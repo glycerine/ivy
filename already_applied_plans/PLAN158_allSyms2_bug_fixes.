@@ -1,0 +1,162 @@
+# Fix allSyms2 divergence: CallAction callee yielded as symbol
+
+**Created:** 2026-03-31
+
+## Context
+
+Golden test (`make golden`) diverges at trace point 155164 in `isolate.allSyms2`:
+- **Go extra:** `dramc.t_min` (Go finds this, Python doesn't)
+- **Go missing:** `dramc_l` (Python finds this, Go doesn't)
+
+Root cause traced by comparing Python and Go second-collection code.
+
+## Root Cause
+
+In the second collection (`allSyms2`), the Go calls `collectSymbolsInto(act, allSyms2)` on each action. This uses `SymbolsIluAst` which walks action Children. For `CallAction`, `Children()` returns `[Callee, ActualReturns...]`. `Callee` is `*lg.Const` (the action name). `IsApp(*lg.Const)` → true → `NodeRep` → self → yield.
+
+**Go yields CallAction callee names as symbols.** Python does NOT.
+
+In Python, `CallAction.args[0]` is an `ivy_ast.Atom` (AST level), not a `lg.Const`. `is_app(Atom)` returns False (Atom is not `App`, `lg.Const`, or `lg.NamedBinder`). So `symbols_ilu_ast` does NOT yield the callee — it only recurses into `atom.args` (the actual parameters).
+
+The mismatch: Go represents `CallAction.Callee` as `*lg.Const` (logic level), Python represents it as `Atom` (AST level). When `SymbolsIluAst` walks a Const, it yields it. When Python's `symbols_ilu_ast` walks an Atom, it doesn't yield it (Atoms aren't apps).
+
+This causes Go to include extra action-name symbols (like `dramc.t_min` — a callee name), which displaces other symbols in the sorted output. The "missing" `dramc_l` is actually present in the Go walk but gets collected differently due to these extra symbols affecting the set.
+
+Wait — both sets have exactly 30 entries. So Go's extra `dramc.t_min` displaces `dramc_l`. Let me verify: is `dramc_l` a symbol that appears only in an action that DOESN'T get walked because its body was erased (via EraseUnrefed) using the wrong allSyms set?
+
+Actually no — allSyms (first collection) is identical between Go and Python. And EraseUnrefed produces identical newActions_final. The difference is purely in how the second collection walks these identical actions.
+
+The extra `dramc.t_min` in Go's allSyms2 must be a CallAction callee. And the missing `dramc_l` must be a symbol that Python finds by walking the atom's args but Go misses because... actually, Go should also find it. Unless Go's `CallAction.Children()` returns `[Callee, ActualReturns...]` but Python's `CallAction.args` = `[atom, returns...]` and `atom.args` includes terms that reference `dramc_l`.
+
+The key issue: Python iterates `CallAction.args[0].args` (the Atom's terms — the actual call parameters). Go's `CallAction.Children()` returns `[Callee, ActualReturns...]` where `Callee` is a bare `*lg.Const` with NO children. **The actual call parameters are in `AstCallee.Terms`, not in `Callee`.**
+
+So:
+1. **Go yields `Callee` (a bare Const = action name) as a symbol** — WRONG (Python doesn't)
+2. **Go does NOT walk the actual call parameters** (they're in `AstCallee.Terms`, not reachable from `Callee.Children()`) — WRONG (Python walks `atom.args` which ARE the parameters)
+
+This is a two-part bug in how `CallAction.Children()` / `ActionArgs()` works for symbol collection:
+- Yields the callee name (wrong)
+- Misses the actual parameters (wrong)
+
+## Fix
+
+The fix should be in `CallAction.ActionArgs()` (actions/action.go:721). Currently:
+```go
+func (a *CallAction) ActionArgs() []lg.Expr {
+    args := []lg.Expr{a.Callee}
+    args = append(args, a.ActualReturns...)
+    return args
+}
+```
+
+This returns `[Callee, returns...]`. But Python's `CallAction.args` = `[atom, returns...]` where atom is an AST Atom whose `.args` are the actual call parameters.
+
+The fix should return the actual parameters and returns (matching Python), NOT the bare callee Const. Looking at `AstCallee` (an `*ast.Atom`), its `Terms` field holds the compiled parameter expressions.
+
+However, changing `ActionArgs()` would break other callers (Clone, Sexp, etc.) that expect the current layout. So instead, we should either:
+
+**Option A:** Override `Children()` for CallAction to return parameters + returns (not callee).
+**Option B:** Change the second collection to use `GetReferencesInto` (which already handles CallAction correctly) instead of `collectSymbolsInto`.
+
+Option B is safer — it matches the Python's first-collection path and already handles CallAction's special semantics. But the Python second collection uses `symbols_ilu_ast` which is the GENERIC walker, not `get_references`. The Python works because its Atom prevents callee from being yielded.
+
+**Option A (recommended):** The cleanest fix is to make `SymbolsIluAst` handle CallAction specially, matching how Python's generic `symbols_ilu_ast` behaves when walking a CallAction. In Python, `symbols_ilu_ast(CallAction)` iterates `.args = [atom, returns...]`, and for the atom, `is_app(atom)` is False so only `atom.args` (parameters) are recursed into.
+
+In Go, we need `SymbolsIluAst` to NOT yield `CallAction.Callee` as a symbol, and instead walk the callee's parameters.
+
+The fix: add a special case for `*actions.CallAction` in `symbolsIluAstRec` or in `NodeArgs`. Since `NodeArgs` falls through to `Children()` for unknown types, and `Children()` returns `ActionArgs()`, we need to override `NodeArgs` for `CallAction` to return `[AstCallee.Terms..., ActualReturns...]` instead of `[Callee, ActualReturns...]`.
+
+Actually, the simplest approach: add a `CallAction` case to `NodeArgs` in `ivylogic/util.go`. But ivylogic can't import actions (circular dep). So instead, add the case in `symbolsIluAstRec` in `ivylogic/symbols.go`.
+
+Wait — ivylogic can't reference `actions.CallAction`. Let me think about this differently.
+
+The issue is that `CallAction` exposes a bare `*lg.Const` as its first child, and `SymbolsIluAst` treats any Const as an app and yields it. The correct behavior is that action NAMES should not be yielded as referenced symbols — only the arguments/parameters should be.
+
+**Actual cleanest fix:** Override `CallAction.Children()` to return `[parameters..., returns...]` instead of `[Callee, returns...]`. The `AstCallee.Terms` field has the parameters. But we need to also keep `ActionArgs()` unchanged for Clone semantics.
+
+Let me check: is `Children()` defined separately from `ActionArgs()` for CallAction?
+
+Looking at `action_expr.go:456`:
+```go
+func (a *CallAction) Children() []lg.Expr { return a.ActionArgs() }
+```
+
+Currently `Children()` delegates to `ActionArgs()`. We can override `Children()` to return the parameters + returns instead.
+
+## Confirmed: `Atom` is NOT an `App`
+
+`ivy_logic.py:298` defines `App = lg.Apply`. `ivy_ast.Atom` extends `Formula(AST)`, NOT `lg.Apply`. So `is_app(Atom)` → False. Python's `symbols_ilu_ast` on a `CallAction`:
+1. `is_app(CallAction)` → False
+2. `for arg in CallAction.args:` → `[atom, returns...]`
+3. For `atom`: `is_app(atom)` → False (Atom ≠ Apply)
+4. `for arg in atom.args:` → iterates actual parameters → recurse
+
+Python does NOT yield the callee name. It only walks the actual parameters and returns.
+
+Go's `SymbolsIluAst` on a `CallAction`:
+1. `IsApp(CallAction)` → False
+2. `NodeArgs(CallAction)` → `Children()` → `ActionArgs()` → `[Callee, ActualReturns...]`
+3. For `Callee` (`*lg.Const`): `IsApp` → True → yield Callee (**WRONG — Python doesn't yield it**)
+4. `NodeArgs(*lg.Const)` → nil (**WRONG — actual parameters in AstCallee.Terms are never walked**)
+
+**Two bugs:**
+- Go yields the callee name as a symbol (Python doesn't)
+- Go doesn't walk the actual call parameters (Python does via `atom.args`)
+
+## Plan
+
+### Step 1: Override `CallAction.Children()` in `actions/action_expr.go`
+
+Change from:
+```go
+func (a *CallAction) Children() []lg.Expr { return a.ActionArgs() }
+```
+
+To return the actual parameters + returns (matching Python's atom.args + returns), NOT the callee:
+```go
+func (a *CallAction) Children() []lg.Expr {
+    // Python's CallAction.args[0] is an Atom (AST level).
+    // is_app(Atom) → False, so symbols_ilu_ast does NOT yield the callee.
+    // It iterates atom.args (the actual call parameters).
+    // Match this by returning parameters + returns, not the callee Const.
+    var result []lg.Expr
+    if a.AstCallee != nil {
+        for _, t := range a.AstCallee.Terms {
+            if e, ok := t.(lg.Expr); ok {
+                result = append(result, e)
+            }
+        }
+    }
+    result = append(result, a.ActualReturns...)
+    return result
+}
+```
+
+### Step 2: Verify `ActionArgs()` is unchanged
+
+`ActionArgs()` still returns `[Callee, returns...]` for Clone/Sexp semantics. Only `Children()` (used by `SymbolsIluAst` via `NodeArgs` fallthrough) changes.
+
+### Step 3: Check other action types for similar AST-vs-logic mismatches
+
+Review all action `Children()` / `ActionArgs()` methods to ensure they match what Python's `.args` property yields. Key types to check:
+- `IfAction` — `AstCond` vs `Cond` (existential conditions use `SomeCondition` AST node)
+- `LocalAction` — `Locals` entries may have AST-level nodes
+
+### Step 4: Tests
+
+- Add CallAction-specific test in `isolate/isolate_symbols_test.go`
+- Run `make golden` to verify trace 155164 now matches
+
+### Files to modify
+
+| File | Change |
+|------|--------|
+| `actions/action_expr.go:456` | Override `CallAction.Children()` to return params+returns |
+| `isolate/isolate_symbols_test.go` | Add CallAction symbol collection test |
+
+## Verification
+
+1. `go build ./...` — compiles
+2. `go test ./actions/ -v` — no regressions
+3. `go test ./isolate/ -v` — all tests pass
+4. `cd ~/ivy/goivy && make golden` — trace point 155164 now matches
