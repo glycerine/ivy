@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 func TestDebugClientServerInit(t *testing.T) {

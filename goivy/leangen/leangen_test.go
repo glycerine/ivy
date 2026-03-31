@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/actions"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/actions"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 func TestSortToStringBool(t *testing.T) {

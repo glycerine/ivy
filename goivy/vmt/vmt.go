@@ -11,15 +11,15 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	mod "github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/solver"
-	"github.com/glycerine/goivy/transrel"
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/solver"
+	"github.com/glycerine/ivy/goivy/transrel"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // checked returns true if the given labeled formula or action should

@@ -10,13 +10,13 @@ package alpha
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/solver"
-	"github.com/glycerine/goivy/webui"
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/solver"
+	"github.com/glycerine/ivy/goivy/webui"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Domain interface for Alpha ---

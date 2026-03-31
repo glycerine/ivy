@@ -5,10 +5,10 @@
 package solver
 
 import (
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/resolution"
-	"github.com/glycerine/goivy/unitres"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/resolution"
+	"github.com/glycerine/ivy/goivy/unitres"
 )
 
 // ivyLitToUnitResLit converts an ivylogic.Literal to a unitres.Literal.

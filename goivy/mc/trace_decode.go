@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
-	tr "github.com/glycerine/goivy/transrel"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // AigerMatchHandler evaluates conditions and decodes state from an AIGER

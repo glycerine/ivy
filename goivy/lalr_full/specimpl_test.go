@@ -3,8 +3,8 @@ package lalr_full
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // TestSpecificationSetsAttribute verifies that "specification { ... }" sets

@@ -5,9 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // shortTypeName returns just the struct name without package prefix or pointer star,

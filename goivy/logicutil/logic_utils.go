@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // --- AST collectors ---

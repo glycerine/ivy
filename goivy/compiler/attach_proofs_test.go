@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // helper: make a label-only proof entry (formula field is nil, label is set).

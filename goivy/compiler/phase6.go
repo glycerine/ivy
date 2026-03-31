@@ -15,19 +15,19 @@ import (
 
 	"strconv"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/theory"
-	"github.com/glycerine/goivy/typeinfer"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/theory"
+	"github.com/glycerine/ivy/goivy/typeinfer"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ProofCheckerInterface, NewProofCheckerFn, and GoalConcFn are now defined

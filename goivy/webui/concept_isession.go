@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/solver"
 )
 
 // ConceptInteractiveSession is the full interactive concept-graph session

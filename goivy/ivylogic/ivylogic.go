@@ -3,8 +3,8 @@ package ivylogic
 import (
 	"fmt"
 
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // SortName extracts the name from a sort.

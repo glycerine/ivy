@@ -5,9 +5,9 @@ import (
 	"sync"
 	"testing"
 
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/z3bridge"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Z3 Worker Goroutine ---

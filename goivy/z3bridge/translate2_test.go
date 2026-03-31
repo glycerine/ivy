@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // TestTranslateVariable_SortSuffix checks that a Variable is translated

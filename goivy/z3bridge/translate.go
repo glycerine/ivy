@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/xtracer"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // NativeLookupFunc is a callback that looks up native Z3 interpretations

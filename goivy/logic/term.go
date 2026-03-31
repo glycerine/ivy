@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // Variable represents a variable. Name must start with uppercase.

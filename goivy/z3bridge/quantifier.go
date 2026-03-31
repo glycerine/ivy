@@ -613,17 +613,17 @@ func (ctx *Z3Context) newSort(c C.Z3_sort) Sort {
 				   // panic: z3 bridge panic on error: invalid dec_ref command
 
 				   // goroutine 18 [running]:
-				   // github.com/glycerine/goivy/z3bridge.goZ3BridgeErrorHandler(0x7f951902a208, 0xb)
+				   // github.com/glycerine/ivy/goivy/z3bridge.goZ3BridgeErrorHandler(0x7f951902a208, 0xb)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
-				   // github.com/glycerine/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7f951902a208, 0x7f951903ced8)
+				   // github.com/glycerine/ivy/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7f951902a208, 0x7f951903ced8)
 				   // 	_cgo_gotypes.go:280 +0x5b
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1.1.1(...)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1.1.1(...)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1.1()
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1.1()
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528 +0xa5
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).do(0x3992eb5b4008?, 0x3992eb866000?)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).do(0x3992eb5b4008?, 0x3992eb866000?)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1(0x0?)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1(0x0?)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:527 +0x49
 				   // runtime.runFinalizers()
 				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7
@@ -693,17 +693,17 @@ func (ctx *Z3Context) newExpr(c C.Z3_ast) Expr {
 				   // panic: z3 bridge panic on error: invalid dec_ref command
 
 				   // goroutine 5 [running]:
-				   // github.com/glycerine/goivy/z3bridge.goZ3BridgeErrorHandler(0x7fa1e2008808, 0xb)
+				   // github.com/glycerine/ivy/goivy/z3bridge.goZ3BridgeErrorHandler(0x7fa1e2008808, 0xb)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
-				   // github.com/glycerine/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7fa1e2008808, 0x7fa1e2019d90)
+				   // github.com/glycerine/ivy/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7fa1e2008808, 0x7fa1e2019d90)
 				   // 	_cgo_gotypes.go:280 +0x5b
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2.1.1(...)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2.1.1(...)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2.1()
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2.1()
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606 +0x9d
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).do(0x2e4d48034110?, 0x2e4d4807c610?)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).do(0x2e4d48034110?, 0x2e4d4807c610?)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
-				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2(0x0?)
+				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2(0x0?)
 				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:605 +0x49
 				   // runtime.runFinalizers()
 				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7

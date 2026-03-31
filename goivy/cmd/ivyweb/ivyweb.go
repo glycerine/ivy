@@ -18,8 +18,8 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/webui"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/webui"
 )
 
 func main() {

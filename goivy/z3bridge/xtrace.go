@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"sync/atomic"
 
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // z3VarPattern matches Z3 internal variable names like !k!0, !k!1, etc.

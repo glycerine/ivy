@@ -8,8 +8,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/idem"
 )
 

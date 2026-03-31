@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Sexp() methods for ivylogic types that implement logic.Expr.

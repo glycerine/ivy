@@ -3,12 +3,12 @@ package compiler
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	"github.com/glycerine/goivy/lexer"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/lexer"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/lalr_full"
 )
 
 func newTestCompiler() *Compiler {

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 func makeVar(name string, s lg.Sort) *lg.Variable {

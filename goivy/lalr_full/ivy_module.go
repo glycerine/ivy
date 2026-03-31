@@ -7,9 +7,9 @@ package lalr_full
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ParseResult bundles the declarations returned by the LALR parser.

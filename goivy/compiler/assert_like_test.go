@@ -6,9 +6,9 @@ package compiler
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------

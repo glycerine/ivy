@@ -3,7 +3,7 @@
 package proof
 
 import (
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ProofGoal represents a single proof obligation.

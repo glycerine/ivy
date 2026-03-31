@@ -9,7 +9,7 @@ import __yyfmt__ "fmt"
 
 import (
 	"fmt"
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // labelCounter is a package-level counter for generating unique mixer names.

@@ -11,8 +11,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/actions"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Preamble is the standard Lean file header.

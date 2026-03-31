@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // debugNextDefinitionDeclSn is a debug-only atomic counter for tagging

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 func mkConst(name string) *logic.Const {

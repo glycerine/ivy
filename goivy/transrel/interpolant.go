@@ -1,9 +1,9 @@
 package transrel
 
 import (
-	co "github.com/glycerine/goivy/clauseops"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/solver"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/solver"
 )
 
 // InterpolantResult holds the result of an interpolation query.

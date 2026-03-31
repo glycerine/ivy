@@ -7,12 +7,12 @@ package solver
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/unitres"
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/unitres"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // HerbrandModel wraps a Z3 model and provides operations to extract

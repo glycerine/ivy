@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // SortOrVar is implemented by both logic.Sort and *SortVar.

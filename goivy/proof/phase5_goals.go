@@ -6,12 +6,12 @@ package proof
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // === Batch 5.1: Goal Utilities ===

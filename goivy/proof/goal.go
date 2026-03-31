@@ -1,10 +1,10 @@
 package proof
 
 import (
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // Vocab represents the vocabulary of a goal: the sorts, symbols, and variables

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // --- Theory construction tests ---

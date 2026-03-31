@@ -3,9 +3,9 @@ package ivylogic
 import (
 	"fmt"
 
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	iu "github.com/glycerine/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // CloneNode clones a logic node, replacing its children with the given args.

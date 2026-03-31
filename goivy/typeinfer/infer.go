@@ -3,7 +3,7 @@ package typeinfer
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // InferResult holds the inferred sort and a closure to concretize the term.

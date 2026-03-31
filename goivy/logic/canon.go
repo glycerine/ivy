@@ -1,7 +1,7 @@
 package logic
 
 import (
-	iu "github.com/glycerine/goivy/ivyutils"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // Canon() implementations for all logic types.

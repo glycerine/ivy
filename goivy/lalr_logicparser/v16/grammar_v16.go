@@ -9,7 +9,7 @@ import __yyfmt__ "fmt"
 
 import (
 	"fmt"
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 func atypeToString(n ast.Node) string {

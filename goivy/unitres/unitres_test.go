@@ -4,8 +4,8 @@ import (
 	//"fmt"
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/resolution"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/resolution"
 )
 
 // Helper: create a constant term.

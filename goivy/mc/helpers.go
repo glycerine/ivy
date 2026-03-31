@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
-	thy "github.com/glycerine/goivy/theory"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	thy "github.com/glycerine/ivy/goivy/theory"
 )
 
 // CeilLog2 returns the ceiling of log2(n), i.e., the minimum number

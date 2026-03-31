@@ -5,10 +5,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Canon returns a single canonical s-expression of key module state.

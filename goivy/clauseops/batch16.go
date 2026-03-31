@@ -4,9 +4,9 @@ package clauseops
 // Most functions already exist in logicutil or clauseops. This file fills the gaps.
 
 import (
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // SubstituteAstByName substitutes terms for variables in an AST, keyed by

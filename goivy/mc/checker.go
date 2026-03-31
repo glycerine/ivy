@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ModelChecker is the interface for hardware model checkers.

@@ -3,7 +3,7 @@ package ast
 import (
 	"fmt"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // Canon() implementations for all declaration types defined in decl.go.

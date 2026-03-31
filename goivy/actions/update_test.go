@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/transrel"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/transrel"
 )
 
 func testCtx() *UpdateContext {

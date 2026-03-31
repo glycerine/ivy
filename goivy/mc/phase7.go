@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/art"
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/art"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // EncodeVars encodes a list of variables into binary-encoded sub-bits,

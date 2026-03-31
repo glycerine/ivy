@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/module"
 
-	ivyiso "github.com/glycerine/goivy/isolate"
+	ivyiso "github.com/glycerine/ivy/goivy/isolate"
 )
 
 // TestRegression_ActionInsideIsolateBody verifies that actions declared inside

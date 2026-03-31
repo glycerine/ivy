@@ -7,12 +7,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	modpkg "github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/proof"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	modpkg "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/proof"
 )
 
 // l2sAutoInvariants generates invariants for l2s_auto tactics.

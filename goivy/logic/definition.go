@@ -3,7 +3,7 @@ package logic
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // Definition represents a formula of the form lhs = rhs (or lhs <-> rhs).

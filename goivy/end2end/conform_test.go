@@ -13,13 +13,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/art"
-	"github.com/glycerine/goivy/check"
-	"github.com/glycerine/goivy/compiler"
-	il "github.com/glycerine/goivy/ivylogic"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/check"
+	"github.com/glycerine/ivy/goivy/compiler"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // pythonIvyCheck runs the Python Ivy checker on the given .ivy file.

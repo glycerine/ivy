@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/pytesthelper"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/pytesthelper"
 )
 
 // PyBackend communicates with a Python Ivy sidecar HTTP server.

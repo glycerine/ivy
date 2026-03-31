@@ -4,9 +4,9 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // makeTestIsolateDef creates an *ast.IsolateDef with the given verified and present names.

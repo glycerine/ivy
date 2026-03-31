@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ============================================================================

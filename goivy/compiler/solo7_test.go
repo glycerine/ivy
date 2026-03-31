@@ -9,11 +9,11 @@ package compiler
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ============================================================================

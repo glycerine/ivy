@@ -1,9 +1,9 @@
 package module
 
 import (
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Config for check, but module is lower in the import graph.

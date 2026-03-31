@@ -15,12 +15,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/glycerine/goivy/art"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/art"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // resetIncluded clears the included set on config. Call at the start of

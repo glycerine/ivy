@@ -18,7 +18,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // PDRResult holds the outcome of a PDR run.

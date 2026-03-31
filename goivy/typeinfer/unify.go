@@ -3,7 +3,7 @@ package typeinfer
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // Find performs path-compressing find on a SortOrVar.

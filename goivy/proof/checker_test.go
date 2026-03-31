@@ -3,8 +3,8 @@ package proof
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // TestAdmitPropositionWithComposeTactics tests that a property admitted with

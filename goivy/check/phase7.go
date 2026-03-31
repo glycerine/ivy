@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/glycerine/goivy/art"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // GuiArt launches the GUI for an analysis graph.

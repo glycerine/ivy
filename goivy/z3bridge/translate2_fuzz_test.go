@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 var durlog *os.File

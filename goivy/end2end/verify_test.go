@@ -5,12 +5,12 @@ package end2end
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/art"
-	"github.com/glycerine/goivy/check"
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/check"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/solver"
 )
 
 // verifyInitInvariant checks that the module's initialization establishes

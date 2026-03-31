@@ -3,7 +3,7 @@ package logicutil
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // CaptureError is raised when a substitution would create variable capture.

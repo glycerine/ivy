@@ -5,9 +5,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/actions"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // Generator is the top-level Go code generator. It coordinates type

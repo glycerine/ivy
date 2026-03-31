@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // UPDRResult holds the result of running UPDR on a module.

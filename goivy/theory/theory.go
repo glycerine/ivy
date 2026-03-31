@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // TheoryKind identifies the kind of theory.

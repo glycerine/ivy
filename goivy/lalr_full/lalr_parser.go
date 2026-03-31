@@ -3,9 +3,9 @@ package lalr_full
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Parse parses a complete Ivy file and returns the declarations.

@@ -6,16 +6,16 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/glycerine/goivy/clauseops"
-	"github.com/glycerine/goivy/compiler"
-	il "github.com/glycerine/goivy/ivylogic"
-	//iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/trace"
-	"github.com/glycerine/goivy/typeinfer"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/compiler"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	//iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/trace"
+	"github.com/glycerine/ivy/goivy/typeinfer"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.

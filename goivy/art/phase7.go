@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // RenderRg renders an AnalysisGraph into a string representation for display.

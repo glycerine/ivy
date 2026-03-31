@@ -16,14 +16,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	mod "github.com/glycerine/goivy/module"
-	thy "github.com/glycerine/goivy/theory"
-	uf "github.com/glycerine/goivy/unionfind"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	mod "github.com/glycerine/ivy/goivy/module"
+	thy "github.com/glycerine/ivy/goivy/theory"
+	uf "github.com/glycerine/ivy/goivy/unionfind"
 )
 
 // FragmentError is raised when a VC is not in the FAU fragment.

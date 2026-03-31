@@ -3,7 +3,7 @@
 // every Expr value IS an ast.Node — no adapters or conversion helpers needed.
 package logic
 
-import "github.com/glycerine/goivy/ast"
+import "github.com/glycerine/ivy/goivy/ast"
 
 // --- Sort types ---
 

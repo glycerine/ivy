@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // nodeShape returns a compact string representation of AST structure for test assertions.

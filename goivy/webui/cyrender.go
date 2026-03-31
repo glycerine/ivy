@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/art"
+	"github.com/glycerine/ivy/goivy/art"
 )
 
 // -----------------------------------------------------------------------

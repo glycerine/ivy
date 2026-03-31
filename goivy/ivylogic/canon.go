@@ -1,6 +1,6 @@
 package ivylogic
 
-import iu "github.com/glycerine/goivy/ivyutils"
+import iu "github.com/glycerine/ivy/goivy/ivyutils"
 
 // Canon() methods for ivylogic types, wrapping Sexp() — same pattern as logic/canon.go.
 

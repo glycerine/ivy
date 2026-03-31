@@ -3,11 +3,11 @@ package autoinst
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	mod "github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // ExpandSchemata expands axiom schemata into axioms by matching schema

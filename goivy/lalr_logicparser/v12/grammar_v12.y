@@ -12,7 +12,7 @@ package v12
 
 import (
 	"fmt"
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 func atypeToString(n ast.Node) string {

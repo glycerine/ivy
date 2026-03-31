@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/glycerine/goivy/clauseops"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Z3 sort → Ivy sort ---

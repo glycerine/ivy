@@ -3,7 +3,7 @@ package typeinfer
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 func TestFindBasic(t *testing.T) {

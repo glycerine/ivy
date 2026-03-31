@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/check"
-	"github.com/glycerine/goivy/l2s"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/trace"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/check"
+	"github.com/glycerine/ivy/goivy/l2s"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/trace"
 )
 
 // RankingAutoHookConfig holds the configuration for the ranking auto_hook.

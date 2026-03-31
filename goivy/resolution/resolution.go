@@ -5,7 +5,7 @@
 package resolution
 
 import (
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // Term is an alias for logic.Expr (variables or constants).

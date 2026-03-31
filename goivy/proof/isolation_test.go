@@ -3,8 +3,8 @@ package proof
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // TestConfigIsolation verifies that two independent ProofConfig instances

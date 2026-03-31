@@ -6,7 +6,7 @@ package ivylogic
 import (
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // --- §1.1 Regression: GetSortRefinement must use structural keys ---

@@ -16,9 +16,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/lalr_full"
 )
 
 // testdataDir returns the absolute path to the testdata/ directory.
@@ -417,7 +417,7 @@ func TestGoldenAST(t *testing.T) {
 	// The errors are probably just from not specifying which
 	// of the isolates to verify:
 	//
-	// jaten@jbook ~/pyivy/ivy/doc/examples/MSV (goport) $ ivy /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
+	// jaten@jbook ~/pyivy/ivy/doc/examples/MSV (goport) $ ivy /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
 	// error: no isolate specified on command line
 	// jaten@jbook ~/pyivy/ivy/doc/examples/MSV (goport) $ ivy isolate=iso_l pingpong.ivy
 	// Traceback (most recent call last):
@@ -556,7 +556,7 @@ func extractDeclType(line string) string {
 func TestOrdLive(t *testing.T) {
 	return // of while doing lalr_full
 
-	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 	path := "/Users/jaten/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	if _, err := os.Stat(path); err != nil {

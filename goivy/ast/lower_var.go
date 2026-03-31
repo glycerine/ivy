@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 func lvsCanons(stmts []Node) string {

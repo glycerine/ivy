@@ -42,8 +42,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/glycerine/goivy/check"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/check"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 var ProgramName string = "goivy_check"

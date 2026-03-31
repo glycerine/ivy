@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // GoType maps an Ivy sort to its Go type string.

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/module"
-	tr "github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
+	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // ToAigerResult holds the result of converting a module to an AIGER circuit.

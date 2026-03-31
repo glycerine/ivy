@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/go-rod/rod"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // setupBrowserB returns the shared browser for benchmarks.

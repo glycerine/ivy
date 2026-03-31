@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // Server is the HTTP backend for the Ivy verification UI.

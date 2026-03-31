@@ -6,10 +6,10 @@ package lalr_logicparser
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lalr_logicparser/v12"
-	"github.com/glycerine/goivy/lalr_logicparser/v16"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lalr_logicparser/v12"
+	"github.com/glycerine/ivy/goivy/lalr_logicparser/v16"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // Parse dispatches to the appropriate version-specific LALR parser.

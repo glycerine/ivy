@@ -17,12 +17,12 @@ import (
 	"fmt"
 	//"sync"
 
-	"github.com/glycerine/goivy/actions"
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	tr "github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // ---------------------------------------------------------------------------

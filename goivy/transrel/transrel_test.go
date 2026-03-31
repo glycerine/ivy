@@ -3,9 +3,9 @@ package transrel
 import (
 	"testing"
 
-	co "github.com/glycerine/goivy/clauseops"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // -----------------------------------------------------------------------

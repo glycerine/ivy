@@ -11,8 +11,8 @@ package lalr_full
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // doInsts expands instantiation declarations.

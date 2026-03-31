@@ -6,7 +6,7 @@
 package congclos
 
 import (
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // node is an entry in the union-find structure.

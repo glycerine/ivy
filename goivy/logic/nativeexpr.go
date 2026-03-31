@@ -6,7 +6,7 @@ package logic
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // NativeExpr is a compiled native expression that preserves all children

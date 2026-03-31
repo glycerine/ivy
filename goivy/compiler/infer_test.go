@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // Helper: build an ActionDecl containing ActionDefs.

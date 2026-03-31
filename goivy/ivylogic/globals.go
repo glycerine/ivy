@@ -1,7 +1,7 @@
 package ivylogic
 
 import (
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // IsDefaultSort returns true if s is the default sort of the given signature.

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // stubAction is a minimal Action implementation for canon tests.

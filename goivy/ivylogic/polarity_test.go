@@ -3,7 +3,7 @@ package ivylogic
 import (
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // helper to build p(X) where p: node -> bool

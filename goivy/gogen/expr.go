@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ExprEmitter converts Ivy logic nodes (formulas and terms) to Go source expressions.

@@ -3,7 +3,7 @@ package z3bridge
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {

@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // content holds our static web server content.

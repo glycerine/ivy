@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // --- AST-level sort types ---

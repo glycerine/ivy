@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // True and False are the logical constants (empty And / empty Or).

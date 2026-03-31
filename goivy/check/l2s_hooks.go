@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/l2s"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/trace"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/l2s"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/trace"
 )
 
 // L2STraceHook is the L2S trace hook. It finds the loop start point by

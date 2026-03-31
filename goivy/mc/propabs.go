@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Global counter for propositional abstraction.

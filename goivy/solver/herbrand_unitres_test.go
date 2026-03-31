@@ -3,11 +3,11 @@ package solver
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/resolution"
-	"github.com/glycerine/goivy/unitres"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/resolution"
+	"github.com/glycerine/ivy/goivy/unitres"
 )
 
 // ---------------------------------------------------------------

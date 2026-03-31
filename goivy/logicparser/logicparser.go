@@ -7,9 +7,9 @@
 package logicparser
 
 import (
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lalr_logicparser"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lalr_logicparser"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // DefaultVersion is the version used by the convenience functions

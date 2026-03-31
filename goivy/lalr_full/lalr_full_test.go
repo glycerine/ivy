@@ -3,7 +3,7 @@ package lalr_full
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 func TestParseEmpty(t *testing.T) {

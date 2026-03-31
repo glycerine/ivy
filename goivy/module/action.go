@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Action is the interface implemented by all compiled action nodes.

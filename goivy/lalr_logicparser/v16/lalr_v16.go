@@ -3,8 +3,8 @@ package v16
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // ParseV16 parses a formula string using the v1.3–v1.6 LALR grammar.

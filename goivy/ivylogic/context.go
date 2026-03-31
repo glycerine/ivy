@@ -1,8 +1,8 @@
 package ivylogic
 
 import (
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // --- Batch 1.3: Context Managers and Misc ---

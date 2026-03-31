@@ -4,11 +4,11 @@
 package compiler
 
 import (
-	"github.com/glycerine/goivy/clauseops"
-	"github.com/glycerine/goivy/lexer"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/logicparser"
-	lu "github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/lexer"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicparser"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // ToFormula parses a string, compiles the AST, and applies sort inference.

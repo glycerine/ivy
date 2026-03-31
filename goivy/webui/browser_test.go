@@ -17,7 +17,7 @@ import (
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------- shared browser singleton ----------

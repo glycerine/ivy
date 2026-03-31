@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/clauseops"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/clauseops"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------

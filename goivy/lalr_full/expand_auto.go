@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // TypeNames matches Python's TypeNames class (ivy_parser.py:3601-3613).

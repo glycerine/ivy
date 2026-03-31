@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/clauseops"
 )
 
 // NodeAction describes a context-menu action available on a graph node.

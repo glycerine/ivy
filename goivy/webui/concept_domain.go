@@ -18,10 +18,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/logicutil"
-	"github.com/glycerine/goivy/typeinfer"
+	"github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/typeinfer"
 )
 
 // ---------------------------------------------------------------------------

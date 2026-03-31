@@ -17,7 +17,7 @@ package lalr_logicparser
 
 import (
 	"fmt"
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // labelCounter is a package-level counter for generating unique mixer names.

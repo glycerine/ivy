@@ -16,9 +16,9 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.

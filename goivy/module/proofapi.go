@@ -5,7 +5,7 @@
 package module
 
 import (
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // ProofCheckerInterface abstracts the proof checker methods needed by the compiler

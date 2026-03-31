@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // evalConstLit evaluates a literal in a circuit that has no real inputs

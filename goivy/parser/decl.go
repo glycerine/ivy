@@ -3,9 +3,9 @@ package parser
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // nodeToSortString extracts a sort name string from an atype Node.

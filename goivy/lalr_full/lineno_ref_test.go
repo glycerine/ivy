@@ -3,7 +3,7 @@ package lalr_full
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // TestLinenoAddRefWhenReferenceSet verifies that LinenoAddRef wraps the

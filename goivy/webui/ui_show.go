@@ -6,7 +6,7 @@ package webui
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ShowVerification is the main entry point for showing verification results.

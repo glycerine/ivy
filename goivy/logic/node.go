@@ -1,6 +1,6 @@
 package logic
 
-import "github.com/glycerine/goivy/ast"
+import "github.com/glycerine/ivy/goivy/ast"
 
 // Expr is the interface for all sorted logic expressions (sorts, terms, formulas).
 // It embeds ast.Node so every Expr is statically known to be an ast.Node —

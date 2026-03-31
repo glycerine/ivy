@@ -11,12 +11,12 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/glycerine/goivy/compiler"
-	il "github.com/glycerine/goivy/ivylogic"
-	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/compiler"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // dataDir returns the path to the data directory.

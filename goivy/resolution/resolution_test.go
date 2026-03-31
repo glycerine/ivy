@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // helper to make a variable with TopSort (Python variables have no case restriction in ivy_logic)

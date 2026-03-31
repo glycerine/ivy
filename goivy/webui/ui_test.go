@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- AnalysisGraphUI tests ---

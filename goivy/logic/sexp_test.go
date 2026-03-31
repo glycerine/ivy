@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"testing"
 
-	tv "github.com/glycerine/goivy/test_vectors"
+	tv "github.com/glycerine/ivy/goivy/test_vectors"
 )
 
 func vectorsPath() string {

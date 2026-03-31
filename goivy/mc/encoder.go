@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math"
 
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Encoder wraps an Aiger circuit with multi-bit encoding for finite sorts.

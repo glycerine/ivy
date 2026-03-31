@@ -7,7 +7,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ConformBackend sends every request to both a Go and Python backend,

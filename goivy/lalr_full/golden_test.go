@@ -17,9 +17,9 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
@@ -396,7 +396,7 @@ func normalizeLine(line string) string {
 	for _, prefix := range []string{
 		home + "/ivy/ivy-lang-examples/ivy/include/",
 		home + "/ivy/pyivy/ivy/ivy/include/",
-		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
+		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
@@ -404,7 +404,7 @@ func normalizeLine(line string) string {
 	}
 	for _, prefix := range []string{
 		home + "/ivy/ivy-lang-examples/",
-		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
+		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
@@ -445,7 +445,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	//return // off to check everything else under make test.
 	t.Helper()
 
-	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 	home := os.Getenv("HOME")
 	path := home + "/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"

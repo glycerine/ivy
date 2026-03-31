@@ -3,11 +3,11 @@ package proof
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // SkolemizeGoal converts a goal to skolem normal form:

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 func TestGoType_BooleanSort(t *testing.T) {

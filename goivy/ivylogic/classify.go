@@ -1,8 +1,8 @@
 package ivylogic
 
 import (
-	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // IsQF returns true if the formula is quantifier-free.

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 const clientServerIvy = `#lang ivy1.7

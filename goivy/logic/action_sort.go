@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // ActionS is the sort for compiled action nodes.

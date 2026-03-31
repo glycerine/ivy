@@ -3,7 +3,7 @@ package conceptspace
 import (
 	"testing"
 
-	il "github.com/glycerine/goivy/ivylogic"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 )
 
 func TestParseNamedSpace(t *testing.T) {

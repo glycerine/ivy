@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops

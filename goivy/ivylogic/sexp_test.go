@@ -5,8 +5,8 @@ import (
 	"runtime"
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
-	tv "github.com/glycerine/goivy/test_vectors"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	tv "github.com/glycerine/ivy/goivy/test_vectors"
 )
 
 func vectorsPath() string {

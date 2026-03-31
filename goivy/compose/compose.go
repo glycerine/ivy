@@ -16,8 +16,8 @@ import (
 	"sort"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
-	mod "github.com/glycerine/goivy/module"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // RankingDef holds the definitions for a single ranking function (work item).

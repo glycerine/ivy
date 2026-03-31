@@ -23,13 +23,13 @@ import (
 	"strings"
 	"unicode"
 
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/solver"
-	"github.com/glycerine/goivy/xtracer"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/solver"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // -----------------------------------------------------------------------

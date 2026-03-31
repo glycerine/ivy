@@ -3,7 +3,7 @@ package logic
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // IvyError is the general error type for Ivy.

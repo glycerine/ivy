@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ivySample is a minimal Ivy file for conformance testing.

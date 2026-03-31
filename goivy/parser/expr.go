@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/lexer"
 )
 
 // composeAtomsExpr flattens dotted name expressions, matching Python's

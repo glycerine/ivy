@@ -3,8 +3,8 @@ package ivylogic
 import (
 	"strings"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Some represents "some X:t. phi" — an indefinite description.

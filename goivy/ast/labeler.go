@@ -1,6 +1,6 @@
 package ast
 
-import iu "github.com/glycerine/goivy/ivyutils"
+import iu "github.com/glycerine/ivy/goivy/ivyutils"
 
 // Labeler generates unique label atoms for proof subgoals.
 // Corresponds to Python's ivy_ast.Labeler (ivy_ast.py:1938-1942).

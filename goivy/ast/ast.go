@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Location represents a source code position.

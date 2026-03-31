@@ -1,4 +1,4 @@
-module github.com/glycerine/goivy
+module github.com/glycerine/ivy/goivy
 
 go 1.24.2
 

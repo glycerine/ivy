@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/temporal"
+	"github.com/glycerine/ivy/goivy/ast"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/temporal"
 )
 
 var testAstCfg = ast.NewAstConfig()

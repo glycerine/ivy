@@ -11,8 +11,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/glycerine/goivy/art"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/ivy/goivy/art"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // DumpToIvy writes an analysis graph as Ivy source to the writer.

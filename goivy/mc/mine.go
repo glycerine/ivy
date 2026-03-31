@@ -1,11 +1,11 @@
 package mc
 
 import (
-	co "github.com/glycerine/goivy/clauseops"
-	il "github.com/glycerine/goivy/ivylogic"
-	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
-	tr "github.com/glycerine/goivy/transrel"
+	co "github.com/glycerine/ivy/goivy/clauseops"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // MineConstants collects constants to use for quantifier instantiation.
