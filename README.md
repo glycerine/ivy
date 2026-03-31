@@ -258,7 +258,7 @@ python3 -m venv goivy-venv
 source goivy-venv/bin/activate
 pip install -r requirements.txt
 
-#pip3 install 'setuptools<70.0.0' ## depends on older version
+pip3 install 'setuptools<70.0.0' ## depends on older version
 #pip3 install pyyaml # needed at one point.
 #pip3 install blake3
 
