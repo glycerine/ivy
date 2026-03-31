@@ -538,7 +538,7 @@ def get_assumes_and_asserts(preconds_only):
 
     for ldf in im.module.definitions:
         if not isinstance(ldf.formula,il.DefinitionSchema):
-            if (ldf.formula.defines() not in ilu.symbols_ast(ldf.formula.rhs())
+            if (ldf.formula.defines() not in ilu.symbols_ilu_ast(ldf.formula.rhs())
                 and not isinstance(ldf.formula.rhs(),il.Some)):
                 # print 'macro : {}'.format(ldf.formula)
                 macros.append((ldf.formula,ldf))

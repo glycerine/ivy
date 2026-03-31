@@ -4289,7 +4289,7 @@ def emit_assign(self,header):
             return
         bexpr = il.And()
         if il.is_ite(self.args[1]) and self.args[0] == self.args[1].args[2]:
-            if self.modifies()[0] not in ilu.symbols_ast(self.args[1].args[0]):
+            if self.modifies()[0] not in ilu.symbols_ilu_ast(self.args[1].args[0]):
                 bexpr = self.args[1].args[0]
         loops = open_bounded_loops(vs,bexpr)
         if isinstance(loops,BoundsError):

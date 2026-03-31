@@ -801,7 +801,7 @@ def mine_constants2(mod,trans,invariant):
 
 def prev_expr(stvarset,expr,sort_constants):
     if any(sym in stvarset or tr.is_skolem(sym) and not sym in sort_constants[sym.sort]
-           for sym in ilu.symbols_ast(expr)):
+           for sym in ilu.symbols_ilu_ast(expr)):
         return None
     news = [sym for sym in ilu.used_symbols_ast(expr) if tr.is_new(sym)]
     if news:
@@ -1390,7 +1390,7 @@ def to_aiger(mod,ext_act,method="mc"):
     def_set.update(stvars)
 #    iu.dbg('def_set')
     used = ilu.used_symbols_clauses(trans)
-    used.update(ilu.symbols_ast(invariant))
+    used.update(ilu.symbols_ilu_ast(invariant))
     inputs = [sym for sym in used if
               sym not in def_set and not il.is_interpreted_symbol(sym)]
     fail = il.Symbol('__fail',il.find_sort('bool'))

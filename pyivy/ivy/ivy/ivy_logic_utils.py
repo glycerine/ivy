@@ -84,7 +84,7 @@ class Clauses(object):
         res = Clauses(fmlas,defs,annot)
         return res
     def symbols(self):
-        return self.gen(symbols_ast)
+        return self.gen(symbols_ilu_ast)
     def to_let(self):
         return Let(*(self.defs+[And(*self.fmlas)]))
     def __repr__(self):
@@ -122,7 +122,7 @@ def close_epr(fmla):
 
 for op in lg_ops:
     op.clauses = property(lambda self: formula_to_clauses(self).clauses)
-    op.symbols = lambda self: symbols_ast(self)
+    op.symbols = lambda self: symbols_ilu_ast(self)
     op.is_universal_first_order = lambda self: is_prenex_universal(self) and not any(sym.is_skolem() for sym in self.symbols())
     op.to_formula = lambda self: self
 
@@ -534,17 +534,17 @@ uses_constants_clauses = uses_constants_cubes = any_in(constants_clauses)
 
 # same as above but for symbols
 
-def symbols_ast(ast):
+def symbols_ilu_ast(ast):
     if is_app(ast):
         if is_binder(ast.rep):
-            for x in symbols_ast(ast.rep.body):
+            for x in symbols_ilu_ast(ast.rep.body):
                 yield x
         else:
             yield ast.rep
     for arg in ast.args:
         if isinstance(arg,str):
             print(arg)
-        for x in symbols_ast(arg):
+        for x in symbols_ilu_ast(arg):
             yield x
 
 def named_binders_ast(ast):
@@ -588,8 +588,8 @@ def sorts_ast(ast):
 # extend to clauses, etc...
 
 
-symbols_asts = symbols_clause = symbols_cube = apply_gen_to_list(symbols_ast)
-symbols_clauses = symbols_cubes = apply_gen_to_clauses(symbols_ast)
+symbols_asts = symbols_clause = symbols_cube = apply_gen_to_list(symbols_ilu_ast)
+symbols_clauses = symbols_cubes = apply_gen_to_clauses(symbols_ilu_ast)
 
 named_binders_asts = apply_gen_to_list(named_binders_ast)
 
@@ -597,7 +597,7 @@ temporals_asts = apply_gen_to_list(temporals_ast)
 
 # get set of symbols occurring
 
-used_symbols_ast = gen_to_set(symbols_ast)
+used_symbols_ast = gen_to_set(symbols_ilu_ast)
 used_symbols_asts = used_symbols_clause = gen_to_set(symbols_clause)
 used_symbols_clauses = gen_to_set(symbols_clauses)
 
@@ -607,13 +607,13 @@ used_sorts_ast = gen_to_set(sorts_ast)
 
 # generate symbols in order of first occurrence
 
-used_symbols_in_order_ast = gen_unique(symbols_ast)
+used_symbols_in_order_ast = gen_unique(symbols_ilu_ast)
 used_symbols_in_order_clause = used_symbols_in_order_cube = gen_unique(symbols_clause)
 used_symbols_in_order_clauses = used_symbols_in_order_cubes = gen_unique(symbols_clauses)
 
 # check if some symbol occurs
 
-uses_symbols_ast = any_in(symbols_ast)
+uses_symbols_ast = any_in(symbols_ilu_ast)
 uses_symbols_clause = uses_symbols_cube = any_in(symbols_clause)
 uses_symbols_clauses = uses_symbols_cubes = any_in(symbols_clauses)
 
@@ -1297,7 +1297,7 @@ def ite_clauses(cond,args):
     elif args[1].is_false():
         args[1] = Clauses(args[1].fmlas,args[0].defs,args[1].annot) 
     used = set(chain(*[arg.symbols() for arg in args]))
-    used.update(symbols_ast(cond))
+    used.update(symbols_ilu_ast(cond))
     rn = UniqueRenamer('__ts0',used)
     return ite_clauses_int(rn,cond,args)
 

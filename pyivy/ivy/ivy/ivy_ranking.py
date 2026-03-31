@@ -115,7 +115,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     for defn in list(prover.definitions.values()) + prem_defns:
         fml = ilg.drop_universals(defn.formula)
-        for sym in iu.unique(ilu.symbols_ast(fml.args[1])):
+        for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
             defn_deps[sym].append(fml.args[0].rep)
             
     def dependencies(syms):
@@ -807,14 +807,14 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     for vs, t, env in l2s_gs:
         prop = l2s_g(vs,t,env)
         envprops[env].append(prop)
-        for sym in ilu.symbols_ast(t):
+        for sym in ilu.symbols_ilu_ast(t):
             symprops[sym].append(prop)
     for when in l2s_whens:
-        for sym in ilu.symbols_ast(when.body):
+        for sym in ilu.symbols_ilu_ast(when.body):
             symwhens[sym].append(when)
     for vs, t in to_wait:
         wait = l2s_w(vs,t)
-        for sym in ilu.symbols_ast(t):
+        for sym in ilu.symbols_ilu_ast(t):
             symwaits[sym].append(wait)
     actions = dict((b.name,b.action) for b in model.bindings)
     # lines = dict(zip(gprops,gproplines))

@@ -824,7 +824,7 @@ def compile_thunk_action(self):
         body.formal_returns = []
     symset = set(formals)  # formal parameters don't go in the struct
     syms = []
-    for sym in lu.symbols_ast(body):
+    for sym in lu.symbols_ilu_ast(body):
         if ((sym.name.startswith('fml:') or sym.name.startswith('loc:'))
             and sym.name in ivy_logic.sig.symbols and sym not in symset):
             symset.add(sym)
@@ -2020,7 +2020,7 @@ def check_definitions(mod):
                 
     arcs = [(d.formula.defines(),x)
             for d in mod.definitions
-            for x in lu.symbols_ast(d.formula.args[1])]
+            for x in lu.symbols_ilu_ast(d.formula.args[1])]
     dmap = dict((d.formula.defines(),d) for d in mod.definitions)
     pmap = dict((lf.id,p) for lf,p in mod.proofs)
     sccs = tarjan_arcs(arcs)

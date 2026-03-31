@@ -1255,14 +1255,18 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for name, act := range newActions.All() {
 		mod.Actions.Set(name, act)
 	}
-	for name := range newActions.All() {
-		xtracer.Trace("isolate.newActions_final actname=%s", name)
-	}
-	for name := range oldActions.All() {
-		xtracer.Trace("isolate.oldActions actname=%s", name)
+	if xtracer.Enabled {
+		for name := range newActions.All() {
+			xtracer.Trace("isolate.newActions_final actname=%s", name)
+		}
+		for name := range oldActions.All() {
+			xtracer.Trace("isolate.oldActions actname=%s", name)
+		}
 	}
 
-	// --- Filter signature ---
+	// Filter the signature: ivy_isolate.py:1353
+	// keep only the symbols referenced in the remaining
+	// formulas
 
 	allSyms2 := make(map[lg.NodeKey]lg.Expr)
 	for _, lfSlice := range [][]*ast.LabeledFormula{
@@ -1323,7 +1327,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	allSyms2Names := allSymsNameSet(allSyms2)
 	if xtracer.Enabled {
-		traceSymSet("isolate.allSyms2", allSyms2)
+		traceSymSet("isolate.allSyms2", allSyms2) // ivy_isolte.py:1378
 	}
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {

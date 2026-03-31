@@ -328,7 +328,7 @@ def invariance_tactic(prover,goals,proof):
     symprops = defaultdict(list)
     for prop in gprops:
         envprops[prop.environ].append(prop)
-        for sym in ilu.symbols_ast(prop):
+        for sym in ilu.symbols_ilu_ast(prop):
             symprops[sym].append(prop)
     actions = dict((b.name,b.action) for b in model.bindings)
     lines = dict(list(zip(gprops,gproplines)))

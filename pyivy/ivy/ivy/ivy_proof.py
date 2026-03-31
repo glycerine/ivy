@@ -81,7 +81,7 @@ class ProofChecker(object):
             raise Redefinition(defn,"redefinition of {}".format(sym))
         if sym in self.stale:
             raise Circular(defn,"symbol {} defined after reference".format(sym))
-        deps = list(lu.symbols_ast(defn.formula.rhs()))
+        deps = list(lu.symbols_ilu_ast(defn.formula.rhs()))
         self.stale.update(deps)
         if sym in deps:
             # Recursive definitions must match a schema
@@ -290,7 +290,7 @@ class ProofChecker(object):
                     elf = lf.clone([lf.label,fmla])
                     lf = compile_expr_vocab(elf,vocab)
                 sym = lf.formula.body.args[0].rep
-                deps = list(lu.symbols_ast(lf.formula.body.args[1]))
+                deps = list(lu.symbols_ilu_ast(lf.formula.body.args[1]))
                 if sym in deps:
                     raise NoMatch(lf,"no proof given for recursive definition")
                 # TODO: allow proofs of recursive definitions
@@ -1484,7 +1484,7 @@ def compile_definition_goal_vocab(df,goal):
         # this normalizes the body but not the quantifier
         lf = lf.clone([lf.label,lf.formula.clone([thing]) if vars else thing])
         sym = thing.args[0].rep
-        deps = list(lu.symbols_ast(thing.args[1]))
+        deps = list(lu.symbols_ilu_ast(thing.args[1]))
         if sym in deps:
             raise NoMatch(lf,"no proof given for recursive definition")
         # TODO: allow proofs of recursive definitions

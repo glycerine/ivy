@@ -1344,13 +1344,14 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     mod.public_actions.update(exported)
     mod.actions.clear()
     mod.actions.update(new_actions)
-    for actname in new_actions:
-        if __debug__: xtracer.trace("isolate.newActions_final actname=%s" % actname)
-    for actname in old_actions:
-        if __debug__: xtracer.trace("isolate.oldActions actname=%s" % actname)
+    if __debug__:
+        for actname in new_actions:
+            xtracer.trace("isolate.newActions_final actname=%s" % actname)
+        for actname in old_actions:
+            xtracer.trace("isolate.oldActions actname=%s" % actname)
     
 
-    # filter the signature
+    # filter the signature (goivy/isolate/isolate.go:1267)
     # keep only the symbols referenced in the remaining
     # formulas
 
@@ -1374,7 +1375,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
         for sym in list(all_syms):
             collect_relevant_destructors(sym,all_syms,set())
 
-    _trace_sym_set("isolate.allSyms2", all_syms)
+    _trace_sym_set("isolate.allSyms2", all_syms) # isolate.go:1330
 
     if filter_symbols.get() or cone_of_influence.get():
         old_syms = list(mod.sig.all_symbols())

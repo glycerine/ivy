@@ -530,7 +530,7 @@ class ModuleTheoryContext(object):
 
 def relevant_definitions(symbols):
     dfn_map = dict((ldf.formula.defines(),ldf.formula.args[1]) for ldf in module.definitions)
-    rch = set(iu.reachable(list(il.normalize_symbol(x) for x in symbols),lambda sym: lu.symbols_ast(dfn_map[sym]) if sym in dfn_map else []))
+    rch = set(iu.reachable(list(il.normalize_symbol(x) for x in symbols),lambda sym: lu.symbols_ilu_ast(dfn_map[sym]) if sym in dfn_map else []))
     return [ldf for ldf in module.definitions if ldf.formula.defines() in rch]
     
 def sort_dependencies(mod,sortname,with_variants=True):

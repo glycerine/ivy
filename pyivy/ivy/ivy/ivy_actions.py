@@ -7,7 +7,7 @@ from .ivy_logic_utils import to_clauses, formula_to_clauses, substitute_constant
     substitute_clause, substitute_ast, used_symbols_clauses, used_symbols_ast, rename_clauses, subst_both_clauses,\
     variables_distinct_ast, is_individual_ast, variables_distinct_list_ast, sym_placeholders, sym_inst, apps_ast,\
     eq_atom, eq_lit, eqs_ast, TseitinContext, formula_to_clauses_tseitin,\
-    used_symbols_asts, symbols_asts, symbols_ast, has_enumerated_sort, false_clauses, true_clauses, or_clauses, dual_formula, Clauses, and_clauses, substitute_constants_ast, rename_ast, bool_const, used_variables_ast, unfold_definitions_clauses, skolemize_formula
+    used_symbols_asts, symbols_asts, symbols_ilu_ast, has_enumerated_sort, false_clauses, true_clauses, or_clauses, dual_formula, Clauses, and_clauses, substitute_constants_ast, rename_ast, bool_const, used_variables_ast, unfold_definitions_clauses, skolemize_formula
 from .ivy_transrel import state_to_action,new, compose_updates, condition_update_on_fmla, hide, join_action, ite_action, \
     subst_action, null_update, exist_quant, hide_state, hide_state_map, constrain_state, bind_olds_action, old
 from .ivy_utils import unzip_append, IvyError, IvyUndefined, distinct_obj_renaming, dbg
@@ -294,7 +294,7 @@ class Action(AST):
                             (kind, len(a.params())))
                     else:
                         xtracer.trace("actions.referencesRec.if_cond kind=plain")
-                for sym in symbols_ast(a):
+                for sym in symbols_ilu_ast(a):
                     if __debug__ and sym not in refs:
                         xtracer.trace("actions.collectSymbols.add %s" % str(sym))
                     refs.add(sym)
@@ -487,13 +487,13 @@ def assign_refs(self,refs):
             refs.add(n.rep)
             recur(n.args[0])
             for a in n.args[1:]:
-                for sym in symbols_ast(a):
+                for sym in symbols_ilu_ast(a):
                     if __debug__ and sym not in refs:
                         xtracer.trace("actions.collectSymbols.add %s" % str(sym))
                     refs.add(sym)
         else:
             for a in n.args:
-                for sym in symbols_ast(a):
+                for sym in symbols_ilu_ast(a):
                     if __debug__ and sym not in refs:
                         xtracer.trace("actions.collectSymbols.add %s" % str(sym))
                     refs.add(sym)
@@ -514,7 +514,7 @@ class AssignAction(Action):
             n = n.args[0]
         return [n.rep]
     def references(self,refs):
-        for sym in symbols_ast(self.args[1]):
+        for sym in symbols_ilu_ast(self.args[1]):
             if __debug__ and sym not in refs:
                 xtracer.trace("actions.collectSymbols.add %s" % str(sym))
             refs.add(sym)

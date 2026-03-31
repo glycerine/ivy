@@ -119,7 +119,7 @@ def compose_tactic_int(prover,goals,proof,tactic_name):
 
     for defn in list(prover.definitions.values()) + prem_defns:
         fml = ilg.drop_universals(defn.formula)
-        for sym in iu.unique(ilu.symbols_ast(fml.args[1])):
+        for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
             defn_deps[sym].append(fml.args[0].rep)
             
     def dependencies(syms):
