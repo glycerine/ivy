@@ -17,11 +17,9 @@ func testConst(name string) *lg.Const {
 }
 
 func testVar(name string) *lg.Variable {
-	v, _ := lg.NewVariable(name, testSort())
-	if v == nil {
-		// Variable names must start uppercase in ivy logic.
-		// If the caller passed lowercase, build directly.
-		return &lg.Variable{Name: name, VSort: testSort()}
+	v, err := lg.NewVariable(name, testSort())
+	if err != nil {
+		panic("testVar: " + err.Error())
 	}
 	return v
 }
@@ -110,7 +108,7 @@ func TestNodeRep_NamedBinder0Vars(t *testing.T) {
 }
 
 func TestNodeRep_NamedBinderWithVars(t *testing.T) {
-	v := testVar("x")
+	v := testVar("X")
 	nb := &lg.NamedBinder{
 		Name:      "nb",
 		Variables: []*lg.Variable{v},
@@ -123,7 +121,7 @@ func TestNodeRep_NamedBinderWithVars(t *testing.T) {
 }
 
 func TestNodeRep_Variable(t *testing.T) {
-	v := testVar("x")
+	v := testVar("X")
 	rep := NodeRep(v)
 	if rep != nil {
 		t.Errorf("NodeRep(Variable) should return nil, got %v", rep)
@@ -182,7 +180,7 @@ func TestSymbolsIluAst_BinderFunc(t *testing.T) {
 	x := testConst("x")
 	a := testConst("a")
 	fOfX := testApply(f, x)
-	v := testVar("v")
+	v := testVar("V")
 	lam := testLambda([]*lg.Variable{v}, fOfX)
 	app := testApply(lam, a)
 
@@ -206,7 +204,7 @@ func TestSymbolsIluAst_ForAllFormula(t *testing.T) {
 	g := testConst("g")
 	a := testConst("a")
 	b := testConst("b")
-	v := testVar("x")
+	v := testVar("X")
 	fOfA := testApply(f, a)
 	gOfB := testApply(g, b)
 	body := &lg.And{Terms: []lg.Expr{fOfA, gOfB}}
@@ -230,8 +228,8 @@ func TestSymbolsIluAst_NestedBinders(t *testing.T) {
 	f := testConst("f")
 	c := testConst("c")
 	a := testConst("a")
-	v := testVar("v")
-	w := testVar("w")
+	v := testVar("V")
+	w := testVar("W")
 	fOfC := testApply(f, c)
 	lam := testLambda([]*lg.Variable{w}, fOfC)
 	app := testApply(lam, a)
@@ -247,7 +245,7 @@ func TestSymbolsIluAst_NestedBinders(t *testing.T) {
 
 func TestSymbolsIluAst_Variable(t *testing.T) {
 	// Variable is not an app and has no args. Should yield nothing.
-	v := testVar("x")
+	v := testVar("X")
 	syms := collectSyms(v)
 	if len(syms) != 0 {
 		t.Errorf("expected 0 symbols from Variable, got %d: %v", len(syms), symNames(syms))
@@ -359,7 +357,7 @@ func TestSymbolsIluAst_ExistsFormula(t *testing.T) {
 	// Exists([v], f(a)) → recurse into body f(a), yield f, a
 	f := testConst("f")
 	a := testConst("a")
-	v := testVar("x")
+	v := testVar("X")
 	ex := testExists([]*lg.Variable{v}, testApply(f, a))
 
 	syms := collectSyms(ex)
@@ -379,7 +377,7 @@ func TestSymbolsIluAst_ApplyWithForAllFunc(t *testing.T) {
 	g := testConst("g")
 	c := testConst("c")
 	a := testConst("a")
-	v := testVar("v")
+	v := testVar("V")
 	gOfC := testApply(g, c)
 	fa := testForAll([]*lg.Variable{v}, gOfC)
 	app := testApply(fa, a)
