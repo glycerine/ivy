@@ -12,7 +12,7 @@ from pathlib import Path
 
 # Get the directory where THIS script is located
 # .parent.parent might be needed depending on how deep your script is
-base_path = Path(__file__).resolve().parent / "pyivy" / "ivy"
+base_path = Path(__file__).resolve() / "pyivy" / "ivy"
 
 sys.path.insert(0, str(base_path))
 
