@@ -33,10 +33,10 @@ golden-nonstop: # to see all productions and not stop at first diff.
 
 
 ord: # xtraced 
-	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 ordo: # not xtraced
-	python3 -O ~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	python3 -O ~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 
 
