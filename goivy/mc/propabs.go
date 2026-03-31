@@ -2,19 +2,20 @@ package mc
 
 import (
 	"fmt"
-	"sync/atomic"
+	//"sync/atomic"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
+// unused globals, comment out; add on a Config if needed.
 // Global counter for propositional abstraction.
-var propAbsCtr int64
-
+//var propAbsCtr int64
+//
 // NextPropAbsCtr returns the next unique propositional abstraction counter value.
-func NextPropAbsCtr() int64 {
-	return atomic.AddInt64(&propAbsCtr, 1) - 1
-}
+//func NextPropAbsCtr() int64 {
+//	return atomic.AddInt64(&propAbsCtr, 1) - 1
+//}
 
 // PropAbs holds the state for propositional abstraction of non-finite atoms.
 // Non-propositional atoms (quantifiers, non-finite-sort applications) are
