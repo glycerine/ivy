@@ -251,6 +251,12 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 
 # notes on installing python original Ivy
 
+Some of the commented out steps (#) may 
+be needed for a completely fresh install
+when z3 is not built yet. The z3 build
+takes 10 minutes, so we comment out
+to avoid that unnecessary delay.
+
 ~~~
 sudo apt install python3-tk
 cd goivy/pyivy
@@ -263,13 +269,11 @@ pip3 install 'setuptools<70.0.0' ## depends on older version
 #pip3 install pyyaml # needed at one point.
 #pip3 install blake3
 
-#git clone git@github.com/glycerine/ivy
-
 cd ivy
 
+# builds z3. very, very slow (10 minutes):
 #git submodule update --init --recursive
-
-python3 build_submodules.py
+#python3 build_submodules.py
 
 # uninstall any prior version
 pip3 uninstall ms_ivy 
