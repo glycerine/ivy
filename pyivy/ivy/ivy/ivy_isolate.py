@@ -1368,7 +1368,12 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
         asts.extend(tmp.args[2:])
     # in case a symbol is used only in a proof
     asts.extend(x[1] for x in mod.proofs)
-    
+   
+    # jea note: "This is the set of all unique symbols referenced 
+    # anywhere in any of the ASTs in the list. This is a full 
+    # recursive traversal, not a filter. (dedupped though)"
+    # symbols_ilu_ast recursively walks each AST node and 
+    # yields ast.rep for every non-binder app node it finds.
     all_syms = set(lu.used_symbols_asts(asts))
 
     if opt_keep_destructors.get():

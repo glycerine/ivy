@@ -1264,7 +1264,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
-	// Filter the signature: ivy_isolate.py:1353
+	// Filter the signature: ivy_isolate.py:1354
 	// keep only the symbols referenced in the remaining
 	// formulas
 
