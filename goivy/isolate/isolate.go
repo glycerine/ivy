@@ -254,9 +254,9 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 }
 
 // IsolateComponent extracts a verified/present/opaque component.
-// This is the main entry point for isolation.
+// This is the main entry point for isolates.
 //
-// Faithfully ports Python's isolate_component (lines 887-1389).
+// Faithfully ports Python's isolate_component (ivy_isolate.py:919-1484).
 // It classifies each component as verified/present/opaque, applies
 // mixins with appropriate assert_to_assume conversions, summarizes
 // opaque actions, builds the exported action set, filters conjectures/
@@ -922,7 +922,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
 				}
-				collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms)
+				collectUsedSymbolNames("lf.Formula", lf.Formula.(lg.Expr), allSyms)
 			}
 		}
 	}
@@ -946,7 +946,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
-				collectUsedSymbolNames(expr, allSyms)
+				collectUsedSymbolNames("mod.Natives", expr, allSyms)
 			}
 		}
 	}
@@ -983,25 +983,25 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Python: for x in mod.proofs: x[1].vocab(all_names)
 	allNames := ast.NewVocabNames()
 	if xtracer.Enabled {
-		xtracer.Trace1("isolate.proofs n=%d", len(mod.Proofs))
+		xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
 	}
 	for i, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			before := allNames.Len()
 			if xtracer.Enabled {
-				xtracer.Trace1("isolate.proof type=%s", typeName(pe.Proof))
+				xtracer.Trace("isolate.proof type=%s", typeName(pe.Proof))
 			}
 			ast.VocabNode(pe.Proof, allNames)
 			if xtracer.Enabled {
-				xtracer.Trace1("isolate.proof[%d].vocab delta=%d total=%d", i, allNames.Len()-before, allNames.Len())
+				xtracer.Trace("isolate.proof[%d].vocab delta=%d total=%d", i, allNames.Len()-before, allNames.Len())
 			}
 		}
 	}
 	if xtracer.Enabled {
-		xtracer.Trace1("isolate.allNames_from_proofs n=%d", allNames.Len())
+		xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
 		// Omap.All() iterates in sorted order
 		for name, _ := range allNames.All() {
-			xtracer.Trace1("isolate.allNames_from_proofs.name %s", name)
+			xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
 		}
 	}
 
@@ -1090,7 +1090,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				continue
 			}
 			symsInAxiom := make(map[lg.NodeKey]lg.Expr)
-			collectUsedSymbolNames(a.Formula.(lg.Expr), symsInAxiom)
+			collectUsedSymbolNames("droppedAxioms.Formula", a.Formula.(lg.Expr), symsInAxiom)
 			for key, expr := range symsInAxiom {
 				if _, inAllSyms := allSyms[key]; inAllSyms {
 					symName := ""
@@ -1273,7 +1273,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
 				}
-				collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms2)
+				collectUsedSymbolNames("lf.Formula", lf.Formula.(lg.Expr), allSyms2)
 			}
 		}
 	}
@@ -1284,7 +1284,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, r := range act.GetFormalReturns() {
 			allSyms2[actions.ConstSymKey(r)] = r
 		}
-		collectUsedSymbolNames(act, allSyms2)
+		collectUsedSymbolNames("mod.Actions", act, allSyms2)
 	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
@@ -1295,14 +1295,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
-				collectUsedSymbolNames(expr, allSyms2)
+				collectUsedSymbolNames("mod.Natives", expr, allSyms2)
 			}
 		}
 	}
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			if n, ok := pe.Proof.(lg.Expr); ok {
-				collectUsedSymbolNames(n, allSyms2)
+				collectUsedSymbolNames("mod.Proofs", n, allSyms2)
 			}
 		}
 	}
@@ -1351,7 +1351,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 					// Check if any symbol of the property is in our signature
 					if pd.Prop.Formula != nil {
 						propSyms := make(map[lg.NodeKey]lg.Expr)
-						collectUsedSymbolNames(pd.Prop.Formula.(lg.Expr), propSyms)
+						collectUsedSymbolNames("pd.Prop.Formula", pd.Prop.Formula.(lg.Expr), propSyms)
 						for key := range propSyms {
 							if _, ok := allSyms2[key]; ok {
 								lbl := ""
@@ -1511,7 +1511,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.InitCond = formulaToClauses(initAnd)
 
 	return nil
-}
+
+} // end IsolateComponent()
 
 // nodeToExpr safely converts an ast.Node to lg.Expr, returning nil if the node is nil.
 // Handles both compiled expressions (lg.Expr) and uncompiled AST nodes (*ast.Atom).
@@ -1575,7 +1576,7 @@ func addSortDeps(s lg.Sort, allSorts map[string]bool, addDeps func(string)) {
 			addDeps(name)
 		}
 	}
-}
+} // end addSortDeps
 
 // afterMixinsFunc is a named version of afterMixins for use as a parameter.
 var afterMixinsFunc = func(m interface{}) map[string]bool {

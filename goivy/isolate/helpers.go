@@ -380,7 +380,7 @@ func definedSymbolName(node lg.Expr) string {
 
 func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectUsedSymbolNames(node, syms)
+	collectUsedSymbolNames("usedSymbolExprs", node, syms)
 	return syms
 }
 
@@ -401,7 +401,7 @@ func usedSymbolNames(node lg.Expr) []string {
 	return result
 }
 
-func collectUsedSymbolNames(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
+func collectUsedSymbolNames(label string, node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 	if node == nil {
 		return
 	}
@@ -409,10 +409,10 @@ func collectUsedSymbolNames(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 		syms[actions.ConstSymKey(c)] = c
 	}
 	if app, ok := node.(*lg.Apply); ok {
-		collectUsedSymbolNames(app.Func, syms)
+		collectUsedSymbolNames(label, app.Func, syms)
 	}
 	for _, child := range node.Children() {
-		collectUsedSymbolNames(child, syms)
+		collectUsedSymbolNames(label, child, syms)
 	}
 }
 
@@ -1119,7 +1119,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 func collectActionSymNames(act actions.Action) map[string]bool {
 	exprs := make(map[lg.NodeKey]lg.Expr)
 	for _, arg := range act.ActionArgs() {
-		collectUsedSymbolNames(arg, exprs)
+		collectUsedSymbolNames("collectActionSymNames", arg, exprs)
 	}
 	// Also recurse into sub-actions
 	for _, sub := range act.IterSubactions() {
@@ -1127,7 +1127,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 			continue // skip self to avoid infinite loop
 		}
 		for _, arg := range sub.ActionArgs() {
-			collectUsedSymbolNames(arg, exprs)
+			collectUsedSymbolNames("act.IterSubactions", arg, exprs)
 		}
 	}
 	names := make(map[string]bool, len(exprs))
