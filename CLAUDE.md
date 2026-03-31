@@ -1,17 +1,16 @@
 This project is goivy. goivy is meant to be a MECHANICAL PORT of 
-the Ivy python project into Go. We are not porting the ivygo/cppgen/ any longer; 
-that old stub was deleted.
+the Ivy python project into Go. We are not porting the ivygo/cppgen/ any longer; that old stub was deleted.
 
 A. Source of truth: the python version 
 
 The python version of Ivy is the source of truth, and
 all new features and bug fixes should conform to its example. It is:
-/Users/jaten/pyivy/ivy
+/Users/jaten/goivy/pyivy/ivy
 
 The Go must follow the Python for all execution flow.
 
 The goivy Go port, which should conform to the original Python Ivy logic:
-/Users/jaten/go/src/github.com/glycerine/goivy
+/Users/jaten/goivy
 
 B. MECHANICAL PORT RULES:
 
