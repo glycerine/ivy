@@ -2396,6 +2396,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-152573  go : XTRACE: isolate.allNames_from_proofs n=295
-        py : XTRACE: isolate.allNames_from_proofs n=329        
+155164  go : XTRACE: isolate.allSyms2.sym dramc.t_min
+        py : XTRACE: isolate.allSyms2.sym dramc.wr_fair
 ~~~
