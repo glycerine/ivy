@@ -25,7 +25,7 @@ import (
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
 func examplesDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "ivy-lang-examples")
+	return filepath.Join(filepath.Dir(file), "..", "..", "ivy-lang-examples")
 }
 
 // pythonTestHelperDir returns the path to the Python helper scripts.
@@ -394,8 +394,8 @@ func normalizeLine(line string) string {
 	// Strip known path prefixes for include files
 	home := os.Getenv("HOME")
 	for _, prefix := range []string{
-		home + "/goivy/ivy-lang-examples/ivy/include/",
-		home + "/pyivy/ivy/ivy/include/",
+		home + "/ivy/ivy-lang-examples/ivy/include/",
+		home + "/ivy/pyivy/ivy/ivy/include/",
 		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
@@ -403,7 +403,7 @@ func normalizeLine(line string) string {
 		}
 	}
 	for _, prefix := range []string{
-		home + "/goivy/ivy-lang-examples/",
+		home + "/ivy/ivy-lang-examples/",
 		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
 	} {
 		if strings.Contains(line, prefix) {
@@ -411,7 +411,7 @@ func normalizeLine(line string) string {
 		}
 	}
 	for _, prefix := range []string{
-		home + "/pyivy/ivy/ivy/include/",
+		home + "/ivy/pyivy/ivy/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
@@ -448,7 +448,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 	home := os.Getenv("HOME")
-	path := home + "/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	path := home + "/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	if _, err := os.Stat(path); err != nil {
 		t.Skipf("target path not found at %s", path)
 	}
