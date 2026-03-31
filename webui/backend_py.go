@@ -48,8 +48,10 @@ func pyIvyPython() string {
 		return py
 	}
 	home, err := os.UserHomeDir()
+	_ = home
 	if err == nil {
-		venvPy := filepath.Join(home, "pyivy", "venv", "bin", "python3")
+		//venvPy := filepath.Join(home, "pyivy", "venv", "bin", "python3")
+		venvPy := filepath.Join("..", "pyivy", "goivy-venv", "bin", "python3")
 		if _, err := os.Stat(venvPy); err == nil {
 			return venvPy
 		}
