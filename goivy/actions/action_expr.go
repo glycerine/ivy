@@ -453,7 +453,23 @@ func (a *CallAction) Clone(args []ast.Node) ast.Node {
 	r.AstCallee = newAstCallee
 	return r
 }
-func (a *CallAction) Children() []lg.Expr          { return a.ActionArgs() }
+func (a *CallAction) Children() []lg.Expr {
+	// Python's CallAction.args[0] is an ivy_ast.Atom (AST level).
+	// is_app(Atom) returns False (Atom is not lg.Apply), so symbols_ilu_ast
+	// does NOT yield the callee name — it only iterates atom.args (the actual
+	// call parameters). Match this by returning [parameters..., returns...],
+	// not [Callee, returns...].
+	var result []lg.Expr
+	if a.AstCallee != nil {
+		for _, t := range a.AstCallee.Terms {
+			if e, ok := t.(lg.Expr); ok {
+				result = append(result, e)
+			}
+		}
+	}
+	result = append(result, a.ActualReturns...)
+	return result
+}
 func (a *CallAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *CallAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *CallAction) GetAstConfig() *ast.AstConfig { return nil }
