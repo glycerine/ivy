@@ -805,6 +805,23 @@ func sortToName(s lg.Sort) string {
 	}
 }
 
+// collectRelevantDestructorsForSym mirrors Python collect_relevant_destructors.
+// It extracts the range sort from the symbol's sort and collects destructors for it.
+func collectRelevantDestructorsForSym(mod *module.Module, sym lg.Expr, result map[string]bool, memo map[string]bool) {
+	c, ok := sym.(*lg.Const)
+	if !ok || c.CSort == nil {
+		return
+	}
+	fs, ok := c.CSort.(*lg.FunctionSort)
+	if !ok {
+		return // sym.sort has no .rng — matches Python's hasattr(sym.sort, 'rng') check
+	}
+	rng := fs.Range()
+	if us, ok := rng.(*lg.UninterpretedSort); ok {
+		CollectSortDestructors(mod, us.Name, result, memo)
+	}
+}
+
 // CollectSortDestructors collects all destructor symbols for a sort
 // and its variants, recursively.
 func CollectSortDestructors(mod *module.Module, sortName string, result map[string]bool, memo map[string]bool) {

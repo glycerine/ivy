@@ -1044,8 +1044,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isoCfg.KeepDestructors {
 		namesBefore := allSymsNameSet(allSyms)
 		namesAfter := copyStringSet(namesBefore)
-		for name := range namesBefore {
-			CollectSortDestructors(mod, name, namesAfter, make(map[string]bool))
+		for _, sym := range allSyms {
+			collectRelevantDestructorsForSym(mod, sym, namesAfter, make(map[string]bool))
 		}
 		// Add newly discovered destructor names to allSyms
 		for name := range namesAfter {
@@ -1314,8 +1314,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isoCfg.KeepDestructors {
 		namesBefore2 := allSymsNameSet(allSyms2)
 		namesAfter2 := copyStringSet(namesBefore2)
-		for name := range namesBefore2 {
-			CollectSortDestructors(mod, name, namesAfter2, make(map[string]bool))
+		for _, sym := range allSyms2 {
+			collectRelevantDestructorsForSym(mod, sym, namesAfter2, make(map[string]bool))
 		}
 		for name := range namesAfter2 {
 			if !namesBefore2[name] {
