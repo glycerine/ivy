@@ -253,18 +253,21 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 
 ~~~
 sudo apt install python3-tk
-mkdir ~/pyivy
-python3 -m venv venv
-source venv/bin/activate
-pip3 install 'setuptools<70.0.0' ## depends on older version
-pip3 install pyyaml # needed at one point.
-pip3 install blake3
+cd goivy/pyivy
+python3 -m venv goivy-venv
+source goivy-venv/bin/activate
+pip install -r requirements.txt
 
-git clone git@github.com/glycerine/ivy
+#pip3 install 'setuptools<70.0.0' ## depends on older version
+#pip3 install pyyaml # needed at one point.
+#pip3 install blake3
+
+#git clone git@github.com/glycerine/ivy
+
 cd ivy
-git submodule update --init --recursive
 
-python3 build_submodules.py
+#git submodule update --init --recursive
+#python3 build_submodules.py
 
 # uninstall any prior version
 pip3 uninstall ms_ivy 

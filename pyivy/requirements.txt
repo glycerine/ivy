@@ -1,6 +1,5 @@
 applescript==2021.2.9
 blake3==1.0.8
--e git+ssh://git@github.com/glycerine/goivy@87561d6cdb6d99ea0d891c9451633167a0d7ac54#egg=ms_ivy&subdirectory=pyivy/ivy
 ply==3.11
 pydot==4.0.1
 pyparsing==3.3.2
