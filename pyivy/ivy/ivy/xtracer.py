@@ -22,10 +22,11 @@ _hash_verbose = True
 
 enabled = os.environ.get('XTRACE_OFF') != '1'
 
-def trace(msg):
+def trace(msg, *args):
     """Print an XTRACE line to stdout, flushed immediately."""
     if enabled:
-        print("XTRACE: " + msg, file=sys.stdout, flush=True)
+        if args: # turn off everything except vocab calls for a moment
+            print("XTRACE: " + msg, file=sys.stdout, flush=True)
 
 
 def normalize_filename(f):

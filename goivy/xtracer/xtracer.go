@@ -40,9 +40,20 @@ func init() {
 	}
 }
 
+func Trace1(format string, args ...interface{}) {
+	trace(format, args...)
+}
+
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func Trace(format string, args ...interface{}) {
+	return
+	trace(format, args...)
+}
+
+// Trace prints an execution trace line to stdout.
+// Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
+func trace(format string, args ...interface{}) {
 	if suppressed {
 		return
 	}

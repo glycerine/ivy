@@ -297,7 +297,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if !isoCfg.InterpretAllSorts && mod.Sig != nil {
 		for typeName := range mod.Sig.Interp {
 			_, inHier := mod.Hierarchy[typeName]
-		cond1 := present[typeName] && !inHier
+			cond1 := present[typeName] && !inHier
 			cond2 := false
 			if itps, ok := mod.Interps[typeName]; ok {
 				for _, itp := range itps {
@@ -658,11 +658,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if callee != nil {
 					preconds := exportPreconds[extC]
 					// Extract call arguments from callee Apply node
-				var callArgs []lg.Expr
-				if app, ok := ca.Callee.(*lg.Apply); ok {
-					callArgs = app.Terms
-				}
-				AddExternPrecond(mod, callee, callArgs, &preconds)
+					var callArgs []lg.Expr
+					if app, ok := ca.Callee.(*lg.Apply); ok {
+						callArgs = app.Terms
+					}
+					AddExternPrecond(mod, callee, callArgs, &preconds)
 					exportPreconds[extC] = preconds
 				}
 			}
@@ -983,25 +983,25 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Python: for x in mod.proofs: x[1].vocab(all_names)
 	allNames := ast.NewVocabNames()
 	if xtracer.Enabled {
-		xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
+		xtracer.Trace1("isolate.proofs n=%d", len(mod.Proofs))
 	}
 	for i, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			before := allNames.Len()
 			if xtracer.Enabled {
-				xtracer.Trace("isolate.proof type=%s", typeName(pe.Proof))
+				xtracer.Trace1("isolate.proof type=%s", typeName(pe.Proof))
 			}
 			ast.VocabNode(pe.Proof, allNames)
 			if xtracer.Enabled {
-				xtracer.Trace("isolate.proof[%d].vocab delta=%d total=%d", i, allNames.Len()-before, allNames.Len())
+				xtracer.Trace1("isolate.proof[%d].vocab delta=%d total=%d", i, allNames.Len()-before, allNames.Len())
 			}
 		}
 	}
 	if xtracer.Enabled {
-		xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
+		xtracer.Trace1("isolate.allNames_from_proofs n=%d", allNames.Len())
 		// Omap.All() iterates in sorted order
 		for name, _ := range allNames.All() {
-			xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
+			xtracer.Trace1("isolate.allNames_from_proofs.name %s", name)
 		}
 	}
 
@@ -1098,8 +1098,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 						symName = c.Name
 					}
 					if !determined[symName] {
-					// Python also checks: not ivy_logic.is_interpreted_symbol(x)
-					// We skip that for now since we only have symbol names, not objects.
+						// Python also checks: not ivy_logic.is_interpreted_symbol(x)
+						// We skip that for now since we only have symbol names, not objects.
 						lbl := ""
 						if a.Label != nil {
 							lbl = fmt.Sprint(a.Label)
