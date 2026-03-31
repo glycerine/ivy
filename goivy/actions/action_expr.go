@@ -466,6 +466,8 @@ func (a *CallAction) Children() []lg.Expr {
 				result = append(result, e)
 			}
 		}
+	} else {
+		panic("CallAction.AstCallee should always be set.")
 	}
 	result = append(result, a.ActualReturns...)
 	return result
