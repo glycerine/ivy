@@ -6,3 +6,5 @@ testdata
 goivy_check
 out.go.xtrace
 out.py.xtrace
+log.red
+log.red.prev
