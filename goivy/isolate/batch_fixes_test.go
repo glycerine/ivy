@@ -653,7 +653,9 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 	act2 := actions.NewSequence()
 	m.Actions.Set("ext:a", act1)
 	m.Actions.Set("ext:b", act2)
-	m.PublicActions = map[string]bool{"ext:a": true, "ext:b": true}
+	m.PublicActions = iu.NewInsMap[string, bool]()
+	m.PublicActions.Set("ext:a", true)
+	m.PublicActions.Set("ext:b", true)
 
 	m.Cfg.ExtAction = "ext"
 	defer func() { m.Cfg.ExtAction = "" }()
@@ -662,7 +664,7 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 	// (We test it in isolation since CreateIsolate is complex)
 	afterInitNames := map[string]bool{}
 	var sortedPublic []string
-	for name := range m.PublicActions {
+	for name := range m.PublicActions.All() {
 		sortedPublic = append(sortedPublic, name)
 	}
 

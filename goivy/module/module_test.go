@@ -95,7 +95,8 @@ func TestCopy(t *testing.T) {
 func TestAddToHierarchy(t *testing.T) {
 	m := New()
 	m.AddToHierarchy("protocol")
-	if m.Hierarchy["this"] == nil || !m.Hierarchy["this"]["protocol"] {
+	thisMap, ok := m.Hierarchy.Get2("this")
+	if !ok || !thisMap.Get("protocol") {
 		t.Error("protocol should be under 'this'")
 	}
 }
@@ -103,10 +104,12 @@ func TestAddToHierarchy(t *testing.T) {
 func TestAddToHierarchyDotted(t *testing.T) {
 	m := New()
 	m.AddToHierarchy("net.protocol")
-	if m.Hierarchy["this"] == nil || !m.Hierarchy["this"]["net"] {
+	thisMap2, ok2 := m.Hierarchy.Get2("this")
+	if !ok2 || !thisMap2.Get("net") {
 		t.Error("net should be under 'this'")
 	}
-	if m.Hierarchy["net"] == nil || !m.Hierarchy["net"]["protocol"] {
+	netMap, ok3 := m.Hierarchy.Get2("net")
+	if !ok3 || !netMap.Get("protocol") {
 		t.Error("protocol should be under 'net'")
 	}
 }
@@ -114,7 +117,7 @@ func TestAddToHierarchyDotted(t *testing.T) {
 func TestAddObject(t *testing.T) {
 	m := New()
 	m.AddObject("myobj")
-	if m.Hierarchy["myobj"] == nil {
+	if _, ok := m.Hierarchy.Get2("myobj"); !ok {
 		t.Error("AddObject should create hierarchy entry")
 	}
 }

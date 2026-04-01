@@ -199,7 +199,7 @@ func TestNormalProgramFromModule_WithActions(t *testing.T) {
 	mod := module.New()
 	act := actions.NewSequence()
 	mod.Actions.Set("ext:myact", act)
-	mod.PublicActions["ext:myact"] = true
+	mod.PublicActions.Set("ext:myact", true)
 	np := NormalProgramFromModule(mod)
 	if len(np.Bindings) != 1 {
 		t.Errorf("expected 1 binding, got %d", len(np.Bindings))

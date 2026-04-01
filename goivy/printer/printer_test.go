@@ -105,7 +105,7 @@ func TestFormatModule_WithActions(t *testing.T) {
 
 func TestFormatModule_WithExports(t *testing.T) {
 	mod := module.New()
-	mod.PublicActions["ext:foo"] = true
+	mod.PublicActions.Set("ext:foo", true)
 	result := FormatModule(mod)
 	if !strings.Contains(result, "export ext:foo") {
 		t.Errorf("expected 'export ext:foo' in output, got %q", result)

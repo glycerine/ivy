@@ -25,11 +25,11 @@ func newTestModule() *module.Module {
 
 	// Add a boolean relation: link(int, int) -> bool
 	linkSort, _ := lg.NewFunctionSort(lg.Boolean, lg.Boolean, lg.Boolean)
-	mod.Relations["link"] = linkSort
+	mod.Relations.Set("link", linkSort)
 
 	// Add a function: data -> color (using bool as domain placeholder)
 	dataSort, _ := lg.NewFunctionSort(lg.Boolean, colorSort)
-	mod.Functions["data"] = dataSort
+	mod.Functions.Set("data", dataSort)
 
 	return mod
 }

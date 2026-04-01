@@ -346,8 +346,8 @@ func TestGetCheckedActionsEmpty(t *testing.T) {
 
 func TestGetCheckedActionsAll(t *testing.T) {
 	mod := module.New()
-	mod.PublicActions["ext:send"] = true
-	mod.PublicActions["ext:recv"] = true
+	mod.PublicActions.Set("ext:send", true)
+	mod.PublicActions.Set("ext:recv", true)
 	result := GetCheckedActions(mod)
 	if len(result) != 2 {
 		t.Errorf("expected 2 actions, got %d", len(result))

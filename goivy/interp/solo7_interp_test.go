@@ -115,8 +115,8 @@ func TestModuleTypeCheckConcepts_Valid(t *testing.T) {
 	}
 
 	// Verify relations were restored (not modified)
-	if len(mod.Relations) != 0 {
-		t.Errorf("expected original relations to be restored, got %d entries", len(mod.Relations))
+	if mod.Relations.Len() != 0 {
+		t.Errorf("expected original relations to be restored, got %d entries", mod.Relations.Len())
 	}
 }
 
@@ -148,8 +148,8 @@ func TestModuleTypeCheckConcepts_ArityError(t *testing.T) {
 	}
 
 	// Verify relations were restored even on error
-	if len(mod.Relations) != 0 {
-		t.Errorf("expected original relations to be restored after error, got %d entries", len(mod.Relations))
+	if mod.Relations.Len() != 0 {
+		t.Errorf("expected original relations to be restored after error, got %d entries", mod.Relations.Len())
 	}
 }
 
@@ -176,7 +176,7 @@ func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
 
 	// Set up an existing relation in mod.Relations
 	existingSort, _ := lg.NewFunctionSort(sortA, lg.Boolean)
-	mod.Relations["existing"] = existingSort
+	mod.Relations.Set("existing", existingSort)
 
 	// Add a concept space with a new relation "c"
 	cSort, _ := lg.NewFunctionSort(sortA, lg.Boolean)
@@ -193,13 +193,13 @@ func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
 	}
 
 	// Verify that mod.Relations still has exactly the original entry
-	if len(mod.Relations) != 1 {
-		t.Errorf("expected 1 relation (original), got %d", len(mod.Relations))
+	if mod.Relations.Len() != 1 {
+		t.Errorf("expected 1 relation (original), got %d", mod.Relations.Len())
 	}
-	if mod.Relations["existing"] == nil {
+	if mod.Relations.Get("existing") == nil {
 		t.Error("original relation 'existing' was lost")
 	}
-	if mod.Relations["c"] != nil {
+	if mod.Relations.Get("c") != nil {
 		t.Error("temporary relation 'c' leaked into mod.Relations")
 	}
 }

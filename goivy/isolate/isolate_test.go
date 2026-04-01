@@ -251,8 +251,14 @@ func TestPresentable(t *testing.T) {
 
 func TestClassifyComponents(t *testing.T) {
 	m := mkModule()
-	m.Hierarchy["this"] = map[string]bool{"a": true, "b": true, "c": true}
-	m.Hierarchy["a"] = map[string]bool{"x": true}
+	thisChildren := iu.NewInsMap[string, bool]()
+	thisChildren.Set("a", true)
+	thisChildren.Set("b", true)
+	thisChildren.Set("c", true)
+	m.Hierarchy.Set("this", thisChildren)
+	aChildren := iu.NewInsMap[string, bool]()
+	aChildren.Set("x", true)
+	m.Hierarchy.Set("a", aChildren)
 
 	verified := map[string]bool{"a": true}
 	present := map[string]bool{"a": true, "b": true}

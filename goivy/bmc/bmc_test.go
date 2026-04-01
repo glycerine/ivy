@@ -33,7 +33,7 @@ func testModuleWithAction() *module.Module {
 	mod := testModuleWithConj()
 	act := actions.NewAssumeAction(lg.True)
 	mod.Actions.Set("test_action", act)
-	mod.PublicActions["test_action"] = true
+	mod.PublicActions.Set("test_action", true)
 	return mod
 }
 
