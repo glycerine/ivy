@@ -584,7 +584,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Build exported action set ---
 
-	exported := make(map[string]bool)
+	exported := iu.NewInsMap[string, bool]()
 	exportPreconds := make(map[string][]lg.Expr)
 
 	makeBeforeExport := func(actname string) {
@@ -627,11 +627,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Explicit exports
 	for _, exp := range mod.Exports {
 		if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, implementationMap) {
-			exported["ext:"+exp.Exported()] = true
+			exported.Set("ext:"+exp.Exported(), true)
 			makeBeforeExport(exp.Exported())
 		}
 	}
-	explicitExports := copyStringSet(exported)
+	explicitExports := make(map[string]bool, exported.Len())
+	for k, v := range exported.All() {
+		explicitExports[k] = v
+	}
 
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
@@ -676,14 +679,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 					exportPreconds[extC] = preconds
 				}
 			}
-			if exported[extC] || withEffects[c] {
+			if exported.Get(extC) || withEffects[c] {
 				continue
 			}
 			if !HasSideEffectFull(mod, newActions, c) {
 				withEffects[c] = true
 				continue
 			}
-			exported[extC] = true
+			exported.Set(extC, true)
 			makeBeforeExport(c)
 		}
 	}
@@ -893,8 +896,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				xtracer.Trace("isolate.afterInits_delete actname=%s extname=%s", actname, extname)
 				newActions.Delkey(actname)
 				newActions.Delkey(extname)
-				delete(exported, actname)
-				delete(exported, extname)
+				exported.Delkey(actname)
+				exported.Delkey(extname)
 			}
 		}
 	}
@@ -911,8 +914,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		xtracer.Trace("isolate.pre_cone actname=%s", name)
 	}
 	// Trace exported roots (sorted for deterministic trace output)
-	sortedExported := make([]string, 0, len(exported))
-	for name := range exported {
+	sortedExported := make([]string, 0, exported.Len())
+	for name := range exported.All() {
 		sortedExported = append(sortedExported, name)
 	}
 	sort.Strings(sortedExported)
@@ -1315,12 +1318,16 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Put new actions in place ---
 	oldActions := mod.Actions
-	{
-		sortedExp := sortedKeys(exported)
-		xtracer.Trace("isolate.exported=%s", strings.Join(sortedExp, ","))
+	if xtracer.Enabled {
+		expKeys := make([]string, 0, exported.Len())
+		for k := range exported.All() {
+			expKeys = append(expKeys, k)
+		}
+		sort.Strings(expKeys)
+		xtracer.Trace("isolate.exported=%s", strings.Join(expKeys, ","))
 	}
 	mod.PublicActions = iu.NewInsMap[string, bool]()
-	for k, v := range exported {
+	for k, v := range exported.All() {
 		mod.PublicActions.Set(k, v)
 	}
 	mod.Actions = iu.NewInsMap[string, module.Action]()

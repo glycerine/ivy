@@ -1079,7 +1079,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
             
 
     # figure out what is exported:
-    exported = set()
+    exported = {}
     export_preconds = defaultdict(list)
 #    save_implementation_map = implementation_map
 #    implementation_map = {}
@@ -1103,7 +1103,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
 
     for e in mod.exports:
         if not e.scope() and startswith_eq_some(e.exported(),present,mod): # global scope
-            exported.add('ext:' + e.exported())
+            exported['ext:' + e.exported()] = True
             make_before_export(e.exported())
             
     explicit_exports = set(exported)
@@ -1123,7 +1123,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
                             if not has_side_effect(mod,new_actions,c):
                                 with_effects.add(c)
                                 continue
-                            exported.add('ext:' + c)
+                            exported['ext:' + c] = True
                             make_before_export(c)
 
     for actname in export_preconds:
@@ -1392,7 +1392,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     old_actions.update(mod.actions)
     if __debug__: xtracer.trace("isolate.exported=%s" % ','.join(sorted(exported)))
     mod.public_actions.clear()
-    mod.public_actions.update({x: True for x in exported})
+    mod.public_actions.update(exported)
     mod.actions.clear()
     mod.actions.update(new_actions)
     if __debug__:

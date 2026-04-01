@@ -766,12 +766,12 @@ func getCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, c
 // Actions referenced by natives and initializers are also included.
 // Matches Python get_mod_cone (ivy_isolate.py:1482-1494).
 func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action],
-	roots map[string]bool, afterInits []string) map[string]bool {
+	roots *iu.InsMap[string, bool], afterInits []string) map[string]bool {
 
 	cone := make(map[string]bool)
 
 	// Start with roots — Python: for a in roots: get_cone(actions, a, cone)
-	for name := range roots {
+	for name := range roots.All() {
 		getCone(actionsMap, name, cone)
 	}
 
