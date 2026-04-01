@@ -1295,32 +1295,45 @@ func ActionTypeName(a interface{}) string {
 // update axioms on top of the atomic action_update.
 // Corresponds to Python Action.int_update().
 func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
-	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
-	// Dispatch to type-specific int_update methods
+	// Dispatch to type-specific int_update methods.
+	// Types with their own IntUpdate method have their own traces.
+	// Types using intUpdateFromActionUpdate use the base Action.int_update
+	// trace (matching Python's Action.int_update which traces
+	// "actions.IntUpdate ENTER type=%s").
 	switch a := action.(type) {
 	case *AssumeAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *AssertAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *RequiresAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *EnsuresAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *AssignAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *HavocAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *SetAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *NativeAction:
 		return a.IntUpdate(ctx)
 	case *DebugAction:
 		return a.IntUpdate(ctx)
 	case *AssignFieldAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *NullFieldAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *CopyFieldAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *Sequence:
 		return a.IntUpdate(ctx)
@@ -1341,9 +1354,11 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 	case *BindOldsAction:
 		return a.IntUpdate(ctx)
 	case *CrashAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	default:
 		// Generic fallback: null update
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return transrel.NullUpdate()
 	}
 }
