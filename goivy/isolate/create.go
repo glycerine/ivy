@@ -18,6 +18,23 @@ import (
 )
 
 
+// pyBool returns "True" or "False" matching Python's bool formatting.
+func pyBool(b bool) string {
+	if b {
+		return "True"
+	}
+	return "False"
+}
+
+// fmtStrList formats a string slice like Python's str(list): "['a', 'b']".
+func fmtStrList(ss []string) string {
+	parts := make([]string, len(ss))
+	for i, s := range ss {
+		parts[i] = "'" + s + "'"
+	}
+	return "[" + strings.Join(parts, ", ") + "]"
+}
+
 // exportStub implements the exporter interface for after-init mixins
 // that need to be treated as exports.
 type exportStub struct {
@@ -54,6 +71,15 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	// Apply present conjectures (version >= 1.7)
+	// Python calls this FIRST, before initializer exports, mixin/delegate/export checks.
+	var brackets []BracketEntry
+	if iso != "" {
+		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+			brackets = ApplyPresentConjectures(isoDef, mod)
+		}
+	}
+
 	// Treat initializers as exports
 	afterInits := mod.Mixins.Get("init")
 	mod.Mixins.Delkey("init")
@@ -83,7 +109,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	origExports := make(map[string]bool)
 	for _, e := range mod.Exports {
 		expname := e.Exported()
-		xtracer.Trace("check.CreateIsolate.export check name=%s found=%v", expname, mod.Actions.Get(expname) != nil)
+		xtracer.Trace("check.CreateIsolate.export check name=%s found=%s", expname, pyBool(mod.Actions.Get(expname) != nil))
 		if _, ok := mod.Actions.Get2(expname); !ok {
 			// Dump all action keys for debugging
 			for k := range mod.Actions.All() {
@@ -98,14 +124,6 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	if iso != "" {
 		if err := CheckWithParameters(mod, iso); err != nil {
 			return err
-		}
-	}
-
-	// Apply present conjectures (version >= 1.7)
-	var brackets []BracketEntry
-	if iso != "" {
-		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
-			brackets = ApplyPresentConjectures(isoDef, mod)
 		}
 	}
 
@@ -713,8 +731,10 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	}
 
 	// Get present conjectures (verified=false, present=true)
+	xtracer.Trace("check.ApplyPresentConjectures raw_labeled_conjs=%d", len(mod.LabeledConjs))
 	conjs := GetIsolateConjs(mod, isol, false, true)
 	mod.AssumedInvs = conjs
+	xtracer.Trace("check.ApplyPresentConjectures after_GetIsolateConjs n_conjs=%d", len(conjs))
 
 	// Filter out explicit conjectures
 	var filteredConjs []*ast.LabeledFormula
@@ -736,6 +756,29 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	cg := ActionCallGraph(mod)
 	myExports := GetIsolateExports(mod, cg, isol)
 
+	// Dump exports sorted for cross-language comparison
+	exportNames := make([]string, 0, len(myExports))
+	for a := range myExports {
+		exportNames = append(exportNames, a)
+	}
+	sortStrings(exportNames)
+	xtracer.Trace("check.ApplyPresentConjectures n_exports=%d n_conjs=%d n_postConjs=%d",
+		len(myExports), len(filteredConjs), len(filteredPostConjs))
+	for _, a := range exportNames {
+		xtracer.Trace("check.ApplyPresentConjectures EXPORT %s", a)
+	}
+	// Dump conj_actions
+	conjActKeys := make([]string, 0, len(mod.ConjActions))
+	for k := range mod.ConjActions {
+		conjActKeys = append(conjActKeys, k)
+	}
+	sortStrings(conjActKeys)
+	for _, k := range conjActKeys {
+		vals := make([]string, len(mod.ConjActions[k]))
+		copy(vals, mod.ConjActions[k])
+		sortStrings(vals)
+		xtracer.Trace("check.ApplyPresentConjectures CONJ_ACTIONS %s -> %s", k, fmtStrList(vals))
+	}
 	var brackets []BracketEntry
 	for actname := range myExports {
 		var assumes []actions.Action

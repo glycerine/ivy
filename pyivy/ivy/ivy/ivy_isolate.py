@@ -1707,13 +1707,24 @@ def apply_present_conjectures(isol,mod):
     if not assume_invariants.get():
         return []
     brackets = []
+    if __debug__: xtracer.trace("check.ApplyPresentConjectures raw_labeled_conjs=%d" % len(mod.labeled_conjs))
     conjs = get_isolate_conjs(mod,isol,verified=False)
     mod.assumed_invariants = list(conjs)
+    if __debug__: xtracer.trace("check.ApplyPresentConjectures after_GetIsolateConjs n_conjs=%d" % len(conjs))
     conjs = [c for c in conjs if not c.explicit]
     post_conjs = get_isolate_post_conjs(mod,isol)
     post_conjs = [c for c in post_conjs if not c.explicit]
     cg = mod.call_graph()  # TODO: cg should be cached
     myexports = get_isolate_exports(mod,cg,isol)
+    if __debug__:
+        _sorted_exports = sorted(myexports)
+        xtracer.trace("check.ApplyPresentConjectures n_exports=%d n_conjs=%d n_postConjs=%d" % (len(myexports), len(conjs), len(post_conjs)))
+        for _e in _sorted_exports:
+            xtracer.trace("check.ApplyPresentConjectures EXPORT %s" % _e)
+        _sorted_cak = sorted(mod.conj_actions.keys())
+        for _k in _sorted_cak:
+            _vals = sorted(mod.conj_actions[_k])
+            xtracer.trace("check.ApplyPresentConjectures CONJ_ACTIONS %s -> %s" % (_k, _vals))
     for actname in myexports:
         assumes = list(map(conj_to_assume,conjs))
         post_assumes = list(map(conj_to_assume,post_conjs))
