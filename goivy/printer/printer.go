@@ -151,8 +151,8 @@ func sortedActionNames(mod *module.Module) []string {
 
 // sortedPublicActions returns sorted public action names from a module.
 func sortedPublicActions(mod *module.Module) []string {
-	keys := make([]string, 0, len(mod.PublicActions))
-	for k := range mod.PublicActions {
+	keys := make([]string, 0, mod.PublicActions.Len())
+	for k := range mod.PublicActions.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

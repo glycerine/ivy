@@ -11,6 +11,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
@@ -197,17 +198,17 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 		// Find globally exported actions
 		if len(mod.Exports) > 0 {
-			mod.PublicActions = make(map[string]bool)
+			mod.PublicActions = iu.NewInsMap[string, bool]()
 			for _, e := range mod.Exports {
 				if e.Scope() == "" {
-					mod.PublicActions[e.Exported()] = true
+					mod.PublicActions.Set(e.Exported(), true)
 				}
 			}
 		} else {
 			// No exports specified: all actions are public (compatibility)
-			mod.PublicActions = make(map[string]bool)
+			mod.PublicActions = iu.NewInsMap[string, bool]()
 			for a := range mod.Actions.All() {
-				mod.PublicActions[a] = true
+				mod.PublicActions.Set(a, true)
 			}
 		}
 	}
@@ -286,8 +287,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// === Post-isolate_component steps, in Python order (lines 1899-1954) ===
 
 	// Python line 1899-1900: Label public actions
-	xtracer.Trace("check.CreateIsolate before_label_public n_public=%d", len(mod.PublicActions))
-	for name := range mod.PublicActions {
+	xtracer.Trace("check.CreateIsolate before_label_public n_public=%d", mod.PublicActions.Len())
+	for name := range mod.PublicActions.All() {
 		if act, ok := mod.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
 				type labeler interface {
@@ -313,8 +314,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			afterInitNames[ai.Mixer()] = true
 		}
 
-		sortedPublic := make([]string, 0, len(mod.PublicActions))
-		for name := range mod.PublicActions {
+		sortedPublic := make([]string, 0, mod.PublicActions.Len())
+		for name := range mod.PublicActions.All() {
 			sortedPublic = append(sortedPublic, name)
 		}
 		sort.Strings(sortedPublic)
@@ -334,7 +335,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			extAct := actions.NewEnvActionOn(mod.Cfg.ActCfg, extBranches...)
 			mod.Actions.Set(extAction, extAct)
 		}
-		mod.PublicActions[extAction] = true
+		mod.PublicActions.Set(extAction, true)
 	}
 	xtracer.Trace("check.CreateIsolate after_ext_action")
 
@@ -408,7 +409,7 @@ func getModCone(mod *module.Module) map[string]bool {
 	cone := make(map[string]bool)
 
 	// Start with public actions
-	for name := range mod.PublicActions {
+	for name := range mod.PublicActions.All() {
 		cone[name] = true
 	}
 
@@ -653,9 +654,9 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 
 		// Remove from actions and public actions
 		mod.Actions.Delkey(name)
-		delete(mod.PublicActions, name)
+		mod.PublicActions.Delkey(name)
 		mod.Actions.Delkey(extname)
-		delete(mod.PublicActions, extname)
+		mod.PublicActions.Delkey(extname)
 
 		if action == nil || !actions.HasCode(action) {
 			continue

@@ -60,7 +60,7 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Const {
 	// Build the list of existing function names
 	var funcNames []string
 	if mod.Functions != nil {
-		for name := range mod.Functions {
+		for name := range mod.Functions.All() {
 			funcNames = append(funcNames, name)
 		}
 	}

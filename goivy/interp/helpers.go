@@ -31,14 +31,14 @@ func (e *UnsatCoreWithInterpolant) Error() string {
 	return "unsat core with interpolant"
 }
 
-// functionsToInterpreted converts a Functions map (map[string]lg.Sort) to
+// functionsToInterpreted converts a Functions InsMap to
 // the map[string]bool expected by transrel interpolation functions.
-func functionsToInterpreted(functions map[string]lg.Sort) map[string]bool {
+func functionsToInterpreted(functions *iu.InsMap[string, lg.Sort]) map[string]bool {
 	if functions == nil {
 		return nil
 	}
-	m := make(map[string]bool, len(functions))
-	for k := range functions {
+	m := make(map[string]bool, functions.Len())
+	for k := range functions.All() {
 		m[k] = true
 	}
 	return m
@@ -479,10 +479,10 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 
 	// Copy and extend with concept space arities.
 	// Python temporarily adds (x.rep, len(x.args)) for each concept space relation.
-	// Go's Relations is map[string]lg.Sort; we add the relation's sort if available.
-	newRelations := make(map[string]lg.Sort, len(origRelations))
-	for k, v := range origRelations {
-		newRelations[k] = v
+	// Go's Relations is *iu.InsMap[string, lg.Sort]; we add the relation's sort if available.
+	newRelations := iu.NewInsMap[string, lg.Sort]()
+	for k, v := range origRelations.All() {
+		newRelations.Set(k, v)
 	}
 
 	// Extract concept space body formulas for type checking
@@ -494,10 +494,10 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 			switch r := cs.Label.(type) {
 			case *lg.Apply:
 				if sym, ok := r.Func.(*lg.Const); ok {
-					newRelations[sym.Name] = sym.CSort
+					newRelations.Set(sym.Name, sym.CSort)
 				}
 			case *lg.Const:
-				newRelations[r.Name] = r.CSort
+				newRelations.Set(r.Name, r.CSort)
 			}
 		}
 		if cs.Body != nil {

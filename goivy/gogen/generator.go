@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -154,9 +155,9 @@ func (g *Generator) stateFields() [][2]string {
 	seen := make(map[string]bool)
 
 	// Relations
-	relNames := sortedKeys(g.Module.Relations)
+	relNames := sortedKeysInsMap(g.Module.Relations)
 	for _, name := range relNames {
-		s := g.Module.Relations[name]
+		s := g.Module.Relations.Get(name)
 		goName := goExportedName(name)
 		goType := StateFieldType(name, s)
 		if !seen[goName] {
@@ -166,9 +167,9 @@ func (g *Generator) stateFields() [][2]string {
 	}
 
 	// Functions
-	fnNames := sortedKeys(g.Module.Functions)
+	fnNames := sortedKeysInsMap(g.Module.Functions)
 	for _, name := range fnNames {
-		s := g.Module.Functions[name]
+		s := g.Module.Functions.Get(name)
 		goName := goExportedName(name)
 		goType := StateFieldType(name, s)
 		if !seen[goName] {
@@ -279,12 +280,12 @@ func (g *Generator) EmitStateStruct(name string) {
 	w := g.Writer
 	w.OpenBlock(fmt.Sprintf("type %s struct {", name))
 	if g.Module != nil {
-		for symName, s := range g.Module.Relations {
+		for symName, s := range g.Module.Relations.All() {
 			fieldName := goExportedName(symName)
 			fieldType := StateFieldType(symName, s)
 			w.Linef("%s %s", fieldName, fieldType)
 		}
-		for symName, s := range g.Module.Functions {
+		for symName, s := range g.Module.Functions.All() {
 			fieldName := goExportedName(symName)
 			fieldType := StateFieldType(symName, s)
 			w.Linef("%s %s", fieldName, fieldType)
@@ -322,10 +323,10 @@ func formatFormalReturns(params []*lg.Const) string {
 	return "(" + strings.Join(parts, ", ") + ")"
 }
 
-// sortedKeys returns sorted keys from a map[string]lg.Sort.
-func sortedKeys(m map[string]lg.Sort) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
+// sortedKeysInsMap returns sorted keys from an InsMap[string, lg.Sort].
+func sortedKeysInsMap(m *iu.InsMap[string, lg.Sort]) []string {
+	keys := make([]string, 0, m.Len())
+	for k := range m.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

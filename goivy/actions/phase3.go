@@ -166,7 +166,7 @@ func TypeAst(domain *module.Module, node lg.Expr) lg.Expr {
 		if c, ok := app.Func.(*lg.Const); ok {
 			isRelation := false
 			if domain.Relations != nil {
-				_, isRelation = domain.Relations[c.Name]
+				_, isRelation = domain.Relations.Get2(c.Name)
 			}
 			isEq := c.Name == "="
 

@@ -1635,7 +1635,7 @@ class IvyARGSetup(IvyDeclInterp):
         name = a.args[0].relname
         if __debug__: xtracer.trace("compiler.ARGSetup.action ENTER name=%s" % name)
         self.mod.actions[name] = compile_action_def(a,self.mod.sig)
-        self.mod.public_actions.add(name)
+        self.mod.public_actions[name] = True
         if __debug__: xtracer.trace("compiler.ARGSetup.action EXIT name=%s key=%s" % (name, name))
     def state(self,a):
         if __debug__: xtracer.trace("compiler.ARGSetup.state ENTER")

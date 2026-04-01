@@ -590,12 +590,12 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 	// Handle hierarchical case: if the symbol has children in the hierarchy
 	if ctx.Domain != nil && ctx.Domain.Hierarchy != nil {
-		if children, ok := ctx.Domain.Hierarchy[sym.Name]; ok && len(children) > 0 {
+		if children, ok := ctx.Domain.Hierarchy.Get2(sym.Name); ok && children.Len() > 0 {
 			xtracer.Trace("actions.AssignAction.action_update branch=hierarchy")
 			// Decompose into sub-assignments for each child
 			var updates []*transrel.Update
 			axioms := ctx.BackgroundTheory()
-			for childName := range children {
+			for childName := range children.All() {
 				childSym := lg.NewConst(childName, lg.TopS)
 				childLHS := &lg.Apply{Func: childSym, Terms: nodeArgs(lhs)}
 				childRHS := rhs // simplified: same RHS for each child
@@ -2105,8 +2105,8 @@ func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // collectCrashSyms recursively collects symbols to havoc for a crash action.
 func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 	if domain.Hierarchy != nil {
-		if children, ok := domain.Hierarchy[name]; ok && len(children) > 0 {
-			for child := range children {
+		if children, ok := domain.Hierarchy.Get2(name); ok && children.Len() > 0 {
+			for child := range children.All() {
 				fullName := name + "." + child
 				if child == "spec" {
 					continue

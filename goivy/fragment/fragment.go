@@ -809,14 +809,14 @@ func (c *checker) findCycle() []arc {
 // Corresponds to Python's get_assumes_and_asserts.
 func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
 	if precondsOnly {
-		for name, action := range m.BeforeExport {
+		for name, action := range m.BeforeExport.All() {
 			_ = name
 			if fp, ok := makeFmlaPairFromAction(action, m); ok {
 				assumes = append(assumes, fp)
 			}
 		}
 	} else {
-		for name := range m.PublicActions {
+		for name := range m.PublicActions.All() {
 			action, ok := m.Actions.Get2(name)
 			if !ok {
 				continue

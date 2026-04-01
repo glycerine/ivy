@@ -33,19 +33,19 @@ type Module struct {
 	AssumedInvs   []*ast.LabeledFormula            // assumed invariants
 
 	// Relations and functions
-	Relations map[string]lg.Sort
-	Functions map[string]lg.Sort
+	Relations *iu.InsMap[string, lg.Sort]
+	Functions *iu.InsMap[string, lg.Sort]
 
 	// Actions and mixins
 	Actions        *iu.InsMap[string, Action]
 	Mixins         *iu.InsMap[string, []MixinDef]
-	PublicActions  map[string]bool
+	PublicActions  *iu.InsMap[string, bool]
 	Predicates     map[string]ast.Node
 	Initializers   []NamedAction
 	InitialActions []Action
 
 	// Module structure
-	Hierarchy      map[string]map[string]bool // parent → children
+	Hierarchy      *iu.InsMap[string, *iu.InsMap[string, bool]] // parent → children
 	Updates        []interface{}
 	Schemata       map[string]ast.Node
 	Theorems       map[string]ast.Node
@@ -98,7 +98,7 @@ type Module struct {
 
 	// Other
 	Aliases       map[string]string // name → name
-	BeforeExport  map[string]Action
+	BeforeExport  *iu.InsMap[string, Action]
 	Attributes    map[string]interface{}
 	ExtPreconds   map[string]lg.Expr
 	ConceptSpaces []ConceptSpace
@@ -227,15 +227,15 @@ func (m *Module) Clear() {
 	m.Assertions = nil
 	m.AssumedInvs = nil
 	m.Postconds = make(map[string][]*ast.LabeledFormula)
-	m.Relations = make(map[string]lg.Sort)
-	m.Functions = make(map[string]lg.Sort)
+	m.Relations = iu.NewInsMap[string, lg.Sort]()
+	m.Functions = iu.NewInsMap[string, lg.Sort]()
 	m.Actions = iu.NewInsMap[string, Action]()
 	m.Mixins = iu.NewInsMap[string, []MixinDef]()
-	m.PublicActions = make(map[string]bool)
+	m.PublicActions = iu.NewInsMap[string, bool]()
 	m.Predicates = make(map[string]ast.Node)
 	m.Initializers = nil
 	m.InitialActions = nil
-	m.Hierarchy = make(map[string]map[string]bool)
+	m.Hierarchy = iu.NewInsMap[string, *iu.InsMap[string, bool]]()
 	m.Updates = nil
 	m.Schemata = make(map[string]ast.Node)
 	m.Theorems = make(map[string]ast.Node)
@@ -273,7 +273,7 @@ func (m *Module) Clear() {
 	m.Params = nil
 	m.ParamDefaults = nil
 	m.Aliases = make(map[string]string)
-	m.BeforeExport = make(map[string]Action)
+	m.BeforeExport = iu.NewInsMap[string, Action]()
 	m.Attributes = make(map[string]interface{})
 	m.ExtPreconds = make(map[string]lg.Expr)
 	m.ConceptSpaces = nil
@@ -334,8 +334,14 @@ func (m *Module) Copy() *Module {
 
 	// Copy maps
 	c.Postconds = copyMapLF(m.Postconds)
-	c.Relations = copyMapSort(m.Relations)
-	c.Functions = copyMapSort(m.Functions)
+	c.Relations = iu.NewInsMap[string, lg.Sort]()
+	for k, v := range m.Relations.All() {
+		c.Relations.Set(k, v)
+	}
+	c.Functions = iu.NewInsMap[string, lg.Sort]()
+	for k, v := range m.Functions.All() {
+		c.Functions.Set(k, v)
+	}
 	c.Actions = iu.NewInsMap[string, Action]()
 	for k, v := range m.Actions.All() {
 		c.Actions.Set(k, v)
@@ -351,9 +357,15 @@ func (m *Module) Copy() *Module {
 	c.ConstructorSorts = copyMapSort(m.ConstructorSorts)
 	c.NativeTypes = copyMapNativeType(m.NativeTypes)
 	c.Aliases = copyMapStr(m.Aliases)
-	c.BeforeExport = copyMapAction(m.BeforeExport)
+	c.BeforeExport = iu.NewInsMap[string, Action]()
+	for k, v := range m.BeforeExport.All() {
+		c.BeforeExport.Set(k, v)
+	}
 	c.Attributes = copyMapIface(m.Attributes)
-	c.PublicActions = copyMapBool(m.PublicActions)
+	c.PublicActions = iu.NewInsMap[string, bool]()
+	for k, v := range m.PublicActions.All() {
+		c.PublicActions.Set(k, v)
+	}
 	c.GhostSorts = copyMapBool(m.GhostSorts)
 	c.Privates = copyMapBool(m.Privates)
 	c.FiniteSorts = copyMapBool(m.FiniteSorts)
@@ -402,9 +414,13 @@ func (m *Module) Copy() *Module {
 	}
 
 	// Copy hierarchy
-	c.Hierarchy = make(map[string]map[string]bool, len(m.Hierarchy))
-	for k, v := range m.Hierarchy {
-		c.Hierarchy[k] = copyMapBool(v)
+	c.Hierarchy = iu.NewInsMap[string, *iu.InsMap[string, bool]]()
+	for k, v := range m.Hierarchy.All() {
+		inner := iu.NewInsMap[string, bool]()
+		for ik, iv := range v.All() {
+			inner.Set(ik, iv)
+		}
+		c.Hierarchy.Set(k, inner)
 	}
 
 	// Copy mixins
@@ -439,22 +455,26 @@ func (m *Module) AddToHierarchy(name string) {
 		pref := name[:idx]
 		suff := name[idx+len(cc):]
 		m.AddToHierarchy(pref)
-		if m.Hierarchy[pref] == nil {
-			m.Hierarchy[pref] = make(map[string]bool)
+		inner, ok := m.Hierarchy.Get2(pref)
+		if !ok {
+			inner = iu.NewInsMap[string, bool]()
+			m.Hierarchy.Set(pref, inner)
 		}
-		m.Hierarchy[pref][suff] = true
+		inner.Set(suff, true)
 	} else {
-		if m.Hierarchy["this"] == nil {
-			m.Hierarchy["this"] = make(map[string]bool)
+		inner, ok := m.Hierarchy.Get2("this")
+		if !ok {
+			inner = iu.NewInsMap[string, bool]()
+			m.Hierarchy.Set("this", inner)
 		}
-		m.Hierarchy["this"][name] = true
+		inner.Set(name, true)
 	}
 }
 
 // AddObject adds an object name to the hierarchy.
 func (m *Module) AddObject(name string) {
-	if m.Hierarchy[name] == nil {
-		m.Hierarchy[name] = make(map[string]bool)
+	if _, ok := m.Hierarchy.Get2(name); !ok {
+		m.Hierarchy.Set(name, iu.NewInsMap[string, bool]())
 	}
 }
 

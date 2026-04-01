@@ -44,17 +44,17 @@ class Module(object):
         self.abstraction_predicates = []
         self.labeled_conjs = []  # conjectures
         self.postconds = defaultdict(list) # action name -> list of LabeledFormula
-        self.hierarchy = defaultdict(set)
+        self.hierarchy = defaultdict(dict)
         self.actions = {}
         self.predicates = {}
         self.assertions = []
         self.mixins = defaultdict(list)
-        self.public_actions = set()
+        self.public_actions = {}
         self.isolates = {}
         self.exports = []
         self.imports = []
         self.delegates = []
-        self.public_actions = set() # hash of the exported actions
+        self.public_actions = {} # dict of the exported actions (insertion-ordered)
         self.progress = []  # list of progress properties
         self.rely = [] # list of rely relations
         self.mixord = [] # list of mixin order relations
@@ -123,9 +123,9 @@ class Module(object):
         if iu.ivy_compose_character in name:
             pref,suff = str.rsplit(name,iu.ivy_compose_character,1)
             self.add_to_hierarchy(pref)
-            self.hierarchy[pref].add(suff)
+            self.hierarchy[pref][suff] = True
         else:
-            self.hierarchy['this'].add(name)
+            self.hierarchy['this'][name] = True
 
     def add_object(self,name):
         assert not isinstance(name,ivy_ast.This)

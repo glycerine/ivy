@@ -261,10 +261,10 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 // crashModifiesRec walks the module hierarchy to find all symbols modified
 // by a CrashAction. Corresponds to Python's CrashAction.modifies() inner recur().
 func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result *[]*lg.Const) {
-	children, inHier := mod.Hierarchy[n]
+	children, inHier := mod.Hierarchy.Get2(n)
 	xtracer.Trace("actions.CrashAction.modifies.recur n_type=string n_val=%s in_hierarchy=%v", n, inHier)
 	if inHier {
-		for child := range children {
+		for child := range children.All() {
 			cname := n + "." + child
 			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
 				cname = mod.Cfg.IuCfg.ComposeNames(n, child)

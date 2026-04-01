@@ -477,7 +477,14 @@ func CheckIsolate(method string, m *mod.Module) error {
 	}
 
 	// Combine all public actions into a list of (name, action) pairs
-	publicNames := sortedKeys(m.PublicActions)
+	publicNames := func() []string {
+		keys := make([]string, 0, m.PublicActions.Len())
+		for k := range m.PublicActions.All() {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		return keys
+	}()
 	type namedAction struct {
 		Name   string
 		Action actions.Action

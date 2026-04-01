@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -77,17 +78,17 @@ func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
 	}
 
 	// Resort BeforeExport (Python line 261: self.before_export = resort_map_any_ast(self.before_export))
-	newBE := make(map[string]Action, len(m.BeforeExport))
-	for k, v := range m.BeforeExport {
+	newBE := iu.NewInsMap[string, Action]()
+	for k, v := range m.BeforeExport.All() {
 		if expr, ok := v.(lg.Expr); ok {
 			if resorted := ResortAST(expr, rn); resorted != nil {
 				if act, ok2 := resorted.(Action); ok2 {
-					newBE[k] = act
+					newBE.Set(k, act)
 					continue
 				}
 			}
 		}
-		newBE[k] = v
+		newBE.Set(k, v)
 	}
 	m.BeforeExport = newBE
 

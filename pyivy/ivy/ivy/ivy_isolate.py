@@ -1392,7 +1392,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     old_actions.update(mod.actions)
     if __debug__: xtracer.trace("isolate.exported=%s" % ','.join(sorted(exported)))
     mod.public_actions.clear()
-    mod.public_actions.update(exported)
+    mod.public_actions.update({x: True for x in exported})
     mod.actions.clear()
     mod.actions.update(new_actions)
     if __debug__:
@@ -1661,11 +1661,11 @@ def fix_initializers(mod,after_inits):
             if name in mod.actions:
                 del mod.actions[name]
             if name in mod.public_actions:
-                mod.public_actions.remove(name)
+                del mod.public_actions[name]
             if extname in mod.actions:
                 del mod.actions[extname]
             if extname in mod.public_actions:
-                mod.public_actions.remove(extname)
+                del mod.public_actions[extname]
             if action == None or not ia.has_code(action):
                 continue
             mod.initial_actions.append(action)
@@ -1906,10 +1906,10 @@ def create_isolate(iso,mod = None,**kwargs):
                 mod.public_actions.clear()
                 for e in mod.exports:
                     if not e.scope(): # global export
-                        mod.public_actions.add(e.exported())
+                        mod.public_actions[e.exported()] = True
             else:
                 for a in mod.actions:
-                    mod.public_actions.add(a)
+                    mod.public_actions[a] = True
 
         if __debug__: xtracer.trace("check.CreateIsolate after_isolate_component")
 
@@ -1925,7 +1925,7 @@ def create_isolate(iso,mod = None,**kwargs):
             ais = set(m.mixer() for m in after_inits)
             ext_acts = [mod.actions[x] for x in sorted(mod.public_actions) if canon_act(x) not in ais]
             ext_act = ia.EnvAction(*ext_acts)
-            mod.public_actions.add(ext);
+            mod.public_actions[ext] = True;
             mod.actions[ext] = ext_act;
         if __debug__: xtracer.trace("check.CreateIsolate after_ext_action")
 
