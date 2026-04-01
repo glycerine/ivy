@@ -525,7 +525,7 @@ type isolateAtomProvider interface {
 // isolateParamProvider is an optional interface for isolate definitions that
 // expose their parameters as lg.Const (needed for variable param substitution).
 type isolateParamProvider interface {
-	Params() []*lg.Const
+	Params() []ast.Node
 }
 
 // StripIsolateParams is the full version of strip_isolate that handles
@@ -552,7 +552,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 		ipl := pp.Params()
 		hasVar := false
 		for _, p := range ipl {
-			if p != nil && il.IsVariable(p) {
+			if _, isVar := p.(*ast.Variable); isVar {
 				hasVar = true
 				break
 			}
@@ -560,9 +560,15 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 		if hasVar {
 			subst := make(map[string]lg.Expr)
 			for _, p := range ipl {
-				if p != nil && il.IsVariable(p) {
-					v := lg.NewConst("iso:"+p.Name, p.NodeSort())
-					subst[p.Name] = v
+				if v, isVar := p.(*ast.Variable); isVar {
+					var sort lg.Sort
+					if mod.Sig != nil {
+						if s, ok := mod.Sig.Sorts[v.VSort]; ok {
+							sort = s
+						}
+					}
+					newConst := lg.NewConst("iso:"+v.Rep, sort)
+					subst[v.Rep] = newConst
 				}
 			}
 			// Apply substitution to isolate (would need SubstituteAst)
@@ -583,8 +589,8 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	if pp, ok := isolate.(isolateParamProvider); ok {
 		ips := make(map[string]bool)
 		for _, p := range pp.Params() {
-			if p != nil {
-				ips[p.Name] = true
+			if a, ok := p.(*ast.Atom); ok {
+				ips[a.Rep] = true
 			}
 		}
 		if ap, ok2 := isolate.(isolateAtomProvider); ok2 {
@@ -645,9 +651,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				mixerParams := StripMapLookup(CanonAct(m.Mixer()), stripMap, mod)
-				if len(mixerParams) > 0 {
-					stripMap[m.Mixee()] = mixerParams
-				}
+				stripMap[m.Mixee()] = mixerParams
 			}
 		}
 	}
@@ -665,12 +669,27 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	// Step 4: Add isolate parameters as symbols and to mod.Params.
 	// Python lines 441-456: for s in isolate.params(): add_symbol(s.rep, mod.sig.sorts[s.sort])
 	if pp, ok := isolate.(isolateParamProvider); ok {
-		for _, sym := range pp.Params() {
-			if sym == nil {
+		for _, node := range pp.Params() {
+			if node == nil {
 				continue
 			}
-			paramName := sym.Name
-			paramSort := sym.NodeSort()
+			// Python: s.rep and s.sort — params are Atoms
+			paramAtom, isAtom := node.(*ast.Atom)
+			if !isAtom {
+				continue
+			}
+			paramName := paramAtom.Rep
+			// Python: add_symbol(s.rep, mod.sig.sorts[s.sort])
+			// Look up sort by name from the atom's sort annotation
+			var paramSort lg.Sort
+			if paramAtom.ASort != nil {
+				// ASort is an ast.Node; extract sort name and look up
+				if sortAtom, ok := paramAtom.ASort.(*ast.Atom); ok {
+					if mod.Sig != nil {
+						paramSort, _ = mod.Sig.Sorts[sortAtom.Rep]
+					}
+				}
+			}
 
 			// Check if already added via StripAddedSymbols
 			alreadyAdded := false
@@ -692,7 +711,8 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				// Look up the sort from the parameter's sort name
 				if paramSort != nil {
 					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: paramSort}
-					mod.Params = append(mod.Params, sym)
+					newSym := lg.NewConst(paramName, paramSort)
+					mod.Params = append(mod.Params, newSym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
 				} else if s, ok := mod.Sig.Sorts[paramName]; ok {
 					newSym := lg.NewConst(paramName, s)

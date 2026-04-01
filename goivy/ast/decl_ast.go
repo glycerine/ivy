@@ -1408,6 +1408,18 @@ func (i *IsolateDef) Present() []Node {
 	}
 	return nil
 }
+// Params returns the isolate parameters (terms of the name atom).
+// Python: def params(self): return self.args[0].args
+func (i *IsolateDef) Params() []Node {
+	if len(i.Elems) == 0 {
+		return nil
+	}
+	if a, ok := i.Elems[0].(*Atom); ok {
+		return a.Terms
+	}
+	return nil
+}
+
 func (i *IsolateDef) String() string {
 	parts := make([]string, len(i.Elems))
 	for j, e := range i.Elems {
