@@ -161,7 +161,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 			return nil
 		},
 	}
-	upd := actions.IntUpdate(action, ctx)
+	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		upd = tr.NullUpdate()
 	}
