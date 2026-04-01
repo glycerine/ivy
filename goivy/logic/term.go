@@ -23,12 +23,7 @@ func NewVariable(name string, sort Sort) (*Variable, error) {
 
 func (v *Variable) NodeSort() Sort   { return v.VSort }
 func (v *Variable) Children() []Expr { return nil }
-func (v *Variable) String() string {
-	if v.VSort != nil && !IsTopSort(v.VSort) {
-		return v.Name + ":" + v.VSort.String()
-	}
-	return v.Name
-}
+func (v *Variable) String() string { return v.Name }
 
 func (v *Variable) Equal(n Expr) bool {
 	if o, ok := n.(*Variable); ok {
