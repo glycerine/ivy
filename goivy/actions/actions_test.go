@@ -533,7 +533,7 @@ func TestComposeAnnotationWithLineno(t *testing.T) {
 		Args:   []Annotation{EmptyAnnotation{}, EmptyAnnotation{}},
 		Lineno: &loc,
 	}
-	if !strings.Contains(c.String(), "test.ivy:10") {
+	if !strings.Contains(c.String(), "test.ivy: line 10: ") {
 		t.Errorf("ComposeAnnotation with lineno: %q", c.String())
 	}
 }

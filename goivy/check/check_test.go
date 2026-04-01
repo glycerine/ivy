@@ -290,11 +290,11 @@ func TestPrettyLabelWithValue(t *testing.T) {
 func TestPrettyLinenoPositive(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, nil)
-	lf.Lineno = 42
+	lf.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 	result := PrettyLineno(lf)
-	// Python: return str(ast.lineno) — bare number, no "line" prefix.
-	if result != "42" {
-		t.Errorf("expected '42', got '%s'", result)
+	// Python: return str(ast.lineno) — LocationTuple with filename and line.
+	if result != "test.ivy: line 42: " {
+		t.Errorf("expected 'test.ivy: line 42: ', got '%s'", result)
 	}
 }
 
@@ -317,14 +317,13 @@ func TestPrettyLinenoNil(t *testing.T) {
 func TestPrettyLF(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, nil)
-	lf.Lineno = 10
+	lf.SetLineno(ast.Location{Filename: "test.ivy", Line: 10})
 	result := PrettyLF(lf, 4)
 	if !strings.HasPrefix(result, "    ") {
 		t.Error("expected 4-space indent")
 	}
-	// Python pretty_lineno returns bare number: "10"
-	if !strings.Contains(result, "10") {
-		t.Errorf("expected '10' in output, got '%s'", result)
+	if !strings.Contains(result, "line 10") {
+		t.Errorf("expected 'line 10' in output, got '%s'", result)
 	}
 }
 
