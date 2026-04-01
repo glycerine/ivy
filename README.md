@@ -2400,6 +2400,12 @@ Estimated People Required 26.621735
 
 # "make golden" progress
 
+using fine grain on-the-fly tracing:
+~~~
+150875  go : XTRACE: isolate.allSyms.add lclock.succ
+        py : XTRACE: isolate.allSyms.add <
+~~~
+before (batching, different flow of IsolateComponent() )
 ~~~
 155164  go : XTRACE: isolate.allSyms2.sym dramc.t_min
         py : XTRACE: isolate.allSyms2.sym dramc.wr_fair
