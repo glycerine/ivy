@@ -757,14 +757,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for i, a := range mod.LabeledAxioms {
 			lbl := ""
 			if a.Label != nil {
-				lbl = fmt.Sprint(a.Label)
+				lbl = lg.ReprNode(a.Label)
 			}
 			xtracer.Trace("isolate.pre_filter_axioms[%d] label=%s explicit=%v", i, lbl, a.Explicit)
 		}
 		for i, p := range mod.LabeledProps {
 			lbl := ""
 			if p.Label != nil {
-				lbl = fmt.Sprint(p.Label)
+				lbl = lg.ReprNode(p.Label)
 			}
 			xtracer.Trace("isolate.pre_filter_props[%d] label=%s explicit=%v", i, lbl, p.Explicit)
 		}
@@ -849,14 +849,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for i, a := range mod.LabeledAxioms {
 			lbl := ""
 			if a.Label != nil {
-				lbl = fmt.Sprint(a.Label)
+				lbl = lg.ReprNode(a.Label)
 			}
 			xtracer.Trace("isolate.post_filter_axioms[%d] label=%s explicit=%v assumed=%v", i, lbl, a.Explicit, a.Assumed)
 		}
 		for i, p := range mod.LabeledProps {
 			lbl := ""
 			if p.Label != nil {
-				lbl = fmt.Sprint(p.Label)
+				lbl = lg.ReprNode(p.Label)
 			}
 			xtracer.Trace("isolate.post_filter_props[%d] label=%s explicit=%v assumed=%v", i, lbl, p.Explicit, p.Assumed)
 		}
@@ -970,7 +970,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if xtracer.Enabled {
 					lbl := ""
 					if lf.Label != nil {
-						lbl = fmt.Sprint(lf.Label)
+						lbl = lg.ReprNode(lf.Label)
 					}
 					xtracer.Trace("%s.formula_begin list=%s idx=%d label=%s", as1, as1ListNames[listIdx], fIdx, lbl)
 				}
@@ -1178,7 +1178,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 						// We skip that for now since we only have symbol names, not objects.
 						lbl := ""
 						if a.Label != nil {
-							lbl = fmt.Sprint(a.Label)
+							lbl = lg.ReprNode(a.Label)
 						}
 						return fmt.Errorf("relevant axiom %s not enforced (uses symbol %s)", lbl, symName)
 					}
@@ -1241,7 +1241,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for i, d := range origDefs {
 		lbl := ""
 		if d.Label != nil {
-			lbl = fmt.Sprint(d.Label)
+			lbl = lg.ReprNode(d.Label)
 		}
 		xtracer.Trace("isolate.origDefs[%d] label=%s", i, lbl)
 	}
@@ -1286,7 +1286,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 			yName := ""
 			if y.Label != nil {
-				yName = fmt.Sprint(y.Label)
+				yName = lg.ReprNode(y.Label)
 			}
 			if exactPresent[defName] || exactPresent[yName] {
 				newDef := &lg.Definition{Lhs: sch.Lhs, Rhs: sch.Rhs}
