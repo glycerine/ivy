@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -161,6 +162,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 			return nil
 		},
 	}
+	xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s", actionName, actions.ActionTypeName(action))
 	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		upd = tr.NullUpdate()

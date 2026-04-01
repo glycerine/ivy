@@ -1,4 +1,5 @@
 from . import ivy_actions as ia
+from . import xtracer
 from . import ivy_module as im
 from . import ivy_logic as il
 from . import ivy_utils as iu

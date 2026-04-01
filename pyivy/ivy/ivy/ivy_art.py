@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation. All Rights Reserved.
 #
 from . import ivy_actions
+from . import xtracer
 from .ivy_interp import *
 from . import ivy_utils as iu
 from . import ivy_module as im
@@ -156,6 +157,7 @@ class AnalysisGraph(object):
         return poststate
 
     def post_state(self,op,pre_state,abstractor):
+        if __debug__: xtracer.trace("art.post_state calling update type=%s" % type(op).__name__)
         s = concrete_post(op.update(pre_state.domain,pre_state.in_scope),pre_state)
         s.action = op
         if abstractor:

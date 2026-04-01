@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -372,6 +373,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 					return nil
 				},
 			}
+			xtracer.Trace("actions.match calling IntUpdate type=%s", ActionTypeName(bodyAction))
 			update := IntUpdate(bodyAction, ctx)
 			if update != nil && update.Modified != nil {
 				modset = update.Modified

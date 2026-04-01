@@ -19,6 +19,7 @@ from .ivy_transrel import compose_state_action, forward_interpolant, reverse_ima
 from .ivy_actions import type_check,Action,RME
 from . import ivy_ast as ia
 from . import ivy_actions
+from . import xtracer
 from . import ivy_transrel as tr
 from . import ivy_utils as iu
 from . import ivy_module as im

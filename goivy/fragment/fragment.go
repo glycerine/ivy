@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -947,6 +948,7 @@ func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
 
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{}
+	xtracer.Trace("fragment calling IntUpdate type=%s", actions.ActionTypeName(act))
 	upd := actions.IntUpdate(act, ctx)
 	if upd == nil {
 		return fmlaPair{}, false

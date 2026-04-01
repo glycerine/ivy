@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -198,6 +199,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 			return nil
 		},
 	}
+	xtracer.Trace("phase4 calling IntUpdate type=%s", actions.ActionTypeName(act))
 	upd := actions.IntUpdate(act, ctx)
 	if upd == nil {
 		upd = tr.NullUpdate()
@@ -211,6 +213,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 		// Compute updates for each action in the decomposition
 		upds := make([]*tr.Update, len(comp.Actions))
 		for i, subAct := range comp.Actions {
+			xtracer.Trace("phase4 calling IntUpdate decomp type=%s", actions.ActionTypeName(subAct))
 			subUpd := actions.IntUpdate(subAct, ctx)
 			if subUpd == nil {
 				subUpd = tr.NullUpdate()

@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -123,6 +124,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	ctx := &actions.UpdateContext{
 		Domain: mod,
 	}
+	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)
 
 	// Add post axioms: rename axioms for modified symbols
