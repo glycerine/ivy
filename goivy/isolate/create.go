@@ -694,9 +694,8 @@ func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 			subst[lg.Key(p)] = v
 		}
 	}
-	if len(subst) == 0 {
-		return action
-	}
+	// Python always calls substitute_constants_ast even with empty subst,
+	// so we must too for trace fidelity.
 	result := actions.SubstituteConstantsAction(action, subst)
 	// Python calls ia.type_check_action(action, mod) here, but that function
 	// is disabled in Python (immediately returns). Omitted for parity.
