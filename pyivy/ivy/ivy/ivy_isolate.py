@@ -1151,6 +1151,15 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     del mod.labeled_inits[:]
     mod.labeled_inits.extend(new_inits)
     
+    # Trace pre-filter state of axioms and props
+    if __debug__:
+        for _i, _a in enumerate(mod.labeled_axioms):
+            _lbl = str(_a.label) if _a.label else ""
+            xtracer.trace("isolate.pre_filter_axioms[%d] label=%s explicit=%s" % (_i, _lbl, _a.explicit if hasattr(_a, 'explicit') else "N/A"))
+        for _i, _p in enumerate(mod.labeled_props):
+            _lbl = str(_p.label) if _p.label else ""
+            xtracer.trace("isolate.pre_filter_props[%d] label=%s explicit=%s" % (_i, _lbl, _p.explicit if hasattr(_p, 'explicit') else "N/A"))
+
     # filter the axioms
     dropped_axioms = [a for a in mod.labeled_axioms if not keep_ax(a.label)]
     mod.labeled_axioms = [a for a in mod.labeled_axioms if keep_ax(a.label)]
@@ -1178,6 +1187,15 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
         mod.labeled_props = new_props
     else:
         mod.labeled_props = []
+
+    # Trace post-filter state
+    if __debug__:
+        for _i, _a in enumerate(mod.labeled_axioms):
+            _lbl = str(_a.label) if _a.label else ""
+            xtracer.trace("isolate.post_filter_axioms[%d] label=%s explicit=%s assumed=%s" % (_i, _lbl, getattr(_a, 'explicit', 'N/A'), getattr(_a, 'assumed', 'N/A')))
+        for _i, _p in enumerate(mod.labeled_props):
+            _lbl = str(_p.label) if _p.label else ""
+            xtracer.trace("isolate.post_filter_props[%d] label=%s explicit=%s assumed=%s" % (_i, _lbl, getattr(_p, 'explicit', 'N/A'), getattr(_p, 'assumed', 'N/A')))
 
     # filter natives
 

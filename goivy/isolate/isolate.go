@@ -752,6 +752,24 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	mod.LabeledInits = newInits
 
+	// Trace pre-filter state of axioms and props
+	if xtracer.Enabled {
+		for i, a := range mod.LabeledAxioms {
+			lbl := ""
+			if a.Label != nil {
+				lbl = fmt.Sprint(a.Label)
+			}
+			xtracer.Trace("isolate.pre_filter_axioms[%d] label=%s explicit=%v", i, lbl, a.Explicit)
+		}
+		for i, p := range mod.LabeledProps {
+			lbl := ""
+			if p.Label != nil {
+				lbl = fmt.Sprint(p.Label)
+			}
+			xtracer.Trace("isolate.pre_filter_props[%d] label=%s explicit=%v", i, lbl, p.Explicit)
+		}
+	}
+
 	// Filter axioms
 	var droppedAxioms []*ast.LabeledFormula
 	var keptAxioms []*ast.LabeledFormula
@@ -824,6 +842,24 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		mod.LabeledProps = newProps
 	} else {
 		mod.LabeledProps = nil
+	}
+
+	// Trace post-filter state
+	if xtracer.Enabled {
+		for i, a := range mod.LabeledAxioms {
+			lbl := ""
+			if a.Label != nil {
+				lbl = fmt.Sprint(a.Label)
+			}
+			xtracer.Trace("isolate.post_filter_axioms[%d] label=%s explicit=%v assumed=%v", i, lbl, a.Explicit, a.Assumed)
+		}
+		for i, p := range mod.LabeledProps {
+			lbl := ""
+			if p.Label != nil {
+				lbl = fmt.Sprint(p.Label)
+			}
+			xtracer.Trace("isolate.post_filter_props[%d] label=%s explicit=%v assumed=%v", i, lbl, p.Explicit, p.Assumed)
+		}
 	}
 
 	// Filter natives
