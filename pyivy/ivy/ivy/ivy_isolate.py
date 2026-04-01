@@ -1736,6 +1736,8 @@ def apply_present_conjectures(isol,mod):
                 posts[actname].append(conj_to_assume(conj))
     for actname,assumes in posts.items():
         brackets.append((actname,[],assumes))
+    # Sort brackets by actname for deterministic ordering matching Go.
+    brackets.sort(key=lambda b: b[0])
     return brackets
 
 def create_isolate(iso,mod = None,**kwargs):

@@ -810,6 +810,11 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 		brackets = append(brackets, BracketEntry{ActName: actname, After: assumes})
 	}
 
+	// Sort brackets by actname for deterministic ordering matching Python.
+	sort.Slice(brackets, func(i, j int) bool {
+		return brackets[i].ActName < brackets[j].ActName
+	})
+
 	return brackets
 }
 
@@ -926,6 +931,10 @@ func topologicalSortStrings(nodes []string, arcs []arc) []string {
 func lfLabelName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
+	}
+	// Python uses conj.label.rep — the Atom's rep string.
+	if a, ok := lf.Label.(*ast.Atom); ok {
+		return a.Rep
 	}
 	if c, ok := lf.Label.(*lg.Const); ok {
 		return c.Name
