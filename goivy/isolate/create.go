@@ -695,7 +695,7 @@ func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 	if len(subst) == 0 {
 		return action
 	}
-	result := actions.SubstConstantsAction(action, subst)
+	result := actions.SubstituteConstantsAction(action, subst)
 	// Python calls ia.type_check_action(action, mod) here, but that function
 	// is disabled in Python (immediately returns). Omitted for parity.
 	return result

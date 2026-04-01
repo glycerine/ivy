@@ -1923,7 +1923,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 		}
 
 		// Substitute in the callee action using action-level substitution
-		renamedCallee = SubstConstantsAction(callee, substMap)
+		renamedCallee = SubstituteConstantsAction(callee, substMap)
 	}
 
 	// Get renamed formals
@@ -2152,111 +2152,6 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 // -----------------------------------------------------------------------
 
 // GetUpdateForArt implements the Updater interface expected by art/art.go.
-// SubstConstantsAction applies a constant substitution to an action and all its
-// sub-actions and embedded logic nodes, recursively.
-//
-// This is the faithful Go port of Python's substitute_constants_ast applied to
-// Action trees. In Python, actions and logic nodes share the same .args/.clone()
-// interface, so a single recursive function handles both. In Go, we need to
-// handle three cases at each node:
-//
-//  1. The node is an Action (which IS lg.Expr) → walk Args(), substitute each
-//     child recursively, then Clone() with the new args.
-//  2. The node is a plain lg.Expr (Const, Apply, Var, etc.) → apply
-//     co.SubstituteConstantsAST (the logic-level substitution).
-//  3. Also substitute in FormalParams and
-//     FormalReturns.
-//
-// Corresponds to Python ivy_logic_utils.substitute_constants_ast when applied
-// to an Action AST (which Python handles transparently via duck typing).
-func SubstConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	if len(subs) == 0 {
-		return action
-	}
-
-	// Substitute in each child arg.
-	oldArgs := action.ActionArgs()
-	newArgs := make([]lg.Expr, len(oldArgs))
-	changed := false
-	for i, arg := range oldArgs {
-		newArg := substConstantsNode(arg, subs)
-		newArgs[i] = newArg
-		if newArg != arg {
-			changed = true
-		}
-	}
-
-	// Clone with new args if anything changed, or with old args to get a copy.
-	var result Action
-	if changed {
-		result = action.ActionClone(newArgs)
-	} else {
-		result = action.ActionClone(oldArgs)
-	}
-
-	// Substitute in formal params.
-	oldFP := action.GetFormalParams()
-	if len(oldFP) > 0 {
-		newFP := make([]*lg.Const, len(oldFP))
-		fpChanged := false
-		for i, fp := range oldFP {
-			if replacement, ok := subs[lg.Key(fp)]; ok {
-				if rc, ok := replacement.(*lg.Const); ok {
-					newFP[i] = rc
-					fpChanged = true
-					continue
-				}
-			}
-			newFP[i] = fp
-		}
-		if fpChanged {
-			result.SetFormalParams(newFP)
-		} else {
-			result.SetFormalParams(oldFP)
-		}
-	}
-
-	// Substitute in formal returns.
-	oldFR := action.GetFormalReturns()
-	if len(oldFR) > 0 {
-		newFR := make([]*lg.Const, len(oldFR))
-		frChanged := false
-		for i, fr := range oldFR {
-			if replacement, ok := subs[lg.Key(fr)]; ok {
-				if rc, ok := replacement.(*lg.Const); ok {
-					newFR[i] = rc
-					frChanged = true
-					continue
-				}
-			}
-			newFR[i] = fr
-		}
-		if frChanged {
-			result.SetFormalReturns(newFR)
-		} else {
-			result.SetFormalReturns(oldFR)
-		}
-	}
-
-	return result
-}
-
-// substConstantsNode applies constant substitution to a single lg.Expr,
-// handling both wrapped Actions and plain logic nodes.
-func substConstantsNode(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-	if node == nil {
-		return nil
-	}
-
-	// Case 1: Action — recurse into the action.
-	if act, ok := node.(Action); ok {
-		return SubstConstantsAction(act, subs)
-	}
-
-	// Case 2: Plain logic node — use clauseops SubstituteConstantsAST.
-	return co.SubstituteConstantsAST(node, subs)
-}
-
 // It adapts the module-level GetUpdate function to the (domain, inScope) signature.
 func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bool) *transrel.Update {
 	ctx := &UpdateContext{
