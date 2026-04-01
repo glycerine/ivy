@@ -152,12 +152,14 @@ func GetIsolateActions(mod *module.Module, iso IsolateDefInterface) map[string]b
 // names in the given lfs slice. Respects verified/present flags.
 // Corresponds to Python get_isolate_lfs().
 func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*ast.LabeledFormula, verified, present bool) []*ast.LabeledFormula {
-	// Build map from label name to labeled formula
+	// Build map from label name to labeled formula.
+	// Python uses lf.label.rep (the Atom's rep string), so we use the Atom's Rep.
 	lfMap := make(map[string]*ast.LabeledFormula)
 	for _, lf := range lfs {
 		if lf.Label != nil {
-			key := fmt.Sprint(lf.Label)
-			lfMap[key] = lf
+			if atom, ok := lf.Label.(*ast.Atom); ok {
+				lfMap[atom.Rep] = lf
+			}
 		}
 	}
 
@@ -203,13 +205,13 @@ func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*ast.Lab
 	verConjs := GetIsolateConjs(mod, iso, true, false)
 	verSet := make(map[string]bool)
 	for _, lf := range verConjs {
-		if lf.Label != nil {
-			verSet[fmt.Sprint(lf.Label)] = true
+		if atom, ok := lf.Label.(*ast.Atom); ok {
+			verSet[atom.Rep] = true
 		}
 	}
 	var postConjs []*ast.LabeledFormula
 	for _, ver := range mod.LabeledConjs {
-		if ver.Label != nil && verSet[fmt.Sprint(ver.Label)] {
+		if atom, ok := ver.Label.(*ast.Atom); ok && verSet[atom.Rep] {
 			break
 		}
 		postConjs = append(postConjs, ver)
