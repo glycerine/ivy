@@ -334,10 +334,10 @@ func TestDomainSetupScenario(t *testing.T) {
 	}
 
 	// Each place should have a relation entry
-	if _, ok := c.Module.Relations["state_a"]; !ok {
+	if _, ok := c.Module.Relations.Get2("state_a"); !ok {
 		t.Error("expected 'state_a' in module Relations")
 	}
-	if _, ok := c.Module.Relations["state_b"]; !ok {
+	if _, ok := c.Module.Relations.Get2("state_b"); !ok {
 		t.Error("expected 'state_b' in module Relations")
 	}
 
@@ -424,7 +424,7 @@ func TestARGSetupScenario(t *testing.T) {
 		if err != nil {
 			t.Fatalf("AddSymbol(%s): %v", name, err)
 		}
-		c.Module.Relations[name] = relSort
+		c.Module.Relations.Set(name, relSort)
 	}
 
 	// Also need "init" and "a" as known actions

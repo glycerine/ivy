@@ -742,19 +742,19 @@ func GetCheckedActions(mod *module.Module) []string {
 	cact := mod.Cfg.CheckedAction
 	if cact != "" {
 		extName := "ext:" + cact
-		if mod.PublicActions[extName] {
+		if mod.PublicActions.Get(extName) {
 			cact = extName
 		}
 	}
-	if cact != "" && !mod.PublicActions[cact] {
+	if cact != "" && !mod.PublicActions.Get(cact) {
 		return nil
 	}
 	mod.Cfg.CheckedActionFound = true
 	if cact != "" {
 		return []string{cact}
 	}
-	result := make([]string, 0, len(mod.PublicActions))
-	for name := range mod.PublicActions {
+	result := make([]string, 0, mod.PublicActions.Len())
+	for name := range mod.PublicActions.All() {
 		result = append(result, name)
 	}
 	sort.Strings(result)

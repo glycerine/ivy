@@ -428,7 +428,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 					someAssumps = true
 				}
 				callers := callgraph[actname]
-				if mod.PublicActions[actname] {
+				if mod.PublicActions.Get(actname) {
 					callers = append(callers, "the environment")
 				}
 				prettyname := actname
@@ -496,7 +496,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 					someGuarants = true
 				}
 				callers := callgraph[actname]
-				if mod.PublicActions[actname] {
+				if mod.PublicActions.Get(actname) {
 					callers = append(callers, "the environment")
 				}
 				prettyname := actname
@@ -640,9 +640,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				if np.Postconds != nil {
 					fakeMod.Postconds = np.Postconds
 				}
-				fakeMod.PublicActions = make(map[string]bool)
+				fakeMod.PublicActions = iu.NewInsMap[string, bool]()
 				for _, c := range np.Calls {
-					fakeMod.PublicActions[c] = true
+					fakeMod.PublicActions.Set(c, true)
 				}
 				bmap := np.BindingMap()
 				fakeMod.Actions = iu.NewInsMap[string, module.Action]()
@@ -759,7 +759,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.LabeledProps = []*ast.LabeledFormula{pgoal}
 			fakeMod.ConceptSpaces = nil
 			fakeMod.LabeledConjs = nil
-			fakeMod.PublicActions = make(map[string]bool)
+			fakeMod.PublicActions = iu.NewInsMap[string, bool]()
 			fakeMod.Actions = iu.NewInsMap[string, module.Action]()
 			fakeMod.Initializers = nil
 			fakeMod.IsolateProof = nil

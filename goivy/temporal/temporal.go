@@ -252,8 +252,8 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	}
 
 	// Sort public actions
-	calls := make([]string, 0, len(mod.PublicActions))
-	for name := range mod.PublicActions {
+	calls := make([]string, 0, mod.PublicActions.Len())
+	for name := range mod.PublicActions.All() {
 		calls = append(calls, name)
 	}
 	sort.Strings(calls)

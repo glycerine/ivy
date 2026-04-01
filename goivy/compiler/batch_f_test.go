@@ -393,8 +393,12 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 
 	// Hierarchy: obj_a has child act1, obj_b has child act2.
 	// IterIsolate walks verified names through mod.Hierarchy to find actions.
-	mod.Hierarchy["obj_a"] = map[string]bool{"act1": true}
-	mod.Hierarchy["obj_b"] = map[string]bool{"act2": true}
+	hierA := iu.NewInsMap[string, bool]()
+	hierA.Set("act1", true)
+	mod.Hierarchy.Set("obj_a", hierA)
+	hierB := iu.NewInsMap[string, bool]()
+	hierB.Set("act2", true)
+	mod.Hierarchy.Set("obj_b", hierB)
 
 	// Actions registered with composed names (obj_a.act1, obj_b.act2)
 	mod.Actions.Set("obj_a.act1", actions.NewSequence()) // placeholder action body
@@ -450,7 +454,9 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	// Hierarchy: obj has child act1
-	mod.Hierarchy["obj"] = map[string]bool{"act1": true}
+	hierObj := iu.NewInsMap[string, bool]()
+	hierObj.Set("act1", true)
+	mod.Hierarchy.Set("obj", hierObj)
 	mod.Actions.Set("obj.act1", actions.NewSequence())
 
 	// Two exports — only obj.act1 belongs to iso1's isolate

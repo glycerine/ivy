@@ -197,7 +197,7 @@ func EnvAction(mod *module.Module) actions.Action {
 		return actions.NewSequence()
 	}
 	var branches []lg.Expr
-	for name := range mod.PublicActions {
+	for name := range mod.PublicActions.All() {
 		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue

@@ -2005,10 +2005,10 @@ type Updater interface {
 // BuildEnvAction constructs an environment (external) action for the given action name.
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
-func BuildEnvAction(publicActions map[string]bool, actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
+func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
 	var actNames []string
 	if actName == "" {
-		for name := range publicActions {
+		for name := range publicActions.All() {
 			actNames = append(actNames, name)
 		}
 		sort.Strings(actNames)
