@@ -3,6 +3,7 @@
 #
 
 from . import ivy_module as im
+from . import xtracer
 from . import ivy_actions as ia
 from . import ivy_logic as il
 from . import ivy_transrel as tr
@@ -1161,8 +1162,10 @@ def to_aiger(mod,ext_act,method="mc"):
     bgt = mod.background_theory()
     if method=="fsmc":  # if finite-state, unroll the loops
         with ia.UnrollContext(im.module.sort_card):
+            if __debug__: xtracer.trace("mc.action_to_tr calling update (fsmc) type=%s" % type(action).__name__)
             upd = action.update(im.module,None)
     else:
+        if __debug__: xtracer.trace("mc.action_to_tr calling update type=%s" % type(action).__name__)
         upd = action.update(im.module,None)
     stvars,trans,error = tr.add_post_axioms(upd,bgt)
     trans = ilu.and_clauses(trans,ilu.Clauses(defs=bgt.defs))
