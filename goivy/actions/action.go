@@ -858,6 +858,12 @@ type LocalAction struct {
 }
 
 func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...lg.Expr) *LocalAction {
+	if cfg == nil {
+		panic("cfg must not be nil")
+	}
+	if cfg.IuCfg == nil {
+		panic("cfg.UiCfg must not be nil")
+	}
 	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))

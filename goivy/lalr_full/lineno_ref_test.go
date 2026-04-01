@@ -87,7 +87,7 @@ func TestLocationStringWithReference(t *testing.T) {
 
 	// Should delegate to inner (Reference)
 	got := outer.String()
-	want := "orig.ivy:5"
+	want := "orig.ivy: line 5: "
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

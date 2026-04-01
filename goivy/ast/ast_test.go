@@ -483,11 +483,11 @@ func TestForallClone(t *testing.T) {
 
 func TestLocation(t *testing.T) {
 	loc := Location{Filename: "test.ivy", Line: 42}
-	if loc.String() != "test.ivy:42" {
+	if loc.String() != "test.ivy: line 42: " {
 		t.Errorf("got %q", loc.String())
 	}
 	loc2 := Location{Line: 7}
-	if loc2.String() != "line 7" {
+	if loc2.String() != "line 7: " {
 		t.Errorf("got %q", loc2.String())
 	}
 }
