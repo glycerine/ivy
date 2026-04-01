@@ -119,19 +119,19 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 	}
 
 	// Mark top-level suffix as private
-	if _, ok := mod.Hierarchy[suff]; ok {
+	if _, ok := mod.Hierarchy.Get2(suff); ok {
 		mod.Privates[suff] = true
 	}
 
 	// Walk hierarchy
-	for n, children := range mod.Hierarchy {
+	for n, children := range mod.Hierarchy.All() {
 		nsuff := getPrivateFromAttributes(mod, n, suff)
 		nsList := []string{nsuff}
 		if nsuff == "priv" {
 			nsList = []string{"impl", "spec"}
 		}
 		for _, ns := range nsList {
-			if children[ns] {
+			if children.Get(ns) {
 				pname := mod.Cfg.IuCfg.ComposeNames(n, ns)
 				mod.Privates[pname] = true
 			}
@@ -197,13 +197,15 @@ func setPrivatesPrefer(mod *module.Module, iso interface{}, preferred string) {
 	}
 
 	if !verified["this"] {
-		if mod.Hierarchy[suff] != nil && mod.Hierarchy[preferred] != nil {
+		suffVal, _ := mod.Hierarchy.Get2(suff)
+		prefVal, _ := mod.Hierarchy.Get2(preferred)
+		if suffVal != nil && prefVal != nil {
 			mod.Privates[suff] = true
 		}
 	}
-	for n, children := range mod.Hierarchy {
+	for n, children := range mod.Hierarchy.All() {
 		if !verified[n] {
-			if children[suff] && children[preferred] {
+			if children.Get(suff) && children.Get(preferred) {
 				mod.Privates[mod.Cfg.IuCfg.ComposeNames(n, suff)] = true
 			}
 		}

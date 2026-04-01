@@ -947,7 +947,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 
 	// Check hierarchy
 	if c.Module != nil {
-		if _, ok := c.Module.Hierarchy[resolved]; ok {
+		if _, ok := c.Module.Hierarchy.Get2(resolved); ok {
 			return c.CompileNativeName(node)
 		}
 	}

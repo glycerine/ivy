@@ -381,12 +381,12 @@ func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
 
 	// For vocabulary symbols not in env, use identity mapping
 	if tb.AnalysisGraph != nil && tb.AnalysisGraph.Domain != nil {
-		for name := range tb.AnalysisGraph.Domain.Relations {
+		for name := range tb.AnalysisGraph.Domain.Relations.All() {
 			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
 				symPairs = append(symPairs, [2]string{name, name})
 			}
 		}
-		for name := range tb.AnalysisGraph.Domain.Functions {
+		for name := range tb.AnalysisGraph.Domain.Functions.All() {
 			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
 				symPairs = append(symPairs, [2]string{name, name})
 			}
@@ -567,7 +567,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 		}
 	} else {
 		// All public actions
-		for name := range mod.PublicActions {
+		for name := range mod.PublicActions.All() {
 			if a, ok := mod.Actions.Get2(name); ok {
 				if act, ok2 := a.(actions.Action); ok2 {
 					branches = append(branches, act)

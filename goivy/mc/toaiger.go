@@ -676,9 +676,9 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 
 // sortedPublicActions returns public action names sorted.
 func sortedPublicActions(mod *module.Module) []string {
-	names := make([]string, 0, len(mod.PublicActions))
-	for name := range mod.PublicActions {
-		if mod.PublicActions[name] {
+	names := make([]string, 0, mod.PublicActions.Len())
+	for name := range mod.PublicActions.All() {
+		if mod.PublicActions.Get(name) {
 			names = append(names, name)
 		}
 	}

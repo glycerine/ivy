@@ -818,7 +818,7 @@ func TestGraphExecuteAndTraverse(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	ag.Actions.Set("step", act)
-	ag.PublicActions["step"] = true
+	ag.PublicActions.Set("step", true)
 
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)

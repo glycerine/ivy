@@ -510,7 +510,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 		if name == "this" {
 			continue
 		}
-		if _, ok := mod.Hierarchy[name]; ok {
+		if _, ok := mod.Hierarchy.Get2(name); ok {
 			continue
 		}
 		if mod.Sig != nil {

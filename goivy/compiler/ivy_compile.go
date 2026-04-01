@@ -567,7 +567,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					}
 				}
 				mod.SetAction(name, action)
-				mod.PublicActions[name] = true
+				mod.PublicActions.Set(name, true)
 				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)
 			}
 		case *ast.MixinDecl:

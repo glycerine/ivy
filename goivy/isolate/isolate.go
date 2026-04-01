@@ -297,7 +297,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Handle interpret_all_sorts
 	if !isoCfg.InterpretAllSorts && mod.Sig != nil {
 		for typeName := range mod.Sig.Interp {
-			_, inHier := mod.Hierarchy[typeName]
+			_, inHier := mod.Hierarchy.Get2(typeName)
 			cond1 := present[typeName] && !inHier
 			cond2 := false
 			if itps, ok := mod.Interps[typeName]; ok {
@@ -619,9 +619,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 		if mod.BeforeExport == nil {
-			mod.BeforeExport = make(map[string]module.Action)
+			mod.BeforeExport = iu.NewInsMap[string, module.Action]()
 		}
-		mod.BeforeExport["ext:"+actname] = act
+		mod.BeforeExport.Set("ext:"+actname, act)
 	}
 
 	// Explicit exports
@@ -1319,7 +1319,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		sortedExp := sortedKeys(exported)
 		xtracer.Trace("isolate.exported=%s", strings.Join(sortedExp, ","))
 	}
-	mod.PublicActions = exported
+	mod.PublicActions = iu.NewInsMap[string, bool]()
+	for k, v := range exported {
+		mod.PublicActions.Set(k, v)
+	}
 	mod.Actions = iu.NewInsMap[string, module.Action]()
 	for name, act := range newActions.All() {
 		mod.Actions.Set(name, act)
@@ -1808,11 +1811,11 @@ func ClassifyComponents(mod *module.Module, verified, present map[string]bool) m
 	// Walk the hierarchy and classify each component.
 	var walk func(parent string)
 	walk = func(parent string) {
-		children, ok := mod.Hierarchy[parent]
+		children, ok := mod.Hierarchy.Get2(parent)
 		if !ok {
 			return
 		}
-		for child := range children {
+		for child := range children.All() {
 			fullName := child
 			if parent != "this" {
 				fullName = mod.Cfg.IuCfg.ComposeNames(parent, child)

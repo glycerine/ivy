@@ -263,7 +263,10 @@ func GetModCone(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action
 		}
 	}
 	if roots == nil {
-		roots = mod.PublicActions
+		roots = make(map[string]bool)
+		for k, v := range mod.PublicActions.All() {
+			roots[k] = v
+		}
 	}
 	cone := make(map[string]bool)
 	for a := range roots {

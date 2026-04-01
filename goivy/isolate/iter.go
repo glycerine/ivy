@@ -100,8 +100,8 @@ func IterIsolate(mod *module.Module, iso IsolateDefInterface, fun func(string), 
 			}
 		}
 
-		if children, ok := mod.Hierarchy[name]; ok {
-			for child := range children {
+		if children, ok := mod.Hierarchy.Get2(name); ok {
+			for child := range children.All() {
 				cname := mod.Cfg.IuCfg.ComposeNames(name, child)
 				if !inSub || !(child == suff ||
 					hasAttribute(mod, mod.Cfg.IuCfg.ComposeNames(cname, suff)) ||

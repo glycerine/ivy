@@ -270,7 +270,7 @@ type AnalysisGraph struct {
 	Isolates      map[string]*ast.IsolateDef
 	Exports       []module.Exporter
 	Delegates     []module.Delegator
-	PublicActions map[string]bool
+	PublicActions *iu.InsMap[string, bool]
 	InitCond      *clauseops.Clauses
 }
 
@@ -1123,7 +1123,7 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 	// Unlabeled state: apply each public action
 	var result []*ast.Definition
 	for actionName := range ag.Actions.All() {
-		if !ag.PublicActions[actionName] {
+		if !ag.PublicActions.Get(actionName) {
 			continue
 		}
 		interpState := ArtToInterpState(state)

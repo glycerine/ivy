@@ -27,18 +27,18 @@ func DumpToIvy(w io.Writer, ag *art.AnalysisGraph) error {
 	mod := ag.Domain
 
 	// Dump relations
-	for name, sort := range mod.Relations {
+	for name, sort := range mod.Relations.All() {
 		fmt.Fprintf(w, "relation %s : %s\n", name, sort)
 	}
-	if len(mod.Relations) > 0 {
+	if mod.Relations.Len() > 0 {
 		fmt.Fprintln(w)
 	}
 
 	// Dump functions
-	for name, sort := range mod.Functions {
+	for name, sort := range mod.Functions.All() {
 		fmt.Fprintf(w, "function %s : %s\n", name, sort)
 	}
-	if len(mod.Functions) > 0 {
+	if mod.Functions.Len() > 0 {
 		fmt.Fprintln(w)
 	}
 
