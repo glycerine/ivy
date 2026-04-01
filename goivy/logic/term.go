@@ -7,6 +7,19 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 )
 
+// ReprExpr returns the Repr() of an expression if available, else String().
+// This matches Python's __repr__ behavior for sort-qualified display.
+func ReprExpr(e Expr) string {
+	type reprer interface{ Repr() string }
+	if r, ok := e.(reprer); ok {
+		return r.Repr()
+	}
+	if e == nil {
+		return "<nil>"
+	}
+	return e.String()
+}
+
 // Variable represents a variable. Name must start with uppercase.
 type Variable struct {
 	ast.Base
@@ -24,6 +37,16 @@ func NewVariable(name string, sort Sort) (*Variable, error) {
 func (v *Variable) NodeSort() Sort   { return v.VSort }
 func (v *Variable) Children() []Expr { return nil }
 func (v *Variable) String() string { return v.Name }
+
+// Repr returns a sort-qualified string, matching Python ast.Variable.__repr__
+// which always includes ':sort'. String() matches Python logic.Var.__str__
+// which returns just the name.
+func (v *Variable) Repr() string {
+	if v.VSort != nil && !IsTopSort(v.VSort) {
+		return v.Name + ":" + v.VSort.String()
+	}
+	return v.Name
+}
 
 func (v *Variable) Equal(n Expr) bool {
 	if o, ok := n.(*Variable); ok {
@@ -62,7 +85,10 @@ func NewConst(name string, sort Sort) *Const {
 
 func (c *Const) NodeSort() Sort   { return c.CSort }
 func (c *Const) Children() []Expr { return nil }
-func (c *Const) String() string   { return c.Name }
+func (c *Const) String() string { return c.Name }
+
+// Repr returns the sort-qualified representation. For Const, same as String().
+func (c *Const) Repr() string { return c.Name }
 
 func (c *Const) Equal(n Expr) bool {
 	if o, ok := n.(*Const); ok {
@@ -168,6 +194,20 @@ func (a *Apply) String() string {
 		parts[i] = t.String()
 	}
 	return fmt.Sprintf("%s(%s)", a.Func.String(), strings.Join(parts, ", "))
+}
+
+// Repr returns the sort-qualified representation, using Repr() on children.
+// Matches Python ast.Atom.__repr__ which calls str() on args (which for
+// ast.Variable invokes __repr__ including sort qualifiers).
+func (a *Apply) Repr() string {
+	if len(a.Terms) == 0 {
+		return ReprExpr(a.Func)
+	}
+	parts := make([]string, len(a.Terms))
+	for i, t := range a.Terms {
+		parts[i] = ReprExpr(t)
+	}
+	return fmt.Sprintf("%s(%s)", ReprExpr(a.Func), strings.Join(parts, ", "))
 }
 
 func (a *Apply) Equal(n Expr) bool {

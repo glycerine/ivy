@@ -2278,7 +2278,12 @@ func CheckProperties(mod *module.Module) error {
 	}
 
 	for _, prop := range props {
-		propLabel := fmt.Sprint(prop.Label)
+		propLabel := ""
+		if expr, ok := prop.Label.(lg.Expr); ok {
+			propLabel = lg.ReprExpr(expr)
+		} else if prop.Label != nil {
+			propLabel = fmt.Sprint(prop.Label)
+		}
 		_, hasPfCheck := pmap[prop.ID]
 		xtracer.Trace("compiler.CheckProperties.classify label=%s id=%d temporal=%v hasPf=%v", propLabel, prop.ID, prop.IsTemporal(), hasPfCheck)
 
