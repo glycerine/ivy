@@ -1007,6 +1007,11 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
                                   if after_mixins(m)
                                   else []))
 
+    if __debug__:
+        xtracer.trace("isolate.input_actions count=%d" % len(mod.actions))
+        for _name, _action in mod.actions.items():
+            xtracer.trace("isolate.input_action[%s]=%s" % (_name, _action.canon()))
+
     summarized_actions = set()
     for actname,action in mod.actions.items():
         if __debug__: xtracer.trace("isolate.classify_loop actname=%s type=%s" % (actname, type(action).__name__))

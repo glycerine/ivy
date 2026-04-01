@@ -494,6 +494,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Main action classification loop ---
 
+	if xtracer.Enabled && mod.Actions != nil && mod.Actions.Len() > 0 {
+		xtracer.Trace("isolate.input_actions count=%d", mod.Actions.Len())
+		for name, action := range mod.Actions.All() {
+			xtracer.Trace("isolate.input_action[%s]=%s", name, action.Sexp())
+		}
+	}
+
 	newActions := iu.NewInsMap[string, actions.Action]()
 	summarizedActions := make(map[string]bool)
 
