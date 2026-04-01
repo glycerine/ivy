@@ -1,5 +1,7 @@
 # Fix allSyms.add Trace Ordering Mismatch
 
+note: REDONE. see PLAN165.
+
 **Created:** 2026-04-01 (current session)
 
 ## Context
