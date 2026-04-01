@@ -46,7 +46,7 @@ func symSetNames(syms map[lg.NodeKey]lg.Expr) map[string]bool {
 func TestCollectSymbolsInto_SimpleConst(t *testing.T) {
 	c := tConst("c")
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(c, syms)
+	collectSymbolsInto("test",c, syms)
 	names := symSetNames(syms)
 	if !names["c"] {
 		t.Error("should contain c")
@@ -62,7 +62,7 @@ func TestCollectSymbolsInto_Apply(t *testing.T) {
 	b := tConst("b")
 	app := tApply(f, a, b)
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(app, syms)
+	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "a", "b"} {
 		if !names[name] {
@@ -83,7 +83,7 @@ func TestCollectSymbolsInto_BinderFunc(t *testing.T) {
 	app := tApply(lam, a)
 
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(app, syms)
+	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "x", "a"} {
 		if !names[name] {
@@ -94,7 +94,7 @@ func TestCollectSymbolsInto_BinderFunc(t *testing.T) {
 
 func TestCollectSymbolsInto_Nil(t *testing.T) {
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(nil, syms) // must not panic
+	collectSymbolsInto("test",nil, syms) // must not panic
 	if len(syms) != 0 {
 		t.Errorf("expected empty map for nil node, got %d entries", len(syms))
 	}
@@ -107,7 +107,7 @@ func TestCollectSymbolsInto_MergesIntoExisting(t *testing.T) {
 
 	f := tConst("f")
 	a := tConst("a")
-	collectSymbolsInto(tApply(f, a), syms)
+	collectSymbolsInto("test",tApply(f, a), syms)
 
 	if len(syms) != 3 {
 		t.Errorf("expected 3 symbols (pre + f + a), got %d", len(syms))
@@ -130,7 +130,7 @@ func TestCollectSymbolsInto_ForAllBody(t *testing.T) {
 	fa := tForAll(body)
 
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(fa, syms)
+	collectSymbolsInto("test",fa, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "a", "g", "b"} {
 		if !names[name] {
@@ -149,7 +149,7 @@ func TestCollectSymbolsInto_ApplyWithForAllFunc(t *testing.T) {
 	app := tApply(fa, a)
 
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(app, syms)
+	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"g", "c", "a"} {
 		if !names[name] {
@@ -209,7 +209,7 @@ func TestRandomized_NoPanic(t *testing.T) {
 	for i := 0; i < 500; i++ {
 		node := randAST(rng, consts, 4)
 		syms := make(map[lg.NodeKey]lg.Expr)
-		collectSymbolsInto(node, syms)
+		collectSymbolsInto("test",node, syms)
 		if len(syms) == 0 {
 			t.Errorf("iter %d: expected at least one symbol", i)
 		}
@@ -238,7 +238,7 @@ func FuzzCollectSymbolsInto(f *testing.F) {
 
 		// must not panic
 		syms := make(map[lg.NodeKey]lg.Expr)
-		collectSymbolsInto(node, syms)
+		collectSymbolsInto("test",node, syms)
 
 		// every random AST contains at least one Const leaf
 		if len(syms) == 0 {

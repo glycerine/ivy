@@ -40,6 +40,13 @@ def _trace_sym_set(label, syms):
             xtracer.trace("%s.sym %s" % (label, str(x)))
         xtracer.trace("%s n=%d" % (label, len(syms)))
 
+def _traced_add_syms(label, target_set, new_syms):
+    """Add symbols to set, tracing each NEW addition inline."""
+    for sym in new_syms:
+        if sym not in target_set:
+            if __debug__: xtracer.trace("%s.add %s" % (label, str(sym)))
+        target_set.add(sym)
+
 def lookup_action(ast,mod,name):
     if name not in mod.actions:
         raise iu.IvyError(ast,"action {} undefined".format(name))
@@ -1227,28 +1234,32 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
 
     # filter definitions and native definitions
 
-    # Collect in phases with per-phase traces (matching Go), normalize at end.
+    # Collect in phases with online per-symbol traces and per-phase summaries.
+    _as1_label = "isolate.allSyms"
     # Phase 1: formulas
-    formula_asts = []
+    all_syms_raw = set()
     for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs]:
-        formula_asts += [y.formula for y in x if not isinstance(y.formula,ivy_ast.SchemaBody)]
-    all_syms_raw = set(lu.used_symbols_asts(formula_asts))
+        for y in x:
+            if not isinstance(y.formula,ivy_ast.SchemaBody):
+                _traced_add_syms(_as1_label, all_syms_raw, lu.used_symbols_ast(y.formula))
     _trace_sym_set("isolate.allSyms_post_formulas", all_syms_raw)
     # Phase 2: action formals
-    formal_asts = []
     for a in list(mod.actions.values()):
-        formal_asts.extend(a.formal_params)
-        formal_asts.extend(a.formal_returns)
-    all_syms_raw.update(lu.used_symbols_asts(formal_asts))
+        _traced_add_syms(_as1_label, all_syms_raw, lu.used_symbols_asts(a.formal_params))
+        _traced_add_syms(_as1_label, all_syms_raw, lu.used_symbols_asts(a.formal_returns))
     _trace_sym_set("isolate.allSyms_post_formals", all_syms_raw)
     # Phase 3: natives
-    native_asts = []
     for tmp in mod.natives:
-        native_asts.extend(tmp.args[2:])
-    all_syms_raw.update(lu.used_symbols_asts(native_asts))
+        _traced_add_syms(_as1_label, all_syms_raw, lu.used_symbols_asts(tmp.args[2:]))
     _trace_sym_set("isolate.allSyms_post_natives", all_syms_raw)
     # Normalize all at once
-    all_syms = set(map(ivy_logic.normalize_symbol, all_syms_raw))
+    all_syms = set()
+    for sym in all_syms_raw:
+        nsym = ivy_logic.normalize_symbol(sym)
+        if __debug__:
+            if nsym not in all_syms:
+                xtracer.trace("%s.add_normalized %s" % (_as1_label, str(nsym)))
+        all_syms.add(nsym)
     _trace_sym_set("isolate.allSyms_post_normalize", all_syms)
     for actname, action in list(new_actions.items()):
         if __debug__: xtracer.trace("isolate.allSyms_action_refs.BEGIN %s" % actname)
@@ -1360,26 +1371,36 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     # keep only the symbols referenced in the remaining
     # formulas
 
-    asts = []
+    # allSyms2: online per-symbol tracing, matching Go execution order exactly.
+    _as2_label = "isolate.allSyms2"
+    all_syms = set()
+
+    # Phase A: formulas from axioms, props, inits, conjs, definitions
     for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,mod.definitions]:
-        asts.extend(y.formula for y in x if not isinstance(y.formula,ivy_ast.SchemaBody))
-    asts.extend(action for action in list(mod.actions.values()))
+        for y in x:
+            if not isinstance(y.formula,ivy_ast.SchemaBody):
+                _traced_add_syms(_as2_label, all_syms, lu.used_symbols_ast(y.formula))
+
+    # Phase B: action bodies
+    for action in list(mod.actions.values()):
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_ast(action))
+
+    # Phase C: params (if compiling, keep all of the parameters)
     if opt_keep_destructors.get():
-        asts.extend(mod.params) # if compiling, keep all of the parameters
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_asts(mod.params))
+
+    # Phase D: action formals (separate pass from action bodies)
     for a in list(mod.actions.values()):
-        asts.extend(a.formal_params)
-        asts.extend(a.formal_returns)
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_asts(a.formal_params))
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_asts(a.formal_returns))
+
+    # Phase E: natives
     for tmp in mod.natives:
-        asts.extend(tmp.args[2:])
-    # in case a symbol is used only in a proof
-    asts.extend(x[1] for x in mod.proofs)
-   
-    # jea note: "This is the set of all unique symbols referenced 
-    # anywhere in any of the ASTs in the list. This is a full 
-    # recursive traversal, not a filter. (dedupped though)"
-    # symbols_ilu_ast recursively walks each AST node and 
-    # yields ast.rep for every non-binder app node it finds.
-    all_syms = set(lu.used_symbols_asts(asts))
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_asts(tmp.args[2:]))
+
+    # Phase F: proofs (in case a symbol is used only in a proof)
+    for x in mod.proofs:
+        _traced_add_syms(_as2_label, all_syms, lu.used_symbols_ast(x[1]))
 
     if opt_keep_destructors.get():
         for sym in list(all_syms):

@@ -378,7 +378,7 @@ func definedSymbolName(node lg.Expr) string {
 
 func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectSymbolsInto(node, syms)
+	collectSymbolsInto("isolate.usedSymbolExprs", node, syms)
 	return syms
 }
 
@@ -402,12 +402,20 @@ func usedSymbolNames(node lg.Expr) []string {
 // collectSymbolsInto walks node with il.SymbolsIluAst and adds all
 // yielded symbols into the target map. This matches Python's
 // lu.used_symbols_ast behavior, including binder expansion.
-func collectSymbolsInto(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
+// The label parameter is used for online per-symbol xtracer tracing:
+// each NEW symbol addition emits an xtracer.Trace line immediately.
+func collectSymbolsInto(label string, node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 	if node == nil {
 		return
 	}
 	for sym := range il.SymbolsIluAst(node) {
-		syms[lg.Key(sym)] = sym
+		key := lg.Key(sym)
+		if xtracer.Enabled {
+			if _, exists := syms[key]; !exists {
+				xtracer.Trace("%s.add %s", label, lg.PrettyFmla(sym))
+			}
+		}
+		syms[key] = sym
 	}
 }
 
@@ -1115,7 +1123,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 func collectActionSymNames(act actions.Action) map[string]bool {
 	exprs := make(map[lg.NodeKey]lg.Expr)
 	for _, arg := range act.ActionArgs() {
-		collectSymbolsInto(arg, exprs)
+		collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 	}
 	// Also recurse into sub-actions
 	for _, sub := range act.IterSubactions() {
@@ -1123,7 +1131,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 			continue // skip self to avoid infinite loop
 		}
 		for _, arg := range sub.ActionArgs() {
-			collectSymbolsInto(arg, exprs)
+			collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 		}
 	}
 	names := make(map[string]bool, len(exprs))
