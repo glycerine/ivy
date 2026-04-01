@@ -885,7 +885,7 @@ def follow_definitions_rec(sym,dmap,all_syms,memo):
     all_syms.add(sym)
     if sym in dmap and sym not in memo:
         memo.add(sym)
-        for s in lu.used_symbols_ast(dmap[sym]):
+        for s in lu.symbols_ilu_ast(dmap[sym]):
             follow_definitions_rec(s,dmap,all_syms,memo)
 
 def follow_definitions(ldfs,all_syms,label=""):
