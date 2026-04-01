@@ -948,8 +948,8 @@ func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
 
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{}
-	xtracer.Trace("fragment calling IntUpdate type=%s", actions.ActionTypeName(act))
-	upd := actions.IntUpdate(act, ctx)
+	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(act))
+	upd := actions.GetUpdate(act, ctx)
 	if upd == nil {
 		return fmlaPair{}, false
 	}

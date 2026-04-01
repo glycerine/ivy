@@ -34,10 +34,10 @@ def action_to_tr(mod,action,method):
     bgt = mod.background_theory()
     if method=="fsmc":  # if finite-state, unroll the loops
         with ia.UnrollContext(im.module.sort_card):
-            if __debug__: xtracer.trace("vmt.action_to_tr calling update (fsmc) type=%s" % type(action).__name__)
+            if __debug__: xtracer.trace("vmt.ActionToTR calling GetUpdate (fsmc) type=%s" % type(action).__name__)
             upd = action.update(im.module,None)
     else:
-        if __debug__: xtracer.trace("vmt.action_to_tr calling update type=%s" % type(action).__name__)
+        if __debug__: xtracer.trace("vmt.ActionToTR calling GetUpdate type=%s" % type(action).__name__)
         upd = action.update(im.module,None)
     stvars,trans,error = tr.add_post_axioms(upd,bgt)
     trans = ilu.and_clauses(trans,ilu.Clauses(defs=bgt.defs))
