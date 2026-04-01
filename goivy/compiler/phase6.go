@@ -2278,7 +2278,12 @@ func CheckProperties(mod *module.Module) error {
 	}
 
 	for _, prop := range props {
+		propLabel := labeledFormulaName(prop)
+		_, hasPfCheck := pmap[prop.ID]
+		xtracer.Trace("compiler.CheckProperties.classify label=%s id=%d temporal=%v hasPf=%v", propLabel, prop.ID, prop.IsTemporal(), hasPfCheck)
+
 		if prop.IsTemporal() {
+			xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (temporal)", propLabel)
 			mod.LabeledProps = append(mod.LabeledProps, prop)
 		} else if pf, hasPf := pmap[prop.ID]; hasPf {
 			// Property has a proof — admit it via prover
@@ -2290,10 +2295,12 @@ func CheckProperties(mod *module.Module) error {
 				if err != nil {
 					// On proof error, treat as unproved (match Python: errors propagate but we log)
 					pp("check_properties: proof error for %s: %v", labeledFormulaName(prop), err)
+					xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (proof error)", propLabel)
 					mod.LabeledProps = append(mod.LabeledProps, prop)
 					continue
 				}
 			}
+			xtracer.Trace("compiler.CheckProperties.classify label=%s subgoals=%d", propLabel, len(subgoals))
 
 			if _, isDef := prop.Formula.(*lg.Definition); !isDef {
 				prop = namedTrans(prop)
@@ -2307,11 +2314,14 @@ func CheckProperties(mod *module.Module) error {
 			if len(subgoals) == 0 {
 				if fExpr, ok := prop.Formula.(lg.Expr); ok && !isSchemaBody(fExpr) {
 					if _, isDef := prop.Formula.(*lg.Definition); isDef {
+						xtracer.Trace("compiler.CheckProperties.classify label=%s -> definitions (proved, 0 subgoals, def)", propLabel)
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
+						xtracer.Trace("compiler.CheckProperties.classify label=%s -> axioms (proved, 0 subgoals)", propLabel)
 						mod.LabeledAxioms = append(mod.LabeledAxioms, prop)
 					}
 				} else {
+					xtracer.Trace("compiler.CheckProperties.classify label=%s -> schemata (proved, 0 subgoals, schema)", propLabel)
 					name := labeledFormulaName(prop)
 					if mod.Schemata == nil {
 						mod.Schemata = make(map[string]ast.Node)
@@ -2320,6 +2330,7 @@ func CheckProperties(mod *module.Module) error {
 				}
 			} else {
 				// Has subgoals — convert via TheoremToProperty
+				xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (proved, %d subgoals)", propLabel, len(subgoals))
 				subgoals = mapTheoremToProperty(subgoals, mod)
 				lb := ast.NewLabeler(mod.Cfg.AstCfg)
 				for _, g := range subgoals {
@@ -2355,6 +2366,7 @@ func CheckProperties(mod *module.Module) error {
 			})
 		} else {
 			// No proof
+			xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (no proof)", propLabel)
 			if _, isDef := prop.Formula.(*lg.Definition); isDef {
 				mod.Definitions = append(mod.Definitions, prop)
 			} else {

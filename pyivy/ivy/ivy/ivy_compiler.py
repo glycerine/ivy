@@ -2270,10 +2270,15 @@ def check_properties(mod):
     prover = ivy_proof.ProofChecker(mod.labeled_axioms,mod.definitions,mod.schemata)
 
     for prop in props:
+        _plbl = str(prop.label) if prop.label else ""
+        _has_pf = prop.id in pmap
+        if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s id=%d temporal=%s hasPf=%s" % (_plbl, prop.id, prop.temporal, _has_pf))
         if prop.temporal:
+            if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> props (temporal)" % _plbl)
             mod.labeled_props.append(prop)
         elif prop.id in pmap:
             subgoals = prover.admit_proposition(prop,pmap[prop.id])
+            if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s subgoals=%d" % (_plbl, len(subgoals)))
             if not isinstance(prop.formula,ivy_logic.Definition):
                 prop = named_trans(prop)
                 prover.axioms[-1] = prop
@@ -2281,12 +2286,16 @@ def check_properties(mod):
             if len(subgoals) == 0:
                 if not isinstance(prop.formula,ivy_ast.SchemaBody):
                     if isinstance(prop.formula,ivy_logic.Definition):
+                        if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> definitions (proved, 0 subgoals, def)" % _plbl)
                         mod.definitions.append(prop)
-                    else: 
+                    else:
+                        if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> axioms (proved, 0 subgoals)" % _plbl)
                         mod.labeled_axioms.append(prop)
                 else:
+                    if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> schemata (proved, 0 subgoals, schema)" % _plbl)
                     mod.schemata[prop.label.relname] = prop
             else:
+                if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> props (proved, %d subgoals)" % (_plbl, len(subgoals)))
                 subgoals = list(map(theorem_to_property,subgoals))
                 lb = ivy_ast.Labeler()
                 for g in subgoals:
@@ -2309,6 +2318,7 @@ def check_properties(mod):
             # if isinstance(prop.formula,ivy_ast.SchemaBody):
             #     prover.schemata[prop.label.relname] = prop.formula
             #     prop = theorem_to_property(prop)
+            if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> props (no proof)" % _plbl)
             if isinstance(prop.formula,ivy_logic.Definition):
                 mod.definitions.append(prop)
             else:
