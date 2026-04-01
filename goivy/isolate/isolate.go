@@ -921,14 +921,22 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// matching Python's set of Const objects distinguished by (name, sort).
 	const as1 = "isolate.allSyms"
 	allSyms := make(map[lg.NodeKey]lg.Expr)
-	for _, lfSlice := range [][]*ast.LabeledFormula{
+	as1ListNames := []string{"axioms", "props", "inits", "conjs"}
+	for listIdx, lfSlice := range [][]*ast.LabeledFormula{
 		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
 	} {
-		for _, lf := range lfSlice {
+		for fIdx, lf := range lfSlice {
 			if lf.Formula != nil {
 				// Python: if not isinstance(y.formula, ivy_ast.SchemaBody)
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
+				}
+				if xtracer.Enabled {
+					lbl := ""
+					if lf.Label != nil {
+						lbl = fmt.Sprint(lf.Label)
+					}
+					xtracer.Trace("%s.formula_begin list=%s idx=%d label=%s", as1, as1ListNames[listIdx], fIdx, lbl)
 				}
 				collectSymbolsInto(as1, lf.Formula.(lg.Expr), allSyms)
 			}

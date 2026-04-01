@@ -1238,9 +1238,13 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     _as1_label = "isolate.allSyms"
     # Phase 1: formulas
     all_syms_raw = set()
-    for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs]:
-        for y in x:
+    _as1_list_names = ["axioms", "props", "inits", "conjs"]
+    for _list_idx, x in enumerate([mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs]):
+        for _f_idx, y in enumerate(x):
             if not isinstance(y.formula,ivy_ast.SchemaBody):
+                if __debug__:
+                    _lbl = str(y.label) if y.label else ""
+                    xtracer.trace("%s.formula_begin list=%s idx=%d label=%s" % (_as1_label, _as1_list_names[_list_idx], _f_idx, _lbl))
                 _traced_add_syms(_as1_label, all_syms_raw, lu.used_symbols_ast(y.formula))
     _trace_sym_set("isolate.allSyms_post_formulas", all_syms_raw)
     # Phase 2: action formals
