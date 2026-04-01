@@ -237,8 +237,12 @@ func (a *EnsuresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 6. AssignAction
 // =========================================================================
 
-// func (a *AssignAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *AssignAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *AssignAction) Clone(args []ast.Node) ast.Node {
+	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+}
 
+/* regresses our golden matching from 155259 -> 149446, commenting out.
 func (a *AssignAction) Args() []ast.Node {
 	// Return AST-level nodes when available, matching Python's self.args = [lhs, rhs]
 	// where lhs/rhs are Atoms (not logic.Apply).
@@ -253,10 +257,6 @@ func (a *AssignAction) Args() []ast.Node {
 	return []ast.Node{lhs, rhs}
 }
 
-//func (a *AssignAction) Clone(args []ast.Node) ast.Node {
-//	return a.ActionClone(nodesToExprs(args)).(ast.Node)
-//}
-
 func (a *AssignAction) Clone(args []ast.Node) ast.Node {
 	// After tree rewriting, Args() may have returned AST nodes (Atom, App)
 	// which got rewritten. Sync both AST and logic fields.
@@ -265,6 +265,7 @@ func (a *AssignAction) Clone(args []ast.Node) ast.Node {
 	r := &AssignAction{ActionBase: a.ActionBase, LHS: newLHS, RHS: newRHS, AstLHS: newAstLHS, AstRHS: newAstRHS}
 	return r
 }
+*/
 
 func (a *AssignAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *AssignAction) NodeSort() lg.Sort            { return lg.ActionS }

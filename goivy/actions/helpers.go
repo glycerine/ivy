@@ -22,6 +22,9 @@ func shortTypeName(v interface{}) string {
 	if s == "Variable" {
 		return "Var"
 	}
+	if s == "App" {
+		return "Apply"
+	}
 	return s
 }
 
