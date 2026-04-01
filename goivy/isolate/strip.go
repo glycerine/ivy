@@ -11,6 +11,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // StripMap maps component names to their isolate parameter names.
@@ -419,6 +420,7 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.
 func StripLabeledFormulas(lfs []*ast.LabeledFormula, stripMap StripMap, mod *module.Module) []*ast.LabeledFormula {
+	xtracer.Trace("isolate.StripLabeledFormulas ENTER n_lfs=%d n_stripMap=%d", len(lfs), len(stripMap))
 	if len(stripMap) == 0 {
 		return lfs
 	}
@@ -699,7 +701,9 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 // This is the core stripping function. StripIsolateParams is the higher-level
 // function that builds the strip map and handles variable parameter substitution.
 func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[string]bool) error {
+	xtracer.Trace("isolate.StripIsolate ENTER n_stripMap=%d", len(stripMap))
 	if len(stripMap) == 0 {
+		xtracer.Trace("isolate.StripIsolate SKIP empty_stripMap")
 		return nil
 	}
 
