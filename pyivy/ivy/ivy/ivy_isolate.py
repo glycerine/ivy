@@ -77,6 +77,7 @@ def add_mixins(mod,actname,action2,assert_to_assume=lambda m:[],use_mixin=lambda
                 action1 = action1.assert_to_assume(ata)
             action1 = mod_mixin(mixin,action1)
             res = ia.apply_mixin(mixin,action1,res)
+            if __debug__: xtracer.trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_nargs=%d action1_nargs=%d" % (actname, mixin_name, len(res.args), len(action1.args)))
         else:
             if __debug__: xtracer.trace("isolate.add_mixins_ext SKIP use_mixin=false mixer=%s" % mixin_name)
     return res
@@ -1668,6 +1669,7 @@ def fix_initializers(mod,after_inits):
             if action == None or not ia.has_code(action):
                 continue
             mod.initial_actions.append(action)
+            if __debug__: xtracer.trace("isolate.fix_initializers LOOP name=%s extname=%s action_type=%s action_nargs=%d" % (name, extname, type(action).__name__, len(action.args)))
             mod.initializers.append((name,loop_action(action,mod)))
             things.add(name)
             things.add(extname)

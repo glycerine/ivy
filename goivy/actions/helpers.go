@@ -12,6 +12,9 @@ import (
 
 // shortTypeName returns just the struct name without package prefix or pointer star,
 // matching Python's type(x).__name__ output.
+// ShortTypeName is the exported version of shortTypeName.
+func ShortTypeName(v interface{}) string { return shortTypeName(v) }
+
 func shortTypeName(v interface{}) string {
 	s := fmt.Sprintf("%T", v)
 	if i := strings.LastIndex(s, "."); i >= 0 {

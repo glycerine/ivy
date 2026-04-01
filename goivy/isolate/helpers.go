@@ -78,6 +78,13 @@ func AddMixinsExt(
 			action1 = modMixin(mx, action1)
 		}
 		res = actions.ApplyMixin(action1, res, mx.IsAfter())
+		if seq, ok := res.(*actions.Sequence); ok {
+			xtracer.Trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_nargs=%d action1_nargs=%d",
+				actname, mixerName, len(seq.Elems), len(action1.Args()))
+		} else {
+			xtracer.Trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_type=%s action1_nargs=%d",
+				actname, mixerName, actions.ShortTypeName(res), len(action1.Args()))
+		}
 	}
 	return res
 }

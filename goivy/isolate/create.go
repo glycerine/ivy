@@ -646,6 +646,8 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 		mod.InitialActions = append(mod.InitialActions, action)
 
 		// Create looped version for initializers
+		xtracer.Trace("isolate.fix_initializers LOOP name=%s extname=%s action_type=%s action_nargs=%d",
+			name, extname, actions.ShortTypeName(action), len(action.Args()))
 		loopedAction := LoopAction(action, mod)
 		mod.Initializers = append(mod.Initializers, module.NamedAction{
 			Name:   name,
