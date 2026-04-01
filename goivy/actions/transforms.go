@@ -288,8 +288,8 @@ func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result
 
 // References returns the set of non-action symbols referenced by an action.
 // Corresponds to Python's Action.references() + get_references().
-func References(action Action, destructorSorts map[string]lg.Sort) map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+func References(action Action, destructorSorts map[string]lg.Sort) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	referencesRec(action, result, destructorSorts)
 	return result
 }
@@ -299,12 +299,12 @@ func References(action Action, destructorSorts map[string]lg.Sort) map[lg.NodeKe
 //   - AssignAction: only RHS + assign_refs(LHS)
 //   - HavocAction: only assign_refs(target)
 //   - Base Action: all non-Action args
-func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
+func referencesRec(action Action, result *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
 	if action == nil {
 		return
 	}
 	if xtracer.Enabled {
-		xtracer.Trace("actions.referencesRec ENTER type=%s n_before=%d", action.Name(), len(result))
+		xtracer.Trace("actions.referencesRec ENTER type=%s n_before=%d", action.Name(), result.Len())
 	}
 	// Dispatch: matches Python's specialized references() overrides
 	switch a := action.(type) {
@@ -365,7 +365,7 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 		}
 	}
 	if xtracer.Enabled {
-		xtracer.Trace("actions.referencesRec EXIT type=%s n_after=%d", action.Name(), len(result))
+		xtracer.Trace("actions.referencesRec EXIT type=%s n_after=%d", action.Name(), result.Len())
 	}
 }
 
@@ -374,7 +374,7 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 // recurses into args[0] (x), and collects symbols from remaining args (y).
 // For non-destructors (including bare Const symbols), processes children
 // only — does NOT add the target symbol itself.
-func assignRefs(node lg.Expr, result map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
+func assignRefs(node lg.Expr, result *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
 	if node == nil {
 		return
 	}
@@ -384,11 +384,11 @@ func assignRefs(node lg.Expr, result map[lg.NodeKey]lg.Expr, destructorSorts map
 				// Python: refs.add(n.rep); recur(n.args[0])
 				if xtracer.Enabled {
 					key := ConstSymKey(c)
-					if _, already := result[key]; !already {
+					if _, already := result.Get2(key); !already {
 						xtracer.Trace("actions.assignRefs.add_destructor %s", ConstSymDisplay(c))
 					}
 				}
-				result[ConstSymKey(c)] = c
+				result.Set(ConstSymKey(c), c)
 				if len(app.Terms) > 0 {
 					assignRefs(app.Terms[0], result, destructorSorts)
 				}
@@ -455,18 +455,18 @@ func SymKeyToDisplay(key string) string {
 	return name
 }
 
-func collectSymbols(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
+func collectSymbols(node lg.Expr, result *iu.InsMap[lg.NodeKey, lg.Expr]) {
 	if node == nil {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
 		if xtracer.Enabled {
 			key := ConstSymKey(c)
-			if _, already := result[key]; !already {
+			if _, already := result.Get2(key); !already {
 				xtracer.Trace("actions.collectSymbols.add %s", ConstSymDisplay(c))
 			}
 		}
-		result[ConstSymKey(c)] = c
+		result.Set(ConstSymKey(c), c)
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		collectSymbols(app.Func, result)
@@ -669,7 +669,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 
 // GetReferencesInto accumulates non-action symbol references from an
 // action into the given set. Corresponds to Python's get_references().
-func GetReferencesInto(action Action, syms map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
+func GetReferencesInto(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
 	referencesRec(action, syms, destructorSorts)
 }
 
@@ -678,7 +678,7 @@ func GetReferencesInto(action Action, syms map[lg.NodeKey]lg.Expr, destructorSor
 // syms is the set of referenced symbols; names is a set of names
 // referenced by proofs that should also be kept.
 // Corresponds to Python's Action.erase_unrefed(refs, names).
-func EraseUnrefed(action Action, syms map[lg.NodeKey]lg.Expr, names map[string]bool) Action {
+func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map[string]bool) Action {
 	if action == nil {
 		return nil
 	}
@@ -687,7 +687,7 @@ func EraseUnrefed(action Action, syms map[lg.NodeKey]lg.Expr, names map[string]b
 		// If LHS symbol is not referenced, erase
 		// Python: if self.modifies()[0] not in refs and self.modifies()[0].name not in ref_names
 		if c, ok := rootSymbol(a.LHS); ok {
-			_, inSyms := syms[ConstSymKey(c)]
+			_, inSyms := syms.Get2(ConstSymKey(c))
 			if !inSyms && !names[c.Name] {
 				return NewSequence()
 			}
@@ -696,7 +696,7 @@ func EraseUnrefed(action Action, syms map[lg.NodeKey]lg.Expr, names map[string]b
 	case *HavocAction:
 		if a.Target != nil {
 			if c, ok := a.Target.(*lg.Const); ok {
-				_, inSyms := syms[ConstSymKey(c)]
+				_, inSyms := syms.Get2(ConstSymKey(c))
 				if !inSyms && !names[c.Name] {
 					return NewSequence()
 				}

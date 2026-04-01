@@ -956,7 +956,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Collect symbols from formulas — allSyms uses NodeKey for structural identity,
 	// matching Python's set of Const objects distinguished by (name, sort).
 	const as1 = "isolate.allSyms"
-	allSyms := make(map[lg.NodeKey]lg.Expr)
+	allSyms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	as1ListNames := []string{"axioms", "props", "inits", "conjs"}
 	for listIdx, lfSlice := range [][]*ast.LabeledFormula{
 		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
@@ -986,20 +986,20 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, p := range act.GetFormalParams() {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
-				if _, exists := allSyms[key]; !exists {
+				if _, exists := allSyms.Get2(key); !exists {
 					xtracer.Trace("%s.add %s", as1, lg.PrettyFmla(p))
 				}
 			}
-			allSyms[key] = p
+			allSyms.Set(key, p)
 		}
 		for _, r := range act.GetFormalReturns() {
 			key := actions.ConstSymKey(r)
 			if xtracer.Enabled {
-				if _, exists := allSyms[key]; !exists {
+				if _, exists := allSyms.Get2(key); !exists {
 					xtracer.Trace("%s.add %s", as1, lg.PrettyFmla(r))
 				}
 			}
-			allSyms[key] = r
+			allSyms.Set(key, r)
 		}
 	}
 	if xtracer.Enabled {
@@ -1022,7 +1022,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// IMPORTANT: Only the first collection (formulas, formals, natives) is normalized.
 	// action.get_references adds symbols WITHOUT normalization.
 	usePolyMacros := !versionLE(isoCfg.IvyVersion, "1.5")
-	normalizeSymbolKeys(allSyms, usePolyMacros, mod.Cfg.IuCfg)
+	allSyms = normalizeSymbolKeys(as1, allSyms, usePolyMacros, mod.Cfg.IuCfg)
 	if xtracer.Enabled {
 		traceSymSet("isolate.allSyms_post_normalize", allSyms)
 	}
@@ -1032,11 +1032,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if xtracer.Enabled {
 			xtracer.Trace("isolate.allSyms_action_refs.BEGIN %s", actname)
 		}
-		sizeBefore := len(allSyms)
+		sizeBefore := allSyms.Len()
 		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
 		if xtracer.Enabled {
 			xtracer.Trace("isolate.allSyms_action_refs.END %s added=%d total=%d",
-				actname, len(allSyms)-sizeBefore, len(allSyms))
+				actname, allSyms.Len()-sizeBefore, allSyms.Len())
 		}
 	}
 	if xtracer.Enabled {
@@ -1084,12 +1084,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			if c := definedSymbolConst(children[0]); c != nil {
 				if _, found := allNames.Get2(c.Name); found {
 					key := actions.ConstSymKey(c)
-					if xtracer.Enabled {
-						if _, exists := allSyms[key]; !exists {
-							xtracer.Trace("%s.add %s", as1, lg.PrettyFmla(c))
-						}
-					}
-					allSyms[key] = c
+					// Python: all_syms.add(x.formula.defines()) via OrderedSymSet.add — no trace
+					allSyms.Set(key, c)
 				}
 			}
 		}
@@ -1114,21 +1110,15 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isoCfg.KeepDestructors {
 		namesBefore := allSymsNameSet(allSyms)
 		namesAfter := copyStringSet(namesBefore)
-		for _, sym := range allSyms {
+		for _, sym := range allSyms.All() {
 			collectRelevantDestructorsForSym(mod, sym, namesAfter, make(map[string]bool))
 		}
 		// Add newly discovered destructor names to allSyms
+		// Python: collect_relevant_destructors calls res.add(dstr) via OrderedSymSet.add — no trace
 		for name := range namesAfter {
 			if !namesBefore[name] {
-				// Create a bare Const for the destructor name
 				c := lg.NewConst(name, lg.TopS)
-				key := actions.ConstSymKey(c)
-				if xtracer.Enabled {
-					if _, exists := allSyms[key]; !exists {
-						xtracer.Trace("%s.add %s", as1, lg.PrettyFmla(c))
-					}
-				}
-				allSyms[key] = c
+				allSyms.Set(actions.ConstSymKey(c), c)
 			}
 		}
 	}
@@ -1165,10 +1155,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			if a.Formula == nil {
 				continue
 			}
-			symsInAxiom := make(map[lg.NodeKey]lg.Expr)
+			symsInAxiom := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 			collectSymbolsInto("isolate.droppedAxiomSyms", a.Formula.(lg.Expr), symsInAxiom)
-			for key, expr := range symsInAxiom {
-				if _, inAllSyms := allSyms[key]; inAllSyms {
+			for key, expr := range symsInAxiom.All() {
+				if _, inAllSyms := allSyms.Get2(key); inAllSyms {
 					symName := ""
 					if c, ok := expr.(*lg.Const); ok {
 						symName = c.Name
@@ -1263,7 +1253,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		defConst := definedSymbolConst(children[0])
 		inAllSyms := false
 		if defConst != nil {
-			_, inAllSyms = allSyms[actions.ConstSymKey(defConst)]
+			_, inAllSyms = allSyms.Get2(actions.ConstSymKey(defConst))
 		}
 		if (keepAx(nodeToExpr(c.Label)) || exactPresent[defName]) && inAllSyms {
 			filteredDefs = append(filteredDefs, c)
@@ -1310,7 +1300,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				defConst := definedSymbolConst(children[0])
 				inAllSyms := false
 				if defConst != nil {
-					_, inAllSyms = allSyms[actions.ConstSymKey(defConst)]
+					_, inAllSyms = allSyms.Get2(actions.ConstSymKey(defConst))
 				}
 				if keepAx(nodeToExpr(lf.Label)) && inAllSyms {
 					filteredNatDefs = append(filteredNatDefs, lf)
@@ -1348,7 +1338,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Python builds one flat AST list in this order, then calls used_symbols_asts once.
 	// We match that order for identical online per-symbol traces.
 	const as2 = "isolate.allSyms2"
-	allSyms2 := make(map[lg.NodeKey]lg.Expr)
+	allSyms2 := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 
 	// Phase A: formulas from axioms, props, inits, conjs, definitions
 	// Python: for x in [mod.labeled_axioms,...,mod.definitions]:
@@ -1378,11 +1368,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, p := range mod.Params {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
-				if _, exists := allSyms2[key]; !exists {
+				if _, exists := allSyms2.Get2(key); !exists {
 					xtracer.Trace("%s.add %s", as2, lg.PrettyFmla(p))
 				}
 			}
-			allSyms2[key] = p
+			allSyms2.Set(key, p)
 		}
 	}
 
@@ -1393,20 +1383,20 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, p := range act.GetFormalParams() {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
-				if _, exists := allSyms2[key]; !exists {
+				if _, exists := allSyms2.Get2(key); !exists {
 					xtracer.Trace("%s.add %s", as2, lg.PrettyFmla(p))
 				}
 			}
-			allSyms2[key] = p
+			allSyms2.Set(key, p)
 		}
 		for _, r := range act.GetFormalReturns() {
 			key := actions.ConstSymKey(r)
 			if xtracer.Enabled {
-				if _, exists := allSyms2[key]; !exists {
+				if _, exists := allSyms2.Get2(key); !exists {
 					xtracer.Trace("%s.add %s", as2, lg.PrettyFmla(r))
 				}
 			}
-			allSyms2[key] = r
+			allSyms2.Set(key, r)
 		}
 	}
 
@@ -1435,7 +1425,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isoCfg.KeepDestructors {
 		namesBefore2 := allSymsNameSet(allSyms2)
 		namesAfter2 := copyStringSet(namesBefore2)
-		for _, sym := range allSyms2 {
+		for _, sym := range allSyms2.All() {
 			collectRelevantDestructorsForSym(mod, sym, namesAfter2, make(map[string]bool))
 		}
 		for name := range namesAfter2 {
@@ -1443,11 +1433,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				c := lg.NewConst(name, lg.TopS)
 				key := actions.ConstSymKey(c)
 				if xtracer.Enabled {
-					if _, exists := allSyms2[key]; !exists {
+					if _, exists := allSyms2.Get2(key); !exists {
 						xtracer.Trace("%s.add %s", as2, lg.PrettyFmla(c))
 					}
 				}
-				allSyms2[key] = c
+				allSyms2.Set(key, c)
 			}
 		}
 	}
@@ -1481,10 +1471,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if !StartsWithEqSome(d, present, mod, implementationMap) {
 					// Check if any symbol of the property is in our signature
 					if pd.Prop.Formula != nil {
-						propSyms := make(map[lg.NodeKey]lg.Expr)
+						propSyms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 						collectSymbolsInto("isolate.propDepSyms", pd.Prop.Formula.(lg.Expr), propSyms)
-						for key := range propSyms {
-							if _, ok := allSyms2[key]; ok {
+						for key := range propSyms.All() {
+							if _, ok := allSyms2.Get2(key); ok {
 								lbl := ""
 								if pd.Prop.Label != nil {
 									lbl = lg.ReprNode(pd.Prop.Label)

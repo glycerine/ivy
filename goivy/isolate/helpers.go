@@ -5,7 +5,6 @@ package isolate
 import (
 	"fmt"
 	"os"
-	"sort"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
@@ -17,20 +16,15 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// traceSymSet dumps the full sorted contents of a symbol set using per-symbol
-// traces. Matches Python: for x in sorted(s, key=lambda x: str(x)): xtracer.trace(...)
+// traceSymSet dumps the contents of a symbol set in insertion order using per-symbol
+// traces. Matches Python: for x in syms: xtracer.trace(...)
 // Caller MUST guard with `if xtracer.Enabled {}` so the compiler eliminates this
 // when tracing is disabled.
-func traceSymSet(label string, syms map[lg.NodeKey]lg.Expr) {
-	displayNames := make([]string, 0, len(syms))
-	for _, v := range syms {
-		displayNames = append(displayNames, lg.PrettyFmla(v))
+func traceSymSet(label string, syms *iu.InsMap[lg.NodeKey, lg.Expr]) {
+	for _, v := range syms.All() {
+		xtracer.Trace("%s.sym %s", label, lg.PrettyFmla(v))
 	}
-	sort.Strings(displayNames)
-	for _, s := range displayNames {
-		xtracer.Trace("%s.sym %s", label, s)
-	}
-	xtracer.Trace("%s n=%d", label, len(syms))
+	xtracer.Trace("%s n=%d", label, syms.Len())
 }
 
 // -----------------------------------------------------------------------
@@ -306,12 +300,12 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // FollowDefinitions transitively adds all symbols referenced by definitions
 // of symbols already in allSyms. Corresponds to Python follow_definitions
 // (lines 847-850).
-func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[lg.NodeKey]lg.Expr) {
+func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms *iu.InsMap[lg.NodeKey, lg.Expr]) {
 	FollowDefinitionsLabeled("", ldfs, allSyms)
 }
 
-func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms map[lg.NodeKey]lg.Expr) {
-	before := len(allSyms)
+func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms *iu.InsMap[lg.NodeKey, lg.Expr]) {
+	before := allSyms.Len()
 	// Build map from defined symbol Sexp key to RHS.
 	// Python: dmap = dict((ldf.formula.args[0].rep, ldf.formula.args[1]) for ldf in ldfs)
 	// Python uses full Const object as key; we use Sexp() for equivalent structural identity.
@@ -333,23 +327,24 @@ func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms 
 		}
 	}
 	// For each symbol already in allSyms, follow its definition
-	for k, v := range copySymSet(allSyms) {
+	for k, v := range copySymSet(allSyms).All() {
 		followDefinitionsRec(k, v, dmap, allSyms, make(map[lg.NodeKey]bool))
 	}
 	if label != "" {
-		xtracer.Trace("isolate.FollowDefinitions.%s before=%d after=%d", label, before, len(allSyms))
+		xtracer.Trace("isolate.FollowDefinitions.%s before=%d after=%d", label, before, allSyms.Len())
 	} else {
-		xtracer.Trace("isolate.FollowDefinitions before=%d after=%d", before, len(allSyms))
+		xtracer.Trace("isolate.FollowDefinitions before=%d after=%d", before, allSyms.Len())
 	}
 }
 
-func followDefinitionsRec(key lg.NodeKey, expr lg.Expr, dmap map[lg.NodeKey]lg.Expr, allSyms map[lg.NodeKey]lg.Expr, memo map[lg.NodeKey]bool) {
-	allSyms[key] = expr
+func followDefinitionsRec(key lg.NodeKey, expr lg.Expr, dmap map[lg.NodeKey]lg.Expr, allSyms *iu.InsMap[lg.NodeKey, lg.Expr], memo map[lg.NodeKey]bool) {
+	allSyms.Set(key, expr)
 	if rhs, ok := dmap[key]; ok && !memo[key] {
 		memo[key] = true
-		found := usedSymbolExprs(rhs)
-		for k, v := range found {
-			followDefinitionsRec(k, v, dmap, allSyms, memo)
+		// Use SymbolsIluAst directly (no traces) matching Python's:
+		//   for s in lu.used_symbols_ast(dmap[sym]): follow_definitions_rec(s,...)
+		for sym := range il.SymbolsIluAst(rhs) {
+			followDefinitionsRec(lg.Key(sym), sym, dmap, allSyms, memo)
 		}
 	}
 }
@@ -376,8 +371,8 @@ func definedSymbolName(node lg.Expr) string {
 	return ""
 }
 
-func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
-	syms := make(map[lg.NodeKey]lg.Expr)
+func usedSymbolExprs(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("isolate.usedSymbolExprs", node, syms)
 	return syms
 }
@@ -386,9 +381,9 @@ func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
 // from the given expression. Used by FindReferences and other name-based lookups.
 func usedSymbolNames(node lg.Expr) []string {
 	exprs := usedSymbolExprs(node)
-	result := make([]string, 0, len(exprs))
+	result := make([]string, 0, exprs.Len())
 	seen := make(map[string]bool)
-	for _, v := range exprs {
+	for _, v := range exprs.All() {
 		if c, ok := v.(*lg.Const); ok {
 			if !seen[c.Name] {
 				seen[c.Name] = true
@@ -400,48 +395,67 @@ func usedSymbolNames(node lg.Expr) []string {
 }
 
 // collectSymbolsInto walks node with il.SymbolsIluAst and adds all
-// yielded symbols into the target map. This matches Python's
-// lu.used_symbols_ast behavior, including binder expansion.
+// yielded symbols into the target InsMap. This matches Python's
+// lu.symbols_ilu_ast behavior, including binder expansion, in AST traversal order.
 // The label parameter is used for online per-symbol xtracer tracing:
 // each NEW symbol addition emits an xtracer.Trace line immediately.
-func collectSymbolsInto(label string, node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
+func collectSymbolsInto(label string, node lg.Expr, syms *iu.InsMap[lg.NodeKey, lg.Expr]) {
 	if node == nil {
 		return
 	}
 	for sym := range il.SymbolsIluAst(node) {
 		key := lg.Key(sym)
 		if xtracer.Enabled {
-			if _, exists := syms[key]; !exists {
+			if _, exists := syms.Get2(key); !exists {
 				xtracer.Trace("%s.add %s", label, lg.PrettyFmla(sym))
 			}
 		}
-		syms[key] = sym
+		syms.Set(key, sym)
 	}
 }
 
-
-// normalizeSymbolKeys applies normalize_symbol to the entries of a symbol set.
-// This matches Python: all_syms = set(map(ivy_logic.normalize_symbol, ...))
-// Polymorphic macros like "<=", ">", ">=" get mapped to "<" (keeping sort).
-func normalizeSymbolKeys(syms map[lg.NodeKey]lg.Expr, usePolymorphicMacros bool, iuCfg *iu.IvyUtilsConfig) {
-	if !usePolymorphicMacros {
-		return
-	}
-	for key, expr := range syms {
-		if c, ok := expr.(*lg.Const); ok {
-			if canonical, ok := il.PolymorphicMacrosMap[c.Name]; ok {
-				normalized := il.NormalizeSymbol(c, iuCfg)
+// normalizeSymbolKeys applies normalize_symbol to the entries of a symbol set,
+// returning a NEW insertion-ordered map. Matches Python's:
+//
+//	all_syms = OrderedSymSet()
+//	for sym in all_syms_raw:
+//	    nsym = ivy_logic.normalize_symbol(sym)
+//	    if nsym not in all_syms: xtracer.trace("label.add_normalized nsym")
+//	    all_syms.add(nsym)
+//
+// Polymorphic macros (<=, >, >=) are mapped to canonical form (<).
+// Non-polymorphic symbols pass through unchanged.
+// The label parameter is used for inline add_normalized traces.
+func normalizeSymbolKeys(label string, syms *iu.InsMap[lg.NodeKey, lg.Expr], usePolymorphicMacros bool, iuCfg *iu.IvyUtilsConfig) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	for _, expr := range syms.All() {
+		var norm lg.Expr = expr
+		if c, ok := expr.(*lg.Const); ok && usePolymorphicMacros {
+			if _, isPolyMacro := il.PolymorphicMacrosMap[c.Name]; isPolyMacro {
+				nc := il.NormalizeSymbol(c, iuCfg)
 				// NormalizeSymbol may not work if iuCfg flag is wrong;
 				// construct manually if needed
-				if normalized.Name == c.Name {
-					normalized = lg.NewConst(canonical, c.CSort)
+				if nc.Name == c.Name {
+					canonical := il.PolymorphicMacrosMap[c.Name]
+					nc = lg.NewConst(canonical, c.CSort)
 				}
-				newKey := actions.ConstSymKey(normalized)
-				delete(syms, key)
-				syms[newKey] = normalized
+				norm = nc
 			}
 		}
+		var newKey lg.NodeKey
+		if c, ok := norm.(*lg.Const); ok {
+			newKey = actions.ConstSymKey(c)
+		} else {
+			newKey = lg.Key(norm)
+		}
+		if xtracer.Enabled {
+			if _, exists := result.Get2(newKey); !exists {
+				xtracer.Trace("%s.add_normalized %s", label, lg.PrettyFmla(norm))
+			}
+		}
+		result.Set(newKey, norm)
 	}
+	return result
 }
 
 func copyStringSet(s map[string]bool) map[string]bool {
@@ -452,11 +466,11 @@ func copyStringSet(s map[string]bool) map[string]bool {
 	return c
 }
 
-// allSymsNameSet extracts a name-only set from a NodeKey→Expr symbol map.
+// allSymsNameSet extracts a name-only set from a NodeKey→Expr symbol InsMap.
 // Used where downstream code needs name-based lookup (e.g., CollectSortDestructors).
-func allSymsNameSet(syms map[lg.NodeKey]lg.Expr) map[string]bool {
-	names := make(map[string]bool, len(syms))
-	for _, v := range syms {
+func allSymsNameSet(syms *iu.InsMap[lg.NodeKey, lg.Expr]) map[string]bool {
+	names := make(map[string]bool, syms.Len())
+	for _, v := range syms.All() {
 		if c, ok := v.(*lg.Const); ok {
 			names[c.Name] = true
 		}
@@ -465,8 +479,8 @@ func allSymsNameSet(syms map[lg.NodeKey]lg.Expr) map[string]bool {
 }
 
 // symSetContainsName checks if any entry in a symbol set has the given name.
-func symSetContainsName(syms map[lg.NodeKey]lg.Expr, name string) bool {
-	for _, v := range syms {
+func symSetContainsName(syms *iu.InsMap[lg.NodeKey, lg.Expr], name string) bool {
+	for _, v := range syms.All() {
 		if c, ok := v.(*lg.Const); ok && c.Name == name {
 			return true
 		}
@@ -474,10 +488,10 @@ func symSetContainsName(syms map[lg.NodeKey]lg.Expr, name string) bool {
 	return false
 }
 
-func copySymSet(s map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
-	c := make(map[lg.NodeKey]lg.Expr, len(s))
-	for k, v := range s {
-		c[k] = v
+func copySymSet(s *iu.InsMap[lg.NodeKey, lg.Expr]) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	c := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	for k, v := range s.All() {
+		c.Set(k, v)
 	}
 	return c
 }
@@ -1121,7 +1135,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 // collectActionSymNames collects all constant symbol names referenced by an action.
 // Returns a name-only set for use in FindReferences.
 func collectActionSymNames(act actions.Action) map[string]bool {
-	exprs := make(map[lg.NodeKey]lg.Expr)
+	exprs := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for _, arg := range act.ActionArgs() {
 		collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 	}
@@ -1134,8 +1148,8 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 			collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 		}
 	}
-	names := make(map[string]bool, len(exprs))
-	for _, v := range exprs {
+	names := make(map[string]bool, exprs.Len())
+	for _, v := range exprs.All() {
 		if c, ok := v.(*lg.Const); ok {
 			names[c.Name] = true
 		}

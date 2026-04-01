@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -31,9 +32,9 @@ func tLambda(body lg.Expr) *lg.Lambda {
 	return &lg.Lambda{Variables: []*lg.Variable{v}, Body: body}
 }
 
-func symSetNames(syms map[lg.NodeKey]lg.Expr) map[string]bool {
-	names := make(map[string]bool, len(syms))
-	for _, expr := range syms {
+func symSetNames(syms *iu.InsMap[lg.NodeKey, lg.Expr]) map[string]bool {
+	names := make(map[string]bool, syms.Len())
+	for _, expr := range syms.All() {
 		if c, ok := expr.(*lg.Const); ok {
 			names[c.Name] = true
 		}
@@ -45,14 +46,14 @@ func symSetNames(syms map[lg.NodeKey]lg.Expr) map[string]bool {
 
 func TestCollectSymbolsInto_SimpleConst(t *testing.T) {
 	c := tConst("c")
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",c, syms)
 	names := symSetNames(syms)
 	if !names["c"] {
 		t.Error("should contain c")
 	}
-	if len(syms) != 1 {
-		t.Errorf("expected 1 symbol, got %d", len(syms))
+	if syms.Len() != 1 {
+		t.Errorf("expected 1 symbol, got %d", syms.Len())
 	}
 }
 
@@ -61,7 +62,7 @@ func TestCollectSymbolsInto_Apply(t *testing.T) {
 	a := tConst("a")
 	b := tConst("b")
 	app := tApply(f, a, b)
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "a", "b"} {
@@ -82,7 +83,7 @@ func TestCollectSymbolsInto_BinderFunc(t *testing.T) {
 	lam := tLambda(fOfX)
 	app := tApply(lam, a)
 
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "x", "a"} {
@@ -93,24 +94,24 @@ func TestCollectSymbolsInto_BinderFunc(t *testing.T) {
 }
 
 func TestCollectSymbolsInto_Nil(t *testing.T) {
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",nil, syms) // must not panic
-	if len(syms) != 0 {
-		t.Errorf("expected empty map for nil node, got %d entries", len(syms))
+	if syms.Len() != 0 {
+		t.Errorf("expected empty map for nil node, got %d entries", syms.Len())
 	}
 }
 
 func TestCollectSymbolsInto_MergesIntoExisting(t *testing.T) {
 	pre := tConst("pre")
-	syms := make(map[lg.NodeKey]lg.Expr)
-	syms[lg.Key(pre)] = pre
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	syms.Set(lg.Key(pre), pre)
 
 	f := tConst("f")
 	a := tConst("a")
 	collectSymbolsInto("test",tApply(f, a), syms)
 
-	if len(syms) != 3 {
-		t.Errorf("expected 3 symbols (pre + f + a), got %d", len(syms))
+	if syms.Len() != 3 {
+		t.Errorf("expected 3 symbols (pre + f + a), got %d", syms.Len())
 	}
 	names := symSetNames(syms)
 	for _, name := range []string{"pre", "f", "a"} {
@@ -129,7 +130,7 @@ func TestCollectSymbolsInto_ForAllBody(t *testing.T) {
 	body := &lg.And{Terms: []lg.Expr{tApply(f, a), tApply(g, b)}}
 	fa := tForAll(body)
 
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",fa, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"f", "a", "g", "b"} {
@@ -148,7 +149,7 @@ func TestCollectSymbolsInto_ApplyWithForAllFunc(t *testing.T) {
 	fa := tForAll(tApply(g, c))
 	app := tApply(fa, a)
 
-	syms := make(map[lg.NodeKey]lg.Expr)
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	collectSymbolsInto("test",app, syms)
 	names := symSetNames(syms)
 	for _, name := range []string{"g", "c", "a"} {
@@ -208,9 +209,9 @@ func TestRandomized_NoPanic(t *testing.T) {
 
 	for i := 0; i < 500; i++ {
 		node := randAST(rng, consts, 4)
-		syms := make(map[lg.NodeKey]lg.Expr)
+		syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 		collectSymbolsInto("test",node, syms)
-		if len(syms) == 0 {
+		if syms.Len() == 0 {
 			t.Errorf("iter %d: expected at least one symbol", i)
 		}
 	}
@@ -237,11 +238,11 @@ func FuzzCollectSymbolsInto(f *testing.F) {
 		node := randAST(rng, consts, depth)
 
 		// must not panic
-		syms := make(map[lg.NodeKey]lg.Expr)
+		syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 		collectSymbolsInto("test",node, syms)
 
 		// every random AST contains at least one Const leaf
-		if len(syms) == 0 {
+		if syms.Len() == 0 {
 			t.Error("expected at least one symbol")
 		}
 	})
