@@ -1487,7 +1487,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 							if _, ok := allSyms2[key]; ok {
 								lbl := ""
 								if pd.Prop.Label != nil {
-									lbl = fmt.Sprint(pd.Prop.Label)
+									lbl = lg.ReprNode(pd.Prop.Label)
 								}
 								return fmt.Errorf("property %s depends on abstracted object %s", lbl, d)
 							}
