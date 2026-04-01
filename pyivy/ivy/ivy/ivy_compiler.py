@@ -2272,7 +2272,7 @@ def check_properties(mod):
     for prop in props:
         _plbl = str(prop.label) if prop.label else ""
         _has_pf = prop.id in pmap
-        if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s id=%d temporal=%s hasPf=%s" % (_plbl, prop.id, prop.temporal, _has_pf))
+        if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s id=%d temporal=%s hasPf=%s" % (_plbl, prop.id, bool(prop.temporal), bool(_has_pf)))
         if prop.temporal:
             if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> props (temporal)" % _plbl)
             mod.labeled_props.append(prop)

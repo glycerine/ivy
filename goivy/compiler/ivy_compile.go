@@ -238,21 +238,31 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	// When called from ivy_check with create_isolate=False, this is SKIPPED.
 	// The create_isolate call mutates mod.Actions (adds ext: prefixed entries),
 	// so it must NOT run when the module will be reused for per-isolate checks.
+	// Python ivy_compiler.py:2569-2572 — the merge and theory update are
+	// INSIDE the if create_isolate block.
 	if createIsolate {
 		if err := isolate.CreateIsolate("this", mod); err != nil {
 			pp("IvyCompile: CreateIsolate warning: %v", err)
 		}
+
+		// Python: im.module.labeled_axioms.extend(im.module.labeled_props)
+		if xtracer.Enabled {
+			xtracer.Trace("compiler.IvyCompile.merge_props_to_axioms n_axioms=%d n_props=%d", len(mod.LabeledAxioms), len(mod.LabeledProps))
+			for i, p := range mod.LabeledProps {
+				lbl := ""
+				if p.Label != nil {
+					lbl = fmt.Sprint(p.Label)
+				}
+				xtracer.Trace("compiler.IvyCompile.merge_props_to_axioms[%d] label=%s", i, lbl)
+			}
+		}
+		mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
+
+		// theory_context().__enter__() calls update_theory() which builds
+		// the background theory from axioms and definitions, caching the
+		// result for BackgroundTheory() calls during verification.
+		mod.UpdateTheory()
 	}
-
-	// Python line 2253-2254:
-	//   im.module.labeled_axioms.extend(im.module.labeled_props)
-	//   im.module.theory_context().__enter__()
-	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
-
-	// theory_context().__enter__() calls update_theory() which builds
-	// the background theory from axioms and definitions, caching the
-	// result for BackgroundTheory() calls during verification.
-	mod.UpdateTheory()
 
 	// Set CompileActionBodyFn on the module so that InstantiateAction.IntUpdate
 	// can compile macro expansions at runtime. Python: im.compile().int_update(...)
