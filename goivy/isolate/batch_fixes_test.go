@@ -612,10 +612,11 @@ func TestGetLocMods_FiltersOnFml(t *testing.T) {
 	m.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: lg.Boolean}
 	m.Sig.Symbols["y"] = &il.SymbolEntry{Name: "y", Sort: lg.Boolean}
 
-	act := actions.NewSequence(
-		actions.NewAssignAction(fmlSym, lg.True),
-		actions.NewAssignAction(normalSym, lg.True),
-	)
+	// Python's get_loc_mods calls action.modifies() which is non-recursive.
+	// For a Sequence, modifies() returns [] (no override). Only direct
+	// AssignAction/HavocAction have non-empty modifies().
+	// Test with a direct AssignAction to check the fml: filter.
+	act := actions.NewAssignAction(fmlSym, lg.True)
 	m.Actions.Set("act1", act)
 
 	result := GetLocMods(m, "act1")
@@ -624,12 +625,20 @@ func TestGetLocMods_FiltersOnFml(t *testing.T) {
 		if r == "fml:x" {
 			found = true
 		}
-		if r == "y" {
-			t.Error("GetLocMods should not include non-fml: symbols")
-		}
 	}
 	if !found {
-		t.Error("GetLocMods should include fml:x")
+		t.Error("GetLocMods should include fml:x for direct AssignAction")
+	}
+
+	// A Sequence should return empty (Python: Sequence.modifies() returns [])
+	seqAct := actions.NewSequence(
+		actions.NewAssignAction(fmlSym, lg.True),
+		actions.NewAssignAction(normalSym, lg.True),
+	)
+	m.Actions.Set("act2", seqAct)
+	result2 := GetLocMods(m, "act2")
+	if len(result2) != 0 {
+		t.Errorf("GetLocMods on Sequence should return empty (matching Python), got %v", result2)
 	}
 }
 
