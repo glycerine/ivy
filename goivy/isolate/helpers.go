@@ -52,7 +52,7 @@ func AddMixinsExt(
 	if mod.Cfg.IsolateCfg.CreateImports {
 		res = actions.DropInvariants(res)
 	}
-	mixins, ok := mod.Mixins[actname]
+	mixins, ok := mod.Mixins.Get2(actname)
 	if !ok {
 		return res
 	}
@@ -913,7 +913,7 @@ const (
 // actname is not in summarized_actions.
 // Corresponds to Python has_unsummarized_mixins (lines 523-525).
 func HasUnsummarizedMixins(mod *module.Module, actname string, summarizedActions map[string]bool, kind MixinKind) bool {
-	mixins, ok := mod.Mixins[actname]
+	mixins, ok := mod.Mixins.Get2(actname)
 	if !ok {
 		return false
 	}

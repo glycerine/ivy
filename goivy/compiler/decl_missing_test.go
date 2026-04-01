@@ -478,7 +478,7 @@ func TestARGSetupScenario(t *testing.T) {
 	}
 
 	// Check mixins for "init" have 2 entries (s0[init] and s1[init])
-	initMixins := c.Module.Mixins["init"]
+	initMixins := c.Module.Mixins.Get("init")
 	if len(initMixins) < 2 {
 		t.Errorf("expected at least 2 mixins for 'init', got %d", len(initMixins))
 	}
@@ -489,7 +489,7 @@ func TestARGSetupScenario(t *testing.T) {
 	}
 
 	// Check mixins for "a" has a MixinBeforeDef
-	aMixins := c.Module.Mixins["a"]
+	aMixins := c.Module.Mixins.Get("a")
 	if len(aMixins) < 1 {
 		t.Errorf("expected at least 1 mixin for 'a', got %d", len(aMixins))
 	}

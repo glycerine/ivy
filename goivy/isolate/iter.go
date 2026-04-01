@@ -325,7 +325,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 
 	// Build implementation map from implement mixins
 	implementationMap := make(map[string]string)
-	for _, ms := range mod.Mixins {
+	for _, ms := range mod.Mixins.All() {
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implementationMap[m.Mixee()] = m.Mixer()
@@ -423,7 +423,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 			}
 
 			// Check mixin assertions
-			if mixins, ok := mod.Mixins[callee]; ok {
+			if mixins, ok := mod.Mixins.Get2(callee); ok {
 				for _, mixin := range mixins {
 					mixed := mixin.Mixer()
 
@@ -485,7 +485,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 				Msg:    "assertion is not checked when called from the environment",
 			})
 		}
-		if mixins, ok := mod.Mixins[callee]; ok {
+		if mixins, ok := mod.Mixins.Get2(callee); ok {
 			for _, mixin := range mixins {
 				mixed := mixin.Mixer()
 				if HasAssertions(mod, mixed) && mixin.IsAfter() {

@@ -28,8 +28,8 @@ func TestDebugClientServerInit(t *testing.T) {
 	for i, na := range mod.Initializers {
 		fmt.Printf("  initializer[%d]: name=%s type=%T\n", i, na.Name, na.Action)
 	}
-	fmt.Printf("Mixins: %d keys\n", len(mod.Mixins))
-	for k, v := range mod.Mixins {
+	fmt.Printf("Mixins: %d keys\n", mod.Mixins.Len())
+	for k, v := range mod.Mixins.All() {
 		fmt.Printf("  mixins[%q]: %d entries\n", k, len(v))
 		for j, m := range v {
 			fmt.Printf("    [%d]: %T = %s\n", j, m, m)

@@ -186,7 +186,7 @@ func GetCallsModsRecFull(
 
 	// Python lines 511-520: Process mixins for this action.
 	if mod.Mixins != nil {
-		for _, mixin := range mod.Mixins[actname] {
+		for _, mixin := range mod.Mixins.Get(actname) {
 			calledName := mixin.Mixer()
 			if !summarizedActions[calledName] {
 				if mixins != nil {
@@ -341,7 +341,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	summarizedActions map[string]bool,
 	implMixins *iu.InsMap[string, []module.MixinDef],
 	checkTerm bool,
-	interfSyms map[string]bool,
+	interfSymsInsMap *iu.InsMap[lg.NodeKey, lg.Expr],
 	afterInits []string,
 	allAfterInits map[string]bool,
 ) error {
@@ -349,10 +349,36 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		return nil
 	}
 
+	// Convert InsMap to name-based set (collapses entries with same name but different sorts)
+	var interfSyms map[string]bool
+	if interfSymsInsMap != nil {
+		interfSyms = make(map[string]bool, interfSymsInsMap.Len())
+		for _, v := range interfSymsInsMap.All() {
+			if c, ok := v.(*lg.Const); ok {
+				interfSyms[c.Name] = true
+			}
+		}
+	}
+
+	// Use InsMap length for trace to match Python (which counts symbol objects, not unique names)
+	interfSymsLen := 0
+	if interfSymsInsMap != nil {
+		interfSymsLen = interfSymsInsMap.Len()
+	}
 	xtracer.Trace("isolate.CheckInterferenceFull ENTER n_summarized=%d n_interfSyms=%d n_afterInits=%d",
-		len(summarizedActions), len(interfSyms), len(afterInits))
+		len(summarizedActions), interfSymsLen, len(afterInits))
 	xtracer.Trace("isolate.CheckInterferenceFull summarized=%s", strings.Join(sortedKeys(summarizedActions), ","))
-	xtracer.Trace("isolate.CheckInterferenceFull interfSyms=%s", strings.Join(sortedKeys(interfSyms), ","))
+	// Trace interfSyms using PrettyFmla representation to match Python's str(x)
+	{
+		var symStrs []string
+		if interfSymsInsMap != nil {
+			for _, v := range interfSymsInsMap.All() {
+				symStrs = append(symStrs, lg.PrettyFmla(v))
+			}
+		}
+		sort.Strings(symStrs)
+		xtracer.Trace("isolate.CheckInterferenceFull interfSyms=%s", strings.Join(symStrs, ","))
+	}
 
 	// Compute calls, mods, mixins, and loops for all summarized actions.
 	calls := make(map[string]map[string]bool)
@@ -360,7 +386,9 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	mixinDeps := make(map[string]map[string]bool)
 	loops := make(map[string][]actions.Action)
 	locmods := make(map[string]map[string]bool) // Python line 582
-	for actname := range summarizedActions {
+	// Sort summarizedActions keys to get deterministic iteration order matching Python
+	sortedSummarized := sortedKeys(summarizedActions)
+	for _, actname := range sortedSummarized {
 		GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, mixinDeps, loops)
 		// Python line 586: locmods[actname] = get_loc_mods(mod, actname)
 		locmods[actname] = make(map[string]bool)
@@ -415,7 +443,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 			// unsummarized before-mixins of the called action.
 			preRefed := make(map[string]bool)
 			if mod.Mixins != nil {
-				for _, m := range mod.Mixins[calledName] {
+				for _, m := range mod.Mixins.Get(calledName) {
 					if !m.IsAfter() && !summarizedActions[m.Mixer()] {
 						if mixerAct, ok := mod.Actions.Get2(m.Mixer()); ok {
 							collectActionSymbolNames(mixerAct, preRefed)
@@ -426,7 +454,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 
 			// Build list of all related actions: callee + mixins + impl_mixins
 			allCalls := []string{calledName}
-			if modMixins, ok := mod.Mixins[calledName]; ok {
+			if modMixins, ok := mod.Mixins.Get2(calledName); ok {
 				for _, m := range modMixins {
 					allCalls = append(allCalls, m.Mixer())
 				}
@@ -525,7 +553,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		calledName := CanonAct(exp.Exported())
 
 		allCalls := []string{calledName}
-		if modMixins, ok := mod.Mixins[calledName]; ok {
+		if modMixins, ok := mod.Mixins.Get2(calledName); ok {
 			for _, m := range modMixins {
 				allCalls = append(allCalls, m.Mixer())
 			}

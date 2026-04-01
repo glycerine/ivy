@@ -870,9 +870,9 @@ func TestCheckIsolateCompleteness_MixinAssertionUnchecked(t *testing.T) {
 	))
 
 	// Add a before-mixin on callee
-	m.Mixins["callee"] = []module.MixinDef{
+	m.Mixins.Set("callee", []module.MixinDef{
 		&testMixin{mixer: "mixin_act", mixee: "callee", after: false},
-	}
+	})
 
 	result := CheckIsolateCompleteness(m)
 	foundMixin := false

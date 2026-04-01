@@ -266,7 +266,7 @@ type AnalysisGraph struct {
 	Actions       *iu.InsMap[string, module.Action]
 	Predicates    map[string]ast.Node
 	Assertions    []*ast.LabeledFormula
-	Mixins        map[string][]module.MixinDef
+	Mixins        *iu.InsMap[string, []module.MixinDef]
 	Isolates      map[string]*ast.IsolateDef
 	Exports       []module.Exporter
 	Delegates     []module.Delegator

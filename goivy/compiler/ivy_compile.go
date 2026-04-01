@@ -578,13 +578,16 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				switch m := arg.(type) {
 				case *ast.MixinBeforeDef:
 					mixee := m.Mixee()
-					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+					existing, _ := mod.Mixins.Get2(mixee)
+					mod.Mixins.Set(mixee, append(existing, m))
 				case *ast.MixinAfterDef:
 					mixee := m.Mixee()
-					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+					existing, _ := mod.Mixins.Get2(mixee)
+					mod.Mixins.Set(mixee, append(existing, m))
 				case *ast.MixinImplementDef:
 					mixee := m.Mixee()
-					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+					existing, _ := mod.Mixins.Get2(mixee)
+					mod.Mixins.Set(mixee, append(existing, m))
 				}
 			}
 		case *ast.AssertDecl:
@@ -811,7 +814,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		mixeeAtom := cfg.NewAtom("init")
 		mdef := cfg.NewMixinAfterDef(mixerAtom, mixeeAtom)
 		mixee := mdef.Mixee()
-		mod.Mixins[mixee] = append(mod.Mixins[mixee], mdef)
+		existing, _ := mod.Mixins.Get2(mixee)
+		mod.Mixins.Set(mixee, append(existing, mdef))
 	}
 
 	// 4. For each action's transitions, create mixer actions
@@ -991,7 +995,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 			if mixer != nil && mixee != nil {
 				mdef := mod.Cfg.AstCfg.NewMixinBeforeDef(mixer, mixee)
 				mixeeName := mdef.Mixee()
-				mod.Mixins[mixeeName] = append(mod.Mixins[mixeeName], mdef)
+				existingM, _ := mod.Mixins.Get2(mixeeName)
+				mod.Mixins.Set(mixeeName, append(existingM, mdef))
 			}
 		}
 
@@ -1015,7 +1020,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 			if mixer != nil && mixee != nil {
 				mdef := mod.Cfg.AstCfg.NewMixinAfterDef(mixer, mixee)
 				mixeeName := mdef.Mixee()
-				mod.Mixins[mixeeName] = append(mod.Mixins[mixeeName], mdef)
+				existingM, _ := mod.Mixins.Get2(mixeeName)
+				mod.Mixins.Set(mixeeName, append(existingM, mdef))
 			}
 		}
 	}

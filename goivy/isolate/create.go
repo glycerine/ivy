@@ -55,8 +55,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Treat initializers as exports
-	afterInits := mod.Mixins["init"]
-	delete(mod.Mixins, "init")
+	afterInits := mod.Mixins.Get("init")
+	mod.Mixins.Delkey("init")
 
 	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
@@ -64,7 +64,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Check all mixin declarations
-	for name, mixins := range mod.Mixins {
+	for name, mixins := range mod.Mixins.All() {
 		for _, mx := range mixins {
 			if _, err := LookupAction(mod, mx.Mixer()); err != nil {
 				return fmt.Errorf("mixin %s for %s: %w", mx.Mixer(), name, err)
@@ -111,7 +111,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 	// Track mixer names for later warnings
 	mixers := make(map[string]bool)
-	for _, ms := range mod.Mixins {
+	for _, ms := range mod.Mixins.All() {
 		for _, m := range ms {
 			mixers[m.Mixer()] = true
 		}
@@ -143,7 +143,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		mod.IsolateInfo = &module.IsolateInfo{}
 		implemented := make(map[string]bool)
 
-		for actname, mixinList := range mod.Mixins {
+		for actname, mixinList := range mod.Mixins.All() {
 			for _, mx := range mixinList {
 				action1, err := LookupAction(mod, mx.Mixer())
 				if err != nil {
@@ -516,7 +516,7 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		}
 	}
 
-	for action, mixinList := range mod.Mixins {
+	for action, mixinList := range mod.Mixins.All() {
 		// Separate implements from before/after
 		var implements []module.MixinDef
 		var beforeAfter []module.MixinDef
@@ -581,7 +581,7 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		result = append(result, implements...)
 		result = append(result, befores...)
 		result = append(result, afters...)
-		mod.Mixins[action] = result
+		mod.Mixins.Set(action, result)
 	}
 	return nil
 }
@@ -797,7 +797,7 @@ func conjToAssume(c *ast.LabeledFormula) actions.Action {
 // Corresponds to Python set_up_implementation_map (lines 1508-1514).
 func SetUpImplementationMap(mod *module.Module) map[string]string {
 	implMap := make(map[string]string)
-	for _, ms := range mod.Mixins {
+	for _, ms := range mod.Mixins.All() {
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implMap[m.Mixee()] = m.Mixer()

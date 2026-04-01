@@ -38,7 +38,7 @@ type Module struct {
 
 	// Actions and mixins
 	Actions        *iu.InsMap[string, Action]
-	Mixins         map[string][]MixinDef
+	Mixins         *iu.InsMap[string, []MixinDef]
 	PublicActions  map[string]bool
 	Predicates     map[string]ast.Node
 	Initializers   []NamedAction
@@ -230,7 +230,7 @@ func (m *Module) Clear() {
 	m.Relations = make(map[string]lg.Sort)
 	m.Functions = make(map[string]lg.Sort)
 	m.Actions = iu.NewInsMap[string, Action]()
-	m.Mixins = make(map[string][]MixinDef)
+	m.Mixins = iu.NewInsMap[string, []MixinDef]()
 	m.PublicActions = make(map[string]bool)
 	m.Predicates = make(map[string]ast.Node)
 	m.Initializers = nil
@@ -408,9 +408,9 @@ func (m *Module) Copy() *Module {
 	}
 
 	// Copy mixins
-	c.Mixins = make(map[string][]MixinDef, len(m.Mixins))
-	for k, v := range m.Mixins {
-		c.Mixins[k] = append([]MixinDef{}, v...)
+	c.Mixins = iu.NewInsMap[string, []MixinDef]()
+	for k, v := range m.Mixins.All() {
+		c.Mixins.Set(k, append([]MixinDef{}, v...))
 	}
 
 	// Copy interps

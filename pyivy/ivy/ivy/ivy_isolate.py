@@ -617,7 +617,7 @@ def check_interference(mod,new_actions,summarized_actions,impl_mixins,check_term
     mixins = dict()
     locmods = dict()
     loops = dict()
-    for actname in summarized_actions:
+    for actname in sorted(summarized_actions):
         get_calls_mods(mod,summarized_actions,actname,calls,mods,mixins,loops,interf_syms)
         locmods[actname] = get_loc_mods(mod,actname)
         if __debug__: xtracer.trace("isolate.GetCallsModsRecFull actname=%s calls=%s mods=%s" %

@@ -103,7 +103,7 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		// in the Go action types, this is a no-op for now.
 		// The action is used as-is, which is safe (just not optimal).
 	}
-	mixins, ok := mod.Mixins[actname]
+	mixins, ok := mod.Mixins.Get2(actname)
 	if !ok {
 		return res
 	}
@@ -331,20 +331,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Process implementation mixins
 	implMixins := iu.NewInsMap[string, []MixinDef]()
-	for actname, ms := range mod.Mixins {
+	for actname, ms := range mod.Mixins.All() {
 		var implements []MixinDef
 		var beforeAfter []MixinDef
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implements = append(implements, m)
-				existing, _ := implMixins.Get2(actname)
-				implMixins.Set(actname, append(existing, m))
 			} else {
 				beforeAfter = append(beforeAfter, m)
 			}
 		}
+		// Match Python defaultdict behavior: always create entry for actname
+		existing, _ := implMixins.Get2(actname)
+		implMixins.Set(actname, append(existing, implements...))
 		// Replace mixin list with only before/after
-		mod.Mixins[actname] = beforeAfter
+		mod.Mixins.Set(actname, beforeAfter)
 
 		// Apply implementations
 		for _, mi := range implements {
@@ -567,7 +568,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Record monitor info
-		if mixins, ok := mod.Mixins[actname]; ok {
+		if mixins, ok := mod.Mixins.Get2(actname); ok {
 			for _, mx := range mixins {
 				if mi, ok := mx.(MixinDef); ok {
 					if useMixin(mi.Mixer()) {
@@ -599,7 +600,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			act = EmptyClone(action)
 		}
 		// Apply before mixins
-		for _, mx := range mod.Mixins[actname] {
+		for _, mx := range mod.Mixins.Get(actname) {
 			mi, ok := mx.(MixinDef)
 			if !ok {
 				continue
@@ -645,7 +646,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			c := ca.CalleeName()
 			if !StartsWithEqSome(c, present, mod, implementationMap) {
 				hasMixinPresent := false
-				if mixins, ok := mod.Mixins[c]; ok {
+				if mixins, ok := mod.Mixins.Get2(c); ok {
 					for _, mx := range mixins {
 						if mi, ok := mx.(MixinDef); ok {
 							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {
@@ -1533,7 +1534,6 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			traceSymSet("isolate.interfSyms_after_follow", interfSyms)
 		}
 		// Build name-only set for interference check (which works with name-based mods)
-		interfSymNames := allSymsNameSet(interfSyms)
 		{
 			cp := append([]string(nil), presentAfterInits...)
 			sort.Strings(cp)
@@ -1553,7 +1553,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		mod.Actions = oldActions
 		checkTerm := isoCfg.EnforceAxioms && versionLE("1.7", isoCfg.IvyVersion)
 		err := CheckInterferenceFull(mod, newActions, summarizedActions,
-			implMixins, checkTerm, interfSymNames, presentAfterInits, allAfterInits)
+			implMixins, checkTerm, interfSyms, presentAfterInits, allAfterInits)
 		mod.Actions = saveActions
 		if err != nil {
 			return err
