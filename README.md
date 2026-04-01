@@ -2401,6 +2401,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-156616  go : XTRACE: actions.substitute_constants_action ENTER type=Sequence nargs=2
-        py : XTRACE: actions.substitute_constants_action ENTER type=Sequence nargs=3
+157309  go : XTRACE: actions.substitute_constants_action ENTER type=Not nargs=1
+        py : XTRACE: actions.substitute_constants_action ENTER type=Implies nargs=2
 ~~~
