@@ -1755,6 +1755,8 @@ func formulaToClauses(fmla lg.Expr) *co.Clauses {
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
 func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
+	_, isIDI := iso.(IsolateDefInterface)
+	xtracer.Trace("strip.stripIsolateWrapper isIsolateDefInterface=%v", isIDI)
 	if idef, ok := iso.(IsolateDefInterface); ok {
 		err := StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
 		if err != nil {

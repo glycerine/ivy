@@ -369,6 +369,7 @@ def canon_act(name):
 def strip_isolate(mod,isolate,impl_mixins,all_after_inits,extra_strip):
     global strip_added_symbols
     global num_isolate_params
+    if __debug__: xtracer.trace("strip.StripIsolateParams ENTER isAtomProv=%s isParamProv=%s" % (hasattr(isolate, 'verified'), hasattr(isolate, 'params')))
     ipl = isolate.params()
     if any (isinstance(p,ivy_ast.Variable) for p in ipl):
         subst = dict()
@@ -429,6 +430,7 @@ def strip_isolate(mod,isolate,impl_mixins,all_after_inits,extra_strip):
     mod.actions.update(new_actions)
 
     # strip the axioms and conjectures
+    if __debug__: xtracer.trace("strip.StripIsolate before_strip_lfs axioms=%d props=%d conjs=%d inits=%d defs=%d stripMap=%d" % (len(mod.labeled_axioms), len(mod.labeled_props), len(mod.labeled_conjs), len(mod.labeled_inits), len(mod.definitions), len(strip_map)))
     for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_conjs,mod.labeled_inits,mod.definitions]:
         strip_labeled_fmlas(x,strip_map)
 
@@ -1549,6 +1551,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
 
     # strip the isolate parameters
 
+    if __debug__: xtracer.trace("strip.stripIsolateWrapper isIsolateDefInterface=True")
     strip_isolate(mod,isolate,impl_mixins,all_after_inits,extra_strip)
 
     # collect the initial condition
@@ -1870,6 +1873,7 @@ def create_isolate(iso,mod = None,**kwargs):
                     mixed_name = mixin.args[1].relname
                     if mixed_name in orig_exports and isinstance(mixin,ivy_ast.MixinBeforeDef):
                         action1 = action1.assert_to_assume([ia.AssertAction])
+                    if __debug__: xtracer.trace("isolate.create_no_iso mixer=%s mixee=%s" % (mixin.mixer(), mixin.mixee()))
                     mixed = ia.apply_mixin(mixin,action1,action2)
                     mod.actions[mixed_name] = mixed
                     triple = (mixin.mixer(),mixin.mixee(),mod.actions[mixin.mixer()])
@@ -1892,31 +1896,40 @@ def create_isolate(iso,mod = None,**kwargs):
                 for a in mod.actions:
                     mod.public_actions.add(a)
 
+        if __debug__: xtracer.trace("check.CreateIsolate after_isolate_component")
 
         # Create one big external action if requested
 
-
+        if __debug__: xtracer.trace("check.CreateIsolate before_label_public n_public=%d" % len(mod.public_actions))
         for name in mod.public_actions:
             mod.actions[name].label = name
+        if __debug__: xtracer.trace("check.CreateIsolate after_label_public")
         ext = kwargs['ext'] if 'ext' in kwargs else ext_action.get()
+        if __debug__: xtracer.trace("check.CreateIsolate before_ext_action ext=\"%s\"" % (ext if ext is not None else ""))
         if ext is not None:
             ais = set(m.mixer() for m in after_inits)
             ext_acts = [mod.actions[x] for x in sorted(mod.public_actions) if canon_act(x) not in ais]
             ext_act = ia.EnvAction(*ext_acts)
             mod.public_actions.add(ext);
             mod.actions[ext] = ext_act;
+        if __debug__: xtracer.trace("check.CreateIsolate after_ext_action")
 
         # Check native interpretations of symbols
 
+        if __debug__: xtracer.trace("check.CreateIsolate before_check_compat")
         slv.check_compat()
+        if __debug__: xtracer.trace("check.CreateIsolate after_check_compat")
 
         # Make concept spaces from the conjecture
 
+        if __debug__: xtracer.trace("check.CreateIsolate before_update_conjs n_conjs=%d" % len(mod.labeled_conjs))
         mod.update_conjs()
+        if __debug__: xtracer.trace("check.CreateIsolate after_update_conjs")
 
         # get rid of useless actions
 
-        cone = get_mod_cone(mod)        
+        if __debug__: xtracer.trace("check.CreateIsolate before_cone_of_influence cone=%s" % cone_of_influence.get())
+        cone = get_mod_cone(mod)
         if cone_of_influence.get():
             for a in list(mod.actions):
                 if a not in cone:
@@ -1934,16 +1947,26 @@ def create_isolate(iso,mod = None,**kwargs):
                     anorm = a[4:] if a.startswith('ext:') else a
                     if anorm not in orig_exports:
                         iu.warn(mod.actions[a],"action {} is implicitly exported".format(anorm))
-                    
 
+        if __debug__: xtracer.trace("check.CreateIsolate after_cone_of_influence")
+
+        if __debug__: xtracer.trace("check.CreateIsolate before_fix_initializers n_afterInits=%d" % len(after_inits))
         fix_initializers(mod,after_inits)
+        if __debug__: xtracer.trace("check.CreateIsolate after_fix_initializers")
 
+        _n_sort_refs = len(list(ivy_logic.sort_refinement()))
+        if __debug__: xtracer.trace("check.CreateIsolate before_canonize_types n_sortRefs=%d" % _n_sort_refs)
         mod.canonize_types()
+        if __debug__: xtracer.trace("check.CreateIsolate after_canonize_types")
 
         # Apply the present conjectures
+        if __debug__: xtracer.trace("check.CreateIsolate before_bracket_actions n_brackets=%d" % len(brackets))
         if iso and iso in mod.isolates and iu.version_le("1.7",iu.get_string_version()):
             for actname,before,after in brackets:
+                if __debug__: xtracer.trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d" % (actname, len(before), len(after)))
                 bracket_action(mod,actname,before,after)
+
+        if __debug__: xtracer.trace("check.CreateIsolate after_bracket_actions")
 
         mod.isolate_proof = mod.isolate_proofs[iso] if iso in mod.isolate_proofs else None
 

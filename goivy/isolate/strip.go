@@ -11,6 +11,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // StripMap maps component names to their isolate parameter names.
@@ -540,6 +541,11 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	// Python: global num_isolate_params, strip_added_symbols
 	isoCfg.StripAddedSymbols = nil // reset
 
+	_, isAtomProv := isolate.(isolateAtomProvider)
+	_, isParamProv := isolate.(isolateParamProvider)
+	xtracer.Trace("strip.StripIsolateParams ENTER isAtomProv=%v isParamProv=%v",
+		isAtomProv, isParamProv)
+
 	// Step 1: Variable isolate parameter substitution.
 	// Python lines 345-352: if any(isinstance(p, Variable) for p in ipl): substitute
 	if pp, ok := isolate.(isolateParamProvider); ok {
@@ -795,6 +801,9 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	mod.Actions = newActions
 
 	// Strip labeled formulas.
+	xtracer.Trace("strip.StripIsolate before_strip_lfs axioms=%d props=%d conjs=%d inits=%d defs=%d stripMap=%d",
+		len(mod.LabeledAxioms), len(mod.LabeledProps), len(mod.LabeledConjs),
+		len(mod.LabeledInits), len(mod.Definitions), len(stripMap))
 	mod.LabeledAxioms = StripLabeledFormulas(mod.LabeledAxioms, stripMap, mod)
 	mod.LabeledProps = StripLabeledFormulas(mod.LabeledProps, stripMap, mod)
 	mod.LabeledConjs = StripLabeledFormulas(mod.LabeledConjs, stripMap, mod)
