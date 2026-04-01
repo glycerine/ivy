@@ -137,6 +137,7 @@ class State(object):
     @property
     def update(self):
         if self.cached_update == None and self.expr != None and is_action_app(self.expr):
+            if __debug__: xtracer.trace("interp.State.update calling update type=%s" % type(eval_action(self.expr.rep)).__name__)
             self.cached_update = eval_action(self.expr.rep).update(self.domain,self.in_scope)
         return self.cached_update
 
@@ -355,6 +356,7 @@ def underapproximate_state(state,implied=[[]]):
 
 
 def apply_action(ast,action_name,action,state):
+    if __debug__: xtracer.trace("interp.apply_action calling update actionName=%s type=%s" % (action_name, type(action).__name__))
     upd = action.update(state.domain,state.in_scope)
     try:
         res = concrete_post(upd,state,action_app(action_name,state))
@@ -381,11 +383,13 @@ class fail_action(Action):
     def __str__(self):
         return "fail " + (self.action.label if hasattr(self.action,'label') else str(self.action))
     def update(self,domain,in_scope):
+        if __debug__: xtracer.trace("interp.ActionFail.update calling update type=%s" % type(self.action).__name__)
         upd = self.action.update(domain,in_scope)
         res = action_failure(upd)
         return res
     def int_update(self,domain,in_scope):
 #        print "action_failure action: {}".format(pretty(str(self.action)))
+        if __debug__: xtracer.trace("interp.ActionFail.int_update calling int_update type=%s" % type(self.action).__name__)
         return action_failure(self.action.int_update(domain,in_scope))
     def decompose(self,pre,post):
         cases = self.action.decompose(pre,post,fail=True)
@@ -489,6 +493,9 @@ def decompose_action_app(state2,expr):
     for pre,acts,post in comps:
 #        print "pre core: {} ".format(unsat_core(and_clauses(pre[1],bg),true_clauses()))
 #        print "post core: {} ".format(unsat_core(and_clauses(post[1],bg),true_clauses()))
+        if __debug__:
+            for act in acts:
+                xtracer.trace("interp.decompose calling int_update type=%s" % type(act).__name__)
         upds = [act.int_update(state1.domain,state1.in_scope) for act in acts]
         h = History(pre)
 #        print "h.post: {}".format(h.post)

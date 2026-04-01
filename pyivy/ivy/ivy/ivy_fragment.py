@@ -511,12 +511,14 @@ def get_assumes_and_asserts(preconds_only):
     if preconds_only:
         for name in im.module.before_export:
             action = im.module.before_export[name]
+            if __debug__: xtracer.trace("fragment.before_export calling update type=%s" % type(action).__name__)
             triple = action.update(im.module,[])
             foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
             assumes.append((foo,action))
     else:
         for name in im.module.public_actions:
             action = im.module.actions[name]
+            if __debug__: xtracer.trace("fragment.public_actions calling update type=%s" % type(action).__name__)
             triple = action.update(im.module,[])
             #        print 'ivy_theory.py: triple[1]: {}'.format(triple[1])
             foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
