@@ -869,25 +869,22 @@ func CollectSortDestructors(mod *module.Module, sortName string, result map[stri
 	}
 }
 
-// ActionCallGraph builds a map from action names to the set of action names
-// they call (directly, not transitively).
+// ActionCallGraph builds a REVERSE call graph: for each action name that
+// is called, maps it to the list of action names that call it.
+// Matches Python's Module.call_graph() (ivy_module.py:282-287).
 func ActionCallGraph(mod *module.Module) map[string][]string {
 	graph := make(map[string][]string)
-	for name, act := range mod.Actions.All() {
-		callSet := make(map[string]bool)
+	for actname, act := range mod.Actions.All() {
 		for _, sub := range act.IterSubactions() {
 			if ca, ok := sub.(*actions.CallAction); ok {
-				callSet[CanonAct(ca.CalleeName())] = true
+				calledName := CanonAct(ca.CalleeName())
+				graph[calledName] = append(graph[calledName], actname)
 			}
 		}
-		if len(callSet) > 0 {
-			calls := make([]string, 0, len(callSet))
-			for c := range callSet {
-				calls = append(calls, c)
-			}
-			sortStrings(calls)
-			graph[name] = calls
-		}
+	}
+	// Sort each caller list for determinism.
+	for k := range graph {
+		sortStrings(graph[k])
 	}
 	return graph
 }

@@ -489,18 +489,23 @@ func actionsInsMap(m map[string]actions.Action) *iu.InsMap[string, actions.Actio
 
 func TestActionCallGraph(t *testing.T) {
 	m := mkModule()
-	call1 := actions.NewCallActionOn(actions.NewActionsConfig(),mkConst("b"))
-	call2 := actions.NewCallActionOn(actions.NewActionsConfig(),mkConst("c"))
+	call1 := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("b"))
+	call2 := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("c"))
 	m.Actions.Set("a", actions.NewSequence(call1, call2))
 	m.Actions.Set("b", actions.NewSequence())
 	m.Actions.Set("c", actions.NewSequence())
 
+	// ActionCallGraph is a REVERSE graph: callee → [callers].
+	// "a" calls "b" and "c", so graph["b"] = ["a"], graph["c"] = ["a"].
 	graph := ActionCallGraph(m)
-	if len(graph["a"]) != 2 {
-		t.Errorf("a should call 2 actions, got %d", len(graph["a"]))
+	if len(graph["b"]) != 1 || graph["b"][0] != "a" {
+		t.Errorf("b should be called by [a], got %v", graph["b"])
 	}
-	if len(graph["b"]) != 0 {
-		t.Errorf("b should call 0 actions, got %d", len(graph["b"]))
+	if len(graph["c"]) != 1 || graph["c"][0] != "a" {
+		t.Errorf("c should be called by [a], got %v", graph["c"])
+	}
+	if len(graph["a"]) != 0 {
+		t.Errorf("a is not called by anyone, got %v", graph["a"])
 	}
 }
 

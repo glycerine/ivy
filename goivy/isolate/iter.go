@@ -233,10 +233,10 @@ func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso Is
 			exports[act] = true
 			continue
 		}
-		// Check if any callee is outside the isolate
-		if callees, ok := callGraph[act]; ok {
-			for _, callee := range callees {
-				if !isoActions[callee] {
+		// Check if any caller of this action is outside the isolate
+		if callers, ok := callGraph[act]; ok {
+			for _, caller := range callers {
+				if !isoActions[caller] {
 					exports[act] = true
 					break
 				}
