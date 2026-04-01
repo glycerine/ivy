@@ -107,12 +107,29 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 	return res
 }
 
-// Modifies returns the list of symbols modified by an action.
-// This matches Python's Action.modifies() which returns [n.rep] — a list
-// of Symbol objects. Callers that need a structural-equality set build one
-// via: set[lg.Key(sym)] = true. Callers that need the plain name use sym.Name.
-// Modifies returns the list of symbols modified by an action.
-// Uses the given ActionsConfig for destructor lookups (may be nil).
+// ModifiesSingle returns the symbols modified by a single action, matching
+// Python's per-class Action.modifies() method — NO recursion into children.
+// AssignAction and HavocAction walk destructor chains.
+// CrashAction walks module hierarchy.
+// All other types (including SetAction and Sequence) return nil.
+func ModifiesSingle(action Action, cfg ...*ActionsConfig) []*lg.Const {
+	if action == nil {
+		return nil
+	}
+	var acfg *ActionsConfig
+	if len(cfg) > 0 {
+		acfg = cfg[0]
+	}
+	var result []*lg.Const
+	switch action.(type) {
+	case *AssignAction, *HavocAction, *CrashAction:
+		modifiesRec(action, &result, acfg)
+	}
+	return result
+}
+
+// Modifies returns the list of symbols modified by an action, recursing
+// into children. Uses the given ActionsConfig for destructor lookups (may be nil).
 func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Const {
 	var acfg *ActionsConfig
 	if len(cfg) > 0 {

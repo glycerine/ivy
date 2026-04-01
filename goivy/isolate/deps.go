@@ -83,18 +83,20 @@ func GetCallsModsRec(
 	calls, mods map[string]map[string]bool,
 	loops ...map[string][]actions.Action,
 ) {
-	GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, nil, loops...)
+	GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, nil, nil, loops...)
 }
 
 // GetCallsModsRecFull is the full version that also tracks mixin dependencies.
 // Python: get_calls_mods(mod, summarized_actions, actname, calls, mods, mixins, loops, interf_syms)
 // The mixins parameter tracks which callee actions are reached via mixin chains.
+// interfSyms filters modifications at collection time (matching Python behavior).
 func GetCallsModsRecFull(
 	mod *module.Module,
 	summarizedActions map[string]bool,
 	actname string,
 	calls, mods map[string]map[string]bool,
 	mixins map[string]map[string]bool,
+	interfSyms map[string]bool,
 	loops ...map[string][]actions.Action,
 ) {
 	if _, done := calls[actname]; done {
@@ -125,22 +127,13 @@ func GetCallsModsRecFull(
 	}
 
 	for _, sub := range action.IterSubactions() {
-		// Collect modifications.
-		switch a := sub.(type) {
-		case *actions.AssignAction:
-			if c, ok := a.LHS.(*lg.Const); ok {
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Assign", actname, c.Name)
-				amods[c.Name] = true
-			}
-		case *actions.HavocAction:
-			if c, ok := a.Target.(*lg.Const); ok {
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Havoc", actname, c.Name)
-				amods[c.Name] = true
-			}
-		case *actions.SetAction:
-			if c, ok := a.Lit.(*lg.Const); ok {
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Set", actname, c.Name)
-				amods[c.Name] = true
+		// Collect modifications via sub.modifies() — matching Python exactly.
+		// Python: for sym in sub.modifies(): if sym in interf_syms: amods.add(sym)
+		for _, sym := range actions.ModifiesSingle(sub) {
+			xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=%s",
+				actname, sym.Name, actions.ActionTypeName(sub))
+			if interfSyms == nil || interfSyms[sym.Name] {
+				amods[sym.Name] = true
 			}
 		}
 
@@ -157,7 +150,7 @@ func GetCallsModsRecFull(
 			if !summarizedActions[calledName] {
 				acalls[calledName] = true
 			}
-			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, loops...)
+			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, interfSyms, loops...)
 			if subcalls, ok := calls[calledName]; ok {
 				for c := range subcalls {
 					acalls[c] = true
@@ -193,7 +186,7 @@ func GetCallsModsRecFull(
 					amixins[calledName] = true
 				}
 			}
-			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, loops...)
+			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, interfSyms, loops...)
 			if subcalls, ok := calls[calledName]; ok {
 				for c := range subcalls {
 					acalls[c] = true
@@ -389,7 +382,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	// Sort summarizedActions keys to get deterministic iteration order matching Python
 	sortedSummarized := sortedKeys(summarizedActions)
 	for _, actname := range sortedSummarized {
-		GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, mixinDeps, loops)
+		GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, mixinDeps, interfSyms, loops)
 		// Python line 586: locmods[actname] = get_loc_mods(mod, actname)
 		locmods[actname] = make(map[string]bool)
 		for _, s := range GetLocMods(mod, actname) {
@@ -407,18 +400,8 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		GetCallouts(mod, newActions, summarizedActions, actname, callouts)
 	}
 
-	// Filter mods to only include interface symbols if interfSyms is provided.
-	if interfSyms != nil {
-		for actname, modSet := range mods {
-			filtered := make(map[string]bool)
-			for sym := range modSet {
-				if interfSyms[sym] {
-					filtered[sym] = true
-				}
-			}
-			mods[actname] = filtered
-		}
-	}
+	// interfSyms filtering now happens at collection time inside GetCallsModsRecFull,
+	// matching Python's inline `if sym in interf_syms` check.
 
 	// Get all mixins for impl_mixins lookup
 	if implMixins == nil {
