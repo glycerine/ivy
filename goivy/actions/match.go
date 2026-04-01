@@ -362,6 +362,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 			ctx := &UpdateContext{
 				Domain: mod,
 				PVars:  make(map[string]bool),
+				ActCfg: mod.Cfg.ActCfg,
 				GetAction: func(name string) Action {
 					if mod.Actions != nil {
 						if v, ok := mod.Actions.Get2(name); ok {

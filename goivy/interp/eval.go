@@ -151,6 +151,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 	ctx := &actions.UpdateContext{
 		Domain: state.Domain,
 		PVars:  state.InScope,
+		ActCfg: state.Domain.Cfg.ActCfg,
 		GetAction: func(name string) actions.Action {
 			if state.Domain != nil {
 				if a, ok := state.Domain.Actions.Get2(name); ok {

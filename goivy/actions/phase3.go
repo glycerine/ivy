@@ -436,6 +436,7 @@ func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *mod
 	ctx := &UpdateContext{
 		Domain: domain,
 		PVars:  pvars,
+		ActCfg: domain.Cfg.ActCfg,
 	}
 	return aa.ActionUpdate(ctx)
 }

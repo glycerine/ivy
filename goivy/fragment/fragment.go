@@ -811,7 +811,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	if precondsOnly {
 		for name, action := range m.BeforeExport {
 			_ = name
-			if fp, ok := makeFmlaPairFromAction(action); ok {
+			if fp, ok := makeFmlaPairFromAction(action, m); ok {
 				assumes = append(assumes, fp)
 			}
 		}
@@ -821,7 +821,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 			if !ok {
 				continue
 			}
-			if fp, ok := makeFmlaPairFromAction(action); ok {
+			if fp, ok := makeFmlaPairFromAction(action, m); ok {
 				assumes = append(assumes, fp)
 			}
 		}
@@ -940,14 +940,14 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // makeFmlaPairFromAction attempts to extract a formula pair from an action.
 // It computes the action's transition relation update and extracts the
 // pre/post formulas for fragment analysis.
-func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
+func makeFmlaPairFromAction(action interface{}, m *mod.Module) (fmlaPair, bool) {
 	act, ok := action.(actions.Action)
 	if !ok {
 		return fmlaPair{}, false
 	}
 
 	// Compute the action's transition relation
-	ctx := &actions.UpdateContext{}
+	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}
 	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(act))
 	upd := actions.GetUpdate(act, ctx)
 	if upd == nil {

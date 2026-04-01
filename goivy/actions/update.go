@@ -2172,6 +2172,7 @@ func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bo
 	ctx := &UpdateContext{
 		Domain: domain,
 		PVars:  inScope,
+		ActCfg: domain.Cfg.ActCfg,
 		GetAction: func(name string) Action {
 			if domain != nil && domain.Actions != nil {
 				if v, ok := domain.Actions.Get2(name); ok {

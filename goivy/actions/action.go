@@ -1408,7 +1408,7 @@ func (a *WhileAction) DecomposeWithModule(mod *module.Module) [][]Action {
 	if mod == nil {
 		return a.Decompose()
 	}
-	ctx := &UpdateContext{Domain: mod}
+	ctx := &UpdateContext{Domain: mod, ActCfg: mod.Cfg.ActCfg}
 	expanded := a.Expand(ctx)
 	return expanded.Decompose()
 }

@@ -123,6 +123,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	bgt := mod.BackgroundTheory(nil)
 	ctx := &actions.UpdateContext{
 		Domain: mod,
+		ActCfg: mod.Cfg.ActCfg,
 	}
 	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)
