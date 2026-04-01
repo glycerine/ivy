@@ -20,6 +20,20 @@ func ReprExpr(e Expr) string {
 	return e.String()
 }
 
+// ReprNode returns the sort-qualified repr of any ast.Node.
+// Calls Repr() if available (on lg.Variable, lg.Apply, ast.Atom, etc.),
+// else falls back to String(). This is the public entry point for traces.
+func ReprNode(n ast.Node) string {
+	if n == nil {
+		return ""
+	}
+	type reprer interface{ Repr() string }
+	if r, ok := n.(reprer); ok {
+		return r.Repr()
+	}
+	return fmt.Sprint(n)
+}
+
 // Variable represents a variable. Name must start with uppercase.
 type Variable struct {
 	ast.Base

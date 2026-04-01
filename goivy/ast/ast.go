@@ -75,6 +75,18 @@ type Node interface {
 	GetAstConfig() *AstConfig
 }
 
+// reprNode returns Repr() if available on the node, else String().
+// Used by Atom.Repr() to get sort-qualified display of children.
+// The reprer interface is checked at runtime, catching lg.Variable.Repr(),
+// lg.Apply.Repr(), etc. without ast importing logic.
+func reprNode(n Node) string {
+	type reprer interface{ Repr() string }
+	if r, ok := n.(reprer); ok {
+		return r.Repr()
+	}
+	return fmt.Sprint(n)
+}
+
 // GetFormalSortAnnotation extracts the sort-annotation string from an AST
 // node that carries one. It returns "" for nodes that have no sort annotation.
 //
@@ -345,6 +357,23 @@ func (a *Atom) String() string {
 	return a.Rep + "(" + strings.Join(parts, ", ") + ")"
 }
 func (a *Atom) Relname() string { return a.Rep }
+
+// Repr returns a sort-qualified string, using Repr() on children when available.
+// Matches Python ast.Atom.__repr__ which calls str() on args — and for
+// ast.Variable, str() falls to __repr__ which includes sort qualifiers.
+func (a *Atom) Repr() string {
+	if IsEquals(a.Rep) && len(a.Terms) == 2 {
+		return reprNode(a.Terms[0]) + " = " + reprNode(a.Terms[1])
+	}
+	if len(a.Terms) == 0 {
+		return a.Rep
+	}
+	parts := make([]string, len(a.Terms))
+	for i, t := range a.Terms {
+		parts[i] = reprNode(t)
+	}
+	return a.Rep + "(" + strings.Join(parts, ", ") + ")"
+}
 
 func (a *Atom) Prefix(s string) *Atom {
 	c := a.Clone(a.Terms).(*Atom)
