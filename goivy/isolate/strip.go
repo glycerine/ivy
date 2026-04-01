@@ -507,7 +507,7 @@ type isolateParamProvider interface {
 //
 // Corresponds to Python strip_isolate (lines 341-456).
 func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
-	implMixins map[string][]MixinDef, allAfterInits map[string]bool,
+	implMixins *iu.InsMap[string, []MixinDef], allAfterInits map[string]bool,
 	extraStrip map[string][]string) error {
 
 	isoCfg := mod.Cfg.IsolateCfg
@@ -609,7 +609,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 
 	// Step 3: Propagate strip map through impl_mixins.
 	// Python: for ms in impl_mixins.values(): for m: strip_map[m.mixee()] = strip_params
-	for _, ms := range implMixins {
+	for _, ms := range implMixins.All() {
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				mixerParams := StripMapLookup(CanonAct(m.Mixer()), stripMap, mod)

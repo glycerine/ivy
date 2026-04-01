@@ -1473,7 +1473,10 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     #check non-interference (temporarily put back in old_actions)
 
     if do_check_interference.get():
-        interf_syms = set(x for x in ivy_logic.all_symbols() if x in all_syms)
+        interf_syms = OrderedSymSet()
+        for x in all_syms:
+            if x in ivy_logic.all_symbols():
+                interf_syms.add(x)
         _trace_sym_set("isolate.interfSyms_pre_follow", interf_syms)
         follow_definitions(orig_defs,interf_syms,label="interfSyms")
         _trace_sym_set("isolate.interfSyms_after_follow", interf_syms)

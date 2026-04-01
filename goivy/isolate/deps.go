@@ -339,7 +339,7 @@ func CheckInterference(mod *module.Module, newActions *iu.InsMap[string, actions
 // Python: check_interference (lines 577-641).
 func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, actions.Action],
 	summarizedActions map[string]bool,
-	implMixins map[string][]module.MixinDef,
+	implMixins *iu.InsMap[string, []module.MixinDef],
 	checkTerm bool,
 	interfSyms map[string]bool,
 	afterInits []string,
@@ -394,7 +394,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 
 	// Get all mixins for impl_mixins lookup
 	if implMixins == nil {
-		implMixins = make(map[string][]module.MixinDef)
+		implMixins = iu.NewInsMap[string, []module.MixinDef]()
 	}
 
 	// Python lines 590-622: For each non-summarized action, check interference.
@@ -431,8 +431,10 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 					allCalls = append(allCalls, m.Mixer())
 				}
 			}
-			for _, m := range implMixins[calledName] {
-				allCalls = append(allCalls, m.Mixer())
+			if ims, ok := implMixins.Get2(calledName); ok {
+				for _, m := range ims {
+					allCalls = append(allCalls, m.Mixer())
+				}
 			}
 
 			for _, called := range allCalls {
@@ -528,8 +530,10 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 				allCalls = append(allCalls, m.Mixer())
 			}
 		}
-		for _, m := range implMixins[calledName] {
-			allCalls = append(allCalls, m.Mixer())
+		if ims, ok := implMixins.Get2(calledName); ok {
+			for _, m := range ims {
+				allCalls = append(allCalls, m.Mixer())
+			}
 		}
 
 		for _, called := range allCalls {

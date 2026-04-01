@@ -330,14 +330,15 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.IsolateInfo = &module.IsolateInfo{}
 
 	// Process implementation mixins
-	implMixins := make(map[string][]MixinDef)
+	implMixins := iu.NewInsMap[string, []MixinDef]()
 	for actname, ms := range mod.Mixins {
 		var implements []MixinDef
 		var beforeAfter []MixinDef
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implements = append(implements, m)
-				implMixins[actname] = append(implMixins[actname], m)
+				existing, _ := implMixins.Get2(actname)
+				implMixins.Set(actname, append(existing, m))
 			} else {
 				beforeAfter = append(beforeAfter, m)
 			}
@@ -1512,7 +1513,18 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Interference check ---
 	if isoCfg.DoCheckInterference {
-		interfSyms := copySymSet(allSyms2)
+		// Python: interf_syms = set(x for x in ivy_logic.all_symbols() if x in all_syms)
+		// Filter allSyms2 to only symbols that are also in the logic signature.
+		interfSyms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+		if mod.Sig != nil {
+			for key, sym := range allSyms2.All() {
+				if c, ok := sym.(*lg.Const); ok {
+					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
+						interfSyms.Set(key, sym)
+					}
+				}
+			}
+		}
 		if xtracer.Enabled {
 			traceSymSet("isolate.interfSyms_pre_follow", interfSyms)
 		}
@@ -1528,7 +1540,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			xtracer.Trace("isolate.presentAfterInits=%s", strings.Join(cp, ","))
 		}
 		xtracer.Trace("isolate.allAfterInits=%s", strings.Join(sortedKeys(allAfterInits), ","))
-		for actname, mixins := range implMixins {
+		for actname, mixins := range implMixins.All() {
 			mixerNames := make([]string, 0)
 			for _, m := range mixins {
 				mixerNames = append(mixerNames, m.Mixer())
@@ -1740,7 +1752,7 @@ func formulaToClauses(fmla lg.Expr) *co.Clauses {
 }
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
-func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins map[string][]MixinDef,
+func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
 	if idef, ok := iso.(IsolateDefInterface); ok {
 		_ = StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
