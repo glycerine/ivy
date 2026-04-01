@@ -11,7 +11,6 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // StripMap maps component names to their isolate parameter names.
@@ -66,9 +65,8 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 // Corresponds to Python strip_action (ivy_isolate.py lines 242-289).
 func StripActionFull(action actions.Action, stripMap StripMap, mod *module.Module,
 	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.Action {
-	if len(stripMap) == 0 && len(binding) == 0 {
-		return action
-	}
+	// Python: strip_action always recurses and clones, even with empty strip_map/binding.
+	// No early return — the clone calls produce LF.clone PRESERVE and action __init__ traces.
 	return stripActionFullRec(action, stripMap, mod, binding, isInit, initParams)
 }
 
@@ -164,20 +162,48 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 			}
 		}
 
-		// Recurse into child nodes.
-		oldArgs := action.ActionArgs()
-		newActionArgs := make([]lg.Expr, len(oldArgs))
-		for i, arg := range oldArgs {
-			if act, ok := arg.(actions.Action); ok {
-				newActionArgs[i] = stripActionFullRec(act, stripMap, mod, binding, isInit, initParams)
-			} else if w, ok := arg.(actions.Action); ok {
-				newActionArgs[i] = stripActionFullRec(w, stripMap, mod, binding, isInit, initParams)
-			} else {
-				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, binding)
-			}
+		// Python: args = [strip_action(arg,...) for arg in ast.args]
+		//         return ast.clone(args)
+		// Use Args()/Clone() (ast.Node interface) instead of ActionArgs()/ActionClone()
+		// so that LabeledFormula children (inside assume/assert actions) are properly
+		// recursed into and cloned, producing the LF.clone PRESERVE traces that Python emits.
+		nodeArgs := action.(ast.Node).Args()
+		newNodeArgs := make([]ast.Node, len(nodeArgs))
+		for i, arg := range nodeArgs {
+			newNodeArgs[i] = stripArgNode(arg, stripMap, mod, binding, isInit, initParams)
 		}
-		return action.ActionClone(newActionArgs)
+		return action.(ast.Node).Clone(newNodeArgs).(actions.Action)
 	}
+}
+
+// stripArgNode recursively processes an ast.Node argument, matching Python's
+// strip_action which handles actions, LabeledFormulas, and plain nodes uniformly.
+// Python: args = [strip_action(arg,...) for arg in ast.args]; return ast.clone(args)
+func stripArgNode(node ast.Node, stripMap StripMap, mod *module.Module,
+	binding map[lg.NodeKey]string, isInit bool, initParams []string) ast.Node {
+	if node == nil {
+		return nil
+	}
+	// If it's an action, delegate to action stripping.
+	if act, ok := node.(actions.Action); ok {
+		return stripActionFullRec(act, stripMap, mod, binding, isInit, initParams).(ast.Node)
+	}
+	// If it's a LabeledFormula, recurse into children and clone.
+	// Python: strip_action recurses into lf.args (label, formula) then calls lf.clone(new_args),
+	// which emits LF.clone PRESERVE.
+	if lf, ok := node.(*ast.LabeledFormula); ok {
+		lfArgs := lf.Args() // [label, formula]
+		newArgs := make([]ast.Node, len(lfArgs))
+		for i, arg := range lfArgs {
+			newArgs[i] = stripArgNode(arg, stripMap, mod, binding, isInit, initParams)
+		}
+		return lf.Clone(newArgs)
+	}
+	// Otherwise, treat as a logic expression and strip via stripNodeFull.
+	if expr, ok := node.(lg.Expr); ok {
+		return stripNodeFull(expr, stripMap, mod, binding)
+	}
+	return node
 }
 
 // stripNodeFull recursively processes a logic node, stripping isolate parameters
@@ -420,7 +446,6 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.
 func StripLabeledFormulas(lfs []*ast.LabeledFormula, stripMap StripMap, mod *module.Module) []*ast.LabeledFormula {
-	xtracer.Trace("isolate.StripLabeledFormulas ENTER n_lfs=%d n_stripMap=%d", len(lfs), len(stripMap))
 	if len(stripMap) == 0 {
 		return lfs
 	}
@@ -701,20 +726,17 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 // This is the core stripping function. StripIsolateParams is the higher-level
 // function that builds the strip map and handles variable parameter substitution.
 func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[string]bool) error {
-	xtracer.Trace("isolate.StripIsolate ENTER n_stripMap=%d", len(stripMap))
-	if len(stripMap) == 0 {
-		xtracer.Trace("isolate.StripIsolate SKIP empty_stripMap")
-		return nil
-	}
+	// Python: strip_isolate does NOT early-return for empty strip_map.
+	// It processes all actions through strip_action even when strip_map is empty,
+	// which clones actions and labeled formulas (producing LF.clone PRESERVE traces).
 
 	// Strip actions.
 	newActions := iu.NewInsMap[string, module.Action]()
 	for name, act := range mod.Actions.All() {
 		stripParams := StripMapLookup(CanonAct(name), stripMap, mod)
-		if len(stripParams) == 0 {
-			newActions.Set(name, act)
-			continue
-		}
+
+		// Python: does NOT skip when strip_params is empty — always calls strip_action.
+		// strip_binding = dict(zip(formal_params, strip_params)) → {} when strip_params is empty.
 
 		// Check if this is an initializer action
 		origName := name

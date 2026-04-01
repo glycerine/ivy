@@ -13,6 +13,7 @@ package isolate
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -1755,14 +1756,10 @@ func formulaToClauses(fmla lg.Expr) *co.Clauses {
 func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
 	if idef, ok := iso.(IsolateDefInterface); ok {
-		xtracer.Trace("isolate.stripIsolateWrapper ENTER idef_type=%T", idef)
 		err := StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
 		if err != nil {
-			xtracer.Trace("isolate.stripIsolateWrapper ERROR err=%v", err)
+			fmt.Fprintf(os.Stderr, "isolate.stripIsolateWrapper ERROR err=%v\n", err)
 		}
-		xtracer.Trace("isolate.stripIsolateWrapper EXIT")
-	} else {
-		xtracer.Trace("isolate.stripIsolateWrapper SKIP iso_type=%T does_not_implement_IsolateDefInterface", iso)
 	}
 }
 

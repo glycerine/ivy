@@ -2401,6 +2401,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-156456  go : XTRACE: check.CreateIsolate EXIT name=cf_live
-        py : XTRACE: ast.LF.clone PRESERVE origid=226 counter=1822
+156567  go : XTRACE: check.CreateIsolate after_isolate_component
+        py : XTRACE: ast.LF.clone PRESERVE origid=207 counter=1822
 ~~~

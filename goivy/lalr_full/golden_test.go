@@ -397,6 +397,7 @@ func normalizeLine(line string) string {
 		home + "/ivy/ivy-lang-examples/ivy/include/",
 		home + "/ivy/pyivy/ivy/ivy/include/",
 		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/ivy/include/",
+		home + "/go/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
@@ -405,6 +406,7 @@ func normalizeLine(line string) string {
 	for _, prefix := range []string{
 		home + "/ivy/ivy-lang-examples/",
 		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/",
+		home + "/go/src/github.com/glycerine/ivy/ivy-lang-examples/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
