@@ -2401,21 +2401,9 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-157309  go : XTRACE: actions.substitute_constants_action ENTER type=Not nargs=1
-        py : XTRACE: actions.substitute_constants_action ENTER type=Implies nargs=2
-~~~
-or
-~~~
-157285  go : XTRACE: actions.Sequence.int_update ENTER
-        py : XTRACE: actions.LocalAction.int_update ENTER
-~~~
-or
-~~~
-157299  go : XTRACE: actions.LocalAction.int_update ENTER
-        py : XTRACE: actions.IntUpdate ENTER type=AssignAction
-~~~
-or
-~~~
-157289  go : XTRACE: actions.LocalAction.int_update ENTER
-        py : XTRACE: actions.IntUpdate ENTER type=AssignAction
+157357  go : XTRACE: actions.IfAction.int_update ENTER
+        py : XTRACE: actions.IfAction.int_update ENTER
+
+157358  go : XTRACE: actions.IfAction.int_update EXIT
+        py : XTRACE: actions.substitute_constants_action ENTER type=And nargs=3
 ~~~
