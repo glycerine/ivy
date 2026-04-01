@@ -678,7 +678,7 @@ func GetReferencesInto(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], dest
 // syms is the set of referenced symbols; names is a set of names
 // referenced by proofs that should also be kept.
 // Corresponds to Python's Action.erase_unrefed(refs, names).
-func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map[string]bool) Action {
+func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map[string]bool, destructorSorts map[string]lg.Sort) Action {
 	if action == nil {
 		return nil
 	}
@@ -686,7 +686,7 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 	case *AssignAction:
 		// If LHS symbol is not referenced, erase
 		// Python: if self.modifies()[0] not in refs and self.modifies()[0].name not in ref_names
-		if c, ok := rootSymbol(a.LHS); ok {
+		if c, ok := rootSymbol(a.LHS, destructorSorts); ok {
 			_, inSyms := syms.Get2(ConstSymKey(c))
 			if !inSyms && !names[c.Name] {
 				return NewSequence()
@@ -694,8 +694,9 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 		}
 		return a
 	case *HavocAction:
+		// Python HavocAction.erase_unrefed uses modifies() which walks destructor chains
 		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := rootSymbol(a.Target, destructorSorts); ok {
 				_, inSyms := syms.Get2(ConstSymKey(c))
 				if !inSyms && !names[c.Name] {
 					return NewSequence()
@@ -711,7 +712,7 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
-				newArgs[i] = EraseUnrefed(child, syms, names)
+				newArgs[i] = EraseUnrefed(child, syms, names, destructorSorts)
 			} else {
 				newArgs[i] = arg
 			}
@@ -720,15 +721,37 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 	}
 }
 
-// rootSymbol walks destructor chains to find the root symbol of an assignment LHS.
-func rootSymbol(node lg.Expr) (*lg.Const, bool) {
+// rootSymbol finds the root symbol modified by an assignment LHS.
+// Matches Python AssignAction.modifies() / HavocAction.modifies():
+//
+//	n = self.args[0]
+//	while n.rep.name in module.destructor_sorts:
+//	    n = n.args[0]
+//	return [n.rep]
+//
+// For non-destructor functions like isd.rsp(P,M,A,T), returns isd.rsp.
+// For destructor chains like d2(d1(x)), walks through destructors to return x.
+func rootSymbol(node lg.Expr, destructorSorts map[string]lg.Sort) (*lg.Const, bool) {
 	for {
-		if app, ok := node.(*lg.Apply); ok && len(app.Terms) > 0 {
+		app, ok := node.(*lg.Apply)
+		if !ok {
+			break
+		}
+		c, ok := app.Func.(*lg.Const)
+		if !ok {
+			break
+		}
+		if _, isDestr := destructorSorts[c.Name]; isDestr && len(app.Terms) > 0 {
+			// Walk through destructor chain
 			node = app.Terms[0]
 			continue
 		}
-		break
+		// Non-destructor function — this IS the root symbol
+		return c, true
 	}
-	c, ok := node.(*lg.Const)
-	return c, ok
+	// Bare Const (e.g., zero-argument symbol)
+	if c, ok := node.(*lg.Const); ok {
+		return c, true
+	}
+	return nil, false
 }

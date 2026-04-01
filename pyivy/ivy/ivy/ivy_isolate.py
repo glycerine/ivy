@@ -1411,26 +1411,32 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,mod.definitions]:
         for y in x:
             if not isinstance(y.formula,ivy_ast.SchemaBody):
+                if __debug__: xtracer.trace("%s.phaseA_fmla %s" % (_as2_label, str(y.label)))
                 _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(y.formula))
 
     # Phase B: action bodies
-    for action in list(mod.actions.values()):
+    for actname, action in list(mod.actions.items()):
+        if __debug__: xtracer.trace("%s.phaseB_action %s" % (_as2_label, actname))
         _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(action))
 
     # Phase C: params (if compiling, keep all of the parameters)
+    if __debug__: xtracer.trace("%s.phaseC_params_start" % _as2_label)
     if opt_keep_destructors.get():
         _traced_add_syms(_as2_label, all_syms, lu.symbols_asts(mod.params))
 
     # Phase D: action formals (separate pass from action bodies)
-    for a in list(mod.actions.values()):
+    for actname, a in list(mod.actions.items()):
+        if __debug__: xtracer.trace("%s.phaseD_formals %s" % (_as2_label, actname))
         _traced_add_syms(_as2_label, all_syms, lu.symbols_asts(a.formal_params))
         _traced_add_syms(_as2_label, all_syms, lu.symbols_asts(a.formal_returns))
 
     # Phase E: natives
+    if __debug__: xtracer.trace("%s.phaseE_natives_start" % _as2_label)
     for tmp in mod.natives:
         _traced_add_syms(_as2_label, all_syms, lu.symbols_asts(tmp.args[2:]))
 
     # Phase F: proofs (in case a symbol is used only in a proof)
+    if __debug__: xtracer.trace("%s.phaseF_proofs_start" % _as2_label)
     for x in mod.proofs:
         _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(x[1]))
 

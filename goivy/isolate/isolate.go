@@ -1126,7 +1126,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Erase assignments to unreferenced variables
 	for actname, act := range newActions.All() {
 		xtracer.Trace("isolate.erase_unrefed_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
-		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNamesMap))
+		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNamesMap, mod.DestructorSorts))
 	}
 
 	// --- Enforce axioms check ---
@@ -1351,6 +1351,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
 				}
+				if xtracer.Enabled {
+					lbl := ""
+					if lf.Label != nil {
+						lbl = lg.ReprNode(lf.Label)
+					}
+					xtracer.Trace("%s.phaseA_fmla %s", as2, lbl)
+				}
 				collectSymbolsInto(as2, lf.Formula.(lg.Expr), allSyms2)
 			}
 		}
@@ -1358,12 +1365,18 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Phase B: action bodies ONLY (not formals -- Python does them separately in Phase D)
 	// Python: asts.extend(action for action in list(mod.actions.values()))
-	for _, act := range mod.Actions.All() {
+	for name, act := range mod.Actions.All() {
+		if xtracer.Enabled {
+			xtracer.Trace("%s.phaseB_action %s", as2, name)
+		}
 		collectSymbolsInto(as2, act, allSyms2)
 	}
 
 	// Phase C: params (if keep_destructors)
 	// Python: if opt_keep_destructors.get(): asts.extend(mod.params)
+	if xtracer.Enabled {
+		xtracer.Trace("%s.phaseC_params_start", as2)
+	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
 			key := actions.ConstSymKey(p)
@@ -1379,7 +1392,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Phase D: action formals (separate pass, matching Python)
 	// Python: for a in list(mod.actions.values()):
 	//             asts.extend(a.formal_params); asts.extend(a.formal_returns)
-	for _, act := range mod.Actions.All() {
+	for name, act := range mod.Actions.All() {
+		if xtracer.Enabled {
+			xtracer.Trace("%s.phaseD_formals %s", as2, name)
+		}
 		for _, p := range act.GetFormalParams() {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
@@ -1402,6 +1418,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Phase E: natives
 	// Python: for tmp in mod.natives: asts.extend(tmp.args[2:])
+	if xtracer.Enabled {
+		xtracer.Trace("%s.phaseE_natives_start", as2)
+	}
 	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
@@ -1413,6 +1432,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Phase F: proofs
 	// Python: asts.extend(x[1] for x in mod.proofs)
+	if xtracer.Enabled {
+		xtracer.Trace("%s.phaseF_proofs_start", as2)
+	}
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			if n, ok := pe.Proof.(lg.Expr); ok {
