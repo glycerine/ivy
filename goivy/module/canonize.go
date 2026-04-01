@@ -95,6 +95,26 @@ func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
 	ResortSig(m.Sig, rn)
 }
 
+// ComputeSortRefinements computes sort refinements from the signature.
+// Corresponds to Python's il.sort_refinement() (ivy_logic.py:1471).
+func ComputeSortRefinements(sig *il.Sig) []SortRefinement {
+	if sig == nil {
+		return nil
+	}
+	raw := il.GetSortRefinement(sig)
+	if len(raw) == 0 {
+		return nil
+	}
+	result := make([]SortRefinement, 0, len(raw))
+	for _, s := range sig.Sorts {
+		key := lg.SortKey(s)
+		if newSort, ok := raw[key]; ok {
+			result = append(result, SortRefinement{Old: s, New: newSort})
+		}
+	}
+	return result
+}
+
 // --- resort helpers ---
 
 // ResortAST applies sort refinement to an AST node, replacing old sorts
@@ -257,9 +277,9 @@ func resortLabeledFormulas(lfs []*ast.LabeledFormula, rn map[lg.NodeKey]*SortRef
 	result := make([]*ast.LabeledFormula, len(lfs))
 	for i, lf := range lfs {
 		newFormula := ResortAST(lf.Formula.(lg.Expr), rn)
-		nlf := lf.Cfg.NewLabeledFormulaFrom(lf, newFormula)
-		nlf.ID = lf.ID
-		result[i] = nlf
+		// Python: ast.clone([ast.args[0], lu.resort_ast(ast.args[1], sort_refinement)])
+		cloned := lf.Clone([]ast.Node{lf.Label, newFormula})
+		result[i] = cloned.(*ast.LabeledFormula)
 	}
 	return result
 }

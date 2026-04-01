@@ -194,6 +194,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	xtracer.Trace("check.CreateIsolate after_isolate_component")
+
 	// Python lines 1609-1673: create_imports processing.
 	// When CreateImports is enabled, create import actions for out-calls
 	// and external stubs.
@@ -263,34 +265,47 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		mod.Imports = newImports
 	}
 
+	xtracer.Trace("check.CreateIsolate before_fix_initializers n_afterInits=%d", len(afterInits))
 	// Fix initializers: move after-init actions to mod.InitialActions
 	FixInitializers(mod, afterInits)
+	xtracer.Trace("check.CreateIsolate after_fix_initializers")
 
 	// Python line 1769: mod.canonize_types()
-	mod.CanonizeTypes(nil)
+	sortRefs := module.ComputeSortRefinements(mod.Sig)
+	xtracer.Trace("check.CreateIsolate before_canonize_types n_sortRefs=%d", len(sortRefs))
+	mod.CanonizeTypes(sortRefs)
+	xtracer.Trace("check.CreateIsolate after_canonize_types")
 
 	// Apply bracket actions for present conjectures (version >= 1.7)
+	xtracer.Trace("check.CreateIsolate before_bracket_actions n_brackets=%d", len(brackets))
 	if iso != "" {
 		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
 			for _, b := range brackets {
+				xtracer.Trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d", b.ActName, len(b.Before), len(b.After))
 				BracketAction(mod, b.ActName, b.Before, b.After)
 			}
 		}
 	}
+	xtracer.Trace("check.CreateIsolate after_bracket_actions")
 
 	// Python line 1739: slv.check_compat()
 	// Check native interpretations of symbols for compatibility.
+	xtracer.Trace("check.CreateIsolate before_check_compat")
 	if mod.Sig != nil {
 		errs := solver.CheckCompatStatic(mod.Sig)
 		for _, err := range errs {
 			fmt.Printf("warning: %v\n", err)
 		}
 	}
+	xtracer.Trace("check.CreateIsolate after_check_compat")
 
 	// Update conjectures (generate concept spaces)
+	xtracer.Trace("check.CreateIsolate before_update_conjs n_conjs=%d", len(mod.LabeledConjs))
 	mod.UpdateConjs()
+	xtracer.Trace("check.CreateIsolate after_update_conjs")
 
 	// Label public actions
+	xtracer.Trace("check.CreateIsolate before_label_public n_public=%d", len(mod.PublicActions))
 	for name := range mod.PublicActions {
 		if act, ok := mod.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
@@ -304,11 +319,14 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	xtracer.Trace("check.CreateIsolate after_label_public")
+
 	// Create one big external action if requested
 	extAction := ""
 	if mod.Cfg != nil {
 		extAction = mod.Cfg.ExtAction
 	}
+	xtracer.Trace("check.CreateIsolate before_ext_action ext=%q", extAction)
 	if extAction != "" {
 		afterInitNames := make(map[string]bool)
 		for _, ai := range afterInits {
@@ -339,7 +357,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		mod.PublicActions[extAction] = true
 	}
 
+	xtracer.Trace("check.CreateIsolate after_ext_action")
+
 	// Apply cone of influence filter
+	xtracer.Trace("check.CreateIsolate before_cone_of_influence cone=%v", isoCfg.ConeOfInfluence)
 	if isoCfg.ConeOfInfluence {
 		cone := getModCone(mod)
 		for a := range mod.Actions.All() {
@@ -348,6 +369,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			}
 		}
 	}
+
+	xtracer.Trace("check.CreateIsolate after_cone_of_influence")
 
 	// Set isolate proof reference
 	if mod.IsolateProofs != nil {

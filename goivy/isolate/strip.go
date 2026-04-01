@@ -412,10 +412,9 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 	}
 
 	// Return a new LabeledFormula with stripped contents.
-	nlf := mod.Cfg.AstCfg.NewLabeledFormulaFrom(lf, newFormula)
-	nlf.Label = newLabel
-	nlf.ID = lf.ID
-	return nlf
+	// Python: return lfmla.clone([lbl, fmla])
+	cloned := lf.Clone([]ast.Node{newLabel, newFormula})
+	return cloned.(*ast.LabeledFormula)
 }
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.
