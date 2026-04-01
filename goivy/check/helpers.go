@@ -17,9 +17,15 @@ import (
 // --- Pretty printing ---
 
 // PrettyLabel formats a label for display. Returns "(no name)" for nil labels.
+// Uses Repr() on Atom labels to include sort qualifiers on args,
+// matching Python where str(label) falls to Atom.__repr__ which
+// produces sort-qualified Variable args (e.g. M:mem_type).
 func PrettyLabel(label interface{}) string {
 	if label == nil {
 		return "(no name)"
+	}
+	if a, ok := label.(*ast.Atom); ok {
+		return a.Repr()
 	}
 	s := fmt.Sprint(label)
 	if s == "" || s == "<nil>" {
@@ -29,13 +35,16 @@ func PrettyLabel(label interface{}) string {
 }
 
 // PrettyLineno formats a line number from a labeled formula.
+// Uses the full Location (with filename) from Base.Loc, matching
+// Python's pretty_lineno which calls str(ast.lineno) where lineno
+// is a LocationTuple that includes filename.
 func PrettyLineno(lf *ast.LabeledFormula) string {
 	if lf == nil {
 		return "(internal) "
 	}
-	if lf.Lineno > 0 {
-		// Python: return str(ast.lineno) — bare number, no "line" prefix.
-		return fmt.Sprintf("%d", lf.Lineno)
+	loc := lf.GetLineno()
+	if loc.Filename != "" || loc.Line > 0 {
+		return loc.String()
 	}
 	return "(internal) "
 }

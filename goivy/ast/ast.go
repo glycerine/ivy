@@ -5,6 +5,7 @@ package ast
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
@@ -24,17 +25,25 @@ func (s *Location) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(location filename:%v line:%v)", s.Filename, s.Line))
 }
 
-// String returns a human-readable location string.
+// String returns a human-readable location string matching
+// Python's LocationTuple.__str__ on Unix:
+//
+//	filename: line N:
+//
 // When Reference is set (from lineno_add_ref during module instantiation),
-// delegates to the reference's String() matching Python LocationTuple.__str__.
+// delegates to the reference's String().
 func (l Location) String() string {
 	if l.Reference != nil {
 		return l.Reference.String()
 	}
-	if l.Filename == "" {
-		return fmt.Sprintf("line %d", l.Line)
+	res := ""
+	if l.Filename != "" {
+		res += l.Filename + ": "
 	}
-	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
+	if l.Line > 0 {
+		res += "line " + strconv.Itoa(l.Line) + ": "
+	}
+	return res
 }
 
 // safeLinenoAddRef extracts cfg from a node and applies LinenoAddRef.
