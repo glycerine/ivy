@@ -290,6 +290,11 @@ type AssignAction struct {
 	ActionBase
 	LHS lg.Expr
 	RHS lg.Expr
+
+	// original AST nodes for tree-walking (matches Python's self.args[0])
+	AstLHS ast.Node
+	// original AST node for tree-walking (matches Python's self.args[1])
+	AstRHS ast.Node
 }
 
 func NewAssignAction(lhs, rhs lg.Expr) *AssignAction {
@@ -299,7 +304,13 @@ func NewAssignAction(lhs, rhs lg.Expr) *AssignAction {
 func (a *AssignAction) Name() string          { return "assign" }
 func (a *AssignAction) ActionArgs() []lg.Expr { return []lg.Expr{a.LHS, a.RHS} }
 func (a *AssignAction) ActionClone(args []lg.Expr) Action {
-	return &AssignAction{ActionBase: a.ActionBase, LHS: args[0], RHS: args[1]}
+	return &AssignAction{
+		ActionBase: a.ActionBase,
+		LHS:        args[0],
+		RHS:        args[1],
+		AstLHS:     a.AstLHS,
+		AstRHS:     a.AstRHS,
+	}
 }
 func (a *AssignAction) String() string {
 	return fmt.Sprint(a.LHS) + " := " + fmt.Sprint(a.RHS)
@@ -313,6 +324,9 @@ func (a *AssignAction) IterSubactions() []Action { return defaultIterSubactions(
 type HavocAction struct {
 	ActionBase
 	Target lg.Expr
+
+	// original AST node for tree-walking (matches Python's self.args[0])
+	AstTarget ast.Node
 }
 
 func NewHavocAction(target lg.Expr) *HavocAction {
@@ -322,7 +336,7 @@ func NewHavocAction(target lg.Expr) *HavocAction {
 func (a *HavocAction) Name() string          { return "havoc" }
 func (a *HavocAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Target} }
 func (a *HavocAction) ActionClone(args []lg.Expr) Action {
-	return &HavocAction{ActionBase: a.ActionBase, Target: args[0]}
+	return &HavocAction{ActionBase: a.ActionBase, Target: args[0], AstTarget: a.AstTarget}
 }
 func (a *HavocAction) String() string {
 	return fmt.Sprint(a.Target) + " := *"
@@ -2283,4 +2297,18 @@ func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.N
 	// Rewrite the macro body: ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
 	rewriter := ast.NewAstRewriteSubstConstantsParams(subst, psubst)
 	return ast.AstRewrite(defn.Rhs, rewriter)
+}
+
+// syncAstLogic takes a child node from Clone(args) and the previous
+// logic-level Expr. If the child is already lg.Expr, use it directly
+// (ActionClone path). If it's a pure AST node (Atom, App), keep the
+// original logic-level Expr unchanged and update the AST field.
+// This preserves sort information that would be lost by reconstructing.
+func syncAstLogic(child ast.Node, prevExpr lg.Expr, prevAst ast.Node) (lg.Expr, ast.Node) {
+	if expr, ok := child.(lg.Expr); ok {
+		// Logic-level node — use it, keep previous AST
+		return expr, prevAst
+	}
+	// Pure AST node from tree rewriting — keep original logic Expr, update AST
+	return prevExpr, child
 }

@@ -237,10 +237,35 @@ func (a *EnsuresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 6. AssignAction
 // =========================================================================
 
-func (a *AssignAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *AssignAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+// func (a *AssignAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+
+func (a *AssignAction) Args() []ast.Node {
+	// Return AST-level nodes when available, matching Python's self.args = [lhs, rhs]
+	// where lhs/rhs are Atoms (not logic.Apply).
+	lhs := ast.Node(a.AstLHS)
+	if lhs == nil {
+		lhs = a.LHS
+	}
+	rhs := ast.Node(a.AstRHS)
+	if rhs == nil {
+		rhs = a.RHS
+	}
+	return []ast.Node{lhs, rhs}
 }
+
+//func (a *AssignAction) Clone(args []ast.Node) ast.Node {
+//	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+//}
+
+func (a *AssignAction) Clone(args []ast.Node) ast.Node {
+	// After tree rewriting, Args() may have returned AST nodes (Atom, App)
+	// which got rewritten. Sync both AST and logic fields.
+	newLHS, newAstLHS := syncAstLogic(args[0], a.LHS, a.AstLHS)
+	newRHS, newAstRHS := syncAstLogic(args[1], a.RHS, a.AstRHS)
+	r := &AssignAction{ActionBase: a.ActionBase, LHS: newLHS, RHS: newRHS, AstLHS: newAstLHS, AstRHS: newAstRHS}
+	return r
+}
+
 func (a *AssignAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *AssignAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *AssignAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
@@ -254,10 +279,27 @@ func (a *AssignAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 7. HavocAction
 // =========================================================================
 
-func (a *HavocAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *HavocAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+//func (a *HavocAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+//func (a *HavocAction) Clone(args []ast.Node) ast.Node {
+//	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+//}
+
+func (a *HavocAction) Args() []ast.Node {
+	// Return AST-level node when available, matching Python's self.args = [target]
+	// where target is an Atom (not logic.Apply/Const).
+	tgt := ast.Node(a.AstTarget)
+	if tgt == nil {
+		tgt = a.Target
+	}
+	return []ast.Node{tgt}
 }
+
+func (a *HavocAction) Clone(args []ast.Node) ast.Node {
+	newTarget, newAstTarget := syncAstLogic(args[0], a.Target, a.AstTarget)
+	r := &HavocAction{ActionBase: a.ActionBase, Target: newTarget, AstTarget: newAstTarget}
+	return r
+}
+
 func (a *HavocAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *HavocAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *HavocAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
