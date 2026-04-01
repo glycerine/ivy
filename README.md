@@ -2401,6 +2401,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-156567  go : XTRACE: check.CreateIsolate after_isolate_component
-        py : XTRACE: ast.LF.clone PRESERVE origid=207 counter=1822
+156616  go : XTRACE: actions.substitute_constants_action ENTER type=Sequence nargs=2
+        py : XTRACE: actions.substitute_constants_action ENTER type=Sequence nargs=3
 ~~~
