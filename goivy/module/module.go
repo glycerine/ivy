@@ -326,6 +326,11 @@ func (m *Module) Copy() *Module {
 	c.Subgoals = append([]SubgoalEntry{}, m.Subgoals...)
 	c.ConjSubgoals = copyLFSlice(m.ConjSubgoals)
 	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
+	c.Instantiations = append([]Instantiation{}, m.Instantiations...)
+	c.IsolateInfo = m.IsolateInfo
+	c.IsolateProof = m.IsolateProof
+	c.InitCond = m.InitCond
+	c.Name = m.Name
 
 	// Copy params
 	c.Params = make([]*lg.Const, len(m.Params))
