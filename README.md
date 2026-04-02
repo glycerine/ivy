@@ -2401,7 +2401,12 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-157400  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  updates=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  updates=[(DerivedUpdate defn:(Def lhs:(Apply func:(Symbol name:index.max2 sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSort name:index) (UninterpretedSort name:index)])) terms:[(Variable name
- ...(truncated long line to 300 bytes)
+167300  go : XTRACE: fragment CheckFEU ENTER
+        py : XTRACE: fragment CheckFEU ENTER
+
+167301  go : XTRACE: fragment/checker.reportCycle ENTER
+        py : XTRACE: fragment/checker.reportCycle ENTER
+
+167302  go : XTRACE: fragment/checker.reportCycle report cycle error
+        py : XTRACE: fragment/checker.reportCycle EXIT
 ~~~
