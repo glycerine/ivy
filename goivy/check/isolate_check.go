@@ -90,9 +90,12 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Python: ifc.check_fragment()
+	xtracer.Trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
 	if err := fragment.CheckFragment(mod, false); err != nil {
+		xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment() but with error: %v", err)
 		return err
 	}
+	xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")
 
 	// Python: with im.module.theory_context():
 	cleanupTheory := mod.TheoryContext()
@@ -1086,8 +1089,9 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) st
 
 // CheckSeparately returns whether to check assertions separately.
 // Python: opt_separate is BooleanParameter("separate", None) — tri-state.
-//   if opt_separate.get() is not None: return opt_separate.get()
-//   return get_isolate_attr(isolate,'separate','false') == 'true'
+//
+//	if opt_separate.get() is not None: return opt_separate.get()
+//	return get_isolate_attr(isolate,'separate','false') == 'true'
 func CheckSeparately(isolate string, mod *module.Module) bool {
 	if mod.Cfg.OptSeparateSet {
 		return mod.Cfg.OptSeparate

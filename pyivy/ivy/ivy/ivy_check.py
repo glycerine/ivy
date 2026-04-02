@@ -520,7 +520,11 @@ def check_isolate(trace_hook = None):
     if opt_ivy_stats.get():
         print('calling fragment checker...')
     fc_start = time.time()
+
+    if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
     ifc.check_fragment()
+    if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")
+
     fc_end = time.time()
     if opt_ivy_stats.get():
         print("\n\t IVY_STATS fragment checker elapsed time (s): ", fc_end - fc_start)
