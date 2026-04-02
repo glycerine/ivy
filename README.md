@@ -2401,16 +2401,70 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-157365  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theorems=(hash)
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theorems=(hash)
-
-157366  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  predicates=(hash)
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  predicates=(hash)
-
-157367  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
-
-157368  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theory=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:ref.prevents sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T0 sort:(U ...(truncated long line to 300 bytes)
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  actions.keys=24 keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:m
+157394  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  mixins=(insMap index.next:[(mixinAfterDef)] index.prev:[(mixinBeforeDef) (mixinAfterDef)] lclock.next:[(mixinAfterDef)] lclock.prev:[(mixinBeforeDef) (mixinAfterDef)] tar_clock.next:[(mixinAfterDef)] tar_clock.prev:[( ...(truncated long line to 300 bytes)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  mixins=(insMap index.next:[(mixinAfterDef)] index.prev:[(mixinBeforeDef) (mixinAfterDef)] lclock.next:[(mixinAfterDef)] lclock.prev:[(mixinBeforeDef) (mixinAfterDef)] tar_clock.next:[(mixinAfterDef)] tar_clock.prev:[(
  ...(truncated long line to 300 bytes)
+
+=== S-expression diff (go '-' vs py '+') ===
+   mixins=(insMap
+     index.next:[
+       (mixinAfterDef)]
+     index.prev:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     lclock.next:[
+       (mixinAfterDef)]
+     lclock.prev:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     tar_clock.next:[
+       (mixinAfterDef)]
+     tar_clock.prev:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     tar_cf_clock.next:[
+       (mixinAfterDef)]
+     tar_cf_clock.prev:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     rfn.abs.trying1.raise:[
+       (mixinBeforeDef)]
+     rfn.abs.trying2.raise:[
+       (mixinBeforeDef)]
+     rfn.abs.send:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     rfn.abs.recv1:[
+       (mixinBeforeDef)]
+     rfn.abs.recv2:[
+       (mixinBeforeDef)]
+     dramc.step_rd:[
+       (mixinBeforeDef)]
+     dramc.step_wr:[
+       (mixinBeforeDef)]
+     memc.memc_arr_hook:[
+       (mixinBeforeDef)
+       (mixinBeforeDef)]
+     dramc_nb2.memc_pushing.raise:[
+       (mixinBeforeDef)]
+     dramc_nb2.memc_arriving.raise:[
+       (mixinBeforeDef)]
+     memc.memc_push_hook:[
+       (mixinBeforeDef)]
+     rfn2.abs.trying.raise:[
+       (mixinBeforeDef)]
+     rfn2.abs.send:[
+       (mixinBeforeDef)
+       (mixinAfterDef)]
+     rfn2.abs.complete:[
+       (mixinBeforeDef)]
+     rfn2.abs.recv:[
+       (mixinBeforeDef)]
+     arm.retire_hook:[
+       (mixinBeforeDef)]
+     arm.issue_hook:[
+       (mixinBeforeDef)]
+     cfabric.complete_hook:[
+-     (mixinBeforeDef)])
++     (mixinBeforeDef)]
 ~~~
