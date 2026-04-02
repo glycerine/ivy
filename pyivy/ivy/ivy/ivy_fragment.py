@@ -468,6 +468,10 @@ def check_feu(assumes,asserts,macros):
 
     create_strat_map(assumes,asserts,macros)
     
+    if __debug__:
+        from .canon_fragment import checker_canon
+        xtracer.trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s" % checker_canon())
+
     # Check for cycles in the stratification graph.
 
     report_cycle(iu.cycle(arcs, first = lambda x: find(x[0]), second = lambda x: find(x[1])))

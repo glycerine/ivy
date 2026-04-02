@@ -737,6 +737,10 @@ func CheckFEU(
 	// Build stratification graph
 	c.createStratMap(newAssumes, newAsserts, newMacros)
 
+	if xtracer.Enabled {
+		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
+	}
+
 	// Check for cycles
 	cycle := c.findCycle()
 	if len(cycle) > 0 {
