@@ -311,6 +311,7 @@ func (m *Module) Copy() *Module {
 	c.MixOrd = append([]ast.Node{}, m.MixOrd...)
 	c.Natives = append([]ast.Node{}, m.Natives...)
 	c.NativeDefinitions = append([]*ast.LabeledFormula{}, m.NativeDefinitions...)
+	c.Updates = append([]interface{}{}, m.Updates...)
 	c.InitialActions = append([]Action{}, m.InitialActions...)
 	c.Initializers = append([]NamedAction{}, m.Initializers...)
 	c.SortOrder = append([]string{}, m.SortOrder...)
