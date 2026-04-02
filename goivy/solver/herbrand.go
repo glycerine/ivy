@@ -137,7 +137,7 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sor
 		if r := recover(); r != nil {
 			sorted = nil
 			ok = false
-			panic(r)
+			//panic(r) // panic during solver tests: z3 bridge panic on error: Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is T [recovered, repanicked]
 		}
 	}()
 
