@@ -819,6 +819,9 @@ func CheckModule(mod *module.Module) error {
 	xtracer.Trace("check.CheckModule ENTER isolates=%d", len(mod.Isolates))
 	var isolates []string
 
+	// xtrace all the module data at this point.
+	mod.CanonSnapshot("top-of-CheckModule")
+
 	// Determine which isolates to check
 	// Python: isolate = ivy_compiler.isolate.get()
 	//         if isolate != None: isolates = [isolate]
