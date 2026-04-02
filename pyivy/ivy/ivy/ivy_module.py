@@ -308,39 +308,123 @@ class Module(object):
         return "(module %s)" % " ".join(parts)
 
     def canon_snapshot(self, label):
-        """Emit canonical s-expression snapshot of key module state via xtracer.
+        """Emit canonical s-expression snapshot of ALL module state via xtracer.
         Matches Go's Module.CanonSnapshot() in module/canon.go."""
         if not __debug__:
             return
         xtracer.trace("module.CanonSnapshot ENTER label=%s" % label)
 
-        # Labeled formula slices
+        # Group 1: Declarations (labeled formula slices)
         xtracer.trace("module.CanonSnapshot %s labeledAxioms=%s" % (label, _canon_lf_slice(self.labeled_axioms)))
         xtracer.trace("module.CanonSnapshot %s definitions=%s" % (label, _canon_lf_slice(self.definitions)))
         xtracer.trace("module.CanonSnapshot %s labeledProps=%s" % (label, _canon_lf_slice(self.labeled_props)))
         xtracer.trace("module.CanonSnapshot %s labeledInits=%s" % (label, _canon_lf_slice(self.labeled_inits)))
         xtracer.trace("module.CanonSnapshot %s labeledConjs=%s" % (label, _canon_lf_slice(self.labeled_conjs)))
+        xtracer.trace("module.CanonSnapshot %s assertions=%s" % (label, _canon_lf_slice(self.assertions)))
+        xtracer.trace("module.CanonSnapshot %s assumedInvs=%s" % (label, _canon_lf_slice(self.assumed_invariants)))
+        xtracer.trace("module.CanonSnapshot %s nativeDefinitions=%s" % (label, _canon_lf_slice(self.native_definitions)))
+        if self.conj_subgoals is not None:
+            xtracer.trace("module.CanonSnapshot %s conjSubgoals=%s" % (label, _canon_lf_slice(self.conj_subgoals)))
 
-        # Signature sorts (sorted by name)
+        # Group 2: All relations
+        xtracer.trace("module.CanonSnapshot %s allRelations=%s" % (label, _canon_expr_slice(self.all_relations)))
+
+        # Group 3: Signature
         if hasattr(self, 'sig') and self.sig is not None:
             xtracer.trace("module.CanonSnapshot %s sig.sorts=%s" % (label, _canon_sort_map(self.sig.sorts)))
             xtracer.trace("module.CanonSnapshot %s sig.interp=%s" % (label, _canon_interp_map(self.sig.interp)))
 
-        # Schemata (sorted by name)
-        xtracer.trace("module.CanonSnapshot %s schemata=%s" % (label, _canon_schema_map(self.schemata)))
+        # Group 4: Relations and functions
+        xtracer.trace("module.CanonSnapshot %s relations=%s" % (label, _canon_insmap_sort(self.relations)))
+        xtracer.trace("module.CanonSnapshot %s functions=%s" % (label, _canon_insmap_sort(self.functions)))
 
-        # InitCond and Theory
+        # Group 5: Schemata, theorems, predicates
+        xtracer.trace("module.CanonSnapshot %s schemata=%s" % (label, _canon_schema_map(self.schemata)))
+        xtracer.trace("module.CanonSnapshot %s theorems=%s" % (label, _canon_schema_map(self.theorems)))
+        xtracer.trace("module.CanonSnapshot %s predicates=%s" % (label, _canon_schema_map(self.predicates)))
+
+        # Group 6: InitCond and Theory
         if hasattr(self, 'init_cond') and self.init_cond is not None:
             xtracer.trace("module.CanonSnapshot %s initCond=%s" % (label, self.init_cond.sexp()))
         if hasattr(self, 'theory') and self.theory is not None:
             xtracer.trace("module.CanonSnapshot %s theory=%s" % (label, self.theory.sexp()))
 
-        # Actions map: dump keys summary then per-action bodies
+        # Group 7: Actions
         if hasattr(self, 'actions') and self.actions:
             act_keys = list(self.actions.keys())
             xtracer.trace("module.CanonSnapshot %s actions.keys=%d keys=%s" % (label, len(act_keys), ",".join(act_keys)))
             for name, action in self.actions.items():
                 xtracer.trace("module.CanonSnapshot %s action[%s]=%s" % (label, name, action.sexp()))
+        xtracer.trace("module.CanonSnapshot %s beforeExport=%s" % (label, _canon_action_map(self.before_export)))
+
+        # Group 8: Mixins, PublicActions
+        xtracer.trace("module.CanonSnapshot %s mixins=%s" % (label, _canon_insmap_mixins(self.mixins)))
+        xtracer.trace("module.CanonSnapshot %s publicActions=%s" % (label, _canon_insmap_bool(self.public_actions)))
+
+        # Group 9: Postconds
+        xtracer.trace("module.CanonSnapshot %s postconds=%s" % (label, _canon_postconds_map(self.postconds)))
+
+        # Group 10: Initializers
+        xtracer.trace("module.CanonSnapshot %s initializers=%s" % (label, _canon_named_action_slice(self.initializers)))
+        xtracer.trace("module.CanonSnapshot %s initialActions=%s" % (label, _canon_action_slice(self.initial_actions)))
+
+        # Group 11: Hierarchy
+        xtracer.trace("module.CanonSnapshot %s hierarchy=%s" % (label, _canon_insmap_hierarchy(self.hierarchy)))
+
+        # Group 12: Updates, Instantiations
+        xtracer.trace("module.CanonSnapshot %s updates=%s" % (label, _canon_interface_slice(self.updates)))
+        xtracer.trace("module.CanonSnapshot %s instantiations=%s" % (label, _canon_instantiation_slice(self.instantiations)))
+
+        # Group 13: Isolates
+        xtracer.trace("module.CanonSnapshot %s isolates=%s" % (label, _canon_isolate_map(self.isolates)))
+        if self.isolate_info is not None:
+            xtracer.trace("module.CanonSnapshot %s isolateInfo=%s" % (label, _canon_isolate_info(self.isolate_info)))
+        xtracer.trace("module.CanonSnapshot %s isolateProofs=%s" % (label, _canon_schema_map(self.isolate_proofs)))
+        if self.isolate_proof is not None:
+            xtracer.trace("module.CanonSnapshot %s isolateProof=%s" % (label, _canon_node(self.isolate_proof)))
+
+        # Group 14: Exports, imports, delegates
+        xtracer.trace("module.CanonSnapshot %s exports=%s" % (label, _canon_exporter_slice(self.exports)))
+        xtracer.trace("module.CanonSnapshot %s imports=%s" % (label, _canon_node_slice(self.imports)))
+        xtracer.trace("module.CanonSnapshot %s delegates=%s" % (label, _canon_delegator_slice(self.delegates)))
+
+        # Group 15: Sorts and destructors
+        xtracer.trace("module.CanonSnapshot %s destructorSorts=%s" % (label, _canon_sort_map(self.destructor_sorts)))
+        xtracer.trace("module.CanonSnapshot %s sortDestructors=%s" % (label, _canon_const_slice_map(self.sort_destructors)))
+        xtracer.trace("module.CanonSnapshot %s constructorSorts=%s" % (label, _canon_sort_map(self.constructor_sorts)))
+        xtracer.trace("module.CanonSnapshot %s sortConstructors=%s" % (label, _canon_const_slice_map(self.sort_constructors)))
+        xtracer.trace("module.CanonSnapshot %s ghostSorts=%s" % (label, _canon_bool_set(self.ghost_sorts)))
+        xtracer.trace("module.CanonSnapshot %s sortOrder=%s" % (label, _canon_string_slice(self.sort_order)))
+        xtracer.trace("module.CanonSnapshot %s symbolOrder=%s" % (label, _canon_const_slice(self.symbol_order)))
+        xtracer.trace("module.CanonSnapshot %s variants=%s" % (label, _canon_sort_slice_map(self.variants)))
+        xtracer.trace("module.CanonSnapshot %s supertypes=%s" % (label, _canon_sort_slice_map(self.supertypes)))
+        xtracer.trace("module.CanonSnapshot %s finiteSorts=%s" % (label, _canon_bool_set(self.finite_sorts)))
+
+        # Group 16: Interpretations and natives
+        xtracer.trace("module.CanonSnapshot %s interps=%s" % (label, _canon_node_map_slice(self.interps)))
+        xtracer.trace("module.CanonSnapshot %s natives=%s" % (label, _canon_node_slice(self.natives)))
+        xtracer.trace("module.CanonSnapshot %s nativeTypes=%s" % (label, _canon_native_type_map(self.native_types)))
+
+        # Group 17: Properties and proofs
+        xtracer.trace("module.CanonSnapshot %s progress=%s" % (label, _canon_interface_slice(self.progress)))
+        xtracer.trace("module.CanonSnapshot %s rely=%s" % (label, _canon_expr_slice(self.rely)))
+        xtracer.trace("module.CanonSnapshot %s mixOrd=%s" % (label, _canon_node_slice(self.mixord)))
+        xtracer.trace("module.CanonSnapshot %s privates=%s" % (label, _canon_bool_set(self.privates)))
+        xtracer.trace("module.CanonSnapshot %s proofs=%s" % (label, _canon_proof_entry_slice(self.proofs)))
+        xtracer.trace("module.CanonSnapshot %s named=%s" % (label, _canon_named_entry_slice(self.named)))
+        xtracer.trace("module.CanonSnapshot %s subgoals=%s" % (label, _canon_subgoal_entry_slice(self.subgoals)))
+        xtracer.trace("module.CanonSnapshot %s conjActions=%s" % (label, _canon_string_slice_map(self.conj_actions)))
+
+        # Group 18: Parameters
+        xtracer.trace("module.CanonSnapshot %s params=%s" % (label, _canon_const_slice(self.params)))
+        xtracer.trace("module.CanonSnapshot %s paramDefaults=%s" % (label, _canon_node_slice(self.param_defaults)))
+
+        # Group 19: Other
+        xtracer.trace("module.CanonSnapshot %s aliases=%s" % (label, _canon_string_map(self.aliases)))
+        xtracer.trace("module.CanonSnapshot %s attributes=%s" % (label, _canon_interp_map(self.attributes)))
+        xtracer.trace("module.CanonSnapshot %s extPreconds=%s" % (label, _canon_expr_map(self.ext_preconds)))
+        xtracer.trace("module.CanonSnapshot %s conceptSpaces=%s" % (label, _canon_concept_space_slice(self.concept_spaces)))
+        xtracer.trace("module.CanonSnapshot %s logics=%s" % (label, _canon_string_slice(self.logics)))
 
         xtracer.trace("module.CanonSnapshot EXIT label=%s" % label)
 
@@ -424,6 +508,417 @@ def _canon_action_map(actions):
             vs = str(v)
         parts.append('%s:%s' % (k, vs))
     return '(insMap %s)' % ' '.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# New generic helpers
+# ---------------------------------------------------------------------------
+
+def _canon_expr_slice(exprs):
+    """Canonical s-expression for a list of logic expressions.
+    Handles (symbol, arity) tuples from all_relations by extracting the symbol."""
+    if not exprs:
+        return '[]'
+    parts = []
+    for e in exprs:
+        # Handle (symbol, arity) tuples from all_relations
+        if isinstance(e, tuple):
+            e = e[0]
+        if hasattr(e, 'sexp'):
+            parts.append(e.sexp())
+        else:
+            parts.append(str(e))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_action_slice(actions):
+    """Canonical s-expression for a list of actions."""
+    if not actions:
+        return '[]'
+    parts = []
+    for a in actions:
+        if hasattr(a, 'sexp'):
+            parts.append(a.sexp())
+        elif hasattr(a, 'canon'):
+            parts.append(a.canon())
+        else:
+            parts.append(str(a))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_bool_set(s):
+    """Canonical representation of a set (or map with bool values) as sorted keys."""
+    if not s:
+        return '(set)'
+    return '(set %s)' % ' '.join(sorted(s))
+
+
+def _canon_string_slice(ss):
+    """Canonical form of a list of strings."""
+    if not ss:
+        return '[]'
+    return '[%s]' % ' '.join('"%s"' % s for s in ss)
+
+
+def _canon_const_slice(cs):
+    """Canonical form of a list of symbols/constants."""
+    if not cs:
+        return '[]'
+    parts = []
+    for c in cs:
+        if hasattr(c, 'sexp'):
+            parts.append(c.sexp())
+        else:
+            parts.append(str(c))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_node_slice(nodes):
+    """Canonical form of a list of AST nodes."""
+    if not nodes:
+        return '[]'
+    parts = []
+    for n in nodes:
+        parts.append(_canon_node(n))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_node(n):
+    """Canonical form of a single AST node."""
+    if n is None:
+        return 'nil'
+    if hasattr(n, 'canon'):
+        return n.canon()
+    return str(n)
+
+
+def _canon_interface_slice(items):
+    """Canonical form of a list of mixed-type items."""
+    if not items:
+        return '[]'
+    parts = []
+    for item in items:
+        if item is None:
+            parts.append('nil')
+        elif hasattr(item, 'canon'):
+            parts.append(item.canon())
+        elif hasattr(item, 'sexp'):
+            parts.append(item.sexp())
+        else:
+            parts.append(str(item))
+    return '[%s]' % ' '.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# New InsMap helpers (Python dicts are insertion-ordered)
+# ---------------------------------------------------------------------------
+
+def _canon_insmap_sort(m):
+    """Canonical form of a dict mapping strings to sorts (insertion order)."""
+    if not m:
+        return '(insMap)'
+    parts = []
+    for k, v in m.items():
+        if hasattr(v, 'sexp'):
+            vs = v.sexp()
+        else:
+            vs = str(v)
+        parts.append('%s:%s' % (k, vs))
+    return '(insMap %s)' % ' '.join(parts)
+
+
+def _canon_insmap_bool(m):
+    """Canonical form of a dict mapping strings to bools (insertion order, keys only)."""
+    if not m:
+        return '(insMap)'
+    return '(insMap %s)' % ' '.join(m.keys())
+
+
+def _canon_insmap_mixins(m):
+    """Canonical form of a dict mapping strings to lists of mixin defs."""
+    if not m:
+        return '(insMap)'
+    parts = []
+    for k, defs in m.items():
+        mparts = []
+        for d in defs:
+            if hasattr(d, 'canon'):
+                mparts.append(d.canon())
+            else:
+                mparts.append(str(d))
+        parts.append('%s:[%s]' % (k, ' '.join(mparts)))
+    return '(insMap %s)' % ' '.join(parts)
+
+
+def _canon_insmap_hierarchy(m):
+    """Canonical form of a dict mapping strings to dicts of strings to bools."""
+    if not m:
+        return '(insMap)'
+    parts = []
+    for parent, children in m.items():
+        parts.append('%s:%s' % (parent, _canon_insmap_bool(children)))
+    return '(insMap %s)' % ' '.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# New sorted-map helpers
+# ---------------------------------------------------------------------------
+
+def _canon_postconds_map(m):
+    """Canonical form of a dict mapping strings to lists of LabeledFormulas."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        parts.append('%s:%s' % (k, _canon_lf_slice(m[k])))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_sort_slice_map(m):
+    """Canonical form of a dict mapping strings to lists of sorts."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        ss = []
+        for s in m[k]:
+            if hasattr(s, 'sexp'):
+                ss.append(s.sexp())
+            else:
+                ss.append(str(s))
+        parts.append('%s:[%s]' % (k, ' '.join(ss)))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_const_slice_map(m):
+    """Canonical form of a dict mapping strings to lists of symbols/constants."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        cs = []
+        for c in m[k]:
+            if hasattr(c, 'sexp'):
+                cs.append(c.sexp())
+            else:
+                cs.append(str(c))
+        parts.append('%s:[%s]' % (k, ' '.join(cs)))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_string_map(m):
+    """Canonical form of a dict mapping strings to strings."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        parts.append('%s:"%s"' % (k, m[k]))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_string_slice_map(m):
+    """Canonical form of a dict mapping strings to lists of strings."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        ss = ['"%s"' % s for s in m[k]]
+        parts.append('%s:[%s]' % (k, ' '.join(ss)))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_node_map_slice(m):
+    """Canonical form of a dict mapping strings to lists of AST nodes."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        parts.append('%s:%s' % (k, _canon_node_slice(m[k])))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_expr_map(m):
+    """Canonical form of a dict mapping strings to expressions."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        v = m[k]
+        if hasattr(v, 'sexp'):
+            vs = v.sexp()
+        else:
+            vs = str(v)
+        parts.append('%s:%s' % (k, vs))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_isolate_map(m):
+    """Canonical form of a dict mapping strings to IsolateDefs."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        v = m[k]
+        if hasattr(v, 'canon'):
+            vs = v.canon()
+        else:
+            vs = str(v)
+        parts.append('%s:%s' % (k, vs))
+    return '(hash %s)' % ' '.join(parts)
+
+
+def _canon_native_type_map(m):
+    """Canonical form of a dict mapping strings to NativeType."""
+    if not m:
+        return '(hash)'
+    parts = []
+    for k in sorted(m.keys()):
+        v = m[k]
+        if hasattr(v, 'canon'):
+            vs = v.canon()
+        else:
+            vs = str(v)
+        parts.append('%s:%s' % (k, vs))
+    return '(hash %s)' % ' '.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# New struct-specific helpers
+# ---------------------------------------------------------------------------
+
+def _canon_named_action_slice(nas):
+    """Canonical form of a list of (name, action) pairs."""
+    if not nas:
+        return '[]'
+    parts = []
+    for name, action in nas:
+        if hasattr(action, 'sexp'):
+            vs = action.sexp()
+        elif hasattr(action, 'canon'):
+            vs = action.canon()
+        else:
+            vs = str(action)
+        parts.append('(%s:%s)' % (name, vs))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_instantiation_slice(insts):
+    """Canonical form of a list of (schema, inst) pairs."""
+    if not insts:
+        return '[]'
+    parts = []
+    for schema, inst in insts:
+        parts.append('(schema:%s inst:%s)' % (_canon_node(schema), _canon_node(inst)))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_isolate_info(info):
+    """Canonical form of an IsolateInfo object."""
+    if info is None:
+        return 'nil'
+    impls = _canon_mixin_triple_slice(getattr(info, 'implementations', []))
+    monitors = _canon_mixin_triple_slice(getattr(info, 'monitors', []))
+    return '(isolateInfo impls:%s monitors:%s)' % (impls, monitors)
+
+
+def _canon_mixin_triple_slice(triples):
+    """Canonical form of a list of mixin triples (mixer, mixee, action)."""
+    if not triples:
+        return '[]'
+    parts = []
+    for t in triples:
+        mixer = getattr(t, 'mixer', str(t[0]) if isinstance(t, tuple) else '')
+        mixee = getattr(t, 'mixee', str(t[1]) if isinstance(t, tuple) else '')
+        action = getattr(t, 'action', t[2] if isinstance(t, tuple) else None)
+        if action is not None and hasattr(action, 'sexp'):
+            av = action.sexp()
+        elif action is not None and hasattr(action, 'canon'):
+            av = action.canon()
+        else:
+            av = str(action)
+        parts.append('(mixer:%s mixee:%s action:%s)' % (mixer, mixee, av))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_exporter_slice(exports):
+    """Canonical form of a list of export definitions."""
+    if not exports:
+        return '[]'
+    parts = []
+    for e in exports:
+        if hasattr(e, 'canon'):
+            parts.append(e.canon())
+        else:
+            parts.append(str(e))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_delegator_slice(delegates):
+    """Canonical form of a list of delegate definitions."""
+    if not delegates:
+        return '[]'
+    parts = []
+    for d in delegates:
+        if hasattr(d, 'canon'):
+            parts.append(d.canon())
+        else:
+            parts.append(str(d))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_concept_space_slice(css):
+    """Canonical form of a list of concept space (label, body) pairs."""
+    if not css:
+        return '[]'
+    parts = []
+    for cs in css:
+        label, body = cs[0], cs[1]
+        if hasattr(label, 'sexp'):
+            ls = label.sexp()
+        else:
+            ls = str(label)
+        if hasattr(body, 'sexp'):
+            bs = body.sexp()
+        else:
+            bs = str(body)
+        parts.append('(label:%s body:%s)' % (ls, bs))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_proof_entry_slice(proofs):
+    """Canonical form of a list of (formula, proof) pairs."""
+    if not proofs:
+        return '[]'
+    parts = []
+    for formula, proof in proofs:
+        fc = formula.canon() if hasattr(formula, 'canon') else str(formula)
+        pc = _canon_node(proof)
+        parts.append('(formula:%s proof:%s)' % (fc, pc))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_named_entry_slice(named):
+    """Canonical form of a list of (formula, atom) pairs."""
+    if not named:
+        return '[]'
+    parts = []
+    for formula, name in named:
+        fc = formula.canon() if hasattr(formula, 'canon') else str(formula)
+        nc = name.sexp() if hasattr(name, 'sexp') else str(name)
+        parts.append('(formula:%s name:%s)' % (fc, nc))
+    return '[%s]' % ' '.join(parts)
+
+
+def _canon_subgoal_entry_slice(subs):
+    """Canonical form of a list of (formula, subgoals) tuples."""
+    if not subs:
+        return '[]'
+    parts = []
+    for formula, subgoals in subs:
+        fc = formula.canon() if hasattr(formula, 'canon') else str(formula)
+        sc = _canon_lf_slice(subgoals)
+        parts.append('(formula:%s subgoals:%s)' % (fc, sc))
+    return '[%s]' % ' '.join(parts)
 
 
 def resort_ast(ast):
