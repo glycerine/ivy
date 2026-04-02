@@ -550,8 +550,11 @@ func canonStringSliceMap(m map[string][]string) string {
 	sort.Strings(keys)
 	var parts []string
 	for _, k := range keys {
+		vals := make([]string, len(m[k]))
+		copy(vals, m[k])
+		sort.Strings(vals)
 		var ss []string
-		for _, s := range m[k] {
+		for _, s := range vals {
 			ss = append(ss, fmt.Sprintf("%q", s))
 		}
 		parts = append(parts, fmt.Sprintf("%s:[%s]", k, strings.Join(ss, " ")))

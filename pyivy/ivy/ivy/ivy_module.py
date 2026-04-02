@@ -724,7 +724,7 @@ def _canon_string_slice_map(m):
         return '(hash)'
     parts = []
     for k in sorted(m.keys()):
-        ss = ['"%s"' % s for s in m[k]]
+        ss = ['"%s"' % s for s in sorted(m[k])]
         parts.append('%s:[%s]' % (k, ' '.join(ss)))
     return '(hash %s)' % ' '.join(parts)
 
