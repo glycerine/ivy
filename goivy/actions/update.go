@@ -1925,21 +1925,16 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	// Build renaming: formal → fresh name
 	renaming := distinctObjRenaming(allFormals, vocabNames)
 
-	// Apply renaming to callee if needed
-	renamedCallee := callee
-	if len(renaming) > 0 {
-		// Build substitution map
-		substMap := make(map[lg.NodeKey]lg.Expr)
-		for oldSym, newSym := range renaming {
-			substMap[lg.Key(oldSym)] = newSym
-			// Also map old(s) → old(t) for pre-state symbols
-			oldOfOld := lg.NewConst("old("+oldSym.Name+")", oldSym.CSort)
-			substMap[lg.Key(oldOfOld)] = lg.NewConst("old("+newSym.Name+")", newSym.CSort)
-		}
-
-		// Substitute in the callee action using action-level substitution
-		renamedCallee = SubstituteConstantsAction(callee, substMap)
+	// Apply renaming to callee — always call SubstituteConstantsAction
+	// (matches Python which unconditionally calls substitute_constants_ast)
+	substMap := make(map[lg.NodeKey]lg.Expr)
+	for oldSym, newSym := range renaming {
+		substMap[lg.Key(oldSym)] = newSym
+		// Also map old(s) → old(t) for pre-state symbols
+		oldOfOld := lg.NewConst("old("+oldSym.Name+")", oldSym.CSort)
+		substMap[lg.Key(oldOfOld)] = lg.NewConst("old("+newSym.Name+")", newSym.CSort)
 	}
+	renamedCallee := SubstituteConstantsAction(callee, substMap)
 
 	// Get renamed formals
 	renamedFormalParams := make([]*lg.Const, len(formalParams))
@@ -2029,7 +2024,8 @@ func distinctObjRenaming(formals []*lg.Const, vocabNames map[string]bool) map[*l
 		name := sym.Name
 		if _, used := usedNames[name]; !used {
 			usedNames[name] = true
-			// No conflict — no rename needed
+			// No conflict — identity mapping (matches Python which always adds all formals)
+			result[sym] = lg.NewConst(name, sym.CSort)
 			continue
 		}
 		// Need a fresh name
