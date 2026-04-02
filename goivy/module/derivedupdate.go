@@ -114,13 +114,12 @@ func (a *DerivedUpdate) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *DerivedUpdate) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *DerivedUpdate) GetAstConfig() *ast.AstConfig { return nil }
 func (a *DerivedUpdate) Sexp() lg.NodeKey {
-	s1, s2 := "nil", "nil"
-	if a.Symbol != nil {
-		s1 = string(a.Symbol.Sexp())
-	}
+	// Python DerivedUpdate stores only defn (not a separate symbol field).
+	// Match Python's format: (DerivedUpdate defn:<defn.sexp()>)
+	defn := "nil"
 	if a.Defn != nil {
-		s2 = string(a.Defn.Sexp())
+		defn = string(a.Defn.Sexp())
 	}
-	return lg.NodeKey(fmt.Sprintf("(DerivedUpdate symbol:%v defn:%v)", s1, s2))
+	return lg.NodeKey(fmt.Sprintf("(DerivedUpdate defn:%v)", defn))
 }
 func (a *DerivedUpdate) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }

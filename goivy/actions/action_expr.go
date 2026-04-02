@@ -825,7 +825,9 @@ func (a *NamedUpdate) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *NamedUpdate) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *NamedUpdate) GetAstConfig() *ast.AstConfig { return nil }
 func (a *NamedUpdate) Sexp() lg.NodeKey {
-	return lg.NodeKey(fmt.Sprintf("(namedUpdate%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	// Python NamedUpdate stores only sym (string) and discards the body formula.
+	// Match Python's format: (NamedUpdate sym:"<name>")
+	return lg.NodeKey(fmt.Sprintf("(NamedUpdate sym:\"%s\")", a.UpdateName))
 }
 func (a *NamedUpdate) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 

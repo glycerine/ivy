@@ -699,6 +699,19 @@ def install():
                 lineno_fields(self), node_canon(dfns), node_canon(deps), node_canon(patterns))
         act.PatternBasedUpdate.canon = _patternbasedupdate_canon
 
+    # DerivedUpdate — Python stores self.defn (ivy_logic.Definition) which has .sexp()
+    if hasattr(act, 'DerivedUpdate'):
+        def _derivedupdate_canon(self):
+            defn_str = self.defn.sexp() if hasattr(self.defn, 'sexp') else str(self.defn)
+            return '(DerivedUpdate defn:%s)' % defn_str
+        act.DerivedUpdate.canon = _derivedupdate_canon
+
+    # NamedUpdate — Python stores self.sym (string)
+    if hasattr(act, 'NamedUpdate'):
+        def _namedupdate_canon(self):
+            return '(NamedUpdate sym:"%s")' % str(self.sym)
+        act.NamedUpdate.canon = _namedupdate_canon
+
     # VarAction
     if hasattr(act, 'VarAction'):
         def _varaction_canon(self):
