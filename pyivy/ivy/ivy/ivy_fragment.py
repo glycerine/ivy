@@ -500,7 +500,9 @@ def check_feu(assumes,asserts,macros):
 # the whole it would probably be better to fragment check each prover
 # context separately.
 
-def get_assumes_and_asserts(preconds_only):    
+def get_assumes_and_asserts(preconds_only):
+    if __debug__: xtracer.trace("fragment: GetAssumesAndAsserts ENTER")
+
     assumes = []
     asserts = []
     macros = []
@@ -589,6 +591,8 @@ def get_assumes_and_asserts(preconds_only):
     #     print 'assert: {}'.format(x[0])
     # for x in macros:
     #     print 'macro: {}'.format(x[0])
+
+    if __debug__: xtracer.trace("fragment: GetAssumesAndAsserts EXIT")
     return assumes,asserts,macros
 
     
