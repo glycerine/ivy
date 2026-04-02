@@ -1129,13 +1129,13 @@ func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg
 }
 
 // AddSymbol adds a symbol with the given name and sort to the signature.
+// Python's add_symbol (ivy_logic.py:378) does NOT call add_to_hierarchy;
+// hierarchy is populated only from decls.defined in ivy_compile.
 func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Const, error) {
 	sym, err := sig.AddSymbol(name, sort)
 	if err != nil {
 		return nil, err
 	}
-	// Also add to hierarchy
-	c.Module.AddToHierarchy(name)
 	return sym, nil
 }
 
