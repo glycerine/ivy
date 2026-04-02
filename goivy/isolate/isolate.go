@@ -614,7 +614,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			if useMixin(mixerName) && beforeMixins(mx) {
 				xtracer.Trace("isolate.make_before_export actname=%s mixer=%s", actname, mixerName)
 				action1 = actions.AssertToAssume(action1, makeKindSet("assert", "require"))
-				action1 = actions.PrefixCalls(action1, "ext:")
+				action1 = extModMixin(allMixins)(mx, action1)
 				act = actions.ApplyMixin(action1, act, false)
 			}
 		}
