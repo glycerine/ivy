@@ -450,6 +450,8 @@ def check_feu(assumes,asserts,macros):
     whether collectively they are in the FEU fragment, raising an error
     exception if not. """
 
+    if __debug__: xtracer.trace("fragment CheckFEU ENTER")
+
     # Alpha convert so that all the variables have unique names,
 
     global var_uniq
@@ -490,6 +492,8 @@ def check_feu(assumes,asserts,macros):
     #                         if il.has_infinite_interpretation(v.sort):
     #                             bad_interpreted.add(x[0])
     #                             break
+
+    if __debug__: xtracer.trace("fragment CheckFEU EXIT")
 
 
 # Here we try to extract all the assumes, asserts and macros that

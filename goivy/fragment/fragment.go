@@ -689,8 +689,14 @@ func (c *checker) reportInterpOverVar(fmla lg.Expr, lineno int, node *uf.UFNode)
 //
 // Each argument is a slice of (formula, source) pairs where source provides
 // line number info.
-func CheckFEU(sig *il.Sig, interp map[string]interface{},
-	assumes, asserts, macros []fmlaPair) (err error) {
+func CheckFEU(
+	sig *il.Sig,
+	interp map[string]interface{},
+	assumes, asserts, macros []fmlaPair,
+) (err error) {
+
+	xtracer.Trace("fragment CheckFEU ENTER")
+	defer xtracer.Trace("fragment CheckFEU EXIT")
 
 	c := newChecker(sig, interp)
 
