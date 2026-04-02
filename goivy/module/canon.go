@@ -43,6 +43,8 @@ func (m *Module) Canon() iu.Canonical {
 func (m *Module) CanonSnapshot(label string) {
 	xtracer.Trace("module.CanonSnapshot ENTER label=%s", label)
 
+	label += " HASH canon= "
+
 	// Group 1: Declarations (labeled formula slices)
 	xtracer.Trace("module.CanonSnapshot %s labeledAxioms=%s", label, canonLFSlice(m.LabeledAxioms))
 	xtracer.Trace("module.CanonSnapshot %s definitions=%s", label, canonLFSlice(m.Definitions))

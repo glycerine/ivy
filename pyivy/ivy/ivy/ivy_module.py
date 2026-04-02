@@ -314,6 +314,8 @@ class Module(object):
             return
         xtracer.trace("module.CanonSnapshot ENTER label=%s" % label)
 
+        label += " HASH canon= "
+
         # Group 1: Declarations (labeled formula slices)
         xtracer.trace("module.CanonSnapshot %s labeledAxioms=%s" % (label, _canon_lf_slice(self.labeled_axioms)))
         xtracer.trace("module.CanonSnapshot %s definitions=%s" % (label, _canon_lf_slice(self.definitions)))
