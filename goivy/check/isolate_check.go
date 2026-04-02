@@ -816,7 +816,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 // isolates to check and dispatches to the appropriate checking method.
 // This corresponds to Python's check_module.
 func CheckModule(mod *module.Module) error {
-	xtracer.Trace("check.CheckModule ENTER isolates=%d", len(mod.Isolates))
+	if xtracer.Enabled {
+		xtracer.Trace("check.CheckModule ENTER isolates=%d", len(mod.Isolates))
+	}
 	var isolates []string
 
 	// xtrace all the module data at this point.

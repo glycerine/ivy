@@ -2401,41 +2401,16 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-167212  go : XTRACE: fragment: GetAssumesAndAsserts EXIT
-        py : XTRACE: fragment: GetAssumesAndAsserts EXIT
+157365  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theorems=(hash)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theorems=(hash)
 
-167213  go : XTRACE: fragment CheckFEU ENTER
-        py : XTRACE: fragment CheckFEU ENTER
+157366  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  predicates=(hash)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  predicates=(hash)
 
-167214  go : XTRACE: fragment/checker.reportCycle ENTER
-        py : XTRACE: fragment/checker.reportCycle ENTER
+157367  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
 
-167215  go : XTRACE: fragment/checker.reportCycle report cycle error
-        py : XTRACE: fragment/checker.reportCycle EXIT
-
-========== trailing ~go[after i= 167215]:
-;xtracer.go:50: stack: goroutine 1 [running]:
-runtime/debug.Stack()
-	/usr/local/go/src/runtime/debug/stack.go:26 +0x5e
-github.com/glycerine/ivy/goivy/fragment.stack(...)
-	/Users/jaten/ivy/goivy/fragment/vprint.go:173
-github.com/glycerine/ivy/goivy/fragment.(*checker).reportCycle(0x4a01477a508, {0x4a013cbbc40, 0x1, 0x4a01477a508?})
-	/Users/jaten/ivy/goivy/fragment/fragment.go:657 +0x8b
-github.com/glycerine/ivy/goivy/fragment.CheckFEU(0x4a0139d21e0, 0x4a0146d0480, {0x4a014325808, 0x78, 0x4a013f74000?}, {0x4a0146f8008, 0x14, 0x0?}, {0x4a013b5a2c8, 0xc, ...})
-	/Users/jaten/ivy/goivy/fragment/fragment.go:745 +0x9d0
-github.com/glycerine/ivy/goivy/fragment.CheckFragment(0x4a0141a8488, 0x0)
-	/Users/jaten/ivy/goivy/fragment/fragment.go:938 +0x166
-github.com/glycerine/ivy/goivy/check.CheckIsolate(0x4a0141a8488, 0x7?)
-	/Users/jaten/ivy/goivy/check/isolate_check.go:94 +0x5f4
-github.com/glycerine/ivy/goivy/check.CheckModule(0x4a013c20008)
-	/Users/jaten/ivy/goivy/check/isolate_check.go:961 +0x9e8
-github.com/glycerine/ivy/goivy/check.StartWithConfig({0x4a0138f6410, 0x1, 0x6633872cb55287ee?}, 0x4a013c1a000)
-	/Users/jaten/ivy/goivy/check/check.go:1264 +0x52c
-github.com/glycerine/ivy/goivy/check.MainWithConfig({0x4a0138f6410?, 0x4a013a9fe98?, 0x10c108898?}, 0x7?)
-	/Users/jaten/ivy/goivy/check/check.go:1285 +0x18
-main.main()
-	/Users/jaten/ivy/goivy/cmd/goivy_check/main.go:117 +0x50c
-
-    golden_test.go:430: ivy_check and goivy_check differ at line 167215, counting from 0.
---- FAIL: TestOrdLive (88.41s)
+157368  go : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  theory=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:ref.prevents sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T0 sort:(U ...(truncated long line to 300 bytes)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:922 CheckFragment() HASH canon=  actions.keys=24 keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:m
+ ...(truncated long line to 300 bytes)
 ~~~

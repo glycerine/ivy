@@ -601,6 +601,7 @@ def get_assumes_and_asserts(preconds_only):
 
     
 def check_fragment(preconds_only=False):
+    if __debug__: im.module.canon_snapshot("fragment/fragment.go:922 CheckFragment()")
     if 'fo' not in im.logics():
         assumes,asserts,macros = get_assumes_and_asserts(preconds_only)
         check_feu(assumes,asserts,macros)

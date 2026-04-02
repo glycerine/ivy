@@ -914,7 +914,8 @@ def check_module():
     if __debug__: xtracer.trace("check.CheckModule ENTER isolates=%d" % len(list(im.module.isolates)))
 
     # xtrace all the module data at this point.
-    im.module.canon_snapshot("top-of-CheckModule")
+
+    if __debug__: im.module.canon_snapshot("top-of-CheckModule")
 
     if isolate != None:
         isolates = [isolate]
