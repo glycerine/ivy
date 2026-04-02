@@ -2401,11 +2401,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-~py[after i=156942]:     The following properties are treated as conjectures: 
-~go[after i=166803]: error: The verification condition is not in the fragment FAU.
-~go[after i=166803]: 
-~go[after i=166803]: The following terms may generate an infinite sequence of instantiations:
-~go[after i=166803]:   
-~go[after i=166803]: 0: (dramc.t_min(M_i) == 0)
-stopping on goivy_check_xtrace error EOF
+102789  go : XTRACE: module.CanonSnapshot after-domain-setup initialActions=[]
+        py : XTRACE: module.CanonSnapshot after-domain-setup initialActions=[]
+
+102790  go : XTRACE: module.CanonSnapshot after-domain-setup hierarchy=(insMap this:(insMap totally_ordered totally_ordered_with_zero unbounded_sequence bounded_sequence_spec bounded_sequence bit_vector order_iterator order_iterator_impl sequence_iterator iterable index lclock proc mem_type addr_type tar_clock t ...(truncated long line to 300 bytes)
+        py : XTRACE: module.CanonSnapshot after-domain-setup hierarchy=(insMap this:(insMap totally_ordered totally_ordered_with_zero unbounded_sequence bounded_sequence_spec bounded_sequence bit_vector order_iterator order_iterator_impl sequence_iterator iterable index lclock proc mem_type addr_type tar_clock t
+ ...(truncated long line to 300 bytes)
 ~~~
