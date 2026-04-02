@@ -634,7 +634,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 const fullXtraceToDir string = ".."
 
-const writeFullLogFile = false
+const writeFullLogFile = true
 
 const showNonXtraceLines = true
 
