@@ -1,15 +1,18 @@
-// Package fragment implements decidable fragment checking for Ivy verification conditions.
+// Package fragment implements decidable fragment checking
+// for Ivy verification conditions.
 // This is a port of Python's ivy_fragment.py.
 //
-// It checks whether VCs are in the FEU (Finite Essentially Uninterpreted) fragment,
-// which guarantees that Z3 can decide them. The check builds a stratification graph
+// It checks whether VCs are in the FEU (Finite Essentially
+// Uninterpreted) fragment, which guarantees that Z3 can
+// decide them. The check builds a stratification graph
 // as described in:
 //
-//	Yeting Ge and Leonardo de Moura, "Complete instantiation for quantified formulas
-//	in Satisfiability Modulo Theories"
+// Yeting Ge and Leonardo de Moura, "Complete instantiation
+// for quantified formulas in Satisfiability Modulo Theories"
 //
-// If the stratification graph is cyclic, the VC may generate an infinite sequence
-// of instantiations, and an error is raised.
+// If the stratification graph is cyclic, the VC may
+// generate an infinite sequence of instantiations,
+// and an error is raised.
 package fragment
 
 import (
@@ -38,12 +41,7 @@ func (e *FragmentError) Error() string {
 
 // --- Stratification graph types ---
 
-// stratKey is a string key for the strat_map, using structural identity
-// (not pointer identity) for logic nodes. This matches Python where
-// Symbol/Variable objects are structurally compared as dict keys.
-type stratKey = string
-
-// stratEntry holds metadata associated with a stratKey, for error reporting.
+// stratEntry holds metadata associated with a stratification key, for error reporting.
 type stratEntry struct {
 	sym    *lg.Const    // non-nil for appKey entries
 	idx    int          // argument index for appKey entries
@@ -51,16 +49,16 @@ type stratEntry struct {
 	isSort bool
 }
 
-func varKey(v *lg.Variable) stratKey {
-	return "v:" + string(lg.Key(v))
+func varKey(v *lg.Variable) lg.NodeKey {
+	return lg.NodeKey("v:" + string(lg.Key(v)))
 }
 
-func appKey(sym *lg.Const, idx int) stratKey {
-	return fmt.Sprintf("a:%s:%d", lg.Key(sym), idx)
+func appKey(sym *lg.Const, idx int) lg.NodeKey {
+	return lg.NodeKey(fmt.Sprintf("a:%s:%d", lg.Key(sym), idx))
 }
 
-func sortEqKey(sort lg.Sort) stratKey {
-	return "s:" + string(lg.Key(lg.NewConst("=", sort)))
+func sortEqKey(sort lg.Sort) lg.NodeKey {
+	return lg.NodeKey("s:" + string(lg.Key(lg.NewConst("=", sort))))
 }
 
 // arc represents a directed edge in the stratification graph.
@@ -83,8 +81,8 @@ type checker struct {
 	universallyQuantifiedVars map[varID]*lg.Variable // var → lineno origin info
 	universalVarLineno        map[varID]int          // var → lineno
 
-	stratMap  map[stratKey]*uf.UFNode // maps stratKey to UFNode
-	stratInfo map[stratKey]stratEntry // metadata for error reporting
+	stratMap  map[lg.NodeKey]*uf.UFNode // maps node key to UFNode
+	stratInfo map[lg.NodeKey]stratEntry // metadata for error reporting
 	arcs      []arc
 
 	// Macro maps
@@ -137,8 +135,8 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 		interp:                    interp,
 		universallyQuantifiedVars: make(map[varID]*lg.Variable),
 		universalVarLineno:        make(map[varID]int),
-		stratMap:                  make(map[stratKey]*uf.UFNode),
-		stratInfo:                 make(map[stratKey]stratEntry),
+		stratMap:                  make(map[lg.NodeKey]*uf.UFNode),
+		stratInfo:                 make(map[lg.NodeKey]stratEntry),
 		arcs:                      nil,
 		macroMap:                  make(map[string]macroDef),
 		macroValueMap:             make(map[string]mapFmlaRes),
@@ -149,7 +147,7 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 }
 
 // getStratNode gets or creates a UFNode for the given key.
-func (c *checker) getStratNode(key stratKey) *uf.UFNode {
+func (c *checker) getStratNode(key lg.NodeKey) *uf.UFNode {
 	if n, ok := c.stratMap[key]; ok {
 		return n
 	}
@@ -159,7 +157,7 @@ func (c *checker) getStratNode(key stratKey) *uf.UFNode {
 }
 
 // getStratNodeWith gets or creates a UFNode and stores metadata for error reporting.
-func (c *checker) getStratNodeWith(key stratKey, entry stratEntry) *uf.UFNode {
+func (c *checker) getStratNodeWith(key lg.NodeKey, entry stratEntry) *uf.UFNode {
 	n := c.getStratNode(key)
 	if _, exists := c.stratInfo[key]; !exists {
 		c.stratInfo[key] = entry
