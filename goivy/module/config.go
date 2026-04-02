@@ -187,6 +187,7 @@ func NewConfig() *Config {
 	astCfg := ast.NewAstConfig()
 	astCfg.IuCfg = iuCfg
 	return &Config{
+		ActCfg:           NewActionsConfig(),
 		Coverage:         true,
 		MacroFinder:      true, // Python default: islv.opt_macro_finder defaults to true
 		GlobalIncluded:   make(map[string]bool),
