@@ -2401,9 +2401,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-157556  go : XTRACE: actions.CallAction.int_update ENTER
-        py : XTRACE: actions.CallAction.int_update ENTER
-
-157557  go : XTRACE: actions.Sequence.int_update ENTER
-        py : XTRACE: actions.substitute_constants_action ENTER type=Sequence nargs=2
+~py[after i=156942]:     The following properties are treated as conjectures: 
+~go[after i=166803]: error: The verification condition is not in the fragment FAU.
+~go[after i=166803]: 
+~go[after i=166803]: The following terms may generate an infinite sequence of instantiations:
+~go[after i=166803]:   
+~go[after i=166803]: 0: (dramc.t_min(M_i) == 0)
+stopping on goivy_check_xtrace error EOF
 ~~~
