@@ -22,6 +22,8 @@ class UFNode(object):
         return self.id
     def __eq__(self,other):
         return self.id == other.id
+    def canon(self):
+        return '(ufNode id:{})'.format(self.id)
 
 
 ufidctr = 0

@@ -10,3 +10,6 @@ var IvyAstDumpDotPy []byte
 
 //go:embed ivy_expr_shape.py
 var IvyExprShapeDotPy []byte
+
+//go:embed emit_fragment_sexp.py
+var EmitFragmentSexpDotPy []byte

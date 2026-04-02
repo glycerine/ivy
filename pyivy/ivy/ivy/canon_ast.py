@@ -718,3 +718,7 @@ def install():
             return '(varAction{} elems:{})'.format(
                 lineno_fields(self), slice_canon(list(self.args)))
         act.VarAction.canon = _varaction_canon
+
+    # Install canon on fragment checker types (UFNode etc.)
+    from .canon_fragment import install as install_fragment
+    install_fragment()
