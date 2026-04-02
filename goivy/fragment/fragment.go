@@ -17,7 +17,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -25,6 +24,7 @@ import (
 	mod "github.com/glycerine/ivy/goivy/module"
 	thy "github.com/glycerine/ivy/goivy/theory"
 	uf "github.com/glycerine/ivy/goivy/unionfind"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // FragmentError is raised when a VC is not in the FAU fragment.
@@ -45,9 +45,9 @@ type stratKey = string
 
 // stratEntry holds metadata associated with a stratKey, for error reporting.
 type stratEntry struct {
-	sym    *lg.Const // non-nil for appKey entries
-	idx    int       // argument index for appKey entries
-	v      *lg.Variable   // non-nil for varKey entries
+	sym    *lg.Const    // non-nil for appKey entries
+	idx    int          // argument index for appKey entries
+	v      *lg.Variable // non-nil for varKey entries
 	isSort bool
 }
 
@@ -65,32 +65,32 @@ func sortEqKey(sort lg.Sort) stratKey {
 
 // arc represents a directed edge in the stratification graph.
 type arc struct {
-	from    *uf.UFNode
-	to      *uf.UFNode
-	fmla    lg.Expr
-	lineno  int
-	argIdx  int  // -1 if not applicable
-	hasIdx  bool // true if argIdx is valid
+	from   *uf.UFNode
+	to     *uf.UFNode
+	fmla   lg.Expr
+	lineno int
+	argIdx int  // -1 if not applicable
+	hasIdx bool // true if argIdx is valid
 }
 
 // --- Fragment checker state ---
 
 // checker holds the state for a single fragment check.
 type checker struct {
-	sig      *il.Sig
-	interp   map[string]interface{} // sort interpretations
+	sig    *il.Sig
+	interp map[string]interface{} // sort interpretations
 
 	universallyQuantifiedVars map[varID]*lg.Variable // var → lineno origin info
-	universalVarLineno        map[varID]int      // var → lineno
+	universalVarLineno        map[varID]int          // var → lineno
 
-	stratMap  map[stratKey]*uf.UFNode  // maps stratKey to UFNode
+	stratMap  map[stratKey]*uf.UFNode // maps stratKey to UFNode
 	stratInfo map[stratKey]stratEntry // metadata for error reporting
 	arcs      []arc
 
 	// Macro maps
-	macroMap      map[string]macroDef   // symbol name → (definition, labeled formula)
-	macroValueMap map[string]mapFmlaRes // symbol name → memoized result
-	macroVarMap   map[varID]*uf.UFNode  // macro param var → strat node
+	macroMap      map[string]macroDef           // symbol name → (definition, labeled formula)
+	macroValueMap map[string]mapFmlaRes         // symbol name → memoized result
+	macroVarMap   map[varID]*uf.UFNode          // macro param var → strat node
 	macroDepMap   map[varID]map[*uf.UFNode]bool // macro param → dep nodes
 
 	// Skolem map
@@ -723,6 +723,7 @@ func CheckFEU(sig *il.Sig, interp map[string]interface{},
 			} else {
 				panic(r) // re-panic for unexpected errors
 			}
+			panic(r) // re-throw anyway!
 		}
 	}()
 

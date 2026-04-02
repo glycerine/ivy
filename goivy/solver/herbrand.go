@@ -137,6 +137,7 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sor
 		if r := recover(); r != nil {
 			sorted = nil
 			ok = false
+			panic(r)
 		}
 	}()
 
