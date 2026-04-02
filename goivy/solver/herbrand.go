@@ -12,12 +12,13 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/unitres"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // HerbrandModel wraps a Z3 model and provides operations to extract
 // sort universes, evaluate formulas, and produce Ivy-level facts.
-// Corresponds to Python's HerbrandModel class.
+// Corresponds to Python's HerbrandModel class. (ivy_solver.py:835)
 type HerbrandModel struct {
 	solver    *z3bridge.Solver
 	model     *z3bridge.Model
@@ -123,11 +124,14 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Const {
 
 // trySortByOrder attempts to sort elements using the Ivy `<` relation
 // translated to Z3 and evaluated in the model. This matches Python's
-// SortOrder class (ivy_solver.py:776-786) which uses atom_to_z3(order(*vs))
+// SortOrder class (ivy_solver.py:787-797) which uses atom_to_z3(order(*vs))
 // with substitute + model.eval, supporting user-defined orderings on
 // uninterpreted sorts.
+// HerbrandModel is in ivy_solver.py:835-914.
 func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sorted []z3bridge.Expr, ok bool) {
-	// Python's approach:
+	xtracer.Trace("ivy_solver.py:851 HerbrandModel.sorted_sort_universe() top. solver/herbrand.go:132") // not seen in make golden.
+
+	// Python's approach: (ivy_solver.py:850 in sorted_sort_universe()):
 	//   vs = [Variable("X", sort), Variable("Y", sort)]
 	//   order = Symbol("<", RelationSort([sort, sort]))
 	//   order_atom = atom_to_z3(order(*vs))
@@ -135,9 +139,12 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sor
 	//   sorted(elems, key=cmp_to_key(SortOrder(z3_vs, order_atom, self.model)))
 	defer func() {
 		if r := recover(); r != nil {
+			// actually this recover is not hit during "make golden".
+			xtracer.Trace("ivy_solver.py:866 HerbrandModel.sorted_sort_universe(): IndexError from order.to_z3() | solver/herbrand.go:143")
+
 			sorted = nil
 			ok = false
-			//panic(r) // panic during solver tests: z3 bridge panic on error: Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is T [recovered, repanicked]
+			//panic(r) // panic in solver/solver2_test.go/TestClausesModelToDiagram_NoTautologies: z3 bridge panic on error: Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is T [recovered, repanicked]
 		}
 	}()
 

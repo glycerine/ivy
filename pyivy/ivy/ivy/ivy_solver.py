@@ -848,6 +848,8 @@ class HerbrandModel(object):
         return [constant_from_z3(sort,c) for c in self.constants[sort]]
 
     def sorted_sort_universe(self,sort):
+        if __debug__: xtracer.trace("ivy_solver.py:851 HerbrandModel.sorted_sort_universe() top. solver/herbrand.go:132")
+
         elems = self.constants[sort]
 #        print "elems: {}".format(map(str,elems))
         vs = [ivy_logic.Variable(s,sort) for s in ["X","Y"]]
@@ -861,6 +863,7 @@ class HerbrandModel(object):
 #            print "sorting..."
             elems = sorted(elems,key=functools.cmp_to_key(SortOrder(z3_vs,order_atom,self.model)))
         except IndexError:
+            if __debug__: xtracer.trace("ivy_solver.py:866 HerbrandModel.sorted_sort_universe(): IndexError from order.to_z3() | solver/herbrand.go:143")
             pass
 #        print "elems: {}".format(map(str,elems))
         return [constant_from_z3(sort,elem) for elem in elems]
