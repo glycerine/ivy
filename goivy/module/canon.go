@@ -231,10 +231,10 @@ func canonInterpMap(interp map[string]interface{}) string {
 		switch val := v.(type) {
 		case string:
 			vs = fmt.Sprintf("%q", val)
-		case fmt.Stringer:
-			vs = val.String()
 		case iu.Canonizer:
 			vs = string(val.Canon())
+		case fmt.Stringer:
+			vs = val.String()
 		default:
 			vs = fmt.Sprintf("%v", val)
 		}
