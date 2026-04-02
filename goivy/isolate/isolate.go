@@ -508,6 +508,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions.All() {
+		// Match Python defaultdict(list) behavior: reading mod.mixins[actname]
+		// in the main loop auto-creates empty entries for actions without mixins.
+		// These entries are visible in CanonSnapshot serialization.
+		if _, ok := mod.Mixins.Get2(actname); !ok {
+			mod.Mixins.Set(actname, nil)
+		}
 		xtracer.Trace("isolate.classify_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
 		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
 		pre := StartsWithEqSome(actname, present, mod, implementationMap)
