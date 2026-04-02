@@ -501,7 +501,7 @@ func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality.
 func SubstituteConstantsClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clauses {
 	fn := func(n lg.Expr) lg.Expr {
-		return SubstituteConstantsAST(n, subs)
+		return SubstituteConstantsExpr(n, subs)
 	}
 	return clauses.Apply(fn)
 }

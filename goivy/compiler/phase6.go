@@ -696,7 +696,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Python: new_body = lu.substitute_constants_ast(body, subs)
 	//         new_body.formal_params = body.formal_params
 	//         new_body.formal_returns = body.formal_returns
-	newBody := clauseops.SubstituteConstantsAST(body, subs)
+	newBody := clauseops.SubstituteConstantsExpr(body, subs)
 
 	// Wrap body as action with formal params/returns
 	var bodyAct actions.Action
