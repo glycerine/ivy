@@ -60,6 +60,9 @@ func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
 func (cfg *AstConfig) NewLabeledFormulaFrom(src *LabeledFormula, formula Node) *LabeledFormula {
 	lf := cfg.NewLabeledFormula(src.Label, formula)
 	lf.Lineno = src.Lineno
+	if src.HasLocSet() {
+		lf.SetLineno(src.GetLineno())
+	}
 	lf.Temporal = src.Temporal
 	lf.Explicit = src.Explicit
 	lf.Assumed = src.Assumed

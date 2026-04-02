@@ -75,6 +75,9 @@ func addLabel(cfg *ast.AstConfig, lf *ast.LabeledFormula, pref string) *ast.Labe
 	}
 	res := cfg.NewLabeledFormula(newLabel(cfg, pref), lf.Formula)
 	res.Lineno = lf.Lineno
+	if lf.HasLocSet() {
+		res.SetLineno(lf.GetLineno())
+	}
 	return res
 }
 
