@@ -19,7 +19,6 @@ import (
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
 	Cfg *Config // really for check. check imports module.
-	//ModCfg *ModConfig
 
 	// Declarations
 	AllRelations  []lg.Expr // base and derived relations in declaration order
@@ -293,6 +292,8 @@ func (m *Module) Clear() {
 func (m *Module) Copy() *Module {
 	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), len(m.Isolates))
 	c := New()
+	*c.Cfg = *m.Cfg
+
 	// defer after c is declared so we can report its counts
 	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", c.Actions.Len(), len(c.Isolates)) }()
 
