@@ -533,8 +533,12 @@ func TestCheckFcsInStateWithChecker(t *testing.T) {
 	}
 }
 
+/* commented out check/check.go:260 as dead code.
+It is confusing because compiler also has CheckProperties.
+This one is not used anywhere. The python port is not
+used anywhere either. So we just ported dead code.
+Comment out for now to avoid confusion.
 // --- CheckProperties tests ---
-
 func TestCheckProperties(t *testing.T) {
 	mod := module.New()
 	mod.LabeledProps = []*ast.LabeledFormula{
@@ -548,6 +552,7 @@ func TestCheckProperties(t *testing.T) {
 		t.Error("props should be moved to axioms")
 	}
 }
+*/
 
 // --- ApplyConjProofs tests ---
 

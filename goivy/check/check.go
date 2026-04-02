@@ -249,6 +249,19 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 //   - If any fail, reports error (optionally launches diagnosis)
 //   - Promotes all properties to axioms
 //   - Calls mod.UpdateTheory() to rebuild background theory
+//
+// However note:
+// It is confusing because compiler also has CheckProperties.
+// This one is not used anywhere. The python port is not
+// used anywhere either. So we just ported dead code.
+// Comment out for now to avoid confusion.
+//
+// Both sides have the same pattern: the compiler version (of
+// CheckProperties)is live, the check version is
+// effectively dead code (Python's is completely uncalled;
+// Go's is only referenced from a test). They're parallel
+// dead code inherited from the port.
+/*
 func CheckProperties(mod *module.Module) error {
 	failed := interp.FalseProperties(mod)
 	if len(failed) > 0 {
@@ -261,6 +274,7 @@ func CheckProperties(mod *module.Module) error {
 	mod.UpdateTheory()
 	return nil
 }
+*/
 
 // CheckConjectures checks conjectures in the given state.
 // Corresponds to Python's check_conjectures which calls
