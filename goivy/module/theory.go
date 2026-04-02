@@ -338,7 +338,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 		}
 
 		if allGround && len(subst) > 0 {
-			inst := co.SubstituteConstantsAST(entry.constraint, subst)
+			inst := co.SubstituteConstantsExpr(entry.constraint, subst)
 			theory = append(theory, inst)
 		}
 		matched[lg.Key(term)] = true

@@ -5,31 +5,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/glycerine/ivy/goivy/ast"
+	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// shortTypeName returns just the struct name without package prefix or pointer star,
-// matching Python's type(x).__name__ output.
-// ShortTypeName is the exported version of shortTypeName.
-func ShortTypeName(v interface{}) string { return shortTypeName(v) }
+// shortTypeName delegates to co.ShortTypeName.
+func shortTypeName(v interface{}) string { return co.ShortTypeName(v) }
 
-func shortTypeName(v interface{}) string {
-	s := fmt.Sprintf("%T", v)
-	if i := strings.LastIndex(s, "."); i >= 0 {
-		s = s[i+1:]
-	}
-	// Map Go type names to Python class names where they differ.
-	// Python: Var; Go: Variable. (logic.Symbol→logic.Const already renamed.)
-	if s == "Variable" {
-		return "Var"
-	}
-	if s == "App" {
-		return "Apply"
-	}
-	return s
-}
+// ShortTypeName delegates to co.ShortTypeName.
+func ShortTypeName(v interface{}) string { return co.ShortTypeName(v) }
 
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
@@ -225,42 +210,10 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	return res
 }
 
-// substituteConstantsAST matches Python's substitute_constants_ast from
-// ivy_logic_utils.py:172. One unified function handles all node types
-// (actions, LabeledFormulas, logic expressions, atoms) via Args()/Clone().
-//
-// Description: substitute terms for lg.Const constants. The map
-// subs has keys that are the string names of constants, which
-// get mapped to terms.
-func substituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node {
-	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
-	if sym, ok := node.(*lg.Const); ok {
-		if rep, found := subs[lg.Key(sym)]; found {
-			return rep
-		}
-		return sym
-	}
-
-	args := node.Args()
-	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d",
-		shortTypeName(node), len(args))
-
-	if len(args) == 0 {
-		// Leaf non-constant (Variable, Atom label, etc.).
-		// Python traces then clones with empty args.
-		return node.Clone(args)
-	}
-
-	newArgs := make([]ast.Node, len(args))
-	for i, arg := range args {
-		newArgs[i] = substituteConstantsAST(arg, subs)
-	}
-	return node.Clone(newArgs)
-}
-
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.
+// Delegates to co.SubstituteConstantsAST.
 func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	return substituteConstantsAST(action, subs).(Action)
+	return co.SubstituteConstantsAST(action, subs).(Action)
 }
 
 // AppendToAction appends action2 at the end of action1, preserving

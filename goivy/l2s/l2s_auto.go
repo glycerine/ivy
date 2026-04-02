@@ -202,7 +202,7 @@ func l2sAutoInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return co.SubstituteConstantsAST(node, subs)
+		return co.SubstituteConstantsExpr(node, subs)
 	}
 
 	// all_d: all elements in l2s_d

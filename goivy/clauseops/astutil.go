@@ -2,10 +2,13 @@ package clauseops
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // SymbolsAST yields all constant symbols in a node (the function symbol
@@ -98,72 +101,57 @@ func copyStringSet(s map[string]struct{}) map[string]struct{} {
 	return r
 }
 
-// SubstituteConstantsAST substitutes constants by structural identity.
-// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
-// matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast).
-// Variables are not affected.
-func SubstituteConstantsAST(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-	if len(subs) == 0 {
-		return node
+// ShortTypeName returns just the struct name without package prefix or pointer star,
+// matching Python's type(x).__name__ output.
+func ShortTypeName(v interface{}) string {
+	s := fmt.Sprintf("%T", v)
+	if i := strings.LastIndex(s, "."); i >= 0 {
+		s = s[i+1:]
 	}
-	return substituteConstantsRec(node, subs)
+	// Map Go type names to Python class names where they differ.
+	// Python: Var; Go: Variable. (logic.Symbol→logic.Const already renamed.)
+	if s == "Variable" {
+		return "Var"
+	}
+	if s == "App" {
+		return "Apply"
+	}
+	return s
 }
 
-func substituteConstantsRec(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-	switch t := node.(type) {
-	case *lg.Const:
-		if r, ok := subs[lg.Key(t)]; ok {
-			return r
+// SubstituteConstantsAST substitutes terms for constants in an AST node.
+// Matches Python's substitute_constants_ast (ivy_logic_utils.py:173).
+// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
+// matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast).
+func SubstituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node {
+	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
+	if sym, ok := node.(*lg.Const); ok {
+		if rep, found := subs[lg.Key(sym)]; found {
+			return rep
 		}
-		return node
-	case *lg.Variable:
-		return node
-	case *lg.Apply:
-		// Python substitute_constants_ast iterates ast.args (Terms only)
-		// and calls ast.clone(new_args) which preserves Func unchanged.
-		// The function head is NOT substituted.
-		newTerms := make([]lg.Expr, len(t.Terms))
-		changed := false
-		for i, arg := range t.Terms {
-			newTerms[i] = substituteConstantsRec(arg, subs)
-			if newTerms[i] != arg {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
-		}
-		result, err := lg.NewApply(t.Func, newTerms...)
-		if err != nil {
-			return node
-		}
-		return result
-	case *il.Definition:
-		lhs := substituteConstantsRec(t.Lhs, subs)
-		rhs := substituteConstantsRec(t.Rhs, subs)
-		if lhs == t.Lhs && rhs == t.Rhs {
-			return node
-		}
-		return il.NewDefinition(lhs, rhs)
+		return sym
 	}
 
-	// Generic: recurse into children via CloneNode
-	children := node.Children()
-	if len(children) == 0 {
-		return node
+	args := node.Args()
+	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d",
+		ShortTypeName(node), len(args))
+
+	if len(args) == 0 {
+		// Leaf non-constant (Variable, Atom label, etc.).
+		// Python traces then clones with empty args.
+		return node.Clone(args)
 	}
-	newChildren := make([]lg.Expr, len(children))
-	changed := false
-	for i, c := range children {
-		newChildren[i] = substituteConstantsRec(c, subs)
-		if newChildren[i] != c {
-			changed = true
-		}
+
+	newArgs := make([]ast.Node, len(args))
+	for i, arg := range args {
+		newArgs[i] = SubstituteConstantsAST(arg, subs)
 	}
-	if !changed {
-		return node
-	}
-	return il.CloneNode(node, newChildren)
+	return node.Clone(newArgs)
+}
+
+// SubstituteConstantsExpr is SubstituteConstantsAST for lg.Expr callers.
+func SubstituteConstantsExpr(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
+	return SubstituteConstantsAST(node, subs).(lg.Expr)
 }
 
 // RenameAST renames symbols in an AST by structural identity.

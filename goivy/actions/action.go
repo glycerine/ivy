@@ -99,7 +99,7 @@ func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) 
 	}
 	// Python uses AstRewriteSubstPrefix which rewrites constants (not variables).
 	// SubstituteConstantsAST is the Go equivalent for constant substitution.
-	result := co.SubstituteConstantsAST(defn.Rhs, subst)
+	result := co.SubstituteConstantsExpr(defn.Rhs, subst)
 	// Note: when toClauses is true, Python returns formula_to_clauses(fmla).
 	// For the actions.Schema (compiled expressions), callers that need clauses
 	// should call co.FormulaToClauses on the result themselves.
@@ -528,7 +528,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 		vs[i] = v
 		subst[lg.Key(p)] = v
 	}
-	sfmla := co.SubstituteConstantsAST(fmla, subst)
+	sfmla := co.SubstituteConstantsExpr(fmla, subst)
 
 	// Handle SomeMinMax ordering constraints
 	if some.Kind == "some_min" || some.Kind == "some_max" {
@@ -570,7 +570,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 					idxSort = lg.TopS
 				}
 				ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{idxSort, idxSort}))
-				ivar = co.SubstituteConstantsAST(idx, subst)
+				ivar = co.SubstituteConstantsExpr(idx, subst)
 				var comp lg.Expr
 				if isMin {
 					ltApp, _ := lg.NewApply(ltSym, ivar, idx)
@@ -617,7 +617,7 @@ func (a *IfAction) GetCond() lg.Expr {
 			vs[i] = v
 			subst[lg.Key(p)] = v
 		}
-		sfmla := co.SubstituteConstantsAST(some.Fmla, subst)
+		sfmla := co.SubstituteConstantsExpr(some.Fmla, subst)
 		exists, _ := lg.NewExists(vs, sfmla)
 		return exists
 	}

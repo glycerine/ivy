@@ -190,7 +190,7 @@ func rankingInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return co.SubstituteConstantsAST(node, subs)
+		return co.SubstituteConstantsExpr(node, subs)
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
