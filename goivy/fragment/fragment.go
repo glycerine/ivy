@@ -649,6 +649,7 @@ func (c *checker) reportArc(a arc) string {
 }
 
 func (c *checker) reportCycle(cycle []arc) error {
+	xtracer.Trace("fragment/checker.reportCycle() top.")
 	if len(cycle) == 0 {
 		return nil
 	}

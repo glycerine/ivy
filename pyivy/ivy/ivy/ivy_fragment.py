@@ -421,6 +421,7 @@ def report_arc(arc):
     return res
 
 def report_cycle(cycle):
+    if __debug__: xtracer.trace("fragment/checker.reportCycle() top.")
     if cycle is not None:
         report_feu_error("The following terms may generate an infinite sequence of instantiations:\n"+
                          '\n'.join('  ' + report_arc(arc) for arc in cycle))
