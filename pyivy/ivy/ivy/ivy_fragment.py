@@ -421,10 +421,13 @@ def report_arc(arc):
     return res
 
 def report_cycle(cycle):
-    if __debug__: xtracer.trace("fragment/checker.reportCycle() top.")
+    if __debug__: xtracer.trace("fragment/checker.reportCycle ENTER")
     if cycle is not None:
+        if __debug__: xtracer.trace("fragment/checker.reportCycle report cycle error")
         report_feu_error("The following terms may generate an infinite sequence of instantiations:\n"+
                          '\n'.join('  ' + report_arc(arc) for arc in cycle))
+    if __debug__: xtracer.trace("fragment/checker.reportCycle EXIT")
+
 
 def report_interp_over_var(fmla,lineno,node):
     """ Report a violation of FAU due to a universal variable

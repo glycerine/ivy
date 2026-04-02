@@ -649,10 +649,12 @@ func (c *checker) reportArc(a arc) string {
 }
 
 func (c *checker) reportCycle(cycle []arc) error {
-	xtracer.Trace("fragment/checker.reportCycle() top.")
+	xtracer.Trace("fragment/checker.reportCycle ENTER")
+	defer xtracer.Trace("fragment/checker.reportCycle EXIT")
 	if len(cycle) == 0 {
 		return nil
 	}
+	xtracer.Trace("fragment/checker.reportCycle report cycle error\n stack: %v", stack())
 	var parts []string
 	for _, a := range cycle {
 		parts = append(parts, "  "+c.reportArc(a))
