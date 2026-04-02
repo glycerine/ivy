@@ -958,10 +958,10 @@ func CheckModule(mod *module.Module) error {
 			if logic != "" {
 				isoMod.Logics = []string{logic}
 			}
-			// Set up theory context for the isolated module
-			cleanup := isoMod.TheoryContext()
+			// Python check_module (ivy_check.py:974) calls check_isolate()
+			// without a theory_context() wrapper. CheckIsolate handles
+			// TheoryContext internally (after CheckFragment).
 			err := CheckIsolate(isoMod, nil)
-			cleanup()
 			if err != nil {
 				return err
 			}
