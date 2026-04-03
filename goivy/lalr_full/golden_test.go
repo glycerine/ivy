@@ -803,12 +803,13 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	}
 	target := filepath.Join(gobin, "goivy_check_xtrace")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
-	fmt.Printf("build goivy_check_xtrace so we know it is up to date: 'cd %v && %v build -o %v'\n", goivyCheckCmdDir, goBinary, target)
+	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
+	fmt.Printf("build goivy_check_xtrace so we know it is up to date: '%v'\n", doFullCmd)
 	cmd := exec.Command(goBinary, "build", "-o", target)
 	cmd.Dir = goivyCheckCmdDir
 	err = cmd.Run()
 	if err != nil {
-		panicf("could not run 'make tr' to build goivy_check_xtrace; error: '%v'", err)
+		panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
 	}
 	fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 
