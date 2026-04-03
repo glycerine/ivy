@@ -871,15 +871,21 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 	for _, s := range syms {
 		symNames[s.Name] = true
 	}
-	// Also hide new_ versions of modified symbols that are being hidden
+	// Also hide new_ versions of modified symbols that are being hidden.
+	// Matches Python: syms.update(new(s) for s in update[0] if s in syms)
+	// which mutates syms to include new_ versions before filtering.
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
-				toHide = append(toHide, NewConst(s))
+				nc := NewConst(s)
+				toHide = append(toHide, nc)
+				symNames[nc.Name] = true
 			}
 		}
 	}
-	// Compute new modified list (excluding hidden symbols)
+	// Compute new modified list (excluding hidden symbols).
+	// Python: new_updated = [s for s in update[0] if s not in syms]
+	// Uses the mutated syms which now includes new_ versions.
 	newMod := make([]*lg.Const, 0)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
