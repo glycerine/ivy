@@ -812,8 +812,8 @@ func CheckFEU(
 		for i, a := range c.arcs {
 			fromRoot := uf.Find(a.from).ID
 			toRoot := uf.Find(a.to).ID
-			xtracer.Trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s lineno=%d argIdx=%d",
-				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.lineno, a.argIdx)
+			xtracer.Trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
+				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.argIdx) // a.lineno,
 		}
 
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
