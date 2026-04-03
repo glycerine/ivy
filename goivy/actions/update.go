@@ -18,6 +18,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/transrel"
@@ -2063,10 +2064,13 @@ func distinctObjRenaming(formals []*lg.Const, vocabNames map[string]bool) map[*l
 	return result
 }
 
-// unusedNameWithBase finds an unused name starting with base.
+// unusedNameWithBase finds an unused name starting with base, using
+// letter suffixes (a, b, ..., z, a0, ...) matching Python's
+// constant_name_generator via ivy_utils.unused_name_with_base.
 func unusedNameWithBase(base string, used map[string]bool) string {
-	for i := 0; ; i++ {
-		name := fmt.Sprintf("%s_%d", base, i)
+	gen := iu.ConstantNameGenerator()
+	for {
+		name := base + "_" + gen()
 		if !used[name] {
 			return name
 		}
