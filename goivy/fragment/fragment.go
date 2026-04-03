@@ -92,8 +92,8 @@ type checker struct {
 	arcs      []arc
 
 	// Macro maps
-	macroMap      map[lg.NodeKey]macroDef   // symbol key → (definition, labeled formula)
-	macroValueMap map[lg.NodeKey]mapFmlaRes // symbol key → memoized result
+	macroMap      map[lg.NodeKey]macroDef       // symbol key → (definition, labeled formula)
+	macroValueMap map[lg.NodeKey]mapFmlaRes     // symbol key → memoized result
 	macroVarMap   map[varID]*uf.UFNode          // macro param var → strat node
 	macroDepMap   map[varID]map[*uf.UFNode]bool // macro param → dep nodes
 
@@ -125,7 +125,7 @@ type mapFmlaRes struct {
 
 type skolemEntry struct {
 	fmla lg.Expr
-	ast  lg.Expr
+	ast  ast.Node
 }
 
 // fmlaPair is a (formula, source) pair used throughout the checker.
@@ -449,10 +449,10 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 					}
 				} else {
 					// Non-variable argument: free variables contribute to deps.
-				// Python uses ilu.used_variables_ast (ivy_logic_utils.variables_ast)
-				// which collects free variables (excludes bound vars from binders).
-				// Note: ivy_ast.py has a different used_variables_ast that collects ALL
-				// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
+					// Python uses ilu.used_variables_ast (ivy_logic_utils.variables_ast)
+					// which collects free variables (excludes bound vars from binders).
+					// Note: ivy_ast.py has a different used_variables_ast that collects ALL
+					// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
 					fvs := lu.FreeVariables(appArgs[i])
 					for _, uNode := range fvs {
 						u := uNode.(*lg.Variable)
@@ -522,7 +522,7 @@ func (c *checker) makeSkolems(fmla lg.Expr, source interface{}, pol bool, univs 
 				qvars := il.QuantifierVars(fmla)
 				for _, e := range qvars {
 					eid := makeVarID(e)
-					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source.(lg.Expr)}
+					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source.(ast.Node)}
 					uNode := c.getUnivNode(u)
 					if c.macroDepMap[eid] == nil {
 						c.macroDepMap[eid] = make(map[*uf.UFNode]bool)

@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/ast"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	uf "github.com/glycerine/ivy/goivy/unionfind"
@@ -35,11 +36,11 @@ func ufNodeSetSexp(m map[*uf.UFNode]bool) string {
 	return "[" + strings.Join(parts, " ") + "]"
 }
 
-func exprSexp(e lg.Expr) string {
+func exprSexp(e ast.Node) string {
 	if e == nil {
 		return "nil"
 	}
-	return string(lg.Key(e))
+	return string(e.Canon()) // lg.Key(e))
 }
 
 func sortSexp(s lg.Sort) string {

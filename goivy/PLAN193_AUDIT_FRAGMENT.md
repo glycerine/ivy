@@ -174,9 +174,6 @@ on the Variable, comparing name+sort). Go checks by name only.
 **Effect**: If two variables with the same name but different sorts exist (shouldn't
 happen after alpha-conversion), Go would match falsely.
 
-**Severity**: Low. After VariableUniqifier alpha-conversion, all variable names
-should be unique.
-
 **Fix**: Use `lg.Key(u)` as the set key instead of just the name.
 
 ---
@@ -193,7 +190,9 @@ line numbers). Go stores the **variable** itself, with lineno stored separately
 in `universalVarLineno`.
 
 **Severity**: Low. This is a structural difference, not a behavioral one.
-Error messages may differ but core logic is unaffected.
+Error messages may differ but core logic is unaffected. Still, we want to
+match python so that future extensions in both languages find the same data
+in the same places.
 
 ---
 
