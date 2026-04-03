@@ -755,8 +755,10 @@ func CheckFEU(
 
 		// Dump universally quantified variables
 		uqvNames := make([]string, 0, len(c.universallyQuantifiedVars))
+		extra := ""
 		for vid := range c.universallyQuantifiedVars {
-			uqvNames = append(uqvNames, fmt.Sprintf("%s:%s", vid.name, vid.sort))
+			uqvNames = append(uqvNames, fmt.Sprintf("%v'%s:%s'", extra, vid.name, vid.sort))
+			extra = ", "
 		}
 		sort.Strings(uqvNames)
 		xtracer.Trace("fragment HASH canon= univQuantVars (%d): %v", len(c.universallyQuantifiedVars), uqvNames)
