@@ -432,6 +432,8 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 	}
 
 	dir = filepath.Dir(filename)
+	dir = filepath.Dir(dir)
+	dir = filepath.Dir(dir)
 	return
 }
 
@@ -440,18 +442,14 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
-	my := mustGetRepoDir(t)
-	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
-
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	GoldenPathCompareIvyCheck(t, false, true, path)
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
-	my := mustGetRepoDir(t)
-	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
-
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	GoldenPathCompareIvyCheck(t, true, true, path)
 }
 
@@ -459,15 +457,16 @@ func TestVerboseOrdLive(t *testing.T) {
 // at the first divergence. It prints all parsed
 // and xtraced lines.
 func TestVerboseNonstopOrdLive(t *testing.T) {
-	my := mustGetRepoDir(t)
-	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
-
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	GoldenPathCompareIvyCheck(t, true, false, path)
 }
 
-func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, path string) {
+func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string) {
 	//return // off to check everything else under make test.
 	t.Helper()
+
+	repo := mustGetRepoDir(t)
+	path := filepath.Join(repo, repoRelPath)
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
