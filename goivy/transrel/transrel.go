@@ -20,6 +20,7 @@ package transrel
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"unicode"
 
@@ -609,6 +610,8 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 		for i, m := range updated2 {
 			u2n[i] = fmt.Sprintf("'%v'", m.Name)
 		}
+		sort.Strings(u1n)
+		sort.Strings(u2n)
 		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=[%v](modAll=%v) u2.Modified=[%v](modAll=%v)", strings.Join(u1n, ", "), u1.ModifiedAll, strings.Join(u2n, ", "), u2.ModifiedAll)
 	}
 	clauses1 := u1.TR
@@ -682,6 +685,7 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 		for i, m := range newUpdated {
 			nun[i] = fmt.Sprintf("'%v'", m.Name)
 		}
+		sort.Strings(nun)
 		xtracer.Trace("transrel.ComposeUpdates newUpdated=[%v](modAll=%v)", strings.Join(nun, ", "), modAll)
 	}
 

@@ -11,6 +11,7 @@ package actions
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -1442,6 +1443,7 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 			for j, m := range childUpdate.Modified {
 				childModNames[j] = fmt.Sprintf("'%v'", m.Name)
 			}
+			sort.Strings(childModNames)
 			xtracer.Trace("actions.Sequence.int_update compose[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(childModNames, ", "))
 		}
 		result = transrel.ComposeUpdates(result, axioms, childUpdate)
@@ -1450,6 +1452,7 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 			for j, m := range result.Modified {
 				resultModNames[j] = fmt.Sprintf("'%v'", m.Name)
 			}
+			sort.Strings(resultModNames)
 			xtracer.Trace("actions.Sequence.int_update compose[%d] resultModified=[%v]", i, strings.Join(resultModNames, ", "))
 		}
 	}
