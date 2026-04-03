@@ -871,7 +871,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
 			_ = name
-			fps := makeFmlaPairsFromAction(action, m)
+			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
 		}
 	} else {
@@ -880,7 +880,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 			if !ok {
 				continue
 			}
-			fps := makeFmlaPairsFromAction(action, m)
+			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
 		}
 	}
@@ -997,13 +997,12 @@ func defToConstraint(d *il.Definition) lg.Expr {
 	return &lg.Eq{T1: lhs, T2: rhs}
 }
 
-// makeFmlaPairFromAction attempts to extract a formula pair from an action.
-// It computes the action's transition relation update and extracts the
-// pre/post formulas for fragment analysis.
-// makeFmlaPairsFromAction returns fmlaPairs for an action's transition
-// relation (TR) and precondition (Pre), each wrapped with close_epr.
-// Python adds both triple[1] and triple[2] as separate assumes.
-func makeFmlaPairsFromAction(action interface{}, m *mod.Module) []fmlaPair {
+// makeFmlaPairsFromAction returns fmlaPairs for an action's update.
+// When precondsOnly is false, it returns two pairs: TR (triple[1]) and
+// Pre (triple[2]), each wrapped with CloseEpr — matching Python's normal mode.
+// When precondsOnly is true, it returns only the TR pair (triple[1]),
+// matching Python's preconds_only=True which omits triple[2].
+func makeFmlaPairsFromAction(action interface{}, m *mod.Module, precondsOnly bool) []fmlaPair {
 	act, ok := action.(actions.Action)
 	if !ok {
 		return nil
@@ -1017,16 +1016,21 @@ func makeFmlaPairsFromAction(action interface{}, m *mod.Module) []fmlaPair {
 		return nil
 	}
 
-	// Extract TR and Pre formulas, applying close_epr to each.
+	// Extract TR formula (triple[1]), applying close_epr.
 	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
 	//         assumes.append((foo,action))
-	//         foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
-	//         assumes.append((foo,action))
-	pre := lu.CloseEpr(upd.TRNode())
-	post := lu.CloseEpr(upd.PreNode())
-
-	return []fmlaPair{
-		{fmla: pre, source: action},
-		{fmla: post, source: action},
+	tr := lu.CloseEpr(upd.TRNode())
+	result := []fmlaPair{
+		{fmla: tr, source: action},
 	}
+
+	// When not precondsOnly, also add Pre formula (triple[2]).
+	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
+	//         assumes.append((foo,action))
+	if !precondsOnly {
+		pre := lu.CloseEpr(upd.PreNode())
+		result = append(result, fmlaPair{fmla: pre, source: action})
+	}
+
+	return result
 }

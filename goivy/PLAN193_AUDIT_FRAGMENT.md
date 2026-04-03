@@ -525,49 +525,11 @@ property.
 
 ---
 
-## Divergence 21 — `CheckFEU` panic handler re-panics unconditionally
-
-| | Python | Go |
-|---|---|---|
-| **File:Line** | `ivy_fragment.py:381` (raises) | `fragment.go:731-734` |
-
-Go's panic handler:
-```go
-defer func() {
-    if r := recover(); r != nil {
-        if fe, ok := r.(*FragmentError); ok {
-            err = fe
-        } else {
-            panic(r)
-        }
-        panic(r) // re-throw anyway!
-    }
-}()
-```
-
-The `panic(r)` on the last line re-panics EVEN for `FragmentError` (after setting `err`).
-This means the error is never returned normally — it always panics.
-
-Python raises an exception which propagates normally.
-
-**Severity**: High. Go never returns a `FragmentError` via the error return;
-it always panics.
-
-**Fix**: Remove the unconditional `panic(r)` and only re-panic for non-FragmentError:
-```go
-if fe, ok := r.(*FragmentError); ok {
-    err = fe
-} else {
-    panic(r)
-}
-// Do NOT re-panic for FragmentError
-```
-
 ---
 
 ## Priority-ordered fix list
 
-1. **Divergence 21** — panic handler re-panics (High, easy fix)
+1. (deleted)
 2. **Divergence 2** — preconds_only adds wrong number of assumes (High, easy fix)
 3. **Divergence 20/14/18** — `NodeArgs` vs `fmla.args` for applications (Critical, needs investigation)
 4. **Divergence 19** — `VariableUniqifier` name differences (High, needs investigation)
