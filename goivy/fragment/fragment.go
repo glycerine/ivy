@@ -513,12 +513,8 @@ func (c *checker) makeSkolems(fmla lg.Expr, source interface{}, pol bool, univs 
 
 	if (isE && pol) || (isA && !pol) {
 		fvs := lu.FreeVariables(fmla)
-		fvNames := make(map[string]bool)
-		for _, vNode := range fvs {
-			fvNames[vNode.(*lg.Variable).Name] = true
-		}
 		for _, u := range univs {
-			if fvNames[u.Name] {
+			if _, ok := fvs[lg.Key(u)]; ok {
 				qvars := il.QuantifierVars(fmla)
 				for _, e := range qvars {
 					eid := makeVarID(e)

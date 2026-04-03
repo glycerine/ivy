@@ -240,3 +240,60 @@ func TestMakeSkolemSourcePropagatedThroughUniversal(t *testing.T) {
 		t.Errorf("source should propagate through nested ForAll unchanged")
 	}
 }
+
+// --- Divergence 7 tests: structural equality (name+sort) for free variable matching ---
+
+func TestMakeSkolemsDivergence7DifferentSortNoMatch(t *testing.T) {
+	// Two variables with the same name "X" but different sorts S1 and S2.
+	// ForAll([X:S1], Exists([Y], Eq(X:S2, Y)))
+	// The body of Exists has free variable X:S2, NOT X:S1.
+	// With name-only matching (old bug): X:S1 matches X:S2 → Y incorrectly recorded.
+	// With structural matching (fix): X:S1 does NOT match X:S2 → Y correctly absent.
+	S1 := &lg.UninterpretedSort{Name: "S1"}
+	S2 := &lg.UninterpretedSort{Name: "S2"}
+	X1, _ := lg.NewVariable("X", S1)
+	X2, _ := lg.NewVariable("X", S2)
+	Y, _ := lg.NewVariable("Y", S1)
+	body := &lg.Eq{T1: X2, T2: Y}
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+	forall := &lg.ForAll{Variables: []*lg.Variable{X1}, Body: exists}
+
+	sig := il.NewSig()
+	sig.AddSort(S1)
+	sig.AddSort(S2)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X1)
+	c.universallyQuantifiedVars[vid] = X1
+
+	c.makeSkolems(forall, forall, true, nil)
+
+	yid := makeVarID(Y)
+	if _, ok := c.skolemMap[yid]; ok {
+		t.Error("Y should NOT be in skolemMap: universal X:S1 is not free in Exists body (only X:S2 is)")
+	}
+}
+
+func TestMakeSkolemsDivergence7SameSortMatches(t *testing.T) {
+	// Same name AND same sort → structural match should succeed.
+	// ForAll([X:S], Exists([Y:S], Eq(X:S, Y:S))) with pol=true
+	// X:S is free in the Exists body, so Y should be recorded as a Skolem variable.
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	Y, _ := lg.NewVariable("Y", S)
+	body := &lg.Eq{T1: X, T2: Y}
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+	forall := &lg.ForAll{Variables: []*lg.Variable{X}, Body: exists}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(forall, forall, true, nil)
+
+	yid := makeVarID(Y)
+	if _, ok := c.skolemMap[yid]; !ok {
+		t.Error("Y should be in skolemMap: universal X:S is free in Exists body with same sort")
+	}
+}

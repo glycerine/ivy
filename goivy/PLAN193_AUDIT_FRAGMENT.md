@@ -533,10 +533,10 @@ property.
 8. **Divergence 1** — Equality key construction. FIXED.
 9. **Divergence 5** — used_variables_ast vs FreeVariables. FALSE ALARM. Python ilu.used_variables_ast (from ivy_logic_utils) collects free vars (excludes bound), same as Go FreeVariables. Test added. No change needed.
 10. **Divergence 4** — macro_map key type 
+11. **Divergence 7** — free_variables matching by name 
 
 still todo:
 
-11. **Divergence 7** — free_variables matching by name 
 12. **Divergence 9** — Definition recursion check 
 13. **Divergence 10/11** — Error reporting differences 
 14. **Divergence 13** — has_integer_interp sig passing 
