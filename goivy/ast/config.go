@@ -1,8 +1,10 @@
 package ast
 
 import (
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"sync/atomic"
+
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // AstConfig holds per-session AST state that was previously stored in
@@ -67,7 +69,7 @@ func (cfg *AstConfig) LinenoAddRef(loc Location) Location {
 	}
 	refCopy := loc
 	return Location{
-		Filename:  cfg.ReferenceLineno.Filename,
+		Filename:  xtracer.NormalizeLine(cfg.ReferenceLineno.Filename),
 		Line:      cfg.ReferenceLineno.Line,
 		Reference: &refCopy,
 	}
