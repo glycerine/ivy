@@ -176,7 +176,7 @@ def checker_canon():
     parts.append(' interp:nil')
 
     # universallyQuantifiedVars - can infinite loop, so skip.
-    # uqv = getattr(frag, 'universally_quantified_variables', None)
+    uqv = getattr(frag, 'universally_quantified_variables', None)
     # parts.append(' universallyQuantifiedVars:')
     # if uqv is None:
     #     parts.append('nil')
