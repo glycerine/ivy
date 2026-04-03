@@ -380,10 +380,10 @@ def hide(syms,update):
     syms = set(syms)
     syms.update(new(s) for s in update[0] if s in syms)
     if __debug__:
-        sym_strs = [s.name + ':' + str(s.sort) for s in syms]
+        sym_strs = sorted([s.name + ':' + str(s.sort) for s in syms])
         mod_strs = []
         if update[0] is not None:
-            mod_strs = [s.name + '(inSymNames=' + str(s in syms) + ')' for s in update[0]]
+            mod_strs = sorted([s.name + '(inSymNames=' + str(s in syms) + ')' for s in update[0]])
         xtracer.trace("transrel.Hide: syms=%s toHide=%s modified=%s" % (sym_strs, sym_strs, mod_strs))
     new_updated = [s for s in update[0] if s not in syms]
     new_tr = exist_quant(syms,update[1])

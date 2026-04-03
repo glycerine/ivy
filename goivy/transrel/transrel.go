@@ -889,19 +889,28 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 		}
 	}
 	if xtracer.Enabled {
+		boolStr := func(b bool) string {
+			if b {
+				return "True"
+			}
+			return "False"
+		}
 		symStrs := make([]string, len(syms))
 		for i, s := range syms {
-			symStrs[i] = s.Name + ":" + fmt.Sprintf("%v", s.CSort)
+			symStrs[i] = fmt.Sprintf("'%s:%v'", s.Name, s.CSort)
 		}
+		sort.Strings(symStrs)
 		hideStrs := make([]string, len(toHide))
 		for i, s := range toHide {
-			hideStrs[i] = s.Name + ":" + fmt.Sprintf("%v", s.CSort)
+			hideStrs[i] = fmt.Sprintf("'%s:%v'", s.Name, s.CSort)
 		}
-		modStrs := []string{}
+		sort.Strings(hideStrs)
+		modStrs := make([]string, 0, len(u.Modified))
 		for _, s := range u.Modified {
-			modStrs = append(modStrs, s.Name+"(inSymNames="+fmt.Sprintf("%v", symNames[s.Name])+")")
+			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, boolStr(symNames[s.Name])))
 		}
-		xtracer.Trace("transrel.Hide: syms=%v toHide=%v modified=%v", symStrs, hideStrs, modStrs)
+		sort.Strings(modStrs)
+		xtracer.Trace("transrel.Hide: syms=[%v] toHide=[%v] modified=[%v]", strings.Join(symStrs, ", "), strings.Join(hideStrs, ", "), strings.Join(modStrs, ", "))
 	}
 	// Existentially quantify hidden symbols in TR and Pre
 	_, newTR := ExistQuantClauses(toHide, u.TR)
