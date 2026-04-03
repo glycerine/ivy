@@ -119,3 +119,124 @@ func TestMakeSkolemsExistsNodeArgsReturnsBody(t *testing.T) {
 		t.Error("NodeArgs(Exists)[0] should be the body")
 	}
 }
+
+// --- Divergence 17 tests: source parameter propagation ---
+
+// Helper: builds ForAll([X], Exists([Y], Eq(X,Y))) and a separate source marker.
+// Returns the formula, the source, sort S, variable X, and variable Y.
+func buildSkolemTestFormula() (fmla lg.Expr, source lg.Expr, S *lg.UninterpretedSort, X, Y *lg.Variable) {
+	S = &lg.UninterpretedSort{Name: "S"}
+	X, _ = lg.NewVariable("X", S)
+	Y, _ = lg.NewVariable("Y", S)
+	body := &lg.Eq{T1: X, T2: Y}
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+	fmla = &lg.ForAll{Variables: []*lg.Variable{X}, Body: exists}
+	// Use a distinct Const as the source marker (simulates a LabeledFormula or Action)
+	source = lg.NewConst("__source_marker__", lg.Boolean)
+	return
+}
+
+func TestMakeSkolemSourceIsPreserved(t *testing.T) {
+	// Divergence 17: makeSkolems must store the source (not the formula) in skolemMap.
+	fmla, source, S, X, Y := buildSkolemTestFormula()
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(fmla, source, true, nil)
+
+	yid := makeVarID(Y)
+	entry, ok := c.skolemMap[yid]
+	if !ok {
+		t.Fatal("Y should be in skolemMap")
+	}
+	if entry.ast != source {
+		t.Errorf("skolemMap[Y].ast should be the source object, not the formula")
+	}
+	if entry.ast == fmla {
+		t.Errorf("skolemMap[Y].ast is the formula itself — divergence 17 is not fixed")
+	}
+}
+
+func TestMakeSkolemSourcePropagatedThroughNot(t *testing.T) {
+	// Not flips polarity. Not(ForAll([X], Exists([Y], Eq(X,Y)))) with pol=false:
+	// Not flips to pol=true, then ForAll under pol=true is universal, Exists is skolem.
+	fmla, source, S, X, Y := buildSkolemTestFormula()
+	notFmla := &lg.Not{Body: fmla}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(notFmla, source, false, nil)
+
+	yid := makeVarID(Y)
+	entry, ok := c.skolemMap[yid]
+	if !ok {
+		t.Fatal("Y should be in skolemMap after Not flips polarity")
+	}
+	if entry.ast != source {
+		t.Errorf("source should propagate through Not unchanged")
+	}
+}
+
+func TestMakeSkolemSourcePropagatedThroughImplies(t *testing.T) {
+	// Implies(p, ForAll([X], Exists([Y], Eq(X,Y)))) with pol=true:
+	// Implies processes T2 with pol=true → ForAll universal, Exists skolem.
+	fmla, source, S, X, Y := buildSkolemTestFormula()
+	p := lg.NewConst("p", lg.Boolean)
+	imp := &lg.Implies{T1: p, T2: fmla}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(imp, source, true, nil)
+
+	yid := makeVarID(Y)
+	entry, ok := c.skolemMap[yid]
+	if !ok {
+		t.Fatal("Y should be in skolemMap (Implies consequent with pol=true)")
+	}
+	if entry.ast != source {
+		t.Errorf("source should propagate through Implies unchanged")
+	}
+}
+
+func TestMakeSkolemSourcePropagatedThroughUniversal(t *testing.T) {
+	// ForAll([X], ForAll([Z], Exists([Y], Eq(X,Y)))) with pol=true:
+	// Both ForAlls are universal (pol=true). Source should reach the inner Exists.
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	Y, _ := lg.NewVariable("Y", S)
+	Z, _ := lg.NewVariable("Z", S)
+	body := &lg.Eq{T1: X, T2: Y}
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+	innerForall := &lg.ForAll{Variables: []*lg.Variable{Z}, Body: exists}
+	outerForall := &lg.ForAll{Variables: []*lg.Variable{X}, Body: innerForall}
+	source := lg.NewConst("__source_marker__", lg.Boolean)
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(outerForall, source, true, nil)
+
+	yid := makeVarID(Y)
+	entry, ok := c.skolemMap[yid]
+	if !ok {
+		t.Fatal("Y should be in skolemMap (nested ForAll with pol=true)")
+	}
+	if entry.ast != source {
+		t.Errorf("source should propagate through nested ForAll unchanged")
+	}
+}

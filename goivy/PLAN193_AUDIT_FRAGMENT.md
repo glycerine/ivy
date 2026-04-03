@@ -534,11 +534,11 @@ property.
 3. **Divergence 20/14/18** — `NodeArgs` vs `fmla.args` for applications (Critical, needs investigation): FALSE ALARM. added test. no changes needed.
 4. **Divergence 19** — `VariableUniqifier` name differences (High, needs investigation). FALSE ALARM. tests added. no change needed.
 5. **Divergence 3** — `pol` None vs -1. FALSE ALARM. test added. no change needed.
+6. **Divergence 12** — `makeSkolems` recursion with NodeArgs. FALSE ALARM. no change needed.
+7. **Divergence 17** — `makeSkolems` source parameter. FIXED.
 
 still todo:
 
-6. **Divergence 12** — `makeSkolems` recursion with NodeArgs. FALSE ALARM. no change needed.
-7. **Divergence 17** — `makeSkolems` source parameter (Medium, easy fix)
 8. **Divergence 1** — Equality key construction (Medium, needs analysis)
 9. **Divergence 5** — used_variables_ast vs FreeVariables (Low-Medium)
 10. **Divergence 4** — macro_map key type (Low)

@@ -596,7 +596,7 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 
 	// Simulate Skolem functions
 	for _, fp := range allFmlas {
-		c.makeSkolems(fp.fmla, fp.fmla, true, nil)
+		c.makeSkolems(fp.fmla, fp.source, true, nil)
 	}
 
 	// Build graph by mapping all assumes and asserts
