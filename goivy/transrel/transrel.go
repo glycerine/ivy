@@ -116,10 +116,10 @@ type Update struct {
 	Modified    []*lg.Const
 	ModifiedAll bool // true ↔ Python updated==None; false ↔ Python updated==[]
 
-	TR       *co.Clauses  // transition relation (Clauses with fmlas + defs)
-	Pre      *co.Clauses  // precondition, negative (Clauses with fmlas + defs)
-	TRRaw    lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw   lg.Expr      // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	TR     *co.Clauses // transition relation (Clauses with fmlas + defs)
+	Pre    *co.Clauses // precondition, negative (Clauses with fmlas + defs)
+	TRRaw  lg.Expr     // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw lg.Expr     // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // IsModifiedAll returns true when the update modifies all symbols
@@ -607,9 +607,9 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 		}
 		u2n := make([]string, len(updated2))
 		for i, m := range updated2 {
-			u2n[i] = m.Name
+			u2n[i] = fmt.Sprintf("'%v'", m.Name)
 		}
-		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(modAll=%v) u2.Modified=%v(modAll=%v)", u1n, u1.ModifiedAll, u2n, u2.ModifiedAll)
+		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(modAll=%v) u2.Modified=[%v](modAll=%v)", u1n, u1.ModifiedAll, strings.Join(u2n, ", "), u2.ModifiedAll)
 	}
 	clauses1 := u1.TR
 	pre1 := u1.Pre
