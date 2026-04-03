@@ -680,9 +680,9 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	if xtracer.Enabled {
 		nun := make([]string, len(newUpdated))
 		for i, m := range newUpdated {
-			nun[i] = m.Name
+			nun[i] = fmt.Sprintf("'%v'", m.Name)
 		}
-		xtracer.Trace("transrel.ComposeUpdates newUpdated=%v(modAll=%v)", nun, modAll)
+		xtracer.Trace("transrel.ComposeUpdates newUpdated=[%v](modAll=%v)", strings.Join(nun, ", "), modAll)
 	}
 
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))

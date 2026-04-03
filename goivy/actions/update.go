@@ -1448,9 +1448,9 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 		if xtracer.Enabled {
 			resultModNames := make([]string, len(result.Modified))
 			for j, m := range result.Modified {
-				resultModNames[j] = m.Name
+				resultModNames[j] = fmt.Sprintf("'%v'", m.Name)
 			}
-			xtracer.Trace("actions.Sequence.int_update compose[%d] resultModified=%v", i, resultModNames)
+			xtracer.Trace("actions.Sequence.int_update compose[%d] resultModified=[%v]", i, strings.Join(resultModNames, ", "))
 		}
 	}
 	return result
