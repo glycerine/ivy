@@ -735,6 +735,10 @@ func CheckFEU(
 		}
 	}()
 
+	if xtracer.Enabled {
+		xtracer.Trace("fragment CheckFEU input counts: assumes=%d asserts=%d macros=%d", len(newAssumes), len(newAsserts), len(newMacros))
+	}
+
 	// Build stratification graph
 	c.createStratMap(newAssumes, newAsserts, newMacros)
 

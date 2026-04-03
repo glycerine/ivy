@@ -466,6 +466,9 @@ def check_feu(assumes,asserts,macros):
 
     # Create the stratificaiton graph, as described above.
 
+    if __debug__:
+        xtracer.trace("fragment CheckFEU input counts: assumes=%d asserts=%d macros=%d" % (len(assumes), len(asserts), len(macros)))
+
     create_strat_map(assumes,asserts,macros)
     
     if __debug__:
