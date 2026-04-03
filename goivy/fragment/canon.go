@@ -132,11 +132,7 @@ func (s *skolemEntry) Canon() iu.Canonical { return iu.Canonical(s.Sexp()) }
 func (f *fmlaPair) Sexp() lg.NodeKey {
 	sourceStr := "nil"
 	if f.source != nil {
-		if c, ok := f.source.(iu.Canonizer); ok {
-			sourceStr = string(c.Canon())
-		} else {
-			sourceStr = fmt.Sprintf("%v", f.source)
-		}
+		sourceStr = string(f.source.Canon())
 	}
 	return lg.NodeKey(fmt.Sprintf("(fmlaPair fmla:%s source:%s lineno:%d)",
 		exprSexp(f.fmla), sourceStr, f.lineno))

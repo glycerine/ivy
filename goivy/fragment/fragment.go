@@ -23,6 +23,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	mod "github.com/glycerine/ivy/goivy/module"
@@ -128,10 +129,16 @@ type skolemEntry struct {
 	ast  ast.Node
 }
 
+type SomeString string
+
+func (s SomeString) Canon() iu.Canonical {
+	return iu.Canonical(s)
+}
+
 // fmlaPair is a (formula, source) pair used throughout the checker.
 type fmlaPair struct {
 	fmla   lg.Expr
-	source interface{} // *ast.LabeledFormula or action or similar
+	source ast.Node // *ast.LabeledFormula or actions.Action
 	lineno int
 }
 
@@ -497,7 +504,7 @@ func (c *checker) varMapAdd(wid varID, vn *uf.UFNode) {
 // --- Skolem handling ---
 
 // makeSkolems simulates Skolem functions for AE alternations.
-func (c *checker) makeSkolems(fmla lg.Expr, source interface{}, pol bool, univs []*lg.Variable) {
+func (c *checker) makeSkolems(fmla lg.Expr, source ast.Node, pol bool, univs []*lg.Variable) {
 	switch t := fmla.(type) {
 	case *lg.Not:
 		c.makeSkolems(t.Body, source, !pol, univs)
@@ -518,7 +525,7 @@ func (c *checker) makeSkolems(fmla lg.Expr, source interface{}, pol bool, univs 
 				qvars := il.QuantifierVars(fmla)
 				for _, e := range qvars {
 					eid := makeVarID(e)
-					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source.(ast.Node)}
+					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source}
 					uNode := c.getUnivNode(u)
 					if c.macroDepMap[eid] == nil {
 						c.macroDepMap[eid] = make(map[*uf.UFNode]bool)
@@ -752,6 +759,18 @@ func CheckFEU(
 
 	if xtracer.Enabled {
 		xtracer.Trace("fragment CheckFEU input counts: assumes=%d asserts=%d macros=%d", len(newAssumes), len(newAsserts), len(newMacros))
+
+		assumesB := &strings.Builder{}
+		assumesB.WriteString("[")
+		for i, a := range newAssumes {
+			if i > 0 {
+				assumesB.WriteString(", ")
+			}
+			assumesB.WriteString(string(a.Canon()))
+		}
+		assumesB.WriteString("]")
+		xtracer.Trace("fragment CheckFEU input HASH canon= assumes=%v", assumesB.String())
+
 	}
 
 	// Build stratification graph
@@ -1017,16 +1036,11 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // Pre (triple[2]), each wrapped with CloseEpr — matching Python's normal mode.
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
-func makeFmlaPairsFromAction(action interface{}, m *mod.Module, precondsOnly bool) []fmlaPair {
-	act, ok := action.(actions.Action)
-	if !ok {
-		return nil
-	}
-
+func makeFmlaPairsFromAction(action actions.Action, m *mod.Module, precondsOnly bool) []fmlaPair {
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}
-	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(act))
-	upd := actions.GetUpdate(act, ctx)
+	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(action))
+	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		return nil
 	}

@@ -52,22 +52,6 @@ func TestMakeFmlaPairsPrecondsOnlyFalse(t *testing.T) {
 	}
 }
 
-// TestMakeFmlaPairsNonAction checks that passing a non-Action value
-// returns nil.
-func TestMakeFmlaPairsNonAction(t *testing.T) {
-	m := mod.New()
-
-	fps := makeFmlaPairsFromAction("not-an-action", m, false)
-	if fps != nil {
-		t.Errorf("non-action: expected nil, got %d fmlaPairs", len(fps))
-	}
-
-	fps = makeFmlaPairsFromAction("not-an-action", m, true)
-	if fps != nil {
-		t.Errorf("non-action with precondsOnly=true: expected nil, got %d fmlaPairs", len(fps))
-	}
-}
-
 // TestMakeFmlaPairsFormulaIdentity verifies that the returned formulas
 // match the expected TR and Pre from the action's update.
 func TestMakeFmlaPairsFormulaIdentity(t *testing.T) {
