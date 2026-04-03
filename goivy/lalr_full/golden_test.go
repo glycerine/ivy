@@ -562,13 +562,18 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 				// avoid regurgitating very long canonical
 				// strings for modules of matching stuff.
 				for j, pys := range pyLast30 {
-					fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
-					if len(goLast30[j]) > 300 {
-						fmt.Printf(" ...(truncated long line to 300 bytes)\n")
-					}
-					fmt.Printf("        py : %.300s\n", pys)
-					if len(pys) > 300 {
-						fmt.Printf(" ...(truncated long line to 300 bytes)\n")
+					if false {
+						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
+						if len(goLast30[j]) > 300 {
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n")
+						}
+						fmt.Printf("        py : %.300s\n", pys)
+						if len(pys) > 300 {
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n")
+						}
+					} else {
+						fmt.Printf("%06d  go : %s", i-n+j+1, goLast30[j])
+						fmt.Printf("        py : %s\n", pys)
 					}
 				}
 			}

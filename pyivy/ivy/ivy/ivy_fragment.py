@@ -475,7 +475,31 @@ def check_feu(assumes,asserts,macros):
         ## xtracer.trace("fragment/fragment.go CheckFEU after createStratMap, newAssumes is: HASH canon= %s" % assumes.canon())
 
         # Dump sig.interp keys for cross-language comparison
-        xtracer.trace("fragment sig.interp keys: %s" % sorted(il.sig.interp.keys()))
+        xtracer.trace("fragment sig.Interp keys: %s" % sorted(il.sig.interp.keys()))
+
+        # Dump universally quantified variables
+        uqv_names = sorted('%s:%s' % (v.name, str(v.sort)) for v in universally_quantified_variables)
+        xtracer.trace("fragment HASH canon= univQuantVars (%d): %s" % (len(universally_quantified_variables), uqv_names))
+
+        # Dump strat_map size and keys
+        from .canon_fragment import strat_key_canon
+        sm_keys = sorted(strat_key_canon(k) for k in strat_map)
+        xtracer.trace("fragment HASH canon= stratMap (%d): %s" % (len(strat_map), sm_keys))
+
+        # Dump arcs count and simplified form
+        xtracer.trace("fragment HASH canon= arcs (%d):" % len(arcs))
+        for i, a in enumerate(arcs):
+            if len(a) == 5:
+                v, anode, fmla, lineno, idx = a
+            else:
+                v, anode, fmla, lineno = a
+                idx = -1
+            from_root = find(v).id
+            to_root = find(anode).id
+            fmla_str = fmla.sexp() if hasattr(fmla, 'sexp') else str(fmla)
+            xtracer.trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s lineno=%d argIdx=%d" % (
+                i, v.id, from_root, anode.id, to_root, fmla_str, lineno, idx))
+
         xtracer.trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s" % checker_canon())
 
     # Check for cycles in the stratification graph.

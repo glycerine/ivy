@@ -753,12 +753,38 @@ func CheckFEU(
 			xtracer.Trace("fragment sig.Interp keys: nil (no sig)")
 		}
 
+		// Dump universally quantified variables
+		uqvNames := make([]string, 0, len(c.universallyQuantifiedVars))
+		for vid := range c.universallyQuantifiedVars {
+			uqvNames = append(uqvNames, fmt.Sprintf("%s:%s", vid.name, vid.sort))
+		}
+		sort.Strings(uqvNames)
+		xtracer.Trace("fragment HASH canon= univQuantVars (%d): %v", len(c.universallyQuantifiedVars), uqvNames)
+
+		// Dump strat_map size and keys
+		smKeys := make([]string, 0, len(c.stratMap))
+		for k := range c.stratMap {
+			smKeys = append(smKeys, string(k))
+		}
+		sort.Strings(smKeys)
+		xtracer.Trace("fragment HASH canon= stratMap (%d): %v", len(c.stratMap), smKeys)
+
+		// Dump arcs count and simplified form
+		xtracer.Trace("fragment HASH canon= arcs (%d):", len(c.arcs))
+		for i, a := range c.arcs {
+			fromRoot := uf.Find(a.from).ID
+			toRoot := uf.Find(a.to).ID
+			xtracer.Trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s lineno=%d argIdx=%d",
+				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.lineno, a.argIdx)
+		}
+
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
 	}
 
 	// Check for cycles
 	cycle := c.findCycle()
 	if len(cycle) > 0 {
+		//vv("TODO REMOVE DEBUG ONLY: skip reporing cycle!")
 		return c.reportCycle(cycle)
 	}
 
