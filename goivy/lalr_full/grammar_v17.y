@@ -144,7 +144,7 @@ func nodeLineno(n ast.Node) ast.Location {
 		return ast.Location{}
 	}
 	loc := n.GetLineno()
-	loc.Filename = normalizeFilename(loc.Filename)
+	loc.Filename = xtracer.NormalizeLine(loc.Filename)
 	return loc
 }
 
