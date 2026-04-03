@@ -996,7 +996,7 @@ def start():
     from . import ivy_alpha
     if len(sys.argv) != 2 or not sys.argv[1].endswith('ivy'):
         usage()
-    if __debug__: xtracer.trace("check.start ENTER file=%s" % sys.argv[1])
+    if __debug__: xtracer.trace("check.start ENTER file=%s" % xtracer.normalize_filename(sys.argv[1]))
     global some_bounded
     some_bounded = False
 
