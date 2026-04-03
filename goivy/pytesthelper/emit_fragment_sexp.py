@@ -112,6 +112,7 @@ emit("strat_key_expr", strat_key_canon(eq_expr_sym))
 # ---- stratEntry vectors ----
 emit("strat_entry_var", strat_entry_canon(X))
 emit("strat_entry_app", strat_entry_canon((sym, 1)))
+sort_eq_sym = il.Symbol('=', S)
 emit("strat_entry_sort", strat_entry_canon(sort_eq_sym))
 
 # ---- arc vectors ----
