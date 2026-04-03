@@ -609,7 +609,7 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 		for i, m := range updated2 {
 			u2n[i] = m.Name
 		}
-		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(nil=%v) u2.Modified=%v(nil=%v)", u1n, updated1 == nil, u2n, updated2 == nil)
+		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(modAll=%v) u2.Modified=%v(modAll=%v)", u1n, u1.ModifiedAll, u2n, u2.ModifiedAll)
 	}
 	clauses1 := u1.TR
 	pre1 := u1.Pre
