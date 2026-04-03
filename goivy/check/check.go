@@ -350,8 +350,10 @@ func CheckTemporals(mod *module.Module) error {
 			model := temporal.NormalProgramFromModule(mod)
 
 			// Python: subgoal = prop.clone([prop.args[0], ivy_ast.TemporalModels(model, propn.args[1])])
+			xtracer.Trace("check.temporal propn.Formula type=%T", propn.Formula)
 			tm := mod.Cfg.AstCfg.NewTemporalModels(model, propn.Formula)
 			subgoal := prop.Clone([]ast.Node{prop.Label, tm}).(*ast.LabeledFormula)
+			xtracer.Trace("check.temporal subgoal.Formula type=%T", subgoal.Formula)
 
 			subgoals := []*ast.LabeledFormula{subgoal}
 
@@ -360,6 +362,7 @@ func CheckTemporals(mod *module.Module) error {
 			if pf != nil {
 				pfNode, _ = pf.(ast.Node)
 			}
+			xtracer.Trace("check.temporal proof type=%T pfNode type=%T", pf, pfNode)
 			var err error
 			subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
 			if err != nil {

@@ -7,6 +7,7 @@ from . import ivy_logic as il
 from . import ivy_logic_utils as lu
 from . import ivy_ast as ia
 from . import logic_util
+from . import xtracer
 
 class Redefinition(iu.IvyError):
     pass
@@ -141,6 +142,8 @@ class ProofChecker(object):
         with ia.ASTContext(proof):
             if len(decls) == 0:
                 return []
+            if len(decls) > 0 and decls[0] is not None:
+                if __debug__: xtracer.trace("proof.ApplyProof ENTER proofType=%s goal[0].Formula type=%s" % (type(proof).__name__, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
             if isinstance(proof,ia.SchemaInstantiation):
                 m = self.match_schema(decls[0],proof)
                 return None if m is None else m + decls[1:]
@@ -186,13 +189,18 @@ class ProofChecker(object):
 
     def tactic_tactic(self,decls,proof):
         tn = proof.tactic_name
+        if len(decls) > 0 and decls[0] is not None:
+            if __debug__: xtracer.trace("proof.tacticTactic name=%r goal[0].Formula type=%s" % (tn, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
         if tn not in registered_tactics:
             raise iu.IvyError(proof,'unknown tactic: {}'.format(tn))
         tactic = registered_tactics[tn]
         return tactic(self,decls,proof)
-    
+
     def compose_proofs(self,decls,proofs):
-        for proof in proofs:
+        if __debug__: xtracer.trace("proof.composeProofs ENTER nproofs=%d ndecls=%d" % (len(proofs), len(decls)))
+        for i,proof in enumerate(proofs):
+            if len(decls) > 0 and decls[0] is not None:
+                if __debug__: xtracer.trace("proof.composeProofs step=%d/%d proofType=%s goal[0].Formula type=%s" % (i, len(proofs), type(proof).__name__, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
             decls = self.apply_proof(decls,proof)
             if decls is None or len(decls) == 0:
                 return decls

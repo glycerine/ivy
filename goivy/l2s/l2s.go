@@ -30,6 +30,7 @@ import (
 	modpkg "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // --- Named constants used by the L2S transformation ---
@@ -215,11 +216,20 @@ func l2sTacticInt(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	full := tacticName == "l2s_full"
 	goal := goals[0]
+	xtracer.Trace("l2s.l2sTacticInt ENTER tactic=%q ngoals=%d goal.Formula type=%T", tacticName, len(goals), goal.Formula)
+	if goal.Formula != nil {
+		// Also check if it's a SchemaBody
+		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
+			conc := sb.Conc()
+			xtracer.Trace("l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=%T", conc)
+		}
+	}
 	lineno := ast.Location{Filename: "l2s", Line: 0}
 	// Check that the conclusion is a temporal proof goal.
 	// TemporalModels is an ast.Node, not a lg.Expr, so we must check
 	// the goal's formula directly (GoalConc won't find it).
 	tm := findTemporalModels(goal)
+	xtracer.Trace("l2s.l2sTacticInt findTemporalModels result=%v (nil=%v)", tm, tm == nil)
 	if tm == nil {
 		return nil, fmt.Errorf("l2s: proof goal is not temporal")
 	}

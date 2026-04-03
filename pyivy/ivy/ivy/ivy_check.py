@@ -145,8 +145,11 @@ def check_temporals():
                     proof = pmap.get(prop.id,None)
                     propn = ivy_proof.normalize_goal(prop)
                     model = itmp.normal_program_from_module(im.module)
+                    if __debug__: xtracer.trace("check.temporal propn.Formula type=%s" % type(propn.args[1]).__name__)
                     subgoal = prop.clone([prop.args[0],ivy_ast.TemporalModels(model,propn.args[1])])
+                    if __debug__: xtracer.trace("check.temporal subgoal.Formula type=%s" % type(subgoal.formula).__name__)
                     subgoals = [subgoal]
+                    if __debug__: xtracer.trace("check.temporal proof type=%s pfNode type=%s" % (type(proof).__name__ if proof is not None else "None", type(proof).__name__ if proof is not None else "None"))
                     subgoals = pc.admit_proposition(prop,proof,subgoals)
                     check_subgoals(subgoals)
             

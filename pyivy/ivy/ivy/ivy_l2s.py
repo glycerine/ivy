@@ -62,6 +62,7 @@ from . import ivy_proof as ipr
 from . import ivy_module as im
 from . import ivy_compiler
 from . import ivy_theory as thy
+from . import xtracer
 
 debug = iu.BooleanParameter("l2s_debug",False)
 
@@ -109,8 +110,12 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     full = tactic_name == "l2s_full"
     mod = im.module
     goal = goals[0]                  # pick up the first proof goal
+    if __debug__: xtracer.trace("l2s.l2sTacticInt ENTER tactic=%r ngoals=%d goal.Formula type=%s" % (tactic_name, len(goals), type(goal.formula).__name__))
+    if hasattr(goal.formula, 'conc'):
+        if __debug__: xtracer.trace("l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=%s" % type(goal.formula.conc()).__name__)
     lineno = iu.Location("nowhere",0)
     conc = ipr.goal_conc(goal)       # get its conclusion
+    if __debug__: xtracer.trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)" % (type(conc).__name__, isinstance(conc, ivy_ast.TemporalModels)))
     if not isinstance(conc,ivy_ast.TemporalModels):
         raise iu.IvyError(proof,'proof goal is not temporal')
     model = conc.model.clone([])

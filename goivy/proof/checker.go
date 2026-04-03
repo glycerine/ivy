@@ -8,6 +8,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ProofChecker is Ivy's built-in proof checker.
@@ -210,6 +211,10 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	}
 	if proof == nil {
 		return nil, &ProofError{Msg: "nil proof supplied"}
+	}
+
+	if len(goals) > 0 && goals[0] != nil {
+		xtracer.Trace("proof.ApplyProof ENTER proofType=%T goal[0].Formula type=%T", proof, goals[0].Formula)
 	}
 
 	// Dispatch on proof type.
@@ -506,8 +511,12 @@ func (pc *ProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
 // composeProofs applies a sequence of proofs one after another.
 // Corresponds to Python's compose_proofs.
 func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.Node) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.composeProofs ENTER nproofs=%d ndecls=%d", len(proofs), len(decls))
 	var err error
-	for _, proof := range proofs {
+	for i, proof := range proofs {
+		if len(decls) > 0 && decls[0] != nil {
+			xtracer.Trace("proof.composeProofs step=%d/%d proofType=%T goal[0].Formula type=%T", i, len(proofs), proof, decls[0].Formula)
+		}
 		decls, err = pc.ApplyProof(decls, proof)
 		if err != nil {
 			return nil, err
@@ -568,6 +577,9 @@ func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.Proo
 // Corresponds to Python's tactic_tactic.
 func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.TacticTactic) ([]*ast.LabeledFormula, error) {
 	tn := nodeToString(proof.TName)
+	if len(decls) > 0 && decls[0] != nil {
+		xtracer.Trace("proof.tacticTactic name=%q goal[0].Formula type=%T", tn, decls[0].Formula)
+	}
 	tactic, ok := pc.Cfg.Tactics[tn]
 	if !ok {
 		return nil, &ProofError{Msg: fmt.Sprintf("unknown tactic: %s", tn)}
