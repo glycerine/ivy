@@ -1398,9 +1398,15 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 	tr := update.TR
 	pre := update.Pre
 
+	if xtracer.Enabled {
+		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=%v", len(ctx.Domain.Updates), modNames)
+	}
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
 			newModNames, transrelNode, precondNode := provider.GetUpdateAxioms(modNames, action)
+			if xtracer.Enabled {
+				xtracer.Trace("actions.applyUpdateAxioms axiom modNames=%v -> newModNames=%v hasTR=%v hasPre=%v", modNames, newModNames, transrelNode != nil, precondNode != nil)
+			}
 			// Update modNames for next iteration
 			modNames = newModNames
 			// Convert new names to Consts (TopSort since we don't have sort info)

@@ -204,8 +204,15 @@ class Action(AST):
         (updated,clauses,pre) = self.action_update(domain,in_scope)
         # instantiate the update axioms
 #        iu.dbg('[str(x) for x in domain.updates]')
+        if __debug__:
+            mod_names = [s.name for s in updated] if updated is not None else 'None'
+            xtracer.trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=%s" % (len(domain.updates), sorted(mod_names)))
         for u in domain.updates:
+            old_updated = [s.name for s in updated] if updated is not None else 'None'
             updated,transrel,precond = u.get_update_axioms(updated,self)
+            if __debug__:
+                new_mod = [s.name for s in updated] if updated is not None else 'None'
+                xtracer.trace("actions.applyUpdateAxioms axiom modNames=%s -> newModNames=%s hasTR=%s hasPre=%s" % (sorted(old_updated), sorted(new_mod), transrel is not None, precond is not None))
            # TODO: do something with the precondition
 #            if transrel:
 ##                print "updated: {}".format(updated)
