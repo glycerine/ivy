@@ -219,8 +219,6 @@ name+sort). Go compares only by name string.
 Python reverses alpha-conversion to show original variable names in error messages.
 Go shows the uniquified names.
 
-**Severity**: Low. Only affects error message readability, not correctness.
-
 **Fix**: Implement `Undo` on `VariableUniqifier` and call it in error messages.
 
 ---
@@ -234,7 +232,6 @@ Go shows the uniquified names.
 Python's `report_arc` checks if a term is in `skolem_map` and adds
 context about the skolem function origin. Go's `reportArc` doesn't.
 
-**Severity**: Low. Only affects error message detail.
 
 ---
 
@@ -281,14 +278,12 @@ Python's `ForAll.args` which returns `(body,)`).
 
 | | Python | Go |
 |---|---|---|
-| **File:Line** | `ivy_fragment.py:185` | `fragment.go:348` |
+| **File:Line** | `ivy_fragment.py:185` | `fragment.go:354` |
 | **Code** | `thy.has_integer_interp(app.args[0].sort)` | `thy.HasIntegerInterp(sort, c.flatInterp())` |
 
 Python's `has_integer_interp` uses the global `sig.interp` implicitly.
 Go passes `c.flatInterp()` explicitly.
 
-**Severity**: Low. Both `sig.interp` maps are empty in the current test case.
-Should be equivalent when non-empty.
 
 ---
 
@@ -533,10 +528,10 @@ property.
 9. **Divergence 5** — used_variables_ast vs FreeVariables. FALSE ALARM. Python ilu.used_variables_ast (from ivy_logic_utils) collects free vars (excludes bound), same as Go FreeVariables. Test added. No change needed.
 10. **Divergence 4** — macro_map key type 
 11. **Divergence 7** — free_variables matching by name 
+12. **Divergence 9** — Definition recursion check 
+13. **Divergence 10/11** — Error reporting differences 
 
 still todo:
 
-12. **Divergence 9** — Definition recursion check 
-13. **Divergence 10/11** — Error reporting differences 
 14. **Divergence 13** — has_integer_interp sig passing 
 

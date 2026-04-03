@@ -648,6 +648,15 @@ func (c *checker) reportArc(a arc) string {
 			term := args[a.argIdx]
 			fmt.Fprintf(&b, "\n    (position %d is a function from %s to %s)",
 				a.argIdx, c.getNodeSort(a.from), term.NodeSort())
+			// Divergence 11 fix: check skolemMap for skolem origin info,
+			// matching Python report_arc lines 418-420.
+			if v, ok := term.(*lg.Variable); ok {
+				vid := makeVarID(v)
+				if se, found := c.skolemMap[vid]; found {
+					fmt.Fprintf(&b, "\n    %sskolem function defined by:\n         %s",
+						se.ast.GetLineno(), se.fmla)
+				}
+			}
 		}
 	}
 	return b.String()
@@ -676,13 +685,13 @@ func (c *checker) reportInterpOverVar(fmla lg.Expr, lineno int, node *uf.UFNode)
 			if info, ok := c.stratInfo[key]; ok && info.v != nil {
 				vid := makeVarID(info.v)
 				if origLn, exists := c.universalVarLineno[vid]; exists {
-					varMsg = fmt.Sprintf("\n%d: The quantified variable is %s", origLn, vid.name)
+					varMsg = fmt.Sprintf("\n%d: The quantified variable is %s", origLn, c.varUniq.Undo(info.v))
 				}
 			}
 		}
 	}
 	msg := fmt.Sprintf("An interpreted symbol is applied to a universally quantified variable:\n%d: %s%s",
-		lineno, fmla, varMsg)
+		lineno, c.varUniq.Undo(fmla), varMsg)
 	// In Python this raises; we panic-wrap it via the caller's error handling
 	panic(&FragmentError{Message: "The verification condition is not in the fragment FAU.\n\n" + msg})
 }
