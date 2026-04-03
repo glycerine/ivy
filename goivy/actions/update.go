@@ -1406,7 +1406,7 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
 			newMod, transrelNode, precondNode := provider.GetUpdateAxioms(modified, action)
-			if xtracer.Enabled {
+			if xtracer.Enabled && (len(modified) > 0 || len(newMod) > 0) {
 				oldShow := make([]string, len(modified))
 				for j, s := range modified {
 					oldShow[j] = fmt.Sprintf("'%v'", s.Name)

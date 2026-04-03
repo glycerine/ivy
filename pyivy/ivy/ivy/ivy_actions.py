@@ -212,7 +212,8 @@ class Action(AST):
             updated,transrel,precond = u.get_update_axioms(updated,self)
             if __debug__:
                 new_mod = [s.name for s in updated] if updated is not None else 'None'
-                xtracer.trace("actions.applyUpdateAxioms axiom modNames=%s -> newModNames=%s hasTR=%s hasPre=%s" % (sorted(old_updated), sorted(new_mod), transrel is not None, precond is not None))
+                if old_updated and old_updated != 'None' or new_mod and new_mod != 'None':
+                    xtracer.trace("actions.applyUpdateAxioms axiom modNames=%s -> newModNames=%s hasTR=%s hasPre=%s" % (sorted(old_updated), sorted(new_mod), transrel is not None, precond is not None))
            # TODO: do something with the precondition
 #            if transrel:
 ##                print "updated: {}".format(updated)
