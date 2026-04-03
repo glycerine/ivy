@@ -17,6 +17,7 @@ package fragment
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
@@ -739,6 +740,18 @@ func CheckFEU(
 
 	if xtracer.Enabled {
 		//xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap, newAssumes is: HASH canon= %s", newAssumes.Canon())
+
+		// Dump sig.Interp keys for cross-language comparison
+		if c.sig != nil {
+			interpKeys := make([]string, 0, len(c.sig.Interp))
+			for k := range c.sig.Interp {
+				interpKeys = append(interpKeys, k)
+			}
+			sort.Strings(interpKeys)
+			xtracer.Trace("fragment sig.Interp keys: %v", interpKeys)
+		} else {
+			xtracer.Trace("fragment sig.Interp keys: nil (no sig)")
+		}
 
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
 	}

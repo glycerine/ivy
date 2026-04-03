@@ -474,6 +474,8 @@ def check_feu(assumes,asserts,macros):
         ## AttributeError: 'list' object has no attribute 'canon':
         ## xtracer.trace("fragment/fragment.go CheckFEU after createStratMap, newAssumes is: HASH canon= %s" % assumes.canon())
 
+        # Dump sig.interp keys for cross-language comparison
+        xtracer.trace("fragment sig.interp keys: %s" % sorted(il.sig.interp.keys()))
         xtracer.trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s" % checker_canon())
 
     # Check for cycles in the stratification graph.
