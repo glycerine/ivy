@@ -41,15 +41,16 @@ def sorted_map_canon(m, key_fn, val_fn):
 
 
 # --- strat_map key canonicalization ---
-# Must match Go's "v:", "a:", "s:" prefixes from varKey/appKey/sortEqKey.
+# Must match Go's "v:", "a:" prefixes from varKey/appKey and
+# "(StratNode eq:...)" from eqExprKey.
 
 def strat_key_canon(key):
     """Convert a Python strat_map key to the same string Go uses.
 
     Python strat_map keys are:
-      - Variable objects         -> Go varKey:  "v:" + var.Sexp()
-      - (Symbol, int) tuples     -> Go appKey:  "a:" + sym.Sexp() + ":" + idx
-      - Symbol('=', ...) objects -> Go sortEqKey: "s:" + sym.Sexp()
+      - Variable objects         -> Go varKey:   "v:" + var.Sexp()
+      - (Symbol, int) tuples     -> Go appKey:   "a:" + sym.Sexp() + ":" + idx
+      - Symbol('=', expr) objects -> Go eqExprKey: "(StratNode eq:" + expr.Sexp() + ")"
     """
     from . import ivy_logic as il
     if isinstance(key, tuple):
@@ -57,8 +58,9 @@ def strat_key_canon(key):
         return 'a:{}:{}'.format(sym.sexp(), idx)
     if il.is_variable(key):
         return 'v:{}'.format(key.sexp())
-    # Sort equality key: Symbol('=', ...)
-    return 's:{}'.format(key.sexp())
+    # Equality key: Symbol('=', <expr>) — Go uses (StratNode eq:<expr.Sexp()>)
+    # key.sort is the expression (duck-typed as sort field of the Const)
+    return '(StratNode eq:{})'.format(key.sort.sexp())
 
 
 # --- stratEntry ---

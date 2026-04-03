@@ -536,10 +536,10 @@ property.
 5. **Divergence 3** — `pol` None vs -1. FALSE ALARM. test added. no change needed.
 6. **Divergence 12** — `makeSkolems` recursion with NodeArgs. FALSE ALARM. no change needed.
 7. **Divergence 17** — `makeSkolems` source parameter. FIXED.
+8. **Divergence 1** — Equality key construction. FIXED.
 
 still todo:
 
-8. **Divergence 1** — Equality key construction (Medium, needs analysis)
 9. **Divergence 5** — used_variables_ast vs FreeVariables (Low-Medium)
 10. **Divergence 4** — macro_map key type (Low)
 11. **Divergence 7** — free_variables matching by name (Low)

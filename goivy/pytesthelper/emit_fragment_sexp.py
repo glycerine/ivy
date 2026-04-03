@@ -105,9 +105,9 @@ emit("varID_other", var_id_canon(Y))
 # ---- strat_key vectors ----
 emit("strat_key_var", strat_key_canon(X))
 emit("strat_key_app", strat_key_canon((sym, 2)))
-# Sort equality key: Symbol('=', sort) — note Python uses il.Symbol = lg.Const
-sort_eq_sym = il.Symbol('=', S)
-emit("strat_key_sort", strat_key_canon(sort_eq_sym))
+# Expression equality key: Symbol('=', expr) — Go eqExprKey uses (StratNode eq:<expr.Sexp()>)
+eq_expr_sym = il.Symbol('=', X)
+emit("strat_key_expr", strat_key_canon(eq_expr_sym))
 
 # ---- stratEntry vectors ----
 emit("strat_entry_var", strat_entry_canon(X))

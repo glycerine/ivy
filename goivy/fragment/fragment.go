@@ -58,8 +58,13 @@ func appKey(sym *lg.Const, idx int) lg.NodeKey {
 	return lg.NodeKey(fmt.Sprintf("a:%s:%d", lg.Key(sym), idx))
 }
 
-func sortEqKey(sort lg.Sort) lg.NodeKey {
-	return lg.NodeKey("s:" + string(lg.Key(lg.NewConst("=", sort))))
+// eqExprKey returns a strat_map key for an equality node keyed on the expression,
+// matching Python: il.Symbol('=', fmla.args[0]) which creates Const('=', <expression>)
+// and uses it as a dict key via recstruct hashing on (name, sort=expression).
+// Uses (StratNode ...) — a unique s-expression tag not used by any AST type —
+// to avoid collisions with real Const.Sexp() entries that use (Symbol ...).
+func eqExprKey(expr lg.Expr) lg.NodeKey {
+	return lg.NodeKey(fmt.Sprintf("(StratNode eq:%v)", lg.Key(expr)))
 }
 
 // arc represents a directed edge in the stratification graph.
@@ -238,7 +243,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 		eq := fmla.(*lg.Eq)
 		sort := eq.T1.NodeSort()
 		if !il.IsInterpretedSort(c.sig, sort) {
-			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
+			sSigma := c.getStratNodeWith(eqExprKey(eq.T1), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
 			for i, r := range reses {
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)

@@ -75,10 +75,10 @@ func buildAllFragmentSexps(t *testing.T) map[string]string {
 		"varID_simple": string(varID{name: "X", sort: "S"}.Sexp()),
 		"varID_other":  string(varID{name: "Y", sort: "S"}.Sexp()),
 
-		// strat_key (Go varKey/appKey/sortEqKey)
+		// strat_key (Go varKey/appKey/eqExprKey)
 		"strat_key_var":  string(varKey(f.X)),
 		"strat_key_app":  string(appKey(f.sym, 2)),
-		"strat_key_sort": string(sortEqKey(f.S)),
+		"strat_key_expr": string(eqExprKey(f.X)),
 
 		// stratEntry
 		"strat_entry_var": string((&stratEntry{v: f.X}).Sexp()),
