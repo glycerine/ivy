@@ -505,7 +505,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 		for {
 			goCheck, err = goivyR.ReadString('\n')
 			if err != nil {
-				fmt.Printf("stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
+				handleEOF(t, "go", goCheck, ivyR, "py", i)
 				return
 			}
 			if strings.HasPrefix(goCheck, "XTRACE:") {
@@ -519,7 +519,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 		for {
 			ivCheck, err = ivyR.ReadString('\n')
 			if err != nil {
-				fmt.Printf("stopping on (i=%v) ivy_check error %v\n", i, err)
+				handleEOF(t, "py", ivCheck, goivyR, "go", i)
 				return
 			}
 			if strings.HasPrefix(ivCheck, "XTRACE:") {
@@ -635,6 +635,38 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}
+}
+
+// handleEOF is called when one process hits EOF. It prints the final
+// data from the dead process, shows what the surviving process does
+// next, and fails the test.
+func handleEOF(t *testing.T, deadName string, deadData string,
+	aliveReader *bufio.Reader, aliveName string, i int) {
+	t.Helper()
+	// 1. Print any data returned alongside the EOF (ReadString returns
+	//    partial data before the error — the current code was discarding this).
+	if trimmed := strings.TrimSpace(deadData); trimmed != "" {
+		fmt.Printf("~%s[final at i=%d]: %s\n", deadName, i, trimmed)
+	}
+	// 2. Read up to 10 more XTRACE lines from the surviving process
+	//    to show where it continues that the dead process didn't.
+	fmt.Printf("\n=== %s died at XTRACE line %d, but %s continues: ===\n", deadName, i, aliveName)
+	shown := 0
+	for shown < 10 {
+		line, err := aliveReader.ReadString('\n')
+		line = strings.TrimRight(line, "\n")
+		if line != "" {
+			fmt.Printf("  %s[i=%d+%d]: %s\n", aliveName, i, shown, line)
+			if strings.HasPrefix(line, "XTRACE:") {
+				shown++
+			}
+		}
+		if err != nil {
+			fmt.Printf("  (%s also hit %v)\n", aliveName, err)
+			break
+		}
+	}
+	t.Fatalf("%s exited at XTRACE line %d while %s continues", deadName, i, aliveName)
 }
 
 const fullXtraceToDir string = ".."
