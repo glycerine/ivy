@@ -738,6 +738,8 @@ func CheckFEU(
 	c.createStratMap(newAssumes, newAsserts, newMacros)
 
 	if xtracer.Enabled {
+		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap, newAssumes is: HASH canon= %s", newAssumes.Canon())
+
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
 	}
 
