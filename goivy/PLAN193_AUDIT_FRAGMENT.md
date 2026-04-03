@@ -531,7 +531,101 @@ property.
 12. **Divergence 9** — Definition recursion check 
 13. **Divergence 10/11** — Error reporting differences 
 
-still todo:
+14. **Divergence 13** — has_integer_interp sig passing. FALSE ALARM. not real.
 
-14. **Divergence 13** — has_integer_interp sig passing 
+Divergence 13 flags that Python's has_integer_interp(sort) accesses the global
+ il.sig.interp implicitly, while Go's HasIntegerInterp(sort, c.flatInterp()) passes
+  the interpretation map explicitly. The question is whether this is a real
+ behavioral divergence.
 
+ Deep Trace
+
+ Python side (ivy_fragment.py:188, ivy_theory.py:176-181)
+
+ def has_integer_interp(sort):
+     name = sort.name                    # string key from sort object
+     if name in il.sig.interp:           # looks up in global sig.interp dict
+         interp = il.sig.interp[name]
+         return interp in ['int','nat'] or isinstance(interp, il.RangeSort)
+     return False
+
+ Called from is_arithmetic_literal at ivy_fragment.py:188:
+ thy.has_integer_interp(app.args[0].sort)
+
+ Go side (fragment.go:354, theory/theory.go:236-252)
+
+ func HasIntegerInterp(sort lg.Sort, interp map[string]interface{}) bool {
+     name := sort.String()               // string key from sort object
+     v, ok := interp[name]               // looks up in explicit interp map
+     if !ok { return false }
+     switch val := v.(type) {
+     case string:  return val == "int" || val == "nat"
+     case *lg.RangeSort: return true
+     }
+     return false
+ }
+
+ Called from isArithmeticLiteral at fragment.go:354:
+ thy.HasIntegerInterp(sort, c.flatInterp())
+
+ Where c.flatInterp() simply returns c.interp (line 378).
+
+ Data source equivalence
+
+ ┌────────────┬────────────────────────────────┬──────────────────────────────┐
+ │   Aspect   │             Python             │              Go              │
+ ├────────────┼────────────────────────────────┼──────────────────────────────┤
+ │ Key        │ sort.name (attribute)          │ sort.String() (method)       │
+ │ derivation │                                │                              │
+ ├────────────┼────────────────────────────────┼──────────────────────────────┤
+ │            │                                │ Same —                       │
+ │ Key value  │ e.g. "nat", "pid"              │ UninterpretedSort.String()   │
+ │            │                                │ returns s.Name               │
+ ├────────────┼────────────────────────────────┼──────────────────────────────┤
+ │            │                                │ c.interp (copied from        │
+ │ Map source │ il.sig.interp (global)         │ m.Sig.Interp at              │
+ │            │                                │ CheckFragment line 993-998)  │
+ ├────────────┼────────────────────────────────┼──────────────────────────────┤
+ │ Map        │ {string →                      │ Same: map[string]interface{} │
+ │ contents   │ string/"int"/"nat"/RangeSort}  │  with same values            │
+ ├────────────┼────────────────────────────────┼──────────────────────────────┤
+ │ Value      │ interp in ['int','nat'] or     │ val == "int" || val == "nat" │
+ │ check      │ isinstance(interp, RangeSort)  │  or *lg.RangeSort type       │
+ │            │                                │ assertion                    │
+ └────────────┴────────────────────────────────┴──────────────────────────────┘
+
+ Why the data is identical
+
+ 1. sort.name (Python) and sort.String() (Go) produce the same string for all sort
+ types — verified by reading both implementations in logic.py:21-24 and
+ logic/sort.go:34.
+ 2. il.sig.interp (Python global) and m.Sig.Interp (Go field) hold the same
+ interpretation data — both are populated by the compiler during sort declaration
+ processing.
+ 3. Go copies m.Sig.Interp into a local interp map at the start of CheckFragment()
+ before any checking begins. The interpretation map is read-only during fragment
+ checking, so the copy is equivalent to a live reference.
+ 4. The explicit parameter passing in Go is required by CLAUDE.md rule C ("NO
+ GLOBAL VARIABLES"). This is a deliberate structural choice, not a behavioral
+ difference.
+
+ Verdict: FALSE ALARM
+
+ Divergence 13 is not a real behavioral divergence. The Go code correctly passes
+ the same interpretation data explicitly that Python accesses implicitly through a
+ global. Both functions:
+
+ - Look up the same key (sort name string)
+ - In the same map (signature's interpretation map)
+ - Check for the same values ("int", "nat", RangeSort)
+ - Return the same boolean result
+
+ No code changes are needed. The PLAN193 audit entry should be updated to mark this
+  as resolved.
+
+ Action
+
+ Update PLAN193_AUDIT_FRAGMENT.md priority list entry for divergence 13 to: FALSE
+ ALARM. Go explicitly passes the same interp map that Python accesses via global
+ il.sig.interp. sort.String() == sort.name for all sort types. No change needed.
+-----
