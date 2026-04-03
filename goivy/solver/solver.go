@@ -401,9 +401,17 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
 }
 
 // translateClosed converts a formula to Z3, universally quantifying free variables.
-func (s *Solver) translateClosed(fmla lg.Expr) (z3bridge.Expr, error) {
+func (s *Solver) translateClosed(fmla lg.Expr) (x z3bridge.Expr, err error) {
 	closed := il.CloseFormula(fmla)
-	return s.tr.Translate(closed)
+	defer func() {
+		r := recover()
+		if r != nil {
+			vv("warning: recover from panic on il.CloseFormula(): '%v'", r)
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+	x, err = s.tr.Translate(closed)
+	return
 }
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
