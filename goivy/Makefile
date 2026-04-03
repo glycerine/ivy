@@ -137,7 +137,8 @@ pprof-full:  # Full profile with CPU/mem profiling
 
 vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
-	make golden 
-	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 181000 { print } NR == 181000 { exit }' &> py.ord.out
+	@if [ -f log.red ]; then mv log.red log.red.prev; fi
+	-cd lalr_full && go test -v -run TestOrdLive &> ../log.red
+	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | tee py.ord.out | awk 'NR <= 181000 { print } NR == 181000 { exit }'
 	goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	diff py.ord.out log.gox > diffs
