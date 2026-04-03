@@ -1807,9 +1807,10 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	if xtracer.Enabled {
 		modNames := make([]string, len(update.Modified))
 		for i, m := range update.Modified {
-			modNames[i] = m.Name
+			modNames[i] = fmt.Sprintf("'%v'", m.Name)
 		}
-		xtracer.Trace("actions.LocalAction.int_update bodyType=%s bodyModified=%v", ActionTypeName(bodyAct), modNames)
+		sort.Strings(modNames)
+		xtracer.Trace("actions.LocalAction.int_update bodyType=%s bodyModified=[%v]", ActionTypeName(bodyAct), strings.Join(modNames, ", "))
 	}
 
 	// Collect symbols to hide
