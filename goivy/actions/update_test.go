@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/transrel"
@@ -257,6 +258,186 @@ func TestGetUpdateHidesFormals(t *testing.T) {
 		if m.Name == "fml:x" {
 			t.Error("GetUpdate should hide formal params from modified")
 		}
+	}
+}
+
+// --- hideFormals __prefix tests ---
+
+// formulaContainsName checks if a formula references a constant with the given name.
+func formulaContainsName(node lg.Expr, name string) bool {
+	if node == nil {
+		return false
+	}
+	if c, ok := node.(*lg.Const); ok {
+		return c.Name == name
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		if formulaContainsName(app.Func, name) {
+			return true
+		}
+	}
+	for _, ch := range node.Children() {
+		if formulaContainsName(ch, name) {
+			return true
+		}
+	}
+	return false
+}
+
+// formulaContainsPrefix checks if any constant name in the formula starts with prefix.
+func formulaContainsPrefix(node lg.Expr, prefix string) bool {
+	if node == nil {
+		return false
+	}
+	if c, ok := node.(*lg.Const); ok {
+		return strings.HasPrefix(c.Name, prefix)
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		if formulaContainsPrefix(app.Func, prefix) {
+			return true
+		}
+	}
+	for _, ch := range node.Children() {
+		if formulaContainsPrefix(ch, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
+// collectConstNames returns all constant names in a formula.
+func collectConstNames(node lg.Expr, out map[string]bool) {
+	if node == nil {
+		return
+	}
+	if c, ok := node.(*lg.Const); ok {
+		out[c.Name] = true
+		return
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		collectConstNames(app.Func, out)
+	}
+	for _, ch := range node.Children() {
+		collectConstNames(ch, out)
+	}
+}
+
+// TestHideFormalsRenamesWithDoubleUnderscore verifies that hideFormals
+// (via transrel.Hide → ExistQuantClauses) renames formal params and their
+// new_ versions with __ prefix. This is the core mechanism that should
+// produce __new_loc:wr from new_loc:wr in the fragment checker.
+func TestHideFormalsRenamesWithDoubleUnderscore(t *testing.T) {
+	// Create symbols with a non-TopS sort (UninterpretedSort).
+	// This is critical — the original bug was that TopS-keyed lookups
+	// failed to match constants with real sorts.
+	mySort := &lg.UninterpretedSort{Name: "mytype"}
+	loc := lg.NewConst("loc", mySort)
+	val := lg.NewConst("val", mySort)
+
+	// Create "loc := val" assignment — this produces new_loc in the TR
+	asgn := NewAssignAction(loc, val)
+	asgn.SetFormalParams([]*lg.Const{loc})
+
+	ctx := testCtx()
+	// Step 1: IntUpdate — should produce new_loc in TR
+	u := IntUpdate(asgn, ctx)
+	trFormula := u.TRNode()
+	t.Logf("After IntUpdate, TR formula: %v", trFormula)
+
+	names := make(map[string]bool)
+	collectConstNames(trFormula, names)
+	t.Logf("After IntUpdate, constant names: %v", names)
+
+	if !formulaContainsName(trFormula, "new_loc") {
+		t.Logf("IntUpdate TR does not contain new_loc (may use different structure)")
+	}
+
+	// Step 2: BindOldsAction
+	u = transrel.BindOldsAction(u)
+
+	// Step 3: hideFormals — should rename loc and new_loc with __ prefix
+	u = hideFormals(asgn, u)
+	trAfterHide := u.TRNode()
+
+	names2 := make(map[string]bool)
+	collectConstNames(trAfterHide, names2)
+	t.Logf("After hideFormals, constant names: %v", names2)
+
+	// The bare "loc" should NOT appear (it was hidden)
+	if formulaContainsName(trAfterHide, "loc") {
+		t.Error("After hideFormals, bare 'loc' should be renamed with __ prefix")
+	}
+
+	// The bare "new_loc" should NOT appear (it was hidden)
+	if formulaContainsName(trAfterHide, "new_loc") {
+		t.Error("After hideFormals, bare 'new_loc' should be renamed with __ prefix")
+	}
+
+	// There should be some __-prefixed name
+	if !formulaContainsPrefix(trAfterHide, "__") {
+		t.Error("After hideFormals, expected at least one __-prefixed constant")
+	}
+}
+
+// TestHideFormalsWithTopSSort verifies that Hide works even when the
+// formal param has TopS sort (the original code's assumption).
+func TestHideFormalsWithTopSSort(t *testing.T) {
+	loc := lg.NewConst("loc", lg.TopS)
+	x := lg.NewConst("x", lg.TopS)
+	asgn := NewAssignAction(loc, x)
+	asgn.SetFormalParams([]*lg.Const{loc})
+
+	ctx := testCtx()
+	u := IntUpdate(asgn, ctx)
+	u = transrel.BindOldsAction(u)
+	u = hideFormals(asgn, u)
+	trAfterHide := u.TRNode()
+
+	names := make(map[string]bool)
+	collectConstNames(trAfterHide, names)
+	t.Logf("After hideFormals (TopS), constant names: %v", names)
+
+	if formulaContainsName(trAfterHide, "loc") {
+		t.Error("After hideFormals, bare 'loc' should be renamed")
+	}
+	if formulaContainsName(trAfterHide, "new_loc") {
+		t.Error("After hideFormals, bare 'new_loc' should be renamed")
+	}
+}
+
+// TestTransrelHideDirectly tests transrel.Hide directly with a
+// FunctionSort symbol to verify ExistQuantClauses works with real sorts.
+func TestTransrelHideDirectly(t *testing.T) {
+	mySort := &lg.UninterpretedSort{Name: "mytype"}
+	loc := lg.NewConst("loc", mySort)
+	newLoc := lg.NewConst("new_loc", mySort)
+
+	// Build a simple update with loc in Modified and new_loc in TR
+	eq, _ := lg.NewEq(newLoc, loc)
+	tr := &lg.And{Terms: []lg.Expr{eq}}
+
+	u := &transrel.Update{
+		Modified: []*lg.Const{loc},
+		TR:       co.FormulaToClauses(tr, nil),
+		Pre:      co.FormulaToClauses(lg.False, nil),
+	}
+
+	// Hide loc — should also hide new_loc, both renamed with __
+	hidden := transrel.Hide([]*lg.Const{loc}, u)
+	trFormula := hidden.TRNode()
+
+	names := make(map[string]bool)
+	collectConstNames(trFormula, names)
+	t.Logf("After Hide (FunctionSort), constant names: %v", names)
+
+	if formulaContainsName(trFormula, "loc") {
+		t.Errorf("After Hide, bare 'loc' should be renamed to __loc, got names: %v", names)
+	}
+	if formulaContainsName(trFormula, "new_loc") {
+		t.Errorf("After Hide, bare 'new_loc' should be renamed to __new_loc, got names: %v", names)
+	}
+	if !formulaContainsPrefix(trFormula, "__") {
+		t.Errorf("After Hide, expected __-prefixed constants, got names: %v", names)
 	}
 }
 
