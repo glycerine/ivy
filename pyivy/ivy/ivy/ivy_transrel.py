@@ -308,7 +308,7 @@ def compose_updates(update1,axioms,update2):
     if __debug__:
         u1n = [s.name for s in updated1] if updated1 is not None else 'None'
         u2n = [s.name for s in updated2] if updated2 is not None else 'None'
-        xtracer.trace("transrel.ComposeUpdates ENTER u1.Modified=%s(modAll=%s) u2.Modified=%s(modAll=%s)" % (u1n, updated1 is None, u2n, updated2 is None))
+        xtracer.trace("transrel.ComposeUpdates ENTER u1.Modified=%s(modAll=%s) u2.Modified=%s(modAll=%s)" % (sorted(u1n), updated1 is None, sorted(u2n), updated2 is None))
     clauses2 = rename_distinct(clauses2,clauses1)
     pre2 = rename_distinct(pre2,clauses1)
 #    print "clauses2 = {}".format(clauses2)
@@ -336,7 +336,7 @@ def compose_updates(update1,axioms,update2):
     new_updated = list(us1.union(us2))
     if __debug__:
         nun = [s.name for s in new_updated] if new_updated is not None else 'None'
-        xtracer.trace("transrel.ComposeUpdates newUpdated=%s(modAll=%s)" % (nun, new_updated is None))
+        xtracer.trace("transrel.ComposeUpdates newUpdated=%s(modAll=%s)" % (sorted(nun), new_updated is None))
 #    print "pre1 before = {}".format(pre1)
 #    iu.dbg('pre1.annot')
 #    iu.dbg('pre1')
