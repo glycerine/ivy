@@ -505,7 +505,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 		for {
 			goCheck, err = goivyR.ReadString('\n')
 			if err != nil {
-				fmt.Printf("stopping on goivy_check_xtrace error %v\n", err)
+				fmt.Printf("stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
 				return
 			}
 			if strings.HasPrefix(goCheck, "XTRACE:") {
@@ -519,7 +519,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 		for {
 			ivCheck, err = ivyR.ReadString('\n')
 			if err != nil {
-				fmt.Printf("stopping on ivy_check error %v\n", err)
+				fmt.Printf("stopping on (i=%v) ivy_check error %v\n", i, err)
 				return
 			}
 			if strings.HasPrefix(ivCheck, "XTRACE:") {

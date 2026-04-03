@@ -176,7 +176,7 @@ def checker_canon():
     parts.append(' interp:nil')
 
     # universallyQuantifiedVars - can infinite loop, so skip.
-    uqv = getattr(frag, 'universally_quantified_variables', None)
+    #uqv = getattr(frag, 'universally_quantified_variables', None)
     # parts.append(' universallyQuantifiedVars:')
     # if uqv is None:
     #     parts.append('nil')
@@ -188,19 +188,19 @@ def checker_canon():
     # universalVarLineno — Python doesn't separate this; lineno comes from
     # the labeled_formula value in universally_quantified_variables.
     # Emit the lineno extracted from the lf source.
-    parts.append(' universalVarLineno:')
-    if uqv is None:
-        parts.append('nil')
-    else:
-        lineno_pairs = {}
-        for v, lf in uqv.items():
-            ln = getattr(lf, 'lineno', 0)
-            if hasattr(ln, 'line'):
-                ln = ln.line
-            lineno_pairs[v] = ln
-        parts.append(sorted_map_canon(lineno_pairs,
-            lambda k: str(var_id_canon(k)),
-            lambda v: str(v)))
+    # parts.append(' universalVarLineno:')
+    # if uqv is None:
+    #     parts.append('nil')
+    # else:
+    #     lineno_pairs = {}
+    #     for v, lf in uqv.items():
+    #         ln = getattr(lf, 'lineno', 0)
+    #         if hasattr(ln, 'line'):
+    #             ln = ln.line
+    #         lineno_pairs[v] = ln
+    #     parts.append(sorted_map_canon(lineno_pairs,
+    #         lambda k: str(var_id_canon(k)),
+    #         lambda v: str(v)))
 
     # stratMap
     sm = getattr(frag, 'strat_map', None)

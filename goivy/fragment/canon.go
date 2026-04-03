@@ -352,15 +352,19 @@ func (c *checker) Sexp() lg.NodeKey {
 
 	// interp
 	b.WriteString(" interp:")
-	b.WriteString(stringInterfaceMapSexp(c.interp))
+	if len(c.interp) == 0 {
+		b.WriteString("nil")
+	} else {
+		b.WriteString(stringInterfaceMapSexp(c.interp))
+	}
 
 	// universallyQuantifiedVars - can infinitely loop, so skip.
 	//b.WriteString(" universallyQuantifiedVars:")
 	//b.WriteString(varIDVarMapSexp(c.universallyQuantifiedVars))
 
 	// universalVarLineno
-	b.WriteString(" universalVarLineno:")
-	b.WriteString(varIDIntMapSexp(c.universalVarLineno))
+	//b.WriteString(" universalVarLineno:")
+	//b.WriteString(varIDIntMapSexp(c.universalVarLineno))
 
 	// stratMap
 	b.WriteString(" stratMap:")
