@@ -34,7 +34,9 @@ func acfg(lex v17Lexer) *ast.AstConfig {
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
-		Filename: normalizeFilename(lex.filename),
+		//Filename: normalizeFilename(lex.filename),
+                // xtracer.NormalizeLine handles IVY_EXAMPLES too:
+                Filename: xtracer.NormalizeLine(lex.filename),
 		Line:     lex.prevTok.Line,
 	}
 }
