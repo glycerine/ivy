@@ -759,7 +759,7 @@ func CheckFEU(
 			uqvNames = append(uqvNames, fmt.Sprintf("'%s:%s'", vid.name, vid.sort))
 		}
 		sort.Strings(uqvNames)
-		xtracer.Trace("fragment HASH canon= univQuantVars (%d): %v", len(c.universallyQuantifiedVars), strings.Join(uqvNames, ", "))
+		xtracer.Trace("fragment HASH canon= univQuantVars (%d): [%v]", len(c.universallyQuantifiedVars), strings.Join(uqvNames, ", "))
 
 		// Dump strat_map size and keys
 		smKeys := make([]string, 0, len(c.stratMap))
