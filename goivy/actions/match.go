@@ -376,7 +376,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 			}
 			xtracer.Trace("actions.match calling IntUpdate type=%s", ActionTypeName(bodyAction))
 			update := IntUpdate(bodyAction, ctx)
-			if update != nil && update.Modified != nil {
+			if update != nil && !update.ModifiedAll {
 				modset = update.Modified
 			}
 		}

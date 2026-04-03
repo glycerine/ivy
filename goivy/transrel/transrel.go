@@ -105,17 +105,33 @@ func IsGlobalSkolem(name string) bool {
 // list of Symbol objects, and clauses/pre are Clauses objects carrying
 // both formulas and definitions.
 type Update struct {
-	Modified []*lg.Const // nil means "all"; list of modified symbols (with sorts)
+	// Modified is the list of symbols this update modifies.
+	// When ModifiedAll is true, Modified is ignored and the update
+	// modifies all symbols (Python: updated == None, "pure state").
+	// When ModifiedAll is false, Modified lists the specific symbols
+	// (Python: updated == [], "nothing modified", or updated == [sym1,...]).
+	//
+	// NEVER test Modified == nil to check for "all modified" — use
+	// IsModifiedAll() instead. This avoids Go's nil-vs-empty-slice trap.
+	Modified    []*lg.Const
+	ModifiedAll bool // true ↔ Python updated==None; false ↔ Python updated==[]
+
 	TR       *co.Clauses  // transition relation (Clauses with fmlas + defs)
 	Pre      *co.Clauses  // precondition, negative (Clauses with fmlas + defs)
 	TRRaw    lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
 	PreRaw   lg.Expr      // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
+// IsModifiedAll returns true when the update modifies all symbols
+// (Python: updated == None). Use this instead of checking Modified == nil.
+func (u *Update) IsModifiedAll() bool {
+	return u.ModifiedAll
+}
+
 // String returns a human-readable representation of the update.
 func (u *Update) String() string {
 	mod := "all"
-	if u.Modified != nil {
+	if !u.ModifiedAll {
 		mod = fmt.Sprintf("%v", u.Modified)
 	}
 	return fmt.Sprintf("Update{Modified: %s, TR: %s, Pre: %s}", mod, u.TR, u.Pre)
@@ -152,19 +168,19 @@ func NullUpdate() *Update {
 	}
 }
 
-// PureState returns a pure state update from a formula. Modified is nil
-// (meaning "all"), and Pre is false.
+// PureState returns a pure state update from a formula. ModifiedAll=true
+// (meaning "all symbols modified"), and Pre is false.
 func PureState(formula lg.Expr) *Update {
 	return &Update{
-		Modified: nil,
-		TR:       co.FormulaToClauses(formula, nil),
-		Pre:      co.FalseClauses(nil),
+		ModifiedAll: true,
+		TR:          co.FormulaToClauses(formula, nil),
+		Pre:         co.FalseClauses(nil),
 	}
 }
 
-// IsPureState reports whether u is a pure state (Modified is nil).
+// IsPureState reports whether u is a pure state (ModifiedAll == true).
 func IsPureState(u *Update) bool {
-	return u.Modified == nil
+	return u.ModifiedAll
 }
 
 // TopState returns a pure state whose formula is True (all states).
@@ -656,17 +672,21 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	newTR := co.AndClausesTyped(clauses1, co.RenameClauses(co.AndClausesTyped(clauses2, midAx), map2))
 
 	// Combined modified set
-	newUpdated := UpdatedJoinConst(updated1, updated2)
+	modAll := u1.ModifiedAll || u2.ModifiedAll
+	var newUpdated []*lg.Const
+	if !modAll {
+		newUpdated = UpdatedJoinConst(updated1, updated2)
+	}
 	if xtracer.Enabled {
 		nun := make([]string, len(newUpdated))
 		for i, m := range newUpdated {
 			nun[i] = m.Name
 		}
-		xtracer.Trace("transrel.ComposeUpdates newUpdated=%v(nil=%v)", nun, newUpdated == nil)
+		xtracer.Trace("transrel.ComposeUpdates newUpdated=%v(modAll=%v)", nun, modAll)
 	}
 
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
-	pre1 = co.AndClausesTyped(pre1, DiffFrameConst(updated1, updated2, NewConst, axioms))
+	pre1 = co.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewConst, axioms))
 
 	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2))
 	temp := co.AndClausesTyped(clauses1, co.RenameClauses(co.AndClausesTyped(pre2, midAx), map2))
@@ -675,9 +695,10 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	newPre := co.OrClausesTyped(pre1, temp)
 
 	return &Update{
-		Modified: newUpdated,
-		TR:       newTR,
-		Pre:      newPre,
+		Modified:    newUpdated,
+		ModifiedAll: modAll,
+		TR:          newTR,
+		Pre:         newPre,
 	}
 }
 
@@ -748,23 +769,28 @@ func JoinState(u1, u2 *Update, axioms *co.Clauses) *Update {
 // joinUpdate implements the generic join operation for both action and state styles.
 // Faithfully ports Python's join(s1, s2, op, axioms) (ivy_transrel.py:189-201).
 func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
-	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
-	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
+	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
+	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
 
 	c1 := co.AndClausesTyped(u1.TR, df12)
 	c2 := co.AndClausesTyped(u2.TR, df21)
 	p1 := co.AndClausesTyped(u1.Pre, df12)
 	p2 := co.AndClausesTyped(u2.Pre, df21)
 
-	u := UpdatedJoinConst(u1.Modified, u2.Modified)
+	modAll := u1.ModifiedAll || u2.ModifiedAll
+	var u []*lg.Const
+	if !modAll {
+		u = UpdatedJoinConst(u1.Modified, u2.Modified)
+	}
 
 	c := co.OrClausesTyped(c1, c2)
 	p := co.OrClausesTyped(p1, p2)
 
 	return &Update{
-		Modified: u,
-		TR:       c,
-		Pre:      p,
+		Modified:    u,
+		ModifiedAll: modAll,
+		TR:          c,
+		Pre:         p,
 	}
 }
 
@@ -788,24 +814,29 @@ func IteState(cond lg.Expr, u1, u2 *Update, axioms *co.Clauses) *Update {
 // iteUpdate implements the generic if-then-else for both action and state styles.
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
 func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
-	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
-	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
+	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
+	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
 
 	c1 := co.AndClausesTyped(u1.TR, df12)
 	c2 := co.AndClausesTyped(u2.TR, df21)
 	p1 := co.AndClausesTyped(u1.Pre, df12)
 	p2 := co.AndClausesTyped(u2.Pre, df21)
 
-	u := UpdatedJoinConst(u1.Modified, u2.Modified)
+	modAll := u1.ModifiedAll || u2.ModifiedAll
+	var u []*lg.Const
+	if !modAll {
+		u = UpdatedJoinConst(u1.Modified, u2.Modified)
+	}
 
 	// Python: c = ite_clauses(cond, [c1, c2])
 	c := co.IteClauses(cond, c1, c2)
 	p := co.IteClauses(cond, p1, p2)
 
 	return &Update{
-		Modified: u,
-		TR:       c,
-		Pre:      p,
+		Modified:    u,
+		ModifiedAll: modAll,
+		TR:          c,
+		Pre:         p,
 	}
 }
 
@@ -837,7 +868,7 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 		symNames[s.Name] = true
 	}
 	// Also hide new_ versions of modified symbols that are being hidden
-	if u.Modified != nil {
+	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
 				toHide = append(toHide, NewConst(s))
@@ -845,8 +876,8 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 		}
 	}
 	// Compute new modified list (excluding hidden symbols)
-	var newMod []*lg.Const
-	if u.Modified != nil {
+	newMod := make([]*lg.Const, 0)
+	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if !symNames[s.Name] {
 				newMod = append(newMod, s)
@@ -873,9 +904,10 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return &Update{
-		Modified: newMod,
-		TR:       newTR,
-		Pre:      newPre,
+		Modified:    newMod,
+		ModifiedAll: u.ModifiedAll,
+		TR:          newTR,
+		Pre:         newPre,
 	}
 }
 
@@ -909,8 +941,8 @@ func HideState(syms []*lg.Const, u *Update) *Update {
 	for _, s := range syms {
 		symNames[s.Name] = true
 	}
-	var newMod []*lg.Const
-	if u.Modified != nil {
+	newMod := make([]*lg.Const, 0)
+	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
 				toHide = append(toHide, OldConst(s))
@@ -926,9 +958,10 @@ func HideState(syms []*lg.Const, u *Update) *Update {
 	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return &Update{
-		Modified: newMod,
-		TR:       newTR,
-		Pre:      newPre,
+		Modified:    newMod,
+		ModifiedAll: u.ModifiedAll,
+		TR:          newTR,
+		Pre:         newPre,
 	}
 }
 
@@ -941,8 +974,8 @@ func HideStateMap(syms []*lg.Const, u *Update) (map[lg.NodeKey]*lg.Const, *Updat
 	for _, s := range syms {
 		symNames[s.Name] = true
 	}
-	var newMod []*lg.Const
-	if u.Modified != nil {
+	newMod := make([]*lg.Const, 0)
+	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
 				toHide = append(toHide, OldConst(s))
@@ -959,9 +992,10 @@ func HideStateMap(syms []*lg.Const, u *Update) (map[lg.NodeKey]*lg.Const, *Updat
 	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return trMap, &Update{
-		Modified: newMod,
-		TR:       co.FormulaToClauses(newTRNode, nil),
-		Pre:      newPre,
+		Modified:    newMod,
+		ModifiedAll: u.ModifiedAll,
+		TR:          co.FormulaToClauses(newTRNode, nil),
+		Pre:         newPre,
 	}
 }
 
@@ -1137,6 +1171,7 @@ func ComposeStateAction(
 ) (*Update, error) {
 	// Faithful port of Python compose_state_action (ivy_transrel.py:464-488).
 	su := state.Modified
+	suAll := state.ModifiedAll
 	sc := state.TR
 	sp := state.Pre
 	au := action.Modified
@@ -1174,7 +1209,7 @@ func ComposeStateAction(
 
 	// Rename state clauses: for symbols modified by action but not yet modified
 	// in state, rename x → old(x)
-	if su != nil {
+	if !suAll {
 		ssu := constNames(su)
 		rn := make(map[lg.NodeKey]*lg.Const)
 		for _, x := range au {
@@ -1193,9 +1228,10 @@ func ComposeStateAction(
 	// Compute forward image
 	img := ForwardImage(sc.ToOpenFormula(), axioms, action)
 	return &Update{
-		Modified: su,
-		TR:       co.FormulaToClauses(img, nil),
-		Pre:      sp,
+		Modified:    su,
+		ModifiedAll: suAll,
+		TR:          co.FormulaToClauses(img, nil),
+		Pre:         sp,
 	}, nil
 }
 
@@ -1364,7 +1400,7 @@ func ConstrainState(u *Update, fmla lg.Expr) *Update {
 // true, the update applies; otherwise symbols keep their previous values
 // (frame condition). Corresponds to Python's condition_update_on_fmla.
 func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
-	if u.Modified == nil {
+	if u.ModifiedAll {
 		return ConstrainState(u, fmla)
 	}
 	// Build frame as Clauses with definitions
@@ -1602,10 +1638,10 @@ func OldConst(sym *lg.Const) *lg.Const {
 }
 
 // UpdatedJoinConst computes the union of two Modified lists (by name, deduped).
+// Callers must check ModifiedAll before calling — if either update has
+// ModifiedAll=true, the result should also be ModifiedAll=true (return nil
+// and set the flag). This function only handles the non-All case.
 func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
-	if u1 == nil || u2 == nil {
-		return nil
-	}
 	// Use Sexp-based structural identity to match Python's set union
 	// of Symbol objects with structural equality (name + sort).
 	seen := make(map[lg.NodeKey]bool)
@@ -1627,12 +1663,18 @@ func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
 	return result
 }
 
+// DiffFrameConstUpdate builds frame definitions using Update structs,
+// checking ModifiedAll instead of nil slices.
+func DiffFrameConstUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *co.Clauses {
+	if u1.ModifiedAll || u2.ModifiedAll {
+		return co.TrueClauses(nil)
+	}
+	return DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
+}
+
 // DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
 // op is NewConst or OldConst.
 func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *co.Clauses {
-	if updated1 == nil || updated2 == nil {
-		return co.TrueClauses(nil)
-	}
 	u1Set := constNames(updated1)
 	// Also exclude symbols that are defined in axioms
 	defnd := make(map[lg.NodeKey]bool)
@@ -1660,7 +1702,7 @@ func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
 
 // ModifiedNames extracts string names from the Modified list.
 func ModifiedNames(u *Update) []string {
-	if u.Modified == nil {
+	if u.ModifiedAll {
 		return nil
 	}
 	names := make([]string, len(u.Modified))
@@ -1691,7 +1733,7 @@ type Renaming map[string]string
 // NewHistory creates a history from a pure-state update.
 func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 	if !IsPureState(state) {
-		panic("NewHistory requires a pure state (Modified == nil)")
+		panic("NewHistory requires a pure state (ModifiedAll == true)")
 	}
 	return &History{
 		Cfg:     cfg,

@@ -15,13 +15,13 @@ func mkConst(name string) *lg.Const {
 
 // mkTestUpdate creates an Update for testing from name lists and node formulas.
 func mkTestUpdate(modNames []string, tr lg.Expr, pre lg.Expr) *Update {
-	// nil modNames means "all" (pure state). Non-nil (even empty) means
-	// a concrete Modified list. Use make() so empty != nil.
+	// nil modNames means "all" (pure state / ModifiedAll=true).
+	// Non-nil (even empty) means a concrete Modified list.
 	if modNames == nil {
 		return &Update{
-			Modified: nil,
-			TR:       co.FormulaToClauses(tr, nil),
-			Pre:      co.FormulaToClauses(pre, nil),
+			ModifiedAll: true,
+			TR:          co.FormulaToClauses(tr, nil),
+			Pre:         co.FormulaToClauses(pre, nil),
 		}
 	}
 	mods := make([]*lg.Const, 0, len(modNames))
@@ -327,9 +327,9 @@ func TestHideNilModifiedQuantifies(t *testing.T) {
 	// Pure state with nil modified
 	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
 	result := Hide([]*lg.Const{mkConst("x")}, u)
-	// Modified stays nil for pure state
-	if result.Modified != nil {
-		t.Error("Hide of pure state should keep nil Modified")
+	// ModifiedAll stays true for pure state
+	if !result.ModifiedAll {
+		t.Error("Hide of pure state should keep ModifiedAll")
 	}
 	// x should be skolemized
 	if formulaContainsName(result.TRNode(), "x") {
@@ -626,8 +626,8 @@ func TestHideState(t *testing.T) {
 func TestHideStateNilModified(t *testing.T) {
 	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
 	result := HideState([]*lg.Const{mkConst("x")}, u)
-	if result.Modified != nil {
-		t.Error("HideState of pure state should keep nil Modified")
+	if !result.ModifiedAll {
+		t.Error("HideState of pure state should keep ModifiedAll")
 	}
 }
 
@@ -808,8 +808,8 @@ func TestComposeUpdatesNilModified(t *testing.T) {
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
 	// nil union anything = nil
-	if result.Modified != nil {
-		t.Error("ComposeUpdates with nil Modified should produce nil")
+	if !result.ModifiedAll {
+		t.Error("ComposeUpdates with ModifiedAll input should produce ModifiedAll")
 	}
 }
 
@@ -892,8 +892,8 @@ func TestJoinActionNilModified(t *testing.T) {
 	u1 := mkTestUpdate(nil, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	result := JoinAction(u1, u2, co.TrueClauses(nil))
-	if result.Modified != nil {
-		t.Error("JoinAction with nil Modified should produce nil")
+	if !result.ModifiedAll {
+		t.Error("JoinAction with ModifiedAll input should produce ModifiedAll")
 	}
 }
 

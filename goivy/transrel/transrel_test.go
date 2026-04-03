@@ -418,9 +418,9 @@ func TestHideNilModified(t *testing.T) {
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
-	// nil Modified (pure state) => hidden result has nil Modified
-	if result.Modified != nil {
-		t.Error("Hide of pure state should have nil Modified")
+	// ModifiedAll (pure state) => hidden result keeps ModifiedAll
+	if !result.ModifiedAll {
+		t.Error("Hide of pure state should have ModifiedAll")
 	}
 }
 

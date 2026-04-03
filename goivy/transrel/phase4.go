@@ -33,7 +33,7 @@ func Rename(sym *lg.Const, rn func(string) string) *lg.Const {
 // For individual symbols, produces an equality constraint.
 // Corresponds to Python's update_frame_constraint.
 func UpdateFrameConstraint(update *Update, relations map[string]int) *co.Clauses {
-	if update.Modified == nil {
+	if update.ModifiedAll {
 		return co.TrueClauses(nil)
 	}
 	var fmlas []lg.Expr
@@ -126,11 +126,11 @@ func ClausesImplyFormulaCex(clauses *co.Clauses, fmla lg.Expr) (bool, *CounterEx
 // Returns true if s1 implies s2, or a *CounterExample if not.
 // Corresponds to Python's implies(s1, s2, axioms, relations, op).
 func Implies(s1, s2 *Update, axioms *co.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
-	if s1.Modified == nil && s2.Modified != nil {
+	if s1.ModifiedAll && !s2.ModifiedAll {
 		return false, nil
 	}
 
-	c1 := co.AndClausesTyped(s1.TR, axioms, DiffFrameConst(s1.Modified, s2.Modified, op, axioms))
+	c1 := co.AndClausesTyped(s1.TR, axioms, DiffFrameConstUpdate(s1, s2, op, axioms))
 	p1 := s1.Pre
 
 	// Python: if isinstance(c2, Clauses) — check whether s2 carries Clauses or raw formulas
