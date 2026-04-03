@@ -1786,6 +1786,14 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 	update := IntUpdate(bodyAct, ctx)
 
+	if xtracer.Enabled {
+		modNames := make([]string, len(update.Modified))
+		for i, m := range update.Modified {
+			modNames[i] = m.Name
+		}
+		xtracer.Trace("actions.LocalAction.int_update bodyType=%s bodyModified=%v", ActionTypeName(bodyAct), modNames)
+	}
+
 	// Collect symbols to hide
 	var symsToHide []*lg.Const
 	for _, local := range a.Locals {

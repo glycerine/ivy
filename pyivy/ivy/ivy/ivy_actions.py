@@ -1132,6 +1132,10 @@ class LocalAction(Action):
     def int_update(self,domain,pvars):
         if __debug__: xtracer.trace("actions.LocalAction.int_update ENTER")
         update = self.args[-1].int_update(domain,pvars)
+        if __debug__:
+            body_type = type(self.args[-1]).__name__
+            body_mod = [s.name for s in update[0]] if update[0] is not None else []
+            xtracer.trace("actions.LocalAction.int_update bodyType=%s bodyModified=%s" % (body_type, body_mod))
 #        syms = used_symbols_asts(self.args[0:-1])
         syms = self.args[0:-1]
 #        print "hiding locals : {}".format(syms)

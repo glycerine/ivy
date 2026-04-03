@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform clean z3ivy z3-build tr trt
+.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -134,3 +134,10 @@ pprof-full:  # Full profile with CPU/mem profiling
 
 # Then inspect
 # go tool pprof cpu.prof
+
+vs-full:
+	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
+	make golden 
+	make ord &> py.ord.out
+	goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
+	diff py.ord.out log.gox > diffs

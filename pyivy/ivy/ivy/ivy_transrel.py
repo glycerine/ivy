@@ -38,6 +38,7 @@ from .ivy_logic_utils import symbols_clauses, used_symbols_clauses, rename_claus
 from .ivy_solver import unsat_core, clauses_imply, clauses_imply_formula, clauses_sat, clauses_case, get_model_clauses, clauses_model_to_clauses, get_small_model, binary_interpolant
 from . import ivy_logic
 from . import ivy_logic_utils as lu
+from . import xtracer
 from . import ivy_utils as iu
 from .logic_util import is_tautology_equality
 
@@ -371,6 +372,12 @@ def constrain_state(upd,fmla):
 def hide(syms,update):
     syms = set(syms)
     syms.update(new(s) for s in update[0] if s in syms)
+    if __debug__:
+        sym_strs = [s.name + ':' + str(s.sort) for s in syms]
+        mod_strs = []
+        if update[0] is not None:
+            mod_strs = [s.name + '(inSymNames=' + str(s in syms) + ')' for s in update[0]]
+        xtracer.trace("transrel.Hide: syms=%s toHide=%s modified=%s" % (sym_strs, sym_strs, mod_strs))
     new_updated = [s for s in update[0] if s not in syms]
     new_tr = exist_quant(syms,update[1])
     new_pre = exist_quant(syms,update[2])
