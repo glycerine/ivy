@@ -832,11 +832,17 @@ class Sequence(Action):
         if __debug__: xtracer.trace("actions.Sequence.int_update ENTER")
         update = ([],true_clauses(EmptyAnnotation()),false_clauses(EmptyAnnotation()))
         axioms = domain.background_theory(pvars)
-        for op in self.args:
+        for i,op in enumerate(self.args):
             thing = op.int_update(domain,pvars);
 #            if thing[1].annot is None or thing[2].annot is None:
 #                print "op: {}, thing[1].annot: {}, thing[2].annot: {}".format(op,thing[1].annot,thing[2].annot)
+            if __debug__:
+                child_mod = [s.name for s in thing[0]] if thing[0] is not None else []
+                xtracer.trace("actions.Sequence.int_update compose[%d] childType=%s childModified=%s" % (i, type(op).__name__, child_mod))
             update = compose_updates(update,axioms,thing)
+            if __debug__:
+                result_mod = [s.name for s in update[0]] if update[0] is not None else []
+                xtracer.trace("actions.Sequence.int_update compose[%d] resultModified=%s" % (i, result_mod))
             if hasattr(op,'lineno') and update[1].annot is not None:
                 update[1].annot.lineno = op.lineno
         if __debug__: xtracer.trace("actions.Sequence.int_update EXIT")

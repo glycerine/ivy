@@ -584,6 +584,17 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	// Faithful port of Python ivy_transrel.py compose_updates (lines 304-344).
 	updated1 := u1.Modified
 	updated2 := u2.Modified
+	if xtracer.Enabled {
+		u1n := make([]string, len(updated1))
+		for i, m := range updated1 {
+			u1n[i] = m.Name
+		}
+		u2n := make([]string, len(updated2))
+		for i, m := range updated2 {
+			u2n[i] = m.Name
+		}
+		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(nil=%v) u2.Modified=%v(nil=%v)", u1n, updated1 == nil, u2n, updated2 == nil)
+	}
 	clauses1 := u1.TR
 	pre1 := u1.Pre
 	clauses2 := u2.TR
@@ -646,6 +657,13 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 
 	// Combined modified set
 	newUpdated := UpdatedJoinConst(updated1, updated2)
+	if xtracer.Enabled {
+		nun := make([]string, len(newUpdated))
+		for i, m := range newUpdated {
+			nun[i] = m.Name
+		}
+		xtracer.Trace("transrel.ComposeUpdates newUpdated=%v(nil=%v)", nun, newUpdated == nil)
+	}
 
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
 	pre1 = co.AndClausesTyped(pre1, DiffFrameConst(updated1, updated2, NewConst, axioms))

@@ -135,9 +135,9 @@ pprof-full:  # Full profile with CPU/mem profiling
 # Then inspect
 # go tool pprof cpu.prof
 
-vs-full:
+vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	make golden 
-	make ord &> py.ord.out
+	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 181000 { print } NR == 181000 { exit }' &> py.ord.out
 	goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	diff py.ord.out log.gox > diffs

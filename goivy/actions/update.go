@@ -1430,13 +1430,27 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	defer xtracer.Trace("actions.Sequence.int_update EXIT")
 	result := transrel.NullUpdate()
 	axioms := ctx.BackgroundTheory()
-	for _, child := range s.Elems {
+	for i, child := range s.Elems {
 		act := unwrapToAction(child)
 		if act == nil {
 			continue
 		}
 		childUpdate := IntUpdate(act, ctx)
+		if xtracer.Enabled {
+			childModNames := make([]string, len(childUpdate.Modified))
+			for j, m := range childUpdate.Modified {
+				childModNames[j] = m.Name
+			}
+			xtracer.Trace("actions.Sequence.int_update compose[%d] childType=%s childModified=%v", i, ActionTypeName(act), childModNames)
+		}
 		result = transrel.ComposeUpdates(result, axioms, childUpdate)
+		if xtracer.Enabled {
+			resultModNames := make([]string, len(result.Modified))
+			for j, m := range result.Modified {
+				resultModNames[j] = m.Name
+			}
+			xtracer.Trace("actions.Sequence.int_update compose[%d] resultModified=%v", i, resultModNames)
+		}
 	}
 	return result
 }

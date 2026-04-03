@@ -305,6 +305,10 @@ def rename_distinct(clauses1,clauses2):
 def compose_updates(update1,axioms,update2):
     updated1, clauses1, pre1 = update1
     updated2, clauses2, pre2 = update2
+    if __debug__:
+        u1n = [s.name for s in updated1] if updated1 is not None else 'None'
+        u2n = [s.name for s in updated2] if updated2 is not None else 'None'
+        xtracer.trace("transrel.ComposeUpdates ENTER u1.Modified=%s(nil=%s) u2.Modified=%s(nil=%s)" % (u1n, updated1 is None, u2n, updated2 is None))
     clauses2 = rename_distinct(clauses2,clauses1)
     pre2 = rename_distinct(pre2,clauses1)
 #    print "clauses2 = {}".format(clauses2)
@@ -330,6 +334,9 @@ def compose_updates(update1,axioms,update2):
     annot_op = lambda x,y: x.compose(y) if x is not None and y is not None else None
     new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2,mid_ax),map2),annot_op=annot_op)
     new_updated = list(us1.union(us2))
+    if __debug__:
+        nun = [s.name for s in new_updated] if new_updated is not None else 'None'
+        xtracer.trace("transrel.ComposeUpdates newUpdated=%s(nil=%s)" % (nun, new_updated is None))
 #    print "pre1 before = {}".format(pre1)
 #    iu.dbg('pre1.annot')
 #    iu.dbg('pre1')
