@@ -422,35 +422,55 @@ func normalizeLine(line string) string {
 	return line
 }
 
+func mustGetRepoDir(t *testing.T) (dir string) {
+	// _, filename, _, ok := runtime.Caller(0)
+	// filename is the absolute path to THIS test file
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatalf("unable to get current .go test file path")
+		return
+	}
+
+	dir = filepath.Dir(filename)
+	return
+}
+
 // TestOrdLive: do we parse this demanding
 // file the same as python Ivy?
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
-	ordLiveCompare(t, false, true)
+	my := mustGetRepoDir(t)
+	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
+
+	GoldenPathCompareIvyCheck(t, false, true, path)
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
-	ordLiveCompare(t, true, true)
+	my := mustGetRepoDir(t)
+	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
+
+	GoldenPathCompareIvyCheck(t, true, true, path)
 }
 
 // TestVerboseNonstopOrdLive does not stop
 // at the first divergence. It prints all parsed
 // and xtraced lines.
 func TestVerboseNonstopOrdLive(t *testing.T) {
-	ordLiveCompare(t, true, false)
+	my := mustGetRepoDir(t)
+	path := filepath.Join(my, "../../ivy-lang-examples/doc/examples/apple/ord_live.ivy")
+
+	GoldenPathCompareIvyCheck(t, true, false, path)
 }
 
-func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
+func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, path string) {
 	//return // off to check everything else under make test.
 	t.Helper()
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
-	home := os.Getenv("HOME")
-	path := home + "/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	if _, err := os.Stat(path); err != nil {
 		t.Skipf("target path not found at %s", path)
 	}
