@@ -775,11 +775,37 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
+	// parent dir.
 	goivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	// cmd/goivy_check dir
+	goivyCheckCmdDir := filepath.Join(goivyRoot, "cmd", "goivy_check")
 
-	fmt.Printf("build goivy_check_xtrace so we know it is up to date.\n")
-	cmd := exec.Command("make", "tr")
-	cmd.Dir = goivyRoot // parent dir.
+	// we will compile goivy_check_xtrace now to make
+	// sure it is up-to-date, and place it into the gobin directory.
+	gobin := os.Getenv("GOBIN")
+	// fallback places; if GOBIN is not set.
+	home := os.Getenv("HOME")
+	gopath := os.Getenv("GOPATH")
+	if gobin == "" {
+		switch {
+		case gopath != "":
+			gobin = filepath.Join(gopath, "bin")
+		case home != "":
+			gobin = filepath.Join(home, "go", "bin")
+			if dirExists(gobin) {
+				break
+			}
+			fallthrough
+		default:
+			// write to root of repo as last resort.
+			gobin = repo
+		}
+	}
+	target := filepath.Join(gobin, "goivy_check_xtrace")
+	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
+	fmt.Printf("build goivy_check_xtrace so we know it is up to date: 'cd %v && %v build -o %v'\n", goivyCheckCmdDir, goBinary, target)
+	cmd := exec.Command(goBinary, "build", "-o", target)
+	cmd.Dir = goivyCheckCmdDir
 	err = cmd.Run()
 	if err != nil {
 		panicf("could not run 'make tr' to build goivy_check_xtrace; error: '%v'", err)

@@ -284,3 +284,14 @@ func getBinaryVersion() string {
 	return s
 }
 */
+
+func dirExists(name string) bool {
+	fi, err := os.Stat(name)
+	if err != nil {
+		return false
+	}
+	if fi.IsDir() {
+		return true
+	}
+	return false
+}
