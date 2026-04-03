@@ -871,9 +871,8 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
 			_ = name
-			if fp, ok := makeFmlaPairFromAction(action, m); ok {
-				assumes = append(assumes, fp)
-			}
+			fps := makeFmlaPairsFromAction(action, m)
+			assumes = append(assumes, fps...)
 		}
 	} else {
 		for name := range m.PublicActions.All() {
@@ -881,9 +880,8 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 			if !ok {
 				continue
 			}
-			if fp, ok := makeFmlaPairFromAction(action, m); ok {
-				assumes = append(assumes, fp)
-			}
+			fps := makeFmlaPairsFromAction(action, m)
+			assumes = append(assumes, fps...)
 		}
 	}
 
@@ -1002,10 +1000,13 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // makeFmlaPairFromAction attempts to extract a formula pair from an action.
 // It computes the action's transition relation update and extracts the
 // pre/post formulas for fragment analysis.
-func makeFmlaPairFromAction(action interface{}, m *mod.Module) (fmlaPair, bool) {
+// makeFmlaPairsFromAction returns fmlaPairs for an action's transition
+// relation (TR) and precondition (Pre), each wrapped with close_epr.
+// Python adds both triple[1] and triple[2] as separate assumes.
+func makeFmlaPairsFromAction(action interface{}, m *mod.Module) []fmlaPair {
 	act, ok := action.(actions.Action)
 	if !ok {
-		return fmlaPair{}, false
+		return nil
 	}
 
 	// Compute the action's transition relation
@@ -1013,13 +1014,19 @@ func makeFmlaPairFromAction(action interface{}, m *mod.Module) (fmlaPair, bool) 
 	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(act))
 	upd := actions.GetUpdate(act, ctx)
 	if upd == nil {
-		return fmlaPair{}, false
+		return nil
 	}
 
-	// Extract pre (TR) and post (Pre condition) formulas
-	pre := upd.TRNode()
-	post := upd.PreNode()
-	_ = post
+	// Extract TR and Pre formulas, applying close_epr to each.
+	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
+	//         assumes.append((foo,action))
+	//         foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
+	//         assumes.append((foo,action))
+	pre := lu.CloseEpr(upd.TRNode())
+	post := lu.CloseEpr(upd.PreNode())
 
-	return fmlaPair{fmla: pre, source: action}, true
+	return []fmlaPair{
+		{fmla: pre, source: action},
+		{fmla: post, source: action},
+	}
 }
