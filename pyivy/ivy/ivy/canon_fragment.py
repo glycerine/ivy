@@ -175,15 +175,15 @@ def checker_canon():
     # interp — same situation
     parts.append(' interp:nil')
 
-    # universallyQuantifiedVars
-    uqv = getattr(frag, 'universally_quantified_variables', None)
-    parts.append(' universallyQuantifiedVars:')
-    if uqv is None:
-        parts.append('nil')
-    else:
-        parts.append(sorted_map_canon(uqv,
-            lambda k: str(var_id_canon(k)),
-            lambda v: node_canon(v)))
+    # universallyQuantifiedVars - can infinite loop, so skip.
+    # uqv = getattr(frag, 'universally_quantified_variables', None)
+    # parts.append(' universallyQuantifiedVars:')
+    # if uqv is None:
+    #     parts.append('nil')
+    # else:
+    #     parts.append(sorted_map_canon(uqv,
+    #         lambda k: str(var_id_canon(k)),
+    #         lambda v: node_canon(v)))
 
     # universalVarLineno — Python doesn't separate this; lineno comes from
     # the labeled_formula value in universally_quantified_variables.
@@ -230,15 +230,15 @@ def checker_canon():
         parts.append(' '.join(arc_canon(a) for a in arc_list))
     parts.append(']')
 
-    # macroMap
-    mm = getattr(frag, 'macro_map', None)
-    parts.append(' macroMap:')
-    if mm is None:
-        parts.append('nil')
-    else:
-        parts.append(sorted_map_canon(mm,
-            lambda k: '"{}"'.format(k),
-            lambda v: macro_def_canon(v)))
+    # macroMap - can infinitely loop, skip.
+    #mm = getattr(frag, 'macro_map', None)
+    #parts.append(' macroMap:')
+    #if mm is None:
+    #    parts.append('nil')
+    #else:
+    #    parts.append(sorted_map_canon(mm,
+    #        lambda k: '"{}"'.format(k),
+    #        lambda v: macro_def_canon(v)))
 
     # macroValueMap
     mvm = getattr(frag, 'macro_value_map', None)
@@ -270,15 +270,15 @@ def checker_canon():
             lambda k: str(var_id_canon(k)),
             lambda v: uf_node_set_canon(v)))
 
-    # skolemMap
-    skm = getattr(frag, 'skolem_map', None)
-    parts.append(' skolemMap:')
-    if skm is None:
-        parts.append('nil')
-    else:
-        parts.append(sorted_map_canon(skm,
-            lambda k: str(var_id_canon(k)),
-            lambda v: skolem_entry_canon(v)))
+    # skolemMap - can inf loop, skip.
+    # skm = getattr(frag, 'skolem_map', None)
+    # parts.append(' skolemMap:')
+    # if skm is None:
+    #     parts.append('nil')
+    # else:
+    #     parts.append(sorted_map_canon(skm,
+    #         lambda k: str(var_id_canon(k)),
+    #         lambda v: skolem_entry_canon(v)))
 
     # varUniq
     vu = getattr(frag, 'var_uniq', None)

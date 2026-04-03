@@ -354,9 +354,9 @@ func (c *checker) Sexp() lg.NodeKey {
 	b.WriteString(" interp:")
 	b.WriteString(stringInterfaceMapSexp(c.interp))
 
-	// universallyQuantifiedVars
-	b.WriteString(" universallyQuantifiedVars:")
-	b.WriteString(varIDVarMapSexp(c.universallyQuantifiedVars))
+	// universallyQuantifiedVars - can infinitely loop, so skip.
+	//b.WriteString(" universallyQuantifiedVars:")
+	//b.WriteString(varIDVarMapSexp(c.universallyQuantifiedVars))
 
 	// universalVarLineno
 	b.WriteString(" universalVarLineno:")
@@ -380,9 +380,9 @@ func (c *checker) Sexp() lg.NodeKey {
 	}
 	b.WriteString("]")
 
-	// macroMap
-	b.WriteString(" macroMap:")
-	b.WriteString(stringMacroDefMapSexp(c.macroMap))
+	// macroMap - can inf loop, skip.
+	//b.WriteString(" macroMap:")
+	//b.WriteString(stringMacroDefMapSexp(c.macroMap))
 
 	// macroValueMap
 	b.WriteString(" macroValueMap:")
@@ -396,9 +396,9 @@ func (c *checker) Sexp() lg.NodeKey {
 	b.WriteString(" macroDepMap:")
 	b.WriteString(varIDDepMapSexp(c.macroDepMap))
 
-	// skolemMap
-	b.WriteString(" skolemMap:")
-	b.WriteString(varIDSkolemMapSexp(c.skolemMap))
+	// skolemMap - can inf loop, skip.
+	//b.WriteString(" skolemMap:")
+	//b.WriteString(varIDSkolemMapSexp(c.skolemMap))
 
 	// varUniq — omit internals, just indicate presence
 	b.WriteString(" varUniq:")
