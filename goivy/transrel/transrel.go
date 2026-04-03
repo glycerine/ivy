@@ -1609,7 +1609,7 @@ func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
 	// Use Sexp-based structural identity to match Python's set union
 	// of Symbol objects with structural equality (name + sort).
 	seen := make(map[lg.NodeKey]bool)
-	var result []*lg.Const
+	result := make([]*lg.Const, 0, len(u1)+len(u2))
 	for _, s := range u1 {
 		k := lg.Key(s)
 		if !seen[k] {

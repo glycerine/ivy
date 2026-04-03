@@ -15,7 +15,16 @@ func mkConst(name string) *lg.Const {
 
 // mkTestUpdate creates an Update for testing from name lists and node formulas.
 func mkTestUpdate(modNames []string, tr lg.Expr, pre lg.Expr) *Update {
-	var mods []*lg.Const
+	// nil modNames means "all" (pure state). Non-nil (even empty) means
+	// a concrete Modified list. Use make() so empty != nil.
+	if modNames == nil {
+		return &Update{
+			Modified: nil,
+			TR:       co.FormulaToClauses(tr, nil),
+			Pre:      co.FormulaToClauses(pre, nil),
+		}
+	}
+	mods := make([]*lg.Const, 0, len(modNames))
 	for _, n := range modNames {
 		mods = append(mods, mkConst(n))
 	}
@@ -801,6 +810,81 @@ func TestComposeUpdatesNilModified(t *testing.T) {
 	// nil union anything = nil
 	if result.Modified != nil {
 		t.Error("ComposeUpdates with nil Modified should produce nil")
+	}
+}
+
+// TestUpdatedJoinConstEmptyNonNil verifies that joining two empty (non-nil)
+// Modified lists returns a non-nil empty slice, not nil. This was the root
+// cause of a bug where composing updates through a sequence of AssumeActions
+// (which have empty Modified) would turn Modified into nil, then
+// UpdatedJoinConst(nil, anything) returns nil, permanently losing all
+// subsequent Modified entries.
+func TestUpdatedJoinConstEmptyNonNil(t *testing.T) {
+	empty1 := []*lg.Const{}
+	empty2 := []*lg.Const{}
+	result := UpdatedJoinConst(empty1, empty2)
+	if result == nil {
+		t.Fatal("UpdatedJoinConst of two empty non-nil slices must return non-nil, got nil")
+	}
+	if len(result) != 0 {
+		t.Errorf("expected empty slice, got %d elements", len(result))
+	}
+}
+
+// TestComposeUpdatesEmptyModifiedPreservesNonNil verifies that composing
+// two updates with empty (non-nil) Modified lists produces a non-nil
+// Modified in the result, so subsequent composes don't lose entries.
+func TestComposeUpdatesEmptyModifiedPreservesNonNil(t *testing.T) {
+	u1 := mkTestUpdate([]string{}, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{}, lg.True, lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
+	if result.Modified == nil {
+		t.Fatal("ComposeUpdates of two empty-Modified updates must return non-nil Modified, got nil")
+	}
+}
+
+// TestComposeUpdatesSequenceDoesNotPoisonModified simulates the real
+// scenario: a Sequence starts with NullUpdate (empty Modified), composes
+// with AssumeAction (empty Modified), then composes with AssignAction
+// (non-empty Modified). The final result must preserve the AssignAction's
+// Modified entries.
+func TestComposeUpdatesSequenceDoesNotPoisonModified(t *testing.T) {
+	axioms := co.TrueClauses(nil)
+
+	// Start: NullUpdate (empty non-nil Modified)
+	result := NullUpdate()
+
+	// compose[0]: AssumeAction — empty Modified
+	assume := mkTestUpdate([]string{}, lg.True, lg.False)
+	result = ComposeUpdates(result, axioms, assume)
+	if result.Modified == nil {
+		t.Fatal("After composing with empty-Modified assume, Modified became nil")
+	}
+
+	// compose[1]: another AssumeAction — empty Modified
+	result = ComposeUpdates(result, axioms, assume)
+	if result.Modified == nil {
+		t.Fatal("After second compose with empty-Modified assume, Modified became nil")
+	}
+
+	// compose[2]: AssignAction — has Modified [x]
+	assign := mkTestUpdate([]string{"x"}, mkEq("new_x", "y"), lg.False)
+	result = ComposeUpdates(result, axioms, assign)
+	if result.Modified == nil {
+		t.Fatal("After composing with non-empty-Modified assign, Modified is nil — poison bug!")
+	}
+	found := false
+	for _, m := range result.Modified {
+		if m.Name == "x" {
+			found = true
+		}
+	}
+	if !found {
+		names := make([]string, len(result.Modified))
+		for i, m := range result.Modified {
+			names[i] = m.Name
+		}
+		t.Errorf("Expected 'x' in Modified, got %v", names)
 	}
 }
 
