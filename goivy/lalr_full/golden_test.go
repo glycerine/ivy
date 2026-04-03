@@ -390,14 +390,18 @@ func TestGoldenLALR(t *testing.T) {
 // read a line from each, and compare
 // Normalize file paths so that different install locations
 // (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
-func normalizeLine(line string) string {
+func normalizeLine(repo, line string) string {
 	// Strip known path prefixes for include files
+	gopath := os.Getenv("GOPATH")
 	home := os.Getenv("HOME")
+	if gopath == "" {
+		gopath = filepath.Join(home, "go")
+	}
 	for _, prefix := range []string{
 		home + "/ivy/ivy-lang-examples/ivy/include/",
+		filepath.Join(repo, "/ivy-lang-examples/ivy/include/"),
 		home + "/ivy/pyivy/ivy/ivy/include/",
-		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/ivy/include/",
-		home + "/go/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/",
+		gopath + "/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
@@ -405,8 +409,8 @@ func normalizeLine(line string) string {
 	}
 	for _, prefix := range []string{
 		home + "/ivy/ivy-lang-examples/",
-		home + "/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/",
-		home + "/go/src/github.com/glycerine/ivy/ivy-lang-examples/",
+		filepath.Join(repo, "/ivy-lang-examples/"),
+		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/"),
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
@@ -414,6 +418,8 @@ func normalizeLine(line string) string {
 	}
 	for _, prefix := range []string{
 		home + "/ivy/pyivy/ivy/ivy/include/",
+		filepath.Join(repo, "/ivy/pyivy/ivy/ivy/include/"),
+		filepath.Join(gopath, "/src/github.com/glycerine/ivy/pyivy/ivy/ivy/include/"),
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
@@ -477,7 +483,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	args := []string{"isolate=cf_live"}
 
 	// Get Python AST
-	ivyPipe, pyProc, pyErr := ivy_check(t, args, path)
+	ivyPipe, pyProc, pyErr := ivy_check(t, args, path, repo)
 	if pyErr != nil {
 		t.Fatalf("%v had Python error: %v", path, pyErr)
 		panic(pyErr)
@@ -491,7 +497,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 	// Get Go AST, + parse xtrace
 
-	goivyPipe, goProc, goErr := goivy_check_xtrace(t, args, path)
+	goivyPipe, goProc, goErr := goivy_check_xtrace(t, args, path, repo)
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
 		return
@@ -549,8 +555,8 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
 			}
 		}
-		goNorm := normalizeLine(goCheck)
-		ivNorm := normalizeLine(ivCheck)
+		goNorm := normalizeLine(repo, goCheck)
+		ivNorm := normalizeLine(repo, ivCheck)
 
 		if verbose {
 			fmt.Printf("%06d  go : %v", i, goNorm)
@@ -696,7 +702,7 @@ const showNonXtraceLines = true
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
-func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, proc *os.Process, err error) {
+func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -751,7 +757,7 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, pr
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 		for scanner.Scan() {
-			line := normalizeLine(scanner.Text())
+			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
 		pw.Close() // must close write end so reader sees EOF
@@ -765,7 +771,7 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, pr
 
 // goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
 // It streams output back on r, a pipe, asynchronously.
-func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, proc *os.Process, err error) {
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -823,7 +829,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 		for scanner.Scan() {
-			line := normalizeLine(scanner.Text())
+			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
 		pw.Close() // must close write end so reader sees EOF
