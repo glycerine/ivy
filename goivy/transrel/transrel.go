@@ -344,10 +344,18 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	constMap := make(map[lg.NodeKey]*lg.Const, len(nameMap))
-	for old, new_ := range nameMap {
-		oldSym := lg.NewConst(old, lg.TopS)
-		constMap[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
+	// Scan the formula for actual constants with real sorts, then build
+	// a correctly-keyed substitution map. Matches Python's rename_ast
+	// which uses recstruct (name, sort) equality.
+	actualSyms := co.UsedSymbolsAST(node)
+	constMap := make(map[lg.NodeKey]*lg.Const)
+	for _, s := range actualSyms {
+		if newName, ok := nameMap[s.Name]; ok {
+			constMap[lg.Key(s)] = lg.NewConst(newName, s.CSort)
+		}
+	}
+	if len(constMap) == 0 {
+		return node
 	}
 	return co.RenameAST(node, constMap)
 }
@@ -537,23 +545,24 @@ func MyAnnotOp(annots ...interface{}) interface{} {
 
 // ExistQuantMap renames the given symbols to fresh skolem names, returning
 // both the renaming map and the renamed formula. This corresponds to
-// Python's exist_quant_map.
-func ExistQuantMap(syms map[string]bool, node lg.Expr) (map[string]string, lg.Expr) {
+// Python's exist_quant_map. Symbols are []*lg.Const with sorts preserved,
+// matching Python where syms is a set of Symbol objects.
+func ExistQuantMap(syms []*lg.Const, node lg.Expr) (map[lg.NodeKey]*lg.Const, lg.Expr) {
 	if len(syms) == 0 || node == nil {
 		return nil, node
 	}
 	used := usedSymbolNameSlice(node)
 	rn := iu.NewUniqueRenamer("__", used)
-	nameMap := make(map[string]string)
-	for s := range syms {
-		nameMap[s] = rn.Rename(s)
+	constMap := make(map[lg.NodeKey]*lg.Const, len(syms))
+	for _, s := range syms {
+		constMap[lg.Key(s)] = lg.NewConst(rn.Rename(s.Name), s.CSort)
 	}
-	return nameMap, renameFormula(node, nameMap)
+	return constMap, co.RenameAST(node, constMap)
 }
 
 // ExistQuant existentially quantifies the given symbols by renaming them
 // to fresh skolem constants. This corresponds to Python's exist_quant.
-func ExistQuant(syms map[string]bool, node lg.Expr) lg.Expr {
+func ExistQuant(syms []*lg.Const, node lg.Expr) lg.Expr {
 	_, result := ExistQuantMap(syms, node)
 	return result
 }
@@ -801,15 +810,19 @@ func negateFormula(f lg.Expr) lg.Expr {
 // Corresponds to Python's hide(syms, update).
 func Hide(syms []*lg.Const, u *Update) *Update {
 	// Faithful port of Python hide(syms, update) (ivy_transrel.py:371-377).
-	symSet := make(map[string]bool, len(syms))
+	// Preserves []*lg.Const with sorts throughout, matching Python where
+	// syms is a set of Symbol objects.
+	symNames := make(map[string]bool, len(syms))
+	toHide := make([]*lg.Const, len(syms))
+	copy(toHide, syms)
 	for _, s := range syms {
-		symSet[s.Name] = true
+		symNames[s.Name] = true
 	}
 	// Also hide new_ versions of modified symbols that are being hidden
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s.Name] {
-				symSet[New(s.Name)] = true
+			if symNames[s.Name] {
+				toHide = append(toHide, NewConst(s))
 			}
 		}
 	}
@@ -817,14 +830,14 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if !symSet[s.Name] {
+			if !symNames[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
 	// Existentially quantify hidden symbols in TR and Pre
-	_, newTR := ExistQuantClauses(symSet, u.TR)
-	_, newPre := ExistQuantClauses(symSet, u.Pre)
+	_, newTR := ExistQuantClauses(toHide, u.TR)
+	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -834,21 +847,22 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 }
 
 // ExistQuantClauses existentially quantifies symbols by renaming them
-// to fresh skolem names in a Clauses object.
-func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) (map[string]string, *co.Clauses) {
+// to fresh skolem names in a Clauses object. Symbols are []*lg.Const
+// with sorts preserved, matching Python's exist_quant for clauses.
+func ExistQuantClauses(syms []*lg.Const, clauses *co.Clauses) (map[lg.NodeKey]*lg.Const, *co.Clauses) {
 	if clauses == nil || len(syms) == 0 {
 		return nil, clauses
 	}
 	allUsed := co.UsedSymbolNamesClauses(clauses)
 	rn := iu.NewUniqueRenamer("__", nameSetToSlice(allUsed))
-	nameMap := make(map[string]string)
-	for s := range syms {
-		nameMap[s] = rn.Rename(s)
+	constMap := make(map[lg.NodeKey]*lg.Const, len(syms))
+	for _, s := range syms {
+		constMap[lg.Key(s)] = lg.NewConst(rn.Rename(s.Name), s.CSort)
 	}
-	if len(nameMap) == 0 {
+	if len(constMap) == 0 {
 		return nil, clauses
 	}
-	return nameMap, co.RenameClausesByName(clauses, nameMap)
+	return constMap, co.RenameClauses(clauses, constMap)
 }
 
 // HideState hides symbols from a state-style update, using old_
@@ -856,25 +870,27 @@ func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) (map[string]st
 //
 // Corresponds to Python's hide_state(syms, update).
 func HideState(syms []*lg.Const, u *Update) *Update {
-	symSet := make(map[string]bool, len(syms))
+	symNames := make(map[string]bool, len(syms))
+	toHide := make([]*lg.Const, len(syms))
+	copy(toHide, syms)
 	for _, s := range syms {
-		symSet[s.Name] = true
+		symNames[s.Name] = true
 	}
 	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s.Name] {
-				symSet[Old(s.Name)] = true
+			if symNames[s.Name] {
+				toHide = append(toHide, OldConst(s))
 			}
 		}
 		for _, s := range u.Modified {
-			if !symSet[s.Name] {
+			if !symNames[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
-	_, newTR := ExistQuantClauses(symSet, u.TR)
-	_, newPre := ExistQuantClauses(symSet, u.Pre)
+	_, newTR := ExistQuantClauses(toHide, u.TR)
+	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -885,27 +901,29 @@ func HideState(syms []*lg.Const, u *Update) *Update {
 
 // HideStateMap is like HideState but also returns the renaming map
 // for the TR. Corresponds to Python's hide_state_map.
-func HideStateMap(syms []*lg.Const, u *Update) (map[string]string, *Update) {
-	symSet := make(map[string]bool, len(syms))
+func HideStateMap(syms []*lg.Const, u *Update) (map[lg.NodeKey]*lg.Const, *Update) {
+	symNames := make(map[string]bool, len(syms))
+	toHide := make([]*lg.Const, len(syms))
+	copy(toHide, syms)
 	for _, s := range syms {
-		symSet[s.Name] = true
+		symNames[s.Name] = true
 	}
 	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s.Name] {
-				symSet[Old(s.Name)] = true
+			if symNames[s.Name] {
+				toHide = append(toHide, OldConst(s))
 			}
 		}
 		for _, s := range u.Modified {
-			if !symSet[s.Name] {
+			if !symNames[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
 	// ExistQuantMap operates on Node, use TRNode() then wrap result back
-	trMap, newTRNode := ExistQuantMap(symSet, u.TRNode())
-	_, newPre := ExistQuantClauses(symSet, u.Pre)
+	trMap, newTRNode := ExistQuantMap(toHide, u.TRNode())
+	_, newPre := ExistQuantClauses(toHide, u.Pre)
 
 	return trMap, &Update{
 		Modified: newMod,
@@ -926,14 +944,15 @@ func HideStateMap(syms []*lg.Const, u *Update) (map[string]string, *Update) {
 // Corresponds to Python's state_to_action(update).
 func StateToAction(u *Update) *Update {
 	// Faithful port of Python state_to_action (ivy_transrel.py:109-119).
+	// Uses actual *lg.Const objects with sorts for renaming, matching
+	// Python's Symbol-keyed substitution dict.
 	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = NewConst(s)
 	}
-	for name := range co.UsedSymbolNamesClauses(u.TR) {
-		if IsOld(name) {
-			oldSym := lg.NewConst(name, lg.TopS)
-			renaming[lg.Key(oldSym)] = lg.NewConst(OldOf(name), lg.TopS)
+	for _, s := range constSliceFromMap(co.UsedSymbolsClauses(u.TR)) {
+		if IsOld(s.Name) {
+			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -951,10 +970,9 @@ func ActionToState(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = OldConst(s)
 	}
-	for name := range co.UsedSymbolNamesClauses(u.TR) {
-		if IsNew(name) {
-			newSym := lg.NewConst(name, lg.TopS)
-			renaming[lg.Key(newSym)] = lg.NewConst(NewOf(name), lg.TopS)
+	for _, s := range constSliceFromMap(co.UsedSymbolsClauses(u.TR)) {
+		if IsNew(s.Name) {
+			renaming[lg.Key(s)] = lg.NewConst(NewOf(s.Name), s.CSort)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -963,6 +981,15 @@ func ActionToState(u *Update) *Update {
 		TR:       renamedTR,
 		Pre:      u.Pre,
 	}
+}
+
+// constSliceFromMap extracts the values from a NodeKey→Const map.
+func constSliceFromMap(m map[lg.NodeKey]*lg.Const) []*lg.Const {
+	result := make([]*lg.Const, 0, len(m))
+	for _, c := range m {
+		result = append(result, c)
+	}
+	return result
 }
 
 // -----------------------------------------------------------------------
@@ -986,7 +1013,7 @@ func ActionToState(u *Update) *Update {
 //	pre = conjoin(pre_state, pre_ax)
 //	map1, res = exist_quant_map(updated, conjoin(pre, clauses, annot_op=my_annot_op))
 //	res = rename_clauses(res, dict((new(x),x) for x in updated))
-func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[string]string, *co.Clauses) {
+func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[lg.NodeKey]*lg.Const, *co.Clauses) {
 	updated := u.Modified
 
 	// Filter axioms that reference updated symbols
@@ -1000,7 +1027,7 @@ func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[s
 	combined := ConjoinClausesWithAnnotOp(pre, u.TR, MyAnnotOp)
 
 	// Existentially quantify the updated (pre-state) symbols
-	eqMap, quantified := ExistQuantClauses(updatedNames, combined)
+	eqMap, quantified := ExistQuantClauses(updated, combined)
 
 	// Rename new_x -> x for all updated symbols
 	renaming := make(map[lg.NodeKey]*lg.Const, len(updated))
@@ -1013,12 +1040,21 @@ func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[s
 	return eqMap, result
 }
 
-// ForwardImageMapFormula is the formula-level variant for backward compatibility.
+// ForwardImageMapFormula is the formula-level variant.
+// Converts the NodeKey→Const map from ForwardImageMap to a name→name
+// map for callers that only need name-level renaming info (e.g. History).
 func ForwardImageMapFormula(preState lg.Expr, axioms lg.Expr, u *Update) (map[string]string, lg.Expr) {
 	preClauses := co.FormulaToClauses(preState, nil)
 	axClauses := co.FormulaToClauses(axioms, nil)
 	eqMap, resClauses := ForwardImageMap(preClauses, axClauses, u)
-	return eqMap, resClauses.ToFormula()
+	// Build name map from Modified (which we know were the quantified symbols)
+	nameMap := make(map[string]string, len(eqMap))
+	for _, s := range u.Modified {
+		if renamed, ok := eqMap[lg.Key(s)]; ok {
+			nameMap[s.Name] = renamed.Name
+		}
+	}
+	return nameMap, resClauses.ToFormula()
 }
 
 // ForwardImage computes the forward image of a pre-state through an
@@ -1089,9 +1125,9 @@ func ComposeStateAction(
 				// Extract pre/post state from the model.
 				preCls, postCls := ExtractPrePostModel(cfg, preTest, model, au)
 
-				postUpdated := make(map[string]bool, len(au))
-				for _, s := range au {
-					postUpdated[New(s.Name)] = true
+				postUpdated := make([]*lg.Const, len(au))
+				for i, s := range au {
+					postUpdated[i] = NewConst(s)
 				}
 				_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
 				return nil, &ActionFailed{
@@ -1249,15 +1285,16 @@ func ReverseImage(postState lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 	postAx := filterAxiomsBySyms(nameSetToSlice(updatedNames), axioms)
 	postClauses := Conjoin(postState, postAx)
 
-	renaming := make(map[string]string, len(updated))
+	// Rename x → new(x) for updated symbols in post-state clauses
+	renamingMap := make(map[lg.NodeKey]*lg.Const, len(updated))
 	for _, s := range updated {
-		renaming[s.Name] = New(s.Name)
+		renamingMap[lg.Key(s)] = NewConst(s)
 	}
-	postClauses = renameFormula(postClauses, renaming)
+	postClauses = co.RenameAST(postClauses, renamingMap)
 
-	postUpdated := make(map[string]bool, len(updated))
-	for _, s := range updated {
-		postUpdated[New(s.Name)] = true
+	postUpdated := make([]*lg.Const, len(updated))
+	for i, s := range updated {
+		postUpdated[i] = NewConst(s)
 	}
 	result := ExistQuant(postUpdated, Conjoin(trNode, postClauses))
 	return result
@@ -1404,32 +1441,40 @@ func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
 	if clauses == nil {
 		return clauses
 	}
-	used := co.UsedSymbolNamesClauses(clauses)
-	nameMap := make(map[lg.NodeKey]*lg.Const)
-	for name := range used {
-		if IsOld(name) {
-			oldSym := lg.NewConst(name, lg.TopS)
-			nameMap[lg.Key(oldSym)] = lg.NewConst(OldOf(name), lg.TopS)
+	used := co.UsedSymbolsClauses(clauses)
+	renaming := make(map[lg.NodeKey]*lg.Const)
+	for _, s := range used {
+		if IsOld(s.Name) {
+			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
 	}
-	if len(nameMap) == 0 {
+	if len(renaming) == 0 {
 		return clauses
 	}
-	return co.RenameClauses(clauses, nameMap)
+	return co.RenameClauses(clauses, renaming)
 }
 
 // SubstAction substitutes symbols in an update according to a substitution map.
-// Corresponds to Python's subst_action.
+// Corresponds to Python's subst_action. Uses actual Const sorts from the
+// clauses to build correctly-keyed renaming maps.
 func SubstAction(u *Update, subst map[string]string) *Update {
-	syms := make(map[lg.NodeKey]*lg.Const, len(subst))
-	for k, v := range subst {
-		keySym := lg.NewConst(k, lg.TopS)
-		syms[lg.Key(keySym)] = lg.NewConst(v, lg.TopS)
+	// Collect actual constants from both TR and Pre to get real sorts
+	allSyms := co.UsedSymbolsClauses(u.TR)
+	for k, v := range co.UsedSymbolsClauses(u.Pre) {
+		allSyms[k] = v
 	}
+	// Build (name,sort)-keyed renaming from actual constants
+	renaming := make(map[lg.NodeKey]*lg.Const)
+	for _, s := range allSyms {
+		if newName, ok := subst[s.Name]; ok {
+			renaming[lg.Key(s)] = lg.NewConst(newName, s.CSort)
+		}
+	}
+	// Also rename new_ versions of modified symbols
 	for _, s := range u.Modified {
 		if v, ok := subst[s.Name]; ok {
-			newKeySym := lg.NewConst(New(s.Name), s.CSort)
-			syms[lg.Key(newKeySym)] = lg.NewConst(New(v), lg.TopS)
+			newSym := NewConst(s)
+			renaming[lg.Key(newSym)] = lg.NewConst(New(v), s.CSort)
 		}
 	}
 	newUpdated := make([]*lg.Const, len(u.Modified))
@@ -1440,8 +1485,8 @@ func SubstAction(u *Update, subst map[string]string) *Update {
 			newUpdated[i] = s
 		}
 	}
-	newTR := co.RenameClauses(u.TR, syms)
-	newPre := co.RenameClauses(u.Pre, syms)
+	newTR := co.RenameClauses(u.TR, renaming)
+	newPre := co.RenameClauses(u.Pre, renaming)
 	return &Update{
 		Modified: newUpdated,
 		TR:       newTR,
@@ -1630,7 +1675,6 @@ func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 func (h *History) ForwardStep(axioms lg.Expr, u *Update, action lg.Expr) *History {
 	eqMap, result := ForwardImageMapFormula(h.Post, axioms, u)
 
-	// Convert the map[string]string from ForwardImageMap to a Renaming
 	renaming := make(Renaming, len(eqMap))
 	for k, v := range eqMap {
 		renaming[k] = v

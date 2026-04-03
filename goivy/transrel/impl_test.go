@@ -127,7 +127,7 @@ func TestConjoinRenamesSkolems(t *testing.T) {
 
 func TestExistQuantEmpty(t *testing.T) {
 	fmla := mkEq("x", "y")
-	result := ExistQuant(map[string]bool{}, fmla)
+	result := ExistQuant(nil, fmla)
 	if !result.Equal(fmla) {
 		t.Errorf("ExistQuant with empty syms should return same formula")
 	}
@@ -135,7 +135,8 @@ func TestExistQuantEmpty(t *testing.T) {
 
 func TestExistQuantRenames(t *testing.T) {
 	fmla := mkEq("x", "y")
-	result := ExistQuant(map[string]bool{"x": true}, fmla)
+	xSym := lg.NewConst("x", lg.TopS)
+	result := ExistQuant([]*lg.Const{xSym}, fmla)
 	// x should be renamed to a skolem name (starts with __)
 	if formulaContainsName(result, "x") {
 		t.Error("ExistQuant should rename 'x' to a skolem")
@@ -148,11 +149,12 @@ func TestExistQuantRenames(t *testing.T) {
 
 func TestExistQuantMapReturnsMap(t *testing.T) {
 	fmla := mkEq("x", "y")
-	m, result := ExistQuantMap(map[string]bool{"x": true}, fmla)
+	xSym := lg.NewConst("x", lg.TopS)
+	m, result := ExistQuantMap([]*lg.Const{xSym}, fmla)
 	if m == nil {
 		t.Fatal("ExistQuantMap should return non-nil map")
 	}
-	if _, ok := m["x"]; !ok {
+	if _, ok := m[lg.Key(xSym)]; !ok {
 		t.Error("ExistQuantMap should map 'x'")
 	}
 	if formulaContainsName(result, "x") {

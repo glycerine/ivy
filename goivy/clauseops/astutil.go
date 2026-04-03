@@ -223,6 +223,75 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 	return il.CloneNode(node, newChildren)
 }
 
+// collectConstsByName walks an expression tree and collects all *lg.Const
+// nodes whose names appear in the nameSubs map. For each found constant,
+// it adds a (name,sort)-keyed entry to the output map with the renamed
+// constant preserving the original sort. This matches Python's recstruct
+// __eq__ which compares (name, sort) tuples.
+func collectConstsByName(node lg.Expr, nameSubs map[string]string, out map[lg.NodeKey]*lg.Const) {
+	if node == nil {
+		return
+	}
+	switch t := node.(type) {
+	case *lg.Const:
+		if newName, ok := nameSubs[t.Name]; ok {
+			out[lg.Key(t)] = lg.NewConst(newName, t.CSort)
+		}
+	case *lg.Variable:
+		// variables not collected
+	case *lg.Apply:
+		collectConstsByName(t.Func, nameSubs, out)
+		for _, arg := range t.Terms {
+			collectConstsByName(arg, nameSubs, out)
+		}
+	case *il.Definition:
+		collectConstsByName(t.Lhs, nameSubs, out)
+		collectConstsByName(t.Rhs, nameSubs, out)
+	default:
+		for _, c := range node.Children() {
+			collectConstsByName(c, nameSubs, out)
+		}
+	}
+}
+
+// RenameASTByName renames constants in a formula using a name→name map.
+// It first scans the formula to discover actual (name, sort) keys, then
+// applies RenameAST with correctly-keyed entries. This matches Python's
+// rename_ast where subs.get(ast.rep, ast.rep) uses recstruct equality
+// on (name, sort) pairs.
+func RenameASTByName(node lg.Expr, subs map[string]string) lg.Expr {
+	if len(subs) == 0 || node == nil {
+		return node
+	}
+	constMap := make(map[lg.NodeKey]*lg.Const)
+	collectConstsByName(node, subs, constMap)
+	if len(constMap) == 0 {
+		return node
+	}
+	return RenameAST(node, constMap)
+}
+
+// RenameClausesByName renames symbols in clauses using a name→name map.
+// Scans the clauses to discover actual (name, sort) keys, then applies
+// RenameClauses with correctly-keyed entries. This matches Python where
+// rename_clauses → rename_ast uses recstruct (name, sort) equality.
+func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
+	if len(subs) == 0 {
+		return clauses
+	}
+	constMap := make(map[lg.NodeKey]*lg.Const)
+	for _, f := range clauses.Fmlas {
+		collectConstsByName(f, subs, constMap)
+	}
+	for _, d := range clauses.Defs {
+		collectConstsByName(d, subs, constMap)
+	}
+	if len(constMap) == 0 {
+		return clauses
+	}
+	return RenameClauses(clauses, constMap)
+}
+
 // FreeVariablesAST is an alias for logicutil.FreeVariables.
 func FreeVariablesAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
 	return lu.FreeVariables(node)

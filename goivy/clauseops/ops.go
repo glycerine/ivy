@@ -447,6 +447,27 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 	return result
 }
 
+// UsedSymbolsClauses returns all constant symbols referenced in a Clauses
+// object, preserving their sorts. This matches Python's used_symbols_clauses
+// which returns a set of Symbol objects (with sorts).
+func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]*lg.Const {
+	if clauses == nil {
+		return make(map[lg.NodeKey]*lg.Const)
+	}
+	result := make(map[lg.NodeKey]*lg.Const)
+	for _, f := range clauses.Fmlas {
+		for k, v := range UsedSymbolsAST(f) {
+			result[k] = v
+		}
+	}
+	for _, d := range clauses.Defs {
+		for k, v := range UsedSymbolsAST(d) {
+			result[k] = v
+		}
+	}
+	return result
+}
+
 func collectSymbolNamesFromNode(n lg.Expr, result map[string]bool) {
 	if c, ok := n.(*lg.Const); ok {
 		result[c.Name] = true
@@ -482,19 +503,6 @@ func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Const) *Clauses {
 		return RenameAST(n, subs)
 	}
 	return clauses.Apply(fn)
-}
-
-// RenameClausesByName renames symbols in clauses using a name→name map.
-// Since only names are available, symbols are constructed with TopSort;
-// RenameAST's sort-preservation logic will carry the original sort through.
-// Callers with access to a Sig should prefer building a proper NodeKey map.
-func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
-	constSubs := make(map[lg.NodeKey]*lg.Const, len(subs))
-	for old, new_ := range subs {
-		oldSym := lg.NewConst(old, lg.TopS)
-		constSubs[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
-	}
-	return RenameClauses(clauses, constSubs)
 }
 
 // SubstituteConstantsClauses substitutes constants in clauses by structural identity.
