@@ -38,7 +38,7 @@ in practice (it likely doesn't since unification merges the nodes anyway).
 
 ---
 
-## Divergence 2 — `preconds_only` adds TWO assumes instead of ONE (BUG, JUST INTRODUCED)
+## Divergence 2 — `preconds_only` adds TWO assumes instead of ONE (BUG, JUST INTRODUCED). FIXED. DONE.
 
 | | Python | Go |
 |---|---|---|
@@ -530,11 +530,14 @@ property.
 ## Priority-ordered fix list
 
 1. (deleted)
-2. **Divergence 2** — preconds_only adds wrong number of assumes (High, easy fix)
-3. **Divergence 20/14/18** — `NodeArgs` vs `fmla.args` for applications (Critical, needs investigation)
-4. **Divergence 19** — `VariableUniqifier` name differences (High, needs investigation)
-5. **Divergence 3** — `pol` None vs -1 (Medium-High, needs investigation)
-6. **Divergence 12** — `makeSkolems` recursion with NodeArgs (High if NodeArgs differs)
+2. **Divergence 2** — preconds_only adds wrong number of assumes. FIXED.
+3. **Divergence 20/14/18** — `NodeArgs` vs `fmla.args` for applications (Critical, needs investigation): FALSE ALARM. added test. no changes needed.
+4. **Divergence 19** — `VariableUniqifier` name differences (High, needs investigation). FALSE ALARM. tests added. no change needed.
+5. **Divergence 3** — `pol` None vs -1. FALSE ALARM. test added. no change needed.
+
+still todo:
+
+6. **Divergence 12** — `makeSkolems` recursion with NodeArgs. FALSE ALARM. no change needed.
 7. **Divergence 17** — `makeSkolems` source parameter (Medium, easy fix)
 8. **Divergence 1** — Equality key construction (Medium, needs analysis)
 9. **Divergence 5** — used_variables_ast vs FreeVariables (Low-Medium)

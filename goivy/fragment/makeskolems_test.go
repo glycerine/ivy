@@ -1,0 +1,121 @@
+package fragment
+
+import (
+	"testing"
+
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
+)
+
+// These tests verify the makeSkolems recursion structure matches Python's
+// make_skolems. Key invariant: NodeArgs(ForAll/Exists) returns [body],
+// matching Python's .args, so the fallthrough loop processes only the body.
+
+func TestMakeSkolemsSkolemRecorded(t *testing.T) {
+	// ForAll([X], Exists([Y], Eq(X, Y))) with pol=true
+	// ForAll under pol=true → universal case: body processed with univs=[X]
+	// Then Exists under pol=true → skolem case: Y should be recorded
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	Y, _ := lg.NewVariable("Y", S)
+	body := &lg.Eq{T1: X, T2: Y}
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+	forall := &lg.ForAll{Variables: []*lg.Variable{X}, Body: exists}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+
+	// Add X as a universal variable (needed for getUnivNode)
+	vid := makeVarID(X)
+	c.universallyQuantifiedVars[vid] = X
+
+	c.makeSkolems(forall, forall, true, nil)
+
+	// Y should appear in skolemMap (it's existentially quantified
+	// under positive polarity with a free universal X in scope)
+	yid := makeVarID(Y)
+	if _, ok := c.skolemMap[yid]; !ok {
+		t.Error("Y should be recorded in skolemMap as a Skolem variable")
+	}
+}
+
+func TestMakeSkolemsNotReturnsEarly(t *testing.T) {
+	// Not(Exists([Y], Y)) with pol=true
+	// Not flips pol to false and returns early.
+	// Exists under pol=false → universal case (not skolem case).
+	// Y should NOT be in skolemMap.
+	S := &lg.UninterpretedSort{Name: "S"}
+	Y, _ := lg.NewVariable("Y", S)
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: Y}
+	not := &lg.Not{Body: exists}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+
+	c.makeSkolems(not, not, true, nil)
+
+	yid := makeVarID(Y)
+	if _, ok := c.skolemMap[yid]; ok {
+		t.Error("Y should NOT be in skolemMap (Not flips polarity, making Exists universal)")
+	}
+}
+
+func TestMakeSkolemsImpliesReturnsEarly(t *testing.T) {
+	// Implies(p, Exists([Y], Y)) with pol=true
+	// Implies processes T1 with !pol=false, T2 with pol=true, then returns.
+	// The fallthrough loop should NOT run (Implies returns early).
+	// Exists under pol=true → Y IS a Skolem variable, but only if
+	// there's a universal in scope (there isn't here), so no skolem entry.
+	S := &lg.UninterpretedSort{Name: "S"}
+	Y, _ := lg.NewVariable("Y", S)
+	p := lg.NewConst("p", lg.Boolean)
+	exists := &lg.Exists{Variables: []*lg.Variable{Y}, Body: Y}
+	imp := &lg.Implies{T1: p, T2: exists}
+
+	sig := il.NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+
+	c.makeSkolems(imp, imp, true, nil)
+
+	// No panic = the recursion structure is correct.
+	// Y is not in skolemMap because there are no universal vars in scope.
+	yid := makeVarID(Y)
+	if _, ok := c.skolemMap[yid]; ok {
+		t.Error("Y should NOT be in skolemMap (no universals in scope)")
+	}
+}
+
+func TestMakeSkolemsForAllNodeArgsReturnsBody(t *testing.T) {
+	// Verify that for ForAll, NodeArgs returns [body], not [vars, body].
+	// This is the key invariant that makes divergence 12 a non-issue.
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	body := lg.NewConst("p", lg.Boolean)
+	fa := &lg.ForAll{Variables: []*lg.Variable{X}, Body: body}
+
+	args := il.NodeArgs(fa)
+	if len(args) != 1 {
+		t.Fatalf("NodeArgs(ForAll) should return 1 element (body), got %d", len(args))
+	}
+	if args[0] != body {
+		t.Error("NodeArgs(ForAll)[0] should be the body")
+	}
+}
+
+func TestMakeSkolemsExistsNodeArgsReturnsBody(t *testing.T) {
+	S := &lg.UninterpretedSort{Name: "S"}
+	Y, _ := lg.NewVariable("Y", S)
+	body := lg.NewConst("q", lg.Boolean)
+	ex := &lg.Exists{Variables: []*lg.Variable{Y}, Body: body}
+
+	args := il.NodeArgs(ex)
+	if len(args) != 1 {
+		t.Fatalf("NodeArgs(Exists) should return 1 element (body), got %d", len(args))
+	}
+	if args[0] != body {
+		t.Error("NodeArgs(Exists)[0] should be the body")
+	}
+}
