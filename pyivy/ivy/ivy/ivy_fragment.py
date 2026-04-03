@@ -469,6 +469,13 @@ def check_feu(assumes,asserts,macros):
     if __debug__:
         xtracer.trace("fragment CheckFEU input counts: assumes=%d asserts=%d macros=%d" % (len(assumes), len(asserts), len(macros)))
 
+        from .canon_fragment import fmla_pair_canon
+        parts = []
+        for fmla, source in assumes:
+            lineno = getattr(source, 'lineno', 0)
+            parts.append(fmla_pair_canon(fmla, source, lineno))
+        xtracer.trace("fragment CheckFEU input HASH canon= assumes=[%s]" % ", ".join(parts))
+
     create_strat_map(assumes,asserts,macros)
     
     if __debug__:
