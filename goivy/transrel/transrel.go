@@ -603,13 +603,13 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	if xtracer.Enabled {
 		u1n := make([]string, len(updated1))
 		for i, m := range updated1 {
-			u1n[i] = m.Name
+			u1n[i] = fmt.Sprintf("'%v'", m.Name)
 		}
 		u2n := make([]string, len(updated2))
 		for i, m := range updated2 {
 			u2n[i] = fmt.Sprintf("'%v'", m.Name)
 		}
-		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=%v(modAll=%v) u2.Modified=[%v](modAll=%v)", u1n, u1.ModifiedAll, strings.Join(u2n, ", "), u2.ModifiedAll)
+		xtracer.Trace("transrel.ComposeUpdates ENTER u1.Modified=[%v](modAll=%v) u2.Modified=[%v](modAll=%v)", strings.Join(u1n, ", "), u1.ModifiedAll, strings.Join(u2n, ", "), u2.ModifiedAll)
 	}
 	clauses1 := u1.TR
 	pre1 := u1.Pre
