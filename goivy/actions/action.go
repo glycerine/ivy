@@ -1889,7 +1889,7 @@ func (a *PatternBasedUpdate) IterSubactions() []Action { return defaultIterSubac
 // If so, adds all defines to updated and finds a matching pattern.
 // Returns (updated, transrel_clauses, precond_clauses).
 // Corresponds to Python PatternBasedUpdate.get_update_axioms.
-func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
+func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *co.Clauses, *co.Clauses) {
 	// Check if any dependency is in the updated set
 	depSet := make(map[string]bool)
 	for _, d := range a.Dependencies {
@@ -1897,12 +1897,12 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([
 	}
 	updatedSet := make(map[string]bool)
 	for _, u := range updated {
-		updatedSet[u] = true
+		updatedSet[u.Name] = true
 	}
 
 	found := false
 	for _, u := range updated {
-		if depSet[u] {
+		if depSet[u.Name] {
 			found = true
 			break
 		}
@@ -1915,7 +1915,7 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([
 	// Add all defines to updated (if not already present)
 	for _, d := range a.Defines {
 		if !updatedSet[d.Name] {
-			updated = append(updated, d.Name)
+			updated = append(updated, d)
 			updatedSet[d.Name] = true
 		}
 	}
@@ -1966,7 +1966,7 @@ func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
 // updated set. If so, adds the symbol to updated. Returns (updated, nil, nil).
 // Corresponds to Python NamedUpdate.get_update_axioms.
-func (a *NamedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
+func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *co.Clauses, *co.Clauses) {
 	defines := a.UpdateName
 	if defines == "" {
 		return updated, nil, nil
@@ -1979,12 +1979,17 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string
 	// Check if defines is not in updated and any dependency is in updated
 	updatedSet := make(map[string]bool)
 	for _, u := range updated {
-		updatedSet[u] = true
+		updatedSet[u.Name] = true
 	}
 	if !updatedSet[defines] {
 		for _, u := range updated {
-			if deps[u] {
-				updated = append(updated, defines)
+			if deps[u.Name] {
+				// Use the sort from the body's symbol if available, else TopS
+				sym := lg.NewConst(defines, lg.TopS)
+				if c, ok := a.Body.(*lg.Const); ok {
+					sym = lg.NewConst(defines, c.CSort)
+				}
+				updated = append(updated, sym)
 				break
 			}
 		}
@@ -1997,7 +2002,7 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string
 // Corresponds to the Python protocol where domain.updates[] objects have
 // get_update_axioms(updated, action).
 type Updater interface {
-	GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses)
+	GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *co.Clauses, *co.Clauses)
 }
 
 // --- EnvAction constructor ---

@@ -1392,41 +1392,34 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 	}
 
 	modified := update.Modified
-	modNames := transrel.ModifiedNames(update)
 	tr := update.TR
 	pre := update.Pre
 
 	if xtracer.Enabled {
-		show := make([]string, len(modNames))
-		for i, s := range modNames {
-			show[i] = fmt.Sprintf("'%v'", s)
+		show := make([]string, len(modified))
+		for i, s := range modified {
+			show[i] = fmt.Sprintf("'%v'", s.Name)
 		}
 		sort.Strings(show)
 		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=[%v]", len(ctx.Domain.Updates), strings.Join(show, ", "))
 	}
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
-			newModNames, transrelNode, precondNode := provider.GetUpdateAxioms(modNames, action)
+			newMod, transrelNode, precondNode := provider.GetUpdateAxioms(modified, action)
 			if xtracer.Enabled {
-				oldShow := make([]string, len(modNames))
-				for j, s := range modNames {
-					oldShow[j] = fmt.Sprintf("'%v'", s)
+				oldShow := make([]string, len(modified))
+				for j, s := range modified {
+					oldShow[j] = fmt.Sprintf("'%v'", s.Name)
 				}
 				sort.Strings(oldShow)
-				newShow := make([]string, len(newModNames))
-				for j, s := range newModNames {
-					newShow[j] = fmt.Sprintf("'%v'", s)
+				newShow := make([]string, len(newMod))
+				for j, s := range newMod {
+					newShow[j] = fmt.Sprintf("'%v'", s.Name)
 				}
 				sort.Strings(newShow)
 				xtracer.Trace("actions.applyUpdateAxioms axiom modNames=[%v] -> newModNames=[%v] hasTR=%v hasPre=%v", strings.Join(oldShow, ", "), strings.Join(newShow, ", "), transrelNode != nil, precondNode != nil)
 			}
-			// Update modNames for next iteration
-			modNames = newModNames
-			// Convert new names to Consts (TopSort since we don't have sort info)
-			modified = make([]*lg.Const, len(newModNames))
-			for i, n := range newModNames {
-				modified[i] = lg.NewConst(n, lg.TopS)
-			}
+			modified = newMod
 			if transrelNode != nil {
 				tr = co.AndClausesTyped(tr, transrelNode)
 			}

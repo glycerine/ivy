@@ -43,13 +43,10 @@ func (a *DerivedUpdate) IterSubactions() []Action { return DefaultIterSubactions
 // GetUpdateAxioms checks if any dependency of the definition is in the updated
 // set. If so, adds the defined symbol to updated. Returns (updated, nil, nil).
 // Corresponds to Python DerivedUpdate.get_update_axioms.
-func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
-	// Get the defined symbol name
-	defines := ""
-	if c, ok := a.Symbol.(*lg.Const); ok {
-		defines = c.Name
-	}
-	if defines == "" {
+func (a *DerivedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *co.Clauses, *co.Clauses) {
+	// Get the defined symbol
+	defSym, ok := a.Symbol.(*lg.Const)
+	if !ok || defSym == nil {
 		return updated, nil, nil
 	}
 
@@ -60,12 +57,12 @@ func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]stri
 	// Check if defines is not in updated and any dependency is in updated
 	updatedSet := make(map[string]bool)
 	for _, u := range updated {
-		updatedSet[u] = true
+		updatedSet[u.Name] = true
 	}
-	if !updatedSet[defines] {
+	if !updatedSet[defSym.Name] {
 		for _, u := range updated {
-			if deps[u] {
-				updated = append(updated, defines)
+			if deps[u.Name] {
+				updated = append(updated, defSym)
 				break
 			}
 		}
