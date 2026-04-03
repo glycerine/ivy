@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -214,7 +215,7 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	}
 
 	if len(goals) > 0 && goals[0] != nil {
-		xtracer.Trace("proof.ApplyProof ENTER proofType=%T goal[0].Formula type=%T", proof, goals[0].Formula)
+		xtracer.Trace("proof.ApplyProof ENTER proofType=%s goal[0].Formula type=%s", iu.TypeName(proof), iu.TypeName(goals[0].Formula))
 	}
 
 	// Dispatch on proof type.
@@ -515,7 +516,7 @@ func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.
 	var err error
 	for i, proof := range proofs {
 		if len(decls) > 0 && decls[0] != nil {
-			xtracer.Trace("proof.composeProofs step=%d/%d proofType=%T goal[0].Formula type=%T", i, len(proofs), proof, decls[0].Formula)
+			xtracer.Trace("proof.composeProofs step=%d/%d proofType=%s goal[0].Formula type=%s", i, len(proofs), iu.TypeName(proof), iu.TypeName(decls[0].Formula))
 		}
 		decls, err = pc.ApplyProof(decls, proof)
 		if err != nil {
@@ -578,7 +579,7 @@ func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.Proo
 func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.TacticTactic) ([]*ast.LabeledFormula, error) {
 	tn := nodeToString(proof.TName)
 	if len(decls) > 0 && decls[0] != nil {
-		xtracer.Trace("proof.tacticTactic name=%q goal[0].Formula type=%T", tn, decls[0].Formula)
+		xtracer.Trace("proof.tacticTactic name=%q goal[0].Formula type=%s", tn, iu.TypeName(decls[0].Formula))
 	}
 	tactic, ok := pc.Cfg.Tactics[tn]
 	if !ok {

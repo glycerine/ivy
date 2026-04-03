@@ -25,6 +25,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	modpkg "github.com/glycerine/ivy/goivy/module"
@@ -216,12 +217,12 @@ func l2sTacticInt(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	full := tacticName == "l2s_full"
 	goal := goals[0]
-	xtracer.Trace("l2s.l2sTacticInt ENTER tactic=%q ngoals=%d goal.Formula type=%T", tacticName, len(goals), goal.Formula)
+	xtracer.Trace("l2s.l2sTacticInt ENTER tactic=%q ngoals=%d goal.Formula type=%s", tacticName, len(goals), iu.TypeName(goal.Formula))
 	if goal.Formula != nil {
 		// Also check if it's a SchemaBody
 		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 			conc := sb.Conc()
-			xtracer.Trace("l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=%T", conc)
+			xtracer.Trace("l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=%s", iu.TypeName(conc))
 		}
 	}
 	lineno := ast.Location{Filename: "l2s", Line: 0}

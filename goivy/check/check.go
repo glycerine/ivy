@@ -13,6 +13,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
@@ -350,10 +351,10 @@ func CheckTemporals(mod *module.Module) error {
 			model := temporal.NormalProgramFromModule(mod)
 
 			// Python: subgoal = prop.clone([prop.args[0], ivy_ast.TemporalModels(model, propn.args[1])])
-			xtracer.Trace("check.temporal propn.Formula type=%T", propn.Formula)
+			xtracer.Trace("check.temporal propn.Formula type=%s", iu.TypeName(propn.Formula))
 			tm := mod.Cfg.AstCfg.NewTemporalModels(model, propn.Formula)
 			subgoal := prop.Clone([]ast.Node{prop.Label, tm}).(*ast.LabeledFormula)
-			xtracer.Trace("check.temporal subgoal.Formula type=%T", subgoal.Formula)
+			xtracer.Trace("check.temporal subgoal.Formula type=%s", iu.TypeName(subgoal.Formula))
 
 			subgoals := []*ast.LabeledFormula{subgoal}
 
@@ -362,7 +363,7 @@ func CheckTemporals(mod *module.Module) error {
 			if pf != nil {
 				pfNode, _ = pf.(ast.Node)
 			}
-			xtracer.Trace("check.temporal proof type=%T pfNode type=%T", pf, pfNode)
+			xtracer.Trace("check.temporal proof type=%s pfNode type=%s", iu.TypeName(pf), iu.TypeName(pfNode))
 			var err error
 			subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
 			if err != nil {

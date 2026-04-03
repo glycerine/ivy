@@ -2,10 +2,10 @@ package clauseops
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -101,22 +101,9 @@ func copyStringSet(s map[string]struct{}) map[string]struct{} {
 	return r
 }
 
-// ShortTypeName returns just the struct name without package prefix or pointer star,
-// matching Python's type(x).__name__ output.
+// ShortTypeName delegates to iu.ShortTypeName.
 func ShortTypeName(v interface{}) string {
-	s := fmt.Sprintf("%T", v)
-	if i := strings.LastIndex(s, "."); i >= 0 {
-		s = s[i+1:]
-	}
-	// Map Go type names to Python class names where they differ.
-	// Python: Var; Go: Variable. (logic.Symbol→logic.Const already renamed.)
-	if s == "Variable" {
-		return "Var"
-	}
-	if s == "App" {
-		return "Apply"
-	}
-	return s
+	return iu.ShortTypeName(v)
 }
 
 // SubstituteConstantsAST substitutes terms for constants in an AST node.
