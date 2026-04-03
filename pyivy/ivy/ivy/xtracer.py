@@ -15,12 +15,20 @@ Usage:
 
 import os
 import sys
+import os.path
+
+from pathlib import Path as pathlibPath
 
 from .canon import canon_blake3
+from . import ivy_utils as iu
 
 _hash_verbose = True
 
 enabled = os.environ.get('XTRACE_OFF') != '1'
+
+defaultEx = str((pathlibPath(__file__).resolve() / "../../../../ivy-lang-examples").resolve())
+#print("defaultEx = %s" % defaultEx) # e.g. /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples
+examples_dir = os.environ.get('IVY_EXAMPLES_DIR', defaultEx)
 
 def trace(msg, *args):
     """Print an XTRACE line to stdout, flushed immediately."""
@@ -37,11 +45,11 @@ def normalize_filename(f):
     """
     if f is None:
         return f
-    import os.path
+    #import os.path
     # Build list of include directory prefixes to normalize.
     # The include path may be under the source tree or under a venv.
     prefixes = []
-    from . import ivy_utils as iu
+    #from . import ivy_utils as iu
     std_dir = iu.get_std_include_dir()
     if std_dir:
         base_dir = os.path.dirname(std_dir)
@@ -57,12 +65,10 @@ def normalize_filename(f):
     for prefix in prefixes:
         if f.startswith(prefix):
             return '<IVY_INCLUDE>/' + f[len(prefix):]
-    examples_dir = os.environ.get('IVY_EXAMPLES_DIR', '')
+
     if examples_dir:
-        if not examples_dir.endswith(os.sep):
-            examples_dir += os.sep
         if f.startswith(examples_dir):
-            return '<IVY_EXAMPLES>/' + f[len(examples_dir):]
+            return '<IVY_EXAMPLES>' + f[len(examples_dir):]
     return f
 
 

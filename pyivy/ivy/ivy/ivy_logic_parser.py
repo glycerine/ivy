@@ -7,23 +7,24 @@ from . import ivy_logic_utils
 from . import ivy_utils as iu
 from . import xtracer
 
-def _normalize_filename(f):
-    """Replace include directory path with <IVY_INCLUDE> for canonical matching."""
-    if f is None:
-        return f
-    std_dir = iu.get_std_include_dir()
-    if std_dir:
-        import os.path
-        base_dir = os.path.dirname(std_dir)
-        if base_dir and not base_dir.endswith(os.sep):
-            base_dir += os.sep
-        if f.startswith(base_dir):
-            return '<IVY_INCLUDE>/' + f[len(base_dir):]
-    return f
+# prefer xtracer.normalize_filename() instead. Does IVY_EXAMPLES too.
+# def _normalize_filename(f):
+#     """Replace include directory path with <IVY_INCLUDE> for canonical matching."""
+#     if f is None:
+#         return f
+#     std_dir = iu.get_std_include_dir()
+#     if std_dir:
+#         import os.path
+#         base_dir = os.path.dirname(std_dir)
+#         if base_dir and not base_dir.endswith(os.sep):
+#             base_dir += os.sep
+#         if f.startswith(base_dir):
+#             return '<IVY_INCLUDE>/' + f[len(base_dir):]
+#     return f
 
 def get_lineno(p,n):
     if __debug__: xtracer.trace("parser.get_lineno ENTER")
-    return iu.Location(_normalize_filename(iu.filename),p.lineno(n))
+    return iu.Location(xtracer.normalize_filename(iu.filename), p.lineno(n))
 
 def symbol(s):
     if __debug__: xtracer.trace("parser.symbol ENTER")
