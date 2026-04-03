@@ -1380,11 +1380,9 @@ func intUpdateFromActionUpdate(action actionUpdater, ctx *UpdateContext) *transr
 	return update
 }
 
-// implemented by DerivedUpdate, here
-// in actions/extra_actions.go
-type updateAxiomProvider interface {
-	GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Expr, lg.Expr)
-}
+// updateAxiomProvider matches the Updater interface in action.go.
+// Implemented by PatternBasedUpdate, DerivedUpdate, and NamedUpdate.
+type updateAxiomProvider = Updater
 
 // applyUpdateAxioms applies domain.updates to the given update.
 // In Python, this iterates over domain.updates calling get_update_axioms.
@@ -1415,10 +1413,10 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 				modified[i] = lg.NewConst(n, lg.TopS)
 			}
 			if transrelNode != nil {
-				tr = co.AndClausesTyped(tr, co.FormulaToClauses(transrelNode, nil))
+				tr = co.AndClausesTyped(tr, transrelNode)
 			}
 			if precondNode != nil {
-				pre = co.OrClausesTyped(pre, co.FormulaToClauses(precondNode, nil))
+				pre = co.OrClausesTyped(pre, precondNode)
 			}
 		}
 	}
