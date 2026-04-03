@@ -835,7 +835,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	cmdPr, cmdPw := io.Pipe()
 
 	args = append(args, ivyFile)
-	exe := "goivy_check_xtrace"
+	exe := target // "goivy_check_xtrace"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
 	cmd.Stdout = cmdPw
