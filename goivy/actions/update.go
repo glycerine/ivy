@@ -1397,7 +1397,12 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 	pre := update.Pre
 
 	if xtracer.Enabled {
-		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=%v", len(ctx.Domain.Updates), modNames)
+		show := make([]string, len(modNames))
+		for i, s := range modNames {
+			show[i] = fmt.Sprintf("'%v'", s)
+		}
+		sort.Strings(show)
+		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=[%v]", len(ctx.Domain.Updates), strings.Join(show, ", "))
 	}
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
