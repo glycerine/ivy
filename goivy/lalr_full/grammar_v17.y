@@ -419,7 +419,7 @@ type TokenInfo struct {
 func tokLineno(lex *v17LexAdapter, tok TokenInfo) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
-		Filename: normalizeFilename(lex.filename),
+		Filename: xtracer.NormalizeLine(lex.filename),
 		Line:     tok.Line,
 	}
 }
