@@ -92,8 +92,8 @@ type checker struct {
 	arcs      []arc
 
 	// Macro maps
-	macroMap      map[string]macroDef           // symbol name → (definition, labeled formula)
-	macroValueMap map[string]mapFmlaRes         // symbol name → memoized result
+	macroMap      map[lg.NodeKey]macroDef   // symbol key → (definition, labeled formula)
+	macroValueMap map[lg.NodeKey]mapFmlaRes // symbol key → memoized result
 	macroVarMap   map[varID]*uf.UFNode          // macro param var → strat node
 	macroDepMap   map[varID]map[*uf.UFNode]bool // macro param → dep nodes
 
@@ -144,8 +144,8 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 		stratMap:                  make(map[lg.NodeKey]*uf.UFNode),
 		stratInfo:                 make(map[lg.NodeKey]stratEntry),
 		arcs:                      nil,
-		macroMap:                  make(map[string]macroDef),
-		macroValueMap:             make(map[string]mapFmlaRes),
+		macroMap:                  make(map[lg.NodeKey]macroDef),
+		macroValueMap:             make(map[lg.NodeKey]mapFmlaRes),
 		macroVarMap:               make(map[varID]*uf.UFNode),
 		macroDepMap:               make(map[varID]map[*uf.UFNode]bool),
 		skolemMap:                 make(map[varID]skolemEntry),
@@ -286,12 +286,13 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 		if rep != nil {
 			if !il.IsInterpretedSymbol(c.sig, rep) {
 				// Check macro maps
-				if res, ok := c.macroValueMap[rep.Name]; ok {
+				repKey := lg.Key(rep)
+				if res, ok := c.macroValueMap[repKey]; ok {
 					return res.node, res.uvs
 				}
-				if md, ok := c.macroMap[rep.Name]; ok {
+				if md, ok := c.macroMap[repKey]; ok {
 					resNode, resUvs := c.mapFmla(md.lf.Lineno, md.def.Rhs, -1)
-					c.macroValueMap[rep.Name] = mapFmlaRes{node: resNode, uvs: resUvs}
+					c.macroValueMap[repKey] = mapFmlaRes{node: resNode, uvs: resUvs}
 					return resNode, resUvs
 				}
 				// Regular function application
@@ -388,7 +389,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 			defining := def.Defines()
 			if defining != nil {
 				if cst, ok := defining.(*lg.Const); ok {
-					c.macroMap[cst.Name] = macroDef{
+					c.macroMap[lg.Key(cst)] = macroDef{
 						def: def,
 						lf:  pair.source.(*ast.LabeledFormula),
 					}
@@ -412,7 +413,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 			if rep == nil {
 				continue
 			}
-			md, isMacro := c.macroMap[rep.Name]
+			md, isMacro := c.macroMap[lg.Key(rep)]
 			if !isMacro {
 				continue
 			}

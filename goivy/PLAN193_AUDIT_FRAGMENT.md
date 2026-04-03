@@ -94,9 +94,7 @@ ensure `Polar` handles it identically to Python's `None` case.
 Python keys the macro map on the full `Const` object (compared by name+sort via
 recstruct equality). Go keys on `cst.Name` (string only).
 
-**Effect**: If two macros define symbols with the same name but different sorts
-(extremely unlikely but theoretically possible), Python would distinguish them
-while Go would not.
+**Effect**: when two macros define symbols with the same name but different sorts, Python would distinguish them while Go would not.
 
 Similarly in `map_fmla`:
 - Python `ivy_fragment.py:135`: `if func in macro_value_map`
@@ -120,8 +118,7 @@ Go uses `FreeVariables` which collects only FREE variables.
 **Effect**: If a macro argument expression contains a quantifier that binds a variable,
 Python would include that bound variable in the dependency tracking, but Go would not.
 
-**Severity**: Low-Medium. Macro arguments rarely contain quantifiers, but if they do,
-Go would miss some dependencies.
+**Severity**: Low-Medium. Macro arguments rarely contain quantifiers, but when they do, Go will miss some dependencies.
 
 **Fix**: Port `used_variables_ast` → `UsedVariablesAst` to Go, or use an existing
 equivalent that collects all variable occurrences.
@@ -536,11 +533,12 @@ property.
 7. **Divergence 17** — `makeSkolems` source parameter. FIXED.
 8. **Divergence 1** — Equality key construction. FIXED.
 9. **Divergence 5** — used_variables_ast vs FreeVariables. FALSE ALARM. Python ilu.used_variables_ast (from ivy_logic_utils) collects free vars (excludes bound), same as Go FreeVariables. Test added. No change needed.
+10. **Divergence 4** — macro_map key type 
 
 still todo:
 
-10. **Divergence 4** — macro_map key type (Low)
-11. **Divergence 7** — free_variables matching by name (Low)
-12. **Divergence 9** — Definition recursion check (Low)
-13. **Divergence 10/11** — Error reporting differences (Low)
-14. **Divergence 13** — has_integer_interp sig passing (Low)
+11. **Divergence 7** — free_variables matching by name 
+12. **Divergence 9** — Definition recursion check 
+13. **Divergence 10/11** — Error reporting differences 
+14. **Divergence 13** — has_integer_interp sig passing 
+

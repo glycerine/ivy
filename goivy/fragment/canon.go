@@ -240,19 +240,19 @@ func stringMacroDefMapSexp(m map[string]macroDef) string {
 	return "(hash " + strings.Join(parts, " ") + ")"
 }
 
-// sorted-map helper: map[string]mapFmlaRes
-func stringMapFmlaResMapSexp(m map[string]mapFmlaRes) string {
+// sorted-map helper: map[lg.NodeKey]mapFmlaRes
+func nodeKeyMapFmlaResMapSexp(m map[lg.NodeKey]mapFmlaRes) string {
 	if m == nil {
 		return "nil"
 	}
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		keys = append(keys, k)
+		keys = append(keys, string(k))
 	}
 	sort.Strings(keys)
 	parts := make([]string, len(keys))
 	for i, k := range keys {
-		r := m[k]
+		r := m[lg.NodeKey(k)]
 		parts[i] = fmt.Sprintf(`"%s":%s`, k, string(r.Sexp()))
 	}
 	return "(hash " + strings.Join(parts, " ") + ")"
@@ -390,7 +390,7 @@ func (c *checker) Sexp() lg.NodeKey {
 
 	// macroValueMap
 	b.WriteString(" macroValueMap:")
-	b.WriteString(stringMapFmlaResMapSexp(c.macroValueMap))
+	b.WriteString(nodeKeyMapFmlaResMapSexp(c.macroValueMap))
 
 	// macroVarMap
 	b.WriteString(" macroVarMap:")
