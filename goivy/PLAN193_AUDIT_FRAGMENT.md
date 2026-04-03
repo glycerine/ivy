@@ -206,7 +206,6 @@ in the same places.
 Python uses `not in` which checks value equality (recstruct `__eq__`, comparing
 name+sort). Go compares only by name string.
 
-**Severity**: Low. Unlikely to have two definitions with same name but different sorts.
 
 ---
 

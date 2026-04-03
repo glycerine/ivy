@@ -906,7 +906,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 		symsInRHS := il.SymbolsAst(def.Rhs)
 		isRecursive := false
 		for _, s := range symsInRHS {
-			if defSym != nil && s.Name == defSym.String() {
+			if defSym != nil && lg.Key(s) == lg.Key(defSym) {
 				isRecursive = true
 				break
 			}
