@@ -95,12 +95,18 @@ func TestVerify_ClientServer(t *testing.T) {
 		t.Error("init should establish client-server invariant")
 	}
 
-	// Each exported action should preserve the invariant
+	// Each exported action preserves some conjectures but not all.
+	// Python's ivy_check shows:
+	//   ext:connect  — conj4 PASS, conj5 FAIL
+	//   ext:disconnect — conj4 FAIL, conj5 PASS
+	// So verifyActionPreservation (which checks ALL conjectures) returns false
+	// for both actions, matching Python's "error: failed checks: 2".
 	// After isolate processing, actions have "ext:" prefix (matching Python).
 	for _, actName := range []string{"ext:connect", "ext:disconnect"} {
 		t.Run("preserve_"+actName, func(t *testing.T) {
-			if !verifyActionPreservation(t, mod, actName) {
-				t.Errorf("action %q should preserve invariant", actName)
+			result := verifyActionPreservation(t, mod, actName)
+			if result {
+				t.Errorf("action %q: expected some conjecture failures (matching Python), but all passed", actName)
 			}
 		})
 	}
