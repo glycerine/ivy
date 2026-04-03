@@ -102,8 +102,6 @@ Similarly in `map_fmla`:
 - Python `ivy_fragment.py:135`: `if func in macro_value_map`
 - Go `fragment.go:283`: `if res, ok := c.macroValueMap[rep.Name]`
 
-**Severity**: Low. Unlikely to matter in practice.
-
 **Fix**: Use `lg.Key(cst)` (canonical s-expression string) as the map key
 instead of just `cst.Name`.
 
@@ -537,10 +535,10 @@ property.
 6. **Divergence 12** — `makeSkolems` recursion with NodeArgs. FALSE ALARM. no change needed.
 7. **Divergence 17** — `makeSkolems` source parameter. FIXED.
 8. **Divergence 1** — Equality key construction. FIXED.
+9. **Divergence 5** — used_variables_ast vs FreeVariables. FALSE ALARM. Python ilu.used_variables_ast (from ivy_logic_utils) collects free vars (excludes bound), same as Go FreeVariables. Test added. No change needed.
 
 still todo:
 
-9. **Divergence 5** — used_variables_ast vs FreeVariables (Low-Medium)
 10. **Divergence 4** — macro_map key type (Low)
 11. **Divergence 7** — free_variables matching by name (Low)
 12. **Divergence 9** — Definition recursion check (Low)

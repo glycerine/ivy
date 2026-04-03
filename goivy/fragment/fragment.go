@@ -447,7 +447,11 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 						}
 					}
 				} else {
-					// Non-variable argument: all used variables contribute to deps
+					// Non-variable argument: free variables contribute to deps.
+				// Python uses ilu.used_variables_ast (ivy_logic_utils.variables_ast)
+				// which collects free variables (excludes bound vars from binders).
+				// Note: ivy_ast.py has a different used_variables_ast that collects ALL
+				// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
 					fvs := lu.FreeVariables(appArgs[i])
 					for _, uNode := range fvs {
 						u := uNode.(*lg.Variable)
