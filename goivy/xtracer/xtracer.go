@@ -104,7 +104,7 @@ func trace(format string, args ...interface{}) {
 				args[i] = "False"
 			}
 		case string:
-			args[i] = normalize(b)
+			args[i] = NormalizeLine(b)
 		}
 	}
 
@@ -128,16 +128,18 @@ func fileLine(depth int) string {
 	return s
 }
 
-func normalize(line string) string {
+func NormalizeLine(line string) string {
 	// Strip known path prefixes for include files
 	for _, prefix := range ivyIncludeDirs {
 		if strings.Contains(line, prefix) {
-			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
+			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>")
 		}
 	}
 	for _, prefix := range ivyExamplesDir {
 		if strings.Contains(line, prefix) {
-			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
+			//fmt.Printf("from: '%v'\n", line)
+			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>")
+			//fmt.Printf("to: '%v'\n", line)
 		}
 	}
 	return line

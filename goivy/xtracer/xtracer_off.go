@@ -15,3 +15,5 @@ func Trace(format string, args ...interface{}) {}
 
 // Trace1 is a no-op when xtracer is disabled.
 func Trace1(format string, args ...interface{}) {}
+
+func NormalizeLine(line string) string { return line }

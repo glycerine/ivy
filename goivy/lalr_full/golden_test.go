@@ -20,6 +20,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
@@ -555,8 +556,14 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
 			}
 		}
-		goNorm := normalizeLine(repo, goCheck)
-		ivNorm := normalizeLine(repo, ivCheck)
+		var goNorm, ivNorm string
+		if xtracer.Enabled {
+			goNorm = xtracer.NormalizeLine(goCheck)
+			ivNorm = xtracer.NormalizeLine(ivCheck)
+		} else {
+			goNorm = normalizeLine(repo, goCheck)
+			ivNorm = normalizeLine(repo, ivCheck)
+		}
 
 		if verbose {
 			fmt.Printf("%06d  go : %v", i, goNorm)
