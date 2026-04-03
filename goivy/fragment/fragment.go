@@ -755,13 +755,11 @@ func CheckFEU(
 
 		// Dump universally quantified variables
 		uqvNames := make([]string, 0, len(c.universallyQuantifiedVars))
-		extra := ""
 		for vid := range c.universallyQuantifiedVars {
-			uqvNames = append(uqvNames, fmt.Sprintf("%v'%s:%s'", extra, vid.name, vid.sort))
-			extra = ", "
+			uqvNames = append(uqvNames, fmt.Sprintf("'%s:%s'", vid.name, vid.sort))
 		}
 		sort.Strings(uqvNames)
-		xtracer.Trace("fragment HASH canon= univQuantVars (%d): %v", len(c.universallyQuantifiedVars), uqvNames)
+		xtracer.Trace("fragment HASH canon= univQuantVars (%d): %v", len(c.universallyQuantifiedVars), strings.Join(uqvNames, ", "))
 
 		// Dump strat_map size and keys
 		smKeys := make([]string, 0, len(c.stratMap))
