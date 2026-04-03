@@ -835,6 +835,21 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 			}
 		}
 	}
+	if xtracer.Enabled {
+		symStrs := make([]string, len(syms))
+		for i, s := range syms {
+			symStrs[i] = s.Name + ":" + fmt.Sprintf("%v", s.CSort)
+		}
+		hideStrs := make([]string, len(toHide))
+		for i, s := range toHide {
+			hideStrs[i] = s.Name + ":" + fmt.Sprintf("%v", s.CSort)
+		}
+		modStrs := []string{}
+		for _, s := range u.Modified {
+			modStrs = append(modStrs, s.Name+"(inSymNames="+fmt.Sprintf("%v", symNames[s.Name])+")")
+		}
+		xtracer.Trace("transrel.Hide: syms=%v toHide=%v modified=%v", symStrs, hideStrs, modStrs)
+	}
 	// Existentially quantify hidden symbols in TR and Pre
 	_, newTR := ExistQuantClauses(toHide, u.TR)
 	_, newPre := ExistQuantClauses(toHide, u.Pre)
