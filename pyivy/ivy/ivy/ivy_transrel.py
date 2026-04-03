@@ -384,7 +384,7 @@ def hide(syms,update):
         mod_strs = []
         if update[0] is not None:
             mod_strs = sorted([s.name + '(inSymNames=' + str(s in syms) + ')' for s in update[0]])
-        xtracer.trace("transrel.Hide: syms=%s toHide=%s modified=%s" % (sym_strs, sym_strs, mod_strs))
+        xtracer.trace("transrel.Hide: syms=%s modified=%s" % (sym_strs, mod_strs))
     new_updated = [s for s in update[0] if s not in syms]
     new_tr = exist_quant(syms,update[1])
     new_pre = exist_quant(syms,update[2])

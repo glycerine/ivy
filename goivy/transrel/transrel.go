@@ -861,39 +861,36 @@ func negateFormula(f lg.Expr) lg.Expr {
 // fresh skolem names, effectively hiding them.
 //
 // Corresponds to Python's hide(syms, update).
-func Hide(syms []*lg.Const, u *Update) *Update {
+func Hide(inputSyms []*lg.Const, u *Update) *Update {
 	// Faithful port of Python hide(syms, update) (ivy_transrel.py:371-377).
-	// Preserves []*lg.Const with sorts throughout, matching Python where
-	// syms is a set of Symbol objects.
+	// Matches Python's exact order of operations:
+	//   syms = set(syms)
+	//   syms.update(new(s) for s in update[0] if s in syms)
+	//   <trace>
+	//   new_updated = [s for s in update[0] if s not in syms]
+	//   new_tr = exist_quant(syms, update[1])
+	//   new_pre = exist_quant(syms, update[2])
+
+	// Step 1: syms = set(syms)
+	syms := make([]*lg.Const, len(inputSyms))
+	copy(syms, inputSyms)
 	symNames := make(map[string]bool, len(syms))
-	toHide := make([]*lg.Const, len(syms))
-	copy(toHide, syms)
 	for _, s := range syms {
 		symNames[s.Name] = true
 	}
-	// Also hide new_ versions of modified symbols that are being hidden.
-	// Matches Python: syms.update(new(s) for s in update[0] if s in syms)
-	// which mutates syms to include new_ versions before filtering.
+
+	// Step 2: syms.update(new(s) for s in update[0] if s in syms)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
 				nc := NewConst(s)
-				toHide = append(toHide, nc)
+				syms = append(syms, nc)
 				symNames[nc.Name] = true
 			}
 		}
 	}
-	// Compute new modified list (excluding hidden symbols).
-	// Python: new_updated = [s for s in update[0] if s not in syms]
-	// Uses the mutated syms which now includes new_ versions.
-	newMod := make([]*lg.Const, 0)
-	if !u.ModifiedAll {
-		for _, s := range u.Modified {
-			if !symNames[s.Name] {
-				newMod = append(newMod, s)
-			}
-		}
-	}
+
+	// Step 3: trace (syms is now mutated, matching Python)
 	if xtracer.Enabled {
 		boolStr := func(b bool) string {
 			if b {
@@ -906,21 +903,27 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 			symStrs[i] = fmt.Sprintf("'%s:%v'", s.Name, s.CSort)
 		}
 		sort.Strings(symStrs)
-		hideStrs := make([]string, len(toHide))
-		for i, s := range toHide {
-			hideStrs[i] = fmt.Sprintf("'%s:%v'", s.Name, s.CSort)
-		}
-		sort.Strings(hideStrs)
 		modStrs := make([]string, 0, len(u.Modified))
 		for _, s := range u.Modified {
 			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, boolStr(symNames[s.Name])))
 		}
 		sort.Strings(modStrs)
-		xtracer.Trace("transrel.Hide: syms=[%v] toHide=[%v] modified=[%v]", strings.Join(symStrs, ", "), strings.Join(hideStrs, ", "), strings.Join(modStrs, ", "))
+		xtracer.Trace("transrel.Hide: syms=[%v] modified=[%v]", strings.Join(symStrs, ", "), strings.Join(modStrs, ", "))
 	}
-	// Existentially quantify hidden symbols in TR and Pre
-	_, newTR := ExistQuantClauses(toHide, u.TR)
-	_, newPre := ExistQuantClauses(toHide, u.Pre)
+
+	// Step 4: new_updated = [s for s in update[0] if s not in syms]
+	newMod := make([]*lg.Const, 0)
+	if !u.ModifiedAll {
+		for _, s := range u.Modified {
+			if !symNames[s.Name] {
+				newMod = append(newMod, s)
+			}
+		}
+	}
+	// Step 5: new_tr = exist_quant(syms, update[1])
+	//         new_pre = exist_quant(syms, update[2])
+	_, newTR := ExistQuantClauses(syms, u.TR)
+	_, newPre := ExistQuantClauses(syms, u.Pre)
 
 	return &Update{
 		Modified:    newMod,
