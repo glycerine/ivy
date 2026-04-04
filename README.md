@@ -292,7 +292,7 @@ pip3 install -e .
 Package Dependency Layers (reference)
 
 Layer 0 (foundation):  ast, lexer, ivyutils
-Layer 1:               logic, parser
+Layer 1:               logic, parser, ivylogic
 Layer 2:               z3bridge, logicutil, logicparser
 Layer 3:               module (+clauseops), solver
 Layer 4:               actions (+transrel), isolate
