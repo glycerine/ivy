@@ -5,7 +5,7 @@ package solver
 import (
 	"fmt"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -14,7 +14,7 @@ import (
 // ClausesImplyList checks whether clauses1 implies each element of clauses2List.
 // Returns a bool slice with the result for each element.
 // Corresponds to Python's clauses_imply_list.
-func (s *Solver) ClausesImplyList(clauses1 *clauseops.Clauses, clauses2List []*clauseops.Clauses) ([]bool, error) {
+func (s *Solver) ClausesImplyList(clauses1 *mod.Clauses, clauses2List []*mod.Clauses) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -25,7 +25,7 @@ func (s *Solver) ClausesImplyList(clauses1 *clauseops.Clauses, clauses2List []*c
 
 	results := make([]bool, len(clauses2List))
 	for i, clauses2 := range clauses2List {
-		dual := clauseops.NegateClauses(clauses2)
+		dual := mod.NegateClauses(clauses2)
 		z2, err := s.ClausesToZ3(dual)
 		if err != nil {
 			return nil, err
@@ -40,47 +40,47 @@ func (s *Solver) ClausesImplyList(clauses1 *clauseops.Clauses, clauses2List []*c
 
 // ConditionClauses wraps each formula in clauses with an implication from fmla.
 // Returns new Clauses where each formula is (Not(fmla) OR formula).
-// This is a convenience wrapper around clauseops.ConditionClauses.
-func ConditionClauses(clauses *clauseops.Clauses, fmla lg.Expr) *clauseops.Clauses {
-	return clauseops.ConditionClauses(clauses, fmla)
+// This is a convenience wrapper around mod.ConditionClauses.
+func ConditionClauses(clauses *mod.Clauses, fmla lg.Expr) *mod.Clauses {
+	return mod.ConditionClauses(clauses, fmla)
 }
 
 // DualClauses negates a clause set (for checking implications).
-// This is a convenience wrapper around clauseops.NegateClauses.
-func DualClauses(clauses *clauseops.Clauses) *clauseops.Clauses {
-	return clauseops.NegateClauses(clauses)
+// This is a convenience wrapper around mod.NegateClauses.
+func DualClauses(clauses *mod.Clauses) *mod.Clauses {
+	return mod.NegateClauses(clauses)
 }
 
 // TrueClauses returns a trivially true clause set.
-func TrueClauses() *clauseops.Clauses {
-	return clauseops.TrueClauses(nil)
+func TrueClauses() *mod.Clauses {
+	return mod.TrueClauses(nil)
 }
 
 // FalseClauses returns a trivially false clause set.
-func FalseClauses() *clauseops.Clauses {
-	return clauseops.FalseClauses(nil)
+func FalseClauses() *mod.Clauses {
+	return mod.FalseClauses(nil)
 }
 
 // AndClauses computes the conjunction of multiple clause sets.
-func AndClauses(args ...*clauseops.Clauses) *clauseops.Clauses {
-	return clauseops.AndClausesTyped(args...)
+func AndClauses(args ...*mod.Clauses) *mod.Clauses {
+	return mod.AndClausesTyped(args...)
 }
 
 // FormulaToClauses wraps a formula as a Clauses set.
-func FormulaToClauses(fmla lg.Expr) *clauseops.Clauses {
-	return clauseops.FormulaToClauses(fmla, nil)
+func FormulaToClauses(fmla lg.Expr) *mod.Clauses {
+	return mod.FormulaToClauses(fmla, nil)
 }
 
 // BoundQuantifiersClauses bounds universal quantifiers in clauses to
 // the given set of representative terms per sort.
 // Corresponds to Python's bound_quantifiers_clauses.
 func (s *Solver) BoundQuantifiersClauses(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	reps map[string][]lg.Expr,
 	uninterpretedSorts map[string]bool,
-) *clauseops.Clauses {
+) *mod.Clauses {
 	bq := func(fmla lg.Expr) lg.Expr {
-		vars := clauseops.VariablesAST(fmla)
+		vars := mod.VariablesAST(fmla)
 		if len(vars) == 0 {
 			return fmla
 		}
@@ -113,13 +113,13 @@ func (s *Solver) BoundQuantifiersClauses(
 	}
 	defs := make([]*il.Definition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
-	return clauseops.NewClauses(newFmlas, defs, clauses.Annot)
+	return mod.NewClauses(newFmlas, defs, clauses.Annot)
 }
 
 // RemoveDuplicatesClauses removes duplicate formulas from a clause set.
 // Uses Z3 expression identity for deduplication.
 // Corresponds to Python's remove_duplicates_clauses.
-func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
+func (s *Solver) RemoveDuplicatesClauses(clauses *mod.Clauses) (*mod.Clauses, error) {
 	seen := make(map[string]bool)
 	var unique []lg.Expr
 	for _, f := range clauses.Fmlas {
@@ -136,7 +136,7 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops
 	}
 	defs := make([]*il.Definition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
-	return clauseops.NewClauses(unique, defs, clauses.Annot), nil
+	return mod.NewClauses(unique, defs, clauses.Annot), nil
 }
 
 // ClausesModelToDiagram returns a diagram (clause set) of a model of clauses.
@@ -144,33 +144,33 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops
 // SubstituteConstantsClauses + FilterRedundantFacts, matching Python's
 // clauses_model_to_diagram (ivy_solver.py:1448-1516).
 func (s *Solver) ClausesModelToDiagram(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	ignore func(*lg.Const) bool,
-	axioms *clauseops.Clauses,
-) (*clauseops.Clauses, error) {
+	axioms *mod.Clauses,
+) (*mod.Clauses, error) {
 	return s.ClausesModelToDiagramFull(clauses, ignore, nil, nil, axioms, true, true, true)
 }
 
 // ClausesModelToDiagramFull is the full-featured version matching all Python parameters.
 func (s *Solver) ClausesModelToDiagramFull(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	ignore func(*lg.Const) bool,
-	implied *clauseops.Clauses,
+	implied *mod.Clauses,
 	model *HerbrandModel,
-	axioms *clauseops.Clauses,
+	axioms *mod.Clauses,
 	weaken bool,
 	numerals bool,
 	upwardClose bool,
-) (*clauseops.Clauses, error) {
+) (*mod.Clauses, error) {
 	if axioms == nil {
-		axioms = clauseops.TrueClauses(nil)
+		axioms = mod.TrueClauses(nil)
 	}
 	if ignore == nil {
 		ignore = func(*lg.Const) bool { return false }
 	}
 
 	// Get model
-	combined := clauseops.AndClausesTyped(clauses, axioms)
+	combined := mod.AndClausesTyped(clauses, axioms)
 	h := s.ModelIfNone(combined, implied, model)
 	if h == nil {
 		return nil, nil
@@ -198,7 +198,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	} else {
 		reps = make(map[lg.NodeKey]lg.Expr)
 		// Use constants from clauses as reps where possible
-		usedConsts := clauseops.ConstantsClauses(clauses)
+		usedConsts := mod.ConstantsClauses(clauses)
 		for _, c := range usedConsts {
 			mc := h.EvalConstant(c)
 			if mc != nil {
@@ -225,13 +225,13 @@ func (s *Solver) ClausesModelToDiagramFull(
 	}
 
 	// Substitute constants
-	res = clauseops.SubstituteConstantsClauses(res, reps)
+	res = mod.SubstituteConstantsClauses(res, reps)
 
 	// Filter defined skolems
 	if len(clauses.DefIdx) > 0 {
 		var filtered []lg.Expr
 		for _, f := range res.Fmlas {
-			syms := clauseops.UsedSymbolsAST(f)
+			syms := mod.UsedSymbolsAST(f)
 			hasSkolemDef := false
 			for _, c := range syms {
 				if isSkolem(c.Name) {
@@ -245,7 +245,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 				filtered = append(filtered, f)
 			}
 		}
-		res = clauseops.NewClauses(filtered, res.Defs, res.Annot)
+		res = mod.NewClauses(filtered, res.Defs, res.Annot)
 	}
 
 	// Filter redundant facts
@@ -275,7 +275,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			}
 		}
 		clauses1Weak := s.BoundQuantifiersClauses(clauses, repTerms, nil)
-		core, err := s.UnsatCore(res, clauseops.AndClausesTyped(clauseops.TrueClauses(nil), axioms), clauses1Weak, unlikely)
+		core, err := s.UnsatCore(res, mod.AndClausesTyped(mod.TrueClauses(nil), axioms), clauses1Weak, unlikely)
 		if err == nil && core != nil {
 			res = core
 		}
@@ -290,7 +290,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	}
 	var finalFmlas []lg.Expr
 	for _, f := range res.Fmlas {
-		syms := clauseops.UsedSymbolsAST(f)
+		syms := mod.UsedSymbolsAST(f)
 		hasIgnored := false
 		for _, c := range syms {
 			if ignore(c) && !repSet[c.Name] {
@@ -302,7 +302,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			finalFmlas = append(finalFmlas, f)
 		}
 	}
-	res = clauseops.NewClauses(finalFmlas, res.Defs, res.Annot)
+	res = mod.NewClauses(finalFmlas, res.Defs, res.Annot)
 
 	// If not upward-closing, add universe closure constraints
 	if !upwardClose {
@@ -320,8 +320,8 @@ func (s *Solver) ClausesModelToDiagramFull(
 			}
 		}
 		if len(ucFmlas) > 0 {
-			ucClauses := clauseops.NewClauses(ucFmlas, nil, nil)
-			res = clauseops.AndClausesTyped(res, ucClauses)
+			ucClauses := mod.NewClauses(ucFmlas, nil, nil)
+			res = mod.AndClausesTyped(res, ucClauses)
 		}
 	}
 
@@ -335,7 +335,7 @@ func (s *Solver) NewZ3Solver() *z3bridge.Solver {
 
 // AddClauses adds a clauses set to a Z3 solver.
 // Corresponds to Python's add_clauses.
-func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *clauseops.Clauses) error {
+func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *mod.Clauses) error {
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return err

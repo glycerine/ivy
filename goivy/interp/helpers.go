@@ -5,12 +5,10 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -23,8 +21,8 @@ import (
 // the unsat core and interpolant respectively.
 // Corresponds to Python's UnsatCoreWithInterpolant exception (ivy_interp.py:219-222).
 type UnsatCoreWithInterpolant struct {
-	Core *co.Clauses
-	Itp  *co.Clauses
+	Core *module.Clauses
+	Itp  *module.Clauses
 }
 
 func (e *UnsatCoreWithInterpolant) Error() string {
@@ -131,7 +129,7 @@ func (fa *FailAction) FailedAction() actions.Action {
 // through its update. If clauses is nil, the state's own clauses are used.
 //
 // Corresponds to Python's reverse() in ivy_interp.py.
-func Reverse(state *State, clauses *co.Clauses) (*co.Clauses, error) {
+func Reverse(state *State, clauses *module.Clauses) (*module.Clauses, error) {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil, fmt.Errorf("Reverse: cannot reverse state without predecessor and update")
 	}
@@ -139,9 +137,9 @@ func Reverse(state *State, clauses *co.Clauses) (*co.Clauses, error) {
 		clauses = state.Clauses
 	}
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	revImage := tr.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
-	revClauses := co.FormulaToClauses(revImage, clauses.Annot)
-	return co.AndClausesTyped(revClauses, axioms), nil
+	revImage := actions.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
+	revClauses := module.FormulaToClauses(revImage, clauses.Annot)
+	return module.AndClausesTyped(revClauses, axioms), nil
 }
 
 // ReverseUpdateConcreteClauses reverses an update concretely. If the
@@ -150,7 +148,7 @@ func Reverse(state *State, clauses *co.Clauses) (*co.Clauses, error) {
 // returns the reverse image conjoined with axioms.
 //
 // Corresponds to Python's reverse_update_concrete_clauses() in ivy_interp.py.
-func ReverseUpdateConcreteClauses(state *State, clauses *co.Clauses) (*co.Clauses, error) {
+func ReverseUpdateConcreteClauses(state *State, clauses *module.Clauses) (*module.Clauses, error) {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil, fmt.Errorf("ReverseUpdateConcreteClauses: no predecessor or update")
 	}
@@ -163,15 +161,15 @@ func ReverseUpdateConcreteClauses(state *State, clauses *co.Clauses) (*co.Clause
 	// Check forward interpolant: if the predecessor cannot reach the
 	// given clauses, return UnsatCoreWithInterpolant.
 	// Python: ivy_interp.py:234-236
-	fi := tr.ForwardInterpolant(state.Pred().Clauses, state.Update(), clauses, axioms, interpreted)
+	fi := actions.ForwardInterpolant(state.Pred().Clauses, state.Update(), clauses, axioms, interpreted)
 	if fi != nil {
 		return nil, &UnsatCoreWithInterpolant{Core: fi.Core, Itp: fi.Itp}
 	}
 
 	// Compute reverse image: this is the concrete pre-image.
-	revImage := tr.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
-	revClauses := co.FormulaToClauses(revImage, clauses.Annot)
-	return co.AndClausesTyped(revClauses, axioms), nil
+	revImage := actions.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
+	revClauses := module.FormulaToClauses(revImage, clauses.Annot)
+	return module.AndClausesTyped(revClauses, axioms), nil
 }
 
 // ---------------------------------------------------------------------------
@@ -180,20 +178,20 @@ func ReverseUpdateConcreteClauses(state *State, clauses *co.Clauses) (*co.Clause
 
 // JoinUnders computes the join (disjunction) of all under-approximation
 // states. Returns TrueClauses if there are no under-approximations.
-func JoinUnders(state *State) *co.Clauses {
+func JoinUnders(state *State) *module.Clauses {
 	unders := state.Unders()
 	if len(unders) == 0 {
-		return co.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
-	clauses := make([]*co.Clauses, len(unders))
+	clauses := make([]*module.Clauses, len(unders))
 	for i, u := range unders {
 		clauses[i] = u.Clauses
 	}
-	return co.OrClausesTyped(clauses...)
+	return module.OrClausesTyped(clauses...)
 }
 
 // AddUnder adds an under-approximation state to the target state.
-func AddUnder(state *State, clauses *co.Clauses, pred *State, universe interface{}) *State {
+func AddUnder(state *State, clauses *module.Clauses, pred *State, universe interface{}) *State {
 	s := NewStateFromClauses(state.Domain, clauses)
 	if pred != nil {
 		s.SetPred(pred)
@@ -212,7 +210,7 @@ func AddUnder(state *State, clauses *co.Clauses, pred *State, universe interface
 // under-approximation and returns it. Otherwise returns nil.
 //
 // Corresponds to Python's reach_state() in ivy_interp.py.
-func ReachState(state *State, clauses *co.Clauses) *State {
+func ReachState(state *State, clauses *module.Clauses) *State {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil
 	}
@@ -223,9 +221,9 @@ func ReachState(state *State, clauses *co.Clauses) *State {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	// Compute the forward image from the predecessor's under-approximation
 	// through the state's update, then conjoin with the target clauses.
-	img := tr.ForwardImage(pre.ToFormula(), axioms.ToFormula(), state.Update())
-	imgClauses := co.AndClausesTyped(
-		co.FormulaToClauses(img, nil),
+	img := actions.ForwardImage(pre.ToFormula(), axioms.ToFormula(), state.Update())
+	imgClauses := module.AndClausesTyped(
+		module.FormulaToClauses(img, nil),
 		axioms,
 		clauses,
 	)
@@ -247,7 +245,7 @@ func ReachState(state *State, clauses *co.Clauses) *State {
 // and returns the reachable state. If not reachable, returns nil.
 //
 // Corresponds to Python's reach_state_from_pred() in ivy_interp.py.
-func ReachStateFromPred(state *State, clauses *co.Clauses) (*State, error) {
+func ReachStateFromPred(state *State, clauses *module.Clauses) (*State, error) {
 	post := ReachState(state, clauses)
 	if post != nil {
 		return post, nil
@@ -261,7 +259,7 @@ func ReachStateFromPred(state *State, clauses *co.Clauses) (*State, error) {
 		axioms := state.Domain.BackgroundTheory(state.InScope)
 		interpreted := functionsToInterpreted(state.Domain.Functions)
 		pre := JoinUnders(state.Pred())
-		ri := tr.ReverseInterpolantCase(clauses, state.Update(), pre, axioms, interpreted)
+		ri := actions.ReverseInterpolantCase(clauses, state.Update(), pre, axioms, interpreted)
 		if ri != nil {
 			return nil, &UnsatCoreWithInterpolant{Core: ri.Core, Itp: ri.Itp}
 		}
@@ -277,16 +275,16 @@ func ReachStateFromPred(state *State, clauses *co.Clauses) (*State, error) {
 // implied by the state's clauses and background theory.
 //
 // Corresponds to Python's undecided_conjectures() in ivy_interp.py.
-func UndecidedConjectures(state *State) []*co.Clauses {
+func UndecidedConjectures(state *State) []*module.Clauses {
 	conjs := state.Conjs()
 	if len(conjs) == 0 {
 		return nil
 	}
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	premise := co.AndClausesTyped(state.Clauses, axioms)
+	premise := module.AndClausesTyped(state.Clauses, axioms)
 	premiseFmla := premise.ToFormula()
 
-	var undecided []*co.Clauses
+	var undecided []*module.Clauses
 	for _, c := range conjs {
 		t := z3bridge.NewTranslator()
 		implied, err := t.Implies(premiseFmla, c.ToFormula())
@@ -301,14 +299,14 @@ func UndecidedConjectures(state *State) []*co.Clauses {
 // implied by the model (kept) and those not implied (lost).
 //
 // Corresponds to Python's filter_conjectures() in ivy_interp.py.
-func FilterConjectures(state *State, model *co.Clauses) []*co.Clauses {
+func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
 	conjs := state.Conjs()
 	if len(conjs) == 0 {
 		return nil
 	}
 	modelFmla := model.ToFormula()
-	var keep []*co.Clauses
-	var lose []*co.Clauses
+	var keep []*module.Clauses
+	var lose []*module.Clauses
 	for _, c := range conjs {
 		t := z3bridge.NewTranslator()
 		implied, err := t.Implies(modelFmla, c.ToFormula())
@@ -331,14 +329,14 @@ func FilterConjectures(state *State, model *co.Clauses) []*co.Clauses {
 // is appended to the state's conjectures.
 //
 // Corresponds to Python's case_conjecture() in ivy_interp.py.
-func CaseConjecture(state *State, clauses *co.Clauses) (interface{}, interface{}, bool) {
+func CaseConjecture(state *State, clauses *module.Clauses) (interface{}, interface{}, bool) {
 	pre := JoinUnders(state)
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 
 	// Check if the under-approximation (pre) implies the clauses.
 	// If pre AND NOT clauses is UNSAT, then pre implies clauses and
 	// there's no separating conjecture to find.
-	premiseFmla := co.AndClausesTyped(pre, axioms).ToFormula()
+	premiseFmla := module.AndClausesTyped(pre, axioms).ToFormula()
 	clausesFmla := clauses.ToFormula()
 
 	t := z3bridge.NewTranslator()
@@ -355,7 +353,7 @@ func CaseConjecture(state *State, clauses *co.Clauses) (interface{}, interface{}
 	// that separates them). If the negation conjoined with pre is
 	// SAT, we have found something the under-approximation satisfies
 	// but clauses does not — use the negation of clauses as a conjecture.
-	negClauses := co.FormulaToClauses(&lg.Not{Body: clausesFmla}, nil)
+	negClauses := module.FormulaToClauses(&lg.Not{Body: clausesFmla}, nil)
 	interp := negClauses
 	state.SetConjs(append(state.Conjs(), interp))
 	return nil, interp, true
@@ -369,17 +367,17 @@ func CaseConjecture(state *State, clauses *co.Clauses) (interface{}, interface{}
 // given state, or nil if the clauses are unsatisfiable.
 //
 // Corresponds to Python's diagram() in ivy_interp.py.
-func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms *co.Clauses, weaken, upwardClose bool) *co.Clauses {
+func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, extraAxioms *module.Clauses, weaken, upwardClose bool) *module.Clauses {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	if extraAxioms != nil {
-		axioms = co.AndClausesTyped(axioms, extraAxioms)
+		axioms = module.AndClausesTyped(axioms, extraAxioms)
 	}
 
 	// Use solver to extract a minimal model diagram.
 	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
 	slv := solver.New()
 	isSkolem := func(c *lg.Const) bool {
-		return tr.IsSkolem(c.Name)
+		return actions.IsSkolem(c.Name)
 	}
 	diag, err := slv.ClausesModelToDiagram(clauses, isSkolem, axioms)
 	if err != nil || diag == nil {
@@ -393,13 +391,13 @@ func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms
 // ---------------------------------------------------------------------------
 
 // NewHistory creates a History from a state's value.
-func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *State) *tr.History {
-	return tr.NewHistory(cfg, tr.PureState(state.ToFormula()))
+func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *State) *actions.History {
+	return actions.NewHistory(cfg, actions.PureState(state.ToFormula()))
 }
 
 // HistoryForwardStep advances a history by one step through the
 // state's update.
-func HistoryForwardStep(history *tr.History, state *State) *tr.History {
+func HistoryForwardStep(history *actions.History, state *State) *actions.History {
 	var actionNode lg.Expr
 	if state.Expr != nil && IsActionApp(state.Expr) {
 		atom := state.Expr.(*ast.Atom)
@@ -418,7 +416,7 @@ func HistoryForwardStep(history *tr.History, state *State) *tr.History {
 // and path) if satisfiable, or nil if unsatisfiable.
 //
 // Corresponds to Python's history_satisfy() in ivy_interp.py (lines 593-598).
-func HistorySatisfy(history *tr.History, state *State) *tr.SatisfyResult {
+func HistorySatisfy(history *actions.History, state *State) *actions.SatisfyResult {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	return history.Satisfy(axioms.ToFormula())
 }
@@ -429,7 +427,7 @@ func HistorySatisfy(history *tr.History, state *State) *tr.SatisfyResult {
 
 // ModuleNewState creates a new State from clauses, adding an empty
 // annotation if none is present. Mirrors module_new_state.
-func ModuleNewState(mod *module.Module, clauses *co.Clauses) *State {
+func ModuleNewState(mod *module.Module, clauses *module.Clauses) *State {
 	return NewStateFromClauses(mod, clauses)
 }
 
@@ -559,8 +557,8 @@ func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 // prior subgoal properties) for a given property.
 //
 // Corresponds to Python's get_property_context() in ivy_interp.py.
-func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *co.Clauses {
-	res := co.TrueClauses(nil)
+func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *module.Clauses {
+	res := module.TrueClauses(nil)
 	// Build subgoal map.
 	subgoalMap := make(map[int64]bool)
 	for _, sg := range mod.Subgoals {
@@ -573,7 +571,7 @@ func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *co.Clause
 			break
 		}
 		if subgoalMap[x.ID] && x.Formula != nil {
-			res = co.AndClausesTyped(res, co.FormulaToClauses(x.Formula.(lg.Expr), nil))
+			res = module.AndClausesTyped(res, module.FormulaToClauses(x.Formula.(lg.Expr), nil))
 		}
 	}
 	return res
@@ -654,7 +652,7 @@ func EvalStateActions(expr ast.Node, pre *State) []*ast.Atom {
 
 // TopAlpha resets a state's clauses to TrueClauses.
 func TopAlpha(state *State) {
-	state.Clauses = co.TrueClauses(nil)
+	state.Clauses = module.TrueClauses(nil)
 }
 
 // FailExpr constructs a fail expression from an action application.
@@ -666,4 +664,4 @@ func FailExpr(cfg *ast.AstConfig, expr *ast.Atom) *ast.Atom {
 var _ = fmt.Sprintf
 var _ actions.Action
 var _ *module.Module
-var _ *tr.Update
+var _ *actions.Update

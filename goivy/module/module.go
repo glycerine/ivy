@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -126,12 +125,12 @@ type Module struct {
 
 	// InitCond is the initial condition clauses, computed from LabeledInits
 	// and initializer actions. Corresponds to Python's module.init_cond.
-	InitCond *co.Clauses
+	InitCond *Clauses
 
 	// Instantiator is a function that instantiates non-EPR definitions
 	// with ground terms. Set by TheoryContext. Corresponds to Python's
 	// lu.instantiator / ModuleTheoryContext.__call__.
-	Instantiator func(groundTerms []lg.Expr) *co.Clauses
+	Instantiator func(groundTerms []lg.Expr) *Clauses
 
 	// Name is the module name, typically the source filename without extension.
 	// Corresponds to Python's module.name.
@@ -139,7 +138,7 @@ type Module struct {
 
 	// Theory is the cached background theory, set by UpdateTheory.
 	// Corresponds to Python's self.theory (ivy_module.py:117).
-	Theory *co.Clauses
+	Theory *Clauses
 
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
@@ -285,7 +284,7 @@ func (m *Module) Clear() {
 		m.Sig = il.NewSig()
 	}
 	// Python line 35: self.init_cond = lu.true_clauses()
-	m.InitCond = co.TrueClauses(nil)
+	m.InitCond = TrueClauses(nil)
 }
 
 // Copy creates a semi-shallow copy of the module.
@@ -769,7 +768,7 @@ func (m *Module) UpdateConjs() {
 		csname := fmt.Sprintf("conjecture:%d", i)
 
 		// Collect used variables from the formula.
-		varMap := co.UsedVariablesAST(fmla)
+		varMap := UsedVariablesAST(fmla)
 		var variables []*lg.Variable
 		for _, v := range varMap {
 			if vr, ok := v.(*lg.Variable); ok {

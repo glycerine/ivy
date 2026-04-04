@@ -19,10 +19,8 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // ---------------------------------------------------------------------------
@@ -34,30 +32,30 @@ import (
 // assertion), and precondition for a state.
 type StateValue struct {
 	Moded   []string    // modified symbols (nil = all)
-	Clauses *co.Clauses // clauses / assertions
-	Precond *co.Clauses // precondition (negative: action fails when sat)
+	Clauses *module.Clauses // clauses / assertions
+	Precond *module.Clauses // precondition (negative: action fails when sat)
 }
 
 // NewStateValue constructs a StateValue from optional parts. If clauses
 // is nil, TopState is used. If precond is nil, FalseClauses is used.
-func NewStateValue(moded []string, clauses, precond *co.Clauses) *StateValue {
+func NewStateValue(moded []string, clauses, precond *module.Clauses) *StateValue {
 	if clauses == nil {
-		clauses = co.TrueClauses(nil)
+		clauses = module.TrueClauses(nil)
 	}
 	if precond == nil {
-		precond = co.FalseClauses(nil)
+		precond = module.FalseClauses(nil)
 	}
 	return &StateValue{Moded: moded, Clauses: clauses, Precond: precond}
 }
 
 // TopStateValue returns a state value representing all states (True clauses).
 func TopStateValue() *StateValue {
-	return NewStateValue(nil, co.TrueClauses(nil), co.FalseClauses(nil))
+	return NewStateValue(nil, module.TrueClauses(nil), module.FalseClauses(nil))
 }
 
 // BottomStateValue returns a state value representing no states (False clauses).
 func BottomStateValue() *StateValue {
-	return NewStateValue(nil, co.FalseClauses(nil), co.FalseClauses(nil))
+	return NewStateValue(nil, module.FalseClauses(nil), module.FalseClauses(nil))
 }
 
 // ---------------------------------------------------------------------------
@@ -73,15 +71,15 @@ type State struct {
 
 	// The value triple.
 	Moded   []string    // modified symbols
-	Clauses *co.Clauses // main clauses
-	Precond *co.Clauses // precondition (negative)
+	Clauses *module.Clauses // main clauses
+	Precond *module.Clauses // precondition (negative)
 
 	// Expression tree linking this state to its predecessor.
 	Expr  ast.Node // expression that produced this state
 	Label string   // optional label
 
 	// Cached analysis results.
-	CachedUpdate *tr.Update // cached update for this state's action
+	CachedUpdate *actions.Update // cached update for this state's action
 	CachedPred   *State     // cached predecessor state
 
 	// Additional fields set during evaluation.
@@ -141,7 +139,7 @@ func (s *State) SetValue(v *StateValue) {
 //
 // NOTE: currently returns the cached value only; full computation
 // requires the action update infrastructure.
-func (s *State) Update() *tr.Update {
+func (s *State) Update() *actions.Update {
 	if s.CachedUpdate == nil && s.Expr != nil && IsActionApp(s.Expr) {
 		// Matches Python: s.update = eval_action(s.expr.rep).int_update(s.domain, s.in_scope)
 		// Action update computation requires the actions package's IntUpdate method.
@@ -151,7 +149,7 @@ func (s *State) Update() *tr.Update {
 }
 
 // SetUpdate sets the cached update.
-func (s *State) SetUpdate(u *tr.Update) {
+func (s *State) SetUpdate(u *actions.Update) {
 	s.CachedUpdate = u
 }
 
@@ -196,13 +194,13 @@ func (s *State) String() string {
 
 // Conjs returns the conjectures stored on the domain module.
 // In Python, conjectures are global via the module.
-func (s *State) Conjs() []*co.Clauses {
-	conjs, _ := s.Domain.Attributes["__interp_conjs"].([]*co.Clauses)
+func (s *State) Conjs() []*module.Clauses {
+	conjs, _ := s.Domain.Attributes["__interp_conjs"].([]*module.Clauses)
 	return conjs
 }
 
 // SetConjs sets the conjectures on the domain module.
-func (s *State) SetConjs(conjs []*co.Clauses) {
+func (s *State) SetConjs(conjs []*module.Clauses) {
 	s.Domain.Attributes["__interp_conjs"] = conjs
 }
 
@@ -406,17 +404,17 @@ func NewIvyActionFailedError(
 	actionName string,
 	action actions.Action,
 	state *State,
-	failClauses *co.Clauses,
+	failClauses *module.Clauses,
 	trans interface{},
 ) *IvyActionFailedError {
 	errState := NewState(state.Domain, &StateValue{
 		Clauses: failClauses,
-		Precond: co.FalseClauses(nil),
+		Precond: module.FalseClauses(nil),
 	}, nil, "")
 	errState.SetPred(state)
 	errState.Action = action
 	errState.ActionName = actionName
-	errState.SetUpdate(tr.NullUpdate())
+	errState.SetUpdate(actions.NullUpdate())
 
 	return &IvyActionFailedError{
 		Ast:        astNode,

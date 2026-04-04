@@ -17,7 +17,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/lalr_full"
@@ -329,7 +328,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	// B2-R7: Use UniqueRenamer to avoid variable name conflicts (matching Python)
 	// Python: vars = variables_ast(lhs); rn = UniqueRenamer(used=[v.name for v in vars])
 	//         v = ivy_logic.Variable(rn('V'),rhs)
-	existingVars := clauseops.VariablesAST(lhs)
+	existingVars := module.VariablesAST(lhs)
 	usedNames := make([]string, len(existingVars))
 	for i, ev := range existingVars {
 		usedNames[i] = ev.Name
@@ -631,7 +630,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		seen[f.Name] = true
 	}
 	var syms []*lg.Const
-	for sym := range clauseops.IterSymbolsAST(body) {
+	for sym := range module.IterSymbolsAST(body) {
 		if (strings.HasPrefix(sym.Name, "fml:") || strings.HasPrefix(sym.Name, "loc:")) &&
 			c.Sig.Symbols[sym.Name] != nil && !seen[sym.Name] {
 			seen[sym.Name] = true
@@ -696,7 +695,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Python: new_body = lu.substitute_constants_ast(body, subs)
 	//         new_body.formal_params = body.formal_params
 	//         new_body.formal_returns = body.formal_returns
-	newBody := clauseops.SubstituteConstantsExpr(body, subs)
+	newBody := module.SubstituteConstantsExpr(body, subs)
 
 	// Wrap body as action with formal params/returns
 	var bodyAct actions.Action

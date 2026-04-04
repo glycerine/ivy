@@ -4,15 +4,13 @@ import (
 	"strings"
 	"testing"
 
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/transrel"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 func testCtx() *UpdateContext {
 	return &UpdateContext{
-		Domain: module.New(),
+		Domain: mod.New(),
 		PVars:  nil,
 		ActCfg: NewActionsConfig(),
 	}
@@ -323,7 +321,7 @@ func collectConstNames(node lg.Expr, out map[string]bool) {
 }
 
 // TestHideFormalsRenamesWithDoubleUnderscore verifies that hideFormals
-// (via transrel.Hide → ExistQuantClauses) renames formal params and their
+// (via Hide → ExistQuantClauses) renames formal params and their
 // new_ versions with __ prefix. This is the core mechanism that should
 // produce __new_loc:wr from new_loc:wr in the fragment checker.
 func TestHideFormalsRenamesWithDoubleUnderscore(t *testing.T) {
@@ -353,7 +351,7 @@ func TestHideFormalsRenamesWithDoubleUnderscore(t *testing.T) {
 	}
 
 	// Step 2: BindOldsAction
-	u = transrel.BindOldsAction(u)
+	u = BindOldsUpdate(u)
 
 	// Step 3: hideFormals — should rename loc and new_loc with __ prefix
 	u = hideFormals(asgn, u)
@@ -389,7 +387,7 @@ func TestHideFormalsWithTopSSort(t *testing.T) {
 
 	ctx := testCtx()
 	u := IntUpdate(asgn, ctx)
-	u = transrel.BindOldsAction(u)
+	u = BindOldsUpdate(u)
 	u = hideFormals(asgn, u)
 	trAfterHide := u.TRNode()
 
@@ -405,7 +403,7 @@ func TestHideFormalsWithTopSSort(t *testing.T) {
 	}
 }
 
-// TestTransrelHideDirectly tests transrel.Hide directly with a
+// TestTransrelHideDirectly tests Hide directly with a
 // FunctionSort symbol to verify ExistQuantClauses works with real sorts.
 func TestTransrelHideDirectly(t *testing.T) {
 	mySort := &lg.UninterpretedSort{Name: "mytype"}
@@ -416,14 +414,14 @@ func TestTransrelHideDirectly(t *testing.T) {
 	eq, _ := lg.NewEq(newLoc, loc)
 	tr := &lg.And{Terms: []lg.Expr{eq}}
 
-	u := &transrel.Update{
+	u := &Update{
 		Modified: []*lg.Const{loc},
-		TR:       co.FormulaToClauses(tr, nil),
-		Pre:      co.FormulaToClauses(lg.False, nil),
+		TR:       mod.FormulaToClauses(tr, nil),
+		Pre:      mod.FormulaToClauses(lg.False, nil),
 	}
 
 	// Hide loc — should also hide new_loc, both renamed with __
-	hidden := transrel.Hide([]*lg.Const{loc}, u)
+	hidden := Hide([]*lg.Const{loc}, u)
 	trFormula := hidden.TRNode()
 
 	names := make(map[string]bool)
@@ -444,7 +442,7 @@ func TestTransrelHideDirectly(t *testing.T) {
 // --- NullUpdate ---
 
 func TestNullUpdate(t *testing.T) {
-	u := transrel.NullUpdate()
+	u := NullUpdate()
 	if u.Modified == nil {
 		t.Error("NullUpdate Modified should be non-nil empty slice")
 	}

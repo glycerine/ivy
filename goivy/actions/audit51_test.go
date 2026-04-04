@@ -7,10 +7,9 @@ import (
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -731,8 +730,8 @@ func TestActionContext_NestedEnterExit(t *testing.T) {
 	cfg := NewActionsConfig()
 	original := cfg.Context
 
-	ctx1 := NewActionContextOn(&module.Module{Name: "domain1"}, cfg)
-	ctx2 := NewActionContextOn(&module.Module{Name: "domain2"}, cfg)
+	ctx1 := NewActionContextOn(&mod.Module{Name: "domain1"}, cfg)
+	ctx2 := NewActionContextOn(&mod.Module{Name: "domain2"}, cfg)
 
 	ctx1.Enter()
 	if cfg.Context != ctx1 {
@@ -874,5 +873,5 @@ func TestRunWithSymExContext(t *testing.T) {
 }
 
 // Ensure unused imports are satisfied.
-var _ = co.BoolConst
+var _ = mod.BoolConst
 var _ = il.NewEqualsNode

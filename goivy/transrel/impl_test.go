@@ -576,14 +576,14 @@ func TestBindOldsClausesNoOld(t *testing.T) {
 	}
 }
 
-func TestBindOldsAction(t *testing.T) {
+func TestBindOldsUpdate(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("old_x", "val"), mkEq("old_y", "z"))
-	result := BindOldsAction(u)
+	result := BindOldsUpdate(u)
 	if formulaContainsName(result.TRNode(), "old_x") {
-		t.Error("BindOldsAction should strip old_ from TR")
+		t.Error("BindOldsUpdate should strip old_ from TR")
 	}
 	if formulaContainsName(result.PreNode(), "old_y") {
-		t.Error("BindOldsAction should strip old_ from Pre")
+		t.Error("BindOldsUpdate should strip old_ from Pre")
 	}
 }
 

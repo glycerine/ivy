@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
@@ -43,7 +42,7 @@ func (a *DerivedUpdate) IterSubactions() []Action { return DefaultIterSubactions
 // GetUpdateAxioms checks if any dependency of the definition is in the updated
 // set. If so, adds the defined symbol to updated. Returns (updated, nil, nil).
 // Corresponds to Python DerivedUpdate.get_update_axioms.
-func (a *DerivedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *co.Clauses, *co.Clauses) {
+func (a *DerivedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *Clauses, *Clauses) {
 	// Get the defined symbol
 	defSym, ok := a.Symbol.(*lg.Const)
 	if !ok || defSym == nil {

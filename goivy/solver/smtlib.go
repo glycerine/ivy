@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // ClausesToSMTLIB2 converts a Clauses set to an SMT-LIB2 string.
 // Corresponds to Python's clauses_to_smtlib.
-func ClausesToSMTLIB2(clauses *clauseops.Clauses) string {
+func ClausesToSMTLIB2(clauses *mod.Clauses) string {
 	if clauses == nil {
 		return "(assert true)\n(check-sat)\n"
 	}

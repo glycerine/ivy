@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops
 // OpsConfig. Retained for callers that need explicit per-config registration.
-func RegisterAnnotConj(coCfg *co.OpsConfig) {
+func RegisterAnnotConj(coCfg *mod.OpsConfig) {
 	coCfg.AnnotConjFunc = func(a, b interface{}) interface{} {
 		aa, ok1 := a.(Annotation)
 		bb, ok2 := b.(Annotation)

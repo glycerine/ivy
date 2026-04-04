@@ -6,7 +6,6 @@ package module
 
 import (
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -368,7 +367,7 @@ func resortMapAST(m map[string]lg.Expr, rn map[lg.NodeKey]*SortRefinement) map[s
 // ResortClauses applies sort refinement to a Clauses object,
 // transforming all formulas and definitions within it.
 // Corresponds to Python's resort_clauses (via apply_func_to_clauses(resort_ast)).
-func ResortClauses(cls *co.Clauses, rn map[lg.NodeKey]*SortRefinement) *co.Clauses {
+func ResortClauses(cls *Clauses, rn map[lg.NodeKey]*SortRefinement) *Clauses {
 	if cls == nil {
 		return nil
 	}
@@ -385,7 +384,7 @@ func ResortClauses(cls *co.Clauses, rn map[lg.NodeKey]*SortRefinement) *co.Claus
 			newDefs[i] = d
 		}
 	}
-	return co.NewClauses(newFmlas, newDefs, cls.Annot)
+	return NewClauses(newFmlas, newDefs, cls.Annot)
 }
 
 // ResortAsts applies sort refinement to a slice of AST nodes.

@@ -5,16 +5,16 @@ import (
 	"os"
 	"strings"
 
-	co "github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// shortTypeName delegates to co.ShortTypeName.
-func shortTypeName(v interface{}) string { return co.ShortTypeName(v) }
+// shortTypeName delegates to mod.ShortTypeName.
+func shortTypeName(v interface{}) string { return mod.ShortTypeName(v) }
 
-// ShortTypeName delegates to co.ShortTypeName.
-func ShortTypeName(v interface{}) string { return co.ShortTypeName(v) }
+// ShortTypeName delegates to mod.ShortTypeName.
+func ShortTypeName(v interface{}) string { return mod.ShortTypeName(v) }
 
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
@@ -211,9 +211,9 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 }
 
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.
-// Delegates to co.SubstituteConstantsAST.
+// Delegates to mod.SubstituteConstantsAST.
 func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	return co.SubstituteConstantsAST(action, subs).(Action)
+	return mod.SubstituteConstantsAST(action, subs).(Action)
 }
 
 // AppendToAction appends action2 at the end of action1, preserving

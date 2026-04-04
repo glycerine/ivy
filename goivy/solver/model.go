@@ -5,7 +5,7 @@ package solver
 import (
 	"fmt"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -34,7 +34,7 @@ func (mr *ModelResult) String() string {
 
 // GetModelClauses checks satisfiability of clauses and returns a ModelResult if sat.
 // Corresponds to Python's get_model_clauses.
-func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, error) {
+func (s *Solver) GetModelClauses(clauses *mod.Clauses) (*ModelResult, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -95,7 +95,7 @@ func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Const) (map[strin
 //
 // Corresponds to the final_cond parameter of Python's get_small_model.
 type FinalCond interface {
-	Cond() *clauseops.Clauses
+	Cond() *mod.Clauses
 	Start()
 	Sat() bool
 	Unsat() bool
@@ -107,7 +107,7 @@ type FinalCond interface {
 // Returns nil if unsatisfiable.
 // Corresponds to Python's get_small_model.
 func (s *Solver) GetSmallModel(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	sortsToMinimize []lg.Sort,
 	relationsToMinimize []*lg.Const,
 ) (*ModelResult, error) {
@@ -125,7 +125,7 @@ func (s *Solver) GetSmallModel(
 // If any check returns false from Sat()/Unsat(), we stop and return
 // the current model (or nil if UNSAT).
 func (s *Solver) GetSmallModelWithCond(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	sortsToMinimize []lg.Sort,
 	relationsToMinimize []*lg.Const,
 	finalCond []FinalCond,
@@ -144,7 +144,7 @@ func (s *Solver) GetSmallModelWithCond(
 	// modes, matching Python's opt_incremental parameter.
 	// Python: ivy_solver.py:1221-1265
 	overallResult := z3bridge.Unsat
-	var assumes []*clauseops.Clauses // track assumed conditions for non-incremental replay
+	var assumes []*mod.Clauses // track assumed conditions for non-incremental replay
 	if len(finalCond) > 0 {
 		for _, fc := range finalCond {
 			// NON-INCREMENTAL: create fresh solver before each non-assumed check.
@@ -397,9 +397,9 @@ func (s *Solver) CheckCube(
 //
 // Corresponds to Python's clauses_model_to_clauses.
 func (s *Solver) ClausesModelToClauses(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	ignore func(*lg.Const) bool,
-) (*clauseops.Clauses, error) {
+) (*mod.Clauses, error) {
 	return s.ClausesModelToClausesWithModel(clauses, nil, ignore, false)
 }
 
@@ -411,11 +411,11 @@ func (s *Solver) ClausesModelToClauses(
 // and constant substitution.
 // Corresponds to Python's clauses_model_to_clauses (ivy_solver.py:1373-1395).
 func (s *Solver) ClausesModelToClausesWithModel(
-	clauses *clauseops.Clauses,
+	clauses *mod.Clauses,
 	model *ModelResult,
 	ignore func(*lg.Const) bool,
 	numerals bool,
-) (*clauseops.Clauses, error) {
+) (*mod.Clauses, error) {
 	if ignore == nil {
 		ignore = func(*lg.Const) bool { return false }
 	}
@@ -462,14 +462,14 @@ func (s *Solver) ClausesModelToClausesWithModel(
 		}
 	}
 
-	res = clauseops.SubstituteConstantsClauses(res, subs)
+	res = mod.SubstituteConstantsClauses(res, subs)
 	return res, nil
 }
 
 // FilterRedundantFacts removes redundant negative formulas from clauses,
 // given axioms.
 // Corresponds to Python's filter_redundant_facts.
-func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clauseops.Clauses) (*clauseops.Clauses, error) {
+func (s *Solver) FilterRedundantFacts(clauses *mod.Clauses, axioms *mod.Clauses) (*mod.Clauses, error) {
 	// Separate positive and negative formulas.
 	// Python: pos_fmlas = [f for f in fmlas if not isinstance(f, ivy_logic.Not)]
 	var posFmlas, negFmlas []lg.Expr
@@ -541,5 +541,5 @@ func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clause
 	allFmlas := append(posFmlas, keep...)
 	defs := make([]*il.Definition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
-	return clauseops.NewClauses(allFmlas, defs, clauses.Annot), nil
+	return mod.NewClauses(allFmlas, defs, clauses.Annot), nil
 }

@@ -235,7 +235,7 @@ func VariablesDistinctListAst(astList []lg.Expr, ast2 lg.Expr) []lg.Expr {
 // ResortVar resorts a variable using a sort substitution map.
 // Corresponds to Python's resort_var (ivy_logic_utils.py:415-416).
 func ResortVar(v *lg.Variable, subs map[lg.NodeKey]lg.Sort) *lg.Variable {
-	newSort := ResortSort(v.VSort, subs)
+	newSort := resortSortBySort(v.VSort, subs)
 	if lg.SortEqual(newSort, v.VSort) {
 		return v
 	}
@@ -243,8 +243,8 @@ func ResortVar(v *lg.Variable, subs map[lg.NodeKey]lg.Sort) *lg.Variable {
 	return nv
 }
 
-// ResortSort resorts a sort using a substitution map.
-func ResortSort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
+// resortSortBySort resorts a sort using a substitution map.
+func resortSortBySort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 	k := lg.SortKey(s)
 	if newSort, ok := subs[k]; ok {
 		return newSort
@@ -255,13 +255,13 @@ func ResortSort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 		newDom := make([]lg.Sort, len(dom))
 		changed := false
 		for i, d := range dom {
-			nd := ResortSort(d, subs)
+			nd := resortSortBySort(d, subs)
 			newDom[i] = nd
 			if !lg.SortEqual(nd, d) {
 				changed = true
 			}
 		}
-		newRng := ResortSort(rng, subs)
+		newRng := resortSortBySort(rng, subs)
 		if !lg.SortEqual(newRng, rng) {
 			changed = true
 		}

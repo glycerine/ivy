@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -269,7 +269,7 @@ func (s *Solver) FormulaToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 // After translating formulas and definitions, it also appends type_constraints
 // for nat sorts (non-negativity) and range sorts (bounds), matching Python's
 // clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
-func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) {
+func (s *Solver) ClausesToZ3(clauses *mod.Clauses) (z3bridge.Expr, error) {
 	if clauses == nil {
 		xtracer.Trace("solver.ClausesToZ3 ENTER nil")
 		return s.tr.Ctx.BoolVal(true), nil
@@ -416,7 +416,7 @@ func (s *Solver) translateClosed(fmla lg.Expr) (x z3bridge.Expr, err error) {
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
 // Corresponds to Python's not_clauses_to_z3.
-func (s *Solver) NotClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) {
+func (s *Solver) NotClausesToZ3(clauses *mod.Clauses) (z3bridge.Expr, error) {
 	// Separate Skolem definitions from other definitions
 	var skolemDefs, otherDefs []*il.Definition
 	for _, d := range clauses.Defs {
@@ -429,7 +429,7 @@ func (s *Solver) NotClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, erro
 	}
 
 	// Skolem definitions are asserted positively
-	skolemClauses := clauseops.NewClauses(nil, skolemDefs, nil)
+	skolemClauses := mod.NewClauses(nil, skolemDefs, nil)
 	zSkolem, err := s.ClausesToZ3(skolemClauses)
 	if err != nil {
 		return z3bridge.Expr{}, err
@@ -482,7 +482,7 @@ func (s *Solver) Implies(fmla1, fmla2 lg.Expr) (bool, error) {
 
 // ClausesSat checks whether a Clauses set is satisfiable.
 // Corresponds to Python's clauses_sat.
-func (s *Solver) ClausesSat(clauses *clauseops.Clauses) (bool, error) {
+func (s *Solver) ClausesSat(clauses *mod.Clauses) (bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -495,7 +495,7 @@ func (s *Solver) ClausesSat(clauses *clauseops.Clauses) (bool, error) {
 
 // ClausesImply checks whether clauses1 imply clauses2.
 // Corresponds to Python's clauses_imply.
-func (s *Solver) ClausesImply(clauses1, clauses2 *clauseops.Clauses) (bool, error) {
+func (s *Solver) ClausesImply(clauses1, clauses2 *mod.Clauses) (bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -544,7 +544,7 @@ func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) 
 
 // ClausesImplyFormula checks whether clauses1 imply fmla2.
 // Corresponds to Python's clauses_imply_formula.
-func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Expr) (bool, error) {
+func (s *Solver) ClausesImplyFormula(clauses1 *mod.Clauses, fmla2 lg.Expr) (bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -572,10 +572,10 @@ func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Expr)
 // The 'unlikely' function marks formulas that should preferably be excluded.
 // Corresponds to Python's unsat_core.
 func (s *Solver) UnsatCore(
-	clauses1, clauses2 *clauseops.Clauses,
-	implies *clauseops.Clauses,
+	clauses1, clauses2 *mod.Clauses,
+	implies *mod.Clauses,
 	unlikely func(lg.Expr) bool,
-) (*clauseops.Clauses, error) {
+) (*mod.Clauses, error) {
 	if unlikely == nil {
 		unlikely = func(lg.Expr) bool { return false }
 	}
@@ -666,7 +666,7 @@ func (s *Solver) UnsatCore(
 
 	defs := make([]*il.Definition, len(clauses1.Defs))
 	copy(defs, clauses1.Defs)
-	return clauseops.NewClauses(resFmlas, defs, nil), nil
+	return mod.NewClauses(resFmlas, defs, nil), nil
 }
 
 // minimizeCore performs biased core minimization on a set of formulas.
@@ -825,18 +825,18 @@ func SizeConstraint(x lg.Expr, size int) lg.Expr {
 
 // AssumeAssert represents either an assumption or an assertion in a sequence.
 type AssumeAssert struct {
-	Clauses  *clauseops.Clauses
+	Clauses  *mod.Clauses
 	Doc      string
 	IsAssert bool
 }
 
 // NewAssume creates an Assume entry.
-func NewAssume(clauses *clauseops.Clauses, doc string) AssumeAssert {
+func NewAssume(clauses *mod.Clauses, doc string) AssumeAssert {
 	return AssumeAssert{Clauses: clauses, Doc: doc, IsAssert: false}
 }
 
 // NewAssert creates an Assert entry.
-func NewAssert(clauses *clauseops.Clauses, doc string) AssumeAssert {
+func NewAssert(clauses *mod.Clauses, doc string) AssumeAssert {
 	return AssumeAssert{Clauses: clauses, Doc: doc, IsAssert: true}
 }
 
@@ -888,7 +888,7 @@ func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter
 			if reporter != nil {
 				reporter.Start(true, aa.Doc) // Python ignores return
 			}
-			dual := clauseops.NegateClauses(aa.Clauses)
+			dual := mod.NegateClauses(aa.Clauses)
 			z2, err := s.ClausesToZ3(dual)
 			if err != nil {
 				return nil, err

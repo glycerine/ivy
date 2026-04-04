@@ -9,7 +9,6 @@ import (
 	"sort"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
@@ -24,11 +23,11 @@ import (
 //
 //	if hasattr(self,"theory"): return self.theory
 //	return lu.Clauses([])
-func (m *Module) BackgroundTheory(inScope map[string]bool) *co.Clauses {
+func (m *Module) BackgroundTheory(inScope map[string]bool) *Clauses {
 	if m.Theory != nil {
 		return m.Theory
 	}
-	return co.NewClauses(nil, nil, nil)
+	return NewClauses(nil, nil, nil)
 }
 
 // UpdateTheory rebuilds the background theory from axioms and definitions,
@@ -105,7 +104,7 @@ func (m *Module) UpdateTheory() {
 	// Exclusivity axioms for variants.
 	theory = append(theory, m.VariantAxioms()...)
 
-	cls := co.NewClauses(theory, defs, nil)
+	cls := NewClauses(theory, defs, nil)
 	m.Theory = cls
 }
 
@@ -145,10 +144,10 @@ func (m *Module) Axioms() []lg.Expr {
 // Conjs returns the conjectures as a slice of Clauses (without labels).
 // Each conjecture formula is converted to a Clauses.
 // Corresponds to Python's Module.conjs property.
-func (m *Module) Conjs() []*co.Clauses {
-	var result []*co.Clauses
+func (m *Module) Conjs() []*Clauses {
+	var result []*Clauses
 	for _, c := range m.LabeledConjs {
-		cls := co.FormulaToClauses(c.Formula.(lg.Expr), nil)
+		cls := FormulaToClauses(c.Formula.(lg.Expr), nil)
 		// Attach line number info as annotation if needed.
 		// The Python code sets clauses.lineno = c.lineno.
 		result = append(result, cls)
@@ -190,7 +189,7 @@ func (m *Module) TheoryContext() func() {
 	// Set the instantiator and return a cleanup function that restores it.
 	// Python: lu.instantiator = ModuleTheoryContext(non_epr)
 	oldInstantiator := m.Instantiator
-	m.Instantiator = func(groundTerms []lg.Expr) *co.Clauses {
+	m.Instantiator = func(groundTerms []lg.Expr) *Clauses {
 		return instantiateNonEPREntries(nonEPR, groundTerms)
 	}
 
@@ -207,7 +206,7 @@ func (m *Module) TheoryContext() func() {
 type ModuleTheoryContext struct {
 	NonEPR map[lg.NodeKey]nonEPREntry
 	// OldInstantiator stores the previous instantiator to restore on Exit.
-	OldInstantiator func([]lg.Expr) *co.Clauses
+	OldInstantiator func([]lg.Expr) *Clauses
 }
 
 // NewModuleTheoryContext creates a new ModuleTheoryContext from non-EPR entries.
@@ -230,7 +229,7 @@ func (tc *ModuleTheoryContext) Exit(m *Module) {
 
 // Call instantiates non-EPR definitions with the given ground terms.
 // Corresponds to Python's ModuleTheoryContext.__call__.
-func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *co.Clauses {
+func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *Clauses {
 	return instantiateNonEPREntries(tc.NonEPR, groundTerms)
 }
 
@@ -253,9 +252,9 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 			continue
 		}
 		if _, ok := subst[lg.Key(defSym)]; ok {
-			renamedLdf := entry.ldf.Cfg.NewLabeledFormulaFrom(entry.ldf, co.RenameAST(entry.ldf.Formula.(lg.Expr), subst))
+			renamedLdf := entry.ldf.Cfg.NewLabeledFormulaFrom(entry.ldf, RenameAST(entry.ldf.Formula.(lg.Expr), subst))
 			renamedLdf.ID = entry.ldf.ID
-			renamedConstraint := co.RenameAST(entry.constraint, subst)
+			renamedConstraint := RenameAST(entry.constraint, subst)
 			newEntries = append(newEntries, nonEPREntry{
 				ldf:        renamedLdf,
 				constraint: renamedConstraint,
@@ -281,10 +280,10 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 // parameters with the term's arguments.
 //
 // Corresponds to Python instantiate_non_epr (lines 329-343).
-func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []lg.Expr) *co.Clauses {
+func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []lg.Expr) *Clauses {
 	var theory []lg.Expr
 	if groundTerms == nil {
-		return co.NewClauses(theory, nil, nil)
+		return NewClauses(theory, nil, nil)
 	}
 
 	matched := make(map[lg.NodeKey]bool)
@@ -338,13 +337,13 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 		}
 
 		if allGround && len(subst) > 0 {
-			inst := co.SubstituteConstantsExpr(entry.constraint, subst)
+			inst := SubstituteConstantsExpr(entry.constraint, subst)
 			theory = append(theory, inst)
 		}
 		matched[lg.Key(term)] = true
 	}
 
-	return co.NewClauses(theory, nil, nil)
+	return NewClauses(theory, nil, nil)
 }
 
 // isGroundNode returns true if a logic node contains no free variables.
@@ -529,20 +528,7 @@ func nodesToVars(nodes []lg.Expr) []*lg.Variable {
 	return vars
 }
 
-// defToConstraint converts a Definition to a constraint formula.
-// For Boolean-sorted RHS, produces Iff(lhs, rhs).
-// For non-Boolean, produces Eq(lhs, rhs).
-func defToConstraint(d *il.Definition) lg.Expr {
-	lhs := d.Lhs
-	rhs := d.Rhs
-	var constraint lg.Expr
-	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
-		constraint = &lg.Iff{T1: lhs, T2: rhs}
-	} else {
-		constraint = &lg.Eq{T1: lhs, T2: rhs}
-	}
-	return constraint
-}
+// defToConstraint is now in clauses.go (merged from clauseops)
 
 // isEPR checks if a formula is in the EPR fragment (effectively
 // propositional after grounding — no function symbols in quantified

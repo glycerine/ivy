@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
@@ -160,9 +159,9 @@ func FindAction(cfg *Config, name string) (Action, bool) {
 
 // BackgroundTheory returns the background theory from the current module.
 // Corresponds to Python's module-level background_theory (ivy_module.py:346-347).
-func BackgroundTheory(cfg *Config, symbols map[string]bool) *co.Clauses {
+func BackgroundTheory(cfg *Config, symbols map[string]bool) *Clauses {
 	if cfg == nil || cfg.CurrentModule == nil {
-		return co.NewClauses(nil, nil, nil)
+		return NewClauses(nil, nil, nil)
 	}
 	return cfg.CurrentModule.BackgroundTheory(symbols)
 }

@@ -24,7 +24,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/interp"
 	"github.com/glycerine/ivy/goivy/isolate"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -704,12 +703,12 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					acfg := as.Compiler.Module.Cfg.AstCfg
 					mlf := acfg.NewLabeledFormula(nil, compiled)
 					mod.LabeledInits = append(mod.LabeledInits, mlf)
-					initClauses := co.FormulaToClauses(compiled, nil)
+					initClauses := module.FormulaToClauses(compiled, nil)
 					xtracer.Trace("compiler.ARGSetup.init clauses fmlas=%d defs=%d", len(initClauses.Fmlas), len(initClauses.Defs))
 					if mod.InitCond == nil {
 						mod.InitCond = initClauses
 					} else {
-						mod.InitCond = co.AndClausesTyped(mod.InitCond, initClauses)
+						mod.InitCond = module.AndClausesTyped(mod.InitCond, initClauses)
 					}
 				}
 			}

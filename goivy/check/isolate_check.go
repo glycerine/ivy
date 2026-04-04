@@ -11,7 +11,6 @@ import (
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/bmc"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/fragment"
 	ivyiso "github.com/glycerine/ivy/goivy/isolate"
@@ -22,7 +21,6 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/vmt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -145,7 +143,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			}
 			// Property checking: create AG with True pre-state, check properties
 			ag := art.NewAnalysisGraph(mod)
-			pre := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+			pre := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 			ag.Add(pre, nil)
 
 			nonTemporal := make([]*ast.LabeledFormula, 0)
@@ -333,7 +331,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				// Python State() defaults to value=top_state() (true clauses),
 				// only the expr field is set from fail_expr.
 				// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
-				failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+				failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 				if aa, ok := ag.States[0].Prov.(*art.ActionApp); ok {
 					if rep, ok := aa.Rep.(string); ok {
 						failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
@@ -556,7 +554,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 								// Python: fail = itp.State(expr = itp.fail_expr(post.expr))
 								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
 								// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
-								failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+								failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 								if aa, ok := post.Prov.(*art.ActionApp); ok {
 									if rep, ok := aa.Rep.(string); ok {
 										failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
@@ -1248,7 +1246,7 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 	// Append converted postconditions using the post state's update.
 	// Python: conjs += convert_postconds(post, pcs)
 	if len(pcs) > 0 {
-		var update *tr.Update
+		var update *actions.Update
 		if post != nil {
 			update = post.Update
 		}

@@ -4,7 +4,7 @@
 package compiler
 
 import (
-	"github.com/glycerine/ivy/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicparser"
@@ -54,12 +54,12 @@ func (c *Compiler) ToClause(s string) ([]lg.Expr, error) {
 
 // ToClauses parses a formula string and converts it to Clauses form.
 // Python equivalent: to_clauses(s) = formula_to_clauses(to_formula(s))
-func (c *Compiler) ToClauses(s string) (*clauseops.Clauses, error) {
+func (c *Compiler) ToClauses(s string) (*module.Clauses, error) {
 	f, err := c.ToFormula(s)
 	if err != nil {
 		return nil, err
 	}
-	return clauseops.FormulaToClauses(f, nil), nil
+	return module.FormulaToClauses(f, nil), nil
 }
 
 // ToLiteral parses a formula string and converts it to a literal (positive or negated atom).

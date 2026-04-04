@@ -6,10 +6,8 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 var testAstCfg = ast.NewAstConfig()
@@ -38,8 +36,8 @@ func TestNewStateValueDefaults(t *testing.T) {
 }
 
 func TestNewStateValueExplicit(t *testing.T) {
-	cls := co.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	pre := co.FalseClauses(nil)
+	cls := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	pre := module.FalseClauses(nil)
 	sv := NewStateValue([]string{"x", "y"}, cls, pre)
 	if len(sv.Moded) != 2 {
 		t.Errorf("expected 2 moded symbols, got %d", len(sv.Moded))
@@ -98,7 +96,7 @@ func TestNewStateWithDomain(t *testing.T) {
 }
 
 func TestStateValueRoundtrip(t *testing.T) {
-	sv := NewStateValue([]string{"a"}, co.TrueClauses(nil), co.FalseClauses(nil))
+	sv := NewStateValue([]string{"a"}, module.TrueClauses(nil), module.FalseClauses(nil))
 	s := NewState(nil, sv, nil, "")
 	got := s.Value()
 	if len(got.Moded) != 1 || got.Moded[0] != "a" {
@@ -108,7 +106,7 @@ func TestStateValueRoundtrip(t *testing.T) {
 
 func TestSetValue(t *testing.T) {
 	s := NewState(nil, nil, nil, "")
-	sv := NewStateValue([]string{"x"}, co.FalseClauses(nil), co.TrueClauses(nil))
+	sv := NewStateValue([]string{"x"}, module.FalseClauses(nil), module.TrueClauses(nil))
 	s.SetValue(sv)
 	if !s.Clauses.IsFalse() {
 		t.Error("SetValue should set Clauses")
@@ -166,7 +164,7 @@ func TestStatePredAndUpdate(t *testing.T) {
 	if s.Pred() != pred {
 		t.Error("SetPred should set predecessor")
 	}
-	u := tr.NullUpdate()
+	u := actions.NullUpdate()
 	s.SetUpdate(u)
 	if s.Update() != u {
 		t.Error("SetUpdate should set update")
@@ -179,7 +177,7 @@ func TestStateConjs(t *testing.T) {
 	if s.Conjs() != nil {
 		t.Error("initial Conjs should be nil")
 	}
-	conjs := []*co.Clauses{co.TrueClauses(nil)}
+	conjs := []*module.Clauses{module.TrueClauses(nil)}
 	s.SetConjs(conjs)
 	got := s.Conjs()
 	if len(got) != 1 {
@@ -436,7 +434,7 @@ func TestNewIvyActionFailedError(t *testing.T) {
 		"myAction",
 		seq,
 		state,
-		co.TrueClauses(nil),
+		module.TrueClauses(nil),
 		nil,
 	)
 	if err.ActionName != "myAction" {
@@ -451,8 +449,8 @@ func TestNewIvyActionFailedError(t *testing.T) {
 }
 
 func TestUnsatCoreWithInterpolant(t *testing.T) {
-	core := co.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	itp := co.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	core := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	itp := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
 	err := &UnsatCoreWithInterpolant{Core: core, Itp: itp}
 	msg := err.Error()
 	if !strings.Contains(msg, "interpolant") {
@@ -467,7 +465,7 @@ func TestUnsatCoreWithInterpolant(t *testing.T) {
 func TestConcretePostBasic(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	upd := tr.NullUpdate()
+	upd := actions.NullUpdate()
 	result, err := ConcretePost(true, upd, s, nil)
 	if err != nil {
 		t.Fatalf("ConcretePost returned error: %v", err)
@@ -482,7 +480,7 @@ func TestConcretePostBasic(t *testing.T) {
 
 func TestConcretePostNilDomain(t *testing.T) {
 	s := &State{}
-	upd := tr.NullUpdate()
+	upd := actions.NullUpdate()
 	_, err := ConcretePost(true, upd, s, nil)
 	if err == nil {
 		t.Error("expected error for nil domain")
@@ -683,7 +681,7 @@ func TestJoinUnders(t *testing.T) {
 func TestAddUnder(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	cls := co.TrueClauses(nil)
+	cls := module.TrueClauses(nil)
 	under := AddUnder(s, cls, nil, nil)
 	if under == nil {
 		t.Fatal("AddUnder should return a state")
@@ -697,7 +695,7 @@ func TestAddUnderWithPred(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
 	pred := NewState(m, nil, nil, "pred")
-	under := AddUnder(s, co.TrueClauses(nil), pred, "universe")
+	under := AddUnder(s, module.TrueClauses(nil), pred, "universe")
 	if under.Pred() != pred {
 		t.Error("under pred should be set")
 	}
@@ -731,7 +729,7 @@ func TestUndecidedConjectures(t *testing.T) {
 	// TrueClauses state implies TrueClauses conjecture, so it should
 	// be decided (not undecided). Use FalseClauses as conjecture to
 	// get an undecided one (True does not imply False).
-	conjs := []*co.Clauses{co.FalseClauses(nil)}
+	conjs := []*module.Clauses{module.FalseClauses(nil)}
 	s.SetConjs(conjs)
 	result := UndecidedConjectures(s)
 	if len(result) != 1 {
@@ -742,9 +740,9 @@ func TestUndecidedConjectures(t *testing.T) {
 func TestFilterConjectures(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	conjs := []*co.Clauses{co.TrueClauses(nil)}
+	conjs := []*module.Clauses{module.TrueClauses(nil)}
 	s.SetConjs(conjs)
-	lost := FilterConjectures(s, co.TrueClauses(nil))
+	lost := FilterConjectures(s, module.TrueClauses(nil))
 	if len(lost) != 0 {
 		t.Errorf("stub should lose no conjectures, got %d", len(lost))
 	}
@@ -753,7 +751,7 @@ func TestFilterConjectures(t *testing.T) {
 func TestCaseConjecture(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	_, _, ok := CaseConjecture(s, co.TrueClauses(nil))
+	_, _, ok := CaseConjecture(s, module.TrueClauses(nil))
 	if ok {
 		t.Error("stub CaseConjecture should return false")
 	}
@@ -763,12 +761,12 @@ func TestDiagram(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
 	// TrueClauses is satisfiable, so Diagram should return non-nil.
-	result := Diagram(s, co.TrueClauses(nil), nil, nil, true, true)
+	result := Diagram(s, module.TrueClauses(nil), nil, nil, true, true)
 	if result == nil {
 		t.Error("Diagram of satisfiable clauses should return non-nil")
 	}
 	// FalseClauses is unsatisfiable, so Diagram should return nil.
-	result2 := Diagram(s, co.FalseClauses(nil), nil, nil, true, true)
+	result2 := Diagram(s, module.FalseClauses(nil), nil, nil, true, true)
 	if result2 != nil {
 		t.Error("Diagram of unsatisfiable clauses should return nil")
 	}
@@ -828,7 +826,7 @@ func TestHistorySatisfy(t *testing.T) {
 
 func TestModuleNewState(t *testing.T) {
 	m := module.New()
-	cls := co.TrueClauses(nil)
+	cls := module.TrueClauses(nil)
 	s := ModuleNewState(m, cls)
 	if s == nil {
 		t.Fatal("ModuleNewState should not return nil")
@@ -889,7 +887,7 @@ func TestBottomState(t *testing.T) {
 
 func TestNewStateFromClauses(t *testing.T) {
 	m := module.New()
-	cls := co.NewClauses(nil, nil, nil) // annot is nil
+	cls := module.NewClauses(nil, nil, nil) // annot is nil
 	s := NewStateFromClauses(m, cls)
 	if s == nil {
 		t.Fatal("should not be nil")
@@ -902,7 +900,7 @@ func TestNewStateFromClauses(t *testing.T) {
 
 func TestNewStateFromClausesWithAnnot(t *testing.T) {
 	m := module.New()
-	cls := co.NewClauses(nil, nil, "existing_annot")
+	cls := module.NewClauses(nil, nil, "existing_annot")
 	s := NewStateFromClauses(m, cls)
 	if s.Clauses.Annot != "existing_annot" {
 		t.Error("should preserve existing annotation")
@@ -1010,17 +1008,17 @@ func FuzzStateValueCreation(f *testing.F) {
 		if modedStr != "" {
 			moded = strings.Split(modedStr, ",")
 		}
-		var cls *co.Clauses
+		var cls *module.Clauses
 		if useTrue {
-			cls = co.TrueClauses(nil)
+			cls = module.TrueClauses(nil)
 		} else {
-			cls = co.FalseClauses(nil)
+			cls = module.FalseClauses(nil)
 		}
-		var pre *co.Clauses
+		var pre *module.Clauses
 		if useFalsePrecond {
-			pre = co.FalseClauses(nil)
+			pre = module.FalseClauses(nil)
 		} else {
-			pre = co.TrueClauses(nil)
+			pre = module.TrueClauses(nil)
 		}
 
 		sv := NewStateValue(moded, cls, pre)
@@ -1076,5 +1074,5 @@ func FuzzExpressionHelpers(f *testing.F) {
 // Ensure we use all imports.
 var (
 	_ = lg.True
-	_ = tr.NullUpdate
+	_ = actions.NullUpdate
 )

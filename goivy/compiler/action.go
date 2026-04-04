@@ -6,7 +6,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -185,7 +185,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		if call, ok := suba.(*actions.CallAction); ok {
 			if app, ok := call.Callee.(*lg.Apply); ok {
 				for _, arg := range app.Terms {
-					freeVars := clauseops.UsedVariablesAST(arg)
+					freeVars := module.UsedVariablesAST(arg)
 					if len(freeVars) > 0 {
 						return nil, lg.NewIvyError(node, "call may not have free variables")
 					}

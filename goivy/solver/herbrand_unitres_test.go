@@ -3,7 +3,7 @@ package solver
 import (
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/resolution"
@@ -223,7 +223,7 @@ func TestClausesCaseUNSAT(t *testing.T) {
 	p := boolConst("p")
 	// p AND NOT p — UNSAT
 	fmlas := []lg.Expr{p, &lg.Not{Body: p}}
-	clauses := clauseops.NewClauses(fmlas, nil, nil)
+	clauses := mod.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -245,7 +245,7 @@ func TestClausesCaseAllUnits(t *testing.T) {
 	q := boolConst("q")
 	// p, q — already unit clauses
 	fmlas := []lg.Expr{p, q}
-	clauses := clauseops.NewClauses(fmlas, nil, nil)
+	clauses := mod.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -275,7 +275,7 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 	notBOrC := &lg.Or{Terms: []lg.Expr{&lg.Not{Body: b}, c}}
 
 	fmlas := []lg.Expr{notA, aOrB, notBOrC}
-	clauses := clauseops.NewClauses(fmlas, nil, nil)
+	clauses := mod.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -297,7 +297,7 @@ func TestClausesCaseSingleClause(t *testing.T) {
 	b := boolConst("b")
 	aOrB := &lg.Or{Terms: []lg.Expr{a, b}}
 
-	clauses := clauseops.NewClauses([]lg.Expr{aOrB}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{aOrB}, nil, nil)
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
 		t.Fatal(err)

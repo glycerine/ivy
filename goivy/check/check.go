@@ -14,7 +14,6 @@ import (
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
 	"github.com/glycerine/ivy/goivy/l2s"
@@ -25,7 +24,6 @@ import (
 	"github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/temporal"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/vmt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -57,7 +55,7 @@ func wireAdmitDefinitionFactory(mod *module.Module) {
 // Each checker wraps a formula condition to be checked against a state.
 type Checker interface {
 	// Cond returns the clause set representing the negated condition to check.
-	Cond() *clauseops.Clauses
+	Cond() *module.Clauses
 	// Start is called before checking begins (prints status).
 	Start()
 	// Sat is called when the SMT solver finds the condition satisfiable
@@ -87,7 +85,7 @@ type Checker interface {
 // negating it (dualizing) and checking satisfiability.
 type BaseChecker struct {
 	Cfg        *module.Config
-	FC         *clauseops.Clauses
+	FC         *module.Clauses
 	ReportPass bool
 	Inverted   bool
 	FailedFlag bool
@@ -96,7 +94,7 @@ type BaseChecker struct {
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
 // If invert is true (the default), the formula is dualized for checking.
 func NewBaseChecker(cfg *module.Config, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
-	fc := clauseops.FormulaToClauses(conj, nil)
+	fc := module.FormulaToClauses(conj, nil)
 	if invert {
 		fc = DualClauses(fc)
 	}
@@ -108,7 +106,7 @@ func NewBaseChecker(cfg *module.Config, conj lg.Expr, reportPass bool, invert bo
 	}
 }
 
-func (c *BaseChecker) Cond() *clauseops.Clauses { return c.FC }
+func (c *BaseChecker) Cond() *module.Clauses { return c.FC }
 func (c *BaseChecker) Start() {
 	if c.ReportPass {
 		fmt.Print("... ")
@@ -212,26 +210,26 @@ func (c *ConjAssumer) GetLF() *ast.LabeledFormula { return c.LF }
 // clauses are satisfiable iff the original are not entailed.
 // Free variables are replaced with Skolem constants before negation.
 // Corresponds to Python's lut.dual_clauses (ivy_logic_utils.py:1514-1525).
-func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
+func DualClauses(c *module.Clauses) *module.Clauses {
 	if c == nil {
 		return c
 	}
 	// Step 1: Collect used variables in order.
-	vs := clauseops.UsedVariablesOrdered(c)
+	vs := module.UsedVariablesOrdered(c)
 
 	// Step 2: Skolemize — replace each variable with a Skolem constant.
 	if len(vs) > 0 {
 		subs := make(map[string]lg.Expr, len(vs))
 		for _, v := range vs {
-			subs[v.Name] = clauseops.VarToSkolem("@", v)
+			subs[v.Name] = module.VarToSkolem("@", v)
 		}
-		c = clauseops.SubstituteClausesByName(c, subs)
+		c = module.SubstituteClausesByName(c, subs)
 	}
 
 	// Step 3: Convert to formula, negate, convert back to clauses.
-	fmla := clauseops.ClausesToFormula(c)
-	negated := clauseops.Negate(fmla)
-	return clauseops.FormulaToClauses(negated, nil)
+	fmla := module.ClausesToFormula(c)
+	negated := module.Negate(fmla)
+	return module.FormulaToClauses(negated, nil)
 }
 
 // --- Check functions ---
@@ -382,7 +380,7 @@ func CheckTemporals(mod *module.Module) error {
 // GetConjs returns the conjecture clauses for the pre-state of inductive checks.
 // Only implicit (non-explicit), non-unprovable conjectures and assumed invariants
 // are included.
-func GetConjs(mod *module.Module) *clauseops.Clauses {
+func GetConjs(mod *module.Module) *module.Clauses {
 	var fmlas []lg.Expr
 	all := append(mod.LabeledConjs, mod.AssumedInvs...)
 	for _, lf := range all {
@@ -390,7 +388,7 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 			fmlas = append(fmlas, lf.Formula.(lg.Expr))
 		}
 	}
-	return clauseops.NewClauses(fmlas, nil, actions.EmptyAnnotation{})
+	return module.NewClauses(fmlas, nil, actions.EmptyAnnotation{})
 }
 
 // ApplyConjProofs applies proof tactics to conjectures to produce
@@ -497,7 +495,7 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 	}
 
 	// Get history and background theory
-	var history *tr.History
+	var history *actions.History
 	if ag != nil && post != nil {
 		history = ag.GetHistory(post, nil)
 	}
@@ -515,7 +513,7 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 // checkFcsTracePath implements the trace/diagnose branch of check_fcs_in_state.
 // Python lines 379-411.
 func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.State,
-	history *tr.History, axioms *clauseops.Clauses, checkers []Checker) bool {
+	history *actions.History, axioms *module.Clauses, checkers []Checker) bool {
 
 	if history == nil || history.Post == nil {
 		// No history — fall back to normal path
@@ -523,8 +521,8 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	}
 
 	// Python: clauses = history.post; clauses = lut.and_clauses(clauses, axioms)
-	postClauses := clauseops.NewClauses([]lg.Expr{history.Post}, nil, nil)
-	clauses := clauseops.AndClausesTyped(postClauses, axioms)
+	postClauses := module.NewClauses([]lg.Expr{history.Post}, nil, nil)
+	clauses := module.AndClausesTyped(postClauses, axioms)
 
 	// Python: ffcs = filter_fcs(fcs)
 	ffcs := FilterCheckers(checkers, mod.Cfg.CheckLineno)
@@ -534,7 +532,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	for _, fc := range ffcs {
 		finalConds = append(finalConds, fc)
 	}
-	model, modelSlv := tr.SmallModelClauses(clauses, finalConds, true, mod)
+	model, modelSlv := actions.SmallModelClauses(clauses, finalConds, true, mod)
 
 	if model != nil {
 		// Python: failed = [c for c in ffcs if c.failed]
@@ -553,7 +551,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		mclauses := clauses
 		for _, c := range failed {
 			if c.Cond() != nil {
-				mclauses = clauseops.AndClausesTyped(mclauses, c.Cond())
+				mclauses = module.AndClausesTyped(mclauses, c.Cond())
 			}
 		}
 
@@ -616,7 +614,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		// handler.is_cti = lut.formula_to_clauses(ff.lf.formula) if isinstance(ff, ConjChecker) else None
 		ff := failed[0]
 		if cc, ok := ff.(*ConjChecker); ok {
-			handler.IsCti = clauseops.FormulaToClauses(cc.LF.Formula.(lg.Expr), nil)
+			handler.IsCti = module.FormulaToClauses(cc.LF.Formula.(lg.Expr), nil)
 		}
 
 		// Python: if not opt_trace.get(): gui_art(handler)
@@ -640,7 +638,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 //	if res is not None and diagnose.get():
 //	    show_counterexample(ag, post, res)
 func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.State,
-	history *tr.History, axioms *clauseops.Clauses, checkers []Checker) bool {
+	history *actions.History, axioms *module.Clauses, checkers []Checker) bool {
 
 	// Python: filter_fcs(fcs) — filter by check_lineno
 	filteredCheckers := FilterCheckers(checkers, mod.Cfg.CheckLineno)
@@ -654,13 +652,13 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	if history != nil {
 		xtracer.Trace("check.checkFcsNormalPath history path\n postType=%T postSort=%v axiomFmlas=%d checkers=%d", history.Post, history.Post.NodeSort(), len(axioms.Fmlas), len(filteredCheckers))
 		// Python: gmc = lambda cls, final_cond: itr.small_model_clauses(cls, final_cond, shrink=diagnose.get())
-		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			mr, _ := tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+		gmc := func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+			mr, _ := actions.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
 			return mr
 		}
 
 		// Python: res = history.satisfy(axioms, gmc, filter_fcs(fcs))
-		axiomExpr := clauseops.ClausesToFormula(axioms)
+		axiomExpr := module.ClausesToFormula(axioms)
 		res := history.SatisfyWithCond(axiomExpr, gmc, finalConds)
 
 		// Python: if res is not None and diagnose.get(): show_counterexample(ag, post, res)
@@ -670,11 +668,11 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	} else {
 		// No history — fall back to direct solver check.
 		// This happens when ag/post are nil (e.g., property checking with true pre-state).
-		baseClauses := clauseops.TrueClauses(actions.EmptyAnnotation{})
-		combined := clauseops.AndClausesTyped(baseClauses, axioms)
+		baseClauses := module.TrueClauses(actions.EmptyAnnotation{})
+		combined := module.AndClausesTyped(baseClauses, axioms)
 
-		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			mr, _ := tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+		gmc := func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+			mr, _ := actions.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
 			return mr
 		}
 		gmc(combined, finalConds)
@@ -811,7 +809,7 @@ func ConvertPostconds(postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 
 // ConvertPostcondsWithUpdate is the full version that uses the state's update
 // to build a renaming for old symbols. Matches Python convert_postconds(state, postconds).
-func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
+func ConvertPostcondsWithUpdate(update *actions.Update, postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 	if len(postconds) == 0 {
 		return postconds
 	}
@@ -825,18 +823,18 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 		if pc.Formula == nil {
 			continue
 		}
-		usedSyms := clauseops.UsedSymbolsAST(pc.Formula.(lg.Expr))
+		usedSyms := module.UsedSymbolsAST(pc.Formula.(lg.Expr))
 		for _, sym := range usedSyms {
-			if tr.IsOld(sym.Name) {
+			if actions.IsOld(sym.Name) {
 				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
-				renaming[lg.Key(sym)] = lg.NewConst(tr.OldOf(sym.Name), sym.CSort)
+				renaming[lg.Key(sym)] = lg.NewConst(actions.OldOf(sym.Name), sym.CSort)
 			}
 		}
 	}
 
 	// Python: for s in updated: renaming[itr.old(s)] = s.prefix('__')
 	for _, s := range update.Modified {
-		oldName := tr.Old(s.Name)
+		oldName := actions.Old(s.Name)
 		oldSym := lg.NewConst(oldName, s.CSort)
 		renaming[lg.Key(oldSym)] = lg.NewConst("__"+s.Name, s.CSort)
 	}
@@ -848,7 +846,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	// Python: [x.clone([x.args[0], lut.rename_ast(x.formula, renaming)]) for x in postconds]
 	result := make([]*ast.LabeledFormula, len(postconds))
 	for i, pc := range postconds {
-		renamed := clauseops.RenameAST(pc.Formula.(lg.Expr), renaming)
+		renamed := module.RenameAST(pc.Formula.(lg.Expr), renaming)
 		lf := pc.Cfg.NewLabeledFormulaFrom(pc, renamed)
 		lf.ID = pc.ID
 		result[i] = lf
@@ -912,7 +910,7 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 	// bmcRes should be a (universe, path) pair from BMC
 	type bmcResult struct {
 		Universe interface{}
-		Path     []*tr.Update
+		Path     []*actions.Update
 	}
 	res, ok := bmcRes.(*bmcResult)
 	if !ok {

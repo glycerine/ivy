@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -225,7 +225,7 @@ func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Expr, error) {
 // Z3's interpolation API may not be available in all builds, so this includes
 // a fallback that returns an error.
 // Corresponds to Python's binary_interpolant.
-func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clauseops.Clauses, error) {
+func (s *Solver) BinaryInterpolant(clauses2, clauses1 *mod.Clauses) (*mod.Clauses, error) {
 	// Create a fresh translator with an interpolation-capable context.
 	// Z3_compute_interpolant requires a context created via
 	// Z3_mk_interpolation_context (legacy solver with proof generation).
@@ -265,7 +265,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clau
 		return nil, fmt.Errorf("binary_interpolant: converting interpolant: %w", err)
 	}
 
-	return clauseops.NewClauses([]lg.Expr{ivyFmla}, nil, nil), nil
+	return mod.NewClauses([]lg.Expr{ivyFmla}, nil, nil), nil
 }
 
 // computeZ3Interpolant computes a Craig interpolant between two Z3 formulas
@@ -358,7 +358,7 @@ func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *
 	result := make(map[string]*lg.Const)
 
 	// Create the term: sym(V0, V1, ...)
-	phs := clauseops.SymPlaceholders(sym)
+	phs := mod.SymPlaceholders(sym)
 	var term lg.Expr
 	if len(phs) == 0 {
 		term = sym

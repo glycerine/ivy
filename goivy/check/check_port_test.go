@@ -9,7 +9,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
@@ -362,7 +361,7 @@ func FuzzMatchHandlerEqs(f *testing.F) {
 				fmlas = append(fmlas, &lg.Not{Body: app})
 			}
 		}
-		cls := clauseops.NewClauses(fmlas, nil, nil)
+		cls := module.NewClauses(fmlas, nil, nil)
 		// Should not panic
 		h := NewMatchHandler(cls, nil, []*lg.Const{sym}, nil)
 		_ = h.String()
@@ -376,7 +375,7 @@ func FuzzDualClauses(f *testing.F) {
 	f.Fuzz(func(t *testing.T, name1, name2 string) {
 		s1 := lg.NewConst(name1, lg.Boolean)
 		s2 := lg.NewConst(name2, lg.Boolean)
-		cls := clauseops.NewClauses([]lg.Expr{s1, s2}, nil, nil)
+		cls := module.NewClauses([]lg.Expr{s1, s2}, nil, nil)
 		// Should not panic
 		result := DualClauses(cls)
 		_ = result

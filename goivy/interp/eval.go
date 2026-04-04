@@ -6,10 +6,8 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -25,7 +23,7 @@ import (
 //
 //	axioms = state.domain.background_theory(state.in_scope)
 //	cons = compose_state_action(state.value, axioms, update, check=context.check)
-func ConcretePost(checkPrecond bool, update *tr.Update, state *State, expr ast.Node) (*State, error) {
+func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr ast.Node) (*State, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
 	}
@@ -50,7 +48,7 @@ func ConcretePost(checkPrecond bool, update *tr.Update, state *State, expr ast.N
 		defer t.Close()
 		result, err := t.IsSat(preCombined)
 		if err == nil && result == z3bridge.Sat {
-			return nil, &tr.ActionFailed{
+			return nil, &actions.ActionFailed{
 				Formula: preNode,
 				Trace:   []lg.Expr{stateTR},
 			}
@@ -58,13 +56,13 @@ func ConcretePost(checkPrecond bool, update *tr.Update, state *State, expr ast.N
 	}
 
 	// Compute forward image.
-	postFmla := tr.ForwardImage(stateTR, axiomsFmla, update)
-	postClauses := co.FormulaToClauses(postFmla, state.Clauses.Annot)
+	postFmla := actions.ForwardImage(stateTR, axiomsFmla, update)
+	postClauses := module.FormulaToClauses(postFmla, state.Clauses.Annot)
 
 	postValue := NewStateValue(
-		tr.ModifiedNames(update),
+		actions.ModifiedNames(update),
 		postClauses,
-		co.FalseClauses(nil),
+		module.FalseClauses(nil),
 	)
 	res := NewState(state.Domain, postValue, expr, "")
 	res.SetPred(state)
@@ -87,14 +85,14 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 	// This adds differential frame conditions and takes the disjunction.
 	u1 := stateValueToUpdate(s1.Value())
 	u2 := stateValueToUpdate(s2.Value())
-	joinedUpdate := tr.JoinState(u1, u2, axioms)
+	joinedUpdate := actions.JoinState(u1, u2, axioms)
 
 	joinedClauses := joinedUpdate.TR
 	joinedPrecond := joinedUpdate.Pre
 
 	joinExpr := StateJoin(s1.AstCfg(), WrapState(s1), WrapState(s2))
 	res := NewState(s1.Domain, &StateValue{
-		Moded:   tr.ModifiedNames(joinedUpdate),
+		Moded:   actions.ModifiedNames(joinedUpdate),
 		Clauses: joinedClauses,
 		Precond: joinedPrecond,
 	}, joinExpr, "")
@@ -166,16 +164,16 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 	xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s", actionName, actions.ActionTypeName(action))
 	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
-		upd = tr.NullUpdate()
+		upd = actions.NullUpdate()
 	}
 
 	res, err := ConcretePost(checkPrecond, upd, state, ActionApp(state.AstCfg(), actionName, WrapState(state)))
 	if err != nil {
 		// Check if it's an ActionFailed error.
-		if af, ok := err.(*tr.ActionFailed); ok {
+		if af, ok := err.(*actions.ActionFailed); ok {
 			return nil, NewIvyActionFailedError(
 				astNode, actionName, action, state,
-				co.FormulaToClauses(af.Formula, nil),
+				module.FormulaToClauses(af.Formula, nil),
 				af.Trace,
 			)
 		}
@@ -204,15 +202,15 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 	// Check true.
 	if ast.IsTrue(expr) {
 		return NewState(mod, &StateValue{
-			Clauses: co.TrueClauses(nil),
-			Precond: co.FalseClauses(nil),
+			Clauses: module.TrueClauses(nil),
+			Precond: module.FalseClauses(nil),
 		}, nil, ""), nil
 	}
 	// Check false.
 	if ast.IsFalse(expr) {
 		return NewState(mod, &StateValue{
-			Clauses: co.FalseClauses(nil),
-			Precond: co.FalseClauses(nil),
+			Clauses: module.FalseClauses(nil),
+			Precond: module.FalseClauses(nil),
 		}, nil, ""), nil
 	}
 	// State symbol: look up via module.FindAction.
@@ -295,13 +293,13 @@ func BottomState(domain *module.Module) *State {
 
 // NewStateFromClauses creates a state from clauses, mirroring
 // module_new_state in Python.
-func NewStateFromClauses(mod *module.Module, clauses *co.Clauses) *State {
+func NewStateFromClauses(mod *module.Module, clauses *module.Clauses) *State {
 	if clauses.Annot == nil {
-		clauses = co.NewClauses(clauses.Fmlas, clauses.Defs, actions.EmptyAnnotation{})
+		clauses = module.NewClauses(clauses.Fmlas, clauses.Defs, actions.EmptyAnnotation{})
 	}
 	return NewState(mod, &StateValue{
 		Clauses: clauses,
-		Precond: co.FalseClauses(nil),
+		Precond: module.FalseClauses(nil),
 	}, nil, "")
 }
 
@@ -317,12 +315,12 @@ func isNodeFalse(n lg.Expr) bool {
 
 // stateValueToUpdate converts a StateValue to a transrel.Update.
 // This maps the state representation to the transrel format.
-func stateValueToUpdate(sv *StateValue) *tr.Update {
-	trClauses := co.TrueClauses(nil)
+func stateValueToUpdate(sv *StateValue) *actions.Update {
+	trClauses := module.TrueClauses(nil)
 	if sv.Clauses != nil {
 		trClauses = sv.Clauses
 	}
-	preClauses := co.FalseClauses(nil)
+	preClauses := module.FalseClauses(nil)
 	if sv.Precond != nil {
 		preClauses = sv.Precond
 	}
@@ -331,7 +329,7 @@ func stateValueToUpdate(sv *StateValue) *tr.Update {
 	for _, name := range sv.Moded {
 		modified = append(modified, lg.NewConst(name, lg.TopS))
 	}
-	return &tr.Update{
+	return &actions.Update{
 		Modified: modified,
 		TR:       trClauses,
 		Pre:      preClauses,

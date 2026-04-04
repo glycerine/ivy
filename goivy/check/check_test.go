@@ -7,7 +7,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -178,7 +177,7 @@ func TestDualClausesNil(t *testing.T) {
 }
 
 func TestDualClausesEmpty(t *testing.T) {
-	c := clauseops.NewClauses(nil, nil, nil)
+	c := module.NewClauses(nil, nil, nil)
 	result := DualClauses(c)
 	if result == nil {
 		t.Fatal("DualClauses should not return nil for empty clauses")
@@ -188,7 +187,7 @@ func TestDualClausesEmpty(t *testing.T) {
 func TestDualClausesSingleFormula(t *testing.T) {
 	// Use a real formula (not lg.True which is empty And, consumed by collectAndList)
 	p := lg.NewConst("p", lg.Boolean)
-	c := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
+	c := module.NewClauses([]lg.Expr{p}, nil, nil)
 	result := DualClauses(c)
 	if result == nil {
 		t.Fatal("result should not be nil")

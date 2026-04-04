@@ -141,7 +141,7 @@ func TestNewOldRoundTrip(t *testing.T) {
 // Update constructor tests
 // -----------------------------------------------------------------------
 
-func TestNullUpdate(t *testing.T) {
+func TestNullUpdateTransrel(t *testing.T) {
 	u := NullUpdate()
 	if u.Modified == nil {
 		t.Error("NullUpdate Modified should be non-nil empty slice")

@@ -7,11 +7,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // --- Pretty printing ---
@@ -111,7 +109,7 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 // This corresponds to Python's MatchHandler class (ivy_check.py lines 281-364).
 type MatchHandler struct {
 	// Clauses is the clause set used to build the model.
-	Clauses *clauseops.Clauses
+	Clauses *module.Clauses
 	// Model holds the satisfying assignment.
 	Model *solver.ModelResult
 	// Slv is the solver used to extract ground equalities.
@@ -136,7 +134,7 @@ type MatchHandler struct {
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
 // MatchHandler.__init__ (lines 282-310) which takes clauses, model, and vocab,
 // then calls islv.clauses_model_to_clauses to extract ground equalities.
-func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, vocab []*lg.Const, slv *solver.Solver) *MatchHandler {
+func NewMatchHandler(clauses *module.Clauses, model *solver.ModelResult, vocab []*lg.Const, slv *solver.Solver) *MatchHandler {
 	h := &MatchHandler{
 		Clauses:  clauses,
 		Model:    model,
@@ -197,7 +195,7 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Const) {
 	renamedKey := lg.Key(renamedSym)
 	for _, fmla := range h.Eqs[renamedKey] {
 		// Python: rfmla = lut.rename_ast(fmla, rmap); lhs,rhs = rfmla.args
-		rfmla := clauseops.RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(renamedSym): sym})
+		rfmla := module.RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(renamedSym): sym})
 		// Python: if lhs in self.current and self.current[lhs] == rhs: continue
 		if eq, ok := rfmla.(*lg.Eq); ok {
 			lhsKey := lg.Key(eq.T1)
@@ -234,7 +232,7 @@ func (h *MatchHandler) Eval(cond lg.Expr) bool {
 // IsSkolem checks if a symbol is a skolem (but not a __ prefixed uppercase one).
 // Corresponds to Python's MatchHandler.is_skolem (lines 334-336).
 func (h *MatchHandler) IsSkolem(sym *lg.Const) bool {
-	if !tr.IsSkolem(sym.Name) {
+	if !actions.IsSkolem(sym.Name) {
 		return false
 	}
 	// Python: not (sym.name.startswith('__') and sym.name[2:3].isupper())
@@ -262,7 +260,7 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 		// Python: for sym in self.vocab: if sym not in env and not itr.is_new(sym) ...
 		for _, sym := range h.Vocab {
 			if _, inEnv := env[lg.Key(sym)]; !inEnv {
-				if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
+				if !actions.IsNew(sym.Name) && !h.IsSkolem(sym) {
 					h.ShowSym(sym, sym)
 				}
 			}
@@ -291,7 +289,7 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 			// Fallback: use renamedSym for checks (may not be fully correct).
 			origSym = renamedSym
 		}
-		if !tr.IsNew(origSym.Name) && !h.IsSkolem(origSym) {
+		if !actions.IsNew(origSym.Name) && !h.IsSkolem(origSym) {
 			h.ShowSym(origSym, renamedSym)
 		}
 	}
@@ -309,7 +307,7 @@ func (h *MatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Exp
 // Corresponds to Python's MatchHandler.end (lines 358-361).
 func (h *MatchHandler) End() {
 	for _, sym := range h.Vocab {
-		if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
+		if !actions.IsNew(sym.Name) && !h.IsSkolem(sym) {
 			h.ShowSym(sym, sym)
 		}
 	}

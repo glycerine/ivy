@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -497,7 +497,7 @@ func TestClausesModelToDiagram_NoTautologies(t *testing.T) {
 
 	// Simple clauses: a != b
 	fmla := &lg.Not{Body: &lg.Eq{T1: a, T2: b}}
-	clauses := clauseops.NewClauses([]lg.Expr{fmla}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{fmla}, nil, nil)
 
 	result, err := s.ClausesModelToDiagram(clauses, nil, nil)
 	if err != nil {
@@ -661,8 +661,8 @@ func TestCheckSequenceWithReporter(t *testing.T) {
 	p := boolConst("p")
 
 	seq := []AssumeAssert{
-		NewAssume(clauseops.FormulaToClauses(p, nil), "assume_p"),
-		NewAssert(clauseops.FormulaToClauses(p, nil), "assert_p"),
+		NewAssume(mod.FormulaToClauses(p, nil), "assume_p"),
+		NewAssert(mod.FormulaToClauses(p, nil), "assert_p"),
 	}
 
 	rep := &testReporter{}
@@ -692,8 +692,8 @@ func TestCheckSequenceWithReporter_Abort(t *testing.T) {
 
 	seq := []AssumeAssert{
 		// Assert p with no assumptions — should fail
-		NewAssert(clauseops.FormulaToClauses(p, nil), "assert_p"),
-		NewAssert(clauseops.FormulaToClauses(p, nil), "assert_p_again"),
+		NewAssert(mod.FormulaToClauses(p, nil), "assert_p"),
+		NewAssert(mod.FormulaToClauses(p, nil), "assert_p_again"),
 	}
 
 	rep := &testReporter{abort: true}

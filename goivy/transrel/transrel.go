@@ -1267,9 +1267,9 @@ func ComposeStateAction(
 	}, nil
 }
 
-// RenameClauses renames symbols in a logic node using the given mapping.
-// Corresponds to Python rename_clauses.
-func RenameClauses(node lg.Expr, rn map[string]string) lg.Expr {
+// RenameExprByName renames symbols in a logic node using a name→name mapping.
+// Corresponds to Python rename_clauses (the single-Expr version).
+func RenameExprByName(node lg.Expr, rn map[string]string) lg.Expr {
 	if node == nil || len(rn) == 0 {
 		return node
 	}
@@ -1526,9 +1526,9 @@ func BindOldsClauses(node lg.Expr) lg.Expr {
 	return renameFormula(node, nameMap)
 }
 
-// BindOldsAction binds "old" symbols in both the TR and Pre of an update.
+// BindOldsUpdate binds "old" symbols in both the TR and Pre of an update.
 // Corresponds to Python's bind_olds_action.
-func BindOldsAction(u *Update) *Update {
+func BindOldsUpdate(u *Update) *Update {
 	// Faithful port of Python bind_olds_action (ivy_transrel.py:225-228).
 	return &Update{
 		Modified: u.Modified,

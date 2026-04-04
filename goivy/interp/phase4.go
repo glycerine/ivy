@@ -8,13 +8,11 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // --- TypeCheckList ---
@@ -44,11 +42,11 @@ func TypeCheckList(domain *module.Module, items []interface{}) error {
 // i.e., state1 implies state2 in state style.
 // Returns true if state1 ⊆ state2.
 // Corresponds to Python's module_order.
-func ModuleOrder(state1, state2 *State) (bool, *tr.CounterExample) {
+func ModuleOrder(state1, state2 *State) (bool, *actions.CounterExample) {
 	axioms := state1.Domain.BackgroundTheory(state1.InScope)
 	u1 := stateValueToUpdate(state1.Value())
 	u2 := stateValueToUpdate(state2.Value())
-	return tr.ImpliesState(u1, u2, axioms)
+	return actions.ImpliesState(u1, u2, axioms)
 }
 
 // --- ModuleSkolemizer ---
@@ -77,16 +75,16 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Const {
 // If so, returns an unsat core (a subset of state clauses that implies
 // the clause). Otherwise returns nil.
 // Corresponds to Python's get_core.
-func GetCore(state *State, clause lg.Expr) *co.Clauses {
+func GetCore(state *State, clause lg.Expr) *module.Clauses {
 	// Python:
 	//   clauses1 = and_clauses(state_clauses, background_theory)
 	//   clauses2 = [[~lit] for lit in clause]
 	//   return unsat_core(clauses1, clauses2)
 	stateClauses := state.Clauses
-	clauses1 := co.AndClausesTyped(stateClauses, state.Domain.BackgroundTheory(state.InScope))
+	clauses1 := module.AndClausesTyped(stateClauses, state.Domain.BackgroundTheory(state.InScope))
 
 	// Negate the clause: each literal becomes a singleton clause with its negation
-	clauses2 := co.NegateClauses(co.FormulaToClauses(clause, nil))
+	clauses2 := module.NegateClauses(module.FormulaToClauses(clause, nil))
 
 	slv := solver.New()
 	core, err := slv.UnsatCore(clauses1, clauses2, nil, nil)
@@ -101,12 +99,12 @@ func GetCore(state *State, clause lg.Expr) *co.Clauses {
 // ReverseJoinConcreteClauses reverses a join operation by finding which
 // joined state is compatible with the given clauses.
 // Corresponds to Python's reverse_join_concrete_clauses.
-func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *co.Clauses) (*co.Clauses, *State, error) {
+func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *module.Clauses) (*module.Clauses, *State, error) {
 	if clauses == nil {
 		clauses = state.Clauses
 	}
 	for _, s := range joinOf {
-		combined := co.AndClausesTyped(s.Clauses, clauses)
+		combined := module.AndClausesTyped(s.Clauses, clauses)
 		if !combined.IsFalse() {
 			return combined, s, nil
 		}
@@ -117,12 +115,12 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *co.Claus
 	// Python: ivy_interp.py:258-262
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	interpreted := functionsToInterpreted(state.Domain.Functions)
-	clausesOfStates := make([]*co.Clauses, len(joinOf))
+	clausesOfStates := make([]*module.Clauses, len(joinOf))
 	for i, s := range joinOf {
 		clausesOfStates[i] = s.Clauses
 	}
-	pre := co.OrClausesTyped(clausesOfStates...)
-	itp := tr.Interpolant(pre, clauses, axioms, interpreted)
+	pre := module.OrClausesTyped(clausesOfStates...)
+	itp := actions.Interpolant(pre, clauses, axioms, interpreted)
 	if itp != nil {
 		return nil, nil, &UnsatCoreWithInterpolant{Core: itp.Core, Itp: itp.Itp}
 	}
@@ -134,20 +132,20 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *co.Claus
 // UnderapproximateState builds an under-approximation of reachable states
 // using model extraction from the state's clauses.
 // Corresponds to Python's underapproximate_state.
-func UnderapproximateState(state *State, implied *co.Clauses) {
+func UnderapproximateState(state *State, implied *module.Clauses) {
 	// Python:
 	//   axioms = state.domain.background_theory(state.in_scope)
 	//   under = clauses_model_to_clauses(and_clauses(state.clauses, axioms), is_skolem, implied)
 	//   if under != None:
 	//       state.unders.append(self.new_state(under))
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	combined := co.AndClausesTyped(state.Clauses, axioms)
+	combined := module.AndClausesTyped(state.Clauses, axioms)
 
 	slv := solver.New()
 	under, err := slv.ClausesModelToClauses(
 		combined,
 		func(s *lg.Const) bool {
-			return tr.IsSkolem(s.Name)
+			return actions.IsSkolem(s.Name)
 		},
 	)
 	if err != nil || under == nil {
@@ -203,7 +201,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 	xtracer.Trace("phase4 calling IntUpdate type=%s", actions.ActionTypeName(act))
 	upd := actions.IntUpdate(act, ctx)
 	if upd == nil {
-		upd = tr.NullUpdate()
+		upd = actions.NullUpdate()
 	}
 
 	// Use decomposition: try each decomposition path
@@ -212,18 +210,18 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 
 	for _, comp := range comps {
 		// Compute updates for each action in the decomposition
-		upds := make([]*tr.Update, len(comp.Actions))
+		upds := make([]*actions.Update, len(comp.Actions))
 		for i, subAct := range comp.Actions {
 			xtracer.Trace("phase4 calling IntUpdate decomp type=%s", actions.ActionTypeName(subAct))
 			subUpd := actions.IntUpdate(subAct, ctx)
 			if subUpd == nil {
-				subUpd = tr.NullUpdate()
+				subUpd = actions.NullUpdate()
 			}
 			upds[i] = subUpd
 		}
 
 		// Build a history from pre-state
-		h := tr.NewHistory(cfg, tr.PureState(comp.Pre))
+		h := actions.NewHistory(cfg, actions.PureState(comp.Pre))
 
 		// Forward-step through each update
 		for _, upd := range upds {
@@ -269,8 +267,8 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 // Corresponds to Python's state_implies_formula.
 func StateImpliesFormula(state *State, fmla lg.Expr) bool {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	combined := co.AndClausesTyped(state.Clauses, axioms)
-	ok, _ := tr.ClausesImplyFormulaCex(combined, fmla)
+	combined := module.AndClausesTyped(state.Clauses, axioms)
+	ok, _ := actions.ClausesImplyFormulaCex(combined, fmla)
 	return ok
 }
 
@@ -307,10 +305,10 @@ func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *module.Module) (*
 	_ = ctx
 	// Convert RME to state: the RME's ensures formula becomes the state constraint
 	if rmeVal.Ensures != nil {
-		cls := co.FormulaToClauses(rmeVal.Ensures, nil)
+		cls := module.FormulaToClauses(rmeVal.Ensures, nil)
 		return NewStateFromClauses(domain, cls), nil
 	}
-	return NewStateFromClauses(domain, co.TrueClauses(nil)), nil
+	return NewStateFromClauses(domain, module.TrueClauses(nil)), nil
 }
 
 // --- EvalStateOrder ---
@@ -392,11 +390,11 @@ func CheckStateAssertion(checkPrecond bool, state *State, assertion *ast.Labeled
 // and returns their conjunction. Returns nil if no assertions match
 // or all are trivially true.
 // Corresponds to Python's get_state_assertions.
-func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *co.Clauses {
+func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *module.Clauses {
 	if state.Label == "" {
 		return nil
 	}
-	res := co.TrueClauses(nil)
+	res := module.TrueClauses(nil)
 	for _, assertion := range mod.Assertions {
 		if assertion.Label == nil {
 			continue
@@ -410,7 +408,7 @@ func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *co
 			if err != nil {
 				continue
 			}
-			res = co.AndClausesTyped(res, rhsState.Clauses)
+			res = module.AndClausesTyped(res, rhsState.Clauses)
 		}
 	}
 	if res.IsTrue() {
@@ -433,9 +431,9 @@ type SortUniverse struct {
 // If the state has universe data (from model finding), generates
 // equality constraints for each sort.
 // Corresponds to Python's universe_constraint.
-func UniverseConstraint(state *State) *co.Clauses {
+func UniverseConstraint(state *State) *module.Clauses {
 	if state.Universe == nil {
-		return co.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	// Universe is a map from sort -> []values.
 	// Accept both the legacy map[lg.Sort][]lg.Expr and the
@@ -456,7 +454,7 @@ func UniverseConstraint(state *State) *co.Clauses {
 			entries = append(entries, sortEntry{s, vals})
 		}
 	default:
-		return co.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	var fmlas []lg.Expr
 	for _, e := range entries {
@@ -473,7 +471,7 @@ func UniverseConstraint(state *State) *co.Clauses {
 		fmlas = append(fmlas, fmla)
 	}
 	if len(fmlas) == 0 {
-		return co.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
-	return co.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
@@ -225,5 +224,5 @@ func TestConjsReturnType(t *testing.T) {
 	if len(conjs) != 1 {
 		t.Fatal("expected 1 conjecture clause")
 	}
-	var _ *co.Clauses = conjs[0] // type assertion check
+	var _ *Clauses = conjs[0] // type assertion check
 }

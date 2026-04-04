@@ -7,11 +7,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/temporal"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // =============================================================================
@@ -93,7 +91,7 @@ func TestRegression_Bug2_NoPanic(t *testing.T) {
 func TestRegression_Bug3_WithUpdate(t *testing.T) {
 	ac := ast.NewAstConfig()
 	sym := lg.NewConst("x", lg.Boolean)
-	update := &tr.Update{
+	update := &actions.Update{
 		Modified: []*lg.Const{sym},
 	}
 	oldSym := lg.NewConst("old_x", lg.Boolean)
@@ -163,7 +161,7 @@ func TestRegression_Bug5_SkolemPrefix(t *testing.T) {
 		t.Fatalf("NewVariable failed: %v", err)
 	}
 	// Create clauses containing a variable.
-	c := clauseops.FormulaToClauses(v, nil)
+	c := module.FormulaToClauses(v, nil)
 	dual := DualClauses(c)
 	if dual == nil {
 		t.Fatal("DualClauses returned nil")
