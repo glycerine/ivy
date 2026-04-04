@@ -4,6 +4,16 @@ Created: 2026-04-04 10:00
 
 ## Context
 
+Structural equivalence in Python Ivy is provided for
+the logic.py types by inheriting from a custom
+recstruct class defined in utils/recstruct_object.py.
+
+The recstruct base class is a hand-rolled "metaprogramming" 
+implementation for the Ivy project. This is a clever 
+bit of code that dynamically generates class strings 
+and then execs them to create highly optimized and
+immutable data structures.
+
 Python Ivy has **two distinct equality regimes**:
 
 1. **`logic.py` types** (via `recstruct`): ALL types (`Var`, `Const`, `Apply`, `And`, `Or`, `Not`, `ForAll`, `Exists`, `Lambda`, etc.) have auto-generated `__eq__` and `__hash__` based on structural content (`_tup`). They can all be dict keys with structural semantics.
