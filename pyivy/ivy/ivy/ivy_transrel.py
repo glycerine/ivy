@@ -291,7 +291,7 @@ def rename_distinct(clauses1,clauses2):
     """
 #    print "rename_distinct clauses1 = {}".format(clauses1)
 #    print "rename_distinct clauses2 = {!r}".format(clauses2)
-    used1 = used_symbols_clauses(clauses1)
+    used1 = dict.fromkeys(symbols_clauses(clauses1))
     used2 = used_symbols_clauses(clauses2)
     rn = UniqueRenamer('',used2)
     map1 = dict()

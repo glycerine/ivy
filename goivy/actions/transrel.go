@@ -446,57 +446,57 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	if node1 == nil {
 		return node1
 	}
-	used1 := usedSymbolNames(node1)
+	// Collect symbols (name+sort) in AST depth-first order (InsMap).
+	// Matches Python: dict.fromkeys(symbols_clauses(node1)).
+	used1 := mod.UsedSymbolsExprOrdered(node1)
+	// Build name-string set for renamer from node2
 	used2 := usedSymbolNames(node2)
 	used2Slice := nameSetToSlice(used2)
 	rn := iu.NewUniqueRenamer("", used2Slice)
-	// Collect skolem names and sort for deterministic Rename() call order.
-	// Go map iteration is random; Python set iteration is deterministic.
-	var skolems []string
-	for s := range used1 {
-		if IsSkolem(s) && !IsGlobalSkolem(s) {
-			skolems = append(skolems, s)
+	// Iterate symbols in insertion order, building structural rename map.
+	constMap := make(map[lg.NodeKey]*lg.Const)
+	for key, sym := range used1.All() {
+		if IsSkolem(sym.Name) && !IsGlobalSkolem(sym.Name) {
+			newName := rn.Rename(sym.Name)
+			constMap[key] = lg.NewConst(newName, sym.CSort)
 		}
 	}
-	if len(skolems) == 0 {
+	if len(constMap) == 0 {
 		return node1
 	}
-	sort.Strings(skolems)
-	nameMap := make(map[string]string, len(skolems))
-	for _, s := range skolems {
-		nameMap[s] = rn.Rename(s)
-	}
-	return renameFormula(node1, nameMap)
+	return mod.RenameAST(node1, constMap)
 }
 
 // RenameDistinctClauses renames skolems in clauses1 to avoid clashes with clauses2.
 // Clauses version of RenameDistinct.
+//
+// Uses per-symbol renaming (keyed by name+sort via lg.NodeKey), matching
+// Python's rename_distinct which iterates Symbol objects. Two symbols with
+// the same name but different sorts each get their own fresh name.
 func RenameDistinctClauses(c1, c2 *mod.Clauses) *mod.Clauses {
 	if c1 == nil {
 		return c1
 	}
-	// Collect all symbol names from both
-	used1 := usedSymbolNamesClauses(c1)
+	// Collect symbols (name+sort) in AST depth-first order (InsMap).
+	// Matches Python: dict.fromkeys(symbols_clauses(clauses1)).
+	used1 := mod.UsedSymbolsClausesOrdered(c1)
+	// Build name-string set for renamer from c2
 	used2 := usedSymbolNamesClauses(c2)
 	used2Slice := nameSetToSlice(used2)
 	rn := iu.NewUniqueRenamer("", used2Slice)
-	// Collect skolem names and sort for deterministic Rename() call order.
-	// Go map iteration is random; Python set iteration is deterministic.
-	var skolems []string
-	for s := range used1 {
-		if IsSkolem(s) && !IsGlobalSkolem(s) {
-			skolems = append(skolems, s)
+	// Iterate symbols in insertion order, building structural rename map.
+	// Each unique (name, sort) pair gets its own rn.Rename() call.
+	constMap := make(map[lg.NodeKey]*lg.Const)
+	for key, sym := range used1.All() {
+		if IsSkolem(sym.Name) && !IsGlobalSkolem(sym.Name) {
+			newName := rn.Rename(sym.Name)
+			constMap[key] = lg.NewConst(newName, sym.CSort)
 		}
 	}
-	if len(skolems) == 0 {
+	if len(constMap) == 0 {
 		return c1
 	}
-	sort.Strings(skolems)
-	nameMap := make(map[string]string, len(skolems))
-	for _, s := range skolems {
-		nameMap[s] = rn.Rename(s)
-	}
-	return mod.RenameClausesByName(c1, nameMap)
+	return mod.RenameClauses(c1, constMap)
 }
 
 // usedSymbolNamesClauses collects all symbol names from a Clauses.

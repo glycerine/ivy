@@ -842,6 +842,44 @@ func elimDefinitions(clauses *Clauses, deadSet map[lg.NodeKey]bool) *Clauses {
 	return NewClauses(fmlas, defs, clauses.Annot)
 }
 
+// UsedSymbolsClausesOrdered collects constant symbols from clauses in
+// depth-first AST traversal order, deduplicating by structural identity
+// (lg.NodeKey includes name + sort). This matches Python's
+// dict.fromkeys(symbols_clauses(c)) insertion order.
+func UsedSymbolsClausesOrdered(c *Clauses) *iu.InsMap[lg.NodeKey, *lg.Const] {
+	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
+	if c == nil {
+		return result
+	}
+	for _, f := range c.Fmlas {
+		collectSymbolsOrdered(f, result)
+	}
+	for _, d := range c.Defs {
+		collectSymbolsOrdered(d, result)
+	}
+	return result
+}
+
+func collectSymbolsOrdered(n lg.Expr, result *iu.InsMap[lg.NodeKey, *lg.Const]) {
+	if n == nil {
+		return
+	}
+	if c, ok := n.(*lg.Const); ok {
+		result.Set(lg.Key(c), c)
+	}
+	for _, child := range n.Children() {
+		collectSymbolsOrdered(child, result)
+	}
+}
+
+// UsedSymbolsExprOrdered collects constant symbols from an expression in
+// depth-first AST traversal order, deduplicating by structural identity.
+func UsedSymbolsExprOrdered(node lg.Expr) *iu.InsMap[lg.NodeKey, *lg.Const] {
+	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
+	collectSymbolsOrdered(node, result)
+	return result
+}
+
 // UsedVariablesOrdered returns free variables from the clauses in order.
 func UsedVariablesOrdered(c *Clauses) []*lg.Variable {
 	seen := make(map[string]bool)
