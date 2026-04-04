@@ -152,9 +152,8 @@ vmt, check, bmc):
 - Replace `tr.Foo` → `actions.Foo`
 - If file already imports actions, just drop the transrel import
 
-**Critical:** Use targeted Edit tool calls per-file or very precise sed patterns.
-NEVER use `sed 's/co\.//g'` — this mangles `s.Context`, `destr.CSort`, etc.
-Safe pattern: `sed 's/\bco\.\([A-Z]\)/mod.\1/g'` (only co. followed by uppercase).
+**Critical:** Use targeted Edit tool calls per-file. No sed — it mangles
+unrelated code (`s.Context`→`s.ntext`, `destr.CSort`→`desCSort`).
 
 **Verify:** `go build ./...`
 
