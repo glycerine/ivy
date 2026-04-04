@@ -22,7 +22,7 @@ func testModuleWithConj() *module.Module {
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, _ := lg.NewVariable("X", S)
 	eq, _ := lg.NewEq(X, X)
-	module.LabeledConjs = []*ast.LabeledFormula{
+	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: eq},
 	}
 	return mod
@@ -31,8 +31,8 @@ func testModuleWithConj() *module.Module {
 func testModuleWithAction() *module.Module {
 	mod := testModuleWithConj()
 	act := actions.NewAssumeAction(lg.True)
-	module.Actions.Set("test_action", act)
-	module.PublicActions.Set("test_action", true)
+	mod.Actions.Set("test_action", act)
+	mod.PublicActions.Set("test_action", true)
 	return mod
 }
 
@@ -123,7 +123,7 @@ func TestCheckIsolateWithUnroll(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// Actions should be restored after the call.
-	if _, ok := module.Actions.Get2("test_action"); !ok {
+	if _, ok := mod.Actions.Get2("test_action"); !ok {
 		t.Error("actions should be restored after unrolling")
 	}
 }

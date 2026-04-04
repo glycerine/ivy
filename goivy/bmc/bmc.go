@@ -83,15 +83,15 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	// If unrolling is requested, duplicate the actions with unrolled loops.
 	var oldActions *iu.InsMap[string, module.Action]
 	if cfg.NUnroll != nil {
-		oldActions = module.Actions
-		module.Actions = iu.NewInsMap[string, module.Action]()
+		oldActions = mod.Actions
+		mod.Actions = iu.NewInsMap[string, module.Action]()
 		for name, act := range oldActions.All() {
-			module.Actions.Set(name, UnrollAction(act, *cfg.NUnroll))
+			mod.Actions.Set(name, UnrollAction(act, *cfg.NUnroll))
 		}
 	}
 	defer func() {
 		if oldActions != nil {
-			module.Actions = oldActions
+			mod.Actions = oldActions
 		}
 	}()
 
@@ -114,7 +114,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	post := initState
 
 	// Execute the initialize action if present.
-	if initAct, ok := module.Actions.Get2("initialize"); ok {
+	if initAct, ok := mod.Actions.Get2("initialize"); ok {
 		if act, ok2 := initAct.(actions.Action); ok2 {
 			initPost, err := ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
 			if err != nil {
@@ -195,8 +195,8 @@ func EnvAction(mod *module.Module) actions.Action {
 		return actions.NewSequence()
 	}
 	var branches []lg.Expr
-	for name := range module.PublicActions.All() {
-		act, ok := module.Actions.Get2(name)
+	for name := range mod.PublicActions.All() {
+		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -214,11 +214,11 @@ func EnvAction(mod *module.Module) actions.Action {
 
 // BuildConjecture combines a module's conjectures into a single Clauses.
 func BuildConjecture(mod *module.Module) *module.Clauses {
-	if mod == nil || len(module.LabeledConjs) == 0 {
+	if mod == nil || len(mod.LabeledConjs) == 0 {
 		return module.TrueClauses(nil)
 	}
 	var fmlas []lg.Expr
-	for _, lc := range module.LabeledConjs {
+	for _, lc := range mod.LabeledConjs {
 		if lc.Formula != nil {
 			fmlas = append(fmlas, lc.Formula.(lg.Expr))
 		}
