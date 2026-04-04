@@ -43,7 +43,9 @@ func VarToSkolem(prefix string, v *lg.Variable) lg.Expr {
 // DualFormula negates a formula after replacing free variables with
 // Skolem constants. Corresponds to Python's dual_formula
 // (ivy_logic_utils.py:1527-1537).
-func DualFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr) lg.Expr {
+// If instantiator is non-nil, definition instances are conjoined with the
+// negated formula (matching Python's `if instantiator != None` check).
+func DualFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr, instantiator func([]lg.Expr) *Clauses) lg.Expr {
 	if skolemizer == nil {
 		skolemizer = func(v *lg.Variable) lg.Expr {
 			return VarToSkolem("__", v)
@@ -58,12 +60,23 @@ func DualFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr) lg.Expr {
 		}
 		fmla = SubstituteAstByName(fmla, subs)
 	}
-	return Negate(fmla)
+	fmla = Negate(fmla)
+	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	if instantiator != nil {
+		gts := il.AppsAst(fmla)
+		insts := instantiator(gts)
+		if len(insts.Fmlas) > 0 {
+			fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
+		}
+	}
+	return fmla
 }
 
 // SkolemizeFormula skolemizes leading existential quantifiers in a formula.
 // Corresponds to Python's skolemize_formula (ivy_logic_utils.py:1539-1552).
-func SkolemizeFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr) lg.Expr {
+// If instantiator is non-nil, definition instances are conjoined with the
+// skolemized formula (matching Python's `if instantiator != None` check).
+func SkolemizeFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr, instantiator func([]lg.Expr) *Clauses) lg.Expr {
 	if skolemizer == nil {
 		skolemizer = func(v *lg.Variable) lg.Expr {
 			return VarToSkolem("__sk__", v)
@@ -84,6 +97,14 @@ func SkolemizeFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr) lg.Ex
 			subs[v.Name] = skolemizer(v)
 		}
 		fmla = SubstituteAstByName(fmla, subs)
+	}
+	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	if instantiator != nil {
+		gts := il.AppsAst(fmla)
+		insts := instantiator(gts)
+		if len(insts.Fmlas) > 0 {
+			fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
+		}
 	}
 	return fmla
 }

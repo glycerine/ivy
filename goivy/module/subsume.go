@@ -351,14 +351,19 @@ func DebugClausesList(cl []*Clauses) {
 }
 
 // TaggedOrClauses takes the logical or of clause sets, giving each disjunct
-// a unique tag predicate.
+// a unique tag predicate that can be used to determine which disjunct is true
+// in a model. See FindTrueDisjunct.
 // Corresponds to Python's tagged_or_clauses (ivy_logic_utils.py:1391-1398).
+// Unlike OrClausesTyped, this does NOT filter false branches (preserving
+// disjunct indices) and uses an empty used-names set with prefix __to0.
 func TaggedOrClauses(prefix string, args ...*Clauses) *Clauses {
 	if len(args) == 0 {
 		return TrueClauses(nil)
 	}
-	// Use OrClausesTyped which already handles tagging
-	return OrClausesTyped(args...)
+	// Python: or_clauses_int(UniqueRenamer('__to0',dict()),args)
+	rn := iu.NewUniqueRenamer("__to0", nil)
+	res, vs, processedArgs := orClausesIntWithVs(rn, args)
+	return fixOrAnnot(res, vs, processedArgs)
 }
 
 // FindTrueDisjunct finds the index of a true disjunct in a tagged disjunction.
@@ -430,43 +435,40 @@ func ExistsQuantClausesMap(syms []*lg.Const, clauses *Clauses) (map[lg.NodeKey]*
 		}
 	}
 
-	for k, w := range map2 {
-		if len(w) == 0 {
+	// Build key→Const lookup for map2 keys (from definition args and syms)
+	keyToConst := make(map[lg.NodeKey]*lg.Const)
+	for _, df := range clauses.Defs {
+		if c, ok := df.Lhs.(*lg.Const); ok {
+			keyToConst[lg.Key(c)] = c
+		}
+		if c, ok := df.Rhs.(*lg.Const); ok {
+			keyToConst[lg.Key(c)] = c
+		}
+	}
+	for _, s := range syms {
+		keyToConst[lg.Key(s)] = s
+	}
+
+	// Python: for v,w in map2.items(): for x in w: map1[x] = v
+	// Map each element x in the equivalence class to its representative key v
+	for vKey, w := range map2 {
+		vConst := keyToConst[vKey]
+		if vConst == nil {
 			continue
 		}
-		// Find the representative node for this key
-		var rep lg.Expr
-		for _, s := range syms {
-			if lg.Key(s) == k {
-				rep = s
-				break
-			}
-		}
-		if rep == nil {
-			// It's the rhs key, find the symbol
-			for _, node := range w {
-				if c, ok := node.(*lg.Const); ok {
-					for x, xw := range map2 {
-						_ = x
-						for _, xn := range xw {
-							if lg.Key(xn) == lg.Key(c) {
-								_ = xn
-							}
-						}
-					}
-					map1[lg.Key(c)] = lg.NewConst(c.Name, c.CSort)
-				}
+		for _, x := range w {
+			if c, ok := x.(*lg.Const); ok {
+				map1[lg.Key(c)] = vConst
 			}
 		}
 	}
 
 	newClauses := NewClauses(clauses.Fmlas, defs, nil)
 	rn := iu.NewUniqueRenamer("__", used)
+	// Python: unconditionally overwrite ALL syms with fresh names
 	for _, s := range syms {
-		if _, already := map1[lg.Key(s)]; !already {
-			newName := rn.Rename(s.Name)
-			map1[lg.Key(s)] = lg.NewConst(newName, s.CSort)
-		}
+		newName := rn.Rename(s.Name)
+		map1[lg.Key(s)] = lg.NewConst(newName, s.CSort)
 	}
 	return map1, RenameClauses(newClauses, map1)
 }

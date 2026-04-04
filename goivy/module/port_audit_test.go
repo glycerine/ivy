@@ -373,6 +373,143 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 	}
 }
 
+// TestDualFormulaInstantiator verifies that DualFormula conjoins definition
+// instances from the instantiator, matching Python's dual_formula.
+func TestDualFormulaInstantiator(t *testing.T) {
+	p := mkConst("p")
+
+	// With nil instantiator: just negate
+	result1 := DualFormula(p, nil, nil)
+	if _, ok := result1.(*lg.Not); !ok {
+		t.Fatalf("DualFormula(p, nil, nil) should be Not, got %T", result1)
+	}
+
+	// With non-nil instantiator: should conjoin instances
+	instantiator := func(gts []lg.Expr) *Clauses {
+		return NewClauses([]lg.Expr{mkConst("inst")}, nil, nil)
+	}
+	result2 := DualFormula(p, nil, instantiator)
+	and, ok := result2.(*lg.And)
+	if !ok {
+		t.Fatalf("DualFormula with instantiator should produce And, got %T", result2)
+	}
+	if len(and.Terms) != 2 {
+		t.Fatalf("expected 2 And terms, got %d", len(and.Terms))
+	}
+	// First term should be Not(p), second should be the instantiated formula
+	if _, ok := and.Terms[0].(*lg.Not); !ok {
+		t.Errorf("first And term should be Not, got %T", and.Terms[0])
+	}
+}
+
+// TestSkolemizeFormulaInstantiator verifies that SkolemizeFormula conjoins
+// definition instances from the instantiator, matching Python's skolemize_formula.
+func TestSkolemizeFormulaInstantiator(t *testing.T) {
+	v, _ := lg.NewVariable("X", lg.TopS)
+	body := v
+	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
+
+	// With nil instantiator: just skolemize
+	result1 := SkolemizeFormula(ex, nil, nil)
+	if c, ok := result1.(*lg.Const); !ok || c.Name != "__sk__X" {
+		t.Fatalf("SkolemizeFormula without instantiator: expected __sk__X, got %T %v", result1, result1)
+	}
+
+	// With non-nil instantiator: should conjoin instances
+	instantiator := func(gts []lg.Expr) *Clauses {
+		return NewClauses([]lg.Expr{mkConst("inst")}, nil, nil)
+	}
+	result2 := SkolemizeFormula(ex, nil, instantiator)
+	and, ok := result2.(*lg.And)
+	if !ok {
+		t.Fatalf("SkolemizeFormula with instantiator should produce And, got %T", result2)
+	}
+	if len(and.Terms) != 2 {
+		t.Fatalf("expected 2 And terms, got %d", len(and.Terms))
+	}
+}
+
+// TestTaggedOrClausesPrefix verifies that TaggedOrClauses uses __to0 prefix
+// and does NOT filter false branches, matching Python's tagged_or_clauses.
+func TestTaggedOrClausesPrefix(t *testing.T) {
+	cls1 := NewClauses([]lg.Expr{mkConst("p")}, nil, nil)
+	cls2 := NewClauses([]lg.Expr{mkConst("q")}, nil, nil)
+
+	result := TaggedOrClauses("tag", cls1, cls2)
+
+	// Should have the Or disjunction as first formula
+	if len(result.Fmlas) < 1 {
+		t.Fatal("expected at least 1 formula")
+	}
+	or, ok := result.Fmlas[0].(*lg.Or)
+	if !ok {
+		t.Fatalf("first formula should be Or, got %T", result.Fmlas[0])
+	}
+	if len(or.Terms) != 2 {
+		t.Fatalf("expected 2 Or terms, got %d", len(or.Terms))
+	}
+	// Tag variables should start with __to0, not __ts0
+	for _, term := range or.Terms {
+		c, ok := term.(*lg.Const)
+		if !ok {
+			t.Errorf("Or term should be Const, got %T", term)
+			continue
+		}
+		if len(c.Name) < 5 || c.Name[:5] != "__to0" {
+			t.Errorf("tag variable should start with __to0, got %q", c.Name)
+		}
+	}
+}
+
+// TestTaggedOrClausesNoFalseFilter verifies that false branches are NOT filtered.
+func TestTaggedOrClausesNoFalseFilter(t *testing.T) {
+	cls1 := FalseClauses(nil)
+	cls2 := NewClauses([]lg.Expr{mkConst("p")}, nil, nil)
+	cls3 := NewClauses([]lg.Expr{mkConst("q")}, nil, nil)
+
+	result := TaggedOrClauses("tag", cls1, cls2, cls3)
+
+	// Should have Or with 3 terms (false branch NOT filtered)
+	if len(result.Fmlas) < 1 {
+		t.Fatal("expected at least 1 formula")
+	}
+	or, ok := result.Fmlas[0].(*lg.Or)
+	if !ok {
+		t.Fatalf("first formula should be Or, got %T", result.Fmlas[0])
+	}
+	if len(or.Terms) != 3 {
+		t.Errorf("expected 3 Or terms (false branch not filtered), got %d", len(or.Terms))
+	}
+}
+
+// TestExistsQuantClausesMapSimple verifies basic equivalence class merging
+// and unconditional renaming.
+func TestExistsQuantClausesMapSimple(t *testing.T) {
+	a := lg.NewConst("a", lg.Boolean)
+	c := lg.NewConst("c", lg.Boolean)
+
+	// Definition: a = c
+	def := il.NewDefinition(a, c)
+	cls := NewClauses([]lg.Expr{mkConst("p")}, []*il.Definition{def}, nil)
+
+	syms := []*lg.Const{a}
+	map1, resultCls := ExistsQuantClausesMap(syms, cls)
+
+	// 'a' should be mapped to a fresh name (unconditionally renamed)
+	aMapping, ok := map1[lg.Key(a)]
+	if !ok {
+		t.Fatal("expected mapping for symbol 'a'")
+	}
+	if aMapping.Name == "a" {
+		t.Error("symbol 'a' should be renamed to a fresh name")
+	}
+
+	// The definition a=c should have been eliminated by eqcm_upd
+	if len(resultCls.Defs) > 0 {
+		t.Errorf("expected definition to be eliminated, got %d defs", len(resultCls.Defs))
+	}
+}
+
 // --- test helpers ---
 
 func newTestRenamer() *iu.UniqueRenamer {

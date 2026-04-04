@@ -498,7 +498,11 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
 	//         clauses = unfold_definitions_clauses(clauses)
 	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
-	fmla = mod.SkolemizeFormula(fmla, nil)
+	var skInst func([]lg.Expr) *mod.Clauses
+	if ctx != nil {
+		skInst = ctx.Instantiator
+	}
+	fmla = mod.SkolemizeFormula(fmla, nil, skInst)
 	clauses := mod.FormulaToClauses(fmla, nil)
 	if ctx != nil && ctx.Instantiator != nil {
 		clauses = mod.UnfoldDefinitionsClauses(clauses, ctx.Instantiator)
@@ -543,7 +547,7 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Only assertions that pass both filters get dual formula treatment
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
-	dual := mod.DualFormula(fmla, nil)
+	dual := mod.DualFormula(fmla, nil, nil)
 	cl := mod.FormulaToClauses(dual, nil)
 	cl = mod.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &Update{
