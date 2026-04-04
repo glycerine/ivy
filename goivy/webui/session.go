@@ -106,7 +106,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// and CreateIsolate — matching Python's ivy_compile exactly.
 	sig := il.NewSig()
 	mod := module.New()
-	module.Sig = sig
+	mod.Sig = sig
 	compileErr := compiler.IvyCompile(decls, mod, true)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
@@ -141,7 +141,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			relations = append(relations, ri)
 		}
 	}
-	for name := range module.Actions.All() {
+	for name := range mod.Actions.All() {
 		actionNames = append(actionNames, name)
 	}
 
