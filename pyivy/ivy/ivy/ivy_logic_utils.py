@@ -1326,7 +1326,7 @@ def rename_symbols(rn,clauses1,to_rename):
 def elim_dead_definitions(rn,args):
     """ If a symbol defined in one arg occurs free in another,
     then eliminate the definition by converting it to clauses """
-    defd = set(d.defines() for a in args for d in a.defs)
+    defd = dict.fromkeys(d.defines() for a in args for d in a.defs)
     occurs = [set(a.symbols()) for a in args]
     captured = [sym for sym in defd if any (sym not in a.defidx for a in args)]
     dead = [sym for sym in captured if not sym.is_skolem()]
