@@ -15,6 +15,19 @@ type AnnotConjoiner interface {
 	ConjWith(other interface{}) interface{}
 }
 
+// AnnotIter is implemented by annotation values that support if-then-else.
+// clauseops uses this interface to build IteAnnotations without importing actions.
+// Matches Python's annot.ite(v, other).
+type AnnotIter interface {
+	Ite(cond lg.Expr, other interface{}) interface{}
+}
+
+// AnnotRenamer is implemented by annotation values that support renaming.
+// Matches Python's annot.rename(map).
+type AnnotRenamer interface {
+	Rename(m map[lg.NodeKey]lg.Expr) interface{}
+}
+
 // OpsConfig holds per-session clauseops state.
 type OpsConfig struct {
 	AnnotConjFunc func(a, b interface{}) interface{}
@@ -52,15 +65,15 @@ func AndClauses(args ...interface{}) interface{} {
 		return TrueClauses(nil)
 	}
 
-	// Combine annotations via conj
+	// Combine annotations via conj (matching Python's and_clauses default)
 	var annot interface{}
 	for _, c := range clauses {
 		if c.Annot != nil {
 			if annot == nil {
 				annot = c.Annot
+			} else if conjer, ok := annot.(AnnotConjoiner); ok {
+				annot = conjer.ConjWith(c.Annot)
 			}
-			// In Python, annot = annot.conj(c.annot). We just take first non-nil.
-			// Full annotation support would require an Annotation interface.
 		}
 	}
 
@@ -187,10 +200,16 @@ func OrClauses(args ...interface{}) interface{} {
 }
 
 // OrClausesTyped is a convenience wrapper that always returns *Clauses.
+// Matches Python's or_clauses: filters false branches, does Tseitin encoding
+// if 2+ non-false branches, and always returns via fixOrAnnot for proper
+// annotation reconstruction.
 func OrClausesTyped(args ...*Clauses) *Clauses {
 	if len(args) == 0 {
 		return FalseClauses(nil)
 	}
+
+	origArgs := make([]*Clauses, len(args))
+	copy(origArgs, args)
 
 	var nonFalse []*Clauses
 	for _, c := range args {
@@ -199,32 +218,83 @@ func OrClausesTyped(args ...*Clauses) *Clauses {
 		}
 	}
 
+	var res *Clauses
+	var vs []lg.Expr
+
 	if len(nonFalse) == 0 {
-		return FalseClauses(nil)
-	}
-	if len(nonFalse) == 1 {
-		return nonFalse[0]
+		res = FalseClauses(nil)
+		vs = nil
+	} else if len(nonFalse) == 1 {
+		res = nonFalse[0]
+		vs = []lg.Expr{lg.True} // Python: [And()]
+	} else {
+		used := collectUsedNames(nonFalse, nil)
+		rn := iu.NewUniqueRenamer("__ts0", used)
+		res, vs, nonFalse = orClausesIntWithVs(rn, nonFalse)
 	}
 
-	used := collectUsedNames(nonFalse, nil)
-	rn := iu.NewUniqueRenamer("__ts0", used)
-	return orClausesInt(rn, nonFalse)
+	// Build fixed_vs and fixed_args matching Python's orig_args ordering
+	fixedVs := make([]lg.Expr, 0, len(origArgs))
+	fixedArgs := make([]*Clauses, 0, len(origArgs))
+	idx := 0
+	for _, a := range origArgs {
+		if a.IsFalse() {
+			fixedVs = append(fixedVs, lg.False) // Python: Or()
+			fixedArgs = append(fixedArgs, a)
+		} else {
+			if idx < len(vs) {
+				fixedVs = append(fixedVs, vs[idx])
+			}
+			if idx < len(nonFalse) {
+				fixedArgs = append(fixedArgs, nonFalse[idx])
+			}
+			idx++
+		}
+	}
+
+	return fixOrAnnot(res, fixedVs, fixedArgs)
+}
+
+// fixOrAnnot reconstructs annotations for or_clauses results.
+// Matches Python's fix_or_annot.
+func fixOrAnnot(res *Clauses, vs []lg.Expr, args []*Clauses) *Clauses {
+	if len(args) == 0 {
+		return res
+	}
+	annot := args[0].Annot
+	for i := 1; i < len(args) && i < len(vs); i++ {
+		a := args[i].Annot
+		if annot == nil || a == nil {
+			annot = nil
+		} else if iter, ok := a.(AnnotIter); ok {
+			annot = iter.Ite(vs[i], annot)
+		}
+	}
+	return NewClauses(res.Fmlas, res.Defs, annot)
 }
 
 // orClausesInt implements the Tseitin-like encoding for disjunction.
-// For each clause set, it introduces a fresh Boolean variable v_i,
-// and produces: Or(v1, v2, ...) AND for each v_i, fmla => (v_i -> fmla).
+// Delegates to orClausesIntWithVs and discards the vs/args returns.
 func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
+	res, _, _ := orClausesIntWithVs(rn, args)
+	return res
+}
+
+// orClausesIntWithVs implements the Tseitin-like encoding for disjunction.
+// Returns the result Clauses, the fresh Boolean variables, and the (possibly
+// modified) args — matching Python's or_clauses_int which returns (res, vs, args).
+func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.Expr, []*Clauses) {
 	// Eliminate dead definitions across args
 	args = elimDeadDefinitions(rn, args)
 
 	// Create fresh Boolean variables, one per disjunct
-	vs := make([]*lg.Const, len(args))
+	vs := make([]lg.Expr, len(args))
 	vsNodes := make([]lg.Expr, len(args))
 	for i := range args {
 		name := rn.Rename("")
-		vs[i] = lg.NewConst(name, lg.Boolean)
-		vsNodes[i] = vs[i]
+		c := lg.NewConst(name, lg.Boolean)
+		vs[i] = c
+		vsNodes[i] = c
 	}
 
 	// Build formulas:
@@ -235,7 +305,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 	for i, cls := range args {
 		for _, f := range cls.Fmlas {
 			fmlas = append(fmlas, &lg.Or{Terms: []lg.Expr{
-				&lg.Not{Body: vs[i]},
+				&lg.Not{Body: vs[i].(*lg.Const)},
 				f,
 			}})
 		}
@@ -249,10 +319,12 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 			if existing, ok := defIdx[key]; !ok {
 				defIdx[key] = d
 			} else {
-				// Merge: use Ite to select between definitions
+				// Merge: use bare Ite to select between definitions.
+				// Python or_clauses_int uses bare Ite (not simp_ite).
+				// Only ite_clauses_int uses simp_ite.
 				merged := il.NewDefinition(
 					d.Lhs,
-					il.SimpIte(vs[i], d.Rhs, existing.Rhs),
+					&lg.Ite{ISort: d.Rhs.NodeSort(), Cond: vs[i], Then: d.Rhs, Else: existing.Rhs},
 				)
 				defIdx[key] = merged
 			}
@@ -264,7 +336,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 		defs = append(defs, d)
 	}
 
-	return NewClauses(fmlas, defs, nil)
+	return NewClauses(fmlas, defs, nil), vs, args
 }
 
 // IteClauses computes if-then-else on Clauses:
@@ -498,11 +570,26 @@ func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses
 
 // RenameClauses renames symbols in clauses by structural identity.
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality.
+// Also renames annotations matching Python's rename_clauses_annot_fun.
 func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Const) *Clauses {
 	fn := func(n lg.Expr) lg.Expr {
 		return RenameAST(n, subs)
 	}
-	return clauses.Apply(fn)
+	result := clauses.Apply(fn)
+
+	// Rename annotation if it supports it (Python: annot_fun=rename_clauses_annot_fun)
+	if result.Annot != nil {
+		// Convert subs to lg.Expr map for the AnnotRenamer interface
+		exprSubs := make(map[lg.NodeKey]lg.Expr, len(subs))
+		for k, v := range subs {
+			exprSubs[k] = v
+		}
+		if renamer, ok := result.Annot.(AnnotRenamer); ok {
+			result.Annot = renamer.Rename(exprSubs)
+		}
+	}
+
+	return result
 }
 
 // SubstituteConstantsClauses substitutes constants in clauses by structural identity.
@@ -632,54 +719,100 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 }
 
 // elimDeadDefinitions eliminates definitions that are captured across
-// different clause sets. If a symbol is defined in one set but used
-// free in another, the definition is inlined as a constraint.
+// different clause sets. Matches Python's elim_dead_definitions:
+// - Non-skolem captured symbols are "dead": eliminated by converting to constraints.
+// - Skolem captured symbols are renamed to fresh names via the renamer.
 func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
-	// Collect all defined symbols
-	defined := make(map[lg.NodeKey]bool)
+	// 1. Collect all defined symbols (with their Const for skolem check)
+	type defInfo struct {
+		key  lg.NodeKey
+		sym  *lg.Const
+	}
+	defined := make(map[lg.NodeKey]*lg.Const)
 	for _, a := range args {
 		for _, d := range a.Defs {
-			defined[definesKey(d)] = true
+			key := definesKey(d)
+			if c, ok := d.Defines().(*lg.Const); ok {
+				defined[key] = c
+			} else {
+				defined[key] = nil
+			}
 		}
 	}
 
-	// Find captured symbols: defined somewhere but not everywhere
-	var dead []lg.NodeKey
-	for sym := range defined {
+	// 2. Find captured: defined somewhere but not in all args
+	var captured []lg.NodeKey
+	for key := range defined {
 		for _, a := range args {
-			if _, ok := a.DefIdx[sym]; !ok {
-				dead = append(dead, sym)
+			if _, ok := a.DefIdx[key]; !ok {
+				captured = append(captured, key)
 				break
 			}
 		}
 	}
 
-	if len(dead) == 0 {
+	if len(captured) == 0 {
 		return args
 	}
 
-	// Eliminate dead definitions by converting them to constraints
+	// 3. Split: non-skolem → dead (eliminate), skolem → toRename
+	var dead []lg.NodeKey
+	var toRename []*lg.Const
+	for _, key := range captured {
+		sym := defined[key]
+		if sym != nil && isSkolem(sym) {
+			toRename = append(toRename, sym)
+		} else {
+			dead = append(dead, key)
+		}
+	}
+
+	// 4. Rename skolems to fresh names (Python: rename_symbols(rn, arg, to_rename))
+	if len(toRename) > 0 {
+		subs := make(map[lg.NodeKey]*lg.Const, len(toRename))
+		for _, sym := range toRename {
+			newName := rn.Rename(sym.Name)
+			subs[lg.Key(sym)] = lg.NewConst(newName, sym.CSort)
+		}
+		for i, a := range args {
+			args[i] = RenameClauses(a, subs)
+		}
+	}
+
+	// 5. Eliminate dead (non-skolem) definitions by converting to constraints
+	if len(dead) == 0 {
+		return args
+	}
 	deadSet := make(map[lg.NodeKey]bool, len(dead))
 	for _, s := range dead {
 		deadSet[s] = true
 	}
-
 	result := make([]*Clauses, len(args))
 	for i, a := range args {
-		var fmlas []lg.Expr
-		fmlas = append(fmlas, a.Fmlas...)
-		var defs []*il.Definition
-		for _, d := range a.Defs {
-			key := definesKey(d)
-			if deadSet[key] {
-				fmlas = append(fmlas, defToConstraint(d))
-			} else {
-				defs = append(defs, d)
-			}
-		}
-		result[i] = NewClauses(fmlas, defs, a.Annot)
+		result[i] = elimDefinitions(a, deadSet)
 	}
 	return result
+}
+
+// elimDefinitions converts dead definitions to constraint formulas.
+// Matches Python's elim_definitions.
+func elimDefinitions(clauses *Clauses, deadSet map[lg.NodeKey]bool) *Clauses {
+	var fmlas []lg.Expr
+	fmlas = append(fmlas, clauses.Fmlas...)
+	for _, d := range clauses.Defs {
+		key := definesKey(d)
+		if deadSet[key] {
+			fmlas = append(fmlas, defToConstraint(d))
+		}
+	}
+	var defs []*il.Definition
+	for _, d := range clauses.Defs {
+		key := definesKey(d)
+		if !deadSet[key] {
+			defs = append(defs, d)
+		}
+	}
+	return NewClauses(fmlas, defs, clauses.Annot)
 }
 
 // UsedVariablesOrdered returns free variables from the clauses in order.
