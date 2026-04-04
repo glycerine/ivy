@@ -2401,19 +2401,17 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-$ make vs
-$ tail log.gox
-XTRACE: ast.LF.__init__ id=2244 counter=2245
-XTRACE: ast.LF.__init__ id=2245 counter=2246
+           (Or
+             terms:[
+               (Symbol
+                 name:__ts0__ts0_d_a
+                 sort:(BooleanSort))
+-             (Eq
++             (Iff
+                 t1:(Apply
+                   func:(Symbol
+-                   name:new_ref.pnd_or_ser_rd
++                   name:new_ref.both_nGnR
 
-    The following temporal property is being proved:
-    /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy: line 1694: cf_live.cf_liveness ... XTRACE: ast.LF.__init__ id=2246 counter=2247
-XTRACE: ast.LF.clone PRESERVE origid=598 counter=2247
-XTRACE: ast.LF.__init__ id=2247 counter=2248
-XTRACE: ast.LF.__init__ id=2248 counter=2249
-XTRACE: ast.LF.__init__ id=2249 counter=2250
-error: l2s: proof goal is not temporal
-$ wc -l log.gox
-  288373 log.gox
-$
+    golden_test.go:453: ivy_check and goivy_check differ at line 166784, counting from 0.
 ~~~
