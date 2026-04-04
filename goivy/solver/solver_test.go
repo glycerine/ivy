@@ -6,7 +6,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
@@ -1407,7 +1407,7 @@ func TestSolverNameZ3Builtin(t *testing.T) {
 				t.Fatal("SolverName('bit0') should panic")
 			}
 			// Check it's an IvyError with the right message
-			if ie, ok := r.(*iu.IvyError); ok {
+			if ie, ok := r.(*lg.IvyError); ok {
 				if !strings.Contains(ie.Error(), "clashes with Z3 built-in") {
 					t.Errorf("unexpected error message: %s", ie.Error())
 				}

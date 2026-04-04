@@ -1018,7 +1018,7 @@ func (s *Solver) SolverName(sym *lg.Const) string {
 	// Corresponds to Python's z3_builtins = set(["bit0","bit1"]).
 	// Python: raise iu.IvyError(None, 'name "{}" clashes with Z3 built-in'.format(name))
 	if z3Builtins[name] {
-		panic(iu.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name)))
+		panic(lg.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name)))
 	}
 
 	return name

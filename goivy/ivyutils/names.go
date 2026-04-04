@@ -156,8 +156,7 @@ func (cfg *IvyUtilsConfig) GetStdIncludeDir() string {
 	}
 	if bestDir == "" {
 		// Python: raise IvyError(None, 'cannot find standard library for language version ...')
-		panic(NewIvyError(nil, fmt.Sprintf(
-			"cannot find standard library for language version %s", cfg.LanguageVersion)))
+		panic(fmt.Sprintf("cannot find standard library for language version %s", cfg.LanguageVersion))
 	}
 	cfg.StdIncludeDir = filepath.Join(incBaseDir, bestDir)
 	return cfg.StdIncludeDir
