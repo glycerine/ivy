@@ -101,11 +101,6 @@ func copyStringSet(s map[string]struct{}) map[string]struct{} {
 	return r
 }
 
-// ShortTypeName delegates to iu.ShortTypeName.
-func ShortTypeName(v interface{}) string {
-	return iu.ShortTypeName(v)
-}
-
 // SubstituteConstantsAST substitutes terms for constants in an AST node.
 // Matches Python's substitute_constants_ast (ivy_logic_utils.py:173).
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
@@ -121,7 +116,7 @@ func SubstituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node
 
 	args := node.Args()
 	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d",
-		ShortTypeName(node), len(args))
+		iu.ShortTypeName(node), len(args))
 
 	if len(args) == 0 {
 		// Leaf non-constant (Variable, Atom label, etc.).

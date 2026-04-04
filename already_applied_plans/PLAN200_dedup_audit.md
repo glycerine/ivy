@@ -21,7 +21,7 @@ logic. This audit catalogs all found duplication for future cleanup.
 - `actions/helpers.go:71-77`
 - `isolate/deps.go:921-927`
 
-Both are identical insertion-sort implementations. Could use `slices.Sort()` or consolidate.
+Both are identical insertion-sort implementations. These should use `slices.Sort()` instead.
 
 ### D4: `GetCone()` / `getCone()` — 2 copies in isolate/
 
@@ -43,14 +43,6 @@ Identical bodies.
 - `isolate/isolate.go:1708-1720` — `makeAnd()`
 
 Identical conjunction-creation logic.
-
-### D7: `dirExists()` — 3 identical copies
-
-- `cmd/goivy_check/fileutil.go:24-33`
-- `lalr_full/vprint.go:288-297`
-- `xtracer/xtracer.go:148-157`
-
-Same 10-line implementation. Could move to `ivyutils/`.
 
 ### D8: `HasSideEffectRec()` — 2 variants in isolate/
 
@@ -118,12 +110,6 @@ Different APIs. dafnygen may be able to use the ivyutils version.
 ---
 
 ## LOW — Trivial Wrappers / Delegation Chains
-
-### D16: `ShortTypeName()` — 3-level delegation chain
-
-- `ivyutils/typename.go:24-33` — actual implementation
-- `module/astutil.go:105-107` — wraps `iu.ShortTypeName(v)`
-- `actions/helpers.go:13-17` — TWO wrappers (private + public), both wrap `mod.ShortTypeName(v)`
 
 ### D17: `SubstituteConstantsAction()` — trivial type-cast wrapper
 

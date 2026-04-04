@@ -18,7 +18,6 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-
 // pyBool returns "True" or "False" matching Python's bool formatting.
 func pyBool(b bool) string {
 	if b {
@@ -666,7 +665,7 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 
 		// Create looped version for initializers
 		xtracer.Trace("isolate.fix_initializers LOOP name=%s extname=%s action_type=%s action_nargs=%d",
-			name, extname, actions.ShortTypeName(action), len(action.Args()))
+			name, extname, iu.ShortTypeName(action), len(action.Args()))
 		loopedAction := LoopAction(action, mod)
 		mod.Initializers = append(mod.Initializers, module.NamedAction{
 			Name:   name,

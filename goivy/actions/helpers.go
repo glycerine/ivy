@@ -5,16 +5,16 @@ import (
 	"os"
 	"strings"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // shortTypeName delegates to mod.ShortTypeName.
-func shortTypeName(v interface{}) string { return mod.ShortTypeName(v) }
+//func shortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
 
 // ShortTypeName delegates to mod.ShortTypeName.
-func ShortTypeName(v interface{}) string { return mod.ShortTypeName(v) }
+//func ShortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
 
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.

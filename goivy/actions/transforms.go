@@ -512,7 +512,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	if action == nil || renamer == nil {
 		return action
 	}
-	xtracer.Trace("actions.prefix_calls ENTER type=%s", shortTypeName(action))
+	xtracer.Trace("actions.prefix_calls ENTER type=%s", iu.ShortTypeName(action))
 	switch a := action.(type) {
 	case *CallAction:
 		// Python: CallAction.prefix_calls always creates new CallAction
