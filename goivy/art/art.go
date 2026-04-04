@@ -27,18 +27,18 @@ const checkPrecondTrue = true
 // provided by ivy_interp.State; since the interp package is being created
 // in parallel, we define a concrete type here.
 type State struct {
-	ID       int
-	Clauses  *module.Clauses
-	Update   *actions.Update
-	Domain   *module.Module
-	Label    string
-	Prov     Provenance // provenance: the expression that produced this state
-	Pred     *State   // predecessor state (if derived from action)
-	JoinOf   []*State // predecessor states (if derived from join)
-	InScope  map[string]bool
-	Unders   []*State         // under-approximations (for exact states)
-	Value    *actions.Update // assigned during BMC
-	Universe interface{}      // assigned during BMC
+	ID         int
+	Clauses    *module.Clauses
+	Update     *actions.Update
+	Domain     *module.Module
+	Label      string
+	Prov       Provenance // provenance: the expression that produced this state
+	Pred       *State     // predecessor state (if derived from action)
+	JoinOf     []*State   // predecessor states (if derived from join)
+	InScope    map[string]bool
+	Unders     []*State        // under-approximations (for exact states)
+	Value      *actions.Update // assigned during BMC
+	Universe   interface{}     // assigned during BMC
 	Action     actions.Action
 	ActionName string // name of the action (matches interp.State.ActionName)
 	ArgNode    *State // reference to a state in another graph (for copy_path)
@@ -1483,7 +1483,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 
 	s := NewState(mod, ic)
 
-	if len(module.Initializers) > 0 {
+	if len(mod.Initializers) > 0 {
 		// Python ivy_art.py:106-114:
 		//   action = Sequence(*[a for n,a in domain.initializers])
 		//   action = env_action(action, 'init')
@@ -1494,7 +1494,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 		//   s2.expr = s
 		//   self.add(s2)
 		var seqChildren []lg.Expr
-		for _, na := range module.Initializers {
+		for _, na := range mod.Initializers {
 			if na.Action != nil {
 				seqChildren = append(seqChildren, na.Action)
 			}

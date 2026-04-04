@@ -26,8 +26,8 @@ func interpChain(mod *module.Module, n int) *interp.State {
 		return nil
 	}
 	cfg := ast.NewAstConfig()
-	if mod != nil && module.Cfg != nil && module.Cfg.AstCfg != nil {
-		cfg = module.Cfg.AstCfg
+	if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
+		cfg = mod.Cfg.AstCfg
 	}
 	root := interpState(mod)
 	root.Label = "root"
@@ -191,8 +191,8 @@ func TestInterpToArtStateActionName(t *testing.T) {
 func TestInterpToArtStateJoinProv(t *testing.T) {
 	mod := testModule()
 	cfg := ast.NewAstConfig()
-	if mod != nil && module.Cfg != nil && module.Cfg.AstCfg != nil {
-		cfg = module.Cfg.AstCfg
+	if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
+		cfg = mod.Cfg.AstCfg
 	}
 
 	s1 := interpState(mod)
