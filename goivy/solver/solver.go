@@ -8,11 +8,12 @@ package solver
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
@@ -459,7 +460,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 }
 
 func isSkolem(name string) bool {
-	return len(name) >= 2 && name[0] == '_' && name[1] == '_'
+	return strings.Contains(name, "__")
 }
 
 // --- Satisfiability checks ---
