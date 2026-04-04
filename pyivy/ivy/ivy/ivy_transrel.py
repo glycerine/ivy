@@ -314,7 +314,7 @@ def compose_updates(update1,axioms,update2):
 #    print "clauses2 = {}".format(clauses2)
     us1 = set(updated1)
     us2 = set(updated2)
-    mid = us1.intersection(us2)
+    mid = [s for s in updated1 if s in us2]
     mid_ax = clauses_using_symbols(mid,axioms)
     used = used_symbols_clauses(and_clauses(clauses1,clauses2))
     used.update(symbols_clauses(pre1))
@@ -333,7 +333,7 @@ def compose_updates(update1,axioms,update2):
     clauses1 = rename_clauses(clauses1,map1)
     annot_op = lambda x,y: x.compose(y) if x is not None and y is not None else None
     new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2,mid_ax),map2),annot_op=annot_op)
-    new_updated = list(us1.union(us2))
+    new_updated = list(dict.fromkeys(list(updated1) + list(updated2)))
     if __debug__:
         nun = [s.name for s in new_updated] if new_updated is not None else 'None'
         xtracer.trace("transrel.ComposeUpdates newUpdated=%s(modAll=%s)" % (sorted(nun), new_updated is None))
