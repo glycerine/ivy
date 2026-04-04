@@ -558,15 +558,15 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 	}
 	var branches []lg.Expr
 	if actName != "" {
-		if a, ok := module.Actions.Get2(actName); ok {
+		if a, ok := mod.Actions.Get2(actName); ok {
 			if act, ok2 := a.(actions.Action); ok2 {
 				branches = append(branches, act)
 			}
 		}
 	} else {
 		// All public actions
-		for name := range module.PublicActions.All() {
-			if a, ok := module.Actions.Get2(name); ok {
+		for name := range mod.PublicActions.All() {
+			if a, ok := mod.Actions.Get2(name); ok {
 				if act, ok2 := a.(actions.Action); ok2 {
 					branches = append(branches, act)
 				}
