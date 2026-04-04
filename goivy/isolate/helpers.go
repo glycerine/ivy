@@ -752,17 +752,29 @@ func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Ac
 
 	// Add actions referenced by natives
 	// Python: for n in mod.natives: for a in n.args[2:]: if isinstance(a,ivy_ast.Atom) and a.rep in mod.actions
+	// Natives are *ast.NativeDef with Args() = [name, code_template, ref1, ref2, ...].
+	// After compilation, refs are *ast.CompiledNode wrapping lg.Expr.
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*ast.LabeledFormula); ok {
-			if lf.Formula != nil {
-				// LabeledFormula.Args() = [label, formula]. Python checks n.args[2:].
-				// In Python, natives are AST nodes with args = [name, type, ...references].
-				// In Go, they're stored as LabeledFormula. Extract references from the formula subtree.
-				n := lfLabelName(lf)
-				if n != "" {
-					if _, exists := actionsMap.Get2(n); exists {
-						GetCone(actionsMap, n, cone)
+		args := nat.Args()
+		for i := 2; i < len(args); i++ {
+			name := ""
+			if atom, ok := args[i].(*ast.Atom); ok {
+				// Pre-compilation: direct Atom (matches Python isinstance(a, ivy_ast.Atom))
+				name = atom.Rep
+			} else if cn, ok := args[i].(*ast.CompiledNode); ok {
+				// Post-compilation: CompiledNode wrapping lg.Expr
+				switch e := cn.Node.(type) {
+				case *lg.Const:
+					name = e.Name
+				case *lg.Apply:
+					if c, ok := e.Func.(*lg.Const); ok {
+						name = c.Name
 					}
+				}
+			}
+			if name != "" {
+				if _, exists := actionsMap.Get2(name); exists {
+					GetCone(actionsMap, name, cone)
 				}
 			}
 		}

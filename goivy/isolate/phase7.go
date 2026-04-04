@@ -219,47 +219,6 @@ type SortOrder struct {
 	Less  func(a, b string) bool
 }
 
-// GetModCone returns the cone of action names reachable from the given
-// roots (normally the exported actions). An action is accessible if it
-// is a root, is referenced from native code, or is called in an initializer.
-// Corresponds to Python's get_mod_cone (ivy_isolate.py lines 1463-1475).
-func GetModCone(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action], roots map[string]bool, afterInits []string) map[string]bool {
-	if actionsMap == nil {
-		actionsMap = iu.NewInsMap[string, actions.Action]()
-		for name, a := range mod.Actions.All() {
-			if act, ok := a.(actions.Action); ok {
-				actionsMap.Set(name, act)
-			}
-		}
-	}
-	if roots == nil {
-		roots = make(map[string]bool)
-		for k, v := range mod.PublicActions.All() {
-			roots[k] = v
-		}
-	}
-	cone := make(map[string]bool)
-	for a := range roots {
-		GetCone(actionsMap, a, cone)
-	}
-	// Add actions referenced by natives.
-	for _, n := range mod.Natives {
-		if lf, ok := n.(*ast.LabeledFormula); ok {
-			name := lfLabelName(lf)
-			if name != "" {
-				if _, exists := actionsMap.Get2(name); exists {
-					GetCone(actionsMap, name, cone)
-				}
-			}
-		}
-	}
-	// Add after-init actions.
-	for _, ai := range afterInits {
-		GetCone(actionsMap, ai, cone)
-	}
-	return cone
-}
-
 // ConjToAssume converts a labeled conjecture into an AssumeAction.
 // Corresponds to Python's conj_to_assume (ivy_isolate.py lines 1517-1520).
 func ConjToAssume(c *ast.LabeledFormula) actions.Action {
