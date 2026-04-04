@@ -246,8 +246,12 @@ class Definition(AST):
                              Implies(self.args[1].args[1],
                                      lu.substitute(self.args[1].args[1],{self.args[1].args[0]:self.args[0]})))
         if is_individual(self.args[0]):
-            return Equals(*self.args)
-        return Iff(*self.args)
+            result = Equals(*self.args)
+        else:
+            result = Iff(*self.args)
+        if __debug__:
+            xtracer.trace("ops.defToConstraint lhsSort=%s resultType=%s" % (self.args[0].sort, type(result).__name__))
+        return result
     @property
     def sort(self):
         return lg.Boolean

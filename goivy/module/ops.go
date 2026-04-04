@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // AnnotConjoiner is implemented by annotation values that support conjunction.
@@ -284,6 +285,14 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 	// Eliminate dead definitions across args
 	args = elimDeadDefinitions(rn, args)
 
+	if xtracer.Enabled {
+		argInfo := make([]string, len(args))
+		for i, a := range args {
+			argInfo[i] = fmt.Sprintf("(%dF,%dD)", len(a.Fmlas), len(a.Defs))
+		}
+		xtracer.Trace("ops.orClausesInt ENTER nArgs=%d args=%v", len(args), argInfo)
+	}
+
 	// Create fresh Boolean variables, one per disjunct
 	vs := make([]lg.Expr, len(args))
 	vsNodes := make([]lg.Expr, len(args))
@@ -333,7 +342,11 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 		defs = append(defs, d)
 	}
 
-	return NewClauses(fmlas, defs, nil), vs, args
+	result := NewClauses(fmlas, defs, nil)
+	if xtracer.Enabled {
+		xtracer.Trace("ops.orClausesInt EXIT HASH canon= %s", result.Canon())
+	}
+	return result, vs, args
 }
 
 // IteClauses computes if-then-else on Clauses:
@@ -360,6 +373,11 @@ func IteClauses(cond lg.Expr, thenCls, elseCls *Clauses) *Clauses {
 
 func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses {
 	args = elimDeadDefinitions(rn, args)
+
+	if xtracer.Enabled {
+		xtracer.Trace("ops.iteClausesInt ENTER nArgs0Fmlas=%d nArgs0Defs=%d nArgs1Fmlas=%d nArgs1Defs=%d",
+			len(args[0].Fmlas), len(args[0].Defs), len(args[1].Fmlas), len(args[1].Defs))
+	}
 
 	// Create a fresh Boolean variable for the condition
 	name := rn.Rename("")
@@ -408,7 +426,11 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 	if a0 != nil && a1 != nil && AnnotIteFunc != nil {
 		annot = AnnotIteFunc(a0, v, a1)
 	}
-	return NewClauses(fmlas, defs, annot)
+	result := NewClauses(fmlas, defs, annot)
+	if xtracer.Enabled {
+		xtracer.Trace("ops.iteClausesInt EXIT HASH canon= %s", result.Canon())
+	}
+	return result
 }
 
 // NegateClauses negates a Clauses. Requires the clauses to be
@@ -791,6 +813,18 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 		}
 	}
 
+	if xtracer.Enabled {
+		xtracer.Trace("ops.elimDeadDefinitions nArgs=%d nDefined=%d nCaptured=%d nDead=%d nToRename=%d",
+			len(args), defined.Len(), len(captured), len(dead), len(toRename))
+		if len(dead) > 0 {
+			deadNames := make([]string, len(dead))
+			for i, k := range dead {
+				deadNames[i] = string(k)
+			}
+			xtracer.Trace("ops.elimDeadDefinitions dead=%v", deadNames)
+		}
+	}
+
 	// 4. Rename skolems to fresh names (Python: rename_symbols(rn, arg, to_rename))
 	// Python calls rename_symbols(rn, arg, to_rename) per arg, generating
 	// DIFFERENT fresh names per arg (rn is stateful). This separates captured
@@ -822,6 +856,18 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 // looks up each symbol in clauses.DefIdx, so the converted constraint
 // formulas appear in `dead`-list order (not clauses.Defs order).
 func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
+	if xtracer.Enabled {
+		deadNames := make([]string, len(dead))
+		for i, k := range dead {
+			deadNames[i] = string(k)
+		}
+		defNames := make([]string, len(clauses.Defs))
+		for i, d := range clauses.Defs {
+			defNames[i] = fmt.Sprintf("%v", d.Defines())
+		}
+		xtracer.Trace("ops.elimDefinitions ENTER nDead=%d dead=%v nDefs=%d defs=%v nFmlas=%d",
+			len(dead), deadNames, len(clauses.Defs), defNames, len(clauses.Fmlas))
+	}
 	var fmlas []lg.Expr
 	fmlas = append(fmlas, clauses.Fmlas...)
 	// Python: for sym in dead: if sym in clauses.defidx: fmlas.append(...)
@@ -841,6 +887,9 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 		if !deadSet[key] {
 			defs = append(defs, d)
 		}
+	}
+	if xtracer.Enabled {
+		xtracer.Trace("ops.elimDefinitions EXIT nFmlas=%d nDefs=%d", len(fmlas), len(defs))
 	}
 	return NewClauses(fmlas, defs, clauses.Annot)
 }

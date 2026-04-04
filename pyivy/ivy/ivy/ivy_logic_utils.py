@@ -1308,6 +1308,11 @@ def ite_clauses(cond,args):
     return ite_clauses_int(rn,cond,args)
 
 def elim_definitions(clauses,dead):
+    if __debug__:
+        deadNames = [str(s) for s in dead]
+        defNames = [str(d.defines()) for d in clauses.defs]
+        xtracer.trace("ops.elimDefinitions ENTER nDead=%d dead=%s nDefs=%d defs=%s nFmlas=%d" %
+            (len(dead), deadNames, len(clauses.defs), defNames, len(clauses.fmlas)))
     c2 = clauses.copy()
     fmlas = clauses.fmlas
     for sym in dead:
@@ -1316,6 +1321,8 @@ def elim_definitions(clauses,dead):
 #    print "elim_definitions fmlas = {}".format(["%s" % f for f in fmlas])
     deadset = set(dead)
     defs = [d for d in clauses.defs if d.defines() not in deadset]
+    if __debug__:
+        xtracer.trace("ops.elimDefinitions EXIT nFmlas=%d nDefs=%d" % (len(fmlas), len(defs)))
     return Clauses(fmlas,defs,clauses.annot)
 
 def rename_symbols(rn,clauses1,to_rename):
@@ -1331,6 +1338,11 @@ def elim_dead_definitions(rn,args):
     captured = [sym for sym in defd if any (sym not in a.defidx for a in args)]
     dead = [sym for sym in captured if not sym.is_skolem()]
     to_rename = [sym for sym in captured if sym.is_skolem()]
+    if __debug__:
+        xtracer.trace("ops.elimDeadDefinitions nArgs=%d nDefined=%d nCaptured=%d nDead=%d nToRename=%d" %
+            (len(args), len(defd), len(captured), len(dead), len(to_rename)))
+        if dead:
+            xtracer.trace("ops.elimDeadDefinitions dead=%s" % [str(s) for s in dead])
     args = [rename_symbols(rn,arg,to_rename) for arg in args]
 #    print "args = {}, dead = {}".format(args,dead)
     res = [elim_definitions(a,dead) for a in args]
@@ -1339,6 +1351,9 @@ def elim_dead_definitions(rn,args):
 def or_clauses_int(rn,args):
 #    print "or_clauses_int: args = {}".format(args)
     args = elim_dead_definitions(rn,args)
+    if __debug__:
+        argInfo = ["(%dF,%dD)" % (len(a.fmlas), len(a.defs)) for a in args]
+        xtracer.trace("ops.orClausesInt ENTER nArgs=%d args=%s" % (len(args), argInfo))
 #    print "or_clauses_int: args = {}".format(args)
     vs = [bool_const(rn()) for a in args]
     fmlas = ([Or(*vs)]
@@ -1353,6 +1368,8 @@ def or_clauses_int(rn,args):
                 defidx[s] = Definition(d.args[0],Ite(v,d.args[1],defidx[s].args[1]))
     defs = [d for n,d in defidx.items()] # TODO: hash traversal dependency
     res = Clauses(fmlas,defs)
+    if __debug__:
+        xtracer.trace("ops.orClausesInt EXIT HASH canon= %s" % res.canon())
     #    print "or_clauses_int res = {}".format(res)
     return res,vs,args
 
@@ -1370,6 +1387,9 @@ def ite_clauses_int(rn,cond,args):
     # print "ite_clauses_int args:"
     # debug_clauses_list(args)
     args = elim_dead_definitions(rn,args)
+    if __debug__:
+        xtracer.trace("ops.iteClausesInt ENTER nArgs0Fmlas=%d nArgs0Defs=%d nArgs1Fmlas=%d nArgs1Defs=%d" %
+            (len(args[0].fmlas), len(args[0].defs), len(args[1].fmlas), len(args[1].defs)))
     a0,a1 = args[0].annot,args[1].annot
 #    print "or_clauses_int: args = {}".format(args)
     v = bool_const(rn())
@@ -1390,6 +1410,8 @@ def ite_clauses_int(rn,cond,args):
     defs = [d for n,d in defidx.items()] + [Definition(v,cond)] # TODO: hash traversal dependency
     annot = None if a0 is None or a1 is None else a0.ite(v,a1)
     res = Clauses(fmlas,defs,annot)
+    if __debug__:
+        xtracer.trace("ops.iteClausesInt EXIT HASH canon= %s" % res.canon())
     # print "ite_clauses_int res:"
     # debug_clauses_list([res])
     return res

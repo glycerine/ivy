@@ -152,6 +152,8 @@ def frame_def(sym,op):
     lhs = sym_inst(op(sym) if op is new else sym)
     rhs = sym_inst(sym if op is new else op(sym))
     dfn = Definition(lhs,rhs)
+    if __debug__:
+        xtracer.trace("transrel.FrameDefConst sym=%s sort=%s lhsSort=%s def=%s" % (sym.name, sym.sort, lhs.sort, dfn.canon()))
     return dfn
 
 def frame(updated,op):
@@ -181,7 +183,11 @@ def diff_frame(updated1,updated2,op,axioms):
     updated = list_diff(updated2,updated1)
     defnd = set(df.defines() for df in axioms.defs)
     updated = [sym for sym in updated if sym not in defnd]
-    return frame(updated,op)
+    result = frame(updated,op)
+    if __debug__:
+        names = [str(d.defines()) for d in result.defs]
+        xtracer.trace("transrel.DiffFrameConst nDefs=%d syms=%s" % (len(names), names))
+    return result
 
 def updated_join(updated1,updated2):
     if updated1 == None or updated1 == None: return None
@@ -204,12 +210,19 @@ def join(s1,s2,op,axioms):
 def ite(cond,s1,s2,op,axioms):
     u1,c1,p1 = s1
     u2,c2,p2 = s2
+    if __debug__:
+        xtracer.trace("transrel.iteUpdate ENTER u1.nMod=%d u2.nMod=%d" % (len(u1), len(u2)))
     df12 = diff_frame(u1,u2,op,axioms)
     df21 = diff_frame(u2,u1,op,axioms)
     c1 = and_clauses(c1,df12)
     c2 = and_clauses(c2,df21)
     p1 = and_clauses(p1,df12)
     p2 = and_clauses(p2,df21)
+    if __debug__:
+        xtracer.trace("transrel.iteUpdate df12 HASH canon= %s" % df12.canon())
+        xtracer.trace("transrel.iteUpdate df21 HASH canon= %s" % df21.canon())
+        xtracer.trace("transrel.iteUpdate c1 HASH canon= %s" % c1.canon())
+        xtracer.trace("transrel.iteUpdate c2 HASH canon= %s" % c2.canon())
     u = updated_join(u1,u2)
     c = ite_clauses(cond,[c1,c2])
     p = ite_clauses(cond,[p1,p2])

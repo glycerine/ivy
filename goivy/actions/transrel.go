@@ -836,11 +836,21 @@ func IteState(cond lg.Expr, u1, u2 *Update, axioms *mod.Clauses) *Update {
 // iteUpdate implements the generic if-then-else for both action and state styles.
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
 func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
+	if xtracer.Enabled {
+		xtracer.Trace("transrel.iteUpdate ENTER u1.nMod=%d u2.nMod=%d", len(u1.Modified), len(u2.Modified))
+	}
 	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
 	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
 
 	c1 := mod.AndClausesTyped(u1.TR, df12)
 	c2 := mod.AndClausesTyped(u2.TR, df21)
+
+	if xtracer.Enabled {
+		xtracer.Trace("transrel.iteUpdate df12 HASH canon= %s", df12.Canon())
+		xtracer.Trace("transrel.iteUpdate df21 HASH canon= %s", df21.Canon())
+		xtracer.Trace("transrel.iteUpdate c1 HASH canon= %s", c1.Canon())
+		xtracer.Trace("transrel.iteUpdate c2 HASH canon= %s", c2.Canon())
+	}
 	p1 := mod.AndClausesTyped(u1.Pre, df12)
 	p2 := mod.AndClausesTyped(u2.Pre, df21)
 
@@ -1734,6 +1744,13 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 			defs = append(defs, FrameDefConst(sym, op))
 		}
 	}
+	if xtracer.Enabled {
+		names := make([]string, len(defs))
+		for i, d := range defs {
+			names[i] = fmt.Sprintf("%v", d.Defines())
+		}
+		xtracer.Trace("transrel.DiffFrameConst nDefs=%d syms=%v", len(defs), names)
+	}
 	return mod.NewClauses(nil, defs, nil)
 }
 
@@ -1742,7 +1759,11 @@ func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
 	opSym := op(sym)
 	lhs := mod.SymInst(opSym)
 	rhs := mod.SymInst(sym)
-	return il.NewDefinition(lhs, rhs)
+	def := il.NewDefinition(lhs, rhs)
+	if xtracer.Enabled {
+		xtracer.Trace("transrel.FrameDefConst sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
+	}
+	return def
 }
 
 // ModifiedNames extracts string names from the Modified list.

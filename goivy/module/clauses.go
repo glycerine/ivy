@@ -8,6 +8,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Clauses wraps a set of formulas and definitions.
@@ -248,7 +249,11 @@ func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 // defToConstraint converts a Definition to a constraint formula.
 // Delegates to the faithful port in ivylogic/constraint.go.
 func defToConstraint(d *il.Definition) lg.Expr {
-	return il.DefinitionToConstraint(d)
+	result := il.DefinitionToConstraint(d)
+	if xtracer.Enabled {
+		xtracer.Trace("ops.defToConstraint lhsSort=%v resultType=%T", d.Lhs.NodeSort(), result)
+	}
+	return result
 }
 
 // collectAndList flattens a list of formulas: any top-level And is expanded.
