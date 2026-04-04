@@ -6,18 +6,17 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *module.Module {
-	return module.New()
+func testModule() *mod.Module {
+	return mod.New()
 }
 
-func testModuleWithConj() *module.Module {
+func testModuleWithConj() *mod.Module {
 	mod := testModule()
 	// Use a tautology (X = X) as the conjecture — always true.
 	S := &lg.UninterpretedSort{Name: "S"}
@@ -29,7 +28,7 @@ func testModuleWithConj() *module.Module {
 	return mod
 }
 
-func testModuleWithAction() *module.Module {
+func testModuleWithAction() *mod.Module {
 	mod := testModuleWithConj()
 	act := actions.NewAssumeAction(lg.True)
 	mod.Actions.Set("test_action", act)
@@ -204,7 +203,7 @@ func TestDualClausesNil(t *testing.T) {
 }
 
 func TestDualClausesEmpty(t *testing.T) {
-	clauses := clauseops.NewClauses(nil, nil, nil)
+	clauses := mod.NewClauses(nil, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -213,7 +212,7 @@ func TestDualClausesEmpty(t *testing.T) {
 
 func TestDualClausesSingle(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
-	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -233,7 +232,7 @@ func TestDualClausesSingle(t *testing.T) {
 func TestDualClausesMultiple(t *testing.T) {
 	c := lg.NewConst("P", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
-	clauses := clauseops.NewClauses([]lg.Expr{q, c}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {
 		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))
