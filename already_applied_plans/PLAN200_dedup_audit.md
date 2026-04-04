@@ -23,20 +23,6 @@ logic. This audit catalogs all found duplication for future cleanup.
 
 Same recursive cone-of-influence algorithm with minor structural differences.
 
-### D5: `GetPropsProvedInIsolateOrig()` — 2 copies in isolate/
-
-- `isolate/helpers.go:662-681` — private `getPropsProvedInIsolateOrig()`
-- `isolate/phase7.go:149-172` — public `GetPropsProvedInIsolateOrig()`
-
-Identical bodies.
-
-### D6: `makeAnd()` / `makeAndH()` — 2 copies in isolate/
-
-- `isolate/helpers.go:830-842` — `makeAndH()`
-- `isolate/isolate.go:1708-1720` — `makeAnd()`
-
-Identical conjunction-creation logic.
-
 ---
 
 ## MEDIUM — Similar Logic, Different Types or Signatures

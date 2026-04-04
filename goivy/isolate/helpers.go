@@ -600,7 +600,7 @@ func specAncestors(name string, cc string) []string {
 // (lines 752-774).
 func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
 	if versionLE(mod.Cfg.IsolateCfg.IvyVersion, "1.6") {
-		return getPropsProvedInIsolateOrig(mod, iso)
+		return GetPropsProvedInIsolateOrig(mod, iso)
 	}
 
 	// Save and temporarily modify privates
@@ -659,31 +659,6 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 	return proved, notProved
 }
 
-func getPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
-	savePrivates := mod.Privates
-	mod.Privates = make(map[string]bool)
-	SetPrivatesFull(mod, iso, "spec")
-	verified, _ := GetIsolateInfoFull(mod, iso, "spec", nil)
-
-	checkPr := func(lf *ast.LabeledFormula) bool {
-		if lf.Label == nil {
-			return true
-		}
-		name := lfLabelName(lf)
-		return VStartsWithEqSome(name, verified, mod, nil)
-	}
-
-	for _, p := range mod.LabeledProps {
-		if checkPr(p) {
-			proved = append(proved, p)
-		} else {
-			notProved = append(notProved, p)
-		}
-	}
-	mod.Privates = savePrivates
-	return proved, notProved
-}
-
 // -----------------------------------------------------------------------
 // add_extern_precond
 // -----------------------------------------------------------------------
@@ -710,7 +685,7 @@ func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.E
 		// Anything or true is true: clear preconds
 		*preconds = nil
 	} else {
-		and := makeAndH(conjs...)
+		and := makeAnd(conjs...)
 		*preconds = append(*preconds, and)
 	}
 }
@@ -824,21 +799,6 @@ type IsolateDefNode interface {
 	Params() []*lg.Const
 	// WithArgs returns the number of with-clause arguments.
 	WithArgs() int
-}
-
-// makeAndH creates an And node, ignoring sort errors.
-func makeAndH(terms ...lg.Expr) lg.Expr {
-	if len(terms) == 0 {
-		return &lg.And{Terms: nil} // empty conjunction = true
-	}
-	if len(terms) == 1 {
-		return terms[0]
-	}
-	a, err := lg.NewAnd(terms...)
-	if err != nil {
-		return &lg.And{Terms: terms}
-	}
-	return a
 }
 
 // makeKindSet creates a map[string]bool from action type names.
