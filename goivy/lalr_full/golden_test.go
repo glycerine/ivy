@@ -782,7 +782,11 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
-		vv("ivy_check scanner has finished. scanner.Err()='%v'", scanner.Err())
+		serr := scanner.Err()
+		vv("ivy_check scanner has finished. scanner.Err()='%v'", serr)
+		if serr != nil {
+			panicf("scanner.Err() was not nil, very bad!: %v", serr)
+		}
 		pw.Close() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
@@ -883,7 +887,11 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
-		vv("goivy_check_xtrace scanner has finished. scanner.Err()='%v'", scanner.Err())
+		serr := scanner.Err()
+		vv("goivy_check_xtrace scanner has finished. scanner.Err()='%v'", serr)
+		if serr != nil {
+			panicf("scanner.Err() was not nil, very bad!: %v", serr)
+		}
 		pw.Close() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
