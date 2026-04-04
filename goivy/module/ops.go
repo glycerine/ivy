@@ -308,13 +308,13 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 		}
 	}
 
-	// Merge definitions
-	defIdx := make(map[lg.NodeKey]*il.Definition)
+	// Merge definitions (InsMap preserves insertion order, matching Python 3.7+ dict)
+	defIdx := iu.NewInsMap[lg.NodeKey, *il.Definition]()
 	for i, cls := range args {
 		for _, d := range cls.Defs {
 			key := definesKey(d)
-			if existing, ok := defIdx[key]; !ok {
-				defIdx[key] = d
+			if existing, ok := defIdx.Get2(key); !ok {
+				defIdx.Set(key, d)
 			} else {
 				// Merge: use bare Ite to select between definitions.
 				// Python or_clauses_int uses bare Ite (not simp_ite).
@@ -323,13 +323,13 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 					d.Lhs,
 					&lg.Ite{ISort: d.Rhs.NodeSort(), Cond: vs[i], Then: d.Rhs, Else: existing.Rhs},
 				)
-				defIdx[key] = merged
+				defIdx.Set(key, merged)
 			}
 		}
 	}
 
 	var defs []*il.Definition
-	for _, d := range defIdx {
+	for _, d := range defIdx.All() {
 		defs = append(defs, d)
 	}
 
@@ -376,27 +376,27 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 		fmlas = append(fmlas, &lg.Or{Terms: []lg.Expr{v, f}})
 	}
 
-	// Merge definitions
-	defIdx := make(map[lg.NodeKey]*il.Definition)
+	// Merge definitions (InsMap preserves insertion order, matching Python 3.7+ dict)
+	defIdx := iu.NewInsMap[lg.NodeKey, *il.Definition]()
 	for _, d := range args[0].Defs {
 		key := definesKey(d)
-		defIdx[key] = d
+		defIdx.Set(key, d)
 	}
 	for _, d := range args[1].Defs {
 		key := definesKey(d)
-		if existing, ok := defIdx[key]; !ok {
-			defIdx[key] = d
+		if existing, ok := defIdx.Get2(key); !ok {
+			defIdx.Set(key, d)
 		} else {
 			merged := il.NewDefinition(
 				d.Lhs,
 				il.SimpIte(v, existing.Rhs, d.Rhs),
 			)
-			defIdx[key] = merged
+			defIdx.Set(key, merged)
 		}
 	}
 
 	var defs []*il.Definition
-	for _, d := range defIdx {
+	for _, d := range defIdx.All() {
 		defs = append(defs, d)
 	}
 	// Add definition: v = cond
@@ -751,25 +751,22 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 // - Skolem captured symbols are renamed to fresh names via the renamer.
 func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	// 1. Collect all defined symbols (with their Const for skolem check)
-	type defInfo struct {
-		key  lg.NodeKey
-		sym  *lg.Const
-	}
-	defined := make(map[lg.NodeKey]*lg.Const)
+	// InsMap preserves insertion order, matching Python 3.7+ dict.
+	defined := iu.NewInsMap[lg.NodeKey, *lg.Const]()
 	for _, a := range args {
 		for _, d := range a.Defs {
 			key := definesKey(d)
 			if c, ok := d.Defines().(*lg.Const); ok {
-				defined[key] = c
+				defined.Set(key, c)
 			} else {
-				defined[key] = nil
+				defined.Set(key, nil)
 			}
 		}
 	}
 
 	// 2. Find captured: defined somewhere but not in all args
 	var captured []lg.NodeKey
-	for key := range defined {
+	for key := range defined.All() {
 		for _, a := range args {
 			if _, ok := a.DefIdx[key]; !ok {
 				captured = append(captured, key)
@@ -786,7 +783,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	var dead []lg.NodeKey
 	var toRename []*lg.Const
 	for _, key := range captured {
-		sym := defined[key]
+		sym, _ := defined.Get2(key)
 		if sym != nil && isSkolem(sym) {
 			toRename = append(toRename, sym)
 		} else {

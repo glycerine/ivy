@@ -450,14 +450,21 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	used2 := usedSymbolNames(node2)
 	used2Slice := nameSetToSlice(used2)
 	rn := iu.NewUniqueRenamer("", used2Slice)
-	nameMap := make(map[string]string)
+	// Collect skolem names and sort for deterministic Rename() call order.
+	// Go map iteration is random; Python set iteration is deterministic.
+	var skolems []string
 	for s := range used1 {
 		if IsSkolem(s) && !IsGlobalSkolem(s) {
-			nameMap[s] = rn.Rename(s)
+			skolems = append(skolems, s)
 		}
 	}
-	if len(nameMap) == 0 {
+	if len(skolems) == 0 {
 		return node1
+	}
+	sort.Strings(skolems)
+	nameMap := make(map[string]string, len(skolems))
+	for _, s := range skolems {
+		nameMap[s] = rn.Rename(s)
 	}
 	return renameFormula(node1, nameMap)
 }
@@ -473,14 +480,21 @@ func RenameDistinctClauses(c1, c2 *mod.Clauses) *mod.Clauses {
 	used2 := usedSymbolNamesClauses(c2)
 	used2Slice := nameSetToSlice(used2)
 	rn := iu.NewUniqueRenamer("", used2Slice)
-	nameMap := make(map[string]string)
+	// Collect skolem names and sort for deterministic Rename() call order.
+	// Go map iteration is random; Python set iteration is deterministic.
+	var skolems []string
 	for s := range used1 {
 		if IsSkolem(s) && !IsGlobalSkolem(s) {
-			nameMap[s] = rn.Rename(s)
+			skolems = append(skolems, s)
 		}
 	}
-	if len(nameMap) == 0 {
+	if len(skolems) == 0 {
 		return c1
+	}
+	sort.Strings(skolems)
+	nameMap := make(map[string]string, len(skolems))
+	for _, s := range skolems {
+		nameMap[s] = rn.Rename(s)
 	}
 	return mod.RenameClausesByName(c1, nameMap)
 }
