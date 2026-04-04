@@ -13,12 +13,10 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
-	"github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -69,7 +67,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	// Conjoin definitions from background theory into trans
 	// Conjoin definitions from background theory as formulas
 	if bgt != nil && len(bgt.Defs) > 0 {
-		defsClauses := co.NewClauses(nil, bgt.Defs, nil)
+		defsClauses := mod.NewClauses(nil, bgt.Defs, nil)
 		defsFormula := defsClauses.ToOpenFormula()
 		if defsFormula != nil && !lg.IsTrue(defsFormula) {
 			and, _ := lg.NewAnd(transNode, defsFormula)
@@ -330,8 +328,8 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.E
 	}
 
 	// Check for variable overlap between lhs and rhs
-	lhsVars := co.UsedVariablesAST(lhs)
-	rhsVars := co.UsedVariablesAST(rhs)
+	lhsVars := mod.UsedVariablesAST(lhs)
+	rhsVars := mod.UsedVariablesAST(rhs)
 	for v := range lhsVars {
 		if _, ok := rhsVars[v]; ok {
 			return nil, nil, fmt.Errorf("cannot convert parameterized assignment to VMT")
@@ -618,8 +616,8 @@ func CheckIsolate(method string, m *mod.Module) error {
 	}
 	initState := transrel.ActionToState(&transrel.Update{
 		Modified: istConsts,
-		TR:       co.FormulaToClauses(init, nil),
-		Pre:      co.FalseClauses(nil),
+		TR:       mod.FormulaToClauses(init, nil),
+		Pre:      mod.FalseClauses(nil),
 	})
 	initFormula := initState.TRNode()
 
@@ -793,14 +791,14 @@ func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 		oldSym := lg.NewConst(old, lg.TopS)
 		constMap[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
 	}
-	return co.RenameAST(node, constMap)
+	return mod.RenameAST(node, constMap)
 }
 
 // collectAllSymbols collects all constant symbols from a list of formulas.
 func collectAllSymbols(formulas []lg.Expr) []*lg.Const {
 	seen := make(map[string]*lg.Const)
 	for _, f := range formulas {
-		syms := co.UsedSymbolsAST(f)
+		syms := mod.UsedSymbolsAST(f)
 		for _, sym := range syms {
 			if _, ok := seen[sym.Name]; !ok {
 				seen[sym.Name] = sym
