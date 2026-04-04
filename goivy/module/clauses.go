@@ -441,7 +441,10 @@ func SymInst(sym *lg.Const) lg.Expr {
 	for i, v := range phs {
 		args[i] = v
 	}
-	app := &lg.Apply{Func: sym, Terms: args}
+	app, err := lg.NewApply(sym, args...)
+	if err != nil {
+		panic(fmt.Sprintf("SymInst: NewApply failed for %v: %v", sym, err))
+	}
 	return app
 }
 
