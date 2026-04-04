@@ -20,10 +20,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -80,9 +79,9 @@ func NewComponentInfo(name string, role IsolateRole) *ComponentInfo {
 	}
 }
 
-// LookupAction finds an action by name in the module.
+// LookupAction finds an action by name in the mod.
 // Returns an error if the action is not found.
-func LookupAction(mod *module.Module, name string) (actions.Action, error) {
+func LookupAction(mod *mod.Module, name string) (actions.Action, error) {
 	act, ok := mod.Actions.Get2(name)
 	if !ok {
 		return nil, fmt.Errorf("action %s undefined", name)
@@ -93,7 +92,7 @@ func LookupAction(mod *module.Module, name string) (actions.Action, error) {
 // AddMixins applies before/after mixins to an action.
 // The useMixin predicate controls which mixins are applied (by mixer name).
 // If useMixin is nil, all mixins are applied.
-func AddMixins(mod *module.Module, actname string, action actions.Action, useMixin func(string) bool) actions.Action {
+func AddMixins(mod *mod.Module, actname string, action actions.Action, useMixin func(string) bool) actions.Action {
 	isoCfg := mod.Cfg.IsolateCfg
 	res := action
 	if isoCfg.CreateImports {
@@ -125,13 +124,13 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 	return res
 }
 
-// MixinDef is an alias for module.MixinDef, kept for convenience within
+// MixinDef is an alias for mod.MixinDef, kept for convenience within
 // the isolate package.
-type MixinDef = module.MixinDef
+type MixinDef = mod.MixinDef
 
 // SummarizeAction creates an abstract version of an action: just formals,
 // no body. In "check" mode, in/out parameters are havoced.
-func SummarizeAction(action actions.Action, isoCfg ...*module.IsolateConfig) actions.Action {
+func SummarizeAction(action actions.Action, isoCfg ...*mod.IsolateConfig) actions.Action {
 	res := actions.NewSequence()
 	res.SetLineno(action.GetLineno())
 	res.SetFormalParams(action.GetFormalParams())
@@ -216,7 +215,7 @@ func Ancestors(name string, cc string) []string {
 
 // StartsWithSome returns true if name (after mapping through implementationMap)
 // is a child of any name in prefixes, respecting module privates.
-func StartsWithSome(name string, prefixes map[string]bool, mod *module.Module, implMap map[string]string) bool {
+func StartsWithSome(name string, prefixes map[string]bool, mod *mod.Module, implMap map[string]string) bool {
 	if implMap != nil {
 		if mapped, ok := implMap[name]; ok {
 			name = mapped
@@ -225,7 +224,7 @@ func StartsWithSome(name string, prefixes map[string]bool, mod *module.Module, i
 	return startsWithSomeRec(name, prefixes, mod)
 }
 
-func startsWithSomeRec(name string, prefixes map[string]bool, mod *module.Module) bool {
+func startsWithSomeRec(name string, prefixes map[string]bool, mod *mod.Module) bool {
 	if mod.Privates[name] {
 		return false
 	}
@@ -238,7 +237,7 @@ func startsWithSomeRec(name string, prefixes map[string]bool, mod *module.Module
 }
 
 // StartsWithEqSome returns true if name equals or is a child of some prefix.
-func StartsWithEqSome(name string, prefixes map[string]bool, mod *module.Module, implMap map[string]string) bool {
+func StartsWithEqSome(name string, prefixes map[string]bool, mod *mod.Module, implMap map[string]string) bool {
 	if implMap != nil {
 		if mapped, ok := implMap[name]; ok {
 			name = mapped
@@ -247,7 +246,7 @@ func StartsWithEqSome(name string, prefixes map[string]bool, mod *module.Module,
 	return startsWithEqSomeRec(name, prefixes, mod)
 }
 
-func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Module) bool {
+func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *mod.Module) bool {
 	if prefixes[name] {
 		return true
 	}
@@ -264,7 +263,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // axioms/properties/definitions/signatures, runs interference checking,
 // applies cone-of-influence, strips isolate parameters, and computes
 // init_cond.
-func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
+func IsolateComponent(mod *mod.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
 	isoCfg := mod.Cfg.IsolateCfg
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
@@ -328,7 +327,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
-	mod.IsolateInfo = &module.IsolateInfo{}
+	mod.IsolateInfo = &mod.IsolateInfo{}
 
 	// Process implementation mixins
 	implMixins := iu.NewInsMap[string, []MixinDef]()
@@ -373,7 +372,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				mixed := actions.ApplyMixin(mixer, action, false)
 				mod.Actions.Set(mixeeName, mixed)
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
-					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
+					mod.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
 			}
 			implementationMap[mixeeName] = mixerName
 		}
@@ -561,7 +560,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			// Record implementation info
 			if _, hasImpl := implementationMap[actname]; !hasImpl {
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
-					module.MixinTriple{Mixer: actname, Mixee: actname, Action: act})
+					mod.MixinTriple{Mixer: actname, Mixee: actname, Action: act})
 			}
 		} else {
 			// Opaque: summarize
@@ -581,7 +580,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 					if useMixin(mi.Mixer()) {
 						mixerAct, _ := LookupAction(mod, mi.Mixer())
 						mod.IsolateInfo.Monitors = append(mod.IsolateInfo.Monitors,
-							module.MixinTriple{Mixer: mi.Mixer(), Mixee: mi.Mixee(), Action: mixerAct})
+							mod.MixinTriple{Mixer: mi.Mixer(), Mixee: mi.Mixee(), Action: mixerAct})
 					}
 				}
 			}
@@ -625,7 +624,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 		if mod.BeforeExport == nil {
-			mod.BeforeExport = iu.NewInsMap[string, module.Action]()
+			mod.BeforeExport = iu.NewInsMap[string, mod.Action]()
 		}
 		mod.BeforeExport.Set("ext:"+actname, act)
 	}
@@ -942,7 +941,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Filter isolate info
 	if mod.IsolateInfo != nil {
-		var filteredImpls []module.MixinTriple
+		var filteredImpls []mod.MixinTriple
 		for _, impl := range mod.IsolateInfo.Implementations {
 			if _, ok := newActions.Get2(impl.Mixee); ok {
 				filteredImpls = append(filteredImpls, impl)
@@ -952,7 +951,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 		mod.IsolateInfo.Implementations = filteredImpls
 
-		var filteredMons []module.MixinTriple
+		var filteredMons []mod.MixinTriple
 		for _, mon := range mod.IsolateInfo.Monitors {
 			if _, ok := newActions.Get2(mon.Mixee); ok {
 				filteredMons = append(filteredMons, mon)
@@ -1336,7 +1335,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for k, v := range exported.All() {
 		mod.PublicActions.Set(k, v)
 	}
-	mod.Actions = iu.NewInsMap[string, module.Action]()
+	mod.Actions = iu.NewInsMap[string, mod.Action]()
 	for name, act := range newActions.All() {
 		mod.Actions.Set(name, act)
 	}
@@ -1764,12 +1763,12 @@ var afterMixinsFunc = func(m interface{}) map[string]bool {
 // Delegates to clauseops.FormulaToClauses which unwraps singleton
 // And/Or and drops universal quantifiers (matching Python's
 // formula_to_clauses in ivy_logic_utils.py).
-func formulaToClauses(fmla lg.Expr) *co.Clauses {
-	return co.FormulaToClauses(fmla, nil)
+func formulaToClauses(fmla lg.Expr) *mod.Clauses {
+	return mod.FormulaToClauses(fmla, nil)
 }
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
-func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
+func stripIsolateWrapper(mod *mod.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
 	_, isIDI := iso.(IsolateDefInterface)
 	xtracer.Trace("strip.stripIsolateWrapper isIsolateDefInterface=%v", isIDI)
@@ -1818,7 +1817,7 @@ func extractIsolateNames(iso interface{}) (verified, present []string) {
 
 // ClassifyComponents determines the role of each hierarchy component
 // given the verified and present sets.
-func ClassifyComponents(mod *module.Module, verified, present map[string]bool) map[string]IsolateRole {
+func ClassifyComponents(mod *mod.Module, verified, present map[string]bool) map[string]IsolateRole {
 	roles := make(map[string]IsolateRole)
 
 	// Walk the hierarchy and classify each component.
@@ -1852,7 +1851,7 @@ func ClassifyComponents(mod *module.Module, verified, present map[string]bool) m
 // definition's verified and present atoms.
 // verifiedNames and presentNames are the names from the isolate declaration.
 // kind is "impl" or "spec".
-func GetIsolateInfo(mod *module.Module, verifiedNames, presentNames []string, kind string) (verified, present map[string]bool) {
+func GetIsolateInfo(mod *mod.Module, verifiedNames, presentNames []string, kind string) (verified, present map[string]bool) {
 	verified = make(map[string]bool)
 	present = make(map[string]bool)
 
