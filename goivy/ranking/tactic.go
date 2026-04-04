@@ -193,7 +193,7 @@ func rankingInvariants(
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
-		return module.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
+		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
 	}
 
 	allD := func(eq *lg.Eq) lg.Expr {
@@ -332,13 +332,13 @@ func rankingInvariants(
 
 	// --- l2s_consts_d invariant ---
 	var constsDTerms []lg.Expr
-	if mod != nil && module.Sig != nil {
+	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			sName := s.String()
 			if finiteSorts[sName] {
 				continue
 			}
-			for _, sym := range module.Sig.Symbols {
+			for _, sym := range mod.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2sD(s)
 					c := lg.NewConst(sym.Name, sym.Sort)
