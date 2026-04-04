@@ -4,7 +4,12 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
+
+// bad: duplicate of ast.Location, which parser produces.
+// we should scap this and replace it with that.
 
 // LocationTuple represents a source location with an optional reference chain.
 // Corresponds to Python's LocationTuple(tuple) which extends tuple with
@@ -18,7 +23,11 @@ type LocationTuple struct {
 // Location creates a new LocationTuple with the given filename and line.
 // Corresponds to Python's Location(filename=None, line=None).
 func Location(filename string, line int) *LocationTuple {
-	return &LocationTuple{Filename: filename, Line: line}
+	return &LocationTuple{
+		//Filename: filename,
+		Filename: xtracer.NormalizeLine(filename),
+		Line:     line,
+	}
 }
 
 // Nowhere returns a sentinel LocationTuple representing "no location".
