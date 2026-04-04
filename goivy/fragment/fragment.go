@@ -998,7 +998,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 // CheckFragment checks that the current module's VCs are in the decidable fragment.
 // Corresponds to Python's check_fragment.
 func CheckFragment(m *mod.Module, precondsOnly bool) error {
-	m.CanonSnapshot("fragment/fragment.go:922 CheckFragment()")
+	m.CanonSnapshot("fragment/fragment.go:1001 CheckFragment()")
 
 	logics := m.GetLogics()
 	for _, l := range logics {
