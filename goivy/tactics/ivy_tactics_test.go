@@ -15,7 +15,7 @@ var testAstCfg = ast.NewAstConfig()
 // testPC creates a minimal ProofChecker with a module.Config for testing.
 func testPC() *proof.ProofChecker {
 	mod := module.New()
-	module.Cfg = module.NewConfig()
+	mod.Cfg = module.NewConfig()
 	return &proof.ProofChecker{
 		Cfg:    module.TacticNewConfig(),
 		AstCfg: testAstCfg,
