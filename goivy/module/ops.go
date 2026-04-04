@@ -417,7 +417,7 @@ func NegateClauses(clauses *Clauses) *Clauses {
 	if !clauses.IsUniversalFirstOrder() {
 		panic("NegateClauses requires universal first-order clauses")
 	}
-	return dualClauses(clauses, nil)
+	return dualClauses(clauses, nil, nil)
 }
 
 // Skolemizer is a function that creates a Skolem constant for a variable.
@@ -428,11 +428,13 @@ type Skolemizer func(v *lg.Variable) lg.Expr
 // Skolem constants, then negates. Corresponds to Python's dual_clauses.
 // If skolemizer is nil, defaults to var_to_skolem('__', v) which produces
 // a constant named "__"+v.Name with the same sort.
-func DualClauses(clauses *Clauses, skolemizer Skolemizer) *Clauses {
-	return dualClauses(clauses, skolemizer)
+// If instantiator is non-nil, definition instances are conjoined with the
+// negated formula (matching Python's `if instantiator != None` check).
+func DualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]lg.Expr) *Clauses) *Clauses {
+	return dualClauses(clauses, skolemizer, instantiator)
 }
 
-func dualClauses(clauses *Clauses, skolemizer Skolemizer) *Clauses {
+func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]lg.Expr) *Clauses) *Clauses {
 	// Get used variables in order
 	vars := UsedVariablesOrdered(clauses)
 
@@ -452,9 +454,17 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer) *Clauses {
 	clauses = SubstituteNodesClauses(clauses, subs)
 
 	// Negate the formula
-	// TODO: Python checks instantiator != None here and adds definition instances.
-	// Deferred until ivy_module porting provides the Instantiator callback.
 	f := Negate(clausesToFormula(clauses))
+
+	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	if instantiator != nil {
+		gts := AppsClauses(clauses)
+		insts := instantiator(gts)
+		if len(insts.Fmlas) > 0 {
+			f = &lg.And{Terms: []lg.Expr{f, clausesToFormula(insts)}}
+		}
+	}
+
 	return FormulaToClauses(f, nil)
 }
 

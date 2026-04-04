@@ -358,7 +358,7 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 		return lg.NewConst(customPrefix+v.Name, v.VSort)
 	}
 
-	result := DualClauses(cls, skolemizer)
+	result := DualClauses(cls, skolemizer, nil)
 
 	// The result should reference the custom-prefixed skolem
 	syms := result.Symbols()
