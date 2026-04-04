@@ -8,11 +8,6 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
-// helper: make a simple logic const for testing.
-func mkConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
-}
-
 // helper: make a sort
 func mkSort(name string) lg.Sort {
 	return &lg.UninterpretedSort{Name: name}

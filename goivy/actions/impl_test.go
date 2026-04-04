@@ -41,22 +41,6 @@ func mkEq(a, b string) lg.Expr {
 	return eq
 }
 
-// formulaContainsName checks if a formula references a constant with the given name.
-func formulaContainsName(node lg.Expr, name string) bool {
-	if node == nil {
-		return false
-	}
-	if c, ok := node.(*lg.Const); ok {
-		return c.Name == name
-	}
-	for _, ch := range node.Children() {
-		if formulaContainsName(ch, name) {
-			return true
-		}
-	}
-	return false
-}
-
 // -----------------------------------------------------------------------
 // RenameDistinct tests
 // -----------------------------------------------------------------------
