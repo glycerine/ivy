@@ -998,7 +998,23 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	} else if compiled[0] == nil {
 		compiled[0] = lg.NewConst("native", lg.TopS)
 	}
+	// Parse "impure" keyword from first line of code template.
+	// Python: NativeAction.__init__ checks args[0].code.split('\n')[0].strip() == "impure"
+	// and strips that line, setting self.impure = True.
+	isImpure := false
+	if codeConst, ok := compiled[0].(*lg.Const); ok {
+		lines := strings.SplitN(codeConst.Name, "\n", 2)
+		if len(lines) > 0 && strings.TrimSpace(lines[0]) == "impure" {
+			isImpure = true
+			newCode := ""
+			if len(lines) > 1 {
+				newCode = lines[1]
+			}
+			compiled[0] = lg.NewConst(newCode, lg.TopS)
+		}
+	}
 	act := actions.NewNativeAction(compiled[0], compiled[1:]...)
+	act.Impure = isImpure
 	act.SetLineno(node.GetLineno())
 	return act, nil
 }

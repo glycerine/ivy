@@ -945,6 +945,16 @@ func TestIsSkolem(t *testing.T) {
 	if isSkolem("_") {
 		t.Fatal("single underscore should not be skolem")
 	}
+	// Mid-string __ (strings.Contains semantics, matching Python's sym.contains('__'))
+	if !isSkolem("foo__bar") {
+		t.Fatal("foo__bar should be skolem (contains __)")
+	}
+	if !isSkolem("a__") {
+		t.Fatal("a__ should be skolem (trailing __)")
+	}
+	if !isSkolem("__") {
+		t.Fatal("__ alone should be skolem")
+	}
 }
 
 // --- Test: Quantifier translation ---
