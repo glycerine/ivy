@@ -607,7 +607,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				// avoid regurgitating very long canonical
 				// strings for modules of matching stuff.
 				for j, pys := range pyLast30 {
-					if false {
+					if true {
 						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
 						if len(goLast30[j]) > 300 {
 							fmt.Printf(" ...(truncated long line to 300 bytes)\n")
