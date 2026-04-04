@@ -128,10 +128,10 @@ func getSigFrom(mod *module.Module) *il.Sig {
 	if mod == nil {
 		panic("getSigFrom: mod is nil — module must be threaded through to proof matching")
 	}
-	if module.Sig == nil {
+	if mod.Sig == nil {
 		panic("getSigFrom: module.Sig is nil — module must have a Sig before proof matching")
 	}
-	return module.Sig
+	return mod.Sig
 }
 
 // compileSimple is a fallback compiler that resolves atoms using vocab directly.
@@ -361,11 +361,11 @@ func TransformDefnMatch(cfg *ast.AstConfig, prob *MatchProblem) *MatchProblem {
 	schema = ApplyMatchGoalNode(cfg, dmatch, schema)
 
 	return &MatchProblem{
-		Schema:   prob.Schema,
-		SchemaLF: schema,
-		Pat:      concrhs,
-		Inst:     declrhs,
-		FreeSyms: freesyms,
+		Schema:    prob.Schema,
+		SchemaLF:  schema,
+		Pat:       concrhs,
+		Inst:      declrhs,
+		FreeSyms:  freesyms,
 		Constants: constants,
 	}
 }
@@ -602,7 +602,7 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 		}
 		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
 		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
-		result = append(result, module.Cfg.AstCfg.NewDefinition(x, y))
+		result = append(result, mod.Cfg.AstCfg.NewDefinition(x, y))
 	}
 	return result
 }
@@ -830,7 +830,7 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			if replacement, exists := match[k]; exists {
 				if lam, ok := replacement.(*lg.Lambda); ok {
 					result, _ := il.LambdaApply(lam, newTerms)
-				return result
+					return result
 				}
 				if newC, ok := replacement.(*lg.Const); ok {
 					app, _ := lg.NewApply(newC, newTerms...)
