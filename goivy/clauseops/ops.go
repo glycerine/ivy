@@ -15,13 +15,6 @@ type AnnotConjoiner interface {
 	ConjWith(other interface{}) interface{}
 }
 
-// AnnotIter is implemented by annotation values that support if-then-else.
-// clauseops uses this interface to build IteAnnotations without importing actions.
-// Matches Python's annot.ite(v, other).
-type AnnotIter interface {
-	Ite(cond lg.Expr, other interface{}) interface{}
-}
-
 // AnnotRenamer is implemented by annotation values that support renaming.
 // Matches Python's annot.rename(map).
 type AnnotRenamer interface {
@@ -255,6 +248,10 @@ func OrClausesTyped(args ...*Clauses) *Clauses {
 	return fixOrAnnot(res, fixedVs, fixedArgs)
 }
 
+// AnnotIteFunc is a callback for computing annot.ite(v, other) without
+// importing the actions package. Set by the actions package at init time.
+var AnnotIteFunc func(annot interface{}, cond lg.Expr, other interface{}) interface{}
+
 // fixOrAnnot reconstructs annotations for or_clauses results.
 // Matches Python's fix_or_annot.
 func fixOrAnnot(res *Clauses, vs []lg.Expr, args []*Clauses) *Clauses {
@@ -266,8 +263,8 @@ func fixOrAnnot(res *Clauses, vs []lg.Expr, args []*Clauses) *Clauses {
 		a := args[i].Annot
 		if annot == nil || a == nil {
 			annot = nil
-		} else if iter, ok := a.(AnnotIter); ok {
-			annot = iter.Ite(vs[i], annot)
+		} else if AnnotIteFunc != nil {
+			annot = AnnotIteFunc(a, vs[i], annot)
 		}
 	}
 	return NewClauses(res.Fmlas, res.Defs, annot)
