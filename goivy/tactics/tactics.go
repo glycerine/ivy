@@ -11,12 +11,10 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/solver"
-	"github.com/glycerine/ivy/goivy/transrel"
 )
 
 const checkPrecondTrue = true
@@ -42,12 +40,12 @@ type TacticStep struct {
 // TacticsContext holds the state for interactive proof exploration.
 type TacticsContext struct {
 	AG    *art.AnalysisGraph
-	Mod   *module.Module
+	Mod   *mod.Module
 	Goals *proof.ProofGoalStack
 }
 
 // NewTacticsContext creates a new tactics context.
-func NewTacticsContext(ag *art.AnalysisGraph, mod *module.Module) *TacticsContext {
+func NewTacticsContext(ag *art.AnalysisGraph, mod *mod.Module) *TacticsContext {
 	return &TacticsContext{
 		AG:    ag,
 		Mod:   mod,
@@ -76,7 +74,7 @@ func GoalAtArgNode(formula lg.Expr, node *art.State) *proof.ProofGoal {
 	return &proof.ProofGoal{Formula: formula, Node: node}
 }
 
-// BackgroundTheory returns the background theory for the module.
+// BackgroundTheory returns the background theory for the mod.
 func (tc *TacticsContext) BackgroundTheory() lg.Expr {
 	if tc.Mod == nil {
 		return lg.True
@@ -118,7 +116,7 @@ func (tc *TacticsContext) RefutedGoal(goal *proof.ProofGoal) bool {
 
 // ForwardImage computes the forward image of clauses through an action.
 // Corresponds to Python's forward_image(pre_fact, action).
-func (tc *TacticsContext) ForwardImage(preFact *clauseops.Clauses, action actions.Action) *clauseops.Clauses {
+func (tc *TacticsContext) ForwardImage(preFact *mod.Clauses, action actions.Action) *mod.Clauses {
 	if preFact == nil || action == nil {
 		return preFact
 	}
@@ -128,14 +126,14 @@ func (tc *TacticsContext) ForwardImage(preFact *clauseops.Clauses, action action
 		return preFact
 	}
 	preFormula := preFact.ToFormula()
-	resultFormula := transrel.ForwardImage(preFormula, axioms, update)
-	return clauseops.FormulaToClauses(resultFormula, preFact.Annot)
+	resultFormula := actions.ForwardImage(preFormula, axioms, update)
+	return mod.FormulaToClauses(resultFormula, preFact.Annot)
 }
 
 // BackwardImage computes the backward image (reverse image / weakest precondition)
 // of clauses through an action.
 // Corresponds to Python's backward_image(post_fact, action).
-func (tc *TacticsContext) BackwardImage(postFact *clauseops.Clauses, action actions.Action) *clauseops.Clauses {
+func (tc *TacticsContext) BackwardImage(postFact *mod.Clauses, action actions.Action) *mod.Clauses {
 	if postFact == nil || action == nil {
 		return postFact
 	}
@@ -145,22 +143,22 @@ func (tc *TacticsContext) BackwardImage(postFact *clauseops.Clauses, action acti
 		return postFact
 	}
 	postFormula := postFact.ToFormula()
-	resultFormula := transrel.ReverseImage(postFormula, axioms, update)
-	return clauseops.FormulaToClauses(resultFormula, postFact.Annot)
+	resultFormula := actions.ReverseImage(postFormula, axioms, update)
+	return mod.FormulaToClauses(resultFormula, postFact.Annot)
 }
 
 // ImpliedFacts checks which facts are implied by a premise.
 // Returns the subset of factsToCheck that are implied by premise conjoined
 // with background axioms.
 // Corresponds to Python's implied_facts().
-func (tc *TacticsContext) ImpliedFacts(premise *clauseops.Clauses, factsToCheck []*clauseops.Clauses) []*clauseops.Clauses {
+func (tc *TacticsContext) ImpliedFacts(premise *mod.Clauses, factsToCheck []*mod.Clauses) []*mod.Clauses {
 	if premise == nil || len(factsToCheck) == 0 {
 		return nil
 	}
 	axioms := tc.BackgroundTheory()
 	premFormula := conjoinNodes(axioms, premise.ToFormula())
 
-	var implied []*clauseops.Clauses
+	var implied []*mod.Clauses
 	slv := solver.New()
 	for _, fact := range factsToCheck {
 		if fact == nil {
@@ -237,7 +235,7 @@ func (tc *TacticsContext) RefineOrReverse(goal *proof.ProofGoal) (bool, interfac
 	}
 
 	// Refinement fails: compute backward image and push new goal.
-	goalClauses := clauseops.FormulaToClauses(goalFmla, nil)
+	goalClauses := mod.FormulaToClauses(goalFmla, nil)
 	bi := tc.BackwardImage(goalClauses, action)
 	newGoal := GoalAtArgNode(bi.ToFormula(), pred)
 	return false, newGoal
@@ -248,7 +246,7 @@ func (tc *TacticsContext) RefineOrReverse(goal *proof.ProofGoal) (bool, interfac
 // -----------------------------------------------------------------------
 
 // ArgGetFact returns the clauses at an ARG node.
-func ArgGetFact(node *art.State) *clauseops.Clauses {
+func ArgGetFact(node *art.State) *mod.Clauses {
 	if node == nil {
 		return nil
 	}
@@ -256,13 +254,13 @@ func ArgGetFact(node *art.State) *clauseops.Clauses {
 }
 
 // ArgAddFacts adds facts (conjoins clauses) to an ARG node.
-func ArgAddFacts(node *art.State, facts ...*clauseops.Clauses) {
+func ArgAddFacts(node *art.State, facts ...*mod.Clauses) {
 	if node == nil {
 		return
 	}
 	for _, f := range facts {
 		if f != nil {
-			node.Clauses = clauseops.AndClausesTyped(node.Clauses, f)
+			node.Clauses = mod.AndClausesTyped(node.Clauses, f)
 		}
 	}
 }
@@ -346,7 +344,7 @@ func (t *RefineOrReverseTactic) Apply(goal *proof.ProofGoal) (bool, error) {
 		if newFact, ok := result.(lg.Expr); ok {
 			node, ok := goal.Node.(*art.State)
 			if ok && node != nil {
-				factClauses := clauseops.FormulaToClauses(newFact, nil)
+				factClauses := mod.FormulaToClauses(newFact, nil)
 				ArgAddFacts(node, factClauses)
 			}
 		}
@@ -451,7 +449,7 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 				// Add the learned fact
 				if newFact, ok := result.(lg.Expr); ok {
 					if goalNode, ok := currentGoal.Node.(*art.State); ok {
-						factClauses := clauseops.FormulaToClauses(newFact, nil)
+						factClauses := mod.FormulaToClauses(newFact, nil)
 						ArgAddFacts(goalNode, factClauses)
 					}
 				}
