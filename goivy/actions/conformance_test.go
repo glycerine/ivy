@@ -39,7 +39,7 @@ func TestIsSkolem_MidString(t *testing.T) {
 	}
 }
 
-func TestIsGlobalSkolem(t *testing.T) {
+func TestIsGlobalSkolem_Conformance(t *testing.T) {
 	// Python: sym.startswith('__') and len(sym.name) > 2 and sym.name[2].isupper()
 	cases := []struct {
 		name   string
@@ -252,7 +252,7 @@ func TestNew_Old_Prefixes(t *testing.T) {
 	}
 }
 
-func TestNullUpdate(t *testing.T) {
+func TestNullUpdate_Conformance(t *testing.T) {
 	// Python: null_update() = ([], true_clauses(), false_clauses())
 	u := NullUpdate()
 	if u.ModifiedAll {
@@ -263,10 +263,10 @@ func TestNullUpdate(t *testing.T) {
 	}
 }
 
-func TestPureState(t *testing.T) {
+func TestPureState_Conformance(t *testing.T) {
 	// Python: pure_state(c) = (None, c, false_clauses())
 	cls := mod.TrueClauses(nil)
-	u := PureState(cls)
+	u := PureStateClauses(cls)
 	if !u.ModifiedAll {
 		t.Error("PureState should have ModifiedAll=true")
 	}
