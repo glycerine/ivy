@@ -698,6 +698,11 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	// Python: new_pre = or_clauses(pre1, temp)
 	newPre := co.OrClausesTyped(pre1, temp)
 
+	if xtracer.Enabled {
+		xtracer.Trace("transrel.ComposeUpdates result HASH canon= TR=%s", newTR.Canon())
+		xtracer.Trace("transrel.ComposeUpdates result HASH canon= Pre=%s", newPre.Canon())
+	}
+
 	return &Update{
 		Modified:    newUpdated,
 		ModifiedAll: modAll,
@@ -924,6 +929,11 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 	//         new_pre = exist_quant(syms, update[2])
 	_, newTR := ExistQuantClauses(syms, u.TR)
 	_, newPre := ExistQuantClauses(syms, u.Pre)
+
+	if xtracer.Enabled {
+		xtracer.Trace("transrel.Hide result HASH canon= newTR=%s", newTR.Canon())
+		xtracer.Trace("transrel.Hide result HASH canon= newPre=%s", newPre.Canon())
+	}
 
 	return &Update{
 		Modified:    newMod,

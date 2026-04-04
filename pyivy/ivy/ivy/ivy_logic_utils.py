@@ -102,6 +102,10 @@ class Clauses(object):
         return not self.defs and not any(sym.is_skolem() for sym in self.symbols())
     def __hash__(self):
         return hash((tuple(self.fmlas), tuple(self.defs)))
+    def canon(self):
+        fmla_strs = [f.canon() if hasattr(f,'canon') else str(f) for f in self.fmlas]
+        def_strs = [d.canon() if hasattr(d,'canon') else str(d) for d in self.defs]
+        return '(clauses fmlas:[%s] defs:[%s])' % (' '.join(fmla_strs), ' '.join(def_strs))
     def __eq__(self,other):
         return type(other) == type(self) and self.fmlas == other.fmlas and self.defs == other.defs
 

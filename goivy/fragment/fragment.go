@@ -1009,6 +1009,21 @@ func CheckFragment(m *mod.Module, precondsOnly bool) error {
 
 	assumes, asserts, macros := GetAssumesAndAsserts(m, precondsOnly)
 
+	if xtracer.Enabled {
+		xtracer.Trace("fragment.CheckFragment HASH canon= assumes count=%d", len(assumes))
+		for i, a := range assumes {
+			xtracer.Trace("fragment.CheckFragment HASH canon= assume[%d]=%s", i, a.fmla.Canon())
+		}
+		xtracer.Trace("fragment.CheckFragment HASH canon= asserts count=%d", len(asserts))
+		for i, a := range asserts {
+			xtracer.Trace("fragment.CheckFragment HASH canon= assert[%d]=%s", i, a.fmla.Canon())
+		}
+		xtracer.Trace("fragment.CheckFragment HASH canon= macros count=%d", len(macros))
+		for i, a := range macros {
+			xtracer.Trace("fragment.CheckFragment HASH canon= macro[%d]=%s", i, a.fmla.Canon())
+		}
+	}
+
 	interp := make(map[string]interface{})
 	if m.Sig != nil {
 		for k, v := range m.Sig.Interp {

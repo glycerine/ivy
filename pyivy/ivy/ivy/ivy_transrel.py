@@ -349,6 +349,9 @@ def compose_updates(update1,axioms,update2):
 #    print "new_pre = {}".format(new_pre)
 #    iu.dbg('new_clauses')
 #    iu.dbg('new_clauses.annot')
+    if __debug__:
+        xtracer.trace("transrel.ComposeUpdates result HASH canon= TR=%s" % new_clauses.canon())
+        xtracer.trace("transrel.ComposeUpdates result HASH canon= Pre=%s" % new_pre.canon())
     return (new_updated,new_clauses,new_pre)
 
 def add_post_axioms(update,axioms):
@@ -388,6 +391,9 @@ def hide(syms,update):
     new_updated = [s for s in update[0] if s not in syms]
     new_tr = exist_quant(syms,update[1])
     new_pre = exist_quant(syms,update[2])
+    if __debug__:
+        xtracer.trace("transrel.Hide result HASH canon= newTR=%s" % new_tr.canon())
+        xtracer.trace("transrel.Hide result HASH canon= newPre=%s" % new_pre.canon())
     return (new_updated,new_tr,new_pre)
 
 def hide_state(syms,update):

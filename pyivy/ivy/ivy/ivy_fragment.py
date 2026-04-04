@@ -648,4 +648,16 @@ def check_fragment(preconds_only=False):
     if __debug__: im.module.canon_snapshot("fragment/fragment.go:1001 CheckFragment()")
     if 'fo' not in im.logics():
         assumes,asserts,macros = get_assumes_and_asserts(preconds_only)
+        if __debug__:
+            from .canon_fragment import fmla_pair_canon
+            xtracer.trace("fragment.CheckFragment HASH canon= assumes count=%d" % len(assumes))
+            for i, (fmla, source) in enumerate(assumes):
+                lineno = getattr(source, 'lineno', 0)
+                xtracer.trace("fragment.CheckFragment HASH canon= assume[%d]=%s" % (i, fmla.canon() if hasattr(fmla,'canon') else str(fmla)))
+            xtracer.trace("fragment.CheckFragment HASH canon= asserts count=%d" % len(asserts))
+            for i, (fmla, source) in enumerate(asserts):
+                xtracer.trace("fragment.CheckFragment HASH canon= assert[%d]=%s" % (i, fmla.canon() if hasattr(fmla,'canon') else str(fmla)))
+            xtracer.trace("fragment.CheckFragment HASH canon= macros count=%d" % len(macros))
+            for i, (fmla, source) in enumerate(macros):
+                xtracer.trace("fragment.CheckFragment HASH canon= macro[%d]=%s" % (i, fmla.canon() if hasattr(fmla,'canon') else str(fmla)))
         check_feu(assumes,asserts,macros)

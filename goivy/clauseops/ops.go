@@ -252,7 +252,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 				// Merge: use Ite to select between definitions
 				merged := il.NewDefinition(
 					d.Lhs,
-					simpIte(vs[i], d.Rhs, existing.Rhs),
+					il.SimpIte(vs[i], d.Rhs, existing.Rhs),
 				)
 				defIdx[key] = merged
 			}
@@ -320,7 +320,7 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 		} else {
 			merged := il.NewDefinition(
 				d.Lhs,
-				simpIte(v, existing.Rhs, d.Rhs),
+				il.SimpIte(v, existing.Rhs, d.Rhs),
 			)
 			defIdx[key] = merged
 		}
@@ -680,20 +680,6 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 		result[i] = NewClauses(fmlas, defs, a.Annot)
 	}
 	return result
-}
-
-// simpIte returns a simplified Ite node. If both branches are equal,
-// returns either branch.
-func simpIte(cond lg.Expr, thenN, elseN lg.Expr) lg.Expr {
-	if thenN.Equal(elseN) {
-		return thenN
-	}
-	return &lg.Ite{
-		ISort: thenN.NodeSort(),
-		Cond:  cond,
-		Then:  thenN,
-		Else:  elseN,
-	}
 }
 
 // UsedVariablesOrdered returns free variables from the clauses in order.
