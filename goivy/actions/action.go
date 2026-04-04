@@ -507,7 +507,7 @@ func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart Action, elsePart Ac
 	if elseAction == nil {
 		elseAction = NewSequence()
 	}
-	dual := dualFormula(a.Cond)
+	dual := mod.DualFormula(a.Cond, nil, nil)
 	elsePart = NewSequence(NewAssumeAction(dual), elseAction)
 	return
 }

@@ -473,13 +473,13 @@ func TestEquivASTBoolean(t *testing.T) {
 
 func TestDualFormula(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
-	dual := dualFormula(p)
+	dual := mod.DualFormula(p, nil, nil)
 	not, ok := dual.(*lg.Not)
 	if !ok {
-		t.Fatalf("dualFormula of constant should be Not, got %T: %s", dual, dual)
+		t.Fatalf("DualFormula of constant should be Not, got %T: %s", dual, dual)
 	}
 	if c, ok := not.Body.(*lg.Const); !ok || c.Name != "p" {
-		t.Errorf("dualFormula body should be p, got %s", not.Body)
+		t.Errorf("DualFormula body should be p, got %s", not.Body)
 	}
 }
 
@@ -487,7 +487,7 @@ func TestSkolemizeFormula(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	body := v
 	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
-	result := skolemizeFormula(ex)
+	result := mod.SkolemizeFormula(ex, nil, nil)
 	// Should replace X with __sk__X
 	if c, ok := result.(*lg.Const); ok {
 		if c.Name != "__sk__X" {
