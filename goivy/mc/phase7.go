@@ -267,7 +267,7 @@ func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler 
 // Corresponds to Python's checked (ivy_mc.py lines 1017-1018).
 // Uses module.Cfg.CheckLineno (was mc.CheckedAssert, from Python ia.checked_assert).
 func Checked(action actions.Action, mod *module.Module) bool {
-	checkedAssert := module.Cfg.CheckLineno
+	checkedAssert := mod.Cfg.CheckLineno
 	if checkedAssert == "" {
 		return true
 	}

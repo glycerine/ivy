@@ -272,12 +272,12 @@ func defToConstraint(def *il.Definition) lg.Expr {
 func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
-	if module.Schemata == nil {
+	if mod.Schemata == nil {
 		return result
 	}
 
 	// For each schema, try to match its premises
-	for name, lf := range module.Schemata {
+	for name, lf := range mod.Schemata {
 		// Skip recursive/inductive schemata
 		if len(name) >= 4 && (name[:4] == "rec[" || name[:4] == "lep[" || name[:4] == "ind[") {
 			continue
@@ -308,7 +308,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 		// For each matching of premises, instantiate conclusion
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
-			result = append(result, module.Cfg.AstCfg.NewLabeledFormula(nil, inst))
+			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(nil, inst))
 		})
 	}
 
@@ -413,7 +413,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 
 	// Combine with existing labeled axioms
 	var axioms []*ast.LabeledFormula
-	axioms = append(axioms, module.LabeledAxioms...)
+	axioms = append(axioms, mod.LabeledAxioms...)
 	axioms = append(axioms, expandedAxioms...)
 
 	// Get triggers for each quantified axiom

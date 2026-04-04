@@ -5,12 +5,12 @@ import (
 	"sort"
 
 	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ToAigerResult holds the result of converting a module to an AIGER circuit.
@@ -42,7 +42,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	pubNames := sortedPublicActions(mod)
 	extActs := make([]lg.Expr, len(pubNames))
 	for i, name := range pubNames {
-		act, ok := module.Actions.Get2(name)
+		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -58,7 +58,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Build initializer sequence
 	var initParts []lg.Expr
-	for _, ni := range module.Initializers {
+	for _, ni := range mod.Initializers {
 		if a, ok := ni.Action.(actions.Action); ok {
 			initParts = append(initParts, &actionNodeWrapper{action: a})
 		}
@@ -70,7 +70,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	initAction := AddErrFlag(initSeq, erf, &errConds)
 
 	// action = Sequence(erf := false, if init_var then ext_act else init)
-	erfReset := actions.NewAssignAction(erf, &lg.Or{Terms: nil}) // false
+	erfReset := actions.NewAssignAction(erf, &lg.Or{Terms: nil})     // false
 	ifAction := actions.NewIfAction(&actionNodeWrapper{action: nil}, // placeholder
 		&actionNodeWrapper{action: extAct},
 		&actionNodeWrapper{action: initAction},
@@ -90,7 +90,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 2: Get invariant to prove, applying proof tactics
 	// Replace free variables with Skolems
 	var conjs []*ast.LabeledFormula
-	for _, lf := range module.LabeledConjs {
+	for _, lf := range mod.LabeledConjs {
 		conjs = append(conjs, lf)
 	}
 
@@ -118,10 +118,10 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	invarSyms := module.UsedSymbolsAST(invariant)
 
 	// Step 3: Compute transition relation
-	bgt := module.BackgroundTheory(nil)
+	bgt := mod.BackgroundTheory(nil)
 	ctx := &actions.UpdateContext{
 		Domain: mod,
-		ActCfg: module.Cfg.ActCfg,
+		ActCfg: mod.Cfg.ActCfg,
 	}
 	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)
@@ -170,12 +170,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Build inductive hypotheses
 	var indHyps []lg.Expr
-	for _, lf := range module.LabeledConjs {
+	for _, lf := range mod.LabeledConjs {
 		indHyps = append(indHyps, &lg.ForAll{
 			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
 	}
-	for _, lf := range module.AssumedInvs {
+	for _, lf := range mod.AssumedInvs {
 		indHyps = append(indHyps, &lg.ForAll{
 			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
@@ -553,12 +553,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 //
 // Python: ivy_mc.py:1048-1054
 func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
-	for actname, act := range module.Actions.All() {
+	for actname, act := range mod.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
 			newAction := AddErrFlag(a, erf, errConds)
 			newAction.SetFormalParams(a.GetFormalParams())
 			newAction.SetFormalReturns(a.GetFormalReturns())
-			module.SetAction(actname, newAction)
+			mod.SetAction(actname, newAction)
 		}
 	}
 }
@@ -674,9 +674,9 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 
 // sortedPublicActions returns public action names sorted.
 func sortedPublicActions(mod *module.Module) []string {
-	names := make([]string, 0, module.PublicActions.Len())
-	for name := range module.PublicActions.All() {
-		if module.PublicActions.Get(name) {
+	names := make([]string, 0, mod.PublicActions.Len())
+	for name := range mod.PublicActions.All() {
+		if mod.PublicActions.Get(name) {
 			names = append(names, name)
 		}
 	}
@@ -702,7 +702,7 @@ type actionNodeWrapper struct {
 	action actions.Action
 }
 
-func (w *actionNodeWrapper) NodeSort() lg.Sort  { return lg.Boolean }
+func (w *actionNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
 func (w *actionNodeWrapper) Children() []lg.Expr { return nil }
 func (w *actionNodeWrapper) String() string {
 	if w.action != nil {
@@ -711,8 +711,10 @@ func (w *actionNodeWrapper) String() string {
 	return "<nil-action>"
 }
 func (w *actionNodeWrapper) Equal(n lg.Expr) bool { return w == n }
-func (w *actionNodeWrapper) Sexp() lg.NodeKey       { return lg.NodeKey("(actionNodeWrapper action:" + w.String() + ")") }
-func (w *actionNodeWrapper) Args() []ast.Node      { return nil }
+func (w *actionNodeWrapper) Sexp() lg.NodeKey {
+	return lg.NodeKey("(actionNodeWrapper action:" + w.String() + ")")
+}
+func (w *actionNodeWrapper) Args() []ast.Node               { return nil }
 func (w *actionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
 
 // defsToNodes converts a slice of *il.Definition to []lg.Expr.
@@ -742,4 +744,3 @@ func isFiniteSortByName(name string) bool {
 	// Abstract vars (__abs, __qe, __ite, __init, __cnst, __axioms) are boolean
 	return true // In the propositionally abstracted system, all remaining vars are boolean
 }
-
