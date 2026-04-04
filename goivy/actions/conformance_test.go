@@ -265,8 +265,7 @@ func TestNullUpdate_Conformance(t *testing.T) {
 
 func TestPureState_Conformance(t *testing.T) {
 	// Python: pure_state(c) = (None, c, false_clauses())
-	cls := mod.TrueClauses(nil)
-	u := PureStateClauses(cls)
+	u := PureState(lg.True)
 	if !u.ModifiedAll {
 		t.Error("PureState should have ModifiedAll=true")
 	}
