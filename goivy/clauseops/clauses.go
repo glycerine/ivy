@@ -22,11 +22,17 @@ type Clauses struct {
 	Annot  interface{}        // annotation (for trace reconstruction)
 }
 
-// NewClauses constructs a Clauses value. The formulas are flattened:
-// any top-level And is expanded into its conjuncts (collect_and_list).
+// NewClauses constructs a Clauses value. Each formula is first normalized
+// via coerceClauseToFormula (strips leading ForAll, matching Python's
+// coerce_clause_to_formula), then flattened: any top-level And is expanded
+// into its conjuncts (collect_and_list).
 // Definitions are indexed by their defining symbol name.
 func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clauses {
-	flat := collectAndList(fmlas)
+	coerced := make([]lg.Expr, len(fmlas))
+	for i, f := range fmlas {
+		coerced[i] = dropUniversals(f)
+	}
+	flat := collectAndList(coerced)
 	idx := make(map[lg.NodeKey]int, len(defs))
 	for i, d := range defs {
 		key := definesKey(d)
@@ -259,20 +265,33 @@ func collectAndList(fmlas []lg.Expr) []lg.Expr {
 }
 
 // dropUniversals strips leading ForAll quantifiers from a formula.
+// Matches Python's drop_universals: also unwraps singleton And and
+// handles Not by calling dropExistentials on the negated body.
 func dropUniversals(f lg.Expr) lg.Expr {
-	for {
-		switch t := f.(type) {
-		case *lg.ForAll:
-			f = t.Body
-			continue
-		case *lg.And:
-			if len(t.Terms) == 1 {
-				f = t.Terms[0]
-				continue
-			}
+	switch t := f.(type) {
+	case *lg.ForAll:
+		return dropUniversals(t.Body)
+	case *lg.Not:
+		return &lg.Not{Body: dropExistentials(t.Body)}
+	case *lg.And:
+		if len(t.Terms) == 1 {
+			return dropUniversals(t.Terms[0])
 		}
-		return f
 	}
+	return f
+}
+
+// dropExistentials strips leading Exists quantifiers from a formula.
+// Matches Python's drop_existentials: handles Not by calling
+// dropUniversals on the negated body.
+func dropExistentials(f lg.Expr) lg.Expr {
+	switch t := f.(type) {
+	case *lg.Exists:
+		return dropExistentials(t.Body)
+	case *lg.Not:
+		return &lg.Not{Body: dropUniversals(t.Body)}
+	}
+	return f
 }
 
 // unwrapSingleton unwraps a single-element And or Or.
