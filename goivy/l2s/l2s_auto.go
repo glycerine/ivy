@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	modpkg "github.com/glycerine/ivy/goivy/module"
@@ -82,7 +81,7 @@ func l2sAutoInvariants(
 				continue
 			}
 			// Check no free variables
-			freeVars := co.VariablesAST(f)
+			freeVars := modpkg.VariablesAST(f)
 			if len(freeVars) > 0 {
 				continue // skip definitions with free variables
 			}
@@ -202,7 +201,7 @@ func l2sAutoInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return co.SubstituteConstantsExpr(node, subs)
+		return modpkg.SubstituteConstantsExpr(node, subs)
 	}
 
 	// all_d: all elements in l2s_d
@@ -643,7 +642,7 @@ func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fml
 
 // collectVarsSlice collects free variables from a node into a slice.
 func collectVarsSlice(n lg.Expr) []*lg.Variable {
-	vars := co.VariablesAST(n)
+	vars := modpkg.VariablesAST(n)
 	return vars
 }
 

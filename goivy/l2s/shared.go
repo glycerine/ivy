@@ -11,7 +11,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
@@ -240,7 +239,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 					symName := modSym.Name
 					if m != nil && m.Sig != nil {
 						if entry, ok := m.Sig.Symbols[symName]; ok {
-							vs := co.SymPlaceholders(lg.NewConst(symName, entry.Sort))
+							vs := modpkg.SymPlaceholders(lg.NewConst(symName, entry.Sort))
 							var expr lg.Expr
 							if len(vs) > 0 {
 								expr = mustApply(lg.NewConst(symName, entry.Sort), varsToNodes(vs)...)
@@ -266,7 +265,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		normNotLf := lu.NormalizeNamedBinders(cfg.NotLf, nil)
 		for _, b := range lu.NamedBindersAst(normNotLf) {
 			if b.Name == "l2s_g" {
-				negBody := co.Negate(b.Body)
+				negBody := modpkg.Negate(b.Body)
 				key := fmt.Sprint(negBody)
 				if !seenWait[key] {
 					seenWait[key] = true
@@ -315,7 +314,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
 		negGlob := cfg.ReplaceTemporals(
-			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: co.Negate(vb.Body)}})
+			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: modpkg.Negate(vb.Body)}})
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), cfg.Lineno))
 	}
@@ -483,7 +482,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				&lg.Not{Body: t},
 				cfg.ReplaceTemporals(&lg.Not{Body: &lg.Globally{
 					Environ: strPtr(cfg.ProofLabel),
-					Body:    co.Negate(t),
+					Body:    modpkg.Negate(t),
 				}}),
 			}}
 			res = append(res, setLineno(actions.NewAssignAction(waitApp, rhs), lineno))

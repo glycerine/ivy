@@ -1,11 +1,10 @@
 package mc
 
 import (
-	co "github.com/glycerine/ivy/goivy/clauseops"
+	"github.com/glycerine/ivy/goivy/actions"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	tr "github.com/glycerine/ivy/goivy/transrel"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // MineConstants collects constants to use for quantifier instantiation.
@@ -13,7 +12,7 @@ import (
 // symbols that are either Skolem or module parameters.
 //
 // Python: ivy_mc.py:778-784
-func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Const {
+func MineConstants(mod *mod.Module, trans *mod.Clauses, invariant lg.Expr) map[string][]*lg.Const {
 	res := make(map[string][]*lg.Const)
 
 	// Collect symbols from invariant and module params
@@ -30,7 +29,7 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map
 
 	seen := make(map[string]bool)
 	for _, fmla := range fmlas {
-		syms := co.UsedSymbolsAST(fmla)
+		syms := mod.UsedSymbolsAST(fmla)
 		for _, sym := range syms {
 			if seen[sym.Name] {
 				continue
@@ -38,7 +37,7 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map
 			if il.IsFunctionSort(sym.CSort) {
 				continue
 			}
-			if tr.IsSkolem(sym.Name) || paramSet[sym.Name] {
+			if actions.IsSkolem(sym.Name) || paramSet[sym.Name] {
 				seen[sym.Name] = true
 				sortKey := sortKeyStr(sym.CSort)
 				res[sortKey] = append(res[sortKey], sym)
@@ -52,12 +51,12 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map
 // It looks at all symbols in the invariant and transition relation.
 //
 // Python: ivy_mc.py:786-794
-func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Const {
+func MineConstants2(mod *mod.Module, trans *mod.Clauses, invariant lg.Expr) map[string][]*lg.Const {
 	res := make(map[string][]*lg.Const)
 	seen := make(map[string]bool)
 
 	// Collect symbols from invariant
-	syms := co.UsedSymbolsAST(invariant)
+	syms := mod.UsedSymbolsAST(invariant)
 	for _, sym := range syms {
 		if seen[sym.Name] {
 			continue
@@ -71,7 +70,7 @@ func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) ma
 
 	// Collect symbols from transition clauses
 	if trans != nil {
-		for _, sym := range co.SymbolsClauses(trans) {
+		for _, sym := range mod.SymbolsClauses(trans) {
 			if seen[sym.Name] {
 				continue
 			}
@@ -105,14 +104,14 @@ func sortKeyStr(s lg.Sort) string {
 //
 // Python: ivy_mc.py:802-810
 func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
-	symsMap := co.UsedSymbolsAST(expr)
+	symsMap := mod.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems
 	for _, sym := range symsMap {
 		if stVarSet[sym.Name] {
 			return nil
 		}
-		if tr.IsSkolem(sym.Name) {
+		if actions.IsSkolem(sym.Name) {
 			sortKey := sortKeyStr(sym.CSort)
 			inConstants := false
 			for _, sc := range sortConstants[sortKey] {
@@ -130,7 +129,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	// Find new_ symbols
 	var newSyms []*lg.Const
 	for _, sym := range symsMap {
-		if tr.IsNew(sym.Name) {
+		if actions.IsNew(sym.Name) {
 			newSyms = append(newSyms, sym)
 		}
 	}
@@ -142,9 +141,9 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	// Build renaming: new_X → X
 	renaming := make(map[lg.NodeKey]*lg.Const, len(newSyms))
 	for _, sym := range newSyms {
-		oldName := tr.NewOf(sym.Name)
+		oldName := actions.NewOf(sym.Name)
 		renaming[lg.Key(sym)] = lg.NewConst(oldName, sym.CSort)
 	}
 
-	return co.RenameAST(expr, renaming)
+	return mod.RenameAST(expr, renaming)
 }
