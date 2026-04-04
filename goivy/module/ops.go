@@ -810,27 +810,30 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	if len(dead) == 0 {
 		return args
 	}
-	deadSet := make(map[lg.NodeKey]bool, len(dead))
-	for _, s := range dead {
-		deadSet[s] = true
-	}
 	result := make([]*Clauses, len(args))
 	for i, a := range args {
-		result[i] = elimDefinitions(a, deadSet)
+		result[i] = elimDefinitions(a, dead)
 	}
 	return result
 }
 
 // elimDefinitions converts dead definitions to constraint formulas.
-// Matches Python's elim_definitions.
-func elimDefinitions(clauses *Clauses, deadSet map[lg.NodeKey]bool) *Clauses {
+// Matches Python's elim_definitions: iterates `dead` in order and
+// looks up each symbol in clauses.DefIdx, so the converted constraint
+// formulas appear in `dead`-list order (not clauses.Defs order).
+func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 	var fmlas []lg.Expr
 	fmlas = append(fmlas, clauses.Fmlas...)
-	for _, d := range clauses.Defs {
-		key := definesKey(d)
-		if deadSet[key] {
-			fmlas = append(fmlas, defToConstraint(d))
+	// Python: for sym in dead: if sym in clauses.defidx: fmlas.append(...)
+	for _, key := range dead {
+		if idx, ok := clauses.DefIdx[key]; ok {
+			fmlas = append(fmlas, defToConstraint(clauses.Defs[idx]))
 		}
+	}
+	// Build deadSet for filtering remaining defs
+	deadSet := make(map[lg.NodeKey]bool, len(dead))
+	for _, key := range dead {
+		deadSet[key] = true
 	}
 	var defs []*il.Definition
 	for _, d := range clauses.Defs {
