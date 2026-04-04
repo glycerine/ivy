@@ -11,10 +11,9 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 )
 
@@ -30,7 +29,7 @@ func rankingInvariants(
 	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
-	mod *module.Module,
+	mod *mod.Module,
 ) ([]*ast.LabeledFormula, []*ast.LabeledFormula, map[string]*Task, map[string]*Trigger, error) {
 
 	// Helper: put into nested dict
@@ -75,7 +74,7 @@ func rankingInvariants(
 			if dname == "" || !strings.HasPrefix(dname, name) {
 				continue
 			}
-			freeVars := co.VariablesAST(f)
+			freeVars := mod.VariablesAST(f)
 			if len(freeVars) > 0 {
 				continue
 			}
@@ -190,7 +189,7 @@ func rankingInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return co.SubstituteConstantsExpr(node, subs)
+		return mod.SubstituteConstantsExpr(node, subs)
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {

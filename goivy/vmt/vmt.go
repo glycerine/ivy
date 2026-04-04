@@ -58,7 +58,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	}
 
 	// Add post-state axioms
-	postUpd := transrel.AddPostAxioms(upd, bgt)
+	postUpd := actions.AddPostAxioms(upd, bgt)
 
 	stvars := postUpd.Modified
 	transNode := postUpd.TRNode()
@@ -86,7 +86,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	if len(defsyms) > 0 {
 		rn := make(map[string]string)
 		for sym := range defsyms {
-			newSym := transrel.New(sym)
+			newSym := actions.New(sym)
 			rn[newSym] = "__" + newSym
 		}
 		transNode = renameNode(transNode, rn)
@@ -101,7 +101,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 		stvars = filtered
 	}
 
-	return transrel.ModifiedNames(postUpd), transNode, errNodeFmla, nil
+	return actions.ModifiedNames(postUpd), transNode, errNodeFmla, nil
 }
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
@@ -614,7 +614,7 @@ func CheckIsolate(method string, m *mod.Module) error {
 	for _, name := range istvars {
 		istConsts = append(istConsts, lg.NewConst(name, lg.TopS))
 	}
-	initState := transrel.ActionToState(&transrel.Update{
+	initState := actions.ActionToState(&actions.Update{
 		Modified: istConsts,
 		TR:       mod.FormulaToClauses(init, nil),
 		Pre:      mod.FalseClauses(nil),
@@ -660,14 +660,14 @@ func CheckIsolate(method string, m *mod.Module) error {
 	initTransFormulas := []lg.Expr{initFormula, trans}
 	initTransSyms := collectAllSymbols(initTransFormulas)
 	for _, sym := range initTransSyms {
-		if !transrel.IsNew(sym.Name) {
+		if !actions.IsNew(sym.Name) {
 			continue
 		}
 		decl, err := slv.Translator().Translate(sym)
 		if err != nil {
 			continue
 		}
-		baseSym := lg.NewConst(transrel.NewOf(sym.Name), sym.CSort)
+		baseSym := lg.NewConst(actions.NewOf(sym.Name), sym.CSort)
 		declc, err := slv.Translator().Translate(baseSym)
 		if err != nil {
 			continue
@@ -762,10 +762,10 @@ func backgroundTheory(m *mod.Module) lg.Expr {
 // computeUpdate computes the transition relation update for an action.
 // This is a simplified version; the full implementation would call
 // action.update(module, None) which does full symbolic execution.
-func computeUpdate(m *mod.Module, action actions.Action) *transrel.Update {
+func computeUpdate(m *mod.Module, action actions.Action) *actions.Update {
 	// For now, return a trivial update. The full implementation requires
 	// the complete action semantics compiler.
-	return transrel.NullUpdate()
+	return actions.NullUpdate()
 }
 
 // conjoinDefs conjoins definition equalities into a formula.
