@@ -298,10 +298,11 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap *iu.InsMap[s
 // This is the Go port of Python's check_interference function.
 // It computes the calls and modifications for all summarized (opaque)
 // actions, then checks that:
-// 1. Non-summarized actions calling summarized actions don't have
-//    visible modifications.
-// 2. Exported summarized actions don't modify visible symbols.
-// 3. There are no interfering callbacks.
+//  1. Non-summarized actions calling summarized actions don't have
+//     visible modifications.
+//  2. Exported summarized actions don't modify visible symbols.
+//  3. There are no interfering callbacks.
+//
 // CheckInterference checks for visible interference between isolated and
 // summarized actions. This detects several kinds of problems:
 //
@@ -925,4 +926,3 @@ func sortStrings(s []string) {
 		}
 	}
 }
-
