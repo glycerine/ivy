@@ -82,7 +82,7 @@ func NewComponentInfo(name string, role IsolateRole) *ComponentInfo {
 // LookupAction finds an action by name in the module.
 // Returns an error if the action is not found.
 func LookupAction(mod *module.Module, name string) (actions.Action, error) {
-	act, ok := module.Actions.Get2(name)
+	act, ok := mod.Actions.Get2(name)
 	if !ok {
 		return nil, fmt.Errorf("action %s undefined", name)
 	}
@@ -93,7 +93,7 @@ func LookupAction(mod *module.Module, name string) (actions.Action, error) {
 // The useMixin predicate controls which mixins are applied (by mixer name).
 // If useMixin is nil, all mixins are applied.
 func AddMixins(mod *module.Module, actname string, action actions.Action, useMixin func(string) bool) actions.Action {
-	isoCfg := module.Cfg.IsolateCfg
+	isoCfg := mod.Cfg.IsolateCfg
 	res := action
 	if isoCfg.CreateImports {
 		// When creating imports, strip invariants from the action.
@@ -103,7 +103,7 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		// in the Go action types, this is a no-op for now.
 		// The action is used as-is, which is safe (just not optimal).
 	}
-	mixins, ok := module.Mixins.Get2(actname)
+	mixins, ok := mod.Mixins.Get2(actname)
 	if !ok {
 		return res
 	}
@@ -225,10 +225,10 @@ func StartsWithSome(name string, prefixes map[string]bool, mod *module.Module, i
 }
 
 func startsWithSomeRec(name string, prefixes map[string]bool, mod *module.Module) bool {
-	if module.Privates[name] {
+	if mod.Privates[name] {
 		return false
 	}
-	pc := module.Cfg.IuCfg.ParentChildName(name)
+	pc := mod.Cfg.IuCfg.ParentChildName(name)
 	parent := pc[0]
 	if parent == "this" {
 		return prefixes["this"]
@@ -264,7 +264,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // applies cone-of-influence, strips isolate parameters, and computes
 // init_cond.
 func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
-	isoCfg := module.Cfg.IsolateCfg
+	isoCfg := mod.Cfg.IsolateCfg
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
 
@@ -273,13 +273,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isolateName == "" {
 		// Python line 892: IsolateDef(Atom('iso'), Atom('this')) with with_args=0
 		// Creates a default isolate with "this" as verified.
-		iso = module.Cfg.AstCfg.NewIsolateDef(
-			[]ast.Node{module.Cfg.AstCfg.NewAtom("iso"), module.Cfg.AstCfg.NewAtom("this")},
+		iso = mod.Cfg.AstCfg.NewIsolateDef(
+			[]ast.Node{mod.Cfg.AstCfg.NewAtom("iso"), mod.Cfg.AstCfg.NewAtom("this")},
 			0,
 		)
 	} else {
 		var ok bool
-		iso, ok = module.Isolates[isolateName]
+		iso, ok = mod.Isolates[isolateName]
 		if !ok {
 			return fmt.Errorf("undefined isolate: %s", isolateName)
 		}
@@ -294,12 +294,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	verified, present := GetIsolateInfoFull(mod, iso, "impl", extraWith)
 
 	// Handle interpret_all_sorts
-	if !isoCfg.InterpretAllSorts && module.Sig != nil {
-		for typeName := range module.Sig.Interp {
-			_, inHier := module.Hierarchy.Get2(typeName)
+	if !isoCfg.InterpretAllSorts && mod.Sig != nil {
+		for typeName := range mod.Sig.Interp {
+			_, inHier := mod.Hierarchy.Get2(typeName)
 			cond1 := present[typeName] && !inHier
 			cond2 := false
-			if itps, ok := module.Interps[typeName]; ok {
+			if itps, ok := mod.Interps[typeName]; ok {
 				for _, itp := range itps {
 					if lf, ok := itp.(*ast.LabeledFormula); ok && lf.Label != nil {
 						name := lfLabelName(lf)
@@ -311,7 +311,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				}
 			}
 			if !(cond1 || cond2) {
-				delete(module.Sig.Interp, typeName)
+				delete(mod.Sig.Interp, typeName)
 			}
 		}
 	}
@@ -319,7 +319,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Collect delegates
 	delegates := make(map[string]bool)
 	delegatedTo := make(map[string]string)
-	for _, d := range module.Delegates {
+	for _, d := range mod.Delegates {
 		if d.Delegee() == "" {
 			delegates[d.Delegated()] = true
 		} else {
@@ -327,11 +327,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
-	module.IsolateInfo = &module.IsolateInfo{}
+	mod.IsolateInfo = &module.IsolateInfo{}
 
 	// Process implementation mixins
 	implMixins := iu.NewInsMap[string, []MixinDef]()
-	for actname, ms := range module.Mixins.All() {
+	for actname, ms := range mod.Mixins.All() {
 		var implements []MixinDef
 		var beforeAfter []MixinDef
 		for _, m := range ms {
@@ -345,7 +345,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		existing, _ := implMixins.Get2(actname)
 		implMixins.Set(actname, append(existing, implements...))
 		// Replace mixin list with only before/after
-		module.Mixins.Set(actname, beforeAfter)
+		mod.Mixins.Set(actname, beforeAfter)
 
 		// Apply implementations
 		for _, mi := range implements {
@@ -370,8 +370,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				mixer, _ := LookupAction(mod, mixerName)
 				xtracer.Trace("isolate.impl_mixin mixer=%s mixee=%s", mixerName, mixeeName)
 				mixed := actions.ApplyMixin(mixer, action, false)
-				module.Actions.Set(mixeeName, mixed)
-				module.IsolateInfo.Implementations = append(module.IsolateInfo.Implementations,
+				mod.Actions.Set(mixeeName, mixed)
+				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
 					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
 			}
 			implementationMap[mixeeName] = mixerName
@@ -496,9 +496,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Main action classification loop ---
 
-	if xtracer.Enabled && module.Actions != nil && module.Actions.Len() > 0 {
-		xtracer.Trace("isolate.input_actions count=%d", module.Actions.Len())
-		for name, action := range module.Actions.All() {
+	if xtracer.Enabled && mod.Actions != nil && mod.Actions.Len() > 0 {
+		xtracer.Trace("isolate.input_actions count=%d", mod.Actions.Len())
+		for name, action := range mod.Actions.All() {
 			xtracer.Trace("isolate.input_action[%s]=%s", name, action.Sexp())
 		}
 	}
@@ -506,12 +506,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	newActions := iu.NewInsMap[string, actions.Action]()
 	summarizedActions := make(map[string]bool)
 
-	for actname, act := range module.Actions.All() {
-		// Match Python defaultdict(list) behavior: reading module.mixins[actname]
+	for actname, act := range mod.Actions.All() {
+		// Match Python defaultdict(list) behavior: reading mod.mixins[actname]
 		// in the main loop auto-creates empty entries for actions without mixins.
 		// These entries are visible in CanonSnapshot serialization.
-		if _, ok := module.Mixins.Get2(actname); !ok {
-			module.Mixins.Set(actname, nil)
+		if _, ok := mod.Mixins.Get2(actname); !ok {
+			mod.Mixins.Set(actname, nil)
 		}
 		xtracer.Trace("isolate.classify_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
 		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
@@ -559,7 +559,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 			// Record implementation info
 			if _, hasImpl := implementationMap[actname]; !hasImpl {
-				module.IsolateInfo.Implementations = append(module.IsolateInfo.Implementations,
+				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
 					module.MixinTriple{Mixer: actname, Mixee: actname, Action: act})
 			}
 		} else {
@@ -574,12 +574,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Record monitor info
-		if mixins, ok := module.Mixins.Get2(actname); ok {
+		if mixins, ok := mod.Mixins.Get2(actname); ok {
 			for _, mx := range mixins {
 				if mi, ok := mx.(MixinDef); ok {
 					if useMixin(mi.Mixer()) {
 						mixerAct, _ := LookupAction(mod, mi.Mixer())
-						module.IsolateInfo.Monitors = append(module.IsolateInfo.Monitors,
+						mod.IsolateInfo.Monitors = append(mod.IsolateInfo.Monitors,
 							module.MixinTriple{Mixer: mi.Mixer(), Mixee: mi.Mixee(), Action: mixerAct})
 					}
 				}
@@ -606,7 +606,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			act = EmptyClone(action)
 		}
 		// Apply before mixins
-		for _, mx := range module.Mixins.Get(actname) {
+		for _, mx := range mod.Mixins.Get(actname) {
 			mi, ok := mx.(MixinDef)
 			if !ok {
 				continue
@@ -623,14 +623,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				act = actions.ApplyMixin(action1, act, false)
 			}
 		}
-		if module.BeforeExport == nil {
-			module.BeforeExport = iu.NewInsMap[string, module.Action]()
+		if mod.BeforeExport == nil {
+			mod.BeforeExport = iu.NewInsMap[string, module.Action]()
 		}
-		module.BeforeExport.Set("ext:"+actname, act)
+		mod.BeforeExport.Set("ext:"+actname, act)
 	}
 
 	// Explicit exports
-	for _, exp := range module.Exports {
+	for _, exp := range mod.Exports {
 		if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, implementationMap) {
 			exported.Set("ext:"+exp.Exported(), true)
 			makeBeforeExport(exp.Exported())
@@ -643,7 +643,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
-	for actname, act := range module.Actions.All() {
+	for actname, act := range mod.Actions.All() {
 		if StartsWithEqSome(actname, present, mod, implementationMap) {
 			continue
 		}
@@ -655,7 +655,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			c := ca.CalleeName()
 			if !StartsWithEqSome(c, present, mod, implementationMap) {
 				hasMixinPresent := false
-				if mixins, ok := module.Mixins.Get2(c); ok {
+				if mixins, ok := mod.Mixins.Get2(c); ok {
 					for _, mx := range mixins {
 						if mi, ok := mx.(MixinDef); ok {
 							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {
@@ -699,15 +699,15 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Store export preconditions
 	for actname, pcs := range exportPreconds {
 		if len(pcs) == 1 {
-			if module.ExtPreconds == nil {
-				module.ExtPreconds = make(map[string]lg.Expr)
+			if mod.ExtPreconds == nil {
+				mod.ExtPreconds = make(map[string]lg.Expr)
 			}
-			module.ExtPreconds[actname] = pcs[0]
+			mod.ExtPreconds[actname] = pcs[0]
 		} else if len(pcs) > 1 {
-			if module.ExtPreconds == nil {
-				module.ExtPreconds = make(map[string]lg.Expr)
+			if mod.ExtPreconds == nil {
+				mod.ExtPreconds = make(map[string]lg.Expr)
 			}
-			module.ExtPreconds[actname] = makeOr(pcs...)
+			mod.ExtPreconds[actname] = makeOr(pcs...)
 		}
 	}
 
@@ -732,13 +732,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var assumedConjs []*ast.LabeledFormula
 
 	if versionLE(isoCfg.IvyVersion, "1.6") {
-		for _, c := range module.LabeledConjs {
+		for _, c := range mod.LabeledConjs {
 			if keepAx(nodeToExpr(c.Label)) {
 				newConjs = append(newConjs, c)
 			}
 		}
 	} else {
-		for _, c := range module.LabeledConjs {
+		for _, c := range mod.LabeledConjs {
 			name := lfLabelName(c)
 			if VStartsWithEqSome(name, verified, mod, implementationMap) {
 				newConjs = append(newConjs, c)
@@ -749,30 +749,30 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	_ = assumedConjs
 
-	module.LabeledConjs = nil
+	mod.LabeledConjs = nil
 	if !isoCfg.CreateImports || isoCfg.CompileWithInvariants {
-		module.LabeledConjs = newConjs
+		mod.LabeledConjs = newConjs
 	}
 
 	// Filter inits
 	var newInits []*ast.LabeledFormula
-	for _, c := range module.LabeledInits {
+	for _, c := range mod.LabeledInits {
 		if keepAx(nodeToExpr(c.Label)) {
 			newInits = append(newInits, c)
 		}
 	}
-	module.LabeledInits = newInits
+	mod.LabeledInits = newInits
 
 	// Trace pre-filter state of axioms and props
 	if xtracer.Enabled {
-		for i, a := range module.LabeledAxioms {
+		for i, a := range mod.LabeledAxioms {
 			lbl := ""
 			if a.Label != nil {
 				lbl = lg.ReprNode(a.Label)
 			}
 			xtracer.Trace("isolate.pre_filter_axioms[%d] label=%s explicit=%v", i, lbl, a.Explicit)
 		}
-		for i, p := range module.LabeledProps {
+		for i, p := range mod.LabeledProps {
 			lbl := ""
 			if p.Label != nil {
 				lbl = lg.ReprNode(p.Label)
@@ -784,23 +784,23 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Filter axioms
 	var droppedAxioms []*ast.LabeledFormula
 	var keptAxioms []*ast.LabeledFormula
-	for _, a := range module.LabeledAxioms {
+	for _, a := range mod.LabeledAxioms {
 		if keepAx(nodeToExpr(a.Label)) {
 			keptAxioms = append(keptAxioms, a)
 		} else {
 			droppedAxioms = append(droppedAxioms, a)
 		}
 	}
-	module.LabeledAxioms = keptAxioms
+	mod.LabeledAxioms = keptAxioms
 
 	// Filter properties
 	var keptProps []*ast.LabeledFormula
-	for _, a := range module.LabeledProps {
+	for _, a := range mod.LabeledProps {
 		if keepAx(nodeToExpr(a.Label)) {
 			keptProps = append(keptProps, a)
 		}
 	}
-	module.LabeledProps = keptProps
+	mod.LabeledProps = keptProps
 
 	// --- Convert properties not being verified to axioms ---
 
@@ -822,12 +822,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 		// Filter axioms: keep only non-explicit or those in exact_present or temporal
 		var filteredAxioms []*ast.LabeledFormula
-		for _, a := range module.LabeledAxioms {
+		for _, a := range mod.LabeledAxioms {
 			if !a.Explicit || exactPresent[lfLabelName(a)] || a.IsTemporal() {
 				filteredAxioms = append(filteredAxioms, a)
 			}
 		}
-		module.LabeledAxioms = filteredAxioms
+		mod.LabeledAxioms = filteredAxioms
 
 		// Rebuild properties list
 		provedIDs := make(map[int64]bool)
@@ -840,7 +840,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		var newProps []*ast.LabeledFormula
-		for _, p := range module.LabeledProps {
+		for _, p := range mod.LabeledProps {
 			cp := p.Clone(p.Args()).(*ast.LabeledFormula)
 			if notProvedIDs[p.ID] {
 				cp.Assumed = true
@@ -850,21 +850,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				newProps = append(newProps, cp)
 			}
 		}
-		module.LabeledProps = newProps
+		mod.LabeledProps = newProps
 	} else {
-		module.LabeledProps = nil
+		mod.LabeledProps = nil
 	}
 
 	// Trace post-filter state
 	if xtracer.Enabled {
-		for i, a := range module.LabeledAxioms {
+		for i, a := range mod.LabeledAxioms {
 			lbl := ""
 			if a.Label != nil {
 				lbl = lg.ReprNode(a.Label)
 			}
 			xtracer.Trace("isolate.post_filter_axioms[%d] label=%s explicit=%v assumed=%v", i, lbl, a.Explicit, a.Assumed)
 		}
-		for i, p := range module.LabeledProps {
+		for i, p := range mod.LabeledProps {
 			lbl := ""
 			if p.Label != nil {
 				lbl = lg.ReprNode(p.Label)
@@ -875,7 +875,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Filter natives
 	var newNatives []ast.Node
-	for _, nat := range module.Natives {
+	for _, nat := range mod.Natives {
 		if lf, ok := nat.(*ast.LabeledFormula); ok {
 			if keepAx(nodeToExpr(lf.Label)) {
 				newNatives = append(newNatives, nat)
@@ -884,7 +884,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			newNatives = append(newNatives, nat)
 		}
 	}
-	module.Natives = newNatives
+	mod.Natives = newNatives
 
 	// Filter initializers from after_inits that are not present
 	// Sort afterInits for deterministic trace output (Python passes a set, which has
@@ -940,26 +940,26 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	newActions = filteredActions
 
 	// Filter isolate info
-	if module.IsolateInfo != nil {
+	if mod.IsolateInfo != nil {
 		var filteredImpls []module.MixinTriple
-		for _, impl := range module.IsolateInfo.Implementations {
+		for _, impl := range mod.IsolateInfo.Implementations {
 			if _, ok := newActions.Get2(impl.Mixee); ok {
 				filteredImpls = append(filteredImpls, impl)
 			} else if _, ok := newActions.Get2("ext:" + impl.Mixee); ok {
 				filteredImpls = append(filteredImpls, impl)
 			}
 		}
-		module.IsolateInfo.Implementations = filteredImpls
+		mod.IsolateInfo.Implementations = filteredImpls
 
 		var filteredMons []module.MixinTriple
-		for _, mon := range module.IsolateInfo.Monitors {
+		for _, mon := range mod.IsolateInfo.Monitors {
 			if _, ok := newActions.Get2(mon.Mixee); ok {
 				filteredMons = append(filteredMons, mon)
 			} else if _, ok := newActions.Get2("ext:" + mon.Mixee); ok {
 				filteredMons = append(filteredMons, mon)
 			}
 		}
-		module.IsolateInfo.Monitors = filteredMons
+		mod.IsolateInfo.Monitors = filteredMons
 	}
 
 	// --- Symbol collection for definition/signature filtering ---
@@ -970,7 +970,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	allSyms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	as1ListNames := []string{"axioms", "props", "inits", "conjs"}
 	for listIdx, lfSlice := range [][]*ast.LabeledFormula{
-		module.LabeledAxioms, module.LabeledProps, module.LabeledInits, module.LabeledConjs,
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
 	} {
 		for fIdx, lf := range lfSlice {
 			if lf.Formula != nil {
@@ -993,7 +993,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		traceSymSet("isolate.allSyms_post_formulas", allSyms)
 	}
 	// Collect from action formals
-	for _, act := range module.Actions.All() {
+	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
@@ -1017,7 +1017,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		traceSymSet("isolate.allSyms_post_formals", allSyms)
 	}
 	// Collect from natives — Python: asts.extend(tmp.args[2:])
-	for _, nat := range module.Natives {
+	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
@@ -1033,7 +1033,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// IMPORTANT: Only the first collection (formulas, formals, natives) is normalized.
 	// action.get_references adds symbols WITHOUT normalization.
 	usePolyMacros := !versionLE(isoCfg.IvyVersion, "1.5")
-	allSyms = normalizeSymbolKeys(as1, allSyms, usePolyMacros, module.Cfg.IuCfg)
+	allSyms = normalizeSymbolKeys(as1, allSyms, usePolyMacros, mod.Cfg.IuCfg)
 	if xtracer.Enabled {
 		traceSymSet("isolate.allSyms_post_normalize", allSyms)
 	}
@@ -1044,7 +1044,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			xtracer.Trace("isolate.allSyms_action_refs.BEGIN %s", actname)
 		}
 		sizeBefore := allSyms.Len()
-		actions.GetReferencesInto(act, allSyms, module.DestructorSorts)
+		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
 		if xtracer.Enabled {
 			xtracer.Trace("isolate.allSyms_action_refs.END %s added=%d total=%d",
 				actname, allSyms.Len()-sizeBefore, allSyms.Len())
@@ -1055,12 +1055,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Collect names from proofs
-	// Python: for x in module.proofs: x[1].vocab(all_names)
+	// Python: for x in mod.proofs: x[1].vocab(all_names)
 	allNames := ast.NewVocabNames()
 	if xtracer.Enabled {
-		xtracer.Trace("isolate.proofs n=%d", len(module.Proofs))
+		xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
 	}
-	for i, pe := range module.Proofs {
+	for i, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			before := allNames.Len()
 			if xtracer.Enabled {
@@ -1082,7 +1082,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Add definition-defined symbols that are in allNames
 	// Python: if x.formula.defines().name in all_names: all_syms.add(x.formula.defines())
-	for _, dfn := range module.Definitions {
+	for _, dfn := range mod.Definitions {
 		if dfn.Formula == nil {
 			continue
 		}
@@ -1112,7 +1112,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if xtracer.Enabled {
 		traceSymSet("isolate.allSyms_pre_follow", allSyms)
 	}
-	FollowDefinitionsLabeled("allSyms", module.Definitions, allSyms)
+	FollowDefinitionsLabeled("allSyms", mod.Definitions, allSyms)
 
 	// Collect relevant destructors
 	// Python: for sym in list(all_syms): collect_relevant_destructors(sym, all_syms, set())
@@ -1137,15 +1137,15 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Erase assignments to unreferenced variables
 	for actname, act := range newActions.All() {
 		xtracer.Trace("isolate.erase_unrefed_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
-		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNamesMap, module.DestructorSorts))
+		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNamesMap, mod.DestructorSorts))
 	}
 
 	// --- Enforce axioms check ---
 	// Python lines 1215-1239
 	if isoCfg.EnforceAxioms {
-		// Build determined set: symbols defined by deterministic formulas + module.Params
+		// Build determined set: symbols defined by deterministic formulas + mod.Params
 		determined := make(map[string]bool)
-		for _, dfn := range module.Definitions {
+		for _, dfn := range mod.Definitions {
 			if dfn.Formula != nil {
 				if expr, ok := dfn.Formula.(lg.Expr); ok {
 					dname := definedSymbolName(expr)
@@ -1155,7 +1155,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				}
 			}
 		}
-		for _, p := range module.Params {
+		for _, p := range mod.Params {
 			if p != nil {
 				determined[p.Name] = true
 			}
@@ -1192,7 +1192,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, ew := range extraWith {
 			extraWithSet[ew] = true
 		}
-		for actname, action := range module.Actions.All() {
+		for actname, action := range mod.Actions.All() {
 			if StartsWithEqSome(actname, present, mod, implementationMap) {
 				for _, sub := range action.IterSubactions() {
 					ca, ok := sub.(*actions.CallAction)
@@ -1205,7 +1205,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 						if mapped, ok := implementationMap[c]; ok {
 							imp = mapped
 						}
-						if called, ok := module.Actions.Get2(imp); ok {
+						if called, ok := mod.Actions.Get2(imp); ok {
 							// Check it's not an empty Sequence
 							if seq, isSeq := called.(*actions.Sequence); isSeq && len(seq.ActionArgs()) == 0 {
 								continue
@@ -1221,7 +1221,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Python lines 1237-1239: Check definitions referenced but not present
-		for _, c := range module.Definitions {
+		for _, c := range mod.Definitions {
 			if c.Formula == nil {
 				continue
 			}
@@ -1238,7 +1238,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// --- Filter definitions ---
-	origDefs := module.Definitions
+	origDefs := mod.Definitions
 	for i, d := range origDefs {
 		lbl := ""
 		if d.Label != nil {
@@ -1248,7 +1248,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	var filteredDefs []*ast.LabeledFormula
-	for _, c := range module.Definitions {
+	for _, c := range mod.Definitions {
 		if c.Formula == nil {
 			continue
 		}
@@ -1270,11 +1270,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			filteredDefs = append(filteredDefs, c)
 		}
 	}
-	module.Definitions = filteredDefs
+	mod.Definitions = filteredDefs
 
 	// Python lines 1249-1256: Pull in definition schemata explicitly named in 'with'.
 	// Convert DefinitionSchema to plain Definition for exact_present names.
-	for i, y := range module.Definitions {
+	for i, y := range mod.Definitions {
 		if y.Formula == nil {
 			continue
 		}
@@ -1291,16 +1291,16 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 			if exactPresent[defName] || exactPresent[yName] {
 				newDef := &lg.Definition{Lhs: sch.Lhs, Rhs: sch.Rhs}
-				newLf := module.Cfg.AstCfg.NewLabeledFormula(y.Label, newDef)
+				newLf := mod.Cfg.AstCfg.NewLabeledFormula(y.Label, newDef)
 				newLf.Loc = y.Loc
-				module.Definitions[i] = newLf
+				mod.Definitions[i] = newLf
 			}
 		}
 	}
 
 	// Filter native definitions
 	var filteredNatDefs []*ast.LabeledFormula
-	for _, lf := range module.NativeDefinitions {
+	for _, lf := range mod.NativeDefinitions {
 		if lf.Formula != nil {
 			fmla, ok := lf.Formula.(lg.Expr)
 			if !ok {
@@ -1319,10 +1319,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
-	module.NativeDefinitions = filteredNatDefs
+	mod.NativeDefinitions = filteredNatDefs
 
 	// --- Put new actions in place ---
-	oldActions := module.Actions
+	oldActions := mod.Actions
 	if xtracer.Enabled {
 		expKeys := make([]string, 0, exported.Len())
 		for k := range exported.All() {
@@ -1331,13 +1331,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		sort.Strings(expKeys)
 		xtracer.Trace("isolate.exported=%s", strings.Join(expKeys, ","))
 	}
-	module.PublicActions = iu.NewInsMap[string, bool]()
+	mod.PublicActions = iu.NewInsMap[string, bool]()
 	for k, v := range exported.All() {
-		module.PublicActions.Set(k, v)
+		mod.PublicActions.Set(k, v)
 	}
-	module.Actions = iu.NewInsMap[string, module.Action]()
+	mod.Actions = iu.NewInsMap[string, module.Action]()
 	for name, act := range newActions.All() {
-		module.Actions.Set(name, act)
+		mod.Actions.Set(name, act)
 	}
 	if xtracer.Enabled {
 		for name := range newActions.All() {
@@ -1359,10 +1359,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	allSyms2 := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 
 	// Phase A: formulas from axioms, props, inits, conjs, definitions
-	// Python: for x in [module.labeled_axioms,...,module.definitions]:
+	// Python: for x in [mod.labeled_axioms,...,mod.definitions]:
 	//             asts.extend(y.formula for y in x if not isinstance(y.formula, SchemaBody))
 	for _, lfSlice := range [][]*ast.LabeledFormula{
-		module.LabeledAxioms, module.LabeledProps, module.LabeledInits, module.LabeledConjs, module.Definitions,
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.Definitions,
 	} {
 		for _, lf := range lfSlice {
 			if lf.Formula != nil {
@@ -1382,8 +1382,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Phase B: action bodies ONLY (not formals -- Python does them separately in Phase D)
-	// Python: asts.extend(action for action in list(module.actions.values()))
-	for name, act := range module.Actions.All() {
+	// Python: asts.extend(action for action in list(mod.actions.values()))
+	for name, act := range mod.Actions.All() {
 		if xtracer.Enabled {
 			xtracer.Trace("%s.phaseB_action %s", as2, name)
 		}
@@ -1391,12 +1391,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Phase C: params (if keep_destructors)
-	// Python: if opt_keep_destructors.get(): asts.extend(module.params)
+	// Python: if opt_keep_destructors.get(): asts.extend(mod.params)
 	if xtracer.Enabled {
 		xtracer.Trace("%s.phaseC_params_start", as2)
 	}
 	if isoCfg.KeepDestructors {
-		for _, p := range module.Params {
+		for _, p := range mod.Params {
 			key := actions.ConstSymKey(p)
 			if xtracer.Enabled {
 				if _, exists := allSyms2.Get2(key); !exists {
@@ -1408,9 +1408,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Phase D: action formals (separate pass, matching Python)
-	// Python: for a in list(module.actions.values()):
+	// Python: for a in list(mod.actions.values()):
 	//             asts.extend(a.formal_params); asts.extend(a.formal_returns)
-	for name, act := range module.Actions.All() {
+	for name, act := range mod.Actions.All() {
 		if xtracer.Enabled {
 			xtracer.Trace("%s.phaseD_formals %s", as2, name)
 		}
@@ -1435,11 +1435,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Phase E: natives
-	// Python: for tmp in module.natives: asts.extend(tmp.args[2:])
+	// Python: for tmp in mod.natives: asts.extend(tmp.args[2:])
 	if xtracer.Enabled {
 		xtracer.Trace("%s.phaseE_natives_start", as2)
 	}
-	for _, nat := range module.Natives {
+	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
@@ -1449,11 +1449,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Phase F: proofs
-	// Python: asts.extend(x[1] for x in module.proofs)
+	// Python: asts.extend(x[1] for x in mod.proofs)
 	if xtracer.Enabled {
 		xtracer.Trace("%s.phaseF_proofs_start", as2)
 	}
-	for _, pe := range module.Proofs {
+	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			if n, ok := pe.Proof.(lg.Expr); ok {
 				collectSymbolsInto(as2, n, allSyms2)
@@ -1487,17 +1487,17 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		traceSymSet("isolate.allSyms2", allSyms2) // ivy_isolate.py:1378
 	}
 
-	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && module.Sig != nil {
-		for name := range module.Sig.Symbols {
+	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
+		for name := range mod.Sig.Symbols {
 			if !allSyms2Names[name] && !allNamesMap[name] {
-				delete(module.Sig.Symbols, name)
+				delete(mod.Sig.Symbols, name)
 			}
 		}
 	}
 
-	if module.Sig != nil {
+	if mod.Sig != nil {
 		remaining := make([]string, 0)
-		for name := range module.Sig.Symbols {
+		for name := range mod.Sig.Symbols {
 			remaining = append(remaining, name)
 		}
 		sort.Strings(remaining)
@@ -1533,10 +1533,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Python: interf_syms = set(x for x in ivy_logic.all_symbols() if x in all_syms)
 		// Filter allSyms2 to only symbols that are also in the logic signature.
 		interfSyms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
-		if module.Sig != nil {
+		if mod.Sig != nil {
 			for key, sym := range allSyms2.All() {
 				if c, ok := sym.(*lg.Const); ok {
-					if _, inSig := module.Sig.Symbols[c.Name]; inSig {
+					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
 						interfSyms.Set(key, sym)
 					}
 				}
@@ -1565,19 +1565,19 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			xtracer.Trace("isolate.implMixins actname=%s mixers=%s", actname, strings.Join(mixerNames, ","))
 		}
 		// Temporarily put old actions back for interference check
-		saveActions := module.Actions
-		module.Actions = oldActions
+		saveActions := mod.Actions
+		mod.Actions = oldActions
 		checkTerm := isoCfg.EnforceAxioms && versionLE("1.7", isoCfg.IvyVersion)
 		err := CheckInterferenceFull(mod, newActions, summarizedActions,
 			implMixins, checkTerm, interfSyms, presentAfterInits, allAfterInits)
-		module.Actions = saveActions
+		mod.Actions = saveActions
 		if err != nil {
 			return err
 		}
 	}
 
 	// --- Filter sorts ---
-	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && module.Sig != nil {
+	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		allSorts := make(map[string]bool)
 		var addDeps func(string)
 		addDeps = func(s string) {
@@ -1586,15 +1586,15 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 			allSorts[s] = true
 			// Follow sort dependencies
-			for _, dep := range module.SortDependencies(s, true) {
+			for _, dep := range mod.SortDependencies(s, true) {
 				addDeps(dep)
 			}
 		}
 
 		// Add sorts from all remaining symbols
 		for name := range allSyms2Names {
-			if module.Sig != nil {
-				if entry, ok := module.Sig.Symbols[name]; ok {
+			if mod.Sig != nil {
+				if entry, ok := mod.Sig.Symbols[name]; ok {
 					if entry.Union != nil {
 						for _, s := range entry.Union.Sorts {
 							addSortDeps(s, allSorts, addDeps)
@@ -1617,29 +1617,29 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Filter sorts
-		for name := range module.Sig.Sorts {
+		for name := range mod.Sig.Sorts {
 			if name != "bool" && !allSorts[name] {
-				delete(module.Sig.Sorts, name)
+				delete(mod.Sig.Sorts, name)
 			}
 		}
 		var newSortOrder []string
-		for _, s := range module.SortOrder {
-			if _, ok := module.Sig.Sorts[s]; ok {
+		for _, s := range mod.SortOrder {
+			if _, ok := mod.Sig.Sorts[s]; ok {
 				newSortOrder = append(newSortOrder, s)
 			}
 		}
-		module.SortOrder = newSortOrder
+		mod.SortOrder = newSortOrder
 
 		// Filter sort destructors
-		for name := range module.SortDestructors {
+		for name := range mod.SortDestructors {
 			if !allSorts[name] {
-				delete(module.SortDestructors, name)
+				delete(mod.SortDestructors, name)
 			}
 		}
-		for name, s := range module.DestructorSorts {
+		for name, s := range mod.DestructorSorts {
 			sname := sortToName(s)
 			if !allSorts[sname] {
-				delete(module.DestructorSorts, name)
+				delete(mod.DestructorSorts, name)
 			}
 		}
 	}
@@ -1649,13 +1649,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Only check for exact IsolateDef, not ExtractDef or ProcessDef.
 	_, isExactIsolate := iso.(*ast.IsolateDef)
 	if isExactIsolate && isoCfg.IsolateMode == "check" {
-		for _, actIface := range module.Actions.All() {
+		for _, actIface := range mod.Actions.All() {
 			if _, ok := actIface.(*actions.NativeAction); ok {
 				return fmt.Errorf("trusted code used in untrusted isolate")
 			}
 		}
 		// Python lines 1369-1371: Also check definitions for NativeExpr.
-		for _, dfn := range module.Definitions {
+		for _, dfn := range mod.Definitions {
 			if dfn.Formula != nil {
 				if _, isNative := dfn.Formula.(*ast.NativeExpr); isNative {
 					return fmt.Errorf("trusted code used in untrusted isolate (in definition)")
@@ -1668,10 +1668,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	stripIsolateWrapper(mod, iso, implMixins, allAfterInits, extraStrip)
 
 	// --- Compute init_cond ---
-	// Python line 1388: init_cond = ivy_logic.And(*(lf.formula for lf in module.labeled_inits))
+	// Python line 1388: init_cond = ivy_logic.And(*(lf.formula for lf in mod.labeled_inits))
 	// Always set init_cond, even if empty (empty And = true).
 	var initFmlas []lg.Expr
-	for _, lf := range module.LabeledInits {
+	for _, lf := range mod.LabeledInits {
 		if lf.Formula != nil {
 			if fmla, ok := lf.Formula.(lg.Expr); ok {
 				initFmlas = append(initFmlas, fmla)
@@ -1679,7 +1679,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	initAnd := makeAnd(initFmlas...) // makeAnd with no args returns empty And = true
-	module.InitCond = formulaToClauses(initAnd)
+	mod.InitCond = formulaToClauses(initAnd)
 
 	return nil
 
@@ -1823,14 +1823,14 @@ func ClassifyComponents(mod *module.Module, verified, present map[string]bool) m
 	// Walk the hierarchy and classify each component.
 	var walk func(parent string)
 	walk = func(parent string) {
-		children, ok := module.Hierarchy.Get2(parent)
+		children, ok := mod.Hierarchy.Get2(parent)
 		if !ok {
 			return
 		}
 		for child := range children.All() {
 			fullName := child
 			if parent != "this" {
-				fullName = module.Cfg.IuCfg.ComposeNames(parent, child)
+				fullName = mod.Cfg.IuCfg.ComposeNames(parent, child)
 			}
 			if verified[fullName] {
 				roles[fullName] = RoleVerified
@@ -1859,13 +1859,13 @@ func GetIsolateInfo(mod *module.Module, verifiedNames, presentNames []string, ki
 		verified[name] = true
 		present[name] = true
 		// Also add the kind-specific child (e.g., "foo.impl")
-		kindName := module.Cfg.IuCfg.ComposeNames(name, kind)
+		kindName := mod.Cfg.IuCfg.ComposeNames(name, kind)
 		verified[kindName] = true
 		present[kindName] = true
 	}
 	for _, name := range presentNames {
 		present[name] = true
-		kindName := module.Cfg.IuCfg.ComposeNames(name, kind)
+		kindName := mod.Cfg.IuCfg.ComposeNames(name, kind)
 		present[kindName] = true
 	}
 

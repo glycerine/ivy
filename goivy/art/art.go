@@ -285,14 +285,14 @@ func NewAnalysisGraph(mod *module.Module, pvars ...lg.Expr) *AnalysisGraph {
 		Covering:      nil,
 		PVars:         pvars,
 		StateGraphs:   nil,
-		Actions:       module.Actions,
-		Predicates:    module.Predicates,
-		Assertions:    module.Assertions,
-		Mixins:        module.Mixins,
-		Isolates:      module.Isolates,
-		Exports:       module.Exports,
-		Delegates:     module.Delegates,
-		PublicActions: module.PublicActions,
+		Actions:       mod.Actions,
+		Predicates:    mod.Predicates,
+		Assertions:    mod.Assertions,
+		Mixins:        mod.Mixins,
+		Isolates:      mod.Isolates,
+		Exports:       mod.Exports,
+		Delegates:     mod.Delegates,
+		PublicActions: mod.PublicActions,
 	}
 	return ag
 }
@@ -1474,8 +1474,8 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 	mod := ag.Domain
 
 	if ic == nil {
-		if module.InitCond != nil {
-			ic = module.InitCond
+		if mod.InitCond != nil {
+			ic = mod.InitCond
 		} else {
 			ic = module.TrueClauses(nil)
 		}
