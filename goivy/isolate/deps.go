@@ -220,73 +220,7 @@ func GetCallsModsRecFull(
 // signature, or contains assert actions or impure native actions.
 // The check follows through calls recursively.
 func HasSideEffect(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.Action]) bool {
-	return hasSideEffectRec(mod, actname, actionMap, make(map[string]bool))
-}
-
-func hasSideEffectRec(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.Action], memo map[string]bool) bool {
-	if memo[actname] {
-		return false // cycle: assume no effect
-	}
-	memo[actname] = true
-
-	action, ok := actionMap.Get2(actname)
-	if !ok {
-		return false
-	}
-
-	for _, sub := range action.IterSubactions() {
-		// Impure native actions have side effects.
-		if na, ok := sub.(*actions.NativeAction); ok && na.Impure {
-			return true
-		}
-
-		// Assert actions count as side effects (they can fail).
-		// Python: isinstance(sub, ia.AssertAction) — matches all subclasses.
-		if actions.IsAssertLike(sub) {
-			return true
-		}
-
-		// Python line 472-473: Ranking has side effects.
-		if _, isRanking := sub.(*actions.Ranking); isRanking {
-			return true
-		}
-
-		// Check for modifications to module symbols.
-		switch a := sub.(type) {
-		case *actions.AssignAction:
-			if c, ok := a.LHS.(*lg.Const); ok {
-				if mod.Sig != nil {
-					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
-						return true
-					}
-				}
-			}
-		case *actions.HavocAction:
-			if c, ok := a.Target.(*lg.Const); ok {
-				if mod.Sig != nil {
-					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
-						return true
-					}
-				}
-			}
-		case *actions.SetAction:
-			if c, ok := a.Lit.(*lg.Const); ok {
-				if mod.Sig != nil {
-					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
-						return true
-					}
-				}
-			}
-		}
-
-		// Follow through calls.
-		if ca, ok := sub.(*actions.CallAction); ok {
-			if hasSideEffectRec(mod, ca.CalleeName(), actionMap, memo) {
-				return true
-			}
-		}
-	}
-	return false
+	return HasSideEffectRec(mod, actionMap, actname, make(map[string]bool))
 }
 
 // CheckInterference verifies non-interference between components.
