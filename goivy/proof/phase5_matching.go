@@ -7,13 +7,12 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // === Batch 5.2: Match Compilation ===
@@ -790,7 +789,7 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 		return defaultVal, nil
 	}
 	// Check for capture
-	vocab := co.UsedSymbolsAST(val)
+	vocab := mod.UsedSymbolsAST(val)
 	for vk := range vocab {
 		if env[vk] {
 			return nil, RaiseCapture(sym)
@@ -1121,7 +1120,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), sort)
 		vars[i] = v
 	}
-	return co.RenameVariablesDistinctAsts(vars, asts)
+	return mod.RenameVariablesDistinctAsts(vars, asts)
 }
 
 // ApplyMatchGoalNode applies a match to a goal.
