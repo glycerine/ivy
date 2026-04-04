@@ -776,12 +776,12 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
 		scanner := bufio.NewScanner(cmdPr)
-		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
+		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 		for scanner.Scan() {
 			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
-		vv("ivy_check scanner has finished.")
+		vv("ivy_check scanner has finished. scanner.Err()='%v'", scanner.Err())
 		pw.Close() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
@@ -877,12 +877,12 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
 		scanner := bufio.NewScanner(cmdPr)
-		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
+		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 		for scanner.Scan() {
 			line := normalizeLine(repo, scanner.Text())
 			fmt.Fprintf(w, "%s\n", line)
 		}
-		vv("goivy_check_xtrace scanner has finished.")
+		vv("goivy_check_xtrace scanner has finished. scanner.Err()='%v'", scanner.Err())
 		pw.Close() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
