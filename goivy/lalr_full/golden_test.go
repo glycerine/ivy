@@ -629,7 +629,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				pyCanon := ivNorm[strings.Index(ivNorm, "canon=")+6:]
 				goCanon = strings.TrimSpace(goCanon)
 				pyCanon = strings.TrimSpace(pyCanon)
-				diff := iu.DiffSexp(goCanon, pyCanon)
+				diff := iu.DiffSexp(goCanon, pyCanon, 10)
 				if diff != "" {
 					fmt.Printf("\n=== S-expression diff (go '-' vs py '+') ===\n%s\n", diff)
 				}

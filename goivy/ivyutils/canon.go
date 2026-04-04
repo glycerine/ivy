@@ -130,7 +130,11 @@ func PrettySexp(s string) string {
 // the differences. Returns "" if they are identical.
 // If not, the goVers is marked with '-',
 // and the pyVersion with '+' in the diff.
-func DiffSexp(goVers, pyVers string) string {
+// If maxDiffs is 0 it has no effect. Otherwise
+// at most maxDiffs will be marked and any
+// remaining diffs discarded to keep the
+// returned diff string short.
+func DiffSexp(goVers, pyVers string, maxDiffs int) string {
 	pgo := PrettySexp(goVers)
 	ppy := PrettySexp(pyVers)
 	if pgo == ppy {
@@ -139,6 +143,7 @@ func DiffSexp(goVers, pyVers string) string {
 	linesGo := strings.Split(pgo, "\n")
 	linesPy := strings.Split(ppy, "\n")
 
+	diffs := 0
 	var sb strings.Builder
 	maxLen := len(linesGo)
 	if len(linesPy) > maxLen {
@@ -157,6 +162,10 @@ func DiffSexp(goVers, pyVers string) string {
 		} else {
 			sb.WriteString("- " + lgo + "\n") // go
 			sb.WriteString("+ " + lpy + "\n") // python
+			diffs++
+			if maxDiffs > 0 && diffs >= maxDiffs {
+				return sb.String()
+			}
 		}
 	}
 	return sb.String()
