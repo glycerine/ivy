@@ -107,6 +107,8 @@ class Clauses(object):
 
 def close_epr(fmla):
     """ Convert fmla to E X. A Y. fmla, where X are the skolems in fmla and Y are the variables. """
+    xtracer.trace("logicutil.CloseEpr HASH canon= fmla=%s" % (fmla.canon() if hasattr(fmla,'canon') else str(fmla)))
+
     if isinstance(fmla,And):
         return And(*[close_epr(f) for f in fmla.args])
     skolems = [s for s in used_symbols_ast(fmla) if not s.is_skolem()]
