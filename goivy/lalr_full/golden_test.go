@@ -524,32 +524,44 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	var goLast30 []string
 	var pyLast30 []string
 	var goCheck, ivCheck string
-	var err error
+	var err, err1, err2 error
 
 	for i := 0; ; i++ {
 
+		if err != nil {
+			fmt.Printf("stopping (after i=%v) on goivy_check_xtrace error %v\n", i-1, err)
+			return
+		}
+		if err1 != nil {
+			fmt.Printf("stopping (after i=%v) on ivy_check error %v\n", i-1, err1)
+			return
+		}
+
 		for {
 			goCheck, err = goivyR.ReadString('\n')
-			if err != nil {
-				//handleEOF(t, "go", goCheck, ivyR, "py", i)
-				return
-			}
 			if strings.HasPrefix(goCheck, "XTRACE:") {
 				break
 			}
+			if err != nil {
+				//handleEOF(t, "go", goCheck, ivyR, "py", i)
+				fmt.Printf("stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
+				return
+			}
+
 			if showNonXtraceLines {
 				// allow stack traces/other debug prints through
 				fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
 			}
 		}
 		for {
-			ivCheck, err = ivyR.ReadString('\n')
-			if err != nil {
-				//handleEOF(t, "py", ivCheck, goivyR, "go", i)
-				return
-			}
+			ivCheck, err1 = ivyR.ReadString('\n')
 			if strings.HasPrefix(ivCheck, "XTRACE:") {
 				break
+			}
+			if err1 != nil {
+				//handleEOF(t, "py", ivCheck, goivyR, "go", i)
+				fmt.Printf("stopping on (i=%v) ivy_check error %v\n", i, err1)
+				return
 			}
 			if showNonXtraceLines {
 				// allow stack traces/other debug prints through
@@ -585,6 +597,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 		}
 
 		if goNorm != ivNorm {
+			vv("we have divergence at i = %v", i)
 			if !verbose {
 				n := len(pyLast30)
 				if i > 30 {
@@ -628,11 +641,11 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 			var sourceShownGo bool
 			var sourceShownPy bool
 			for {
-				goCheck, err = goivyR.ReadString('\n')
-				if err != nil {
+				goCheck, err2 = goivyR.ReadString('\n')
+				if strings.HasPrefix(goCheck, "XTRACE:") {
 					break
 				}
-				if strings.HasPrefix(goCheck, "XTRACE:") {
+				if err2 != nil {
 					break
 				}
 				if showNonXtraceLines {
@@ -646,11 +659,11 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				}
 			}
 			for {
-				ivCheck, err = ivyR.ReadString('\n')
-				if err != nil {
+				ivCheck, err2 = ivyR.ReadString('\n')
+				if strings.HasPrefix(ivCheck, "XTRACE:") {
 					break
 				}
-				if strings.HasPrefix(ivCheck, "XTRACE:") {
+				if err2 != nil {
 					break
 				}
 				if showNonXtraceLines {
