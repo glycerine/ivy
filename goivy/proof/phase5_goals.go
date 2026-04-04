@@ -11,7 +11,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // === Batch 5.1: Goal Utilities ===
@@ -199,11 +199,11 @@ func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.
 func FmlaVocab(fmla lg.Expr) map[lg.NodeKey]lg.Expr {
 	result := make(map[lg.NodeKey]lg.Expr)
 	// Use clauseops.UsedSymbolsAST for symbols
-	for k, v := range mod.UsedSymbolsAST(fmla) {
+	for k, v := range module.UsedSymbolsAST(fmla) {
 		result[k] = v
 	}
 	// Use clauseops.VariablesAST for variables
-	for _, v := range mod.VariablesAST(fmla) {
+	for _, v := range module.VariablesAST(fmla) {
 		result[lg.Key(v)] = v
 	}
 	return result
@@ -374,7 +374,7 @@ func VarSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subst map[lg.Nod
 	conc := GoalConc(goal)
 	if conc != nil && !GoalIsSchema(goal) {
 		conc = ApplyToConc(conc, func(x lg.Expr) lg.Expr {
-			return mod.SubstituteAstByName(x, nodeMapToStringMap(subst))
+			return module.SubstituteAstByName(x, nodeMapToStringMap(subst))
 		})
 	}
 	return CloneGoal(cfg, goal, prems, conc)
@@ -412,7 +412,7 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula) *
 	if conc == nil {
 		return goal
 	}
-	usedSyms := mod.UsedSymbolsAST(conc)
+	usedSyms := module.UsedSymbolsAST(conc)
 	var newPrems []ast.Node
 	reversed := make([]ast.Node, len(prems))
 	for i, p := range prems {
@@ -430,7 +430,7 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula) *
 			}
 		}
 		if n, ok := x.(lg.Expr); ok {
-			for k, v := range mod.UsedSymbolsAST(n) {
+			for k, v := range module.UsedSymbolsAST(n) {
 				usedSyms[k] = v
 			}
 		}
@@ -556,12 +556,12 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 	for _, pg := range GoalPremGoals(goal) {
 		pgConc := GoalConc(pg)
 		if pgConc != nil {
-			for _, v := range mod.VariablesAST(pgConc) {
+			for _, v := range module.VariablesAST(pgConc) {
 				premVars[lg.Key(v)] = true
 			}
 		}
 	}
-	concVars := mod.VariablesAST(conc)
+	concVars := module.VariablesAST(conc)
 	var toClose []*lg.Variable
 	for _, v := range concVars {
 		k := lg.Key(v)

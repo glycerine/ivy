@@ -11,7 +11,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // EncodeVars encodes a list of variables into binary-encoded sub-bits,
@@ -39,7 +39,7 @@ func EncodeVars(vars []*lg.Variable, encoding map[*lg.Variable][]*lg.Variable) [
 // For equalities, it reorders arguments to a canonical form. For
 // trivially true equalities (x == x), it returns And() (true).
 // Corresponds to Python's clone_normal (ivy_mc.py lines 839-849).
-func CloneNormal(clauses *mod.Clauses, iuCfg *iu.IvyUtilsConfig) *mod.Clauses {
+func CloneNormal(clauses *module.Clauses, iuCfg *iu.IvyUtilsConfig) *module.Clauses {
 	if clauses == nil {
 		return nil
 	}
@@ -54,7 +54,7 @@ func CloneNormal(clauses *mod.Clauses, iuCfg *iu.IvyUtilsConfig) *mod.Clauses {
 	}
 	newDefs := make([]*il.Definition, len(clauses.Defs))
 	copy(newDefs, clauses.Defs)
-	return mod.NewClauses(newFmlas, newDefs, clauses.Annot)
+	return module.NewClauses(newFmlas, newDefs, clauses.Annot)
 }
 
 // normalize recursively normalizes a formula: expands macros, canonicalizes
@@ -199,7 +199,7 @@ type AnnotPair struct {
 // Corresponds to Python's MatchHandler class (ivy_mc.py lines 933-943).
 type MatchHandler struct {
 	// Clauses is the satisfying assignment context.
-	Clauses *mod.Clauses
+	Clauses *module.Clauses
 	// Model is the satisfying model.
 	Model interface{}
 	// Vocab is the vocabulary of symbols.
@@ -258,16 +258,16 @@ func (h *MatchHandler) Fail() {
 // MatchAnnotationMC is a convenience wrapper that calls actions.MatchAnnotation
 // with a MatchHandler.
 // Corresponds to Python's match_annotation (ivy_mc.py lines 946-1015).
-func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler *MatchHandler, mod *mod.Module) {
+func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler *MatchHandler, mod *module.Module) {
 	actions.MatchAnnotation(action, annot, handler, mod)
 }
 
 // Checked returns true if the given action should be checked (its line
 // number matches the checked_assert parameter, or checked_assert is empty).
 // Corresponds to Python's checked (ivy_mc.py lines 1017-1018).
-// Uses mod.Cfg.CheckLineno (was mc.CheckedAssert, from Python ia.checked_assert).
-func Checked(action actions.Action, mod *mod.Module) bool {
-	checkedAssert := mod.Cfg.CheckLineno
+// Uses module.Cfg.CheckLineno (was mc.CheckedAssert, from Python ia.checked_assert).
+func Checked(action actions.Action, mod *module.Module) bool {
+	checkedAssert := module.Cfg.CheckLineno
 	if checkedAssert == "" {
 		return true
 	}
@@ -288,10 +288,10 @@ type IvyMCTrace struct {
 
 // NewIvyMCTrace creates a new IvyMCTrace from state values.
 // Corresponds to Python's IvyMCTrace.__init__ (ivy_mc.py lines 1435-1440).
-func NewIvyMCTrace(stvals []lg.Expr, mod *mod.Module) *IvyMCTrace {
+func NewIvyMCTrace(stvals []lg.Expr, mod *module.Module) *IvyMCTrace {
 	ag := art.NewAnalysisGraph(mod)
 	// Set up initial state with the given state values as clauses.
-	initClauses := &mod.Clauses{Fmlas: stvals}
+	initClauses := &module.Clauses{Fmlas: stvals}
 	initState := art.NewState(mod, initClauses)
 	initState.Universe = make(map[string]interface{}) // singleton state
 	ag.States = append(ag.States, initState)
@@ -301,7 +301,7 @@ func NewIvyMCTrace(stvals []lg.Expr, mod *mod.Module) *IvyMCTrace {
 // AddState adds a new state to the trace, produced by the given action.
 // Corresponds to Python's IvyMCTrace.add_state (ivy_mc.py lines 1441-1443).
 func (t *IvyMCTrace) AddState(stvals []lg.Expr, action actions.Action) {
-	cls := &mod.Clauses{Fmlas: stvals}
+	cls := &module.Clauses{Fmlas: stvals}
 	newState := art.NewState(t.Domain, cls)
 	newState.Label = "ext"
 	newState.Action = action
@@ -317,7 +317,7 @@ func (t *IvyMCTrace) AddState(stvals []lg.Expr, action actions.Action) {
 // infrastructure to decode latch values into state equalities and to
 // use MatchAnnotation with an AigerMatchHandler for path reconstruction.
 // Corresponds to Python's aiger_witness_to_ivy_trace (ivy_mc.py lines 1570-1628).
-func AigerWitnessToIvyTrace(witnessFile string, mod *mod.Module) (*IvyMCTrace, error) {
+func AigerWitnessToIvyTrace(witnessFile string, mod *module.Module) (*IvyMCTrace, error) {
 	// Parse the witness file.
 	trace, err := ParseWitnessFile(witnessFile)
 	if err != nil {

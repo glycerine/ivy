@@ -7,7 +7,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ElimIte eliminates ITEs over non-finite sorts by introducing fresh variables
@@ -68,7 +68,7 @@ func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
 // circuit (as opposed to a set of constraints) which might be helpful to ABC.
 //
 // Python: ivy_mc.py:1063-1114
-func ToTableLookup(trans *mod.Clauses, invariant lg.Expr) (*mod.Clauses, lg.Expr) {
+func ToTableLookup(trans *module.Clauses, invariant lg.Expr) (*module.Clauses, lg.Expr) {
 	var newDefs []lg.Expr
 	counter := 0
 
@@ -149,7 +149,7 @@ func ToTableLookup(trans *mod.Clauses, invariant lg.Expr) (*mod.Clauses, lg.Expr
 			allDefs = append(allDefs, def)
 		}
 	}
-	newTrans := mod.NewClauses(fmlas, allDefs, trans.Annot)
+	newTrans := module.NewClauses(fmlas, allDefs, trans.Annot)
 
 	// Process invariant
 	newDefs = nil
@@ -269,15 +269,15 @@ func defToConstraint(def *il.Definition) lg.Expr {
 // premises against the sort constants and functions.
 //
 // Python: ivy_mc.py:637-655
-func ExpandSchemata(mod *mod.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
+func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
-	if mod.Schemata == nil {
+	if module.Schemata == nil {
 		return result
 	}
 
 	// For each schema, try to match its premises
-	for name, lf := range mod.Schemata {
+	for name, lf := range module.Schemata {
 		// Skip recursive/inductive schemata
 		if len(name) >= 4 && (name[:4] == "rec[" || name[:4] == "lep[" || name[:4] == "ind[") {
 			continue
@@ -308,7 +308,7 @@ func ExpandSchemata(mod *mod.Module, sortConstants map[string][]*lg.Const, funs 
 		// For each matching of premises, instantiate conclusion
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
-			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(nil, inst))
+			result = append(result, module.Cfg.AstCfg.NewLabeledFormula(nil, inst))
 		})
 	}
 
@@ -407,13 +407,13 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *mod.Module, stVars []string, trans *mod.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 
 	// Combine with existing labeled axioms
 	var axioms []*ast.LabeledFormula
-	axioms = append(axioms, mod.LabeledAxioms...)
+	axioms = append(axioms, module.LabeledAxioms...)
 	axioms = append(axioms, expandedAxioms...)
 
 	// Get triggers for each quantified axiom

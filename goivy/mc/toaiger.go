@@ -10,7 +10,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ToAigerResult holds the result of converting a module to an AIGER circuit.
@@ -27,7 +27,7 @@ type ToAigerResult struct {
 // This is the main entry point for the model checking pipeline.
 //
 // Python: ivy_mc.py:1117-1427
-func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
+func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	if method == "" {
 		method = "mc"
 	}
@@ -42,7 +42,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	pubNames := sortedPublicActions(mod)
 	extActs := make([]lg.Expr, len(pubNames))
 	for i, name := range pubNames {
-		act, ok := mod.Actions.Get2(name)
+		act, ok := module.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -58,7 +58,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 
 	// Build initializer sequence
 	var initParts []lg.Expr
-	for _, ni := range mod.Initializers {
+	for _, ni := range module.Initializers {
 		if a, ok := ni.Action.(actions.Action); ok {
 			initParts = append(initParts, &actionNodeWrapper{action: a})
 		}
@@ -90,7 +90,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	// Step 2: Get invariant to prove, applying proof tactics
 	// Replace free variables with Skolems
 	var conjs []*ast.LabeledFormula
-	for _, lf := range mod.LabeledConjs {
+	for _, lf := range module.LabeledConjs {
 		conjs = append(conjs, lf)
 	}
 
@@ -115,13 +115,13 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 		}
 		invariant = lu.SubstituteByName(invariant, sksubs)
 	}
-	invarSyms := mod.UsedSymbolsAST(invariant)
+	invarSyms := module.UsedSymbolsAST(invariant)
 
 	// Step 3: Compute transition relation
-	bgt := mod.BackgroundTheory(nil)
+	bgt := module.BackgroundTheory(nil)
 	ctx := &actions.UpdateContext{
 		Domain: mod,
-		ActCfg: mod.Cfg.ActCfg,
+		ActCfg: module.Cfg.ActCfg,
 	}
 	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)
@@ -132,7 +132,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	// Build transition as clauses — merge update's TR with background defs
 	trans := updWithAxioms.TR
 	if bgt != nil && len(bgt.Defs) > 0 {
-		trans = mod.AndClausesTyped(trans, mod.NewClauses(nil, bgt.Defs, nil))
+		trans = module.AndClausesTyped(trans, module.NewClauses(nil, bgt.Defs, nil))
 	}
 
 	// Rename defined symbols in next-state to avoid name collisions.
@@ -153,7 +153,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	}
 
 	if len(rn) > 0 {
-		trans = mod.RenameClauses(trans, rn)
+		trans = module.RenameClauses(trans, rn)
 	}
 
 	stVarNames := actions.ModifiedNames(updWithAxioms)
@@ -170,12 +170,12 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 
 	// Build inductive hypotheses
 	var indHyps []lg.Expr
-	for _, lf := range mod.LabeledConjs {
+	for _, lf := range module.LabeledConjs {
 		indHyps = append(indHyps, &lg.ForAll{
 			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
 	}
-	for _, lf := range mod.AssumedInvs {
+	for _, lf := range module.AssumedInvs {
 		indHyps = append(indHyps, &lg.ForAll{
 			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
@@ -183,21 +183,21 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 
 	// Save original symbols for trace
 	origSyms := make(map[string]bool)
-	for _, sym := range mod.UsedSymbolsAST(invariant) {
+	for _, sym := range module.UsedSymbolsAST(invariant) {
 		origSyms[sym.Name] = true
 	}
-	for _, sym := range mod.SymbolsClauses(trans) {
+	for _, sym := range module.SymbolsClauses(trans) {
 		origSyms[sym.Name] = true
 	}
 
 	// Collect function symbols
 	funs := make(map[string]bool)
-	for _, sym := range mod.SymbolsClauses(trans) {
+	for _, sym := range module.SymbolsClauses(trans) {
 		if il.IsFunctionSort(sym.CSort) {
 			funs[sym.Name] = true
 		}
 	}
-	invSymsAST := mod.UsedSymbolsAST(invariant)
+	invSymsAST := module.UsedSymbolsAST(invariant)
 	for _, sym := range invSymsAST {
 		if il.IsFunctionSort(sym.CSort) {
 			funs[sym.Name] = true
@@ -222,7 +222,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 		newFmlas = append(newFmlas, defToConstraint(df))
 	}
 	transFmlas2 := append(newFmlas, trans.Fmlas...)
-	trans = mod.NewClauses(transFmlas2, newDefs, trans.Annot)
+	trans = module.NewClauses(transFmlas2, newDefs, trans.Annot)
 
 	// Step 4b: Eliminate ITEs over non-finite sorts
 	var iteCnsts []lg.Expr
@@ -237,12 +237,12 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 		elimFmlas[i] = ElimIte(f, &iteCnsts)
 	}
 	allFmlas := append(elimFmlas, iteCnsts...)
-	trans = mod.NewClauses(allFmlas, elimDefs, trans.Annot)
+	trans = module.NewClauses(allFmlas, elimDefs, trans.Annot)
 
 	// Step 4c: Quantifier elimination via finite instantiation
 	// Collect error condition symbols for invar_syms
 	for _, ec := range errConds {
-		ecSyms := mod.UsedSymbolsAST(ec)
+		ecSyms := module.UsedSymbolsAST(ec)
 		for k, sym := range ecSyms {
 			if actions.IsSkolem(sym.Name) && !il.IsFunctionSort(sym.CSort) {
 				invarSyms[k] = sym
@@ -256,7 +256,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	qelim := NewQelim(sortConstants, sortConstants2)
 	qeFmlas, qeDefs, newInvariant := qelim.Apply(trans.Fmlas, defsToNodes(trans.Defs), invariant, indHyps)
 	invariant = newInvariant
-	trans = mod.NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
+	trans = module.NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
 
 	// Step 4d: Instantiate axioms using pattern matching
 	stVarList := stVarNames
@@ -268,7 +268,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 		invariant = &lg.Implies{T1: axVar, T2: invariant}
 		allFmlas := append(trans.Fmlas, axVar)
 		allDefs := append(trans.Defs, axDef)
-		trans = mod.NewClauses(allFmlas, allDefs, trans.Annot)
+		trans = module.NewClauses(allFmlas, allDefs, trans.Annot)
 	}
 
 	// Step 4e: Table lookup for finite-domain functions
@@ -282,7 +282,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 
 	propAbs := NewPropAbs(stVarSet, sortConstants)
 	paFmlas, paDefs := propAbs.Apply(trans.Fmlas, defsToNodes(trans.Defs))
-	trans = mod.NewClauses(paFmlas, nodesToDefs(paDefs), trans.Annot)
+	trans = module.NewClauses(paFmlas, nodesToDefs(paDefs), trans.Annot)
 
 	// Find immutable abstract variables and give them next definitions
 	invarSymSet := make(map[string]bool)
@@ -291,7 +291,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	}
 
 	isImmutableExpr := func(expr lg.Expr) bool {
-		syms := mod.UsedSymbolsAST(expr)
+		syms := module.UsedSymbolsAST(expr)
 		for _, sym := range syms {
 			if actions.IsSkolem(sym.Name) && !invarSymSet[sym.Name] {
 				return false
@@ -334,7 +334,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	}
 	if len(addDefs) > 0 {
 		allDefs := append(trans.Defs, addDefs...)
-		trans = mod.NewClauses(trans.Fmlas, allDefs, trans.Annot)
+		trans = module.NewClauses(trans.Fmlas, allDefs, trans.Annot)
 	}
 
 	// Apply propositional abstraction to invariant
@@ -346,7 +346,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 		svSym := lg.NewConst(sv, lg.TopS)
 		rnInv[lg.Key(svSym)] = lg.NewConst(actions.New(sv), nil)
 	}
-	propAbs.MkPropAbs(mod.RenameAST(invariant, rnInv))
+	propAbs.MkPropAbs(module.RenameAST(invariant, rnInv))
 
 	// Update state variables
 	var finiteStVars []string
@@ -374,7 +374,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 			fixRn[lg.Key(vSym)] = lg.NewConst("curval"+v, nil)
 		}
 	}
-	trans = mod.RenameClauses(trans, fixRn)
+	trans = module.RenameClauses(trans, fixRn)
 
 	// Add next-state definitions and curval definitions
 	var extraDefs []*il.Definition
@@ -394,7 +394,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 			&lg.Ite{Cond: initVar, Then: origV, Else: initChoice}))
 	}
 	allDefs3 := append(trans.Defs, extraDefs...)
-	trans = mod.NewClauses(trans.Fmlas, allDefs3, trans.Annot)
+	trans = module.NewClauses(trans.Fmlas, allDefs3, trans.Annot)
 
 	// Step 6: Turn transition constraint into a definition
 	cnstVar := lg.NewConst("__cnst", lg.Boolean)
@@ -415,7 +415,7 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	}
 	finalDefs = append(finalDefs, il.NewDefinition(fixCnst, cnstBody))
 	stVarNames = append(stVarNames, "__cnst")
-	trans = mod.NewClauses(nil, finalDefs, trans.Annot)
+	trans = module.NewClauses(nil, finalDefs, trans.Annot)
 
 	// Step 7: Determine inputs, outputs, build Encoder
 	defSet := make(map[string]bool)
@@ -429,10 +429,10 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	}
 
 	usedSyms := make(map[string]*lg.Const)
-	for _, sym := range mod.SymbolsClauses(trans) {
+	for _, sym := range module.SymbolsClauses(trans) {
 		usedSyms[sym.Name] = sym
 	}
-	for _, sym := range mod.UsedSymbolsAST(invariant) {
+	for _, sym := range module.UsedSymbolsAST(invariant) {
 		usedSyms[sym.Name] = sym
 	}
 
@@ -552,13 +552,13 @@ func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 // Asserts become assignments to the error flag, assumes become conditional on the error flag.
 //
 // Python: ivy_mc.py:1048-1054
-func AddErrFlagMod(mod *mod.Module, erf *lg.Const, errConds *[]lg.Expr) {
-	for actname, act := range mod.Actions.All() {
+func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
+	for actname, act := range module.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
 			newAction := AddErrFlag(a, erf, errConds)
 			newAction.SetFormalParams(a.GetFormalParams())
 			newAction.SetFormalReturns(a.GetFormalReturns())
-			mod.SetAction(actname, newAction)
+			module.SetAction(actname, newAction)
 		}
 	}
 }
@@ -673,10 +673,10 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 }
 
 // sortedPublicActions returns public action names sorted.
-func sortedPublicActions(mod *mod.Module) []string {
-	names := make([]string, 0, mod.PublicActions.Len())
-	for name := range mod.PublicActions.All() {
-		if mod.PublicActions.Get(name) {
+func sortedPublicActions(mod *module.Module) []string {
+	names := make([]string, 0, module.PublicActions.Len())
+	for name := range module.PublicActions.All() {
+		if module.PublicActions.Get(name) {
 			names = append(names, name)
 		}
 	}

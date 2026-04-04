@@ -5,7 +5,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -470,5 +470,5 @@ func FuzzExecuteAndCheckSafety(f *testing.F) {
 
 // Ensure transrel import is used.
 var _ = actions.NullUpdate
-var _ = mod.New
-var _ = mod.TrueClauses
+var _ = module.New
+var _ = module.TrueClauses

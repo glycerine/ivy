@@ -7,32 +7,32 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *mod.Module {
-	return mod.New()
+func testModule() *module.Module {
+	return module.New()
 }
 
-func testModuleWithConj() *mod.Module {
+func testModuleWithConj() *module.Module {
 	mod := testModule()
 	// Use a tautology (X = X) as the conjecture — always true.
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, _ := lg.NewVariable("X", S)
 	eq, _ := lg.NewEq(X, X)
-	mod.LabeledConjs = []*ast.LabeledFormula{
+	module.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: eq},
 	}
 	return mod
 }
 
-func testModuleWithAction() *mod.Module {
+func testModuleWithAction() *module.Module {
 	mod := testModuleWithConj()
 	act := actions.NewAssumeAction(lg.True)
-	mod.Actions.Set("test_action", act)
-	mod.PublicActions.Set("test_action", true)
+	module.Actions.Set("test_action", act)
+	module.PublicActions.Set("test_action", true)
 	return mod
 }
 
@@ -123,7 +123,7 @@ func TestCheckIsolateWithUnroll(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// Actions should be restored after the call.
-	if _, ok := mod.Actions.Get2("test_action"); !ok {
+	if _, ok := module.Actions.Get2("test_action"); !ok {
 		t.Error("actions should be restored after unrolling")
 	}
 }
@@ -203,7 +203,7 @@ func TestDualClausesNil(t *testing.T) {
 }
 
 func TestDualClausesEmpty(t *testing.T) {
-	clauses := mod.NewClauses(nil, nil, nil)
+	clauses := module.NewClauses(nil, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -212,7 +212,7 @@ func TestDualClausesEmpty(t *testing.T) {
 
 func TestDualClausesSingle(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -232,7 +232,7 @@ func TestDualClausesSingle(t *testing.T) {
 func TestDualClausesMultiple(t *testing.T) {
 	c := lg.NewConst("P", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
-	clauses := mod.NewClauses([]lg.Expr{q, c}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {
 		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))

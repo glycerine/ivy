@@ -27,7 +27,6 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
-	"github.com/glycerine/ivy/goivy/transrel"
 )
 
 // --- Formula helpers ---
@@ -74,7 +73,7 @@ func OldOf(fmla lg.Expr) lg.Expr {
 		}
 		return app
 	case *lg.Const:
-		return lg.NewConst(transrel.Old(f.Name), f.CSort)
+		return lg.NewConst(actions.Old(f.Name), f.CSort)
 	case *lg.Eq:
 		return &lg.Eq{T1: OldOf(f.T1), T2: OldOf(f.T2)}
 	case *lg.Not:
@@ -107,7 +106,7 @@ func OldOf(fmla lg.Expr) lg.Expr {
 func makeOldFunc(fn lg.Expr) lg.Expr {
 	switch f := fn.(type) {
 	case *lg.Const:
-		return lg.NewConst(transrel.Old(f.Name), f.CSort)
+		return lg.NewConst(actions.Old(f.Name), f.CSort)
 	default:
 		return fn
 	}

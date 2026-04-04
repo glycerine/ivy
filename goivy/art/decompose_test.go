@@ -6,28 +6,28 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/interp"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
 // helpers for building interp.State chains in tests
 // ---------------------------------------------------------------------------
 
-func interpState(mod *mod.Module) *interp.State {
-	sv := interp.NewStateValue(nil, mod.TrueClauses(nil), mod.FalseClauses(nil))
+func interpState(mod *module.Module) *interp.State {
+	sv := interp.NewStateValue(nil, module.TrueClauses(nil), module.FalseClauses(nil))
 	return interp.NewState(mod, sv, nil, "")
 }
 
 // interpChain builds a chain of n interp.States where each non-root state
 // has .Expr set to an ActionApp pointing at its predecessor, and .CachedPred
 // set explicitly. Returns the deepest (last) state.
-func interpChain(mod *mod.Module, n int) *interp.State {
+func interpChain(mod *module.Module, n int) *interp.State {
 	if n <= 0 {
 		return nil
 	}
 	cfg := ast.NewAstConfig()
-	if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
-		cfg = mod.Cfg.AstCfg
+	if mod != nil && module.Cfg != nil && module.Cfg.AstCfg != nil {
+		cfg = module.Cfg.AstCfg
 	}
 	root := interpState(mod)
 	root.Label = "root"
@@ -191,8 +191,8 @@ func TestInterpToArtStateActionName(t *testing.T) {
 func TestInterpToArtStateJoinProv(t *testing.T) {
 	mod := testModule()
 	cfg := ast.NewAstConfig()
-	if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
-		cfg = mod.Cfg.AstCfg
+	if mod != nil && module.Cfg != nil && module.Cfg.AstCfg != nil {
+		cfg = module.Cfg.AstCfg
 	}
 
 	s1 := interpState(mod)

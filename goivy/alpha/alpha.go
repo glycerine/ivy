@@ -10,7 +10,7 @@ package alpha
 import (
 	"fmt"
 
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
@@ -25,8 +25,8 @@ import (
 // In Python this is state.domain with concept_spaces and background_theory.
 type AlphaDomain struct {
 	ConceptSpaces    []ConceptSpaceEntry
-	BackgroundTheory func(inScope map[string]bool) *mod.Clauses
-	AbstrPreds       []*mod.Clauses
+	BackgroundTheory func(inScope map[string]bool) *module.Clauses
+	AbstrPreds       []*module.Clauses
 }
 
 // ConceptSpaceEntry pairs an atom with a concept space expression.
@@ -39,7 +39,7 @@ type ConceptSpaceEntry struct {
 // AlphaState represents the state to abstract.
 // In Python this is the state argument to alpha() and predicate_alpha().
 type AlphaState struct {
-	Clauses    *mod.Clauses
+	Clauses    *module.Clauses
 	Domain     *AlphaDomain
 	InScope    map[string]bool
 	TestBottom bool // Whether to UNSAT-check concrete state before abstraction. Python: test_bottom.
@@ -52,11 +52,11 @@ type AlphaState struct {
 // Corresponds to Python's alpha(state).
 func Alpha(state *AlphaState) {
 	d := NewProgressiveDomain(state.Domain.ConceptSpaces, false, state.TestBottom, state.Log)
-	var bgTheory *mod.Clauses
+	var bgTheory *module.Clauses
 	if state.Domain.BackgroundTheory != nil {
 		bgTheory = state.Domain.BackgroundTheory(state.InScope)
 	} else {
-		bgTheory = mod.TrueClauses(nil)
+		bgTheory = module.TrueClauses(nil)
 	}
 	state.Clauses = d.Post(state.Clauses, bgTheory, nil, nil)
 }
@@ -230,7 +230,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 // postInit initializes the solver state for a post computation.
 // Corresponds to Python's post_init.
 func (pd *ProgressiveDomain) postInit(
-	theory, backgroundTheory *mod.Clauses,
+	theory, backgroundTheory *module.Clauses,
 	newSym map[string]*lg.Const,
 	toKeep []string,
 ) {
@@ -247,7 +247,7 @@ func (pd *ProgressiveDomain) postInit(
 		fmt.Printf("background: %s\n", backgroundTheory)
 	}
 
-	combined := mod.AndClausesTyped(theory, backgroundTheory)
+	combined := module.AndClausesTyped(theory, backgroundTheory)
 	if err := pd.slvr.AddClauses(pd.z3solver, combined); err != nil {
 		pd.unsat = true
 		return
@@ -269,9 +269,9 @@ func (pd *ProgressiveDomain) postInit(
 // postStep performs one step of concept space enumeration.
 // Returns the inferred clauses.
 // Corresponds to Python's post_step.
-func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *mod.Clauses {
+func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *module.Clauses {
 	if pd.unsat {
-		return mod.FalseClauses(nil)
+		return module.FalseClauses(nil)
 	}
 	pd.inferred = nil
 
@@ -315,7 +315,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *mod.Cl
 			fmlas[i] = &lg.Or{Terms: clause}
 		}
 	}
-	return mod.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }
 
 // postQuit cleans up after a post computation.
@@ -334,10 +334,10 @@ func (pd *ProgressiveDomain) postQuit() {
 // background theory, new symbol map, and symbols to keep.
 // Corresponds to Python's post.
 func (pd *ProgressiveDomain) Post(
-	theory, backgroundTheory *mod.Clauses,
+	theory, backgroundTheory *module.Clauses,
 	newSym map[string]*lg.Const,
 	toKeep []string,
-) *mod.Clauses {
+) *module.Clauses {
 	pd.postInit(theory, backgroundTheory, newSym, toKeep)
 	res := pd.postStep(pd.conceptSpaces)
 	pd.postQuit()
@@ -767,22 +767,22 @@ func PredicateAlpha(state *AlphaState) {
 	slvr := solver.New()
 	z3slvr := slvr.NewZ3Solver()
 
-	var bgTheory *mod.Clauses
+	var bgTheory *module.Clauses
 	if state.Domain.BackgroundTheory != nil {
 		bgTheory = state.Domain.BackgroundTheory(nil)
 	} else {
-		bgTheory = mod.TrueClauses(nil)
+		bgTheory = module.TrueClauses(nil)
 	}
 
-	combined := mod.AndClausesTyped(state.Clauses, bgTheory)
+	combined := module.AndClausesTyped(state.Clauses, bgTheory)
 	if err := slvr.AddClauses(z3slvr, combined); err != nil {
 		return
 	}
 
-	res := mod.TrueClauses(nil)
+	res := module.TrueClauses(nil)
 	for _, pred := range state.Domain.AbstrPreds {
 		z3slvr.Push()
-		dual := mod.NegateClauses(pred)
+		dual := module.NegateClauses(pred)
 		if err := slvr.AddClauses(z3slvr, dual); err != nil {
 			z3slvr.Pop()
 			continue
@@ -792,7 +792,7 @@ func PredicateAlpha(state *AlphaState) {
 			fmt.Printf("predicate: %s result %v\n", pred, cr)
 		}
 		if cr == z3bridge.Unsat {
-			res = mod.AndClausesTyped(res, pred)
+			res = module.AndClausesTyped(res, pred)
 		}
 		z3slvr.Pop()
 	}

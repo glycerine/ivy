@@ -16,7 +16,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicparser"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -28,9 +28,9 @@ const checkPrecondTrue = true
 // in parallel, we define a concrete type here.
 type State struct {
 	ID       int
-	Clauses  *mod.Clauses
+	Clauses  *module.Clauses
 	Update   *actions.Update
-	Domain   *mod.Module
+	Domain   *module.Module
 	Label    string
 	Prov     Provenance // provenance: the expression that produced this state
 	Pred     *State   // predecessor state (if derived from action)
@@ -45,7 +45,7 @@ type State struct {
 }
 
 // NewState creates a new state with the given domain and clauses.
-func NewState(domain *mod.Module, clauses *mod.Clauses) *State {
+func NewState(domain *module.Module, clauses *module.Clauses) *State {
 	return &State{
 		ID:      -1,
 		Domain:  domain,
@@ -65,7 +65,7 @@ func (s *State) StateValue() *actions.Update {
 	return &actions.Update{
 		Modified: nil, // None means "all modified"
 		TR:       s.Clauses,
-		Pre:      mod.FalseClauses(nil),
+		Pre:      module.FalseClauses(nil),
 	}
 }
 
@@ -150,7 +150,7 @@ func NewStateJoin(args ...*State) *StateJoin {
 // Counterexample records why a property is false. Its IsFailed method returns
 // false, mirroring Python's __bool__ returning False.
 type Counterexample struct {
-	Clauses *mod.Clauses
+	Clauses *module.Clauses
 	State   *State
 	Conc    interface{} // conclusion information
 	Msg     string
@@ -187,8 +187,8 @@ type SafetyResult struct {
 // It wraps an AnalysisGraph and delegates to its domain (module) and actions.
 type AC struct {
 	Assertions map[string]lg.Expr
-	Actions    *iu.InsMap[string, mod.Action]
-	Domain     *mod.Module
+	Actions    *iu.InsMap[string, module.Action]
+	Domain     *module.Module
 	AddFn      func(*State, Provenance)
 	NoAdd      bool
 }
@@ -214,7 +214,7 @@ func (ac *AC) Get(sym string) interface{} {
 }
 
 // NewState creates a new state from clauses, optionally adding it to the graph.
-func (ac *AC) NewState(clauses *mod.Clauses, exact bool, prov Provenance) *State {
+func (ac *AC) NewState(clauses *module.Clauses, exact bool, prov Provenance) *State {
 	res := NewState(ac.Domain, clauses)
 	if !ac.NoAdd {
 		ac.AddFn(res, prov)
@@ -255,28 +255,28 @@ type CoveringPair struct {
 // It maintains a set of states, transitions between them, and a covering
 // relation.
 type AnalysisGraph struct {
-	Domain        *mod.Module
+	Domain        *module.Module
 	States        []*State
 	Transitions   []Transition
 	Covering      []CoveringPair
 	PVars         []lg.Expr
 	StateGraphs   []interface{}
-	Actions       *iu.InsMap[string, mod.Action]
+	Actions       *iu.InsMap[string, module.Action]
 	Predicates    map[string]ast.Node
 	Assertions    []*ast.LabeledFormula
-	Mixins        *iu.InsMap[string, []mod.MixinDef]
+	Mixins        *iu.InsMap[string, []module.MixinDef]
 	Isolates      map[string]*ast.IsolateDef
-	Exports       []mod.Exporter
-	Delegates     []mod.Delegator
+	Exports       []module.Exporter
+	Delegates     []module.Delegator
 	PublicActions *iu.InsMap[string, bool]
-	InitCond      *mod.Clauses
+	InitCond      *module.Clauses
 }
 
-// NewAnalysisGraph creates a new AnalysisGraph backed by the given mod.
+// NewAnalysisGraph creates a new AnalysisGraph backed by the given module.
 // If mod is nil a fresh empty module is used.
-func NewAnalysisGraph(mod *mod.Module, pvars ...lg.Expr) *AnalysisGraph {
+func NewAnalysisGraph(mod *module.Module, pvars ...lg.Expr) *AnalysisGraph {
 	if mod == nil {
-		mod = mod.New()
+		mod = module.New()
 	}
 	ag := &AnalysisGraph{
 		Domain:        mod,
@@ -285,14 +285,14 @@ func NewAnalysisGraph(mod *mod.Module, pvars ...lg.Expr) *AnalysisGraph {
 		Covering:      nil,
 		PVars:         pvars,
 		StateGraphs:   nil,
-		Actions:       mod.Actions,
-		Predicates:    mod.Predicates,
-		Assertions:    mod.Assertions,
-		Mixins:        mod.Mixins,
-		Isolates:      mod.Isolates,
-		Exports:       mod.Exports,
-		Delegates:     mod.Delegates,
-		PublicActions: mod.PublicActions,
+		Actions:       module.Actions,
+		Predicates:    module.Predicates,
+		Assertions:    module.Assertions,
+		Mixins:        module.Mixins,
+		Isolates:      module.Isolates,
+		Exports:       module.Exports,
+		Delegates:     module.Delegates,
+		PublicActions: module.PublicActions,
 	}
 	return ag
 }
@@ -443,9 +443,9 @@ func (ag *AnalysisGraph) JoinStates(state1, state2 *State, abstractor Abstractor
 	if err != nil {
 		log.Printf("art.JoinStates: %v", err)
 		// Fallback: simple OR (defensive, matches old behavior)
-		var joinedClauses *mod.Clauses
+		var joinedClauses *module.Clauses
 		if state1.Clauses != nil && state2.Clauses != nil {
-			joinedClauses = mod.OrClausesTyped(state1.Clauses, state2.Clauses)
+			joinedClauses = module.OrClausesTyped(state1.Clauses, state2.Clauses)
 		} else if state1.Clauses != nil {
 			joinedClauses = state1.Clauses
 		} else {
@@ -538,7 +538,7 @@ func (ag *AnalysisGraph) Unreachable(node *State) bool {
 		return false
 	}
 	if result == z3bridge.Unsat {
-		node.Clauses = mod.FalseClauses(node.Clauses.Annot)
+		node.Clauses = module.FalseClauses(node.Clauses.Annot)
 		return true
 	}
 	return false
@@ -1252,7 +1252,7 @@ func (ag *AnalysisGraph) FixedpointCandidateBottomDefault(fpc map[string]*State,
 	if s, ok := fpc[label]; ok {
 		return s
 	}
-	return NewState(ag.Domain, mod.FalseClauses(nil))
+	return NewState(ag.Domain, module.FalseClauses(nil))
 }
 
 // -----------------------------------------------------------------------
@@ -1261,13 +1261,13 @@ func (ag *AnalysisGraph) FixedpointCandidateBottomDefault(fpc map[string]*State,
 
 // ConceptGraph creates a concept graph for the given state.
 // Python ivy_art.py:307-316.
-func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) ConceptGraphView, clauses *mod.Clauses) ConceptGraphView {
+func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) ConceptGraphView, clauses *module.Clauses) ConceptGraphView {
 	if clauses == nil {
 		clauses = state.Clauses
 	}
 	bg := ag.Domain.BackgroundTheory(state.InScope)
 	sg := standardGraph(state)
-	sg.SetGraphState(mod.AndClausesTyped(clauses, bg))
+	sg.SetGraphState(module.AndClausesTyped(clauses, bg))
 	sg.SetGraphConcrete(nil)
 	return sg
 }
@@ -1470,20 +1470,20 @@ func truncate(s string, maxLen int) string {
 // If the module has initializer actions, they are composed into a Sequence,
 // wrapped in an EnvAction, and evaluated as a single action_app with
 // EvalContext(check=False). Otherwise, a fresh state from init_cond is added.
-func (ag *AnalysisGraph) AddInitialState(ic *mod.Clauses, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstractor) *State {
 	mod := ag.Domain
 
 	if ic == nil {
-		if mod.InitCond != nil {
-			ic = mod.InitCond
+		if module.InitCond != nil {
+			ic = module.InitCond
 		} else {
-			ic = mod.TrueClauses(nil)
+			ic = module.TrueClauses(nil)
 		}
 	}
 
 	s := NewState(mod, ic)
 
-	if len(mod.Initializers) > 0 {
+	if len(module.Initializers) > 0 {
 		// Python ivy_art.py:106-114:
 		//   action = Sequence(*[a for n,a in domain.initializers])
 		//   action = env_action(action, 'init')
@@ -1494,7 +1494,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *mod.Clauses, abstractor Abstractor)
 		//   s2.expr = s
 		//   self.add(s2)
 		var seqChildren []lg.Expr
-		for _, na := range mod.Initializers {
+		for _, na := range module.Initializers {
 			if na.Action != nil {
 				seqChildren = append(seqChildren, na.Action)
 			}
@@ -1555,7 +1555,7 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 
 	if len(ag.Predicates) > 0 {
 		// Python: if self.predicates:
-		//   if not im.mod.init_cond.is_true(): raise IvyError
+		//   if not im.module.init_cond.is_true(): raise IvyError
 		//   for n,p in self.predicates.items():
 		//     s = eval_state_facts(p); if s: s.label = n
 		if ag.Domain.InitCond != nil && !ag.Domain.InitCond.IsTrue() {
@@ -1600,7 +1600,7 @@ func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
 	if is, ok := memo[s]; ok {
 		return is
 	}
-	sv := interp.NewStateValue(nil, s.Clauses, mod.FalseClauses(nil))
+	sv := interp.NewStateValue(nil, s.Clauses, module.FalseClauses(nil))
 	is := interp.NewState(s.Domain, sv, nil, s.Label)
 	memo[s] = is // memo before recursing to break cycles
 	is.InScope = s.InScope
@@ -1624,7 +1624,7 @@ func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
 
 // provenanceToInterpExpr converts an art.Provenance to an ast.Node
 // suitable for interp.State.Expr.
-func provenanceToInterpExpr(prov Provenance, domain *mod.Module, memo map[*State]*interp.State) ast.Node {
+func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*State]*interp.State) ast.Node {
 	if prov == nil {
 		return nil
 	}

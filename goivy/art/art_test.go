@@ -6,24 +6,24 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *mod.Module {
-	return mod.New()
+func testModule() *module.Module {
+	return module.New()
 }
 
-func testClauses() *mod.Clauses {
-	return mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
+func testClauses() *module.Clauses {
+	return module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 }
 
-func falseClauses() *mod.Clauses {
-	return mod.NewClauses([]lg.Expr{lg.False}, nil, nil)
+func falseClauses() *module.Clauses {
+	return module.NewClauses([]lg.Expr{lg.False}, nil, nil)
 }
 
-func testState(mod *mod.Module) *State {
+func testState(mod *module.Module) *State {
 	return NewState(mod, testClauses())
 }
 

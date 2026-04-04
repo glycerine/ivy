@@ -5,19 +5,19 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
 var testAstCfg = ast.NewAstConfig()
 
-// testPC creates a minimal ProofChecker with a mod.Config for testing.
+// testPC creates a minimal ProofChecker with a module.Config for testing.
 func testPC() *proof.ProofChecker {
-	mod := mod.New()
-	mod.Cfg = mod.NewConfig()
+	mod := module.New()
+	module.Cfg = module.NewConfig()
 	return &proof.ProofChecker{
-		Cfg:    mod.TacticNewConfig(),
+		Cfg:    module.TacticNewConfig(),
 		AstCfg: testAstCfg,
 		Mod:    mod,
 	}
@@ -294,7 +294,7 @@ func TestTempindWithTemporal(t *testing.T) {
 // ---------- Registration ----------
 
 func TestRegisterProofTactics(t *testing.T) {
-	cfg := mod.TacticNewConfig()
+	cfg := module.TacticNewConfig()
 	RegisterProofTactics(cfg)
 
 	expected := []string{"vcgen", "skolemize", "skolemizenp", "tempind", "tempcase", "sorry"}
@@ -309,7 +309,7 @@ func TestRegisterProofTactics(t *testing.T) {
 
 func TestVcToGoal(t *testing.T) {
 	x := mustVar("X")
-	cls := mod.NewClauses([]lg.Expr{x}, nil, nil)
+	cls := module.NewClauses([]lg.Expr{x}, nil, nil)
 	goal := VcToGoal(testAstCfg, ast.Location{}, "test", cls, nil)
 	if goal == nil {
 		t.Fatal("VcToGoal returned nil")
@@ -329,9 +329,9 @@ func TestPcAstCfg_NilChecker(t *testing.T) {
 func TestPcAstCfg_CheckerWithNilAstCfg(t *testing.T) {
 	// ProofChecker whose GetAstCfg() returns nil must still produce a valid config.
 	pc := &proof.ProofChecker{
-		Cfg:    mod.TacticNewConfig(),
+		Cfg:    module.TacticNewConfig(),
 		AstCfg: nil, // deliberately nil
-		Mod:    mod.New(),
+		Mod:    module.New(),
 	}
 	cfg := pcAstCfg(pc)
 	if cfg == nil {

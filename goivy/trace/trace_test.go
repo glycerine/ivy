@@ -7,20 +7,20 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *mod.Module {
-	return mod.New()
+func testModule() *module.Module {
+	return module.New()
 }
 
-func testClauses(fmlas ...lg.Expr) *mod.Clauses {
+func testClauses(fmlas ...lg.Expr) *module.Clauses {
 	if len(fmlas) == 0 {
 		fmlas = []lg.Expr{lg.True}
 	}
-	return mod.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }
 
 func makeEq(name string, val string) lg.Expr {
@@ -258,7 +258,7 @@ func TestEvalInState(t *testing.T) {
 	param := lg.NewConst("X", lg.Boolean)
 	val := lg.NewConst("true_val", lg.Boolean)
 	eq, _ := lg.NewEq(param, val)
-	clauses := mod.NewClauses([]lg.Expr{eq}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{eq}, nil, nil)
 	state := art.NewState(nil, clauses)
 	result := EvalInState(state, param)
 	if result == nil {
@@ -270,7 +270,7 @@ func TestEvalInState(t *testing.T) {
 }
 
 func TestEvalInStateNotFound(t *testing.T) {
-	clauses := mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	state := art.NewState(nil, clauses)
 	param := lg.NewConst("missing", lg.Boolean)
 	result := EvalInState(state, param)
@@ -360,7 +360,7 @@ func TestMakeCheckArt(t *testing.T) {
 
 func TestMakeCheckArtWithPrecond(t *testing.T) {
 	mod := testModule()
-	precond := []*mod.Clauses{testClauses(), testClauses()}
+	precond := []*module.Clauses{testClauses(), testClauses()}
 	ag, pre, _, err := MakeCheckArt(mod, "test", precond)
 	if err != nil {
 		t.Fatalf("MakeCheckArt error: %v", err)
@@ -399,7 +399,7 @@ func TestCheckVCNilClauses(t *testing.T) {
 }
 
 func TestCheckVCNoAnnot(t *testing.T) {
-	clauses := mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	// Annot is nil
 	result := CheckVC(nil, clauses, nil, nil, nil, false)
 	if result != nil {
@@ -411,8 +411,8 @@ func TestCheckVCNoAnnot(t *testing.T) {
 
 func TestMakeVC(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
-	pre := []*mod.Clauses{testClauses()}
-	post := []*mod.Clauses{testClauses()}
+	pre := []*module.Clauses{testClauses()}
+	post := []*module.Clauses{testClauses()}
 	vc := MakeVC(action, pre, post, true)
 	if vc == nil {
 		t.Fatal("MakeVC returned nil")

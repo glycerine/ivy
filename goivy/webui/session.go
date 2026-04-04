@@ -6,7 +6,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
@@ -107,7 +106,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// and CreateIsolate — matching Python's ivy_compile exactly.
 	sig := il.NewSig()
 	mod := module.New()
-	mod.Sig = sig
+	module.Sig = sig
 	compileErr := compiler.IvyCompile(decls, mod, true)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
@@ -142,7 +141,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			relations = append(relations, ri)
 		}
 	}
-	for name := range mod.Actions.All() {
+	for name := range module.Actions.All() {
 		actionNames = append(actionNames, name)
 	}
 
@@ -640,10 +639,10 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula.
 		// Sort inference is now done at compile time (SortInfer → ConcretizeSorts),
 		// matching Python's sortify_with_inference in LabeledFormula.cmpl.
-		var conjClauses []*clauseops.Clauses
+		var conjClauses []*module.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				conjClauses = append(conjClauses, clauseops.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
 			}
 		}
 
@@ -666,7 +665,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			// Get display text: Python uses str(il.drop_universals(conj.to_formula()))
 			// str() calls pretty_fmla which does drop_annotations then ugly(0).
-			displayFormula := logic.PrettyFmla(clauseops.DropUniversals(conj.ToFormula()))
+			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
@@ -681,7 +680,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if err != nil {
 				continue
 			}
-			finalCond := clauseops.FormulaToClauses(negFormula, nil)
+			finalCond := module.FormulaToClauses(negFormula, nil)
 
 			// Concretize sorts in the final condition for Z3.
 			// If ConcretizeSorts fails, the formula may still contain TopSort,

@@ -12,7 +12,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // === Batch 5.2: Match Compilation ===
@@ -121,17 +121,17 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 	return compiled
 }
 
-// getSigFrom returns the module's Sig. Panics if mod or mod.Sig is nil —
+// getSigFrom returns the module's Sig. Panics if mod or module.Sig is nil —
 // a nil here means the caller failed to thread the module through,
 // which is always a bug (Python uses a single global Sig).
 func getSigFrom(mod *module.Module) *il.Sig {
 	if mod == nil {
 		panic("getSigFrom: mod is nil — module must be threaded through to proof matching")
 	}
-	if mod.Sig == nil {
-		panic("getSigFrom: mod.Sig is nil — module must have a Sig before proof matching")
+	if module.Sig == nil {
+		panic("getSigFrom: module.Sig is nil — module must have a Sig before proof matching")
 	}
-	return mod.Sig
+	return module.Sig
 }
 
 // compileSimple is a fallback compiler that resolves atoms using vocab directly.
@@ -602,7 +602,7 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 		}
 		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
 		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
-		result = append(result, mod.Cfg.AstCfg.NewDefinition(x, y))
+		result = append(result, module.Cfg.AstCfg.NewDefinition(x, y))
 	}
 	return result
 }
@@ -789,7 +789,7 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 		return defaultVal, nil
 	}
 	// Check for capture
-	vocab := mod.UsedSymbolsAST(val)
+	vocab := module.UsedSymbolsAST(val)
 	for vk := range vocab {
 		if env[vk] {
 			return nil, RaiseCapture(sym)
@@ -1120,7 +1120,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), sort)
 		vars[i] = v
 	}
-	return mod.RenameVariablesDistinctAsts(vars, asts)
+	return module.RenameVariablesDistinctAsts(vars, asts)
 }
 
 // ApplyMatchGoalNode applies a match to a goal.

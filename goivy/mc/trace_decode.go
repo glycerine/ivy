@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/actions"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 // AigerMatchHandler evaluates conditions and decodes state from an AIGER
@@ -83,7 +83,7 @@ func (h *AigerMatchHandler) DoReturn(action interface{}, env map[string]string) 
 }
 
 func (h *AigerMatchHandler) isSkolem(name string) bool {
-	return tr.IsSkolem(name) && !h.Consts[name]
+	return actions.IsSkolem(name) && !h.Consts[name]
 }
 
 func (h *AigerMatchHandler) getSymValue(name string) lg.Expr {
@@ -153,7 +153,7 @@ func (h *AigerMatchHandler2) Eval(cond lg.Expr) bool {
 func (h *AigerMatchHandler2) NewState(env map[string]string) {
 	invEnv := make(map[string]string)
 	for k, v := range env {
-		if !h.isSkolem(k) && !tr.IsNew(k) {
+		if !h.isSkolem(k) && !actions.IsNew(k) {
 			invEnv[v] = k
 		}
 	}
@@ -203,7 +203,7 @@ func (h *AigerMatchHandler2) FinalState() {
 }
 
 func (h *AigerMatchHandler2) isSkolem(name string) bool {
-	return tr.IsSkolem(name) && !h.Consts[name]
+	return actions.IsSkolem(name) && !h.Consts[name]
 }
 
 func (h *AigerMatchHandler2) getSymValue(name string) lg.Expr {

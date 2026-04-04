@@ -7,18 +7,18 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ProofChecker is Ivy's built-in proof checker.
 type ProofChecker struct {
 	// Cfg is the per-session proof configuration (tactic registry).
-	Cfg *mod.ProofConfig
+	Cfg *module.ProofConfig
 	// AstCfg is the per-session AST configuration (constructor state).
 	AstCfg *ast.AstConfig
 	// Mod is the current module (for compilation during matching).
-	Mod *mod.Module
+	Mod *module.Module
 	// Axioms is the list of available axioms.
 	Axioms []*ast.LabeledFormula
 	// Definitions maps symbol names to their definitions.
@@ -33,9 +33,9 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(cfg *mod.ProofConfig, mod *mod.Module, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
+func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
 	if cfg == nil {
-		cfg = mod.TacticNewConfig()
+		cfg = module.TacticNewConfig()
 	}
 	// Use the caller's AstConfig if provided (shares LF counter with module),
 	// otherwise create a private one.
@@ -113,13 +113,13 @@ func NewProofChecker(cfg *mod.ProofConfig, mod *mod.Module, axioms, definitions 
 	return pc
 }
 
-// GetModule returns the current mod. Implements mod.ProofCheckerInterface.
-func (pc *ProofChecker) GetModule() *mod.Module { return pc.Mod }
+// GetModule returns the current module. Implements module.ProofCheckerInterface.
+func (pc *ProofChecker) GetModule() *module.Module { return pc.Mod }
 
-// GetAstCfg returns the AST configuration. Implements mod.ProofCheckerInterface.
+// GetAstCfg returns the AST configuration. Implements module.ProofCheckerInterface.
 func (pc *ProofChecker) GetAstCfg() *ast.AstConfig { return pc.AstCfg }
 
-// GetAxioms returns the list of available axioms. Implements mod.ProofCheckerInterface.
+// GetAxioms returns the list of available axioms. Implements module.ProofCheckerInterface.
 func (pc *ProofChecker) GetAxioms() []*ast.LabeledFormula { return pc.Axioms }
 
 // astCfg returns the AstConfig for this proof checker, preferring
@@ -419,7 +419,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 		return nil, &Circular{Node: defn, Msg: fmt.Sprintf("symbol %s defined after reference", symSym.Name)}
 	}
 	// Get dependencies from RHS
-	deps := mod.SymbolsAST(def.Rhs)
+	deps := module.SymbolsAST(def.Rhs)
 	for _, d := range deps {
 		pc.Stale[d.Name] = true
 	}
@@ -650,7 +650,7 @@ func collectStaleSymbols(n ast.Node, stale map[string]bool) {
 	// If this node is an lg.Expr, use the existing UsedSymbolsAST
 	// which handles logic-level nodes efficiently.
 	if expr, ok := n.(lg.Expr); ok {
-		for _, c := range mod.UsedSymbolsAST(expr) {
+		for _, c := range module.UsedSymbolsAST(expr) {
 			stale[c.Name] = true
 		}
 		return

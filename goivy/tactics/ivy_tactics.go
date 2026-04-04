@@ -11,7 +11,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
 	"github.com/glycerine/ivy/goivy/trace"
@@ -19,7 +19,7 @@ import (
 
 // pcAstCfg safely extracts the AstConfig from a ProofCheckerInterface, returning a
 // default config if pc is nil or pc.GetAstCfg() is nil.
-func pcAstCfg(pc mod.ProofCheckerInterface) *ast.AstConfig {
+func pcAstCfg(pc module.ProofCheckerInterface) *ast.AstConfig {
 	if pc != nil && pc.GetAstCfg() != nil {
 		return pc.GetAstCfg()
 	}
@@ -34,8 +34,8 @@ func pcAstCfg(pc mod.ProofCheckerInterface) *ast.AstConfig {
 //
 //	pr.make_goal(lineno, name, [], lg.Not(lu.clauses_to_formula(vc)),
 //	    annot=(action, vc.annot))
-func VcToGoal(cfg *ast.AstConfig, loc ast.Location, name string, vc *mod.Clauses, action interface{}) *ast.LabeledFormula {
-	fmla := mod.ClausesToFormula(vc)
+func VcToGoal(cfg *ast.AstConfig, loc ast.Location, name string, vc *module.Clauses, action interface{}) *ast.LabeledFormula {
+	fmla := module.ClausesToFormula(vc)
 	negFmla, err := lg.NewNot(fmla)
 	if err != nil {
 		// Fallback: use the formula directly if negation fails (shouldn't happen)
@@ -53,16 +53,16 @@ func VcToGoal(cfg *ast.AstConfig, loc ast.Location, name string, vc *mod.Clauses
 func TripleToGoal(cfg *ast.AstConfig, loc ast.Location, name string, action actions.Action,
 	precond []*ast.LabeledFormula, postcond []*ast.LabeledFormula) *ast.LabeledFormula {
 	// Convert labeled formulas to clauses for MakeVC
-	var preClauses []*mod.Clauses
+	var preClauses []*module.Clauses
 	for _, lf := range precond {
 		if f, ok := lf.Formula.(lg.Expr); ok {
-			preClauses = append(preClauses, mod.NewClauses([]lg.Expr{f}, nil, nil))
+			preClauses = append(preClauses, module.NewClauses([]lg.Expr{f}, nil, nil))
 		}
 	}
-	var postClauses []*mod.Clauses
+	var postClauses []*module.Clauses
 	for _, lf := range postcond {
 		if f, ok := lf.Formula.(lg.Expr); ok {
-			postClauses = append(postClauses, mod.NewClauses([]lg.Expr{f}, nil, nil))
+			postClauses = append(postClauses, module.NewClauses([]lg.Expr{f}, nil, nil))
 		}
 	}
 	vc := trace.MakeVC(action, preClauses, postClauses, false)
@@ -354,12 +354,12 @@ func ApplyTempcase(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.N
 }
 
 // ---------- tactic entry points ----------
-// All follow mod.ProofTactic signature:
-//   func(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
+// All follow module.ProofTactic signature:
+//   func(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
 
 // Vcgen reduces a safety property to initiation and consecution subgoals.
 // Corresponds to Python: vcgen (ivy_tactics.py lines 21-31).
-func Vcgen(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Vcgen(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, fmt.Errorf("vcgen: no goals")
 	}
@@ -416,7 +416,7 @@ func Vcgen(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode 
 
 // Skolemize skolemizes a goal in prenex form.
 // Corresponds to Python: skolemize (ivy_tactics.py lines 43-46).
-func Skolemize(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Skolemize(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, fmt.Errorf("skolemize: no goals")
 	}
@@ -431,7 +431,7 @@ func Skolemize(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofN
 
 // Skolemizenp skolemizes a goal without requiring prenex normal form.
 // Corresponds to Python: skolemizenp (ivy_tactics.py lines 50-53).
-func Skolemizenp(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Skolemizenp(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, fmt.Errorf("skolemizenp: no goals")
 	}
@@ -446,7 +446,7 @@ func Skolemizenp(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proo
 
 // Tempind applies temporal induction to a proof goal.
 // Corresponds to Python: tempind (ivy_tactics.py lines 91-94).
-func Tempind(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Tempind(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, fmt.Errorf("tempind: no goals")
 	}
@@ -464,7 +464,7 @@ func Tempind(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNod
 
 // Tempcase applies temporal case analysis to a proof goal.
 // Corresponds to Python: tempcase (ivy_tactics.py lines 127-130).
-func Tempcase(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Tempcase(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, fmt.Errorf("tempcase: no goals")
 	}
@@ -482,7 +482,7 @@ func Tempcase(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNo
 
 // Sorry drops the current goal without proof, marking that unsound proofs were used.
 // Corresponds to Python: sorry (ivy_tactics.py lines 136-139).
-func Sorry(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func Sorry(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	// Python: used_sorry = True; return decls[1:]
 	if pc != nil && pc.GetModule() != nil && pc.GetModule().Cfg != nil {
 		pc.GetModule().Cfg.UsedSorry = true
@@ -497,7 +497,7 @@ func Sorry(pc mod.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNode 
 
 // RegisterProofTactics registers all ivy_tactics.py proof tactics on the given proof config.
 // Corresponds to Python's module-level register_tactic calls (lines 41, 48, 55, 96, 132, 141).
-func RegisterProofTactics(cfg *mod.ProofConfig) {
+func RegisterProofTactics(cfg *module.ProofConfig) {
 	cfg.RegisterTactic("vcgen", Vcgen)
 	cfg.RegisterTactic("skolemize", Skolemize)
 	cfg.RegisterTactic("skolemizenp", Skolemizenp)

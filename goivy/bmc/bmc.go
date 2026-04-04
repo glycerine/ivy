@@ -14,7 +14,7 @@ import (
 	"github.com/glycerine/ivy/goivy/art"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/trace"
 )
 
@@ -40,13 +40,13 @@ type Config struct {
 	// NUnroll is the loop unroll count (nil for no unrolling).
 	NUnroll *int
 	// Module is the Ivy module to check.
-	Module *mod.Module
+	Module *module.Module
 	// Logger receives diagnostic messages. If nil, messages are discarded.
 	Logger func(string)
 }
 
 // DefaultConfig returns a Config with sensible defaults.
-func DefaultConfig(mod *mod.Module, nSteps int) *Config {
+func DefaultConfig(mod *module.Module, nSteps int) *Config {
 	return &Config{
 		NSteps: nSteps,
 		Module: mod,
@@ -59,7 +59,7 @@ func (c *Config) log(format string, args ...interface{}) {
 	}
 }
 
-// CheckIsolate performs bounded model checking on an Ivy mod.
+// CheckIsolate performs bounded model checking on an Ivy module.
 //
 // It unrolls the system up to nSteps transitions and checks whether
 // the module's conjectures hold at each step. If a counterexample is
@@ -81,17 +81,17 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	nSteps := cfg.NSteps
 
 	// If unrolling is requested, duplicate the actions with unrolled loops.
-	var oldActions *iu.InsMap[string, mod.Action]
+	var oldActions *iu.InsMap[string, module.Action]
 	if cfg.NUnroll != nil {
-		oldActions = mod.Actions
-		mod.Actions = iu.NewInsMap[string, mod.Action]()
+		oldActions = module.Actions
+		module.Actions = iu.NewInsMap[string, module.Action]()
 		for name, act := range oldActions.All() {
-			mod.Actions.Set(name, UnrollAction(act, *cfg.NUnroll))
+			module.Actions.Set(name, UnrollAction(act, *cfg.NUnroll))
 		}
 	}
 	defer func() {
 		if oldActions != nil {
-			mod.Actions = oldActions
+			module.Actions = oldActions
 		}
 	}()
 
@@ -108,13 +108,13 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	ag := art.NewAnalysisGraph(mod)
 
 	// Add initial state.
-	initClauses := mod.TrueClauses(actions.EmptyAnnotation{})
+	initClauses := module.TrueClauses(actions.EmptyAnnotation{})
 	initState := art.NewState(mod, initClauses)
 	ag.Add(initState, nil)
 	post := initState
 
 	// Execute the initialize action if present.
-	if initAct, ok := mod.Actions.Get2("initialize"); ok {
+	if initAct, ok := module.Actions.Get2("initialize"); ok {
 		if act, ok2 := initAct.(actions.Action); ok2 {
 			initPost, err := ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
 			if err != nil {
@@ -166,7 +166,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 				failClauses := failUpdate.TR
 				failState := art.NewState(mod, failClauses)
 				failState.Pred = post.Pred
-				safetyResult := trace.CheckFinalCond(ag, failState, mod.TrueClauses(nil), nil, true)
+				safetyResult := trace.CheckFinalCond(ag, failState, module.TrueClauses(nil), nil, true)
 				if safetyResult != nil {
 					msg := fmt.Sprintf("BMC with bound %d found an assertion failure", n)
 					cfg.log("%s", msg)
@@ -190,13 +190,13 @@ func CheckIsolate(cfg *Config) *BMCResult {
 
 // EnvAction creates the environment step action from a module's public actions.
 // It produces a nondeterministic choice among all public actions.
-func EnvAction(mod *mod.Module) actions.Action {
+func EnvAction(mod *module.Module) actions.Action {
 	if mod == nil {
 		return actions.NewSequence()
 	}
 	var branches []lg.Expr
-	for name := range mod.PublicActions.All() {
-		act, ok := mod.Actions.Get2(name)
+	for name := range module.PublicActions.All() {
+		act, ok := module.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -213,27 +213,27 @@ func EnvAction(mod *mod.Module) actions.Action {
 }
 
 // BuildConjecture combines a module's conjectures into a single Clauses.
-func BuildConjecture(mod *mod.Module) *mod.Clauses {
-	if mod == nil || len(mod.LabeledConjs) == 0 {
-		return mod.TrueClauses(nil)
+func BuildConjecture(mod *module.Module) *module.Clauses {
+	if mod == nil || len(module.LabeledConjs) == 0 {
+		return module.TrueClauses(nil)
 	}
 	var fmlas []lg.Expr
-	for _, lc := range mod.LabeledConjs {
+	for _, lc := range module.LabeledConjs {
 		if lc.Formula != nil {
 			fmlas = append(fmlas, lc.Formula.(lg.Expr))
 		}
 	}
 	if len(fmlas) == 0 {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
-	return mod.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }
 
 // DualClauses computes the negation of a conjecture for checking.
 // The dual conjecture is satisfiable iff the original is not valid.
-func DualClauses(conj *mod.Clauses) *mod.Clauses {
+func DualClauses(conj *module.Clauses) *module.Clauses {
 	if conj == nil || len(conj.Fmlas) == 0 {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	// Negate: each conjunct becomes a disjunct of its negation.
 	var negFmlas []lg.Expr
@@ -244,9 +244,9 @@ func DualClauses(conj *mod.Clauses) *mod.Clauses {
 	or, err := lg.NewOr(negFmlas...)
 	if err != nil {
 		// Fallback
-		return mod.NewClauses(negFmlas, nil, nil)
+		return module.NewClauses(negFmlas, nil, nil)
 	}
-	return mod.NewClauses([]lg.Expr{or}, nil, nil)
+	return module.NewClauses([]lg.Expr{or}, nil, nil)
 }
 
 // UnrollAction is a placeholder for loop unrolling.
@@ -265,7 +265,7 @@ func UnrollAction(act actions.Action, n int) actions.Action {
 //
 // If the action implements the Updater interface, we compute its update
 // and return action_failure(update). Otherwise returns nil.
-func computeFailUpdate(action actions.Action, mod *mod.Module) *actions.Update {
+func computeFailUpdate(action actions.Action, mod *module.Module) *actions.Update {
 	update := actions.GetUpdateForArt(action, mod, nil)
 	if update == nil {
 		return nil

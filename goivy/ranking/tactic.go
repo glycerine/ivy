@@ -13,7 +13,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 )
 
@@ -29,7 +29,7 @@ func rankingInvariants(
 	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
-	mod *mod.Module,
+	mod *module.Module,
 ) ([]*ast.LabeledFormula, []*ast.LabeledFormula, map[string]*Task, map[string]*Trigger, error) {
 
 	// Helper: put into nested dict
@@ -74,7 +74,7 @@ func rankingInvariants(
 			if dname == "" || !strings.HasPrefix(dname, name) {
 				continue
 			}
-			freeVars := mod.VariablesAST(f)
+			freeVars := module.VariablesAST(f)
 			if len(freeVars) > 0 {
 				continue
 			}
@@ -189,11 +189,11 @@ func rankingInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return mod.SubstituteConstantsExpr(node, subs)
+		return module.SubstituteConstantsExpr(node, subs)
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
-		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
+		return module.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
 	}
 
 	allD := func(eq *lg.Eq) lg.Expr {
@@ -332,13 +332,13 @@ func rankingInvariants(
 
 	// --- l2s_consts_d invariant ---
 	var constsDTerms []lg.Expr
-	if mod != nil && mod.Sig != nil {
+	if mod != nil && module.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			sName := s.String()
 			if finiteSorts[sName] {
 				continue
 			}
-			for _, sym := range mod.Sig.Symbols {
+			for _, sym := range module.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2sD(s)
 					c := lg.NewConst(sym.Name, sym.Sort)

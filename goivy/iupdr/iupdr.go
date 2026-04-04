@@ -12,7 +12,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/art"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/tactics"
 )
@@ -20,7 +20,7 @@ import (
 // Session holds the state for an interactive UPDR session.
 type Session struct {
 	AG      *art.AnalysisGraph
-	Mod     *mod.Module
+	Mod     *module.Module
 	TC      *tactics.TacticsContext
 	Frames  []*art.State
 	History []StepInfo
@@ -36,7 +36,7 @@ type StepInfo struct {
 }
 
 // NewSession creates a new interactive UPDR session.
-func NewSession(mod *mod.Module) *Session {
+func NewSession(mod *module.Module) *Session {
 	ag := art.NewAnalysisGraph(mod)
 	tc := tactics.NewTacticsContext(ag, mod)
 	return &Session{
@@ -47,7 +47,7 @@ func NewSession(mod *mod.Module) *Session {
 }
 
 // Initialize sets up the initial state and adds it to the graph.
-func (s *Session) Initialize(initClauses *mod.Clauses) {
+func (s *Session) Initialize(initClauses *module.Clauses) {
 	state := art.NewState(s.Mod, initClauses)
 	s.AG.Add(state, nil)
 	s.Frames = append(s.Frames, state)
@@ -117,7 +117,7 @@ func (s *Session) Step() (*StepInfo, bool, error) {
 		// Learned new fact
 		if newFact, ok := result.(lg.Expr); ok {
 			if goalNode, ok := goal.Node.(*art.State); ok {
-				factClauses := mod.FormulaToClauses(newFact, nil)
+				factClauses := module.FormulaToClauses(newFact, nil)
 				tactics.ArgAddFacts(goalNode, factClauses)
 			}
 		}
