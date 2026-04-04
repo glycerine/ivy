@@ -6,22 +6,21 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *module.Module {
-	return module.New()
+func testModule() *mod.Module {
+	return mod.New()
 }
 
-func testClauses(fmlas ...lg.Expr) *clauseops.Clauses {
+func testClauses(fmlas ...lg.Expr) *mod.Clauses {
 	if len(fmlas) == 0 {
 		fmlas = []lg.Expr{lg.True}
 	}
-	return clauseops.NewClauses(fmlas, nil, nil)
+	return mod.NewClauses(fmlas, nil, nil)
 }
 
 func makeEq(name string, val string) lg.Expr {
@@ -259,7 +258,7 @@ func TestEvalInState(t *testing.T) {
 	param := lg.NewConst("X", lg.Boolean)
 	val := lg.NewConst("true_val", lg.Boolean)
 	eq, _ := lg.NewEq(param, val)
-	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{eq}, nil, nil)
 	state := art.NewState(nil, clauses)
 	result := EvalInState(state, param)
 	if result == nil {
@@ -271,7 +270,7 @@ func TestEvalInState(t *testing.T) {
 }
 
 func TestEvalInStateNotFound(t *testing.T) {
-	clauses := clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	state := art.NewState(nil, clauses)
 	param := lg.NewConst("missing", lg.Boolean)
 	result := EvalInState(state, param)
@@ -361,7 +360,7 @@ func TestMakeCheckArt(t *testing.T) {
 
 func TestMakeCheckArtWithPrecond(t *testing.T) {
 	mod := testModule()
-	precond := []*clauseops.Clauses{testClauses(), testClauses()}
+	precond := []*mod.Clauses{testClauses(), testClauses()}
 	ag, pre, _, err := MakeCheckArt(mod, "test", precond)
 	if err != nil {
 		t.Fatalf("MakeCheckArt error: %v", err)
@@ -400,7 +399,7 @@ func TestCheckVCNilClauses(t *testing.T) {
 }
 
 func TestCheckVCNoAnnot(t *testing.T) {
-	clauses := clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	// Annot is nil
 	result := CheckVC(nil, clauses, nil, nil, nil, false)
 	if result != nil {
@@ -412,8 +411,8 @@ func TestCheckVCNoAnnot(t *testing.T) {
 
 func TestMakeVC(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
-	pre := []*clauseops.Clauses{testClauses()}
-	post := []*clauseops.Clauses{testClauses()}
+	pre := []*mod.Clauses{testClauses()}
+	post := []*mod.Clauses{testClauses()}
 	vc := MakeVC(action, pre, post, true)
 	if vc == nil {
 		t.Fatal("MakeVC returned nil")

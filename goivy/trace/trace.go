@@ -15,12 +15,10 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
-	tr "github.com/glycerine/ivy/goivy/transrel"
 )
 
 const checkPrecondTrue = true
@@ -98,9 +96,9 @@ type TraceBase struct {
 }
 
 // NewTraceBase creates a new empty TraceBase.
-func NewTraceBase(cfg *iu.IvyUtilsConfig, mod *module.Module) *TraceBase {
+func NewTraceBase(cfg *iu.IvyUtilsConfig, mod *mod.Module) *TraceBase {
 	if mod == nil {
-		mod = module.New()
+		mod = mod.New()
 	}
 	return &TraceBase{
 		cfg:           cfg,
@@ -118,7 +116,7 @@ func (tb *TraceBase) Rename(m map[string]string) *TraceBase {
 // IsSkolem reports whether a symbol name is a Skolem constant
 // that should be hidden from trace display.
 func IsSkolem(name string) bool {
-	if !tr.IsSkolem(name) {
+	if !actions.IsSkolem(name) {
 		return false
 	}
 	// Symbols starting with "__X" where X is uppercase are global skolems, not hidden.
@@ -133,7 +131,7 @@ func IsSkolem(name string) bool {
 
 // AddTraceState adds a new trace state from a list of equations.
 func (tb *TraceBase) AddTraceState(eqns []lg.Expr) {
-	clauses := clauseops.NewClauses(eqns, nil, nil)
+	clauses := mod.NewClauses(eqns, nil, nil)
 	state := art.NewState(tb.Domain, clauses)
 	ts := &TraceState{State: state}
 	if tb.LastAction != nil {
@@ -376,18 +374,18 @@ func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
 	var symPairs [][2]string
 
 	isSkolem := func(name string) bool {
-		return tr.IsSkolem(name) && (tb.HiddenSymbols == nil || !tb.HiddenSymbols(name))
+		return actions.IsSkolem(name) && (tb.HiddenSymbols == nil || !tb.HiddenSymbols(name))
 	}
 
 	// For vocabulary symbols not in env, use identity mapping
 	if tb.AnalysisGraph != nil && tb.AnalysisGraph.Domain != nil {
 		for name := range tb.AnalysisGraph.Domain.Relations.All() {
-			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
+			if _, inEnv := env[name]; !inEnv && !actions.IsNew(name) && !isSkolem(name) {
 				symPairs = append(symPairs, [2]string{name, name})
 			}
 		}
 		for name := range tb.AnalysisGraph.Domain.Functions.All() {
-			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
+			if _, inEnv := env[name]; !inEnv && !actions.IsNew(name) && !isSkolem(name) {
 				symPairs = append(symPairs, [2]string{name, name})
 			}
 		}
@@ -395,7 +393,7 @@ func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
 
 	// For symbols in env, use the renaming
 	for sym, renamedSym := range env {
-		if !tr.IsNew(sym) && !isSkolem(sym) {
+		if !actions.IsNew(sym) && !isSkolem(sym) {
 			symPairs = append(symPairs, [2]string{sym, renamedSym})
 		}
 	}
@@ -437,7 +435,7 @@ func isCallAction(action actions.Action) bool {
 // Trace extends TraceBase with model-based state construction.
 type Trace struct {
 	*TraceBase
-	Clauses  *clauseops.Clauses
+	Clauses  *mod.Clauses
 	Model    Model
 	Vocab    []lg.Expr
 	TopLevel bool
@@ -453,8 +451,8 @@ type Model interface {
 }
 
 // NewTrace creates a Trace from clauses and a model.
-func NewTrace(cfg *iu.IvyUtilsConfig, clauses *clauseops.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
-	mod := module.New()
+func NewTrace(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
+	mod := mod.New()
 	t := &Trace{
 		TraceBase: NewTraceBase(cfg, mod),
 		Clauses:   clauses,
@@ -514,16 +512,16 @@ func (t *Trace) GetSymEqs(sym string) []lg.Expr {
 //  3. Return (ag, post_state) — post includes the TR encoding
 //
 // Returns (ag, preState, postState).
-func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State, error) {
+func MakeCheckArt(mod *mod.Module, actName string, precond []*mod.Clauses) (*art.AnalysisGraph, *art.State, *art.State, error) {
 	ag := art.NewAnalysisGraph(mod)
-	var pre *clauseops.Clauses
+	var pre *mod.Clauses
 	if len(precond) > 0 {
 		pre = precond[0]
 		for _, p := range precond[1:] {
-			pre = clauseops.AndClausesTyped(pre, p)
+			pre = mod.AndClausesTyped(pre, p)
 		}
 	} else {
-		pre = clauseops.TrueClauses(nil)
+		pre = mod.TrueClauses(nil)
 	}
 	pre.Annot = actions.EmptyAnnotation{}
 	preState := art.NewState(mod, pre)
@@ -542,7 +540,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 		}
 		if postState != nil {
 			// Python: post.clauses = true_clauses()
-			postState.Clauses = clauseops.TrueClauses(nil)
+			postState.Clauses = mod.TrueClauses(nil)
 		}
 	}
 	if postState == nil {
@@ -552,9 +550,9 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 	return ag, preState, postState, nil
 }
 
-// buildEnvAction creates an EnvAction wrapping all public actions from the module.
+// buildEnvAction creates an EnvAction wrapping all public actions from the mod.
 // Matches Python ivy_actions.py env_action().
-func buildEnvAction(mod *module.Module, actName string) actions.Action {
+func buildEnvAction(mod *mod.Module, actName string) actions.Action {
 	if mod == nil {
 		return nil
 	}
@@ -589,7 +587,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 //
 // Returns a trace if a counterexample is found, nil otherwise.
 func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
-	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
+	finalCond *mod.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if post == nil {
 		return nil
 	}
@@ -605,13 +603,13 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	}
 	// Use the history's post formula as the clauses.
 	// Matches Python ivy_trace.py:328: clauses = history.post
-	clauses := clauseops.FormulaToClauses(history.Post, actions.EmptyAnnotation{})
+	clauses := mod.FormulaToClauses(history.Post, actions.EmptyAnnotation{})
 	// Conjoin with background theory (axioms, definitions)
 	// Matches Python ivy_trace.py:330: clauses = lut.and_clauses(clauses, axioms)
 	if ag.Domain != nil {
 		bgTheory := ag.Domain.BackgroundTheory(nil)
 		if bgTheory != nil && len(bgTheory.Fmlas) > 0 {
-			clauses = clauseops.AndClausesTyped(clauses, bgTheory)
+			clauses = mod.AndClausesTyped(clauses, bgTheory)
 		}
 	}
 	return CheckVC(ag.Domain.Cfg, clauses, nil, finalCond, relsToMin, shrink)
@@ -624,8 +622,8 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
 //   - Calls solver.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
-func CheckVC(cfg *module.Config, clauses *clauseops.Clauses, action actions.Action,
-	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
+func CheckVC(cfg *mod.Config, clauses *mod.Clauses, action actions.Action,
+	finalCond *mod.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
 	}
@@ -634,7 +632,7 @@ func CheckVC(cfg *module.Config, clauses *clauseops.Clauses, action actions.Acti
 	// Python: model = slv.get_small_model(clauses, sorts, rels, final_cond=final_cond)
 	checkClauses := clauses
 	if finalCond != nil {
-		checkClauses = clauseops.AndClausesTyped(clauses, finalCond)
+		checkClauses = mod.AndClausesTyped(clauses, finalCond)
 	}
 
 	// Collect uninterpreted sorts for minimization
@@ -715,8 +713,8 @@ func addSortIfNew(out *[]lg.Sort, s lg.Sort) {
 // The VC is: pre ∧ TR ∧ ¬post, where TR is the action's transition relation.
 //
 // Python: ivy_trace.py:make_vc
-func MakeVC(action actions.Action, precond []*clauseops.Clauses,
-	postcond []*clauseops.Clauses, checkAsserts bool) *clauseops.Clauses {
+func MakeVC(action actions.Action, precond []*mod.Clauses,
+	postcond []*mod.Clauses, checkAsserts bool) *mod.Clauses {
 	// Collect precondition formulas
 	var preFmlas []lg.Expr
 	for _, p := range precond {
@@ -733,7 +731,7 @@ func MakeVC(action actions.Action, precond []*clauseops.Clauses,
 
 	// Combine: pre ∧ ¬post (the TR would be added by the caller)
 	allFmlas := append(preFmlas, postFmlas...)
-	return clauseops.NewClauses(allFmlas, nil, actions.EmptyAnnotation{})
+	return mod.NewClauses(allFmlas, nil, actions.EmptyAnnotation{})
 }
 
 // ValueToStr converts a value to a human-readable string for trace display.
@@ -752,7 +750,7 @@ func ValueToStr(val lg.Expr, evalFn func(lg.Expr) lg.Expr) string {
 			sortName := c.CSort.String()
 			// Try to detect array pattern: sort has .end and .value
 			// This is a simplified version; full implementation would
-			// check module.sort_destructors for struct rendering.
+			// check mod.sort_destructors for struct rendering.
 			_ = sortName
 		}
 		return c.Name

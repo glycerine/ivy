@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // ElimIte eliminates ITEs over non-finite sorts by introducing fresh variables
@@ -69,7 +68,7 @@ func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
 // circuit (as opposed to a set of constraints) which might be helpful to ABC.
 //
 // Python: ivy_mc.py:1063-1114
-func ToTableLookup(trans *co.Clauses, invariant lg.Expr) (*co.Clauses, lg.Expr) {
+func ToTableLookup(trans *mod.Clauses, invariant lg.Expr) (*mod.Clauses, lg.Expr) {
 	var newDefs []lg.Expr
 	counter := 0
 
@@ -150,7 +149,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Expr) (*co.Clauses, lg.Expr) 
 			allDefs = append(allDefs, def)
 		}
 	}
-	newTrans := co.NewClauses(fmlas, allDefs, trans.Annot)
+	newTrans := mod.NewClauses(fmlas, allDefs, trans.Annot)
 
 	// Process invariant
 	newDefs = nil
@@ -270,7 +269,7 @@ func defToConstraint(def *il.Definition) lg.Expr {
 // premises against the sort constants and functions.
 //
 // Python: ivy_mc.py:637-655
-func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
+func ExpandSchemata(mod *mod.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
@@ -408,7 +407,7 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
+func InstantiateAxioms(mod *mod.Module, stVars []string, trans *mod.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 

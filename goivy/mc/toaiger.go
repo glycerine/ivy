@@ -27,7 +27,7 @@ type ToAigerResult struct {
 // This is the main entry point for the model checking pipeline.
 //
 // Python: ivy_mc.py:1117-1427
-func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
+func ToAiger(mod *mod.Module, method string) (*ToAigerResult, error) {
 	if method == "" {
 		method = "mc"
 	}
@@ -552,7 +552,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 // Asserts become assignments to the error flag, assumes become conditional on the error flag.
 //
 // Python: ivy_mc.py:1048-1054
-func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
+func AddErrFlagMod(mod *mod.Module, erf *lg.Const, errConds *[]lg.Expr) {
 	for actname, act := range mod.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
 			newAction := AddErrFlag(a, erf, errConds)
@@ -673,7 +673,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 }
 
 // sortedPublicActions returns public action names sorted.
-func sortedPublicActions(mod *module.Module) []string {
+func sortedPublicActions(mod *mod.Module) []string {
 	names := make([]string, 0, mod.PublicActions.Len())
 	for name := range mod.PublicActions.All() {
 		if mod.PublicActions.Get(name) {
