@@ -469,7 +469,7 @@ func TestVerboseNonstopOrdLive(t *testing.T) {
 }
 
 func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string) {
-	t.Skip("skip the golden tests for the moment-- too slow for refactor testing.")
+	//t.Skip("skip the golden tests for the moment-- too slow for refactor testing.")
 	//return // off to check everything else under make test.
 	t.Helper()
 
