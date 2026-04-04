@@ -761,7 +761,7 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	for a := range myExports {
 		exportNames = append(exportNames, a)
 	}
-	sortStrings(exportNames)
+	sort.Strings(exportNames)
 	xtracer.Trace("check.ApplyPresentConjectures n_exports=%d n_conjs=%d n_postConjs=%d",
 		len(myExports), len(filteredConjs), len(filteredPostConjs))
 	for _, a := range exportNames {
@@ -772,11 +772,11 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	for k := range mod.ConjActions {
 		conjActKeys = append(conjActKeys, k)
 	}
-	sortStrings(conjActKeys)
+	sort.Strings(conjActKeys)
 	for _, k := range conjActKeys {
 		vals := make([]string, len(mod.ConjActions[k]))
 		copy(vals, mod.ConjActions[k])
-		sortStrings(vals)
+		sort.Strings(vals)
 		xtracer.Trace("check.ApplyPresentConjectures CONJ_ACTIONS %s -> %s", k, fmtStrList(vals))
 	}
 	var brackets []BracketEntry

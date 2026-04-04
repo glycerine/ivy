@@ -46,13 +46,13 @@ func GetCallsMods(action actions.Action) (calls []string, mods []string) {
 	for c := range callSet {
 		calls = append(calls, c)
 	}
-	sortStrings(calls)
+	sort.Strings(calls)
 
 	mods = make([]string, 0, len(modSet))
 	for m := range modSet {
 		mods = append(mods, m)
 	}
-	sortStrings(mods)
+	sort.Strings(mods)
 
 	return calls, mods
 }
@@ -407,7 +407,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 					for m := range cmods {
 						modNames = append(modNames, m)
 					}
-					sortStrings(modNames)
+					sort.Strings(modNames)
 					xtracer.Trace("isolate.CheckInterferenceFull ERROR_CALLOUT actname=%s called=%s cmods=%s",
 						actname, called, strings.Join(modNames, ","))
 					refs := FindReferences(mod, cmods, newActions)
@@ -438,7 +438,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 						for c := range mcalls {
 							callbackNames = append(callbackNames, c)
 						}
-						sortStrings(callbackNames)
+						sort.Strings(callbackNames)
 						return fmt.Errorf("call to %s may cause interfering callback to %s",
 							midcall, joinStrings(callbackNames, ","))
 					}
@@ -502,7 +502,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 					for m := range filteredMods {
 						modNames = append(modNames, m)
 					}
-					sortStrings(modNames)
+					sort.Strings(modNames)
 					refs := FindReferences(mod, filteredMods, newActions)
 					refStr := ""
 					for ln := range refs {
@@ -819,7 +819,7 @@ func ActionCallGraph(mod *module.Module) map[string][]string {
 	}
 	// Sort each caller list for determinism.
 	for k := range graph {
-		sortStrings(graph[k])
+		sort.Strings(graph[k])
 	}
 	return graph
 }
@@ -850,13 +850,4 @@ func sortedKeys(m map[string]bool) []string {
 	}
 	sort.Strings(keys)
 	return keys
-}
-
-// sortStrings sorts a string slice in place (insertion sort).
-func sortStrings(s []string) {
-	for i := 1; i < len(s); i++ {
-		for j := i; j > 0 && s[j] < s[j-1]; j-- {
-			s[j], s[j-1] = s[j-1], s[j]
-		}
-	}
 }

@@ -16,13 +16,6 @@ logic. This audit catalogs all found duplication for future cleanup.
 
 ## HIGH — Exact Duplicates Within/Across Packages
 
-### D3: `sortStrings()` — 2 identical copies
-
-- `actions/helpers.go:71-77`
-- `isolate/deps.go:921-927`
-
-Both are identical insertion-sort implementations. These should use `slices.Sort()` instead.
-
 ### D4: `GetCone()` / `getCone()` — 2 copies in isolate/
 
 - `isolate/helpers.go:738-763` — private `getCone()`
@@ -43,13 +36,6 @@ Identical bodies.
 - `isolate/isolate.go:1708-1720` — `makeAnd()`
 
 Identical conjunction-creation logic.
-
-### D8: `HasSideEffectRec()` — 2 variants in isolate/
-
-- `isolate/deps.go:226-289` — private, manually traverses action types
-- `isolate/phase7.go:102-144` — public, uses `actions.Modifies()` helper
-
-Same concept, different implementations. Phase7 version is more concise/correct.
 
 ---
 
@@ -93,19 +79,6 @@ Near-identical except location tracking.
 
 Three implement the same check; two delegate.
 
-### D14: `IsSkolem()` — 2 different implementations
-
-- `actions/transrel.go:73-75` — `strings.Contains(name, "__")` (anywhere in name)
-- `solver/solver.go:461-463` — `name[0]=='_' && name[1]=='_'` (prefix only)
-
-May be intentionally different. Needs review against Python to determine which is correct.
-
-### D15: `UniqueRenamer` — 2 implementations
-
-- `ivyutils/renamer.go:6-37` — full implementation (prefix + suffix, collision avoidance)
-- `dafnygen/dafnygen.go:25-42` — simpler (prefix + atomic counter)
-
-Different APIs. dafnygen may be able to use the ivyutils version.
 
 ---
 
@@ -142,15 +115,11 @@ All follow the same `make` + `range` + `copy` pattern. Could use a single generi
 | HIGH | D4 | GetCone() ×2 | ~50 |
 | HIGH | D5 | GetPropsProvedInIsolateOrig() ×2 | ~40 |
 | HIGH | D6 | makeAnd()/makeAndH() ×2 | ~26 |
-| HIGH | D7 | dirExists() ×3 | ~30 |
-| HIGH | D8 | HasSideEffectRec() ×2 | ~100 |
 | MEDIUM | D9 | DistinctVariableRenaming ×2 | ~60 |
 | MEDIUM | D10 | Substitute/Rename families | ~250 |
 | MEDIUM | D11 | usedSymbolNames() ×2 | ~16 |
 | MEDIUM | D12 | ConjToAssume() ×2 | ~16 |
 | MEDIUM | D13 | IsTrue()/IsFalse() ×5 | ~30 |
-| MEDIUM | D14 | IsSkolem() ×2 | ~6 |
-| MEDIUM | D15 | UniqueRenamer ×2 | ~35 |
 | LOW | D16 | ShortTypeName() chain | ~12 |
 | LOW | D17 | SubstituteConstantsAction() | ~3 |
 | LOW | D18 | formulaToClauses() | ~3 |

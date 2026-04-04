@@ -3,6 +3,7 @@ package actions
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -63,17 +64,8 @@ func CallSet(actionName string, env map[string]Action) []string {
 		names = append(names, n)
 	}
 	// Sort for deterministic output.
-	sortStrings(names)
+	sort.Strings(names)
 	return names
-}
-
-// sortStrings sorts a string slice in place.
-func sortStrings(s []string) {
-	for i := 1; i < len(s); i++ {
-		for j := i; j > 0 && s[j] < s[j-1]; j-- {
-			s[j], s[j-1] = s[j-1], s[j]
-		}
-	}
 }
 
 // PrefixAction adds a list of statements at the beginning of an action.
