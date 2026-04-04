@@ -219,36 +219,6 @@ type SortOrder struct {
 	Less  func(a, b string) bool
 }
 
-// GetCone computes the cone of influence: the set of action names reachable
-// from the given action name by following calls and native references.
-// Corresponds to Python's get_cone (ivy_isolate.py lines 1443-1456).
-func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
-	if cone[actionName] {
-		return
-	}
-	cone[actionName] = true
-	action, ok := actionsMap.Get2(actionName)
-	if !ok {
-		return
-	}
-	for _, sub := range action.IterSubactions() {
-		if ca, ok := sub.(*actions.CallAction); ok {
-			calleeName := ca.CalleeName()
-			GetCone(actionsMap, calleeName, cone)
-		}
-		if na, ok := sub.(*actions.NativeAction); ok {
-			// Native actions may reference other actions by name in args[1:]
-			for _, arg := range na.ActionArgs() {
-				if sym, ok := arg.(*lg.Const); ok {
-					if _, exists := actionsMap.Get2(sym.Name); exists {
-						GetCone(actionsMap, sym.Name, cone)
-					}
-				}
-			}
-		}
-	}
-}
-
 // GetModCone returns the cone of action names reachable from the given
 // roots (normally the exported actions). An action is accessible if it
 // is a root, is referenced from native code, or is called in an initializer.

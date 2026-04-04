@@ -710,7 +710,7 @@ func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
 
 // getCone recursively adds action_name and its transitive callees to cone.
 // Matches Python's get_cone (ivy_isolate.py:1462-1475).
-func getCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
+func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
 	if cone[actionName] {
 		return
 	}
@@ -722,14 +722,14 @@ func getCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, c
 	for _, sub := range act.IterSubactions() {
 		switch a := sub.(type) {
 		case *actions.CallAction:
-			getCone(actionsMap, a.CalleeName(), cone)
+			GetCone(actionsMap, a.CalleeName(), cone)
 		case *actions.NativeAction:
 			// Python: for arg in a.args[1:]: if isinstance(arg,ivy_ast.Atom) and a.rep in actions
 			// In Go, native params are lg.Expr — Atoms become *lg.Const after compilation
 			for _, arg := range a.Params {
 				if c, ok := arg.(*lg.Const); ok {
 					if _, exists := actionsMap.Get2(c.Name); exists {
-						getCone(actionsMap, c.Name, cone)
+						GetCone(actionsMap, c.Name, cone)
 					}
 				}
 			}
@@ -747,7 +747,7 @@ func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Ac
 
 	// Start with roots — Python: for a in roots: get_cone(actions, a, cone)
 	for name := range roots.All() {
-		getCone(actionsMap, name, cone)
+		GetCone(actionsMap, name, cone)
 	}
 
 	// Add actions referenced by natives
@@ -761,7 +761,7 @@ func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Ac
 				n := lfLabelName(lf)
 				if n != "" {
 					if _, exists := actionsMap.Get2(n); exists {
-						getCone(actionsMap, n, cone)
+						GetCone(actionsMap, n, cone)
 					}
 				}
 			}
@@ -770,7 +770,7 @@ func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Ac
 
 	// Add after-init actions — Python: for ai in after_inits: get_cone(actions, ai, cone)
 	for _, ai := range afterInits {
-		getCone(actionsMap, ai, cone)
+		GetCone(actionsMap, ai, cone)
 	}
 
 	return cone
