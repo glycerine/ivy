@@ -5,27 +5,25 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/transrel"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers ---
 
-func testModule() *module.Module {
-	return module.New()
+func testModule() *mod.Module {
+	return mod.New()
 }
 
-func testClauses() *clauseops.Clauses {
-	return clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
+func testClauses() *mod.Clauses {
+	return mod.NewClauses([]lg.Expr{lg.True}, nil, nil)
 }
 
-func falseClauses() *clauseops.Clauses {
-	return clauseops.NewClauses([]lg.Expr{lg.False}, nil, nil)
+func falseClauses() *mod.Clauses {
+	return mod.NewClauses([]lg.Expr{lg.False}, nil, nil)
 }
 
-func testState(mod *module.Module) *State {
+func testState(mod *mod.Module) *State {
 	return NewState(mod, testClauses())
 }
 
@@ -1054,4 +1052,4 @@ func TestGetHistoryBounded(t *testing.T) {
 }
 
 // Verify that unused imports are used.
-var _ = transrel.NullUpdate
+var _ = actions.NullUpdate

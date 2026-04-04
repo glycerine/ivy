@@ -4,25 +4,24 @@ import (
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/clauseops"
 	"github.com/glycerine/ivy/goivy/interp"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
 // helpers for building interp.State chains in tests
 // ---------------------------------------------------------------------------
 
-func interpState(mod *module.Module) *interp.State {
-	sv := interp.NewStateValue(nil, clauseops.TrueClauses(nil), clauseops.FalseClauses(nil))
+func interpState(mod *mod.Module) *interp.State {
+	sv := interp.NewStateValue(nil, mod.TrueClauses(nil), mod.FalseClauses(nil))
 	return interp.NewState(mod, sv, nil, "")
 }
 
 // interpChain builds a chain of n interp.States where each non-root state
 // has .Expr set to an ActionApp pointing at its predecessor, and .CachedPred
 // set explicitly. Returns the deepest (last) state.
-func interpChain(mod *module.Module, n int) *interp.State {
+func interpChain(mod *mod.Module, n int) *interp.State {
 	if n <= 0 {
 		return nil
 	}

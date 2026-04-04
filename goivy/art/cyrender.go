@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 )
 
 // NodeAction describes a context-menu action available on a graph node.
@@ -285,7 +285,7 @@ var SortColors = []string{
 type ConceptGraphView interface {
 	// SetGraphState sets the clause state on the concept graph.
 	// Python: sg.current.set_state(and_clauses(clauses, bg))
-	SetGraphState(clauses *clauseops.Clauses)
+	SetGraphState(clauses *mod.Clauses)
 	// SetGraphConcrete clears/sets the concrete state.
 	// Python: sg.current.set_concrete([])
 	SetGraphConcrete(concrete []interface{})

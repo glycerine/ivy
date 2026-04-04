@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/clauseops"
+	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -21,7 +21,7 @@ func TestAsCyElementsFormulaStrings(t *testing.T) {
 	x := &lg.Const{Name: "x"}
 	y := &lg.Const{Name: "y"}
 	eq := &lg.Eq{T1: x, T2: y}
-	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)
 	ag.Add(s, nil)
 
@@ -215,7 +215,7 @@ func TestRenderRgFormulaStrings(t *testing.T) {
 	x := &lg.Const{Name: "myvar"}
 	y := &lg.Const{Name: "othervar"}
 	eq := &lg.Eq{T1: x, T2: y}
-	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
+	clauses := mod.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)
 	ag.Add(s, nil)
 
