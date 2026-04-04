@@ -230,8 +230,152 @@ func TestNewClausesDropUniversalsNot(t *testing.T) {
 	}
 }
 
+// TestIteClausesIntAnnotation verifies that iteClausesInt preserves
+// annotations, matching Python: annot = None if a0 is None or a1 is None else a0.ite(v,a1).
+func TestIteClausesIntAnnotation(t *testing.T) {
+	// Set up AnnotIteFunc to capture the call
+	origFunc := AnnotIteFunc
+	defer func() { AnnotIteFunc = origFunc }()
+
+	var calledWith struct {
+		annot, other interface{}
+		cond         lg.Expr
+	}
+	AnnotIteFunc = func(annot interface{}, cond lg.Expr, other interface{}) interface{} {
+		calledWith.annot = annot
+		calledWith.cond = cond
+		calledWith.other = other
+		return "combined"
+	}
+
+	cls1 := NewClauses([]lg.Expr{mkConst("p")}, nil, "annot1")
+	cls2 := NewClauses([]lg.Expr{mkConst("q")}, nil, "annot2")
+	cond := mkConst("c")
+
+	result := IteClauses(cond, cls1, cls2)
+
+	if result.Annot != "combined" {
+		t.Errorf("expected combined annotation, got %v", result.Annot)
+	}
+
+	// With one nil annotation, result should be nil
+	cls3 := NewClauses([]lg.Expr{mkConst("r")}, nil, nil)
+	result2 := IteClauses(cond, cls1, cls3)
+	if result2.Annot != nil {
+		t.Errorf("expected nil annotation when one arg annot is nil, got %v", result2.Annot)
+	}
+}
+
+// TestElimDeadDefinitionsPerArgRename verifies that each arg gets different
+// fresh names for captured skolem symbols, matching Python's per-arg renaming.
+// Python: args = [rename_symbols(rn, arg, to_rename) for arg in args]
+// Each call generates DIFFERENT fresh names because rn is stateful.
+func TestElimDeadDefinitionsPerArgRename(t *testing.T) {
+	skolem := lg.NewConst("__sk", lg.Boolean)
+
+	// cls1 defines __sk; cls2 does NOT define __sk but references it in a formula.
+	// This makes __sk "captured" (defined in some but not all args).
+	def1 := il.NewDefinition(skolem, mkConst("a"))
+	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
+	cls2 := NewClauses([]lg.Expr{skolem}, nil, nil) // references __sk in fmla
+
+	rn := newTestRenamer()
+	result := elimDeadDefinitions(rn, []*Clauses{cls1, cls2})
+
+	// cls1 should have its definition renamed (not __sk anymore)
+	if len(result[0].Defs) == 0 {
+		t.Fatal("cls1 should retain its (renamed) definition")
+	}
+	defName := result[0].Defs[0].Defines().(*lg.Const).Name
+	if defName == "__sk" {
+		t.Error("skolem definition should have been renamed from __sk")
+	}
+
+	// cls2's formula should reference a different renamed version of __sk.
+	// With per-arg renaming, cls1 and cls2 get DIFFERENT fresh names.
+	if len(result[1].Fmlas) == 0 {
+		t.Fatal("cls2 should still have its formula")
+	}
+	fmlaConst, ok := result[1].Fmlas[0].(*lg.Const)
+	if !ok {
+		t.Fatalf("cls2 formula should be a renamed Const, got %T", result[1].Fmlas[0])
+	}
+	if fmlaConst.Name == "__sk" {
+		t.Error("cls2's reference to __sk should have been renamed")
+	}
+	if fmlaConst.Name == defName {
+		t.Errorf("per-arg rename should produce different names: cls1 def=%q, cls2 fmla=%q (should differ)", defName, fmlaConst.Name)
+	}
+}
+
+// TestToFormulaCloseEPR verifies that ToFormula distributes ForAll through And,
+// matching Python's close_epr behavior.
+func TestToFormulaCloseEPR(t *testing.T) {
+	x := mkVar("X")
+	y := mkVar("Y")
+	// Two formulas with different free variables
+	cls := NewClauses([]lg.Expr{x, y}, nil, nil)
+	f := cls.ToFormula()
+
+	// CloseEPR(And(X, Y)) → And(CloseEPR(X), CloseEPR(Y)) → And(ForAll(X,X), ForAll(Y,Y))
+	and, ok := f.(*lg.And)
+	if !ok {
+		t.Fatalf("expected And at top level, got %T", f)
+	}
+	if len(and.Terms) != 2 {
+		t.Fatalf("expected 2 terms, got %d", len(and.Terms))
+	}
+	for i, term := range and.Terms {
+		if _, ok := term.(*lg.ForAll); !ok {
+			t.Errorf("term %d: expected ForAll, got %T", i, term)
+		}
+	}
+}
+
+// TestNegateClausesPanic verifies that NegateClauses panics on non-universal-first-order input.
+func TestNegateClausesPanic(t *testing.T) {
+	// Create clauses with a definition (not universal first order)
+	sym := mkConst("p")
+	def := il.NewDefinition(sym, mkConst("a"))
+	cls := NewClauses(nil, []*il.Definition{def}, nil)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Error("expected panic for non-universal-first-order input")
+		}
+	}()
+	NegateClauses(cls)
+}
+
+// TestDualClausesCustomSkolemizer verifies that a custom skolemizer is applied.
+func TestDualClausesCustomSkolemizer(t *testing.T) {
+	x := mkVar("X")
+	cls := NewClauses([]lg.Expr{x}, nil, nil)
+
+	customPrefix := "@test_"
+	skolemizer := func(v *lg.Variable) lg.Expr {
+		return lg.NewConst(customPrefix+v.Name, v.VSort)
+	}
+
+	result := DualClauses(cls, skolemizer)
+
+	// The result should reference the custom-prefixed skolem
+	syms := result.Symbols()
+	found := false
+	for _, s := range syms {
+		if s.Name == customPrefix+"X" {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("custom skolemizer should produce @test_X, but symbol not found in result")
+	}
+}
+
 // --- test helpers ---
 
 func newTestRenamer() *iu.UniqueRenamer {
 	return iu.NewUniqueRenamer("__test", nil)
 }
+

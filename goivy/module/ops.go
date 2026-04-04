@@ -402,38 +402,58 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 	// Add definition: v = cond
 	defs = append(defs, il.NewDefinition(v, cond))
 
-	return NewClauses(fmlas, defs, nil)
+	// Compute annotation matching Python: annot = None if a0 is None or a1 is None else a0.ite(v,a1)
+	var annot interface{}
+	a0, a1 := args[0].Annot, args[1].Annot
+	if a0 != nil && a1 != nil && AnnotIteFunc != nil {
+		annot = AnnotIteFunc(a0, v, a1)
+	}
+	return NewClauses(fmlas, defs, annot)
 }
 
 // NegateClauses negates a Clauses. Requires the clauses to be
 // universal first-order (no definitions, no skolems).
 func NegateClauses(clauses *Clauses) *Clauses {
 	if !clauses.IsUniversalFirstOrder() {
-		// For non-universal-first-order, convert to formula and negate
-		f := clauses.ToFormula()
-		return FormulaToClauses(Negate(f), nil)
+		panic("NegateClauses requires universal first-order clauses")
 	}
-	// Dual: skolemize variables, then negate
-	return dualClauses(clauses)
+	return dualClauses(clauses, nil)
 }
 
-// dualClauses implements the dual construction: replaces variables with
-// Skolem constants, then negates.
-func dualClauses(clauses *Clauses) *Clauses {
+// Skolemizer is a function that creates a Skolem constant for a variable.
+// Corresponds to Python's skolemizer parameter in dual_clauses.
+type Skolemizer func(v *lg.Variable) lg.Expr
+
+// DualClauses implements the dual construction: replaces variables with
+// Skolem constants, then negates. Corresponds to Python's dual_clauses.
+// If skolemizer is nil, defaults to var_to_skolem('__', v) which produces
+// a constant named "__"+v.Name with the same sort.
+func DualClauses(clauses *Clauses, skolemizer Skolemizer) *Clauses {
+	return dualClauses(clauses, skolemizer)
+}
+
+func dualClauses(clauses *Clauses, skolemizer Skolemizer) *Clauses {
 	// Get used variables in order
 	vars := UsedVariablesOrdered(clauses)
 
-	// Create Skolem substitution: V -> __V
+	// Create Skolem substitution
 	subs := make(map[lg.NodeKey]lg.Expr, len(vars))
 	for _, v := range vars {
-		sk := lg.NewConst("__"+v.Name, v.VSort)
-		subs[lg.Key(v)] = sk
+		if skolemizer != nil {
+			subs[lg.Key(v)] = skolemizer(v)
+		} else {
+			// Default: var_to_skolem('__', v)
+			sk := lg.NewConst("__"+v.Name, v.VSort)
+			subs[lg.Key(v)] = sk
+		}
 	}
 
 	// Apply substitution
 	clauses = SubstituteNodesClauses(clauses, subs)
 
 	// Negate the formula
+	// TODO: Python checks instantiator != None here and adds definition instances.
+	// Deferred until ivy_module porting provides the Instantiator callback.
 	f := Negate(clausesToFormula(clauses))
 	return FormulaToClauses(f, nil)
 }
@@ -765,13 +785,16 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	}
 
 	// 4. Rename skolems to fresh names (Python: rename_symbols(rn, arg, to_rename))
+	// Python calls rename_symbols(rn, arg, to_rename) per arg, generating
+	// DIFFERENT fresh names per arg (rn is stateful). This separates captured
+	// skolems so they don't interact across args after merging.
 	if len(toRename) > 0 {
-		subs := make(map[lg.NodeKey]*lg.Const, len(toRename))
-		for _, sym := range toRename {
-			newName := rn.Rename(sym.Name)
-			subs[lg.Key(sym)] = lg.NewConst(newName, sym.CSort)
-		}
 		for i, a := range args {
+			subs := make(map[lg.NodeKey]*lg.Const, len(toRename))
+			for _, sym := range toRename {
+				newName := rn.Rename(sym.Name)
+				subs[lg.Key(sym)] = lg.NewConst(newName, sym.CSort)
+			}
 			args[i] = RenameClauses(a, subs)
 		}
 	}

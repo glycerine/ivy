@@ -700,10 +700,19 @@ func TestClausesToFormula(t *testing.T) {
 	x := mkVar("X")
 	c := NewClauses([]lg.Expr{x}, nil, nil)
 	f := c.ToFormula()
-	// Should be ForAll X. X (since X is free)
-	fa, ok := f.(*lg.ForAll)
+	// ToFormula uses CloseEPR which distributes through And.
+	// to_open_formula() returns And(X), then CloseEPR(And(X)) → And(ForAll(X, X)).
+	// This matches Python: close_epr(And(X)) = And(close_epr(X)) = And(ForAll([X], X)).
+	and, ok := f.(*lg.And)
 	if !ok {
-		t.Fatalf("expected ForAll, got %T: %s", f, f)
+		t.Fatalf("expected And (CloseEPR distributes through And), got %T: %s", f, f)
+	}
+	if len(and.Terms) != 1 {
+		t.Fatalf("expected 1 term in And, got %d", len(and.Terms))
+	}
+	fa, ok := and.Terms[0].(*lg.ForAll)
+	if !ok {
+		t.Fatalf("expected ForAll inside And, got %T: %s", and.Terms[0], and.Terms[0])
 	}
 	if len(fa.Variables) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(fa.Variables))

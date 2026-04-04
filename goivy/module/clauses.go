@@ -108,12 +108,15 @@ func (c *Clauses) ToOpenFormula() lg.Expr {
 // ToFormula converts to a closed formula by universally quantifying
 // over all free variables.
 func (c *Clauses) ToFormula() lg.Expr {
-	return il.CloseFormula(c.ToOpenFormula())
+	return lu.CloseEPR(c.ToOpenFormula())
 }
 
 // Conjuncts returns [CloseEPR(c) for c in self.Fmlas].
 // Matches Python ivy_logic_utils.py Clauses.conjuncts (lines 63-65).
 func (c *Clauses) Conjuncts() []lg.Expr {
+	if len(c.Defs) > 0 {
+		panic("Conjuncts requires no definitions")
+	}
 	result := make([]lg.Expr, len(c.Fmlas))
 	for i, f := range c.Fmlas {
 		result[i] = lu.CloseEPR(f)
