@@ -1037,6 +1037,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
 func makeFmlaPairsFromAction(action actions.Action, m *mod.Module, precondsOnly bool) []fmlaPair {
+
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}
 	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(action))

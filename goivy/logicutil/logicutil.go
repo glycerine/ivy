@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // CaptureError is raised when a substitution would create variable capture.
@@ -663,6 +664,7 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 // quantifying each conjunct's free variables independently.
 // Corresponds to Python close_epr in ivy_logic_utils.py.
 func CloseEpr(fmla logic.Expr) logic.Expr {
+	xtracer.Trace("logicutil.CloseEpr fmla=%s", fmla.Canon())
 	if and, ok := fmla.(*logic.And); ok {
 		terms := make([]logic.Expr, len(and.Terms))
 		for i, t := range and.Terms {
