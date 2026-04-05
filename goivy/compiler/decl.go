@@ -666,22 +666,32 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 		}
 	}
 
+	// Extract concretely-sorted symbol from compiled definition.
+	// Python's DerivedUpdate(df) uses defn.args[0].rep which has concrete sorts
+	// from compilation. The original `sym` still has TopFunctionSort.
+	derivedSym := sym // fallback
+	if def, ok := compiled.(*il.Definition); ok {
+		if cnst, ok := def.Defines().(*lg.Const); ok {
+			derivedSym = cnst
+		}
+	}
+
 	// Python: self.add_definition(ldf.clone([label, df]))
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
 	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 	d.LastFact = mlf
 	mod := d.Compiler.Module
-	mod.SymbolOrder = append(mod.SymbolOrder, sym)
+	mod.SymbolOrder = append(mod.SymbolOrder, derivedSym)
 
 	// Python: self.domain.all_relations.append((sym, len(lhs.args)))
 	// Python: self.domain.relations[sym] = len(lhs.args)
-	mod.AllRelations = append(mod.AllRelations, sym)
-	mod.Relations.Set(sym.Name, sym.CSort)
+	mod.AllRelations = append(mod.AllRelations, derivedSym)
+	mod.Relations.Set(derivedSym.Name, derivedSym.CSort)
 
 	// Python: self.domain.updates.append(DerivedUpdate(df))
 	mod.Updates = append(mod.Updates,
-		module.NewDerivedUpdate(sym, compiled))
+		module.NewDerivedUpdate(derivedSym, compiled))
 
 	return nil
 }
