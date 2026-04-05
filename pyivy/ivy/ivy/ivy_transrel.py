@@ -153,7 +153,7 @@ def frame_def(sym,op):
     rhs = sym_inst(sym if op is new else op(sym))
     dfn = Definition(lhs,rhs)
     if __debug__:
-        xtracer.trace("transrel.FrameDefConst sym=%s sort=%s lhsSort=%s def=%s" % (sym.name, sym.sort, lhs.sort, dfn.canon()))
+        xtracer.trace("transrel.FrameDefConst HASH canon= sym=%s sort=%s lhsSort=%s def=%s" % (sym.name, sym.sort, lhs.sort, dfn.canon()))
     return dfn
 
 def frame(updated,op):

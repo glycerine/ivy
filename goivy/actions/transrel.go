@@ -1762,7 +1762,7 @@ func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
 	rhs := mod.SymInst(sym)
 	def := il.NewDefinition(lhs, rhs)
 	if xtracer.Enabled {
-		xtracer.Trace("transrel.FrameDefConst sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
+		xtracer.Trace("transrel.FrameDefConst HASH canon= sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
 	}
 	return def
 }
