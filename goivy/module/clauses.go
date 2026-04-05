@@ -119,6 +119,9 @@ func (c *Clauses) ToFormula() lg.Expr {
 // Conjuncts returns [CloseEPR(c) for c in self.Fmlas].
 // Matches Python ivy_logic_utils.py Clauses.conjuncts (lines 63-65).
 func (c *Clauses) Conjuncts() []lg.Expr {
+	if xtracer.Enabled {
+		xtracer.Trace("ops.Conjuncts nFmlas=%d nDefs=%d", len(c.Fmlas), len(c.Defs))
+	}
 	if len(c.Defs) > 0 {
 		panic("Conjuncts requires no definitions")
 	}

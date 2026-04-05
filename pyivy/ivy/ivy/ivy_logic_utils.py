@@ -62,6 +62,8 @@ class Clauses(object):
     def is_true(self):
         return all(is_true(f) for f in self.fmlas)
     def conjuncts(self):
+        if __debug__:
+            xtracer.trace("ops.Conjuncts nFmlas=%d nDefs=%d" % (len(self.fmlas), len(self.defs)))
         assert self.defs == []
         return [close_epr(c) for c in self.fmlas]
     # TODO: this should not be needed
