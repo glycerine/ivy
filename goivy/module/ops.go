@@ -797,14 +797,6 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 		}
 	}
 
-	if len(captured) == 0 {
-		if xtracer.Enabled {
-			xtracer.Trace("ops.elimDeadDefinitions nArgs=%d nDefined=%d nCaptured=0 nDead=0 nToRename=0",
-				len(args), defined.Len())
-		}
-		return args
-	}
-
 	// 3. Split: non-skolem → dead (eliminate), skolem → toRename
 	var dead []lg.NodeKey
 	var toRename []*lg.Const
@@ -844,10 +836,9 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 		}
 	}
 
-	// 5. Eliminate dead (non-skolem) definitions by converting to constraints
-	if len(dead) == 0 {
-		return args
-	}
+	// 5. Eliminate dead (non-skolem) definitions by converting to constraints.
+	// Always call elimDefinitions (even with empty dead) to match Python's
+	// execution path — Python has no early return here.
 	result := make([]*Clauses, len(args))
 	for i, a := range args {
 		result[i] = elimDefinitions(a, dead)
