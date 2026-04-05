@@ -682,12 +682,12 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 	d.LastFact = mlf
 	mod := d.Compiler.Module
-	mod.SymbolOrder = append(mod.SymbolOrder, derivedSym)
+	mod.SymbolOrder = append(mod.SymbolOrder, sym)
 
 	// Python: self.domain.all_relations.append((sym, len(lhs.args)))
 	// Python: self.domain.relations[sym] = len(lhs.args)
-	mod.AllRelations = append(mod.AllRelations, derivedSym)
-	mod.Relations.Set(derivedSym.Name, derivedSym.CSort)
+	mod.AllRelations = append(mod.AllRelations, sym)
+	mod.Relations.Set(sym.Name, sym.CSort)
 
 	// Python: self.domain.updates.append(DerivedUpdate(df))
 	mod.Updates = append(mod.Updates,
