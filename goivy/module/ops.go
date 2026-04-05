@@ -855,14 +855,14 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 	if xtracer.Enabled {
 		deadNames := make([]string, len(dead))
 		for i, k := range dead {
-			deadNames[i] = string(k)
+			deadNames[i] = fmt.Sprintf("'%v'", k)
 		}
 		defNames := make([]string, len(clauses.Defs))
 		for i, d := range clauses.Defs {
 			defNames[i] = fmt.Sprintf("'%v'", d.Defines().Canon())
 		}
-		xtracer.Trace("ops.elimDefinitions ENTER HASH canon= nDead=%d dead=%v nDefs=%d defs=[%v] nFmlas=%d",
-			len(dead), deadNames, len(clauses.Defs), strings.Join(defNames, ", "), len(clauses.Fmlas))
+		xtracer.Trace("ops.elimDefinitions ENTER HASH canon= nDead=%d dead=[%v] nDefs=%d defs=[%v] nFmlas=%d",
+			len(dead), strings.Join(deadNames, ", "), len(clauses.Defs), strings.Join(defNames, ", "), len(clauses.Fmlas))
 	}
 	var fmlas []lg.Expr
 	fmlas = append(fmlas, clauses.Fmlas...)
