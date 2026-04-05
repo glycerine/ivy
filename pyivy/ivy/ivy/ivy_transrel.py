@@ -364,6 +364,7 @@ def compose_updates(update1,axioms,update2):
 #    iu.dbg('new_clauses')
 #    iu.dbg('new_clauses.annot')
     if __debug__:
+        xtracer.trace("transrel.ComposeUpdates result nTRfmlas=%d nTRdefs=%d nPREfmlas=%d nPREdefs=%d" % (len(new_clauses.fmlas), len(new_clauses.defs), len(new_pre.fmlas), len(new_pre.defs)))
         xtracer.trace("transrel.ComposeUpdates result HASH canon= TR=%s" % new_clauses.canon())
         xtracer.trace("transrel.ComposeUpdates result HASH canon= Pre=%s" % new_pre.canon())
     return (new_updated,new_clauses,new_pre)

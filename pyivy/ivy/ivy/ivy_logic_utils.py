@@ -1469,8 +1469,7 @@ def and_clauses(*args,**kwargs):
     if any(cls.is_false() for cls in args):
         if __debug__:
             totalDefs = sum(len(a.defs) for a in args)
-            if totalDefs > 0:
-                xtracer.trace("ops.andClauses FALSE-DROP droppingDefs=%d" % totalDefs)
+            xtracer.trace("ops.andClauses FALSE-DROP droppingDefs=%d nArgs=%d" % (totalDefs, len(args)))
         return false_clauses(annot=annot)
     fmlas = [c for cls in args for c in cls.fmlas]
     defs = [d for cls in args for d in cls.defs]

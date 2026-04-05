@@ -712,6 +712,7 @@ func ComposeUpdates(u1 *Update, axioms *mod.Clauses, u2 *Update) *Update {
 	newPre := mod.OrClausesTyped(pre1, temp)
 
 	if xtracer.Enabled {
+		xtracer.Trace("transrel.ComposeUpdates result nTRfmlas=%d nTRdefs=%d nPREfmlas=%d nPREdefs=%d", len(newTR.Fmlas), len(newTR.Defs), len(newPre.Fmlas), len(newPre.Defs))
 		xtracer.Trace("transrel.ComposeUpdates result HASH canon= TR=%s", newTR.Canon())
 		xtracer.Trace("transrel.ComposeUpdates result HASH canon= Pre=%s", newPre.Canon())
 	}

@@ -80,9 +80,7 @@ func AndClauses(args ...interface{}) interface{} {
 				for _, cc := range clauses {
 					totalDefs += len(cc.Defs)
 				}
-				if totalDefs > 0 {
-					xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d", totalDefs)
-				}
+				xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d nArgs=%d", totalDefs, len(clauses))
 			}
 			return FalseClauses(annot)
 		}
@@ -151,9 +149,7 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 				for _, cc := range args {
 					totalDefs += len(cc.Defs)
 				}
-				if totalDefs > 0 {
-					xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d", totalDefs)
-				}
+				xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d nArgs=%d", totalDefs, len(args))
 			}
 			return FalseClauses(annot)
 		}
