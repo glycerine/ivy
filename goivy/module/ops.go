@@ -75,6 +75,15 @@ func AndClauses(args ...interface{}) interface{} {
 	// If any clause set is false, return false
 	for _, c := range clauses {
 		if c.IsFalse() {
+			if xtracer.Enabled {
+				totalDefs := 0
+				for _, cc := range clauses {
+					totalDefs += len(cc.Defs)
+				}
+				if totalDefs > 0 {
+					xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d", totalDefs)
+				}
+			}
 			return FalseClauses(annot)
 		}
 	}
@@ -137,6 +146,15 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 
 	for _, c := range args {
 		if c.IsFalse() {
+			if xtracer.Enabled {
+				totalDefs := 0
+				for _, cc := range args {
+					totalDefs += len(cc.Defs)
+				}
+				if totalDefs > 0 {
+					xtracer.Trace("ops.andClauses FALSE-DROP droppingDefs=%d", totalDefs)
+				}
+			}
 			return FalseClauses(annot)
 		}
 	}
