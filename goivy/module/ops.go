@@ -816,9 +816,9 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 		if len(dead) > 0 {
 			deadNames := make([]string, len(dead))
 			for i, k := range dead {
-				deadNames[i] = string(k)
+				deadNames[i] = fmt.Sprintf("'%v'", k)
 			}
-			xtracer.Trace("ops.elimDeadDefinitions HASH canon= dead=%v", deadNames)
+			xtracer.Trace("ops.elimDeadDefinitions HASH canon= dead=[%v]", strings.Join(deadNames, ", "))
 		}
 	}
 
@@ -859,7 +859,7 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 		}
 		defNames := make([]string, len(clauses.Defs))
 		for i, d := range clauses.Defs {
-			defNames[i] = fmt.Sprintf("'%v'", d.Defines())
+			defNames[i] = fmt.Sprintf("'%v'", d.Defines().Canon())
 		}
 		xtracer.Trace("ops.elimDefinitions ENTER HASH canon= nDead=%d dead=%v nDefs=%d defs=[%v] nFmlas=%d",
 			len(dead), deadNames, len(clauses.Defs), strings.Join(defNames, ", "), len(clauses.Fmlas))
