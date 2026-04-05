@@ -118,8 +118,8 @@ type Update struct {
 
 	TR     *mod.Clauses // transition relation (Clauses with fmlas + defs)
 	Pre    *mod.Clauses // precondition, negative (Clauses with fmlas + defs)
-	TRRaw  lg.Expr     // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw lg.Expr     // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	TRRaw  lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw lg.Expr      // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // IsModifiedAll returns true when the update modifies all symbols
@@ -1193,11 +1193,11 @@ func ForwardImage(pre lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 // ActionFailed is returned when compose_state_action detects that the
 // precondition of an action is not satisfied by the pre-state.
 type ActionFailed struct {
-	PreTest   lg.Expr     // the unsatisfied precondition (from compose_state_action)
+	PreTest   lg.Expr      // the unsatisfied precondition (from compose_state_action)
 	TransPre  *mod.Clauses // pre-state model extraction (from extract_pre_post_model)
 	TransPost *mod.Clauses // post-state model extraction (from extract_pre_post_model)
-	Formula   lg.Expr     // the unsatisfied precondition formula (legacy field)
-	Trace     []lg.Expr   // sequence of states leading to the failure (legacy field)
+	Formula   lg.Expr      // the unsatisfied precondition formula (legacy field)
+	Trace     []lg.Expr    // sequence of states leading to the failure (legacy field)
 }
 
 func (af *ActionFailed) Error() string {
@@ -1747,9 +1747,10 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 	if xtracer.Enabled {
 		names := make([]string, len(defs))
 		for i, d := range defs {
-			names[i] = fmt.Sprintf("%v", d.Defines())
+			names[i] = fmt.Sprintf("'%v'", d.Defines())
 		}
-		xtracer.Trace("transrel.DiffFrameConst nDefs=%d syms=%v", len(defs), names)
+
+		xtracer.Trace("transrel.DiffFrameConst nDefs=%d syms=[%v]", len(defs), strings.Join(names, ", "))
 	}
 	return mod.NewClauses(nil, defs, nil)
 }
@@ -1787,9 +1788,9 @@ func ModifiedNames(u *Update) []string {
 // state at each time step.
 type History struct {
 	Cfg     *iu.IvyUtilsConfig
-	Post    lg.Expr        // characteristic formula of the current state
-	Maps    []Renaming     // sequence of symbol renamings from forward images
-	Actions []lg.Expr      // actions taken at each step
+	Post    lg.Expr     // characteristic formula of the current state
+	Maps    []Renaming  // sequence of symbol renamings from forward images
+	Actions []lg.Expr   // actions taken at each step
 	Mod     *mod.Module // module for sort/symbol lookups (replaces global)
 }
 

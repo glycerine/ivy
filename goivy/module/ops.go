@@ -798,6 +798,10 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	}
 
 	if len(captured) == 0 {
+		if xtracer.Enabled {
+			xtracer.Trace("ops.elimDeadDefinitions nArgs=%d nDefined=%d nCaptured=0 nDead=0 nToRename=0",
+				len(args), defined.Len())
+		}
 		return args
 	}
 
