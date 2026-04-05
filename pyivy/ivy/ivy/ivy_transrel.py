@@ -211,7 +211,8 @@ def ite(cond,s1,s2,op,axioms):
     u1,c1,p1 = s1
     u2,c2,p2 = s2
     if __debug__:
-        xtracer.trace("transrel.iteUpdate ENTER u1.nMod=%d u2.nMod=%d" % (len(u1), len(u2)))
+        xtracer.trace("transrel.iteUpdate ENTER u1.nMod=%d u1.TR.nFmlas=%d u1.TR.nDefs=%d u2.nMod=%d u2.TR.nFmlas=%d u2.TR.nDefs=%d" %
+            (len(u1), len(c1.fmlas), len(c1.defs), len(u2), len(c2.fmlas), len(c2.defs)))
     df12 = diff_frame(u1,u2,op,axioms)
     df21 = diff_frame(u2,u1,op,axioms)
     c1 = and_clauses(c1,df12)

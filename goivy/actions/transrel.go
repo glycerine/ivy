@@ -837,7 +837,8 @@ func IteState(cond lg.Expr, u1, u2 *Update, axioms *mod.Clauses) *Update {
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
 func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
 	if xtracer.Enabled {
-		xtracer.Trace("transrel.iteUpdate ENTER u1.nMod=%d u2.nMod=%d", len(u1.Modified), len(u2.Modified))
+		xtracer.Trace("transrel.iteUpdate ENTER u1.nMod=%d u1.TR.nFmlas=%d u1.TR.nDefs=%d u2.nMod=%d u2.TR.nFmlas=%d u2.TR.nDefs=%d",
+			len(u1.Modified), len(u1.TR.Fmlas), len(u1.TR.Defs), len(u2.Modified), len(u2.TR.Fmlas), len(u2.TR.Defs))
 	}
 	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
 	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
