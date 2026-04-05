@@ -289,9 +289,9 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 	if xtracer.Enabled {
 		argInfo := make([]string, len(args))
 		for i, a := range args {
-			argInfo[i] = fmt.Sprintf("(%dF,%dD)", len(a.Fmlas), len(a.Defs))
+			argInfo[i] = fmt.Sprintf("'(%dF,%dD)'", len(a.Fmlas), len(a.Defs))
 		}
-		xtracer.Trace("ops.orClausesInt ENTER nArgs=%d args=%v", len(args), argInfo)
+		xtracer.Trace("ops.orClausesInt ENTER nArgs=%d args=%v", len(args), strings.Join(argInfo, ", "))
 	}
 
 	// Create fresh Boolean variables, one per disjunct
