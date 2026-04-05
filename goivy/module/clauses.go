@@ -19,7 +19,7 @@ import (
 type Clauses struct {
 	Fmlas  []lg.Expr          // conjuncts (formulas)
 	Defs   []*il.Definition   // definitions
-	DefIdx map[lg.NodeKey]int  // definition index: definesKey() -> index in Defs
+	DefIdx map[lg.NodeKey]int // definition index: definesKey() -> index in Defs
 	Annot  interface{}        // annotation (for trace reconstruction)
 }
 
@@ -251,7 +251,7 @@ func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 func defToConstraint(d *il.Definition) lg.Expr {
 	result := il.DefinitionToConstraint(d)
 	if xtracer.Enabled {
-		xtracer.Trace("ops.defToConstraint lhsSort=%v resultType=%T", d.Lhs.NodeSort(), result)
+		xtracer.Trace("ops.defToConstraint lhsSort=%v resultType=%v", d.Lhs.NodeSort(), iu.ShortTypeName(result))
 	}
 	return result
 }
