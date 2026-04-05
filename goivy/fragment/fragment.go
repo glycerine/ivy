@@ -905,6 +905,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
 			_ = name
+			xtracer.Trace("fragment/fragment.go:908 precondsOnly holds, calling CloseEpr() name='%v' type=%s", name, actions.ActionTypeName(action))
 			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
 		}
@@ -914,6 +915,8 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 			if !ok {
 				continue
 			}
+			xtracer.Trace("fragment/fragment.go:918 not-precondsOnly, calling CloseEpr() name='%v' type=%s", name, actions.ActionTypeName(action))
+
 			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
 		}

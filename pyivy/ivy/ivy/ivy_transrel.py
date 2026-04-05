@@ -407,6 +407,7 @@ def hide(syms,update):
     new_tr = exist_quant(syms,update[1])
     new_pre = exist_quant(syms,update[2])
     if __debug__:
+        xtracer.trace("transrel.Hide result nTRdefs=%d nPREdefs=%d" % (len(new_tr.defs), len(new_pre.defs)))
         xtracer.trace("transrel.Hide result HASH canon= newTR=%s" % new_tr.canon())
         xtracer.trace("transrel.Hide result HASH canon= newPre=%s" % new_pre.canon())
     return (new_updated,new_tr,new_pre)

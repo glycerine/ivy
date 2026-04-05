@@ -1,4 +1,6 @@
-// Package transrel provides functions for manipulating transition relations
+// Package transrel/ was folded into package actions/
+// to facilitate integration and strong typing. It
+// provides functions for manipulating transition relations
 // as two-vocabulary formulas.
 //
 // Updates represent the semantics of actions and states. Both kinds of
@@ -956,6 +958,7 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 	_, newPre := ExistQuantClauses(syms, u.Pre)
 
 	if xtracer.Enabled {
+		xtracer.Trace("transrel.Hide result nTRdefs=%d nPREdefs=%d", len(newTR.Defs), len(newPre.Defs))
 		xtracer.Trace("transrel.Hide result HASH canon= newTR=%s", newTR.Canon())
 		xtracer.Trace("transrel.Hide result HASH canon= newPre=%s", newPre.Canon())
 	}
