@@ -1309,10 +1309,10 @@ def ite_clauses(cond,args):
 
 def elim_definitions(clauses,dead):
     if __debug__:
-        deadNames = [str(s) for s in dead]
-        defNames = [str(d.defines()) for d in clauses.defs]
-        xtracer.trace("ops.elimDefinitions ENTER nDead=%d dead=%s nDefs=%d defs=%s nFmlas=%d" %
-            (len(dead), deadNames, len(clauses.defs), defNames, len(clauses.fmlas)))
+        deadNames = [s.canon() if hasattr(s,'canon') else str(s) for s in dead]
+        defNames = ["'%s'" % (d.defines().canon() if hasattr(d.defines(),'canon') else str(d.defines())) for d in clauses.defs]
+        xtracer.trace("ops.elimDefinitions ENTER HASH canon= nDead=%d dead=%s nDefs=%d defs=[%s] nFmlas=%d" %
+            (len(dead), deadNames, len(clauses.defs), ', '.join(defNames), len(clauses.fmlas)))
     c2 = clauses.copy()
     fmlas = clauses.fmlas
     for sym in dead:
@@ -1342,7 +1342,7 @@ def elim_dead_definitions(rn,args):
         xtracer.trace("ops.elimDeadDefinitions nArgs=%d nDefined=%d nCaptured=%d nDead=%d nToRename=%d" %
             (len(args), len(defd), len(captured), len(dead), len(to_rename)))
         if dead:
-            xtracer.trace("ops.elimDeadDefinitions dead=%s" % [str(s) for s in dead])
+            xtracer.trace("ops.elimDeadDefinitions HASH canon= dead=%s" % [s.canon() if hasattr(s,'canon') else str(s) for s in dead])
     args = [rename_symbols(rn,arg,to_rename) for arg in args]
 #    print "args = {}, dead = {}".format(args,dead)
     res = [elim_definitions(a,dead) for a in args]
