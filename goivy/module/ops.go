@@ -2,6 +2,7 @@ package module
 
 import (
 	"fmt"
+	"strings"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
@@ -858,10 +859,10 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 		}
 		defNames := make([]string, len(clauses.Defs))
 		for i, d := range clauses.Defs {
-			defNames[i] = fmt.Sprintf("%v", d.Defines())
+			defNames[i] = fmt.Sprintf("'%v'", d.Defines())
 		}
-		xtracer.Trace("ops.elimDefinitions ENTER nDead=%d dead=%v nDefs=%d defs=%v nFmlas=%d",
-			len(dead), deadNames, len(clauses.Defs), defNames, len(clauses.Fmlas))
+		xtracer.Trace("ops.elimDefinitions ENTER nDead=%d dead=%v nDefs=%d defs=[%v] nFmlas=%d",
+			len(dead), deadNames, len(clauses.Defs), strings.Join(defNames, ", "), len(clauses.Fmlas))
 	}
 	var fmlas []lg.Expr
 	fmlas = append(fmlas, clauses.Fmlas...)
