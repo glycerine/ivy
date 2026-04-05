@@ -90,6 +90,8 @@ class Clauses(object):
     def __repr__(self):
         return repr(self.to_let())
     def to_open_formula(self):
+        if __debug__:
+            xtracer.trace("ops.ToOpenFormula nFmlas=%d nDefs=%d" % (len(self.fmlas), len(self.defs)))
         conjuncts = [dfn.to_constraint() for dfn in self.defs] + self.fmlas
         return And(*conjuncts)
         # if len(conjuncts) == 1:
