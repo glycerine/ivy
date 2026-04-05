@@ -845,6 +845,8 @@ func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axiom
 
 	c1 := mod.AndClausesTyped(u1.TR, df12)
 	c2 := mod.AndClausesTyped(u2.TR, df21)
+	p1 := mod.AndClausesTyped(u1.Pre, df12)
+	p2 := mod.AndClausesTyped(u2.Pre, df21)
 
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.iteUpdate df12 HASH canon= %s", df12.Canon())
@@ -852,8 +854,6 @@ func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axiom
 		xtracer.Trace("transrel.iteUpdate c1 HASH canon= %s", c1.Canon())
 		xtracer.Trace("transrel.iteUpdate c2 HASH canon= %s", c2.Canon())
 	}
-	p1 := mod.AndClausesTyped(u1.Pre, df12)
-	p2 := mod.AndClausesTyped(u2.Pre, df21)
 
 	modAll := u1.ModifiedAll || u2.ModifiedAll
 	var u []*lg.Const
