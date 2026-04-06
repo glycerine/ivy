@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/lalr_full"
 	"github.com/glycerine/ivy/goivy/lexer"
+	"github.com/glycerine/ivy/goivy/parser"
 )
 
 func TestDebugClientServerInit(t *testing.T) {
@@ -59,7 +59,7 @@ action step(x:t) = {
 export step
 `
 	version := lexer.Version{1, 7}
-	result, err := lalr_full.Parse(src, version)
+	result, err := parser.Parse(src, version)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}

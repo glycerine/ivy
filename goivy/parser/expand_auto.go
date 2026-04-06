@@ -1,4 +1,4 @@
-package lalr_full
+package parser
 
 // expandAutoInstances implements Python's expand_autoinstances.
 // Matches parser.py expand_autoinstances behavior (ivy_parser.py:3615-3648):

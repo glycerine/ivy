@@ -13,10 +13,10 @@ import (
 
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/lalr_full"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 )
 
 // dataDir returns the path to the data directory.
@@ -30,7 +30,7 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 	t.Helper()
 	version := lexer.Version{1, 7}
 	// Try LALR parser first, fall back to hand-rolled for debugging
-	result, err := lalr_full.Parse(src, version)
+	result, err := parser.Parse(src, version)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -42,8 +42,6 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 	}
 	return mod
 }
-
-
 
 // compileIvyFile parses and compiles an Ivy file into a module.
 func compileIvyFile(t *testing.T, filename string) *module.Module {

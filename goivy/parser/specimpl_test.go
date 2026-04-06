@@ -1,4 +1,4 @@
-package lalr_full
+package parser
 
 import (
 	"testing"

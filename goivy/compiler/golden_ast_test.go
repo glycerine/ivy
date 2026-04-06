@@ -18,7 +18,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/lexer"
-	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/parser"
 )
 
 // testdataDir returns the absolute path to the testdata/ directory.

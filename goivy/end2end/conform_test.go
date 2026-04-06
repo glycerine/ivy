@@ -17,9 +17,9 @@ import (
 	"github.com/glycerine/ivy/goivy/check"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/lalr_full"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 )
 
 // pythonIvyCheck runs the Python Ivy checker on the given .ivy file.
@@ -70,7 +70,7 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 	}()
 
 	version := lexer.Version{1, 7}
-	result, err := lalr_full.Parse(src, version)
+	result, err := parser.Parse(src, version)
 	if err != nil {
 		t.Logf("Go parse error: %v", err)
 		return false, false

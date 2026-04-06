@@ -18,8 +18,8 @@ import (
 	"github.com/glycerine/ivy/goivy/art"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/lalr_full"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -54,7 +54,7 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // ReadModule reads and parses an Ivy source file, detecting the version
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
-func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.ParseResult, error) {
+func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	f, err := os.Open(filename)
 	if err != nil {
@@ -101,21 +101,21 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 		version := parseIvyVersion(cfg.IuCfg.GetStringVersion())
 
 		// Use the LALR(1) goyacc-generated parser (faithful to Python PLY grammar)
-		importer := func(name string) (*lalr_full.ParseResult, error) {
+		importer := func(name string) (*parser.ParseResult, error) {
 			return ImportModule(name, cfg)
 		}
-		opts := []lalr_full.ParseOption{
-			lalr_full.WithImporter(importer),
-			lalr_full.WithIncluded(cfg.GlobalIncluded),
-			lalr_full.WithFilename(filename),
+		opts := []parser.ParseOption{
+			parser.WithImporter(importer),
+			parser.WithIncluded(cfg.GlobalIncluded),
+			parser.WithFilename(filename),
 		}
 		if cfg != nil && cfg.AstCfg != nil {
-			opts = append(opts, lalr_full.WithAstConfig(cfg.AstCfg))
+			opts = append(opts, parser.WithAstConfig(cfg.AstCfg))
 		}
 		if nested {
-			opts = append(opts, lalr_full.WithNested())
+			opts = append(opts, parser.WithNested())
 		}
-		result, parseErr := lalr_full.Parse(s, version, opts...)
+		result, parseErr := parser.Parse(s, version, opts...)
 		if parseErr != nil {
 			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
 		}
@@ -129,17 +129,17 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 // ReadModuleFromString parses an Ivy source string (with #lang header),
 // used when compiling theory schemata from in-memory strings.
 // Corresponds to Python's read_module(StringIO(source)).
-func ReadModuleFromString(source string, cfg *module.Config) (*lalr_full.ParseResult, error) {
+func ReadModuleFromString(source string, cfg *module.Config) (*parser.ParseResult, error) {
 	// Python: sio = io.StringIO(theory); module = read_module(sio)
 	// StringIO has no .name attribute, so Python traces file=?
 	xtracer.Trace("init.ReadModule ENTER file=? nested=False")
 	body, version := parseIvySource(source)
 
-	var opts []lalr_full.ParseOption
+	var opts []parser.ParseOption
 	if cfg != nil && cfg.AstCfg != nil {
-		opts = append(opts, lalr_full.WithAstConfig(cfg.AstCfg))
+		opts = append(opts, parser.WithAstConfig(cfg.AstCfg))
 	}
-	result, err := lalr_full.Parse(body, version, opts...)
+	result, err := parser.Parse(body, version, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func ReadModuleFromString(source string, cfg *module.Config) (*lalr_full.ParseRe
 // ImportModule reads and parses a module by name, looking first in the
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
-func ImportModule(name string, cfg *module.Config) (res *lalr_full.ParseResult, err error) {
+func ImportModule(name string, cfg *module.Config) (res *parser.ParseResult, err error) {
 	xtracer.Trace("init.ImportModule ENTER name=%s", name)
 	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
 
@@ -165,7 +165,7 @@ func ImportModule(name string, cfg *module.Config) (res *lalr_full.ParseResult, 
 	}
 	// Python: with iu.SourceFile(fname): mod = read_module(f, nested=True)
 	// WithSourceFile pushes/pops the global Filename for error reporting.
-	var result *lalr_full.ParseResult
+	var result *parser.ParseResult
 	var resultErr error
 	cfg.IuCfg.WithSourceFile(fname, func() {
 		result, resultErr = ReadModule(fname, true, cfg)

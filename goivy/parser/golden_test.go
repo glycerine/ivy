@@ -1,9 +1,8 @@
-package lalr_full
+package parser
 
 // Golden AST comparison test: parses each .ivy file in ivy-lang-examples/
 // with both Python and Go LALR parser, serializes the AST to text, and compares.
-// Adapted from compiler/golden_ast_test.go — uses lalr_full.Parse instead of
-// the hand-rolled parser.
+// Adapted from compiler/golden_ast_test.go — uses parser.Parse, the lalr parser.
 
 import (
 	"bufio"

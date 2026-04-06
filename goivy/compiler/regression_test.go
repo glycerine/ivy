@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/module"
 

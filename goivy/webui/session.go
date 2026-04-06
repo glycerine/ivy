@@ -9,10 +9,10 @@ import (
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/lalr_full"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/trace"
 	"github.com/glycerine/ivy/goivy/typeinfer"
 )
@@ -92,7 +92,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			src = src[idx+1:]
 		}
 	}
-	parseResult, parseErr := lalr_full.Parse(src, version)
+	parseResult, parseErr := parser.Parse(src, version)
 	if parseErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "parse", "error": parseErr.Error(),

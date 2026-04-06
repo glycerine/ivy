@@ -19,7 +19,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"

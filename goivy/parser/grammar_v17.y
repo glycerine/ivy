@@ -10,7 +10,7 @@
 //   < PLUS/MINUS < TIMES/DIV < DOLLAR < OLD < DOT
 
 %{
-package lalr_full
+package parser
 
 import (
 	"fmt"

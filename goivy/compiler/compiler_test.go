@@ -8,7 +8,7 @@ import (
 	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/lalr_full"
+	"github.com/glycerine/ivy/goivy/parser"
 )
 
 func newTestCompiler() *Compiler {
@@ -817,7 +817,7 @@ export a
 		version := lexer.Version{1, int(vByte % 8)}
 
 		// Parse
-		result, err := lalr_full.Parse(string(src), version)
+		result, err := parser.Parse(string(src), version)
 		if err != nil || result == nil {
 			return
 		}

@@ -1,4 +1,4 @@
-package lalr_full
+package parser
 
 // Module instantiation logic.
 // Cleanroom port from Python ivy_parser.py: do_insts() and inst_mod().
