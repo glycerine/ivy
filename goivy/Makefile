@@ -23,13 +23,13 @@ SHELL := /bin/bash
 
 golden: # parse with python ivy_check and goivy_check_xtrace. full xtrace output is written now to the files: out.go.xtrace; out.py.xtrace
 	@if [ -f log.red ]; then mv log.red log.red.prev; fi
-	cd lalr_full && go test -v -run TestOrdLive &> ../log.red
+	cd parser && go test -v -run TestOrdLive &> ../log.red
 
 golden-v: # to see all productions not just last 10
-	cd lalr_full && go test -v -run TestVerboseOrdLive
+	cd parser && go test -v -run TestVerboseOrdLive
 
 golden-nonstop: # to see all productions and not stop at first diff.
-	cd lalr_full && go test -v -run TestVerboseNonstopOrdLive
+	cd parser && go test -v -run TestVerboseNonstopOrdLive
 
 
 ord: # xtraced 
@@ -71,7 +71,7 @@ z3-build:
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
 build: # be sure .y -> .go up to date
-	cd lalr_full && go generate # grammar_v17.y
+	cd parser && go generate # grammar_v17.y
 	cd conceptspace && go generate # cs_grammar.y
 	cd lalr_logicparser/v12 && go generate # grammar_v12.y
 	cd lalr_logicparser/v16 && go generate # grammar_v16.y
@@ -138,7 +138,7 @@ pprof-full:  # Full profile with CPU/mem profiling
 vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
-	-cd lalr_full && go test -v -run TestOrdLive &> ../log.red
+	-cd parser && go test -v -run TestOrdLive &> ../log.red
 	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
 	-goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	-diff py.ord.out log.gox > diffs
