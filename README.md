@@ -2401,6 +2401,7 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+
 179847  go : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
         py : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
 
