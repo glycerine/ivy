@@ -506,8 +506,14 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]lg
 }
 
 // clausesToFormula converts clauses to formula (drop universals).
+// corresponds to ivy_logic_utils.py which does:
+// . def clauses_to_formula(cs):
+// .    formula = cs.to_formula()
+// .    return drop_universals(formula)
 func clausesToFormula(c *Clauses) lg.Expr {
-	return dropUniversals(c.ToFormula())
+	formula := c.ToFormula()
+	xtracer.Trace("ivy_logic_utils.py:1013/clauses_to_formula(): formula = %v", formula.Canon())
+	return dropUniversals(formula)
 }
 
 // ClausesToFormula converts clauses to a formula, dropping leading

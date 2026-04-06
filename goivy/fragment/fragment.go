@@ -1085,7 +1085,8 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
 	//         assumes.append((foo,action))
 	if !precondsOnly {
-		// inline upd.PreNode() here, for clarity of trace comparison.
+		// inline upd.PreNode() here, for clarity of trace comparison;
+		// and methinks we found a port bug too: skips the module.dropUniversals(), yikes.
 		//preIn := upd.PreNode()
 		var preIn lg.Expr
 		if upd.Pre == nil {
@@ -1095,7 +1096,7 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 			// foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
 			preIn = module.ClausesToFormula(upd.Pre)
 			// wrong me thinks:
-			// preIn = upd.Pre.ToOpenFormula()
+			// preIn = upd.Pre.ToOpenFormula(); skips
 		}
 		pre := lu.CloseEPR(preIn)
 		result = append(result, fmlaPair{fmla: pre, source: action})
