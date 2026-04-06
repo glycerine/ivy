@@ -26,7 +26,7 @@ from .ivy_logic_parser_gen import formula_parser,term_parser
 from collections import defaultdict
 from . import logic_util
 from . import xtracer
-from traceback
+import traceback
 
 class LogicParseError(Exception):
     """ Exception raised on parser error """
