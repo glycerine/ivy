@@ -194,7 +194,7 @@ func parseGoAST(t *testing.T, ivyFile string) ([]string, error) {
 		src = src[strings.Index(src, "\n")+1:]
 	}
 
-	result, parseErr := lalr_full.Parse(src, ver)
+	result, parseErr := parser.Parse(src, ver)
 	if parseErr != nil {
 		return []string{fmt.Sprintf("PARSE_ERROR: %s", parseErr)}, nil
 	}
@@ -554,7 +554,8 @@ func extractDeclType(line string) string {
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
-	return // of while doing lalr_full
+	t.Skip("compiler/TestOrdLive off for now: TODO restore it")
+	return
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 

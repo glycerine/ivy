@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 
 	ivyiso "github.com/glycerine/ivy/goivy/isolate"
 )
@@ -30,7 +30,7 @@ isolate bar = {
 }
 export bar.a
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 7})
+	result, err := parser.Parse(src, lexer.Version{1, 7})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -90,7 +90,7 @@ object cfabric = {
 
 export cfabric.step
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 7})
+	result, err := parser.Parse(src, lexer.Version{1, 7})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -147,7 +147,7 @@ object cfabric = {
 
 export cfabric.step
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 8})
+	result, err := parser.Parse(src, lexer.Version{1, 8})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -221,7 +221,7 @@ isolate live = {
     function issued(T:bool) = cfabric.rd_pio_fair
 } with this
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 8})
+	result, err := parser.Parse(src, lexer.Version{1, 8})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -303,7 +303,7 @@ object cfabric = {
 }
 export cfabric.step
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 8})
+	result, err := parser.Parse(src, lexer.Version{1, 8})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -352,7 +352,7 @@ module mymod = {
 }
 instance idx : mymod
 `
-	result, err := lalr_full.Parse(src, lexer.Version{1, 8})
+	result, err := parser.Parse(src, lexer.Version{1, 8})
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}

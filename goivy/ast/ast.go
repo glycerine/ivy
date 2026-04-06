@@ -1621,7 +1621,7 @@ func (c *CallAction) Canon() iu.Canonical {
 //   - And extends Formula — represents logical conjunction p & q
 //
 // The hand-rolled parser in parser/ conflates these, using ast.And for both.
-// The new lalr_full LALR parser uses ast.Sequence to be faithful to the
+// The new LALR parser (in parser/) uses ast.Sequence to be faithful to the
 // original Python grammar, which is important because downstream code
 // (e.g. int_update, compose_updates) uses isinstance(x, Sequence) type
 // checks that distinguish action sequences from logical conjunctions.

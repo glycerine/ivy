@@ -508,8 +508,8 @@ func TestCrossValidation_V17_AllOperatorTriples(t *testing.T) {
 //
 // NOTE: lalr_logicparser is a formula/expression parser — it does not produce
 // dedicated action types (AssumeAction, AssignAction, etc.) the way Python
-// and lalr_full do. Action bodies parsed here appear as generic Atom/And nodes.
-// Full action cross-validation happens via `make golden` using lalr_full.
+// and parser (nee lalr_full) do. Action bodies parsed here appear as generic Atom/And nodes.
+// Full action cross-validation happens via `make golden` using parser (nee lalr_full).
 // These tests validate that action bodies at least parse without error in both
 // parsers; shape mismatches due to action type representation are expected.
 func crossValidateAction(t *testing.T, input string, version lexer.Version) {

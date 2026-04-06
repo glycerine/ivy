@@ -161,10 +161,11 @@ func applyParams(cfg *module.Config, params map[string]string) error {
 		case "checked_assert":
 			cfg.CheckLineno = val
 		case "parser":
-			// parser=lalr is the only option now (lalr_full is always used)
-			if val != "lalr" && val != "lalr_full" {
-				return fmt.Errorf("unknown parser value: %s (only 'lalr' is supported)", val)
-			}
+			panic("parser is no longer an option. we always use 'lalr_full' which was renamed to just 'parser' now, since it is the only full parser in tree.")
+		//	// parser=lalr is the only option now (lalr_full -> renamed to parser is always used now)
+		//	if val != "lalr" && val != "lalr_full" {
+		//		return fmt.Errorf("unknown parser value: %s (only 'lalr' is supported)", val)
+		//	}
 		default:
 			return fmt.Errorf("unknown parameter: %s", key)
 		}

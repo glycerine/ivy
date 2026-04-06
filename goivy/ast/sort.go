@@ -44,10 +44,9 @@ func (s *ConstantSort) Dom() []Node            { return nil }
 // The "AST" suffix distinguishes this from logic.UninterpretedSort
 // to prevent confusion between parse-level and compiled representations.
 //
-// Note: the hand-rolled parser in parser/ uses ConstantSort as a stand-in
-// for uninterpreted sorts. The new lalr_full LALR parser uses
+// Note: The new LALR parser/ package uses
 // UninterpretedSortAST to be faithful to the original Python grammar
-// where UninterpretedSort() is a distinct type.
+// where UninterpretedSort() is a distinct type (from ConstantSort).
 type UninterpretedSortAST struct {
 	Base
 }
