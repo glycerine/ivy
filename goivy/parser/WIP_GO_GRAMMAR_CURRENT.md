@@ -1,6 +1,6 @@
 # Complete Go Ivy Grammar Reference (Current WIP)
 
-**Source:** `~/goivy/lalr_full/grammar_v17.y` (4,296 lines)
+**Source:** `~/goivy/parser/grammar_v17.y` (4,296 lines)
 **Lexer:** `~/goivy/lexer/token.go`, `~/goivy/lexer/lexer.go`
 **Date extracted:** 2026-03-23
 **Nonterminals:** 138 rules
@@ -165,7 +165,7 @@ Matches Python's LexerVersion class:
 [_a-z0-9]... → SYMBOL or reserved keyword
 ```
 
-### Lex() adapter (lalr_full/lalr_parser.go lines 96-422)
+### Lex() adapter (parser/lalr_parser.go lines 96-422)
 Maps lexer tokens to TOK_* constants. Unmapped tokens default to TOK_PRESYMBOL.
 
 ## 4. GRAMMAR PRODUCTIONS

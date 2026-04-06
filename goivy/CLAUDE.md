@@ -50,7 +50,7 @@ HOW TO PORT A PYTHON GLOBAL:
 1. Find or create the package's Config struct. Most packages already have one.
    Examples:
      ast/config.go          → AstConfig
-     lalr_full/config.go    → ParserConfig
+     parser/config.go    → ParserConfig
      ivyutils/config.go     → IvyUtilsConfig
      interp/interp.go       → InterpConfig
      transrel/phase4.go     → TransrelConfig

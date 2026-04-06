@@ -520,7 +520,7 @@ The general flow:
 
 ```
 Source text
-  → LALR parser (lalr_full/)
+  → LALR parser (parser/)
   → ast.Node tree (ast/)
   → Compiler: Thing / CompileNode / SortifyWithInference (compiler/)
   → logic.Expr tree (logic/) + actions.Action tree (actions/)
