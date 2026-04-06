@@ -15,7 +15,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
@@ -45,7 +45,7 @@ func checkedAction(a actions.Action, checkLineno string) bool {
 
 // actionToTR converts an action to a transition relation triple
 // (stateVars, trans, error). Corresponds to Python's action_to_tr.
-func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, lg.Expr, lg.Expr, error) {
+func actionToTR(m *module.Module, action actions.Action, method string) ([]string, lg.Expr, lg.Expr, error) {
 	// Get background theory
 	bgt := m.BackgroundTheory(nil)
 
@@ -67,7 +67,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	// Conjoin definitions from background theory into trans
 	// Conjoin definitions from background theory as formulas
 	if bgt != nil && len(bgt.Defs) > 0 {
-		defsClauses := mod.NewClauses(nil, bgt.Defs, nil)
+		defsClauses := module.NewClauses(nil, bgt.Defs, nil)
 		defsFormula := defsClauses.ToOpenFormula()
 		if defsFormula != nil && !lg.IsTrue(defsFormula) {
 			and, _ := lg.NewAnd(transNode, defsFormula)
@@ -213,7 +213,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr, checkLi
 
 // addErrFlagMod transforms all actions in a module to use error flag checking.
 // Corresponds to Python's add_err_flag_mod.
-func addErrFlagMod(m *mod.Module, erf lg.Expr, errconds *[]lg.Expr) {
+func addErrFlagMod(m *module.Module, erf lg.Expr, errconds *[]lg.Expr) {
 	for actname, actIface := range m.Actions.All() {
 		action, ok := actIface.(actions.Action)
 		if !ok {
@@ -256,7 +256,7 @@ func createArraySortRec(sig *il.Sig, dom []lg.Sort, i int, rng lg.Sort) (string,
 
 // encodeAsArray returns true if the symbol should be converted to an array.
 // Corresponds to Python's encode_as_array.
-func encodeAsArray(m *mod.Module, sig *il.Sig, sym *lg.Const) bool {
+func encodeAsArray(m *module.Module, sig *il.Sig, sym *lg.Const) bool {
 	if il.IsInterpretedSymbol(sig, sym) {
 		return false
 	}
@@ -266,11 +266,11 @@ func encodeAsArray(m *mod.Module, sig *il.Sig, sym *lg.Const) bool {
 
 // ufToArrAST converts all uninterpreted functions in a formula to arrays.
 // Corresponds to Python's uf_to_arr_ast.
-func ufToArrAST(m *mod.Module, sig *il.Sig, node lg.Expr) lg.Expr {
+func ufToArrAST(m *module.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 	return ufToArrASTRec(m, sig, node)
 }
 
-func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Expr) lg.Expr {
+func ufToArrASTRec(m *module.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 	// Recursively transform arguments
 	args := il.NodeArgs(node)
 	newArgs := make([]lg.Expr, len(args))
@@ -307,7 +307,7 @@ func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 
 // encodeAssign encodes a parameterized assignment to use array operations.
 // Returns (newLHS, newRHS). Corresponds to Python's encode_assign.
-func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.Expr) (lg.Expr, lg.Expr, error) {
+func encodeAssign(m *module.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.Expr) (lg.Expr, lg.Expr, error) {
 	sym := il.GetAppRep(lhs)
 	if sym == nil {
 		return lhs, rhs, nil
@@ -328,8 +328,8 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.E
 	}
 
 	// Check for variable overlap between lhs and rhs
-	lhsVars := mod.UsedVariablesAST(lhs)
-	rhsVars := mod.UsedVariablesAST(rhs)
+	lhsVars := module.UsedVariablesAST(lhs)
+	rhsVars := module.UsedVariablesAST(rhs)
 	for v := range lhsVars {
 		if _, ok := rhsVars[v]; ok {
 			return nil, nil, fmt.Errorf("cannot convert parameterized assignment to VMT")
@@ -355,7 +355,7 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.E
 }
 
 // encodeAssignRecur recursively builds the array update expression.
-func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
+func encodeAssignRecur(m *module.Module, sig *il.Sig, asgn actions.Action,
 	lhsArgs []lg.Expr, ssorts []lg.Sort, i int, val lg.Expr, arhs lg.Expr) (lg.Expr, error) {
 
 	if i == len(lhsArgs) {
@@ -404,7 +404,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 
 // UFToArrayAction converts uninterpreted functions to array operations in an action.
 // Corresponds to Python's uf_to_array_action.
-func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.Action {
+func UFToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actions.Action {
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
@@ -445,7 +445,7 @@ func hasAssert(action actions.Action) bool {
 // CheckIsolate performs VMT-based model checking on the current module.
 // It writes the VMT file to "ivy.vmt" and exits.
 // Corresponds to Python's check_isolate.
-func CheckIsolate(method string, m *mod.Module) error {
+func CheckIsolate(method string, m *module.Module) error {
 	if method == "" {
 		method = "mc"
 	}
@@ -616,8 +616,8 @@ func CheckIsolate(method string, m *mod.Module) error {
 	}
 	initState := actions.ActionToState(&actions.Update{
 		Modified: istConsts,
-		TR:       mod.FormulaToClauses(init, nil),
-		Pre:      mod.FalseClauses(nil),
+		TR:       module.FormulaToClauses(init, nil),
+		Pre:      module.FalseClauses(nil),
 	})
 	initFormula := initState.TRNode()
 
@@ -746,7 +746,7 @@ func dualFormula(fmla lg.Expr) lg.Expr {
 // backgroundTheory returns the background theory for a module as a formula.
 // In the full implementation this would collect axioms, definitions, etc.
 // Simplified here to return True (no background axioms).
-func backgroundTheory(m *mod.Module) lg.Expr {
+func backgroundTheory(m *module.Module) lg.Expr {
 	var conjuncts []lg.Expr
 	for _, lf := range m.LabeledAxioms {
 		if lf.Formula != nil {
@@ -762,7 +762,7 @@ func backgroundTheory(m *mod.Module) lg.Expr {
 // computeUpdate computes the transition relation update for an action.
 // This is a simplified version; the full implementation would call
 // action.update(module, None) which does full symbolic execution.
-func computeUpdate(m *mod.Module, action actions.Action) *actions.Update {
+func computeUpdate(m *module.Module, action actions.Action) *actions.Update {
 	// For now, return a trivial update. The full implementation requires
 	// the complete action semantics compiler.
 	return actions.NullUpdate()
@@ -791,14 +791,14 @@ func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 		oldSym := lg.NewConst(old, lg.TopS)
 		constMap[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
 	}
-	return mod.RenameAST(node, constMap)
+	return module.RenameAST(node, constMap)
 }
 
 // collectAllSymbols collects all constant symbols from a list of formulas.
 func collectAllSymbols(formulas []lg.Expr) []*lg.Const {
 	seen := make(map[string]*lg.Const)
 	for _, f := range formulas {
-		syms := mod.UsedSymbolsAST(f)
+		syms := module.UsedSymbolsAST(f)
 		for _, sym := range syms {
 			if _, ok := seen[sym.Name]; !ok {
 				seen[sym.Name] = sym

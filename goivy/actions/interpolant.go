@@ -2,14 +2,14 @@ package actions
 
 import (
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
 )
 
 // InterpolantResult holds the result of an interpolation query.
 type InterpolantResult struct {
-	Core *mod.Clauses // the unsatisfiable core
-	Itp  *mod.Clauses // the interpolant (over-approximation)
+	Core *module.Clauses // the unsatisfiable core
+	Itp  *module.Clauses // the interpolant (over-approximation)
 }
 
 // Interpolant computes an interpolant between two clause sets.
@@ -20,9 +20,9 @@ type InterpolantResult struct {
 //   - I ∧ clauses2 is unsat
 //
 // Python: ivy_transrel.py:501-509
-func Interpolant(clauses1, clauses2, axioms *mod.Clauses, interpreted map[string]bool) *InterpolantResult {
-	combined := mod.AndClausesTyped(clauses1, axioms)
-	clauses2 = mod.SimplifyClauses(clauses2)
+func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	combined := module.AndClausesTyped(clauses1, axioms)
+	clauses2 = module.SimplifyClauses(clauses2)
 
 	slv := solver.New()
 	itp, err := slv.BinaryInterpolant(combined, clauses2)
@@ -39,9 +39,9 @@ func Interpolant(clauses1, clauses2, axioms *mod.Clauses, interpreted map[string
 //
 //	forward_interpolant(pre_state, update, post_state, axioms, interpreted):
 //	    return interpolant(forward_image(pre_state, axioms, update), post_state, axioms, interpreted)
-func ForwardInterpolant(preState *mod.Clauses, update *Update, postState *mod.Clauses, axioms *mod.Clauses, interpreted map[string]bool) *InterpolantResult {
+func ForwardInterpolant(preState *module.Clauses, update *Update, postState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	fwdImg := ForwardImage(preState.ToFormula(), axioms.ToFormula(), update)
-	fwdClauses := mod.FormulaToClauses(fwdImg, nil)
+	fwdClauses := module.FormulaToClauses(fwdImg, nil)
 	return Interpolant(fwdClauses, postState, axioms, interpreted)
 }
 
@@ -55,9 +55,9 @@ func ForwardInterpolant(preState *mod.Clauses, update *Update, postState *mod.Cl
 //	    pre_case = clauses_case(pre)
 //	    pre_case = [filter ground non-skolem clauses]
 //	    return interpolant(pre_state, pre_case, axioms, interpreted)
-func ReverseInterpolantCase(postState *mod.Clauses, update *Update, preState *mod.Clauses, axioms *mod.Clauses, interpreted map[string]bool) *InterpolantResult {
+func ReverseInterpolantCase(postState *module.Clauses, update *Update, preState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	revImg := ReverseImage(postState.ToFormula(), axioms.ToFormula(), update)
-	revClauses := mod.FormulaToClauses(revImg, nil)
+	revClauses := module.FormulaToClauses(revImg, nil)
 
 	// Case analysis: filter to ground clauses without Skolem relations
 	filtered := filterGroundNonSkolem(revClauses)
@@ -67,7 +67,7 @@ func ReverseInterpolantCase(postState *mod.Clauses, update *Update, preState *mo
 // InterpolantCase computes the interpolant using forward case analysis.
 //
 // Python: ivy_transrel.py:531-543
-func InterpolantCase(preState *mod.Clauses, post *mod.Clauses, axioms *mod.Clauses, interpreted map[string]bool) *InterpolantResult {
+func InterpolantCase(preState *module.Clauses, post *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	filtered := filterGroundNonSkolem(post)
 	return Interpolant(preState, filtered, axioms, interpreted)
 }
@@ -77,7 +77,7 @@ func InterpolantCase(preState *mod.Clauses, post *mod.Clauses, axioms *mod.Claus
 // restricted to the shared vocabulary.
 //
 // Python: ivy_transrel.py:545-580
-func InterpFromUnsatCore(clauses1, clauses2, core *mod.Clauses, interpreted map[string]bool) *mod.Clauses {
+func InterpFromUnsatCore(clauses1, clauses2, core *module.Clauses, interpreted map[string]bool) *module.Clauses {
 	if core == nil {
 		return nil
 	}
@@ -88,13 +88,13 @@ func InterpFromUnsatCore(clauses1, clauses2, core *mod.Clauses, interpreted map[
 	//
 	// For now, return the core restricted to symbols from clauses1.
 	syms1 := make(map[string]bool)
-	for _, sym := range mod.SymbolsClauses(clauses1) {
+	for _, sym := range module.SymbolsClauses(clauses1) {
 		syms1[sym.Name] = true
 	}
 
 	var filteredFmlas []lg.Expr
 	for _, f := range core.Fmlas {
-		fmlaSyms := mod.UsedSymbolsAST(f)
+		fmlaSyms := module.UsedSymbolsAST(f)
 		allInClauses1 := true
 		for _, c := range fmlaSyms {
 			if !syms1[c.Name] && !interpreted[c.Name] {
@@ -108,17 +108,17 @@ func InterpFromUnsatCore(clauses1, clauses2, core *mod.Clauses, interpreted map[
 	}
 
 	if len(filteredFmlas) == 0 {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
-	return mod.NewClauses(filteredFmlas, nil, nil)
+	return module.NewClauses(filteredFmlas, nil, nil)
 }
 
 // UnsatCore computes the unsat core of clauses2 with respect to clauses1.
 // Returns nil if the conjunction is satisfiable.
 //
 // This is a simplified version that returns clauses2 if unsatisfiable.
-func UnsatCore(clauses2, clauses1 *mod.Clauses) *mod.Clauses {
-	combined := mod.AndClausesTyped(clauses1, clauses2)
+func UnsatCore(clauses2, clauses1 *module.Clauses) *module.Clauses {
+	combined := module.AndClausesTyped(clauses1, clauses2)
 	if combined == nil {
 		return nil
 	}
@@ -132,13 +132,13 @@ func UnsatCore(clauses2, clauses1 *mod.Clauses) *mod.Clauses {
 
 // filterGroundNonSkolem filters clauses to keep only ground clauses
 // without Skolem relation symbols.
-func filterGroundNonSkolem(clauses *mod.Clauses) *mod.Clauses {
+func filterGroundNonSkolem(clauses *module.Clauses) *module.Clauses {
 	if clauses == nil {
 		return clauses
 	}
 	var filtered []lg.Expr
 	for _, f := range clauses.Fmlas {
-		syms := mod.UsedSymbolsAST(f)
+		syms := module.UsedSymbolsAST(f)
 		hasSkolem := false
 		for _, c := range syms {
 			if IsSkolem(c.Name) {
@@ -150,5 +150,5 @@ func filterGroundNonSkolem(clauses *mod.Clauses) *mod.Clauses {
 			filtered = append(filtered, f)
 		}
 	}
-	return mod.NewClauses(filtered, clauses.Defs, clauses.Annot)
+	return module.NewClauses(filtered, clauses.Defs, clauses.Annot)
 }

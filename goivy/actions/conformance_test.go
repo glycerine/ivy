@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // -----------------------------------------------------------------------
@@ -95,7 +95,7 @@ func TestNativeAction_ImpureFlag(t *testing.T) {
 func TestChoiceAction_Determinize(t *testing.T) {
 	// With determinize=true and exactly 2 branches, ChoiceAction should
 	// convert to IfAction behavior. We verify the config field exists.
-	cfg := mod.NewActionsConfig()
+	cfg := module.NewActionsConfig()
 	if cfg.Determinize {
 		t.Error("NewActionsConfig should default Determinize to false")
 	}
@@ -127,7 +127,7 @@ func TestSequence_Decompose(t *testing.T) {
 
 func TestChoiceAction_Decompose(t *testing.T) {
 	// Python: return [(pre, [a], post) for a in self.args]
-	cfg := mod.NewActionsConfig()
+	cfg := module.NewActionsConfig()
 	a1 := NewAssumeAction(mkConst("p"))
 	a2 := NewAssumeAction(mkConst("q"))
 	choice := NewChoiceActionOn(cfg, a1, a2)
@@ -290,7 +290,7 @@ func TestTopBottomState(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestIfAction_Subactions_Boolean(t *testing.T) {
-	cfg := mod.NewActionsConfig()
+	cfg := module.NewActionsConfig()
 	cond := mkConst("c")
 	thenBody := NewAssumeAction(mkConst("p"))
 	elseBody := NewAssumeAction(mkConst("q"))

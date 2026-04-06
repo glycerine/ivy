@@ -29,7 +29,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -118,10 +118,10 @@ type Update struct {
 	Modified    []*lg.Const
 	ModifiedAll bool // true ↔ Python updated==None; false ↔ Python updated==[]
 
-	TR     *mod.Clauses // transition relation (Clauses with fmlas + defs)
-	Pre    *mod.Clauses // precondition, negative (Clauses with fmlas + defs)
-	TRRaw  lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw lg.Expr      // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	TR     *module.Clauses // transition relation (Clauses with fmlas + defs)
+	Pre    *module.Clauses // precondition, negative (Clauses with fmlas + defs)
+	TRRaw  lg.Expr         // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw lg.Expr         // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // IsModifiedAll returns true when the update modifies all symbols
@@ -165,8 +165,8 @@ func (u *Update) PreNode() lg.Expr {
 func NullUpdate() *Update {
 	return &Update{
 		Modified: []*lg.Const{},
-		TR:       mod.TrueClauses(nil),
-		Pre:      mod.FalseClauses(nil),
+		TR:       module.TrueClauses(nil),
+		Pre:      module.FalseClauses(nil),
 	}
 }
 
@@ -175,8 +175,8 @@ func NullUpdate() *Update {
 func PureState(formula lg.Expr) *Update {
 	return &Update{
 		ModifiedAll: true,
-		TR:          mod.FormulaToClauses(formula, nil),
-		Pre:         mod.FalseClauses(nil),
+		TR:          module.FormulaToClauses(formula, nil),
+		Pre:         module.FalseClauses(nil),
 	}
 }
 
@@ -196,12 +196,12 @@ func BottomState() *Update {
 }
 
 // StatePostcond returns the transition relation (postcondition) of an update.
-func StatePostcond(u *Update) *mod.Clauses {
+func StatePostcond(u *Update) *module.Clauses {
 	return u.TR
 }
 
 // StatePrecond returns the precondition of an update.
-func StatePrecond(u *Update) *mod.Clauses {
+func StatePrecond(u *Update) *module.Clauses {
 	return u.Pre
 }
 
@@ -316,7 +316,7 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Expr {
 
 // usedSymbolNames returns all constant symbol names referenced in a formula.
 func usedSymbolNames(node lg.Expr) map[string]bool {
-	syms := mod.UsedSymbolsAST(node)
+	syms := module.UsedSymbolsAST(node)
 	result := make(map[string]bool, len(syms))
 	for _, c := range syms {
 		result[c.Name] = true
@@ -365,7 +365,7 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	// Scan the formula for actual constants with real sorts, then build
 	// a correctly-keyed substitution map. Matches Python's rename_ast
 	// which uses recstruct (name, sort) equality.
-	actualSyms := mod.UsedSymbolsAST(node)
+	actualSyms := module.UsedSymbolsAST(node)
 	constMap := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range actualSyms {
 		if newName, ok := nameMap[s.Name]; ok {
@@ -375,7 +375,7 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(constMap) == 0 {
 		return node
 	}
-	return mod.RenameAST(node, constMap)
+	return module.RenameAST(node, constMap)
 }
 
 // conjoinFormulas creates the conjunction of two formulas, simplifying
@@ -450,7 +450,7 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	}
 	// Collect symbols (name+sort) in AST depth-first order (InsMap).
 	// Matches Python: dict.fromkeys(symbols_clauses(node1)).
-	used1 := mod.UsedSymbolsExprOrdered(node1)
+	used1 := module.UsedSymbolsExprOrdered(node1)
 	// Build name-string set for renamer from node2
 	used2 := usedSymbolNames(node2)
 	used2Slice := nameSetToSlice(used2)
@@ -466,7 +466,7 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	if len(constMap) == 0 {
 		return node1
 	}
-	return mod.RenameAST(node1, constMap)
+	return module.RenameAST(node1, constMap)
 }
 
 // RenameDistinctClauses renames skolems in clauses1 to avoid clashes with clauses2.
@@ -475,13 +475,13 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 // Uses per-symbol renaming (keyed by name+sort via lg.NodeKey), matching
 // Python's rename_distinct which iterates Symbol objects. Two symbols with
 // the same name but different sorts each get their own fresh name.
-func RenameDistinctClauses(c1, c2 *mod.Clauses) *mod.Clauses {
+func RenameDistinctClauses(c1, c2 *module.Clauses) *module.Clauses {
 	if c1 == nil {
 		return c1
 	}
 	// Collect symbols (name+sort) in AST depth-first order (InsMap).
 	// Matches Python: dict.fromkeys(symbols_clauses(clauses1)).
-	used1 := mod.UsedSymbolsClausesOrdered(c1)
+	used1 := module.UsedSymbolsClausesOrdered(c1)
 	// Build name-string set for renamer from c2
 	used2 := usedSymbolNamesClauses(c2)
 	used2Slice := nameSetToSlice(used2)
@@ -498,11 +498,11 @@ func RenameDistinctClauses(c1, c2 *mod.Clauses) *mod.Clauses {
 	if len(constMap) == 0 {
 		return c1
 	}
-	return mod.RenameClauses(c1, constMap)
+	return module.RenameClauses(c1, constMap)
 }
 
 // usedSymbolNamesClauses collects all symbol names from a Clauses.
-func usedSymbolNamesClauses(c *mod.Clauses) map[string]bool {
+func usedSymbolNamesClauses(c *module.Clauses) map[string]bool {
 	if c == nil {
 		return nil
 	}
@@ -536,14 +536,14 @@ func Conjoin(f1, f2 lg.Expr) lg.Expr {
 
 // ConjoinClauses conjoins two Clauses, renaming skolems in the second to
 // avoid clashes with the first. Corresponds to Python's conjoin() for Clauses.
-func ConjoinClauses(c1, c2 *mod.Clauses) *mod.Clauses {
-	return mod.AndClausesTyped(c1, RenameDistinctClauses(c2, c1))
+func ConjoinClauses(c1, c2 *module.Clauses) *module.Clauses {
+	return module.AndClausesTyped(c1, RenameDistinctClauses(c2, c1))
 }
 
 // ConjoinClausesWithAnnotOp conjoins two Clauses with a custom annotation combiner.
 // Matches Python's conjoin(c1, c2, annot_op=f).
-func ConjoinClausesWithAnnotOp(c1, c2 *mod.Clauses, annotOp mod.AnnotOp) *mod.Clauses {
-	return mod.AndClausesWithAnnotOp(annotOp, c1, RenameDistinctClauses(c2, c1))
+func ConjoinClausesWithAnnotOp(c1, c2 *module.Clauses, annotOp module.AnnotOp) *module.Clauses {
+	return module.AndClausesWithAnnotOp(annotOp, c1, RenameDistinctClauses(c2, c1))
 }
 
 // MyAnnotOp is the default annotation combiner for transrel operations.
@@ -589,7 +589,7 @@ func ExistQuantMap(syms []*lg.Const, node lg.Expr) (map[lg.NodeKey]*lg.Const, lg
 	for _, s := range syms {
 		constMap[lg.Key(s)] = lg.NewConst(rn.Rename(s.Name), s.CSort)
 	}
-	return constMap, mod.RenameAST(node, constMap)
+	return constMap, module.RenameAST(node, constMap)
 }
 
 // ExistQuant existentially quantifies the given symbols by renaming them
@@ -612,7 +612,7 @@ func ExistQuant(syms []*lg.Const, node lg.Expr) lg.Expr {
 // 2. Introduces intermediate ("mid") variables for symbols modified by both.
 // 3. Conjoins the transition relations with appropriate renamings.
 // 4. Combines preconditions: the composed action fails if either fails.
-func ComposeUpdates(u1 *Update, axioms *mod.Clauses, u2 *Update) *Update {
+func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	// Faithful port of Python ivy_transrel.py compose_updates (lines 304-344).
 	updated1 := u1.Modified
 	updated2 := u2.Modified
@@ -653,17 +653,17 @@ func ComposeUpdates(u1 *Update, axioms *mod.Clauses, u2 *Update) *Update {
 
 	// Python: mid_ax = clauses_using_symbols(mid, axioms)
 	midSymNames := constNames(mid)
-	midAx := mod.ClausesUsingSymbolNames(midSymNames, axioms)
+	midAx := module.ClausesUsingSymbolNames(midSymNames, axioms)
 
 	// Python: used = used_symbols_clauses(and_clauses(clauses1, clauses2))
 	//         used.update(symbols_clauses(pre1))
 	//         used.update(symbols_clauses(pre2))
-	combined := mod.AndClausesTyped(clauses1, clauses2)
-	allUsed := mod.UsedSymbolNamesClauses(combined)
-	for k := range mod.UsedSymbolNamesClauses(pre1) {
+	combined := module.AndClausesTyped(clauses1, clauses2)
+	allUsed := module.UsedSymbolNamesClauses(combined)
+	for k := range module.UsedSymbolNamesClauses(pre1) {
 		allUsed[k] = true
 	}
-	for k := range mod.UsedSymbolNamesClauses(pre2) {
+	for k := range module.UsedSymbolNamesClauses(pre2) {
 		allUsed[k] = true
 	}
 	rn := iu.NewUniqueRenamer("__m_", nameSetToSlice(allUsed))
@@ -684,10 +684,10 @@ func ComposeUpdates(u1 *Update, axioms *mod.Clauses, u2 *Update) *Update {
 	}
 
 	// Python: clauses1 = rename_clauses(clauses1, map1)
-	clauses1 = mod.RenameClauses(clauses1, map1)
+	clauses1 = module.RenameClauses(clauses1, map1)
 
 	// Python: new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2, mid_ax), map2))
-	newTR := mod.AndClausesTyped(clauses1, mod.RenameClauses(mod.AndClausesTyped(clauses2, midAx), map2))
+	newTR := module.AndClausesTyped(clauses1, module.RenameClauses(module.AndClausesTyped(clauses2, midAx), map2))
 
 	// Combined modified set
 	modAll := u1.ModifiedAll || u2.ModifiedAll
@@ -705,13 +705,13 @@ func ComposeUpdates(u1 *Update, axioms *mod.Clauses, u2 *Update) *Update {
 	}
 
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
-	pre1 = mod.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewConst, axioms))
+	pre1 = module.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewConst, axioms))
 
 	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2))
-	temp := mod.AndClausesTyped(clauses1, mod.RenameClauses(mod.AndClausesTyped(pre2, midAx), map2))
+	temp := module.AndClausesTyped(clauses1, module.RenameClauses(module.AndClausesTyped(pre2, midAx), map2))
 
 	// Python: new_pre = or_clauses(pre1, temp)
-	newPre := mod.OrClausesTyped(pre1, temp)
+	newPre := module.OrClausesTyped(pre1, temp)
 
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.ComposeUpdates result nTRfmlas=%d nTRdefs=%d nPREfmlas=%d nPREdefs=%d", len(newTR.Fmlas), len(newTR.Defs), len(newPre.Fmlas), len(newPre.Defs))
@@ -782,25 +782,25 @@ func formulaUsesSyms(node lg.Expr, syms map[string]bool) bool {
 // The join adds frame conditions for symbols modified in one but not the
 // other, then takes the disjunction of transition relations and
 // preconditions.
-func JoinAction(u1, u2 *Update, axioms *mod.Clauses) *Update {
+func JoinAction(u1, u2 *Update, axioms *module.Clauses) *Update {
 	return joinUpdate(u1, u2, NewConst, axioms)
 }
 
 // JoinState computes the join of two state-style updates.
-func JoinState(u1, u2 *Update, axioms *mod.Clauses) *Update {
+func JoinState(u1, u2 *Update, axioms *module.Clauses) *Update {
 	return joinUpdate(u1, u2, OldConst, axioms)
 }
 
 // joinUpdate implements the generic join operation for both action and state styles.
 // Faithfully ports Python's join(s1, s2, op, axioms) (ivy_transrel.py:189-201).
-func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
+func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
 	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
 
-	c1 := mod.AndClausesTyped(u1.TR, df12)
-	c2 := mod.AndClausesTyped(u2.TR, df21)
-	p1 := mod.AndClausesTyped(u1.Pre, df12)
-	p2 := mod.AndClausesTyped(u2.Pre, df21)
+	c1 := module.AndClausesTyped(u1.TR, df12)
+	c2 := module.AndClausesTyped(u2.TR, df21)
+	p1 := module.AndClausesTyped(u1.Pre, df12)
+	p2 := module.AndClausesTyped(u2.Pre, df21)
 
 	modAll := u1.ModifiedAll || u2.ModifiedAll
 	var u []*lg.Const
@@ -808,8 +808,8 @@ func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clause
 		u = UpdatedJoinConst(u1.Modified, u2.Modified)
 	}
 
-	c := mod.OrClausesTyped(c1, c2)
-	p := mod.OrClausesTyped(p1, p2)
+	c := module.OrClausesTyped(c1, c2)
+	p := module.OrClausesTyped(p1, p2)
 
 	return &Update{
 		Modified:    u,
@@ -827,18 +827,18 @@ func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clause
 //
 // If cond is true, the first update applies; otherwise the second.
 // Frame conditions are added for symbols modified asymmetrically.
-func IteAction(cond lg.Expr, u1, u2 *Update, axioms *mod.Clauses) *Update {
+func IteAction(cond lg.Expr, u1, u2 *Update, axioms *module.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, NewConst, axioms)
 }
 
 // IteState computes the conditional update for state-style updates.
-func IteState(cond lg.Expr, u1, u2 *Update, axioms *mod.Clauses) *Update {
+func IteState(cond lg.Expr, u1, u2 *Update, axioms *module.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, OldConst, axioms)
 }
 
 // iteUpdate implements the generic if-then-else for both action and state styles.
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
-func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
+func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.iteUpdate ENTER u1.nMod=%d u1.TR.nFmlas=%d u1.TR.nDefs=%d u2.nMod=%d u2.TR.nFmlas=%d u2.TR.nDefs=%d",
 			len(u1.Modified), len(u1.TR.Fmlas), len(u1.TR.Defs), len(u2.Modified), len(u2.TR.Fmlas), len(u2.TR.Defs))
@@ -846,10 +846,10 @@ func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axiom
 	df12 := DiffFrameConstUpdate(u1, u2, op, axioms)
 	df21 := DiffFrameConstUpdate(u2, u1, op, axioms)
 
-	c1 := mod.AndClausesTyped(u1.TR, df12)
-	c2 := mod.AndClausesTyped(u2.TR, df21)
-	p1 := mod.AndClausesTyped(u1.Pre, df12)
-	p2 := mod.AndClausesTyped(u2.Pre, df21)
+	c1 := module.AndClausesTyped(u1.TR, df12)
+	c2 := module.AndClausesTyped(u2.TR, df21)
+	p1 := module.AndClausesTyped(u1.Pre, df12)
+	p2 := module.AndClausesTyped(u2.Pre, df21)
 
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.iteUpdate df12 HASH canon= %s", df12.Canon())
@@ -865,8 +865,8 @@ func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axiom
 	}
 
 	// Python: c = ite_clauses(cond, [c1, c2])
-	c := mod.IteClauses(cond, c1, c2)
-	p := mod.IteClauses(cond, p1, p2)
+	c := module.IteClauses(cond, c1, c2)
+	p := module.IteClauses(cond, p1, p2)
 
 	return &Update{
 		Modified:    u,
@@ -974,11 +974,11 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 // ExistQuantClauses existentially quantifies symbols by renaming them
 // to fresh skolem names in a Clauses object. Symbols are []*lg.Const
 // with sorts preserved, matching Python's exist_quant for clauses.
-func ExistQuantClauses(syms []*lg.Const, clauses *mod.Clauses) (map[lg.NodeKey]*lg.Const, *mod.Clauses) {
+func ExistQuantClauses(syms []*lg.Const, clauses *module.Clauses) (map[lg.NodeKey]*lg.Const, *module.Clauses) {
 	if clauses == nil || len(syms) == 0 {
 		return nil, clauses
 	}
-	allUsed := mod.UsedSymbolNamesClauses(clauses)
+	allUsed := module.UsedSymbolNamesClauses(clauses)
 	rn := iu.NewUniqueRenamer("__", nameSetToSlice(allUsed))
 	constMap := make(map[lg.NodeKey]*lg.Const, len(syms))
 	for _, s := range syms {
@@ -987,7 +987,7 @@ func ExistQuantClauses(syms []*lg.Const, clauses *mod.Clauses) (map[lg.NodeKey]*
 	if len(constMap) == 0 {
 		return nil, clauses
 	}
-	return constMap, mod.RenameClauses(clauses, constMap)
+	return constMap, module.RenameClauses(clauses, constMap)
 }
 
 // HideState hides symbols from a state-style update, using old_
@@ -1054,7 +1054,7 @@ func HideStateMap(syms []*lg.Const, u *Update) (map[lg.NodeKey]*lg.Const, *Updat
 	return trMap, &Update{
 		Modified:    newMod,
 		ModifiedAll: u.ModifiedAll,
-		TR:          mod.FormulaToClauses(newTRNode, nil),
+		TR:          module.FormulaToClauses(newTRNode, nil),
 		Pre:         newPre,
 	}
 }
@@ -1077,12 +1077,12 @@ func StateToAction(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = NewConst(s)
 	}
-	for _, s := range constSliceFromMap(mod.UsedSymbolsClauses(u.TR)) {
+	for _, s := range constSliceFromMap(module.UsedSymbolsClauses(u.TR)) {
 		if IsOld(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
 	}
-	renamedTR := mod.RenameClauses(u.TR, renaming)
+	renamedTR := module.RenameClauses(u.TR, renaming)
 	return &Update{
 		Modified: u.Modified,
 		TR:       renamedTR,
@@ -1097,12 +1097,12 @@ func ActionToState(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = OldConst(s)
 	}
-	for _, s := range constSliceFromMap(mod.UsedSymbolsClauses(u.TR)) {
+	for _, s := range constSliceFromMap(module.UsedSymbolsClauses(u.TR)) {
 		if IsNew(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(NewOf(s.Name), s.CSort)
 		}
 	}
-	renamedTR := mod.RenameClauses(u.TR, renaming)
+	renamedTR := module.RenameClauses(u.TR, renaming)
 	return &Update{
 		Modified: u.Modified,
 		TR:       renamedTR,
@@ -1140,12 +1140,12 @@ func constSliceFromMap(m map[lg.NodeKey]*lg.Const) []*lg.Const {
 //	pre = conjoin(pre_state, pre_ax)
 //	map1, res = exist_quant_map(updated, conjoin(pre, clauses, annot_op=my_annot_op))
 //	res = rename_clauses(res, dict((new(x),x) for x in updated))
-func ForwardImageMap(preState *mod.Clauses, axioms *mod.Clauses, u *Update) (map[lg.NodeKey]*lg.Const, *mod.Clauses) {
+func ForwardImageMap(preState *module.Clauses, axioms *module.Clauses, u *Update) (map[lg.NodeKey]*lg.Const, *module.Clauses) {
 	updated := u.Modified
 
 	// Filter axioms that reference updated symbols
 	updatedNames := constNames(updated)
-	preAx := mod.ClausesUsingSymbolNames(updatedNames, axioms)
+	preAx := module.ClausesUsingSymbolNames(updatedNames, axioms)
 
 	// Conjoin pre-state with relevant axioms
 	pre := ConjoinClauses(preState, preAx)
@@ -1162,7 +1162,7 @@ func ForwardImageMap(preState *mod.Clauses, axioms *mod.Clauses, u *Update) (map
 		newSym := lg.NewConst(New(s.Name), s.CSort)
 		renaming[lg.Key(newSym)] = lg.NewConst(s.Name, s.CSort)
 	}
-	result := mod.RenameClauses(quantified, renaming)
+	result := module.RenameClauses(quantified, renaming)
 
 	return eqMap, result
 }
@@ -1171,8 +1171,8 @@ func ForwardImageMap(preState *mod.Clauses, axioms *mod.Clauses, u *Update) (map
 // Converts the NodeKey→Const map from ForwardImageMap to a name→name
 // map for callers that only need name-level renaming info (e.g. History).
 func ForwardImageMapFormula(preState lg.Expr, axioms lg.Expr, u *Update) (map[string]string, lg.Expr) {
-	preClauses := mod.FormulaToClauses(preState, nil)
-	axClauses := mod.FormulaToClauses(axioms, nil)
+	preClauses := module.FormulaToClauses(preState, nil)
+	axClauses := module.FormulaToClauses(axioms, nil)
 	eqMap, resClauses := ForwardImageMap(preClauses, axClauses, u)
 	// Build name map from Modified (which we know were the quantified symbols)
 	nameMap := make(map[string]string, len(eqMap))
@@ -1198,11 +1198,11 @@ func ForwardImage(pre lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 // ActionFailed is returned when compose_state_action detects that the
 // precondition of an action is not satisfied by the pre-state.
 type ActionFailed struct {
-	PreTest   lg.Expr      // the unsatisfied precondition (from compose_state_action)
-	TransPre  *mod.Clauses // pre-state model extraction (from extract_pre_post_model)
-	TransPost *mod.Clauses // post-state model extraction (from extract_pre_post_model)
-	Formula   lg.Expr      // the unsatisfied precondition formula (legacy field)
-	Trace     []lg.Expr    // sequence of states leading to the failure (legacy field)
+	PreTest   lg.Expr         // the unsatisfied precondition (from compose_state_action)
+	TransPre  *module.Clauses // pre-state model extraction (from extract_pre_post_model)
+	TransPost *module.Clauses // post-state model extraction (from extract_pre_post_model)
+	Formula   lg.Expr         // the unsatisfied precondition formula (legacy field)
+	Trace     []lg.Expr       // sequence of states leading to the failure (legacy field)
 }
 
 func (af *ActionFailed) Error() string {
@@ -1241,7 +1241,7 @@ func ComposeStateAction(
 	//         model = small_model_clauses(pre_test)
 	//         if model != None: raise ActionFailed(pre_test, trans)
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
-		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), mod.FormulaToClauses(axioms, nil))
+		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), module.FormulaToClauses(axioms, nil))
 		// Check if precondition violation is possible (SAT = violation found)
 		// Python: model = small_model_clauses(pre_test)
 		//         if model != None: trans = extract_pre_post_model(pre_test, model, au)
@@ -1278,8 +1278,8 @@ func ComposeStateAction(
 			}
 		}
 		if len(rn) > 0 {
-			sc = mod.RenameClauses(sc, rn)
-			actionTR := mod.RenameClauses(action.TR, rn)
+			sc = module.RenameClauses(sc, rn)
+			actionTR := module.RenameClauses(action.TR, rn)
 			action = &Update{Modified: au, TR: actionTR, Pre: action.Pre}
 		}
 		su = UpdatedJoinConst(su, au)
@@ -1290,7 +1290,7 @@ func ComposeStateAction(
 	return &Update{
 		Modified:    su,
 		ModifiedAll: suAll,
-		TR:          mod.FormulaToClauses(img, nil),
+		TR:          module.FormulaToClauses(img, nil),
 		Pre:         sp,
 	}, nil
 }
@@ -1419,7 +1419,7 @@ func ReverseImage(postState lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 	for _, s := range updated {
 		renamingMap[lg.Key(s)] = NewConst(s)
 	}
-	postClauses = mod.RenameAST(postClauses, renamingMap)
+	postClauses = module.RenameAST(postClauses, renamingMap)
 
 	postUpdated := make([]*lg.Const, len(updated))
 	for i, s := range updated {
@@ -1442,7 +1442,7 @@ func ActionFailure(u *Update) *Update {
 	return &Update{
 		Modified: u.Modified,
 		TR:       u.Pre,
-		Pre:      mod.TrueClauses(nil),
+		Pre:      module.TrueClauses(nil),
 	}
 }
 
@@ -1451,7 +1451,7 @@ func ActionFailure(u *Update) *Update {
 func ConstrainState(u *Update, fmla lg.Expr) *Update {
 	return &Update{
 		Modified: u.Modified,
-		TR:       mod.AndClausesTyped(u.TR, mod.FormulaToClauses(fmla, nil)),
+		TR:       module.AndClausesTyped(u.TR, module.FormulaToClauses(fmla, nil)),
 		Pre:      u.Pre,
 	}
 }
@@ -1475,19 +1475,19 @@ func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
 
 	return &Update{
 		Modified: u.Modified,
-		TR:       mod.FormulaToClauses(newTR, nil),
+		TR:       module.FormulaToClauses(newTR, nil),
 		Pre:      u.Pre,
 	}
 }
 
 // FrameConst returns a Clauses with frame definitions for all given symbols.
 // Matches Python's frame(updated, op) = Clauses([], [frame_def(sym, op) for sym in updated]).
-func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *mod.Clauses {
+func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *module.Clauses {
 	var defs []*il.Definition
 	for _, sym := range updated {
 		defs = append(defs, FrameDefConst(sym, op))
 	}
-	return mod.NewClauses(nil, defs, nil)
+	return module.NewClauses(nil, defs, nil)
 }
 
 // FrameUpdate modifies an update so that all symbols in inScope are on
@@ -1509,8 +1509,8 @@ func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 	}
 	newTR := u.TR
 	if len(defs) > 0 {
-		frameClauses := mod.NewClauses(nil, defs, nil)
-		newTR = mod.AndClausesTyped(u.TR, frameClauses)
+		frameClauses := module.NewClauses(nil, defs, nil)
+		newTR = module.AndClausesTyped(u.TR, frameClauses)
 	}
 	return &Update{
 		Modified: updated,
@@ -1521,15 +1521,15 @@ func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 
 // AddPostAxioms adds post-state axioms to an update.
 // Faithful port of Python add_post_axioms (ivy_transrel.py:346-350).
-func AddPostAxioms(u *Update, axioms *mod.Clauses) *Update {
+func AddPostAxioms(u *Update, axioms *module.Clauses) *Update {
 	renaming := make(map[lg.NodeKey]*lg.Const, len(u.Modified))
 	for _, sym := range u.Modified {
 		renaming[lg.Key(sym)] = NewConst(sym)
 	}
 	modNames := constNames(u.Modified)
-	postAx := mod.ClausesUsingSymbolNames(modNames, axioms)
-	renamedAx := mod.RenameClauses(postAx, renaming)
-	newTR := mod.AndClausesTyped(u.TR, renamedAx)
+	postAx := module.ClausesUsingSymbolNames(modNames, axioms)
+	renamedAx := module.RenameClauses(postAx, renaming)
+	newTR := module.AndClausesTyped(u.TR, renamedAx)
 
 	return &Update{
 		Modified: u.Modified,
@@ -1566,11 +1566,11 @@ func BindOldsUpdate(u *Update) *Update {
 }
 
 // BindOldsClausesClauses binds old_ symbols in a Clauses object.
-func BindOldsClausesClauses(clauses *mod.Clauses) *mod.Clauses {
+func BindOldsClausesClauses(clauses *module.Clauses) *module.Clauses {
 	if clauses == nil {
 		return clauses
 	}
-	used := mod.UsedSymbolsClauses(clauses)
+	used := module.UsedSymbolsClauses(clauses)
 	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range used {
 		if IsOld(s.Name) {
@@ -1580,7 +1580,7 @@ func BindOldsClausesClauses(clauses *mod.Clauses) *mod.Clauses {
 	if len(renaming) == 0 {
 		return clauses
 	}
-	return mod.RenameClauses(clauses, renaming)
+	return module.RenameClauses(clauses, renaming)
 }
 
 // SubstAction substitutes symbols in an update according to a substitution map.
@@ -1588,8 +1588,8 @@ func BindOldsClausesClauses(clauses *mod.Clauses) *mod.Clauses {
 // clauses to build correctly-keyed renaming maps.
 func SubstAction(u *Update, subst map[string]string) *Update {
 	// Collect actual constants from both TR and Pre to get real sorts
-	allSyms := mod.UsedSymbolsClauses(u.TR)
-	for k, v := range mod.UsedSymbolsClauses(u.Pre) {
+	allSyms := module.UsedSymbolsClauses(u.TR)
+	for k, v := range module.UsedSymbolsClauses(u.Pre) {
 		allSyms[k] = v
 	}
 	// Build (name,sort)-keyed renaming from actual constants
@@ -1614,8 +1614,8 @@ func SubstAction(u *Update, subst map[string]string) *Update {
 			newUpdated[i] = s
 		}
 	}
-	newTR := mod.RenameClauses(u.TR, renaming)
-	newPre := mod.RenameClauses(u.Pre, renaming)
+	newTR := module.RenameClauses(u.TR, renaming)
+	newPre := module.RenameClauses(u.Pre, renaming)
 	return &Update{
 		Modified: newUpdated,
 		TR:       newTR,
@@ -1725,16 +1725,16 @@ func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
 
 // DiffFrameConstUpdate builds frame definitions using Update structs,
 // checking ModifiedAll instead of nil slices.
-func DiffFrameConstUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *mod.Clauses {
+func DiffFrameConstUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *module.Clauses {
 	if u1.ModifiedAll || u2.ModifiedAll {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	return DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
 }
 
 // DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
 // op is NewConst or OldConst.
-func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *mod.Clauses {
+func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *module.Clauses {
 	u1Set := constNames(updated1)
 	// Also exclude symbols that are defined in axioms
 	defnd := make(map[lg.NodeKey]bool)
@@ -1757,14 +1757,14 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 
 		xtracer.Trace("transrel.DiffFrameConst nDefs=%d syms=[%v]", len(defs), strings.Join(names, ", "))
 	}
-	return mod.NewClauses(nil, defs, nil)
+	return module.NewClauses(nil, defs, nil)
 }
 
 // FrameDefConst creates a frame definition for a symbol (preserving sort).
 func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
 	opSym := op(sym)
-	lhs := mod.SymInst(opSym)
-	rhs := mod.SymInst(sym)
+	lhs := module.SymInst(opSym)
+	rhs := module.SymInst(sym)
 	def := il.NewDefinition(lhs, rhs)
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.FrameDefConst HASH canon= sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
@@ -1793,10 +1793,10 @@ func ModifiedNames(u *Update) []string {
 // state at each time step.
 type History struct {
 	Cfg     *iu.IvyUtilsConfig
-	Post    lg.Expr     // characteristic formula of the current state
-	Maps    []Renaming  // sequence of symbol renamings from forward images
-	Actions []lg.Expr   // actions taken at each step
-	Mod     *mod.Module // module for sort/symbol lookups (replaces global)
+	Post    lg.Expr        // characteristic formula of the current state
+	Maps    []Renaming     // sequence of symbol renamings from forward images
+	Actions []lg.Expr      // actions taken at each step
+	Mod     *module.Module // module for sort/symbol lookups (replaces global)
 }
 
 // Renaming maps symbol names to renamed versions.
@@ -1882,14 +1882,14 @@ func (h *History) Satisfy(axioms lg.Expr) *SatisfyResult {
 // model-finding function and final conditions.
 //
 // Corresponds to Python History.satisfy(axioms, _get_model_clauses, final_cond).
-func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*mod.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
+func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*module.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
 	if h.Post == nil {
 		return nil
 	}
 
 	// Default model finder: small_model_clauses
 	if getModelClauses == nil {
-		getModelClauses = func(cls *mod.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+		getModelClauses = func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
 			mr, _ := SmallModelClauses(cls, fc, true, h.Mod)
 			return mr
 		}
@@ -1897,15 +1897,15 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*mod.Clau
 
 	// A model of the post-state embeds a valuation for each time in the history.
 	xtracer.Trace("transrel.SatisfyWithCond ENTER\n postType=%T postSort=%v axiomType=%T post=%v", h.Post, h.Post.NodeSort(), axioms, h.Post)
-	postClauses := mod.FormulaToClauses(h.Post, nil)
+	postClauses := module.FormulaToClauses(h.Post, nil)
 	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d\n fmla0Sort=%v", len(postClauses.Fmlas), func() interface{} {
 		if len(postClauses.Fmlas) > 0 {
 			return postClauses.Fmlas[0].NodeSort()
 		}
 		return "empty"
 	}())
-	axiomClauses := mod.FormulaToClauses(axioms, nil)
-	post := mod.AndClausesTyped(postClauses, axiomClauses)
+	axiomClauses := module.FormulaToClauses(axioms, nil)
+	post := module.AndClausesTyped(postClauses, axiomClauses)
 	xtracer.Trace("transrel.SatisfyWithCond combined fmlas=%d", len(post.Fmlas))
 	model := getModelClauses(post, finalCond)
 	if model == nil {
@@ -1916,7 +1916,7 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*mod.Clau
 	// recorded renamings in reverse order. Here "renaming" maps
 	// symbols representing a past time onto current time skolems.
 	renaming := make(Renaming)
-	var states []*mod.Clauses
+	var states []*module.Clauses
 	mapsReversed := reverseRenamings(h.Maps)
 
 	numerals := true //default
@@ -1963,8 +1963,8 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*mod.Clau
 				}
 			}
 			if len(condFmlas) > 0 {
-				fcClauses := mod.NewClauses(condFmlas, nil, nil)
-				allClauses = mod.AndClausesTyped(post, fcClauses)
+				fcClauses := module.NewClauses(condFmlas, nil, nil)
+				allClauses = module.AndClausesTyped(post, fcClauses)
 			}
 		}
 
@@ -1972,11 +1972,11 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*mod.Clau
 		slv := solver.New()
 		clauses, err := slv.ClausesModelToClausesWithModel(allClauses, model, ignore, numerals)
 		if err != nil || clauses == nil {
-			clauses = mod.TrueClauses(nil)
+			clauses = module.TrueClauses(nil)
 		}
 
 		// Map this formula into the past using inverse map
-		clauses = mod.RenameClausesByName(clauses, InverseMap(renaming))
+		clauses = module.RenameClausesByName(clauses, InverseMap(renaming))
 
 		// Remove tautology equalities
 		clauses = RemoveTautEqsClauses(clauses)

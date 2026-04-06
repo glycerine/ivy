@@ -9,7 +9,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"sort"
 	"strings"
@@ -17,17 +17,17 @@ import (
 
 // Action is defined in module/action.go. This type alias allows existing code
 // in this package to use 'Action' without the module prefix.
-type Action = mod.Action
+type Action = module.Action
 
 // ActionBase is defined in module/action.go.
-type ActionBase = mod.ActionBase
+type ActionBase = module.ActionBase
 
 // Package-local forwarding for unexported helpers.
-func toAction(n lg.Expr) (Action, bool)          { return mod.ToAction(n) }
-func defaultIterCalls(args []lg.Expr) []string   { return mod.DefaultIterCalls(args) }
-func defaultIterSubactions(self Action) []Action { return mod.DefaultIterSubactions(self) }
-func nodeSliceStr(nodes []lg.Expr) string        { return mod.NodeSliceStr(nodes) }
-func copyNodes(nodes []lg.Expr) []lg.Expr        { return mod.CopyNodes(nodes) }
+func toAction(n lg.Expr) (Action, bool)          { return module.ToAction(n) }
+func defaultIterCalls(args []lg.Expr) []string   { return module.DefaultIterCalls(args) }
+func defaultIterSubactions(self Action) []Action { return module.DefaultIterSubactions(self) }
+func nodeSliceStr(nodes []lg.Expr) string        { return module.NodeSliceStr(nodes) }
+func copyNodes(nodes []lg.Expr) []lg.Expr        { return module.CopyNodes(nodes) }
 
 // --- Schema ---
 
@@ -97,10 +97,10 @@ func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) 
 	}
 	// Python uses AstRewriteSubstPrefix which rewrites constants (not variables).
 	// SubstituteConstantsAST is the Go equivalent for constant substitution.
-	result := mod.SubstituteConstantsExpr(defn.Rhs, subst)
+	result := module.SubstituteConstantsExpr(defn.Rhs, subst)
 	// Note: when toClauses is true, Python returns formula_to_clauses(fmla).
 	// For the actions.Schema (compiled expressions), callers that need clauses
-	// should call mod.FormulaToClauses on the result themselves.
+	// should call module.FormulaToClauses on the result themselves.
 	return result, nil
 }
 
@@ -507,7 +507,7 @@ func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart Action, elsePart Ac
 	if elseAction == nil {
 		elseAction = NewSequence()
 	}
-	dual := mod.DualFormula(a.Cond, nil, nil)
+	dual := module.DualFormula(a.Cond, nil, nil)
 	elsePart = NewSequence(NewAssumeAction(dual), elseAction)
 	return
 }
@@ -526,7 +526,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 		vs[i] = v
 		subst[lg.Key(p)] = v
 	}
-	sfmla := mod.SubstituteConstantsExpr(fmla, subst)
+	sfmla := module.SubstituteConstantsExpr(fmla, subst)
 
 	// Handle SomeMinMax ordering constraints
 	if some.Kind == "some_min" || some.Kind == "some_max" {
@@ -568,7 +568,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 					idxSort = lg.TopS
 				}
 				ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{idxSort, idxSort}))
-				ivar = mod.SubstituteConstantsExpr(idx, subst)
+				ivar = module.SubstituteConstantsExpr(idx, subst)
 				var comp lg.Expr
 				if isMin {
 					ltApp, _ := lg.NewApply(ltSym, ivar, idx)
@@ -615,7 +615,7 @@ func (a *IfAction) GetCond() lg.Expr {
 			vs[i] = v
 			subst[lg.Key(p)] = v
 		}
-		sfmla := mod.SubstituteConstantsExpr(some.Fmla, subst)
+		sfmla := module.SubstituteConstantsExpr(some.Fmla, subst)
 		exists, _ := lg.NewExists(vs, sfmla)
 		return exists
 	}
@@ -802,9 +802,9 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 		return a
 	}
 	// Collect used symbol names for unique naming
-	usedMap := mod.UsedSymbolsAST(a.Callee)
+	usedMap := module.UsedSymbolsAST(a.Callee)
 	for _, r := range a.ActualReturns {
-		for k, v := range mod.UsedSymbolsAST(r) {
+		for k, v := range module.UsedSymbolsAST(r) {
 			usedMap[k] = v
 		}
 	}
@@ -1169,15 +1169,15 @@ func (r *RME) String() string {
 // --- ActionContext types are defined in module/config.go ---
 
 // Type aliases for types moved to module/ package.
-type IActionContext = mod.IActionContext
-type ActionsConfig = mod.ActionsConfig
-type ActionContext = mod.ActionContext
+type IActionContext = module.IActionContext
+type ActionsConfig = module.ActionsConfig
+type ActionContext = module.ActionContext
 
 // Forwarding constructors for types moved to module/.
-var NewActionsConfig = mod.NewActionsConfig
-var NewActionContext = mod.NewActionContext
-var NewActionContextOn = mod.NewActionContextOn
-var RunWithActionContext = mod.RunWithActionContext
+var NewActionsConfig = module.NewActionsConfig
+var NewActionContext = module.NewActionContext
+var NewActionContextOn = module.NewActionContextOn
+var RunWithActionContext = module.RunWithActionContext
 
 // Actions implement lg.Expr directly — no wrapper types needed.
 
@@ -1402,7 +1402,7 @@ func (a *WhileAction) Decompose() [][]Action {
 }
 
 // DecomposeWithModule expands the while loop using the given module and decomposes.
-func (a *WhileAction) DecomposeWithModule(m *mod.Module) [][]Action {
+func (a *WhileAction) DecomposeWithModule(m *module.Module) [][]Action {
 	if m == nil {
 		return a.Decompose()
 	}
@@ -1733,7 +1733,7 @@ type UpdatePattern struct {
 // Match checks if the given action matches this pattern.
 // If it matches, returns (precond_clauses, transrel_clauses), else returns nil, nil.
 // Corresponds to Python UpdatePattern.match.
-func (p *UpdatePattern) Match(action Action) (*mod.Clauses, *mod.Clauses) {
+func (p *UpdatePattern) Match(action Action) (*module.Clauses, *module.Clauses) {
 	if p.Pattern == nil {
 		return nil, nil
 	}
@@ -1744,11 +1744,11 @@ func (p *UpdatePattern) Match(action Action) (*mod.Clauses, *mod.Clauses) {
 
 	// Build precondition and transition relation clauses with substitution applied
 	precondFmla := &lg.Not{Body: p.Precond}
-	precondClauses := mod.FormulaToClauses(precondFmla, nil)
-	precondClauses = mod.SubstBothClauses(precondClauses, subst)
+	precondClauses := module.FormulaToClauses(precondFmla, nil)
+	precondClauses = module.SubstBothClauses(precondClauses, subst)
 
-	transrelClauses := mod.FormulaToClauses(p.TransRel, nil)
-	transrelClauses = mod.SubstBothClauses(transrelClauses, subst)
+	transrelClauses := module.FormulaToClauses(p.TransRel, nil)
+	transrelClauses = module.SubstBothClauses(transrelClauses, subst)
 
 	return precondClauses, transrelClauses
 }
@@ -1887,7 +1887,7 @@ func (a *PatternBasedUpdate) IterSubactions() []Action { return defaultIterSubac
 // If so, adds all defines to updated and finds a matching pattern.
 // Returns (updated, transrel_clauses, precond_clauses).
 // Corresponds to Python PatternBasedUpdate.get_update_axioms.
-func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *mod.Clauses, *mod.Clauses) {
+func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses) {
 	// Check if any dependency is in the updated set
 	depSet := make(map[string]bool)
 	for _, d := range a.Dependencies {
@@ -1907,7 +1907,7 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action)
 	}
 
 	if !found {
-		return updated, mod.TrueClauses(nil), mod.FalseClauses(nil)
+		return updated, module.TrueClauses(nil), module.FalseClauses(nil)
 	}
 
 	// Add all defines to updated (if not already present)
@@ -1930,7 +1930,7 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action)
 
 	// No matching pattern — this is an error in Python (raises IvyError)
 	// but we return a safe default
-	return updated, mod.TrueClauses(nil), mod.FalseClauses(nil)
+	return updated, module.TrueClauses(nil), module.FalseClauses(nil)
 }
 
 // --- NamedUpdate ---
@@ -1964,7 +1964,7 @@ func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
 // updated set. If so, adds the symbol to updated. Returns (updated, nil, nil).
 // Corresponds to Python NamedUpdate.get_update_axioms.
-func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *mod.Clauses, *mod.Clauses) {
+func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses) {
 	defines := a.UpdateName
 	if defines == "" {
 		return updated, nil, nil
@@ -1972,7 +1972,7 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg
 
 	// Collect dependency symbols from the body
 	deps := make(map[string]bool)
-	mod.CollectSymNames(a.Body, deps)
+	module.CollectSymNames(a.Body, deps)
 
 	// Check if defines is not in updated and any dependency is in updated
 	updatedSet := make(map[string]bool)
@@ -2000,7 +2000,7 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg
 // Corresponds to the Python protocol where domain.updates[] objects have
 // get_update_axioms(updated, action).
 type Updater interface {
-	GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *mod.Clauses, *mod.Clauses)
+	GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses)
 }
 
 // --- EnvAction constructor ---
@@ -2199,11 +2199,11 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 			if !ok {
 				return NullUpdate()
 			}
-			clauses := mod.FormulaToClauses(fmla, nil)
+			clauses := module.FormulaToClauses(fmla, nil)
 			return &Update{
 				Modified: nil,
 				TR:       clauses,
-				Pre:      mod.FalseClauses(nil),
+				Pre:      module.FalseClauses(nil),
 			}
 		}
 	}

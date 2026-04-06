@@ -14,7 +14,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	modpkg "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
@@ -24,7 +24,7 @@ type InstrumentationConfig struct {
 	Lineno             ast.Location
 	FiniteSorts        map[string]bool
 	UninterpretedSorts []lg.Sort
-	Mod                *modpkg.Module
+	Mod                *module.Module
 	Fmla               lg.Expr // the temporal formula
 	Invars             []*ast.LabeledFormula
 	Postconds          []*ast.LabeledFormula // nil for l2s
@@ -38,14 +38,14 @@ type InstrumentationConfig struct {
 	AssumeInitAxioms []actions.Action
 
 	// Collected state (populated by shared steps)
-	L2sGs            map[string]L2sGTriple
-	L2sWhensSet      map[string]*lg.NamedBinder
+	L2sGs             map[string]L2sGTriple
+	L2sWhensSet       map[string]*lg.NamedBinder
 	NamedBindersConjs map[string][]VarBodyPair
-	ToWait           []VarBodyPair
-	ToSave           []VarBodyPair
-	SaveState        []actions.Action
-	DoneWaiting      []lg.Expr
-	NotLf            lg.Expr
+	ToWait            []VarBodyPair
+	ToSave            []VarBodyPair
+	SaveState         []actions.Action
+	DoneWaiting       []lg.Expr
+	NotLf             lg.Expr
 
 	// Functions built during step 1
 	ReplaceTemporals func(lg.Expr) lg.Expr
@@ -239,7 +239,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 					symName := modSym.Name
 					if m != nil && m.Sig != nil {
 						if entry, ok := m.Sig.Symbols[symName]; ok {
-							vs := modpkg.SymPlaceholders(lg.NewConst(symName, entry.Sort))
+							vs := module.SymPlaceholders(lg.NewConst(symName, entry.Sort))
 							var expr lg.Expr
 							if len(vs) > 0 {
 								expr = mustApply(lg.NewConst(symName, entry.Sort), varsToNodes(vs)...)
@@ -265,7 +265,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		normNotLf := lu.NormalizeNamedBinders(cfg.NotLf, nil)
 		for _, b := range lu.NamedBindersAst(normNotLf) {
 			if b.Name == "l2s_g" {
-				negBody := modpkg.Negate(b.Body)
+				negBody := module.Negate(b.Body)
 				key := fmt.Sprint(negBody)
 				if !seenWait[key] {
 					seenWait[key] = true
@@ -314,7 +314,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
 		negGlob := cfg.ReplaceTemporals(
-			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: modpkg.Negate(vb.Body)}})
+			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}})
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), cfg.Lineno))
 	}
@@ -482,7 +482,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				&lg.Not{Body: t},
 				cfg.ReplaceTemporals(&lg.Not{Body: &lg.Globally{
 					Environ: strPtr(cfg.ProofLabel),
-					Body:    modpkg.Negate(t),
+					Body:    module.Negate(t),
 				}}),
 			}}
 			res = append(res, setLineno(actions.NewAssignAction(waitApp, rhs), lineno))
@@ -656,7 +656,7 @@ func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals
 }
 
 // BuildAddConstsToD builds the addConstsToD action list.
-func BuildAddConstsToD(mod *modpkg.Module, uninterpretedSorts []lg.Sort, lineno ast.Location) []actions.Action {
+func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno ast.Location) []actions.Action {
 	var addConstsToD []actions.Action
 	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
@@ -672,7 +672,7 @@ func BuildAddConstsToD(mod *modpkg.Module, uninterpretedSorts []lg.Sort, lineno 
 }
 
 // BuildDefnDeps builds the definition dependency map from a module.
-func BuildDefnDeps(mod *modpkg.Module) map[string][]string {
+func BuildDefnDeps(mod *module.Module) map[string][]string {
 	defnDeps := make(map[string][]string)
 	if mod != nil {
 		for _, defn := range mod.Definitions {
@@ -718,7 +718,7 @@ func FindTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 }
 
 // ExtractNormalProgram extracts a NormalProgram from a module.
-func ExtractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
+func ExtractNormalProgram(m *module.Module) *temporal.NormalProgram {
 	return extractNormalProgram(m)
 }
 

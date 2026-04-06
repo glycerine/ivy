@@ -28,7 +28,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	modpkg "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -194,23 +194,23 @@ func dedupeVarBodyPairs(pairs []varBodyPair) []varBodyPair {
 // --- Tactic entry points ---
 
 // L2STactic is the main tactic for "l2s" proof goals.
-func L2STactic(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s")
 }
 
 // L2STacticFull includes all auxiliary state in the transformation.
-func L2STacticFull(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STacticFull(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s_full")
 }
 
 // L2STacticAuto uses automatic trigger inference.
-func L2STacticAuto(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STacticAuto(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s_auto")
 }
 
 // l2sTacticInt is the internal implementation of the L2S tactic.
 // Faithful port of Python's l2s_tactic_int.
-func l2sTacticInt(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
+func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, fmt.Errorf("l2s: no proof goals")
 	}
@@ -628,7 +628,7 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 	return act
 }
 
-func extractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
+func extractNormalProgram(m *module.Module) *temporal.NormalProgram {
 	if m != nil {
 		return temporal.NormalProgramFromModule(m)
 	}
@@ -824,7 +824,7 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 
 // RegisterTactics registers the l2s tactics on the given proof config.
 // Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *modpkg.ProofConfig) {
+func RegisterTactics(proofCfg *module.ProofConfig) {
 	proofCfg.RegisterTactic("l2s", L2STactic)
 	proofCfg.RegisterTactic("l2s_full", L2STacticFull)
 	proofCfg.RegisterTactic("l2s_auto", L2STacticAuto)

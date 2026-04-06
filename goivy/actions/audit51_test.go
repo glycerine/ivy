@@ -9,7 +9,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -643,7 +643,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_NotSelected_Unprovable(t *testi
 	a.Unprovable = true
 
 	ctx := testCtx()
-	ctx.CheckUnprovable = true        // match the unprovable flag
+	ctx.CheckUnprovable = true         // match the unprovable flag
 	ctx.CheckedAssert = "other.ivy:99" // different assertion
 
 	u := a.ActionUpdate(ctx)
@@ -730,8 +730,8 @@ func TestActionContext_NestedEnterExit(t *testing.T) {
 	cfg := NewActionsConfig()
 	original := cfg.Context
 
-	ctx1 := NewActionContextOn(&mod.Module{Name: "domain1"}, cfg)
-	ctx2 := NewActionContextOn(&mod.Module{Name: "domain2"}, cfg)
+	ctx1 := NewActionContextOn(&module.Module{Name: "domain1"}, cfg)
+	ctx2 := NewActionContextOn(&module.Module{Name: "domain2"}, cfg)
 
 	ctx1.Enter()
 	if cfg.Context != ctx1 {
@@ -873,5 +873,5 @@ func TestRunWithSymExContext(t *testing.T) {
 }
 
 // Ensure unused imports are satisfied.
-var _ = mod.BoolConst
+var _ = module.BoolConst
 var _ = il.NewEqualsNode

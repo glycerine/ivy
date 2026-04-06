@@ -5,7 +5,7 @@ import (
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // mkConst creates a Const with TopS sort for testing.
@@ -20,8 +20,8 @@ func mkTestUpdate(modNames []string, tr lg.Expr, pre lg.Expr) *Update {
 	if modNames == nil {
 		return &Update{
 			ModifiedAll: true,
-			TR:          mod.FormulaToClauses(tr, nil),
-			Pre:         mod.FormulaToClauses(pre, nil),
+			TR:          module.FormulaToClauses(tr, nil),
+			Pre:         module.FormulaToClauses(pre, nil),
 		}
 	}
 	mods := make([]*lg.Const, 0, len(modNames))
@@ -30,8 +30,8 @@ func mkTestUpdate(modNames []string, tr lg.Expr, pre lg.Expr) *Update {
 	}
 	return &Update{
 		Modified: mods,
-		TR:       mod.FormulaToClauses(tr, nil),
-		Pre:      mod.FormulaToClauses(pre, nil),
+		TR:       module.FormulaToClauses(tr, nil),
+		Pre:      module.FormulaToClauses(pre, nil),
 	}
 }
 
@@ -163,7 +163,7 @@ func TestComposeUpdatesBasic(t *testing.T) {
 	// u1 modifies x, u2 modifies y
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
@@ -180,7 +180,7 @@ func TestComposeUpdatesBasic(t *testing.T) {
 func TestComposeUpdatesOverlapping(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
@@ -195,7 +195,7 @@ func TestComposeUpdatesOverlapping(t *testing.T) {
 func TestComposeUpdatesPreservesFailure(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), mkEq("err", "x"))
 	u2 := mkTestUpdate([]string{"y"}, lg.True, lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	if result.Pre.IsFalse() {
 		t.Error("ComposeUpdates should preserve failure from u1")
 	}
@@ -204,7 +204,7 @@ func TestComposeUpdatesPreservesFailure(t *testing.T) {
 func TestComposeUpdatesWithAxioms(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
-	axiom := mod.FormulaToClauses(mkEq("x", "x"), nil)
+	axiom := module.FormulaToClauses(mkEq("x", "x"), nil)
 	result := ComposeUpdates(u1, axiom, u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates with axioms returned nil")
@@ -218,7 +218,7 @@ func TestComposeUpdatesWithAxioms(t *testing.T) {
 func TestJoinActionBasic(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
-	result := JoinAction(u1, u2, mod.TrueClauses(nil))
+	result := JoinAction(u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinAction returned nil")
 	}
@@ -235,7 +235,7 @@ func TestJoinActionBasic(t *testing.T) {
 func TestJoinActionSameModified(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
-	result := JoinAction(u1, u2, mod.TrueClauses(nil))
+	result := JoinAction(u1, u2, module.TrueClauses(nil))
 	if len(result.Modified) != 1 {
 		t.Errorf("Modified len = %d, want 1", len(result.Modified))
 	}
@@ -244,7 +244,7 @@ func TestJoinActionSameModified(t *testing.T) {
 func TestJoinActionPreservesPreFalse(t *testing.T) {
 	u1 := mkTestUpdate(nil, lg.True, lg.False)
 	u2 := mkTestUpdate(nil, lg.True, lg.False)
-	result := JoinAction(u1, u2, mod.TrueClauses(nil))
+	result := JoinAction(u1, u2, module.TrueClauses(nil))
 	// Both have Pre=False, join's Pre should be Or(False,False) = False
 	if !result.Pre.IsFalse() {
 		t.Errorf("JoinAction Pre should be False when both are False, got %s", result.Pre)
@@ -259,7 +259,7 @@ func TestIteActionBasic(t *testing.T) {
 	cond := mkConst("cond")
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
-	result := IteAction(cond, u1, u2, mod.TrueClauses(nil))
+	result := IteAction(cond, u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteAction returned nil")
 	}
@@ -276,7 +276,7 @@ func TestIteActionSameModified(t *testing.T) {
 	cond := mkConst("c")
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
-	result := IteAction(cond, u1, u2, mod.TrueClauses(nil))
+	result := IteAction(cond, u1, u2, module.TrueClauses(nil))
 	if len(result.Modified) != 1 {
 		t.Errorf("Modified len = %d, want 1", len(result.Modified))
 	}
@@ -526,7 +526,7 @@ func TestFrameUpdateNoNewSymbols(t *testing.T) {
 func TestAddPostAxioms(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "val"), lg.False)
 	axiom := mkEq("x", "x")
-	result := AddPostAxioms(u, mod.FormulaToClauses(axiom, nil))
+	result := AddPostAxioms(u, module.FormulaToClauses(axiom, nil))
 	if result == nil {
 		t.Fatal("AddPostAxioms returned nil")
 	}
@@ -756,7 +756,7 @@ func TestInverseMap(t *testing.T) {
 func TestJoinState(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, mkEq("x", "old_x"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("y", "old_y"), lg.False)
-	result := JoinState(u1, u2, mod.TrueClauses(nil))
+	result := JoinState(u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinState returned nil")
 	}
@@ -773,7 +773,7 @@ func TestIteState(t *testing.T) {
 	cond := mkConst("cond")
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
-	result := IteState(cond, u1, u2, mod.TrueClauses(nil))
+	result := IteState(cond, u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteState returned nil")
 	}
@@ -790,7 +790,7 @@ func TestComposeUpdatesNilModified(t *testing.T) {
 	// Pure state composed with action
 	u1 := mkTestUpdate(nil, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	// nil union anything = nil
 	if !result.ModifiedAll {
 		t.Error("ComposeUpdates with ModifiedAll input should produce ModifiedAll")
@@ -821,7 +821,7 @@ func TestUpdatedJoinConstEmptyNonNil(t *testing.T) {
 func TestComposeUpdatesEmptyModifiedPreservesNonNil(t *testing.T) {
 	u1 := mkTestUpdate([]string{}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{}, lg.True, lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	if result.Modified == nil {
 		t.Fatal("ComposeUpdates of two empty-Modified updates must return non-nil Modified, got nil")
 	}
@@ -833,7 +833,7 @@ func TestComposeUpdatesEmptyModifiedPreservesNonNil(t *testing.T) {
 // (non-empty Modified). The final result must preserve the AssignAction's
 // Modified entries.
 func TestComposeUpdatesSequenceDoesNotPoisonModified(t *testing.T) {
-	axioms := mod.TrueClauses(nil)
+	axioms := module.TrueClauses(nil)
 
 	// Start: NullUpdate (empty non-nil Modified)
 	result := NullUpdate()
@@ -875,7 +875,7 @@ func TestComposeUpdatesSequenceDoesNotPoisonModified(t *testing.T) {
 func TestJoinActionNilModified(t *testing.T) {
 	u1 := mkTestUpdate(nil, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
-	result := JoinAction(u1, u2, mod.TrueClauses(nil))
+	result := JoinAction(u1, u2, module.TrueClauses(nil))
 	if !result.ModifiedAll {
 		t.Error("JoinAction with ModifiedAll input should produce ModifiedAll")
 	}

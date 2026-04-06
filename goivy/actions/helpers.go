@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// shortTypeName delegates to mod.ShortTypeName.
+// shortTypeName delegates to module.ShortTypeName.
 //func shortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
 
-// ShortTypeName delegates to mod.ShortTypeName.
+// ShortTypeName delegates to module.ShortTypeName.
 //func ShortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
 
 // ConcatActions concatenates actions into a single Sequence.
@@ -203,9 +203,9 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 }
 
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.
-// Delegates to mod.SubstituteConstantsAST.
+// Delegates to module.SubstituteConstantsAST.
 func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	return mod.SubstituteConstantsAST(action, subs).(Action)
+	return module.SubstituteConstantsAST(action, subs).(Action)
 }
 
 // AppendToAction appends action2 at the end of action1, preserving

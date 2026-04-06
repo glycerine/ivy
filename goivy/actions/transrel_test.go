@@ -5,7 +5,7 @@ import (
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // -----------------------------------------------------------------------
@@ -369,7 +369,7 @@ func TestDiffFrame(t *testing.T) {
 func TestComposeUpdatesStub(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"y"}, lg.True, lg.False)
-	result := ComposeUpdates(u1, mod.TrueClauses(nil), u2)
+	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
@@ -381,7 +381,7 @@ func TestComposeUpdatesStub(t *testing.T) {
 func TestJoinActionStub(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x", "y"}, lg.True, lg.False)
-	result := JoinAction(u1, u2, mod.TrueClauses(nil))
+	result := JoinAction(u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinAction returned nil")
 	}
@@ -390,7 +390,7 @@ func TestJoinActionStub(t *testing.T) {
 func TestIteActionStub(t *testing.T) {
 	u1 := NullUpdate()
 	u2 := NullUpdate()
-	result := IteAction(lg.True, u1, u2, mod.TrueClauses(nil))
+	result := IteAction(lg.True, u1, u2, module.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteAction returned nil")
 	}

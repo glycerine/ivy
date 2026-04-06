@@ -9,7 +9,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- PCA ---
@@ -39,7 +39,7 @@ type UnrollContext struct {
 }
 
 // NewUnrollContext creates a new UnrollContext with a cardinality function.
-func NewUnrollContext(card func(lg.Sort) int, domain *mod.Module, cfg ...*ActionsConfig) *UnrollContext {
+func NewUnrollContext(card func(lg.Sort) int, domain *module.Module, cfg ...*ActionsConfig) *UnrollContext {
 	var acfg *ActionsConfig
 	if len(cfg) > 0 {
 		acfg = cfg[0]
@@ -80,7 +80,7 @@ func (sl *SymbolList) Args() []lg.Expr {
 
 // GetCorrectArity returns the correct arity (number of arguments) for an atom.
 // Corresponds to Python's get_correct_arity.
-func GetCorrectArity(domain *mod.Module, atom lg.Expr) int {
+func GetCorrectArity(domain *module.Module, atom lg.Expr) int {
 	// Check if it's a numeral
 	if c, ok := atom.(*lg.Const); ok {
 		if il.IsNumeral(c) {
@@ -107,12 +107,12 @@ func GetCorrectArity(domain *mod.Module, atom lg.Expr) int {
 
 // TypeCheck checks that all atoms in an AST have the correct arity.
 // Corresponds to Python's type_check.
-func TypeCheck(domain *mod.Module, node lg.Expr) error {
+func TypeCheck(domain *module.Module, node lg.Expr) error {
 	// Walk the AST and check each Apply node
 	return typeCheckRec(domain, node)
 }
 
-func typeCheckRec(domain *mod.Module, node lg.Expr) error {
+func typeCheckRec(domain *module.Module, node lg.Expr) error {
 	if node == nil {
 		return nil
 	}
@@ -154,7 +154,7 @@ func typeCheckRec(domain *mod.Module, node lg.Expr) error {
 // If an Atom is not a relation and not '=', it becomes an App.
 // If an App is a relation, it becomes an Atom.
 // Corresponds to Python's type_ast.
-func TypeAst(domain *mod.Module, node lg.Expr) lg.Expr {
+func TypeAst(domain *module.Module, node lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}
@@ -189,13 +189,13 @@ func TypeAst(domain *mod.Module, node lg.Expr) lg.Expr {
 // update formulas for nested field assignments.
 // Returns (new_lhs, new_clauses, mutated_symbol).
 // Corresponds to Python's destr_asgn_val.
-func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.Clauses, *lg.Const) {
+func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *module.Module) (lg.Expr, *module.Clauses, *lg.Const) {
 	app, ok := lhs.(*lg.Apply)
 	if !ok {
-		return lhs, mod.TrueClauses(nil), nil
+		return lhs, module.TrueClauses(nil), nil
 	}
 	if len(app.Terms) == 0 {
-		return lhs, mod.TrueClauses(nil), nil
+		return lhs, module.TrueClauses(nil), nil
 	}
 
 	// Python: mut = lhs.args[0]; rest = list(lhs.args[1:]); mut_n = mut.rep
@@ -213,11 +213,11 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 		mutSym = m
 	}
 	if mutSym == nil {
-		return lhs, mod.TrueClauses(nil), nil
+		return lhs, module.TrueClauses(nil), nil
 	}
 
 	var lval lg.Expr
-	var newClauses *mod.Clauses
+	var newClauses *module.Clauses
 	var mutated *lg.Const
 
 	if m.DestructorSorts != nil {
@@ -233,7 +233,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 			// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
 			// In Python, mk_assign_clauses takes a symbol-like lhs (mut_n) and rhs.
 			// Go's mkAssignClauses returns *Update; we extract .TR (the Clauses).
-			phs := mod.SymPlaceholders(mutSym)
+			phs := module.SymPlaceholders(mutSym)
 			phNodes := make([]lg.Expr, len(phs))
 			for i, v := range phs {
 				phNodes[i] = v
@@ -262,7 +262,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 	} else {
 		// No destructor sorts at all — base case with no skolem
 		mutated = mutSym
-		newClauses = mod.TrueClauses(nil)
+		newClauses = module.TrueClauses(nil)
 		lval = mut
 	}
 
@@ -274,7 +274,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 	}
 
 	// Python: vs = sym_placeholders(n)
-	vs := mod.SymPlaceholders(nSym)
+	vs := module.SymPlaceholders(nSym)
 
 	// Python: dlhs = n(*([lval] + vs[1:]))
 	dlhsArgs := make([]lg.Expr, 0, 1+len(vs))
@@ -322,7 +322,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 				if destr.Name == nSym.Name {
 					continue
 				}
-				phs := mod.SymPlaceholders(destr)
+				phs := module.SymPlaceholders(destr)
 				a1 := make([]lg.Expr, 0, 1+len(phs))
 				a1 = append(a1, lval)
 				for _, v := range phs[1:] {
@@ -354,11 +354,11 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *mod.Module) (lg.Expr, *mod.C
 // AssignRefs collects all referenced symbols in an assignment LHS,
 // including through destructor chains.
 // Corresponds to Python's assign_refs.
-func AssignRefs(lhsNode lg.Expr, refs map[string]bool, m *mod.Module) {
+func AssignRefs(lhsNode lg.Expr, refs map[string]bool, m *module.Module) {
 	assignRefsRec(lhsNode, refs, m)
 }
 
-func assignRefsRec(node lg.Expr, refs map[string]bool, m *mod.Module) {
+func assignRefsRec(node lg.Expr, refs map[string]bool, m *module.Module) {
 	if node == nil {
 		return
 	}
@@ -372,7 +372,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, m *mod.Module) {
 						assignRefsRec(n.Terms[0], refs, m)
 					}
 					for _, a := range n.Terms[1:] {
-						for _, sym := range mod.SymbolsAST(a) {
+						for _, sym := range module.SymbolsAST(a) {
 							refs[sym.Name] = true
 						}
 					}
@@ -382,7 +382,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, m *mod.Module) {
 		}
 		// Non-destructor: collect all symbol refs
 		for _, a := range n.Terms {
-			for _, sym := range mod.SymbolsAST(a) {
+			for _, sym := range module.SymbolsAST(a) {
 				refs[sym.Name] = true
 			}
 		}
@@ -409,7 +409,7 @@ func Sign(polarity bool, atom lg.Expr) lg.Expr {
 // The field f must be a binary relation. r is applied to variable v to produce the RHS.
 // Returns the transition relation update.
 // Corresponds to Python's make_field_update.
-func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *mod.Module, pvars map[string]bool) *Update {
+func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *module.Module, pvars map[string]bool) *Update {
 	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
 	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
 	fs, ok := f.CSort.(*lg.FunctionSort)
@@ -522,9 +522,9 @@ func (a *DebugAction) String() string {
 	}
 	return res
 }
-func (a *DebugAction) IterCalls() []string     { return nil }
+func (a *DebugAction) IterCalls() []string      { return nil }
 func (a *DebugAction) IterSubactions() []Action { return defaultIterSubactions(a) }
-func (a *DebugAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *DebugAction) Decompose() [][]Action    { return atomicDecompose(a) }
 
 // --- Entry ---
 
@@ -551,7 +551,7 @@ type TypeCheckContext struct {
 }
 
 // NewTypeCheckContext creates a new TypeCheckContext.
-func NewTypeCheckContext(domain *mod.Module) *TypeCheckContext {
+func NewTypeCheckContext(domain *module.Module) *TypeCheckContext {
 	return &TypeCheckContext{
 		ActionContext: ActionContext{Domain: domain},
 	}
@@ -580,7 +580,7 @@ func (tc *TypeCheckContext) Get(x string) Action {
 
 // TypeCheckActionFull performs type checking on an action within a domain.
 // Corresponds to Python's type_check_action.
-func TypeCheckActionFull(action Action, domain *mod.Module, pvars map[string]bool) {
+func TypeCheckActionFull(action Action, domain *module.Module, pvars map[string]bool) {
 	// In Python, this function is a no-op (early return).
 	// It was intended to use TypeCheckContext to run int_update
 	// but is currently disabled in the Python source.

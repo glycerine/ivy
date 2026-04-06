@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 func testCtx() *UpdateContext {
 	return &UpdateContext{
-		Domain: mod.New(),
+		Domain: module.New(),
 		PVars:  nil,
 		ActCfg: NewActionsConfig(),
 	}
@@ -416,8 +416,8 @@ func TestTransrelHideDirectly(t *testing.T) {
 
 	u := &Update{
 		Modified: []*lg.Const{loc},
-		TR:       mod.FormulaToClauses(tr, nil),
-		Pre:      mod.FormulaToClauses(lg.False, nil),
+		TR:       module.FormulaToClauses(tr, nil),
+		Pre:      module.FormulaToClauses(lg.False, nil),
 	}
 
 	// Hide loc — should also hide new_loc, both renamed with __
@@ -473,7 +473,7 @@ func TestEquivASTBoolean(t *testing.T) {
 
 func TestDualFormula(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
-	dual := mod.DualFormula(p, nil, nil)
+	dual := module.DualFormula(p, nil, nil)
 	not, ok := dual.(*lg.Not)
 	if !ok {
 		t.Fatalf("DualFormula of constant should be Not, got %T: %s", dual, dual)
@@ -487,7 +487,7 @@ func TestSkolemizeFormula(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	body := v
 	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
-	result := mod.SkolemizeFormula(ex, nil, nil)
+	result := module.SkolemizeFormula(ex, nil, nil)
 	// Should replace X with __sk__X
 	if c, ok := result.(*lg.Const); ok {
 		if c.Name != "__sk__X" {

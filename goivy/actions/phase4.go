@@ -8,7 +8,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/solver"
 )
 
@@ -31,9 +31,9 @@ func Rename(sym *lg.Const, rn func(string) string) *lg.Const {
 // produces clauses asserting old ↔ new for each argument tuple.
 // For individual symbols, produces an equality constraint.
 // Corresponds to Python's update_frame_constraint.
-func UpdateFrameConstraint(update *Update, relations map[string]int) *mod.Clauses {
+func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Clauses {
 	if update.ModifiedAll {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	var fmlas []lg.Expr
 	for _, sym := range update.Modified {
@@ -66,9 +66,9 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *mod.Clause
 		}
 	}
 	if len(fmlas) == 0 {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
-	return mod.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }
 
 // --- SymbolFrameCond ---
@@ -76,9 +76,9 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *mod.Clause
 // SymbolFrameCond returns a transition relation implying that sym remains
 // unchanged. Uses a frame definition (new_sym = sym).
 // Corresponds to Python's symbol_frame_cond.
-func SymbolFrameCond(sym *lg.Const) *mod.Clauses {
+func SymbolFrameCond(sym *lg.Const) *module.Clauses {
 	def := FrameDefConst(sym, NewConst)
-	return mod.NewClauses(nil, []*il.Definition{def}, nil)
+	return module.NewClauses(nil, []*il.Definition{def}, nil)
 }
 
 // --- Join ---
@@ -87,7 +87,7 @@ func SymbolFrameCond(sym *lg.Const) *mod.Clauses {
 // vocabulary operator (New or Old). This is the generic version;
 // JoinAction and JoinState are the specialized wrappers.
 // Corresponds to Python's join(s1, s2, op, axioms).
-func Join(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
+func Join(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	return joinUpdate(u1, u2, op, axioms)
 }
 
@@ -96,7 +96,7 @@ func Join(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Up
 // Ite computes the conditional update with an explicit vocabulary operator.
 // This is the generic version; IteAction and IteState are the specialized wrappers.
 // Corresponds to Python's ite(cond, s1, s2, op, axioms).
-func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod.Clauses) *Update {
+func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, op, axioms)
 }
 
@@ -106,14 +106,14 @@ func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod
 // (true, nil). Otherwise returns (false, *CounterExample) containing the
 // conjunction of clauses with the negation of the formula.
 // Corresponds to Python's clauses_imply_formula_cex.
-func ClausesImplyFormulaCex(clauses *mod.Clauses, fmla lg.Expr) (bool, *CounterExample) {
+func ClausesImplyFormulaCex(clauses *module.Clauses, fmla lg.Expr) (bool, *CounterExample) {
 	slv := solver.New()
 	implied, err := slv.ClausesImplyFormula(clauses, fmla)
 	if err == nil && implied {
 		return true, nil
 	}
 	// Build counterexample: conjoin(clauses, negate_clauses(formula_to_clauses(fmla)))
-	negClauses := mod.NegateClauses(mod.FormulaToClauses(fmla, nil))
+	negClauses := module.NegateClauses(module.FormulaToClauses(fmla, nil))
 	cex := ConjoinClauses(clauses, negClauses)
 	return false, &CounterExample{Formula: cex.ToFormula()}
 }
@@ -124,12 +124,12 @@ func ClausesImplyFormulaCex(clauses *mod.Clauses, fmla lg.Expr) (bool, *CounterE
 // using the given axioms and vocabulary operator (old for state, new for action).
 // Returns true if s1 implies s2, or a *CounterExample if not.
 // Corresponds to Python's implies(s1, s2, axioms, relations, op).
-func Implies(s1, s2 *Update, axioms *mod.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
+func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
 	if s1.ModifiedAll && !s2.ModifiedAll {
 		return false, nil
 	}
 
-	c1 := mod.AndClausesTyped(s1.TR, axioms, DiffFrameConstUpdate(s1, s2, op, axioms))
+	c1 := module.AndClausesTyped(s1.TR, axioms, DiffFrameConstUpdate(s1, s2, op, axioms))
 	p1 := s1.Pre
 
 	// Python: if isinstance(c2, Clauses) — check whether s2 carries Clauses or raw formulas
@@ -140,7 +140,7 @@ func Implies(s1, s2 *Update, axioms *mod.Clauses, op func(*lg.Const) *lg.Const) 
 		if !il.IsPrenexUniversal(c2) || !il.IsPrenexUniversal(p2) {
 			return false, nil
 		}
-		diffFrame := mod.ClausesToFormula(DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
+		diffFrame := module.ClausesToFormula(DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 		c2and, err := lg.NewAnd(c2, diffFrame)
 		if err != nil {
 			panic(fmt.Sprintf("Implies: NewAnd error: %v", err))
@@ -156,13 +156,13 @@ func Implies(s1, s2 *Update, axioms *mod.Clauses, op func(*lg.Const) *lg.Const) 
 		return true, nil
 	}
 
-	// Clauses branch: c2 and p2 are *mod.Clauses
+	// Clauses branch: c2 and p2 are *module.Clauses
 	c2 := s2.TR
 	p2 := s2.Pre
 	if !c2.IsUniversalFirstOrder() || !p2.IsUniversalFirstOrder() {
 		return false, nil
 	}
-	c2 = mod.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
+	c2 = module.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 
 	// Use solver.ClausesImply for Clauses-to-Clauses implication
 	slv := solver.New()
@@ -181,7 +181,7 @@ func Implies(s1, s2 *Update, axioms *mod.Clauses, op func(*lg.Const) *lg.Const) 
 
 // ImpliesState checks if s1 implies s2 in state style (using old vocabulary).
 // Corresponds to Python's implies_state(s1, s2, axioms, relations).
-func ImpliesState(s1, s2 *Update, axioms *mod.Clauses) (bool, *CounterExample) {
+func ImpliesState(s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
 	return Implies(s1, s2, axioms, OldConst)
 }
 
@@ -189,7 +189,7 @@ func ImpliesState(s1, s2 *Update, axioms *mod.Clauses) (bool, *CounterExample) {
 
 // ImpliesAction checks if s1 implies s2 in action style (using new vocabulary).
 // Corresponds to Python's implies_action(s1, s2, axioms, relations).
-func ImpliesAction(s1, s2 *Update, axioms *mod.Clauses) (bool, *CounterExample) {
+func ImpliesAction(s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
 	return Implies(s1, s2, axioms, NewConst)
 }
 
@@ -197,14 +197,14 @@ func ImpliesAction(s1, s2 *Update, axioms *mod.Clauses) (bool, *CounterExample) 
 
 // Clausify converts a formula to Clauses if it isn't already.
 // Corresponds to Python's clausify(f).
-func Clausify(f interface{}) *mod.Clauses {
-	if cls, ok := f.(*mod.Clauses); ok {
+func Clausify(f interface{}) *module.Clauses {
+	if cls, ok := f.(*module.Clauses); ok {
 		return cls
 	}
 	if node, ok := f.(lg.Expr); ok {
-		return mod.FormulaToClauses(node, nil)
+		return module.FormulaToClauses(node, nil)
 	}
-	return mod.TrueClauses(nil)
+	return module.TrueClauses(nil)
 }
 
 // --- ClausifyState ---
@@ -223,7 +223,7 @@ func ClausifyState(u *Update) *Update {
 
 // RemoveTautEqsClauses removes tautological equalities (x = x) from clauses.
 // Corresponds to Python's remove_taut_eqs_clauses.
-func RemoveTautEqsClauses(clauses *mod.Clauses) *mod.Clauses {
+func RemoveTautEqsClauses(clauses *module.Clauses) *module.Clauses {
 	if clauses == nil {
 		return nil
 	}
@@ -233,7 +233,7 @@ func RemoveTautEqsClauses(clauses *mod.Clauses) *mod.Clauses {
 			kept = append(kept, f)
 		}
 	}
-	return mod.NewClauses(kept, clauses.Defs, clauses.Annot)
+	return module.NewClauses(kept, clauses.Defs, clauses.Annot)
 }
 
 // isTautologyEquality checks if a formula is of the form x = x.
@@ -251,7 +251,7 @@ func isTautologyEquality(f lg.Expr) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model *solver.ModelResult, updated []*lg.Const) (*mod.Clauses, *mod.Clauses) {
+func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model *solver.ModelResult, updated []*lg.Const) (*module.Clauses, *module.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
@@ -271,7 +271,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model *so
 		numerals,
 	)
 	if err != nil {
-		preClauses = mod.TrueClauses(nil)
+		preClauses = module.TrueClauses(nil)
 	}
 
 	// Post-state: ignore skolems and symbols that were updated (old version)
@@ -284,7 +284,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model *so
 		numerals,
 	)
 	if err != nil {
-		postClauses = mod.TrueClauses(nil)
+		postClauses = module.TrueClauses(nil)
 	}
 
 	// Rename new_ back to base names
@@ -293,7 +293,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model *so
 		newSym := lg.NewConst(New(sym.Name), sym.CSort)
 		inverseMap[lg.Key(newSym)] = lg.NewConst(sym.Name, sym.CSort)
 	}
-	postClauses = mod.RenameClauses(postClauses, inverseMap)
+	postClauses = module.RenameClauses(postClauses, inverseMap)
 
 	return RemoveTautEqsClauses(preClauses), RemoveTautEqsClauses(postClauses)
 }
@@ -308,7 +308,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *mod.Clauses, model *so
 // The solver is needed by callers that want to call ClausesModelToClausesWithModel
 // or build a HerbrandModel. This matches Python where get_small_model returns a
 // HerbrandModel that wraps both the solver and the model together.
-func SmallModelClauses(cls *mod.Clauses, finalCond []solver.FinalCond, shrink bool, m *mod.Module) (*solver.ModelResult, *solver.Solver) {
+func SmallModelClauses(cls *module.Clauses, finalCond []solver.FinalCond, shrink bool, m *module.Module) (*solver.ModelResult, *solver.Solver) {
 	// Python: get_small_model(cls, ivy_logic.uninterpreted_sorts(), [], final_cond=final_cond, shrink=shrink)
 	var sorts []lg.Sort
 	if m != nil && m.Sig != nil {

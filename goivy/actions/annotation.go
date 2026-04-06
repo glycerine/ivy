@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	mod "github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops
 // OpsConfig. Retained for callers that need explicit per-config registration.
-func RegisterAnnotConj(coCfg *mod.OpsConfig) {
+func RegisterAnnotConj(coCfg *module.OpsConfig) {
 	coCfg.AnnotConjFunc = func(a, b interface{}) interface{} {
 		aa, ok1 := a.(Annotation)
 		bb, ok2 := b.(Annotation)
@@ -53,8 +53,8 @@ type Annotation interface {
 // EmptyAnnotation is the trivial annotation.
 type EmptyAnnotation struct{}
 
-func (EmptyAnnotation) annotationMarker()   {}
-func (EmptyAnnotation) String() string      { return "()" }
+func (EmptyAnnotation) annotationMarker() {}
+func (EmptyAnnotation) String() string    { return "()" }
 
 func (e EmptyAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{e, other}}

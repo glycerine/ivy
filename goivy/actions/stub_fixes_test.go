@@ -8,7 +8,7 @@ import (
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -33,8 +33,8 @@ func mkRelSort(dom ...lg.Sort) lg.Sort {
 }
 
 // mkTestModule creates a module with optional setup.
-func mkTestModule() *mod.Module {
-	return mod.New()
+func mkTestModule() *module.Module {
+	return module.New()
 }
 
 // ---------------------------------------------------------------------------
@@ -602,4 +602,4 @@ func TestDeterminize_PolarityDifference(t *testing.T) {
 }
 
 // Ensure unused imports are satisfied.
-var _ = mod.BoolConst
+var _ = module.BoolConst

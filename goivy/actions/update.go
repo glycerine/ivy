@@ -19,7 +19,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -30,7 +30,7 @@ import (
 
 // UpdateContext holds the context needed for computing action updates.
 type UpdateContext struct {
-	Domain *mod.Module
+	Domain *module.Module
 	PVars  map[string]bool // in-scope variable names
 
 	// ActCfg is the per-session actions config. Used for context lookups
@@ -58,17 +58,17 @@ type UpdateContext struct {
 	// Instantiator provides definition instances for clausification.
 	// Corresponds to Python's global `instantiator` variable.
 	// When non-nil, used by AssumeAction and AssertAction to unfold definitions.
-	Instantiator func([]lg.Expr) *mod.Clauses
+	Instantiator func([]lg.Expr) *module.Clauses
 }
 
 // BackgroundTheory returns the background theory (axioms) for the domain.
-func (ctx *UpdateContext) BackgroundTheory() *mod.Clauses {
+func (ctx *UpdateContext) BackgroundTheory() *module.Clauses {
 	if ctx.Domain == nil {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	clauses := ctx.Domain.BackgroundTheory(ctx.PVars)
 	if clauses == nil {
-		return mod.TrueClauses(nil)
+		return module.TrueClauses(nil)
 	}
 	return clauses
 }
@@ -79,8 +79,8 @@ func (ctx *UpdateContext) BackgroundTheory() *mod.Clauses {
 func makeUpdate(modified []*lg.Const, tr lg.Expr, pre lg.Expr, annot interface{}) *Update {
 	return &Update{
 		Modified: modified,
-		TR:       mod.FormulaToClauses(tr, annot),
-		Pre:      mod.FormulaToClauses(pre, annot),
+		TR:       module.FormulaToClauses(tr, annot),
+		Pre:      module.FormulaToClauses(pre, annot),
 	}
 }
 
@@ -89,8 +89,8 @@ func makeUpdate(modified []*lg.Const, tr lg.Expr, pre lg.Expr, annot interface{}
 func makeUpdateDefs(modified []*lg.Const, defs []*il.Definition, annot interface{}) *Update {
 	return &Update{
 		Modified: modified,
-		TR:       mod.NewClauses(nil, defs, annot),
-		Pre:      mod.FalseClauses(annot),
+		TR:       module.NewClauses(nil, defs, annot),
+		Pre:      module.FalseClauses(annot),
 	}
 }
 
@@ -106,8 +106,8 @@ func equivAST(a, b lg.Expr) lg.Expr {
 		return &lg.Eq{T1: a, T2: b}
 	}
 	// Boolean equivalence: (a | ~b) & (~a | b)
-	notA := mod.Negate(a)
-	notB := mod.Negate(b)
+	notA := module.Negate(a)
+	notB := module.Negate(b)
 	or1, _ := lg.NewOr(a, notB)
 	or2, _ := lg.NewOr(notA, b)
 	and, _ := lg.NewAnd(or1, or2)
@@ -250,7 +250,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 	args := nodeArgs(lhs)
 
 	// Placeholder variables for the full domain of the symbol
-	phs := mod.SymPlaceholders(sym)
+	phs := module.SymPlaceholders(sym)
 
 	// Build new_n applied to placeholders
 	phNodes := varsToNodes(phs)
@@ -272,7 +272,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 	}
 
 	// Substitute variable args in RHS
-	drhs := mod.SubstituteAstByName(rhs, rn)
+	drhs := module.SubstituteAstByName(rhs, rn)
 
 	// If there are equality conditions, build ITE
 	// Python: Ite(And(*eqs), drhs, n(*dlhs.args))
@@ -292,8 +292,8 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 	defn := il.NewDefinition(dlhs, drhs)
 	return &Update{
 		Modified: []*lg.Const{sym},
-		TR:       mod.NewClauses(nil, []*il.Definition{defn}, EmptyAnnotation{}),
-		Pre:      mod.FalseClauses(EmptyAnnotation{}),
+		TR:       module.NewClauses(nil, []*il.Definition{defn}, EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
 	}
 }
 
@@ -326,20 +326,20 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
 	//         clauses = unfold_definitions_clauses(clauses)
 	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
-	var skInst func([]lg.Expr) *mod.Clauses
+	var skInst func([]lg.Expr) *module.Clauses
 	if ctx != nil {
 		skInst = ctx.Instantiator
 	}
-	fmla = mod.SkolemizeFormula(fmla, nil, skInst)
-	clauses := mod.FormulaToClauses(fmla, nil)
+	fmla = module.SkolemizeFormula(fmla, nil, skInst)
+	clauses := module.FormulaToClauses(fmla, nil)
 	if ctx != nil && ctx.Instantiator != nil {
-		clauses = mod.UnfoldDefinitionsClauses(clauses, ctx.Instantiator)
+		clauses = module.UnfoldDefinitionsClauses(clauses, ctx.Instantiator)
 	}
-	clauses = mod.NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
+	clauses = module.NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
 	return &Update{
 		Modified: []*lg.Const{},
 		TR:       clauses,
-		Pre:      mod.FalseClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
 	}
 }
 
@@ -375,12 +375,12 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Only assertions that pass both filters get dual formula treatment
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
-	dual := mod.DualFormula(fmla, nil, nil)
-	cl := mod.FormulaToClauses(dual, nil)
-	cl = mod.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
+	dual := module.DualFormula(fmla, nil, nil)
+	cl := module.FormulaToClauses(dual, nil)
+	cl = module.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &Update{
 		Modified: []*lg.Const{},
-		TR:       mod.TrueClauses(EmptyAnnotation{}),
+		TR:       module.TrueClauses(EmptyAnnotation{}),
 		Pre:      cl,
 	}
 }
@@ -457,7 +457,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 	}
 	if xtra > 0 {
 		// Extend lhs and rhs with fresh placeholder variables
-		phs := mod.SymPlaceholders(sym)
+		phs := module.SymPlaceholders(sym)
 		extend := make([]lg.Expr, xtra)
 		for i := 0; i < xtra; i++ {
 			extend[i] = phs[len(phs)-xtra+i]
@@ -466,7 +466,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 		// Python: extend = variables_distinct_list_ast(extend, self)
 		// We combine lhs and rhs into a single expression for variable collection
 		combined := &lg.And{Terms: []lg.Expr{lhs, rhs}}
-		extend = mod.VariablesDistinctListAst(extend, combined)
+		extend = module.VariablesDistinctListAst(extend, combined)
 
 		lhs = addParametersAST(lhs, extend)
 		// Assignment of individual to a boolean is a special case
@@ -482,8 +482,8 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 
 	// Variable check: all RHS variables must appear in LHS
 	// Python: if any(v not in lhs_vars for v in used_variables_ast(rhs)): raise IvyError
-	lhsVars := mod.UsedVariablesAST(lhs)
-	rhsVars := mod.UsedVariablesAST(rhs)
+	lhsVars := module.UsedVariablesAST(lhs)
+	rhsVars := module.UsedVariablesAST(rhs)
 	for k := range rhsVars {
 		if _, found := lhsVars[k]; !found {
 			// multiply assigned
@@ -517,21 +517,21 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 // destrAsgnVal recursively builds the transition relation for destructor assignments.
 // Python: destr_asgn_val (ivy_actions.py:428-454).
 // Returns (nondet_lhs, new_clauses, mutated_symbol).
-func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *mod.Module) (lg.Expr, *mod.Clauses, *lg.Const) {
+func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr, *module.Clauses, *lg.Const) {
 	lhsArgs := nodeArgs(lhs)
 	if len(lhsArgs) == 0 {
-		return lhs, mod.FalseClauses(nil), nil
+		return lhs, module.FalseClauses(nil), nil
 	}
 
 	mut := lhsArgs[0]
 	rest := lhsArgs[1:]
 	mutN := constSym(mut)
 	if mutN == nil {
-		return lhs, mod.FalseClauses(nil), nil
+		return lhs, module.FalseClauses(nil), nil
 	}
 
 	var lval lg.Expr
-	var newClauses *mod.Clauses
+	var newClauses *module.Clauses
 	var mutated *lg.Const
 
 	if _, ok := domain.DestructorSorts[mutN.Name]; ok {
@@ -542,7 +542,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *mod.Module) (lg.Expr, *
 		// Base case: mut is the root mutable symbol
 		// Python: nondet = mut_n.suffix("_nd").skolem()
 		skSym := lg.NewConst(mutN.Name+"_nd", mutN.CSort)
-		phs := mod.SymPlaceholders(mutN)
+		phs := module.SymPlaceholders(mutN)
 		phNodes := varsToNodes(phs)
 		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
 		var skApplied lg.Expr
@@ -571,7 +571,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *mod.Module) (lg.Expr, *
 	}
 
 	// vs = sym_placeholders(n)
-	vs := mod.SymPlaceholders(n)
+	vs := module.SymPlaceholders(n)
 	vsNodes := varsToNodes(vs)
 
 	// dlhs = n(*([lval] + vs[1:]))
@@ -623,7 +623,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *mod.Module) (lg.Expr, *
 		if destrs, ok := domain.SortDestructors[sortName]; ok {
 			for _, destr := range destrs {
 				if destr.Name != n.Name {
-					destrPhs := mod.SymPlaceholders(destr)
+					destrPhs := module.SymPlaceholders(destr)
 					destrPhNodes := varsToNodes(destrPhs)
 					// a1 = [lval] + phs[1:]
 					a1 := make([]lg.Expr, len(destrPhNodes))
@@ -667,19 +667,19 @@ func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Ex
 	fmlas = append(fmlas, equivAST(nondetLhs, rhs))
 
 	// Python: new_clauses = and_clauses(new_clauses, Clauses(fmlas))
-	fmlaClauses := mod.NewClauses(fmlas, nil, nil)
-	combined := mod.AndClausesTyped(newClauses, fmlaClauses)
+	fmlaClauses := module.NewClauses(fmlas, nil, nil)
+	combined := module.AndClausesTyped(newClauses, fmlaClauses)
 
 	// Python: return ([mut_n], new_clauses, false_clauses(annot=EmptyAnnotation()))
 	return &Update{
 		Modified: []*lg.Const{mutN},
 		TR:       combined,
-		Pre:      mod.FalseClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
 	}
 }
 
 // isVariant checks if lhsSort has rhsSort as a variant.
-func isVariant(domain *mod.Module, lhsSort, rhsSort lg.Sort) bool {
+func isVariant(domain *module.Module, lhsSort, rhsSort lg.Sort) bool {
 	if domain.Variants == nil {
 		return false
 	}
@@ -700,7 +700,7 @@ func isVariant(domain *mod.Module, lhsSort, rhsSort lg.Sort) bool {
 // Python: mk_variant_assign_clauses (ivy_actions.py:593-611).
 // Asserts that the new value points-to the RHS via pto, and does NOT point-to
 // any other variant sort.
-func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *mod.Module) *Update {
+func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *Update {
 	sym := constSym(lhs)
 	if sym == nil {
 		return NullUpdate()
@@ -709,7 +709,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *mod.Module) *Update {
 	args := nodeArgs(lhs)
 
 	// dlhs = new_n(*sym_placeholders(n))
-	phs := mod.SymPlaceholders(sym)
+	phs := module.SymPlaceholders(sym)
 	phNodes := varsToNodes(phs)
 	dlhs := applyToNodes(newN, phNodes)
 	vs := phs // dlhs.args are the placeholders
@@ -737,7 +737,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *mod.Module) *Update {
 	}
 	drhs := rhs
 	if len(rn) > 0 {
-		drhs = mod.SubstituteAstByName(rhs, rn)
+		drhs = module.SubstituteAstByName(rhs, rn)
 	}
 
 	// Create nondeterministic skolem symbol
@@ -807,8 +807,8 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *mod.Module) *Update {
 	// Python: new_clauses = Clauses(fmlas, [Definition(dlhs, nondet)])
 	update := &Update{
 		Modified: []*lg.Const{sym},
-		TR:       mod.NewClauses(fmlas, defs, EmptyAnnotation{}),
-		Pre:      mod.FalseClauses(EmptyAnnotation{}),
+		TR:       module.NewClauses(fmlas, defs, EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
 	}
 	return update
 }
@@ -941,7 +941,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 	}
 
 	newN := newSym(relSym)
-	vs := mod.SymPlaceholders(relSym)
+	vs := module.SymPlaceholders(relSym)
 	vsNodes := varsToNodes(vs)
 
 	// Build equality conditions for non-variable args
@@ -1251,10 +1251,10 @@ func applyUpdateAxioms(update *Update, action Action, ctx *UpdateContext) *Updat
 			}
 			modified = newMod
 			if transrelNode != nil {
-				tr = mod.AndClausesTyped(tr, transrelNode)
+				tr = module.AndClausesTyped(tr, transrelNode)
 			}
 			if precondNode != nil {
-				pre = mod.OrClausesTyped(pre, precondNode)
+				pre = module.OrClausesTyped(pre, precondNode)
 			}
 		}
 	}
@@ -1320,7 +1320,7 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
 	//   ite = IfAction(Not(cond), self.args[0], self.args[1])
 	//   return ite.int_update(domain, pvars)
 	if ctx.ActCfg != nil && ctx.ActCfg.Determinize && len(a.Branches) == 2 {
-		cond := mod.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
+		cond := module.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
 		ite := NewIfAction(&lg.Not{Body: cond}, a.Branches[0], a.Branches[1])
 		return ite.IntUpdate(ctx)
 	}
@@ -1351,7 +1351,7 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 	// Note: EnvAction uses cond (positive), ChoiceAction uses Not(cond).
 	// Note: EnvAction calls update (GetUpdate), not int_update (IntUpdate).
 	if ctx.ActCfg != nil && ctx.ActCfg.Determinize && len(a.Branches) == 2 {
-		cond := mod.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
+		cond := module.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
 		ite := NewIfAction(cond, a.Branches[0], a.Branches[1])
 		return GetUpdate(ite, ctx)
 	}
@@ -1378,7 +1378,7 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 	cond := a.Cond
 
 	// Python: if used_variables_ast(self.args[0]): raise IvyError(...)
-	freeVars := mod.UsedVariablesAST(cond)
+	freeVars := module.UsedVariablesAST(cond)
 	if len(freeVars) > 0 {
 		panic("variables in \"if\" conditions must be explicitly quantified")
 	}
@@ -1972,7 +1972,7 @@ func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *Update {
 }
 
 // collectCrashSyms recursively collects symbols to havoc for a crash action.
-func collectCrashSyms(domain *mod.Module, name string, result *[]*lg.Const) {
+func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 	if domain.Hierarchy != nil {
 		if children, ok := domain.Hierarchy.Get2(name); ok && children.Len() > 0 {
 			for child := range children.All() {
@@ -2037,7 +2037,7 @@ func hideFormals(action Action, update *Update) *Update {
 
 // GetUpdateForArt implements the Updater interface expected by art/art.go.
 // It adapts the module-level GetUpdate function to the (domain, inScope) signature.
-func GetUpdateForArt(action Action, domain *mod.Module, inScope map[string]bool) *Update {
+func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bool) *Update {
 	ctx := &UpdateContext{
 		Domain: domain,
 		PVars:  inScope,
