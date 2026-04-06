@@ -1051,7 +1051,8 @@ func defToConstraint(d *il.Definition) lg.Expr {
 
 // makeFmlaPairsFromAction returns fmlaPairs for an action's update.
 // When precondsOnly is false, it returns two pairs: TR (triple[1]) and
-// Pre (triple[2]), each wrapped with CloseEpr — matching Python's normal mode.
+// Pre (triple[2]), each wrapped with CloseEpr — matching Python's
+// normal mode.
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
 func makeFmlaPairsFromAction(action actions.Action, m *mod.Module, precondsOnly bool) []fmlaPair {

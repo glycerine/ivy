@@ -1,6 +1,6 @@
 module github.com/glycerine/ivy/goivy
 
-go 1.24.2
+go 1.24.3
 
 require (
 	4d63.com/tz v1.2.0
