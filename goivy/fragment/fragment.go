@@ -900,7 +900,11 @@ func (c *checker) findCycle() []arc {
 // Corresponds to Python's get_assumes_and_asserts.
 func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
 	xtracer.Trace("fragment: GetAssumesAndAsserts ENTER")
-	defer xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
+	m.CanonSnapshot("fragment: GetAssumesAndAsserts ENTER canon_snapshot")
+	defer func() {
+		xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
+		m.CanonSnapshot("fragment: GetAssumesAndAsserts EXIT canon_snapshot")
+	}()
 
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
@@ -1055,11 +1059,15 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // normal mode.
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
+//
+// We are a helper for GetAssumesAndAsserts(). We are only called in
+// two places, both above in GetAssumesAndAsserts().
 func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOnly bool) []fmlaPair {
 
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}
-	xtracer.Trace("fragment calling GetUpdate type=%s", actions.ActionTypeName(action))
+	// this trace is just inside the actions.GetUpdate:
+	//xtracer.Trace("actions.GetUpdate ENTER type=%s", actions.ActionTypeName(action))
 	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		return nil
@@ -1077,7 +1085,15 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
 	//         assumes.append((foo,action))
 	if !precondsOnly {
-		pre := lu.CloseEpr(upd.PreNode())
+		// inline upd.PreNode() here, for clarity of trace comparison.
+		//preIn := upd.PreNode()
+		var preIn lg.Expr
+		if upd.Pre == nil {
+			preIn = lg.False
+		} else {
+			preIn = upd.Pre.ToOpenFormula()
+		}
+		pre := lu.CloseEpr(preIn)
 		result = append(result, fmlaPair{fmla: pre, source: action})
 	}
 
