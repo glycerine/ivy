@@ -19,11 +19,11 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/theory"
 	"github.com/glycerine/ivy/goivy/typeinfer"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -2678,7 +2678,7 @@ func IvyFromString(source string) (*module.Module, error) {
 		}
 	}
 
-	result, err := lalr_full.Parse(body, version)
+	result, err := parser.Parse(body, version)
 	if err != nil {
 		return nil, err
 	}
@@ -2763,7 +2763,7 @@ func (c *Compiler) IvyCompileTheoryFromString(source string, sort lg.Sort, sortN
 		cfg = modCfg.AstCfg
 	}
 	subst := map[string]string{"t": sortName}
-	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
+	decls := parser.InstModSubst(result.Decls, subst, cfg)
 
 	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
 	if err := c.IvyCompileTheory(decls); err != nil {
