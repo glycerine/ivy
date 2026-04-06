@@ -26,7 +26,7 @@ from .ivy_logic_parser_gen import formula_parser,term_parser
 from collections import defaultdict
 from . import logic_util
 from . import xtracer
-
+from traceback
 
 class LogicParseError(Exception):
     """ Exception raised on parser error """
@@ -1011,6 +1011,7 @@ def clause_to_formula(c):
 def clauses_to_formula(cs):
     formula = cs.to_formula()
     if __debug__: xtracer.trace("ivy_logic_utils.py:1013/clauses_to_formula(): formula = %s" % formula.canon())
+    if __debug__: traceback.print_stack()
     return drop_universals(formula)
 
 def subst_both_clauses(clauses,subst):
