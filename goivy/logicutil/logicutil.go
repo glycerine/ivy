@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // CaptureError is raised when a substitution would create variable capture.
@@ -658,25 +657,6 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 		}
 	}
 	return result
-}
-
-// CloseEpr distributes ForAll over And conjuncts, universally
-// quantifying each conjunct's free variables independently.
-// Corresponds to Python close_epr in ivy_logic_utils.py.
-func CloseEpr(fmla logic.Expr) logic.Expr {
-	xtracer.Trace("logicutil.CloseEpr HASH canon= fmla=%s", fmla.Canon())
-	if and, ok := fmla.(*logic.And); ok {
-		terms := make([]logic.Expr, len(and.Terms))
-		for i, t := range and.Terms {
-			terms[i] = CloseEpr(t)
-		}
-		return &logic.And{Terms: terms}
-	}
-	fvs := FreeVariablesList(fmla)
-	if len(fvs) == 0 {
-		return fmla
-	}
-	return &logic.ForAll{Variables: fvs, Body: fmla}
 }
 
 // UsedConstantsList returns used constants as a slice (convenience).

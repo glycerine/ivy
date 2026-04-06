@@ -153,6 +153,8 @@ func (u *Update) PreNode() lg.Expr {
 	if u.Pre == nil {
 		return lg.False
 	}
+	// methinks this is wrong:
+	panic("methinks this is wrong: should this be ToOpenFormula or ClausesToFormula???")
 	return u.Pre.ToOpenFormula()
 }
 

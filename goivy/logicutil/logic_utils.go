@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // --- AST collectors ---
@@ -398,8 +399,14 @@ func BooleanConstant(val bool) logic.Expr {
 
 // CloseEPR converts formula to forall Y. fmla, where Y are the free variables.
 // For conjunctions, applies recursively to each conjunct.
-// Corresponds to Python's close_epr.
+//
+// Put another way:
+// CloseEPR distributes ForAll over And conjuncts, universally
+// quantifying each conjunct's free variables independently.
+//
+// Corresponds to Python close_epr in ivy_logic_utils.py.
 func CloseEPR(fmla logic.Expr) logic.Expr {
+	xtracer.Trace("logicutil.CloseEPR HASH canon= fmla=%s", fmla.Canon())
 	if and, ok := fmla.(*logic.And); ok {
 		terms := make([]logic.Expr, len(and.Terms))
 		for i, t := range and.Terms {

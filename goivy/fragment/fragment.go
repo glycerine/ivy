@@ -909,7 +909,7 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
 			_ = name
-			xtracer.Trace("fragment/fragment.go:908 precondsOnly holds, calling CloseEpr() name='%v' type=%s", name, actions.ActionTypeName(action))
+			xtracer.Trace("fragment/fragment.go:908 precondsOnly holds, calling CloseEPR() name='%v' type=%s", name, actions.ActionTypeName(action))
 			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
 		}
@@ -919,7 +919,7 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 			if !ok {
 				continue
 			}
-			xtracer.Trace("fragment/fragment.go:918 not-precondsOnly, calling CloseEpr() name='%v' type=%s", name, actions.ActionTypeName(action))
+			xtracer.Trace("fragment/fragment.go:918 not-precondsOnly, calling CloseEPR() name='%v' type=%s", name, actions.ActionTypeName(action))
 
 			fps := makeFmlaPairsFromAction(action, m, precondsOnly)
 			assumes = append(assumes, fps...)
@@ -1055,7 +1055,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 
 // makeFmlaPairsFromAction returns fmlaPairs for an action's update.
 // When precondsOnly is false, it returns two pairs: TR (triple[1]) and
-// Pre (triple[2]), each wrapped with CloseEpr — matching Python's
+// Pre (triple[2]), each wrapped with CloseEPR — matching Python's
 // normal mode.
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
@@ -1076,7 +1076,7 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 	// Extract TR formula (triple[1]), applying close_epr.
 	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
 	//         assumes.append((foo,action))
-	tr := lu.CloseEpr(upd.TRNode())
+	tr := lu.CloseEPR(upd.TRNode())
 	result := []fmlaPair{
 		{fmla: tr, source: action},
 	}
@@ -1091,9 +1091,13 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 		if upd.Pre == nil {
 			preIn = lg.False
 		} else {
-			preIn = upd.Pre.ToOpenFormula()
+			// python: ivy_fragment.py:571 does:
+			// foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
+			preIn = module.ClausesToFormula(upd.Pre)
+			// wrong me thinks:
+			// preIn = upd.Pre.ToOpenFormula()
 		}
-		pre := lu.CloseEpr(preIn)
+		pre := lu.CloseEPR(preIn)
 		result = append(result, fmlaPair{fmla: pre, source: action})
 	}
 
