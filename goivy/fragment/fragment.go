@@ -1076,7 +1076,12 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 	// Extract TR formula (triple[1]), applying close_epr.
 	// Python: foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
 	//         assumes.append((foo,action))
-	tr := lu.CloseEPR(upd.TRNode())
+
+	// WAS (buggy?!?): tr := lu.CloseEPR(upd.TRNode()) // transrel.go:148, just does u.TR.ToOpenFormula(), again no dropUniversals like clauses_to_formula does.
+
+	formulaTR := module.ClausesToFormula(upd.TR)
+	tr := lu.CloseEPR(formulaTR)
+
 	result := []fmlaPair{
 		{fmla: tr, source: action},
 	}
@@ -1092,8 +1097,8 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 		if upd.Pre == nil {
 			preIn = lg.False
 		} else {
-			// python: ivy_fragment.py:571 does:
-			// foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
+			// python: ivy_fragment.py:584 does:
+			// foo = ilu.close_epr(ilu.clauses_to_formula(triple[2]))
 			preIn = module.ClausesToFormula(upd.Pre)
 			// wrong me thinks:
 			// preIn = upd.Pre.ToOpenFormula(); skips module.dropUniversals()

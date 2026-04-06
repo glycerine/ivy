@@ -577,7 +577,7 @@ def get_assumes_and_asserts(preconds_only):
 
             triple = action.update(im.module,[])
             #        print 'ivy_theory.py: triple[1]: {}'.format(triple[1])
-            foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
+            foo = ilu.close_epr(ilu.clauses_to_formula(triple[1])) ## in here!
             #       print 'ivy_theory.py: foo (1): {}'.format(foo)
             assumes.append((foo,action))
             #        print 'ivy_theory.py: triple[2]: {}'.format(triple[2])
