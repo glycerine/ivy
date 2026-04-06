@@ -258,7 +258,11 @@ func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 func defToConstraint(d *il.Definition) lg.Expr {
 	result := il.DefinitionToConstraint(d)
 	if xtracer.Enabled {
-		xtracer.Trace("ops.defToConstraint lhsSort=%v resultType=%v", d.Lhs.NodeSort(), iu.ShortTypeName(result))
+		lhsSort := d.Lhs.NodeSort()
+		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v\nstack = %v\n", lhsSort, iu.ShortTypeName(result))
+		if lhsSort == nil {
+			vv("defToConstraint() lhsSort was nil! stack=\n%v\n", stack())
+		}
 	}
 	return result
 }

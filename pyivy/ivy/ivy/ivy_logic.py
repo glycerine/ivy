@@ -250,7 +250,7 @@ class Definition(AST):
         else:
             result = Iff(*self.args)
         if __debug__:
-            xtracer.trace("ops.defToConstraint lhsSort=%s resultType=%s" % (self.args[0].sort, type(result).__name__))
+            xtracer.trace("module/clauses.go:262 defToConstraint lhsSort=%s resultType=%s" % (self.args[0].sort, type(result).__name__))
         return result
     @property
     def sort(self):
