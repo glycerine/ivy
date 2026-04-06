@@ -7,14 +7,14 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ExpandSchemata expands axiom schemata into axioms by matching schema
 // premises against the sort constants and functions.
 //
 // Python: ivy_auto_inst.py:100-200 (uses match_schema_prems generator)
-func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
+func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if m.Schemata == nil {
