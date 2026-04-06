@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"sort"
 	"strings"
 )
 
@@ -142,6 +143,7 @@ func varsSexp(vars []*Variable) string {
 	for i, v := range vars {
 		parts[i] = string(v.Sexp())
 	}
+	sort.Strings(parts)
 	return "[" + strings.Join(parts, " ") + "]"
 }
 
