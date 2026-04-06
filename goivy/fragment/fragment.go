@@ -1096,7 +1096,7 @@ func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOn
 			// foo = ilu.close_epr(ilu.clauses_to_formula(triple[1]))
 			preIn = module.ClausesToFormula(upd.Pre)
 			// wrong me thinks:
-			// preIn = upd.Pre.ToOpenFormula(); skips
+			// preIn = upd.Pre.ToOpenFormula(); skips module.dropUniversals()
 		}
 		pre := lu.CloseEPR(preIn)
 		result = append(result, fmlaPair{fmla: pre, source: action})
