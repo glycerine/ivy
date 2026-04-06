@@ -26,7 +26,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 	thy "github.com/glycerine/ivy/goivy/theory"
 	uf "github.com/glycerine/ivy/goivy/unionfind"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -898,7 +898,7 @@ func (c *checker) findCycle() []arc {
 // GetAssumesAndAsserts extracts all assumes, asserts, and macros from the
 // current module that might end up in a prover context.
 // Corresponds to Python's get_assumes_and_asserts.
-func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
+func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
 	xtracer.Trace("fragment: GetAssumesAndAsserts ENTER")
 	defer xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
 
@@ -1000,7 +1000,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 
 // CheckFragment checks that the current module's VCs are in the decidable fragment.
 // Corresponds to Python's check_fragment.
-func CheckFragment(m *mod.Module, precondsOnly bool) error {
+func CheckFragment(m *module.Module, precondsOnly bool) error {
 	m.CanonSnapshot("fragment/fragment.go:1001 CheckFragment()")
 
 	logics := m.GetLogics()
@@ -1055,7 +1055,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 // normal mode.
 // When precondsOnly is true, it returns only the TR pair (triple[1]),
 // matching Python's preconds_only=True which omits triple[2].
-func makeFmlaPairsFromAction(action actions.Action, m *mod.Module, precondsOnly bool) []fmlaPair {
+func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOnly bool) []fmlaPair {
 
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}

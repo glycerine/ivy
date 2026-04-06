@@ -5,14 +5,14 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // TestMakeFmlaPairsPrecondsOnlyTrue checks that when precondsOnly=true,
 // makeFmlaPairsFromAction returns only 1 fmlaPair (the TR formula),
 // matching Python's preconds_only=True which only appends triple[1].
 func TestMakeFmlaPairsPrecondsOnlyTrue(t *testing.T) {
-	m := mod.New()
+	m := module.New()
 	act := actions.NewAssumeAction(lg.NewConst("p", lg.Boolean))
 
 	fps := makeFmlaPairsFromAction(act, m, true)
@@ -31,7 +31,7 @@ func TestMakeFmlaPairsPrecondsOnlyTrue(t *testing.T) {
 // makeFmlaPairsFromAction returns 2 fmlaPairs (TR and Pre),
 // matching Python's normal mode which appends both triple[1] and triple[2].
 func TestMakeFmlaPairsPrecondsOnlyFalse(t *testing.T) {
-	m := mod.New()
+	m := module.New()
 	act := actions.NewAssumeAction(lg.NewConst("p", lg.Boolean))
 
 	fps := makeFmlaPairsFromAction(act, m, false)
@@ -55,7 +55,7 @@ func TestMakeFmlaPairsPrecondsOnlyFalse(t *testing.T) {
 // TestMakeFmlaPairsFormulaIdentity verifies that the returned formulas
 // match the expected TR and Pre from the action's update.
 func TestMakeFmlaPairsFormulaIdentity(t *testing.T) {
-	m := mod.New()
+	m := module.New()
 	act := actions.NewAssumeAction(lg.NewConst("q", lg.Boolean))
 
 	// Get both pairs
