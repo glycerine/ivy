@@ -1010,7 +1010,7 @@ def clause_to_formula(c):
 
 def clauses_to_formula(cs):
     formula = cs.to_formula()
-    if __debug__: xtracer.trace("ivy_logic_utils.py:1013/clauses_to_formula(): formula = %s" % formula.canon())
+    if __debug__: xtracer.trace("ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = %s" % formula.canon())
     if __debug__: traceback.print_stack()
     return drop_universals(formula)
 
