@@ -2401,43 +2401,9 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-173538  go : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
-        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): formula = (And terms:[(Iff t1:(Symbol name:__m_loc:wr sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__m_loc:rd sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__new_loc:wr sort:(BooleanSort)) t2:(Or terms:[(Symbol name:__t
- ...(truncated long line to 300 bytes)
-========== trailing ~go[after i= 173538]:
-;xtracer.go:87:stack=goroutine 1 [running]:
-runtime/debug.Stack()
-	/usr/local/go/src/runtime/debug/stack.go:26 +0x5e
-github.com/glycerine/ivy/goivy/module.stack(...)
-	/Users/jaten/ivy/goivy/module/vprint.go:173
-github.com/glycerine/ivy/goivy/module.(*Clauses).ToOpenFormula(0x290332acba40)
-	/Users/jaten/ivy/goivy/module/clauses.go:103 +0x39
-github.com/glycerine/ivy/goivy/module.(*Clauses).ToFormula(0x28?)
-	/Users/jaten/ivy/goivy/module/clauses.go:116 +0x13
-github.com/glycerine/ivy/goivy/module.clausesToFormula(0x106c194e0?)
-	/Users/jaten/ivy/goivy/module/ops.go:514 +0x13
-github.com/glycerine/ivy/goivy/module.ClausesToFormula(...)
-	/Users/jaten/ivy/goivy/module/ops.go:522
-github.com/glycerine/ivy/goivy/fragment.makeFmlaPairsFromAction({0x106c050a0, 0x290333079440}, 0x2903325b1b08, 0x0)
-	/Users/jaten/ivy/goivy/fragment/fragment.go:1097 +0x1cf
-github.com/glycerine/ivy/goivy/fragment.GetAssumesAndAsserts-range2({0x290332905698, 0x12}, 0x33?)
-	/Users/jaten/ivy/goivy/fragment/fragment.go:924 +0x15e
-github.com/glycerine/ivy/goivy/fragment.GetAssumesAndAsserts.(*InsMap[...]).All.func3(...)
-	/Users/jaten/ivy/goivy/ivyutils/insmap.go:184
-github.com/glycerine/ivy/goivy/fragment.GetAssumesAndAsserts(0x2903325b1b08, 0x0)
-	/Users/jaten/ivy/goivy/fragment/fragment.go:917 +0x16e3
-github.com/glycerine/ivy/goivy/fragment.CheckFragment(0x2903325b1b08, 0x0)
-	/Users/jaten/ivy/goivy/fragment/fragment.go:1017 +0x8e
-github.com/glycerine/ivy/goivy/check.CheckIsolate(0x2903325b1b08, 0x7?)
-	/Users/jaten/ivy/goivy/check/isolate_check.go:92 +0x5f4
-github.com/glycerine/ivy/goivy/check.CheckModule(0x2903325b0008)
-	/Users/jaten/ivy/goivy/check/isolate_check.go:962 +0x9ba
-github.com/glycerine/ivy/goivy/check.StartWithConfig({0x29033248a410, 0x1, 0x535f970516fc8c9b?}, 0x2903325aa000)
-	/Users/jaten/ivy/goivy/check/check.go:1280 +0x52c
-github.com/glycerine/ivy/goivy/check.MainWithConfig({0x29033248a410?, 0x29033261fe98?, 0x1066a81c0?}, 0x7?)
-	/Users/jaten/ivy/goivy/check/check.go:1301 +0x18
-main.main()
-	/Users/jaten/ivy/goivy/cmd/goivy_check/main.go:117 +0x50c
+179847  go : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
+        py : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 173538, counting from 0.
+179848  go : XTRACE: ops.defToConstraint lhsSort=<nil> resultType=Eq
+        py : XTRACE: ops.defToConstraint lhsSort=Boolean resultType=Iff
 ~~~

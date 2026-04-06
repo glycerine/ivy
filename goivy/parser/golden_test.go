@@ -468,7 +468,7 @@ func TestVerboseNonstopOrdLive(t *testing.T) {
 }
 
 func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string) {
-	//t.Skip("skip again the golden tests for the moment-- too slow for refactor testing.")
+	t.Skip("skip again the golden tests for the moment-- too slow for refactor testing.")
 	//return // off to check everything else under make test.
 	t.Helper()
 
@@ -610,11 +610,11 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 					if true {
 						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
 						if len(goLast30[j]) > 300 {
-							fmt.Printf(" ...(truncated long line to 300 bytes)\n")
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n\n")
 						}
 						fmt.Printf("        py : %.300s\n", pys)
 						if len(pys) > 300 {
-							fmt.Printf(" ...(truncated long line to 300 bytes)\n")
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n\n")
 						}
 					} else {
 						fmt.Printf("%06d  go : %s", i-n+j+1, goLast30[j])

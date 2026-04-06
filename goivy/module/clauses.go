@@ -100,7 +100,7 @@ func (c *Clauses) Copy() *Clauses {
 // And(def1.ToConstraint(), def2.ToConstraint(), ..., fmla1, fmla2, ...).
 func (c *Clauses) ToOpenFormula() lg.Expr {
 	if xtracer.Enabled {
-		xtracer.Trace("ops.ToOpenFormula nFmlas=%d nDefs=%d\nstack=%v", len(c.Fmlas), len(c.Defs), stack())
+		xtracer.Trace("ops.ToOpenFormula nFmlas=%d nDefs=%d", len(c.Fmlas), len(c.Defs))
 	}
 	conjuncts := make([]lg.Expr, 0, len(c.Defs)+len(c.Fmlas))
 	for _, d := range c.Defs {
