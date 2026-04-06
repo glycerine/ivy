@@ -259,7 +259,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 	result := il.DefinitionToConstraint(d)
 	if xtracer.Enabled {
 		lhsSort := d.Lhs.NodeSort()
-		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v\nstack = %v\n", lhsSort, iu.ShortTypeName(result))
+		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v", lhsSort, iu.ShortTypeName(result))
 		if lhsSort == nil {
 			vv("defToConstraint() lhsSort was nil! stack=\n%v\n", stack())
 		}
