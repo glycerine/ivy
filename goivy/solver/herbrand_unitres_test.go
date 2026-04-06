@@ -3,9 +3,9 @@ package solver
 import (
 	"testing"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/resolution"
 	"github.com/glycerine/ivy/goivy/unitres"
 )
@@ -145,7 +145,7 @@ func TestIvyLitsToUnitResClauses(t *testing.T) {
 
 	cnf := [][]*il.Literal{
 		{il.NewLiteral(1, p), il.NewLiteral(0, q)}, // p ∨ ¬q
-		{il.NewLiteral(0, p)},                        // ¬p
+		{il.NewLiteral(0, p)},                      // ¬p
 	}
 
 	urClauses, symMap := ivyLitsToUnitResClauses(cnf)
@@ -174,8 +174,8 @@ func TestExtractUnitResResults(t *testing.T) {
 	bAtom := resolution.NewAtom("b")
 
 	clauses := [][]*unitres.Literal{
-		{unitres.NewLiteral(0, aAtom)},                                  // ~a
-		{unitres.NewLiteral(1, aAtom), unitres.NewLiteral(1, bAtom)},   // a ∨ b
+		{unitres.NewLiteral(0, aAtom)},                               // ~a
+		{unitres.NewLiteral(1, aAtom), unitres.NewLiteral(1, bAtom)}, // a ∨ b
 	}
 
 	r := unitres.NewUnitRes(clauses)
@@ -223,7 +223,7 @@ func TestClausesCaseUNSAT(t *testing.T) {
 	p := boolConst("p")
 	// p AND NOT p — UNSAT
 	fmlas := []lg.Expr{p, &lg.Not{Body: p}}
-	clauses := mod.NewClauses(fmlas, nil, nil)
+	clauses := module.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -245,7 +245,7 @@ func TestClausesCaseAllUnits(t *testing.T) {
 	q := boolConst("q")
 	// p, q — already unit clauses
 	fmlas := []lg.Expr{p, q}
-	clauses := mod.NewClauses(fmlas, nil, nil)
+	clauses := module.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -275,7 +275,7 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 	notBOrC := &lg.Or{Terms: []lg.Expr{&lg.Not{Body: b}, c}}
 
 	fmlas := []lg.Expr{notA, aOrB, notBOrC}
-	clauses := mod.NewClauses(fmlas, nil, nil)
+	clauses := module.NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
@@ -297,7 +297,7 @@ func TestClausesCaseSingleClause(t *testing.T) {
 	b := boolConst("b")
 	aOrB := &lg.Or{Terms: []lg.Expr{a, b}}
 
-	clauses := mod.NewClauses([]lg.Expr{aOrB}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{aOrB}, nil, nil)
 	result, err := s.ClausesCase(clauses)
 	if err != nil {
 		t.Fatal(err)

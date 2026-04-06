@@ -6,9 +6,9 @@ package solver
 import (
 	"fmt"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -221,7 +221,7 @@ func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Const) []lg.Expr {
 // small model. All uninterpreted sorts are searched at the same size N
 // simultaneously, matching Python's model_if_none (ivy_solver.py:1135-1161).
 // The implied parameter is negated and added to the solver (not conjoined).
-func (s *Solver) ModelIfNone(clauses *mod.Clauses, implied *mod.Clauses, model *HerbrandModel) *HerbrandModel {
+func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, model *HerbrandModel) *HerbrandModel {
 	if model != nil {
 		return model
 	}
@@ -321,13 +321,13 @@ func NumeralAssign(model *HerbrandModel) map[string]string {
 }
 
 // NumeralAssignWithClauses is the full version that respects existing numerals.
-func NumeralAssignWithClauses(model *HerbrandModel, clauses *mod.Clauses) map[string]string {
+func NumeralAssignWithClauses(model *HerbrandModel, clauses *module.Clauses) map[string]string {
 	result := make(map[string]string)
 
 	// Collect existing numerals from clauses, grouped by sort
 	numBySort := make(map[string][]*lg.Const)
 	if clauses != nil {
-		usedConsts := mod.ConstantsClauses(clauses)
+		usedConsts := module.ConstantsClauses(clauses)
 		for _, c := range usedConsts {
 			if il.IsNumeral(c) {
 				sortName := il.SortName(il.SortRange(c.CSort))

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/module"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -208,7 +208,7 @@ func TestImpliesTrueImpliesAnything(t *testing.T) {
 func TestClausesSatTrue(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -221,7 +221,7 @@ func TestClausesSatTrue(t *testing.T) {
 func TestClausesSatFalse(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -233,7 +233,7 @@ func TestClausesSatFalse(t *testing.T) {
 
 func TestClausesSatEmpty(t *testing.T) {
 	s := New()
-	clauses := mod.TrueClauses(nil)
+	clauses := module.TrueClauses(nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -249,8 +249,8 @@ func TestClausesImplyTrue(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := mod.NewClauses([]lg.Expr{p, q}, nil, nil)
-	c2 := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	c1 := module.NewClauses([]lg.Expr{p, q}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{p}, nil, nil)
 	result, err := s.ClausesImply(c1, c2)
 	if err != nil {
 		t.Fatal(err)
@@ -264,8 +264,8 @@ func TestClausesImplyFalse(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := mod.NewClauses([]lg.Expr{p}, nil, nil)
-	c2 := mod.NewClauses([]lg.Expr{q}, nil, nil)
+	c1 := module.NewClauses([]lg.Expr{p}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{q}, nil, nil)
 	result, err := s.ClausesImply(c1, c2)
 	if err != nil {
 		t.Fatal(err)
@@ -281,7 +281,7 @@ func TestClausesImplyFormula(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := mod.NewClauses([]lg.Expr{p, q}, nil, nil)
+	c1 := module.NewClauses([]lg.Expr{p, q}, nil, nil)
 	result, err := s.ClausesImplyFormula(c1, p)
 	if err != nil {
 		t.Fatal(err)
@@ -298,11 +298,11 @@ func TestClausesImplyList(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
 	r := boolConst("r")
-	c1 := mod.NewClauses([]lg.Expr{p, q}, nil, nil)
-	c2p := mod.NewClauses([]lg.Expr{p}, nil, nil)
-	c2r := mod.NewClauses([]lg.Expr{r}, nil, nil)
+	c1 := module.NewClauses([]lg.Expr{p, q}, nil, nil)
+	c2p := module.NewClauses([]lg.Expr{p}, nil, nil)
+	c2r := module.NewClauses([]lg.Expr{r}, nil, nil)
 
-	results, err := s.ClausesImplyList(c1, []*mod.Clauses{c2p, c2r})
+	results, err := s.ClausesImplyList(c1, []*module.Clauses{c2p, c2r})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -394,7 +394,7 @@ func TestFormulaToZ3Eq(t *testing.T) {
 func TestClausesToZ3Simple(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -403,7 +403,7 @@ func TestClausesToZ3Simple(t *testing.T) {
 
 func TestClausesToZ3Empty(t *testing.T) {
 	s := New()
-	clauses := mod.TrueClauses(nil)
+	clauses := module.TrueClauses(nil)
 	expr, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -419,7 +419,7 @@ func TestClausesToZ3WithDefs(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
 	def := il.NewDefinition(p, q)
-	clauses := mod.NewClauses(nil, []*il.Definition{def}, nil)
+	clauses := module.NewClauses(nil, []*il.Definition{def}, nil)
 	_, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -442,7 +442,7 @@ func TestClausesToZ3Nil(t *testing.T) {
 func TestNotClausesToZ3(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.NotClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -526,7 +526,7 @@ func TestSizeConstraintOther(t *testing.T) {
 func TestGetModelClausesSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -542,7 +542,7 @@ func TestGetModelClausesSat(t *testing.T) {
 func TestGetModelClausesUnsat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -557,7 +557,7 @@ func TestGetModelClausesUnsat(t *testing.T) {
 func TestModelValues(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -586,7 +586,7 @@ func TestModelValues(t *testing.T) {
 func TestEvalFormula(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -718,9 +718,9 @@ func TestCheckSequenceAssumeAssert(t *testing.T) {
 	q := boolConst("q")
 
 	seq := []AssumeAssert{
-		NewAssume(mod.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
-		NewAssert(mod.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
-		NewAssert(mod.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
+		NewAssume(module.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(module.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+		NewAssert(module.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
 	}
 
 	results, err := s.CheckSequence(seq)
@@ -781,7 +781,7 @@ func TestAddClauses(t *testing.T) {
 	s := New()
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	err := s.AddClauses(z3solver, clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -813,7 +813,7 @@ func TestSolverAdd(t *testing.T) {
 func TestRemoveDuplicatesClauses(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p, p, p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p, p, p}, nil, nil)
 	deduped, err := s.RemoveDuplicatesClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -856,7 +856,7 @@ func TestFormulaToClauses(t *testing.T) {
 
 func TestDualClauses(t *testing.T) {
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -866,7 +866,7 @@ func TestDualClauses(t *testing.T) {
 func TestConditionClauses(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
-	clauses := mod.NewClauses([]lg.Expr{q}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{q}, nil, nil)
 	result := ConditionClauses(clauses, p)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
@@ -889,7 +889,7 @@ func TestSetSig(t *testing.T) {
 func TestModelResultString(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -916,8 +916,8 @@ func TestModelResultStringNil(t *testing.T) {
 func TestUnsatCoreReturnsNilForSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	c1 := mod.NewClauses([]lg.Expr{p}, nil, nil)
-	c2 := mod.TrueClauses(nil)
+	c1 := module.NewClauses([]lg.Expr{p}, nil, nil)
+	c2 := module.TrueClauses(nil)
 	core, err := s.UnsatCore(c1, c2, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1006,7 +1006,7 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 func TestGetSmallModelSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1019,7 +1019,7 @@ func TestGetSmallModelSat(t *testing.T) {
 func TestGetSmallModelUnsat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1034,8 +1034,8 @@ func TestGetSmallModelUnsat(t *testing.T) {
 func TestFilterRedundantFactsNoNeg(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
-	axioms := mod.TrueClauses(nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
+	axioms := module.TrueClauses(nil)
 	result, err := s.FilterRedundantFacts(clauses, axioms)
 	if err != nil {
 		t.Fatal(err)
@@ -1050,7 +1050,7 @@ func TestFilterRedundantFactsNoNeg(t *testing.T) {
 func TestBoundQuantifiersClausesEmpty(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := mod.NewClauses([]lg.Expr{p}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	result := s.BoundQuantifiersClauses(clauses, nil, nil)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
@@ -1486,8 +1486,8 @@ func TestCheckSequenceReporterOnlyAssert(t *testing.T) {
 	p := boolConst("p")
 
 	seq := []AssumeAssert{
-		NewAssume(mod.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
-		NewAssert(mod.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+		NewAssume(module.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(module.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
 	}
 
 	reporter := newMockReporter()
@@ -1533,9 +1533,9 @@ func TestCheckSequenceReporterAbort(t *testing.T) {
 	q := boolConst("q")
 
 	seq := []AssumeAssert{
-		NewAssume(mod.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
-		NewAssert(mod.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
-		NewAssert(mod.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
+		NewAssume(module.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(module.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+		NewAssert(module.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
 	}
 
 	// Abort on first End call
@@ -2075,7 +2075,7 @@ func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
 
 	// Axiom: a → Not(b) (if a is true, b must be false)
 	axiomFmla := &lg.Implies{T1: a, T2: &lg.Not{Body: b}}
-	axioms := mod.NewClauses([]lg.Expr{axiomFmla}, nil, nil)
+	axioms := module.NewClauses([]lg.Expr{axiomFmla}, nil, nil)
 
 	// Positive formula: a
 	// Negative 1: Not(b) — REDUNDANT: axiom + a → Not(b), so it's implied
@@ -2083,7 +2083,7 @@ func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
 	neg1 := &lg.Not{Body: b}
 	neg2 := &lg.Not{Body: c}
 
-	clauses := mod.NewClauses([]lg.Expr{a, neg1, neg2}, nil, nil)
+	clauses := module.NewClauses([]lg.Expr{a, neg1, neg2}, nil, nil)
 
 	result, err := s.FilterRedundantFacts(clauses, axioms)
 	if err != nil {
@@ -2118,8 +2118,8 @@ func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
 func TestFilterRedundantFactsNoNegatives(t *testing.T) {
 	s := New()
 	a := boolConst("a")
-	clauses := mod.NewClauses([]lg.Expr{a}, nil, nil)
-	axioms := mod.TrueClauses(nil)
+	clauses := module.NewClauses([]lg.Expr{a}, nil, nil)
+	axioms := module.TrueClauses(nil)
 
 	result, err := s.FilterRedundantFacts(clauses, axioms)
 	if err != nil {
@@ -2140,8 +2140,8 @@ func TestFilterRedundantFactsAllKept(t *testing.T) {
 	neg1 := &lg.Not{Body: a}
 	neg2 := &lg.Not{Body: b}
 
-	clauses := mod.NewClauses([]lg.Expr{neg1, neg2}, nil, nil)
-	axioms := mod.TrueClauses(nil)
+	clauses := module.NewClauses([]lg.Expr{neg1, neg2}, nil, nil)
+	axioms := module.TrueClauses(nil)
 
 	result, err := s.FilterRedundantFacts(clauses, axioms)
 	if err != nil {

@@ -13,7 +13,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- Match class ---
@@ -21,7 +21,7 @@ import (
 // Match is a backtrackable unification-style matching context.
 // Corresponds to Python's Match class.
 type Match struct {
-	stack [][]lg.Expr // stack of frames, each listing keys added
+	stack [][]lg.Expr            // stack of frames, each listing keys added
 	m     map[string]interface{} // current mapping (sort or symbol)
 }
 
@@ -334,7 +334,7 @@ type InstResult struct {
 // InstantiateAxioms performs pattern-based eager instantiation of axioms.
 // Returns a list of (axiom, instantiated formula) pairs.
 // Corresponds to Python's instantiate_axioms.
-func InstantiateAxioms(m *mod.Module, fmlas []lg.Expr, triggers []TriggerAxiom) []InstResult {
+func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxiom) []InstResult {
 	// Collect all symbols used in formulas
 	symbolSet := make(map[string]*lg.Const)
 	for _, f := range fmlas {

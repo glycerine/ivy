@@ -7,10 +7,10 @@ package solver
 import (
 	"fmt"
 
-	mod "github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/unitres"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -432,7 +432,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []
 		}
 
 		// collect_model_values: build sym(V0,V1,...), translate, eval, collect numerals
-		phs := mod.SymPlaceholders(sym)
+		phs := module.SymPlaceholders(sym)
 		var term lg.Expr
 		if len(phs) == 0 {
 			term = sym
@@ -554,7 +554,7 @@ func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Expr 
 // ModelFacts extracts all facts from a Herbrand model.
 // Returns a Clauses set characterizing the model.
 // Corresponds to Python's model_facts.
-func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *mod.Clauses, upclose bool) *mod.Clauses {
+func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.Clauses, upclose bool) *module.Clauses {
 	if ignore == nil {
 		ignore = func(*lg.Const) bool { return false }
 	}
@@ -614,7 +614,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *mod.Clau
 		}
 	}
 
-	return mod.NewClauses(fmlas, nil, nil)
+	return module.NewClauses(fmlas, nil, nil)
 }
 
 // RelationModelToClauses extracts the relation interpretation from the model.
@@ -807,7 +807,7 @@ func (s *Solver) EnumeratedRange(sort *lg.EnumeratedSort) ([]z3bridge.Expr, erro
 
 // GetModelFromClauses checks satisfiability and returns a HerbrandModel if sat.
 // This is the high-level API for model extraction.
-func (s *Solver) GetModelFromClauses(clauses *mod.Clauses) (*HerbrandModel, error) {
+func (s *Solver) GetModelFromClauses(clauses *module.Clauses) (*HerbrandModel, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -842,7 +842,7 @@ func (s *Solver) GetModelFromClauses(clauses *mod.Clauses) (*HerbrandModel, erro
 //  1. Check SAT, get model
 //  2. Model-simplify each CNF clause, remove duplicates
 //  3. Loop: run UnitRes propagation, model-simplify, dedup, until convergence
-func (s *Solver) ClausesCase(clauses *mod.Clauses) (*mod.Clauses, error) {
+func (s *Solver) ClausesCase(clauses *module.Clauses) (*module.Clauses, error) {
 	// Check satisfiability
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
@@ -864,15 +864,15 @@ func (s *Solver) ClausesCase(clauses *mod.Clauses) (*mod.Clauses, error) {
 	// Initial model simplification over CNF (includes defs via ToOpenFormula).
 	// Python: clauses = Clauses([clause_model_simp(m,c) for c in clauses1.clauses])
 	// Python: clauses = remove_duplicates_clauses(clauses)
-	cnf := mod.FormulaToClausesAux(clauses.ToOpenFormula())
+	cnf := module.FormulaToClausesAux(clauses.ToOpenFormula())
 	var initFmlas []lg.Expr
 	for _, c := range cnf {
-		f := mod.ClauseToFormula(c)
+		f := module.ClauseToFormula(c)
 		simplified := s.clauseModelSimp(model, f)
 		initFmlas = append(initFmlas, simplified)
 	}
 	initFmlas = removeDuplicateFormulas(initFmlas)
-	currentClauses := mod.NewClauses(initFmlas, nil, clauses.Annot)
+	currentClauses := module.NewClauses(initFmlas, nil, clauses.Annot)
 
 	// Iterative UnitRes + model simplification loop.
 	// Python:
@@ -886,7 +886,7 @@ func (s *Solver) ClausesCase(clauses *mod.Clauses) (*mod.Clauses, error) {
 	//     if len(clauses.clauses) <= num_old_clauses: return clauses
 	for {
 		// Get CNF literal-lists for this round
-		cnf = mod.FormulaToClausesAux(currentClauses.ToOpenFormula())
+		cnf = module.FormulaToClausesAux(currentClauses.ToOpenFormula())
 		numOldClauses := len(cnf)
 
 		// Convert to unitres format and run propagation
@@ -900,9 +900,9 @@ func (s *Solver) ClausesCase(clauses *mod.Clauses) (*mod.Clauses, error) {
 		// Convert to formulas
 		var resultFmlas []lg.Expr
 		for _, c := range resultLitClauses {
-			resultFmlas = append(resultFmlas, mod.ClauseToFormula(c))
+			resultFmlas = append(resultFmlas, module.ClauseToFormula(c))
 		}
-		newClauses := mod.NewClauses(resultFmlas, nil, currentClauses.Annot)
+		newClauses := module.NewClauses(resultFmlas, nil, currentClauses.Annot)
 
 		// Model simplify each formula
 		// Python: clauses = Clauses([clause_model_simp(m,c) for c in new_clauses.clauses])
@@ -912,10 +912,10 @@ func (s *Solver) ClausesCase(clauses *mod.Clauses) (*mod.Clauses, error) {
 			simpFmlas = append(simpFmlas, simplified)
 		}
 		simpFmlas = removeDuplicateFormulas(simpFmlas)
-		currentClauses = mod.NewClauses(simpFmlas, nil, currentClauses.Annot)
+		currentClauses = module.NewClauses(simpFmlas, nil, currentClauses.Annot)
 
 		// Convergence: Python checks len(clauses.clauses) <= num_old_clauses
-		newCnf := mod.FormulaToClausesAux(currentClauses.ToOpenFormula())
+		newCnf := module.FormulaToClausesAux(currentClauses.ToOpenFormula())
 		if len(newCnf) <= numOldClauses {
 			return currentClauses, nil
 		}
@@ -983,7 +983,7 @@ func removeDuplicateFormulas(fmlas []lg.Expr) []lg.Expr {
 }
 
 // clausesCaseLegacy is the old implementation kept for reference.
-func (s *Solver) clausesCaseLegacy(clauses *mod.Clauses) (*mod.Clauses, error) {
+func (s *Solver) clausesCaseLegacy(clauses *module.Clauses) (*module.Clauses, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -1027,5 +1027,5 @@ func (s *Solver) clausesCaseLegacy(clauses *mod.Clauses) (*mod.Clauses, error) {
 
 	defs := make([]*il.Definition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
-	return mod.NewClauses(newFmlas, defs, clauses.Annot), nil
+	return module.NewClauses(newFmlas, defs, clauses.Annot), nil
 }

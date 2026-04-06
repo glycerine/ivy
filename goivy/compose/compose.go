@@ -17,7 +17,7 @@ import (
 	"strings"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
-	mod "github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // RankingDef holds the definitions for a single ranking function (work item).
@@ -87,11 +87,11 @@ type TacticProof interface {
 // 5. Creates ranking functions from work items
 // 6. Generates subgoals for each work item
 // 7. Adds invariant strengthening from work_helpful
-func ComposeTactic(m *mod.Module, goals []interface{}, proof interface{}) error {
+func ComposeTactic(m *module.Module, goals []interface{}, proof interface{}) error {
 	return composeTacticInt(m, goals, proof, "ranking")
 }
 
-func composeTacticInt(m *mod.Module, goals []interface{}, proof interface{}, tacticName string) error {
+func composeTacticInt(m *module.Module, goals []interface{}, proof interface{}, tacticName string) error {
 	if len(goals) == 0 {
 		return fmt.Errorf("compose: no proof goals")
 	}
