@@ -291,10 +291,17 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
 	}
 
 	// Translate definitions as constraints
-	for _, d := range clauses.Defs {
+	for di, d := range clauses.Defs {
 		constraint := defToConstraint(d)
 		zd, err := s.translateClosed(constraint)
 		if err != nil {
+			defName := "?"
+			if sym := d.Defines(); sym != nil {
+				if c, ok := sym.(*lg.Const); ok {
+					defName = c.Name
+				}
+			}
+			xtracer.Trace("clauses_to_z3: Z3 error on def[%d]: %v defines=%s", di, err, defName)
 			return z3bridge.Expr{}, fmt.Errorf("translating definition: %w", err)
 		}
 		exprs = append(exprs, zd)

@@ -583,7 +583,12 @@ def clauses_to_z3(clauses):
     for i, f in enumerate(clauses.fmlas):
         if __debug__: xtracer.trace("solver.ClausesToZ3 fmla[%d] sort=%s\n type=%s val=%s" % (i, f.sort if hasattr(f,'sort') else '?', type(f).__name__, f))
     z3_clauses = [conj_to_z3(cl) for cl in clauses.fmlas]
-    z3_clauses.extend([formula_to_z3(dfn) for dfn in clauses.defs])
+    for di, dfn in enumerate(clauses.defs):
+        try:
+            z3_clauses.append(formula_to_z3(dfn))
+        except Exception as e:
+            xtracer.trace("clauses_to_z3: Z3 error on def[%d]: %s defType=%s defines=%s" % (di, e, type(dfn).__name__, dfn.defines() if hasattr(dfn,'defines') else '?'))
+            raise
     z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
     if __debug__: xtracer.trace("solver.ClausesToZ3 EXIT exprs=%d" % len(z3_clauses))
     res = z3.And(z3_clauses)
@@ -656,10 +661,18 @@ def formula_to_z3(fmla):
         canon = fmla.sexp()
         leaf, root = _translate_merkle.add_leaf(canon)
         xtracer.trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s" % (leaf, root, canon))
-    z3_fmla = formula_to_z3_closed(fmla)
-    tcs = type_constraints(used_symbols_ast(fmla))
-    if len(tcs) > 0:
-        z3_fmla = z3.And(*([z3_fmla] + tcs))
+    try:
+        z3_fmla = formula_to_z3_closed(fmla)
+    except Exception as e:
+        xtracer.trace("formula_to_z3: Z3 error on formula_to_z3_closed: %s type=%s" % (e, type(fmla).__name__))
+        raise
+    try:
+        tcs = type_constraints(used_symbols_ast(fmla))
+        if len(tcs) > 0:
+            z3_fmla = z3.And(*([z3_fmla] + tcs))
+    except Exception as e:
+        xtracer.trace("formula_to_z3: Z3 error on type_constraints: %s type=%s" % (e, type(fmla).__name__))
+        raise
     return z3_fmla
                            
 

@@ -2412,24 +2412,24 @@ Estimated People Required 26.621735
 
 === S-expression diff (go '-' vs py '+') ===
 - (ForAll
-+ (Def
 -   vars:[
-+   lhs:(Apply
 -     (Variable
-+     func:(Symbol
 -       name:T0
-+       name:ref.prevents
 -       sort:(UninterpretedSort
-+       sort:(FunctionSort
 -         name:lclock))
-+         sorts:[
 -     (Variable
-+           (UninterpretedSort
 -       name:T1
-+             name:lclock)
 -       sort:(UninterpretedSort
-+           (UninterpretedSort
 -         name:lclock))]
++ (Def
++   lhs:(Apply
++     func:(Symbol
++       name:ref.prevents
++       sort:(FunctionSort
++         sorts:[
++           (UninterpretedSort
++             name:lclock)
++           (UninterpretedSort
 +             name:lclock)
 
 ========== trailing ~go[after i= 236046]:
