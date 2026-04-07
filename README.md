@@ -2401,16 +2401,26 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-just a lineno representation vs lineno:0 thing
+227411  go : XTRACE:   arc[2017]: from_id=3169(root=1746) to_id=1749(root=1309) fmla=(Apply func:(Symbol name:rfn.abs.begun sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_y1 sort:(UninterpretedSort name:mem_type)) (Apply fun ...(truncated long line to 300 bytes)
 
-225387  go : XTRACE: fragment CheckFEU ENTER
-        py : XTRACE: fragment CheckFEU ENTER
-
-225388  go : XTRACE: fragment CheckFEU input counts: assumes=127 asserts=20 macros=12
-        py : XTRACE: fragment CheckFEU input counts: assumes=127 asserts=20 macros=12
-
-225389  go : XTRACE: fragment CheckFEU input HASH canon= assumes=[(fmlaPair fmla:(And terms:[(Iff t1:(Symbol name:__m_loc:wr sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__m_loc:rd sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__new_loc:wr sort:(BooleanSort)) t2:(Or terms:[(Symbol name ...(truncated long line to 300 bytes)
-
-        py : XTRACE: fragment CheckFEU input HASH canon= assumes=[(fmlaPair fmla:(And terms:[(Iff t1:(Symbol name:__m_loc:wr sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__m_loc:rd sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__new_loc:wr sort:(BooleanSort)) t2:(Or terms:[(Symbol name
+        py : XTRACE:   arc[2017]: from_id=3169(root=1746) to_id=1749(root=1309) fmla=(Apply func:(Symbol name:rfn.abs.begun sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_y1 sort:(UninterpretedSort name:mem_type)) (Apply fun
  ...(truncated long line to 300 bytes)
+
+227412  go : XTRACE:   arc[2018]: from_id=148(root=1120) to_id=3178(root=1309) fmla=(Eq t1:(Variable name:Y_j sort:(UninterpretedSort name:tar_clock)) t2:(Apply func:(Symbol name:ref.evs.lt_arr sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:tar_clock)])) terms:[(Variable name:T ...(truncated long line to 300 bytes)
+
+        py : XTRACE:   arc[2018]: from_id=148(root=1120) to_id=3178(root=1309) fmla=(Eq t1:(Variable name:Y_j sort:(UninterpretedSort name:tar_clock)) t2:(Apply func:(Symbol name:ref.evs.lt_arr sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:tar_clock)])) terms:[(Variable name:T
+ ...(truncated long line to 300 bytes)
+
+227413  go : XTRACE:   arc[2019]: from_id=148(root=1120) to_id=3179(root=3179) fmla=(Eq t1:(Apply func:(Symbol name:ref.evs.req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp])])) terms:[(Variable name:T_y6 sort:(UninterpretedSort name:lcloc ...(truncated long line to 300 bytes)
+
+        py : XTRACE:   arc[2019]: from_id=148(root=1120) to_id=3179(root=3179) fmla=(Eq t1:(Apply func:(Symbol name:ref.evs.req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp])])) terms:[(Variable name:T_y6 sort:(UninterpretedSort name:lcloc
+ ...(truncated long line to 300 bytes)
+
+227414  go : XTRACE:   arc[2020]: from_id=147(root=1746) to_id=3180(root=3180) fmla=(Eq t1:(Apply func:(Symbol name:rfn.abs.queue sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_b2 sort:(UninterpretedSort name:mem_type)) (Var ...(truncated long line to 300 bytes)
+
+        py : XTRACE:   arc[2020]: from_id=3177(root=1309) to_id=3180(root=3180) fmla=(Eq t1:(Apply func:(Symbol name:rfn.abs.queue sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_b2 sort:(UninterpretedSort name:mem_type)) (Va
+ ...(truncated long line to 300 bytes)
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 227414, counting from 0.
 ~~~
+
