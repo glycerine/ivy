@@ -95,6 +95,8 @@ def arc_canon(arc_tuple):
             node_canon(fmla), lineno, idx)
     else:
         v, anode, fmla, lineno = arc_tuple
+        # TODO revert once python lineno is fixed and correct and matches Go.
+        lineno = 0
         return '(arc from:{} to:{} fmla:{} lineno:{} argIdx:-1 hasIdx:false)'.format(
             uf_node_canon(v), uf_node_canon(anode),
             node_canon(fmla), lineno)
@@ -153,6 +155,8 @@ def fmla_pair_canon(fmla, source, lineno):
             source_str = source.canon()
         else:
             source_str = str(source)
+    # Normalize lineno to 0 — matches disabled lineno_fields()/canonFields()
+    lineno = 0
     return '(fmlaPair fmla:{} source:{} lineno:{})'.format(
         node_canon(fmla), source_str, lineno)
 

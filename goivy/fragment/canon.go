@@ -78,9 +78,12 @@ func (s *stratEntry) Canon() iu.Canonical { return iu.Canonical(s.Sexp()) }
 // --- arc ---
 
 func (a *arc) Sexp() lg.NodeKey {
+	lineno := a.lineno
+	// TODO remove?
+	lineno = 0
 	return lg.NodeKey(fmt.Sprintf("(arc from:%s to:%s fmla:%s lineno:%d argIdx:%d hasIdx:%v)",
 		ufNodeSexp(a.from), ufNodeSexp(a.to), exprSexp(a.fmla),
-		a.lineno, a.argIdx, a.hasIdx))
+		lineno, a.argIdx, a.hasIdx))
 }
 
 func (a *arc) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
@@ -134,8 +137,15 @@ func (f *fmlaPair) Sexp() lg.NodeKey {
 	if f.source != nil {
 		sourceStr = string(f.source.Canon())
 	}
+	lineno := f.lineno
+	// TODO revert once golden working? we avoid spurious Sexp diffs with
+	// this because the python line numbering is broken. Arguably we
+	// should fix it, but we did not want to risk messing up the python
+	// accidentally until we have very good confidence the Go is matching
+	// it in all ways. So for now we just report lineno of 0 on both sides.
+	lineno = 0
 	return lg.NodeKey(fmt.Sprintf("(fmlaPair fmla:%s source:%s lineno:%d)",
-		exprSexp(f.fmla), sourceStr, f.lineno))
+		exprSexp(f.fmla), sourceStr, lineno))
 }
 
 func (f *fmlaPair) Canon() iu.Canonical { return iu.Canonical(f.Sexp()) }
