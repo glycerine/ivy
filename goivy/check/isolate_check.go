@@ -99,7 +99,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")
 
 	fcElap := time.Since(fcStartTm)
-	fmt.Printf("\n\t IVY_STATS fragment checker elapsed time (s): %v\n", fcElap)
+	if mod.Cfg.OptIvyStats {
+		fmt.Printf("\n\t IVY_STATS fragment checker elapsed time (s): %v\n", fcElap)
+	}
 
 	// Python: with im.module.theory_context():
 	cleanupTheory := mod.TheoryContext()

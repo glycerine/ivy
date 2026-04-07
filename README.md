@@ -2401,15 +2401,14 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236015  go : XTRACE: fragment CheckFEU EXIT
-        py : XTRACE: fragment CheckFEU EXIT
-
-236016  go : XTRACE: check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().
-        py : XTRACE: check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().
-
-236017  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+236040  go : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
         py : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 236017, counting from 0.
+236041  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+        py : XTRACE: solver.ClausesToZ3 ENTER
+
+========== trailing ~py[after i= 236041]:
+ fmlas=0 defs=12
+    golden_test.go:452: ivy_check and goivy_check differ at line 236041, counting from 0.
 ~~~
 
