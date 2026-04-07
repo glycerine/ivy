@@ -90,13 +90,19 @@ def arc_canon(arc_tuple):
     or 5-tuples (from, to, fmla, lineno, argIdx)."""
     if len(arc_tuple) == 5:
         v, anode, fmla, lineno, idx = arc_tuple
+
+        # TODO revert once python lineno is fixed and correct and matches Go.
+        lineno = 0
+
         return '(arc from:{} to:{} fmla:{} lineno:{} argIdx:{} hasIdx:true)'.format(
             uf_node_canon(v), uf_node_canon(anode),
             node_canon(fmla), lineno, idx)
     else:
         v, anode, fmla, lineno = arc_tuple
+
         # TODO revert once python lineno is fixed and correct and matches Go.
         lineno = 0
+
         return '(arc from:{} to:{} fmla:{} lineno:{} argIdx:-1 hasIdx:false)'.format(
             uf_node_canon(v), uf_node_canon(anode),
             node_canon(fmla), lineno)
