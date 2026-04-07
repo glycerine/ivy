@@ -221,20 +221,20 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 		}
 
 		// Build a history from pre-state
-		h := actions.NewHistory(cfg, actions.PureState(comp.Pre))
+		h := actions.NewHistory(cfg, actions.PureStateClauses(module.FormulaToClauses(comp.Pre, nil)))
 
 		// Forward-step through each update
 		for _, upd := range upds {
-			h = h.ForwardStep(bg.ToFormula(), upd, nil)
+			h = h.ForwardStep(bg, upd, nil)
 		}
 
 		// Assume the post-state
 		if comp.Post != nil {
-			h = h.Assume(comp.Post)
+			h = h.Assume(module.FormulaToClauses(comp.Post, nil))
 		}
 
 		// Check satisfiability
-		bmcRes := h.Satisfy(bg.ToFormula())
+		bmcRes := h.Satisfy(bg)
 		if bmcRes == nil {
 			continue
 		}

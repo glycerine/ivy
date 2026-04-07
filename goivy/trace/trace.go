@@ -601,9 +601,12 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	if history == nil || history.Post == nil {
 		return nil
 	}
-	// Use the history's post formula as the clauses.
+	// Use the history's post clauses directly.
 	// Matches Python ivy_trace.py:328: clauses = history.post
-	clauses := module.FormulaToClauses(history.Post, actions.EmptyAnnotation{})
+	clauses := history.Post
+	if clauses.Annot == nil {
+		clauses = module.NewClauses(clauses.Fmlas, clauses.Defs, actions.EmptyAnnotation{})
+	}
 	// Conjoin with background theory (axioms, definitions)
 	// Matches Python ivy_trace.py:330: clauses = lut.and_clauses(clauses, axioms)
 	if ag.Domain != nil {

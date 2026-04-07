@@ -744,11 +744,12 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 	// Base case: no predecessor or bound exhausted.
 	if state.Pred == nil || (bound != nil && *bound <= 0) {
 		// Use the state's clauses as the initial pure state.
-		var formula lg.Expr = lg.True
-		if state.Clauses != nil {
-			formula = state.Clauses.ToFormula()
+		// Python: new_history(state) stores state.value (Clauses) directly.
+		clauses := state.Clauses
+		if clauses == nil {
+			clauses = module.TrueClauses(nil)
 		}
-		u := actions.PureState(formula)
+		u := actions.PureStateClauses(clauses)
 		return actions.NewHistory(ag.Domain.Cfg.IuCfg, u)
 	}
 
@@ -764,11 +765,11 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 	// Matches Python ivy_interp.py:591:
 	//   history.forward_step(state.pred.domain.background_theory(...), state.update, action)
 	if state.Update != nil {
-		var axioms lg.Expr = lg.True
+		var axioms *module.Clauses = module.TrueClauses(nil)
 		if state.Pred != nil && state.Pred.Domain != nil {
 			bgTheory := state.Pred.Domain.BackgroundTheory(state.Pred.InScope)
 			if bgTheory != nil {
-				axioms = bgTheory.ToFormula()
+				axioms = bgTheory
 			}
 		}
 		var actionNode lg.Expr = lg.True
@@ -810,7 +811,7 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 // concrete path and universe. Python ivy_art.py:331-345.
 func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
 	h := ag.GetHistory(state, bound)
-	h = h.Assume(errorCond)
+	h = h.Assume(module.FormulaToClauses(errorCond, nil))
 
 	// Use HistorySatisfy to check and extract path + universe.
 	interpState := ArtToInterpState(state)

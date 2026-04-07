@@ -407,7 +407,7 @@ func HistoryForwardStep(history *actions.History, state *State) *actions.History
 	if pred == nil {
 		return history
 	}
-	bg := pred.Domain.BackgroundTheory(pred.InScope).ToFormula()
+	bg := pred.Domain.BackgroundTheory(pred.InScope)
 	return history.ForwardStep(bg, state.Update(), actionNode)
 }
 
@@ -418,7 +418,7 @@ func HistoryForwardStep(history *actions.History, state *State) *actions.History
 // Corresponds to Python's history_satisfy() in ivy_interp.py (lines 593-598).
 func HistorySatisfy(history *actions.History, state *State) *actions.SatisfyResult {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	return history.Satisfy(axioms.ToFormula())
+	return history.Satisfy(axioms)
 }
 
 // ---------------------------------------------------------------------------

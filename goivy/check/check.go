@@ -521,8 +521,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	}
 
 	// Python: clauses = history.post; clauses = lut.and_clauses(clauses, axioms)
-	postClauses := module.NewClauses([]lg.Expr{history.Post}, nil, nil)
-	clauses := module.AndClausesTyped(postClauses, axioms)
+	clauses := module.AndClausesTyped(history.Post, axioms)
 
 	// Python: ffcs = filter_fcs(fcs)
 	ffcs := FilterCheckers(checkers, mod.Cfg.CheckLineno)
@@ -650,7 +649,8 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	}
 
 	if history != nil {
-		xtracer.Trace("check.checkFcsNormalPath history path\n postType=%T postSort=%v axiomFmlas=%d checkers=%d", history.Post, history.Post.NodeSort(), len(axioms.Fmlas), len(filteredCheckers))
+		xtracer.Trace("check.checkFcsNormalPath history path postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d checkers=%d",
+			len(history.Post.Fmlas), len(history.Post.Defs), len(axioms.Fmlas), len(axioms.Defs), len(filteredCheckers))
 		// Python: gmc = lambda cls, final_cond: itr.small_model_clauses(cls, final_cond, shrink=diagnose.get())
 		gmc := func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
 			mr, _ := actions.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
@@ -658,8 +658,7 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 		}
 
 		// Python: res = history.satisfy(axioms, gmc, filter_fcs(fcs))
-		axiomExpr := module.ClausesToFormula(axioms)
-		res := history.SatisfyWithCond(axiomExpr, gmc, finalConds)
+		res := history.SatisfyWithCond(axioms, gmc, finalConds)
 
 		// Python: if res is not None and diagnose.get(): show_counterexample(ag, post, res)
 		if res != nil && mod.Cfg.Diagnose {

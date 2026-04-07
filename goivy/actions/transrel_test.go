@@ -494,14 +494,14 @@ func TestActionFailedWithTrace(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestNewHistory(t *testing.T) {
-	state := PureState(lg.True)
+	state := PureStateClauses(module.TrueClauses(nil))
 	cfg := iu.NewIvyUtilsConfig()
 	h := NewHistory(cfg, state)
 	if h == nil {
 		t.Fatal("NewHistory returned nil")
 	}
-	if !h.Post.Equal(lg.True) {
-		t.Errorf("History.Post = %s, want True", h.Post)
+	if len(h.Post.Fmlas) != 0 || len(h.Post.Defs) != 0 {
+		t.Errorf("History.Post should be TrueClauses, got fmlas=%d defs=%d", len(h.Post.Fmlas), len(h.Post.Defs))
 	}
 	if len(h.Maps) != 0 {
 		t.Errorf("History.Maps length = %d, want 0", len(h.Maps))
@@ -520,22 +520,22 @@ func TestNewHistoryPanicsForNonPure(t *testing.T) {
 
 func TestHistoryAssume(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
-	h := NewHistory(cfg, PureState(lg.True))
-	h2 := h.Assume(lg.True)
+	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
+	h2 := h.Assume(module.TrueClauses(nil))
 	if h2 == nil {
 		t.Fatal("History.Assume returned nil")
 	}
 	// Original should be unchanged
-	if !h.Post.Equal(lg.True) {
+	if len(h.Post.Fmlas) != 0 || len(h.Post.Defs) != 0 {
 		t.Error("History.Assume should not mutate original")
 	}
 }
 
 func TestHistoryForwardStep(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
-	h := NewHistory(cfg, PureState(lg.True))
+	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	u := NullUpdate()
-	h2 := h.ForwardStep(lg.True, u, lg.True)
+	h2 := h.ForwardStep(module.TrueClauses(nil), u, lg.True)
 	if h2 == nil {
 		t.Fatal("History.ForwardStep returned nil")
 	}

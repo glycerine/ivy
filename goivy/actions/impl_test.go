@@ -634,9 +634,9 @@ func TestReverseImageBasic(t *testing.T) {
 
 func TestHistoryForwardStepComputes(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
-	h := NewHistory(cfg, PureState(lg.True))
+	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
-	h2 := h.ForwardStep(lg.True, u, lg.True)
+	h2 := h.ForwardStep(module.TrueClauses(nil), u, lg.True)
 	if h2 == nil {
 		t.Fatal("ForwardStep returned nil")
 	}
@@ -648,18 +648,18 @@ func TestHistoryForwardStepComputes(t *testing.T) {
 	}
 	// Post should not be the same as the original (forward image applied)
 	// It should contain const_a (the value assigned in the update)
-	if !formulaContainsName(h2.Post, "const_a") {
+	if !formulaContainsName(h2.Post.ToOpenFormula(), "const_a") {
 		t.Error("ForwardStep Post should contain value from update")
 	}
 }
 
 func TestHistoryForwardStepMultiple(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
-	h := NewHistory(cfg, PureState(lg.True))
+	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "val1"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "val2"), lg.False)
-	h2 := h.ForwardStep(lg.True, u1, lg.True)
-	h3 := h2.ForwardStep(lg.True, u2, lg.True)
+	h2 := h.ForwardStep(module.TrueClauses(nil), u1, lg.True)
+	h3 := h2.ForwardStep(module.TrueClauses(nil), u2, lg.True)
 	if len(h3.Maps) != 2 {
 		t.Errorf("After 2 steps, Maps len = %d, want 2", len(h3.Maps))
 	}
@@ -671,15 +671,15 @@ func TestHistoryForwardStepMultiple(t *testing.T) {
 func TestHistoryAssumeRenamesSkolems(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
 
-	h := NewHistory(cfg, PureState(mkEq("a__b", "x")))
+	h := NewHistory(cfg, PureStateClauses(module.FormulaToClauses(mkEq("a__b", "x"), nil)))
 	// Assume with a formula that also has the same skolem
-	assumption := mkEq("a__b", "y")
+	assumption := module.FormulaToClauses(mkEq("a__b", "y"), nil)
 	h2 := h.Assume(assumption)
 	if h2 == nil {
 		t.Fatal("Assume returned nil")
 	}
-	// Should not modify original
-	if h.Post.Equal(h2.Post) {
+	// Should not modify original — compare via formula
+	if h.Post.ToOpenFormula().Equal(h2.Post.ToOpenFormula()) {
 		t.Error("Assume should produce a different Post")
 	}
 }
@@ -687,9 +687,9 @@ func TestHistoryAssumeRenamesSkolems(t *testing.T) {
 func TestHistorySatisfySatReturnsModel(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
 
-	h := NewHistory(cfg, PureState(lg.True))
+	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	// With Z3 integrated, Satisfy on True (trivially satisfiable) returns a SatisfyResult.
-	result := h.Satisfy(lg.True)
+	result := h.Satisfy(module.TrueClauses(nil))
 	if result == nil {
 		t.Error("Satisfy on True should return a SatisfyResult (SAT)")
 	}
@@ -701,7 +701,7 @@ func TestHistorySatisfySatReturnsModel(t *testing.T) {
 func TestHistorySatisfyNilPostReturnsNil(t *testing.T) {
 	h := &History{Post: nil}
 	// With nil Post, Satisfy should return nil.
-	result := h.Satisfy(lg.True)
+	result := h.Satisfy(module.TrueClauses(nil))
 	if result != nil {
 		t.Error("Satisfy with nil Post should return nil")
 	}

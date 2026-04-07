@@ -187,6 +187,16 @@ func IsPureState(u *Update) bool {
 	return u.ModifiedAll
 }
 
+// PureStateClauses creates a pure-state Update from Clauses directly,
+// matching Python's pure_state(clauses) = (None, clauses, false_clauses()).
+func PureStateClauses(clauses *module.Clauses) *Update {
+	return &Update{
+		ModifiedAll: true,
+		TR:          clauses,
+		Pre:         module.FalseClauses(nil),
+	}
+}
+
 // TopState returns a pure state whose formula is True (all states).
 func TopState() *Update {
 	return PureState(lg.True)
@@ -1789,7 +1799,7 @@ func ModifiedNames(u *Update) []string {
 // state at each time step.
 type History struct {
 	Cfg     *iu.IvyUtilsConfig
-	Post    lg.Expr        // characteristic formula of the current state
+	Post    *module.Clauses // characteristic clauses of the current state (matches Python self.post)
 	Maps    []Renaming     // sequence of symbol renamings from forward images
 	Actions []lg.Expr      // actions taken at each step
 	Mod     *module.Module // module for sort/symbol lookups (replaces global)
@@ -1805,7 +1815,7 @@ func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 	}
 	return &History{
 		Cfg:     cfg,
-		Post:    state.TRNode(),
+		Post:    state.TR,
 		Maps:    nil,
 		Actions: nil,
 	}
@@ -1815,12 +1825,16 @@ func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 // It computes the forward image and records the symbol renaming.
 //
 // Corresponds to Python's History.forward_step(axioms, update, action).
-func (h *History) ForwardStep(axioms lg.Expr, u *Update, action lg.Expr) *History {
-	eqMap, result := ForwardImageMapFormula(h.Post, axioms, u)
+func (h *History) ForwardStep(axioms *module.Clauses, u *Update, action lg.Expr) *History {
+	eqMap, result := ForwardImageMap(h.Post, axioms, u)
 
+	// Convert NodeKey→Const map to name→name Renaming
+	// (same logic as ForwardImageMapFormula lines 1174-1179).
 	renaming := make(Renaming, len(eqMap))
-	for k, v := range eqMap {
-		renaming[k] = v
+	for _, s := range u.Modified {
+		if renamed, ok := eqMap[lg.Key(s)]; ok {
+			renaming[s.Name] = renamed.Name
+		}
 	}
 
 	// Build new maps and actions slices (immutable append)
@@ -1833,9 +1847,11 @@ func (h *History) ForwardStep(axioms lg.Expr, u *Update, action lg.Expr) *Histor
 	newActions[len(h.Actions)] = action
 
 	return &History{
+		Cfg:     h.Cfg,
 		Post:    result,
 		Maps:    newMaps,
 		Actions: newActions,
+		Mod:     h.Mod,
 	}
 }
 
@@ -1843,14 +1859,16 @@ func (h *History) ForwardStep(axioms lg.Expr, u *Update, action lg.Expr) *Histor
 // Skolems in the formula are renamed to avoid clashes with the post-state.
 //
 // Corresponds to Python's History.assume(clauses).
-func (h *History) Assume(formula lg.Expr) *History {
-	// Rename skolems in formula to avoid clashes with post
-	renamed := RenameDistinct(formula, h.Post)
-	newPost := conjoinFormulas(h.Post, renamed)
+func (h *History) Assume(clauses *module.Clauses) *History {
+	// Rename skolems in clauses to avoid clashes with post
+	renamed := RenameDistinctClauses(clauses, h.Post)
+	newPost := module.AndClausesTyped(h.Post, renamed)
 	return &History{
+		Cfg:     h.Cfg,
 		Post:    newPost,
 		Maps:    h.Maps,
 		Actions: h.Actions,
+		Mod:     h.Mod,
 	}
 }
 
@@ -1870,7 +1888,7 @@ type SatisfyResult struct {
 // history is vacuous (unsatisfiable).
 //
 // Corresponds to Python ivy_transrel.py History.satisfy (lines 613-665).
-func (h *History) Satisfy(axioms lg.Expr) *SatisfyResult {
+func (h *History) Satisfy(axioms *module.Clauses) *SatisfyResult {
 	return h.SatisfyWithCond(axioms, nil, nil)
 }
 
@@ -1878,7 +1896,7 @@ func (h *History) Satisfy(axioms lg.Expr) *SatisfyResult {
 // model-finding function and final conditions.
 //
 // Corresponds to Python History.satisfy(axioms, _get_model_clauses, final_cond).
-func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*module.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
+func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*module.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
 	if h.Post == nil {
 		return nil
 	}
@@ -1892,17 +1910,12 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*module.C
 	}
 
 	// A model of the post-state embeds a valuation for each time in the history.
-	xtracer.Trace("transrel.SatisfyWithCond ENTER\n postType=%T postSort=%v axiomType=%T post=%v", h.Post, h.Post.NodeSort(), axioms, h.Post)
-	postClauses := module.FormulaToClauses(h.Post, nil)
-	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d\n fmla0Sort=%v", len(postClauses.Fmlas), func() interface{} {
-		if len(postClauses.Fmlas) > 0 {
-			return postClauses.Fmlas[0].NodeSort()
-		}
-		return "empty"
-	}())
-	axiomClauses := module.FormulaToClauses(axioms, nil)
-	post := module.AndClausesTyped(postClauses, axiomClauses)
-	xtracer.Trace("transrel.SatisfyWithCond combined fmlas=%d", len(post.Fmlas))
+	xtracer.Trace("transrel.SatisfyWithCond ENTER postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d",
+		len(h.Post.Fmlas), len(h.Post.Defs), len(axioms.Fmlas), len(axioms.Defs))
+	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d defs=%d",
+		len(h.Post.Fmlas), len(h.Post.Defs))
+	post := module.AndClausesTyped(h.Post, axioms)
+	xtracer.Trace("transrel.SatisfyWithCond combined fmlas=%d defs=%d", len(post.Fmlas), len(post.Defs))
 	model := getModelClauses(post, finalCond)
 	if model == nil {
 		return nil

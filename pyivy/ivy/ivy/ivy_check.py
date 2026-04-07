@@ -414,6 +414,7 @@ def check_fcs_in_state(mod,ag,post,fcs):
                 print(str(handler))
             exit(0)
     else:
+        xtracer.trace("check.checkFcsNormalPath history path postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d checkers=%d" % (len(history.post.fmlas), len(history.post.defs), len(axioms.fmlas), len(axioms.defs), len(filter_fcs(fcs))))
         res = history.satisfy(axioms,gmc,filter_fcs(fcs))
         if res is not None and diagnose.get():
             show_counterexample(ag,post,res)
