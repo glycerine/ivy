@@ -2401,40 +2401,12 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236011  go : XTRACE:   HASH canon= arc[10617]: from_id=11838(root=1746) to_id=1776(root=1776) fmla=(Apply func:(Symbol name:> sort:(FunctionSort sorts:[(UninterpretedSort name:tar_clock) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:X_s5 sort:(UninterpretedSort name:tar_clock)) (Apply ...(truncated long line to 300 bytes)
-
-        py : XTRACE:   HASH canon= arc[10617]: from_id=11838(root=1746) to_id=1776(root=1776) fmla=(Apply func:(Symbol name:> sort:(FunctionSort sorts:[(UninterpretedSort name:tar_clock) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:X_s5 sort:(UninterpretedSort name:tar_clock)) (Apply
- ...(truncated long line to 300 bytes)
-
 236012  go : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type  ...(truncated long line to 300 bytes)
 
-        py : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:nil interp:nil stratMap:(hash (StratNode eq:(Apply func:(Symbol name:__ts0__ts0__ts0__m_ref.evs.l_cmp_a sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:loc_type ext:[init_l,cf_mem_l,cf_
+        py : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type 
  ...(truncated long line to 300 bytes)
 
-
-=== S-expression diff (go '-' vs py '+') ===
-   (checker
--   sig:(sig
--     sorts:[addr_type
--       bool
--       index
--       lclock
--       loc_type
--       mem_loc_type
--       mem_type
--       op_ack_type
--       op_type
-+   sig:nil
-+   interp:nil
-+   stratMap:(hash
-+     (StratNode
-+       eq:(Apply
-+         func:(Symbol
-+           name:__ts0__ts0__ts0__m_ref.evs.l_cmp_a
-+           sort:(FunctionSort
-+             sorts:[
-+               (UninterpretedSort
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 236012, counting from 0.
+236013  go : XTRACE: fragment CheckFEU EXIT
+        py : XTRACE: fragment/checker.reportCycle ENTER
 ~~~
 
