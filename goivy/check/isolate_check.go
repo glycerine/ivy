@@ -984,7 +984,7 @@ func CheckModule(mod *module.Module) error {
 			fmt.Println("Turning on macro_finder")
 			mod.Cfg.MacroFinder = true
 			// python does:
-
+			// islv.set_macro_finder(True)
 			// a true Go port needs to do something akin to calling: Solver.SetMacroFinder(true)
 		}
 	}
