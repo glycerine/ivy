@@ -2381,8 +2381,7 @@ func TestImpliesBatchTimeout(t *testing.T) {
 
 func TestImpliesBatchFreeVarsShared(t *testing.T) {
 	// When using raw translate, free variables X in premise and formulas
-	// become the SAME Z3 constant. With translateClosed, they would be
-	// independently universally quantified (different semantics).
+	// become the SAME Z3 constant.
 	s := New()
 	sort := unintSort("S")
 	x := uiVar("X", sort)

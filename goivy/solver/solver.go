@@ -419,20 +419,6 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
 	return constraints
 }
 
-// translateClosed converts a formula to Z3, universally quantifying free variables.
-func (s *Solver) translateClosed(fmla lg.Expr) (x z3bridge.Expr, err error) {
-	closed := il.CloseFormula(fmla)
-	defer func() {
-		r := recover()
-		if r != nil {
-			vv("warning: recover from panic on il.CloseFormula(): '%v'", r)
-			err = fmt.Errorf("%v", r)
-		}
-	}()
-	x, err = s.tr.Translate(closed)
-	return
-}
-
 // formulaToZ3 translates a formula to Z3 with HASH trace and type constraints.
 // Matches Python's formula_to_z3 (ivy_solver.py:659-676).
 //
