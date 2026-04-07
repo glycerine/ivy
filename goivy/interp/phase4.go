@@ -86,7 +86,7 @@ func GetCore(state *State, clause lg.Expr) *module.Clauses {
 	// Negate the clause: each literal becomes a singleton clause with its negation
 	clauses2 := module.NegateClauses(module.FormulaToClauses(clause, nil))
 
-	slv := solver.New()
+	slv := solver.NewSolver(state.Domain.Sig, nil)
 	core, err := slv.UnsatCore(clauses1, clauses2, nil, nil)
 	if err != nil {
 		return nil
@@ -141,7 +141,7 @@ func UnderapproximateState(state *State, implied *module.Clauses) {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := module.AndClausesTyped(state.Clauses, axioms)
 
-	slv := solver.New()
+	slv := solver.NewSolver(state.Domain.Sig, nil)
 	under, err := slv.ClausesModelToClauses(
 		combined,
 		func(s *lg.Const) bool {

@@ -1241,6 +1241,15 @@ func Main(args []string) int {
 // sets Parameter objects before start() creates the Module context.
 func StartWithConfig(args []string, cfg *module.Config) error {
 	if len(args) >= 1 {
+		// Python: set_macro_finder(True) at ivy_solver.py:53 during module import.
+		// Emit matching trace before check.start.
+		{
+			truthStr := "True"
+			if !cfg.SolverOpts.MacroFinder {
+				truthStr = "False"
+			}
+			xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
+		}
 		xtracer.Trace("check.start ENTER file=%s", args[0])
 	}
 	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {

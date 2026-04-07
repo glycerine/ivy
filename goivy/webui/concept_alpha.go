@@ -28,7 +28,7 @@ func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, pro
 		cache = make(map[string]bool)
 	}
 
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	var result []TagValue
 
 	for _, fact := range facts {

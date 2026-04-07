@@ -375,7 +375,7 @@ func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, ext
 
 	// Use solver to extract a minimal model diagram.
 	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
-	slv := solver.New()
+	slv := solver.NewSolver(state.Domain.Sig, nil)
 	isSkolem := func(c *lg.Const) bool {
 		return actions.IsSkolem(c.Name)
 	}

@@ -21,28 +21,6 @@ import (
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-// --- Options ---
-
-// Options controls solver behavior.
-type Options struct {
-	Seed        int
-	Incremental bool
-	MacroFinder bool
-	ShowVCs     bool
-	UseZ3Enums  bool
-}
-
-// DefaultOptions returns the default solver options.
-func DefaultOptions() *Options {
-	return &Options{
-		Seed:        0,
-		Incremental: true,
-		MacroFinder: true,
-		ShowVCs:     false,
-		UseZ3Enums:  true,
-	}
-}
-
 // --- Solver ---
 
 // Solver wraps a z3bridge.Translator and manages caches for
@@ -50,7 +28,7 @@ func DefaultOptions() *Options {
 type Solver struct {
 	mu               sync.Mutex
 	tr               *z3bridge.Translator
-	opts             *Options
+	opts             *module.SolverOptions
 	sig              *il.Sig
 	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
 
@@ -60,36 +38,14 @@ type Solver struct {
 	impliesCache map[[2]lg.NodeKey]bool
 }
 
-// New creates a new Solver with default options and a fresh Z3 context.
-func New() *Solver {
-	s := &Solver{
-		tr:               z3bridge.NewTranslator(),
-		opts:             DefaultOptions(),
-		sig:              il.NewSig(),
-		HandleRangeSorts: true,
-		impliesCache:     make(map[[2]lg.NodeKey]bool),
-	}
-	s.wireNativeLookup()
-	return s
-}
-
-// NewWithSig creates a new Solver using the given signature.
-func NewWithSig(sig *il.Sig) *Solver {
-	s := &Solver{
-		tr:               z3bridge.NewTranslator(),
-		opts:             DefaultOptions(),
-		sig:              sig,
-		HandleRangeSorts: true,
-		impliesCache:     make(map[[2]lg.NodeKey]bool),
-	}
-	s.wireNativeLookup()
-	return s
-}
-
-// NewWithOptions creates a new Solver with custom options.
-func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
+// NewSolver creates a new Solver. Pass nil for sig to get an empty
+// signature, or nil for opts to get default solver options.
+func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
 	if opts == nil {
-		opts = DefaultOptions()
+		opts = module.DefaultSolverOptions()
+	}
+	if sig == nil {
+		sig = il.NewSig()
 	}
 	s := &Solver{
 		tr:               z3bridge.NewTranslator(),
@@ -100,6 +56,19 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 	}
 	s.wireNativeLookup()
 	return s
+}
+
+// newZ3Solver creates a z3bridge.Solver and applies opts
+// (e.g., smt.macro_finder). Always sets the parameter
+// explicitly — never assumes Z3's default matches ours.
+func (s *Solver) newZ3Solver() *z3bridge.Solver {
+	zs := s.tr.Ctx.NewSolver()
+	if s.opts.MacroFinder {
+		zs.SetParam("smt.macro_finder", "true")
+	} else {
+		zs.SetParam("smt.macro_finder", "false")
+	}
+	return zs
 }
 
 func (s *Solver) Close() error {
@@ -613,7 +582,7 @@ func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
 	}
 	s.mu.Unlock()
 
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 	if timeout {
 		z3solver.SetParam("timeout", "2000")
 	}
@@ -650,7 +619,7 @@ func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
 // Corresponds to Python's clauses_sat.
 func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
 	xtracer.Trace("ivy_solver.py:1113 clauses_sat() ENTER")
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return false, err
@@ -664,7 +633,7 @@ func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
 // Corresponds to Python's clauses_imply.
 func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) {
 	xtracer.Trace("ivy_solver.py:1023 clauses_imply() ENTER")
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 
 	z1, err := s.ClausesToZ3(clauses1)
 	if err != nil {
@@ -687,7 +656,7 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) 
 // Free variables become shared Z3 constants (not universally quantified).
 // Corresponds to Python z3_utils.py:z3_implies_batch (lines 136-171).
 func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr, timeout bool) ([]bool, error) {
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 	if timeout {
 		z3solver.SetParam("timeout", "2000")
 	}
@@ -740,7 +709,7 @@ func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr, timeout bool) ([
 // Corresponds to Python's clauses_imply_formula.
 func (s *Solver) ClausesImplyFormula(clauses1 *module.Clauses, fmla2 lg.Expr) (bool, error) {
 	xtracer.Trace("ivy_solver.py:1704 clauses_imply_formula() ENTER")
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 
 	z1, err := s.ClausesToZ3(clauses1)
 	if err != nil {
@@ -777,7 +746,7 @@ func (s *Solver) UnsatCore(
 	}
 
 	fmlas := clauses1.Fmlas
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 
 	// Create activation literals
 	alits := make([]z3bridge.Expr, len(fmlas))
@@ -1069,7 +1038,7 @@ func (s *Solver) CheckSequence(seq []AssumeAssert) ([]bool, error) {
 //   - reporter.end() returning False causes early return
 func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter) ([]bool, error) {
 	xtracer.Trace("ivy_solver.py:1070 check_sequence() ENTER n=%d", len(seq))
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.newZ3Solver()
 	var results []bool // Python uses list append
 
 	for _, aa := range seq {

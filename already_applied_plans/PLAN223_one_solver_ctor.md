@@ -54,17 +54,18 @@ In `NewConfig()`: replace `MacroFinder: true` (line 192) with:
 SolverOpts: DefaultSolverOptions(),
 ```
 
-### 2. solver/solver.go — Delete `Options`, `New()`, `NewWithSig()`; keep only `NewWithOptions()`
+### 2. solver/solver.go — Delete `Options`, `New()`, `NewWithSig()`, `NewWithOptions()`; replace with `NewSolver()`
 
 Delete:
 - `type Options struct` (lines 27-33)
 - `func DefaultOptions()` (lines 35-43)
 - `func New()` (lines 64-74)
 - `func NewWithSig()` (lines 76-87)
+- `func NewWithOptions()` (lines 89-103)
 
-Update `NewWithOptions` to reference `module.SolverOptions` and handle nil sig:
+Replace with `NewSolver` referencing `module.SolverOptions` and handling nil sig:
 ```go
-func NewWithOptions(sig *il.Sig, opts *module.SolverOptions) *Solver {
+func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
     if opts == nil {
         opts = module.DefaultSolverOptions()
     }
@@ -113,22 +114,22 @@ func (s *Solver) SetMacroFinder(enabled bool) {
 }
 ```
 
-### 4. External call sites — Change `solver.New()` → `solver.NewWithOptions(sig, opts)`
+### 4. External call sites — Change `solver.New()` → `solver.NewSolver(sig, opts)`
 
 **25 call sites across 13 files.** For each, choose the right sig and opts:
 
 #### Sites with `*module.Module` available (pass `m.Sig` and `m.Cfg.SolverOpts`):
 | File | Line | Current | New |
 |------|------|---------|-----|
-| `vmt/vmt.go` | 625 | `solver.New()` | `solver.NewWithOptions(m.Sig, m.Cfg.SolverOpts)` |
-| `actions/phase4.go` | 317 | `solver.New()` | `solver.NewWithOptions(m.Sig, m.Cfg.SolverOpts)` (nil-guard on m) |
-| `tactics/tactics.go` | 132, 200, 267 | `solver.New()` | `solver.NewWithOptions(tc.Mod.Sig, tc.Mod.Cfg.SolverOpts)` |
+| `vmt/vmt.go` | 625 | `solver.New()` | `solver.NewSolver(m.Sig, m.Cfg.SolverOpts)` |
+| `actions/phase4.go` | 317 | `solver.New()` | `solver.NewSolver(m.Sig, m.Cfg.SolverOpts)` (nil-guard on m) |
+| `tactics/tactics.go` | 132, 200, 267 | `solver.New()` | `solver.NewSolver(tc.Mod.Sig, tc.Mod.Cfg.SolverOpts)` |
 
 #### Sites with `*State` available (pass `state.Domain.Sig`):
 | File | Line | Current | New |
 |------|------|---------|-----|
-| `interp/helpers.go` | 378 | `solver.New()` | `solver.NewWithOptions(state.Domain.Sig, nil)` |
-| `interp/phase4.go` | 89, 144 | `solver.New()` | `solver.NewWithOptions(state.Domain.Sig, nil)` |
+| `interp/helpers.go` | 378 | `solver.New()` | `solver.NewSolver(state.Domain.Sig, nil)` |
+| `interp/phase4.go` | 89, 144 | `solver.New()` | `solver.NewSolver(state.Domain.Sig, nil)` |
 
 #### Sites without sig/opts (pass nil, nil — gets defaults):
 | File | Line |
@@ -145,7 +146,7 @@ func (s *Solver) SetMacroFinder(enabled bool) {
 ### 5. Internal solver test call sites
 
 Update all `New()` and `NewWithSig(sig)` calls in solver/*_test.go:
-- `New()` → `NewWithOptions(nil, nil)`
+- `New()` → `NewSolver(nil, nil)`
 - `NewWithSig(sig)` → `NewWithOptions(sig, nil)`
 
 Files: `solver_test.go`, `solver2_test.go`, `solver2_fuzz_test.go`, `herbrand_unitres_test.go`
@@ -207,7 +208,7 @@ CLI param "macro_finder=false"
   ↓
 cfg.SolverOpts.MacroFinder = false   (cmd/goivy_check/main.go)
   ↓
-solver.NewWithOptions(sig, cfg.SolverOpts)   (actions/phase4.go SmallModelClauses, etc.)
+solver.NewSolver(sig, cfg.SolverOpts)   (actions/phase4.go SmallModelClauses, etc.)
   ↓
 s.opts.MacroFinder = false   (stored on *Solver)
   ↓
@@ -231,18 +232,18 @@ Z3 C API: Z3_solver_set_params()
 | `check/check.go` | Emit startup `set_macro_finder` trace |
 | `check/isolate_check.go` | Emit trace at toggle points; update MacroFinder refs |
 | `check/check_port_test.go` | Update MacroFinder ref |
-| `vmt/vmt.go` | `solver.New()` → `solver.NewWithOptions(m.Sig, m.Cfg.SolverOpts)` |
+| `vmt/vmt.go` | `solver.New()` → `solver.NewSolver(m.Sig, m.Cfg.SolverOpts)` |
 | `actions/phase4.go` | 4 call sites: thread sig/opts where available |
-| `actions/interpolant.go` | `solver.New()` → `solver.NewWithOptions(nil, nil)` |
-| `actions/transrel.go` | 3 call sites → `solver.NewWithOptions(nil, nil)` |
-| `tactics/tactics.go` | 3 call sites → `solver.NewWithOptions(tc.Mod.Sig, tc.Mod.Cfg.SolverOpts)` |
-| `interp/helpers.go` | `solver.New()` → `solver.NewWithOptions(state.Domain.Sig, nil)` |
-| `interp/phase4.go` | 2 call sites → `solver.NewWithOptions(state.Domain.Sig, nil)` |
-| `alpha/alpha.go` | 2 call sites → `solver.NewWithOptions(nil, nil)` |
-| `trace/trace.go` | `solver.New()` → `solver.NewWithOptions(nil, nil)` |
-| `webui/concept_isession.go` | `solver.New()` → `solver.NewWithOptions(nil, nil)` |
-| `webui/concept_alpha.go` | `solver.New()` → `solver.NewWithOptions(nil, nil)` |
-| `end2end/verify_test.go` | `solver.New()` → `solver.NewWithOptions(nil, nil)` |
+| `actions/interpolant.go` | `solver.New()` → `solver.NewSolver(nil, nil)` |
+| `actions/transrel.go` | 3 call sites → `solver.NewSolver(nil, nil)` |
+| `tactics/tactics.go` | 3 call sites → `solver.NewSolver(tc.Mod.Sig, tc.Mod.Cfg.SolverOpts)` |
+| `interp/helpers.go` | `solver.New()` → `solver.NewSolver(state.Domain.Sig, nil)` |
+| `interp/phase4.go` | 2 call sites → `solver.NewSolver(state.Domain.Sig, nil)` |
+| `alpha/alpha.go` | 2 call sites → `solver.NewSolver(nil, nil)` |
+| `trace/trace.go` | `solver.New()` → `solver.NewSolver(nil, nil)` |
+| `webui/concept_isession.go` | `solver.New()` → `solver.NewSolver(nil, nil)` |
+| `webui/concept_alpha.go` | `solver.New()` → `solver.NewSolver(nil, nil)` |
+| `end2end/verify_test.go` | `solver.New()` → `solver.NewSolver(nil, nil)` |
 
 ## Known Issue (not fixed in this plan)
 

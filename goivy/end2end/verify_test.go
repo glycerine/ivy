@@ -141,7 +141,7 @@ func TestVerify_EnumExhaustive(t *testing.T) {
 // TestVerify_Z3SolverBasic does a bare-bones solver check to make sure
 // Z3 is working in the test environment.
 func TestVerify_Z3SolverBasic(t *testing.T) {
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	if slv == nil {
 		t.Fatal("solver.New() returned nil")
 	}

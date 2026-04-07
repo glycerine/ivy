@@ -55,9 +55,10 @@ type Config struct {
 	// CheckLineno is the current line number being checked, or empty for all.
 	CheckLineno string
 
-	// MacroFinder corresponds to Python's islv.opt_macro_finder.
-	// When true, the Z3 macro finder is enabled (default true in solver).
-	MacroFinder bool `json:"macro_finder"`
+	// SolverOpts controls per-solver Z3 behavior.
+	// Moved from solver.Options so the full config is accessible
+	// from module.Config without import cycles.
+	SolverOpts *SolverOptions
 
 	// Isolate is the user-specified isolate to check.
 	// Python: ivy_compiler.isolate.get()
@@ -145,6 +146,28 @@ type Config struct {
 	ProofCfg *ProofConfig `json:"-"`
 }
 
+// SolverOptions controls per-solver Z3 behavior.
+// Moved from solver.Options so the full config is accessible
+// from module.Config without import cycles.
+type SolverOptions struct {
+	Seed        int
+	Incremental bool
+	MacroFinder bool
+	ShowVCs     bool
+	UseZ3Enums  bool
+}
+
+// DefaultSolverOptions returns the default solver options.
+func DefaultSolverOptions() *SolverOptions {
+	return &SolverOptions{
+		Seed:        0,
+		Incremental: true,
+		MacroFinder: true,
+		ShowVCs:     false,
+		UseZ3Enums:  true,
+	}
+}
+
 // IsolateConfig holds per-session isolate configuration. Replaces former
 // package-level globals in isolate/ for multi-tenancy safety.
 // Defined in module/ to avoid a circular import (isolate imports module).
@@ -189,7 +212,7 @@ func NewConfig() *Config {
 	return &Config{
 		ActCfg:           NewActionsConfig(),
 		Coverage:         true,
-		MacroFinder:      true, // Python default: islv.opt_macro_finder defaults to true
+		SolverOpts:       DefaultSolverOptions(),
 		GlobalIncluded:   make(map[string]bool),
 		AstCfg:           astCfg,
 		IuCfg:            iuCfg,

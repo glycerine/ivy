@@ -339,7 +339,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 //	slvr.add(Not(fmla2))
 //	return not is_sat(slvr)
 func z3Implies(fmla1, fmla2 logic.Expr) (bool, error) {
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	return slv.Implies(fmla1, fmla2)
 }
 

@@ -235,7 +235,7 @@ func (pd *ProgressiveDomain) postInit(
 	toKeep []string,
 ) {
 	pd.newSym = newSym
-	pd.slvr = solver.New()
+	pd.slvr = solver.NewSolver(nil, nil)
 	pd.z3solver = pd.slvr.NewZ3Solver()
 	pd.cubeMemo = make(map[uint]*solver.CubeMemoEntry)
 	pd.inhabitedCubes = make(map[string]bool)
@@ -764,7 +764,7 @@ func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Expr {
 // Corresponds to Python's predicate_alpha.
 func PredicateAlpha(state *AlphaState) {
 	fmt.Println("running predicate alpha")
-	slvr := solver.New()
+	slvr := solver.NewSolver(nil, nil)
 	z3slvr := slvr.NewZ3Solver()
 
 	var bgTheory *module.Clauses

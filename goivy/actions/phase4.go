@@ -107,7 +107,7 @@ func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod
 // conjunction of clauses with the negation of the formula.
 // Corresponds to Python's clauses_imply_formula_cex.
 func ClausesImplyFormulaCex(clauses *module.Clauses, fmla lg.Expr) (bool, *CounterExample) {
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	implied, err := slv.ClausesImplyFormula(clauses, fmla)
 	if err == nil && implied {
 		return true, nil
@@ -165,7 +165,7 @@ func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Cons
 	c2 = module.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 
 	// Use solver.ClausesImply for Clauses-to-Clauses implication
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	ok1, err := slv.ClausesImply(p1, p2)
 	if err != nil || !ok1 {
 		return false, nil
@@ -261,7 +261,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model 
 	numerals := cfg.UseNumerals
 
 	// Pre-state: ignore skolems and new_ symbols
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	preClauses, err := slv.ClausesModelToClausesWithModel(
 		clauses,
 		model,
@@ -314,7 +314,15 @@ func SmallModelClauses(cls *module.Clauses, finalCond []solver.FinalCond, shrink
 	if m != nil && m.Sig != nil {
 		sorts = il.UninterpretedSorts(m.Sig)
 	}
-	slv := solver.New()
+	var sig *il.Sig
+	var sopts *module.SolverOptions
+	if m != nil {
+		sig = m.Sig
+		if m.Cfg != nil {
+			sopts = m.Cfg.SolverOpts
+		}
+	}
+	slv := solver.NewSolver(sig, sopts)
 	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
 		return nil, slv

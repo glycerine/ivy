@@ -232,7 +232,11 @@ func (s *Solver) SetSeed(seed int) {
 
 // SetMacroFinder enables or disables the Z3 macro finder.
 func (s *Solver) SetMacroFinder(enabled bool) {
-	xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%v", enabled)
+	truthStr := "False"
+	if enabled {
+		truthStr = "True"
+	}
+	xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
 	s.opts.MacroFinder = enabled
 }
 

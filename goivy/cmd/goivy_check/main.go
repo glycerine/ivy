@@ -155,7 +155,7 @@ func applyParams(cfg *module.Config, params map[string]string) error {
 		case "profile":
 			cfg.Profiling = parseBool(val)
 		case "macro_finder":
-			cfg.MacroFinder = parseBool(val)
+			cfg.SolverOpts.MacroFinder = parseBool(val)
 		case "complete":
 			cfg.CompleteLogic = val
 		case "checked_assert":

@@ -21,7 +21,7 @@ import (
 func TestQuantConstraints_NatForAll(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mynat"] = "nat"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
@@ -61,7 +61,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 func TestQuantConstraints_NatExists(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mynat"] = "nat"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
@@ -103,7 +103,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 	rs := &lg.RangeSort{Name: "myrange", Lb: lg.NumeralBound{Value: "2"}, Ub: lg.NumeralBound{Value: "5"}}
 	sig := il.NewSig()
 	sig.Interp["myrange"] = rs
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	rangeSort := &lg.UninterpretedSort{Name: "myrange"}
 	x, _ := lg.NewVariable("X", rangeSort)
@@ -135,7 +135,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 // adds no constraints (body is unchanged).
 func TestQuantConstraints_NoInterp(t *testing.T) {
 	sig := il.NewSig()
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	sort := &lg.UninterpretedSort{Name: "T"}
 	x, _ := lg.NewVariable("X", sort)
@@ -297,7 +297,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	// Encode "green" (index 1) in 2 bits MSB first
 	greenSym := lg.NewConst("green", es)
@@ -321,7 +321,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 func TestEncodeTermZ3_Variable(t *testing.T) {
 	es := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := il.NewSig()
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	x, _ := lg.NewVariable("X", es)
 	bits, err := s.EncodeTermZ3(x, 2, es)
@@ -342,7 +342,7 @@ func TestEncodeEqualityZ3(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	red := lg.NewConst("red", es)
 	green := lg.NewConst("green", es)
@@ -381,7 +381,7 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 	rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	sig := il.NewSig()
 	sig.Interp["bounded"] = rs
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	// Numeral 15 should be clamped to 10
 	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})
@@ -420,7 +420,7 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 // true in the model, clauseModelSimp returns just that literal (not
 // the entire clause).
 func TestClauseModelSimp_EarlyReturn(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	p := boolConst("p")
@@ -459,7 +459,7 @@ func TestClauseModelSimp_EarlyReturn(t *testing.T) {
 
 // TestClauseModelSimp_DropFalse checks that false literals are dropped.
 func TestClauseModelSimp_DropFalse(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	p := boolConst("p")
@@ -490,7 +490,7 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 // TestClausesModelToDiagram_NoTautologies checks that the diagram does not
 // contain tautologies like "sym = sym".
 func TestClausesModelToDiagram_NoTautologies(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := &lg.UninterpretedSort{Name: "T"}
 	a := lg.NewConst("a", sort)
 	b := lg.NewConst("b", sort)
@@ -593,7 +593,7 @@ func TestRangeSortBounds_NotRangeSort(t *testing.T) {
 
 // TestVariableNaming checks that variables are named "name:sortName" in Z3.
 func TestVariableNaming(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := &lg.UninterpretedSort{Name: "node"}
 	x, _ := lg.NewVariable("X", sort)
 
@@ -611,7 +611,7 @@ func TestVariableNaming(t *testing.T) {
 
 // TestVariableNaming_BoolSort checks Bool variable naming.
 func TestVariableNaming_BoolSort(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	v, _ := lg.NewVariable("Flag", lg.Boolean)
 
 	z3x, err := s.Translator().Translate(v)
@@ -657,7 +657,7 @@ func (r *testReporter) End(result bool, doc string) bool {
 }
 
 func TestCheckSequenceWithReporter(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	seq := []AssumeAssert{
@@ -687,7 +687,7 @@ func TestCheckSequenceWithReporter(t *testing.T) {
 }
 
 func TestCheckSequenceWithReporter_Abort(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	seq := []AssumeAssert{
@@ -715,7 +715,7 @@ func TestCheckSequenceWithReporter_Abort(t *testing.T) {
 // TestSolverName_Z3Builtins checks that z3 builtin names panic with IvyError.
 // Python: raise iu.IvyError(None, 'name "{}" clashes with Z3 built-in'.format(name))
 func TestSolverName_Z3Builtins(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	for _, name := range []string{"bit0", "bit1"} {
 		sym := lg.NewConst(name, lg.Boolean)
 		func() {
@@ -732,7 +732,7 @@ func TestSolverName_Z3Builtins(t *testing.T) {
 
 // TestSolverName_Normal checks that normal names pass through.
 func TestSolverName_Normal(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sym := lg.NewConst("myvar", lg.Boolean)
 	result := s.SolverName(sym)
 	if result != "myvar" {

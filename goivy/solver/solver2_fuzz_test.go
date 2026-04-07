@@ -350,7 +350,7 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 			rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: lb}, Ub: lg.NumeralBound{Value: ub}}
 			sig := il.NewSig()
 			sig.Interp["bounded"] = rs
-			s := NewWithSig(sig)
+			s := NewSolver(sig, nil)
 
 			num := lg.NewConst(numStr, &lg.UninterpretedSort{Name: "bounded"})
 			_, _ = s.NumeralToZ3(num)
@@ -394,7 +394,7 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			for _, name := range ext {
 				sig.Constructors[name] = true
 			}
-			s := NewWithSig(sig)
+			s := NewSolver(sig, nil)
 
 			t1 := lg.NewConst(ext[i1], es)
 			t2 := lg.NewConst(ext[i2], es)
@@ -438,7 +438,7 @@ func FuzzSolverNameBuiltins(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
-			s := New()
+			s := NewSolver(nil, nil)
 			sym := lg.NewConst(name, lg.Boolean)
 
 			if name == "bit0" || name == "bit1" {
@@ -481,7 +481,7 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 			case 2:
 				// No interpretation
 			}
-			s := NewWithSig(sig)
+			s := NewSolver(sig, nil)
 
 			sort := &lg.UninterpretedSort{Name: "mysort"}
 			x, err := lg.NewVariable("X", sort)

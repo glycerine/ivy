@@ -219,7 +219,7 @@ func TestExtractUnitResResults(t *testing.T) {
 // ---------------------------------------------------------------
 
 func TestClausesCaseUNSAT(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	// p AND NOT p — UNSAT
 	fmlas := []lg.Expr{p, &lg.Not{Body: p}}
@@ -240,7 +240,7 @@ func TestClausesCaseUNSAT(t *testing.T) {
 }
 
 func TestClausesCaseAllUnits(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	// p, q — already unit clauses
@@ -266,7 +266,7 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 	// After model simp: {~a}, {b}, {c}
 	// UnitRes on {~a, b, c}: all units already, no change
 	// But this verifies the pipeline works end-to-end.
-	s := New()
+	s := NewSolver(nil, nil)
 	a := boolConst("a")
 	b := boolConst("b")
 	c := boolConst("c")
@@ -292,7 +292,7 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 
 func TestClausesCaseSingleClause(t *testing.T) {
 	// Single disjunction: a ∨ b
-	s := New()
+	s := NewSolver(nil, nil)
 	a := boolConst("a")
 	b := boolConst("b")
 	aOrB := &lg.Or{Terms: []lg.Expr{a, b}}

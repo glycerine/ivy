@@ -252,7 +252,7 @@ func TestCloneProofWithTacticLets(t *testing.T) {
 
 func TestCheckModuleMacroFinderDefault(t *testing.T) {
 	cfg := module.NewConfig()
-	if !cfg.MacroFinder {
+	if !cfg.SolverOpts.MacroFinder {
 		t.Error("MacroFinder should default to true")
 	}
 }

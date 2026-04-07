@@ -645,7 +645,7 @@ func CheckVC(cfg *module.Config, clauses *module.Clauses, action actions.Action,
 	}
 
 	// Create solver and check
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	model, err := slv.GetSmallModel(checkClauses, sortsToMin, nil)
 	if err != nil {
 		fmt.Printf("CheckVC: solver error: %v\n", err)

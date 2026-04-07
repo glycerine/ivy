@@ -24,7 +24,7 @@ func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[str
 	combined := module.AndClausesTyped(clauses1, axioms)
 	clauses2 = module.SimplifyClauses(clauses2)
 
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	itp, err := slv.BinaryInterpolant(combined, clauses2)
 	if err != nil || itp == nil {
 		return nil

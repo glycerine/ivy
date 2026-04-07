@@ -880,14 +880,11 @@ func CheckModule(mod *module.Module) error {
 			attrKey := mod.Cfg.IuCfg.ComposeNames(isolate, "macro_finder")
 			if _, ok := mod.Attributes[attrKey]; ok {
 				hasMFAttr = true
-				saveMacroFinder = mod.Cfg.MacroFinder
+				saveMacroFinder = mod.Cfg.SolverOpts.MacroFinder
 				if saveMacroFinder {
 					fmt.Println("Turning off macro_finder")
-					mod.Cfg.MacroFinder = false
-					// python does:
-					// islv.set_macro_finder(False) ## where islv is ivy_solver.py
-					// a true Go port needs to do something akin to calling: Solver.SetMacroFinder(false)
-
+					mod.Cfg.SolverOpts.MacroFinder = false
+					xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=False")
 				}
 			}
 		}
@@ -982,10 +979,8 @@ func CheckModule(mod *module.Module) error {
 		//     if save_macro_finder: print("Turning on macro_finder"); islv.set_macro_finder(True)
 		if hasMFAttr && saveMacroFinder {
 			fmt.Println("Turning on macro_finder")
-			mod.Cfg.MacroFinder = true
-			// python does:
-			// islv.set_macro_finder(True)
-			// a true Go port needs to do something akin to calling: Solver.SetMacroFinder(true)
+			mod.Cfg.SolverOpts.MacroFinder = true
+			xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=True")
 		}
 	}
 

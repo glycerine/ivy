@@ -1253,7 +1253,7 @@ func ComposeStateAction(
 		//         if model != None: trans = extract_pre_post_model(pre_test, model, au)
 		//                           raise ActionFailed(pre_test, trans)
 		{
-			slv := solver.New()
+			slv := solver.NewSolver(nil, nil)
 			model, _ := slv.GetModelClauses(preTest)
 			if model != nil {
 				// Extract pre/post state from the model.
@@ -1978,7 +1978,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 		}
 
 		// Get the sub-model for the given past time as a formula
-		slv := solver.New()
+		slv := solver.NewSolver(nil, nil)
 		clauses, err := slv.ClausesModelToClausesWithModel(allClauses, model, ignore, numerals)
 		if err != nil || clauses == nil {
 			clauses = module.TrueClauses(nil)
@@ -2002,7 +2002,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 	}
 
 	// Extract universes from model
-	slv := solver.New()
+	slv := solver.NewSolver(nil, nil)
 	hm := solver.NewHerbrandModel(slv, model.Solver, model.Model, model.Vocab)
 	universes := hm.Universes(numerals)
 

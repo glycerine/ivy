@@ -54,7 +54,7 @@ func relConst(name string, domain ...lg.Sort) *lg.Const {
 // --- Test: New creates a working solver ---
 
 func TestNewSolver(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	if s == nil {
 		t.Fatal("New() returned nil")
 	}
@@ -71,16 +71,16 @@ func TestNewSolver(t *testing.T) {
 
 func TestNewWithSig(t *testing.T) {
 	sig := il.NewSig()
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 	if s.Sig() != sig {
 		t.Fatal("Sig mismatch")
 	}
 }
 
 func TestNewWithOptions(t *testing.T) {
-	opts := DefaultOptions()
+	opts := module.DefaultSolverOptions()
 	opts.Seed = 42
-	s := NewWithOptions(il.NewSig(), opts)
+	s := NewSolver(il.NewSig(), opts)
 	if s.opts.Seed != 42 {
 		t.Fatal("Options not applied")
 	}
@@ -89,7 +89,7 @@ func TestNewWithOptions(t *testing.T) {
 // --- Test: DefaultOptions ---
 
 func TestDefaultOptions(t *testing.T) {
-	opts := DefaultOptions()
+	opts := module.DefaultSolverOptions()
 	if !opts.Incremental {
 		t.Fatal("Incremental should default to true")
 	}
@@ -110,7 +110,7 @@ func TestDefaultOptions(t *testing.T) {
 // --- Test: IsSat ---
 
 func TestIsSatTrue(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	sat, err := s.IsSat(p)
 	if err != nil {
@@ -122,7 +122,7 @@ func TestIsSatTrue(t *testing.T) {
 }
 
 func TestIsSatFalse(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	// p AND NOT p
 	fmla := &lg.And{Terms: []lg.Expr{p, &lg.Not{Body: p}}}
@@ -136,7 +136,7 @@ func TestIsSatFalse(t *testing.T) {
 }
 
 func TestIsSatTautology(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	// TRUE is satisfiable
 	sat, err := s.IsSat(lg.True)
 	if err != nil {
@@ -148,7 +148,7 @@ func TestIsSatTautology(t *testing.T) {
 }
 
 func TestIsSatContradiction(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	// FALSE is unsatisfiable
 	sat, err := s.IsSat(lg.False)
 	if err != nil {
@@ -162,7 +162,7 @@ func TestIsSatContradiction(t *testing.T) {
 // --- Test: Implies ---
 
 func TestImpliesValid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	// (p AND q) => p
@@ -177,7 +177,7 @@ func TestImpliesValid(t *testing.T) {
 }
 
 func TestImpliesInvalid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	result, err := s.Implies(p, q)
@@ -190,7 +190,7 @@ func TestImpliesInvalid(t *testing.T) {
 }
 
 func TestImpliesTrueImpliesAnything(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	// NOT p OR p is a tautology; True => (p | ~p)
 	pOrNotP := &lg.Or{Terms: []lg.Expr{p, &lg.Not{Body: p}}}
@@ -206,7 +206,7 @@ func TestImpliesTrueImpliesAnything(t *testing.T) {
 // --- Test: ClausesSat ---
 
 func TestClausesSatTrue(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
@@ -219,7 +219,7 @@ func TestClausesSatTrue(t *testing.T) {
 }
 
 func TestClausesSatFalse(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
@@ -232,7 +232,7 @@ func TestClausesSatFalse(t *testing.T) {
 }
 
 func TestClausesSatEmpty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	clauses := module.TrueClauses(nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
@@ -246,7 +246,7 @@ func TestClausesSatEmpty(t *testing.T) {
 // --- Test: ClausesImply ---
 
 func TestClausesImplyTrue(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	c1 := module.NewClauses([]lg.Expr{p, q}, nil, nil)
@@ -261,7 +261,7 @@ func TestClausesImplyTrue(t *testing.T) {
 }
 
 func TestClausesImplyFalse(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	c1 := module.NewClauses([]lg.Expr{p}, nil, nil)
@@ -278,7 +278,7 @@ func TestClausesImplyFalse(t *testing.T) {
 // --- Test: ClausesImplyFormula ---
 
 func TestClausesImplyFormula(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	c1 := module.NewClauses([]lg.Expr{p, q}, nil, nil)
@@ -294,7 +294,7 @@ func TestClausesImplyFormula(t *testing.T) {
 // --- Test: ClausesImplyList ---
 
 func TestClausesImplyList(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	r := boolConst("r")
@@ -320,7 +320,7 @@ func TestClausesImplyList(t *testing.T) {
 // --- Test: FormulaToZ3 ---
 
 func TestFormulaToZ3And(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	fmla := &lg.And{Terms: []lg.Expr{p, q}}
@@ -335,7 +335,7 @@ func TestFormulaToZ3And(t *testing.T) {
 }
 
 func TestFormulaToZ3Or(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	fmla := &lg.Or{Terms: []lg.Expr{p, q}}
@@ -346,7 +346,7 @@ func TestFormulaToZ3Or(t *testing.T) {
 }
 
 func TestFormulaToZ3Not(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	fmla := &lg.Not{Body: p}
 	_, err := s.FormulaToZ3(fmla)
@@ -356,7 +356,7 @@ func TestFormulaToZ3Not(t *testing.T) {
 }
 
 func TestFormulaToZ3Implies(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	fmla := &lg.Implies{T1: p, T2: q}
@@ -367,7 +367,7 @@ func TestFormulaToZ3Implies(t *testing.T) {
 }
 
 func TestFormulaToZ3Iff(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	fmla := &lg.Iff{T1: p, T2: q}
@@ -378,7 +378,7 @@ func TestFormulaToZ3Iff(t *testing.T) {
 }
 
 func TestFormulaToZ3Eq(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := unintSort("S")
 	a := lg.NewConst("a", sort)
 	b := lg.NewConst("b", sort)
@@ -392,7 +392,7 @@ func TestFormulaToZ3Eq(t *testing.T) {
 // --- Test: ClausesToZ3 ---
 
 func TestClausesToZ3Simple(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.ClausesToZ3(clauses)
@@ -402,7 +402,7 @@ func TestClausesToZ3Simple(t *testing.T) {
 }
 
 func TestClausesToZ3Empty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	clauses := module.TrueClauses(nil)
 	expr, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -415,7 +415,7 @@ func TestClausesToZ3Empty(t *testing.T) {
 }
 
 func TestClausesToZ3WithDefs(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	def := il.NewDefinition(p, q)
@@ -427,7 +427,7 @@ func TestClausesToZ3WithDefs(t *testing.T) {
 }
 
 func TestClausesToZ3Nil(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	expr, err := s.ClausesToZ3(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -440,7 +440,7 @@ func TestClausesToZ3Nil(t *testing.T) {
 // --- Test: NotClausesToZ3 ---
 
 func TestNotClausesToZ3(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.NotClausesToZ3(clauses)
@@ -524,7 +524,7 @@ func TestSizeConstraintOther(t *testing.T) {
 // --- Test: GetModelClauses ---
 
 func TestGetModelClausesSat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
@@ -540,7 +540,7 @@ func TestGetModelClausesSat(t *testing.T) {
 }
 
 func TestGetModelClausesUnsat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
@@ -555,7 +555,7 @@ func TestGetModelClausesUnsat(t *testing.T) {
 // --- Test: ModelValues ---
 
 func TestModelValues(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
@@ -584,7 +584,7 @@ func TestModelValues(t *testing.T) {
 // --- Test: EvalFormula ---
 
 func TestEvalFormula(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
@@ -606,7 +606,7 @@ func TestEvalFormula(t *testing.T) {
 // --- Test: CheckCube ---
 
 func TestCheckCubeSat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	z3solver := s.NewZ3Solver()
 
@@ -621,7 +621,7 @@ func TestCheckCubeSat(t *testing.T) {
 }
 
 func TestCheckCubeUnsat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	// Assert NOT p in solver, then check cube [p]
@@ -640,7 +640,7 @@ func TestCheckCubeUnsat(t *testing.T) {
 }
 
 func TestCheckCubeEmpty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	z3solver := s.NewZ3Solver()
 	sat, err := s.CheckCube(z3solver, nil, nil, false)
 	if err != nil {
@@ -654,7 +654,7 @@ func TestCheckCubeEmpty(t *testing.T) {
 // --- Test: CubeToZ3 ---
 
 func TestCubeToZ3Empty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	expr, err := s.CubeToZ3(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -665,7 +665,7 @@ func TestCubeToZ3Empty(t *testing.T) {
 }
 
 func TestCubeToZ3Single(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	lit := il.NewLiteral(1, p)
 	_, err := s.CubeToZ3([]*il.Literal{lit})
@@ -675,7 +675,7 @@ func TestCubeToZ3Single(t *testing.T) {
 }
 
 func TestCubeToZ3Negative(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	lit := il.NewLiteral(0, p)
 	expr, err := s.CubeToZ3([]*il.Literal{lit})
@@ -691,7 +691,7 @@ func TestCubeToZ3Negative(t *testing.T) {
 // --- Test: LiteralToZ3 ---
 
 func TestLiteralToZ3Positive(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	lit := il.NewLiteral(1, p)
 	_, err := s.LiteralToZ3(lit)
@@ -701,7 +701,7 @@ func TestLiteralToZ3Positive(t *testing.T) {
 }
 
 func TestLiteralToZ3Negative(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	lit := il.NewLiteral(0, p)
 	_, err := s.LiteralToZ3(lit)
@@ -713,7 +713,7 @@ func TestLiteralToZ3Negative(t *testing.T) {
 // --- Test: CheckSequence ---
 
 func TestCheckSequenceAssumeAssert(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 
@@ -742,7 +742,7 @@ func TestCheckSequenceAssumeAssert(t *testing.T) {
 // --- Test: Decide ---
 
 func TestDecideSat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
 	zp, _ := s.FormulaToZ3(p)
@@ -758,7 +758,7 @@ func TestDecideSat(t *testing.T) {
 }
 
 func TestDecideUnsat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
 	zp, _ := s.FormulaToZ3(p)
@@ -778,7 +778,7 @@ func TestDecideUnsat(t *testing.T) {
 // --- Test: AddClauses ---
 
 func TestAddClauses(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
@@ -795,7 +795,7 @@ func TestAddClauses(t *testing.T) {
 // --- Test: SolverAdd ---
 
 func TestSolverAdd(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
 	err := s.SolverAdd(z3solver, p)
@@ -811,7 +811,7 @@ func TestSolverAdd(t *testing.T) {
 // --- Test: RemoveDuplicatesClauses ---
 
 func TestRemoveDuplicatesClauses(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p, p, p}, nil, nil)
 	deduped, err := s.RemoveDuplicatesClauses(clauses)
@@ -876,7 +876,7 @@ func TestConditionClauses(t *testing.T) {
 // --- Test: SetSig ---
 
 func TestSetSig(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sig2 := il.NewSig()
 	s.SetSig(sig2)
 	if s.Sig() != sig2 {
@@ -887,7 +887,7 @@ func TestSetSig(t *testing.T) {
 // --- Test: ModelResult.String ---
 
 func TestModelResultString(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
@@ -914,7 +914,7 @@ func TestModelResultStringNil(t *testing.T) {
 // --- Test: UnsatCore ---
 
 func TestUnsatCoreReturnsNilForSat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	c1 := module.NewClauses([]lg.Expr{p}, nil, nil)
 	c2 := module.TrueClauses(nil)
@@ -960,7 +960,7 @@ func TestIsSkolem(t *testing.T) {
 // --- Test: Quantifier translation ---
 
 func TestForAllTranslation(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
@@ -973,7 +973,7 @@ func TestForAllTranslation(t *testing.T) {
 }
 
 func TestExistsTranslation(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
@@ -988,7 +988,7 @@ func TestExistsTranslation(t *testing.T) {
 // --- Test: Function application translation ---
 
 func TestFunctionApplicationTranslation(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := unintSort("S")
 	f := funcConst("f", []lg.Sort{sort}, sort)
 	a := lg.NewConst("a", sort)
@@ -1004,7 +1004,7 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 // --- Test: GetSmallModel ---
 
 func TestGetSmallModelSat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
@@ -1017,7 +1017,7 @@ func TestGetSmallModelSat(t *testing.T) {
 }
 
 func TestGetSmallModelUnsat(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
@@ -1032,7 +1032,7 @@ func TestGetSmallModelUnsat(t *testing.T) {
 // --- Test: FilterRedundantFacts ---
 
 func TestFilterRedundantFactsNoNeg(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	axioms := module.TrueClauses(nil)
@@ -1048,7 +1048,7 @@ func TestFilterRedundantFactsNoNeg(t *testing.T) {
 // --- Test: BoundQuantifiersClauses ---
 
 func TestBoundQuantifiersClausesEmpty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
 	result := s.BoundQuantifiersClauses(clauses, nil, nil)
@@ -1143,7 +1143,7 @@ func TestZ3SortToSortNonArray(t *testing.T) {
 // --- Test: lookupBuiltinFunc arrsel/arrupd ---
 
 func TestLookupBuiltinFuncArrsel(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
@@ -1169,7 +1169,7 @@ func TestLookupBuiltinFuncArrsel(t *testing.T) {
 }
 
 func TestLookupBuiltinFuncArrselWrongArity(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	fn := s.lookupBuiltinFunc("arrsel", false)
@@ -1184,7 +1184,7 @@ func TestLookupBuiltinFuncArrselWrongArity(t *testing.T) {
 }
 
 func TestLookupBuiltinFuncArrupd(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
@@ -1207,7 +1207,7 @@ func TestLookupBuiltinFuncArrupd(t *testing.T) {
 }
 
 func TestLookupBuiltinFuncArrupdWrongArity(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	fn := s.lookupBuiltinFunc("arrupd", false)
@@ -1224,7 +1224,7 @@ func TestLookupBuiltinFuncArrupdWrongArity(t *testing.T) {
 // --- Test: lookupBuiltinRelation arrsel ---
 
 func TestLookupBuiltinRelationArrsel(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
@@ -1247,7 +1247,7 @@ func TestLookupBuiltinRelationArrsel(t *testing.T) {
 }
 
 func TestLookupBuiltinRelationArrselWrongArity(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	fn := s.lookupBuiltinRelation("arrsel")
@@ -1263,7 +1263,7 @@ func TestLookupBuiltinRelationArrselWrongArity(t *testing.T) {
 // --- Test: lookupBuiltinFunc/Relation returns nil for unknown ---
 
 func TestLookupBuiltinFuncUnknown(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	fn := s.lookupBuiltinFunc("nonexistent", false)
 	if fn != nil {
 		t.Fatal("unknown name should return nil")
@@ -1271,7 +1271,7 @@ func TestLookupBuiltinFuncUnknown(t *testing.T) {
 }
 
 func TestLookupBuiltinRelationUnknown(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	fn := s.lookupBuiltinRelation("nonexistent")
 	if fn != nil {
 		t.Fatal("unknown name should return nil")
@@ -1283,7 +1283,7 @@ func TestLookupBuiltinRelationUnknown(t *testing.T) {
 func TestArraySortRoundtrip(t *testing.T) {
 	// Create an array sort via Translator, convert back via Z3SortToSort,
 	// and verify the Ivy sort name roundtrips.
-	s := New()
+	s := NewSolver(nil, nil)
 	tr := s.Translator()
 
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
@@ -1322,7 +1322,7 @@ func TestArraySortRoundtrip(t *testing.T) {
 // --- Test: arrsel/arrupd via NativeLookup dispatch ---
 
 func TestLookupNativeArrselDispatch(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	// arrsel is polymorphic and recognized by name in LookupNative
 	// when not in sig.interp. We need a FunctionSort for arrsel.
 	arrIvySort := unintSort("arr[int][int]")
@@ -1348,7 +1348,7 @@ func TestLookupNativeArrselDispatch(t *testing.T) {
 // --- Test: Store preserves non-written indices (full solver check) ---
 
 func TestStorePreservesOtherIndicesSolver(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
@@ -1374,7 +1374,7 @@ func TestStorePreservesOtherIndicesSolver(t *testing.T) {
 // TestClear verifies that Clear() resets Z3 caches and the solver
 // still works after clearing.
 func TestClear(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 
 	// Translate a formula to populate caches
 	p := boolConst("p")
@@ -1406,7 +1406,7 @@ func TestClear(t *testing.T) {
 // TestSolverNameZ3Builtin verifies that SolverName panics with IvyError
 // when the symbol name clashes with a Z3 built-in (bit0, bit1).
 func TestSolverNameZ3Builtin(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 
 	// "bit0" is in z3Builtins — should panic
 	sym := lg.NewConst("bit0", lg.Boolean)
@@ -1482,7 +1482,7 @@ func (m *mockReporter) End(result bool, doc string) bool {
 // TestCheckSequenceReporterOnlyAssert verifies that reporter.End is only
 // called for Assert items (not Assume), matching Python's check_sequence.
 func TestCheckSequenceReporterOnlyAssert(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	seq := []AssumeAssert{
@@ -1528,7 +1528,7 @@ func TestCheckSequenceReporterOnlyAssert(t *testing.T) {
 
 // TestCheckSequenceReporterAbort verifies early abort when reporter.End returns false.
 func TestCheckSequenceReporterAbort(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 
@@ -1601,7 +1601,7 @@ func TestSortFromZ3RoundTrip(t *testing.T) {
 func TestSortLookupStrbv(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mystr"] = "strbv[16]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "mystr"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1621,7 +1621,7 @@ func TestSortLookupStrbv(t *testing.T) {
 func TestSortLookupIntbv(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "intbv[32]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "myint"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1641,7 +1641,7 @@ func TestSortLookupIntbv(t *testing.T) {
 func TestSortLookupStrlit(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["s"] = "strlit"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "s"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1732,7 +1732,7 @@ func TestSortCardStrbvIntbv(t *testing.T) {
 func TestBfeToZ3_BracketFormat(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1750,7 +1750,7 @@ func TestBfeToZ3_BracketFormat(t *testing.T) {
 func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1768,7 +1768,7 @@ func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 func TestBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1793,7 +1793,7 @@ func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
 	sig.Interp["mybv"] = "bv[8]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	intSort := &lg.UninterpretedSort{Name: "myint"}
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
@@ -1817,7 +1817,7 @@ func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
 
 // TestTranslateDefinition verifies that *logic.Definition translates to equality.
 func TestTranslateDefinition(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	a := boolConst("a")
 	b := boolConst("b")
 	def := lg.NewDefinition(a, b)
@@ -1832,7 +1832,7 @@ func TestTranslateDefinition(t *testing.T) {
 // TestTranslateDefinitionTrueSimplification verifies MyEq True optimization.
 // Definition{Lhs: p, Rhs: True} should translate to just p (via MyEq).
 func TestTranslateDefinitionTrueSimplification(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	// Create a Definition where RHS is Ivy True (empty And)
@@ -1854,7 +1854,7 @@ func TestTranslateDefinitionTrueSimplification(t *testing.T) {
 
 // TestTranslateDefinitionFalseSimplification verifies MyEq False optimization.
 func TestTranslateDefinitionFalseSimplification(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	def := lg.NewDefinition(p, lg.False)
@@ -1873,7 +1873,7 @@ func TestTranslateDefinitionFalseSimplification(t *testing.T) {
 
 // TestEqMyEqTrueOptimization verifies Eq uses MyEq True optimization.
 func TestEqMyEqTrueOptimization(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	// Eq{T1: p, T2: True} → MyEq should return just p
@@ -1892,7 +1892,7 @@ func TestEqMyEqTrueOptimization(t *testing.T) {
 
 // TestEqMyEqFalseOptimization verifies Eq uses MyEq False optimization.
 func TestEqMyEqFalseOptimization(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 
 	eq := &lg.Eq{T1: p, T2: lg.False}
@@ -1915,7 +1915,7 @@ func TestEnumEqBinaryEncoding(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 	s.SetUseNativeEnums(false)
 
 	red := lg.NewConst("red", es)
@@ -1945,7 +1945,7 @@ func TestNumeralRangeClamping(t *testing.T) {
 		Lb:   lg.NumeralBound{Value: "0"},
 		Ub:   lg.NumeralBound{Value: "10"},
 	}
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	// Numeral "15" with sort "bounded" should be clamped to [0,10]
 	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})
@@ -1970,7 +1970,7 @@ func TestNumeralRangeClamping(t *testing.T) {
 func TestNumeralNoClamping(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	// Numeral "42" with int-interpreted sort → IntVal(42)
 	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
@@ -1993,7 +1993,7 @@ func TestNumeralNoClamping(t *testing.T) {
 func TestNumeralToZ3_IntValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
@@ -2010,7 +2010,7 @@ func TestNumeralToZ3_IntValue(t *testing.T) {
 func TestNumeralToZ3_BvValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[8]"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	num := lg.NewConst("255", &lg.UninterpretedSort{Name: "mybv"})
 	result, err := s.NumeralToZ3(num)
@@ -2029,7 +2029,7 @@ func TestNumeralToZ3_BvValue(t *testing.T) {
 func TestNumeralToZ3_HexValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	num := lg.NewConst("0xff", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
@@ -2046,7 +2046,7 @@ func TestNumeralToZ3_HexValue(t *testing.T) {
 func TestNumeralToZ3_StringValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mystr"] = "strlit"
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	num := lg.NewConst(`"hello"`, &lg.UninterpretedSort{Name: "mystr"})
 	result, err := s.NumeralToZ3(num)
@@ -2067,7 +2067,7 @@ func TestNumeralToZ3_StringValue(t *testing.T) {
 // A negative Not(P) is redundant when pos_fmlas + axioms → Not(P),
 // i.e., pos_fmlas + axioms + P is UNSAT.
 func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 
 	a := boolConst("a")
 	b := boolConst("b")
@@ -2116,7 +2116,7 @@ func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
 
 // TestFilterRedundantFactsNoNegatives verifies no-op when there are no negatives.
 func TestFilterRedundantFactsNoNegatives(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	a := boolConst("a")
 	clauses := module.NewClauses([]lg.Expr{a}, nil, nil)
 	axioms := module.TrueClauses(nil)
@@ -2132,7 +2132,7 @@ func TestFilterRedundantFactsNoNegatives(t *testing.T) {
 
 // TestFilterRedundantFactsAllKept verifies all negatives kept when non-redundant.
 func TestFilterRedundantFactsAllKept(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 
 	// Two independent negative formulas
 	a := boolConst("a")
@@ -2160,7 +2160,7 @@ func TestFilterRedundantFactsAllKept(t *testing.T) {
 
 // TestDecideWithAssumptions verifies Decide supports assumption-based checking.
 func TestDecideWithAssumptions(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	ctx := s.Context()
 	z3solver := ctx.NewSolver()
 
@@ -2192,7 +2192,7 @@ func TestDecideWithAssumptions(t *testing.T) {
 // --- Tests for Z3Implies (PLAN219) ---
 
 func TestZ3ImpliesValid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
@@ -2206,7 +2206,7 @@ func TestZ3ImpliesValid(t *testing.T) {
 }
 
 func TestZ3ImpliesInvalid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	result, err := s.Z3Implies(p, q, false)
@@ -2219,7 +2219,7 @@ func TestZ3ImpliesInvalid(t *testing.T) {
 }
 
 func TestZ3ImpliesCache(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	// First call
 	r1, err := s.Z3Implies(p, p, false)
@@ -2245,7 +2245,7 @@ func TestZ3ImpliesCache(t *testing.T) {
 }
 
 func TestZ3ImpliesTautology(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	notP := &lg.Not{Body: p}
 	pOrNotP := &lg.Or{Terms: []lg.Expr{p, notP}}
@@ -2260,7 +2260,7 @@ func TestZ3ImpliesTautology(t *testing.T) {
 }
 
 func TestZ3ImpliesTimeout(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	result, err := s.Z3Implies(p, p, true)
 	if err != nil {
@@ -2274,7 +2274,7 @@ func TestZ3ImpliesTimeout(t *testing.T) {
 // --- Tests for ImpliesBatch (PLAN219) ---
 
 func TestImpliesBatchValid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
@@ -2294,7 +2294,7 @@ func TestImpliesBatchValid(t *testing.T) {
 }
 
 func TestImpliesBatchInvalid(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	results, err := s.ImpliesBatch(p, []lg.Expr{q}, false)
@@ -2307,7 +2307,7 @@ func TestImpliesBatchInvalid(t *testing.T) {
 }
 
 func TestImpliesBatchMixed(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	r := boolConst("r")
@@ -2328,7 +2328,7 @@ func TestImpliesBatchMixed(t *testing.T) {
 }
 
 func TestImpliesBatchEmpty(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	results, err := s.ImpliesBatch(p, nil, false)
 	if err != nil {
@@ -2340,7 +2340,7 @@ func TestImpliesBatchEmpty(t *testing.T) {
 }
 
 func TestImpliesBatchCache(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	q := boolConst("q")
 	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
@@ -2368,7 +2368,7 @@ func TestImpliesBatchCache(t *testing.T) {
 }
 
 func TestImpliesBatchTimeout(t *testing.T) {
-	s := New()
+	s := NewSolver(nil, nil)
 	p := boolConst("p")
 	results, err := s.ImpliesBatch(p, []lg.Expr{p}, true)
 	if err != nil {
@@ -2382,7 +2382,7 @@ func TestImpliesBatchTimeout(t *testing.T) {
 func TestImpliesBatchFreeVarsShared(t *testing.T) {
 	// When using raw translate, free variables X in premise and formulas
 	// become the SAME Z3 constant.
-	s := New()
+	s := NewSolver(nil, nil)
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
@@ -2415,7 +2415,7 @@ func TestTranslateComparisonUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
 	// lclock has NO interpretation — it's truly uninterpreted
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	ltSym := relConst("<", lclock, lclock)
 	x := uiVar("X", lclock)
@@ -2449,7 +2449,7 @@ func TestTranslateComparisonInterpretedSort(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mysort"] = "int"
 
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	ltSym := relConst("<", mySort, mySort)
 	x := uiVar("X", mySort)
@@ -2480,7 +2480,7 @@ func TestTranslateComparisonBVSort(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[8]"
 
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	ltSym := relConst("<", mySort, mySort)
 	x := uiVar("X", mySort)
@@ -2511,7 +2511,7 @@ func TestTranslateComparisonBVSort(t *testing.T) {
 func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	ltSym := relConst("<", lclock, lclock)
 	a := lg.NewConst("a", lclock)
@@ -2538,7 +2538,7 @@ func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
-	s := NewWithSig(sig)
+	s := NewSolver(sig, nil)
 
 	for _, op := range []string{"<=", ">", ">="} {
 		sym := relConst(op, lclock, lclock)
