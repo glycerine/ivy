@@ -13,9 +13,9 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/l2s"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/mc"
@@ -1250,7 +1250,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 			}
 			xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
 		}
-		xtracer.Trace("check.start ENTER file=%s", args[0])
+		xtracer.Trace("check.start ENTER file=%s\n Go stack=\n%v\n", args[0], stack())
 	}
 	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
 		return fmt.Errorf("%s", Usage())

@@ -25,6 +25,7 @@ from . import logic as lg
 from . import ivy_ast
 
 import sys
+import traceback
 
 # Following accounts for Z3 API symbols that are hidden as of Z3-4.5.0
 
@@ -243,6 +244,7 @@ def is_solver_op(name):
 
 def clear():
     if __debug__: xtracer.trace("ivy_solver.py:245 clear() ENTER")
+    if __debug__: traceback.print_stack()
     global z3_sorts, z3_predicates, z3_constants, z3_functions
     z3_sorts = dict()
     z3_predicates = {ivy_logic.equals : my_eq}
