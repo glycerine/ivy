@@ -266,7 +266,7 @@ def checker_canon():
         parts.append('nil')
     else:
         parts.append(sorted_map_canon(mvm,
-            lambda k: '"{}"'.format(k),
+            lambda k: '"{}"'.format(k.sexp()),
             lambda v: map_fmla_res_canon(v)))
 
     # macroVarMap
