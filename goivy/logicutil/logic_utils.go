@@ -493,11 +493,7 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 		if !changed {
 			return ast
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
-		if err != nil {
-			return &logic.Apply{Func: newFunc, Terms: newTerms}
-		}
-		return result
+		return logic.MustApply(newFunc, newTerms...)
 	default:
 		children := ast.Children()
 		if len(children) == 0 {
@@ -920,11 +916,7 @@ func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 		for i, t := range app.Terms {
 			newTerms[i] = NormalizeNamedBinders(t, names)
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
-		if err != nil {
-			return &logic.Apply{Func: newFunc, Terms: newTerms}
-		}
-		return result
+		return logic.MustApply(newFunc, newTerms...)
 	}
 	children := ast.Children()
 	if len(children) == 0 {
@@ -973,11 +965,7 @@ func applyNamedBinder(nb *logic.NamedBinder, args []logic.Expr) logic.Expr {
 	if len(args) == 0 {
 		return nb
 	}
-	result, err := logic.NewApply(nb, args...)
-	if err != nil {
-		return &logic.Apply{Func: nb, Terms: args}
-	}
-	return result
+	return logic.MustApply(nb, args...)
 }
 
 // ReplaceTemporalsByNamedBinder replaces temporal operators (Globally,
@@ -1024,29 +1012,18 @@ func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFu
 			}
 			if notBody, ok := body.(*logic.Not); ok {
 				newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: notBody.Body}
-				inner, err := logic.NewApply(newNB, newArgs...)
-				if err != nil {
-					inner = &logic.Apply{Func: newNB, Terms: newArgs}
-				}
+				inner := logic.MustApply(newNB, newArgs...)
 				return &logic.Not{Body: inner}
 			}
 			newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: body}
-			result, err := logic.NewApply(newNB, newArgs...)
-			if err != nil {
-				return &logic.Apply{Func: newNB, Terms: newArgs}
-			}
-			return result
+			return logic.MustApply(newNB, newArgs...)
 		}
 		newFunc := replaceTemporalsRec(t.Func, g, when)
 		newTerms := make([]logic.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newTerms[i] = replaceTemporalsRec(a, g, when)
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
-		if err != nil {
-			return &logic.Apply{Func: newFunc, Terms: newTerms}
-		}
-		return result
+		return logic.MustApply(newFunc, newTerms...)
 
 	case *logic.Not:
 		body := replaceTemporalsRec(t.Body, g, when)
@@ -1124,11 +1101,7 @@ func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 		for i, t := range app.Terms {
 			newTerms[i] = reduceNamedBindersRec(t, g)
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
-		if err != nil {
-			return &logic.Apply{Func: newFunc, Terms: newTerms}
-		}
-		return result
+		return logic.MustApply(newFunc, newTerms...)
 	}
 
 	children := ast.Children()
@@ -1175,11 +1148,7 @@ func ReplaceNamedBindersAst(ast logic.Expr, subs map[string]logic.Expr) logic.Ex
 				newFunc = rep
 			}
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
-		if err != nil {
-			return &logic.Apply{Func: newFunc, Terms: newTerms}
-		}
-		return result
+		return logic.MustApply(newFunc, newTerms...)
 	}
 	children := ast.Children()
 	if len(children) == 0 {
@@ -1444,12 +1413,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Expr) logic.Expr {
 		fn := logic.NewConst(fname, fnSort)
 		var res logic.Expr
 		if len(vs) > 0 {
-			r, err := logic.NewApply(fn, varsToNodes(vs)...)
-			if err != nil {
-				res = &logic.Apply{Func: fn, Terms: varsToNodes(vs)}
-			} else {
-				res = r
-			}
+			res = logic.MustApply(fn, varsToNodes(vs)...)
 		} else {
 			res = fn
 		}
@@ -1628,7 +1592,7 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 		for i, term := range n.Terms {
 			newTerms[i] = NormalizeQuantifiers(term)
 		}
-		return &logic.Apply{Func: n.Func, Terms: newTerms}
+		return logic.MustApply(n.Func, newTerms...)
 
 	case *logic.Eq:
 		return &logic.Eq{T1: NormalizeQuantifiers(n.T1), T2: NormalizeQuantifiers(n.T2)}

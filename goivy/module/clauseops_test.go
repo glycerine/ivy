@@ -400,7 +400,7 @@ func TestSymbolsAST(t *testing.T) {
 func TestUsedSymbolsAST(t *testing.T) {
 	f := mkFuncConst("f", 1)
 	x := mkVar("X")
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{x}}
+	app := lg.MustApply(f, x)
 	syms := UsedSymbolsAST(app)
 	if _, ok := syms[lg.Key(f)]; !ok {
 		t.Error("should contain function symbol f")

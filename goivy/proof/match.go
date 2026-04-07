@@ -385,7 +385,7 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 				// If replacement is a constant, build new application
 				if rc, ok := replacement.(*lg.Const); ok {
 					if len(newArgs) > 0 {
-						return &lg.Apply{Func: rc, Terms: newArgs}
+						return lg.MustApply(rc, newArgs...)
 					}
 					return rc
 				}
@@ -395,7 +395,7 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 			newC := ApplyMatchFunc(match, c)
 			if newC != c {
 				if len(newArgs) > 0 {
-					return &lg.Apply{Func: newC, Terms: newArgs}
+					return lg.MustApply(newC, newArgs...)
 				}
 				return newC
 			}

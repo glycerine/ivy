@@ -698,7 +698,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
 			// Variant assignment: use pto relation for sort inference
 			ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
-			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
+			ptoApp := lg.MustApply(ptoSym, lhs, rhs)
 			inferred, err := c.SortInfer(ptoApp)
 			if err == nil {
 				if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {
@@ -927,11 +927,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	actionSym := lg.NewConst(name, lg.TopS)
 	var callee lg.Expr
 	if len(compiledArgs) > 0 {
-		var err error
-		callee, err = lg.NewApply(actionSym, compiledArgs...)
-		if err != nil {
-			callee = &lg.Apply{Func: actionSym, Terms: compiledArgs}
-		}
+		callee = lg.MustApply(actionSym, compiledArgs...)
 	} else {
 		callee = actionSym
 	}
@@ -1034,7 +1030,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			rhsSort := rhs.NodeSort()
 			if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
 				ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
-				ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
+				ptoApp := lg.MustApply(ptoSym, lhs, rhs)
 				inferred, inferErr := c.SortInfer(ptoApp)
 				if inferErr == nil {
 					if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {

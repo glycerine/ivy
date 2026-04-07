@@ -316,7 +316,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 			return t
 		}
 		ltSym := lg.NewConst("<", t.Func.NodeSort())
-		ltApp := &lg.Apply{Func: ltSym, Terms: t.Terms}
+		ltApp := lg.MustApply(ltSym, t.Terms...)
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
 		return &lg.Or{Terms: []lg.Expr{ltApp, eq}}
 	},
@@ -326,7 +326,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 		}
 		ltSym := lg.NewConst("<", t.Func.NodeSort())
 		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
-		return &lg.Apply{Func: ltSym, Terms: swapped}
+		return lg.MustApply(ltSym, swapped...)
 	},
 	">=": func(t *lg.Apply) lg.Expr {
 		if len(t.Terms) != 2 {
@@ -334,7 +334,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 		}
 		ltSym := lg.NewConst("<", t.Func.NodeSort())
 		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
-		ltApp := &lg.Apply{Func: ltSym, Terms: swapped}
+		ltApp := lg.MustApply(ltSym, swapped...)
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
 		return &lg.Or{Terms: []lg.Expr{ltApp, eq}}
 	},
@@ -400,8 +400,8 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
 		x, _ := lg.NewVariable("X", sort)
 		y, _ := lg.NewVariable("Y", sort)
 		z, _ := lg.NewVariable("Z", s)
-		ptoXZ := &lg.Apply{Func: pto(s), Terms: []lg.Expr{x, z}}
-		ptoYZ := &lg.Apply{Func: pto(s), Terms: []lg.Expr{y, z}}
+		ptoXZ := lg.MustApply(pto(s), x, z)
+		ptoYZ := lg.MustApply(pto(s), y, z)
 		premise := &lg.And{Terms: []lg.Expr{ptoXZ, ptoYZ}}
 		conclusion := &lg.Eq{T1: x, T2: y}
 		conjuncts = append(conjuncts, &lg.Implies{T1: premise, T2: conclusion})
@@ -414,8 +414,8 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
 			x, _ := lg.NewVariable("X", sort)
 			y, _ := lg.NewVariable("Y", s1)
 			z, _ := lg.NewVariable("Z", s2)
-			pto1 := &lg.Apply{Func: pto(s1), Terms: []lg.Expr{x, y}}
-			pto2 := &lg.Apply{Func: pto(s2), Terms: []lg.Expr{x, z}}
+			pto1 := lg.MustApply(pto(s1), x, y)
+			pto2 := lg.MustApply(pto(s2), x, z)
 			conjuncts = append(conjuncts, &lg.Not{Body: &lg.And{Terms: []lg.Expr{pto1, pto2}}})
 		}
 	}

@@ -188,6 +188,16 @@ func NewApply(fn Expr, terms ...Expr) (*Apply, error) {
 	}
 }
 
+// MustApply is like NewApply but panics on error.
+// Matches Python's Apply constructor which raises SortError on bad input.
+func MustApply(fn Expr, terms ...Expr) *Apply {
+	a, err := NewApply(fn, terms...)
+	if err != nil {
+		panic(fmt.Sprintf("MustApply: %v", err))
+	}
+	return a
+}
+
 func (a *Apply) NodeSort() Sort { return a.aSort }
 
 func (a *Apply) Children() []Expr {

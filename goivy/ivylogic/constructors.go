@@ -22,7 +22,7 @@ func Atom(rel *lg.Const, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return rel
 	}
-	return &lg.Apply{Func: rel, Terms: args}
+	return lg.MustApply(rel, args...)
 }
 
 // Constant returns the symbol itself.
@@ -45,7 +45,7 @@ func Apply(sym *lg.Const, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return sym
 	}
-	return &lg.Apply{Func: sym, Terms: args}
+	return lg.MustApply(sym, args...)
 }
 
 // QuantifierBody returns the body of a quantifier/binder.

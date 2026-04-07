@@ -102,22 +102,14 @@ func applyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return nb
 	}
-	result, err := lg.NewApply(nb, args...)
-	if err != nil {
-		return &lg.Apply{Func: nb, Terms: args}
-	}
-	return result
+	return lg.MustApply(nb, args...)
 }
 
 func mustApply(f lg.Expr, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return f
 	}
-	result, err := lg.NewApply(f, args...)
-	if err != nil {
-		return &lg.Apply{Func: f, Terms: args}
-	}
-	return result
+	return lg.MustApply(f, args...)
 }
 
 func varsToNodes(vs []*lg.Variable) []lg.Expr {

@@ -489,7 +489,7 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 				return
 			}
 			p := relConst("P", sort)
-			pApp := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+			pApp := lg.MustApply(p, x)
 
 			var fmla lg.Expr
 			if isForall {

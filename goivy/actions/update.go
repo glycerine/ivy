@@ -430,7 +430,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 			axioms := ctx.BackgroundTheory()
 			for childName := range children.All() {
 				childSym := lg.NewConst(childName, lg.TopS)
-				childLHS := &lg.Apply{Func: childSym, Terms: nodeArgs(lhs)}
+				childLHS := lg.MustApply(childSym, nodeArgs(lhs)...)
 				childRHS := rhs // simplified: same RHS for each child
 				childAssign := NewAssignAction(childLHS, childRHS)
 				childUpdate := childAssign.ActionUpdate(ctx)
@@ -891,16 +891,7 @@ func applyToNodes(fn lg.Expr, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return fn
 	}
-	app, err := lg.NewApply(fn, args...)
-	if err != nil {
-		// Fallback: construct directly with computed sort
-		rng := il.SortRange(fn.NodeSort())
-		if rng == nil {
-			rng = lg.TopS
-		}
-		return &lg.Apply{Func: fn, Terms: args}
-	}
-	return app
+	return lg.MustApply(fn, args...)
 }
 
 // --- SetAction ---
@@ -1587,9 +1578,9 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 			rankLocal = aux
 			assumes = append(assumes, NewAssumeAction(&lg.Eq{T1: aux, T2: rankExpr}))
 			ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{rankSort, rankSort}))
-			exitAsserts = append(exitAsserts, NewAssertAction(&lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, aux}}))
+			exitAsserts = append(exitAsserts, NewAssertAction(lg.MustApply(ltSym, rankExpr, aux)))
 			zeroSym := lg.NewConst("0", rankSort)
-			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: &lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, zeroSym}}}))
+			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: lg.MustApply(ltSym, rankExpr, zeroSym)}))
 		}
 	}
 

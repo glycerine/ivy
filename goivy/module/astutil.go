@@ -177,11 +177,7 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 		if !changed {
 			return node
 		}
-		app, err := lg.NewApply(newFunc, newTerms...)
-		if err != nil {
-			panic(fmt.Sprintf("renameASTRec: NewApply failed after rename: %v", err))
-		}
-		return app
+		return lg.MustApply(newFunc, newTerms...)
 	case *il.Definition:
 		lhs := renameASTRec(t.Lhs, subs)
 		rhs := renameASTRec(t.Rhs, subs)

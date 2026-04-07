@@ -272,7 +272,7 @@ func substituteNode(n lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 		for i, term := range t.Terms {
 			newTerms[i] = substituteNode(term, subs)
 		}
-		return &lg.Apply{Func: t.Func, Terms: newTerms}
+		return lg.MustApply(t.Func, newTerms...)
 	case *lg.Variable:
 		if r, ok := subs[lg.Key(t)]; ok {
 			return r

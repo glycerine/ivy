@@ -481,7 +481,7 @@ func TestSchema_GetInstance(t *testing.T) {
 	// Schema with definition: f(a) = body where body references a
 	aSym := lg.NewConst("a", lg.TopS)
 	fSym := lg.NewConst("f", lg.TopS)
-	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
+	lhs := lg.MustApply(fSym, aSym)
 	rhs := aSym // body is just "a"
 	defn := lg.NewDefinition(lhs, rhs)
 	s := NewSchema(defn)
@@ -506,7 +506,7 @@ func TestSchema_GetInstance(t *testing.T) {
 func TestSchema_GetInstance_ParamCountMismatch(t *testing.T) {
 	aSym := lg.NewConst("a", lg.TopS)
 	fSym := lg.NewConst("f", lg.TopS)
-	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
+	lhs := lg.MustApply(fSym, aSym)
 	defn := lg.NewDefinition(lhs, aSym)
 	s := NewSchema(defn)
 
@@ -520,7 +520,7 @@ func TestSchema_GetInstance_ParamCountMismatch(t *testing.T) {
 func TestSchema_Instantiate(t *testing.T) {
 	aSym := lg.NewConst("a", lg.TopS)
 	fSym := lg.NewConst("f", lg.TopS)
-	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
+	lhs := lg.MustApply(fSym, aSym)
 	defn := lg.NewDefinition(lhs, aSym)
 	s := NewSchema(defn)
 

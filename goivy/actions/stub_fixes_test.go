@@ -227,7 +227,7 @@ func TestSetAction_ActionUpdate_PositiveLiteral(t *testing.T) {
 	relSort := mkRelSort(lg.TopS)
 	relSym := lg.NewConst("R", relSort)
 	aConst := lg.NewConst("a", lg.TopS)
-	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst}}
+	atom := lg.MustApply(relSym, aConst)
 
 	sa := NewSetAction(atom)
 	ctx := testCtx()
@@ -261,7 +261,7 @@ func TestSetAction_ActionUpdate_NegativeLiteral(t *testing.T) {
 	relSort := mkRelSort(lg.TopS)
 	relSym := lg.NewConst("R", relSort)
 	aConst := lg.NewConst("a", lg.TopS)
-	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst}}
+	atom := lg.MustApply(relSym, aConst)
 	negLit := &lg.Not{Body: atom}
 
 	sa := NewSetAction(negLit)
@@ -296,7 +296,7 @@ func TestSetAction_ActionUpdate_MultipleArgs(t *testing.T) {
 	relSym := lg.NewConst("R", relSort)
 	aConst := lg.NewConst("a", lg.TopS)
 	bConst := lg.NewConst("b", lg.TopS)
-	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst, bConst}}
+	atom := lg.MustApply(relSym, aConst, bConst)
 
 	sa := NewSetAction(atom)
 	ctx := testCtx()
@@ -409,7 +409,7 @@ func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 	// lhs = fld(obj), rhs = val
 	objSym := lg.NewConst("obj", sortT)
 	_ = lg.NewConst("val", sortS) // rhs used in destructorAssignUpdate, not destrAsgnVal
-	lhs := &lg.Apply{Func: fldSym, Terms: []lg.Expr{objSym}}
+	lhs := lg.MustApply(fldSym, objSym)
 
 	var fmlas []lg.Expr
 	resultExpr, clauses, mutated := destrAsgnVal(lhs, &fmlas, mod)
@@ -451,7 +451,7 @@ func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 	// lhs = fld1(obj), rhs = val — should produce frame condition for fld2
 	objSym := lg.NewConst("obj", sortT)
 	valSym := lg.NewConst("val", sortS)
-	lhs := &lg.Apply{Func: fld1Sym, Terms: []lg.Expr{objSym}}
+	lhs := lg.MustApply(fld1Sym, objSym)
 
 	var fmlas []lg.Expr
 	_, _, mutated := destrAsgnVal(lhs, &fmlas, mod)
@@ -491,7 +491,7 @@ func TestDestructorAssignUpdate_FullPath(t *testing.T) {
 
 	objSym := lg.NewConst("obj", sortT)
 	valSym := lg.NewConst("val", sortS)
-	lhs := &lg.Apply{Func: fldSym, Terms: []lg.Expr{objSym}}
+	lhs := lg.MustApply(fldSym, objSym)
 
 	a := NewAssignAction(lhs, valSym)
 	ctx := &UpdateContext{Domain: mod}

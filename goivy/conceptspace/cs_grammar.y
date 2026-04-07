@@ -100,7 +100,7 @@ atom:
     CS_SYMBOL CS_LPAREN terms CS_RPAREN
     {
         sym := lg.NewConst($1, lg.TopS)
-        $$ = &lg.Apply{Func: sym, Terms: $3}
+        $$ = lg.MustApply(sym, $3...)
     }
     ;
 

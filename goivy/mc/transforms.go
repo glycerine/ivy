@@ -220,7 +220,7 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Const, argSym func(lg.Sort) *lg.C
 	// Build ITE chain: f(v0) for first combo, then ite(args==v, f(v), rest)
 	var result lg.Expr
 	for i, combo := range combos {
-		fApp := &lg.Apply{Func: funcSym, Terms: combo}
+		fApp := lg.MustApply(funcSym, combo...)
 		if i == 0 {
 			result = fApp
 		} else {

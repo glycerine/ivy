@@ -964,7 +964,7 @@ func TestForAllTranslation(t *testing.T) {
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
-	body := &lg.Apply{Func: r, Terms: []lg.Expr{x}}
+	body := lg.MustApply(r, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -977,7 +977,7 @@ func TestExistsTranslation(t *testing.T) {
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
-	body := &lg.Apply{Func: r, Terms: []lg.Expr{x}}
+	body := lg.MustApply(r, x)
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -993,7 +993,7 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 	f := funcConst("f", []lg.Sort{sort}, sort)
 	a := lg.NewConst("a", sort)
 	b := lg.NewConst("b", sort)
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{a}}
+	app := lg.MustApply(f, a)
 	fmla := &lg.Eq{T1: app, T2: b}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {

@@ -151,7 +151,7 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
 		if c, ok := app.Func.(*lg.Const); ok {
 			if replacement, exists := matchMap[c.Name]; exists {
 				if rc, ok := replacement.(*lg.Const); ok {
-					return &lg.Apply{Func: rc, Terms: newArgs}
+					return lg.MustApply(rc, newArgs...)
 				}
 			}
 		}

@@ -143,7 +143,7 @@ func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Expr, error) {
 			if arity == 0 {
 				return sym, nil
 			}
-			return &lg.Apply{Func: sym, Terms: args}, nil
+			return lg.MustApply(sym, args...), nil
 		}
 	}
 
@@ -367,7 +367,7 @@ func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *
 		for i, v := range phs {
 			args[i] = v
 		}
-		term = &lg.Apply{Func: sym, Terms: args}
+		term = lg.MustApply(sym, args...)
 	}
 
 	// Translate to Z3 and evaluate

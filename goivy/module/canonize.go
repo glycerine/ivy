@@ -160,7 +160,7 @@ func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 			return node
 		}
 		// Rebuild the Apply with potentially new sorts.
-		return &lg.Apply{Func: newFunc, Terms: newTerms}
+		return lg.MustApply(newFunc, newTerms...)
 
 	case *lg.ForAll:
 		newVars := resortVars(t.Variables, rn)

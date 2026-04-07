@@ -101,7 +101,7 @@ func TestAssignActionWithArgs(t *testing.T) {
 	f := lg.NewConst("f", fSort)
 	aConst := lg.NewConst("a", lg.TopS)
 	bConst := lg.NewConst("b", lg.TopS)
-	lhs := &lg.Apply{Func: f, Terms: []lg.Expr{aConst}}
+	lhs := lg.MustApply(f, aConst)
 	a := NewAssignAction(lhs, bConst)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)

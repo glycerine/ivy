@@ -106,7 +106,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
 	p := logic.NewConst("P", pSort)
-	pApp := &logic.Apply{Func: p, Terms: []logic.Expr{x}}
+	pApp := logic.MustApply(p, x)
 
 	fmla := &logic.ForAll{Variables: []*logic.Variable{x}, Body: pApp}
 	z3expr, err := tr.Translate(fmla)
@@ -153,7 +153,7 @@ func TestQuantConstraints_Exists(t *testing.T) {
 	x, _ := logic.NewVariable("X", sort)
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
 	p := logic.NewConst("P", pSort)
-	pApp := &logic.Apply{Func: p, Terms: []logic.Expr{x}}
+	pApp := logic.MustApply(p, x)
 
 	fmla := &logic.Exists{Variables: []*logic.Variable{x}, Body: pApp}
 	z3expr, err := tr.Translate(fmla)

@@ -447,14 +447,14 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		ltSym := lg.NewConst("<", ltSort)
 
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
-		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, aux}}
+		ltApp := lg.MustApply(ltSym, rank, aux)
 		exitAssert := NewAssertAction(ltApp)
 		exitAssert.SetLineno(w.GetLineno())
 		exitAsserts = append(exitAsserts, exitAssert)
 
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
 		zeroSym := lg.NewConst("0", rankSort)
-		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, zeroSym}}
+		ltZero := lg.MustApply(ltSym, rank, zeroSym)
 		entryAssert := NewAssertAction(&lg.Not{Body: ltZero})
 		entryAssert.SetLineno(w.GetLineno())
 		entryAsserts = append(entryAsserts, entryAssert)

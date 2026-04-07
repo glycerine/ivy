@@ -441,7 +441,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []
 			for i, v := range phs {
 				args[i] = v
 			}
-			term = &lg.Apply{Func: sym, Terms: args}
+			term = lg.MustApply(sym, args...)
 		}
 
 		z3term, err := h.tr.Translate(term)
@@ -634,7 +634,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *lg.Const, arity int) []lg.Exp
 		vars[i] = v
 		varPtrs[i] = v
 	}
-	app := &lg.Apply{Func: rel, Terms: vars}
+	app := lg.MustApply(rel, vars...)
 
 	var result []lg.Expr
 
@@ -665,7 +665,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Const) []lg.Expr {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), s)
 		vars[i] = v
 	}
-	fTerm := &lg.Apply{Func: f, Terms: vars}
+	fTerm := lg.MustApply(f, vars...)
 
 	// For enumerated range, check each possible value
 	if es, ok := rng.(*lg.EnumeratedSort); ok {

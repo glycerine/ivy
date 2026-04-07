@@ -786,12 +786,7 @@ func calleeFromAtom(atom *ast.Atom) lg.Expr {
 	for i, t := range atom.Terms {
 		terms[i] = t.(lg.Expr)
 	}
-	applied, err := lg.NewApply(nameConst, terms...)
-	if err != nil {
-		// Fallback: construct Apply without sort checking
-		return &lg.Apply{Func: nameConst, Terms: terms}
-	}
-	return applied
+	return lg.MustApply(nameConst, terms...)
 }
 
 // SplitReturns decomposes a call with returns into a call with temp

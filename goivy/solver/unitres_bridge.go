@@ -53,7 +53,7 @@ func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Const) *il.L
 		if len(lit.Atom.Args) == 0 {
 			atom = sym
 		} else {
-			atom = &lg.Apply{Func: sym, Terms: lit.Atom.Args}
+			atom = lg.MustApply(sym, lit.Atom.Args...)
 		}
 	} else {
 		// Fallback: create a boolean symbol
@@ -61,7 +61,7 @@ func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Const) *il.L
 		if len(lit.Atom.Args) == 0 {
 			atom = sym
 		} else {
-			atom = &lg.Apply{Func: sym, Terms: lit.Atom.Args}
+			atom = lg.MustApply(sym, lit.Atom.Args...)
 		}
 	}
 	return il.NewLiteral(lit.Polarity, atom)

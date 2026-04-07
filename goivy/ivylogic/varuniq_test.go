@@ -180,7 +180,7 @@ func TestVariableUniqifierApplyPreservesFunc(t *testing.T) {
 	f := lg.NewConst("f", fs)
 	X, _ := lg.NewVariable("X", S)
 	Y, _ := lg.NewVariable("Y", S)
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{X, Y}}
+	app := lg.MustApply(f, X, Y)
 
 	vu := NewVariableUniqifier(nil)
 	result := vu.Uniquify(app)

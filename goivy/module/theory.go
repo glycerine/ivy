@@ -452,8 +452,8 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Expr {
 		x, _ := lg.NewVariable("X", parentSort)
 		y, _ := lg.NewVariable("Y", parentSort)
 		z, _ := lg.NewVariable("Z", s)
-		relXZ := &lg.Apply{Func: rel, Terms: []lg.Expr{x, z}}
-		relYZ := &lg.Apply{Func: rel, Terms: []lg.Expr{y, z}}
+		relXZ := lg.MustApply(rel, x, z)
+		relYZ := lg.MustApply(rel, y, z)
 		body := &lg.Implies{
 			T1: &lg.And{Terms: []lg.Expr{relXZ, relYZ}},
 			T2: &lg.Eq{T1: x, T2: y},
@@ -469,8 +469,8 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Expr {
 			y, _ := lg.NewVariable("Y", s1)
 			z, _ := lg.NewVariable("Z", s2)
 			body := &lg.Not{Body: &lg.And{Terms: []lg.Expr{
-				&lg.Apply{Func: pto(s1), Terms: []lg.Expr{x, y}},
-				&lg.Apply{Func: pto(s2), Terms: []lg.Expr{x, z}},
+				lg.MustApply(pto(s1), x, y),
+				lg.MustApply(pto(s2), x, z),
 			}}}
 			excs = append(excs, &lg.ForAll{Variables: []*lg.Variable{x, y, z}, Body: body})
 		}

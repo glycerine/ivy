@@ -409,10 +409,7 @@ func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			lt := &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[0].NodeSort(), args[1].NodeSort()})),
-				Terms: args,
-			}
+			lt := lg.MustApply(lg.NewConst("<", il.RelationSort([]lg.Sort{args[0].NodeSort(), args[1].NodeSort()})), args...)
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
 			return &lg.Or{Terms: []lg.Expr{lt, eq}}
 		}
@@ -421,20 +418,14 @@ func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			return &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
-				Terms: []lg.Expr{args[1], args[0]},
-			}
+			return lg.MustApply(lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
 		}
 	case ">=":
 		return func(args []lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			lt := &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
-				Terms: []lg.Expr{args[1], args[0]},
-			}
+			lt := lg.MustApply(lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
 			return &lg.Or{Terms: []lg.Expr{lt, eq}}
 		}

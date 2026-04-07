@@ -17,11 +17,7 @@ func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 		return t // variables are immutable
 	case *lg.Apply:
 		if len(args) > 0 {
-			app, err := lg.NewApply(t.Func, args...)
-			if err != nil {
-				panic(fmt.Sprintf("CloneNode: NewApply failed: %v", err))
-			}
-			return app
+			return lg.MustApply(t.Func, args...)
 		}
 		return t
 	case *lg.Eq:
@@ -311,8 +307,8 @@ func Extensionality(destrs []*lg.Const) lg.Expr {
 			argsY = append(argsY, v)
 		}
 
-		appX := &lg.Apply{Func: d, Terms: argsX}
-		appY := &lg.Apply{Func: d, Terms: argsY}
+		appX := lg.MustApply(d, argsX...)
+		appY := lg.MustApply(d, argsY...)
 		eq := &lg.Eq{T1: appX, T2: appY}
 
 		if len(extraVars) > 0 {
@@ -343,8 +339,8 @@ func PartialFunction(rel *lg.Const) lg.Expr {
 	y, _ := lg.NewVariable("Y", dom[1])
 	z, _ := lg.NewVariable("Z", dom[1])
 
-	relXY := &lg.Apply{Func: rel, Terms: []lg.Expr{x, y}}
-	relXZ := &lg.Apply{Func: rel, Terms: []lg.Expr{x, z}}
+	relXY := lg.MustApply(rel, x, y)
+	relXZ := lg.MustApply(rel, x, z)
 	premise := &lg.And{Terms: []lg.Expr{relXY, relXZ}}
 	conclusion := &lg.Eq{T1: y, T2: z}
 	body := &lg.Implies{T1: premise, T2: conclusion}
@@ -644,7 +640,7 @@ func LabelTemporal(fmla lg.Expr, label string) lg.Expr {
 		for i, a := range t.Terms {
 			newArgs[i] = LabelTemporal(a, label)
 		}
-		return &lg.Apply{Func: newFunc, Terms: newArgs}
+		return lg.MustApply(newFunc, newArgs...)
 	}
 	args := NodeArgs(fmla)
 	newArgs := make([]lg.Expr, len(args))

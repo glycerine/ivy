@@ -72,7 +72,7 @@ func TestPolarApplyDefaultIsMixed(t *testing.T) {
 	fs, _ := lg.NewFunctionSort(S, lg.Boolean)
 	f := lg.NewConst("f", fs)
 	x := lg.NewConst("x", S)
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{x}}
+	app := lg.MustApply(f, x)
 
 	for _, pol := range []int{0, 1, -1} {
 		result := Polar(app, 0, pol)

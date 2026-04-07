@@ -793,7 +793,7 @@ func TestExtractInstInfoSymbol(t *testing.T) {
 func TestExtractInstInfoApply(t *testing.T) {
 	fSym := lg.NewConst("bar", lg.TopS)
 	arg := lg.NewConst("x", lg.TopS)
-	app := &lg.Apply{Func: fSym, Terms: []lg.Expr{arg}}
+	app := lg.MustApply(fSym, arg)
 	name, args := extractInstInfo(app)
 	if name != "bar" {
 		t.Errorf("expected 'bar', got %q", name)

@@ -796,7 +796,7 @@ func RelationSizeConstraint(relation *lg.Const, size int) lg.Expr {
 	}
 
 	// Build: ~relation(X0,...) | (X0=c00 & X1=c01 &...) | (X0=c10 & X1=c11 &...) | ...
-	negApp := &lg.Not{Body: &lg.Apply{Func: relation, Terms: vs}}
+	negApp := &lg.Not{Body: lg.MustApply(relation, vs...)}
 
 	disjuncts := []lg.Expr{negApp}
 	for i := 0; i < size; i++ {

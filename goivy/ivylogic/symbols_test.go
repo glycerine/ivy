@@ -25,7 +25,7 @@ func testVar(name string) *lg.Variable {
 }
 
 func testApply(fn lg.Expr, terms ...lg.Expr) *lg.Apply {
-	return &lg.Apply{Func: fn, Terms: terms}
+	return lg.MustApply(fn, terms...)
 }
 
 func testForAll(vars []*lg.Variable, body lg.Expr) *lg.ForAll {

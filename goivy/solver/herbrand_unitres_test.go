@@ -18,7 +18,7 @@ func TestIvyLitToUnitResLitApply(t *testing.T) {
 	// p(a) — positive literal with Apply atom
 	p := relConst("p", unintSort("S"))
 	a := lg.NewConst("a", unintSort("S"))
-	applyAtom := &lg.Apply{Func: p, Terms: []lg.Expr{a}}
+	applyAtom := lg.MustApply(p, a)
 	lit := il.NewLiteral(1, applyAtom)
 
 	symMap := make(map[string]*lg.Const)
@@ -102,7 +102,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 			makeLit: func() *il.Literal {
 				p := relConst("r", unintSort("T"))
 				x := lg.NewConst("x", unintSort("T"))
-				return il.NewLiteral(1, &lg.Apply{Func: p, Terms: []lg.Expr{x}})
+				return il.NewLiteral(1, lg.MustApply(p, x))
 			},
 			checkStr: "r(x)",
 		},

@@ -289,8 +289,8 @@ func TestMatchFail(t *testing.T) {
 	q := mkConst("q", fs)
 	c := mkConst("c", s)
 
-	pat := &lg.Apply{Func: p, Terms: []lg.Expr{c}}
-	inst := &lg.Apply{Func: q, Terms: []lg.Expr{c}}
+	pat := lg.MustApply(p, c)
+	inst := lg.MustApply(q, c)
 
 	m := Match(pat, inst, nil, nil)
 	if m != nil {
@@ -590,7 +590,7 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 	// ForAll X. p(X) in positive position -> skolemize X
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	body := lg.MustApply(p, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
@@ -616,7 +616,7 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	body := lg.MustApply(p, x)
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
@@ -638,7 +638,7 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	body := lg.MustApply(p, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	goal := mkLF(testAstCfg.NewAtom("test"), fmla)

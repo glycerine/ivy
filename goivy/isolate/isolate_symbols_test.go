@@ -19,7 +19,7 @@ func tConst(name string) *lg.Const {
 }
 
 func tApply(fn lg.Expr, terms ...lg.Expr) *lg.Apply {
-	return &lg.Apply{Func: fn, Terms: terms}
+	return lg.MustApply(fn, terms...)
 }
 
 func tForAll(body lg.Expr) *lg.ForAll {

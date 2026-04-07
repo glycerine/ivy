@@ -791,7 +791,7 @@ func (m *Module) UpdateConjs() {
 			for j, v := range variables {
 				varExprs[j] = v
 			}
-			label = &lg.Apply{Func: sym, Terms: varExprs}
+			label = lg.MustApply(sym, varExprs...)
 		} else {
 			label = sym
 		}

@@ -901,7 +901,7 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	// Build definition with Apply LHS: f(x) = true_const
 	fSym := lg.NewConst("f", &lg.FunctionSort{Sorts: []lg.Sort{lg.Boolean, lg.Boolean}})
 	xSym := lg.NewConst("x", lg.Boolean)
-	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{xSym}}
+	lhs := lg.MustApply(fSym, xSym)
 	rhs := lg.NewConst("true_const", lg.Boolean)
 	def := &lg.Definition{Lhs: lhs, Rhs: rhs}
 

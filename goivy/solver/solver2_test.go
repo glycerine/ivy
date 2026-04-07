@@ -26,7 +26,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
 	p := relConst("P", natSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	pApp := lg.MustApply(p, x)
 
 	// ForAll(X:mynat, P(X))
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: pApp}
@@ -66,7 +66,7 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
 	p := relConst("P", natSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	pApp := lg.MustApply(p, x)
 
 	// Exists(X:mynat, P(X))
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: pApp}
@@ -108,7 +108,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 	rangeSort := &lg.UninterpretedSort{Name: "myrange"}
 	x, _ := lg.NewVariable("X", rangeSort)
 	p := relConst("P", rangeSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	pApp := lg.MustApply(p, x)
 
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: pApp}
 
@@ -140,7 +140,7 @@ func TestQuantConstraints_NoInterp(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "T"}
 	x, _ := lg.NewVariable("X", sort)
 	p := relConst("P", sort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
+	pApp := lg.MustApply(p, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: pApp}
 
 	_, err := s.FormulaToZ3(fmla)

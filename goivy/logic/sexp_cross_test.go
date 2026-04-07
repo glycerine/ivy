@@ -56,7 +56,7 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 	fNull := lg.NewConst("f", fsNull)
 
 	appBin, _ := lg.NewApply(leq, X, Y)
-	appNull := &lg.Apply{Func: fNull, Terms: nil}
+	appNull := lg.MustApply(fNull)
 	appInner, _ := lg.NewApply(fSym, X)
 	appNested, _ := lg.NewApply(gSym, appInner)
 

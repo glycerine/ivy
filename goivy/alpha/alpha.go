@@ -860,7 +860,7 @@ func renameNode(node lg.Expr, newSym map[string]*lg.Const) lg.Expr {
 		for i, arg := range t.Terms {
 			newArgs[i] = renameNode(arg, newSym)
 		}
-		return &lg.Apply{Func: newFunc, Terms: newArgs}
+		return lg.MustApply(newFunc, newArgs...)
 	case *lg.Eq:
 		return &lg.Eq{T1: renameNode(t.T1, newSym), T2: renameNode(t.T2, newSym)}
 	case *lg.Not:
@@ -980,7 +980,7 @@ func csAtomToNode(atom *webui.CSAtom) lg.Expr {
 	sorts[len(atom.Args)] = lg.Boolean
 	funcSort, _ := lg.NewFunctionSort(sorts...)
 	fn := lg.NewConst(atom.RelName, funcSort)
-	return &lg.Apply{Func: fn, Terms: args}
+	return lg.MustApply(fn, args...)
 }
 
 // csTermToNode converts a concept-space term to an Ivy logic node.

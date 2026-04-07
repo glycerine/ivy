@@ -451,7 +451,7 @@ func substituteVarsInNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 		if !changed {
 			return node
 		}
-		return &lg.Apply{Func: newFunc, Terms: newTerms}
+		return lg.MustApply(newFunc, newTerms...)
 	case *lg.And:
 		terms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {

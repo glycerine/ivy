@@ -254,7 +254,7 @@ func TestIsEPR(t *testing.T) {
 	y, _ := lg.NewVariable("Y", lg.TopS)
 	qSort, _ := lg.NewFunctionSort(lg.TopS, lg.TopS, lg.Boolean)
 	q := lg.NewConst("q", qSort)
-	qApp := &lg.Apply{Func: q, Terms: []lg.Expr{v, y}}
+	qApp := lg.MustApply(q, v, y)
 	ex := &lg.Exists{Variables: []*lg.Variable{y}, Body: qApp}
 	fa2 := &lg.ForAll{Variables: []*lg.Variable{v}, Body: ex}
 	// This should be false because free vars of ex include v which is in uvars
@@ -268,7 +268,7 @@ func TestIsSegregated(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	pSort, _ := lg.NewFunctionSort(lg.TopS, lg.Boolean)
 	p := lg.NewConst("p", pSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
+	pApp := lg.MustApply(p, v)
 	if !IsSegregated(pApp) {
 		t.Error("p(X) should be segregated")
 	}
@@ -283,14 +283,14 @@ func TestIsMacro(t *testing.T) {
 	leSym := lg.NewConst("<=", leSort)
 	x := lg.NewConst("a", s)
 	y := lg.NewConst("b", s)
-	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
+	app := lg.MustApply(leSym, x, y)
 
 	if !IsMacro(app, cfg) {
 		t.Error("<= application should be a macro")
 	}
 
 	ltSym := lg.NewConst("<", leSort)
-	ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{x, y}}
+	ltApp := lg.MustApply(ltSym, x, y)
 	if IsMacro(ltApp, cfg) {
 		t.Error("< application should not be a macro")
 	}
@@ -304,7 +304,7 @@ func TestExpandMacro(t *testing.T) {
 	leSym := lg.NewConst("<=", leSort)
 	x := lg.NewConst("a", s)
 	y := lg.NewConst("b", s)
-	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
+	app := lg.MustApply(leSym, x, y)
 
 	expanded := ExpandMacro(app)
 	if _, ok := expanded.(*lg.Or); !ok {
@@ -313,7 +313,7 @@ func TestExpandMacro(t *testing.T) {
 
 	// Test > expansion: a > b  ->  b < a
 	gtSym := lg.NewConst(">", leSort)
-	gtApp := &lg.Apply{Func: gtSym, Terms: []lg.Expr{x, y}}
+	gtApp := lg.MustApply(gtSym, x, y)
 	expanded2 := ExpandMacro(gtApp)
 	if app2, ok := expanded2.(*lg.Apply); ok {
 		if c, ok := app2.Func.(*lg.Const); !ok || c.Name != "<" {
@@ -362,7 +362,7 @@ func TestSymbolsOverUniversals(t *testing.T) {
 	v, _ := lg.NewVariable("X", s)
 	pSort, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := lg.NewConst("p", pSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
+	pApp := lg.MustApply(p, v)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: pApp}
 
 	syms := SymbolsOverUniversals([]lg.Expr{fa})
@@ -424,7 +424,7 @@ func TestIsDefinitional(t *testing.T) {
 	fSort, _ := lg.NewFunctionSort(s, lg.Boolean)
 	f := lg.NewConst("f", fSort)
 	v, _ := lg.NewVariable("X", s)
-	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{v}}
+	fApp := lg.MustApply(f, v)
 	body := lg.NewConst("true", lg.Boolean)
 
 	// forall X. f(X) <-> true

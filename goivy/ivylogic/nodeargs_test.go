@@ -20,7 +20,7 @@ func TestNodeArgsApplyExcludesFunc(t *testing.T) {
 	x := lg.NewConst("x", S)
 	y := lg.NewConst("y", S)
 
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{x, y}}
+	app := lg.MustApply(f, x, y)
 	args := NodeArgs(app)
 
 	if len(args) != 2 {
@@ -41,8 +41,9 @@ func TestNodeArgsApplyExcludesFunc(t *testing.T) {
 }
 
 func TestNodeArgsApplyNoTerms(t *testing.T) {
-	f := lg.NewConst("c", lg.Boolean)
-	app := &lg.Apply{Func: f, Terms: nil}
+	fs, _ := lg.NewFunctionSort(lg.Boolean)
+	f := lg.NewConst("c", fs)
+	app := lg.MustApply(f)
 	args := NodeArgs(app)
 
 	if len(args) != 0 {
@@ -234,7 +235,7 @@ func TestNodeArgsPolarConsistency(t *testing.T) {
 	fs2, _ := lg.NewFunctionSort(S, lg.Boolean)
 	f := lg.NewConst("f", fs2)
 	x := lg.NewConst("x", S)
-	app := &lg.Apply{Func: f, Terms: []lg.Expr{x}}
+	app := lg.MustApply(f, x)
 	if Polar(app, 0, 0) != -1 {
 		t.Errorf("Polar(Apply, 0, 0) should be -1 (both), got %d", Polar(app, 0, 0))
 	}

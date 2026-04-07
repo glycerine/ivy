@@ -517,7 +517,7 @@ csdefault:
 //line cs_grammar.y:101
 		{
 			sym := lg.NewConst(csDollar[1].str, lg.TopS)
-			csVAL.atom = &lg.Apply{Func: sym, Terms: csDollar[3].terms}
+			csVAL.atom = lg.MustApply(sym, csDollar[3].terms...)
 		}
 	case 10:
 		csDollar = csS[cspt-1 : cspt+1]
