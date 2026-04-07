@@ -2401,12 +2401,15 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236012  go : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type  ...(truncated long line to 300 bytes)
+236015  go : XTRACE: fragment CheckFEU EXIT
+        py : XTRACE: fragment CheckFEU EXIT
 
-        py : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type 
- ...(truncated long line to 300 bytes)
+236016  go : XTRACE: check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().
+        py : XTRACE: check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().
 
-236013  go : XTRACE: fragment CheckFEU EXIT
-        py : XTRACE: fragment/checker.reportCycle ENTER
+236017  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+        py : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 236017, counting from 0.
 ~~~
 
