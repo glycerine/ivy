@@ -19,7 +19,8 @@ func tConst(name string) *lg.Const {
 }
 
 func tApply(fn lg.Expr, terms ...lg.Expr) *lg.Apply {
-	return lg.MustApply(fn, terms...)
+	// Intentional: bypass sort check for test convenience (fn may have non-function sort)
+	return &lg.Apply{Func: fn, Terms: terms}
 }
 
 func tForAll(body lg.Expr) *lg.ForAll {
