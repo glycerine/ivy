@@ -235,7 +235,7 @@ func (s *Solver) GetSmallModelWithCond(
 		for _, sort := range sortsToMinimize {
 			for n := 1; ; n++ {
 				sc := SortSizeConstraint(sort, n)
-				zsc, err := s.translateClosed(sc)
+				zsc, err := s.formulaToZ3(sc)
 				if err != nil {
 					break
 				}
@@ -252,7 +252,7 @@ func (s *Solver) GetSmallModelWithCond(
 		for _, rel := range relationsToMinimize {
 			for n := 1; ; n++ {
 				sc := RelationSizeConstraint(rel, n)
-				zsc, err := s.translateClosed(sc)
+				zsc, err := s.formulaToZ3(sc)
 				if err != nil {
 					break
 				}
@@ -496,9 +496,10 @@ func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Cl
 	z3solver.Assert(za)
 
 	// Add definitions
+	// Python filter_redundant_facts line 1494: formula_to_z3(d.to_constraint())
 	for _, d := range clauses.Defs {
-		constraint := defToConstraint(d)
-		zd, err := s.translateClosed(constraint)
+		constraint := il.DefinitionToConstraint(d)
+		zd, err := s.formulaToZ3(constraint)
 		if err != nil {
 			return nil, err
 		}
@@ -507,7 +508,7 @@ func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Cl
 
 	// Add positive formulas
 	for _, f := range posFmlas {
-		zf, err := s.translateClosed(f)
+		zf, err := s.formulaToZ3(f)
 		if err != nil {
 			return nil, err
 		}
@@ -521,7 +522,7 @@ func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Cl
 	for i, nf := range negFmlas {
 		alit := ctx.Const(fmt.Sprintf("__c%d", i), ctx.BoolSort())
 		alits[i] = alit
-		zn, err := s.translateClosed(nf)
+		zn, err := s.formulaToZ3(nf)
 		if err != nil {
 			continue
 		}

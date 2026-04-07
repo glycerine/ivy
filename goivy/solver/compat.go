@@ -261,7 +261,7 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 		z3solver.Push()
 		for _, sort := range uninterpSorts {
 			sc := SortSizeConstraint(sort, sortSize)
-			zsc, err := s.translateClosed(sc)
+			zsc, err := s.formulaToZ3(sc)
 			if err != nil {
 				continue
 			}

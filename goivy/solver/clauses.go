@@ -123,7 +123,7 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *module.Clauses) (*module.Claus
 	seen := make(map[string]bool)
 	var unique []lg.Expr
 	for _, f := range clauses.Fmlas {
-		zf, err := s.translateClosed(f)
+		zf, err := s.formulaToZ3(f)
 		if err != nil {
 			unique = append(unique, f)
 			continue
@@ -347,7 +347,7 @@ func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *module.Clauses) 
 // SolverAdd adds a formula to a Z3 solver.
 // Corresponds to Python's solver_add.
 func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
-	zf, err := s.translateClosed(fmla)
+	zf, err := s.formulaToZ3(fmla)
 	if err != nil {
 		return err
 	}

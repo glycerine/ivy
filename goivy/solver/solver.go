@@ -261,9 +261,10 @@ func (s *Solver) SetSig(sig *il.Sig) {
 
 // --- Formula translation ---
 
-// FormulaToZ3 converts a single Ivy formula to a Z3 expression.
-// Free variables are universally quantified.
-// This corresponds to Python's formula_to_z3.
+// FormulaToZ3 translates a single Ivy formula to Z3 via the core translator.
+// This is a raw translate (no HASH, no closing, no type constraints).
+// Used by tests and external callers (vmt, alpha).
+// For the full Python formula_to_z3 equivalent, use formulaToZ3 (private).
 func (s *Solver) FormulaToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 	return s.tr.Translate(fmla)
 }
@@ -309,12 +310,12 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
 	}
 
 	// Type constraints matching Python: type_constraints(used_symbols_clauses(clauses))
+	// Python's type_constraints uses formula_to_z3_closed → Go formulaToZ3Closed
 	usedSyms := clauses.Symbols()
 	for _, sym := range usedSyms {
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
-			closed := il.CloseFormula(tc)
-			ztc, err := s.tr.TranslateNoHash(closed)
+			ztc, err := s.formulaToZ3Closed(tc)
 			if err != nil {
 				continue // skip constraints we can't translate
 			}
@@ -451,13 +452,13 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x z3bridge.Expr, err error) {
 	}
 
 	// Per-formula type constraints matching Python formula_to_z3 line 670-672
+	// Python's type_constraints uses formula_to_z3_closed → Go formulaToZ3Closed
 	usedSyms := lu.UsedConstantsList(fmla)
 	var tcs []z3bridge.Expr
 	for _, sym := range usedSyms {
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
-			closed := il.CloseFormula(tc)
-			ztc, err := s.tr.TranslateNoHash(closed)
+			ztc, err := s.formulaToZ3Closed(tc)
 			if err != nil {
 				continue
 			}
@@ -577,19 +578,6 @@ func (s *Solver) NotClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) 
 	return s.tr.Ctx.And(zSkolem, s.tr.Ctx.Not(zAll)), nil
 }
 
-// defToConstraint converts a Definition to a constraint formula.
-func defToConstraint(d *il.Definition) lg.Expr {
-	lhs := d.Lhs
-	rhs := d.Rhs
-	var constraint lg.Expr
-	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
-		constraint = &lg.Iff{T1: lhs, T2: rhs}
-	} else {
-		constraint = &lg.Eq{T1: lhs, T2: rhs}
-	}
-	return constraint
-}
-
 func isSkolem(name string) bool {
 	return strings.Contains(name, "__")
 }
@@ -686,7 +674,7 @@ func (s *Solver) ClausesImplyFormula(clauses1 *module.Clauses, fmla2 lg.Expr) (b
 	z3solver.Assert(z1)
 
 	negFmla := &lg.Not{Body: fmla2}
-	z2, err := s.translateClosed(negFmla)
+	z2, err := s.formulaToZ3(negFmla)
 	if err != nil {
 		return false, err
 	}
@@ -724,7 +712,7 @@ func (s *Solver) UnsatCore(
 
 	// Assert: activation literal => formula
 	for i, f := range fmlas {
-		zf, err := s.translateClosed(f)
+		zf, err := s.formulaToZ3(f)
 		if err != nil {
 			return nil, err
 		}
@@ -733,9 +721,10 @@ func (s *Solver) UnsatCore(
 	}
 
 	// Assert definitions from clauses1
+	// Python unsat_core line 690: formula_to_z3(d.to_constraint())
 	for _, d := range clauses1.Defs {
-		constraint := defToConstraint(d)
-		zd, err := s.translateClosed(constraint)
+		constraint := il.DefinitionToConstraint(d)
+		zd, err := s.formulaToZ3(constraint)
 		if err != nil {
 			return nil, err
 		}
