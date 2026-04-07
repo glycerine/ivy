@@ -54,9 +54,9 @@ func Unify(x, y *UFNode) {
 	}
 	x = Find(x)
 	y = Find(y)
-	if x.ID == y.ID {
-		return
-	}
+	// No early return when x == y — Python's unify() doesn't check,
+	// causing a rank increment when both are already in the same set.
+	// We must match Python's behavior for identical union-find trees.
 	if x.rank < y.rank {
 		x, y = y, x
 	}

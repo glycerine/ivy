@@ -835,14 +835,10 @@ func CheckFEU(
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
 	}
 
-	// Check for cycles
+	// Check for cycles — always call reportCycle to match Python's
+	// unconditional report_cycle() call which traces ENTER/EXIT.
 	cycle := c.findCycle()
-	if len(cycle) > 0 {
-		//vv("TODO REMOVE DEBUG ONLY: skip reporing cycle!")
-		return c.reportCycle(cycle)
-	}
-
-	return nil
+	return c.reportCycle(cycle)
 }
 
 // findCycle looks for a cycle in the stratification graph's arcs. see ivy_utils.py:485
