@@ -2401,10 +2401,14 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+225387  go : XTRACE: fragment CheckFEU ENTER
+        py : XTRACE: fragment CheckFEU ENTER
 
-179847  go : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
-        py : XTRACE: ops.ToOpenFormula nFmlas=286 nDefs=27
+225388  go : XTRACE: fragment CheckFEU input counts: assumes=127 asserts=20 macros=12
+        py : XTRACE: fragment CheckFEU input counts: assumes=127 asserts=20 macros=12
 
-179848  go : XTRACE: ops.defToConstraint lhsSort=<nil> resultType=Eq
-        py : XTRACE: ops.defToConstraint lhsSort=Boolean resultType=Iff
+225389  go : XTRACE: fragment CheckFEU input HASH canon= assumes=[(fmlaPair fmla:(And terms:[(Iff t1:(Symbol name:__m_loc:wr sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__m_loc:rd sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__new_loc:wr sort:(BooleanSort)) t2:(Or terms:[(Symbol name ...(truncated long line to 300 bytes)
+
+        py : XTRACE: fragment CheckFEU input HASH canon= assumes=[(fmlaPair fmla:(And terms:[(Iff t1:(Symbol name:__m_loc:wr sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__m_loc:rd sort:(BooleanSort)) t2:(Or terms:[])) (Iff t1:(Symbol name:__new_loc:wr sort:(BooleanSort)) t2:(Or terms:[(Symbol name
+ ...(truncated long line to 300 bytes)
 ~~~
