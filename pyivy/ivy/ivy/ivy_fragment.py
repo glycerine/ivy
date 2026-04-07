@@ -485,7 +485,7 @@ def check_feu(assumes,asserts,macros):
         ## xtracer.trace("fragment/fragment.go CheckFEU after createStratMap, newAssumes is: HASH canon= %s" % assumes.canon())
 
         # Dump sig.interp keys for cross-language comparison
-        xtracer.trace("fragment sig.Interp keys: %s" % sorted(il.sig.interp.keys()))
+        xtracer.trace("fragment sig.Interp keys: [%s]" % ' '.join(sorted(il.sig.interp.keys())))
 
         # Dump universally quantified variables
         uqv_names = sorted('%s:%s' % (v.name, str(v.sort)) for v in universally_quantified_variables)
@@ -494,7 +494,7 @@ def check_feu(assumes,asserts,macros):
         # Dump strat_map size and keys
         from .canon_fragment import strat_key_canon
         sm_keys = sorted(strat_key_canon(k) for k in strat_map)
-        xtracer.trace("fragment HASH canon= stratMap (%d): %s" % (len(strat_map), sm_keys))
+        xtracer.trace("fragment HASH canon= stratMap (%d): [%s]" % (len(strat_map), ' '.join(sm_keys)))
 
         # Dump arcs count and simplified form
         xtracer.trace("fragment HASH canon= arcs (%d):" % len(arcs))
