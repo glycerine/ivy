@@ -2401,26 +2401,40 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-227411  go : XTRACE:   arc[2017]: from_id=3169(root=1746) to_id=1749(root=1309) fmla=(Apply func:(Symbol name:rfn.abs.begun sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_y1 sort:(UninterpretedSort name:mem_type)) (Apply fun ...(truncated long line to 300 bytes)
+236011  go : XTRACE:   HASH canon= arc[10617]: from_id=11838(root=1746) to_id=1776(root=1776) fmla=(Apply func:(Symbol name:> sort:(FunctionSort sorts:[(UninterpretedSort name:tar_clock) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:X_s5 sort:(UninterpretedSort name:tar_clock)) (Apply ...(truncated long line to 300 bytes)
 
-        py : XTRACE:   arc[2017]: from_id=3169(root=1746) to_id=1749(root=1309) fmla=(Apply func:(Symbol name:rfn.abs.begun sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_y1 sort:(UninterpretedSort name:mem_type)) (Apply fun
+        py : XTRACE:   HASH canon= arc[10617]: from_id=11838(root=1746) to_id=1776(root=1776) fmla=(Apply func:(Symbol name:> sort:(FunctionSort sorts:[(UninterpretedSort name:tar_clock) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:X_s5 sort:(UninterpretedSort name:tar_clock)) (Apply
  ...(truncated long line to 300 bytes)
 
-227412  go : XTRACE:   arc[2018]: from_id=148(root=1120) to_id=3178(root=1309) fmla=(Eq t1:(Variable name:Y_j sort:(UninterpretedSort name:tar_clock)) t2:(Apply func:(Symbol name:ref.evs.lt_arr sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:tar_clock)])) terms:[(Variable name:T ...(truncated long line to 300 bytes)
+236012  go : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type  ...(truncated long line to 300 bytes)
 
-        py : XTRACE:   arc[2018]: from_id=148(root=1120) to_id=3178(root=1309) fmla=(Eq t1:(Variable name:Y_j sort:(UninterpretedSort name:tar_clock)) t2:(Apply func:(Symbol name:ref.evs.lt_arr sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:tar_clock)])) terms:[(Variable name:T
+        py : XTRACE: fragment/fragment.go CheckFEU after createStratMap HASH canon= (checker sig:nil interp:nil stratMap:(hash (StratNode eq:(Apply func:(Symbol name:__ts0__ts0__ts0__m_ref.evs.l_cmp_a sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:loc_type ext:[init_l,cf_mem_l,cf_
  ...(truncated long line to 300 bytes)
 
-227413  go : XTRACE:   arc[2019]: from_id=148(root=1120) to_id=3179(root=3179) fmla=(Eq t1:(Apply func:(Symbol name:ref.evs.req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp])])) terms:[(Variable name:T_y6 sort:(UninterpretedSort name:lcloc ...(truncated long line to 300 bytes)
 
-        py : XTRACE:   arc[2019]: from_id=148(root=1120) to_id=3179(root=3179) fmla=(Eq t1:(Apply func:(Symbol name:ref.evs.req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp])])) terms:[(Variable name:T_y6 sort:(UninterpretedSort name:lcloc
- ...(truncated long line to 300 bytes)
+=== S-expression diff (go '-' vs py '+') ===
+   (checker
+-   sig:(sig
+-     sorts:[addr_type
+-       bool
+-       index
+-       lclock
+-       loc_type
+-       mem_loc_type
+-       mem_type
+-       op_ack_type
+-       op_type
++   sig:nil
++   interp:nil
++   stratMap:(hash
++     (StratNode
++       eq:(Apply
++         func:(Symbol
++           name:__ts0__ts0__ts0__m_ref.evs.l_cmp_a
++           sort:(FunctionSort
++             sorts:[
++               (UninterpretedSort
 
-227414  go : XTRACE:   arc[2020]: from_id=147(root=1746) to_id=3180(root=3180) fmla=(Eq t1:(Apply func:(Symbol name:rfn.abs.queue sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_b2 sort:(UninterpretedSort name:mem_type)) (Var ...(truncated long line to 300 bytes)
-
-        py : XTRACE:   arc[2020]: from_id=3177(root=1309) to_id=3180(root=3180) fmla=(Eq t1:(Apply func:(Symbol name:rfn.abs.queue sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (UninterpretedSort name:tar_clock) (BooleanSort)])) terms:[(Variable name:M_b2 sort:(UninterpretedSort name:mem_type)) (Va
- ...(truncated long line to 300 bytes)
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 227414, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 236012, counting from 0.
 ~~~
 
