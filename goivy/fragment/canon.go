@@ -62,7 +62,11 @@ func (e *FragmentError) Canon() iu.Canonical { return iu.Canonical(e.Sexp()) }
 
 func (s *stratEntry) Sexp() lg.NodeKey {
 	symStr := "nil"
-	if s.sym != nil {
+	if s.isSort && s.eqExpr != nil {
+		// Python stores il.Symbol('=', expr) where expr is the expression itself
+		// (not its sort). Match that: serialize as (Symbol name:= sort:<expr.Sexp()>).
+		symStr = fmt.Sprintf("(Symbol name:= sort:%s)", lg.Key(s.eqExpr))
+	} else if s.sym != nil {
 		symStr = string(s.sym.Sexp())
 	}
 	vStr := "nil"

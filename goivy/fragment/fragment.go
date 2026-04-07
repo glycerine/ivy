@@ -49,6 +49,7 @@ type stratEntry struct {
 	idx    int          // argument index for appKey entries
 	v      *lg.Variable // non-nil for varKey entries
 	isSort bool
+	eqExpr lg.Expr // for equality entries: the expression (matches Python's il.Symbol('=', expr))
 }
 
 func varKey(v *lg.Variable) lg.NodeKey {
@@ -265,7 +266,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 		eq := fmla.(*lg.Eq)
 		sort := eq.T1.NodeSort()
 		if !il.IsInterpretedSort(c.sig, sort) {
-			sSigma := c.getStratNodeWith(eqExprKey(eq.T1), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
+			sSigma := c.getStratNodeWith(eqExprKey(eq.T1), stratEntry{sym: lg.NewConst("=", sort), isSort: true, eqExpr: eq.T1})
 			for i, r := range reses {
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)
