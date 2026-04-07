@@ -2603,11 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236106  go : XTRACE: ivy_solver.py:269 functionsort() ENTER
-        py : XTRACE: ivy_solver.py:269 functionsort() ENTER
-
-236107  go : XTRACE: ivy_solver.py:121 sorts() ENTER name=(UninterpretedSort name:lclock)
+236107  go : XTRACE: ivy_solver.py:258 uninterpretedsort() ENTER name=lclock
         py : XTRACE: ivy_solver.py:258 uninterpretedsort() ENTER name=lclock
+
+236108  go : XTRACE: ivy_solver.py:258 uninterpretedsort() ENTER name=lclock
+        py : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=lclock kind=sort
 ~~~
 was, before adding solver xtracing:
 ~~~

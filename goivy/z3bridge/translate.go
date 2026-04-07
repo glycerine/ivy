@@ -105,20 +105,25 @@ func (t *Translator) z3Name(name string, sort logic.Sort) string {
 }
 
 // TranslateSort converts an Ivy sort to a Z3 sort.
+// Emits type-specific traces matching Python's per-sort-type functions:
+//   uninterpretedsort() (line 258), enumeratedsort() (line 276), etc.
 func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
-	xtracer.Trace("ivy_solver.py:121 sorts() ENTER name=%s", s.Sexp())
 	switch st := s.(type) {
 	case *logic.BooleanSort:
+		// Python z3.BoolSort() has no custom trace
 		return t.Ctx.BoolSort(), nil
 
 	case *logic.UninterpretedSort:
+		// Python: uninterpretedsort(us) at ivy_solver.py:257
+		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
+		// Python: s = lookup_native(us, sorts, "sort") inside uninterpretedsort()
+		xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=sort", st.Name)
 		// Check for interpreted sort via callback (nat→IntSort, bv[N]→BitVecSort, etc.)
-		// Corresponds to Python ivy_solver.py:111-135 sorts() function and
-		// lookup_native(term.sort, sorts, "sort") in term_to_z3.
+		// If native, this calls sorts() internally.
 		if t.SortLookup != nil {
 			if zs := t.SortLookup(st.Name); zs != nil {
 				t.sorts[key] = *zs
@@ -149,6 +154,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 
 	case *logic.TopSort:
 		// TopSort is treated as uninterpreted in Z3
+		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
@@ -159,9 +165,12 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return zs, nil
 
 	case *logic.FunctionSort:
+		xtracer.Trace("ivy_solver.py:269 functionsort() ENTER")
 		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *logic.EnumeratedSort:
+		// Python: enumeratedsort(es) at ivy_solver.py:275
+		xtracer.Trace("ivy_solver.py:276 enumeratedsort() ENTER name=%s", st.Name)
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
@@ -179,6 +188,8 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 
 	case *logic.RangeSort:
 		// Range sorts map to integers
+		// Python: lookup_native returns the IntSort via sorts("int")
+		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
 		zs := t.Ctx.IntSort()
 		t.sortsInv[zs.String()] = s
 		return zs, nil
