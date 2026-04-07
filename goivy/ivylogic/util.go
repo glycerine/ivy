@@ -17,7 +17,11 @@ func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 		return t // variables are immutable
 	case *lg.Apply:
 		if len(args) > 0 {
-			return &lg.Apply{Func: t.Func, Terms: args, }
+			app, err := lg.NewApply(t.Func, args...)
+			if err != nil {
+				panic(fmt.Sprintf("CloneNode: NewApply failed: %v", err))
+			}
+			return app
 		}
 		return t
 	case *lg.Eq:

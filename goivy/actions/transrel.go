@@ -1323,7 +1323,11 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 		if !changed {
 			return node
 		}
-		return &lg.Apply{Func: newFunc, Terms: newTerms}
+		app, err := lg.NewApply(newFunc, newTerms...)
+		if err != nil {
+			panic(fmt.Sprintf("renameNode: NewApply failed after rename: %v", err))
+		}
+		return app
 	case *lg.And:
 		newTerms := make([]lg.Expr, len(n.Terms))
 		changed := false
