@@ -9,7 +9,6 @@ Usage: call install() once at startup (after logic_sexp.install()).
 """
 
 from .canon import node_canon, slice_canon, string_canon, bool_canon, canon_blake3
-from .ivy_compiler import sig_canon
 
 
 # --- UFNode ---
@@ -182,6 +181,7 @@ def checker_canon():
 
     # sig — Python reads from il.sig (the global signature).
     from . import ivy_logic as il
+    from .ivy_compiler import sig_canon
     parts.append(' sig:')
     parts.append(sig_canon(il.sig))
 
