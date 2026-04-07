@@ -2401,6 +2401,8 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+just a lineno representation vs lineno:0 thing
+
 225387  go : XTRACE: fragment CheckFEU ENTER
         py : XTRACE: fragment CheckFEU ENTER
 
