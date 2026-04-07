@@ -34,6 +34,7 @@ z3_to_expr_ref = z3._to_expr_ref if '_to_expr_ref' in z3.__dict__ else z3.z3._to
 use_z3_enums = True
 
 def set_seed(seed):
+    if __debug__: xtracer.trace("ivy_solver.py:37 set_seed() ENTER seed=%s" % seed)
     print('setting seed to {}'.format(seed))
     z3.set_param('smt.random_seed',seed)
 
@@ -41,6 +42,7 @@ opt_seed = iu.Parameter("seed",0,process=int)
 opt_seed.set_callback(set_seed)
 
 def set_macro_finder(truth):
+    if __debug__: xtracer.trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s" % truth)
     z3.set_param('smt.macro_finder',truth)
     
 opt_incremental = iu.BooleanParameter("incremental",True)
@@ -52,6 +54,7 @@ set_macro_finder(True)
 opt_macro_finder.set_callback(set_macro_finder)
 
 def set_use_native_enums(t):
+    if __debug__: xtracer.trace("ivy_solver.py:57 set_use_native_enums() ENTER t=%s" % t)
     global use_z3_enums
     use_z3_enums = t
 
@@ -59,6 +62,7 @@ def set_use_native_enums(t):
 z3_builtins = set(["bit0","bit1"])
 
 def solver_name(symbol):
+    if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
     name = symbol.name
     if name.startswith('bfe['):
         if bfe_to_z3(symbol) is not None:
@@ -82,11 +86,13 @@ def solver_name(symbol):
 # S = z3.DeclareSort("S")
 
 def my_minus(*args):
+    if __debug__: xtracer.trace("ivy_solver.py:89 my_minus() ENTER nargs=%d" % len(args))
     if len(args) == 1:
         return -args[0]
     return args[0] - args[1]
 
 def my_eq(x,y):
+    if __debug__: xtracer.trace("ivy_solver.py:95 my_eq() ENTER")
     if z3.is_true(y):
         return x
     if z3.is_false(y):
@@ -98,6 +104,7 @@ def my_eq(x,y):
 z3_sort_parser = re.compile(r'bv\[[0-9]+\]')
 
 def parse_array_theory(name):
+    if __debug__: xtracer.trace("ivy_solver.py:107 parse_array_theory() ENTER name=%s" % name)
     pname = ivy_ast.parse_name(name)
     if not(isinstance(pname,ivy_ast.Bracket)
            and isinstance(pname.args[0],ivy_ast.Bracket)
@@ -106,10 +113,12 @@ def parse_array_theory(name):
     return pname.args[0].args[1].unparse(),pname.args[1].unparse()
     
 def sort_name_to_z3(name):
+    if __debug__: xtracer.trace("ivy_solver.py:116 sort_name_to_z3() ENTER name=%s" % name)
     sort = ivy_logic.find_sort(name)
     return sort.to_z3()
 
 def sorts(name):
+    if __debug__: xtracer.trace("ivy_solver.py:121 sorts() ENTER name=%s" % name)
     if name.startswith('bv[') and name.endswith(']'):
         width = int(name[3:-1])
         return z3.BitVecSort(width)
@@ -140,6 +149,7 @@ def sorts(name):
 #         "Int":z3.IntSort()}
 
 def parse_int_params(name):
+    if __debug__: xtracer.trace("ivy_solver.py:152 parse_int_params() ENTER name=%s" % name)
     things = name.split('[')[1:]
 #    print "things:".format(things)
     if not all(t.endswith(']') for t in things):
@@ -148,6 +158,7 @@ def parse_int_params(name):
     
 
 def is_solver_sort(name):
+    if __debug__: xtracer.trace("ivy_solver.py:161 is_solver_sort() ENTER name=%s" % name)
     return name.startswith('bv[') and name.endswith(']') or name == 'int' or name == 'nat' or name == 'real' or name == 'strlit' or name.startswith('strbv[') or name.startswith('intbv[') or name.startswith('arr[')
 
 relations_dict = {'<':(lambda x,y: z3.ULT(x, y) if z3.is_bv(x) else x < y),
@@ -158,6 +169,7 @@ relations_dict = {'<':(lambda x,y: z3.ULT(x, y) if z3.is_bv(x) else x < y),
              }
 
 def relations(name):
+    if __debug__: xtracer.trace("ivy_solver.py:172 relations() ENTER name=%s" % name)
     return relations_dict.get(name)
 
 functions_dict = {"+":(lambda x,y: x + y),
@@ -173,6 +185,7 @@ functions_dict = {"+":(lambda x,y: x + y),
              }
 
 def bfe_to_z3(sym):
+    if __debug__: xtracer.trace("ivy_solver.py:188 bfe_to_z3() ENTER sym=%s" % sym)
     try:
         things = parse_int_params(sym.name)
     except:
@@ -212,6 +225,7 @@ def bfe_to_z3(sym):
 
     
 def functions(name):
+    if __debug__: xtracer.trace("ivy_solver.py:228 functions() ENTER name=%s" % name)
     # if name.startswith('bfe['):
     #     try:
     #         things = parse_int_params(name)
@@ -223,10 +237,12 @@ def functions(name):
     return functions_dict.get(name)
 
 def is_solver_op(name):
+    if __debug__: xtracer.trace("ivy_solver.py:240 is_solver_op() ENTER name=%s" % name)
     return relations(name) != None or functions(name) != None
 
 
 def clear():
+    if __debug__: xtracer.trace("ivy_solver.py:245 clear() ENTER")
     global z3_sorts, z3_predicates, z3_constants, z3_functions
     z3_sorts = dict()
     z3_predicates = {ivy_logic.equals : my_eq}
@@ -239,6 +255,7 @@ clear()
 z3_sorts_inv = {}
 
 def uninterpretedsort(us):
+    if __debug__: xtracer.trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s" % us.rep)
     s = z3_sorts.get(us.rep,None)
     if s is not None: return s
     s = lookup_native(us,sorts,"sort")
@@ -249,12 +266,14 @@ def uninterpretedsort(us):
     return s
 
 def functionsort(fs):
+    if __debug__: xtracer.trace("ivy_solver.py:269 functionsort() ENTER")
 #    print "fs.rng = {!r}".format(fs.rng)
     if fs.is_relational():
         return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
     return [s.to_z3() for s in fs.dom] + [fs.rng.to_z3()]
 
 def enumeratedsort(es):
+    if __debug__: xtracer.trace("ivy_solver.py:276 enumeratedsort() ENTER name=%s" % es.name)
     s = z3_sorts.get(es.rep, None)
     if s is not None: return s 
     res,consts = z3.EnumSort(es.name,es.extension)
@@ -265,6 +284,7 @@ def enumeratedsort(es):
     return res
 
 def symbol_to_z3(s):
+    if __debug__: xtracer.trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s" % (s.name, s.sort))
     return z3.Const(s.name, s.sort.to_z3()) if s.sort.dom == [] else z3.Function(s.name,s.sort.to_z3())    
 
 ivy_logic.UninterpretedSort.to_z3 = uninterpretedsort
@@ -276,6 +296,7 @@ ivy_logic.Symbol.to_z3 = symbol_to_z3
 
 
 def range_sort_bounds_to_z3(itp):
+    if __debug__: xtracer.trace("ivy_solver.py:299 range_sort_bounds_to_z3() ENTER")
     global handle_range_sorts
     handle_range_sorts = False
     lb = term_to_z3(itp.lb)
@@ -288,6 +309,7 @@ def range_sort_bounds_to_z3(itp):
 
 
 def lookup_native(thing,table,kind):
+    if __debug__: xtracer.trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s" % (thing.name, kind))
     z3name = ivy_logic.sig.interp.get(thing.name)
     if z3name == None:
         if  thing.name.startswith('bfe['):
@@ -325,6 +347,7 @@ def lookup_native(thing,table,kind):
     return z3val
 
 def check_native_compat_sym(sym):
+    if __debug__: xtracer.trace("ivy_solver.py:350 check_native_compat_sym() ENTER sym=%s" % sym)
     table,kind = (relations,"relation") if sym.is_relation() else (functions,"function") 
     thing = lookup_native(sym,table,kind)
 #    print "check_native_compat_sym: {} {}".format(sym,thing)
@@ -348,6 +371,7 @@ def check_native_compat_sym(sym):
         raise iu.IvyError(None,'cannot interpret {} as {}: {}'.format(sym,ivy_logic.sig.interp[sym.name],e))
 
 def check_compat():
+    if __debug__: xtracer.trace("ivy_solver.py:374 check_compat() ENTER")
     for name,value in ivy_logic.sig.interp.items():
         if name in ivy_logic.sig.symbols:
             sym = ivy_logic.sig.symbols[name]
@@ -356,6 +380,7 @@ def check_compat():
                 check_native_compat_sym(ivy_logic.Symbol(name,sort))
 
 def sort_card(sort):
+    if __debug__: xtracer.trace("ivy_solver.py:383 sort_card() ENTER sort=%s" % sort)
     sig = lookup_native(sort,sorts,"sort")
     sig = sig if sig is not None else sort.to_z3()
     if z3.is_bv_sort(sig):
@@ -370,11 +395,13 @@ def sort_card(sort):
 
 # TODO: this seems wrong: why return a constant?
 def native_symbol(sym):
+    if __debug__: xtracer.trace("ivy_solver.py:398 native_symbol() ENTER sym=%s" % sym)
     if isinstance(sym.sort,ConstantSort):
         return z3.Const(sym.rep, name.sort.to_z3())
     return z3.Function(sym.rep, *(name.sort.to_z3()))
 
 def apply_z3_func(pred,tup):
+    if __debug__: xtracer.trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d" % len(tup))
     if isinstance(pred,z3.BoolRef):
         assert not tup
         return pred
@@ -387,6 +414,7 @@ def apply_z3_func(pred,tup):
 handle_range_sorts = True
 
 def numeral_to_z3(num):
+    if __debug__: xtracer.trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%s" % num)
     # TODO: allow other numeric types
     z3sort = lookup_native(num.sort,sorts,"sort")
     if z3sort == None:
@@ -410,9 +438,11 @@ def numeral_to_z3(num):
 # check that the constants actually fit in the type.
 
 def enumerated_to_numeral(term):
+    if __debug__: xtracer.trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
     raise iu.IvyError(None,'Cannot interpret enumerated type "{}" as a native sort (not yet supported)'.format(term.sort.name))
 
 def term_to_z3(term):
+    if __debug__: xtracer.trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s" % (type(term).__name__, getattr(term, 'name', getattr(term, 'rep', '?'))))
     if ivy_logic.is_boolean(term) and not ivy_logic.is_variable(term):
         return formula_to_z3_int(term)
     if not term.args:
@@ -468,6 +498,7 @@ def term_to_z3(term):
     return res
 
 def lt_pred(sort):
+    if __debug__: xtracer.trace("ivy_solver.py:501 lt_pred() ENTER sort=%s" % sort)
     sym = ivy_logic.Symbol('<',sort)
     sig = sym.sort.to_z3()
     return z3.Function(solver_name(sym), *sig)
@@ -479,9 +510,11 @@ polymacs = {
 }
 
 def get_polymacs(op):
+    if __debug__: xtracer.trace("ivy_solver.py:513 get_polymacs() ENTER op=%s" % op.name)
     return functools.partial(polymacs[op.name],op.sort)
 
 def atom_to_z3(atom):
+    if __debug__: xtracer.trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d" % (atom.rep, len(atom.args)))
     if ivy_logic.is_equals(atom.rep) and ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums:
         return encode_equality(*atom.args)
     if atom.relname not in z3_predicates:
@@ -501,6 +534,7 @@ def atom_to_z3(atom):
     return apply_z3_func(pred,tup)
 
 def literal_to_z3(lit):
+    if __debug__: xtracer.trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%d" % lit.polarity)
     z3_atom = formula_to_z3_int(lit.atom)
     if lit.polarity == 0:
         return z3.Not(z3_atom)
@@ -508,6 +542,7 @@ def literal_to_z3(lit):
         return z3_atom
 
 def quant_constraints(vs,z3_vs):
+    if __debug__: xtracer.trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d" % len(vs))
     cnstrs = []
     for (v,z3_v) in zip(vs,z3_vs):
         itp = ivy_logic.sig.interp.get(v.sort.name,None)
@@ -522,18 +557,21 @@ def quant_constraints(vs,z3_vs):
 # this adds bounds for nat and range types
 
 def forall(vs,z3_vs,z3_body):
+    if __debug__: xtracer.trace("ivy_solver.py:560 forall() ENTER nvars=%d" % len(vs))
     cnstrs = quant_constraints(vs,z3_vs)
     if len(cnstrs) > 0:
         z3_body = z3.Implies(z3.And(*cnstrs),z3_body)
     return z3.ForAll(z3_vs, z3_body)
 
 def exists(vs,z3_vs,z3_body):
+    if __debug__: xtracer.trace("ivy_solver.py:567 exists() ENTER nvars=%d" % len(vs))
     cnstrs = quant_constraints(vs,z3_vs)
     if len(cnstrs) > 0:
         z3_body = z3.And(*(cnstrs + [z3_body]))
     return z3.Exists(z3_vs, z3_body)
 
 def clause_to_z3(clause):
+    if __debug__: xtracer.trace("ivy_solver.py:574 clause_to_z3() ENTER nlits=%d" % len(clause))
     z3_literals = [literal_to_z3(lit) for lit in clause]
     z3_formula = z3.Or(z3_literals)
     variables = sorted(used_variables_clause(clause))
@@ -544,11 +582,13 @@ def clause_to_z3(clause):
         return forall(variables, z3_variables, z3_formula)
 
 def conj_to_z3(cl):
+    if __debug__: xtracer.trace("ivy_solver.py:585 conj_to_z3() ENTER type=%s" % type(cl).__name__)
     if isinstance(cl,ivy_logic.And):
         return z3.And(*[conj_to_z3(t) for t in cl.args])
     return formula_to_z3_closed(cl)
 
 def type_constraints(syms):
+    if __debug__: xtracer.trace("ivy_solver.py:591 type_constraints() ENTER nsyms=%d" % len(syms))
     natsyms = [s for s in syms
                if ivy_logic.sig.interp.get(s.sort.rng.name,None) == 'nat'
                   and not ivy_logic.is_interpreted_symbol(s)]
@@ -595,6 +635,7 @@ def clauses_to_z3(clauses):
     return res
 
 def formula_to_z3_int(fmla):
+    if __debug__: xtracer.trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%s" % type(fmla).__name__)
 #    print "formula_to_z3_int: {} : {}".format(fmla,type(fmla))
     if isinstance(fmla,ivy_logic.Definition or ivy_logic.is_eq(fmla) or isinstance(fmla,ivy_logic.Iff)):
         if ivy_logic.is_true(fmla.args[1]):
@@ -644,6 +685,7 @@ def formula_to_z3_int(fmla):
     assert False
 
 def formula_to_z3_closed(fmla):
+    if __debug__: xtracer.trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%s" % type(fmla).__name__)
     z3_formula = formula_to_z3_int(fmla)
     variables = sorted(used_variables_ast(fmla))
     if len(variables) == 0:
@@ -678,6 +720,7 @@ def formula_to_z3(fmla):
 
 
 def unsat_core(clauses1, clauses2, implies = None, unlikely=lambda x:False):
+    if __debug__: xtracer.trace("ivy_solver.py:723 unsat_core() ENTER")
 #    print "unsat_core clauses1 = {}, clauses2 = {}".format(clauses1,clauses2)
 #    assert clauses1.defs == []
     fmlas = clauses1.fmlas
@@ -707,6 +750,7 @@ def unsat_core(clauses1, clauses2, implies = None, unlikely=lambda x:False):
     return Clauses(res,list(clauses1.defs))
 
 def binary_interpolant(clauses2, clauses1):
+    if __debug__: xtracer.trace("ivy_solver.py:753 binary_interpolant() ENTER")
     print ("binary_interpolant clauses1 = {}, clauses2 = {}".format(clauses1,clauses2))
 #    assert clauses1.defs == []
     print ("clauses1: {}".format(clauses_to_z3(clauses1)))
@@ -727,15 +771,18 @@ def binary_interpolant(clauses2, clauses1):
         return None
 
 def cube_to_z3(cube):
+    if __debug__: xtracer.trace("ivy_solver.py:774 cube_to_z3() ENTER nlits=%d" % len(cube))
     if len(cube) == 0:
         return z3.BoolVal(True)
     fmla = z3.And([literal_to_z3(lit) for lit in cube])
     return fmla
 
 def get_id(x):
+    if __debug__: xtracer.trace("ivy_solver.py:781 get_id() ENTER")
     return z3.Z3_get_ast_id(x.ctx_ref(), x.as_ast())
 
 def check_cube(s,cube,memo = None,memo_unsat_only = False):
+    if __debug__: xtracer.trace("ivy_solver.py:785 check_cube() ENTER")
     s.push()
     f = cube_to_z3(cube)
 ##    print f
@@ -758,23 +805,29 @@ def check_cube(s,cube,memo = None,memo_unsat_only = False):
     return res
 
 def new_solver():
+    if __debug__: xtracer.trace("ivy_solver.py:808 new_solver() ENTER")
     return z3.Solver()
 
 def solver_add(solver,fmla):
+    if __debug__: xtracer.trace("ivy_solver.py:812 solver_add() ENTER")
     solver.add(formula_to_z3(fmla))
 
 def is_sat(s):
+    if __debug__: xtracer.trace("ivy_solver.py:816 is_sat() ENTER")
     return s.check() != z3.unsat
 
 def add_clauses(s,clauses):
+    if __debug__: xtracer.trace("ivy_solver.py:820 add_clauses() ENTER")
     foo = clauses_to_z3(clauses)
 #    print "foo = {}".format(foo)
     s.add(foo)
 
 def get_model(s):
+    if __debug__: xtracer.trace("ivy_solver.py:826 get_model() ENTER")
     return s.model()
 
 def terms_match(tl1,tl2):
+    if __debug__: xtracer.trace("ivy_solver.py:830 terms_match() ENTER")
     if len(tl1) != len(tl2):
         return False
     env = dict()
@@ -790,6 +843,7 @@ def terms_match(tl1,tl2):
     return True
 
 def get_arg_range(m,x):
+    if __debug__: xtracer.trace("ivy_solver.py:846 get_arg_range() ENTER")
     decl = x.decl()
     v = m[decl].as_list()
     range = [y[-1] for y in v[0:-1]] + [v[-1]]
@@ -810,6 +864,7 @@ class SortOrder(object):
         return -1 if z3.is_true(fact_val) else 1   
 
 def collect_numerals(z3term):
+    if __debug__: xtracer.trace("ivy_solver.py:867 collect_numerals() ENTER")
     if z3.is_int_value(z3term) or z3.is_bv_value(z3term):
         yield z3term
     elif z3.is_app_of(z3term,z3.Z3_OP_ITE):
@@ -819,18 +874,21 @@ def collect_numerals(z3term):
             yield z
 
 def from_z3_numeral(z3term,sort):
+    if __debug__: xtracer.trace("ivy_solver.py:877 from_z3_numeral() ENTER sort=%s" % sort)
     name = str(z3term)
     if not(name[0].isdigit() or name[0] == '"' or name[0] == '-'):
         print("unexpected numeral from Z3 model: {}".format(name))
     return ivy_logic.Symbol(name,sort)
 
 def collect_model_values(sort,model,sym):
+    if __debug__: xtracer.trace("ivy_solver.py:884 collect_model_values() ENTER sort=%s" % sort)
     term = sym(*sym_placeholders(sym))
     val = model.eval(term_to_z3(term),model_completion=True)
     nums = set(from_z3_numeral(n,sort) for n in collect_numerals(val))
     return nums
 
 def mine_interpreted_constants(model,vocab):
+    if __debug__: xtracer.trace("ivy_solver.py:891 mine_interpreted_constants() ENTER")
     sorts = ivy_logic.interpreted_sorts()
     sort_values = dict((sort,set()) for sort in sorts)
     for s in vocab:
@@ -842,11 +900,13 @@ def mine_interpreted_constants(model,vocab):
     return dict((x,list(map(get_const,list(y)))) for x,y in sort_values.items())
     
 def enumerated_range(sort):
+    if __debug__: xtracer.trace("ivy_solver.py:903 enumerated_range() ENTER")
     res = [z3_constants[x] for x in sort.defines()]
     return res
 
 class HerbrandModel(object):
     def __init__(self,solver,model,vocab):
+        if __debug__: xtracer.trace("ivy_solver.py:909 HerbrandModel.__init__() ENTER")
         self.solver, self.model = solver, model
         self.constants = dict((sort_from_z3(s),model.get_universe(s))
                               for s in model.sorts())
@@ -861,7 +921,7 @@ class HerbrandModel(object):
         return [constant_from_z3(sort,c) for c in self.constants[sort]]
 
     def sorted_sort_universe(self,sort):
-        if __debug__: xtracer.trace("ivy_solver.py:851 HerbrandModel.sorted_sort_universe() top. solver/herbrand.go:132")
+        if __debug__: xtracer.trace("ivy_solver.py:924 HerbrandModel.sorted_sort_universe() top. solver/herbrand.go:132")
 
         elems = self.constants[sort]
 #        print "elems: {}".format(map(str,elems))
@@ -876,7 +936,7 @@ class HerbrandModel(object):
 #            print "sorting..."
             elems = sorted(elems,key=functools.cmp_to_key(SortOrder(z3_vs,order_atom,self.model)))
         except IndexError:
-            if __debug__: xtracer.trace("ivy_solver.py:866 HerbrandModel.sorted_sort_universe(): IndexError from order.to_z3() | solver/herbrand.go:143")
+            if __debug__: xtracer.trace("ivy_solver.py:939 HerbrandModel.sorted_sort_universe(): IndexError from order.to_z3() | solver/herbrand.go:143")
             pass
 #        print "elems: {}".format(map(str,elems))
         return [constant_from_z3(sort,elem) for elem in elems]
@@ -930,9 +990,11 @@ class HerbrandModel(object):
     
 # TODO: need to map Z3 sorts back to ivy sorts
 def sort_from_z3(s):
+    if __debug__: xtracer.trace("ivy_solver.py:993 sort_from_z3() ENTER")
     return z3_sorts_inv[get_id(s)]
 
 def constant_from_z3(sort,c):
+    if __debug__: xtracer.trace("ivy_solver.py:997 constant_from_z3() ENTER sort=%s" % sort)
     if z3.is_true(c):
         return ivy_logic.And()
     if z3.is_false(c):
@@ -940,6 +1002,7 @@ def constant_from_z3(sort,c):
     return ivy_logic.Constant(ivy_logic.Symbol(repr(c),sort))
 
 def get_model_constant(m,t):
+    if __debug__: xtracer.trace("ivy_solver.py:1005 get_model_constant() ENTER")
     s = t.get_sort()
     if isinstance(s,ivy_logic.EnumeratedSort) and not use_z3_enums:
         for v in s.defines():
@@ -957,6 +1020,7 @@ def get_model_constant(m,t):
 
 
 def clauses_imply(clauses1, clauses2):
+    if __debug__: xtracer.trace("ivy_solver.py:1023 clauses_imply() ENTER")
     """True if clauses1 imply clauses2.
     """
     s = z3.Solver()
@@ -969,6 +1033,7 @@ def clauses_imply(clauses1, clauses2):
     return s.check() == z3.unsat
 
 def clauses_imply_list(clauses1, clauses2_list):
+    if __debug__: xtracer.trace("ivy_solver.py:1036 clauses_imply_list() ENTER")
     """True if clauses1 imply clauses2.
     """
     s = z3.Solver()
@@ -1002,6 +1067,7 @@ class Assert(AssumeAssert):
     pass
 
 def check_sequence(assume_assert_list,reporter):
+    if __debug__: xtracer.trace("ivy_solver.py:1070 check_sequence() ENTER n=%d" % len(assume_assert_list))
     """True if clauses1 imply clauses2.
     """
     s = z3.Solver()
@@ -1033,6 +1099,7 @@ def check_sequence(assume_assert_list,reporter):
 
 
 def not_clauses_to_z3(clauses):
+    if __debug__: xtracer.trace("ivy_solver.py:1102 not_clauses_to_z3() ENTER")
     # Separate the definition of skolems
     sdefs,defs = [],[]
     for dfn in clauses.defs:
@@ -1043,6 +1110,7 @@ def not_clauses_to_z3(clauses):
     return z3.And(clauses_to_z3(dcls),z3.Not(clauses_to_z3(clauses)))
 
 def clauses_sat(clauses1):
+    if __debug__: xtracer.trace("ivy_solver.py:1113 clauses_sat() ENTER")
     """True if clauses1 imply clauses2.
     """
     s = z3.Solver()
@@ -1051,11 +1119,13 @@ def clauses_sat(clauses1):
 
 
 def remove_duplicates_clauses(clauses):
+    if __debug__: xtracer.trace("ivy_solver.py:1122 remove_duplicates_clauses() ENTER")
     # tricky: store all z3 fmlas in list so not GC'd until all id's computed!
     z3fs = [(c,formula_to_z3(c)) for c in clauses.fmlas]
     return Clauses(list(iu.unique2((x,get_id(y)) for x,y in z3fs)),clauses.defs)
 
 def clauses_case(clauses1):
+    if __debug__: xtracer.trace("ivy_solver.py:1128 clauses_case() ENTER")
     """ Drop literals in a clause set while maintaining satisfiability.
     This only works for quantifier-free clauses. """
     s = z3.Solver()
@@ -1087,6 +1157,7 @@ def clauses_case(clauses1):
 
 
 def clause_model_simp(m,c):
+    if __debug__: xtracer.trace("ivy_solver.py:1160 clause_model_simp() ENTER")
     """ Simplify a clause by dropping literals while maintaining its truth in a model. """
     res = []
     for l in c:
@@ -1103,6 +1174,7 @@ def clause_model_simp(m,c):
     return res
 
 def get_model_clauses(clauses1):
+    if __debug__: xtracer.trace("ivy_solver.py:1177 get_model_clauses() ENTER")
     s = z3.Solver()
     z3c = clauses_to_z3(clauses1)
     s.add(z3c)
@@ -1113,6 +1185,7 @@ def get_model_clauses(clauses1):
     return HerbrandModel(s,m,used_symbols_clauses(clauses1))
 
 def sort_size_constraint(sort,size):
+    if __debug__: xtracer.trace("ivy_solver.py:1188 sort_size_constraint() ENTER sort=%s size=%d" % (sort, size))
     if isinstance(sort,ivy_logic.UninterpretedSort):
         syms = [ivy_logic.Symbol('__'+sort.name+'$'+str(i),sort) for i in range(size)]
         v = ivy_logic.Variable('X'+sort.name,sort)
@@ -1123,6 +1196,7 @@ def sort_size_constraint(sort,size):
 
 
 def relation_size_constraint(relation, size):
+    if __debug__: xtracer.trace("ivy_solver.py:1199 relation_size_constraint() ENTER size=%d" % size)
     assert type(relation) is lg.Const
     assert type(relation.sort) is lg.FunctionSort
 
@@ -1149,6 +1223,7 @@ def relation_size_constraint(relation, size):
 
 
 def size_constraint(x, size):
+    if __debug__: xtracer.trace("ivy_solver.py:1226 size_constraint() ENTER size=%d" % size)
     if type(x) is lg.UninterpretedSort:
         return sort_size_constraint(x, size)
 
@@ -1160,6 +1235,7 @@ def size_constraint(x, size):
 
 
 def model_if_none(clauses1,implied,model):
+    if __debug__: xtracer.trace("ivy_solver.py:1238 model_if_none() ENTER")
     h = model
     if h == None:
         s = z3.Solver()
@@ -1223,6 +1299,7 @@ def _traced_z3_solver_check(self, *args):
 z3.Solver.check = _traced_z3_solver_check
 
 def decide(s,atoms=None):
+    if __debug__: xtracer.trace("ivy_solver.py:1302 decide() ENTER")
     # print ("solving{")
     # f = open("ivy.smt2","w")
     # f.write(s.to_smt2())
@@ -1259,6 +1336,7 @@ def get_small_model(clauses, sorts_to_minimize, relations_to_minimize, final_con
 
     """
 
+    if __debug__: xtracer.trace("ivy_solver.py:1339 get_small_model() ENTER shrink=%s" % shrink)
     if opt_show_vcs.get():
         print('')
         print("definitions:")
@@ -1351,6 +1429,7 @@ def get_small_model(clauses, sorts_to_minimize, relations_to_minimize, final_con
 
 
 def model_universe_facts(h,sort,upclose):
+    if __debug__: xtracer.trace("ivy_solver.py:1432 model_universe_facts() ENTER sort=%s" % sort)
     if ivy_logic.is_interpreted_sort(sort):
         return []
     # get universe elements
@@ -1366,6 +1445,7 @@ def model_universe_facts(h,sort,upclose):
 
 
 def model_facts(h,ignore,clauses1,upclose=False):
+    if __debug__: xtracer.trace("ivy_solver.py:1448 model_facts() ENTER")
     # define the universe for each sort:
     uc = [fact for s in h.sorts() for fact in model_universe_facts(h,s,upclose)]
     # values of constants in formula
@@ -1397,6 +1477,7 @@ def model_facts(h,ignore,clauses1,upclose=False):
 #             for s in h.sorts() for i,c in enumerate(h.sorted_sort_universe(s)))
 
 def numeral_assign(clauses,h):
+    if __debug__: xtracer.trace("ivy_solver.py:1480 numeral_assign() ENTER")
     num_by_sort = defaultdict(list)
     numerals = [c for c in used_constants_clauses(clauses) if c.is_numeral()]
     for num in numerals:
@@ -1432,6 +1513,7 @@ def numeral_assign(clauses,h):
     return foom
 
 def clauses_model_to_clauses(clauses1,ignore = None, implied = None,model = None, numerals=False):
+    if __debug__: xtracer.trace("ivy_solver.py:1516 clauses_model_to_clauses() ENTER")
     """ Return a model of clauses1 or None. Model is represented by a
     clause set that uniquely characterizes it. The function "ignore", if
     provided, returns true for symbols that should be ignored in the
@@ -1456,6 +1538,7 @@ def clauses_model_to_clauses(clauses1,ignore = None, implied = None,model = None
     return res
 
 def bound_quantifiers_clauses(h,clauses,reps):
+   if __debug__: xtracer.trace("ivy_solver.py:1541 bound_quantifiers_clauses() ENTER")
    """ Bound the universal quantifiers in "clauses" to just the terms in
        Herbrand model h. This applies only to quantifiers in the constraints of
        "clauses" and not to the definitions. The map reps gives representatives
@@ -1478,6 +1561,7 @@ def bound_quantifiers_clauses(h,clauses,reps):
    return Clauses(fmlas=new_fmlas,defs=list(clauses.defs))
 
 def filter_redundant_facts(clauses,axioms):
+    if __debug__: xtracer.trace("ivy_solver.py:1564 filter_redundant_facts() ENTER")
     """ Filter out redundant constraints from "clauses", given the
     "axioms".  Currently, this removes only negative formulas that are
     implied by the positive formulas, so it should work well for facts
@@ -1507,6 +1591,7 @@ def filter_redundant_facts(clauses,axioms):
 
 
 def clauses_model_to_diagram(clauses1,ignore = None, implied = None,model = None,axioms=None,weaken=True,numerals=True,upward_close=True):
+    if __debug__: xtracer.trace("ivy_solver.py:1594 clauses_model_to_diagram() ENTER")
     """ Return a diagram of a model of clauses1 or None.  The function "ignore", if
     provided, returns true for symbols that should be ignored in the
     diagram.
@@ -1577,6 +1662,7 @@ def clauses_model_to_diagram(clauses1,ignore = None, implied = None,model = None
     return res
 
 def relation_model_to_clauses(h,r,n):
+    if __debug__: xtracer.trace("ivy_solver.py:1665 relation_model_to_clauses() ENTER")
     lit = ivy_logic.Literal(1,rel_inst(r))
     res = []
     get_lit_facts(h,lit,res)
@@ -1587,6 +1673,7 @@ def relation_model_to_clauses(h,r,n):
 #    return pos + neg;
 
 def get_lit_facts(h,lit,res):
+    if __debug__: xtracer.trace("ivy_solver.py:1676 get_lit_facts() ENTER")
     vs,rows = h.check(lit)
 ##    print "rows = {}".format(rows)
     for r in rows:
@@ -1596,6 +1683,7 @@ def get_lit_facts(h,lit,res):
         res += [substitute_lit(lit,subst)]
 
 def function_model_to_clauses(h,f):
+    if __debug__: xtracer.trace("ivy_solver.py:1686 function_model_to_clauses() ENTER")
     sort = f.sort
     rng = sort.rng
     res = []
@@ -1613,6 +1701,7 @@ def function_model_to_clauses(h,f):
     return res
 
 def clauses_imply_formula(clauses1, fmla2):
+    if __debug__: xtracer.trace("ivy_solver.py:1704 clauses_imply_formula() ENTER")
     """True if clauses1 imply clauses2.
     """
     s = z3.Solver()
@@ -1622,6 +1711,7 @@ def clauses_imply_formula(clauses1, fmla2):
     return s.check() == z3.unsat
 
 def ceillog2(n):
+    if __debug__: xtracer.trace("ivy_solver.py:1714 ceillog2() ENTER n=%d" % n)
     bits,vals = 0,1
     while vals < n:
         bits += 1
@@ -1629,6 +1719,7 @@ def ceillog2(n):
     return bits
 
 def gebin(bits,n):
+    if __debug__: xtracer.trace("ivy_solver.py:1722 gebin() ENTER n=%d" % n)
     if n == 0:
         return z3.BoolVal(True)
     if n >= 2**len(bits):
@@ -1639,13 +1730,16 @@ def gebin(bits,n):
     return z3.Or(bits[0],gebin(bits[1:],n))
 
 def binenc(m,n):
+    if __debug__: xtracer.trace("ivy_solver.py:1733 binenc() ENTER m=%d n=%d" % (m, n))
     return [(z3.BoolVal(True) if m & (1 << (n-1-i)) else z3.BoolVal(False))
             for i in range(n)]
 
 def z3_function(name,sig):
+    if __debug__: xtracer.trace("ivy_solver.py:1738 z3_function() ENTER name=%s" % name)
     return z3.Function(name, *sig) if isinstance(sig,list) else z3.Const(name,sig)
 
 def encode_term(t,n,sort):
+    if __debug__: xtracer.trace("ivy_solver.py:1742 encode_term() ENTER sort=%s" % sort)
     if isinstance(t,ivy_logic.Ite):
         cond = formula_to_z3_int(t.args[0])
         thenterm = encode_term(t.args[1],n,sort)
@@ -1676,6 +1770,7 @@ def encode_term(t,n,sort):
         return res
 
 def encode_equality(*terms):
+    if __debug__: xtracer.trace("ivy_solver.py:1773 encode_equality() ENTER nterms=%d" % len(terms))
     sort = terms[0].sort
     n = len(sort.defines())
     bits = ceillog2(n)
@@ -1690,6 +1785,7 @@ def encode_equality(*terms):
 # this is just a stripped-down version of the one in z3.py
 
 def substitute(t, *m):
+    if __debug__: xtracer.trace("ivy_solver.py:1788 substitute() ENTER")
     """Apply substitution m on t, m is a list of pairs of the form (from, to). Every occurrence in t of from is replaced with to. """
     num = len(m)
     _from = (z3.Ast * num)()
@@ -1700,11 +1796,13 @@ def substitute(t, *m):
     return z3_to_expr_ref(z3.Z3_substitute(t.ctx.ref(), t.as_ast(), num, _from, _to), t.ctx)
 
 def z3sort_to_sort(z3sort):
+    if __debug__: xtracer.trace("ivy_solver.py:1799 z3sort_to_sort() ENTER")
     if z3sort.kind() == z3.Z3_BOOL_SORT:
         return ivy_logic.BooleanSort()
     return ivy_logic.ConstantSort(z3sort.name())
 
 def z3decl_to_symbol(z3decl):
+    if __debug__: xtracer.trace("ivy_solver.py:1805 z3decl_to_symbol() ENTER")
     if z3.is_func_decl(z3decl):
         arity = z3decl.arity()
         rng = z3sort_to_sort(z3decl.range())
@@ -1716,6 +1814,7 @@ def z3decl_to_symbol(z3decl):
     
 
 def z3_to_formula(z3expr,vars = []):
+    if __debug__: xtracer.trace("ivy_solver.py:1817 z3_to_formula() ENTER")
     if z3.is_app(z3expr):
         arity = z3expr.num_args()
         z3args = [z3expr.arg(i) for i in range(arity)]

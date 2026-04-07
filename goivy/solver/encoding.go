@@ -8,11 +8,13 @@ import (
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // CeilLog2 returns the ceiling of log base 2 of n.
 func CeilLog2(n int) int {
+	xtracer.Trace("ivy_solver.py:1714 ceillog2() ENTER n=%d", n)
 	if n <= 1 {
 		return 0
 	}
@@ -27,6 +29,7 @@ func CeilLog2(n int) int {
 
 // BinEnc encodes a number m in n bits as a list of boolean values.
 func BinEnc(m, n int) []bool {
+	xtracer.Trace("ivy_solver.py:1733 binenc() ENTER m=%d n=%d", m, n)
 	result := make([]bool, n)
 	for i := 0; i < n; i++ {
 		result[i] = (m>>uint(i))&1 == 1
@@ -65,6 +68,7 @@ func BinEncZ3(ctx *z3bridge.Z3Context, m, n int) []z3bridge.Expr {
 // Used for binary encoding of enumerated sorts when UseZ3Enums is false.
 // Corresponds to Python's encode_term (ivy_solver.py:1587-1615).
 func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:1742 encode_term() ENTER sort=%s", sort)
 	ctx := s.tr.Ctx
 
 	// ITE: recurse into then/else, zip with element-wise ITE
@@ -161,6 +165,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 // at the Z3 level. Returns a Z3 expression representing the equality.
 // Corresponds to Python's encode_equality (ivy_solver.py:1617-1627).
 func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:1773 encode_equality() ENTER nterms=%d", 2)
 	ctx := s.tr.Ctx
 	n := sort.Card()
 	bits := CeilLog2(n)
@@ -198,6 +203,7 @@ func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (z3br
 
 // Z3Function creates a Z3 function declaration from a name and signature sorts.
 func (s *Solver) Z3Function(name string, sig []lg.Sort) (z3bridge.FuncDecl, error) {
+	xtracer.Trace("ivy_solver.py:1738 z3_function() ENTER name=%s", name)
 	if len(sig) < 2 {
 		return z3bridge.FuncDecl{}, fmt.Errorf("Z3Function: need at least 2 sorts (domain + range)")
 	}
@@ -220,16 +226,19 @@ func (s *Solver) Z3Function(name string, sig []lg.Sort) (z3bridge.FuncDecl, erro
 
 // SetSeed sets the Z3 random seed.
 func (s *Solver) SetSeed(seed int) {
+	xtracer.Trace("ivy_solver.py:37 set_seed() ENTER seed=%d", seed)
 	s.opts.Seed = seed
 }
 
 // SetMacroFinder enables or disables the Z3 macro finder.
 func (s *Solver) SetMacroFinder(enabled bool) {
+	xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%v", enabled)
 	s.opts.MacroFinder = enabled
 }
 
 // SetUseNativeEnums enables or disables native enumerated sort support.
 func (s *Solver) SetUseNativeEnums(enabled bool) {
+	xtracer.Trace("ivy_solver.py:57 set_use_native_enums() ENTER t=%v", enabled)
 	s.opts.UseZ3Enums = enabled
 }
 
@@ -238,6 +247,7 @@ func (s *Solver) SetUseNativeEnums(enabled bool) {
 // ParseArrayTheory parses an array theory name like "array(K,V)" into
 // the key and value sort names.
 func ParseArrayTheory(name string) (key, val string, ok bool) {
+	xtracer.Trace("ivy_solver.py:107 parse_array_theory() ENTER name=%s", name)
 	if len(name) < 8 || name[:6] != "array(" || name[len(name)-1] != ')' {
 		return "", "", false
 	}
@@ -252,6 +262,7 @@ func ParseArrayTheory(name string) (key, val string, ok bool) {
 
 // ParseIntParams parses integer parameters from a sort name like "bv[32]".
 func ParseIntParams(name string) (base string, params []int, ok bool) {
+	xtracer.Trace("ivy_solver.py:152 parse_int_params() ENTER name=%s", name)
 	for i, c := range name {
 		if c == '[' {
 			base = name[:i]
@@ -283,6 +294,7 @@ func ParseIntParams(name string) (base string, params []int, ok bool) {
 // IsSolverSort returns true if the name is a native solver sort.
 // Matches Python ivy_solver.py:149 is_solver_sort.
 func IsSolverSort(name string) bool {
+	xtracer.Trace("ivy_solver.py:161 is_solver_sort() ENTER name=%s", name)
 	switch name {
 	case "int", "nat", "real", "strlit",
 		"Int", "Bool", "Real", "String": // Z3 capitalized forms
@@ -299,6 +311,7 @@ func IsSolverSort(name string) bool {
 
 // IsSolverOp returns true if the name is a Z3 built-in operation.
 func IsSolverOp(name string) bool {
+	xtracer.Trace("ivy_solver.py:240 is_solver_op() ENTER name=%s", name)
 	switch name {
 	case "+", "-", "*", "/", "mod", "div", "<", "<=", ">", ">=",
 		"bvand", "bvor", "bvxor", "bvnot", "bvadd", "bvsub", "bvmul",
@@ -316,6 +329,7 @@ func IsSolverOp(name string) bool {
 
 // NativeSymbol returns the Z3 native symbol for a given Ivy symbol, if any.
 func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
+	xtracer.Trace("ivy_solver.py:398 native_symbol() ENTER sym=%v", sym)
 	if il.IsInterpretedSymbol(sig, sym) {
 		return sym
 	}
@@ -324,6 +338,7 @@ func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
 
 // LtPred returns the less-than predicate for a sort.
 func LtPred(sort lg.Sort) *lg.Const {
+	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%v", sort)
 	return lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
 }
 
@@ -331,6 +346,7 @@ func LtPred(sort lg.Sort) *lg.Const {
 
 // CollectNumerals collects all numeral subterms from a Z3 expression.
 func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:867 collect_numerals() ENTER")
 	// Simplified: just return the expression itself if it looks like a numeral
 	s := z3term.String()
 	if len(s) > 0 && (s[0] >= '0' && s[0] <= '9' || s[0] == '-') {
@@ -346,6 +362,7 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 // clamped to [lb, ub].
 // Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
 func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%v", num)
 	ctx := s.tr.Ctx
 	sortName := il.SortName(num.CSort)
 
@@ -424,6 +441,7 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
 
 // EnumeratedToNumeral converts an enumerated constant to its ordinal number.
 func EnumeratedToNumeral(term *lg.Const) int {
+	xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
 	sort := term.CSort
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		for i, name := range es.Extension {
@@ -440,6 +458,7 @@ func EnumeratedToNumeral(term *lg.Const) int {
 // RangeSortBounds returns the lower and upper bounds of a range sort.
 // Parses the Lb/Ub fields of a RangeSort as integers.
 func RangeSortBounds(sort lg.Sort) (lo, hi int, ok bool) {
+	xtracer.Trace("ivy_solver.py:299 range_sort_bounds_to_z3() ENTER")
 	rs, isRS := sort.(*lg.RangeSort)
 	if !isRS {
 		return 0, 0, false

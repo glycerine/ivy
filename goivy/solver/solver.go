@@ -109,6 +109,7 @@ func (s *Solver) Close() error {
 // Clear resets all Z3 caches (sorts, constants, functions) to initial state.
 // Corresponds to Python ivy_solver.clear() (line 228).
 func (s *Solver) Clear() {
+	xtracer.Trace("ivy_solver.py:245 clear() ENTER")
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.tr.Clear()
@@ -475,6 +476,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x z3bridge.Expr, err error) {
 // For Definition: wraps in raw z3.ForAll (no quant constraints).
 // For others: wraps via forall() helper (with quant constraints).
 func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%T", fmla)
 	z3Formula, err := s.tr.TranslateNoHash(fmla)
 	if err != nil {
 		return z3bridge.Expr{}, err
@@ -512,6 +514,7 @@ func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (z3bridge.Expr, error) {
 // For And: recursively translates each conjunct.
 // Otherwise: delegates to formulaToZ3Closed.
 func (s *Solver) conjToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%T", fmla)
 	if and, ok := fmla.(*lg.And); ok {
 		z3Args := make([]z3bridge.Expr, len(and.Terms))
 		for i, t := range and.Terms {
@@ -529,6 +532,7 @@ func (s *Solver) conjToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
 // Matches Python's forall (ivy_solver.py:524-528).
 func (s *Solver) forall(vars []*lg.Variable, z3Vars []z3bridge.Expr, z3Body z3bridge.Expr) z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(vars))
 	if s.tr.QuantConstraints != nil {
 		var cnstrs []z3bridge.Expr
 		for i, v := range vars {
@@ -545,6 +549,7 @@ func (s *Solver) forall(vars []*lg.Variable, z3Vars []z3bridge.Expr, z3Body z3br
 // NotClausesToZ3 negates a Clauses and converts to Z3.
 // Corresponds to Python's not_clauses_to_z3.
 func (s *Solver) NotClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:1102 not_clauses_to_z3() ENTER")
 	// Separate Skolem definitions from other definitions
 	var skolemDefs, otherDefs []*il.Definition
 	for _, d := range clauses.Defs {
@@ -582,6 +587,7 @@ func isSkolem(name string) bool {
 // IsSat checks whether a formula is satisfiable.
 // Returns true if satisfiable, false if unsatisfiable.
 func (s *Solver) IsSat(fmla lg.Expr) (bool, error) {
+	xtracer.Trace("ivy_solver.py:816 is_sat() ENTER")
 	result, err := s.tr.IsSat(fmla)
 	if err != nil {
 		return false, err
@@ -643,6 +649,7 @@ func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
 // ClausesSat checks whether a Clauses set is satisfiable.
 // Corresponds to Python's clauses_sat.
 func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
+	xtracer.Trace("ivy_solver.py:1113 clauses_sat() ENTER")
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -656,6 +663,7 @@ func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
 // ClausesImply checks whether clauses1 imply clauses2.
 // Corresponds to Python's clauses_imply.
 func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) {
+	xtracer.Trace("ivy_solver.py:1023 clauses_imply() ENTER")
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -731,6 +739,7 @@ func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr, timeout bool) ([
 // ClausesImplyFormula checks whether clauses1 imply fmla2.
 // Corresponds to Python's clauses_imply_formula.
 func (s *Solver) ClausesImplyFormula(clauses1 *module.Clauses, fmla2 lg.Expr) (bool, error) {
+	xtracer.Trace("ivy_solver.py:1704 clauses_imply_formula() ENTER")
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -762,6 +771,7 @@ func (s *Solver) UnsatCore(
 	implies *module.Clauses,
 	unlikely func(lg.Expr) bool,
 ) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:723 unsat_core() ENTER")
 	if unlikely == nil {
 		unlikely = func(lg.Expr) bool { return false }
 	}
@@ -940,6 +950,7 @@ func collectAssumptions(alits []z3bridge.Expr, included []bool) []z3bridge.Expr 
 // For uninterpreted sorts: exists constants c0..c_{size-1} such that forall X, X=c0 | X=c1 | ...
 // Corresponds to Python's sort_size_constraint.
 func SortSizeConstraint(sort lg.Sort, size int) lg.Expr {
+	xtracer.Trace("ivy_solver.py:1188 sort_size_constraint() ENTER sort=%s size=%d", sort, size)
 	us, ok := sort.(*lg.UninterpretedSort)
 	if !ok {
 		return lg.True // trivially true for non-uninterpreted sorts
@@ -958,6 +969,7 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Expr {
 // RelationSizeConstraint generates a constraint limiting a relation to at most 'size' true entries.
 // Corresponds to Python's relation_size_constraint.
 func RelationSizeConstraint(relation *lg.Const, size int) lg.Expr {
+	xtracer.Trace("ivy_solver.py:1199 relation_size_constraint() ENTER size=%d", size)
 	fs, ok := relation.CSort.(*lg.FunctionSort)
 	if !ok {
 		return lg.True
@@ -997,6 +1009,7 @@ func RelationSizeConstraint(relation *lg.Const, size int) lg.Expr {
 
 // SizeConstraint generates a size constraint for either a sort or a relation.
 func SizeConstraint(x lg.Expr, size int) lg.Expr {
+	xtracer.Trace("ivy_solver.py:1226 size_constraint() ENTER size=%d", size)
 	if us, ok := x.(*lg.UninterpretedSort); ok {
 		return SortSizeConstraint(us, size)
 	}
@@ -1055,6 +1068,7 @@ func (s *Solver) CheckSequence(seq []AssumeAssert) ([]bool, error) {
 //   - s.pop() happens AFTER reporter.end()
 //   - reporter.end() returning False causes early return
 func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter) ([]bool, error) {
+	xtracer.Trace("ivy_solver.py:1070 check_sequence() ENTER n=%d", len(seq))
 	z3solver := s.tr.Ctx.NewSolver()
 	var results []bool // Python uses list append
 

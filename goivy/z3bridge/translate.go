@@ -103,6 +103,7 @@ func (t *Translator) z3Name(name string, sort logic.Sort) string {
 
 // TranslateSort converts an Ivy sort to a Z3 sort.
 func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
+	xtracer.Trace("ivy_solver.py:121 sorts() ENTER name=%s", s.Sexp())
 	switch st := s.(type) {
 	case *logic.BooleanSort:
 		return t.Ctx.BoolSort(), nil
@@ -196,6 +197,7 @@ func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
 }
 
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
+	xtracer.Trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%T", n)
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
@@ -441,6 +443,7 @@ func (t *Translator) TranslateVar(v *logic.Variable) (Expr, error) {
 }
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
+	xtracer.Trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s", name, sort)
 	// Check for numeral with special handling (range sort clamping).
 	// Python term_to_z3 lines 439-440: if term.is_numeral(): res = numeral_to_z3(term.rep)
 	if t.NumeralFunc != nil && isNumeralName(name) {
@@ -545,6 +548,11 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 }
 
 func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Variable, body logic.Expr) (Expr, error) {
+	if isForall {
+		xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(variables))
+	} else {
+		xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(variables))
+	}
 	if len(variables) == 0 {
 		return t.Translate(body)
 	}

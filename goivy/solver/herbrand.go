@@ -32,6 +32,7 @@ type HerbrandModel struct {
 // vocab is the set of constants used in the problem (for mining interpreted constants).
 // Corresponds to Python's HerbrandModel.__init__.
 func NewHerbrandModel(s *Solver, z3solver *z3bridge.Solver, model *z3bridge.Model, vocab []*lg.Const) *HerbrandModel {
+	xtracer.Trace("ivy_solver.py:909 HerbrandModel.__init__() ENTER")
 	h := &HerbrandModel{
 		solver:    z3solver,
 		model:     model,
@@ -356,6 +357,7 @@ func (h *HerbrandModel) variableRange(v *lg.Variable) []z3bridge.Expr {
 
 // getModelConstant evaluates a constant in the model.
 func (h *HerbrandModel) getModelConstant(c *lg.Const) *lg.Const {
+	xtracer.Trace("ivy_solver.py:1005 get_model_constant() ENTER")
 	sort := il.SortRange(c.CSort)
 
 	// Handle enumerated sorts without native Z3 enums
@@ -489,6 +491,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []
 // Used by SortUniverse, Check, getModelConstant where callers need .Name/.CSort.
 // Corresponds to Python's constant_from_z3.
 func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Const {
+	xtracer.Trace("ivy_solver.py:997 constant_from_z3() ENTER sort=%v", sort)
 	s := z3val.String()
 	if s == "true" {
 		return lg.NewConst("true", lg.Boolean)
@@ -520,6 +523,7 @@ func constantFromZ3Expr(sort lg.Sort, z3val z3bridge.Expr) lg.Expr {
 // Returns a list of clause-like formulas: X=c0 | X=c1 | ... and ci != cj.
 // Corresponds to Python's model_universe_facts.
 func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Expr {
+	xtracer.Trace("ivy_solver.py:1432 model_universe_facts() ENTER sort=%v", sort)
 	if il.IsInterpretedSort(h.sig, sort) {
 		return nil
 	}
@@ -555,6 +559,7 @@ func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Expr 
 // Returns a Clauses set characterizing the model.
 // Corresponds to Python's model_facts.
 func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.Clauses, upclose bool) *module.Clauses {
+	xtracer.Trace("ivy_solver.py:1448 model_facts() ENTER")
 	if ignore == nil {
 		ignore = func(*lg.Const) bool { return false }
 	}
@@ -621,6 +626,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 // Returns formulas for both positive and negative ground instances.
 // Corresponds to Python's relation_model_to_clauses.
 func RelationModelToClauses(h *HerbrandModel, rel *lg.Const, arity int) []lg.Expr {
+	xtracer.Trace("ivy_solver.py:1665 relation_model_to_clauses() ENTER")
 	// Create a literal for the relation applied to fresh variables
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok {
@@ -652,6 +658,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *lg.Const, arity int) []lg.Exp
 // FunctionModelToClauses extracts the function interpretation from the model.
 // Corresponds to Python's function_model_to_clauses.
 func FunctionModelToClauses(h *HerbrandModel, f *lg.Const) []lg.Expr {
+	xtracer.Trace("ivy_solver.py:1686 function_model_to_clauses() ENTER")
 	fs, ok := f.CSort.(*lg.FunctionSort)
 	if !ok {
 		return nil
@@ -687,6 +694,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Const) []lg.Expr {
 // getLitFacts returns ground instances of a literal that hold in the model.
 // Corresponds to Python's get_lit_facts.
 func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Expr {
+	xtracer.Trace("ivy_solver.py:1676 get_lit_facts() ENTER")
 	vs, rows := h.Check(lit)
 	var result []lg.Expr
 	for _, row := range rows {
@@ -754,6 +762,7 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 // Handles EnumeratedSort, BV sorts, RangeSort, and interpreted sorts.
 // Corresponds to Python's sort_card (ivy_solver.py:357-367).
 func SortCard(sort lg.Sort, sig *il.Sig) int {
+	xtracer.Trace("ivy_solver.py:383 sort_card() ENTER sort=%v", sort)
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		return es.Card()
 	}
@@ -793,6 +802,7 @@ func SortCard(sort lg.Sort, sig *il.Sig) int {
 // EnumeratedRange returns Z3 expressions for all elements of an enumerated sort.
 // Corresponds to Python's enumerated_range.
 func (s *Solver) EnumeratedRange(sort *lg.EnumeratedSort) ([]z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:903 enumerated_range() ENTER")
 	var result []z3bridge.Expr
 	for _, name := range sort.Extension {
 		c := lg.NewConst(name, sort)
@@ -843,6 +853,7 @@ func (s *Solver) GetModelFromClauses(clauses *module.Clauses) (*HerbrandModel, e
 //  2. Model-simplify each CNF clause, remove duplicates
 //  3. Loop: run UnitRes propagation, model-simplify, dedup, until convergence
 func (s *Solver) ClausesCase(clauses *module.Clauses) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:1128 clauses_case() ENTER")
 	// Check satisfiability
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
@@ -928,6 +939,7 @@ func (s *Solver) ClausesCase(clauses *module.Clauses) (*module.Clauses, error) {
 //
 // Corresponds to Python clause_model_simp (lines 1062-1080).
 func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Expr) lg.Expr {
+	xtracer.Trace("ivy_solver.py:1160 clause_model_simp() ENTER")
 	or, ok := clause.(*lg.Or)
 	if !ok || len(or.Terms) <= 1 {
 		return clause

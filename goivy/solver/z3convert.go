@@ -11,6 +11,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -19,6 +20,7 @@ import (
 // Z3SortToSort converts a Z3 sort back to an Ivy sort.
 // Corresponds to Python's z3sort_to_sort.
 func Z3SortToSort(z3sort z3bridge.Sort) lg.Sort {
+	xtracer.Trace("ivy_solver.py:1799 z3sort_to_sort() ENTER")
 	kind := z3sort.Kind()
 	switch kind {
 	case z3bridge.SortBool:
@@ -45,6 +47,7 @@ func Z3SortToSort(z3sort z3bridge.Sort) lg.Sort {
 // Z3DeclToSymbol converts a Z3 function declaration to an Ivy constant (symbol).
 // Corresponds to Python's z3decl_to_symbol.
 func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Const {
+	xtracer.Trace("ivy_solver.py:1805 z3decl_to_symbol() ENTER")
 	arity := z3decl.Arity()
 	rng := Z3SortToSort(z3decl.RangeSort())
 
@@ -77,6 +80,7 @@ func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Const {
 // The vars parameter holds de Bruijn variable bindings (innermost first).
 // Corresponds to Python's z3_to_formula.
 func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Expr, error) {
+	xtracer.Trace("ivy_solver.py:1817 z3_to_formula() ENTER")
 	// Application (includes constants, And, Or, Not, Eq, etc.)
 	if z3expr.IsApp() {
 		arity := z3expr.NumArgs()
@@ -226,6 +230,7 @@ func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Expr, error) {
 // a fallback that returns an error.
 // Corresponds to Python's binary_interpolant.
 func (s *Solver) BinaryInterpolant(clauses2, clauses1 *module.Clauses) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:753 binary_interpolant() ENTER")
 	// Create a fresh translator with an interpolation-capable context.
 	// Z3_compute_interpolant requires a context created via
 	// Z3_mk_interpolation_context (legacy solver with proof generation).
@@ -337,6 +342,7 @@ func collectNumeralsHelper(z3term z3bridge.Expr, result *[]z3bridge.Expr) {
 // of the given sort.
 // Corresponds to Python's from_z3_numeral.
 func FromZ3Numeral(z3term z3bridge.Expr, sort lg.Sort) *lg.Const {
+	xtracer.Trace("ivy_solver.py:877 from_z3_numeral() ENTER sort=%s", sort)
 	name := z3term.String()
 	if len(name) == 0 {
 		return lg.NewConst("0", sort)
@@ -417,6 +423,7 @@ func NewSortOrder(vs []z3bridge.Expr, order z3bridge.Expr, model *z3bridge.Model
 // This implements a comparison function suitable for sorting.
 // Corresponds to Python's SortOrder.__call__.
 func (so *SortOrder) Compare(x, y z3bridge.Expr) int {
+	xtracer.Trace("ivy_solver.py:856 SortOrder.compare() ENTER")
 	if len(so.Vs) < 2 {
 		return 0
 	}
@@ -444,6 +451,7 @@ func (so *SortOrder) Compare(x, y z3bridge.Expr) int {
 // This is a thin wrapper around Context.Substitute.
 // Corresponds to Python's substitute.
 func SubstituteZ3(ctx *z3bridge.Z3Context, t z3bridge.Expr, pairs [][2]z3bridge.Expr) z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:1788 substitute() ENTER")
 	if len(pairs) == 0 {
 		return t
 	}
@@ -462,6 +470,7 @@ func SubstituteZ3(ctx *z3bridge.Z3Context, t z3bridge.Expr, pairs [][2]z3bridge.
 // integer expressions.
 // Corresponds to Python's range_sort_bounds_to_z3.
 func (s *Solver) RangeSortBoundsToZ3(rs *lg.RangeSort) (lb, ub z3bridge.Expr, err error) {
+	xtracer.Trace("ivy_solver.py:299 range_sort_bounds_to_z3() ENTER")
 	// Parse the lower bound
 	lbVal, err := strconv.ParseInt(rs.LbString(), 10, 64)
 	if err != nil {
@@ -537,6 +546,7 @@ type NativeFunc func(args ...z3bridge.Expr) z3bridge.Expr
 //
 // Corresponds to Python lookup_native (lines 289-324).
 func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
+	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%v", sym.Name, isRelation)
 	if s.sig == nil {
 		return nil
 	}
@@ -830,6 +840,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 // Corresponds to Python bfe_to_z3 (lines 174-209).
 // Python uses parse_int_params which parses bfe[lo][hi] format.
 func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
+	xtracer.Trace("ivy_solver.py:188 bfe_to_z3() ENTER sym=%s", sym.Name)
 	name := sym.Name
 	if !strings.HasPrefix(name, "bfe[") {
 		return nil
@@ -977,6 +988,7 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 // ":domain_sort_name" for each domain sort. Returns "" if the symbol
 // has a native Z3 interpretation (should be handled inline, not declared).
 func (s *Solver) SolverName(sym *lg.Const) string {
+	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
 	name := sym.Name
 
 	// bfe[lo:hi] — handled natively
@@ -1073,6 +1085,7 @@ func parseInt64(s string) int64 {
 // MyMinus creates a Z3 subtraction, handling unary case.
 // Corresponds to Python's my_minus (ivy_solver.py:83-86).
 func MyMinus(ctx *z3bridge.Z3Context, args []z3bridge.Expr) z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:89 my_minus() ENTER nargs=%d", len(args))
 	if len(args) == 1 {
 		zero := ctx.IntVal(0)
 		return ctx.Sub(zero, args[0])
@@ -1093,6 +1106,7 @@ func MyMinus(ctx *z3bridge.Z3Context, args []z3bridge.Expr) z3bridge.Expr {
 // For boolean args, uses Iff; for other types, uses Eq.
 // Corresponds to Python's my_eq (ivy_solver.py:88-95).
 func MyEq(ctx *z3bridge.Z3Context, x, y z3bridge.Expr) z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:95 my_eq() ENTER")
 	if y.IsTrue() {
 		return x
 	}
@@ -1108,6 +1122,7 @@ func MyEq(ctx *z3bridge.Z3Context, x, y z3bridge.Expr) z3bridge.Expr {
 // SortNameToZ3 converts an Ivy sort name to a Z3 sort using the solver's
 // translator. Corresponds to Python's sort_name_to_z3 (ivy_solver.py:107).
 func (s *Solver) SortNameToZ3(name string) (z3bridge.Sort, error) {
+	xtracer.Trace("ivy_solver.py:116 sort_name_to_z3() ENTER name=%s", name)
 	sort := &lg.UninterpretedSort{Name: name}
 	return s.tr.TranslateSort(sort)
 }
@@ -1116,6 +1131,7 @@ func (s *Solver) SortNameToZ3(name string) (z3bridge.Sort, error) {
 // expressions (MSB first). Recursively splits on the MSB.
 // Corresponds to Python's gebin (ivy_solver.py:1570-1578).
 func Gebin(ctx *z3bridge.Z3Context, bits []z3bridge.Expr, n int) z3bridge.Expr {
+	xtracer.Trace("ivy_solver.py:1722 gebin() ENTER n=%d", n)
 	if n == 0 {
 		return ctx.BoolVal(true)
 	}

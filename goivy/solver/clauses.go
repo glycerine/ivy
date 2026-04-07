@@ -8,6 +8,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -15,6 +16,7 @@ import (
 // Returns a bool slice with the result for each element.
 // Corresponds to Python's clauses_imply_list.
 func (s *Solver) ClausesImplyList(clauses1 *module.Clauses, clauses2List []*module.Clauses) ([]bool, error) {
+	xtracer.Trace("ivy_solver.py:1036 clauses_imply_list() ENTER")
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -79,6 +81,7 @@ func (s *Solver) BoundQuantifiersClauses(
 	reps map[string][]lg.Expr,
 	uninterpretedSorts map[string]bool,
 ) *module.Clauses {
+	xtracer.Trace("ivy_solver.py:1541 bound_quantifiers_clauses() ENTER")
 	bq := func(fmla lg.Expr) lg.Expr {
 		vars := module.VariablesAST(fmla)
 		if len(vars) == 0 {
@@ -120,6 +123,7 @@ func (s *Solver) BoundQuantifiersClauses(
 // Uses Z3 expression identity for deduplication.
 // Corresponds to Python's remove_duplicates_clauses.
 func (s *Solver) RemoveDuplicatesClauses(clauses *module.Clauses) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:1122 remove_duplicates_clauses() ENTER")
 	seen := make(map[string]bool)
 	var unique []lg.Expr
 	for _, f := range clauses.Fmlas {
@@ -162,6 +166,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	numerals bool,
 	upwardClose bool,
 ) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:1594 clauses_model_to_diagram() ENTER")
 	if axioms == nil {
 		axioms = module.TrueClauses(nil)
 	}
@@ -330,12 +335,14 @@ func (s *Solver) ClausesModelToDiagramFull(
 
 // NewZ3Solver creates a new Z3 solver on this solver's context.
 func (s *Solver) NewZ3Solver() *z3bridge.Solver {
+	xtracer.Trace("ivy_solver.py:808 new_solver() ENTER")
 	return s.tr.Ctx.NewSolver()
 }
 
 // AddClauses adds a clauses set to a Z3 solver.
 // Corresponds to Python's add_clauses.
 func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *module.Clauses) error {
+	xtracer.Trace("ivy_solver.py:820 add_clauses() ENTER")
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return err
@@ -347,6 +354,7 @@ func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *module.Clauses) 
 // SolverAdd adds a formula to a Z3 solver.
 // Corresponds to Python's solver_add.
 func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
+	xtracer.Trace("ivy_solver.py:812 solver_add() ENTER")
 	zf, err := s.formulaToZ3(fmla)
 	if err != nil {
 		return err
@@ -360,6 +368,7 @@ func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
 // Returns an error if the result is unknown.
 // Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
 func Decide(z3solver *z3bridge.Solver, assumptions ...z3bridge.Expr) (z3bridge.CheckResult, error) {
+	xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 	var result z3bridge.CheckResult
 	if len(assumptions) > 0 {
 		result = z3solver.CheckAssumptions(assumptions)

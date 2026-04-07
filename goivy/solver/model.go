@@ -8,6 +8,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -35,6 +36,7 @@ func (mr *ModelResult) String() string {
 // GetModelClauses checks satisfiability of clauses and returns a ModelResult if sat.
 // Corresponds to Python's get_model_clauses.
 func (s *Solver) GetModelClauses(clauses *module.Clauses) (*ModelResult, error) {
+	xtracer.Trace("ivy_solver.py:1177 get_model_clauses() ENTER")
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -131,6 +133,7 @@ func (s *Solver) GetSmallModelWithCond(
 	finalCond []FinalCond,
 	shrink bool,
 ) (*ModelResult, error) {
+	xtracer.Trace("ivy_solver.py:1339 get_small_model() ENTER shrink=%v", shrink)
 
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
@@ -302,6 +305,7 @@ func (s *Solver) EvalFormula(model *z3bridge.Model, fmla lg.Expr) (bool, error) 
 // CubeToZ3 converts a list of literals (a cube) to a Z3 conjunction.
 // Corresponds to Python's cube_to_z3.
 func (s *Solver) CubeToZ3(cube []*il.Literal) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:774 cube_to_z3() ENTER nlits=%d", len(cube))
 	if len(cube) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
@@ -321,6 +325,7 @@ func (s *Solver) CubeToZ3(cube []*il.Literal) (z3bridge.Expr, error) {
 
 // LiteralToZ3 converts a single literal to a Z3 expression.
 func (s *Solver) LiteralToZ3(lit *il.Literal) (z3bridge.Expr, error) {
+	xtracer.Trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%v", lit.Polarity)
 	zAtom, err := s.tr.Translate(lit.Atom)
 	if err != nil {
 		return z3bridge.Expr{}, err
@@ -353,6 +358,7 @@ func (s *Solver) CheckCube(
 	memo map[uint]*CubeMemoEntry,
 	memoUnsatOnly bool,
 ) (bool, error) {
+	xtracer.Trace("ivy_solver.py:785 check_cube() ENTER")
 	z3solver.Push()
 	defer z3solver.Pop()
 
@@ -400,6 +406,7 @@ func (s *Solver) ClausesModelToClauses(
 	clauses *module.Clauses,
 	ignore func(*lg.Const) bool,
 ) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:1516 clauses_model_to_clauses() ENTER")
 	return s.ClausesModelToClausesWithModel(clauses, nil, ignore, false)
 }
 
@@ -470,6 +477,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 // given axioms.
 // Corresponds to Python's filter_redundant_facts.
 func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Clauses) (*module.Clauses, error) {
+	xtracer.Trace("ivy_solver.py:1564 filter_redundant_facts() ENTER")
 	// Separate positive and negative formulas.
 	// Python: pos_fmlas = [f for f in fmlas if not isinstance(f, ivy_logic.Not)]
 	var posFmlas, negFmlas []lg.Expr

@@ -9,6 +9,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -18,6 +19,7 @@ import (
 // Returns an error if there's a compatibility issue.
 // Corresponds to Python's check_native_compat_sym.
 func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
+	xtracer.Trace("ivy_solver.py:350 check_native_compat_sym() ENTER sym=%s", sym)
 	if s.sig == nil {
 		return nil
 	}
@@ -97,6 +99,7 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 
 // CheckNativeCompatSymStatic is the old static version for backward compatibility.
 func CheckNativeCompatSymStatic(sig *il.Sig, sym *lg.Const) error {
+	xtracer.Trace("ivy_solver.py:350 check_native_compat_sym() ENTER sym=%s", sym)
 	if !il.IsFunctionSort(sym.CSort) {
 		return nil
 	}
@@ -138,6 +141,7 @@ func checkSortCompat(sig *il.Sig, s lg.Sort) error {
 
 // CheckCompat checks all symbols in the signature for native compatibility.
 func (s *Solver) CheckCompat() []error {
+	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
 	if s.sig == nil {
 		return nil
@@ -153,6 +157,7 @@ func (s *Solver) CheckCompat() []error {
 
 // CheckCompatStatic is the old static version for backward compatibility.
 func CheckCompatStatic(sig *il.Sig) []error {
+	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
 	for _, entry := range sig.Symbols {
 		sym := lg.NewConst(entry.Name, entry.Sort)
@@ -167,6 +172,7 @@ func CheckCompatStatic(sig *il.Sig) []error {
 // can be bound to terms in tl2 with consistency checking.
 // Corresponds to Python's terms_match (ivy_solver.py:753-766).
 func TermsMatch(tl1, tl2 []lg.Expr) bool {
+	xtracer.Trace("ivy_solver.py:830 terms_match() ENTER")
 	if len(tl1) != len(tl2) {
 		return false
 	}
@@ -207,6 +213,7 @@ func exprName(e lg.Expr) string {
 
 // GetArgRange returns the range of argument values from a model for a function symbol.
 func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Const) []lg.Expr {
+	xtracer.Trace("ivy_solver.py:846 get_arg_range() ENTER")
 	sort := il.SortRange(x.CSort)
 	universe := model.SortUniverse(sort)
 	result := make([]lg.Expr, len(universe))
@@ -222,6 +229,7 @@ func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Const) []lg.Expr {
 // simultaneously, matching Python's model_if_none (ivy_solver.py:1135-1161).
 // The implied parameter is negated and added to the solver (not conjoined).
 func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, model *HerbrandModel) *HerbrandModel {
+	xtracer.Trace("ivy_solver.py:1238 model_if_none() ENTER")
 	if model != nil {
 		return model
 	}
@@ -299,6 +307,7 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 
 // CollectModelValues collects all model values for a symbol of a given sort.
 func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.Const) []*lg.Const {
+	xtracer.Trace("ivy_solver.py:884 collect_model_values() ENTER sort=%v", sort)
 	if model == nil {
 		return nil
 	}
@@ -317,6 +326,7 @@ func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.
 //
 // Corresponds to Python numeral_assign (lines 1338-1371).
 func NumeralAssign(model *HerbrandModel) map[string]string {
+	xtracer.Trace("ivy_solver.py:1480 numeral_assign() ENTER")
 	return NumeralAssignWithClauses(model, nil)
 }
 
@@ -390,6 +400,7 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *module.Clauses) map
 // MineInterpretedConstants extracts interpreted constants from a Z3 model.
 // This is called during HerbrandModel construction but also available separately.
 func (s *Solver) MineInterpretedConstants(vocab []*lg.Const) map[string][]*lg.Const {
+	xtracer.Trace("ivy_solver.py:891 mine_interpreted_constants() ENTER")
 	result := make(map[string][]*lg.Const)
 	for _, c := range vocab {
 		sortName := il.SortName(il.SortRange(c.CSort))
@@ -403,6 +414,7 @@ func (s *Solver) MineInterpretedConstants(vocab []*lg.Const) map[string][]*lg.Co
 
 // GetPolymacs returns polymorphic macros for an operator.
 func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
+	xtracer.Trace("ivy_solver.py:513 get_polymacs() ENTER op=%s", op)
 	switch op {
 	case "<=":
 		return func(args []lg.Expr) lg.Expr {
@@ -436,6 +448,7 @@ func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 // QuantConstraints generates sort constraints for quantifier variables.
 // For finite/enumerated sorts, generates membership constraints.
 func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Expr {
+	xtracer.Trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d", len(vs))
 	var constraints []lg.Expr
 	for _, v := range vs {
 		if es, ok := v.VSort.(*lg.EnumeratedSort); ok {
@@ -455,6 +468,7 @@ func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Expr {
 
 // TypeConstraints generates type constraints for a set of symbols.
 func TypeConstraints(syms []*lg.Const) lg.Expr {
+	xtracer.Trace("ivy_solver.py:591 type_constraints() ENTER nsyms=%d", len(syms))
 	// For each symbol with an enumerated sort, generate range constraints
 	var constraints []lg.Expr
 	for _, sym := range syms {
