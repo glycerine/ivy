@@ -2603,8 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236101  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=*logic.Definition
-        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Definition
+236103  go : XTRACE: ivy_solver.py:638 formula_to_z3_int() ENTER type=Apply
+        py : XTRACE: ivy_solver.py:638 formula_to_z3_int() ENTER type=Apply
+
+236104  go : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=ref.prevents kind=True
+        py : XTRACE: ivy_solver.py:517 atom_to_z3() ENTER rep=ref.prevents nargs=2
 ~~~
 was, before adding solver xtracing:
 ~~~
