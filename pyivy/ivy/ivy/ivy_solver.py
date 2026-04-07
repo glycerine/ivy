@@ -62,7 +62,7 @@ def set_use_native_enums(t):
 z3_builtins = set(["bit0","bit1"])
 
 def solver_name(symbol):
-    #if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name) # Go uses IsInterpretedSymbol too.
+    if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
     name = symbol.name
     if name.startswith('bfe['):
         if bfe_to_z3(symbol) is not None:

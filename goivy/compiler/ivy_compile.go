@@ -31,6 +31,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	slv "github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -1434,16 +1435,24 @@ func CheckDefinitions(mod *module.Module) error {
 		mod.LabeledProps = append(mod.LabeledProps, prop)
 	}
 
-	// Check for redefinition — Python: checkdef(sym, lf) raises IvyError on duplicate.
-	// Also checks for definitions of interpreted symbols (Python: slv.solver_name(sym) == None).
+	// Check for redefinition and interpreted symbols.
+	// Python: checkdef(sym, lf) checks redefinition first, then slv.solver_name(sym).
 	// Uses structural keys (Sexp) so symbols with same name but different sorts don't collide.
 	defs := make(map[lg.NodeKey]*ast.LabeledFormula)
 	checkdef := func(key lg.NodeKey, name string, symObj *lg.Const, lf *ast.LabeledFormula) error {
-		if symObj != nil && IsInterpretedSymbol(name, symObj, mod.Sig) {
-			return lg.NewIvyError(lf, fmt.Sprintf("definition of interpreted symbol %s", name))
-		}
+		// Python: if sym in defs: raise IvyError('redefinition of ...')
 		if prev, exists := defs[key]; exists {
 			return lg.NewIvyError(lf, fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno))
+		}
+		// Python: if slv.solver_name(sym) == None: raise IvyError('definition of interpreted symbol ...')
+		if symObj != nil {
+			solverN, err := slv.SolverName(symObj, mod.Sig, nil)
+			if err != nil {
+				return err // z3 builtin clash
+			}
+			if solverN == "" {
+				return lg.NewIvyError(lf, fmt.Sprintf("definition of interpreted symbol %s", name))
+			}
 		}
 		defs[key] = lf
 		return nil
@@ -1653,39 +1662,6 @@ func labelName(label ast.Node) string {
 		return atom.Relname()
 	}
 	return fmt.Sprint(label)
-}
-
-// IsInterpretedSymbol returns true when the symbol is natively interpreted
-// by Z3 and should not be user-defined. Standalone version of
-// solver.SolverName(sym) == "" for use at compile time without a Solver instance.
-// Matches Python's `slv.solver_name(sym) == None` check in check_definitions.
-func IsInterpretedSymbol(name string, sym *lg.Const, sig *il.Sig) bool {
-	if sig == nil {
-		return false
-	}
-	// Polymorphic symbols on interpreted sorts
-	if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
-		if fs, ok := sym.CSort.(*lg.FunctionSort); ok && len(fs.Domain()) > 0 {
-			domName := fs.Domain()[0].String()
-			if name == "arrcst" {
-				domName = fs.Range().String()
-			}
-			if interp, has := sig.Interp[domName]; has {
-				if _, isEnum := interp.(*lg.EnumeratedSort); !isEnum {
-					return true
-				}
-			}
-		}
-	}
-	// Direct interpretation
-	if _, has := sig.Interp[name]; has {
-		return true
-	}
-	// Z3 builtins
-	if name == "bit0" || name == "bit1" {
-		return true
-	}
-	return false
 }
 
 // definesKey returns a structural identity key for a definition's LHS symbol,

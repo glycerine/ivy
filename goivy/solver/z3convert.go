@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
@@ -983,63 +984,78 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 	}
 }
 
-// SolverName returns the Z3 name for an Ivy symbol, matching Python's
-// solver_name (ivy_solver.py:60-78). For polymorphic symbols, appends
-// ":domain_sort_name" for each domain sort. Returns "" if the symbol
-// has a native Z3 interpretation (should be handled inline, not declared).
-func (s *Solver) SolverName(sym *lg.Const) string {
-	// Go uses both SolverName and IsInterpretedSymbol (to avoid needing a *Solver)
-	//xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
+// SolverName returns the Z3 name for an Ivy symbol, or "" if the symbol
+// is natively interpreted. Matches Python's module-level solver_name()
+// (ivy_solver.py:65-84). This is a package-level function because
+// Python's solver_name is a module-level function, not a Solver method.
+//
+// bfeCheck, when non-nil, returns true if bfe_to_z3(sym) would return
+// a non-nil native function. Pass nil when no Z3 translator is available
+// (e.g. at compile time).
+//
+// Returns ("", nil) for interpreted symbols (Python returns None).
+// Returns (name, nil) for non-interpreted symbols.
+// Returns ("", error) for z3 builtin clashes (Python raises IvyError).
+func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (string, error) {
+	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
+
 	name := sym.Name
 
-	// bfe[lo:hi] — handled natively
+	// Python: if name.startswith('bfe['):
 	if strings.HasPrefix(name, "bfe[") {
-		if s.bfeToZ3(sym) != nil {
-			return ""
+		if bfeCheck != nil && bfeCheck(sym) {
+			return "", nil // interpreted
 		}
-	}
-
-	// Polymorphic symbols: append domain sort names
-	if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
-		fs, isFuncSort := sym.CSort.(*lg.FunctionSort)
-		if isFuncSort && len(fs.Domain()) > 0 {
-			domSort := fs.Domain()[0]
-			domName := sortToName(domSort)
-			if name == "arrcst" {
-				domName = sortToName(fs.Range())
-			}
-			if s.sig != nil {
-				interp, hasInterp := s.sig.Interp[domName]
-				if hasInterp {
+	} else if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
+		// Python: elif name in iu.polymorphic_symbols:
+		if sig != nil {
+			fs, isFuncSort := sym.CSort.(*lg.FunctionSort)
+			if isFuncSort && len(fs.Domain()) > 0 {
+				domName := sortToName(fs.Domain()[0])
+				if name == "arrcst" {
+					domName = sortToName(fs.Range())
+				}
+				if interp, has := sig.Interp[domName]; has {
 					if _, isEnum := interp.(*lg.EnumeratedSort); !isEnum {
-						return "" // native interpretation
+						return "", nil // native interpretation
 					}
 				}
-			}
-			for _, d := range fs.Domain() {
-				name += ":" + sortToName(d)
-			}
-			if sym.Name == "arrcst" {
-				name += ":" + sortToName(fs.Range())
+				// Python: for s in symbol.sort.domain: name += ':' + s.name
+				for _, d := range fs.Domain() {
+					name += ":" + sortToName(d)
+				}
+				if sym.Name == "arrcst" {
+					name += ":" + sortToName(fs.Range())
+				}
 			}
 		}
 	}
 
-	// Check if the name itself is interpreted
-	if s.sig != nil {
-		if _, hasInterp := s.sig.Interp[name]; hasInterp {
-			return ""
+	// Python: if name in ivy_logic.sig.interp: return None
+	if sig != nil {
+		if _, has := sig.Interp[name]; has {
+			return "", nil // interpreted
 		}
 	}
 
-	// Check Z3 built-in collision.
-	// Corresponds to Python's z3_builtins = set(["bit0","bit1"]).
-	// Python: raise iu.IvyError(None, 'name "{}" clashes with Z3 built-in'.format(name))
+	// Python: if name in z3_builtins: raise iu.IvyError(...)
 	if z3Builtins[name] {
-		panic(lg.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name)))
+		return "", lg.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name))
 	}
 
-	return name
+	return name, nil
+}
+
+// SolverName on *Solver is a thin wrapper around the package-level
+// SolverName, providing the Solver's sig and bfeToZ3 capability.
+// Preserves existing string return + panic-on-error behavior.
+func (s *Solver) SolverName(sym *lg.Const) string {
+	bfeCheck := func(c *lg.Const) bool { return s.bfeToZ3(c) != nil }
+	n, err := SolverName(sym, s.sig, bfeCheck)
+	if err != nil {
+		panic(err) // matches Python's raise; existing callers expect panic
+	}
+	return n
 }
 
 // z3Builtins is the set of names that clash with Z3 built-in symbols.
