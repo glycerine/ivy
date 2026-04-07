@@ -1250,7 +1250,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 			}
 			xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
 		}
-		xtracer.Trace("check.start ENTER file=%s\n Go stack=\n%v\n", args[0], stack())
+		xtracer.Trace("check.start ENTER file=%s", args[0])
 	}
 	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
 		return fmt.Errorf("%s", Usage())

@@ -77,8 +77,28 @@ func (s *Solver) Close() error {
 
 // Clear resets all Z3 caches (sorts, constants, functions) to initial state.
 // Corresponds to Python ivy_solver.clear() (line 228).
+//
+// Why this clear is never called (and so we removed the xtracing from both sides):
+//
+// Python calls clear() in two places:
+//
+// 1. ivy_solver.py:254 — at module import time (startup), once
+// 2. ivy_module.py:102 — inside Module.__enter__(), every time a module context is entered
+//
+// What clear() does is reset 4 module-level global dicts — z3_sorts, z3_predicates,
+// z3_constants, z3_functions — which are translation caches mapping Ivy sorts/symbols to Z3
+// objects. They accumulate as formulas get translated. When entering a new module (different
+// signature), the old Z3 translations could be stale, so Python wipes them.
+//
+// Go doesn't need the functional clear. Each solver.NewSolver(sig, opts) creates a fresh
+// z3bridge.Translator with empty maps (sorts, consts, funcs, sortsInv). There are no shared
+// module-level caches. Go's constructors handle it.
+//
+// The SolverClearFn field on module.Config exists and is called in Module.Enter()
+// (context.go:37-39), but nobody ever sets it — and nothing breaks, because there's nothing
+// shared to clear.
 func (s *Solver) Clear() {
-	xtracer.Trace("ivy_solver.py:245 clear() ENTER")
+	//xtracer.Trace("ivy_solver.py:245 clear() ENTER")
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.tr.Clear()
