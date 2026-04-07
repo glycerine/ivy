@@ -845,7 +845,7 @@ func CheckFEU(
 	return nil
 }
 
-// findCycle looks for a cycle in the stratification graph's arcs.
+// findCycle looks for a cycle in the stratification graph's arcs. see ivy_utils.py:485
 func (c *checker) findCycle() []arc {
 	if len(c.arcs) == 0 {
 		return nil
