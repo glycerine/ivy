@@ -1,96 +1,172 @@
-# PLAN217: Pass raw Definition to Z3 translator (match Python's clauses_to_z3)
+# PLAN217: Refactor ClausesToZ3 to mirror Python's internal call structure
 
 **Created:** 2026-04-07 ~19:30 UTC
+**Revised:** 2026-04-07 ~20:15 UTC — full structural alignment with Python
 
 ## Context
 
-PLAN216 succeeded — lines 236041-236045 now match (checkFcsNormalPath, SatisfyWithCond, ClausesToZ3 ENTER traces). The golden test diverges at line 236046 with a `z3bridge.Translate HASH` mismatch:
+PLAN216 succeeded — lines 236041-236045 now match. The golden test diverges at line 236046 with a `z3bridge.Translate HASH` mismatch:
 
 ```
-236046  go : XTRACE: z3bridge.Translate HASH ... canon=(ForAll vars:[(Variable name:T0 sort:lclock) (Variable name:T1 sort:lclock)] body:(Iff ...
-        py : XTRACE: z3bridge.Translate HASH ... canon=(Def lhs:(Apply func:(Symbol name:ref.prevents ...) ...) ...
+236046  go : z3bridge.Translate HASH ... canon=(ForAll vars:[(Variable name:T0 sort:lclock)...] body:(Iff ...
+        py : z3bridge.Translate HASH ... canon=(Def lhs:(Apply func:(Symbol name:ref.prevents...)...)
 ```
 
-Go sends `ForAll(Iff(...))` canon, Python sends `Def(lhs, rhs)` canon. Different blake3 hashes → divergence.
-
-Additionally, Go panics with: "Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is lclock" — a consequence of the wrong translation path.
+Go also panics with "Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is lclock".
 
 ## Root Cause
 
-In Go's `ClausesToZ3` (`solver/solver.go:293-308`), each definition goes through:
-1. `defToConstraint(d)` → converts `Definition` to `Iff(lhs, rhs)` or `Eq(lhs, rhs)`
-2. `translateClosed(constraint)` → calls `CloseFormula(constraint)` → wraps in `ForAll(freeVars, constraint)` at logic level
-3. `Translate(ForAll(...))` → emits HASH trace showing `(ForAll ... (Iff ...))` canon
+Go's `ClausesToZ3` internal call structure diverges from Python's:
 
-In Python's `clauses_to_z3` (`ivy_solver.py:586-591`), each definition goes through:
-1. `formula_to_z3(dfn)` → passes raw Definition directly
-2. Emits HASH trace showing `(Def lhs:... rhs:...)` canon
-3. `formula_to_z3_int(dfn)` → handles Definition natively as `my_eq(z3_lhs, z3_rhs)`
-4. `formula_to_z3_closed(dfn)` → wraps in `z3.ForAll(z3_variables, z3_formula)` at **Z3 level** (not logic level)
+**Python's call chain (what we want):**
+```
+clauses_to_z3(clauses):
+    fmlas → conj_to_z3(f)         → formula_to_z3_closed(f) → formula_to_z3_int(f)  [no HASH]
+    defs  → formula_to_z3(dfn)    → formula_to_z3_closed(f) → formula_to_z3_int(f)  [HASH]
+    + type_constraints(used_symbols_clauses(clauses))                                 [no HASH]
+```
 
-The mismatch is twofold:
-- **Canon mismatch**: Go shows ForAll wrapping Iff, Python shows raw Def
-- **Quantifier handling**: Go's `translateQuantifier` adds sort constraints (nat non-negativity, range bounds) to the quantified body via `QuantConstraints`. Python uses raw `z3.ForAll` for Definition (no sort constraints). This explains the "Sort mismatch" — Go's `translateQuantifier` adds a constraint involving `<` for the lclock sort's nat/range interpretation, but `<` is declared for Int not lclock.
+**Go's current call chain (wrong):**
+```
+ClausesToZ3(clauses):
+    fmlas → translateClosed(f)     → CloseFormula → Translate  [HASH via depth=0]
+    defs  → defToConstraint(d)+translateClosed → CloseFormula → Translate  [HASH, wrong canon]
+    + typeConstraintsForSymbol → translateClosed → Translate    [HASH, Python has none]
+```
+
+Key differences:
+1. **Definitions**: Go converts Def→Iff via `defToConstraint`, Python passes raw Def
+2. **Closing**: Go wraps in ForAll at logic level (via `CloseFormula`), Python wraps at Z3 level (raw `z3.ForAll`)
+3. **HASH traces**: Go emits HASH for fmlas/defs/type_constraints; Python emits HASH only for defs (via `formula_to_z3`)
+4. **Quant constraints**: Go's `translateQuantifier` adds sort constraints (causing Sort mismatch panic); Python uses raw `z3.ForAll` for Definitions (no sort constraints)
 
 ## Approach
 
-1. In `ClausesToZ3`, replace `defToConstraint(d)` + `translateClosed(constraint)` with a new `translateDefinition(d)` method
-2. `translateDefinition` calls `s.tr.Translate(d)` directly (emits HASH with Def canon), then wraps in z3 ForAll at Z3 level using `s.tr.Ctx.ForAll` (no sort constraints, matching Python)
-3. Add `TranslateVar` exported method on z3bridge.Translator to translate variables without HASH traces (for building ForAll bound list after main translation)
+Create Go equivalents of Python's function hierarchy and rewire `ClausesToZ3`:
+
+| Python function         | Go equivalent (new)      | Role |
+|------------------------|--------------------------|------|
+| `formula_to_z3`        | `formulaToZ3`            | HASH trace + close + type_constraints |
+| `formula_to_z3_closed` | `formulaToZ3Closed`      | Translate + ForAll wrapping |
+| `formula_to_z3_int`    | `s.tr.Translate` (existing) | Recursive core translator |
+| `conj_to_z3`           | `conjToZ3`               | And-recursive, delegates to formulaToZ3Closed |
+| `forall(vs,z3vs,body)` | `forall`                 | quant_constraints + z3.ForAll |
+| `term_to_z3`           | `s.tr.TranslateVar` (new) | Variable → Z3 const |
 
 ## File Changes
 
-### A. `z3bridge/translate.go` — add TranslateVar
+### A. `z3bridge/translate.go` — add two methods
 
-Add exported wrapper for `translateVariable`, used to translate free variables into Z3 consts without emitting HASH trace:
+**A1. TranslateNoHash** (after line 196):
+
+Translate without the depth-0 HASH trace. Used by the solver's `formulaToZ3Closed` and `conjToZ3` paths to avoid emitting HASH traces that Python doesn't emit.
+
+```go
+// TranslateNoHash translates without emitting the top-level HASH trace.
+// Matches Python's formula_to_z3_int/formula_to_z3_closed which do not
+// emit HASH — only formula_to_z3 does.
+func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
+    t.translateDepth++
+    defer func() { t.translateDepth-- }()
+    return t.Translate(n)
+}
+```
+
+**A2. TranslateVar** (after line 426):
 
 ```go
 // TranslateVar translates a Variable to a Z3 const without emitting a
-// top-level HASH trace. Matches Python's term_to_z3(v) used in
-// formula_to_z3_closed when building ForAll bound variable lists.
+// HASH trace. Matches Python's term_to_z3(v).
 func (t *Translator) TranslateVar(v *logic.Variable) (Expr, error) {
     return t.translateVariable(v)
 }
 ```
 
-Insert after `translateVariable` (after line 426).
+### B. `solver/solver.go` — add four internal helpers + update imports
 
-### B. `solver/solver.go` — new translateDefinition method
+**B0. Add imports:**
+```go
+"sort"
+lu "github.com/glycerine/ivy/goivy/logicutil"
+iu "github.com/glycerine/ivy/goivy/ivyutils"
+```
+
+**B1. `formulaToZ3`** — matches Python `formula_to_z3` (ivy_solver.py:659-676)
 
 Add after `translateClosed` (after line 423):
 
 ```go
-// translateDefinition translates a Definition to Z3, matching Python's
-// formula_to_z3(dfn) → formula_to_z3_closed(dfn) path in clauses_to_z3.
+// formulaToZ3 translates a formula to Z3 with HASH trace and type constraints.
+// Matches Python's formula_to_z3 (ivy_solver.py:659-676).
 //
-// Unlike translateClosed (which converts to ForAll at the logic level via
-// CloseFormula, adding sort constraints via translateQuantifier), this:
-// 1. Calls Translate(d) directly — emits HASH trace with (Def ...) canon
-// 2. Wraps in z3.ForAll at Z3 level — no sort constraints, matching Python
-func (s *Solver) translateDefinition(d *il.Definition) (x z3bridge.Expr, err error) {
+// Call chain: formulaToZ3 → formulaToZ3Closed → Translate (no HASH)
+// Only this function emits the HASH trace, matching Python.
+func (s *Solver) formulaToZ3(fmla lg.Expr) (x z3bridge.Expr, err error) {
     defer func() {
         r := recover()
         if r != nil {
-            vv("warning: recover from panic on translateDefinition: '%v'", r)
+            vv("warning: recover from panic on formulaToZ3: '%v'", r)
             err = fmt.Errorf("%v", r)
         }
     }()
 
-    // Translate the Definition directly at depth 0.
-    // Emits HASH trace with (Def ...) canon matching Python.
-    z3Def, err := s.tr.Translate(d)
+    // Emit HASH trace matching Python formula_to_z3 line 660-663
+    if xtracer.Enabled {
+        canon := iu.Canonical(fmla.Sexp())
+        leaf, root := s.tr.TranslateMerkle.AddLeaf(canon)
+        xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, string(canon))
+    }
+
+    z3Fmla, err := s.formulaToZ3Closed(fmla)
+    if err != nil {
+        xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%T", err, fmla)
+        return z3bridge.Expr{}, err
+    }
+
+    // Per-formula type constraints matching Python formula_to_z3 line 670-672
+    usedSyms := lu.UsedConstantsList(fmla)
+    var tcs []z3bridge.Expr
+    for _, sym := range usedSyms {
+        constraints := s.typeConstraintsForSymbol(sym)
+        for _, tc := range constraints {
+            closed := il.CloseFormula(tc)
+            ztc, err := s.tr.TranslateNoHash(closed)
+            if err != nil {
+                continue
+            }
+            tcs = append(tcs, ztc)
+        }
+    }
+    if len(tcs) > 0 {
+        all := make([]z3bridge.Expr, 0, len(tcs)+1)
+        all = append(all, z3Fmla)
+        all = append(all, tcs...)
+        return s.tr.Ctx.And(all...), nil
+    }
+    return z3Fmla, nil
+}
+```
+
+**B2. `formulaToZ3Closed`** — matches Python `formula_to_z3_closed` (ivy_solver.py:646-655)
+
+```go
+// formulaToZ3Closed translates and closes (universally quantifies free vars).
+// Matches Python's formula_to_z3_closed (ivy_solver.py:646-655).
+//
+// For Definition: wraps in raw z3.ForAll (no quant constraints).
+// For others: wraps via forall() helper (with quant constraints).
+func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (z3bridge.Expr, error) {
+    z3Formula, err := s.tr.TranslateNoHash(fmla)
     if err != nil {
         return z3bridge.Expr{}, err
     }
 
-    // Close at Z3 level: wrap in ForAll with sorted free variables.
-    // Matches Python formula_to_z3_closed:
-    //   z3_variables = [term_to_z3(v) for v in sorted(used_variables_ast(fmla))]
-    //   if isinstance(fmla, Definition): return z3.ForAll(z3_variables, z3_formula)
-    freeVars := lu.FreeVariablesList(d)
+    freeVars := lu.FreeVariablesList(fmla)
     if len(freeVars) == 0 {
-        return z3Def, nil
+        return z3Formula, nil
     }
+
+    // Sort variables matching Python: sorted(used_variables_ast(fmla))
     sort.Slice(freeVars, func(i, j int) bool {
         return freeVars[i].Name < freeVars[j].Name
     })
@@ -103,48 +179,141 @@ func (s *Solver) translateDefinition(d *il.Definition) (x z3bridge.Expr, err err
         }
     }
 
-    return s.tr.Ctx.ForAll(z3Vars, z3Def), nil
+    // Definition: raw z3.ForAll (no quant constraints)
+    // Other: forall() with quant constraints
+    // Matches Python formula_to_z3_closed lines 653-654
+    if _, isDef := fmla.(*lg.Definition); isDef {
+        return s.tr.Ctx.ForAll(z3Vars, z3Formula), nil
+    }
+    return s.forall(freeVars, z3Vars, z3Formula), nil
 }
 ```
 
-Add two imports to `solver/solver.go`:
+**B3. `conjToZ3`** — matches Python `conj_to_z3` (ivy_solver.py:546-549)
+
 ```go
-"sort"
-lu "github.com/glycerine/ivy/goivy/logicutil"
+// conjToZ3 translates a conjunction to Z3 without HASH trace.
+// Matches Python's conj_to_z3 (ivy_solver.py:546-549).
+// For And: recursively translates each conjunct.
+// Otherwise: delegates to formulaToZ3Closed.
+func (s *Solver) conjToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
+    if and, ok := fmla.(*lg.And); ok {
+        z3Args := make([]z3bridge.Expr, len(and.Terms))
+        for i, t := range and.Terms {
+            var err error
+            z3Args[i], err = s.conjToZ3(t)
+            if err != nil {
+                return z3bridge.Expr{}, err
+            }
+        }
+        return s.tr.Ctx.And(z3Args...), nil
+    }
+    return s.formulaToZ3Closed(fmla)
+}
 ```
 
-### C. `solver/solver.go` — ClausesToZ3 def loop (lines 293-308)
+**B4. `forall` helper** — matches Python `forall` (ivy_solver.py:524-528)
 
-Replace:
 ```go
-    // Translate definitions as constraints
+// forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
+// Matches Python's forall (ivy_solver.py:524-528).
+func (s *Solver) forall(vars []*lg.Variable, z3Vars []z3bridge.Expr, z3Body z3bridge.Expr) z3bridge.Expr {
+    if s.tr.QuantConstraints != nil {
+        var cnstrs []z3bridge.Expr
+        for i, v := range vars {
+            cs := s.tr.QuantConstraints(v, z3Vars[i])
+            cnstrs = append(cnstrs, cs...)
+        }
+        if len(cnstrs) > 0 {
+            z3Body = s.tr.Ctx.Implies(s.tr.Ctx.And(cnstrs...), z3Body)
+        }
+    }
+    return s.tr.Ctx.ForAll(z3Vars, z3Body)
+}
+```
+
+### C. `solver/solver.go` — update ClausesToZ3 (lines 273-332)
+
+Replace the body of ClausesToZ3 to match Python's clauses_to_z3 call structure:
+
+```go
+func (s *Solver) ClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
+    if clauses == nil {
+        xtracer.Trace("solver.ClausesToZ3 ENTER nil")
+        return s.tr.Ctx.BoolVal(true), nil
+    }
+    xtracer.Trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
+
+    var exprs []z3bridge.Expr
+
+    // Translate formulas via conjToZ3 matching Python: [conj_to_z3(cl) for cl in clauses.fmlas]
+    for i, f := range clauses.Fmlas {
+        xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v", i, f.NodeSort())
+        zf, err := s.conjToZ3(f)
+        if err != nil {
+            return z3bridge.Expr{}, fmt.Errorf("translating formula: %w", err)
+        }
+        exprs = append(exprs, zf)
+    }
+
+    // Translate definitions via formulaToZ3 matching Python: formula_to_z3(dfn)
     for di, d := range clauses.Defs {
-        constraint := defToConstraint(d)
-        zd, err := s.translateClosed(constraint)
+        zd, err := s.formulaToZ3(d)
+        if err != nil {
+            defName := "?"
+            if sym := d.Defines(); sym != nil {
+                if c, ok := sym.(*lg.Const); ok {
+                    defName = c.Name
+                }
+            }
+            xtracer.Trace("clauses_to_z3: Z3 error on def[%d]: %v defines=%s", di, err, defName)
+            return z3bridge.Expr{}, fmt.Errorf("translating definition: %w", err)
+        }
+        exprs = append(exprs, zd)
+    }
+
+    // Type constraints matching Python: type_constraints(used_symbols_clauses(clauses))
+    usedSyms := clauses.Symbols()
+    for _, sym := range usedSyms {
+        constraints := s.typeConstraintsForSymbol(sym)
+        for _, tc := range constraints {
+            closed := il.CloseFormula(tc)
+            ztc, err := s.tr.TranslateNoHash(closed)
+            if err != nil {
+                continue
+            }
+            exprs = append(exprs, ztc)
+        }
+    }
+
+    xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
+    if len(exprs) == 0 {
+        return s.tr.Ctx.BoolVal(true), nil
+    }
+    if len(exprs) == 1 {
+        return exprs[0], nil
+    }
+    return s.tr.Ctx.And(exprs...), nil
+}
 ```
 
-With:
-```go
-    // Translate definitions directly, matching Python's formula_to_z3(dfn)
-    for di, d := range clauses.Defs {
-        zd, err := s.translateDefinition(d)
-```
+Note: The `\n` was removed from the ENTER trace to match the previous fix (PLAN216 removed `\n` for stronger checks).
 
-Rest of the error handling block stays the same.
+### D. Keep existing code for other callers
 
-### D. `solver/solver.go` — keep defToConstraint for UnsatCore
-
-The local `defToConstraint` function (lines 456-467) is still used at line 612 in the unsat_core path (where Python also calls `d.to_constraint()` explicitly). Keep it.
+- **`translateClosed`** (line 411-423): Unchanged. Still used by `ImpliesBatch`, `UnsatCore`, `IsSat`, `model.go`, `clauses.go`, `compat.go` etc.
+- **`FormulaToZ3`** (public, line 261-266): Unchanged for now. Used by `vmt`, `alpha`, tests. Future task: align with Python's `formula_to_z3` properly.
+- **`defToConstraint`** (line 456-467): Unchanged. Still used by UnsatCore (line 612).
 
 ## Files Modified
 
-- `z3bridge/translate.go` — add `TranslateVar` method
-- `solver/solver.go` — add `translateDefinition` method, change ClausesToZ3 def loop
+- `z3bridge/translate.go` — add `TranslateNoHash` and `TranslateVar`
+- `solver/solver.go` — add `formulaToZ3`, `formulaToZ3Closed`, `conjToZ3`, `forall`; rewrite `ClausesToZ3` body; add imports
 
 ## Verification
 
 ```bash
-cd ~/ivy/goivy && go build ./... && go test ./solver/... && make golden
+cd ~/ivy/goivy && go build ./... && go test ./solver/... && go test ./actions/... && make golden
 ```
 
-Expected: Line 236046 now shows matching `(Def ...)` canons with identical blake3 hashes. The Z3 Sort mismatch panic should also be resolved since we no longer route through `translateQuantifier` (which adds sort constraints involving `<`). The golden test should advance past line 236046 + all 12 definition HASH traces.
+Expected: Line 236046 now shows matching `(Def ...)` canons. The Sort mismatch panic is resolved (Definition uses raw z3.ForAll, no quant constraints). The golden test advances past line 236046 + all 12 definition HASH traces.
