@@ -884,6 +884,10 @@ func CheckModule(mod *module.Module) error {
 				if saveMacroFinder {
 					fmt.Println("Turning off macro_finder")
 					mod.Cfg.MacroFinder = false
+					// python does:
+					// islv.set_macro_finder(False) ## where islv is ivy_solver.py
+					// a true Go port needs to do something akin to calling: Solver.SetMacroFinder(false)
+
 				}
 			}
 		}
@@ -979,6 +983,9 @@ func CheckModule(mod *module.Module) error {
 		if hasMFAttr && saveMacroFinder {
 			fmt.Println("Turning on macro_finder")
 			mod.Cfg.MacroFinder = true
+			// python does:
+
+			// a true Go port needs to do something akin to calling: Solver.SetMacroFinder(true)
 		}
 	}
 
