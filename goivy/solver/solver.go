@@ -637,7 +637,14 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) 
 // ImpliesBatch tests if premise implies each formula in fmlas.
 // More efficient than calling Implies repeatedly: reuses a single solver
 // with push/pop for each check.
-// Corresponds to Python's z3_implies_batch.
+//
+// Corresponds to Python's z3_implies_batch at ivy/z3_utils.py:136,
+// whose documentation says:
+//
+// Use z3 to test if premise implies each formula in formulas.
+// Equivalent to: [z3_implies(premise, f) for f in formulas]
+// but more efficient.
+// .
 func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zPremise, err := s.translateClosed(premise)

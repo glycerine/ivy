@@ -248,6 +248,208 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 *Bibliography compiled March 2026. For the most current publication list, see McMillan's dblp page linked above.*
 
 ------------
+# Questions
+
+Q: What is first order logic and how does it relate to the logic fragment EPR?
+
+A:
+
+**First-Order Logic (FOL)**
+
+First-order logic extends propositional logic by adding quantifiers and terms, allowing statements about objects in a domain rather than just atomic truth values. Its components are:
+
+- **Terms** — variables, constants, and function symbols applied to terms (e.g., `f(x, c)`)
+- **Atoms** — predicate symbols applied to terms (e.g., `P(x, f(y))`)
+- **Connectives** — ∧, ∨, ¬, →, ↔
+- **Quantifiers** — ∀ and ∃ ranging over domain elements
+
+FOL is highly expressive — you can reason about relations, functions, and structured domains — but this comes at a cost. FOL is **semi-decidable**: validity is recursively enumerable, but unsatisfiability is not, so automated reasoning does not always terminate.
+
+---
+
+**The EPR Fragment**
+
+EPR stands for **Effectively Propositional Reasoning** (also called the **Bernays-Schönfinkel class**). It is the fragment of FOL restricted to formulas of the form:
+
+> ∃\* ∀\* φ
+
+meaning: existential quantifiers followed by universal quantifiers, with **no function symbols** (constants are permitted). This quantifier prefix pattern is key — it is the opposite order from what Skolemization typically produces.
+
+**Why It's Decidable**
+
+Without function symbols, terms cannot nest. Every term is either a variable or a constant, so the **Herbrand universe** — the set of ground terms — is finite. This means the search space for a model is bounded, and satisfiability becomes decidable, essentially reducing to a propositional problem, hence the name "effectively propositional."
+
+**Why the Quantifier Order Matters**
+
+In ∃\*∀\* formulas, Skolemization only introduces constants (not functions), because the existential quantifiers precede all universals and thus depend on nothing. This keeps the Herbrand universe finite. If you allowed ∀∃ alternation, Skolem functions would appear, terms could nest arbitrarily deeply, and decidability would be lost.
+
+**Why EPR Matters in Practice**
+
+Despite its restrictions, EPR is surprisingly expressive for verification tasks:
+
+- Many **software and hardware verification** problems can be encoded in EPR
+- **Bounded model checking** naturally fits the fragment
+- Systems like **Ivy** (developed at Microsoft Research and Carnegie Mellon) use EPR as their core logic, because its decidability gives strong guarantees for protocol verification
+- It sits at a useful sweet spot — expressive enough to capture interesting properties, constrained enough to be mechanically decidable
+
+It is one of the most practically important decidable fragments of FOL in formal methods today.
+------
+
+Q: Tell me about propositional logic
+
+A:
+
+**Propositional Logic**
+
+Propositional logic is the simplest and most foundational formal logic. It reasons about **propositions** — statements that are either true or false — and how they combine via logical connectives. There are no quantifiers, no variables ranging over domains, no functions or predicates. Just atomic truth values and the connectives that operate on them.
+
+---
+
+**Syntax**
+
+The basic ingredients are:
+
+- **Atomic propositions** — primitive symbols, e.g., `P`, `Q`, `R`, each assigned a truth value
+- **Connectives** — the standard ones being:
+  - ¬ (negation)
+  - ∧ (conjunction)
+  - ∨ (disjunction)
+  - → (implication)
+  - ↔ (biconditional)
+          
+Formulas are built recursively from atoms and connectives in the usual way.
+          
+---
+          
+**Semantics**
+          
+The semantics is simple: a **valuation** assigns true or false to each atomic proposition, and the truth value of a compound formula is determined compositionally by the standard truth tables. There is no deeper model theory — everything reduces to truth table evaluation.
+          
+Key semantic notions:
+          
+ - **Tautology** — true under all valuations (e.g., `P ∨ ¬P`)
+ - **Satisfiable** — true under at least one valuation
+ - **Unsatisfiable (contradiction)** — true under no valuation (e.g., `P ∧ ¬P`)
+          
+---
+          
+**Decidability**
+          
+Propositional logic is fully **decidable** — truth table evaluation always terminates. However, the decision problem for satisfiability, known as **SAT**, is **NP-complete**. This means that while a solution can always be verified quickly, finding one may require exponential time in the worst case. SAT was in fact the first problem proven NP-complete (Cook, 1971).
+
+In practice, modern **SAT solvers** handle formulas with millions of variables efficiently through heuristics like DPLL and CDCL, and are a cornerstone of industrial formal verification.
+          
+---
+
+**Normal Forms**
+          
+Propositional logic has two important normal forms:
+          
+ - **CNF (Conjunctive Normal Form)** — a conjunction of clauses, where each clause is a disjunction of literals. This is the standard input format for SAT solvers.
+ - **DNF (Disjunctive Normal Form)** — a disjunction of conjunctions of literals.
+          
+Any propositional formula can be converted to either form, though the conversion to CNF can introduce new variables (Tseitin transformation) to avoid an exponential blowup.
+          
+---
+          
+**Relationship to FOL**
+          
+Propositional logic can be seen as the quantifier-free, function-free, variable-free fragment of FOL. FOL strictly generalizes it — every propositional tautology lifts to a FOL tautology, but FOL can express vastly more. The jump from propositional to first-order logic is where undecidability enters, which is why the decidable fragments of FOL (like EPR) are valuable — they recover some of the tractability of the propositional setting while retaining more expressive power.
+
+------
+
+Q: Give an example please of how FOL can express vastly more, but at the same time be reduced to propositional logic.
+
+Great question — it gets at something deep about the relationship between the two logics.
+
+---
+
+**What FOL Can Express That Propositional Logic Cannot**
+
+Consider a simple FOL statement:
+
+> ∀x (Person(x) → Mortal(x))
+
+This says something general about *all* objects in a domain — an infinite or arbitrary collection. Propositional logic has no mechanism for this. You could write `P → Q` for specific named individuals, but you cannot quantify over an open-ended domain. FOL captures structure and relationships that propositional logic simply cannot express.
+
+---
+
+**How FOL Reduces to Propositional Logic**
+
+The reduction works through **grounding** — instantiating the universal quantifier over a finite, concrete domain. Suppose your domain is just three individuals: `{alice, bob, carol}`. Then:
+
+> ∀x (Person(x) → Mortal(x))
+
+grounds out to the conjunction:
+
+> (Person(alice) → Mortal(alice)) ∧ (Person(bob) → Mortal(bob)) ∧ (Person(carol) → Mortal(carol))
+
+Now each atom like `Person(alice)` is just a proposition — it has no internal structure anymore, it is simply true or false. The entire formula is now a plain propositional formula, and a SAT solver can handle it directly.
+
+This is essentially what happens in **EPR** — because the Herbrand universe is finite, every FOL formula in that fragment can be grounded into a propositional formula of finite size, which is why EPR is decidable.
+
+---
+
+**The Catch**
+
+This only works when the domain is finite and known. In full FOL, the domain may be infinite — you cannot enumerate all instantiations. The grounding process never terminates, which is precisely where undecidability comes from. The power of FOL to reason over arbitrary domains is exactly what makes it escape propositional decidability.
+
+So the tradeoff is sharp: **expressiveness buys you undecidability; bounding the domain buys you back decidability at the cost of generality.**
+
+------
+
+Q: Ivy uses EPR to prove safety of inifinite state systems; how is that possible since EPR needs finite domains?
+
+A: Excellent question — this is one of the most elegant aspects of Ivy's design.
+
+---
+
+**The Apparent Contradiction**
+
+You are right that EPR's decidability rests on a finite Herbrand universe. Yet distributed protocols — the primary target of Ivy — have unbounded numbers of nodes, messages, and quorums. How can a finite-domain logic reason about them?
+
+---
+
+**The Resolution: Reasoning About the Protocol, Not the State Space**
+
+The key insight is that Ivy does not enumerate the state space. Instead it reasons about **universally quantified invariants** over the protocol's transition relation. The question is never "check all reachable states" but rather "does this invariant hold inductively" — meaning:
+
+- It holds in the initial state
+- If it holds before a transition, it holds after
+
+This is a **verification condition** expressed as a FOL formula, and Ivy is designed so that these verification conditions fall within EPR. The domain of the verification condition is the set of symbolic actors — nodes, values, quorums — treated as uninterpreted sorts, not as enumerated objects.
+
+---
+
+**Uninterpreted Sorts Are the Bridge**
+
+In Ivy, you declare sorts like `node` or `quorum` without giving them a size. The EPR formula says things like:
+
+> ∀ n:node, q:quorum. member(n, q) → ...
+
+The EPR decision procedure treats these sorts as **arbitrary but fixed** — it does not need to know how many nodes there are. It asks: is there *any* interpretation of the sorts and relations that falsifies the invariant? If not, the invariant holds for all domain sizes simultaneously.
+
+This works because EPR's decidability does not actually require the domain to be small — it requires the **Herbrand universe to be finite given the formula**, which holds when there are no function symbols. The sorts can be arbitrarily large in any specific model; what matters is that the formula's structure prevents unbounded term nesting.
+
+---
+
+**So What Is Finite?**
+
+What is finite is not the domain of the system being verified, but the **syntactic structure of the verification condition**. The absence of function symbols keeps the formula's Herbrand universe finite at the logical level, even though the semantic domain — the actual nodes and quorums in a real deployment — can be arbitrarily large.
+
+---
+
+**The Payoff**
+
+This is what makes Ivy powerful. You get:
+
+- A decidable verification procedure (no false timeouts or incompleteness)
+- Correctness guarantees that hold for **all instance sizes** — 3 nodes, 300 nodes, or 3 million
+- No need to fix a bound ahead of time, unlike bounded model checking
+
+It is a genuinely clever engineering of the logic — staying within EPR is a discipline imposed on the user (Ivy will reject specifications that escape the fragment), but the reward is a verifier that is both sound and complete for the properties it can express.
+
+------------
 
 # notes on installing python original Ivy
 
