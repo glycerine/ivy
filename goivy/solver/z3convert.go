@@ -547,7 +547,11 @@ type NativeFunc func(args ...z3bridge.Expr) z3bridge.Expr
 //
 // Corresponds to Python lookup_native (lines 289-324).
 func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
-	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%v\n stack=\n%v\n", sym.Name, isRelation, stack())
+	kind := "function"
+	if isRelation {
+		kind = "relation"
+	}
+	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s", sym.Name, kind)
 	if s.sig == nil {
 		return nil
 	}

@@ -50,6 +50,7 @@ type Translator struct {
 	sortsInv         map[string]logic.Sort      // reverse map: Z3 sort name -> original Ivy sort
 	consts           map[logic.NodeKey]Expr     // cache: structural key -> Z3 const
 	funcs            map[logic.NodeKey]FuncDecl // cache: structural key -> Z3 func decl
+	preds            map[logic.NodeKey]func(args ...Expr) Expr // cache: z3_predicates (Python z3_predicates)
 	NativeLookup     NativeLookupFunc           // optional: native interpretation callback
 	SolverName       SolverNameFunc             // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 	QuantConstraints QuantConstraintsFn         // optional: generates sort constraints for quantifier-bound variables
@@ -69,6 +70,7 @@ func NewTranslator() *Translator {
 		sortsInv: make(map[string]logic.Sort),
 		consts:   make(map[logic.NodeKey]Expr),
 		funcs:    make(map[logic.NodeKey]FuncDecl),
+		preds:    make(map[logic.NodeKey]func(args ...Expr) Expr),
 	}
 }
 
@@ -83,6 +85,7 @@ func (t *Translator) Clear() {
 	t.sortsInv = make(map[string]logic.Sort)
 	t.consts = make(map[logic.NodeKey]Expr)
 	t.funcs = make(map[logic.NodeKey]FuncDecl)
+	t.preds = make(map[logic.NodeKey]func(args ...Expr) Expr)
 }
 
 // SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
@@ -196,6 +199,9 @@ func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
 	return t.Translate(n)
 }
 
+// Translate converts an Ivy logic node to a Z3 expression.
+// Corresponds to Python formula_to_z3_int (ivy_solver.py:637).
+// Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	xtracer.Trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%v", iu.ShortTypeName(n))
 	if xtracer.Enabled && t.translateDepth == 0 {
@@ -205,6 +211,25 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	}
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
+
+	// Python line 645: if ivy_logic.is_atom(fmla): return atom_to_z3(fmla)
+	// is_atom: Apply (or Symbol) with Boolean sort, or Eq.
+	// Eq is handled by translateCore's *logic.Eq case. Here we only
+	// intercept Apply with Boolean sort and non-zero args.
+	if app, ok := n.(*logic.Apply); ok && len(app.Terms) > 0 {
+		if _, isBool := n.NodeSort().(*logic.BooleanSort); isBool {
+			return t.atomToZ3(app)
+		}
+	}
+
+	return t.translateCore(n)
+}
+
+// translateCore is the inner dispatch for Translate. It handles all node
+// types except Boolean-sorted Apply (which is routed to atomToZ3 by
+// Translate). No XTRACE, no Merkle hash, no depth tracking — those are
+// done by the caller (Translate or TermToZ3).
+func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 	switch node := n.(type) {
 	case *logic.Variable:
 		// Python: sksym = term.rep + ':' + term.sort.name
@@ -220,8 +245,10 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 			return t.Translate(node.Func)
 		}
 
-		// Check if the function is a built-in operation (arithmetic, BV, etc.)
+		// Non-Boolean Apply: corresponds to Python term_to_z3 "else"
+		// branch (line 483–497) for function applications.
 		if c, ok := node.Func.(*logic.Const); ok {
+			// Check if the function is a built-in operation (arithmetic, BV, etc.)
 			result, handled, err := t.translateBuiltinOp(c.Name, node.Terms)
 			if err != nil {
 				return Expr{}, err
@@ -232,17 +259,12 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 
 			// Check for native interpretation via callback (handles polymorphic
 			// symbols, range sort clamped arithmetic, nat interpretation, etc.)
+			// Python: fun = lookup_native(term.rep, functions, "function")
 			if t.NativeLookup != nil {
-				isRelation := false
-				if fs, ok := c.CSort.(*logic.FunctionSort); ok {
-					if _, isBool := fs.Range().(*logic.BooleanSort); isBool {
-						isRelation = true
-					}
-				}
-				if nativeFn := t.NativeLookup(c.Name, c.CSort, isRelation); nativeFn != nil {
+				if nativeFn := t.NativeLookup(c.Name, c.CSort, false); nativeFn != nil {
 					args := make([]Expr, len(node.Terms))
 					for i, term := range node.Terms {
-						a, err := t.Translate(term)
+						a, err := t.TermToZ3(term)
 						if err != nil {
 							return Expr{}, err
 						}
@@ -253,19 +275,14 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 			}
 		}
 
-		fn, err := t.Translate(node.Func)
-		if err != nil {
-			return Expr{}, err
-		}
-		_ = fn
-		// For function applications, we need to use the FuncDecl
+		// Python: fun = z3.Function(sn, *sig); args = [term_to_z3(arg) for arg in term.args]
 		fd, err := t.getFuncDecl(node.Func)
 		if err != nil {
 			return Expr{}, err
 		}
 		args := make([]Expr, len(node.Terms))
 		for i, term := range node.Terms {
-			a, err := t.Translate(term)
+			a, err := t.TermToZ3(term)
 			if err != nil {
 				return Expr{}, err
 			}
@@ -402,6 +419,132 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 
 	default:
 		return Expr{}, fmt.Errorf("unsupported node type for Z3 translation: %T", n)
+	}
+}
+
+// atomToZ3 translates a Boolean-sorted Apply (atom) to Z3.
+// Corresponds to Python atom_to_z3 (ivy_solver.py:516).
+func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
+	c, ok := app.Func.(*logic.Const)
+	if !ok {
+		// Fallback for non-Const func (rare)
+		return t.translateCore(app)
+	}
+
+	xtracer.Trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d",
+		c.Name, len(app.Terms))
+
+	// Python line 518: if ivy_logic.is_equals(atom.rep) and
+	//   ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums
+	if c.Name == "=" && len(app.Terms) == 2 && t.EnumEqFunc != nil {
+		if es, ok2 := app.Terms[0].NodeSort().(*logic.EnumeratedSort); ok2 {
+			if result, err := t.EnumEqFunc(app.Terms[0], app.Terms[1], es); result != nil {
+				return *result, err
+			}
+		}
+	}
+
+	// Check preds cache (Python z3_predicates)
+	predKey := logic.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+	if cached, ok := t.preds[predKey]; ok {
+		return t.applyPred(cached, app.Terms)
+	}
+
+	// Check builtin ops (Go-specific: Python handles via polymacs inside lookup_native)
+	result, handled, err := t.translateBuiltinOp(c.Name, app.Terms)
+	if err != nil {
+		return Expr{}, err
+	}
+	if handled {
+		return result, nil
+	}
+
+	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
+	if t.NativeLookup != nil {
+		if nativeFn := t.NativeLookup(c.Name, c.CSort, true); nativeFn != nil {
+			t.preds[predKey] = nativeFn
+			return t.applyPred(nativeFn, app.Terms)
+		}
+	}
+
+	// Python lines 527-528: create Z3 Function/Const for uninterpreted relation
+	fs, ok := c.CSort.(*logic.FunctionSort)
+	if !ok {
+		return Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
+	}
+	fd, err := t.makeFuncDecl(c.Name, fs)
+	if err != nil {
+		return Expr{}, err
+	}
+	predFn := fd.Apply
+	t.preds[predKey] = predFn
+	return t.applyPred(predFn, app.Terms)
+}
+
+// applyPred translates args via TermToZ3 and applies the predicate function.
+func (t *Translator) applyPred(pred func(args ...Expr) Expr, terms []logic.Expr) (Expr, error) {
+	args := make([]Expr, len(terms))
+	for i, term := range terms {
+		a, err := t.TermToZ3(term)
+		if err != nil {
+			return Expr{}, err
+		}
+		args[i] = a
+	}
+	return pred(args...), nil
+}
+
+// TermToZ3 translates a term to Z3.
+// Corresponds to Python term_to_z3 (ivy_solver.py:444).
+func (t *Translator) TermToZ3(term logic.Expr) (Expr, error) {
+	xtracer.Trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s",
+		iu.ShortTypeName(term), termName(term))
+
+	// Python line 446: if is_boolean(term) and not is_variable(term):
+	//     return formula_to_z3_int(term)
+	if _, isBool := term.NodeSort().(*logic.BooleanSort); isBool {
+		if _, isVar := term.(*logic.Variable); !isVar {
+			return t.Translate(term)
+		}
+	}
+
+	// Python line 481-482: Ite in term context — cond through formula,
+	// then/else through term path.
+	if ite, ok := term.(*logic.Ite); ok {
+		cond, err := t.Translate(ite.Cond)
+		if err != nil {
+			return Expr{}, err
+		}
+		th, err := t.TermToZ3(ite.Then)
+		if err != nil {
+			return Expr{}, err
+		}
+		el, err := t.TermToZ3(ite.Else)
+		if err != nil {
+			return Expr{}, err
+		}
+		return t.Ctx.Ite(cond, th, el), nil
+	}
+
+	// All other non-boolean terms: Variable, Const, non-boolean Apply
+	return t.translateCore(term)
+}
+
+// termName extracts a name from a node for the term_to_z3 XTRACE.
+// Python: getattr(term, 'name', getattr(term, 'rep', '?'))
+func termName(n logic.Expr) string {
+	switch e := n.(type) {
+	case *logic.Variable:
+		return e.Name
+	case *logic.Const:
+		return e.Name
+	case *logic.Apply:
+		if c, ok := e.Func.(*logic.Const); ok {
+			return c.Name
+		}
+		return "?"
+	default:
+		return "?"
 	}
 }
 
@@ -652,7 +795,7 @@ func (t *Translator) translateBuiltinOp(name string, terms []logic.Expr) (Expr, 
 	translateArgs := func() ([]Expr, error) {
 		args := make([]Expr, len(terms))
 		for i, term := range terms {
-			a, err := t.Translate(term)
+			a, err := t.TermToZ3(term)
 			if err != nil {
 				return nil, err
 			}
