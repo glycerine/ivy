@@ -44,11 +44,24 @@ func (m *Module) UpdateTheory() {
 	for _, ldf := range m.Definitions {
 		fmla := ldf.Formula
 
-		// Check if it is a Definition node.
-		def, isDef := fmla.(*il.Definition)
-		if !isDef {
+		// Extract Definition — handle both *Definition and *DefinitionSchema.
+		// In Go, *DefinitionSchema embeds Definition but doesn't satisfy
+		// the *Definition type assertion. Python isinstance() handles both.
+		var def *il.Definition
+		var isSchema bool
+		if d, ok := fmla.(*il.Definition); ok {
+			def = d
+		} else if ds, ok := fmla.(*il.DefinitionSchema); ok {
+			def = &ds.Definition
+			isSchema = true
+		} else {
 			continue
 		}
+
+		// Python: cnst = ldf.formula.to_constraint()
+		// Called unconditionally for ALL definitions to match Python trace output.
+		// The result is unused here but the call produces an xtracer trace.
+		defToConstraint(def)
 
 		// Check that all LHS args are variables.
 		lhsArgs := getLhsArgs(def)
@@ -57,7 +70,7 @@ func (m *Module) UpdateTheory() {
 		}
 
 		// Skip DefinitionSchema.
-		if _, isSchema := fmla.(*il.DefinitionSchema); isSchema {
+		if isSchema {
 			continue
 		}
 
@@ -170,16 +183,25 @@ func (m *Module) TheoryContext() func() {
 	// Collect non-EPR definitions (definitions with non-variable parameters).
 	nonEPR := make(map[lg.NodeKey]nonEPREntry)
 	for _, ldf := range m.Definitions {
-		def, isDef := ldf.Formula.(*il.Definition)
-		if !isDef {
+		// Extract Definition — handle both *Definition and *DefinitionSchema.
+		var def *il.Definition
+		if d, ok := ldf.Formula.(*il.Definition); ok {
+			def = d
+		} else if ds, ok := ldf.Formula.(*il.DefinitionSchema); ok {
+			def = &ds.Definition
+		} else {
 			continue
 		}
+
+		// Python: cnst = ldf.formula.to_constraint()
+		// Called for ALL definitions (result used only for non-EPR).
+		cnst := defToConstraint(def)
+
 		lhsArgs := getLhsArgs(def)
 		if allVariables(lhsArgs) {
 			continue
 		}
 		// This definition has non-variable parameters.
-		cnst := defToConstraint(def)
 		defines := def.Defines()
 		if defines != nil {
 			nonEPR[lg.Key(defines)] = nonEPREntry{ldf: ldf, constraint: cnst}
