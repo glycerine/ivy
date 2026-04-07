@@ -988,7 +988,8 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 // ":domain_sort_name" for each domain sort. Returns "" if the symbol
 // has a native Z3 interpretation (should be handled inline, not declared).
 func (s *Solver) SolverName(sym *lg.Const) string {
-	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
+	// Go uses both SolverName and IsInterpretedSymbol (to avoid needing a *Solver)
+	//xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
 	name := sym.Name
 
 	// bfe[lo:hi] — handled natively

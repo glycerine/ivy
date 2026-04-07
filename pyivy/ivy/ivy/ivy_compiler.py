@@ -1937,6 +1937,7 @@ def attach_proofs(mod):
 
 
 def check_definitions(mod):
+    if __debug__: xtracer.trace("compiler.CheckDefinitions ENTER")
 
     # get the definitions that have no dependence on proofs
 
@@ -2033,7 +2034,8 @@ def check_definitions(mod):
         if d.id not in pmap:
             raise iu.IvyError(d,'definition of {} requires a recursion schema'.format(d.formula.defines()))
         prover.admit_definition(d,pmap[d.id])
-        
+    if __debug__: xtracer.trace("compiler.CheckDefinitions EXIT")
+
 
 # Take a goal with premises and convert it to an implication. To do this, we have to skolemize
 # the bound vocabulary in the goal. Also, any definitions in the proof goal are made global

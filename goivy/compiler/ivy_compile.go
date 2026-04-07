@@ -39,7 +39,6 @@ import (
 // Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
 var OptMutax = iu.NewBooleanParameter("mutax", false)
 
-
 // IvyCompile is the main compilation entry point. It takes a list of
 // declarations and compiles them into the module.
 //
@@ -1395,6 +1394,9 @@ func AttachProofs(mod *module.Module) error {
 // CheckDefinitions validates definitions for cycles and redefinition.
 // Corresponds to Python's check_definitions (ivy_compiler.py:1696-1776).
 func CheckDefinitions(mod *module.Module) error {
+	xtracer.Trace("compiler.CheckDefinitions ENTER")
+	defer xtracer.Trace("compiler.CheckDefinitions EXIT")
+
 	// Get definitions that have no dependence on proofs.
 	// stale uses structural keys (Sexp) matching Python's Symbol-as-dict-key semantics.
 	stale := make(map[lg.NodeKey]bool)

@@ -23,9 +23,8 @@ from . import ivy_utils as iu
 from . import ivy_unitres as ur
 from . import logic as lg
 from . import ivy_ast
-
+#import traceback
 import sys
-import traceback
 
 # Following accounts for Z3 API symbols that are hidden as of Z3-4.5.0
 
@@ -63,7 +62,7 @@ def set_use_native_enums(t):
 z3_builtins = set(["bit0","bit1"])
 
 def solver_name(symbol):
-    if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
+    #if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name) # Go uses IsInterpretedSymbol too.
     name = symbol.name
     if name.startswith('bfe['):
         if bfe_to_z3(symbol) is not None:
@@ -244,7 +243,6 @@ def is_solver_op(name):
 
 def clear():
     #if __debug__: xtracer.trace("ivy_solver.py:245 clear() ENTER")
-    #if __debug__: traceback.print_stack()
     global z3_sorts, z3_predicates, z3_constants, z3_functions
     z3_sorts = dict()
     z3_predicates = {ivy_logic.equals : my_eq}
