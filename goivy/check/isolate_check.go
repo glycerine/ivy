@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/glycerine/ivy/goivy/acl"
 	"github.com/glycerine/ivy/goivy/actions"
@@ -87,6 +88,8 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		return CheckSubgoals(subgoals, nil, mod)
 	}
 
+	fcStartTm := time.Now()
+
 	// Python: ifc.check_fragment()
 	xtracer.Trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
 	if err := fragment.CheckFragment(mod, false); err != nil {
@@ -94,6 +97,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		return err
 	}
 	xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")
+
+	fcElap := time.Since(fcStartTm)
+	fmt.Printf("\n\t IVY_STATS fragment checker elapsed time (s): %v\n", fcElap)
 
 	// Python: with im.module.theory_context():
 	cleanupTheory := mod.TheoryContext()
