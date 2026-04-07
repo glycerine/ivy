@@ -65,7 +65,7 @@ func appKey(sym *lg.Const, idx int) lg.NodeKey {
 // Uses (StratNode ...) — a unique s-expression tag not used by any AST type —
 // to avoid collisions with real Const.Sexp() entries that use (Symbol ...).
 func eqExprKey(expr lg.Expr) lg.NodeKey {
-	return lg.NodeKey(fmt.Sprintf("'(StratNode eq:%v)'", lg.Key(expr)))
+	return lg.NodeKey(fmt.Sprintf("(StratNode eq:%v)", lg.Key(expr)))
 }
 
 // arc represents a directed edge in the stratification graph.
