@@ -2459,7 +2459,7 @@ func TestTranslateComparisonInterpretedSort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmla := &lg.ForAll{Bounds: []*lg.Variable{x, y}, Body: app}
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x, y}, Body: app}
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatalf("FormulaToZ3 failed: %v", err)
@@ -2490,7 +2490,7 @@ func TestTranslateComparisonBVSort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmla := &lg.ForAll{Bounds: []*lg.Variable{x, y}, Body: app}
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x, y}, Body: app}
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatalf("FormulaToZ3 failed: %v", err)
