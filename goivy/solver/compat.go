@@ -139,30 +139,59 @@ func checkSortCompat(sig *il.Sig, s lg.Sort) error {
 	return nil
 }
 
-// CheckCompat checks all symbols in the signature for native compatibility.
+// CheckCompat checks interpreted symbols in the signature for native compatibility.
+// Python iterates sig.interp (not sig.symbols), so we do the same.
 func (s *Solver) CheckCompat() []error {
 	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
 	if s.sig == nil {
 		return nil
 	}
-	for _, entry := range s.sig.Symbols {
-		sym := lg.NewConst(entry.Name, entry.Sort)
-		if err := s.CheckNativeCompatSym(sym); err != nil {
-			errs = append(errs, err)
+	for name := range s.sig.Interp {
+		entry, ok := s.sig.Symbols[name]
+		if !ok {
+			continue
+		}
+		// Handle UnionSort (polymorphic symbols)
+		if entry.Union != nil {
+			for _, sort := range entry.Union.Sorts {
+				sym := lg.NewConst(name, sort)
+				if err := s.CheckNativeCompatSym(sym); err != nil {
+					errs = append(errs, err)
+				}
+			}
+		} else {
+			sym := lg.NewConst(name, entry.Sort)
+			if err := s.CheckNativeCompatSym(sym); err != nil {
+				errs = append(errs, err)
+			}
 		}
 	}
 	return errs
 }
 
 // CheckCompatStatic is the old static version for backward compatibility.
+// Python iterates sig.interp (not sig.symbols), so we do the same.
 func CheckCompatStatic(sig *il.Sig) []error {
 	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
-	for _, entry := range sig.Symbols {
-		sym := lg.NewConst(entry.Name, entry.Sort)
-		if err := CheckNativeCompatSymStatic(sig, sym); err != nil {
-			errs = append(errs, err)
+	for name := range sig.Interp {
+		entry, ok := sig.Symbols[name]
+		if !ok {
+			continue
+		}
+		if entry.Union != nil {
+			for _, sort := range entry.Union.Sorts {
+				sym := lg.NewConst(name, sort)
+				if err := CheckNativeCompatSymStatic(sig, sym); err != nil {
+					errs = append(errs, err)
+				}
+			}
+		} else {
+			sym := lg.NewConst(name, entry.Sort)
+			if err := CheckNativeCompatSymStatic(sig, sym); err != nil {
+				errs = append(errs, err)
+			}
 		}
 	}
 	return errs
