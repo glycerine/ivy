@@ -669,7 +669,9 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 		return cached, nil
 	}
 
-	z3name := t.z3Name(name, fs)
+	// Python: sig = atom.rep.sort.to_z3() calls functionsort(fs) first,
+	// then solver_name(atom.rep). Match that order.
+	xtracer.Trace("ivy_solver.py:269 functionsort() ENTER")
 
 	domain := fs.Domain()
 	zDomain := make([]Sort, len(domain))
@@ -684,6 +686,8 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 	if err != nil {
 		return FuncDecl{}, err
 	}
+
+	z3name := t.z3Name(name, fs)
 
 	fd := t.Ctx.Function(z3name, zDomain, zRange)
 	t.funcs[key] = fd
