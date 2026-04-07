@@ -2603,40 +2603,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236045  go : XTRACE: solver.ClausesToZ3 ENTER
-        py : XTRACE: solver.ClausesToZ3 ENTER
+236342  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
+        py : XTRACE: ast.LF.__init__ id=2033 counter=2034
 
-236046  go : XTRACE: z3bridge.Translate HASH leaf=blake3.33B-wdhWhdcqtTAth8MCyO2Ms2xjk1wF2xSaIIWbAS4D6w2C root=blake3.33B-ptS3bj_QbTEeHw6--06rNt2nGKCEuHAAxy8VjPSQ4s65 canon=(ForAll vars:[(Variable name:T0 sort:(UninterpretedSort name:lclock)) (Variable name:T1 sort:(UninterpretedSort name:lclock))] body:(Iff t1: ...(truncated long line to 300 bytes)
-
-        py : XTRACE: z3bridge.Translate HASH leaf=blake3.33B-Lnsv4OgqRbtKtXc1AtrDUC15dizPN2GI5y-uWjpSaip4 root=blake3.33B-JuryUmz-ejWh0-ehdBVEUVZ8uTw9Q2SXkwTR6z4uuZPN canon=(Def lhs:(Apply func:(Symbol name:ref.prevents sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (Bo
- ...(truncated long line to 300 bytes)
-
-
-=== S-expression diff (go '-' vs py '+') ===
-- (ForAll
--   vars:[
--     (Variable
--       name:T0
--       sort:(UninterpretedSort
--         name:lclock))
--     (Variable
--       name:T1
--       sort:(UninterpretedSort
--         name:lclock))]
-+ (Def
-+   lhs:(Apply
-+     func:(Symbol
-+       name:ref.prevents
-+       sort:(FunctionSort
-+         sorts:[
-+           (UninterpretedSort
-+             name:lclock)
-+           (UninterpretedSort
-+             name:lclock)
-
-========== trailing ~go[after i= 236046]:
-
-solver.go:410 [goID 1] 2026-04-07 14:22:29.437245000 +0000 UTC warning: recover from panic on il.CloseFormula(): 'z3 bridge panic on error: Sort mismatch at argument #1 for function (declare-fun < (Int Int) Bool) supplied sort is lclock'
-    golden_test.go:452: ivy_check and goivy_check differ at line 236046, counting from 0.
+236343  go : XTRACE: ast.LF.__init__ id=2034 counter=2035
+        py : XTRACE: actions.GetUpdate ENTER type=EnvAction
 ~~~
 
