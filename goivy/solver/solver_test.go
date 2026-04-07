@@ -2404,3 +2404,161 @@ func TestImpliesBatchFreeVarsShared(t *testing.T) {
 		t.Error("r(X) should imply r(X) with shared X")
 	}
 }
+
+// --- PLAN220: Comparison operators on different sort types ---
+
+// TestTranslateComparisonUninterpretedSort verifies that < on an uninterpreted
+// sort creates a sort-qualified uninterpreted Z3 function (not Z3's built-in Lt).
+// Matches Python ivy_solver.py: z3.Function(solver_name(sym), *sig) for
+// uninterpreted sorts where solver_name returns "<:lclock:lclock".
+func TestTranslateComparisonUninterpretedSort(t *testing.T) {
+	lclock := unintSort("lclock")
+	sig := il.NewSig()
+	// lclock has NO interpretation — it's truly uninterpreted
+	s := NewWithSig(sig)
+
+	ltSym := relConst("<", lclock, lclock)
+	x := uiVar("X", lclock)
+	y := uiVar("Y", lclock)
+	app, err := lg.NewApply(ltSym, x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Wrap in a ForAll so formulaToZ3 can handle it
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x, y}, Body: app}
+
+	// This previously panicked with "Sort mismatch at argument #1 for
+	// function (declare-fun < (Int Int) Bool) supplied sort is lclock"
+	z3expr, err := s.FormulaToZ3(fmla)
+	if err != nil {
+		t.Fatalf("FormulaToZ3 failed: %v", err)
+	}
+
+	// The Z3 expression should contain the sort-qualified name
+	smt := z3expr.String()
+	if !strings.Contains(smt, "<:lclock") {
+		t.Errorf("expected sort-qualified function name containing '<:lclock' in Z3 output, got: %s", smt)
+	}
+}
+
+// TestTranslateComparisonInterpretedSort verifies that < on an interpreted
+// sort (int) uses Z3's built-in arithmetic Lt.
+func TestTranslateComparisonInterpretedSort(t *testing.T) {
+	mySort := unintSort("mysort")
+	sig := il.NewSig()
+	sig.Interp["mysort"] = "int"
+
+	s := NewWithSig(sig)
+
+	ltSym := relConst("<", mySort, mySort)
+	x := uiVar("X", mySort)
+	y := uiVar("Y", mySort)
+	app, err := lg.NewApply(ltSym, x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmla := &lg.ForAll{Bounds: []*lg.Variable{x, y}, Body: app}
+	z3expr, err := s.FormulaToZ3(fmla)
+	if err != nil {
+		t.Fatalf("FormulaToZ3 failed: %v", err)
+	}
+
+	// For interpreted int sort, should use Z3's built-in < (not uninterpreted function)
+	smt := z3expr.String()
+	// Should NOT contain sort-qualified name
+	if strings.Contains(smt, "<:mysort") {
+		t.Errorf("interpreted sort should use Z3 built-in <, not uninterpreted function, got: %s", smt)
+	}
+}
+
+// TestTranslateComparisonBVSort verifies that < on a bitvector sort
+// uses Z3's BvUlt (unsigned less-than).
+func TestTranslateComparisonBVSort(t *testing.T) {
+	mySort := unintSort("mybv")
+	sig := il.NewSig()
+	sig.Interp["mybv"] = "bv[8]"
+
+	s := NewWithSig(sig)
+
+	ltSym := relConst("<", mySort, mySort)
+	x := uiVar("X", mySort)
+	y := uiVar("Y", mySort)
+	app, err := lg.NewApply(ltSym, x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmla := &lg.ForAll{Bounds: []*lg.Variable{x, y}, Body: app}
+	z3expr, err := s.FormulaToZ3(fmla)
+	if err != nil {
+		t.Fatalf("FormulaToZ3 failed: %v", err)
+	}
+
+	// For BV sort, should use bvult (not regular < and not uninterpreted function)
+	smt := z3expr.String()
+	if strings.Contains(smt, "<:mybv") {
+		t.Errorf("BV sort should use bvult, not uninterpreted function, got: %s", smt)
+	}
+	if !strings.Contains(smt, "bvult") {
+		t.Errorf("BV sort should contain bvult in Z3 output, got: %s", smt)
+	}
+}
+
+// TestTranslateComparisonUninterpretedSortNoForAll tests that < on an
+// uninterpreted sort works even without ForAll wrapping (via raw Translate).
+func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
+	lclock := unintSort("lclock")
+	sig := il.NewSig()
+	s := NewWithSig(sig)
+
+	ltSym := relConst("<", lclock, lclock)
+	a := lg.NewConst("a", lclock)
+	b := lg.NewConst("b", lclock)
+	app, err := lg.NewApply(ltSym, a, b)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Use raw Translate (the path used by ImpliesBatch)
+	z3expr, err := s.Translator().Translate(app)
+	if err != nil {
+		t.Fatalf("Translate failed: %v", err)
+	}
+
+	smt := z3expr.String()
+	if !strings.Contains(smt, "<:lclock") {
+		t.Errorf("expected sort-qualified '<:lclock' in Z3 output, got: %s", smt)
+	}
+}
+
+// TestTranslateLeGtGeUninterpretedSort verifies that <=, >, >= also work
+// on uninterpreted sorts (creating sort-qualified uninterpreted functions).
+func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
+	lclock := unintSort("lclock")
+	sig := il.NewSig()
+	s := NewWithSig(sig)
+
+	for _, op := range []string{"<=", ">", ">="} {
+		sym := relConst(op, lclock, lclock)
+		a := lg.NewConst("a", lclock)
+		b := lg.NewConst("b", lclock)
+		app, err := lg.NewApply(sym, a, b)
+		if err != nil {
+			t.Fatalf("op %s: NewApply failed: %v", op, err)
+		}
+
+		z3expr, err := s.Translator().Translate(app)
+		if err != nil {
+			t.Fatalf("op %s: Translate failed: %v", op, err)
+		}
+
+		smt := z3expr.String()
+		// Should contain sort-qualified name (e.g., "<=:lclock")
+		expected := op + ":lclock"
+		if !strings.Contains(smt, expected) {
+			t.Errorf("op %s: expected sort-qualified '%s' in Z3 output, got: %s", op, expected, smt)
+		}
+	}
+}

@@ -668,7 +668,12 @@ func (s *Solver) lookupPolymorphicNative(sym *lg.Const, isRelation bool) NativeF
 		}
 	}
 
-	// Fall back to standard built-in operations
+	// Fall back to standard built-in operations.
+	// Dispatch relations to lookupBuiltinRelation (has <, <=, >, >= with
+	// BV-awareness), matching lookupNamedNative's pattern.
+	if isRelation {
+		return s.lookupBuiltinRelation(name)
+	}
 	return s.lookupBuiltinFunc(name, isRelation)
 }
 
@@ -1031,10 +1036,11 @@ var z3Builtins = map[string]bool{
 	"bit1": true,
 }
 
-// isPolymorphicOp returns true if the name is a polymorphic arithmetic operator.
+// isPolymorphicOp returns true if the name is a polymorphic operator.
+// Matches Python iu.polymorphic_symbols (ivy_utils.py:696-714).
 func isPolymorphicOp(name string) bool {
 	switch name {
-	case "+", "-", "*", "/":
+	case "+", "-", "*", "/", "<", "<=", ">", ">=":
 		return true
 	}
 	return false

@@ -694,38 +694,16 @@ func (t *Translator) translateBuiltinOp(name string, terms []logic.Expr) (Expr, 
 		}
 
 	// --- Comparisons ---
-	case "<":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Lt(args[0], args[1]), true, nil
-		}
-	case "<=":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Le(args[0], args[1]), true, nil
-		}
-	case ">":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Gt(args[0], args[1]), true, nil
-		}
-	case ">=":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Ge(args[0], args[1]), true, nil
-		}
+	// Comparison operators (<, <=, >, >=) are NOT handled here.
+	// They are polymorphic: for interpreted sorts (int, nat, bv) they
+	// use Z3 built-in comparisons via NativeLookup → lookupBuiltinRelation;
+	// for uninterpreted sorts they become sort-qualified uninterpreted
+	// functions via getFuncDecl (e.g., "<:lclock:lclock").
+	// Handling them here with hardcoded ctx.Lt/Le/Gt/Ge causes Z3 Sort
+	// mismatch panics on uninterpreted sorts.
+	// Matches Python ivy_solver.py:atom_to_z3 which dispatches via
+	// lookup_native → relations_dict for interpreted sorts, or creates
+	// z3.Function(solver_name(sym), *sig) for uninterpreted sorts.
 
 	// --- Bit-vector operations ---
 	case "bvand":
