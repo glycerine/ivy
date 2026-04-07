@@ -614,7 +614,7 @@ func (s Sort) GetId() uint {
 	xtracer.Trace("ivy_solver.py:781 get_id() ENTER")
 	var id uint
 	s.ctx.do(func() {
-		ast := C.Z3_sort_to_ast(s.ctx.c, s.c)
+		ast := C.Z3_sort_to_ast(s.ctx.c, s.c) // python's x.as_ast() does this internally.
 		id = uint(C.Z3_get_ast_id(s.ctx.c, ast))
 	})
 	runtime.KeepAlive(s)
