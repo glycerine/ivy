@@ -2603,11 +2603,8 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-157287  go : XTRACE: ivy_solver.py:374 check_compat() ENTER
-        py : XTRACE: ivy_solver.py:374 check_compat() ENTER
-
-157288  go : XTRACE: ivy_solver.py:350 check_native_compat_sym() ENTER sym=rfn.abs.trying1.now
-        py : XTRACE: check.CreateIsolate after_check_compat
+236101  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=*logic.Definition
+        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Definition
 ~~~
 was, before adding solver xtracing:
 ~~~
