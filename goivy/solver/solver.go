@@ -432,7 +432,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x z3bridge.Expr, err error) {
 
 	z3Fmla, err := s.formulaToZ3Closed(fmla)
 	if err != nil {
-		xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%T", err, fmla)
+		xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%v", err, iu.ShortTypeName(fmla))
 		return z3bridge.Expr{}, err
 	}
 
@@ -503,7 +503,7 @@ func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (z3bridge.Expr, error) {
 // For And: recursively translates each conjunct.
 // Otherwise: delegates to formulaToZ3Closed.
 func (s *Solver) conjToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
-	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%T", fmla)
+	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%v", iu.ShortTypeName(fmla))
 	if and, ok := fmla.(*lg.And); ok {
 		z3Args := make([]z3bridge.Expr, len(and.Terms))
 		for i, t := range and.Terms {

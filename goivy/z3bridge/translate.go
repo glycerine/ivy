@@ -46,19 +46,19 @@ type NumeralFuncFn func(name string, sort logic.Sort) (*Expr, error)
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Z3Context
-	sorts            map[logic.NodeKey]Sort // cache: Ivy sort Sexp -> Z3 sort
-	sortsInv         map[string]logic.Sort  // reverse map: Z3 sort name -> original Ivy sort
-	consts           map[logic.NodeKey]Expr // cache: structural key -> Z3 const
+	sorts            map[logic.NodeKey]Sort     // cache: Ivy sort Sexp -> Z3 sort
+	sortsInv         map[string]logic.Sort      // reverse map: Z3 sort name -> original Ivy sort
+	consts           map[logic.NodeKey]Expr     // cache: structural key -> Z3 const
 	funcs            map[logic.NodeKey]FuncDecl // cache: structural key -> Z3 func decl
-	NativeLookup     NativeLookupFunc      // optional: native interpretation callback
-	SolverName       SolverNameFunc        // optional: maps symbol to Z3 name (for polymorphic disambiguation)
-	QuantConstraints QuantConstraintsFn    // optional: generates sort constraints for quantifier-bound variables
-	SortLookup       SortLookupFunc        // optional: resolves interpreted sort names to Z3 sorts
-	EqFunc           EqFuncFn              // optional: custom equality (MyEq True/False optimization)
-	EnumEqFunc       EnumEqFuncFn          // optional: custom enumerated equality (binary encoding)
-	NumeralFunc      NumeralFuncFn         // optional: custom numeral handling (range clamping)
-	TranslateMerkle  iu.MerkleState        // rolling Merkle hash for Translate() input conformance
-	translateDepth   int                   // nesting depth; only hash at top level (depth 0)
+	NativeLookup     NativeLookupFunc           // optional: native interpretation callback
+	SolverName       SolverNameFunc             // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	QuantConstraints QuantConstraintsFn         // optional: generates sort constraints for quantifier-bound variables
+	SortLookup       SortLookupFunc             // optional: resolves interpreted sort names to Z3 sorts
+	EqFunc           EqFuncFn                   // optional: custom equality (MyEq True/False optimization)
+	EnumEqFunc       EnumEqFuncFn               // optional: custom enumerated equality (binary encoding)
+	NumeralFunc      NumeralFuncFn              // optional: custom numeral handling (range clamping)
+	TranslateMerkle  iu.MerkleState             // rolling Merkle hash for Translate() input conformance
+	translateDepth   int                        // nesting depth; only hash at top level (depth 0)
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -197,7 +197,7 @@ func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
 }
 
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%T", n)
+	xtracer.Trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%v", iu.ShortTypeName(n))
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
