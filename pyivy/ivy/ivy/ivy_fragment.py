@@ -507,7 +507,7 @@ def check_feu(assumes,asserts,macros):
             from_root = find(v).id
             to_root = find(anode).id
             fmla_str = fmla.sexp() if hasattr(fmla, 'sexp') else str(fmla)
-            xtracer.trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d" % ( # lineno=%d 
+            xtracer.trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d" % ( # lineno=%d 
                 i, v.id, from_root, anode.id, to_root, fmla_str, idx)) #, lineno
 
         xtracer.trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s" % checker_canon())

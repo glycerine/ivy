@@ -812,7 +812,7 @@ func CheckFEU(
 		for i, a := range c.arcs {
 			fromRoot := uf.Find(a.from).ID
 			toRoot := uf.Find(a.to).ID
-			xtracer.Trace("  arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
+			xtracer.Trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
 				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.argIdx) // a.lineno,
 		}
 
