@@ -31,3 +31,10 @@ func ShortTypeName(v interface{}) string {
 	}
 	return s
 }
+
+func BoolPythonStr(b bool) string {
+	if b {
+		return "True"
+	}
+	return "False"
+}

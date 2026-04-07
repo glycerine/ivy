@@ -926,12 +926,6 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 
 	// Step 3: trace (syms is now mutated, matching Python)
 	if xtracer.Enabled {
-		boolStr := func(b bool) string {
-			if b {
-				return "True"
-			}
-			return "False"
-		}
 		symStrs := make([]string, len(syms))
 		for i, s := range syms {
 			symStrs[i] = fmt.Sprintf("'%s:%v'", s.Name, s.CSort)
@@ -939,7 +933,7 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 		sort.Strings(symStrs)
 		modStrs := make([]string, 0, len(u.Modified))
 		for _, s := range u.Modified {
-			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, boolStr(symNames[s.Name])))
+			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, iu.BoolPythonStr(symNames[s.Name])))
 		}
 		sort.Strings(modStrs)
 		xtracer.Trace("transrel.Hide: syms=[%v] modified=[%v]", strings.Join(symStrs, ", "), strings.Join(modStrs, ", "))

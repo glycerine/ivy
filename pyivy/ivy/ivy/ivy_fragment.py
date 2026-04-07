@@ -549,7 +549,7 @@ def check_feu(assumes,asserts,macros):
 # context separately.
 
 def get_assumes_and_asserts(preconds_only):
-    if __debug__: xtracer.trace("fragment: GetAssumesAndAsserts ENTER")
+    if __debug__: xtracer.trace("fragment: GetAssumesAndAsserts ENTER precondsOnly = %s" % preconds_only)
     if __debug__: im.module.canon_snapshot("fragment: GetAssumesAndAsserts ENTER canon_snapshot")
 
     assumes = []

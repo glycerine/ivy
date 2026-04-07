@@ -899,7 +899,7 @@ func (c *checker) findCycle() []arc {
 // current module that might end up in a prover context.
 // Corresponds to Python's get_assumes_and_asserts.
 func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
-	xtracer.Trace("fragment: GetAssumesAndAsserts ENTER")
+	xtracer.Trace("fragment: GetAssumesAndAsserts ENTER precondsOnly = %v", iu.BoolPythonStr(precondsOnly))
 	m.CanonSnapshot("fragment: GetAssumesAndAsserts ENTER canon_snapshot")
 	defer func() {
 		xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
