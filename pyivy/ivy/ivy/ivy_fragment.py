@@ -117,7 +117,7 @@ def map_fmla(lineno,fmla,pol):
             for x,uv in zip(nodes,uvs):
                 if x is not None:
                     unify(x,S_sigma)
-                arcs.extend((v,S_sigma,fmla,lineno) for v in uv)
+                arcs.extend((v,S_sigma,fmla,lineno) for v in sorted(uv, key=lambda n: n.id))
         else:
             check_interpreted(fmla,nodes,uvs,lineno,pol)
         return None,all_uvs 
@@ -145,7 +145,7 @@ def map_fmla(lineno,fmla,pol):
                 anode = strat_map[(func,idx)]
                 if node is not None:
                     unify(anode,node)
-                arcs.extend((v,anode,fmla,lineno,idx) for v in uvs[idx])
+                arcs.extend((v,anode,fmla,lineno,idx) for v in sorted(uvs[idx], key=lambda n: n.id))
         else:
             check_interpreted(fmla,nodes,uvs,lineno,pol)
         return None,all_uvs

@@ -68,6 +68,21 @@ func eqExprKey(expr lg.Expr) lg.NodeKey {
 	return lg.NodeKey(fmt.Sprintf("(StratNode eq:%v)", lg.Key(expr)))
 }
 
+// sortedUFNodes returns the nodes in a map sorted by ID for deterministic ordering.
+// Go map iteration order is non-deterministic (pointer hash), while Python set
+// iteration uses integer ID hash. Sorting by ID ensures both sides produce arcs
+// in the same order.
+func sortedUFNodes(m map[*uf.UFNode]bool) []*uf.UFNode {
+	nodes := make([]*uf.UFNode, 0, len(m))
+	for n := range m {
+		nodes = append(nodes, n)
+	}
+	sort.Slice(nodes, func(i, j int) bool {
+		return nodes[i].ID < nodes[j].ID
+	})
+	return nodes
+}
+
 // arc represents a directed edge in the stratification graph.
 type arc struct {
 	from   *uf.UFNode
@@ -255,7 +270,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)
 				}
-				for v := range reses[i].uvs {
+				for _, v := range sortedUFNodes(reses[i].uvs) {
 					c.arcs = append(c.arcs, arc{from: v, to: sSigma, fmla: fmla, lineno: lineno, argIdx: -1})
 				}
 			}
@@ -308,7 +323,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 					if r.node != nil {
 						uf.Unify(anode, r.node)
 					}
-					for v := range reses[i].uvs {
+					for _, v := range sortedUFNodes(reses[i].uvs) {
 						c.arcs = append(c.arcs, arc{from: v, to: anode, fmla: fmla, lineno: lineno, argIdx: i, hasIdx: true})
 					}
 				}
