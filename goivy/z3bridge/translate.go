@@ -186,6 +186,15 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 
 // Translate converts an Ivy logic node to a Z3 expression.
 // Called recursively for subexpressions; translateDepth tracks nesting.
+// TranslateNoHash translates without emitting the top-level HASH trace.
+// Matches Python's formula_to_z3_int/formula_to_z3_closed which do not
+// emit HASH — only formula_to_z3 does.
+func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
+	t.translateDepth++
+	defer func() { t.translateDepth-- }()
+	return t.Translate(n)
+}
+
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
@@ -423,6 +432,12 @@ func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 	c := t.Ctx.Const(sksym, zs)
 	t.consts[key] = c
 	return c, nil
+}
+
+// TranslateVar translates a Variable to a Z3 const without emitting a
+// HASH trace. Matches Python's term_to_z3(v).
+func (t *Translator) TranslateVar(v *logic.Variable) (Expr, error) {
+	return t.translateVariable(v)
 }
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {

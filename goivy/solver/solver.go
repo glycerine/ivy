@@ -8,11 +8,14 @@ package solver
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"sync"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -275,25 +278,23 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
 		xtracer.Trace("solver.ClausesToZ3 ENTER nil")
 		return s.tr.Ctx.BoolVal(true), nil
 	}
-	xtracer.Trace("solver.ClausesToZ3 ENTER\n fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
+	xtracer.Trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 
 	var exprs []z3bridge.Expr
 
-	// Translate each formula
+	// Translate formulas via conjToZ3 matching Python: [conj_to_z3(cl) for cl in clauses.fmlas]
 	for i, f := range clauses.Fmlas {
 		xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v", i, f.NodeSort())
-		//pp("type=%T val=%v", f, f)
-		zf, err := s.translateClosed(f)
+		zf, err := s.conjToZ3(f)
 		if err != nil {
 			return z3bridge.Expr{}, fmt.Errorf("translating formula: %w", err)
 		}
 		exprs = append(exprs, zf)
 	}
 
-	// Translate definitions as constraints
+	// Translate definitions via formulaToZ3 matching Python: formula_to_z3(dfn)
 	for di, d := range clauses.Defs {
-		constraint := defToConstraint(d)
-		zd, err := s.translateClosed(constraint)
+		zd, err := s.formulaToZ3(d)
 		if err != nil {
 			defName := "?"
 			if sym := d.Defines(); sym != nil {
@@ -307,13 +308,13 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (z3bridge.Expr, error) {
 		exprs = append(exprs, zd)
 	}
 
-	// Add type constraints for used symbols (nat non-negativity, range bounds)
-	// This corresponds to Python: type_constraints(used_symbols_clauses(clauses))
+	// Type constraints matching Python: type_constraints(used_symbols_clauses(clauses))
 	usedSyms := clauses.Symbols()
 	for _, sym := range usedSyms {
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
-			ztc, err := s.translateClosed(tc)
+			closed := il.CloseFormula(tc)
+			ztc, err := s.tr.TranslateNoHash(closed)
 			if err != nil {
 				continue // skip constraints we can't translate
 			}
@@ -420,6 +421,129 @@ func (s *Solver) translateClosed(fmla lg.Expr) (x z3bridge.Expr, err error) {
 	}()
 	x, err = s.tr.Translate(closed)
 	return
+}
+
+// formulaToZ3 translates a formula to Z3 with HASH trace and type constraints.
+// Matches Python's formula_to_z3 (ivy_solver.py:659-676).
+//
+// Call chain: formulaToZ3 → formulaToZ3Closed → Translate (no HASH)
+// Only this function emits the HASH trace, matching Python.
+func (s *Solver) formulaToZ3(fmla lg.Expr) (x z3bridge.Expr, err error) {
+	defer func() {
+		r := recover()
+		if r != nil {
+			vv("warning: recover from panic on formulaToZ3: '%v'", r)
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	// Emit HASH trace matching Python formula_to_z3 line 660-663
+	if xtracer.Enabled {
+		canon := iu.Canonical(fmla.Sexp())
+		leaf, root := s.tr.TranslateMerkle.AddLeaf(canon)
+		xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, string(canon))
+	}
+
+	z3Fmla, err := s.formulaToZ3Closed(fmla)
+	if err != nil {
+		xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%T", err, fmla)
+		return z3bridge.Expr{}, err
+	}
+
+	// Per-formula type constraints matching Python formula_to_z3 line 670-672
+	usedSyms := lu.UsedConstantsList(fmla)
+	var tcs []z3bridge.Expr
+	for _, sym := range usedSyms {
+		constraints := s.typeConstraintsForSymbol(sym)
+		for _, tc := range constraints {
+			closed := il.CloseFormula(tc)
+			ztc, err := s.tr.TranslateNoHash(closed)
+			if err != nil {
+				continue
+			}
+			tcs = append(tcs, ztc)
+		}
+	}
+	if len(tcs) > 0 {
+		all := make([]z3bridge.Expr, 0, len(tcs)+1)
+		all = append(all, z3Fmla)
+		all = append(all, tcs...)
+		return s.tr.Ctx.And(all...), nil
+	}
+	return z3Fmla, nil
+}
+
+// formulaToZ3Closed translates and closes (universally quantifies free vars).
+// Matches Python's formula_to_z3_closed (ivy_solver.py:646-655).
+//
+// For Definition: wraps in raw z3.ForAll (no quant constraints).
+// For others: wraps via forall() helper (with quant constraints).
+func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (z3bridge.Expr, error) {
+	z3Formula, err := s.tr.TranslateNoHash(fmla)
+	if err != nil {
+		return z3bridge.Expr{}, err
+	}
+
+	freeVars := lu.FreeVariablesList(fmla)
+	if len(freeVars) == 0 {
+		return z3Formula, nil
+	}
+
+	// Sort variables matching Python: sorted(used_variables_ast(fmla))
+	sort.Slice(freeVars, func(i, j int) bool {
+		return freeVars[i].Name < freeVars[j].Name
+	})
+
+	z3Vars := make([]z3bridge.Expr, len(freeVars))
+	for i, v := range freeVars {
+		z3Vars[i], err = s.tr.TranslateVar(v)
+		if err != nil {
+			return z3bridge.Expr{}, err
+		}
+	}
+
+	// Definition: raw z3.ForAll (no quant constraints)
+	// Other: forall() with quant constraints
+	// Matches Python formula_to_z3_closed lines 653-654
+	if _, isDef := fmla.(*lg.Definition); isDef {
+		return s.tr.Ctx.ForAll(z3Vars, z3Formula), nil
+	}
+	return s.forall(freeVars, z3Vars, z3Formula), nil
+}
+
+// conjToZ3 translates a conjunction to Z3 without HASH trace.
+// Matches Python's conj_to_z3 (ivy_solver.py:546-549).
+// For And: recursively translates each conjunct.
+// Otherwise: delegates to formulaToZ3Closed.
+func (s *Solver) conjToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
+	if and, ok := fmla.(*lg.And); ok {
+		z3Args := make([]z3bridge.Expr, len(and.Terms))
+		for i, t := range and.Terms {
+			var err error
+			z3Args[i], err = s.conjToZ3(t)
+			if err != nil {
+				return z3bridge.Expr{}, err
+			}
+		}
+		return s.tr.Ctx.And(z3Args...), nil
+	}
+	return s.formulaToZ3Closed(fmla)
+}
+
+// forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
+// Matches Python's forall (ivy_solver.py:524-528).
+func (s *Solver) forall(vars []*lg.Variable, z3Vars []z3bridge.Expr, z3Body z3bridge.Expr) z3bridge.Expr {
+	if s.tr.QuantConstraints != nil {
+		var cnstrs []z3bridge.Expr
+		for i, v := range vars {
+			cs := s.tr.QuantConstraints(v, z3Vars[i])
+			cnstrs = append(cnstrs, cs...)
+		}
+		if len(cnstrs) > 0 {
+			z3Body = s.tr.Ctx.Implies(s.tr.Ctx.And(cnstrs...), z3Body)
+		}
+	}
+	return s.tr.Ctx.ForAll(z3Vars, z3Body)
 }
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
