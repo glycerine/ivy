@@ -53,6 +53,11 @@ type Solver struct {
 	opts             *Options
 	sig              *il.Sig
 	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
+
+	// impliesCache caches z3_implies / z3_implies_batch results.
+	// Key: [premise.Sexp(), formula.Sexp()]; Value: true if implied.
+	// Corresponds to Python z3_utils._implies_cache.
+	impliesCache map[[2]lg.NodeKey]bool
 }
 
 // New creates a new Solver with default options and a fresh Z3 context.
@@ -62,6 +67,7 @@ func New() *Solver {
 		opts:             DefaultOptions(),
 		sig:              il.NewSig(),
 		HandleRangeSorts: true,
+		impliesCache:     make(map[[2]lg.NodeKey]bool),
 	}
 	s.wireNativeLookup()
 	return s
@@ -74,6 +80,7 @@ func NewWithSig(sig *il.Sig) *Solver {
 		opts:             DefaultOptions(),
 		sig:              sig,
 		HandleRangeSorts: true,
+		impliesCache:     make(map[[2]lg.NodeKey]bool),
 	}
 	s.wireNativeLookup()
 	return s
@@ -89,6 +96,7 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 		opts:             opts,
 		sig:              sig,
 		HandleRangeSorts: true,
+		impliesCache:     make(map[[2]lg.NodeKey]bool),
 	}
 	s.wireNativeLookup()
 	return s
@@ -104,6 +112,7 @@ func (s *Solver) Clear() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.tr.Clear()
+	s.impliesCache = make(map[[2]lg.NodeKey]bool)
 }
 
 // wireNativeLookup installs the NativeLookup callback on the translator
@@ -600,6 +609,51 @@ func (s *Solver) Implies(fmla1, fmla2 lg.Expr) (bool, error) {
 	return s.tr.Implies(fmla1, fmla2)
 }
 
+// Z3Implies checks whether f1 implies f2 using raw Z3 translation.
+// Uses the implies cache. Returns error on Unknown result.
+// Corresponds to Python z3_utils.py:z3_implies (lines 109-133).
+func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
+	key := [2]lg.NodeKey{f1.Sexp(), f2.Sexp()}
+	s.mu.Lock()
+	if cached, ok := s.impliesCache[key]; ok {
+		s.mu.Unlock()
+		return cached, nil
+	}
+	s.mu.Unlock()
+
+	z3solver := s.tr.Ctx.NewSolver()
+	if timeout {
+		z3solver.SetParam("timeout", "2000")
+	}
+	zf1, err := s.tr.Translate(f1)
+	if err != nil {
+		return false, err
+	}
+	z3solver.Assert(zf1)
+	negF2 := &lg.Not{Body: f2}
+	zNeg, err := s.tr.Translate(negF2)
+	if err != nil {
+		return false, err
+	}
+	z3solver.Assert(zNeg)
+
+	res := z3solver.Check()
+	switch res {
+	case z3bridge.Sat:
+		s.mu.Lock()
+		s.impliesCache[key] = false
+		s.mu.Unlock()
+		return false, nil
+	case z3bridge.Unsat:
+		s.mu.Lock()
+		s.impliesCache[key] = true
+		s.mu.Unlock()
+		return true, nil
+	default:
+		return false, fmt.Errorf("z3 returned: %s", res)
+	}
+}
+
 // ClausesSat checks whether a Clauses set is satisfiable.
 // Corresponds to Python's clauses_sat.
 func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
@@ -635,19 +689,15 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) 
 }
 
 // ImpliesBatch tests if premise implies each formula in fmlas.
-// More efficient than calling Implies repeatedly: reuses a single solver
-// with push/pop for each check.
-//
-// Corresponds to Python's z3_implies_batch at ivy/z3_utils.py:136,
-// whose documentation says:
-//
-// Use z3 to test if premise implies each formula in formulas.
-// Equivalent to: [z3_implies(premise, f) for f in formulas]
-// but more efficient.
-// .
-func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) {
+// Uses raw Translate (no closing), matching Python z3_utils.py:to_z3.
+// Free variables become shared Z3 constants (not universally quantified).
+// Corresponds to Python z3_utils.py:z3_implies_batch (lines 136-171).
+func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr, timeout bool) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
-	zPremise, err := s.translateClosed(premise)
+	if timeout {
+		z3solver.SetParam("timeout", "2000")
+	}
+	zPremise, err := s.tr.Translate(premise)
 	if err != nil {
 		return nil, err
 	}
@@ -655,8 +705,17 @@ func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) 
 
 	result := make([]bool, len(fmlas))
 	for i, f := range fmlas {
+		key := [2]lg.NodeKey{premise.Sexp(), f.Sexp()}
+		s.mu.Lock()
+		if cached, ok := s.impliesCache[key]; ok {
+			s.mu.Unlock()
+			result[i] = cached
+			continue
+		}
+		s.mu.Unlock()
+
 		negF := &lg.Not{Body: f}
-		zNeg, err := s.translateClosed(negF)
+		zNeg, err := s.tr.Translate(negF)
 		if err != nil {
 			return nil, err
 		}
@@ -664,7 +723,21 @@ func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) 
 		z3solver.Assert(zNeg)
 		res := z3solver.Check()
 		z3solver.Pop()
-		result[i] = (res == z3bridge.Unsat)
+
+		switch res {
+		case z3bridge.Sat:
+			s.mu.Lock()
+			s.impliesCache[key] = false
+			s.mu.Unlock()
+			result[i] = false
+		case z3bridge.Unsat:
+			s.mu.Lock()
+			s.impliesCache[key] = true
+			s.mu.Unlock()
+			result[i] = true
+		default:
+			return nil, fmt.Errorf("z3 returned: %s for formula %d", res, i)
+		}
 	}
 	return result, nil
 }

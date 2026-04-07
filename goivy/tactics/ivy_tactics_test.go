@@ -430,3 +430,61 @@ func TestVcgenWithProofChecker(t *testing.T) {
 		t.Error("Expected error for non-temporal goal")
 	}
 }
+
+// --- Tests for ImpliedFacts and RefutedGoal (PLAN219) ---
+
+func TestImpliedFactsNilPremise(t *testing.T) {
+	tc := NewTacticsContext(nil, module.New())
+	result := tc.ImpliedFacts(nil, []*module.Clauses{module.TrueClauses(nil)})
+	if result != nil {
+		t.Error("nil premise should return nil")
+	}
+}
+
+func TestImpliedFactsEmptyFacts(t *testing.T) {
+	tc := NewTacticsContext(nil, module.New())
+	p := lg.NewConst("p", lg.Boolean)
+	premClauses := module.NewClauses([]lg.Expr{p}, nil, nil)
+	result := tc.ImpliedFacts(premClauses, nil)
+	if result != nil {
+		t.Error("empty factsToCheck should return nil")
+	}
+}
+
+func TestImpliedFactsBasic(t *testing.T) {
+	tc := NewTacticsContext(nil, module.New())
+
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
+	r := lg.NewConst("r", lg.Boolean)
+
+	// premise: p AND q
+	premClauses := module.NewClauses([]lg.Expr{p, q}, nil, nil)
+
+	// facts: {p}, {q}, {r}
+	factP := module.NewClauses([]lg.Expr{p}, nil, nil)
+	factQ := module.NewClauses([]lg.Expr{q}, nil, nil)
+	factR := module.NewClauses([]lg.Expr{r}, nil, nil)
+
+	implied := tc.ImpliedFacts(premClauses, []*module.Clauses{factP, factQ, factR})
+	// Should find p and q implied, not r
+	if len(implied) != 2 {
+		t.Fatalf("expected 2 implied facts, got %d", len(implied))
+	}
+}
+
+func TestRefutedGoalNilGoal(t *testing.T) {
+	tc := NewTacticsContext(nil, module.New())
+	if tc.RefutedGoal(nil) {
+		t.Error("nil goal should not be refuted")
+	}
+}
+
+func TestRefutedGoalFalseFormula(t *testing.T) {
+	tc := NewTacticsContext(nil, module.New())
+	// Empty Or is False
+	goal := &proof.ProofGoal{Formula: &lg.Or{Terms: []lg.Expr{}}}
+	if !tc.RefutedGoal(goal) {
+		t.Error("goal with False formula should be refuted")
+	}
+}

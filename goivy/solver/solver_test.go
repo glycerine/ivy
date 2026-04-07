@@ -2188,3 +2188,220 @@ func TestDecideWithAssumptions(t *testing.T) {
 		t.Fatalf("expected UNSAT with Not(a),Not(b) assumptions, got %v", result2)
 	}
 }
+
+// --- Tests for Z3Implies (PLAN219) ---
+
+func TestZ3ImpliesValid(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
+	result, err := s.Z3Implies(pAndQ, p, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result {
+		t.Error("p AND q should imply p")
+	}
+}
+
+func TestZ3ImpliesInvalid(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	result, err := s.Z3Implies(p, q, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result {
+		t.Error("p should not imply q")
+	}
+}
+
+func TestZ3ImpliesCache(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	// First call
+	r1, err := s.Z3Implies(p, p, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !r1 {
+		t.Error("p should imply p")
+	}
+	// Second call should hit cache
+	r2, err := s.Z3Implies(p, p, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !r2 {
+		t.Error("cached: p should imply p")
+	}
+	// Verify cache has the entry
+	key := [2]lg.NodeKey{p.Sexp(), p.Sexp()}
+	if _, ok := s.impliesCache[key]; !ok {
+		t.Error("cache should contain the entry")
+	}
+}
+
+func TestZ3ImpliesTautology(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	notP := &lg.Not{Body: p}
+	pOrNotP := &lg.Or{Terms: []lg.Expr{p, notP}}
+	// true implies (p | ~p)
+	result, err := s.Z3Implies(lg.True, pOrNotP, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result {
+		t.Error("true should imply (p | ~p)")
+	}
+}
+
+func TestZ3ImpliesTimeout(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	result, err := s.Z3Implies(p, p, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result {
+		t.Error("p should imply p (with timeout)")
+	}
+}
+
+// --- Tests for ImpliesBatch (PLAN219) ---
+
+func TestImpliesBatchValid(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
+	results, err := s.ImpliesBatch(pAndQ, []lg.Expr{p, q}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(results) != 2 {
+		t.Fatalf("expected 2 results, got %d", len(results))
+	}
+	if !results[0] {
+		t.Error("p AND q should imply p")
+	}
+	if !results[1] {
+		t.Error("p AND q should imply q")
+	}
+}
+
+func TestImpliesBatchInvalid(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	results, err := s.ImpliesBatch(p, []lg.Expr{q}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if results[0] {
+		t.Error("p should not imply q")
+	}
+}
+
+func TestImpliesBatchMixed(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	r := boolConst("r")
+	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
+	results, err := s.ImpliesBatch(pAndQ, []lg.Expr{p, r, q}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !results[0] {
+		t.Error("should imply p")
+	}
+	if results[1] {
+		t.Error("should not imply r")
+	}
+	if !results[2] {
+		t.Error("should imply q")
+	}
+}
+
+func TestImpliesBatchEmpty(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	results, err := s.ImpliesBatch(p, nil, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(results) != 0 {
+		t.Fatalf("expected 0 results for nil formulas, got %d", len(results))
+	}
+}
+
+func TestImpliesBatchCache(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
+	// First call
+	results1, err := s.ImpliesBatch(pAndQ, []lg.Expr{p}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !results1[0] {
+		t.Error("first call: should imply p")
+	}
+	// Second call should hit cache
+	results2, err := s.ImpliesBatch(pAndQ, []lg.Expr{p}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !results2[0] {
+		t.Error("cached call: should imply p")
+	}
+	// Verify cache has the entry
+	key := [2]lg.NodeKey{pAndQ.Sexp(), p.Sexp()}
+	if _, ok := s.impliesCache[key]; !ok {
+		t.Error("cache should contain the entry")
+	}
+}
+
+func TestImpliesBatchTimeout(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	results, err := s.ImpliesBatch(p, []lg.Expr{p}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !results[0] {
+		t.Error("p should imply p (with timeout)")
+	}
+}
+
+func TestImpliesBatchFreeVarsShared(t *testing.T) {
+	// When using raw translate, free variables X in premise and formulas
+	// become the SAME Z3 constant. With translateClosed, they would be
+	// independently universally quantified (different semantics).
+	s := New()
+	sort := unintSort("S")
+	x := uiVar("X", sort)
+	r := relConst("r", sort)
+	// premise: r(X)
+	premiseApp, err := lg.NewApply(r, x)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// formula: r(X) — same X should be shared
+	formulaApp, err := lg.NewApply(r, x)
+	if err != nil {
+		t.Fatal(err)
+	}
+	results, err := s.ImpliesBatch(premiseApp, []lg.Expr{formulaApp}, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !results[0] {
+		t.Error("r(X) should imply r(X) with shared X")
+	}
+}

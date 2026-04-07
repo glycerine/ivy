@@ -12,6 +12,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/solver"
@@ -74,7 +75,7 @@ func GoalAtArgNode(formula lg.Expr, node *art.State) *proof.ProofGoal {
 	return &proof.ProofGoal{Formula: formula, Node: node}
 }
 
-// BackgroundTheory returns the background theory for the module.
+// BackgroundTheory returns the background theory for the module as a formula.
 func (tc *TacticsContext) BackgroundTheory() lg.Expr {
 	if tc.Mod == nil {
 		return lg.True
@@ -86,28 +87,50 @@ func (tc *TacticsContext) BackgroundTheory() lg.Expr {
 	return clauses.ToFormula()
 }
 
+// BackgroundTheoryClauses returns the background theory as Clauses.
+// Preserves Clauses structure for and_clauses operations.
+// Corresponds to Python _ivy_interp.background_theory().
+func (tc *TacticsContext) BackgroundTheoryClauses() *module.Clauses {
+	if tc.Mod == nil {
+		return module.TrueClauses(nil)
+	}
+	clauses := tc.Mod.BackgroundTheory(nil)
+	if clauses == nil {
+		return module.TrueClauses(nil)
+	}
+	return clauses
+}
+
 // RefutedGoal checks if a goal has been refuted.
 // A goal is refuted if its node's clauses conjoined with axioms imply
 // the negation of the goal formula.
-// Corresponds to Python's refuted_goal().
+// Corresponds to Python tactics_api.py:refuted_goal (lines 336-341).
 func (tc *TacticsContext) RefutedGoal(goal *proof.ProofGoal) bool {
 	if goal == nil || goal.Formula == nil {
 		return false
 	}
-	// Quick check: formula is False
+	// Quick check: formula is False (empty Or)
 	if or, ok := goal.Formula.(*lg.Or); ok && len(or.Terms) == 0 {
 		return true
 	}
-	// Full check: axioms & node.clauses => ~goal.formula
 	node, ok := goal.Node.(*art.State)
 	if !ok || node == nil || node.Clauses == nil {
 		return false
 	}
-	axioms := tc.BackgroundTheory()
-	premise := conjoinNodes(axioms, node.Clauses.ToFormula())
+
+	// Python: axioms = _ivy_interp.background_theory()
+	axioms := tc.BackgroundTheoryClauses()
+
+	// Python: premise = (and_clauses(axioms, goal.node.clauses)).to_formula()
+	combined := module.AndClausesTyped(axioms, node.Clauses)
+	premise := combined.ToFormula()
+
+	// Python: f = Not(goal.formula.to_formula())
 	negGoal := &lg.Not{Body: goal.Formula}
+
+	// Python: return z3_implies(premise, f)
 	slv := solver.New()
-	result, err := slv.Implies(premise, negGoal)
+	result, err := slv.Z3Implies(premise, negGoal, false)
 	if err != nil {
 		return false
 	}
@@ -150,24 +173,41 @@ func (tc *TacticsContext) BackwardImage(postFact *module.Clauses, action actions
 // ImpliedFacts checks which facts are implied by a premise.
 // Returns the subset of factsToCheck that are implied by premise conjoined
 // with background axioms.
-// Corresponds to Python's implied_facts().
+// Corresponds to Python tactics_api.py:implied_facts (lines 310-320).
 func (tc *TacticsContext) ImpliedFacts(premise *module.Clauses, factsToCheck []*module.Clauses) []*module.Clauses {
 	if premise == nil || len(factsToCheck) == 0 {
 		return nil
 	}
-	axioms := tc.BackgroundTheory()
-	premFormula := conjoinNodes(axioms, premise.ToFormula())
 
-	var implied []*module.Clauses
-	slv := solver.New()
-	for _, fact := range factsToCheck {
-		if fact == nil {
-			continue
+	// Python: axioms = _ivy_interp.background_theory()
+	axioms := tc.BackgroundTheoryClauses()
+
+	// Python: premise = normalize_quantifiers((and_clauses(axioms, premise)).to_formula())
+	combined := module.AndClausesTyped(axioms, premise)
+	premFormula := lu.NormalizeQuantifiers(combined.ToFormula())
+
+	// Python: facts_to_check = [f.to_formula() if type(f) is Clauses else f ...]
+	formulas := make([]lg.Expr, 0, len(factsToCheck))
+	indices := make([]int, 0, len(factsToCheck))
+	for i, fact := range factsToCheck {
+		if fact != nil {
+			formulas = append(formulas, fact.ToFormula())
+			indices = append(indices, i)
 		}
-		factFormula := fact.ToFormula()
-		result, err := slv.Implies(premFormula, factFormula)
-		if err == nil && result {
-			implied = append(implied, fact)
+	}
+
+	// Python: result = z3_implies_batch(premise, facts_to_check, False)
+	slv := solver.New()
+	results, err := slv.ImpliesBatch(premFormula, formulas, false)
+	if err != nil {
+		return nil
+	}
+
+	// Python: return [f for f, x in zip(facts_to_check, result) if x]
+	var implied []*module.Clauses
+	for j, isImplied := range results {
+		if isImplied {
+			implied = append(implied, factsToCheck[indices[j]])
 		}
 	}
 	return implied
