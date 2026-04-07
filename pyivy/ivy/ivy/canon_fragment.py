@@ -9,6 +9,7 @@ Usage: call install() once at startup (after logic_sexp.install()).
 """
 
 from .canon import node_canon, slice_canon, string_canon, bool_canon, canon_blake3
+from .ivy_compiler import sig_canon
 
 
 # --- UFNode ---
@@ -179,13 +180,19 @@ def checker_canon():
     parts = []
     parts.append('(checker')
 
-    # sig — not directly available as a module global in Python fragment;
-    # Go's checker has it but Python reads from im.module.sig at call time.
-    # Emit nil for now.
-    parts.append(' sig:nil')
+    # sig — Python reads from il.sig (the global signature).
+    from . import ivy_logic as il
+    parts.append(' sig:')
+    parts.append(sig_canon(il.sig))
 
-    # interp — same situation
-    parts.append(' interp:nil')
+    # interp — Go copies sig.Interp into checker.interp, then serializes with
+    # stringInterfaceMapSexp: (hash "key1":value1 ...) or nil if empty.
+    interp = il.sig.interp
+    if not interp:
+        parts.append(' interp:nil')
+    else:
+        ipairs = sorted(('"%s":%s' % (k, v)) for k, v in interp.items())
+        parts.append(' interp:(hash %s)' % ' '.join(ipairs))
 
     # universallyQuantifiedVars - can infinite loop, so skip.
     #uqv = getattr(frag, 'universally_quantified_variables', None)
