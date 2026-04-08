@@ -278,14 +278,17 @@ def functionsort(fs):
     return [s.to_z3() for s in fs.dom] + [fs.rng.to_z3()]
 
 def enumeratedsort(es):
-    if __debug__: xtracer.trace("ivy_solver.py:276 enumeratedsort() ENTER name=%s" % es.name)
+    if __debug__: xtracer.trace("ivy_solver.py:281 enumeratedsort() ENTER name=%s" % es.name)
     s = z3_sorts.get(es.rep, None)
-    if s is not None: return s 
+    if s is not None: 
+        if __debug__: xtracer.trace("ivy_solver.py:284 enumeratedsort() EXIT 1: cache hit.")
+        return s 
     res,consts = z3.EnumSort(es.name,es.extension)
     z3_sorts[es.rep] = res
     for c in consts:
         z3_constants[str(c)] = c
 #    print "enum {} : {}".format(res,type(res))
+    if __debug__: xtracer.trace("ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.")
     return res
 
 def symbol_to_z3(s):

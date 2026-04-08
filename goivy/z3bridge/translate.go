@@ -171,10 +171,11 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *logic.EnumeratedSort:
-		// Python: enumeratedsort(es) at ivy_solver.py:275
-		xtracer.Trace("ivy_solver.py:276 enumeratedsort() ENTER name=%s", st.Name)
+		// Python: enumeratedsort(es) at ivy_solver.py:280
+		xtracer.Trace("ivy_solver.py:281 enumeratedsort() ENTER name=%s", st.Name)
 		key := logic.NodeKey(st.Name) // Python: z3_sorts[es.rep] where rep = name
 		if cached, ok := t.sorts[key]; ok {
+			xtracer.Trace("ivy_solver.py:284 enumeratedsort() EXIT 1: cache hit.")
 			return cached, nil
 		}
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
@@ -188,6 +189,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 			constKey := logic.NodeKey(name + ":" + string(s.Sexp()))
 			t.consts[constKey] = constExprs[i]
 		}
+		xtracer.Trace("ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.")
 		return zs, nil
 
 	case *logic.RangeSort:
