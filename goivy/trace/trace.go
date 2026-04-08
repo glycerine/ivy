@@ -18,7 +18,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 const checkPrecondTrue = true
@@ -623,7 +623,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 // CheckVC checks a verification condition using Z3.
 // Matches Python ivy_trace.py check_vc:
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
-//   - Calls solver.GetSmallModel to check satisfiability
+//   - Calls z3bridge.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
 func CheckVC(cfg *module.Config, clauses *module.Clauses, action actions.Action,
 	finalCond *module.Clauses, relsToMin []string, shrink bool) *TraceBase {
@@ -645,7 +645,7 @@ func CheckVC(cfg *module.Config, clauses *module.Clauses, action actions.Action,
 	}
 
 	// Create solver and check
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	model, err := slv.GetSmallModel(checkClauses, sortsToMin, nil)
 	if err != nil {
 		fmt.Printf("CheckVC: solver error: %v\n", err)

@@ -30,12 +30,14 @@ func pyBackendAvailable() bool {
 	root := os.Getenv("PYIVY_ROOT")
 	if root == "" {
 		home, _ := os.UserHomeDir()
-		root = filepath.Join(home, "pyivy", "ivy")
+		root = filepath.Join(home, "ivy", "pyivy", "ivy", "ivy")
 	}
-	z3Dir := filepath.Join(root, "ivy", "z3")
+	// ~/ivy/pyivy/ivy/ivy/z3/
+	z3Dir := filepath.Join(root, "z3")
 	if _, err := os.Stat(z3Dir); err != nil {
 		return false
 	}
+	//vv("pyBackendAvailable true at: z3Dir='%v'", z3Dir)
 	return true
 }
 

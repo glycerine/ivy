@@ -3,7 +3,7 @@ package actions
 import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // InterpolantResult holds the result of an interpolation query.
@@ -24,7 +24,7 @@ func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[str
 	combined := module.AndClausesTyped(clauses1, axioms)
 	clauses2 = module.SimplifyClauses(clauses2)
 
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	itp, err := slv.BinaryInterpolant(combined, clauses2)
 	if err != nil || itp == nil {
 		return nil
@@ -122,7 +122,7 @@ func UnsatCore(clauses2, clauses1 *module.Clauses) *module.Clauses {
 	if combined == nil {
 		return nil
 	}
-	// For a proper unsat core, we would use the solver.
+	// For a proper unsat core, we would use the z3bridge.
 	// For now, return clauses2 if the combined is non-trivially constrained.
 	if len(combined.Fmlas) > 0 {
 		return clauses2

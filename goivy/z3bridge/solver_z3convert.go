@@ -1101,7 +1101,7 @@ func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (stri
 // SolverName, providing the Solver's sig and bfeToZ3 capability.
 // Preserves existing string return + panic-on-error behavior.
 func (s *Solver) SolverName(sym *lg.Const) string {
-	vv("Solver.SolverName called with sym='%v'; caller='%v'", sym.Canon(), caller(1))
+	//vv("Solver.SolverName called with sym='%v'; caller='%v'", sym.Canon(), caller(1))
 	bfeCheck := func(c *lg.Const) bool { return s.bfeToZ3(c) != nil }
 	n, err := SolverName(sym, s.sig, bfeCheck)
 	if err != nil {

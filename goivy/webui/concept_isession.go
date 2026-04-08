@@ -12,7 +12,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicutil"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // ConceptInteractiveSession is the full interactive concept-graph session
@@ -339,7 +339,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 //	slvr.add(Not(fmla2))
 //	return not is_sat(slvr)
 func z3Implies(fmla1, fmla2 logic.Expr) (bool, error) {
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	return slv.Implies(fmla1, fmla2)
 }
 
@@ -704,7 +704,6 @@ func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) {
 	s.Recompute(nil)
 }
 
-
 // Reset restores the concept domain to its initial state.
 func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols map[string]*logic.Const) {
 	s.Push()
@@ -735,7 +734,7 @@ func (s *ConceptInteractiveSession) RelationNames() []string {
 			for _, v := range c.Variables {
 				varNames = append(varNames, v.Name)
 			}
-			names = append(names, id+"("+strings.Join(varNames, ",")+")") 
+			names = append(names, id+"("+strings.Join(varNames, ",")+")")
 		} else {
 			names = append(names, id)
 		}

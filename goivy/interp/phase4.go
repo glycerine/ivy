@@ -6,13 +6,13 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- TypeCheckList ---
@@ -86,7 +86,7 @@ func GetCore(state *State, clause lg.Expr) *module.Clauses {
 	// Negate the clause: each literal becomes a singleton clause with its negation
 	clauses2 := module.NegateClauses(module.FormulaToClauses(clause, nil))
 
-	slv := solver.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
 	core, err := slv.UnsatCore(clauses1, clauses2, nil, nil)
 	if err != nil {
 		return nil
@@ -141,7 +141,7 @@ func UnderapproximateState(state *State, implied *module.Clauses) {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := module.AndClausesTyped(state.Clauses, axioms)
 
-	slv := solver.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
 	under, err := slv.ClausesModelToClauses(
 		combined,
 		func(s *lg.Const) bool {

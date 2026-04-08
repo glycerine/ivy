@@ -14,8 +14,8 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // pyBool returns "True" or "False" matching Python's bool formatting.
@@ -342,7 +342,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Check native interpretations of symbols for compatibility.
 	xtracer.Trace("check.CreateIsolate before_check_compat")
 	if mod.Sig != nil {
-		errs := solver.CheckCompatStatic(mod.Sig)
+		errs := z3bridge.CheckCompatStatic(mod.Sig)
 		for _, err := range errs {
 			fmt.Printf("warning: %v\n", err)
 		}

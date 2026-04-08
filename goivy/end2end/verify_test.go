@@ -10,7 +10,7 @@ import (
 	"github.com/glycerine/ivy/goivy/check"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // verifyInitInvariant checks that the module's initialization establishes
@@ -141,9 +141,9 @@ func TestVerify_EnumExhaustive(t *testing.T) {
 // TestVerify_Z3SolverBasic does a bare-bones solver check to make sure
 // Z3 is working in the test environment.
 func TestVerify_Z3SolverBasic(t *testing.T) {
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	if slv == nil {
-		t.Fatal("solver.New() returned nil")
+		t.Fatal("z3bridge.NewSolver() returned nil")
 	}
 	// Check that True is satisfiable
 	sat, err := slv.IsSat(logic.True)

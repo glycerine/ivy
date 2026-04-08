@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/logic"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // Alpha computes the alpha abstraction of a concept domain against a state formula.
@@ -28,7 +28,7 @@ func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, pro
 		cache = make(map[string]bool)
 	}
 
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	var result []TagValue
 
 	for _, fact := range facts {

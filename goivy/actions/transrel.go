@@ -31,7 +31,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // -----------------------------------------------------------------------
@@ -1253,7 +1253,7 @@ func ComposeStateAction(
 		//         if model != None: trans = extract_pre_post_model(pre_test, model, au)
 		//                           raise ActionFailed(pre_test, trans)
 		{
-			slv := solver.NewSolver(nil, nil)
+			slv := z3bridge.NewSolver(nil, nil)
 			model, _ := slv.GetModelClauses(preTest)
 			if model != nil {
 				// Extract pre/post state from the model.
@@ -1896,14 +1896,14 @@ func (h *History) Satisfy(axioms *module.Clauses) *SatisfyResult {
 // model-finding function and final conditions.
 //
 // Corresponds to Python History.satisfy(axioms, _get_model_clauses, final_cond).
-func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*module.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
+func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*module.Clauses, []z3bridge.FinalCond) *z3bridge.ModelResult, finalCond []z3bridge.FinalCond) *SatisfyResult {
 	if h.Post == nil {
 		return nil
 	}
 
 	// Default model finder: small_model_clauses
 	if getModelClauses == nil {
-		getModelClauses = func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+		getModelClauses = func(cls *module.Clauses, fc []z3bridge.FinalCond) *z3bridge.ModelResult {
 			mr, _ := SmallModelClauses(cls, fc, true, h.Mod)
 			return mr
 		}
@@ -1978,7 +1978,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 		}
 
 		// Get the sub-model for the given past time as a formula
-		slv := solver.NewSolver(nil, nil)
+		slv := z3bridge.NewSolver(nil, nil)
 		clauses, err := slv.ClausesModelToClausesWithModel(allClauses, model, ignore, numerals)
 		if err != nil || clauses == nil {
 			clauses = module.TrueClauses(nil)
@@ -2002,8 +2002,8 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 	}
 
 	// Extract universes from model
-	slv := solver.NewSolver(nil, nil)
-	hm := solver.NewHerbrandModel(slv, model.Solver, model.Model, model.Vocab)
+	slv := z3bridge.NewSolver(nil, nil)
+	hm := z3bridge.NewHerbrandModel(slv, model.Solver, model.Model, model.Vocab)
 	universes := hm.Universes(numerals)
 
 	// Build path: reverse states and wrap each in pure_state

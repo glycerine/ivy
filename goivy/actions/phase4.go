@@ -9,7 +9,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Rename ---
@@ -107,7 +107,7 @@ func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod
 // conjunction of clauses with the negation of the formula.
 // Corresponds to Python's clauses_imply_formula_cex.
 func ClausesImplyFormulaCex(clauses *module.Clauses, fmla lg.Expr) (bool, *CounterExample) {
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	implied, err := slv.ClausesImplyFormula(clauses, fmla)
 	if err == nil && implied {
 		return true, nil
@@ -164,8 +164,8 @@ func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Cons
 	}
 	c2 = module.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 
-	// Use solver.ClausesImply for Clauses-to-Clauses implication
-	slv := solver.NewSolver(nil, nil)
+	// Use z3bridge.ClausesImply for Clauses-to-Clauses implication
+	slv := z3bridge.NewSolver(nil, nil)
 	ok1, err := slv.ClausesImply(p1, p2)
 	if err != nil || !ok1 {
 		return false, nil
@@ -251,7 +251,7 @@ func isTautologyEquality(f lg.Expr) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model *solver.ModelResult, updated []*lg.Const) (*module.Clauses, *module.Clauses) {
+func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model *z3bridge.ModelResult, updated []*lg.Const) (*module.Clauses, *module.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
@@ -261,7 +261,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model 
 	numerals := cfg.UseNumerals
 
 	// Pre-state: ignore skolems and new_ symbols
-	slv := solver.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(nil, nil)
 	preClauses, err := slv.ClausesModelToClausesWithModel(
 		clauses,
 		model,
@@ -308,7 +308,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model 
 // The solver is needed by callers that want to call ClausesModelToClausesWithModel
 // or build a HerbrandModel. This matches Python where get_small_model returns a
 // HerbrandModel that wraps both the solver and the model together.
-func SmallModelClauses(cls *module.Clauses, finalCond []solver.FinalCond, shrink bool, m *module.Module) (*solver.ModelResult, *solver.Solver) {
+func SmallModelClauses(cls *module.Clauses, finalCond []z3bridge.FinalCond, shrink bool, m *module.Module) (*z3bridge.ModelResult, *z3bridge.Solver) {
 	// Python: get_small_model(cls, ivy_logic.uninterpreted_sorts(), [], final_cond=final_cond, shrink=shrink)
 	var sorts []lg.Sort
 	if m != nil && m.Sig != nil {
@@ -322,7 +322,7 @@ func SmallModelClauses(cls *module.Clauses, finalCond []solver.FinalCond, shrink
 			sopts = m.Cfg.SolverOpts
 		}
 	}
-	slv := solver.NewSolver(sig, sopts)
+	slv := z3bridge.NewSolver(sig, sopts)
 	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
 		return nil, slv

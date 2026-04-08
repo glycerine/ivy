@@ -36,9 +36,9 @@ func pyIvyRoot() string {
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return filepath.Join("pyivy", "ivy")
+		return filepath.Join("../../pyivy/ivy")
 	}
-	return filepath.Join(home, "pyivy", "ivy")
+	return filepath.Join(home, "ivy/pyivy/ivy")
 }
 
 // pyIvyPython returns the Python interpreter to use for the sidecar.
