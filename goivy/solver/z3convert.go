@@ -1042,7 +1042,7 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 // Returns (name, nil) for non-interpreted symbols.
 // Returns ("", error) for z3 builtin clashes (Python raises IvyError).
 func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (string, error) {
-	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s", sym.Name)
+	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s/n go-caller='%v'", sym.Name, caller(1))
 
 	name := sym.Name
 

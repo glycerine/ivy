@@ -327,7 +327,7 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 		return Expr{}, fmt.Errorf("translateCore: unexpected Eq (should be routed through atomToZ3 by Translate)")
 
 	case *logic.Not:
-		b, err := t.Formula_to_z3_int(node.Body, caller)
+		b, err := t.Formula_to_z3_int(node.Body, "logic.Not Body/args[0]")
 		if err != nil {
 			return Expr{}, err
 		}
@@ -339,7 +339,7 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 		}
 		args := make([]Expr, len(node.Terms))
 		for i, term := range node.Terms {
-			a, err := t.Formula_to_z3_int(term, caller)
+			a, err := t.Formula_to_z3_int(term, fmt.Sprintf("logic.And args[i=%v]", i))
 			if err != nil {
 				return Expr{}, err
 			}
@@ -353,7 +353,7 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 		}
 		args := make([]Expr, len(node.Terms))
 		for i, term := range node.Terms {
-			a, err := t.Formula_to_z3_int(term, caller)
+			a, err := t.Formula_to_z3_int(term, fmt.Sprintf("logic.Or args[i=%v]", i))
 			if err != nil {
 				return Expr{}, err
 			}
@@ -362,22 +362,22 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 		return t.Ctx.Or(args...), nil
 
 	case *logic.Implies:
-		t1, err := t.Formula_to_z3_int(node.T1, caller)
+		t1, err := t.Formula_to_z3_int(node.T1, "logic.Implies args[0]")
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Formula_to_z3_int(node.T2, caller)
+		t2, err := t.Formula_to_z3_int(node.T2, "logic.Implies args[1]")
 		if err != nil {
 			return Expr{}, err
 		}
 		return t.Ctx.Implies(t1, t2), nil
 
 	case *logic.Iff:
-		t1, err := t.Formula_to_z3_int(node.T1, caller)
+		t1, err := t.Formula_to_z3_int(node.T1, "logic.Iff args[0]")
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Formula_to_z3_int(node.T2, caller)
+		t2, err := t.Formula_to_z3_int(node.T2, "logic.Iff args[1]")
 		if err != nil {
 			return Expr{}, err
 		}
@@ -388,15 +388,15 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 		return t.Ctx.Iff(t1, t2), nil
 
 	case *logic.Ite:
-		c, err := t.Formula_to_z3_int(node.Cond, caller)
+		c, err := t.Formula_to_z3_int(node.Cond, "logic.Ite node.Cond")
 		if err != nil {
 			return Expr{}, err
 		}
-		th, err := t.Formula_to_z3_int(node.Then, caller)
+		th, err := t.Formula_to_z3_int(node.Then, "logic.Ite node.Then")
 		if err != nil {
 			return Expr{}, err
 		}
-		el, err := t.Formula_to_z3_int(node.Else, caller)
+		el, err := t.Formula_to_z3_int(node.Else, "logic.Ite node.Else")
 		if err != nil {
 			return Expr{}, err
 		}
@@ -412,11 +412,11 @@ func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 				}
 			}
 		}
-		t1, err := t.Formula_to_z3_int(node.Lhs, caller)
+		t1, err := t.Formula_to_z3_int(node.Lhs, "logic.Definition Lhs")
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Formula_to_z3_int(node.Rhs, caller)
+		t2, err := t.Formula_to_z3_int(node.Rhs, "logic.Definition Rhs")
 		if err != nil {
 			return Expr{}, err
 		}
