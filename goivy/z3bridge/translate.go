@@ -210,13 +210,17 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	defer func() { t.translateDepth-- }()
 
 	// Python line 645: if ivy_logic.is_atom(fmla): return atom_to_z3(fmla)
-	// is_atom: Apply (or Symbol) with Boolean sort, or Eq.
-	// Eq is handled by translateCore's *logic.Eq case. Here we only
-	// intercept Apply with Boolean sort and non-zero args.
+	// is_atom: (Apply or Symbol) with Boolean sort, or Eq.
 	if app, ok := n.(*logic.Apply); ok && len(app.Terms) > 0 {
 		if _, isBool := n.NodeSort().(*logic.BooleanSort); isBool {
 			return t.atomToZ3(app)
 		}
+	}
+	// Python: isinstance(term, lg.Eq) in is_atom → atom_to_z3(fmla)
+	// Eq has duck-typed .rep/.args/.relname in Python; we construct a
+	// pseudo-Apply to pass through the same atomToZ3 code path.
+	if eq, ok := n.(*logic.Eq); ok {
+		return t.eqToAtomZ3(eq)
 	}
 
 	return t.translateCore(n)
@@ -290,26 +294,9 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		return fd.Apply(args...), nil
 
 	case *logic.Eq:
-		// Check for enumerated encoding (Python atom_to_z3 line 484)
-		if t.EnumEqFunc != nil {
-			if es, ok := node.T1.NodeSort().(*logic.EnumeratedSort); ok {
-				if result, err := t.EnumEqFunc(node.T1, node.T2, es); result != nil {
-					return *result, err
-				}
-			}
-		}
-		t1, err := t.Translate(node.T1)
-		if err != nil {
-			return Expr{}, err
-		}
-		t2, err := t.Translate(node.T2)
-		if err != nil {
-			return Expr{}, err
-		}
-		if t.EqFunc != nil {
-			return t.EqFunc(t1, t2), nil
-		}
-		return t.Ctx.Eq(t1, t2), nil
+		// Eq is now routed through atomToZ3 by Translate() (matching Python's
+		// is_atom dispatch). This case should be unreachable.
+		return Expr{}, fmt.Errorf("translateCore: unexpected Eq (should be routed through atomToZ3 by Translate)")
 
 	case *logic.Not:
 		b, err := t.Translate(node.Body)
@@ -421,6 +408,8 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 	}
 }
 
+const eqCanonPredKey = logic.NodeKey("=:eq")
+
 // atomToZ3 translates a Boolean-sorted Apply (atom) to Z3.
 // Corresponds to Python atom_to_z3 (ivy_solver.py:516).
 func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
@@ -468,6 +457,20 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 		}
 	}
 
+	// Python's z3.Function("=", ...) returns Z3's built-in equality.
+	// Go's makeFuncDecl would create an uninterpreted function instead.
+	// Use Ctx.Eq (or EqFunc) for "=" to match Python/Z3 semantics.
+	if c.Name == "=" {
+		eqFn := func(args ...Expr) Expr {
+			if t.EqFunc != nil {
+				return t.EqFunc(args[0], args[1])
+			}
+			return t.Ctx.Eq(args[0], args[1])
+		}
+		t.preds[predKey] = eqFn
+		return t.applyZ3Func(eqFn, app.Terms)
+	}
+
 	// Python lines 527-528: create Z3 Function/Const for uninterpreted relation
 	fs, ok := c.CSort.(*logic.FunctionSort)
 	if !ok {
@@ -480,6 +483,27 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	predFn := fd.Apply
 	t.preds[predKey] = predFn
 	return t.applyZ3Func(predFn, app.Terms)
+}
+
+// eqToAtomZ3 routes Eq through atomToZ3, matching Python where
+// is_atom() returns True for Eq and atom_to_z3 accesses Eq via
+// duck-typed properties:
+//
+//	atom.rep = Symbol('=', RelationSort([x.sort for x in self.args]))
+//	atom.args = [t1, t2]
+//	atom.relname = equals (ivy_logic.py:1145-1147)
+func (t *Translator) eqToAtomZ3(eq *logic.Eq) (Expr, error) {
+	s1, s2 := eq.T1.NodeSort(), eq.T2.NodeSort()
+	repSort, err := logic.NewFunctionSort(s1, s2, logic.Boolean)
+	if err != nil {
+		return Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
+	}
+	eqConst := logic.NewConst("=", repSort)
+	pseudoApp, err := logic.NewApply(eqConst, eq.T1, eq.T2)
+	if err != nil {
+		return Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
+	}
+	return t.atomToZ3(pseudoApp)
 }
 
 // applyZ3Func translates args via TermToZ3 and applies the predicate function.
