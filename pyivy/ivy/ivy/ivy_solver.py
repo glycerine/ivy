@@ -276,7 +276,7 @@ def uninterpretedsort(us):
     return s
 
 def functionsort(fs):
-    if __debug__: xtracer.trace("ivy_solver.py:269 functionsort() ENTER")
+    if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER")
 #    print "fs.rng = {!r}".format(fs.rng)
     if fs.is_relational():
         return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
@@ -457,7 +457,7 @@ def enumerated_to_numeral(term):
 def term_to_z3(term):
     #if __debug__: xtracer.trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s" % (type(term).__name__, getattr(term, 'name', getattr(term, 'rep', '?'))))
     if ivy_logic.is_boolean(term) and not ivy_logic.is_variable(term):
-        return formula_to_z3_int(term)
+        return formula_to_z3_int(term, "term_to_z3:bool_not_term")
     if not term.args:
         if isinstance(term,ivy_logic.Variable):
             sorted = hasattr(term,'sort')
@@ -492,7 +492,7 @@ def term_to_z3(term):
                 res = z3.Const(solver_name(term.rep),sig)
             z3_constants[term.rep] = res
     elif isinstance(term,ivy_logic.Ite):
-        return z3.If(formula_to_z3_int(term.args[0]),term_to_z3(term.args[1]),term_to_z3(term.args[2]))
+        return z3.If(formula_to_z3_int(term.args[0]),term_to_z3(term.args[1]),term_to_z3(term.args[2]), "term_to_z3:ivy_logic.Ite"))
     else:
         if not hasattr(term,'rep'):
             print(term)
@@ -548,7 +548,7 @@ def atom_to_z3(atom):
 
 def literal_to_z3(lit):
     if __debug__: xtracer.trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%d" % lit.polarity)
-    z3_atom = formula_to_z3_int(lit.atom)
+    z3_atom = formula_to_z3_int(lit.atom, "literal_to_z3"))
     if lit.polarity == 0:
         return z3.Not(z3_atom)
     else:
@@ -647,19 +647,19 @@ def clauses_to_z3(clauses):
     res = z3.And(z3_clauses)
     return res
 
-def formula_to_z3_int(fmla):
-    if __debug__: xtracer.trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%s" % type(fmla).__name__)
+def formula_to_z3_int(fmla, caller):
+    if __debug__: xtracer.trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%s\ncaller=%s" % (type(fmla).__name__, caller))
 #    print "formula_to_z3_int: {} : {}".format(fmla,type(fmla))
     if isinstance(fmla,ivy_logic.Definition or ivy_logic.is_eq(fmla) or isinstance(fmla,ivy_logic.Iff)):
         if ivy_logic.is_true(fmla.args[1]):
-            return formula_to_z3_int(fmla.args[0])
+            return formula_to_z3_int(fmla.args[0], "term_to_z3_int:is_true")
         if ivy_logic.is_false(fmla.args[1]):
-            return z3.Not(formula_to_z3_int(fmla.args[0]))
+            return z3.Not(formula_to_z3_int(fmla.args[0], "term_to_z3_int:is_false"))
     if ivy_logic.is_atom(fmla):
         return atom_to_z3(fmla)
     if isinstance(fmla,ivy_logic.Definition) and ivy_logic.is_enumerated(fmla.args[0]) and not use_z3_enums:
         return encode_equality(*fmla.args)
-    args = [formula_to_z3_int(arg) for arg in fmla.args]
+    args = [formula_to_z3_int(arg, "term_to_z3_int:fmla.args") for arg in fmla.args]
     if isinstance(fmla,ivy_logic.And):
         if len(args) == 0:
             return z3.BoolVal(True)
@@ -699,7 +699,7 @@ def formula_to_z3_int(fmla):
 
 def formula_to_z3_closed(fmla):
     if __debug__: xtracer.trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%s" % type(fmla).__name__)
-    z3_formula = formula_to_z3_int(fmla)
+    z3_formula = formula_to_z3_int(fmla,"term_to_z3_closed")
     variables = sorted(used_variables_ast(fmla))
     if len(variables) == 0:
         return z3_formula
@@ -1754,7 +1754,7 @@ def z3_function(name,sig):
 def encode_term(t,n,sort):
     if __debug__: xtracer.trace("ivy_solver.py:1742 encode_term() ENTER sort=%s" % sort)
     if isinstance(t,ivy_logic.Ite):
-        cond = formula_to_z3_int(t.args[0])
+        cond = formula_to_z3_int(t.args[0], "encode_term")
         thenterm = encode_term(t.args[1],n,sort)
         elseterm = encode_term(t.args[2],n,sort)
         return [z3.If(cond,x,y) for x,y in zip(thenterm,elseterm)]

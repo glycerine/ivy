@@ -51,7 +51,7 @@ type Translator struct {
 	EqFunc           EqFuncFn                                  // optional: custom equality (MyEq True/False optimization)
 	EnumEqFunc       EnumEqFuncFn                              // optional: custom enumerated equality (binary encoding)
 	NumeralFunc      NumeralFuncFn                             // optional: custom numeral handling (range clamping)
-	TranslateMerkle  iu.MerkleState                            // rolling Merkle hash for Translate() input conformance
+	TranslateMerkle  iu.MerkleState                            // rolling Merkle hash for Formula_to_z3_int() input conformance
 	translateDepth   int                                       // nesting depth; only hash at top level (depth 0)
 }
 
@@ -170,7 +170,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		panic(fmt.Sprintf("TranslateSort: TopSort %q has no to_z3() equivalent in Python", st.Name))
 
 	case *logic.FunctionSort:
-		xtracer.Trace("ivy_solver.py:269 functionsort() ENTER")
+		xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
 		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *logic.EnumeratedSort:
@@ -212,14 +212,23 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 func (t *Translator) TranslateNoHash(n logic.Expr) (Expr, error) {
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
-	return t.Translate(n)
+	return t.Formula_to_z3_int(n, "term_to_z3_closed")
 }
 
 // Translate converts an Ivy logic node to a Z3 expression.
 // Corresponds to Python formula_to_z3_int (ivy_solver.py:637).
 // Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
+// This is a thin wrapper around Translator.Formula_to_z3_int(),
+// which does more diagnostic logging (of the caller).
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:638 formula_to_z3_int() ENTER type=%v", iu.ShortTypeName(n))
+	return t.Formula_to_z3_int(n, "")
+}
+
+// Formula_to_z3_int converts an Ivy logic node to a Z3 expression.
+// Corresponds to Python formula_to_z3_int (ivy_solver.py:637).
+// Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
+func (t *Translator) Formula_to_z3_int(n logic.Expr, caller string) (Expr, error) {
+	xtracer.Trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%v\ncaller=%v", iu.ShortTypeName(n), caller)
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
@@ -242,14 +251,14 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		return t.eqToAtomZ3(eq)
 	}
 
-	return t.translateCore(n)
+	return t.translateCore(n, caller)
 }
 
 // translateCore is the inner dispatch for Translate. It handles all node
 // types except Boolean-sorted Apply (which is routed to atomToZ3 by
 // Translate). No XTRACE, no Merkle hash, no depth tracking — those are
 // done by the caller (Translate or TermToZ3).
-func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
+func (t *Translator) translateCore(n logic.Expr, caller string) (Expr, error) {
 	switch node := n.(type) {
 	case *logic.Variable:
 		// Python: sksym = term.rep + ':' + term.sort.name
@@ -262,7 +271,7 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 	case *logic.Apply:
 		if len(node.Terms) == 0 {
 			// Nullary application: convert func directly
-			return t.Translate(node.Func)
+			return t.Formula_to_z3_int(node.Func, caller)
 		}
 
 		// Non-Boolean Apply: corresponds to Python term_to_z3 "else"
@@ -313,12 +322,12 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		return fd.Apply(args...), nil
 
 	case *logic.Eq:
-		// Eq is now routed through atomToZ3 by Translate() (matching Python's
+		// Eq is now routed through atomToZ3 by Formula_to_z3_int() (matching Python's
 		// is_atom dispatch). This case should be unreachable.
 		return Expr{}, fmt.Errorf("translateCore: unexpected Eq (should be routed through atomToZ3 by Translate)")
 
 	case *logic.Not:
-		b, err := t.Translate(node.Body)
+		b, err := t.Formula_to_z3_int(node.Body, caller)
 		if err != nil {
 			return Expr{}, err
 		}
@@ -330,7 +339,7 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		}
 		args := make([]Expr, len(node.Terms))
 		for i, term := range node.Terms {
-			a, err := t.Translate(term)
+			a, err := t.Formula_to_z3_int(term, caller)
 			if err != nil {
 				return Expr{}, err
 			}
@@ -344,7 +353,7 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		}
 		args := make([]Expr, len(node.Terms))
 		for i, term := range node.Terms {
-			a, err := t.Translate(term)
+			a, err := t.Formula_to_z3_int(term, caller)
 			if err != nil {
 				return Expr{}, err
 			}
@@ -353,22 +362,22 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		return t.Ctx.Or(args...), nil
 
 	case *logic.Implies:
-		t1, err := t.Translate(node.T1)
+		t1, err := t.Formula_to_z3_int(node.T1, caller)
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Translate(node.T2)
+		t2, err := t.Formula_to_z3_int(node.T2, caller)
 		if err != nil {
 			return Expr{}, err
 		}
 		return t.Ctx.Implies(t1, t2), nil
 
 	case *logic.Iff:
-		t1, err := t.Translate(node.T1)
+		t1, err := t.Formula_to_z3_int(node.T1, caller)
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Translate(node.T2)
+		t2, err := t.Formula_to_z3_int(node.T2, caller)
 		if err != nil {
 			return Expr{}, err
 		}
@@ -379,15 +388,15 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 		return t.Ctx.Iff(t1, t2), nil
 
 	case *logic.Ite:
-		c, err := t.Translate(node.Cond)
+		c, err := t.Formula_to_z3_int(node.Cond, caller)
 		if err != nil {
 			return Expr{}, err
 		}
-		th, err := t.Translate(node.Then)
+		th, err := t.Formula_to_z3_int(node.Then, caller)
 		if err != nil {
 			return Expr{}, err
 		}
-		el, err := t.Translate(node.Else)
+		el, err := t.Formula_to_z3_int(node.Else, caller)
 		if err != nil {
 			return Expr{}, err
 		}
@@ -403,11 +412,11 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 				}
 			}
 		}
-		t1, err := t.Translate(node.Lhs)
+		t1, err := t.Formula_to_z3_int(node.Lhs, caller)
 		if err != nil {
 			return Expr{}, err
 		}
-		t2, err := t.Translate(node.Rhs)
+		t2, err := t.Formula_to_z3_int(node.Rhs, caller)
 		if err != nil {
 			return Expr{}, err
 		}
@@ -435,7 +444,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	c, ok := app.Func.(*logic.Const)
 	if !ok {
 		// Fallback for non-Const func (rare)
-		return t.translateCore(app)
+		return t.translateCore(app, "atom_to_z3")
 	}
 
 	xtracer.Trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d",
@@ -626,14 +635,14 @@ func (t *Translator) TermToZ3(term logic.Expr) (Expr, error) {
 	//     return formula_to_z3_int(term)
 	if _, isBool := term.NodeSort().(*logic.BooleanSort); isBool {
 		if _, isVar := term.(*logic.Variable); !isVar {
-			return t.Translate(term)
+			return t.Formula_to_z3_int(term, "term_to_z3")
 		}
 	}
 
 	// Python line 481-482: Ite in term context — cond through formula,
 	// then/else through term path.
 	if ite, ok := term.(*logic.Ite); ok {
-		cond, err := t.Translate(ite.Cond)
+		cond, err := t.Formula_to_z3_int(ite.Cond, "term_to_z3:ivy_logic.Ite")
 		if err != nil {
 			return Expr{}, err
 		}
@@ -649,7 +658,7 @@ func (t *Translator) TermToZ3(term logic.Expr) (Expr, error) {
 	}
 
 	// All other non-boolean terms: Variable, Const, non-boolean Apply
-	return t.translateCore(term)
+	return t.translateCore(term, "term_to_z3")
 }
 
 // termName extracts a name from a node for the term_to_z3 XTRACE.
@@ -824,7 +833,7 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 
 	// Python: sig = atom.rep.sort.to_z3() calls functionsort(fs) first,
 	// then solver_name(atom.rep). Match that order.
-	xtracer.Trace("ivy_solver.py:269 functionsort() ENTER")
+	xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
 
 	domain := fs.Domain()
 	zDomain := make([]Sort, len(domain))
@@ -854,7 +863,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 		xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(variables))
 	}
 	if len(variables) == 0 {
-		return t.Translate(body)
+		return t.Formula_to_z3_int(body, "translate.go:857 translateQauntifier() no variables")
 	}
 
 	// Create Z3 constants for the bound variables
@@ -876,7 +885,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 		t.consts[key] = bound[i]
 	}
 
-	zBody, err := t.Translate(body)
+	zBody, err := t.Formula_to_z3_int(body, "translate.go:879 translateQauntifier() len(variables) > 0")
 	if err != nil {
 		return Expr{}, err
 	}
@@ -918,11 +927,11 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 // Implies checks if f1 implies f2 using Z3.
 // Returns true if f1 => f2 is valid (i.e., f1 && !f2 is unsatisfiable).
 func (t *Translator) Implies(f1, f2 logic.Expr) (bool, error) {
-	zf1, err := t.Translate(f1)
+	zf1, err := t.Formula_to_z3_int(f1, "zf1 translate.go:921 Implies")
 	if err != nil {
 		return false, err
 	}
-	zf2, err := t.Translate(f2)
+	zf2, err := t.Formula_to_z3_int(f2, "zf2 translate.go:925 Implies")
 	if err != nil {
 		return false, err
 	}
@@ -1170,7 +1179,7 @@ func parseBfeParams(name string) (int, int, bool) {
 
 // IsSat checks if the formula is satisfiable.
 func (t *Translator) IsSat(f logic.Expr) (CheckResult, error) {
-	zf, err := t.Translate(f)
+	zf, err := t.Formula_to_z3_int(f, "IsSat")
 	if err != nil {
 		return Unknown, err
 	}
