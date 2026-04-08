@@ -62,13 +62,22 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 	}
 
 	// Check native interpretation compatibility by invoking LookupNative
-	isRelation := false
+	var table func(string) any
+	var kind string
 	if _, isBool := fs.Range().(*lg.BooleanSort); isBool {
-		isRelation = true
+		table = s.Relations
+		kind = "relation"
+	} else {
+		table = s.Functions
+		kind = "function"
 	}
-	nf := s.LookupNative(sym, isRelation)
-	if nf == nil {
+	result := s.LookupNative(sym, table, kind)
+	if result == nil {
 		return nil // no native interpretation
+	}
+	nf, ok := result.(NativeFunc)
+	if !ok {
+		return nil // not a callable
 	}
 
 	// Create dummy Z3 args and invoke
@@ -81,14 +90,14 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 		}
 		args[i] = ctx.Const(fmt.Sprintf("__compat_check_%d", i), zs)
 	}
-	result := nf(args...)
+	nfResult := nf(args...)
 
 	// Check result sort matches declared range
 	expectedSort, err := s.tr.TranslateSort(fs.Range())
 	if err != nil {
 		return nil // can't check
 	}
-	resultSort := result.ExprSort()
+	resultSort := nfResult.ExprSort()
 	if resultSort.Kind() != expectedSort.Kind() {
 		return fmt.Errorf("symbol %s: native interpretation returns sort %s but expected %s",
 			sym.Name, resultSort.String(), expectedSort.String())

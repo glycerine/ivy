@@ -91,13 +91,12 @@ func TestQuantConstraints_Callback(t *testing.T) {
 		return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
 	}
 
-	// Use an uninterpreted sort but register it as IntSort via SortLookup
+	// Use an uninterpreted sort but register it as IntSort via LookupNative
 	// so the Z3 variable will be of IntSort, matching the Le constraint.
 	sort := &logic.UninterpretedSort{Name: "mynat"}
-	tr.SortLookup = func(name string) *Sort {
-		if name == "mynat" {
-			s := tr.Ctx.IntSort()
-			return &s
+	tr.LookupNative = func(name string, s logic.Sort, kind string) any {
+		if kind == "sort" && name == "mynat" {
+			return tr.Ctx.IntSort()
 		}
 		return nil
 	}
@@ -142,10 +141,9 @@ func TestQuantConstraints_Exists(t *testing.T) {
 	}
 
 	sort := &logic.UninterpretedSort{Name: "mynat"}
-	tr.SortLookup = func(name string) *Sort {
-		if name == "mynat" {
-			s := tr.Ctx.IntSort()
-			return &s
+	tr.LookupNative = func(name string, s logic.Sort, kind string) any {
+		if kind == "sort" && name == "mynat" {
+			return tr.Ctx.IntSort()
 		}
 		return nil
 	}

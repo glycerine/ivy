@@ -105,79 +105,24 @@ func (s *Solver) Clear() {
 	s.impliesCache = make(map[[2]lg.NodeKey]bool)
 }
 
-// wireNativeLookup installs the NativeLookup callback on the translator
+// wireNativeLookup installs the LookupNative callback on the translator
 // so that polymorphic symbols (+, -, *, /), range sort clamped arithmetic,
-// and native interpretations (nat, bv, etc.) are properly handled during
-// Z3 translation.
+// native interpretations (nat, bv, etc.), and interpreted sorts are properly
+// handled during Z3 translation.
+// Corresponds to Python's lookup_native(thing, table, kind) dispatch.
 func (s *Solver) wireNativeLookup() {
-	s.tr.NativeLookup = func(name string, sort lg.Sort, isRelation bool) func(args ...z3bridge.Expr) z3bridge.Expr {
+	s.tr.LookupNative = func(name string, sort lg.Sort, kind string) any {
 		sym := lg.NewConst(name, sort)
-		nf := s.LookupNative(sym, isRelation)
-		if nf == nil {
-			return nil
+		var table func(string) any
+		switch kind {
+		case "sort":
+			table = s.Sorts
+		case "relation":
+			table = s.Relations
+		case "function":
+			table = s.Functions
 		}
-		return func(args ...z3bridge.Expr) z3bridge.Expr {
-			return nf(args...)
-		}
-	}
-	// Install SortLookup to handle interpreted sorts (nat→IntSort, bv[N]→BitVecSort, etc.)
-	// Corresponds to Python ivy_solver.py sorts() function.
-	s.tr.SortLookup = func(sortName string) *z3bridge.Sort {
-		if s.sig == nil {
-			return nil
-		}
-		itp, ok := s.sig.Interp[sortName]
-		if !ok {
-			return nil
-		}
-		ctx := s.tr.Ctx
-		switch v := itp.(type) {
-		case string:
-			switch v {
-			case "nat", "int":
-				zs := ctx.IntSort()
-				return &zs
-			case "real":
-				zs := ctx.RealSort()
-				return &zs
-			case "strlit":
-				zs := ctx.StringSort()
-				return &zs
-			default:
-				// Check for bv[N], strbv[N], intbv[N]
-				// Python: bv → BitVecSort, strbv → BitVecSort, intbv → BitVecSort
-				base, params, ok := ParseIntParams(v)
-				if ok && len(params) > 0 {
-					switch base {
-					case "bv", "strbv", "intbv":
-						zs := ctx.BvSort(params[0])
-						return &zs
-					}
-				}
-				// Python sorts() lines 125-130: array sort names "arr[dom][rng]"
-				if dom, rng, ok2 := z3bridge.ParseArraySortName(v); ok2 {
-					domSort, err1 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: dom})
-					rngSort, err2 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: rng})
-					if err1 == nil && err2 == nil {
-						zs := ctx.ArraySort(domSort, rngSort)
-						return &zs
-					}
-				}
-			}
-		case *lg.RangeSort:
-			// Range sorts map to integers
-			zs := ctx.IntSort()
-			return &zs
-		case *lg.EnumeratedSort:
-			// Python lookup_native line 342-343:
-			// if isinstance(z3name, (EnumeratedSort, RangeSort)): return z3name.to_z3()
-			zs, err := s.tr.TranslateSort(v)
-			if err != nil {
-				return nil
-			}
-			return &zs
-		}
-		return nil
+		return s.LookupNative(sym, table, kind)
 	}
 
 	// Install SolverName so Z3 names match Python's naming convention

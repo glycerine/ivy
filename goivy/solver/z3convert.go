@@ -240,7 +240,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *module.Clauses) (*module.
 
 	// Wire up native lookups on the interpolation translator so that
 	// polymorphic symbols and native interpretations are handled.
-	itpTr.NativeLookup = s.tr.NativeLookup
+	itpTr.LookupNative = s.tr.LookupNative
 	itpTr.SolverName = s.tr.SolverName
 
 	// Re-translate both clause sets into the interpolation context.
@@ -539,73 +539,127 @@ func (s *Solver) RangeSortClampedDiv(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 // This represents a native Z3 operation mapped from an Ivy symbol.
 type NativeFunc func(args ...z3bridge.Expr) z3bridge.Expr
 
-// LookupNative resolves the native Z3 interpretation for an Ivy symbol.
-// It checks sig.interp for native interpretations, handles polymorphic symbols
-// with range sort clamped arithmetic, and recognizes bfe[lo:hi] bit-field extract.
-//
-// Returns nil if the symbol has no native interpretation.
-//
-// Corresponds to Python lookup_native (lines 289-324).
-func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
-	kind := "function"
-	if isRelation {
-		kind = "relation"
+// Sorts resolves a sort interpretation name to a Z3 sort.
+// Corresponds to Python sorts() (ivy_solver.py:120).
+func (s *Solver) Sorts(name string) any {
+	xtracer.Trace("ivy_solver.py:121 sorts() ENTER name=%s", name)
+	ctx := s.tr.Ctx
+	switch name {
+	case "nat", "int":
+		return ctx.IntSort()
+	case "real":
+		return ctx.RealSort()
+	case "strlit":
+		return ctx.StringSort()
 	}
-	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s", sym.Name, kind)
+	base, params, ok := ParseIntParams(name)
+	if ok && len(params) > 0 {
+		switch base {
+		case "bv", "strbv", "intbv":
+			return ctx.BvSort(params[0])
+		}
+	}
+	if dom, rng, ok2 := z3bridge.ParseArraySortName(name); ok2 {
+		domSort, err1 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: dom})
+		rngSort, err2 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: rng})
+		if err1 == nil && err2 == nil {
+			return ctx.ArraySort(domSort, rngSort)
+		}
+	}
+	return nil
+}
+
+// Relations resolves a relation name to a native Z3 function.
+// Corresponds to Python relations() (ivy_solver.py:171).
+func (s *Solver) Relations(name string) any {
+	xtracer.Trace("ivy_solver.py:172 relations() ENTER name=%s", name)
+	return s.lookupBuiltinRelation(name)
+}
+
+// Functions resolves a function name to a native Z3 function.
+// Corresponds to Python functions() (ivy_solver.py:227).
+func (s *Solver) Functions(name string) any {
+	xtracer.Trace("ivy_solver.py:228 functions() ENTER name=%s", name)
+	return s.lookupBuiltinFunc(name, false)
+}
+
+// LookupNative resolves the native Z3 interpretation for an Ivy symbol.
+// Corresponds to Python lookup_native(thing, table, kind) (ivy_solver.py:311).
+//
+// Parameters:
+//   - thing: the Ivy symbol being looked up
+//   - table: one of Sorts, Relations, or Functions
+//   - kind: "sort", "relation", or "function"
+//
+// Returns any: z3bridge.Sort for sort lookups, NativeFunc for function/relation
+// lookups, or nil if no native interpretation.
+func (s *Solver) LookupNative(thing *lg.Const, table func(string) any, kind string) any {
+	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s", thing.Name, kind)
 	if s.sig == nil {
 		return nil
 	}
 	ctx := s.tr.Ctx
-	name := sym.Name
+	name := thing.Name
 
-	// Check sig.interp for a native interpretation
+	// Python line 313: z3name = ivy_logic.sig.interp.get(thing.name)
 	z3name, hasInterp := s.sig.Interp[name]
 
+	// Python line 314: if z3name == None:
 	if !hasInterp {
-		// Check for bfe[lo:hi] pattern
+		// Python line 315: if thing.name.startswith('bfe['):
 		if strings.HasPrefix(name, "bfe[") {
-			return s.bfeToZ3(sym)
+			return s.bfeToZ3(thing)
 		}
 
-		// Check for arrcst (array constant)
-		// Corresponds to Python ivy_solver.py:294-297:
+		// Python line 317-320: if thing.name == 'arrcst':
 		//   sort = thing.sort.rng
-		//   return lambda x: z3.K(sort.to_z3().domain(), x)
+		//   if sort.name in ivy_logic.sig.interp:
+		//     return lambda x: z3.K(sort.to_z3().domain(), x)
 		if name == "arrcst" {
-			if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
-				arrSort := fs.Range()
-				z3arrSort, err := s.tr.TranslateSort(arrSort)
-				if err == nil && z3arrSort.Kind() == z3bridge.SortArray {
-					domSort := z3arrSort.ArrayDomain()
-					return func(args ...z3bridge.Expr) z3bridge.Expr {
-						if len(args) == 1 {
-							return ctx.ConstArray(domSort, args[0])
-						}
-						return ctx.BoolVal(false)
+			if fs, ok := thing.CSort.(*lg.FunctionSort); ok {
+				rngSort := fs.Range()
+				rngName := sortToName(rngSort)
+				if _, inInterp := s.sig.Interp[rngName]; inInterp {
+					z3arrSort, err := s.tr.TranslateSort(rngSort)
+					if err == nil && z3arrSort.Kind() == z3bridge.SortArray {
+						domSort := z3arrSort.ArrayDomain()
+						return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
+							if len(args) == 1 {
+								return ctx.ConstArray(domSort, args[0])
+							}
+							return ctx.BoolVal(false)
+						})
 					}
 				}
 			}
 		}
 
-		// Check for polymorphic symbols (+, -, *, /)
+		// Python line 321: if thing.name in iu.polymorphic_symbols:
 		if isPolymorphicOp(name) {
-			return s.lookupPolymorphicNative(sym, isRelation)
+			return s.lookupPolymorphicNative(thing, table)
 		}
 
 		return nil
 	}
 
-	// Interpret z3name
-	switch interp := z3name.(type) {
+	// Python line 342-343: if isinstance(z3name, (EnumeratedSort, RangeSort)):
+	//   return z3name.to_z3()
+	switch v := z3name.(type) {
 	case *lg.EnumeratedSort:
-		// Sort interpretation → return the sort itself (used for sort lookups)
-		return nil
+		zs, err := s.tr.TranslateSort(v)
+		if err != nil {
+			return nil
+		}
+		return zs
 	case *lg.RangeSort:
-		// Sort interpretation → return nil (handled by sort translation)
-		return nil
+		zs, err := s.tr.TranslateSort(v)
+		if err != nil {
+			return nil
+		}
+		return zs
 	case string:
-		// Named interpretation (e.g., "int", "nat", "bv[32]")
-		return s.lookupNamedNative(interp, isRelation)
+		// Python line 344: z3val = table(z3name)
+		return table(v)
 	}
 
 	return nil
@@ -613,11 +667,12 @@ func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
 
 // lookupPolymorphicNative handles polymorphic symbols (+, -, *, /) where the
 // behavior depends on the domain sort's interpretation.
-func (s *Solver) lookupPolymorphicNative(sym *lg.Const, isRelation bool) NativeFunc {
+// Corresponds to Python lookup_native lines 321-340.
+func (s *Solver) lookupPolymorphicNative(sym *lg.Const, table func(string) any) any {
 	ctx := s.tr.Ctx
 	name := sym.Name
 
-	// Get the domain sort
+	// Python line 322: sort = thing.sort.domain[0].name
 	var domSort lg.Sort
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && len(fs.Sorts) > 1 {
 		domSort = fs.Sorts[0]
@@ -626,78 +681,64 @@ func (s *Solver) lookupPolymorphicNative(sym *lg.Const, isRelation bool) NativeF
 		return nil
 	}
 
+	// Python line 323: if sort in sig.interp and not isinstance(sig.interp[sort], EnumeratedSort):
 	domName := sortToName(domSort)
 	interp, ok := s.sig.Interp[domName]
 	if !ok {
 		return nil
 	}
-
-	// Check if interpretation is an EnumeratedSort (no arithmetic)
 	if _, isEnum := interp.(*lg.EnumeratedSort); isEnum {
 		return nil
 	}
 
-	// Handle nat interpretation: subtraction clamps to 0
+	// Python line 325: if thing.name == '-' and itp == 'nat':
 	if interpStr, ok := interp.(string); ok && interpStr == "nat" && name == "-" {
-		return func(args ...z3bridge.Expr) z3bridge.Expr {
+		return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
 			if len(args) == 2 {
 				return ctx.Ite(ctx.Lt(args[0], args[1]), ctx.IntVal(0), ctx.Sub(args[0], args[1]))
 			}
 			return ctx.IntVal(0)
-		}
+		})
 	}
 
-	// Handle range sort: clamped arithmetic
+	// Python line 327-336: if handle_range_sorts and isinstance(itp, RangeSort):
 	if rs, ok := interp.(*lg.RangeSort); ok && s.HandleRangeSorts {
 		lb := ctx.IntVal(parseInt64(rs.LbString()))
 		ub := ctx.IntVal(parseInt64(rs.UbString()))
 		switch name {
 		case "+":
-			return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedAdd(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
-			}
+			})
 		case "-":
-			return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedSub(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
-			}
+			})
 		case "*":
-			return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedMul(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
-			}
+			})
 		case "/":
-			return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return NativeFunc(func(args ...z3bridge.Expr) z3bridge.Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedDiv(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
-			}
+			})
 		}
 	}
 
-	// Fall back to standard built-in operations.
-	// Dispatch relations to lookupBuiltinRelation (has <, <=, >, >= with
-	// BV-awareness), matching lookupNamedNative's pattern.
-	if isRelation {
-		return s.lookupBuiltinRelation(name)
-	}
-	return s.lookupBuiltinFunc(name, isRelation)
-}
-
-// lookupNamedNative resolves a string-named native interpretation (e.g., "int").
-func (s *Solver) lookupNamedNative(z3name string, isRelation bool) NativeFunc {
-	if isRelation {
-		return s.lookupBuiltinRelation(z3name)
-	}
-	return s.lookupBuiltinFunc(z3name, false)
+	// Python line 337: z3val = table(thing.name)
+	return table(sym.Name)
 }
 
 // lookupBuiltinFunc returns the native Z3 function for a built-in name.

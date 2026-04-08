@@ -563,15 +563,16 @@ func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 
 	// Python line 454: sig = lookup_native(term.sort, sorts, "sort") if sorted else S
 	var zs *Sort
-	if t.SortLookup != nil {
-		xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=sort", sortName)
-		zs = t.SortLookup(sortName)
-		if zs != nil {
-			// Cache the sort so TranslateSort finds it later via cache
-			sortKey := sort.Sexp()
-			if _, ok := t.sorts[sortKey]; !ok {
-				t.sorts[sortKey] = *zs
-				t.sortsInv[zs.GetId()] = sort
+	if t.LookupNative != nil {
+		if result := t.LookupNative(sortName, sort, "sort"); result != nil {
+			if zsVal, ok := result.(Sort); ok {
+				zs = &zsVal
+				// Cache the sort so TranslateSort finds it later via cache
+				sortKey := sort.Sexp()
+				if _, ok := t.sorts[sortKey]; !ok {
+					t.sorts[sortKey] = zsVal
+					t.sortsInv[zsVal.GetId()] = sort
+				}
 			}
 		}
 	}
@@ -880,7 +881,7 @@ func (t *Translator) translateBuiltinOp(name string, terms []logic.Expr) (Expr, 
 	// --- Comparisons ---
 	// Comparison operators (<, <=, >, >=) are NOT handled here.
 	// They are polymorphic: for interpreted sorts (int, nat, bv) they
-	// use Z3 built-in comparisons via NativeLookup → lookupBuiltinRelation;
+	// use Z3 built-in comparisons via LookupNative → lookupBuiltinRelation;
 	// for uninterpreted sorts they become sort-qualified uninterpreted
 	// functions via getFuncDecl (e.g., "<:lclock:lclock").
 	// Handling them here with hardcoded ctx.Lt/Le/Gt/Ge causes Z3 Sort

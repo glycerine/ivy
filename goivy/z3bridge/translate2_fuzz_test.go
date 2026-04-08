@@ -143,10 +143,9 @@ func FuzzQuantConstraintsForAll(f *testing.F) {
 			tr := NewTranslator()
 			defer tr.Close()
 
-			tr.SortLookup = func(name string) *Sort {
-				if name == "mynat" {
-					s := tr.Ctx.IntSort()
-					return &s
+			tr.LookupNative = func(name string, s logic.Sort, kind string) any {
+				if kind == "sort" && name == "mynat" {
+					return tr.Ctx.IntSort()
 				}
 				return nil
 			}
@@ -247,10 +246,9 @@ func FuzzSortLookup(f *testing.F) {
 			defer tr.Close()
 
 			if hasInterp {
-				tr.SortLookup = func(name string) *Sort {
-					if name == sortName {
-						s := tr.Ctx.IntSort()
-						return &s
+				tr.LookupNative = func(name string, s logic.Sort, kind string) any {
+					if kind == "sort" && name == sortName {
+						return tr.Ctx.IntSort()
 					}
 					return nil
 				}
