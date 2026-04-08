@@ -62,7 +62,7 @@ def set_use_native_enums(t):
 z3_builtins = set(["bit0","bit1"])
 
 def solver_name(symbol):
-    if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
+    #if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
     name = symbol.name
     if name.startswith('bfe['):
         if bfe_to_z3(symbol) is not None:
@@ -322,7 +322,7 @@ def range_sort_bounds_to_z3(itp):
 
 
 def lookup_native(thing,table,kind):
-    if __debug__: xtracer.trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s" % (thing.name, kind))
+    #if __debug__: xtracer.trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s" % (thing.name, kind))
     z3name = ivy_logic.sig.interp.get(thing.name)
     if z3name == None:
         if  thing.name.startswith('bfe['):

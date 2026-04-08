@@ -596,7 +596,7 @@ func (s *Solver) Functions(name string) any {
 // Returns any: Sort for sort lookups, NativeFunc for function/relation
 // lookups, or nil if no native interpretation.
 func (s *Solver) LookupNative(thing *lg.Const, table func(string) any, kind string) any {
-	xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s", thing.Name, kind)
+	//xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=%s", thing.Name, kind)
 	if s.sig == nil {
 		return nil
 	}
@@ -1044,7 +1044,7 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 // Returns (name, nil) for non-interpreted symbols.
 // Returns ("", error) for z3 builtin clashes (Python raises IvyError).
 func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (string, error) {
-	xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s\n go-caller='%v'; sym.Canon = '%v'", sym.Name, caller(2), sym.Canon())
+	//xtracer.Trace("ivy_solver.py:65 solver_name() ENTER name=%s\n go-caller='%v'; sym.Canon = '%v'", sym.Name, caller(2), sym.Canon())
 
 	name := sym.Name
 
