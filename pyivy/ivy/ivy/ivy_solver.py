@@ -66,10 +66,12 @@ def solver_name(symbol):
     name = symbol.name
     if name.startswith('bfe['):
         if bfe_to_z3(symbol) is not None:
+            if __debug__: xtracer.trace("ivy_solver.py:69 solver_name() EXIT 1")
             return None
     elif name in iu.polymorphic_symbols:
         sort = symbol.sort.domain[0].name if name != 'arrcst' else symbol.sort.rng.name
         if sort in ivy_logic.sig.interp and not isinstance(ivy_logic.sig.interp[sort],ivy_logic.EnumeratedSort):
+            if __debug__: xtracer.trace("ivy_solver.py:74 solver_name() EXIT 2")
             return None
 #        name += ':' + sort
         for s in symbol.sort.domain:
@@ -77,22 +79,25 @@ def solver_name(symbol):
         if name == 'arrcst':
             name += ':' + sort.name
     if name in ivy_logic.sig.interp:
+        if __debug__: xtracer.trace("ivy_solver.py:82 solver_name() EXIT 3")
         return None
     if name in z3_builtins:
+        if __debug__: xtracer.trace("ivy_solver.py:85 solver_name() EXIT 4")
         raise iu.IvyError(None,'name "{}" clashes with Z3 built-in'.format(name))
+    if __debug__: xtracer.trace("ivy_solver.py:87 solver_name() EXIT 5")
     return name
     #    return '_' + name if isinstance(symbol,ivy_logic.Symbol) and name[0].isalpha() else name
 
 # S = z3.DeclareSort("S")
 
 def my_minus(*args):
-    if __debug__: xtracer.trace("ivy_solver.py:89 my_minus() ENTER nargs=%d" % len(args))
+    #if __debug__: xtracer.trace("ivy_solver.py:89 my_minus() ENTER nargs=%d" % len(args))
     if len(args) == 1:
         return -args[0]
     return args[0] - args[1]
 
 def my_eq(x,y):
-    if __debug__: xtracer.trace("ivy_solver.py:95 my_eq() ENTER")
+    #if __debug__: xtracer.trace("ivy_solver.py:95 my_eq() ENTER")
     if z3.is_true(y):
         return x
     if z3.is_false(y):

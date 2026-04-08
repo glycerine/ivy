@@ -734,7 +734,7 @@ func (t *Translator) TranslateVar(v *logic.Variable) (Expr, error) {
 }
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s", name, sort)
+	//xtracer.Trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s", name, sort)
 	// Check for numeral with special handling (range sort clamping).
 	// Python term_to_z3 lines 439-440: if term.is_numeral(): res = numeral_to_z3(term.rep)
 	if t.NumeralFunc != nil && isNumeralName(name) {

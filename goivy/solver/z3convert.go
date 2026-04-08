@@ -1049,6 +1049,7 @@ func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (stri
 	// Python: if name.startswith('bfe['):
 	if strings.HasPrefix(name, "bfe[") {
 		if bfeCheck != nil && bfeCheck(sym) {
+			xtracer.Trace("ivy_solver.py:69 solver_name() EXIT 1")
 			return "", nil // interpreted
 		}
 	} else if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
@@ -1062,6 +1063,7 @@ func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (stri
 				}
 				if interp, has := sig.Interp[domName]; has {
 					if _, isEnum := interp.(*lg.EnumeratedSort); !isEnum {
+						xtracer.Trace("ivy_solver.py:74 solver_name() EXIT 2")
 						return "", nil // native interpretation
 					}
 				}
@@ -1079,15 +1081,17 @@ func SolverName(sym *lg.Const, sig *il.Sig, bfeCheck func(*lg.Const) bool) (stri
 	// Python: if name in ivy_logic.sig.interp: return None
 	if sig != nil {
 		if _, has := sig.Interp[name]; has {
+			xtracer.Trace("ivy_solver.py:82 solver_name() EXIT 3")
 			return "", nil // interpreted
 		}
 	}
 
 	// Python: if name in z3_builtins: raise iu.IvyError(...)
 	if z3Builtins[name] {
+		xtracer.Trace("ivy_solver.py:85 solver_name() EXIT 4")
 		return "", lg.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name))
 	}
-
+	xtracer.Trace("ivy_solver.py:87 solver_name() EXIT 5")
 	return name, nil
 }
 
@@ -1147,7 +1151,7 @@ func parseInt64(s string) int64 {
 // MyMinus creates a Z3 subtraction, handling unary case.
 // Corresponds to Python's my_minus (ivy_solver.py:83-86).
 func MyMinus(ctx *z3bridge.Z3Context, args []z3bridge.Expr) z3bridge.Expr {
-	xtracer.Trace("ivy_solver.py:89 my_minus() ENTER nargs=%d", len(args))
+	//xtracer.Trace("ivy_solver.py:89 my_minus() ENTER nargs=%d", len(args))
 	if len(args) == 1 {
 		zero := ctx.IntVal(0)
 		return ctx.Sub(zero, args[0])
