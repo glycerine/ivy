@@ -253,17 +253,19 @@ func (t *Translator) translateCore(n logic.Expr) (Expr, error) {
 			// Check for native interpretation via callback (handles polymorphic
 			// symbols, range sort clamped arithmetic, nat interpretation, etc.)
 			// Python: fun = lookup_native(term.rep, functions, "function")
-			if t.NativeLookup != nil {
-				if nativeFn := t.NativeLookup(c.Name, c.CSort, false); nativeFn != nil {
-					args := make([]Expr, len(node.Terms))
-					for i, term := range node.Terms {
-						a, err := t.TermToZ3(term)
-						if err != nil {
-							return Expr{}, err
+			if t.LookupNative != nil {
+				if result := t.LookupNative(c.Name, c.CSort, "function"); result != nil {
+					if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
+						args := make([]Expr, len(node.Terms))
+						for i, term := range node.Terms {
+							a, err := t.TermToZ3(term)
+							if err != nil {
+								return Expr{}, err
+							}
+							args[i] = a
 						}
-						args[i] = a
+						return nativeFn(args...), nil
 					}
-					return nativeFn(args...), nil
 				}
 			}
 		}
@@ -453,10 +455,12 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	}
 
 	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
-	if t.NativeLookup != nil {
-		if nativeFn := t.NativeLookup(c.Name, c.CSort, true); nativeFn != nil {
-			t.preds[predKey] = nativeFn
-			return t.applyZ3Func(nativeFn, app.Terms)
+	if t.LookupNative != nil {
+		if result := t.LookupNative(c.Name, c.CSort, "relation"); result != nil {
+			if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
+				t.preds[predKey] = nativeFn
+				return t.applyZ3Func(nativeFn, app.Terms)
+			}
 		}
 	}
 
