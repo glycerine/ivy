@@ -462,7 +462,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	// Check preds cache (Python z3_predicates)
 	predKey := logic.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
 	if cached, ok := t.preds[predKey]; ok {
-		return t.applyPred(cached, app.Terms)
+		return t.applyZ3Func(cached, app.Terms)
 	}
 
 	// Check builtin ops (Go-specific: Python handles via polymacs inside lookup_native)
@@ -478,7 +478,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	if t.NativeLookup != nil {
 		if nativeFn := t.NativeLookup(c.Name, c.CSort, true); nativeFn != nil {
 			t.preds[predKey] = nativeFn
-			return t.applyPred(nativeFn, app.Terms)
+			return t.applyZ3Func(nativeFn, app.Terms)
 		}
 	}
 
@@ -493,11 +493,12 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	}
 	predFn := fd.Apply
 	t.preds[predKey] = predFn
-	return t.applyPred(predFn, app.Terms)
+	return t.applyZ3Func(predFn, app.Terms)
 }
 
-// applyPred translates args via TermToZ3 and applies the predicate function.
-func (t *Translator) applyPred(pred func(args ...Expr) Expr, terms []logic.Expr) (Expr, error) {
+// applyZ3Func translates args via TermToZ3 and applies the predicate function.
+// Corresponds to Python apply_z3_func (ivy_solver.py:403).
+func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []logic.Expr) (Expr, error) {
 	args := make([]Expr, len(terms))
 	for i, term := range terms {
 		a, err := t.TermToZ3(term)
@@ -506,6 +507,7 @@ func (t *Translator) applyPred(pred func(args ...Expr) Expr, terms []logic.Expr)
 		}
 		args[i] = a
 	}
+	xtracer.Trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d", len(args))
 	return pred(args...), nil
 }
 
