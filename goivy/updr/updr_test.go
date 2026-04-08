@@ -38,9 +38,9 @@ func makeNBits(t *testing.T, n int) (*z3bridge.Z3Context, []z3bridge.Expr, []z3b
 
 func TestPDR_TrivialSafe(t *testing.T) {
 	ctx, x, xn := makeOneBit(t)
-	init := ctx.Not(x)                   // init: x = false
-	trans := ctx.Iff(xn, x)              // trans: x' = x (identity)
-	bad := ctx.BoolVal(false)             // bad: never
+	init := ctx.Not(x)        // init: x = false
+	trans := ctx.Iff(xn, x)   // trans: x' = x (identity)
+	bad := ctx.BoolVal(false) // bad: never
 	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
@@ -73,7 +73,7 @@ func TestPDR_OneBitFlip(t *testing.T) {
 	ctx, x, xn := makeOneBit(t)
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, ctx.Not(x)) // flip
-	bad := x                           // bad when x=true
+	bad := x                         // bad when x=true
 	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if result.Valid {
@@ -88,8 +88,8 @@ func TestPDR_OneBitFlip(t *testing.T) {
 func TestPDR_OneBitStaysFalse(t *testing.T) {
 	ctx, x, xn := makeOneBit(t)
 	init := ctx.Not(x)
-	trans := ctx.Not(xn)   // x' always false
-	bad := x               // bad when x=true
+	trans := ctx.Not(xn) // x' always false
+	bad := x             // bad when x=true
 	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
@@ -467,7 +467,7 @@ func TestNextPrev(t *testing.T) {
 	// next(x) should produce xn
 	nx := pdr.next(x)
 	// Check that next(x) equals xn by checking equivalence
-	s := ctx.NewSolver()
+	s := ctx.NewZ3Solver()
 	s.Assert(ctx.Not(ctx.Iff(nx, xn)))
 	if s.Check() != z3bridge.Unsat {
 		t.Fatal("next(x) should equal xn")
@@ -475,7 +475,7 @@ func TestNextPrev(t *testing.T) {
 
 	// prev(xn) should produce x
 	px := pdr.prev(xn)
-	s2 := ctx.NewSolver()
+	s2 := ctx.NewZ3Solver()
 	s2.Assert(ctx.Not(ctx.Iff(px, x)))
 	if s2.Check() != z3bridge.Unsat {
 		t.Fatal("prev(xn) should equal x")
@@ -491,7 +491,7 @@ func TestForwardClauses(t *testing.T) {
 	forwarded := ForwardClauses(ctx, clause, []z3bridge.Expr{x}, []z3bridge.Expr{xn})
 
 	// forwarded should be equivalent to ¬xn
-	s := ctx.NewSolver()
+	s := ctx.NewZ3Solver()
 	s.Assert(ctx.Not(ctx.Iff(forwarded, ctx.Not(xn))))
 	if s.Check() != z3bridge.Unsat {
 		t.Fatal("ForwardClauses should rename x to xn")
@@ -584,9 +584,9 @@ func TestFramesEqual(t *testing.T) {
 
 	pdr := &PDR{ctx: ctx}
 
-	f1 := &Frame{clauses: map[string]z3bridge.Expr{key: clause}, solver: ctx.NewSolver()}
-	f2 := &Frame{clauses: map[string]z3bridge.Expr{key: clause}, solver: ctx.NewSolver()}
-	f3 := &Frame{clauses: map[string]z3bridge.Expr{}, solver: ctx.NewSolver()}
+	f1 := &Frame{clauses: map[string]z3bridge.Expr{key: clause}, solver: ctx.NewZ3Solver()}
+	f2 := &Frame{clauses: map[string]z3bridge.Expr{key: clause}, solver: ctx.NewZ3Solver()}
+	f3 := &Frame{clauses: map[string]z3bridge.Expr{}, solver: ctx.NewZ3Solver()}
 
 	pdr.frames = []*Frame{f1, f2, f3}
 
@@ -606,7 +606,7 @@ func TestFrameToExpr(t *testing.T) {
 	a := ctx.Const("a", bs)
 
 	pdr := &PDR{ctx: ctx}
-	f := &Frame{clauses: map[string]z3bridge.Expr{}, solver: ctx.NewSolver()}
+	f := &Frame{clauses: map[string]z3bridge.Expr{}, solver: ctx.NewZ3Solver()}
 	pdr.frames = []*Frame{f}
 
 	// Empty frame should be true
@@ -664,7 +664,7 @@ func TestPrune(t *testing.T) {
 			c1.String(): c1,
 			c2.String(): c2,
 		},
-		solver: ctx.NewSolver(),
+		solver: ctx.NewZ3Solver(),
 	}
 
 	pdr.prune(f)

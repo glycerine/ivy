@@ -33,7 +33,7 @@ type PDRResult struct {
 // states reachable in at most that many steps.
 type Frame struct {
 	clauses map[string]z3bridge.Expr // keyed by String() for dedup
-	solver  *z3bridge.Solver
+	solver  *z3bridge.Z3Solver
 }
 
 // Goal represents a proof obligation: a cube (conjunction of literals)
@@ -119,7 +119,7 @@ func NewPDR(ctx *z3bridge.Z3Context, init, trans, bad z3bridge.Expr,
 	// Create F0: solver with init asserted
 	f0 := &Frame{
 		clauses: make(map[string]z3bridge.Expr),
-		solver:  ctx.NewSolver(),
+		solver:  ctx.NewZ3Solver(),
 	}
 	f0.solver.Assert(init)
 	p.frames = []*Frame{f0}
@@ -176,7 +176,7 @@ func (p *PDR) Run() PDRResult {
 func (p *PDR) addFrame() {
 	f := &Frame{
 		clauses: make(map[string]z3bridge.Expr),
-		solver:  p.ctx.NewSolver(),
+		solver:  p.ctx.NewZ3Solver(),
 	}
 	p.frames = append(p.frames, f)
 	p.N = len(p.frames) - 1
@@ -394,7 +394,7 @@ func (p *PDR) frameToExpr(i int) z3bridge.Expr {
 
 // extractCube extracts a cube (conjunction of literals) from a SAT model.
 // The cube is over the current-state variables x0.
-func (p *PDR) extractCube(s *z3bridge.Solver) []z3bridge.Expr {
+func (p *PDR) extractCube(s *z3bridge.Z3Solver) []z3bridge.Expr {
 	m := s.Model()
 	if m == nil {
 		return nil
@@ -430,7 +430,7 @@ func (p *PDR) extractTrace(g *Goal) []*Goal {
 }
 
 // isSAT checks if cube is satisfiable with the solver's current assertions.
-func (p *PDR) isSAT(s *z3bridge.Solver, cube []z3bridge.Expr) bool {
+func (p *PDR) isSAT(s *z3bridge.Z3Solver, cube []z3bridge.Expr) bool {
 	s.Push()
 	defer s.Pop()
 	for _, lit := range cube {
@@ -482,7 +482,7 @@ func (p *PDR) cube2clause(cube []z3bridge.Expr) z3bridge.Expr {
 
 // checkDisjoint returns true if a ∧ b is UNSAT (the formulas are disjoint).
 func (p *PDR) checkDisjoint(a, b z3bridge.Expr) bool {
-	s := p.ctx.NewSolver()
+	s := p.ctx.NewZ3Solver()
 	s.Assert(a)
 	s.Assert(b)
 	p.SATQueryCount++
@@ -492,7 +492,7 @@ func (p *PDR) checkDisjoint(a, b z3bridge.Expr) bool {
 // minimizeCube removes literals from a cube that are not needed for
 // the UNSAT core, producing a smaller blocking clause.
 func (p *PDR) minimizeCube(cube, inputs, lits []z3bridge.Expr) []z3bridge.Expr {
-	s := p.ctx.NewSolver()
+	s := p.ctx.NewZ3Solver()
 	for _, e := range inputs {
 		s.Assert(e)
 	}
@@ -532,7 +532,7 @@ func (p *PDR) prune(f *Frame) {
 			ci := f.clauses[keys[i]]
 			cj := f.clauses[keys[j]]
 			// Check if ci => cj (ci subsumes cj, so remove cj)
-			s := p.ctx.NewSolver()
+			s := p.ctx.NewZ3Solver()
 			s.Assert(ci)
 			s.Assert(p.ctx.Not(cj))
 			if s.Check() == z3bridge.Unsat {
@@ -542,7 +542,7 @@ func (p *PDR) prune(f *Frame) {
 				continue
 			}
 			// Check if cj => ci (cj subsumes ci, so remove ci)
-			s2 := p.ctx.NewSolver()
+			s2 := p.ctx.NewZ3Solver()
 			s2.Assert(cj)
 			s2.Assert(p.ctx.Not(ci))
 			if s2.Check() == z3bridge.Unsat {
