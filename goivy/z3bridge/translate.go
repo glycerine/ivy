@@ -424,6 +424,8 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 
 	// Python line 518: if ivy_logic.is_equals(atom.rep) and
 	//   ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums
+	//
+	//
 	if c.Name == "=" && len(app.Terms) == 2 && t.EnumEqFunc != nil {
 		if es, ok2 := app.Terms[0].NodeSort().(*logic.EnumeratedSort); ok2 {
 			if result, err := t.EnumEqFunc(app.Terms[0], app.Terms[1], es); result != nil {
@@ -433,7 +435,16 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	}
 
 	// Check preds cache (Python z3_predicates)
-	predKey := logic.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+	// Python: atom.relname for Eq is always equals = Symbol('=', RelationSort([TopSort(), TopSort()]))
+	// regardless of concrete sorts. Use a canonical key to match Python's caching.
+	// (all equalities need to share one cache entry, matching
+	// Python's z3_predicates[atom.relname] behavior)
+	var predKey logic.NodeKey
+	if c.Name == "=" {
+		predKey = eqCanonPredKey
+	} else {
+		predKey = logic.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+	}
 	if cached, ok := t.preds[predKey]; ok {
 		return t.applyZ3Func(cached, app.Terms)
 	}
