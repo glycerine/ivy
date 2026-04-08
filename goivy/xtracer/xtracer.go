@@ -111,7 +111,7 @@ func trace(format string, args ...interface{}) {
 	if strings.Contains(format, "\n") {
 		splt := strings.SplitN(format, "\n", 2)
 		if len(splt) == 2 {
-			format = splt[0] + "\n;" + fileLine(2) + ":" + splt[1]
+			format = splt[0] + "\n" + fileLine(3) + ":" + splt[1]
 		}
 	}
 	fmt.Printf("XTRACE: "+format+"\n", args...)
