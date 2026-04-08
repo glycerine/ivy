@@ -266,8 +266,24 @@ func TestParseArraySortName(t *testing.T) {
 func TestTranslateSortArrayIntBool(t *testing.T) {
 	tr := NewTranslator()
 	defer tr.Close()
-	arrIvySort := &logic.UninterpretedSort{Name: "arr[int][bool]"}
 
+	// Without LookupNative, arr[int][bool] is just an uninterpreted sort name.
+	// Python requires sig.interp to interpret sort names as arrays.
+	// Install a LookupNative callback that resolves arr[...] patterns.
+	tr.LookupNative = func(name string, sort logic.Sort, kind string) any {
+		if kind == "sort" {
+			if dom, rng, ok := ParseArraySortName(name); ok {
+				domSort, err1 := tr.TranslateSort(&logic.UninterpretedSort{Name: dom})
+				rngSort, err2 := tr.TranslateSort(&logic.UninterpretedSort{Name: rng})
+				if err1 == nil && err2 == nil {
+					return tr.Ctx.ArraySort(domSort, rngSort)
+				}
+			}
+		}
+		return nil
+	}
+
+	arrIvySort := &logic.UninterpretedSort{Name: "arr[int][bool]"}
 	z3s, err := tr.TranslateSort(arrIvySort)
 	if err != nil {
 		t.Fatalf("TranslateSort(arr[int][bool]) failed: %v", err)
@@ -275,16 +291,25 @@ func TestTranslateSortArrayIntBool(t *testing.T) {
 	if z3s.Kind() != SortArray {
 		t.Fatalf("expected SortArray, got %d", z3s.Kind())
 	}
-	if z3s.ArrayDomain().Kind() != SortUninterpreted {
-		// "int" as an UninterpretedSort name goes through UninterpretedSort path
-		// (not IntSort) unless the name is special-cased.
-		// Just verify it is an array sort with two component sorts.
-	}
 }
 
 func TestTranslateSortArrayCached(t *testing.T) {
 	tr := NewTranslator()
 	defer tr.Close()
+
+	// Install LookupNative to resolve arr[...] patterns.
+	tr.LookupNative = func(name string, sort logic.Sort, kind string) any {
+		if kind == "sort" {
+			if dom, rng, ok := ParseArraySortName(name); ok {
+				domSort, err1 := tr.TranslateSort(&logic.UninterpretedSort{Name: dom})
+				rngSort, err2 := tr.TranslateSort(&logic.UninterpretedSort{Name: rng})
+				if err1 == nil && err2 == nil {
+					return tr.Ctx.ArraySort(domSort, rngSort)
+				}
+			}
+		}
+		return nil
+	}
 
 	arrIvySort := &logic.UninterpretedSort{Name: "arr[node][value]"}
 

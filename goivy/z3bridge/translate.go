@@ -102,7 +102,7 @@ func (t *Translator) z3Name(name string, sort logic.Sort) string {
 // uninterpretedsort() (line 258), enumeratedsort() (line 276), etc.
 //
 // What is the equivalent of TranslateSort in python?
-// It's the polymorphic .to_z3() method, monkey-patched
+// It is the polymorphic .to_z3() method, monkey-patched
 // onto each sort class at ivy_solver.py:286-295:
 //
 // ivy_logic.UninterpretedSort.to_z3 = uninterpretedsort    # line 286
@@ -111,9 +111,11 @@ func (t *Translator) z3Name(name string, sort logic.Sort) string {
 // ivy_logic.RangeSort.to_z3 = lambda self: z3.IntSort()    # line 290
 // ivy_logic.BooleanSort.to_z3 = lambda self: z3.BoolSort() # line 289
 //
-// Go's TranslateSort is the correct structural equivalent — it
+// Our TranslateSort is a structural equivalent. It
 // dispatches on sort type via a switch, doing the same thing
-// as Python's polymorphic dispatch.
+// as Python's polymorphic dispatch. This also avoids
+// a circular import issue that would need two more interfaces
+// to circumvent.
 func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 	switch st := s.(type) {
 	case *logic.BooleanSort:
@@ -164,7 +166,9 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
 		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
 		t.sorts[key] = zs
-		// Python enumeratedsort() does NOT store in z3_sorts_inv
+		// Python enumeratedsort() does NOT store in z3_sorts_inv,
+		// but Go needs it for SortFromZ3 reverse lookups.
+		t.sortsInv[zs.GetId()] = s
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
 			constKey := logic.NodeKey(name + ":" + string(s.Sexp()))

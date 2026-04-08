@@ -1283,7 +1283,10 @@ func TestLookupBuiltinRelationUnknown(t *testing.T) {
 func TestArraySortRoundtrip(t *testing.T) {
 	// Create an array sort via Translator, convert back via Z3SortToSort,
 	// and verify the Ivy sort name roundtrips.
-	s := NewSolver(nil, nil)
+	// Python requires sig.interp to interpret sort names as arrays.
+	sig := il.NewSig()
+	sig.Interp["arr[node][value]"] = "arr[node][value]"
+	s := NewSolver(sig, nil)
 	tr := s.Translator()
 
 	nodeSort := &lg.UninterpretedSort{Name: "node"}

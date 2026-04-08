@@ -122,7 +122,15 @@ func (s *Solver) wireNativeLookup() {
 		case "function":
 			table = s.Functions
 		}
-		return s.LookupNative(sym, table, kind)
+		result := s.LookupNative(sym, table, kind)
+		// Convert NativeFunc (named type in solver package) to the anonymous
+		// function type that z3bridge can type-assert against.
+		if nf, ok := result.(NativeFunc); ok {
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				return nf(args...)
+			}
+		}
+		return result
 	}
 
 	// Install SolverName so Z3 names match Python's naming convention
