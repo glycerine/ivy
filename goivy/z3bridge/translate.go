@@ -57,7 +57,7 @@ type Translator struct {
 
 // NewTranslator creates a translator with a fresh Z3 context.
 func NewTranslator() *Translator {
-	return &Translator{
+	t := &Translator{
 		Ctx:      NewZ3Context(),
 		sorts:    make(map[logic.NodeKey]Sort),
 		sortsInv: make(map[uint]logic.Sort),
@@ -65,6 +65,8 @@ func NewTranslator() *Translator {
 		funcs:    make(map[logic.NodeKey]FuncDecl),
 		preds:    make(map[logic.NodeKey]func(args ...Expr) Expr),
 	}
+	t.initEqPred()
+	return t
 }
 
 func (t *Translator) Close() error {
@@ -79,6 +81,18 @@ func (t *Translator) Clear() {
 	t.consts = make(map[logic.NodeKey]Expr)
 	t.funcs = make(map[logic.NodeKey]FuncDecl)
 	t.preds = make(map[logic.NodeKey]func(args ...Expr) Expr)
+	t.initEqPred()
+}
+
+// initEqPred pre-populates the equality predicate in preds, matching
+// Python's clear() which initializes z3_predicates = {ivy_logic.equals: my_eq}.
+func (t *Translator) initEqPred() {
+	t.preds[eqCanonPredKey] = func(args ...Expr) Expr {
+		if t.EqFunc != nil {
+			return t.EqFunc(args[0], args[1])
+		}
+		return t.Ctx.Eq(args[0], args[1])
+	}
 }
 
 // SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
