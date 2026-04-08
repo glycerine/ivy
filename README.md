@@ -2603,6 +2603,24 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+236165  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=And
+        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=And
+
+236166  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Or
+        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Or
+
+236167  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
+        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
+
+236168  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Eq
+        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Eq
+
+236169  go : XTRACE: ivy_solver.py:517 atom_to_z3() ENTER rep== nargs=2
+        py : XTRACE: ivy_solver.py:517 atom_to_z3() ENTER rep== nargs=2
+
+236170  go : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=ref.evs.req kind=function
+        py : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=ref.evs.req kind=function
+
 236171  go : XTRACE: ivy_solver.py:279 functionsort() ENTER
         py : XTRACE: ivy_solver.py:279 functionsort() ENTER
 
@@ -2627,9 +2645,10 @@ Estimated People Required 26.621735
 236178  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=nop
         py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
 
+========== trailing ~go[after i= 236178]:
+solver_z3convert.go:1047: go-caller='github.com/glycerine/ivy/goivy/z3bridge.(*Translator).SolverName'; sym.Canon = '(Symbol name:nop sort:(EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp]))'
 ========== trailing ~py[after i= 236178]:
 caller=term_to_z3_int:fmla.args
-        
 ~~~
 was, before adding solver xtracing:
 ~~~
