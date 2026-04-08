@@ -548,7 +548,7 @@ def atom_to_z3(atom):
 
 def literal_to_z3(lit):
     if __debug__: xtracer.trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%d" % lit.polarity)
-    z3_atom = formula_to_z3_int(lit.atom, "literal_to_z3"))
+    z3_atom = formula_to_z3_int(lit.atom, "literal_to_z3")
     if lit.polarity == 0:
         return z3.Not(z3_atom)
     else:
