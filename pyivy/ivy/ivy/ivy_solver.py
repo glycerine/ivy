@@ -260,12 +260,17 @@ clear()
 z3_sorts_inv = {}
 
 def uninterpretedsort(us):
-    if __debug__: xtracer.trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s" % us.rep)
+    if __debug__: xtracer.trace("ivy_solver.py:263 uninterpretedsort() ENTER name=%s" % us.rep)
     s = z3_sorts.get(us.rep,None)
-    if s is not None: return s
+    if s is not None: 
+        if __debug__: xtracer.trace("ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit")
+        return s
     s = lookup_native(us,sorts,"sort")
     if s == None:
+        if __debug__: xtracer.trace("ivy_solver.py:270 uninterpretedsort() None from lookup_native")
         s = z3.DeclareSort(us.rep)
+    else:
+        if __debug__: xtracer.trace("ivy_solver.py:273 uninterpretedsort() not-None from lookup_native")
     z3_sorts[us.rep] = s
     z3_sorts_inv[get_id(s)] = us
     return s

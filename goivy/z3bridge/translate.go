@@ -139,21 +139,24 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 	case *logic.UninterpretedSort:
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
-		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
+		xtracer.Trace("ivy_solver.py:263 uninterpretedsort() ENTER name=%s", st.Name)
 		key := logic.NodeKey(st.Name) // Python: z3_sorts[us.rep] where rep = name
 		if cached, ok := t.sorts[key]; ok {
+			xtracer.Trace("ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit")
 			return cached, nil
 		}
 		// Python: s = lookup_native(us, sorts, "sort")
 		if t.LookupNative != nil {
 			if result := t.LookupNative(st.Name, s, "sort"); result != nil {
 				if zs, ok := result.(Sort); ok {
+					xtracer.Trace("ivy_solver.py:273 uninterpretedsort() not-None from lookup_native")
 					t.sorts[key] = zs
 					t.sortsInv[zs.GetId()] = s
 					return zs, nil
 				}
 			}
 		}
+		xtracer.Trace("ivy_solver.py:270 uninterpretedsort() None from lookup_native")
 		// Python: if s == None: s = z3.DeclareSort(us.rep)
 		zs := t.Ctx.UninterpretedSort(st.Name)
 		t.sorts[key] = zs
