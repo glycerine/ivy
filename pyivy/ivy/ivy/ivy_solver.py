@@ -492,7 +492,7 @@ def term_to_z3(term):
                 res = z3.Const(solver_name(term.rep),sig)
             z3_constants[term.rep] = res
     elif isinstance(term,ivy_logic.Ite):
-        return z3.If(formula_to_z3_int(term.args[0]),term_to_z3(term.args[1]),term_to_z3(term.args[2]), "term_to_z3:ivy_logic.Ite"))
+        return z3.If(formula_to_z3_int(term.args[0], "term_to_z3:ivy_logic.Ite"),term_to_z3(term.args[1]),term_to_z3(term.args[2])))
     else:
         if not hasattr(term,'rep'):
             print(term)
