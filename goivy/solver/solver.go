@@ -28,14 +28,10 @@ import (
 type Solver struct {
 	mu               sync.Mutex
 	tr               *z3bridge.Translator
+	z3u              *z3bridge.Z3Utils // z3_utils.py operations (ToZ3, Z3Implies, Z3ImpliesBatch)
 	opts             *module.SolverOptions
 	sig              *il.Sig
 	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
-
-	// impliesCache caches z3_implies / z3_implies_batch results.
-	// Key: [premise.Sexp(), formula.Sexp()]; Value: true if implied.
-	// Corresponds to Python z3_utils._implies_cache.
-	impliesCache map[[2]lg.NodeKey]bool
 }
 
 // NewSolver creates a new Solver. Pass nil for sig to get an empty
@@ -49,10 +45,10 @@ func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
 	}
 	s := &Solver{
 		tr:               z3bridge.NewTranslator(),
+		z3u:              z3bridge.NewZ3Utils(),
 		opts:             opts,
 		sig:              sig,
 		HandleRangeSorts: true,
-		impliesCache:     make(map[[2]lg.NodeKey]bool),
 	}
 	s.wireNativeLookup()
 	return s
@@ -72,7 +68,12 @@ func (s *Solver) newZ3Solver() *z3bridge.Solver {
 }
 
 func (s *Solver) Close() error {
-	return s.tr.Close()
+	err1 := s.tr.Close()
+	err2 := s.z3u.Close()
+	if err1 != nil {
+		return err1
+	}
+	return err2
 }
 
 // Clear resets all Z3 caches (sorts, constants, functions) to initial state.
@@ -102,7 +103,7 @@ func (s *Solver) Clear() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.tr.Clear()
-	s.impliesCache = make(map[[2]lg.NodeKey]bool)
+	s.z3u.Clear()
 }
 
 // wireNativeLookup installs the LookupNative callback on the translator
@@ -560,51 +561,6 @@ func (s *Solver) Implies(fmla1, fmla2 lg.Expr) (bool, error) {
 	return s.tr.Implies(fmla1, fmla2)
 }
 
-// Z3Implies checks whether f1 implies f2 using raw Z3 translation.
-// Uses the implies cache. Returns error on Unknown result.
-// Corresponds to Python z3_utils.py:z3_implies (lines 109-133).
-func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
-	key := [2]lg.NodeKey{f1.Sexp(), f2.Sexp()}
-	s.mu.Lock()
-	if cached, ok := s.impliesCache[key]; ok {
-		s.mu.Unlock()
-		return cached, nil
-	}
-	s.mu.Unlock()
-
-	z3solver := s.newZ3Solver()
-	if timeout {
-		z3solver.SetParam("timeout", "2000")
-	}
-	zf1, err := s.tr.Translate(f1)
-	if err != nil {
-		return false, err
-	}
-	z3solver.Assert(zf1)
-	negF2 := &lg.Not{Body: f2}
-	zNeg, err := s.tr.Translate(negF2)
-	if err != nil {
-		return false, err
-	}
-	z3solver.Assert(zNeg)
-
-	res := z3solver.Check()
-	switch res {
-	case z3bridge.Sat:
-		s.mu.Lock()
-		s.impliesCache[key] = false
-		s.mu.Unlock()
-		return false, nil
-	case z3bridge.Unsat:
-		s.mu.Lock()
-		s.impliesCache[key] = true
-		s.mu.Unlock()
-		return true, nil
-	default:
-		return false, fmt.Errorf("z3 returned: %s", res)
-	}
-}
-
 // ClausesSat checks whether a Clauses set is satisfiable.
 // Corresponds to Python's clauses_sat.
 func (s *Solver) ClausesSat(clauses *module.Clauses) (bool, error) {
@@ -642,57 +598,18 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *module.Clauses) (bool, error) 
 }
 
 // ImpliesBatch tests if premise implies each formula in fmlas.
-// Uses raw Translate (no closing), matching Python z3_utils.py:to_z3.
-// Free variables become shared Z3 constants (not universally quantified).
+// Delegates to Z3Utils.Z3ImpliesBatch which uses the bare to_z3 translator
+// (no closing, no HASH, no type constraints). Free variables become shared
+// Z3 constants (not universally quantified).
 // Corresponds to Python z3_utils.py:z3_implies_batch (lines 136-171).
 func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr, timeout bool) ([]bool, error) {
-	z3solver := s.newZ3Solver()
-	if timeout {
-		z3solver.SetParam("timeout", "2000")
-	}
-	zPremise, err := s.tr.Translate(premise)
-	if err != nil {
-		return nil, err
-	}
-	z3solver.Assert(zPremise)
+	return s.z3u.Z3ImpliesBatch(premise, fmlas, timeout)
+}
 
-	result := make([]bool, len(fmlas))
-	for i, f := range fmlas {
-		key := [2]lg.NodeKey{premise.Sexp(), f.Sexp()}
-		s.mu.Lock()
-		if cached, ok := s.impliesCache[key]; ok {
-			s.mu.Unlock()
-			result[i] = cached
-			continue
-		}
-		s.mu.Unlock()
-
-		negF := &lg.Not{Body: f}
-		zNeg, err := s.tr.Translate(negF)
-		if err != nil {
-			return nil, err
-		}
-		z3solver.Push()
-		z3solver.Assert(zNeg)
-		res := z3solver.Check()
-		z3solver.Pop()
-
-		switch res {
-		case z3bridge.Sat:
-			s.mu.Lock()
-			s.impliesCache[key] = false
-			s.mu.Unlock()
-			result[i] = false
-		case z3bridge.Unsat:
-			s.mu.Lock()
-			s.impliesCache[key] = true
-			s.mu.Unlock()
-			result[i] = true
-		default:
-			return nil, fmt.Errorf("z3 returned: %s for formula %d", res, i)
-		}
-	}
-	return result, nil
+// Z3Implies tests if f1 implies f2 using the bare to_z3 translator.
+// Corresponds to Python z3_utils.py:z3_implies (line 109).
+func (s *Solver) Z3Implies(f1, f2 lg.Expr, timeout bool) (bool, error) {
+	return s.z3u.Z3Implies(f1, f2, timeout)
 }
 
 // ClausesImplyFormula checks whether clauses1 imply fmla2.

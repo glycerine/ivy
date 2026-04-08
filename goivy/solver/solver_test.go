@@ -2240,9 +2240,9 @@ func TestZ3ImpliesCache(t *testing.T) {
 	if !r2 {
 		t.Error("cached: p should imply p")
 	}
-	// Verify cache has the entry
+	// Verify cache has the entry (impliesCache lives on Z3Utils now)
 	key := [2]lg.NodeKey{p.Sexp(), p.Sexp()}
-	if _, ok := s.impliesCache[key]; !ok {
+	if _, ok := s.z3u.ImpliesCache[key]; !ok {
 		t.Error("cache should contain the entry")
 	}
 }
@@ -2363,9 +2363,9 @@ func TestImpliesBatchCache(t *testing.T) {
 	if !results2[0] {
 		t.Error("cached call: should imply p")
 	}
-	// Verify cache has the entry
+	// Verify cache has the entry (impliesCache lives on Z3Utils now)
 	key := [2]lg.NodeKey{pAndQ.Sexp(), p.Sexp()}
-	if _, ok := s.impliesCache[key]; !ok {
+	if _, ok := s.z3u.ImpliesCache[key]; !ok {
 		t.Error("cache should contain the entry")
 	}
 }
