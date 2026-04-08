@@ -715,7 +715,7 @@ def formula_to_z3(fmla):
     if __debug__:
         canon = fmla.sexp()
         leaf, root = _translate_merkle.add_leaf(canon)
-        xtracer.trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s" % (leaf, root, canon))
+        xtracer.trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s" % (leaf, root, canon))
     try:
         z3_fmla = formula_to_z3_closed(fmla)
     except Exception as e:

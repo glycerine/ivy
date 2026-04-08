@@ -336,7 +336,8 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
-		xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, string(canon))
+		//xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, canon)
+		xtracer.Trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s", leaf, root, canon)
 	}
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
