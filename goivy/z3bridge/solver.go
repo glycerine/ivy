@@ -401,6 +401,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	if xtracer.Enabled {
 		canon := iu.Canonical(fmla.Sexp())
 		leaf, root := s.tr.TranslateMerkle.AddLeaf(canon)
+		_, _ = leaf, root
 		//xtracer.Trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s", leaf, root, string(canon)) // 1 of 2
 	}
 
