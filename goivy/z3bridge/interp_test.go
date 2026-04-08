@@ -39,7 +39,7 @@ func TestBinaryInterpolant(t *testing.T) {
 
 	// Verify interpolant properties:
 	// 1) a implies itp
-	solver1 := ctx.NewSolver()
+	solver1 := ctx.NewZ3Solver()
 	solver1.Assert(a)
 	solver1.Assert(ctx.Not(itp))
 	if solver1.Check() != Unsat {
@@ -47,7 +47,7 @@ func TestBinaryInterpolant(t *testing.T) {
 	}
 
 	// 2) itp AND b is unsat
-	solver2 := ctx.NewSolver()
+	solver2 := ctx.NewZ3Solver()
 	solver2.Assert(itp)
 	solver2.Assert(b)
 	if solver2.Check() != Unsat {

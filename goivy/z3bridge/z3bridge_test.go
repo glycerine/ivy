@@ -59,7 +59,7 @@ func TestSolverSat(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
-	s := ctx.NewSolver()
+	s := ctx.NewZ3Solver()
 	s.Assert(x)
 	if s.Check() != Sat {
 		t.Error("expected sat")
@@ -70,7 +70,7 @@ func TestSolverUnsat(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
-	s := ctx.NewSolver()
+	s := ctx.NewZ3Solver()
 	s.Assert(x)
 	s.Assert(ctx.Not(x))
 	if s.Check() != Unsat {
@@ -86,7 +86,7 @@ func TestForAllQuantifier(t *testing.T) {
 	fa := ctx.ForAll([]Expr{x}, eq)
 	t.Log("ForAll:", fa.String())
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(fa)
 	if solver.Check() != Sat {
 		t.Error("ForAll x. x==x should be sat")
@@ -102,7 +102,7 @@ func TestExistsQuantifier(t *testing.T) {
 	ex := ctx.Exists([]Expr{x}, eq)
 	t.Log("Exists:", ex.String())
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(ex)
 	if solver.Check() != Sat {
 		t.Error("Exists x. x==y should be sat")
@@ -114,7 +114,7 @@ func TestPushPop(t *testing.T) {
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(x)
 	if solver.Check() != Sat {
 		t.Error("expected sat before push")
@@ -137,7 +137,7 @@ func TestModel(t *testing.T) {
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(x)
 	if solver.Check() != Sat {
 		t.Fatal("expected sat")
@@ -399,7 +399,7 @@ func TestCheckAssumptions(t *testing.T) {
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 
 	// SAT case: no background assertions, assumptions are compatible
 	res := solver.CheckAssumptions([]Expr{a, b})
@@ -435,7 +435,7 @@ func TestUnsatCore(t *testing.T) {
 	b := ctx.Const("b", bs)
 	c := ctx.Const("c", bs)
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	// Assert that a implies not(b)
 	solver.Assert(ctx.Implies(a, ctx.Not(b)))
 
@@ -477,7 +477,7 @@ func TestUnsatCore(t *testing.T) {
 
 func TestSolverForLogic(t *testing.T) {
 	ctx := NewZ3Context()
-	solver := NewSolverForLogic(ctx, "QF_LIA")
+	solver := NewZ3SolverForLogic(ctx, "QF_LIA")
 	if solver == nil {
 		t.Fatal("expected solver")
 	}
@@ -560,7 +560,7 @@ func TestSubstitute(t *testing.T) {
 	expected := ctx.And(c, b)
 
 	// Verify by checking that result <=> expected is valid
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	diff := ctx.Not(ctx.Iff(result, expected))
 	solver.Assert(diff)
 	if solver.Check() != Unsat {

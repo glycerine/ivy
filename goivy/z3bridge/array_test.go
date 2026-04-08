@@ -99,7 +99,7 @@ func TestSelectFromSymbolicArray(t *testing.T) {
 
 	// Select from symbolic array is satisfiable (unconstrained)
 	sel := ctx.Select(a, ctx.IntVal(0))
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(sel, ctx.IntVal(42)))
 	assertSat(t, slv, "Select from symbolic array can equal 42")
 }
@@ -109,7 +109,7 @@ func TestSelectFromConstArray(t *testing.T) {
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(7))
 
 	// Select at any index from K(Int, 7) must equal 7
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	x := ctx.Const("x", ctx.IntSort())
 	sel := ctx.Select(ca, x)
 	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(7))))
@@ -129,7 +129,7 @@ func TestStoreSelectSameIndex(t *testing.T) {
 	aPrime := ctx.Store(a, idx, val)
 	sel := ctx.Select(aPrime, idx)
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(sel, val)))
 	assertUnsat(t, slv, "Select(Store(a,7,42),7) == 42")
 }
@@ -144,7 +144,7 @@ func TestStoreSelectDifferentIndex(t *testing.T) {
 	selOrig := ctx.Select(a, ctx.IntVal(3))
 	selNew := ctx.Select(aPrime, ctx.IntVal(3))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(selOrig, selNew)))
 	assertUnsat(t, slv, "Store at 7 doesn't affect index 3")
 }
@@ -159,7 +159,7 @@ func TestStoreOverwrite(t *testing.T) {
 	a2 := ctx.Store(a1, ctx.IntVal(0), ctx.IntVal(20))
 	sel := ctx.Select(a2, ctx.IntVal(0))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(20))))
 	assertUnsat(t, slv, "Second store overwrites first at same index")
 }
@@ -174,7 +174,7 @@ func TestStoreMultipleIndices(t *testing.T) {
 	a2 := ctx.Store(a1, ctx.IntVal(2), ctx.IntVal(20))
 	a3 := ctx.Store(a2, ctx.IntVal(3), ctx.IntVal(30))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.Select(a3, ctx.IntVal(1)), ctx.IntVal(10)))
 	slv.Assert(ctx.Eq(ctx.Select(a3, ctx.IntVal(2)), ctx.IntVal(20)))
 	slv.Assert(ctx.Eq(ctx.Select(a3, ctx.IntVal(3)), ctx.IntVal(30)))
@@ -188,7 +188,7 @@ func TestConstArrayBoolRange(t *testing.T) {
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.BoolVal(true))
 
 	// Every index maps to true
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	x := ctx.Const("x", ctx.IntSort())
 	slv.Assert(ctx.Not(ctx.Select(ca, x)))
 	assertUnsat(t, slv, "K(Int, true)[x] is always true")
@@ -201,7 +201,7 @@ func TestConstArrayThenStore(t *testing.T) {
 	// Start with all-zero array, store 99 at index 5
 	ca2 := ctx.Store(ca, ctx.IntVal(5), ctx.IntVal(99))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	// Index 5 should be 99
 	slv.Assert(ctx.Eq(ctx.Select(ca2, ctx.IntVal(5)), ctx.IntVal(99)))
 	// Index 3 should still be 0
@@ -218,7 +218,7 @@ func TestArrayExtensionality(t *testing.T) {
 	b := ctx.Const("b", arrSort)
 
 	// If two arrays are equal, selecting at the same index gives the same value
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(a, b))
 	x := ctx.Const("x", ctx.IntSort())
 	slv.Assert(ctx.Not(ctx.Eq(ctx.Select(a, x), ctx.Select(b, x))))
@@ -348,7 +348,7 @@ func TestArraySymbolicSolve(t *testing.T) {
 	a := ctx.Const("a", arrSort)
 
 	// Find array a such that a[0]=1, a[1]=2, a[2]=3
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.Select(a, ctx.IntVal(0)), ctx.IntVal(1)))
 	slv.Assert(ctx.Eq(ctx.Select(a, ctx.IntVal(1)), ctx.IntVal(2)))
 	slv.Assert(ctx.Eq(ctx.Select(a, ctx.IntVal(2)), ctx.IntVal(3)))
@@ -361,7 +361,7 @@ func TestArraySymbolicUnsatConflict(t *testing.T) {
 	a := ctx.Const("a", arrSort)
 
 	// a[0] = 1 AND a[0] = 2 is contradictory
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.Select(a, ctx.IntVal(0)), ctx.IntVal(1)))
 	slv.Assert(ctx.Eq(ctx.Select(a, ctx.IntVal(0)), ctx.IntVal(2)))
 	assertUnsat(t, slv, "conflicting values at same index")
@@ -376,7 +376,7 @@ func TestArrayForAllSelect(t *testing.T) {
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(5))
 
 	// Assert a == K(Int, 5), then forall x: a[x] == 5
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(a, ca))
 	x := ctx.Const("x", ctx.IntSort())
 	body := ctx.Eq(ctx.Select(a, x), ctx.IntVal(5))

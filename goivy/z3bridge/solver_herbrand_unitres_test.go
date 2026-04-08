@@ -1,4 +1,4 @@
-package solver
+package z3bridge
 
 import (
 	"testing"

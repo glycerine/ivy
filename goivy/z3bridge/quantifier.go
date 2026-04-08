@@ -1427,21 +1427,21 @@ func (r CheckResult) String() string {
 	}
 }
 
-// Solver wraps a Z3 solver.
-type Solver struct {
+// Z3Solver wraps a Z3 solver.
+type Z3Solver struct {
 	ctx *Z3Context
 	c   C.Z3_solver
 }
 
-// NewSolver creates a new solver.
-func (ctx *Z3Context) NewSolver() *Solver {
-	var s *Solver
+// NewZ3Solver creates a new solver.
+func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
+	var s *Z3Solver
 	ctx.do(func() {
 		cs := C.Z3_mk_solver(ctx.c)
 		C.Z3_solver_inc_ref(ctx.c, cs)
-		s = &Solver{ctx: ctx, c: cs}
+		s = &Z3Solver{ctx: ctx, c: cs}
 	})
-	//runtime.SetFinalizer(s, func(s *Solver) {
+	//runtime.SetFinalizer(s, func(s *Z3Solver) {
 	//	s.ctx.do(func() {
 	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
 	//	})
@@ -1450,7 +1450,7 @@ func (ctx *Z3Context) NewSolver() *Solver {
 }
 
 // Assert adds a constraint to the solver.
-func (s *Solver) Assert(e Expr) {
+func (s *Z3Solver) Assert(e Expr) {
 	s.ctx.do(func() {
 		C.Z3_solver_assert(s.ctx.c, s.c, e.c)
 	})
@@ -1458,7 +1458,7 @@ func (s *Solver) Assert(e Expr) {
 }
 
 // Check checks satisfiability.
-func (s *Solver) Check() CheckResult {
+func (s *Z3Solver) Check() CheckResult {
 	var r CheckResult
 	s.ctx.do(func() {
 		res := C.Z3_solver_check(s.ctx.c, s.c)
@@ -1470,28 +1470,28 @@ func (s *Solver) Check() CheckResult {
 }
 
 // Push creates a backtracking point.
-func (s *Solver) Push() {
+func (s *Z3Solver) Push() {
 	s.ctx.do(func() {
 		C.Z3_solver_push(s.ctx.c, s.c)
 	})
 }
 
 // Pop removes constraints added since the last Push.
-func (s *Solver) Pop() {
+func (s *Z3Solver) Pop() {
 	s.ctx.do(func() {
 		C.Z3_solver_pop(s.ctx.c, s.c, 1)
 	})
 }
 
 // Reset removes all assertions from the solver.
-func (s *Solver) Reset() {
+func (s *Z3Solver) Reset() {
 	s.ctx.do(func() {
 		C.Z3_solver_reset(s.ctx.c, s.c)
 	})
 }
 
 // String returns a string representation of the solver's assertions.
-func (s *Solver) String() string {
+func (s *Z3Solver) String() string {
 	var res string
 	s.ctx.do(func() {
 		res = C.GoString(C.Z3_solver_to_string(s.ctx.c, s.c))
@@ -1509,7 +1509,7 @@ type Model struct {
 }
 
 // Model returns the model from the last successful Check.
-func (s *Solver) Model() *Model {
+func (s *Z3Solver) Model() *Model {
 	var m *Model
 	s.ctx.do(func() {
 		cm := C.Z3_solver_get_model(s.ctx.c, s.c)
@@ -1594,7 +1594,7 @@ func (m *Model) String() string {
 
 // CheckAssumptions checks satisfiability under a set of assumptions.
 // The assumptions are temporary — they are not added to the solver's assertion stack.
-func (s *Solver) CheckAssumptions(assumptions []Expr) CheckResult {
+func (s *Z3Solver) CheckAssumptions(assumptions []Expr) CheckResult {
 	cassumptions := make([]C.Z3_ast, len(assumptions))
 	for i, a := range assumptions {
 		cassumptions[i] = a.c
@@ -1615,7 +1615,7 @@ func (s *Solver) CheckAssumptions(assumptions []Expr) CheckResult {
 
 // UnsatCore returns the unsat core from the last CheckAssumptions call that returned Unsat.
 // The core is a subset of the assumptions that are sufficient to prove unsatisfiability.
-func (s *Solver) UnsatCore() []Expr {
+func (s *Z3Solver) UnsatCore() []Expr {
 	var result []Expr
 	s.ctx.do(func() {
 		vec := C.Z3_solver_get_unsat_core(s.ctx.c, s.c)
@@ -1632,18 +1632,18 @@ func (s *Solver) UnsatCore() []Expr {
 	return result
 }
 
-// NewSolverForLogic creates a solver for a specific SMT logic (e.g., "QF_LIA" for quantifier-free linear integer arithmetic).
-func NewSolverForLogic(ctx *Z3Context, logic string) *Solver {
-	var s *Solver
+// NewZ3SolverForLogic creates a solver for a specific SMT logic (e.g., "QF_LIA" for quantifier-free linear integer arithmetic).
+func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
+	var s *Z3Solver
 	ctx.do(func() {
 		clogic := C.CString(logic)
 		defer C.free(unsafe.Pointer(clogic))
 		sym := C.Z3_mk_string_symbol(ctx.c, clogic)
 		cs := C.Z3_mk_solver_for_logic(ctx.c, sym)
 		C.Z3_solver_inc_ref(ctx.c, cs)
-		s = &Solver{ctx: ctx, c: cs}
+		s = &Z3Solver{ctx: ctx, c: cs}
 	})
-	//runtime.SetFinalizer(s, func(s *Solver) {
+	//runtime.SetFinalizer(s, func(s *Z3Solver) {
 	//	s.ctx.do(func() {
 	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
 	//	})
@@ -1710,7 +1710,7 @@ func (ctx *Z3Context) Substitute(e Expr, from, to []Expr) Expr {
 
 // SetParam sets a solver parameter. The value is interpreted as a boolean
 // ("true"/"false") if possible, then as an unsigned integer, otherwise as a symbol.
-func (s *Solver) SetParam(key, value string) {
+func (s *Z3Solver) SetParam(key, value string) {
 	s.ctx.do(func() {
 		ckey := C.CString(key)
 		defer C.free(unsafe.Pointer(ckey))

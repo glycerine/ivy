@@ -121,7 +121,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 
 	// Semantic check: ForAll(X, 0<=X => P(X)) should not require P(-1).
 	// We need to use the same P function declaration from the translator.
-	slv := tr.Ctx.NewSolver()
+	slv := tr.Ctx.NewZ3Solver()
 	slv.Assert(z3expr)
 	// Create a fresh P decl to negate P(-1)
 	pDecl := tr.Ctx.Function("P", []Sort{tr.Ctx.IntSort()}, tr.Ctx.BoolSort())
@@ -162,7 +162,7 @@ func TestQuantConstraints_Exists(t *testing.T) {
 	t.Logf("Exists result: %s", z3expr.String())
 
 	// Exists(X, And(0<=X, P(X))) with P only true at -1 should be UNSAT
-	slv := tr.Ctx.NewSolver()
+	slv := tr.Ctx.NewZ3Solver()
 	slv.Assert(z3expr)
 	xConst := tr.Ctx.Const("|X:mynat|", tr.Ctx.IntSort())
 	pDecl := tr.Ctx.Function("P", []Sort{tr.Ctx.IntSort()}, tr.Ctx.BoolSort())

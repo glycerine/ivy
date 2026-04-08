@@ -1,7 +1,7 @@
 // Additional solver utility functions for compatibility checking
 // and type system integration.
 // Ported from Python's ivy_solver.py.
-package solver
+package z3bridge
 
 import (
 	"fmt"
@@ -10,7 +10,6 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // CheckNativeCompatSym checks if a symbol's sort is compatible with native Z3 types.
@@ -82,7 +81,7 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 
 	// Create dummy Z3 args and invoke
 	ctx := s.tr.Ctx
-	args := make([]z3bridge.Expr, fs.Arity())
+	args := make([]Expr, fs.Arity())
 	for i, d := range fs.Domain() {
 		zs, err := s.tr.TranslateSort(d)
 		if err != nil {
@@ -272,7 +271,7 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 		return model
 	}
 
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.tr.Ctx.NewZ3Solver()
 
 	// Add main clauses
 	zc, err := s.ClausesToZ3(clauses)
@@ -313,7 +312,7 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 			}
 			z3solver.Assert(zsc)
 		}
-		if z3solver.Check() != z3bridge.Unsat {
+		if z3solver.Check() != Unsat {
 			m := z3solver.Model()
 			if m == nil {
 				z3solver.Pop()

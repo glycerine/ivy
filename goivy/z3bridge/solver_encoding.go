@@ -1,6 +1,6 @@
 // Binary encoding helpers and Z3 conversion utility functions.
 // Ported from Python's ivy_solver.py.
-package solver
+package z3bridge
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // CeilLog2 returns the ceiling of log base 2 of n.
@@ -52,8 +51,8 @@ func GetBin(bits []bool, n int) int {
 
 // BinEncZ3 encodes a number m in n bits as a list of Z3 BoolVal (MSB first).
 // Corresponds to Python's binenc (ivy_solver.py:1580-1582).
-func BinEncZ3(ctx *z3bridge.Z3Context, m, n int) []z3bridge.Expr {
-	result := make([]z3bridge.Expr, n)
+func BinEncZ3(ctx *Z3Context, m, n int) []Expr {
+	result := make([]Expr, n)
 	for i := 0; i < n; i++ {
 		if m&(1<<uint(n-1-i)) != 0 {
 			result[i] = ctx.BoolVal(true)
@@ -67,7 +66,7 @@ func BinEncZ3(ctx *z3bridge.Z3Context, m, n int) []z3bridge.Expr {
 // EncodeTermZ3 encodes an Ivy term as a list of Z3 Bool expressions (n bits, MSB first).
 // Used for binary encoding of enumerated sorts when UseZ3Enums is false.
 // Corresponds to Python's encode_term (ivy_solver.py:1587-1615).
-func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3bridge.Expr, error) {
+func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]Expr, error) {
 	xtracer.Trace("ivy_solver.py:1742 encode_term() ENTER sort=%s", sort)
 	ctx := s.tr.Ctx
 
@@ -85,7 +84,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 		if err != nil {
 			return nil, err
 		}
-		result := make([]z3bridge.Expr, n)
+		result := make([]Expr, n)
 		for i := 0; i < n; i++ {
 			result[i] = ctx.Ite(cond, thenBits[i], elseBits[i])
 		}
@@ -114,7 +113,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 	// Variable: create n Bool constants named "rep:sort:bit_index"
 	if v, ok := t.(*lg.Variable); ok {
 		sksym := v.Name + ":" + sort.Name
-		result := make([]z3bridge.Expr, n)
+		result := make([]Expr, n)
 		for i := 0; i < n; i++ {
 			constName := fmt.Sprintf("%s:%d", sksym, n-1-i)
 			result[i] = ctx.Const(constName, ctx.BoolSort())
@@ -126,7 +125,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 	if app, ok := t.(*lg.Apply); ok {
 		if sym, ok2 := app.Func.(*lg.Const); ok2 {
 			// Translate args
-			args := make([]z3bridge.Expr, len(app.Terms))
+			args := make([]Expr, len(app.Terms))
 			for i, arg := range app.Terms {
 				a, err := s.tr.Translate(arg)
 				if err != nil {
@@ -139,7 +138,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 			if !fsOk {
 				return nil, fmt.Errorf("encode_term: expected FunctionSort for %s", sym.Name)
 			}
-			domSorts := make([]z3bridge.Sort, len(fs.Domain()))
+			domSorts := make([]Sort, len(fs.Domain()))
 			for i, d := range fs.Domain() {
 				zs, err := s.tr.TranslateSort(d)
 				if err != nil {
@@ -148,7 +147,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 				domSorts[i] = zs
 			}
 			boolSort := ctx.BoolSort()
-			result := make([]z3bridge.Expr, n)
+			result := make([]Expr, n)
 			for i := 0; i < n; i++ {
 				fname := fmt.Sprintf("%s:%d", sym.Name, n-1-i)
 				fd := ctx.Function(fname, domSorts, boolSort)
@@ -164,7 +163,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 // EncodeEqualityZ3 encodes an equality between two Ivy terms using binary encoding
 // at the Z3 level. Returns a Z3 expression representing the equality.
 // Corresponds to Python's encode_equality (ivy_solver.py:1617-1627).
-func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (z3bridge.Expr, error) {
+func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (Expr, error) {
 	xtracer.Trace("ivy_solver.py:1773 encode_equality() ENTER nterms=%d", 2)
 	ctx := s.tr.Ctx
 	n := sort.Card()
@@ -172,21 +171,21 @@ func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (z3br
 
 	eterms1, err := s.EncodeTermZ3(t1, bits, sort)
 	if err != nil {
-		return z3bridge.Expr{}, err
+		return Expr{}, err
 	}
 	eterms2, err := s.EncodeTermZ3(t2, bits, sort)
 	if err != nil {
-		return z3bridge.Expr{}, err
+		return Expr{}, err
 	}
 
 	// Bit-equalities: x[i] == y[i] for all bits
-	eqs := make([]z3bridge.Expr, bits)
+	eqs := make([]Expr, bits)
 	for i := 0; i < bits; i++ {
 		eqs[i] = ctx.Eq(eterms1[i], eterms2[i])
 	}
 
 	// Overflow guard: both terms must be < n (using gebin for >= n-1)
-	alts := make([]z3bridge.Expr, 2)
+	alts := make([]Expr, 2)
 	alts[0] = Gebin(ctx, eterms1, n-1)
 	alts[1] = Gebin(ctx, eterms2, n-1)
 
@@ -202,22 +201,22 @@ func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (z3br
 // --- Z3 function creation ---
 
 // Z3Function creates a Z3 function declaration from a name and signature sorts.
-func (s *Solver) Z3Function(name string, sig []lg.Sort) (z3bridge.FuncDecl, error) {
+func (s *Solver) Z3Function(name string, sig []lg.Sort) (FuncDecl, error) {
 	xtracer.Trace("ivy_solver.py:1738 z3_function() ENTER name=%s", name)
 	if len(sig) < 2 {
-		return z3bridge.FuncDecl{}, fmt.Errorf("Z3Function: need at least 2 sorts (domain + range)")
+		return FuncDecl{}, fmt.Errorf("Z3Function: need at least 2 sorts (domain + range)")
 	}
-	domain := make([]z3bridge.Sort, len(sig)-1)
+	domain := make([]Sort, len(sig)-1)
 	for i := 0; i < len(sig)-1; i++ {
 		zs, err := s.tr.TranslateSort(sig[i])
 		if err != nil {
-			return z3bridge.FuncDecl{}, err
+			return FuncDecl{}, err
 		}
 		domain[i] = zs
 	}
 	rangeSort, err := s.tr.TranslateSort(sig[len(sig)-1])
 	if err != nil {
-		return z3bridge.FuncDecl{}, err
+		return FuncDecl{}, err
 	}
 	return s.tr.Ctx.Function(name, domain, rangeSort), nil
 }
@@ -349,12 +348,12 @@ func LtPred(sort lg.Sort) *lg.Const {
 // --- Collection utilities ---
 
 // CollectNumerals collects all numeral subterms from a Z3 expression.
-func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
+func CollectNumerals(z3term Expr) []Expr {
 	xtracer.Trace("ivy_solver.py:867 collect_numerals() ENTER")
 	// Simplified: just return the expression itself if it looks like a numeral
 	s := z3term.String()
 	if len(s) > 0 && (s[0] >= '0' && s[0] <= '9' || s[0] == '-') {
-		return []z3bridge.Expr{z3term}
+		return []Expr{z3term}
 	}
 	return nil
 }
@@ -365,7 +364,7 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 // If the numeral's sort is interpreted as a RangeSort, the value is
 // clamped to [lb, ub].
 // Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
-func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
+func (s *Solver) NumeralToZ3(num *lg.Const) (Expr, error) {
 	xtracer.Trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%v", num)
 	ctx := s.tr.Ctx
 	sortName := il.SortName(num.CSort)
@@ -383,7 +382,7 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
 	}
 	z3sort, err := s.tr.TranslateSort(num.CSort)
 	if err != nil {
-		return z3bridge.Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)
+		return Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)
 	}
 	if !hasNativeInterp {
 		// Uninterpreted sort: Python line 391-392
@@ -400,7 +399,7 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
 
 	// String sort: Python lines 395-396
 	// if isinstance(z3sort, z3.SeqSortRef) and z3sort.is_string(): return z3.StringVal(name)
-	if z3sort.Kind() == z3bridge.SortSeq {
+	if z3sort.Kind() == SortSeq {
 		return ctx.StringVal(name), nil
 	}
 
@@ -408,15 +407,15 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
 	// Python: val = z3sort.cast(str(int(name, 0)))  — int(name, 0) handles 0x, 0b, etc.
 	intVal, err := strconv.ParseInt(name, 0, 64)
 	if err != nil {
-		return z3bridge.Expr{}, fmt.Errorf("cannot parse numeral %q: %w", name, err)
+		return Expr{}, fmt.Errorf("cannot parse numeral %q: %w", name, err)
 	}
 
 	// Create Z3 value based on sort kind.
-	var val z3bridge.Expr
+	var val Expr
 	switch z3sort.Kind() {
-	case z3bridge.SortInt:
+	case SortInt:
 		val = ctx.IntVal(intVal)
-	case z3bridge.SortBV:
+	case SortBV:
 		val = ctx.BvVal(intVal, ctx.BvSortSize(z3sort))
 	default:
 		// Fallback: create as IntVal (covers RangeSort which maps to IntSort)

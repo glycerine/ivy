@@ -5,7 +5,7 @@ import (
 )
 
 // helper: assert SAT
-func assertSat(t *testing.T, slv *Solver, msg string) {
+func assertSat(t *testing.T, slv *Z3Solver, msg string) {
 	t.Helper()
 	r := slv.Check()
 	if r != Sat {
@@ -14,7 +14,7 @@ func assertSat(t *testing.T, slv *Solver, msg string) {
 }
 
 // helper: assert UNSAT
-func assertUnsat(t *testing.T, slv *Solver, msg string) {
+func assertUnsat(t *testing.T, slv *Z3Solver, msg string) {
 	t.Helper()
 	r := slv.Check()
 	if r != Unsat {
@@ -76,7 +76,7 @@ func TestIsBvExpr(t *testing.T) {
 
 func TestBvAdd(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	a := ctx.Const("a", ctx.BvSort(8))
 	b := ctx.Const("b", ctx.BvSort(8))
 	// 200 + 100 = 300 mod 256 = 44
@@ -88,7 +88,7 @@ func TestBvAdd(t *testing.T) {
 
 func TestBvSub(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	a := ctx.Const("a", ctx.BvSort(8))
 	b := ctx.Const("b", ctx.BvSort(8))
 	// 10 - 20 = -10 mod 256 = 246
@@ -100,14 +100,14 @@ func TestBvSub(t *testing.T) {
 
 func TestBvMul(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvMul(ctx.BvVal(7, 8), ctx.BvVal(6, 8)), ctx.BvVal(42, 8)))
 	assertSat(t, slv, "BvMul 7*6=42")
 }
 
 func TestBvUdiv(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvUdiv(ctx.BvVal(200, 8), ctx.BvVal(10, 8)), ctx.BvVal(20, 8)))
 	assertSat(t, slv, "BvUdiv 200/10=20")
 }
@@ -116,28 +116,28 @@ func TestBvUdiv(t *testing.T) {
 
 func TestBvAnd(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvAnd(ctx.BvVal(0xF0, 8), ctx.BvVal(0x3C, 8)), ctx.BvVal(0x30, 8)))
 	assertSat(t, slv, "BvAnd 0xF0&0x3C=0x30")
 }
 
 func TestBvOr(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvOr(ctx.BvVal(0xF0, 8), ctx.BvVal(0x0F, 8)), ctx.BvVal(0xFF, 8)))
 	assertSat(t, slv, "BvOr 0xF0|0x0F=0xFF")
 }
 
 func TestBvXor(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvXor(ctx.BvVal(0xFF, 8), ctx.BvVal(0x0F, 8)), ctx.BvVal(0xF0, 8)))
 	assertSat(t, slv, "BvXor 0xFF^0x0F=0xF0")
 }
 
 func TestBvNot(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvNot(ctx.BvVal(0xF0, 8)), ctx.BvVal(0x0F, 8)))
 	assertSat(t, slv, "BvNot ~0xF0=0x0F")
 }
@@ -146,14 +146,14 @@ func TestBvNot(t *testing.T) {
 
 func TestBvShl(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvShl(ctx.BvVal(1, 8), ctx.BvVal(4, 8)), ctx.BvVal(16, 8)))
 	assertSat(t, slv, "BvShl 1<<4=16")
 }
 
 func TestBvLshr(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	// 128 >> 3 = 16
 	slv.Assert(ctx.Eq(ctx.BvLshr(ctx.BvVal(0x80, 8), ctx.BvVal(3, 8)), ctx.BvVal(0x10, 8)))
 	assertSat(t, slv, "BvLshr 0x80>>3=0x10")
@@ -161,7 +161,7 @@ func TestBvLshr(t *testing.T) {
 
 func TestBvAshr(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	// 0x80 = -128 signed, arithmetic right shift by 1 = 0xC0 = -64 signed
 	slv.Assert(ctx.Eq(ctx.BvAshr(ctx.BvVal(0x80, 8), ctx.BvVal(1, 8)), ctx.BvVal(0xC0, 8)))
 	assertSat(t, slv, "BvAshr 0x80>>a1=0xC0")
@@ -172,11 +172,11 @@ func TestBvAshr(t *testing.T) {
 func TestBvUlt(t *testing.T) {
 	ctx := NewZ3Context()
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUlt(ctx.BvVal(5, 8), ctx.BvVal(10, 8)))
 	assertSat(t, slv, "5 < 10 unsigned")
 
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUlt(ctx.BvVal(200, 8), ctx.BvVal(10, 8)))
 	assertUnsat(t, slv2, "200 < 10 unsigned")
 }
@@ -184,15 +184,15 @@ func TestBvUlt(t *testing.T) {
 func TestBvUle(t *testing.T) {
 	ctx := NewZ3Context()
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUle(ctx.BvVal(42, 8), ctx.BvVal(42, 8)))
 	assertSat(t, slv, "42 <= 42 unsigned")
 
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUle(ctx.BvVal(5, 8), ctx.BvVal(10, 8)))
 	assertSat(t, slv2, "5 <= 10 unsigned")
 
-	slv3 := ctx.NewSolver()
+	slv3 := ctx.NewZ3Solver()
 	slv3.Assert(ctx.BvUle(ctx.BvVal(200, 8), ctx.BvVal(10, 8)))
 	assertUnsat(t, slv3, "200 <= 10 unsigned")
 }
@@ -200,11 +200,11 @@ func TestBvUle(t *testing.T) {
 func TestBvUgt(t *testing.T) {
 	ctx := NewZ3Context()
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUgt(ctx.BvVal(200, 8), ctx.BvVal(10, 8)))
 	assertSat(t, slv, "200 > 10 unsigned")
 
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUgt(ctx.BvVal(5, 8), ctx.BvVal(10, 8)))
 	assertUnsat(t, slv2, "5 > 10 unsigned")
 }
@@ -212,15 +212,15 @@ func TestBvUgt(t *testing.T) {
 func TestBvUge(t *testing.T) {
 	ctx := NewZ3Context()
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUge(ctx.BvVal(42, 8), ctx.BvVal(42, 8)))
 	assertSat(t, slv, "42 >= 42 unsigned")
 
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUge(ctx.BvVal(200, 8), ctx.BvVal(10, 8)))
 	assertSat(t, slv2, "200 >= 10 unsigned")
 
-	slv3 := ctx.NewSolver()
+	slv3 := ctx.NewZ3Solver()
 	slv3.Assert(ctx.BvUge(ctx.BvVal(5, 8), ctx.BvVal(10, 8)))
 	assertUnsat(t, slv3, "5 >= 10 unsigned")
 }
@@ -237,17 +237,17 @@ func TestBvUnsignedSemantics(t *testing.T) {
 	one := ctx.BvVal(1, 8)
 
 	// Unsigned: 0x80 > 1 → true
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUgt(highBit, one))
 	assertSat(t, slv, "0x80 > 1 unsigned (critical BV semantics)")
 
 	// Unsigned: 1 < 0x80 → true
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUlt(one, highBit))
 	assertSat(t, slv2, "1 < 0x80 unsigned")
 
 	// Unsigned: 0x80 < 1 → false (would be true under signed)
-	slv3 := ctx.NewSolver()
+	slv3 := ctx.NewZ3Solver()
 	slv3.Assert(ctx.BvUlt(highBit, one))
 	assertUnsat(t, slv3, "0x80 < 1 unsigned (signed would give opposite)")
 }
@@ -256,7 +256,7 @@ func TestBvUnsignedSemantics(t *testing.T) {
 
 func TestBvConcat(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	result := ctx.Concat(ctx.BvVal(0xAB, 8), ctx.BvVal(0xCD, 8))
 	sort := result.ExprSort()
 	if ctx.BvSortSize(sort) != 16 {
@@ -270,14 +270,14 @@ func TestBvConcat(t *testing.T) {
 
 func TestBv2IntUnsigned(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.Bv2Int(ctx.BvVal(42, 8), false), ctx.IntVal(42)))
 	assertSat(t, slv, "Bv2Int(42, unsigned)=42")
 }
 
 func TestBv2IntSigned(t *testing.T) {
 	ctx := NewZ3Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	// 0xFF as signed 8-bit = -1
 	slv.Assert(ctx.Eq(ctx.Bv2Int(ctx.BvVal(0xFF, 8), true), ctx.IntVal(-1)))
 	assertSat(t, slv, "Bv2Int(0xFF, signed)=-1")
@@ -296,7 +296,7 @@ func TestBvSymbolicSolve(t *testing.T) {
 	}
 
 	// Find x, y such that x & y == 0x30 and x | y == 0xFC
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(ctx.BvAnd(x, y), ctx.BvVal(0x30, 8)))
 	slv.Assert(ctx.Eq(ctx.BvOr(x, y), ctx.BvVal(0xFC, 8)))
 	assertSat(t, slv, "BV symbolic AND/OR constraint")
@@ -308,13 +308,13 @@ func TestBvSymbolicCompare(t *testing.T) {
 	x := ctx.Const("x", bv8)
 
 	// Find x such that x > 200 and x < 250 (unsigned)
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.BvUgt(x, ctx.BvVal(200, 8)))
 	slv.Assert(ctx.BvUlt(x, ctx.BvVal(250, 8)))
 	assertSat(t, slv, "200 < x < 250 unsigned")
 
 	// No x such that x > 255 (8-bit max) — UNSAT
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.BvUgt(x, ctx.BvVal(255, 8)))
 	assertUnsat(t, slv2, "x > 255 in 8-bit")
 }

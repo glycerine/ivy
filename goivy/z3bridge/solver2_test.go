@@ -1,6 +1,6 @@
 // Tests for solver bug fixes 7.1, 7.2, 7.3.
 // Each test targets a specific phase from the fix plan.
-package solver
+package z3bridge
 
 import (
 	"strings"
@@ -9,7 +9,6 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // ============================================================
@@ -44,14 +43,14 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 	// Verify semantics: ForAll(X:nat, X >= 0 => P(X)) should NOT imply P(-1).
 	// So we check: (ForAll + P(-1)=false) should be SAT.
 	ctx := s.Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(z3expr)
 	// Assert P(-1) = false
 	negOne := ctx.IntVal(-1)
-	pDecl := ctx.Function("P", []z3bridge.Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.Not(pDecl.Apply(negOne)))
 	res := slv.Check()
-	if res == z3bridge.Unsat {
+	if res == Unsat {
 		t.Fatal("ForAll(X:nat, P(X)) should not constrain negative X, but it does")
 	}
 }
@@ -82,17 +81,17 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 	// Verify: if P is only true for -1, Exists should be UNSAT
 	// because the nat constraint requires X >= 0.
 	ctx := s.Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(z3expr)
 	// P(x) = (x == -1)
 	xConst := ctx.Const("X:mynat", ctx.IntSort())
-	pDecl := ctx.Function("P", []z3bridge.Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.ForAll(
-		[]z3bridge.Expr{xConst},
+		[]Expr{xConst},
 		ctx.Eq(pDecl.Apply(xConst), ctx.Eq(xConst, ctx.IntVal(-1))),
 	))
 	res := slv.Check()
-	if res != z3bridge.Unsat {
+	if res != Unsat {
 		t.Fatal("Exists(X:nat, P(X)) with P only true at -1 should be UNSAT")
 	}
 }
@@ -121,12 +120,12 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 
 	// Verify: ForAll should not constrain X=1 (outside range).
 	ctx := s.Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(z3expr)
-	pDecl := ctx.Function("P", []z3bridge.Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.Not(pDecl.Apply(ctx.IntVal(1)))) // P(1) = false
 	res := slv.Check()
-	if res == z3bridge.Unsat {
+	if res == Unsat {
 		t.Fatal("ForAll(X:range(2,5), P(X)) should not constrain X=1")
 	}
 }
@@ -156,43 +155,43 @@ func TestQuantConstraints_NoInterp(t *testing.T) {
 
 // TestMyEq_TrueShortCircuit checks that MyEq(x, true) returns x.
 func TestMyEq_TrueShortCircuit(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	x := ctx.Const("x", ctx.BoolSort())
 
 	result := MyEq(ctx, x, ctx.BoolVal(true))
 	// result should be equivalent to x, not Iff(x, true)
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, x)))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("MyEq(x, true) should be equivalent to x, got %s", result.String())
 	}
 }
 
 // TestMyEq_FalseShortCircuit checks that MyEq(x, false) returns Not(x).
 func TestMyEq_FalseShortCircuit(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	x := ctx.Const("x", ctx.BoolSort())
 
 	result := MyEq(ctx, x, ctx.BoolVal(false))
 	// result should be equivalent to Not(x)
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, ctx.Not(x))))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("MyEq(x, false) should be equivalent to Not(x), got %s", result.String())
 	}
 }
 
 // TestMyEq_NonBoolFallback checks that MyEq for int values still uses Eq.
 func TestMyEq_NonBoolFallback(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	x := ctx.Const("x", ctx.IntSort())
 	y := ctx.Const("y", ctx.IntSort())
 
 	result := MyEq(ctx, x, y)
 	// result should be equivalent to x == y
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, ctx.Eq(x, y))))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("MyEq(x, y) for ints should be Eq, got %s", result.String())
 	}
 }
@@ -203,10 +202,10 @@ func TestMyEq_NonBoolFallback(t *testing.T) {
 
 // TestGebin_ZeroIsTrue checks that Gebin(bits, 0) is always true.
 func TestGebin_ZeroIsTrue(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []z3bridge.Expr{a, b}
+	bits := []Expr{a, b}
 
 	result := Gebin(ctx, bits, 0)
 	if !result.IsTrue() {
@@ -216,10 +215,10 @@ func TestGebin_ZeroIsTrue(t *testing.T) {
 
 // TestGebin_OverflowIsFalse checks that Gebin(bits, 2^len(bits)) is false.
 func TestGebin_OverflowIsFalse(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []z3bridge.Expr{a, b} // 2 bits can represent 0-3
+	bits := []Expr{a, b} // 2 bits can represent 0-3
 
 	result := Gebin(ctx, bits, 4) // 4 >= 2^2, impossible
 	if !result.IsFalse() {
@@ -231,17 +230,17 @@ func TestGebin_OverflowIsFalse(t *testing.T) {
 // With MSB-first: bits >= 2 means the MSB must be 1.
 // 2 in binary (2 bits, MSB first) = [1, 0], so bits >= 2 iff a=1 (MSB).
 func TestGebin_TwoBitsGeTwo(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []z3bridge.Expr{a, b}
+	bits := []Expr{a, b}
 
 	result := Gebin(ctx, bits, 2)
 	// bits >= 2 with 2 bits MSB first means: a must be true
 	// (hval=2, 2<=2, so And(a, Gebin([b], 0)) = And(a, true) = a)
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, a)))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("Gebin([a,b], 2) should equal a, got %s", result.String())
 	}
 }
@@ -250,16 +249,16 @@ func TestGebin_TwoBitsGeTwo(t *testing.T) {
 // bits >= 1 with MSB-first: hval=2 > 1, so Or(a, Gebin([b], 1))
 // = Or(a, And(b, Gebin([], 0))) = Or(a, b).
 func TestGebin_TwoBitsGeOne(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []z3bridge.Expr{a, b}
+	bits := []Expr{a, b}
 
 	result := Gebin(ctx, bits, 1)
 	expected := ctx.Or(a, b)
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("Gebin([a,b], 1) should equal Or(a,b), got %s", result.String())
 	}
 }
@@ -270,17 +269,17 @@ func TestGebin_TwoBitsGeOne(t *testing.T) {
 // Gebin([b,c], 1): hval=2>1, Or(b, Gebin([c],1)) = Or(b, c).
 // So Gebin([a,b,c], 5) = And(a, Or(b, c)).
 func TestGebin_ThreeBitsGeFive(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	c := ctx.Const("c", ctx.BoolSort())
-	bits := []z3bridge.Expr{a, b, c}
+	bits := []Expr{a, b, c}
 
 	result := Gebin(ctx, bits, 5)
 	expected := ctx.And(a, ctx.Or(b, c))
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatalf("Gebin([a,b,c], 5) should equal And(a, Or(b,c)), got %s", result.String())
 	}
 }
@@ -353,9 +352,9 @@ func TestEncodeEqualityZ3(t *testing.T) {
 		t.Fatalf("EncodeEqualityZ3 same: %v", err)
 	}
 	ctx := s.Context()
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(eqSame)
-	if slv.Check() == z3bridge.Unsat {
+	if slv.Check() == Unsat {
 		t.Fatal("red == red should be SAT")
 	}
 
@@ -364,9 +363,9 @@ func TestEncodeEqualityZ3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("EncodeEqualityZ3 diff: %v", err)
 	}
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(eqDiff)
-	if slv2.Check() != z3bridge.Unsat {
+	if slv2.Check() != Unsat {
 		t.Fatal("red == green should be UNSAT")
 	}
 }
@@ -392,9 +391,9 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 
 	ctx := s.Context()
 	// Check that z3val <= 10
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Gt(z3val, ctx.IntVal(10)))
-	if slv.Check() != z3bridge.Unsat {
+	if slv.Check() != Unsat {
 		t.Fatal("numeral 15 in range(0,10) should be clamped to <= 10")
 	}
 
@@ -405,9 +404,9 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 		// Negative numerals may not parse; that's OK for this test
 		t.Skipf("NumeralToZ3 for negative: %v", err)
 	}
-	slv2 := ctx.NewSolver()
+	slv2 := ctx.NewZ3Solver()
 	slv2.Assert(ctx.Lt(z3valNeg, ctx.IntVal(0)))
-	if slv2.Check() != z3bridge.Unsat {
+	if slv2.Check() != Unsat {
 		t.Fatal("numeral -5 in range(0,10) should be clamped to >= 0")
 	}
 }
@@ -428,7 +427,7 @@ func TestClauseModelSimp_EarlyReturn(t *testing.T) {
 	r := boolConst("r")
 
 	// Create a model where p=true, q=false, r=false
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	zp, _ := s.FormulaToZ3(p)
 	zq, _ := s.FormulaToZ3(q)
 	zr, _ := s.FormulaToZ3(r)
@@ -465,7 +464,7 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 	p := boolConst("p")
 
 	// Model where p=false
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	zp, _ := s.FormulaToZ3(p)
 	slv.Assert(ctx.Not(zp))
 	slv.Check()

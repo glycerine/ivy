@@ -1,6 +1,6 @@
 // Ported to Go from ivy_solver.py.
 
-package solver
+package z3bridge
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // ClausesImplyList checks whether clauses1 implies each element of clauses2List.
@@ -17,7 +16,7 @@ import (
 // Corresponds to Python's clauses_imply_list.
 func (s *Solver) ClausesImplyList(clauses1 *module.Clauses, clauses2List []*module.Clauses) ([]bool, error) {
 	xtracer.Trace("ivy_solver.py:1036 clauses_imply_list() ENTER")
-	z3solver := s.tr.Ctx.NewSolver()
+	z3solver := s.tr.Ctx.NewZ3Solver()
 
 	z1, err := s.ClausesToZ3(clauses1)
 	if err != nil {
@@ -34,7 +33,7 @@ func (s *Solver) ClausesImplyList(clauses1 *module.Clauses, clauses2List []*modu
 		}
 		z3solver.Push()
 		z3solver.Assert(z2)
-		results[i] = z3solver.Check() == z3bridge.Unsat
+		results[i] = z3solver.Check() == Unsat
 		z3solver.Pop()
 	}
 	return results, nil
@@ -334,14 +333,14 @@ func (s *Solver) ClausesModelToDiagramFull(
 }
 
 // NewZ3Solver creates a new Z3 solver on this solver's context.
-func (s *Solver) NewZ3Solver() *z3bridge.Solver {
+func (s *Solver) NewZ3Solver() *Z3Solver {
 	xtracer.Trace("ivy_solver.py:808 new_solver() ENTER")
-	return s.tr.Ctx.NewSolver()
+	return s.tr.Ctx.NewZ3Solver()
 }
 
 // AddClauses adds a clauses set to a Z3 solver.
 // Corresponds to Python's add_clauses.
-func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *module.Clauses) error {
+func (s *Solver) AddClauses(z3solver *Z3Solver, clauses *module.Clauses) error {
 	xtracer.Trace("ivy_solver.py:820 add_clauses() ENTER")
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -353,7 +352,7 @@ func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *module.Clauses) 
 
 // SolverAdd adds a formula to a Z3 solver.
 // Corresponds to Python's solver_add.
-func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
+func (s *Solver) SolverAdd(z3solver *Z3Solver, fmla lg.Expr) error {
 	xtracer.Trace("ivy_solver.py:812 solver_add() ENTER")
 	zf, err := s.formulaToZ3(fmla)
 	if err != nil {
@@ -367,15 +366,15 @@ func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
 // If assumptions are provided, uses assumption-based checking.
 // Returns an error if the result is unknown.
 // Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
-func Decide(z3solver *z3bridge.Solver, assumptions ...z3bridge.Expr) (z3bridge.CheckResult, error) {
+func Decide(z3solver *Z3Solver, assumptions ...Expr) (CheckResult, error) {
 	xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-	var result z3bridge.CheckResult
+	var result CheckResult
 	if len(assumptions) > 0 {
 		result = z3solver.CheckAssumptions(assumptions)
 	} else {
 		result = z3solver.Check()
 	}
-	if result == z3bridge.Unknown {
+	if result == Unknown {
 		return result, fmt.Errorf("solver produced inconclusive result")
 	}
 	return result, nil

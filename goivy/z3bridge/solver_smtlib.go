@@ -1,6 +1,6 @@
 // smtlib.go provides SMT-LIB2 output for Ivy clauses.
 // Corresponds to Python's ivy_smtlib.py.
-package solver
+package z3bridge
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package solver
+package z3bridge
 
 import (
 	"runtime"
@@ -7,7 +7,6 @@ import (
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Z3 Worker Goroutine ---
@@ -22,27 +21,28 @@ import (
 // Fuzz workers send closures to this goroutine over a channel and block
 // until the work completes.
 
+// re-use translate2_fuzz_test.go version. Identical.
 // z3Job is a closure that performs Z3 work. It receives a *testing.T for
 // reporting failures. Any panic is caught by the worker and forwarded.
-type z3Job struct {
-	fn   func(t *testing.T)
-	t    *testing.T
-	done chan *z3Result
-}
-
-type z3Result struct {
-	panicVal interface{}
-}
+//type z3Job struct {
+//	fn   func(t *testing.T)
+//	t    *testing.T
+//	done chan *z3Result
+//}
+//
+//type z3Result struct {
+//	panicVal interface{}
+//}
 
 var (
-	z3WorkerOnce sync.Once
-	z3JobChan    chan *z3Job
+	z3WorkerOnce2 sync.Once
+	z3JobChan2    chan *z3Job
 )
 
-// startZ3Worker launches the singleton Z3 worker goroutine.
-func startZ3Worker() {
-	z3WorkerOnce.Do(func() {
-		z3JobChan = make(chan *z3Job, 1)
+// startZ3Worker2 launches the singleton Z3 worker goroutine.
+func startZ3Worker2() {
+	z3WorkerOnce2.Do(func() {
+		z3JobChan2 = make(chan *z3Job, 1)
 		go func() {
 			runtime.LockOSThread()
 			defer runtime.UnlockOSThread()
@@ -50,7 +50,7 @@ func startZ3Worker() {
 			// so we never unlock — this goroutine owns this OS thread for life.
 			for {
 				select {
-				case job := <-z3JobChan:
+				case job := <-z3JobChan2:
 					result := &z3Result{}
 					func() {
 						defer func() {
@@ -69,14 +69,14 @@ func startZ3Worker() {
 	})
 }
 
-// runOnZ3Thread sends a closure to the Z3 worker goroutine and waits for
+// runOnZ3Thread2 sends a closure to the Z3 worker goroutine and waits for
 // it to complete. If the closure panicked, the panic value is reported as
 // a test fatal error.
-func runOnZ3Thread(t *testing.T, fn func(t *testing.T)) {
+func runOnZ3Thread2(t *testing.T, fn func(t *testing.T)) {
 	t.Helper()
-	startZ3Worker()
+	startZ3Worker2()
 	done := make(chan *z3Result, 1)
-	z3JobChan <- &z3Job{fn: fn, t: t, done: done}
+	z3JobChan2 <- &z3Job{fn: fn, t: t, done: done}
 	result := <-done
 	if result.panicVal != nil {
 		t.Fatalf("panic on Z3 thread: %v", result.panicVal)
@@ -97,9 +97,9 @@ func FuzzMyEq(f *testing.F) {
 	f.Add(false, false, false)
 
 	f.Fuzz(func(t *testing.T, isXTrue, isYTrue, isYFalse bool) {
-		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewZ3Context()
-			var x, y z3bridge.Expr
+		runOnZ3Thread2(t, func(t *testing.T) {
+			ctx := NewZ3Context()
+			var x, y Expr
 			if isXTrue {
 				x = ctx.BoolVal(true)
 			} else {
@@ -117,9 +117,9 @@ func FuzzMyEq(f *testing.F) {
 
 			// Verify equivalence with standard Eq
 			expected := ctx.Eq(x, y)
-			slv := ctx.NewSolver()
+			slv := ctx.NewZ3Solver()
 			slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-			if slv.Check() != z3bridge.Unsat {
+			if slv.Check() != Unsat {
 				t.Fatalf("MyEq(%s, %s) = %s is not equivalent to Eq",
 					x.String(), y.String(), result.String())
 			}
@@ -147,10 +147,10 @@ func FuzzGebin(f *testing.F) {
 			return
 		}
 
-		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewZ3Context()
+		runOnZ3Thread2(t, func(t *testing.T) {
+			ctx := NewZ3Context()
 
-			bits := make([]z3bridge.Expr, nbits)
+			bits := make([]Expr, nbits)
 			for i := 0; i < nbits; i++ {
 				bits[i] = ctx.Const(string(rune('a'+i)), ctx.BoolSort())
 			}
@@ -159,7 +159,7 @@ func FuzzGebin(f *testing.F) {
 
 			maxVal := 1 << uint(nbits)
 			for val := 0; val < maxVal; val++ {
-				slv := ctx.NewSolver()
+				slv := ctx.NewZ3Solver()
 				for i := 0; i < nbits; i++ {
 					bitSet := (val & (1 << uint(nbits-1-i))) != 0
 					if bitSet {
@@ -172,13 +172,13 @@ func FuzzGebin(f *testing.F) {
 				expectTrue := val >= threshold
 				if expectTrue {
 					slv.Assert(ctx.Not(result))
-					if slv.Check() != z3bridge.Unsat {
+					if slv.Check() != Unsat {
 						t.Fatalf("Gebin(bits, %d) should be true for val=%d (nbits=%d)",
 							threshold, val, nbits)
 					}
 				} else {
 					slv.Assert(result)
-					if slv.Check() != z3bridge.Unsat {
+					if slv.Check() != Unsat {
 						t.Fatalf("Gebin(bits, %d) should be false for val=%d (nbits=%d)",
 							threshold, val, nbits)
 					}
@@ -203,8 +203,8 @@ func FuzzBinEncZ3(f *testing.F) {
 			return
 		}
 
-		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewZ3Context()
+		runOnZ3Thread2(t, func(t *testing.T) {
+			ctx := NewZ3Context()
 			bits := BinEncZ3(ctx, m, n)
 
 			if len(bits) != n {
@@ -346,7 +346,7 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 			return
 		}
 
-		runOnZ3Thread(t, func(t *testing.T) {
+		runOnZ3Thread2(t, func(t *testing.T) {
 			rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: lb}, Ub: lg.NumeralBound{Value: ub}}
 			sig := il.NewSig()
 			sig.Interp["bounded"] = rs
@@ -383,7 +383,7 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 
 		// Capture for closure
 		i1, i2 := idx1, idx2
-		runOnZ3Thread(t, func(t *testing.T) {
+		runOnZ3Thread2(t, func(t *testing.T) {
 			ext := make([]string, nElems)
 			for i := range ext {
 				ext[i] = string(rune('a' + i))
@@ -405,15 +405,15 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			}
 
 			ctx := s.Context()
-			slv := ctx.NewSolver()
+			slv := ctx.NewZ3Solver()
 			if i1 == i2 {
 				slv.Assert(eq)
-				if slv.Check() == z3bridge.Unsat {
+				if slv.Check() == Unsat {
 					t.Fatalf("encode_equality(%s, %s) should be SAT", ext[i1], ext[i2])
 				}
 			} else {
 				slv.Assert(eq)
-				if slv.Check() != z3bridge.Unsat {
+				if slv.Check() != Unsat {
 					t.Fatalf("encode_equality(%s, %s) should be UNSAT", ext[i1], ext[i2])
 				}
 			}
@@ -437,7 +437,7 @@ func FuzzSolverNameBuiltins(f *testing.F) {
 			return
 		}
 
-		runOnZ3Thread(t, func(t *testing.T) {
+		runOnZ3Thread2(t, func(t *testing.T) {
 			s := NewSolver(nil, nil)
 			sym := lg.NewConst(name, lg.Boolean)
 
@@ -471,7 +471,7 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 	f.Add(byte(2), true)
 
 	f.Fuzz(func(t *testing.T, interpKind byte, isForall bool) {
-		runOnZ3Thread(t, func(t *testing.T) {
+		runOnZ3Thread2(t, func(t *testing.T) {
 			sig := il.NewSig()
 			switch interpKind % 3 {
 			case 0:

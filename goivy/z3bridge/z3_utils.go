@@ -350,7 +350,7 @@ func (u *Z3Utils) Z3Implies(f1, f2 logic.Expr, timeout bool) (bool, error) {
 		return cached, nil
 	}
 
-	s := u.Ctx.NewSolver()
+	s := u.Ctx.NewZ3Solver()
 	if timeout {
 		s.SetParam("timeout", "2000") // 2 seconds
 	}
@@ -387,7 +387,7 @@ func (u *Z3Utils) Z3Implies(f1, f2 logic.Expr, timeout bool) (bool, error) {
 // Uses a single Z3 Solver with push/pop for incremental checking.
 // Corresponds to Python z3_utils.py:z3_implies_batch (line 136).
 func (u *Z3Utils) Z3ImpliesBatch(premise logic.Expr, formulas []logic.Expr, timeout bool) ([]bool, error) {
-	s := u.Ctx.NewSolver()
+	s := u.Ctx.NewZ3Solver()
 	if timeout {
 		s.SetParam("timeout", "2000") // 2 seconds
 	}

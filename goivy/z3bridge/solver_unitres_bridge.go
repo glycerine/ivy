@@ -2,7 +2,7 @@
 // unitres.Literal (resolution.Atom). Needed because Go has two
 // separate Literal types; Python has only one.
 
-package solver
+package z3bridge
 
 import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"

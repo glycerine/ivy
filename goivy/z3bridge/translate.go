@@ -936,7 +936,7 @@ func (t *Translator) Implies(f1, f2 logic.Expr) (bool, error) {
 		return false, err
 	}
 
-	s := t.Ctx.NewSolver()
+	s := t.Ctx.NewZ3Solver()
 	s.Assert(zf1)
 	s.Assert(t.Ctx.Not(zf2))
 
@@ -1183,7 +1183,7 @@ func (t *Translator) IsSat(f logic.Expr) (CheckResult, error) {
 	if err != nil {
 		return Unknown, err
 	}
-	s := t.Ctx.NewSolver()
+	s := t.Ctx.NewZ3Solver()
 	s.Assert(zf)
 	return s.Check(), nil
 }

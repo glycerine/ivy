@@ -1,4 +1,4 @@
-package solver
+package z3bridge
 
 import (
 	"strings"
@@ -8,7 +8,6 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Helper constructors ---
@@ -752,7 +751,7 @@ func TestDecideSat(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result != z3bridge.Sat {
+	if result != Sat {
 		t.Fatal("expected sat")
 	}
 }
@@ -770,7 +769,7 @@ func TestDecideUnsat(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result != z3bridge.Unsat {
+	if result != Unsat {
 		t.Fatal("expected unsat")
 	}
 }
@@ -787,7 +786,7 @@ func TestAddClauses(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := z3solver.Check()
-	if result != z3bridge.Sat {
+	if result != Sat {
 		t.Fatal("expected sat after adding {p}")
 	}
 }
@@ -803,7 +802,7 @@ func TestSolverAdd(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := z3solver.Check()
-	if result != z3bridge.Sat {
+	if result != Sat {
 		t.Fatal("expected sat after adding p")
 	}
 }
@@ -1098,7 +1097,7 @@ func FuzzSortSizeConstraint(f *testing.F) {
 // --- Test: Z3SortToSort array case ---
 
 func TestZ3SortToSortArray(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	arrZ3Sort := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 	ivySort := Z3SortToSort(arrZ3Sort)
 	us, ok := ivySort.(*lg.UninterpretedSort)
@@ -1113,7 +1112,7 @@ func TestZ3SortToSortArray(t *testing.T) {
 }
 
 func TestZ3SortToSortNestedArray(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	innerSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	outerSort := ctx.ArraySort(ctx.IntSort(), innerSort)
 	ivySort := Z3SortToSort(outerSort)
@@ -1127,7 +1126,7 @@ func TestZ3SortToSortNestedArray(t *testing.T) {
 }
 
 func TestZ3SortToSortNonArray(t *testing.T) {
-	ctx := z3bridge.NewZ3Context()
+	ctx := NewZ3Context()
 	// Bool, Int should still work as before
 	boolSort := Z3SortToSort(ctx.BoolSort())
 	if boolSort != lg.Boolean {
@@ -1160,10 +1159,10 @@ func TestLookupBuiltinFuncArrsel(t *testing.T) {
 	}
 	sel := fn(aPrime, idx)
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(sel, val)))
 	result := slv.Check()
-	if result != z3bridge.Unsat {
+	if result != Unsat {
 		t.Fatalf("arrsel(Store(a,3,99), 3) should equal 99, got %s", result)
 	}
 }
@@ -1198,10 +1197,10 @@ func TestLookupBuiltinFuncArrupd(t *testing.T) {
 	aPrime := fn(a, ctx.IntVal(5), ctx.IntVal(100))
 	sel := ctx.Select(aPrime, ctx.IntVal(5))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(100))))
 	result := slv.Check()
-	if result != z3bridge.Unsat {
+	if result != Unsat {
 		t.Fatalf("arrupd then select should give stored value, got %s", result)
 	}
 }
@@ -1238,10 +1237,10 @@ func TestLookupBuiltinRelationArrsel(t *testing.T) {
 	aPrime := ctx.Store(a, ctx.IntVal(0), ctx.IntVal(77))
 	sel := fn(aPrime, ctx.IntVal(0))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(77))))
 	result := slv.Check()
-	if result != z3bridge.Unsat {
+	if result != Unsat {
 		t.Fatalf("relation arrsel should work like function arrsel, got %s", result)
 	}
 }
@@ -1307,7 +1306,7 @@ func TestArraySortRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("TranslateSort failed: %v", err)
 	}
-	if z3s.Kind() != z3bridge.SortArray {
+	if z3s.Kind() != SortArray {
 		t.Fatalf("expected SortArray, got %d", z3s.Kind())
 	}
 
@@ -1362,12 +1361,12 @@ func TestStorePreservesOtherIndicesSolver(t *testing.T) {
 	// Store val at index i, then select at j where j != i
 	aPrime := ctx.Store(a, i, ctx.IntVal(42))
 
-	slv := ctx.NewSolver()
+	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(i, j)))
 	// a'[j] should equal a[j]
 	slv.Assert(ctx.Not(ctx.Eq(ctx.Select(aPrime, j), ctx.Select(a, j))))
 	result := slv.Check()
-	if result != z3bridge.Unsat {
+	if result != Unsat {
 		t.Fatalf("Store at i should preserve a[j] when i!=j, got %s", result)
 	}
 }
@@ -1564,7 +1563,7 @@ func TestCheckSequenceReporterAbort(t *testing.T) {
 
 // TestSortFromZ3RoundTrip verifies the reverse sort map preserves original Ivy sorts.
 func TestSortFromZ3RoundTrip(t *testing.T) {
-	tr := z3bridge.NewTranslator()
+	tr := NewTranslator()
 	defer tr.Close()
 
 	// Test UninterpretedSort
@@ -2161,7 +2160,7 @@ func TestFilterRedundantFactsAllKept(t *testing.T) {
 func TestDecideWithAssumptions(t *testing.T) {
 	s := NewSolver(nil, nil)
 	ctx := s.Context()
-	z3solver := ctx.NewSolver()
+	z3solver := ctx.NewZ3Solver()
 
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
@@ -2174,7 +2173,7 @@ func TestDecideWithAssumptions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Decide without assumptions: %v", err)
 	}
-	if result != z3bridge.Sat {
+	if result != Sat {
 		t.Fatalf("expected SAT without assumptions, got %v", result)
 	}
 
@@ -2183,7 +2182,7 @@ func TestDecideWithAssumptions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Decide with assumptions: %v", err)
 	}
-	if result2 != z3bridge.Unsat {
+	if result2 != Unsat {
 		t.Fatalf("expected UNSAT with Not(a),Not(b) assumptions, got %v", result2)
 	}
 }
