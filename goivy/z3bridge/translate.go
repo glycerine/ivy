@@ -460,7 +460,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 		predKey = logic.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
 	}
 	if cached, ok := t.preds[predKey]; ok {
-		return t.applyZ3Func(cached, app.Terms)
+		return t.applyZ3Func(cached, app.Terms) // in atomToZ3() here.
 	}
 
 	// Check builtin ops (Go-specific: Python handles via polymacs inside lookup_native)
@@ -477,7 +477,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 		if result := t.LookupNative(c.Name, c.CSort, "relation"); result != nil {
 			if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
 				t.preds[predKey] = nativeFn
-				return t.applyZ3Func(nativeFn, app.Terms)
+				return t.applyZ3Func(nativeFn, app.Terms) // in atomToZ3 here.
 			}
 		}
 	}
@@ -493,7 +493,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 			return t.Ctx.Eq(args[0], args[1])
 		}
 		t.preds[predKey] = eqFn
-		return t.applyZ3Func(eqFn, app.Terms)
+		return t.applyZ3Func(eqFn, app.Terms) // in atomToZ3 here.
 	}
 
 	// Python lines 527-528: create Z3 Function/Const for uninterpreted relation
@@ -507,7 +507,7 @@ func (t *Translator) atomToZ3(app *logic.Apply) (Expr, error) {
 	}
 	predFn := fd.Apply
 	t.preds[predKey] = predFn
-	return t.applyZ3Func(predFn, app.Terms)
+	return t.applyZ3Func(predFn, app.Terms) // end of atomToZ3 here.
 }
 
 // eqToAtomZ3 routes Eq through atomToZ3, matching Python where
@@ -534,6 +534,72 @@ func (t *Translator) eqToAtomZ3(eq *logic.Eq) (Expr, error) {
 // applyZ3Func translates args via TermToZ3 and applies the predicate function.
 // Corresponds to Python apply_z3_func (ivy_solver.py:403).
 func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []logic.Expr) (Expr, error) {
+	//xtracer.Trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d", len(args))
+
+	// the original python is very polymorphic:
+	// Here are the three call sites and what pred can be:
+	//
+	// Call site 1 — line 497 (term_to_z3): fun is always
+	// a z3.FuncDeclRef (from z3.Function()).
+	//
+	// Call site 2 — line 534 (atom_to_z3):  (translate.go:463)
+	// pred comes
+	// from z3_predicates[atom.relname], which is
+	// populated from three sources:
+	// - lookup_native() — returns Python lambdas/callables
+	//   (e.g., lambda x,y: z3.If(x < y, ...),
+	// lambda x: z3.K(...)) or a z3.FuncDeclRef
+	// - get_polymacs() — returns a functools.partial (a callable)
+	// - z3.Function() → z3.FuncDeclRef
+	// - z3.Const() → z3.BoolRef (or other ExprRef) when the sort
+	// is non-functional (a 0-ary predicate/constant)
+	//
+	// Call site 3 — line 1767 (encode_term): z3_function()
+	// returns either z3.Function() →
+	// z3.FuncDeclRef, or z3.Const() → z3.ExprRef/z3.BoolRef.
+	//
+	// So pred has three possible types:
+	//
+	// ┌────────────────────────┬─────────────────────┬─────────────────────┐
+	// │            Type        │            When     │        Branch taken │
+	// ├────────────────────────┼─────────────────────┼─────────────────────┤
+	// │ z3.BoolRef (or ExprRef)│ 0-ary constant from │ line 405: return it │
+	// │                        │ z3.Const()          │ directly            │
+	// ├────────────────────────┼─────────────────────┼─────────────────────┤
+	// │ Python callable        │ native interp or    │ line 409: pred(*tup)│
+	// │ (lambda/partial)       │ polymorphic macro   │                     │
+	// ├────────────────────────┼─────────────────────┼─────────────────────┤
+	// │ z3.FuncDeclRef         │ z3.Function() result│ line 410-411:       │
+	// │                        │                     │ low-level Z3_mk_app │
+	// └────────────────────────┴─────────────────────┴─────────────────────┘
+	//
+	// For the Go port, this naturally maps to an interface{} (or a
+	// small sum type) since Go's Expr
+	// and FuncDecl are distinct types, and you'd also need to
+	// handle Go function values:
+	//
+	// func ApplyZ3Func(pred interface{}, tup []z3bridge.Expr) z3bridge.Expr {
+	//     switch p := pred.(type) {
+	//     case z3bridge.Expr:
+	//         if p.ExprSort().Kind() == z3bridge.SortBool {
+	//             // was isinstance(pred, z3.BoolRef)
+	//             assert(len(tup) == 0)
+	//             return p
+	//         }
+	//         // non-boolean Expr — falls through to "not FuncDeclRef" in Python,
+	//         // which would try pred(*tup). This likely shouldn't happen in
+	//         // practice, but faithfully it's an error here.
+	//         panic("ApplyZ3Func: non-boolean Expr passed as pred")
+	//         // was isinstance(pred, z3.BoolRef) — 0-ary constant
+	//     case func([]z3bridge.Expr) z3bridge.Expr:
+	//         // was "not isinstance(pred, z3.FuncDeclRef)" — native callable
+	//         return p(tup)
+	//     case z3bridge.FuncDecl:
+	//         // low-level Z3_mk_app
+	//         return p.Apply(tup...)
+	//     }
+	// }
+
 	args := make([]Expr, len(terms))
 	for i, term := range terms {
 		a, err := t.TermToZ3(term)
@@ -542,15 +608,14 @@ func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []logic.Exp
 		}
 		args[i] = a
 	}
-	xtracer.Trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d", len(args))
 	return pred(args...), nil
 }
 
 // TermToZ3 translates a term to Z3.
 // Corresponds to Python term_to_z3 (ivy_solver.py:444).
 func (t *Translator) TermToZ3(term logic.Expr) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s",
-		iu.ShortTypeName(term), termName(term))
+	//xtracer.Trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s",
+	//	iu.ShortTypeName(term), termName(term))
 
 	// Python line 446: if is_boolean(term) and not is_variable(term):
 	//     return formula_to_z3_int(term)

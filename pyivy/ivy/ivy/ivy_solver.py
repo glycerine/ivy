@@ -400,8 +400,8 @@ def native_symbol(sym):
         return z3.Const(sym.rep, name.sort.to_z3())
     return z3.Function(sym.rep, *(name.sort.to_z3()))
 
-def apply_z3_func(pred,tup):
-    if __debug__: xtracer.trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d" % len(tup))
+def apply_z3_func(pred,tup): # called only at: 497, 534, 1767 herein.
+    #if __debug__: xtracer.trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d" % len(tup))
     if isinstance(pred,z3.BoolRef):
         assert not tup
         return pred
@@ -442,7 +442,7 @@ def enumerated_to_numeral(term):
     raise iu.IvyError(None,'Cannot interpret enumerated type "{}" as a native sort (not yet supported)'.format(term.sort.name))
 
 def term_to_z3(term):
-    if __debug__: xtracer.trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s" % (type(term).__name__, getattr(term, 'name', getattr(term, 'rep', '?'))))
+    #if __debug__: xtracer.trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s" % (type(term).__name__, getattr(term, 'name', getattr(term, 'rep', '?'))))
     if ivy_logic.is_boolean(term) and not ivy_logic.is_variable(term):
         return formula_to_z3_int(term)
     if not term.args:
