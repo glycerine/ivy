@@ -23,7 +23,7 @@ from . import ivy_utils as iu
 from . import ivy_unitres as ur
 from . import logic as lg
 from . import ivy_ast
-#import traceback
+import traceback
 import sys
 
 # Following accounts for Z3 API symbols that are hidden as of Z3-4.5.0
@@ -276,7 +276,7 @@ def uninterpretedsort(us):
     return s
 
 def functionsort(fs):
-    if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER")
+    if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER"); traceback.print_stack(limit=10)
 #    print "fs.rng = {!r}".format(fs.rng)
     if fs.is_relational():
         return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
