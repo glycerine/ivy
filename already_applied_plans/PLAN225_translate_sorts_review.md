@@ -115,9 +115,13 @@ case *logic.RangeSort:
 
 **Fix E:** Remove `t.sortsInv[zs.GetId()] = s` from the RangeSort case.
 
-### 6. TopSort — No Python equivalent
+### 6. TopSort — No Python equivalent, should panic
 
-Go (lines 170-180) treats TopSort as uninterpreted. Python has **no** `TopSort.to_z3` assignment. If Python ever tries to call `.to_z3()` on a TopSort, it raises AttributeError. Go's treatment as uninterpreted is a reasonable defensive fallback. **No fix needed** — unlikely to affect traces and would crash Python if reached.
+Go (lines 170-180) treats TopSort as uninterpreted. Python has **no** `TopSort.to_z3` assignment. If Python ever tries to call `.to_z3()` on a TopSort, it raises AttributeError (crash). Go should match this behavior by panicking.
+
+**Issue F — Go silently handles TopSort, Python would crash.** Go creates an uninterpreted sort as a fallback, masking bugs. Replace with a panic.
+
+**Fix F:** Replace the TopSort case with a panic.
 
 ---
 
@@ -139,6 +143,28 @@ case *logic.RangeSort:
 case *logic.RangeSort:
     // Python: lambda self: z3.IntSort() — no trace, no caching, no sortsInv
     return t.Ctx.IntSort(), nil
+```
+
+#### Fix F — Panic on TopSort (lines 170-180)
+
+```go
+// BEFORE:
+case *logic.TopSort:
+    xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
+    key := s.Sexp()
+    if cached, ok := t.sorts[key]; ok {
+        return cached, nil
+    }
+    zs := t.Ctx.UninterpretedSort(st.Name)
+    t.sorts[key] = zs
+    t.sortsInv[zs.GetId()] = s
+    return zs, nil
+
+// AFTER:
+case *logic.TopSort:
+    // Python has no TopSort.to_z3 — calling it would raise AttributeError.
+    // Panic here to match Python's behavior and expose bugs.
+    panic(fmt.Sprintf("TranslateSort: TopSort %q has no to_z3() equivalent in Python", st.Name))
 ```
 
 #### Fix B — Remove extra sortsInv from EnumeratedSort (line 196)
