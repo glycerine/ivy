@@ -10,13 +10,13 @@ package alpha
 import (
 	"fmt"
 
-	"github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/webui"
 	"github.com/glycerine/ivy/goivy/z3bridge"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Domain interface for Alpha ---
@@ -73,7 +73,7 @@ type ProgressiveDomain struct {
 	testBottom     bool // from AlphaState.TestBottom
 	log            bool // from AlphaState.Log
 	slvr           *solver.Solver
-	z3solver       *z3bridge.Solver
+	z3solver       *z3bridge.Z3Solver
 	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
 	inhabitedCubes map[string]bool                // Z3 expr ID -> inhabited
 	z3Cubes        []z3bridge.Expr                // prevent GC of Z3 cubes
@@ -539,8 +539,8 @@ func (ra *RelAlg1) Empty(tab *RelTable) bool {
 // Corresponds to Python's RelAlg2 class.
 type RelAlg2 struct {
 	Slvr       *solver.Solver
-	Z3Slvr     *z3bridge.Solver
-	TempSolver *z3bridge.Solver
+	Z3Slvr     *z3bridge.Z3Solver
+	TempSolver *z3bridge.Z3Solver
 	Model      *solver.HerbrandModel
 	Parent     *ProgressiveDomain
 	Numbering  map[string]int
@@ -555,7 +555,7 @@ type RelAlg2 struct {
 // Corresponds to Python's RelAlg2.__init__.
 func NewRelAlg2(
 	slvr *solver.Solver,
-	z3slvr *z3bridge.Solver,
+	z3slvr *z3bridge.Z3Solver,
 	newSym map[string]*lg.Const,
 	parent *ProgressiveDomain,
 ) *RelAlg2 {
@@ -701,7 +701,7 @@ type RelAlg3 struct {
 // NewRelAlg3 creates a new RelAlg3.
 func NewRelAlg3(
 	slvr *solver.Solver,
-	z3slvr *z3bridge.Solver,
+	z3slvr *z3bridge.Z3Solver,
 	newSym map[string]*lg.Const,
 	parent *ProgressiveDomain,
 ) *RelAlg3 {
