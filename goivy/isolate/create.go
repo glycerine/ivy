@@ -14,7 +14,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 

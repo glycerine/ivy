@@ -3,7 +3,7 @@ package actions
 import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // InterpolantResult holds the result of an interpolation query.

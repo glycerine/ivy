@@ -16,8 +16,8 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/z3bridge"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // checked returns true if the given labeled formula or action should

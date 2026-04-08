@@ -30,8 +30,8 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // -----------------------------------------------------------------------
@@ -1800,9 +1800,9 @@ func ModifiedNames(u *Update) []string {
 type History struct {
 	Cfg     *iu.IvyUtilsConfig
 	Post    *module.Clauses // characteristic clauses of the current state (matches Python self.post)
-	Maps    []Renaming     // sequence of symbol renamings from forward images
-	Actions []lg.Expr      // actions taken at each step
-	Mod     *module.Module // module for sort/symbol lookups (replaces global)
+	Maps    []Renaming      // sequence of symbol renamings from forward images
+	Actions []lg.Expr       // actions taken at each step
+	Mod     *module.Module  // module for sort/symbol lookups (replaces global)
 }
 
 // Renaming maps symbol names to renamed versions.

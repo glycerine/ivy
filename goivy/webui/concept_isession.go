@@ -12,7 +12,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // ConceptInteractiveSession is the full interactive concept-graph session

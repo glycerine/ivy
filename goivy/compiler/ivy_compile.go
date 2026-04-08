@@ -31,8 +31,8 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
-	slv "github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // OptMutax controls whether mutable-axiom checking is enabled.
@@ -1436,7 +1436,7 @@ func CheckDefinitions(mod *module.Module) error {
 	}
 
 	// Check for redefinition and interpreted symbols.
-	// Python: checkdef(sym, lf) checks redefinition first, then slv.solver_name(sym).
+	// Python: checkdef(sym, lf) checks redefinition first, then solver.solver_name(sym).
 	// Uses structural keys (Sexp) so symbols with same name but different sorts don't collide.
 	defs := make(map[lg.NodeKey]*ast.LabeledFormula)
 	checkdef := func(key lg.NodeKey, name string, symObj *lg.Const, lf *ast.LabeledFormula) error {
@@ -1444,9 +1444,9 @@ func CheckDefinitions(mod *module.Module) error {
 		if prev, exists := defs[key]; exists {
 			return lg.NewIvyError(lf, fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno))
 		}
-		// Python: if slv.solver_name(sym) == None: raise IvyError('definition of interpreted symbol ...')
+		// Python: if solver.solver_name(sym) == None: raise IvyError('definition of interpreted symbol ...')
 		if symObj != nil {
-			solverN, err := slv.SolverName(symObj, mod.Sig, nil)
+			solverN, err := solver.SolverName(symObj, mod.Sig, nil)
 			if err != nil {
 				return err // z3 builtin clash
 			}

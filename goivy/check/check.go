@@ -21,7 +21,7 @@ import (
 	"github.com/glycerine/ivy/goivy/mc"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/temporal"
 	"github.com/glycerine/ivy/goivy/vmt"

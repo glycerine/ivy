@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // Alpha computes the alpha abstraction of a concept domain against a state formula.

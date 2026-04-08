@@ -9,8 +9,8 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	slv "github.com/glycerine/ivy/goivy/solver"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // DomainSetup processes top-level declarations, replacing Python's
@@ -1109,8 +1109,8 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	// BB6a: Check sorts first
 	if inSorts {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=solver-sort")
-		// Python: if not slv.is_solver_sort(rhs): raise IvyError(...)
-		if !slv.IsSolverSort(rhsName) {
+		// Python: if not solver.is_solver_sort(rhs): raise IvyError(...)
+		if !solver.IsSolverSort(rhsName) {
 			return lg.NewIvyError(node, fmt.Sprintf("%s not a native sort", rhsName))
 		}
 		interp[lhs] = rhsName
@@ -1125,8 +1125,8 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	// BB6b: Check symbols
 	if inSymbols {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=solver-symbol")
-		// Python: if not slv.is_solver_op(rhs): raise IvyError(...)
-		if !slv.IsSolverOp(rhsName) {
+		// Python: if not solver.is_solver_op(rhs): raise IvyError(...)
+		if !solver.IsSolverOp(rhsName) {
 			return lg.NewIvyError(node, fmt.Sprintf("%s not a native symbol", rhsName))
 		}
 		interp[lhs] = rhsName

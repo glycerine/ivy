@@ -10,7 +10,7 @@ import (
 	"github.com/glycerine/ivy/goivy/check"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/solver"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // verifyInitInvariant checks that the module's initialization establishes
