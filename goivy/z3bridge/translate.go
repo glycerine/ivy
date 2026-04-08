@@ -332,7 +332,7 @@ func (t *Translator) Translate(n lg.Expr) (Expr, error) {
 // Corresponds to Python formula_to_z3_int (ivy_solver.py:637).
 // Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
 func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%v\ncaller=%v", iu.ShortTypeName(n), caller)
+	//xtracer.Trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%v\ncaller=%v", iu.ShortTypeName(n), caller)
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
@@ -548,8 +548,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		return t.translateCore(app, "atom_to_z3")
 	}
 
-	xtracer.Trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d",
-		c.Name, len(app.Terms))
+	//xtracer.Trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d", c.Name, len(app.Terms))
 
 	// Python line 518: if ivy_logic.is_equals(atom.rep) and
 	//   ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums

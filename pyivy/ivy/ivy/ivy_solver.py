@@ -527,7 +527,7 @@ def get_polymacs(op):
     return functools.partial(polymacs[op.name],op.sort)
 
 def atom_to_z3(atom):
-    if __debug__: xtracer.trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d" % (atom.rep, len(atom.args)))
+    #if __debug__: xtracer.trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d" % (atom.rep, len(atom.args)))
     if ivy_logic.is_equals(atom.rep) and ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums:
         return encode_equality(*atom.args)
     if atom.relname not in z3_predicates:
@@ -648,7 +648,7 @@ def clauses_to_z3(clauses):
     return res
 
 def formula_to_z3_int(fmla, caller):
-    if __debug__: xtracer.trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%s\ncaller=%s" % (type(fmla).__name__, caller))
+    #if __debug__: xtracer.trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%s\ncaller=%s" % (type(fmla).__name__, caller))
 #    print "formula_to_z3_int: {} : {}".format(fmla,type(fmla))
     if isinstance(fmla,ivy_logic.Definition or ivy_logic.is_eq(fmla) or isinstance(fmla,ivy_logic.Iff)):
         if ivy_logic.is_true(fmla.args[1]):
