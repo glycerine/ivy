@@ -2603,20 +2603,33 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236126  go : XTRACE: ivy_solver.py:258 uninterpretedsort() ENTER name=lclock
-        py : XTRACE: ivy_solver.py:258 uninterpretedsort() ENTER name=lclock
+236171  go : XTRACE: ivy_solver.py:279 functionsort() ENTER
+        py : XTRACE: ivy_solver.py:279 functionsort() ENTER
 
-236127  go : XTRACE: ivy_solver.py:276 enumeratedsort() ENTER name=op_type
-        py : XTRACE: ivy_solver.py:276 enumeratedsort() ENTER name=op_type
+236172  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=lclock
+        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=lclock
 
-236128  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.evs.req
+236173  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+
+236174  go : XTRACE: ivy_solver.py:281 enumeratedsort() ENTER name=op_type
+        py : XTRACE: ivy_solver.py:281 enumeratedsort() ENTER name=op_type
+
+236175  go : XTRACE: ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.
+        py : XTRACE: ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.
+
+236176  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.evs.req
         py : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.evs.req
 
-236129  go : XTRACE: ivy_solver.py:445 term_to_z3() ENTER type=Var name=T0
-        py : XTRACE: ivy_solver.py:445 term_to_z3() ENTER type=Var name=T0
+236177  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+        py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
 
-236130  go : XTRACE: ivy_solver.py:445 term_to_z3() ENTER type=Const name=nop
-        py : XTRACE: ivy_solver.py:404 apply_z3_func() ENTER nargs=1
+236178  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=nop
+        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
+
+========== trailing ~py[after i= 236178]:
+caller=term_to_z3_int:fmla.args
+        
 ~~~
 was, before adding solver xtracing:
 ~~~
