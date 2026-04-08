@@ -91,8 +91,9 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 // NewTranslatorWithInterpolation creates a Translator backed by an
 // interpolation-capable Z3 context. Use this translator when you need
 // to compute Craig interpolants.
-func NewTranslatorWithInterpolation() *Translator {
+func (s *Solver) NewTranslatorWithInterpolation() *Translator {
 	return &Translator{
+		s:      s,
 		Ctx:    NewInterpolationZ3Context(),
 		sorts:  make(map[logic.NodeKey]Sort),
 		consts: make(map[logic.NodeKey]Expr),

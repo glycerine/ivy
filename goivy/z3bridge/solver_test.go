@@ -1563,7 +1563,7 @@ func TestCheckSequenceReporterAbort(t *testing.T) {
 
 // TestSortFromZ3RoundTrip verifies the reverse sort map preserves original Ivy sorts.
 func TestSortFromZ3RoundTrip(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 
 	// Test UninterpretedSort

@@ -158,7 +158,7 @@ func TestModel(t *testing.T) {
 // --- Translation tests ---
 
 func TestTranslateSorts(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 
 	_, err := tr.TranslateSort(logic.Boolean)
@@ -174,7 +174,7 @@ func TestTranslateSorts(t *testing.T) {
 }
 
 func TestTranslateVar(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
@@ -187,7 +187,7 @@ func TestTranslateVar(t *testing.T) {
 }
 
 func TestTranslateEq(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
@@ -202,7 +202,7 @@ func TestTranslateEq(t *testing.T) {
 }
 
 func TestTranslateApply(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
@@ -218,7 +218,7 @@ func TestTranslateApply(t *testing.T) {
 }
 
 func TestTranslateForAll(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
@@ -264,7 +264,7 @@ func TestTransitiveImplication(t *testing.T) {
 	existsTerm, _ := logic.NewExists([]*logic.Variable{X, Y, Z}, andTerm3)
 	transitive3, _ := logic.NewNot(existsTerm)
 
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 
 	// transitive1 => transitive2 (should be true — they're equivalent)
@@ -277,8 +277,8 @@ func TestTransitiveImplication(t *testing.T) {
 	}
 
 	// transitive2 => transitive3 (should be true)
-	tr2 := NewTranslator()
-	defer tr.Close()
+	tr2 := NewSolver(nil, nil).NewTranslator()
+	defer tr2.Close()
 	result, err = tr2.Implies(transitive2, transitive3)
 	if err != nil {
 		t.Fatal(err)
@@ -288,8 +288,8 @@ func TestTransitiveImplication(t *testing.T) {
 	}
 
 	// transitive3 => transitive1 (should be true — all three are equivalent)
-	tr3 := NewTranslator()
-	defer tr.Close()
+	tr3 := NewSolver(nil, nil).NewTranslator()
+	defer tr3.Close()
 	result, err = tr3.Implies(transitive3, transitive1)
 	if err != nil {
 		t.Fatal(err)
@@ -325,7 +325,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 	antisymmetric, _ := logic.NewForAll([]*logic.Variable{X, Y}, implAS)
 
 	// transitive3 should NOT imply antisymmetric
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	result, err := tr.Implies(transitive3, antisymmetric)
 	if err != nil {
@@ -346,7 +346,7 @@ func TestIteImplication(t *testing.T) {
 	ite, _ := logic.NewIte(b, x, y)
 	eqIteX, _ := logic.NewEq(ite, x)
 
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	result, err := tr.Implies(b, eqIteX)
 	if err != nil {
@@ -360,8 +360,8 @@ func TestIteImplication(t *testing.T) {
 	notB, _ := logic.NewNot(b)
 	eqIteY, _ := logic.NewEq(ite, y)
 
-	tr2 := NewTranslator()
-	defer tr.Close()
+	tr2 := NewSolver(nil, nil).NewTranslator()
+	defer tr2.Close()
 	result, err = tr2.Implies(notB, eqIteY)
 	if err != nil {
 		t.Fatal(err)
@@ -372,7 +372,7 @@ func TestIteImplication(t *testing.T) {
 }
 
 func TestTranslateTrue(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	zt, err := tr.Translate(logic.True)
 	if err != nil {
@@ -382,7 +382,7 @@ func TestTranslateTrue(t *testing.T) {
 }
 
 func TestTranslateFalse(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	zf, err := tr.Translate(logic.False)
 	if err != nil {
@@ -573,7 +573,7 @@ func TestIsSat(t *testing.T) {
 	X, _ := logic.NewVariable("X", S)
 	eq, _ := logic.NewEq(X, X)
 
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	result, err := tr.IsSat(eq)
 	if err != nil {
@@ -595,7 +595,7 @@ func TestIsUnsat(t *testing.T) {
 	neqSelf, _ := logic.NewNot(eqSelf)
 
 	// X != X is unsatisfiable
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	result, err := tr.IsSat(neqSelf)
 	if err != nil {
@@ -837,7 +837,7 @@ func FuzzTranslator(f *testing.F) {
 			return
 		}
 
-		tr := NewTranslator()
+		tr := NewSolver(nil, nil).NewTranslator()
 		defer tr.Close()
 		// Translate may return an error (that's fine), but must not panic
 		_, _ = tr.Translate(node)

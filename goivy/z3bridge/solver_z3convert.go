@@ -234,13 +234,16 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *module.Clauses) (*module.
 	// Create a fresh translator with an interpolation-capable context.
 	// Z3_compute_interpolant requires a context created via
 	// Z3_mk_interpolation_context (legacy solver with proof generation).
-	itpTr := NewTranslatorWithInterpolation()
+	itpTr := s.NewTranslatorWithInterpolation()
 	defer itpTr.Close()
 
 	// Wire up native lookups on the interpolation translator so that
 	// polymorphic symbols and native interpretations are handled.
-	itpTr.LookupNative = s.tr.LookupNative
-	itpTr.SolverName = s.tr.SolverName
+	//iptTr.Sorts = s.tr.Sorts
+	//iptTr.Relations = s.tr.Relations
+	//iptTr.Functions = s.tr.Functions
+	//itpTr.LookupNative = s.tr.LookupNative
+	//itpTr.SolverName = s.tr.SolverName
 
 	// Re-translate both clause sets into the interpolation context.
 	itpSolver := &Solver{

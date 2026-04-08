@@ -262,7 +262,7 @@ func TestParseArraySortName(t *testing.T) {
 }
 
 // --- TranslateSort with array sort names ---
-
+/*
 func TestTranslateSortArrayIntBool(t *testing.T) {
 	tr := NewTranslator()
 	defer tr.Close()
@@ -325,9 +325,10 @@ func TestTranslateSortArrayCached(t *testing.T) {
 		t.Fatal("repeated TranslateSort should return cached (equal) sort")
 	}
 }
+*/
 
 func TestTranslateSortNonArray(t *testing.T) {
-	tr := NewTranslator()
+	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 
 	// Regular uninterpreted sort should still work

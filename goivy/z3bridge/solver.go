@@ -44,13 +44,13 @@ func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
 		sig = il.NewSig()
 	}
 	s := &Solver{
-		tr:               NewTranslator(),
 		z3u:              NewZ3Utils(),
 		opts:             opts,
 		sig:              sig,
 		HandleRangeSorts: true,
 	}
-	s.wireNativeLookup()
+	s.tr = s.NewTranslator()
+	//s.wireNativeLookup()
 	return s
 }
 
@@ -106,6 +106,7 @@ func (s *Solver) Clear() {
 	s.z3u.Clear()
 }
 
+/* deprecated, go directly now.
 // wireNativeLookup installs the LookupNative callback on the translator
 // so that polymorphic symbols (+, -, *, /), range sort clamped arithmetic,
 // native interpretations (nat, bv, etc.), and interpreted sorts are properly
@@ -209,6 +210,7 @@ func (s *Solver) wireNativeLookup() {
 		return &result, nil
 	}
 }
+*/
 
 // Translator returns the underlying Translator.
 func (s *Solver) Translator() *Translator {
@@ -494,16 +496,16 @@ func (s *Solver) conjToZ3(fmla lg.Expr) (Expr, error) {
 // Matches Python's forall (ivy_solver.py:524-528).
 func (s *Solver) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
 	xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(vars))
-	if s.tr.QuantConstraints != nil {
-		var cnstrs []Expr
-		for i, v := range vars {
-			cs := s.tr.QuantConstraints(v, z3Vars[i])
-			cnstrs = append(cnstrs, cs...)
-		}
-		if len(cnstrs) > 0 {
-			z3Body = s.tr.Ctx.Implies(s.tr.Ctx.And(cnstrs...), z3Body)
-		}
+
+	var cnstrs []Expr
+	for i, v := range vars {
+		cs := s.tr.QuantConstraints(v, z3Vars[i])
+		cnstrs = append(cnstrs, cs...)
 	}
+	if len(cnstrs) > 0 {
+		z3Body = s.tr.Ctx.Implies(s.tr.Ctx.And(cnstrs...), z3Body)
+	}
+
 	return s.tr.Ctx.ForAll(z3Vars, z3Body)
 }
 
