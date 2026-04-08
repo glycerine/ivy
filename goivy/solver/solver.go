@@ -154,10 +154,27 @@ func (s *Solver) wireNativeLookup() {
 						return &zs
 					}
 				}
+				// Python sorts() lines 125-130: array sort names "arr[dom][rng]"
+				if dom, rng, ok2 := z3bridge.ParseArraySortName(v); ok2 {
+					domSort, err1 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: dom})
+					rngSort, err2 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: rng})
+					if err1 == nil && err2 == nil {
+						zs := ctx.ArraySort(domSort, rngSort)
+						return &zs
+					}
+				}
 			}
 		case *lg.RangeSort:
 			// Range sorts map to integers
 			zs := ctx.IntSort()
+			return &zs
+		case *lg.EnumeratedSort:
+			// Python lookup_native line 342-343:
+			// if isinstance(z3name, (EnumeratedSort, RangeSort)): return z3name.to_z3()
+			zs, err := s.tr.TranslateSort(v)
+			if err != nil {
+				return nil
+			}
 			return &zs
 		}
 		return nil

@@ -168,16 +168,9 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return zs, nil
 
 	case *logic.TopSort:
-		// TopSort is treated as uninterpreted in Z3
-		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
-		key := s.Sexp()
-		if cached, ok := t.sorts[key]; ok {
-			return cached, nil
-		}
-		zs := t.Ctx.UninterpretedSort(st.Name)
-		t.sorts[key] = zs
-		t.sortsInv[zs.GetId()] = s
-		return zs, nil
+		// Python has no TopSort.to_z3 — calling it would raise AttributeError.
+		// Panic here to match Python's behavior and expose bugs.
+		panic(fmt.Sprintf("TranslateSort: TopSort %q has no to_z3() equivalent in Python", st.Name))
 
 	case *logic.FunctionSort:
 		xtracer.Trace("ivy_solver.py:269 functionsort() ENTER")
@@ -193,7 +186,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
 		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
 		t.sorts[key] = zs
-		t.sortsInv[zs.GetId()] = s
+		// Python enumeratedsort() does NOT store in z3_sorts_inv
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
 			constKey := logic.NodeKey(name + ":" + string(s.Sexp()))
@@ -202,12 +195,8 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return zs, nil
 
 	case *logic.RangeSort:
-		// Range sorts map to integers
-		// Python: lookup_native returns the IntSort via sorts("int")
-		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
-		zs := t.Ctx.IntSort()
-		t.sortsInv[zs.GetId()] = s
-		return zs, nil
+		// Python: lambda self: z3.IntSort() — no trace, no caching, no sortsInv
+		return t.Ctx.IntSort(), nil
 
 	default:
 		return Sort{}, fmt.Errorf("unsupported sort type: %T", s)
