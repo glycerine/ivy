@@ -505,7 +505,7 @@ func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Expr {
 
 // TypeConstraints generates type constraints for a set of symbols.
 func TypeConstraints(syms []*lg.Const) lg.Expr {
-	xtracer.Trace("ivy_solver.py:591 type_constraints() ENTER nsyms=%d", len(syms))
+	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(syms))
 	// For each symbol with an enumerated sort, generate range constraints
 	var constraints []lg.Expr
 	for _, sym := range syms {

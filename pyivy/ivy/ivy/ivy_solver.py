@@ -97,7 +97,7 @@ def my_minus(*args):
     return args[0] - args[1]
 
 def my_eq(x,y):
-    #if __debug__: xtracer.trace("ivy_solver.py:95 my_eq() ENTER")
+    if __debug__: xtracer.trace("ivy_solver.py:95 my_eq() ENTER")
     if z3.is_true(y):
         return x
     if z3.is_false(y):
@@ -276,7 +276,7 @@ def uninterpretedsort(us):
     return s
 
 def functionsort(fs):
-    if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER"); traceback.print_stack(limit=10)
+    if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER")
 #    print "fs.rng = {!r}".format(fs.rng)
     if fs.is_relational():
         return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
@@ -601,7 +601,7 @@ def conj_to_z3(cl):
     return formula_to_z3_closed(cl)
 
 def type_constraints(syms):
-    if __debug__: xtracer.trace("ivy_solver.py:591 type_constraints() ENTER nsyms=%d" % len(syms))
+    if __debug__: xtracer.trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d" % len(syms)); traceback.print_stack(limit=20)
     natsyms = [s for s in syms
                if ivy_logic.sig.interp.get(s.sort.rng.name,None) == 'nat'
                   and not ivy_logic.is_interpreted_symbol(s)]
@@ -715,7 +715,7 @@ def formula_to_z3(fmla):
     if __debug__:
         canon = fmla.sexp()
         leaf, root = _translate_merkle.add_leaf(canon)
-        xtracer.trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s" % (leaf, root, canon))
+        #xtracer.trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s" % (leaf, root, canon))
     try:
         z3_fmla = formula_to_z3_closed(fmla)
     except Exception as e:

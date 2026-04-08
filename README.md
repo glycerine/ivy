@@ -2603,52 +2603,24 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236165  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=And
-        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=And
-
-236166  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Or
-        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Or
-
-236167  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
-        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
-
-236168  go : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Eq
-        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Eq
-
-236169  go : XTRACE: ivy_solver.py:517 atom_to_z3() ENTER rep== nargs=2
-        py : XTRACE: ivy_solver.py:517 atom_to_z3() ENTER rep== nargs=2
-
-236170  go : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=ref.evs.req kind=function
-        py : XTRACE: ivy_solver.py:312 lookup_native() ENTER name=ref.evs.req kind=function
-
-236171  go : XTRACE: ivy_solver.py:279 functionsort() ENTER
-        py : XTRACE: ivy_solver.py:279 functionsort() ENTER
-
-236172  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=lclock
+236237  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=lclock
         py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=lclock
 
-236173  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+236238  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
         py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
 
-236174  go : XTRACE: ivy_solver.py:281 enumeratedsort() ENTER name=op_type
-        py : XTRACE: ivy_solver.py:281 enumeratedsort() ENTER name=op_type
+236239  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.mem_memc_exception
+        py : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.mem_memc_exception
 
-236175  go : XTRACE: ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.
-        py : XTRACE: ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.
-
-236176  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.evs.req
-        py : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.evs.req
-
-236177  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+236240  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
         py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
 
-236178  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=nop
-        py : XTRACE: ivy_solver.py:651 formula_to_z3_int() ENTER type=Not
+236241  go : XTRACE: ivy_solver.py:95 my_eq() ENTER
+        py : XTRACE: ivy_solver.py:95 my_eq() ENTER
 
-========== trailing ~go[after i= 236178]:
-solver_z3convert.go:1047: go-caller='github.com/glycerine/ivy/goivy/z3bridge.(*Translator).SolverName'; sym.Canon = '(Symbol name:nop sort:(EnumeratedSort name:op_type ext:[nop,write,read,rrsp,wr_cmp]))'
-========== trailing ~py[after i= 236178]:
-caller=term_to_z3_int:fmla.args
+236242  go : XTRACE: ivy_solver.py:718 formula_to_z3 HASH leaf=blake3.33B-K-GRFyQei7xlCrxz2J-IN-jDxlSocoE3BjeYkZq8wLNA root=blake3.33B-0pGcbRRT5hn_x-xqgphD-LazWjXkHZQLCoM4urFni-Ge canon=(Def lhs:(Apply func:(Symbol name:ref.mem_memc_exception sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (Uninterpret ...(truncated long line to 300 bytes)
+
+        py : XTRACE: ivy_solver.py:591 type_constraints() ENTER nsyms=14
 ~~~
 was, before adding solver xtracing:
 ~~~

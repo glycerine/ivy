@@ -337,7 +337,7 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 		canon := iu.Canonical(n.Sexp())
 		leaf, root := t.TranslateMerkle.AddLeaf(canon)
 		//xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, canon)
-		xtracer.Trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s", leaf, root, canon)
+		//xtracer.Trace("ivy_solver.py:718 formula_to_z3 HASH leaf=%s root=%s canon=%s", leaf, root, canon) // 2 of 2
 	}
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
@@ -851,7 +851,9 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		}
 	}
 
-	// Python term_to_z3 line 479: z3_constants.get(str(term.rep)).
+	// Python term_to_z3() at ivy_solver.py:479 does:
+	//     z3_constants.get(str(term.rep)).
+	//
 	// For enum constants pre-registered by enumeratedsort(), this cache
 	// hit returns immediately without calling solver_name or to_z3.
 	// Only enum constants get this early check because Python's z3_constants
