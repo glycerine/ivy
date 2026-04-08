@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -44,7 +44,8 @@ func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr 
 	preNode := update.PreNode()
 	if checkPrecond && preNode != nil && !isNodeFalse(preNode) {
 		preCombined := &lg.And{Terms: []lg.Expr{stateTR, axiomsFmla, preNode}}
-		t := z3bridge.NewTranslator()
+		solver := z3bridge.NewSolver(nil, nil)
+		t := solver.NewTranslator()
 		defer t.Close()
 		result, err := t.IsSat(preCombined)
 		if err == nil && result == z3bridge.Sat {

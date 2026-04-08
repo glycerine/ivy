@@ -16,7 +16,6 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -871,9 +870,3 @@ func appendUnique(dst, src []string) []string {
 	}
 	return dst
 }
-
-// Ensure imports are used. These will be fully utilized once the complete
-// action semantics compiler is in place.
-var (
-	_ = z3bridge.NewTranslator
-)

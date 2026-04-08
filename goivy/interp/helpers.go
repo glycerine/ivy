@@ -8,7 +8,6 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -229,7 +228,8 @@ func ReachState(state *State, clauses *module.Clauses) *State {
 	)
 	// Check satisfiability of the forward image conjoined with the target.
 	// If SAT, a reachable state exists.
-	t := z3bridge.NewTranslator()
+	solver := z3bridge.NewSolver(nil, nil)
+	t := solver.NewTranslator()
 	defer t.Close()
 	result, err := t.IsSat(imgClauses.ToFormula())
 	if err != nil || result != z3bridge.Sat {
@@ -286,7 +286,9 @@ func UndecidedConjectures(state *State) []*module.Clauses {
 
 	var undecided []*module.Clauses
 	for _, c := range conjs {
-		t := z3bridge.NewTranslator()
+		solver := z3bridge.NewSolver(nil, nil)
+		t := solver.NewTranslator()
+
 		implied, err := t.Implies(premiseFmla, c.ToFormula())
 		if err != nil || !implied {
 			undecided = append(undecided, c)
@@ -308,7 +310,9 @@ func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
 	var keep []*module.Clauses
 	var lose []*module.Clauses
 	for _, c := range conjs {
-		t := z3bridge.NewTranslator()
+		solver := z3bridge.NewSolver(nil, nil)
+		t := solver.NewTranslator()
+
 		implied, err := t.Implies(modelFmla, c.ToFormula())
 		if err == nil && implied {
 			keep = append(keep, c)
@@ -339,7 +343,9 @@ func CaseConjecture(state *State, clauses *module.Clauses) (interface{}, interfa
 	premiseFmla := module.AndClausesTyped(pre, axioms).ToFormula()
 	clausesFmla := clauses.ToFormula()
 
-	t := z3bridge.NewTranslator()
+	solver := z3bridge.NewSolver(nil, nil)
+	t := solver.NewTranslator()
+
 	implied, err := t.Implies(premiseFmla, clausesFmla)
 	if err != nil {
 		return nil, nil, false
@@ -375,7 +381,7 @@ func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, ext
 
 	// Use solver to extract a minimal model diagram.
 	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
-	slv := solver.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
 	isSkolem := func(c *lg.Const) bool {
 		return actions.IsSkolem(c.Name)
 	}
@@ -544,7 +550,9 @@ func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 			continue
 		}
 		// Assert: check if axioms (plus accumulated subgoals) imply this property.
-		t := z3bridge.NewTranslator()
+		solver := z3bridge.NewSolver(nil, nil)
+		t := solver.NewTranslator()
+
 		implied, err := t.Implies(premise, prop.Formula.(lg.Expr))
 		if err != nil || !implied {
 			falseProps = append(falseProps, prop)
