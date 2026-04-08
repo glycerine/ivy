@@ -529,7 +529,8 @@ func (ag *AnalysisGraph) Unreachable(node *State) bool {
 	}
 
 	fmla := node.Clauses.ToFormula()
-	t := z3bridge.NewTranslator()
+	solver := z3bridge.NewSolver(nil, nil)
+	t := solver.NewTranslator()
 	defer t.Close()
 
 	result, err := t.IsSat(fmla)
