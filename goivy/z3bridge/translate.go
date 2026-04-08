@@ -850,6 +850,22 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 			return *result, err
 		}
 	}
+
+	// Python term_to_z3 line 479: z3_constants.get(str(term.rep)).
+	// For enum constants pre-registered by enumeratedsort(), this cache
+	// hit returns immediately without calling solver_name or to_z3.
+	// Only enum constants get this early check because Python's z3_constants
+	// cache only effectively works for enum constants (string-to-string key
+	// match). Non-enum constants use Symbol object keys for storage but
+	// string keys for lookup, so the cache never hits for them — solver_name
+	// is always called. We must match that behavior.
+	if _, isEnum := sort.(*lg.EnumeratedSort); isEnum {
+		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
+		if cached, ok := t.consts[key]; ok {
+			return cached, nil
+		}
+	}
+
 	z3name := t.z3Name(name, sort)
 	if lg.FirstOrderSort(sort) {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
