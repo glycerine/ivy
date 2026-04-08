@@ -9,11 +9,10 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// NativeLookupFunc is a callback that looks up native Z3 interpretations
-// for Ivy symbols. If the symbol has a native interpretation, it returns
-// a function that maps Z3 arguments to a Z3 result. Returns nil if the
-// symbol has no native interpretation.
-type NativeLookupFunc func(name string, sort logic.Sort, isRelation bool) func(args ...Expr) Expr
+// LookupNativeFunc is a callback matching Python lookup_native(thing, table, kind)
+// (ivy_solver.py:311). Returns any: z3bridge.Sort for sort lookups,
+// func(args ...Expr) Expr for function/relation lookups, or nil.
+type LookupNativeFunc func(name string, sort logic.Sort, kind string) any
 
 // SolverNameFunc maps an Ivy symbol to its Z3 name. Returns "" if the
 // symbol should be handled natively (not declared as an uninterpreted function).
@@ -23,11 +22,6 @@ type SolverNameFunc func(name string, sort logic.Sort) string
 // quantifier-bound variables based on their sort (e.g., nat non-negativity,
 // range sort bounds). Corresponds to Python's quant_constraints.
 type QuantConstraintsFn func(v *logic.Variable, z3Var Expr) []Expr
-
-// SortLookupFunc is a callback that resolves an Ivy sort name to a Z3 sort.
-// Used for interpreted sorts (nat→IntSort, bv[N]→BitVecSort, etc.).
-// Returns nil Sort if the sort should be handled by the default TranslateSort.
-type SortLookupFunc func(sortName string) *Sort
 
 // EqFuncFn is a callback for custom equality (e.g., MyEq with True/False optimization).
 // Corresponds to Python's my_eq (ivy_solver.py:88-95).
@@ -51,10 +45,9 @@ type Translator struct {
 	consts           map[logic.NodeKey]Expr                    // cache: structural key -> Z3 const
 	funcs            map[logic.NodeKey]FuncDecl                // cache: structural key -> Z3 func decl
 	preds            map[logic.NodeKey]func(args ...Expr) Expr // cache: z3_predicates (Python z3_predicates)
-	NativeLookup     NativeLookupFunc                          // optional: native interpretation callback
+	LookupNative     LookupNativeFunc                          // optional: Python lookup_native(thing, table, kind) callback
 	SolverName       SolverNameFunc                            // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 	QuantConstraints QuantConstraintsFn                        // optional: generates sort constraints for quantifier-bound variables
-	SortLookup       SortLookupFunc                            // optional: resolves interpreted sort names to Z3 sorts
 	EqFunc           EqFuncFn                                  // optional: custom equality (MyEq True/False optimization)
 	EnumEqFunc       EnumEqFuncFn                              // optional: custom enumerated equality (binary encoding)
 	NumeralFunc      NumeralFuncFn                             // optional: custom numeral handling (range clamping)
@@ -129,38 +122,23 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 
 	case *logic.UninterpretedSort:
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
+		// Python: uninterpretedsort(us) at ivy_solver.py:257
 		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
-		// Python: s = lookup_native(us, sorts, "sort") inside uninterpretedsort()
-		xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=sort", st.Name)
-		// Check for interpreted sort via callback (nat→IntSort, bv[N]→BitVecSort, etc.)
-		// If native, this calls sorts() internally.
-		if t.SortLookup != nil {
-			if zs := t.SortLookup(st.Name); zs != nil {
-				t.sorts[key] = *zs
-				t.sortsInv[zs.GetId()] = s
-				return *zs, nil
+		// Python: s = lookup_native(us, sorts, "sort")
+		if t.LookupNative != nil {
+			if result := t.LookupNative(st.Name, s, "sort"); result != nil {
+				if zs, ok := result.(Sort); ok {
+					t.sorts[key] = zs
+					t.sortsInv[zs.GetId()] = s
+					return zs, nil
+				}
 			}
 		}
-		// Check for array sort: arr[domain][range]
-		// Corresponds to Python ivy_solver.py:115-120 sorts() function.
-		if dom, rng, ok := ParseArraySortName(st.Name); ok {
-			domSort, err := t.TranslateSort(&logic.UninterpretedSort{Name: dom})
-			if err != nil {
-				return Sort{}, fmt.Errorf("array domain sort %q: %w", dom, err)
-			}
-			rngSort, err := t.TranslateSort(&logic.UninterpretedSort{Name: rng})
-			if err != nil {
-				return Sort{}, fmt.Errorf("array range sort %q: %w", rng, err)
-			}
-			zs := t.Ctx.ArraySort(domSort, rngSort)
-			t.sorts[key] = zs
-			t.sortsInv[zs.GetId()] = s
-			return zs, nil
-		}
+		// Python: if s == None: s = z3.DeclareSort(us.rep)
 		zs := t.Ctx.UninterpretedSort(st.Name)
 		t.sorts[key] = zs
 		// Python: z3_sorts_inv[get_id(s)] = us
