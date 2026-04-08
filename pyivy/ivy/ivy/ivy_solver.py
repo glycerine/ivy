@@ -778,7 +778,7 @@ def cube_to_z3(cube):
     return fmla
 
 def get_id(x):
-    if __debug__: xtracer.trace("ivy_solver.py:781 get_id() ENTER")
+    #if __debug__: xtracer.trace("ivy_solver.py:781 get_id() ENTER")
     return z3.Z3_get_ast_id(x.ctx_ref(), x.as_ast())
 
 def check_cube(s,cube,memo = None,memo_unsat_only = False):

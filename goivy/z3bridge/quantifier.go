@@ -31,7 +31,7 @@ import (
 	"unsafe"
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/xtracer"
+	//"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // --- Z3Context ---
@@ -611,7 +611,7 @@ func (s Sort) String() string {
 // GetId returns the unique numeric AST ID for this sort.
 // Corresponds to Python's get_id() which calls Z3_get_ast_id.
 func (s Sort) GetId() uint {
-	xtracer.Trace("ivy_solver.py:781 get_id() ENTER")
+	//xtracer.Trace("ivy_solver.py:781 get_id() ENTER")
 	var id uint
 	s.ctx.do(func() {
 		ast := C.Z3_sort_to_ast(s.ctx.c, s.c) // python's x.as_ast() does this internally.
