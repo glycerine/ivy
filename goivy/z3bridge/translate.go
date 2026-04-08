@@ -140,7 +140,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
 		xtracer.Trace("ivy_solver.py:258 uninterpretedsort() ENTER name=%s", st.Name)
-		key := s.Sexp()
+		key := logic.NodeKey(st.Name) // Python: z3_sorts[us.rep] where rep = name
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
@@ -173,16 +173,16 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 	case *logic.EnumeratedSort:
 		// Python: enumeratedsort(es) at ivy_solver.py:275
 		xtracer.Trace("ivy_solver.py:276 enumeratedsort() ENTER name=%s", st.Name)
-		key := s.Sexp()
+		key := logic.NodeKey(st.Name) // Python: z3_sorts[es.rep] where rep = name
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
 		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
 		t.sorts[key] = zs
-		// Python enumeratedsort() does NOT store in z3_sorts_inv,
-		// but Go needs it for SortFromZ3 reverse lookups.
-		t.sortsInv[zs.GetId()] = s
+		// Python enumeratedsort() does NOT store in z3_sorts_inv.
+		// The reverse map entry is created by uninterpretedsort (the normal
+		// entry point for interpreted sorts).
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
 			constKey := logic.NodeKey(name + ":" + string(s.Sexp()))
@@ -621,7 +621,7 @@ func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 			if zsVal, ok := result.(Sort); ok {
 				zs = &zsVal
 				// Cache the sort so TranslateSort finds it later via cache
-				sortKey := sort.Sexp()
+				sortKey := logic.NodeKey(sortDisplayName(sort)) // Python: z3_sorts key is sort name
 				if _, ok := t.sorts[sortKey]; !ok {
 					t.sorts[sortKey] = zsVal
 					t.sortsInv[zsVal.GetId()] = sort

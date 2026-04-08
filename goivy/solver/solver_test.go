@@ -1581,22 +1581,18 @@ func TestSortFromZ3RoundTrip(t *testing.T) {
 		t.Fatalf("expected UninterpretedSort{Name:node}, got %T %v", got, got)
 	}
 
-	// Test EnumeratedSort — must preserve Extension data
+	// Test EnumeratedSort — Python enumeratedsort() does NOT store in
+	// z3_sorts_inv, so SortFromZ3 returns false for directly-translated
+	// EnumeratedSorts. The reverse map is populated by the uninterpretedsort
+	// path (the normal entry point for interpreted sorts in production).
 	enumSort := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	z3enum, err := tr.TranslateSort(enumSort)
 	if err != nil {
 		t.Fatalf("TranslateSort(EnumeratedSort): %v", err)
 	}
-	got2, ok := tr.SortFromZ3(z3enum)
-	if !ok {
-		t.Fatal("SortFromZ3 returned false for EnumeratedSort")
-	}
-	es, ok := got2.(*lg.EnumeratedSort)
-	if !ok {
-		t.Fatalf("expected *EnumeratedSort, got %T", got2)
-	}
-	if len(es.Extension) != 3 || es.Extension[0] != "red" {
-		t.Fatalf("EnumeratedSort extension not preserved: %v", es.Extension)
+	_, ok = tr.SortFromZ3(z3enum)
+	if ok {
+		t.Fatal("SortFromZ3 should return false for directly-translated EnumeratedSort (matches Python)")
 	}
 }
 
