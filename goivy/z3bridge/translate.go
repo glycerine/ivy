@@ -46,20 +46,20 @@ type NumeralFuncFn func(name string, sort logic.Sort) (*Expr, error)
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Z3Context
-	sorts            map[logic.NodeKey]Sort     // cache: Ivy sort Sexp -> Z3 sort
-	sortsInv         map[uint]logic.Sort         // reverse map: Z3 AST ID -> original Ivy sort (Python z3_sorts_inv)
-	consts           map[logic.NodeKey]Expr     // cache: structural key -> Z3 const
-	funcs            map[logic.NodeKey]FuncDecl // cache: structural key -> Z3 func decl
+	sorts            map[logic.NodeKey]Sort                    // cache: Ivy sort Sexp -> Z3 sort
+	sortsInv         map[uint]logic.Sort                       // reverse map: Z3 AST ID -> original Ivy sort (Python z3_sorts_inv)
+	consts           map[logic.NodeKey]Expr                    // cache: structural key -> Z3 const
+	funcs            map[logic.NodeKey]FuncDecl                // cache: structural key -> Z3 func decl
 	preds            map[logic.NodeKey]func(args ...Expr) Expr // cache: z3_predicates (Python z3_predicates)
-	NativeLookup     NativeLookupFunc           // optional: native interpretation callback
-	SolverName       SolverNameFunc             // optional: maps symbol to Z3 name (for polymorphic disambiguation)
-	QuantConstraints QuantConstraintsFn         // optional: generates sort constraints for quantifier-bound variables
-	SortLookup       SortLookupFunc             // optional: resolves interpreted sort names to Z3 sorts
-	EqFunc           EqFuncFn                   // optional: custom equality (MyEq True/False optimization)
-	EnumEqFunc       EnumEqFuncFn               // optional: custom enumerated equality (binary encoding)
-	NumeralFunc      NumeralFuncFn              // optional: custom numeral handling (range clamping)
-	TranslateMerkle  iu.MerkleState             // rolling Merkle hash for Translate() input conformance
-	translateDepth   int                        // nesting depth; only hash at top level (depth 0)
+	NativeLookup     NativeLookupFunc                          // optional: native interpretation callback
+	SolverName       SolverNameFunc                            // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	QuantConstraints QuantConstraintsFn                        // optional: generates sort constraints for quantifier-bound variables
+	SortLookup       SortLookupFunc                            // optional: resolves interpreted sort names to Z3 sorts
+	EqFunc           EqFuncFn                                  // optional: custom equality (MyEq True/False optimization)
+	EnumEqFunc       EnumEqFuncFn                              // optional: custom enumerated equality (binary encoding)
+	NumeralFunc      NumeralFuncFn                             // optional: custom numeral handling (range clamping)
+	TranslateMerkle  iu.MerkleState                            // rolling Merkle hash for Translate() input conformance
+	translateDepth   int                                       // nesting depth; only hash at top level (depth 0)
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -106,7 +106,21 @@ func (t *Translator) z3Name(name string, sort logic.Sort) string {
 
 // TranslateSort converts an Ivy sort to a Z3 sort.
 // Emits type-specific traces matching Python's per-sort-type functions:
-//   uninterpretedsort() (line 258), enumeratedsort() (line 276), etc.
+// uninterpretedsort() (line 258), enumeratedsort() (line 276), etc.
+//
+// What is the equivalent of TranslateSort in python?
+// It's the polymorphic .to_z3() method, monkey-patched
+// onto each sort class at ivy_solver.py:286-295:
+//
+// ivy_logic.UninterpretedSort.to_z3 = uninterpretedsort    # line 286
+// ivy_logic.FunctionSort.to_z3 = functionsort              # line 293
+// ivy_logic.EnumeratedSort.to_z3 = enumeratedsort          # line 294
+// ivy_logic.RangeSort.to_z3 = lambda self: z3.IntSort()    # line 290
+// ivy_logic.BooleanSort.to_z3 = lambda self: z3.BoolSort() # line 289
+//
+// Go's TranslateSort is the correct structural equivalent — it
+// dispatches on sort type via a switch, doing the same thing
+// as Python's polymorphic dispatch.
 func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 	switch st := s.(type) {
 	case *logic.BooleanSort:
@@ -564,31 +578,61 @@ func termName(n logic.Expr) string {
 // Corresponds to Python term_to_z3 variable case (ivy_solver.py:418-433).
 func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 	sort := v.VSort
-	// Z3 display name uses simple sort name
-	sortDisplayName := string(sort.Sexp())
-	if us, ok := sort.(*logic.UninterpretedSort); ok {
-		sortDisplayName = us.Name
-	} else if es, ok := sort.(*logic.EnumeratedSort); ok {
-		sortDisplayName = es.Name
-	} else if rs, ok := sort.(*logic.RangeSort); ok {
-		sortDisplayName = rs.Name
-	} else if _, ok := sort.(*logic.BooleanSort); ok {
-		sortDisplayName = "Bool"
-	}
-
-	sksym := v.Name + ":" + sortDisplayName
+	sortName := sortDisplayName(sort)
+	sksym := v.Name + ":" + sortName
 	// Cache key uses structural identity
 	key := logic.NodeKey(v.Name + ":" + string(sort.Sexp()))
+
+	// Python: res = z3_constants.get(sksym)
 	if cached, ok := t.consts[key]; ok {
 		return cached, nil
 	}
-	zs, err := t.TranslateSort(sort)
-	if err != nil {
-		return Expr{}, err
+
+	// Python line 454: sig = lookup_native(term.sort, sorts, "sort") if sorted else S
+	var zs *Sort
+	if t.SortLookup != nil {
+		xtracer.Trace("ivy_solver.py:312 lookup_native() ENTER name=%s kind=sort", sortName)
+		zs = t.SortLookup(sortName)
+		if zs != nil {
+			// Cache the sort so TranslateSort finds it later via cache
+			sortKey := sort.Sexp()
+			if _, ok := t.sorts[sortKey]; !ok {
+				t.sorts[sortKey] = *zs
+				t.sortsInv[zs.GetId()] = sort
+			}
+		}
 	}
-	c := t.Ctx.Const(sksym, zs)
+
+	// Python line 455-456: if sig == None: sig = term.sort.to_z3()
+	if zs == nil {
+		zsVal, err := t.TranslateSort(sort)
+		if err != nil {
+			return Expr{}, err
+		}
+		zs = &zsVal
+	}
+
+	// Python: res = z3.Const(sksym, sig); z3_constants[sksym] = res
+	c := t.Ctx.Const(sksym, *zs)
 	t.consts[key] = c
 	return c, nil
+}
+
+// sortDisplayName extracts the display name from a sort for use in Z3 constant
+// naming (e.g., "T0:lclock"). Matches Python's term.sort.name.
+func sortDisplayName(sort logic.Sort) string {
+	switch s := sort.(type) {
+	case *logic.UninterpretedSort:
+		return s.Name
+	case *logic.EnumeratedSort:
+		return s.Name
+	case *logic.RangeSort:
+		return s.Name
+	case *logic.BooleanSort:
+		return "Bool"
+	default:
+		return string(sort.Sexp())
+	}
 }
 
 // TranslateVar translates a Variable to a Z3 const without emitting a
