@@ -283,10 +283,24 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	}
 
 	// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
-	symMap := clauses.Symbols()
-	clauseSyms := make([]*lg.Const, 0, len(symMap))
-	for _, sym := range symMap {
-		clauseSyms = append(clauseSyms, sym)
+	// used_symbols_clauses = gen_to_set(apply_gen_to_clauses(symbols_ilu_ast))
+	// i.e. applies symbols_ilu_ast to each fmla and def, collects into a set.
+	allSyms := make(map[lg.NodeKey]lg.Expr)
+	for _, f := range clauses.Fmlas {
+		for k, v := range il.UsedSymbolsAst(f) {
+			allSyms[k] = v
+		}
+	}
+	for _, d := range clauses.Defs {
+		for k, v := range il.UsedSymbolsAst(d) {
+			allSyms[k] = v
+		}
+	}
+	clauseSyms := make([]*lg.Const, 0, len(allSyms))
+	for _, sym := range allSyms {
+		if c, ok := sym.(*lg.Const); ok {
+			clauseSyms = append(clauseSyms, c)
+		}
 	}
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
@@ -474,7 +488,14 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	}
 
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
-	usedSyms := lu.UsedConstantsList(fmla)
+	// used_symbols_ast = gen_to_set(symbols_ilu_ast)  (ivy_logic_utils.py:610)
+	symMap := il.UsedSymbolsAst(fmla)
+	usedSyms := make([]*lg.Const, 0, len(symMap))
+	for _, sym := range symMap {
+		if c, ok := sym.(*lg.Const); ok {
+			usedSyms = append(usedSyms, c)
+		}
+	}
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, iu.ShortTypeName(fmla))
