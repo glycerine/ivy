@@ -179,11 +179,11 @@ func (t *Translator) Numeral(name string, sort lg.Sort) (*Expr, error) {
 // NewTranslator creates a translator with a fresh Z3 context.
 func (s *Solver) NewTranslator() *Translator {
 	t := &Translator{
-		s:        s,
-		Ctx:      NewZ3Context(),
-		sorts:    make(map[lg.NodeKey]Sort),
-		sortsInv: make(map[uint]lg.Sort),
-		consts:   make(map[lg.NodeKey]Expr),
+		s:             s,
+		Ctx:           NewZ3Context(),
+		sorts:         make(map[lg.NodeKey]Sort),
+		sortsInv:      make(map[uint]lg.Sort),
+		consts:        make(map[lg.NodeKey]Expr),
 		z3_functions:  make(map[lg.NodeKey]FuncDecl),
 		z3_predicates: make(map[lg.NodeKey]func(args ...Expr) Expr),
 	}
@@ -371,11 +371,12 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 			return t.atomToZ3(app)
 		}
 	}
-	if app, ok := n.(*lg.Apply); ok {
-		if c, ok2 := app.Func.(*lg.Const); ok2 && isPolymac(c.Name) {
-			vv("DEBUG F2Z3: polymac op=%s nTerms=%d sort=%T isApp=%v\n", c.Name, len(app.Terms), n.NodeSort(), true)
-		}
-	}
+	//if app, ok := n.(*lg.Apply); ok {
+	//	if c, ok2 := app.Func.(*lg.Const); ok2 && isPolymac(c.Name) {
+	//		vv("DEBUG F2Z3: polymac op=%s nTerms=%d sort=%T isApp=%v\n", c.Name, len(app.Terms), n.NodeSort(), true)
+	//	}
+	//}
+
 	// Python: isinstance(term, lg.Eq) in is_atom → atom_to_z3(fmla)
 	// Eq has duck-typed .rep/.args/.relname in Python; we construct a
 	// pseudo-Apply to pass through the same atomToZ3 code path.
@@ -625,11 +626,11 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// For <=, >, >= on uninterpreted sorts where lookup_native returned nil,
 	// expand into combinations of < and = at the Z3 level.
 	// Matches Python polymacs dict (ivy_solver.py:519-523).
-	if isPolymac(c.Name) {
-		vv("DEBUG polymacs: op=%s usePolymorphicMacros=%v s=%v sig=%v iuCfg=%v\n",
-			c.Name, t.usePolymorphicMacros(), t.s != nil, t.s != nil && t.s.sig != nil,
-			t.s != nil && t.s.sig != nil && t.s.sig.IuCfg != nil)
-	}
+	//if isPolymac(c.Name) {
+	//vv("DEBUG polymacs: op=%s usePolymorphicMacros=%v s=%v sig=%v iuCfg=%v\n",
+	//	c.Name, t.usePolymorphicMacros(), t.s != nil, t.s != nil && t.s.sig != nil,
+	//	t.s != nil && t.s.sig != nil && t.s.sig.IuCfg != nil)
+	//}
 	if isPolymac(c.Name) && t.usePolymorphicMacros() {
 		xtracer.Trace("ivy_solver.py:513 get_polymacs() ENTER op=%s", c.Name)
 		predFn, err := t.polymacPred(c.Name, c.CSort)
