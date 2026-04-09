@@ -851,6 +851,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 		wrap.Elems = append(wrap.Elems, a)
 	}
 	mod.Actions.Set(actname, wrap)
+	actions.AssertEveryActionHasLoc(wrap, "isolate.bracketActionInt actname="+actname)
 }
 
 // conjToAssume converts a labeled conjecture to an AssumeAction.

@@ -571,6 +571,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				if action.GetLineno() == (ast.Location{}) {
 					action.SetLineno(ad.GetLineno())
 				}
+				actions.AssertEveryActionHasLoc(action, "compiler.IvyARGSetup actname="+name)
 				mod.SetAction(name, action)
 				mod.PublicActions.Set(name, true)
 				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)

@@ -1335,6 +1335,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for k, v := range exported.All() {
 		mod.PublicActions.Set(k, v)
 	}
+	// Defensive: validate that every action carries a source Location
+	// before installing into mod.Actions. This is a no-op when
+	// AssertLocEnabled is false (default).
+	for actname, act := range newActions.All() {
+		actions.AssertEveryActionHasLoc(act, "isolate.end_classify actname="+actname)
+	}
 	mod.Actions = iu.NewInsMap[string, module.Action]()
 	for name, act := range newActions.All() {
 		mod.Actions.Set(name, act)
