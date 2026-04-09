@@ -2531,8 +2531,12 @@ func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 	}
 }
 
-// TestTranslateLeGtGeUninterpretedSort verifies that <=, >, >= also work
-// on uninterpreted sorts (creating sort-qualified uninterpreted functions).
+// TestTranslateLeGtGeUninterpretedSort verifies that <=, >, >= on
+// uninterpreted sorts are expanded via polymorphic macros into
+// combinations of < and =, matching Python's polymacs dict.
+//   <= -> Or(x == y, lt(x, y))
+//   >  -> lt(y, x)
+//   >= -> Or(x == y, lt(y, x))
 func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
@@ -2553,10 +2557,15 @@ func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
 		}
 
 		smt := z3expr.String()
-		// Should contain sort-qualified name (e.g., "<=:lclock")
-		expected := op + ":lclock"
-		if !strings.Contains(smt, expected) {
-			t.Errorf("op %s: expected sort-qualified '%s' in Z3 output, got: %s", op, expected, smt)
+		// Polymacs expansion uses lt_pred("<") on the same sort.
+		if !strings.Contains(smt, "<:lclock:lclock") {
+			t.Errorf("op %s: expected '<:lclock:lclock' (lt_pred) in Z3 output, got: %s", op, smt)
+		}
+		// <= and >= should produce Or(=, <); > should not contain "or".
+		if op == "<=" || op == ">=" {
+			if !strings.Contains(smt, "or") {
+				t.Errorf("op %s: expected 'or' in polymacs expansion, got: %s", op, smt)
+			}
 		}
 	}
 }

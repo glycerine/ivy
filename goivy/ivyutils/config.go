@@ -80,7 +80,11 @@ func NewIvyUtilsConfig() *IvyUtilsConfig {
 		UseNewUI:              false,
 		DefaultUI:             "cti",
 		EnableDebug:           false,
+		UsePolymorphicMacros:  true, // derived: default version 1.8 > 1.5
+		ForbidGhostInit:       true, // derived: default version 1.8 > 1.6
 	}
+	cfg.SetStringVersion(cfg.LanguageVersion)
+	//fmt.Printf("UsePolymorphicMacros = %v\n", cfg.UsePolymorphicMacros)
 	return cfg
 }
 
