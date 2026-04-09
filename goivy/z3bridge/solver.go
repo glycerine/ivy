@@ -414,6 +414,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	// Per-formula type constraints matching Python formula_to_z3 line 670-672
 	// Python's type_constraints uses formula_to_z3_closed → Go formulaToZ3Closed
 	usedSyms := lu.UsedConstantsList(fmla)
+	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(usedSyms))
 	var tcs []Expr
 	for _, sym := range usedSyms {
 		constraints := s.typeConstraintsForSymbol(sym)
