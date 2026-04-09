@@ -2,7 +2,6 @@ package module
 
 import (
 	"fmt"
-	"iter"
 	"strings"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -139,7 +138,7 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 		return false
 	}
 	for _, f := range c.Fmlas {
-		syms := usedSymbolsAST(f)
+		syms := il.UsedConstantsAst(f)
 		for _, s := range syms {
 			if isSkolem(s) {
 				return false
@@ -193,16 +192,17 @@ func (c *Clauses) Equal(other *Clauses) bool {
 }
 
 // Symbols yields all constant symbols used in the Clauses.
+// Delegates to the faithful port il.UsedConstantsAst (via symbols_ilu_ast).
 func (c *Clauses) Symbols() map[lg.NodeKey]*lg.Const {
 	result := make(map[lg.NodeKey]*lg.Const)
 	for _, f := range c.Fmlas {
-		for s, sym := range usedSymbolsAST(f) {
-			result[s] = sym
+		for k, v := range il.UsedConstantsAst(f) {
+			result[k] = v
 		}
 	}
 	for _, d := range c.Defs {
-		for s, sym := range usedSymbolsAST(d) {
-			result[s] = sym
+		for k, v := range il.UsedConstantsAst(d) {
+			result[k] = v
 		}
 	}
 	return result
@@ -333,77 +333,10 @@ func isSkolem(c *lg.Const) bool {
 	return len(c.Name) >= 2 && c.Name[0] == '_' && c.Name[1] == '_'
 }
 
-// usedSymbolsAST returns the set of constant symbols used in an AST node.
-// This matches Python's used_symbols_ast: it yields the function symbols
-// of applications, plus recurses into arguments.
-func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Const {
-	result := make(map[lg.NodeKey]*lg.Const)
-	symbolsASTRec(node, result)
-	return result
-}
-
-func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]*lg.Const) {
-	switch t := node.(type) {
-	case *lg.Const:
-		result[lg.Key(t)] = t
-	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Const); ok {
-			result[lg.Key(c)] = c
-		} else {
-			symbolsASTRec(t.Func, result)
-		}
-		for _, arg := range t.Terms {
-			symbolsASTRec(arg, result)
-		}
-		return
-	}
-	for _, c := range node.Children() {
-		symbolsASTRec(c, result)
-	}
-}
-
-// IterSymbolsAST yields symbols from the AST in depth-first traversal order.
-// This matches Python's symbols_ast generator: yield func head first (for Apply),
-// then recurse into args. Unlike UsedSymbolsAST, this preserves encounter order
-// and does not use a map internally.
-func IterSymbolsAST(node lg.Expr) iter.Seq[*lg.Const] {
-	return func(yield func(*lg.Const) bool) {
-		iterSymbolsRec(node, yield)
-	}
-}
-
-func iterSymbolsRec(node lg.Expr, yield func(*lg.Const) bool) bool {
-	switch t := node.(type) {
-	case *lg.Const:
-		return yield(t)
-	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Const); ok {
-			if !yield(c) {
-				return false
-			}
-		} else {
-			if !iterSymbolsRec(t.Func, yield) {
-				return false
-			}
-		}
-		for _, arg := range t.Terms {
-			if !iterSymbolsRec(arg, yield) {
-				return false
-			}
-		}
-		return true
-	}
-	for _, c := range node.Children() {
-		if !iterSymbolsRec(c, yield) {
-			return false
-		}
-	}
-	return true
-}
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
 func usesSymbolsAST(syms map[lg.NodeKey]lg.Expr, node lg.Expr) bool {
-	used := usedSymbolsAST(node)
+	used := il.UsedConstantsAst(node)
 	for s := range syms {
 		if _, ok := used[s]; ok {
 			return true

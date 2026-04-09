@@ -97,6 +97,29 @@ func UsedSymbolsAsts(nodes []lg.Expr) map[lg.NodeKey]lg.Expr {
 	return result
 }
 
+// UsedConstantsAst returns the set of constant symbols in an AST.
+// Const-filtered version of UsedSymbolsAst. In Python, used_symbols_ast
+// returns Symbol objects directly; this filter is a Go type-system artifact.
+func UsedConstantsAst(node lg.Expr) map[lg.NodeKey]*lg.Const {
+	result := make(map[lg.NodeKey]*lg.Const)
+	for sym := range SymbolsIluAst(node) {
+		if c, ok := sym.(*lg.Const); ok {
+			result[lg.Key(c)] = c
+		}
+	}
+	return result
+}
+
+// UsedConstantsListAst returns used constants as a slice (convenience).
+func UsedConstantsListAst(node lg.Expr) []*lg.Const {
+	m := UsedConstantsAst(node)
+	result := make([]*lg.Const, 0, len(m))
+	for _, c := range m {
+		result = append(result, c)
+	}
+	return result
+}
+
 // UsedSymbolsInOrderAst returns unique symbols in order of first occurrence.
 // Matches Python: used_symbols_in_order_ast = gen_unique(symbols_ilu_ast)
 func UsedSymbolsInOrderAst(node lg.Expr) []lg.Expr {

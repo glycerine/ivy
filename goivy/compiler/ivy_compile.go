@@ -29,7 +29,6 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	solver "github.com/glycerine/ivy/goivy/z3bridge"
@@ -1418,7 +1417,7 @@ func CheckDefinitions(mod *module.Module) error {
 				// Check if any used symbols are stale
 				hasStale := false
 				if expr, ok := prop.Formula.(lg.Expr); ok {
-					for _, sym := range lu.UsedConstantsList(expr) {
+					for _, sym := range il.UsedConstantsListAst(expr) {
 						if stale[lg.Key(sym)] {
 							hasStale = true
 							break
@@ -1598,7 +1597,7 @@ func CheckDefinitions(mod *module.Module) error {
 			defKey := definesKey(logicDef)
 			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
-				for _, sym := range lu.UsedConstantsList(rhs) {
+				for _, sym := range il.UsedConstantsListAst(rhs) {
 					arcs = append(arcs, [2]string{string(defKey), string(lg.Key(sym))})
 				}
 			}

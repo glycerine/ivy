@@ -18,6 +18,7 @@ import (
 	"sort"
 	"strings"
 
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	"github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicutil"
@@ -1425,7 +1426,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 		allConsts[logic.Key(c)] = c
 	}
 	if diagram != nil {
-		for _, c := range logicutil.UsedConstants(diagram) {
+		for _, c := range il.UsedConstantsAst(diagram) {
 			k := logic.Key(c)
 			if _, exists := allConsts[k]; !exists {
 				allConsts[k] = c
@@ -1531,7 +1532,7 @@ func GetStructureConceptDomain(
 	// union/difference of Const objects with structural equality.
 	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
 	if stateFormula != nil {
-		for _, c := range logicutil.UsedConstants(stateFormula) {
+		for _, c := range il.UsedConstantsAst(stateFormula) {
 			if !elementSet[c.Name] {
 				allSymbolsByKey[logic.Key(c)] = c
 			}

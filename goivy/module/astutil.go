@@ -14,18 +14,15 @@ import (
 // SymbolsAST yields all constant symbols in a node (the function symbol
 // of applications, plus any bare constants). This corresponds to Python's
 // symbols_ast which yields the "rep" of app nodes.
+// Delegates to the faithful port il.UsedConstantsListAst (via symbols_ilu_ast).
 func SymbolsAST(node lg.Expr) []*lg.Const {
-	result := usedSymbolsAST(node)
-	out := make([]*lg.Const, 0, len(result))
-	for _, sym := range result {
-		out = append(out, sym)
-	}
-	return out
+	return il.UsedConstantsListAst(node)
 }
 
 // UsedSymbolsAST returns the set of used constant symbols in a node.
+// Delegates to the faithful port il.UsedConstantsAst (via symbols_ilu_ast).
 func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Const {
-	return usedSymbolsAST(node)
+	return il.UsedConstantsAst(node)
 }
 
 // VariablesAST yields free variables in a node (not bound variables).

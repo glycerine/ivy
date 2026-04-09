@@ -575,16 +575,25 @@ func usesSymbolNameAST(names map[string]bool, node lg.Expr) bool {
 }
 
 // UsedSymbolNamesClauses collects all symbol names from a Clauses.
+// Uses the faithful port il.SymbolsIluAst for traversal.
 func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 	if clauses == nil {
 		return make(map[string]bool)
 	}
 	result := make(map[string]bool)
 	for _, f := range clauses.Fmlas {
-		collectSymbolNamesFromNode(f, result)
+		for sym := range il.SymbolsIluAst(f) {
+			if c, ok := sym.(*lg.Const); ok {
+				result[c.Name] = true
+			}
+		}
 	}
 	for _, d := range clauses.Defs {
-		collectSymbolNamesFromNode(d, result)
+		for sym := range il.SymbolsIluAst(d) {
+			if c, ok := sym.(*lg.Const); ok {
+				result[c.Name] = true
+			}
+		}
 	}
 	return result
 }
@@ -610,17 +619,7 @@ func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]*lg.Const {
 	return result
 }
 
-func collectSymbolNamesFromNode(n lg.Expr, result map[string]bool) {
-	if c, ok := n.(*lg.Const); ok {
-		result[c.Name] = true
-	}
-	if app, ok := n.(*lg.Apply); ok {
-		collectSymbolNamesFromNode(app.Func, result)
-	}
-	for _, child := range n.Children() {
-		collectSymbolNamesFromNode(child, result)
-	}
-}
+
 
 func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses {
 	var fmlas []lg.Expr
@@ -777,7 +776,7 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 		}
 	}
 	if extra != nil {
-		for _, s := range usedSymbolsAST(extra) {
+		for _, s := range il.UsedConstantsAst(extra) {
 			seen[s.Name] = struct{}{}
 		}
 	}
@@ -914,37 +913,39 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 // depth-first AST traversal order, deduplicating by structural identity
 // (lg.NodeKey includes name + sort). This matches Python's
 // dict.fromkeys(symbols_clauses(c)) insertion order.
+// Uses the faithful port il.SymbolsIluAst for traversal.
 func UsedSymbolsClausesOrdered(c *Clauses) *iu.InsMap[lg.NodeKey, *lg.Const] {
 	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
 	if c == nil {
 		return result
 	}
 	for _, f := range c.Fmlas {
-		collectSymbolsOrdered(f, result)
+		for sym := range il.SymbolsIluAst(f) {
+			if cc, ok := sym.(*lg.Const); ok {
+				result.Set(lg.Key(cc), cc)
+			}
+		}
 	}
 	for _, d := range c.Defs {
-		collectSymbolsOrdered(d, result)
+		for sym := range il.SymbolsIluAst(d) {
+			if cc, ok := sym.(*lg.Const); ok {
+				result.Set(lg.Key(cc), cc)
+			}
+		}
 	}
 	return result
 }
 
-func collectSymbolsOrdered(n lg.Expr, result *iu.InsMap[lg.NodeKey, *lg.Const]) {
-	if n == nil {
-		return
-	}
-	if c, ok := n.(*lg.Const); ok {
-		result.Set(lg.Key(c), c)
-	}
-	for _, child := range n.Children() {
-		collectSymbolsOrdered(child, result)
-	}
-}
-
 // UsedSymbolsExprOrdered collects constant symbols from an expression in
 // depth-first AST traversal order, deduplicating by structural identity.
+// Uses the faithful port il.SymbolsIluAst for traversal.
 func UsedSymbolsExprOrdered(node lg.Expr) *iu.InsMap[lg.NodeKey, *lg.Const] {
 	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
-	collectSymbolsOrdered(node, result)
+	for sym := range il.SymbolsIluAst(node) {
+		if c, ok := sym.(*lg.Const); ok {
+			result.Set(lg.Key(c), c)
+		}
+	}
 	return result
 }
 
@@ -1091,6 +1092,7 @@ func VariablesClauses(clauses *Clauses) []*lg.Variable {
 
 // ConstantsClauses returns all constants used across all formulas and defs.
 // Corresponds to Python: constants_clauses = apply_gen_to_clauses(constants_ast)
+// Uses the faithful port il.UsedConstantsAst for traversal.
 func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
@@ -1098,7 +1100,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	seen := make(map[string]bool)
 	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
-		for _, cc := range lu.UsedConstants(f) {
+		for _, cc := range il.UsedConstantsAst(f) {
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)
@@ -1106,7 +1108,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, cc := range lu.UsedConstants(d) {
+		for _, cc := range il.UsedConstantsAst(d) {
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)

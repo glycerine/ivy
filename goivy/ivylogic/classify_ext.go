@@ -183,7 +183,7 @@ func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 		if err != nil {
 			return false
 		}
-		cs := lu.UsedConstants(term)
+		cs := UsedConstantsAst(term)
 		for _, c := range cs {
 			if _, ok := sig.Interp[c.Name]; ok {
 				return false
@@ -193,7 +193,7 @@ func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 	case LogicQF:
 		return IsQF(term)
 	case LogicFO:
-		cs := lu.UsedConstants(term)
+		cs := UsedConstantsAst(term)
 		for _, c := range cs {
 			if _, ok := sig.Interp[c.Name]; ok {
 				return false

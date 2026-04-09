@@ -630,11 +630,13 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		seen[f.Name] = true
 	}
 	var syms []*lg.Const
-	for sym := range module.IterSymbolsAST(body) {
-		if (strings.HasPrefix(sym.Name, "fml:") || strings.HasPrefix(sym.Name, "loc:")) &&
-			c.Sig.Symbols[sym.Name] != nil && !seen[sym.Name] {
-			seen[sym.Name] = true
-			syms = append(syms, sym)
+	for sym := range il.SymbolsIluAst(body) {
+		if sc, ok := sym.(*lg.Const); ok {
+			if (strings.HasPrefix(sc.Name, "fml:") || strings.HasPrefix(sc.Name, "loc:")) &&
+				c.Sig.Symbols[sc.Name] != nil && !seen[sc.Name] {
+				seen[sc.Name] = true
+				syms = append(syms, sc)
+			}
 		}
 	}
 

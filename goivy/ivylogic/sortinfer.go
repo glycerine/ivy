@@ -87,7 +87,7 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 			}
 		}
 	}
-	usedConsts := lu.UsedConstants(term)
+	usedConsts := UsedConstantsAst(term)
 	for _, c := range usedConsts {
 		if unsortedVarNames != nil && unsortedVarNames[c.Name] {
 			continue

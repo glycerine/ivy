@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -149,13 +150,13 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	// Collect from formula
 	formula := s.ToFormula()
 	if formula != nil {
-		for _, c := range logicutil.UsedConstants(formula) {
+		for _, c := range il.UsedConstantsAst(formula) {
 			used[c.Name] = true
 		}
 	}
 	// Collect from concept formulas
 	s.Domain.Concepts.ForEachConcept(func(_ string, c *CDConcept) {
-		for _, uc := range logicutil.UsedConstants(c.Formula) {
+		for _, uc := range il.UsedConstantsAst(c.Formula) {
 			used[uc.Name] = true
 		}
 	})
@@ -304,7 +305,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 		return []*logic.Const{logic.NewConst("0", cSort)}
 	}
 
-	constants := logicutil.UsedConstantsList(concept.Formula)
+	constants := il.UsedConstantsListAst(concept.Formula)
 	freshName := s.FreshConstName(nil)
 	x := logic.NewConst(freshName, cSort)
 	f, err := concept.Call(x)

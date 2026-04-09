@@ -191,43 +191,6 @@ func boundVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 	}
 }
 
-// UsedConstants returns all constants used in the given term.
-func UsedConstants(t logic.Expr) map[logic.NodeKey]*logic.Const {
-	result := make(map[logic.NodeKey]*logic.Const)
-	usedConstantsRec(t, result)
-	return result
-}
-
-func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]*logic.Const) {
-	switch n := t.(type) {
-	case *logic.Const:
-		result[logic.Key(n)] = n
-	default:
-		for _, c := range t.Children() {
-			usedConstantsRec(c, result)
-		}
-		// Also recurse into binder variables
-		switch b := n.(type) {
-		case *logic.ForAll:
-			for _, v := range b.Variables {
-				usedConstantsRec(v, result)
-			}
-		case *logic.Exists:
-			for _, v := range b.Variables {
-				usedConstantsRec(v, result)
-			}
-		case *logic.Lambda:
-			for _, v := range b.Variables {
-				usedConstantsRec(v, result)
-			}
-		case *logic.NamedBinder:
-			for _, v := range b.Variables {
-				usedConstantsRec(v, result)
-			}
-		}
-	}
-}
-
 // Substitute returns the term obtained from t by simultaneous substitution.
 // subs maps Nodes (Var or Const) to replacement Nodes.
 // Only free occurrences of variables are substituted.
@@ -655,16 +618,6 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 		if v, ok := node.(*logic.Variable); ok {
 			result = append(result, v)
 		}
-	}
-	return result
-}
-
-// UsedConstantsList returns used constants as a slice (convenience).
-func UsedConstantsList(t logic.Expr) []*logic.Const {
-	uc := UsedConstants(t)
-	result := make([]*logic.Const, 0, len(uc))
-	for _, sym := range uc {
-		result = append(result, sym)
 	}
 	return result
 }
