@@ -471,6 +471,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	//t.Skip("skip again the golden tests for the moment-- too slow for refactor testing.")
 	//return // off to check everything else under make test.
 	t.Helper()
+	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v')", repoRelPath)
 
 	repo := mustGetRepoDir(t)
 	path := filepath.Join(repo, repoRelPath)
