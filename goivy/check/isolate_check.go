@@ -433,7 +433,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				}
 				fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
 				for _, sub := range assumptions {
-					fmt.Printf("            %sassumption\n", prettyActionLineno(sub))
+					fmt.Printf("            %sassumption\n", PrettyActionLineno(sub))
 				}
 			}
 		}
@@ -517,7 +517,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				for _, sub := range guarantees {
 					xtracer.Trace("check.guarantee_outer iter")
 					lineno := sub.GetLineno()
-					fmt.Printf("            %sguarantee ", prettyActionLineno(sub))
+					fmt.Printf("            %sguarantee ", PrettyActionLineno(sub))
 					linenoKey := fmt.Sprintf("%d", lineno.Line)
 
 					// Check if any root is in checked actions and hasn't been tried
@@ -1289,18 +1289,6 @@ func CheckSafetyInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *a
 }
 
 // --- Helper functions ---
-
-// prettyActionLineno formats a line number from an action.
-func prettyActionLineno(act actions.Action) string {
-	if act == nil {
-		return "(internal) "
-	}
-	loc := act.GetLineno()
-	if loc.Line > 0 {
-		return fmt.Sprintf("line %d: ", loc.Line)
-	}
-	return "(internal) "
-}
 
 // filterExplicitSubgoals filters out explicit subgoals from the list.
 func filterExplicitSubgoals(props []*ast.LabeledFormula, subgoalMap map[int64]bool) []*ast.LabeledFormula {
