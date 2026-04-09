@@ -192,7 +192,11 @@ func TestCompileEquality(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Eq, got %T", result)
 	}
-	if eqNode.T1.String() != "X" || eqNode.T2.String() != "Y" {
+	// Use .Name (not .String()) to check identity — String() now returns
+	// sort-qualified output via PrettyFmla.
+	t1Var, ok1 := eqNode.T1.(*lg.Variable)
+	t2Var, ok2 := eqNode.T2.(*lg.Variable)
+	if !ok1 || !ok2 || t1Var.Name != "X" || t2Var.Name != "Y" {
 		t.Errorf("expected X = Y, got %s = %s", eqNode.T1, eqNode.T2)
 	}
 }

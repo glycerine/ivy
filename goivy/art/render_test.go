@@ -18,9 +18,15 @@ func TestAsCyElementsFormulaStrings(t *testing.T) {
 	ag := testGraph()
 
 	// Create a state with non-trivial clauses containing a named symbol.
-	x := &lg.Const{Name: "x"}
-	y := &lg.Const{Name: "y"}
-	eq := &lg.Eq{T1: x, T2: y}
+	// Use a real sort so Eq.String() (now via PrettyFmla → dropAnnotations →
+	// NewEq) does not panic on a nil sort.
+	s0 := &lg.UninterpretedSort{Name: "S"}
+	x := lg.NewConst("x", s0)
+	y := lg.NewConst("y", s0)
+	eq, err := lg.NewEq(x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
 	clauses := module.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)
 	ag.Add(s, nil)
@@ -212,9 +218,15 @@ func TestAsCyElementsLabelBraceSubstitution(t *testing.T) {
 // TestRenderRgFormulaStrings verifies that RenderRg shows actual formulas.
 func TestRenderRgFormulaStrings(t *testing.T) {
 	ag := testGraph()
-	x := &lg.Const{Name: "myvar"}
-	y := &lg.Const{Name: "othervar"}
-	eq := &lg.Eq{T1: x, T2: y}
+	// Use a real sort so Eq.String() (now via PrettyFmla → dropAnnotations →
+	// NewEq) does not panic on a nil sort.
+	s0 := &lg.UninterpretedSort{Name: "S"}
+	x := lg.NewConst("myvar", s0)
+	y := lg.NewConst("othervar", s0)
+	eq, err := lg.NewEq(x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
 	clauses := module.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)
 	ag.Add(s, nil)
