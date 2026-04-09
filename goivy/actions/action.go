@@ -2004,6 +2004,7 @@ type Updater interface {
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
 func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
+	xtracer.Trace("actions.env_action ENTER")
 	var actNames []string
 	if actName == "" {
 		for name := range publicActions.All() {
@@ -2013,15 +2014,20 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 	} else {
 		actNames = []string{actName}
 	}
+	xtracer.Trace("actions.env_action post actNames")
 
 	var branches []lg.Expr
 	for _, name := range actNames {
+		_ = name
+		xtracer.Trace("actions.env_action loop iter")
 		bodyAction, ok := actionsMap.Get2(name)
 		if !ok {
 			continue
 		}
+		xtracer.Trace("actions.env_action loop post lookup")
 		retAct := &ReturnAction{}
 		seq := NewSequence(bodyAction, retAct)
+		xtracer.Trace("actions.env_action loop post NewSequence")
 		// Copy formal params
 		if fp := bodyAction.GetFormalParams(); fp != nil {
 			seq.SetFormalParams(fp)
@@ -2029,6 +2035,7 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 		if fr := bodyAction.GetFormalReturns(); fr != nil {
 			seq.SetFormalReturns(fr)
 		}
+		xtracer.Trace("actions.env_action loop post formals")
 		// Set label
 		lbl := name
 		if len(lbl) > 4 && lbl[:4] == "ext:" {
@@ -2036,13 +2043,16 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 		}
 		seq.Labels = []string{lbl}
 		branches = append(branches, seq)
+		xtracer.Trace("actions.env_action loop end")
 	}
 
+	xtracer.Trace("actions.env_action post loop")
 	env := &EnvAction{}
 	env.Branches = branches
 	if label != "" {
 		env.Labels = []string{label}
 	}
+	xtracer.Trace("actions.env_action EXIT")
 	return env
 }
 

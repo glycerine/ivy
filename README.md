@@ -2607,6 +2607,6 @@ Estimated People Required 26.621735
         py : XTRACE: ast.LF.__init__ id=2033 counter=2034
 
 236914  go : XTRACE: ast.LF.__init__ id=2034 counter=2035
-        py : XTRACE: actions.GetUpdate ENTER type=EnvAction
+        py : XTRACE: check.guarantee_loop post BuildEnvAction
 ~~~
 
