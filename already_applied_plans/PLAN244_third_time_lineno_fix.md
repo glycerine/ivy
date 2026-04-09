@@ -73,26 +73,34 @@ unroll-loops, etc.) where a fresh `Action` is constructed from a source
 that *has* a Loc but the result fails to inherit it.
 
 The user's directive: *"carry it along everywhere, and generalize the fix
-so we do not have to revisit this 1609 more times."*
+so we do not have to revisit this 1609 more times."* — and the follow-up:
+*the generalized walker should be a debug-only **assertion**, not a
+silent fix-it pass; once it has been confirmed not to fire, it can be
+turned off.*
 
-We satisfy that with a four-layer defense:
+We satisfy that with a four-layer defense, the last two of which are
+**diagnostic assertions, not silent fixers**:
 
   1. **Surgical fix** (Step 1): patch the smoking gun (`conjToAssume`).
   2. **Audit fix** (Step 2): fix every other constructor site that omits
      `SetLineno`.
-  3. **Safety-net walker** (Step 3): a `PropagateLocDown(action)` recursive
-     walker that fills any nested action's empty Loc by inheritance from
-     its enclosing parent. Idempotent, applied at strategic points in the
-     pipeline.
-  4. **Pipeline integration** (Step 4): call the safety-net at the end of
-     the isolate classification loop and after compiler ARGSetup, so any
-     forgotten `SetLineno` is recovered before the print site consumes it.
+  3. **Diagnostic walker** (Step 3): an `AssertEveryActionHasLoc(action,
+     where string)` recursive walker that **panics** (or `t.Fatal`s in
+     test mode) when it finds a nested action whose `Loc` is empty. The
+     walker is gated by a per-session config flag (default OFF) so the
+     hot path isn't paid in production but the check can be flipped on
+     for debugging or pre-merge validation.
+  4. **Pipeline checkpoints** (Step 4): when the flag is on, invoke the
+     assertion at strategic points (end of compiler ARGSetup, end of
+     isolate classification, end of `ApplyPresentConjectures`) so any
+     missed Loc transfer is detected with the most precise context (which
+     pipeline stage produced the bad node, and which root action it lives
+     under).
 
-After this fix, the only way to produce an `(internal) assumption` is for
-both the action *and* every ancestor on its path back to the root to have
-empty Loc — which is impossible because the root action (registered in
-`mod.Actions`) has its Loc set from the previous fix's defensive fallback
-in `compiler/ivy_compile.go:IvyARGSetup`.
+The intent: run the assertion-on build once after Steps 1-2 land, confirm
+zero panics, then leave the flag OFF in production. If a future change
+regresses Loc handling, flip the flag and the panic message will name
+the offender directly.
 
 ## Plan
 
@@ -134,75 +142,111 @@ already in scope. None require API changes.
 | `actions/match.go` | 498-519 | `expandWhile`: `NewAssumeAction(...)`, `NewSequence(thenParts...)`, `NewSequence()`, `NewIfAction(...)`, outer `NewSequence(...)` | Add `.SetLineno(w.GetLineno())` to each. |
 | `vmt/vmt.go` | 127-128, 133-134 | Already calls `SetLineno(ast.Location{})` — explicitly empty | Leave as-is; vmt is a different output path and not affected by this divergence. |
 
-### Step 3 — General safety-net: `PropagateLocDown` walker
+### Step 3 — Diagnostic assertion walker: `AssertEveryActionHasLoc`
 
 Add a new function in `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/actions/transforms.go`:
 
 ```go
-// PropagateLocDown walks an action tree and fills any nested action's
-// empty Loc by inheritance from its enclosing parent. Idempotent and
-// order-independent (mutates in place; SetLineno on a non-empty Loc is
-// a no-op via the HasLoc invariant — we only set when GetLineno() returns
-// the zero Location).
+// AssertEveryActionHasLoc recursively walks an action tree and panics
+// if any nested action has an empty Loc. The `where` argument is a
+// human-readable context label (e.g., "isolate.classify_loop after
+// AddMixinsExt actname=cfabric.step") that is included in the panic
+// message so the failing pipeline stage is obvious.
 //
-// This is the safety-net layer of the Loc-on-action discipline: even if
-// some constructor in the codebase forgets to call SetLineno, this walker
-// recovers a meaningful Loc by inheriting from the parent. Combined with
-// the per-constructor fixes, it makes "(internal) <action>" output
-// impossible whenever the enclosing action has any Loc at all.
+// This is a DIAGNOSTIC tool, not a silent fix-it pass. It is gated by
+// the package-level flag AssertLocEnabled (defined below) which defaults
+// to false. Production runs should leave the flag off; this walker
+// is intended to be flipped on temporarily to validate that all
+// constructor sites preserve Loc, and then flipped off again when the
+// codebase is clean.
 //
-// Used at the end of the isolate pipeline (before mod.Actions = newActions)
-// and after compiler ARGSetup, so any forgotten SetLineno is recovered
-// before downstream consumers (PrettyActionLineno) see it.
-func PropagateLocDown(action Action) {
-    if action == nil {
+// The walker reports the FIRST missing-Loc node it finds with:
+//   - The action's Go type name
+//   - The action's Sexp() (truncated to ~120 chars)
+//   - The full context label
+//   - The path of enclosing parent action types
+// so the offending pipeline stage and constructor are immediately
+// identifiable from the panic stack.
+func AssertEveryActionHasLoc(action Action, where string) {
+    if !AssertLocEnabled || action == nil {
         return
     }
-    propagateLocDownRec(action, action.GetLineno())
+    var path []string
+    assertEveryActionHasLocRec(action, where, &path)
 }
 
-func propagateLocDownRec(action Action, parentLoc ast.Location) {
+func assertEveryActionHasLocRec(action Action, where string, path *[]string) {
     if action == nil {
         return
     }
+    typeName := iu.ShortTypeName(action)
+    *path = append(*path, typeName)
+    defer func() { *path = (*path)[:len(*path)-1] }()
+
     if action.GetLineno() == (ast.Location{}) {
-        action.SetLineno(parentLoc)
+        sx := string(action.Sexp())
+        if len(sx) > 120 {
+            sx = sx[:120] + "..."
+        }
+        panic(fmt.Sprintf(
+            "AssertEveryActionHasLoc: missing Loc on %s at %s\n  path: %s\n  sexp: %s",
+            typeName, where, strings.Join(*path, " > "), sx,
+        ))
     }
-    myLoc := action.GetLineno()
-    if myLoc == (ast.Location{}) {
-        myLoc = parentLoc
-    }
+
     for _, sub := range action.IterSubactions() {
         if sub == nil || sub == action {
             continue
         }
-        propagateLocDownRec(sub, myLoc)
+        assertEveryActionHasLocRec(sub, where, path)
     }
 }
+
+// AssertLocEnabled gates AssertEveryActionHasLoc. Default false so
+// production builds pay zero cost. Flip to true (via go test, a build
+// tag, or a config setter) when validating Loc-propagation invariants.
+var AssertLocEnabled = false
 ```
 
 Notes:
 
-- Uses `IterSubactions()` (already implemented for every Action type) so
-  the walker is fully generic — no per-type handling.
-- Mutates in place, since `SetLineno` is cheap and idempotent and we want
-  the same Action instances visible to callers.
-- The `if sub == action` guard handles `IterSubactions` implementations
-  that include `self` as the first element (which `defaultIterSubactions`
-  in `module/action.go` does).
+- Lives at the package level for now (a global `var`) — a clear exception
+  to CLAUDE.md rule C because it is a debug-only diagnostic, not mutable
+  production state. Document this exemption in a comment alongside the
+  flag. (If multi-tenant correctness becomes a concern later, the flag can
+  be moved to `module.Config` with a small refactor; for now the
+  simplicity matters more.)
+- `iu.ShortTypeName` already exists; reuse it.
+- `IterSubactions` is already implemented for every Action type.
+- `Sexp()` is on the `lg.Expr`/`Action` interface and gives a deterministic
+  short form of the action.
+- The walker is read-only — no `SetLineno` calls. It diagnoses, does not
+  fix.
 
-### Step 4 — Apply the safety-net at strategic pipeline points
+### Step 4 — Wire the assertion at strategic pipeline checkpoints
 
-**4a.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/isolate/isolate.go`,
-just before `mod.Actions = iu.NewInsMap[string, module.Action]()` at
-line 1338, walk `newActions`:
+When `AssertLocEnabled` is on, validate the Loc invariant at every point
+where actions cross a pipeline stage boundary. Each call site passes a
+unique `where` label so the panic message identifies the failing stage.
+
+**4a.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/ivy_compile.go`,
+inside the `IvyARGSetup` ActionDecl handler around line 567, after the
+existing defensive fallback block (added in the previous plan):
 
 ```go
-// Defensive Loc safety-net: every nested action should have a Loc by
-// inheritance from its parent. Catches any constructor that forgot
-// SetLineno and fixes it before downstream PrettyActionLineno sees it.
-for _, act := range newActions.All() {
-    actions.PropagateLocDown(act)
+if action.GetLineno() == (ast.Location{}) {
+    action.SetLineno(ad.GetLineno())
+}
+actions.AssertEveryActionHasLoc(action, "compiler.IvyARGSetup actname="+name)
+mod.SetAction(name, action)
+```
+
+**4b.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/isolate/isolate.go`,
+just before the existing `mod.Actions = iu.NewInsMap[...]()` at line 1338:
+
+```go
+for actname, act := range newActions.All() {
+    actions.AssertEveryActionHasLoc(act, "isolate.end_classify actname="+actname)
 }
 mod.Actions = iu.NewInsMap[string, module.Action]()
 for name, act := range newActions.All() {
@@ -210,56 +254,78 @@ for name, act := range newActions.All() {
 }
 ```
 
-**4b.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/isolate/create.go`,
-in `bracketActionInt` (around line 853) and at the end of
-`ApplyPresentConjectures` (where brackets are applied to actions), call
-`PropagateLocDown(newAct)` after each `mod.Actions.Set(actname, newAct)`
-so the bracketed conj-assumes inherit Loc from the wrapping action if
-their own (now-fixed) Loc is somehow still missing. This is belt-and-
-suspenders: it catches *future* breakage in `conjToAssume` or its callers.
-
-**4c.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/ivy_compile.go`,
-after the existing defensive-fallback block in `IvyARGSetup` ActionDecl
-case (around line 568, the block added in the previous plan), also call:
+**4c.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/isolate/create.go`,
+inside `bracketActionInt` (around line 853), after `mod.Actions.Set(actname, newAct)`:
 
 ```go
-actions.PropagateLocDown(action)
-mod.SetAction(name, action)
+mod.Actions.Set(actname, newAct)
+actions.AssertEveryActionHasLoc(newAct, "isolate.bracketActionInt actname="+actname)
 ```
 
-This guarantees that every action entering `mod.Actions` from the
-compiler has its full subtree Loc-populated.
+**4d.** Also at the end of `ApplyPresentConjectures` (around the return at
+line 818), iterate the brackets returned and call the assertion on each
+bracket's `Before`/`After` slices, with `where = "isolate.ApplyPresentConjectures.bracket actname="+e.ActName`. This catches the
+exact bug we're fixing (`conjToAssume` dropping Loc) at its source instead
+of waiting for the downstream consumer.
 
-### Step 5 — (Optional) Lint guard test
-
-Add a small test in `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/isolate/loc_invariant_test.go`:
+**4e.** In `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/check/isolate_check.go`,
+just before the print loop at line 400 (`for actname, action := range mod.Actions.All()`),
+add a debug-only assertion sweep so the print stage is the last gate:
 
 ```go
-// TestLocInvariantAfterIsolate compiles the ord_live example, runs
-// isolate, and asserts that no nested action in mod.Actions has an
-// empty Loc. Catches regressions where a future constructor change
-// drops Loc without going through the per-constructor or safety-net
-// fixes.
-func TestLocInvariantAfterIsolate(t *testing.T) {
-    mod := loadOrdLiveAndIsolate(t)
-    for actname, act := range mod.Actions.All() {
-        if a, ok := act.(actions.Action); ok {
-            walk(a, func(sub actions.Action) {
-                if sub.GetLineno() == (ast.Location{}) {
-                    t.Errorf("nested action in %s has empty Loc: %T", actname, sub)
-                }
-            })
+if actions.AssertLocEnabled {
+    for actname, action := range mod.Actions.All() {
+        if a, ok := action.(actions.Action); ok {
+            actions.AssertEveryActionHasLoc(a, "check.isolate_check.print actname="+actname)
         }
     }
 }
 ```
 
-If `loadOrdLiveAndIsolate` is too heavy, point this at any minimal model
-that has at least one conjecture and one export — the smoking gun in
-`conjToAssume` only needs that to fire.
+### How to run with assertions on
 
-This test is *optional* — Steps 1-4 are sufficient for the immediate fix.
-Step 5 is the long-term regression guard.
+There are three options for flipping `AssertLocEnabled`. Pick one:
+
+1. **Test-only `init`** in a small `*_assertloc_test.go` file:
+   ```go
+   func init() { actions.AssertLocEnabled = true }
+   ```
+   gated by a build tag like `assertloc`. Then run:
+   ```
+   go test -tags assertloc ./...
+   ```
+2. **Manual flip in main**: in `cmd/.../main.go` (or wherever the goivy
+   binary is wired), gated by a `--assert-loc` CLI flag. Then run:
+   ```
+   make golden ASSERT_LOC=1
+   ```
+3. **Direct flip from a one-shot test** that imports `actions`, sets the
+   flag, and exercises `make golden`-equivalent code paths. This is the
+   smallest-overhead option.
+
+Whichever is chosen, after Steps 1-2 land, run with assertions ON once to
+confirm zero panics, then leave the flag at its default `false` so
+production runs are unaffected.
+
+### Step 5 — Validation pass with assertions enabled
+
+After Steps 1-4 land:
+
+1. Build with assertions enabled (whichever mechanism from Step 4's "How
+   to run with assertions on" was chosen).
+2. Run `make golden` (or the equivalent direct test invocation).
+3. Expected result: zero panics from `AssertEveryActionHasLoc`. The
+   validation has succeeded.
+4. If a panic *does* fire, the message names the failing pipeline stage,
+   the action's Go type, its Sexp, and the path of enclosing parents —
+   from that, identify the constructor that omitted `SetLineno` and add
+   it to Step 2's table; then re-run.
+
+Iterate Steps 2 and 5 until the assertion-enabled run is panic-free.
+
+Once panic-free, leave `AssertLocEnabled = false` in production. The flag
+remains in the codebase as a debugging tool that any future contributor
+can flip on if they suspect a Loc regression.
 
 ### Step 6 — Verify
 
@@ -280,13 +346,16 @@ sed -n '/in action cfabric.step when called from the environment/,/^~go.*in acti
 Every `~go` line should now match the corresponding `~py` line modulo
 xtrace indices. No `(internal) assumption` should appear in the output.
 
-If any `(internal) assumption` *does* remain, the safety-net `PropagateLocDown`
-is intentionally lenient: it only inherits when a parent has Loc. If both
-parent and child are empty, the walker can't help. In that case, trace
-back to the root action: which `mod.Actions[name]` has empty Loc? That
-means the IvyARGSetup defensive-fallback failed to fire, which means
-`ad.GetLineno()` itself was empty — which would point at a missing
-parser-side `SetLineno` on the `ActionDef` (a separate, narrower fix).
+If any `(internal) assumption` *does* remain after Steps 1-2, that means a
+constructor site was missed in the audit. Flip `AssertLocEnabled` on
+(Step 4's mechanism) and re-run; the panic message will identify the
+offender by pipeline stage, action type, and Sexp. Add the missing
+`SetLineno` and repeat until clean.
+
+After validation: revert `AssertLocEnabled` to `false` (or delete the
+test-only `init` flip from Step 4), so production runs pay zero cost.
+The walker stays in the codebase as a one-line-flip debugging tool for
+future regressions.
 
 ## Critical files
 
