@@ -2603,20 +2603,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+236913  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
+        py : XTRACE: ast.LF.__init__ id=2033 counter=2034
 
-236447  go : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
-        py : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
-
-236448  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
-        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
-
-236449  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
-        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
-
-236450  go : XTRACE: ivy_solver.py:501 lt_pred() ENTER sort=index * index -> Boolean
-        py : XTRACE: ivy_solver.py:501 lt_pred() ENTER sort=index * index -> Boolean
-
-236451  go : XTRACE: ivy_solver.py:560 forall() ENTER nvars=1
-        py : XTRACE: ivy_solver.py:279 functionsort() ENTER
+236914  go : XTRACE: ast.LF.__init__ id=2034 counter=2035
+        py : XTRACE: actions.GetUpdate ENTER type=EnvAction
 ~~~
 
