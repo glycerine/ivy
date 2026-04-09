@@ -469,16 +469,21 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			xtracer.Trace("check.guarantee_phase actname iter actname=%s", actname)
 			act, ok := action.(actions.Action)
 			if !ok {
+				xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
 				continue
 			}
 			var guarantees []actions.Action
+			subCount := 0
 			for _, sub := range act.IterSubactions() {
+				subCount++
 				_, isAssert := sub.(*actions.AssertAction)
 				_, isRanking := sub.(*actions.Ranking)
+				xtracer.Trace("check.guarantee_phase sub actname=%s kind=%s lineno=%d isAssert=%v isRanking=%v", actname, actions.ActionTypeName(sub), sub.GetLineno().Line, isAssert, isRanking)
 				if isAssert || isRanking {
 					guarantees = append(guarantees, sub)
 				}
 			}
+			xtracer.Trace("check.guarantee_phase post iter_subactions actname=%s subCount=%d guarantees=%d", actname, subCount, len(guarantees))
 			// Python: if check_lineno is not None:
 			//             guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
 			if mod.Cfg.CheckLineno != "" {
@@ -489,16 +494,20 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 					}
 				}
 				guarantees = filtered
+				xtracer.Trace("check.guarantee_phase post check_lineno_filter actname=%s guarantees=%d", actname, len(guarantees))
 			}
 			// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
 			{
 				var filtered []actions.Action
 				for _, sub := range guarantees {
-					if IsGuaranteeModUnprovable(mod.Cfg, sub) {
+					pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
+					xtracer.Trace("check.guarantee_phase unprov_filter actname=%s lineno=%d pass=%v", actname, sub.GetLineno().Line, pass)
+					if pass {
 						filtered = append(filtered, sub)
 					}
 				}
 				guarantees = filtered
+				xtracer.Trace("check.guarantee_phase post unprov_filter actname=%s guarantees=%d", actname, len(guarantees))
 			}
 			// Python: if guarantees and not(no_check_guarantees.get()):
 			if len(guarantees) > 0 {
