@@ -815,6 +815,18 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 		return brackets[i].ActName < brackets[j].ActName
 	})
 
+	// Defensive: validate that every conj-derived assume in the brackets
+	// carries a Loc. Catches future regressions of conjToAssume Loc
+	// propagation. No-op when AssertLocEnabled is false.
+	for _, e := range brackets {
+		for _, b := range e.Before {
+			actions.AssertEveryActionHasLoc(b, "isolate.ApplyPresentConjectures.before actname="+e.ActName)
+		}
+		for _, a := range e.After {
+			actions.AssertEveryActionHasLoc(a, "isolate.ApplyPresentConjectures.after actname="+e.ActName)
+		}
+	}
+
 	return brackets
 }
 

@@ -395,6 +395,16 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			}
 		}
 
+		// Defensive: validate Loc-on-action invariant before the print
+		// stage. No-op when AssertLocEnabled is false.
+		if actions.AssertLocEnabled {
+			for actname, action := range mod.Actions.All() {
+				if a, ok := action.(actions.Action); ok {
+					actions.AssertEveryActionHasLoc(a, "check.isolate_check.print actname="+actname)
+				}
+			}
+		}
+
 		// Print assumptions
 		someAssumps := false
 		for actname, action := range mod.Actions.All() {
