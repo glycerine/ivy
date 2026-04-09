@@ -125,7 +125,7 @@ def _normalize_filename(f):
     return f
 
 def get_lineno(p,n):
-    if __debug__: xtracer.trace("parser.get_lineno ENTER")
+    #if __debug__: xtracer.trace("parser.get_lineno ENTER")
     return iu.Location(xtracer.normalize_filename(iu.filename),p.lineno(n))
 
 def report_error(error):

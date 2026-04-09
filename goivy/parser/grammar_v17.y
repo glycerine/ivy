@@ -32,7 +32,7 @@ func acfg(lex v17Lexer) *ast.AstConfig {
 // getLineno returns a Location for the current token position.
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
-	xtracer.Trace("parser.get_lineno ENTER")
+	//xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
 		//Filename: normalizeFilename(lex.filename),
                 // xtracer.NormalizeLine handles IVY_EXAMPLES too:
@@ -88,6 +88,9 @@ func addLabel(cfg *ast.AstConfig, lf *ast.LabeledFormula, pref string) *ast.Labe
 func mkLF(cfg *ast.AstConfig, x ast.Node) *ast.LabeledFormula {
 	xtracer.Trace("parser.mk_lf ENTER")
 	lf := cfg.NewLabeledFormula(nil, x)
+	if x != nil && x.GetLineno().Line > 0 {
+		lf.SetLineno(x.GetLineno())
+	}
 	return lf
 }
 
@@ -139,7 +142,7 @@ func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
 // Used when we need the line of a child node instead of lastTok (which is the lookahead).
 // Emits the get_lineno trace to match Python's get_lineno(p, n) call.
 func nodeLineno(n ast.Node) ast.Location {
-	xtracer.Trace("parser.get_lineno ENTER")
+	//xtracer.Trace("parser.get_lineno ENTER")
 	if n == nil {
 		return ast.Location{}
 	}
@@ -417,7 +420,7 @@ type TokenInfo struct {
 // from the lex adapter. This replaces getLineno for cases where we have direct
 // access to the token's position.
 func tokLineno(lex *v17LexAdapter, tok TokenInfo) ast.Location {
-	xtracer.Trace("parser.get_lineno ENTER")
+        //xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
 		Filename: xtracer.NormalizeLine(lex.filename),
 		Line:     tok.Line,
@@ -978,7 +981,9 @@ top:
             }
         }
         lf := acfg(v17lex).NewLabeledFormula($4, gdefn)
-        lf.Lineno = tokLineno(v17lex.(*v17LexAdapter), $3).Line
+        loc := tokLineno(v17lex.(*v17LexAdapter), $3)
+        lf.SetLineno(loc)
+        lf.Lineno = loc.Line
         lf = addLabel(acfg(v17lex), lf, "def")
         dd := acfg(v17lex).NewDefinitionDecl(lf)
         $$.declare(dd)
@@ -1031,6 +1036,7 @@ top:
         label := acfg(v17lex).NewAtom($3.Val)
         label.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         lf := acfg(v17lex).NewLabeledFormula(label, $4)
+        lf.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         $$.declare(acfg(v17lex).NewProofDecl(lf))
     }
     // --- Instantiate ---
@@ -2691,6 +2697,9 @@ schdecl:
     {
         xtracer.Trace("parser.p_schdecl_theorem ENTER (schdecl)")
         lf := acfg(v17lex).NewLabeledFormula(nil, $1)
+        if $1 != nil && $1.GetLineno().Line > 0 {
+            lf.SetLineno($1.GetLineno())
+        }
         lf = addLabel(acfg(v17lex), lf, "sch")
         $$ = []ast.Node{lf}
     }

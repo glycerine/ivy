@@ -1881,6 +1881,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	}
 	acfg := mod.Cfg.AstCfg
 	result := acfg.NewLabeledFormula(prop.Label, fmla)
+	result.SetLineno(prop.GetLineno())
 	result.Lineno = prop.Lineno
 	return result
 }

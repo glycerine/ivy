@@ -2181,7 +2181,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindNam
 		sga := actions.NewSubgoalAction(sgConc)
 		sga.Kind = a.Kind
 		sga.SubgoalKind = kindName // use caller-specified kind, not a.Name()
-		if sg.Lineno > 0 {
+		if sg.GetLineno().Line > 0 {
 			sga.SetLineno(sg.GetLineno())
 		}
 		seqArgs = append(seqArgs, sga)
@@ -2276,6 +2276,7 @@ func CheckProperties(mod *module.Module) error {
 		body = il.DropUniversals(body)
 		acfg := mod.Cfg.AstCfg
 		newProp := acfg.NewLabeledFormula(prop.Label, body)
+		newProp.SetLineno(prop.GetLineno())
 		newProp.Lineno = prop.Lineno
 		newProp.Temporal = prop.Temporal
 		newProp.ID = getModFreshPropID(mod)

@@ -75,6 +75,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		subgoal := acfg.NewLabeledFormula(safetyLabel, tm)
 		// Python: subgoal.lineno = mod.isolate_proof.lineno
 		if pfNode, ok := mod.IsolateProof.(ast.Node); ok {
+			subgoal.SetLineno(pfNode.GetLineno())
 			subgoal.Lineno = pfNode.GetLineno().Line
 		}
 
