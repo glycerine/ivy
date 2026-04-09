@@ -2603,6 +2603,22 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+220219  go : XTRACE: actions.Sequence.int_update ENTER
+        py : XTRACE: actions.Sequence.int_update ENTER
+
+220220  go : XTRACE: actions.IntUpdate ENTER type=AssumeAction
+        py : XTRACE: actions.IntUpdate ENTER type=AssumeAction
+
+220221  go : XTRACE: actions.AssumeAction.action_update ENTER
+        py : XTRACE: actions.AssumeAction.action_update ENTER
+
+220222  go : XTRACE: actions.AssumeAction.action_update EXIT
+        py : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+~~~
+so we are hitting divergence sooner...
+
+was/before:
+~~~
 236913  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
         py : XTRACE: ast.LF.__init__ id=2033 counter=2034
 
