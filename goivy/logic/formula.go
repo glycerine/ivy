@@ -51,7 +51,10 @@ func NewEq(t1, t2 Expr) (*Eq, error) {
 
 func (e *Eq) NodeSort() Sort   { return Boolean }
 func (e *Eq) Children() []Expr { return []Expr{e.T1, e.T2} }
-func (e *Eq) String() string   { return fmt.Sprintf("(%s == %s)", e.T1, e.T2) }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Eq.__str__ = pretty_fmla.
+func (e *Eq) String() string { return PrettyFmla(e) }
 func (e *Eq) Equal(n Expr) bool {
 	if o, ok := n.(*Eq); ok {
 		return e.T1.Equal(o.T1) && e.T2.Equal(o.T2)
@@ -84,7 +87,10 @@ func NewIte(cond, then_, else_ Expr) (*Ite, error) {
 
 func (t *Ite) NodeSort() Sort   { return t.ISort }
 func (t *Ite) Children() []Expr { return []Expr{t.Cond, t.Then, t.Else} }
-func (t *Ite) String() string   { return fmt.Sprintf("Ite(%s, %s, %s)", t.Cond, t.Then, t.Else) }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Ite.__str__ = pretty_fmla.
+func (t *Ite) String() string { return PrettyFmla(t) }
 func (t *Ite) Equal(n Expr) bool {
 	if o, ok := n.(*Ite); ok {
 		return t.Cond.Equal(o.Cond) && t.Then.Equal(o.Then) && t.Else.Equal(o.Else)
@@ -108,12 +114,11 @@ func NewNot(body Expr) (*Not, error) {
 
 func (n *Not) NodeSort() Sort   { return Boolean }
 func (n *Not) Children() []Expr { return []Expr{n.Body} }
-func (n *Not) String() string {
-	if eq, ok := n.Body.(*Eq); ok {
-		return fmt.Sprintf("(%s != %s)", eq.T1, eq.T2)
-	}
-	return fmt.Sprintf("Not(%s)", n.Body)
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Not.__str__ = pretty_fmla. Note Not.ugly handles Not(Eq(a,b)) → "a ~= b"
+// and Not(other) → "~other".
+func (n *Not) String() string { return PrettyFmla(n) }
 func (n *Not) Equal(nd Expr) bool {
 	if o, ok := nd.(*Not); ok {
 		return n.Body.Equal(o.Body)
@@ -267,9 +272,10 @@ func NewAnd(terms ...Expr) (*And, error) {
 
 func (a *And) NodeSort() Sort   { return Boolean }
 func (a *And) Children() []Expr { return a.Terms }
-func (a *And) String() string {
-	return fmt.Sprintf("And(%s)", nodeSliceStr(a.Terms))
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.And.__str__ = pretty_fmla. Empty And renders as "true".
+func (a *And) String() string { return PrettyFmla(a) }
 func (a *And) Equal(n Expr) bool {
 	if o, ok := n.(*And); ok {
 		return nodeSliceEqual(a.Terms, o.Terms)
@@ -298,9 +304,10 @@ func NewOr(terms ...Expr) (*Or, error) {
 
 func (o *Or) NodeSort() Sort   { return Boolean }
 func (o *Or) Children() []Expr { return o.Terms }
-func (o *Or) String() string {
-	return fmt.Sprintf("Or(%s)", nodeSliceStr(o.Terms))
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Or.__str__ = pretty_fmla. Empty Or renders as "false".
+func (o *Or) String() string { return PrettyFmla(o) }
 func (o *Or) Equal(n Expr) bool {
 	if oo, ok := n.(*Or); ok {
 		return nodeSliceEqual(o.Terms, oo.Terms)
@@ -324,7 +331,10 @@ func NewImplies(t1, t2 Expr) (*Implies, error) {
 
 func (i *Implies) NodeSort() Sort   { return Boolean }
 func (i *Implies) Children() []Expr { return []Expr{i.T1, i.T2} }
-func (i *Implies) String() string   { return fmt.Sprintf("Implies(%s, %s)", i.T1, i.T2) }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Implies.__str__ = pretty_fmla.
+func (i *Implies) String() string { return PrettyFmla(i) }
 func (i *Implies) Equal(n Expr) bool {
 	if o, ok := n.(*Implies); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
@@ -348,7 +358,10 @@ func NewIff(t1, t2 Expr) (*Iff, error) {
 
 func (i *Iff) NodeSort() Sort   { return Boolean }
 func (i *Iff) Children() []Expr { return []Expr{i.T1, i.T2} }
-func (i *Iff) String() string   { return fmt.Sprintf("Iff(%s, %s)", i.T1, i.T2) }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Iff.__str__ = pretty_fmla.
+func (i *Iff) String() string { return PrettyFmla(i) }
 func (i *Iff) Equal(n Expr) bool {
 	if o, ok := n.(*Iff); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
@@ -384,9 +397,10 @@ func NewForAll(variables []*Variable, body Expr) (*ForAll, error) {
 
 func (f *ForAll) NodeSort() Sort   { return Boolean }
 func (f *ForAll) Children() []Expr { return []Expr{f.Body} }
-func (f *ForAll) String() string {
-	return fmt.Sprintf("(ForAll %s. %s)", varSortList(f.Variables), f.Body)
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.ForAll.__str__ = pretty_fmla.
+func (f *ForAll) String() string { return PrettyFmla(f) }
 func (f *ForAll) Equal(n Expr) bool {
 	if o, ok := n.(*ForAll); ok {
 		return varSliceEqual(f.Variables, o.Variables) && f.Body.Equal(o.Body)
@@ -421,9 +435,10 @@ func NewExists(variables []*Variable, body Expr) (*Exists, error) {
 
 func (e *Exists) NodeSort() Sort   { return Boolean }
 func (e *Exists) Children() []Expr { return []Expr{e.Body} }
-func (e *Exists) String() string {
-	return fmt.Sprintf("(Exists %s. %s)", varSortList(e.Variables), e.Body)
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Exists.__str__ = pretty_fmla.
+func (e *Exists) String() string { return PrettyFmla(e) }
 func (e *Exists) Equal(n Expr) bool {
 	if o, ok := n.(*Exists); ok {
 		return varSliceEqual(e.Variables, o.Variables) && e.Body.Equal(o.Body)
@@ -452,9 +467,10 @@ func NewLambda(variables []*Variable, body Expr) (*Lambda, error) {
 
 func (l *Lambda) NodeSort() Sort   { return Boolean }
 func (l *Lambda) Children() []Expr { return []Expr{l.Body} }
-func (l *Lambda) String() string {
-	return fmt.Sprintf("(Lambda %s. %s)", varSortList(l.Variables), l.Body)
-}
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Lambda.__str__ = pretty_fmla.
+func (l *Lambda) String() string { return PrettyFmla(l) }
 func (l *Lambda) Equal(n Expr) bool {
 	if o, ok := n.(*Lambda); ok {
 		return varSliceEqual(l.Variables, o.Variables) && l.Body.Equal(o.Body)
@@ -502,13 +518,9 @@ func (nb *NamedBinder) NodeSort() Sort {
 
 func (nb *NamedBinder) Children() []Expr { return []Expr{nb.Body} }
 
-func (nb *NamedBinder) String() string {
-	env := ""
-	if nb.Environ != nil {
-		env = "[" + *nb.Environ + "]"
-	}
-	return fmt.Sprintf("($%s%s %s. %s)", nb.Name, env, varSortList(nb.Variables), nb.Body)
-}
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.NamedBinder.__str__ = pretty_fmla.
+func (nb *NamedBinder) String() string { return PrettyFmla(nb) }
 
 func (nb *NamedBinder) Equal(n Expr) bool {
 	if o, ok := n.(*NamedBinder); ok {

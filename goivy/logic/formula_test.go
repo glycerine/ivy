@@ -13,8 +13,10 @@ func TestEqValid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if eq.String() != "(X == Y)" {
-		t.Errorf("String() = %q, want %q", eq.String(), "(X == Y)")
+	// String() now matches Python lg.Eq.__str__ = pretty_fmla → nary_ugly("=").
+	// drop_annotations strips the second arg's sort.
+	if eq.String() != "X:S = Y" {
+		t.Errorf("String() = %q, want %q", eq.String(), "X:S = Y")
 	}
 	if !SortEqual(eq.NodeSort(), Boolean) {
 		t.Error("Eq sort should be Boolean")
@@ -63,14 +65,17 @@ func TestNotString(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
 	notEq, _ := NewNot(eq)
-	if notEq.String() != "(X != Y)" {
-		t.Errorf("Not(Eq) String() = %q, want %q", notEq.String(), "(X != Y)")
+	// Python: Not(Eq(a,b)).ugly → nary_ugly("~=", ...) → "a ~= b"
+	if notEq.String() != "X:S ~= Y" {
+		t.Errorf("Not(Eq) String() = %q, want %q", notEq.String(), "X:S ~= Y")
 	}
 
 	and, _ := NewAnd(eq)
 	notAnd, _ := NewNot(and)
-	if notAnd.String() != "Not(And((X == Y)))" {
-		t.Errorf("Not(And) String() = %q, want %q", notAnd.String(), "Not(And((X == Y)))")
+	// Python: Not(other).ugly → "~" + body.ugly(6)
+	// And(eq).ugly → nary_paren("&", [eq], 5, 6) → "(X:S = Y)"  (single-arg And keeps the parens)
+	if notAnd.String() != "~(X:S = Y)" {
+		t.Errorf("Not(And) String() = %q, want %q", notAnd.String(), "~(X:S = Y)")
 	}
 }
 
@@ -95,7 +100,8 @@ func TestAndOr(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if and.String() != "And(leq(X, Y), leq(Y, X))" {
+	// Python And.ugly → nary_paren("&", ...) → always parenthesizes.
+	if and.String() != "(leq(X,Y) & leq(Y,X))" {
 		t.Errorf("And String() = %q", and.String())
 	}
 
@@ -103,7 +109,8 @@ func TestAndOr(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if or.String() != "Or(leq(X, Y), leq(Y, X))" {
+	// Python Or.ugly → nary_ugly("|", ...) — parens only when myprec(4) <= prec(0), which is false.
+	if or.String() != "leq(X,Y) | leq(Y,X)" {
 		t.Errorf("Or String() = %q", or.String())
 	}
 }
@@ -118,12 +125,12 @@ func TestAndBadSort(t *testing.T) {
 }
 
 func TestTrueFalse(t *testing.T) {
-	// True is empty And, False is empty Or
-	if True.String() != "And()" {
-		t.Errorf("True = %q, want %q", True.String(), "And()")
+	// True is empty And → Python ugly → "true". False is empty Or → "false".
+	if True.String() != "true" {
+		t.Errorf("True = %q, want %q", True.String(), "true")
 	}
-	if False.String() != "Or()" {
-		t.Errorf("False = %q, want %q", False.String(), "Or()")
+	if False.String() != "false" {
+		t.Errorf("False = %q, want %q", False.String(), "false")
 	}
 }
 
@@ -139,7 +146,8 @@ func TestImpliesIff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if impl.String() != "Implies(leq(X, Y), leq(Y, X))" {
+	// Python Implies.ugly → nary_ugly("->", ...).
+	if impl.String() != "leq(X,Y) -> leq(Y,X)" {
 		t.Errorf("Implies = %q", impl.String())
 	}
 
@@ -147,7 +155,8 @@ func TestImpliesIff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if iff.String() != "Iff(leq(X, Y), leq(Y, X))" {
+	// Python Iff.ugly → nary_ugly("<->", ...).
+	if iff.String() != "leq(X,Y) <-> leq(Y,X)" {
 		t.Errorf("Iff = %q", iff.String())
 	}
 }
@@ -221,7 +230,8 @@ func TestIte(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if ite.String() != "Ite((X == Y), X, Y)" {
+	// Python Ite.ugly → '({} if {} else {})' format.
+	if ite.String() != "(X:S if (X = Y) else Y)" {
 		t.Errorf("Ite String() = %q", ite.String())
 	}
 	if !SortEqual(ite.NodeSort(), S) {
@@ -248,7 +258,9 @@ func TestGloballyEventually(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if g.String() != "globally((X == Y))" {
+	// Globally is not in Python's monkey-patch list, so its String() body is
+	// unchanged — but its child eq.String() now uses pretty_fmla.
+	if g.String() != "globally(X:S = Y)" {
 		t.Errorf("Globally = %q", g.String())
 	}
 
@@ -257,7 +269,7 @@ func TestGloballyEventually(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if e.String() != "eventually[env1]((X == Y))" {
+	if e.String() != "eventually[env1](X:S = Y)" {
 		t.Errorf("Eventually = %q", e.String())
 	}
 }
@@ -270,7 +282,9 @@ func TestWhenOperator(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if w.String() != "WhenOperator(when,X,(X == X))" {
+	// WhenOperator is not in Python's monkey-patch list. Its child variable
+	// X.String() and Eq cond.String() now use pretty_fmla.
+	if w.String() != "WhenOperator(when,X:S,X:S = X)" {
 		t.Errorf("WhenOperator = %q", w.String())
 	}
 	if !SortEqual(w.NodeSort(), S) {
@@ -286,7 +300,8 @@ func TestCond(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c.String() != "Cond((X == X), X)" {
+	// Cond is not in Python's monkey-patch list, but its children use pretty_fmla.
+	if c.String() != "Cond(X:S = X, X:S)" {
 		t.Errorf("Cond = %q", c.String())
 	}
 }

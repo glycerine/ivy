@@ -11,8 +11,10 @@ func TestVarValid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if v.String() != "X" {
-		t.Errorf("String() = %q, want %q", v.String(), "X")
+	// String() now matches Python lg.Var.__str__ = pretty_fmla, which
+	// includes the sort for non-TopSort variables.
+	if v.String() != "X:S" {
+		t.Errorf("String() = %q, want %q", v.String(), "X:S")
 	}
 	if !SortEqual(v.NodeSort(), S) {
 		t.Error("Sort should be S")
@@ -70,8 +72,10 @@ func TestApplyValid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if app.String() != "leq(X, Y)" {
-		t.Errorf("String() = %q, want %q", app.String(), "leq(X, Y)")
+	// String() matches Python lg.Apply.__str__ = pretty_fmla → app_ugly,
+	// which uses ',' (no space) and drops inferable variable sorts.
+	if app.String() != "leq(X,Y)" {
+		t.Errorf("String() = %q, want %q", app.String(), "leq(X,Y)")
 	}
 	if !SortEqual(app.NodeSort(), Boolean) {
 		t.Errorf("Sort should be Boolean, got %s", app.NodeSort())
@@ -166,8 +170,8 @@ func TestConstCall(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.String() != "leq(X, Y)" {
-		t.Errorf("String() = %q, want %q", result.String(), "leq(X, Y)")
+	if result.String() != "leq(X,Y)" {
+		t.Errorf("String() = %q, want %q", result.String(), "leq(X,Y)")
 	}
 }
 
@@ -240,8 +244,10 @@ func FuzzVarName(f *testing.F) {
 			if err != nil {
 				t.Errorf("Unexpected error for name %q: %v", name, err)
 			}
-			if v.String() != name {
-				t.Errorf("String() = %q, want %q", v.String(), name)
+			// PrettyFmla now appends ":S" for the non-TopSort variable.
+			want := name + ":S"
+			if v.String() != want {
+				t.Errorf("String() = %q, want %q", v.String(), want)
 			}
 		}
 	})

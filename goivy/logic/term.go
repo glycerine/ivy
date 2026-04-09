@@ -50,7 +50,11 @@ func NewVariable(name string, sort Sort) (*Variable, error) {
 
 func (v *Variable) NodeSort() Sort   { return v.VSort }
 func (v *Variable) Children() []Expr { return nil }
-func (v *Variable) String() string { return v.Name }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Var.__str__ = pretty_fmla. PrettyFmla calls
+// drop_annotations(False, set()).ugly(0).
+func (v *Variable) String() string { return PrettyFmla(v) }
 
 // Repr returns a sort-qualified string, matching Python ast.Variable.__repr__
 // which always includes ':sort'. String() matches Python logic.Var.__str__
@@ -99,7 +103,12 @@ func NewConst(name string, sort Sort) *Const {
 
 func (c *Const) NodeSort() Sort   { return c.CSort }
 func (c *Const) Children() []Expr { return nil }
-func (c *Const) String() string { return c.Name }
+
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Const.__str__ = pretty_fmla. PrettyFmla calls
+// drop_annotations(False, set()).ugly(0); for a Const this returns
+// "name:sortName" for numerals with non-TopSort, else just "name".
+func (c *Const) String() string { return PrettyFmla(c) }
 
 // Repr returns the sort-qualified representation. For Const, same as String().
 func (c *Const) Repr() string { return c.Name }
@@ -209,16 +218,11 @@ func (a *Apply) Children() []Expr {
 	return cp
 }
 
-func (a *Apply) String() string {
-	if len(a.Terms) == 0 {
-		return a.Func.String()
-	}
-	parts := make([]string, len(a.Terms))
-	for i, t := range a.Terms {
-		parts[i] = t.String()
-	}
-	return fmt.Sprintf("%s(%s)", a.Func.String(), strings.Join(parts, ", "))
-}
+// String matches Python ivy_logic.py:1444-1446 which monkey-patches
+// lg.Apply.__str__ = pretty_fmla. PrettyFmla calls
+// drop_annotations(False, set()).ugly(0), which uses app_ugly for Apply
+// (handles infix operators and precedence).
+func (a *Apply) String() string { return PrettyFmla(a) }
 
 // Repr returns the sort-qualified representation, using Repr() on children.
 // Matches Python ast.Atom.__repr__ which calls str() on args (which for
