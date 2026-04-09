@@ -130,8 +130,17 @@ At trace line 236446, Go will emit `get_polymacs() ENTER op=<=` matching Python.
 
 ## Verification
 
+1. Build must succeed:
 ```bash
-cd /Users/jaten/go/src/github.com/glycerine/ivy/goivy
-go build ./z3bridge/...
-go test ./parser/ -run TestOrdLive -v -count=1
+cd /Users/jaten/go/src/github.com/glycerine/ivy/goivy && go build ./z3bridge/...
+```
+
+2. All tests in the z3bridge package must pass:
+```bash
+cd /Users/jaten/go/src/github.com/glycerine/ivy/goivy && go test ./z3bridge/ -v -count=1
+```
+
+3. Run the golden test and review saved output to confirm the divergence at line 236446 is resolved:
+```bash
+cd ~/ivy/goivy && make golden
 ```
