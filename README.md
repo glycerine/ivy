@@ -2603,54 +2603,16 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+236405  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
+        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
 
-236238  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.mem_memc_exception
-        py : XTRACE: ivy_solver.py:65 solver_name() ENTER name=ref.mem_memc_exception
+236406  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
 
-236239  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
-        py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+236407  go : XTRACE: ivy_solver.py:560 forall() ENTER nvars=3
+        py : XTRACE: ivy_solver.py:560 forall() ENTER nvars=3
 
-236240  go : XTRACE: ivy_solver.py:95 my_eq() ENTER
-        py : XTRACE: ivy_solver.py:95 my_eq() ENTER
-
-236241  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=2
-        py : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=14
-
-========== trailing ~py[after i= 236241]:
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/goivy-venv/bin/ivy_check", line 33, in <module>
-    sys.exit(load_entry_point('ms-ivy', 'console_scripts', 'ivy_check')())
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 1061, in main
-    start()
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 1018, in start
-    check_module()
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 978, in check_module
-    check_isolate()
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 567, in check_isolate
-    check_fcs_in_state(mod,ag,pre,fcs)
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 418, in check_fcs_in_state
-    res = history.satisfy(axioms,gmc,filter_fcs(fcs))
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_transrel.py", line 668, in satisfy
-    model = _get_model_clauses(post,final_cond=final_cond)
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_check.py", line 381, in <lambda>
-    gmc = lambda cls, final_cond: itr.small_model_clauses(cls,final_cond,shrink=diagnose.get())
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_transrel.py", line 607, in small_model_clauses
-    return get_small_model(cls,ivy_logic.uninterpreted_sorts(),[],final_cond=final_cond,shrink=shrink)
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_solver.py", line 1365, in get_small_model
-    the_fmla = clauses_to_z3(clauses)
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_solver.py", line 641, in clauses_to_z3
-    z3_clauses.append(formula_to_z3(dfn))
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_solver.py", line 725, in formula_to_z3
-    tcs = type_constraints(used_symbols_ast(fmla))
-  File "/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/ivy_solver.py", line 604, in type_constraints
-    if __debug__: xtracer.trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d" % len(syms)); traceback.print_stack(limit=20)
-    golden_test.go:452: ivy_check and goivy_check differ at line 236241, counting from 0.
-~~~
-was, before adding solver xtracing:
-~~~
-236342  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
-        py : XTRACE: ast.LF.__init__ id=2033 counter=2034
-
-236343  go : XTRACE: ast.LF.__init__ id=2034 counter=2035
-        py : XTRACE: actions.GetUpdate ENTER type=EnvAction
+236408  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=2
+        py : XTRACE: ivy_solver.py:545 quant_constraints() ENTER nvars=3
 ~~~
 
