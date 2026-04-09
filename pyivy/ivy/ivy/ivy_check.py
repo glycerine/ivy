@@ -707,7 +707,7 @@ def check_isolate(trace_hook = None):
                         for root in checked_actions:
                             if root in roots:
                                tried.add((root,sub.lineno))
-                               if __debug__: xtracer.trace("check.guarantee_loop pre BuildEnvAction root=%s" % root)
+                               if __debug__: xtracer.trace("check.guarantee_loop pre BuildEnvAction")
                                action = act.env_action(root)
                                if __debug__: xtracer.trace("check.guarantee_loop post BuildEnvAction")
                                ag = ivy_art.AnalysisGraph()

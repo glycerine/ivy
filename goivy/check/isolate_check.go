@@ -549,7 +549,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 								continue
 							}
 							tried[root+":"+linenoKey] = true
-							xtracer.Trace("check.guarantee_loop pre BuildEnvAction root=%s", root)
+							xtracer.Trace("check.guarantee_loop pre BuildEnvAction")
 							envAction := actions.BuildEnvAction(mod.PublicActions, mod.Actions, root, "")
 							xtracer.Trace("check.guarantee_loop post BuildEnvAction")
 							ag := art.NewAnalysisGraph(mod)

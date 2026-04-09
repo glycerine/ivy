@@ -145,7 +145,7 @@ func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 // action.update(domain, in_scope) to compute the transition relation,
 // then compose_state_action to get the post-state.
 func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action actions.Action, state *State) (*State, error) {
-	xtracer.Trace("interp.ApplyAction ENTER actionName=%s", actionName)
+	xtracer.Trace("interp.ApplyAction ENTER actionName=%s", actions.ActionTypeName(action))
 	// Compute the action's transition relation update.
 	// Python: upd = action.update(state.domain, state.in_scope)
 	ctx := &actions.UpdateContext{
@@ -164,7 +164,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 		},
 	}
 	xtracer.Trace("interp.ApplyAction post UpdateContext build")
-	xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s", actionName, actions.ActionTypeName(action))
+	xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s", actions.ActionTypeName(action), actions.ActionTypeName(action))
 	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		upd = actions.NullUpdate()

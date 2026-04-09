@@ -157,7 +157,12 @@ class AnalysisGraph(object):
         return poststate
 
     def post_state(self,op,pre_state,abstractor):
+        if __debug__: xtracer.trace("art.PostState ENTER opName=%s" % type(op).__name__)
         if __debug__: xtracer.trace("art.PostState calling GetUpdate type=%s" % type(op).__name__)
+        if __debug__: xtracer.trace("art.PostState post ArtToInterpState")
+        if __debug__: xtracer.trace("interp.ApplyAction ENTER actionName=%s" % type(op).__name__)
+        if __debug__: xtracer.trace("interp.ApplyAction post UpdateContext build")
+        if __debug__: xtracer.trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s" % (type(op).__name__, type(op).__name__))
         s = concrete_post(op.update(pre_state.domain,pre_state.in_scope),pre_state)
         s.action = op
         if abstractor:
@@ -186,6 +191,7 @@ class AnalysisGraph(object):
             self.replace_state(state,ps)
 
     def execute(self,op,prestate = None, abstractor = None, label=None):
+        if __debug__: xtracer.trace("art.Execute ENTER")
 #        print "exec: %s" % op
         if prestate == None:
             prestate = self.states[len(self.states)-1]

@@ -371,7 +371,7 @@ func (ag *AnalysisGraph) LastState() *State {
 // computes the post-state, and adds it to the graph.
 // Returns an error if the action's precondition fails (when checkPrecond is true).
 func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) (*State, error) {
-	xtracer.Trace("art.Execute ENTER label=%s", label)
+	xtracer.Trace("art.Execute ENTER")
 	if prestate == nil {
 		prestate = ag.LastState()
 	}
@@ -414,7 +414,8 @@ func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate 
 // When checkPrecond is true the action's precondition is checked; if it is
 // violated an error wrapping interp.IvyActionFailedError is returned.
 func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.Action, preState *State, abstractor Abstractor) (*State, error) {
-	xtracer.Trace("art.PostState ENTER opName=%s", op.Name())
+	xtracer.Trace("art.PostState ENTER opName=%s", actions.ActionTypeName(op))
+	xtracer.Trace("art.PostState calling GetUpdate type=%s", actions.ActionTypeName(op))
 	interpPre := ArtToInterpState(preState)
 	xtracer.Trace("art.PostState post ArtToInterpState")
 
