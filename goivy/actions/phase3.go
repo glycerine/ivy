@@ -373,7 +373,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, m *module.Module) {
 					}
 					for _, a := range n.Terms[1:] {
 						for _, sym := range module.SymbolsAST(a) {
-							refs[sym.Name] = true
+							refs[lg.ExprName(sym)] = true
 						}
 					}
 					return
@@ -383,7 +383,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, m *module.Module) {
 		// Non-destructor: collect all symbol refs
 		for _, a := range n.Terms {
 			for _, sym := range module.SymbolsAST(a) {
-				refs[sym.Name] = true
+				refs[lg.ExprName(sym)] = true
 			}
 		}
 	case *lg.Const:

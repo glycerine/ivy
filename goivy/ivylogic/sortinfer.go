@@ -87,14 +87,15 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 			}
 		}
 	}
-	usedConsts := UsedConstantsAst(term)
-	for _, c := range usedConsts {
-		if unsortedVarNames != nil && unsortedVarNames[c.Name] {
+	usedSyms := UsedSymbolsAst(term)
+	for _, sym := range usedSyms {
+		name := lg.ExprName(sym)
+		if unsortedVarNames != nil && unsortedVarNames[name] {
 			continue
 		}
-		if lg.ContainsTopSort(c) || lg.IsPolymorphic(c) {
+		if lg.ContainsTopSort(sym) || lg.IsPolymorphic(sym) {
 			return &lg.IvyError{
-				Msg: fmt.Sprintf("cannot infer sort of %s in %s", c, term),
+				Msg: fmt.Sprintf("cannot infer sort of %s in %s", sym, term),
 			}
 		}
 	}

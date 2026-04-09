@@ -183,9 +183,9 @@ func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 		if err != nil {
 			return false
 		}
-		cs := UsedConstantsAst(term)
+		cs := UsedSymbolsAst(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[c.Name]; ok {
+			if _, ok := sig.Interp[lg.ExprName(c)]; ok {
 				return false
 			}
 		}
@@ -193,9 +193,9 @@ func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 	case LogicQF:
 		return IsQF(term)
 	case LogicFO:
-		cs := UsedConstantsAst(term)
+		cs := UsedSymbolsAst(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[c.Name]; ok {
+			if _, ok := sig.Interp[lg.ExprName(c)]; ok {
 				return false
 			}
 		}

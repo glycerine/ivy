@@ -57,16 +57,18 @@ func IsUninterpretedSort(sig *Sig, s lg.Sort) bool {
 // A symbol is interpreted if it is a numeral with an interpreted sort,
 // or if it is a polymorphic symbol with domain in an interpreted sort
 // and is not in the uninterpreted polymorphic symbols set.
-func IsInterpretedSymbol(sig *Sig, s *lg.Const) bool {
+func IsInterpretedSymbol(sig *Sig, s lg.Expr) bool {
+	name := lg.ExprName(s)
+	sort := s.NodeSort()
 	// Check if it's a numeral with interpreted sort
-	if IsNumeralName(s.Name) && IsInterpretedSort(sig, SortRange(s.CSort)) {
+	if IsNumeralName(name) && IsInterpretedSort(sig, SortRange(sort)) {
 		return true
 	}
 	// Check if it's a polymorphic symbol over an interpreted sort
-	if SymbolIsPolymorphic(s.Name) {
-		dom := SortDomain(s.CSort)
+	if SymbolIsPolymorphic(name) {
+		dom := SortDomain(sort)
 		if len(dom) > 0 && IsInterpretedSort(sig, dom[0]) {
-			if _, uninterp := UninterpretedPolymorphicSymbols[s.Name]; !uninterp {
+			if _, uninterp := UninterpretedPolymorphicSymbols[name]; !uninterp {
 				return true
 			}
 		}

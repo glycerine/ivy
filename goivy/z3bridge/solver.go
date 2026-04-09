@@ -296,11 +296,9 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 			allSyms[k] = v
 		}
 	}
-	clauseSyms := make([]*lg.Const, 0, len(allSyms))
+	clauseSyms := make([]lg.Expr, 0, len(allSyms))
 	for _, sym := range allSyms {
-		if c, ok := sym.(*lg.Const); ok {
-			clauseSyms = append(clauseSyms, c)
-		}
+		clauseSyms = append(clauseSyms, sym)
 	}
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
@@ -322,9 +320,9 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 // For non-function symbols: returns the symbol itself.
 // For function symbols: returns sym applied to fresh variables X0, X1, ...
 // Matches Python type_constraints lines 610-611 / 621-622.
-func (s *Solver) buildConstraintTerm(sym *lg.Const) lg.Expr {
+func (s *Solver) buildConstraintTerm(sym lg.Expr) lg.Expr {
 	var term lg.Expr = sym
-	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
+	if fs, ok := sym.NodeSort().(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		args := make([]lg.Expr, len(dom))
 		for i, ds := range dom {
@@ -343,11 +341,11 @@ func (s *Solver) buildConstraintTerm(sym *lg.Const) lg.Expr {
 // natConstraintForSymbol returns a ¬(term < 0) constraint if sym has
 // a nat interpretation, else nil.
 // Matches Python type_constraints lines 605-615.
-func (s *Solver) natConstraintForSymbol(sym *lg.Const) []lg.Expr {
+func (s *Solver) natConstraintForSymbol(sym lg.Expr) []lg.Expr {
 	if s.sig == nil {
 		return nil
 	}
-	rng := il.SortRange(sym.CSort)
+	rng := il.SortRange(sym.NodeSort())
 	if rng == nil {
 		return nil
 	}
@@ -380,11 +378,11 @@ func (s *Solver) natConstraintForSymbol(sym *lg.Const) []lg.Expr {
 // rangeConstraintsForSymbol returns ¬(term < lb) and ¬(ub < term)
 // constraints if sym has a RangeSort interpretation, else nil.
 // Matches Python type_constraints lines 618-629.
-func (s *Solver) rangeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
+func (s *Solver) rangeConstraintsForSymbol(sym lg.Expr) []lg.Expr {
 	if s.sig == nil {
 		return nil
 	}
-	rng := il.SortRange(sym.CSort)
+	rng := il.SortRange(sym.NodeSort())
 	if rng == nil {
 		return nil
 	}
@@ -424,7 +422,7 @@ func (s *Solver) rangeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
 // typeConstraints generates type constraints for nat and range sorts,
 // translating each to Z3 via formulaToZ3Closed.
 // Matches Python type_constraints (ivy_solver.py:603-631).
-func (s *Solver) typeConstraints(syms []*lg.Const) ([]Expr, error) {
+func (s *Solver) typeConstraints(syms []lg.Expr) ([]Expr, error) {
 	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(syms))
 
 	var res []Expr
@@ -490,11 +488,9 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
 	// used_symbols_ast = gen_to_set(symbols_ilu_ast)  (ivy_logic_utils.py:610)
 	symMap := il.UsedSymbolsAst(fmla)
-	usedSyms := make([]*lg.Const, 0, len(symMap))
+	usedSyms := make([]lg.Expr, 0, len(symMap))
 	for _, sym := range symMap {
-		if c, ok := sym.(*lg.Const); ok {
-			usedSyms = append(usedSyms, c)
-		}
+		usedSyms = append(usedSyms, sym)
 	}
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {

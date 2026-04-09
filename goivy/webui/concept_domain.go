@@ -1426,10 +1426,12 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 		allConsts[logic.Key(c)] = c
 	}
 	if diagram != nil {
-		for _, c := range il.UsedConstantsAst(diagram) {
-			k := logic.Key(c)
-			if _, exists := allConsts[k]; !exists {
-				allConsts[k] = c
+		for _, sym := range il.UsedSymbolsAst(diagram) {
+			if c, ok := sym.(*logic.Const); ok {
+				k := logic.Key(c)
+				if _, exists := allConsts[k]; !exists {
+					allConsts[k] = c
+				}
 			}
 		}
 	}
@@ -1532,8 +1534,8 @@ func GetStructureConceptDomain(
 	// union/difference of Const objects with structural equality.
 	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
 	if stateFormula != nil {
-		for _, c := range il.UsedConstantsAst(stateFormula) {
-			if !elementSet[c.Name] {
+		for _, sym := range il.UsedSymbolsAst(stateFormula) {
+			if c, ok := sym.(*logic.Const); ok && !elementSet[c.Name] {
 				allSymbolsByKey[logic.Key(c)] = c
 			}
 		}

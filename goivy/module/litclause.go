@@ -235,9 +235,10 @@ func TrimClauses(cls *Clauses) *Clauses {
 		seeds = seeds[:len(seeds)-1]
 		syms := UsedSymbolsAST(seed)
 		for _, sym := range syms {
-			if isSkolem(sym) {
-				if !usedSyms[sym.Name] {
-					usedSyms[sym.Name] = true
+			name := lg.ExprName(sym)
+			if len(name) >= 2 && name[0] == '_' && name[1] == '_' {
+				if !usedSyms[name] {
+					usedSyms[name] = true
 					if idx, ok := cls.DefIdx[lg.Key(sym)]; ok && idx < len(cls.Defs) {
 						seeds = append(seeds, cls.Defs[idx].Rhs)
 					}

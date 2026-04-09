@@ -558,7 +558,9 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		vocabMap := mclauses.Symbols()
 		vocab := make([]*lg.Const, 0, len(vocabMap))
 		for _, sym := range vocabMap {
-			vocab = append(vocab, sym)
+			if c, ok := sym.(*lg.Const); ok {
+				vocab = append(vocab, c)
+			}
 		}
 
 		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
@@ -824,9 +826,8 @@ func ConvertPostcondsWithUpdate(update *actions.Update, postconds []*ast.Labeled
 		}
 		usedSyms := module.UsedSymbolsAST(pc.Formula.(lg.Expr))
 		for _, sym := range usedSyms {
-			if actions.IsOld(sym.Name) {
-				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
-				renaming[lg.Key(sym)] = lg.NewConst(actions.OldOf(sym.Name), sym.CSort)
+			if s, ok := sym.(*lg.Const); ok && actions.IsOld(s.Name) {
+				renaming[lg.Key(s)] = lg.NewConst(actions.OldOf(s.Name), s.CSort)
 			}
 		}
 	}

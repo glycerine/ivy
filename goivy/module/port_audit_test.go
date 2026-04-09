@@ -364,7 +364,7 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 	syms := result.Symbols()
 	found := false
 	for _, s := range syms {
-		if s.Name == customPrefix+"X" {
+		if lg.ExprName(s) == customPrefix+"X" {
 			found = true
 		}
 	}

@@ -598,14 +598,14 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 	return result
 }
 
-// UsedSymbolsClauses returns all constant symbols referenced in a Clauses
-// object, preserving their sorts. This matches Python's used_symbols_clauses
+// UsedSymbolsClauses returns all symbols referenced in a Clauses
+// object. This matches Python's used_symbols_clauses
 // which returns a set of Symbol objects (with sorts).
-func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]*lg.Const {
+func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]lg.Expr {
 	if clauses == nil {
-		return make(map[lg.NodeKey]*lg.Const)
+		return make(map[lg.NodeKey]lg.Expr)
 	}
-	result := make(map[lg.NodeKey]*lg.Const)
+	result := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range clauses.Fmlas {
 		for k, v := range UsedSymbolsAST(f) {
 			result[k] = v
@@ -772,12 +772,12 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
 		for _, s := range cls.Symbols() {
-			seen[s.Name] = struct{}{}
+			seen[lg.ExprName(s)] = struct{}{}
 		}
 	}
 	if extra != nil {
-		for _, s := range il.UsedConstantsAst(extra) {
-			seen[s.Name] = struct{}{}
+		for _, s := range il.UsedSymbolsAst(extra) {
+			seen[lg.ExprName(s)] = struct{}{}
 		}
 	}
 	result := make([]string, 0, len(seen))
@@ -914,37 +914,31 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 // (lg.NodeKey includes name + sort). This matches Python's
 // dict.fromkeys(symbols_clauses(c)) insertion order.
 // Uses the faithful port il.SymbolsIluAst for traversal.
-func UsedSymbolsClausesOrdered(c *Clauses) *iu.InsMap[lg.NodeKey, *lg.Const] {
-	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
+func UsedSymbolsClausesOrdered(c *Clauses) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	if c == nil {
 		return result
 	}
 	for _, f := range c.Fmlas {
 		for sym := range il.SymbolsIluAst(f) {
-			if cc, ok := sym.(*lg.Const); ok {
-				result.Set(lg.Key(cc), cc)
-			}
+			result.Set(lg.Key(sym), sym)
 		}
 	}
 	for _, d := range c.Defs {
 		for sym := range il.SymbolsIluAst(d) {
-			if cc, ok := sym.(*lg.Const); ok {
-				result.Set(lg.Key(cc), cc)
-			}
+			result.Set(lg.Key(sym), sym)
 		}
 	}
 	return result
 }
 
-// UsedSymbolsExprOrdered collects constant symbols from an expression in
+// UsedSymbolsExprOrdered collects symbols from an expression in
 // depth-first AST traversal order, deduplicating by structural identity.
 // Uses the faithful port il.SymbolsIluAst for traversal.
-func UsedSymbolsExprOrdered(node lg.Expr) *iu.InsMap[lg.NodeKey, *lg.Const] {
-	result := iu.NewInsMap[lg.NodeKey, *lg.Const]()
+func UsedSymbolsExprOrdered(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for sym := range il.SymbolsIluAst(node) {
-		if c, ok := sym.(*lg.Const); ok {
-			result.Set(lg.Key(c), c)
-		}
+		result.Set(lg.Key(sym), sym)
 	}
 	return result
 }
@@ -1090,9 +1084,9 @@ func VariablesClauses(clauses *Clauses) []*lg.Variable {
 	return result
 }
 
-// ConstantsClauses returns all constants used across all formulas and defs.
+// ConstantsClauses returns all Const symbols used across all formulas and defs.
 // Corresponds to Python: constants_clauses = apply_gen_to_clauses(constants_ast)
-// Uses the faithful port il.UsedConstantsAst for traversal.
+// Note: this is intentionally Const-only (Python's constants_ast uses is_constant).
 func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
@@ -1100,32 +1094,36 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	seen := make(map[string]bool)
 	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
-		for _, cc := range il.UsedConstantsAst(f) {
-			if !seen[cc.Name] {
-				seen[cc.Name] = true
-				result = append(result, cc)
+		for _, sym := range il.UsedSymbolsAst(f) {
+			if cc, ok := sym.(*lg.Const); ok {
+				if !seen[cc.Name] {
+					seen[cc.Name] = true
+					result = append(result, cc)
+				}
 			}
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, cc := range il.UsedConstantsAst(d) {
-			if !seen[cc.Name] {
-				seen[cc.Name] = true
-				result = append(result, cc)
+		for _, sym := range il.UsedSymbolsAst(d) {
+			if cc, ok := sym.(*lg.Const); ok {
+				if !seen[cc.Name] {
+					seen[cc.Name] = true
+					result = append(result, cc)
+				}
 			}
 		}
 	}
 	return result
 }
 
-// SymbolsClauses returns all constant symbols used across all formulas and defs.
+// SymbolsClauses returns all symbols used across all formulas and defs.
 // Corresponds to Python: symbols_clauses = apply_gen_to_clauses(symbols_ast)
-func SymbolsClauses(clauses *Clauses) []*lg.Const {
+func SymbolsClauses(clauses *Clauses) []lg.Expr {
 	if clauses == nil {
 		return nil
 	}
 	result := clauses.Symbols()
-	syms := make([]*lg.Const, 0, len(result))
+	syms := make([]lg.Expr, 0, len(result))
 	for _, s := range result {
 		syms = append(syms, s)
 	}

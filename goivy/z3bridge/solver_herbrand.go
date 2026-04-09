@@ -572,7 +572,11 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 
 	// Constant values
 	symSet := clauses.Symbols()
-	for _, sym := range symSet {
+	for _, symExpr := range symSet {
+		sym, ok := symExpr.(*lg.Const)
+		if !ok {
+			continue
+		}
 		if ignore(sym) {
 			continue
 		}
@@ -591,7 +595,11 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 	}
 
 	// Relation values
-	for _, sym := range symSet {
+	for _, symExpr := range symSet {
+		sym, ok := symExpr.(*lg.Const)
+		if !ok {
+			continue
+		}
 		if ignore(sym) {
 			continue
 		}
@@ -607,7 +615,11 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 	}
 
 	// Function values
-	for _, sym := range symSet {
+	for _, symExpr := range symSet {
+		sym, ok := symExpr.(*lg.Const)
+		if !ok {
+			continue
+		}
 		if ignore(sym) {
 			continue
 		}
@@ -838,7 +850,9 @@ func (s *Solver) GetModelFromClauses(clauses *module.Clauses) (*HerbrandModel, e
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
-		vocab = append(vocab, sym)
+		if c, ok := sym.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return NewHerbrandModel(s, z3solver, m, vocab), nil

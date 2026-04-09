@@ -805,7 +805,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	}
 	usedNames := make([]string, 0, len(usedMap))
 	for _, sym := range usedMap {
-		usedNames = append(usedNames, sym.Name)
+		usedNames = append(usedNames, lg.ExprName(sym))
 	}
 	rn := iu.NewUniqueRenamer("", usedNames)
 

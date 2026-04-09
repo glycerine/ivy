@@ -138,9 +138,10 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 		return false
 	}
 	for _, f := range c.Fmlas {
-		syms := il.UsedConstantsAst(f)
+		syms := il.UsedSymbolsAst(f)
 		for _, s := range syms {
-			if isSkolem(s) {
+			name := lg.ExprName(s)
+			if len(name) >= 2 && name[0] == '_' && name[1] == '_' {
 				return false
 			}
 		}
@@ -191,17 +192,17 @@ func (c *Clauses) Equal(other *Clauses) bool {
 	return true
 }
 
-// Symbols yields all constant symbols used in the Clauses.
-// Delegates to the faithful port il.UsedConstantsAst (via symbols_ilu_ast).
-func (c *Clauses) Symbols() map[lg.NodeKey]*lg.Const {
-	result := make(map[lg.NodeKey]*lg.Const)
+// Symbols yields all symbols used in the Clauses.
+// Delegates to the faithful port il.UsedSymbolsAst (via symbols_ilu_ast).
+func (c *Clauses) Symbols() map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range c.Fmlas {
-		for k, v := range il.UsedConstantsAst(f) {
+		for k, v := range il.UsedSymbolsAst(f) {
 			result[k] = v
 		}
 	}
 	for _, d := range c.Defs {
-		for k, v := range il.UsedConstantsAst(d) {
+		for k, v := range il.UsedSymbolsAst(d) {
 			result[k] = v
 		}
 	}
@@ -336,7 +337,7 @@ func isSkolem(c *lg.Const) bool {
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
 func usesSymbolsAST(syms map[lg.NodeKey]lg.Expr, node lg.Expr) bool {
-	used := il.UsedConstantsAst(node)
+	used := il.UsedSymbolsAst(node)
 	for s := range syms {
 		if _, ok := used[s]; ok {
 			return true

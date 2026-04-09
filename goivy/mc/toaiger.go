@@ -184,23 +184,23 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Save original symbols for trace
 	origSyms := make(map[string]bool)
 	for _, sym := range module.UsedSymbolsAST(invariant) {
-		origSyms[sym.Name] = true
+		origSyms[lg.ExprName(sym)] = true
 	}
 	for _, sym := range module.SymbolsClauses(trans) {
-		origSyms[sym.Name] = true
+		origSyms[lg.ExprName(sym)] = true
 	}
 
 	// Collect function symbols
 	funs := make(map[string]bool)
 	for _, sym := range module.SymbolsClauses(trans) {
-		if il.IsFunctionSort(sym.CSort) {
-			funs[sym.Name] = true
+		if il.IsFunctionSort(sym.NodeSort()) {
+			funs[lg.ExprName(sym)] = true
 		}
 	}
 	invSymsAST := module.UsedSymbolsAST(invariant)
 	for _, sym := range invSymsAST {
-		if il.IsFunctionSort(sym.CSort) {
-			funs[sym.Name] = true
+		if il.IsFunctionSort(sym.NodeSort()) {
+			funs[lg.ExprName(sym)] = true
 		}
 	}
 
@@ -244,7 +244,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, ec := range errConds {
 		ecSyms := module.UsedSymbolsAST(ec)
 		for k, sym := range ecSyms {
-			if actions.IsSkolem(sym.Name) && !il.IsFunctionSort(sym.CSort) {
+			if actions.IsSkolem(lg.ExprName(sym)) && !il.IsFunctionSort(sym.NodeSort()) {
 				invarSyms[k] = sym
 			}
 		}
@@ -287,16 +287,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Find immutable abstract variables and give them next definitions
 	invarSymSet := make(map[string]bool)
 	for _, sym := range invarSyms {
-		invarSymSet[sym.Name] = true
+		invarSymSet[lg.ExprName(sym)] = true
 	}
 
 	isImmutableExpr := func(expr lg.Expr) bool {
 		syms := module.UsedSymbolsAST(expr)
 		for _, sym := range syms {
-			if actions.IsSkolem(sym.Name) && !invarSymSet[sym.Name] {
+			n := lg.ExprName(sym)
+			if actions.IsSkolem(n) && !invarSymSet[n] {
 				return false
 			}
-			if actions.IsNew(sym.Name) || stVarSet[sym.Name] {
+			if actions.IsNew(n) || stVarSet[n] {
 				return false
 			}
 		}
@@ -428,17 +429,18 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		defSet[sv] = true
 	}
 
-	usedSyms := make(map[string]*lg.Const)
+	usedSyms := make(map[string]lg.Expr)
 	for _, sym := range module.SymbolsClauses(trans) {
-		usedSyms[sym.Name] = sym
+		usedSyms[lg.ExprName(sym)] = sym
 	}
 	for _, sym := range module.UsedSymbolsAST(invariant) {
-		usedSyms[sym.Name] = sym
+		usedSyms[lg.ExprName(sym)] = sym
 	}
 
 	var inputs []string
 	for name, sym := range usedSyms {
-		if !defSet[name] && !isInterpretedSymbol(sym) {
+		cc, isConst := sym.(*lg.Const)
+		if !defSet[name] && !(isConst && isInterpretedSymbol(cc)) {
 			inputs = append(inputs, name)
 		}
 	}

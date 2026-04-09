@@ -331,7 +331,7 @@ func usedSymbolNames(node lg.Expr) map[string]bool {
 	syms := module.UsedSymbolsAST(node)
 	result := make(map[string]bool, len(syms))
 	for _, c := range syms {
-		result[c.Name] = true
+		result[lg.ExprName(c)] = true
 	}
 	return result
 }
@@ -380,8 +380,10 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	actualSyms := module.UsedSymbolsAST(node)
 	constMap := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range actualSyms {
-		if newName, ok := nameMap[s.Name]; ok {
-			constMap[lg.Key(s)] = lg.NewConst(newName, s.CSort)
+		if c, ok := s.(*lg.Const); ok {
+			if newName, ok := nameMap[c.Name]; ok {
+				constMap[lg.Key(c)] = lg.NewConst(newName, c.CSort)
+			}
 		}
 	}
 	if len(constMap) == 0 {
@@ -470,9 +472,11 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	// Iterate symbols in insertion order, building structural rename map.
 	constMap := make(map[lg.NodeKey]*lg.Const)
 	for key, sym := range used1.All() {
-		if IsSkolem(sym.Name) && !IsGlobalSkolem(sym.Name) {
-			newName := rn.Rename(sym.Name)
-			constMap[key] = lg.NewConst(newName, sym.CSort)
+		if c, ok := sym.(*lg.Const); ok {
+			if IsSkolem(c.Name) && !IsGlobalSkolem(c.Name) {
+				newName := rn.Rename(c.Name)
+				constMap[key] = lg.NewConst(newName, c.CSort)
+			}
 		}
 	}
 	if len(constMap) == 0 {
@@ -502,9 +506,11 @@ func RenameDistinctClauses(c1, c2 *module.Clauses) *module.Clauses {
 	// Each unique (name, sort) pair gets its own rn.Rename() call.
 	constMap := make(map[lg.NodeKey]*lg.Const)
 	for key, sym := range used1.All() {
-		if IsSkolem(sym.Name) && !IsGlobalSkolem(sym.Name) {
-			newName := rn.Rename(sym.Name)
-			constMap[key] = lg.NewConst(newName, sym.CSort)
+		if c, ok := sym.(*lg.Const); ok {
+			if IsSkolem(c.Name) && !IsGlobalSkolem(c.Name) {
+				newName := rn.Rename(c.Name)
+				constMap[key] = lg.NewConst(newName, c.CSort)
+			}
 		}
 	}
 	if len(constMap) == 0 {
@@ -1083,8 +1089,8 @@ func StateToAction(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = NewConst(s)
 	}
-	for _, s := range constSliceFromMap(module.UsedSymbolsClauses(u.TR)) {
-		if IsOld(s.Name) {
+	for _, sym := range module.UsedSymbolsClauses(u.TR) {
+		if s, ok := sym.(*lg.Const); ok && IsOld(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
 	}
@@ -1103,8 +1109,8 @@ func ActionToState(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = OldConst(s)
 	}
-	for _, s := range constSliceFromMap(module.UsedSymbolsClauses(u.TR)) {
-		if IsNew(s.Name) {
+	for _, sym := range module.UsedSymbolsClauses(u.TR) {
+		if s, ok := sym.(*lg.Const); ok && IsNew(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(NewOf(s.Name), s.CSort)
 		}
 	}
@@ -1578,8 +1584,8 @@ func BindOldsClausesClauses(clauses *module.Clauses) *module.Clauses {
 	}
 	used := module.UsedSymbolsClauses(clauses)
 	renaming := make(map[lg.NodeKey]*lg.Const)
-	for _, s := range used {
-		if IsOld(s.Name) {
+	for _, sym := range used {
+		if s, ok := sym.(*lg.Const); ok && IsOld(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
 	}
@@ -1600,9 +1606,11 @@ func SubstAction(u *Update, subst map[string]string) *Update {
 	}
 	// Build (name,sort)-keyed renaming from actual constants
 	renaming := make(map[lg.NodeKey]*lg.Const)
-	for _, s := range allSyms {
-		if newName, ok := subst[s.Name]; ok {
-			renaming[lg.Key(s)] = lg.NewConst(newName, s.CSort)
+	for _, sym := range allSyms {
+		if s, ok := sym.(*lg.Const); ok {
+			if newName, ok := subst[s.Name]; ok {
+				renaming[lg.Key(s)] = lg.NewConst(newName, s.CSort)
+			}
 		}
 	}
 	// Also rename new_ versions of modified symbols

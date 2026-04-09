@@ -795,12 +795,13 @@ func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 
 // collectAllSymbols collects all constant symbols from a list of formulas.
 func collectAllSymbols(formulas []lg.Expr) []*lg.Const {
-	seen := make(map[string]*lg.Const)
+	seen := make(map[string]lg.Expr)
 	for _, f := range formulas {
 		syms := module.UsedSymbolsAST(f)
 		for _, sym := range syms {
-			if _, ok := seen[sym.Name]; !ok {
-				seen[sym.Name] = sym
+			name := lg.ExprName(sym)
+			if _, ok := seen[name]; !ok {
+				seen[name] = sym
 			}
 		}
 	}
@@ -810,9 +811,11 @@ func collectAllSymbols(formulas []lg.Expr) []*lg.Const {
 		names = append(names, name)
 	}
 	sort.Strings(names)
-	result := make([]*lg.Const, len(names))
-	for i, name := range names {
-		result[i] = seen[name]
+	result := make([]*lg.Const, 0, len(names))
+	for _, name := range names {
+		if c, ok := seen[name].(*lg.Const); ok {
+			result = append(result, c)
+		}
 	}
 	return result
 }

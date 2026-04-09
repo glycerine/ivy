@@ -421,12 +421,12 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 	// Get dependencies from RHS
 	deps := module.SymbolsAST(def.Rhs)
 	for _, d := range deps {
-		pc.Stale[d.Name] = true
+		pc.Stale[lg.ExprName(d)] = true
 	}
 	// Check if recursive (sym in deps)
 	recursive := false
 	for _, d := range deps {
-		if d.Name == symSym.Name {
+		if lg.ExprName(d) == symSym.Name {
 			recursive = true
 			break
 		}
@@ -651,7 +651,7 @@ func collectStaleSymbols(n ast.Node, stale map[string]bool) {
 	// which handles logic-level nodes efficiently.
 	if expr, ok := n.(lg.Expr); ok {
 		for _, c := range module.UsedSymbolsAST(expr) {
-			stale[c.Name] = true
+			stale[lg.ExprName(c)] = true
 		}
 		return
 	}

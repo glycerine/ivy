@@ -57,7 +57,9 @@ func (s *Solver) GetModelClauses(clauses *module.Clauses) (*ModelResult, error) 
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
-		vocab = append(vocab, sym)
+		if c, ok := sym.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return &ModelResult{
@@ -276,7 +278,9 @@ func (s *Solver) GetSmallModelWithCond(
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
-		vocab = append(vocab, sym)
+		if c, ok := sym.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return &ModelResult{
@@ -433,7 +437,9 @@ func (s *Solver) ClausesModelToClausesWithModel(
 		symSet := clauses.Symbols()
 		vocab := make([]*lg.Const, 0, len(symSet))
 		for _, sym := range symSet {
-			vocab = append(vocab, sym)
+			if c, ok := sym.(*lg.Const); ok {
+				vocab = append(vocab, c)
+			}
 		}
 		h = NewHerbrandModel(s, model.Solver, model.Model, vocab)
 	} else {

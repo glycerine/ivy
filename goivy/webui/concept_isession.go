@@ -150,14 +150,14 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	// Collect from formula
 	formula := s.ToFormula()
 	if formula != nil {
-		for _, c := range il.UsedConstantsAst(formula) {
-			used[c.Name] = true
+		for _, c := range il.UsedSymbolsAst(formula) {
+			used[logic.ExprName(c)] = true
 		}
 	}
 	// Collect from concept formulas
 	s.Domain.Concepts.ForEachConcept(func(_ string, c *CDConcept) {
-		for _, uc := range il.UsedConstantsAst(c.Formula) {
-			used[uc.Name] = true
+		for _, uc := range il.UsedSymbolsAst(c.Formula) {
+			used[logic.ExprName(uc)] = true
 		}
 	})
 	// Collect from extra
@@ -305,7 +305,12 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 		return []*logic.Const{logic.NewConst("0", cSort)}
 	}
 
-	constants := il.UsedConstantsListAst(concept.Formula)
+	var constants []*logic.Const
+	for _, sym := range il.UsedSymbolsAst(concept.Formula) {
+		if c, ok := sym.(*logic.Const); ok {
+			constants = append(constants, c)
+		}
+	}
 	freshName := s.FreshConstName(nil)
 	x := logic.NewConst(freshName, cSort)
 	f, err := concept.Call(x)

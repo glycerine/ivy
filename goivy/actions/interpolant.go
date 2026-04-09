@@ -89,7 +89,7 @@ func InterpFromUnsatCore(clauses1, clauses2, core *module.Clauses, interpreted m
 	// For now, return the core restricted to symbols from clauses1.
 	syms1 := make(map[string]bool)
 	for _, sym := range module.SymbolsClauses(clauses1) {
-		syms1[sym.Name] = true
+		syms1[lg.ExprName(sym)] = true
 	}
 
 	var filteredFmlas []lg.Expr
@@ -97,7 +97,8 @@ func InterpFromUnsatCore(clauses1, clauses2, core *module.Clauses, interpreted m
 		fmlaSyms := module.UsedSymbolsAST(f)
 		allInClauses1 := true
 		for _, c := range fmlaSyms {
-			if !syms1[c.Name] && !interpreted[c.Name] {
+			cn := lg.ExprName(c)
+			if !syms1[cn] && !interpreted[cn] {
 				allInClauses1 = false
 				break
 			}
@@ -141,7 +142,7 @@ func filterGroundNonSkolem(clauses *module.Clauses) *module.Clauses {
 		syms := module.UsedSymbolsAST(f)
 		hasSkolem := false
 		for _, c := range syms {
-			if IsSkolem(c.Name) {
+			if IsSkolem(lg.ExprName(c)) {
 				hasSkolem = true
 				break
 			}

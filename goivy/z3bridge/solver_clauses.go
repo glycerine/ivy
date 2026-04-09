@@ -238,7 +238,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			syms := module.UsedSymbolsAST(f)
 			hasSkolemDef := false
 			for _, c := range syms {
-				if isSkolem(c.Name) {
+				if isSkolem(lg.ExprName(c)) {
 					if _, inIdx := clauses.DefIdx[lg.Key(c)]; inIdx {
 						hasSkolemDef = true
 						break
@@ -297,7 +297,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 		syms := module.UsedSymbolsAST(f)
 		hasIgnored := false
 		for _, c := range syms {
-			if ignore(c) && !repSet[c.Name] {
+			if cc, ok := c.(*lg.Const); ok && ignore(cc) && !repSet[lg.ExprName(c)] {
 				hasIgnored = true
 				break
 			}
