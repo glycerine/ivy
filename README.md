@@ -2603,6 +2603,7 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+
 236447  go : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
         py : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
 
