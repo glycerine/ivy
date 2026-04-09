@@ -282,19 +282,17 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 		exprs = append(exprs, zd)
 	}
 
-	// Type constraints matching Python: type_constraints(used_symbols_clauses(clauses))
-	// Python's type_constraints uses formula_to_z3_closed → Go formulaToZ3Closed
-	usedSyms := clauses.Symbols()
-	for _, sym := range usedSyms {
-		constraints := s.typeConstraintsForSymbol(sym)
-		for _, tc := range constraints {
-			ztc, err := s.formulaToZ3Closed(tc)
-			if err != nil {
-				continue // skip constraints we can't translate
-			}
-			exprs = append(exprs, ztc)
-		}
+	// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
+	symMap := clauses.Symbols()
+	clauseSyms := make([]*lg.Const, 0, len(symMap))
+	for _, sym := range symMap {
+		clauseSyms = append(clauseSyms, sym)
 	}
+	tcs, tcErr := s.typeConstraints(clauseSyms)
+	if tcErr != nil {
+		return Expr{}, tcErr
+	}
+	exprs = append(exprs, tcs...)
 
 	xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
 	if len(exprs) == 0 {
@@ -306,33 +304,11 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	return s.tr.Ctx.And(exprs...), nil
 }
 
-// typeConstraintsForSymbol generates type constraints for a symbol based on
-// its sort's interpretation. For nat sorts: ¬(x < 0). For range sorts:
-// ¬(x < lb) ∧ ¬(ub < x). Corresponds to Python's type_constraints.
-func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
-	if s.sig == nil {
-		return nil
-	}
-
-	// Get the range sort of the symbol
-	rng := il.SortRange(sym.CSort)
-	if rng == nil {
-		return nil
-	}
-	rngName := il.SortName(rng)
-
-	// Check if the sort has a nat interpretation
-	interp, hasInterp := s.sig.Interp[rngName]
-	if !hasInterp {
-		return nil
-	}
-
-	// Skip interpreted symbols
-	if il.IsInterpretedSymbol(s.sig, sym) {
-		return nil
-	}
-
-	// Build the term for the symbol (applying to variables if function sort)
+// buildConstraintTerm builds a term for type constraints.
+// For non-function symbols: returns the symbol itself.
+// For function symbols: returns sym applied to fresh variables X0, X1, ...
+// Matches Python type_constraints lines 610-611 / 621-622.
+func (s *Solver) buildConstraintTerm(sym *lg.Const) lg.Expr {
 	var term lg.Expr = sym
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
@@ -347,40 +323,126 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
 		}
 		term = app
 	}
+	return term
+}
 
+// natConstraintForSymbol returns a ¬(term < 0) constraint if sym has
+// a nat interpretation, else nil.
+// Matches Python type_constraints lines 605-615.
+func (s *Solver) natConstraintForSymbol(sym *lg.Const) []lg.Expr {
+	if s.sig == nil {
+		return nil
+	}
+	rng := il.SortRange(sym.CSort)
+	if rng == nil {
+		return nil
+	}
+	interp, ok := s.sig.Interp[il.SortName(rng)]
+	if !ok {
+		return nil
+	}
+	interpStr, isStr := interp.(string)
+	if !isStr || interpStr != "nat" {
+		return nil
+	}
+	if il.IsInterpretedSymbol(s.sig, sym) {
+		return nil
+	}
+	term := s.buildConstraintTerm(sym)
+	if term == nil {
+		return nil
+	}
+	// ¬(term < 0)
+	zero := lg.NewConst("0", rng)
+	ltSort := il.RelationSort([]lg.Sort{rng, rng})
+	lt := lg.NewConst("<", ltSort)
+	ltApp, err := lg.NewApply(lt, term, zero)
+	if err != nil {
+		return nil
+	}
+	return []lg.Expr{&lg.Not{Body: ltApp}}
+}
+
+// rangeConstraintsForSymbol returns ¬(term < lb) and ¬(ub < term)
+// constraints if sym has a RangeSort interpretation, else nil.
+// Matches Python type_constraints lines 618-629.
+func (s *Solver) rangeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
+	if s.sig == nil {
+		return nil
+	}
+	rng := il.SortRange(sym.CSort)
+	if rng == nil {
+		return nil
+	}
+	interp, ok := s.sig.Interp[il.SortName(rng)]
+	if !ok {
+		return nil
+	}
+	rs, isRS := interp.(*lg.RangeSort)
+	if !isRS {
+		return nil
+	}
+	if il.IsInterpretedSymbol(s.sig, sym) {
+		return nil
+	}
+	term := s.buildConstraintTerm(sym)
+	if term == nil {
+		return nil
+	}
 	var constraints []lg.Expr
-
-	// Check for nat interpretation (string "nat")
-	if interpStr, ok := interp.(string); ok && interpStr == "nat" {
-		// Non-negativity: ¬(term < 0)
-		zero := lg.NewConst("0", rng)
-		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewConst("<", ltSort)
-		ltApp, err := lg.NewApply(lt, term, zero)
-		if err == nil {
-			constraints = append(constraints, &lg.Not{Body: ltApp})
-		}
+	lb := lg.NewConst(rs.LbString(), rng)
+	ub := lg.NewConst(rs.UbString(), rng)
+	ltSort := il.RelationSort([]lg.Sort{rng, rng})
+	lt := lg.NewConst("<", ltSort)
+	// Lower bound: ¬(term < lb)
+	ltLbApp, err := lg.NewApply(lt, term, lb)
+	if err == nil {
+		constraints = append(constraints, &lg.Not{Body: ltLbApp})
 	}
-
-	// Check for range sort interpretation
-	if rs, ok := interp.(*lg.RangeSort); ok {
-		lb := lg.NewConst(rs.LbString(), rng)
-		ub := lg.NewConst(rs.UbString(), rng)
-		// Lower bound: ¬(term < lb)
-		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewConst("<", ltSort)
-		ltLbApp, err := lg.NewApply(lt, term, lb)
-		if err == nil {
-			constraints = append(constraints, &lg.Not{Body: ltLbApp})
-		}
-		// Upper bound: ¬(ub < term)
-		ltUbApp, err := lg.NewApply(lt, ub, term)
-		if err == nil {
-			constraints = append(constraints, &lg.Not{Body: ltUbApp})
-		}
+	// Upper bound: ¬(ub < term)
+	ltUbApp, err := lg.NewApply(lt, ub, term)
+	if err == nil {
+		constraints = append(constraints, &lg.Not{Body: ltUbApp})
 	}
-
 	return constraints
+}
+
+// typeConstraints generates type constraints for nat and range sorts,
+// translating each to Z3 via formulaToZ3Closed.
+// Matches Python type_constraints (ivy_solver.py:603-631).
+func (s *Solver) typeConstraints(syms []*lg.Const) ([]Expr, error) {
+	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(syms))
+
+	var res []Expr
+
+	// Pass 1: nat sort constraints (Python lines 605-615)
+	for _, sym := range syms {
+		for _, tc := range s.natConstraintForSymbol(sym) {
+			ztc, err := s.formulaToZ3Closed(tc)
+			if err != nil {
+				continue
+			}
+			res = append(res, ztc)
+		}
+	}
+
+	// Pass 2: range sort constraints (Python lines 616-630)
+	// Python sets handle_range_sorts = False before translating range constraints,
+	// to avoid double-clamping (the constraint IS the bound, don't clamp again).
+	saved := s.HandleRangeSorts
+	s.HandleRangeSorts = false
+	for _, sym := range syms {
+		for _, tc := range s.rangeConstraintsForSymbol(sym) {
+			ztc, err := s.formulaToZ3Closed(tc)
+			if err != nil {
+				continue
+			}
+			res = append(res, ztc)
+		}
+	}
+	s.HandleRangeSorts = saved
+
+	return res, nil
 }
 
 // formulaToZ3 translates a formula to Z3 with HASH trace and type constraints.
@@ -411,20 +473,12 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 		return Expr{}, err
 	}
 
-	// Per-formula type constraints matching Python formula_to_z3 line 670-672
-	// Python's type_constraints uses formula_to_z3_closed → Go formulaToZ3Closed
+	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
 	usedSyms := lu.UsedConstantsList(fmla)
-	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(usedSyms))
-	var tcs []Expr
-	for _, sym := range usedSyms {
-		constraints := s.typeConstraintsForSymbol(sym)
-		for _, tc := range constraints {
-			ztc, err := s.formulaToZ3Closed(tc)
-			if err != nil {
-				continue
-			}
-			tcs = append(tcs, ztc)
-		}
+	tcs, tcErr := s.typeConstraints(usedSyms)
+	if tcErr != nil {
+		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, iu.ShortTypeName(fmla))
+		return Expr{}, tcErr
 	}
 	if len(tcs) > 0 {
 		all := make([]Expr, 0, len(tcs)+1)
