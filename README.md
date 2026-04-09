@@ -2603,22 +2603,19 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-236442  go : XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
-        py : XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
-
-236443  go : XTRACE: solver.ClausesToZ3 fmla[0] sort=Boolean
-        py : XTRACE: solver.ClausesToZ3 fmla[0] sort=Boolean
-
-236444  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Apply
-        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Apply
-
-236445  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
-        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
-
-236446  go : XTRACE: ivy_solver.py:513 get_polymacs() ENTER op=<=
-        py : XTRACE: ivy_solver.py:513 get_polymacs() ENTER op=<=
-
-236447  go : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0
+236447  go : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
         py : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
+
+236448  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
+        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
+
+236449  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+
+236450  go : XTRACE: ivy_solver.py:501 lt_pred() ENTER sort=index * index -> Boolean
+        py : XTRACE: ivy_solver.py:501 lt_pred() ENTER sort=index * index -> Boolean
+
+236451  go : XTRACE: ivy_solver.py:560 forall() ENTER nvars=1
+        py : XTRACE: ivy_solver.py:279 functionsort() ENTER
 ~~~
 

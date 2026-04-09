@@ -339,12 +339,6 @@ func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
 	return nil
 }
 
-// LtPred returns the less-than predicate for a sort.
-func LtPred(sort lg.Sort) *lg.Const {
-	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%v", sort)
-	return lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
-}
-
 // --- Collection utilities ---
 
 // CollectNumerals collects all numeral subterms from a Z3 expression.
