@@ -290,7 +290,11 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		panic(fmt.Sprintf("TranslateSort: TopSort %q has no to_z3() equivalent in Python", st.Name))
 
 	case *lg.FunctionSort:
-		xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
+		// FunctionSort.to_z3 in Python is functionsort(), which returns a
+		// list of Z3 sorts — not a single Z3 Sort. Callers that need this
+		// should call (*Translator).functionSort directly. Reaching this
+		// branch means a caller wrongly handed a FunctionSort to a code
+		// path that expects a single sort; surface that as an error.
 		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *lg.EnumeratedSort:
@@ -712,15 +716,31 @@ func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Expr) 
 	return nil, fmt.Errorf("polymacPred: unknown operator %s", name)
 }
 
-// ltPred creates a Z3 function declaration for < on the given sort.
-// Matches Python lt_pred (ivy_solver.py:513-517).
+// ltPred creates a Z3 function declaration for "<" on the given sort.
+// Mirrors Python lt_pred (ivy_solver.py:513-517):
+//
+//	def lt_pred(sort):
+//	    sym = ivy_logic.Symbol('<', sort)
+//	    sig = sym.sort.to_z3()                  # functionsort() ENTER
+//	    return z3.Function(solver_name(sym), *sig)
+//
+// Python does NOT cache the result. Each invocation re-emits the
+// functionsort() trace and rebuilds the Z3 Function. Z3 dedups
+// internally by (name, signature), so multiple calls return
+// equivalent FuncDecls. We mirror that exactly here — going through
+// makeFuncDecl's cache would suppress the functionsort() ENTER trace
+// on hits and break xtrace alignment with Python (this was the cause
+// of the log.red divergence at step 236451).
 func (t *Translator) ltPred(fs *lg.FunctionSort) FuncDecl {
 	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%s", fs)
-	fd, err := t.makeFuncDecl("<", fs)
+	sig, err := t.functionSort(fs)
 	if err != nil {
-		panic(fmt.Sprintf("ltPred: makeFuncDecl failed: %v", err))
+		panic(fmt.Sprintf("ltPred: functionSort failed: %v", err))
 	}
-	return fd
+	zDomain := sig[:len(sig)-1]
+	zRange := sig[len(sig)-1]
+	z3name := t.z3Name("<", fs)
+	return t.Ctx.Function(z3name, zDomain, zRange)
 }
 
 // eqToAtomZ3 routes Eq through atomToZ3, matching Python where
