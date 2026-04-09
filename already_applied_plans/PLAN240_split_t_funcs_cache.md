@@ -1,4 +1,4 @@
-# Plan: Split Go's `t.funcs` Cache to Match Python's z3_functions vs z3_predicates
+# Plan: Split and Rename Go's Z3 Caches to Match Python's z3_functions / z3_predicates
 
 Created: 2026-04-09 05:16 -03
 
@@ -46,6 +46,15 @@ This mirrors the existing `ltPred` precedent (`translate.go:734-744`),
 which already inlines `functionSort` + `Ctx.Function` for exactly this
 reason.
 
+In addition, the Go port has been obscuring these two caches by
+renaming them (`funcs` / `preds`) when Python's names (`z3_functions`
+/ `z3_predicates`) are clearer and make the Python correspondence
+obvious at every call site. We rename the Go fields back to match
+Python literally, using the identical snake_case identifiers
+`z3_functions` and `z3_predicates`. This intentionally departs from
+idiomatic Go camelCase in favor of mechanical-port clarity (CLAUDE.md
+rules 3 and 8).
+
 ## Approach
 
 Inline the Z3 FuncDecl construction at both offending call sites so
@@ -68,6 +77,163 @@ cache — matching `symbol_to_z3`.
   299-301 (symbol_to_z3), 457-511 (term_to_z3), 529-547 (atom_to_z3).
 
 ## Changes
+
+> Note on change ordering: apply Change 0 (the rename) first so that
+> subsequent inline-rewrite changes touch fields with their final
+> names. Alternatively, do Changes 1-5 first against the current
+> `funcs`/`preds` names and finish with Change 0 — either order
+> works but the file-wide rename is mechanically simplest to do as a
+> single pass.
+
+### Change 0 — Rename `funcs` → `z3_functions`, `preds` → `z3_predicates`
+
+**Rationale:** the current Go names obscure the Python correspondence.
+Python uses `z3_functions` / `z3_predicates`; the Go port should use
+the same identifiers (with the literal underscore, not camelCase) so
+that every reader immediately recognizes the mapping. Yes, this
+violates idiomatic Go naming — but CLAUDE.md rule 8 ("When in doubt,
+translate literally") and rule 3 ("SAME NAME") both favor literal
+correspondence over Go idiom for this mechanical port.
+
+**File:** `translate.go`
+
+- **Line 46** (struct field declaration):
+  ```go
+  funcs           map[lg.NodeKey]FuncDecl                // ...
+  ```
+  →
+  ```go
+  z3_functions    map[lg.NodeKey]FuncDecl                // Python z3_functions (term_to_z3 FuncDecl cache; NOT used by atom or symbol-bare paths)
+  ```
+
+- **Line 47** (struct field declaration):
+  ```go
+  preds           map[lg.NodeKey]func(args ...Expr) Expr // ...
+  ```
+  →
+  ```go
+  z3_predicates   map[lg.NodeKey]func(args ...Expr) Expr // Python z3_predicates (atom_to_z3 closure cache; stores FuncDecl.Apply / native / polymac / my_eq)
+  ```
+
+  (These comment updates also subsume Changes 3 and 4 below — see note
+  at the end of this section.)
+
+- **Lines 187-188** (`NewTranslator`):
+  ```go
+  funcs:    make(map[lg.NodeKey]FuncDecl),
+  preds:    make(map[lg.NodeKey]func(args ...Expr) Expr),
+  ```
+  →
+  ```go
+  z3_functions:  make(map[lg.NodeKey]FuncDecl),
+  z3_predicates: make(map[lg.NodeKey]func(args ...Expr) Expr),
+  ```
+
+- **Lines 204-205** (`Clear`):
+  ```go
+  t.funcs = make(map[lg.NodeKey]FuncDecl)
+  t.preds = make(map[lg.NodeKey]func(args ...Expr) Expr)
+  ```
+  →
+  ```go
+  t.z3_functions = make(map[lg.NodeKey]FuncDecl)
+  t.z3_predicates = make(map[lg.NodeKey]func(args ...Expr) Expr)
+  ```
+
+- **Line 212** (`initEqPred`):
+  ```go
+  t.preds[eqCanonPredKey] = func(args ...Expr) Expr {
+  ```
+  →
+  ```go
+  t.z3_predicates[eqCanonPredKey] = func(args ...Expr) Expr {
+  ```
+
+- **Line 602** (atomToZ3 cache lookup):
+  ```go
+  if cached, ok := t.preds[predKey]; ok {
+  ```
+  →
+  ```go
+  if cached, ok := t.z3_predicates[predKey]; ok {
+  ```
+
+- **Line 618** (atomToZ3 native relation cache store):
+  ```go
+  t.preds[predKey] = nativeFn
+  ```
+  →
+  ```go
+  t.z3_predicates[predKey] = nativeFn
+  ```
+
+- **Line 638** (atomToZ3 polymac cache store):
+  ```go
+  t.preds[predKey] = predFn
+  ```
+  →
+  ```go
+  t.z3_predicates[predKey] = predFn
+  ```
+
+- **Line 650** (atomToZ3 `=` cache store):
+  ```go
+  t.preds[predKey] = eqFn
+  ```
+  →
+  ```go
+  t.z3_predicates[predKey] = eqFn
+  ```
+
+- **Line 664** (atomToZ3 uninterpreted relation cache store — will be
+  moved/rewritten by Change 1, but still uses the renamed field):
+  ```go
+  t.preds[predKey] = predFn
+  ```
+  →
+  ```go
+  t.z3_predicates[predKey] = predFn
+  ```
+
+- **Line 1105** (`makeFuncDecl` cache lookup):
+  ```go
+  if cached, ok := t.funcs[key]; ok {
+  ```
+  →
+  ```go
+  if cached, ok := t.z3_functions[key]; ok {
+  ```
+
+- **Line 1121** (`makeFuncDecl` cache store):
+  ```go
+  t.funcs[key] = fd
+  ```
+  →
+  ```go
+  t.z3_functions[key] = fd
+  ```
+
+**File:** `interp.go`
+
+- **Line 100** (`NewTranslatorWithInterpolation`):
+  ```go
+  funcs:  make(map[logic.NodeKey]FuncDecl),
+  ```
+  →
+  ```go
+  z3_functions:  make(map[logic.NodeKey]FuncDecl),
+  ```
+
+  Pre-existing bug worth calling out but out of scope: this
+  constructor does not initialize `sortsInv`, `z3_predicates`, or call
+  `initEqPred`. Any attempt to translate a predicate through a
+  Translator built here would nil-panic on `z3_predicates`. Leave
+  as-is for this plan (noted for future cleanup).
+
+**Note:** Changes 3 and 4 below (the `funcs` and `preds` field
+comment updates) are now subsumed by Change 0; their entries remain in
+the list for completeness but can be skipped if Change 0 is applied
+first. Change 5 (the `makeFuncDecl` docstring) is still needed.
 
 ### Change 1 — `atomToZ3` inline FuncDecl creation (`translate.go:653-665`)
 
@@ -98,12 +264,13 @@ cache — matching `symbol_to_z3`.
     //           else z3.Const(solver_name(atom.rep),sig)
     //
     // Python's atom_to_z3 populates the z3_predicates cache (mirrored
-    // here by t.preds); it NEVER touches z3_functions. We must not go
-    // through makeFuncDecl (which caches in t.funcs, the z3_functions
-    // analog) — sharing that cache causes a hit from a prior term_to_z3
-    // or symbol_to_z3 path to suppress the functionsort() ENTER xtrace,
-    // diverging from Python. Same reasoning and precedent as ltPred
-    // (see its comment referencing log.red step 236451).
+    // here by t.z3_predicates); it NEVER touches z3_functions. We
+    // must not go through makeFuncDecl (which caches in
+    // t.z3_functions) — sharing that cache causes a hit from a prior
+    // term_to_z3 or symbol_to_z3 path to suppress the functionsort()
+    // ENTER xtrace, diverging from Python. Same reasoning and
+    // precedent as ltPred (see its comment referencing log.red step
+    // 236451).
     fs, ok := c.CSort.(*lg.FunctionSort)
     if !ok {
         return Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
@@ -117,7 +284,7 @@ cache — matching `symbol_to_z3`.
     z3name := t.z3Name(c.Name, fs)
     fd := t.Ctx.Function(z3name, zDomain, zRange)
     predFn := fd.Apply
-    t.preds[predKey] = predFn
+    t.z3_predicates[predKey] = predFn
     return t.applyZ3Func(predFn, app.Terms) // end of atomToZ3 here.
 }
 ```
@@ -162,9 +329,9 @@ Notes:
     // does NOT cache anywhere. We call functionSort directly so the
     // "functionsort() ENTER" xtrace fires every time (matching Python,
     // where symbol_to_z3 has no cache). Going through makeFuncDecl
-    // would write t.funcs (the z3_functions cache), which symbol_to_z3
-    // does not populate in Python, and would also suppress the trace
-    // on subsequent visits.
+    // would write t.z3_functions (Python's z3_functions cache), which
+    // symbol_to_z3 does not populate in Python, and would also
+    // suppress the trace on subsequent visits.
     if fs, ok := sort.(*lg.FunctionSort); ok {
         if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
             return Expr{}, err
@@ -184,33 +351,11 @@ to populate `funcs` and emit the trace on the first visit. Python's
 cache-pollution side effect that drove the atomToZ3 divergence in the
 first place.
 
-### Change 3 — `funcs` field comment (`translate.go:46`)
+### Changes 3 & 4 — Field comments
 
-**Before:**
-
-```go
-    funcs           map[lg.NodeKey]FuncDecl                // cache: structural key -> Z3 func decl
-```
-
-**After:**
-
-```go
-    funcs           map[lg.NodeKey]FuncDecl                // cache: Python z3_functions (term_to_z3 FuncDecl cache; NOT used by atom or symbol-bare paths)
-```
-
-### Change 4 — `preds` field comment (`translate.go:47`)
-
-**Before:**
-
-```go
-    preds           map[lg.NodeKey]func(args ...Expr) Expr // cache: z3_predicates (Python z3_predicates)
-```
-
-**After:**
-
-```go
-    preds           map[lg.NodeKey]func(args ...Expr) Expr // cache: Python z3_predicates (atom_to_z3 closure cache; stores FuncDecl.Apply / native / polymac / my_eq)
-```
+Subsumed by Change 0 (which rewrites the field declarations at lines
+46-47 with the new names and new comments in a single edit). No
+separate action required.
 
 ### Change 5 — `makeFuncDecl` docstring (insert above `translate.go:1103`)
 
@@ -218,7 +363,7 @@ Add a new docstring directly above the `func (t *Translator) makeFuncDecl(...)` 
 
 ```go
 // makeFuncDecl returns a Z3 FuncDecl for (name, fs), caching the
-// result in t.funcs.
+// result in t.z3_functions.
 //
 // This is the TERM-PATH helper only — the Go analog of Python's
 // z3_functions cache (ivy_solver.py:500-508). Callers on the atom
@@ -234,11 +379,11 @@ Add a new docstring directly above the `func (t *Translator) makeFuncDecl(...)` 
 
 ## Invariants After the Change
 
-- `t.funcs` is written exclusively by `makeFuncDecl`, which is called
-  only by `getFuncDecl` (callers at `translate.go:1049` and `1056`, the
-  term-path). `t.funcs` ↔ Python `z3_functions`.
-- `t.preds` is written exclusively by `atomToZ3` (and `initEqPred`).
-  `t.preds` ↔ Python `z3_predicates`.
+- `t.z3_functions` is written exclusively by `makeFuncDecl`, which is
+  called only by `getFuncDecl` (callers at `translate.go:1049` and
+  `1056`, the term-path). `t.z3_functions` ↔ Python `z3_functions`.
+- `t.z3_predicates` is written exclusively by `atomToZ3` (and
+  `initEqPred`). `t.z3_predicates` ↔ Python `z3_predicates`.
 - `translateVarOrConst`'s higher-order branch writes no cache; it
   emits `functionsort() ENTER` on every invocation, matching
   `symbol_to_z3`.
@@ -253,8 +398,10 @@ Add a new docstring directly above the `func (t *Translator) makeFuncDecl(...)` 
    should list exactly three callers: lines ~1049 and ~1056 (both in
    `getFuncDecl`) plus the definition itself. No matches inside
    `atomToZ3` or `translateVarOrConst`.
-2. **Grep sanity:** `Grep "t\.funcs\[" translate.go` should show
-   writes/reads only inside `makeFuncDecl`.
+2. **Grep sanity:** `Grep "t\.z3_functions\[" translate.go` should
+   show writes/reads only inside `makeFuncDecl`. `Grep "t\.funcs|t\.preds"`
+   across the whole tree should return zero results (the rename is
+   complete).
 3. **Build:** `cd ~/go/src/github.com/glycerine/ivy/goivy && go build ./z3bridge/...`
 4. **Unit tests:** `go test ./z3bridge/...`. Expect no regressions. Any
    golden test that exercises uninterpreted relations may gain
@@ -292,14 +439,19 @@ Add a new docstring directly above the `func (t *Translator) makeFuncDecl(...)` 
   exhibits the same behavior with its two separate dicts, so the fix
   matches.
 - **`translateVarOrConst` downstream effects:** Change 2 removes the
-  `funcs` side-effect. Since the current code already discards the
-  FuncDecl (`_ = fd`), no caller depends on the returned FuncDecl —
-  only on the `Const` return value, which is unchanged. The only
-  observable behavior change is (a) `t.funcs` no longer gains an
-  unrelated entry, and (b) the trace now fires on each visit, matching
-  Python.
-- **`Clear()` (`translate.go:200-207`):** no change needed. `t.funcs`
-  is still allocated and cleared; it simply has fewer writers.
+  `t.z3_functions` side-effect. Since the current code already
+  discards the FuncDecl (`_ = fd`), no caller depends on the returned
+  FuncDecl — only on the `Const` return value, which is unchanged.
+  The only observable behavior change is (a) `t.z3_functions` no
+  longer gains an unrelated entry, and (b) the trace now fires on
+  each visit, matching Python.
+- **`Clear()` (`translate.go:200-207`):** updated by Change 0 to use
+  the renamed fields; still allocates and clears both caches.
+- **Snake_case in Go:** `z3_functions` / `z3_predicates` are
+  intentionally non-idiomatic Go. `go vet` and `golint` may complain
+  about the underscores. This is accepted as a cost of literal Python
+  correspondence. Document the choice in the struct field comments
+  (Change 0) so future readers understand it is deliberate.
 - **Thread safety:** `Translator` is not concurrent-safe today and
   this change does not alter that.
 
@@ -311,6 +463,8 @@ Add a new docstring directly above the `func (t *Translator) makeFuncDecl(...)` 
   FuncDecl cache would be a Go-only abstraction (violates rule 7).
 - **Parameterized `makeFuncDecl(kind)`** — rejected. Not mechanical;
   Python has no such helper.
-- **Renaming `funcs` to `z3Functions`** — out of scope. Comment update
-  in Change 3 makes the correspondence explicit without churning
-  identifiers.
+- **Go-idiomatic rename (`z3Functions` / `z3Predicates` camelCase)** —
+  rejected in favor of literal snake_case `z3_functions` /
+  `z3_predicates` per user direction and CLAUDE.md rule 8. The whole
+  point of this rename is to maximize visual correspondence with the
+  Python names; camelCase would partially defeat that.
