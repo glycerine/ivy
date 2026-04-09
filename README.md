@@ -2603,17 +2603,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+236445  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
+        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
 
-236405  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
-        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=index
-
-236406  go : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
-        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
-
-236407  go : XTRACE: ivy_solver.py:560 forall() ENTER nvars=3
-        py : XTRACE: ivy_solver.py:560 forall() ENTER nvars=3
-
-236408  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=2
-        py : XTRACE: ivy_solver.py:545 quant_constraints() ENTER nvars=3
+236446  go : XTRACE: ivy_solver.py:279 functionsort() ENTER
+        py : XTRACE: ivy_solver.py:513 get_polymacs() ENTER op=<=
 ~~~
 
