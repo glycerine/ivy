@@ -678,9 +678,11 @@ def check_isolate(trace_hook = None):
                 for sub in assumptions:
                     print("            {}assumption".format(pretty_lineno(sub)))
 
+        if __debug__: xtracer.trace("check.guarantee_phase ENTER")
         tried = set()
         some_guarants = False
         for actname,action in mod.actions.items():
+            if __debug__: xtracer.trace("check.guarantee_phase actname iter actname=%s" % actname)
             guarantees = [sub for sub in action.iter_subactions()
                               if isinstance(sub,(act.AssertAction,act.Ranking))]
             if check_lineno is not None:
@@ -698,6 +700,7 @@ def check_isolate(trace_hook = None):
                 print("        in action {} when called from {}:".format(prettyname,','.join(prettycallers)))
                 roots = set(iu.reachable([actname],lambda x: callgraph[x]))
                 for sub in guarantees:
+                    if __debug__: xtracer.trace("check.guarantee_outer iter")
                     print("            {}guarantee".format(pretty_lineno(sub)), end=' ')
                     if check and any(r in roots and (r,sub.lineno) not in tried for r in checked_actions):
                         print_dots()

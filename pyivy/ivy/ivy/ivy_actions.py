@@ -1795,23 +1795,32 @@ def match_annotation(action,annot,handler):
         print("internal error: cannot convert satisfying assignment to program trace")
     
 def env_action(actname,label=None):
-    actnames = sorted(ivy_module.module.public_actions) if actname is None else [actname] 
+    if __debug__: xtracer.trace("actions.env_action ENTER")
+    actnames = sorted(ivy_module.module.public_actions) if actname is None else [actname]
+    if __debug__: xtracer.trace("actions.env_action post actNames")
     racts = []
     for a in actnames:
+        if __debug__: xtracer.trace("actions.env_action loop iter")
         act = ivy_module.module.actions[a] if isinstance(a,str) else actname
+        if __debug__: xtracer.trace("actions.env_action loop post lookup")
         # if unroll is not None:
         #    act = act.unroll_loops(unroll)
         ract = Sequence(act,ReturnAction())
+        if __debug__: xtracer.trace("actions.env_action loop post NewSequence")
         if hasattr(act,'formal_params'):
             ract.formal_params = act.formal_params
         if hasattr(act,'formal_returns'):
             ract.formal_returns = act.formal_returns
+        if __debug__: xtracer.trace("actions.env_action loop post formals")
         if isinstance(a,str):
             ract.label = a[4:] if a.startswith('ext:') else a
         racts.append(ract)
+        if __debug__: xtracer.trace("actions.env_action loop end")
+    if __debug__: xtracer.trace("actions.env_action post loop")
     action = EnvAction(*racts)
     if label is not None:
         action.label = label
 #        action.label = label if not isinstance(actname,str) else actname
+    if __debug__: xtracer.trace("actions.env_action EXIT")
     return action
 

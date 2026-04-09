@@ -462,9 +462,11 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		// Check guarantees
 		// Python: guarantees = [sub for sub in action.iter_subactions()
 		//             if isinstance(sub, (act.AssertAction, act.Ranking))]
+		xtracer.Trace("check.guarantee_phase ENTER")
 		tried := make(map[string]bool)
 		someGuarants := false
 		for actname, action := range mod.Actions.All() {
+			xtracer.Trace("check.guarantee_phase actname iter actname=%s", actname)
 			act, ok := action.(actions.Action)
 			if !ok {
 				continue
@@ -524,6 +526,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 				roots := reachable([]string{actname}, func(x string) []string { return callgraph[x] })
 				for _, sub := range guarantees {
+					xtracer.Trace("check.guarantee_outer iter")
 					lineno := sub.GetLineno()
 					fmt.Printf("            %sguarantee ", prettyActionLineno(sub))
 					linenoKey := fmt.Sprintf("%d", lineno.Line)
