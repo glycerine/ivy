@@ -1040,6 +1040,46 @@ func (t *Translator) getFuncDecl(fn lg.Expr) (FuncDecl, error) {
 	}
 }
 
+// functionSort mirrors Python's functionsort (ivy_solver.py:278-283).
+// Translates a FunctionSort to its list of Z3 sorts: [domain..., range].
+// ALWAYS emits the functionsort() ENTER trace — there is no caching
+// here, matching Python's monkey-patched FunctionSort.to_z3 = functionsort
+// (ivy_solver.py:304). Callers that want caching must wrap this themselves
+// (e.g. makeFuncDecl). Callers that need to mirror Python's uncached
+// callsites (e.g. lt_pred) must call this helper directly so the trace
+// fires every time.
+func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
+	xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
+
+	domain := fs.Domain()
+	sig := make([]Sort, 0, len(domain)+1)
+	for _, d := range domain {
+		zs, err := t.TranslateSort(d)
+		if err != nil {
+			return nil, err
+		}
+		sig = append(sig, zs)
+	}
+
+	// Python:
+	//   if fs.is_relational(): return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
+	//   else:                  return [s.to_z3() for s in fs.dom] + [fs.rng.to_z3()]
+	// Note: Python short-circuits the rng.to_z3() call when relational,
+	// so no extra trace fires for the Boolean range. We mirror that.
+	var rng Sort
+	if il.IsRelationalSort(fs) {
+		rng = t.Ctx.BoolSort()
+	} else {
+		var err error
+		rng, err = t.TranslateSort(fs.Range())
+		if err != nil {
+			return nil, err
+		}
+	}
+	sig = append(sig, rng)
+	return sig, nil
+}
+
 func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, error) {
 	key := lg.NodeKey(name + ":" + string(fs.Sexp()))
 	if cached, ok := t.funcs[key]; ok {
@@ -1048,21 +1088,12 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 
 	// Python: sig = atom.rep.sort.to_z3() calls functionsort(fs) first,
 	// then solver_name(atom.rep). Match that order.
-	xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
-
-	domain := fs.Domain()
-	zDomain := make([]Sort, len(domain))
-	for i, d := range domain {
-		zs, err := t.TranslateSort(d)
-		if err != nil {
-			return FuncDecl{}, err
-		}
-		zDomain[i] = zs
-	}
-	zRange, err := t.TranslateSort(fs.Range())
+	sig, err := t.functionSort(fs)
 	if err != nil {
 		return FuncDecl{}, err
 	}
+	zDomain := sig[:len(sig)-1]
+	zRange := sig[len(sig)-1]
 
 	z3name := t.z3Name(name, fs)
 
