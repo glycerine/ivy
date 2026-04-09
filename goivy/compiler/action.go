@@ -609,7 +609,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return seq, nil
 		}
 		// Zero children or unexpected
-		return actions.NewSequence(), nil
+		seq := actions.NewSequence()
+		seq.SetLineno(node.GetLineno())
+		return seq, nil
 	}
 
 	// Default: compile as formula and wrap as assume
@@ -773,7 +775,9 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 		for _, s := range exprCtx.LocalSyms {
 			localArgs = append(localArgs, s)
 		}
-		localArgs = append(localArgs, actions.NewSequence(exprCtx.Code...))
+		innerSeq := actions.NewSequence(exprCtx.Code...)
+		setLoc(innerSeq)
+		localArgs = append(localArgs, innerSeq)
 		res := actions.NewLocalActionOn(c.ActCfg, "compiler.compile_cmpd_local", localArgs...)
 		setLoc(res)
 		return res, nil
@@ -787,7 +791,9 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 
 	if len(exprCtx.Code) == 0 {
 		// No code generated (tuple case with no elements)
-		return actions.NewSequence(), nil
+		empty := actions.NewSequence()
+		setLoc(empty)
+		return empty, nil
 	}
 
 	seq := actions.NewSequence(exprCtx.Code...)
@@ -1149,7 +1155,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			for _, s := range exprCtx.LocalSyms {
 				args = append(args, s)
 			}
-			args = append(args, actions.NewSequence(exprCtx.Code...))
+			innerSeq := actions.NewSequence(exprCtx.Code...)
+			innerSeq.SetLineno(assignAction.GetLineno())
+			args = append(args, innerSeq)
 			result := actions.NewLocalActionOn(c.ActCfg, "compiler.compile_local_seq", args...)
 			result.SetLineno(assignAction.GetLineno())
 			return result, nil
@@ -1183,7 +1191,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	if _, wasSeq := body.(*ast.Sequence); wasSeq {
 		if _, isSeq := compiledResult.(*actions.Sequence); !isSeq {
 			if _, isAnd := compiledResult.(*lg.And); !isAnd {
-				compiledResult = actions.NewSequence(compiledResult)
+				wrap := actions.NewSequence(compiledResult)
+				wrap.SetLineno(body.GetLineno())
+				compiledResult = wrap
 			}
 		}
 	}
@@ -1198,7 +1208,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		seq.SetLineno(body.GetLineno())
 		compiledBody = seq
 	default:
-		compiledBody = actions.NewSequence()
+		seq := actions.NewSequence()
+		seq.SetLineno(body.GetLineno())
+		compiledBody = seq
 	}
 
 	args := make([]lg.Expr, 0, len(locals)+1)

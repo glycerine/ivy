@@ -711,7 +711,9 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 		if c, ok := rootSymbol(a.LHS, destructorSorts); ok {
 			_, inSyms := syms.Get2(ConstSymKey(c))
 			if !inSyms && !names[c.Name] {
-				return NewSequence()
+				erased := NewSequence()
+				erased.SetLineno(a.GetLineno())
+				return erased
 			}
 		}
 		return a
@@ -721,7 +723,9 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 			if c, ok := rootSymbol(a.Target, destructorSorts); ok {
 				_, inSyms := syms.Get2(ConstSymKey(c))
 				if !inSyms && !names[c.Name] {
-					return NewSequence()
+					erased := NewSequence()
+					erased.SetLineno(a.GetLineno())
+					return erased
 				}
 			}
 		}
@@ -787,7 +791,7 @@ func rootSymbol(node lg.Expr, destructorSorts map[string]lg.Sort) (*lg.Const, bo
 // debug-only diagnostic flag, not mutable production state. If
 // multi-tenant correctness ever becomes a concern, move it to
 // module.Config.
-var AssertLocEnabled = false
+var AssertLocEnabled = true
 
 // AssertEveryActionHasLoc recursively walks an action tree and panics
 // if any nested action has an empty Loc. The `where` argument is a
@@ -806,6 +810,7 @@ var AssertLocEnabled = false
 //   - The action's Sexp() (truncated to ~120 chars)
 //   - The full context label
 //   - The path of enclosing parent action types
+//   - The root action's Sexp (truncated)
 //
 // so the offending pipeline stage and constructor are immediately
 // identifiable from the panic stack.
@@ -814,10 +819,10 @@ func AssertEveryActionHasLoc(action Action, where string) {
 		return
 	}
 	var path []string
-	assertEveryActionHasLocRec(action, where, &path)
+	assertEveryActionHasLocRec(action, action, where, &path)
 }
 
-func assertEveryActionHasLocRec(action Action, where string, path *[]string) {
+func assertEveryActionHasLocRec(root Action, action Action, where string, path *[]string) {
 	if action == nil {
 		return
 	}
@@ -827,12 +832,16 @@ func assertEveryActionHasLocRec(action Action, where string, path *[]string) {
 
 	if action.GetLineno() == (ast.Location{}) {
 		sx := string(action.Sexp())
-		if len(sx) > 120 {
-			sx = sx[:120] + "..."
+		if len(sx) > 200 {
+			sx = sx[:200] + "..."
+		}
+		rootSx := string(root.Sexp())
+		if len(rootSx) > 400 {
+			rootSx = rootSx[:400] + "..."
 		}
 		panic(fmt.Sprintf(
-			"AssertEveryActionHasLoc: missing Loc on %s at %s\n  path: %s\n  sexp: %s",
-			typeName, where, strings.Join(*path, " > "), sx,
+			"AssertEveryActionHasLoc: missing Loc on %s at %s\n  path: %s\n  sexp: %s\n  root sexp: %s",
+			typeName, where, strings.Join(*path, " > "), sx, rootSx,
 		))
 	}
 
@@ -840,6 +849,6 @@ func assertEveryActionHasLocRec(action Action, where string, path *[]string) {
 		if sub == nil || sub == action {
 			continue
 		}
-		assertEveryActionHasLocRec(sub, where, path)
+		assertEveryActionHasLocRec(root, sub, where, path)
 	}
 }

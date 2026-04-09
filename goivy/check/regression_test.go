@@ -627,6 +627,7 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	act1Stmt := actions.NewSequence()
+	act1Stmt.SetLineno(ast.Location{Filename: "test", Line: 1})
 	act1Term := &temporal.ActionTerm{Stmt: act1Stmt}
 	np := &temporal.NormalProgram{
 		Invars:   []*ast.LabeledFormula{cfg.NewLabeledFormula(nil, lg.True)},
