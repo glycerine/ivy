@@ -707,10 +707,16 @@ def check_isolate(trace_hook = None):
                         for root in checked_actions:
                             if root in roots:
                                tried.add((root,sub.lineno))
+                               if __debug__: xtracer.trace("check.guarantee_loop pre BuildEnvAction root=%s" % root)
                                action = act.env_action(root)
+                               if __debug__: xtracer.trace("check.guarantee_loop post BuildEnvAction")
                                ag = ivy_art.AnalysisGraph()
+                               if __debug__: xtracer.trace("check.guarantee_loop post NewAnalysisGraph")
                                pre = itp.State()
                                pre.clauses = get_conjs(mod)
+                               if __debug__: xtracer.trace("check.guarantee_loop post NewState+GetConjs")
+                               if __debug__: xtracer.trace("check.guarantee_loop post ag.Add")
+                               if __debug__: xtracer.trace("check.guarantee_loop pre ag.Execute")
                                with itp.EvalContext(check=False):
                                    post = ag.execute(action,prestate=pre)
                                fail = itp.State(expr = itp.fail_expr(post.expr))

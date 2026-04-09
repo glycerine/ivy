@@ -17,6 +17,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/logicparser"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -370,6 +371,7 @@ func (ag *AnalysisGraph) LastState() *State {
 // computes the post-state, and adds it to the graph.
 // Returns an error if the action's precondition fails (when checkPrecond is true).
 func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) (*State, error) {
+	xtracer.Trace("art.Execute ENTER label=%s", label)
 	if prestate == nil {
 		prestate = ag.LastState()
 	}
@@ -412,7 +414,9 @@ func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate 
 // When checkPrecond is true the action's precondition is checked; if it is
 // violated an error wrapping interp.IvyActionFailedError is returned.
 func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.Action, preState *State, abstractor Abstractor) (*State, error) {
+	xtracer.Trace("art.PostState ENTER opName=%s", op.Name())
 	interpPre := ArtToInterpState(preState)
+	xtracer.Trace("art.PostState post ArtToInterpState")
 
 	// interp.ApplyAction computes the update (action.update(domain, in_scope)),
 	// then calls ConcretePost which:

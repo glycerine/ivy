@@ -549,10 +549,16 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 								continue
 							}
 							tried[root+":"+linenoKey] = true
+							xtracer.Trace("check.guarantee_loop pre BuildEnvAction root=%s", root)
 							envAction := actions.BuildEnvAction(mod.PublicActions, mod.Actions, root, "")
+							xtracer.Trace("check.guarantee_loop post BuildEnvAction")
 							ag := art.NewAnalysisGraph(mod)
+							xtracer.Trace("check.guarantee_loop post NewAnalysisGraph")
 							pre := art.NewState(mod, GetConjs(mod))
+							xtracer.Trace("check.guarantee_loop post NewState+GetConjs")
 							ag.Add(pre, nil)
+							xtracer.Trace("check.guarantee_loop post ag.Add")
+							xtracer.Trace("check.guarantee_loop pre ag.Execute")
 							post, execErr := ag.Execute(false, envAction, pre, nil, root)
 							if execErr != nil {
 								fmt.Printf("WARNING: Execute %s failed: %v\n", root, execErr)
