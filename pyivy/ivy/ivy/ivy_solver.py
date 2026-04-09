@@ -634,7 +634,8 @@ def type_constraints(syms):
 def clauses_to_z3(clauses):
     if __debug__: xtracer.trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d" % (len(clauses.fmlas), len(clauses.defs)))
     for i, f in enumerate(clauses.fmlas):
-        if __debug__: xtracer.trace("solver.ClausesToZ3 fmla[%d] sort=%s\n type=%s val=%s" % (i, f.sort if hasattr(f,'sort') else '?', type(f).__name__, f))
+        if __debug__: xtracer.trace("solver.ClausesToZ3 fmla[%d] sort=%s" % (i, f.sort if hasattr(f,'sort') else '?'))
+        #if __debug__: xtracer.trace("solver.ClausesToZ3 fmla[%d] sort=%s\n type=%s val=%s" % (i, f.sort if hasattr(f,'sort') else '?', type(f).__name__, f))
     z3_clauses = [conj_to_z3(cl) for cl in clauses.fmlas]
     for di, dfn in enumerate(clauses.defs):
         try:

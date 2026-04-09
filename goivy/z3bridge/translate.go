@@ -368,7 +368,7 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 	}
 	if app, ok := n.(*lg.Apply); ok {
 		if c, ok2 := app.Func.(*lg.Const); ok2 && isPolymac(c.Name) {
-			fmt.Printf("DEBUG F2Z3: polymac op=%s nTerms=%d sort=%T isApp=%v\n", c.Name, len(app.Terms), n.NodeSort(), true)
+			vv("DEBUG F2Z3: polymac op=%s nTerms=%d sort=%T isApp=%v\n", c.Name, len(app.Terms), n.NodeSort(), true)
 		}
 	}
 	// Python: isinstance(term, lg.Eq) in is_atom → atom_to_z3(fmla)
@@ -621,7 +621,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// expand into combinations of < and = at the Z3 level.
 	// Matches Python polymacs dict (ivy_solver.py:519-523).
 	if isPolymac(c.Name) {
-		fmt.Printf("DEBUG polymacs: op=%s usePolymorphicMacros=%v s=%v sig=%v iuCfg=%v\n",
+		vv("DEBUG polymacs: op=%s usePolymorphicMacros=%v s=%v sig=%v iuCfg=%v\n",
 			c.Name, t.usePolymorphicMacros(), t.s != nil, t.s != nil && t.s.sig != nil,
 			t.s != nil && t.s.sig != nil && t.s.sig.IuCfg != nil)
 	}
