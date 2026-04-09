@@ -484,24 +484,4 @@ func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 	return nil
 }
 
-// QuantConstraints generates sort constraints for quantifier variables.
-// For finite/enumerated sorts, generates membership constraints.
-func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Expr {
-	xtracer.Trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d", len(vs))
-	var constraints []lg.Expr
-	for _, v := range vs {
-		if es, ok := v.VSort.(*lg.EnumeratedSort); ok {
-			// Generate: v = e0 | v = e1 | ...
-			eqs := make([]lg.Expr, len(es.Extension))
-			for i, name := range es.Extension {
-				eqs[i] = &lg.Eq{T1: v, T2: lg.NewConst(name, v.VSort)}
-			}
-			constraints = append(constraints, &lg.Or{Terms: eqs})
-		}
-	}
-	if len(constraints) == 0 {
-		return &lg.And{} // true
-	}
-	return &lg.And{Terms: constraints}
-}
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -19,11 +18,6 @@ type LookupNativeFunc func(name string, sort lg.Sort, kind string) any
 // SolverNameFunc maps an Ivy symbol to its Z3 name. Returns "" if the
 // symbol should be handled natively (not declared as an uninterpreted function).
 type SolverNameFunc func(name string, sort lg.Sort) string
-
-// QuantConstraintsFn is a callback that generates Z3 constraints for
-// quantifier-bound variables based on their sort (e.g., nat non-negativity,
-// range sort bounds). Corresponds to Python's quant_constraints.
-type QuantConstraintsFn func(v *lg.Variable, z3Var Expr) []Expr
 
 // EqFuncFn is a callback for custom equality (e.g., MyEq with True/False optimization).
 // Corresponds to Python's my_eq (ivy_solver.py:88-95).
@@ -92,40 +86,6 @@ func (t *Translator) LookupNative(name string, sort lg.Sort, kind string) any {
 func (t *Translator) SolverName(name string, sort lg.Sort) string {
 	sym := lg.NewConst(name, sort)
 	return t.s.SolverName(sym)
-}
-
-// QuantConstraints generates Z3 constraints for
-// quantifier-bound variables based on their sort (e.g., nat non-negativity,
-// range sort bounds). Corresponds to Python's quant_constraints.
-func (t *Translator) QuantConstraints(v *lg.Variable, z3Var Expr) []Expr {
-	if t.s.sig == nil {
-		return nil
-	}
-	sortName := il.SortName(v.VSort)
-	itp, ok := t.s.sig.Interp[sortName]
-	if !ok {
-		return nil
-	}
-	ctx := t.s.tr.Ctx
-	switch itpVal := itp.(type) {
-	case string:
-		if itpVal == "nat" {
-			// nat: 0 <= z3_v
-			return []Expr{ctx.Le(ctx.IntVal(0), z3Var)}
-		}
-	case *lg.RangeSort:
-		if t.s.HandleRangeSorts {
-			lb, ub, err := t.s.RangeSortBoundsToZ3(itpVal)
-			if err == nil {
-				// lb <= z3_v and z3_v <= ub
-				return []Expr{
-					ctx.Le(lb, z3Var),
-					ctx.Le(z3Var, ub),
-				}
-			}
-		}
-	}
-	return nil
 }
 
 // Eq is for custom equality (e.g., MyEq with True/False optimization).
@@ -970,13 +930,8 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 }
 
 func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable, body lg.Expr) (Expr, error) {
-	if isForall {
-		xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(variables))
-	} else {
-		xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(variables))
-	}
 	if len(variables) == 0 {
-		return t.Formula_to_z3_int(body, "translate.go:857 translateQauntifier() no variables")
+		return t.Formula_to_z3_int(body, "translateQuantifier() no variables")
 	}
 
 	// Create Z3 constants for the bound variables
@@ -986,7 +941,6 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		if err != nil {
 			return Expr{}, err
 		}
-		// Use "name:sortName" to match Python's variable naming convention
 		z3Var, err := t.translateVariable(v)
 		if err != nil {
 			return Expr{}, err
@@ -998,7 +952,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		t.consts[key] = bound[i]
 	}
 
-	zBody, err := t.Formula_to_z3_int(body, "translate.go:879 translateQauntifier() len(variables) > 0")
+	zBody, err := t.Formula_to_z3_int(body, "translateQuantifier() len(variables) > 0")
 	if err != nil {
 		return Expr{}, err
 	}
@@ -1010,27 +964,13 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		return Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
 	}
 
-	// Collect quantifier constraints (nat non-negativity, range sort bounds).
-	// Corresponds to Python's quant_constraints + forall/exists wrapping.
-	var allConstraints []Expr
-	for i, v := range variables {
-		cs := t.QuantConstraints(v, bound[i])
-		allConstraints = append(allConstraints, cs...)
-	}
-	if len(allConstraints) > 0 {
-		if isForall {
-			// ForAll: body becomes Implies(And(constraints), body)
-			zBody = t.Ctx.Implies(t.Ctx.And(allConstraints...), zBody)
-		} else {
-			// Exists: body becomes And(constraints..., body)
-			zBody = t.Ctx.And(append(allConstraints, zBody)...)
-		}
-	}
-
+	// Delegate to forall/exists which call quantConstraints.
+	// Matches Python: formula_to_z3_int calls forall()/exists() after
+	// translating body and variables.
 	if isForall {
-		return t.Ctx.ForAll(bound, zBody), nil
+		return t.s.forall(variables, bound, zBody), nil
 	}
-	return t.Ctx.Exists(bound, zBody), nil
+	return t.s.exists(variables, bound, zBody), nil
 }
 
 // --- Convenience functions ---
