@@ -224,6 +224,13 @@ func quantUgly(keyword string, vars []*Variable, body Expr, prec int) string {
 // where the sort can be inferred. This matches Python's pretty_fmla
 // which calls drop_annotations(False, set()) before ugly(0).
 func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) Expr {
+	// NOTE: This pass constructs result nodes via direct struct literals
+	// rather than the New* constructors. The constructors validate sorts
+	// strictly and would panic on inputs that have nil/missing sorts.
+	// Python's equivalent (lg.Eq, lg.Apply, ...) is more lenient about
+	// None sorts; bypassing validation here keeps PrettyFmla robust on
+	// such inputs and matches Python's effective behavior. The output is
+	// only ever fed to ugly() which does not require fully-validated trees.
 	switch t := n.(type) {
 	case *Variable:
 		if inferredSort || annotatedVars[t.Name] {
@@ -237,7 +244,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 
 	case *Const:
 		if inferredSort && isNumeralName(t.Name) {
-			return NewConst(t.Name, TopS)
+			return &Const{Name: t.Name, CSort: TopS}
 		}
 		return t
 
@@ -253,34 +260,29 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 				rest[i] = dropAnnotations(a, name != "*>", annotatedVars)
 			}
 			newTerms := append([]Expr{arg0}, rest...)
-			result, _ := NewApply(t.Func, newTerms...)
-			return result
+			return &Apply{Func: t.Func, Terms: newTerms, aSort: t.aSort}
 		}
 		newTerms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newTerms[i] = dropAnnotations(a, true, annotatedVars)
 		}
-		result, _ := NewApply(t.Func, newTerms...)
-		return result
+		return &Apply{Func: t.Func, Terms: newTerms, aSort: t.aSort}
 
 	case *Eq:
 		a0 := dropAnnotations(t.T1, false, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		result, _ := NewEq(a0, a1)
-		return result
+		return &Eq{T1: a0, T2: a1}
 
 	case *Ite:
 		a1 := dropAnnotations(t.Then, inferredSort, annotatedVars)
 		a2 := dropAnnotations(t.Else, true, annotatedVars)
 		a0 := dropAnnotations(t.Cond, true, annotatedVars)
-		result, _ := NewIte(a0, a1, a2)
-		return result
+		return &Ite{ISort: t.ISort, Cond: a0, Then: a1, Else: a2}
 
 	case *Cond:
 		a1 := dropAnnotations(t.T2, inferredSort, annotatedVars)
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
-		result, _ := NewCond(a0, a1)
-		return result
+		return &Cond{T1: a0, T2: a1}
 
 	case *ForAll:
 		vars := make([]*Variable, len(t.Variables))
@@ -293,8 +295,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 			}
 		}
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewForAll(vars, body)
-		return result
+		return &ForAll{Variables: vars, Body: body}
 
 	case *Exists:
 		vars := make([]*Variable, len(t.Variables))
@@ -307,8 +308,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 			}
 		}
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewExists(vars, body)
-		return result
+		return &Exists{Variables: vars, Body: body}
 
 	case *Lambda:
 		vars := make([]*Variable, len(t.Variables))
@@ -321,8 +321,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 			}
 		}
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewLambda(vars, body)
-		return result
+		return &Lambda{Variables: vars, Body: body}
 
 	case *NamedBinder:
 		vars := make([]*Variable, len(t.Variables))
@@ -335,8 +334,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 			}
 		}
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewNamedBinder(t.Name, vars, t.Environ, body)
-		return result
+		return &NamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
 
 	// Default: recurse into children with inferred_sort=true
 	// Matches Python default_drop_annotations for Not, And, Or, Implies, Iff, etc.
@@ -346,49 +344,43 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 }
 
 // dropAnnotationsDefault handles Not, Globally, Eventually, WhenOperator, And, Or, Implies, Iff.
+// Like dropAnnotations, this constructs nodes via direct struct literals to
+// avoid the strict sort validation in the New* constructors.
 func dropAnnotationsDefault(n Expr, annotatedVars map[string]bool) Expr {
 	switch t := n.(type) {
 	case *Not:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewNot(body)
-		return result
+		return &Not{Body: body}
 	case *And:
 		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}
-		result, _ := NewAnd(terms...)
-		return result
+		return &And{Terms: terms}
 	case *Or:
 		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}
-		result, _ := NewOr(terms...)
-		return result
+		return &Or{Terms: terms}
 	case *Implies:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		result, _ := NewImplies(a0, a1)
-		return result
+		return &Implies{T1: a0, T2: a1}
 	case *Iff:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		result, _ := NewIff(a0, a1)
-		return result
+		return &Iff{T1: a0, T2: a1}
 	case *Globally:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewGlobally(t.Environ, body)
-		return result
+		return &Globally{Environ: t.Environ, Body: body}
 	case *Eventually:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		result, _ := NewEventually(t.Environ, body)
-		return result
+		return &Eventually{Environ: t.Environ, Body: body}
 	case *WhenOperator:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		result, _ := NewWhenOperator(t.Name, a0, a1)
-		return result
+		return &WhenOperator{Name: t.Name, T1: a0, T2: a1}
 	}
 	return n
 }
