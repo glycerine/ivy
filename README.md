@@ -2603,7 +2603,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-
 236913  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
         py : XTRACE: ast.LF.__init__ id=2033 counter=2034
 
