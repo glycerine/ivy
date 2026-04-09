@@ -496,12 +496,16 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	}
 	// AssumeAction(Or()) = assume false (empty disjunction)
 	assumeFalse := NewAssumeAction(&lg.Or{Terms: nil})
+	assumeFalse.SetLineno(w.GetLineno())
 	thenParts = append(thenParts, assumeFalse)
 
 	thenSeq := NewSequence(thenParts...)
+	thenSeq.SetLineno(w.GetLineno())
 	elseSeq := NewSequence() // empty Sequence
+	elseSeq.SetLineno(w.GetLineno())
 
 	ifAction := NewIfAction(w.Cond, thenSeq, elseSeq)
+	ifAction.SetLineno(w.GetLineno())
 
 	// Build the outer Sequence: asserts + havocs + assumes + [ifAction]
 	var outerParts []lg.Expr
@@ -516,7 +520,9 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	}
 	outerParts = append(outerParts, ifAction)
 
-	var res Action = NewSequence(outerParts...)
+	outerSeq := NewSequence(outerParts...)
+	outerSeq.SetLineno(w.GetLineno())
+	var res Action = outerSeq
 
 	// Step 7: Wrap in LocalAction if decreases ranking was used.
 	// Python: if decreases is not None: res = LocalAction(aux, res)

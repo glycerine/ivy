@@ -669,7 +669,10 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 	// Build unrolled if-then-else chain (Python lines 1041-1044)
 	// Base case: if cond then AssumeAction(Or()) — equivalent to assume false
 	orExpr := &lg.Or{}
-	res := NewIfAction(a.Cond, NewAssumeAction(orExpr))
+	assumeFalse := NewAssumeAction(orExpr)
+	assumeFalse.SetLineno(a.GetLineno())
+	res := NewIfAction(a.Cond, assumeFalse)
+	res.SetLineno(a.GetLineno())
 	for i := 0; i < cardsort; i++ {
 		var bodyExpr lg.Expr
 		if body != nil {
@@ -678,7 +681,9 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 			bodyExpr = a.Body
 		}
 		seq := NewSequence(bodyExpr, res)
+		seq.SetLineno(a.GetLineno())
 		res = NewIfAction(a.Cond, seq)
+		res.SetLineno(a.GetLineno())
 	}
 	CopyFormalsTo(a, res)
 	return res
@@ -771,4 +776,70 @@ func rootSymbol(node lg.Expr, destructorSorts map[string]lg.Sort) (*lg.Const, bo
 		return c, true
 	}
 	return nil, false
+}
+
+// AssertLocEnabled gates AssertEveryActionHasLoc. Default false so
+// production builds pay zero cost. Flip to true (via go test, a build
+// tag init, or a one-shot debug session) when validating Loc-propagation
+// invariants. Once a clean baseline is confirmed, leave it off again.
+//
+// Exception to the no-package-globals rule (CLAUDE.md C): this is a
+// debug-only diagnostic flag, not mutable production state. If
+// multi-tenant correctness ever becomes a concern, move it to
+// module.Config.
+var AssertLocEnabled = false
+
+// AssertEveryActionHasLoc recursively walks an action tree and panics
+// if any nested action has an empty Loc. The `where` argument is a
+// human-readable context label (e.g., "isolate.end_classify
+// actname=cfabric.step") that is included in the panic message so the
+// failing pipeline stage is obvious.
+//
+// This is a DIAGNOSTIC tool, not a silent fix-it pass. It is gated by
+// the package-level flag AssertLocEnabled which defaults to false.
+// Production runs leave the flag off; this walker is intended to be
+// flipped on temporarily to validate that all constructor sites
+// preserve Loc, and then flipped off again when the codebase is clean.
+//
+// The walker reports the FIRST missing-Loc node it finds with:
+//   - The action's Go type name
+//   - The action's Sexp() (truncated to ~120 chars)
+//   - The full context label
+//   - The path of enclosing parent action types
+//
+// so the offending pipeline stage and constructor are immediately
+// identifiable from the panic stack.
+func AssertEveryActionHasLoc(action Action, where string) {
+	if !AssertLocEnabled || action == nil {
+		return
+	}
+	var path []string
+	assertEveryActionHasLocRec(action, where, &path)
+}
+
+func assertEveryActionHasLocRec(action Action, where string, path *[]string) {
+	if action == nil {
+		return
+	}
+	typeName := iu.ShortTypeName(action)
+	*path = append(*path, typeName)
+	defer func() { *path = (*path)[:len(*path)-1] }()
+
+	if action.GetLineno() == (ast.Location{}) {
+		sx := string(action.Sexp())
+		if len(sx) > 120 {
+			sx = sx[:120] + "..."
+		}
+		panic(fmt.Sprintf(
+			"AssertEveryActionHasLoc: missing Loc on %s at %s\n  path: %s\n  sexp: %s",
+			typeName, where, strings.Join(*path, " > "), sx,
+		))
+	}
+
+	for _, sub := range action.IterSubactions() {
+		if sub == nil || sub == action {
+			continue
+		}
+		assertEveryActionHasLocRec(sub, where, path)
+	}
 }

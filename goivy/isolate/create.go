@@ -837,30 +837,36 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 	if !ok {
 		return
 	}
-	// Build the new action: Sequence(before..., act, after...)
-	var parts []lg.Expr
+	// Python (ivy_isolate.py:1695-1700):
+	//   thing = empty_clone(action)
+	//   thing.args.extend(before+[action]+after)
+	// EmptyClone preserves the original action's Loc on the wrapper.
+	wrap := EmptyClone(act).(*actions.Sequence)
+	wrap.Elems = make([]lg.Expr, 0, len(before)+1+len(after))
 	for _, b := range before {
-		parts = append(parts, b)
+		wrap.Elems = append(wrap.Elems, b)
 	}
-	parts = append(parts, act)
+	wrap.Elems = append(wrap.Elems, act)
 	for _, a := range after {
-		parts = append(parts, a)
+		wrap.Elems = append(wrap.Elems, a)
 	}
-	newAct := actions.NewSequence(parts...)
-	// Copy formals from old action to new
-	newAct.SetFormalParams(act.GetFormalParams())
-	newAct.SetFormalReturns(act.GetFormalReturns())
-	mod.Actions.Set(actname, newAct)
+	mod.Actions.Set(actname, wrap)
 }
 
 // conjToAssume converts a labeled conjecture to an AssumeAction.
-// Corresponds to Python conj_to_assume (lines 1517-1520).
+// Corresponds to Python conj_to_assume (ivy_isolate.py:1690-1693):
+//
+//	def conj_to_assume(c):
+//	    res = ia.AssumeAction(c.formula)
+//	    res.lineno = c.lineno
+//	    return res
 func conjToAssume(c *ast.LabeledFormula) actions.Action {
 	fmla, ok := c.Formula.(lg.Expr)
 	if !ok {
 		return actions.NewSequence()
 	}
 	act := actions.NewAssumeAction(fmla)
+	act.SetLineno(c.GetLineno())
 	return act
 }
 

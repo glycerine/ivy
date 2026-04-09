@@ -537,7 +537,9 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_crash_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
-		return actions.NewCrashAction(nil), nil
+		ca := actions.NewCrashAction(nil)
+		ca.SetLineno(node.GetLineno())
+		return ca, nil
 	}
 	nameNode := args[0]
 	if atom, ok := nameNode.(*ast.Atom); ok {
@@ -772,7 +774,9 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_debug_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
-		return actions.NewDebugAction(nil), nil
+		da := actions.NewDebugAction(nil)
+		da.SetLineno(node.GetLineno())
+		return da, nil
 	}
 
 	// B2-R4: Use ExprContext + Extract pattern matching Python
@@ -1983,7 +1987,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					return applyAssertProofAction(mod, a, a.Name(), prover)
 				}
 				// P8: return self.clone(self.args[:1]) — clone with proof stripped
-				return actions.NewAssertAction(a.Formula)
+				stripped := actions.NewAssertAction(a.Formula)
+				stripped.SetLineno(a.GetLineno())
+				return stripped
 			}
 			// P9: return self
 			return a
@@ -1995,7 +2001,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves RequiresAction type
-				return actions.NewRequiresAction(a.Formula)
+				stripped := actions.NewRequiresAction(a.Formula)
+				stripped.SetLineno(a.GetLineno())
+				return stripped
 			}
 			return a
 		}
@@ -2006,7 +2014,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves EnsuresAction type
-				return actions.NewEnsuresAction(a.Formula)
+				stripped := actions.NewEnsuresAction(a.Formula)
+				stripped.SetLineno(a.GetLineno())
+				return stripped
 			}
 			return a
 		}
@@ -2017,7 +2027,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves SubgoalAction type
-				return actions.NewSubgoalAction(a.Formula)
+				stripped := actions.NewSubgoalAction(a.Formula)
+				stripped.SetLineno(a.GetLineno())
+				return stripped
 			}
 			return a
 		}

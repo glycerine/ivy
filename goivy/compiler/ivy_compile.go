@@ -871,7 +871,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 							if err != nil {
 								return fmt.Errorf("scenario from place: %w", err)
 							}
-							seq = append(seq, actions.NewAssumeAction(sym))
+							assm := actions.NewAssumeAction(sym)
+							assm.SetLineno(tr.GetLineno())
+							seq = append(seq, assm)
 						}
 					}
 				}
@@ -879,7 +881,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.NewAssignAction(sym, &lg.Or{}))
+							assn := actions.NewAssignAction(sym, &lg.Or{})
+							assn.SetLineno(tr.GetLineno())
+							seq = append(seq, assn)
 						}
 					}
 				}
@@ -887,7 +891,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.NewAssignAction(sym, &lg.And{}))
+							assn := actions.NewAssignAction(sym, &lg.And{})
+							assn.SetLineno(tr.GetLineno())
+							seq = append(seq, assn)
 						}
 					}
 				}
@@ -927,7 +933,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.NewAssignAction(sym, &lg.Or{}))
+							assn := actions.NewAssignAction(sym, &lg.Or{})
+							assn.SetLineno(tr.GetLineno())
+							seq = append(seq, assn)
 						}
 					}
 				}
@@ -935,12 +943,15 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.NewAssignAction(sym, &lg.And{}))
+							assn := actions.NewAssignAction(sym, &lg.And{})
+							assn.SetLineno(tr.GetLineno())
+							seq = append(seq, assn)
 						}
 					}
 				}
 				seq = append(seq, body)
 				seqAction := actions.NewSequence(seq...)
+				seqAction.SetLineno(tr.GetLineno())
 
 				// IfAction(And(sources...), seq)
 				var conds []lg.Expr
