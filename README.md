@@ -2603,10 +2603,22 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+236442  go : XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
+        py : XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
+
+236443  go : XTRACE: solver.ClausesToZ3 fmla[0] sort=Boolean
+        py : XTRACE: solver.ClausesToZ3 fmla[0] sort=Boolean
+
+236444  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Apply
+        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Apply
+
 236445  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
         py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Apply
 
-236446  go : XTRACE: ivy_solver.py:279 functionsort() ENTER
+236446  go : XTRACE: ivy_solver.py:513 get_polymacs() ENTER op=<=
         py : XTRACE: ivy_solver.py:513 get_polymacs() ENTER op=<=
+
+236447  go : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0
+        py : XTRACE: ivy_solver.py:417 numeral_to_z3() ENTER num=0:index
 ~~~
 
