@@ -99,7 +99,7 @@ func UsedSymbolsAsts(nodes []lg.Expr) map[lg.NodeKey]lg.Expr {
 
 // UsedConstantsAst returns the set of constant symbols in an AST.
 // Const-filtered version of UsedSymbolsAst. In Python, used_symbols_ast
-// returns Symbol objects directly; this filter is a Go type-system artifact.
+// returns either Var (Variables) or Constants.
 func UsedConstantsAst(node lg.Expr) map[lg.NodeKey]*lg.Const {
 	result := make(map[lg.NodeKey]*lg.Const)
 	for sym := range SymbolsIluAst(node) {
