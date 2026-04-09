@@ -434,7 +434,7 @@ func UFToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actio
 // Corresponds to Python's has_assert.
 func hasAssert(action actions.Action) bool {
 	for _, sub := range action.IterSubactions() {
-		if _, ok := sub.(*actions.AssertAction); ok {
+		if actions.IsAssertLike(sub) {
 			return true
 		}
 	}

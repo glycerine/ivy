@@ -683,6 +683,7 @@ def check_isolate(trace_hook = None):
         some_guarants = False
         for actname,action in mod.actions.items():
             if __debug__: xtracer.trace("check.guarantee_phase actname iter actname=%s" % actname)
+            if __debug__: xtracer.trace("check.guarantee_phase HASH actname=%s canon=%s" % (actname, action.canon()))
             _all_subs = list(action.iter_subactions())
             _sub_count = 0
             guarantees = []
@@ -690,21 +691,21 @@ def check_isolate(trace_hook = None):
                 _sub_count += 1
                 _is_assert = isinstance(_sub, act.AssertAction)
                 _is_ranking = isinstance(_sub, act.Ranking)
-                if __debug__: xtracer.trace("check.guarantee_phase sub kind=%s isAssert=%s isRanking=%s" % (type(_sub).__name__, "true" if _is_assert else "false", "true" if _is_ranking else "false"))
+                if __debug__: xtracer.trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%s isRanking=%s canon=%s" % (actname, type(_sub).__name__, "True" if _is_assert else "False", "True" if _is_ranking else "False", _sub.canon()))
                 if _is_assert or _is_ranking:
                     guarantees.append(_sub)
             if __debug__: xtracer.trace("check.guarantee_phase post iter_subactions actname=%s subCount=%d guarantees=%d" % (actname, _sub_count, len(guarantees)))
             if check_lineno is not None:
                 guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
-                if __debug__: xtracer.trace("check.guarantee_phase post check_lineno_filter guarantees=%d" % len(guarantees))
+                if __debug__: xtracer.trace("check.guarantee_phase post check_lineno_filter actname=%s guarantees=%d" % (actname, len(guarantees)))
             _filtered = []
             for _x in guarantees:
                 _pass = is_guarantee_mod_unprovable(_x)
-                if __debug__: xtracer.trace("check.guarantee_phase unprov_filter pass=%s" % ("true" if _pass else "false"))
+                if __debug__: xtracer.trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%s canon=%s" % (actname, "True" if _pass else "False", _x.canon()))
                 if _pass:
                     _filtered.append(_x)
             guarantees = _filtered
-            if __debug__: xtracer.trace("check.guarantee_phase post unprov_filter guarantees=%d" % len(guarantees))
+            if __debug__: xtracer.trace("check.guarantee_phase post unprov_filter actname=%s guarantees=%d" % (actname, len(guarantees)))
             if guarantees and not(no_check_guarantees.get()):
                 if not some_guarants:
                     print("\n    The following program assertions are treated as guarantees:")

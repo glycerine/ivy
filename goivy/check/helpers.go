@@ -92,7 +92,7 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 			continue
 		}
 		for _, sub := range act.IterSubactions() {
-			_, isAssert := sub.(*actions.AssertAction)
+			isAssert := actions.IsAssertLike(sub)
 			_, isRanking := sub.(*actions.Ranking)
 			if isAssert || isRanking {
 				result = append(result, sub)

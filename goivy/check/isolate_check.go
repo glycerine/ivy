@@ -306,7 +306,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		for _, na := range mod.Initializers {
 			if act, ok := na.Action.(actions.Action); ok {
 				for _, sub := range act.IterSubactions() {
-					_, isAssert := sub.(*actions.AssertAction)
+					isAssert := actions.IsAssertLike(sub)
 					_, isRanking := sub.(*actions.Ranking)
 					if isAssert || isRanking {
 						if IsGuaranteeModUnprovable(mod.Cfg, sub) {
@@ -472,13 +472,14 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
 				continue
 			}
+			xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
 			var guarantees []actions.Action
 			subCount := 0
 			for _, sub := range act.IterSubactions() {
 				subCount++
-				_, isAssert := sub.(*actions.AssertAction)
+				isAssert := actions.IsAssertLike(sub)
 				_, isRanking := sub.(*actions.Ranking)
-				xtracer.Trace("check.guarantee_phase sub actname=%s kind=%s lineno=%d isAssert=%v isRanking=%v", actname, actions.ActionTypeName(sub), sub.GetLineno().Line, isAssert, isRanking)
+				xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, actions.ActionTypeName(sub), isAssert, isRanking, sub.Canon())
 				if isAssert || isRanking {
 					guarantees = append(guarantees, sub)
 				}
@@ -501,7 +502,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				var filtered []actions.Action
 				for _, sub := range guarantees {
 					pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
-					xtracer.Trace("check.guarantee_phase unprov_filter actname=%s lineno=%d pass=%v", actname, sub.GetLineno().Line, pass)
+					xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
 					if pass {
 						filtered = append(filtered, sub)
 					}
@@ -1141,7 +1142,7 @@ func AllAssertLinenos(mod *module.Module) ([]int, error) {
 		if act, ok := action.(interface{ IterSubactions() []actions.Action }); ok {
 			for _, sub := range act.IterSubactions() {
 				// Python: isinstance(sub, (act.AssertAction, act.Ranking))
-				_, isAssert := sub.(*actions.AssertAction)
+				isAssert := actions.IsAssertLike(sub)
 				_, isRanking := sub.(*actions.Ranking)
 				if isAssert || isRanking {
 					loc := sub.GetLineno()
