@@ -96,7 +96,7 @@ func TestRegression_Bug3_WithUpdate(t *testing.T) {
 	}
 	oldSym := lg.NewConst("old_x", lg.Boolean)
 	pc := ac.NewLabeledFormula(nil, oldSym)
-	pc.Lineno = 1
+	pc.SetLineno(ast.Location{Line: 1})
 	result := ConvertPostcondsWithUpdate(update, []*ast.LabeledFormula{pc})
 	if len(result) != 1 {
 		t.Fatalf("expected 1 postcondition, got %d", len(result))
@@ -380,9 +380,9 @@ func TestRegression_Bug11_FilterCheckers(t *testing.T) {
 	cfg := module.NewConfig()
 	ac := cfg.AstCfg
 	lf10 := ac.NewLabeledFormula(nil, lg.True)
-	lf10.Lineno = 10
+	lf10.SetLineno(ast.Location{Line: 10})
 	lf20 := ac.NewLabeledFormula(nil, lg.True)
-	lf20.Lineno = 20
+	lf20.SetLineno(ast.Location{Line: 20})
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf10, 0),
@@ -448,9 +448,9 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 	cfg := module.NewConfig()
 	ac := cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, lg.True)
-	lf42.Lineno = 42
+	lf42.SetLineno(ast.Location{Line: 42})
 	lf99 := ac.NewLabeledFormula(nil, lg.True)
-	lf99.Lineno = 99
+	lf99.SetLineno(ast.Location{Line: 99})
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf42, 0),
@@ -462,8 +462,8 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 		t.Fatalf("expected 1 checker for line 42, got %d", len(filtered))
 	}
 	cc := filtered[0].(*ConjChecker)
-	if cc.LF.Lineno != 42 {
-		t.Errorf("expected lineno 42, got %d", cc.LF.Lineno)
+	if cc.LF.Lineno() != 42 {
+		t.Errorf("expected lineno 42, got %d", cc.LF.Lineno())
 	}
 }
 
@@ -471,9 +471,9 @@ func TestRegression_Bug14_NoFilter(t *testing.T) {
 	cfg := module.NewConfig()
 	ac := cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, lg.True)
-	lf42.Lineno = 42
+	lf42.SetLineno(ast.Location{Line: 42})
 	lf99 := ac.NewLabeledFormula(nil, lg.True)
-	lf99.Lineno = 99
+	lf99.SetLineno(ast.Location{Line: 99})
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf42, 0),

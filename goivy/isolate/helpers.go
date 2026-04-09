@@ -1092,7 +1092,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 		fSyms := usedSymbolNames(fmla)
 		for _, s := range fSyms {
 			if syms[s] {
-				refs[lf.Lineno] = true
+				refs[lf.Lineno()] = true
 				break
 			}
 		}

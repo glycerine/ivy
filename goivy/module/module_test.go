@@ -239,11 +239,11 @@ func TestLabeledFormula(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, &lg.And{})
 	lf.Temporal = ast.BoolPtr(true)
-	lf.Lineno = 42
+	lf.SetLineno(ast.Location{Line: 42})
 	if !lf.IsTemporal() {
 		t.Error("should be temporal")
 	}
-	if lf.Lineno != 42 {
+	if lf.Lineno() != 42 {
 		t.Error("wrong lineno")
 	}
 }

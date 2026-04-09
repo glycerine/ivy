@@ -17,12 +17,16 @@ var debugNextDefinitionDeclSn atomic.Int64
 // --- Declaration types ---
 
 // LabeledFormula associates a label with a formula (used in axioms, properties, etc.).
+//
+// Source location lives ONLY in Base.Loc (set via SetLineno / read via GetLineno).
+// Python's lf.lineno is a LocationTuple — there is no separate int field — so the
+// Go port keeps Base.Loc as the single source of truth. Use LinenoLine() when you
+// need just the integer line number.
 type LabeledFormula struct {
 	Base
 	Label        Node // label (may be nil)
 	Formula      Node
 	ID           int64
-	Lineno       int   // direct line number (matches Python lf.lineno)
 	Temporal     *bool // tristate: nil = not set, true = temporal, false = non-temporal
 	Explicit     bool
 	IsDefinition bool
@@ -33,6 +37,11 @@ type LabeledFormula struct {
 	// It carries (action, annotation) pair context for proof checking.
 	Annot interface{}
 }
+
+// Lineno returns the line number from the node's Location.
+// Equivalent to lf.GetLineno().Line. Matches Python lf.lineno's
+// integer-coercion semantics for callers that need just the line.
+func (lf *LabeledFormula) Lineno() int { return lf.Base.Loc.Line }
 
 // BoolPtr returns a pointer to a bool value.
 func BoolPtr(b bool) *bool { return &b }
@@ -55,11 +64,10 @@ func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
 }
 
 // NewLabeledFormulaFrom creates a new LabeledFormula with a fresh ID,
-// copying metadata (Label, Lineno, Temporal, Explicit, Assumed, Unprovable)
+// copying metadata (Label, Loc, Temporal, Explicit, Assumed, Unprovable)
 // from src but using the given formula.
 func (cfg *AstConfig) NewLabeledFormulaFrom(src *LabeledFormula, formula Node) *LabeledFormula {
 	lf := cfg.NewLabeledFormula(src.Label, formula)
-	lf.Lineno = src.Lineno
 	if src.HasLocSet() {
 		lf.SetLineno(src.GetLineno())
 	}
@@ -102,7 +110,6 @@ func (lf *LabeledFormula) cloneInternal(args []Node) *LabeledFormula {
 		Label:        args[0],
 		Formula:      args[1],
 		ID:           id,
-		Lineno:       lf.Lineno,
 		Temporal:     lf.Temporal,
 		Explicit:     lf.Explicit,
 		IsDefinition: lf.IsDefinition,

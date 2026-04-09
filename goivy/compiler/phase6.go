@@ -2277,7 +2277,6 @@ func CheckProperties(mod *module.Module) error {
 		acfg := mod.Cfg.AstCfg
 		newProp := acfg.NewLabeledFormula(prop.Label, body)
 		newProp.SetLineno(prop.GetLineno())
-		newProp.Lineno = prop.Lineno
 		newProp.Temporal = prop.Temporal
 		newProp.ID = getModFreshPropID(mod)
 		return newProp

@@ -726,7 +726,7 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 	if checkLineno != "" {
 		var filtered []*ast.LabeledFormula
 		for _, c := range checkable {
-			if fmt.Sprintf("%d", c.Lineno) == checkLineno {
+			if fmt.Sprintf("%d", c.Lineno()) == checkLineno {
 				filtered = append(filtered, c)
 			}
 		}

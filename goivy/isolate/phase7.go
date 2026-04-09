@@ -227,7 +227,7 @@ func ConjToAssume(c *ast.LabeledFormula) actions.Action {
 		return actions.NewSequence()
 	}
 	res := actions.NewAssumeAction(fmla)
-	res.SetLineno(ast.Location{Line: c.Lineno})
+	res.SetLineno(c.GetLineno())
 	return res
 }
 

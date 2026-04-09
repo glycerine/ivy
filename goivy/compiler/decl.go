@@ -1308,7 +1308,6 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 			label := cfg.NewAtom(defName)
 			clf := cfg.NewLabeledFormula(label, compiled)
 			clf.SetLineno(schema.GetLineno())
-			clf.Lineno = schema.GetLineno().Line
 			d.Compiler.Module.Schemata[label.Rep] = clf
 		} else {
 			d.Compiler.Module.Schemata[schema.Defines()] = schema
@@ -1340,7 +1339,6 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 		label := cfg.NewAtom(defName)
 		clf := cfg.NewLabeledFormula(label, compiled)
 		clf.SetLineno(lf.GetLineno())
-		clf.Lineno = lf.GetLineno().Line
 		d.Compiler.Module.Schemata[defName] = clf
 	} else {
 		d.Compiler.Module.Schemata[defName] = node
@@ -1507,7 +1505,6 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 		acfg := d.Compiler.Module.Cfg.AstCfg
 		mlf := acfg.NewLabeledFormula(nil, compiled)
 		mlf.SetLineno(lf.GetLineno())
-		mlf.Lineno = lf.GetLineno().Line
 		d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 		d.Compiler.Module.Theorems[defName] = compiled
 		d.LastFact = mlf

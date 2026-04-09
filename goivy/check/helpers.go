@@ -355,8 +355,8 @@ func FilterCheckers(checkers []Checker, checkLineno string) []Checker {
 	var result []Checker
 	for _, fc := range checkers {
 		if cc, ok := fc.(*ConjChecker); ok {
-			if fmt.Sprintf("line %d", cc.LF.Lineno) == checkLineno ||
-				fmt.Sprintf("%d", cc.LF.Lineno) == checkLineno {
+			if fmt.Sprintf("line %d", cc.LF.Lineno()) == checkLineno ||
+				fmt.Sprintf("%d", cc.LF.Lineno()) == checkLineno {
 				result = append(result, fc)
 			}
 		} else {

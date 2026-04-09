@@ -1441,7 +1441,7 @@ func CheckDefinitions(mod *module.Module) error {
 	checkdef := func(key lg.NodeKey, name string, symObj *lg.Const, lf *ast.LabeledFormula) error {
 		// Python: if sym in defs: raise IvyError('redefinition of ...')
 		if prev, exists := defs[key]; exists {
-			return lg.NewIvyError(lf, fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno))
+			return lg.NewIvyError(lf, fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno()))
 		}
 		// Python: if solver.solver_name(sym) == None: raise IvyError('definition of interpreted symbol ...')
 		if symObj != nil {
@@ -1882,7 +1882,6 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	acfg := mod.Cfg.AstCfg
 	result := acfg.NewLabeledFormula(prop.Label, fmla)
 	result.SetLineno(prop.GetLineno())
-	result.Lineno = prop.Lineno
 	return result
 }
 

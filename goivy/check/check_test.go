@@ -105,7 +105,7 @@ func TestConjCheckerCreate(t *testing.T) {
 	cfg := module.NewConfig()
 
 	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf.Lineno = 42
+	lf.SetLineno(ast.Location{Line: 42})
 	cc := NewConjChecker(cfg, lf, 8)
 	if cc == nil {
 		t.Fatal("NewConjChecker returned nil")
@@ -491,7 +491,7 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 	cfg := module.NewConfig()
 
 	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf.Lineno = 10
+	lf.SetLineno(ast.Location{Line: 10})
 	checkers := []Checker{NewConjChecker(cfg, lf, 8)}
 	result := FilterCheckers(checkers, "")
 	if len(result) != 1 {
@@ -503,9 +503,9 @@ func TestFilterCheckersWithLineFilter(t *testing.T) {
 	cfg := module.NewConfig()
 
 	lf1 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf1.Lineno = 10
+	lf1.SetLineno(ast.Location{Line: 10})
 	lf2 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf2.Lineno = 20
+	lf2.SetLineno(ast.Location{Line: 20})
 	checkers := []Checker{NewConjChecker(cfg, lf1, 8), NewConjChecker(cfg, lf2, 8)}
 	result := FilterCheckers(checkers, "10")
 	if len(result) != 1 {
@@ -1140,9 +1140,9 @@ func TestAllAssertLinenosDeduplicates(t *testing.T) {
 
 func TestAllAssertLinenosIncludesConjs(t *testing.T) {
 	mod := module.New()
-	mod.LabeledConjs = []*ast.LabeledFormula{
-		{Formula: lg.True, Lineno: 55},
-	}
+	lf := &ast.LabeledFormula{Formula: lg.True}
+	lf.SetLineno(ast.Location{Line: 55})
+	mod.LabeledConjs = []*ast.LabeledFormula{lf}
 	result, _ := AllAssertLinenos(mod)
 	found := false
 	for _, l := range result {

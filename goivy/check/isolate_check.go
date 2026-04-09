@@ -76,7 +76,6 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		// Python: subgoal.lineno = mod.isolate_proof.lineno
 		if pfNode, ok := mod.IsolateProof.(ast.Node); ok {
 			subgoal.SetLineno(pfNode.GetLineno())
-			subgoal.Lineno = pfNode.GetLineno().Line
 		}
 
 		subgoals := []*ast.LabeledFormula{subgoal}
@@ -1157,9 +1156,9 @@ func AllAssertLinenos(mod *module.Module) ([]int, error) {
 	}
 
 	for _, lf := range mod.LabeledConjs {
-		if !seen[lf.Lineno] {
-			seen[lf.Lineno] = true
-			result = append(result, lf.Lineno)
+		if !seen[lf.Lineno()] {
+			seen[lf.Lineno()] = true
+			result = append(result, lf.Lineno())
 		}
 	}
 
@@ -1289,7 +1288,7 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 	if checkLineno != "" {
 		var filtered []*ast.LabeledFormula
 		for _, c := range checkable {
-			if fmt.Sprintf("%d", c.Lineno) == checkLineno {
+			if fmt.Sprintf("%d", c.Lineno()) == checkLineno {
 				filtered = append(filtered, c)
 			}
 		}

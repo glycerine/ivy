@@ -76,7 +76,6 @@ func addLabel(cfg *ast.AstConfig, lf *ast.LabeledFormula, pref string) *ast.Labe
 		return lf
 	}
 	res := cfg.NewLabeledFormula(newLabel(cfg, pref), lf.Formula)
-	res.Lineno = lf.Lineno
 	if lf.HasLocSet() {
 		res.SetLineno(lf.GetLineno())
 	}
@@ -981,9 +980,7 @@ top:
             }
         }
         lf := acfg(v17lex).NewLabeledFormula($4, gdefn)
-        loc := tokLineno(v17lex.(*v17LexAdapter), $3)
-        lf.SetLineno(loc)
-        lf.Lineno = loc.Line
+        lf.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         lf = addLabel(acfg(v17lex), lf, "def")
         dd := acfg(v17lex).NewDefinitionDecl(lf)
         $$.declare(dd)

@@ -30,7 +30,7 @@ func checked(lineno int, checkLineno string) bool {
 
 // checkedLF returns true if the labeled formula should be checked.
 func checkedLF(lf *ast.LabeledFormula, checkLineno string) bool {
-	return checked(lf.Lineno, checkLineno)
+	return checked(lf.Lineno(), checkLineno)
 }
 
 // checkedAction returns true if the action should be checked.
@@ -553,7 +553,7 @@ func CheckIsolate(method string, m *module.Module) error {
 			continue
 		}
 		if vmtVerbose {
-			fmt.Printf("%d Model checking invariant\n", lf.Lineno)
+			fmt.Printf("%d Model checking invariant\n", lf.Lineno())
 		}
 		// For now, skip proof tactic handling -- add conj directly
 		conjs = append(conjs, lf)

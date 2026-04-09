@@ -78,9 +78,9 @@ func TestAxioms(t *testing.T) {
 func TestConjs(t *testing.T) {
 	m := New()
 	f1 := lg.NewConst("axiom", lg.Boolean)
-	m.LabeledConjs = []*ast.LabeledFormula{
-		{Formula: f1, Lineno: 10},
-	}
+	lf := &ast.LabeledFormula{Formula: f1}
+	lf.SetLineno(ast.Location{Line: 10})
+	m.LabeledConjs = []*ast.LabeledFormula{lf}
 
 	conjs := m.Conjs()
 	if len(conjs) != 1 {

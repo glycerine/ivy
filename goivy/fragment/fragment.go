@@ -314,7 +314,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 					return res.node, res.uvs
 				}
 				if md, ok := c.macroMap[repKey]; ok {
-					resNode, resUvs := c.mapFmla(md.lf.Lineno, md.def.Rhs, -1)
+					resNode, resUvs := c.mapFmla(md.lf.Lineno(), md.def.Rhs, -1)
 					c.macroValueMap[repKey] = mapFmlaRes{node: resNode, uvs: resUvs}
 					return resNode, resUvs
 				}
@@ -963,18 +963,18 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 		_, isSome := def.Rhs.(*il.Some)
 
 		if !isRecursive && !isSome {
-			macros = append(macros, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+			macros = append(macros, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 		} else {
 			// Convert to constraint
 			constraint := defToConstraint(def)
-			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, lineno: ldf.Lineno})
+			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, lineno: ldf.Lineno()})
 		}
 	}
 
 	// Axioms
 	for _, ldf := range m.LabeledAxioms {
 		if !ldf.IsTemporal() {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 		}
 	}
 
@@ -991,23 +991,23 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 	for _, ldf := range m.LabeledProps {
 		if !ldf.IsTemporal() {
 			if !proofIDs[ldf.ID] {
-				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 			} else if subgoalIDs[ldf.ID] && !ldf.Explicit {
-				assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+				assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 			}
 		}
 	}
 
 	// Conjectures (both assumed and asserted)
 	for _, ldf := range m.LabeledConjs {
-		asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
-		assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+		asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
+		assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 	}
 
 	// Assumed invariants
 	for _, ldf := range m.AssumedInvs {
 		if !ldf.Explicit {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 		}
 	}
 
