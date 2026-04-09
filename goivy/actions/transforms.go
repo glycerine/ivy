@@ -18,6 +18,17 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
+// AssertLocEnabled gates AssertEveryActionHasLoc. Default false so
+// production builds pay zero cost. Flip to true (via go test, a build
+// tag init, or a one-shot debug session) when validating Loc-propagation
+// invariants. Once a clean baseline is confirmed, leave it off again.
+//
+// Exception to the no-package-globals rule (CLAUDE.md C): this is a
+// debug-only diagnostic flag, not mutable production state. If
+// multi-tenant correctness ever becomes a concern, move it to
+// module.Config.
+const AssertLocEnabled = false
+
 // AssertToAssume recursively transforms an action tree, converting
 // action nodes whose type name matches one of the given kinds into
 // AssumeAction nodes. This is used during isolate extraction to convert
@@ -781,17 +792,6 @@ func rootSymbol(node lg.Expr, destructorSorts map[string]lg.Sort) (*lg.Const, bo
 	}
 	return nil, false
 }
-
-// AssertLocEnabled gates AssertEveryActionHasLoc. Default false so
-// production builds pay zero cost. Flip to true (via go test, a build
-// tag init, or a one-shot debug session) when validating Loc-propagation
-// invariants. Once a clean baseline is confirmed, leave it off again.
-//
-// Exception to the no-package-globals rule (CLAUDE.md C): this is a
-// debug-only diagnostic flag, not mutable production state. If
-// multi-tenant correctness ever becomes a concern, move it to
-// module.Config.
-var AssertLocEnabled = true
 
 // AssertEveryActionHasLoc recursively walks an action tree and panics
 // if any nested action has an empty Loc. The `where` argument is a
