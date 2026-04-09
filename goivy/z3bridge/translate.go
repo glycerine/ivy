@@ -611,6 +611,20 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		}
 	}
 
+	// Python lines 536-538: polymorphic macro check.
+	// For <=, >, >= on uninterpreted sorts where lookup_native returned nil,
+	// expand into combinations of < and = at the Z3 level.
+	// Matches Python polymacs dict (ivy_solver.py:519-523).
+	if isPolymac(c.Name) && t.usePolymorphicMacros() {
+		xtracer.Trace("ivy_solver.py:513 get_polymacs() ENTER op=%s", c.Name)
+		predFn, err := t.polymacPred(c.Name, c.CSort)
+		if err != nil {
+			return Expr{}, err
+		}
+		t.preds[predKey] = predFn
+		return t.applyZ3Func(predFn, app.Terms)
+	}
+
 	// Python's z3.Function("=", ...) returns Z3's built-in equality.
 	// Go's makeFuncDecl would create an uninterpreted function instead.
 	// Use Ctx.Eq (or EqFunc) for "=" to match Python/Z3 semantics.
@@ -635,6 +649,68 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	predFn := fd.Apply
 	t.preds[predKey] = predFn
 	return t.applyZ3Func(predFn, app.Terms) // end of atomToZ3 here.
+}
+
+// isPolymac returns true if name is a polymorphic macro operator.
+// Matches Python polymacs dict keys (ivy_solver.py:519-523): <=, >, >=.
+// Distinct from isPolymorphicOp which also includes +, -, *, /, <.
+func isPolymac(name string) bool {
+	switch name {
+	case "<=", ">", ">=":
+		return true
+	}
+	return false
+}
+
+// usePolymorphicMacros checks if polymorphic macros are enabled (version > 1.5).
+// Matches Python iu.ivy_use_polymorphic_macros.
+func (t *Translator) usePolymorphicMacros() bool {
+	if t.s == nil || t.s.sig == nil || t.s.sig.IuCfg == nil {
+		return false
+	}
+	return t.s.sig.IuCfg.UsePolymorphicMacros
+}
+
+// polymacPred returns a Z3-level predicate for a polymorphic macro operator.
+// Matches Python polymacs dict (ivy_solver.py:519-523).
+// Uses t.Ctx.Eq (plain Z3 equality, not MyEq) to match Python's x == y.
+func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Expr) Expr, error) {
+	fs, ok := sort.(*lg.FunctionSort)
+	if !ok {
+		return nil, fmt.Errorf("polymacPred: expected FunctionSort for %s, got %T", name, sort)
+	}
+	switch name {
+	case "<=":
+		// Python: lambda s,x,y: z3.Or(x == y, lt_pred(s)(x,y))
+		return func(args ...Expr) Expr {
+			ltFd := t.ltPred(fs)
+			return t.Ctx.Or(t.Ctx.Eq(args[0], args[1]), ltFd.Apply(args...))
+		}, nil
+	case ">":
+		// Python: lambda s,x,y: lt_pred(s)(y,x)
+		return func(args ...Expr) Expr {
+			ltFd := t.ltPred(fs)
+			return ltFd.Apply(args[1], args[0])
+		}, nil
+	case ">=":
+		// Python: lambda s,x,y: z3.Or(x == y, lt_pred(s)(y,x))
+		return func(args ...Expr) Expr {
+			ltFd := t.ltPred(fs)
+			return t.Ctx.Or(t.Ctx.Eq(args[0], args[1]), ltFd.Apply(args[1], args[0]))
+		}, nil
+	}
+	return nil, fmt.Errorf("polymacPred: unknown operator %s", name)
+}
+
+// ltPred creates a Z3 function declaration for < on the given sort.
+// Matches Python lt_pred (ivy_solver.py:513-517).
+func (t *Translator) ltPred(fs *lg.FunctionSort) FuncDecl {
+	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%s", fs)
+	fd, err := t.makeFuncDecl("<", fs)
+	if err != nil {
+		panic(fmt.Sprintf("ltPred: makeFuncDecl failed: %v", err))
+	}
+	return fd
 }
 
 // eqToAtomZ3 routes Eq through atomToZ3, matching Python where
