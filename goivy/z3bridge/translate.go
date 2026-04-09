@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -86,6 +87,61 @@ func (t *Translator) LookupNative(name string, sort lg.Sort, kind string) any {
 func (t *Translator) SolverName(name string, sort lg.Sort) string {
 	sym := lg.NewConst(name, sort)
 	return t.s.SolverName(sym)
+}
+
+// quantConstraints generates Z3 constraints for quantifier-bound variables
+// based on their sort (nat non-negativity, range sort bounds).
+// Matches Python quant_constraints (ivy_solver.py:557-568).
+func (t *Translator) quantConstraints(vars []*lg.Variable, z3Vars []Expr) []Expr {
+	xtracer.Trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d", len(vars))
+	if t.s == nil || t.s.sig == nil {
+		return nil
+	}
+	var cnstrs []Expr
+	for i, v := range vars {
+		sortName := il.SortName(v.VSort)
+		itp, ok := t.s.sig.Interp[sortName]
+		if !ok {
+			continue
+		}
+		switch itpVal := itp.(type) {
+		case string:
+			if itpVal == "nat" {
+				cnstrs = append(cnstrs, t.Ctx.Le(t.Ctx.IntVal(0), z3Vars[i]))
+			}
+		case *lg.RangeSort:
+			if t.s.HandleRangeSorts {
+				lb, ub, err := t.s.RangeSortBoundsToZ3(itpVal)
+				if err == nil {
+					cnstrs = append(cnstrs, t.Ctx.Le(lb, z3Vars[i]))
+					cnstrs = append(cnstrs, t.Ctx.Le(z3Vars[i], ub))
+				}
+			}
+		}
+	}
+	return cnstrs
+}
+
+// forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
+// Matches Python's forall (ivy_solver.py:572-577).
+func (t *Translator) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
+	xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(vars))
+	cnstrs := t.quantConstraints(vars, z3Vars)
+	if len(cnstrs) > 0 {
+		z3Body = t.Ctx.Implies(t.Ctx.And(cnstrs...), z3Body)
+	}
+	return t.Ctx.ForAll(z3Vars, z3Body)
+}
+
+// exists wraps a Z3 body in Exists with quant constraints (nat/range bounds).
+// Matches Python's exists (ivy_solver.py:579-584).
+func (t *Translator) exists(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
+	xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(vars))
+	cnstrs := t.quantConstraints(vars, z3Vars)
+	if len(cnstrs) > 0 {
+		z3Body = t.Ctx.And(append(cnstrs, z3Body)...)
+	}
+	return t.Ctx.Exists(z3Vars, z3Body)
 }
 
 // Eq is for custom equality (e.g., MyEq with True/False optimization).
@@ -451,7 +507,7 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		//  return t.EqFunc(t1, t2), nil
 		return t.Eq(t1, t2), nil
 		//}
-		return t.Ctx.Iff(t1, t2), nil
+		//return t.Ctx.Iff(t1, t2), nil
 
 	case *lg.Ite:
 		c, err := t.Formula_to_z3_int(node.Cond, "lg.Ite node.Cond")
@@ -968,9 +1024,9 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 	// Matches Python: formula_to_z3_int calls forall()/exists() after
 	// translating body and variables.
 	if isForall {
-		return t.s.forall(variables, bound, zBody), nil
+		return t.forall(variables, bound, zBody), nil
 	}
-	return t.s.exists(variables, bound, zBody), nil
+	return t.exists(variables, bound, zBody), nil
 }
 
 // --- Convenience functions ---

@@ -565,60 +565,10 @@ func (s *Solver) conjToZ3(fmla lg.Expr) (Expr, error) {
 	return s.formulaToZ3Closed(fmla)
 }
 
-// quantConstraints generates Z3 constraints for quantifier-bound variables
-// based on their sort (nat non-negativity, range sort bounds).
-// Matches Python quant_constraints (ivy_solver.py:557-568).
-func (s *Solver) quantConstraints(vars []*lg.Variable, z3Vars []Expr) []Expr {
-	xtracer.Trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d", len(vars))
-	if s.sig == nil {
-		return nil
-	}
-	var cnstrs []Expr
-	for i, v := range vars {
-		sortName := il.SortName(v.VSort)
-		itp, ok := s.sig.Interp[sortName]
-		if !ok {
-			continue
-		}
-		ctx := s.tr.Ctx
-		switch itpVal := itp.(type) {
-		case string:
-			if itpVal == "nat" {
-				cnstrs = append(cnstrs, ctx.Le(ctx.IntVal(0), z3Vars[i]))
-			}
-		case *lg.RangeSort:
-			if s.HandleRangeSorts {
-				lb, ub, err := s.RangeSortBoundsToZ3(itpVal)
-				if err == nil {
-					cnstrs = append(cnstrs, ctx.Le(lb, z3Vars[i]))
-					cnstrs = append(cnstrs, ctx.Le(z3Vars[i], ub))
-				}
-			}
-		}
-	}
-	return cnstrs
-}
-
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
-// Matches Python's forall (ivy_solver.py:572-577).
+// Delegates to the solver's translator. Used by formulaToZ3Closed.
 func (s *Solver) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
-	xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(vars))
-	cnstrs := s.quantConstraints(vars, z3Vars)
-	if len(cnstrs) > 0 {
-		z3Body = s.tr.Ctx.Implies(s.tr.Ctx.And(cnstrs...), z3Body)
-	}
-	return s.tr.Ctx.ForAll(z3Vars, z3Body)
-}
-
-// exists wraps a Z3 body in Exists with quant constraints (nat/range bounds).
-// Matches Python's exists (ivy_solver.py:579-584).
-func (s *Solver) exists(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
-	xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(vars))
-	cnstrs := s.quantConstraints(vars, z3Vars)
-	if len(cnstrs) > 0 {
-		z3Body = s.tr.Ctx.And(append(cnstrs, z3Body)...)
-	}
-	return s.tr.Ctx.Exists(z3Vars, z3Body)
+	return s.tr.forall(vars, z3Vars, z3Body)
 }
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
