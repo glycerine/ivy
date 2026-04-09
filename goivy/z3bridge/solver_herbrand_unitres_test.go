@@ -112,7 +112,8 @@ func TestRoundTripLitConversion(t *testing.T) {
 				s := unintSort("U")
 				return il.NewLiteral(1, &lg.Eq{T1: lg.NewConst("a", s), T2: lg.NewConst("b", s)})
 			},
-			checkStr: "(a == b)",
+			// String() now follows Python pretty_fmla → nary_ugly("=", ...).
+			checkStr: "a = b",
 		},
 	}
 
