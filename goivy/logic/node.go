@@ -18,6 +18,33 @@ type Expr interface {
 	Sexp() NodeKey
 }
 
+// ExprName returns the name of an Expr node.
+// Matches Python's duck-typed .name field on Var, Const, sorts,
+// WhenOperator, and NamedBinder. Types without a .name in Python
+// will panic to catch buggy uses.
+func ExprName(x Expr) string {
+	switch t := x.(type) {
+	case *Const:
+		return t.Name
+	case *Variable:
+		return t.Name
+	case *UninterpretedSort:
+		return t.Name
+	case *EnumeratedSort:
+		return t.Name
+	case *RangeSort:
+		return t.Name
+	case *TopSort:
+		return t.Name
+	case *WhenOperator:
+		return t.Name
+	case *NamedBinder:
+		return t.Name
+	}
+	panicf("ExprName not implemented for %T", x)
+	return ""
+}
+
 // Sort types implement Expr: they are leaf nodes whose sort is themselves.
 
 func (s *UninterpretedSort) NodeSort() Sort   { return s }
@@ -36,7 +63,7 @@ func (s *BooleanSort) Equal(n Expr) bool {
 	return ok
 }
 
-func (s *FunctionSort) NodeSort() Sort   { return s }
+func (s *FunctionSort) NodeSort() Sort { return s }
 func (s *FunctionSort) Children() []Expr {
 	nodes := make([]Expr, len(s.Sorts))
 	for i, sub := range s.Sorts {
