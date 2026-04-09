@@ -43,8 +43,8 @@ type Translator struct {
 	sorts           map[lg.NodeKey]Sort                    // cache: Ivy sort Sexp -> Z3 sort
 	sortsInv        map[uint]lg.Sort                       // reverse map: Z3 AST ID -> original Ivy sort (Python z3_sorts_inv)
 	consts          map[lg.NodeKey]Expr                    // cache: structural key -> Z3 const
-	funcs           map[lg.NodeKey]FuncDecl                // cache: structural key -> Z3 func decl
-	preds           map[lg.NodeKey]func(args ...Expr) Expr // cache: z3_predicates (Python z3_predicates)
+	z3_functions    map[lg.NodeKey]FuncDecl                // Python z3_functions (term_to_z3 FuncDecl cache; NOT used by atom or symbol-bare paths). snake_case is deliberate: mirror ivy_solver.py name verbatim for mechanical-port clarity.
+	z3_predicates   map[lg.NodeKey]func(args ...Expr) Expr // Python z3_predicates (atom_to_z3 closure cache; stores FuncDecl.Apply / native / polymac / my_eq). snake_case is deliberate: mirror ivy_solver.py name verbatim.
 	TranslateMerkle iu.MerkleState                         // rolling Merkle hash for Formula_to_z3_int() input conformance
 	translateDepth  int                                    // nesting depth; only hash at top level (depth 0)
 
@@ -184,8 +184,8 @@ func (s *Solver) NewTranslator() *Translator {
 		sorts:    make(map[lg.NodeKey]Sort),
 		sortsInv: make(map[uint]lg.Sort),
 		consts:   make(map[lg.NodeKey]Expr),
-		funcs:    make(map[lg.NodeKey]FuncDecl),
-		preds:    make(map[lg.NodeKey]func(args ...Expr) Expr),
+		z3_functions:  make(map[lg.NodeKey]FuncDecl),
+		z3_predicates: make(map[lg.NodeKey]func(args ...Expr) Expr),
 	}
 	t.initEqPred()
 	return t
@@ -201,15 +201,16 @@ func (t *Translator) Clear() {
 	t.sorts = make(map[lg.NodeKey]Sort)
 	t.sortsInv = make(map[uint]lg.Sort)
 	t.consts = make(map[lg.NodeKey]Expr)
-	t.funcs = make(map[lg.NodeKey]FuncDecl)
-	t.preds = make(map[lg.NodeKey]func(args ...Expr) Expr)
+	t.z3_functions = make(map[lg.NodeKey]FuncDecl)
+	t.z3_predicates = make(map[lg.NodeKey]func(args ...Expr) Expr)
 	t.initEqPred()
 }
 
-// initEqPred pre-populates the equality predicate in preds, matching
-// Python's clear() which initializes z3_predicates = {ivy_logic.equals: my_eq}.
+// initEqPred pre-populates the equality predicate in t.z3_predicates,
+// matching Python's clear() which initializes
+// z3_predicates = {ivy_logic.equals: my_eq}.
 func (t *Translator) initEqPred() {
-	t.preds[eqCanonPredKey] = func(args ...Expr) Expr {
+	t.z3_predicates[eqCanonPredKey] = func(args ...Expr) Expr {
 		//if t.EqFunc != nil {
 		return t.Eq(args[0], args[1])
 		//}
@@ -588,7 +589,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		}
 	}
 
-	// Check preds cache (Python z3_predicates)
+	// Check z3_predicates cache (Python z3_predicates)
 	// Python: atom.relname for Eq is always equals = Symbol('=', RelationSort([TopSort(), TopSort()]))
 	// regardless of concrete sorts. Use a canonical key to match Python's caching.
 	// (all equalities need to share one cache entry, matching
@@ -599,7 +600,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	} else {
 		predKey = lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
 	}
-	if cached, ok := t.preds[predKey]; ok {
+	if cached, ok := t.z3_predicates[predKey]; ok {
 		return t.applyZ3Func(cached, app.Terms) // in atomToZ3() here.
 	}
 
@@ -615,7 +616,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
 	if result := t.LookupNative(c.Name, c.CSort, "relation"); result != nil {
 		if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
-			t.preds[predKey] = nativeFn
+			t.z3_predicates[predKey] = nativeFn
 			return t.applyZ3Func(nativeFn, app.Terms) // in atomToZ3 here.
 		}
 	}
@@ -635,7 +636,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		if err != nil {
 			return Expr{}, err
 		}
-		t.preds[predKey] = predFn
+		t.z3_predicates[predKey] = predFn
 		return t.applyZ3Func(predFn, app.Terms)
 	}
 
@@ -647,21 +648,37 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 			return t.Eq(args[0], args[1])
 			//return t.Ctx.Eq(args[0], args[1])
 		}
-		t.preds[predKey] = eqFn
+		t.z3_predicates[predKey] = eqFn
 		return t.applyZ3Func(eqFn, app.Terms) // in atomToZ3 here.
 	}
 
-	// Python lines 527-528: create Z3 Function/Const for uninterpreted relation
+	// Python ivy_solver.py:540-541:
+	//     sig = atom.rep.sort.to_z3()
+	//     rel = z3.Function(solver_name(atom.rep), *sig) if isinstance(sig,list)
+	//           else z3.Const(solver_name(atom.rep),sig)
+	//
+	// Python's atom_to_z3 populates the z3_predicates cache (mirrored
+	// here by t.z3_predicates); it NEVER touches z3_functions. We
+	// must not go through makeFuncDecl (which caches in
+	// t.z3_functions) — sharing that cache causes a hit from a prior
+	// term_to_z3 or symbol_to_z3 path to suppress the functionsort()
+	// ENTER xtrace, diverging from Python. Same reasoning and
+	// precedent as ltPred (see its comment referencing log.red step
+	// 236451).
 	fs, ok := c.CSort.(*lg.FunctionSort)
 	if !ok {
 		return Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
 	}
-	fd, err := t.makeFuncDecl(c.Name, fs)
+	sig, err := t.functionSort(fs) // emits "ivy_solver.py:279 functionsort() ENTER"
 	if err != nil {
 		return Expr{}, err
 	}
+	zDomain := sig[:len(sig)-1]
+	zRange := sig[len(sig)-1]
+	z3name := t.z3Name(c.Name, fs)
+	fd := t.Ctx.Function(z3name, zDomain, zRange)
 	predFn := fd.Apply
-	t.preds[predKey] = predFn
+	t.z3_predicates[predKey] = predFn
 	return t.applyZ3Func(predFn, app.Terms) // end of atomToZ3 here.
 }
 
@@ -1021,14 +1038,18 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		return c, nil
 	}
 
-	// Higher-order: return a placeholder constant.
-	// The actual FuncDecl is created in getFuncDecl.
+	// Higher-order bare Const: mirror Python symbol_to_z3
+	// (ivy_solver.py:299-301), which creates a z3.Function inline and
+	// does NOT cache anywhere. We call functionSort directly so the
+	// "functionsort() ENTER" xtrace fires every time (matching Python,
+	// where symbol_to_z3 has no cache). Going through makeFuncDecl
+	// would write t.z3_functions (Python's z3_functions cache), which
+	// symbol_to_z3 does not populate in Python, and would also
+	// suppress the trace on subsequent visits.
 	if fs, ok := sort.(*lg.FunctionSort); ok {
-		fd, err := t.makeFuncDecl(name, fs)
-		if err != nil {
+		if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
 			return Expr{}, err
 		}
-		_ = fd
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
@@ -1100,9 +1121,22 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	return sig, nil
 }
 
+// makeFuncDecl returns a Z3 FuncDecl for (name, fs), caching the
+// result in t.z3_functions.
+//
+// This is the TERM-PATH helper only — the Go analog of Python's
+// z3_functions cache (ivy_solver.py:500-508). Callers on the atom
+// path (atomToZ3) and the symbol-bare path (translateVarOrConst
+// higher-order branch) MUST NOT call this helper; they must build
+// the FuncDecl inline via t.functionSort + t.Ctx.Function so that
+// Python's independent z3_predicates / symbol_to_z3 xtrace semantics
+// are preserved. Sharing this cache across paths suppresses the
+// functionsort() ENTER trace on downstream misses and diverges from
+// Python. See atomToZ3, translateVarOrConst, and ltPred for the
+// inline-creation precedent.
 func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, error) {
 	key := lg.NodeKey(name + ":" + string(fs.Sexp()))
-	if cached, ok := t.funcs[key]; ok {
+	if cached, ok := t.z3_functions[key]; ok {
 		return cached, nil
 	}
 
@@ -1118,7 +1152,7 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 	z3name := t.z3Name(name, fs)
 
 	fd := t.Ctx.Function(z3name, zDomain, zRange)
-	t.funcs[key] = fd
+	t.z3_functions[key] = fd
 	return fd, nil
 }
 

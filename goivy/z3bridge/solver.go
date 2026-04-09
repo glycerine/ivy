@@ -92,8 +92,8 @@ func (s *Solver) Close() error {
 // signature), the old Z3 translations could be stale, so Python wipes them.
 //
 // Go doesn't need the functional clear. Each solver.NewSolver(sig, opts) creates a fresh
-// Translator with empty maps (sorts, consts, funcs, sortsInv). There are no shared
-// module-level caches. Go's constructors handle it.
+// Translator with empty maps (sorts, consts, z3_functions, z3_predicates, sortsInv).
+// There are no shared module-level caches. Go's constructors handle it.
 //
 // The SolverClearFn field on module.Config exists and is called in Module.Enter()
 // (context.go:37-39), but nobody ever sets it — and nothing breaks, because there's nothing

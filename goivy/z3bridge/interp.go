@@ -97,6 +97,6 @@ func (s *Solver) NewTranslatorWithInterpolation() *Translator {
 		Ctx:    NewInterpolationZ3Context(),
 		sorts:  make(map[logic.NodeKey]Sort),
 		consts: make(map[logic.NodeKey]Expr),
-		funcs:  make(map[logic.NodeKey]FuncDecl),
+		z3_functions: make(map[logic.NodeKey]FuncDecl),
 	}
 }
