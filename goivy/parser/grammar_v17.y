@@ -1308,12 +1308,14 @@ top:
         xtracer.Trace("parser.p_top_around_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := acfg(v17lex).NewAtom($3.(*ast.Symbol).Rep)
+        aroundLoc := tokLineno(v17lex.(*v17LexAdapter), $2)
         before := lalrMakeSequence(acfg(v17lex), $7)
         after := lalrMakeSequence(acfg(v17lex), $10)
         // before mixin
         acfg(v17lex).LabelCounter++
         bmixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, acfg(v17lex).LabelCounter))
         bdf := acfg(v17lex).NewActionDef(bmixer, before, $4, $5)
+        bdf.SetLineno(aroundLoc)
         bdecl := acfg(v17lex).NewActionDecl(bdf)
         $$.declare(bdecl)
         bm := acfg(v17lex).NewMixinBeforeDef(bmixer, atom)
@@ -1323,6 +1325,7 @@ top:
         acfg(v17lex).LabelCounter++
         amixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, acfg(v17lex).LabelCounter))
         adf := acfg(v17lex).NewActionDef(amixer, after, $4, $5)
+        adf.SetLineno(aroundLoc)
         adecl := acfg(v17lex).NewActionDecl(adf)
         $$.declare(adecl)
         am := acfg(v17lex).NewMixinAfterDef(amixer, atom)

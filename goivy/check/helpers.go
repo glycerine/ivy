@@ -55,6 +55,23 @@ func PrettyLF(lf *ast.LabeledFormula, indent int) string {
 	return strings.Repeat(" ", indent) + PrettyLineno(lf) + PrettyLabel(lf.Label)
 }
 
+// PrettyActionLineno formats an action's location for display.
+// Mirrors PrettyLineno (for *ast.LabeledFormula) and matches Python's
+// pretty_lineno which calls str(ast.lineno) when present.
+// Returns "(internal) " when the action has no Location set.
+// Uses Location.String() so the Reference chain (set during module
+// instantiation by LinenoAddRef) is followed correctly.
+func PrettyActionLineno(a actions.Action) string {
+	if a == nil {
+		return "(internal) "
+	}
+	loc := a.GetLineno()
+	if loc.Filename != "" || loc.Line > 0 {
+		return loc.String()
+	}
+	return "(internal) "
+}
+
 // --- Action finding ---
 
 // FindAssertions finds all assert actions reachable from the given action name.

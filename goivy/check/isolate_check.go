@@ -228,14 +228,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		copy(impls, mod.IsolateInfo.Implementations)
 		sort.Slice(impls, func(i, j int) bool { return impls[i].Mixer < impls[j].Mixer })
 		for _, impl := range impls {
-			lineno := "(internal) "
-			if impl.Action != nil {
-				loc := impl.Action.GetLineno()
-				if loc.Line > 0 {
-					lineno = fmt.Sprintf("%d", loc.Line)
-				}
-			}
-			fmt.Printf("        %simplementation of %s\n", lineno, impl.Mixee)
+			fmt.Printf("        %simplementation of %s\n", PrettyActionLineno(impl.Action), impl.Mixee)
 		}
 	}
 
@@ -247,14 +240,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		copy(mons, mod.IsolateInfo.Monitors)
 		sort.Slice(mons, func(i, j int) bool { return mons[i].Mixer < mons[j].Mixer })
 		for _, mon := range mons {
-			lineno := "(internal) "
-			if mon.Action != nil {
-				loc := mon.Action.GetLineno()
-				if loc.Line > 0 {
-					lineno = fmt.Sprintf("%d", loc.Line)
-				}
-			}
-			fmt.Printf("        %smonitor of %s\n", lineno, mon.Mixee)
+			fmt.Printf("        %smonitor of %s\n", PrettyActionLineno(mon.Action), mon.Mixee)
 		}
 	}
 
@@ -266,14 +252,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		copy(inits, mod.Initializers)
 		sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
 		for _, na := range inits {
-			lineno := "(internal) "
-			if na.Action != nil {
-				loc := na.Action.GetLineno()
-				if loc.Line > 0 {
-					lineno = fmt.Sprintf("%d", loc.Line)
-				}
-			}
-			fmt.Printf("        %s%s\n", lineno, na.Name)
+			fmt.Printf("        %s%s\n", PrettyActionLineno(na.Action), na.Name)
 		}
 	}
 

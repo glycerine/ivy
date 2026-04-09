@@ -23,13 +23,18 @@ func (c *Compiler) thingAction(node ast.Node) (actions.Action, error) {
 	}
 	switch v := result.(type) {
 	case actions.Action:
+		if v.GetLineno() == (ast.Location{}) {
+			v.SetLineno(node.GetLineno())
+		}
 		return v, nil
 	case *lg.And:
 		seq := actions.NewSequence(v.Terms...)
 		seq.SetLineno(node.GetLineno())
 		return seq, nil
 	default:
-		return actions.NewSequence(), nil
+		seq := actions.NewSequence()
+		seq.SetLineno(node.GetLineno())
+		return seq, nil
 	}
 }
 
@@ -41,6 +46,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// Python: compile_action_def handles this by creating Sequence() for empty bodies.
 	if node.Body == nil {
 		seq := actions.NewSequence()
+		seq.SetLineno(node.GetLineno())
 		seq.FormalParams = nil
 		seq.FormalReturns = nil
 		return seq, nil
@@ -129,6 +135,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// If any formal failed, return fallback with placeholder params
 	if formalsErr != nil {
 		fallback := actions.NewSequence()
+		fallback.SetLineno(node.GetLineno())
 		fallback.SetFormalParams(formals)
 		fallback.SetFormalReturns(returns)
 		return fallback, formalsErr
@@ -162,6 +169,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		// so callers can register an action with the right parameter signature.
 		// This prevents panics in ApplyMixin which requires matching param counts.
 		fallback := actions.NewSequence()
+		fallback.SetLineno(node.GetLineno())
 		fallback.SetFormalParams(formals)
 		fallback.SetFormalReturns(returns)
 		return fallback, sortErr
@@ -178,6 +186,19 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		body = seq
 	default:
 		body = actions.NewSequence()
+	}
+
+	// Python compile_action_def asserts hasattr(res,'lineno') after sortify.
+	// Mirror that guarantee: ensure body carries a source Location, preferring
+	// the body node's own Loc when set (matches Python's res.lineno from
+	// sortify), and falling back to the ActionDef's Loc (set by handleBeforeAfter
+	// or the top-level action production in grammar_v17.y).
+	if body.GetLineno() == (ast.Location{}) {
+		if bl := bodyToCompile.GetLineno(); bl.Filename != "" || bl.Line > 0 {
+			body.SetLineno(bl)
+		} else {
+			body.SetLineno(node.GetLineno())
+		}
 	}
 
 	// Check for free variables in call arguments (Python lines 817-824)
@@ -569,6 +590,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		// which preserves the Sequence via self.clone([compiled_children]).
 		// compileGeneric may unwrap single-child Sequences; we re-wrap here.
 		if seq, ok := result.(*actions.Sequence); ok {
+			if seq.GetLineno() == (ast.Location{}) {
+				seq.SetLineno(node.GetLineno())
+			}
 			return seq, nil
 		}
 		if act, ok := result.(actions.Action); ok {

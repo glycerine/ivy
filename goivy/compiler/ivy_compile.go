@@ -564,6 +564,13 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 						action = actions.NewSequence()
 					}
 				}
+				// Defensive: ensure the registered action carries a source
+				// Location, falling back to the ActionDef's Loc set by the
+				// parser. Mirrors Python's compile_action_def assertion that
+				// the compiled body has lineno after sortify.
+				if action.GetLineno() == (ast.Location{}) {
+					action.SetLineno(ad.GetLineno())
+				}
 				mod.SetAction(name, action)
 				mod.PublicActions.Set(name, true)
 				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)
