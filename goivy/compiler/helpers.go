@@ -410,6 +410,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 					varAstTerms[i] = a
 				}
 				newCall.AstCallee = c.Module.Cfg.AstCfg.NewAtom(vactName, varAstTerms...)
+				newCall.SetLineno(self.GetLineno())
 				// Build the Some condition: Some(tmpsym, *>(keyArg, tmpsym))
 				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
 				isaSym := lg.NewConst("*>", isaSort)
@@ -421,6 +422,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				ifAction := actions.NewIfAction(someCond,
 					newCall,
 					call)
+				ifAction.SetLineno(self.GetLineno())
 				// R3: assign IfAction directly to call, do NOT wrap in CallAction
 				call = ifAction
 			}
