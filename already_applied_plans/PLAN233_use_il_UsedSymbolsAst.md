@@ -92,19 +92,51 @@ tcs, tcErr := s.typeConstraints(usedSyms)
 
 `il.UsedSymbolsAst` returns `map[lg.NodeKey]lg.Expr`. We filter to `*lg.Const` because `typeConstraints` checks `.CSort` on each symbol — only `*lg.Const` has that field. This matches Python where `type_constraints` filters on `sym.sort.rng.name`.
 
-### Why `ClausesToZ3` is OK
+### 2. Replace `clauses.Symbols()` with `il.UsedSymbolsAst` in `ClausesToZ3`
 
-`ClausesToZ3` (solver.go:286) uses `clauses.Symbols()` which calls `module/clauses.go:usedSymbolsAST` → `symbolsASTRec`. This function **explicitly handles Apply.Func** (line 349-354):
+**File:** `z3bridge/solver.go` lines 285-290
+
+Python's `clauses_to_z3` line 645 calls `type_constraints(used_symbols_clauses(clauses))`. The `used_symbols_clauses` function (ivy_logic_utils.py:612) is `gen_to_set(symbols_clauses)` which is `gen_to_set(apply_gen_to_clauses(symbols_ilu_ast))` — it applies the **same** `symbols_ilu_ast` to every fmla and def in the clauses.
+
+Go's `clauses.Symbols()` uses a different implementation (`module/clauses.go:symbolsASTRec`) which happens to handle `Apply.Func` correctly but is not the faithful port. For consistency, use `il.UsedSymbolsAst`.
+
+**Before:**
 ```go
-case *lg.Apply:
-    if c, ok := t.Func.(*lg.Const); ok {
-        result[lg.Key(c)] = c
-    }
+// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
+symMap := clauses.Symbols()
+clauseSyms := make([]*lg.Const, 0, len(symMap))
+for _, sym := range symMap {
+    clauseSyms = append(clauseSyms, sym)
+}
 ```
-So the clauses path already collects function symbols correctly. No change needed there.
+
+**After:**
+```go
+// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
+// used_symbols_clauses = gen_to_set(apply_gen_to_clauses(symbols_ilu_ast))
+// i.e. applies symbols_ilu_ast to each fmla and def, collects into a set.
+allSyms := make(map[lg.NodeKey]lg.Expr)
+for _, f := range clauses.Fmlas {
+    for k, v := range il.UsedSymbolsAst(f) {
+        allSyms[k] = v
+    }
+}
+for _, d := range clauses.Defs {
+    for k, v := range il.UsedSymbolsAst(d) {
+        allSyms[k] = v
+    }
+}
+clauseSyms := make([]*lg.Const, 0, len(allSyms))
+for _, sym := range allSyms {
+    if c, ok := sym.(*lg.Const); ok {
+        clauseSyms = append(clauseSyms, c)
+    }
+}
+```
 
 ### Files to modify
-- `z3bridge/solver.go` — line 477: replace `lu.UsedConstantsList(fmla)` with `il.UsedSymbolsAst(fmla)` + `*lg.Const` filter
+- `z3bridge/solver.go` — line 477: replace `lu.UsedConstantsList(fmla)` with `il.UsedSymbolsAst(fmla)` + filter
+- `z3bridge/solver.go` — lines 285-290: replace `clauses.Symbols()` with `il.UsedSymbolsAst` applied to each fmla and def
 
 ## Verification
 
