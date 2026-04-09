@@ -95,7 +95,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 	xtracer.Trace("compiler.compile_field_reference ENTER name=%s", symbolName)
 	argsCopy := make([]lg.Expr, len(args))
 	copy(argsCopy, args)
-	result, argsCopy, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old)
+	result, argsCopy, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old, lineno)
 	if err != nil {
 		if cfrErr, ok := err.(*cfrError); ok {
 			if _, inSorts := c.Sig.Sorts[symbolName]; inSorts {
@@ -112,7 +112,9 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 
 // compileFieldReferenceRec is the recursive implementation of field reference
 // compilation. It splits dotted names and looks up destructors and actions.
-func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, []lg.Expr, error) {
+// `lineno` is the source location of the original reference, propagated so
+// synthesized atoms (e.g., for inline action calls at line 201) inherit it.
+func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool, lineno ast.Location) (lg.Expr, []lg.Expr, error) {
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
@@ -141,7 +143,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Recursively compile the parent
 		savedRetCtx := c.ReturnCtx
 		c.ReturnCtx = nil
-		base, updatedArgs, err := c.compileFieldReferenceRec(parentName, args, false, old)
+		base, updatedArgs, err := c.compileFieldReferenceRec(parentName, args, false, old, lineno)
 		args = updatedArgs // Python: args is a shared mutable list; del args[:n] in pull_args is visible here
 		c.ReturnCtx = savedRetCtx
 		if err != nil {
@@ -199,6 +201,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				args = remaining
 				cfg := c.Module.Cfg.AstCfg
 				atom := cfg.NewAtom(destrName)
+				atom.SetLineno(lineno)
 				result, err := c.CompileInlineCall(atom, callArgs, true)
 				return result, args, err
 			} else {
