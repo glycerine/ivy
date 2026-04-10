@@ -271,7 +271,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 	case *lg.UninterpretedSort:
 		// Python: uninterpretedsort(us) at ivy_solver.py:257
 		if xtracer.Enabled {
-			xtracer.Trace("ivy_solver.py:263 uninterpretedsort() ENTER name=%s\nstack=\n%v\n", st.Name, stack())
+			xtracer.Trace("ivy_solver.py:263 uninterpretedsort() ENTER name=%s", st.Name)
 			xtracer.Trace("ivy_solver.py:263 uninterpretedsort top HASH canon= sorts=%v", t.dumpSortsCanon())
 		}
 		key := lg.NodeKey(st.Name) // Python: z3_sorts[us.rep] where rep = name

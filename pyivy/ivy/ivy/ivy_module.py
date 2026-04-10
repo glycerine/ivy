@@ -39,6 +39,7 @@ class Module(object):
         self.updates = []
         self.schemata = dict()
         self.theorems = dict()
+
         self.instantiations = []
         self.concept_spaces = []
         self.abstraction_predicates = []

@@ -101,8 +101,7 @@ type Module struct {
 	ExtPreconds   map[string]lg.Expr
 	ConceptSpaces []ConceptSpace
 
-	// unused. placeholder?
-	//AbstrPreds    []interface{}
+	AbstractionPredicates []interface{}
 
 	Logics []string
 	Macros map[string]*ast.Definition // macro name → definition
@@ -221,70 +220,78 @@ func (m *Module) Clear() {
 	m.LabeledAxioms = nil
 	m.LabeledProps = nil
 	m.LabeledInits = nil
-	m.LabeledConjs = nil
-	m.Assertions = nil
-	m.AssumedInvs = nil
-	m.Postconds = make(map[string][]*ast.LabeledFormula)
+
+	// Python line 36: self.init_cond = lu.true_clauses()
+	m.InitCond = TrueClauses(nil)
 	m.Relations = iu.NewInsMap[string, lg.Sort]()
 	m.Functions = iu.NewInsMap[string, lg.Sort]()
-	m.Actions = iu.NewInsMap[string, Action]()
-	m.Mixins = iu.NewInsMap[string, []MixinDef]()
-	m.PublicActions = iu.NewInsMap[string, bool]()
-	m.Predicates = make(map[string]ast.Node)
-	m.Initializers = nil
-	m.InitialActions = nil
-	m.Hierarchy = iu.NewInsMap[string, *iu.InsMap[string, bool]]()
 	m.Updates = nil
 	m.Schemata = make(map[string]ast.Node)
 	m.Theorems = make(map[string]ast.Node)
+
 	m.Instantiations = nil
+	m.ConceptSpaces = nil
+	m.AbstractionPredicates = nil
+	m.LabeledConjs = nil
+	m.Postconds = make(map[string][]*ast.LabeledFormula)
+	m.Hierarchy = iu.NewInsMap[string, *iu.InsMap[string, bool]]()
+	m.Actions = iu.NewInsMap[string, Action]()
+	m.Predicates = make(map[string]ast.Node)
+	m.Assertions = nil
+	m.Mixins = iu.NewInsMap[string, []MixinDef]()
+	m.PublicActions = iu.NewInsMap[string, bool]()
 	m.Isolates = make(map[string]*ast.IsolateDef)
-	m.IsolateInfo = nil
-	m.IsolateProofs = make(map[string]ast.Node)
-	m.IsolateProof = nil
 	m.Exports = nil
 	m.Imports = nil
 	m.Delegates = nil
+	m.Progress = nil
+	m.Rely = nil
+	m.MixOrd = nil
+
 	m.DestructorSorts = make(map[string]lg.Sort)
 	m.SortDestructors = make(map[string][]*lg.Const)
 	m.ConstructorSorts = make(map[string]lg.Sort)
 	m.SortConstructors = make(map[string][]*lg.Const)
-	m.GhostSorts = make(map[string]bool)
-	m.SortOrder = nil
-	m.SymbolOrder = nil
-	m.Variants = make(map[string][]lg.Sort)
-	m.Supertypes = make(map[string][]lg.Sort)
-	m.FiniteSorts = make(map[string]bool)
+
+	m.Privates = make(map[string]bool)
 	m.Interps = make(map[string][]ast.Node)
 	m.Natives = nil
 	m.NativeDefinitions = nil
-	m.NativeTypes = make(map[string]*ast.NativeType)
-	m.Progress = nil
-	m.Rely = nil
-	m.MixOrd = nil
-	m.Privates = make(map[string]bool)
-	m.Proofs = nil
-	m.Named = nil
-	m.Subgoals = nil
-	m.ConjActions = make(map[string][]string)
-	m.ConjSubgoals = nil
+	m.Initializers = nil
+	m.InitialActions = nil
 	m.Params = nil
 	m.ParamDefaults = nil
+	m.GhostSorts = make(map[string]bool)
+	m.NativeTypes = make(map[string]*ast.NativeType)
+	m.SortOrder = nil
+	m.SymbolOrder = nil
 	m.Aliases = make(map[string]string)
 	m.BeforeExport = iu.NewInsMap[string, Action]()
 	m.Attributes = make(map[string]interface{})
+	m.Variants = make(map[string][]lg.Sort)
+	m.Supertypes = make(map[string][]lg.Sort)
 	m.ExtPreconds = make(map[string]lg.Expr)
-	m.ConceptSpaces = nil
-	//m.AbstrPreds = nil
+	m.Proofs = nil
+
+	m.Named = nil
+	m.Subgoals = nil
+	m.IsolateInfo = nil
+	m.ConjActions = make(map[string][]string)
+	m.ConjSubgoals = nil
+	m.AssumedInvs = nil
+	m.FiniteSorts = make(map[string]bool)
+	m.IsolateProofs = make(map[string]ast.Node)
+	m.IsolateProof = nil
+
 	m.Logics = nil
-	m.Macros = make(map[string]*ast.Definition)
 	if m.Cfg != nil && m.Cfg.IuCfg != nil {
 		m.Sig = il.NewSigOn(m.Cfg.IuCfg)
 	} else {
 		m.Sig = il.NewSig()
 	}
-	// Python line 35: self.init_cond = lu.true_clauses()
-	m.InitCond = TrueClauses(nil)
+	// python does not clear macros. maybe Go should not either?
+	// but clear is also used to initialize... hmm...
+	m.Macros = make(map[string]*ast.Definition)
 }
 
 // Copy creates a semi-shallow copy of the module.
