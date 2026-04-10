@@ -81,26 +81,83 @@ def interactive_updr():
     user_selection, user_is_sat = yield UserSelectCore(...)
 ```
 
-Go (literal translation): a function that runs the body in a goroutine and
-exposes two channels — one for yielded `FrontEndOperation` values and one for
-caller responses. CLAUDE.md rule 8 ("translate literally") makes this the
-preferred form over a state-machine refactor:
+Go (literal translation): use Go 1.23+ range-over-function iterators
+(`iter.Seq[FrontEndOperation]`). The interactive function returns an iterator;
+its body uses `yield(op)` to pause. The consumer (e.g., a webui handler) loops
+over the iterator with `for op := range gen { ... }` and writes the user's
+response back into mutable fields on the `op` value before its loop body
+returns. The next call to `yield(op)` resumes the generator body, which then
+reads those response fields. This is the most literal Go translation of
+Python's `value = yield op` pattern (CLAUDE.md rule 8) — single-goroutine,
+synchronous, no channels, no goroutine leaks. The project already uses
+`iter.Seq2` in `ivyutils/omap.go` (Go 1.24.3 in `go.mod`).
 
 ```go
-type InteractionSession struct {
-    Yields  <-chan FrontEndOperation
-    Resumes chan<- interface{}
-    Done    <-chan error
+type FrontEndOperation interface{ frontEndOp() }
+
+type UserSelectMultiple struct {
+    // input fields (set by generator before yield)
+    Options *OrderedMap
+    Title, Prompt string
+    Default []lg.Expr
+
+    // response fields (set by consumer before next iteration)
+    Selection []lg.Expr
+    Cancelled bool
 }
+func (*UserSelectMultiple) frontEndOp() {}
 
-func RunInteraction(body func(*InteractionGen)) *InteractionSession { ... }
+type UserSelectCore struct {
+    *ShowModal
+    Theory     *module.Clauses
+    Constrains []lg.Expr
+    Title, Prompt string
 
-type InteractionGen struct { ... }
-func (g *InteractionGen) Yield(op FrontEndOperation) interface{} { ... }
+    // response fields
+    SelectedConstraints []lg.Expr
+    UserIsSat           bool
+    Cancelled           bool
+}
+func (*UserSelectCore) frontEndOp() {}
 ```
 
-`g.Yield(op)` sends `op` on `Yields`, blocks on `Resumes`, returns the value
-sent in. This preserves Python's `value = yield op` semantics exactly.
+Generator body:
+
+```go
+func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[FrontEndOperation] {
+    return func(yield func(FrontEndOperation) bool) {
+        op := &UserSelectMultiple{ Options: opts, ... }
+        if !yield(op) { return }
+        if op.Cancelled { return }    // Python: assert user_selection is not None
+        userSelection := op.Selection
+        // ...continue...
+    }
+}
+```
+
+Consumer (webui handler):
+
+```go
+for op := range iupdr.InteractiveUpdr(tc) {
+    switch o := op.(type) {
+    case *iupdr.UserSelectMultiple:
+        sel, ok := waitForUserMultiple(o.Options, o.Default)
+        if !ok { o.Cancelled = true } else { o.Selection = sel }
+    case *iupdr.UserSelectCore:
+        sel, isSat, ok := waitForUserCore(o.Theory, o.Constrains)
+        if !ok { o.Cancelled = true } else {
+            o.SelectedConstraints = sel
+            o.UserIsSat            = isSat
+        }
+    }
+}
+```
+
+The `@interaction` decorator does not need a Go counterpart — generator-style
+functions simply return `iter.Seq[FrontEndOperation]`. Non-generator helpers
+remain plain Go functions. The Python `current_step == len(history)-1` guard
+that the decorator imposes becomes a precondition check inside each generator
+function (the first thing it does before any yield).
 
 ### IPython widgets
 
@@ -124,23 +181,23 @@ range and is a literal port.
 | Python symbol | Python lines | Go addition |
 |---|---|---|
 | `set_context` | 29-40 | `func (cfg *ExtConfig) SetContext(asw *AnalysisSessionWidget)` |
-| `arg_node_actions` registration | 128-133 | replace stub `RegisterArgRecalculate`/etc. with the literal `ExecuteActions` and `TryConjectures` callbacks |
+| `arg_node_actions` registration | 128-133 | replace stub `RegisterArg*` with literal `ExecuteActions` and `TryConjectures` callbacks |
 | `try_conjectures` | 135-143 | full body using `TacticsContext.BackgroundTheory` and `Solver.Implies` |
-| `run_interaction` | 146-163 | `func RunInteraction(body func(*InteractionGen)) *InteractionSession` (goroutine launcher) |
-| `interaction` decorator | 165-184 | `func Interaction(body func(*InteractionGen)) func(*InteractionGen)` — checks `current_step == len(history)-1`, otherwise emits `ShowModal("Error", ...)` |
-| `FrontEndOperation` (base) | 191-199 | already an interface; add `Submit(onDone func(interface{}))` doc |
-| `ExecuteNewCell` | 201-221 | `type ExecuteNewCell struct { Code string }` with `Submit` that POSTs to the front end (HTTP/WebSocket); the Python `post_run_cell` callback becomes a channel response |
-| `ShowModal` | 224-242 | `type ShowModal struct { Title string; Children []Widget; OnDone func(bool) }` + `Submit` |
-| `UserSelect` | 245-268 | `type UserSelect struct { *ShowModal; Prompt string; Options *OrderedMap; Default interface{} }` + `OnClose` |
-| `UserSelectMultiple` | 271-296 | `type UserSelectMultiple struct { *ShowModal; Prompt string; Options *OrderedMap; Default []interface{} }` + `OnClose` |
-| `execute_arg_action` | 299-306 | `func ExecuteArgAction(node *art.State, action string) *InteractionSession` |
-| `try_conjecture` | 309-318 | `func TryConjecture(node *art.State, conj lg.Expr) *InteractionSession` |
+| `run_interaction` | 146-163 | **dropped** — replaced by `iter.Seq` consumption in callers (`for op := range gen { ... }`) |
+| `interaction` decorator | 165-184 | **dropped** — generator functions just return `iter.Seq[FrontEndOperation]`; the `current_step == len(history)-1` guard becomes a precondition `if`-check at the top of each generator body, yielding a `&ShowModal{Title:"Error", ...}` and returning if violated |
+| `FrontEndOperation` (base) | 191-199 | already an interface; replace `Submit(onDone)` with marker method `frontEndOp()`. The "submit/on_done" lifecycle is now expressed by mutating the op's response fields between yields. |
+| `ExecuteNewCell` | 201-221 | `type ExecuteNewCell struct { Code string; Output any /*set by consumer*/ }` |
+| `ShowModal` | 224-242 | `type ShowModal struct { Title string; Children []Widget; OK bool /*set by consumer*/ }` |
+| `UserSelect` | 245-268 | `type UserSelect struct { *ShowModal; Prompt string; Options *OrderedMap; Default any; Selection any; Cancelled bool }` |
+| `UserSelectMultiple` | 271-296 | `type UserSelectMultiple struct { *ShowModal; Prompt string; Options *OrderedMap; Default []lg.Expr; Selection []lg.Expr; Cancelled bool }` |
+| `execute_arg_action` | 299-306 | `func ExecuteArgAction(node *art.State, action string) iter.Seq[FrontEndOperation]` |
+| `try_conjecture` | 309-318 | `func TryConjecture(node *art.State, conj lg.Expr) iter.Seq[FrontEndOperation]` |
 | `arg_new_goal` | 321-326 | replace stub in `RegisterArgNewGoal` with a literal port that yields `ExecuteNewCell` |
 | `arg_recalculate` | 328-336 | likewise for `RegisterArgRecalculate` |
 | `arg_check_cover` | 338-356 | likewise for `RegisterArgCheckCover` |
-| `arg_remove_facts` | 359-379 | likewise for `RegisterArgRemoveFacts`, with `UserSelectMultiple` yield |
-| `apply_goal_tactic` | 382-388 | `func ApplyGoalTactic(goal *proof.ProofGoal, tactic string) *InteractionSession` |
-| `arg_join2` | 390-409 | likewise for `RegisterArgJoin`, with `UserSelect` yield |
+| `arg_remove_facts` | 359-379 | likewise for `RegisterArgRemoveFacts`, yielding `UserSelectMultiple` then `ExecuteNewCell` |
+| `apply_goal_tactic` | 382-388 | `func ApplyGoalTactic(goal *proof.ProofGoal, tactic string) iter.Seq[FrontEndOperation]` |
+| `arg_join2` | 390-409 | likewise for `RegisterArgJoin`, yielding `UserSelect` then `ExecuteNewCell` |
 
 **New supporting types in `webui/ext_api.go`** (because Go has no Python
 generator/decorator/widget runtime):
@@ -262,17 +319,23 @@ The `__core_aux{n}` auxiliary literals are created via
 exactly as Python does. The dead `#core = ivy_solver.minimize_core(...)`
 comment block is preserved verbatim as Go comments per CLAUDE.md rule 8.
 
-**`InteractiveUpdr` function** (Python iupdr.py lines 96-203). Uses the
-goroutine+channel pattern from Phase 1:
+**`InteractiveUpdr` function** (Python iupdr.py lines 96-203). Returns an
+`iter.Seq[webui.FrontEndOperation]`. The body is a literal translation; each
+Python `yield X` becomes `if !yield(op) { return }` followed by reading the
+consumer-mutated response fields off `op`.
 
 ```go
-func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
-    return webui.RunInteraction(func(g *webui.InteractionGen) {
+func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperation] {
+    return func(yield func(webui.FrontEndOperation) bool) {
         frames := tc.AG.States
         if len(frames) != 1 {
-            g.Fail(&webui.InteractionError{Message:
-                "Interactive UPDR can only be started when the ARG " +
-                "contains nothing but the initial state."})
+            // Python: raise InteractionError(...)
+            errOp := &webui.ShowModal{Title: "Error", Children: []webui.Widget{
+                &webui.LatexWidget{Text:
+                    "Interactive UPDR can only be started when the ARG " +
+                    "contains nothing but the initial state."},
+            }}
+            yield(errOp)
             return
         }
 
@@ -287,7 +350,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
             // check inductive invariant
             for i := 0; i < len(frames)-1; i++ {
                 if tactics.CheckCover(tc, frames[i+1], frames[i]) {
-                    tc.Step(map[string]interface{}{
+                    tc.Step(map[string]any{
                         "msg": fmt.Sprintf("Inductive invariant found at frame %d", i),
                         "i":   i,
                     })
@@ -297,7 +360,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
             // add new frame
             lastFrame = tc.ArgAddActionNode(lastFrame, action, nil)
             tc.PushGoal(tactics.GoalAtArgNode(badStates.ToFormula(), lastFrame))
-            tc.Step(map[string]interface{}{"msg": "Added new frame"})
+            tc.Step(map[string]any{"msg": "Added new frame"})
 
             tactics.RecalculateFacts(tc, lastFrame,
                 tactics.ArgGetConjuncts(tactics.ArgGetPred(lastFrame)))
@@ -317,18 +380,24 @@ func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
                 for _, c := range module.SimplifyClauses(dg.Formula).Conjuncts() {
                     options.Set(c.String(), c)
                 }
-                resp := g.Yield(&webui.UserSelectMultiple{
+                op1 := &webui.UserSelectMultiple{
                     Options: options,
                     Title:   "Generalize Diagram",
                     Prompt:  "Choose which literals to take as the refutation goal",
                     Default: options.Values(),
-                })
-                userSelection := resp.([]lg.Expr)
+                }
+                if !yield(op1) { return }
+                if op1.Cancelled {
+                    // Python: assert user_selection is not None
+                    panic("user_selection is None")
+                }
+                userSelection := op1.Selection
+
                 ug := tactics.GoalAtArgNode(
                     module.NewClauses(userSelection, nil, nil).ToFormula(),
                     currentGoal.Node)
                 tc.PushGoal(ug)
-                tc.Step(map[string]interface{}{"msg": "Pushed user selected goal", "ug": ug})
+                tc.Step(map[string]any{"msg": "Pushed user selected goal", "ug": ug})
 
                 goal := tc.TopGoal()
                 preds, act := tactics.ArgGetPredAction(goal.Node)
@@ -357,18 +426,16 @@ func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
                         module.FormulaToClauses(goal.Formula, nil), act)
                     x, y = false, tactics.GoalAtArgNode(bi.ToFormula(), pred)
                 case z3bridge.Unsat:
-                    resp := g.Yield(&UserSelectCore{
+                    op2 := &UserSelectCore{
                         Theory:     theory,
                         Constrains: goalClauses.Fmlas,
                         Title:      "Refinement",
                         Prompt:     "Choose the literals to use",
-                    })
-                    sel := resp.(struct {
-                        Selection []lg.Expr
-                        IsSat     bool
-                    })
-                    if sel.IsSat { panic("user_is_sat is False") }
-                    core := module.NewClauses(sel.Selection, nil, nil)
+                    }
+                    if !yield(op2) { return }
+                    if op2.Cancelled { panic("user cancelled core selection") }
+                    if op2.UserIsSat { panic("user_is_sat is False") }
+                    core := module.NewClauses(op2.SelectedConstraints, nil, nil)
                     x = true
                     y = actions.InterpFromUnsatCore(goalClauses, theory, core, nil)
                     // ^^^ This is the target call: iupdr.py:193
@@ -387,7 +454,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) *webui.InteractionSession {
                 tactics.RecalculateFacts(tc, frames[i], factsToCheck)
             }
         }
-    })
+    }
 }
 ```
 
@@ -399,12 +466,15 @@ Python idiom; it does not represent a new abstraction.)
 - `TestUserSelectCoreCreate` — verify struct construction and that the
   auxiliary literals are added to the solver in order.
 - `TestUserSelectCoreCheck` — drive `Check()` with sat and unsat selections.
-- `TestUserSelectCoreOnCloseCancel` — verify cancel returns `(nil, nil)`.
-- `TestInteractiveUpdrInitialFrameError` — start with a non-initial ARG, expect
-  an `InteractionError` on the `Done` channel.
+- `TestUserSelectCoreOnCloseCancel` — verify cancel produces `Cancelled = true`.
+- `TestInteractiveUpdrInitialFrameError` — start with a non-initial ARG;
+  iterate the returned `iter.Seq` once and verify the first yielded op is a
+  `*webui.ShowModal` with the expected error text.
 - `TestInteractiveUpdrSimple` — drive a small Ivy program (e.g., one of the
-  test_vectors entries) end-to-end through the interaction goroutine,
-  feeding scripted responses on `Resumes`.
+  test_vectors entries) end-to-end. Use a `for op := range InteractiveUpdr(tc)`
+  loop in the test that scripts each op response by mutating the op fields
+  before the loop body returns. Assert final `tc.Goals.Len() == 0` and the
+  expected facts have been added to the ARG.
 
 ## Phase 4 — Port `widget_analysis_session.py` to `webui/widget_analysis_session.go`
 
@@ -508,21 +578,29 @@ This is the largest class. Embeds `ConceptSessionControls`. Methods to port:
 | `is_sufficient` (1103) | `IsSufficient` |
 | `is_inductive` (1152) | `IsInductive` |
 | `strengthen` (1198) | `Strengthen` |
-| `weaken` (1206) | `Weaken` (uses `Interaction` wrapper from Phase 1; yields `UserSelectMultiple`) |
+| `weaken` (1206) | `Weaken` (returns `iter.Seq[FrontEndOperation]`; yields `UserSelectMultiple`) |
 | `get_relevant_elements` (1223) | `GetRelevantElements` |
 
-`Weaken` is implemented via the `RunInteraction` pattern:
+`Weaken` is implemented as an `iter.Seq[FrontEndOperation]`-returning function
+(matching the iupdr generator pattern):
+
 ```go
-func (t *TransitionViewWidget) Weaken(button *webui.ButtonWidget) *webui.InteractionSession {
-    return webui.RunInteraction(func(g *webui.InteractionGen) {
+func (t *TransitionViewWidget) Weaken(button *webui.ButtonWidget) iter.Seq[webui.FrontEndOperation] {
+    return func(yield func(webui.FrontEndOperation) bool) {
         opts := buildOptionsFromConjectures(t.Conjectures)
-        resp := g.Yield(&webui.UserSelectMultiple{
-            Options: opts, Title: "Conjectures",
-            Prompt: "Select conjectures to remove", Default: nil,
-        })
-        if resp == nil { return }
-        ...
-    })
+        op := &webui.UserSelectMultiple{
+            Options: opts,
+            Title:   "Conjectures",
+            Prompt:  "Select conjectures to remove",
+            Default: nil,
+        }
+        if !yield(op) { return }
+        if op.Cancelled || op.Selection == nil { return }   // Python: if user_selection is not None
+        for _, conj := range op.Selection {
+            t.Conjectures = removeConjecture(t.Conjectures, conj)
+        }
+        t.ShowResult(fmt.Sprintf("Removed the following conjectures:\n%s", joinConjs(op.Selection)))
+    }
 }
 ```
 
@@ -622,8 +700,9 @@ not a translation issue. We preserve it but add a comment, per rule 8.)
 - `TestConceptRefineUnsat` — drive `ConceptRefine` with a goal whose theory is
   unsat, verify `InterpFromUnsatCore` is called and `CustomRefineOrReverse`
   applies the result.
-- `TestWeakenInteraction` — drive `Weaken` end-to-end, scripting a response
-  on the interaction channel.
+- `TestWeakenInteraction` — drive `Weaken` end-to-end with
+  `for op := range t.Weaken(nil) { ... }`, scripting the user's selection by
+  mutating `op.Selection`/`op.Cancelled` before each loop body returns.
 - Round-trip tests for each click handler (`Prev`, `Next`, `First`, `Last`,
   `ArgNodeClick`, etc.).
 
@@ -667,11 +746,12 @@ not a translation issue. We preserve it but add a comment, per rule 8.)
 - `webui/widget_analysis_session_test.go` — NEW
 
 **Modified files:**
-- `webui/ext_api.go` — extend from 235 lines to ~600+ lines (add `ShowModal`,
-  `UserSelect`, `UserSelectMultiple`, `ExecuteNewCell`, `RunInteraction`,
-  `Interaction`, `InteractionGen`, `InteractionSession`, the
-  `Latex/Button/Select*Widget` data carriers, the `OrderedMap` shim, and
-  literal ports of the @interaction default callbacks)
+- `webui/ext_api.go` — extend from 235 lines to ~500+ lines (add `ShowModal`,
+  `UserSelect`, `UserSelectMultiple`, `ExecuteNewCell` with mutable response
+  fields and a `frontEndOp()` marker; the `Latex/Button/Select*Widget` data
+  carriers; the `OrderedMap` shim; literal `iter.Seq[FrontEndOperation]`-returning
+  ports of the @interaction default callbacks). No goroutine/channel session
+  types — generators are plain `iter.Seq` returns.
 - `tactics/tactics.go` — add `GetSafetyProperty`, `ArgAddActionNode`,
   `RecalculateFacts` (function form), `RemoveIfRefuted` (function form),
   `CheckCover` (function form), `CustomRefineOrReverse`
