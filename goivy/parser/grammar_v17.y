@@ -1197,10 +1197,19 @@ top:
     {
         xtracer.Trace("parser.p_top_update_terms_from_terms_upaxes ENTER (top)")
         $$ = $1
-        // Simplified: store as raw nodes
-        _ = $3
-        _ = $5
-        _ = $6
+        cfg := acfg(v17lex)
+        // Python (ivy_parser.py:1741-1745):
+        //   dfns = [x.rep for x in p[3]]
+        //   deps = [x.rep for x in p[5]]
+        //   p[0].declare(UpdateDecl(PatternBasedUpdate(SymbolList(*dfns),
+        //                                              SymbolList(*deps),
+        //                                              UpdatePatternList(*p[6]))))
+        dfns := cfg.NewSymbolList($3...)
+        deps := cfg.NewSymbolList($5...)
+        pats := cfg.NewUpdatePatternList($6...)
+        pbu := cfg.NewPatternBasedUpdate(dfns, deps, pats)
+        upd := cfg.NewUpdateDecl(pbu)
+        $$.declare(upd)
     }
     // --- Macro ---
     | top TOK_MACRO atom TOK_EQ sequence
@@ -5199,7 +5208,11 @@ upax:
     TOK_PARAMS tterms TOK_IN action TOK_ARROW requires ensures
     {
         xtracer.Trace("parser.p_upax_params_apps_in_action_arrow_ensures_fmla ENTER (upax)")
-        $$ = acfg(v17lex).NewAtom("upax", $6, $7)
+        cfg := acfg(v17lex)
+        // Python (ivy_parser.py:1980):
+        //   p[0] = UpdatePattern(ConstantDecl(*p[2]), p[4], p[6], p[7])
+        params := cfg.NewConstantDecl($2...)
+        $$ = cfg.NewUpdatePattern(params, $4, $6, $7)
     }
     ;
 

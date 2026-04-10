@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	//"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -1474,6 +1474,10 @@ func (d *DomainSetup) Named(node ast.Node) error {
 		Formula: d.LastFact,
 		Name:    sym,
 	})
+
+	// Python (ivy_compiler.py:1237): self.domain.updates.append(NamedUpdate(sym, cond))
+	d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
+		actions.NewNamedUpdate(sym, cond))
 	return nil
 }
 

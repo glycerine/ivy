@@ -1918,33 +1918,46 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action)
 		for _, pat := range a.Patterns.Patterns {
 			precond, transrel := pat.Match(action)
 			if precond != nil && transrel != nil {
-				return updated, transrel, precond
+				// Python (ivy_actions.py:161):
+				//   postcond = state_to_action((updated, postcond, precond))
+				//   return (updated, postcond[1], precond)
+				stateUpdate := &Update{
+					Modified: updated,
+					TR:       transrel,
+					Pre:      precond,
+				}
+				actionUpdate := StateToAction(stateUpdate)
+				return updated, actionUpdate.TR, precond
 			}
 		}
+		// Python (ivy_actions.py:159-160):
+		//   raise IvyError(action, 'No matching update axiom for ' + str(x))
+		panic(fmt.Sprintf("PatternBasedUpdate.GetUpdateAxioms: no matching update axiom for %v", a.Defines))
 	}
-
-	// No matching pattern — this is an error in Python (raises IvyError)
-	// but we return a safe default
-	return updated, module.TrueClauses(nil), module.FalseClauses(nil)
+	// patterns is nil but a dep was hit — also a construction-site error.
+	panic(fmt.Sprintf("PatternBasedUpdate.GetUpdateAxioms: dependency hit but no patterns: %v", a.Defines))
 }
 
 // --- NamedUpdate ---
 
 // NamedUpdate is a named state update.
+// Python: NamedUpdate(sym, fmla) at ivy_actions.py:178-186, constructed by
+// IvyDomainSetup.named at ivy_compiler.py:1237.
 type NamedUpdate struct {
 	ActionBase
-	UpdateName string
-	Body       lg.Expr
+	UpdateName string    // sym.Name (cached for convenience)
+	Sym        *lg.Const // the named symbol with its FuncConstSort (Python: self.sym)
+	Body       lg.Expr   // the existential formula `cond` (Python: fmla)
 }
 
-func NewNamedUpdate(name string, body lg.Expr) *NamedUpdate {
-	return &NamedUpdate{UpdateName: name, Body: body}
+func NewNamedUpdate(sym *lg.Const, body lg.Expr) *NamedUpdate {
+	return &NamedUpdate{UpdateName: sym.Name, Sym: sym, Body: body}
 }
 
 func (a *NamedUpdate) Name() string          { return "named_update" }
 func (a *NamedUpdate) ActionArgs() []lg.Expr { return []lg.Expr{a.Body} }
 func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
-	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName}
+	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName, Sym: a.Sym}
 	if len(args) >= 1 {
 		r.Body = args[0]
 	}
@@ -1958,14 +1971,16 @@ func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a
 
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
 // updated set. If so, adds the symbol to updated. Returns (updated, nil, nil).
-// Corresponds to Python NamedUpdate.get_update_axioms.
+// Corresponds to Python NamedUpdate.get_update_axioms (ivy_actions.py:182-186).
 func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses) {
-	defines := a.UpdateName
-	if defines == "" {
-		return updated, nil, nil
+	if a.Sym == nil {
+		// Python: would AttributeError on self.sym. Faithful port panics.
+		panic("NamedUpdate.GetUpdateAxioms: Sym is nil")
 	}
+	defines := a.Sym
 
-	// Collect dependency symbols from the body
+	// Python: self.dependencies = used_symbols_ast(fmla) — computed at __init__.
+	// Go re-computes each call (acceptable for now).
 	deps := make(map[string]bool)
 	module.CollectSymNames(a.Body, deps)
 
@@ -1974,15 +1989,10 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg
 	for _, u := range updated {
 		updatedSet[u.Name] = true
 	}
-	if !updatedSet[defines] {
+	if !updatedSet[defines.Name] {
 		for _, u := range updated {
 			if deps[u.Name] {
-				// Use the sort from the body's symbol if available, else TopS
-				sym := lg.NewConst(defines, lg.TopS)
-				if c, ok := a.Body.(*lg.Const); ok {
-					sym = lg.NewConst(defines, c.CSort)
-				}
-				updated = append(updated, sym)
+				updated = append(updated, defines)
 				break
 			}
 		}
@@ -2153,8 +2163,10 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	// Python: if hasattr(domain,'macros'): im = instantiate_macro(inst, domain.macros)
 	if ctx.Domain.Macros != nil && a.AstInst != nil {
 		if rewritten := instantiateMacro(a.AstInst, ctx.Domain.Macros); rewritten != nil {
-			// Python: res = im.compile().int_update(domain, pvars)
-			// Try ctx.CompileActionBody first, fall back to domain's callback
+			// Python (ivy_actions.py:812): res = im.compile().int_update(domain, pvars)
+			// The monkey-patched .compile() is always available; the Go equivalent
+			// is ctx.CompileActionBody (test override) or ctx.Domain.CompileActionBodyFn
+			// (registered by ivy_compile.go:265 during IvyCompile).
 			compileFn := ctx.CompileActionBody
 			if compileFn == nil && ctx.Domain.CompileActionBodyFn != nil {
 				moduleFn := ctx.Domain.CompileActionBodyFn
@@ -2169,12 +2181,21 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 					return nil, fmt.Errorf("CompileActionBodyFn returned non-Action type %T", result)
 				}
 			}
-			if compileFn != nil {
-				compiled, err := compileFn(rewritten)
-				if err == nil && compiled != nil {
-					return IntUpdate(compiled, ctx)
-				}
+			if compileFn == nil {
+				// Python: .compile() is monkey-patched at startup and is always
+				// present. If neither hook is set, callback registration is
+				// broken upstream.
+				panic("InstantiateAction.IntUpdate: macro matched but no CompileActionBody hook is registered")
 			}
+			compiled, err := compileFn(rewritten)
+			if err != nil {
+				// Python would propagate the exception from im.compile().
+				panic(fmt.Sprintf("InstantiateAction.IntUpdate: compile failed for macro expansion: %v", err))
+			}
+			if compiled == nil {
+				panic("InstantiateAction.IntUpdate: compileFn returned (nil, nil) for macro expansion")
+			}
+			return IntUpdate(compiled, ctx)
 		}
 	}
 
@@ -2244,7 +2265,8 @@ func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 //	psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams) if ...)
 //	return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
 func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.Node {
-	// Get name and actual params from the AST node
+	// Python (ivy_actions.py:783-784): if inst.relname in defns
+	//   would AttributeError on .relname / .args if inst is not Atom-like.
 	var name string
 	var aparams []ast.Node
 	switch n := astInst.(type) {
@@ -2255,38 +2277,48 @@ func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.N
 		name = n.Rep
 		aparams = nil
 	default:
-		return nil
+		panic(fmt.Sprintf("instantiateMacro: instantiation node is not Atom/Symbol: %T", astInst))
 	}
 
 	defn, ok := macros[name]
 	if !ok || defn == nil {
-		return nil
+		return nil // matches Python "if inst.relname in defns: ... else None"
 	}
 
-	// fparams = defn.args[0].args — formal parameters from the LHS
-	var fparams []ast.Node
-	if lhs, ok := defn.Lhs.(*ast.Atom); ok {
-		fparams = lhs.Terms
+	// Python (ivy_actions.py:787): fparams = defn.args[0].args
+	//   would AttributeError if defn.args[0] is not Atom-like.
+	lhs, ok := defn.Lhs.(*ast.Atom)
+	if !ok {
+		panic(fmt.Sprintf("instantiateMacro: macro %s definition LHS is not Atom: %T", name, defn.Lhs))
 	}
+	fparams := lhs.Terms
 
 	if len(aparams) != len(fparams) {
 		panic(fmt.Sprintf("wrong number of parameters for macro %s", name))
 	}
 
-	// Build subst: formal_name -> actual_node
+	// Python (ivy_actions.py:790): subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
+	//   x.rep would AttributeError if x is not Atom-like.
 	subst := make(map[string]ast.Node)
 	for i, fp := range fparams {
+		var fpName string
 		switch s := fp.(type) {
 		case *ast.Atom:
-			subst[s.Rep] = aparams[i]
+			fpName = s.Rep
 		case *ast.Symbol:
-			subst[s.Rep] = aparams[i]
+			fpName = s.Rep
+		default:
+			panic(fmt.Sprintf("instantiateMacro: macro %s formal param %d is not Atom/Symbol: %T", name, i, fp))
 		}
+		subst[fpName] = aparams[i]
 	}
 
 	// Build psubst: formal_name -> actual_name (for zero-arity atoms/symbols only)
-	// Python: psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams)
+	// Python (ivy_actions.py:792-794): psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams)
 	//           if (isinstance(y, App) or isinstance(y, Atom)) and len(y.args) == 0)
+	// The fparams loop above already validated that every fp is Atom or Symbol,
+	// so the type-switch fallthrough on ap below is a structural test (only
+	// zero-arity Atoms or Symbols qualify), not a silent skip.
 	psubst := make(map[string]string)
 	for i, fp := range fparams {
 		var fpName string
@@ -2296,10 +2328,7 @@ func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.N
 		case *ast.Symbol:
 			fpName = s.Rep
 		}
-		if fpName == "" {
-			continue
-		}
-
+		// fpName is guaranteed non-empty by the subst loop's type validation.
 		ap := aparams[i]
 		switch a := ap.(type) {
 		case *ast.Atom:

@@ -349,6 +349,13 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 		}
 		return act, nil
 
+	// --- PatternBasedUpdate ---
+	// Python: PatternBasedUpdate.cmpl walks defines/dependencies/patterns and
+	// returns a PatternBasedUpdate with compiled symbol/pattern fields.
+	case *ast.PatternBasedUpdate:
+		xtracer.Trace("compiler.CompileNode return case=PatternBasedUpdate")
+		return c.compilePatternBasedUpdate(n)
+
 	// --- Default: Python's AST.cmpl = other_thing ---
 	// Handles all other unrecognized AST types.
 	default:
@@ -391,6 +398,135 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 
 	// Lowercase unresolved names become constants with TopSort
 	return lg.NewConst(name, lg.TopS), nil
+}
+
+// compilePatternBasedUpdate compiles an ast.PatternBasedUpdate into an
+// actions.PatternBasedUpdate. Walks defines/dependencies SymbolLists to
+// produce []*lg.Const (looking up sorts in the signature), and compiles
+// each UpdatePattern child.
+// Corresponds to Python PatternBasedUpdate.cmpl (default compile → clone children).
+func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr, error) {
+	// Compile defines (SymbolList → []*lg.Const)
+	var defines []*lg.Const
+	if sl, ok := n.Dfns.(*ast.SymbolList); ok {
+		for _, elem := range sl.Elems {
+			name := nodeRepStr(elem)
+			if name == "" {
+				continue
+			}
+			sym := c.lookupOrCreateConst(name)
+			defines = append(defines, sym)
+		}
+	}
+
+	// Compile dependencies (SymbolList → []*lg.Const)
+	var deps []*lg.Const
+	if sl, ok := n.Deps.(*ast.SymbolList); ok {
+		for _, elem := range sl.Elems {
+			name := nodeRepStr(elem)
+			if name == "" {
+				continue
+			}
+			sym := c.lookupOrCreateConst(name)
+			deps = append(deps, sym)
+		}
+	}
+
+	// Compile patterns (UpdatePatternList → *actions.UpdatePatternList)
+	patList := actions.NewUpdatePatternList()
+	if upl, ok := n.Patterns.(*ast.UpdatePatternList); ok {
+		for _, elem := range upl.Elems {
+			up, ok := elem.(*ast.UpdatePattern)
+			if !ok {
+				continue
+			}
+			compiled, err := c.compileUpdatePattern(up)
+			if err != nil {
+				return nil, err
+			}
+			patList.Add(compiled)
+		}
+	}
+
+	result := actions.NewPatternBasedUpdate(defines, deps, patList)
+	return result, nil
+}
+
+// compileUpdatePattern compiles an ast.UpdatePattern into an actions.UpdatePattern.
+func (c *Compiler) compileUpdatePattern(up *ast.UpdatePattern) (*actions.UpdatePattern, error) {
+	// Compile placeholders (ConstantDecl → []lg.Expr of *lg.Const)
+	var placeholders []lg.Expr
+	if up.Params != nil {
+		for _, p := range up.Params.Args() {
+			compiled, err := c.Thing(p)
+			if err != nil {
+				return nil, err
+			}
+			placeholders = append(placeholders, compiled)
+		}
+	}
+
+	// Compile the pattern action
+	var patternAction actions.Action
+	if up.Action != nil {
+		compiled, err := c.CompileActionBody(up.Action)
+		if err != nil {
+			return nil, err
+		}
+		patternAction = compiled
+	}
+
+	// Compile requires (precondition formula)
+	var precond lg.Expr = lg.True
+	if up.Requires != nil {
+		compiled, err := c.Thing(up.Requires)
+		if err != nil {
+			return nil, err
+		}
+		precond = compiled
+	}
+
+	// Compile ensures (transition relation formula)
+	var transrel lg.Expr = lg.True
+	if up.Ensures != nil {
+		compiled, err := c.Thing(up.Ensures)
+		if err != nil {
+			return nil, err
+		}
+		transrel = compiled
+	}
+
+	return &actions.UpdatePattern{
+		Placeholders: placeholders,
+		Pattern:      patternAction,
+		Precond:      precond,
+		TransRel:     transrel,
+	}, nil
+}
+
+// lookupOrCreateConst resolves a name to a *lg.Const, looking up the sort
+// in the signature if available, or using TopS if not found.
+func (c *Compiler) lookupOrCreateConst(name string) *lg.Const {
+	if entry, ok := c.Sig.Symbols[name]; ok {
+		return lg.NewConst(name, entry.Sort)
+	}
+	return lg.NewConst(name, lg.TopS)
+}
+
+// nodeRepStr extracts a string representation (name) from an AST node,
+// handling Atom, App, and Symbol types.
+func nodeRepStr(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Atom:
+		return v.Rep
+	case *ast.App:
+		if sym, ok := v.Rep.(*ast.Symbol); ok {
+			return sym.Rep
+		}
+	case *ast.Symbol:
+		return v.Rep
+	}
+	return ""
 }
 
 // compileGeneric is the fallback for non-sort_infer_root nodes: compile each

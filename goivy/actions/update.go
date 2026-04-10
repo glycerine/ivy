@@ -1852,11 +1852,15 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 			if v, ok := ctx.Domain.Actions.Get2(calleeName); ok {
 				act, isAct := v.(Action)
 				if !isAct {
-					// Python supports tuple- and state-valued context entries
-					// (state_to_action path). Go currently only stores Actions
-					// in Domain.Actions; if a non-Action turns up, panic so we
-					// know to port the missing path.
-					panic(fmt.Sprintf("CallAction.IntUpdate: callee %s resolved to non-Action %T (state_to_action path not yet ported)", calleeName, v))
+					// Python (ivy_actions.py:1350): v = state_to_action(v.value)
+					//   for non-Action context entries (state-style updates with .value).
+					// Go's module.Module.Actions is typed *iu.InsMap[string, Action]
+					// (module.go:38), so the type system prevents non-Action values
+					// from ever being stored. The state_to_action(v.value) branch
+					// is unreachable in Go's typed model. If this panic ever fires,
+					// the upstream construction site is violating the type contract
+					// — investigate that, do not port state_to_action(v.value).
+					panic(fmt.Sprintf("CallAction.IntUpdate: callee %s resolved to non-Action %T (Domain.Actions is typed Action; non-Action storage is a programming error)", calleeName, v))
 				}
 				calleeAction = act
 			}
@@ -1914,9 +1918,13 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *Update {
 	substMap := make(map[lg.NodeKey]lg.Expr)
 	for oldSym, newSym := range renaming {
 		substMap[lg.Key(oldSym)] = newSym
-		// Also map old(s) → old(t) for pre-state symbols
-		oldOfOld := lg.NewConst("old("+oldSym.Name+")", oldSym.CSort)
-		substMap[lg.Key(oldOfOld)] = lg.NewConst("old("+newSym.Name+")", newSym.CSort)
+		// Python (ivy_actions.py:1364-1365): subst[old(s)] = old(t)
+		//   where old(sym) = sym.prefix('old_'). Use the Old() helper here
+		//   so the substMap key actually matches a real pre-state symbol in
+		//   the callee body (e.g., from a prior BindOldsAction wrapper).
+		oldOfOldSym := lg.NewConst(Old(oldSym.Name), oldSym.CSort)
+		oldOfNewSym := lg.NewConst(Old(newSym.Name), newSym.CSort)
+		substMap[lg.Key(oldOfOldSym)] = oldOfNewSym
 	}
 	renamedCallee := SubstituteConstantsAction(callee, substMap)
 

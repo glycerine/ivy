@@ -191,12 +191,21 @@ func TestInstantiateMacroSymbolInst(t *testing.T) {
 }
 
 func TestInstantiateMacroNonNodeInst(t *testing.T) {
-	// Pass something that is neither *ast.Atom nor *ast.Symbol
+	// Pass something that is neither *ast.Atom nor *ast.Symbol.
+	// Python would AttributeError on inst.relname / inst.args.
+	// Faithful Go port panics.
 	macros := map[string]*ast.Definition{}
-	result := instantiateMacro(testAstCfg.NewAnd(), macros)
-	if result != nil {
-		t.Errorf("expected nil for non-Atom/Symbol inst, got %s", result)
-	}
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("expected panic for non-Atom/Symbol inst")
+		}
+		msg := fmt.Sprintf("%v", r)
+		if !strings.Contains(msg, "not Atom/Symbol") {
+			t.Errorf("unexpected panic: %v", r)
+		}
+	}()
+	_ = instantiateMacro(testAstCfg.NewAnd(), macros)
 }
 
 func TestInstantiateMacroPsubstApplied(t *testing.T) {
