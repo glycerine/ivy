@@ -14,7 +14,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/ast"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
@@ -22,50 +21,6 @@ import (
 )
 
 const checkPrecondTrue = true
-
-// FailAction wraps an action that failed during trace construction.
-type FailAction struct {
-	actions.ActionBase
-	Action actions.Action
-}
-
-func (f *FailAction) String() string {
-	if f.Action != nil {
-		return fmt.Sprintf("FAIL(%s)", f.Action.String())
-	}
-	return "FAIL"
-}
-
-func (f *FailAction) ActionClone(args []lg.Expr) actions.Action {
-	return &FailAction{Action: f.Action}
-}
-
-func (f *FailAction) ActionArgs() []lg.Expr { return nil }
-
-func (f *FailAction) IterCalls() []string {
-	if f.Action != nil {
-		return f.Action.IterCalls()
-	}
-	return nil
-}
-
-func (f *FailAction) IterSubactions() []actions.Action {
-	return []actions.Action{f}
-}
-
-func (f *FailAction) Name() string                  { return "fail" }
-func (f *FailAction) Decompose() [][]actions.Action { return [][]actions.Action{{f}} }
-
-// --- ast.Node + lg.Expr methods for trace.FailAction ---
-
-func (f *FailAction) Args() []ast.Node               { return nil }
-func (f *FailAction) Clone(args []ast.Node) ast.Node { return f.ActionClone(nil).(ast.Node) }
-func (f *FailAction) Children() []lg.Expr            { return nil }
-func (f *FailAction) NodeSort() lg.Sort              { return lg.ActionS }
-func (f *FailAction) Equal(other lg.Expr) bool       { return f.Sexp() == other.Sexp() }
-func (f *FailAction) GetAstConfig() *ast.AstConfig   { return nil }
-func (f *FailAction) Sexp() lg.NodeKey               { return "(trace.FailAction)" }
-func (f *FailAction) Canon() iu.Canonical            { return iu.Canonical(f.Sexp()) }
 
 // Subgraph holds a pointer to a nested trace for call/return tracking.
 type Subgraph struct {
@@ -345,8 +300,12 @@ func (tb *TraceBase) DoReturn(action actions.Action, env map[string]string) {
 }
 
 // Fail marks the last action as failed.
+// Python: ivy_trace.py:229-230:
+//
+//	def fail(self):
+//	    self.last_action = itp.fail_action(self.last_action)
 func (tb *TraceBase) Fail() {
-	tb.LastAction = &FailAction{Action: tb.LastAction}
+	tb.LastAction = actions.NewFailAction(tb.LastAction)
 }
 
 // End finishes the trace, returning from any unfinished calls.

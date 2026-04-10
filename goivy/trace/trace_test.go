@@ -149,11 +149,11 @@ func TestTraceBaseFail(t *testing.T) {
 	origAction := actions.NewAssertAction(lg.True)
 	tb.LastAction = origAction
 	tb.Fail()
-	fa, ok := tb.LastAction.(*FailAction)
+	fa, ok := tb.LastAction.(*actions.FailAction)
 	if !ok {
 		t.Fatal("Fail should wrap action in FailAction")
 	}
-	if fa.Action != origAction {
+	if fa.Inner != origAction {
 		t.Error("FailAction should wrap original action")
 	}
 }
@@ -176,39 +176,6 @@ func TestTraceBaseEndWithSub(t *testing.T) {
 	}
 	if tb.Returned == nil {
 		t.Error("End should set Returned from Sub")
-	}
-}
-
-// --- FailAction tests ---
-
-func TestFailActionString(t *testing.T) {
-	fa := &FailAction{Action: actions.NewAssertAction(lg.True)}
-	s := fa.String()
-	if !strings.Contains(s, "FAIL") {
-		t.Errorf("FailAction.String() should contain FAIL, got %q", s)
-	}
-}
-
-func TestFailActionNilAction(t *testing.T) {
-	fa := &FailAction{}
-	s := fa.String()
-	if s != "FAIL" {
-		t.Errorf("FailAction with nil action should return 'FAIL', got %q", s)
-	}
-}
-
-func TestFailActionClone(t *testing.T) {
-	orig := &FailAction{Action: actions.NewAssertAction(lg.True)}
-	clone := orig.ActionClone(nil)
-	if clone == nil {
-		t.Fatal("Clone returned nil")
-	}
-}
-
-func TestFailActionName(t *testing.T) {
-	fa := &FailAction{}
-	if fa.Name() != "fail" {
-		t.Errorf("expected name 'fail', got %q", fa.Name())
 	}
 }
 

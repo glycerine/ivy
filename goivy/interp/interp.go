@@ -21,6 +21,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ---------------------------------------------------------------------------
@@ -134,17 +135,59 @@ func (s *State) SetValue(v *StateValue) {
 	s.Precond = v.Precond
 }
 
-// Update returns the cached update, computing it lazily if the state's
-// expression is an action application.
+// Update returns the cached update, computing it lazily on first access.
 //
-// NOTE: currently returns the cached value only; full computation
-// requires the action update infrastructure.
+// Mechanical port of Python ivy_interp.py:137-142:
+//
+//	@property
+//	def update(self):
+//	    if self.cached_update is None and self.expr is not None and is_action_app(self.expr):
+//	        xtracer.trace("interp.State.Update calling GetUpdate type=%s"
+//	                      % type(eval_action(self.expr.rep)).__name__)
+//	        self.cached_update = eval_action(self.expr.rep).update(self.domain, self.in_scope)
+//	    return self.cached_update
+//
+// Source-of-action lookup differs from Python because ast.Atom.Rep is
+// string-only in Go. We use s.Action when set (this is how the
+// failState path passes a FailAction object through), and otherwise
+// fall back to looking up s.Expr.Rep as an action name in the module.
 func (s *State) Update() *actions.Update {
-	if s.CachedUpdate == nil && s.Expr != nil && IsActionApp(s.Expr) {
-		// Matches Python: s.update = eval_action(s.expr.rep).int_update(s.domain, s.in_scope)
-		// Action update computation requires the actions package's IntUpdate method.
-		// The update is cached on first access.
+	if s.CachedUpdate != nil {
+		return s.CachedUpdate
 	}
+	var action actions.Action
+	if s.Action != nil {
+		action = s.Action
+	} else if s.Expr != nil && IsActionApp(s.Expr) {
+		if atom, ok := s.Expr.(*ast.Atom); ok && s.Domain != nil {
+			if a, found := s.Domain.FindAction(atom.Rep); found {
+				if act, ok := a.(actions.Action); ok {
+					action = act
+				}
+			}
+		}
+	}
+	if action == nil {
+		return nil
+	}
+
+	xtracer.Trace("interp.State.Update calling GetUpdate type=%s", actions.ActionTypeName(action))
+
+	ctx := &actions.UpdateContext{
+		Domain:       s.Domain,
+		PVars:        s.InScope,
+		ActCfg:       s.Domain.Cfg.ActCfg,
+		Instantiator: s.Domain.Instantiator,
+		GetAction: func(name string) actions.Action {
+			if v, ok := s.Domain.Actions.Get2(name); ok {
+				if act, ok := v.(actions.Action); ok {
+					return act
+				}
+			}
+			return nil
+		},
+	}
+	s.CachedUpdate = actions.GetUpdate(action, ctx)
 	return s.CachedUpdate
 }
 

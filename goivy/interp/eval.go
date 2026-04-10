@@ -109,16 +109,13 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 // In Python: eval_action in ivy_interp.py.
 func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 	// If it's already an Action, return it.
+	// Note: Python ivy_interp.py:441-442 has a parallel `isinstance(expr,
+	// fail_action)` branch that is dead code (fail_action IS an Action so
+	// the previous isinstance check fires first). Go's actions.Action type
+	// assertion catches *actions.FailAction the same way, so we omit the
+	// dead branch.
 	if a, ok := expr.(actions.Action); ok {
 		return a, nil
-	}
-	// If it's a FailAction, recursively evaluate.
-	if fa, ok := expr.(*FailAction); ok {
-		inner, err := EvalAction(fa.Inner, mod)
-		if err != nil {
-			return nil, err
-		}
-		return NewFailAction(inner), nil
 	}
 	// If it's a string, look it up in the module.
 	name, ok := expr.(string)

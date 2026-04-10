@@ -606,66 +606,6 @@ func TestEvalStateAtomSymbol(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// FailAction tests
-// ---------------------------------------------------------------------------
-
-func TestNewFailAction(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	if fa.Inner != inner {
-		t.Error("Inner should be the provided action")
-	}
-	if fa.Name() != "fail" {
-		t.Errorf("Name() should be 'fail', got %q", fa.Name())
-	}
-}
-
-func TestFailActionString(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	str := fa.String()
-	if !strings.HasPrefix(str, "fail ") {
-		t.Errorf("String() should start with 'fail ', got %q", str)
-	}
-}
-
-func TestFailActionFailedAction(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	if fa.FailedAction() != inner {
-		t.Error("FailedAction should return inner")
-	}
-}
-
-func TestFailActionClone(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	cloned := fa.ActionClone(nil)
-	if _, ok := cloned.(*FailAction); !ok {
-		t.Error("Clone should return a *FailAction")
-	}
-}
-
-func TestFailActionIterCalls(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	calls := fa.IterCalls()
-	// Sequence has no calls
-	if len(calls) != 0 {
-		t.Errorf("expected 0 calls, got %d", len(calls))
-	}
-}
-
-func TestFailActionIterSubactions(t *testing.T) {
-	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
-	subs := fa.IterSubactions()
-	if len(subs) != 1 {
-		t.Errorf("expected 1 subaction, got %d", len(subs))
-	}
-}
-
-// ---------------------------------------------------------------------------
 // Helper function tests
 // ---------------------------------------------------------------------------
 
@@ -983,13 +923,13 @@ func TestApplyAction(t *testing.T) {
 
 func TestEvalActionFailAction(t *testing.T) {
 	inner := actions.NewSequence()
-	fa := NewFailAction(inner)
+	fa := actions.NewFailAction(inner)
 	m := module.New()
 	act, err := EvalAction(fa, m)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if _, ok := act.(*FailAction); !ok {
+	if _, ok := act.(*actions.FailAction); !ok {
 		t.Error("should return a FailAction")
 	}
 }

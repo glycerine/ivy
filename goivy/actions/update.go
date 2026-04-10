@@ -1140,6 +1140,8 @@ func ActionTypeName(a interface{}) string {
 		return "NullFieldAction"
 	case *CopyFieldAction:
 		return "CopyFieldAction"
+	case *FailAction:
+		return "fail_action" // Python class name is snake_case
 	default:
 		return fmt.Sprintf("%T", a)
 	}
@@ -1212,6 +1214,11 @@ func IntUpdate(action Action, ctx *UpdateContext) *Update {
 	case *CrashAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
+	case *FailAction:
+		// FailAction.IntUpdate emits its own "interp.ActionFail calling
+		// IntUpdate type=<inner>" trace and recursively calls IntUpdate
+		// on the inner action, matching Python fail_action.int_update.
+		return a.IntUpdate(ctx)
 	default:
 		// Generic fallback: null update
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
@@ -2137,6 +2144,13 @@ func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 //
 // This corresponds to Python Action.update(domain, pvars).
 func GetUpdate(action Action, ctx *UpdateContext) *Update {
+	// FailAction overrides Python's Action.update (ivy_interp.py:385-389),
+	// so it does NOT emit the base "actions.GetUpdate ENTER type=fail_action"
+	// trace. Match that by delegating to fa.Update directly here, before
+	// the ENTER trace fires.
+	if fa, ok := action.(*FailAction); ok {
+		return fa.Update(ctx)
+	}
 	xtracer.Trace("actions.GetUpdate ENTER type=%s", ActionTypeName(action))
 	update := IntUpdate(action, ctx)
 	update = BindOldsUpdate(update)

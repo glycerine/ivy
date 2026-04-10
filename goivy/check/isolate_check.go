@@ -318,12 +318,40 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				// Python State() defaults to value=top_state() (true clauses),
 				// only the expr field is set from fail_expr.
 				// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
+				initState := ag.States[0]
+
 				failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
-				if aa, ok := ag.States[0].Prov.(*art.ActionApp); ok {
-					if rep, ok := aa.Rep.(string); ok {
+
+				// Recover the inner action: AddInitialState stores either an
+				// action object or a string label.
+				var innerAction actions.Action
+				if aa, ok := initState.Prov.(*art.ActionApp); ok {
+					switch rep := aa.Rep.(type) {
+					case string:
 						failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
+						if v, ok := mod.Actions.Get2(rep); ok {
+							if a, ok := v.(actions.Action); ok {
+								innerAction = a
+							}
+						}
+					case actions.Action:
+						failState.Prov = art.NewActionApp("fail_"+rep.Name(), aa.Args...)
+						innerAction = rep
 					}
 				}
+				if innerAction == nil {
+					innerAction = initState.Action
+				}
+
+				if innerAction != nil {
+					failState.Action = actions.NewFailAction(innerAction)
+					if initState.Pred != nil {
+						failState.Pred = initState.Pred
+					} else if aa, ok := initState.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
+						failState.Pred = aa.Args[0]
+					}
+				}
+
 				CheckSafetyInStateWithAG(mod, ag, failState, true)
 			}
 		}
@@ -570,12 +598,30 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 								// Python: fail = itp.State(expr = itp.fail_expr(post.expr))
 								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
 								// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
+								//
+								// The fail state's lazy update is computed in art.GetHistory once
+								// we set failState.Action and failState.Pred.
 								failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 								if aa, ok := post.Prov.(*art.ActionApp); ok {
 									if rep, ok := aa.Rep.(string); ok {
 										failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
 									}
 								}
+
+								// Wrap the original envAction with FailAction. Python's
+								// fail_action(post.expr.rep) — see ivy_interp.py:406.
+								failState.Action = actions.NewFailAction(envAction)
+
+								// Set predecessor so ag.GetHistory walks back through it.
+								// Python: fail.pred (lazy from fail.expr.args[0]) == pre.
+								// post.Pred is set by interp.ApplyAction → InterpToArtState above;
+								// fall back to post.Prov.Args[0] defensively.
+								if post.Pred != nil {
+									failState.Pred = post.Pred
+								} else if aa, ok := post.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
+									failState.Pred = aa.Args[0]
+								}
+
 								if !CheckSafetyInStateWithAG(mod, ag, failState, false) {
 									someFailed = true
 									break

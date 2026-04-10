@@ -767,6 +767,32 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 	}
 	h := ag.GetHistory(state.Pred, nextBound)
 
+	// Lazy compute state.Update for the failState path. Python:
+	// ivy_interp.py:137-142 - the State.update property is accessed by
+	// history_forward_step (ivy_interp.py:597-599) inside ag.get_history.
+	//
+	// In Go we set failState.Action = NewFailAction(envAction) at
+	// construction time but leave failState.Update nil so the lazy compute
+	// fires here, exactly where Python's lazy property would fire.
+	if state.Update == nil && state.Action != nil && state.Domain != nil {
+		ctx := &actions.UpdateContext{
+			Domain:       state.Domain,
+			PVars:        state.InScope,
+			ActCfg:       state.Domain.Cfg.ActCfg,
+			Instantiator: state.Domain.Instantiator,
+			GetAction: func(name string) actions.Action {
+				if v, ok := state.Domain.Actions.Get2(name); ok {
+					if act, ok := v.(actions.Action); ok {
+						return act
+					}
+				}
+				return nil
+			},
+		}
+		xtracer.Trace("interp.State.Update calling GetUpdate type=%s", actions.ActionTypeName(state.Action))
+		state.Update = actions.GetUpdate(state.Action, ctx)
+	}
+
 	// If the state has an Update, use it for the forward step.
 	// Matches Python ivy_interp.py:591:
 	//   history.forward_step(state.pred.domain.background_theory(...), state.update, action)
