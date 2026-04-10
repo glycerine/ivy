@@ -1009,7 +1009,10 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		}
 	}
 
-	z3name := t.z3Name(name, sort)
+	// Python term_to_z3 evaluates `sig = iso.to_z3()` BEFORE
+	// `z3.Const(solver_name(term.rep), sig)`, so the to_z3 trace
+	// (functionsort/uninterpretedsort) fires before the solver_name trace.
+	// We must mirror that order.
 	if lg.FirstOrderSort(sort) {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
 		if cached, ok := t.consts[key]; ok {
@@ -1019,6 +1022,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if err != nil {
 			return Expr{}, err
 		}
+		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
 		t.consts[key] = c
 		return c, nil
@@ -1034,6 +1038,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
+		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
 		t.consts[key] = c
 		return c, nil
@@ -1055,6 +1060,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if err != nil {
 			return Expr{}, err
 		}
+		z3name := t.z3Name(name, sort)
 		return t.Ctx.Const(z3name, zs), nil
 	}
 

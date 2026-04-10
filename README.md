@@ -2612,7 +2612,10 @@ Estimated People Required 26.621735
 247602  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
         py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
 
-247603  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=cfabric.t_rd_arr_min
+247603  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=tar_cf_clock
         py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=tar_cf_clock
+
+247604  go : XTRACE: ivy_solver.py:270 uninterpretedsort() None from lookup_native
+        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
 ~~~
 
