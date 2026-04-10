@@ -2603,27 +2603,22 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-220219  go : XTRACE: actions.Sequence.int_update ENTER
-        py : XTRACE: actions.Sequence.int_update ENTER
+233618  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
+        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
 
-220220  go : XTRACE: actions.IntUpdate ENTER type=AssumeAction
-        py : XTRACE: actions.IntUpdate ENTER type=AssumeAction
+233619  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
 
-220221  go : XTRACE: actions.AssumeAction.action_update ENTER
-        py : XTRACE: actions.AssumeAction.action_update ENTER
+233620  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
 
-220222  go : XTRACE: actions.AssumeAction.action_update EXIT
-        py : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+233621  go : XTRACE: actions.EnvAction.int_update EXIT
+        py : XTRACE: actions.EnvAction.int_update EXIT
 
-now:
+233622  go : XTRACE: ops.ToOpenFormula nFmlas=118 nDefs=0
+        py : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
 
-233571  go : XTRACE: actions.Sequence.int_update compose[0] resultModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', 'dramc_nb2.evqual_r ...(truncated long line to 300 bytes)
-
-        py : XTRACE: actions.Sequence.int_update compose[0] resultModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', 'dramc_nb2.evqual_r
- ...(truncated long line to 300 bytes)
-
-233572  go : XTRACE: actions.IntUpdate ENTER type=ReturnAction
-        py : XTRACE: actions.Sequence.int_update compose[1] childType=ReturnAction childModified=[]
+    golden_test.go:452: ivy_check and goivy_check differ at line 233622, counting from 0.
 ~~~
 so we are hitting divergence sooner...
 
