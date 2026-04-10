@@ -256,9 +256,15 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 
 	var exprs []Expr
 
-	// Translate formulas via conjToZ3 matching Python: [conj_to_z3(cl) for cl in clauses.fmlas]
+	// Match Python clauses_to_z3: a `for` loop emits the per-fmla sort traces,
+	// THEN a separate list comprehension calls conj_to_z3 on each formula.
+	// We must mirror that two-pass structure so the xtraces interleave the
+	// same way as Python.
 	for i, f := range clauses.Fmlas {
 		xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v", i, f.NodeSort())
+	}
+	// Translate formulas via conjToZ3 matching Python: [conj_to_z3(cl) for cl in clauses.fmlas]
+	for _, f := range clauses.Fmlas {
 		zf, err := s.conjToZ3(f)
 		if err != nil {
 			return Expr{}, fmt.Errorf("translating formula: %w", err)
