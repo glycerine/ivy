@@ -1,4 +1,4 @@
-# Conformance Audit + Fixes: SymbolList parser data type, compileUpdatePattern sig.copy(), subst_both_clauses sort handling, ast_rewrite Node-typed return, Hide/SubstAction/BindOldsUpdate callsites, add_definition NativeExpr routing
+# Conformance Audit + Fixes: subst_both_clauses NodeKey API, ast_rewrite Node-typed return, compileUpdatePattern sig.copy(), Hide/SubstAction/BindOldsUpdate callsites, add_definition NativeExpr routing
 
 *Created: 2026-04-10 14:00*
 
@@ -16,7 +16,7 @@ The 5 audit areas in this plan:
 
 All audits were performed sequentially against the Python source of truth (`/Users/jaten/ivy/pyivy/ivy/ivy/`) and the Go port (`/Users/jaten/go/src/github.com/glycerine/ivy/goivy/`), reading the actual code line-by-line. **No parallel agents used** per prior user instruction.
 
-**Headline result**: Bugs found in 4 of 5 areas. Area 1 (Hide/SubstAction/BindOldsUpdate callsites) is verified clean. Area 2 has a sort-handling bug. Area 3 has a structural restriction in the AstRewriter interface. Area 4 has a parser/compiler pair of bugs around SymbolList element type and missing `sig.copy()` scoping. Area 5 has two bugs: missing NativeExpr→NativeDefinitions routing and duplicated logic that should be a shared `AddDefinition` helper.
+**Headline result**: Bugs found in 4 of 5 areas. Area 1 (Hide/SubstAction/BindOldsUpdate callsites) is verified clean. Area 2 has a sort-handling bug fixable by adopting the codebase's `map[lg.NodeKey]lg.Expr` convention. Area 3 has a structural restriction in the AstRewriter interface. Area 4 has TWO bugs identified: 4-i (parser-side SymbolList element type) is **DEFERRED** for deeper investigation per user direction, and 4-ii (compileUpdatePattern missing `sig.copy()` scoping) is fixed in this plan. Area 5 has two bugs: missing NativeExpr→NativeDefinitions routing and duplicated logic that should be a shared `AddDefinition` helper.
 
 ## Audit results
 
@@ -269,7 +269,7 @@ func (cfg *AstConfig) NewSymbolList(elems ...Node) *SymbolList {
 }
 ```
 
-**Bug 4-i (SymbolList stores Node objects, not strings)**:
+**Bug 4-i (SymbolList stores Node objects, not strings) — DEFERRED, NOT ADDRESSED IN THIS PLAN**:
 
 Go's parser passes `[]ast.Node` (App nodes) directly into `SymbolList.Elems`. Python stores strings. This diverges:
 - Python: `SymbolList.symbols = ("foo", "bar")`
@@ -279,15 +279,9 @@ This is a Canon-level divergence (Python's `_symbollist_canon` shows `elems:["fo
 
 The runtime compile path in Go (`compiler/compiler.go:411-419`) extracts `nodeRepStr(elem)` to get the name string and then calls `lookupOrCreateConst(name)`. This works at runtime but is an indirect workaround for storing the wrong data type at parse-time.
 
-**Fix**: Have the parser extract `App.Rep` strings and pass them as `*ast.Symbol` nodes (the Go equivalent of bare names), so `SymbolList.Elems` matches Python's structure. Then the compile-time `compilePatternBasedUpdate` walks Symbol nodes (or their Rep strings) instead of App nodes.
+**Decision**: Bug 4-i is **deferred for later investigation**. Changing the parser to drop App nodes and store only string-equivalent Symbol nodes would lose potentially important type information (sort annotations on the App, lineno, attribute references) that may be needed by downstream paths not yet audited. A naive parser-side fix risks breaking unidentified downstream consumers.
 
-Actually, the simpler and more faithful approach: change `SymbolList` to store `[]string` (matching Python's `tuple of strings`). Then both parser and compile paths align with Python.
-
-But Go's existing tests reference `*SymbolList.Elems` as `[]Node`. Let me also note: the previous plan's `compileUpdatePattern` and `compilePatternBasedUpdate` already do the right runtime resolution via `nodeRepStr`. So the only changes needed are:
-- Parser: build a `*ast.Symbol` for each `App.Rep` and pass that to NewSymbolList. (This keeps `Elems []Node` typed but makes the elements simple Symbols, matching Python's str — Symbol is the closest Go AST analog of a bare name string.)
-- Canon helper: should print the inner string only, not a full app sexp.
-
-Alternative simpler approach: introduce a new field `Names []string` on SymbolList that matches Python's `symbols` (and is what Canon shows). Keep `Elems []Node` as a fallback for compatibility but populate Names from it. This is more invasive than just fixing the parser to pass Symbols, so the Symbol approach is preferred.
+**This plan does NOT touch the parser for Bug 4-i.** The parser stays as-is, passing App nodes to NewSymbolList. The compile-time `nodeRepStr` workaround continues to operate. Bug 4-i is added to the "Out-of-scope / follow-ups" section below pending a proper deep audit of every consumer of `SymbolList.Elems`.
 
 **Bug 4-ii (compileUpdatePattern doesn't wrap placeholders in sig.copy())**:
 
@@ -389,7 +383,7 @@ The `addDefinitionChecks` helper at decl.go:324-342 already covers the variable 
 | 3-i | ast_rewrite | `RewriteAtom` interface returns `*Atom`, restricting substitution | Real (silently drops non-Atom substitutions) |
 | 3-ii | AstRewriteSubstConstantsParams | Type assertion `repl.(*Atom)` silently drops App/Variable replacements | Real |
 | 3-iii | AstRewriteSubstConstants | Same type-assertion bug as 3-ii | Real |
-| 4-i | upaxes parser | SymbolList stores Node objects (Apps) instead of strings/Symbols | Canon-level divergence + non-faithful port |
+| ~~4-i~~ | ~~upaxes parser~~ | ~~SymbolList stores Node objects~~ | **DEFERRED** — see Out-of-scope |
 | 4-ii | compileUpdatePattern | Missing `sig.copy()` scope around placeholder declarations | Real (pollutes global Sig) |
 | 5-i | Derived/DefinitionDecl | Missing NativeExpr→NativeDefinitions routing | Real |
 | 5-ii | Derived/DefinitionDecl | Duplicated logic instead of shared `AddDefinition` method | Non-faithful port |
@@ -598,69 +592,11 @@ func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 }
 ```
 
-### Group C — `upaxes` parser + compileUpdatePattern sig.copy() (Area 4)
+### Group C — compileUpdatePattern sig.copy() (Area 4 — Bug 4-ii only)
 
-#### C1. `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/parser/grammar_v17.y`
+**Note**: Bug 4-i (parser-side SymbolList element type) is deferred. The parser stays as-is. Group C only addresses Bug 4-ii. There is no `parser/grammar_v17.y` change in this group.
 
-Change the UPDATE/FROM rule to extract App.Rep strings and wrap as Symbol nodes (matching Python's strings):
-
-```go
-| top TOK_UPDATE apps TOK_FROM apps upaxes
-{
-    xtracer.Trace("parser.p_top_update_terms_from_terms_upaxes ENTER (top)")
-    $$ = $1
-    cfg := acfg(v17lex)
-    // Python (ivy_parser.py:1741-1745):
-    //   dfns = [x.rep for x in p[3]]  # strings extracted from each App
-    //   deps = [x.rep for x in p[5]]
-    //   p[0].declare(UpdateDecl(PatternBasedUpdate(SymbolList(*dfns),
-    //                                              SymbolList(*deps),
-    //                                              UpdatePatternList(*p[6]))))
-    // Go: extract the Rep string from each App and wrap as a Symbol node so
-    // SymbolList.Elems contains bare-name Symbols (the closest Go AST analog
-    // of Python's tuple of strings). The compile-time path then resolves each
-    // Symbol's name to a *lg.Const via the signature.
-    dfns := cfg.NewSymbolList(extractAppRepsAsSymbols(cfg, $3)...)
-    deps := cfg.NewSymbolList(extractAppRepsAsSymbols(cfg, $5)...)
-    pats := cfg.NewUpdatePatternList($6...)
-    pbu := cfg.NewPatternBasedUpdate(dfns, deps, pats)
-    upd := cfg.NewUpdateDecl(pbu)
-    $$.declare(upd)
-}
-```
-
-Add a helper at the top of `parser/grammar_v17.y` (in the `%{ ... %}` block) or in a small helpers file the parser already uses:
-```go
-// extractAppRepsAsSymbols mirrors Python's [x.rep for x in apps]:
-// extracts the .Rep string from each App and wraps it in a *Symbol node.
-func extractAppRepsAsSymbols(cfg *ast.AstConfig, apps []ast.Node) []ast.Node {
-    out := make([]ast.Node, 0, len(apps))
-    for _, n := range apps {
-        var name string
-        switch a := n.(type) {
-        case *ast.App:
-            if sym, ok := a.Rep.(*ast.Symbol); ok {
-                name = sym.Rep
-            } else {
-                name = fmt.Sprint(a.Rep)
-            }
-        case *ast.Atom:
-            name = a.Rep
-        case *ast.Symbol:
-            name = a.Rep
-        default:
-            // Python would AttributeError on .rep — faithful port panics.
-            panic(fmt.Sprintf("apps element is not App/Atom/Symbol: %T", n))
-        }
-        out = append(out, cfg.NewSymbol(name))
-    }
-    return out
-}
-```
-
-After editing `grammar_v17.y`, regenerate `parser/grammar_v17.go` via the project's standard `go generate` (or whatever goyacc invocation it uses).
-
-#### C2. `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go` (compileUpdatePattern)
+#### C1. `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go` (compileUpdatePattern)
 
 Add `sig.copy()` scoping around the entire UpdatePattern compile:
 
@@ -703,24 +639,9 @@ func (c *Compiler) compileUpdatePattern(up *ast.UpdatePattern) (*actions.UpdateP
 
 Note: the returned `placeholders`, `patternAction`, `precond`, `transrel` are all `lg.Expr` / `actions.Action` pointers. They reference the temporary symbols. The temporary symbols themselves are gone from `c.Sig` after the defer, but the returned objects continue to hold references to them. This matches Python: the returned UpdatePattern carries Symbol objects independently of `ivy_logic.sig`.
 
-#### C3. `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go` (compilePatternBasedUpdate)
+#### C2. `compilePatternBasedUpdate` — no change required
 
-Update `compilePatternBasedUpdate` (lines 408-453) to handle the new Symbol-based SymbolList.Elems. The existing `nodeRepStr` helper already handles Symbol nodes, so this should work without changes:
-
-```go
-if sl, ok := n.Dfns.(*ast.SymbolList); ok {
-    for _, elem := range sl.Elems {
-        name := nodeRepStr(elem)  // already handles *ast.Symbol
-        if name == "" {
-            continue
-        }
-        sym := c.lookupOrCreateConst(name)
-        defines = append(defines, sym)
-    }
-}
-```
-
-Verify `nodeRepStr` (compiler/compiler.go:518-530) handles `*ast.Symbol` (it does, line 526-527). No code change needed in the compile path.
+The previous plan's `compilePatternBasedUpdate` and `nodeRepStr` already handle the App nodes that the parser produces (since Bug 4-i is deferred). No change needed in the compile path.
 
 ### Group D — `add_definition` shared method + NativeExpr routing (Area 5)
 
@@ -831,11 +752,7 @@ After all fixes, run in this order:
    ```
    The existing `TestSubstAction`, `TestBindOldsClauses`, `TestBindOldsUpdate`, `TestInstantiateMacroNonNodeInst`, and the SubstBoth-related impl tests should still pass.
 
-5. **Parser package tests** (Group C — requires goyacc regen):
-   ```
-   cd /Users/jaten/go/src/github.com/glycerine/ivy/goivy && go test ./parser/ -run TestParse
-   ```
-   Run only `TestParse*` since `TestOrdLive` is long-running.
+5. **Parser package tests** — not needed for this plan (no parser changes).
 
 6. **Compiler package tests** (Groups C + D):
    ```
@@ -849,7 +766,6 @@ After all fixes, run in this order:
    ```
 
 8. **Critical panic checks** — any of these indicates a previously-hidden upstream construction bug surfaced by the new panics. Investigate (do not revert):
-   - `apps element is not App/Atom/Symbol: ...` (Group C parser)
    - `AddDefinition: ldf.Formula is not a Definition: ...` (Group D)
    - Any sig.copy() restoration failure in compileUpdatePattern (Group C)
 
@@ -859,25 +775,25 @@ After all fixes, run in this order:
 
 - **Group B (RewriteAtom interface change)**: Changes the AstRewriter interface signature. Ripple effect through every rewriter implementation (5 types) plus `AstRewrite` and `RewriteSort` themselves. This is the most invasive single change in the plan. Risk: missing a callsite and breaking the build. Mitigation: build compilation will catch all callsites the interface change affects.
 
-- **Group C (parser SymbolList element type)**: Changes what `SymbolList.Elems` contains for `update X from Y { ... }` declarations. Currently they hold App nodes; after the fix they hold Symbol nodes. This is parse-time data. Any code that walks `SymbolList.Elems` and expects the elements to be Apps will need updating. Verified via grep that `compilePatternBasedUpdate` is the only such code path (and it uses `nodeRepStr` which already handles Symbol nodes — no change needed there).
-
 - **Group C (sig.copy() in compileUpdatePattern)**: This change isolates placeholder symbols from the global signature. If any test was previously relying on placeholders leaking into `c.Sig` after UpdatePattern compile (extremely unlikely but possible), it would break. The fix is the right behavior — leaking placeholders is itself a bug. Investigate any new test failures.
+
+- **Bug 4-i deferral**: The parser-side SymbolList element type mismatch is **not addressed** in this plan per explicit user direction. A naive fix risks losing type information from the App nodes that may be needed by downstream consumers. This is added to follow-ups as a deeper investigation.
 
 - **Group D (NativeExpr routing)**: This change moves NativeExpr-RHS definitions from LabeledProps to NativeDefinitions. Any test that asserts on `len(LabeledProps)` after a `definition foo = <native ...>` declaration will see a different count. Same for `len(NativeDefinitions)`. Investigate; the new behavior matches Python.
 
-- **`grammar_v17.go` regeneration**: Group C requires re-running goyacc on `grammar_v17.y`. The generated `.go` file is committed to the repo, so it must be regenerated and re-committed.
+- **No parser changes / no goyacc regen**: Bug 4-i is deferred, so neither `parser/grammar_v17.y` nor the generated `parser/grammar_v17.go` is touched in this plan.
 
-- **Order of execution**: Groups can be implemented in any order, but Group B's interface change is the riskiest, so doing it first lets failures surface early. Group C (parser change) requires goyacc which is the slowest feedback loop.
+- **Order of execution**: Groups can be implemented in any order, but Group B's interface change is the riskiest, so doing it first lets failures surface early.
 
 ## Critical files to be modified
 
-- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/module/ops.go` (Group A1 — SubstBothClauses signature)
-- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/actions/action.go` (Group A2 — UpdatePattern.Match, actionMatch, nodeMatch)
+- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/module/ops.go` (Group A1 — SubstBothClauses signature: `map[string]lg.Expr` → `map[lg.NodeKey]lg.Expr`)
+- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/actions/action.go` (Group A2 — UpdatePattern.Match, actionMatch, nodeMatch use `map[lg.NodeKey]lg.Expr` and `lg.Key(placeholder)`)
 - `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/ast/rewrite.go` (Group B — AstRewriter interface + 5 implementations + AstRewrite + RewriteSort)
-- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/parser/grammar_v17.y` (Group C1 — UPDATE/FROM rule)
-- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/parser/grammar_v17.go` (regenerated)
-- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go` (Group C2 — compileUpdatePattern sig.copy())
+- `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go` (Group C — compileUpdatePattern sig.copy())
 - `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/decl.go` (Group D — AddDefinition method, Derived, DefinitionDecl)
+
+**NOT modified**: `parser/grammar_v17.y`, `parser/grammar_v17.go` (Bug 4-i deferred per user direction).
 
 ## Existing helpers to reuse
 
@@ -889,6 +805,11 @@ After all fixes, run in this order:
 
 ## Out-of-scope / follow-ups (NOT in this plan)
 
+- **Bug 4-i (deferred): SymbolList stores Apps instead of strings/Symbols at parse time.** This affects the `apps` rule used by `update X from Y { ... }` declarations. The Go parser currently passes `[]ast.Node` (App nodes) where Python passes string `.rep` extracts. The naive fix (parser-side extraction to Symbols) would lose type information from the App nodes — sort annotations, lineno, attribute references — that may be needed by downstream consumers not yet audited. A proper fix requires:
+  1. Audit of every `SymbolList.Elems` consumer in the codebase to confirm what data they actually need.
+  2. Investigation of what type information lives on the App nodes that would be lost by the naive fix.
+  3. Decision: either (a) introduce a parallel `Names []string` field on SymbolList and populate both, (b) have the parser extract a richer Symbol-with-attributes node, or (c) leave the indirect runtime workaround in place and document it.
+  This audit must be performed deeply before any parser change.
 - Audit of other rewriters used outside `instantiateMacro` (e.g., `subst_prefix_atoms_ast` callers in compile chain) — beyond Area 3's interface fix.
 - Investigation of whether `ast_match` in Go (`nodeMatch`/`actionMatch`) handles Variable placeholders. Python's `ast_match` accepts both `is_variable(y) or is_constant(y)` placeholders. Go's nodeMatch only handles Const. May need a follow-up audit.
 - Audit of the `compile_native_def` chain in Python (ivy_compiler.py:1445-1446) versus Go ARGSetup native handling — adjacent to Area 5 but covers a different pathway (top-level native declarations, not native-RHS definitions).
