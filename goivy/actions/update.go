@@ -1292,16 +1292,27 @@ func applyUpdateAxioms(update *Update, action Action, ctx *UpdateContext) *Updat
 // --- Sequence ---
 
 // IntUpdate computes the sequential composition of child updates.
-// Python: Sequence.int_update composes each child via compose_updates.
+// Python: Sequence.int_update (ivy_actions.py:839) composes each child via
+// compose_updates and pins the source op's lineno onto the resulting TR
+// annotation after each composition.
 func (s *Sequence) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.Sequence.int_update ENTER")
 	defer xtracer.Trace("actions.Sequence.int_update EXIT")
-	result := NullUpdate()
+	// Python (ivy_actions.py:841):
+	//   update = ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
+	result := &Update{
+		Modified: []*lg.Const{},
+		TR:       module.TrueClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
+	}
 	axioms := ctx.BackgroundTheory()
 	for i, child := range s.Elems {
 		act := unwrapToAction(child)
 		if act == nil {
-			continue
+			// Python (ivy_actions.py:843) iterates blindly; calling int_update
+			// on a non-Action would AttributeError. The faithful port panics
+			// rather than silently skipping.
+			panic(fmt.Sprintf("Sequence.IntUpdate: child %d is not an Action: %T", i, child))
 		}
 		childUpdate := IntUpdate(act, ctx)
 		if xtracer.Enabled {
@@ -1320,6 +1331,17 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *Update {
 			}
 			sort.Strings(resultModNames)
 			xtracer.Trace("actions.Sequence.int_update compose[%d] resultModified=[%v]", i, strings.Join(resultModNames, ", "))
+		}
+		// Python (ivy_actions.py:854):
+		//   if hasattr(op,'lineno') and update[1].annot is not None:
+		//       update[1].annot.lineno = op.lineno
+		// After ComposeUpdates uses composeAnnotOp, result.TR.Annot is a
+		// *ComposeAnnotation (or nil).
+		if act.HasLineno() && result.TR != nil && result.TR.Annot != nil {
+			if compAnnot, ok := result.TR.Annot.(*ComposeAnnotation); ok {
+				loc := act.GetLineno()
+				compAnnot.Lineno = &loc
+			}
 		}
 	}
 	return result

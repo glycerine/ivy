@@ -621,6 +621,35 @@ func ExistQuant(syms []*lg.Const, node lg.Expr) lg.Expr {
 // Core composition operations
 // -----------------------------------------------------------------------
 
+// composeAnnotOp is the annot_op used by ComposeUpdates when composing
+// TR clauses and Pre clauses, matching Python's compose_updates which
+// passes annot_op = lambda x,y: x.compose(y) if x is not None and y is not None else None.
+// (Same lambda also defined as Python's my_annot_op at ivy_transrel.py:447.)
+//
+// Returns nil if any input annotation is nil. Otherwise returns the
+// left-fold of Compose() over all annotations, producing a *ComposeAnnotation.
+func composeAnnotOp(annots ...interface{}) interface{} {
+	if len(annots) == 0 {
+		return nil
+	}
+	var result Annotation
+	for _, a := range annots {
+		if a == nil {
+			return nil
+		}
+		ann, ok := a.(Annotation)
+		if !ok {
+			return nil
+		}
+		if result == nil {
+			result = ann
+		} else {
+			result = result.Compose(ann)
+		}
+	}
+	return result
+}
+
 // ComposeUpdates computes the sequential composition of two updates.
 // The axioms parameter provides background axioms for the composition.
 //
