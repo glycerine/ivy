@@ -1353,6 +1353,18 @@ func unwrapToAction(n lg.Expr) Action {
 	return act
 }
 
+// sortedModNames formats a slice of modified-symbol Consts as a sorted slice
+// of "'name'"-quoted strings, matching the Python xtracer trace format
+// produced by sorted([s.name for s in modified]).
+func sortedModNames(mods []*lg.Const) []string {
+	names := make([]string, len(mods))
+	for i, m := range mods {
+		names[i] = fmt.Sprintf("'%v'", m.Name)
+	}
+	sort.Strings(names)
+	return names
+}
+
 // --- ChoiceAction ---
 
 // IntUpdate computes the nondeterministic choice between branches.
@@ -1388,12 +1400,7 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
 		branchUpdate := IntUpdate(act, ctx)
 		result = JoinAction(result, branchUpdate, axioms)
 		if xtracer.Enabled {
-			modNames := make([]string, len(branchUpdate.Modified))
-			for j, m := range branchUpdate.Modified {
-				modNames[j] = fmt.Sprintf("'%v'", m.Name)
-			}
-			sort.Strings(modNames)
-			xtracer.Trace("actions.ChoiceAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(modNames, ", "))
+			xtracer.Trace("actions.ChoiceAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(sortedModNames(branchUpdate.Modified), ", "))
 		}
 	}
 	return result
@@ -1436,12 +1443,7 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 		branchUpdate := GetUpdate(act, ctx)
 		result = JoinAction(result, branchUpdate, axioms)
 		if xtracer.Enabled {
-			modNames := make([]string, len(branchUpdate.Modified))
-			for j, m := range branchUpdate.Modified {
-				modNames[j] = fmt.Sprintf("'%v'", m.Name)
-			}
-			sort.Strings(modNames)
-			xtracer.Trace("actions.EnvAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(modNames, ", "))
+			xtracer.Trace("actions.EnvAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(sortedModNames(branchUpdate.Modified), ", "))
 		}
 	}
 	return result
@@ -1494,18 +1496,8 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 	thenUpdate := IntUpdate(thenAct, ctx)
 	elseUpdate := IntUpdate(elseAct, ctx)
 	if xtracer.Enabled {
-		thenMod := make([]string, len(thenUpdate.Modified))
-		for j, m := range thenUpdate.Modified {
-			thenMod[j] = fmt.Sprintf("'%v'", m.Name)
-		}
-		sort.Strings(thenMod)
-		elseMod := make([]string, len(elseUpdate.Modified))
-		for j, m := range elseUpdate.Modified {
-			elseMod[j] = fmt.Sprintf("'%v'", m.Name)
-		}
-		sort.Strings(elseMod)
-		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(thenAct), strings.Join(thenMod, ", "))
-		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elseAct), strings.Join(elseMod, ", "))
+		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(thenAct), strings.Join(sortedModNames(thenUpdate.Modified), ", "))
+		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elseAct), strings.Join(sortedModNames(elseUpdate.Modified), ", "))
 	}
 
 	axioms := ctx.BackgroundTheory()
@@ -1520,18 +1512,8 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 	ifUpdate := IntUpdate(ifPart, ctx)
 	elseUpdate := IntUpdate(elsePart, ctx)
 	if xtracer.Enabled {
-		ifMod := make([]string, len(ifUpdate.Modified))
-		for j, m := range ifUpdate.Modified {
-			ifMod[j] = fmt.Sprintf("'%v'", m.Name)
-		}
-		sort.Strings(ifMod)
-		elseMod := make([]string, len(elseUpdate.Modified))
-		for j, m := range elseUpdate.Modified {
-			elseMod[j] = fmt.Sprintf("'%v'", m.Name)
-		}
-		sort.Strings(elseMod)
-		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(ifPart), strings.Join(ifMod, ", "))
-		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elsePart), strings.Join(elseMod, ", "))
+		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(ifPart), strings.Join(sortedModNames(ifUpdate.Modified), ", "))
+		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elsePart), strings.Join(sortedModNames(elseUpdate.Modified), ", "))
 	}
 
 	axioms := ctx.BackgroundTheory()
