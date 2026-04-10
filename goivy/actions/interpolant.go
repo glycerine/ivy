@@ -40,8 +40,7 @@ func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[str
 //	forward_interpolant(pre_state, update, post_state, axioms, interpreted):
 //	    return interpolant(forward_image(pre_state, axioms, update), post_state, axioms, interpreted)
 func ForwardInterpolant(preState *module.Clauses, update *Update, postState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
-	fwdImg := ForwardImage(preState.ToFormula(), axioms.ToFormula(), update)
-	fwdClauses := module.FormulaToClauses(fwdImg, nil)
+	fwdClauses := ForwardImage(preState, axioms, update)
 	return Interpolant(fwdClauses, postState, axioms, interpreted)
 }
 
@@ -56,8 +55,7 @@ func ForwardInterpolant(preState *module.Clauses, update *Update, postState *mod
 //	    pre_case = [filter ground non-skolem clauses]
 //	    return interpolant(pre_state, pre_case, axioms, interpreted)
 func ReverseInterpolantCase(postState *module.Clauses, update *Update, preState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
-	revImg := ReverseImage(postState.ToFormula(), axioms.ToFormula(), update)
-	revClauses := module.FormulaToClauses(revImg, nil)
+	revClauses := ReverseImage(postState, axioms, update)
 
 	// Case analysis: filter to ground clauses without Skolem relations
 	filtered := filterGroundNonSkolem(revClauses)

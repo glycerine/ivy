@@ -46,12 +46,6 @@ func ConditionClauses(clauses *module.Clauses, fmla lg.Expr) *module.Clauses {
 	return module.ConditionClauses(clauses, fmla)
 }
 
-// DualClauses negates a clause set (for checking implications).
-// This is a convenience wrapper around module.NegateClauses.
-func DualClauses(clauses *module.Clauses) *module.Clauses {
-	return module.NegateClauses(clauses)
-}
-
 // TrueClauses returns a trivially true clause set.
 func TrueClauses() *module.Clauses {
 	return module.TrueClauses(nil)

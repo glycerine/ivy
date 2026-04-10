@@ -442,7 +442,7 @@ func TestActionToStateStub(t *testing.T) {
 
 func TestForwardImageStub(t *testing.T) {
 	u := NullUpdate()
-	result := ForwardImage(lg.True, lg.True, u)
+	result := ForwardImage(module.TrueClauses(nil), module.TrueClauses(nil), u)
 	if result == nil {
 		t.Fatal("ForwardImage returned nil")
 	}

@@ -1210,31 +1210,16 @@ func ForwardImageMap(preState *module.Clauses, axioms *module.Clauses, u *Update
 	return eqMap, result
 }
 
-// ForwardImageMapFormula is the formula-level variant.
-// Converts the NodeKey→Const map from ForwardImageMap to a name→name
-// map for callers that only need name-level renaming info (e.g. History).
-func ForwardImageMapFormula(preState lg.Expr, axioms lg.Expr, u *Update) (map[string]string, lg.Expr) {
-	preClauses := module.FormulaToClauses(preState, nil)
-	axClauses := module.FormulaToClauses(axioms, nil)
-	eqMap, resClauses := ForwardImageMap(preClauses, axClauses, u)
-	// Build name map from Modified (which we know were the quantified symbols)
-	nameMap := make(map[string]string, len(eqMap))
-	for _, s := range u.Modified {
-		if renamed, ok := eqMap[lg.Key(s)]; ok {
-			nameMap[s.Name] = renamed.Name
-		}
-	}
-	return nameMap, resClauses.ToFormula()
-}
-
-// ForwardImage computes the forward image of a pre-state through an
-// update, given background axioms.
+// ForwardImage computes the forward image of a pre-state through an update,
+// given background axioms.
 //
-// Corresponds to Python's forward_image(pre_state, axioms, update).
-// ForwardImage computes the forward image of a pre-state through an update.
-// Takes formula-level arguments for backward compatibility.
-func ForwardImage(pre lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
-	_, result := ForwardImageMapFormula(pre, axioms, u)
+// Faithful port of Python forward_image (ivy_transrel.py:464-466):
+//
+//	def forward_image(pre_state,axioms,update):
+//	    map1,res = forward_image_map(pre_state,axioms,update)
+//	    return res
+func ForwardImage(preState *module.Clauses, axioms *module.Clauses, u *Update) *module.Clauses {
+	_, result := ForwardImageMap(preState, axioms, u)
 	return result
 }
 
@@ -1465,27 +1450,41 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 // ReverseImage computes the reverse image (weakest precondition) of a
 // post-state through an update, given background axioms.
 //
-// Corresponds to Python's reverse_image(post_state, axioms, update).
-func ReverseImage(postState lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
+// Faithful port of Python reverse_image (ivy_transrel.py:527-535):
+//
+//	def reverse_image(post_state,axioms,update):
+//	    updated, clauses, _precond = update
+//	    post_ax = clauses_using_symbols(updated,axioms)
+//	    post_clauses = conjoin(post_state,post_ax)
+//	    post_clauses = rename_clauses(post_clauses, dict((x,new(x)) for x in updated))
+//	    post_updated = [new(s) for s in updated]
+//	    res = exist_quant(post_updated,conjoin(clauses,post_clauses))
+//	    return res
+func ReverseImage(postState *module.Clauses, axioms *module.Clauses, u *Update) *module.Clauses {
 	updated := u.Modified
-	trNode := u.TRNode()
+
+	// Python: post_ax = clauses_using_symbols(updated, axioms)
 	updatedNames := constNames(updated)
+	postAx := module.ClausesUsingSymbolNames(updatedNames, axioms)
 
-	postAx := filterAxiomsBySyms(nameSetToSlice(updatedNames), axioms)
-	postClauses := Conjoin(postState, postAx)
+	// Python: post_clauses = conjoin(post_state, post_ax)
+	postClauses := ConjoinClauses(postState, postAx)
 
-	// Rename x → new(x) for updated symbols in post-state clauses
-	renamingMap := make(map[lg.NodeKey]*lg.Const, len(updated))
+	// Python: post_clauses = rename_clauses(post_clauses, dict((x,new(x)) for x in updated))
+	renaming := make(map[lg.NodeKey]*lg.Const, len(updated))
 	for _, s := range updated {
-		renamingMap[lg.Key(s)] = NewConst(s)
+		renaming[lg.Key(s)] = NewConst(s)
 	}
-	postClauses = module.RenameAST(postClauses, renamingMap)
+	postClauses = module.RenameClauses(postClauses, renaming)
 
+	// Python: post_updated = [new(s) for s in updated]
 	postUpdated := make([]*lg.Const, len(updated))
 	for i, s := range updated {
 		postUpdated[i] = NewConst(s)
 	}
-	result := ExistQuant(postUpdated, Conjoin(trNode, postClauses))
+
+	// Python: res = exist_quant(post_updated, conjoin(clauses, post_clauses))
+	_, result := ExistQuantClauses(postUpdated, ConjoinClauses(u.TR, postClauses))
 	return result
 }
 
@@ -1885,8 +1884,7 @@ func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 func (h *History) ForwardStep(axioms *module.Clauses, u *Update, action lg.Expr) *History {
 	eqMap, result := ForwardImageMap(h.Post, axioms, u)
 
-	// Convert NodeKey→Const map to name→name Renaming
-	// (same logic as ForwardImageMapFormula lines 1174-1179).
+	// Convert NodeKey→Const map to name→name Renaming.
 	renaming := make(Renaming, len(eqMap))
 	for _, s := range u.Modified {
 		if renamed, ok := eqMap[lg.Key(s)]; ok {

@@ -160,14 +160,12 @@ func (tc *TacticsContext) ForwardImage(preFact *module.Clauses, action actions.A
 	if preFact == nil || action == nil {
 		return preFact
 	}
-	axioms := tc.BackgroundTheory()
+	axioms := tc.BackgroundTheoryClauses()
 	update := actions.GetUpdateForArt(action, tc.Mod, nil)
 	if update == nil {
 		return preFact
 	}
-	preFormula := preFact.ToFormula()
-	resultFormula := actions.ForwardImage(preFormula, axioms, update)
-	return module.FormulaToClauses(resultFormula, preFact.Annot)
+	return actions.ForwardImage(preFact, axioms, update)
 }
 
 // BackwardImage computes the backward image (reverse image / weakest precondition)
@@ -177,14 +175,12 @@ func (tc *TacticsContext) BackwardImage(postFact *module.Clauses, action actions
 	if postFact == nil || action == nil {
 		return postFact
 	}
-	axioms := tc.BackgroundTheory()
+	axioms := tc.BackgroundTheoryClauses()
 	update := actions.GetUpdateForArt(action, tc.Mod, nil)
 	if update == nil {
 		return postFact
 	}
-	postFormula := postFact.ToFormula()
-	resultFormula := actions.ReverseImage(postFormula, axioms, update)
-	return module.FormulaToClauses(resultFormula, postFact.Annot)
+	return actions.ReverseImage(postFact, axioms, update)
 }
 
 // ImpliedFacts checks which facts are implied by a premise.

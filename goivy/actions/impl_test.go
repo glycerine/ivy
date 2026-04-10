@@ -382,7 +382,7 @@ func TestStateToActionToStateRoundTrip(t *testing.T) {
 func TestForwardImageTrivial(t *testing.T) {
 	// NullUpdate: modifies nothing, TR is True
 	u := NullUpdate()
-	result := ForwardImage(lg.True, lg.True, u)
+	result := ForwardImage(module.TrueClauses(nil), module.TrueClauses(nil), u)
 	if result == nil {
 		t.Fatal("ForwardImage returned nil")
 	}
@@ -391,28 +391,14 @@ func TestForwardImageTrivial(t *testing.T) {
 func TestForwardImageWithUpdate(t *testing.T) {
 	// Update that sets new_x = const_a
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
-	pre := lg.True
-	result := ForwardImage(pre, lg.True, u)
+	pre := module.TrueClauses(nil)
+	result := ForwardImage(pre, module.TrueClauses(nil), u)
 	if result == nil {
 		t.Fatal("ForwardImage returned nil")
 	}
 	// The result should contain "const_a" (the assigned value)
-	if !formulaContainsName(result, "const_a") {
+	if !formulaContainsName(result.ToFormula(), "const_a") {
 		t.Error("ForwardImage should propagate the assigned value")
-	}
-}
-
-func TestForwardImageMapReturnsMap(t *testing.T) {
-	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
-	m, result := ForwardImageMapFormula(lg.True, lg.True, u)
-	if result == nil {
-		t.Fatal("ForwardImageMap returned nil result")
-	}
-	// m should have an entry for "x"
-	if m != nil {
-		if _, ok := m["x"]; !ok {
-			t.Error("ForwardImageMap should map 'x'")
-		}
 	}
 }
 
@@ -621,8 +607,8 @@ func TestHideStateNilModified(t *testing.T) {
 
 func TestReverseImageBasic(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
-	post := lg.True
-	result := ReverseImage(post, lg.True, u)
+	post := module.TrueClauses(nil)
+	result := ReverseImage(post, module.TrueClauses(nil), u)
 	if result == nil {
 		t.Fatal("ReverseImage returned nil")
 	}

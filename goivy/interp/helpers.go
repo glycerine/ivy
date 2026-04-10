@@ -136,8 +136,7 @@ func Reverse(state *State, clauses *module.Clauses) (*module.Clauses, error) {
 		clauses = state.Clauses
 	}
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	revImage := actions.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
-	revClauses := module.FormulaToClauses(revImage, clauses.Annot)
+	revClauses := actions.ReverseImage(clauses, axioms, state.Update())
 	return module.AndClausesTyped(revClauses, axioms), nil
 }
 
@@ -166,8 +165,7 @@ func ReverseUpdateConcreteClauses(state *State, clauses *module.Clauses) (*modul
 	}
 
 	// Compute reverse image: this is the concrete pre-image.
-	revImage := actions.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
-	revClauses := module.FormulaToClauses(revImage, clauses.Annot)
+	revClauses := actions.ReverseImage(clauses, axioms, state.Update())
 	return module.AndClausesTyped(revClauses, axioms), nil
 }
 
@@ -220,9 +218,8 @@ func ReachState(state *State, clauses *module.Clauses) *State {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	// Compute the forward image from the predecessor's under-approximation
 	// through the state's update, then conjoin with the target clauses.
-	img := actions.ForwardImage(pre.ToFormula(), axioms.ToFormula(), state.Update())
 	imgClauses := module.AndClausesTyped(
-		module.FormulaToClauses(img, nil),
+		actions.ForwardImage(pre, axioms, state.Update()),
 		axioms,
 		clauses,
 	)

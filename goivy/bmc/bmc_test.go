@@ -193,59 +193,6 @@ func TestBuildConjectureWithConj(t *testing.T) {
 	}
 }
 
-// --- DualClauses tests ---
-
-func TestDualClausesNil(t *testing.T) {
-	dual := DualClauses(nil)
-	if dual == nil {
-		t.Fatal("DualClauses should not return nil")
-	}
-}
-
-func TestDualClausesEmpty(t *testing.T) {
-	clauses := module.NewClauses(nil, nil, nil)
-	dual := DualClauses(clauses)
-	if dual == nil {
-		t.Fatal("DualClauses should not return nil")
-	}
-}
-
-func TestDualClausesSingle(t *testing.T) {
-	p := lg.NewConst("p", lg.Boolean)
-	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
-	dual := DualClauses(clauses)
-	if dual == nil {
-		t.Fatal("DualClauses should not return nil")
-	}
-	if len(dual.Fmlas) != 1 {
-		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))
-	}
-	or, ok := dual.Fmlas[0].(*lg.Or)
-	if !ok {
-		t.Fatalf("expected Or, got %T", dual.Fmlas[0])
-	}
-	if len(or.Terms) != 1 {
-		t.Errorf("expected 1 term in Or, got %d", len(or.Terms))
-	}
-}
-
-func TestDualClausesMultiple(t *testing.T) {
-	c := lg.NewConst("P", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
-	clauses := module.NewClauses([]lg.Expr{q, c}, nil, nil)
-	dual := DualClauses(clauses)
-	if len(dual.Fmlas) != 1 {
-		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))
-	}
-	or, ok := dual.Fmlas[0].(*lg.Or)
-	if !ok {
-		t.Fatalf("expected Or, got %T", dual.Fmlas[0])
-	}
-	if len(or.Terms) != 2 {
-		t.Errorf("expected 2 terms in Or, got %d", len(or.Terms))
-	}
-}
-
 // --- UnrollAction tests ---
 
 func TestUnrollAction(t *testing.T) {

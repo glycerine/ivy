@@ -102,7 +102,16 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	conj := BuildConjecture(mod)
 
 	// Build the dual (negated) conjecture for checking.
-	dualConj := DualClauses(conj)
+	// Python ivy_bmc.py:35-39:
+	//   def witness(v):
+	//       c = lg.Const('@' + v.name, v.sort)
+	//       assert c.name not in used_names
+	//       return c
+	//   clauses = ilu.dual_clauses(conj, witness)
+	witness := func(v *lg.Variable) lg.Expr {
+		return module.VarToSkolem("@", v)
+	}
+	dualConj := module.DualClauses(conj, witness, mod.Instantiator)
 
 	// Create the analysis graph.
 	ag := art.NewAnalysisGraph(mod)
@@ -227,26 +236,6 @@ func BuildConjecture(mod *module.Module) *module.Clauses {
 		return module.TrueClauses(nil)
 	}
 	return module.NewClauses(fmlas, nil, nil)
-}
-
-// DualClauses computes the negation of a conjecture for checking.
-// The dual conjecture is satisfiable iff the original is not valid.
-func DualClauses(conj *module.Clauses) *module.Clauses {
-	if conj == nil || len(conj.Fmlas) == 0 {
-		return module.TrueClauses(nil)
-	}
-	// Negate: each conjunct becomes a disjunct of its negation.
-	var negFmlas []lg.Expr
-	for _, f := range conj.Fmlas {
-		neg := &lg.Not{Body: f}
-		negFmlas = append(negFmlas, neg)
-	}
-	or, err := lg.NewOr(negFmlas...)
-	if err != nil {
-		// Fallback
-		return module.NewClauses(negFmlas, nil, nil)
-	}
-	return module.NewClauses([]lg.Expr{or}, nil, nil)
 }
 
 // UnrollAction is a placeholder for loop unrolling.

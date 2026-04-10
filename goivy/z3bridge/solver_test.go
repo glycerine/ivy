@@ -853,15 +853,6 @@ func TestFormulaToClauses(t *testing.T) {
 	}
 }
 
-func TestDualClauses(t *testing.T) {
-	p := boolConst("p")
-	clauses := module.NewClauses([]lg.Expr{p}, nil, nil)
-	dual := DualClauses(clauses)
-	if dual == nil {
-		t.Fatal("DualClauses should not return nil")
-	}
-}
-
 func TestConditionClauses(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
