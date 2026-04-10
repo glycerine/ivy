@@ -2603,16 +2603,20 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-233837  go : XTRACE: actions.EnvAction.int_update branch[0] childType=Sequence childModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', ' ...(truncated long line to 300 bytes)
+233842  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Or terms:[])])
+        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Or terms:[])])
 
-        py : XTRACE: actions.EnvAction.int_update branch[0] childType=Sequence childModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', '
- ...(truncated long line to 300 bytes)
+233843  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+        py : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
 
-233838  go : XTRACE: actions.EnvAction.int_update EXIT
-        py : XTRACE: actions.EnvAction.int_update EXIT
+233844  go : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
+        py : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
 
-233839  go : XTRACE: ops.ToOpenFormula nFmlas=118 nDefs=0
-        py : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
+233845  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
+        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
+
+233846  go : XTRACE: check.checkFcsNormalPath history path postFmlas=0 postDefs=0 axiomFmlas=20 axiomDefs=12 checkers=1
+        py : XTRACE: interp.State.Update calling GetUpdate type=fail_action
 ~~~
 so we are hitting divergence sooner...
 
