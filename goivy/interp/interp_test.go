@@ -751,10 +751,11 @@ func TestFilterConjectures(t *testing.T) {
 func TestCaseConjecture(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	_, _, ok := CaseConjecture(s, module.TrueClauses(nil))
-	if ok {
-		t.Error("stub CaseConjecture should return false")
-	}
+	// Smoke test for the rewritten CaseConjecture, which now delegates
+	// to actions.InterpolantCase (Python ivy_interp.py:325-337). With an
+	// empty state and TrueClauses input, the call should not panic.
+	// Deeper coverage requires real under-approximations.
+	_ = CaseConjecture(s, module.TrueClauses(nil))
 }
 
 func TestDiagram(t *testing.T) {

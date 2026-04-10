@@ -118,10 +118,8 @@ type Update struct {
 	Modified    []*lg.Const
 	ModifiedAll bool // true ↔ Python updated==None; false ↔ Python updated==[]
 
-	TR     *module.Clauses // transition relation (Clauses with fmlas + defs)
-	Pre    *module.Clauses // precondition, negative (Clauses with fmlas + defs)
-	TRRaw  lg.Expr         // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw lg.Expr         // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	TR  *module.Clauses // transition relation (Clauses with fmlas + defs)
+	Pre *module.Clauses // precondition, negative (Clauses with fmlas + defs)
 }
 
 // IsModifiedAll returns true when the update modifies all symbols
@@ -1486,6 +1484,214 @@ func ReverseImage(postState *module.Clauses, axioms *module.Clauses, u *Update) 
 	// Python: res = exist_quant(post_updated, conjoin(clauses, post_clauses))
 	_, result := ExistQuantClauses(postUpdated, ConjoinClauses(u.TR, postClauses))
 	return result
+}
+
+// -----------------------------------------------------------------------
+// Interpolation (Python ivy_transrel.py:537-603)
+// -----------------------------------------------------------------------
+
+// InterpolantResult holds the result of an interpolation query.
+//
+// Mirrors the Python (core, interpolant) tuple returned by
+// interpolant / forward_interpolant / reverse_interpolant_case /
+// interpolant_case in ivy_transrel.py.
+type InterpolantResult struct {
+	Core *module.Clauses // the unsatisfiable core
+	Itp  *module.Clauses // the interpolant (over-approximation)
+}
+
+// Interpolant computes an interpolant between two clause sets.
+// Returns nil if the conjunction is satisfiable (no interpolant exists).
+//
+// The interpolant I has the properties:
+//   - clauses1 ∧ axioms ⊨ I
+//   - I ∧ clauses2 is unsat
+//
+// Faithful port of Python interpolant (ivy_transrel.py:537-552):
+//
+//	def interpolant(clauses1,clauses2,axioms,interpreted):
+//	    foo = and_clauses(clauses1,axioms)
+//	    clauses2 = simplify_clauses(clauses2)
+//	    itp = binary_interpolant(foo,clauses2)
+//	    return None if itp is None else (clauses1,itp)
+func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	combined := module.AndClausesTyped(clauses1, axioms)
+	clauses2 = module.SimplifyClauses(clauses2)
+
+	slv := z3bridge.NewSolver(nil, nil)
+	itp, err := slv.BinaryInterpolant(combined, clauses2)
+	if err != nil || itp == nil {
+		return nil
+	}
+	return &InterpolantResult{Core: clauses1, Itp: itp}
+}
+
+// ForwardInterpolant computes the interpolant of the forward image.
+// preState is the predecessor's clauses.
+//
+// Faithful port of Python forward_interpolant (ivy_transrel.py:554-555):
+//
+//	def forward_interpolant(pre_state,update,post_state,axioms,interpreted):
+//	    return interpolant(forward_image(pre_state,axioms,update),post_state,axioms,interpreted)
+func ForwardInterpolant(preState *module.Clauses, update *Update, postState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	fwdClauses := ForwardImage(preState, axioms, update)
+	return Interpolant(fwdClauses, postState, axioms, interpreted)
+}
+
+// ReverseInterpolantCase computes the interpolant using reverse image and
+// case analysis.
+//
+// Faithful port of Python reverse_interpolant_case (ivy_transrel.py:557-565):
+//
+//	def reverse_interpolant_case(post_state,update,pre_state,axioms,interpreted):
+//	    pre = reverse_image(post_state,axioms,update)
+//	    pre_case = clauses_case(pre)
+//	    pre_case = [cl for cl in pre_case if len(cl) <= 1
+//	                and is_ground_clause(cl)
+//	                and not any(is_skolem(r) for r,n in relations_clause(cl))]
+//	    return interpolant(pre_state,pre_case,axioms,interpreted)
+func ReverseInterpolantCase(postState *module.Clauses, update *Update, preState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	pre := ReverseImage(postState, axioms, update)
+	slv := z3bridge.NewSolver(nil, nil)
+	preCase, err := slv.ClausesCase(pre)
+	if err != nil || preCase == nil {
+		return nil
+	}
+	filtered := caseClausesFilter(preCase)
+	return Interpolant(preState, filtered, axioms, interpreted)
+}
+
+// InterpolantCase computes the interpolant using forward case analysis.
+//
+// Faithful port of Python interpolant_case (ivy_transrel.py:567-579):
+//
+//	def interpolant_case(pre_state,post,axioms,interpreted):
+//	    post_case = clauses_case(post)
+//	    post_case = Clauses([cl for cl in post_case.clauses
+//	                         if len(cl) <= 1
+//	                         and is_ground_clause(cl)
+//	                         and not any(is_skolem(r) for r,n in relations_clause(cl))])
+//	    return interpolant(pre_state,post_case,axioms,interpreted)
+func InterpolantCase(preState *module.Clauses, post *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	slv := z3bridge.NewSolver(nil, nil)
+	postCase, err := slv.ClausesCase(post)
+	if err != nil || postCase == nil {
+		return nil
+	}
+	filtered := caseClausesFilter(postCase)
+	return Interpolant(preState, filtered, axioms, interpreted)
+}
+
+// InterpFromUnsatCore computes a Craig-style interpolant from an unsat core.
+//
+// Faithful port of Python interp_from_unsat_core (ivy_transrel.py:581-603):
+//
+//	def interp_from_unsat_core(clauses1,clauses2,core,interpreted):
+//	    used_syms = used_symbols_clauses(core)
+//	    vars = used_variables_clauses(core)
+//	    if vars:
+//	        return None  # interpolant would require skolem constants
+//	    core_consts = used_constants_clauses(core)
+//	    clauses2_consts = used_constants_clauses(clauses2)
+//	    renaming = dict()
+//	    i = 0
+//	    for v in core_consts:
+//	        if v not in clauses2_consts or v.is_skolem():
+//	            renaming[v] = Variable('V' + str(i),Constant(v).get_sort())
+//	            i += 1
+//	    renamed_core = substitute_constants_clauses(core,renaming)
+//	    res = simplify_clauses(Clauses([Or(*[negate(c) for c in renamed_core.fmlas])]))
+//	    return res
+func InterpFromUnsatCore(clauses1, clauses2, core *module.Clauses, interpreted map[string]bool) *module.Clauses {
+	if core == nil {
+		return nil
+	}
+
+	// Python: vars = used_variables_clauses(core); if vars: return None
+	if vs := module.VariablesClauses(core); len(vs) > 0 {
+		return nil
+	}
+
+	// Python: core_consts = used_constants_clauses(core)
+	//         clauses2_consts = used_constants_clauses(clauses2)
+	coreConsts := module.ConstantsClauses(core)
+	clauses2Consts := module.ConstantsClauses(clauses2)
+	in2 := make(map[lg.NodeKey]bool, len(clauses2Consts))
+	for _, c := range clauses2Consts {
+		in2[lg.Key(c)] = true
+	}
+
+	// Python: for v in core_consts: if v not in clauses2_consts or v.is_skolem():
+	//             renaming[v] = Variable('V' + str(i), Constant(v).get_sort())
+	//             i += 1
+	renaming := make(map[lg.NodeKey]lg.Expr, len(coreConsts))
+	i := 0
+	for _, v := range coreConsts {
+		if !in2[lg.Key(v)] || IsSkolem(v.Name) {
+			nv, err := lg.NewVariable(fmt.Sprintf("V%d", i), v.CSort)
+			if err != nil {
+				return nil
+			}
+			renaming[lg.Key(v)] = nv
+			i++
+		}
+	}
+
+	// Python: renamed_core = substitute_constants_clauses(core, renaming)
+	renamedCore := module.SubstituteConstantsClauses(core, renaming)
+
+	// Python: res = simplify_clauses(Clauses([Or(*[negate(c) for c in renamed_core.fmlas])]))
+	negs := make([]lg.Expr, 0, len(renamedCore.Fmlas))
+	for _, f := range renamedCore.Fmlas {
+		negs = append(negs, &lg.Not{Body: f})
+	}
+	if len(negs) == 0 {
+		return module.SimplifyClauses(module.NewClauses([]lg.Expr{lg.False}, nil, nil))
+	}
+	or, err := lg.NewOr(negs...)
+	if err != nil {
+		return nil
+	}
+	return module.SimplifyClauses(module.NewClauses([]lg.Expr{or}, nil, nil))
+}
+
+// caseClausesFilter implements Python's case-clauses filter from
+// ivy_transrel.py:573-576 / 561-563:
+//
+//	[cl for cl in clauses if len(cl) <= 1
+//	                       and is_ground_clause(cl)
+//	                       and not any(is_skolem(r) for r,n in relations_clause(cl))]
+//
+// "Length <= 1" interprets each formula as a CNF clause and accepts only
+// unit clauses (disjuncts of zero or one literal).
+func caseClausesFilter(clauses *module.Clauses) *module.Clauses {
+	if clauses == nil {
+		return clauses
+	}
+	var filtered []lg.Expr
+	for _, f := range clauses.Fmlas {
+		// Python: len(cl) <= 1 — drop multi-literal disjunctions.
+		if or, ok := f.(*lg.Or); ok && len(or.Terms) > 1 {
+			continue
+		}
+		// Python: is_ground_clause(cl) — no free variables.
+		if !il.IsGroundFormula(f) {
+			continue
+		}
+		// Python: not any(is_skolem(r) for r,n in relations_clause(cl))
+		hasSkolem := false
+		for _, c := range module.UsedSymbolsAST(f) {
+			if IsSkolem(lg.ExprName(c)) {
+				hasSkolem = true
+				break
+			}
+		}
+		if hasSkolem {
+			continue
+		}
+		filtered = append(filtered, f)
+	}
+	return module.NewClauses(filtered, clauses.Defs, clauses.Annot)
 }
 
 // -----------------------------------------------------------------------

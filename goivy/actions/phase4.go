@@ -132,31 +132,9 @@ func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Cons
 	c1 := module.AndClausesTyped(s1.TR, axioms, DiffFrameConstUpdate(s1, s2, op, axioms))
 	p1 := s1.Pre
 
-	// Python: if isinstance(c2, Clauses) — check whether s2 carries Clauses or raw formulas
-	if s2.TRRaw != nil {
-		// Non-Clauses branch: c2 and p2 are raw formulas (lg.Expr)
-		c2 := s2.TRRaw
-		p2 := s2.PreRaw
-		if !il.IsPrenexUniversal(c2) || !il.IsPrenexUniversal(p2) {
-			return false, nil
-		}
-		diffFrame := module.ClausesToFormula(DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
-		c2and, err := lg.NewAnd(c2, diffFrame)
-		if err != nil {
-			panic(fmt.Sprintf("Implies: NewAnd error: %v", err))
-		}
-		ok1, cex1 := ClausesImplyFormulaCex(p1, p2)
-		if !ok1 {
-			return false, cex1
-		}
-		ok2, cex2 := ClausesImplyFormulaCex(c1, c2and)
-		if !ok2 {
-			return false, cex2
-		}
-		return true, nil
-	}
-
-	// Clauses branch: c2 and p2 are *module.Clauses
+	// Python: Clauses-to-Clauses implication path. Python's implies()
+	// branches on isinstance(c2, Clauses), but Go's Update always carries
+	// *module.Clauses, so the non-Clauses branch is unreachable.
 	c2 := s2.TR
 	p2 := s2.Pre
 	if !c2.IsUniversalFirstOrder() || !p2.IsUniversalFirstOrder() {

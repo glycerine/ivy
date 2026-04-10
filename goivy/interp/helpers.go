@@ -326,40 +326,28 @@ func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
 // true of all models of the under-approximation and false in at
 // least one model of clauses.
 //
-// Returns (core, interpolant, ok). If ok is true, the interpolant
-// is appended to the state's conjectures.
+// If a separator is found, returns the InterpolantResult and appends
+// the interpolant to the state's conjectures.
 //
-// Corresponds to Python's case_conjecture() in ivy_interp.py.
-func CaseConjecture(state *State, clauses *module.Clauses) (interface{}, interface{}, bool) {
+// Faithful port of Python case_conjecture (ivy_interp.py:325-337):
+//
+//	def case_conjecture(state,clauses):
+//	    pre = join_unders(state)
+//	    axioms = state.domain.background_theory(state.in_scope)
+//	    ri = interpolant_case(pre,clauses,axioms,state.domain.functions)
+//	    if ri != None:
+//	        core,interp = ri
+//	        state.conjs.append(interp)
+//	    return ri
+func CaseConjecture(state *State, clauses *module.Clauses) *actions.InterpolantResult {
 	pre := JoinUnders(state)
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-
-	// Check if the under-approximation (pre) implies the clauses.
-	// If pre AND NOT clauses is UNSAT, then pre implies clauses and
-	// there's no separating conjecture to find.
-	premiseFmla := module.AndClausesTyped(pre, axioms).ToFormula()
-	clausesFmla := clauses.ToFormula()
-
-	solver := z3bridge.NewSolver(nil, nil)
-	t := solver.NewTranslator()
-
-	implied, err := t.Implies(premiseFmla, clausesFmla)
-	if err != nil {
-		return nil, nil, false
+	interpreted := functionsToInterpreted(state.Domain.Functions)
+	ri := actions.InterpolantCase(pre, clauses, axioms, interpreted)
+	if ri != nil {
+		state.SetConjs(append(state.Conjs(), ri.Itp))
 	}
-	if implied {
-		// pre already implies clauses; no separator needed.
-		return nil, nil, false
-	}
-
-	// Check if NOT clauses AND pre is satisfiable (to find a model
-	// that separates them). If the negation conjoined with pre is
-	// SAT, we have found something the under-approximation satisfies
-	// but clauses does not — use the negation of clauses as a conjecture.
-	negClauses := module.FormulaToClauses(&lg.Not{Body: clausesFmla}, nil)
-	interp := negClauses
-	state.SetConjs(append(state.Conjs(), interp))
-	return nil, interp, true
+	return ri
 }
 
 // ---------------------------------------------------------------------------
