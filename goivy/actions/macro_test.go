@@ -304,15 +304,17 @@ func TestInstantiateActionClonePreservesAstInst(t *testing.T) {
 }
 
 func TestInstantiateActionIntUpdateNilDomain(t *testing.T) {
+	// Python (ivy_actions.py:807): hasattr(domain, 'macros') would AttributeError
+	// when domain is None. The faithful Go port panics instead of silently
+	// returning a NullUpdate.
 	a := NewInstantiateAction(nil)
 	ctx := &UpdateContext{Domain: nil}
-	u := a.IntUpdate(ctx)
-	if u == nil {
-		t.Fatal("IntUpdate should return non-nil")
-	}
-	if len(u.Modified) != 0 {
-		t.Error("should modify nothing with nil domain")
-	}
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("IntUpdate should panic when ctx.Domain is nil")
+		}
+	}()
+	a.IntUpdate(ctx)
 }
 
 func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
@@ -425,6 +427,8 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 }
 
 func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
+	// Python (ivy_actions.py:820): raise IvyError("instantiation of undefined: ...")
+	// when neither macros nor schemata contain the name. Faithful Go port panics.
 	mod := module.New()
 	mod.Macros = map[string]*ast.Definition{}
 
@@ -436,11 +440,12 @@ func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
 		PVars:  nil,
 	}
 
-	u := a.IntUpdate(ctx)
-	// Should be null update
-	if len(u.Modified) != 0 {
-		t.Error("unknown instantiate should produce null update")
-	}
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("IntUpdate should panic for instantiation of undefined")
+		}
+	}()
+	a.IntUpdate(ctx)
 }
 
 func TestInstantiateActionIntUpdateCompiledExprFallback(t *testing.T) {
