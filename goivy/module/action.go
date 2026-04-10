@@ -33,6 +33,9 @@ type Action interface {
 	SetFormalReturns([]*lg.Const)
 	Name() string
 	Decompose() [][]Action
+	// HasLineno reports whether SetLineno has been called on this action.
+	// Go analog of Python's hasattr(op, 'lineno').
+	HasLineno() bool
 }
 
 // ActionBase provides common fields and default method implementations
@@ -55,6 +58,7 @@ func (b *ActionBase) CanonFields() string { return "" }
 
 func (b *ActionBase) GetLineno() ast.Location      { return b.Loc }
 func (b *ActionBase) SetLineno(l ast.Location)      { b.Loc = l; b.HasLoc = true }
+func (b *ActionBase) HasLineno() bool               { return b.HasLoc }
 func (b *ActionBase) GetFormalParams() []*lg.Const  { return b.FormalParams }
 func (b *ActionBase) GetFormalReturns() []*lg.Const { return b.FormalReturns }
 func (b *ActionBase) SetFormalParams(p []*lg.Const)  { b.FormalParams = p }

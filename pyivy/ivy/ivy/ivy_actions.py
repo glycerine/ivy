@@ -1265,6 +1265,7 @@ class DebugAction(Action):
         return ('debug ' + str(self.args[0])
                 + ((' with ' + ','.join(map(str,self.args[1:]))) if len(self.args)>1 else ''))
     def int_update(self,domain,pvars):
+        if __debug__: xtracer.trace("actions.IntUpdate ENTER type=%s" % type(self).__name__)
         return ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
 
 class NativeAction(Action):
@@ -1284,6 +1285,7 @@ class NativeAction(Action):
     def __str__(self):
         return ivy_ast.native_to_string(self.args)
     def int_update(self,domain,pvars):
+        if __debug__: xtracer.trace("actions.IntUpdate ENTER type=%s" % type(self).__name__)
         return ([], true_clauses(), false_clauses())
         
 call_action_ctr = 0
@@ -1662,6 +1664,7 @@ class AnnotationError(Exception):
 
 class ReturnAction(object):
     def int_update(self,domain,pvars):
+        if __debug__: xtracer.trace("actions.IntUpdate ENTER type=%s" % type(self).__name__)
         return ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
     def __str__(self):
         return 'return'

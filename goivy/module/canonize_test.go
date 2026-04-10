@@ -30,6 +30,7 @@ func (s *stubAction) Args() []ast.Node                     { return nil }
 func (s *stubAction) Clone(args []ast.Node) ast.Node       { return s }
 func (s *stubAction) GetLineno() ast.Location               { return ast.Location{} }
 func (s *stubAction) SetLineno(ast.Location)               {}
+func (s *stubAction) HasLineno() bool                       { return false }
 func (s *stubAction) String() string                       { return s.name }
 func (s *stubAction) Canon() iu.Canonical                  { return iu.Canonical(s.Sexp()) }
 func (s *stubAction) GetAstConfig() *ast.AstConfig         { return nil }

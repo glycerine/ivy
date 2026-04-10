@@ -704,8 +704,9 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	// Python: clauses1 = rename_clauses(clauses1, map1)
 	clauses1 = module.RenameClauses(clauses1, map1)
 
-	// Python: new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2, mid_ax), map2))
-	newTR := module.AndClausesTyped(clauses1, module.RenameClauses(module.AndClausesTyped(clauses2, midAx), map2))
+	// Python: annot_op = lambda x,y: x.compose(y) if x is not None and y is not None else None
+	//         new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2, mid_ax), map2), annot_op=annot_op)
+	newTR := module.AndClausesWithAnnotOp(composeAnnotOp, clauses1, module.RenameClauses(module.AndClausesTyped(clauses2, midAx), map2))
 
 	// Combined modified set
 	modAll := u1.ModifiedAll || u2.ModifiedAll
@@ -725,8 +726,9 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
 	pre1 = module.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewConst, axioms))
 
-	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2))
-	temp := module.AndClausesTyped(clauses1, module.RenameClauses(module.AndClausesTyped(pre2, midAx), map2))
+	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2), annot_op=my_annot_op)
+	// (my_annot_op at ivy_transrel.py:447 is the same compose lambda.)
+	temp := module.AndClausesWithAnnotOp(composeAnnotOp, clauses1, module.RenameClauses(module.AndClausesTyped(pre2, midAx), map2))
 
 	// Python: new_pre = or_clauses(pre1, temp)
 	newPre := module.OrClausesTyped(pre1, temp)

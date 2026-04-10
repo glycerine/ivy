@@ -985,17 +985,41 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 // --- NativeAction ---
 
 // IntUpdate for NativeAction is a no-op — skips update axioms.
-// Python: NativeAction.int_update returns ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
+// Python: NativeAction.int_update (ivy_actions.py:1286) returns
+// ([], true_clauses(), false_clauses()) — annot is None.
 func (a *NativeAction) IntUpdate(ctx *UpdateContext) *Update {
+	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(a))
 	return NullUpdate()
 }
 
 // --- DebugAction ---
 
 // IntUpdate for DebugAction is a no-op — skips update axioms.
-// Python: DebugAction.int_update returns ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
+// Python: DebugAction.int_update (ivy_actions.py:1267) returns
+// ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation())).
 func (a *DebugAction) IntUpdate(ctx *UpdateContext) *Update {
-	return NullUpdate()
+	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(a))
+	return &Update{
+		Modified: []*lg.Const{},
+		TR:       module.TrueClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
+	}
+}
+
+// --- ReturnAction ---
+
+// IntUpdate for ReturnAction is a no-op — skips update axioms.
+// Python: ReturnAction.int_update (ivy_actions.py:1664) returns
+// ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation())).
+// In Python, ReturnAction is a bare `object` subclass (not Action), so it
+// bypasses Action.int_update; both sides emit the same ENTER trace explicitly.
+func (a *ReturnAction) IntUpdate(ctx *UpdateContext) *Update {
+	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(a))
+	return &Update{
+		Modified: []*lg.Const{},
+		TR:       module.TrueClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
+	}
 }
 
 // --- Field Actions ---
@@ -1155,6 +1179,8 @@ func IntUpdate(action Action, ctx *UpdateContext) *Update {
 	case *NativeAction:
 		return a.IntUpdate(ctx)
 	case *DebugAction:
+		return a.IntUpdate(ctx)
+	case *ReturnAction:
 		return a.IntUpdate(ctx)
 	case *AssignFieldAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
