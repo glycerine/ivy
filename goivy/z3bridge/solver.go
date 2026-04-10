@@ -77,7 +77,7 @@ func (s *Solver) Close() error {
 }
 
 // Clear resets all Z3 caches (sorts, constants, functions) to initial state.
-// Corresponds to Python ivy_solver.clear() (line 228).
+// Corresponds to Python ivy_solver.clear() (line 249).
 //
 // Why this clear is never called (and so we removed the xtracing from both sides):
 //
