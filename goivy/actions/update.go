@@ -1860,7 +1860,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 					// is unreachable in Go's typed model. If this panic ever fires,
 					// the upstream construction site is violating the type contract
 					// — investigate that, do not port state_to_action(v.value).
-					panic(fmt.Sprintf("CallAction.IntUpdate: callee %s resolved to non-Action %T (Domain.Actions is typed Action; non-Action storage is a programming error)", calleeName, v))
+					panic(fmt.Sprintf("CallAction.IntUpdate: callee %s resolved to non-Action %T (Domain.Actions is typed Action; non-Action means a Go porting error and we need to change the Go types to accommodate/port more faithfully.", calleeName, v))
 				}
 				calleeAction = act
 			}

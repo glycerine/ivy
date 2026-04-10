@@ -2603,6 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
+233837  go : XTRACE: actions.EnvAction.int_update branch[0] childType=Sequence childModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', ' ...(truncated long line to 300 bytes)
+
+        py : XTRACE: actions.EnvAction.int_update branch[0] childType=Sequence childModified=['cf_live.issued_memc', 'cf_pio_live.issued_pio', 'cf_pio_live.issued_pio_cpl_if', 'cf_pio_live.issued_pio_cpl_memc', 'cf_pio_live.issued_pio_if', 'cf_pio_live.issued_pio_memc', 'cmpl_live.arm_cpl', 'cmpl_live.cf_cpl', '
+ ...(truncated long line to 300 bytes)
+
 233838  go : XTRACE: actions.EnvAction.int_update EXIT
         py : XTRACE: actions.EnvAction.int_update EXIT
 
