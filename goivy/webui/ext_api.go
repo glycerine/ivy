@@ -1,7 +1,9 @@
 package webui
 
 // Full port of ui_extensions_api.py — extension point system for
-// registering callbacks that add actions to the verification UI.
+// registering callbacks that add actions to the verification UI,
+// plus the FrontEndOperation hierarchy used by interactive
+// (generator-style) UI flows.
 
 import (
 	"fmt"
@@ -176,13 +178,26 @@ func registerDefaultExtensions(cfg *ExtConfig) {
 
 
 // --- Front-end operation types (Python: FrontEndOperation hierarchy) ---
+//
+// In Python, FrontEndOperation has a Submit(on_done) method and the
+// run_interaction driver uses generators with yield to chain operations.
+// In Go, we use range-over-function iterators (iter.Seq[FrontEndOperation]):
+// generator-style functions return iter.Seq[FrontEndOperation]; each yielded
+// op carries both its input fields AND its response fields. The consumer
+// mutates the response fields before its loop body returns, and the next
+// call to yield() resumes the generator with those values visible. This is
+// the literal Go translation of Python's `value = yield op` semantics.
 
-// FrontEndOperation represents an async operation with the front end.
+// FrontEndOperation is the marker interface for any operation that an
+// interactive UI flow can yield to the front end. Concrete types are
+// ShowModal, UserSelect, UserSelectMultiple, UserSelectCore, ExecuteNewCell,
+// etc. — see Python ui_extensions_api.py:191.
 type FrontEndOperation interface {
-	Submit(onDone func(result interface{}))
+	frontEndOp()
 }
 
 // InteractionError represents an error during user interaction.
+// Mirrors Python ui_extensions_api.py:187.
 type InteractionError struct {
 	Message string
 }
@@ -190,6 +205,221 @@ type InteractionError struct {
 func (e *InteractionError) Error() string {
 	return e.Message
 }
+
+// --- Widget data carriers ---
+//
+// Python widget_analysis_session.py and iupdr.py instantiate a small
+// vocabulary of IPython widgets (Latex, Button, SelectMultiple, Select,
+// Checkbox). Go does not have IPython, so each becomes a small data
+// carrier struct. The webui front end serializes these to its JSON
+// protocol.
+
+// Widget is the marker interface for any data carrier that can appear
+// inside a ShowModal's Children list.
+type Widget interface {
+	widget()
+}
+
+// LatexWidget mirrors IPython's widgets.Latex — a single string of
+// LaTeX-formatted text to display.
+type LatexWidget struct {
+	Text string
+}
+
+func (*LatexWidget) widget() {}
+
+// ButtonWidget mirrors IPython's widgets.Button — a clickable button.
+// OnClick is invoked when the front end signals a click.
+type ButtonWidget struct {
+	Description string
+	OnClick     func()
+}
+
+func (*ButtonWidget) widget() {}
+
+// CheckboxWidget mirrors IPython's widgets.Checkbox.
+type CheckboxWidget struct {
+	Description string
+	Value       bool
+	OnChange    func(bool)
+}
+
+func (*CheckboxWidget) widget() {}
+
+// SelectWidget mirrors IPython's widgets.Select — single-selection list.
+type SelectWidget struct {
+	Options *OrderedMap
+	Value   any // current value
+}
+
+func (*SelectWidget) widget() {}
+
+// SelectMultipleWidget mirrors IPython's widgets.SelectMultiple — multi-
+// selection list.
+type SelectMultipleWidget struct {
+	Options *OrderedMap
+	Value   []any // currently selected values
+}
+
+func (*SelectMultipleWidget) widget() {}
+
+// --- OrderedMap (Python OrderedDict shim) ---
+//
+// Python iupdr.py and widget_analysis_session.py both build OrderedDict
+// values whose keys are stringified clauses and whose values are the
+// underlying clause objects. Go has no order-preserving map literal,
+// so this shim preserves insertion order.
+
+// OrderedMap is an order-preserving string-keyed map. It is not a
+// general-purpose abstraction — only the widget code uses it, mirroring
+// Python's collections.OrderedDict.
+type OrderedMap struct {
+	keys []string
+	vals map[string]any
+}
+
+// NewOrderedMap creates an empty OrderedMap.
+func NewOrderedMap() *OrderedMap {
+	return &OrderedMap{vals: make(map[string]any)}
+}
+
+// Set inserts or updates a key/value pair, preserving insertion order
+// for new keys.
+func (m *OrderedMap) Set(key string, val any) {
+	if _, ok := m.vals[key]; !ok {
+		m.keys = append(m.keys, key)
+	}
+	m.vals[key] = val
+}
+
+// Get returns the value for a key, or nil if not present.
+func (m *OrderedMap) Get(key string) any {
+	return m.vals[key]
+}
+
+// Has returns true if the key is present.
+func (m *OrderedMap) Has(key string) bool {
+	_, ok := m.vals[key]
+	return ok
+}
+
+// Keys returns the keys in insertion order. The slice is a copy.
+func (m *OrderedMap) Keys() []string {
+	out := make([]string, len(m.keys))
+	copy(out, m.keys)
+	return out
+}
+
+// Values returns the values in insertion order. The slice is a copy.
+func (m *OrderedMap) Values() []any {
+	out := make([]any, 0, len(m.keys))
+	for _, k := range m.keys {
+		out = append(out, m.vals[k])
+	}
+	return out
+}
+
+// Len returns the number of entries.
+func (m *OrderedMap) Len() int { return len(m.keys) }
+
+// --- Concrete FrontEndOperation types ---
+
+// ShowModal displays a modal dialog with arbitrary widget children.
+// Mirrors Python ui_extensions_api.py:224.
+//
+// Response fields (set by consumer before next yield):
+//   - OK: true if the user clicked OK, false otherwise.
+type ShowModal struct {
+	Title    string
+	Children []Widget
+
+	// Response (filled by consumer)
+	OK bool
+}
+
+func (*ShowModal) frontEndOp() {}
+
+// UserSelect asks the user to select a single option or cancel.
+// Mirrors Python ui_extensions_api.py:245.
+//
+// Response fields:
+//   - Selection: the selected value, or nil if cancelled.
+//   - Cancelled: true if the user clicked cancel.
+type UserSelect struct {
+	*ShowModal
+	Prompt  string
+	Options *OrderedMap
+	Default any
+
+	// Response (filled by consumer)
+	Selection any
+	Cancelled bool
+}
+
+// NewUserSelect builds a UserSelect with the given options and prompt.
+// Mirrors the Python __init__ at lines 256-262.
+func NewUserSelect(options *OrderedMap, title, prompt string, dflt any) *UserSelect {
+	u := &UserSelect{
+		ShowModal: &ShowModal{Title: title},
+		Prompt:    prompt,
+		Options:   options,
+		Default:   dflt,
+	}
+	u.ShowModal.Children = []Widget{
+		&LatexWidget{Text: prompt},
+		&SelectWidget{Options: options, Value: dflt},
+	}
+	return u
+}
+
+// UserSelectMultiple asks the user to select multiple options or cancel.
+// Mirrors Python ui_extensions_api.py:271.
+//
+// Response fields:
+//   - Selection: the selected values, or nil if cancelled.
+//   - Cancelled: true if the user clicked cancel.
+type UserSelectMultiple struct {
+	*ShowModal
+	Prompt  string
+	Options *OrderedMap
+	Default []any
+
+	// Response (filled by consumer)
+	Selection []any
+	Cancelled bool
+}
+
+// NewUserSelectMultiple builds a UserSelectMultiple with the given options.
+// Mirrors the Python __init__ at lines 284-290.
+func NewUserSelectMultiple(options *OrderedMap, title, prompt string, dflt []any) *UserSelectMultiple {
+	u := &UserSelectMultiple{
+		ShowModal: &ShowModal{Title: title},
+		Prompt:    prompt,
+		Options:   options,
+		Default:   dflt,
+	}
+	dfltAny := make([]any, len(dflt))
+	copy(dfltAny, dflt)
+	u.ShowModal.Children = []Widget{
+		&LatexWidget{Text: prompt},
+		&SelectMultipleWidget{Options: options, Value: dfltAny},
+	}
+	return u
+}
+
+// ExecuteNewCell asks the front end to run a new code cell.
+// Mirrors Python ui_extensions_api.py:201.
+//
+// Response field:
+//   - Output: the result of executing the code (set by the consumer).
+type ExecuteNewCell struct {
+	Code string
+
+	// Response (filled by consumer)
+	Output any
+}
+
+func (*ExecuteNewCell) frontEndOp() {}
 
 // --- Convenience registration methods on ExtConfig ---
 

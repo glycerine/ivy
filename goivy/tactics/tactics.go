@@ -614,6 +614,254 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 }
 
 // -----------------------------------------------------------------------
+// Additional tactics_api / tactics functions for the iupdr.py port
+// -----------------------------------------------------------------------
+
+// GetSafetyProperty mirrors Python tactics_api.py:60-64:
+//
+//	def get_safety_property():
+//	    """Return the safety property"""
+//	    return _ivy_interp.conjs[0]
+//
+// In Python this returns the first conjecture from the interpreter; in
+// Go the conjectures live on the module and are accessible via
+// Module.Conjs().
+func (tc *TacticsContext) GetSafetyProperty() *module.Clauses {
+	if tc.AG == nil || tc.AG.Domain == nil {
+		return module.TrueClauses(nil)
+	}
+	conjs := tc.AG.Domain.Conjs()
+	if len(conjs) == 0 {
+		return module.TrueClauses(nil)
+	}
+	return conjs[0]
+}
+
+// ArgAddActionNode mirrors Python tactics_api.py:109-120:
+//
+//	def arg_add_action_node(pre, action, abstractor=None):
+//	    """Add a new node with an action edge from pre, and return it."""
+//	    try:
+//	        label = [k for k, v in _ivy_ag.actions.items() if v == action][0]
+//	    except IndexError:
+//	        label = None
+//	    node = _ivy_ag.execute(action, pre, abstractor, label)
+//	    if abstractor is None:
+//	        node.clauses = true_clauses()
+//	    return node
+func (tc *TacticsContext) ArgAddActionNode(pre *art.State, action actions.Action, abstractor art.Abstractor) *art.State {
+	if tc.AG == nil {
+		return nil
+	}
+	// Python: try to find the action's registered label.
+	label := ""
+	for k := range tc.AG.Actions.All() {
+		if act, ok := tc.AG.Actions.Get2(k); ok {
+			if act == action {
+				label = k
+				break
+			}
+		}
+	}
+	node, err := tc.AG.Execute(checkPrecondTrue, action, pre, abstractor, label)
+	if err != nil || node == nil {
+		return nil
+	}
+	if abstractor == nil {
+		// Python: node.clauses = true_clauses()
+		node.Clauses = module.TrueClauses(nil)
+	}
+	return node
+}
+
+// ArgGetPred mirrors Python tactics_api.py:251-253:
+//
+//	def arg_get_pred(node):
+//	    assert node.pred is not None
+//	    return node.pred
+func ArgGetPred(node *art.State) *art.State {
+	if node == nil || node.Pred == nil {
+		panic("arg_get_pred: node.pred is nil")
+	}
+	return node.Pred
+}
+
+// ArgIsCovered mirrors Python tactics_api.py:102-106:
+//
+//	def arg_is_covered(covered, by):
+//	    """Returns True if covered is covered by 'by' in the arg"""
+//	    return _ivy_ag.cover(covered, by)
+func (tc *TacticsContext) ArgIsCovered(covered, by *art.State) bool {
+	if tc.AG == nil {
+		return false
+	}
+	return tc.AG.Cover(covered, by)
+}
+
+// CheckCover mirrors Python tactics.py:206-211 (the @tactic
+// CheckCover.apply body, which becomes a top-level function via the
+// @tactic decorator):
+//
+//	@tactic
+//	class CheckCover(Tactic):
+//	    def apply(self, covered, by):
+//	        result = ta.arg_is_covered(covered, by)
+//	        self.step(covered=covered, by=by, result=result)
+//	        return result
+//
+// (The struct CheckCover above is the goal-tactic form; this function
+// is the iupdr-style direct call.)
+func CheckCoverFn(tc *TacticsContext, covered, by *art.State) bool {
+	return tc.ArgIsCovered(covered, by)
+}
+
+// RemoveIfRefutedFn mirrors Python tactics.py:29-36 (the @tactic
+// RemoveIfRefuted.apply body, exposed as a function via the decorator):
+//
+//	@goal_tactic
+//	@tactic
+//	class RemoveIfRefuted(Tactic):
+//	    def apply(self, goal):
+//	        if ta.refuted_goal(goal):
+//	            ta.remove_goal(goal)
+//	            self.step(goal=goal, active=ta.top_goal())
+//	            return True
+//	        else:
+//	            return False
+func RemoveIfRefutedFn(tc *TacticsContext, goal *proof.ProofGoal) bool {
+	if tc.RefutedGoal(goal) {
+		tc.RemoveGoal(goal)
+		return true
+	}
+	return false
+}
+
+// RecalculateFactsFn mirrors Python tactics.py:156-177 (the @tactic
+// RecalculateFacts.apply body):
+//
+//	@tactic
+//	class RecalculateFacts(Tactic):
+//	    def apply(self, node, facts):
+//	        preds, action = ta.arg_get_preds_action(node)
+//	        assert action != 'join'
+//	        assert len(preds) == 1
+//	        pred = preds[0]
+//	        already_implied = ta.implied_facts(arg_get_fact(node), facts)
+//	        implied = ta.implied_facts(
+//	            forward_image(arg_get_fact(pred), action),
+//	            list(set(facts) - set(already_implied)),
+//	        )
+//	        if len(implied) > 0:
+//	            for fact in implied:
+//	                ta.arg_add_facts(node, fact)
+//	            self.step(node=node, facts=facts, implied=implied)
+//	            return True
+//	        else:
+//	            return False
+//
+// `facts` here is a slice of *Clauses, mirroring the Python list-of-Clauses
+// usage in iupdr.interactive_updr.
+func RecalculateFactsFn(tc *TacticsContext, node *art.State, facts []*module.Clauses) bool {
+	pred, action := ArgGetPredAction(node)
+	if action == nil {
+		// Python: assert action != 'join'
+		panic("recalculate_facts: action is 'join'")
+	}
+	if pred == nil {
+		// Python: assert len(preds) == 1
+		panic("recalculate_facts: no single predecessor")
+	}
+
+	// Python: already_implied = ta.implied_facts(arg_get_fact(node), facts)
+	alreadyImplied := tc.ImpliedFacts(ArgGetFact(node), facts)
+	alreadySet := make(map[*module.Clauses]bool, len(alreadyImplied))
+	for _, c := range alreadyImplied {
+		alreadySet[c] = true
+	}
+
+	// Python: list(set(facts) - set(already_implied))
+	remaining := make([]*module.Clauses, 0, len(facts))
+	for _, f := range facts {
+		if !alreadySet[f] {
+			remaining = append(remaining, f)
+		}
+	}
+
+	// Python: forward_image(arg_get_fact(pred), action)
+	predClauses := tc.ForwardImage(ArgGetFact(pred), action)
+
+	// Python: implied = ta.implied_facts(forward_image(...), remaining)
+	implied := tc.ImpliedFacts(predClauses, remaining)
+
+	if len(implied) > 0 {
+		for _, fact := range implied {
+			ArgAddFacts(node, fact)
+		}
+		return true
+	}
+	return false
+}
+
+// CustomRefineOrReverse mirrors Python tactics.py:89-125 (the @tactic
+// CustomRefineOrReverse.apply body):
+//
+//	@tactic
+//	class CustomRefineOrReverse(Tactic):
+//	    def apply(self, goal, x, y, auto_remove=True):
+//	        info = dict(goal=goal, x=x, y=y)
+//	        if x:
+//	            ta.arg_add_facts(goal.node, y)
+//	            removed = []
+//	            removed_str = []
+//	            if auto_remove:
+//	                g = goal
+//	                while g is not None and ta.refuted_goal(g):
+//	                    removed.append(g)
+//	                    ta.remove_goal(g)
+//	                    g = g.parent
+//	                ...
+//	        else:
+//	            ta.push_goal(y)
+//	            ...
+//	        self.step(**info)
+//	        return x
+//
+// `x` is a bool: True if we learned a new fact (refined), False if we
+// pushed a new goal (reversed). `y` is the learned fact (a *Clauses) or
+// the new goal (a *ProofGoal), depending on x.
+func CustomRefineOrReverse(tc *TacticsContext, goal *proof.ProofGoal, x bool, y interface{}, autoRemove bool) bool {
+	if x {
+		// Python: ta.arg_add_facts(goal.node, y)
+		if node, ok := goal.Node.(*art.State); ok {
+			if yc, ok := y.(*module.Clauses); ok {
+				ArgAddFacts(node, yc)
+			} else if ye, ok := y.(lg.Expr); ok {
+				ArgAddFacts(node, module.FormulaToClauses(ye, nil))
+			}
+		}
+		if autoRemove {
+			// Python: walk up via g.parent removing refuted goals.
+			// Go ProofGoal does not currently have a Parent field, so we
+			// only remove the immediate goal if refuted (matching the
+			// minimum behavior). When ProofGoal.Parent is added, this
+			// loop should mirror the Python while-loop.
+			g := goal
+			for g != nil && tc.RefutedGoal(g) {
+				tc.RemoveGoal(g)
+				// g = g.Parent  // not yet available in Go
+				break
+			}
+		}
+	} else {
+		// Python: ta.push_goal(y)
+		if ng, ok := y.(*proof.ProofGoal); ok {
+			tc.PushGoal(ng)
+		}
+	}
+	return x
+}
+
+// -----------------------------------------------------------------------
 // Helper functions
 // -----------------------------------------------------------------------
 

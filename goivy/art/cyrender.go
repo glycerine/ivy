@@ -31,10 +31,19 @@ type CyElements struct {
 
 // CyElement is a single Cytoscape.js element (node or edge).
 type CyElement struct {
-	Group   string                 `json:"group"`
-	Data    map[string]interface{} `json:"data"`
-	Classes string                 `json:"classes,omitempty"`
-	Locked  bool                   `json:"locked,omitempty"`
+	Group    string                 `json:"group"`
+	Data     map[string]interface{} `json:"data"`
+	Classes  string                 `json:"classes,omitempty"`
+	Locked   bool                   `json:"locked,omitempty"`
+	Position *CyPosition            `json:"position,omitempty"` // populated by dotgraph.DotLayout
+}
+
+// CyPosition is the {x,y} layout position of a node element. It mirrors
+// the top-level "position" entry that Python's dot_layout sets on each
+// element dict (see dot_layout.py:260).
+type CyPosition struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
 }
 
 // NewCyElements creates an empty CyElements container.
