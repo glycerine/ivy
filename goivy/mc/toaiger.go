@@ -120,8 +120,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 3: Compute transition relation
 	bgt := mod.BackgroundTheory(nil)
 	ctx := &actions.UpdateContext{
-		Domain: mod,
-		ActCfg: mod.Cfg.ActCfg,
+		Domain:       mod,
+		ActCfg:       mod.Cfg.ActCfg,
+		Instantiator: mod.Instantiator,
 	}
 	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)

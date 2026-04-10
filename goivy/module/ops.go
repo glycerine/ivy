@@ -494,12 +494,12 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]lg
 	f := Negate(clausesToFormula(clauses))
 
 	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Matches Python dual_clauses (ivy_logic_utils.py:1554-1565) — unconditional
+	// (no insts.fmlas guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := AppsClauses(clauses)
 		insts := instantiator(gts)
-		if len(insts.Fmlas) > 0 {
-			f = &lg.And{Terms: []lg.Expr{f, clausesToFormula(insts)}}
-		}
+		f = &lg.And{Terms: []lg.Expr{f, clausesToFormula(insts)}}
 	}
 
 	return FormulaToClauses(f, nil)

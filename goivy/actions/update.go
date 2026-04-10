@@ -375,7 +375,13 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Only assertions that pass both filters get dual formula treatment
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
-	dual := module.DualFormula(fmla, nil, nil)
+	// Python's dual_formula consults lu.instantiator (a module-level global);
+	// Go's literal port reads it from ctx.Instantiator (set from Domain.Instantiator).
+	var dualInst func([]lg.Expr) *module.Clauses
+	if ctx != nil {
+		dualInst = ctx.Instantiator
+	}
+	dual := module.DualFormula(fmla, nil, dualInst)
 	cl := module.FormulaToClauses(dual, nil)
 	cl = module.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &Update{
@@ -2030,9 +2036,10 @@ func hideFormals(action Action, update *Update) *Update {
 // It adapts the module-level GetUpdate function to the (domain, inScope) signature.
 func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bool) *Update {
 	ctx := &UpdateContext{
-		Domain: domain,
-		PVars:  inScope,
-		ActCfg: domain.Cfg.ActCfg,
+		Domain:       domain,
+		PVars:        inScope,
+		ActCfg:       domain.Cfg.ActCfg,
+		Instantiator: domain.Instantiator,
 		GetAction: func(name string) Action {
 			if domain != nil && domain.Actions != nil {
 				if v, ok := domain.Actions.Get2(name); ok {

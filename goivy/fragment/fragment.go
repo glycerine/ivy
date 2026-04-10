@@ -1077,7 +1077,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOnly bool) []fmlaPair {
 
 	// Compute the action's transition relation
-	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg}
+	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg, Instantiator: m.Instantiator}
 	upd := actions.GetUpdate(action, ctx)
 	if upd == nil {
 		return nil

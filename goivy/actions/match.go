@@ -360,9 +360,10 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		bodyAction := extractActionFromNode(w.Body)
 		if bodyAction != nil {
 			ctx := &UpdateContext{
-				Domain: mod,
-				PVars:  make(map[string]bool),
-				ActCfg: mod.Cfg.ActCfg,
+				Domain:       mod,
+				PVars:        make(map[string]bool),
+				ActCfg:       mod.Cfg.ActCfg,
+				Instantiator: mod.Instantiator,
 				GetAction: func(name string) Action {
 					if mod.Actions != nil {
 						if v, ok := mod.Actions.Get2(name); ok {

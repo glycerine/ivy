@@ -62,12 +62,12 @@ func DualFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr, instantiat
 	}
 	fmla = Negate(fmla)
 	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Matches Python dual_formula (ivy_logic_utils.py:1567-1577) — unconditional
+	// (no len(insts.Fmlas) > 0 guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := il.AppsAst(fmla)
 		insts := instantiator(gts)
-		if len(insts.Fmlas) > 0 {
-			fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
-		}
+		fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
 	}
 	return fmla
 }
@@ -99,12 +99,12 @@ func SkolemizeFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr, insta
 		fmla = SubstituteAstByName(fmla, subs)
 	}
 	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Matches Python skolemize_formula (ivy_logic_utils.py:1579-1592) — unconditional
+	// (no len(insts.Fmlas) > 0 guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := il.AppsAst(fmla)
 		insts := instantiator(gts)
-		if len(insts.Fmlas) > 0 {
-			fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
-		}
+		fmla = &lg.And{Terms: []lg.Expr{fmla, clausesToFormula(insts)}}
 	}
 	return fmla
 }

@@ -149,9 +149,10 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 	// Compute the action's transition relation update.
 	// Python: upd = action.update(state.domain, state.in_scope)
 	ctx := &actions.UpdateContext{
-		Domain: state.Domain,
-		PVars:  state.InScope,
-		ActCfg: state.Domain.Cfg.ActCfg,
+		Domain:       state.Domain,
+		PVars:        state.InScope,
+		ActCfg:       state.Domain.Cfg.ActCfg,
+		Instantiator: state.Domain.Instantiator,
 		GetAction: func(name string) actions.Action {
 			if state.Domain != nil {
 				if a, ok := state.Domain.Actions.Get2(name); ok {

@@ -184,9 +184,10 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 
 	// Compute update
 	ctx := &actions.UpdateContext{
-		Domain: state1.Domain,
-		PVars:  state1.InScope,
-		ActCfg: state1.Domain.Cfg.ActCfg,
+		Domain:       state1.Domain,
+		PVars:        state1.InScope,
+		ActCfg:       state1.Domain.Cfg.ActCfg,
+		Instantiator: state1.Domain.Instantiator,
 		GetAction: func(name string) actions.Action {
 			if state1.Domain != nil {
 				if a, ok := state1.Domain.Actions.Get2(name); ok {
