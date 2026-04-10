@@ -2603,22 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-233618  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-
-233619  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
-
-233620  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=29 nArgs=2
-
-233621  go : XTRACE: actions.EnvAction.int_update EXIT
+233838  go : XTRACE: actions.EnvAction.int_update EXIT
         py : XTRACE: actions.EnvAction.int_update EXIT
 
-233622  go : XTRACE: ops.ToOpenFormula nFmlas=118 nDefs=0
+233839  go : XTRACE: ops.ToOpenFormula nFmlas=118 nDefs=0
         py : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 233622, counting from 0.
 ~~~
 so we are hitting divergence sooner...
 
