@@ -887,9 +887,12 @@ class ChoiceAction(Action):
             if __debug__: xtracer.trace("actions.ChoiceAction.int_update EXIT")
             return ite.int_update(domain,pvars)
         result = [], false_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation())
-        for a in self.args:
+        for i,a in enumerate(self.args):
             foo = a.int_update(domain, pvars)
             result = join_action(result, foo, domain.background_theory(pvars))
+            if __debug__:
+                child_mod = [s.name for s in foo[0]] if foo[0] is not None else []
+                xtracer.trace("actions.ChoiceAction.int_update branch[%d] childType=%s childModified=%s" % (i, type(a).__name__, sorted(child_mod)))
         if __debug__: xtracer.trace("actions.ChoiceAction.int_update EXIT")
         return result
     def __repr__(self):
@@ -916,12 +919,15 @@ class EnvAction(ChoiceAction):
             return ite.update(domain,pvars)
         result = [], false_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation())
 #        print 'env action:'
-        for a in self.args:
+        for i,a in enumerate(self.args):
             foo = a.update(domain, pvars)
 #            print 'sub vars = {}'.format([str(x) for x in used_symbols_clauses(foo[1])])
             result = join_action(result, foo, domain.background_theory(pvars))
 #            print 'join vars = {}'.format([str(x) for x in used_symbols_clauses(result[1])])
 #            print 'annot = {}'.format(result[1].annot)
+            if __debug__:
+                child_mod = [s.name for s in foo[0]] if foo[0] is not None else []
+                xtracer.trace("actions.EnvAction.int_update branch[%d] childType=%s childModified=%s" % (i, type(a).__name__, sorted(child_mod)))
         if __debug__: xtracer.trace("actions.EnvAction.int_update EXIT")
         return result
     def __str__(self):
@@ -991,6 +997,11 @@ class IfAction(Action):
                 raise IvyError(self,'condition must be boolean')
             branches = [self.args[1],self.args[2] if len(self.args) >= 3 else Sequence()]
             upds = [a.int_update(domain,pvars) for a in branches]
+            if __debug__:
+                then_mod = [s.name for s in upds[0][0]] if upds[0][0] is not None else []
+                else_mod = [s.name for s in upds[1][0]] if upds[1][0] is not None else []
+                xtracer.trace("actions.IfAction.int_update then childType=%s thenModified=%s" % (type(branches[0]).__name__, sorted(then_mod)))
+                xtracer.trace("actions.IfAction.int_update else childType=%s elseModified=%s" % (type(branches[1]).__name__, sorted(else_mod)))
 #            if hasattr(self,'lineno'):
 #                print 'ite at {}'.format(self.lineno)
 #            print 'if vars = {}'.format([str(x) for x in used_symbols_clauses(upds[0][1])])
@@ -999,7 +1010,13 @@ class IfAction(Action):
 #            print 'join vars = {}'.format([str(x) for x in used_symbols_clauses(res[1])])
             if __debug__: xtracer.trace("actions.IfAction.int_update EXIT")
             return res
-        if_part,else_part = (a.int_update(domain,pvars) for a in self.subactions())
+        subs = list(self.subactions())
+        if_part,else_part = (a.int_update(domain,pvars) for a in subs)
+        if __debug__:
+            if_mod = [s.name for s in if_part[0]] if if_part[0] is not None else []
+            else_mod = [s.name for s in else_part[0]] if else_part[0] is not None else []
+            xtracer.trace("actions.IfAction.int_update then childType=%s thenModified=%s" % (type(subs[0]).__name__, sorted(if_mod)))
+            xtracer.trace("actions.IfAction.int_update else childType=%s elseModified=%s" % (type(subs[1]).__name__, sorted(else_mod)))
 
         res = join_action(if_part,else_part,domain.background_theory(pvars))
         # Hack: the ite annotation comes out reversed. Fix it.

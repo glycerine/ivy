@@ -2145,7 +2145,8 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.InstantiateAction.int_update ENTER")
 	defer xtracer.Trace("actions.InstantiateAction.int_update EXIT")
 	if ctx.Domain == nil {
-		return NullUpdate()
+		// Python: would AttributeError on domain.macros / domain.schemata
+		panic("InstantiateAction.IntUpdate: ctx.Domain is nil")
 	}
 
 	// Check macros first using the raw AST node
@@ -2191,7 +2192,8 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 		}
 	}
 	if instName == "" {
-		return NullUpdate()
+		// Python: would AttributeError on inst.relname for an unrecognized inst.
+		panic(fmt.Sprintf("InstantiateAction.IntUpdate: cannot extract instantiation name from %T", a.Inst))
 	}
 
 	// Check schemata
@@ -2202,18 +2204,19 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
 			fmla, ok := mlf.Formula.(lg.Expr)
 			if !ok {
-				return NullUpdate()
+				panic(fmt.Sprintf("InstantiateAction.IntUpdate: schema %s formula has wrong type %T", instName, mlf.Formula))
 			}
 			clauses := module.FormulaToClauses(fmla, nil)
 			return &Update{
-				Modified: nil,
+				Modified: []*lg.Const{},
 				TR:       clauses,
 				Pre:      module.FalseClauses(nil),
 			}
 		}
 	}
 
-	return NullUpdate()
+	// Python: raise IvyError(inst, "instantiation of undefined: {}".format(inst.relname))
+	panic(fmt.Sprintf("instantiation of undefined: %s", instName))
 }
 
 // extractInstInfo extracts the name and args from an instantiation node.

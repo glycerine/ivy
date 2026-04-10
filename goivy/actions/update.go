@@ -1369,15 +1369,32 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
 		ite := NewIfAction(&lg.Not{Body: cond}, a.Branches[0], a.Branches[1])
 		return ite.IntUpdate(ctx)
 	}
-	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
+	// Python (ivy_actions.py:889):
+	//   result = [], false_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation())
+	result := &Update{
+		Modified: []*lg.Const{},
+		TR:       module.FalseClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
+	}
 	axioms := ctx.BackgroundTheory()
-	for _, branch := range a.Branches {
+	for i, branch := range a.Branches {
 		act := unwrapToAction(branch)
 		if act == nil {
-			continue
+			// Python iterates blindly; calling int_update on a non-Action
+			// would AttributeError. The faithful port panics rather than
+			// silently skipping.
+			panic(fmt.Sprintf("ChoiceAction.IntUpdate: branch %d is not an Action: %T", i, branch))
 		}
 		branchUpdate := IntUpdate(act, ctx)
 		result = JoinAction(result, branchUpdate, axioms)
+		if xtracer.Enabled {
+			modNames := make([]string, len(branchUpdate.Modified))
+			for j, m := range branchUpdate.Modified {
+				modNames[j] = fmt.Sprintf("'%v'", m.Name)
+			}
+			sort.Strings(modNames)
+			xtracer.Trace("actions.ChoiceAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(modNames, ", "))
+		}
 	}
 	return result
 }
@@ -1400,15 +1417,32 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 		ite := NewIfAction(cond, a.Branches[0], a.Branches[1])
 		return GetUpdate(ite, ctx)
 	}
-	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
+	// Python (ivy_actions.py:917):
+	//   result = [], false_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation())
+	result := &Update{
+		Modified: []*lg.Const{},
+		TR:       module.FalseClauses(EmptyAnnotation{}),
+		Pre:      module.FalseClauses(EmptyAnnotation{}),
+	}
 	axioms := ctx.BackgroundTheory()
-	for _, branch := range a.Branches {
+	for i, branch := range a.Branches {
 		act := unwrapToAction(branch)
 		if act == nil {
-			continue
+			// Python iterates blindly; calling .update on a non-Action would
+			// AttributeError. The faithful port panics rather than silently
+			// skipping.
+			panic(fmt.Sprintf("EnvAction.IntUpdateEnv: branch %d is not an Action: %T", i, branch))
 		}
 		branchUpdate := GetUpdate(act, ctx)
 		result = JoinAction(result, branchUpdate, axioms)
+		if xtracer.Enabled {
+			modNames := make([]string, len(branchUpdate.Modified))
+			for j, m := range branchUpdate.Modified {
+				modNames[j] = fmt.Sprintf("'%v'", m.Name)
+			}
+			sort.Strings(modNames)
+			xtracer.Trace("actions.EnvAction.int_update branch[%d] childType=%s childModified=[%v]", i, ActionTypeName(act), strings.Join(modNames, ", "))
+		}
 	}
 	return result
 }
@@ -1433,6 +1467,11 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 		return a.intUpdateWithSubactions(ctx)
 	}
 
+	// Python (ivy_actions.py:990): if not is_boolean(self.args[0]): raise IvyError("condition must be boolean")
+	if !il.IsBoolean(cond) {
+		panic("condition must be boolean")
+	}
+
 	// Simple boolean condition
 	thenBranch := a.ThenBody
 	var elseBranch lg.Expr
@@ -1454,6 +1493,20 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	thenUpdate := IntUpdate(thenAct, ctx)
 	elseUpdate := IntUpdate(elseAct, ctx)
+	if xtracer.Enabled {
+		thenMod := make([]string, len(thenUpdate.Modified))
+		for j, m := range thenUpdate.Modified {
+			thenMod[j] = fmt.Sprintf("'%v'", m.Name)
+		}
+		sort.Strings(thenMod)
+		elseMod := make([]string, len(elseUpdate.Modified))
+		for j, m := range elseUpdate.Modified {
+			elseMod[j] = fmt.Sprintf("'%v'", m.Name)
+		}
+		sort.Strings(elseMod)
+		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(thenAct), strings.Join(thenMod, ", "))
+		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elseAct), strings.Join(elseMod, ", "))
+	}
 
 	axioms := ctx.BackgroundTheory()
 	return IteAction(cond, thenUpdate, elseUpdate, axioms)
@@ -1466,6 +1519,20 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 
 	ifUpdate := IntUpdate(ifPart, ctx)
 	elseUpdate := IntUpdate(elsePart, ctx)
+	if xtracer.Enabled {
+		ifMod := make([]string, len(ifUpdate.Modified))
+		for j, m := range ifUpdate.Modified {
+			ifMod[j] = fmt.Sprintf("'%v'", m.Name)
+		}
+		sort.Strings(ifMod)
+		elseMod := make([]string, len(elseUpdate.Modified))
+		for j, m := range elseUpdate.Modified {
+			elseMod[j] = fmt.Sprintf("'%v'", m.Name)
+		}
+		sort.Strings(elseMod)
+		xtracer.Trace("actions.IfAction.int_update then childType=%s thenModified=[%v]", ActionTypeName(ifPart), strings.Join(ifMod, ", "))
+		xtracer.Trace("actions.IfAction.int_update else childType=%s elseModified=[%v]", ActionTypeName(elsePart), strings.Join(elseMod, ", "))
+	}
 
 	axioms := ctx.BackgroundTheory()
 	res := JoinAction(ifUpdate, elseUpdate, axioms)
@@ -1509,9 +1576,14 @@ func (a *WhileAction) IntUpdate(ctx *UpdateContext) *Update {
 	}
 	if uc, ok := actCtx.(*UnrollContext); ok {
 		unrolled, err := a.Unroll(uc.Card, nil)
-		if err == nil {
-			return IntUpdate(unrolled, ctx)
+		if err != nil {
+			// Python (ivy_actions.py:1117-1120): unroll raises IvyError
+			// ("cannot determine an iteration bound" / "cowardly refusing
+			// to unroll") and does not fall back to expand. Faithful port
+			// propagates the error rather than silently expanding.
+			panic(err.Error())
 		}
+		return IntUpdate(unrolled, ctx)
 	}
 	expanded := a.Expand(ctx)
 	return IntUpdate(expanded, ctx)
@@ -1688,7 +1760,9 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.LocalAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
-		return NullUpdate()
+		// Python (ivy_actions.py:1148) iterates blindly; calling int_update
+		// on a non-Action would AttributeError. Faithful port panics.
+		panic(fmt.Sprintf("LocalAction.IntUpdate: body is not an Action: %T", a.Body))
 	}
 	update := IntUpdate(bodyAct, ctx)
 
@@ -1701,23 +1775,22 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *Update {
 		xtracer.Trace("actions.LocalAction.int_update bodyType=%s bodyModified=[%v]", ActionTypeName(bodyAct), strings.Join(modNames, ", "))
 	}
 
-	// Collect symbols to hide
-	var symsToHide []*lg.Const
-	for _, local := range a.Locals {
-		if c, ok := local.(*lg.Const); ok {
-			symsToHide = append(symsToHide, c)
-		} else {
-			name := constName(local)
-			if name != "" {
-				symsToHide = append(symsToHide, lg.NewConst(name, lg.TopS))
-			}
+	// Collect symbols to hide. Python (ivy_actions.py:1154):
+	//   syms = self.args[0:-1]
+	// All callers (compiler.compile_local_action, compile_proof, etc.)
+	// construct LocalActions with *lg.Const locals — a type assertion failure
+	// would mean an upstream construction bug.
+	symsToHide := make([]*lg.Const, len(a.Locals))
+	for i, local := range a.Locals {
+		c, ok := local.(*lg.Const)
+		if !ok {
+			panic(fmt.Sprintf("LocalAction.IntUpdate: local %d is not *lg.Const: %T", i, local))
 		}
+		symsToHide[i] = c
 	}
 
-	if len(symsToHide) > 0 {
-		update = Hide(symsToHide, update)
-	}
-	return update
+	// Python: res = hide(syms, update) — always called, even with empty syms.
+	return Hide(symsToHide, update)
 }
 
 // --- LetAction ---
@@ -1729,11 +1802,14 @@ func (a *LetAction) IntUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.LetAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
-		return NullUpdate()
+		// Python (ivy_actions.py:1179) iterates blindly; calling int_update
+		// on a non-Action would AttributeError. Faithful port panics.
+		panic(fmt.Sprintf("LetAction.IntUpdate: body is not an Action: %T", a.Body))
 	}
 	update := IntUpdate(bodyAct, ctx)
 
-	// Build substitution map from bindings
+	// Build substitution map from bindings.
+	// Python: subst = dict((a.args[0].rep, a.args[1].rep) for a in self.args[0:-1])
 	subst := make(map[string]string)
 	for _, binding := range a.Bindings {
 		// Each binding is an assignment-like node: lhs = rhs
@@ -1747,10 +1823,8 @@ func (a *LetAction) IntUpdate(ctx *UpdateContext) *Update {
 		}
 	}
 
-	if len(subst) > 0 {
-		update = SubstAction(update, subst)
-	}
-	return update
+	// Python: res = subst_action(update, subst) — always called.
+	return SubstAction(update, subst)
 }
 
 // --- BindOldsAction ---
@@ -1762,7 +1836,9 @@ func (a *BindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.BindOldsAction.int_update EXIT")
 	innerAct := unwrapToAction(a.Inner)
 	if innerAct == nil {
-		return NullUpdate()
+		// Python (ivy_actions.py:1296) iterates blindly; calling int_update
+		// on a non-Action would AttributeError. Faithful port panics.
+		panic(fmt.Sprintf("BindOldsAction.IntUpdate: inner is not an Action: %T", a.Inner))
 	}
 	update := IntUpdate(innerAct, ctx)
 	return BindOldsUpdate(update)
@@ -1778,7 +1854,9 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
 	if calleeName == "" {
-		return NullUpdate()
+		// Python (ivy_actions.py:1318): name = self.args[0].rep — would
+		// AttributeError if .rep is missing. Faithful port panics.
+		panic(fmt.Sprintf("CallAction.IntUpdate: callee has no name: %T", a.Callee))
 	}
 
 	// Resolve the callee
@@ -1790,14 +1868,21 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 		// Try from domain.Actions
 		if ctx.Domain != nil && ctx.Domain.Actions != nil {
 			if v, ok := ctx.Domain.Actions.Get2(calleeName); ok {
-				if act, ok := v.(Action); ok {
-					calleeAction = act
+				act, isAct := v.(Action)
+				if !isAct {
+					// Python supports tuple- and state-valued context entries
+					// (state_to_action path). Go currently only stores Actions
+					// in Domain.Actions; if a non-Action turns up, panic so we
+					// know to port the missing path.
+					panic(fmt.Sprintf("CallAction.IntUpdate: callee %s resolved to non-Action %T (state_to_action path not yet ported)", calleeName, v))
 				}
+				calleeAction = act
 			}
 		}
 	}
 	if calleeAction == nil {
-		return NullUpdate()
+		// Python (ivy_actions.py:1322): raise IvyError(self, "no value for {}")
+		panic(fmt.Sprintf("CallAction.IntUpdate: no value for %s", calleeName))
 	}
 
 	// Apply actual parameters
@@ -1813,12 +1898,14 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *Update {
 	actualParams := nodeArgs(a.Callee)
 	actualReturns := a.ActualReturns
 
-	// Validate parameter counts
+	// Validate parameter counts.
+	// Python (ivy_actions.py:1352): raise IvyError("wrong number of input parameters")
 	if len(formalParams) != len(actualParams) {
-		return NullUpdate()
+		panic("wrong number of input parameters")
 	}
+	// Python (ivy_actions.py:1356): raise IvyError("wrong number of output parameters")
 	if len(formalReturns) != len(actualReturns) {
-		return NullUpdate()
+		panic("wrong number of output parameters")
 	}
 
 	// Capture avoidance: rename formals to avoid colliding with actuals.
@@ -1869,16 +1956,29 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *Update {
 		}
 	}
 
-	// Sort compatibility check
+	// Sort compatibility check.
+	// Python (ivy_actions.py:1359-1361):
+	//   for x,y in zip(formal_params,actual_params):
+	//       if x.sort != y.sort and not domain.is_variant(x.sort, y.sort):
+	//           raise IvyError("value for input parameter ... has wrong sort")
 	if ctx.Domain != nil {
 		for i, fp := range renamedFormalParams {
-			if i < len(actualParams) {
-				fpSort := fp.CSort
-				apSort := actualParams[i].NodeSort()
-				if fpSort != nil && apSort != nil && fpSort != apSort {
-					if !ctx.Domain.IsVariant(fpSort, apSort) {
-						// Sort mismatch — continue anyway (Python raises error)
-					}
+			fpSort := fp.CSort
+			apSort := actualParams[i].NodeSort()
+			if fpSort != nil && apSort != nil && fpSort != apSort {
+				if !ctx.Domain.IsVariant(fpSort, apSort) {
+					panic(fmt.Sprintf("value for input parameter %s has wrong sort", fp.Name))
+				}
+			}
+		}
+		// Python (ivy_actions.py:1362-1369): symmetric check on returns,
+		// but with x and y reversed in is_variant: domain.is_variant(y.sort, x.sort).
+		for i, fr := range renamedFormalReturns {
+			frSort := fr.CSort
+			arSort := actualReturns[i].NodeSort()
+			if frSort != nil && arSort != nil && frSort != arSort {
+				if !ctx.Domain.IsVariant(arSort, frSort) {
+					panic(fmt.Sprintf("value for output parameter %s has wrong sort", fr.Name))
 				}
 			}
 		}
@@ -1910,19 +2010,13 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *Update {
 
 	update := IntUpdate(fullSeq, ctx)
 
-	// Hide the renamed formal parameters and returns
-	var toHide []*lg.Const
-	for _, fp := range renamedFormalParams {
-		toHide = append(toHide, fp)
-	}
-	for _, fr := range renamedFormalReturns {
-		toHide = append(toHide, fr)
-	}
-	if len(toHide) > 0 {
-		update = Hide(toHide, update)
-	}
-
-	return update
+	// Hide the renamed formal parameters and returns.
+	// Python (ivy_actions.py:1377): res = hide(formal_params+formal_returns, res)
+	// Always called, even with empty toHide.
+	toHide := make([]*lg.Const, 0, len(renamedFormalParams)+len(renamedFormalReturns))
+	toHide = append(toHide, renamedFormalParams...)
+	toHide = append(toHide, renamedFormalReturns...)
+	return Hide(toHide, update)
 }
 
 // distinctObjRenaming creates a renaming from formals to fresh names
