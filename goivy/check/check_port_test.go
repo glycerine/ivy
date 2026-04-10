@@ -80,7 +80,7 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("test"), &lg.And{})
 	lf.Annot = "test_annotation"
-	cc := NewConjChecker(module.NewConfig(), lf, 8)
+	cc := NewConjChecker(module.New(), lf, 8)
 	got := cc.GetAnnot()
 	if got != "test_annotation" {
 		t.Errorf("GetAnnot() = %v, want 'test_annotation'", got)
@@ -89,7 +89,7 @@ func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 
 func TestConjCheckerGetAnnotWithoutAnnot(t *testing.T) {
 	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("test"), &lg.And{})
-	cc := NewConjChecker(module.NewConfig(), lf, 8)
+	cc := NewConjChecker(module.New(), lf, 8)
 	got := cc.GetAnnot()
 	if got != nil {
 		t.Errorf("GetAnnot() = %v, want nil", got)
@@ -377,7 +377,7 @@ func FuzzDualClauses(f *testing.F) {
 		s2 := lg.NewConst(name2, lg.Boolean)
 		cls := module.NewClauses([]lg.Expr{s1, s2}, nil, nil)
 		// Should not panic
-		result := DualClauses(cls)
+		result := module.DualClauses(cls, nil, nil)
 		_ = result
 	})
 }

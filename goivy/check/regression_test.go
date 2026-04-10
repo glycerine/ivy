@@ -152,7 +152,7 @@ func TestRegression_Bug4_PromotionUpdatesTheory(t *testing.T) {
 }
 
 // =============================================================================
-// Fix 5: DualClauses Skolem prefix "@"
+// Fix 5: NewBaseChecker witness Skolem prefix "@"
 // =============================================================================
 
 func TestRegression_Bug5_SkolemPrefix(t *testing.T) {
@@ -160,15 +160,15 @@ func TestRegression_Bug5_SkolemPrefix(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewVariable failed: %v", err)
 	}
-	// Create clauses containing a variable.
-	c := module.FormulaToClauses(v, nil)
-	dual := DualClauses(c)
-	if dual == nil {
-		t.Fatal("DualClauses returned nil")
+	// NewBaseChecker(invert=true) dualizes the conjecture using the @-prefix
+	// witness skolemizer (Python: def witness(v): return lg.Symbol('@'+v.name, v.sort)).
+	checker := NewBaseChecker(module.New(), v, false, true)
+	if checker == nil || checker.FC == nil {
+		t.Fatal("NewBaseChecker returned nil or FC")
 	}
 	// Walk the dual clauses for skolem symbols.
 	// The Skolem constant should have "@" prefix, not "__".
-	for _, fmla := range dual.Fmlas {
+	for _, fmla := range checker.FC.Fmlas {
 		walkForSkolem(t, fmla)
 	}
 }
@@ -377,16 +377,16 @@ func TestRegression_Bug9_BothTypes(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug11_FilterCheckers(t *testing.T) {
-	cfg := module.NewConfig()
-	ac := cfg.AstCfg
+	mod := module.New()
+	ac := mod.Cfg.AstCfg
 	lf10 := ac.NewLabeledFormula(nil, lg.True)
 	lf10.SetLineno(ast.Location{Line: 10})
 	lf20 := ac.NewLabeledFormula(nil, lg.True)
 	lf20.SetLineno(ast.Location{Line: 20})
 
 	checkers := []Checker{
-		NewConjChecker(cfg, lf10, 0),
-		NewConjChecker(cfg, lf20, 0),
+		NewConjChecker(mod, lf10, 0),
+		NewConjChecker(mod, lf20, 0),
 	}
 
 	// Filter by line 10 — should return 1 result.
@@ -445,16 +445,16 @@ func TestRegression_Bug13_TheoryContext(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug14_WithFilter(t *testing.T) {
-	cfg := module.NewConfig()
-	ac := cfg.AstCfg
+	mod := module.New()
+	ac := mod.Cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, lg.True)
 	lf42.SetLineno(ast.Location{Line: 42})
 	lf99 := ac.NewLabeledFormula(nil, lg.True)
 	lf99.SetLineno(ast.Location{Line: 99})
 
 	checkers := []Checker{
-		NewConjChecker(cfg, lf42, 0),
-		NewConjChecker(cfg, lf99, 0),
+		NewConjChecker(mod, lf42, 0),
+		NewConjChecker(mod, lf99, 0),
 	}
 
 	filtered := FilterCheckers(checkers, "42")
@@ -468,16 +468,16 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 }
 
 func TestRegression_Bug14_NoFilter(t *testing.T) {
-	cfg := module.NewConfig()
-	ac := cfg.AstCfg
+	mod := module.New()
+	ac := mod.Cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, lg.True)
 	lf42.SetLineno(ast.Location{Line: 42})
 	lf99 := ac.NewLabeledFormula(nil, lg.True)
 	lf99.SetLineno(ast.Location{Line: 99})
 
 	checkers := []Checker{
-		NewConjChecker(cfg, lf42, 0),
-		NewConjChecker(cfg, lf99, 0),
+		NewConjChecker(mod, lf42, 0),
+		NewConjChecker(mod, lf99, 0),
 	}
 
 	filtered := FilterCheckers(checkers, "")

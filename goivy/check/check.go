@@ -84,7 +84,7 @@ type Checker interface {
 // It wraps a formula conjecture and checks it against a state by
 // negating it (dualizing) and checking satisfiability.
 type BaseChecker struct {
-	Cfg        *module.Config
+	Mod        *module.Module
 	FC         *module.Clauses
 	ReportPass bool
 	Inverted   bool
@@ -93,13 +93,19 @@ type BaseChecker struct {
 
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
 // If invert is true (the default), the formula is dualized for checking.
-func NewBaseChecker(cfg *module.Config, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
+// Faithful port of Python ivy_check.py Checker.__init__ (lines 218-226).
+func NewBaseChecker(mod *module.Module, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
 	fc := module.FormulaToClauses(conj, nil)
 	if invert {
-		fc = DualClauses(fc)
+		// Python: def witness(v): return lg.Symbol('@'+v.name, v.sort)
+		//         self.fc = lut.dual_clauses(self.fc, witness)
+		witness := func(v *lg.Variable) lg.Expr {
+			return module.VarToSkolem("@", v)
+		}
+		fc = module.DualClauses(fc, witness, mod.Instantiator)
 	}
 	return &BaseChecker{
-		Cfg:        cfg,
+		Mod:        mod,
 		FC:         fc,
 		ReportPass: reportPass,
 		Inverted:   invert,
@@ -114,14 +120,14 @@ func (c *BaseChecker) Start() {
 }
 func (c *BaseChecker) Sat() bool {
 	// Python: return self._pass() if act.check_unprovable.get() else self.fail()
-	if c.Cfg.OnlyCheckUnprovable {
+	if c.Mod.Cfg.OnlyCheckUnprovable {
 		return c.Pass()
 	}
 	return c.Fail()
 }
 func (c *BaseChecker) Unsat() bool {
 	// Python: return self.fail() if act.check_unprovable.get() else self._pass()
-	if c.Cfg.OnlyCheckUnprovable {
+	if c.Mod.Cfg.OnlyCheckUnprovable {
 		return c.Fail()
 	}
 	return c.Pass()
@@ -133,10 +139,10 @@ func (c *BaseChecker) GetLF() *ast.LabeledFormula { return nil }
 
 func (c *BaseChecker) Fail() bool {
 	fmt.Println("FAIL")
-	c.Cfg.Failures++
+	c.Mod.Cfg.Failures++
 	c.FailedFlag = true
 	// Python: return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get()
-	return !(c.Cfg.Diagnose || c.Cfg.OptTrace) || c.Cfg.OnlyCheckUnprovable
+	return !(c.Mod.Cfg.Diagnose || c.Mod.Cfg.OptTrace) || c.Mod.Cfg.OnlyCheckUnprovable
 }
 
 func (c *BaseChecker) Pass() bool {
@@ -156,8 +162,8 @@ type ConjChecker struct {
 }
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
-func NewConjChecker(cfg *module.Config, lf *ast.LabeledFormula, indent int) *ConjChecker {
-	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), true, true)
+func NewConjChecker(mod *module.Module, lf *ast.LabeledFormula, indent int) *ConjChecker {
+	base := NewBaseChecker(mod, lf.Formula.(lg.Expr), true, true)
 	return &ConjChecker{
 		BaseChecker: *base,
 		LF:          lf,
@@ -189,8 +195,8 @@ type ConjAssumer struct {
 }
 
 // NewConjAssumer creates a ConjAssumer for the given labeled formula.
-func NewConjAssumer(cfg *module.Config, lf *ast.LabeledFormula) *ConjAssumer {
-	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), false, false)
+func NewConjAssumer(mod *module.Module, lf *ast.LabeledFormula) *ConjAssumer {
+	base := NewBaseChecker(mod, lf.Formula.(lg.Expr), false, false)
 	return &ConjAssumer{
 		BaseChecker: *base,
 		LF:          lf,
@@ -203,34 +209,6 @@ func (c *ConjAssumer) Start() {
 
 func (c *ConjAssumer) Assume() bool               { return true }
 func (c *ConjAssumer) GetLF() *ast.LabeledFormula { return c.LF }
-
-// --- DualClauses ---
-
-// DualClauses negates a clause set for checking: the negated
-// clauses are satisfiable iff the original are not entailed.
-// Free variables are replaced with Skolem constants before negation.
-// Corresponds to Python's lut.dual_clauses (ivy_logic_utils.py:1514-1525).
-func DualClauses(c *module.Clauses) *module.Clauses {
-	if c == nil {
-		return c
-	}
-	// Step 1: Collect used variables in order.
-	vs := module.UsedVariablesOrdered(c)
-
-	// Step 2: Skolemize — replace each variable with a Skolem constant.
-	if len(vs) > 0 {
-		subs := make(map[string]lg.Expr, len(vs))
-		for _, v := range vs {
-			subs[v.Name] = module.VarToSkolem("@", v)
-		}
-		c = module.SubstituteClausesByName(c, subs)
-	}
-
-	// Step 3: Convert to formula, negate, convert back to clauses.
-	fmla := module.ClausesToFormula(c)
-	negated := module.Negate(fmla)
-	return module.FormulaToClauses(negated, nil)
-}
 
 // --- Check functions ---
 
@@ -736,7 +714,7 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 	// Build checkers for the filtered list.
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
+		checkers = append(checkers, NewConjChecker(mod, c, indent))
 	}
 
 	return CheckFcsInState(mod, checkers)
@@ -748,7 +726,7 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 // lg.Or() with no terms is "false", so after dualization the check
 // succeeds iff the post-state has no assertion violations.
 func CheckSafetyInState(mod *module.Module, reportPass bool) bool {
-	checker := NewBaseChecker(mod.Cfg, &lg.Or{}, reportPass, true)
+	checker := NewBaseChecker(mod, &lg.Or{}, reportPass, true)
 	return CheckFcsInState(mod, []Checker{checker})
 }
 

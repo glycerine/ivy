@@ -14,7 +14,7 @@ import (
 // --- BaseChecker tests ---
 
 func TestBaseCheckerCreate(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, true, true)
+	c := NewBaseChecker(module.New(), lg.True, true, true)
 	if c == nil {
 		t.Fatal("NewBaseChecker returned nil")
 	}
@@ -27,7 +27,7 @@ func TestBaseCheckerCreate(t *testing.T) {
 }
 
 func TestBaseCheckerCond(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, false)
+	c := NewBaseChecker(module.New(), lg.True, false, false)
 	cond := c.Cond()
 	if cond == nil {
 		t.Fatal("Cond returned nil")
@@ -35,7 +35,7 @@ func TestBaseCheckerCond(t *testing.T) {
 }
 
 func TestBaseCheckerPass(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.New(), lg.True, false, true)
 	result := c.Pass()
 	if !result {
 		t.Error("Pass should return true")
@@ -46,32 +46,32 @@ func TestBaseCheckerPass(t *testing.T) {
 }
 
 func TestBaseCheckerFail(t *testing.T) {
-	cfg := module.NewConfig()
-	oldFailures := cfg.Failures
-	c := NewBaseChecker(cfg, lg.True, false, true)
+	mod := module.New()
+	oldFailures := mod.Cfg.Failures
+	c := NewBaseChecker(mod, lg.True, false, true)
 	_ = c.Fail()
 	if !c.Failed() {
 		t.Error("after Fail, should be failed")
 	}
-	if cfg.Failures <= oldFailures {
+	if mod.Cfg.Failures <= oldFailures {
 		t.Error("Failures count should have increased")
 	}
-	cfg.Failures = oldFailures // restore
+	mod.Cfg.Failures = oldFailures // restore
 }
 
 func TestBaseCheckerSatCallsFail(t *testing.T) {
-	cfg := module.NewConfig()
-	oldFailures := cfg.Failures
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	mod := module.New()
+	oldFailures := mod.Cfg.Failures
+	c := NewBaseChecker(mod, lg.True, false, true)
 	_ = c.Sat()
 	if !c.Failed() {
 		t.Error("Sat should trigger Fail")
 	}
-	cfg.Failures = oldFailures
+	mod.Cfg.Failures = oldFailures
 }
 
 func TestBaseCheckerUnsatCallsPass(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.New(), lg.True, false, true)
 	result := c.Unsat()
 	if !result {
 		t.Error("Unsat should trigger Pass and return true")
@@ -79,21 +79,21 @@ func TestBaseCheckerUnsatCallsPass(t *testing.T) {
 }
 
 func TestBaseCheckerAssume(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.New(), lg.True, false, true)
 	if c.Assume() {
 		t.Error("BaseChecker.Assume should return false")
 	}
 }
 
 func TestBaseCheckerGetAnnot(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.New(), lg.True, false, true)
 	if c.GetAnnot() != nil {
 		t.Error("BaseChecker.GetAnnot should return nil")
 	}
 }
 
 func TestBaseCheckerGetLF(t *testing.T) {
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.New(), lg.True, false, true)
 	if c.GetLF() != nil {
 		t.Error("BaseChecker.GetLF should return nil")
 	}
@@ -102,11 +102,11 @@ func TestBaseCheckerGetLF(t *testing.T) {
 // --- ConjChecker tests ---
 
 func TestConjCheckerCreate(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	lf.SetLineno(ast.Location{Line: 42})
-	cc := NewConjChecker(cfg, lf, 8)
+	cc := NewConjChecker(mod, lf, 8)
 	if cc == nil {
 		t.Fatal("NewConjChecker returned nil")
 	}
@@ -119,29 +119,29 @@ func TestConjCheckerCreate(t *testing.T) {
 }
 
 func TestConjCheckerGetLF(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	cc := NewConjChecker(cfg, lf, 4)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	cc := NewConjChecker(mod, lf, 4)
 	if cc.GetLF() != lf {
 		t.Error("GetLF should return the labeled formula")
 	}
 }
 
 func TestConjCheckerImplementsChecker(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	var _ Checker = NewConjChecker(cfg, lf, 8)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	var _ Checker = NewConjChecker(mod, lf, 8)
 }
 
 // --- ConjAssumer tests ---
 
 func TestConjAssumerCreate(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	ca := NewConjAssumer(cfg, lf)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	ca := NewConjAssumer(mod, lf)
 	if ca == nil {
 		t.Fatal("NewConjAssumer returned nil")
 	}
@@ -151,56 +151,20 @@ func TestConjAssumerCreate(t *testing.T) {
 }
 
 func TestConjAssumerAssume(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	ca := NewConjAssumer(cfg, lf)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	ca := NewConjAssumer(mod, lf)
 	if !ca.Assume() {
 		t.Error("ConjAssumer.Assume should return true")
 	}
 }
 
 func TestConjAssumerImplementsChecker(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	var _ Checker = NewConjAssumer(cfg, lf)
-}
-
-// --- DualClauses tests ---
-
-func TestDualClausesNil(t *testing.T) {
-	result := DualClauses(nil)
-	if result != nil {
-		t.Error("DualClauses(nil) should return nil")
-	}
-}
-
-func TestDualClausesEmpty(t *testing.T) {
-	c := module.NewClauses(nil, nil, nil)
-	result := DualClauses(c)
-	if result == nil {
-		t.Fatal("DualClauses should not return nil for empty clauses")
-	}
-}
-
-func TestDualClausesSingleFormula(t *testing.T) {
-	// Use a real formula (not lg.True which is empty And, consumed by collectAndList)
-	p := lg.NewConst("p", lg.Boolean)
-	c := module.NewClauses([]lg.Expr{p}, nil, nil)
-	result := DualClauses(c)
-	if result == nil {
-		t.Fatal("result should not be nil")
-	}
-	if len(result.Fmlas) != 1 {
-		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
-	}
-	// The dual negates the formula: p becomes Not(p).
-	// (No variables to skolemize for a constant symbol.)
-	_, isNot := result.Fmlas[0].(*lg.Not)
-	if !isNot {
-		t.Errorf("expected Not, got %T", result.Fmlas[0])
-	}
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	var _ Checker = NewConjAssumer(mod, lf)
 }
 
 // --- Parameter tests ---
@@ -488,11 +452,11 @@ func TestPrettyActionNameWithoutPrefix(t *testing.T) {
 // --- FilterCheckers tests ---
 
 func TestFilterCheckersNoFilter(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	lf.SetLineno(ast.Location{Line: 10})
-	checkers := []Checker{NewConjChecker(cfg, lf, 8)}
+	checkers := []Checker{NewConjChecker(mod, lf, 8)}
 	result := FilterCheckers(checkers, "")
 	if len(result) != 1 {
 		t.Errorf("expected 1 checker, got %d", len(result))
@@ -500,13 +464,13 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 }
 
 func TestFilterCheckersWithLineFilter(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
-	lf1 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf1 := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	lf1.SetLineno(ast.Location{Line: 10})
-	lf2 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf2 := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	lf2.SetLineno(ast.Location{Line: 20})
-	checkers := []Checker{NewConjChecker(cfg, lf1, 8), NewConjChecker(cfg, lf2, 8)}
+	checkers := []Checker{NewConjChecker(mod, lf1, 8), NewConjChecker(mod, lf2, 8)}
 	result := FilterCheckers(checkers, "10")
 	if len(result) != 1 {
 		t.Errorf("expected 1 checker after filter, got %d", len(result))
@@ -525,7 +489,7 @@ func TestCheckFcsInStateEmpty(t *testing.T) {
 
 func TestCheckFcsInStateWithChecker(t *testing.T) {
 	mod := module.New()
-	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(mod, lg.True, false, true)
 	result := CheckFcsInState(mod, []Checker{c})
 	if !result {
 		t.Error("should pass (stub implementation)")
@@ -1180,14 +1144,14 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 // --- Integration-level tests ---
 
 func TestCheckerInterfaceCompliance(t *testing.T) {
-	cfg := module.NewConfig()
+	mod := module.New()
 
 	// All checker types implement the Checker interface
-	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	checkers := []Checker{
-		NewBaseChecker(module.NewConfig(), lg.True, true, true),
-		NewConjChecker(cfg, lf, 8),
-		NewConjAssumer(cfg, lf),
+		NewBaseChecker(mod, lg.True, true, true),
+		NewConjChecker(mod, lf, 8),
+		NewConjAssumer(mod, lf),
 	}
 	for i, c := range checkers {
 		t.Run(fmt.Sprintf("checker_%d", i), func(t *testing.T) {

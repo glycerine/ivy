@@ -165,9 +165,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			var checkers []Checker
 			for _, prop := range nonTemporal {
 				if prop.Assumed || subgoalMap[prop.ID] {
-					checkers = append(checkers, NewConjAssumer(mod.Cfg, prop))
+					checkers = append(checkers, NewConjAssumer(mod, prop))
 				} else {
-					checkers = append(checkers, NewConjChecker(mod.Cfg, prop, 8))
+					checkers = append(checkers, NewConjChecker(mod, prop, 8))
 				}
 			}
 			if len(checkers) > 0 {
@@ -1286,7 +1286,7 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
+		checkers = append(checkers, NewConjChecker(mod, c, indent))
 	}
 
 	return CheckFcsInStateWithAG(mod, ag, post, checkers)
@@ -1294,7 +1294,7 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 
 // CheckSafetyInStateWithAG checks safety in a state using the analysis graph.
 func CheckSafetyInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, reportPass bool) bool {
-	checker := NewBaseChecker(mod.Cfg, &lg.Or{}, reportPass, true)
+	checker := NewBaseChecker(mod, &lg.Or{}, reportPass, true)
 	return CheckFcsInStateWithAG(mod, ag, post, []Checker{checker})
 }
 
