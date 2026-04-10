@@ -1260,58 +1260,75 @@ func (af *ActionFailed) Error() string {
 // ActionFailed error if not.
 //
 // Parameters:
-//   - state: (updated []string, clauses lg.Expr, pre lg.Expr)
-//   - axioms: background axioms
-//   - action: (updated []string, clauses lg.Expr, pre lg.Expr)
+//   - state: (Modified, TR, Pre) — Python state.value tuple (su, sc, sp)
+//   - axioms: background theory as a Clauses
+//   - action: (Modified, TR, Pre) — Python action tuple (au, ac, ap)
 //   - check: whether to check precondition
 //
-// Returns: (updated []string, post_state lg.Expr, pre lg.Expr), or error
+// Returns: composed Update (Modified, TR, Pre), or ActionFailed error.
 //
-// Corresponds to Python compose_state_action (lines 464-488).
+// Faithful port of Python compose_state_action (ivy_transrel.py:500-524).
 func ComposeStateAction(
 	cfg *iu.IvyUtilsConfig,
-	state *Update, axioms lg.Expr, action *Update, check bool,
+	state *Update, axioms *module.Clauses, action *Update, check bool,
 ) (*Update, error) {
-	// Faithful port of Python compose_state_action (ivy_transrel.py:464-488).
 	su := state.Modified
-	suAll := state.ModifiedAll
+	// Python: `if su != None` — su==None means "all moded". Map this to
+	// Update.ModifiedAll. Some callers (notably art.State.StateValue and
+	// stateValueToUpdate for state-style states with sv.Moded==nil) leave
+	// Modified==nil without setting ModifiedAll; treat that nil slice the
+	// same as ModifiedAll for compatibility with Python's `su == None`.
+	suAll := state.ModifiedAll || su == nil
 	sc := state.TR
 	sp := state.Pre
 	au := action.Modified
+
+	// Python: sc, sp = clausify(sc), clausify(sp)
+	// (no-op in Go since sc, sp are already *Clauses)
 
 	// Check precondition if requested.
 	// Python: pre_test = and_clauses(and_clauses(sc, ap), axioms)
 	//         model = small_model_clauses(pre_test)
 	//         if model != None: raise ActionFailed(pre_test, trans)
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
-		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), module.FormulaToClauses(axioms, nil))
-		// Check if precondition violation is possible (SAT = violation found)
-		// Python: model = small_model_clauses(pre_test)
-		//         if model != None: trans = extract_pre_post_model(pre_test, model, au)
-		//                           raise ActionFailed(pre_test, trans)
-		{
-			slv := z3bridge.NewSolver(nil, nil)
-			model, _ := slv.GetModelClauses(preTest)
-			if model != nil {
-				// Extract pre/post state from the model.
-				preCls, postCls := ExtractPrePostModel(cfg, preTest, model, au)
-
-				postUpdated := make([]*lg.Const, len(au))
-				for i, s := range au {
-					postUpdated[i] = NewConst(s)
-				}
-				_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
-				return nil, &ActionFailed{
-					PreTest:   quantPreTest.ToOpenFormula(),
-					TransPre:  preCls,
-					TransPost: postCls,
-				}
+		// Python uses and_clauses (no rename_distinct), so use AndClausesTyped.
+		preTest := module.AndClausesTyped(sc, action.Pre, axioms)
+		slv := z3bridge.NewSolver(nil, nil)
+		model, _ := slv.GetModelClauses(preTest)
+		if model != nil {
+			// Python: trans = extract_pre_post_model(pre_test, model, au)
+			//         post_updated = [new(s) for s in au]
+			//         pre_test = exist_quant(post_updated, pre_test)
+			//         raise ActionFailed(pre_test, trans)
+			preCls, postCls := ExtractPrePostModel(cfg, preTest, model, au)
+			postUpdated := make([]*lg.Const, len(au))
+			for i, s := range au {
+				postUpdated[i] = NewConst(s)
+			}
+			_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
+			preTestFmla := quantPreTest.ToOpenFormula()
+			return nil, &ActionFailed{
+				PreTest:   preTestFmla,
+				Formula:   preTestFmla, // legacy field used by interp.ApplyAction wrapper
+				TransPre:  preCls,
+				TransPost: postCls,
 			}
 		}
 	}
 
-	// Rename state clauses: for symbols modified by action but not yet modified
-	// in state, rename x → old(x)
+	// Python:
+	//   if su != None:                 # None means "all moded" — block skipped then
+	//       ssu = set(su)
+	//       rn = dict((x, old(x)) for x in au if x not in ssu)
+	//       sc = rename_clauses(sc, rn)
+	//       ac = rename_clauses(ac, rn) # ← DEAD CODE: rebinds local only
+	//       su = list(su)
+	//       union_to_list(su, au)
+	//   img = forward_image(sc, axioms, action)   # uses ORIGINAL action tuple
+	//
+	// Rename `sc` only. Do NOT replace `action.TR`: Python's `ac = rename_clauses(...)`
+	// is dead code that rebinds a local but is never read by the subsequent
+	// forward_image call (which is invoked with the original `action` tuple).
 	if !suAll {
 		ssu := constNames(su)
 		rn := make(map[lg.NodeKey]*lg.Const)
@@ -1322,18 +1339,18 @@ func ComposeStateAction(
 		}
 		if len(rn) > 0 {
 			sc = module.RenameClauses(sc, rn)
-			actionTR := module.RenameClauses(action.TR, rn)
-			action = &Update{Modified: au, TR: actionTR, Pre: action.Pre}
 		}
 		su = UpdatedJoinConst(su, au)
 	}
 
-	// Compute forward image
-	img := ForwardImage(sc.ToOpenFormula(), axioms, action)
+	// Python: img = forward_image(sc, axioms, action)
+	// Use the Clauses-level ForwardImageMap (no formula round-trip).
+	_, img := ForwardImageMap(sc, axioms, action)
+
 	return &Update{
 		Modified:    su,
 		ModifiedAll: suAll,
-		TR:          module.FormulaToClauses(img, nil),
+		TR:          img,
 		Pre:         sp,
 	}, nil
 }

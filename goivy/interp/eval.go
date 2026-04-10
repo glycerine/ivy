@@ -19,51 +19,49 @@ import (
 // post-image. The result is a new state whose predecessor and update
 // fields are set for future analysis.
 //
-// Corresponds to Python's concrete_post() in ivy_interp.py:
+// Faithful port of Python's concrete_post() in ivy_interp.py:197-209:
 //
-//	axioms = state.domain.background_theory(state.in_scope)
-//	cons = compose_state_action(state.value, axioms, update, check=context.check)
+//	def concrete_post(update, state, expr=None):
+//	    axioms = state.domain.background_theory(state.in_scope)
+//	    cons = compose_state_action(state.value, axioms, update, check=context.check)
+//	    res = new_state(cons, domain=state.domain, expr=expr)
+//	    res.pred = state
+//	    res.update = update
+//	    return res
+//
+// Both `axioms` and `state.value` are passed to compose_state_action as
+// Clauses (no formula conversion). Delegating to actions.ComposeStateAction
+// preserves this — there must be no `state.Clauses.ToFormula()` /
+// `axioms.ToFormula()` calls here, since those would emit spurious
+// `ops.ToOpenFormula` traces with no Python counterpart.
 func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr ast.Node) (*State, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
 	}
+
+	// Python: axioms = state.domain.background_theory(state.in_scope)
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 
-	// compose_state_action: compute the forward image of the state
-	// through the action update, producing the post-state.
-	//
-	// The state is in "state style" (Modified=nil for pure states).
-	// The update is in "action style". We:
-	// 1. Compute the forward image of the state's TR through the update.
-	// 2. If check is enabled and the precondition is satisfiable with
-	//    the state, raise ActionFailed.
-	stateTR := state.Clauses.ToFormula()
-	axiomsFmla := axioms.ToFormula()
-
-	// Check precondition if requested.
-	preNode := update.PreNode()
-	if checkPrecond && preNode != nil && !isNodeFalse(preNode) {
-		preCombined := &lg.And{Terms: []lg.Expr{stateTR, axiomsFmla, preNode}}
-		solver := z3bridge.NewSolver(nil, nil)
-		t := solver.NewTranslator()
-		defer t.Close()
-		result, err := t.IsSat(preCombined)
-		if err == nil && result == z3bridge.Sat {
-			return nil, &actions.ActionFailed{
-				Formula: preNode,
-				Trace:   []lg.Expr{stateTR},
-			}
-		}
+	// Python: cons = compose_state_action(state.value, axioms, update, check=context.check)
+	stateUpdate := stateValueToUpdate(state.Value())
+	cons, err := actions.ComposeStateAction(
+		state.Domain.Cfg.IuCfg,
+		stateUpdate,
+		axioms,
+		update,
+		checkPrecond,
+	)
+	if err != nil {
+		return nil, err
 	}
 
-	// Compute forward image.
-	postFmla := actions.ForwardImage(stateTR, axiomsFmla, update)
-	postClauses := module.FormulaToClauses(postFmla, state.Clauses.Annot)
-
+	// Python: res = new_state(cons, domain=state.domain, expr=expr)
+	//         res.pred = state
+	//         res.update = update
 	postValue := NewStateValue(
-		actions.ModifiedNames(update),
-		postClauses,
-		module.FalseClauses(nil),
+		actions.ModifiedNames(cons),
+		cons.TR,
+		cons.Pre,
 	)
 	res := NewState(state.Domain, postValue, expr, "")
 	res.SetPred(state)
