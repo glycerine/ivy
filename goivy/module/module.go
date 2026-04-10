@@ -290,8 +290,11 @@ func (m *Module) Clear() {
 		m.Sig = il.NewSig()
 	}
 	// python does not clear macros. maybe Go should not either?
-	// but clear is also used to initialize... hmm...
+	// but clear is also used to initialize... hmm... add nil check?
+	// python does not actually have macros on its module.
+	//if m.Macros == nil {
 	m.Macros = make(map[string]*ast.Definition)
+	//}
 }
 
 // Copy creates a semi-shallow copy of the module.
