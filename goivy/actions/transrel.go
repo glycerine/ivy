@@ -1581,6 +1581,7 @@ func AddPostAxioms(u *Update, axioms *module.Clauses) *Update {
 	}
 }
 
+// dead and redundant code; BindOldsClausesClauses() on line 1614 preferred.
 // BindOldsClauses binds "old" symbols to their current values by
 // stripping the "old_" prefix. Corresponds to Python's bind_olds_clauses.
 func BindOldsClauses(node lg.Expr) lg.Expr {

@@ -320,9 +320,13 @@ type AstRewritable interface {
 
 // AstRewriter is the interface for all AST rewrite strategies.
 // Python: duck-typed objects with rewrite_name and rewrite_atom methods.
+//
+// RewriteAtom returns Node (not *Atom) so rewriters can substitute with any
+// node type — Atom, App, Variable, NamedBinder — matching Python's
+// rewrite_atom which returns subst[atom.rep], an unconstrained type.
 type AstRewriter interface {
 	RewriteName(name string) string
-	RewriteAtom(atom *Atom, always bool) *Atom
+	RewriteAtom(atom *Atom, always bool) Node
 }
 
 // --- Concrete rewriters ---
@@ -341,12 +345,13 @@ func (r *AstRewriteSubstConstants) RewriteName(name string) string {
 	return name
 }
 
-func (r *AstRewriteSubstConstants) RewriteAtom(atom *Atom, always bool) *Atom {
+func (r *AstRewriteSubstConstants) RewriteAtom(atom *Atom, always bool) Node {
+	// Python (ivy_ast.py:1633-1635):
+	//   return subst[atom.rep] if not atom.args and atom.rep in subst else atom
+	// The replacement can be any Node type — Atom, App, Variable, etc.
 	if len(atom.Terms) == 0 {
 		if repl, ok := r.Subst[atom.Rep]; ok {
-			if a, ok := repl.(*Atom); ok {
-				return a
-			}
+			return repl
 		}
 	}
 	return atom
@@ -367,12 +372,15 @@ func (r *AstRewriteSubstConstantsParams) RewriteName(name string) string {
 	return SubstSubscripts(name, r.PSubst)
 }
 
-func (r *AstRewriteSubstConstantsParams) RewriteAtom(atom *Atom, always bool) *Atom {
+func (r *AstRewriteSubstConstantsParams) RewriteAtom(atom *Atom, always bool) Node {
+	// Python (ivy_ast.py:1643-1645):
+	//   return subst[atom.rep] if not atom.args and atom.rep in subst else atom
+	// The replacement can be any Node type — used by instantiate_macro to
+	// substitute formal parameters with actual macro call arguments which can
+	// be Apps, Atoms, NamedBinders, etc.
 	if len(atom.Terms) == 0 {
 		if repl, ok := r.Subst[atom.Rep]; ok {
-			if a, ok := repl.(*Atom); ok {
-				return a
-			}
+			return repl
 		}
 	}
 	return atom
@@ -409,7 +417,7 @@ func (r *AstRewriteSubstPrefix) PrefixStr(name string, always bool) string {
 	return composeNames(r.Pref.Rep, name)
 }
 
-func (r *AstRewriteSubstPrefix) RewriteAtom(atom *Atom, always bool) *Atom {
+func (r *AstRewriteSubstPrefix) RewriteAtom(atom *Atom, always bool) Node {
 	// First handle name rewriting for non-This, non-quoted reps
 	if atom.Rep != "this" && !strings.HasPrefix(atom.Rep, "\"") {
 		tree := ParseName(atom.Rep)
@@ -454,7 +462,7 @@ func (r *AstRewritePostfix) RewriteName(name string) string {
 	return name
 }
 
-func (r *AstRewritePostfix) RewriteAtom(atom *Atom, always bool) *Atom {
+func (r *AstRewritePostfix) RewriteAtom(atom *Atom, always bool) Node {
 	return ComposeAtoms(atom, r.Post)
 }
 
@@ -472,7 +480,7 @@ func (r *AstRewriteAddParams) RewriteName(name string) string {
 	return name
 }
 
-func (r *AstRewriteAddParams) RewriteAtom(atom *Atom, always bool) *Atom {
+func (r *AstRewriteAddParams) RewriteAtom(atom *Atom, always bool) Node {
 	newArgs := make([]Node, 0, len(atom.Terms)+len(r.Params))
 	newArgs = append(newArgs, atom.Terms...)
 	newArgs = append(newArgs, r.Params...)
@@ -481,7 +489,13 @@ func (r *AstRewriteAddParams) RewriteAtom(atom *Atom, always bool) *Atom {
 }
 
 // RewriteSort rewrites a sort name using a rewriter.
-// Python: rewrite_sort(rewrite, orig_sort)
+// Python: rewrite_sort(rewrite, orig_sort) (ivy_ast.py:1690-1695):
+//
+//	sort = rewrite.rewrite_name(orig_sort)
+//	if base_name_differs(sort, orig_sort):
+//	    return sort
+//	sort = rewrite.rewrite_atom(Atom(sort)).rep
+//	return sort
 func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 	sort := rewrite.RewriteName(origSort)
 	if BaseNameDiffers(sort, origSort) {
@@ -489,7 +503,14 @@ func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 	}
 	tmpAtom := &Atom{Rep: sort}
 	tmpAtom.Cfg = cfg
-	sort = rewrite.RewriteAtom(tmpAtom, false).Rep
+	rewritten := rewrite.RewriteAtom(tmpAtom, false)
+	// RewriteAtom now returns Node. For sort rewriting, only an Atom result
+	// is meaningful (we read .Rep below). Non-Atom returns from substitution
+	// rewriters don't make sense in a sort context — fall back to the
+	// pre-rewrite sort name in that case.
+	if a, ok := rewritten.(*Atom); ok {
+		return a.Rep
+	}
 	return sort
 }
 
@@ -559,7 +580,16 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 			tmpAtom.ASort = ss
 		}
 		if !BaseNameDiffers(n.Rep, newRep) {
-			tmpAtom = rewrite.RewriteAtom(tmpAtom, false)
+			rewritten := rewrite.RewriteAtom(tmpAtom, false)
+			// RewriteAtom may return a non-Atom Node (e.g., a substitution value
+			// from instantiate_macro that's an App, Variable, etc.). Return it
+			// directly when it's not an Atom — there's no way to coerce an App
+			// back into a Symbol.
+			if a, ok := rewritten.(*Atom); ok {
+				tmpAtom = a
+			} else {
+				return rewritten
+			}
 		}
 		// Convert back to Symbol with the rewritten name
 		if tmpAtom.Rep != n.Rep || (n.Sort != nil && tmpAtom.ASort != nil && fmt.Sprint(tmpAtom.ASort) != fmt.Sprint(n.Sort)) {
@@ -639,12 +669,19 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		appAtom.Base = newApp.Base
 		appAtom.ASort = newApp.ASort
 		rewritten := rewrite.RewriteAtom(appAtom, false)
-		if rewritten.Rep != newRep {
-			rSym := &Symbol{Rep: rewritten.Rep}
+		// RewriteAtom may return a non-Atom Node (e.g., a substitution value
+		// from instantiate_macro that's an App, Variable, NamedBinder, etc.).
+		// In that case return it directly.
+		rAtom, isAtom := rewritten.(*Atom)
+		if !isAtom {
+			return rewritten
+		}
+		if rAtom.Rep != newRep {
+			rSym := &Symbol{Rep: rAtom.Rep}
 			rSym.Cfg = n.Cfg
-			result := &App{Rep: rSym, Terms: rewritten.Terms}
+			result := &App{Rep: rSym, Terms: rAtom.Terms}
 			result.Base = newApp.Base
-			result.ASort = rewritten.ASort
+			result.ASort = rAtom.ASort
 			return result
 		}
 		return newApp

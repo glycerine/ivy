@@ -453,8 +453,24 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr
 }
 
 // compileUpdatePattern compiles an ast.UpdatePattern into an actions.UpdatePattern.
+//
+// Python (ivy_compiler.py:528-532):
+//
+//	def UpdatePattern_cmpl(self):
+//	    with ivy_logic.sig.copy():
+//	        return ivy_ast.AST.cmpl(self)
+//
+// The placeholder symbols compiled below are temporary; they must NOT pollute
+// the global signature for the rest of compilation. We follow the same
+// sigCopy / restore pattern as compileDefnImpl (compiler.go:1313-1315).
 func (c *Compiler) compileUpdatePattern(up *ast.UpdatePattern) (*actions.UpdatePattern, error) {
-	// Compile placeholders (ConstantDecl → []lg.Expr of *lg.Const)
+	sigCopy := c.Sig.Copy()
+	savedSig := c.Sig
+	c.Sig = sigCopy
+	defer func() { c.Sig = savedSig }()
+
+	// Compile placeholders (ConstantDecl → []lg.Expr of *lg.Const).
+	// These get added to sigCopy and discarded when the defer fires.
 	var placeholders []lg.Expr
 	if up.Params != nil {
 		for _, p := range up.Params.Args() {

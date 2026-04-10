@@ -1011,35 +1011,36 @@ func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Expr) *Clauses
 }
 
 // SubstBothClauses applies substitution to both variables and constants in clauses.
-// Corresponds to Python subst_both_clauses:
+// Python: subst_both_clauses (ivy_logic_utils.py:1017-1019):
 //
 //	substitute_constants_clauses(substitute_clauses(clauses, subst), subst)
 //
-// The subs map is keyed by name strings (mixed variable + constant names).
-// Internally, variable substitution uses name-based lookup (World 2), and
-// constant substitution constructs structural keys for the SubstituteConstantsAST
-// lookup (World 1). This dual-world function bridges the two.
-func SubstBothClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
+// Both passes share the same subs map. Python's dict can hold a polymorphic
+// mix of variable-keyed (Variable.rep is a string name) and constant-keyed
+// (Const.rep is the Const itself, with sort-sensitive __eq__) entries; each
+// pass picks up only its own type via different .rep semantics.
+//
+// The Go convention for "places where Python uses structural equivalence
+// (which accounts for Sort)" is map[lg.NodeKey]lg.Expr keyed by lg.Key(node),
+// which calls node.Sexp(). Variable.Sexp() and Const.Sexp() produce
+// type-prefixed sexps that naturally segregate the two pass populations:
+// the variable pass only matches keys built from Variables, the constant pass
+// only matches keys built from Consts.
+//
+// The caller (e.g., UpdatePattern.Match) builds the map with lg.Key(placeholder)
+// keys — preserving the placeholder's actual sort (matching Python's
+// "subst[y] = x" where y is the placeholder Symbol with its sort).
+func SubstBothClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
-	// First, substitute as variables (map[NodeKey]lg.Expr keyed by Var sexp)
-	varSubs := make(map[lg.NodeKey]lg.Expr)
-	for name, val := range subs {
-		v, err := lg.NewVariable(name, val.NodeSort())
-		if err == nil {
-			varSubs[lg.Key(v)] = val
-		}
-	}
-	result := SubstituteClauses(clauses, varSubs)
-	// Then, substitute as constants — build structural keys
-	constSubs := make(map[lg.NodeKey]lg.Expr, len(subs))
-	for name, val := range subs {
-		// Construct a Symbol with the value's sort for structural matching
-		sym := lg.NewConst(name, val.NodeSort())
-		constSubs[lg.Key(sym)] = val
-	}
-	result = SubstituteConstantsClauses(result, constSubs)
+	// Both passes share the same subs map. SubstituteClauses iterates Variables
+	// in the formula and looks them up by lg.Key(var); SubstituteConstantsClauses
+	// iterates Consts and looks them up by lg.Key(const). The two key namespaces
+	// don't collide because Variable.Sexp() and Const.Sexp() have different
+	// type prefixes.
+	result := SubstituteClauses(clauses, subs)
+	result = SubstituteConstantsClauses(result, subs)
 	return result
 }
 

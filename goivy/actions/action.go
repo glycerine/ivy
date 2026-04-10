@@ -1727,12 +1727,18 @@ type UpdatePattern struct {
 
 // Match checks if the given action matches this pattern.
 // If it matches, returns (precond_clauses, transrel_clauses), else returns nil, nil.
-// Corresponds to Python UpdatePattern.match.
+// Corresponds to Python UpdatePattern.match (ivy_actions.py:122-130).
 func (p *UpdatePattern) Match(action Action) (*module.Clauses, *module.Clauses) {
 	if p.Pattern == nil {
 		return nil, nil
 	}
-	subst := make(map[string]lg.Expr)
+	// Python: subst dict is populated by ast_match, which sets
+	//   subst[placeholder_symbol] = matched_term. The key is the placeholder
+	//   Symbol object whose __eq__/__hash__ compare (name, sort).
+	// Go convention: map[lg.NodeKey]lg.Expr where the NodeKey is built from
+	// the placeholder Const via lg.Key (which calls node.Sexp()), preserving
+	// the placeholder's full structural identity (name + sort).
+	subst := make(map[lg.NodeKey]lg.Expr)
 	if !actionMatch(action, p.Pattern, p.Placeholders, subst) {
 		return nil, nil
 	}
@@ -1750,7 +1756,7 @@ func (p *UpdatePattern) Match(action Action) (*module.Clauses, *module.Clauses) 
 
 // actionMatch checks if action matches pattern, populating subst with
 // placeholder bindings. Corresponds to Python Action.match.
-func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[string]lg.Expr) bool {
+func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
 	// Types must match
 	if action.Name() != pattern.Name() {
 		return false
@@ -1770,7 +1776,7 @@ func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[strin
 }
 
 // nodeMatch matches a single node against a pattern node.
-func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string]lg.Expr) bool {
+func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
 	if actual == nil && pattern == nil {
 		return true
 	}
@@ -1782,11 +1788,15 @@ func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string
 	if pc, ok := pattern.(*lg.Const); ok {
 		for _, ph := range placeholders {
 			if phc, ok := ph.(*lg.Const); ok && phc.Name == pc.Name {
-				// It's a placeholder — bind it
-				if existing, found := subst[pc.Name]; found {
+				// It's a placeholder — bind it. Use lg.Key(phc) so the
+				// placeholder's full structural identity (name + sort) is the
+				// map key. This matches Python's subst[y] = x where y is the
+				// placeholder Symbol with its sort.
+				phKey := lg.Key(phc)
+				if existing, found := subst[phKey]; found {
 					return actual.Equal(existing)
 				}
-				subst[pc.Name] = actual
+				subst[phKey] = actual
 				return true
 			}
 		}

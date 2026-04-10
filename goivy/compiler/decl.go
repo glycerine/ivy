@@ -341,6 +341,48 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 	return nil
 }
 
+// AddDefinition routes a labeled definition to the appropriate module list and
+// updates LastFact. Corresponds to the routing+last_fact portion of Python
+// IvyDomainSetup.add_definition (ivy_compiler.py:1317-1327):
+//
+//	def add_definition(self, ldf):
+//	    defs = self.domain.native_definitions
+//	           if isinstance(ldf.formula.args[1], ivy_ast.NativeExpr)
+//	           else self.domain.labeled_props
+//	    # ... variable validation ...
+//	    defs.append(ldf)
+//	    self.last_fact = ldf
+//
+// Routing: if astDefNode.Rhs is a *ast.NativeExpr, the definition is appended
+// to NativeDefinitions; otherwise to LabeledProps.
+//
+// The astDefNode parameter is the pre-compile AST Definition. It is passed
+// explicitly because ldf.Formula by this point holds the compiled
+// *lg.Definition (logic form), and the NativeExpr routing check needs the AST
+// form. Callers (Derived, DefinitionDecl) already have the AST defNode in
+// scope from earlier in their flow.
+//
+// NOTE: Variable validation (addDefinitionChecks) is intentionally NOT done
+// here. Validation must run BEFORE compile so a free RHS variable is reported
+// as "occurs free on right-hand side of definition" rather than the
+// compile-side "unknown symbol" error. Callers do the validation early,
+// before invoking CompileDefn.
+func (d *DomainSetup) AddDefinition(ldf *ast.LabeledFormula, astDefNode *ast.Definition) error {
+	// Python (ivy_compiler.py:1318):
+	//   defs = self.domain.native_definitions
+	//          if isinstance(ldf.formula.args[1], ivy_ast.NativeExpr)
+	//          else self.domain.labeled_props
+	if _, isNative := astDefNode.Rhs.(*ast.NativeExpr); isNative {
+		d.Compiler.Module.NativeDefinitions = append(
+			d.Compiler.Module.NativeDefinitions, ldf)
+	} else {
+		d.Compiler.Module.LabeledProps = append(
+			d.Compiler.Module.LabeledProps, ldf)
+	}
+	d.LastFact = ldf
+	return nil
+}
+
 // --- Individual declaration handlers ---
 
 // TypeDecl processes a type declaration.
@@ -630,7 +672,11 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	} else {
 		return nil
 	}
-	// Validate definition variables (Python: add_definition checks)
+	// Validate definition variables BEFORE compile so a free RHS variable is
+	// reported as "occurs free on right-hand side of definition" rather than
+	// the compile-side "unknown symbol" error. Python (ivy_compiler.py:1319-1325)
+	// validates inside add_definition (post-compile) but the error semantics are
+	// equivalent because variable names are invariant under compile.
 	if err := addDefinitionChecks(defNode); err != nil {
 		return err
 	}
@@ -678,9 +724,13 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 
 	// Python: self.add_definition(ldf.clone([label, df]))
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
+	// AddDefinition validates the definition variables (using astDefNode, the
+	// pre-compile AST form) and routes to either NativeDefinitions or
+	// LabeledProps based on whether the AST RHS is a NativeExpr.
 	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
-	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	d.LastFact = mlf
+	if err := d.AddDefinition(mlf, defNode); err != nil {
+		return err
+	}
 	mod := d.Compiler.Module
 	mod.SymbolOrder = append(mod.SymbolOrder, sym)
 
@@ -719,7 +769,11 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	} else {
 		return nil
 	}
-	// Validate definition variables (Python: add_definition checks)
+	// Validate definition variables BEFORE compile so a free RHS variable is
+	// reported as "occurs free on right-hand side of definition" rather than
+	// the compile-side "unknown symbol" error. Python (ivy_compiler.py:1319-1325)
+	// validates inside add_definition (post-compile) but the error semantics are
+	// equivalent because variable names are invariant under compile.
 	if err := addDefinitionChecks(defNode); err != nil {
 		return err
 	}
@@ -754,9 +808,13 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 
 	// Python: self.add_definition(ldf.clone([label, df]))
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
+	// AddDefinition validates the definition variables (using astDefNode, the
+	// pre-compile AST form) and routes to either NativeDefinitions or
+	// LabeledProps based on whether the AST RHS is a NativeExpr.
 	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
-	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	d.LastFact = mlf
+	if err := d.AddDefinition(mlf, defNode); err != nil {
+		return err
+	}
 
 	// Add the defined symbol if not already in the signature
 	if def, ok := compiled.(*il.Definition); ok {
