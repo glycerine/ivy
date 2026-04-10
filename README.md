@@ -2603,29 +2603,16 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-233842  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Or terms:[])])
-        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Or terms:[])])
+247600  go : XTRACE: solver.ClausesToZ3 fmla[296] sort=Boolean
+        py : XTRACE: solver.ClausesToZ3 fmla[296] sort=Boolean
 
-233843  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
-        py : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+247601  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
+        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
 
-233844  go : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
-        py : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
+247602  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
+        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
 
-233845  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
-        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
-
-233846  go : XTRACE: check.checkFcsNormalPath history path postFmlas=0 postDefs=0 axiomFmlas=20 axiomDefs=12 checkers=1
-        py : XTRACE: interp.State.Update calling GetUpdate type=fail_action
-~~~
-so we are hitting divergence sooner...
-
-was/before:
-~~~
-236913  go : XTRACE: ast.LF.__init__ id=2033 counter=2034
-        py : XTRACE: ast.LF.__init__ id=2033 counter=2034
-
-236914  go : XTRACE: ast.LF.__init__ id=2034 counter=2035
-        py : XTRACE: check.guarantee_loop post BuildEnvAction
+247603  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=cfabric.t_rd_arr_min
+        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=tar_cf_clock
 ~~~
 
