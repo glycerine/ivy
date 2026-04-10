@@ -1252,6 +1252,7 @@ func (af *ActionFailed) Error() string {
 //
 // Faithful port of Python compose_state_action (ivy_transrel.py:500-524).
 func ComposeStateAction(
+	mod *module.Module,
 	cfg *iu.IvyUtilsConfig,
 	state *Update, axioms *module.Clauses, action *Update, check bool,
 ) (*Update, error) {
@@ -1276,14 +1277,14 @@ func ComposeStateAction(
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
 		// Python uses and_clauses (no rename_distinct), so use AndClausesTyped.
 		preTest := module.AndClausesTyped(sc, action.Pre, axioms)
-		slv := z3bridge.NewSolver(nil, nil)
+		slv := z3bridge.NewSolver(mod, nil)
 		model, _ := slv.GetModelClauses(preTest)
 		if model != nil {
 			// Python: trans = extract_pre_post_model(pre_test, model, au)
 			//         post_updated = [new(s) for s in au]
 			//         pre_test = exist_quant(post_updated, pre_test)
 			//         raise ActionFailed(pre_test, trans)
-			preCls, postCls := ExtractPrePostModel(cfg, preTest, model, au)
+			preCls, postCls := ExtractPrePostModel(mod, cfg, preTest, model, au)
 			postUpdated := make([]*lg.Const, len(au))
 			for i, s := range au {
 				postUpdated[i] = NewConst(s)
@@ -1514,11 +1515,11 @@ type InterpolantResult struct {
 //	    clauses2 = simplify_clauses(clauses2)
 //	    itp = binary_interpolant(foo,clauses2)
 //	    return None if itp is None else (clauses1,itp)
-func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+func Interpolant(mod *module.Module, clauses1, clauses2, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	combined := module.AndClausesTyped(clauses1, axioms)
 	clauses2 = module.SimplifyClauses(clauses2)
 
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(mod, nil)
 	itp, err := slv.BinaryInterpolant(combined, clauses2)
 	if err != nil || itp == nil {
 		return nil
@@ -1533,9 +1534,9 @@ func Interpolant(clauses1, clauses2, axioms *module.Clauses, interpreted map[str
 //
 //	def forward_interpolant(pre_state,update,post_state,axioms,interpreted):
 //	    return interpolant(forward_image(pre_state,axioms,update),post_state,axioms,interpreted)
-func ForwardInterpolant(preState *module.Clauses, update *Update, postState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+func ForwardInterpolant(mod *module.Module, preState *module.Clauses, update *Update, postState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	fwdClauses := ForwardImage(preState, axioms, update)
-	return Interpolant(fwdClauses, postState, axioms, interpreted)
+	return Interpolant(mod, fwdClauses, postState, axioms, interpreted)
 }
 
 // ReverseInterpolantCase computes the interpolant using reverse image and
@@ -1550,15 +1551,15 @@ func ForwardInterpolant(preState *module.Clauses, update *Update, postState *mod
 //	                and is_ground_clause(cl)
 //	                and not any(is_skolem(r) for r,n in relations_clause(cl))]
 //	    return interpolant(pre_state,pre_case,axioms,interpreted)
-func ReverseInterpolantCase(postState *module.Clauses, update *Update, preState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+func ReverseInterpolantCase(mod *module.Module, postState *module.Clauses, update *Update, preState *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
 	pre := ReverseImage(postState, axioms, update)
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(mod, nil)
 	preCase, err := slv.ClausesCase(pre)
 	if err != nil || preCase == nil {
 		return nil
 	}
 	filtered := caseClausesFilter(preCase)
-	return Interpolant(preState, filtered, axioms, interpreted)
+	return Interpolant(mod, preState, filtered, axioms, interpreted)
 }
 
 // InterpolantCase computes the interpolant using forward case analysis.
@@ -1572,14 +1573,14 @@ func ReverseInterpolantCase(postState *module.Clauses, update *Update, preState 
 //	                         and is_ground_clause(cl)
 //	                         and not any(is_skolem(r) for r,n in relations_clause(cl))])
 //	    return interpolant(pre_state,post_case,axioms,interpreted)
-func InterpolantCase(preState *module.Clauses, post *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
-	slv := z3bridge.NewSolver(nil, nil)
+func InterpolantCase(mod *module.Module, preState *module.Clauses, post *module.Clauses, axioms *module.Clauses, interpreted map[string]bool) *InterpolantResult {
+	slv := z3bridge.NewSolver(mod, nil)
 	postCase, err := slv.ClausesCase(post)
 	if err != nil || postCase == nil {
 		return nil
 	}
 	filtered := caseClausesFilter(postCase)
-	return Interpolant(preState, filtered, axioms, interpreted)
+	return Interpolant(mod, preState, filtered, axioms, interpreted)
 }
 
 // InterpFromUnsatCore computes a Craig-style interpolant from an unsat core.
@@ -2239,7 +2240,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 		}
 
 		// Get the sub-model for the given past time as a formula
-		slv := z3bridge.NewSolver(nil, nil)
+		slv := z3bridge.NewSolver(h.Mod, nil)
 		clauses, err := slv.ClausesModelToClausesWithModel(allClauses, model, ignore, numerals)
 		if err != nil || clauses == nil {
 			clauses = module.TrueClauses(nil)
@@ -2263,7 +2264,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 	}
 
 	// Extract universes from model
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(h.Mod, nil)
 	hm := z3bridge.NewHerbrandModel(slv, model.Solver, model.Model, model.Vocab)
 	universes := hm.Universes(numerals)
 

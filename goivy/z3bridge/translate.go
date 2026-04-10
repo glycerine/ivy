@@ -40,14 +40,20 @@ type NumeralFuncFn func(name string, sort lg.Sort) (*Expr, error)
 type Translator struct {
 	s *Solver
 
+	// cache holds the shared Z3 translation state (sorts, predicates,
+	// constants, functions, sortsInv) plus the Z3 context. Translators
+	// constructed via NewTranslatorWithCache share the same cache —
+	// matching Python's module-level z3_sorts/z3_predicates/etc. that
+	// all z3.Solver() instances within a Module context share.
+	// Translators constructed via NewTranslator get their own fresh cache
+	// (legacy/test behavior).
+	cache *Z3SessionCache
+
+	// Ctx is an alias for cache.Ctx, kept as a field for backward
+	// compatibility with all existing t.Ctx / tr.Ctx call sites.
 	Ctx             *Z3Context
-	sorts           map[lg.NodeKey]Sort                    // cache: Ivy sort Sexp -> Z3 sort
-	sortsInv        map[uint]lg.Sort                       // reverse map: Z3 AST ID -> original Ivy sort (Python z3_sorts_inv)
-	consts          map[lg.NodeKey]Expr                    // cache: structural key -> Z3 const
-	z3_functions    map[lg.NodeKey]FuncDecl                // Python z3_functions (term_to_z3 FuncDecl cache; NOT used by atom or symbol-bare paths). snake_case is deliberate: mirror ivy_solver.py name verbatim for mechanical-port clarity.
-	z3_predicates   map[lg.NodeKey]func(args ...Expr) Expr // Python z3_predicates (atom_to_z3 closure cache; stores FuncDecl.Apply / native / polymac / my_eq). snake_case is deliberate: mirror ivy_solver.py name verbatim.
-	TranslateMerkle iu.MerkleState                         // rolling Merkle hash for Formula_to_z3_int() input conformance
-	translateDepth  int                                    // nesting depth; only hash at top level (depth 0)
+	TranslateMerkle iu.MerkleState // rolling Merkle hash for Formula_to_z3_int() input conformance
+	translateDepth  int            // nesting depth; only hash at top level (depth 0)
 
 	// these were pre-merge of solver/ and z3bridge hacks to avoid circular imports
 	/*	LookupNative     LookupNativeFunc                          // optional: Python lookup_native(thing, table, kind) callback
@@ -177,52 +183,44 @@ func (t *Translator) Numeral(name string, sort lg.Sort) (*Expr, error) {
 	return &result, nil
 }
 
-// NewTranslator creates a translator with a fresh Z3 context.
+// NewTranslator creates a Translator that owns its own private cache
+// (and therefore its own Z3 context). Used by tests, ad-hoc Solver
+// instances without a module, and the legacy NewSolver(nil, ...) path.
 func (s *Solver) NewTranslator() *Translator {
-	t := &Translator{
-		s:             s,
-		Ctx:           NewZ3Context(),
-		sorts:         make(map[lg.NodeKey]Sort),
-		sortsInv:      make(map[uint]lg.Sort),
-		consts:        make(map[lg.NodeKey]Expr),
-		z3_functions:  make(map[lg.NodeKey]FuncDecl),
-		z3_predicates: make(map[lg.NodeKey]func(args ...Expr) Expr),
+	return s.NewTranslatorWithCache(NewZ3SessionCache())
+}
+
+// NewTranslatorWithCache creates a Translator that shares the given
+// Z3SessionCache (and the cache's Z3 context). Multiple Translators built
+// from the same cache will see each other's cached sorts/predicates/
+// constants/functions — this is the Go equivalent of Python's
+// "z3.Solver() instances within a Module context share z3_sorts".
+func (s *Solver) NewTranslatorWithCache(cache *Z3SessionCache) *Translator {
+	return &Translator{
+		s:     s,
+		cache: cache,
+		Ctx:   cache.Ctx,
 	}
-	t.initEqPred()
-	return t
 }
 
 func (t *Translator) Close() error {
-	return t.Ctx.Close()
+	// Do not close t.Ctx here: the Z3Context lives on the cache and may
+	// be shared with other Translators (and indeed with other Solvers
+	// belonging to the same module session). Let GC dispose of the
+	// Z3Context when the cache itself becomes unreachable.
+	return nil
 }
 
 // Clear resets all Z3 caches to initial state.
 // Corresponds to Python ivy_solver.clear() (line 228).
 func (t *Translator) Clear() {
-	t.sorts = make(map[lg.NodeKey]Sort)
-	t.sortsInv = make(map[uint]lg.Sort)
-	t.consts = make(map[lg.NodeKey]Expr)
-	t.z3_functions = make(map[lg.NodeKey]FuncDecl)
-	t.z3_predicates = make(map[lg.NodeKey]func(args ...Expr) Expr)
-	t.initEqPred()
-}
-
-// initEqPred pre-populates the equality predicate in t.z3_predicates,
-// matching Python's clear() which initializes
-// z3_predicates = {ivy_logic.equals: my_eq}.
-func (t *Translator) initEqPred() {
-	t.z3_predicates[eqCanonPredKey] = func(args ...Expr) Expr {
-		//if t.EqFunc != nil {
-		return t.Eq(args[0], args[1])
-		//}
-		//return t.Ctx.Eq(args[0], args[1])
-	}
+	t.cache.Clear()
 }
 
 // SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
 // Corresponds to Python's sort_from_z3() (ivy_solver.py:905).
 func (t *Translator) SortFromZ3(z3sort Sort) (lg.Sort, bool) {
-	ivySort, ok := t.sortsInv[z3sort.GetId()]
+	ivySort, ok := t.cache.sortsInv[z3sort.GetId()]
 	return ivySort, ok
 }
 
@@ -233,10 +231,11 @@ func (t *Translator) z3Name(name string, sort lg.Sort) string {
 	//return name
 }
 
-// xtracer / dump helper for viewing t.sorts in deterministic (sorted) order.
+// xtracer / dump helper for viewing the session-cache sorts in
+// deterministic (sorted) order.
 func (t *Translator) dumpSortsCanon() (r string) {
 	var slc []string
-	for _, srt := range t.sorts {
+	for _, srt := range t.cache.sorts {
 		slc = append(slc, srt.String())
 	}
 	sort.Strings(slc)
@@ -275,7 +274,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 			xtracer.Trace("ivy_solver.py:263 uninterpretedsort top HASH canon= sorts=%v", t.dumpSortsCanon())
 		}
 		key := lg.NodeKey(st.Name) // Python: z3_sorts[us.rep] where rep = name
-		if cached, ok := t.sorts[key]; ok {
+		if cached, ok := t.cache.sorts[key]; ok {
 			xtracer.Trace("ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit")
 			return cached, nil
 		}
@@ -284,8 +283,8 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		if result := t.LookupNative(st.Name, s, "sort"); result != nil {
 			if zs, ok := result.(Sort); ok {
 				xtracer.Trace("ivy_solver.py:273 uninterpretedsort() not-None from lookup_native")
-				t.sorts[key] = zs
-				t.sortsInv[zs.GetId()] = s
+				t.cache.sorts[key] = zs
+				t.cache.sortsInv[zs.GetId()] = s
 				return zs, nil
 			}
 		}
@@ -293,9 +292,9 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		xtracer.Trace("ivy_solver.py:270 uninterpretedsort() None from lookup_native")
 		// Python: if s == None: s = z3.DeclareSort(us.rep)
 		zs := t.Ctx.UninterpretedSort(st.Name)
-		t.sorts[key] = zs
+		t.cache.sorts[key] = zs
 		// Python: z3_sorts_inv[get_id(s)] = us
-		t.sortsInv[zs.GetId()] = s
+		t.cache.sortsInv[zs.GetId()] = s
 		return zs, nil
 
 	case *lg.TopSort:
@@ -315,20 +314,20 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		// Python: enumeratedsort(es) at ivy_solver.py:280
 		xtracer.Trace("ivy_solver.py:281 enumeratedsort() ENTER name=%s", st.Name)
 		key := lg.NodeKey(st.Name) // Python: z3_sorts[es.rep] where rep = name
-		if cached, ok := t.sorts[key]; ok {
+		if cached, ok := t.cache.sorts[key]; ok {
 			xtracer.Trace("ivy_solver.py:284 enumeratedsort() EXIT 1: cache hit.")
 			return cached, nil
 		}
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
 		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
-		t.sorts[key] = zs
+		t.cache.sorts[key] = zs
 		// Python enumeratedsort() does NOT store in z3_sorts_inv.
 		// The reverse map entry is created by uninterpretedsort (the normal
 		// entry point for interpreted sorts).
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
 			constKey := lg.NodeKey(name + ":" + string(s.Sexp()))
-			t.consts[constKey] = constExprs[i]
+			t.cache.consts[constKey] = constExprs[i]
 		}
 		xtracer.Trace("ivy_solver.py:291 enumeratedsort() EXIT 2: cache miss.")
 		return zs, nil
@@ -614,7 +613,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	} else {
 		predKey = lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
 	}
-	if cached, ok := t.z3_predicates[predKey]; ok {
+	if cached, ok := t.cache.z3_predicates[predKey]; ok {
 		return t.applyZ3Func(cached, app.Terms) // in atomToZ3() here.
 	}
 
@@ -630,7 +629,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
 	if result := t.LookupNative(c.Name, c.CSort, "relation"); result != nil {
 		if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
-			t.z3_predicates[predKey] = nativeFn
+			t.cache.z3_predicates[predKey] = nativeFn
 			return t.applyZ3Func(nativeFn, app.Terms) // in atomToZ3 here.
 		}
 	}
@@ -650,7 +649,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		if err != nil {
 			return Expr{}, err
 		}
-		t.z3_predicates[predKey] = predFn
+		t.cache.z3_predicates[predKey] = predFn
 		return t.applyZ3Func(predFn, app.Terms)
 	}
 
@@ -662,7 +661,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 			return t.Eq(args[0], args[1])
 			//return t.Ctx.Eq(args[0], args[1])
 		}
-		t.z3_predicates[predKey] = eqFn
+		t.cache.z3_predicates[predKey] = eqFn
 		return t.applyZ3Func(eqFn, app.Terms) // in atomToZ3 here.
 	}
 
@@ -672,9 +671,9 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	//           else z3.Const(solver_name(atom.rep),sig)
 	//
 	// Python's atom_to_z3 populates the z3_predicates cache (mirrored
-	// here by t.z3_predicates); it NEVER touches z3_functions. We
+	// here by t.cache.z3_predicates); it NEVER touches z3_functions. We
 	// must not go through makeFuncDecl (which caches in
-	// t.z3_functions) — sharing that cache causes a hit from a prior
+	// t.cache.z3_functions) — sharing that cache causes a hit from a prior
 	// term_to_z3 or symbol_to_z3 path to suppress the functionsort()
 	// ENTER xtrace, diverging from Python. Same reasoning and
 	// precedent as ltPred (see its comment referencing log.red step
@@ -692,7 +691,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	z3name := t.z3Name(c.Name, fs)
 	fd := t.Ctx.Function(z3name, zDomain, zRange)
 	predFn := fd.Apply
-	t.z3_predicates[predKey] = predFn
+	t.cache.z3_predicates[predKey] = predFn
 	return t.applyZ3Func(predFn, app.Terms) // end of atomToZ3 here.
 }
 
@@ -939,7 +938,7 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 	key := lg.NodeKey(v.Name + ":" + string(sort.Sexp()))
 
 	// Python: res = z3_constants.get(sksym)
-	if cached, ok := t.consts[key]; ok {
+	if cached, ok := t.cache.consts[key]; ok {
 		return cached, nil
 	}
 
@@ -950,9 +949,9 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 			zs = &zsVal
 			// Cache the sort so TranslateSort finds it later via cache
 			sortKey := lg.NodeKey(sortDisplayName(sort)) // Python: z3_sorts key is sort name
-			if _, ok := t.sorts[sortKey]; !ok {
-				t.sorts[sortKey] = zsVal
-				t.sortsInv[zsVal.GetId()] = sort
+			if _, ok := t.cache.sorts[sortKey]; !ok {
+				t.cache.sorts[sortKey] = zsVal
+				t.cache.sortsInv[zsVal.GetId()] = sort
 			}
 		}
 	}
@@ -968,7 +967,7 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 
 	// Python: res = z3.Const(sksym, sig); z3_constants[sksym] = res
 	c := t.Ctx.Const(sksym, *zs)
-	t.consts[key] = c
+	t.cache.consts[key] = c
 	return c, nil
 }
 
@@ -1017,7 +1016,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// is always called. We must match that behavior.
 	if _, isEnum := sort.(*lg.EnumeratedSort); isEnum {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
-		if cached, ok := t.consts[key]; ok {
+		if cached, ok := t.cache.consts[key]; ok {
 			return cached, nil
 		}
 	}
@@ -1028,7 +1027,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// We must mirror that order.
 	if lg.FirstOrderSort(sort) {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
-		if cached, ok := t.consts[key]; ok {
+		if cached, ok := t.cache.consts[key]; ok {
 			return cached, nil
 		}
 		zs, err := t.TranslateSort(sort)
@@ -1037,7 +1036,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		}
 		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
-		t.consts[key] = c
+		t.cache.consts[key] = c
 		return c, nil
 	}
 
@@ -1048,12 +1047,12 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 			return Expr{}, err
 		}
 		key := lg.NodeKey(name + ":" + string(fs.Range().Sexp()))
-		if cached, ok := t.consts[key]; ok {
+		if cached, ok := t.cache.consts[key]; ok {
 			return cached, nil
 		}
 		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
-		t.consts[key] = c
+		t.cache.consts[key] = c
 		return c, nil
 	}
 
@@ -1062,7 +1061,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// does NOT cache anywhere. We call functionSort directly so the
 	// "functionsort() ENTER" xtrace fires every time (matching Python,
 	// where symbol_to_z3 has no cache). Going through makeFuncDecl
-	// would write t.z3_functions (Python's z3_functions cache), which
+	// would write t.cache.z3_functions (Python's z3_functions cache), which
 	// symbol_to_z3 does not populate in Python, and would also
 	// suppress the trace on subsequent visits.
 	if fs, ok := sort.(*lg.FunctionSort); ok {
@@ -1142,7 +1141,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 }
 
 // makeFuncDecl returns a Z3 FuncDecl for (name, fs), caching the
-// result in t.z3_functions.
+// result in t.cache.z3_functions.
 //
 // This is the TERM-PATH helper only — the Go analog of Python's
 // z3_functions cache (ivy_solver.py:500-508). Callers on the atom
@@ -1156,7 +1155,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 // inline-creation precedent.
 func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, error) {
 	key := lg.NodeKey(name + ":" + string(fs.Sexp()))
-	if cached, ok := t.z3_functions[key]; ok {
+	if cached, ok := t.cache.z3_functions[key]; ok {
 		return cached, nil
 	}
 
@@ -1172,7 +1171,7 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 	z3name := t.z3Name(name, fs)
 
 	fd := t.Ctx.Function(z3name, zDomain, zRange)
-	t.z3_functions[key] = fd
+	t.cache.z3_functions[key] = fd
 	return fd, nil
 }
 
@@ -1196,7 +1195,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		bound[i] = z3Var
 		_ = zs
 		// Temporarily override the const cache so the body uses these bound vars
-		t.consts[key] = bound[i]
+		t.cache.consts[key] = bound[i]
 	}
 
 	zBody, err := t.Formula_to_z3_int(body, "translateQuantifier() len(variables) > 0")

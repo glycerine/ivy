@@ -70,7 +70,7 @@ func TestNewSolver(t *testing.T) {
 
 func TestNewWithSig(t *testing.T) {
 	sig := il.NewSig()
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 	if s.Sig() != sig {
 		t.Fatal("Sig mismatch")
 	}
@@ -79,7 +79,7 @@ func TestNewWithSig(t *testing.T) {
 func TestNewWithOptions(t *testing.T) {
 	opts := module.DefaultSolverOptions()
 	opts.Seed = 42
-	s := NewSolver(il.NewSig(), opts)
+	s := NewSolverFromSig(il.NewSig(), opts)
 	if s.opts.Seed != 42 {
 		t.Fatal("Options not applied")
 	}
@@ -1276,7 +1276,7 @@ func TestArraySortRoundtrip(t *testing.T) {
 	// Python requires sig.interp to interpret sort names as arrays.
 	sig := il.NewSig()
 	sig.Interp["arr[node][value]"] = "arr[node][value]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
 
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
@@ -1590,7 +1590,7 @@ func TestSortFromZ3RoundTrip(t *testing.T) {
 func TestSortLookupStrbv(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mystr"] = "strbv[16]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "mystr"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1610,7 +1610,7 @@ func TestSortLookupStrbv(t *testing.T) {
 func TestSortLookupIntbv(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "intbv[32]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "myint"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1630,7 +1630,7 @@ func TestSortLookupIntbv(t *testing.T) {
 func TestSortLookupStrlit(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["s"] = "strlit"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	mySort := &lg.UninterpretedSort{Name: "s"}
 	z3s, err := s.Translator().TranslateSort(mySort)
@@ -1721,7 +1721,7 @@ func TestSortCardStrbvIntbv(t *testing.T) {
 func TestBfeToZ3_BracketFormat(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1739,7 +1739,7 @@ func TestBfeToZ3_BracketFormat(t *testing.T) {
 func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1757,7 +1757,7 @@ func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 func TestBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[16]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
 	fs, err := lg.NewFunctionSort(bvSort, bvSort)
@@ -1782,7 +1782,7 @@ func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
 	sig.Interp["mybv"] = "bv[8]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	intSort := &lg.UninterpretedSort{Name: "myint"}
 	bvSort := &lg.UninterpretedSort{Name: "mybv"}
@@ -1904,7 +1904,7 @@ func TestEnumEqBinaryEncoding(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 	s.SetUseNativeEnums(false)
 
 	red := lg.NewConst("red", es)
@@ -1934,7 +1934,7 @@ func TestNumeralRangeClamping(t *testing.T) {
 		Lb:   lg.NumeralBound{Value: "0"},
 		Ub:   lg.NumeralBound{Value: "10"},
 	}
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	// Numeral "15" with sort "bounded" should be clamped to [0,10]
 	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})
@@ -1959,7 +1959,7 @@ func TestNumeralRangeClamping(t *testing.T) {
 func TestNumeralNoClamping(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	// Numeral "42" with int-interpreted sort → IntVal(42)
 	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
@@ -1982,7 +1982,7 @@ func TestNumeralNoClamping(t *testing.T) {
 func TestNumeralToZ3_IntValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
@@ -1999,7 +1999,7 @@ func TestNumeralToZ3_IntValue(t *testing.T) {
 func TestNumeralToZ3_BvValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[8]"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	num := lg.NewConst("255", &lg.UninterpretedSort{Name: "mybv"})
 	result, err := s.NumeralToZ3(num)
@@ -2018,7 +2018,7 @@ func TestNumeralToZ3_BvValue(t *testing.T) {
 func TestNumeralToZ3_HexValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["myint"] = "int"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	num := lg.NewConst("0xff", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
@@ -2035,7 +2035,7 @@ func TestNumeralToZ3_HexValue(t *testing.T) {
 func TestNumeralToZ3_StringValue(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mystr"] = "strlit"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	num := lg.NewConst(`"hello"`, &lg.UninterpretedSort{Name: "mystr"})
 	result, err := s.NumeralToZ3(num)
@@ -2404,7 +2404,7 @@ func TestTranslateComparisonUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
 	// lclock has NO interpretation — it's truly uninterpreted
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	ltSym := relConst("<", lclock, lclock)
 	x := uiVar("X", lclock)
@@ -2438,7 +2438,7 @@ func TestTranslateComparisonInterpretedSort(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mysort"] = "int"
 
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	ltSym := relConst("<", mySort, mySort)
 	x := uiVar("X", mySort)
@@ -2469,7 +2469,7 @@ func TestTranslateComparisonBVSort(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mybv"] = "bv[8]"
 
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	ltSym := relConst("<", mySort, mySort)
 	x := uiVar("X", mySort)
@@ -2500,7 +2500,7 @@ func TestTranslateComparisonBVSort(t *testing.T) {
 func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	ltSym := relConst("<", lclock, lclock)
 	a := lg.NewConst("a", lclock)
@@ -2531,7 +2531,7 @@ func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	for _, op := range []string{"<=", ">", ">="} {
 		sym := relConst(op, lclock, lclock)

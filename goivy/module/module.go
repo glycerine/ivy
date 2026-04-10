@@ -144,6 +144,32 @@ type Module struct {
 	// oldSig is saved by Enter() and restored by Exit().
 	// Corresponds to Python's self.old_sig (ivy_module.py:97).
 	oldSig *il.Sig
+
+	// z3SessionCache holds the Go equivalent of Python's per-module-context
+	// z3_sorts/z3_predicates/z3_constants/z3_functions globals
+	// (ivy_solver.py:252-260). All z3bridge.Solver instances created via
+	// NewSolver(mod, ...) share this single cache, mirroring Python's
+	// "z3.Solver() instances within a Module context share z3_sorts" rule.
+	//
+	// Stored as `any` because the concrete type *z3bridge.Z3SessionCache
+	// lives in the z3bridge package, which already imports module — so the
+	// reverse import is a cycle. Accessed only via GetZ3SessionCache /
+	// SetZ3SessionCache from z3bridge code.
+	//
+	// Cleared by Module.Enter() (mirroring Python's clear() in __enter__).
+	z3SessionCache any
+}
+
+// GetZ3SessionCache returns the opaque z3bridge cache attached to this
+// module, or nil. Type-assert to *z3bridge.Z3SessionCache in z3bridge code.
+func (m *Module) GetZ3SessionCache() any {
+	return m.z3SessionCache
+}
+
+// SetZ3SessionCache attaches a z3bridge cache to this module. Called by
+// z3bridge.NewSolver on first access (lazy creation).
+func (m *Module) SetZ3SessionCache(c any) {
+	m.z3SessionCache = c
 }
 
 // NamedAction pairs a name with an action.

@@ -574,7 +574,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 			clauses = module.AndClausesTyped(clauses, bgTheory)
 		}
 	}
-	return CheckVC(ag.Domain.Cfg, clauses, nil, finalCond, relsToMin, shrink)
+	return CheckVC(ag.Domain, clauses, nil, finalCond, relsToMin, shrink)
 }
 
 // CheckVC checks a verification condition.
@@ -584,7 +584,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
 //   - Calls z3bridge.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
-func CheckVC(cfg *module.Config, clauses *module.Clauses, action actions.Action,
+func CheckVC(mod *module.Module, clauses *module.Clauses, action actions.Action,
 	finalCond *module.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
@@ -604,7 +604,7 @@ func CheckVC(cfg *module.Config, clauses *module.Clauses, action actions.Action,
 	}
 
 	// Create solver and check
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(mod, nil)
 	model, err := slv.GetSmallModel(checkClauses, sortsToMin, nil)
 	if err != nil {
 		fmt.Printf("CheckVC: solver error: %v\n", err)

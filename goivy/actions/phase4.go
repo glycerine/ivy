@@ -106,8 +106,8 @@ func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *mod
 // (true, nil). Otherwise returns (false, *CounterExample) containing the
 // conjunction of clauses with the negation of the formula.
 // Corresponds to Python's clauses_imply_formula_cex.
-func ClausesImplyFormulaCex(clauses *module.Clauses, fmla lg.Expr) (bool, *CounterExample) {
-	slv := z3bridge.NewSolver(nil, nil)
+func ClausesImplyFormulaCex(mod *module.Module, clauses *module.Clauses, fmla lg.Expr) (bool, *CounterExample) {
+	slv := z3bridge.NewSolver(mod, nil)
 	implied, err := slv.ClausesImplyFormula(clauses, fmla)
 	if err == nil && implied {
 		return true, nil
@@ -124,7 +124,7 @@ func ClausesImplyFormulaCex(clauses *module.Clauses, fmla lg.Expr) (bool, *Count
 // using the given axioms and vocabulary operator (old for state, new for action).
 // Returns true if s1 implies s2, or a *CounterExample if not.
 // Corresponds to Python's implies(s1, s2, axioms, relations, op).
-func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
+func Implies(mod *module.Module, s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
 	if s1.ModifiedAll && !s2.ModifiedAll {
 		return false, nil
 	}
@@ -143,7 +143,7 @@ func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Cons
 	c2 = module.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 
 	// Use z3bridge.ClausesImply for Clauses-to-Clauses implication
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(mod, nil)
 	ok1, err := slv.ClausesImply(p1, p2)
 	if err != nil || !ok1 {
 		return false, nil
@@ -159,16 +159,16 @@ func Implies(s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Cons
 
 // ImpliesState checks if s1 implies s2 in state style (using old vocabulary).
 // Corresponds to Python's implies_state(s1, s2, axioms, relations).
-func ImpliesState(s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
-	return Implies(s1, s2, axioms, OldConst)
+func ImpliesState(mod *module.Module, s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
+	return Implies(mod, s1, s2, axioms, OldConst)
 }
 
 // --- ImpliesAction ---
 
 // ImpliesAction checks if s1 implies s2 in action style (using new vocabulary).
 // Corresponds to Python's implies_action(s1, s2, axioms, relations).
-func ImpliesAction(s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
-	return Implies(s1, s2, axioms, NewConst)
+func ImpliesAction(mod *module.Module, s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
+	return Implies(mod, s1, s2, axioms, NewConst)
 }
 
 // --- Clausify ---
@@ -229,7 +229,7 @@ func isTautologyEquality(f lg.Expr) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model *z3bridge.ModelResult, updated []*lg.Const) (*module.Clauses, *module.Clauses) {
+func ExtractPrePostModel(mod *module.Module, cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model *z3bridge.ModelResult, updated []*lg.Const) (*module.Clauses, *module.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
@@ -239,7 +239,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model 
 	numerals := cfg.UseNumerals
 
 	// Pre-state: ignore skolems and new_ symbols
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := z3bridge.NewSolver(mod, nil)
 	preClauses, err := slv.ClausesModelToClausesWithModel(
 		clauses,
 		model,
@@ -292,15 +292,11 @@ func SmallModelClauses(cls *module.Clauses, finalCond []z3bridge.FinalCond, shri
 	if m != nil && m.Sig != nil {
 		sorts = il.UninterpretedSorts(m.Sig)
 	}
-	var sig *il.Sig
 	var sopts *module.SolverOptions
-	if m != nil {
-		sig = m.Sig
-		if m.Cfg != nil {
-			sopts = m.Cfg.SolverOpts
-		}
+	if m != nil && m.Cfg != nil {
+		sopts = m.Cfg.SolverOpts
 	}
-	slv := z3bridge.NewSolver(sig, sopts)
+	slv := z3bridge.NewSolver(m, sopts)
 	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
 		return nil, slv

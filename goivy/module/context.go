@@ -12,6 +12,13 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
+// Z3CacheClearer is implemented by *z3bridge.Z3SessionCache. Module.Enter
+// uses this interface to clear the cache without importing z3bridge (which
+// would be a cycle, since z3bridge already imports module).
+type Z3CacheClearer interface {
+	Clear()
+}
+
 // Enter sets m as the current module on its ModCfg, saving the previous
 // one so that Exit can restore it. This is the Go equivalent of Python's
 // Module.__enter__.
@@ -33,7 +40,14 @@ func (m *Module) Enter() {
 		m.oldSig = m.prevModule.Sig
 	}
 	cfg.CurrentModule = m
-	// Python: ivy_solver.clear() — clear cached Z3 values when changing sig
+	// Python: ivy_solver.clear() — clear cached Z3 values when changing sig.
+	// The z3SessionCache field on Module holds a *z3bridge.Z3SessionCache
+	// (typed `any` to avoid the import cycle); call Clear() via interface.
+	if c, ok := m.z3SessionCache.(Z3CacheClearer); ok {
+		c.Clear()
+	}
+	// Legacy hook: kept for backward compat with any code that may set it
+	// (currently nobody does, but harmless).
 	if cfg.SolverClearFn != nil {
 		cfg.SolverClearFn()
 	}

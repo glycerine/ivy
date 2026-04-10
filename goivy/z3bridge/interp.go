@@ -12,8 +12,6 @@ import "C"
 import (
 	"fmt"
 	"runtime"
-
-	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // MkInterpolant marks a formula for interpolation.
@@ -90,13 +88,17 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 
 // NewTranslatorWithInterpolation creates a Translator backed by an
 // interpolation-capable Z3 context. Use this translator when you need
-// to compute Craig interpolants.
+// to compute Craig interpolants. The interpolation translator owns its
+// own private cache (different Z3 context, so cannot share with the
+// main solver).
 func (s *Solver) NewTranslatorWithInterpolation() *Translator {
+	cache := &Z3SessionCache{
+		Ctx: NewInterpolationZ3Context(),
+	}
+	cache.resetMaps()
 	return &Translator{
-		s:      s,
-		Ctx:    NewInterpolationZ3Context(),
-		sorts:  make(map[logic.NodeKey]Sort),
-		consts: make(map[logic.NodeKey]Expr),
-		z3_functions: make(map[logic.NodeKey]FuncDecl),
+		s:     s,
+		cache: cache,
+		Ctx:   cache.Ctx,
 	}
 }

@@ -146,7 +146,7 @@ func (tc *TacticsContext) RefutedGoal(goal *proof.ProofGoal) bool {
 	negGoal := &lg.Not{Body: goal.Formula}
 
 	// Python: return z3_implies(premise, f)
-	slv := z3bridge.NewSolver(tc.modSig(), tc.modSolverOpts())
+	slv := z3bridge.NewSolver(tc.Mod, tc.modSolverOpts())
 	result, err := slv.Z3Implies(premise, negGoal, false)
 	if err != nil {
 		return false
@@ -210,7 +210,7 @@ func (tc *TacticsContext) ImpliedFacts(premise *module.Clauses, factsToCheck []*
 	}
 
 	// Python: result = z3_implies_batch(premise, facts_to_check, False)
-	slv := z3bridge.NewSolver(tc.modSig(), tc.modSolverOpts())
+	slv := z3bridge.NewSolver(tc.Mod, tc.modSolverOpts())
 	results, err := slv.ImpliesBatch(premFormula, formulas, false)
 	if err != nil {
 		return nil
@@ -277,7 +277,7 @@ func (tc *TacticsContext) RefineOrReverse(goal *proof.ProofGoal) (bool, interfac
 	postFmla := conjoinNodes(preFmla, update.TRNode())
 	negGoal := &lg.Not{Body: goalFmla}
 
-	slv := z3bridge.NewSolver(tc.modSig(), tc.modSolverOpts())
+	slv := z3bridge.NewSolver(tc.Mod, tc.modSolverOpts())
 	implies, err := slv.Implies(postFmla, negGoal)
 	if err == nil && implies {
 		// Refinement succeeds: the goal is unreachable from pred.

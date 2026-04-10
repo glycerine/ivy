@@ -31,14 +31,29 @@ type Solver struct {
 	z3u              *Z3Utils // z3_utils.py operations (ToZ3, Z3Implies, Z3ImpliesBatch)
 	opts             *module.SolverOptions
 	sig              *il.Sig
-	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
+	mod              *module.Module // module this solver belongs to (nil = ad-hoc/test)
+	HandleRangeSorts bool           // controls range sort clamped arithmetic; default true
 }
 
-// NewSolver creates a new Solver. Pass nil for sig to get an empty
-// signature, or nil for opts to get default solver options.
-func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
+// NewSolver creates a new Solver bound to the given module. The module's
+// Z3SessionCache (lazily created on first use) is reused so that all
+// NewSolver calls against the same module share Z3 sorts, constants,
+// functions, and predicates — matching Python's "z3.Solver() instances
+// within a Module context share z3_sorts/etc." semantics
+// (ivy_solver.py:252-260, ivy_module.py:96-109).
+//
+// Pass nil for mod to get an ad-hoc per-Solver cache (tests, low-level
+// usage that has no module). Pass nil for opts to get default options.
+//
+// Sig is derived from mod.Sig when mod is non-nil; pass nil mod to get
+// an empty signature.
+func NewSolver(mod *module.Module, opts *module.SolverOptions) *Solver {
 	if opts == nil {
 		opts = module.DefaultSolverOptions()
+	}
+	var sig *il.Sig
+	if mod != nil {
+		sig = mod.Sig
 	}
 	if sig == nil {
 		sig = il.NewSig()
@@ -47,11 +62,46 @@ func NewSolver(sig *il.Sig, opts *module.SolverOptions) *Solver {
 		z3u:              NewZ3Utils(),
 		opts:             opts,
 		sig:              sig,
+		mod:              mod,
 		HandleRangeSorts: true,
 	}
-	s.tr = s.NewTranslator()
+	cache := getOrCreateModuleCache(mod)
+	s.tr = s.NewTranslatorWithCache(cache)
 	//s.wireNativeLookup()
 	return s
+}
+
+// NewSolverFromSig is a test convenience: wraps the given sig in a
+// throwaway module and returns a Solver bound to it. Each call creates
+// a fresh module, so caches are not shared between calls. Production
+// code should use NewSolver(mod, opts) directly so that solver calls
+// against the same module share Z3 state.
+func NewSolverFromSig(sig *il.Sig, opts *module.SolverOptions) *Solver {
+	var mod *module.Module
+	if sig != nil {
+		mod = module.NewWithSig(sig)
+	}
+	return NewSolver(mod, opts)
+}
+
+// getOrCreateModuleCache returns mod's Z3SessionCache, lazily creating
+// and attaching it on first access. For mod == nil, returns a fresh
+// per-Solver cache (no sharing — preserves legacy/test behavior).
+//
+// Stored as `any` on module.Module to avoid the module → z3bridge import
+// cycle.
+func getOrCreateModuleCache(mod *module.Module) *Z3SessionCache {
+	if mod == nil {
+		return NewZ3SessionCache()
+	}
+	if existing := mod.GetZ3SessionCache(); existing != nil {
+		if c, ok := existing.(*Z3SessionCache); ok {
+			return c
+		}
+	}
+	cache := NewZ3SessionCache()
+	mod.SetZ3SessionCache(cache)
+	return cache
 }
 
 // newZ3Solver creates a Solver and applies opts
@@ -77,27 +127,26 @@ func (s *Solver) Close() error {
 }
 
 // Clear resets all Z3 caches (sorts, constants, functions) to initial state.
-// Corresponds to Python ivy_solver.clear() (line 249).
-//
-// Why this clear is never called (and so we removed the xtracing from both sides):
+// Corresponds to Python ivy_solver.clear() (ivy_solver.py:249).
 //
 // Python calls clear() in two places:
+//   1. ivy_solver.py:257 — at module import time (startup), once
+//   2. ivy_module.py:102 — inside Module.__enter__(), every time a module
+//      context is entered
 //
-// 1. ivy_solver.py:254 — at module import time (startup), once
-// 2. ivy_module.py:102 — inside Module.__enter__(), every time a module context is entered
+// What clear() does is reset 4 module-level global dicts — z3_sorts,
+// z3_predicates, z3_constants, z3_functions — which are translation caches
+// mapping Ivy sorts/symbols to Z3 objects. They accumulate as formulas
+// get translated. When entering a new module (different signature), the
+// old Z3 translations could be stale, so Python wipes them.
 //
-// What clear() does is reset 4 module-level global dicts — z3_sorts, z3_predicates,
-// z3_constants, z3_functions — which are translation caches mapping Ivy sorts/symbols to Z3
-// objects. They accumulate as formulas get translated. When entering a new module (different
-// signature), the old Z3 translations could be stale, so Python wipes them.
+// In Go, the equivalent state lives on a *Z3SessionCache attached to the
+// module.Module. Module.Enter() (context.go) calls cache.Clear() via the
+// Z3CacheClearer interface to reset that state.
 //
-// Go doesn't need the functional clear. Each solver.NewSolver(sig, opts) creates a fresh
-// Translator with empty maps (sorts, consts, z3_functions, z3_predicates, sortsInv).
-// There are no shared module-level caches. Go's constructors handle it.
-//
-// The SolverClearFn field on module.Config exists and is called in Module.Enter()
-// (context.go:37-39), but nobody ever sets it — and nothing breaks, because there's nothing
-// shared to clear.
+// Solver.Clear() here resets the cache associated with this Solver's
+// Translator. If the cache is shared with other Solvers (because they
+// belong to the same module), they will all see the cleared state.
 func (s *Solver) Clear() {
 	//xtracer.Trace("ivy_solver.py:245 clear() ENTER")
 	s.mu.Lock()

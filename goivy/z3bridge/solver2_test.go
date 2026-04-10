@@ -20,7 +20,7 @@ import (
 func TestQuantConstraints_NatForAll(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mynat"] = "nat"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
@@ -60,7 +60,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 func TestQuantConstraints_NatExists(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["mynat"] = "nat"
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	natSort := &lg.UninterpretedSort{Name: "mynat"}
 	x, _ := lg.NewVariable("X", natSort)
@@ -102,7 +102,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 	rs := &lg.RangeSort{Name: "myrange", Lb: lg.NumeralBound{Value: "2"}, Ub: lg.NumeralBound{Value: "5"}}
 	sig := il.NewSig()
 	sig.Interp["myrange"] = rs
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	rangeSort := &lg.UninterpretedSort{Name: "myrange"}
 	x, _ := lg.NewVariable("X", rangeSort)
@@ -134,7 +134,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 // adds no constraints (body is unchanged).
 func TestQuantConstraints_NoInterp(t *testing.T) {
 	sig := il.NewSig()
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	sort := &lg.UninterpretedSort{Name: "T"}
 	x, _ := lg.NewVariable("X", sort)
@@ -296,7 +296,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	// Encode "green" (index 1) in 2 bits MSB first
 	greenSym := lg.NewConst("green", es)
@@ -320,7 +320,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 func TestEncodeTermZ3_Variable(t *testing.T) {
 	es := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := il.NewSig()
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	x, _ := lg.NewVariable("X", es)
 	bits, err := s.EncodeTermZ3(x, 2, es)
@@ -341,7 +341,7 @@ func TestEncodeEqualityZ3(t *testing.T) {
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	red := lg.NewConst("red", es)
 	green := lg.NewConst("green", es)
@@ -380,7 +380,7 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 	rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	sig := il.NewSig()
 	sig.Interp["bounded"] = rs
-	s := NewSolver(sig, nil)
+	s := NewSolverFromSig(sig, nil)
 
 	// Numeral 15 should be clamped to 10
 	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})

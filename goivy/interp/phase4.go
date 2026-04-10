@@ -46,7 +46,7 @@ func ModuleOrder(state1, state2 *State) (bool, *actions.CounterExample) {
 	axioms := state1.Domain.BackgroundTheory(state1.InScope)
 	u1 := stateValueToUpdate(state1.Value())
 	u2 := stateValueToUpdate(state2.Value())
-	return actions.ImpliesState(u1, u2, axioms)
+	return actions.ImpliesState(state1.Domain, u1, u2, axioms)
 }
 
 // --- ModuleSkolemizer ---
@@ -86,7 +86,7 @@ func GetCore(state *State, clause lg.Expr) *module.Clauses {
 	// Negate the clause: each literal becomes a singleton clause with its negation
 	clauses2 := module.NegateClauses(module.FormulaToClauses(clause, nil))
 
-	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain, nil)
 	core, err := slv.UnsatCore(clauses1, clauses2, nil, nil)
 	if err != nil {
 		return nil
@@ -120,7 +120,7 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *module.C
 		clausesOfStates[i] = s.Clauses
 	}
 	pre := module.OrClausesTyped(clausesOfStates...)
-	itp := actions.Interpolant(pre, clauses, axioms, interpreted)
+	itp := actions.Interpolant(state.Domain, pre, clauses, axioms, interpreted)
 	if itp != nil {
 		return nil, nil, &UnsatCoreWithInterpolant{Core: itp.Core, Itp: itp.Itp}
 	}
@@ -141,7 +141,7 @@ func UnderapproximateState(state *State, implied *module.Clauses) {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := module.AndClausesTyped(state.Clauses, axioms)
 
-	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain, nil)
 	under, err := slv.ClausesModelToClauses(
 		combined,
 		func(s *lg.Const) bool {
@@ -269,7 +269,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 func StateImpliesFormula(state *State, fmla lg.Expr) bool {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := module.AndClausesTyped(state.Clauses, axioms)
-	ok, _ := actions.ClausesImplyFormulaCex(combined, fmla)
+	ok, _ := actions.ClausesImplyFormulaCex(state.Domain, combined, fmla)
 	return ok
 }
 

@@ -7,6 +7,7 @@ import (
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- Z3 Worker Goroutine ---
@@ -350,7 +351,8 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 			rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: lb}, Ub: lg.NumeralBound{Value: ub}}
 			sig := il.NewSig()
 			sig.Interp["bounded"] = rs
-			s := NewSolver(sig, nil)
+			mod := module.NewWithSig(sig)
+			s := NewSolver(mod, nil)
 
 			num := lg.NewConst(numStr, &lg.UninterpretedSort{Name: "bounded"})
 			_, _ = s.NumeralToZ3(num)
@@ -394,7 +396,8 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			for _, name := range ext {
 				sig.Constructors[name] = true
 			}
-			s := NewSolver(sig, nil)
+			mod := module.NewWithSig(sig)
+			s := NewSolver(mod, nil)
 
 			t1 := lg.NewConst(ext[i1], es)
 			t2 := lg.NewConst(ext[i2], es)
@@ -481,7 +484,8 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 			case 2:
 				// No interpretation
 			}
-			s := NewSolver(sig, nil)
+			mod := module.NewWithSig(sig)
+			s := NewSolver(mod, nil)
 
 			sort := &lg.UninterpretedSort{Name: "mysort"}
 			x, err := lg.NewVariable("X", sort)

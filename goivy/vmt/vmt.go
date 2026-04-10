@@ -621,7 +621,7 @@ func CheckIsolate(method string, m *module.Module) error {
 	initFormula := initState.TRNode()
 
 	// Write the VMT file
-	slv := solver.NewSolver(m.Sig, m.Cfg.SolverOpts)
+	slv := solver.NewSolver(m, m.Cfg.SolverOpts)
 
 	f, err := os.Create("ivy.vmt")
 	if err != nil {

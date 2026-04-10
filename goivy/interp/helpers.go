@@ -80,7 +80,7 @@ func ReverseUpdateConcreteClauses(state *State, clauses *module.Clauses) (*modul
 	// Check forward interpolant: if the predecessor cannot reach the
 	// given clauses, return UnsatCoreWithInterpolant.
 	// Python: ivy_interp.py:234-236
-	fi := actions.ForwardInterpolant(state.Pred().Clauses, state.Update(), clauses, axioms, interpreted)
+	fi := actions.ForwardInterpolant(state.Domain, state.Pred().Clauses, state.Update(), clauses, axioms, interpreted)
 	if fi != nil {
 		return nil, &UnsatCoreWithInterpolant{Core: fi.Core, Itp: fi.Itp}
 	}
@@ -146,7 +146,7 @@ func ReachState(state *State, clauses *module.Clauses) *State {
 	)
 	// Check satisfiability of the forward image conjoined with the target.
 	// If SAT, a reachable state exists.
-	solver := z3bridge.NewSolver(nil, nil)
+	solver := z3bridge.NewSolver(state.Domain, nil)
 	t := solver.NewTranslator()
 	defer t.Close()
 	result, err := t.IsSat(imgClauses.ToFormula())
@@ -177,7 +177,7 @@ func ReachStateFromPred(state *State, clauses *module.Clauses) (*State, error) {
 		axioms := state.Domain.BackgroundTheory(state.InScope)
 		interpreted := functionsToInterpreted(state.Domain.Functions)
 		pre := JoinUnders(state.Pred())
-		ri := actions.ReverseInterpolantCase(clauses, state.Update(), pre, axioms, interpreted)
+		ri := actions.ReverseInterpolantCase(state.Domain, clauses, state.Update(), pre, axioms, interpreted)
 		if ri != nil {
 			return nil, &UnsatCoreWithInterpolant{Core: ri.Core, Itp: ri.Itp}
 		}
@@ -204,7 +204,7 @@ func UndecidedConjectures(state *State) []*module.Clauses {
 
 	var undecided []*module.Clauses
 	for _, c := range conjs {
-		solver := z3bridge.NewSolver(nil, nil)
+		solver := z3bridge.NewSolver(state.Domain, nil)
 		t := solver.NewTranslator()
 
 		implied, err := t.Implies(premiseFmla, c.ToFormula())
@@ -228,7 +228,7 @@ func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
 	var keep []*module.Clauses
 	var lose []*module.Clauses
 	for _, c := range conjs {
-		solver := z3bridge.NewSolver(nil, nil)
+		solver := z3bridge.NewSolver(state.Domain, nil)
 		t := solver.NewTranslator()
 
 		implied, err := t.Implies(modelFmla, c.ToFormula())
@@ -264,7 +264,7 @@ func CaseConjecture(state *State, clauses *module.Clauses) *actions.InterpolantR
 	pre := JoinUnders(state)
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	interpreted := functionsToInterpreted(state.Domain.Functions)
-	ri := actions.InterpolantCase(pre, clauses, axioms, interpreted)
+	ri := actions.InterpolantCase(state.Domain, pre, clauses, axioms, interpreted)
 	if ri != nil {
 		state.SetConjs(append(state.Conjs(), ri.Itp))
 	}
@@ -287,7 +287,7 @@ func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, ext
 
 	// Use solver to extract a minimal model diagram.
 	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
-	slv := z3bridge.NewSolver(state.Domain.Sig, nil)
+	slv := z3bridge.NewSolver(state.Domain, nil)
 	isSkolem := func(c *lg.Const) bool {
 		return actions.IsSkolem(c.Name)
 	}
@@ -456,7 +456,7 @@ func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 			continue
 		}
 		// Assert: check if axioms (plus accumulated subgoals) imply this property.
-		solver := z3bridge.NewSolver(nil, nil)
+		solver := z3bridge.NewSolver(mod, nil)
 		t := solver.NewTranslator()
 
 		implied, err := t.Implies(premise, prop.Formula.(lg.Expr))

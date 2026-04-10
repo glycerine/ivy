@@ -45,6 +45,7 @@ func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr 
 	// Python: cons = compose_state_action(state.value, axioms, update, check=context.check)
 	stateUpdate := stateValueToUpdate(state.Value())
 	cons, err := actions.ComposeStateAction(
+		state.Domain,
 		state.Domain.Cfg.IuCfg,
 		stateUpdate,
 		axioms,
