@@ -261,6 +261,7 @@ z3_sorts_inv = {}
 
 def uninterpretedsort(us):
     if __debug__: xtracer.trace("ivy_solver.py:263 uninterpretedsort() ENTER name=%s" % us.rep)
+    if __debug__: xtracer.trace("ivy_solver.py:263 uninterpretedsort top HASH canon= sorts=[%s]" % ", ".join(sorted(str(v) for v in z3_sorts.values())))
     s = z3_sorts.get(us.rep,None)
     if s is not None: 
         if __debug__: xtracer.trace("ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit")
