@@ -495,8 +495,8 @@ Package Dependency Layers (reference)
 
 Layer 0 (foundation):  ast, lexer, ivyutils
 Layer 1:               logic, parser, ivylogic
-Layer 2:               z3bridge (+solver), logicutil, logicparser
-Layer 3:               module (+clauseops)
+Layer 2:               module (+clauseops)
+Layer 3:               z3bridge (+solver), logicutil, logicparser
 Layer 4:               actions (+transrel), isolate
 Layer 5:               interp, compiler, art
 Layer 6:               proof(imports module, compiler), trace, bmc, temporal
