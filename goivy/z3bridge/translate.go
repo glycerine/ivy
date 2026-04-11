@@ -1033,11 +1033,17 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// `z3.Const(solver_name(term.rep), sig)`, so the to_z3 trace
 	// (functionsort/uninterpretedsort) fires before the solver_name trace.
 	// We must mirror that order.
+	//
+	// IMPORTANT: do NOT cache-hit here for non-enum constants. Python's
+	// z3_constants cache (ivy_solver.py:479) writes with `term.rep` as key
+	// but reads with `str(term.rep)` as key — for non-enum constants the
+	// cache never hits, so Python re-runs iso.to_z3() and solver_name on
+	// every encounter. Go must mirror this so the trace counts match.
+	// (See the comment above about Python's broken cache behavior, and
+	// the divergence at log.red step 247865 that surfaced when Go's
+	// shared session cache started hitting these constants.)
 	if lg.FirstOrderSort(sort) {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
-		if cached, ok := t.cache.consts[key]; ok {
-			return cached, nil
-		}
 		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const")
 		zs, err := t.TranslateSort(sort)
 		if err != nil {

@@ -2603,19 +2603,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-247600  go : XTRACE: solver.ClausesToZ3 fmla[296] sort=Boolean
-        py : XTRACE: solver.ClausesToZ3 fmla[296] sort=Boolean
+247864  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+        py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
 
-247601  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
-        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
-
-247602  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
-        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
-
-247603  go : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=tar_cf_clock
-        py : XTRACE: ivy_solver.py:263 uninterpretedsort() ENTER name=tar_cf_clock
-
-247604  go : XTRACE: ivy_solver.py:270 uninterpretedsort() None from lookup_native
-        py : XTRACE: ivy_solver.py:266 uninterpretedsort() EXIT 1: cache hit
+247865  go : XTRACE: ivy_solver.py:95 my_eq() ENTER
+        py : XTRACE: TranslateSort_call callsite=term_to_z3_const
 ~~~
 
