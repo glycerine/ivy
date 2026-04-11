@@ -362,12 +362,10 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	exprs = append(exprs, tcs...)
 
 	xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
-	if len(exprs) == 0 {
-		return s.tr.Ctx.BoolVal(true), nil
-	}
-	if len(exprs) == 1 {
-		return exprs[0], nil
-	}
+	// Mirror Python ivy_solver.py:681 `res = z3.And(z3_clauses)`. Python
+	// wraps unconditionally — even with 0 or 1 clauses. We must do the
+	// same: a 1-clause unwrap shortcut would change the Z3 AST shape and
+	// break the z3.check canon hash comparison.
 	return s.tr.Ctx.And(exprs...), nil
 }
 
