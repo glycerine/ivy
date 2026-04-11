@@ -1500,6 +1500,81 @@ func (s *Z3Solver) String() string {
 	return res
 }
 
+// ToSmt2 returns the solver's assertions in SMT-LIB2 benchmark format,
+// matching Python's z3.Solver.to_smt2() exactly. This is used by
+// TraceCheck so that Go and Python produce the same byte string and
+// thus the same Merkle leaf hash for the z3.check trace event.
+//
+// Mirrors ~/ivy/goivy/z3vendor/z3/src/api/python/z3/z3.py:6495-6509:
+//   - All-but-last assertion become "assumptions"
+//   - Last assertion becomes the "formula"
+//   - If there are 0 assertions, formula = Z3_mk_true()
+//   - Benchmark name is the literal "benchmark generated from python API"
+//   - status is the literal "unknown" (NOT the actual check result)
+//   - logic and attributes are both ""
+func (s *Z3Solver) ToSmt2() string {
+	var res string
+	s.ctx.do(func() {
+		// Get all asserted formulas as an AST vector.
+		vec := C.Z3_solver_get_assertions(s.ctx.c, s.c)
+		C.Z3_ast_vector_inc_ref(s.ctx.c, vec)
+		defer C.Z3_ast_vector_dec_ref(s.ctx.c, vec)
+
+		n := int(C.Z3_ast_vector_size(s.ctx.c, vec))
+
+		// Mirror Python: split off the last assertion as the "formula";
+		// the rest become "assumptions". If empty, formula = true.
+		var nAssumptions int
+		if n > 0 {
+			nAssumptions = n - 1
+		}
+
+		var formula C.Z3_ast
+		if n > 0 {
+			formula = C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(nAssumptions))
+		} else {
+			formula = C.Z3_mk_true(s.ctx.c)
+		}
+
+		// Build the assumptions array.
+		var assumptionsPtr *C.Z3_ast
+		var assumptions []C.Z3_ast
+		if nAssumptions > 0 {
+			assumptions = make([]C.Z3_ast, nAssumptions)
+			for i := 0; i < nAssumptions; i++ {
+				assumptions[i] = C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(i))
+			}
+			assumptionsPtr = &assumptions[0]
+		}
+
+		// Literal strings matching Python exactly. The name "benchmark
+		// generated from python API" is what produces the
+		// "; benchmark generated from python API" header line.
+		cName := C.CString("benchmark generated from python API")
+		defer C.free(unsafe.Pointer(cName))
+		cLogic := C.CString("")
+		defer C.free(unsafe.Pointer(cLogic))
+		cStatus := C.CString("unknown")
+		defer C.free(unsafe.Pointer(cStatus))
+		cAttrs := C.CString("")
+		defer C.free(unsafe.Pointer(cAttrs))
+
+		// Z3 returns a static buffer; copy immediately into a Go string
+		// before any other Z3 call can invalidate it.
+		cstr := C.Z3_benchmark_to_smtlib_string(
+			s.ctx.c,
+			cName, cLogic, cStatus, cAttrs,
+			C.uint(nAssumptions),
+			assumptionsPtr,
+			formula,
+		)
+		res = C.GoString(cstr)
+		runtime.KeepAlive(assumptions)
+	})
+	runtime.KeepAlive(s)
+	return res
+}
+
 // --- Model ---
 
 // Model wraps a Z3 model (satisfying assignment).
