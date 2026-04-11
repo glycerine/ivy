@@ -602,14 +602,20 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 			handler.IsCti = module.FormulaToClauses(cc.LF.Formula.(lg.Expr), nil)
 		}
 
-		// Python: if not opt_trace.get(): gui_art(handler)
-		// else: print(str(handler)); exit(0)
+		// Python ivy_check.py:411-415:
+		//   if not opt_trace.get(): gui_art(handler)
+		//   else: print(str(handler)); exit(0)
 		if mod.Cfg.OptTrace {
 			fmt.Println(handler.String())
 			os.Exit(0)
 		} else {
-			// GUI display not supported in Go; print trace instead
-			fmt.Println(handler.String())
+			// Python: gui_art(handler) — passes the trace handler. The handler
+			// carries the IsCti clauses for the GUI's CTI display mode.
+			if err := GuiArt(mod, handler, handler.IsCti); err != nil {
+				fmt.Fprintf(os.Stderr, "GuiArt: %v\n", err)
+			}
+			// Python: gui_art ends with exit(1) after the Tk mainloop returns.
+			os.Exit(1)
 		}
 	}
 
@@ -871,13 +877,24 @@ func IsCheckModUnprovable(cfg *module.Config, lf *ast.LabeledFormula) bool {
 }
 
 // DisplayCex displays a counterexample with a message.
-// In Go, the web UI handles display differently from Python's Tk UI.
-// Corresponds to Python's display_cex.
-func DisplayCex(cfg *module.Config, msg string, ag interface{}) error {
-	if cfg.Diagnose {
-		// In the Go port, diagnostics are handled by the web UI.
-		// The Tk-based display_cex from Python is replaced by web-based CEX rendering.
-		return fmt.Errorf("%s (use web UI for interactive diagnostics)", msg)
+// Corresponds to Python's display_cex (ivy_check.py:54-60).
+//
+// Python:
+//
+//	def display_cex(msg,ag):
+//	    if diagnose.get():
+//	        from . import tk_ui as ui
+//	        iu.set_parameters({'mode':'induction'})
+//	        ui.ui_main_loop(ag)
+//	        exit(1)
+//	    raise iu.IvyError(None,msg)
+func DisplayCex(mod *module.Module, msg string, ag interface{}) error {
+	if mod.Cfg.Diagnose {
+		// Python: ui.ui_main_loop(ag); exit(1)
+		if err := GuiArt(mod, ag, nil); err != nil {
+			fmt.Fprintf(os.Stderr, "DisplayCex GuiArt: %v\n", err)
+		}
+		os.Exit(1)
 	}
 	return fmt.Errorf("%s", msg)
 }
@@ -898,7 +915,16 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 	}
 	res, ok := bmcRes.(*bmcResult)
 	if !ok {
-		fmt.Println("Counterexample found (use web UI for visualization)")
+		// bmcRes is not the expected struct (BMC result plumbing through
+		// history.SatisfyWithCond is incomplete — see followup item 4 in the
+		// merge plan). Hand off to GuiArt with a freshly-built graph so the
+		// hook still has something to display.
+		otherArt := art.NewAnalysisGraph(ag.Domain)
+		ag.CopyPath(state, otherArt, nil)
+		// Python: gui_art(other_art)
+		if err := GuiArt(ag.Domain, otherArt, nil); err != nil {
+			fmt.Fprintf(os.Stderr, "ShowCounterexample GuiArt: %v\n", err)
+		}
 		return
 	}
 
@@ -919,8 +945,10 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 		}
 	}
 
-	// In Go port, display is handled by web UI, not Tk
-	fmt.Println("Counterexample found (use web UI for visualization)")
+	// Python: gui_art(other_art)
+	if err := GuiArt(ag.Domain, otherArt, nil); err != nil {
+		fmt.Fprintf(os.Stderr, "ShowCounterexample GuiArt: %v\n", err)
+	}
 }
 
 // PreprocessAssumedIgnoredProperties applies ACL filtering to axioms,
@@ -1158,12 +1186,12 @@ func Start(args []string) error {
 		return fmt.Errorf("%s", Usage())
 	}
 
-	someBounded := false
-
 	mod := module.New()
 	if mod.Cfg == nil {
 		mod.Cfg = module.NewConfig()
 	}
+	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry
+	mod.Cfg.SomeBounded = false
 	wireAdmitDefinitionFactory(mod)
 	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
@@ -1192,8 +1220,8 @@ func Start(args []string) error {
 		return err
 	}
 
-	// Python: if some_bounded: print("BOUNDED")
-	if someBounded {
+	// Python ivy_check.py:1046-1047: if some_bounded: print("BOUNDED")
+	if mod.Cfg.SomeBounded {
 		fmt.Println("BOUNDED")
 	}
 	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")
@@ -1241,8 +1269,9 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 		return fmt.Errorf("%s", Usage())
 	}
 
-	someBounded := false
-	_ = someBounded // TODO: wire BMC flag
+	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry.
+	// Reset the flag in case the caller is reusing a Config across runs.
+	cfg.SomeBounded = false
 
 	mod := module.New()
 	mod.Cfg = cfg
@@ -1274,8 +1303,8 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 		return err
 	}
 
-	// Python: if some_bounded: print("BOUNDED")
-	if someBounded {
+	// Python ivy_check.py:1046-1047: if some_bounded: print("BOUNDED")
+	if mod.Cfg.SomeBounded {
 		fmt.Println("BOUNDED")
 	}
 	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")

@@ -2,6 +2,7 @@ package check
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -794,6 +795,28 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
+					// Python ivy_check.py:829-830:
+					//   if hasattr(goal,"trace_hook"): foo = goal.trace_hook(foo)
+					// The Go trace-hook propagation differs (it acts on a
+					// MatchHandler via fakeMod.TraceHook in the no-method
+					// branch below, not as a transformer here). For now we
+					// honor opt_trace and diagnose without re-routing the
+					// failure value through goal.TraceHook — see followup
+					// item 5 of plans/velvety-kindling-shamir.md.
+					// Python: if opt_trace.get(): print(str(foo)); exit(0)
+					if mod.Cfg.OptTrace {
+						fmt.Println(err)
+						wsorts.Exit()
+						ws.Exit()
+						cleanup()
+						os.Exit(0)
+					}
+					// Python: if diagnose.get(): gui_art(foo)
+					if mod.Cfg.Diagnose {
+						if guiErr := GuiArt(mod, err, nil); guiErr != nil {
+							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
+						}
+					}
 					wsorts.Exit()
 					ws.Exit()
 					cleanup()
@@ -850,6 +873,22 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
+					// Python ivy_check.py:829-835. See the parallel block in
+					// the temporal branch above for the trace-hook caveat.
+					// Python: if opt_trace.get(): print(str(foo)); exit(0)
+					if mod.Cfg.OptTrace {
+						fmt.Println(err)
+						wsorts.Exit()
+						ws.Exit()
+						cleanup()
+						os.Exit(0)
+					}
+					// Python: if diagnose.get(): gui_art(foo)
+					if mod.Cfg.Diagnose {
+						if guiErr := GuiArt(mod, err, nil); guiErr != nil {
+							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
+						}
+					}
 					wsorts.Exit()
 					ws.Exit()
 					cleanup()
@@ -995,6 +1034,13 @@ func CheckModule(mod *module.Module) error {
 				return err
 			}
 		case strings.HasPrefix(methodName, "bmc["):
+			// Python ivy_check.py:995-996:
+			//   global some_bounded
+			//   some_bounded = True
+			// We write to the PARENT mod.Cfg, NOT isoMod.Cfg, because Module.Copy
+			// (module.go:337) does *c.Cfg = *m.Cfg, so writes to isoMod.Cfg are
+			// discarded when the loop iteration ends.
+			mod.Cfg.SomeBounded = true
 			// Python: mc_isolate(isolate, lambda: ivy_bmc.check_isolate(prms[0], n_unroll=prms[1]))
 			nSteps, nUnroll, err := parseBMCParams(methodName)
 			if err != nil {

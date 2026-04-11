@@ -7,6 +7,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/compiler"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -1078,6 +1079,87 @@ func TestParseBMCParamsMissingCloseBracket(t *testing.T) {
 	_, _, err := parseBMCParams("bmc[10")
 	if err == nil {
 		t.Fatal("should fail for missing ']'")
+	}
+}
+
+// --- SomeBounded (BMC flag) tests ---
+//
+// Mirrors Python ivy_check.py's `some_bounded` global, which is set when an
+// isolate uses a bmc[N] verification method and read at the end of start()
+// to print "BOUNDED" before "OK".
+
+func TestSomeBoundedZeroByDefault(t *testing.T) {
+	cfg := module.NewConfig()
+	if cfg.SomeBounded {
+		t.Error("fresh Config should have SomeBounded == false")
+	}
+}
+
+// loadBMCFixture parses test_vectors/bmc_minimal.ivy into a fresh module
+// and optionally sets the "method" attribute. Returns the module ready for
+// CheckModule. The fixture uses the implicit "this" isolate, which is the
+// only way the BMC dispatch can be reached without a more complex isolate
+// graph (a hand-built IsolateDef without going through the compiler fails
+// CreateIsolate).
+func loadBMCFixture(t *testing.T, method string) *module.Module {
+	t.Helper()
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	mod.Cfg.Isolate = "this"
+	err := compiler.SourceFile(
+		"../test_vectors/bmc_minimal.ivy",
+		mod, mod.Sig,
+		map[string]interface{}{"create_isolate": false},
+	)
+	if err != nil {
+		t.Fatalf("loadBMCFixture: SourceFile: %v", err)
+	}
+	if method != "" {
+		// ComposeNames("this", "method") strips "this" and returns "method",
+		// so the attribute key for the implicit isolate is just "method".
+		mod.Attributes["method"] = method
+	}
+	return mod
+}
+
+func TestSomeBoundedSetByBMCBranch(t *testing.T) {
+	// CheckModule's BMC branch should set mod.Cfg.SomeBounded = true on the
+	// PARENT mod.Cfg (not isoMod.Cfg, which would be lost by Module.Copy).
+	mod := loadBMCFixture(t, "bmc[1]")
+	_ = CheckModule(mod) // ignore the BMC verdict; we only care about the flag
+	if !mod.Cfg.SomeBounded {
+		t.Error("expected mod.Cfg.SomeBounded == true after BMC isolate")
+	}
+}
+
+func TestSomeBoundedNotSetForDefaultMethod(t *testing.T) {
+	// No method attribute → defaults to "ic" (induction check) → BMC branch
+	// is never reached → SomeBounded stays false.
+	mod := loadBMCFixture(t, "")
+	_ = CheckModule(mod)
+	if mod.Cfg.SomeBounded {
+		t.Error("SomeBounded should remain false when no isolate uses BMC")
+	}
+}
+
+func TestSomeBoundedResetByStartWithConfig(t *testing.T) {
+	// Pre-set the flag to true on a Config, then call StartWithConfig.
+	// The reset at the entry of StartWithConfig should clear it before
+	// any work happens. We use an invalid filename so StartWithConfig
+	// returns immediately after the reset and before CheckModule runs.
+	cfg := module.NewConfig()
+	cfg.SomeBounded = true
+	// Use an empty args slice; StartWithConfig should return Usage error
+	// after the reset has already executed.
+	_ = StartWithConfig([]string{}, cfg)
+	// The reset happens after the args check (lines 1240-1242), so for an
+	// empty args slice the reset is NOT yet reached. We instead use a
+	// non-existent .ivy file so the args check passes and the reset runs.
+	cfg2 := module.NewConfig()
+	cfg2.SomeBounded = true
+	_ = StartWithConfig([]string{"/nonexistent/path/that/will/fail.ivy"}, cfg2)
+	if cfg2.SomeBounded {
+		t.Error("StartWithConfig should reset SomeBounded to false at entry")
 	}
 }
 

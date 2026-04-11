@@ -6,6 +6,24 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
+// GuiArtHook is the concrete type for the analysis-graph GUI hook stored on
+// Config.GuiArtHook. It is invoked by check.GuiArt to display an analysis
+// graph in an interactive UI.
+//
+// The `target` argument is interface{} to mirror Python's gui_art polymorphism:
+// callers pass either an *art.AnalysisGraph (from the ShowCounterexample /
+// DisplayCex paths) or a *check.MatchHandler (from the trace failure path).
+// We cannot name those types here because module cannot import art or check
+// (cycle), so target stays interface{} and the hook implementation type-switches.
+//
+// The `isCti` argument carries the failing-conjecture clauses captured by
+// check.MatchHandler.IsCti, or nil for non-CTI counterexamples.
+//
+// The hook is responsible for any blocking UI loop and may call os.Exit if
+// it wishes to mirror Python's `exit(1)` at the end of gui_art
+// (ivy_check.py:102).
+type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
+
 // Config for check, but module is lower in the import graph.
 // - module doesn't import check
 // - check imports module (one-way)
@@ -48,6 +66,19 @@ type Config struct {
 
 	// Failures tracks the number of failed checks during verification.
 	Failures int
+
+	// SomeBounded tracks whether any isolate in this session used the BMC
+	// (bounded model checking) verification method. When true, Start prints
+	// "BOUNDED" before "OK". Mirrors Python's module-level `some_bounded`
+	// global (ivy_check.py:996, 1029, 1046).
+	SomeBounded bool
+
+	// GuiArtHook is a closure that displays an analysis graph in a UI. When
+	// nil, check.GuiArt prints diagnostic info and returns. Mirrors Python's
+	// gui_art delegation to tk_ui.new_ui (ivy_check.py:86-102). The type is
+	// defined in this package (above) so the field is fully typed without
+	// interface{} boxing.
+	GuiArtHook GuiArtHook `json:"-"`
 
 	// CheckedActionFound tracks whether a checked action was found.
 	CheckedActionFound bool

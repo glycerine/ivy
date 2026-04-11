@@ -630,3 +630,5 @@ not get lost.
 - **Rollback**: each step is independently revertible. If Step 4 causes an
   end-to-end regression, revert just Step 4 and the call sites; Steps 1-3
   are safe additive changes.
+
+-----------
