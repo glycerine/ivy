@@ -58,7 +58,7 @@ func (s *Z3Solver) TraceCheck(result CheckResult) {
 		return
 	}
 	seq := s.ctx.z3CheckCounter.Add(1)
-	smt2 := s.CanonZ3Assertions()
+	asserts := s.CanonZ3Assertions()
 
 	var rs string
 	switch result {
@@ -69,8 +69,10 @@ func (s *Z3Solver) TraceCheck(result CheckResult) {
 	default:
 		rs = "unknown"
 	}
-	// Merkle-chain the solver state + result
-	canon := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s smt2=%s)", seq, rs, smt2))
-	leaf, root := s.ctx.z3Merkle.AddLeaf(canon)
-	xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s smt2=%s", seq, rs, leaf, root, smt2)
+	// Merkle-chain the solver state + result. The field is named "canon="
+	// (not "smt2=") because golden_test.go's structured s-expression diff
+	// fires only when both lines contain "HASH" and "canon=".
+	cs := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s canon=%s)", seq, rs, asserts))
+	leaf, root := s.ctx.z3Merkle.AddLeaf(cs)
+	xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s", seq, rs, leaf, root, asserts)
 }

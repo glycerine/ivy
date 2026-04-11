@@ -1182,7 +1182,12 @@ func MyMinus(ctx *Z3Context, args []Expr) Expr {
 // MyEq creates a Z3 equality, handling boolean edge cases.
 // If y is true, returns x; if y is false, returns Not(x).
 // For boolean args, uses Iff; for other types, uses Eq.
-// Corresponds to Python's my_eq (ivy_solver.py:88-95).
+// Corresponds to Python's my_eq (ivy_solver.py:99-107).
+// Python uses Z3_mk_eq unconditionally (even for Bool args), so we
+// must do the same — using Z3_mk_iff for Bool would produce a Z3
+// decl with name "iff" instead of "=", which then breaks the z3.check
+// canon hash comparison between Go and Python (the underlying logic
+// is equivalent, but the AST decl is different).
 func MyEq(ctx *Z3Context, x, y Expr) Expr {
 	xtracer.Trace("ivy_solver.py:95 my_eq() ENTER")
 	if y.IsTrue() {
@@ -1190,9 +1195,6 @@ func MyEq(ctx *Z3Context, x, y Expr) Expr {
 	}
 	if y.IsFalse() {
 		return ctx.Not(x)
-	}
-	if x.ExprSort().Kind() == SortBool {
-		return ctx.Iff(x, y)
 	}
 	return ctx.Eq(x, y)
 }

@@ -1362,13 +1362,15 @@ def _canon_z3_assertions(s):
 def _trace_z3_check(s, res):
     """Emit Merkle-chained Z3 solver state and result via xtracer."""
     _z3_check_counter[0] += 1
-    smt2 = _canon_z3_assertions(s)
+    asserts = _canon_z3_assertions(s)
     rs = 'sat' if res == z3.sat else ('unsat' if res == z3.unsat else 'unknown')
-    # Merkle-chain the solver state + result
-    canon = "(z3check seq=%d result=%s smt2=%s)" % (_z3_check_counter[0], rs, smt2)
-    leaf, root = _z3_merkle.add_leaf(canon)
-    xtracer.trace("z3.check seq=%d result=%s HASH leaf=%s root=%s smt2=%s" % (
-        _z3_check_counter[0], rs, leaf, root, smt2))
+    # Merkle-chain the solver state + result. The field is named "canon="
+    # (not "smt2=") because golden_test.go's structured s-expression diff
+    # fires only when both lines contain "HASH" and "canon=".
+    cs = "(z3check seq=%d result=%s canon=%s)" % (_z3_check_counter[0], rs, asserts)
+    leaf, root = _z3_merkle.add_leaf(cs)
+    xtracer.trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s" % (
+        _z3_check_counter[0], rs, leaf, root, asserts))
 
 # Monkey-patch z3.Solver.check to trace every Z3 check call globally.
 _orig_z3_solver_check = z3.Solver.check
