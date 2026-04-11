@@ -2606,6 +2606,9 @@ Estimated People Required 26.621735
 254992  go : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
         py : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
 
-254993  go : XTRACE: l2s.l2sTacticInt findTemporalModels result=
+254993  go : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
         py : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
+
+254994  go : XTRACE: ast.LF.__init__ id=2250 counter=2251
+        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
 ~~~
