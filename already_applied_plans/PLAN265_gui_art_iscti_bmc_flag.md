@@ -149,33 +149,57 @@ comment is gone. `BOUNDED` now actually prints when a BMC isolate runs.
 
 ### Step 2 — Add the `GuiArtHook` callback hook point
 
-**2a. Add the hook field** to `module/config.go`. Place this on `Config` because
-it's session-level configuration (one hook per session, set by the launcher) rather
-than per-goal:
+**2a. Define the hook type** in `module/config.go` (or a new `module/gui_hook.go`
+if preferred). All three referenced types — `*Module`, `interface{}`, and
+`*Clauses` — already live in `module/`, so the type can be a fully-typed `func`
+without any import cycle and without `interface{}` boxing:
 
 ```go
-// GuiArtHook is a closure that displays an analysis graph in a UI. The
-// concrete type is check.GuiArtHookFn; the field is interface{} only because
-// module cannot import check (cycle), mirroring the TraceHook pattern on
-// Module. When nil, GuiArt prints diagnostic info and returns. Mirrors
-// Python's gui_art delegation to tk_ui.new_ui (ivy_check.py:86-102).
-GuiArtHook interface{} `json:"-"`
+// GuiArtHook is the concrete type for the analysis-graph GUI hook stored on
+// Config.GuiArtHook. It is invoked by check.GuiArt to display an analysis
+// graph in an interactive UI.
+//
+// The `target` argument is interface{} to mirror Python's gui_art polymorphism:
+// callers pass either an *art.AnalysisGraph (from the ShowCounterexample /
+// DisplayCex paths) or a *check.MatchHandler (from the trace failure path).
+// We cannot name those types here because module cannot import art or check
+// (cycle), so target stays interface{} and the hook implementation type-switches.
+//
+// The `isCti` argument carries the failing-conjecture clauses captured by
+// check.MatchHandler.IsCti, or nil for non-CTI counterexamples.
+//
+// The hook is responsible for any blocking UI loop and may call os.Exit if
+// it wishes to mirror Python's `exit(1)` at the end of gui_art
+// (ivy_check.py:102).
+type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
 ```
 
-**2b. Define the hook type** in `check/phase7.go` next to `GuiArt`:
+**2b. Add the hook field** to `Config` in the same file. Place it on `Config`
+because it's session-level configuration (one hook per session, set by the
+launcher) rather than per-goal:
 
 ```go
-// GuiArtHookFn is the concrete type stored in module.Config.GuiArtHook.
-// It is invoked by GuiArt to display an analysis graph in an interactive
-// UI. The `target` argument is interface{} to mirror Python's gui_art
-// polymorphism: callers pass either a *art.AnalysisGraph (from
-// ShowCounterexample / DisplayCex paths) or a *MatchHandler (from the trace
-// failure path). The `isCti` argument carries the failing-conjecture clauses
-// captured by MatchHandler.IsCti, or nil. The hook is responsible for any
-// blocking UI loop and may call os.Exit if it wishes to mirror Python's
-// `exit(1)` at the end of gui_art.
-type GuiArtHookFn func(mod *module.Module, target interface{}, isCti *module.Clauses) error
+// GuiArtHook is a closure that displays an analysis graph in a UI. When nil,
+// check.GuiArt prints diagnostic info and returns. Mirrors Python's gui_art
+// delegation to tk_ui.new_ui (ivy_check.py:86-102). The type is defined in
+// this package (above) so the field is fully typed without interface{} boxing.
+GuiArtHook GuiArtHook `json:"-"`
 ```
+
+(Field name and type name are both `GuiArtHook`; this is idiomatic Go since
+they live in different namespaces — the type is `module.GuiArtHook`, the field
+is `module.Config.GuiArtHook`.)
+
+**2c. Optional convenience alias** in `check/phase7.go`:
+
+```go
+// GuiArtHook is an alias for module.GuiArtHook so check-package callers can
+// declare hooks without importing module by name.
+type GuiArtHook = module.GuiArtHook
+```
+
+This is purely for convenience; it can be omitted if call sites are happy to
+write `module.GuiArtHook` directly.
 
 After Step 2: build still passes (no callers yet). The hook field is unused
 until Step 3.
@@ -246,19 +270,17 @@ func GuiArt(mod *module.Module, target interface{}, isCti *module.Clauses) error
     // Python: agui = gui.add(other_art); gui.tk.update_idletasks();
     //         gui.tk.mainloop(); exit(1)
     //
-    // In Go, delegate to the registered hook (typically webui).
+    // In Go, delegate to the registered hook (typically webui). The hook is
+    // a fully-typed module.GuiArtHook — no interface{} unboxing needed.
     if mod.Cfg.GuiArtHook != nil {
-        if hook, ok := mod.Cfg.GuiArtHook.(GuiArtHookFn); ok {
-            // Pass the original target (which may be a Trace handler), not
-            // the resolved otherArt. Hooks that need an AnalysisGraph can
-            // type-switch themselves.
-            if otherArt != nil && target == nil {
-                return hook(mod, otherArt, isCti)
-            }
-            return hook(mod, target, isCti)
+        // Pass the original target (which may be a Trace handler) when we have
+        // one; otherwise pass the freshly-built otherArt from the "art" UI
+        // branch above. Hooks that need a specific concrete type can
+        // type-switch themselves.
+        if target == nil && otherArt != nil {
+            return mod.Cfg.GuiArtHook(mod, otherArt, isCti)
         }
-        return fmt.Errorf("GuiArtHook has wrong type %T (want check.GuiArtHookFn)",
-            mod.Cfg.GuiArtHook)
+        return mod.Cfg.GuiArtHook(mod, target, isCti)
     }
 
     // No hook registered: print diagnostic info matching the previous stub.
@@ -498,10 +520,10 @@ Should return nothing (all four stub strings should be deleted by Step 4).
 
 | File | Change | Step |
 |---|---|---|
-| `module/config.go` | Add `SomeBounded bool` and `GuiArtHook interface{}` fields to `Config` | 1a, 2a |
+| `module/config.go` | Add `SomeBounded bool` field to `Config`; define `module.GuiArtHook` named func type and add `GuiArtHook GuiArtHook` field to `Config` | 1a, 2a, 2b |
 | `check/isolate_check.go` | Set `mod.Cfg.SomeBounded = true` in BMC branch (line 997); rewrite `CheckSubgoals` failure handling in both temporal (793-801) and non-temporal (849-857) branches | 1b, 4d |
 | `check/check.go` | Replace `someBounded := false` in `Start()` and `StartWithConfig()` with `mod.Cfg.SomeBounded` reads + resets; rewrite the `else` branch at 605-613 to call `GuiArt`; rewrite `DisplayCex` (876-883) signature and body; replace the trailing print in `ShowCounterexample` with `GuiArt(ag.Domain, otherArt, nil)` | 1c, 4a, 4b, 4c |
-| `check/phase7.go` | Define `GuiArtHookFn` type; rewrite `GuiArt` body and signature | 2b, 3 |
+| `check/phase7.go` | Optional `type GuiArtHook = module.GuiArtHook` alias; rewrite `GuiArt` body and signature | 2c, 3 |
 | `check/check_test.go` | Add `TestSomeBounded*` tests | 1d |
 | `check/phase7_test.go` (new) | Add `TestGuiArt*` tests for nil/AnalysisGraph/MatchHandler targets, hook invocation, hook error propagation, and "art" UI branch | 5 |
 
@@ -523,8 +545,10 @@ No changes outside `check/`, `module/config.go`, and the new test file.
 - `TestGuiArtMatchHandlerTarget` — passes a `*MatchHandler`, returns nil
 - `TestGuiArtHookInvoked` — register a hook on `mod.Cfg.GuiArtHook`, assert it was called with matching args
 - `TestGuiArtHookErrorPropagates` — hook returns an error, assert `GuiArt` returns it
-- `TestGuiArtHookWrongType` — set `mod.Cfg.GuiArtHook` to a non-`GuiArtHookFn` value, assert error message
 - `TestGuiArtArtUIBranch` — set `mod.Cfg.IuCfg.DefaultUI = "art"`, add an `initialize` action, call GuiArt, assert no panic and that initializers count was printed
+
+(`TestGuiArtHookWrongType` is no longer needed because the hook field is now
+fully typed — wrong types are caught by the compiler, not at runtime.)
 
 Do not unit-test the four `os.Exit` call sites directly — Go's test machinery
 handles these poorly. Test the pre-exit logic in isolation.
@@ -535,7 +559,7 @@ handles these poorly. Test the pre-exit logic in isolation.
 - `/Users/jaten/ivy/goivy/check/check.go` lines 605-613, 876-883, 893-924, 1161-1207, 1244-1290 — call sites to wire and the BMC flag plumbing
 - `/Users/jaten/ivy/goivy/check/isolate_check.go` lines 793-801, 849-857, 997-1020 — BMC flag write site and `CheckSubgoals` failure paths
 - `/Users/jaten/ivy/goivy/check/helpers.go` lines 147-150 — existing `MatchHandler.IsCti` field that finally gets read after this plan
-- `/Users/jaten/ivy/goivy/module/config.go` — add `SomeBounded` and `GuiArtHook` fields
+- `/Users/jaten/ivy/goivy/module/config.go` — add `SomeBounded bool` field, define `module.GuiArtHook` named func type, and add `GuiArtHook GuiArtHook` field on `Config`
 - `/Users/jaten/ivy/goivy/module/module.go` line 337 — `Module.Copy()` value-copies Cfg (read-only reference; explains why `SomeBounded` writes must target the parent `mod.Cfg`, not `isoMod.Cfg`)
 - `/Users/jaten/ivy/goivy/ivyutils/config.go` line 81 — `IvyUtilsConfig.DefaultUI = "cti"` (read-only reference; the `"art"` branch in `GuiArt` keys off this)
 - `/Users/jaten/ivy/pyivy/ivy/ivy/ivy_check.py` lines 54-60, 86-102, 824-837, 990-1000, 1028-1029, 1046-1047 — Python source of truth
