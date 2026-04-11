@@ -166,9 +166,8 @@ func L2sS(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	return nb
 }
 
-func strPtr(s string) *string {
-	return &s
-}
+// strPtr is provided by l2s.go (identical implementation); the ranking
+// definition was deleted during the l2s/+ranking/ → check/ merge.
 
 // --- Task and Trigger types ---
 
@@ -218,7 +217,10 @@ type ProofDecl struct {
 //   5. Replacing the conclusion with M |= true
 //
 // Returns the modified goal stack.
-func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
+// RankingL2STactic is the ranking-tactic entry point. Renamed from L2STactic
+// during the l2s/+ranking/ → check/ merge to avoid colliding with the
+// proof-tactic L2STactic from the l2s package.
+func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	if cfg == nil || len(cfg.Goals) == 0 {
 		return nil, fmt.Errorf("no goals provided")
 	}
@@ -276,7 +278,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		}
 	}
 	if len(temporalPrems) > 0 {
-		premConj := makeAnd(temporalPrems...)
+		premConj := rankingMakeAnd(temporalPrems...)
 		fmla = &lg.Implies{T1: premConj, T2: fmla}
 	}
 
@@ -661,7 +663,7 @@ func NewPropEvents(gprops []*lg.NamedBinder, lineno ast.Location) *PropEvent {
 
 			// Pre: assume ~old_g(V) & body -> ~g(V)
 			newFmla := makeImplies(
-				makeAnd(makeNot(oldG), body),
+				rankingMakeAnd(makeNot(oldG), body),
 				makeNot(curG))
 			pe.PreActions = append(pe.PreActions,
 				makeAssumeForAll(vs, newFmla, lineno))
@@ -690,7 +692,7 @@ func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) 
 		negBody := makeNot(body)
 		gNegBody := L2sG(vs, negBody, proofLabel)
 
-		newVal := makeAnd(wApp, negBody, makeNot(gNegBody))
+		newVal := rankingMakeAnd(wApp, negBody, makeNot(gNegBody))
 		result = append(result, newAssignAction(wApp, newVal, lineno))
 	}
 	return result
@@ -725,7 +727,12 @@ func makeImplies(t1, t2 lg.Expr) lg.Expr {
 	return imp
 }
 
-func makeAnd(terms ...lg.Expr) lg.Expr {
+// rankingMakeAnd is the ranking-tactic makeAnd. Renamed from makeAnd
+// during the l2s/+ranking/ → check/ merge to avoid colliding with the
+// l2s.makeAnd helper which has a slightly different implementation
+// (l2s builds &lg.And{Terms: terms} directly; ranking goes through
+// lg.NewAnd which validates).
+func rankingMakeAnd(terms ...lg.Expr) lg.Expr {
 	and, err := lg.NewAnd(terms...)
 	if err != nil {
 		return lg.True
@@ -750,7 +757,10 @@ func makeNot(body lg.Expr) lg.Expr {
 //
 // The l2s_s binder is pushed inside propositional connectives so that
 // saved values correspond to atoms (avoiding redundant saved values).
-func Desugar(expr lg.Expr, proofLabel string, l2sSaved lg.Expr) lg.Expr {
+// RankingDesugar is the ranking-tactic Desugar. Renamed from Desugar
+// during the l2s/+ranking/ → check/ merge to avoid colliding with the
+// l2s.Desugar (which has a different two-arg signature).
+func RankingDesugar(expr lg.Expr, proofLabel string, l2sSaved lg.Expr) lg.Expr {
 	if expr == nil {
 		return nil
 	}
@@ -761,16 +771,16 @@ func Desugar(expr lg.Expr, proofLabel string, l2sSaved lg.Expr) lg.Expr {
 				// Error: 'was' does not take parameters
 				return expr
 			}
-			return makeAnd(l2sSaved, applyWas(nb.Body, proofLabel))
+			return rankingMakeAnd(l2sSaved, applyWas(nb.Body, proofLabel))
 		case "happened":
 			if len(nb.Variables) > 0 {
 				return expr
 			}
-			return makeAnd(l2sSaved, applyHappened(nb.Body, proofLabel))
+			return rankingMakeAnd(l2sSaved, applyHappened(nb.Body, proofLabel))
 		}
 	}
 	return cloneWithTransform(expr, func(n lg.Expr) lg.Expr {
-		return Desugar(n, proofLabel, l2sSaved)
+		return RankingDesugar(n, proofLabel, l2sSaved)
 	})
 }
 

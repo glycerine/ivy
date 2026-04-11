@@ -1,4 +1,4 @@
-package ranking
+package check
 
 import (
 	"strings"
@@ -9,7 +9,10 @@ import (
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
-var testAstCfg = ast.NewAstConfig()
+// rankingTestAstCfg is the test fixture for ranking tests. Renamed from
+// testAstCfg during the l2s/+ranking/ → check/ merge to avoid colliding
+// with check/check_port_test.go's testAstCfg.
+var rankingTestAstCfg = ast.NewAstConfig()
 
 // --- helpers ---
 
@@ -521,7 +524,7 @@ func TestConvertToInitNil(t *testing.T) {
 
 func TestDesugarNonBinder(t *testing.T) {
 	c := boolConst("P")
-	result := Desugar(c, "label", lg.True)
+	result := RankingDesugar(c, "label", lg.True)
 	// Non-binder should be returned unchanged
 	if result != c {
 		t.Error("non-binder should pass through unchanged")
@@ -529,16 +532,16 @@ func TestDesugarNonBinder(t *testing.T) {
 }
 
 func TestDesugarNil(t *testing.T) {
-	result := Desugar(nil, "label", lg.True)
+	result := RankingDesugar(nil, "label", lg.True)
 	if result != nil {
-		t.Error("Desugar(nil) should return nil")
+		t.Error("RankingDesugar(nil) should return nil")
 	}
 }
 
 // --- L2STactic ---
 
 func TestL2STacticNilConfig(t *testing.T) {
-	_, err := L2STactic(nil)
+	_, err := RankingL2STactic(nil)
 	if err == nil {
 		t.Error("expected error for nil config")
 	}
@@ -546,7 +549,7 @@ func TestL2STacticNilConfig(t *testing.T) {
 
 func TestL2STacticNoGoals(t *testing.T) {
 	cfg := &L2STacticConfig{Goals: nil}
-	_, err := L2STactic(cfg)
+	_, err := RankingL2STactic(cfg)
 	if err == nil {
 		t.Error("expected error for no goals")
 	}
@@ -560,7 +563,7 @@ func TestL2STacticWithLets(t *testing.T) {
 		Goals: []*ast.LabeledFormula{testAstCfg.NewLabeledFormula(nil, testAstCfg.NewAtom("true"))},
 		Proof: &ProofDecl{TacticLets: []ast.Node{testAstCfg.NewAtom("x")}},
 	}
-	_, err := L2STactic(cfg)
+	_, err := RankingL2STactic(cfg)
 	if err == nil {
 		t.Error("expected error for tactic with non-temporal goal")
 	}

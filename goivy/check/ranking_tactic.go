@@ -212,7 +212,7 @@ func rankingInvariants(
 		if len(cons) == 0 {
 			return &lg.And{Terms: nil}
 		}
-		return &lg.Implies{T1: rhs, T2: makeAnd(cons...)}
+		return &lg.Implies{T1: rhs, T2: rankingMakeAnd(cons...)}
 	}
 
 	// Generate invariants and postconditions
@@ -242,7 +242,7 @@ func rankingInvariants(
 		createdArgs := eqLHSArgs(workCreated)
 		s := substVars(neededArgs, createdArgs)
 		neededImplCreated := &lg.Implies{
-			T1: makeAnd(workInvarVal, eqRHS(workNeeded)),
+			T1: rankingMakeAnd(workInvarVal, eqRHS(workNeeded)),
 			T2: subst(eqRHS(workCreated), s),
 		}
 		postconds = append(postconds, mklf("l2s_needed_implies_created"+sfx,
@@ -260,14 +260,14 @@ func rankingInvariants(
 		// --- l2s_needed_preserved postcond ---
 		noHelp := OldOf(&lg.Not{Body: &lg.Or{Terms: helps}})
 		notNeeded := &lg.Implies{
-			T1: OldOf(makeAnd(workInvarVal, &lg.Not{Body: eqRHS(workNeeded)})),
+			T1: OldOf(rankingMakeAnd(workInvarVal, &lg.Not{Body: eqRHS(workNeeded)})),
 			T2: &lg.Not{Body: eqRHS(workNeeded)},
 		}
 		postconds = append(postconds, mklf("l2s_needed_preserved"+sfx,
 			&lg.Implies{T1: noHelp, T2: notNeeded}))
 
 		// Add current task's help to the accumulated helps
-		helps = append(helps, makeAnd(workInvarVal,
+		helps = append(helps, rankingMakeAnd(workInvarVal,
 			Exists(helpfulArgs, eqRHS(workHelpful))))
 
 		// --- l2s_progress postcond ---
@@ -278,10 +278,10 @@ func rankingInvariants(
 		if len(helpfulArgs) > len(progressArgs) {
 			wpargs = neededArgs[len(helpfulArgs)-len(progressArgs):]
 		}
-		decreased := Exists(wpargs, makeAnd(
+		decreased := Exists(wpargs, rankingMakeAnd(
 			OldOf(eqRHS(workNeeded)),
 			&lg.Not{Body: eqRHS(workNeeded)}))
-		progressCond := makeAnd(
+		progressCond := rankingMakeAnd(
 			OldOf(workInvarVal),
 			OldOf(eqRHS(workHelpful)),
 			&lg.Not{Body: waitingForProgress})
@@ -292,14 +292,14 @@ func rankingInvariants(
 		eventuallyProgress := &lg.Eventually{Body: eqRHS(workProgress)}
 		postconds = append(postconds, mklf("l2s_progress_eventually"+sfx,
 			&lg.Implies{
-				T1: makeAnd(OldOf(workInvarVal), OldOf(eqRHS(workHelpful))),
+				T1: rankingMakeAnd(OldOf(workInvarVal), OldOf(eqRHS(workHelpful))),
 				T2: eventuallyProgress,
 			}))
 
 		// --- l2s_sched_stable postcond ---
 		schedStable := ForAll(progressArgs,
 			&lg.Implies{
-				T1: makeAnd(
+				T1: rankingMakeAnd(
 					OldOf(workInvarVal),
 					noHelp,
 					OldOf(eqRHS(workHelpful)),
@@ -351,13 +351,13 @@ func rankingInvariants(
 		}
 	}
 	if len(constsDTerms) > 0 {
-		invars = append(invars, mklf("l2s_consts_d", makeAnd(constsDTerms...)))
+		invars = append(invars, mklf("l2s_consts_d", rankingMakeAnd(constsDTerms...)))
 	}
 
 	return invars, postconds, tasks, triggers, nil
 }
 
-// makeAnd, ForAll, Exists, OldOf are defined in ranking.go
+// rankingMakeAnd, ForAll, Exists, OldOf are defined in ranking.go
 
 func rankVarsToNodes(vs []*lg.Variable) []lg.Expr {
 	nodes := make([]lg.Expr, len(vs))
