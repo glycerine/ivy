@@ -334,11 +334,47 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	// --- Invariants ---
 	// C6/C8: invars holds tactic-level invariants (user-supplied + auto-generated).
-	// We start empty (Python ivy_l2s.py:175 starts from compiled tactic_invars,
-	// which is empty in Phase 1 — Phase 2 will populate it). At the end of this
-	// function we commit invars into model.Invars (Python ivy_l2s.py:722).
-	// Do NOT seed from model.Invars — that's the original C6/C8 bug.
+	// At the end of this function we commit invars into model.Invars (Python
+	// ivy_l2s.py:722). Do NOT seed from model.Invars — that's the original
+	// C6/C8 bug.
 	var invars []*ast.LabeledFormula
+
+	// C6/C7/M1: process user-supplied tactic_decls.
+	// Python ivy_l2s.py:124-125, 141-153, 175.
+	if tt, ok := pf.(*ast.TacticTactic); ok {
+		// M1: reject tactic_lets (Python line 124-125).
+		if tt.Body != nil {
+			if _, isLets := tt.Body.(*ast.TacticLets); isLets {
+				return nil, fmt.Errorf("tactic does not take lets")
+			}
+		}
+
+		decls := tt.TacticDeclsList()
+		var tacticInvars []*ast.LabeledFormula
+		var tacticDefns []ast.Node
+		for _, d := range decls {
+			if dd, isDerived := d.(*ast.DerivedDecl); isDerived {
+				tacticDefns = append(tacticDefns, dd)
+			} else if lf, isLF := d.(*ast.LabeledFormula); isLF {
+				tacticInvars = append(tacticInvars, lf)
+			}
+		}
+
+		// C7: compile definitions into goal premises (Python lines 152-153).
+		for _, defn := range tacticDefns {
+			goal = proof.CompileDefinitionGoalVocab(m.Cfg.AstCfg, defn, goal)
+		}
+
+		// C6: compile user invariants and seed `invars` (Python line 175).
+		for _, inv := range tacticInvars {
+			compiled := proof.CompileWithGoalVocab(inv.Formula, goal)
+			if compiled == nil {
+				continue
+			}
+			labeled := il.LabelTemporal(compiled, proofLabel)
+			invars = append(invars, m.Cfg.AstCfg.NewLabeledFormula(inv.Label, labeled))
+		}
+	}
 
 	// --- L2S monitor symbols ---
 	l2sWaitingSym := L2SWaiting()

@@ -267,6 +267,21 @@ func l2sAutoInvariants(
 		return forall(vs, applyNB(initNB, vsNodes...))
 	}
 
+	// Accumulators per Python ivy_l2s.py:263-265.
+	// notAllDonePreds resets at scheduler boundaries (when emitting intermediate
+	// l2s_not_all_done<sfx>). notAllWasDonePreds resets when a new task with
+	// work_start is encountered (Python ivy_l2s.py:472-473). schedExistsPreds
+	// is used only by l2s_auto5.
+	var notAllDonePreds []lg.Expr
+	var notAllWasDonePreds []lg.Expr
+	var schedExistsPreds []lg.Expr
+	_ = notAllWasDonePreds // populated by D3 (Phase 3)
+	_ = schedExistsPreds   // populated by Phase 4
+
+	// Track the last evStart for use in the auto5 final l2s_sched_exists invariant.
+	var lastEvStart lg.Expr
+	_ = lastEvStart // populated by Phase 4
+
 	// Generate invariants per task
 	for idx, sfx := range sortedTasks {
 		task := tasks[sfx]
@@ -337,6 +352,18 @@ func l2sAutoInvariants(
 				T2: &lg.Implies{T1: notIsDone, T2: makeAnd(aCons...)},
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp)
+
+			// C12 / Python ivy_l2s.py:422-425: l2s_needed_were_frozen
+			// uses get_was_done(work_needed) which for auto4/5 expands to
+			//   l2s_s(done_args, Implies(subst(needed.RHS), done.RHS))(done_args).
+			isDoneImplied := &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
+			sNBwere := l2sS(doneSubArgs, isDoneImplied, proofLabel)
+			wasDoneWere := applyNB(sNBwere, varsToNodes(doneSubArgs)...)
+			tmp2 := &lg.Implies{
+				T1: makeAnd(evStart, l2sSaved),
+				T2: &lg.Implies{T1: &lg.Not{Body: wasDoneWere}, T2: makeAnd(aCons...)},
+			}
+			invars = appendLF(autoAcfg, invars, "l2s_needed_were_frozen"+sfx, tmp2)
 		}
 
 		// --- l2s_done_implies_created ---
@@ -415,6 +442,8 @@ func l2sAutoInvariants(
 			})
 
 		// --- l2s_not_all_done ---
+		// Builds the per-task `not_all_done(work_needed)` predicate
+		// (Python ivy_l2s.py:345-356).
 		neededArgs := eqLHSArgs(workNeeded)
 		s := substVars(neededArgs, doneArgs)
 		var notAllDoneBody lg.Expr = &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
@@ -426,11 +455,41 @@ func l2sAutoInvariants(
 		if workInvar != nil {
 			notAllDoneBody = &lg.Implies{T1: eqRHS(workInvar), T2: notAllDoneBody}
 		}
-		notAllDone := &lg.Not{Body: forall(doneArgs, notAllDoneBody)}
+		var notAllDone lg.Expr = &lg.Not{Body: forall(doneArgs, notAllDoneBody)}
 
-		if idx == len(sortedTasks)-1 {
-			invars = appendLF(autoAcfg, invars, "l2s_not_all_done", notAllDone)
+		// C3 / Python ivy_l2s.py:354-355: wrap with Or(Not(notWaitingForStart),...)
+		// for auto2/3/4/5.
+		if tacticName == "l2s_auto2" || tacticName == "l2s_auto3" ||
+			tacticName == "l2s_auto4" || tacticName == "l2s_auto5" {
+			notAllDone = &lg.Or{Terms: []lg.Expr{
+				&lg.Not{Body: notWaitingForStart},
+				notAllDone,
+			}}
 		}
+
+		// C4 / Python ivy_l2s.py:519-526: accumulate per-task predicates.
+		// At each scheduler boundary (next task has a trigger), emit an
+		// intermediate l2s_not_all_done<sfx> and reset the accumulator.
+		notAllDonePreds = append(notAllDonePreds, notAllDone)
+		if idx+1 < len(sortedTasks) {
+			nextSfx := sortedTasks[idx+1]
+			if trig, ok := triggers[nextSfx]; ok && trig["work_start"] != nil {
+				trigf := trig["work_start"]
+				orOfPreds := buildOrExpr(notAllDonePreds)
+				tmp := &lg.Implies{
+					T1: &lg.Not{Body: eventuallyStartTask(trigf)},
+					T2: orOfPreds,
+				}
+				invars = appendLF(autoAcfg, invars, "l2s_not_all_done"+sfx, tmp)
+				notAllDonePreds = nil
+			}
+		}
+	}
+
+	// C4 final / Python ivy_l2s.py:545-546: emit global l2s_not_all_done as
+	// the OR of all (remaining) accumulated per-task predicates.
+	if len(notAllDonePreds) > 0 {
+		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", buildOrExpr(notAllDonePreds))
 	}
 
 	// --- init_globally: generate l2s_globally invariants ---
@@ -457,6 +516,10 @@ func l2sAutoInvariants(
 				*res = append(*res, &lg.Implies{T1: prop, T2: notWaiting})
 				initNB := l2sInit(vs, &lg.Not{Body: prop}, proofLabel)
 				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
+				// C16 / Python ivy_l2s.py:572-576: AG-pattern extra invariant.
+				if isEventuallyOrNotGlobally(arg) {
+					*res = append(*res, &lg.Implies{T1: notWaiting, T2: &lg.Not{Body: arg}})
+				}
 			}
 		case *lg.Eventually:
 			knownInits[fmt.Sprint(prop)] = true
@@ -474,6 +537,10 @@ func l2sAutoInvariants(
 				*res = append(*res, &lg.Implies{T1: &lg.Not{Body: prop}, T2: notWaiting})
 				initNB := l2sInit(vs, prop, proofLabel)
 				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
+				// C16 / Python ivy_l2s.py:564-568: EF-pattern extra invariant.
+				if isGloballyOrNotEventually(arg) {
+					*res = append(*res, &lg.Implies{T1: notWaiting, T2: arg})
+				}
 			}
 		case *lg.Implies:
 			if !pos {
@@ -638,6 +705,46 @@ func l2sAutoInvariants(
 func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
 	lf := cfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
 	return append(invars, lf)
+}
+
+// buildOrExpr builds an Or expression from a slice of terms, mirroring
+// Python's `lg.Or(*xs)`. Empty Or is false (per the codebase convention at
+// l2s_auto.go:141). Single-element Or returns the element directly.
+func buildOrExpr(xs []lg.Expr) lg.Expr {
+	if len(xs) == 1 {
+		return xs[0]
+	}
+	return &lg.Or{Terms: xs}
+}
+
+// isGloballyOrNotEventually returns true if e is *lg.Globally or *lg.Not{*lg.Eventually}.
+// Used for the C16 EF-pattern extra invariant in initGlobally.
+// Mirrors Python ivy_l2s.py:566.
+func isGloballyOrNotEventually(e lg.Expr) bool {
+	if _, ok := e.(*lg.Globally); ok {
+		return true
+	}
+	if n, ok := e.(*lg.Not); ok {
+		if _, ok := n.Body.(*lg.Eventually); ok {
+			return true
+		}
+	}
+	return false
+}
+
+// isEventuallyOrNotGlobally returns true if e is *lg.Eventually or *lg.Not{*lg.Globally}.
+// Used for the C16 AG-pattern extra invariant in initGlobally.
+// Mirrors Python ivy_l2s.py:574.
+func isEventuallyOrNotGlobally(e lg.Expr) bool {
+	if _, ok := e.(*lg.Eventually); ok {
+		return true
+	}
+	if n, ok := e.(*lg.Not); ok {
+		if _, ok := n.Body.(*lg.Globally); ok {
+			return true
+		}
+	}
+	return false
 }
 
 // collectVarsSlice collects free variables from a node into a slice.

@@ -404,14 +404,31 @@ func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Expr {
 // CompileDefinitionGoalVocab compiles a definition and adds it to the goal
 // as new premises (a function declaration and a property stating the definition).
 // Returns the modified goal.
-// Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1469-1499).
+// Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1477-1506).
+//
+// Accepts either a *ast.LabeledFormula (containing the equation directly) or
+// a *ast.DerivedDecl (whose first arg is the LabeledFormula). Python's
+// `lf = df.args[0]` (line 1480) extracts the inner LF from a DerivedDecl.
 func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	// Unwrap DerivedDecl: Python lf = df.args[0]
+	var innerLF *ast.LabeledFormula
+	if lf, ok := df.(*ast.LabeledFormula); ok {
+		innerLF = lf
+	} else if dd, ok := df.(*ast.DerivedDecl); ok {
+		if len(dd.DeclArgs) > 0 {
+			if lf, ok := dd.DeclArgs[0].(*ast.LabeledFormula); ok {
+				innerLF = lf
+			}
+		}
+	}
+	if innerLF == nil {
+		return goal
+	}
+
 	// Extract the definition formula
 	var defnFormula lg.Expr
-	if lf, ok := df.(*ast.LabeledFormula); ok {
-		if n, ok := lf.Formula.(lg.Expr); ok {
-			defnFormula = n
-		}
+	if n, ok := innerLF.Formula.(lg.Expr); ok {
+		defnFormula = n
 	}
 	if defnFormula == nil {
 		return goal // can't process, return unchanged
@@ -446,8 +463,10 @@ func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.Label
 		return goal
 	}
 
-	// Create a new premise with the definition
-	defPrem := cfg.NewLabeledFormula(nil, defnFormula)
+	// Create a new premise with the definition.
+	// Python ivy_proof.py:1501 sets `lf.definition = True` on the premise.
+	defPrem := cfg.NewLabeledFormula(innerLF.Label, defnFormula)
+	defPrem.IsDefinition = true
 
 	// Clone the SchemaBody with the new premise added
 	newPrems := make([]ast.Node, 0, len(sb.Prems())+1)
