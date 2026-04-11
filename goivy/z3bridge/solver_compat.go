@@ -83,6 +83,7 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 	ctx := s.tr.Ctx
 	args := make([]Expr, fs.Arity())
 	for i, d := range fs.Domain() {
+		xtracer.Trace("TranslateSort_call callsite=check_native_compat_dom")
 		zs, err := s.tr.TranslateSort(d)
 		if err != nil {
 			return fmt.Errorf("symbol %s: cannot translate domain sort %d: %w", sym.Name, i, err)
@@ -92,6 +93,7 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 	nfResult := nf(args...)
 
 	// Check result sort matches declared range
+	xtracer.Trace("TranslateSort_call callsite=check_native_compat_rng")
 	expectedSort, err := s.tr.TranslateSort(fs.Range())
 	if err != nil {
 		return nil // can't check

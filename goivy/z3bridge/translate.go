@@ -682,6 +682,10 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	if !ok {
 		return Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
 	}
+	// Python: sig = atom.rep.sort.to_z3() (ivy_solver.py:572). This dispatches
+	// to functionsort via the monkey-patched FunctionSort.to_z3, so Python emits
+	// the atom_to_z3_relation callsite trace before functionsort. We mirror that.
+	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation")
 	sig, err := t.functionSort(fs) // emits "ivy_solver.py:279 functionsort() ENTER"
 	if err != nil {
 		return Expr{}, err
@@ -958,6 +962,7 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 
 	// Python line 455-456: if sig == None: sig = term.sort.to_z3()
 	if zs == nil {
+		xtracer.Trace("TranslateSort_call callsite=term_to_z3_variable")
 		zsVal, err := t.TranslateSort(sort)
 		if err != nil {
 			return Expr{}, err
@@ -1030,6 +1035,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if cached, ok := t.cache.consts[key]; ok {
 			return cached, nil
 		}
+		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const")
 		zs, err := t.TranslateSort(sort)
 		if err != nil {
 			return Expr{}, err
@@ -1042,6 +1048,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 
 	// Function sort with single element (0-ary function) → treat as first-order
 	if fs, ok := sort.(*lg.FunctionSort); ok && fs.Arity() == 0 {
+		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_const")
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
@@ -1068,6 +1075,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
 			return Expr{}, err
 		}
+		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func")
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
@@ -1114,6 +1122,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	domain := fs.Domain()
 	sig := make([]Sort, 0, len(domain)+1)
 	for _, d := range domain {
+		xtracer.Trace("TranslateSort_call callsite=functionsort_dom")
 		zs, err := t.TranslateSort(d)
 		if err != nil {
 			return nil, err
@@ -1130,6 +1139,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	if il.IsRelationalSort(fs) {
 		rng = t.Ctx.BoolSort()
 	} else {
+		xtracer.Trace("TranslateSort_call callsite=functionsort_rng")
 		var err error
 		rng, err = t.TranslateSort(fs.Range())
 		if err != nil {
@@ -1183,6 +1193,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 	// Create Z3 constants for the bound variables
 	bound := make([]Expr, len(variables))
 	for i, v := range variables {
+		xtracer.Trace("TranslateSort_call callsite=translate_quantifier_var")
 		zs, err := t.TranslateSort(v.VSort)
 		if err != nil {
 			return Expr{}, err

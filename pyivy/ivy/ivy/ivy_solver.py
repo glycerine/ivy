@@ -120,6 +120,7 @@ def parse_array_theory(name):
 def sort_name_to_z3(name):
     if __debug__: xtracer.trace("ivy_solver.py:116 sort_name_to_z3() ENTER name=%s" % name)
     sort = ivy_logic.find_sort(name)
+    if __debug__: xtracer.trace("TranslateSort_call callsite=sort_name_to_z3")
     return sort.to_z3()
 
 def sorts(name):
@@ -197,7 +198,9 @@ def bfe_to_z3(sym):
         return None
     if len(things) == 2:
         lo,hi = things
+        if __debug__: xtracer.trace("TranslateSort_call callsite=bfe_to_z3_dom")
         insort = sym.sort.dom[0].to_z3()
+        if __debug__: xtracer.trace("TranslateSort_call callsite=bfe_to_z3_rng")
         outsort = sym.sort.rng.to_z3()
         #        assert (z3.is_bv_sort(insort) and z3.is_bv_sort(outsort))
         if insort == z3.IntSort():
@@ -280,8 +283,18 @@ def functionsort(fs):
     if __debug__: xtracer.trace("ivy_solver.py:279 functionsort() ENTER")
 #    print "fs.rng = {!r}".format(fs.rng)
     if fs.is_relational():
-        return [s.to_z3() for s in fs.dom] + [z3.BoolSort()]
-    return [s.to_z3() for s in fs.dom] + [fs.rng.to_z3()]
+        result = []
+        for s in fs.dom:
+            if __debug__: xtracer.trace("TranslateSort_call callsite=functionsort_dom")
+            result.append(s.to_z3())
+        return result + [z3.BoolSort()]
+    result = []
+    for s in fs.dom:
+        if __debug__: xtracer.trace("TranslateSort_call callsite=functionsort_dom")
+        result.append(s.to_z3())
+    if __debug__: xtracer.trace("TranslateSort_call callsite=functionsort_rng")
+    result.append(fs.rng.to_z3())
+    return result
 
 def enumeratedsort(es):
     if __debug__: xtracer.trace("ivy_solver.py:281 enumeratedsort() ENTER name=%s" % es.name)
@@ -299,7 +312,11 @@ def enumeratedsort(es):
 
 def symbol_to_z3(s):
     if __debug__: xtracer.trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s" % (s.name, s.sort))
-    return z3.Const(s.name, s.sort.to_z3()) if s.sort.dom == [] else z3.Function(s.name,s.sort.to_z3())    
+    if s.sort.dom == []:
+        if __debug__: xtracer.trace("TranslateSort_call callsite=symbol_to_z3_const")
+        return z3.Const(s.name, s.sort.to_z3())
+    if __debug__: xtracer.trace("TranslateSort_call callsite=symbol_to_z3_func")
+    return z3.Function(s.name, s.sort.to_z3())
 
 ivy_logic.UninterpretedSort.to_z3 = uninterpretedsort
 ivy_logic.FunctionSort.to_z3 = functionsort
@@ -331,6 +348,7 @@ def lookup_native(thing,table,kind):
         if thing.name == 'arrcst':
             sort = thing.sort.rng
             if sort.name in ivy_logic.sig.interp:
+                if __debug__: xtracer.trace("TranslateSort_call callsite=lookup_native_arrcst")
                 return lambda x: z3.K(sort.to_z3().domain(),x)
         if thing.name in iu.polymorphic_symbols:
             sort = thing.sort.domain[0].name
@@ -354,6 +372,7 @@ def lookup_native(thing,table,kind):
                 return z3val
         return None
     if isinstance(z3name,(ivy_logic.EnumeratedSort,ivy_logic.RangeSort)):
+        if __debug__: xtracer.trace("TranslateSort_call callsite=lookup_native_enum_or_range")
         return z3name.to_z3()
     z3val = table(z3name)
     if z3val == None:
@@ -396,7 +415,9 @@ def check_compat():
 def sort_card(sort):
     if __debug__: xtracer.trace("ivy_solver.py:383 sort_card() ENTER sort=%s" % sort)
     sig = lookup_native(sort,sorts,"sort")
-    sig = sig if sig is not None else sort.to_z3()
+    if sig is None:
+        if __debug__: xtracer.trace("TranslateSort_call callsite=sort_card")
+        sig = sort.to_z3()
     if z3.is_bv_sort(sig):
         return 2**sig.size()
     if isinstance(sig,z3.DatatypeSortRef):
@@ -411,7 +432,9 @@ def sort_card(sort):
 def native_symbol(sym):
     if __debug__: xtracer.trace("ivy_solver.py:398 native_symbol() ENTER sym=%s" % sym)
     if isinstance(sym.sort,ConstantSort):
+        if __debug__: xtracer.trace("TranslateSort_call callsite=native_symbol_const")
         return z3.Const(sym.rep, name.sort.to_z3())
+    if __debug__: xtracer.trace("TranslateSort_call callsite=native_symbol_func")
     return z3.Function(sym.rep, *(name.sort.to_z3()))
 
 def apply_z3_func(pred,tup): # called only at: 497, 534, 1767 herein.
@@ -432,6 +455,7 @@ def numeral_to_z3(num):
     # TODO: allow other numeric types
     z3sort = lookup_native(num.sort,sorts,"sort")
     if z3sort == None:
+        if __debug__: xtracer.trace("TranslateSort_call callsite=numeral_to_z3")
         return z3.Const(num.name+':'+num.sort.name,num.sort.to_z3()) # uninterpreted sort
 #    try:
     name = num.name[1:-1] if num.name.startswith('"') else num.name
@@ -467,6 +491,7 @@ def term_to_z3(term):
             if res is not None: return res
             sig = lookup_native(term.sort,sorts,"sort") if sorted else S
             if sig == None:
+                if __debug__: xtracer.trace("TranslateSort_call callsite=term_to_z3_variable")
                 sig = term.sort.to_z3()
 #            if sorted:
 #                print type(term.sort)
@@ -488,7 +513,11 @@ def term_to_z3(term):
             else:
                 iso = term.rep.sort
                 # TODO: this is dangerous
-                sig = iso.to_z3() if iso is not None else S
+                if iso is not None:
+                    if __debug__: xtracer.trace("TranslateSort_call callsite=term_to_z3_const")
+                    sig = iso.to_z3()
+                else:
+                    sig = S
 #                print "term: {}, iso : {}, sig = {}".format(term,iso,sig)
                 res = z3.Const(solver_name(term.rep),sig)
             z3_constants[term.rep] = res
@@ -502,6 +531,7 @@ def term_to_z3(term):
         if fun is None:
             fun = lookup_native(term.rep,functions,"function")
             if fun is None:
+                if __debug__: xtracer.trace("TranslateSort_call callsite=term_to_z3_func")
                 sig = term.rep.sort.to_z3()
                 sn = solver_name(term.rep)
                 assert solver_name is not None, term.rep
@@ -514,6 +544,7 @@ def term_to_z3(term):
 def lt_pred(sort):
     if __debug__: xtracer.trace("ivy_solver.py:501 lt_pred() ENTER sort=%s" % sort)
     sym = ivy_logic.Symbol('<',sort)
+    if __debug__: xtracer.trace("TranslateSort_call callsite=lt_pred")
     sig = sym.sort.to_z3()
     return z3.Function(solver_name(sym), *sig)
     
@@ -538,6 +569,7 @@ def atom_to_z3(atom):
             if atom.rep.name in polymacs and iu.ivy_use_polymorphic_macros:
                 rel = get_polymacs(atom.rep)
             else:
+                if __debug__: xtracer.trace("TranslateSort_call callsite=atom_to_z3_relation")
                 sig = atom.rep.sort.to_z3()
                 rel = z3.Function(solver_name(atom.rep), *sig) if isinstance(sig,list) else z3.Const(solver_name(atom.rep),sig)
         z3_predicates[atom.relname] = rel
@@ -1777,6 +1809,7 @@ def encode_term(t,n,sort):
 #                for i in range(n)]
         args = [term_to_z3(arg) for arg in t.args]
         print("encode_term t={}".format(t))
+        if __debug__: xtracer.trace("TranslateSort_call callsite=encode_term_relation_sort")
         sig = ivy_logic.RelationSort(t.rep.sort.dom).to_z3()
 
         res = [apply_z3_func(z3_function(t.rep.name + ':' + str(n-1-i),sig),args)
