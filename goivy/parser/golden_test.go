@@ -266,7 +266,7 @@ func extractDeclType(line string) string {
 var pyIvyNoError = []int{0, 1, 2, 3, 41, 43, 44, 49, 53, 54, 55, 57, 59, 86,
 	94, 95, 96, 97, 99, 104, 107, 108, 114, 126, 131, 132, 133, 154, 155,
 	156, 157, 178, 183, 184, 189, 198, 210, 211, 235, 239, 240, 242, 243,
-	244, 252, 280, 281, 291, 2000, 302, 303, 304, 306, 307, 308, 309, 310,
+	244, 252, 280, 281, 291, 300, 302, 303, 304, 306, 307, 308, 309, 310,
 	311, 314, 315, 317, 318, 320, 322, 324, 325, 326, 327, 329, 330, 332,
 	333, 335, 337, 338, 339, 340, 341, 342, 345, 346, 350, 354, 356, 357,
 	358, 359, 361, 362, 364, 365, 372, 374, 375, 377, 379, 394, 396, 397,
@@ -609,13 +609,13 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				// strings for modules of matching stuff.
 				for j, pys := range pyLast30 {
 					if true {
-						fmt.Printf("%06d  go : %.2000s", i-n+j+1, goLast30[j])
-						if len(goLast30[j]) > 2000 {
-							fmt.Printf(" ...(truncated long line to 2000 bytes)\n\n")
+						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
+						if len(goLast30[j]) > 300 {
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n\n")
 						}
-						fmt.Printf("        py : %.2000s\n", pys)
-						if len(pys) > 2000 {
-							fmt.Printf(" ...(truncated long line to 2000 bytes)\n\n")
+						fmt.Printf("        py : %.300s\n", pys)
+						if len(pys) > 300 {
+							fmt.Printf(" ...(truncated long line to 300 bytes)\n\n")
 						}
 					} else {
 						fmt.Printf("%06d  go : %s", i-n+j+1, goLast30[j])
