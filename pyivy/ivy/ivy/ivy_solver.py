@@ -559,7 +559,7 @@ def get_polymacs(op):
     return functools.partial(polymacs[op.name],op.sort)
 
 def atom_to_z3(atom):
-    #if __debug__: xtracer.trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d" % (atom.rep, len(atom.args)))
+    if __debug__: xtracer.trace("atom_to_z3 ENTER HASH canon=%s cacheHit=%s" % (atom.rep.sexp() if hasattr(atom.rep, 'sexp') else str(atom.rep), "True" if atom.relname in z3_predicates else "False"))
     if ivy_logic.is_equals(atom.rep) and ivy_logic.is_enumerated(atom.args[0]) and not use_z3_enums:
         return encode_equality(*atom.args)
     if atom.relname not in z3_predicates:
@@ -732,7 +732,7 @@ def formula_to_z3_int(fmla, caller):
     assert False
 
 def formula_to_z3_closed(fmla):
-    if __debug__: xtracer.trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%s" % type(fmla).__name__)
+    if __debug__: xtracer.trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%s HASH canon=%s" % (type(fmla).__name__, fmla.sexp()))
     z3_formula = formula_to_z3_int(fmla,"term_to_z3_closed")
     variables = sorted(used_variables_ast(fmla))
     if len(variables) == 0:

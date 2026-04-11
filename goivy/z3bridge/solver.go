@@ -567,7 +567,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 // For Definition: wraps in raw z3.ForAll (no quant constraints).
 // For others: wraps via forall() helper (with quant constraints).
 func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (Expr, error) {
-	xtracer.Trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%v", iu.ShortTypeName(fmla))
+	xtracer.Trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%v HASH canon=%v", iu.ShortTypeName(fmla), fmla.Sexp())
 	z3Formula, err := s.tr.TranslateNoHash(fmla)
 	if err != nil {
 		return Expr{}, err

@@ -588,6 +588,23 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		return t.translateCore(app, "atom_to_z3")
 	}
 
+	// Diagnostic: report atom + cache state on entry. Mirror Python's
+	// atom_to_z3 entry trace so divergences in cache state are visible.
+	{
+		var probeKey lg.NodeKey
+		if c.Name == "=" {
+			probeKey = eqCanonPredKey
+		} else {
+			probeKey = lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+		}
+		_, hit := t.cache.z3_predicates[probeKey]
+		hitStr := "False"
+		if hit {
+			hitStr = "True"
+		}
+		xtracer.Trace("atom_to_z3 ENTER HASH canon=%s cacheHit=%s", c.Sexp(), hitStr)
+	}
+
 	//xtracer.Trace("ivy_solver.py:517 atom_to_z3() ENTER rep=%s nargs=%d", c.Name, len(app.Terms))
 
 	// Python line 518: if ivy_logic.is_equals(atom.rep) and
