@@ -249,7 +249,7 @@ func rankingInvariants(
 			OldOf(neededImplCreated)))
 
 		// --- l2s_invar postcond ---
-		wBinder := L2sW(nil, eqRHS(workStart), "")
+		wBinder := l2sW(nil, eqRHS(workStart), "")
 		notWaitingForTrigger := &lg.Not{Body: wBinder}
 		postconds = append(postconds, mklf("l2s_invar"+sfx,
 			&lg.Implies{
@@ -271,7 +271,7 @@ func rankingInvariants(
 			Exists(helpfulArgs, eqRHS(workHelpful))))
 
 		// --- l2s_progress postcond ---
-		waitingForProgress := rankApplyNB(L2sW(progressArgs, eqRHS(workProgress), ""),
+		waitingForProgress := rankApplyNB(l2sW(progressArgs, eqRHS(workProgress), ""),
 			rankVarsToNodes(progressArgs)...)
 
 		wpargs := neededArgs

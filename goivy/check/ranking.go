@@ -123,48 +123,6 @@ func L2sD(sort lg.Sort) *lg.Const {
 	return lg.NewConst("l2s_d", fs)
 }
 
-// L2sW creates an l2s_w named binder (waiting predicate).
-func L2sW(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_w", vs, strPtr(label), body)
-	return nb
-}
-
-// L2sG creates an l2s_g named binder (globally predicate).
-func L2sG(vs []*lg.Variable, body lg.Expr, environ string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_g", vs, strPtr(environ), body)
-	return nb
-}
-
-// OldL2sG creates an _old_l2s_g named binder (old globally predicate).
-func OldL2sG(vs []*lg.Variable, body lg.Expr, environ string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("_old_l2s_g", vs, strPtr(environ), body)
-	return nb
-}
-
-// L2sInit creates an l2s_init named binder.
-func L2sInit(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_init", vs, strPtr(label), body)
-	return nb
-}
-
-// L2sWhen creates an l2s_when named binder.
-func L2sWhen(name string, vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_when"+name, vs, strPtr(label), body)
-	return nb
-}
-
-// L2sOld creates an l2s_old named binder.
-func L2sOld(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_old", vs, strPtr(label), body)
-	return nb
-}
-
-// L2sS creates an l2s_s named binder (saved state).
-func L2sS(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
-	nb, _ := lg.NewNamedBinder("l2s_s", vs, strPtr(label), body)
-	return nb
-}
-
 // --- Task and Trigger types ---
 
 // Task holds the ranking function definitions for one task suffix.
@@ -622,13 +580,9 @@ func NewPropEvents(gprops []*lg.NamedBinder, lineno ast.Location) *PropEvent {
 	for _, gprop := range gprops {
 		vs := gprop.Variables
 		body := gprop.Body
-		environ := ""
-		if gprop.Environ != nil {
-			environ = *gprop.Environ
-		}
 
-		oldG := OldL2sG(vs, body, environ)
-		curG := L2sG(vs, body, environ)
+		oldG := oldL2sG(vs, body, gprop.Environ)
+		curG := l2sG(vs, body, gprop.Environ)
 
 		// Pre: save old value
 		if oldG != nil && curG != nil {
@@ -642,13 +596,9 @@ func NewPropEvents(gprops []*lg.NamedBinder, lineno ast.Location) *PropEvent {
 	for _, gprop := range gprops {
 		vs := gprop.Variables
 		body := gprop.Body
-		environ := ""
-		if gprop.Environ != nil {
-			environ = *gprop.Environ
-		}
 
-		oldG := OldL2sG(vs, body, environ)
-		curG := L2sG(vs, body, environ)
+		oldG := oldL2sG(vs, body, gprop.Environ)
+		curG := l2sG(vs, body, gprop.Environ)
 
 		// Pre: assume monotonicity: old_g(V) -> g(V)
 		if oldG != nil && curG != nil {
@@ -685,7 +635,7 @@ func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) 
 		// w(V) := w(V) & ~body & ~g(~body)
 		wApp := wait // The waiting predicate itself
 		negBody := makeNot(body)
-		gNegBody := L2sG(vs, negBody, proofLabel)
+		gNegBody := l2sG(vs, negBody, strPtr(proofLabel))
 
 		newVal := rankingMakeAnd(wApp, negBody, makeNot(gNegBody))
 		result = append(result, newAssignAction(wApp, newVal, lineno))
@@ -798,14 +748,14 @@ func applyWas(expr lg.Expr, proofLabel string) lg.Expr {
 		return &lg.Iff{T1: applyWas(e.T1, proofLabel), T2: applyWas(e.T2, proofLabel)}
 	default:
 		// Atomic: create l2s_s binder
-		nb := L2sS(nil, expr, proofLabel)
+		nb := l2sS(nil, expr, proofLabel)
 		return nb
 	}
 }
 
 func applyHappened(expr lg.Expr, proofLabel string) lg.Expr {
 	// ~(l2s_w(V, body)(V))
-	nb := L2sW(nil, expr, proofLabel)
+	nb := l2sW(nil, expr, proofLabel)
 	return makeNot(nb)
 }
 
@@ -925,6 +875,6 @@ func ConvertToInit(fmla lg.Expr, proofLabel string) lg.Expr {
 		return &lg.Exists{Variables: f.Variables, Body: ConvertToInit(f.Body, proofLabel)}
 	default:
 		// Wrap in l2s_init
-		return L2sInit(nil, fmla, proofLabel)
+		return l2sInit(nil, fmla, proofLabel)
 	}
 }
