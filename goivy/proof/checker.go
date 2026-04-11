@@ -302,6 +302,11 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 	if goalConc == nil {
 		return nil, &NoMatch{Msg: "goal has no conclusion"}
 	}
+	// Schema matching does not apply to *ast.TemporalModels goals.
+	// Mirror Python ivy_proof.py:429 which raises NoMatch in this case.
+	if _, isTM := goalConc.(*ast.TemporalModels); isTM {
+		return nil, &NoMatch{Msg: "schema matching does not apply to temporal-models goals"}
+	}
 
 	// Step 1: Build match problem (full pipeline)
 	prob, pmatch, err := pc.SetupMatching(goal, proof, pc.Mod)

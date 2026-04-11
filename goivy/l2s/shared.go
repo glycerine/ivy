@@ -15,6 +15,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
@@ -647,7 +648,7 @@ func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals
 		nonTemporalPrems = append(nonTemporalPrems, p)
 	}
 
-	newGoal := cloneGoalWithASTConc(acfg, goal, nonTemporalPrems, newConc)
+	newGoal := proof.CloneGoal(acfg, goal, nonTemporalPrems, newConc)
 
 	result := make([]*ast.LabeledFormula, len(goals))
 	result[0] = newGoal
@@ -722,7 +723,5 @@ func ExtractNormalProgram(m *module.Module) *temporal.NormalProgram {
 	return extractNormalProgram(m)
 }
 
-// CloneGoalWithASTConc clones a goal with an ast.Node conclusion.
-func CloneGoalWithASTConc(acfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	return cloneGoalWithASTConc(acfg, goal, prems, conc)
-}
+// (CloneGoalWithASTConc was deleted — callers should use proof.CloneGoal
+// directly, which now accepts ast.Node for conc.)

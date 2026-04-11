@@ -109,7 +109,14 @@ func CheckPremisesProvided(g1, g2 *ast.LabeledFormula, sig *il.Sig) error {
 }
 
 // GoalIsTemporal checks if a goal has temporal properties.
-// Corresponds to Python's goal_is_temporal.
+// Corresponds to Python's goal_is_temporal (ivy_proof.py:603-605):
+//
+//	def goal_is_temporal(x):
+//	    conc = goal_conc(x)
+//	    return conc.temoral or isinstance(conc.formula,ia.TemporalModels)
+//
+// Returns true when the goal's conclusion is a *ast.TemporalModels OR a
+// NamedBinder for "globally"/"eventually".
 func GoalIsTemporal(x *ast.LabeledFormula) bool {
 	if x.IsTemporal() {
 		return true
@@ -117,6 +124,9 @@ func GoalIsTemporal(x *ast.LabeledFormula) bool {
 	conc := GoalConc(x)
 	if conc == nil {
 		return false
+	}
+	if _, ok := conc.(*ast.TemporalModels); ok {
+		return true
 	}
 	if nb, ok := conc.(*lg.NamedBinder); ok {
 		return nb.Name == "globally" || nb.Name == "eventually"

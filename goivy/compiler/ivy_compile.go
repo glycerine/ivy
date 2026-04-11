@@ -1990,10 +1990,23 @@ func t2pApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Const) *lg.Const {
 }
 
 // t2pGoalConc returns the conclusion of a goal as an Expr.
-// Now a thin wrapper around proof.GoalConcExpr — same semantics
-// (returns nil for non-lg.Expr formulas like *ast.TemporalModels).
+// Duplicates proof.GoalConcExpr logic to avoid circular import (compiler
+// cannot import proof). Same semantics: returns nil for non-lg.Expr
+// formulas like *ast.TemporalModels.
 func t2pGoalConc(g *ast.LabeledFormula) lg.Expr {
-	return proof.GoalConcExpr(g)
+	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
+		conc := sb.Conc()
+		if conc != nil {
+			if ln, ok := conc.(lg.Expr); ok {
+				return ln
+			}
+		}
+		return nil
+	}
+	if ln, ok := g.Formula.(lg.Expr); ok {
+		return ln
+	}
+	return nil
 }
 
 // t2pApplyMatchSort applies a match to a sort, returning the matched sort or original.

@@ -601,9 +601,10 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	// Change conclusion to M |= true (Python line 385: conc = TemporalModels(model, il.And()))
 	newConc := pc.GetAstCfg().NewTemporalModels(model, lg.True)
 
-	// Build new goal
+	// Build new goal — proof.CloneGoal now accepts ast.Node, so the local
+	// cloneGoalWithASTConc helper is no longer needed.
 	prems := proof.GoalPrems(goal)
-	newGoal := cloneGoalWithASTConc(pc.GetAstCfg(), goal, prems, newConc)
+	newGoal := proof.CloneGoal(pc.GetAstCfg(), goal, prems, newConc)
 
 	result := make([]*ast.LabeledFormula, len(goals))
 	result[0] = newGoal
@@ -630,19 +631,8 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 	return nil
 }
 
-// cloneGoalWithASTConc clones a goal with an ast.Node conclusion.
-func cloneGoalWithASTConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	var formula ast.Node
-	if len(prems) > 0 {
-		elems := make([]ast.Node, len(prems)+1)
-		copy(elems, prems)
-		elems[len(prems)] = conc
-		formula = cfg.NewSchemaBody(elems...)
-	} else {
-		formula = conc
-	}
-	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
-}
+// (cloneGoalWithASTConc was deleted — proof.CloneGoal now takes ast.Node
+// for conc and supersedes this duplicate helper.)
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).
 func symbolsAst(n lg.Expr) []*lg.Const {

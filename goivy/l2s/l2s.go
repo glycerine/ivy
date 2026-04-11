@@ -575,20 +575,8 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 	return nil
 }
 
-// cloneGoalWithASTConc clones a goal with an ast.Node conclusion
-// (instead of lg.Expr which proof.CloneGoal requires).
-func cloneGoalWithASTConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	var formula ast.Node
-	if len(prems) > 0 {
-		elems := make([]ast.Node, len(prems)+1)
-		copy(elems, prems)
-		elems[len(prems)] = conc
-		formula = cfg.NewSchemaBody(elems...)
-	} else {
-		formula = conc
-	}
-	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
-}
+// (cloneGoalWithASTConc was deleted — proof.CloneGoal now takes ast.Node
+// for conc and supersedes this duplicate helper.)
 
 func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
 	if act == nil {
