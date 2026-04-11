@@ -1,21 +1,22 @@
-// Package l2s implements liveness-to-safety reduction for temporal property verification.
+// l2s.go implements liveness-to-safety reduction for temporal property
+// verification (formerly the l2s/ package, merged into check).
 //
-// This is a faithful port of Python's ivy_l2s.py. It transforms temporal (liveness)
-// properties into safety properties that can be checked with standard
-// IC3/UPDR verification.
+// This is a faithful port of Python's ivy_l2s.py. It transforms temporal
+// (liveness) properties into safety properties that can be checked with
+// standard IC3/UPDR verification.
 //
 // The transformation works by:
-// 1. Constructing a monitor that tracks whether the temporal property holds
-// 2. Adding saved-state copies of all relevant state
-// 3. Adding Skolem constants/functions for existentially quantified variables
-// 4. Adding fairness constraints
-// 5. Proving that the resulting safety property implies the temporal one
+//  1. Constructing a monitor that tracks whether the temporal property holds
+//  2. Adding saved-state copies of all relevant state
+//  3. Adding Skolem constants/functions for existentially quantified variables
+//  4. Adding fairness constraints
+//  5. Proving that the resulting safety property implies the temporal one
 //
 // Key entry points:
 //   - L2STactic: The main tactic for "l2s" proof goals
 //   - L2STacticFull: Full version including auxiliary state
 //   - L2STacticAuto: Automatic version with trigger inference
-package l2s
+package check
 
 import (
 	"fmt"
@@ -999,9 +1000,11 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 
 // --- Registration ---
 
-// RegisterTactics registers the l2s tactics on the given proof config.
-// Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *module.ProofConfig) {
+// RegisterL2STactics registers the l2s tactics on the given proof config.
+// Replaces the old init()-based global registration. Renamed from
+// RegisterTactics to avoid colliding with check.RegisterTactics during
+// the l2s/ → check/ package merge.
+func RegisterL2STactics(proofCfg *module.ProofConfig) {
 	proofCfg.RegisterTactic("l2s", L2STactic)
 	proofCfg.RegisterTactic("l2s_full", L2STacticFull)
 	proofCfg.RegisterTactic("l2s_auto", L2STacticAuto)

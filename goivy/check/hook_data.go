@@ -1,10 +1,10 @@
-// hook_data.go defines the opaque data structure that l2s attaches to
-// LabeledFormula.TraceHook so that check/ can route to the correct
-// trace-formatting function without an import cycle.
+// hook_data.go defines the data structure that the l2s tactic attaches to
+// LabeledFormula.TraceHook so the check trace-display code can route to
+// the correct trace-formatting function.
 //
 // Mirrors Python's dynamically-attached `goal.trace_hook` lambda
 // (ivy_l2s.py:88, 1311, 1313).
-package l2s
+package check
 
 import (
 	lg "github.com/glycerine/ivy/goivy/logic"

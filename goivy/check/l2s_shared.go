@@ -1,9 +1,9 @@
-// shared.go contains the L2S instrumentation pipeline steps that are
+// l2s_shared.go contains the L2S instrumentation pipeline steps that are
 // shared between the l2s tactic and the ranking tactic.
 //
 // Each SharedStep* function corresponds to a numbered step in l2sTacticInt.
 // The InstrumentationConfig struct carries all state between steps.
-package l2s
+package check
 
 import (
 	"fmt"

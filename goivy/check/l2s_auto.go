@@ -1,6 +1,6 @@
 // l2s_auto.go implements the l2s_auto tactic's task/trigger invariant
 // generation, ported from Python ivy_l2s.py lines 196-678.
-package l2s
+package check
 
 import (
 	"fmt"
