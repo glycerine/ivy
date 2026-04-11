@@ -1319,25 +1319,46 @@ def _canon_z3_sort(sort):
     canonZ3SortUnlocked."""
     return sort.name()
 
-def _canon_z3_expr(e):
+def _canon_z3_lookup_binder_name(binders, idx):
+    """Resolve a de Bruijn index to a bound-variable name. Mirrors
+    goivy/z3bridge/canon_z3.go lookupBinderName."""
+    for scope in reversed(binders):
+        n = len(scope)
+        if idx < n:
+            return scope[n - 1 - idx]
+        idx -= n
+    return "??unbound"
+
+def _canon_z3_expr(e, binders):
     """Return a deterministic s-expression representation of a Z3
     expression. Mirrors goivy/z3bridge/canon_z3.go canonZ3ExprUnlocked
-    BYTE-FOR-BYTE. Format spec lives in that file's header comment."""
+    BYTE-FOR-BYTE. binders is a list of bound-variable name lists, one
+    per enclosing quantifier (innermost LAST). Format spec lives in
+    that file's header comment."""
     if z3.is_int_value(e) or z3.is_rational_value(e) or e.sort().kind() == z3.Z3_BV_SORT:
         # Numeric literal
         return "(n %s)" % e.as_string()
     if z3.is_var(e):
-        # Bound variable: (v <de_bruijn_idx> <sort>)
-        return "(v %d %s)" % (z3.get_var_index(e), _canon_z3_sort(e.sort()))
+        # Bound variable: (v <name>) -- looked up from binder stack
+        idx = z3.get_var_index(e)
+        return "(v %s)" % _canon_z3_lookup_binder_name(binders, idx)
     if z3.is_quantifier(e):
+        nbound = e.num_vars()
+        # AST-order names (needed for body lookups via the binder stack)
+        ast_names = [e.var_name(i) for i in range(nbound)]
+        # Sort (name, sort) pairs alphabetically by name to neutralize
+        # Python's frozenset-randomized binder ordering.
+        pairs = sorted(
+            ((ast_names[i], _canon_z3_sort(e.var_sort(i))) for i in range(nbound)),
+            key=lambda p: p[0],
+        )
         if e.is_forall():
             head = "(forall ("
         else:
             head = "(exists ("
-        binders = []
-        for i in range(e.num_vars()):
-            binders.append("(%s %s)" % (e.var_name(i), _canon_z3_sort(e.var_sort(i))))
-        return head + " ".join(binders) + ") " + _canon_z3_expr(e.body()) + ")"
+        binder_strs = ["(%s %s)" % (n, s) for (n, s) in pairs]
+        new_binders = binders + [ast_names]
+        return head + " ".join(binder_strs) + ") " + _canon_z3_expr(e.body(), new_binders) + ")"
     if z3.is_app(e):
         name = e.decl().name()
         nargs = e.num_args()
@@ -1347,16 +1368,16 @@ def _canon_z3_expr(e):
         # n-ary application: (a <name> <arg1> <arg2> ...)
         parts = ["(a", name]
         for i in range(nargs):
-            parts.append(_canon_z3_expr(e.arg(i)))
+            parts.append(_canon_z3_expr(e.arg(i), binders))
         return " ".join(parts) + ")"
-    return "(unknown)"
+    return "(unknown_kind=%s)" % type(e).__name__
 
 def _canon_z3_assertions(s):
     """Return the canonical s-expression for the solver's current
     assertions. Mirrors goivy/z3bridge/canon_z3.go CanonZ3Assertions."""
     parts = ["(asserts"]
     for a in s.assertions():
-        parts.append(_canon_z3_expr(a))
+        parts.append(_canon_z3_expr(a, []))
     return " ".join(parts) + ")"
 
 def _trace_z3_check(s, res):
