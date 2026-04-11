@@ -2603,19 +2603,21 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-254710  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Not HASH canon=(Not body:(Or terms:[]))
-        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Not HASH canon=(Not body:(Or terms:[]))
+254983  go : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=TemporalModels
+        py : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=TemporalModels
 
-254711  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=0
-        py : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=0
+254984  go : XTRACE: proof.tacticTactic name='skolemize' goal[0].Formula type=TemporalModels
+        py : XTRACE: proof.tacticTactic name='skolemize' goal[0].Formula type=TemporalModels
 
-254712  go : XTRACE: solver.ClausesToZ3 EXIT exprs=1
-        py : XTRACE: solver.ClausesToZ3 EXIT exprs=1
+254985  go : XTRACE: ast.LF.__init__ id=2248 counter=2249
+        py : XTRACE: ast.LF.__init__ id=2248 counter=2249
 
-254713  go : XTRACE: ivy_solver.py:1302 decide() ENTER
-        py : XTRACE: ivy_solver.py:1302 decide() ENTER
+254986  go : XTRACE: ast.LF.__init__ id=2249 counter=2250
+        py : XTRACE: ast.LF.__init__ id=2249 counter=2250
 
-254714  go : XTRACE: z3.check seq=1 result=unsat HASH leaf=blake3.33B-0BqO_pzhEvwh5wEb3K7FUtAJeCO_ZFSFQC02pM99hANK root=blake3.33B-Jykd9ebBajktwodxl3qWauC_RYt9clScHZ_e9YkuvpSa smt2=(declare-sort lclock)
-        py : XTRACE: z3.check seq=1 result=unsat HASH leaf=blake3.33B-HtNHleHO8kt4Hp2uqkyD5zyTiiijvMHwjw3FEKtvdCJc root=blake3.33B-SbuuYA-Xcwb6cnaIlmU_DA3_vvvXkYVF5SzROLrn_TUS smt2=; benchmark generated from python API
+254987  go : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=nil
+        py : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=SchemaBody
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 254987, counting from 0.
 ~~~
 
