@@ -36,10 +36,10 @@ type LabeledFormula struct {
 	// In Python this is a dynamically-attached attribute (lf.annot).
 	// It carries (action, annotation) pair context for proof checking.
 	Annot interface{}
-	// TraceHook is an opaque diagnostic hook attached by tactics (e.g. l2s).
-	// Mirrors Python's dynamically-attached lf.trace_hook attribute
-	// (ivy_l2s.py:88, 1311, 1313). Type is interface{} to avoid forcing ast
-	// to depend on the trace package; consumers in check/ type-assert it.
+	// TraceHook is a diagnostic hook closure attached by tactics (e.g. l2s).
+	// The concrete type is check.TraceHookFn; the field is interface{} only
+	// because ast cannot import check (cycle). Mirrors Python's
+	// dynamically-attached lf.trace_hook attribute (ivy_l2s.py:88, 1311, 1313).
 	TraceHook interface{}
 }
 

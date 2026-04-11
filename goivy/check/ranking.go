@@ -1,6 +1,5 @@
 // ranking.go implements liveness-to-safety reduction using
-// lexicographic relational rankings (formerly the ranking/ package,
-// merged into check).
+// lexicographic relational rankings.
 //
 // It provides the l2s_tactic which transforms temporal properties
 // (liveness) into safety properties by adding ranking functions
@@ -166,9 +165,6 @@ func L2sS(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	return nb
 }
 
-// strPtr is provided by l2s.go (identical implementation); the ranking
-// definition was deleted during the l2s/+ranking/ → check/ merge.
-
 // --- Task and Trigger types ---
 
 // Task holds the ranking function definitions for one task suffix.
@@ -217,9 +213,8 @@ type ProofDecl struct {
 //   5. Replacing the conclusion with M |= true
 //
 // Returns the modified goal stack.
-// RankingL2STactic is the ranking-tactic entry point. Renamed from L2STactic
-// during the l2s/+ranking/ → check/ merge to avoid colliding with the
-// proof-tactic L2STactic from the l2s package.
+// RankingL2STactic is the ranking-tactic entry point. The "Ranking" prefix
+// distinguishes it from the proof-tactic L2STactic in l2s.go.
 func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	if cfg == nil || len(cfg.Goals) == 0 {
 		return nil, fmt.Errorf("no goals provided")
@@ -727,11 +722,9 @@ func makeImplies(t1, t2 lg.Expr) lg.Expr {
 	return imp
 }
 
-// rankingMakeAnd is the ranking-tactic makeAnd. Renamed from makeAnd
-// during the l2s/+ranking/ → check/ merge to avoid colliding with the
-// l2s.makeAnd helper which has a slightly different implementation
-// (l2s builds &lg.And{Terms: terms} directly; ranking goes through
-// lg.NewAnd which validates).
+// rankingMakeAnd is the ranking-tactic And constructor. It differs from
+// l2s.go's makeAnd: l2s builds &lg.And{Terms: terms} directly, while ranking
+// goes through lg.NewAnd which validates and may return lg.True on error.
 func rankingMakeAnd(terms ...lg.Expr) lg.Expr {
 	and, err := lg.NewAnd(terms...)
 	if err != nil {
@@ -757,9 +750,8 @@ func makeNot(body lg.Expr) lg.Expr {
 //
 // The l2s_s binder is pushed inside propositional connectives so that
 // saved values correspond to atoms (avoiding redundant saved values).
-// RankingDesugar is the ranking-tactic Desugar. Renamed from Desugar
-// during the l2s/+ranking/ → check/ merge to avoid colliding with the
-// l2s.Desugar (which has a different two-arg signature).
+// RankingDesugar is the ranking-tactic Desugar. The "Ranking" prefix
+// distinguishes it from l2s.go's two-argument Desugar.
 func RankingDesugar(expr lg.Expr, proofLabel string, l2sSaved lg.Expr) lg.Expr {
 	if expr == nil {
 		return nil

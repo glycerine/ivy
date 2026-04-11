@@ -144,8 +144,10 @@ type MatchHandler struct {
 	Started bool
 	// Lines collects output lines.
 	Lines []string
-	// IsCti is set after trace is built; holds the failing conjecture clauses.
-	IsCti interface{}
+	// IsCti holds the failing conjecture clauses, if any. Set by the trace
+	// formatter and consumed by the GUI analysis graph (currently a stub in
+	// phase7.go GuiArt). Mirrors Python handler.is_cti (ivy_check.py:401-403).
+	IsCti *module.Clauses
 }
 
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's

@@ -9,9 +9,8 @@ import (
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
-// rankingTestAstCfg is the test fixture for ranking tests. Renamed from
-// testAstCfg during the l2s/+ranking/ → check/ merge to avoid colliding
-// with check/check_port_test.go's testAstCfg.
+// rankingTestAstCfg is the test fixture for ranking tests. The "ranking"
+// prefix avoids colliding with check_port_test.go's testAstCfg.
 var rankingTestAstCfg = ast.NewAstConfig()
 
 // --- helpers ---

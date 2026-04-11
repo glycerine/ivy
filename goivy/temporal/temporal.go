@@ -601,8 +601,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	// Change conclusion to M |= true (Python line 385: conc = TemporalModels(model, il.And()))
 	newConc := pc.GetAstCfg().NewTemporalModels(model, lg.True)
 
-	// Build new goal — proof.CloneGoal now accepts ast.Node, so the local
-	// cloneGoalWithASTConc helper is no longer needed.
+	// Build new goal.
 	prems := proof.GoalPrems(goal)
 	newGoal := proof.CloneGoal(pc.GetAstCfg(), goal, prems, newConc)
 
@@ -630,9 +629,6 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 	}
 	return nil
 }
-
-// (cloneGoalWithASTConc was deleted — proof.CloneGoal now takes ast.Node
-// for conc and supersedes this duplicate helper.)
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).
 func symbolsAst(n lg.Expr) []*lg.Const {

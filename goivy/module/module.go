@@ -139,10 +139,11 @@ type Module struct {
 	// Corresponds to Python's self.theory (ivy_module.py:117).
 	Theory *Clauses
 
-	// TraceHook is an opaque diagnostic hook propagated from a goal's
-	// LabeledFormula.TraceHook field. Mirrors Python's dynamically-attached
-	// mod.trace_hook (ivy_check.py:406-407, 829-840). Type is interface{}
-	// to avoid forcing module to depend on the trace package.
+	// TraceHook is a diagnostic hook closure propagated from a goal's
+	// LabeledFormula.TraceHook field. The concrete type is check.TraceHookFn;
+	// the field is interface{} only because module cannot import check
+	// (cycle). Mirrors Python's dynamically-attached mod.trace_hook
+	// (ivy_check.py:406-407, 829-840).
 	TraceHook interface{}
 
 	// prevModule is used by Enter/Exit for context management.

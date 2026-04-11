@@ -1,5 +1,5 @@
 // l2s.go implements liveness-to-safety reduction for temporal property
-// verification (formerly the l2s/ package, merged into check).
+// verification.
 //
 // This is a faithful port of Python's ivy_l2s.py. It transforms temporal
 // (liveness) properties into safety properties that can be checked with
@@ -779,9 +779,6 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 	return nil
 }
 
-// (cloneGoalWithASTConc was deleted — proof.CloneGoal now takes ast.Node
-// for conc and supersedes this duplicate helper.)
-
 func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
 	if act == nil {
 		return nil
@@ -977,9 +974,7 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 // --- Registration ---
 
 // RegisterL2STactics registers the l2s tactics on the given proof config.
-// Replaces the old init()-based global registration. Renamed from
-// RegisterTactics to avoid colliding with check.RegisterTactics during
-// the l2s/ → check/ package merge.
+// Replaces the old init()-based global registration.
 func RegisterL2STactics(proofCfg *module.ProofConfig) {
 	proofCfg.RegisterTactic("l2s", L2STactic)
 	proofCfg.RegisterTactic("l2s_full", L2STacticFull)

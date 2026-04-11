@@ -1,5 +1,6 @@
-// phase7.go implements Phase 7 helper functions for the check package,
-// ported from Python ivy_check.py.
+// phase7.go implements the GuiArt analysis-graph GUI entry, ported from
+// Python ivy_check.py. The GUI itself is a stub in this Go port; the
+// function prints diagnostic info and returns.
 package check
 
 import (
