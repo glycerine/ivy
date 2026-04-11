@@ -1,14 +1,12 @@
-// hooks.go implements trace hooks for ranking-based L2S diagnostics.
+// ranking_hooks.go implements trace hooks for ranking-based L2S diagnostics.
 // Ported from Python ivy_ranking.py: auto_hook (lines 1042-1151).
-package ranking
+package check
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/l2s"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/trace"
 )
