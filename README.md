@@ -2603,13 +2603,19 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-248545  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
-        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
+254710  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Not HASH canon=(Not body:(Or terms:[]))
+        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Not HASH canon=(Not body:(Or terms:[]))
 
-248546  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
-        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
+254711  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=0
+        py : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=0
 
-248547  go : XTRACE: TranslateSort_call callsite=term_to_z3_variable
-        py : XTRACE: TranslateSort_call callsite=atom_to_z3_relation
+254712  go : XTRACE: solver.ClausesToZ3 EXIT exprs=1
+        py : XTRACE: solver.ClausesToZ3 EXIT exprs=1
+
+254713  go : XTRACE: ivy_solver.py:1302 decide() ENTER
+        py : XTRACE: ivy_solver.py:1302 decide() ENTER
+
+254714  go : XTRACE: z3.check seq=1 result=unsat HASH leaf=blake3.33B-0BqO_pzhEvwh5wEb3K7FUtAJeCO_ZFSFQC02pM99hANK root=blake3.33B-Jykd9ebBajktwodxl3qWauC_RYt9clScHZ_e9YkuvpSa smt2=(declare-sort lclock)
+        py : XTRACE: z3.check seq=1 result=unsat HASH leaf=blake3.33B-HtNHleHO8kt4Hp2uqkyD5zyTiiijvMHwjw3FEKtvdCJc root=blake3.33B-SbuuYA-Xcwb6cnaIlmU_DA3_vvvXkYVF5SzROLrn_TUS smt2=; benchmark generated from python API
 ~~~
 
