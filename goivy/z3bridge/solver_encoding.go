@@ -377,6 +377,12 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (Expr, error) {
 			hasNativeInterp = true
 		}
 	}
+	// Python numeral_to_z3 (ivy_solver.py:435) only calls .to_z3() when
+	// lookup_native returns None (i.e., uninterpreted sort). It emits the
+	// callsite trace inside that branch. We mirror it here.
+	if !hasNativeInterp {
+		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3")
+	}
 	z3sort, err := s.tr.TranslateSort(num.CSort)
 	if err != nil {
 		return Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)

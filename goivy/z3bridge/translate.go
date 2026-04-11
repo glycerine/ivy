@@ -767,6 +767,9 @@ func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Expr) 
 // of the log.red divergence at step 236451).
 func (t *Translator) ltPred(fs *lg.FunctionSort) FuncDecl {
 	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%s", fs)
+	// Python lt_pred (ivy_solver.py:546): sig = sym.sort.to_z3() dispatches
+	// to functionsort, so Python emits the lt_pred callsite trace before.
+	xtracer.Trace("TranslateSort_call callsite=lt_pred")
 	sig, err := t.functionSort(fs)
 	if err != nil {
 		panic(fmt.Sprintf("ltPred: functionSort failed: %v", err))
@@ -1072,10 +1075,12 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// symbol_to_z3 does not populate in Python, and would also
 	// suppress the trace on subsequent visits.
 	if fs, ok := sort.(*lg.FunctionSort); ok {
+		// Python symbol_to_z3 (ivy_solver.py:300-305): emits callsite trace
+		// before s.sort.to_z3(), which dispatches to functionsort. Mirror order.
+		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func")
 		if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
 			return Expr{}, err
 		}
-		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func")
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
@@ -1169,8 +1174,10 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 		return cached, nil
 	}
 
-	// Python: sig = atom.rep.sort.to_z3() calls functionsort(fs) first,
-	// then solver_name(atom.rep). Match that order.
+	// Python: term_to_z3 line 534 does `sig = term.rep.sort.to_z3()`. The
+	// .to_z3() dispatches to functionsort, so Python emits the term_to_z3_func
+	// callsite trace just before functionsort. Mirror that here.
+	xtracer.Trace("TranslateSort_call callsite=term_to_z3_func")
 	sig, err := t.functionSort(fs)
 	if err != nil {
 		return FuncDecl{}, err
