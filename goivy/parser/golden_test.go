@@ -468,8 +468,11 @@ func TestVerboseNonstopOrdLive(t *testing.T) {
 }
 
 func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string) {
-	//t.Skip("skip again the golden tests for the moment-- too slow for refactor testing.")
-	//return // off to check everything else under make test.
+	off := os.Getenv("XTRACE_OFF")
+	if off != "" {
+		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
+		return // off to check everything else under make test.
+	}
 	t.Helper()
 	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v')", repoRelPath)
 
