@@ -1197,21 +1197,21 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		return t.Formula_to_z3_int(body, "translateQuantifier() no variables")
 	}
 
-	// Create Z3 constants for the bound variables
+	// Create Z3 constants for the bound variables.
+	// Python (ivy_solver.py:692-694) only calls term_to_z3(v) for each
+	// quantifier-bound variable; it does NOT call sort.to_z3() separately.
+	// translateVariable already calls TranslateSort internally on cache miss
+	// (matching Python's term_to_z3 variable case at line 494). An extra
+	// unconditional TranslateSort here would emit redundant uninterpretedsort
+	// traces (see translate_quantifier_var divergence at log.red step 247851).
 	bound := make([]Expr, len(variables))
 	for i, v := range variables {
-		xtracer.Trace("TranslateSort_call callsite=translate_quantifier_var")
-		zs, err := t.TranslateSort(v.VSort)
-		if err != nil {
-			return Expr{}, err
-		}
 		z3Var, err := t.translateVariable(v)
 		if err != nil {
 			return Expr{}, err
 		}
 		key := lg.NodeKey(v.Name + ":" + string(v.VSort.Sexp()))
 		bound[i] = z3Var
-		_ = zs
 		// Temporarily override the const cache so the body uses these bound vars
 		t.cache.consts[key] = bound[i]
 	}
