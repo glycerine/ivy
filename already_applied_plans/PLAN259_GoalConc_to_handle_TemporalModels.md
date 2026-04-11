@@ -1,5 +1,7 @@
 # Plan: Fix `GoalConc`/`SkolemizeFmla` to handle `*ast.TemporalModels` (skolemize divergence at log.red:254987)
 
+// NOTE: not done. see PLAN260 instead.
+
 Created: 2026-04-11 04:30 UTC
 
 ## Context
