@@ -2145,9 +2145,34 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 // SubgoalActions + AssumeAction.
 // kindName is the originating action's Name() (e.g. "assert", "require", "ensure", "subgoal"),
 // used to set SubgoalKind on the generated SubgoalActions.
+// ApplyAssertProofWith applies a tactic proof to an AssertAction's formula
+// and returns the resulting (typically Sequence-of-subgoals + assume) action.
+// This is the public counterpart of the unexported applyAssertProofAction
+// for callers (e.g. l2s) that have a proof object separate from the action.
+//
+// Mirrors Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:2192-2209).
+func ApplyAssertProofWith(mod *module.Module, a *actions.AssertAction, pf ast.Node, prover module.ProofCheckerInterface) actions.Action {
+	if a == nil {
+		return nil
+	}
+	return applyAssertProofActionWithProof(mod, a, a.Name(), prover, pf)
+}
+
 // Python: sga.kind = type(self) — preserves the originating action type.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
 func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.Action {
+	// a.Proof is typed lg.Expr; pass it through as ast.Node (lg.Expr embeds ast.Node).
+	var pf ast.Node
+	if a.Proof != nil {
+		pf = a.Proof
+	}
+	return applyAssertProofActionWithProof(mod, a, kindName, prover, pf)
+}
+
+// applyAssertProofActionWithProof is the shared implementation for both
+// applyAssertProofAction (proof read from a.Proof) and ApplyAssertProofWith
+// (proof passed in explicitly as an ast.Node, which may not be an lg.Expr).
+func applyAssertProofActionWithProof(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface, pf ast.Node) actions.Action {
 	if prover == nil {
 		assm := actions.NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
@@ -2158,7 +2183,6 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindNam
 	goal := acfg.NewLabeledFormula(nil, cond)
 	goal.SetLineno(a.GetLineno())
 
-	pf := a.Proof
 	if pf == nil {
 		assm := actions.NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())

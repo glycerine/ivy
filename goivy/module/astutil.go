@@ -30,17 +30,14 @@ func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
 	return il.UsedSymbolsAst(node)
 }
 
-// VariablesAST yields free variables in a node (not bound variables).
-// This matches Python's variables_ast which skips bound variables.
+// VariablesAST yields free variables in a node (not bound variables),
+// in left-to-right traversal order with first-occurrence dedup.
+// H6 / Python ivy_logic_utils.py:559-568 + iu.unique(): preserves traversal
+// order so that downstream binder construction is deterministic across runs.
 func VariablesAST(node lg.Expr) []*lg.Variable {
-	result := make(map[lg.NodeKey]lg.Expr)
-	variablesASTRec(node, result, nil)
-	out := make([]*lg.Variable, 0, len(result))
-	for _, node := range result {
-		if v, ok := node.(*lg.Variable); ok {
-			out = append(out, v)
-		}
-	}
+	var out []*lg.Variable
+	seen := make(map[string]bool)
+	collectFreeVarsOrdered(node, nil, seen, &out)
 	return out
 }
 

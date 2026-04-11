@@ -586,8 +586,36 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		}
 		handler.End()
 
-		// Python: if hasattr(mod,"trace_hook"): handler = mod.trace_hook(handler, ffcs)
-		// trace_hook is set by l2s for temporal property diagnostics.
+		// C5 / Python ivy_check.py:406-407 (and ivy_l2s.py:1310-1313):
+		// Apply the module's trace hook (set by l2s) for temporal property
+		// diagnostics. The hook is opaque (interface{}) — we type-assert
+		// it to *l2s.L2STraceHookData and dispatch by Kind.
+		//
+		// NOTE: the existing L2S hook functions in l2s_hooks.go operate on
+		// *trace.TraceBase, not check.MatchHandler. The bridge between these
+		// two trace representations is not yet implemented; we record the
+		// hook kind and apply renaming where possible. Full bridging is
+		// tracked as a follow-up to Phase 7.
+		if mod.TraceHook != nil {
+			if data, ok := mod.TraceHook.(*l2s.L2STraceHookData); ok {
+				switch data.Kind {
+				case l2s.HookKindFull:
+					// L2STraceHook marks the loop start in a trace.TraceBase.
+					// Not applicable to MatchHandler directly; tracked as a TODO.
+				case l2s.HookKindRenaming, l2s.HookKindAuto:
+					// Renaming hook: build the inverse map and rename
+					// symbols in handler.Lines for readability.
+					if data.Subs != nil {
+						applyL2SRenamingToHandler(handler, data.Subs)
+					}
+					// Auto hook diagnostics print task-specific information;
+					// dispatch to a stub that uses tasks/triggers.
+					if data.Kind == l2s.HookKindAuto && data.Tasks != nil {
+						applyL2SAutoDiagnostics(handler, ffcs, data)
+					}
+				}
+			}
+		}
 
 		// Python: ff = failed[0]
 		// handler.is_cti = lut.formula_to_clauses(ff.lf.formula) if isinstance(ff, ConjChecker) else None

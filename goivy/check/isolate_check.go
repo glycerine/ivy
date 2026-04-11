@@ -801,8 +801,11 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 				fmt.Println("PASS")
 			} else {
-				// Python: if hasattr(goal,"trace_hook"): mod.trace_hook = goal.trace_hook
-				// TODO: TraceHook not yet a field on LabeledFormula/Module
+				// C5 / Python ivy_check.py:829-840: propagate goal trace hook
+				// to the module so check.go's trace formatter can use it.
+				if goal.TraceHook != nil {
+					fakeMod.TraceHook = goal.TraceHook
+				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
 					wsorts.Exit()
@@ -854,8 +857,11 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 				fmt.Println("PASS")
 			} else {
-				// Python: if hasattr(goal,"trace_hook"): mod.trace_hook = goal.trace_hook
-				// TODO: TraceHook not yet a field on LabeledFormula/Module
+				// C5 / Python ivy_check.py:829-840: propagate goal trace hook
+				// to the module so check.go's trace formatter can use it.
+				if goal.TraceHook != nil {
+					fakeMod.TraceHook = goal.TraceHook
+				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
 					wsorts.Exit()

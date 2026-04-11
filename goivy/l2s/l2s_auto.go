@@ -8,15 +8,16 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 	modpkg "github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 )
 
 // l2sAutoInvariants generates invariants for l2s_auto tactics.
 // It extracts task/trigger definitions from the proof goal premises
-// and generates the appropriate L2S invariants.
+// and generates the appropriate L2S invariants. Returns the augmented
+// invars list plus the tasks and triggers maps (used by C5 trace_hook).
 func l2sAutoInvariants(
 	tacticName string,
 	goal *ast.LabeledFormula,
@@ -26,9 +27,9 @@ func l2sAutoInvariants(
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	m *modpkg.Module,
-) ([]*ast.LabeledFormula, error) {
+) ([]*ast.LabeledFormula, map[string]map[string]*lg.Eq, map[string]map[string]*lg.Eq, error) {
 	if !strings.HasPrefix(tacticName, "l2s_auto") {
-		return invars, nil
+		return invars, nil, nil, nil
 	}
 
 	autoAcfg := m.Cfg.AstCfg
@@ -47,22 +48,32 @@ func l2sAutoInvariants(
 
 	// getAuxDefn extracts definitions like work_created, work_needed, etc.
 	// from the goal premises.
-	getAuxDefn := func(name string, dct defnMap) {
+	// C18: filter by IsDefinition (Python ivy_l2s.py:208-212) and raise an
+	// error on free variables (Python ivy_l2s.py:214) instead of silently
+	// skipping.
+	getAuxDefn := func(name string, dct defnMap) error {
 		prems := proof.GoalPrems(goal)
 		for _, prem := range prems {
-			// Try to get a definition from the premise
-			var f lg.Expr
-			switch p := prem.(type) {
-			case *ast.LabeledFormula:
-				if n, ok := p.Formula.(lg.Expr); ok {
-					f = n
-				}
-			}
-			if f == nil {
+			// Try to get a definition from the premise.
+			premLF, isLF := prem.(*ast.LabeledFormula)
+			if !isLF {
 				continue
 			}
-			// Drop universals and check for Eq
-			tmp := il.DropUniversals(f)
+			// C18: only consider premises marked as definitions.
+			if !premLF.IsDefinition {
+				continue
+			}
+			f, ok := premLF.Formula.(lg.Expr)
+			if !ok || f == nil {
+				continue
+			}
+			// H9 / Python ivy_l2s.py:210-212: strip ONLY one outer ForAll,
+			// not all levels (DropUniversals would over-strip nested
+			// quantifiers, producing ill-formed results).
+			var tmp lg.Expr = f
+			if fa, isFA := tmp.(*lg.ForAll); isFA {
+				tmp = fa.Body
+			}
 			eq, ok := tmp.(*lg.Eq)
 			if !ok {
 				continue
@@ -80,26 +91,58 @@ func l2sAutoInvariants(
 			if dname == "" || !strings.HasPrefix(dname, name) {
 				continue
 			}
-			// Check no free variables
+			// C18: error on free variables instead of silently skipping.
 			freeVars := modpkg.VariablesAST(f)
 			if len(freeVars) > 0 {
-				continue // skip definitions with free variables
+				return fmt.Errorf("free symbol %s not allowed in definition of %s", freeVars[0].Name, dname)
+			}
+			// H10 / Python ivy_l2s.py:218-219: rebuild the LHS with the
+			// generic name (e.g. "work_created" instead of "work_created0")
+			// so downstream code uses a stable lookup.
+			renamedEq := eq
+			switch lhs := eq.T1.(type) {
+			case *lg.Apply:
+				if c, ok := lhs.Func.(*lg.Const); ok {
+					newC := lg.NewConst(name, c.CSort)
+					if newApp, _ := lg.NewApply(newC, lhs.Terms...); newApp != nil {
+						renamedEq = &lg.Eq{T1: newApp, T2: eq.T2}
+					}
+				}
+			case *lg.Const:
+				renamedEq = &lg.Eq{T1: lg.NewConst(name, lhs.CSort), T2: eq.T2}
 			}
 			sfx := dname[len(name):]
-			dictPut(dct, sfx, name, eq)
+			dictPut(dct, sfx, name, renamedEq)
 		}
+		return nil
 	}
 
-	getAuxDefn("work_created", tasks)
-	getAuxDefn("work_needed", tasks)
-	getAuxDefn("work_done", tasks)
-	getAuxDefn("work_progress", tasks)
-	getAuxDefn("work_end", tasks)
-	getAuxDefn("work_invar", tasks)
-	if tacticName == "l2s_auto5" {
-		getAuxDefn("work_helpful", tasks)
+	if err := getAuxDefn("work_created", tasks); err != nil {
+		return nil, nil, nil, err
 	}
-	getAuxDefn("work_start", triggers)
+	if err := getAuxDefn("work_needed", tasks); err != nil {
+		return nil, nil, nil, err
+	}
+	if err := getAuxDefn("work_done", tasks); err != nil {
+		return nil, nil, nil, err
+	}
+	if err := getAuxDefn("work_progress", tasks); err != nil {
+		return nil, nil, nil, err
+	}
+	if err := getAuxDefn("work_end", tasks); err != nil {
+		return nil, nil, nil, err
+	}
+	if err := getAuxDefn("work_invar", tasks); err != nil {
+		return nil, nil, nil, err
+	}
+	if tacticName == "l2s_auto5" {
+		if err := getAuxDefn("work_helpful", tasks); err != nil {
+			return nil, nil, nil, err
+		}
+	}
+	if err := getAuxDefn("work_start", triggers); err != nil {
+		return nil, nil, nil, err
+	}
 
 	// Sort task suffixes
 	sortedTasks := make([]string, 0, len(tasks))
@@ -149,7 +192,34 @@ func l2sAutoInvariants(
 	for _, sfx := range sortedTasks {
 		for _, name := range []string{"work_created", "work_needed", "work_done", "work_progress"} {
 			if tasks[sfx][name] == nil {
-				return nil, fmt.Errorf("tactic l2s_auto requires a definition of %s%s", name, sfx)
+				return nil, nil, nil, fmt.Errorf("tactic l2s_auto requires a definition of %s%s", name, sfx)
+			}
+		}
+	}
+
+	// H4 / Python ivy_l2s.py:320-321: work_invar must have no arguments.
+	for _, sfx := range sortedTasks {
+		wi := tasks[sfx]["work_invar"]
+		if wi == nil {
+			continue
+		}
+		if app, ok := wi.T1.(*lg.Apply); ok && len(app.Terms) > 0 {
+			return nil, nil, nil, fmt.Errorf("work_invar%s may not have arguments", sfx)
+		}
+	}
+
+	// H5 / Python ivy_l2s.py:314-319: sort-signature consistency checks.
+	for _, sfx := range sortedTasks {
+		task := tasks[sfx]
+		if !sameLHSSort(task["work_created"], task["work_needed"]) {
+			return nil, nil, nil, fmt.Errorf("work_created%s and work_needed%s must have same signature", sfx, sfx)
+		}
+		if !sameLHSSort(task["work_created"], task["work_done"]) {
+			return nil, nil, nil, fmt.Errorf("work_created%s and work_done%s must have same signature", sfx, sfx)
+		}
+		if h := task["work_helpful"]; h != nil {
+			if !sameLHSSort(h, task["work_progress"]) {
+				return nil, nil, nil, fmt.Errorf("work_helpful%s and work_progress%s must have same signature", sfx, sfx)
 			}
 		}
 	}
@@ -260,7 +330,8 @@ func l2sAutoInvariants(
 			return &lg.And{Terms: nil} // true
 		}
 		trigRHS := eqRHS(workStart)
-		evf := &lg.Eventually{Body: trigRHS}
+		// H11 / Python ivy_l2s.py:384: Eventually with proof_label environ.
+		evf := &lg.Eventually{Environ: strPtr(proofLabel), Body: trigRHS}
 		vs := eqLHSArgs(workStart)
 		vsNodes := varsToNodes(vs)
 		initNB := l2sInit(vs, evf, proofLabel)
@@ -275,12 +346,9 @@ func l2sAutoInvariants(
 	var notAllDonePreds []lg.Expr
 	var notAllWasDonePreds []lg.Expr
 	var schedExistsPreds []lg.Expr
-	_ = notAllWasDonePreds // populated by D3 (Phase 3)
-	_ = schedExistsPreds   // populated by Phase 4
 
 	// Track the last evStart for use in the auto5 final l2s_sched_exists invariant.
 	var lastEvStart lg.Expr
-	_ = lastEvStart // populated by Phase 4
 
 	// Generate invariants per task
 	for idx, sfx := range sortedTasks {
@@ -297,6 +365,7 @@ func l2sAutoInvariants(
 		}
 
 		doneArgs := eqLHSArgs(workDone)
+		workHelpful := task["work_helpful"]
 
 		// notWaitingForStart
 		var notWaitingForStart lg.Expr = &lg.And{Terms: nil} // true
@@ -309,6 +378,75 @@ func l2sAutoInvariants(
 					&lg.Not{Body: l2sWaiting},
 					&lg.Not{Body: wBinder},
 				}})
+		}
+
+		// --- Closures used by l2s_progress_made and l2s_sched_stable ---
+		// These mirror Python ivy_l2s.py:236-372 and capture per-task state.
+
+		// getWorkWasDone: Python ivy_l2s.py:236-245
+		// For non-auto3/4/5: l2s_s(done_args, work_done.RHS)(done_args), then Implies(subst(defn.RHS), wasDone)
+		// For auto3/4/5: l2s_s(done_args, Implies(subst(defn.RHS), work_done.RHS))(done_args)
+		getWorkWasDone := func(defn *lg.Eq, workDoneL *lg.Eq) lg.Expr {
+			doneArgsL := eqLHSArgs(workDoneL)
+			defnArgs := eqLHSArgs(defn)
+			s := substVars(defnArgs, doneArgsL)
+			defnsubs := subst(eqRHS(defn), s)
+			if tacticName != "l2s_auto3" && tacticName != "l2s_auto4" && tacticName != "l2s_auto5" {
+				sNB := l2sS(doneArgsL, eqRHS(workDoneL), proofLabel)
+				wd := applyNB(sNB, varsToNodes(doneArgsL)...)
+				return &lg.Implies{T1: defnsubs, T2: wd}
+			}
+			sNB := l2sS(doneArgsL, &lg.Implies{T1: defnsubs, T2: eqRHS(workDoneL)}, proofLabel)
+			return applyNB(sNB, varsToNodes(doneArgsL)...)
+		}
+
+		// getWasDone: Python ivy_l2s.py:358-360
+		getWasDone := func(defn *lg.Eq) lg.Expr {
+			return getWorkWasDone(defn, workDone)
+		}
+
+		// notAllWasDone: Python ivy_l2s.py:361-363
+		// Returns Not(forall(workDone.LHS.Args[skip:], getWasDone(defn)))
+		notAllWasDone := func(defn *lg.Eq, skip int) lg.Expr {
+			tmp := getWasDone(defn)
+			if skip >= len(doneArgs) {
+				return &lg.Not{Body: tmp}
+			}
+			return &lg.Not{Body: forall(doneArgs[skip:], tmp)}
+		}
+
+		// getDepends: Python ivy_l2s.py:365-372
+		// Substitutes work_helpful.LHS.Args -> work_progress.LHS.Args into work_helpful.RHS.
+		getDepends := func() lg.Expr {
+			if workHelpful == nil {
+				return &lg.And{Terms: nil} // true (workHelpful only used for auto5)
+			}
+			helpfulArgs := eqLHSArgs(workHelpful)
+			progressArgsL := eqLHSArgs(workProgress)
+			s := substVars(helpfulArgs, progressArgsL)
+			return subst(eqRHS(workHelpful), s)
+		}
+
+		// nextTaskHasTrigger: Python ivy_l2s.py:462-463
+		nextTaskHasTrigger := func() bool {
+			if idx+1 >= len(sortedTasks) {
+				return false
+			}
+			_, ok := triggers[sortedTasks[idx+1]]
+			return ok
+		}
+
+		// nextTaskNotTriggered: Python ivy_l2s.py:465-468
+		nextTaskNotTriggered := func() lg.Expr {
+			nextSfx := sortedTasks[idx+1]
+			trigf := triggers[nextSfx]["work_start"]
+			return &lg.Not{Body: eventuallyStartTask(trigf)}
+		}
+
+		// Reset notAllWasDonePreds at scheduler boundaries.
+		// Python ivy_l2s.py:472-473.
+		if workStart != nil {
+			notAllWasDonePreds = nil
 		}
 
 		// --- l2s_needed_when_start ---
@@ -409,21 +547,72 @@ func l2sAutoInvariants(
 		invars = appendLF(autoAcfg, invars, "l2s_work_preserved"+sfx, tmp)
 
 		// --- l2s_progress_made ---
+		// C11 / Python ivy_l2s.py:478-505. Three branches:
+		//   - l2s_auto5 special form
+		//   - non-auto5 with progress_args>0 or len(tasks)>1: forall+exists complex form
+		//   - non-auto5 simple form
 		progressArgs := eqLHSArgs(workProgress)
+		// H3 / Python ivy_l2s.py:475-476: work_progress args must be a prefix
+		// of work_done args (except for l2s_auto5).
+		if tacticName != "l2s_auto5" {
+			if len(progressArgs) > len(doneArgs) {
+				return nil, nil, nil, fmt.Errorf("work_progess parameters must be a prefix of work_done parameters")
+			}
+			for i := range progressArgs {
+				if progressArgs[i].Name != doneArgs[i].Name {
+					return nil, nil, nil, fmt.Errorf("work_progess parameters must be a prefix of work_done parameters")
+				}
+			}
+		}
 		waitingForProgress := l2sW(progressArgs, eqRHS(workProgress), proofLabel)
 
 		if tacticName != "l2s_auto3" {
 			var progressInv lg.Expr
-			if len(progressArgs) > 0 || len(tasks) > 1 {
-				innerCond := makeAnd(
-					l2sSaved,
-					&lg.Not{Body: applyNB(waitingForProgress, varsToNodes(progressArgs)...)},
+
+			if tacticName == "l2s_auto5" {
+				// Python lines 479-490
+				nad := getDepends()
+				nad = applyNB(l2sS(progressArgs, nad, proofLabel), varsToNodes(progressArgs)...)
+				if nextTaskHasTrigger() {
+					nad = makeAnd(nextTaskNotTriggered(), nad)
+				}
+				progressInv = &lg.Implies{
+					T1: makeAnd(
+						l2sSaved,
+						evStart,
+						exists(progressArgs, nad),
+						notAllWasDone(workNeeded, 0),
+						forall(progressArgs, &lg.Implies{
+							T1: nad,
+							T2: &lg.Not{Body: applyNB(waitingForProgress, varsToNodes(progressArgs)...)},
+						}),
+					),
+					T2: exists(doneArgs, makeAnd(&lg.Not{Body: wasDone}, isDoneNode)),
+				}
+			} else if len(progressArgs) > 0 || len(tasks) > 1 {
+				// Python lines 491-501
+				nad := makeAnd(
+					notAllWasDone(workNeeded, len(progressArgs)),
+					&lg.Not{Body: buildOrExpr(notAllWasDonePreds)},
 				)
-				progressBody := exists(doneArgs,
-					makeAnd(&lg.Not{Body: wasDone}, isDoneNode))
-				progressInv = forall(progressArgs,
-					&lg.Implies{T1: innerCond, T2: progressBody})
+				if nextTaskHasTrigger() {
+					nad = makeAnd(nextTaskNotTriggered(), nad)
+				}
+				skipDoneArgs := doneArgs
+				if len(progressArgs) <= len(doneArgs) {
+					skipDoneArgs = doneArgs[len(progressArgs):]
+				}
+				progressInv = forall(progressArgs, &lg.Implies{
+					T1: makeAnd(
+						nad,
+						l2sSaved,
+						evStart,
+						&lg.Not{Body: applyNB(waitingForProgress, varsToNodes(progressArgs)...)},
+					),
+					T2: exists(skipDoneArgs, makeAnd(&lg.Not{Body: wasDone}, isDoneNode)),
+				})
 			} else {
+				// Python lines 502-505 (the simple case)
 				progressInv = &lg.Implies{
 					T1: makeAnd(l2sSaved, &lg.Not{Body: waitingForProgress}),
 					T2: exists(doneArgs, makeAnd(&lg.Not{Body: wasDone}, isDoneNode)),
@@ -433,7 +622,15 @@ func l2sAutoInvariants(
 		}
 
 		// --- l2s_progress_invar ---
-		gBody := &lg.Globally{Body: &lg.Eventually{Body: eqRHS(workProgress)}}
+		// H11: ensure Globally/Eventually carry the proof label so dedup
+		// matches binders built through SharedStep1.
+		gBody := &lg.Globally{
+			Environ: strPtr(proofLabel),
+			Body: &lg.Eventually{
+				Environ: strPtr(proofLabel),
+				Body:    eqRHS(workProgress),
+			},
+		}
 		initNB := l2sInit(progressArgs, gBody, proofLabel)
 		invars = appendLF(autoAcfg, invars, "l2s_progress_invar"+sfx,
 			&lg.Implies{
@@ -484,12 +681,47 @@ func l2sAutoInvariants(
 				notAllDonePreds = nil
 			}
 		}
+
+		// Python ivy_l2s.py:528: append this task's not_all_was_done to the
+		// per-scheduler accumulator (used by next iteration's l2s_progress_made).
+		notAllWasDonePreds = append(notAllWasDonePreds, notAllWasDone(workNeeded, 0))
+
+		// C13 / Python ivy_l2s.py:530-543: l2s_sched_stable + sched_exists_preds
+		// for auto5.
+		if tacticName == "l2s_auto5" {
+			nad := getDepends()
+			wasNad := applyNB(l2sS(progressArgs, nad, proofLabel), varsToNodes(progressArgs)...)
+			waitingForProgressApp := applyNB(waitingForProgress, varsToNodes(progressArgs)...)
+			stableInv := forall(progressArgs, &lg.Implies{
+				T1: makeAnd(wasNad, l2sSaved, evStart, waitingForProgressApp),
+				T2: nad,
+			})
+			invars = appendLF(autoAcfg, invars, "l2s_sched_stable"+sfx, stableInv)
+			schedExistsPreds = append(schedExistsPreds, exists(progressArgs, wasNad))
+		}
+
+		// Track the last evStart for use by C14 (l2s_sched_exists, auto5).
+		lastEvStart = evStart
 	}
 
 	// C4 final / Python ivy_l2s.py:545-546: emit global l2s_not_all_done as
 	// the OR of all (remaining) accumulated per-task predicates.
 	if len(notAllDonePreds) > 0 {
 		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", buildOrExpr(notAllDonePreds))
+	}
+
+	// C14 / Python ivy_l2s.py:548-550: l2s_sched_exists invariant for auto5.
+	// Python's `eventually_start()` here refers to the last loop iteration's
+	// work_start (closure captured), so we use the tracked lastEvStart.
+	if tacticName == "l2s_auto5" && len(schedExistsPreds) > 0 {
+		evStartHere := lastEvStart
+		if evStartHere == nil {
+			evStartHere = &lg.And{Terms: nil} // true
+		}
+		invars = appendLF(autoAcfg, invars, "l2s_sched_exists", &lg.Implies{
+			T1: makeAnd(l2sSaved, evStartHere),
+			T2: buildOrExpr(schedExistsPreds),
+		})
 	}
 
 	// --- init_globally: generate l2s_globally invariants ---
@@ -585,7 +817,8 @@ func l2sAutoInvariants(
 			continue
 		}
 		arg := eqRHS(trigDef)
-		evf := &lg.Eventually{Body: arg}
+		// H11: Eventually with proof_label environ.
+		evf := &lg.Eventually{Environ: strPtr(proofLabel), Body: arg}
 		vs := eqLHSArgs(trigDef)
 		vsNodes := varsToNodes(vs)
 		initNB := l2sInit(vs, evf, proofLabel)
@@ -664,6 +897,65 @@ func l2sAutoInvariants(
 	}
 	invars = appendLF(autoAcfg, invars, "neg_prop_init", negPropInit)
 
+	// C15 / Python ivy_l2s.py:664-676: l2s_when_<i> invariants for
+	// WhenOperator nodes with name=="first" found in invars + property prems.
+	{
+		// Collect property premises from goal.
+		var ntPrems []lg.Expr
+		for _, p := range proof.GoalPrems(goal) {
+			if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+				if e, ok := lf.Formula.(lg.Expr); ok {
+					ntPrems = append(ntPrems, e)
+				}
+			}
+		}
+		// Walk all invars + property prems for temporal subnodes.
+		var allFmlas []lg.Expr
+		for _, inv := range invars {
+			if e, ok := inv.Formula.(lg.Expr); ok {
+				allFmlas = append(allFmlas, e)
+			}
+		}
+		allFmlas = append(allFmlas, ntPrems...)
+		// Collect WhenOperator{Name:"first"} via TemporalsAst, dedup by string.
+		seen := make(map[string]bool)
+		var winvs []lg.Expr
+		for _, f := range allFmlas {
+			for _, t := range lu.TemporalsAst(f) {
+				when, ok := t.(*lg.WhenOperator)
+				if !ok || when.Name != "first" {
+					continue
+				}
+				key := fmt.Sprint(when)
+				if seen[key] {
+					continue
+				}
+				seen[key] = true
+				// nws = Or(Not(l2s_waiting), Not(l2s_w((), when.T2)))
+				nws := &lg.Or{Terms: []lg.Expr{
+					&lg.Not{Body: l2sWaiting},
+					&lg.Not{Body: applyNB(l2sW(nil, when.T2, proofLabel))},
+				}}
+				// tmp = Implies(Not(nws), Eq(when, WhenOperator{Name:"next", T1:when.T1, T2:when.T2}))
+				nextWhen := &lg.WhenOperator{Name: "next", T1: when.T1, T2: when.T2}
+				inner := &lg.Implies{
+					T1: &lg.Not{Body: nws},
+					T2: &lg.Eq{T1: when, T2: nextWhen},
+				}
+				// Wrap with Implies(l2s_init((), Eventually(when.T2)), inner)
+				initNB := l2sInit(nil, &lg.Eventually{Environ: strPtr(proofLabel), Body: when.T2}, proofLabel)
+				outer := &lg.Implies{
+					T1: applyNB(initNB),
+					T2: inner,
+				}
+				winvs = append(winvs, outer)
+			}
+		}
+		for i, w := range winvs {
+			invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_when_%d", i), w)
+		}
+	}
+
 	// --- l2s_status invariants ---
 	invars = appendLF(autoAcfg, invars, "l2s_status_0",
 		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
@@ -698,7 +990,7 @@ func l2sAutoInvariants(
 		invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...))
 	}
 
-	return invars, nil
+	return invars, tasks, triggers, nil
 }
 
 // appendLF appends a labeled formula to the invariant list.
@@ -745,6 +1037,33 @@ func isEventuallyOrNotGlobally(e lg.Expr) bool {
 		}
 	}
 	return false
+}
+
+// sameLHSSort returns true if a and b have the same LHS sort signature
+// (each LHS is either an *lg.Apply or *lg.Const). Used by H5 to validate
+// that work_created/work_needed/work_done share a sort and that
+// work_helpful/work_progress share a sort.
+func sameLHSSort(a, b *lg.Eq) bool {
+	if a == nil || b == nil {
+		return true
+	}
+	sortOf := func(e lg.Expr) lg.Sort {
+		switch x := e.(type) {
+		case *lg.Apply:
+			if c, ok := x.Func.(*lg.Const); ok {
+				return c.CSort
+			}
+		case *lg.Const:
+			return x.CSort
+		}
+		return nil
+	}
+	sa := sortOf(a.T1)
+	sb := sortOf(b.T1)
+	if sa == nil || sb == nil {
+		return true
+	}
+	return sa.String() == sb.String()
 }
 
 // collectVarsSlice collects free variables from a node into a slice.

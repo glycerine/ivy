@@ -24,6 +24,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -31,6 +32,7 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
+	theory "github.com/glycerine/ivy/goivy/theory"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -249,6 +251,24 @@ func pyBool(b bool) string {
 	return "False"
 }
 
+// isTheoryFiniteSort returns true if the named sort has a theory
+// interpretation that is finite (e.g. bv[N]).
+// C17 / Python ivy_l2s.py:194 calls thy.get_sort_theory(sort).is_finite().
+func isTheoryFiniteSort(name string, m *module.Module) bool {
+	if m == nil || m.Sig == nil {
+		return false
+	}
+	s, ok := m.Sig.Sorts[name]
+	if !ok {
+		return false
+	}
+	th := theory.GetSortTheory(s, m.Sig.Interp)
+	if t, ok := th.(*theory.Theory); ok {
+		return t.Finite
+	}
+	return false
+}
+
 // l2sTacticInt is the internal implementation of the L2S tactic.
 // Faithful port of Python's l2s_tactic_int.
 func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
@@ -382,11 +402,13 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	l2sSavedSym := L2SSaved()
 
 	// --- Finite sorts ---
+	// C17 / Python ivy_l2s.py:194: include sorts whose theory is finite
+	// (e.g. bv[N]) in addition to mod.FiniteSorts and the `full` override.
 	finiteSorts := make(map[string]bool)
 	var uninterpretedSorts []lg.Sort
 	if m != nil && m.Sig != nil {
 		for name, s := range m.Sig.Sorts {
-			if m.FiniteSorts[name] || full {
+			if m.FiniteSorts[name] || full || isTheoryFiniteSort(name, m) {
 				finiteSorts[name] = true
 			} else if _, isUI := s.(*lg.UninterpretedSort); isUI {
 				uninterpretedSorts = append(uninterpretedSorts, s)
@@ -400,9 +422,10 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// L2S Auto: generate task/trigger invariants (before main steps)
 	// ---------------------------------------------------------------
+	var autoTasks, autoTriggers map[string]map[string]*lg.Eq
 	if strings.HasPrefix(tacticName, "l2s_auto") {
 		var err error
-		invars, err = l2sAutoInvariants(tacticName, goal, invars, proofLabel,
+		invars, autoTasks, autoTriggers, err = l2sAutoInvariants(tacticName, goal, invars, proofLabel,
 			fmla, finiteSorts, uninterpretedSorts, m)
 		if err != nil {
 			return nil, fmt.Errorf("l2s_auto: %w", err)
@@ -422,7 +445,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	model.Invars = append(model.Invars, invars...)
 
 	// --- Build shared config ---
-	defnDeps := BuildDefnDeps(m)
+	// H12: include user-supplied definition premises from the goal in defnDeps.
+	defnDeps := BuildDefnDeps(m, proof.GoalPrems(goal)...)
 
 	cfg := &InstrumentationConfig{
 		ProofLabel:         proofLabel,
@@ -434,6 +458,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		Invars:             invars,
 		Postconds:          nil, // l2s has no postconds
 		Dependencies:       BuildDependenciesFunc(defnDeps),
+		Tasks:              autoTasks,    // C5: for trace_hook routing
+		Triggers:           autoTriggers, // C5: for trace_hook routing
 	}
 
 	// --- Model pass helper (l2s version: no postconds) ---
@@ -564,8 +590,20 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 
-	assertNoFairCycle := setLineno(
+	var assertNoFairCycleAction actions.Action = setLineno(
 		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno)
+
+	// H1 / Python ivy_l2s.py:910-911: if the user supplied a tactic_proof
+	// (e.g. `tactic l2s_auto2 proof { <subproof> }`), apply it to the
+	// no-fair-cycle assertion.
+	if tt, ok := pf.(*ast.TacticTactic); ok {
+		if tp := tt.TacticProofNode(); tp != nil {
+			if assertAct, ok := assertNoFairCycleAction.(*actions.AssertAction); ok {
+				assertNoFairCycleAction = compiler.ApplyAssertProofWith(m, assertAct, tp, pc)
+			}
+		}
+	}
+	assertNoFairCycle := assertNoFairCycleAction
 
 	// ---------------------------------------------------------------
 	// Step 5: Monitor state machine (l2s-specific)
@@ -664,7 +702,35 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
-	return SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
+	result, err := SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
+	if err != nil {
+		return nil, err
+	}
+
+	// C5 / Python ivy_l2s.py:1310-1313: attach a trace hook to the result
+	// goal so that the check package can route diagnostics on failure.
+	// The hook is opaque (interface{}); check/ type-asserts it to
+	// *l2s.L2STraceHookData.
+	if len(result) > 0 && result[0] != nil {
+		if strings.HasPrefix(tacticName, "l2s_auto5") {
+			result[0].TraceHook = &L2STraceHookData{
+				Kind:     HookKindAuto,
+				Subs:     cfg.Subs,
+				Tasks:    cfg.Tasks,
+				Triggers: cfg.Triggers,
+			}
+		} else if strings.HasPrefix(tacticName, "l2s_auto") {
+			result[0].TraceHook = &L2STraceHookData{
+				Kind: HookKindRenaming,
+				Subs: cfg.Subs,
+			}
+		} else if tacticName == "l2s_full" {
+			result[0].TraceHook = &L2STraceHookData{
+				Kind: HookKindFull,
+			}
+		}
+	}
+	return result, nil
 }
 
 // --- Internal helpers ---

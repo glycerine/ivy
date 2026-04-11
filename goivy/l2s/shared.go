@@ -52,6 +52,16 @@ type InstrumentationConfig struct {
 	ReplaceTemporals func(lg.Expr) lg.Expr
 	// Dependencies closure (built by caller from defnDeps)
 	Dependencies func(map[string]bool) map[string]bool
+
+	// C5 trace_hook plumbing: data populated by l2sAutoInvariants and
+	// SharedStep11_ReplaceNamedBinders, used to attach a hook to the
+	// result goal so that the check package can route diagnostics.
+	// Subs is the {fresh-const-name → original-binder-key} renaming map
+	// (from SharedStep11). Tasks/Triggers are the per-suffix definition
+	// maps from l2sAutoInvariants (only set for l2s_auto* tactics).
+	Subs     map[string]string
+	Tasks    map[string]map[string]*lg.Eq
+	Triggers map[string]map[string]*lg.Eq
 }
 
 // L2sGTriple holds the vars, body, and environ of an l2s_g binder.
@@ -618,10 +628,17 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	}
 
 	subs := make(map[string]lg.Expr)
+	// C5: also build a string-keyed inverse map for the trace hook.
+	// Maps fresh-const-name → original-binder-key string. The renaming
+	// hook later builds the reverse for trace display.
+	if cfg.Subs == nil {
+		cfg.Subs = make(map[string]string)
+	}
 	for k, binders := range namedBinders {
 		for i, b := range binders {
 			freshName := fmt.Sprintf("%s_%d", k, i)
 			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())
+			cfg.Subs[freshName] = b.String()
 		}
 	}
 
@@ -673,20 +690,38 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 }
 
 // BuildDefnDeps builds the definition dependency map from a module.
-func BuildDefnDeps(mod *module.Module) map[string][]string {
+// H12 / Python ivy_l2s.py:159-166: also include premise definitions
+// from the goal (premises with IsDefinition == true), not just the
+// module-level definitions.
+func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]string {
 	defnDeps := make(map[string][]string)
-	if mod != nil {
-		for _, defn := range mod.Definitions {
-			f := il.DropUniversals(defn.Formula.(lg.Expr))
-			if eq, ok := f.(*lg.Eq); ok {
-				if app, ok := eq.T1.(*lg.Apply); ok {
-					if c, ok := app.Func.(*lg.Const); ok {
-						for _, sym := range il.SymbolsAst(eq.T2) {
-							defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
-						}
+	addEq := func(formula lg.Expr) {
+		f := il.DropUniversals(formula)
+		if eq, ok := f.(*lg.Eq); ok {
+			if app, ok := eq.T1.(*lg.Apply); ok {
+				if c, ok := app.Func.(*lg.Const); ok {
+					for _, sym := range il.SymbolsAst(eq.T2) {
+						defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
 					}
 				}
 			}
+		}
+	}
+	if mod != nil {
+		for _, defn := range mod.Definitions {
+			if e, ok := defn.Formula.(lg.Expr); ok {
+				addEq(e)
+			}
+		}
+	}
+	// H12: include user-supplied definition premises from the goal.
+	for _, p := range goalPrems {
+		lf, ok := p.(*ast.LabeledFormula)
+		if !ok || !lf.IsDefinition {
+			continue
+		}
+		if e, ok := lf.Formula.(lg.Expr); ok {
+			addEq(e)
 		}
 	}
 	return defnDeps

@@ -109,32 +109,44 @@ func l2sDiagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*
 				fmt.Printf("work_created%s definition: %v\n", sfx, wc)
 			}
 		}
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_needed_when_start"):
 		sfx := name[len("l2s_needed_when_start"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is a subset of work_created%s when the start condition has occurred.\n", sfx, sfx)
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_work_preserved"):
 		sfx := name[len("l2s_work_preserved"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_needed_are_frozen"):
 		sfx := name[len("l2s_needed_are_frozen"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_progress_made"):
 		sfx := name[len("l2s_progress_made"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s decreases when a helpful transition occurs\n", sfx)
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_sched_stable"):
 		sfx := name[len("l2s_sched_stable"):]
 		fmt.Printf("\n\nFailed to prove that work_helpful%s is stable until helpful transition occurs\n", sfx)
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_not_all_done"):
 		var rankNames []string
@@ -145,7 +157,9 @@ func l2sDiagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*
 		}
 		fmt.Printf("The ranking(s) %s have become empty, but termination has not occurred.\n",
 			strings.Join(rankNames, " and "))
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 
 	case strings.HasPrefix(name, "l2s_sched_exists"):
 		var rankNames []string
@@ -156,7 +170,9 @@ func l2sDiagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*
 		}
 		fmt.Printf("The helpful set(s) %s have become empty, but termination has not occurred.\n",
 			strings.Join(rankNames, " and "))
-		tr.HiddenSymbols = L2STemporalAndL2SFilter
+		if tr != nil {
+			tr.HiddenSymbols = L2STemporalAndL2SFilter
+		}
 	}
 }
 
@@ -177,4 +193,59 @@ func l2sLfName(lf *ast.LabeledFormula) string {
 func L2STemporalAndL2SFilter(name string) bool {
 	return (strings.HasPrefix(name, "l2s") && !strings.HasPrefix(name, "l2s_g")) ||
 		strings.HasPrefix(name, "_old_l2s")
+}
+
+// applyL2SRenamingToHandler applies the inverse of subs to the
+// MatchHandler's Lines. subs maps {fresh-const-name → original-binder-key};
+// we build the reverse and rewrite occurrences in each line. This is the
+// MatchHandler counterpart of L2SRenamingHook (which operates on
+// *trace.TraceBase).
+//
+// C5 / Python ivy_l2s.py:1318-1319 renaming_hook.
+func applyL2SRenamingToHandler(handler *MatchHandler, subs map[string]string) {
+	if handler == nil || len(subs) == 0 {
+		return
+	}
+	rsubs := make(map[string]string, len(subs))
+	for k, v := range subs {
+		rsubs[k] = v
+	}
+	for i, line := range handler.Lines {
+		out := line
+		for fresh, orig := range rsubs {
+			out = strings.ReplaceAll(out, fresh, orig)
+		}
+		handler.Lines[i] = out
+	}
+}
+
+// applyL2SAutoDiagnostics dispatches to the auto-failure diagnostic
+// printer based on which checker failed. This is the MatchHandler
+// counterpart of L2SAutoHook (which operates on *trace.TraceBase).
+//
+// C5 / Python ivy_l2s.py:1333-1506 auto_hook.
+func applyL2SAutoDiagnostics(handler *MatchHandler, fcs []Checker, data *l2s.L2STraceHookData) {
+	if handler == nil || data == nil {
+		return
+	}
+	// Find the failing checker.
+	var failedFC Checker
+	for _, fc := range fcs {
+		if fc != nil && fc.Failed() {
+			failedFC = fc
+			break
+		}
+	}
+	if failedFC == nil {
+		return
+	}
+	lf := failedFC.GetLF()
+	if lf == nil {
+		return
+	}
+	name := l2sLfName(lf)
+	// l2sDiagnoseAutoFailure expects a *trace.TraceBase for setting
+	// HiddenSymbols; passing nil suppresses that side effect. The
+	// MatchHandler<->TraceBase bridge is a follow-up to Phase 7.
+	l2sDiagnoseAutoFailure(name, data.Tasks, data.Triggers, lf, nil)
 }

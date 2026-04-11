@@ -36,6 +36,11 @@ type LabeledFormula struct {
 	// In Python this is a dynamically-attached attribute (lf.annot).
 	// It carries (action, annotation) pair context for proof checking.
 	Annot interface{}
+	// TraceHook is an opaque diagnostic hook attached by tactics (e.g. l2s).
+	// Mirrors Python's dynamically-attached lf.trace_hook attribute
+	// (ivy_l2s.py:88, 1311, 1313). Type is interface{} to avoid forcing ast
+	// to depend on the trace package; consumers in check/ type-assert it.
+	TraceHook interface{}
 }
 
 // Lineno returns the line number from the node's Location.
@@ -116,6 +121,7 @@ func (lf *LabeledFormula) cloneInternal(args []Node) *LabeledFormula {
 		Assumed:      lf.Assumed,
 		Unprovable:   lf.Unprovable,
 		Annot:        lf.Annot,
+		TraceHook:    lf.TraceHook,
 	}
 }
 
