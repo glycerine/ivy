@@ -2603,10 +2603,13 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-247864  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
-        py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+248545  go : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
+        py : XTRACE: ivy_solver.py:585 conj_to_z3() ENTER type=Implies
 
-247865  go : XTRACE: ivy_solver.py:95 my_eq() ENTER
-        py : XTRACE: TranslateSort_call callsite=term_to_z3_const
+248546  go : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
+        py : XTRACE: ivy_solver.py:688 formula_to_z3_closed() ENTER type=Implies
+
+248547  go : XTRACE: TranslateSort_call callsite=term_to_z3_variable
+        py : XTRACE: TranslateSort_call callsite=atom_to_z3_relation
 ~~~
 
