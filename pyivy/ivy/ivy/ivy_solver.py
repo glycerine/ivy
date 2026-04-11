@@ -44,7 +44,7 @@ opt_seed.set_callback(set_seed)
 def set_macro_finder(truth):
     if __debug__: xtracer.trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s" % truth)
     z3.set_param('smt.macro_finder',truth)
-    
+
 opt_incremental = iu.BooleanParameter("incremental",True)
 opt_show_vcs = iu.BooleanParameter("show_vcs",False)
 
@@ -1314,22 +1314,55 @@ def model_if_none(clauses1,implied,model):
 _z3_check_counter = [0]
 _z3_merkle = xtracer.MerkleState()
 
-def _normalize_z3_varnames(sexpr):
-    """Replace Z3 internal names (!k!N) with deterministic equivalents."""
-    seen = {}
-    counter = [0]
-    def replace(m):
-        name = m.group(0)
-        if name not in seen:
-            seen[name] = '!v!%d' % counter[0]
-            counter[0] += 1
-        return seen[name]
-    return re.sub(r'!k!\d+', replace, sexpr)
+def _canon_z3_sort(sort):
+    """Return the bare sort name. Mirrors goivy/z3bridge/canon_z3.go
+    canonZ3SortUnlocked."""
+    return sort.name()
+
+def _canon_z3_expr(e):
+    """Return a deterministic s-expression representation of a Z3
+    expression. Mirrors goivy/z3bridge/canon_z3.go canonZ3ExprUnlocked
+    BYTE-FOR-BYTE. Format spec lives in that file's header comment."""
+    if z3.is_int_value(e) or z3.is_rational_value(e) or e.sort().kind() == z3.Z3_BV_SORT:
+        # Numeric literal
+        return "(n %s)" % e.as_string()
+    if z3.is_var(e):
+        # Bound variable: (v <de_bruijn_idx> <sort>)
+        return "(v %d %s)" % (z3.get_var_index(e), _canon_z3_sort(e.sort()))
+    if z3.is_quantifier(e):
+        if e.is_forall():
+            head = "(forall ("
+        else:
+            head = "(exists ("
+        binders = []
+        for i in range(e.num_vars()):
+            binders.append("(%s %s)" % (e.var_name(i), _canon_z3_sort(e.var_sort(i))))
+        return head + " ".join(binders) + ") " + _canon_z3_expr(e.body()) + ")"
+    if z3.is_app(e):
+        name = e.decl().name()
+        nargs = e.num_args()
+        if nargs == 0:
+            # 0-ary application (constant): (c <name> <sort>)
+            return "(c %s %s)" % (name, _canon_z3_sort(e.sort()))
+        # n-ary application: (a <name> <arg1> <arg2> ...)
+        parts = ["(a", name]
+        for i in range(nargs):
+            parts.append(_canon_z3_expr(e.arg(i)))
+        return " ".join(parts) + ")"
+    return "(unknown)"
+
+def _canon_z3_assertions(s):
+    """Return the canonical s-expression for the solver's current
+    assertions. Mirrors goivy/z3bridge/canon_z3.go CanonZ3Assertions."""
+    parts = ["(asserts"]
+    for a in s.assertions():
+        parts.append(_canon_z3_expr(a))
+    return " ".join(parts) + ")"
 
 def _trace_z3_check(s, res):
     """Emit Merkle-chained Z3 solver state and result via xtracer."""
     _z3_check_counter[0] += 1
-    smt2 = _normalize_z3_varnames(s.to_smt2())
+    smt2 = _canon_z3_assertions(s)
     rs = 'sat' if res == z3.sat else ('unsat' if res == z3.unsat else 'unknown')
     # Merkle-chain the solver state + result
     canon = "(z3check seq=%d result=%s smt2=%s)" % (_z3_check_counter[0], rs, smt2)

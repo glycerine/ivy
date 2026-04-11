@@ -58,7 +58,7 @@ func (s *Z3Solver) TraceCheck(result CheckResult) {
 		return
 	}
 	seq := s.ctx.z3CheckCounter.Add(1)
-	smt2 := NormalizeZ3VarNames(s.ToSmt2())
+	smt2 := s.CanonZ3Assertions()
 
 	var rs string
 	switch result {
