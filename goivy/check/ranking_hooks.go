@@ -21,17 +21,17 @@ type RankingAutoHookConfig struct {
 // RankingAutoHook is the ranking-specific diagnostic trace hook.
 // It identifies which invariant failed and prints diagnostic information.
 // Corresponds to Python ivy_ranking.py auto_hook (lines 1042-1151).
-func RankingAutoHook(cfg *RankingAutoHookConfig, tr *trace.TraceBase, fcs []check.Checker) *trace.TraceBase {
+func RankingAutoHook(cfg *RankingAutoHookConfig, tr *trace.TraceBase, fcs []Checker) *trace.TraceBase {
 	if cfg == nil {
 		return tr
 	}
 
 	// Apply renaming
-	tr = check.L2SRenamingHook(cfg.Subs, tr, fcs)
-	tr.PP = l2s.L2SGToGlobally
+	tr = L2SRenamingHook(cfg.Subs, tr, fcs)
+	tr.PP = L2SGToGlobally
 
 	// Figure out which property failed
-	var failedFC check.Checker
+	var failedFC Checker
 	for _, fc := range fcs {
 		if fc.Failed() {
 			failedFC = fc

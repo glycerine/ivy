@@ -1,9 +1,9 @@
-// tactic.go implements the ranking tactic body: task/trigger extraction,
-// invariant and postcondition generation, and delegation to the L2S
-// infrastructure for action instrumentation.
+// ranking_tactic.go implements the ranking tactic body: task/trigger
+// extraction, invariant and postcondition generation, and delegation to
+// the L2S infrastructure for action instrumentation.
 //
 // Ported from Python ivy_ranking.py l2s_tactic_int (lines 55-1022).
-package ranking
+package check
 
 import (
 	"fmt"

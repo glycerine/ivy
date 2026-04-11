@@ -1,5 +1,6 @@
-// Package ranking implements liveness-to-safety reduction using
-// lexicographic relational rankings.
+// ranking.go implements liveness-to-safety reduction using
+// lexicographic relational rankings (formerly the ranking/ package,
+// merged into check).
 //
 // It provides the l2s_tactic which transforms temporal properties
 // (liveness) into safety properties by adding ranking functions
@@ -13,7 +14,7 @@
 //     l2s_g (globally), l2s_init (initial)
 //
 // Ported from ivy_ranking.py.
-package ranking
+package check
 
 import (
 	"fmt"
@@ -22,7 +23,6 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/l2s"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
@@ -227,7 +227,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	lineno := ast.Location{Filename: "ranking", Line: 0}
 
 	// Find the TemporalModels in the goal
-	tm := l2s.FindTemporalModels(goal)
+	tm := FindTemporalModels(goal)
 	if tm == nil {
 		// Fall back to GoalConc check; only lg.Expr conclusions can be
 		// "temporal formulas" (the alternative is *ast.TemporalModels which
@@ -247,7 +247,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 
 	// Extract the model and formula
 	m := cfg.Mod
-	model := l2s.ExtractNormalProgram(m)
+	model := ExtractNormalProgram(m)
 
 	var fmla lg.Expr
 	if tm != nil {
@@ -311,9 +311,9 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	}
 
 	// Desugar $was/$happened in invars and postconds
-	l2sSaved := l2s.L2SSaved()
+	l2sSaved := L2SSaved()
 	desugarFn := func(n lg.Expr) lg.Expr {
-		return l2s.Desugar(n, proofLabel)
+		return Desugar(n, proofLabel)
 	}
 	acfg := m.Cfg.AstCfg
 	for i, inv := range invars {
@@ -325,9 +325,9 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	_ = l2sSaved // used by Desugar internally
 
 	// --- Build shared config ---
-	defnDeps := l2s.BuildDefnDeps(m)
+	defnDeps := BuildDefnDeps(m)
 
-	icfg := &l2s.InstrumentationConfig{
+	icfg := &InstrumentationConfig{
 		ProofLabel:         proofLabel,
 		Lineno:             lineno,
 		FiniteSorts:        finiteSorts,
@@ -335,7 +335,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		Mod:                m,
 		Fmla:               fmla,
 		Postconds:          postconds,
-		Dependencies:       l2s.BuildDependenciesFunc(defnDeps),
+		Dependencies:       BuildDependenciesFunc(defnDeps),
 	}
 
 	// --- Model pass helper (ranking version: also transforms postconds) ---
@@ -347,11 +347,11 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			model.Asms[i] = acfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
 		}
 		for i, b := range model.Bindings {
-			newStmt := l2s.TransformAction(b.Action.Stmt, transform)
+			newStmt := TransformAction(b.Action.Stmt, transform)
 			model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
 		}
 		if model.Init != nil {
-			model.Init = l2s.TransformAction(model.Init, transform)
+			model.Init = TransformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
 			invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
@@ -365,7 +365,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 1: Convert temporal operators to named binders (shared)
 	// ---------------------------------------------------------------
-	l2s.SharedStep1_ConvertTemporals(icfg, model, modPass)
+	SharedStep1_ConvertTemporals(icfg, model, modPass)
 
 	// Normalize named binders in postconds (already done for model by SharedStep1)
 	// (SharedStep1 calls modPass which handles postconds)
@@ -373,28 +373,28 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 3: Collect named binders from conjectures + postconds (shared)
 	// ---------------------------------------------------------------
-	l2s.SharedStep3_CollectNamedBinders(icfg, model, false)
+	SharedStep3_CollectNamedBinders(icfg, model, false)
 
 	// Build save/wait/reset_w
-	l2s.SharedBuildSaveAndWait(icfg)
+	SharedBuildSaveAndWait(icfg)
 
 	// Build addConstsToD
-	icfg.AddConstsToD = l2s.BuildAddConstsToD(m, uninterpretedSorts, lineno)
+	icfg.AddConstsToD = BuildAddConstsToD(m, uninterpretedSorts, lineno)
 
 	// ---------------------------------------------------------------
 	// Step 6: Tableau construction (shared)
 	// ---------------------------------------------------------------
-	l2s.SharedStep6_BuildTableau(icfg)
+	SharedStep6_BuildTableau(icfg)
 
 	// ---------------------------------------------------------------
 	// Step 7: Action instrumentation (shared)
 	// ---------------------------------------------------------------
-	l2s.SharedStep7_InstrumentActions(icfg, model)
+	SharedStep7_InstrumentActions(icfg, model)
 
 	// ---------------------------------------------------------------
 	// Step 8: Patch exported actions (shared, ranking mode: with postconds)
 	// ---------------------------------------------------------------
-	l2s.SharedStep8_PatchExports(icfg, model)
+	SharedStep8_PatchExports(icfg, model)
 
 	// ---------------------------------------------------------------
 	// Step 9: Idle action (ranking-specific: no monitor, no fair cycle)
@@ -405,7 +405,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	idleParts = append(idleParts, icfg.ResetW...)
 	idleParts = append(idleParts, icfg.AddConstsToD...)
 
-	idleAction := l2s.SetLineno(actions.ConcatActions(idleParts...), lineno)
+	idleAction := SetLineno(actions.ConcatActions(idleParts...), lineno)
 	idleAction.SetFormalParams(nil)
 	idleAction.SetFormalReturns(nil)
 
@@ -427,7 +427,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	rankingInitActions = append(rankingInitActions, icfg.ResetW...)
 	rankingInitActions = append(rankingInitActions, icfg.AssumeGAxioms...)
 	rankingInitActions = append(rankingInitActions, icfg.AssumeInitAxioms...)
-	rankingInitActions = append(rankingInitActions, l2s.SetLineno(actions.NewAssumeAction(icfg.NotLf), lineno))
+	rankingInitActions = append(rankingInitActions, SetLineno(actions.NewAssumeAction(icfg.NotLf), lineno))
 
 	if model.Init != nil {
 		model.Init = actions.PostfixAction(model.Init, rankingInitActions)
@@ -436,13 +436,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 11: Replace named binders (shared)
 	// ---------------------------------------------------------------
-	l2s.SharedStep11_ReplaceNamedBinders(icfg, model, modPass)
+	SharedStep11_ReplaceNamedBinders(icfg, model, modPass)
 
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
 	if tm != nil {
-		return l2s.SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
+		return SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
 	}
 	// Fallback: return goals as-is if no TemporalModels found
 	return cfg.Goals, nil
