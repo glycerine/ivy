@@ -1,0 +1,23 @@
+#lang ivy1.7
+
+# Minimal isolate-free module used by check/check_test.go
+# (TestSomeBoundedSetByBMCBranch / TestSomeBoundedNotSetForOtherMethods).
+# The default "this" isolate is exercised; the test sets the "method"
+# attribute (no isolate prefix because ComposeNames strips "this") to
+# trigger the BMC dispatch in check_isolate.go.
+
+type t
+
+relation r(X:t)
+
+after init {
+    r(X) := false
+}
+
+action step(x:t) = {
+    r(x) := true
+}
+
+export step
+
+conjecture r(X) | ~r(X)

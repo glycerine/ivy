@@ -1,0 +1,23 @@
+#lang ivy1.7
+
+# Same as bmc_minimal.ivy but with `attribute method = bmc[1]` so the
+# default goivy_check command exercises the BMC dispatch and prints
+# "BOUNDED" before "OK".
+
+type t
+
+relation r(X:t)
+
+after init {
+    r(X) := false
+}
+
+action step(x:t) = {
+    r(x) := true
+}
+
+export step
+
+conjecture r(X) | ~r(X)
+
+attribute method = bmc[1]
