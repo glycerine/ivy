@@ -2603,16 +2603,9 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-254987  go : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=SchemaBody
-        py : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=SchemaBody
+254992  go : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
+        py : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
 
-254988  go : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=SchemaBody
-        py : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=SchemaBody
-
-254989  go : XTRACE: proof.tacticTactic name='l2s_auto2' goal[0].Formula type=SchemaBody
-        py : XTRACE: proof.tacticTactic name='l2s_auto2' goal[0].Formula type=SchemaBody
-
-254990  go : XTRACE: l2s.l2sTacticInt ENTER tactic="l2s_auto" ngoals=1 goal.Formula type=SchemaBody
-        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
+254993  go : XTRACE: l2s.l2sTacticInt findTemporalModels result=
+        py : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
 ~~~
-

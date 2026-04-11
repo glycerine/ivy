@@ -185,19 +185,68 @@ func dedupeVarBodyPairs(pairs []varBodyPair) []varBodyPair {
 
 // --- Tactic entry points ---
 
+// l2sTactic mirrors Python's l2s_tactic (ivy_l2s.py:75-79).
+// It enters WithSymbols and WithSorts contexts before calling l2sTacticInt.
+// All three public entry points (L2STactic, L2STacticFull, L2STacticAuto)
+// route through this helper.
+func l2sTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
+	if len(goals) == 0 {
+		return nil, fmt.Errorf("l2s: no proof goals")
+	}
+	m := pc.GetModule()
+	if m == nil || m.Sig == nil {
+		return nil, fmt.Errorf("l2s: module or sig is nil")
+	}
+	vocab := proof.GoalVocab(goals[0])
+	ws := il.NewWithSymbols(m.Sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+	wso := il.NewWithSorts(m.Sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+	return l2sTacticInt(pc, goals, pf, tacticName)
+}
+
 // L2STactic is the main tactic for "l2s" proof goals.
 func L2STactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
-	return l2sTacticInt(pc, goals, pf, "l2s")
+	return l2sTactic(pc, goals, pf, "l2s")
 }
 
 // L2STacticFull includes all auxiliary state in the transformation.
 func L2STacticFull(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
-	return l2sTacticInt(pc, goals, pf, "l2s_full")
+	return l2sTactic(pc, goals, pf, "l2s_full")
 }
 
-// L2STacticAuto uses automatic trigger inference.
+// L2STacticAuto uses automatic trigger inference. It extracts the user's
+// actual tactic name (l2s_auto, l2s_auto2, l2s_auto3, l2s_auto4, l2s_auto5)
+// from the proof object, mirroring Python's l2s_tactic_auto (ivy_l2s.py:91-93)
+// which passes proof.tactic_name through.
 func L2STacticAuto(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
-	return l2sTacticInt(pc, goals, pf, "l2s_auto")
+	tacticName := "l2s_auto" // fallback
+	if tt, ok := pf.(*ast.TacticTactic); ok && tt.TName != nil {
+		tacticName = l2sNodeToString(tt.TName)
+	}
+	return l2sTactic(pc, goals, pf, tacticName)
+}
+
+// l2sNodeToString extracts a string name from an AST node (mirrors
+// proof.nodeToString which is unexported).
+func l2sNodeToString(n ast.Node) string {
+	if n == nil {
+		return ""
+	}
+	if a, ok := n.(*ast.Atom); ok {
+		return a.Relname()
+	}
+	return fmt.Sprint(n)
+}
+
+// pyBool formats a Go bool as Python's True/False, for trace parity.
+func pyBool(b bool) string {
+	if b {
+		return "True"
+	}
+	return "False"
 }
 
 // l2sTacticInt is the internal implementation of the L2S tactic.
@@ -209,7 +258,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	full := tacticName == "l2s_full"
 	goal := goals[0]
-	xtracer.Trace("l2s.l2sTacticInt ENTER tactic=%q ngoals=%d goal.Formula type=%s", tacticName, len(goals), iu.TypeName(goal.Formula))
+	xtracer.Trace("l2s.l2sTacticInt ENTER tactic='%s' ngoals=%d goal.Formula type=%s", tacticName, len(goals), iu.TypeName(goal.Formula))
 	if goal.Formula != nil {
 		// Also check if it's a SchemaBody
 		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
@@ -218,12 +267,14 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 	lineno := ast.Location{Filename: "l2s", Line: 0}
-	// Check that the conclusion is a temporal proof goal.
-	// TemporalModels is an ast.Node, not a lg.Expr, so we must check
-	// the goal's formula directly (GoalConc won't find it).
-	tm := findTemporalModels(goal)
-	xtracer.Trace("l2s.l2sTacticInt findTemporalModels result=%v (nil=%v)", tm, tm == nil)
-	if tm == nil {
+	// Get the goal's conclusion. After the TemporalModels API broadening,
+	// proof.GoalConc returns the inner conclusion (TemporalModels in this case)
+	// regardless of whether the goal's Formula is a SchemaBody or a direct
+	// TemporalModels. Mirrors Python ivy_l2s.py:117-118.
+	conc := proof.GoalConc(goal)
+	tm, isTM := conc.(*ast.TemporalModels)
+	xtracer.Trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)", iu.TypeName(conc), pyBool(isTM))
+	if !isTM {
 		return nil, fmt.Errorf("l2s: proof goal is not temporal")
 	}
 
@@ -247,14 +298,26 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 		}
 	}
+	// C10: also include non-explicit temporal axioms in temporalPrems
+	// (mirrors Python ivy_l2s.py:134-135).
+	if pc != nil {
+		for _, ax := range pc.GetAxioms() {
+			if !ax.Explicit && ax.IsTemporal() {
+				if f, ok := ax.Formula.(lg.Expr); ok {
+					temporalPrems = append(temporalPrems, f)
+				}
+			}
+		}
+	}
 
 	// Add assumed globally properties to model assumptions
+	// H13: preserve the original axiom label (Python ivy_l2s.py:132).
 	if pc != nil {
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, m.Cfg.AstCfg.NewLabeledFormula(nil, g.Body))
+						model.Asms = append(model.Asms, m.Cfg.AstCfg.NewLabeledFormula(ax.Label, g.Body))
 					}
 				}
 			}
@@ -269,9 +332,13 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	proofLabel := ""
 
-	// --- Invariants from model ---
+	// --- Invariants ---
+	// C6/C8: invars holds tactic-level invariants (user-supplied + auto-generated).
+	// We start empty (Python ivy_l2s.py:175 starts from compiled tactic_invars,
+	// which is empty in Phase 1 — Phase 2 will populate it). At the end of this
+	// function we commit invars into model.Invars (Python ivy_l2s.py:722).
+	// Do NOT seed from model.Invars — that's the original C6/C8 bug.
 	var invars []*ast.LabeledFormula
-	invars = append(invars, model.Invars...)
 
 	// --- L2S monitor symbols ---
 	l2sWaitingSym := L2SWaiting()
@@ -306,6 +373,18 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 
+	// C9: desugar $was/$happened operators in invars (Python ivy_l2s.py:716)
+	l2sAcfg := m.Cfg.AstCfg
+	for i, inv := range invars {
+		if expr, ok := inv.Formula.(lg.Expr); ok {
+			invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, Desugar(expr, proofLabel))
+		}
+	}
+
+	// C8: commit auto-generated/user invariants into model.Invars
+	// (Python ivy_l2s.py:722 `model.invars = model.invars + invars`).
+	model.Invars = append(model.Invars, invars...)
+
 	// --- Build shared config ---
 	defnDeps := BuildDefnDeps(m)
 
@@ -322,7 +401,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	}
 
 	// --- Model pass helper (l2s version: no postconds) ---
-	l2sAcfg := m.Cfg.AstCfg
+	// All tactic-generated invariants now live in model.Invars (per C8 above),
+	// so modPass only iterates model.Invars (no separate local invars loop).
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
@@ -336,9 +416,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 		if model.Init != nil {
 			model.Init = transformAction(model.Init, transform)
-		}
-		for i, inv := range invars {
-			invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 	}
 
