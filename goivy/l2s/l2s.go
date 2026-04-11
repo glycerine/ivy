@@ -444,9 +444,14 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// (Python ivy_l2s.py:722 `model.invars = model.invars + invars`).
 	model.Invars = append(model.Invars, invars...)
 
+	// M7 / Python ivy_l2s.py:724: re-fetch prems AFTER tactic_decls have
+	// mutated the goal, so the resulting prems include user-supplied
+	// definition premises. modPass below transforms these in place.
+	prems = proof.GoalPrems(goal)
+
 	// --- Build shared config ---
 	// H12: include user-supplied definition premises from the goal in defnDeps.
-	defnDeps := BuildDefnDeps(m, proof.GoalPrems(goal)...)
+	defnDeps := BuildDefnDeps(m, prems...)
 
 	cfg := &InstrumentationConfig{
 		ProofLabel:         proofLabel,
@@ -464,6 +469,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// --- Model pass helper (l2s version: no postconds) ---
 	// All tactic-generated invariants now live in model.Invars (per C8 above),
 	// so modPass only iterates model.Invars (no separate local invars loop).
+	// M7 / Python ivy_l2s.py:744: also transform property prems via list_transform.
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
@@ -477,6 +483,16 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 		if model.Init != nil {
 			model.Init = transformAction(model.Init, transform)
+		}
+		// M7: list_transform on property prems.
+		for i, p := range prems {
+			lf, ok := p.(*ast.LabeledFormula)
+			if !ok || !proof.GoalIsProperty(lf) {
+				continue
+			}
+			if e, ok := lf.Formula.(lg.Expr); ok {
+				prems[i] = l2sAcfg.NewLabeledFormula(lf.Label, transform(e))
+			}
 		}
 	}
 

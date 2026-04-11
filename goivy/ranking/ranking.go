@@ -334,7 +334,6 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		UninterpretedSorts: uninterpretedSorts,
 		Mod:                m,
 		Fmla:               fmla,
-		Invars:             invars,
 		Postconds:          postconds,
 		Dependencies:       l2s.BuildDependenciesFunc(defnDeps),
 	}

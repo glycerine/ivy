@@ -988,6 +988,17 @@ func l2sAutoInvariants(
 		}
 	}
 
+	// T1 / Python ivy_l2s.py:679-682: print l2s_auto invariants when in
+	// debug mode (the Python code prints unconditionally; we gate behind
+	// L2SDebug to avoid noise in normal runs).
+	if m != nil && m.Cfg != nil && m.Cfg.L2SDebug {
+		fmt.Println("--- l2s_auto invariants ---")
+		for _, inv := range invars {
+			fmt.Printf("invariant %v\n", inv)
+		}
+		fmt.Println("---------------------------")
+	}
+
 	return invars, tasks, triggers, nil
 }
 
