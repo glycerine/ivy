@@ -275,6 +275,8 @@ func l2sAutoInvariants(
 	}
 
 	// all_d: all elements in l2s_d
+	// M4 / Python ivy_l2s.py:327-329: always returns Implies(rhs, And(...)),
+	// even when cons is empty (And() = true).
 	allD := func(eq *lg.Eq) lg.Expr {
 		args := eqLHSArgs(eq)
 		var cons []lg.Expr
@@ -287,14 +289,11 @@ func l2sAutoInvariants(
 				}
 			}
 		}
-		rhs := eqRHS(eq)
-		if len(cons) == 0 {
-			return &lg.And{Terms: nil} // true
-		}
-		return &lg.Implies{T1: rhs, T2: makeAnd(cons...)}
+		return &lg.Implies{T1: eqRHS(eq), T2: makeAnd(cons...)}
 	}
 
 	// all_a: all elements in l2s_a
+	// M4 / Python ivy_l2s.py:333-335: same shape as all_d.
 	allA := func(eq *lg.Eq) lg.Expr {
 		args := eqLHSArgs(eq)
 		var cons []lg.Expr
@@ -307,11 +306,7 @@ func l2sAutoInvariants(
 				}
 			}
 		}
-		rhs := eqRHS(eq)
-		if len(cons) == 0 {
-			return &lg.And{Terms: nil}
-		}
-		return &lg.Implies{T1: rhs, T2: makeAnd(cons...)}
+		return &lg.Implies{T1: eqRHS(eq), T2: makeAnd(cons...)}
 	}
 
 	// all_created: needed elements are in created set
@@ -847,6 +842,43 @@ func l2sAutoInvariants(
 		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_globally_%d", i), ninv)
 	}
 
+	// M3: invariant emission order matches Python
+	// (globally → status → consts_d → init_glob → neg_prop → when).
+
+	// --- l2s_status invariants ---
+	invars = appendLF(autoAcfg, invars, "l2s_status_0",
+		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
+	invars = appendLF(autoAcfg, invars, "l2s_status_1",
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
+	invars = appendLF(autoAcfg, invars, "l2s_status_2",
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
+	invars = appendLF(autoAcfg, invars, "l2s_status_3",
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
+
+	// --- l2s_consts_d ---
+	var constsDTerms []lg.Expr
+	if m != nil && m.Sig != nil {
+		for _, s := range uninterpretedSorts {
+			sName := s.String()
+			if finiteSorts[sName] {
+				continue
+			}
+			for _, sym := range m.Sig.Symbols {
+				if sym.Sort != nil && sym.Sort.String() == sName {
+					d := L2SD(s)
+					c := lg.NewConst(sym.Name, sym.Sort)
+					app, _ := lg.NewApply(d, c)
+					if app != nil {
+						constsDTerms = append(constsDTerms, app)
+					}
+				}
+			}
+		}
+	}
+	// M5 / Python ivy_l2s.py:634-638: always emit l2s_consts_d, even when
+	// constsDTerms is empty (And() = true).
+	invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...))
+
 	// --- convert_to_init: wrap temporal formula with l2s_init ---
 	var iinvs []lg.Expr
 	var convertToInit func(f lg.Expr) lg.Expr
@@ -954,40 +986,6 @@ func l2sAutoInvariants(
 		for i, w := range winvs {
 			invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_when_%d", i), w)
 		}
-	}
-
-	// --- l2s_status invariants ---
-	invars = appendLF(autoAcfg, invars, "l2s_status_0",
-		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
-	invars = appendLF(autoAcfg, invars, "l2s_status_1",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
-	invars = appendLF(autoAcfg, invars, "l2s_status_2",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
-	invars = appendLF(autoAcfg, invars, "l2s_status_3",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
-
-	// --- l2s_consts_d ---
-	var constsDTerms []lg.Expr
-	if m != nil && m.Sig != nil {
-		for _, s := range uninterpretedSorts {
-			sName := s.String()
-			if finiteSorts[sName] {
-				continue
-			}
-			for _, sym := range m.Sig.Symbols {
-				if sym.Sort != nil && sym.Sort.String() == sName {
-					d := L2SD(s)
-					c := lg.NewConst(sym.Name, sym.Sort)
-					app, _ := lg.NewApply(d, c)
-					if app != nil {
-						constsDTerms = append(constsDTerms, app)
-					}
-				}
-			}
-		}
-	}
-	if len(constsDTerms) > 0 {
-		invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...))
 	}
 
 	return invars, tasks, triggers, nil

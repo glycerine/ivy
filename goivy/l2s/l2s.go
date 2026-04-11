@@ -699,6 +699,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	SharedStep11_ReplaceNamedBinders(cfg, model, modPass)
 
+	// M2 / Python ivy_l2s.py:1308: remove unused definitions from goal.
+	goal = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, goal)
+
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------

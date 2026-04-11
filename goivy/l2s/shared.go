@@ -503,6 +503,30 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	var instrStmt func(stmt actions.Action) actions.Action
 	instrStmt = func(stmt actions.Action) actions.Action {
+		// H7 / Python ivy_l2s.py:1127-1131: if a CallAction's returns
+		// include any monitored symbol (in symprops, symwhens, or symwaits),
+		// split the call so the assignment is a separate statement.
+		if call, ok := stmt.(*actions.CallAction); ok {
+			callArgs := call.ActionArgs()
+			if len(callArgs) > 1 {
+				returns := callArgs[1:]
+				monitored := false
+				for _, r := range returns {
+					if c, ok := r.(*lg.Const); ok {
+						k := lg.Key(c)
+						if len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0 {
+							monitored = true
+							break
+						}
+					}
+				}
+				if monitored {
+					split := call.SplitReturns(actions.NewActionsConfig())
+					return instrStmt(split)
+				}
+			}
+		}
+
 		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
