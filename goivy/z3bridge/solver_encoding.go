@@ -140,7 +140,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]Expr
 			}
 			domSorts := make([]Sort, len(fs.Domain()))
 			for i, d := range fs.Domain() {
-				xtracer.Trace("TranslateSort_call callsite=encode_term_relation_sort")
+				xtracer.Trace("TranslateSort_call callsite=encode_term_relation_sort HASH canon=%s", d.Sexp())
 				zs, err := s.tr.TranslateSort(d)
 				if err != nil {
 					return nil, err
@@ -209,14 +209,14 @@ func (s *Solver) Z3Function(name string, sig []lg.Sort) (FuncDecl, error) {
 	}
 	domain := make([]Sort, len(sig)-1)
 	for i := 0; i < len(sig)-1; i++ {
-		xtracer.Trace("TranslateSort_call callsite=z3_function_dom")
+		xtracer.Trace("TranslateSort_call callsite=z3_function_dom HASH canon=%s", sig[i].Sexp())
 		zs, err := s.tr.TranslateSort(sig[i])
 		if err != nil {
 			return FuncDecl{}, err
 		}
 		domain[i] = zs
 	}
-	xtracer.Trace("TranslateSort_call callsite=z3_function_rng")
+	xtracer.Trace("TranslateSort_call callsite=z3_function_rng HASH canon=%s", sig[len(sig)-1].Sexp())
 	rangeSort, err := s.tr.TranslateSort(sig[len(sig)-1])
 	if err != nil {
 		return FuncDecl{}, err
@@ -381,7 +381,7 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (Expr, error) {
 	// lookup_native returns None (i.e., uninterpreted sort). It emits the
 	// callsite trace inside that branch. We mirror it here.
 	if !hasNativeInterp {
-		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3")
+		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3 HASH canon=%s", num.CSort.Sexp())
 	}
 	z3sort, err := s.tr.TranslateSort(num.CSort)
 	if err != nil {

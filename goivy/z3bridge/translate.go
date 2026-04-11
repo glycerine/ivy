@@ -685,7 +685,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// Python: sig = atom.rep.sort.to_z3() (ivy_solver.py:572). This dispatches
 	// to functionsort via the monkey-patched FunctionSort.to_z3, so Python emits
 	// the atom_to_z3_relation callsite trace before functionsort. We mirror that.
-	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation")
+	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation HASH canon=%s", c.Sexp())
 	sig, err := t.functionSort(fs) // emits "ivy_solver.py:279 functionsort() ENTER"
 	if err != nil {
 		return Expr{}, err
@@ -769,7 +769,7 @@ func (t *Translator) ltPred(fs *lg.FunctionSort) FuncDecl {
 	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%s", fs)
 	// Python lt_pred (ivy_solver.py:546): sig = sym.sort.to_z3() dispatches
 	// to functionsort, so Python emits the lt_pred callsite trace before.
-	xtracer.Trace("TranslateSort_call callsite=lt_pred")
+	xtracer.Trace("TranslateSort_call callsite=lt_pred HASH canon=(Symbol name:< sort:%s)", fs.Sexp())
 	sig, err := t.functionSort(fs)
 	if err != nil {
 		panic(fmt.Sprintf("ltPred: functionSort failed: %v", err))
@@ -965,7 +965,7 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 
 	// Python line 455-456: if sig == None: sig = term.sort.to_z3()
 	if zs == nil {
-		xtracer.Trace("TranslateSort_call callsite=term_to_z3_variable")
+		xtracer.Trace("TranslateSort_call callsite=term_to_z3_variable HASH canon=%s", v.Sexp())
 		zsVal, err := t.TranslateSort(sort)
 		if err != nil {
 			return Expr{}, err
@@ -1044,7 +1044,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// shared session cache started hitting these constants.)
 	if lg.FirstOrderSort(sort) {
 		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
-		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const")
+		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		zs, err := t.TranslateSort(sort)
 		if err != nil {
 			return Expr{}, err
@@ -1057,7 +1057,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 
 	// Function sort with single element (0-ary function) → treat as first-order
 	if fs, ok := sort.(*lg.FunctionSort); ok && fs.Arity() == 0 {
-		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_const")
+		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
@@ -1083,7 +1083,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	if fs, ok := sort.(*lg.FunctionSort); ok {
 		// Python symbol_to_z3 (ivy_solver.py:300-305): emits callsite trace
 		// before s.sort.to_z3(), which dispatches to functionsort. Mirror order.
-		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func")
+		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
 			return Expr{}, err
 		}
@@ -1133,7 +1133,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	domain := fs.Domain()
 	sig := make([]Sort, 0, len(domain)+1)
 	for _, d := range domain {
-		xtracer.Trace("TranslateSort_call callsite=functionsort_dom")
+		xtracer.Trace("TranslateSort_call callsite=functionsort_dom HASH canon=%s", d.Sexp())
 		zs, err := t.TranslateSort(d)
 		if err != nil {
 			return nil, err
@@ -1150,7 +1150,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	if il.IsRelationalSort(fs) {
 		rng = t.Ctx.BoolSort()
 	} else {
-		xtracer.Trace("TranslateSort_call callsite=functionsort_rng")
+		xtracer.Trace("TranslateSort_call callsite=functionsort_rng HASH canon=%s", fs.Range().Sexp())
 		var err error
 		rng, err = t.TranslateSort(fs.Range())
 		if err != nil {
@@ -1183,7 +1183,7 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 	// Python: term_to_z3 line 534 does `sig = term.rep.sort.to_z3()`. The
 	// .to_z3() dispatches to functionsort, so Python emits the term_to_z3_func
 	// callsite trace just before functionsort. Mirror that here.
-	xtracer.Trace("TranslateSort_call callsite=term_to_z3_func")
+	xtracer.Trace("TranslateSort_call callsite=term_to_z3_func HASH canon=(Symbol name:%s sort:%s)", name, fs.Sexp())
 	sig, err := t.functionSort(fs)
 	if err != nil {
 		return FuncDecl{}, err

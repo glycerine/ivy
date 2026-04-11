@@ -562,10 +562,12 @@ func (s *Solver) Sorts(name string) any {
 		}
 	}
 	if dom, rng, ok2 := ParseArraySortName(name); ok2 {
-		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3")
-		domSort, err1 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: dom})
-		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3")
-		rngSort, err2 := s.tr.TranslateSort(&lg.UninterpretedSort{Name: rng})
+		domS := &lg.UninterpretedSort{Name: dom}
+		rngS := &lg.UninterpretedSort{Name: rng}
+		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", domS.Sexp())
+		domSort, err1 := s.tr.TranslateSort(domS)
+		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", rngS.Sexp())
+		rngSort, err2 := s.tr.TranslateSort(rngS)
 		if err1 == nil && err2 == nil {
 			return ctx.ArraySort(domSort, rngSort)
 		}
@@ -650,14 +652,14 @@ func (s *Solver) LookupNative(thing *lg.Const, table func(string) any, kind stri
 	//   return z3name.to_z3()
 	switch v := z3name.(type) {
 	case *lg.EnumeratedSort:
-		xtracer.Trace("TranslateSort_call callsite=lookup_native_enum_or_range")
+		xtracer.Trace("TranslateSort_call callsite=lookup_native_enum_or_range HASH canon=%s", v.Sexp())
 		zs, err := s.tr.TranslateSort(v)
 		if err != nil {
 			return nil
 		}
 		return zs
 	case *lg.RangeSort:
-		xtracer.Trace("TranslateSort_call callsite=lookup_native_enum_or_range")
+		xtracer.Trace("TranslateSort_call callsite=lookup_native_enum_or_range HASH canon=%s", v.Sexp())
 		zs, err := s.tr.TranslateSort(v)
 		if err != nil {
 			return nil
@@ -936,9 +938,9 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 		}
 	}
 
-	xtracer.Trace("TranslateSort_call callsite=bfe_to_z3_dom")
+	xtracer.Trace("TranslateSort_call callsite=bfe_to_z3_dom HASH canon=%s", fs.Domain()[0].Sexp())
 	insort, err1 := s.tr.TranslateSort(fs.Domain()[0])
-	xtracer.Trace("TranslateSort_call callsite=bfe_to_z3_rng")
+	xtracer.Trace("TranslateSort_call callsite=bfe_to_z3_rng HASH canon=%s", fs.Range().Sexp())
 	outsort, err2 := s.tr.TranslateSort(fs.Range())
 	if err1 != nil || err2 != nil {
 		return nil
@@ -1200,7 +1202,7 @@ func MyEq(ctx *Z3Context, x, y Expr) Expr {
 func (s *Solver) SortNameToZ3(name string) (Sort, error) {
 	xtracer.Trace("ivy_solver.py:116 sort_name_to_z3() ENTER name=%s", name)
 	sort := &lg.UninterpretedSort{Name: name}
-	xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3")
+	xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", sort.Sexp())
 	return s.tr.TranslateSort(sort)
 }
 
