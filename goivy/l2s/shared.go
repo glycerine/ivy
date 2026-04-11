@@ -26,8 +26,7 @@ type InstrumentationConfig struct {
 	FiniteSorts        map[string]bool
 	UninterpretedSorts []lg.Sort
 	Mod                *module.Module
-	Fmla               lg.Expr // the temporal formula
-	Invars             []*ast.LabeledFormula
+	Fmla               lg.Expr               // the temporal formula
 	Postconds          []*ast.LabeledFormula // nil for l2s
 
 	// Common building blocks (populated by BuildCommonBlocks or caller)

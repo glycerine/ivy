@@ -455,7 +455,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		UninterpretedSorts: uninterpretedSorts,
 		Mod:                m,
 		Fmla:               fmla,
-		Invars:             invars,
 		Postconds:          nil, // l2s has no postconds
 		Dependencies:       BuildDependenciesFunc(defnDeps),
 		Tasks:              autoTasks,    // C5: for trace_hook routing
