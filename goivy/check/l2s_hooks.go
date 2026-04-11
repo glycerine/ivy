@@ -1,5 +1,4 @@
 // l2s_hooks.go implements trace hooks for L2S diagnostics.
-// Moved from l2s/hooks.go to break the import cycle l2s → check → l2s.
 // Ported from Python ivy_l2s.py: trace_hook, renaming_hook, auto_hook,
 // temporal_and_l2s, ls2_g_to_globally.
 package check
@@ -9,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/l2s"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/trace"
 )
@@ -72,7 +70,7 @@ func L2SAutoHook(cfg *L2SAutoHookConfig, tr *trace.TraceBase, fcs []Checker) *tr
 
 	// Apply renaming
 	tr = L2SRenamingHook(cfg.Subs, tr, fcs)
-	tr.PP = l2s.L2SGToGlobally
+	tr.PP = L2SGToGlobally
 
 	// Figure out which property failed
 	var failedFC Checker
@@ -224,7 +222,7 @@ func applyL2SRenamingToHandler(handler *MatchHandler, subs map[string]string) {
 // counterpart of L2SAutoHook (which operates on *trace.TraceBase).
 //
 // C5 / Python ivy_l2s.py:1333-1506 auto_hook.
-func applyL2SAutoDiagnostics(handler *MatchHandler, fcs []Checker, data *l2s.L2STraceHookData) {
+func applyL2SAutoDiagnostics(handler *MatchHandler, fcs []Checker, data *L2STraceHookData) {
 	if handler == nil || data == nil {
 		return
 	}

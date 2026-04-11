@@ -860,7 +860,7 @@ type TacticFunc func(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error)
 // RegisteredTactics maps tactic names to implementations.
 var RegisteredTactics = map[string]TacticFunc{
 	"ranking": func(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
-		return L2STactic(cfg)
+		return RankingL2STactic(cfg)
 	},
 }
 
