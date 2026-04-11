@@ -376,6 +376,26 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
 
+	// Python lines 655-659 (formula_to_z3_int): early return if a Definition's
+	// rhs is True or False. NOTE: the Python source has a bug — it writes
+	//   isinstance(fmla, ivy_logic.Definition or ivy_logic.is_eq(fmla) or ...)
+	// which evaluates as `isinstance(fmla, ivy_logic.Definition)` because
+	// `Definition` is truthy and short-circuits the `or`. So this fast path
+	// only fires for Definitions, not for Eq or Iff. We mirror that bug
+	// exactly.
+	if def, ok := n.(*lg.Definition); ok {
+		if lg.IsTrue(def.Rhs) {
+			return t.Formula_to_z3_int(def.Lhs, "term_to_z3_int:is_true")
+		}
+		if lg.IsFalse(def.Rhs) {
+			body, err := t.Formula_to_z3_int(def.Lhs, "term_to_z3_int:is_false")
+			if err != nil {
+				return Expr{}, err
+			}
+			return t.Ctx.Not(body), nil
+		}
+	}
+
 	// Python line 645: if ivy_logic.is_atom(fmla): return atom_to_z3(fmla)
 	// is_atom: (Apply or Symbol) with Boolean sort, or Eq.
 	if app, ok := n.(*lg.Apply); ok && len(app.Terms) > 0 {
@@ -383,11 +403,16 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 			return t.atomToZ3(app)
 		}
 	}
-	//if app, ok := n.(*lg.Apply); ok {
-	//	if c, ok2 := app.Func.(*lg.Const); ok2 && isPolymac(c.Name) {
-	//		vv("DEBUG F2Z3: polymac op=%s nTerms=%d sort=%T isApp=%v\n", c.Name, len(app.Terms), n.NodeSort(), true)
-	//	}
-	//}
+
+	// Python's is_atom also returns True for a BARE Boolean Symbol (Const
+	// with BooleanSort and no args). Such a Const is routed through
+	// atom_to_z3, which builds a 0-ary z3 const and caches it in
+	// z3_predicates. We mirror that here so traces match Python.
+	if c, ok := n.(*lg.Const); ok {
+		if _, isBool := n.NodeSort().(*lg.BooleanSort); isBool {
+			return t.boolConstToZ3(c)
+		}
+	}
 
 	// Python: isinstance(term, lg.Eq) in is_atom → atom_to_z3(fmla)
 	// Eq has duck-typed .rep/.args/.relname in Python; we construct a
@@ -396,7 +421,73 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 		return t.eqToAtomZ3(eq)
 	}
 
+	// Python ivy_solver.py:664-700 has a wasteful pattern in
+	// formula_to_z3_int: for nodes that fall through to the
+	// `is_individual` case (non-Boolean Apply, non-Boolean Const,
+	// non-Boolean Variable), it FIRST evaluates
+	//     args = [formula_to_z3_int(arg) for arg in fmla.args]
+	// (line 664) which recursively translates every child, AND THEN
+	// the dispatch ignores `args` and calls term_to_z3(fmla) at line
+	// 698, which translates everything from scratch a second time.
+	// This causes leaf constants to be translated multiple times along
+	// the same path. We mirror that bug here so trace counts match.
+	// (See log.red divergence at step 253964 where Python translates
+	// __new_loc:tt three times via this pattern but Go only once.)
+	if app, ok := n.(*lg.Apply); ok && len(app.Terms) > 0 {
+		if _, isBool := n.NodeSort().(*lg.BooleanSort); !isBool {
+			// Wasted recursive args translation matching Python's line 664.
+			for _, arg := range app.Terms {
+				if _, err := t.Formula_to_z3_int(arg, "term_to_z3_int:fmla.args"); err != nil {
+					return Expr{}, err
+				}
+			}
+			// Real translation via term_to_z3 (Python's line 698).
+			return t.TermToZ3(app)
+		}
+	}
+
 	return t.translateCore(n, caller)
+}
+
+// boolConstToZ3 translates a bare Boolean Const through the atom_to_z3
+// path, matching Python where is_atom returns True for bare Boolean Symbols
+// (ivy_solver.py:561 atom_to_z3 entry handles Symbols with empty .args via
+// Symbol.relname = self property at ivy_logic.py:130). Python's atom_to_z3
+// builds z3.Const(solver_name(atom.rep), sig) when sig is not a list (i.e.,
+// the sort is non-FunctionSort like BooleanSort), then caches it in
+// z3_predicates.
+func (t *Translator) boolConstToZ3(c *lg.Const) (Expr, error) {
+	predKey := lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+
+	// Diagnostic atom_to_z3 ENTER trace, same as Apply path.
+	{
+		_, hit := t.cache.z3_predicates[predKey]
+		hitStr := "False"
+		if hit {
+			hitStr = "True"
+		}
+		xtracer.Trace("atom_to_z3 ENTER HASH canon=%s cacheHit=%s", c.Sexp(), hitStr)
+	}
+
+	if cached, ok := t.cache.z3_predicates[predKey]; ok {
+		return cached(), nil
+	}
+
+	// Python (ivy_solver.py:572-574):
+	//     sig = atom.rep.sort.to_z3()
+	//     rel = z3.Function(...) if isinstance(sig,list) else z3.Const(...)
+	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation HASH canon=%s", c.Sexp())
+	z3sort, err := t.TranslateSort(c.CSort)
+	if err != nil {
+		return Expr{}, err
+	}
+	z3name := t.z3Name(c.Name, c.CSort)
+	constExpr := t.Ctx.Const(z3name, z3sort)
+	constFn := func(args ...Expr) Expr {
+		return constExpr
+	}
+	t.cache.z3_predicates[predKey] = constFn
+	return constExpr, nil
 }
 
 // translateCore is the inner dispatch for Translate. It handles all node
@@ -1060,7 +1151,6 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	// the divergence at log.red step 247865 that surfaced when Go's
 	// shared session cache started hitting these constants.)
 	if lg.FirstOrderSort(sort) {
-		key := lg.NodeKey(name + ":" + string(sort.Sexp()))
 		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		zs, err := t.TranslateSort(sort)
 		if err != nil {
@@ -1068,7 +1158,17 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		}
 		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
-		t.cache.consts[key] = c
+		// IMPORTANT: do NOT write to t.cache.consts here. Python's z3_constants
+		// cache (ivy_solver.py:479) is broken for non-enum constants — it
+		// writes with `term.rep` (Symbol object) but reads with `str(term.rep)`
+		// (string), so subsequent encounters of the same const always re-run
+		// iso.to_z3() and solver_name. We must mirror that, otherwise Go's
+		// shared session cache silently hits these entries and emits fewer
+		// traces than Python (see divergence at log.red step 253692, where
+		// __fml:ph was cached on first encounter and missed Python's
+		// term_to_z3_const trace on the second encounter).
+		// Enum CONSTRUCTORS are still cached, but that happens in
+		// TranslateSort's EnumeratedSort case, not here.
 		return c, nil
 	}
 
@@ -1220,13 +1320,26 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		return t.Formula_to_z3_int(body, "translateQuantifier() no variables")
 	}
 
-	// Create Z3 constants for the bound variables.
-	// Python (ivy_solver.py:692-694) only calls term_to_z3(v) for each
-	// quantifier-bound variable; it does NOT call sort.to_z3() separately.
+	// Python (ivy_solver.py:691-694) translates the BODY FIRST via the args
+	// list comprehension, THEN translates the bound variables via term_to_z3.
+	// We must mirror that order so that:
+	//   (a) variables encountered as free in the body get cached during body
+	//       translation,
+	//   (b) the subsequent term_to_z3(v) for each bound variable hits the
+	//       cache and emits no extra trace.
+	// Reversing this order (bound vars first, then body) was the cause of
+	// the log.red divergence at step 248831 — Go was emitting term_to_z3
+	// traces for bound vars while Python was already inside the body
+	// translating an atom.
+	zBody, err := t.Formula_to_z3_int(body, "translateQuantifier() len(variables) > 0")
+	if err != nil {
+		return Expr{}, err
+	}
+
+	// Now translate the bound variables. Each translateVariable call should
+	// be a cache hit (since the body already translated and cached them).
 	// translateVariable already calls TranslateSort internally on cache miss
-	// (matching Python's term_to_z3 variable case at line 494). An extra
-	// unconditional TranslateSort here would emit redundant uninterpretedsort
-	// traces (see translate_quantifier_var divergence at log.red step 247851).
+	// (matching Python's term_to_z3 variable case at line 494).
 	bound := make([]Expr, len(variables))
 	for i, v := range variables {
 		z3Var, err := t.translateVariable(v)
@@ -1235,13 +1348,8 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 		}
 		key := lg.NodeKey(v.Name + ":" + string(v.VSort.Sexp()))
 		bound[i] = z3Var
-		// Temporarily override the const cache so the body uses these bound vars
+		// Defensive: ensure the cache has this exact const (no-op on hit).
 		t.cache.consts[key] = bound[i]
-	}
-
-	zBody, err := t.Formula_to_z3_int(body, "translateQuantifier() len(variables) > 0")
-	if err != nil {
-		return Expr{}, err
 	}
 
 	// Validate that the body is a Bool expression before wrapping with

@@ -199,6 +199,9 @@ func (s *Solver) GetSmallModelWithCond(
 					z3solver.Push()
 				}
 				z3solver.Assert(zCond)
+				// Python ivy_solver.py:1437 calls decide(s) which emits the
+				// decide() ENTER trace before invoking solver.check.
+				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 				res := z3solver.Check()
 
 				if res != Unsat {
@@ -226,7 +229,9 @@ func (s *Solver) GetSmallModelWithCond(
 			}
 		}
 	} else {
-		// No final conditions: just check satisfiability
+		// No final conditions: just check satisfiability.
+		// Python ivy_solver.py:1451 calls decide(s) here.
+		xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 		overallResult = z3solver.Check()
 	}
 
@@ -235,7 +240,7 @@ func (s *Solver) GetSmallModelWithCond(
 	}
 
 	if shrink {
-		// Minimize sorts
+		// Minimize sorts. Python ivy_solver.py:1463 calls decide(s) here.
 		for _, sort := range sortsToMinimize {
 			for n := 1; ; n++ {
 				sc := SortSizeConstraint(sort, n)
@@ -245,6 +250,7 @@ func (s *Solver) GetSmallModelWithCond(
 				}
 				z3solver.Push()
 				z3solver.Assert(zsc)
+				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 				if z3solver.Check() == Sat {
 					break
 				}
@@ -252,7 +258,7 @@ func (s *Solver) GetSmallModelWithCond(
 			}
 		}
 
-		// Minimize relations
+		// Minimize relations. Python ivy_solver.py:1463 calls decide(s) here.
 		for _, rel := range relationsToMinimize {
 			for n := 1; ; n++ {
 				sc := RelationSizeConstraint(rel, n)
@@ -262,6 +268,7 @@ func (s *Solver) GetSmallModelWithCond(
 				}
 				z3solver.Push()
 				z3solver.Assert(zsc)
+				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 				if z3solver.Check() == Sat {
 					break
 				}
