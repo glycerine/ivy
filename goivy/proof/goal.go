@@ -17,21 +17,79 @@ type Vocab struct {
 
 // GoalConc returns the conclusion of a goal.
 // If the goal's formula is a SchemaBody, returns the last element (conclusion).
-// Otherwise returns the formula itself as a logic.Expr.
-func GoalConc(g *ast.LabeledFormula) lg.Expr {
+// Otherwise returns the formula itself, regardless of type.
+// Mirrors Python ivy_proof.py:481-482 goal_conc — returns whatever ast.Node
+// is in the formula slot, including *ast.TemporalModels.
+func GoalConc(g *ast.LabeledFormula) ast.Node {
 	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
-		conc := sb.Conc()
-		if conc != nil {
-			if ln, ok := conc.(lg.Expr); ok {
-				return ln
-			}
+		return sb.Conc()
+	}
+	return g.Formula
+}
+
+// GoalConcExpr returns the conclusion as an lg.Expr if possible, else nil.
+// Use when the caller needs lg.Expr for substitution, matching, or other
+// logic-level operations. Use GoalConc when the caller passes the conclusion
+// through to CloneGoal/MakeGoal or just nil-checks it.
+// NOTE: this does NOT unwrap *ast.TemporalModels. Use GoalConcUnwrap (or
+// ConcAsExpr on a raw conclusion node) when you want the inner formula
+// regardless of any TemporalModels wrapper.
+func GoalConcExpr(g *ast.LabeledFormula) lg.Expr {
+	if e, ok := GoalConc(g).(lg.Expr); ok {
+		return e
+	}
+	return nil
+}
+
+// ConcAsExpr converts a conclusion ast.Node to an lg.Expr, unwrapping
+// *ast.TemporalModels if present. Returns nil if the conclusion is neither
+// an lg.Expr nor a TemporalModels containing an lg.Expr.
+// Mirrors Python pattern at ivy_proof.py:580 (`conc_fmla = conc.fmla if
+// isinstance(conc,ia.TemporalModels) else conc`).
+func ConcAsExpr(c ast.Node) lg.Expr {
+	if tm, ok := c.(*ast.TemporalModels); ok {
+		if e, ok := tm.Fmla.(lg.Expr); ok {
+			return e
 		}
 		return nil
 	}
-	if ln, ok := g.Formula.(lg.Expr); ok {
-		return ln
+	if e, ok := c.(lg.Expr); ok {
+		return e
 	}
 	return nil
+}
+
+// GoalConcUnwrap returns the inner lg.Expr conclusion of a goal, unwrapping
+// *ast.TemporalModels if present. Convenience wrapper for ConcAsExpr(GoalConc(g)).
+func GoalConcUnwrap(g *ast.LabeledFormula) lg.Expr {
+	return ConcAsExpr(GoalConc(g))
+}
+
+// ApplyToConc applies fn to the conclusion, unwrapping *ast.TemporalModels
+// if present. The result is wrapped back into a TemporalModels (preserving
+// the Model field) so that transformations applied to a temporal goal stay
+// inside the temporal wrapper.
+// Mirrors Python ivy_proof.py:1370-1373 apply_to_conc.
+func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
+	if tm, ok := conc.(*ast.TemporalModels); ok {
+		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
+			return tm.Clone([]ast.Node{fn(innerExpr)})
+		}
+		return tm
+	}
+	if expr, ok := conc.(lg.Expr); ok {
+		return fn(expr)
+	}
+	return conc
+}
+
+// GoalApplyToConc clones a goal with fn applied to its conclusion.
+// Mirrors Python ivy_proof.py:1572-1573 goal_apply_to_conc.
+// NOTE: fn is called with the raw conclusion (ast.Node) — fn is responsible
+// for handling *ast.TemporalModels itself, OR the caller can wrap fn with
+// ApplyToConc.
+func GoalApplyToConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, fn func(ast.Node) ast.Node) *ast.LabeledFormula {
+	return CloneGoal(cfg, goal, GoalPrems(goal), fn(GoalConc(goal)))
 }
 
 // GoalPrems returns the premises of a goal.
@@ -58,7 +116,9 @@ func GoalPremGoals(goal *ast.LabeledFormula) []*ast.LabeledFormula {
 
 // CloneGoal creates a new goal with the same label but new premises and conclusion.
 // If prems is non-empty, wraps them in a SchemaBody; otherwise uses conc directly.
-func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
+// conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
+// mirroring Python's clone_goal which is duck-typed.
+func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -72,7 +132,9 @@ func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, c
 }
 
 // MakeGoal creates a goal with the given label, premises, and conclusion.
-func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
+// conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
+// mirroring Python's make_goal which is duck-typed.
+func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -102,11 +164,11 @@ func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormul
 			normPrems[i] = p
 		}
 	}
-	conc := GoalConc(g)
-	if conc != nil {
-		conc = il.NormalizeOps(conc)
-	}
-	return CloneGoal(cfg, g, normPrems, conc)
+	// ApplyToConc unwraps *ast.TemporalModels so NormalizeOps runs on the inner
+	// formula, then re-wraps. For plain lg.Expr conclusions, NormalizeOps runs
+	// directly. For unknown types, the conc is passed through unchanged.
+	newConc := ApplyToConc(GoalConc(g), il.NormalizeOps)
+	return CloneGoal(cfg, g, normPrems, newConc)
 }
 
 // GoalIsDefn returns true if x is a non-lambda constant declaration
@@ -143,6 +205,8 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 
 // GoalVocab returns the vocabulary of a goal: the sorts, symbols, and
 // variables that are bound in the goal's premises and conclusion.
+// Mirrors Python ivy_proof.py:580 — when conc is *ast.TemporalModels,
+// extracts conc.Fmla as the formula to scan.
 func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
@@ -169,14 +233,14 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 			}
 		}
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			fc := GoalConc(lf)
+			fc := ConcAsExpr(GoalConc(lf))
 			if fc != nil {
 				fmlas = append(fmlas, fc)
 			}
 		}
 	}
-	if conc != nil {
-		fmlas = append(fmlas, conc)
+	if concExpr := ConcAsExpr(conc); concExpr != nil {
+		fmlas = append(fmlas, concExpr)
 	}
 
 	// Collect variables from formulas
@@ -202,6 +266,8 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 
 // GoalFree returns the free vocabulary of a goal, including sorts,
 // symbols, and variables that are not bound in the goal's premises.
+// Symmetric with GoalVocab — when conc is *ast.TemporalModels, extracts
+// conc.Fmla as the formula to scan.
 func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 	bound := make(map[lg.NodeKey]lg.Expr)
 	res := make(map[lg.NodeKey]lg.Expr)
@@ -234,11 +300,10 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 			if _, ok := pg.Formula.(*ast.SchemaBody); ok {
 				rec(pg)
 			} else {
-				conc := GoalConc(pg)
-				recFmla(conc)
+				recFmla(ConcAsExpr(GoalConc(pg)))
 			}
 		}
-		recFmla(GoalConc(g))
+		recFmla(ConcAsExpr(GoalConc(g)))
 		// Remove defns from bound (restore)
 		for d := range defns {
 			delete(bound, d)
@@ -276,15 +341,18 @@ func GoalRemovePrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName strin
 }
 
 // TrivialGoal returns true if the conclusion equals one of the
-// premises modulo alpha conversion.
+// premises modulo alpha conversion. Uses GoalConcExpr because alpha
+// equivalence is defined on lg.Expr; for non-Expr conclusions
+// (e.g., *ast.TemporalModels) the trivial check returns false,
+// matching the conservative behavior of falling through to a deeper check.
 func TrivialGoal(goal *ast.LabeledFormula) bool {
-	conc := GoalConc(goal)
+	conc := GoalConcExpr(goal)
 	if conc == nil {
 		return false
 	}
 	for _, prem := range GoalPremGoals(goal) {
 		if len(GoalPrems(prem)) == 0 {
-			pc := GoalConc(prem)
+			pc := GoalConcExpr(prem)
 			if pc != nil && lu.EqualModAlpha(pc, conc) {
 				return true
 			}
@@ -294,10 +362,12 @@ func TrivialGoal(goal *ast.LabeledFormula) bool {
 }
 
 // CheckConcsMatch checks that the conclusions of two goals match
-// modulo alpha conversion.
+// modulo alpha conversion. Uses GoalConcExpr because EqualModAlpha
+// requires lg.Expr; non-Expr conclusions (e.g., *ast.TemporalModels)
+// fall into the existing nil-check error path.
 func CheckConcsMatch(g1, g2 *ast.LabeledFormula) error {
-	c1 := GoalConc(g1)
-	c2 := GoalConc(g2)
+	c1 := GoalConcExpr(g1)
+	c2 := GoalConcExpr(g2)
 	if c1 == nil || c2 == nil {
 		return &ProofError{Msg: "nil conclusion in goal"}
 	}

@@ -444,8 +444,10 @@ func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFo
 			newMatch = append(newMatch, m)
 			continue
 		}
-		premConc := GoalConc(sprem)
-		gpremConc := GoalConc(gprem)
+		// Premise pattern matching needs lg.Expr; reject TemporalModels premises
+		// (schemata don't apply to temporal-models goals — Python ivy_proof.py:429).
+		premConc := GoalConcExpr(sprem)
+		gpremConc := GoalConcExpr(gprem)
 		if premConc != nil && gpremConc != nil {
 			pats = append(pats, premConc)
 			insts = append(insts, gpremConc)
@@ -488,8 +490,13 @@ func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFo
 // For each ConstantDecl premise, extends the symbol's sort with the given sorts
 // and wraps the match value in a Lambda.
 // Corresponds to Python's parameterize_schema.
+// Schemata never have *ast.TemporalModels conclusions (Python ivy_proof.py:429
+// rejects them via NoMatch). We use GoalConcExpr to enforce this.
 func ParameterizeSchema(cfg *ast.AstConfig, sorts []lg.Sort, schema *ast.LabeledFormula) *ast.LabeledFormula {
-	conc := GoalConc(schema)
+	conc := GoalConcExpr(schema)
+	if conc == nil {
+		return schema
+	}
 	vars := MakeDistinctVars(sorts, conc)
 
 	match := make(map[lg.NodeKey]lg.Expr)
@@ -583,8 +590,9 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
 	if allowWitness {
-		// Extend leftVocab.Variables with used variables from left goal's conclusion
-		conc := GoalConc(leftGoal)
+		// Extend leftVocab.Variables with used variables from left goal's conclusion.
+		// Unwraps *ast.TemporalModels to scan the inner formula.
+		conc := ConcAsExpr(GoalConc(leftGoal))
 		if conc != nil {
 			usedVars := lu.UsedVariables(conc)
 			for _, v := range usedVars {
@@ -642,7 +650,9 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 	}
 	freesyms := copyNodeMap(prob.FreeSyms)
 	if allowWitness {
-		conc := GoalConc(schema)
+		// Unwrap *ast.TemporalModels to scan the inner formula. In practice
+		// schemata don't have TemporalModels conclusions, but unwrapping is safe.
+		conc := ConcAsExpr(GoalConc(schema))
 		if conc != nil {
 			for k, v := range lu.UsedVariables(conc) {
 				freesyms[k] = v
@@ -1066,12 +1076,21 @@ func RenameGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, renaming ast.Node)
 		// Apply match to goal
 		g = ApplyMatchGoalNode(cfg, match, g)
 
-		// Alpha-rename the conclusion
+		// Alpha-rename the conclusion. ApplyToConc unwraps *ast.TemporalModels
+		// so the rename runs on the inner formula and the wrapper is preserved.
 		conc := GoalConc(g)
 		if conc != nil {
-			renamedConc, err := il.AlphaRename(rmap, conc)
-			if err == nil {
-				g = CloneGoal(cfg, g, GoalPrems(g), renamedConc)
+			var renameErr error
+			newConc := ApplyToConc(conc, func(c lg.Expr) lg.Expr {
+				renamed, err := il.AlphaRename(rmap, c)
+				if err != nil {
+					renameErr = err
+					return c
+				}
+				return renamed
+			})
+			if renameErr == nil {
+				g = CloneGoal(cfg, g, GoalPrems(g), newConc)
 			}
 		}
 
@@ -1170,11 +1189,12 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 			newPrems = append(newPrems, p)
 		}
 	}
-	conc := GoalConc(goal)
-	if conc != nil {
-		conc = ApplyMatchAlt(match, conc, nil)
-	}
-	return CloneGoal(cfg, goal, newPrems, conc)
+	// ApplyToConc unwraps *ast.TemporalModels so ApplyMatchAlt runs on the
+	// inner formula; the wrapper is preserved.
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return ApplyMatchAlt(match, c, nil)
+	})
+	return CloneGoal(cfg, goal, newPrems, newConc)
 }
 
 // CompileWitnessList compiles witness terms for existential instantiation.

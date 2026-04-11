@@ -50,12 +50,16 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 		cond = &lg.And{Terms: eqs}
 	}
 
-	// Build subgoal: cond -> original formula
-	conc := GoalConc(goal)
-	if conc == nil {
+	// Build subgoal: cond -> original formula. ApplyToConc unwraps
+	// *ast.TemporalModels so the implication wraps the inner formula and the
+	// TemporalModels stays outermost — mirrors Python goal_apply_to_conc
+	// which delegates to the substitution function (here: building Implies).
+	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "let tactic: goal has no conclusion"}
 	}
-	newConc := &lg.Implies{T1: cond, T2: conc}
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return &lg.Implies{T1: cond, T2: c}
+	})
 	subgoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
 	subgoal.SetLineno(goal.GetLineno())
 
@@ -148,7 +152,8 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		if !ok {
 			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: definition %s not found", defName)}
 		}
-		defConc := GoalConc(defLF)
+		// Definitions are always lg.Expr (never *ast.TemporalModels).
+		defConc := GoalConcExpr(defLF)
 		if defConc != nil {
 			defns = append(defns, defConc)
 		}
@@ -158,12 +163,14 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		return decls, nil
 	}
 
-	// Unfold in the conclusion: replace defined symbols with their definitions
-	conc := GoalConc(goal)
-	if conc == nil {
+	// Unfold in the conclusion. ApplyToConc unwraps *ast.TemporalModels so
+	// the unfold runs on the inner formula and the wrapper is preserved.
+	if GoalConc(goal) == nil {
 		return decls, nil
 	}
-	newConc := unfoldFmla(conc, defns)
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return unfoldFmla(c, defns)
+	})
 	result := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
 	return append([]*ast.LabeledFormula{result}, decls[1:]...), nil
 }
@@ -202,18 +209,22 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 		return nil, &ProofError{Msg: "if tactic: could not convert condition to logic node"}
 	}
 
-	conc := GoalConc(goal)
-	if conc == nil {
+	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "if tactic: goal has no conclusion"}
 	}
 
-	// Build true_goal: C -> G
-	trueConc := &lg.Implies{T1: cond, T2: conc}
+	// Build true_goal: C -> G. ApplyToConc unwraps *ast.TemporalModels so the
+	// implication wraps the inner formula and the temporal wrapper is preserved.
+	trueConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return &lg.Implies{T1: cond, T2: c}
+	})
 	trueGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), trueConc)
 	trueGoal.SetLineno(goal.GetLineno())
 
-	// Build false_goal: ~C -> G
-	falseConc := &lg.Implies{T1: &lg.Not{Body: cond}, T2: conc}
+	// Build false_goal: ~C -> G (same TemporalModels treatment).
+	falseConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return &lg.Implies{T1: &lg.Not{Body: cond}, T2: c}
+	})
 	falseGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), falseConc)
 	falseGoal.SetLineno(goal.GetLineno())
 
@@ -262,16 +273,19 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 		return nil, &ProofError{Msg: "property tactic: could not convert cut formula"}
 	}
 
-	conc := GoalConc(goal)
-	if conc == nil {
+	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "property tactic: goal has no conclusion"}
 	}
 
-	// Create the cut subgoal: prove the cut formula
+	// Create the cut subgoal: prove the cut formula. The cut formula is a plain
+	// lg.Expr (not a TemporalModels) — we don't wrap it.
 	cutGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), cutFormula)
 
-	// Modify the original goal: add cut as premise (cut -> G)
-	modifiedConc := &lg.Implies{T1: cutFormula, T2: conc}
+	// Modify the original goal: add cut as premise (cut -> G). ApplyToConc
+	// unwraps *ast.TemporalModels so the implication wraps the inner formula.
+	modifiedConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return &lg.Implies{T1: cutFormula, T2: c}
+	})
 	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
 
 	// If there's a proof for the cut, apply it
@@ -315,13 +329,15 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 		return nil, &ProofError{Msg: "function tactic: could not convert definition"}
 	}
 
-	conc := GoalConc(goal)
-	if conc == nil {
+	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "function tactic: goal has no conclusion"}
 	}
 
-	// Add the definition as a premise: defn -> G
-	modifiedConc := &lg.Implies{T1: defFormula, T2: conc}
+	// Add the definition as a premise: defn -> G. ApplyToConc unwraps
+	// *ast.TemporalModels so the implication wraps the inner formula.
+	modifiedConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return &lg.Implies{T1: defFormula, T2: c}
+	})
 	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
 
 	return append([]*ast.LabeledFormula{modifiedGoal}, decls[1:]...), nil
@@ -339,8 +355,7 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	}
 	goal := decls[0]
 
-	conc := GoalConc(goal)
-	if conc == nil {
+	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "witness tactic: goal has no conclusion"}
 	}
 
@@ -364,10 +379,13 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 		return decls, nil
 	}
 
-	// Apply witness substitution to the conclusion
+	// Apply witness substitution to the conclusion. ApplyToConc unwraps
+	// *ast.TemporalModels so the witness substitution runs on the inner
+	// formula and the temporal wrapper is preserved.
 	// Python: conc = lu.witness_ast(False, [], wit_map, conc)
-	// This replaces existentially quantified variables with their witnesses.
-	newConc := applyWitness(conc, witMap)
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return applyWitness(c, witMap)
+	})
 
 	prems := GoalPrems(goal)
 	newGoal := CloneGoal(pc.astCfg(), goal, prems, newConc)

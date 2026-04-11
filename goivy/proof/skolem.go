@@ -95,44 +95,60 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 // skfuns accumulates the skolem function constants.
 // If prenex is true, universally quantified variables are collected
 // into a single prenex quantifier.
-func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) lg.Expr {
+//
+// Takes/returns ast.Node so it can handle *ast.TemporalModels (mirroring
+// Python ivy_proof.py:1443-1450). For lg.Expr inputs, behaves identically
+// to the previous lg.Expr-only signature.
+func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) ast.Node {
 	var univs []*lg.Variable
 	var outer []*lg.Variable
 
-	var rec func(lg.Expr, bool) lg.Expr
-	rec = func(fmla lg.Expr, pos bool) lg.Expr {
+	var rec func(ast.Node, bool) ast.Node
+	rec = func(fmla ast.Node, pos bool) ast.Node {
+		// Mirror Python ivy_proof.py:1443-1444:
+		//   if isinstance(fmla,ia.TemporalModels):
+		//       return fmla.clone([rec(fmla.args[0],pos)])
+		if tm, ok := fmla.(*ast.TemporalModels); ok {
+			return tm.Clone([]ast.Node{rec(tm.Args()[0], pos)})
+		}
+
 		switch f := fmla.(type) {
 		case *lg.Not:
-			return &lg.Not{Body: rec(f.Body, !pos)}
+			return &lg.Not{Body: recExpr(rec, f.Body, !pos)}
 		case *lg.Implies:
 			return &lg.Implies{
-				T1: rec(f.T1, !pos),
-				T2: rec(f.T2, pos),
+				T1: recExpr(rec, f.T1, !pos),
+				T2: recExpr(rec, f.T2, pos),
 			}
 		case *lg.And:
 			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
-				terms[i] = rec(t, pos)
+				terms[i] = recExpr(rec, t, pos)
 			}
 			return &lg.And{Terms: terms}
 		case *lg.Or:
 			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
-				terms[i] = rec(t, pos)
+				terms[i] = recExpr(rec, t, pos)
 			}
 			return &lg.Or{Terms: terms}
 		}
 
-		isE := il.IsExists(fmla)
-		isA := il.IsForall(fmla)
+		// IsExists/IsForall take lg.Expr; guard with type assertion.
+		var isE, isA bool
+		if expr, ok := fmla.(lg.Expr); ok {
+			isE = il.IsExists(expr)
+			isA = il.IsForall(expr)
+		}
 
 		// Skolemize: forall in positive / exists in negative position
 		if (isA && pos) || (isE && !pos) {
-			vars := il.BinderVars(fmla)
-			body := il.BinderBody(fmla)
+			expr := fmla.(lg.Expr) // safe because isE/isA imply lg.Expr
+			vars := il.BinderVars(expr)
+			body := il.BinderBody(expr)
 
 			// Collect outer universal variables for the skolem function domain
-			fvs := outerVarsInFormula(fmla, outer)
+			fvs := outerVarsInFormula(expr, outer)
 
 			for _, v := range vars {
 				domSorts := make([]lg.Sort, len(fvs)+1)
@@ -172,8 +188,9 @@ func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 
 		// Universalize: exists in positive / forall in negative position
 		if (isE && pos) || (isA && !pos) {
-			vars := il.BinderVars(fmla)
-			body := il.BinderBody(fmla)
+			expr := fmla.(lg.Expr) // safe because isE/isA imply lg.Expr
+			vars := il.BinderVars(expr)
+			body := il.BinderBody(expr)
 
 			vu := il.NewVariableUniqifier(keysFromRenamer(renamer))
 			for _, v := range vars {
@@ -188,7 +205,7 @@ func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 					body = newBody
 				}
 			}
-			res := rec(body, pos)
+			res := recExpr(rec, body, pos)
 			if !prenex {
 				// Wrap in same quantifier type with the new variables
 				tail := outer[len(outer)-len(vars):]
@@ -205,14 +222,43 @@ func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 	}
 
 	body := rec(fmla, pos)
+	// Final univs wrapping. Mirror Python ivy_proof.py:1447-1453:
+	//   if isinstance(body,ia.TemporalModels):
+	//       body = body.clone([quant(univs,body.args[0])])
+	//   else:
+	//       body = quant(univs,body)
 	if len(univs) > 0 {
-		if pos {
-			body = il.Exists(univs, body)
-		} else {
-			body = il.ForAll(univs, body)
+		if tm, ok := body.(*ast.TemporalModels); ok {
+			innerExpr, _ := tm.Args()[0].(lg.Expr)
+			var quantBody lg.Expr
+			if pos {
+				quantBody = il.Exists(univs, innerExpr)
+			} else {
+				quantBody = il.ForAll(univs, innerExpr)
+			}
+			body = tm.Clone([]ast.Node{quantBody})
+		} else if expr, ok := body.(lg.Expr); ok {
+			if pos {
+				body = il.Exists(univs, expr)
+			} else {
+				body = il.ForAll(univs, expr)
+			}
 		}
 	}
 	return body
+}
+
+// recExpr is a helper that wraps an ast.Node-returning rec function to
+// produce an lg.Expr result by type-asserting. Used inside SkolemizeFmla
+// for the cases that need to construct an lg.Expr (Not, Implies, And, Or).
+// If the recursive result is not lg.Expr (shouldn't happen for these cases),
+// returns the original input as a fallback.
+func recExpr(rec func(ast.Node, bool) ast.Node, fmla lg.Expr, pos bool) lg.Expr {
+	r := rec(fmla, pos)
+	if e, ok := r.(lg.Expr); ok {
+		return e
+	}
+	return fmla
 }
 
 // --- helpers ---
@@ -243,6 +289,9 @@ func outerVarsInFormula(fmla lg.Expr, outer []*lg.Variable) []*lg.Variable {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
+// Mirrors Python ivy_proof.py:1364-1368 var_subst_goal — uses apply_to_conc
+// so the substitution runs on the inner formula of *ast.TemporalModels and
+// the wrapper is preserved.
 func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
@@ -253,14 +302,14 @@ func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.Node
 			newPrems[i] = p
 		}
 	}
-	conc := GoalConc(goal)
-	if conc != nil {
-		newConc, err := lu.Substitute(conc, subs)
-		if err == nil {
-			conc = newConc
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		result, err := lu.Substitute(c, subs)
+		if err != nil {
+			return c
 		}
-	}
-	return CloneGoal(cfg, goal, newPrems, conc)
+		return result
+	})
+	return CloneGoal(cfg, goal, newPrems, newConc)
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.

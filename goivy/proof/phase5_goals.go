@@ -331,8 +331,10 @@ func GoalsEqModAlpha(x, y *ast.LabeledFormula) bool {
 			return false
 		}
 	}
-	xConc := GoalConc(x)
-	yConc := GoalConc(y)
+	// Unwrap *ast.TemporalModels if present so equality compares the inner
+	// formulas. Mirrors Python's duck-typed access via goal_conc.
+	xConc := GoalConcUnwrap(x)
+	yConc := GoalConcUnwrap(y)
 	if xConc == nil || yConc == nil {
 		return xConc == yConc
 	}
@@ -391,17 +393,11 @@ func nodeMapToStringMap(m map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
 	return result
 }
 
-// ApplyToConc applies a function to a goal's conclusion, handling temporal models.
-// Corresponds to Python's apply_to_conc.
-func ApplyToConc(conc lg.Expr, fn func(lg.Expr) lg.Expr) lg.Expr {
-	if nb, ok := conc.(*lg.NamedBinder); ok {
-		if nb.Name == "globally" || nb.Name == "eventually" {
-			newBody := fn(nb.Body)
-			return &lg.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: newBody}
-		}
-	}
-	return fn(conc)
-}
+// (ApplyToConc moved to proof/goal.go and broadened to take ast.Node so it
+// handles *ast.TemporalModels as well as plain lg.Expr conclusions. The old
+// NamedBinder special case for "globally"/"eventually" was redundant —
+// SubstituteAstByName already recurses into NamedBinder bodies — and Python's
+// apply_to_conc only handles TemporalModels (ivy_proof.py:1370-1373).)
 
 // RemoveUnusedDefinitionsGoal removes definitions that aren't referenced
 // in the goal's conclusion.
@@ -412,7 +408,12 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula) *
 	if conc == nil {
 		return goal
 	}
-	usedSyms := module.UsedSymbolsAST(conc)
+	// Unwrap *ast.TemporalModels so symbol scanning sees the inner formula.
+	concExpr := ConcAsExpr(conc)
+	if concExpr == nil {
+		return goal
+	}
+	usedSyms := module.UsedSymbolsAST(concExpr)
 	var newPrems []ast.Node
 	reversed := make([]ast.Node, len(prems))
 	for i, p := range prems {
@@ -539,29 +540,34 @@ func GoalApplyToPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName stri
 	return nil
 }
 
-// GoalApplyToConc applies a function to the conclusion of a goal.
-// Corresponds to Python's goal_apply_to_conc.
-func GoalApplyToConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, fn func(lg.Expr) lg.Expr) *ast.LabeledFormula {
-	return CloneGoal(cfg, goal, GoalPrems(goal), fn(GoalConc(goal)))
-}
+// (GoalApplyToConc moved to proof/goal.go. The new version takes
+// fn func(ast.Node) ast.Node — fn is responsible for handling any concrete
+// type, OR the caller wraps fn with ApplyToConc to get TemporalModels
+// unwrapping for free.)
 
 // CloseUnmatched universally quantifies unmatched free variables in the conclusion.
 // Corresponds to Python's close_unmatched.
+// For *ast.TemporalModels conclusions, the quantifiers are placed inside
+// the TemporalModels wrapper via ApplyToConc.
 func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
-	conc := GoalConc(goal)
-	if conc == nil {
+	rawConc := GoalConc(goal)
+	if rawConc == nil {
+		return goal
+	}
+	concExpr := ConcAsExpr(rawConc)
+	if concExpr == nil {
 		return goal
 	}
 	premVars := make(map[lg.NodeKey]bool)
 	for _, pg := range GoalPremGoals(goal) {
-		pgConc := GoalConc(pg)
-		if pgConc != nil {
-			for _, v := range module.VariablesAST(pgConc) {
+		pgConcExpr := ConcAsExpr(GoalConc(pg))
+		if pgConcExpr != nil {
+			for _, v := range module.VariablesAST(pgConcExpr) {
 				premVars[lg.Key(v)] = true
 			}
 		}
 	}
-	concVars := module.VariablesAST(conc)
+	concVars := module.VariablesAST(concExpr)
 	var toClose []*lg.Variable
 	for _, v := range concVars {
 		k := lg.Key(v)
@@ -571,10 +577,13 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 			}
 		}
 	}
-	for i := len(toClose) - 1; i >= 0; i-- {
-		conc = il.ForAll([]*lg.Variable{toClose[i]}, conc)
-	}
-	return CloneGoal(cfg, goal, GoalPrems(goal), conc)
+	newConc := ApplyToConc(rawConc, func(c lg.Expr) lg.Expr {
+		for i := len(toClose) - 1; i >= 0; i-- {
+			c = il.ForAll([]*lg.Variable{toClose[i]}, c)
+		}
+		return c
+	})
+	return CloneGoal(cfg, goal, GoalPrems(goal), newConc)
 }
 
 // DropSuppliedPrems removes premises from schema that are supplied by goal.

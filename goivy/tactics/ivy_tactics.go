@@ -232,9 +232,9 @@ func ApplyTempind(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.No
 	}
 
 	// Python: conc = pr.goal_conc(goal)
-	// GoalConc returns nil for TemporalModels since it's not lg.Expr.
-	// Check the formula directly for TemporalModels.
-	conc := proof.GoalConc(goal)
+	// GoalConc now returns ast.Node so it can carry *ast.TemporalModels.
+	// Check the formula directly for TemporalModels first; otherwise use
+	// GoalConcExpr to get the lg.Expr conclusion.
 	fmlaNode := goal.Formula
 
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
@@ -255,7 +255,11 @@ func ApplyTempind(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.No
 		newFmla = tm.Clone([]ast.Node{transformed})
 	} else {
 		// Python: fmla = tempind_fmla(conc, cond, params)
-		newFmla = TempindFmla(conc, cond, params, nil)
+		concExpr := proof.GoalConcExpr(goal)
+		if concExpr == nil {
+			return nil, fmt.Errorf("tempind: goal conclusion is not an lg.Expr")
+		}
+		newFmla = TempindFmla(concExpr, cond, params, nil)
 	}
 
 	// Python: return pr.clone_goal(goal, pr.goal_prems(goal), fmla)
@@ -326,7 +330,6 @@ func ApplyTempcase(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.N
 	// params are the variables (LHS of each let), used as vs in tempcase_fmla
 	vs := params
 
-	conc := proof.GoalConc(goal)
 	fmlaNode := goal.Formula
 
 	var newFmla ast.Node
@@ -341,7 +344,11 @@ func ApplyTempcase(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.N
 		}
 		newFmla = tm.Clone([]ast.Node{transformed})
 	} else {
-		transformed, err := TempcaseFmla(conc, cond, vs, proofNode)
+		concExpr := proof.GoalConcExpr(goal)
+		if concExpr == nil {
+			return nil, fmt.Errorf("tempcase: goal conclusion is not an lg.Expr")
+		}
+		transformed, err := TempcaseFmla(concExpr, cond, vs, proofNode)
 		if err != nil {
 			return nil, err
 		}
@@ -368,11 +375,7 @@ func Vcgen(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNo
 
 	// Python: if not isinstance(conc, ivy_ast.TemporalModels) or not lg.is_true(conc.fmla):
 	//            raise iu.IvyError(self, 'vcgen tactic applies only to safety properties')
-	concNode, ok := conc.(ast.Node)
-	if !ok {
-		return nil, fmt.Errorf("vcgen tactic applies only to safety properties")
-	}
-	tm, ok := concNode.(*ast.TemporalModels)
+	tm, ok := conc.(*ast.TemporalModels)
 	if !ok {
 		return nil, fmt.Errorf("vcgen tactic applies only to safety properties")
 	}

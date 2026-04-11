@@ -229,8 +229,10 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// Find the TemporalModels in the goal
 	tm := l2s.FindTemporalModels(goal)
 	if tm == nil {
-		// Fall back to GoalConc check
-		conc := proof.GoalConc(goal)
+		// Fall back to GoalConc check; only lg.Expr conclusions can be
+		// "temporal formulas" (the alternative is *ast.TemporalModels which
+		// FindTemporalModels would have caught above).
+		conc := proof.GoalConcExpr(goal)
 		if conc == nil {
 			return nil, fmt.Errorf("goal has no conclusion")
 		}

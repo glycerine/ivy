@@ -109,8 +109,16 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 		constants[lg.Key(v)] = v
 	}
 
-	schemaConc := GoalConc(schema)
-	declConc := GoalConc(decl)
+	// Schemata don't apply to *ast.TemporalModels goals; mirror Python
+	// ivy_proof.py:429 which raises NoMatch in this case.
+	if _, isTM := GoalConc(schema).(*ast.TemporalModels); isTM {
+		return nil
+	}
+	if _, isTM := GoalConc(decl).(*ast.TemporalModels); isTM {
+		return nil
+	}
+	schemaConc := GoalConcExpr(schema)
+	declConc := GoalConcExpr(decl)
 	if schemaConc == nil || declConc == nil {
 		return nil
 	}
@@ -193,8 +201,10 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 }
 
 // GoalFreeVars returns the free variables of a goal's conclusion.
+// Unwraps *ast.TemporalModels via ConcAsExpr — mirrors Python's
+// duck-typed access to free variables across temporal goals.
 func GoalFreeVars(g *ast.LabeledFormula) []*lg.Variable {
-	conc := GoalConc(g)
+	conc := GoalConcUnwrap(g)
 	if conc == nil {
 		return nil
 	}
