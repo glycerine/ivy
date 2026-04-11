@@ -16,7 +16,6 @@ import (
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/l2s"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/mc"
 	"github.com/glycerine/ivy/goivy/module"
@@ -589,7 +588,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		// C5 / Python ivy_check.py:406-407 (and ivy_l2s.py:1310-1313):
 		// Apply the module's trace hook (set by l2s) for temporal property
 		// diagnostics. The hook is opaque (interface{}) — we type-assert
-		// it to *l2s.L2STraceHookData and dispatch by Kind.
+		// it to *L2STraceHookData and dispatch by Kind.
 		//
 		// NOTE: the existing L2S hook functions in l2s_hooks.go operate on
 		// *trace.TraceBase, not check.MatchHandler. The bridge between these
@@ -597,12 +596,12 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		// hook kind and apply renaming where possible. Full bridging is
 		// tracked as a follow-up to Phase 7.
 		if mod.TraceHook != nil {
-			if data, ok := mod.TraceHook.(*l2s.L2STraceHookData); ok {
+			if data, ok := mod.TraceHook.(*L2STraceHookData); ok {
 				switch data.Kind {
-				case l2s.HookKindFull:
+				case HookKindFull:
 					// L2STraceHook marks the loop start in a trace.TraceBase.
 					// Not applicable to MatchHandler directly; tracked as a TODO.
-				case l2s.HookKindRenaming, l2s.HookKindAuto:
+				case HookKindRenaming, HookKindAuto:
 					// Renaming hook: build the inverse map and rename
 					// symbols in handler.Lines for readability.
 					if data.Subs != nil {
@@ -610,7 +609,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 					}
 					// Auto hook diagnostics print task-specific information;
 					// dispatch to a stub that uses tasks/triggers.
-					if data.Kind == l2s.HookKindAuto && data.Tasks != nil {
+					if data.Kind == HookKindAuto && data.Tasks != nil {
 						applyL2SAutoDiagnostics(handler, ffcs, data)
 					}
 				}
@@ -1132,7 +1131,7 @@ func applyTemporalTacticChain(prover interface{}, goals []*ast.LabeledFormula, p
 	}
 	// Python: l2s_pf = proof.clone([proof.args[0], TacticLets()] + list(proof.args[2:]))
 	l2sPf := cloneProofWithTacticLets(proofNode)
-	goals, err = l2s.L2STacticFull(pc, goals, l2sPf)
+	goals, err = L2STacticFull(pc, goals, l2sPf)
 	if err != nil {
 		return nil, err
 	}
@@ -1170,7 +1169,7 @@ func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
 	tactics.RegisterProofTactics(proofCfg)
 	// Register temporal and l2s tactics — Python does this at import time.
 	temporal.RegisterTactics(proofCfg)
-	l2s.RegisterTactics(proofCfg)
+	RegisterL2STactics(proofCfg)
 }
 
 // Start is the entry point for the ivy_check command.

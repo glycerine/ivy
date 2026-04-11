@@ -560,8 +560,8 @@ func TestL2STacticWithLets(t *testing.T) {
 	// Since we can't easily create a proper temporal goal here,
 	// we verify the error from the conclusion check instead.
 	cfg := &L2STacticConfig{
-		Goals: []*ast.LabeledFormula{testAstCfg.NewLabeledFormula(nil, testAstCfg.NewAtom("true"))},
-		Proof: &ProofDecl{TacticLets: []ast.Node{testAstCfg.NewAtom("x")}},
+		Goals: []*ast.LabeledFormula{rankingTestAstCfg.NewLabeledFormula(nil, rankingTestAstCfg.NewAtom("true"))},
+		Proof: &ProofDecl{TacticLets: []ast.Node{rankingTestAstCfg.NewAtom("x")}},
 	}
 	_, err := RankingL2STactic(cfg)
 	if err == nil {
