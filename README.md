@@ -2603,21 +2603,16 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-254983  go : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=TemporalModels
-        py : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=TemporalModels
-
-254984  go : XTRACE: proof.tacticTactic name='skolemize' goal[0].Formula type=TemporalModels
-        py : XTRACE: proof.tacticTactic name='skolemize' goal[0].Formula type=TemporalModels
-
-254985  go : XTRACE: ast.LF.__init__ id=2248 counter=2249
-        py : XTRACE: ast.LF.__init__ id=2248 counter=2249
-
-254986  go : XTRACE: ast.LF.__init__ id=2249 counter=2250
-        py : XTRACE: ast.LF.__init__ id=2249 counter=2250
-
-254987  go : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=nil
+254987  go : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=SchemaBody
         py : XTRACE: proof.composeProofs step=1/2 proofType=TacticTactic goal[0].Formula type=SchemaBody
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 254987, counting from 0.
+254988  go : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=SchemaBody
+        py : XTRACE: proof.ApplyProof ENTER proofType=TacticTactic goal[0].Formula type=SchemaBody
+
+254989  go : XTRACE: proof.tacticTactic name='l2s_auto2' goal[0].Formula type=SchemaBody
+        py : XTRACE: proof.tacticTactic name='l2s_auto2' goal[0].Formula type=SchemaBody
+
+254990  go : XTRACE: l2s.l2sTacticInt ENTER tactic="l2s_auto" ngoals=1 goal.Formula type=SchemaBody
+        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
 ~~~
 
