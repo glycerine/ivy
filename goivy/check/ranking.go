@@ -349,11 +349,11 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			model.Asms[i] = acfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
 		}
 		for i, b := range model.Bindings {
-			newStmt := TransformAction(b.Action.Stmt, transform)
+			newStmt := transformAction(b.Action.Stmt, transform)
 			model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
 		}
 		if model.Init != nil {
-			model.Init = TransformAction(model.Init, transform)
+			model.Init = transformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
 			invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
@@ -407,7 +407,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	idleParts = append(idleParts, icfg.ResetW...)
 	idleParts = append(idleParts, icfg.AddConstsToD...)
 
-	idleAction := SetLineno(actions.ConcatActions(idleParts...), lineno)
+	idleAction := setLineno(actions.ConcatActions(idleParts...), lineno)
 	idleAction.SetFormalParams(nil)
 	idleAction.SetFormalReturns(nil)
 
@@ -429,7 +429,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	rankingInitActions = append(rankingInitActions, icfg.ResetW...)
 	rankingInitActions = append(rankingInitActions, icfg.AssumeGAxioms...)
 	rankingInitActions = append(rankingInitActions, icfg.AssumeInitAxioms...)
-	rankingInitActions = append(rankingInitActions, SetLineno(actions.NewAssumeAction(icfg.NotLf), lineno))
+	rankingInitActions = append(rankingInitActions, setLineno(actions.NewAssumeAction(icfg.NotLf), lineno))
 
 	if model.Init != nil {
 		model.Init = actions.PostfixAction(model.Init, rankingInitActions)

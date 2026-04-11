@@ -726,27 +726,33 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		return nil, err
 	}
 
-	// C5 / Python ivy_l2s.py:1310-1313: attach a trace hook to the result
-	// goal so that the check package can route diagnostics on failure.
-	// The hook is opaque (interface{}); check/ type-asserts it to
-	// *l2s.L2STraceHookData.
+	// C5 / Python ivy_l2s.py:1310-1313: attach a trace hook closure to the
+	// result goal so the check trace formatter can run diagnostics on
+	// failure. The closure captures cfg.Subs/Tasks/Triggers by reference;
+	// the field on LabeledFormula is interface{} only because ast cannot
+	// import check (cycle).
 	if len(result) > 0 && result[0] != nil {
-		if strings.HasPrefix(tacticName, "l2s_auto5") {
-			result[0].TraceHook = &L2STraceHookData{
-				Kind:     HookKindAuto,
-				Subs:     cfg.Subs,
-				Tasks:    cfg.Tasks,
-				Triggers: cfg.Triggers,
-			}
-		} else if strings.HasPrefix(tacticName, "l2s_auto") {
-			result[0].TraceHook = &L2STraceHookData{
-				Kind: HookKindRenaming,
-				Subs: cfg.Subs,
-			}
-		} else if tacticName == "l2s_full" {
-			result[0].TraceHook = &L2STraceHookData{
-				Kind: HookKindFull,
-			}
+		subs := cfg.Subs
+		tasks := cfg.Tasks
+		triggers := cfg.Triggers
+		switch {
+		case strings.HasPrefix(tacticName, "l2s_auto5"):
+			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+				if subs != nil {
+					applyRenamingToHandler(handler, subs)
+				}
+				applyAutoDiagnosticsToHandler(handler, fcs, tasks, triggers)
+			})
+		case strings.HasPrefix(tacticName, "l2s_auto"):
+			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+				if subs != nil {
+					applyRenamingToHandler(handler, subs)
+				}
+			})
+		case tacticName == "l2s_full":
+			// No MatchHandler-side hook for l2s_full — Python's trace_hook
+			// marks loop_start on a trace.TraceBase, which we don't build
+			// in this path. Leave TraceHook nil.
 		}
 	}
 	return result, nil
@@ -906,36 +912,6 @@ func IsSavedSymbol(name string) bool {
 // IsL2SSymbol returns true if a symbol name is an L2S auxiliary symbol.
 func IsL2SSymbol(name string) bool {
 	return strings.HasPrefix(name, "l2s_")
-}
-
-// TemporalAndL2S checks if a symbol is temporal-related or L2S-related.
-func TemporalAndL2S(sym *lg.Const) bool {
-	return (strings.HasPrefix(sym.Name, "l2s") && !strings.HasPrefix(sym.Name, "l2s_g")) ||
-		strings.HasPrefix(sym.Name, "_old_l2s")
-}
-
-// L2SGToGlobally converts l2s_g named binders back to Globally operators.
-func L2SGToGlobally(n lg.Expr) lg.Expr {
-	if nb, ok := n.(*lg.NamedBinder); ok && nb.Name == "l2s_g" {
-		return &lg.Globally{Environ: nb.Environ, Body: L2SGToGlobally(nb.Body)}
-	}
-	children := n.Children()
-	if len(children) == 0 {
-		return n
-	}
-	newChildren := make([]lg.Expr, len(children))
-	changed := false
-	for i, c := range children {
-		nc := L2SGToGlobally(c)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return n
-	}
-	return il.CloneNode(n, newChildren)
 }
 
 // Desugar replaces $was and $happened named binders with L2S equivalents.

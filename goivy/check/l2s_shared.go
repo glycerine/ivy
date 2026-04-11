@@ -1,8 +1,7 @@
-// l2s_shared.go contains the L2S instrumentation pipeline steps that are
-// shared between the l2s tactic and the ranking tactic.
-//
-// Each SharedStep* function corresponds to a numbered step in l2sTacticInt.
-// The InstrumentationConfig struct carries all state between steps.
+// l2s_shared.go contains the L2S instrumentation pipeline steps used by
+// the L2S and ranking tactics. Each SharedStep* function corresponds to a
+// numbered step in l2sTacticInt. The InstrumentationConfig struct carries
+// all state between steps.
 package check
 
 import (
@@ -68,98 +67,6 @@ type L2sGTriple = l2sGTriple
 
 // VarBodyPair holds a pair of variables and a body expression.
 type VarBodyPair = varBodyPair
-
-// --- Exported helper functions used by both tactics ---
-
-// TransformAction walks an action tree, applying transform to all lg.Expr leaves.
-func TransformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
-	return transformAction(act, transform)
-}
-
-// CollectAllNamedBinders collects all named binders from a NormalProgram.
-func CollectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.NamedBinder {
-	return collectAllNamedBinders(model)
-}
-
-// SortedSymbols returns the sorted constants from a signature.
-func SortedSymbols(sig *il.Sig) []*lg.Const {
-	return sortedSymbols(sig)
-}
-
-// ApplyNB applies a named binder to arguments.
-func ApplyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
-	return applyNB(nb, args...)
-}
-
-// VarsToNodes converts a slice of *lg.Variable to []lg.Expr.
-func VarsToNodes(vs []*lg.Variable) []lg.Expr {
-	return varsToNodes(vs)
-}
-
-// Forall wraps body in a ForAll if vs is non-empty.
-func Forall(vs []*lg.Variable, body lg.Expr) lg.Expr {
-	return forall(vs, body)
-}
-
-// MakeAnd creates an And node from terms, or lg.True if empty.
-func MakeAnd(terms ...lg.Expr) lg.Expr {
-	return makeAnd(terms...)
-}
-
-// SetLineno sets the location on an action and returns it.
-func SetLineno(a actions.Action, loc ast.Location) actions.Action {
-	return setLineno(a, loc)
-}
-
-// L2sW creates an l2s_w named binder (exported version).
-func ExportL2sW(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
-	return l2sW(vs, t, label)
-}
-
-// L2sS creates an l2s_s named binder (exported version).
-func ExportL2sS(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
-	return l2sS(vs, t, label)
-}
-
-// L2sG creates an l2s_g named binder (exported version).
-func ExportL2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
-	return l2sG(vs, t, environ)
-}
-
-// OldL2sG creates an _old_l2s_g named binder (exported version).
-func ExportOldL2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
-	return oldL2sG(vs, t, environ)
-}
-
-// L2sInit creates an l2s_init named binder (exported version).
-func ExportL2sInit(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
-	return l2sInit(vs, t, label)
-}
-
-// L2sWhen creates an l2s_when named binder (exported version).
-func ExportL2sWhen(name string, vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
-	return l2sWhen(name, vs, t, label)
-}
-
-// L2sOld creates an l2s_old named binder (exported version).
-func ExportL2sOld(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
-	return l2sOld(vs, t, label)
-}
-
-// StrPtr returns a pointer to a string.
-func StrPtr(s string) *string {
-	return strPtr(s)
-}
-
-// ApplyL2sInit applies l2s_init, handling negation.
-func ExportApplyL2sInit(vs []*lg.Variable, t lg.Expr, label string) lg.Expr {
-	return applyL2sInit(vs, t, label)
-}
-
-// DedupeVarBodyPairs removes duplicate VarBodyPairs.
-func DedupeVarBodyPairs(pairs []VarBodyPair) []VarBodyPair {
-	return dedupeVarBodyPairs(pairs)
-}
 
 // SharedStep1_ConvertTemporals converts temporal operators to named binders.
 // This is Step 1 of l2sTacticInt. It populates cfg.L2sGs, cfg.L2sWhensSet,
