@@ -185,6 +185,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	// Python lines 146-159: inner function spaa(decl, subst, pref)
 	spaa := func(decl ast.Node, subst map[string]string, spPref *ast.Atom) ast.Node {
 		xtracer.Trace("parser.spaa ENTER")
+
 		localSubst := subst
 		// Python: if modname is not None and pref is not None and isinstance(decl, ModuleDecl):
 		//             subst = subst.copy()
@@ -210,6 +211,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		if refLineno != (ast.Location{}) {
 			cfg.SetReferenceLineno(ast.Location{})
 		}
+		xtracer.Trace("parser.spaa EXIT res=%v", res.Canon())
 		return res
 	}
 
