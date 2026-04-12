@@ -27,6 +27,7 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // --- Formula helpers ---
@@ -363,19 +364,37 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
 	// matching Python ivy_ranking.py:526-527 where each `transform(x)` ends
 	// up calling `LF.clone(args)` via the recursive `ast.clone` dispatch.
-	modPass := func(transform func(lg.Expr) lg.Expr) {
+	modPass := func(transformName string, transform func(lg.Expr) lg.Expr) {
+		if xtracer.Enabled {
+			nPropPrems := 0
+			for _, p := range prems {
+				if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+					nPropPrems++
+				}
+			}
+			xtracer.Trace("ranking.modPass ENTER transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d nPostconds=%d",
+				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems, len(postconds))
+		}
 		for i, inv := range model.Invars {
+			xtracer.Trace("ranking.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
 			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			xtracer.Trace("ranking.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
 		}
 		for i, asm := range model.Asms {
+			xtracer.Trace("ranking.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
 			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			xtracer.Trace("ranking.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
 		}
 		for i, b := range model.Bindings {
+			xtracer.Trace("ranking.modPass clone binding[%d] ENTER name=%s", i, b.Name)
 			newStmt := transformAction(b.Action.Stmt, transform)
 			model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+			xtracer.Trace("ranking.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {
+			xtracer.Trace("ranking.modPass clone init ENTER")
 			model.Init = transformAction(model.Init, transform)
+			xtracer.Trace("ranking.modPass clone init EXIT")
 		}
 		// Python ivy_ranking.py:532: list_transform(prems, transform)
 		for i, p := range prems {
@@ -384,19 +403,37 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 				continue
 			}
 			if e, ok := lf.Formula.(lg.Expr); ok {
+				xtracer.Trace("ranking.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
 				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
+				xtracer.Trace("ranking.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
 			}
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
+			xtracer.Trace("ranking.modPass clone postcond[%d] ENTER HASH canon=%v", i, pc.Canon())
 			postconds[i] = pc.Clone([]ast.Node{pc.Label, transform(pc.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			xtracer.Trace("ranking.modPass clone postcond[%d] EXIT HASH canon=%v", i, postconds[i].Canon())
+		}
+		if xtracer.Enabled {
+			nPropPrems := 0
+			for _, p := range prems {
+				if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+					nPropPrems++
+				}
+			}
+			xtracer.Trace("ranking.modPass EXIT transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d nPostconds=%d",
+				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems, len(postconds))
 		}
 	}
 
 	// ---------------------------------------------------------------
 	// Step 1: Convert temporal operators to named binders (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep1 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep1_ConvertTemporals(icfg, model, modPass)
+	xtracer.Trace("ranking.SharedStep1 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// Normalize named binders in postconds (already done for model by SharedStep1)
 	// (SharedStep1 calls modPass which handles postconds)
@@ -404,10 +441,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 3: Collect named binders from conjectures + postconds (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep3 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep3_CollectNamedBinders(icfg, model, false)
+	xtracer.Trace("ranking.SharedStep3 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// Build save/wait/reset_w
+	xtracer.Trace("ranking.SharedBuildSaveAndWait ENTER")
 	SharedBuildSaveAndWait(icfg)
+	xtracer.Trace("ranking.SharedBuildSaveAndWait EXIT")
 
 	// Build addConstsToD
 	icfg.AddConstsToD = BuildAddConstsToD(m, uninterpretedSorts, lineno)
@@ -415,17 +458,29 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 6: Tableau construction (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep6 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep6_BuildTableau(icfg)
+	xtracer.Trace("ranking.SharedStep6 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// ---------------------------------------------------------------
 	// Step 7: Action instrumentation (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep7_InstrumentActions(icfg, model)
+	xtracer.Trace("ranking.SharedStep7 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// ---------------------------------------------------------------
 	// Step 8: Patch exported actions (shared, ranking mode: with postconds)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep8 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep8_PatchExports(icfg, model)
+	xtracer.Trace("ranking.SharedStep8 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// ---------------------------------------------------------------
 	// Step 9: Idle action (ranking-specific: no monitor, no fair cycle)
@@ -467,11 +522,17 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 11: Replace named binders (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep11 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	SharedStep11_ReplaceNamedBinders(icfg, model, modPass)
+	xtracer.Trace("ranking.SharedStep11 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("ranking.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	if tm != nil {
 		result, err := SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
 		if err != nil {

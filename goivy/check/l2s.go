@@ -523,7 +523,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata, matching
 	// Python's recursive `LF.clone(args)` dispatch from
 	// replace_temporals_by_named_binder_g_ast (ivy_logic_utils.py:322).
-	modPass := func(transform func(lg.Expr) lg.Expr) {
+	modPass := func(transformName string, transform func(lg.Expr) lg.Expr) {
 		if xtracer.Enabled {
 			nPropPrems := 0
 			for _, p := range prems {
@@ -531,21 +531,29 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 					nPropPrems++
 				}
 			}
-			xtracer.Trace("l2s.modPass ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d",
-				len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems)
+			xtracer.Trace("l2s.modPass ENTER transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d",
+				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems)
 		}
 		for i, inv := range model.Invars {
+			xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
 			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
 		}
 		for i, asm := range model.Asms {
+			xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
 			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
 		}
 		for i, b := range model.Bindings {
+			xtracer.Trace("l2s.modPass clone binding[%d] ENTER name=%s", i, b.Name)
 			newStmt := transformAction(b.Action.Stmt, transform)
 			model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+			xtracer.Trace("l2s.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {
+			xtracer.Trace("l2s.modPass clone init ENTER")
 			model.Init = transformAction(model.Init, transform)
+			xtracer.Trace("l2s.modPass clone init EXIT")
 		}
 		// M7: list_transform on property prems.
 		for i, p := range prems {
@@ -554,15 +562,31 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 				continue
 			}
 			if e, ok := lf.Formula.(lg.Expr); ok {
+				xtracer.Trace("l2s.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
 				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
+				xtracer.Trace("l2s.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
 			}
+		}
+		if xtracer.Enabled {
+			nPropPrems := 0
+			for _, p := range prems {
+				if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+					nPropPrems++
+				}
+			}
+			xtracer.Trace("l2s.modPass EXIT transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d",
+				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems)
 		}
 	}
 
 	// ---------------------------------------------------------------
 	// Step 1: Convert temporal operators to named binders (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep1 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep1_ConvertTemporals(cfg, model, modPass)
+	xtracer.Trace("l2s.SharedStep1 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	if cfg.Mod.Cfg.L2SDebug {
 		fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
@@ -590,10 +614,16 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// Step 3: Collect used l2s_w and l2s_s from conjectures (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep3 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep3_CollectNamedBinders(cfg, model, full)
+	xtracer.Trace("l2s.SharedStep3 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// Build save/wait/reset_w from collected binders
+	xtracer.Trace("l2s.SharedBuildSaveAndWait ENTER")
 	SharedBuildSaveAndWait(cfg)
+	xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT")
 
 	// ---------------------------------------------------------------
 	// Step 4: Fair cycle check (l2s-specific)
@@ -720,17 +750,29 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// Step 6: Tableau construction (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep6 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep6_BuildTableau(cfg)
+	xtracer.Trace("l2s.SharedStep6 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// ---------------------------------------------------------------
 	// Step 7: Action instrumentation (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep7_InstrumentActions(cfg, model)
+	xtracer.Trace("l2s.SharedStep7 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// ---------------------------------------------------------------
 	// Step 8: Patch exported actions (shared, l2s mode: no postconds)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep8 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep8_PatchExports(cfg, model)
+	xtracer.Trace("l2s.SharedStep8 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// ---------------------------------------------------------------
 	// Step 9: Idle action (l2s-specific)
@@ -775,7 +817,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// Step 11: Replace named binders (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep11 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep11_ReplaceNamedBinders(cfg, model, modPass)
+	xtracer.Trace("l2s.SharedStep11 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// M2 / Python ivy_l2s.py:1308: remove unused definitions from goal.
 	goal = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, goal)
@@ -783,7 +829,10 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
+	xtracer.Trace("l2s.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
+		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	result, err := SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
+	xtracer.Trace("l2s.SharedStep12 EXIT nResults=%d err=%v", len(result), err)
 	if err != nil {
 		return nil, err
 	}
@@ -845,6 +894,7 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 	if act == nil {
 		return nil
 	}
+	xtracer.Trace("transformAction ENTER type=%s", iu.ShortTypeName(act))
 	// Python always clones: ast.clone(args) even when args are unchanged.
 	// (replace_temporals_by_named_binder_g_ast line 322, normalize_named_binders line 277)
 	args := act.ActionArgs()
@@ -858,7 +908,9 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 			newArgs[i] = a
 		}
 	}
-	return act.ActionClone(newArgs)
+	result := act.ActionClone(newArgs)
+	xtracer.Trace("transformAction EXIT type=%s", iu.ShortTypeName(result))
+	return result
 }
 
 func extractNormalProgram(m *module.Module) *temporal.NormalProgram {

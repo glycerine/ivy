@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -885,7 +886,9 @@ func NormalizeFreeVariablesTuple(asts ...logic.Expr) ([]*logic.Variable, []*logi
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
 func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
+	xtracer.Trace("ilu.normalizeNamedBinders ENTER type=%s HASH canon=%s", iu.ShortTypeName(ast), ast.Sexp())
 	if _, ok := ast.(*logic.Const); ok {
+		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s const", iu.ShortTypeName(ast))
 		return ast
 	}
 	if nb, ok := ast.(*logic.NamedBinder); ok {
@@ -906,7 +909,9 @@ func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 			}
 			body := NormalizeNamedBinders(nb.Body, names)
 			body = SubstituteByName(body, subs)
-			return &logic.NamedBinder{Name: nb.Name, Variables: nvs, Environ: nb.Environ, Body: body}
+			result := &logic.NamedBinder{Name: nb.Name, Variables: nvs, Environ: nb.Environ, Body: body}
+			xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s binder HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+			return result
 		}
 	}
 	// For Apply nodes, normalize the func part too
@@ -916,10 +921,13 @@ func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 		for i, t := range app.Terms {
 			newTerms[i] = NormalizeNamedBinders(t, names)
 		}
-		return logic.MustApply(newFunc, newTerms...)
+		result := logic.MustApply(newFunc, newTerms...)
+		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 	}
 	children := ast.Children()
 	if len(children) == 0 {
+		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s leaf", iu.ShortTypeName(ast))
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
@@ -932,9 +940,12 @@ func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 		}
 	}
 	if !changed {
+		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s unchanged", iu.ShortTypeName(ast))
 		return ast
 	}
-	return cloneNode(ast, newChildren)
+	result := cloneNode(ast, newChildren)
+	xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+	return result
 }
 
 // --- Temporal -> NamedBinder conversion ---
@@ -983,17 +994,22 @@ func ReplaceTemporalsByNamedBinder(ast logic.Expr, g GloballyBinderFunc, when Wh
 }
 
 func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFunc) logic.Expr {
+	xtracer.Trace("ilu.replaceTemporalsRec ENTER type=%s HASH canon=%s", iu.ShortTypeName(ast), ast.Sexp())
 	switch t := ast.(type) {
 	case *logic.Globally:
 		body := replaceTemporalsRec(t.Body, g, when)
 		vs, nvs, body := NormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
-		return applyNamedBinder(nb, varsToNodes(vs))
+		result := applyNamedBinder(nb, varsToNodes(vs))
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 
 	case *logic.Eventually:
 		notBody := &logic.Not{Body: t.Body}
 		glob := &logic.Globally{Environ: t.Environ, Body: notBody}
-		return replaceTemporalsRec(&logic.Not{Body: glob}, g, when)
+		result := replaceTemporalsRec(&logic.Not{Body: glob}, g, when)
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 
 	case *logic.WhenOperator:
 		val := replaceTemporalsRec(t.T1, g, when)
@@ -1001,7 +1017,9 @@ func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFu
 		body := &logic.Cond{CSort: val.NodeSort(), T1: cond, T2: val}
 		vs, nvs, nbody := NormalizeFreeVariables(body)
 		nb := when(t.Name, nvs, nbody)
-		return applyNamedBinder(nb, varsToNodes(vs))
+		result := applyNamedBinder(nb, varsToNodes(vs))
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 
 	case *logic.Apply:
 		if nb, ok := t.Func.(*logic.NamedBinder); ok && nb.Name == "l2s_init" {
@@ -1013,38 +1031,52 @@ func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFu
 			if notBody, ok := body.(*logic.Not); ok {
 				newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: notBody.Body}
 				inner := logic.MustApply(newNB, newArgs...)
-				return &logic.Not{Body: inner}
+				result := &logic.Not{Body: inner}
+				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init_not HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+				return result
 			}
 			newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: body}
-			return logic.MustApply(newNB, newArgs...)
+			result := logic.MustApply(newNB, newArgs...)
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+			return result
 		}
 		newFunc := replaceTemporalsRec(t.Func, g, when)
 		newTerms := make([]logic.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newTerms[i] = replaceTemporalsRec(a, g, when)
 		}
-		return logic.MustApply(newFunc, newTerms...)
+		result := logic.MustApply(newFunc, newTerms...)
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 
 	case *logic.Not:
 		body := replaceTemporalsRec(t.Body, g, when)
 		if inner, ok := body.(*logic.Not); ok {
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s doubleNeg HASH canon=%s", iu.ShortTypeName(inner.Body), inner.Body.Sexp())
 			return inner.Body
 		}
-		return &logic.Not{Body: body}
+		result := &logic.Not{Body: body}
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s not HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 
 	case *logic.NamedBinder:
 		if t.Name == "l2s_init" {
 			body := replaceTemporalsRec(t.Body, g, when)
 			if notBody, ok := body.(*logic.Not); ok {
 				newNB := &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: notBody.Body}
-				return &logic.Not{Body: newNB}
+				result := &logic.Not{Body: newNB}
+				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init_not HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+				return result
 			}
-			return &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: body}
+			result := &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: body}
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+			return result
 		}
 	}
 
 	children := ast.Children()
 	if len(children) == 0 {
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s leaf", iu.ShortTypeName(ast))
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
@@ -1057,9 +1089,12 @@ func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFu
 		}
 	}
 	if !changed {
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s unchanged", iu.ShortTypeName(ast))
 		return ast
 	}
-	return cloneNode(ast, newChildren)
+	result := cloneNode(ast, newChildren)
+	xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+	return result
 }
 
 func varsToNodes(vars []*logic.Variable) []logic.Expr {
@@ -1129,11 +1164,14 @@ func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 // subs maps NamedBinder string keys to replacement nodes.
 // Named binders inside other named binders are NOT replaced.
 func ReplaceNamedBindersAst(ast logic.Expr, subs map[string]logic.Expr) logic.Expr {
+	xtracer.Trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s", iu.ShortTypeName(ast), ast.Sexp())
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		key := nb.String()
 		if rep, found := subs[key]; found {
+			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", iu.ShortTypeName(rep), rep.Sexp())
 			return rep
 		}
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False", iu.ShortTypeName(ast))
 		return ast
 	}
 	if app, ok := ast.(*logic.Apply); ok {
@@ -1148,10 +1186,13 @@ func ReplaceNamedBindersAst(ast logic.Expr, subs map[string]logic.Expr) logic.Ex
 				newFunc = rep
 			}
 		}
-		return logic.MustApply(newFunc, newTerms...)
+		result := logic.MustApply(newFunc, newTerms...)
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+		return result
 	}
 	children := ast.Children()
 	if len(children) == 0 {
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s leaf", iu.ShortTypeName(ast))
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
@@ -1164,9 +1205,12 @@ func ReplaceNamedBindersAst(ast logic.Expr, subs map[string]logic.Expr) logic.Ex
 		}
 	}
 	if !changed {
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s unchanged", iu.ShortTypeName(ast))
 		return ast
 	}
-	return cloneNode(ast, newChildren)
+	result := cloneNode(ast, newChildren)
+	xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Sexp())
+	return result
 }
 
 // --- ExpandNamedBindersAst ---

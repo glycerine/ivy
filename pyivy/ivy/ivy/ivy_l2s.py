@@ -756,18 +756,33 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     #         print 'orig binder: {} {} {}'.format(b.name,b.environ,b.body)
 
     # model pass helper funciton
-    def mod_pass(transform):
-        if __debug__: 
+    def mod_pass(transform, name=""):
+        if __debug__:
             nPropPrems = sum(1 for p in prems if ipr.goal_is_property(p))
-            xtracer.trace("l2s.modPass ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems), nPropPrems))
+            xtracer.trace("l2s.modPass ENTER transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d" % (name, len(model.invars), len(model.asms), len(model.bindings), len(prems), nPropPrems))
 
-        model.invars = [transform(x) for x in model.invars]
-        model.asms = [transform(x) for x in model.asms]
+        for i, inv in enumerate(model.invars):
+            if __debug__: xtracer.trace("l2s.modPass clone invar[%d] ENTER HASH canon=%s" % (i, inv.canon() if hasattr(inv,'canon') else str(inv)))
+            model.invars[i] = transform(inv)
+            if __debug__: xtracer.trace("l2s.modPass clone invar[%d] EXIT HASH canon=%s" % (i, model.invars[i].canon() if hasattr(model.invars[i],'canon') else str(model.invars[i])))
+        for i, asm in enumerate(model.asms):
+            if __debug__: xtracer.trace("l2s.modPass clone asm[%d] ENTER HASH canon=%s" % (i, asm.canon() if hasattr(asm,'canon') else str(asm)))
+            model.asms[i] = transform(asm)
+            if __debug__: xtracer.trace("l2s.modPass clone asm[%d] EXIT HASH canon=%s" % (i, model.asms[i].canon() if hasattr(model.asms[i],'canon') else str(model.asms[i])))
         # TODO: what about axioms and properties?
         newb = []
-        model.bindings = [b.clone([transform(b.action)]) for b in model.bindings]
+        for i, b in enumerate(model.bindings):
+            if __debug__: xtracer.trace("l2s.modPass clone binding[%d] ENTER name=%s" % (i, b.name if hasattr(b,'name') else ''))
+            model.bindings[i] = b.clone([transform(b.action)])
+            if __debug__: xtracer.trace("l2s.modPass clone binding[%d] EXIT name=%s" % (i, b.name if hasattr(b,'name') else ''))
+        if __debug__: xtracer.trace("l2s.modPass clone init ENTER")
         model.init = transform(model.init)
+        if __debug__: xtracer.trace("l2s.modPass clone init EXIT")
         list_transform(prems,transform)
+
+        if __debug__:
+            nPropPrems = sum(1 for p in prems if ipr.goal_is_property(p))
+            xtracer.trace("l2s.modPass EXIT transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d" % (name, len(model.invars), len(model.asms), len(model.bindings), len(prems), nPropPrems))
 
     # We first convert all temporal operators to named binders, so
     # it's possible to normalize them. Otherwise we won't have the
@@ -792,7 +807,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         l2s_whens.add(res)
         return res
     replace_temporals_by_l2s_g = lambda ast: ilu.replace_temporals_by_named_binder_g_ast(ast, _l2s_g, _l2s_when)
-    mod_pass(replace_temporals_by_l2s_g)
+    if __debug__: xtracer.trace("l2s.SharedStep1 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+    mod_pass(replace_temporals_by_l2s_g, "ReplaceTemporals")
 
     not_lf = replace_temporals_by_l2s_g(lg.Not(fmla))
     if debug.get():
@@ -805,7 +821,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         print("=" * 80 + "\n"*3)
 
     # now we normalize all named binders
-    mod_pass(ilu.normalize_named_binders)
+    mod_pass(ilu.normalize_named_binders, "NormalizeNamedBinders")
+    if __debug__: xtracer.trace("l2s.SharedStep1 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     if debug.get():
         print("=" * 80 +"\nafter normalize_named_binders"+ "\n"*3)
         print(model)
@@ -827,6 +844,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # TODO: add conjectures that constants are in d and a
 
     # figure out which l2s_w and l2s_s are used in conjectures
+    if __debug__: xtracer.trace("l2s.SharedStep3 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     named_binders_conjs = defaultdict(list) # dict mapping names to lists of (vars, body)
     ntprems = [x for x in prems if ipr.goal_is_property(x)
                and not (hasattr(x,'temporal') and x.temporal)]
@@ -870,6 +888,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     to_wait += named_binders_conjs['l2s_w']
     to_save = [] # list of (variables, term) corresponding to l2s_s in conjectures
     to_save += named_binders_conjs['l2s_s']
+    if __debug__: xtracer.trace("l2s.SharedStep3 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
 
     if debug.get():
         print("=" * 40 + "\nto_wait:\n")
@@ -879,6 +898,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             print()
         print("=" * 40)
 
+    if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait ENTER")
     save_state = [
         AssignAction(l2s_s(vs,t)(*vs), t).set_lineno(lineno)
         for vs, t in to_save
@@ -900,7 +920,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     print ('reset_w:')
     for x in reset_w:
         print (x)
-        
+    if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait EXIT")
+
     fair_cycle = [l2s_saved]
     fair_cycle += done_waiting
     # projection of relations
@@ -997,6 +1018,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             print(vs, t, '\n')
         print('='*40)
 
+    if __debug__: xtracer.trace("l2s.SharedStep6 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     assume_g_axioms = [
         AssumeAction(forall(vs, lg.Implies(l2s_g(vs, t, env)(*vs), t))).set_lineno(lineno)
         for vs, t, env in to_g
@@ -1142,9 +1164,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         wait = l2s_w(vs,t)
         for sym in ilu.symbols_ilu_ast(t):
             symwaits[sym].append(wait)
+    if __debug__: xtracer.trace("l2s.SharedStep6 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+    if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     actions = dict((b.name,b.action) for b in model.bindings)
     # lines = dict(zip(gprops,gproplines))
-            
+
     def instr_stmt(stmt,labels):
 
         # A call statement that modifies a monitored symbol as to be split
@@ -1210,9 +1234,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     model.bindings = [b.clone([b.action.clone([instr_stmt(b.action.stmt,b.action.labels)])])
                       for b in model.bindings]
     
+    if __debug__: xtracer.trace("l2s.SharedStep7 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     # Now, for every exported action, we add the l2s construction. On
     # exit of each external procedure, we add a tableau event for all
     # the operators whose scope is being exited.
+    if __debug__: xtracer.trace("l2s.SharedStep8 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     #
     # TODO: This is wrong in the case of an exported procedure that is
     # also internally called.  We do *not* want to update the tableau
@@ -1247,6 +1273,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             b.action.stmt.copy_formals(stmt) # HACK: This shouldn't be needed
             b.action = b.action.clone([stmt])
 
+    if __debug__: xtracer.trace("l2s.SharedStep8 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+
     # The idle action handles automaton state update and cycle checking
 
     idle_action = concat_actions(*(
@@ -1280,6 +1308,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         print("=" * 80 + "\n"*3)
 
     # now replace all named binders by fresh relations
+    if __debug__: xtracer.trace("l2s.SharedStep11 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
 
     named_binders = defaultdict(list) # dict mapping names to lists of (vars, body)
     for b in ilu.named_binders_asts(chain(
@@ -1307,7 +1336,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         for k, v in list(subs.items()):
             print(k, ' : ', v, '\n')
         print("=" * 80 + "\n"*3)
-    mod_pass(lambda ast: ilu.replace_named_binders_ast(ast, subs))
+    mod_pass(lambda ast: ilu.replace_named_binders_ast(ast, subs), "ReplaceNamedBindersAst")
+    if __debug__: xtracer.trace("l2s.SharedStep11 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
 
     if debug.get():
         print("=" * 80 + "\nafter replace_named_binders" + "\n"*3)
@@ -1325,11 +1355,13 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         b.action.stmt.formal_returns = b.action.outputs
 
     # Change the conclusion formula to M |= true
+    if __debug__: xtracer.trace("l2s.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     conc = ivy_ast.TemporalModels(model,lg.And())
 
     # Build the new goal
     non_temporal_prems = [x for x in prems if not (hasattr(x,'temporal') and x.temporal)]
     goal = ipr.clone_goal(goal,non_temporal_prems,conc)
+    if __debug__: xtracer.trace("l2s.SharedStep12 EXIT nResults=1 err=None")
 
     goal = ipr.remove_unused_definitions_goal(goal)
 

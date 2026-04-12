@@ -73,7 +73,7 @@ type VarBodyPair = varBodyPair
 // cfg.ReplaceTemporals, and cfg.NotLf.
 //
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
-func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Expr) lg.Expr)) {
+func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(lg.Expr) lg.Expr)) {
 	cfg.L2sGs = make(map[string]L2sGTriple)
 	cfg.L2sWhensSet = make(map[string]*lg.NamedBinder)
 
@@ -105,11 +105,11 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		)
 	}
 
-	modPass(cfg.ReplaceTemporals)
+	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
 	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla})
 
 	// Normalize named binders
-	modPass(func(n lg.Expr) lg.Expr {
+	modPass("NormalizeNamedBinders", func(n lg.Expr) lg.Expr {
 		return lu.NormalizeNamedBinders(n, nil)
 	})
 }
@@ -562,7 +562,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 }
 
 // SharedStep11_ReplaceNamedBinders replaces named binders with fresh relation constants.
-func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Expr) lg.Expr)) {
+func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(lg.Expr) lg.Expr)) {
 	namedBinders := collectAllNamedBinders(model)
 
 	// Ensure _old_l2s_g is consistent with l2s_g
@@ -587,7 +587,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 		}
 	}
 
-	modPass(func(n lg.Expr) lg.Expr {
+	modPass("ReplaceNamedBindersAst", func(n lg.Expr) lg.Expr {
 		return lu.ReplaceNamedBindersAst(n, subs)
 	})
 
