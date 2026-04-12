@@ -148,6 +148,11 @@ type MatchHandler struct {
 	// formatter and consumed by the GUI analysis graph (currently a stub in
 	// phase7.go GuiArt). Mirrors Python handler.is_cti (ivy_check.py:401-403).
 	IsCti *module.Clauses
+
+	// HiddenSymbols, when non-nil, returns true for symbol names that
+	// should be hidden in trace output. Mirrors Python tr.hidden_symbols
+	// (set by l2s diagnostic hooks to filter l2s_* auxiliary symbols).
+	HiddenSymbols func(name string) bool
 }
 
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's

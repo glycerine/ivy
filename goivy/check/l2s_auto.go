@@ -705,10 +705,17 @@ func l2sAutoInvariants(
 		lastEvStart = evStart
 	}
 
-	// C4 final / Python ivy_l2s.py:545-546: emit global l2s_not_all_done as
+	// C4 final / Python ivy_l2s.py:567-568: ALWAYS emit l2s_not_all_done as
 	// the OR of all (remaining) accumulated per-task predicates.
-	if len(notAllDonePreds) > 0 {
-		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", buildOrExpr(notAllDonePreds))
+	// Python: tmp = lg.Or(*not_all_done_preds) — empty Or = false.
+	{
+		var nadExpr lg.Expr
+		if len(notAllDonePreds) > 0 {
+			nadExpr = buildOrExpr(notAllDonePreds)
+		} else {
+			nadExpr = lg.False
+		}
+		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", nadExpr)
 	}
 
 	// C14 / Python ivy_l2s.py:548-550: l2s_sched_exists invariant for auto5.

@@ -260,11 +260,18 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	}
 
 	// assume_when_axioms
+	// Python ivy_l2s.py:1005-1008:
+	//   AssumeAction(forall(when.variables, lg.Implies(when.body.t1, lg.Eq(when(*when.variables), when.body.t2))))
+	// when.body is a Cond(condition, value); decompose T1=condition, T2=value.
 	cfg.AssumeWhenAxioms = nil
 	for _, when := range cfg.L2sWhensSet {
+		cond, ok := when.Body.(*lg.Cond)
+		if !ok {
+			continue
+		}
 		inner := forall(when.Variables, &lg.Implies{
-			T1: when.Body,
-			T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: when.Body},
+			T1: cond.T1,
+			T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: cond.T2},
 		})
 		cfg.AssumeWhenAxioms = append(cfg.AssumeWhenAxioms,
 			setLineno(actions.NewAssumeAction(inner), cfg.Lineno))
@@ -357,12 +364,18 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		return pre, post
 	}
 
+	// Python ivy_l2s.py:1070-1085: when_events.
+	// when.body is a Cond(condition, value); decompose T1=cond, T2=val.
 	whenEventsFunc := func(whens map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
 		var pre, post []actions.Action
 		for _, when := range whens {
+			condVal, ok := when.Body.(*lg.Cond)
+			if !ok {
+				continue
+			}
 			vs := when.Variables
+			cond := condVal.T1
 			if when.Name == "l2s_whennext" {
-				cond := when.Body
 				oldcond := applyNB(l2sOld(vs, cond, cfg.ProofLabel), varsToNodes(vs)...)
 				pre = append(pre, setLineno(actions.NewAssignAction(oldcond, cond), lineno))
 				post = append(post, setLineno(actions.NewIfAction(
@@ -371,7 +384,6 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				), lineno))
 			}
 			if when.Name == "l2s_whenprev" {
-				cond := when.Body
 				post = append(post, setLineno(actions.NewIfAction(
 					cond,
 					actions.NewHavocAction(applyNB(when, varsToNodes(vs)...)),
@@ -379,11 +391,15 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			}
 		}
 		for _, when := range whens {
+			condVal, ok := when.Body.(*lg.Cond)
+			if !ok {
+				continue
+			}
 			post = append(post,
 				actions.NewAssumeAction(forall(when.Variables,
 					&lg.Implies{
-						T1: when.Body,
-						T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: when.Body},
+						T1: condVal.T1,
+						T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: condVal.T2},
 					})))
 		}
 		return pre, post
