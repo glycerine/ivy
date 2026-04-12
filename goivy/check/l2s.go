@@ -390,10 +390,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 
 		// C6: compile user invariants and seed `invars` (Python line 175).
-		// Use Clone to preserve the inv's id and metadata, mirroring Python's
-		// LF.clone semantics inside compile_with_goal_vocab + label_temporal.
+		// Pass inv (the whole LF, not inv.Formula) so CompileNode dispatches
+		// to CompileLF which clones with PRESERVE — matching Python's
+		// inv.compile() → _labeled_formula_cmpl → self.clone([...]).
 		for _, inv := range tacticInvars {
-			compiled := proof.CompileWithGoalVocab(inv.Formula, goal)
+			compiled := proof.CompileWithGoalVocab(inv, goal, m)
 			if compiled == nil {
 				continue
 			}

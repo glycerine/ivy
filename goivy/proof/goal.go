@@ -5,6 +5,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // Vocab represents the vocabulary of a goal: the sorts, symbols, and variables
@@ -380,25 +381,13 @@ func CheckConcsMatch(g1, g2 *ast.LabeledFormula) error {
 // --- helpers ---
 
 // CompileWithGoalVocab compiles an expression using the vocabulary of a goal.
-// This is a simplified version that returns the expression's formula as a
-// logic.Expr, performing sort inference within the goal's vocabulary context.
-// Corresponds to Python compile_with_goal_vocab (ivy_proof.py:1453-1457).
-func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Expr {
-	// For expressions that are already logic.Nodes, return directly
-	if n, ok := expr.(lg.Expr); ok {
-		return n
-	}
-	// For LabeledFormulas, extract the formula
-	if lf, ok := expr.(*ast.LabeledFormula); ok {
-		if n, ok := lf.Formula.(lg.Expr); ok {
-			return n
-		}
-	}
-	// For other AST nodes, try to compile via the vocabulary
+// Corresponds to Python compile_with_goal_vocab (ivy_proof.py:1461-1465):
+//
+//	the_goal_vocab = goal_vocab(goal)
+//	return compile_expr_vocab_ext(expr, the_goal_vocab)
+func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula, mod *module.Module) lg.Expr {
 	vocab := GoalVocab(goal)
-	_ = vocab
-	// Fallback: return nil if we can't compile
-	return nil
+	return CompileExprVocabExt(expr, vocab, mod)
 }
 
 // CompileDefinitionGoalVocab compiles a definition and adds it to the goal
