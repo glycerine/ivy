@@ -2607,5 +2607,5 @@ Estimated People Required 26.621735
         py : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
 
 260353  go : XTRACE: CallAction.__init__ uniqueID=700 counter=701
-        py : XTRACE: ast.LF.clone PRESERVE origid=226 counter=2306        
+        py : XTRACE: ast.LF.clone PRESERVE origid=226 counter=2306
 ~~~
