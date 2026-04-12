@@ -29,13 +29,13 @@ class AST(object):
     def __init__(self,*args):
         self.args = args
     def clone(self,args):
-       if __debug__: xtracer.trace("ast.clone ENTER type=%s HASH canon=%s" % (type(self).__name__, self.canon() if hasattr(self,'canon') else str(self)))
+       #if __debug__: xtracer.trace("ast.clone ENTER type=%s HASH canon=%s" % (type(self).__name__, self.canon() if hasattr(self,'canon') else str(self)))
        res = type(self)(*args)
        if hasattr(self,'lineno'):
 #           if reference_lineno:
 #               print 'cloning'.format(self)
            res.lineno = lineno_add_ref(self.lineno)
-       if __debug__: xtracer.trace("ast.clone EXIT type=%s HASH canon=%s" % (type(self).__name__, res.canon() if hasattr(res,'canon') else str(res)))
+       #if __debug__: xtracer.trace("ast.clone EXIT type=%s HASH canon=%s" % (type(self).__name__, res.canon() if hasattr(res,'canon') else str(res)))
        return res
     def sln(self,lineno):
         self.lineno = lineno
