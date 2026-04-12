@@ -236,10 +236,12 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 
 // ComposeAtomsGeneric composes two nodes (Atom or App) faithfully matching
 // Python's compose_atoms(pr, atom):
-//   hname = pr.rep if isinstance(atom.rep, This) else compose_names(pr.rep, atom.rep)
-//   args = pr.args + atom.args
-//   res = type(atom)(hname, args)
-//   copy_attributes_ast(atom, res)
+//
+//	hname = pr.rep if isinstance(atom.rep, This) else compose_names(pr.rep, atom.rep)
+//	args = pr.args + atom.args
+//	res = type(atom)(hname, args)
+//	copy_attributes_ast(atom, res)
+//
 // The result type matches the second argument's type.
 func ComposeAtomsGeneric(pr, atom Node) Node {
 	if atom == nil {
@@ -839,13 +841,11 @@ func AstRewriteSlice(nodes []Node, rewrite AstRewriter) []Node {
 //	return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
 func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
 	// Python: po = variables_distinct_ast(pref, ast) if pref else pref
-	var po *Atom
+	var po *Atom = pref
 	if pref != nil {
 		renamed := VariablesDistinctAst(pref, node)
 		if a, ok := renamed.(*Atom); ok {
 			po = a
-		} else {
-			po = pref
 		}
 	}
 	if subst == nil {
