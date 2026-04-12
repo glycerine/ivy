@@ -290,6 +290,13 @@ func CheckTemporals(mod *module.Module) error {
 	pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
 	pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
 	pcAxioms = append(pcAxioms, mod.AssumedInvs...)
+
+	// Diagnostic: dump axioms fed to the temporal proof checker
+	xtracer.Trace("check.CheckTemporals axiomDump nAxioms=%d nLabeledAxioms=%d nAssumedInvs=%d", len(pcAxioms), len(mod.LabeledAxioms), len(mod.AssumedInvs))
+	for idx, ax := range pcAxioms {
+		xtracer.Trace("check.CheckTemporals axiomDump[%d] HASH canon=%v", idx, ax.Canon())
+	}
+
 	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 	// Build ACL config if unchecked properties file is specified

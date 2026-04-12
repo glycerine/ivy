@@ -129,7 +129,12 @@ def check_temporals():
     mod = im.module
     props = mod.labeled_props
     pmap = dict((prop.id,p) for prop,p in mod.proofs)
-    pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants,mod.definitions,mod.schemata)
+    _ct_axioms = mod.labeled_axioms+mod.assumed_invariants
+    # Diagnostic: dump axioms fed to the temporal proof checker
+    if __debug__: xtracer.trace("check.CheckTemporals axiomDump nAxioms=%d nLabeledAxioms=%d nAssumedInvs=%d" % (len(_ct_axioms), len(mod.labeled_axioms), len(mod.assumed_invariants)))
+    for idx, ax in enumerate(_ct_axioms):
+        if __debug__: xtracer.trace("check.CheckTemporals axiomDump[%d] HASH canon=%s" % (idx, ax.canon()))
+    pc = ivy_proof.ProofChecker(_ct_axioms,mod.definitions,mod.schemata)
     for prop in props:
         if prop.temporal:
             if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):

@@ -331,6 +331,12 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 
+	// Diagnostic: dump all axioms via Canon() for golden comparison
+	xtracer.Trace("l2s.l2sTacticInt axiomDump nAxioms=%d", len(pc.GetAxioms()))
+	for idx, ax := range pc.GetAxioms() {
+		xtracer.Trace("l2s.l2sTacticInt axiomDump[%d] HASH canon=%v", idx, ax.Canon())
+	}
+
 	// Add assumed globally properties to model assumptions
 	// H13: preserve the original axiom label (Python ivy_l2s.py:132).
 	// Use Clone (not NewLabeledFormula) to preserve the axiom's id and

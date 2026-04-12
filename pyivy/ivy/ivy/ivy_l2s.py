@@ -125,7 +125,12 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         raise iu.IvyError(proof,'tactic does not take lets')
 
     # Get all the temporal properties from the prover environment as assumptions
-    
+
+    # Diagnostic: dump all axioms via canon() for golden comparison
+    if __debug__: xtracer.trace("l2s.l2sTacticInt axiomDump nAxioms=%d" % len(prover.axioms))
+    for idx, ax in enumerate(prover.axioms):
+        if __debug__: xtracer.trace("l2s.l2sTacticInt axiomDump[%d] HASH canon=%s" % (idx, ax.canon()))
+
     # Add all the assumed invariants to the model
 
     assumed_gprops = [x for x in prover.axioms if not x.explicit and x.temporal and isinstance(x.formula,lg.Globally)]
