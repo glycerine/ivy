@@ -739,7 +739,12 @@ def compile_expr_vocab(expr,vocab):
                 return il.sig.sorts[expr.rep]
             with il.top_sort_as_default():
                 with ia.ASTContext(expr):
-                    expr = il.sort_infer_list([expr.compile()] + vocab.variables)[0]
+                    compiled_list = [expr.compile()] + vocab.variables
+                    if __debug__: xtracer.trace("compileExprVocabLF SortInferList ENTER nterms=%d" % len(compiled_list))
+                    inferred = il.sort_infer_list(compiled_list)
+                    if __debug__: xtracer.trace("compileExprVocabLF CLONE BEFORE")
+                    expr = inferred[0]
+                    if __debug__: xtracer.trace("compileExprVocabLF CLONE AFTER")
                     return expr
 
 

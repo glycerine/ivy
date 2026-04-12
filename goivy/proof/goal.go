@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
@@ -624,16 +625,24 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 		for _, v := range vocab.Variables {
 			terms = append(terms, v)
 		}
+		xtracer.Trace("compileExprVocabLF SortInferList ENTER nterms=%d", len(terms))
 		inferred, err := il.SortInferList(terms, nil, nil)
+		if err != nil {
+			xtracer.Trace("compileExprVocabLF SortInferList ERR=%v", err)
+		}
 		if err == nil && len(inferred) > 0 {
 			// Python: concretize_terms returns t.clone(inferred_args) for
 			// AST nodes with clone. Match by cloning the LabeledFormula
 			// with the sort-inferred formula, producing the matching
 			// ast.LF.clone PRESERVE trace.
+			xtracer.Trace("compileExprVocabLF CLONE BEFORE")
 			cloneArgs := compiled.Args()
 			cloneArgs[1] = inferred[0]
 			compiled = compiled.Clone(cloneArgs).(*ast.LabeledFormula)
+			xtracer.Trace("compileExprVocabLF CLONE AFTER")
 		}
+	} else {
+		xtracer.Trace("compileExprVocabLF FORMULA_NOT_EXPR type=%s", iu.ShortTypeName(compiled.Formula))
 	}
 
 	return compiled, nil
