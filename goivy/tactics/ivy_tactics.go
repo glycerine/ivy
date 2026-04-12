@@ -175,7 +175,7 @@ func compileTacticLets(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode a
 	}
 
 	// Python: vocab = pr.goal_vocab(goal, bound=True)
-	vocab := proof.GoalVocab(goal)
+	vocab := proof.GoalVocabBound(goal)
 
 	// Python: defs = [pr.compile_expr_vocab(ivy_ast.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.tactic_lets]
 	var defs []lg.Expr

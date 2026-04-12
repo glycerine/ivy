@@ -41,16 +41,20 @@ func IsGoal(g ast.Node) bool {
 
 // GoalsSubst substitutes multiple subgoals into the first goal's conclusion.
 // Corresponds to Python's goals_subst.
-func GoalsSubst(cfg *ast.AstConfig, goals []*ast.LabeledFormula, subgoals []*ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
+func GoalsSubst(cfg *ast.AstConfig, goals []*ast.LabeledFormula, subgoals []*ast.LabeledFormula, loc ast.Location) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 || len(subgoals) == 0 {
-		return goals
+		return goals, nil
 	}
 	var result []*ast.LabeledFormula
 	for _, sg := range subgoals {
-		result = append(result, GoalSubst(cfg, goals[0], sg, loc))
+		sub, err := GoalSubst(cfg, goals[0], sg, loc)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, sub)
 	}
 	result = append(result, goals[1:]...)
-	return result
+	return result, nil
 }
 
 // FreshLabel generates a fresh unique label not used in any goal.
@@ -175,13 +179,16 @@ func GetUnprovidedDefns(g1, g2 *ast.LabeledFormula) []ast.Node {
 
 // GoalSubgoals extracts subgoals from a schema instantiation.
 // Corresponds to Python's goal_subgoals.
-func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
+func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.Location) ([]*ast.LabeledFormula, error) {
 	if err := CheckConcsMatch(schema, goal); err != nil {
-		return nil
+		return nil, err
 	}
 	upds := GetUnprovidedDefns(schema, goal)
 	g := CloneGoal(cfg, goal, upds, GoalConc(goal))
-	resultGoal := GoalSubst(cfg, goal, g, loc)
+	resultGoal, err := GoalSubst(cfg, goal, g, loc)
+	if err != nil {
+		return nil, err
+	}
 
 	gpms := GoalPremGoals(resultGoal)
 
@@ -195,13 +202,16 @@ func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.
 			}
 		}
 		if !alreadyPresent {
-			sg := GoalSubst(cfg, resultGoal, sp, loc)
+			sg, err := GoalSubst(cfg, resultGoal, sp, loc)
+			if err != nil {
+				return nil, err
+			}
 			if !TrivialGoal(sg) {
 				subgoals = append(subgoals, sg)
 			}
 		}
 	}
-	return subgoals
+	return subgoals, nil
 }
 
 // FmlaVocab gets the free vocabulary of a formula, including sorts, symbols, and variables.

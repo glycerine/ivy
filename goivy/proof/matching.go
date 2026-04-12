@@ -179,7 +179,7 @@ func DetectNonceSymbols(prob *MatchProblem) error {
 // GoalSubgoalsFromSchema computes the subgoals remaining after matching a schema to a goal.
 //
 // Python: ivy_proof.py:634-643
-func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal *ast.LabeledFormula) []*ast.LabeledFormula {
+func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal *ast.LabeledFormula) ([]*ast.LabeledFormula, error) {
 	goalPremGoals := GoalPremGoals(goal)
 	goalPremNames := make(map[string]bool, len(goalPremGoals))
 	for _, pg := range goalPremGoals {
@@ -194,10 +194,13 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 		if TrivialGoal(pg) {
 			continue
 		}
-		sub := GoalSubst(cfg, goal, pg, goal.GetLineno())
+		sub, err := GoalSubst(cfg, goal, pg, goal.GetLineno())
+		if err != nil {
+			return nil, err
+		}
 		subgoals = append(subgoals, sub)
 	}
-	return subgoals
+	return subgoals, nil
 }
 
 // GoalFreeVars returns the free variables of a goal's conclusion.

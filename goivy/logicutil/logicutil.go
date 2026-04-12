@@ -613,7 +613,9 @@ func equalModAlphaRec(t, u logic.Expr, m1, m2 *pushableMap, n int) bool {
 	return true
 }
 
-// FreeVariablesList returns free variables as a slice in DFS first-occurrence order.
+// FreeVariablesList returns free variables as a slice in sorted NodeKey order
+// (alphabetical). Use VariablesAstList when DFS first-occurrence order is needed
+// (matching Python's list(iu.unique(ilu.variables_ast(t)))).
 func FreeVariablesList(t logic.Expr) []*logic.Variable {
 	fv := FreeVariables(t)
 	result := make([]*logic.Variable, 0, fv.Len())
@@ -623,6 +625,64 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 		}
 	}
 	return result
+}
+
+// VariablesAstList returns the free variables of t in DFS first-occurrence
+// order, matching Python's list(iu.unique(ilu.variables_ast(t))).
+// This is the Go equivalent of Python ivy_logic_utils.py:474-486 variables_ast
+// wrapped with iu.unique (ivy_utils.py:48-55).
+func VariablesAstList(t logic.Expr) []*logic.Variable {
+	var result []*logic.Variable
+	seen := make(map[logic.NodeKey]bool)
+	variablesAstRec(t, &result, seen, nil)
+	return result
+}
+
+func variablesAstRec(t logic.Expr, result *[]*logic.Variable, seen map[logic.NodeKey]bool, bound map[logic.NodeKey]bool) {
+	switch n := t.(type) {
+	case *logic.Variable:
+		k := logic.Key(n)
+		if !bound[k] && !seen[k] {
+			seen[k] = true
+			*result = append(*result, n)
+		}
+	case *logic.ForAll:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstRec(n.Body, result, seen, newBound)
+	case *logic.Exists:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstRec(n.Body, result, seen, newBound)
+	case *logic.Lambda:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstRec(n.Body, result, seen, newBound)
+	case *logic.NamedBinder:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstRec(n.Body, result, seen, newBound)
+	default:
+		for _, c := range t.Children() {
+			variablesAstRec(c, result, seen, bound)
+		}
+	}
+}
+
+func copyBoolKeySet(s map[logic.NodeKey]bool) map[logic.NodeKey]bool {
+	r := make(map[logic.NodeKey]bool, len(s))
+	for k, v := range s {
+		r[k] = v
+	}
+	return r
 }
 
 // --- helpers ---

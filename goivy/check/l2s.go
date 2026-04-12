@@ -299,9 +299,16 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		return nil, fmt.Errorf("l2s: proof goal is not temporal")
 	}
 
-	// Extract the model (NormalProgram) and formula
+	// Extract the model (NormalProgram) and formula.
+	// Python ivy_l2s.py:121: model = conc.model.clone([])
+	// Clone from the goal's embedded model, not rebuilt from module,
+	// to preserve binding order and snapshot from goal-construction time.
 	m := pc.GetModule()
-	model := extractNormalProgram(m)
+	np, npOk := tm.Model.(*temporal.NormalProgram)
+	if !npOk {
+		return nil, fmt.Errorf("l2s: TemporalModels.Model is not a NormalProgram (got %T)", tm.Model)
+	}
+	model := temporal.NormalProgramClone(np)
 	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
 		return nil, fmt.Errorf("l2s: could not extract temporal formula from goal")
@@ -475,7 +482,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// `expr.clone(...)` recursion in desugar.
 	for i, inv := range invars {
 		if expr, ok := inv.Formula.(lg.Expr); ok {
-			invars[i] = inv.Clone([]ast.Node{inv.Label, Desugar(expr, proofLabel)}).(*ast.LabeledFormula)
+			desugared, err := Desugar(expr, proofLabel)
+			if err != nil {
+				return nil, err
+			}
+			invars[i] = inv.Clone([]ast.Node{inv.Label, desugared}).(*ast.LabeledFormula)
 		}
 	}
 
@@ -953,38 +964,50 @@ func IsL2SSymbol(name string) bool {
 }
 
 // Desugar replaces $was and $happened named binders with L2S equivalents.
-func Desugar(expr lg.Expr, proofLabel string) lg.Expr {
+// Python ivy_l2s.py:717-735.
+func Desugar(expr lg.Expr, proofLabel string) (lg.Expr, error) {
 	l2sSaved := L2SSaved()
 
 	if nb, ok := expr.(*lg.NamedBinder); ok {
 		if nb.Name == "was" {
-			return &lg.And{Terms: []lg.Expr{l2sSaved, applyWasRec(nb.Body, proofLabel)}}
+			// Python: if len(expr.variables) > 0: raise IvyError(...)
+			if len(nb.Variables) > 0 {
+				return nil, fmt.Errorf("operator 'was' does not take parameters")
+			}
+			return &lg.And{Terms: []lg.Expr{l2sSaved, applyWasRec(nb.Body, proofLabel)}}, nil
 		} else if nb.Name == "happened" {
-			vs := lu.FreeVariablesList(nb.Body)
+			// Python: if len(expr.variables) > 0: raise IvyError(...)
+			if len(nb.Variables) > 0 {
+				return nil, fmt.Errorf("operator 'happened' does not take parameters")
+			}
+			vs := lu.VariablesAstList(nb.Body)
 			return &lg.And{Terms: []lg.Expr{
 				l2sSaved,
 				&lg.Not{Body: applyNB(l2sW(vs, nb.Body, proofLabel), varsToNodes(vs)...)},
-			}}
+			}}, nil
 		}
 	}
 
 	children := expr.Children()
 	if len(children) == 0 {
-		return expr
+		return expr, nil
 	}
 	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
-		nc := Desugar(c, proofLabel)
+		nc, err := Desugar(c, proofLabel)
+		if err != nil {
+			return nil, err
+		}
 		newChildren[i] = nc
 		if nc != c {
 			changed = true
 		}
 	}
 	if !changed {
-		return expr
+		return expr, nil
 	}
-	return il.CloneNode(expr, newChildren)
+	return il.CloneNode(expr, newChildren), nil
 }
 
 func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
@@ -1008,7 +1031,7 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 	case *lg.Iff:
 		return &lg.Iff{T1: applyWasRec(t.T1, proofLabel), T2: applyWasRec(t.T2, proofLabel)}
 	}
-	vs := lu.FreeVariablesList(expr)
+	vs := lu.VariablesAstList(expr)
 	return applyNB(l2sS(vs, expr, proofLabel), varsToNodes(vs)...)
 }
 

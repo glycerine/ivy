@@ -374,7 +374,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 	if prob.SchemaLF == nil {
 		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
-	return GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal), nil
+	return GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal)
 }
 
 // InstSchema instantiates a schema against a goal using the given match.

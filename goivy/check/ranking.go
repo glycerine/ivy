@@ -270,14 +270,22 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// matching Python's `expr.clone(...)` recursion in desugar
 	// (ivy_ranking.py:505).
 	l2sSaved := L2SSaved()
-	desugarFn := func(n lg.Expr) lg.Expr {
+	desugarFn := func(n lg.Expr) (lg.Expr, error) {
 		return Desugar(n, proofLabel)
 	}
 	for i, inv := range invars {
-		invars[i] = inv.Clone([]ast.Node{inv.Label, desugarFn(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+		desugared, err := desugarFn(inv.Formula.(lg.Expr))
+		if err != nil {
+			return nil, err
+		}
+		invars[i] = inv.Clone([]ast.Node{inv.Label, desugared}).(*ast.LabeledFormula)
 	}
 	for i, pc := range postconds {
-		postconds[i] = pc.Clone([]ast.Node{pc.Label, desugarFn(pc.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+		desugared, err := desugarFn(pc.Formula.(lg.Expr))
+		if err != nil {
+			return nil, err
+		}
+		postconds[i] = pc.Clone([]ast.Node{pc.Label, desugared}).(*ast.LabeledFormula)
 	}
 	_ = l2sSaved // used by Desugar internally
 

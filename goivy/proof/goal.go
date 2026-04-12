@@ -188,6 +188,10 @@ func GoalIsDefn(x ast.Node) bool {
 		}
 		return true
 	}
+	// Python: return isinstance(x, il.UninterpretedSort)
+	if _, ok := x.(*lg.UninterpretedSort); ok {
+		return true
+	}
 	return false
 }
 
@@ -200,7 +204,7 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if c, ok := args[0].(lg.Expr); ok {
+				if c, ok := args[0].(*lg.Const); ok {
 					res[lg.Key(c)] = c
 				}
 			}
@@ -282,6 +286,36 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	}
 }
 
+// GoalVocabBound is like GoalVocab but also includes bound variables from
+// the conclusion, matching Python's goal_vocab(goal, bound=True)
+// (ivy_proof.py:579-582).
+func GoalVocabBound(goal *ast.LabeledFormula) *Vocab {
+	v := GoalVocab(goal)
+
+	// Python: conc_fmla = conc.fmla if isinstance(conc,ia.TemporalModels) else conc
+	conc := GoalConc(goal)
+	concFmla := ConcAsExpr(conc)
+	if concFmla == nil {
+		return v
+	}
+
+	// Python: variables = variables + [x for x in logic_util.bound_variables(conc_fmla)
+	//                                  if x not in variables]
+	existing := make(map[lg.NodeKey]bool, len(v.Variables))
+	for _, vr := range v.Variables {
+		existing[lg.Key(vr)] = true
+	}
+	for bk, bn := range lu.BoundVariables(concFmla) {
+		if !existing[bk] {
+			if bv, ok := bn.(*lg.Variable); ok {
+				v.Variables = append(v.Variables, bv)
+				existing[bk] = true
+			}
+		}
+	}
+	return v
+}
+
 // GoalFree returns the free vocabulary of a goal, including sorts,
 // symbols, and variables that are not bound in the goal's premises.
 // Symmetric with GoalVocab — when conc is *ast.TemporalModels, extracts
@@ -344,9 +378,13 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 
 // GoalSubst substitutes goal g2 for the conclusion of goal g1.
 // The result has the label of g2.
-func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
+// Python ivy_proof.py:506-508: calls check_name_clash(g1,g2) before substituting.
+func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location) (*ast.LabeledFormula, error) {
+	if err := CheckNameClash(g1, g2); err != nil {
+		return nil, err
+	}
 	prems := append(GoalPrems(g1), GoalPrems(g2)...)
-	return MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2))
+	return MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2)), nil
 }
 
 // GoalAddPrem adds a premise to a goal.
