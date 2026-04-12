@@ -2602,6 +2602,13 @@ Estimated People Required 26.621735
 
 # "make golden" progress
 
+with very fine grained xtraces:
+
+~~~
+088139  go : XTRACE: parser.spaa EXIT res=(constantDecl declArgs:[(atom rep:"trying1.now" terms:[] aSort:bool)] attributes:[spec] common:nil)
+        py : XTRACE: parser.spaa EXIT res=(constantDecl declArgs:[(atom rep:"trying1.now" terms:[] aSort:bool)] attributes:[] common:nil)
+~~~
+
 ~~~
 260352  go : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
         py : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
