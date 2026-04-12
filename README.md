@@ -2608,6 +2608,6 @@ Estimated People Required 26.621735
         py : XTRACE: l2s.l2sTacticInt axiomDump[132] HASH canon=(labeledFormula label:(atom rep:"rfn.invar253" terms:[] aSort:nil) formula:(Not body:(Apply func:(Symbol name:dramc.wr_fair sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort 
  ...(truncated long line to 300 bytes)
 
-255262  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
+255262  go : XTRACE: l2s.l2sTacticInt axiomMeta[0] explicit=False temporal=False isGlobally=False formulaType=Implies
+        py : XTRACE: l2s.l2sTacticInt axiomMeta[0] explicit=False temporal=None isGlobally=False formulaType=Implies
 ~~~
