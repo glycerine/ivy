@@ -121,6 +121,55 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 	return compiled
 }
 
+// CompileExprVocabExtLF compiles a LabeledFormula using a vocabulary without
+// full type inference. Returns the compiled LabeledFormula directly.
+// Corresponds to Python's compile_expr_vocab_ext when called with a LabeledFormula.
+func CompileExprVocabExtLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module) *ast.LabeledFormula {
+	if lf == nil {
+		return nil
+	}
+	sig := getSigFrom(mod)
+	ws := il.NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+	wso := il.NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+	tsDefault := il.TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
+	if mod == nil {
+		mod = module.New()
+	}
+	c := compiler.New(sig, mod)
+	compiled, err := c.ThingLF(lf)
+	if err != nil {
+		return nil
+	}
+	return compiled
+}
+
+// LabelTemporalNode labels temporal operators in an ast.Node tree.
+// Matches Python's label_temporal for non-lg.Expr types (e.g., LabeledFormula,
+// Atom). For lg.Expr nodes, delegates to il.LabelTemporal. For other nodes,
+// recursively processes children and clones.
+func LabelTemporalNode(node ast.Node, label string) ast.Node {
+	if node == nil {
+		return nil
+	}
+	if expr, ok := node.(lg.Expr); ok {
+		return il.LabelTemporal(expr, label).(ast.Node)
+	}
+	// Non-expr (LabeledFormula, Atom, etc.): recursively process children, clone.
+	// Python: args = [label_temporal(x, label) for x in fmla.args]; return fmla.clone(args)
+	args := node.Args()
+	processed := make([]ast.Node, len(args))
+	for i, a := range args {
+		processed[i] = LabelTemporalNode(a, label)
+	}
+	return node.Clone(processed)
+}
+
 // getSigFrom returns the module's Sig. Panics if mod or module.Sig is nil —
 // a nil here means the caller failed to thread the module through,
 // which is always a bug (Python uses a single global Sig).

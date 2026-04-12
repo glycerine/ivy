@@ -414,21 +414,21 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 		}
 
-		// C6: compile user invariants and seed `invars` (Python line 175).
-		// Pass inv (the whole LF, not inv.Formula) so CompileNode dispatches
-		// to CompileLF which clones with PRESERVE — matching Python's
-		// inv.compile() → _labeled_formula_cmpl → self.clone([...]).
+		// C6: compile user invariants and seed `invars` (Python line 192-197).
+		// Python: compiled = compile_with_goal_vocab(inv, goal)
+		//         labeled = label_temporal(compiled, proof_label)
+		//         invars.append(labeled)
 		for idx, inv := range tacticInvars {
 			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] pre-compile HASH canon=%v", idx, inv.Canon())
-			compiled := proof.CompileWithGoalVocab(inv, goal, m)
-			if compiled == nil {
+			vocab := proof.GoalVocab(goal)
+			compiledLF := proof.CompileExprVocabExtLF(inv, vocab, m)
+			if compiledLF == nil {
 				xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] compiled=nil", idx)
 				continue
 			}
-			labeled := il.LabelTemporal(compiled, proofLabel)
-			cloned := inv.Clone([]ast.Node{inv.Label, labeled}).(*ast.LabeledFormula)
-			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-compile HASH canon=%v", idx, cloned.Canon())
-			invars = append(invars, cloned)
+			labeled := proof.LabelTemporalNode(compiledLF, proofLabel).(*ast.LabeledFormula)
+			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-compile HASH canon=%v", idx, labeled.Canon())
+			invars = append(invars, labeled)
 		}
 	} else {
 		xtracer.Trace("l2s.l2sTacticInt tacticDecls NONE (pf is not TacticTactic, type=%s)", iu.TypeName(pf))
