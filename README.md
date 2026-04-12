@@ -2603,14 +2603,9 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-260129  go : XTRACE: ast.LF.clone PRESERVE origid=612 counter=2272
-        py : XTRACE: ast.LF.clone PRESERVE origid=612 counter=2272
+260351  go : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
+        py : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
 
-260130  go : XTRACE: l2s.l2sTacticInt compileInvar[2] post-compile HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable nam ...(truncated long line to 300 bytes)
-
-        py : XTRACE: l2s.l2sTacticInt compileInvar[2] post-compile HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable nam
- ...(truncated long line to 300 bytes)
-
-260131  go : XTRACE: actions.substitute_constants_action ENTER type=And nargs=2
-        py : XTRACE: ast.LF.__init__ id=2272 counter=2273
+260352  go : XTRACE: CallAction.__init__ uniqueID=700 counter=701
+        py : XTRACE: ast.LF.clone PRESERVE origid=226 counter=2306
 ~~~
