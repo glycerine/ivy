@@ -655,7 +655,7 @@ class LabeledFormula(AST):
         if not always_clone_with_fresh_id:
             lf_counter -= 1
             res.id = self.id
-            if __debug__: xtracer.trace("ast.LF.clone PRESERVE origid=%d counter=%d" % (res.id, lf_counter)); traceback.print_stack()
+            if __debug__: xtracer.trace("ast.LF.clone PRESERVE origid=%d counter=%d" % (res.id, lf_counter))
         else:
             if __debug__: xtracer.trace("ast.LF.clone FRESH origid=%d newid=%d counter=%d" % (self.id, res.id, lf_counter))
         res.temporal = self.temporal
