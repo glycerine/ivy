@@ -601,7 +601,13 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 		}
 		inferred, err := il.SortInferList(terms, nil, nil)
 		if err == nil && len(inferred) > 0 {
-			compiled.Formula = inferred[0]
+			// Python: concretize_terms returns t.clone(inferred_args) for
+			// AST nodes with clone. Match by cloning the LabeledFormula
+			// with the sort-inferred formula, producing the matching
+			// ast.LF.clone PRESERVE trace.
+			cloneArgs := compiled.Args()
+			cloneArgs[1] = inferred[0]
+			compiled = compiled.Clone(cloneArgs).(*ast.LabeledFormula)
 		}
 	}
 
