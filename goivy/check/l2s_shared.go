@@ -528,13 +528,12 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 		if !calls[b.Name] {
 			continue
 		}
+		// Python ivy_l2s.py:1228-1231: add l2s_d for all non-finite-sort inputs.
 		var addParamsToD []actions.Action
 		for _, p := range b.Action.Inputs {
 			if p.CSort != nil && !cfg.FiniteSorts[p.CSort.String()] {
-				if _, ok := p.CSort.(*lg.UninterpretedSort); ok {
-					addParamsToD = append(addParamsToD,
-						setLineno(actions.NewAssignAction(mustApply(L2SD(p.CSort), p), lg.True), cfg.Lineno))
-				}
+				addParamsToD = append(addParamsToD,
+					setLineno(actions.NewAssignAction(mustApply(L2SD(p.CSort), p), lg.True), cfg.Lineno))
 			}
 		}
 

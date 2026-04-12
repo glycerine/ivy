@@ -23,6 +23,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
@@ -289,6 +290,58 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	}
 	_ = l2sSaved // used by Desugar internally
 
+	// Python ivy_ranking.py:449-461: WhenOperator invariant generation from pprems.
+	{
+		var pprems []lg.Expr
+		for _, p := range prems {
+			if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+				if e, ok := lf.Formula.(lg.Expr); ok {
+					pprems = append(pprems, e)
+				}
+			}
+		}
+		var allFmlas []lg.Expr
+		for _, inv := range invars {
+			if e, ok := inv.Formula.(lg.Expr); ok {
+				allFmlas = append(allFmlas, e)
+			}
+		}
+		allFmlas = append(allFmlas, pprems...)
+		seen := make(map[string]bool)
+		var winvs []lg.Expr
+		for _, f := range allFmlas {
+			for _, t := range lu.TemporalsAst(f) {
+				wo, ok := t.(*lg.WhenOperator)
+				if !ok || wo.Name != "first" {
+					continue
+				}
+				key := wo.String()
+				if seen[key] {
+					continue
+				}
+				seen[key] = true
+				nws := &lg.Or{Terms: []lg.Expr{
+					&lg.Not{Body: L2SWaiting()},
+					&lg.Not{Body: applyNB(l2sW(nil, wo.T2, proofLabel))},
+				}}
+				tmp := &lg.Implies{
+					T1: &lg.Not{Body: nws},
+					T2: &lg.Eq{T1: wo, T2: &lg.WhenOperator{Name: "next", T1: wo.T1, T2: wo.T2}},
+				}
+				tmp2 := &lg.Implies{
+					T1: applyNB(l2sInit(nil, &lg.Eventually{Environ: strPtr(proofLabel), Body: wo.T2}, proofLabel)),
+					T2: tmp,
+				}
+				winvs = append(winvs, tmp2)
+			}
+		}
+		acfg := cfg.Mod.Cfg.AstCfg
+		for i, winv := range winvs {
+			label := lg.NewConst(fmt.Sprintf("l2s_when_%d", i), lg.Boolean)
+			invars = append(invars, acfg.NewLabeledFormula(label, winv))
+		}
+	}
+
 	// Python ivy_ranking.py:511: model.invars = model.invars + invars
 	model.Invars = append(model.Invars, invars...)
 
@@ -420,7 +473,23 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
 	if tm != nil {
-		return SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
+		result, err := SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
+		if err != nil {
+			return nil, err
+		}
+		// Python ivy_ranking.py:1016: goal.trace_hook = lambda tr,fcs: auto_hook(tasks,triggers,subs,tr,fcs)
+		if len(result) > 0 && result[0] != nil {
+			subs := icfg.Subs
+			tasks := icfg.Tasks
+			triggers := icfg.Triggers
+			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+				if subs != nil {
+					applyRenamingToHandler(handler, subs)
+				}
+				applyAutoDiagnosticsToHandler(handler, fcs, tasks, triggers)
+			})
+		}
+		return result, nil
 	}
 	// Fallback: return goals as-is if no TemporalModels found
 	return cfg.Goals, nil
