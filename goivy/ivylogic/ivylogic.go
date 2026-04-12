@@ -5,6 +5,7 @@ import (
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // SortName extracts the name from a sort.
@@ -405,15 +406,18 @@ func GetSortTerm(term lg.Expr) lg.Sort {
 // Corresponds to Python's default_sort (ivy_logic.py:1129-1137).
 func GetDefaultSort(sig *Sig) (lg.Sort, error) {
 	if sig.DefaultSort != nil {
+		xtracer.Trace("ivylogic.GetDefaultSort CACHED HASH canon=%s", sig.Canon())
 		return sig.DefaultSort, nil
 	}
 	if sig.IuCfg != nil && !iu.VersionLE(sig.IuCfg.LanguageVersion, "1.2") {
+		xtracer.Trace("ivylogic.GetDefaultSort VERSION_BLOCK HASH canon=%s", sig.Canon())
 		return nil, &lg.IvyError{Msg: "unspecified type"}
 	}
 	// Create default sort 'S' and add it to the signature
 	ds := &lg.UninterpretedSort{Name: "S"}
 	sig.Sorts["S"] = ds
 	sig.DefaultSort = ds
+	xtracer.Trace("ivylogic.GetDefaultSort CREATED_S HASH canon=%s", sig.Canon())
 	return ds, nil
 }
 

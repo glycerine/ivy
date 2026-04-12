@@ -579,7 +579,10 @@ ivy_ast.AST.compile_with_sort_inference = sortify_with_inference
 def compile_const(v,sig):
     if __debug__: xtracer.trace("compiler.CompileConst ENTER")
     with ASTContext(v):
-      rng = cmpl_sort(v.sort) if hasattr(v,'sort') else ivy_logic.default_sort()
+      hasSort = hasattr(v,'sort')
+      if not hasSort:
+          if __debug__: xtracer.trace("compiler.CompileConst no_sort calling_default_sort HASH canon=%s" % sig_canon(ivy_logic.sig))
+      rng = cmpl_sort(v.sort) if hasSort else ivy_logic.default_sort()
       sort = get_function_sort(sig,v.args,rng)
       with sig:
           return add_symbol(v.rep,sort)

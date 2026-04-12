@@ -2,6 +2,7 @@ package ivylogic
 
 import (
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // IsDefaultSort returns true if s is the default sort of the given signature.
@@ -214,14 +215,17 @@ func NewSortAsDefault(sig *Sig, sort lg.Sort) *SortAsDefault {
 func (sd *SortAsDefault) Enter() {
 	sd.oldSort, sd.hadOld = sd.sig.Sorts["S"]
 	sd.sig.Sorts["S"] = sd.sort
+	xtracer.Trace("ivylogic.SortAsDefault.Enter hadOld=%v HASH canon=%s", sd.hadOld, sd.sig.Canon())
 }
 
 // Exit restores the previous default sort.
 func (sd *SortAsDefault) Exit() {
 	if sd.hadOld {
 		sd.sig.Sorts["S"] = sd.oldSort
+		xtracer.Trace("ivylogic.SortAsDefault.Exit RESTORED HASH canon=%s", sd.sig.Canon())
 	} else {
 		delete(sd.sig.Sorts, "S")
+		xtracer.Trace("ivylogic.SortAsDefault.Exit DELETED_S HASH canon=%s", sd.sig.Canon())
 	}
 }
 

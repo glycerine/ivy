@@ -1242,6 +1242,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
 		}
 	}
 	if rng == nil {
+		xtracer.Trace("compiler.CompileConst no_sort calling_default_sort HASH canon=%s", sig.Canon())
 		var err error
 		rng, err = il.GetDefaultSort(sig)
 		if err != nil {

@@ -100,13 +100,16 @@ class sort_as_default(object):
         global sig
         self.old_default_sort = sig.sorts.get('S',None)
         sig.sorts['S'] = self.sort
+        if __debug__: xtracer.trace("ivylogic.SortAsDefault.Enter hadOld=%s HASH canon=%s" % (self.old_default_sort is not None, sig.canon()))
         return self
     def __exit__(self,exc_type, exc_val, exc_tb):
         global sig
         if self.old_default_sort is not None:
             sig.sorts['S'] = self.old_default_sort
+            if __debug__: xtracer.trace("ivylogic.SortAsDefault.Exit RESTORED HASH canon=%s" % sig.canon())
         else:
             del sig.sorts['S']
+            if __debug__: xtracer.trace("ivylogic.SortAsDefault.Exit DELETED_S HASH canon=%s" % sig.canon())
         return False # don't block any exceptions
 
 class top_sort_as_default(sort_as_default):
@@ -320,14 +323,18 @@ def is_rel_app(term):
 def _find_sort(type_name):
     if allow_unsorted:
         if type_name == 'S':
-            if __debug__: xtracer.trace("compiler.FindSort allowUnsorted name=S\n  returning TopS")
+            if __debug__: xtracer.trace("compiler.FindSort allowUnsorted name=S HASH canon=%s" % sig.canon())
             return lg.TopS
         if __debug__: xtracer.trace("compiler.FindSort allowUnsorted name=%s\n  returning UninterpretedSort" % type_name)
         return lg.UninterpretedSort(type_name)
     try:
-        return sig.sorts[type_name]
+        res = sig.sorts[type_name]
+        if type_name == 'S':
+            if __debug__: xtracer.trace("compiler.FindSort name=S FOUND HASH canon=%s" % sig.canon())
+        return res
     except KeyError:
         if type_name == 'S':
+            if __debug__: xtracer.trace("compiler.FindSort name=S NOT_FOUND calling_GetDefaultSort HASH canon=%s" % sig.canon())
             if iu.get_numeric_version() <= [1,2]:
                 return default_sort()
             raise IvyError(None,"unspecified type")
@@ -908,6 +915,10 @@ class Sig(object):
         res._default_sort = self._default_sort
         res.default_numeric_sort = self.default_numeric_sort
         return res
+    def canon(self):
+        sort_names = sorted(self.sorts.keys())
+        sym_parts = sorted("%s:%s" % (name, getattr(sym.sort, 'name', str(sym.sort))) for name, sym in self.symbols.items())
+        return "(sig sorts:[%s] symbols:[%s])" % (" ".join(sort_names), " ".join(sym_parts))
     def all_symbols(self):
         for name,sym in self.symbols.items():
             if isinstance(sym.sort,UnionSort):
@@ -1128,12 +1139,16 @@ def is_strict_inequality_symbol(sym,pol=0):
 
 def default_sort():
     ds = sig._default_sort
-    if ds != None: return ds
+    if ds != None:
+        if __debug__: xtracer.trace("ivylogic.GetDefaultSort CACHED HASH canon=%s" % sig.canon())
+        return ds
     if not iu.get_numeric_version() <= [1,2]:
+        if __debug__: xtracer.trace("ivylogic.GetDefaultSort VERSION_BLOCK HASH canon=%s" % sig.canon())
         raise IvyError(None,'unspecified type')
     ds = lg.UninterpretedSort('S')
     add_sort(ds)
     sig._default_sort = ds
+    if __debug__: xtracer.trace("ivylogic.GetDefaultSort CREATED_S HASH canon=%s" % sig.canon())
     return ds
 
 def is_default_sort(s):

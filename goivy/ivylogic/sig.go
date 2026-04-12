@@ -287,7 +287,7 @@ func (s *Sig) String() string {
 func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 	if allowUnsorted {
 		if name == "S" {
-			xtracer.Trace("compiler.FindSort allowUnsorted name=S\n  returning TopS")
+			xtracer.Trace("compiler.FindSort allowUnsorted name=S HASH canon=%s", s.Canon())
 			return lg.TopS, nil
 		}
 		xtracer.Trace("compiler.FindSort allowUnsorted name=%s\n  returning UninterpretedSort", name)
@@ -295,9 +295,13 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 	}
 	sort, ok := s.Sorts[name]
 	if ok {
+		if name == "S" {
+			xtracer.Trace("compiler.FindSort name=S FOUND HASH canon=%s", s.Canon())
+		}
 		return sort, nil
 	}
 	if name == "S" {
+		xtracer.Trace("compiler.FindSort name=S NOT_FOUND calling_GetDefaultSort HASH canon=%s", s.Canon())
 		return GetDefaultSort(s)
 	}
 	//vv("about to return unknown type: '%v', call stack is:\n%v\n", name, stack())
