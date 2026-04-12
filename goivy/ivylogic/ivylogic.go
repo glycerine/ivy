@@ -402,16 +402,19 @@ func GetSortTerm(term lg.Expr) lg.Sort {
 
 // GetDefaultSort returns the default sort for the given signature,
 // creating it if necessary (for version <= 1.2 compatibility).
-// Corresponds to Python's default_sort (ivy_logic.py:1118-1126).
-func GetDefaultSort(sig *Sig) lg.Sort {
+// Corresponds to Python's default_sort (ivy_logic.py:1129-1137).
+func GetDefaultSort(sig *Sig) (lg.Sort, error) {
 	if sig.DefaultSort != nil {
-		return sig.DefaultSort
+		return sig.DefaultSort, nil
+	}
+	if sig.IuCfg != nil && !iu.VersionLE(sig.IuCfg.LanguageVersion, "1.2") {
+		return nil, &lg.IvyError{Msg: "unspecified type"}
 	}
 	// Create default sort 'S' and add it to the signature
 	ds := &lg.UninterpretedSort{Name: "S"}
 	sig.Sorts["S"] = ds
 	sig.DefaultSort = ds
-	return ds
+	return ds, nil
 }
 
 // Sorts returns all sorts in the given signature as a slice.

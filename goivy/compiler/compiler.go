@@ -1242,11 +1242,10 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
 		}
 	}
 	if rng == nil {
-		// Default sort
-		if sig.DefaultSort != nil {
-			rng = sig.DefaultSort
-		} else {
-			rng = lg.TopS
+		var err error
+		rng, err = il.GetDefaultSort(sig)
+		if err != nil {
+			return nil, err
 		}
 	}
 
