@@ -2603,26 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-255185  go : XTRACE: l2s.l2sTacticInt axiomDump[56] HASH canon=(labeledFormula label:(atom rep:"invar144" terms:[] aSort:nil) formula:(Implies t1:(ForAll vars:[(Variable name:A sort:(UninterpretedSort name:addr_type))] body:(ForAll vars:[(Variable name:M sort:(UninterpretedSort name:mem_type))] body:(ForAll vars ...(truncated long line to 300 bytes)
+255261  go : XTRACE: l2s.l2sTacticInt axiomDump[132] HASH canon=(labeledFormula label:(atom rep:"rfn.invar253" terms:[] aSort:nil) formula:(Not body:(Apply func:(Symbol name:dramc.wr_fair sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort  ...(truncated long line to 300 bytes)
 
-        py : XTRACE: l2s.l2sTacticInt axiomDump[56] HASH canon=(labeledFormula label:(atom rep:"invar144" terms:[] aSort:nil) formula:(Implies t1:(ForAll vars:[(Variable name:P sort:(UninterpretedSort name:proc))] body:(ForAll vars:[(Variable name:M sort:(UninterpretedSort name:mem_type))] body:(ForAll vars:[(Va
+        py : XTRACE: l2s.l2sTacticInt axiomDump[132] HASH canon=(labeledFormula label:(atom rep:"rfn.invar253" terms:[] aSort:nil) formula:(Not body:(Apply func:(Symbol name:dramc.wr_fair sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort 
  ...(truncated long line to 300 bytes)
 
-
-=== S-expression diff (go '-' vs py '+') ===
-   (labeledFormula
-     label:(atom
-       rep:"invar144"
-       terms:[]
-       aSort:nil)
-     formula:(Implies
-       t1:(ForAll
-         vars:[
-           (Variable
--           name:A
-+           name:P
-             sort:(UninterpretedSort
--             name:addr_type))]
-+             name:proc))]
-         body:(ForAll
+255262  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
+        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
 ~~~
