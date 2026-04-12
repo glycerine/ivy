@@ -513,6 +513,16 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Python's recursive `LF.clone(args)` dispatch from
 	// replace_temporals_by_named_binder_g_ast (ivy_logic_utils.py:322).
 	modPass := func(transform func(lg.Expr) lg.Expr) {
+		if xtracer.Enabled {
+			nPropPrems := 0
+			for _, p := range prems {
+				if lf, ok := p.(*ast.LabeledFormula); ok && proof.GoalIsProperty(lf) {
+					nPropPrems++
+				}
+			}
+			xtracer.Trace("l2s.modPass ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d",
+				len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems)
+		}
 		for i, inv := range model.Invars {
 			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}

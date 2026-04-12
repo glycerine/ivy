@@ -757,6 +757,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     # model pass helper funciton
     def mod_pass(transform):
+        if __debug__: 
+            nPropPrems = sum(1 for p in prems if ipr.goal_is_property(p))
+            xtracer.trace("l2s.modPass ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems), nPropPrems))
+
         model.invars = [transform(x) for x in model.invars]
         model.asms = [transform(x) for x in model.asms]
         # TODO: what about axioms and properties?
