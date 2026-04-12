@@ -1,11 +1,15 @@
 package proof
 
 import (
+	"fmt"
+
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Vocab represents the vocabulary of a goal: the sorts, symbols, and variables
@@ -391,14 +395,18 @@ func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula, mod *module.M
 }
 
 // CompileDefinitionGoalVocab compiles a definition and adds it to the goal
-// as new premises (a function declaration and a property stating the definition).
+// as new premises (a ConstantDecl and a LabeledFormula stating the definition).
 // Returns the modified goal.
 // Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1477-1506).
 //
 // Accepts either a *ast.LabeledFormula (containing the equation directly) or
 // a *ast.DerivedDecl (whose first arg is the LabeledFormula). Python's
 // `lf = df.args[0]` (line 1480) extracts the inner LF from a DerivedDecl.
-func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.LabeledFormula, mod *module.Module) (*ast.LabeledFormula, error) {
+	// Python: vocab = goal_vocab(goal); free = goal_free(goal)
+	vocab := GoalVocab(goal)
+	free := GoalFree(goal)
+
 	// Unwrap DerivedDecl: Python lf = df.args[0]
 	var innerLF *ast.LabeledFormula
 	if lf, ok := df.(*ast.LabeledFormula); ok {
@@ -411,71 +419,211 @@ func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.Label
 		}
 	}
 	if innerLF == nil {
-		return goal
+		return goal, nil
 	}
 
-	// Extract the definition formula
-	var defnFormula lg.Expr
-	if n, ok := innerLF.Formula.(lg.Expr); ok {
-		defnFormula = n
-	}
-	if defnFormula == nil {
-		return goal // can't process, return unchanged
-	}
-
-	// Drop universals to get lhs = rhs
-	inner := il.DropUniversals(defnFormula)
-	eq, ok := inner.(*lg.Eq)
+	// Python: lhs = lf.formula.args[0]
+	// The formula is an *ast.Definition with Lhs and Rhs.
+	defFormula, ok := innerLF.Formula.(*ast.Definition)
 	if !ok {
-		return goal
+		return goal, nil
 	}
 
-	// Get the defined symbol info
-	var defSym *lg.Const
-	switch lhs := eq.T1.(type) {
-	case *lg.Apply:
-		if c, ok := lhs.Func.(*lg.Const); ok {
-			defSym = c
+	// Get the LHS atom and its variable args.
+	// Python: lhs = lf.formula.args[0]; vars = lf.formula.args[0].args
+	lhsAtom, ok := defFormula.Lhs.(*ast.Atom)
+	if !ok {
+		return goal, nil
+	}
+	vars := lhsAtom.Terms // Python: lhs.args — the variable bindings
+
+	// Python: ts = il.TopFunctionSort(len(lhs.args))
+	ts := il.TopFunctionSort(len(vars))
+	// Python: newsym = il.Symbol(lhs.rep, ts)
+	newsym := lg.NewConst(lhsAtom.Rep, ts)
+
+	// Python: with il.WithSymbols([newsym]):
+	sig := getSigFrom(mod)
+	ws := il.NewWithSymbols(sig, []*lg.Const{newsym})
+	ws.Enter()
+	defer ws.Exit()
+
+	// Python: body = ia.Atom('=', lf.formula.args)
+	// lf.formula.args is [lhs, rhs] in Python; in Go that's defFormula.Lhs, defFormula.Rhs.
+	body := cfg.NewAtom("=", defFormula.Lhs, defFormula.Rhs)
+
+	// Python: fmla = ia.Forall(vars, body) if vars else body
+	var fmla ast.Node
+	hasVars := len(vars) > 0
+	if hasVars {
+		fmla = cfg.NewForall(vars, body)
+	} else {
+		fmla = body
+	}
+
+	// Python line 1488: elf = lf.clone([lf.label, fmla])  → LF.clone PRESERVE #1
+	elf := innerLF.Clone([]ast.Node{innerLF.Label, fmla}).(*ast.LabeledFormula)
+
+	// Python line 1489: lf = compile_expr_vocab(elf, vocab)
+	// compile_expr_vocab pushes vocab symbols/sorts, sets TopSort default,
+	// calls elf.compile() (which is _labeled_formula_cmpl → CompileLF → PRESERVE #2),
+	// then runs sort_infer_list on [compiled] + vocab.variables.
+	compiledLF, err := compileExprVocabLF(elf, vocab, mod)
+	if err != nil {
+		return nil, err
+	}
+
+	// Python line 1490: thing = lf.formula.body if vars else lf.formula
+	compiledFormula, ok := compiledLF.Formula.(lg.Expr)
+	if !ok {
+		return nil, fmt.Errorf("CompileDefinitionGoalVocab: compiled formula is not lg.Expr (type %T)", compiledLF.Formula)
+	}
+	var thing lg.Expr
+	if hasVars {
+		fa, ok := compiledFormula.(*lg.ForAll)
+		if !ok {
+			return nil, fmt.Errorf("CompileDefinitionGoalVocab: expected ForAll after compiling vars, got %T", compiledFormula)
 		}
-	case *lg.Const:
-		defSym = lhs
-	}
-	if defSym == nil {
-		return goal
+		thing = fa.Body
+	} else {
+		thing = compiledFormula
 	}
 
-	// Add the definition as a premise to the goal
-	// In the full version, this would also add a function declaration premise.
-	// For now, we add the definition equation as a property premise.
-	sb, ok := goal.Formula.(*ast.SchemaBody)
-	if !ok {
-		return goal
+	// Python line 1491: thing = il.normalize_ops(thing)
+	thing = il.NormalizeOps(thing)
+
+	// Python line 1493: lf = lf.clone([lf.label, lf.formula.clone([thing]) if vars else thing])
+	// → LF.clone PRESERVE #3
+	var newFormula ast.Node
+	if hasVars {
+		// Clone the ForAll with normalized body: lf.formula.clone([thing])
+		newFormula = compiledFormula.(ast.Node).Clone([]ast.Node{thing})
+	} else {
+		newFormula = thing
+	}
+	lf := compiledLF.Clone([]ast.Node{compiledLF.Label, newFormula}).(*ast.LabeledFormula)
+
+	// Python line 1494: sym = thing.args[0].rep
+	// thing is the body (an equality). Get the LHS symbol.
+	var sym *lg.Const
+	eq, isEq := thing.(*lg.Eq)
+	if isEq {
+		switch lhs := eq.T1.(type) {
+		case *lg.Apply:
+			if c, ok := lhs.Func.(*lg.Const); ok {
+				sym = c
+			}
+		case *lg.Const:
+			sym = lhs
+		}
+	}
+	if sym == nil {
+		return nil, fmt.Errorf("CompileDefinitionGoalVocab: cannot extract defined symbol from compiled definition")
 	}
 
-	// Create a new premise with the definition.
-	// Python ivy_proof.py:1501 sets `lf.definition = True` on the premise.
-	defPrem := cfg.NewLabeledFormula(innerLF.Label, defnFormula)
-	defPrem.IsDefinition = true
-
-	// Clone the SchemaBody with the new premise added
-	newPrems := make([]ast.Node, 0, len(sb.Prems())+1)
-	newPrems = append(newPrems, sb.Prems()...)
-	newPrems = append(newPrems, defPrem)
-
-	// Build new SchemaBody with prems + conclusion
-	newArgs := make([]ast.Node, 0, len(newPrems)+1)
-	newArgs = append(newArgs, newPrems...)
-	if conc := sb.Conc(); conc != nil {
-		newArgs = append(newArgs, conc)
+	// Python line 1495-1496: deps = list(lu.symbols_ilu_ast(thing.args[1]))
+	// Check for recursion: if sym appears in the RHS deps.
+	symKey := lg.Key(sym)
+	if isEq {
+		for dep := range il.SymbolsIluAst(eq.T2) {
+			if c, ok := dep.(*lg.Const); ok && lg.Key(c) == symKey {
+				return nil, &NoMatch{Node: lf, Msg: "no proof given for recursive definition"}
+			}
+		}
 	}
 
-	goalArgs := goal.Args()
-	if len(goalArgs) < 2 {
-		return goal
+	// Python line 1499-1500: cd = ia.ConstantDecl(sym); cd.lineno = lf.lineno
+	cd := cfg.NewConstantDecl(sym)
+	cd.SetLineno(lf.GetLineno())
+
+	// Python line 1501: lf.definition = True
+	lf.IsDefinition = true
+
+	// Python line 1502-1503: goal = goal_add_prem(goal, cd, lf.lineno); goal = goal_add_prem(goal, lf, lf.lineno)
+	loc := lf.GetLineno()
+	goal = GoalAddPrem(cfg, goal, cd, loc)
+	goal = GoalAddPrem(cfg, goal, lf, loc)
+
+	// Python line 1504-1505: if sym in vocab.sorts or sym in vocab.symbols or sym in free:
+	//     raise Redefinition(df, "redefinition of {}".format(sym))
+	if isInVocabOrFree(sym, vocab, free) {
+		return nil, &Redefinition{Node: df, Msg: fmt.Sprintf("redefinition of %s", sym.Name)}
 	}
-	newGoal := goal.Clone([]ast.Node{goalArgs[0], cfg.NewSchemaBody(newArgs...)})
-	if lf, ok := newGoal.(*ast.LabeledFormula); ok {
-		return lf
+
+	return goal, nil
+}
+
+// compileExprVocabLF compiles a LabeledFormula using a goal's vocabulary,
+// returning the compiled LabeledFormula (not just the inner formula).
+// This matches Python's compile_expr_vocab when called with a LabeledFormula:
+// it calls elf.compile() → _labeled_formula_cmpl → lf.clone([...]) → PRESERVE,
+// then runs sort_infer_list on [compiled_formula] + vocab.variables.
+func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module) (*ast.LabeledFormula, error) {
+	sig := getSigFrom(mod)
+
+	// Python: with il.WithSymbols(vocab.symbols):
+	ws := il.NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+
+	// Python: with il.WithSorts(vocab.sorts):
+	wso := il.NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	// Python: with il.top_sort_as_default():
+	savedDefault := sig.DefaultSort
+	sig.DefaultSort = lg.TopS
+	defer func() { sig.DefaultSort = savedDefault }()
+
+	// Python: expr = il.sort_infer_list([expr.compile()] + vocab.variables)[0]
+	// expr.compile() for LabeledFormula → _labeled_formula_cmpl → CompileLF
+	if mod == nil {
+		mod = module.New()
 	}
-	return goal
+	c := compiler.New(sig, mod)
+	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
+	xtracer.Trace("compiler.CompileNode ENTER type=LabeledFormula")
+	xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
+	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
+	compiled, err := c.CompileLF(lf)
+	if err != nil {
+		return nil, err
+	}
+	xtracer.Trace("compiler.Thing return type=LabeledFormula")
+
+	// Sort inference: sort_infer_list([compiled.formula] + vocab.variables)
+	if formula, ok := compiled.Formula.(lg.Expr); ok {
+		terms := make([]lg.Expr, 0, 1+len(vocab.Variables))
+		terms = append(terms, formula)
+		for _, v := range vocab.Variables {
+			terms = append(terms, v)
+		}
+		inferred, err := il.SortInferList(terms, nil, nil)
+		if err == nil && len(inferred) > 0 {
+			compiled.Formula = inferred[0]
+		}
+	}
+
+	return compiled, nil
+}
+
+// isInVocabOrFree checks whether sym is in the vocab's sorts/symbols or in the free set.
+// Python: sym in vocab.sorts or sym in vocab.symbols or sym in free
+func isInVocabOrFree(sym *lg.Const, vocab *Vocab, free map[lg.NodeKey]lg.Expr) bool {
+	symKey := lg.Key(sym)
+	for _, s := range vocab.Sorts {
+		if s != nil && s.Sexp() == sym.Sexp() {
+			return true
+		}
+	}
+	for _, c := range vocab.Symbols {
+		if lg.Key(c) == symKey {
+			return true
+		}
+	}
+	if _, ok := free[symKey]; ok {
+		return true
+	}
+	return false
 }

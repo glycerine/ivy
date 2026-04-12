@@ -407,7 +407,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		// C7: compile definitions into goal premises (Python lines 152-153).
 		for idx, defn := range tacticDefns {
 			xtracer.Trace("l2s.l2sTacticInt compileDefn[%d] type=%s", idx, iu.TypeName(defn))
-			goal = proof.CompileDefinitionGoalVocab(m.Cfg.AstCfg, defn, goal)
+			var err error
+			goal, err = proof.CompileDefinitionGoalVocab(m.Cfg.AstCfg, defn, goal, m)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		// C6: compile user invariants and seed `invars` (Python line 175).
