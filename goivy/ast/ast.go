@@ -414,6 +414,9 @@ func (a *Atom) Rename(s string) *Atom {
 	return c
 }
 func (a *Atom) Canon() iu.Canonical {
+	if a == nil {
+		return iu.Canonical("nil")
+	}
 	return iu.Canonical(fmt.Sprintf("(atom%v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, SliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 

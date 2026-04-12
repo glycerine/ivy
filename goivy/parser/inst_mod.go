@@ -184,7 +184,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 
 	// Python lines 146-159: inner function spaa(decl, subst, pref)
 	spaa := func(decl ast.Node, subst map[string]string, spPref *ast.Atom) ast.Node {
-		xtracer.Trace("parser.spaa ENTER decl=%v", decl.Canon())
+		xtracer.Trace("parser.spaa ENTER decl=%v pref=%v", decl.Canon(), spPref.Canon())
 
 		localSubst := subst
 		// Python: if modname is not None and pref is not None and isinstance(decl, ModuleDecl):
@@ -193,6 +193,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		//             subst[c] = pref.rep
 		if modname != "" && spPref != nil {
 			if _, ok := decl.(*ast.ModuleDecl); ok {
+				xtracer.Trace("parser.spaa substituting with pref.rep='%s'", pref.Rep)
 				localSubst = make(map[string]string, len(subst)+1)
 				for k, v := range subst {
 					localSubst[k] = v
