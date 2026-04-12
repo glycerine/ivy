@@ -289,6 +289,9 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	}
 	_ = l2sSaved // used by Desugar internally
 
+	// Python ivy_ranking.py:511: model.invars = model.invars + invars
+	model.Invars = append(model.Invars, invars...)
+
 	// --- Build shared config ---
 	defnDeps := BuildDefnDeps(m)
 
@@ -321,8 +324,15 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		if model.Init != nil {
 			model.Init = transformAction(model.Init, transform)
 		}
-		for i, inv := range invars {
-			invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+		// Python ivy_ranking.py:532: list_transform(prems, transform)
+		for i, p := range prems {
+			lf, ok := p.(*ast.LabeledFormula)
+			if !ok || !proof.GoalIsProperty(lf) {
+				continue
+			}
+			if e, ok := lf.Formula.(lg.Expr); ok {
+				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
+			}
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {

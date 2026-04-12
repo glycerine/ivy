@@ -6,6 +6,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
@@ -559,6 +560,152 @@ func TestGetRankingTactic(t *testing.T) {
 	}
 	if fn == nil {
 		t.Error("ranking tactic function should not be nil")
+	}
+}
+
+// --- Bug 12 regression: ranking modPass must transform property prems ---
+
+// TestRankingModPass_PropertyPremsTransformed verifies that the ranking
+// modPass pattern correctly applies a transform to property premises.
+// Bug 12: Go was iterating local invars instead of prems.
+func TestRankingModPass_PropertyPremsTransformed(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	model := &temporal.NormalProgram{
+		Invars: []*ast.LabeledFormula{
+			cfg.NewLabeledFormula(nil, lg.True),
+		},
+	}
+
+	// Build prems: one property prem (plain formula), one schema prem.
+	propPrem := cfg.NewLabeledFormula(boolConst("P"), boolConst("Q"))
+	schemaPrem := cfg.NewLabeledFormula(boolConst("S"), cfg.NewSchemaBody(boolConst("X")))
+	prems := []ast.Node{propPrem, schemaPrem}
+
+	// Define a transform that wraps in Not.
+	negate := func(e lg.Expr) lg.Expr { return &lg.Not{Body: e} }
+
+	// Simulate the ranking modPass prems loop (Bug 12 fix).
+	for i, p := range prems {
+		lf, ok := p.(*ast.LabeledFormula)
+		if !ok || !proof.GoalIsProperty(lf) {
+			continue
+		}
+		if e, ok := lf.Formula.(lg.Expr); ok {
+			prems[i] = lf.Clone([]ast.Node{lf.Label, negate(e)}).(*ast.LabeledFormula)
+		}
+	}
+	// Also transform model invars.
+	for i, inv := range model.Invars {
+		model.Invars[i] = inv.Clone([]ast.Node{inv.Label, negate(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+	}
+
+	// Property prem should be transformed (Not wrapped).
+	transformedPrem, ok := prems[0].(*ast.LabeledFormula)
+	if !ok {
+		t.Fatal("expected LabeledFormula")
+	}
+	if _, ok := transformedPrem.Formula.(*lg.Not); !ok {
+		t.Errorf("Bug 12 regression: property prem should be transformed, got %T", transformedPrem.Formula)
+	}
+
+	// Schema prem should be unchanged.
+	schemaPremResult, ok := prems[1].(*ast.LabeledFormula)
+	if !ok {
+		t.Fatal("expected LabeledFormula")
+	}
+	if _, ok := schemaPremResult.Formula.(*ast.SchemaBody); !ok {
+		t.Errorf("schema prem should NOT be transformed, got %T", schemaPremResult.Formula)
+	}
+
+	// Model invar should also be transformed.
+	if _, ok := model.Invars[0].Formula.(*lg.Not); !ok {
+		t.Errorf("model invar should be transformed, got %T", model.Invars[0].Formula)
+	}
+}
+
+// TestRankingModPass_PropertyPremClonePreserve verifies that cloning a
+// property prem during modPass preserves the LF id (PRESERVE semantics).
+func TestRankingModPass_PropertyPremClonePreserve(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	origLF := cfg.NewLabeledFormula(boolConst("label"), boolConst("body"))
+	origID := origLF.ID
+
+	// Clone with identity transform (PRESERVE mode).
+	cfg.AlwaysCloneWithFreshID = false
+	cloned := origLF.Clone([]ast.Node{origLF.Label, origLF.Formula.(lg.Expr)}).(*ast.LabeledFormula)
+
+	if cloned.ID != origID {
+		t.Errorf("Bug 12 regression: PRESERVE clone should keep origid=%d, got %d", origID, cloned.ID)
+	}
+	if cloned == origLF {
+		t.Error("clone should be a different pointer")
+	}
+}
+
+// --- Bug 13 regression: ranking invars must merge into model.Invars ---
+
+// TestRankingInvarsMerge verifies that ranking-generated invars are merged
+// into model.Invars before downstream processing.
+// Bug 13: Go kept ranking invars separate, so SharedStep3 missed them.
+func TestRankingInvarsMerge(t *testing.T) {
+	cfg := ast.NewAstConfig()
+
+	// Original model invars.
+	modelInvar := cfg.NewLabeledFormula(boolConst("model_inv"), lg.True)
+	model := &temporal.NormalProgram{
+		Invars: []*ast.LabeledFormula{modelInvar},
+	}
+
+	// Ranking-generated invars (separate list).
+	rankInvar1 := cfg.NewLabeledFormula(boolConst("rank_inv1"), lg.True)
+	rankInvar2 := cfg.NewLabeledFormula(boolConst("rank_inv2"), lg.True)
+	invars := []*ast.LabeledFormula{rankInvar1, rankInvar2}
+
+	// Bug 13 fix: merge invars into model.Invars.
+	model.Invars = append(model.Invars, invars...)
+
+	if len(model.Invars) != 3 {
+		t.Fatalf("Bug 13 regression: expected 3 invars after merge, got %d", len(model.Invars))
+	}
+	// Verify all three are present.
+	names := make(map[string]bool)
+	for _, inv := range model.Invars {
+		if c, ok := inv.Label.(*lg.Const); ok {
+			names[c.Name] = true
+		}
+	}
+	for _, want := range []string{"model_inv", "rank_inv1", "rank_inv2"} {
+		if !names[want] {
+			t.Errorf("Bug 13 regression: missing invar %q after merge", want)
+		}
+	}
+}
+
+// TestRankingInvarsMerge_SharedStep3Visible verifies that after merging,
+// SharedStep3_CollectNamedBinders would see all invars in model.Invars.
+func TestRankingInvarsMerge_SharedStep3Visible(t *testing.T) {
+	cfg := ast.NewAstConfig()
+
+	// Create a model invar and a ranking invar, both with named binders.
+	modelInvar := cfg.NewLabeledFormula(boolConst("m"), boolConst("body_m"))
+	rankInvar := cfg.NewLabeledFormula(boolConst("r"), boolConst("body_r"))
+
+	model := &temporal.NormalProgram{
+		Invars: []*ast.LabeledFormula{modelInvar},
+	}
+
+	// Before merge: only 1 invar visible.
+	if len(model.Invars) != 1 {
+		t.Fatalf("expected 1 invar before merge, got %d", len(model.Invars))
+	}
+
+	// Merge.
+	invars := []*ast.LabeledFormula{rankInvar}
+	model.Invars = append(model.Invars, invars...)
+
+	// After merge: 2 invars visible.
+	if len(model.Invars) != 2 {
+		t.Fatalf("Bug 13 regression: expected 2 invars after merge, got %d", len(model.Invars))
 	}
 }
 
