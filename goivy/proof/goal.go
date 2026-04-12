@@ -633,6 +633,7 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 		}
 		xtracer.Trace("compileExprVocabLF SortInferList ENTER nterms=%d", len(terms))
 		inferred, inferErr := il.SortInferList(terms, nil, nil)
+		xtracer.Trace("compileExprVocabLF CLONE BEFORE")
 		if inferErr == nil && len(inferred) > 0 {
 			// Sort inference succeeded — use inferred formula in clone.
 			cloneArgs := compiled.Args()
@@ -644,6 +645,7 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 			// from seeing unsorted vars). Clone with original formula.
 			compiled = compiled.Clone(compiled.Args()).(*ast.LabeledFormula)
 		}
+		xtracer.Trace("compileExprVocabLF CLONE AFTER")
 	} else {
 		xtracer.Trace("compileExprVocabLF FORMULA_NOT_EXPR type=%s", iu.ShortTypeName(compiled.Formula))
 	}
