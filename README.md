@@ -2603,11 +2603,9 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-258997  go : XTRACE: compiler.sortify_with_inference ENTER
-        py : XTRACE: compiler.sortify_with_inference ENTER
+259072  go : XTRACE: compileExprVocabLF SortInferList ENTER nterms=1
+        py : XTRACE: compileExprVocabLF SortInferList ENTER nterms=1
 
-258998  go : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-QXxaGATRVL4LbG1kKFmguhjmppLAGkn3QoyHfDVA0hUg canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t ...(truncated long line to 300 bytes)
-
-        py : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-UqT6FGtnaSmAbHPoFjC_VKf21Kwm6QNHxX2E_ie68q2Z canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t
- ...(truncated long line to 300 bytes)
+259073  go : XTRACE: compileExprVocabLF SortInferList ERR=cannot infer sort of _T in work_start = (cf_live.issued_memc(_T) & □ ref.evs.l_req(_T) ~= memc_l)
+        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
 ~~~
