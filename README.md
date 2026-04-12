@@ -2605,14 +2605,28 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-088139  go : XTRACE: parser.spaa EXIT res=(constantDecl declArgs:[(atom rep:"trying1.now" terms:[] aSort:bool)] attributes:[spec] common:nil)
-        py : XTRACE: parser.spaa EXIT res=(constantDecl declArgs:[(atom rep:"trying1.now" terms:[] aSort:bool)] attributes:[] common:nil)
-~~~
+319096  go : XTRACE: l2s.modPass clone invar[0] ENTER HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
+        py : XTRACE: l2s.modPass clone invar[0] ENTER HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
 
-~~~
-260352  go : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
-        py : XTRACE: ast.LF.clone PRESERVE origid=667 counter=2306
+319097  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
 
-260353  go : XTRACE: CallAction.__init__ uniqueID=700 counter=701
-        py : XTRACE: ast.LF.clone PRESERVE origid=226 counter=2306
+=== S-expression diff (go '-' vs py '+') ===
+- (Not
+-   body:(Symbol
+-     name:cfabric.rd_fair
+-     sort:(BooleanSort)))
+- 
++ (labeledFormula
++   label:(atom
++     rep:"invar228"
++     terms:[]
++     aSort:nil)
++   formula:(Not
++     body:(Symbol
++       name:cfabric.rd_fair
++       sort:(BooleanSort)))
++   id:610
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 319097, counting from 0.
 ~~~
