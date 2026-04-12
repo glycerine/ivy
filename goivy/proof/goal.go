@@ -193,9 +193,11 @@ func GoalIsDefn(x ast.Node) bool {
 }
 
 // GoalDefns returns the symbols and types defined in the premises of a goal.
+// Corresponds to Python goal_defns (ivy_proof.py:540-547).
 func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 	res := make(map[lg.NodeKey]lg.Expr)
 	for _, p := range GoalPrems(goal) {
+		// Python: isinstance(x, ia.ConstantDecl) and isinstance(x.args[0], il.Symbol)
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
@@ -203,6 +205,10 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 					res[lg.Key(c)] = c
 				}
 			}
+		}
+		// Python: elif isinstance(x, il.UninterpretedSort): res.add(x)
+		if us, ok := p.(*lg.UninterpretedSort); ok {
+			res[lg.Key(us)] = us
 		}
 	}
 	return res
@@ -237,9 +243,17 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 				}
 			}
 		}
+		// Python: fmlas = [x.formula for x in prems if isinstance(x, ia.LabeledFormula)]
+		// Python passes x.formula which could be a SchemaBody; used_variables_asts
+		// traverses all its children. In Go, extract each element individually.
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			fc := ConcAsExpr(GoalConc(lf))
-			if fc != nil {
+			if sb, ok := lf.Formula.(*ast.SchemaBody); ok {
+				for _, elem := range sb.Elems {
+					if e, ok := elem.(lg.Expr); ok {
+						fmlas = append(fmlas, e)
+					}
+				}
+			} else if fc := ConcAsExpr(GoalConc(lf)); fc != nil {
 				fmlas = append(fmlas, fc)
 			}
 		}
@@ -277,19 +291,30 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 	bound := make(map[lg.NodeKey]lg.Expr)
 	res := make(map[lg.NodeKey]lg.Expr)
 
+	// Python fmla_vocab: collects used_sorts_ast, used_symbols_ast, used_variables_ast
 	var recFmla func(lg.Expr)
 	recFmla = func(fmla lg.Expr) {
 		if fmla == nil {
 			return
 		}
-		for vKey, vNode := range lu.FreeVariables(fmla).All() {
-			if bound[vKey] == nil {
-				res[vKey] = vNode
+		// Python: lu.used_sorts_ast(fmla)
+		for sKey, s := range lu.SortsAst(fmla) {
+			if sExpr, ok := s.(lg.Expr); ok {
+				if bound[sKey] == nil {
+					res[sKey] = sExpr
+				}
 			}
 		}
+		// Python: lu.used_symbols_ast(fmla)
 		for cKey, cNode := range il.UsedSymbolsAst(fmla) {
 			if bound[cKey] == nil {
 				res[cKey] = cNode
+			}
+		}
+		// Python: lu.used_variables_ast(fmla)
+		for vKey, vNode := range lu.FreeVariables(fmla).All() {
+			if bound[vKey] == nil {
+				res[vKey] = vNode
 			}
 		}
 	}

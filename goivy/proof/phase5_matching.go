@@ -46,10 +46,10 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 		}
 	}
 
-	// Compile with TopSort as default
-	savedDefault := sig.DefaultSort
-	sig.DefaultSort = lg.TopS
-	defer func() { sig.DefaultSort = savedDefault }()
+	// Python: with il.top_sort_as_default():
+	tsDefault := il.TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
 
 	if mod == nil {
 		mod = module.New()
@@ -105,10 +105,10 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 		}
 	}
 
-	// Compile with TopSort as default
-	savedDefault := sig.DefaultSort
-	sig.DefaultSort = lg.TopS
-	defer func() { sig.DefaultSort = savedDefault }()
+	// Python: with il.top_sort_as_default():
+	tsDefault := il.TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
 
 	if mod == nil {
 		mod = module.New()
