@@ -164,7 +164,7 @@ def inst_mod(ivy,module,pref,subst,vsubst,modname=None,lineno=None):
         if any((df[1] is TypeDecl) or (df[1] is DestructorDecl) for df in dfs):
             static.add(name)
     def spaa(decl,subst,pref):
-        if __debug__: xtracer.trace("parser.spaa ENTER")
+        if __debug__: xtracer.trace("parser.spaa ENTER decl=%s" % decl.canon())
         if modname is not None and pref is not None and isinstance(decl,ModuleDecl):
             subst = subst.copy()
             p,c = iu.parent_child_name(modname)
