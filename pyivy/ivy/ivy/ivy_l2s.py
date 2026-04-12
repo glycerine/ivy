@@ -133,7 +133,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     # Diagnostic: dump metadata for each axiom to diagnose assumed_gprops filtering
     for idx, ax in enumerate(prover.axioms):
-        if __debug__: xtracer.trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isGlobally=%s formulaType=%s" % (idx, ax.explicit, ax.temporal, isinstance(ax.formula, lg.Globally), type(ax.formula).__name__))
+        if __debug__: xtracer.trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isGlobally=%s formulaType=%s" % (idx, bool(ax.explicit), bool(ax.temporal), isinstance(ax.formula, lg.Globally), type(ax.formula).__name__))
 
     # Add all the assumed invariants to the model
 
