@@ -2603,9 +2603,14 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-259072  go : XTRACE: compileExprVocabLF SortInferList ENTER nterms=1
-        py : XTRACE: compileExprVocabLF SortInferList ENTER nterms=1
+259924  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
+        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
 
-259073  go : XTRACE: compileExprVocabLF SortInferList ERR=cannot infer sort of _T in work_start = (cf_live.issued_memc(_T) & □ ref.evs.l_req(_T) ~= memc_l)
-        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
+259925  go : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss ...(truncated long line to 300 bytes)
+
+        py : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss
+ ...(truncated long line to 300 bytes)
+
+259926  go : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
+        py : XTRACE: compiler.Thing ENTER type=LabeledFormula
 ~~~
