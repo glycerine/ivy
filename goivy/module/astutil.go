@@ -274,7 +274,7 @@ func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
 }
 
 // FreeVariablesAST is an alias for logicutil.FreeVariables.
-func FreeVariablesAST(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
+func FreeVariablesAST(node lg.Expr) *iu.Omap[lg.NodeKey, lg.Expr] {
 	return lu.FreeVariables(node)
 }
 

@@ -2,6 +2,7 @@ package ivylogic
 
 import (
 	"fmt"
+	"sort"
 
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
@@ -478,9 +479,11 @@ func NormalizeOps(fmla lg.Expr) lg.Expr {
 		return makeBin(fmla, newArgs[0], newArgs[1:])
 	case *lg.ForAll:
 		vars := BinderVars(fmla)
+		sort.Slice(vars, func(i, j int) bool { return vars[i].Name < vars[j].Name })
 		return makeQuant(fmla, vars, newArgs[0])
 	case *lg.Exists:
 		vars := BinderVars(fmla)
+		sort.Slice(vars, func(i, j int) bool { return vars[i].Name < vars[j].Name })
 		return makeQuant(fmla, vars, newArgs[0])
 	}
 

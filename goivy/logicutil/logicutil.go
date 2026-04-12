@@ -56,10 +56,10 @@ func usedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 
 // FreeVariables returns the set of variables free in the given term.
 // Variables are compared by structural identity (Sexp key).
-// The returned InsMap preserves DFS first-occurrence order, matching
-// Python's variables_ast → unique → tuple pipeline.
-func FreeVariables(t logic.Expr) *iu.InsMap[logic.NodeKey, logic.Expr] {
-	result := iu.NewInsMap[logic.NodeKey, logic.Expr]()
+// The returned Omap iterates in sorted key (NodeKey) order, giving
+// alphabetical variable ordering that matches Python's sorted tuple.
+func FreeVariables(t logic.Expr) *iu.Omap[logic.NodeKey, logic.Expr] {
+	result := iu.NewOmap[logic.NodeKey, logic.Expr]()
 	freeVariablesRec(t, result, nil)
 	return result
 }
@@ -82,7 +82,7 @@ func FreeVariablesByName(t logic.Expr) map[string]struct{} {
 	return result
 }
 
-func freeVariablesRec(t logic.Expr, result *iu.InsMap[logic.NodeKey, logic.Expr], bound map[logic.NodeKey]logic.Expr) {
+func freeVariablesRec(t logic.Expr, result *iu.Omap[logic.NodeKey, logic.Expr], bound map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		if _, isBound := bound[logic.Key(n)]; !isBound {

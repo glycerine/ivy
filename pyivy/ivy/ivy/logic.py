@@ -377,7 +377,7 @@ class ForAll(recstruct('ForAll', ['variables'], ['body'])):
             raise IvyError("Can only quantify over variables")
         if body.sort not in (Boolean, TopS):
             raise SortError("Quantified body must be Boolean: {}", body)
-        return frozenset(variables), body
+        return tuple(sorted(set(variables), key=lambda v: v.name)), body
     def __str__(self):
         return '(ForAll {}. {})'.format(
             ', '.join('{}:{}'.format(v.name, v.sort) for v in sorted(self.variables)),
@@ -395,7 +395,7 @@ class Exists(recstruct('Exists', ['variables'], ['body'])):
             raise IvyError("Can only quantify over variables")
         if body.sort not in (Boolean, TopS):
             raise SortError("Quantified body must be Boolean: {}", body)
-        return frozenset(variables), body
+        return tuple(sorted(set(variables), key=lambda v: v.name)), body
     def __str__(self):
         return '(Exists {}. {})'.format(
             ', '.join('{}:{}'.format(v.name, v.sort) for v in sorted(self.variables)),
