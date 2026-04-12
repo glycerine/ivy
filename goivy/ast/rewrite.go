@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -543,7 +543,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if x != nil {
 			xs = string(x.Canon())
 		}
-		xtracer.Trace("AstRewrite type(x)=%s canon=%s", iu.TypeName(x), xs)
+		xtracer.Trace("AstRewrite canon=%s", xs)
 	}
 
 	if x == nil {

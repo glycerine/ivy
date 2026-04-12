@@ -1700,7 +1700,7 @@ def rewrite_sort(rewrite,orig_sort):
 
 def ast_rewrite(x,rewrite):
     if (not isinstance(x,tuple)) and (not isinstance(x,list)):
-        if __debug__: xtracer.trace("AstRewrite type(x)=%s canon=%s" % (type(x).__name__, x.canon() if hasattr(x,'canon') else str(x) ))
+        if __debug__: xtracer.trace("AstRewrite canon=%s" % (x.canon() if hasattr(x,'canon') else str(x) ))
 
     if isinstance(x,str):
         return rewrite.rewrite_name(x)
