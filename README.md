@@ -2603,14 +2603,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-259924  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-
-259925  go : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss ...(truncated long line to 300 bytes)
-
-        py : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss
- ...(truncated long line to 300 bytes)
-
-259926  go : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
-        py : XTRACE: compiler.Thing ENTER type=LabeledFormula
+259951  go : XTRACE: l2s.l2sTacticInt compileInvar[0] post-clone HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
+        py : XTRACE: l2s.l2sTacticInt compileInvar[0] post-compile type=LabeledFormula
 ~~~
