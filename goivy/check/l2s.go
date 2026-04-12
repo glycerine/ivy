@@ -427,7 +427,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 			labeled := il.LabelTemporal(compiled, proofLabel)
 			cloned := inv.Clone([]ast.Node{inv.Label, labeled}).(*ast.LabeledFormula)
-			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-clone HASH canon=%v", idx, cloned.Canon())
+			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-compile HASH canon=%v", idx, cloned.Canon())
 			invars = append(invars, cloned)
 		}
 	} else {

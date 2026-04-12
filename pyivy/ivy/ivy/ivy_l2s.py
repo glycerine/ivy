@@ -193,7 +193,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         if __debug__: xtracer.trace("l2s.l2sTacticInt compileInvar[%d] pre-compile HASH canon=%s" % (idx, inv.canon()))
         compiled = ipr.compile_with_goal_vocab(inv,goal)
         labeled = ilg.label_temporal(compiled,proof_label)
-        if __debug__: xtracer.trace("l2s.l2sTacticInt compileInvar[%d] post-compile type=%s" % (idx, type(labeled).__name__))
+        if __debug__: xtracer.trace("l2s.l2sTacticInt compileInvar[%d] post-compile HASH canon=%s" % (idx, labeled.canon()))
         invars.append(labeled)
 #    invars = [ilg.label_temporal(inv.compile(),proof_label) for inv in proof.tactic_decls]
 

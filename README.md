@@ -2603,6 +2603,14 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-259951  go : XTRACE: l2s.l2sTacticInt compileInvar[0] post-clone HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
-        py : XTRACE: l2s.l2sTacticInt compileInvar[0] post-compile type=LabeledFormula
+260129  go : XTRACE: ast.LF.clone PRESERVE origid=612 counter=2272
+        py : XTRACE: ast.LF.clone PRESERVE origid=612 counter=2272
+
+260130  go : XTRACE: l2s.l2sTacticInt compileInvar[2] post-compile HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable nam ...(truncated long line to 300 bytes)
+
+        py : XTRACE: l2s.l2sTacticInt compileInvar[2] post-compile HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable nam
+ ...(truncated long line to 300 bytes)
+
+260131  go : XTRACE: actions.substitute_constants_action ENTER type=And nargs=2
+        py : XTRACE: ast.LF.__init__ id=2272 counter=2273
 ~~~
