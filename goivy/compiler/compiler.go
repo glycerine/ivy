@@ -858,7 +858,7 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 
 // variableSort resolves the sort of a variable AST node.
 func (c *Compiler) variableSort(v *ast.Variable) (lg.Sort, error) {
-	if v.VSort == "" || v.VSort == "S" {
+	if v.VSort == "" {
 		return lg.TopS, nil
 	}
 	return c.CmplSort(v.VSort)
