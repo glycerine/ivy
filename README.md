@@ -2603,12 +2603,26 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-254992  go : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
-        py : XTRACE: l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=TemporalModels
+255185  go : XTRACE: l2s.l2sTacticInt axiomDump[56] HASH canon=(labeledFormula label:(atom rep:"invar144" terms:[] aSort:nil) formula:(Implies t1:(ForAll vars:[(Variable name:A sort:(UninterpretedSort name:addr_type))] body:(ForAll vars:[(Variable name:M sort:(UninterpretedSort name:mem_type))] body:(ForAll vars ...(truncated long line to 300 bytes)
 
-254993  go : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
-        py : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
+        py : XTRACE: l2s.l2sTacticInt axiomDump[56] HASH canon=(labeledFormula label:(atom rep:"invar144" terms:[] aSort:nil) formula:(Implies t1:(ForAll vars:[(Variable name:P sort:(UninterpretedSort name:proc))] body:(ForAll vars:[(Variable name:M sort:(UninterpretedSort name:mem_type))] body:(ForAll vars:[(Va
+ ...(truncated long line to 300 bytes)
 
-254994  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
+
+=== S-expression diff (go '-' vs py '+') ===
+   (labeledFormula
+     label:(atom
+       rep:"invar144"
+       terms:[]
+       aSort:nil)
+     formula:(Implies
+       t1:(ForAll
+         vars:[
+           (Variable
+-           name:A
++           name:P
+             sort:(UninterpretedSort
+-             name:addr_type))]
++             name:proc))]
+         body:(ForAll
 ~~~
