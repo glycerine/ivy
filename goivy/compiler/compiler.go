@@ -139,7 +139,8 @@ type Compiler struct {
 
 	// SigMerkle is a rolling Merkle hash for Sig conformance auditing.
 	// Each SigCheck() call feeds the Sig's canon into this chain.
-	SigMerkle iu.MerkleState
+	// Pointer shared with Module so all Compiler instances use one chain.
+	SigMerkle *iu.MerkleState
 
 	// ActCfg holds the per-session ActionsConfig, threaded from module.
 	// Used for creating compiled actions (LocalAction, etc.) with proper
@@ -182,6 +183,13 @@ func New(sig *il.Sig, mod *module.Module) *Compiler {
 	}
 	if mod == nil {
 		c.Module = module.New()
+	}
+	// Share the Module's Merkle chain so all compilers in a session
+	// accumulate into one root, matching Python's module-level sig_merkle.
+	if c.Module.SigMerkle != nil {
+		c.SigMerkle = c.Module.SigMerkle
+	} else {
+		c.SigMerkle = &iu.MerkleState{}
 	}
 	// Ensure ActCfg is always set (IvyCompile seeds it from AstConfig;
 	// standalone tests get a fresh one).

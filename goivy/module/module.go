@@ -106,6 +106,11 @@ type Module struct {
 	Logics []string
 	Macros map[string]*ast.Definition // macro name → definition
 
+	// SigMerkle is the rolling Merkle hash for compiler conformance auditing.
+	// Matches Python's module-level sig_merkle in ivy_compiler.py.
+	// Lives on Module so all Compiler instances share one chain per session.
+	SigMerkle *iu.MerkleState
+
 	// CompCfg holds the per-session compiler config.
 	CompCfg *CompilerConfig
 
@@ -236,6 +241,7 @@ func New() *Module {
 		Cfg: NewConfig(),
 	}
 	m.Clear()
+	m.SigMerkle = &iu.MerkleState{}
 	return m
 }
 
