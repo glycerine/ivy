@@ -2603,10 +2603,11 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-258991  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
+258997  go : XTRACE: compiler.sortify_with_inference ENTER
+        py : XTRACE: compiler.sortify_with_inference ENTER
 
-258992  go : XTRACE: compiler.Thing ENTER type=LabeledFormula
-        py : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss
+258998  go : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-QXxaGATRVL4LbG1kKFmguhjmppLAGkn3QoyHfDVA0hUg canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t ...(truncated long line to 300 bytes)
+
+        py : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-UqT6FGtnaSmAbHPoFjC_VKf21Kwm6QNHxX2E_ie68q2Z canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t
  ...(truncated long line to 300 bytes)
 ~~~
