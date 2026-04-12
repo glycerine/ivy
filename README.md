@@ -2603,49 +2603,10 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-255401  go : XTRACE: compiler.Thing ENTER type=LabeledFormula
-        py : XTRACE: compiler.Thing ENTER type=LabeledFormula
+258991  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
+        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
 
-255402  go : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
-        py : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
-
-255403  go : XTRACE: compiler.CompileNode return case=LabeledFormula
-        py : XTRACE: compiler.CompileNode return case=LabeledFormula
-
-255404  go : XTRACE: compiler.CompileLabeledFormula ENTER
-        py : XTRACE: compiler.CompileLabeledFormula ENTER
-
-255405  go : XTRACE: compiler.sortify_with_inference ENTER
-        py : XTRACE: compiler.sortify_with_inference ENTER
-
-255406  go : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-FsUCcfFu54vUdRZKUwmctGiFT3mysb1P0ETr2IrpLU4i root=blake3.33B-_p3bJ0ti2_n9Ic9XHTFGnEYHDMMe28WlRXPro1Zq4GFe canon=(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar ...(truncated long line to 300 bytes)
-
-        py : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-UqT6FGtnaSmAbHPoFjC_VKf21Kwm6QNHxX2E_ie68q2Z canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t
+258992  go : XTRACE: compiler.Thing ENTER type=LabeledFormula
+        py : XTRACE: ivylogic.SortAsDefault.Enter hadOld=False HASH canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar_clock] symbols:[_GRE:op_ack_type _T:lclock arm.cpl_fair:proc -> Boolean arm_l:loc_type cf_cmp_l:loc_type cf_live.iss
  ...(truncated long line to 300 bytes)
-
-
-=== S-expression diff (go '-' vs py '+') ===
-   (sig
--   sorts:[addr_type
--     bool
--     index
--     lclock
--     loc_type
--     mem_loc_type
--     mem_type
--     op_ack_type
--     op_type
--     ph_type
-+   sorts:[S
-+     addr_type
-+     bool
-+     index
-+     lclock
-+     loc_type
-+     mem_loc_type
-+     mem_type
-+     op_ack_type
-+     op_type
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 255406, counting from 0.
 ~~~
