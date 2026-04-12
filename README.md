@@ -2603,21 +2603,49 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-255394  go : XTRACE: l2s.l2sTacticInt axiomMeta[132] explicit=False temporal=False isGlobally=False formulaType=Not
-        py : XTRACE: l2s.l2sTacticInt axiomMeta[132] explicit=False temporal=False isGlobally=False formulaType=Not
+255401  go : XTRACE: compiler.Thing ENTER type=LabeledFormula
+        py : XTRACE: compiler.Thing ENTER type=LabeledFormula
 
-255395  go : XTRACE: l2s.l2sTacticInt assumedGprops count=0
-        py : XTRACE: l2s.l2sTacticInt assumedGprops count=0
+255402  go : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
+        py : XTRACE: compiler.CompileNode ENTER type=LabeledFormula
 
-255396  go : XTRACE: l2s.l2sTacticInt temporalPrems count=0
-        py : XTRACE: l2s.l2sTacticInt temporalPrems count=0
+255403  go : XTRACE: compiler.CompileNode return case=LabeledFormula
+        py : XTRACE: compiler.CompileNode return case=LabeledFormula
 
-255397  go : XTRACE: l2s.l2sTacticInt tacticDecls nInvars=3 nDefns=11
-        py : XTRACE: l2s.l2sTacticInt tacticDecls nInvars=3 nDefns=11
+255404  go : XTRACE: compiler.CompileLabeledFormula ENTER
+        py : XTRACE: compiler.CompileLabeledFormula ENTER
 
-255398  go : XTRACE: l2s.l2sTacticInt compileDefn[0] type=DerivedDecl
-        py : XTRACE: l2s.l2sTacticInt compileDefn[0] type=DerivedDecl
+255405  go : XTRACE: compiler.sortify_with_inference ENTER
+        py : XTRACE: compiler.sortify_with_inference ENTER
 
-255399  go : XTRACE: l2s.l2sTacticInt compileDefn[1] type=DerivedDecl
-        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
+255406  go : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-FsUCcfFu54vUdRZKUwmctGiFT3mysb1P0ETr2IrpLU4i root=blake3.33B-_p3bJ0ti2_n9Ic9XHTFGnEYHDMMe28WlRXPro1Zq4GFe canon=(sig sorts:[addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock tar ...(truncated long line to 300 bytes)
+
+        py : XTRACE: compiler.SigCheck@SortifyWithInference HASH leaf=blake3.33B-2Lceoz5TS6sIt0S-1T90V9FVWr7Anr2JXJhGfu6RQQ0f root=blake3.33B-UqT6FGtnaSmAbHPoFjC_VKf21Kwm6QNHxX2E_ie68q2Z canon=(sig sorts:[S addr_type bool index lclock loc_type mem_loc_type mem_type op_ack_type op_type ph_type proc tar_cf_clock t
+ ...(truncated long line to 300 bytes)
+
+
+=== S-expression diff (go '-' vs py '+') ===
+   (sig
+-   sorts:[addr_type
++   sorts:[S
+-     bool
++     addr_type
+-     index
++     bool
+-     lclock
++     index
+-     loc_type
++     lclock
+-     mem_loc_type
++     loc_type
+-     mem_type
++     mem_loc_type
+-     op_ack_type
++     mem_type
+-     op_type
++     op_ack_type
+-     ph_type
++     op_type
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 255406, counting from 0.
 ~~~
