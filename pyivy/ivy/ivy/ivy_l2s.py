@@ -131,13 +131,22 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     for idx, ax in enumerate(prover.axioms):
         if __debug__: xtracer.trace("l2s.l2sTacticInt axiomDump[%d] HASH canon=%s" % (idx, ax.canon()))
 
+    # Diagnostic: dump metadata for each axiom to diagnose assumed_gprops filtering
+    for idx, ax in enumerate(prover.axioms):
+        if __debug__: xtracer.trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isLgExpr=%s isGlobally=%s formulaType=%s" % (idx, ax.explicit, ax.temporal, isinstance(ax.formula, lg.Expr), isinstance(ax.formula, lg.Globally), type(ax.formula).__name__))
+
     # Add all the assumed invariants to the model
 
     assumed_gprops = [x for x in prover.axioms if not x.explicit and x.temporal and isinstance(x.formula,lg.Globally)]
-    model.asms.extend([p.clone([p.label,p.formula.args[0]]) for p in assumed_gprops])
+    for p in assumed_gprops:
+        cloned = p.clone([p.label,p.formula.args[0]])
+        if __debug__: xtracer.trace("l2s.l2sTacticInt assumedGprop HASH canon=%s" % cloned.canon())
+        model.asms.append(cloned)
+    if __debug__: xtracer.trace("l2s.l2sTacticInt assumedGprops count=%d" % len(assumed_gprops))
 
     temporal_prems = [x for x in ipr.goal_prems(goal) if hasattr(x,'temporal') and x.temporal] + [
         x for x in prover.axioms if not x.explicit and x.temporal]
+    if __debug__: xtracer.trace("l2s.l2sTacticInt temporalPrems count=%d" % len(temporal_prems))
     if temporal_prems:
         fmla = ilg.Implies(ilg.And(*[x.formula for x in temporal_prems]),fmla)
 
@@ -145,6 +154,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     tactic_invars = [inv for inv in proof.tactic_decls if not isinstance(inv,ivy_ast.DerivedDecl)]
     tactic_defns = [inv for inv in proof.tactic_decls if isinstance(inv,ivy_ast.DerivedDecl)]
+    if __debug__: xtracer.trace("l2s.l2sTacticInt tacticDecls nInvars=%d nDefns=%d" % (len(tactic_invars), len(tactic_defns)))
 
     # TRICKY: We postpone compiling formulas in the tactic until now, so
     # that tactics can introduce their own symbols. But, this means that the
@@ -154,8 +164,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     # compiled definitions into goal
 
-    for defn in tactic_defns:
-        goal = ipr.compile_definition_goal_vocab(defn,goal) 
+    for idx, defn in enumerate(tactic_defns):
+        if __debug__: xtracer.trace("l2s.l2sTacticInt compileDefn[%d] type=%s" % (idx, type(defn).__name__))
+        goal = ipr.compile_definition_goal_vocab(defn,goal)
 
     # compile definition dependcies
 
@@ -169,7 +180,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         fml = ilg.drop_universals(defn.formula)
         for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
             defn_deps[sym].append(fml.args[0].rep)
-            
+
     def dependencies(syms):
         return iu.reachable(syms,lambda x: defn_deps.get(x) or [])
 
@@ -177,7 +188,13 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 #    proof_label = proof.labels[0]
     proof_label = ""
 #    print 'proof label: {}'.format(proof_label)
-    invars = [ilg.label_temporal(ipr.compile_with_goal_vocab(inv,goal),proof_label) for inv in tactic_invars]
+    invars = []
+    for idx, inv in enumerate(tactic_invars):
+        if __debug__: xtracer.trace("l2s.l2sTacticInt compileInvar[%d] pre-compile HASH canon=%s" % (idx, inv.canon()))
+        compiled = ipr.compile_with_goal_vocab(inv,goal)
+        labeled = ilg.label_temporal(compiled,proof_label)
+        if __debug__: xtracer.trace("l2s.l2sTacticInt compileInvar[%d] post-compile type=%s" % (idx, type(labeled).__name__))
+        invars.append(labeled)
 #    invars = [ilg.label_temporal(inv.compile(),proof_label) for inv in proof.tactic_decls]
 
 

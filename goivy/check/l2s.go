@@ -337,24 +337,38 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		xtracer.Trace("l2s.l2sTacticInt axiomDump[%d] HASH canon=%v", idx, ax.Canon())
 	}
 
+	// Diagnostic: dump metadata for each axiom to diagnose assumed_gprops filtering
+	for idx, ax := range pc.GetAxioms() {
+		_, isGlobally := ax.Formula.(*lg.Globally)
+		_, isLgExpr := ax.Formula.(lg.Expr)
+		xtracer.Trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isLgExpr=%s isGlobally=%s formulaType=%s",
+			idx, pyBool(ax.Explicit), pyBool(ax.IsTemporal()), pyBool(isLgExpr), pyBool(isGlobally), iu.TypeName(ax.Formula))
+	}
+
 	// Add assumed globally properties to model assumptions
 	// H13: preserve the original axiom label (Python ivy_l2s.py:132).
 	// Use Clone (not NewLabeledFormula) to preserve the axiom's id and
 	// metadata flags (Temporal, Explicit, IsDefinition, Assumed, Unprovable),
 	// matching Python's `p.clone([p.label,p.formula.args[0]])`.
+	var assumedGprops []*ast.LabeledFormula
 	if pc != nil {
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, ax.Clone([]ast.Node{ax.Label, g.Body}).(*ast.LabeledFormula))
+						assumedGprops = append(assumedGprops, ax)
+						cloned := ax.Clone([]ast.Node{ax.Label, g.Body}).(*ast.LabeledFormula)
+						xtracer.Trace("l2s.l2sTacticInt assumedGprop HASH canon=%v", cloned.Canon())
+						model.Asms = append(model.Asms, cloned)
 					}
 				}
 			}
 		}
 	}
+	xtracer.Trace("l2s.l2sTacticInt assumedGprops count=%d", len(assumedGprops))
 
 	// If there are temporal premises, wrap: prems -> fmla
+	xtracer.Trace("l2s.l2sTacticInt temporalPrems count=%d", len(temporalPrems))
 	if len(temporalPrems) > 0 {
 		premConj := makeAnd(temporalPrems...)
 		fmla = &lg.Implies{T1: premConj, T2: fmla}
@@ -389,9 +403,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 				tacticInvars = append(tacticInvars, lf)
 			}
 		}
+		xtracer.Trace("l2s.l2sTacticInt tacticDecls nInvars=%d nDefns=%d", len(tacticInvars), len(tacticDefns))
 
 		// C7: compile definitions into goal premises (Python lines 152-153).
-		for _, defn := range tacticDefns {
+		for idx, defn := range tacticDefns {
+			xtracer.Trace("l2s.l2sTacticInt compileDefn[%d] type=%s", idx, iu.TypeName(defn))
 			goal = proof.CompileDefinitionGoalVocab(m.Cfg.AstCfg, defn, goal)
 		}
 
@@ -399,14 +415,20 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		// Pass inv (the whole LF, not inv.Formula) so CompileNode dispatches
 		// to CompileLF which clones with PRESERVE — matching Python's
 		// inv.compile() → _labeled_formula_cmpl → self.clone([...]).
-		for _, inv := range tacticInvars {
+		for idx, inv := range tacticInvars {
+			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] pre-compile HASH canon=%v", idx, inv.Canon())
 			compiled := proof.CompileWithGoalVocab(inv, goal, m)
 			if compiled == nil {
+				xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] compiled=nil", idx)
 				continue
 			}
 			labeled := il.LabelTemporal(compiled, proofLabel)
-			invars = append(invars, inv.Clone([]ast.Node{inv.Label, labeled}).(*ast.LabeledFormula))
+			cloned := inv.Clone([]ast.Node{inv.Label, labeled}).(*ast.LabeledFormula)
+			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-clone HASH canon=%v", idx, cloned.Canon())
+			invars = append(invars, cloned)
 		}
+	} else {
+		xtracer.Trace("l2s.l2sTacticInt tacticDecls NONE (pf is not TacticTactic, type=%s)", iu.TypeName(pf))
 	}
 
 	// --- L2S monitor symbols ---
