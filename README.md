@@ -2603,11 +2603,21 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-255261  go : XTRACE: l2s.l2sTacticInt axiomDump[132] HASH canon=(labeledFormula label:(atom rep:"rfn.invar253" terms:[] aSort:nil) formula:(Not body:(Apply func:(Symbol name:dramc.wr_fair sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort  ...(truncated long line to 300 bytes)
+255394  go : XTRACE: l2s.l2sTacticInt axiomMeta[132] explicit=False temporal=False isGlobally=False formulaType=Not
+        py : XTRACE: l2s.l2sTacticInt axiomMeta[132] explicit=False temporal=False isGlobally=False formulaType=Not
 
-        py : XTRACE: l2s.l2sTacticInt axiomDump[132] HASH canon=(labeledFormula label:(atom rep:"rfn.invar253" terms:[] aSort:nil) formula:(Not body:(Apply func:(Symbol name:dramc.wr_fair sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort 
- ...(truncated long line to 300 bytes)
+255395  go : XTRACE: l2s.l2sTacticInt assumedGprops count=0
+        py : XTRACE: l2s.l2sTacticInt assumedGprops count=0
 
-255262  go : XTRACE: l2s.l2sTacticInt axiomMeta[0] explicit=False temporal=False isGlobally=False formulaType=Implies
-        py : XTRACE: l2s.l2sTacticInt axiomMeta[0] explicit=False temporal=None isGlobally=False formulaType=Implies
+255396  go : XTRACE: l2s.l2sTacticInt temporalPrems count=0
+        py : XTRACE: l2s.l2sTacticInt temporalPrems count=0
+
+255397  go : XTRACE: l2s.l2sTacticInt tacticDecls nInvars=3 nDefns=11
+        py : XTRACE: l2s.l2sTacticInt tacticDecls nInvars=3 nDefns=11
+
+255398  go : XTRACE: l2s.l2sTacticInt compileDefn[0] type=DerivedDecl
+        py : XTRACE: l2s.l2sTacticInt compileDefn[0] type=DerivedDecl
+
+255399  go : XTRACE: l2s.l2sTacticInt compileDefn[1] type=DerivedDecl
+        py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
 ~~~
