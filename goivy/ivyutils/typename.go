@@ -6,7 +6,7 @@ import "reflect"
 // and package prefixes. Matches Python's type(x).__name__.
 // Example: (*ast.ComposeTactics) → "ComposeTactics"
 func TypeName(v interface{}) string {
-	if v == nil {
+	if v == nil || isNil(v) {
 		return "nil"
 	}
 	t := reflect.TypeOf(v)

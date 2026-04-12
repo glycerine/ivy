@@ -1697,6 +1697,7 @@ def rewrite_sort(rewrite,orig_sort):
     return sort
 
 def ast_rewrite(x,rewrite):
+    if __debug__: xtracer.trace("AstRewrite x=%s" % type(x).__name__)
     if isinstance(x,str):
         return rewrite.rewrite_name(x)
     if isinstance(x,list):

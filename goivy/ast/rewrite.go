@@ -10,6 +10,9 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // IvyComposeCharacter is the character used to compose names (e.g., "module.name").
@@ -535,6 +538,8 @@ func isTacticType(x Node) bool {
 // AstRewrite performs a deep rewrite of an AST node.
 // Python: ast_rewrite(x, rewrite) — handles all AST node types.
 func AstRewrite(x Node, rewrite AstRewriter) Node {
+	xtracer.Trace("AstRewrite x=%s", iu.ShortTypeName(x))
+
 	if x == nil {
 		return nil
 	}
