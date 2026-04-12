@@ -340,9 +340,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Diagnostic: dump metadata for each axiom to diagnose assumed_gprops filtering
 	for idx, ax := range pc.GetAxioms() {
 		_, isGlobally := ax.Formula.(*lg.Globally)
-		_, isLgExpr := ax.Formula.(lg.Expr)
-		xtracer.Trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isLgExpr=%s isGlobally=%s formulaType=%s",
-			idx, pyBool(ax.Explicit), pyBool(ax.IsTemporal()), pyBool(isLgExpr), pyBool(isGlobally), iu.TypeName(ax.Formula))
+		xtracer.Trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isGlobally=%s formulaType=%s",
+			idx, pyBool(ax.Explicit), pyBool(ax.IsTemporal()), pyBool(isGlobally), iu.TypeName(ax.Formula))
 	}
 
 	// Add assumed globally properties to model assumptions
