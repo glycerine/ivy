@@ -834,30 +834,20 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 	if act == nil {
 		return nil
 	}
+	// Python always clones: ast.clone(args) even when args are unchanged.
+	// (replace_temporals_by_named_binder_g_ast line 322, normalize_named_binders line 277)
 	args := act.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
-	changed := false
 	for i, a := range args {
 		if sub, ok := a.(actions.Action); ok {
-			newSub := transformAction(sub, transform)
-			newArgs[i] = newSub
-			if newSub != sub {
-				changed = true
-			}
+			newArgs[i] = transformAction(sub, transform)
 		} else if a != nil {
-			newA := transform(a)
-			newArgs[i] = newA
-			if newA != a {
-				changed = true
-			}
+			newArgs[i] = transform(a)
 		} else {
 			newArgs[i] = a
 		}
 	}
-	if changed {
-		return act.ActionClone(newArgs)
-	}
-	return act
+	return act.ActionClone(newArgs)
 }
 
 func extractNormalProgram(m *module.Module) *temporal.NormalProgram {
