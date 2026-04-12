@@ -618,7 +618,13 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 	}
 	xtracer.Trace("compiler.Thing return type=LabeledFormula")
 
-	// Sort inference: sort_infer_list([compiled.formula] + vocab.variables)
+	// Python: sort_infer_list([expr.compile()] + vocab.variables)
+	// Python passes the entire LabeledFormula to sort_infer_list.
+	// infer_sorts hits hasattr(t,'clone'), recursively processes args,
+	// returns lambda: t.clone(inferred_args). check_concretely_sorted
+	// on the LabeledFormula wrapper doesn't see unsorted vars inside.
+	// The real sort inference already happened in SortifyWithInference
+	// during CompileLF. So here we just clone the LF (matching Python).
 	if formula, ok := compiled.Formula.(lg.Expr); ok {
 		terms := make([]lg.Expr, 0, 1+len(vocab.Variables))
 		terms = append(terms, formula)
@@ -626,20 +632,17 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 			terms = append(terms, v)
 		}
 		xtracer.Trace("compileExprVocabLF SortInferList ENTER nterms=%d", len(terms))
-		inferred, err := il.SortInferList(terms, nil, nil)
-		if err != nil {
-			xtracer.Trace("compileExprVocabLF SortInferList ERR=%v", err)
-		}
-		if err == nil && len(inferred) > 0 {
-			// Python: concretize_terms returns t.clone(inferred_args) for
-			// AST nodes with clone. Match by cloning the LabeledFormula
-			// with the sort-inferred formula, producing the matching
-			// ast.LF.clone PRESERVE trace.
-			xtracer.Trace("compileExprVocabLF CLONE BEFORE")
+		inferred, inferErr := il.SortInferList(terms, nil, nil)
+		if inferErr == nil && len(inferred) > 0 {
+			// Sort inference succeeded — use inferred formula in clone.
 			cloneArgs := compiled.Args()
 			cloneArgs[1] = inferred[0]
 			compiled = compiled.Clone(cloneArgs).(*ast.LabeledFormula)
-			xtracer.Trace("compileExprVocabLF CLONE AFTER")
+		} else {
+			// Sort inference failed or returned empty. Python still
+			// clones the LF (the LF wrapper shields check_concretely_sorted
+			// from seeing unsorted vars). Clone with original formula.
+			compiled = compiled.Clone(compiled.Args()).(*ast.LabeledFormula)
 		}
 	} else {
 		xtracer.Trace("compileExprVocabLF FORMULA_NOT_EXPR type=%s", iu.ShortTypeName(compiled.Formula))
