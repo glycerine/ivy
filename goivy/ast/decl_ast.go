@@ -154,6 +154,11 @@ type Decl interface {
 // DeclBase is the base for all declaration nodes.
 // In Python, Decl has args and attributes. In Go, each specific Decl type
 // has its own fields. We provide a common DeclBase.
+//
+// NOTE: Clone methods on Decl types intentionally do NOT copy Attributes
+// or Common. This matches Python's Decl.__init__, which always resets
+// self.attributes=() and self.common=None on clone. Callers that need
+// these fields (e.g., inst_mod) explicitly restore them after cloning.
 type DeclBase struct {
 	Base
 	DeclArgs   []Node
@@ -302,7 +307,7 @@ func (cfg *AstConfig) NewModuleDecl(args ...Node) *ModuleDecl {
 }
 
 func (d *ModuleDecl) Clone(args []Node) Node {
-	return &ModuleDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ModuleDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ModuleDecl) String() string {
 	parts := make([]string, len(d.DeclArgs))
@@ -324,7 +329,7 @@ func (cfg *AstConfig) NewMacroDecl(args ...Node) *MacroDecl {
 }
 
 func (d *MacroDecl) Clone(args []Node) Node {
-	return &MacroDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &MacroDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *MacroDecl) String() string { return "macro" }
 
@@ -340,7 +345,7 @@ func (cfg *AstConfig) NewObjectDecl(args ...Node) *ObjectDecl {
 }
 
 func (d *ObjectDecl) Clone(args []Node) Node {
-	return &ObjectDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ObjectDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ObjectDecl) String() string { return "object" }
 
@@ -356,7 +361,7 @@ func (cfg *AstConfig) NewActionDecl(args ...Node) *ActionDecl {
 }
 
 func (d *ActionDecl) Clone(args []Node) Node {
-	return &ActionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ActionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ActionDecl) String() string { return "action" }
 
@@ -589,7 +594,7 @@ func (cfg *AstConfig) NewRelationDecl(args ...Node) *RelationDecl {
 }
 
 func (d *RelationDecl) Clone(args []Node) Node {
-	return &RelationDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &RelationDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *RelationDecl) String() string { return "relation" }
 
@@ -605,7 +610,7 @@ func (cfg *AstConfig) NewConstantDecl(args ...Node) *ConstantDecl {
 }
 
 func (d *ConstantDecl) Clone(args []Node) Node {
-	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ConstantDecl) String() string { return "individual" }
 
@@ -621,7 +626,7 @@ func (cfg *AstConfig) NewParameterDecl(args ...Node) *ParameterDecl {
 }
 
 func (d *ParameterDecl) Clone(args []Node) Node {
-	return &ParameterDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ParameterDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ParameterDecl) String() string { return "parameter" }
 
@@ -648,7 +653,7 @@ func (cfg *AstConfig) NewDestructorDecl(args ...Node) *DestructorDecl {
 }
 
 func (d *DestructorDecl) Clone(args []Node) Node {
-	return &DestructorDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &DestructorDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *DestructorDecl) String() string { return "destructor" }
 
@@ -664,7 +669,7 @@ func (cfg *AstConfig) NewConstructorDecl(args ...Node) *ConstructorDecl {
 }
 
 func (d *ConstructorDecl) Clone(args []Node) Node {
-	return &ConstructorDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ConstructorDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ConstructorDecl) String() string { return "constructor" }
 
@@ -680,7 +685,7 @@ func (cfg *AstConfig) NewTypeDecl(args ...Node) *TypeDecl {
 }
 
 func (d *TypeDecl) Clone(args []Node) Node {
-	return &TypeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &TypeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *TypeDecl) String() string { return "type" }
 
@@ -757,7 +762,7 @@ func (cfg *AstConfig) NewVariantDecl(args ...Node) *VariantDecl {
 }
 
 func (d *VariantDecl) Clone(args []Node) Node {
-	return &VariantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &VariantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *VariantDecl) String() string { return "variant" }
 
@@ -792,7 +797,7 @@ func (cfg *AstConfig) NewAxiomDecl(args ...Node) *AxiomDecl {
 }
 
 func (d *AxiomDecl) Clone(args []Node) Node {
-	return &AxiomDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &AxiomDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AxiomDecl) String() string { return "axiom" }
 
@@ -824,7 +829,7 @@ func (cfg *AstConfig) NewConjectureDecl(args ...Node) *ConjectureDecl {
 }
 
 func (d *ConjectureDecl) Clone(args []Node) Node {
-	return &ConjectureDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ConjectureDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ConjectureDecl) String() string { return "conjecture" }
 
@@ -840,7 +845,7 @@ func (cfg *AstConfig) NewProofDecl(args ...Node) *ProofDecl {
 }
 
 func (d *ProofDecl) Clone(args []Node) Node {
-	return &ProofDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ProofDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ProofDecl) String() string { return "proof" }
 
@@ -856,7 +861,7 @@ func (cfg *AstConfig) NewNamedDecl(args ...Node) *NamedDecl {
 }
 
 func (d *NamedDecl) Clone(args []Node) Node {
-	return &NamedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &NamedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *NamedDecl) String() string { return "named" }
 
@@ -872,7 +877,7 @@ func (cfg *AstConfig) NewSchemaDecl(args ...Node) *SchemaDecl {
 }
 
 func (d *SchemaDecl) Clone(args []Node) Node {
-	return &SchemaDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &SchemaDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *SchemaDecl) String() string { return "schema" }
 
@@ -1038,7 +1043,7 @@ func (cfg *AstConfig) NewTheoremDecl(args ...Node) *TheoremDecl {
 }
 
 func (d *TheoremDecl) Clone(args []Node) Node {
-	return &TheoremDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &TheoremDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *TheoremDecl) String() string { return "theorem" }
 
@@ -1054,7 +1059,7 @@ func (cfg *AstConfig) NewDerivedDecl(args ...Node) *DerivedDecl {
 }
 
 func (d *DerivedDecl) Clone(args []Node) Node {
-	return &DerivedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &DerivedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *DerivedDecl) String() string { return "derived" }
 
@@ -1090,7 +1095,7 @@ func (cfg *AstConfig) NewDefinitionDecl(args ...Node) *DefinitionDecl {
 
 func (d *DefinitionDecl) Clone(args []Node) Node {
 	sn := debugNextDefinitionDeclSn.Add(1)
-	c := &DefinitionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}, Sn: sn}
+	c := &DefinitionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}, Sn: sn}
 	return c
 }
 func (d *DefinitionDecl) String() string { return "definition" }
@@ -1107,7 +1112,7 @@ func (cfg *AstConfig) NewProgressDecl(args ...Node) *ProgressDecl {
 }
 
 func (d *ProgressDecl) Clone(args []Node) Node {
-	return &ProgressDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ProgressDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ProgressDecl) String() string { return "progress" }
 
@@ -1123,7 +1128,7 @@ func (cfg *AstConfig) NewRelyDecl(args ...Node) *RelyDecl {
 }
 
 func (d *RelyDecl) Clone(args []Node) Node {
-	return &RelyDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &RelyDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *RelyDecl) String() string { return "rely" }
 
@@ -1139,7 +1144,7 @@ func (cfg *AstConfig) NewMixOrdDecl(args ...Node) *MixOrdDecl {
 }
 
 func (d *MixOrdDecl) Clone(args []Node) Node {
-	return &MixOrdDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &MixOrdDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *MixOrdDecl) String() string { return "mixord" }
 
@@ -1155,7 +1160,7 @@ func (cfg *AstConfig) NewConceptDecl(args ...Node) *ConceptDecl {
 }
 
 func (d *ConceptDecl) Clone(args []Node) Node {
-	return &ConceptDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ConceptDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ConceptDecl) String() string { return "concept" }
 
@@ -1171,7 +1176,7 @@ func (cfg *AstConfig) NewInitDecl(args ...Node) *InitDecl {
 }
 
 func (d *InitDecl) Clone(args []Node) Node {
-	return &InitDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &InitDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *InitDecl) String() string { return "init" }
 
@@ -1187,7 +1192,7 @@ func (cfg *AstConfig) NewStateDecl(args ...Node) *StateDecl {
 }
 
 func (d *StateDecl) Clone(args []Node) Node {
-	return &StateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &StateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *StateDecl) String() string { return "state" }
 
@@ -1203,7 +1208,7 @@ func (cfg *AstConfig) NewUpdateDecl(args ...Node) *UpdateDecl {
 }
 
 func (d *UpdateDecl) Clone(args []Node) Node {
-	return &UpdateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &UpdateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *UpdateDecl) String() string { return "update" }
 
@@ -1219,7 +1224,7 @@ func (cfg *AstConfig) NewAssertDecl(args ...Node) *AssertDecl {
 }
 
 func (d *AssertDecl) Clone(args []Node) Node {
-	return &AssertDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &AssertDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AssertDecl) String() string { return "assert" }
 
@@ -1235,7 +1240,7 @@ func (cfg *AstConfig) NewInterpretDecl(args ...Node) *InterpretDecl {
 }
 
 func (d *InterpretDecl) Clone(args []Node) Node {
-	return &InterpretDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &InterpretDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *InterpretDecl) String() string { return "interpret" }
 
@@ -1295,7 +1300,7 @@ func (cfg *AstConfig) NewMixinDecl(args ...Node) *MixinDecl {
 }
 
 func (d *MixinDecl) Clone(args []Node) Node {
-	return &MixinDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &MixinDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *MixinDecl) String() string { return "mixin" }
 
@@ -1399,7 +1404,7 @@ func (cfg *AstConfig) NewIsolateDecl(args ...Node) *IsolateDecl {
 }
 
 func (d *IsolateDecl) Clone(args []Node) Node {
-	return &IsolateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &IsolateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *IsolateDecl) String() string { return "isolate" }
 
@@ -1566,7 +1571,7 @@ func (cfg *AstConfig) NewExportDecl(args ...Node) *ExportDecl {
 }
 
 func (d *ExportDecl) Clone(args []Node) Node {
-	return &ExportDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ExportDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ExportDecl) String() string { return "export" }
 
@@ -1630,7 +1635,7 @@ func (cfg *AstConfig) NewImportDecl(args ...Node) *ImportDecl {
 }
 
 func (d *ImportDecl) Clone(args []Node) Node {
-	return &ImportDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ImportDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ImportDecl) String() string { return "import" }
 
@@ -1665,7 +1670,7 @@ func (cfg *AstConfig) NewPrivateDecl(args ...Node) *PrivateDecl {
 }
 
 func (d *PrivateDecl) Clone(args []Node) Node {
-	return &PrivateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &PrivateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *PrivateDecl) String() string { return "private" }
 
@@ -1681,7 +1686,7 @@ func (cfg *AstConfig) NewAliasDecl(args ...Node) *AliasDecl {
 }
 
 func (d *AliasDecl) Clone(args []Node) Node {
-	return &AliasDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &AliasDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AliasDecl) String() string { return "alias" }
 
@@ -1697,7 +1702,7 @@ func (cfg *AstConfig) NewDelegateDecl(args ...Node) *DelegateDecl {
 }
 
 func (d *DelegateDecl) Clone(args []Node) Node {
-	return &DelegateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &DelegateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *DelegateDecl) String() string { return "delegate" }
 
@@ -1747,7 +1752,7 @@ func (cfg *AstConfig) NewImplementTypeDecl(args ...Node) *ImplementTypeDecl {
 }
 
 func (d *ImplementTypeDecl) Clone(args []Node) Node {
-	return &ImplementTypeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ImplementTypeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ImplementTypeDecl) String() string { return "implementtype" }
 
@@ -1844,7 +1849,7 @@ func (cfg *AstConfig) NewNativeDecl(args ...Node) *NativeDecl {
 }
 
 func (d *NativeDecl) Clone(args []Node) Node {
-	return &NativeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &NativeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *NativeDecl) String() string { return "native" }
 
@@ -1883,7 +1888,7 @@ func (cfg *AstConfig) NewAttributeDecl(args ...Node) *AttributeDecl {
 }
 
 func (d *AttributeDecl) Clone(args []Node) Node {
-	return &AttributeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &AttributeDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AttributeDecl) String() string { return "attribute" }
 
@@ -1925,7 +1930,7 @@ func (cfg *AstConfig) NewInstantiateDecl(args ...Node) *InstantiateDecl {
 }
 
 func (d *InstantiateDecl) Clone(args []Node) Node {
-	return &InstantiateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &InstantiateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *InstantiateDecl) String() string { return "instantiate" }
 
@@ -1941,7 +1946,7 @@ func (cfg *AstConfig) NewAutoInstanceDecl(args ...Node) *AutoInstanceDecl {
 }
 
 func (d *AutoInstanceDecl) Clone(args []Node) Node {
-	return &AutoInstanceDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &AutoInstanceDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AutoInstanceDecl) String() string { return "autoinstance" }
 
@@ -1998,7 +2003,7 @@ func (cfg *AstConfig) NewScenarioDecl(args ...Node) *ScenarioDecl {
 }
 
 func (d *ScenarioDecl) Clone(args []Node) Node {
-	return &ScenarioDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &ScenarioDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ScenarioDecl) String() string { return "scenario" }
 
@@ -2292,7 +2297,7 @@ func (cfg *AstConfig) NewSubclassDecl(args ...Node) *SubclassDecl {
 }
 
 func (d *SubclassDecl) Clone(args []Node) Node {
-	return &SubclassDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	return &SubclassDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *SubclassDecl) String() string { return "subclass" }
 
