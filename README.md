@@ -2627,24 +2627,24 @@ Estimated People Required 26.621735
 === S-expression diff (go '-' vs py '+') ===
    (sig
 -   sorts:[addr_type
-+   sorts:[S
 -     bool
-+     addr_type
 -     index
-+     bool
 -     lclock
-+     index
 -     loc_type
-+     lclock
 -     mem_loc_type
-+     loc_type
 -     mem_type
-+     mem_loc_type
 -     op_ack_type
-+     mem_type
 -     op_type
-+     op_ack_type
 -     ph_type
++   sorts:[S
++     addr_type
++     bool
++     index
++     lclock
++     loc_type
++     mem_loc_type
++     mem_type
++     op_ack_type
 +     op_type
 
     golden_test.go:452: ivy_check and goivy_check differ at line 255406, counting from 0.
