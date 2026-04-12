@@ -319,6 +319,8 @@ func composeNames(names ...string) string {
 // Python: hasattr(x, 'rewrite') check in ast_rewrite (ivy_ast.py:1731-1733).
 // When AstRewrite encounters a node implementing this interface, it calls
 // Rewrite instead of the generic args-based traversal.
+// Currently: *ivyAccum in parser/ivy_mulde.go:98 implements
+// AstRewritable, as does *ActionDef at ast/decl_ast.go:508.
 type AstRewritable interface {
 	Rewrite(rewrite AstRewriter) Node
 }
