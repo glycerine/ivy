@@ -55,7 +55,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 		mod = module.New()
 	}
 	c := compiler.New(sig, mod)
-	compiled, err := c.CompileNode(expr)
+	compiled, err := c.Thing(expr)
 	if err != nil {
 		// Fallback: try simple symbol lookup
 		compiled = compileSimple(expr, vocab)
@@ -114,7 +114,7 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 		mod = module.New()
 	}
 	c := compiler.New(sig, mod)
-	compiled, err := c.CompileNode(expr)
+	compiled, err := c.Thing(expr)
 	if err != nil {
 		compiled = compileSimple(expr, vocab)
 	}

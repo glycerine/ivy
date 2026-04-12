@@ -6,11 +6,9 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // Vocab represents the vocabulary of a goal: the sorts, symbols, and variables
@@ -608,15 +606,10 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 		mod = module.New()
 	}
 	c := compiler.New(sig, mod)
-	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
-	xtracer.Trace("compiler.CompileNode ENTER type=LabeledFormula")
-	xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
-	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
-	compiled, err := c.CompileLF(lf)
+	compiled, err := c.ThingLF(lf)
 	if err != nil {
 		return nil, err
 	}
-	xtracer.Trace("compiler.Thing return type=LabeledFormula")
 
 	// Python: sort_infer_list([expr.compile()] + vocab.variables)
 	// Python passes the entire LabeledFormula to sort_infer_list.
@@ -643,8 +636,6 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 			// from seeing unsorted vars). Clone with original formula.
 			compiled = compiled.Clone(compiled.Args()).(*ast.LabeledFormula)
 		}
-	} else {
-		xtracer.Trace("compileExprVocabLF FORMULA_NOT_EXPR type=%s", iu.ShortTypeName(compiled.Formula))
 	}
 
 	return compiled, nil
