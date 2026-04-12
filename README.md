@@ -2609,7 +2609,6 @@ Estimated People Required 26.621735
 254993  go : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
         py : XTRACE: l2s.l2sTacticInt goalConc result type=TemporalModels (isTemporalModels=True)
 
-254994  go : XTRACE: ast.LF.__init__ id=2250 counter=2251
+254994  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
         py : XTRACE: ast.LF.clone PRESERVE origid=599 counter=2250
-        
 ~~~
