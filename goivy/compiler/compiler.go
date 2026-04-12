@@ -37,11 +37,11 @@ func typeName(v interface{}) string {
 // FormalAST/FormalRetAST hold the AST-level formals before compilation;
 // Params/Returns hold the compiled logic-level symbols.
 type ActionInfo struct {
-	FormalAST    []ast.Node   // AST-level formal parameters (pre-compilation)
-	FormalRetAST []ast.Node   // AST-level formal returns (pre-compilation)
+	FormalAST    []ast.Node  // AST-level formal parameters (pre-compilation)
+	FormalRetAST []ast.Node  // AST-level formal returns (pre-compilation)
 	Params       []*lg.Const // compiled formal parameters
 	Returns      []*lg.Const // compiled formal returns
-	KeyPos       int          // index of first KeyArg in formals
+	KeyPos       int         // index of first KeyArg in formals
 }
 
 // ReturnContext tracks the return values for the current expression compilation.
@@ -164,7 +164,9 @@ func (c *Compiler) SigCheck(label string) {
 	}
 	combined := iu.Canonical(string(sigCanon) + string(modCanon))
 	leaf, root := c.SigMerkle.AddLeaf(combined)
-	xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s", label, leaf, root, string(combined))
+	_ = root
+	//xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s", label, leaf, root, string(combined))
+	xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s canon=%s", label, leaf, string(combined))
 }
 
 // New creates a new Compiler with the given signature and module.

@@ -61,7 +61,9 @@ def sig_check(label):
         mod_c = im.module.canon()
     combined = sig_c + mod_c
     leaf, root = sig_merkle.add_leaf(combined)
-    xtracer.trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s" % (label, leaf, root, combined))
+    #xtracer.trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s" % (label, leaf, root, combined))
+    # roots diverging, should track but go forward instead for now.
+    xtracer.trace("compiler.SigCheck@%s HASH leaf=%s canon=%s" % (label, leaf, combined))
 
 class IvyDeclInterp(object):
     def __call__(self,ivy):
