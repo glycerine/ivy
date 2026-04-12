@@ -572,9 +572,9 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 	defer wso.Exit()
 
 	// Python: with il.top_sort_as_default():
-	savedDefault := sig.DefaultSort
-	sig.DefaultSort = lg.TopS
-	defer func() { sig.DefaultSort = savedDefault }()
+	tsDefault := il.TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
 
 	// Python: expr = il.sort_infer_list([expr.compile()] + vocab.variables)[0]
 	// expr.compile() for LabeledFormula → _labeled_formula_cmpl → CompileLF
