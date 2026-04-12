@@ -569,12 +569,11 @@ func CheckIsolate(method string, m *module.Module) error {
 
 	initAction = UFToArrayAction(m, sig, initAction).(*actions.Sequence)
 
-	// Convert conjecture formulas
+	// Convert conjecture formulas. Python ivy_vmt.py:228:
+	//   conjs = [conj.clone([conj.label, uf_to_arr_ast(conj.formula)]) for conj in conjs]
 	for i, conj := range conjs {
 		newFormula := ufToArrAST(m, sig, conj.Formula.(lg.Expr))
-		lf := m.Cfg.AstCfg.NewLabeledFormulaFrom(conj, newFormula)
-		lf.ID = conj.ID
-		conjs[i] = lf
+		conjs[i] = conj.Clone([]ast.Node{conj.Label, newFormula}).(*ast.LabeledFormula)
 	}
 
 	// Convert the global action and initializer to logic

@@ -333,12 +333,15 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	// Add assumed globally properties to model assumptions
 	// H13: preserve the original axiom label (Python ivy_l2s.py:132).
+	// Use Clone (not NewLabeledFormula) to preserve the axiom's id and
+	// metadata flags (Temporal, Explicit, IsDefinition, Assumed, Unprovable),
+	// matching Python's `p.clone([p.label,p.formula.args[0]])`.
 	if pc != nil {
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, m.Cfg.AstCfg.NewLabeledFormula(ax.Label, g.Body))
+						model.Asms = append(model.Asms, ax.Clone([]ast.Node{ax.Label, g.Body}).(*ast.LabeledFormula))
 					}
 				}
 			}
@@ -387,13 +390,15 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 
 		// C6: compile user invariants and seed `invars` (Python line 175).
+		// Use Clone to preserve the inv's id and metadata, mirroring Python's
+		// LF.clone semantics inside compile_with_goal_vocab + label_temporal.
 		for _, inv := range tacticInvars {
 			compiled := proof.CompileWithGoalVocab(inv.Formula, goal)
 			if compiled == nil {
 				continue
 			}
 			labeled := il.LabelTemporal(compiled, proofLabel)
-			invars = append(invars, m.Cfg.AstCfg.NewLabeledFormula(inv.Label, labeled))
+			invars = append(invars, inv.Clone([]ast.Node{inv.Label, labeled}).(*ast.LabeledFormula))
 		}
 	}
 
@@ -433,11 +438,12 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 
-	// C9: desugar $was/$happened operators in invars (Python ivy_l2s.py:716)
-	l2sAcfg := m.Cfg.AstCfg
+	// C9: desugar $was/$happened operators in invars (Python ivy_l2s.py:716).
+	// Use Clone to preserve the inv's id and metadata, matching Python's
+	// `expr.clone(...)` recursion in desugar.
 	for i, inv := range invars {
 		if expr, ok := inv.Formula.(lg.Expr); ok {
-			invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, Desugar(expr, proofLabel))
+			invars[i] = inv.Clone([]ast.Node{inv.Label, Desugar(expr, proofLabel)}).(*ast.LabeledFormula)
 		}
 	}
 
@@ -471,12 +477,15 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// All tactic-generated invariants now live in model.Invars (per C8 above),
 	// so modPass only iterates model.Invars (no separate local invars loop).
 	// M7 / Python ivy_l2s.py:744: also transform property prems via list_transform.
+	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata, matching
+	// Python's recursive `LF.clone(args)` dispatch from
+	// replace_temporals_by_named_binder_g_ast (ivy_logic_utils.py:322).
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
+			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = l2sAcfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
+			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 		for i, b := range model.Bindings {
 			newStmt := transformAction(b.Action.Stmt, transform)
@@ -492,7 +501,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 				continue
 			}
 			if e, ok := lf.Formula.(lg.Expr); ok {
-				prems[i] = l2sAcfg.NewLabeledFormula(lf.Label, transform(e))
+				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
 			}
 		}
 	}

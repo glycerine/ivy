@@ -68,21 +68,6 @@ func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
 	return lf
 }
 
-// NewLabeledFormulaFrom creates a new LabeledFormula with a fresh ID,
-// copying metadata (Label, Loc, Temporal, Explicit, Assumed, Unprovable)
-// from src but using the given formula.
-func (cfg *AstConfig) NewLabeledFormulaFrom(src *LabeledFormula, formula Node) *LabeledFormula {
-	lf := cfg.NewLabeledFormula(src.Label, formula)
-	if src.HasLocSet() {
-		lf.SetLineno(src.GetLineno())
-	}
-	lf.Temporal = src.Temporal
-	lf.Explicit = src.Explicit
-	lf.Assumed = src.Assumed
-	lf.Unprovable = src.Unprovable
-	return lf
-}
-
 func (lf *LabeledFormula) Args() []Node { return []Node{lf.Label, lf.Formula} }
 func (lf *LabeledFormula) Clone(args []Node) Node {
 	cfg := lf.Cfg

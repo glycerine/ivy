@@ -464,8 +464,11 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 		model = &NormalProgram{Init: actions.NewSequence()}
 	}
 
-	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, pc.GetAstCfg().NewLabeledFormula(nil, invar))
+	// Add the invariant phi to the model's invariants. Python ivy_temporal.py:275:
+	//   invars.append(ipr.clone_goal(goal,[],invar))
+	// where clone_goal calls goal.clone_with_fresh_id([goal.label, invar]) — fresh
+	// id is intentional, but the label must be the goal's label, not nil.
+	model.Invars = append(model.Invars, goal.CloneWithFreshID([]ast.Node{goal.Label, invar}))
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
@@ -585,13 +588,16 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
 	}
 
-	// Add assumed G-properties as model assumptions
+	// Add assumed G-properties as model assumptions. Python ivy_temporal.py:378:
+	//   model.asms.extend([p.clone([p.label,p.formula.args[0]]) for p in assumed_gprops])
+	// Use Clone (not NewLabeledFormula(nil,...)) so the axiom's label, id, and
+	// metadata flags are preserved.
 	if pc != nil {
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, pc.GetAstCfg().NewLabeledFormula(nil, g.Body))
+						model.Asms = append(model.Asms, ax.Clone([]ast.Node{ax.Label, g.Body}).(*ast.LabeledFormula))
 					}
 				}
 			}

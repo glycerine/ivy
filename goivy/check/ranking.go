@@ -265,17 +265,19 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		return nil, fmt.Errorf("ranking invariant generation: %w", err)
 	}
 
-	// Desugar $was/$happened in invars and postconds
+	// Desugar $was/$happened in invars and postconds.
+	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
+	// matching Python's `expr.clone(...)` recursion in desugar
+	// (ivy_ranking.py:505).
 	l2sSaved := L2SSaved()
 	desugarFn := func(n lg.Expr) lg.Expr {
 		return Desugar(n, proofLabel)
 	}
-	acfg := m.Cfg.AstCfg
 	for i, inv := range invars {
-		invars[i] = acfg.NewLabeledFormula(inv.Label, desugarFn(inv.Formula.(lg.Expr)))
+		invars[i] = inv.Clone([]ast.Node{inv.Label, desugarFn(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 	}
 	for i, pc := range postconds {
-		postconds[i] = acfg.NewLabeledFormula(pc.Label, desugarFn(pc.Formula.(lg.Expr)))
+		postconds[i] = pc.Clone([]ast.Node{pc.Label, desugarFn(pc.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 	}
 	_ = l2sSaved // used by Desugar internally
 
@@ -294,12 +296,15 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	}
 
 	// --- Model pass helper (ranking version: also transforms postconds) ---
+	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
+	// matching Python ivy_ranking.py:526-527 where each `transform(x)` ends
+	// up calling `LF.clone(args)` via the recursive `ast.clone` dispatch.
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
+			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = acfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
+			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 		for i, b := range model.Bindings {
 			newStmt := transformAction(b.Action.Stmt, transform)
@@ -309,11 +314,11 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			model.Init = transformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
-			invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
+			invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
-			postconds[i] = acfg.NewLabeledFormula(pc.Label, transform(pc.Formula.(lg.Expr)))
+			postconds[i] = pc.Clone([]ast.Node{pc.Label, transform(pc.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 	}
 
@@ -416,18 +421,20 @@ func isTemporalModels(n lg.Expr) bool {
 // --- Model pass helpers ---
 
 // ModelPass applies a transformation to all formulas in a NormalProgram.
+// Mirrors Python ivy_ranking.py:526-527 — uses LF.Clone so the resulting LFs
+// retain their original ids and metadata flags.
 func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 	if model == nil {
 		return
 	}
 	for i, inv := range model.Invars {
 		if inv.Formula != nil {
-			model.Invars[i] = inv.Cfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
+			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 	}
 	for i, asm := range model.Asms {
 		if asm.Formula != nil {
-			model.Asms[i] = asm.Cfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
+			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
 		}
 	}
 }

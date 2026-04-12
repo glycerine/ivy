@@ -274,8 +274,11 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 			continue
 		}
 		if _, ok := subst[lg.Key(defSym)]; ok {
-			renamedLdf := entry.ldf.Cfg.NewLabeledFormulaFrom(entry.ldf, RenameAST(entry.ldf.Formula.(lg.Expr), subst))
-			renamedLdf.ID = entry.ldf.ID
+			// Python ivy_module.py:1026 calls lu.rename_ast(df, subst), which
+			// (via ivy_logic_utils.py:207 `ast.clone(args)`) dispatches to
+			// LF.clone for an LF — preserving id and metadata.
+			renamedFormula := RenameAST(entry.ldf.Formula.(lg.Expr), subst)
+			renamedLdf := entry.ldf.Clone([]ast.Node{entry.ldf.Label, renamedFormula}).(*ast.LabeledFormula)
 			renamedConstraint := RenameAST(entry.constraint, subst)
 			newEntries = append(newEntries, nonEPREntry{
 				ldf:        renamedLdf,

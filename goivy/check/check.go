@@ -837,9 +837,7 @@ func ConvertPostcondsWithUpdate(update *actions.Update, postconds []*ast.Labeled
 	result := make([]*ast.LabeledFormula, len(postconds))
 	for i, pc := range postconds {
 		renamed := module.RenameAST(pc.Formula.(lg.Expr), renaming)
-		lf := pc.Cfg.NewLabeledFormulaFrom(pc, renamed)
-		lf.ID = pc.ID
-		result[i] = lf
+		result[i] = pc.Clone([]ast.Node{pc.Label, renamed}).(*ast.LabeledFormula)
 	}
 	return result
 }
