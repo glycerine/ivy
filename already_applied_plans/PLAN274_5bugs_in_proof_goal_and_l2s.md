@@ -4,9 +4,9 @@
 
 ## Context
 
-`proof/goal.go` and `check/l2s.go` have been a recurring source of non-conformance bugs. A line-by-line reverse audit against the Python originals (`ivy_proof.py` and `ivy_l2s.py`) identified **5 confirmed divergences** where Go behavior differs from Python.
+`proof/goal.go` and `check/l2s.go` have been a recurring source of non-conformance bugs. A line-by-line reverse audit against the Python originals (`ivy_proof.py` and `ivy_l2s.py`) identified **7 confirmed divergences** where Go behavior differs from Python.
 
-The audit also confirmed that many functions initially suspected as missing (e.g., `l2sAutoInvariants`, trace hooks, shared steps, `GoalSubgoals`, `CheckNameClash`, `SkolemizeGoal`, etc.) DO exist in companion Go files (`l2s_auto.go`, `l2s_hooks.go`, `l2s_shared.go`, `phase5_goals.go`, `phase5_matching.go`, `skolem.go`). The core l2s flow (entry points, monitor construction, fair cycle, tableau, action instrumentation, named binder replacement, goal building) matches Python faithfully at ~95% fidelity.
+The audit also confirmed that many functions initially suspected as missing (e.g., `l2sAutoInvariants`, trace hooks, shared steps, `GoalSubgoals`, `CheckNameClash`, `SkolemizeGoal`, etc.) DO exist in companion Go files (`l2s_auto.go`, `l2s_hooks.go`, `l2s_shared.go`, `phase5_goals.go`, `phase5_matching.go`, `skolem.go`). The core l2s flow (entry points, monitor construction, fair cycle, tableau, action instrumentation, named binder replacement, goal building) matches Python faithfully modulo these 7 bugs.
 
 ---
 
@@ -147,26 +147,135 @@ if c, ok := args[0].(*lg.Const); ok {
 
 ---
 
+## Bug 6: l2s model source — Go rebuilds from module instead of cloning from goal
+
+**Files:** `check/l2s.go:304`
+**Python:** `ivy_l2s.py:121`
+
+Python clones the NormalProgram embedded in the goal's TemporalModels:
+```python
+conc = ipr.goal_conc(goal)
+model = conc.model.clone([])    # ← clone from the goal's embedded model
+```
+
+Go ignores `tm.Model` and rebuilds from the module:
+```go
+model := extractNormalProgram(m)   // ← rebuilds from module.Module
+```
+
+Even though both originate from `normal_program_from_module`, the behavioral difference is:
+- **Ordering**: `NormalProgramFromModule` sorts bindings alphabetically (line 236-238 of `temporal.go`). The model embedded in the goal was built at a different time and may have a different binding order.
+- **Content**: The module could have been mutated between goal construction and l2s execution. The Python clone preserves the snapshot from goal-construction time.
+- **Trace output**: Different binding order = different action instrumentation order = different trace output.
+
+**Fix:** Replace `extractNormalProgram(m)` with clone from `tm.Model`:
+```go
+np, ok := tm.Model.(*temporal.NormalProgram)
+if !ok {
+    return nil, fmt.Errorf("l2s: TemporalModels.Model is not a NormalProgram")
+}
+model := temporal.NormalProgramClone(np)
+```
+
+`NormalProgramClone` already exists at `temporal/temporal.go:399` and does a shallow copy matching Python's `clone([])`.
+
+**No signature change. 1 line replacement in l2s.go:304. Can remove `extractNormalProgram` helper if no other callers.**
+
+---
+
+## Bug 7: FreeVariablesList returns alphabetical order, not DFS first-occurrence order
+
+**Files:** `check/l2s.go:963, 1011` and `logicutil/logicutil.go:617`
+**Python:** `ivy_l2s.py:721, 724` using `ilu.variables_ast` + `iu.unique`
+
+Python's `variables_ast` (`ivy_logic_utils.py:474-486`) yields free variables in **DFS tree-traversal order**. Wrapped with `iu.unique()`, it produces unique variables in **first-occurrence** order.
+
+Go's `FreeVariablesList` (`logicutil.go:617`) uses `FreeVariables` which stores in an `Omap` backed by a red-black tree. `Omap.All()` iterates in **sorted NodeKey order** (alphabetical), not DFS order.
+
+**Example:** For expression `And(p(Y), q(X))`:
+- Python: `list(iu.unique(ilu.variables_ast(expr)))` → `[Y, X]` (DFS order)
+- Go: `lu.FreeVariablesList(expr)` → `[X, Y]` (alphabetical)
+
+This directly affects named binder parameter order in `l2s_s(vs, expr)(*vs)` and `l2s_w(vs, expr)(*vs)`, which affects canon() output and trace conformance.
+
+**Affected call sites in l2s.go:**
+- `l2s.go:963` — `Desugar` "happened" case: `vs := lu.FreeVariablesList(nb.Body)`
+- `l2s.go:1011` — `applyWasRec` base case: `vs := lu.FreeVariablesList(expr)`
+
+**Affected call sites in l2s_auto.go** (Python lines 237, 586, 595, 672 use `ilu.variables_ast`):
+- Need to grep l2s_auto.go for corresponding Go calls.
+
+**Fix:** Add `VariablesAstList` to `logicutil/logicutil.go` — a DFS free-variable collector that preserves first-occurrence order:
+```go
+// VariablesAstList returns the free variables of t in DFS first-occurrence
+// order, matching Python's list(iu.unique(ilu.variables_ast(t))).
+func VariablesAstList(t logic.Expr) []*logic.Variable {
+    var result []*logic.Variable
+    seen := make(map[logic.NodeKey]bool)
+    variablesAstRec(t, &result, seen, nil)
+    return result
+}
+
+func variablesAstRec(t logic.Expr, result *[]*logic.Variable, seen map[logic.NodeKey]bool, bound map[logic.NodeKey]bool) {
+    switch n := t.(type) {
+    case *logic.Variable:
+        k := logic.Key(n)
+        if !bound[k] && !seen[k] {
+            seen[k] = true
+            *result = append(*result, n)
+        }
+    case *logic.ForAll:
+        newBound := copyBoolKeySet(bound)
+        for _, v := range n.Variables { newBound[logic.Key(v)] = true }
+        variablesAstRec(n.Body, result, seen, newBound)
+    case *logic.Exists:
+        newBound := copyBoolKeySet(bound)
+        for _, v := range n.Variables { newBound[logic.Key(v)] = true }
+        variablesAstRec(n.Body, result, seen, newBound)
+    case *logic.Lambda:
+        newBound := copyBoolKeySet(bound)
+        for _, v := range n.Variables { newBound[logic.Key(v)] = true }
+        variablesAstRec(n.Body, result, seen, newBound)
+    case *logic.NamedBinder:
+        newBound := copyBoolKeySet(bound)
+        for _, v := range n.Variables { newBound[logic.Key(v)] = true }
+        variablesAstRec(n.Body, result, seen, newBound)
+    default:
+        for _, c := range t.Children() {
+            variablesAstRec(c, result, seen, bound)
+        }
+    }
+}
+```
+
+Then replace `lu.FreeVariablesList` with `lu.VariablesAstList` at the affected call sites.
+
+---
+
 ## Implementation Order
 
 1. **Bug 5** — one-line type narrowing, zero cascade
 2. **Bug 1** — add one branch, zero cascade
-3. **Bug 4** — new function + one caller switch
-4. **Bug 3** — signature change, 3 callers
-5. **Bug 2** — signature change, 4 callers with possible cascading
+3. **Bug 6** — one-line replacement in l2s.go
+4. **Bug 7** — new function in logicutil + call site replacements
+5. **Bug 4** — new function + one caller switch
+6. **Bug 3** — signature change, 3 callers
+7. **Bug 2** — signature change, 4 callers with possible cascading
 
 ---
 
 ## Verification
 
 1. `go build ./...` — ensure all changes compile
-2. `go test ./proof/... ./check/... ./tactics/...` — run existing tests
+2. `go test ./proof/... ./check/... ./tactics/... ./logicutil/...` — run existing tests
 3. Run any existing golden test vectors in `test_vectors/` that exercise proof/l2s paths
 4. For Bug 1: verify that `GoalIsDefn(anUninterpretedSort)` now returns `true`
 5. For Bug 2: verify that `GoalSubst` with clashing premise names returns an error
 6. For Bug 3: verify that `Desugar` with `was(X)` (parameterized) returns an error
 7. For Bug 4: verify that `GoalVocabBound` includes bound variables from conclusion
 8. For Bug 5: verify that `GoalDefns` only collects `*lg.Const` premises, not other Expr types
+9. For Bug 6: verify l2s uses `tm.Model` clone, not module rebuild. Check trace output matches Python.
+10. For Bug 7: verify `VariablesAstList(And(p(Y), q(X)))` returns `[Y, X]` not `[X, Y]`
 
 ---
 
@@ -175,28 +284,17 @@ if c, ok := args[0].(*lg.Const); ok {
 | File | Bugs |
 |------|------|
 | `proof/goal.go` | 1, 2, 4, 5 |
-| `check/l2s.go` | 3 |
+| `check/l2s.go` | 3, 6, 7 |
 | `check/ranking.go` | 3 (caller) |
+| `logicutil/logicutil.go` | 7 (new function) |
 | `proof/matching.go` | 2 (caller) |
 | `proof/phase5_goals.go` | 2 (caller) |
 | `tactics/ivy_tactics.go` | 4 (caller) |
 
 ---
 
-## Items NOT bugs (confirmed matching)
-
-These were initially suspected but confirmed correct after deeper analysis:
-
-- **`extractNormalProgram(m)` vs `conc.model.clone([])`**: Both originate from `normal_program_from_module`. Python embeds it in the goal then clones; Go rebuilds. Equivalent since module state is unchanged between construction and l2s execution.
-- **`FreeVariablesList` vs `variables_ast`**: Both compute FREE variables. Python's `variables_ast` excludes binder-bound variables (line 478-482 of `ivy_logic_utils.py`).
-- **`GoalFree.recFmla`**: Uses same free-variable semantics as Python.
-- **Desugar/applyWasRec core logic**: Matches Python's desugar/apply_was structurally.
-- **Fair cycle construction**: Logic matches Python's inline list comprehensions.
-- **Temporal premises collection**: Same filter and combination logic.
-- **l2s entry points**: l2sTactic/L2STacticFull/L2STacticAuto match Python.
-
 ## Companion files NOT audited (future work)
 
-- `check/l2s_auto.go` — vs Python ivy_l2s.py:222-704 (auto invariant generation, ~480 lines)
+- `check/l2s_auto.go` — vs Python ivy_l2s.py:222-704 (auto invariant generation, ~480 lines). Known to use `ilu.variables_ast` at lines 237, 586, 595, 672 — likely has Bug 7 equivalents.
 - `check/l2s_hooks.go` — vs Python ivy_l2s.py:1349-1537 (trace hooks, ~190 lines)
 - `check/l2s_shared.go` — vs Python l2s_tactic_int inline steps
