@@ -22,17 +22,17 @@ func TestFreeVariablesSimple(t *testing.T) {
 	Y, _ := logic.NewVariable("Y", S)
 
 	fv := FreeVariables(X)
-	if _, ok := fv[logic.Key(X)]; !ok {
+	if _, ok := fv.Get2(logic.Key(X)); !ok {
 		t.Error("X should be free in X")
 	}
-	if len(fv) != 1 {
-		t.Errorf("expected 1 free var, got %d", len(fv))
+	if fv.Len() != 1 {
+		t.Errorf("expected 1 free var, got %d", fv.Len())
 	}
 
 	eq, _ := logic.NewEq(X, Y)
 	fv = FreeVariables(eq)
-	if len(fv) != 2 {
-		t.Errorf("expected 2 free vars in Eq(X,Y), got %d", len(fv))
+	if fv.Len() != 2 {
+		t.Errorf("expected 2 free vars in Eq(X,Y), got %d", fv.Len())
 	}
 }
 
@@ -45,14 +45,14 @@ func TestFreeVariablesForAll(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	fv := FreeVariables(fa)
-	if _, ok := fv[logic.Key(X)]; ok {
+	if _, ok := fv.Get2(logic.Key(X)); ok {
 		t.Error("X should be bound in ForAll X. (X == Y)")
 	}
-	if _, ok := fv[logic.Key(Y)]; !ok {
+	if _, ok := fv.Get2(logic.Key(Y)); !ok {
 		t.Error("Y should be free in ForAll X. (X == Y)")
 	}
-	if len(fv) != 1 {
-		t.Errorf("expected 1 free var, got %d", len(fv))
+	if fv.Len() != 1 {
+		t.Errorf("expected 1 free var, got %d", fv.Len())
 	}
 }
 
@@ -68,7 +68,7 @@ func TestFreeVariablesByIdentity(t *testing.T) {
 
 	// By identity: ForAll X:s1 does NOT bind X:s2
 	fv := FreeVariables(fa)
-	if _, ok := fv[logic.Key(X2)]; !ok {
+	if _, ok := fv.Get2(logic.Key(X2)); !ok {
 		t.Error("X:s2 should be free (bound by identity, not name)")
 	}
 }
@@ -349,13 +349,13 @@ func TestFreeVariablesNested(t *testing.T) {
 	or, _ := logic.NewOr(and, eq2)
 
 	fv := FreeVariables(or)
-	if _, ok := fv[logic.Key(X)]; ok {
+	if _, ok := fv.Get2(logic.Key(X)); ok {
 		t.Error("X should not be free (bound in ForAll)")
 	}
-	if _, ok := fv[logic.Key(Y)]; !ok {
+	if _, ok := fv.Get2(logic.Key(Y)); !ok {
 		t.Error("Y should be free")
 	}
-	if _, ok := fv[logic.Key(Z)]; !ok {
+	if _, ok := fv.Get2(logic.Key(Z)); !ok {
 		t.Error("Z should be free")
 	}
 }
@@ -369,10 +369,10 @@ func TestFreeVariablesLambda(t *testing.T) {
 	lam, _ := logic.NewLambda([]*logic.Variable{X}, eq)
 
 	fv := FreeVariables(lam)
-	if _, ok := fv[logic.Key(X)]; ok {
+	if _, ok := fv.Get2(logic.Key(X)); ok {
 		t.Error("X should be bound in Lambda")
 	}
-	if _, ok := fv[logic.Key(Y)]; !ok {
+	if _, ok := fv.Get2(logic.Key(Y)); !ok {
 		t.Error("Y should be free in Lambda body")
 	}
 }
@@ -386,10 +386,10 @@ func TestFreeVariablesNamedBinder(t *testing.T) {
 	nb, _ := logic.NewNamedBinder("nb", []*logic.Variable{X}, nil, eq)
 
 	fv := FreeVariables(nb)
-	if _, ok := fv[logic.Key(X)]; ok {
+	if _, ok := fv.Get2(logic.Key(X)); ok {
 		t.Error("X should be bound in NamedBinder")
 	}
-	if _, ok := fv[logic.Key(Y)]; !ok {
+	if _, ok := fv.Get2(logic.Key(Y)); !ok {
 		t.Error("Y should be free in NamedBinder body")
 	}
 }

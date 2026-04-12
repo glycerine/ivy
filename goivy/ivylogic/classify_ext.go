@@ -98,7 +98,7 @@ func isEPRRec(term lg.Expr, uvars map[lg.NodeKey]lg.Expr) bool {
 	if ex, ok := term.(*lg.Exists); ok {
 		// Check if any free variable of the exists is in uvars
 		fvs := lu.FreeVariables(ex)
-		for _, v := range fvs {
+		for _, v := range fvs.All() {
 			if _, inUvars := uvars[lg.Key(v)]; inUvars {
 				return false
 			}
@@ -118,8 +118,8 @@ func isEPRRec(term lg.Expr, uvars map[lg.NodeKey]lg.Expr) bool {
 // a universal quantifier (after accounting for free variables).
 func IsEPR(term lg.Expr) bool {
 	fvs := lu.FreeVariables(term)
-	fvsKeyed := make(map[lg.NodeKey]lg.Expr, len(fvs))
-	for _, v := range fvs {
+	fvsKeyed := make(map[lg.NodeKey]lg.Expr, fvs.Len())
+	for _, v := range fvs.All() {
 		fvsKeyed[lg.Key(v)] = v
 	}
 	return isEPRRec(term, fvsKeyed)

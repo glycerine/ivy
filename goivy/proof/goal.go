@@ -278,7 +278,7 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 		if fmla == nil {
 			return
 		}
-		for vKey, vNode := range lu.FreeVariables(fmla) {
+		for vKey, vNode := range lu.FreeVariables(fmla).All() {
 			if bound[vKey] == nil {
 				res[vKey] = vNode
 			}

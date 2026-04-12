@@ -240,7 +240,7 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 	// Get free variables in the literal
 	fvMap := lu.FreeVariables(lit)
 	var vs []*lg.Variable
-	for _, v := range fvMap {
+	for _, v := range fvMap.All() {
 		if vv, ok := v.(*lg.Variable); ok {
 			vs = append(vs, vv)
 		}

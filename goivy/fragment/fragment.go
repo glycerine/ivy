@@ -477,7 +477,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 					// Note: ivy_ast.py has a different used_variables_ast that collects ALL
 					// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
 					fvs := lu.FreeVariables(appArgs[i])
-					for _, uNode := range fvs {
+					for _, uNode := range fvs.All() {
 						u := uNode.(*lg.Variable)
 						uid := makeVarID(u)
 						if c.isUnivVar(u) {
@@ -537,7 +537,7 @@ func (c *checker) makeSkolems(fmla lg.Expr, source ast.Node, pol bool, univs []*
 	if (isE && pol) || (isA && !pol) {
 		fvs := lu.FreeVariables(fmla)
 		for _, u := range univs {
-			if _, ok := fvs[lg.Key(u)]; ok {
+			if _, ok := fvs.Get2(lg.Key(u)); ok {
 				qvars := il.QuantifierVars(fmla)
 				for _, e := range qvars {
 					eid := makeVarID(e)

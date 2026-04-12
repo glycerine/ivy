@@ -195,7 +195,7 @@ func RenameVarsNoClash(fmlas1, fmlas2 []lg.Expr) []lg.Expr {
 	// Collect free variables from fmlas1
 	freeVars := make(map[lg.NodeKey]*lg.Variable)
 	for _, f := range fmlas1 {
-		for k, v := range lu.FreeVariables(f) {
+		for k, v := range lu.FreeVariables(f).All() {
 			if vv, ok := v.(*lg.Variable); ok {
 				freeVars[k] = vv
 			}
@@ -250,7 +250,7 @@ func alphaRenameRec(nmap map[string]string, fmla lg.Expr, vmap map[lg.NodeKey]lg
 		// Check for capture: renamed vars must not clash with free vars
 		freeVarsMap := lu.FreeVariables(fmla)
 		forbidden := make(map[lg.NodeKey]bool)
-		for k := range freeVarsMap {
+		for k := range freeVarsMap.All() {
 			if mapped, ok := vmap[k]; ok {
 				forbidden[lg.Key(mapped)] = true
 			} else {

@@ -45,7 +45,7 @@ func IsPrenexExistential(n lg.Expr) bool {
 // IsAlternationFree returns true if the formula is prenex universal or
 // prenex existential and has no free variables.
 func IsAlternationFree(n lg.Expr) bool {
-	return IsPrenexUniversal(n) || (IsPrenexExistential(n) && len(lu.FreeVariables(n)) == 0)
+	return IsPrenexUniversal(n) || (IsPrenexExistential(n) && lu.FreeVariables(n).Len() == 0)
 }
 
 // IsAE returns true if the formula is in AE form (forall-exists).

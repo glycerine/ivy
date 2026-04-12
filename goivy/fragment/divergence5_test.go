@@ -33,13 +33,13 @@ func TestDivergence5_SimpleTerm(t *testing.T) {
 	}
 
 	fvs := lu.FreeVariables(app)
-	if len(fvs) != 2 {
-		t.Errorf("expected 2 free vars in f(X, Y), got %d", len(fvs))
+	if fvs.Len() != 2 {
+		t.Errorf("expected 2 free vars in f(X, Y), got %d", fvs.Len())
 	}
-	if _, ok := fvs[lg.Key(x)]; !ok {
+	if _, ok := fvs.Get2(lg.Key(x)); !ok {
 		t.Error("X should be free in f(X, Y)")
 	}
-	if _, ok := fvs[lg.Key(y)]; !ok {
+	if _, ok := fvs.Get2(lg.Key(y)); !ok {
 		t.Error("Y should be free in f(X, Y)")
 	}
 }
@@ -63,13 +63,13 @@ func TestDivergence5_QuantifiedTerm(t *testing.T) {
 	}
 
 	fvs := lu.FreeVariables(fa)
-	if len(fvs) != 1 {
-		t.Errorf("expected 1 free var in ForAll X. P(X,Y), got %d", len(fvs))
+	if fvs.Len() != 1 {
+		t.Errorf("expected 1 free var in ForAll X. P(X,Y), got %d", fvs.Len())
 	}
-	if _, ok := fvs[lg.Key(x)]; ok {
+	if _, ok := fvs.Get2(lg.Key(x)); ok {
 		t.Error("X should NOT be free in ForAll X. P(X, Y)")
 	}
-	if _, ok := fvs[lg.Key(y)]; !ok {
+	if _, ok := fvs.Get2(lg.Key(y)); !ok {
 		t.Error("Y should be free in ForAll X. P(X, Y)")
 	}
 }
@@ -99,16 +99,16 @@ func TestDivergence5_NestedBinders(t *testing.T) {
 	}
 
 	fvs := lu.FreeVariables(fa)
-	if len(fvs) != 1 {
-		t.Errorf("expected 1 free var in ForAll X. Exists Y. Q(X,Y,Z), got %d", len(fvs))
+	if fvs.Len() != 1 {
+		t.Errorf("expected 1 free var in ForAll X. Exists Y. Q(X,Y,Z), got %d", fvs.Len())
 	}
-	if _, ok := fvs[lg.Key(x)]; ok {
+	if _, ok := fvs.Get2(lg.Key(x)); ok {
 		t.Error("X should NOT be free (bound by ForAll)")
 	}
-	if _, ok := fvs[lg.Key(y)]; ok {
+	if _, ok := fvs.Get2(lg.Key(y)); ok {
 		t.Error("Y should NOT be free (bound by Exists)")
 	}
-	if _, ok := fvs[lg.Key(z)]; !ok {
+	if _, ok := fvs.Get2(lg.Key(z)); !ok {
 		t.Error("Z should be free in ForAll X. Exists Y. Q(X,Y,Z)")
 	}
 }

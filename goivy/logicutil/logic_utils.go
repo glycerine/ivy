@@ -210,7 +210,7 @@ func IsDisequalityLit(atom logic.Expr) bool {
 // IsGroundLit returns true if the literal contains no variables.
 func IsGroundLit(atom logic.Expr) bool {
 	fv := FreeVariables(atom)
-	return len(fv) == 0
+	return fv.Len() == 0
 }
 
 // IsGroundEqualityLit returns true if the equality literal is ground.
@@ -1653,7 +1653,7 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 		fvs := FreeVariables(body)
 		var vars []*logic.Variable
 		for _, v := range n.Variables {
-			if _, ok := fvs[logic.Key(v)]; ok {
+			if _, ok := fvs.Get2(logic.Key(v)); ok {
 				vars = append(vars, v)
 			}
 		}
@@ -1676,7 +1676,7 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 		fvs := FreeVariables(body)
 		var vars []*logic.Variable
 		for _, v := range n.Variables {
-			if _, ok := fvs[logic.Key(v)]; ok {
+			if _, ok := fvs.Get2(logic.Key(v)); ok {
 				vars = append(vars, v)
 			}
 		}

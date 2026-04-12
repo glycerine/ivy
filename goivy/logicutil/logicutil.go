@@ -3,6 +3,7 @@ package logicutil
 import (
 	"fmt"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -54,9 +55,11 @@ func usedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 }
 
 // FreeVariables returns the set of variables free in the given term.
-// Variables are compared by object identity (pointer equality).
-func FreeVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
-	result := make(map[logic.NodeKey]logic.Expr)
+// Variables are compared by structural identity (Sexp key).
+// The returned InsMap preserves DFS first-occurrence order, matching
+// Python's variables_ast → unique → tuple pipeline.
+func FreeVariables(t logic.Expr) *iu.InsMap[logic.NodeKey, logic.Expr] {
+	result := iu.NewInsMap[logic.NodeKey, logic.Expr]()
 	freeVariablesRec(t, result, nil)
 	return result
 }
@@ -79,11 +82,11 @@ func FreeVariablesByName(t logic.Expr) map[string]struct{} {
 	return result
 }
 
-func freeVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr, bound map[logic.NodeKey]logic.Expr) {
+func freeVariablesRec(t logic.Expr, result *iu.InsMap[logic.NodeKey, logic.Expr], bound map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		if _, isBound := bound[logic.Key(n)]; !isBound {
-			result[logic.Key(n)] = n
+			result.Set(logic.Key(n), n)
 		}
 	case *logic.ForAll:
 		newBound := copyVarSet(bound)
@@ -377,7 +380,7 @@ func substituteBinder(
 	forbidden := make(map[logic.NodeKey]logic.Expr)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
-		for fvarKey, fvarNode := range fv {
+		for fvarKey, fvarNode := range fv.All() {
 			forbidden[fvarKey] = fvarNode
 		}
 	}
@@ -409,7 +412,7 @@ func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.E
 	forbidden := make(map[logic.NodeKey]logic.Expr)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
-		for fvarKey, fvarNode := range fv {
+		for fvarKey, fvarNode := range fv.All() {
 			forbidden[fvarKey] = fvarNode
 		}
 	}
@@ -610,11 +613,11 @@ func equalModAlphaRec(t, u logic.Expr, m1, m2 *pushableMap, n int) bool {
 	return true
 }
 
-// FreeVariablesList returns free variables as a slice (convenience).
+// FreeVariablesList returns free variables as a slice in DFS first-occurrence order.
 func FreeVariablesList(t logic.Expr) []*logic.Variable {
 	fv := FreeVariables(t)
-	result := make([]*logic.Variable, 0, len(fv))
-	for _, node := range fv {
+	result := make([]*logic.Variable, 0, fv.Len())
+	for _, node := range fv.All() {
 		if v, ok := node.(*logic.Variable); ok {
 			result = append(result, v)
 		}

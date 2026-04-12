@@ -1065,7 +1065,7 @@ func VariablesClauses(clauses *Clauses) []*lg.Variable {
 	seen := make(map[string]bool)
 	var result []*lg.Variable
 	for _, f := range clauses.Fmlas {
-		for _, vNode := range lu.FreeVariables(f) {
+		for _, vNode := range lu.FreeVariables(f).All() {
 			vv := vNode.(*lg.Variable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
@@ -1074,7 +1074,7 @@ func VariablesClauses(clauses *Clauses) []*lg.Variable {
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, vNode := range lu.FreeVariables(d) {
+		for _, vNode := range lu.FreeVariables(d).All() {
 			vv := vNode.(*lg.Variable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
