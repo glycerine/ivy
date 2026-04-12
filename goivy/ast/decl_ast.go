@@ -502,24 +502,79 @@ func dropPrefixNodes(nodes []Node, s string) []Node {
 }
 
 // Rewrite applies an AST rewriter to the ActionDef's body and formals.
-// Matches Python ActionDef.rewrite() (ivy_ast.py:1397-1405).
-func (a *ActionDef) Rewrite(rw AstRewriter) *ActionDef {
-	res := a.Clone(AstRewriteSlice(a.Args(), rw)).(*ActionDef)
+// Matches Python ActionDef.rewrite() (ivy_ast.py:1408-1416).
+// Returns Node to satisfy AstRewritable interface — Python dispatches via
+// hasattr(x, 'rewrite') at ivy_ast.py:1729.
+func (a *ActionDef) Rewrite(rw AstRewriter) Node {
+	xtracer.Trace("ActionDef.rewrite ENTER nParams=%d nReturns=%d", len(a.FormalParams), len(a.FormalReturns))
+	// Python: res = self.clone(ast_rewrite(self.args, rewrite))
+	// self.args = [atom, action] — only Name and Body, NOT formals.
+	rewrittenNameBody := AstRewriteSlice([]Node{a.Name, a.Body}, rw)
+	// Clone expects [Name, Body, params..., returns...]. Pass old formals
+	// through; they'll be overwritten by rewriteParams below.
+	allArgs := make([]Node, 0, 2+len(a.FormalParams)+len(a.FormalReturns))
+	allArgs = append(allArgs, rewrittenNameBody...)
+	allArgs = append(allArgs, a.FormalParams...)
+	allArgs = append(allArgs, a.FormalReturns...)
+	res := a.Clone(allArgs).(*ActionDef)
+	// Python: res.formal_params = [rewrite_param(p, rewrite) for p in self.formal_params]
 	res.FormalParams = rewriteParams(a.FormalParams, rw)
 	res.FormalReturns = rewriteParams(a.FormalReturns, rw)
+	xtracer.Trace("ActionDef.rewrite EXIT nParams=%d nReturns=%d", len(res.FormalParams), len(res.FormalReturns))
 	return res
 }
 
-// rewriteParams applies an AST rewriter to each param node.
+// rewriteParams applies rewriteParam to each param node.
+// Matches Python: [rewrite_param(p, rewrite) for p in self.formal_params]
 func rewriteParams(params []Node, rw AstRewriter) []Node {
 	if len(params) == 0 {
 		return nil
 	}
 	result := make([]Node, len(params))
 	for i, p := range params {
-		result[i] = AstRewrite(p, rw)
+		result[i] = rewriteParam(p, rw)
 	}
 	return result
+}
+
+// rewriteParam matches Python rewrite_param (ivy_ast.py:1421-1424):
+//
+//	res = type(p)(p.rep)
+//	res.sort = rewrite_sort(rewrite, p.sort)
+//
+// Creates a fresh node with same rep (no args/terms) and rewrites the sort.
+// Does NOT do a full recursive AstRewrite — Python doesn't either.
+func rewriteParam(p Node, rw AstRewriter) Node {
+	switch n := p.(type) {
+	case *App:
+		repStr := NodeRep(n.Rep)
+		repSym := &Symbol{Rep: repStr}
+		repSym.Cfg = n.Cfg
+		res := &App{Rep: repSym}
+		res.Cfg = n.Cfg
+		if n.ASort != nil {
+			sortStr := fmt.Sprint(n.ASort)
+			newSort := RewriteSort(rw, sortStr, n.Cfg)
+			ss := &Symbol{Rep: newSort}
+			ss.Cfg = n.Cfg
+			res.ASort = ss
+		}
+		return res
+	case *Atom:
+		res := &Atom{Rep: n.Rep}
+		res.Cfg = n.Cfg
+		if n.ASort != nil {
+			sortStr := fmt.Sprint(n.ASort)
+			newSort := RewriteSort(rw, sortStr, n.Cfg)
+			ss := &Symbol{Rep: newSort}
+			ss.Cfg = n.Cfg
+			res.ASort = ss
+		}
+		return res
+	default:
+		// Fallback — formal params should always be App or Atom
+		return AstRewrite(p, rw)
+	}
 }
 
 // RelationDecl declares a relation.

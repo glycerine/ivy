@@ -1406,6 +1406,7 @@ class ActionDef(Definition):
         res.formal_returns = self.formal_returns
         return res
     def rewrite(self,rewrite):
+        if __debug__: xtracer.trace("ActionDef.rewrite ENTER nParams=%d nReturns=%d" % (len(self.formal_params), len(self.formal_returns)))
         res = self.clone(ast_rewrite(self.args,rewrite))
         if hasattr(self,'formal_params'):
             res.formal_params = [rewrite_param(p,rewrite) for p in self.formal_params]
@@ -1413,6 +1414,7 @@ class ActionDef(Definition):
             res.formal_returns = [rewrite_param(p,rewrite) for p in self.formal_returns]
         if hasattr(self,'labels'):
             res.labels = labels
+        if __debug__: xtracer.trace("ActionDef.rewrite EXIT nParams=%d nReturns=%d" % (len(res.formal_params), len(res.formal_returns)))
         return res
     def formals(self):
         return ([s.drop_prefix('fml:') for s in self.formal_params],
