@@ -538,7 +538,7 @@ func isTacticType(x Node) bool {
 // AstRewrite performs a deep rewrite of an AST node.
 // Python: ast_rewrite(x, rewrite) — handles all AST node types.
 func AstRewrite(x Node, rewrite AstRewriter) Node {
-	xtracer.Trace("AstRewrite x=%s", iu.ShortTypeName(x))
+	xtracer.Trace("AstRewrite type(x)=%s canon=%s", iu.TypeName(x), x.Canon())
 
 	if x == nil {
 		return nil
