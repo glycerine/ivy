@@ -271,7 +271,13 @@ func l2sAutoInvariants(
 		return m
 	}
 	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
-		return modpkg.SubstituteConstantsExpr(node, subs)
+		// Python: lu.substitute (logic_util.substitute), not substitute_constants_ast.
+		// lu.substitute does NOT emit the substitute_constants_action trace.
+		result, err := lu.Substitute(node, subs)
+		if err != nil {
+			return node // fallback: return unchanged on error
+		}
+		return result
 	}
 
 	// all_d: all elements in l2s_d
