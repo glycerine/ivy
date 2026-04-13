@@ -666,8 +666,12 @@ func FuzzMakeAnd_L2S(f *testing.F) {
 				t.Error("expected lg.True for 0 terms")
 			}
 		case n == 1:
-			if result != lg.True {
-				t.Error("expected single term passthrough")
+			a, ok := result.(*lg.And)
+			if !ok {
+				t.Fatalf("expected *lg.And for 1 term, got %T", result)
+			}
+			if len(a.Terms) != 1 || a.Terms[0] != lg.True {
+				t.Error("expected And with single term")
 			}
 		default:
 			if _, ok := result.(*lg.And); !ok {
