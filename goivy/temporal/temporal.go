@@ -98,7 +98,7 @@ func (b *ActionTermBinding) Clone(action *ActionTerm) *ActionTermBinding {
 //	        ...
 //	    }
 type NormalProgram struct {
-	ast.Base                                         // Python: extends ia.AST — provides GetLineno/SetLineno
+	ast.Base  // Python: extends ia.AST — provides GetLineno/SetLineno
 	Bindings  []*ActionTermBinding
 	Init      actions.Action
 	Invars    []*ast.LabeledFormula
@@ -232,10 +232,10 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 			})
 		}
 	}
-	// Sort bindings by name for determinism
-	sort.Slice(bindings, func(i, j int) bool {
-		return bindings[i].Name < bindings[j].Name
-	})
+	// python uses dict insert order, which we also do without this:
+	//sort.Slice(bindings, func(i, j int) bool {
+	//	return bindings[i].Name < bindings[j].Name
+	//})
 
 	// Build init from initializers
 	var initNodes []lg.Expr
@@ -616,7 +616,6 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	copy(result[1:], goals[1:])
 	return result, nil
 }
-
 
 // findTemporalModels looks for a TemporalModels in the goal.
 func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
