@@ -405,7 +405,7 @@ func TestDeclInterpEnumType(t *testing.T) {
 
 	// Check that enum values were added as symbols
 	for _, name := range []string{"red", "green", "blue"} {
-		if _, ok := c.Sig.Symbols[name]; !ok {
+		if _, ok := c.Sig.Symbols.Get2(name); !ok {
 			t.Errorf("%s not in sig symbols", name)
 		}
 	}
@@ -430,7 +430,7 @@ func TestDeclInterpRelation(t *testing.T) {
 		t.Fatalf("relation decl: %v", err)
 	}
 
-	if _, ok := c.Sig.Symbols["link"]; !ok {
+	if _, ok := c.Sig.Symbols.Get2("link"); !ok {
 		t.Error("link not in sig symbols")
 	}
 }

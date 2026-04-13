@@ -58,7 +58,7 @@ func mkModuleWithSig() *module.Module {
 	m := mkModule()
 	if m.Sig == nil {
 		m.Sig = &il.Sig{
-			Symbols:      make(map[string]*il.SymbolEntry),
+			Symbols:      iu.NewInsMap[string, *il.SymbolEntry](),
 			Sorts:        make(map[string]lg.Sort),
 			Constructors: make(map[string]bool),
 			Interp:       make(map[string]interface{}),
@@ -128,7 +128,7 @@ func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 
 	stripMap := StripMap{"server": {"s"}}
 	// Add a symbol that matches the strip map
-	m.Sig.Symbols["server.x"] = &il.SymbolEntry{Name: "server.x", Sort: lg.Boolean}
+	m.Sig.Symbols.Set("server.x", &il.SymbolEntry{Name: "server.x", Sort: lg.Boolean})
 
 	err := StripIsolate(m, stripMap, nil)
 	if err != nil {
@@ -149,7 +149,7 @@ func TestStripIsolateVersion17KeepsParams(t *testing.T) {
 	m.Params = append(m.Params, sym)
 
 	stripMap := StripMap{"server": {"s"}}
-	m.Sig.Symbols["server.x"] = &il.SymbolEntry{Name: "server.x", Sort: lg.Boolean}
+	m.Sig.Symbols.Set("server.x", &il.SymbolEntry{Name: "server.x", Sort: lg.Boolean})
 
 	err := StripIsolate(m, stripMap, nil)
 	if err != nil {
@@ -299,7 +299,7 @@ func TestHasSideEffect_WithEnsuresAction(t *testing.T) {
 func TestGetStripBinding_BasicApply(t *testing.T) {
 	m := mkModuleWithSig()
 	sort1 := mkSort("T")
-	m.Sig.Symbols["f"] = &il.SymbolEntry{Name: "f", Sort: sort1}
+	m.Sig.Symbols.Set("f", &il.SymbolEntry{Name: "f", Sort: sort1})
 
 	// Create strip map: f has 1 strip param "s"
 	stripMap := StripMap{"f": {"s"}}
@@ -417,7 +417,7 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewFunctionSort error: %v", err)
 	}
-	m.Sig.Symbols["f"] = &il.SymbolEntry{Name: "f", Sort: fnSort}
+	m.Sig.Symbols.Set("f", &il.SymbolEntry{Name: "f", Sort: fnSort})
 
 	stripMap := StripMap{"f": {"s"}}
 
@@ -450,7 +450,7 @@ func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 
 	// Create function sort: T -> Boolean
 	fnSort, _ := lg.NewFunctionSort(sortT, lg.Boolean)
-	m.Sig.Symbols["server.f"] = &il.SymbolEntry{Name: "server.f", Sort: fnSort}
+	m.Sig.Symbols.Set("server.f", &il.SymbolEntry{Name: "server.f", Sort: fnSort})
 
 	// Create action with formal params [s]
 	s := lg.NewConst("s", sortT)
@@ -609,8 +609,8 @@ func TestGetLocMods_FiltersOnFml(t *testing.T) {
 	normalSym := lg.NewConst("y", lg.Boolean)
 
 	m := mkModuleWithSig()
-	m.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: lg.Boolean}
-	m.Sig.Symbols["y"] = &il.SymbolEntry{Name: "y", Sort: lg.Boolean}
+	m.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: lg.Boolean})
+	m.Sig.Symbols.Set("y", &il.SymbolEntry{Name: "y", Sort: lg.Boolean})
 
 	// Python's get_loc_mods calls action.modifies() which is non-recursive.
 	// For a Sequence, modifies() returns [] (no override). Only direct

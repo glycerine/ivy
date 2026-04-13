@@ -123,7 +123,7 @@ func TestSigCopy(t *testing.T) {
 	if _, ok := c.Sorts["node"]; !ok {
 		t.Error("copy should have node sort")
 	}
-	if _, ok := c.Symbols["x"]; !ok {
+	if _, ok := c.Symbols.Get2("x"); !ok {
 		t.Error("copy should have x symbol")
 	}
 

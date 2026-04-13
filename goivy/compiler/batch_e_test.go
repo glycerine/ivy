@@ -104,7 +104,7 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 	c.Sig.Sorts["nat"] = idxSort
 	// Python: idx must be a known symbol in the sig for sortify_with_inference to compile it.
 	// Python's find_symbol raises "unknown symbol" if the name is not in sig.symbols.
-	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: idxSort}
+	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: idxSort})
 
 	// Build: if some x:t. x = x minimizing idx { skip }
 	xParam := cfg.NewAtom("x")
@@ -149,7 +149,7 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 	// Python: idx must be a known symbol for sortify_with_inference to compile it.
-	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
+	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: tSort})
 
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
@@ -239,7 +239,7 @@ func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
 	thenBody := cfg.NewAtom("true")
 
 	// Record symbols before compilation
-	symsBefore := len(c.Sig.Symbols)
+	symsBefore := c.Sig.Symbols.Len()
 
 	_, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -248,8 +248,8 @@ func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
 
 	// The bound variable "x" should NOT have leaked into the outer signature.
 	// Python uses sig.copy() to prevent this.
-	symsAfter := len(c.Sig.Symbols)
-	if _, found := c.Sig.Symbols["x"]; found {
+	symsAfter := c.Sig.Symbols.Len()
+	if _, found := c.Sig.Symbols.Get2("x"); found {
 		t.Errorf("bound variable 'x' leaked into outer signature (before=%d, after=%d)", symsBefore, symsAfter)
 	}
 }
@@ -327,7 +327,7 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 	}
 
 	// "x" should NOT leak into the outer sig
-	if _, found := c.Sig.Symbols["x"]; found {
+	if _, found := c.Sig.Symbols.Get2("x"); found {
 		t.Errorf("bound variable 'x' leaked into outer signature")
 	}
 }
@@ -390,7 +390,7 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
-	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
+	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: tSort})
 
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
@@ -529,7 +529,7 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 	// Add a captured variable "fml:x" to the signature
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = xSort
-	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
+	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -623,7 +623,7 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 	c.Sig.Sorts["handler"] = thunkSort
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = xSort
-	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
+	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -670,7 +670,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	c.Sig.Sorts["handler"] = thunkSort
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = xSort
-	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
+	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -717,7 +717,7 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	c.Sig.Sorts["handler"] = thunkSort
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = xSort
-	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
+	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -831,7 +831,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	c.Sig.Sorts["handler"] = thunkSort
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = xSort
-	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
+	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -904,7 +904,7 @@ func TestCompileThunkAction_LocSymbolNotLeaked(t *testing.T) {
 
 	// Python adds loc:callback to a sig copy for continuation compilation.
 	// The outer sig should not have loc:callback.
-	if _, found := c.Sig.Symbols["loc:callback"]; found {
+	if _, found := c.Sig.Symbols.Get2("loc:callback"); found {
 		t.Errorf("loc:callback leaked into outer signature")
 	}
 }

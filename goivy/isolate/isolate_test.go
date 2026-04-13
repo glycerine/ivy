@@ -450,7 +450,7 @@ func TestHasSideEffectWithAssert(t *testing.T) {
 func TestHasSideEffectWithSigModification(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Symbols["x"] = &il.SymbolEntry{Name: "x", Sort: lg.Boolean}
+	m.Sig.Symbols.Set("x", &il.SymbolEntry{Name: "x", Sort: lg.Boolean})
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	seq := actions.NewSequence(assign)
@@ -464,7 +464,7 @@ func TestHasSideEffectWithSigModification(t *testing.T) {
 func TestHasSideEffectThroughCall(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Symbols["x"] = &il.SymbolEntry{Name: "x", Sort: lg.Boolean}
+	m.Sig.Symbols.Set("x", &il.SymbolEntry{Name: "x", Sort: lg.Boolean})
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	barSeq := actions.NewSequence(assign)

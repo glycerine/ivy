@@ -326,10 +326,10 @@ func TestDomainSetupScenario(t *testing.T) {
 	}
 
 	// Each place should have a relation symbol in sig
-	if _, ok := c.Sig.Symbols["state_a"]; !ok {
+	if _, ok := c.Sig.Symbols.Get2("state_a"); !ok {
 		t.Error("expected 'state_a' in sig symbols")
 	}
-	if _, ok := c.Sig.Symbols["state_b"]; !ok {
+	if _, ok := c.Sig.Symbols.Get2("state_b"); !ok {
 		t.Error("expected 'state_b' in sig symbols")
 	}
 

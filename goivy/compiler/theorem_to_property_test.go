@@ -73,7 +73,7 @@ func TestTheoremToProperty_SimpleSchemaBody(t *testing.T) {
 		t.Error("expected mySort to be added to sig")
 	}
 	// Symbol should be added to sig
-	if _, ok := mod.Sig.Symbols["mySym"]; !ok {
+	if _, ok := mod.Sig.Symbols.Get2("mySym"); !ok {
 		t.Error("expected mySym to be added to sig")
 	}
 }
@@ -135,11 +135,11 @@ func TestTheoremToProperty_SymbolRenaming(t *testing.T) {
 	}
 
 	// The original "f" should still exist, and a renamed version should also exist
-	if _, ok := mod.Sig.Symbols["f"]; !ok {
+	if _, ok := mod.Sig.Symbols.Get2("f"); !ok {
 		t.Error("original symbol 'f' should still be in sig")
 	}
 	found := false
-	for name := range mod.Sig.Symbols {
+	for name := range mod.Sig.Symbols.All() {
 		if name != "f" {
 			found = true
 			break
@@ -177,12 +177,12 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 	if len(mod.Sig.Sorts) < 2 {
 		t.Errorf("expected at least 2 sorts in sig, got %d", len(mod.Sig.Sorts))
 	}
-	if len(mod.Sig.Symbols) < 2 {
-		t.Errorf("expected at least 2 symbols in sig, got %d", len(mod.Sig.Symbols))
+	if mod.Sig.Symbols.Len() < 2 {
+		t.Errorf("expected at least 2 symbols in sig, got %d", mod.Sig.Symbols.Len())
 	}
 
 	// The renamed symbol's sort should reference the renamed sort, not "t"
-	for name, entry := range mod.Sig.Symbols {
+	for name, entry := range mod.Sig.Symbols.All() {
 		if name != "f" {
 			// This is the renamed symbol; its sort should NOT be "t"
 			sortName := il.SortName(entry.Sort)
