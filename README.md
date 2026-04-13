@@ -2605,12 +2605,9 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-319097  go : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
+319102  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
 
-319098  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
-
-319099  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Atom leaf
-        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+319103  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Not not HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
+        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Not cloned HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
 ~~~
