@@ -2605,45 +2605,33 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-596032  go : XTRACE: l2s.SharedStep3 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
+596031  go : XTRACE: l2s.modPass EXIT transform=NormalizeNamedBinders nInvars=37 nAsms=113 nBindings=24 nPrems=23 nPropPrems=11
+        py : XTRACE: l2s.modPass EXIT transform=NormalizeNamedBinders nInvars=37 nAsms=113 nBindings=24 nPrems=23 nPropPrems=11
+
+596032  go : XTRACE: l2s.SharedStep1 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
+        py : XTRACE: l2s.SharedStep1 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
+
+596033  go : XTRACE: l2s.SharedStep3 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
         py : XTRACE: l2s.SharedStep3 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
 
-596033  go : XTRACE: l2s.SharedStep3 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
-        py : XTRACE: l2s.SharedStep3 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
+596034  go : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_g nEntries=6
+        py : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_g nEntries=6
 
-596034  go : XTRACE: l2s.SharedBuildSaveAndWait ENTER
-        py : XTRACE: l2s.SharedBuildSaveAndWait ENTER
+596035  go : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_init nEntries=5
+        py : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_init nEntries=5
 
-596035  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (Na ...(truncated long line to 300 bytes)
+596036  go : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_s nEntries=2
+        py : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_s nEntries=2
 
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))))
+596037  go : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_w nEntries=3
+        py : XTRACE: l2s.SharedStep3 namedBindersConjs key=l2s_w nEntries=3
+
+596038  go : XTRACE: l2s.SharedStep3 toWait[0] nVars=0 HASH canon=(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (NamedBinder name:l2s_g environ: vars:[] body:(Not b ...(truncated long line to 300 bytes)
+
+        py : XTRACE: l2s.SharedStep3 toWait[0] nVars=0 HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
 
 
 === S-expression diff (go '-' vs py '+') ===
-   (Not
-     body:(Globally
-       environ:
-       body:(Not
--       body:(And
-+       body:(Symbol
--         terms:[
-+         name:cfabric.rd_fair
--           (Apply
-+         sort:(BooleanSort)))))
--             func:(Symbol
-+ 
--               name:cf_live.issued_memc
-+ 
--               sort:(FunctionSort
-+ 
--                 sorts:[
-+ 
--                   (UninterpretedSort
-+ 
--                     name:lclock)
-+ 
--                   (BooleanSort)]))
-+ 
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 596035, counting from 0.
+- (And
++ (Symbol
 ~~~
