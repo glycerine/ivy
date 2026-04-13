@@ -532,9 +532,9 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 	for i := 0; ; i++ {
 
-		if i > 0 && i%10_000 == 0 {
-			fmt.Fprintf(os.Stderr, "progress: i = %v\n", i)
-		}
+		//if i > 0 && i%10_000 == 0 {
+		//	fmt.Fprintf(os.Stderr, "progress: i = %v\n", i)
+		//}
 
 		if err != nil {
 			fmt.Printf("stopping (after i=%v) on goivy_check_xtrace error %v\n", i-1, err)
