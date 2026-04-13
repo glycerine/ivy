@@ -343,6 +343,21 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		}
 	}
 
+	// Python ivy_ranking.py:465-473: print invariants and postconditions.
+	if m != nil && m.Cfg != nil && m.Cfg.L2SDebug {
+		fmt.Println("--- invariants ---")
+		for _, inv := range invars {
+			fmt.Printf("invariant %v\n", inv)
+		}
+		fmt.Println("---------------------------")
+
+		fmt.Println("--- postconditions ---")
+		for _, pc := range postconds {
+			fmt.Printf("assert %v\n", pc)
+		}
+		fmt.Println("---------------------------")
+	}
+
 	// Python ivy_ranking.py:511: model.invars = model.invars + invars
 	model.Invars = append(model.Invars, invars...)
 

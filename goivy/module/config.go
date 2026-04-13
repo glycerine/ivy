@@ -250,6 +250,7 @@ func NewConfig() *Config {
 		IsolateCfg:       NewIsolateConfig(),
 		HandleRangeSorts: true, // default matches solver.HandleRangeSorts = true
 		AlphaTestBottom:  true, // default matches alpha.TestBottom = true
+		L2SDebug:         true, // default true so prints match Python's unconditional output
 		AutoinstVerbose:  true, // default matches autoinst.Verbose = true
 		TraceDetailed:    true, // default matches trace.OptionDetailed = true
 		ProofCfg:         TacticNewConfig(),
