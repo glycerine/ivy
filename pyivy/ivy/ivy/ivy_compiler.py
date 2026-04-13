@@ -2470,7 +2470,7 @@ def handle_temporals(mod):
     # mod.labeled_props = new_props
     imap = iso.get_isolate_map(mod,verified=True,present=True)
     for actname,action in mod.actions.items():
-        action.labels = imap[actname]
+        action.labels = sorted(imap[actname]) ## jea added: sorted().
     if __debug__: xtracer.trace("compiler.HandleTemporals EXIT")
 
 def add_labels_to_proof(proof,labels):

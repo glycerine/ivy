@@ -254,13 +254,6 @@ func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso Is
 func GetIsolateMap(mod *module.Module, verified, present bool) map[string][]string {
 	result := make(map[string][]string)
 	for isoName, isol := range mod.Isolates {
-		// Skip the synthetic "this" isolate — Python's mod.hierarchy
-		// does not have "this" as a key, so iter_isolate for "this"
-		// never reaches any action names. Go's hierarchy does have it,
-		// so we must filter here to match Python behavior.
-		if isoName == "this" {
-			continue
-		}
 		name := isoName // capture for closure
 		IterIsolate(mod, isol, func(n string) {
 			result[n] = append(result[n], name)
