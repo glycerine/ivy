@@ -2605,9 +2605,23 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-319102  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
-        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+319125  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Const HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)]))
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Var HASH canon=(Variable name:T1 sort:(UninterpretedSort name:lclock))
 
-319103  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Not not HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
-        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Not cloned HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
+
+=== S-expression diff (go '-' vs py '+') ===
+- (Symbol
++ (Variable
+-   name:cf_live.issued_memc
++   name:T1
+-   sort:(FunctionSort
++   sort:(UninterpretedSort
+-     sorts:[
++     name:lclock))
+-       (UninterpretedSort
++ 
+-         name:lclock)
++ 
+-       (BooleanSort)]))
++ 
 ~~~
