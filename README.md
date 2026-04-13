@@ -2605,25 +2605,45 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-457653  go : XTRACE: ilu.normalizeNamedBinders ENTER type=Const HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)]))
-        py : XTRACE: ilu.normalizeNamedBinders ENTER type=Var HASH canon=(Variable name:T1 sort:(UninterpretedSort name:lclock))
+596032  go : XTRACE: l2s.SharedStep3 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
+        py : XTRACE: l2s.SharedStep3 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
+
+596033  go : XTRACE: l2s.SharedStep3 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
+        py : XTRACE: l2s.SharedStep3 EXIT nInvars=37 nAsms=113 nBindings=24 nPrems=23
+
+596034  go : XTRACE: l2s.SharedBuildSaveAndWait ENTER
+        py : XTRACE: l2s.SharedBuildSaveAndWait ENTER
+
+596035  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (Na ...(truncated long line to 300 bytes)
+
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))))
 
 
 === S-expression diff (go '-' vs py '+') ===
-- (Symbol
-+ (Variable
--   name:cf_live.issued_memc
-+   name:T1
--   sort:(FunctionSort
-+   sort:(UninterpretedSort
--     sorts:[
-+     name:lclock))
--       (UninterpretedSort
+   (Not
+     body:(Globally
+       environ:
+       body:(Not
+-       body:(And
++       body:(Symbol
+-         terms:[
++         name:cfabric.rd_fair
+-           (Apply
++         sort:(BooleanSort)))))
+-             func:(Symbol
 + 
--         name:lclock)
+-               name:cf_live.issued_memc
 + 
--       (BooleanSort)]))
+-               sort:(FunctionSort
++ 
+-                 sorts:[
++ 
+-                   (UninterpretedSort
++ 
+-                     name:lclock)
++ 
+-                   (BooleanSort)]))
 + 
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 457653, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 596035, counting from 0.
 ~~~
