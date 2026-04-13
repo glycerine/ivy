@@ -38,7 +38,7 @@ type InstrumentationConfig struct {
 	AssumeInitAxioms []actions.Action
 
 	// Collected state (populated by shared steps)
-	L2sGs             map[string]L2sGTriple
+	L2sGs             map[lg.NodeKey]L2sGTriple
 	L2sWhensSet       map[string]*lg.NamedBinder
 	NamedBindersConjs map[string][]VarBodyPair
 	ToWait            []VarBodyPair
@@ -82,9 +82,9 @@ func sortNamedBinderMap(m map[string]*lg.NamedBinder) []*lg.NamedBinder {
 	return sorted
 }
 
-// sortL2sGTriples extracts values from a map[string]L2sGTriple and
+// sortL2sGTriples extracts values from a map[lg.NodeKey]L2sGTriple and
 // returns them sorted by Body.Canon() for deterministic cross-language ordering.
-func sortL2sGTriples(m map[string]L2sGTriple) []L2sGTriple {
+func sortL2sGTriples(m map[lg.NodeKey]L2sGTriple) []L2sGTriple {
 	sorted := make([]L2sGTriple, 0, len(m))
 	for _, v := range m {
 		sorted = append(sorted, v)
@@ -101,7 +101,7 @@ func sortL2sGTriples(m map[string]L2sGTriple) []L2sGTriple {
 //
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
 func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
-	cfg.L2sGs = make(map[string]L2sGTriple)
+	cfg.L2sGs = make(map[lg.NodeKey]L2sGTriple)
 	cfg.L2sWhensSet = make(map[string]*lg.NamedBinder)
 
 	_l2sG := func(vs []*lg.Variable, t lg.Expr, env *string) *lg.NamedBinder {

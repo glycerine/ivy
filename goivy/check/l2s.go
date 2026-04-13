@@ -159,8 +159,12 @@ type l2sGTriple struct {
 	Environ *string
 }
 
-func (t l2sGTriple) key() string {
-	return fmt.Sprintf("%v|%v|%v", t.Vars, t.Body, t.Environ)
+func (t l2sGTriple) key() lg.NodeKey {
+	env := "nil"
+	if t.Environ != nil {
+		env = *t.Environ
+	}
+	return lg.NodeKey("(l2sGTriple environ:" + env + " vars:" + lg.VarsSexp(t.Vars) + " body:" + string(t.Body.Sexp()) + ")")
 }
 
 // --- varBodyPair ---
@@ -588,7 +592,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	if cfg.Mod.Cfg.L2SDebug {
 		fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
 		for _, triple := range cfg.L2sGs {
-			fmt.Printf("l2s_g: %v %v %v\n", triple.Vars, triple.Body, triple.Environ)
+			env := "<nil>"
+			if triple.Environ != nil {
+				env = *triple.Environ
+			}
+			fmt.Printf("l2s_g: %v %v %s\n", triple.Vars, triple.Body, env)
 		}
 		fmt.Println(strings.Repeat("=", 80))
 	}

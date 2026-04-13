@@ -138,7 +138,7 @@ func (c *Cond) Sexp() NodeKey {
 	return NodeKey("(Cond t1:" + string(c.T1.Sexp()) + " t2:" + string(c.T2.Sexp()) + ")")
 }
 
-func varsSexp(vars []*Variable) string {
+func VarsSexp(vars []*Variable) string {
 	parts := make([]string, len(vars))
 	for i, v := range vars {
 		parts[i] = string(v.Sexp())
@@ -148,15 +148,15 @@ func varsSexp(vars []*Variable) string {
 }
 
 func (f *ForAll) Sexp() NodeKey {
-	return NodeKey("(ForAll vars:" + varsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
+	return NodeKey("(ForAll vars:" + VarsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
 }
 
 func (e *Exists) Sexp() NodeKey {
-	return NodeKey("(Exists vars:" + varsSexp(e.Variables) + " body:" + string(e.Body.Sexp()) + ")")
+	return NodeKey("(Exists vars:" + VarsSexp(e.Variables) + " body:" + string(e.Body.Sexp()) + ")")
 }
 
 func (l *Lambda) Sexp() NodeKey {
-	return NodeKey("(Lambda vars:" + varsSexp(l.Variables) + " body:" + string(l.Body.Sexp()) + ")")
+	return NodeKey("(Lambda vars:" + VarsSexp(l.Variables) + " body:" + string(l.Body.Sexp()) + ")")
 }
 
 func (nb *NamedBinder) Sexp() NodeKey {
@@ -164,7 +164,7 @@ func (nb *NamedBinder) Sexp() NodeKey {
 	if nb.Environ != nil {
 		env = *nb.Environ
 	}
-	return NodeKey("(NamedBinder name:" + nb.Name + " environ:" + env + " vars:" + varsSexp(nb.Variables) + " body:" + string(nb.Body.Sexp()) + ")")
+	return NodeKey("(NamedBinder name:" + nb.Name + " environ:" + env + " vars:" + VarsSexp(nb.Variables) + " body:" + string(nb.Body.Sexp()) + ")")
 }
 
 // --- Sexp() on Definition ---
