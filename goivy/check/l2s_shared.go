@@ -69,6 +69,32 @@ type L2sGTriple = l2sGTriple
 // VarBodyPair holds a pair of variables and a body expression.
 type VarBodyPair = varBodyPair
 
+// sortNamedBinderMap extracts values from a map[string]*lg.NamedBinder and
+// returns them sorted by Canon() for deterministic cross-language ordering.
+func sortNamedBinderMap(m map[string]*lg.NamedBinder) []*lg.NamedBinder {
+	sorted := make([]*lg.NamedBinder, 0, len(m))
+	for _, v := range m {
+		sorted = append(sorted, v)
+	}
+	sort.Slice(sorted, func(i, j int) bool {
+		return string(sorted[i].Canon()) < string(sorted[j].Canon())
+	})
+	return sorted
+}
+
+// sortL2sGTriples extracts values from a map[string]L2sGTriple and
+// returns them sorted by Body.Canon() for deterministic cross-language ordering.
+func sortL2sGTriples(m map[string]L2sGTriple) []L2sGTriple {
+	sorted := make([]L2sGTriple, 0, len(m))
+	for _, v := range m {
+		sorted = append(sorted, v)
+	}
+	sort.Slice(sorted, func(i, j int) bool {
+		return string(sorted[i].Body.Canon()) < string(sorted[j].Body.Canon())
+	})
+	return sorted
+}
+
 // SharedStep1_ConvertTemporals converts temporal operators to named binders.
 // This is Step 1 of l2sTacticInt. It populates cfg.L2sGs, cfg.L2sWhensSet,
 // cfg.ReplaceTemporals, and cfg.NotLf.
@@ -270,7 +296,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 		toG = append(toG, triple)
 	}
 	sort.Slice(toG, func(i, j int) bool {
-		return fmt.Sprint(toG[i].Body) < fmt.Sprint(toG[j].Body)
+		return string(toG[i].Body.Canon()) < string(toG[j].Body.Canon())
 	})
 
 	// assume_g_axioms
@@ -292,7 +318,8 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	//   AssumeAction(forall(when.variables, lg.Implies(when.body.t1, lg.Eq(when(*when.variables), when.body.t2))))
 	// when.body is a Cond(condition, value); decompose T1=condition, T2=value.
 	cfg.AssumeWhenAxioms = nil
-	for _, when := range cfg.L2sWhensSet {
+	sortedWhens := sortNamedBinderMap(cfg.L2sWhensSet)
+	for _, when := range sortedWhens {
 		cond, ok := when.Body.(*lg.Cond)
 		if !ok {
 			continue
@@ -333,13 +360,15 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	symwaits := make(map[lg.NodeKey][]*lg.NamedBinder)
 	symwhens := make(map[lg.NodeKey][]*lg.NamedBinder)
 
-	for _, triple := range cfg.L2sGs {
+	sortedTriples := sortL2sGTriples(cfg.L2sGs)
+	for _, triple := range sortedTriples {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
 		for _, sym := range il.SymbolsAst(triple.Body) {
 			symprops[lg.Key(sym)] = append(symprops[lg.Key(sym)], prop)
 		}
 	}
-	for _, when := range cfg.L2sWhensSet {
+	sortedWhens7 := sortNamedBinderMap(cfg.L2sWhensSet)
+	for _, when := range sortedWhens7 {
 		for _, sym := range il.SymbolsAst(when.Body) {
 			symwhens[lg.Key(sym)] = append(symwhens[lg.Key(sym)], when)
 		}
@@ -355,7 +384,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	propEventsFunc := func(gprops map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
 		var pre, post []actions.Action
-		for _, gprop := range gprops {
+		sortedProps := sortNamedBinderMap(gprops)
+		for _, gprop := range sortedProps {
 			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
 			pre = append(pre,
 				setLineno(actions.NewAssignAction(
@@ -367,7 +397,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 					applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
 				), lineno))
 		}
-		for _, gprop := range gprops {
+		for _, gprop := range sortedProps {
 			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
 			pre = append(pre,
 				setLineno(actions.NewAssumeAction(forall(vs,
@@ -398,7 +428,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	// when.body is a Cond(condition, value); decompose T1=cond, T2=val.
 	whenEventsFunc := func(whens map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
 		var pre, post []actions.Action
-		for _, when := range whens {
+		sortedWhens := sortNamedBinderMap(whens)
+		for _, when := range sortedWhens {
 			condVal, ok := when.Body.(*lg.Cond)
 			if !ok {
 				continue
@@ -420,7 +451,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				), lineno))
 			}
 		}
-		for _, when := range whens {
+		for _, when := range sortedWhens {
 			condVal, ok := when.Body.(*lg.Cond)
 			if !ok {
 				continue
@@ -437,7 +468,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	waitEventsFunc := func(waits map[string]*lg.NamedBinder) []actions.Action {
 		var res []actions.Action
-		for _, wait := range waits {
+		sortedWaits := sortNamedBinderMap(waits)
+		for _, wait := range sortedWaits {
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, varsToNodes(vs)...)
 			rhs := &lg.And{Terms: []lg.Expr{
