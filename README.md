@@ -2605,13 +2605,11 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-457182  go : XTRACE: l2s.modPass clone init EXIT
-        py : XTRACE: l2s.modPass clone init EXIT
+457626  go : XTRACE: ilu.normalizeNamedBinders ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+        py : XTRACE: ilu.normalizeNamedBinders ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 
-457183  go : XTRACE: l2s.modPass clone prem[2] ENTER HASH canon=(labeledFormula label:(atom rep:"def217" terms:[] aSort:nil) formula:(Eq t1:(Symbol name:work_start sort:(BooleanSort)) t2:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSor ...(truncated long line to 300 bytes)
+457627  go : XTRACE: ilu.normalizeNamedBinders EXIT type=Atom leaf
+        py : XTRACE: ilu.normalizeNamedBinders EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"def217" terms:[] aSort:nil) formula:(Eq t1:(Symbol name:work_start sort:(BooleanSort)) t2:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:l
- ...(truncated long line to 300 bytes)
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 457183, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 457627, counting from 0.
 ~~~
