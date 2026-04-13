@@ -2605,56 +2605,95 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-319290  go : XTRACE: l2s.modPass clone invar[4] ENTER HASH canon=(labeledFormula label:(atom rep:"l2s_created" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:<= sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T sor ...(truncated long line to 300 bytes)
+321375  go : XTRACE: l2s.modPass clone invar[35] ENTER HASH canon=(labeledFormula label:(atom rep:"l2s_consts_d" terms:[] aSort:nil) formula:(And terms:[(Apply func:(Symbol name:l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lc ...(truncated long line to 300 bytes)
 
-        py : XTRACE: l2s.modPass clone invar[4] ENTER HASH canon=(labeledFormula label:(atom rep:"l2s_created" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:<= sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T sor
+        py : XTRACE: l2s.modPass clone invar[35] ENTER HASH canon=(labeledFormula label:(atom rep:"l2s_consts_d" terms:[] aSort:nil) formula:(And terms:[(Apply func:(Symbol name:l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:ref.lt sort:(UninterpretedSort nam
  ...(truncated long line to 300 bytes)
 
 
 === S-expression diff (go '-' vs py '+') ===
    (labeledFormula
      label:(atom
-       rep:"l2s_created"
+       rep:"l2s_consts_d"
        terms:[]
        aSort:nil)
-     formula:(Implies
-       t1:(Apply
-         func:(Symbol
-           name:<=
-           sort:(FunctionSort
-             sorts:[
-               (UninterpretedSort
-                 name:lclock)
-               (UninterpretedSort
-                 name:lclock)
-               (BooleanSort)]))
-         terms:[
-           (Variable
-             name:T
-             sort:(UninterpretedSort
-               name:lclock))
-           (Symbol
-             name:ref.lt
-             sort:(UninterpretedSort
-               name:lclock))])
--     t2:(Apply
-+     t2:(And
--       func:(Symbol
-+       terms:[
--         name:l2s_d
-+         (Apply
--         sort:(FunctionSort
-+           func:(Symbol
--           sorts:[
-+             name:l2s_d
--             (UninterpretedSort
-+             sort:(FunctionSort
--               name:lclock)
-+               sorts:[
--             (BooleanSort)]))
-+                 (UninterpretedSort
--       terms:[
-+                   name:lclock)
--         (Variable
-+                 (BooleanSort)]))
+     formula:(And
+       terms:[
+         (Apply
+           func:(Symbol
+             name:l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:lclock)
+                 (BooleanSort)]))
+           terms:[
+             (Symbol
+-             name:_T
++             name:ref.lt
+               sort:(UninterpretedSort
+                 name:lclock))])
+         (Apply
+           func:(Symbol
+             name:l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:lclock)
+                 (BooleanSort)]))
+           terms:[
+             (Symbol
+               name:cfabric.t_rd_min
+               sort:(UninterpretedSort
+                 name:lclock))])
+         (Apply
+           func:(Symbol
+             name:l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:lclock)
+                 (BooleanSort)]))
+           terms:[
+             (Symbol
+-             name:ref.lt
++             name:_T
+               sort:(UninterpretedSort
+                 name:lclock))])
+         (Apply
+           func:(Symbol
+             name:l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:tar_cf_clock)
+                 (BooleanSort)]))
+           terms:[
+             (Symbol
+-             name:cfabric.t_rd_arr_min
++             name:ref.lt_tar_cf
+               sort:(UninterpretedSort
+                 name:tar_cf_clock))])
+         (Apply
+           func:(Symbol
+             name:l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:tar_cf_clock)
+                 (BooleanSort)]))
+           terms:[
+             (Symbol
+-             name:ref.lt_tar_cf
++             name:cfabric.t_rd_arr_min
+               sort:(UninterpretedSort
+                 name:tar_cf_clock))])])
+     id:2304
+     temporal:nil
+     explicit:false
+     isDefinition:false
+     assumed:false
+     unprovable:false)
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 321375, counting from 0.
 ~~~
