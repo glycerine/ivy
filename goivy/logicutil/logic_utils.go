@@ -996,6 +996,8 @@ func ReplaceTemporalsByNamedBinder(n ast.Node, g GloballyBinderFunc, when WhenBi
 
 func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) ast.Node {
 	xtracer.Trace("ilu.replaceTemporalsRec ENTER type=%s HASH canon=%s", iu.ShortTypeName(n), n.Canon())
+
+	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
 	case *logic.Globally:
 		body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
@@ -1021,65 +1023,79 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		result := applyNamedBinder(nb, varsToNodes(vs))
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
-
-	case *logic.Apply:
-		if nb, ok := t.Func.(*logic.NamedBinder); ok && nb.Name == "l2s_init" {
-			body := replaceTemporalsRec(nb.Body, g, when).(logic.Expr)
-			newArgs := make([]logic.Expr, len(t.Terms))
-			for i, a := range t.Terms {
-				newArgs[i] = replaceTemporalsRec(a, g, when).(logic.Expr)
-			}
-			if notBody, ok := body.(*logic.Not); ok {
-				newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: notBody.Body}
-				inner := logic.MustApply(newNB, newArgs...)
-				result := &logic.Not{Body: inner}
-				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init_not HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-				return result
-			}
-			newNB := &logic.NamedBinder{Name: nb.Name, Variables: nb.Variables, Environ: nb.Environ, Body: body}
-			result := logic.MustApply(newNB, newArgs...)
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-			return result
-		}
-		newFunc := replaceTemporalsRec(t.Func, g, when).(logic.Expr)
-		newTerms := make([]logic.Expr, len(t.Terms))
-		for i, a := range t.Terms {
-			newTerms[i] = replaceTemporalsRec(a, g, when).(logic.Expr)
-		}
-		result := logic.MustApply(newFunc, newTerms...)
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-		return result
-
-	case *logic.NamedBinder:
-		if t.Name == "l2s_init" {
-			body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
-			if notBody, ok := body.(*logic.Not); ok {
-				newNB := &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: notBody.Body}
-				result := &logic.Not{Body: newNB}
-				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init_not HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-				return result
-			}
-			result := &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: body}
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-			return result
-		}
 	}
 
+	// === Python else branch (line 321) ===
+
+	// Step 1: Common recursion of all args (Python line 322)
+	// args = [replace_temporals_by_named_binder_g_ast(x, g, when) for x in ast.args]
 	children := n.Args()
 	newChildren := make([]ast.Node, len(children))
 	for i, c := range children {
 		newChildren[i] = replaceTemporalsRec(c, g, when)
 	}
-	// Double negation elimination (Python line 338-340)
+
+	// Step 2a: Apply (Python line 323)
+	if t, ok := n.(*logic.Apply); ok {
+		// Python line 324: l2s_init sub-case
+		if nb, ok := t.Func.(*logic.NamedBinder); ok && nb.Name == "l2s_init" {
+			// Python line 325: recurse body AFTER terms (terms already done above)
+			body := replaceTemporalsRec(nb.Body, g, when).(logic.Expr)
+			newArgs := nodesToExprs(newChildren)
+			if notBody, ok := body.(*logic.Not); ok {
+				// Python line 327: lg.Not(lg.Apply(ast.func.clone([body.body]), *args))
+				clonedNB := nb.Clone([]ast.Node{notBody.Body}).(logic.Expr)
+				inner := logic.MustApply(clonedNB, newArgs...)
+				result := &logic.Not{Body: inner}
+				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init_not HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+				return result
+			}
+			// Python line 331: lg.Apply(ast.func.clone([body]), *args)
+			clonedNB := nb.Clone([]ast.Node{body}).(logic.Expr)
+			result := logic.MustApply(clonedNB, newArgs...)
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+			return result
+		}
+		// Python line 334: general Apply — recurse func AFTER terms
+		newFunc := replaceTemporalsRec(t.Func, g, when).(logic.Expr)
+		newArgs := nodesToExprs(newChildren)
+		result := logic.MustApply(newFunc, newArgs...)
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+		return result
+	}
+
+	// Step 2b: Not double negation (Python line 338)
 	if _, ok := n.(*logic.Not); ok && len(newChildren) > 0 {
 		if inner, ok := newChildren[0].(*logic.Not); ok {
 			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s doubleNeg HASH canon=%s", iu.ShortTypeName(inner.Body), inner.Body.Canon())
 			return inner.Body
 		}
 	}
+
+	// Step 2c: NamedBinder l2s_init with Not body (Python line 342)
+	if t, ok := n.(*logic.NamedBinder); ok && t.Name == "l2s_init" && len(newChildren) > 0 {
+		if notChild, ok := newChildren[0].(*logic.Not); ok {
+			// Python line 343: lg.Not(ast.clone([args[0].args[0]]))
+			cloned := n.Clone([]ast.Node{notChild.Body})
+			result := &logic.Not{Body: cloned.(logic.Expr)}
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init_not HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+			return result
+		}
+	}
+
+	// Step 2d: Default clone (Python line 346)
 	result := n.Clone(newChildren)
 	xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 	return result
+}
+
+// nodesToExprs converts a slice of ast.Node to a slice of logic.Expr.
+func nodesToExprs(nodes []ast.Node) []logic.Expr {
+	exprs := make([]logic.Expr, len(nodes))
+	for i, n := range nodes {
+		exprs[i] = n.(logic.Expr)
+	}
+	return exprs
 }
 
 func varsToNodes(vars []*logic.Variable) []logic.Expr {
