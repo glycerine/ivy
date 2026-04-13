@@ -2605,14 +2605,15 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-596106  go : XTRACE: l2s.SharedStep6 toG[1] nVars=0 HASH canon=(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (NamedBinder name:l2s_g environ: vars:[] body ...(truncated long line to 300 bytes)
+596111  go : XTRACE: l2s.SharedStep6 EXIT nAssumeG=6 nAssumeWhen=0 nAssumeInit=5 nAssumeW=3
+        py : XTRACE: l2s.SharedStep6 EXIT nAssumeG=6 nAssumeWhen=0 nAssumeInit=5 nAssumeW=3
 
-        py : XTRACE: l2s.SharedStep6 toG[1] nVars=0 HASH canon=(Not body:(Eq t1:(Apply func:(Symbol name:ref.evs.l_req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:loc_type ext:[init_l,cf_mem_l,cf_pio_l,cf_cmp_l,if_l,memc_l,dramc_l,arm_l])])) terms:[(Symbol name:_T sort:(Uninter
+596112  go : XTRACE: l2s.SharedStep7 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
+        py : XTRACE: l2s.SharedStep7 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
+
+596113  go : XTRACE: LocalAction.__init__ uniqueID=1359 caller=ast.LocalAction.clone
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (Na
  ...(truncated long line to 300 bytes)
 
-
-=== S-expression diff (go '-' vs py '+') ===
-   (Not
--   body:(And
-+   body:(Eq
+    golden_test.go:452: ivy_check and goivy_check differ at line 596113, counting from 0.
 ~~~
