@@ -719,6 +719,16 @@ def install():
                 lineno_fields(self), slice_canon(list(self.args)))
         act.VarAction.canon = _varaction_canon
 
+    # --- Temporal types (ivy_temporal.py) ---
+    from . import ivy_temporal as itm
+
+    def _actionterm_canon(self):
+        return '(actionTerm{} inputs:{} outputs:{} labels:{} stmt:{})'.format(
+            lineno_fields(self), slice_canon(self.inputs), slice_canon(self.outputs),
+            string_slice_canon(self.labels), node_canon(self.stmt))
+    itm.ActionTerm.canon = _actionterm_canon
+    itm.ActionTerm.sexp = _actionterm_canon
+
     # Install canon on fragment checker types (UFNode etc.)
     from .canon_fragment import install as install_fragment
     install_fragment()

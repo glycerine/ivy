@@ -402,13 +402,15 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		}
 		for i, b := range model.Bindings {
 			xtracer.Trace("ranking.modPass clone binding[%d] ENTER name=%s", i, b.Name)
-			newStmt := transformAction(b.Action.Stmt, transform)
-			model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+			// Python: model.bindings[i] = b.clone([transform(b.action)])
+			newAction := transform(b.Action).(*temporal.ActionTerm)
+			model.Bindings[i] = b.Clone(newAction)
 			xtracer.Trace("ranking.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {
 			xtracer.Trace("ranking.modPass clone init ENTER")
-			model.Init = transformAction(model.Init, transform)
+			// Python: model.init = transform(model.init)
+			model.Init = transform(model.Init).(actions.Action)
 			xtracer.Trace("ranking.modPass clone init EXIT")
 		}
 		// Python ivy_ranking.py:532: list_transform(prems, transform)

@@ -16,6 +16,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
@@ -31,6 +32,10 @@ type ActionTerm struct {
 	Outputs []*lg.Const
 	Labels  []string
 	Stmt    actions.Action
+	// ast.Node support (matches Python ia.AST base: lineno, config)
+	Loc    ast.Location
+	HasLoc bool
+	Cfg    *ast.AstConfig
 }
 
 // String returns a human-readable representation of the action term.
@@ -46,15 +51,51 @@ func (at *ActionTerm) String() string {
 	return res
 }
 
-// Clone creates a copy of the ActionTerm with a new statement but preserving
-// all other attributes.
-func (at *ActionTerm) Clone(stmt actions.Action) *ActionTerm {
+// CloneStmt creates a copy of the ActionTerm with a new statement but preserving
+// all other attributes. Used by callers that build a new Stmt manually.
+func (at *ActionTerm) CloneStmt(stmt actions.Action) *ActionTerm {
 	return &ActionTerm{
 		Inputs:  at.Inputs,
 		Outputs: at.Outputs,
 		Labels:  at.Labels,
 		Stmt:    stmt,
+		Loc:     at.Loc,
+		HasLoc:  at.HasLoc,
+		Cfg:     at.Cfg,
 	}
+}
+
+// --- ast.Node interface for ActionTerm ---
+// Python: ActionTerm(ia.AST) with args=[self.stmt]
+
+func (at *ActionTerm) Args() []ast.Node           { return []ast.Node{at.Stmt} }
+func (at *ActionTerm) GetLineno() ast.Location     { return at.Loc }
+func (at *ActionTerm) SetLineno(l ast.Location)    { at.Loc = l; at.HasLoc = true }
+func (at *ActionTerm) GetAstConfig() *ast.AstConfig { return at.Cfg }
+
+// Clone creates a copy with transformed children (ast.Node interface).
+// Python: ActionTerm.clone(args) replaces stmt with args[0], copies attrs.
+func (at *ActionTerm) Clone(args []ast.Node) ast.Node {
+	return &ActionTerm{
+		Inputs:  at.Inputs,
+		Outputs: at.Outputs,
+		Labels:  at.Labels,
+		Stmt:    args[0].(actions.Action),
+		Loc:     at.Loc,
+		HasLoc:  at.HasLoc,
+		Cfg:     at.Cfg,
+	}
+}
+
+// Canon returns a canonical s-expression with all fields.
+func (at *ActionTerm) Canon() iu.Canonical {
+	var lf string
+	if at.HasLoc {
+		lf = fmt.Sprintf(" lineno:%d", at.Loc.Line)
+	}
+	return iu.Canonical(fmt.Sprintf("(actionTerm%s inputs:%s outputs:%s labels:%s stmt:%s)",
+		lf, constSliceCanon(at.Inputs), constSliceCanon(at.Outputs),
+		stringSliceCanon(at.Labels), at.Stmt.Canon()))
 }
 
 // ActionTermBinding binds an action term to a name.
@@ -74,6 +115,32 @@ func (b *ActionTermBinding) Clone(action *ActionTerm) *ActionTermBinding {
 		Name:   b.Name,
 		Action: action,
 	}
+}
+
+// --- canon helpers ---
+
+// constSliceCanon returns canonical form for []*lg.Const.
+func constSliceCanon(cs []*lg.Const) string {
+	if len(cs) == 0 {
+		return "[]"
+	}
+	parts := make([]string, len(cs))
+	for i, c := range cs {
+		parts[i] = string(c.Canon())
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
+// stringSliceCanon returns canonical form for []string.
+func stringSliceCanon(ss []string) string {
+	if len(ss) == 0 {
+		return "[]"
+	}
+	parts := make([]string, len(ss))
+	for i, s := range ss {
+		parts[i] = fmt.Sprintf("%q", s)
+	}
+	return "[" + strings.Join(parts, " ") + "]"
 }
 
 // NormalProgram represents a normal program consisting of bindings, an
@@ -326,7 +393,7 @@ func PropEvent(gprop lg.Expr, lineno ast.Location) actions.Action {
 // before the original body statement.
 func PrefixActionTerm(at *ActionTerm, stmts []actions.Action) *ActionTerm {
 	newStmt := actions.PrefixAction(at.Stmt, stmts)
-	return at.Clone(newStmt)
+	return at.CloneStmt(newStmt)
 }
 
 // IsGloballyFormula returns true if the given node is a logic.Globally formula.
@@ -585,7 +652,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	// Instrument all bindings
 	for i, b := range model.Bindings {
 		newStmt := instrStmt(b.Action.Stmt, b.Action.Labels)
-		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+		model.Bindings[i] = b.Clone(b.Action.CloneStmt(newStmt))
 	}
 
 	// Add assumed G-properties as model assumptions. Python ivy_temporal.py:378:

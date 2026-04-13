@@ -507,7 +507,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	for i, b := range model.Bindings {
 		newStmt := instrStmt(b.Action.Stmt)
-		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+		model.Bindings[i] = b.Clone(b.Action.CloneStmt(newStmt))
 	}
 }
 
@@ -553,7 +553,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 
 		newStmt := setLineno(actions.ConcatActions(stmtParts...), cfg.Lineno)
 		actions.CopyFormalsTo(b.Action.Stmt, newStmt)
-		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+		model.Bindings[i] = b.Clone(b.Action.CloneStmt(newStmt))
 
 		if cfg.Postconds != nil {
 			model.Postconds[b.Name] = cfg.Postconds

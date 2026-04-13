@@ -62,12 +62,12 @@ func TestActionTermClone(t *testing.T) {
 	stmt1 := actions.NewSequence()
 	stmt2 := actions.NewAssumeAction(lg.True)
 	at := makeActionTerm(nil, nil, []string{"env1"}, stmt1)
-	cloned := at.Clone(stmt2)
+	cloned := at.CloneStmt(stmt2)
 	if cloned.Stmt != stmt2 {
-		t.Error("Clone should replace the statement")
+		t.Error("CloneStmt should replace the statement")
 	}
 	if len(cloned.Labels) != 1 || cloned.Labels[0] != "env1" {
-		t.Error("Clone should preserve labels")
+		t.Error("CloneStmt should preserve labels")
 	}
 }
 
