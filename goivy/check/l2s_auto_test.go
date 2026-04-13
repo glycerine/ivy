@@ -25,9 +25,13 @@ func TestBuildOrExpr_Empty(t *testing.T) {
 func TestBuildOrExpr_Single(t *testing.T) {
 	a := lg.NewConst("a", lg.Boolean)
 	result := buildOrExpr([]lg.Expr{a})
-	// Single element should return the element directly, not wrapped in Or.
-	if result != a {
-		t.Errorf("expected unwrapped element, got %T", result)
+	// Single element should be wrapped in Or (matching Python behavior).
+	or, ok := result.(*lg.Or)
+	if !ok {
+		t.Fatalf("expected *lg.Or, got %T", result)
+	}
+	if len(or.Terms) != 1 || or.Terms[0] != a {
+		t.Error("expected Or with single term")
 	}
 }
 
@@ -223,7 +227,7 @@ func TestAppendLF(t *testing.T) {
 	if lf == nil {
 		t.Fatal("expected non-nil LabeledFormula")
 	}
-	if c, ok := lf.Label.(*lg.Const); !ok || c.Name != "foo" {
-		t.Errorf("expected label name 'foo', got %v", lf.Label)
+	if a, ok := lf.Label.(*ast.Atom); !ok || a.Rep != "foo" {
+		t.Errorf("expected label Atom with rep 'foo', got %v", lf.Label)
 	}
 }
