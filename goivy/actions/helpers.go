@@ -195,8 +195,10 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	res.SetLineno(action1.GetLineno())
 	res.SetFormalParams(action2.GetFormalParams())
 	res.SetFormalReturns(action2.GetFormalReturns())
-	if ab, ok := action2.(interface{ SetLabels([]string) }); ok {
-		_ = ab // labels handled by CopyFormalsTo
+	if labeler, ok := action2.(interface{ GetLabels() []string }); ok {
+		if labels := labeler.GetLabels(); labels != nil {
+			res.SetLabels(labels)
+		}
 	}
 	xtracer.Trace("actions.apply_mixin EXIT")
 	return res
@@ -219,6 +221,11 @@ func AppendToAction(action1, action2 Action) Action {
 	if fr := action1.GetFormalReturns(); fr != nil {
 		res.SetFormalReturns(fr)
 	}
+	if labeler, ok := action1.(interface{ GetLabels() []string }); ok {
+		if labels := labeler.GetLabels(); labels != nil {
+			res.SetLabels(labels)
+		}
+	}
 	return res
 }
 
@@ -231,5 +238,12 @@ func CopyFormalsTo(src, dst Action) {
 	}
 	if fr := src.GetFormalReturns(); fr != nil {
 		dst.SetFormalReturns(fr)
+	}
+	if labeler, ok := src.(interface{ GetLabels() []string }); ok {
+		if labels := labeler.GetLabels(); labels != nil {
+			if setter, ok2 := dst.(interface{ SetLabels([]string) }); ok2 {
+				setter.SetLabels(labels)
+			}
+		}
 	}
 }
