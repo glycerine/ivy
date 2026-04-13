@@ -926,23 +926,11 @@ func NormalizeNamedBinders(n ast.Node, names map[string]bool) ast.Node {
 		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 	}
+	// General case: recurse into children and always clone (matching Python).
 	children := n.Args()
-	if len(children) == 0 {
-		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s leaf", iu.ShortTypeName(n))
-		return n
-	}
 	newChildren := make([]ast.Node, len(children))
-	changed := false
 	for i, c := range children {
-		nc := NormalizeNamedBinders(c, names)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s unchanged", iu.ShortTypeName(n))
-		return n
+		newChildren[i] = NormalizeNamedBinders(c, names)
 	}
 	result := n.Clone(newChildren)
 	xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
