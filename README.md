@@ -2605,28 +2605,12 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-319096  go : XTRACE: l2s.modPass clone invar[0] ENTER HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
-        py : XTRACE: l2s.modPass clone invar[0] ENTER HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
-
-319097  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))
+319097  go : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
         py : XTRACE: ilu.replaceTemporalsRec ENTER type=LabeledFormula HASH canon=(labeledFormula label:(atom rep:"invar228" terms:[] aSort:nil) formula:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort))) id:610 temporal:nil explicit:false isDefinition:false assumed:false unprovable:false)
 
-=== S-expression diff (go '-' vs py '+') ===
-- (Not
--   body:(Symbol
--     name:cfabric.rd_fair
--     sort:(BooleanSort)))
-- 
-+ (labeledFormula
-+   label:(atom
-+     rep:"invar228"
-+     terms:[]
-+     aSort:nil)
-+   formula:(Not
-+     body:(Symbol
-+       name:cfabric.rd_fair
-+       sort:(BooleanSort)))
-+   id:610
+319098  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 319097, counting from 0.
+319099  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Atom leaf
+        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 ~~~
