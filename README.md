@@ -2605,23 +2605,38 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-319125  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Const HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)]))
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Var HASH canon=(Variable name:T1 sort:(UninterpretedSort name:lclock))
+319184  go : XTRACE: l2s.modPass clone invar[2] EXIT HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T1 sort:(Uni ...(truncated long line to 300 bytes)
+
+        py : XTRACE: l2s.modPass clone invar[2] EXIT HASH canon=(labeledFormula label:(atom rep:"invar230" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Variable name:T1 sort:(Uni
+ ...(truncated long line to 300 bytes)
+
+319185  go : XTRACE: l2s.modPass clone invar[3] ENTER HASH canon=(labeledFormula label:(Symbol name:l2s_needed_when_start sort:(BooleanSort)) formula:(Implies t1:(And terms:[(NamedBinder name:l2s_init environ: vars:[] body:(Eventually environ: body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(F ...(truncated long line to 300 bytes)
+
+        py : XTRACE: l2s.modPass clone invar[3] ENTER HASH canon=(labeledFormula label:(atom rep:"l2s_needed_when_start" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(NamedBinder name:l2s_init environ: vars:[] body:(Eventually environ: body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(Fu
+ ...(truncated long line to 300 bytes)
 
 
 === S-expression diff (go '-' vs py '+') ===
-- (Symbol
-+ (Variable
--   name:cf_live.issued_memc
-+   name:T1
--   sort:(FunctionSort
-+   sort:(UninterpretedSort
--     sorts:[
-+     name:lclock))
--       (UninterpretedSort
-+ 
--         name:lclock)
-+ 
--       (BooleanSort)]))
-+ 
+   (labeledFormula
+-   label:(Symbol
+-     name:l2s_needed_when_start
+-     sort:(BooleanSort))
+-   formula:(Implies
+-     t1:(And
+-       terms:[
+-         (NamedBinder
++   label:(atom
++     rep:"l2s_needed_when_start"
++     terms:[]
++     aSort:nil)
++   formula:(Implies
++     t1:(And
++       terms:[
+-           name:l2s_init
++         (NamedBinder
+-           environ:
++           name:l2s_init
+-           vars:[]
++           environ:
+
 ~~~
