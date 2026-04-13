@@ -23,13 +23,13 @@ SHELL := /bin/bash
 
 golden: # parse with python ivy_check and goivy_check_xtrace. full xtrace output is written now to the files: out.go.xtrace; out.py.xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
-	cd parser && go test -v -count=1 -run TestOrdLive > ../log.red
+	cd parser && go test -v -count=1 -run TestOrdLive &> ../log.red
 
 golden-v: # to see all productions not just last 10
-	cd parser && go test -v -run TestVerboseOrdLive
+	cd parser && go test -v -run TestVerboseOrdLive &> ../log.all.til.div
 
 golden-nonstop: # to see all productions and not stop at first diff.
-	cd parser && go test -v -run TestVerboseNonstopOrdLive
+	cd parser && go test -v -run TestVerboseNonstopOrdLive &> ../log.nonstop
 
 
 ord: # xtraced 
