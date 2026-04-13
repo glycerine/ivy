@@ -2605,11 +2605,25 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-457626  go : XTRACE: ilu.normalizeNamedBinders ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
-        py : XTRACE: ilu.normalizeNamedBinders ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+457653  go : XTRACE: ilu.normalizeNamedBinders ENTER type=Const HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)]))
+        py : XTRACE: ilu.normalizeNamedBinders ENTER type=Var HASH canon=(Variable name:T1 sort:(UninterpretedSort name:lclock))
 
-457627  go : XTRACE: ilu.normalizeNamedBinders EXIT type=Atom leaf
-        py : XTRACE: ilu.normalizeNamedBinders EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 457627, counting from 0.
+=== S-expression diff (go '-' vs py '+') ===
+- (Symbol
++ (Variable
+-   name:cf_live.issued_memc
++   name:T1
+-   sort:(FunctionSort
++   sort:(UninterpretedSort
+-     sorts:[
++     name:lclock))
+-       (UninterpretedSort
++ 
+-         name:lclock)
++ 
+-       (BooleanSort)]))
++ 
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 457653, counting from 0.
 ~~~
