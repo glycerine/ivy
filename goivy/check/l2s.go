@@ -620,7 +620,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Build save/wait/reset_w from collected binders
 	xtracer.Trace("l2s.SharedBuildSaveAndWait ENTER")
 	SharedBuildSaveAndWait(cfg)
-	xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT")
 
 	// ---------------------------------------------------------------
 	// Step 4: Fair cycle check (l2s-specific)
@@ -750,8 +749,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	xtracer.Trace("l2s.SharedStep6 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	SharedStep6_BuildTableau(cfg)
-	xtracer.Trace("l2s.SharedStep6 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
-		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
 	// ---------------------------------------------------------------
 	// Step 7: Action instrumentation (shared)
