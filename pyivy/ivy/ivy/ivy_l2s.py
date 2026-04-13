@@ -748,8 +748,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     def list_transform(lst,trns):
         for i in range(0,len(lst)):
             if ipr.goal_is_property(lst[i]):
+                if __debug__: xtracer.trace("l2s.modPass clone prem[%d] ENTER HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
                 lst[i] = trns(lst[i])
-    
+                if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
+
     # for inv in invars:
     #     print inv
     #     for b in ilu.named_binders_ast(inv):
@@ -856,7 +858,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     def list_transform(lst,trns):
         for i in range(0,len(lst)):
             if ipr.goal_is_property(lst[i]):
+                if __debug__: xtracer.trace("l2s.modPass clone prem[%d] ENTER HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
                 lst[i] = trns(lst[i])
+                if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
 
     named_binders_conjs = defaultdict(list,((k,list(set(v))) for k,v in named_binders_conjs.items()))
 
