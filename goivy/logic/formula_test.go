@@ -462,12 +462,15 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	lclock := &UninterpretedSort{Name: "lclock"}
 
 	// Sub-test 1: ForAll with polymorphic <=
+	// The bound variable T has sort lclock. The body uses polymorphic <=
+	// which returns Boolean. dropAnnotations should strip the annotation
+	// from the quantifier binding and keep it on the first body occurrence.
 	t.Run("ForAll_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
-		_T, _ := NewVariable("_T", lclock)
+		U, _ := NewVariable("U", lclock)
 		leSort := mustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
-		body, err := NewApply(le, T, _T)
+		body, err := NewApply(le, T, U)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -476,7 +479,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 			t.Fatal(err)
 		}
 		got := fa.String()
-		want := "forall T. T:lclock <= _T"
+		want := "forall T. T:lclock <= U"
 		if got != want {
 			t.Errorf("ForAll String() =\n  %q\nwant:\n  %q\n(annotation must be on body occurrence, not quantifier binding)", got, want)
 		}
@@ -485,10 +488,10 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	// Sub-test 2: Exists with polymorphic <=
 	t.Run("Exists_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
-		_T, _ := NewVariable("_T", lclock)
+		U, _ := NewVariable("U", lclock)
 		leSort := mustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
-		body, err := NewApply(le, T, _T)
+		body, err := NewApply(le, T, U)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -497,7 +500,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 			t.Fatal(err)
 		}
 		got := ex.String()
-		want := "exists T. T:lclock <= _T"
+		want := "exists T. T:lclock <= U"
 		if got != want {
 			t.Errorf("Exists String() =\n  %q\nwant:\n  %q", got, want)
 		}
@@ -506,10 +509,10 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	// Sub-test 3: Lambda with polymorphic <=
 	t.Run("Lambda_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
-		_T, _ := NewVariable("_T", lclock)
+		U, _ := NewVariable("U", lclock)
 		leSort := mustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
-		body, err := NewApply(le, T, _T)
+		body, err := NewApply(le, T, U)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -518,7 +521,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 			t.Fatal(err)
 		}
 		got := lam.String()
-		want := "lambda T. T:lclock <= _T"
+		want := "lambda T. T:lclock <= U"
 		if got != want {
 			t.Errorf("Lambda String() =\n  %q\nwant:\n  %q", got, want)
 		}
