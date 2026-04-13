@@ -545,7 +545,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			xtracer.Trace("l2s.modPass clone binding[%d] ENTER name=%s", i, b.Name)
 			// Python: model.bindings[i] = b.clone([transform(b.action)])
 			newAction := transform(b.Action).(*temporal.ActionTerm)
-			model.Bindings[i] = b.Clone(newAction)
+			model.Bindings[i] = b.CloneAction(newAction)
 			xtracer.Trace("l2s.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {

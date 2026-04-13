@@ -404,7 +404,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			xtracer.Trace("ranking.modPass clone binding[%d] ENTER name=%s", i, b.Name)
 			// Python: model.bindings[i] = b.clone([transform(b.action)])
 			newAction := transform(b.Action).(*temporal.ActionTerm)
-			model.Bindings[i] = b.Clone(newAction)
+			model.Bindings[i] = b.CloneAction(newAction)
 			xtracer.Trace("ranking.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {

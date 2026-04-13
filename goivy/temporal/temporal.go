@@ -99,9 +99,14 @@ func (at *ActionTerm) Canon() iu.Canonical {
 }
 
 // ActionTermBinding binds an action term to a name.
+// Python: ActionTermBinding(ia.AST) with args=[self.action]
 type ActionTermBinding struct {
 	Name   string
 	Action *ActionTerm
+	// ast.Node support (matches Python ia.AST base: lineno, config)
+	Loc    ast.Location
+	HasLoc bool
+	Cfg    *ast.AstConfig
 }
 
 // String returns a human-readable representation of the binding.
@@ -109,12 +114,45 @@ func (b *ActionTermBinding) String() string {
 	return fmt.Sprintf("%s = %s", b.Name, b.Action)
 }
 
-// Clone creates a copy of the binding with a new action.
-func (b *ActionTermBinding) Clone(action *ActionTerm) *ActionTermBinding {
+// CloneAction creates a copy of the binding with a new action.
+// Used by callers that build a new ActionTerm manually.
+func (b *ActionTermBinding) CloneAction(action *ActionTerm) *ActionTermBinding {
 	return &ActionTermBinding{
 		Name:   b.Name,
 		Action: action,
+		Loc:    b.Loc,
+		HasLoc: b.HasLoc,
+		Cfg:    b.Cfg,
 	}
+}
+
+// --- ast.Node interface for ActionTermBinding ---
+
+func (b *ActionTermBinding) Args() []ast.Node            { return []ast.Node{b.Action} }
+func (b *ActionTermBinding) GetLineno() ast.Location      { return b.Loc }
+func (b *ActionTermBinding) SetLineno(l ast.Location)     { b.Loc = l; b.HasLoc = true }
+func (b *ActionTermBinding) GetAstConfig() *ast.AstConfig { return b.Cfg }
+
+// Clone creates a copy with transformed children (ast.Node interface).
+// Python: ActionTermBinding.clone(args) replaces action with args[0], copies attrs.
+func (b *ActionTermBinding) Clone(args []ast.Node) ast.Node {
+	return &ActionTermBinding{
+		Name:   b.Name,
+		Action: args[0].(*ActionTerm),
+		Loc:    b.Loc,
+		HasLoc: b.HasLoc,
+		Cfg:    b.Cfg,
+	}
+}
+
+// Canon returns a canonical s-expression with all fields.
+func (b *ActionTermBinding) Canon() iu.Canonical {
+	var lf string
+	if b.HasLoc {
+		lf = fmt.Sprintf(" lineno:%d", b.Loc.Line)
+	}
+	return iu.Canonical(fmt.Sprintf("(actionTermBinding%s name:%q action:%s)",
+		lf, b.Name, b.Action.Canon()))
 }
 
 // --- canon helpers ---
@@ -652,7 +690,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	// Instrument all bindings
 	for i, b := range model.Bindings {
 		newStmt := instrStmt(b.Action.Stmt, b.Action.Labels)
-		model.Bindings[i] = b.Clone(b.Action.CloneStmt(newStmt))
+		model.Bindings[i] = b.CloneAction(b.Action.CloneStmt(newStmt))
 	}
 
 	// Add assumed G-properties as model assumptions. Python ivy_temporal.py:378:

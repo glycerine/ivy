@@ -91,12 +91,12 @@ func TestActionTermBindingClone(t *testing.T) {
 	at1 := makeActionTerm(nil, nil, nil, stmt)
 	at2 := makeActionTerm(nil, nil, []string{"x"}, stmt)
 	b := &ActionTermBinding{Name: "test", Action: at1}
-	cloned := b.Clone(at2)
+	cloned := b.CloneAction(at2)
 	if cloned.Name != "test" {
-		t.Error("Clone should preserve name")
+		t.Error("CloneAction should preserve name")
 	}
 	if cloned.Action != at2 {
-		t.Error("Clone should replace action")
+		t.Error("CloneAction should replace action")
 	}
 }
 

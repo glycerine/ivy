@@ -729,6 +729,12 @@ def install():
     itm.ActionTerm.canon = _actionterm_canon
     itm.ActionTerm.sexp = _actionterm_canon
 
+    def _actiontermbinding_canon(self):
+        return '(actionTermBinding{} name:{} action:{})'.format(
+            lineno_fields(self), string_canon(self.name), node_canon(self.action))
+    itm.ActionTermBinding.canon = _actiontermbinding_canon
+    itm.ActionTermBinding.sexp = _actiontermbinding_canon
+
     # Install canon on fragment checker types (UFNode etc.)
     from .canon_fragment import install as install_fragment
     install_fragment()

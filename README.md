@@ -2605,6 +2605,44 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-330541  go : XTRACE: transformAction ENTER type=Sequence
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm)
+330541  go : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:[] stmt:(sequence stmts:[(assumeAction elems:[(labeledFormula label:(atom rep:"lclo ...(truncated long line to 300 bytes)
+
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "rfn" "rfn" "tprops" "tprops" "dramc_nb2" "dramc_nb2" "cmpl_li
+ ...(truncated long line to 300 bytes)
+
+
+=== S-expression diff (go '-' vs py '+') ===
+   (actionTerm
+     inputs:[
+       (Symbol
+         name:fml:x
+         sort:(UninterpretedSort
+           name:lclock))]
+     outputs:[
+       (Symbol
+         name:fml:y
+         sort:(UninterpretedSort
+           name:lclock))]
+-   labels:[]
+-   stmt:(sequence
+-     stmts:[
+-       (assumeAction
+-         elems:[
+-           (labeledFormula
+-             label:(atom
+-               rep:"lclock.spec.asrt5"
+-               terms:[]
+-               aSort:nil)
++   labels:["cf_live"
++     "cf_live"
++     "rfn"
++     "rfn"
++     "tprops"
++     "tprops"
++     "dramc_nb2"
++     "dramc_nb2"
++     "cmpl_live"
++     "cmpl_live"
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 330541, counting from 0.
 ~~~
