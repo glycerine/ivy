@@ -393,7 +393,7 @@ func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
 				}
 			}
 			symbolMap := make(map[string]*lg.Const)
-			for name, entry := range sess.CompiledSig.Symbols {
+			for name, entry := range sess.CompiledSig.Symbols.All() {
 				if entry != nil && entry.Sort != nil {
 					if c, ok := entry.Sort.(lg.Sort); ok {
 						symbolMap[name] = lg.NewConst(name, c)

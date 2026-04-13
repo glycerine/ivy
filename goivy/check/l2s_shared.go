@@ -155,7 +155,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 				for _, modSym := range mods {
 					symName := modSym.Name
 					if m != nil && m.Sig != nil {
-						if entry, ok := m.Sig.Symbols[symName]; ok {
+						if entry, ok := m.Sig.Symbols.Get2(symName); ok {
 							vs := module.SymPlaceholders(lg.NewConst(symName, entry.Sort))
 							var expr lg.Expr
 							if len(vs) > 0 {
@@ -635,19 +635,15 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 }
 
 // insertionOrderSymbols returns module symbols in insertion order (matching
-// Python's ilg.sig.symbols.values()), with duplicates removed by name
-// (first occurrence wins, like Python dict semantics).
+// Python's ilg.sig.symbols.values()). Sig.Symbols is an InsMap that
+// preserves insertion order and deduplicates by key automatically.
 func insertionOrderSymbols(mod *module.Module) []*lg.Const {
-	if mod == nil || len(mod.SymbolOrder) == 0 {
+	if mod == nil || mod.Sig == nil || mod.Sig.Symbols.Len() == 0 {
 		return nil
 	}
-	seen := make(map[string]bool, len(mod.SymbolOrder))
-	result := make([]*lg.Const, 0, len(mod.SymbolOrder))
-	for _, sym := range mod.SymbolOrder {
-		if !seen[sym.Name] {
-			seen[sym.Name] = true
-			result = append(result, sym)
-		}
+	result := make([]*lg.Const, 0, mod.Sig.Symbols.Len())
+	for name, entry := range mod.Sig.Symbols.All() {
+		result = append(result, lg.NewConst(name, entry.Sort))
 	}
 	return result
 }

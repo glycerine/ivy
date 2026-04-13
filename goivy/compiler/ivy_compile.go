@@ -1836,9 +1836,9 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	}
 
 	for _, sym := range vocab.Symbols {
-		if _, exists := sig.Symbols[sym.Name]; exists {
-			usedNames := make(map[string]struct{}, len(sig.Symbols))
-			for k := range sig.Symbols {
+		if _, exists := sig.Symbols.Get2(sym.Name); exists {
+			usedNames := make(map[string]struct{}, sig.Symbols.Len())
+			for k := range sig.Symbols.All() {
 				usedNames[k] = struct{}{}
 			}
 			newname := iu.UnusedNameWithBase(sym.Name, usedNames)

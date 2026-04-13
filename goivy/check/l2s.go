@@ -923,7 +923,7 @@ func sortedSymbols(sig *il.Sig) []*lg.Const {
 		return nil
 	}
 	var result []*lg.Const
-	for name, entry := range sig.Symbols {
+	for name, entry := range sig.Symbols.All() {
 		result = append(result, lg.NewConst(name, entry.Sort))
 	}
 	sort.Slice(result, func(i, j int) bool {

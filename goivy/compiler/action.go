@@ -1090,7 +1090,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 			// Python: remove_symbol(sym); shadow existing; add_symbol(clhs.rep.name, clhs.rep.sort)
 			sigCopy.RemoveSymbol(sym.Name, sym.CSort)
-			delete(sigCopy.Symbols, sym.Name)
+			sigCopy.Symbols.Delkey(sym.Name)
 			sigCopy.AddSymbol(sym.Name, lhs.NodeSort())
 
 			c.Sig = savedSig

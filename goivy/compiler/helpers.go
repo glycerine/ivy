@@ -119,7 +119,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
 	if !found {
-		if entry, ok := c.Sig.Symbols[symbolName]; ok {
+		if entry, ok := c.Sig.Symbols.Get2(symbolName); ok {
 			sym = lg.NewConst(symbolName, entry.Sort)
 			found = true
 		}
@@ -164,7 +164,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
 		xtracer.Trace("compiler.compile_field_reference_rec destrName=%s baseSort=%s", destrName, il.SortName(sort))
 		if c.TopCtx != nil {
-			_, inSig := c.Sig.Symbols[destrName]
+			_, inSig := c.Sig.Symbols.Get2(destrName)
 			_, inAct := c.TopCtx.Actions[destrName]
 			xtracer.Trace("compiler.compile_field_reference_rec destr_check name=%s inSig=%v inAct=%v", destrName, inSig, inAct)
 			if !inSig {

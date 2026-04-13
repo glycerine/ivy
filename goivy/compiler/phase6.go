@@ -635,7 +635,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	for sym := range il.SymbolsIluAst(body) {
 		if sc, ok := sym.(*lg.Const); ok {
 			if (strings.HasPrefix(sc.Name, "fml:") || strings.HasPrefix(sc.Name, "loc:")) &&
-				c.Sig.Symbols[sc.Name] != nil && !seen[sc.Name] {
+				c.Sig.Symbols.Get(sc.Name) != nil && !seen[sc.Name] {
 				seen[sc.Name] = true
 				syms = append(syms, sc)
 			}
@@ -861,7 +861,7 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 	}
 	// Check if atom name is in sig.symbols
 	if atom, ok := node.(*ast.Atom); ok {
-		if _, ok := c.Sig.Symbols[atom.Rep]; ok {
+		if _, ok := c.Sig.Symbols.Get2(atom.Rep); ok {
 			return c.SortifyWithInference(node)
 		}
 		// B5-R4: Clone with sortify_with_inference'd args, then rename via resolve_alias.
@@ -923,7 +923,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	}
 
 	// Check if it's in the signature's symbols (non-polymorphic)
-	if entry, ok := c.Sig.Symbols[name]; ok {
+	if entry, ok := c.Sig.Symbols.Get2(name); ok {
 		if entry.Union == nil {
 			return lg.NewConst(name, entry.Sort), nil
 		}

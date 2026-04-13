@@ -781,7 +781,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	// Add a temporary symbol so compilation can resolve the defined name
 	var tempSym *lg.Const
 	if lhsAtom, ok := defNode.Lhs.(*ast.Atom); ok {
-		if _, exists := d.Compiler.Sig.Symbols[lhsAtom.Rep]; !exists {
+		if _, exists := d.Compiler.Sig.Symbols.Get2(lhsAtom.Rep); !exists {
 			var err error
 			tempSym, err = d.Compiler.AddSymbol(lhsAtom.Rep, il.TopFunctionSort(len(lhsAtom.Terms)), d.Compiler.Sig)
 			if err != nil {
@@ -803,7 +803,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 
 	// Remove temporary symbol and re-add with inferred sort
 	if tempSym != nil {
-		delete(d.Compiler.Sig.Symbols, tempSym.Name)
+		d.Compiler.Sig.Symbols.Delkey(tempSym.Name)
 	}
 
 	// Python: self.add_definition(ldf.clone([label, df]))
@@ -820,7 +820,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*lg.Const); ok {
-			if _, exists := d.Compiler.Sig.Symbols[cnst.Name]; !exists {
+			if _, exists := d.Compiler.Sig.Symbols.Get2(cnst.Name); !exists {
 				d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 			}
 			d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, cnst)
@@ -1150,7 +1150,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		for _, c := range ext {
 			if existingSort, hasSig := sig.Sorts[lhs]; hasSig {
 				sym := lg.NewConst(c, existingSort)
-				sig.Symbols[c] = &il.SymbolEntry{Sort: existingSort}
+				sig.Symbols.Set(c, &il.SymbolEntry{Sort: existingSort})
 				mod.Functions.Set(c, existingSort)
 				sig.Constructors[sym.Name] = true
 			}
@@ -1162,7 +1162,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	// BB6: Solver sort/symbol interpretation
 	// Python: for x,y,z in zip([sig.sorts,sig.symbols], [is_solver_sort,is_solver_op], ['sort','symbol']):
 	_, inSorts := sig.Sorts[lhs]
-	_, inSymbols := sig.Symbols[lhs]
+	_, inSymbols := sig.Symbols.Get2(lhs)
 
 	// BB6a: Check sorts first
 	if inSorts {

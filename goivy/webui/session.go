@@ -123,7 +123,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	symbolMap := make(map[string]*logic.Const)
 	var relations []RelationInfo
 	var actionNames []string
-	for name, entry := range sig.Symbols {
+	for name, entry := range sig.Symbols.All() {
 		if entry == nil || entry.Sort == nil {
 			continue
 		}
@@ -352,7 +352,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			concept := s.SimpleSess.Domain.Concepts[conceptName]
 			if concept != nil && len(concept.Sorts) > 0 {
 				targetSort := concept.Sorts[0]
-				for symName, entry := range s.CompiledSig.Symbols {
+				for symName, entry := range s.CompiledSig.Symbols.All() {
 					if entry == nil || entry.Sort == nil {
 						continue
 					}
@@ -747,7 +747,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				// all relations from the signature that appear in the CTI.
 				var usedRels []string
 				if s.CompiledSig != nil {
-					for symName, entry := range s.CompiledSig.Symbols {
+					for symName, entry := range s.CompiledSig.Symbols.All() {
 						if entry == nil || entry.Sort == nil {
 							continue
 						}
