@@ -1076,22 +1076,9 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	}
 
 	children := n.Args()
-	if len(children) == 0 {
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s leaf", iu.ShortTypeName(n))
-		return n
-	}
 	newChildren := make([]ast.Node, len(children))
-	changed := false
 	for i, c := range children {
-		nc := replaceTemporalsRec(c, g, when)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s unchanged", iu.ShortTypeName(n))
-		return n
+		newChildren[i] = replaceTemporalsRec(c, g, when)
 	}
 	result := n.Clone(newChildren)
 	xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
