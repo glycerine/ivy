@@ -2605,7 +2605,7 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-330541  go : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:[] stmt:(sequence stmts:[(assumeAction elems:[(labeledFormula label:(atom rep:"lclo ...(truncated long line to 300 bytes)
+330541  go : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["tprops" "tprops" "dramc_nb2" "dramc_nb2" "this" "rfn" "rfn" "cf_pio_live" "cf_pio ...(truncated long line to 300 bytes)
 
         py : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "rfn" "rfn" "tprops" "tprops" "dramc_nb2" "dramc_nb2" "cmpl_li
  ...(truncated long line to 300 bytes)
@@ -2623,16 +2623,16 @@ with very fine grained xtraces:
          name:fml:y
          sort:(UninterpretedSort
            name:lclock))]
--   labels:[]
--   stmt:(sequence
--     stmts:[
--       (assumeAction
--         elems:[
--           (labeledFormula
--             label:(atom
--               rep:"lclock.spec.asrt5"
--               terms:[]
--               aSort:nil)
+-   labels:["tprops"
+-     "tprops"
+-     "dramc_nb2"
+-     "dramc_nb2"
+-     "this"
+-     "rfn"
+-     "rfn"
+-     "cf_pio_live"
+-     "cf_pio_live"
+-     "e2e"
 +   labels:["cf_live"
 +     "cf_live"
 +     "rfn"
