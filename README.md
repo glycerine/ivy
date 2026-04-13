@@ -2616,4 +2616,5 @@ with very fine grained xtraces:
  ...(truncated long line to 300 bytes)
 
     golden_test.go:452: ivy_check and goivy_check differ at line 596113, counting from 0.
+    
 ~~~
