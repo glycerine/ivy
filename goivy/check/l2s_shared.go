@@ -16,6 +16,7 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // InstrumentationConfig holds all state for the shared L2S instrumentation pipeline.
@@ -107,6 +108,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
 	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla}).(lg.Expr)
+	xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
 
 	// Normalize named binders
 	modPass("NormalizeNamedBinders", func(n ast.Node) ast.Node {
@@ -140,6 +142,17 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 	}
 	for k, v := range cfg.NamedBindersConjs {
 		cfg.NamedBindersConjs[k] = dedupeVarBodyPairs(v)
+	}
+	// Trace named_binders_conjs after dedup (sorted keys for determinism)
+	{
+		keys := make([]string, 0, len(cfg.NamedBindersConjs))
+		for k := range cfg.NamedBindersConjs {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			xtracer.Trace("l2s.SharedStep3 namedBindersConjs key=%s nEntries=%d", k, len(cfg.NamedBindersConjs[k]))
+		}
 	}
 
 	// In full mode, add all state variables to 'to_save'
@@ -200,6 +213,12 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 
 	cfg.ToWait = cfg.NamedBindersConjs["l2s_w"]
 	cfg.ToSave = cfg.NamedBindersConjs["l2s_s"]
+	for i, vb := range cfg.ToWait {
+		xtracer.Trace("l2s.SharedStep3 toWait[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+	}
+	for i, vb := range cfg.ToSave {
+		xtracer.Trace("l2s.SharedStep3 toSave[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+	}
 }
 
 // SharedBuildSaveAndWait builds saveState, doneWaiting, and resetW from ToWait/ToSave.
@@ -207,21 +226,24 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	// save_state actions
 	cfg.SaveState = nil
-	for _, vb := range cfg.ToSave {
+	for i, vb := range cfg.ToSave {
+		xtracer.Trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
 		lhs := applyNB(l2sS(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
 		cfg.SaveState = append(cfg.SaveState, setLineno(actions.NewAssignAction(lhs, vb.Body), cfg.Lineno))
 	}
 
 	// done_waiting formulas
 	cfg.DoneWaiting = nil
-	for _, vb := range cfg.ToWait {
+	for i, vb := range cfg.ToWait {
 		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
+		xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
 		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &lg.Not{Body: inner}))
 	}
 
 	// reset_w actions
 	cfg.ResetW = nil
-	for _, vb := range cfg.ToWait {
+	for i, vb := range cfg.ToWait {
+		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
 		var conjuncts []lg.Expr
 		for _, v := range vb.Vars {
@@ -230,11 +252,14 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 			}
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
-		negGlob := cfg.ReplaceTemporals(
-			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}}).(lg.Expr)
+		preReplaceInput := &lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}}
+		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
+		negGlob := cfg.ReplaceTemporals(preReplaceInput).(lg.Expr)
+		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), cfg.Lineno))
 	}
+	xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d", len(cfg.SaveState), len(cfg.DoneWaiting), len(cfg.ResetW))
 }
 
 // SharedStep6_BuildTableau builds the tableau axiom actions.
@@ -249,6 +274,9 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	})
 
 	// assume_g_axioms
+	for i, triple := range toG {
+		xtracer.Trace("l2s.SharedStep6 toG[%d] nVars=%d HASH canon=%s", i, len(triple.Vars), triple.Body.Canon())
+	}
 	cfg.AssumeGAxioms = nil
 	for _, triple := range toG {
 		inner := &lg.Implies{
@@ -294,6 +322,8 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 		cfg.AssumeWAxioms = append(cfg.AssumeWAxioms,
 			setLineno(actions.NewAssumeAction(inner), cfg.Lineno))
 	}
+	xtracer.Trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d",
+		len(cfg.AssumeGAxioms), len(cfg.AssumeWhenAxioms), len(cfg.AssumeInitAxioms), len(cfg.AssumeWAxioms))
 }
 
 // SharedStep7_InstrumentActions instruments all binding actions with
@@ -564,6 +594,16 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 // SharedStep11_ReplaceNamedBinders replaces named binders with fresh relation constants.
 func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
 	namedBinders := collectAllNamedBinders(model)
+	{
+		keys := make([]string, 0, len(namedBinders))
+		for k := range namedBinders {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			xtracer.Trace("l2s.SharedStep11 namedBinders key=%s count=%d", k, len(namedBinders[k]))
+		}
+	}
 
 	// Ensure _old_l2s_g is consistent with l2s_g
 	namedBinders["_old_l2s_g"] = nil
@@ -584,6 +624,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 			freshName := fmt.Sprintf("%s_%d", k, i)
 			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())
 			cfg.Subs[freshName] = b.String()
+			xtracer.Trace("l2s.SharedStep11 sub freshName=%s binderKey=%s", freshName, b.String())
 		}
 	}
 

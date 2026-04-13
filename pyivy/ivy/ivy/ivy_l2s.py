@@ -813,6 +813,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     mod_pass(replace_temporals_by_l2s_g, "ReplaceTemporals")
 
     not_lf = replace_temporals_by_l2s_g(lg.Not(fmla))
+    if __debug__: xtracer.trace("l2s.SharedStep1 notLf HASH canon=%s" % not_lf.canon())
     if debug.get():
         print("=" * 80 +"\nafter replace_temporals_by_named_binder_g_ast"+ "\n"*3)
         print("=" * 80 + "\nl2s_gs:")
@@ -863,6 +864,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
 
     named_binders_conjs = defaultdict(list,((k,list(set(v))) for k,v in named_binders_conjs.items()))
+    for _k in sorted(named_binders_conjs.keys()):
+        if __debug__: xtracer.trace("l2s.SharedStep3 namedBindersConjs key=%s nEntries=%d" % (_k, len(named_binders_conjs[_k])))
 
     # in full mode, add all the state variables to 'to_save' and all
     # of the temporal operators to 'to_wait'
@@ -892,6 +895,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     to_wait += named_binders_conjs['l2s_w']
     to_save = [] # list of (variables, term) corresponding to l2s_s in conjectures
     to_save += named_binders_conjs['l2s_s']
+    for _i, (vs, t) in enumerate(to_wait):
+        if __debug__: xtracer.trace("l2s.SharedStep3 toWait[%d] nVars=%d HASH canon=%s" % (_i, len(vs), t.canon()))
+    for _i, (vs, t) in enumerate(to_save):
+        if __debug__: xtracer.trace("l2s.SharedStep3 toSave[%d] nVars=%d HASH canon=%s" % (_i, len(vs), t.canon()))
     if __debug__: xtracer.trace("l2s.SharedStep3 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
 
     if debug.get():
@@ -903,28 +910,33 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         print("=" * 40)
 
     if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait ENTER")
-    save_state = [
-        AssignAction(l2s_s(vs,t)(*vs), t).set_lineno(lineno)
-        for vs, t in to_save
-    ]
-    done_waiting = [
-        forall(vs, lg.Not(l2s_w(vs,t)(*vs)))
-        for vs, t in to_wait
-    ]
-    reset_w = [
-        AssignAction(
-            l2s_w(vs,t)(*vs),
-            lg.And(*([l2s_d(v.sort)(v) for v in vs if v.sort.name not in finite_sorts]
-                     + [lg.Not(t),
-                        replace_temporals_by_l2s_g(lg.Not(lg.Globally(proof_label,ilu.negate(t))))]))
-        ).set_lineno(lineno)
-        for vs, t in to_wait
-    ]
+    save_state = []
+    for _i, (vs, t) in enumerate(to_save):
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s" % (_i, len(vs), t.canon()))
+        save_state.append(AssignAction(l2s_s(vs,t)(*vs), t).set_lineno(lineno))
+    done_waiting = []
+    for _i, (vs, t) in enumerate(to_wait):
+        _inner = l2s_w(vs,t)(*vs)
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s" % (_i, len(vs), _inner.canon()))
+        done_waiting.append(forall(vs, lg.Not(_inner)))
+    reset_w = []
+    for _i, (vs, t) in enumerate(to_wait):
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s" % (_i, len(vs), t.canon()))
+        _pre_replace_input = lg.Not(lg.Globally(proof_label,ilu.negate(t)))
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s" % (_i, _pre_replace_input.canon()))
+        _post_replace = replace_temporals_by_l2s_g(_pre_replace_input)
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s" % (_i, _post_replace.canon()))
+        reset_w.append(
+            AssignAction(
+                l2s_w(vs,t)(*vs),
+                lg.And(*([l2s_d(v.sort)(v) for v in vs if v.sort.name not in finite_sorts]
+                         + [lg.Not(t), _post_replace]))
+            ).set_lineno(lineno))
 
     print ('reset_w:')
     for x in reset_w:
         print (x)
-    if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait EXIT")
+    if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d" % (len(save_state), len(done_waiting), len(reset_w)))
 
     fair_cycle = [l2s_saved]
     fair_cycle += done_waiting
@@ -1023,6 +1035,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         print('='*40)
 
     if __debug__: xtracer.trace("l2s.SharedStep6 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+    for _i, (vs, t, env) in enumerate(to_g):
+        if __debug__: xtracer.trace("l2s.SharedStep6 toG[%d] nVars=%d HASH canon=%s" % (_i, len(vs), t.canon()))
     assume_g_axioms = [
         AssumeAction(forall(vs, lg.Implies(l2s_g(vs, t, env)(*vs), t))).set_lineno(lineno)
         for vs, t, env in to_g
@@ -1168,7 +1182,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         wait = l2s_w(vs,t)
         for sym in ilu.symbols_ilu_ast(t):
             symwaits[sym].append(wait)
-    if __debug__: xtracer.trace("l2s.SharedStep6 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+    if __debug__: xtracer.trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d" % (len(assume_g_axioms), len(assume_when_axioms), len(assume_init_axioms), len(assume_w_axioms)))
     if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     actions = dict((b.name,b.action) for b in model.bindings)
     # lines = dict(zip(gprops,gproplines))
@@ -1323,6 +1337,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     )):
         named_binders[b.name].append(b)
     named_binders = defaultdict(list, ((k,list(sorted(set(v),key=str))) for k,v in named_binders.items()))
+    for _k in sorted(named_binders.keys()):
+        if __debug__: xtracer.trace("l2s.SharedStep11 namedBinders key=%s count=%d" % (_k, len(named_binders[_k])))
     # make sure old_l2s_g is consistent with l2s_g
 #    assert len(named_binders['l2s_g']) == len(named_binders['_old_l2s_g'])
     named_binders['_old_l2s_g'] = [
@@ -1330,11 +1346,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
          for b in named_binders['l2s_g']
     ]
 
-    subs = dict(
-        (b, lg.Const('{}_{}'.format(k, i), b.sort))
-        for k, v in named_binders.items()
-        for i, b in enumerate(v)
-    )
+    subs = dict()
+    for k, v in named_binders.items():
+        for i, b in enumerate(v):
+            subs[b] = lg.Const('{}_{}'.format(k, i), b.sort)
+            if __debug__: xtracer.trace("l2s.SharedStep11 sub freshName=%s binderKey=%s" % ('{}_{}'.format(k, i), str(b)))
     if debug.get():
         print("=" * 80 + "\nsubs:" + "\n"*3)
         for k, v in list(subs.items()):
