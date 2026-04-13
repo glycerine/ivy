@@ -2696,4 +2696,5 @@ with very fine grained xtraces:
      unprovable:false)
 
     golden_test.go:452: ivy_check and goivy_check differ at line 321375, counting from 0.
+    
 ~~~
