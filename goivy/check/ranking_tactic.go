@@ -193,7 +193,7 @@ func rankingInvariants(
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
-		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
+		return mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom(name), fmla)
 	}
 
 	allD := func(eq *lg.Eq) lg.Expr {

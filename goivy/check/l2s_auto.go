@@ -1017,7 +1017,7 @@ func l2sAutoInvariants(
 
 // appendLF appends a labeled formula to the invariant list.
 func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
-	lf := cfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
+	lf := cfg.NewLabeledFormula(cfg.NewAtom(name), fmla)
 	return append(invars, lf)
 }
 
