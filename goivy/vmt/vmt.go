@@ -726,11 +726,11 @@ func toAction(n lg.Expr) (actions.Action, bool) {
 	return nil, false
 }
 
-// addLabel wraps an action with a label. In Python this is action.add_label(x).
-// Since Go actions don't have an add_label method yet, we set labels if possible.
+// addLabel wraps an action with a label. In Python this is action.add_label(x),
+// which sets action.label (singular), distinct from action.labels (plural).
 func addLabel(a actions.Action, name string) actions.Action {
-	if ab, ok := a.(interface{ SetLabels([]string) }); ok {
-		ab.SetLabels([]string{name})
+	if ab, ok := a.(interface{ SetLabel(string) }); ok {
+		ab.SetLabel(name)
 	}
 	return a
 }

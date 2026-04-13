@@ -388,7 +388,7 @@ func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
 		if strings.HasPrefix(name, "ext:") {
 			name = name[4:]
 		}
-		ract.SetLabels([]string{name})
+		ract.SetLabel(name) // Python: ract.label = name (singular)
 		branches = append(branches, ract)
 	}
 	return actions.NewEnvAction(branches...)

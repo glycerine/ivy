@@ -290,11 +290,12 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	for name := range mod.PublicActions.All() {
 		if act, ok := mod.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
-				type labeler interface {
-					SetLabels([]string)
+				// Python: action.label = name (singular, distinct from labels plural)
+				type singleLabeler interface {
+					SetLabel(string)
 				}
-				if lb, ok := a.(labeler); ok {
-					lb.SetLabels([]string{name})
+				if lb, ok := a.(singleLabeler); ok {
+					lb.SetLabel(name)
 				}
 			}
 		}

@@ -46,6 +46,7 @@ type ActionBase struct {
 	FormalParams  []*lg.Const
 	FormalReturns []*lg.Const
 	Labels        []string
+	Label         string         // Python action.label (singular) -- display/identification, distinct from Labels
 	ActCfg        *ActionsConfig // per-session config for ActionClone to allocate fresh IDs
 }
 
@@ -79,6 +80,8 @@ func (b *ActionBase) CopyFormalsTo(dst Action) {
 
 func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
 func (b *ActionBase) GetLabels() []string        { return b.Labels }
+func (b *ActionBase) SetLabel(label string)      { b.Label = label }
+func (b *ActionBase) GetLabel() string           { return b.Label }
 
 // -----------------------------------------------------------------------
 // Action/lg.Expr bridging helpers

@@ -2061,7 +2061,7 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 		if len(lbl) > 4 && lbl[:4] == "ext:" {
 			lbl = lbl[4:]
 		}
-		seq.Labels = []string{lbl}
+		seq.Label = lbl // Python: ract.label = ... (singular)
 		branches = append(branches, seq)
 		xtracer.Trace("actions.env_action loop end")
 	}
@@ -2070,7 +2070,7 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 	env := &EnvAction{}
 	env.Branches = branches
 	if label != "" {
-		env.Labels = []string{label}
+		env.Label = label // Python: action.label = label (singular)
 	}
 	xtracer.Trace("actions.env_action EXIT")
 	return env
