@@ -356,27 +356,27 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 // SharedStep7_InstrumentActions instruments all binding actions with
 // prop events, when events, and wait events.
 func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.NormalProgram) {
-	symprops := make(map[lg.NodeKey][]*lg.NamedBinder)
-	symwaits := make(map[lg.NodeKey][]*lg.NamedBinder)
-	symwhens := make(map[lg.NodeKey][]*lg.NamedBinder)
+	symprops := make(map[string][]*lg.NamedBinder)
+	symwaits := make(map[string][]*lg.NamedBinder)
+	symwhens := make(map[string][]*lg.NamedBinder)
 
 	sortedTriples := sortL2sGTriples(cfg.L2sGs)
 	for _, triple := range sortedTriples {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
 		for _, sym := range il.SymbolsAst(triple.Body) {
-			symprops[lg.Key(sym)] = append(symprops[lg.Key(sym)], prop)
+			symprops[sym.Name] = append(symprops[sym.Name], prop)
 		}
 	}
 	sortedWhens7 := sortNamedBinderMap(cfg.L2sWhensSet)
 	for _, when := range sortedWhens7 {
 		for _, sym := range il.SymbolsAst(when.Body) {
-			symwhens[lg.Key(sym)] = append(symwhens[lg.Key(sym)], when)
+			symwhens[sym.Name] = append(symwhens[sym.Name], when)
 		}
 	}
 	for _, vb := range cfg.ToWait {
 		wait := l2sW(vb.Vars, vb.Body, cfg.ProofLabel)
 		for _, sym := range il.SymbolsAst(vb.Body) {
-			symwaits[lg.Key(sym)] = append(symwaits[lg.Key(sym)], wait)
+			symwaits[sym.Name] = append(symwaits[sym.Name], wait)
 		}
 	}
 
@@ -497,7 +497,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				monitored := false
 				for _, r := range returns {
 					if c, ok := r.(*lg.Const); ok {
-						k := lg.Key(c)
+						k := c.Name
 						if len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0 {
 							monitored = true
 							break
@@ -543,14 +543,13 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		}
 		allDeps := cfg.Dependencies(modSet)
 		for sym := range allDeps {
-			symKey := lg.NodeKey(sym)
-			for _, prop := range symprops[symKey] {
+			for _, prop := range symprops[sym] {
 				eventProps[prop.String()] = prop
 			}
-			for _, when := range symwhens[symKey] {
+			for _, when := range symwhens[sym] {
 				eventWhens[when.String()] = when
 			}
-			for _, wait := range symwaits[symKey] {
+			for _, wait := range symwaits[sym] {
 				eventWaits[wait.String()] = wait
 			}
 		}

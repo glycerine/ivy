@@ -202,18 +202,16 @@ func TestModifies_HavocAction(t *testing.T) {
 }
 
 func TestModifies_Sequence(t *testing.T) {
-	// Sequence modifies the union of what its children modify
+	// Python: Sequence inherits Action.modifies() which returns [].
+	// Modifies does NOT recurse into children for compound actions.
+	// Callers that need all modified symbols iterate subactions themselves.
 	a1 := NewAssignAction(mkConst("x"), mkConst("1"))
 	a2 := NewAssignAction(mkConst("y"), mkConst("2"))
 	seq := NewSequence(a1, a2)
 
 	mods := Modifies(seq)
-	names := make(map[string]bool)
-	for _, m := range mods {
-		names[m.Name] = true
-	}
-	if !names["x"] || !names["y"] {
-		t.Errorf("Modifies(Sequence) = %v, want {x, y}", names)
+	if len(mods) != 0 {
+		t.Errorf("Modifies(Sequence) returned %d symbols, want 0 (Python: Sequence.modifies() -> [])", len(mods))
 	}
 }
 

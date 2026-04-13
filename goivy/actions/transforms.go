@@ -246,13 +246,6 @@ func modifiesRec(action Action, result *[]*lg.Const, cfg *ActionsConfig) {
 			}
 		}
 
-	default:
-		// Recurse into children
-		for _, arg := range action.ActionArgs() {
-			if child, ok := arg.(Action); ok {
-				modifiesRec(child, result, cfg)
-			}
-		}
 	}
 }
 

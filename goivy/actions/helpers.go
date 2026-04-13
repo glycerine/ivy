@@ -70,6 +70,9 @@ func CallSet(actionName string, env map[string]Action) []string {
 
 // PrefixAction adds a list of statements at the beginning of an action.
 func PrefixAction(action Action, stmts []Action) Action {
+	if len(stmts) == 0 {
+		return action
+	}
 	nodes := make([]lg.Expr, 0, len(stmts)+1)
 	for _, s := range stmts {
 		nodes = append(nodes, s)
