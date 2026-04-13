@@ -863,7 +863,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                 lst[i] = trns(lst[i])
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
 
-    named_binders_conjs = defaultdict(list,((k,list(set(v))) for k,v in named_binders_conjs.items()))
+    named_binders_conjs = defaultdict(list,((k,list(dict.fromkeys(v))) for k,v in named_binders_conjs.items()))
     for _k in sorted(named_binders_conjs.keys()):
         if __debug__: xtracer.trace("l2s.SharedStep3 namedBindersConjs key=%s nEntries=%d" % (_k, len(named_binders_conjs[_k])))
 
@@ -888,7 +888,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                     named_binders_conjs['l2s_w'].append((vs,t))
             if b.name == 'l2s_init':
                 named_binders_conjs['l2s_init'].append((b.variables,b.body))
-        named_binders_conjs['l2s_init'] = list(set(named_binders_conjs['l2s_init']))
+        named_binders_conjs['l2s_init'] = list(dict.fromkeys(named_binders_conjs['l2s_init']))
                 
                     
     to_wait = [] # list of (variables, term) corresponding to l2s_w in conjectures
@@ -1027,7 +1027,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # TODO: get rid of the above, after properly combining it
     to_g = [] # list of (variables, formula)
     to_g += list(l2s_gs)
-    to_g = list(set(to_g))
+    to_g = list(dict.fromkeys(to_g))
     if debug.get():
         print('='*40 + "\nto_g:\n")
         for vs, t, env in to_g:
