@@ -2605,14 +2605,33 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-596102  go : XTRACE: l2s.SharedBuildSaveAndWait resetW[2] postReplace HASH canon=(Not body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(Symbol name:cfabric.wr_fair sort:(BooleanSort)))))
-        py : XTRACE: l2s.SharedBuildSaveAndWait resetW[2] postReplace HASH canon=(Not body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(Symbol name:cfabric.wr_fair sort:(BooleanSort)))))
+596105  go : XTRACE: l2s.SharedStep6 toG[0] nVars=0 HASH canon=(Not body:(Eq t1:(Apply func:(Symbol name:ref.evs.l_req sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (EnumeratedSort name:loc_type ext:[init_l,cf_mem_l,cf_pio_l,cf_cmp_l,if_l,memc_l,dramc_l,arm_l])])) terms:[(Symbol name:_T sort:(Uninter ...(truncated long line to 300 bytes)
 
-596103  go : XTRACE: l2s.SharedBuildSaveAndWait EXIT nSaveState=2 nDoneWaiting=3 nResetW=3
-        py : XTRACE: l2s.SharedBuildSaveAndWait EXIT nSaveState=2 nDoneWaiting=3 nResetW=3
+        py : XTRACE: l2s.SharedStep6 toG[0] nVars=0 HASH canon=(Not body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))))
 
-596104  go : XTRACE: l2s.SharedBuildSaveAndWait EXIT
-        py : XTRACE: l2s.SharedStep6 ENTER nInvars=37 nAsms=113 nBindings=24 nPrems=23
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 596104, counting from 0.
+=== S-expression diff (go '-' vs py '+') ===
+   (Not
+-   body:(Eq
++   body:(NamedBinder
+-     t1:(Apply
++     name:l2s_g
+-       func:(Symbol
++     environ:
+-         name:ref.evs.l_req
++     vars:[]
+-         sort:(FunctionSort
++     body:(Not
+-           sorts:[
++       body:(Symbol
+-             (UninterpretedSort
++         name:cfabric.rd_fair
+-               name:lclock)
++         sort:(BooleanSort)))))
+-             (EnumeratedSort
++ 
+-               name:loc_type
++ 
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 596105, counting from 0.
 ~~~
