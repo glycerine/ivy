@@ -158,7 +158,7 @@ func (s *Solver) CheckCompat() []error {
 		return nil
 	}
 	for name := range s.sig.Interp {
-		entry, ok := s.sig.Symbols[name]
+		entry, ok := s.sig.Symbols.Get2(name)
 		if !ok {
 			continue
 		}
@@ -186,7 +186,7 @@ func CheckCompatStatic(sig *il.Sig) []error {
 	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
 	for name := range sig.Interp {
-		entry, ok := sig.Symbols[name]
+		entry, ok := sig.Symbols.Get2(name)
 		if !ok {
 			continue
 		}

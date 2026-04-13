@@ -658,9 +658,9 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 
 	// Filter the signature: remove symbols not in allSyms.
 	if isoCfg.FilterSymbols && mod.Sig != nil {
-		for name := range mod.Sig.Symbols {
+		for name := range mod.Sig.Symbols.All() {
 			if !allSyms[name] {
-				delete(mod.Sig.Symbols, name)
+				mod.Sig.Symbols.Delkey(name)
 			}
 		}
 	}
@@ -675,7 +675,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 			addSortName(s, allSorts)
 		}
 
-		for _, entry := range mod.Sig.Symbols {
+		for _, entry := range mod.Sig.Symbols.All() {
 			if entry.Union != nil {
 				for _, s := range entry.Union.Sorts {
 					addSortDeps(s)

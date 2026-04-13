@@ -34,7 +34,7 @@ func (u *UnionSort) String() string {
 type Sig struct {
 	IuCfg              *iu.IvyUtilsConfig     // per-session config for version flags
 	Sorts              map[string]lg.Sort
-	Symbols            map[string]*SymbolEntry
+	Symbols            *iu.InsMap[string, *SymbolEntry]
 	Constructors       map[string]bool
 	Interp             map[string]interface{} // sort name → interpretation
 	DefaultSort        lg.Sort                // nil means unset
@@ -56,7 +56,7 @@ func NewSigOn(iuCfg *iu.IvyUtilsConfig) *Sig {
 	s := &Sig{
 		IuCfg:              iuCfg,
 		Sorts:              make(map[string]lg.Sort),
-		Symbols:            make(map[string]*SymbolEntry),
+		Symbols:            iu.NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool),
 		Interp:             make(map[string]interface{}),
 		DefaultNumericSort: &lg.UninterpretedSort{Name: "int"},
@@ -76,7 +76,7 @@ func (s *Sig) Copy() *Sig {
 	res := &Sig{
 		IuCfg:              s.IuCfg,
 		Sorts:              make(map[string]lg.Sort, len(s.Sorts)),
-		Symbols:            make(map[string]*SymbolEntry, len(s.Symbols)),
+		Symbols:            iu.NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool, len(s.Constructors)),
 		Interp:             make(map[string]interface{}, len(s.Interp)),
 		DefaultSort:        s.DefaultSort,
@@ -86,8 +86,8 @@ func (s *Sig) Copy() *Sig {
 	for k, v := range s.Sorts {
 		res.Sorts[k] = v
 	}
-	for k, v := range s.Symbols {
-		res.Symbols[k] = v
+	for k, v := range s.Symbols.All() {
+		res.Symbols.Set(k, v)
 	}
 	for k, v := range s.Constructors {
 		res.Constructors[k] = v
@@ -103,10 +103,10 @@ func (s *Sig) Copy() *Sig {
 // Returns the resulting Const.
 func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Const, error) {
 	if s.IuCfg != nil && s.IuCfg.HavePolymorphism && IsPolymorphicName(name) {
-		entry, exists := s.Symbols[name]
+		entry, exists := s.Symbols.Get2(name)
 		if !exists {
 			u := &UnionSort{Sorts: []lg.Sort{sort}}
-			s.Symbols[name] = &SymbolEntry{Name: name, Sort: sort, Union: u}
+			s.Symbols.Set(name, &SymbolEntry{Name: name, Sort: sort, Union: u})
 			return lg.NewConst(name, sort), nil
 		}
 		if entry.Union == nil {
@@ -129,21 +129,21 @@ func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Const, error) {
 		return lg.NewConst(name, sort), nil
 	}
 
-	if entry, exists := s.Symbols[name]; exists {
+	if entry, exists := s.Symbols.Get2(name); exists {
 		if !lg.SortEqual(sort, entry.Sort) {
 			return nil, &lg.IvyError{Msg: fmt.Sprintf("redefining symbol: %s", name)}
 		}
 		return lg.NewConst(name, entry.Sort), nil
 	}
 
-	s.Symbols[name] = &SymbolEntry{Name: name, Sort: sort}
+	s.Symbols.Set(name, &SymbolEntry{Name: name, Sort: sort})
 	return lg.NewConst(name, sort), nil
 }
 
 // RemoveSymbol removes a symbol from the signature. For union sorts,
 // removes only the specific sort variant.
 func (s *Sig) RemoveSymbol(name string, sort lg.Sort) {
-	entry, exists := s.Symbols[name]
+	entry, exists := s.Symbols.Get2(name)
 	if !exists {
 		return
 	}
@@ -155,17 +155,17 @@ func (s *Sig) RemoveSymbol(name string, sort lg.Sort) {
 			}
 		}
 		if len(entry.Union.Sorts) == 0 {
-			delete(s.Symbols, name)
+			s.Symbols.Delkey(name)
 		}
 		return
 	}
-	delete(s.Symbols, name)
+	s.Symbols.Delkey(name)
 }
 
 // ContainsSymbol checks if the signature contains a symbol with the given
 // name and sort.
 func (s *Sig) ContainsSymbol(name string, sort lg.Sort) bool {
-	entry, exists := s.Symbols[name]
+	entry, exists := s.Symbols.Get2(name)
 	if !exists {
 		return false
 	}
@@ -200,7 +200,7 @@ func (s *Sig) Contains(sortOrSymbol interface{}) bool {
 // AllSymbols returns all symbols in the signature, expanding union sorts.
 func (s *Sig) AllSymbols() []*lg.Const {
 	var result []*lg.Const
-	for name, entry := range s.Symbols {
+	for name, entry := range s.Symbols.All() {
 		if entry.Union != nil {
 			for _, sort := range entry.Union.Sorts {
 				result = append(result, lg.NewConst(name, sort))
@@ -214,7 +214,7 @@ func (s *Sig) AllSymbols() []*lg.Const {
 
 // AllSymbolsNamed returns all sort variants for a given symbol name.
 func (s *Sig) AllSymbolsNamed(name string) []*lg.Const {
-	entry, exists := s.Symbols[name]
+	entry, exists := s.Symbols.Get2(name)
 	if !exists {
 		return nil
 	}
@@ -243,7 +243,7 @@ func (s *Sig) String() string {
 		}
 		b.WriteByte('\n')
 	}
-	for name, entry := range s.Symbols {
+	for name, entry := range s.Symbols.All() {
 		var sorts []lg.Sort
 		if entry.Union != nil {
 			sorts = entry.Union.Sorts
@@ -332,8 +332,8 @@ func (s *Sig) SortNames() []string {
 func (s *Sig) Canon() iu.Canonical {
 	sortNames := s.SortNames()
 	sort.Strings(sortNames)
-	symParts := make([]string, 0, len(s.Symbols))
-	for name, entry := range s.Symbols {
+	symParts := make([]string, 0, s.Symbols.Len())
+	for name, entry := range s.Symbols.All() {
 		symParts = append(symParts, name+":"+SortName(entry.Sort))
 	}
 	sort.Strings(symParts)
@@ -356,7 +356,7 @@ func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Const, error) {
 	if allowUnsorted {
 		return lg.NewConst(name, lg.TopS), nil
 	}
-	entry, ok := s.Symbols[name]
+	entry, ok := s.Symbols.Get2(name)
 	if ok {
 		return lg.NewConst(name, entry.Sort), nil
 	}
@@ -390,21 +390,21 @@ func NewWithSymbols(sig *Sig, symbols []*lg.Const) *WithSymbols {
 // Enter adds the symbols to the signature.
 func (ws *WithSymbols) Enter() {
 	for _, sym := range ws.symbols {
-		if entry, exists := ws.sig.Symbols[sym.Name]; exists {
+		if entry, exists := ws.sig.Symbols.Get2(sym.Name); exists {
 			ws.saved = append(ws.saved, savedSymbol{sym.Name, entry})
-			delete(ws.sig.Symbols, sym.Name)
+			ws.sig.Symbols.Delkey(sym.Name)
 		}
-		ws.sig.Symbols[sym.Name] = &SymbolEntry{Name: sym.Name, Sort: sym.CSort}
+		ws.sig.Symbols.Set(sym.Name, &SymbolEntry{Name: sym.Name, Sort: sym.CSort})
 	}
 }
 
 // Exit restores the original symbols.
 func (ws *WithSymbols) Exit() {
 	for _, sym := range ws.symbols {
-		delete(ws.sig.Symbols, sym.Name)
+		ws.sig.Symbols.Delkey(sym.Name)
 	}
 	for _, s := range ws.saved {
-		ws.sig.Symbols[s.name] = s.entry
+		ws.sig.Symbols.Set(s.name, s.entry)
 	}
 }
 

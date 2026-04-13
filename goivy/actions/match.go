@@ -465,7 +465,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	var havocs []Action
 	if mod != nil {
 		for _, modSym := range modset {
-			if sym, ok := mod.Sig.Symbols[modSym.Name]; ok {
+			if sym, ok := mod.Sig.Symbols.Get2(modSym.Name); ok {
 				havocTarget := lg.NewConst(modSym.Name, sym.Sort)
 				h := NewHavocAction(havocTarget)
 				h.SetLineno(w.GetLineno())

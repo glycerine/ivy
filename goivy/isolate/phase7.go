@@ -118,7 +118,7 @@ func HasSideEffectRec(mod *module.Module, newActions *iu.InsMap[string, actions.
 		// Modifications to signature symbols have side effects.
 		for _, sym := range actions.Modifies(sub) {
 			if mod.Sig != nil {
-				if _, inSig := mod.Sig.Symbols[sym.Name]; inSig {
+				if _, inSig := mod.Sig.Symbols.Get2(sym.Name); inSig {
 					return true
 				}
 			}
@@ -196,7 +196,7 @@ func CollectRelevantDestructors(mod *module.Module, syms map[string]bool) map[st
 		if mod.Sig == nil {
 			continue
 		}
-		entry, ok := mod.Sig.Symbols[sym]
+		entry, ok := mod.Sig.Symbols.Get2(sym)
 		if !ok {
 			continue
 		}

@@ -151,7 +151,7 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		// Python lines 249-259: Check modifies() for interference.
 		for _, sym := range actions.Modifies(action) {
 			if mod.Sig != nil {
-				if _, inSig := mod.Sig.Symbols[sym.Name]; inSig {
+				if _, inSig := mod.Sig.Symbols.Get2(sym.Name); inSig {
 					lhsParams := StripMapLookup(sym.Name, stripMap, mod)
 					if len(lhsParams) != mod.Cfg.IsolateCfg.NumIsolateParams {
 						if !(len(lhsParams) == 0 && len(binding) == 0 && isInit) {
@@ -223,16 +223,16 @@ func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding 
 			case *lg.Const:
 				// Add symbol to signature if not present.
 				if mod.Sig != nil {
-					if _, exists := mod.Sig.Symbols[sname]; !exists {
-						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.CSort}
+					if _, exists := mod.Sig.Symbols.Get2(sname); !exists {
+						mod.Sig.Symbols.Set(sname, &il.SymbolEntry{Name: sname, Sort: n.CSort})
 						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewConst(sname, n.CSort))
 					}
 				}
 				return lg.NewConst(sname, n.CSort)
 			case *lg.Variable:
 				if mod.Sig != nil {
-					if _, exists := mod.Sig.Symbols[sname]; !exists {
-						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.VSort}
+					if _, exists := mod.Sig.Symbols.Get2(sname); !exists {
+						mod.Sig.Symbols.Set(sname, &il.SymbolEntry{Name: sname, Sort: n.VSort})
 						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewConst(sname, n.VSort))
 					}
 				}
@@ -629,7 +629,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				}
 				// Python line 368-369: check parameter doesn't redefine a symbol
 				if mod.Sig != nil {
-					if _, exists := mod.Sig.Symbols[va.Rep]; exists {
+					if _, exists := mod.Sig.Symbols.Get2(va.Rep); exists {
 						return fmt.Errorf("isolate parameter redefines %s", va.Rep)
 					}
 				}
@@ -705,18 +705,18 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 					// Use existing symbol
 					continue
 				}
-				if _, exists := mod.Sig.Symbols[paramName]; exists {
+				if _, exists := mod.Sig.Symbols.Get2(paramName); exists {
 					continue
 				}
 				// Look up the sort from the parameter's sort name
 				if paramSort != nil {
-					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: paramSort}
+					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: paramSort})
 					newSym := lg.NewConst(paramName, paramSort)
 					mod.Params = append(mod.Params, newSym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
 				} else if s, ok := mod.Sig.Sorts[paramName]; ok {
 					newSym := lg.NewConst(paramName, s)
-					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
+					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
 					mod.Params = append(mod.Params, newSym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
 				}
@@ -730,12 +730,12 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				continue
 			}
 			if mod.Sig != nil {
-				if _, exists := mod.Sig.Symbols[paramName]; exists {
+				if _, exists := mod.Sig.Symbols.Get2(paramName); exists {
 					continue
 				}
 				if s, ok := mod.Sig.Sorts[paramName]; ok {
 					sym := lg.NewConst(paramName, s)
-					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
+					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
 					mod.Params = append(mod.Params, sym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
 				}
@@ -832,17 +832,17 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 
 	// Strip the signature symbols.
 	if mod.Sig != nil {
-		for name, entry := range mod.Sig.Symbols {
+		for name, entry := range mod.Sig.Symbols.All() {
 			if mod.Sig.Constructors[name] {
 				continue // constructors are not stripped
 			}
 			sp := StripMapLookup(name, stripMap, mod)
 			if len(sp) > 0 {
 				newSort := StripSort(entry.Sort, len(sp))
-				mod.Sig.Symbols[name] = &il.SymbolEntry{
+				mod.Sig.Symbols.Set(name, &il.SymbolEntry{
 					Name: name,
 					Sort: newSort,
-				}
+				})
 			}
 		}
 	}
@@ -961,9 +961,9 @@ func StripSortFromModule(mod *module.Module, sortName string) error {
 
 	// Remove the sort from the signature symbols that use it.
 	if mod.Sig != nil {
-		for name, entry := range mod.Sig.Symbols {
+		for name, entry := range mod.Sig.Symbols.All() {
 			if symbolEntryReferencesSort(entry, sortName) {
-				delete(mod.Sig.Symbols, name)
+				mod.Sig.Symbols.Delkey(name)
 			}
 		}
 	}

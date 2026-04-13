@@ -386,7 +386,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	}
 
 	// Look up in signature (action parameters, constants, relations)
-	entry, ok := c.Sig.Symbols[name]
+	entry, ok := c.Sig.Symbols.Get2(name)
 	if ok {
 		return lg.NewConst(name, entry.Sort), nil
 	}
@@ -533,7 +533,7 @@ func (c *Compiler) compileUpdatePattern(up *ast.UpdatePattern) (*actions.UpdateP
 // lookupOrCreateConst resolves a name to a *lg.Const, looking up the sort
 // in the signature if available, or using TopS if not found.
 func (c *Compiler) lookupOrCreateConst(name string) *lg.Const {
-	if entry, ok := c.Sig.Symbols[name]; ok {
+	if entry, ok := c.Sig.Symbols.Get2(name); ok {
 		return lg.NewConst(name, entry.Sort)
 	}
 	return lg.NewConst(name, lg.TopS)
@@ -770,7 +770,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	sym, found := il.FindPolymorphicSymbol(rep, c.Module.Cfg.IuCfg)
 	if !found {
 		// Look up in signature
-		entry, ok := c.Sig.Symbols[rep]
+		entry, ok := c.Sig.Symbols.Get2(rep)
 		if ok {
 			sym = lg.NewConst(rep, entry.Sort)
 		}
@@ -949,7 +949,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 	iuCfg := c.Module.Cfg.IuCfg
 	destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
 	if c.TopCtx != nil {
-		if _, inSig := c.Sig.Symbols[destrName]; !inSig {
+		if _, inSig := c.Sig.Symbols.Get2(destrName); !inSig {
 			if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
 				// Try sibling of the sort
 				pc := iuCfg.ParentChildName(il.SortName(sort))

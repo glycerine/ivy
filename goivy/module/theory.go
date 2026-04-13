@@ -101,7 +101,7 @@ func (m *Module) UpdateTheory() {
 		// Check if any destructor is in the signature.
 		anyInSig := false
 		for _, d := range destrs {
-			if _, ok := m.Sig.Symbols[d.Name]; ok {
+			if _, ok := m.Sig.Symbols.Get2(d.Name); ok {
 				anyInSig = true
 				break
 			}

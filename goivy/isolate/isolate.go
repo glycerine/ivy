@@ -1494,16 +1494,16 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
-		for name := range mod.Sig.Symbols {
+		for name := range mod.Sig.Symbols.All() {
 			if !allSyms2Names[name] && !allNamesMap[name] {
-				delete(mod.Sig.Symbols, name)
+				mod.Sig.Symbols.Delkey(name)
 			}
 		}
 	}
 
 	if mod.Sig != nil {
 		remaining := make([]string, 0)
-		for name := range mod.Sig.Symbols {
+		for name := range mod.Sig.Symbols.All() {
 			remaining = append(remaining, name)
 		}
 		sort.Strings(remaining)
@@ -1542,7 +1542,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if mod.Sig != nil {
 			for key, sym := range allSyms2.All() {
 				if c, ok := sym.(*lg.Const); ok {
-					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
+					if _, inSig := mod.Sig.Symbols.Get2(c.Name); inSig {
 						interfSyms.Set(key, sym)
 					}
 				}
@@ -1600,7 +1600,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Add sorts from all remaining symbols
 		for name := range allSyms2Names {
 			if mod.Sig != nil {
-				if entry, ok := mod.Sig.Symbols[name]; ok {
+				if entry, ok := mod.Sig.Symbols.Get2(name); ok {
 					if entry.Union != nil {
 						for _, s := range entry.Union.Sorts {
 							addSortDeps(s, allSorts, addDeps)

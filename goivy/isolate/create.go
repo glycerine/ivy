@@ -519,7 +519,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 			if _, ok := mod.Sig.Interp[name]; ok {
 				continue
 			}
-			if _, ok := mod.Sig.Symbols[name]; ok {
+			if _, ok := mod.Sig.Symbols.Get2(name); ok {
 				continue
 			}
 		}

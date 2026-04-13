@@ -704,7 +704,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	}
 
 	// Remove the temporary symbol and re-add with inferred sort
-	delete(d.Compiler.Sig.Symbols, sym.Name)
+	d.Compiler.Sig.Symbols.Delkey(sym.Name)
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*lg.Const); ok {

@@ -297,7 +297,7 @@ func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result
 		// Leaf: check if it's in the signature and not defined
 		inSig := false
 		if mod.Sig != nil {
-			_, inSig = mod.Sig.Symbols[n]
+			_, inSig = mod.Sig.Symbols.Get2(n)
 		}
 		inDfnd := dfnd[n]
 		xtracer.Trace("actions.CrashAction.modifies.recur LEAF n=%s in_sig=%v in_dfnd=%v", n, inSig, inDfnd)

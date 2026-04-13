@@ -317,7 +317,7 @@ func UnusedConstant(sig *il.Sig, usedConstants []*lg.Const, sort lg.Sort) *lg.Co
 	for _, c := range usedConstants {
 		usedNames[c.Name] = true
 	}
-	for name := range sig.Symbols {
+	for name := range sig.Symbols.All() {
 		usedNames[name] = true
 	}
 	gen := iu.ConstantNameGenerator()

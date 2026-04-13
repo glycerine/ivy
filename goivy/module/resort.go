@@ -82,7 +82,7 @@ func ResortSig(sig *il.Sig, subs map[lg.NodeKey]*SortRefinement) {
 	sig.Sorts = newSorts
 
 	// Resort symbol entries
-	for name, entry := range sig.Symbols {
+	for name, entry := range sig.Symbols.All() {
 		entry.Sort = resortSymbolSort(entry.Sort, ss)
 		if entry.Union != nil {
 			for i, s := range entry.Union.Sorts {
