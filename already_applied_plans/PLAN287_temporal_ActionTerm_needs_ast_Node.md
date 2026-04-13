@@ -28,9 +28,40 @@ Python's `replace_temporals_rec` handles the ENTIRE tree (formulas AND actions) 
 
 **File:** `temporal/temporal.go`
 
-1a. Rename existing `Clone(stmt actions.Action) *ActionTerm` to `CloneStmt(stmt actions.Action) *ActionTerm`
+1a. Rename existing `Clone(stmt actions.Action) *ActionTerm` to `CloneStmt(stmt actions.Action) *ActionTerm`, and update it to copy the new Loc/HasLoc/Cfg fields:
 
-1b. Add `ast.Node` methods and field-aware `Canon()` to `ActionTerm`:
+```go
+func (at *ActionTerm) CloneStmt(stmt actions.Action) *ActionTerm {
+    return &ActionTerm{
+        Inputs:  at.Inputs,
+        Outputs: at.Outputs,
+        Labels:  at.Labels,
+        Stmt:    stmt,
+        Loc:     at.Loc,
+        HasLoc:  at.HasLoc,
+        Cfg:     at.Cfg,
+    }
+}
+```
+
+1b. Add storage fields for lineno and config to `ActionTerm` struct:
+
+```go
+type ActionTerm struct {
+    Inputs  []*lg.Const
+    Outputs []*lg.Const
+    Labels  []string
+    Stmt    actions.Action
+    // ast.Node support (matches Python ia.AST base: lineno, config)
+    Loc    ast.Location
+    HasLoc bool
+    Cfg    *ast.AstConfig
+}
+```
+
+Python's `ia.AST` base gives ActionTerm `lineno` (via `copy_attrs`) and the runtime attaches `canon()` via monkey-patching. Go needs explicit fields.
+
+1c. Add `ast.Node` methods and field-aware `Canon()` to `ActionTerm`:
 
 ```go
 // --- ast.Node interface for ActionTerm ---
@@ -46,21 +77,28 @@ func (at *ActionTerm) Clone(args []ast.Node) ast.Node {
         Outputs: at.Outputs,
         Labels:  at.Labels,
         Stmt:    args[0].(actions.Action),
+        Loc:     at.Loc,
+        HasLoc:  at.HasLoc,
+        Cfg:     at.Cfg,
     }
 }
 
-func (at *ActionTerm) GetLineno() ast.Location     { return ast.Location{} }
-func (at *ActionTerm) SetLineno(l ast.Location)     {}
-func (at *ActionTerm) GetAstConfig() *ast.AstConfig { return nil }
+func (at *ActionTerm) GetLineno() ast.Location      { return at.Loc }
+func (at *ActionTerm) SetLineno(l ast.Location)      { at.Loc = l; at.HasLoc = true }
+func (at *ActionTerm) GetAstConfig() *ast.AstConfig  { return at.Cfg }
 
 func (at *ActionTerm) Canon() iu.Canonical {
-    return iu.Canonical(fmt.Sprintf("(actionTerm inputs:%s outputs:%s labels:%s stmt:%s)",
-        constSliceCanon(at.Inputs), constSliceCanon(at.Outputs),
+    var lf string
+    if at.HasLoc {
+        lf = fmt.Sprintf(" lineno:%d", at.Loc.Line)
+    }
+    return iu.Canonical(fmt.Sprintf("(actionTerm%s inputs:%s outputs:%s labels:%s stmt:%s)",
+        lf, constSliceCanon(at.Inputs), constSliceCanon(at.Outputs),
         stringSliceCanon(at.Labels), at.Stmt.Canon()))
 }
 ```
 
-Currently Python's `ActionTerm.canon()` uses the base `_ast_canon` fallback which produces `(actionTerm)` with no fields. This is insufficient -- both sides need field-aware canon. The Go Canon above includes all four fields (inputs, outputs, labels, stmt) following the established pattern in `canon_ast.py` for action types.
+Canon includes lineno conditionally (matching Python's `lineno_fields()` pattern) plus all four data fields. Currently Python uses the base `_ast_canon` fallback `(actionTerm)` with no fields -- Step 2 adds a matching field-aware override to Python.
 
 **Field mapping (Python attr -> Go field -> canon key):**
 - `self.inputs` -> `Inputs []*lg.Const` -> `inputs:`
