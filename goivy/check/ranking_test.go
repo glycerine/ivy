@@ -504,7 +504,7 @@ func TestL2STacticWithLets(t *testing.T) {
 
 func TestModelPassNil(t *testing.T) {
 	// Should not panic
-	ModelPass(nil, func(n lg.Expr) lg.Expr { return n })
+	ModelPass(nil, func(n ast.Node) ast.Node { return n })
 }
 
 func TestModelPassTransform(t *testing.T) {
@@ -518,7 +518,7 @@ func TestModelPassTransform(t *testing.T) {
 		},
 	}
 	called := 0
-	ModelPass(model, func(n lg.Expr) lg.Expr {
+	ModelPass(model, func(n ast.Node) ast.Node {
 		called++
 		return n
 	})
@@ -582,8 +582,13 @@ func TestRankingModPass_PropertyPremsTransformed(t *testing.T) {
 	schemaPrem := cfg.NewLabeledFormula(boolConst("S"), cfg.NewSchemaBody(boolConst("X")))
 	prems := []ast.Node{propPrem, schemaPrem}
 
-	// Define a transform that wraps in Not.
-	negate := func(e lg.Expr) lg.Expr { return &lg.Not{Body: e} }
+	// Define a transform that wraps the formula in Not (handles LabeledFormula).
+	negate := func(n ast.Node) ast.Node {
+		if lf, ok := n.(*ast.LabeledFormula); ok {
+			return lf.Clone([]ast.Node{lf.Label, &lg.Not{Body: lf.Formula.(lg.Expr)}})
+		}
+		return &lg.Not{Body: n.(lg.Expr)}
+	}
 
 	// Simulate the ranking modPass prems loop (Bug 12 fix).
 	for i, p := range prems {
@@ -591,13 +596,11 @@ func TestRankingModPass_PropertyPremsTransformed(t *testing.T) {
 		if !ok || !proof.GoalIsProperty(lf) {
 			continue
 		}
-		if e, ok := lf.Formula.(lg.Expr); ok {
-			prems[i] = lf.Clone([]ast.Node{lf.Label, negate(e)}).(*ast.LabeledFormula)
-		}
+		prems[i] = negate(lf).(*ast.LabeledFormula)
 	}
 	// Also transform model invars.
 	for i, inv := range model.Invars {
-		model.Invars[i] = inv.Clone([]ast.Node{inv.Label, negate(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+		model.Invars[i] = negate(inv).(*ast.LabeledFormula)
 	}
 
 	// Property prem should be transformed (Not wrapped).

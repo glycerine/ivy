@@ -523,7 +523,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata, matching
 	// Python's recursive `LF.clone(args)` dispatch from
 	// replace_temporals_by_named_binder_g_ast (ivy_logic_utils.py:322).
-	modPass := func(transformName string, transform func(lg.Expr) lg.Expr) {
+	modPass := func(transformName string, transform func(ast.Node) ast.Node) {
 		if xtracer.Enabled {
 			nPropPrems := 0
 			for _, p := range prems {
@@ -536,12 +536,12 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 		for i, inv := range model.Invars {
 			xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
-			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Invars[i] = transform(inv).(*ast.LabeledFormula)
 			xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
 		}
 		for i, asm := range model.Asms {
 			xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
-			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Asms[i] = transform(asm).(*ast.LabeledFormula)
 			xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
 		}
 		for i, b := range model.Bindings {
@@ -561,11 +561,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			if !ok || !proof.GoalIsProperty(lf) {
 				continue
 			}
-			if e, ok := lf.Formula.(lg.Expr); ok {
-				xtracer.Trace("l2s.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
-				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
-				xtracer.Trace("l2s.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
-			}
+			xtracer.Trace("l2s.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
+			prems[i] = transform(lf).(*ast.LabeledFormula)
+			xtracer.Trace("l2s.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
 		}
 		if xtracer.Enabled {
 			nPropPrems := 0
@@ -890,7 +888,7 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 	return nil
 }
 
-func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
+func transformAction(act actions.Action, transform func(ast.Node) ast.Node) actions.Action {
 	if act == nil {
 		return nil
 	}
@@ -903,7 +901,7 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 		if sub, ok := a.(actions.Action); ok {
 			newArgs[i] = transformAction(sub, transform)
 		} else if a != nil {
-			newArgs[i] = transform(a)
+			newArgs[i] = transform(a).(lg.Expr)
 		} else {
 			newArgs[i] = a
 		}

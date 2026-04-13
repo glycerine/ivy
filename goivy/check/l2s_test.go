@@ -532,7 +532,7 @@ func TestApplyWasRec_Leaf(t *testing.T) {
 // --- transformAction ---
 
 func TestTransformAction_Nil(t *testing.T) {
-	result := transformAction(nil, func(e lg.Expr) lg.Expr { return e })
+	result := transformAction(nil, func(n ast.Node) ast.Node { return n })
 	if result != nil {
 		t.Error("expected nil for nil action")
 	}
@@ -540,7 +540,7 @@ func TestTransformAction_Nil(t *testing.T) {
 
 func TestTransformAction_Simple(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
-	negate := func(e lg.Expr) lg.Expr { return &lg.Not{Body: e} }
+	negate := func(n ast.Node) ast.Node { return &lg.Not{Body: n.(lg.Expr)} }
 	result := transformAction(act, negate)
 	if result == nil {
 		t.Fatal("expected non-nil result")

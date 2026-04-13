@@ -364,7 +364,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
 	// matching Python ivy_ranking.py:526-527 where each `transform(x)` ends
 	// up calling `LF.clone(args)` via the recursive `ast.clone` dispatch.
-	modPass := func(transformName string, transform func(lg.Expr) lg.Expr) {
+	modPass := func(transformName string, transform func(ast.Node) ast.Node) {
 		if xtracer.Enabled {
 			nPropPrems := 0
 			for _, p := range prems {
@@ -377,12 +377,12 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		}
 		for i, inv := range model.Invars {
 			xtracer.Trace("ranking.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
-			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Invars[i] = transform(inv).(*ast.LabeledFormula)
 			xtracer.Trace("ranking.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
 		}
 		for i, asm := range model.Asms {
 			xtracer.Trace("ranking.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
-			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Asms[i] = transform(asm).(*ast.LabeledFormula)
 			xtracer.Trace("ranking.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
 		}
 		for i, b := range model.Bindings {
@@ -402,16 +402,14 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			if !ok || !proof.GoalIsProperty(lf) {
 				continue
 			}
-			if e, ok := lf.Formula.(lg.Expr); ok {
-				xtracer.Trace("ranking.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
-				prems[i] = lf.Clone([]ast.Node{lf.Label, transform(e)}).(*ast.LabeledFormula)
-				xtracer.Trace("ranking.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
-			}
+			xtracer.Trace("ranking.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
+			prems[i] = transform(lf).(*ast.LabeledFormula)
+			xtracer.Trace("ranking.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
 			xtracer.Trace("ranking.modPass clone postcond[%d] ENTER HASH canon=%v", i, pc.Canon())
-			postconds[i] = pc.Clone([]ast.Node{pc.Label, transform(pc.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			postconds[i] = transform(pc).(*ast.LabeledFormula)
 			xtracer.Trace("ranking.modPass clone postcond[%d] EXIT HASH canon=%v", i, postconds[i].Canon())
 		}
 		if xtracer.Enabled {
@@ -571,18 +569,18 @@ func isTemporalModels(n lg.Expr) bool {
 // ModelPass applies a transformation to all formulas in a NormalProgram.
 // Mirrors Python ivy_ranking.py:526-527 — uses LF.Clone so the resulting LFs
 // retain their original ids and metadata flags.
-func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
+func ModelPass(model *temporal.NormalProgram, transform func(ast.Node) ast.Node) {
 	if model == nil {
 		return
 	}
 	for i, inv := range model.Invars {
 		if inv.Formula != nil {
-			model.Invars[i] = inv.Clone([]ast.Node{inv.Label, transform(inv.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Invars[i] = transform(inv).(*ast.LabeledFormula)
 		}
 	}
 	for i, asm := range model.Asms {
 		if asm.Formula != nil {
-			model.Asms[i] = asm.Clone([]ast.Node{asm.Label, transform(asm.Formula.(lg.Expr))}).(*ast.LabeledFormula)
+			model.Asms[i] = transform(asm).(*ast.LabeledFormula)
 		}
 	}
 }

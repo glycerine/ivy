@@ -47,7 +47,7 @@ type InstrumentationConfig struct {
 	NotLf             lg.Expr
 
 	// Functions built during step 1
-	ReplaceTemporals func(lg.Expr) lg.Expr
+	ReplaceTemporals func(ast.Node) ast.Node
 	// Dependencies closure (built by caller from defnDeps)
 	Dependencies func(map[string]bool) map[string]bool
 
@@ -73,7 +73,7 @@ type VarBodyPair = varBodyPair
 // cfg.ReplaceTemporals, and cfg.NotLf.
 //
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
-func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(lg.Expr) lg.Expr)) {
+func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
 	cfg.L2sGs = make(map[string]L2sGTriple)
 	cfg.L2sWhensSet = make(map[string]*lg.NamedBinder)
 
@@ -94,7 +94,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		return res
 	}
 
-	cfg.ReplaceTemporals = func(n lg.Expr) lg.Expr {
+	cfg.ReplaceTemporals = func(n ast.Node) ast.Node {
 		return lu.ReplaceTemporalsByNamedBinder(n,
 			func(vs []*lg.Variable, body lg.Expr, env *string) *lg.NamedBinder {
 				return _l2sG(vs, body, env)
@@ -106,10 +106,10 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 	}
 
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
-	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla})
+	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla}).(lg.Expr)
 
 	// Normalize named binders
-	modPass("NormalizeNamedBinders", func(n lg.Expr) lg.Expr {
+	modPass("NormalizeNamedBinders", func(n ast.Node) ast.Node {
 		return lu.NormalizeNamedBinders(n, nil)
 	})
 }
@@ -179,7 +179,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
 			seenWait[fmt.Sprint(vb.Body)] = true
 		}
-		normNotLf := lu.NormalizeNamedBinders(cfg.NotLf, nil)
+		normNotLf := lu.NormalizeNamedBinders(cfg.NotLf, nil).(lg.Expr)
 		for _, b := range lu.NamedBindersAst(normNotLf) {
 			if b.Name == "l2s_g" {
 				negBody := module.Negate(b.Body)
@@ -231,7 +231,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
 		negGlob := cfg.ReplaceTemporals(
-			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}})
+			&lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}}).(lg.Expr)
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), cfg.Lineno))
 	}
@@ -416,7 +416,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				cfg.ReplaceTemporals(&lg.Not{Body: &lg.Globally{
 					Environ: strPtr(cfg.ProofLabel),
 					Body:    module.Negate(t),
-				}}),
+				}}).(lg.Expr),
 			}}
 			res = append(res, setLineno(actions.NewAssignAction(waitApp, rhs), lineno))
 		}
@@ -562,7 +562,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 }
 
 // SharedStep11_ReplaceNamedBinders replaces named binders with fresh relation constants.
-func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(lg.Expr) lg.Expr)) {
+func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
 	namedBinders := collectAllNamedBinders(model)
 
 	// Ensure _old_l2s_g is consistent with l2s_g
@@ -587,7 +587,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 		}
 	}
 
-	modPass("ReplaceNamedBindersAst", func(n lg.Expr) lg.Expr {
+	modPass("ReplaceNamedBindersAst", func(n ast.Node) ast.Node {
 		return lu.ReplaceNamedBindersAst(n, subs)
 	})
 
