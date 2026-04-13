@@ -1025,9 +1025,6 @@ func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fml
 // Python's `lg.Or(*xs)`. Empty Or is false (per the codebase convention at
 // l2s_auto.go:141). Single-element Or returns the element directly.
 func buildOrExpr(xs []lg.Expr) lg.Expr {
-	if len(xs) == 1 {
-		return xs[0]
-	}
 	return &lg.Or{Terms: xs}
 }
 

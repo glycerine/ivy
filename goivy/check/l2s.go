@@ -143,9 +143,6 @@ func makeAnd(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return lg.True
 	}
-	if len(terms) == 1 {
-		return terms[0]
-	}
 	return &lg.And{Terms: terms}
 }
 

@@ -230,8 +230,12 @@ func TestMakeAnd_Zero(t *testing.T) {
 func TestMakeAnd_One(t *testing.T) {
 	c := lg.NewConst("a", lg.Boolean)
 	result := makeAnd(c)
-	if result != c {
-		t.Error("expected single term passed through")
+	and, ok := result.(*lg.And)
+	if !ok {
+		t.Fatalf("expected *lg.And, got %T", result)
+	}
+	if len(and.Terms) != 1 || and.Terms[0] != c {
+		t.Error("expected And with single term")
 	}
 }
 
