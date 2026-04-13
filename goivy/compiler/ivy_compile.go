@@ -1785,7 +1785,14 @@ func HandleTemporals(mod *module.Module) {
 		if labeler, ok := action.(interface{ SetLabels([]string) }); ok {
 			// Use imap[actname] directly: returns nil for missing keys,
 			// matching Python's defaultdict(list) returning [] for missing keys.
-			labeler.SetLabels(imap[actname])
+			labels := imap[actname]
+			// Sort labels for deterministic ordering: Python preserves dict
+			// insertion order, Go maps iterate randomly. Sorting both sides
+			// ensures canonical s-expressions match.
+			if len(labels) > 0 {
+				sort.Strings(labels)
+			}
+			labeler.SetLabels(labels)
 		} else {
 			pp("HandleTemporals: action %s does not support SetLabels", actname)
 		}
