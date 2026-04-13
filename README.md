@@ -2605,6 +2605,6 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-330540  go : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:arm.issue_hook
-        py : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:lclock.next
+330541  go : XTRACE: transformAction ENTER type=Sequence
+        py : XTRACE: ilu.replaceTemporalsRec ENTER type=ActionTerm HASH canon=(actionTerm)
 ~~~
