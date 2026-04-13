@@ -446,3 +446,193 @@ func FuzzAndConstruction(f *testing.F) {
 		}
 	})
 }
+
+// TestDropAnnotationsQuantifierOrder verifies that dropAnnotations processes
+// the body BEFORE the bound variables for ForAll, Exists, and Lambda —
+// matching Python's quant_drop_annotations (ivy_logic.py:1434-1436).
+//
+// When a polymorphic operator like <= returns Boolean, the first argument's
+// sort annotation is preserved in the body (inferredSort && !Boolean = false),
+// and the corresponding bound variable's annotation is stripped because its
+// name is already in annotatedVars by the time the bound variables are processed.
+//
+// Python output:  forall T. T:lclock <= _T
+// Wrong Go output (vars-first): forall T:lclock. T <= _T
+func TestDropAnnotationsQuantifierOrder(t *testing.T) {
+	lclock := &UninterpretedSort{Name: "lclock"}
+
+	// Sub-test 1: ForAll with polymorphic <=
+	t.Run("ForAll_polymorphic_le", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		_T, _ := NewVariable("_T", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		body, err := NewApply(le, T, _T)
+		if err != nil {
+			t.Fatal(err)
+		}
+		fa, err := NewForAll([]*Variable{T}, body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := fa.String()
+		want := "forall T. T:lclock <= _T"
+		if got != want {
+			t.Errorf("ForAll String() =\n  %q\nwant:\n  %q\n(annotation must be on body occurrence, not quantifier binding)", got, want)
+		}
+	})
+
+	// Sub-test 2: Exists with polymorphic <=
+	t.Run("Exists_polymorphic_le", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		_T, _ := NewVariable("_T", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		body, err := NewApply(le, T, _T)
+		if err != nil {
+			t.Fatal(err)
+		}
+		ex, err := NewExists([]*Variable{T}, body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := ex.String()
+		want := "exists T. T:lclock <= _T"
+		if got != want {
+			t.Errorf("Exists String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+
+	// Sub-test 3: Lambda with polymorphic <=
+	t.Run("Lambda_polymorphic_le", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		_T, _ := NewVariable("_T", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		body, err := NewApply(le, T, _T)
+		if err != nil {
+			t.Fatal(err)
+		}
+		lam, err := NewLambda([]*Variable{T}, body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := lam.String()
+		want := "lambda T. T:lclock <= _T"
+		if got != want {
+			t.Errorf("Lambda String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+
+	// Sub-test 4: ForAll with non-polymorphic function (control case).
+	// Non-polymorphic Apply passes inferredSort=true to all args, so the body
+	// occurrence is stripped and the annotation stays on the bound variable.
+	t.Run("ForAll_nonpolymorphic_func", func(t *testing.T) {
+		S := &UninterpretedSort{Name: "S"}
+		X, _ := NewVariable("X", S)
+		fSort := mustFuncSort(t, S, Boolean)
+		f := NewConst("f", fSort)
+		body, err := NewApply(f, X)
+		if err != nil {
+			t.Fatal(err)
+		}
+		fa, err := NewForAll([]*Variable{X}, body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := fa.String()
+		// Non-polymorphic: body args get inferredSort=true, so X annotation
+		// is stripped in body. But X is also added to annotatedVars during
+		// body processing (inferredSort=true → strip + add). Then bound var
+		// X is processed with inferredSort=false, but X is in annotatedVars
+		// → also stripped. Both stripped means no annotation anywhere.
+		want := "forall X. f(X)"
+		if got != want {
+			t.Errorf("ForAll (non-polymorphic) String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+
+	// Sub-test 5: ForAll with multiple bound vars, only first used in polymorphic context.
+	// T appears in a polymorphic <=, U appears in a non-polymorphic f().
+	t.Run("ForAll_multi_vars_mixed", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		U, _ := NewVariable("U", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		leApp, err := NewApply(le, T, U)
+		if err != nil {
+			t.Fatal(err)
+		}
+		fa, err := NewForAll([]*Variable{T, U}, leApp)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := fa.String()
+		// <= is polymorphic returning Boolean:
+		// arg0 (T) gets inferredSort=false → keeps annotation → T:lclock
+		// arg1 (U) gets inferredSort=(name != "*>")=true → stripped
+		// Then bound vars: T in annotatedVars → stripped; U in annotatedVars → stripped
+		want := "forall T,U. T:lclock <= U"
+		if got != want {
+			t.Errorf("ForAll (multi-var) String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+
+	// Sub-test 6: NamedBinder processes vars BEFORE body (matching Python's
+	// left-to-right argument evaluation). Annotation stays on bound variable.
+	t.Run("NamedBinder_vars_before_body", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		_T, _ := NewVariable("_T", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		body, err := NewApply(le, T, _T)
+		if err != nil {
+			t.Fatal(err)
+		}
+		nb, err := NewNamedBinder("l2s_s", []*Variable{T}, nil, body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := nb.String()
+		// NamedBinder processes vars first (like Python), so T:lclock stays
+		// on the bound variable, and body T is stripped.
+		want := "$l2s_s T:lclock. T <= _T"
+		if got != want {
+			t.Errorf("NamedBinder String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+
+	// Sub-test 7: Nested quantifiers — inner forall inside outer body.
+	// Ensures body-first ordering works correctly through nesting.
+	t.Run("ForAll_nested", func(t *testing.T) {
+		T, _ := NewVariable("T", lclock)
+		U, _ := NewVariable("U", lclock)
+		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		le := NewConst("<=", leSort)
+		innerBody, err := NewApply(le, U, T)
+		if err != nil {
+			t.Fatal(err)
+		}
+		innerFA, err := NewForAll([]*Variable{U}, innerBody)
+		if err != nil {
+			t.Fatal(err)
+		}
+		outerFA, err := NewForAll([]*Variable{T}, innerFA)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := outerFA.String()
+		// Outer body (inner forall) is processed first.
+		// Inner forall: body (U:lclock <= T:lclock) processed first:
+		//   <= polymorphic, Boolean return: arg0 U gets inferredSort=false → keeps U:lclock
+		//   arg1 T gets inferredSort=true (name "<=" != "*>") → stripped T
+		//   Wait: T not yet in annotatedVars at this point, so:
+		//     inferredSort=true → strip + add T to annotatedVars
+		//   Inner bound var U: in annotatedVars → stripped
+		// Then outer bound var T: in annotatedVars → stripped
+		want := "forall T. (forall U. U:lclock <= T)"
+		if got != want {
+			t.Errorf("ForAll (nested) String() =\n  %q\nwant:\n  %q", got, want)
+		}
+	})
+}

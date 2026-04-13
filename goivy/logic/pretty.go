@@ -285,6 +285,11 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		return &Cond{T1: a0, T2: a1}
 
 	case *ForAll:
+		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).
+		// This matters because annotatedVars is shared mutable state — body
+		// processing may add variable names, which then strips them from
+		// the quantifier binding.
+		body := dropAnnotations(t.Body, true, annotatedVars)
 		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
@@ -294,10 +299,11 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 				vars[i] = v
 			}
 		}
-		body := dropAnnotations(t.Body, true, annotatedVars)
 		return &ForAll{Variables: vars, Body: body}
 
 	case *Exists:
+		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).
+		body := dropAnnotations(t.Body, true, annotatedVars)
 		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
@@ -307,10 +313,11 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 				vars[i] = v
 			}
 		}
-		body := dropAnnotations(t.Body, true, annotatedVars)
 		return &Exists{Variables: vars, Body: body}
 
 	case *Lambda:
+		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).
+		body := dropAnnotations(t.Body, true, annotatedVars)
 		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
@@ -320,7 +327,6 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 				vars[i] = v
 			}
 		}
-		body := dropAnnotations(t.Body, true, annotatedVars)
 		return &Lambda{Variables: vars, Body: body}
 
 	case *NamedBinder:
