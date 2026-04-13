@@ -1050,16 +1050,6 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 
-	case *logic.Not:
-		body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
-		if inner, ok := body.(*logic.Not); ok {
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s doubleNeg HASH canon=%s", iu.ShortTypeName(inner.Body), inner.Body.Canon())
-			return inner.Body
-		}
-		result := &logic.Not{Body: body}
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s not HASH canon=%s", iu.ShortTypeName(result), result.Canon())
-		return result
-
 	case *logic.NamedBinder:
 		if t.Name == "l2s_init" {
 			body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
@@ -1079,6 +1069,13 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	newChildren := make([]ast.Node, len(children))
 	for i, c := range children {
 		newChildren[i] = replaceTemporalsRec(c, g, when)
+	}
+	// Double negation elimination (Python line 338-340)
+	if _, ok := n.(*logic.Not); ok && len(newChildren) > 0 {
+		if inner, ok := newChildren[0].(*logic.Not); ok {
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s doubleNeg HASH canon=%s", iu.ShortTypeName(inner.Body), inner.Body.Canon())
+			return inner.Body
+		}
 	}
 	result := n.Clone(newChildren)
 	xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
