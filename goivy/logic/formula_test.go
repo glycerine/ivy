@@ -585,10 +585,10 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	// left-to-right argument evaluation). Annotation stays on bound variable.
 	t.Run("NamedBinder_vars_before_body", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
-		_T, _ := NewVariable("_T", lclock)
+		U, _ := NewVariable("U", lclock)
 		leSort := mustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
-		body, err := NewApply(le, T, _T)
+		body, err := NewApply(le, T, U)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -599,7 +599,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 		got := nb.String()
 		// NamedBinder processes vars first (like Python), so T:lclock stays
 		// on the bound variable, and body T is stripped.
-		want := "$l2s_s T:lclock. T <= _T"
+		want := "$l2s_s T:lclock. T <= U"
 		if got != want {
 			t.Errorf("NamedBinder String() =\n  %q\nwant:\n  %q", got, want)
 		}
