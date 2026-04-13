@@ -623,7 +623,7 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 	var addConstsToD []actions.Action
 	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
-			for _, sym := range sortedSymbols(mod.Sig) {
+			for _, sym := range insertionOrderSymbols(mod) {
 				if sym.CSort != nil && sym.CSort.String() == s.String() {
 					addConstsToD = append(addConstsToD,
 						setLineno(actions.NewAssignAction(mustApply(L2SD(s), sym), lg.True), lineno))
@@ -632,6 +632,24 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 		}
 	}
 	return addConstsToD
+}
+
+// insertionOrderSymbols returns module symbols in insertion order (matching
+// Python's ilg.sig.symbols.values()), with duplicates removed by name
+// (first occurrence wins, like Python dict semantics).
+func insertionOrderSymbols(mod *module.Module) []*lg.Const {
+	if mod == nil || len(mod.SymbolOrder) == 0 {
+		return nil
+	}
+	seen := make(map[string]bool, len(mod.SymbolOrder))
+	result := make([]*lg.Const, 0, len(mod.SymbolOrder))
+	for _, sym := range mod.SymbolOrder {
+		if !seen[sym.Name] {
+			seen[sym.Name] = true
+			result = append(result, sym)
+		}
+	}
+	return result
 }
 
 // BuildDefnDeps builds the definition dependency map from a module.

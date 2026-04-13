@@ -338,11 +338,10 @@ func rankingInvariants(
 			if finiteSorts[sName] {
 				continue
 			}
-			for _, sym := range mod.Sig.Symbols {
-				if sym.Sort != nil && sym.Sort.String() == sName {
+			for _, sym := range insertionOrderSymbols(mod) {
+				if sym.CSort != nil && sym.CSort.String() == sName {
 					d := L2sD(s)
-					c := lg.NewConst(sym.Name, sym.Sort)
-					app, _ := lg.NewApply(d, c)
+					app, _ := lg.NewApply(d, sym)
 					if app != nil {
 						constsDTerms = append(constsDTerms, app)
 					}
