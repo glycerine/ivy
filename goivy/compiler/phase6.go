@@ -2824,8 +2824,10 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	modified := make(map[lg.NodeKey]bool)
 	for _, actVal := range mod.Actions.All() {
 		if act, ok := actVal.(actions.Action); ok {
-			for _, sym := range actions.Modifies(act) {
-				modified[lg.Key(sym)] = true
+			for _, sub := range act.IterSubactions() {
+				for _, sym := range actions.Modifies(sub) {
+					modified[lg.Key(sym)] = true
+				}
 			}
 		}
 	}

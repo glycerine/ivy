@@ -1534,13 +1534,17 @@ func CheckDefinitions(mod *module.Module) error {
 			xtracer.Trace("compiler.ActionInterferenceCheck allKeys=%d keys=%s", len(allKeys), strings.Join(allKeys, ","))
 		}
 		// First loop: build the modified set (order-independent).
-		// Python: side_effects = dict(); for action in list(mod.actions.values()): ...
+		// Python: side_effects = dict(); for action in list(mod.actions.values()):
+		//             for sub in action.iter_subactions():
+		//                 for s in sub.modifies(): side_effects[s] = sub
 		modified := make(map[lg.NodeKey]bool)
 		for _, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(actions.Action); ok {
-				mods := actions.Modifies(act, interferenceActCfg)
-				for _, sym := range mods {
-					modified[lg.Key(sym)] = true
+				for _, sub := range act.IterSubactions() {
+					mods := actions.Modifies(sub, interferenceActCfg)
+					for _, sym := range mods {
+						modified[lg.Key(sym)] = true
+					}
 				}
 			}
 		}
@@ -1550,12 +1554,14 @@ func CheckDefinitions(mod *module.Module) error {
 		//             if mod_syms: xtracer.trace(...)
 		for name, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(actions.Action); ok {
-				mods := actions.Modifies(act, interferenceActCfg)
 				modSyms := make(map[lg.NodeKey]bool)
-				modNames := make(map[string]bool) // symbol names for matching Python str(s)
-				for _, sym := range mods {
-					modSyms[lg.Key(sym)] = true
-					modNames[sym.Name] = true
+				modNames := make(map[string]bool)
+				for _, sub := range act.IterSubactions() {
+					mods := actions.Modifies(sub, interferenceActCfg)
+					for _, sym := range mods {
+						modSyms[lg.Key(sym)] = true
+						modNames[sym.Name] = true
+					}
 				}
 				if len(modSyms) > 0 {
 					var symNames []string
