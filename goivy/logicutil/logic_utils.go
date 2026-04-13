@@ -915,13 +915,14 @@ func NormalizeNamedBinders(n ast.Node, names map[string]bool) ast.Node {
 			return result
 		}
 	}
-	// For Apply nodes, normalize the func part too
+	// For Apply nodes, normalize the func part too.
+	// Python processes ast.args (terms) before ast.rep (func).
 	if app, ok := n.(*logic.Apply); ok {
-		newFunc := NormalizeNamedBinders(app.Func, names).(logic.Expr)
 		newTerms := make([]logic.Expr, len(app.Terms))
 		for i, t := range app.Terms {
 			newTerms[i] = NormalizeNamedBinders(t, names).(logic.Expr)
 		}
+		newFunc := NormalizeNamedBinders(app.Func, names).(logic.Expr)
 		result := logic.MustApply(newFunc, newTerms...)
 		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
