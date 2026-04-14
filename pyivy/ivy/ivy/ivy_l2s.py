@@ -1195,24 +1195,19 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     symprops = defaultdict(list)
     symwaits = defaultdict(list)
     symwhens = defaultdict(list)
-    _ti = 0
+    # Build maps (no traces yet — traces go after SharedStep6 EXIT to match Go ordering)
+    _symprops_trace = []
     for vs, t, env in sorted(l2s_gs, key=lambda x: x[1].canon()):
         prop = l2s_g(vs,t,env)
         envprops[env].append(prop)
-        _si = 0
         for sym in ilu.symbols_ilu_ast(t):
-            if __debug__: xtracer.trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s" % (_ti, _si, sym, t.canon()))
+            _symprops_trace.append((sym, t))
             symprops[sym].append(prop)
-            _si += 1
-        _ti += 1
-    _wi = 0
+    _symwhens_trace = []
     for when in sorted(l2s_whens, key=lambda w: w.canon()):
-        _si = 0
         for sym in ilu.symbols_ilu_ast(when.body):
-            if __debug__: xtracer.trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, when.body.canon()))
+            _symwhens_trace.append((sym, when))
             symwhens[sym].append(when)
-            _si += 1
-        _wi += 1
     for _wi, (vs, t) in enumerate(to_wait):
         wait = l2s_w(vs,t)
         _syms = list(ilu.symbols_ilu_ast(t))
@@ -1222,6 +1217,30 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # Go emits SharedStep7 ENTER from l2s.go:769 BEFORE calling SharedStep7_InstrumentActions,
     # which is where symwaits traces fire. Match that order here.
     if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
+    # Now emit symprops/symwhens traces (matching Go's SharedStep7 position)
+    if __debug__:
+        _ti = 0
+        _prev_t = None
+        _si = 0
+        for sym, t in _symprops_trace:
+            if t is not _prev_t:
+                if _prev_t is not None:
+                    _ti += 1
+                _prev_t = t
+                _si = 0
+            xtracer.trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s" % (_ti, _si, sym, t.canon()))
+            _si += 1
+        _wi = 0
+        _prev_w = None
+        _si = 0
+        for sym, when in _symwhens_trace:
+            if when is not _prev_w:
+                if _prev_w is not None:
+                    _wi += 1
+                _prev_w = when
+                _si = 0
+            xtracer.trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, when.body.canon()))
+            _si += 1
     for _wi, (vs, t) in enumerate(to_wait):
         _syms = list(ilu.symbols_ilu_ast(t))
         for _si, sym in enumerate(_syms):
