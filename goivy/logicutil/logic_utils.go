@@ -1133,7 +1133,7 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 	if nb, ok := n.(*logic.NamedBinder); ok {
 		key := nb.String()
 		if rep, found := subs[key]; found {
-			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", iu.ShortTypeName(rep), rep.Canon())
+			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", iu.ShortTypeName(n), rep.Canon())
 			return rep
 		}
 		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False HASH canon=%s", iu.ShortTypeName(n), n.Canon())
