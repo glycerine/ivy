@@ -835,9 +835,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	xtracer.Trace("l2s.SharedStep11 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
-	// M2 / Python ivy_l2s.py:1308: remove unused definitions from goal.
-	goal = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, goal)
-
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
@@ -851,6 +848,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	xtracer.Trace("l2s.SharedStep12 EXIT nResults=%d err=%s", len(result), errStr)
 	if err != nil {
 		return nil, err
+	}
+
+	// Python ivy_l2s.py:1468: remove unused definitions from goal (after SharedStep12).
+	if len(result) > 0 && result[0] != nil {
+		result[0] = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, result[0])
 	}
 
 	// C5 / Python ivy_l2s.py:1310-1313: attach a trace hook closure to the
