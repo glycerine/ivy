@@ -1228,7 +1228,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             actual_returns = stmt.args[1:]
             if __debug__:
                 for _ri, _sym in enumerate(actual_returns):
-                    xtracer.trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s" % (_ri, type(_sym).__name__, str(_sym), _sym in symprops, _sym in symwhens, _sym in symwaits))
+                    _name = str(_sym.rep) if hasattr(_sym, 'rep') and _sym.rep is not _sym else str(_sym)
+                    xtracer.trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s" % (_ri, type(_sym).__name__, _name, _sym in symprops, _sym in symwhens, _sym in symwaits))
             if any(sym in symprops or sym in symwhens
                    or sym in symwaits for sym in actual_returns):
                 return instr_stmt(stmt.split_returns(),labels)

@@ -529,8 +529,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 						}
 					}
 					if xtracer.Enabled {
-						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%v inSWh=%v inSWa=%v",
-							ri, iu.ShortTypeName(r), k, len(symprops[k]) > 0, len(symwhens[k]) > 0, len(symwaits[k]) > 0)
+						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s",
+							ri, iu.ShortTypeName(r), k, pyBool(len(symprops[k]) > 0), pyBool(len(symwhens[k]) > 0), pyBool(len(symwaits[k]) > 0))
 					}
 					if k != "" && (len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0) {
 						monitored = true
