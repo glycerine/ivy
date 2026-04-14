@@ -176,10 +176,16 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                   if not isinstance(prem,ivy_ast.ConstantDecl)
                   and hasattr(prem,"definition") and prem.definition]
 
-    for defn in list(prover.definitions.values()) + prem_defns:
+    _all_defns = list(prover.definitions.values()) + prem_defns
+    for _di, defn in enumerate(_all_defns):
         fml = ilg.drop_universals(defn.formula)
+        if __debug__: xtracer.trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s" % (_di, fml.canon() if hasattr(fml,'canon') else str(fml)))
         for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
             defn_deps[sym].append(fml.args[0].rep)
+
+    if __debug__:
+        for _k in sorted(defn_deps.keys(), key=str):
+            if __debug__: xtracer.trace("l2s.BuildDefnDeps result dep[%s] -> [%s]" % (str(_k), ','.join(str(v) for v in defn_deps[_k])))
 
     def dependencies(syms):
         return iu.reachable(syms,lambda x: defn_deps.get(x) or [])

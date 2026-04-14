@@ -770,31 +770,48 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 				}
 			case *lg.Const:
 				lhsName = lhs.Name
+			default:
+				panicf("how to handle eq.T1=%T here?; canon=%v", eq.T1, eq.T1.Canon())
 			}
 			if lhsName != "" {
 				for x := range il.SymbolsIluAst(eq.T2) {
 					if sym, ok := x.(*lg.Const); ok {
 						defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
+					} else {
+						panicf("how to handle x=%T here? x=%v", x, x.Canon())
 					}
 				}
 			}
 		}
 	}
 	if mod != nil {
-		for _, defn := range mod.Definitions {
+		for di, defn := range mod.Definitions {
 			if e, ok := defn.Formula.(lg.Expr); ok {
+				xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
 				addEq(e)
 			}
 		}
 	}
 	// H12: include user-supplied definition premises from the goal.
-	for _, p := range goalPrems {
+	for pi, p := range goalPrems {
 		lf, ok := p.(*ast.LabeledFormula)
 		if !ok || !lf.IsDefinition {
 			continue
 		}
 		if e, ok := lf.Formula.(lg.Expr); ok {
+			xtracer.Trace("l2s.BuildDefnDeps premDefn[%d] HASH canon=%s", pi, e.Canon())
 			addEq(e)
+		}
+	}
+	// Trace the resulting defnDeps map
+	{
+		keys := make([]string, 0, len(defnDeps))
+		for k := range defnDeps {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			xtracer.Trace("l2s.BuildDefnDeps result dep[%s] -> [%s]", k, strings.Join(defnDeps[k], ","))
 		}
 	}
 	return defnDeps
