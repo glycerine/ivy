@@ -784,7 +784,8 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 			panicf("how to handle t1=%T here?; canon=%v", t1, t1.Canon())
 		}
 		if lhsName != "" {
-			for x := range il.SymbolsIluAst(t2) {
+			// Python ivy_l2s.py:183: for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
+			for _, x := range il.UsedSymbolsInOrderAst(t2) {
 				if sym, ok := x.(*lg.Const); ok {
 					defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
 				} else {
