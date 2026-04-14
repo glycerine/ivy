@@ -2605,14 +2605,14 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-844423  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[] outputs:[] labels:[] stmt:(sequence stmts:[(choiceAction elems:[(sequence stmts:[(assumeAction elems:[(Symbol name:l2s_waiting sort:(BooleanSort))]) (assignAction elems:[(Symbol name:l2s_waiting sort:(BooleanSo ...(truncated long line to 300 bytes)
+845761  go : XTRACE: l2s.SharedStep12 ENTER nInvars=37 nAsms=113 nBindings=25 nPrems=23
+        py : XTRACE: l2s.SharedStep12 ENTER nInvars=37 nAsms=113 nBindings=25 nPrems=23
 
-        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[] outputs:[] labels:[] stmt:(sequence stmts:[(choiceAction elems:[(sequence stmts:[(assumeAction elems:[(Symbol name:l2s_waiting sort:(BooleanSort))]) (assignAction elems:[(Symbol name:l2s_waiting sort:(BooleanSo
- ...(truncated long line to 300 bytes)
+845762  go : XTRACE: ast.LF.__init__ id=2306 counter=2307
+        py : XTRACE: ast.LF.__init__ id=2306 counter=2307
 
--         uniqueID:0)
-+         uniqueID:1)
+845763  go : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=<nil>
+        py : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 844423, counting from 0.
-    
+    golden_test.go:452: ivy_check and goivy_check differ at line 845763, counting from 0.
 ~~~
