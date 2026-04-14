@@ -686,10 +686,14 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 		}
 
 		// Remove sorts not in the relevant set.
-		for name := range mod.Sig.Sorts {
+		var sortKeysToDelete []string
+		for name, _ := range mod.Sig.Sorts.All() {
 			if !allSorts[name] {
-				delete(mod.Sig.Sorts, name)
+				sortKeysToDelete = append(sortKeysToDelete, name)
 			}
+		}
+		for _, name := range sortKeysToDelete {
+			mod.Sig.Sorts.Delkey(name)
 		}
 
 		// Filter sort order.

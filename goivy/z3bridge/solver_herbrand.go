@@ -50,7 +50,7 @@ func NewHerbrandModel(s *Solver, z3solver *Z3Solver, model *Model, vocab []*lg.C
 		// Primary: use translator's reverse map (matches Python's sort_from_z3)
 		if ivySort, ok := s.tr.SortFromZ3(z3sort); ok {
 			h.sortMap[sortName] = ivySort
-		} else if ivySort, ok := s.sig.Sorts[sortName]; ok {
+		} else if ivySort, ok := s.sig.Sorts.Get2(sortName); ok {
 			// Fallback to sig lookup by name
 			h.sortMap[sortName] = ivySort
 		}
@@ -408,7 +408,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *Model, vocab []*lg.Const
 	// Build set of interpreted sorts (Python: sorts = ivy_logic.interpreted_sorts())
 	interpSorts := make(map[string]lg.Sort)
 	for name := range h.sig.Interp {
-		if s, ok := h.sig.Sorts[name]; ok {
+		if s, ok := h.sig.Sorts.Get2(name); ok {
 			interpSorts[name] = s
 		}
 	}

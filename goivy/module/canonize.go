@@ -106,7 +106,7 @@ func ComputeSortRefinements(sig *il.Sig) []SortRefinement {
 		return nil
 	}
 	result := make([]SortRefinement, 0, len(raw))
-	for _, s := range sig.Sorts {
+	for _, s := range sig.Sorts.All() {
 		key := lg.SortKey(s)
 		if newSort, ok := raw[key]; ok {
 			result = append(result, SortRefinement{Old: s, New: newSort})

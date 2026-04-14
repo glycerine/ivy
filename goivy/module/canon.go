@@ -131,9 +131,9 @@ func (m *Module) CanonSnapshot(label string) {
 	xtracer.Trace("module.CanonSnapshot %s delegates=%s", label, canonDelegatorSlice(m.Delegates))
 
 	// Group 15: Sorts and destructors
-	xtracer.Trace("module.CanonSnapshot %s destructorSorts=%s", label, canonSortMap(m.DestructorSorts))
+	xtracer.Trace("module.CanonSnapshot %s destructorSorts=%s", label, canonPlainSortMap(m.DestructorSorts))
 	xtracer.Trace("module.CanonSnapshot %s sortDestructors=%s", label, canonConstSliceMap(m.SortDestructors))
-	xtracer.Trace("module.CanonSnapshot %s constructorSorts=%s", label, canonSortMap(m.ConstructorSorts))
+	xtracer.Trace("module.CanonSnapshot %s constructorSorts=%s", label, canonPlainSortMap(m.ConstructorSorts))
 	xtracer.Trace("module.CanonSnapshot %s sortConstructors=%s", label, canonConstSliceMap(m.SortConstructors))
 	xtracer.Trace("module.CanonSnapshot %s ghostSorts=%s", label, canonBoolMap(m.GhostSorts))
 	xtracer.Trace("module.CanonSnapshot %s sortOrder=%s", label, canonStringSlice(m.SortOrder))
@@ -199,7 +199,23 @@ func canonLFSlice(lfs []*ast.LabeledFormula) string {
 	return fmt.Sprintf("[%s]", strings.Join(parts, " "))
 }
 
-func canonSortMap(sorts map[string]lg.Sort) string {
+func canonSortMap(sorts *iu.InsMap[string, lg.Sort]) string {
+	if sorts.Len() == 0 {
+		return "(hash)"
+	}
+	keys := make([]string, 0, sorts.Len())
+	for k, _ := range sorts.All() {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var parts []string
+	for _, k := range keys {
+		parts = append(parts, fmt.Sprintf("%s:%s", k, string(sorts.Get(k).Sexp())))
+	}
+	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
+}
+
+func canonPlainSortMap(sorts map[string]lg.Sort) string {
 	if len(sorts) == 0 {
 		return "(hash)"
 	}

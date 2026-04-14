@@ -245,12 +245,12 @@ func createArraySortRec(sig *il.Sig, dom []lg.Sort, i int, rng lg.Sort) (string,
 	}
 	sname, ssorts := createArraySortRec(sig, dom, i+1, rng)
 	name := "arr[" + il.SortName(dom[i]) + "][" + sname + "]"
-	if _, ok := sig.Sorts[name]; !ok {
+	if _, ok := sig.Sorts.Get2(name); !ok {
 		asort := &lg.UninterpretedSort{Name: name}
-		sig.Sorts[name] = asort
+		sig.Sorts.Set(name, asort)
 		sig.Interp[name] = name
 	}
-	return name, append([]lg.Sort{sig.Sorts[name]}, ssorts...)
+	return name, append([]lg.Sort{sig.Sorts.Get(name)}, ssorts...)
 }
 
 // encodeAsArray returns true if the symbol should be converted to an array.

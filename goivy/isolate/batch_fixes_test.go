@@ -59,7 +59,7 @@ func mkModuleWithSig() *module.Module {
 	if m.Sig == nil {
 		m.Sig = &il.Sig{
 			Symbols:      iu.NewInsMap[string, *il.SymbolEntry](),
-			Sorts:        make(map[string]lg.Sort),
+			Sorts:        iu.NewInsMap[string, lg.Sort](),
 			Constructors: make(map[string]bool),
 			Interp:       make(map[string]interface{}),
 		}

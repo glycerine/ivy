@@ -213,18 +213,18 @@ func NewSortAsDefault(sig *Sig, sort lg.Sort) *SortAsDefault {
 
 // Enter sets the default sort.
 func (sd *SortAsDefault) Enter() {
-	sd.oldSort, sd.hadOld = sd.sig.Sorts["S"]
-	sd.sig.Sorts["S"] = sd.sort
+	sd.oldSort, sd.hadOld = sd.sig.Sorts.Get2("S")
+	sd.sig.Sorts.Set("S", sd.sort)
 	xtracer.Trace("ivylogic.SortAsDefault.Enter hadOld=%v HASH canon=%s", sd.hadOld, sd.sig.Canon())
 }
 
 // Exit restores the previous default sort.
 func (sd *SortAsDefault) Exit() {
 	if sd.hadOld {
-		sd.sig.Sorts["S"] = sd.oldSort
+		sd.sig.Sorts.Set("S", sd.oldSort)
 		xtracer.Trace("ivylogic.SortAsDefault.Exit RESTORED HASH canon=%s", sd.sig.Canon())
 	} else {
-		delete(sd.sig.Sorts, "S")
+		sd.sig.Sorts.Delkey("S")
 		xtracer.Trace("ivylogic.SortAsDefault.Exit DELETED_S HASH canon=%s", sd.sig.Canon())
 	}
 }

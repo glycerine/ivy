@@ -34,8 +34,8 @@ import (
 
 // sigSortValues extracts the sort values from a Sig's Sorts map.
 func sigSortValues(sig *il.Sig) []lg.Sort {
-	vals := make([]lg.Sort, 0, len(sig.Sorts))
-	for _, s := range sig.Sorts {
+	vals := make([]lg.Sort, 0, sig.Sorts.Len())
+	for _, s := range sig.Sorts.All() {
 		vals = append(vals, s)
 	}
 	return vals
@@ -940,7 +940,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	}
 
 	// Check if it's a sort
-	if sort, ok := c.Sig.Sorts[resolved]; ok {
+	if sort, ok := c.Sig.Sorts.Get2(resolved); ok {
 		v, _ := lg.NewVariable("X", sort)
 		return v, nil
 	}
@@ -1221,7 +1221,7 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		name := extractSortRep(n.Name)
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
-			schemaSig.Sorts[name] = sort
+			schemaSig.Sorts.Set(name, sort)
 			return c.Module.Cfg.AstCfg.NewCompiledNode(sort), nil
 		}
 		return prem, nil
@@ -2536,7 +2536,7 @@ func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
 	version := mod.Cfg.IuCfg.GetStringVersion()
 	var sort lg.Sort
 	if mod != nil && mod.Sig != nil {
-		if s, ok := mod.Sig.Sorts[sortname]; ok {
+		if s, ok := mod.Sig.Sorts.Get2(sortname); ok {
 			sort = s
 		}
 	}
@@ -2566,7 +2566,7 @@ func (c *Compiler) CompileTheories() error {
 	}
 	for name, value := range mod.Sig.Interp {
 		// Only compile if the name is a known sort
-		if _, hasSortEntry := mod.Sig.Sorts[name]; !hasSortEntry {
+		if _, hasSortEntry := mod.Sig.Sorts.Get2(name); !hasSortEntry {
 			continue
 		}
 		var theoryName string
@@ -2579,7 +2579,7 @@ func (c *Compiler) CompileTheories() error {
 			continue
 		}
 		version := mod.Cfg.IuCfg.GetStringVersion()
-		sort := mod.Sig.Sorts[name]
+		sort := mod.Sig.Sorts.Get(name)
 		theoryStr := theory.GetTheorySchemata(theoryName, sort, version)
 		if theoryStr == "" {
 			continue

@@ -227,7 +227,7 @@ func TestEmitSortDecls_WithModule(t *testing.T) {
 	mod := module.New()
 	colorSort := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	mod.SortOrder = []string{"color"}
-	mod.Sig.Sorts["color"] = colorSort
+	mod.Sig.Sorts.Set("color", colorSort)
 
 	w := NewCodeWriter()
 	EmitSortDecls(w, mod)

@@ -93,7 +93,7 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 
 	// Add a sort and symbols so compilation can proceed to the validation step
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 
 	// definition f(X, X) = body  — X appears twice on LHS
 	x1 := cfg.NewVariable("X", "bool")
@@ -122,7 +122,7 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 
 	// definition f(X) = g(X, Y)  — Y is free on RHS but not on LHS
 	x := cfg.NewVariable("X", "bool")
@@ -157,7 +157,7 @@ func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 
 	// derived foo(X:bool) = true
 	x := cfg.NewVariable("X", "bool")
@@ -191,7 +191,7 @@ func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 
 	// definition bar(X:bool) = true
 	x := cfg.NewVariable("X", "bool")
@@ -230,7 +230,7 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 	c.Sig.AddSymbol("s", boolSort)
 
 	// Add an axiom that references symbol "s" — use compiled lg.Const so structural keys match
@@ -262,7 +262,7 @@ func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 	c.Sig.AddSymbol("s", boolSort)
 
 	axiomAtom := cfg.NewAtom("s")
@@ -289,7 +289,7 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("bool", boolSort)
 	c.Sig.AddSymbol("f", boolSort)
 
 	// Add a compiled definition for "f" — use lg.Definition with lg.Const
@@ -332,7 +332,7 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	intSort := &lg.UninterpretedSort{Name: "myint"}
-	c.Sig.Sorts["myint"] = intSort
+	c.Sig.Sorts.Set("myint", intSort)
 
 	// interpret myint = <<<int>>>  (NativeType with code "int")
 	lhs := cfg.NewSymbol("myint", nil)
@@ -363,7 +363,7 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	myintSort := &lg.UninterpretedSort{Name: "myint"}
-	c.Sig.Sorts["myint"] = myintSort
+	c.Sig.Sorts.Set("myint", myintSort)
 
 	// interpret myint = 0..100
 	lhs := cfg.NewSymbol("myint", nil)
@@ -394,7 +394,7 @@ func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	myintSort := &lg.UninterpretedSort{Name: "myint"}
-	c.Sig.Sorts["myint"] = myintSort
+	c.Sig.Sorts.Set("myint", myintSort)
 
 	// interpret myint = int  (simple string RHS, known solver sort)
 	lhs := cfg.NewSymbol("myint", nil)

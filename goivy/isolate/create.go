@@ -514,7 +514,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 			continue
 		}
 		if mod.Sig != nil {
-			if _, ok := mod.Sig.Sorts[name]; ok {
+			if _, ok := mod.Sig.Sorts.Get2(name); ok {
 				continue
 			}
 			if _, ok := mod.Sig.Interp[name]; ok {

@@ -52,7 +52,7 @@ func TestCompileIfAction_SomeCondition(t *testing.T) {
 
 	// Declare sort "t" in the signature
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	// Build: if some x:t. x = x { skip }
 	xParam := cfg.NewAtom("x")
@@ -99,9 +99,9 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 	idxSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = idxSort
+	c.Sig.Sorts.Set("nat", idxSort)
 	// Python: idx must be a known symbol in the sig for sortify_with_inference to compile it.
 	// Python's find_symbol raises "unknown symbol" if the name is not in sig.symbols.
 	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: idxSort})
@@ -147,7 +147,7 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 	// Python: idx must be a known symbol for sortify_with_inference to compile it.
 	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: tSort})
 
@@ -189,7 +189,7 @@ func TestCompileIfAction_SomeWithElse(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
@@ -229,7 +229,7 @@ func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
@@ -261,7 +261,7 @@ func TestCompileIfAction_SomeMultipleParams(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
@@ -299,7 +299,7 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	// Build: if some x:t. x = x { assert x = x }
 	// The then-branch references "x" which is only visible inside the sig copy.
@@ -346,7 +346,7 @@ func TestCompileWhile_SomeCondition(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 
 	// Build: while some x:t. x = x { skip } invariant true
 	xParam := cfg.NewAtom("x")
@@ -389,7 +389,7 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = tSort
+	c.Sig.Sorts.Set("t", tSort)
 	c.Sig.Symbols.Set("idx", &il.SymbolEntry{Name: "idx", Sort: tSort})
 
 	xParam := cfg.NewAtom("x")
@@ -486,7 +486,7 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 
 	// Declare thunk sort
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	// Build ThunkAction with 5 args (including continuation)
 	node := newThunkWith5Args(
@@ -524,11 +524,11 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	// Add a captured variable "fml:x" to the signature
 	xSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = xSort
+	c.Sig.Sorts.Set("t", xSort)
 	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
@@ -568,7 +568,7 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -620,9 +620,9 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 	xSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = xSort
+	c.Sig.Sorts.Set("t", xSort)
 	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
@@ -667,9 +667,9 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 	xSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = xSort
+	c.Sig.Sorts.Set("t", xSort)
 	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
@@ -714,9 +714,9 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 	xSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = xSort
+	c.Sig.Sorts.Set("t", xSort)
 	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
@@ -774,7 +774,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -828,9 +828,9 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 	xSort := &lg.UninterpretedSort{Name: "t"}
-	c.Sig.Sorts["t"] = xSort
+	c.Sig.Sorts.Set("t", xSort)
 	c.Sig.Symbols.Set("fml:x", &il.SymbolEntry{Name: "fml:x", Sort: xSort})
 
 	node := newThunkWith5Args(
@@ -887,7 +887,7 @@ func TestCompileThunkAction_LocSymbolNotLeaked(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),
@@ -918,7 +918,7 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
-	c.Sig.Sorts["handler"] = thunkSort
+	c.Sig.Sorts.Set("handler", thunkSort)
 
 	node := newThunkWith5Args(
 		cfg.NewAtom("handler"),

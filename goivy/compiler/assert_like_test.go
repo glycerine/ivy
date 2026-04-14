@@ -279,7 +279,7 @@ func TestCompileLocal_WithRequiresBody(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 
 	// var x:nat := y; require true
@@ -308,7 +308,7 @@ func TestCompileLocal_WithEnsuresBody(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 
 	lhsNode := cfg.NewAtom("loc:x")

@@ -157,7 +157,7 @@ func EmitSortDecls(w *CodeWriter, mod *module.Module) {
 	}
 	// Emit enumerated sorts.
 	for _, sortName := range mod.SortOrder {
-		s, ok := mod.Sig.Sorts[sortName]
+		s, ok := mod.Sig.Sorts.Get2(sortName)
 		if !ok {
 			continue
 		}

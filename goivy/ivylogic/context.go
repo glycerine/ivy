@@ -49,7 +49,7 @@ func CheckEssentiallyUninterpreted(sig *Sig, fmla lg.Expr) error {
 // pointer-equality misses on lg.Sort interface map keys.
 func GetSortRefinement(sig *Sig) map[lg.NodeKey]lg.Sort {
 	result := make(map[lg.NodeKey]lg.Sort)
-	for _, s := range sig.Sorts {
+	for _, s := range sig.Sorts.All() {
 		if !IsCanonicalSort(sig, s) {
 			result[lg.SortKey(s)] = CanonizeSort(sig, s)
 		}
@@ -61,7 +61,7 @@ func GetSortRefinement(sig *Sig) map[lg.NodeKey]lg.Sort {
 // Corresponds to Python's uninterpreted_sorts (ivy_logic.py:1469-1470).
 func UninterpretedSorts(sig *Sig) []lg.Sort {
 	var result []lg.Sort
-	for _, s := range sig.Sorts {
+	for _, s := range sig.Sorts.All() {
 		if _, ok := s.(*lg.UninterpretedSort); ok {
 			name := SortName(s)
 			if _, hasInterp := sig.Interp[name]; !hasInterp {
@@ -76,7 +76,7 @@ func UninterpretedSorts(sig *Sig) []lg.Sort {
 // Corresponds to Python's interpreted_sorts (ivy_logic.py:1472-1473).
 func InterpretedSorts(sig *Sig) []lg.Sort {
 	var result []lg.Sort
-	for _, s := range sig.Sorts {
+	for _, s := range sig.Sorts.All() {
 		if IsInterpretedSort(sig, s) {
 			result = append(result, s)
 		}

@@ -24,7 +24,7 @@ func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs
 	// Build initial match with all known sorts
 	match := NewMatch()
 	if m.Sig != nil {
-		for sortName := range m.Sig.Sorts {
+		for sortName, _ := range m.Sig.Sorts.All() {
 			match.Add(sortName, sortName)
 		}
 	}

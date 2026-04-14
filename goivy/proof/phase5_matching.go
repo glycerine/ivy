@@ -41,7 +41,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 
 	// Check if the expression is a sort reference
 	if atom, ok := expr.(*ast.Atom); ok {
-		if s, exists := sig.Sorts[atom.Rep]; exists {
+		if s, exists := sig.Sorts.Get2(atom.Rep); exists {
 			return sortToNode(s)
 		}
 	}
@@ -100,7 +100,7 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 
 	// Check if the expression is a sort reference
 	if atom, ok := expr.(*ast.Atom); ok {
-		if s, exists := sig.Sorts[atom.Rep]; exists {
+		if s, exists := sig.Sorts.Get2(atom.Rep); exists {
 			return sortToNode(s)
 		}
 	}

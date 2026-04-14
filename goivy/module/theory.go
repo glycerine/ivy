@@ -415,7 +415,7 @@ func (m *Module) VariantAxioms() []lg.Expr {
 		anyInSig := false
 		for _, v := range sortVariants {
 			vname := il.SortName(v)
-			if _, ok := m.Sig.Sorts[vname]; ok {
+			if _, ok := m.Sig.Sorts.Get2(vname); ok {
 				anyInSig = true
 				break
 			}
@@ -423,7 +423,7 @@ func (m *Module) VariantAxioms() []lg.Expr {
 		if !anyInSig {
 			continue
 		}
-		parentSort, parentOk := m.Sig.Sorts[sname]
+		parentSort, parentOk := m.Sig.Sorts.Get2(sname)
 		if !parentOk {
 			continue
 		}

@@ -155,7 +155,7 @@ func TestCompileVariable(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	// Add a sort to the signature
-	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts.Set("node", &lg.UninterpretedSort{Name: "node"})
 
 	v := cfg.NewVariable("X", "node")
 	result, err := c.CompileNode(v)
@@ -178,7 +178,7 @@ func TestCompileVariable(t *testing.T) {
 func TestCompileEquality(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts.Set("nat", &lg.UninterpretedSort{Name: "nat"})
 
 	x := cfg.NewVariable("X", "nat")
 	y := cfg.NewVariable("Y", "nat")
@@ -205,7 +205,7 @@ func TestCompileEquality(t *testing.T) {
 func TestCompileQuantifierForall(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts.Set("node", &lg.UninterpretedSort{Name: "node"})
 
 	x := cfg.NewVariable("X", "node")
 	body := cfg.NewAtom("true")
@@ -231,7 +231,7 @@ func TestCompileQuantifierForall(t *testing.T) {
 func TestCompileQuantifierExists(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts.Set("node", &lg.UninterpretedSort{Name: "node"})
 
 	x := cfg.NewVariable("X", "node")
 	body := cfg.NewAtom("true")
@@ -256,7 +256,7 @@ func TestCompileSymbolLookup(t *testing.T) {
 	c := newTestCompiler()
 
 	// Declare a 0-arity symbol
-	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts.Set("nat", &lg.UninterpretedSort{Name: "nat"})
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.AddSymbol("zero", natSort)
 
@@ -280,7 +280,7 @@ func TestCompileApply(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	funcSort, _ := lg.NewFunctionSort(natSort, natSort)
 	c.Sig.AddSymbol("succ", funcSort)
 
@@ -372,7 +372,7 @@ func TestDeclInterpType(t *testing.T) {
 	if err != nil {
 		t.Fatalf("type decl: %v", err)
 	}
-	if _, ok := c.Sig.Sorts["mytype"]; !ok {
+	if _, ok := c.Sig.Sorts.Get2("mytype"); !ok {
 		t.Error("mytype not in sig sorts")
 	}
 }
@@ -391,7 +391,7 @@ func TestDeclInterpEnumType(t *testing.T) {
 		t.Fatalf("enum type decl: %v", err)
 	}
 
-	sort, ok := c.Sig.Sorts["color"]
+	sort, ok := c.Sig.Sorts.Get2("color")
 	if !ok {
 		t.Fatal("color not in sig sorts")
 	}
@@ -418,7 +418,7 @@ func TestDeclInterpRelation(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	// First add the sort
-	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts.Set("node", &lg.UninterpretedSort{Name: "node"})
 
 	// Relation: link(X:node, Y:node)
 	x := cfg.NewVariable("X", "node")
@@ -456,7 +456,7 @@ func TestDeclInterpAlias(t *testing.T) {
 func TestCompileConst(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts.Set("nat", &lg.UninterpretedSort{Name: "nat"})
 
 	atom := cfg.NewAtom("zero")
 	atom.ASort = cfg.NewSymbol("nat", nil)
@@ -478,7 +478,7 @@ func TestCompilePolymorphicSymbol(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	x := cfg.NewVariable("X", "nat")
 	y := cfg.NewVariable("Y", "nat")
@@ -501,7 +501,7 @@ func TestCompilePolymorphicSymbol(t *testing.T) {
 func TestCompileNestedFormula(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts.Set("node", &lg.UninterpretedSort{Name: "node"})
 
 	// forall X:node. X = X -> true
 	x := cfg.NewVariable("X", "node")
@@ -532,7 +532,7 @@ func TestCompileOld(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("count", natSort)
 
 	oldNode := cfg.NewOld(cfg.NewAtom("count"))
@@ -639,10 +639,10 @@ func TestProcessDecls(t *testing.T) {
 		t.Fatalf("process decls: %v", err)
 	}
 
-	if _, ok := c.Sig.Sorts["t1"]; !ok {
+	if _, ok := c.Sig.Sorts.Get2("t1"); !ok {
 		t.Error("t1 not in sorts")
 	}
-	if _, ok := c.Sig.Sorts["t2"]; !ok {
+	if _, ok := c.Sig.Sorts.Get2("t2"); !ok {
 		t.Error("t2 not in sorts")
 	}
 }

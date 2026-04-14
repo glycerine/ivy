@@ -68,7 +68,7 @@ func TestCopy(t *testing.T) {
 	c := m.Copy()
 
 	// Verify copy has same data
-	if _, ok := c.Sig.Sorts["node"]; !ok {
+	if _, ok := c.Sig.Sorts.Get2("node"); !ok {
 		t.Error("copy should have node sort")
 	}
 	if _, ok := c.Actions.Get2("act1"); !ok {
@@ -87,7 +87,7 @@ func TestCopy(t *testing.T) {
 		t.Error("modifying copy should not affect original")
 	}
 	c.Sig.AddSort(&lg.UninterpretedSort{Name: "extra"})
-	if _, ok := m.Sig.Sorts["extra"]; ok {
+	if _, ok := m.Sig.Sorts.Get2("extra"); ok {
 		t.Error("modifying copy's sig should not affect original")
 	}
 }
@@ -230,7 +230,7 @@ func TestNewWithSig(t *testing.T) {
 	sig := il.NewSig()
 	sig.AddSort(&lg.UninterpretedSort{Name: "custom"})
 	m := NewWithSig(sig)
-	if _, ok := m.Sig.Sorts["custom"]; !ok {
+	if _, ok := m.Sig.Sorts.Get2("custom"); !ok {
 		t.Error("module should use provided sig")
 	}
 }

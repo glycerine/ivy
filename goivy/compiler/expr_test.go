@@ -30,7 +30,7 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 
 	// Set up a sort and a symbol so compilation succeeds.
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// Build an ActionDef: action foo(x:nat) = { x := x }
 	// Matches LALR parser: Name atom has no children, params in FormalParams.
@@ -75,7 +75,7 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("foo", natSort)
 
 	// Register "foo" as an action in TopContext so the call path is exercised.
@@ -124,7 +124,7 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 
 	// Build AST matching LowerVarStatements output:
@@ -181,7 +181,7 @@ func TestExpr6_CompileLocal_ExplicitSortAnnotation(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 
 	lhsNode := cfg.NewAtom("loc:x")
@@ -219,7 +219,7 @@ func TestExpr6_CompileLocal_FunctionLikeLHS(t *testing.T) {
 	c := newTestCompiler()
 
 	procSort := &lg.UninterpretedSort{Name: "proc"}
-	c.Sig.Sorts["proc"] = procSort
+	c.Sig.Sorts.Set("proc", procSort)
 	c.Sig.AddSymbol("P", procSort)
 
 	lhsNode := cfg.NewApp(cfg.NewSymbol("loc:f", nil), cfg.NewAtom("P"))
@@ -256,7 +256,7 @@ func TestExpr6_CompileLocal_BareDeclaration(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// Bare declaration: local loc:x { true }
 	xDecl := cfg.NewAtom("loc:x")
@@ -285,7 +285,7 @@ func TestExpr6_CompileLocal_MultipleDeclarations(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	xDecl := cfg.NewAtom("loc:x")
 	xDecl.ASort = cfg.NewSymbol("nat", nil)
@@ -315,7 +315,7 @@ func TestExpr6_CompileLocal_BodyWithMultipleStatements(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 	c.Sig.AddSymbol("z", natSort)
 
@@ -398,7 +398,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("y", natSort)
 
 	// Create: var x := y; true
@@ -460,8 +460,8 @@ func TestExpr6_CompileLocal_SymbolShadowing(t *testing.T) {
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts["nat"] = natSort
-	c.Sig.Sorts["bool"] = boolSort
+	c.Sig.Sorts.Set("nat", natSort)
+	c.Sig.Sorts.Set("bool", boolSort)
 	// Outer scope: x is nat
 	c.Sig.AddSymbol("x", natSort)
 	c.Sig.AddSymbol("y", boolSort)
@@ -507,7 +507,7 @@ func TestExpr6_CompileCall_FieldReferenceFallback(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// Set up TopCtx with an empty Actions map — "foo" is NOT an action.
 	c.TopCtx = &TopContext{
@@ -541,7 +541,7 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// Add symbols to sig so they compile.
 	c.Sig.AddSymbol("x", natSort)

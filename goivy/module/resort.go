@@ -5,6 +5,7 @@ package module
 import (
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
@@ -73,11 +74,11 @@ func ResortSig(sig *il.Sig, subs map[lg.NodeKey]*SortRefinement) {
 	}
 	ss := sortSubsMap(subs)
 	// Resort sort entries
-	newSorts := make(map[string]lg.Sort, len(sig.Sorts))
-	for _, sort := range sig.Sorts {
+	newSorts := iu.NewInsMap[string, lg.Sort]()
+	for _, sort := range sig.Sorts.All() {
 		newSort := lu.ResortSort(sort, ss)
 		newName := il.SortName(newSort)
-		newSorts[newName] = newSort
+		newSorts.Set(newName, newSort)
 	}
 	sig.Sorts = newSorts
 

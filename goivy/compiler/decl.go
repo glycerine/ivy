@@ -1113,10 +1113,10 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	if rng, ok := rhs.(*ast.Range); ok {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=range")
 		// Python: if lhs not in sig.sorts: raise IvyError(...)
-		if _, exists := sig.Sorts[lhs]; !exists {
+		if _, exists := sig.Sorts.Get2(lhs); !exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is not a sort", lhs))
 		}
-		sort := sig.Sorts[lhs]
+		sort := sig.Sorts.Get(lhs)
 		// Python: if not isinstance(sort, ivy_logic.UninterpretedSort): raise IvyError(...)
 		if _, isUn := sort.(*lg.UninterpretedSort); !isUn {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
@@ -1140,7 +1140,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	if enumSort, ok := rhs.(*ast.EnumeratedSort); ok {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=enum")
 		// Python: if lhs not in self.domain.sig.sorts: raise IvyError(...)
-		if _, exists := sig.Sorts[lhs]; !exists {
+		if _, exists := sig.Sorts.Get2(lhs); !exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is not a type", lhs))
 		}
 		ext := enumSort.Extension()
@@ -1148,7 +1148,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		interp[lhs] = sort
 		// Python: for c in sort.defines(): register constructors
 		for _, c := range ext {
-			if existingSort, hasSig := sig.Sorts[lhs]; hasSig {
+			if existingSort, hasSig := sig.Sorts.Get2(lhs); hasSig {
 				sym := lg.NewConst(c, existingSort)
 				sig.Symbols.Set(c, &il.SymbolEntry{Sort: existingSort})
 				mod.Functions.Set(c, existingSort)
@@ -1161,7 +1161,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 
 	// BB6: Solver sort/symbol interpretation
 	// Python: for x,y,z in zip([sig.sorts,sig.symbols], [is_solver_sort,is_solver_op], ['sort','symbol']):
-	_, inSorts := sig.Sorts[lhs]
+	_, inSorts := sig.Sorts.Get2(lhs)
 	_, inSymbols := sig.Symbols.Get2(lhs)
 
 	// BB6a: Check sorts first
@@ -1770,10 +1770,10 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	impd := extractSortRep(def.Lhs)
 	impr := extractSortRep(def.Rhs)
 	// Validate both sorts exist
-	if _, ok := sig.Sorts[impd]; !ok {
+	if _, ok := sig.Sorts.Get2(impd); !ok {
 		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impd))
 	}
-	if _, ok := sig.Sorts[impr]; !ok {
+	if _, ok := sig.Sorts.Get2(impr); !ok {
 		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impr))
 	}
 	// Check not already interpreted
@@ -1783,8 +1783,8 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	if _, ok := sig.Interp[impd]; ok {
 		return lg.NewIvyError(lf, fmt.Sprintf("%s is already interpreted", impd))
 	}
-	impdSort := sig.Sorts[impd]
-	imprSort := sig.Sorts[impr]
+	impdSort := sig.Sorts.Get(impd)
+	imprSort := sig.Sorts.Get(impr)
 	il.ImplementType(sig, impdSort, imprSort)
 	mod.Interps[impd] = append(mod.Interps[impd], node)
 	return nil

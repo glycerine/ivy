@@ -397,7 +397,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 		if n.Sort != nil {
 			sortName := extractSortRep(n.Sort)
 			if sortName != "" {
-				if s, ok2 := c.Sig.Sorts[sortName]; ok2 {
+				if s, ok2 := c.Sig.Sorts.Get2(sortName); ok2 {
 					sort = s
 				}
 			}

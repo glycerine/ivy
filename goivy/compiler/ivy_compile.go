@@ -1833,10 +1833,10 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 
 	for _, sort := range vocab.Sorts {
 		name := il.SortName(sort)
-		if _, exists := sig.Sorts[name]; exists {
+		if _, exists := sig.Sorts.Get2(name); exists {
 			// Name collision — generate unique name
-			usedNames := make(map[string]struct{}, len(sig.Sorts))
-			for k := range sig.Sorts {
+			usedNames := make(map[string]struct{}, sig.Sorts.Len())
+			for k, _ := range sig.Sorts.All() {
 				usedNames[k] = struct{}{}
 			}
 			newname := iu.UnusedNameWithBase(name, usedNames)

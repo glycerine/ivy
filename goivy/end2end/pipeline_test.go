@@ -85,7 +85,7 @@ conjecture r(X) | ~r(X)
 	}
 
 	// Check that sort "t" exists
-	_, ok := mod.Sig.Sorts["t"]
+	_, ok := mod.Sig.Sorts.Get2("t")
 	if !ok {
 		t.Error("sort 't' not found in signature")
 	}
@@ -116,7 +116,7 @@ func TestParseCompile_EnumTypes(t *testing.T) {
 	}
 
 	// Check that "color" is an EnumeratedSort
-	sort, ok := mod.Sig.Sorts["color"]
+	sort, ok := mod.Sig.Sorts.Get2("color")
 	if !ok {
 		t.Fatal("sort 'color' not found")
 	}
@@ -142,10 +142,10 @@ func TestParseCompile_ClientServer(t *testing.T) {
 	}
 
 	// Check sorts
-	if _, ok := mod.Sig.Sorts["client"]; !ok {
+	if _, ok := mod.Sig.Sorts.Get2("client"); !ok {
 		t.Error("sort 'client' not found")
 	}
-	if _, ok := mod.Sig.Sorts["server"]; !ok {
+	if _, ok := mod.Sig.Sorts.Get2("server"); !ok {
 		t.Error("sort 'server' not found")
 	}
 

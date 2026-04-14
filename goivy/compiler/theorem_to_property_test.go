@@ -69,7 +69,7 @@ func TestTheoremToProperty_SimpleSchemaBody(t *testing.T) {
 	}
 
 	// Sort should be added to sig
-	if _, ok := mod.Sig.Sorts["mySort"]; !ok {
+	if _, ok := mod.Sig.Sorts.Get2("mySort"); !ok {
 		t.Error("expected mySort to be added to sig")
 	}
 	// Symbol should be added to sig
@@ -97,12 +97,12 @@ func TestTheoremToProperty_SortRenaming(t *testing.T) {
 	}
 
 	// The original "t" should still exist, and a renamed version should also exist
-	if _, ok := mod.Sig.Sorts["t"]; !ok {
+	if _, ok := mod.Sig.Sorts.Get2("t"); !ok {
 		t.Error("original sort 't' should still be in sig")
 	}
 	// There should be a new sort with a different name
 	found := false
-	for name := range mod.Sig.Sorts {
+	for name, _ := range mod.Sig.Sorts.All() {
 		if name != "t" && len(name) > 0 {
 			found = true
 			break
@@ -174,8 +174,8 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 	}
 
 	// Both should have been renamed. Check that sig has more entries than before.
-	if len(mod.Sig.Sorts) < 2 {
-		t.Errorf("expected at least 2 sorts in sig, got %d", len(mod.Sig.Sorts))
+	if mod.Sig.Sorts.Len() < 2 {
+		t.Errorf("expected at least 2 sorts in sig, got %d", mod.Sig.Sorts.Len())
 	}
 	if mod.Sig.Symbols.Len() < 2 {
 		t.Errorf("expected at least 2 symbols in sig, got %d", mod.Sig.Symbols.Len())

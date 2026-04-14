@@ -387,7 +387,7 @@ func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
 		sess.SimpleSess.Reset()
 		if sess.CompiledSig != nil {
 			sortMap := make(map[string]lg.Sort)
-			for name, sort := range sess.CompiledSig.Sorts {
+			for name, sort := range sess.CompiledSig.Sorts.All() {
 				if name != "bool" {
 					sortMap[name] = sort
 				}

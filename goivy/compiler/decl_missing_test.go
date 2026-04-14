@@ -23,7 +23,7 @@ func TestDomainSetupParameter(t *testing.T) {
 
 	// Add sort "nat" to signature
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// parameter p : nat
 	atom := cfg.NewAtom("p")
@@ -58,7 +58,7 @@ func TestDomainSetupParameterWithDefault(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 	c.Sig.AddSymbol("zero", natSort)
 
 	// parameter p : nat = zero
@@ -98,8 +98,8 @@ func TestDomainSetupDestructor(t *testing.T) {
 
 	pairSort := &lg.UninterpretedSort{Name: "pair"}
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["pair"] = pairSort
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("pair", pairSort)
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// destructor val(X:pair) : nat
 	x := cfg.NewVariable("X", "pair")
@@ -146,7 +146,7 @@ func TestDomainSetupDestructorNoDomain(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts.Set("nat", natSort)
 
 	// destructor val : nat  (0-arity — no parameters)
 	atom := cfg.NewAtom("val")
@@ -172,8 +172,8 @@ func TestDomainSetupConstructor(t *testing.T) {
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	pairSort := &lg.UninterpretedSort{Name: "pair"}
-	c.Sig.Sorts["nat"] = natSort
-	c.Sig.Sorts["pair"] = pairSort
+	c.Sig.Sorts.Set("nat", natSort)
+	c.Sig.Sorts.Set("pair", pairSort)
 
 	// constructor mk_pair(X:nat, Y:nat) : pair
 	x := cfg.NewVariable("X", "nat")
@@ -222,7 +222,7 @@ func TestDomainSetupConcept(t *testing.T) {
 	d := NewDomainSetup(c)
 
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
-	c.Sig.Sorts["node"] = nodeSort
+	c.Sig.Sorts.Set("node", nodeSort)
 
 	// concept rel(X:node) = true
 	x := cfg.NewVariable("X", "node")
@@ -357,8 +357,8 @@ func TestDomainSetupImplementtype(t *testing.T) {
 
 	fooSort := &lg.UninterpretedSort{Name: "foo"}
 	barSort := &lg.UninterpretedSort{Name: "bar"}
-	c.Sig.Sorts["foo"] = fooSort
-	c.Sig.Sorts["bar"] = barSort
+	c.Sig.Sorts.Set("foo", fooSort)
+	c.Sig.Sorts.Set("bar", barSort)
 
 	// implement type foo = bar
 	lhs := cfg.NewSymbol("foo", nil)
@@ -388,8 +388,8 @@ func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
 
 	fooSort := &lg.UninterpretedSort{Name: "foo"}
 	barSort := &lg.UninterpretedSort{Name: "bar"}
-	c.Sig.Sorts["foo"] = fooSort
-	c.Sig.Sorts["bar"] = barSort
+	c.Sig.Sorts.Set("foo", fooSort)
+	c.Sig.Sorts.Set("bar", barSort)
 
 	// Mark foo as already having a native type interpretation
 	c.Module.NativeTypes["foo"] = cfg.NewNativeType(cfg.NewAtom("already_interp"))

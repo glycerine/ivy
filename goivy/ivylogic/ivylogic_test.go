@@ -14,7 +14,7 @@ func TestNewSig(t *testing.T) {
 	if s == nil {
 		t.Fatal("NewSig returned nil")
 	}
-	if _, ok := s.Sorts["bool"]; !ok {
+	if _, ok := s.Sorts.Get2("bool"); !ok {
 		t.Error("Sig should have bool sort")
 	}
 	if s.DefaultNumericSort == nil {
@@ -120,7 +120,7 @@ func TestSigCopy(t *testing.T) {
 	s.AddSymbol("x", sort)
 
 	c := s.Copy()
-	if _, ok := c.Sorts["node"]; !ok {
+	if _, ok := c.Sorts.Get2("node"); !ok {
 		t.Error("copy should have node sort")
 	}
 	if _, ok := c.Symbols.Get2("x"); !ok {
@@ -129,7 +129,7 @@ func TestSigCopy(t *testing.T) {
 
 	// Modifying copy shouldn't affect original
 	c.AddSort(&lg.UninterpretedSort{Name: "extra"})
-	if _, ok := s.Sorts["extra"]; ok {
+	if _, ok := s.Sorts.Get2("extra"); ok {
 		t.Error("original should not have extra sort")
 	}
 }

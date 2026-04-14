@@ -415,7 +415,7 @@ func GetDefaultSort(sig *Sig) (lg.Sort, error) {
 	}
 	// Create default sort 'S' and add it to the signature
 	ds := &lg.UninterpretedSort{Name: "S"}
-	sig.Sorts["S"] = ds
+	sig.Sorts.Set("S", ds)
 	sig.DefaultSort = ds
 	xtracer.Trace("ivylogic.GetDefaultSort CREATED_S HASH canon=%s", sig.Canon())
 	return ds, nil
@@ -424,8 +424,8 @@ func GetDefaultSort(sig *Sig) (lg.Sort, error) {
 // Sorts returns all sorts in the given signature as a slice.
 // Corresponds to Python's sorts() (ivy_logic.py:1188-1189).
 func Sorts(sig *Sig) []lg.Sort {
-	result := make([]lg.Sort, 0, len(sig.Sorts))
-	for _, s := range sig.Sorts {
+	result := make([]lg.Sort, 0, sig.Sorts.Len())
+	for _, s := range sig.Sorts.All() {
 		result = append(result, s)
 	}
 	return result

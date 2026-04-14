@@ -1627,14 +1627,18 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Filter sorts
-		for name := range mod.Sig.Sorts {
+		var sortKeysToDelete []string
+		for name, _ := range mod.Sig.Sorts.All() {
 			if name != "bool" && !allSorts[name] {
-				delete(mod.Sig.Sorts, name)
+				sortKeysToDelete = append(sortKeysToDelete, name)
 			}
+		}
+		for _, name := range sortKeysToDelete {
+			mod.Sig.Sorts.Delkey(name)
 		}
 		var newSortOrder []string
 		for _, s := range mod.SortOrder {
-			if _, ok := mod.Sig.Sorts[s]; ok {
+			if _, ok := mod.Sig.Sorts.Get2(s); ok {
 				newSortOrder = append(newSortOrder, s)
 			}
 		}

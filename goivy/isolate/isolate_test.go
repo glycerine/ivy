@@ -667,7 +667,7 @@ func TestStripMapLookupGlobalParam(t *testing.T) {
 func TestStripMapLookupSort(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Sorts["mysort"] = mkSort("mysort")
+	m.Sig.Sorts.Set("mysort", mkSort("mysort"))
 
 	sm := StripMap{"mysort": {"p"}}
 	result := StripMapLookup("mysort", sm, m)
@@ -717,7 +717,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 func TestStripSortFromModule(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Sorts["mysort"] = mkSort("mysort")
+	m.Sig.Sorts.Set("mysort", mkSort("mysort"))
 	m.SortOrder = []string{"bool", "mysort", "int"}
 	m.SortDestructors["mysort"] = []*lg.Const{mkConst("d")}
 	m.DestructorSorts["mysort"] = mkSort("mysort")
@@ -727,7 +727,7 @@ func TestStripSortFromModule(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if _, ok := m.Sig.Sorts["mysort"]; ok {
+	if _, ok := m.Sig.Sorts.Get2("mysort"); ok {
 		t.Error("sort should be removed from signature")
 	}
 	if _, ok := m.SortDestructors["mysort"]; ok {

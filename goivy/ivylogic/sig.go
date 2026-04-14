@@ -33,7 +33,7 @@ func (u *UnionSort) String() string {
 // interpretations.
 type Sig struct {
 	IuCfg              *iu.IvyUtilsConfig     // per-session config for version flags
-	Sorts              map[string]lg.Sort
+	Sorts              *iu.InsMap[string, lg.Sort]
 	Symbols            *iu.InsMap[string, *SymbolEntry]
 	Constructors       map[string]bool
 	Interp             map[string]interface{} // sort name → interpretation
@@ -55,14 +55,14 @@ type SymbolEntry struct {
 func NewSigOn(iuCfg *iu.IvyUtilsConfig) *Sig {
 	s := &Sig{
 		IuCfg:              iuCfg,
-		Sorts:              make(map[string]lg.Sort),
+		Sorts:              iu.NewInsMap[string, lg.Sort](),
 		Symbols:            iu.NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool),
 		Interp:             make(map[string]interface{}),
 		DefaultNumericSort: &lg.UninterpretedSort{Name: "int"},
 	}
 	// bool is always present
-	s.Sorts["bool"] = lg.Boolean
+	s.Sorts.Set("bool", lg.Boolean)
 	return s
 }
 
@@ -75,7 +75,7 @@ func NewSig() *Sig {
 func (s *Sig) Copy() *Sig {
 	res := &Sig{
 		IuCfg:              s.IuCfg,
-		Sorts:              make(map[string]lg.Sort, len(s.Sorts)),
+		Sorts:              iu.NewInsMap[string, lg.Sort](),
 		Symbols:            iu.NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool, len(s.Constructors)),
 		Interp:             make(map[string]interface{}, len(s.Interp)),
@@ -83,8 +83,8 @@ func (s *Sig) Copy() *Sig {
 		DefaultNumericSort: s.DefaultNumericSort,
 		AllowUnsorted:      s.AllowUnsorted,
 	}
-	for k, v := range s.Sorts {
-		res.Sorts[k] = v
+	for k, v := range s.Sorts.All() {
+		res.Sorts.Set(k, v)
 	}
 	for k, v := range s.Symbols.All() {
 		res.Symbols.Set(k, v)
@@ -188,7 +188,7 @@ func (s *Sig) Contains(sortOrSymbol interface{}) bool {
 	}
 	if sort, ok := sortOrSymbol.(lg.Sort); ok {
 		name := SortName(sort)
-		existing, found := s.Sorts[name]
+		existing, found := s.Sorts.Get2(name)
 		if !found {
 			return false
 		}
@@ -231,7 +231,7 @@ func (s *Sig) AllSymbolsNamed(name string) []*lg.Const {
 // String returns a human-readable representation of the signature.
 func (s *Sig) String() string {
 	var b strings.Builder
-	for name, sort := range s.Sorts {
+	for name, sort := range s.Sorts.All() {
 		if name == "bool" {
 			continue
 		}
@@ -293,7 +293,7 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 		xtracer.Trace("compiler.FindSort allowUnsorted name=%s\n  returning UninterpretedSort", name)
 		return &lg.UninterpretedSort{Name: name}, nil
 	}
-	sort, ok := s.Sorts[name]
+	sort, ok := s.Sorts.Get2(name)
 	if ok {
 		if name == "S" {
 			xtracer.Trace("compiler.FindSort name=S FOUND HASH canon=%s", s.Canon())
@@ -319,8 +319,8 @@ func SortListNames(sorts []lg.Sort) []string {
 
 // SortNames returns the names of all sorts in the signature (for diagnostics).
 func (s *Sig) SortNames() []string {
-	names := make([]string, 0, len(s.Sorts))
-	for n := range s.Sorts {
+	names := make([]string, 0, s.Sorts.Len())
+	for n, _ := range s.Sorts.All() {
 		names = append(names, n)
 	}
 	return names
@@ -347,7 +347,7 @@ func (s *Sig) Canon() iu.Canonical {
 // where IvyError is created but never raised.
 func (s *Sig) AddSort(sort lg.Sort) error {
 	name := SortName(sort)
-	s.Sorts[name] = sort
+	s.Sorts.Set(name, sort)
 	return nil
 }
 
@@ -363,7 +363,7 @@ func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Const, error) {
 	if name == "=" {
 		return Equals, nil
 	}
-	if _, isSorted := s.Sorts[name]; isSorted {
+	if _, isSorted := s.Sorts.Get2(name); isSorted {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf("type %s used where a function or individual symbol is expected", name)}
 	}
 	return nil, &lg.IvyError{Msg: fmt.Sprintf("unknown symbol: %s", name)}
@@ -431,10 +431,10 @@ func (ws *WithSorts) Enter() {
 	//pp("adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
 	for _, s := range ws.sorts {
 		name := SortName(s)
-		if existing, ok := ws.sig.Sorts[name]; ok {
+		if existing, ok := ws.sig.Sorts.Get2(name); ok {
 			ws.saved = append(ws.saved, savedSort{name, existing})
 		}
-		ws.sig.Sorts[name] = s
+		ws.sig.Sorts.Set(name, s)
 	}
 }
 
@@ -442,9 +442,9 @@ func (ws *WithSorts) Enter() {
 func (ws *WithSorts) Exit() {
 	for _, s := range ws.sorts {
 		name := SortName(s)
-		delete(ws.sig.Sorts, name)
+		ws.sig.Sorts.Delkey(name)
 	}
 	for _, s := range ws.saved {
-		ws.sig.Sorts[s.name] = s.sort
+		ws.sig.Sorts.Set(s.name, s.sort)
 	}
 }

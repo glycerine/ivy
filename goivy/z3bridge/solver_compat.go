@@ -294,7 +294,7 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 	// Collect uninterpreted sorts from the signature
 	var uninterpSorts []lg.Sort
 	if s.sig != nil {
-		for name, sort := range s.sig.Sorts {
+		for name, sort := range s.sig.Sorts.All() {
 			if _, interp := s.sig.Interp[name]; !interp {
 				if _, isUS := sort.(*lg.UninterpretedSort); isUS {
 					uninterpSorts = append(uninterpSorts, sort)

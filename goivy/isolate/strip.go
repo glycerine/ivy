@@ -37,7 +37,7 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 
 	// Sort names are not stripped.
 	if mod.Sig != nil {
-		if _, ok := mod.Sig.Sorts[name]; ok {
+		if _, ok := mod.Sig.Sorts.Get2(name); ok {
 			return nil
 		}
 	}
@@ -563,7 +563,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				if v, isVar := p.(*ast.Variable); isVar {
 					var sort lg.Sort
 					if mod.Sig != nil {
-						if s, ok := mod.Sig.Sorts[v.VSort]; ok {
+						if s, ok := mod.Sig.Sorts.Get2(v.VSort); ok {
 							sort = s
 						}
 					}
@@ -686,7 +686,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				// ASort is an ast.Node; extract sort name and look up
 				if sortAtom, ok := paramAtom.ASort.(*ast.Atom); ok {
 					if mod.Sig != nil {
-						paramSort, _ = mod.Sig.Sorts[sortAtom.Rep]
+						paramSort = mod.Sig.Sorts.Get(sortAtom.Rep)
 					}
 				}
 			}
@@ -714,7 +714,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 					newSym := lg.NewConst(paramName, paramSort)
 					mod.Params = append(mod.Params, newSym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
-				} else if s, ok := mod.Sig.Sorts[paramName]; ok {
+				} else if s, ok := mod.Sig.Sorts.Get2(paramName); ok {
 					newSym := lg.NewConst(paramName, s)
 					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
 					mod.Params = append(mod.Params, newSym)
@@ -733,7 +733,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				if _, exists := mod.Sig.Symbols.Get2(paramName); exists {
 					continue
 				}
-				if s, ok := mod.Sig.Sorts[paramName]; ok {
+				if s, ok := mod.Sig.Sorts.Get2(paramName); ok {
 					sym := lg.NewConst(paramName, s)
 					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
 					mod.Params = append(mod.Params, sym)
@@ -929,7 +929,7 @@ func stripNatives(natives []ast.Node, stripMap StripMap, mod *module.Module) {
 func StripSortFromModule(mod *module.Module, sortName string) error {
 	// Remove the sort from the signature.
 	if mod.Sig != nil {
-		delete(mod.Sig.Sorts, sortName)
+		mod.Sig.Sorts.Delkey(sortName)
 	}
 
 	// Remove destructors for this sort.

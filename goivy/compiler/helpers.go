@@ -98,7 +98,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 	result, argsCopy, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old, lineno)
 	if err != nil {
 		if cfrErr, ok := err.(*cfrError); ok {
-			if _, inSorts := c.Sig.Sorts[symbolName]; inSorts {
+			if _, inSorts := c.Sig.Sorts.Get2(symbolName); inSorts {
 				return nil, &lg.IvyError{Msg: fmt.Sprintf(
 					"type %s used where a function or individual symbol is expected",
 					cfrErr.SymbolName)}

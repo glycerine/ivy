@@ -662,7 +662,7 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 					rep = e.Relname()
 				}
 				if rep != "" {
-					if _, inSig := m.Sig.Sorts[rep]; inSig {
+					if _, inSig := m.Sig.Sorts.Get2(rep); inSig {
 						deps = append(deps, rep)
 					}
 				}
@@ -703,7 +703,7 @@ func (m *Module) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Module: %d axioms, %d conjs, %d actions, %d sorts\n",
 		len(m.LabeledAxioms), len(m.LabeledConjs),
-		m.Actions.Len(), len(m.Sig.Sorts))
+		m.Actions.Len(), m.Sig.Sorts.Len())
 	return b.String()
 }
 

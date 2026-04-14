@@ -243,7 +243,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	finiteSorts := make(map[string]bool)
 	var uninterpretedSorts []lg.Sort
 	if m != nil && m.Sig != nil {
-		for name, s := range m.Sig.Sorts {
+		for name, s := range m.Sig.Sorts.All() {
 			if m.FiniteSorts[name] {
 				finiteSorts[name] = true
 			} else if _, isUI := s.(*lg.UninterpretedSort); isUI {

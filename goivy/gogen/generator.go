@@ -127,7 +127,7 @@ func (g *Generator) emitQuantifierHelpers(w *CodeWriter) {
 	}
 	hasAny := false
 	for _, sortName := range g.Module.SortOrder {
-		s, ok := g.Module.Sig.Sorts[sortName]
+		s, ok := g.Module.Sig.Sorts.Get2(sortName)
 		if !ok {
 			continue
 		}

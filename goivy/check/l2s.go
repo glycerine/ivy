@@ -260,7 +260,7 @@ func isTheoryFiniteSort(name string, m *module.Module) bool {
 	if m == nil || m.Sig == nil {
 		return false
 	}
-	s, ok := m.Sig.Sorts[name]
+	s, ok := m.Sig.Sorts.Get2(name)
 	if !ok {
 		return false
 	}
@@ -464,7 +464,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	finiteSorts := make(map[string]bool)
 	var uninterpretedSorts []lg.Sort
 	if m != nil && m.Sig != nil {
-		for name, s := range m.Sig.Sorts {
+		for name, s := range m.Sig.Sorts.All() {
 			if m.FiniteSorts[name] || full || isTheoryFiniteSort(name, m) {
 				finiteSorts[name] = true
 			} else if _, isUI := s.(*lg.UninterpretedSort); isUI {
@@ -472,9 +472,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 		}
 	}
-	sort.Slice(uninterpretedSorts, func(i, j int) bool {
-		return uninterpretedSorts[i].String() < uninterpretedSorts[j].String()
-	})
 
 	// ---------------------------------------------------------------
 	// L2S Auto: generate task/trigger invariants (before main steps)

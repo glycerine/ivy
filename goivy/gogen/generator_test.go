@@ -20,7 +20,7 @@ func newTestModule() *module.Module {
 		Name:      "color",
 		Extension: []string{"red", "green", "blue"},
 	}
-	mod.Sig.Sorts["color"] = colorSort
+	mod.Sig.Sorts.Set("color", colorSort)
 	mod.SortOrder = append(mod.SortOrder, "color")
 
 	// Add a boolean relation: link(int, int) -> bool

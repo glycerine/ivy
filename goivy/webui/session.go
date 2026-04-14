@@ -117,7 +117,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
 	sortMap := make(map[string]logic.Sort)
-	for name, sort := range sig.Sorts {
+	for name, sort := range sig.Sorts.All() {
 		sortMap[name] = sort
 	}
 	symbolMap := make(map[string]*logic.Const)
