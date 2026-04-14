@@ -513,17 +513,31 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			if len(callArgs) > 1 {
 				returns := callArgs[1:]
 				monitored := false
-				for _, r := range returns {
-					if c, ok := r.(*lg.Const); ok {
-						k := c.Name
-						if len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0 {
-							monitored = true
-							break
+				for ri, r := range returns {
+					// Extract symbol name from return, handling both bare
+					// Const and Apply(Const, terms) forms. Python checks
+					// `sym in symprops` using structural equality on
+					// Const objects; Go checks by string name.
+					var k string
+					switch v := r.(type) {
+					case *lg.Const:
+						k = v.Name
+					case *lg.Apply:
+						if c, ok := v.Func.(*lg.Const); ok {
+							k = c.Name
 						}
+					}
+					if xtracer.Enabled {
+						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%T name=%s inSP=%v inSWh=%v inSWa=%v",
+							ri, r, k, len(symprops[k]) > 0, len(symwhens[k]) > 0, len(symwaits[k]) > 0)
+					}
+					if k != "" && (len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0) {
+						monitored = true
+						break
 					}
 				}
 				if monitored {
-					split := call.SplitReturns(actions.NewActionsConfig())
+					split := call.SplitReturns(call.ActCfg)
 					return instrStmt(split)
 				}
 			}
