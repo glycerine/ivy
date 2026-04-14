@@ -748,6 +748,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     def list_transform(lst,trns):
         for i in range(0,len(lst)):
             if ipr.goal_is_property(lst[i]):
+                ilu._rtr_depth[0] = 0
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] ENTER HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
                 lst[i] = trns(lst[i])
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
