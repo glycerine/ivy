@@ -385,7 +385,10 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		si := 0
 		for sym := range il.SymbolsIluAst(when.Body) {
 			if c, ok := sym.(*lg.Const); ok {
-				xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
+				if xtracer.Enabled {
+					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
+					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, c.Name, when.Body.Canon())
+				}
 				symwhens[c.Name] = append(symwhens[c.Name], when)
 				si++
 			}
