@@ -2605,11 +2605,69 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-726105  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=NamedBinder HASH canon=(NamedBinder name:l2s_init environ: vars:[] body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSor ...(truncated long line to 300 bytes)
+734725  go : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:lclock.next
+        py : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:lclock.next
 
-        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=NamedBinder HASH canon=(NamedBinder name:l2s_init environ: vars:[] body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSor
+734726  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "cf_pio_live" "cf_pio_live" "cmpl_live" "cmpl_live" "dramc_ ...(truncated long line to 300 bytes)
+
+        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "cf_pio_live" "cf_pio_live" "cmpl_live" "cmpl_live" "dramc_
  ...(truncated long line to 300 bytes)
 
-726106  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const found=True HASH canon=(Symbol name:l2s_init_2 sort:(BooleanSort))
-        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=NamedBinder found=True
+
+=== S-expression diff (go '-' vs py '+') ===
+   (actionTerm
+     inputs:[
+       (Symbol
+         name:fml:x
+         sort:(UninterpretedSort
+           name:lclock))]
+     outputs:[
+       (Symbol
+         name:fml:y
+         sort:(UninterpretedSort
+           name:lclock))]
+     labels:["cf_live"
+       "cf_live"
+       "cf_pio_live"
+       "cf_pio_live"
+       "cmpl_live"
+       "cmpl_live"
+       "dramc_nb2"
+       "dramc_nb2"
+       "e2e"
+       "e2e"
+       "rfn"
+       "rfn"
+       "rfn2"
+       "rfn2"
+       "rfn2.abs.iso"
+       "sys_live"
+       "sys_live"
+       "this"
+       "tprops"
+       "tprops"]
+     stmt:(sequence
+       stmts:[
+-       (assumeAction
++       (sequence
+-         elems:[
++         stmts:[
+-           (labeledFormula
++           (sequence
+-             label:(atom
++             stmts:[
+-               rep:"lclock.spec.asrt5"
++               (assumeAction
+-               terms:[]
++                 elems:[
+-               aSort:nil)
++                   (labeledFormula
+-             formula:(And
++                     label:(atom
+-               terms:[
++                       rep:"lclock.spec.asrt5"
+-                 (Apply
++                       terms:[]
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 734726, counting from 0.
 ~~~
