@@ -1195,14 +1195,24 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     symprops = defaultdict(list)
     symwaits = defaultdict(list)
     symwhens = defaultdict(list)
+    _ti = 0
     for vs, t, env in sorted(l2s_gs, key=lambda x: x[1].canon()):
         prop = l2s_g(vs,t,env)
         envprops[env].append(prop)
+        _si = 0
         for sym in ilu.symbols_ilu_ast(t):
+            if __debug__: xtracer.trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s" % (_ti, _si, sym, t.canon()))
             symprops[sym].append(prop)
+            _si += 1
+        _ti += 1
+    _wi = 0
     for when in sorted(l2s_whens, key=lambda w: w.canon()):
+        _si = 0
         for sym in ilu.symbols_ilu_ast(when.body):
+            if __debug__: xtracer.trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, when.body.canon()))
             symwhens[sym].append(when)
+            _si += 1
+        _wi += 1
     for _wi, (vs, t) in enumerate(to_wait):
         wait = l2s_w(vs,t)
         _syms = list(ilu.symbols_ilu_ast(t))
