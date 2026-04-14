@@ -2605,9 +2605,9 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-726027  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
-        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+726030  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=Const HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=Const HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
 
-726028  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Atom leaf
-        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+726031  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const app HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
 ~~~
