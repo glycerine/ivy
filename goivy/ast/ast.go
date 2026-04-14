@@ -1582,7 +1582,7 @@ func (cfg *AstConfig) NewCallAction(args ...Node) *CallAction {
 	cfg.IuCfg.CallActionCtr++
 	ca := &CallAction{Elems: args, UniqueID: id}
 	ca.Cfg = cfg
-	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr)
+	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d\n ast.AstConfig.NewCallAction()", id, cfg.IuCfg.CallActionCtr)
 	return ca
 }
 
