@@ -682,7 +682,7 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 		t.Errorf("expected at least 2 branches, got %d", len(extBranches))
 	}
 
-	extAct := actions.NewEnvAction(extBranches...)
+	extAct := actions.NewEnvActionOn(actions.NewActionsConfig(),extBranches...)
 	if extAct == nil {
 		t.Fatal("NewEnvAction returned nil")
 	}

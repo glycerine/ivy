@@ -348,7 +348,7 @@ func GetBigAction(ag *art.AnalysisGraph) actions.Action {
 	if len(branches) == 0 {
 		return actions.NewSequence()
 	}
-	return actions.NewEnvAction(branches...)
+	return actions.NewEnvActionOn(ag.Domain.Cfg.ActCfg, branches...)
 }
 
 // -----------------------------------------------------------------------

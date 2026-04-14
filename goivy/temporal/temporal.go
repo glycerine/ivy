@@ -374,7 +374,7 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 
 // EnvAction creates an environment action from a list of action bindings.
 // This represents the environment nondeterministically calling one of the actions.
-func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
+func EnvAction(cfg *actions.ActionsConfig, bindings []*ActionTermBinding) *actions.EnvAction {
 	var branches []lg.Expr
 	for _, b := range bindings {
 		name := b.Name
@@ -391,7 +391,7 @@ func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
 		ract.SetLabel(name) // Python: ract.label = name (singular)
 		branches = append(branches, ract)
 	}
-	return actions.NewEnvAction(branches...)
+	return actions.NewEnvActionOn(cfg, branches...)
 }
 
 // TemporalModels represents M |= phi, a temporal proof goal.

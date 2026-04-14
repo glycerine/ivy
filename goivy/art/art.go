@@ -1539,7 +1539,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 			// Step 2: env_action(action, 'init') — wrap in EnvAction with label
 			retAct := &actions.ReturnAction{}
 			innerSeq := actions.NewSequence(seq, retAct)
-			env := actions.NewEnvAction(innerSeq)
+			env := actions.NewEnvActionOn(mod.Cfg.ActCfg, innerSeq)
 			env.SetLabels([]string{"init"})
 
 			// Step 3: action_app(action, s) — build expression

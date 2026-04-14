@@ -397,7 +397,7 @@ func Vcgen(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNo
 
 	// Python: goal2 = triple_to_goal(proof.lineno, 'consecution', tm.env_action(model.bindings),
 	//                                precond=model.invars+model.asms, postcond=model.invars)
-	envAct := temporal.EnvAction(model.Bindings)
+	envAct := temporal.EnvAction(pc.GetModule().Cfg.ActCfg, model.Bindings)
 	preconds := make([]*ast.LabeledFormula, 0, len(model.Invars)+len(model.Asms))
 	preconds = append(preconds, model.Invars...)
 	preconds = append(preconds, model.Asms...)

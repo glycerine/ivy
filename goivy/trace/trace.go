@@ -539,7 +539,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 	if len(branches) == 0 {
 		return nil
 	}
-	return actions.NewEnvAction(branches...)
+	return actions.NewEnvActionOn(mod.Cfg.ActCfg, branches...)
 }
 
 // CheckFinalCond checks a final condition against an analysis graph state.

@@ -159,7 +159,7 @@ func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
-	env := NewEnvAction(NewAssumeAction(p), NewAssumeAction(q))
+	env := NewEnvActionOn(NewActionsConfig(),NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	ctx.ActCfg.Determinize = false
 	u := env.IntUpdateEnv(ctx)
@@ -176,7 +176,7 @@ func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
 
 	b0 := NewAssignAction(x, y)
 	b1 := NewAssignAction(x, z)
-	env := NewEnvAction(b0, b1)
+	env := NewEnvActionOn(NewActionsConfig(),b0, b1)
 	ctx := testCtx()
 	ctx.ActCfg.Determinize = true
 	u := env.IntUpdateEnv(ctx)
@@ -203,7 +203,7 @@ func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 	r := lg.NewConst("r", lg.Boolean)
-	env := NewEnvAction(
+	env := NewEnvActionOn(NewActionsConfig(),
 		NewAssumeAction(p),
 		NewAssumeAction(q),
 		NewAssumeAction(r),
@@ -578,7 +578,7 @@ func TestDeterminize_PolarityDifference(t *testing.T) {
 	chTR := chUpdate.TR.String()
 
 	// EnvAction
-	env := NewEnvAction(b0, b1)
+	env := NewEnvActionOn(NewActionsConfig(),b0, b1)
 	envUpdate := env.IntUpdateEnv(ctx)
 	envTR := envUpdate.TR.String()
 

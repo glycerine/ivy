@@ -218,7 +218,7 @@ func EnvAction(mod *module.Module) actions.Action {
 	if len(branches) == 0 {
 		return actions.NewSequence()
 	}
-	return actions.NewEnvAction(branches...)
+	return actions.NewEnvActionOn(mod.Cfg.ActCfg, branches...)
 }
 
 // BuildConjecture combines a module's conjectures into a single Clauses.

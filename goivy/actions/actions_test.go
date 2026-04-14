@@ -208,7 +208,7 @@ func TestThunkAction(t *testing.T) {
 }
 
 func TestEnvAction(t *testing.T) {
-	a := NewEnvAction(NewSequence())
+	a := NewEnvActionOn(NewActionsConfig(),NewSequence())
 	if a.Name() != "env" {
 		t.Errorf("Name() = %q", a.Name())
 	}

@@ -1065,11 +1065,9 @@ type EnvAction struct {
 	ChoiceAction
 }
 
-// NewEnvAction creates an EnvAction without config (for non-compiler callers).
-func NewEnvAction(branches ...lg.Expr) *EnvAction {
-	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches)}}
-}
-
+// NewEnvActionOn creates an EnvAction with a proper UniqueID from the
+// shared ChoiceActionCtr, matching Python's choice_action_ctr global.
+// All production callers must use this constructor.
 func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
@@ -1080,7 +1078,12 @@ func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
 
 func (a *EnvAction) Name() string { return "env" }
 func (a *EnvAction) ActionClone(args []lg.Expr) Action {
-	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}}
+	if a.ActCfg != nil {
+		r := NewEnvActionOn(a.ActCfg, args...)
+		r.ActionBase = a.ActionBase
+		return r
+	}
+	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}}
 }
 
 // EnvAction always returns empty formal params/returns.
@@ -2021,7 +2024,7 @@ type Updater interface {
 // BuildEnvAction constructs an environment (external) action for the given action name.
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
-func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
+func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
 	xtracer.Trace("actions.env_action ENTER")
 	var actNames []string
 	if actName == "" {
@@ -2065,7 +2068,11 @@ func BuildEnvAction(publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMa
 	}
 
 	xtracer.Trace("actions.env_action post loop")
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
 	env := &EnvAction{}
+	env.UniqueID = id
+	env.ActCfg = cfg
 	env.Branches = branches
 	if label != "" {
 		env.Label = label // Python: action.label = label (singular)

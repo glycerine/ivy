@@ -376,7 +376,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 		for _, actname := range actionOrder {
 			// Build the env_action for this external action
-			action := actions.BuildEnvAction(mod.PublicActions, mod.Actions, actname, "")
+			action := actions.BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, actname, "")
 			// Python: print("        {}{}".format(pretty_lineno(action), actname))
 			actionLineno := "(internal) "
 			if action != nil {
@@ -581,7 +581,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 							}
 							tried[root+":"+linenoKey] = true
 							xtracer.Trace("check.guarantee_loop pre BuildEnvAction")
-							envAction := actions.BuildEnvAction(mod.PublicActions, mod.Actions, root, "")
+							envAction := actions.BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, root, "")
 							xtracer.Trace("check.guarantee_loop post BuildEnvAction")
 							ag := art.NewAnalysisGraph(mod)
 							xtracer.Trace("check.guarantee_loop post NewAnalysisGraph")

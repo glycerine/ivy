@@ -52,7 +52,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		}
 	}
 
-	extAct := actions.NewEnvAction(extActs...)
+	extAct := actions.NewEnvActionOn(mod.Cfg.ActCfg, extActs...)
 
 	initVar := lg.NewConst("__init", lg.Boolean)
 

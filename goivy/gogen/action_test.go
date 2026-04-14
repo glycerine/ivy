@@ -305,7 +305,7 @@ func TestEmitSet(t *testing.T) {
 
 func TestEmitEnv(t *testing.T) {
 	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewEnvAction(b1)
+	act := actions.NewEnvActionOn(actions.NewActionsConfig(), b1)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment from env, got: %s", out)
