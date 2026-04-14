@@ -113,6 +113,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		return res
 	}
 	_l2sWhen := func(name string, vs []*lg.Variable, t lg.Expr) *lg.NamedBinder {
+		fmt.Printf("l2s._l2sWhen CALLED name=%s nVars=%d HASH canon=%s\n", name, len(vs), t.Canon())
 		if name == "first" {
 			res := l2sWhen("next", vs, t, cfg.ProofLabel)
 			cfg.L2sWhensSet[res.String()] = res

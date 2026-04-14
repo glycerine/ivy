@@ -811,6 +811,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         l2s_gs.add((vs,t,env))
         return res
     def _l2s_when(name,vs,t):
+        print("l2s._l2sWhen CALLED name=%s nVars=%d HASH canon=%s" % (name, len(vs), t.canon()))
         if name == 'first':
             res = l2s_when('next',tuple(vs),t)
             l2s_whens.add(res)
@@ -1208,6 +1209,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         for sym in ilu.symbols_ilu_ast(when.body):
             _symwhens_trace.append((sym, when))
             symwhens[sym].append(when)
+            if __debug__: print("python ivy_l2s.py:1211 symwhens adding sym='%s' when='%s'" % (sym, when))
     for _wi, (vs, t) in enumerate(to_wait):
         wait = l2s_w(vs,t)
         _syms = list(ilu.symbols_ilu_ast(t))
