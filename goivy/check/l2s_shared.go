@@ -793,30 +793,32 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 			}
 		}
 	}
+	// Python ivy_l2s.py:179: _all_defns = list(prover.definitions.values()) + prem_defns
+	// Merge module definitions + premise definitions into a single list with
+	// unified counter and modDefn label, matching Python's trace output.
+	var allDefnExprs []lg.Expr
 	if mod != nil {
-		for di, defn := range mod.Definitions {
+		for _, defn := range mod.Definitions {
 			if e, ok := defn.Formula.(lg.Expr); ok {
 				// Python reads from prover.definitions which were normalized
 				// via normalize_goal (ivy_proof.py:53). Match that here.
-				e = il.NormalizeOps(e)
-				xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
-				addEq(e)
+				allDefnExprs = append(allDefnExprs, il.NormalizeOps(e))
 			}
 		}
 	}
 	// H12: include user-supplied definition premises from the goal.
-	for pi, p := range goalPrems {
+	for _, p := range goalPrems {
 		lf, ok := p.(*ast.LabeledFormula)
 		if !ok || !lf.IsDefinition {
 			continue
 		}
 		if e, ok := lf.Formula.(lg.Expr); ok {
-			// NormalizeOps is idempotent; premDefns from CompileDefinitionGoalVocab
-			// are already normalized, but apply anyway for consistency.
-			e = il.NormalizeOps(e)
-			xtracer.Trace("l2s.BuildDefnDeps premDefn[%d] HASH canon=%s", pi, e.Canon())
-			addEq(e)
+			allDefnExprs = append(allDefnExprs, il.NormalizeOps(e))
 		}
+	}
+	for di, e := range allDefnExprs {
+		xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
+		addEq(e)
 	}
 	// Trace the resulting defnDeps map
 	{
