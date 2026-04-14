@@ -722,7 +722,7 @@ type CallAction struct {
 func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
 	id := cfg.IuCfg.CallActionCtr
 	cfg.IuCfg.CallActionCtr++
-	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d\n actions.NewCallActionOn()", id, cfg.IuCfg.CallActionCtr)
+	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr)
 	c := &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
 	c.ActCfg = cfg
 	return c

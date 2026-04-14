@@ -12,6 +12,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
@@ -529,7 +530,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 					}
 					if xtracer.Enabled {
 						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%T name=%s inSP=%v inSWh=%v inSWa=%v",
-							ri, r, k, len(symprops[k]) > 0, len(symwhens[k]) > 0, len(symwaits[k]) > 0)
+							ri, iu.ShortTypeName(r), r.Canon(), len(symprops[k]) > 0, len(symwhens[k]) > 0, len(symwaits[k]) > 0)
 					}
 					if k != "" && (len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0) {
 						monitored = true
