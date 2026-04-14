@@ -189,6 +189,10 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 
 	// In full mode, add all state variables to 'to_save'
 	if full {
+		// Match Python defaultdict auto-vivification: bracket-read creates entry
+		if _, ok := cfg.NamedBindersConjs["l2s_s"]; !ok {
+			cfg.NamedBindersConjs["l2s_s"] = nil
+		}
 		seenSave := make(map[string]bool)
 		for _, vb := range cfg.NamedBindersConjs["l2s_s"] {
 			seenSave[fmt.Sprint(vb.Body)] = true
@@ -220,6 +224,10 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 			}
 		}
 
+		// Match Python defaultdict auto-vivification
+		if _, ok := cfg.NamedBindersConjs["l2s_w"]; !ok {
+			cfg.NamedBindersConjs["l2s_w"] = nil
+		}
 		seenWait := make(map[string]bool)
 		for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
 			seenWait[fmt.Sprint(vb.Body)] = true
@@ -236,6 +244,10 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 				}
 			}
 			if b.Name == "l2s_init" {
+				// Match Python defaultdict auto-vivification
+				if _, ok := cfg.NamedBindersConjs["l2s_init"]; !ok {
+					cfg.NamedBindersConjs["l2s_init"] = nil
+				}
 				cfg.NamedBindersConjs["l2s_init"] = append(cfg.NamedBindersConjs["l2s_init"],
 					VarBodyPair{b.Variables, b.Body})
 			}
@@ -243,6 +255,13 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		cfg.NamedBindersConjs["l2s_init"] = dedupeVarBodyPairs(cfg.NamedBindersConjs["l2s_init"])
 	}
 
+	// Match Python defaultdict auto-vivification for non-full mode
+	if _, ok := cfg.NamedBindersConjs["l2s_w"]; !ok {
+		cfg.NamedBindersConjs["l2s_w"] = nil
+	}
+	if _, ok := cfg.NamedBindersConjs["l2s_s"]; !ok {
+		cfg.NamedBindersConjs["l2s_s"] = nil
+	}
 	cfg.ToWait = cfg.NamedBindersConjs["l2s_w"]
 	cfg.ToSave = cfg.NamedBindersConjs["l2s_s"]
 	for i, vb := range cfg.ToWait {
@@ -728,6 +747,10 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	}
 
 	// Ensure _old_l2s_g is consistent with l2s_g
+	// Match Python defaultdict auto-vivification
+	if _, ok := namedBinders.Get2("l2s_g"); !ok {
+		namedBinders.Set("l2s_g", nil)
+	}
 	l2sGBinders, _ := namedBinders.Get2("l2s_g")
 	var oldL2sG []*lg.NamedBinder
 	for _, b := range l2sGBinders {

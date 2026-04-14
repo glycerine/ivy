@@ -480,6 +480,10 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 		}
 		for _, xr := range x.Rows {
 			key := xr[xc].String()
+			// Match Python defaultdict auto-vivification
+			if _, ok := index[key]; !ok {
+				index[key] = nil
+			}
 			for _, yi := range index[key] {
 				yr := y.Rows[yi]
 				if allMatch(xr, yr, corr) {

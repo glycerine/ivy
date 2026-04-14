@@ -114,6 +114,10 @@ func MatchSchemaPrems(
 	case *lg.Variable:
 		// Match to constants of the appropriate sort
 		sortKey := p.VSort.String()
+		// Match Python defaultdict auto-vivification
+		if _, ok := sortConstants[sortKey]; !ok {
+			sortConstants[sortKey] = nil
+		}
 		consts := sortConstants[sortKey]
 		for _, c := range consts {
 			match.Push()
@@ -138,6 +142,10 @@ func MatchSchemaPrems(
 			sortKey := ""
 			if p.CSort != nil {
 				sortKey = p.CSort.String()
+			}
+			// Match Python defaultdict auto-vivification
+			if _, ok := sortConstants[sortKey]; !ok {
+				sortConstants[sortKey] = nil
 			}
 			consts := sortConstants[sortKey]
 			for _, c := range consts {

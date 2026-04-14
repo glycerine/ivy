@@ -416,7 +416,11 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	if ivy == nil {
 		return nil
 	}
-	if entries, ok := ivy.defined[name]; ok && len(entries) > 0 {
+	// Match Python defaultdict auto-vivification
+	if _, ok := ivy.defined[name]; !ok {
+		ivy.defined[name] = nil
+	}
+	if entries := ivy.defined[name]; len(entries) > 0 {
 		return entries[0].ObjectDefined
 	}
 	return nil
@@ -444,7 +448,11 @@ func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]def
 	if ivy.defined == nil {
 		return
 	}
-	if entries, ok := ivy.defined[name]; ok {
+	// Match Python defaultdict auto-vivification
+	if _, ok := ivy.defined[name]; !ok {
+		ivy.defined[name] = nil
+	}
+	if entries := ivy.defined[name]; len(entries) > 0 {
 		for i := range entries {
 			entries[i].ObjectDefined = moduleDefined
 		}

@@ -217,6 +217,10 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Const) {
 	// Python: rmap = {renamed_sym: sym}
 	// Python: for fmla in self.eqs[renamed_sym]: rfmla = lut.rename_ast(fmla, rmap)
 	renamedKey := lg.Key(renamedSym)
+	// Match Python defaultdict auto-vivification
+	if _, ok := h.Eqs[renamedKey]; !ok {
+		h.Eqs[renamedKey] = nil
+	}
 	for _, fmla := range h.Eqs[renamedKey] {
 		// Python: rfmla = lut.rename_ast(fmla, rmap); lhs,rhs = rfmla.args
 		rfmla := module.RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(renamedSym): sym})

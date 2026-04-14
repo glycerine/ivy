@@ -461,6 +461,10 @@ func (t *Trace) Eval(cond lg.Expr) (bool, error) {
 
 // GetSymEqs returns the equations for a symbol in the model.
 func (t *Trace) GetSymEqs(sym string) []lg.Expr {
+	// Match Python defaultdict auto-vivification
+	if _, ok := t.Eqs[sym]; !ok {
+		t.Eqs[sym] = nil
+	}
 	return t.Eqs[sym]
 }
 

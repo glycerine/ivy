@@ -402,6 +402,10 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 			continue
 		}
 		for _, callee := range action.IterCalls() {
+			// Match Python defaultdict(set) auto-vivification
+			if checkedContext[callee] == nil {
+				checkedContext[callee] = make(map[string]bool)
+			}
 			// Check assertions
 			if !(checked[callee] || !HasAssertions(mod, callee) ||
 				(delegates[callee] && checkedContext[callee] != nil && checkedContext[callee][actname])) {
@@ -428,6 +432,13 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 			if mixins, ok := mod.Mixins.Get2(callee); ok {
 				for _, mixin := range mixins {
 					mixed := mixin.Mixer()
+					// Match Python defaultdict(set) auto-vivification
+					if checkedContext[mixed] == nil {
+						checkedContext[mixed] = make(map[string]bool)
+					}
+					if verifiedContext[mixed] == nil {
+						verifiedContext[mixed] = make(map[string]bool)
+					}
 
 					// Check requires on mixin
 					if HasRequires(mod, mixed) {
@@ -490,6 +501,10 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 		if mixins, ok := mod.Mixins.Get2(callee); ok {
 			for _, mixin := range mixins {
 				mixed := mixin.Mixer()
+				// Match Python defaultdict(set) auto-vivification
+				if checkedContext[mixed] == nil {
+					checkedContext[mixed] = make(map[string]bool)
+				}
 				if HasAssertions(mod, mixed) && mixin.IsAfter() {
 					if checkedContext[mixed] == nil || !checkedContext[mixed][callee] {
 						missing = append(missing, IsolateError{

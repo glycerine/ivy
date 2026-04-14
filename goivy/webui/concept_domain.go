@@ -848,8 +848,17 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact 
 				if ec == nil || len(ec.Sorts()) < 2 {
 					continue
 				}
-				c0 := nodesBySortName[ec.Sorts()[0].String()]
-				c1 := nodesBySortName[ec.Sorts()[1].String()]
+				// Match Python defaultdict auto-vivification
+				s0 := ec.Sorts()[0].String()
+				if _, ok := nodesBySortName[s0]; !ok {
+					nodesBySortName[s0] = nil
+				}
+				s1 := ec.Sorts()[1].String()
+				if _, ok := nodesBySortName[s1]; !ok {
+					nodesBySortName[s1] = nil
+				}
+				c0 := nodesBySortName[s0]
+				c1 := nodesBySortName[s1]
 				d.GetCombFacts("edge_info", "edge_info", [][]string{{e}, c0, c1}, &facts)
 			}
 		} else if combinationName == "node_label" || combinationName == "enum" {
@@ -867,7 +876,12 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact 
 					if lc == nil || len(lc.Sorts()) < 1 {
 						continue
 					}
-					c0 := nodesBySortName[lc.Sorts()[0].String()]
+					// Match Python defaultdict auto-vivification
+					lcS0 := lc.Sorts()[0].String()
+					if _, ok := nodesBySortName[lcS0]; !ok {
+						nodesBySortName[lcS0] = nil
+					}
+					c0 := nodesBySortName[lcS0]
 					d.GetCombFacts("node_label", "node_label", [][]string{c0, {cname}}, &facts)
 				}
 			}

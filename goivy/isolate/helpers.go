@@ -554,6 +554,10 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 		name := lfLabelName(prop)
 		var ds []string
 		for _, anc := range specAncestors(name, mod.Cfg.IuCfg.ComposeCharacter) {
+			// Match Python defaultdict auto-vivification
+			if _, ok := depmap[anc]; !ok {
+				depmap[anc] = nil
+			}
 			for _, d := range depmap[anc] {
 				if objs[d] {
 					ds = append(ds, d)

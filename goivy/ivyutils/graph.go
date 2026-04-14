@@ -191,6 +191,10 @@ func FindCycle[K comparable](arcs []Arc[K]) []Arc[K] {
 			return true
 		}
 		stack[node] = struct{}{}
+		// Match Python defaultdict auto-vivification
+		if _, ok := adj[node]; !ok {
+			adj[node] = nil
+		}
 		for _, arc := range adj[node] {
 			if dfs(arc.To) {
 				path = append(path, arc)

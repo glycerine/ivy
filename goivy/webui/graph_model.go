@@ -673,6 +673,10 @@ func GetTransitiveReduction(checks *DisplayCheckboxes, abstractValue map[string]
 	}
 	for _, e := range nonReflexive {
 		key := [2]string{e[0], e[2]}
+		// Match Python defaultdict auto-vivification
+		if _, ok := bySource[key]; !ok {
+			bySource[key] = nil
+		}
 		for _, z := range bySource[key] {
 			result[[3]string{e[0], e[1], z}] = true
 		}

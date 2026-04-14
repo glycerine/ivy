@@ -93,6 +93,10 @@ func expandAutoInstances(ivy *ivyAccum) {
 				trefs[tname] = true
 				pref, refparms := extractParametersName(tname)
 				key := autoKey{pref, len(refparms)}
+				// Match Python defaultdict auto-vivification
+				if _, ok := autos[key]; !ok {
+					autos[key] = nil
+				}
 				for _, inst := range autos[key] {
 					var instNameStr string
 					if a, ok := inst.Name.(*ast.Atom); ok {

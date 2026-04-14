@@ -642,6 +642,10 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 				}
 				for _, l := range at.Labels {
 					if !labelSet[l] {
+						// Match Python defaultdict auto-vivification
+						if _, ok := envprops[l]; !ok {
+							envprops[l] = nil
+						}
 						for _, prop := range envprops[l] {
 							eventProps[fmt.Sprint(prop)] = prop
 						}
@@ -657,7 +661,12 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 			labelSet[l] = true
 		}
 		for _, sym := range mods {
-			for _, prop := range symprops[lg.Key(sym)] {
+			// Match Python defaultdict auto-vivification
+			sk := lg.Key(sym)
+			if _, ok := symprops[sk]; !ok {
+				symprops[sk] = nil
+			}
+			for _, prop := range symprops[sk] {
 				env := EnvironStr(prop)
 				if !labelSet[env] {
 					eventProps[fmt.Sprint(prop)] = prop

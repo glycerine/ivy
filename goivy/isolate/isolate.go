@@ -674,6 +674,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				// Add extern precond
 				callee, _ := LookupAction(mod, c)
 				if callee != nil {
+					// Match Python defaultdict auto-vivification
+					if _, ok := exportPreconds[extC]; !ok {
+						exportPreconds[extC] = nil
+					}
 					preconds := exportPreconds[extC]
 					// Extract call arguments from callee Apply node
 					var callArgs []lg.Expr

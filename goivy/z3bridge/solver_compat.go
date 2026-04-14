@@ -399,6 +399,10 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *module.Clauses) map
 		usedNumerals := make(map[string]bool)
 		foom := make(map[string]*lg.Const) // model element → numeral
 
+		// Match Python defaultdict auto-vivification
+		if _, ok := numBySort[sortName]; !ok {
+			numBySort[sortName] = nil
+		}
 		for _, num := range numBySort[sortName] {
 			modelVal := model.EvalConstant(num)
 			if modelVal != nil {
