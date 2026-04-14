@@ -405,9 +405,31 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
 				symwaits[c.Name] = append(symwaits[c.Name], wait)
 				si++
+			} else {
+				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwaits toWait[%d] sym=%s HASH canon= vb.Body=%s\n", sym, wi, sym, vb.Body.Canon())
 			}
 		}
 	}
+
+	// Dump all keys in each map
+	fmt.Printf("l2s.SharedStep7 symprops keys: %v\n", func() []string {
+		keys := make([]string, 0, len(symprops))
+		for k := range symprops { keys = append(keys, k) }
+		sort.Strings(keys)
+		return keys
+	}())
+	fmt.Printf("l2s.SharedStep7 symwhens keys: %v\n", func() []string {
+		keys := make([]string, 0, len(symwhens))
+		for k := range symwhens { keys = append(keys, k) }
+		sort.Strings(keys)
+		return keys
+	}())
+	fmt.Printf("l2s.SharedStep7 symwaits keys: %v\n", func() []string {
+		keys := make([]string, 0, len(symwaits))
+		for k := range symwaits { keys = append(keys, k) }
+		sort.Strings(keys)
+		return keys
+	}())
 
 	lineno := cfg.Lineno
 
@@ -540,11 +562,17 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 							k = c.Name
 						}
 					}
+					// Python uses `sym in symprops` which checks key existence
+					// in a defaultdict — True even for empty-list entries created
+					// by bracket access in the dependency loop above.
+					_, inSP := symprops[k]
+					_, inSWh := symwhens[k]
+					_, inSWa := symwaits[k]
 					if xtracer.Enabled {
 						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s",
-							ri, iu.ShortTypeName(r), k, pyBool(len(symprops[k]) > 0), pyBool(len(symwhens[k]) > 0), pyBool(len(symwaits[k]) > 0))
+							ri, iu.ShortTypeName(r), k, pyBool(inSP), pyBool(inSWh), pyBool(inSWa))
 					}
-					if k != "" && (len(symprops[k]) > 0 || len(symwhens[k]) > 0 || len(symwaits[k]) > 0) {
+					if k != "" && (inSP || inSWh || inSWa) {
 						monitored = true
 						break
 					}
@@ -591,6 +619,19 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			xtracer.Trace("l2s.SharedStep7 instrStmt mods=[%s] deps=[%s]", strings.Join(sortedMods, ","), strings.Join(sortedDeps, ","))
 		}
 		for sym := range allDeps {
+			// Python uses defaultdict(list) for symprops/symwhens/symwaits.
+			// Bracket access on defaultdict creates an empty-list entry for
+			// missing keys. Later, the monitoring check uses `sym in symprops`
+			// which finds these entries. Replicate by touching the Go maps.
+			if _, ok := symprops[sym]; !ok {
+				symprops[sym] = nil
+			}
+			if _, ok := symwhens[sym]; !ok {
+				symwhens[sym] = nil
+			}
+			if _, ok := symwaits[sym]; !ok {
+				symwaits[sym] = nil
+			}
 			for _, prop := range symprops[sym] {
 				eventProps[prop.String()] = prop
 			}
