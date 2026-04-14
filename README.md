@@ -2636,8 +2636,8 @@ with very fine grained xtraces:
        "sys_live"
        "this"
        "tprops"]
-     stmt:(sequence
-       stmts:[
+     stmt:(sequence 
+      stmts:[
 -       (assignAction
 +       (assumeAction
            elems:[
@@ -2661,4 +2661,5 @@ with very fine grained xtraces:
 +                     (Apply
 
     golden_test.go:452: ivy_check and goivy_check differ at line 736175, counting from 0.
+    
 ~~~
