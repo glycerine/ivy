@@ -715,22 +715,26 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
 	namedBinders := collectAllNamedBinders(model)
 	{
-		keys := make([]string, 0, len(namedBinders))
-		for k := range namedBinders {
+		// Sorted trace for diagnostics only
+		keys := make([]string, 0, namedBinders.Len())
+		for k := range namedBinders.All() {
 			keys = append(keys, k)
 		}
 		sort.Strings(keys)
 		for _, k := range keys {
-			xtracer.Trace("l2s.SharedStep11 namedBinders key=%s count=%d", k, len(namedBinders[k]))
+			v, _ := namedBinders.Get2(k)
+			xtracer.Trace("l2s.SharedStep11 namedBinders key=%s count=%d", k, len(v))
 		}
 	}
 
 	// Ensure _old_l2s_g is consistent with l2s_g
-	namedBinders["_old_l2s_g"] = nil
-	for _, b := range namedBinders["l2s_g"] {
-		namedBinders["_old_l2s_g"] = append(namedBinders["_old_l2s_g"],
+	l2sGBinders, _ := namedBinders.Get2("l2s_g")
+	var oldL2sG []*lg.NamedBinder
+	for _, b := range l2sGBinders {
+		oldL2sG = append(oldL2sG,
 			&lg.NamedBinder{Name: "_old_l2s_g", Variables: b.Variables, Environ: b.Environ, Body: b.Body})
 	}
+	namedBinders.Set("_old_l2s_g", oldL2sG)
 
 	subs := make(map[string]lg.Expr)
 	// C5: also build a string-keyed inverse map for the trace hook.
@@ -739,7 +743,9 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	if cfg.Subs == nil {
 		cfg.Subs = make(map[string]string)
 	}
-	for k, binders := range namedBinders {
+	// Python iterates named_binders.items() in insertion order (Python 3.7+).
+	// InsMap preserves insertion order, matching Python's dict.
+	for k, binders := range namedBinders.All() {
 		for i, b := range binders {
 			freshName := fmt.Sprintf("%s_%d", k, i)
 			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())

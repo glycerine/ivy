@@ -947,12 +947,13 @@ func sortedSymbols(sig *il.Sig) []*lg.Const {
 	return result
 }
 
-func collectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.NamedBinder {
-	result := make(map[string][]*lg.NamedBinder)
+func collectAllNamedBinders(model *temporal.NormalProgram) *iu.InsMap[string, []*lg.NamedBinder] {
+	result := iu.NewInsMap[string, []*lg.NamedBinder]()
 
 	collect := func(n lg.Expr) {
 		for _, b := range lu.NamedBindersAst(n) {
-			result[b.Name] = append(result[b.Name], b)
+			existing, _ := result.Get2(b.Name)
+			result.Set(b.Name, append(existing, b))
 		}
 	}
 
@@ -962,13 +963,13 @@ func collectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.Name
 	for _, asm := range model.Asms {
 		collect(asm.Formula.(lg.Expr))
 	}
-	collectActionNBs(model.Init, &result)
+	collectActionNBs(model.Init, result)
 	for _, b := range model.Bindings {
-		collectActionNBs(b.Action.Stmt, &result)
+		collectActionNBs(b.Action.Stmt, result)
 	}
 
 	// Deduplicate and sort within each name
-	for k, v := range result {
+	for k, v := range result.All() {
 		seen := make(map[string]bool)
 		var deduped []*lg.NamedBinder
 		for _, b := range v {
@@ -981,12 +982,12 @@ func collectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.Name
 		sort.Slice(deduped, func(i, j int) bool {
 			return deduped[i].String() < deduped[j].String()
 		})
-		result[k] = deduped
+		result.Set(k, deduped)
 	}
 	return result
 }
 
-func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) {
+func collectActionNBs(act actions.Action, result *iu.InsMap[string, []*lg.NamedBinder]) {
 	if act == nil {
 		return
 	}
@@ -995,7 +996,8 @@ func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) 
 			collectActionNBs(sub, result)
 		} else if a != nil {
 			for _, b := range lu.NamedBindersAst(a) {
-				(*result)[b.Name] = append((*result)[b.Name], b)
+				existing, _ := result.Get2(b.Name)
+				result.Set(b.Name, append(existing, b))
 			}
 		}
 	}
