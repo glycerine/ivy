@@ -950,9 +950,9 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 
 		// Check if recursive (defining symbol appears in RHS)
 		defSym := def.Defines()
-		symsInRHS := il.SymbolsAst(def.Rhs)
+		symsInRHS := il.SymbolsIluAst(def.Rhs)
 		isRecursive := false
-		for _, s := range symsInRHS {
+		for s := range symsInRHS {
 			if defSym != nil && lg.Key(s) == lg.Key(defSym) {
 				isRecursive = true
 				break

@@ -338,8 +338,14 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 	// Collect all symbols used in formulas
 	symbolSet := make(map[string]*lg.Const)
 	for _, f := range fmlas {
-		for _, sym := range il.SymbolsAst(f) {
-			symbolSet[sym.Name] = sym
+		//for _, sym := range il.SymbolsAst(f) { // I suspect this porting choice is buggy.
+		for _, expr := range il.UsedSymbolsAst(f) {
+			switch sym := expr.(type) {
+			case *lg.Const:
+				symbolSet[sym.Name] = sym
+			default:
+				panic(fmt.Sprintf("what should I do for type %T here?", expr))
+			}
 		}
 	}
 

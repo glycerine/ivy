@@ -52,9 +52,9 @@ func TestDivergence9SameNameDifferentSortNotRecursive(t *testing.T) {
 
 	// Check recursion the same way fragment.go does
 	defSym := def.Defines()
-	symsInRHS := il.SymbolsAst(def.Rhs)
+	symsInRHS := il.SymbolsIluAst(def.Rhs)
 	isRecursive := false
-	for _, s := range symsInRHS {
+	for s := range symsInRHS {
 		if defSym != nil && lg.Key(s) == lg.Key(defSym) {
 			isRecursive = true
 			break
@@ -96,9 +96,9 @@ func TestDivergence9SameNameSameSortIsRecursive(t *testing.T) {
 	def := lg.NewDefinition(lhs, rhs)
 
 	defSym := def.Defines()
-	symsInRHS := il.SymbolsAst(def.Rhs)
+	symsInRHS := il.SymbolsIluAst(def.Rhs) // here, not defined.
 	isRecursive := false
-	for _, s := range symsInRHS {
+	for s := range symsInRHS {
 		if defSym != nil && lg.Key(s) == lg.Key(defSym) {
 			isRecursive = true
 			break

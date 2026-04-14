@@ -369,22 +369,29 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	sortedTriples := sortL2sGTriples(cfg.L2sGs)
 	for _, triple := range sortedTriples {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
-		for _, sym := range il.SymbolsAst(triple.Body) {
-			symprops[sym.Name] = append(symprops[sym.Name], prop)
+		for sym := range il.SymbolsIluAst(triple.Body) {
+			if c, ok := sym.(*lg.Const); ok {
+				symprops[c.Name] = append(symprops[c.Name], prop)
+			}
 		}
 	}
 	sortedWhens7 := sortNamedBinderMap(cfg.L2sWhensSet)
 	for _, when := range sortedWhens7 {
-		for _, sym := range il.SymbolsAst(when.Body) {
-			symwhens[sym.Name] = append(symwhens[sym.Name], when)
+		for sym := range il.SymbolsIluAst(when.Body) {
+			if c, ok := sym.(*lg.Const); ok {
+				symwhens[c.Name] = append(symwhens[c.Name], when)
+			}
 		}
 	}
 	for wi, vb := range cfg.ToWait {
 		wait := l2sW(vb.Vars, vb.Body, cfg.ProofLabel)
-		syms := il.SymbolsAst(vb.Body)
-		for si, sym := range syms {
-			xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, sym.Name, vb.Body.Canon())
-			symwaits[sym.Name] = append(symwaits[sym.Name], wait)
+		si := 0
+		for sym := range il.SymbolsIluAst(vb.Body) {
+			if c, ok := sym.(*lg.Const); ok {
+				xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
+				symwaits[c.Name] = append(symwaits[c.Name], wait)
+				si++
+			}
 		}
 	}
 
@@ -741,8 +748,10 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 		if eq, ok := f.(*lg.Eq); ok {
 			if app, ok := eq.T1.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Const); ok {
-					for _, sym := range il.SymbolsAst(eq.T2) {
-						defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
+					for x := range il.SymbolsIluAst(eq.T2) {
+						if sym, ok := x.(*lg.Const); ok {
+							defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
+						}
 					}
 				}
 			}

@@ -1203,13 +1203,13 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         for _si, sym in enumerate(_syms):
             symwaits[sym].append(wait)
     if __debug__: xtracer.trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d" % (len(assume_g_axioms), len(assume_when_axioms), len(assume_init_axioms), len(assume_w_axioms)))
-    # Emit symwaits traces AFTER SharedStep6 EXIT to match Go ordering
-    # (Go constructs symwaits inside SharedStep7_InstrumentActions, after SharedStep6_BuildTableau returns)
+    # Go emits SharedStep7 ENTER from l2s.go:769 BEFORE calling SharedStep7_InstrumentActions,
+    # which is where symwaits traces fire. Match that order here.
+    if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     for _wi, (vs, t) in enumerate(to_wait):
         _syms = list(ilu.symbols_ilu_ast(t))
         for _si, sym in enumerate(_syms):
             if __debug__: xtracer.trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, t.canon()))
-    if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     actions = dict((b.name,b.action) for b in model.bindings)
     # lines = dict(zip(gprops,gproplines))
 

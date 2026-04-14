@@ -269,6 +269,7 @@ func appsAstRec(ast lg.Expr, result *[]lg.Expr) {
 	}
 }
 
+/* deprecated. SymbolsIluAst is the proper port
 // SymbolsAst yields all function/relation symbols used in an AST.
 // Corresponds to Python's symbols_ast in ivy_logic_utils.py.
 func SymbolsAst(ast lg.Expr) []*lg.Const {
@@ -277,6 +278,7 @@ func SymbolsAst(ast lg.Expr) []*lg.Const {
 	symbolsAstRec(ast, &result, seen)
 	return result
 }
+*/
 
 func symbolsAstRec(ast lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
@@ -320,9 +322,11 @@ func QuantifierVars(n lg.Expr) []*lg.Variable {
 
 // GetAppRep returns the "representative" symbol of a node.
 // Matches Python's .rep property (ivy_logic.py:128-129,282-283,295):
-//   Symbol.rep = self
-//   Apply.rep  = self.func
-//   Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
+//
+//	Symbol.rep = self
+//	Apply.rep  = self.func
+//	Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
+//
 // Returns nil if the node has no representative.
 func GetAppRep(n lg.Expr) *lg.Const {
 	switch t := n.(type) {
