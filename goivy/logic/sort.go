@@ -31,8 +31,9 @@ type UninterpretedSort struct {
 	Name string
 }
 
-func (s *UninterpretedSort) String() string { return s.Name }
-func (s *UninterpretedSort) sortSeal()      {}
+func (s *UninterpretedSort) String() string  { return s.Name }
+func (s *UninterpretedSort) IsFinite() bool  { return false }
+func (s *UninterpretedSort) sortSeal()       {}
 
 // --- BooleanSort ---
 
@@ -107,7 +108,8 @@ func (s *EnumeratedSort) String() string {
 	return "{" + strings.Join(s.Extension, ",") + "}"
 }
 
-func (s *EnumeratedSort) sortSeal() {}
+func (s *EnumeratedSort) IsFinite() bool { return true }
+func (s *EnumeratedSort) sortSeal()      {}
 
 // --- RangeSort ---
 
@@ -152,7 +154,8 @@ func (s *RangeSort) String() string {
 	return "{" + s.Lb.BoundString() + " .. " + s.Ub.BoundString() + "}"
 }
 
-func (s *RangeSort) sortSeal() {}
+func (s *RangeSort) IsFinite() bool { return true }
+func (s *RangeSort) sortSeal()      {}
 
 // --- TopSort ---
 
@@ -169,7 +172,8 @@ func NewTopSort() *TopSort {
 
 func (s *TopSort) IsSortVariable() bool { return s.Name != "TopSort" }
 
-func (s *TopSort) String() string { return s.Name }
+func (s *TopSort) String() string  { return s.Name }
+func (s *TopSort) IsFinite() bool  { return false }
 
 func (s *TopSort) sortSeal() {}
 

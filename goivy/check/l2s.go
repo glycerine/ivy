@@ -268,6 +268,11 @@ func isTheoryFiniteSort(name string, m *module.Module) bool {
 	if t, ok := th.(*theory.Theory); ok {
 		return t.Finite
 	}
+	// Python: sort.is_finite() — each sort type has an is_finite method.
+	// EnumeratedSort.is_finite = True, BooleanSort.is_finite = True, etc.
+	if ifc, ok := th.(interface{ IsFinite() bool }); ok {
+		return ifc.IsFinite()
+	}
 	return false
 }
 

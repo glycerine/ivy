@@ -215,7 +215,7 @@ func GetTheorySchemata(name string, sort lg.Sort, version string) string {
 // parsed as a theory. If the interpretation is already a *Theory, it
 // is returned directly. Otherwise, the sort itself is returned.
 func GetSortTheory(sort lg.Sort, interp map[string]interface{}) interface{} {
-	name := sort.String()
+	name := lg.SortName(sort)
 	if v, ok := interp[name]; ok {
 		switch val := v.(type) {
 		case string:
@@ -236,7 +236,7 @@ func GetSortTheory(sort lg.Sort, interp map[string]interface{}) interface{} {
 // HasIntegerInterp checks whether a sort has an integer-like interpretation
 // (int, nat, or range).
 func HasIntegerInterp(sort lg.Sort, interp map[string]interface{}) bool {
-	name := sort.String()
+	name := lg.SortName(sort)
 	v, ok := interp[name]
 	if !ok {
 		return false
