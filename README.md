@@ -2605,9 +2605,11 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-726030  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=Const HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
-        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=Const HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+726105  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=NamedBinder HASH canon=(NamedBinder name:l2s_init environ: vars:[] body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSor ...(truncated long line to 300 bytes)
 
-726031  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const cloned HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
-        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const app HASH canon=(Symbol name:cfabric.rd_fair sort:(BooleanSort))
+        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=NamedBinder HASH canon=(NamedBinder name:l2s_init environ: vars:[] body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSor
+ ...(truncated long line to 300 bytes)
+
+726106  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Const found=True HASH canon=(Symbol name:l2s_init_2 sort:(BooleanSort))
+        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=NamedBinder found=True
 ~~~

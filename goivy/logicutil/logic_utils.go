@@ -1136,7 +1136,7 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", iu.ShortTypeName(rep), rep.Canon())
 			return rep
 		}
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False", iu.ShortTypeName(n))
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False HASH canon=%s", iu.ShortTypeName(n), n.Canon())
 		return n
 	}
 	// python: is_app returns True for *logic.Apply and *logic.Const as
