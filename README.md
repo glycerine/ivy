@@ -2605,12 +2605,12 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-734725  go : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:lclock.next
-        py : XTRACE: l2s.modPass clone binding[0] ENTER name=ext:lclock.next
+736174  go : XTRACE: l2s.modPass clone binding[7] ENTER name=ext:cfabric.step
+        py : XTRACE: l2s.modPass clone binding[7] ENTER name=ext:cfabric.step
 
-734726  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "cf_pio_live" "cf_pio_live" "cmpl_live" "cmpl_live" "dramc_ ...(truncated long line to 300 bytes)
+736175  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:ph sort:(EnumeratedSort name:ph_type ext:[nop_ph,wr_ph,rd_ph,cpl_ph])) (Symbol name:fml:sel_memc sort:(BooleanSort))] outputs:[] labels:["cf_live" "cf_pio_live" "cmpl_live" "dramc_nb2" "e2e" "rfn ...(truncated long line to 300 bytes)
 
-        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:x sort:(UninterpretedSort name:lclock))] outputs:[(Symbol name:fml:y sort:(UninterpretedSort name:lclock))] labels:["cf_live" "cf_live" "cf_pio_live" "cf_pio_live" "cmpl_live" "cmpl_live" "dramc_
+        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=ActionTerm HASH canon=(actionTerm inputs:[(Symbol name:fml:ph sort:(EnumeratedSort name:ph_type ext:[nop_ph,wr_ph,rd_ph,cpl_ph])) (Symbol name:fml:sel_memc sort:(BooleanSort))] outputs:[] labels:["cf_live" "cf_pio_live" "cmpl_live" "dramc_nb2" "e2e" "rfn
  ...(truncated long line to 300 bytes)
 
 
@@ -2618,56 +2618,47 @@ with very fine grained xtraces:
    (actionTerm
      inputs:[
        (Symbol
-         name:fml:x
-         sort:(UninterpretedSort
-           name:lclock))]
-     outputs:[
+         name:fml:ph
+         sort:(EnumeratedSort
+           name:ph_type
+           ext:[nop_ph,wr_ph,rd_ph,cpl_ph]))
        (Symbol
-         name:fml:y
-         sort:(UninterpretedSort
-           name:lclock))]
+         name:fml:sel_memc
+         sort:(BooleanSort))]
+     outputs:[]
      labels:["cf_live"
-       "cf_live"
-       "cf_pio_live"
        "cf_pio_live"
        "cmpl_live"
-       "cmpl_live"
-       "dramc_nb2"
        "dramc_nb2"
        "e2e"
-       "e2e"
-       "rfn"
        "rfn"
        "rfn2"
-       "rfn2"
-       "rfn2.abs.iso"
-       "sys_live"
        "sys_live"
        "this"
-       "tprops"
        "tprops"]
      stmt:(sequence
        stmts:[
--       (assumeAction
-+       (sequence
--         elems:[
-+         stmts:[
--           (labeledFormula
-+           (sequence
--             label:(atom
-+             stmts:[
--               rep:"lclock.spec.asrt5"
-+               (assumeAction
--               terms:[]
-+                 elems:[
--               aSort:nil)
-+                   (labeledFormula
--             formula:(And
-+                     label:(atom
--               terms:[
-+                       rep:"lclock.spec.asrt5"
--                 (Apply
-+                       terms:[]
+-       (assignAction
++       (assumeAction
+           elems:[
+-           (Apply
++           (Implies
+-             func:(Symbol
++             t1:(NamedBinder
+-               name:l2s_d
++               name:l2s_g
+-               sort:(FunctionSort
++               environ:
+-                 sorts:[
++               vars:[]
+-                   (EnumeratedSort
++               body:(Not
+-                     name:ph_type
++                 body:(And
+-                     ext:[nop_ph,wr_ph,rd_ph,cpl_ph])
++                   terms:[
+-                   (BooleanSort)]))
++                     (Apply
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 734726, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 736175, counting from 0.
 ~~~
