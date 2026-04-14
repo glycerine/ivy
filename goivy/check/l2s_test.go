@@ -688,7 +688,7 @@ func TestCollectAllNamedBinders_Empty(t *testing.T) {
 		Init: actions.NewSequence(),
 	}
 	result := collectAllNamedBinders(np)
-	if len(result) != 0 {
-		t.Errorf("expected empty map, got %d entries", len(result))
+	if result.Len() != 0 {
+		t.Errorf("expected empty map, got %d entries", result.Len())
 	}
 }
