@@ -812,6 +812,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     if __debug__: xtracer.trace("l2s.SharedStep1 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))
     mod_pass(replace_temporals_by_l2s_g, "ReplaceTemporals")
 
+    if __debug__: xtracer.trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s" % fmla.canon())
+    ilu._rtr_depth[0] = 0
     not_lf = replace_temporals_by_l2s_g(lg.Not(fmla))
     if __debug__: xtracer.trace("l2s.SharedStep1 notLf HASH canon=%s" % not_lf.canon())
     if debug.get():
@@ -927,6 +929,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s" % (_i, _negated_body.canon() if hasattr(_negated_body,'canon') else str(_negated_body)))
         _pre_replace_input = lg.Not(lg.Globally(proof_label,_negated_body))
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s" % (_i, _pre_replace_input.canon()))
+        ilu._rtr_depth[0] = 0
         _post_replace = replace_temporals_by_l2s_g(_pre_replace_input)
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s" % (_i, _post_replace.canon()))
         reset_w.append(

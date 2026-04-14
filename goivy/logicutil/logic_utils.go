@@ -983,8 +983,15 @@ func ReplaceTemporalsByNamedBinder(n ast.Node, g GloballyBinderFunc, when WhenBi
 	return replaceTemporalsRec(n, g, when)
 }
 
+var rtrDepth int
+
+// ResetRtrDepth resets the replaceTemporalsRec depth counter (for diagnostics).
+func ResetRtrDepth() { rtrDepth = 0 }
+
 func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) ast.Node {
-	xtracer.Trace("ilu.replaceTemporalsRec ENTER type=%s HASH canon=%s", iu.ShortTypeName(n), n.Canon())
+	rtrDepth++
+	myDepth := rtrDepth
+	xtracer.Trace("ilu.replaceTemporalsRec ENTER depth=%d type=%s HASH canon=%s", myDepth, iu.ShortTypeName(n), n.Canon())
 
 	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
@@ -1080,8 +1087,9 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	}
 
 	// Step 2d: Default clone (Python line 346)
+	xtracer.Trace("ilu.replaceTemporalsRec CLONE depth=%d type=%s nChildren=%d", myDepth, iu.ShortTypeName(n), len(newChildren))
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+	xtracer.Trace("ilu.replaceTemporalsRec EXIT depth=%d type=%s cloned HASH canon=%s", myDepth, iu.ShortTypeName(result), result.Canon())
 	return result
 }
 

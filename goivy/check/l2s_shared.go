@@ -133,6 +133,8 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 	}
 
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
+	xtracer.Trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s", cfg.Fmla.Canon())
+	lu.ResetRtrDepth()
 	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla}).(lg.Expr)
 	xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
 
@@ -283,6 +285,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
 		preReplaceInput := &lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
+		lu.ResetRtrDepth()
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(lg.Expr)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
 		conjuncts = append(conjuncts, negGlob)

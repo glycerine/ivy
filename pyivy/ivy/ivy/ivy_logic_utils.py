@@ -292,13 +292,17 @@ def default_globally_binder(vs, t, env):
 def default_when_binder(name,vs,t):
     return lg.NamedBinder('l2s_when'+name,vs,t)
 
+_rtr_depth = [0]
+
 def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when=default_when_binder):
     """
     Replace temporal operators globally and eventually by a named
     binder g. Note that temporal operators inside formulas bound by
     named binders are also altered.
     """
-    if __debug__: xtracer.trace("ilu.replaceTemporalsRec ENTER type=%s HASH canon=%s" % (type(ast).__name__, ast.canon() if hasattr(ast,'canon') else str(ast)))
+    _rtr_depth[0] += 1
+    _my_depth = _rtr_depth[0]
+    if __debug__: xtracer.trace("ilu.replaceTemporalsRec ENTER depth=%d type=%s HASH canon=%s" % (_my_depth, type(ast).__name__, ast.canon() if hasattr(ast,'canon') else str(ast)))
     if type(ast) == lg.Globally:
         if __debug__: xtracer.trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s" % (ast.body.canon() if hasattr(ast.body,'canon') else str(ast.body)))
         body = replace_temporals_by_named_binder_g_ast(ast.body, g, when)
@@ -354,8 +358,9 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
             if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s nb_init_not HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
             return result
         else:
+            if __debug__: xtracer.trace("ilu.replaceTemporalsRec CLONE depth=%d type=%s nChildren=%d" % (_my_depth, type(ast).__name__, len(args)))
             result = ast.clone(args)
-            if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s cloned HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
+            if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT depth=%d type=%s cloned HASH canon=%s" % (_my_depth, type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
             return result
 
 # Reduce subexpressions of the form ($b V1...Vn. t)(s1...sn) where $b is a
