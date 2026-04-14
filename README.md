@@ -2605,41 +2605,9 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-596196  go : XTRACE: ilu.replaceTemporalsRec EXIT type=Not cloned HASH canon=(Not body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(Uninterpr ...(truncated long line to 300 bytes)
+726027  go : XTRACE: ilu.replaceNamedBindersAst ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
+        py : XTRACE: ilu.replaceNamedBindersAst ENTER type=Atom HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 
-        py : XTRACE: ilu.replaceTemporalsRec EXIT type=Not cloned HASH canon=(Not body:(NamedBinder name:l2s_g environ: vars:[] body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(Uninterpr
- ...(truncated long line to 300 bytes)
-
-596197  go : XTRACE: LocalAction.__init__ uniqueID=1359 caller=ast.LocalAction.clone
-        py : XTRACE: LocalAction.__init__ uniqueID=1359 caller=ast.LocalAction.clone
-
-596198  go : XTRACE: LocalAction.__init__ uniqueID=1360 caller=ast.LocalAction.clone
-        py : XTRACE: LocalAction.__init__ uniqueID=1360 caller=ast.LocalAction.clone
-
-596199  go : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(Symbol name:cfabric.rd_fair sort:(BooleanSort)))))
-        py : XTRACE: ilu.replaceTemporalsRec ENTER type=Not HASH canon=(Not body:(Globally environ: body:(Not body:(And terms:[(Apply func:(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:_T sort:(UninterpretedSort name:lclock))]) (Na
- ...(truncated long line to 300 bytes)
-
-
-=== S-expression diff (go '-' vs py '+') ===
-   (Not
-     body:(Globally
-       environ:
-       body:(Not
--       body:(Symbol
--         name:cfabric.rd_fair
--         sort:(BooleanSort)))))
-
-+       body:(And
-+         terms:[
-+           (Apply
-+             func:(Symbol
-+               name:cf_live.issued_memc
-+               sort:(FunctionSort
-+                 sorts:[
-+                   (UninterpretedSort
-+                     name:lclock)
-+                   (BooleanSort)]))
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 596199, counting from 0.
+726028  go : XTRACE: ilu.replaceNamedBindersAst EXIT type=Atom leaf
+        py : XTRACE: ilu.replaceNamedBindersAst EXIT type=Atom cloned HASH canon=(atom rep:"invar228" terms:[] aSort:nil)
 ~~~
