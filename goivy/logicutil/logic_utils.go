@@ -1139,6 +1139,9 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False", iu.ShortTypeName(n))
 		return n
 	}
+	// python: is_app returns True for *logic.Apply and *logic.Const as
+	// well as *logic.NamedBinder with len(term.variables) == 0, but
+	// all NamedBinders are taken care of above. So only 2 cases left:
 	if app, ok := n.(*logic.Apply); ok {
 		newTerms := make([]logic.Expr, len(app.Terms))
 		for i, t := range app.Terms {
@@ -1153,6 +1156,18 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 		}
 		result := logic.MustApply(newFunc, newTerms...)
 		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
+		return result
+	}
+	if cnst, ok := n.(*logic.Const); ok {
+		// Python: is_app(Const) → True, enters is_app branch
+		// subs.get(ast.rep, ast.rep)(*args) with empty args:
+		// Symbol.__call__: returns App(self) if FunctionSort, else self
+		var result ast.Node = cnst
+		if _, ok := cnst.CSort.(*logic.FunctionSort); ok {
+			result = logic.MustApply(cnst)
+		}
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s",
+			iu.ShortTypeName(result), result.Canon())
 		return result
 	}
 	// Python: args = [replace_named_binders_ast(x, subs) for x in ast.args]
