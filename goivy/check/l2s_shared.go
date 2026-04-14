@@ -759,27 +759,36 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 	defnDeps := make(map[string][]string)
 	addEq := func(formula lg.Expr) {
 		f := il.DropUniversals(formula)
-		if eq, ok := f.(*lg.Eq); ok {
-			// Python: defn_deps[sym].append(fml.args[0].rep)
-			// .rep works for both Apply(Const,args) and bare Const.
-			var lhsName string
-			switch lhs := eq.T1.(type) {
-			case *lg.Apply:
-				if c, ok := lhs.Func.(*lg.Const); ok {
-					lhsName = c.Name
-				}
-			case *lg.Const:
-				lhsName = lhs.Name
-			default:
-				panicf("how to handle eq.T1=%T here?; canon=%v", eq.T1, eq.T1.Canon())
+		// Python Definition inherits from Eq, so isinstance(f, Eq) is True
+		// for Definition. Go has separate types, so handle both.
+		var t1, t2 lg.Expr
+		switch ff := f.(type) {
+		case *lg.Eq:
+			t1, t2 = ff.T1, ff.T2
+		case *lg.Definition:
+			t1, t2 = ff.Lhs, ff.Rhs
+		default:
+			return
+		}
+		// Python: defn_deps[sym].append(fml.args[0].rep)
+		// .rep works for both Apply(Const,args) and bare Const.
+		var lhsName string
+		switch lhs := t1.(type) {
+		case *lg.Apply:
+			if c, ok := lhs.Func.(*lg.Const); ok {
+				lhsName = c.Name
 			}
-			if lhsName != "" {
-				for x := range il.SymbolsIluAst(eq.T2) {
-					if sym, ok := x.(*lg.Const); ok {
-						defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
-					} else {
-						panicf("how to handle x=%T here? x=%v", x, x.Canon())
-					}
+		case *lg.Const:
+			lhsName = lhs.Name
+		default:
+			panicf("how to handle t1=%T here?; canon=%v", t1, t1.Canon())
+		}
+		if lhsName != "" {
+			for x := range il.SymbolsIluAst(t2) {
+				if sym, ok := x.(*lg.Const); ok {
+					defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
+				} else {
+					panicf("how to handle x=%T here? x=%v", x, x.Canon())
 				}
 			}
 		}
@@ -787,6 +796,9 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 	if mod != nil {
 		for di, defn := range mod.Definitions {
 			if e, ok := defn.Formula.(lg.Expr); ok {
+				// Python reads from prover.definitions which were normalized
+				// via normalize_goal (ivy_proof.py:53). Match that here.
+				e = il.NormalizeOps(e)
 				xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
 				addEq(e)
 			}
@@ -799,6 +811,9 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 			continue
 		}
 		if e, ok := lf.Formula.(lg.Expr); ok {
+			// NormalizeOps is idempotent; premDefns from CompileDefinitionGoalVocab
+			// are already normalized, but apply anyway for consistency.
+			e = il.NormalizeOps(e)
 			xtracer.Trace("l2s.BuildDefnDeps premDefn[%d] HASH canon=%s", pi, e.Canon())
 			addEq(e)
 		}
