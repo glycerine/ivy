@@ -823,6 +823,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	// Python: self.clone([self.args[0]] + new_returns)
 	newCall := NewCallActionOn(actCfg, a.Callee, newReturns...)
 	newCall.ActionBase = a.ActionBase
+	newCall.AstCallee = a.AstCallee
 
 	seqChildren := []lg.Expr{newCall}
 	for i, actual := range a.ActualReturns {
