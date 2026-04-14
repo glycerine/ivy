@@ -851,9 +851,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     named_binders_conjs = defaultdict(list) # dict mapping names to lists of (vars, body)
     ntprems = [x for x in prems if ipr.goal_is_property(x)
                and not (hasattr(x,'temporal') and x.temporal)]
-    for b in ilu.named_binders_asts(model.invars):
-#        print 'binder: {} {} {}'.format(b.name,b.environ,b.body)
-        named_binders_conjs[b.name].append((b.variables, b.body))
+    for _srcIdx, _src in enumerate(model.invars):
+        for b in ilu.named_binders_asts([_src]):
+            if __debug__: xtracer.trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s" % (b.name, _srcIdx, len(b.variables), b.body.canon() if hasattr(b.body,'canon') else str(b.body)))
+            named_binders_conjs[b.name].append((b.variables, b.body))
             
 
     def list_transform(lst,trns):
@@ -922,7 +923,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     reset_w = []
     for _i, (vs, t) in enumerate(to_wait):
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s" % (_i, len(vs), t.canon()))
-        _pre_replace_input = lg.Not(lg.Globally(proof_label,ilu.negate(t)))
+        _negated_body = ilu.negate(t)
+        if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s" % (_i, _negated_body.canon() if hasattr(_negated_body,'canon') else str(_negated_body)))
+        _pre_replace_input = lg.Not(lg.Globally(proof_label,_negated_body))
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s" % (_i, _pre_replace_input.canon()))
         _post_replace = replace_temporals_by_l2s_g(_pre_replace_input)
         if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s" % (_i, _post_replace.canon()))

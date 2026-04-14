@@ -1021,6 +1021,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	children := n.Args()
 	newChildren := make([]ast.Node, len(children))
 	for i, c := range children {
+		xtracer.Trace("ilu.replaceTemporalsRec CHILD parent=%s childIdx=%d nChildren=%d childType=%s HASH canon=%s", iu.ShortTypeName(n), i, len(children), iu.ShortTypeName(c), c.Canon())
 		newChildren[i] = replaceTemporalsRec(c, g, when)
 	}
 

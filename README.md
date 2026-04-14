@@ -2627,24 +2627,18 @@ with very fine grained xtraces:
        environ:
        body:(Not
 -       body:(Symbol
-+       body:(And
 -         name:cfabric.rd_fair
-+         terms:[
 -         sort:(BooleanSort)))))
+
++       body:(And
++         terms:[
 +           (Apply
-- 
 +             func:(Symbol
-- 
 +               name:cf_live.issued_memc
-- 
 +               sort:(FunctionSort
-- 
 +                 sorts:[
-- 
 +                   (UninterpretedSort
-- 
 +                     name:lclock)
-- 
 +                   (BooleanSort)]))
 
     golden_test.go:452: ivy_check and goivy_check differ at line 596199, counting from 0.

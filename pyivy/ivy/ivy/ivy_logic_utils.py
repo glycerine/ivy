@@ -319,7 +319,10 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
         if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
         return result
     else:
-        args = [replace_temporals_by_named_binder_g_ast(x, g, when) for x in ast.args]
+        args = []
+        for _ci, _cx in enumerate(ast.args):
+            if __debug__: xtracer.trace("ilu.replaceTemporalsRec CHILD parent=%s childIdx=%d nChildren=%d childType=%s HASH canon=%s" % (type(ast).__name__, _ci, len(ast.args), type(_cx).__name__, _cx.canon() if hasattr(_cx,'canon') else str(_cx)))
+            args.append(replace_temporals_by_named_binder_g_ast(_cx, g, when))
         if type(ast) == lg.Apply:
             if type(ast.func) == lg.NamedBinder and ast.func.name == 'l2s_init':
                 body = replace_temporals_by_named_binder_g_ast(ast.func.body, g, when)

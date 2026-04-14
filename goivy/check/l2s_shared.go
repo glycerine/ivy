@@ -160,8 +160,9 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 	for _, pc := range cfg.Postconds {
 		sources = append(sources, pc.Formula.(lg.Expr))
 	}
-	for _, src := range sources {
+	for srcIdx, src := range sources {
 		for _, b := range lu.NamedBindersAst(src) {
+			xtracer.Trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s", b.Name, srcIdx, len(b.Variables), b.Body.Canon())
 			cfg.NamedBindersConjs[b.Name] = append(cfg.NamedBindersConjs[b.Name],
 				VarBodyPair{b.Variables, b.Body})
 		}
@@ -278,7 +279,9 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 			}
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
-		preReplaceInput := &lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: module.Negate(vb.Body)}}
+		negatedBody := module.Negate(vb.Body)
+		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
+		preReplaceInput := &lg.Not{Body: &lg.Globally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(lg.Expr)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
