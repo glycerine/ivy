@@ -394,7 +394,7 @@ def replace_named_binders_ast(ast,subs):
     if __debug__: xtracer.trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s" % (type(ast).__name__, ast.canon() if hasattr(ast,'canon') else str(ast)))
     if is_named_binder(ast):
         result = subs.get(ast,ast)
-        if __debug__: xtracer.trace("ilu.replaceNamedBindersAst EXIT type=%s found=%s HASH canon=%s" % (type(ast).__name__, str(result is not ast), ast.canon()))
+        if __debug__: xtracer.trace("ilu.replaceNamedBindersAst EXIT type=%s found=%s HASH canon=%s" % (type(ast).__name__, str(result is not ast), result.canon()))
         return result
     args = [replace_named_binders_ast(x, subs) for x in ast.args]
     if is_app(ast):
