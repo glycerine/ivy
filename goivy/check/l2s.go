@@ -392,6 +392,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	// C6/C7/M1: process user-supplied tactic_decls.
 	// Python ivy_l2s.py:124-125, 141-153, 175.
+	var defnDeps map[string][]string
 	if tt, ok := pf.(*ast.TacticTactic); ok {
 		// M1: reject tactic_lets (Python line 124-125).
 		if tt.Body != nil {
@@ -422,6 +423,10 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 		}
 
+		// Build definition dependencies (Python ivy_l2s.py:173-191).
+		// Must happen BEFORE compileInvar to match Python trace ordering.
+		defnDeps = BuildDefnDeps(m, proof.GoalPrems(goal)...)
+
 		// C6: compile user invariants and seed `invars` (Python line 192-197).
 		// Python: compiled = compile_with_goal_vocab(inv, goal)
 		//         labeled = label_temporal(compiled, proof_label)
@@ -440,6 +445,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	} else {
 		xtracer.Trace("l2s.l2sTacticInt tacticDecls NONE (pf is not TacticTactic, type=%s)", iu.TypeName(pf))
+		defnDeps = BuildDefnDeps(m, proof.GoalPrems(goal)...)
 	}
 
 	// --- L2S monitor symbols ---
@@ -501,9 +507,6 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	prems = proof.GoalPrems(goal)
 
 	// --- Build shared config ---
-	// H12: include user-supplied definition premises from the goal in defnDeps.
-	defnDeps := BuildDefnDeps(m, prems...)
-
 	cfg := &InstrumentationConfig{
 		ProofLabel:         proofLabel,
 		Lineno:             lineno,
