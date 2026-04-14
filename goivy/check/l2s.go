@@ -754,7 +754,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	frozenToSavedParts = append(frozenToSavedParts, cfg.ResetW...)
 
 	changeMonitorState := []actions.Action{
-		setLineno(actions.NewChoiceAction(
+		setLineno(actions.NewChoiceActionOn(m.Cfg.ActCfg,
 			setLineno(actions.ConcatActions(waitToFrozenParts...), lineno),
 			setLineno(actions.ConcatActions(frozenToSavedParts...), lineno),
 			setLineno(actions.NewSequence(), lineno),
