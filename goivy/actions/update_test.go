@@ -189,7 +189,7 @@ func TestChoiceActionIntUpdate(t *testing.T) {
 	// choice { assume p } or { assume q }
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
-	ch := NewChoiceAction(NewAssumeAction(p), NewAssumeAction(q))
+	ch := NewChoiceActionOn(NewActionsConfig(), NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
 	if len(u.Modified) != 0 {

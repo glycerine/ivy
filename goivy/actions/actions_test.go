@@ -134,7 +134,7 @@ func TestWhileAction(t *testing.T) {
 func TestChoiceAction(t *testing.T) {
 	b1 := NewSequence()
 	b2 := NewSequence()
-	a := NewChoiceAction(b1, b2)
+	a := NewChoiceActionOn(NewActionsConfig(), b1, b2)
 	if a.Name() != "choice" {
 		t.Errorf("Name() = %q", a.Name())
 	}

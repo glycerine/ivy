@@ -670,12 +670,9 @@ type ChoiceAction struct {
 	UniqueID int64
 }
 
-// NewChoiceAction creates a ChoiceAction without config (for non-compiler callers).
-// Uses UniqueID 0 — acceptable for post-compilation transformations.
-func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
-	return &ChoiceAction{Branches: copyNodes(branches)}
-}
-
+// NewChoiceActionOn creates a ChoiceAction with a proper UniqueID from the
+// shared ChoiceActionCtr, matching Python's choice_action_ctr global.
+// All production callers must use this constructor.
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
