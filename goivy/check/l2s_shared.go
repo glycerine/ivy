@@ -298,7 +298,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
 		var conjuncts []lg.Expr
 		for _, v := range vb.Vars {
-			if !cfg.FiniteSorts[v.VSort.String()] {
+			if !cfg.FiniteSorts[lg.SortName(v.VSort)] {
 				conjuncts = append(conjuncts, mustApply(L2SD(v.VSort), v))
 			}
 		}
@@ -700,7 +700,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 		// Python ivy_l2s.py:1228-1231: add l2s_d for all non-finite-sort inputs.
 		var addParamsToD []actions.Action
 		for _, p := range b.Action.Inputs {
-			if p.CSort != nil && !cfg.FiniteSorts[p.CSort.String()] {
+			if p.CSort != nil && !cfg.FiniteSorts[lg.SortName(p.CSort)] {
 				addParamsToD = append(addParamsToD,
 					setLineno(actions.NewAssignAction(mustApply(L2SD(p.CSort), p), lg.True), cfg.Lineno))
 			}

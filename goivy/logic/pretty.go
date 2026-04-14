@@ -97,7 +97,7 @@ func varUgly(v *Variable, prec int) string {
 	if v.VSort != nil {
 		if _, isTop := v.VSort.(*TopSort); !isTop {
 			// Show sort annotation: "X:sortname"
-			return v.Name + ":" + sortName(v.VSort)
+			return v.Name + ":" + SortName(v.VSort)
 		}
 	}
 	return v.Name
@@ -108,7 +108,7 @@ func varUgly(v *Variable, prec int) string {
 func constUgly(c *Const, prec int) string {
 	if isNumeralName(c.Name) {
 		if _, isTop := c.CSort.(*TopSort); !isTop {
-			return c.Name + ":" + sortName(c.CSort)
+			return c.Name + ":" + SortName(c.CSort)
 		}
 	}
 	return c.Name
@@ -393,8 +393,10 @@ func dropAnnotationsDefault(n Expr, annotatedVars map[string]bool) Expr {
 
 // --- helpers ---
 
-// sortName returns the name of a sort for display purposes.
-func sortName(s Sort) string {
+// SortName returns the name of a sort for display purposes.
+// Matches Python sort.name: returns the sort's declared name
+// (e.g. "ph_type" for EnumeratedSort, "bool" for BooleanSort).
+func SortName(s Sort) string {
 	switch st := s.(type) {
 	case *UninterpretedSort:
 		return st.Name
