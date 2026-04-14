@@ -1247,9 +1247,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         _syms = list(ilu.symbols_ilu_ast(t))
         for _si, sym in enumerate(_syms):
             if __debug__: xtracer.trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, t.canon()))
-    print("l2s.SharedStep7 symprops keys: %s" % sorted(str(k) for k in symprops.keys()))
-    print("l2s.SharedStep7 symwhens keys: %s" % sorted(str(k) for k in symwhens.keys()))
-    print("l2s.SharedStep7 symwaits keys: %s" % sorted(str(k) for k in symwaits.keys()))
+    #print("l2s.SharedStep7 symprops keys: %s" % sorted(str(k) for k in symprops.keys()))
+    #print("l2s.SharedStep7 symwhens keys: %s" % sorted(str(k) for k in symwhens.keys()))
+    #print("l2s.SharedStep7 symwaits keys: %s" % sorted(str(k) for k in symwaits.keys()))
     actions = dict((b.name,b.action) for b in model.bindings)
     # lines = dict(zip(gprops,gproplines))
 
@@ -1263,14 +1263,14 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             if __debug__:
                 for _ri, _sym in enumerate(actual_returns):
                     _name = str(_sym.rep) if hasattr(_sym, 'rep') and _sym.rep is not _sym else str(_sym)
-                    if _name == 'cfabric.t_rd_min':
-                        print("FOUND cfabric.t_rd_min! type=%s repr=%r sort=%s" % (type(_sym).__name__, _sym, _sym.sort if hasattr(_sym,'sort') else '?'))
-                        print("  symprops has %d keys: %s" % (len(symprops), sorted(str(k) for k in symprops.keys())))
-                        print("  symwaits has %d keys: %s" % (len(symwaits), sorted(str(k) for k in symwaits.keys())))
-                        print("  _sym in symprops = %s" % (_sym in symprops))
-                        print("  _sym in symwaits = %s" % (_sym in symwaits))
-                        for _k in symprops:
-                            print("    symprops key: type=%s repr=%r eq=%s hash_eq=%s" % (type(_k).__name__, _k, _k == _sym, hash(_k) == hash(_sym)))
+                    #if _name == 'cfabric.t_rd_min':
+                    #    print("FOUND cfabric.t_rd_min! type=%s repr=%r sort=%s" % (type(_sym).__name__, _sym, _sym.sort if hasattr(_sym,'sort') else '?'))
+                    #    print("  symprops has %d keys: %s" % (len(symprops), sorted(str(k) for k in symprops.keys())))
+                    #    print("  symwaits has %d keys: %s" % (len(symwaits), sorted(str(k) for k in symwaits.keys())))
+                    #    print("  _sym in symprops = %s" % (_sym in symprops))
+                    #    print("  _sym in symwaits = %s" % (_sym in symwaits))
+                    #    for _k in symprops:
+                    #        print("    symprops key: type=%s repr=%r eq=%s hash_eq=%s" % (type(_k).__name__, _k, _k == _sym, hash(_k) == hash(_sym)))
                     xtracer.trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s" % (_ri, type(_sym).__name__, _name, _sym in symprops, _sym in symwhens, _sym in symwaits))
             if any(sym in symprops or sym in symwhens
                    or sym in symwaits for sym in actual_returns):
