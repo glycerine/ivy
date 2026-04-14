@@ -760,12 +760,21 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 	addEq := func(formula lg.Expr) {
 		f := il.DropUniversals(formula)
 		if eq, ok := f.(*lg.Eq); ok {
-			if app, ok := eq.T1.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Const); ok {
-					for x := range il.SymbolsIluAst(eq.T2) {
-						if sym, ok := x.(*lg.Const); ok {
-							defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
-						}
+			// Python: defn_deps[sym].append(fml.args[0].rep)
+			// .rep works for both Apply(Const,args) and bare Const.
+			var lhsName string
+			switch lhs := eq.T1.(type) {
+			case *lg.Apply:
+				if c, ok := lhs.Func.(*lg.Const); ok {
+					lhsName = c.Name
+				}
+			case *lg.Const:
+				lhsName = lhs.Name
+			}
+			if lhsName != "" {
+				for x := range il.SymbolsIluAst(eq.T2) {
+					if sym, ok := x.(*lg.Const); ok {
+						defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
 					}
 				}
 			}
