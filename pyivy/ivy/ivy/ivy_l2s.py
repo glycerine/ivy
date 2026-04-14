@@ -1153,8 +1153,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     def wait_events(waits):
         waits = sorted(waits, key=lambda w: w.canon())
+        if __debug__: xtracer.trace("l2s.SharedStep7 waitEventsFunc nWaits=%d" % len(waits))
         res = []
-        for wait in waits:
+        for _wi, wait in enumerate(waits):
+            if __debug__: xtracer.trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s" % (_wi, wait.canon()))
             vs = wait.variables
             t = wait.body
 
@@ -1195,9 +1197,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     for when in sorted(l2s_whens, key=lambda w: w.canon()):
         for sym in ilu.symbols_ilu_ast(when.body):
             symwhens[sym].append(when)
-    for vs, t in to_wait:
+    for _wi, (vs, t) in enumerate(to_wait):
         wait = l2s_w(vs,t)
-        for sym in ilu.symbols_ilu_ast(t):
+        _syms = list(ilu.symbols_ilu_ast(t))
+        for _si, sym in enumerate(_syms):
+            if __debug__: xtracer.trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s" % (_wi, _si, sym, t.canon()))
             symwaits[sym].append(wait)
     if __debug__: xtracer.trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d" % (len(assume_g_axioms), len(assume_when_axioms), len(assume_init_axioms), len(assume_w_axioms)))
     if __debug__: xtracer.trace("l2s.SharedStep7 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d" % (len(model.invars), len(model.asms), len(model.bindings), len(prems)))

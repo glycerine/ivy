@@ -379,9 +379,11 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			symwhens[sym.Name] = append(symwhens[sym.Name], when)
 		}
 	}
-	for _, vb := range cfg.ToWait {
+	for wi, vb := range cfg.ToWait {
 		wait := l2sW(vb.Vars, vb.Body, cfg.ProofLabel)
-		for _, sym := range il.SymbolsAst(vb.Body) {
+		syms := il.SymbolsAst(vb.Body)
+		for si, sym := range syms {
+			xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, sym.Name, vb.Body.Canon())
 			symwaits[sym.Name] = append(symwaits[sym.Name], wait)
 		}
 	}
@@ -475,7 +477,9 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	waitEventsFunc := func(waits map[string]*lg.NamedBinder) []actions.Action {
 		var res []actions.Action
 		sortedWaits := sortNamedBinderMap(waits)
-		for _, wait := range sortedWaits {
+		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
+		for wi, wait := range sortedWaits {
+			xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, varsToNodes(vs)...)
 			rhs := &lg.And{Terms: []lg.Expr{
