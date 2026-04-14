@@ -758,11 +758,11 @@ func insertionOrderSymbols(mod *module.Module) []*lg.Const {
 func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]string {
 	defnDeps := make(map[string][]string)
 	addEq := func(formula lg.Expr) {
-		f := il.DropUniversals(formula)
+		// DropUniversals already applied by caller (matching Python ivy_l2s.py:181).
 		// Python Definition inherits from Eq, so isinstance(f, Eq) is True
 		// for Definition. Go has separate types, so handle both.
 		var t1, t2 lg.Expr
-		switch ff := f.(type) {
+		switch ff := formula.(type) {
 		case *lg.Eq:
 			t1, t2 = ff.T1, ff.T2
 		case *lg.Definition:
@@ -817,6 +817,8 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 		}
 	}
 	for di, e := range allDefnExprs {
+		// Python ivy_l2s.py:181: fml = ilg.drop_universals(defn.formula)
+		e = il.DropUniversals(e)
 		xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
 		addEq(e)
 	}
