@@ -2605,14 +2605,20 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
+845760  go : XTRACE: l2s.SharedStep11 EXIT nInvars=37 nAsms=113 nBindings=25 nPrems=23
+        py : XTRACE: l2s.SharedStep11 EXIT nInvars=37 nAsms=113 nBindings=25 nPrems=23
+
 845761  go : XTRACE: l2s.SharedStep12 ENTER nInvars=37 nAsms=113 nBindings=25 nPrems=23
         py : XTRACE: l2s.SharedStep12 ENTER nInvars=37 nAsms=113 nBindings=25 nPrems=23
 
 845762  go : XTRACE: ast.LF.__init__ id=2306 counter=2307
         py : XTRACE: ast.LF.__init__ id=2306 counter=2307
 
-845763  go : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=<nil>
+845763  go : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
         py : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 845763, counting from 0.
+845764  go : XTRACE: module.Copy ENTER actions=24 isolates=16
+        py : XTRACE: ast.LF.__init__ id=2307 counter=2308
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 845764, counting from 0.
 ~~~
