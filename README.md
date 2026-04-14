@@ -2605,14 +2605,12 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845765  go : XTRACE: module.Copy ENTER actions=24 isolates=16
-        py : XTRACE: module.Copy ENTER actions=24 isolates=16
-
 845766  go : XTRACE: module.Copy EXIT actions=24 isolates=16
         py : XTRACE: module.Copy EXIT actions=24 isolates=16
 
-845767  go : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
+845767  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
         py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 845767, counting from 0.
+845768  go : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
+        py : XTRACE: check.CheckIsolate ENTER
 ~~~
