@@ -425,16 +425,6 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return fmla
 	}
-	changed := false
-	for i := range args {
-		if newArgs[i] != args[i] {
-			changed = true
-			break
-		}
-	}
-	if !changed {
-		return fmla
-	}
 	return il.CloneNode(fmla, newArgs)
 }
 
@@ -473,20 +463,15 @@ func ApplyMatchSym(match map[lg.NodeKey]lg.Expr, sym lg.Expr) lg.Expr {
 // ApplyMatchFunc applies sort mappings to a constant's sort.
 func ApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Const) *lg.Const {
 	sorts := FuncSorts(c)
-	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
 	for i, s := range sorts {
 		if rep, ok := match[lg.Key(s)]; ok {
 			if rs, ok := rep.(lg.Sort); ok {
 				newSorts[i] = rs
-				changed = true
 				continue
 			}
 		}
 		newSorts[i] = s
-	}
-	if !changed {
-		return c
 	}
 	var newSort lg.Sort
 	if len(newSorts) == 1 {

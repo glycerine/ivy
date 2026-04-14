@@ -102,16 +102,8 @@ func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 		return expr
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
-		nc := q.QE(c, sortConstants)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return expr
+		newChildren[i] = q.QE(c, sortConstants)
 	}
 	return il.CloneNode(expr, newChildren)
 }

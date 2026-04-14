@@ -531,24 +531,14 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
-		changed := false
 		for i, a := range args {
 			if sub, ok := a.(actions.Action); ok {
-				newSub := instrStmt(sub)
-				newArgs[i] = newSub
-				if newSub != sub {
-					changed = true
-				}
+				newArgs[i] = instrStmt(sub)
 			} else {
 				newArgs[i] = a
 			}
 		}
-		var res actions.Action
-		if changed {
-			res = stmt.ActionClone(newArgs)
-		} else {
-			res = stmt
-		}
+		res := stmt.ActionClone(newArgs)
 
 		eventProps := make(map[string]*lg.NamedBinder)
 		eventWhens := make(map[string]*lg.NamedBinder)

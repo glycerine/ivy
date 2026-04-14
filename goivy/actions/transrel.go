@@ -1361,76 +1361,40 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 	case *lg.Apply:
 		newFunc := renameNode(n.Func, rn)
 		newTerms := make([]lg.Expr, len(n.Terms))
-		changed := newFunc != n.Func
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
-			if newTerms[i] != t {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
 		}
 		return lg.MustApply(newFunc, newTerms...)
 	case *lg.And:
 		newTerms := make([]lg.Expr, len(n.Terms))
-		changed := false
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
-			if newTerms[i] != t {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
 		}
 		return &lg.And{Terms: newTerms}
 	case *lg.Or:
 		newTerms := make([]lg.Expr, len(n.Terms))
-		changed := false
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
-			if newTerms[i] != t {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
 		}
 		return &lg.Or{Terms: newTerms}
 	case *lg.Not:
 		newBody := renameNode(n.Body, rn)
-		if newBody == n.Body {
-			return node
-		}
 		return &lg.Not{Body: newBody}
 	case *lg.Implies:
 		newT1 := renameNode(n.T1, rn)
 		newT2 := renameNode(n.T2, rn)
-		if newT1 == n.T1 && newT2 == n.T2 {
-			return node
-		}
 		return &lg.Implies{T1: newT1, T2: newT2}
 	case *lg.Eq:
 		newT1 := renameNode(n.T1, rn)
 		newT2 := renameNode(n.T2, rn)
-		if newT1 == n.T1 && newT2 == n.T2 {
-			return node
-		}
 		return &lg.Eq{T1: newT1, T2: newT2}
 	case *lg.ForAll:
 		newBody := renameNode(n.Body, rn)
-		if newBody == n.Body {
-			return node
-		}
 		vars := make([]*lg.Variable, len(n.Variables))
 		copy(vars, n.Variables)
 		return &lg.ForAll{Variables: vars, Body: newBody}
 	case *lg.Exists:
 		newBody := renameNode(n.Body, rn)
-		if newBody == n.Body {
-			return node
-		}
 		vars := make([]*lg.Variable, len(n.Variables))
 		copy(vars, n.Variables)
 		return &lg.Exists{Variables: vars, Body: newBody}
@@ -1438,9 +1402,6 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 		newCond := renameNode(n.Cond, rn)
 		newThen := renameNode(n.Then, rn)
 		newElse := renameNode(n.Else, rn)
-		if newCond == n.Cond && newThen == n.Then && newElse == n.Else {
-			return node
-		}
 		return &lg.Ite{ISort: n.ISort, Cond: newCond, Then: newThen, Else: newElse}
 	}
 	return node

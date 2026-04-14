@@ -731,19 +731,12 @@ func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error)
 		return n, nil
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		nc, err := substituteNodesRec(c, subs)
 		if err != nil {
 			return nil, err
 		}
 		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return n, nil
 	}
 	return il.CloneNode(n, newChildren), nil
 }

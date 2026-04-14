@@ -621,24 +621,14 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 		// Recur on sub-statements
 		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
-		changed := false
 		for i, a := range args {
 			if sub, ok := a.(actions.Action); ok {
-				newSub := instrStmt(sub, labels)
-				newArgs[i] = newSub
-				if newSub != sub {
-					changed = true
-				}
+				newArgs[i] = instrStmt(sub, labels)
 			} else {
 				newArgs[i] = a
 			}
 		}
-		var res actions.Action
-		if changed {
-			res = stmt.ActionClone(newArgs)
-		} else {
-			res = stmt
-		}
+		res := stmt.ActionClone(newArgs)
 
 		eventProps := make(map[string]lg.Expr) // deduped by string
 

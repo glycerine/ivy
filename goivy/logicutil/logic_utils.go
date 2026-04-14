@@ -438,16 +438,8 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 	// Matches Python ivy_logic_utils.py:398-410 resort_sort
 	if fs, ok := s.(*logic.FunctionSort); ok {
 		allSorts := make([]logic.Sort, len(fs.Sorts))
-		changed := false
 		for i, sub := range fs.Sorts {
-			ns := ResortSort(sub, subs)
-			allSorts[i] = ns
-			if ns != sub {
-				changed = true
-			}
-		}
-		if !changed {
-			return s
+			allSorts[i] = ResortSort(sub, subs)
 		}
 		result, err := logic.NewFunctionSort(allSorts...)
 		if err != nil {
@@ -484,16 +476,8 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 		// Python: resort_symbol(ast.rep)(*args) — must resort the Func too
 		newFunc := ResortAst(t.Func, subs)
 		newTerms := make([]logic.Expr, len(t.Terms))
-		changed := newFunc != t.Func
 		for i, term := range t.Terms {
-			nt := ResortAst(term, subs)
-			newTerms[i] = nt
-			if nt != term {
-				changed = true
-			}
-		}
-		if !changed {
-			return ast
+			newTerms[i] = ResortAst(term, subs)
 		}
 		return logic.MustApply(newFunc, newTerms...)
 	default:
@@ -502,16 +486,8 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 			return ast
 		}
 		newChildren := make([]logic.Expr, len(children))
-		changed := false
 		for i, c := range children {
-			nc := ResortAst(c, subs)
-			newChildren[i] = nc
-			if nc != c {
-				changed = true
-			}
-		}
-		if !changed {
-			return ast
+			newChildren[i] = ResortAst(c, subs)
 		}
 		return cloneNode(ast, newChildren)
 	}
@@ -666,16 +642,8 @@ func substituteByNameRec(ast logic.Expr, subs map[string]logic.Expr) logic.Expr 
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
-	changed := false
 	for i, c := range children {
-		nc := substituteByNameRec(c, subs)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return ast
+		newChildren[i] = substituteByNameRec(c, subs)
 	}
 	return cloneNode(ast, newChildren)
 }
@@ -1149,16 +1117,8 @@ func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
-	changed := false
 	for i, c := range children {
-		nc := reduceNamedBindersRec(c, g)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return ast
+		newChildren[i] = reduceNamedBindersRec(c, g)
 	}
 	return cloneNode(ast, newChildren)
 }
@@ -1201,17 +1161,8 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 		return n
 	}
 	newChildren := make([]ast.Node, len(children))
-	changed := false
 	for i, c := range children {
-		nc := ReplaceNamedBindersAst(c, subs)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s unchanged", iu.ShortTypeName(n))
-		return n
+		newChildren[i] = ReplaceNamedBindersAst(c, subs)
 	}
 	result := n.Clone(newChildren)
 	xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s cloned HASH canon=%s", iu.ShortTypeName(result), result.Canon())
@@ -1234,16 +1185,8 @@ func ExpandNamedBindersAst(ast logic.Expr, fun func(*logic.NamedBinder) logic.Ex
 		return ast
 	}
 	newChildren := make([]logic.Expr, len(children))
-	changed := false
 	for i, c := range children {
-		nc := ExpandNamedBindersAst(c, fun)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return ast
+		newChildren[i] = ExpandNamedBindersAst(c, fun)
 	}
 	return cloneNode(ast, newChildren)
 }
@@ -1786,16 +1729,8 @@ func substituteApplyChildren(t logic.Expr, subs map[logic.NodeKey]SubstituteAppl
 		// including Func, to handle nested Apply whose func is in subs.
 		newFunc := substituteApplyRec(n.Func, subs)
 		newTerms := make([]logic.Expr, len(n.Terms))
-		changed := newFunc != n.Func
 		for i, term := range n.Terms {
-			nt := substituteApplyRec(term, subs)
-			newTerms[i] = nt
-			if nt != term {
-				changed = true
-			}
-		}
-		if !changed {
-			return t
+			newTerms[i] = substituteApplyRec(term, subs)
 		}
 		result, err := logic.NewApply(newFunc, newTerms...)
 		if err != nil {
@@ -1806,9 +1741,6 @@ func substituteApplyChildren(t logic.Expr, subs map[logic.NodeKey]SubstituteAppl
 	case *logic.Eq:
 		t1 := substituteApplyRec(n.T1, subs)
 		t2 := substituteApplyRec(n.T2, subs)
-		if t1 == n.T1 && t2 == n.T2 {
-			return t
-		}
 		return &logic.Eq{T1: t1, T2: t2}
 
 	case *logic.Ite:
@@ -1819,9 +1751,6 @@ func substituteApplyChildren(t logic.Expr, subs map[logic.NodeKey]SubstituteAppl
 
 	case *logic.Not:
 		b := substituteApplyRec(n.Body, subs)
-		if b == n.Body {
-			return t
-		}
 		return &logic.Not{Body: b}
 
 	case *logic.And:

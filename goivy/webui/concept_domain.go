@@ -469,15 +469,8 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 		// Recurse on function and terms.
 		newFunc := substApplyRec(n.Func, varMap)
 		newTerms := make([]logic.Expr, len(n.Terms))
-		changed := newFunc != n.Func
 		for i, t := range n.Terms {
 			newTerms[i] = substApplyRec(t, varMap)
-			if newTerms[i] != t {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
 		}
 		result, err := logic.NewApply(newFunc, newTerms...)
 		if err != nil {
@@ -488,9 +481,6 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 	case *logic.Eq:
 		t1 := substApplyRec(n.T1, varMap)
 		t2 := substApplyRec(n.T2, varMap)
-		if t1 == n.T1 && t2 == n.T2 {
-			return node
-		}
 		result, err := logic.NewEq(t1, t2)
 		if err != nil {
 			return node
@@ -499,25 +489,16 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 
 	case *logic.Not:
 		b := substApplyRec(n.Body, varMap)
-		if b == n.Body {
-			return node
-		}
 		result, _ := logic.NewNot(b)
 		return result
 
 	case *logic.And:
 		terms := substApplySlice(n.Terms, varMap)
-		if terms == nil {
-			return node
-		}
 		result, _ := logic.NewAnd(terms...)
 		return result
 
 	case *logic.Or:
 		terms := substApplySlice(n.Terms, varMap)
-		if terms == nil {
-			return node
-		}
 		result, _ := logic.NewOr(terms...)
 		return result
 
@@ -559,15 +540,8 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 
 func substApplySlice(terms []logic.Expr, varMap map[string]*CDConcept) []logic.Expr {
 	newTerms := make([]logic.Expr, len(terms))
-	changed := false
 	for i, t := range terms {
 		newTerms[i] = substApplyRec(t, varMap)
-		if newTerms[i] != t {
-			changed = true
-		}
-	}
-	if !changed {
-		return nil
 	}
 	return newTerms
 }

@@ -1974,20 +1974,15 @@ func t2pFuncSorts(c *lg.Const) []lg.Sort {
 // Mirrors proof.ApplyMatchFunc.
 func t2pApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Const) *lg.Const {
 	sorts := t2pFuncSorts(c)
-	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
 	for i, s := range sorts {
 		if rep, ok := match[lg.Key(s)]; ok {
 			if rs, ok := rep.(lg.Sort); ok {
 				newSorts[i] = rs
-				changed = true
 				continue
 			}
 		}
 		newSorts[i] = s
-	}
-	if !changed {
-		return c
 	}
 	var newSort lg.Sort
 	if len(newSorts) == 1 {
@@ -2136,15 +2131,8 @@ func t2pApplyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 		return fmla
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		newChildren[i] = t2pApplyMatchAltRec(match, c)
-		if newChildren[i] != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return fmla
 	}
 	return il.CloneNode(fmla, newChildren)
 }

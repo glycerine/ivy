@@ -166,23 +166,13 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 	case *lg.Apply:
 		newFunc := renameASTRec(t.Func, subs)
 		newTerms := make([]lg.Expr, len(t.Terms))
-		changed := newFunc != t.Func
 		for i, arg := range t.Terms {
 			newTerms[i] = renameASTRec(arg, subs)
-			if newTerms[i] != arg {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
 		}
 		return lg.MustApply(newFunc, newTerms...)
 	case *il.Definition:
 		lhs := renameASTRec(t.Lhs, subs)
 		rhs := renameASTRec(t.Rhs, subs)
-		if lhs == t.Lhs && rhs == t.Rhs {
-			return node
-		}
 		return il.NewDefinition(lhs, rhs)
 	}
 
@@ -191,15 +181,8 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 		return node
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		newChildren[i] = renameASTRec(c, subs)
-		if newChildren[i] != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return node
 	}
 	return il.CloneNode(node, newChildren)
 }

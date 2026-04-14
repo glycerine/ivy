@@ -146,16 +146,8 @@ func (pa *PropAbs) MkPropAbs(expr lg.Expr) lg.Expr {
 		return expr
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, child := range children {
-		nc := pa.MkPropAbs(child)
-		newChildren[i] = nc
-		if nc != child {
-			changed = true
-		}
-	}
-	if !changed {
-		return expr
+		newChildren[i] = pa.MkPropAbs(child)
 	}
 	return il.CloneNode(expr, newChildren)
 }

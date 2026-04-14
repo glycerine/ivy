@@ -293,19 +293,14 @@ func CanonizeLiteralUnique(lit *Literal) *Literal {
 // subs maps variable names to replacement terms.
 func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
 	terms := make([]logic.Expr, len(lit.Atom.Args))
-	changed := false
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			if repl, ok := subs[rep(t)]; ok {
 				terms[i] = repl
-				changed = true
 				continue
 			}
 		}
 		terms[i] = t
-	}
-	if !changed {
-		return lit
 	}
 	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
@@ -313,19 +308,14 @@ func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
 // SubstituteConstantsLit substitutes constants by name in a literal.
 func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Expr) *Literal {
 	terms := make([]logic.Expr, len(lit.Atom.Args))
-	changed := false
 	for i, t := range lit.Atom.Args {
 		if isConst(t) {
 			if repl, ok := subs[rep(t)]; ok {
 				terms[i] = repl
-				changed = true
 				continue
 			}
 		}
 		terms[i] = t
-	}
-	if !changed {
-		return lit
 	}
 	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }

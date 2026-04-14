@@ -1055,19 +1055,12 @@ func Desugar(expr lg.Expr, proofLabel string) (lg.Expr, error) {
 		return expr, nil
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		nc, err := Desugar(c, proofLabel)
 		if err != nil {
 			return nil, err
 		}
 		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return expr, nil
 	}
 	return il.CloneNode(expr, newChildren), nil
 }

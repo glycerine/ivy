@@ -98,21 +98,10 @@ func resortSymbolSort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 	if fs, ok := s.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		newDom := make([]lg.Sort, len(dom))
-		changed := false
 		for i, d := range dom {
-			nd := lu.ResortSort(d, subs)
-			newDom[i] = nd
-			if nd != d {
-				changed = true
-			}
+			newDom[i] = lu.ResortSort(d, subs)
 		}
 		rng := lu.ResortSort(fs.Range(), subs)
-		if rng != fs.Range() {
-			changed = true
-		}
-		if !changed {
-			return s
-		}
 		all := make([]lg.Sort, len(newDom)+1)
 		copy(all, newDom)
 		all[len(newDom)] = rng

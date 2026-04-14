@@ -48,16 +48,8 @@ func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
 		return expr
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, child := range children {
-		nc := ElimIte(child, cnsts)
-		newChildren[i] = nc
-		if nc != child {
-			changed = true
-		}
-	}
-	if !changed {
-		return expr
+		newChildren[i] = ElimIte(child, cnsts)
 	}
 	return il.CloneNode(expr, newChildren)
 }
@@ -102,15 +94,8 @@ func ToTableLookup(trans *module.Clauses, invariant lg.Expr) (*module.Clauses, l
 			return expr
 		}
 		nc := make([]lg.Expr, len(children))
-		changed := false
 		for i, c := range children {
 			nc[i] = recur(c)
-			if nc[i] != c {
-				changed = true
-			}
-		}
-		if !changed {
-			return expr
 		}
 		return il.CloneNode(expr, nc)
 	}

@@ -149,17 +149,9 @@ func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 	case *lg.Apply:
 		newFunc := resortASTRec(t.Func, rn)
 		newTerms := make([]lg.Expr, len(t.Terms))
-		changed := newFunc != t.Func
 		for i, arg := range t.Terms {
 			newTerms[i] = resortASTRec(arg, rn)
-			if newTerms[i] != arg {
-				changed = true
-			}
 		}
-		if !changed {
-			return node
-		}
-		// Rebuild the Apply with potentially new sorts.
 		return lg.MustApply(newFunc, newTerms...)
 
 	case *lg.ForAll:
@@ -194,15 +186,8 @@ func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 		return node
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		newChildren[i] = resortASTRec(c, rn)
-		if newChildren[i] != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return node
 	}
 	return il.CloneNode(node, newChildren)
 }
@@ -220,15 +205,8 @@ func ResortSort(s lg.Sort, rn map[lg.NodeKey]*SortRefinement) lg.Sort {
 
 	if fs, ok := s.(*lg.FunctionSort); ok {
 		newSorts := make([]lg.Sort, len(fs.Sorts))
-		changed := false
 		for i, sub := range fs.Sorts {
 			newSorts[i] = ResortSort(sub, rn)
-			if !lg.SortEqual(newSorts[i], sub) {
-				changed = true
-			}
-		}
-		if !changed {
-			return s
 		}
 		result, err := lg.NewFunctionSort(newSorts...)
 		if err != nil {

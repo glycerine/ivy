@@ -47,16 +47,8 @@ func SubstituteAstByName(ast lg.Expr, subs map[string]lg.Expr) lg.Expr {
 		return ast
 	}
 	newArgs := make([]lg.Expr, len(args))
-	changed := false
 	for i, a := range args {
-		na := SubstituteAstByName(a, subs)
-		newArgs[i] = na
-		if na != a {
-			changed = true
-		}
-	}
-	if !changed {
-		return ast
+		newArgs[i] = SubstituteAstByName(a, subs)
 	}
 	return il.CloneNode(ast, newArgs)
 }
@@ -253,21 +245,10 @@ func resortSortBySort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 		dom := fs.Domain()
 		rng := fs.Range()
 		newDom := make([]lg.Sort, len(dom))
-		changed := false
 		for i, d := range dom {
-			nd := resortSortBySort(d, subs)
-			newDom[i] = nd
-			if !lg.SortEqual(nd, d) {
-				changed = true
-			}
+			newDom[i] = resortSortBySort(d, subs)
 		}
 		newRng := resortSortBySort(rng, subs)
-		if !lg.SortEqual(newRng, rng) {
-			changed = true
-		}
-		if !changed {
-			return s
-		}
 		all := append(newDom, newRng)
 		ns, err := lg.NewFunctionSort(all...)
 		if err != nil {

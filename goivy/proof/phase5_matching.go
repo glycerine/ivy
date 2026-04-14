@@ -967,15 +967,8 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 		return fmla
 	}
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
 		newChildren[i] = applyMatchAltRec(match, c, env)
-		if newChildren[i] != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return fmla
 	}
 	return il.CloneNode(fmla, newChildren)
 }
