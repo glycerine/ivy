@@ -777,18 +777,19 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			//             vocab = ivy_proof.goal_vocab(goal)
 			//             with lg.WithSymbols(vocab.symbols):
 			//                 with lg.WithSorts(vocab.sorts):
-			cleanup := fakeMod.TheoryContext()
+			//                     with im.module.theory_context():
 			vocab := proof.GoalVocab(goal)
 			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
 			ws.Enter()
 			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
 			wsorts.Enter()
+			cleanup := fakeMod.TheoryContext()
 			if method != nil {
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					continue
 				}
 				err := method()
@@ -806,9 +807,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(err)
+						cleanup()
 						wsorts.Exit()
 						ws.Exit()
-						cleanup()
 						os.Exit(0)
 					}
 					// Python: if diagnose.get(): gui_art(foo)
@@ -817,9 +818,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
 						}
 					}
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					return err
 				}
 				fmt.Println("PASS")
@@ -831,15 +832,15 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					return err
 				}
 			}
+			cleanup()
 			wsorts.Exit()
 			ws.Exit()
-			cleanup()
 
 		} else {
 			// Non-temporal branch (Python lines 765-776)
@@ -855,18 +856,19 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.IsolateInfo = nil
 
 			// Enter module context and check with vocab
-			cleanup := fakeMod.TheoryContext()
+			// Python: with lg.WithSymbols → with lg.WithSorts → with im.module.theory_context()
 			vocab := proof.GoalVocab(goal)
 			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
 			ws.Enter()
 			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
 			wsorts.Enter()
+			cleanup := fakeMod.TheoryContext()
 			if method != nil {
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					continue
 				}
 				err := method()
@@ -878,9 +880,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(err)
+						cleanup()
 						wsorts.Exit()
 						ws.Exit()
-						cleanup()
 						os.Exit(0)
 					}
 					// Python: if diagnose.get(): gui_art(foo)
@@ -889,9 +891,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
 						}
 					}
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					return err
 				}
 				fmt.Println("PASS")
@@ -903,15 +905,15 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
+					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					cleanup()
 					return err
 				}
 			}
+			cleanup()
 			wsorts.Exit()
 			ws.Exit()
-			cleanup()
 		}
 	}
 	return nil
