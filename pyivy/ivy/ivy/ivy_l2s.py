@@ -764,19 +764,23 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             xtracer.trace("l2s.modPass ENTER transform=%s nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPropPrems=%d" % (name, len(model.invars), len(model.asms), len(model.bindings), len(prems), nPropPrems))
 
         for i, inv in enumerate(model.invars):
+            ilu._rtr_depth[0] = 0
             if __debug__: xtracer.trace("l2s.modPass clone invar[%d] ENTER HASH canon=%s" % (i, inv.canon() if hasattr(inv,'canon') else str(inv)))
             model.invars[i] = transform(inv)
             if __debug__: xtracer.trace("l2s.modPass clone invar[%d] EXIT HASH canon=%s" % (i, model.invars[i].canon() if hasattr(model.invars[i],'canon') else str(model.invars[i])))
         for i, asm in enumerate(model.asms):
+            ilu._rtr_depth[0] = 0
             if __debug__: xtracer.trace("l2s.modPass clone asm[%d] ENTER HASH canon=%s" % (i, asm.canon() if hasattr(asm,'canon') else str(asm)))
             model.asms[i] = transform(asm)
             if __debug__: xtracer.trace("l2s.modPass clone asm[%d] EXIT HASH canon=%s" % (i, model.asms[i].canon() if hasattr(model.asms[i],'canon') else str(model.asms[i])))
         # TODO: what about axioms and properties?
         newb = []
         for i, b in enumerate(model.bindings):
+            ilu._rtr_depth[0] = 0
             if __debug__: xtracer.trace("l2s.modPass clone binding[%d] ENTER name=%s" % (i, b.name if hasattr(b,'name') else ''))
             model.bindings[i] = b.clone([transform(b.action)])
             if __debug__: xtracer.trace("l2s.modPass clone binding[%d] EXIT name=%s" % (i, b.name if hasattr(b,'name') else ''))
+        ilu._rtr_depth[0] = 0
         if __debug__: xtracer.trace("l2s.modPass clone init ENTER")
         model.init = transform(model.init)
         if __debug__: xtracer.trace("l2s.modPass clone init EXIT")
@@ -857,11 +861,12 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         for b in ilu.named_binders_asts([_src]):
             if __debug__: xtracer.trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s" % (b.name, _srcIdx, len(b.variables), b.body.canon() if hasattr(b.body,'canon') else str(b.body)))
             named_binders_conjs[b.name].append((b.variables, b.body))
-            
+
 
     def list_transform(lst,trns):
         for i in range(0,len(lst)):
             if ipr.goal_is_property(lst[i]):
+                ilu._rtr_depth[0] = 0
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] ENTER HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))
                 lst[i] = trns(lst[i])
                 if __debug__: xtracer.trace("l2s.modPass clone prem[%d] EXIT HASH canon=%s" % (i, lst[i].canon() if hasattr(lst[i],'canon') else str(lst[i])))

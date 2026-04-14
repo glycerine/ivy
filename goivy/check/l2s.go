@@ -536,16 +536,19 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems)
 		}
 		for i, inv := range model.Invars {
+			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
 			model.Invars[i] = transform(inv).(*ast.LabeledFormula)
 			xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
 		}
 		for i, asm := range model.Asms {
+			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
 			model.Asms[i] = transform(asm).(*ast.LabeledFormula)
 			xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
 		}
 		for i, b := range model.Bindings {
+			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone binding[%d] ENTER name=%s", i, b.Name)
 			// Python: model.bindings[i] = b.clone([transform(b.action)])
 			newAction := transform(b.Action).(*temporal.ActionTerm)
@@ -553,6 +556,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			xtracer.Trace("l2s.modPass clone binding[%d] EXIT name=%s", i, b.Name)
 		}
 		if model.Init != nil {
+			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone init ENTER")
 			// Python: model.init = transform(model.init)
 			model.Init = transform(model.Init).(actions.Action)
@@ -564,6 +568,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			if !ok || !proof.GoalIsProperty(lf) {
 				continue
 			}
+			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
 			prems[i] = transform(lf).(*ast.LabeledFormula)
 			xtracer.Trace("l2s.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*ast.LabeledFormula).Canon())
