@@ -989,6 +989,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
 	case *logic.Globally:
+		xtracer.Trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s", t.Body.Canon())
 		body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
 		vs, nvs, body := NormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
@@ -999,12 +1000,15 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	case *logic.Eventually:
 		notBody := &logic.Not{Body: t.Body}
 		glob := &logic.Globally{Environ: t.Environ, Body: notBody}
+		xtracer.Trace("ilu.replaceTemporalsRec EVENTUALLY_DESUGAR HASH canon=%s", (&logic.Not{Body: glob}).Canon())
 		result := replaceTemporalsRec(&logic.Not{Body: glob}, g, when)
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 
 	case *logic.WhenOperator:
+		xtracer.Trace("ilu.replaceTemporalsRec WHEN_T1 HASH canon=%s", t.T1.Canon())
 		val := replaceTemporalsRec(t.T1, g, when).(logic.Expr)
+		xtracer.Trace("ilu.replaceTemporalsRec WHEN_T2 HASH canon=%s", t.T2.Canon())
 		cond := replaceTemporalsRec(t.T2, g, when).(logic.Expr)
 		body := &logic.Cond{CSort: val.NodeSort(), T1: cond, T2: val}
 		vs, nvs, nbody := NormalizeFreeVariables(body)
@@ -1030,6 +1034,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		// Python line 324: l2s_init sub-case
 		if nb, ok := t.Func.(*logic.NamedBinder); ok && nb.Name == "l2s_init" {
 			// Python line 325: recurse body AFTER terms (terms already done above)
+			xtracer.Trace("ilu.replaceTemporalsRec L2S_INIT_BODY HASH canon=%s", nb.Body.Canon())
 			body := replaceTemporalsRec(nb.Body, g, when).(logic.Expr)
 			newArgs := nodesToExprs(newChildren)
 			if notBody, ok := body.(*logic.Not); ok {
@@ -1047,6 +1052,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 			return result
 		}
 		// Python line 334: general Apply — recurse func AFTER terms
+		xtracer.Trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s", iu.ShortTypeName(t.Func), t.Func.Canon())
 		newFunc := replaceTemporalsRec(t.Func, g, when).(logic.Expr)
 		newArgs := nodesToExprs(newChildren)
 		result := logic.MustApply(newFunc, newArgs...)

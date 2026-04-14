@@ -300,6 +300,7 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
     """
     if __debug__: xtracer.trace("ilu.replaceTemporalsRec ENTER type=%s HASH canon=%s" % (type(ast).__name__, ast.canon() if hasattr(ast,'canon') else str(ast)))
     if type(ast) == lg.Globally:
+        if __debug__: xtracer.trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s" % (ast.body.canon() if hasattr(ast.body,'canon') else str(ast.body)))
         body = replace_temporals_by_named_binder_g_ast(ast.body, g, when)
         vs, nvs, body = normalize_free_variables(body)
         result = g(nvs,body,ast.environ)(*vs)
@@ -307,11 +308,15 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
         return result
     elif type(ast) == lg.Eventually:
         notbody = lg.Not(ast.body) #if type(ast.body) != lg.Not else ast.body.body
-        result = replace_temporals_by_named_binder_g_ast(lg.Not(lg.Globally(ast.environ,notbody)), g, when)
+        _desugar = lg.Not(lg.Globally(ast.environ,notbody))
+        if __debug__: xtracer.trace("ilu.replaceTemporalsRec EVENTUALLY_DESUGAR HASH canon=%s" % (_desugar.canon() if hasattr(_desugar,'canon') else str(_desugar)))
+        result = replace_temporals_by_named_binder_g_ast(_desugar, g, when)
         if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
         return result
     elif type(ast) == lg.WhenOperator:
+        if __debug__: xtracer.trace("ilu.replaceTemporalsRec WHEN_T1 HASH canon=%s" % (ast.t1.canon() if hasattr(ast.t1,'canon') else str(ast.t1)))
         val = replace_temporals_by_named_binder_g_ast(ast.t1, g, when)
+        if __debug__: xtracer.trace("ilu.replaceTemporalsRec WHEN_T2 HASH canon=%s" % (ast.t2.canon() if hasattr(ast.t2,'canon') else str(ast.t2)))
         cond = replace_temporals_by_named_binder_g_ast(ast.t2, g, when)
         body = lg.Cond(cond,val)
         vs, nvs, body = normalize_free_variables(body)
@@ -325,6 +330,7 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
             args.append(replace_temporals_by_named_binder_g_ast(_cx, g, when))
         if type(ast) == lg.Apply:
             if type(ast.func) == lg.NamedBinder and ast.func.name == 'l2s_init':
+                if __debug__: xtracer.trace("ilu.replaceTemporalsRec L2S_INIT_BODY HASH canon=%s" % (ast.func.body.canon() if hasattr(ast.func.body,'canon') else str(ast.func.body)))
                 body = replace_temporals_by_named_binder_g_ast(ast.func.body, g, when)
                 if type(body) == lg.Not:
                     result = lg.Not(lg.Apply(ast.func.clone([body.body]), *args))
@@ -334,6 +340,7 @@ def replace_temporals_by_named_binder_g_ast(ast, g=default_globally_binder, when
                     result = lg.Apply(ast.func.clone([body]), *args)
                     if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
                     return result
+            if __debug__: xtracer.trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s" % (type(ast.func).__name__, ast.func.canon() if hasattr(ast.func,'canon') else str(ast.func)))
             func = replace_temporals_by_named_binder_g_ast(ast.func, g, when)
             result = type(ast)(func, *args)
             if __debug__: xtracer.trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s" % (type(result).__name__, result.canon() if hasattr(result,'canon') else str(result)))
