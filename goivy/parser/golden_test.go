@@ -596,11 +596,11 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 		// on mismatch, report last 30 for context.
 		goLast30 = append(goLast30, goNorm)
-		if len(goLast30) > 30 {
+		if len(goLast30) > showLast30Lines {
 			goLast30 = goLast30[1:]
 		}
 		pyLast30 = append(pyLast30, ivNorm)
-		if len(pyLast30) > 30 {
+		if len(pyLast30) > showLast30Lines {
 			pyLast30 = pyLast30[1:]
 		}
 
@@ -608,7 +608,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 			vv("we have divergence at i = %v", i)
 			if !verbose {
 				n := len(pyLast30)
-				if i > 30 {
+				if i > showLast30Lines {
 					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
 				}
 				// note: truncate to first 2000 bytes to
@@ -727,6 +727,8 @@ const fullXtraceToDir string = ".."
 const writeFullLogFile = false
 
 const showNonXtraceLines = true
+
+const showLast30Lines = 300
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
