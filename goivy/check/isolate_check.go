@@ -773,18 +773,16 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			}
 
 			// Enter module context and check with vocab
-			// Python: with mod:
-			//             vocab = ivy_proof.goal_vocab(goal)
-			//             with lg.WithSymbols(vocab.symbols):
-			//                 with lg.WithSorts(vocab.sorts):
-			//                     with im.module.theory_context():
+			// Python: with lg.WithSymbols → with lg.WithSorts →
+			//             if method is not None: with im.module.theory_context(): method()
+			//             else: check_isolate()
 			vocab := proof.GoalVocab(goal)
 			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
 			ws.Enter()
 			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
 			wsorts.Enter()
-			cleanup := fakeMod.TheoryContext()
 			if method != nil {
+				cleanup := fakeMod.TheoryContext()
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
@@ -824,23 +822,25 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					return err
 				}
 				fmt.Println("PASS")
+				cleanup()
+				wsorts.Exit()
+				ws.Exit()
 			} else {
-				// C5 / Python ivy_check.py:829-840: propagate goal trace hook
+				// C5 / Python ivy_check.py:843-846: propagate goal trace hook
 				// to the module so check.go's trace formatter can use it.
+				// No TheoryContext here — CheckIsolate handles its own.
 				if goal.TraceHook != nil {
 					fakeMod.TraceHook = goal.TraceHook
 				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
-					cleanup()
 					wsorts.Exit()
 					ws.Exit()
 					return err
 				}
+				wsorts.Exit()
+				ws.Exit()
 			}
-			cleanup()
-			wsorts.Exit()
-			ws.Exit()
 
 		} else {
 			// Non-temporal branch (Python lines 765-776)
@@ -856,14 +856,16 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.IsolateInfo = nil
 
 			// Enter module context and check with vocab
-			// Python: with lg.WithSymbols → with lg.WithSorts → with im.module.theory_context()
+			// Python: with lg.WithSymbols → with lg.WithSorts →
+			//             if method is not None: with im.module.theory_context(): method()
+			//             else: check_isolate()
 			vocab := proof.GoalVocab(goal)
 			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
 			ws.Enter()
 			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
 			wsorts.Enter()
-			cleanup := fakeMod.TheoryContext()
 			if method != nil {
+				cleanup := fakeMod.TheoryContext()
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
@@ -897,23 +899,25 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					return err
 				}
 				fmt.Println("PASS")
+				cleanup()
+				wsorts.Exit()
+				ws.Exit()
 			} else {
-				// C5 / Python ivy_check.py:829-840: propagate goal trace hook
+				// C5 / Python ivy_check.py:843-846: propagate goal trace hook
 				// to the module so check.go's trace formatter can use it.
+				// No TheoryContext here — CheckIsolate handles its own.
 				if goal.TraceHook != nil {
 					fakeMod.TraceHook = goal.TraceHook
 				}
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
-					cleanup()
 					wsorts.Exit()
 					ws.Exit()
 					return err
 				}
+				wsorts.Exit()
+				ws.Exit()
 			}
-			cleanup()
-			wsorts.Exit()
-			ws.Exit()
 		}
 	}
 	return nil
