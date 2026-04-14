@@ -2605,53 +2605,20 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845768  go : XTRACE: check.CheckIsolate ENTER
-        py : XTRACE: check.CheckIsolate ENTER
+845762  go : XTRACE: ast.LF.__init__ id=2306 counter=2307
+        py : XTRACE: ast.LF.__init__ id=2306 counter=2307
 
-845769  go : XTRACE: check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)
-        py : XTRACE: check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)
+845763  go : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
+        py : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
 
-845770  go : XTRACE: module.CanonSnapshot ENTER label=fragment/fragment.go:1001 CheckFragment()
-        py : XTRACE: module.CanonSnapshot ENTER label=fragment/fragment.go:1001 CheckFragment()
+845764  go : XTRACE: ast.LF.__init__ id=2307 counter=2308
+        py : XTRACE: ast.LF.__init__ id=2307 counter=2308
 
-845771  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  labeledAxioms=[(labeledFormula label:(atom rep:"index.spec.prop4" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSor ...(truncated long line to 300 bytes)
+845765  go : XTRACE: check.CheckSubgoals ENTER nGoals=1 nLabeledAxioms=20 method=False
+        py : XTRACE: check.CheckSubgoals ENTER nGoals=1 nLabeledAxioms=20 method=False
 
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  labeledAxioms=[(labeledFormula label:(atom rep:"index.spec.prop4" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSor
- ...(truncated long line to 300 bytes)
+845766  go : XTRACE: check.CheckSubgoals goal[0] formula=SchemaBody nElems=12 concType=TemporalModels isTM=True
+        py : XTRACE: check.CheckSubgoals goal[0] concType=TemporalModels formulaType=SchemaBody isTM=True
 
-
-=== S-expression diff (go '-' vs py '+') ===
-   labeledAxioms=[
-     (labeledFormula
-       label:(atom
-         rep:"index.spec.prop4"
-...
-
-       id:253
-       temporal:nil
-       explicit:false
-       isDefinition:false
-       assumed:true
--     unprovable:false)
-+     unprovable:false)]
--   (labeledFormula
-+ 
--     label:(atom
-+ 
--       rep:"def217"
-+ 
--       terms:[]
-+ 
--       aSort:nil)
-+ 
--     formula:(Eq
-+ 
--       t1:(Symbol
-+ 
--         name:work_start
-+ 
--         sort:(BooleanSort))
-+ 
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 845771, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 845766, counting from 0.
 ~~~

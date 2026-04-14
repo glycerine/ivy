@@ -549,7 +549,9 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("ranking.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d nPostconds=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), len(postconds))
 	if tm != nil {
-		result, err := SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
+		// Python: conc = ivy_ast.TemporalModels(model, lg.And())
+		// Pass the modified model, not tm (which has the original model).
+		result, err := SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, model)
 		if err != nil {
 			return nil, err
 		}

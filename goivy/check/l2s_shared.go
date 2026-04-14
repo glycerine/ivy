@@ -789,8 +789,10 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 }
 
 // SharedStep12_BuildGoal builds the new goal with M |= true as conclusion.
-func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, tm *ast.TemporalModels) ([]*ast.LabeledFormula, error) {
-	newConc := acfg.NewTemporalModels(tm.Model, lg.True)
+// Python ivy_l2s.py:1461: conc = ivy_ast.TemporalModels(model, lg.And())
+// The model parameter is the l2s-modified NormalProgram, not tm.Model (the original).
+func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, model ast.Node) ([]*ast.LabeledFormula, error) {
+	newConc := acfg.NewTemporalModels(model, lg.True)
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {

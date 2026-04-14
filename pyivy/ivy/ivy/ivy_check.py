@@ -768,11 +768,9 @@ def check_isolate(trace_hook = None):
                 
 def check_subgoals(goals,method=None):
     mod = im.module
-    if __debug__: xtracer.trace("check.CheckSubgoals ENTER nGoals=%d nLabeledAxioms=%d method=%s" % (len(goals), len(mod.labeled_axioms), method is not None))
-    for goal_idx,goal in enumerate(goals):
+    for goal in goals:
         # print 'goal: {}'.format(goal)
         conc = ivy_proof.goal_conc(goal)
-        if __debug__: xtracer.trace("check.CheckSubgoals goal[%d] concType=%s formulaType=%s isTM=%s" % (goal_idx, type(conc).__name__, type(goal.formula).__name__, isinstance(conc,ivy_ast.TemporalModels)))
         if isinstance(conc,ivy_ast.TemporalModels):
             model = conc.model
             fmla = conc.fmla

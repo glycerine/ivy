@@ -840,7 +840,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 	xtracer.Trace("l2s.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
-	result, err := SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
+	// Python ivy_l2s.py:1461: conc = ivy_ast.TemporalModels(model, lg.And())
+	// Pass the l2s-modified model, not tm (which has the original model).
+	result, err := SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, model)
 	errStr := "None"
 	if err != nil {
 		errStr = err.Error()
