@@ -844,7 +844,11 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	xtracer.Trace("l2s.SharedStep12 ENTER nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 	result, err := SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
-	xtracer.Trace("l2s.SharedStep12 EXIT nResults=%d err=%v", len(result), err)
+	errStr := "None"
+	if err != nil {
+		errStr = err.Error()
+	}
+	xtracer.Trace("l2s.SharedStep12 EXIT nResults=%d err=%s", len(result), errStr)
 	if err != nil {
 		return nil, err
 	}
