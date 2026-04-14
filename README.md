@@ -2605,12 +2605,53 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845766  go : XTRACE: module.Copy EXIT actions=24 isolates=16
-        py : XTRACE: module.Copy EXIT actions=24 isolates=16
-
-845767  go : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-        py : XTRACE: ivylogic.WithSorts.Enter nSorts=0
-
-845768  go : XTRACE: module/clauses.go:262 defToConstraint lhsSort=Boolean resultType=Iff
+845768  go : XTRACE: check.CheckIsolate ENTER
         py : XTRACE: check.CheckIsolate ENTER
+
+845769  go : XTRACE: check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)
+        py : XTRACE: check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)
+
+845770  go : XTRACE: module.CanonSnapshot ENTER label=fragment/fragment.go:1001 CheckFragment()
+        py : XTRACE: module.CanonSnapshot ENTER label=fragment/fragment.go:1001 CheckFragment()
+
+845771  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  labeledAxioms=[(labeledFormula label:(atom rep:"index.spec.prop4" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSor ...(truncated long line to 300 bytes)
+
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  labeledAxioms=[(labeledFormula label:(atom rep:"index.spec.prop4" terms:[] aSort:nil) formula:(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSor
+ ...(truncated long line to 300 bytes)
+
+
+=== S-expression diff (go '-' vs py '+') ===
+   labeledAxioms=[
+     (labeledFormula
+       label:(atom
+         rep:"index.spec.prop4"
+...
+
+       id:253
+       temporal:nil
+       explicit:false
+       isDefinition:false
+       assumed:true
+-     unprovable:false)
++     unprovable:false)]
+-   (labeledFormula
++ 
+-     label:(atom
++ 
+-       rep:"def217"
++ 
+-       terms:[]
++ 
+-       aSort:nil)
++ 
+-     formula:(Eq
++ 
+-       t1:(Symbol
++ 
+-         name:work_start
++ 
+-         sort:(BooleanSort))
++ 
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 845771, counting from 0.
 ~~~
