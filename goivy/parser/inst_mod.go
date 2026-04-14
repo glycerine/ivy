@@ -416,14 +416,15 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	if ivy == nil {
 		return nil
 	}
-	// Match Python defaultdict auto-vivification
-	if _, ok := ivy.defined[name]; !ok {
-		ivy.defined[name] = nil
+	// Python: if name in self.defined: — uses `in` check, does NOT auto-vivify
+	if ivy.defined == nil {
+		return nil
 	}
-	if entries := ivy.defined[name]; len(entries) > 0 {
-		return entries[0].ObjectDefined
+	entries, ok := ivy.defined[name]
+	if !ok || len(entries) == 0 {
+		return nil
 	}
-	return nil
+	return entries[0].ObjectDefined
 }
 
 // setObjectDefined matches Python Ivy.set_object_defined (ivy_parser.py:383-391):
@@ -445,19 +446,18 @@ func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]def
 		}
 		moduleDefined = copied
 	}
+	// Python: if name in self.defined: — uses `in` check, does NOT auto-vivify
 	if ivy.defined == nil {
 		return
 	}
-	// Match Python defaultdict auto-vivification
-	if _, ok := ivy.defined[name]; !ok {
-		ivy.defined[name] = nil
+	entries, ok := ivy.defined[name]
+	if !ok || len(entries) == 0 {
+		return
 	}
-	if entries := ivy.defined[name]; len(entries) > 0 {
-		for i := range entries {
-			entries[i].ObjectDefined = moduleDefined
-		}
-		ivy.defined[name] = entries
+	for i := range entries {
+		entries[i].ObjectDefined = moduleDefined
 	}
+	ivy.defined[name] = entries
 }
 
 // stackLookup searches the accumulator's modules map for a module definition.

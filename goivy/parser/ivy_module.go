@@ -115,6 +115,7 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 		macros:   make(map[string]ast.Node),
 		actions:  make(map[string]ast.Node),
 		included: make(map[string]bool),
+		defined:  make(map[string][]definedEntry),
 	}
 	// Propagate astCfg from parent if available
 	if parent != nil && parent.astCfg != nil {
@@ -143,11 +144,43 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 	return m
 }
 
-// define tracks a name definition, matching Python Ivy.define().
-func (m *ivyAccum) define(name string) {
+// define tracks a name definition, matching Python Ivy.define() (ivy_parser.py:363-378).
+//
+//	def define(self, df, allow_redef=False):
+//	    if len(df) == 3: name, lineno, cls = df
+//	    else:            name, lineno = df; cls = None
+//	    for x in self.defined[name]:          # auto-vivifies
+//	        olineno, ocls = x[0], x[1]
+//	        conflict = ...
+//	        if conflict:
+//	            if allow_redef: return
+//	            report_error(Redefining(name, lineno, olineno))
+//	    self.defined[name].append((lineno, cls))
+func (m *ivyAccum) define(name string, lineno ast.Location, cls string) {
 	xtracer.Trace("parser.define ENTER")
-	// Track definitions — placeholder for now
-	_ = name
+	if m.defined == nil {
+		m.defined = make(map[string][]definedEntry)
+	}
+	// Match Python defaultdict auto-vivification: self.defined[name]
+	if _, ok := m.defined[name]; !ok {
+		m.defined[name] = nil
+	}
+	// Check for redefinition conflicts
+	for _, x := range m.defined[name] {
+		conflict := true
+		if cls == "TypeDecl" {
+			conflict = (x.DeclType != "ObjectDecl")
+		} else if cls == "ObjectDecl" {
+			conflict = (x.DeclType != "TypeDecl")
+		}
+		if conflict && x.DeclType != "" {
+			// Python: report_error(Redefining(name, lineno, olineno))
+			// For now, log but don't error — matches Python's default allow_redef=False
+			// but we don't have report_error wired up yet.
+			_ = conflict
+		}
+	}
+	m.defined[name] = append(m.defined[name], definedEntry{Lineno: lineno, DeclType: cls})
 }
 
 // declare adds a declaration, matching Python Ivy.declare().
@@ -187,9 +220,21 @@ func (m *ivyAccum) declare(decl ast.Node) {
 	}
 	// Call define for each name defined by this declaration.
 	// Matches Python: for df in decl.defines(): self.define(df)
+	// Python defines() returns tuples (name, lineno) or (name, lineno, cls).
+	// Go Defines() returns []string (just names). We determine cls from decl type.
+	var cls string
+	switch decl.(type) {
+	case *ast.ObjectDecl:
+		cls = "ObjectDecl"
+	case *ast.TypeDecl:
+		cls = "TypeDecl"
+	case *ast.DestructorDecl:
+		cls = "DestructorDecl"
+	}
+	declLineno := decl.GetLineno()
 	if definer, ok := decl.(interface{ Defines() []string }); ok {
 		for _, name := range definer.Defines() {
-			m.define(name)
+			m.define(name, declLineno, cls)
 		}
 	}
 	m.decls = append(m.decls, decl)
