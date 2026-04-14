@@ -391,6 +391,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				}
 				symwhens[c.Name] = append(symwhens[c.Name], when)
 				si++
+			} else {
+				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwhens when[%d] when='%v' sym=%s HASH canon= when.Body=%s\n", sym, wi, when, sym, when.Body.Canon())
 			}
 		}
 	}
