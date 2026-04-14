@@ -7,6 +7,7 @@ package check
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
@@ -559,6 +560,19 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			modSet[sym.Name] = true
 		}
 		allDeps := cfg.Dependencies(modSet)
+		{
+			sortedDeps := make([]string, 0, len(allDeps))
+			for sym := range allDeps {
+				sortedDeps = append(sortedDeps, sym)
+			}
+			sort.Strings(sortedDeps)
+			sortedMods := make([]string, 0, len(modSet))
+			for sym := range modSet {
+				sortedMods = append(sortedMods, sym)
+			}
+			sort.Strings(sortedMods)
+			xtracer.Trace("l2s.SharedStep7 instrStmt mods=[%s] deps=[%s]", strings.Join(sortedMods, ","), strings.Join(sortedDeps, ","))
+		}
 		for sym := range allDeps {
 			for _, prop := range symprops[sym] {
 				eventProps[prop.String()] = prop

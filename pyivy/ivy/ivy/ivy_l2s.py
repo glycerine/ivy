@@ -1249,7 +1249,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         #
         # Notice we have to consider defined functions that depend on the modified symbols
                     
-        for sym in dependencies(stmt.modifies()):
+        _all_deps = list(dependencies(stmt.modifies()))
+        _mods = sorted(str(s) for s in stmt.modifies())
+        _deps = sorted(str(s) for s in _all_deps)
+        if __debug__: xtracer.trace("l2s.SharedStep7 instrStmt mods=[%s] deps=[%s]" % (','.join(_mods), ','.join(_deps)))
+        for sym in _all_deps:
             for prop in symprops[sym]:
 #                if prop.environ not in labels:
                 event_props.add(prop)
