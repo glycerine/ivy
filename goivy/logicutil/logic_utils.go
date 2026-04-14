@@ -1155,11 +1155,9 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 	}
+	// Python: args = [replace_named_binders_ast(x, subs) for x in ast.args]
+	// Python: return ast.clone(args)  — ALWAYS clones, even with empty args.
 	children := n.Args()
-	if len(children) == 0 {
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s leaf", iu.ShortTypeName(n))
-		return n
-	}
 	newChildren := make([]ast.Node, len(children))
 	for i, c := range children {
 		newChildren[i] = ReplaceNamedBindersAst(c, subs)
