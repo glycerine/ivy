@@ -669,7 +669,11 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 		mod = module.New()
 	}
 
-	for _, goal := range goals {
+	if xtracer.Enabled {
+		xtracer.Trace("check.CheckSubgoals ENTER nGoals=%d nLabeledAxioms=%d method=%v",
+			len(goals), len(mod.LabeledAxioms), method != nil)
+	}
+	for goalIdx, goal := range goals {
 		_ = proof.GoalConc(goal) // used for non-temporal branch via goal itself
 
 		// Check for TemporalModels via the formula directly, since
@@ -679,8 +683,16 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			if c := sb.Conc(); c != nil {
 				tm, _ = c.(*ast.TemporalModels)
 			}
+			if xtracer.Enabled {
+				xtracer.Trace("check.CheckSubgoals goal[%d] formula=SchemaBody nElems=%d concType=%s isTM=%v",
+					goalIdx, len(sb.Elems), iu.TypeName(sb.Conc()), tm != nil)
+			}
 		} else if goal.Formula != nil {
 			tm, _ = goal.Formula.(*ast.TemporalModels)
+			if xtracer.Enabled {
+				xtracer.Trace("check.CheckSubgoals goal[%d] formula type=%s isTM=%v",
+					goalIdx, iu.TypeName(goal.Formula), tm != nil)
+			}
 		}
 
 		if tm != nil {
