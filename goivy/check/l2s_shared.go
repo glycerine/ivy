@@ -535,11 +535,11 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				continue
 			}
 			post = append(post,
-				actions.NewAssumeAction(forall(when.Variables,
+				setLineno(actions.NewAssumeAction(forall(when.Variables,
 					&lg.Implies{
 						T1: condVal.T1,
 						T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: condVal.T2},
-					})))
+					})), lineno))
 		}
 		return pre, post
 	}
