@@ -212,6 +212,30 @@ type NormalProgram struct {
 	Postconds map[string][]*ast.LabeledFormula // optional postconditions
 }
 
+// Fmlas returns all component formulas of the program.
+// Matches Python NormalProgram.fmlas property (ivy_temporal.py:188-193).
+func (np *NormalProgram) Fmlas() []ast.Node {
+	var res []ast.Node
+	for _, b := range np.Bindings {
+		res = append(res, b)
+	}
+	if np.Init != nil {
+		res = append(res, np.Init)
+	}
+	for _, inv := range np.Invars {
+		res = append(res, inv)
+	}
+	for _, asm := range np.Asms {
+		res = append(res, asm)
+	}
+	for _, pcs := range np.Postconds {
+		for _, pc := range pcs {
+			res = append(res, pc)
+		}
+	}
+	return res
+}
+
 // Args returns the child AST nodes. Python: args property returns [].
 func (np *NormalProgram) Args() []ast.Node { return nil }
 

@@ -852,9 +852,22 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		return nil, err
 	}
 
-	// Python ivy_l2s.py:1468: remove unused definitions from goal (after SharedStep12).
+	// Python ivy_l2s.py:1468: goal = ipr.remove_unused_definitions_goal(goal)
+	// Python ivy_proof.py:1512-1516: fmlas = conc.model.fmlas + [conc.fmla]
 	if len(result) > 0 && result[0] != nil {
-		result[0] = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, result[0])
+		var concFmlas []lg.Expr
+		for _, fmlaNode := range model.Fmlas() {
+			collectNodeExprs(fmlaNode, &concFmlas)
+		}
+		// Add conclusion inner formula (conc.fmla)
+		if goalConc := proof.GoalConc(result[0]); goalConc != nil {
+			if tm, ok := goalConc.(*ast.TemporalModels); ok {
+				if f, ok := tm.Fmla.(lg.Expr); ok {
+					concFmlas = append(concFmlas, f)
+				}
+			}
+		}
+		result[0] = proof.RemoveUnusedDefinitionsGoal(m.Cfg.AstCfg, result[0], concFmlas)
 	}
 
 	// C5 / Python ivy_l2s.py:1310-1313: attach a trace hook closure to the
@@ -1103,6 +1116,21 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 }
 
 // --- Registration ---
+
+// collectNodeExprs walks an ast.Node tree via Args() and appends any
+// lg.Expr nodes found. This mirrors how Python's symbols_ilu_ast walks
+// any AST through its .args property.
+func collectNodeExprs(n ast.Node, out *[]lg.Expr) {
+	if n == nil {
+		return
+	}
+	if expr, ok := n.(lg.Expr); ok {
+		*out = append(*out, expr)
+	}
+	for _, arg := range n.Args() {
+		collectNodeExprs(arg, out)
+	}
+}
 
 // RegisterL2STactics registers the l2s tactics on the given proof config.
 // Replaces the old init()-based global registration.

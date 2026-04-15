@@ -420,27 +420,52 @@ func nodeMapToStringMap(m map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
 // apply_to_conc only handles TemporalModels (ivy_proof.py:1370-1373).)
 
 // RemoveUnusedDefinitionsGoal removes definitions that aren't referenced
-// in the goal's conclusion.
-// Corresponds to Python's remove_unused_definitions_goal.
-func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula) *ast.LabeledFormula {
+// in the goal's conclusion formulas.
+// concFmlas is the list of formulas to scan for initial used symbols.
+// For TemporalModels conclusions, this should be model.Fmlas() + [conc.Fmla].
+// For non-temporal conclusions, this should be [conc].
+// Corresponds to Python's remove_unused_definitions_goal (ivy_proof.py:1508-1528).
+func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, concFmlas []lg.Expr) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
 	if conc == nil {
 		return goal
 	}
-	// Unwrap *ast.TemporalModels so symbol scanning sees the inner formula.
-	concExpr := ConcAsExpr(conc)
-	if concExpr == nil {
-		return goal
+
+	// Build initial symbol set from concFmlas.
+	// Python: syms = lu.used_symbols_asts(fmlas)
+	usedSyms := make(map[lg.NodeKey]lg.Expr)
+	for _, f := range concFmlas {
+		for k, v := range module.UsedSymbolsAST(f) {
+			usedSyms[k] = v
+		}
 	}
-	usedSyms := module.UsedSymbolsAST(concExpr)
-	var newPrems []ast.Node
+
 	reversed := make([]ast.Node, len(prems))
 	for i, p := range prems {
 		reversed[len(prems)-1-i] = p
 	}
+	var newPrems []ast.Node
 	for _, x := range reversed {
-		if GoalIsDefn(x) {
+		// Case 1: property definitions (Python: goal_is_property(x) and x.definition)
+		if lf, ok := x.(*ast.LabeledFormula); ok && GoalIsProperty(lf) && lf.IsDefinition {
+			if fExpr, ok := lf.Formula.(lg.Expr); ok {
+				// Python: sym = il.drop_universals(x.formula).args[0].rep
+				df := il.DropUniversals(fExpr)
+				dfArgs := df.Args()
+				if len(dfArgs) > 0 {
+					if argExpr, ok := dfArgs[0].(lg.Expr); ok {
+						sym := il.NodeRep(argExpr)
+						if sym != nil {
+							if _, used := usedSyms[lg.Key(sym)]; !used {
+								continue
+							}
+						}
+					}
+				}
+			}
+		} else if GoalIsDefn(x) {
+			// Case 2: ConstantDecl/UninterpretedSort (existing logic)
 			sym := GoalDefines(x)
 			if sym == nil {
 				newPrems = append([]ast.Node{x}, newPrems...)
