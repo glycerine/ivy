@@ -2605,30 +2605,33 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845787  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theorems=(hash)
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theorems=(hash)
+845850  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  named=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  named=[]
 
-845788  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  predicates=(hash)
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  predicates=(hash)
+845851  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  subgoals=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  subgoals=[]
 
-845789  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
+845852  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjActions=(hash dramc_nb2.memc_arriving.invar215:["arm.step_north" "arm.step_south" "cfabric.step" "dramc.step_rd" "dramc.step_wr" "ifabric.step" "memc.step"] dramc_nb2.memc_pushing.invar215:["arm.step_north" "arm. ...(truncated long line to 300 bytes)
 
-845790  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theory=(clauses fmlas:[(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSort name:index) (BooleanSort)])) terms:[(Variable name:X sort:(Uninterpre ...(truncated long line to 300 bytes)
-
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theory=(clauses fmlas:[(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSort name:index) (BooleanSort)])) terms:[(Variable name:X sort:(Uninterpre
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjActions=(hash dramc_nb2.memc_arriving.invar215:["arm.step_north" "arm.step_south" "cfabric.step" "dramc.step_rd" "dramc.step_wr" "ifabric.step" "memc.step"] dramc_nb2.memc_pushing.invar215:["arm.step_north" "arm.
  ...(truncated long line to 300 bytes)
 
-845791  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  actions.keys=25 keys=ext:cfabric.complete_hook,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,idle,ext:ifabric.step,ext:memc.memc_push_hook,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:dramc.step_rd,ext:ta ...(truncated long line to 300 bytes)
-
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  actions.keys=25 keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:
- ...(truncated long line to 300 bytes)
+845853  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  params=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  params=[(Symbol name:_T sort:(UninterpretedSort name:lclock))]
 
 
 === S-expression diff (go '-' vs py '+') ===
-   actions.keys=25
-- keys=ext:cfabric.complete_hook,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,idle,ext:ifabric.step,ext:memc.memc_push_hook,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:dramc.step_rd,ext:tar_clock.next,ext:ref.create,ext:memc.memc_cpl_hook,ext:memc.step,ext:arm.step_south,ext:lclock.next,ext:tar_cf_clock.next,ext:cfabric.step,ext:memc.memc_arr_hook,ext:dramc.step_wr,rfn.abs.trying1.raise,rfn.abs.trying2.raise,ext:ref.perform,ext:ref.perform_grd
-+ keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:memc.memc_push_hook,ext:memc.memc_cpl_hook,ext:memc.step,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:arm.step_south,ext:dramc.step_rd,ext:dramc.step_wr,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,rfn.abs.trying1.raise,rfn.abs.trying2.raise,idle
+- params=[]
++ params=[
+- 
++   (Symbol
+- 
++     name:_T
+- 
++     sort:(UninterpretedSort
+- 
++       name:lclock))]
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 845791, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 845853, counting from 0.
 ~~~
+
