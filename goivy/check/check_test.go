@@ -1151,13 +1151,13 @@ func TestSomeBoundedResetByStartWithConfig(t *testing.T) {
 	cfg.SomeBounded = true
 	// Use an empty args slice; StartWithConfig should return Usage error
 	// after the reset has already executed.
-	_ = StartWithConfig([]string{}, cfg)
+	_ = Start([]string{}, cfg)
 	// The reset happens after the args check (lines 1240-1242), so for an
 	// empty args slice the reset is NOT yet reached. We instead use a
 	// non-existent .ivy file so the args check passes and the reset runs.
 	cfg2 := module.NewConfig()
 	cfg2.SomeBounded = true
-	_ = StartWithConfig([]string{"/nonexistent/path/that/will/fail.ivy"}, cfg2)
+	_ = Start([]string{"/nonexistent/path/that/will/fail.ivy"}, cfg2)
 	if cfg2.SomeBounded {
 		t.Error("StartWithConfig should reset SomeBounded to false at entry")
 	}

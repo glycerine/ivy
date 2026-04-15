@@ -260,14 +260,14 @@ func TestCheckModuleMacroFinderDefault(t *testing.T) {
 // --- Group E: Start entry point ---
 
 func TestStartInvalidArgs(t *testing.T) {
-	err := Start(nil)
+	err := Start(nil, nil)
 	if err == nil {
 		t.Error("Start with no args should error")
 	}
 }
 
 func TestStartNonIvyFile(t *testing.T) {
-	err := Start([]string{"notanivyfile.txt"})
+	err := Start([]string{"notanivyfile.txt"}, nil)
 	if err == nil {
 		t.Error("Start with non-.ivy file should error")
 	}

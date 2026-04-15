@@ -1184,9 +1184,11 @@ func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
 	RegisterL2STactics(proofCfg)
 }
 
-// Start is the entry point for the ivy_check command.
+/*
+// deprecated. duplicate of Start().
+// is the entry point for the ivy_check command.
 // Corresponds to Python's start() (ivy_check.py:975-1005).
-func Start(args []string) error {
+func deprecated_dup_start_9828(args []string) error {
 	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
 		return fmt.Errorf("%s", Usage())
 	}
@@ -1195,6 +1197,7 @@ func Start(args []string) error {
 	if mod.Cfg == nil {
 		mod.Cfg = module.NewConfig()
 	}
+
 	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry
 	mod.Cfg.SomeBounded = false
 	wireAdmitDefinitionFactory(mod)
@@ -1221,7 +1224,7 @@ func Start(args []string) error {
 	}
 
 	// Python: check_module()
-	if err := CheckModule(mod); err != nil {
+	if err := CheckModule(mod); err != nil { // in Start()
 		return err
 	}
 
@@ -1238,6 +1241,7 @@ func Start(args []string) error {
 	}
 	return nil
 }
+*/
 
 // Main is the main entry point, wrapping Start with error handling.
 // Corresponds to Python's main() (ivy_check.py:1025-1041).
@@ -1245,7 +1249,7 @@ func Main(args []string) int {
 	// Python: ivy_alpha.test_bottom = False
 	// Python: ivy_init.read_params()
 	// Python: if profiling.get(): cProfile.runctx(...) else: start()
-	err := Start(args)
+	err := Start(args, nil)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1
@@ -1257,7 +1261,11 @@ func Main(args []string) int {
 // This allows the CLI to parse key=value parameters and apply them
 // before the module is created, matching how Python's ivy_init.read_params()
 // sets Parameter objects before start() creates the Module context.
-func StartWithConfig(args []string, cfg *module.Config) error {
+// If cfg is nil, we will supply a default from module.NewConfig().
+func Start(args []string, cfg *module.Config) error {
+	if cfg == nil {
+		cfg = module.NewConfig()
+	}
 	if len(args) >= 1 {
 		// Python: set_macro_finder(True) at ivy_solver.py:53 during module import.
 		// Emit matching trace before check.start.
@@ -1304,7 +1312,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	}
 
 	// Python: check_module()
-	if err := CheckModule(mod); err != nil {
+	if err := CheckModule(mod); err != nil { // in StartWithConfig()
 		return err
 	}
 
@@ -1325,7 +1333,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 
 // MainWithConfig is like Main but accepts a pre-populated Config.
 func MainWithConfig(args []string, cfg *module.Config) int {
-	err := StartWithConfig(args, cfg)
+	err := Start(args, cfg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1

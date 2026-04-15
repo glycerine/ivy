@@ -1247,6 +1247,20 @@ type updateAxiomProvider = Updater
 // applyUpdateAxioms applies domain.updates to the given update.
 // In Python, this iterates over domain.updates calling get_update_axioms.
 func applyUpdateAxioms(update *Update, action Action, ctx *UpdateContext) *Update {
+	// Trace unconditionally, matching Python Action.int_update line 209
+	// which always emits the trace even when len(domain.updates) == 0.
+	if xtracer.Enabled {
+		numUpdates := 0
+		if ctx.Domain != nil {
+			numUpdates = len(ctx.Domain.Updates)
+		}
+		show := make([]string, len(update.Modified))
+		for i, s := range update.Modified {
+			show[i] = fmt.Sprintf("'%v'", s.Name)
+		}
+		sort.Strings(show)
+		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=[%v]", numUpdates, strings.Join(show, ", "))
+	}
 	if ctx.Domain == nil || len(ctx.Domain.Updates) == 0 {
 		return update
 	}
@@ -1254,15 +1268,6 @@ func applyUpdateAxioms(update *Update, action Action, ctx *UpdateContext) *Updat
 	modified := update.Modified
 	tr := update.TR
 	pre := update.Pre
-
-	if xtracer.Enabled {
-		show := make([]string, len(modified))
-		for i, s := range modified {
-			show[i] = fmt.Sprintf("'%v'", s.Name)
-		}
-		sort.Strings(show)
-		xtracer.Trace("actions.applyUpdateAxioms ENTER numUpdates=%d modNames=[%v]", len(ctx.Domain.Updates), strings.Join(show, ", "))
-	}
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
 			newMod, transrelNode, precondNode := provider.GetUpdateAxioms(modified, action)
