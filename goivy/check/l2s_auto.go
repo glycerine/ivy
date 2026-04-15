@@ -638,7 +638,7 @@ func l2sAutoInvariants(
 			&lg.Implies{
 				T1: applyNB(initNB, varsToNodes(progressArgs)...),
 				T2: gBody,
-			})
+			}, proofLineno)
 
 		// --- l2s_not_all_done ---
 		// Builds the per-task `not_all_done(work_needed)` predicate
@@ -679,7 +679,7 @@ func l2sAutoInvariants(
 					T1: &lg.Not{Body: eventuallyStartTask(trigf)},
 					T2: orOfPreds,
 				}
-				invars = appendLF(autoAcfg, invars, "l2s_not_all_done"+sfx, tmp)
+				invars = appendLF(autoAcfg, invars, "l2s_not_all_done"+sfx, tmp, proofLineno)
 				notAllDonePreds = nil
 			}
 		}
@@ -698,7 +698,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(wasNad, l2sSaved, evStart, waitingForProgressApp),
 				T2: nad,
 			})
-			invars = appendLF(autoAcfg, invars, "l2s_sched_stable"+sfx, stableInv)
+			invars = appendLF(autoAcfg, invars, "l2s_sched_stable"+sfx, stableInv, proofLineno)
 			schedExistsPreds = append(schedExistsPreds, exists(progressArgs, wasNad))
 		}
 
@@ -716,7 +716,7 @@ func l2sAutoInvariants(
 		} else {
 			nadExpr = lg.False
 		}
-		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", nadExpr)
+		invars = appendLF(autoAcfg, invars, "l2s_not_all_done", nadExpr, proofLineno)
 	}
 
 	// C14 / Python ivy_l2s.py:548-550: l2s_sched_exists invariant for auto5.
@@ -730,7 +730,7 @@ func l2sAutoInvariants(
 		invars = appendLF(autoAcfg, invars, "l2s_sched_exists", &lg.Implies{
 			T1: makeAnd(l2sSaved, evStartHere),
 			T2: buildOrExpr(schedExistsPreds),
-		})
+		}, proofLineno)
 	}
 
 	// --- init_globally: generate l2s_globally invariants ---
