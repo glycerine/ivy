@@ -2605,15 +2605,43 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
+845777  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assertions=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assertions=[]
 
-845765  go : XTRACE: module.Copy ENTER actions=24 isolates=16
-        py : XTRACE: module.Copy ENTER actions=24 isolates=16
+845778  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assumedInvs=[(labeledFormula label:(atom rep:"invar108" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Eq t1:(Symbol name:cfabric.t_rd_arr_min sort:(UninterpretedSort name:tar_cf_clock)) t2:(Variable name:Tarr  ...(truncated long line to 300 bytes)
 
-845766  go : XTRACE: module.Copy EXIT actions=24 isolates=16
-        py : XTRACE: module.Copy EXIT actions=24 isolates=16
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assumedInvs=[(labeledFormula label:(atom rep:"invar108" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Eq t1:(Symbol name:cfabric.t_rd_arr_min sort:(UninterpretedSort name:tar_cf_clock)) t2:(Variable name:Tarr 
+ ...(truncated long line to 300 bytes)
 
-845767  go : XTRACE: check.CheckSubgoals temporal prems nTotal=11 nLF=11 nProp=11
-        py : XTRACE: check.CheckSubgoals temporal prems nTotal=1 nLF=0 nProp=0
+845779  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  nativeDefinitions=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  nativeDefinitions=[]
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 845767, counting from 0.
+845780  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  allRelations=[(Symbol name:index.max2 sort:(FunctionSort sorts:[(TopSort name:alpha0) (TopSort name:alpha1) (TopSort name:alpha2)])) (Symbol name:index.mod sort:(FunctionSort sorts:[(TopSort name:alpha0) (TopSort nam ...(truncated long line to 300 bytes)
+
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjSubgoals=[]
+
+
+=== S-expression diff (go '-' vs py '+') ===
+- allRelations=[
++ conjSubgoals=[]
+-   (Symbol
++ 
+-     name:index.max2
++ 
+-     sort:(FunctionSort
++ 
+-       sorts:[
++ 
+-         (TopSort
++ 
+-           name:alpha0)
++ 
+-         (TopSort
++ 
+-           name:alpha1)
++ 
+-         (TopSort
++ 
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 845780, counting from 0.
 ~~~
