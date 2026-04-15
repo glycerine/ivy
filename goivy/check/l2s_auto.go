@@ -511,7 +511,7 @@ func l2sAutoInvariants(
 			createdArgs := eqLHSArgs(workCreated)
 			s := substVars(doneArgs, createdArgs)
 			tmp := &lg.Implies{T1: subst(eqRHS(workDone), s), T2: eqRHS(workCreated)}
-			invars = appendLF(autoAcfg, invars, "l2s_done_implies_created"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_done_implies_created"+sfx, tmp, proofLineno)
 		}
 
 		// --- l2s_needed_implies_created ---
@@ -523,7 +523,7 @@ func l2sAutoInvariants(
 				T1: notWaitingForStart,
 				T2: &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workCreated)},
 			}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_implies_created"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_implies_created"+sfx, tmp, proofLineno)
 		}
 
 		// --- l2s_work_preserved ---
@@ -546,7 +546,7 @@ func l2sAutoInvariants(
 		if tacticName == "l2s_auto5" {
 			tmp = &lg.Implies{T1: evStart, T2: tmp}
 		}
-		invars = appendLF(autoAcfg, invars, "l2s_work_preserved"+sfx, tmp)
+		invars = appendLF(autoAcfg, invars, "l2s_work_preserved"+sfx, tmp, proofLineno)
 
 		// --- l2s_progress_made ---
 		// C11 / Python ivy_l2s.py:478-505. Three branches:
@@ -620,7 +620,7 @@ func l2sAutoInvariants(
 					T2: exists(doneArgs, makeAnd(&lg.Not{Body: wasDone}, isDoneNode)),
 				}
 			}
-			invars = appendLF(autoAcfg, invars, "l2s_progress_made"+sfx, progressInv)
+			invars = appendLF(autoAcfg, invars, "l2s_progress_made"+sfx, progressInv, proofLineno)
 		}
 
 		// --- l2s_progress_invar ---
