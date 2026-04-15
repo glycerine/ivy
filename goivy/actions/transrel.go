@@ -1965,24 +1965,23 @@ func DiffFrameConstUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *
 // DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
 // op is NewConst or OldConst.
 func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *module.Clauses {
-	// Python uses object identity for set membership (Symbol.__hash__/__eq__
-	// are explicitly disabled in ivy_logic.py:143-144). Use pointer identity.
-	u1Set := make(map[*lg.Const]bool, len(updated1))
+	// Python uses recstruct (name, sort) structural equality for set membership
+	// (recstruct_object.py __eq__/__hash__ compare _tup = (name, sort)).
+	// Use lg.Key() which produces a structural string key including name and sort.
+	u1Set := make(map[lg.NodeKey]bool, len(updated1))
 	for _, s := range updated1 {
-		u1Set[s] = true
+		u1Set[lg.Key(s)] = true
 	}
-	// Python: defnd = set(df.defines() for df in axioms.defs)
-	// Also identity-based since defines() returns Symbol objects.
-	defnd := make(map[lg.Expr]bool)
+	// Also exclude symbols that are defined in axioms
+	defnd := make(map[lg.NodeKey]bool)
 	if axioms != nil {
 		for _, d := range axioms.Defs {
-			defnd[d.Defines()] = true
+			defnd[lg.Key(d.Defines())] = true
 		}
 	}
 	var defs []*il.Definition
 	for _, sym := range updated2 {
-		_, inDefnd := defnd[sym]
-		if !u1Set[sym] && !inDefnd {
+		if !u1Set[lg.Key(sym)] && !defnd[lg.Key(sym)] {
 			defs = append(defs, FrameDefConst(sym, op))
 		}
 	}
