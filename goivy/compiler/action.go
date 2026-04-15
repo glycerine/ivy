@@ -6,9 +6,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/module"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -1631,7 +1631,11 @@ func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.Action, error) 
 // CompileAssumeFormula compiles an assume from a formula AST node.
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
-	xtracer.Trace("compiler.compile_assume_action ENTER")
+	// sadly this will false alarm:
+	//xtracer.Trace("compiler.compile_assume_action ENTER")
+	// Since python uses the exact same code for both, (ivy_compiler.py:804-805);
+	// so we have to xtrace 'assert' here too.
+	xtracer.Trace("compiler.compile_assert_action ENTER")
 	r, err := c.compileAssertLikeFormula(node, "Assume")
 	if err != nil {
 		return nil, err
