@@ -255,7 +255,7 @@ class Checker(object):
         return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get() # ignore failures if not diagnosing
     def _pass(self):
         if self.report_pass:
-            print('PASS\n')
+            print('PASS_2\n')
         return True
 
 def pretty_label(label):
@@ -750,7 +750,7 @@ def check_isolate(trace_hook = None):
                                    some_failed = True
                                    break
                         if not some_failed:
-                            print('PASS\n')
+                            print('PASS_1\n')
                         act.checked_assert.value = old_checked_assert
                     else:
                         print("\n")
@@ -844,7 +844,7 @@ def check_subgoals(goals,method=None):
                                 if diagnose.get():
                                     gui_art(foo)
                             else:
-                                print("PASS\n")
+                                print("PASS_3\n")
                     else:
                         if hasattr(goal,"trace_hook"):
                             mod.trace_hook = goal.trace_hook

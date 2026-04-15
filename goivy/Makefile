@@ -87,7 +87,7 @@ tr: # xtracer builds:
 	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
 
 trt: tr  # xtracer test
-	goivy_check_xtrace isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	XTRACE_OFF=1 time goivy_check_xtrace isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
