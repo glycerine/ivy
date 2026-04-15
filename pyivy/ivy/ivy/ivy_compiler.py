@@ -61,9 +61,9 @@ def sig_check(label):
         mod_c = im.module.canon()
     combined = sig_c + mod_c
     leaf, root = sig_merkle.add_leaf(combined)
-    #xtracer.trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s" % (label, leaf, root, combined))
+    #if __debug__: xtracer.trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s" % (label, leaf, root, combined))
     # roots diverging, should track but go forward instead for now.
-    xtracer.trace("compiler.SigCheck@%s HASH leaf=%s canon=%s" % (label, leaf, combined))
+    if __debug__: xtracer.trace("compiler.SigCheck@%s HASH leaf=%s canon=%s" % (label, leaf, combined))
 
 class IvyDeclInterp(object):
     def __call__(self,ivy):
@@ -2004,7 +2004,7 @@ def check_definitions(mod):
                 # Instrumentation: always trace DETAIL for divergent actions
                 if mod_syms:
                     sym_names = sorted(str(s) for s in mod_syms)
-                    xtracer.trace("compiler.ActionInterferenceCheck action=%s modifies=%d syms=%s" % (name, len(mod_syms), ",".join(sym_names)))
+                    if __debug__: xtracer.trace("compiler.ActionInterferenceCheck action=%s modifies=%d syms=%s" % (name, len(mod_syms), ",".join(sym_names)))
 
         mp = dict((lf.formula.defines(),lf.formula.rhs()) for lf in mod.definitions)
         if not opt_mutax.get():

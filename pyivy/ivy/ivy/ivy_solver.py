@@ -674,7 +674,7 @@ def clauses_to_z3(clauses):
         try:
             z3_clauses.append(formula_to_z3(dfn))
         except Exception as e:
-            xtracer.trace("clauses_to_z3: Z3 error on def[%d]: %s defType=%s defines=%s" % (di, e, type(dfn).__name__, dfn.defines() if hasattr(dfn,'defines') else '?'))
+            if __debug__: xtracer.trace("clauses_to_z3: Z3 error on def[%d]: %s defType=%s defines=%s" % (di, e, type(dfn).__name__, dfn.defines() if hasattr(dfn,'defines') else '?'))
             raise
     z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
     if __debug__: xtracer.trace("solver.ClausesToZ3 EXIT exprs=%d" % len(z3_clauses))
@@ -753,14 +753,14 @@ def formula_to_z3(fmla):
     try:
         z3_fmla = formula_to_z3_closed(fmla)
     except Exception as e:
-        xtracer.trace("formula_to_z3: Z3 error on formula_to_z3_closed: %s type=%s" % (e, type(fmla).__name__))
+        if __debug__: xtracer.trace("formula_to_z3: Z3 error on formula_to_z3_closed: %s type=%s" % (e, type(fmla).__name__))
         raise
     try:
         tcs = type_constraints(used_symbols_ast(fmla))
         if len(tcs) > 0:
             z3_fmla = z3.And(*([z3_fmla] + tcs))
     except Exception as e:
-        xtracer.trace("formula_to_z3: Z3 error on type_constraints: %s type=%s" % (e, type(fmla).__name__))
+        if __debug__: xtracer.trace("formula_to_z3: Z3 error on type_constraints: %s type=%s" % (e, type(fmla).__name__))
         raise
     return z3_fmla
                            
@@ -1395,7 +1395,7 @@ def _trace_z3_check(s, res):
     #xtracer.trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s" % (
     #    _z3_check_counter[0], rs, leaf, root, asserts))
 
-    xtracer.trace("z3.check seq=%d result=%s HASH canon=%s" % (
+    if __debug__: xtracer.trace("z3.check seq=%d result=%s HASH canon=%s" % (
         _z3_check_counter[0], rs, asserts))
 
 # Monkey-patch z3.Solver.check to trace every Z3 check call globally.

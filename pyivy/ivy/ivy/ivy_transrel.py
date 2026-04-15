@@ -658,12 +658,13 @@ class History(object):
 
         # A model of the post-state embeds a valuation for each time
         # in the history.
-        xtracer.trace("transrel.SatisfyWithCond ENTER postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d" % (len(self.post.fmlas), len(self.post.defs), len(axioms.fmlas), len(axioms.defs)))
-        xtracer.trace("transrel.SatisfyWithCond postClauses fmlas=%d defs=%d" % (len(self.post.fmlas), len(self.post.defs)))
+        if __debug__: 
+            xtracer.trace("transrel.SatisfyWithCond ENTER postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d" % (len(self.post.fmlas), len(self.post.defs), len(axioms.fmlas), len(axioms.defs)))
+            xtracer.trace("transrel.SatisfyWithCond postClauses fmlas=%d defs=%d" % (len(self.post.fmlas), len(self.post.defs)))
 #        print "concrete state: {}".format(self.post)
 #        print "background: {}".format(axioms)
         post = and_clauses(self.post,axioms)
-        xtracer.trace("transrel.SatisfyWithCond combined fmlas=%d defs=%d" % (len(post.fmlas), len(post.defs)))
+        if __debug__: xtracer.trace("transrel.SatisfyWithCond combined fmlas=%d defs=%d" % (len(post.fmlas), len(post.defs)))
 #        print "bounded check {"
         model = _get_model_clauses(post,final_cond=final_cond)
 #        print "} bounded check"
