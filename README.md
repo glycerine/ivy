@@ -2606,4 +2606,33 @@ timing out now; why does neither side finish???
 
 b/c the python takes 5m37sec to finish when not in lock step, and the Go only 41 sec.
 So we are probably just waiting for the python to finish.
+
+also, python is rudely not terminating every line. hence the XTRACE lines 
+are getting swallowed and not matched on the Go side, maybe?
+
+e.g. 
+
+~py[after i=1220428]:             <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 1703: l2s_globally_5 ... XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
+
+~~~
+
+after more alignment:
+
+~~~
+998114  go : XTRACE: ivy_solver.py:95 my_eq() ENTER
+        py : XTRACE: ivy_solver.py:95 my_eq() ENTER
+
+998115  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=8
+        py : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=8
+
+998116  go : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=133
+        py : XTRACE: ivy_solver.py:603 type_constraints() ENTER nsyms=133
+
+998117  go : XTRACE: solver.ClausesToZ3 EXIT exprs=111
+        py : XTRACE: solver.ClausesToZ3 EXIT exprs=111
+
+998118  go : XTRACE: solver.ClausesToZ3 fmla[0] sort=Boolean
+        py : XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 998118, counting from 0.
 ~~~
