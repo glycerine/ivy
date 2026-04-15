@@ -170,6 +170,14 @@ type Module struct {
 	//
 	// Cleared by Module.Enter() (mirroring Python's clear() in __enter__).
 	z3SessionCache any
+
+	// z3SharedCtx holds the *z3bridge.Z3Context shared across module copies.
+	// Python's _z3_check_counter is a process-global that persists across
+	// all module copies; this field provides the equivalent in Go by
+	// letting copied modules create fresh Z3SessionCaches that reuse the
+	// same Z3Context (and its z3CheckCounter).
+	// Stored as `any` for the same import-cycle reason as z3SessionCache.
+	z3SharedCtx any
 }
 
 // GetZ3SessionCache returns the opaque z3bridge cache attached to this
@@ -182,6 +190,19 @@ func (m *Module) GetZ3SessionCache() any {
 // z3bridge.NewSolver on first access (lazy creation).
 func (m *Module) SetZ3SessionCache(c any) {
 	m.z3SessionCache = c
+}
+
+// GetZ3SharedCtx returns the opaque *z3bridge.Z3Context shared across
+// module copies, or nil. Type-assert to *z3bridge.Z3Context in z3bridge code.
+func (m *Module) GetZ3SharedCtx() any {
+	return m.z3SharedCtx
+}
+
+// SetZ3SharedCtx attaches a shared Z3Context to this module. Called by
+// z3bridge.getOrCreateModuleCache on first cache creation so that future
+// Module.Copy() calls propagate the Z3Context (and its z3CheckCounter).
+func (m *Module) SetZ3SharedCtx(ctx any) {
+	m.z3SharedCtx = ctx
 }
 
 // NamedAction pairs a name with an action.
@@ -496,7 +517,7 @@ func (m *Module) Copy() *Module {
 	c.AdmitDefinitionFn = m.AdmitDefinitionFn
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory
-	c.z3SessionCache = m.z3SessionCache
+	c.z3SharedCtx = m.z3SharedCtx
 
 	// Copy signature (deep)
 	c.Sig = m.Sig.Copy()

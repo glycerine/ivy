@@ -57,6 +57,17 @@ func NewZ3SessionCache() *Z3SessionCache {
 	return c
 }
 
+// NewZ3SessionCacheWithCtx builds a fresh cache with empty maps but reuses
+// an existing Z3Context. This lets module copies share the Z3Context (and
+// its z3CheckCounter) while getting fresh translation caches — matching
+// Python where _z3_check_counter is a process global but z3_sorts etc.
+// are cleared on Module.__enter__.
+func NewZ3SessionCacheWithCtx(ctx *Z3Context) *Z3SessionCache {
+	c := &Z3SessionCache{Ctx: ctx}
+	c.resetMaps()
+	return c
+}
+
 // Clear resets the cache to its initial state (empty maps, but the same
 // Z3Context). Mirrors Python ivy_solver.clear() called from
 // Module.__enter__ (ivy_module.py:102).

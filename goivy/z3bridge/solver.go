@@ -99,8 +99,23 @@ func getOrCreateModuleCache(mod *module.Module) *Z3SessionCache {
 			return c
 		}
 	}
-	cache := NewZ3SessionCache()
+	// Create new cache: reuse shared Z3Context if available (preserves
+	// z3CheckCounter across module copies — Python's _z3_check_counter
+	// is a process global that persists), otherwise create fresh.
+	var cache *Z3SessionCache
+	if sharedCtx := mod.GetZ3SharedCtx(); sharedCtx != nil {
+		if ctx, ok := sharedCtx.(*Z3Context); ok {
+			cache = NewZ3SessionCacheWithCtx(ctx)
+		}
+	}
+	if cache == nil {
+		cache = NewZ3SessionCache()
+	}
 	mod.SetZ3SessionCache(cache)
+	// Ensure z3SharedCtx is set for future copies of this module.
+	if mod.GetZ3SharedCtx() == nil {
+		mod.SetZ3SharedCtx(cache.Ctx)
+	}
 	return cache
 }
 
