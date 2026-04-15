@@ -751,11 +751,11 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				xtracer.Trace("check.CheckSubgoals temporal prems nTotal=%d nLF=%d nProp=%d", len(goalPrems), nLF, nProp)
 			}
 			for _, premNode := range goalPrems {
-				premLF, ok := premNode.(*ast.LabeledFormula)
-				if !ok {
-					continue
-				}
-				if proof.GoalIsProperty(premLF) {
+				// Python iterates ALL premise types, not just LabeledFormula.
+				// GoalIsProperty requires LF; GoalIsDefn handles ConstantDecl
+				// and UninterpretedSort which are NOT LabeledFormulas.
+				premLF, isLF := premNode.(*ast.LabeledFormula)
+				if isLF && proof.GoalIsProperty(premLF) {
 					if premLF.IsDefinition {
 						// Python: df = lg.drop_universals(prem.formula)
 						//         mod.updates.append(act.DerivedUpdate(df))
@@ -774,8 +774,8 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					if modLF != nil {
 						fakeMod.LabeledAxioms = append(fakeMod.LabeledAxioms, modLF)
 					}
-				} else if proof.GoalIsDefn(premLF) {
-					dfnd := proof.GoalDefines(premLF)
+				} else if proof.GoalIsDefn(premNode) {
+					dfnd := proof.GoalDefines(premNode)
 					if dfnd != nil && il.IsConstant(dfnd) {
 						if sym, ok := dfnd.(*lg.Const); ok {
 							fakeMod.Params = append(fakeMod.Params, sym)
