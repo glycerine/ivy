@@ -27,6 +27,7 @@ func l2sAutoInvariants(
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	m *modpkg.Module,
+	proofLineno ast.Location, // mirrors Python proof.lineno — source location of the proof tactic
 ) ([]*ast.LabeledFormula, map[string]map[string]*lg.Eq, map[string]map[string]*lg.Eq, error) {
 	if !strings.HasPrefix(tacticName, "l2s_auto") {
 		return invars, nil, nil, nil
@@ -453,14 +454,14 @@ func l2sAutoInvariants(
 		// --- l2s_needed_when_start ---
 		if tacticName != "l2s_auto5" {
 			tmp := &lg.Implies{T1: notWaitingForStart, T2: allCreated(workNeeded, idx)}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp, proofLineno)
 		} else {
 			tmp := &lg.Implies{T1: notWaitingForStart, T2: allD(workNeeded)}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp, proofLineno)
 		}
 
 		// --- l2s_created ---
-		invars = appendLF(autoAcfg, invars, "l2s_created"+sfx, allD(workCreated))
+		invars = appendLF(autoAcfg, invars, "l2s_created"+sfx, allD(workCreated), proofLineno)
 
 		// --- l2s_needed_are_frozen ---
 		evStart := eventuallyStartTask(workStart)
@@ -469,7 +470,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(evStart, &lg.Not{Body: l2sWaiting}),
 				T2: allA(workNeeded),
 			}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp, proofLineno)
 		} else {
 			doneSubArgs := eqLHSArgs(workDone)
 			neededArgs := eqLHSArgs(workNeeded)
@@ -490,7 +491,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(evStart, &lg.Not{Body: l2sWaiting}),
 				T2: &lg.Implies{T1: notIsDone, T2: makeAnd(aCons...)},
 			}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp, proofLineno)
 
 			// C12 / Python ivy_l2s.py:422-425: l2s_needed_were_frozen
 			// uses get_was_done(work_needed) which for auto4/5 expands to
@@ -502,7 +503,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(evStart, l2sSaved),
 				T2: &lg.Implies{T1: &lg.Not{Body: wasDoneWere}, T2: makeAnd(aCons...)},
 			}
-			invars = appendLF(autoAcfg, invars, "l2s_needed_were_frozen"+sfx, tmp2)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_were_frozen"+sfx, tmp2, proofLineno)
 		}
 
 		// --- l2s_done_implies_created ---
@@ -1015,8 +1016,10 @@ func l2sAutoInvariants(
 }
 
 // appendLF appends a labeled formula to the invariant list.
-func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
+// lineno mirrors Python's .sln(proof.lineno) on each LabeledFormula.
+func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr, lineno ast.Location) []*ast.LabeledFormula {
 	lf := cfg.NewLabeledFormula(cfg.NewAtom(name), fmla)
+	lf.SetLineno(lineno)
 	return append(invars, lf)
 }
 
