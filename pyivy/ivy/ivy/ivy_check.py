@@ -208,7 +208,7 @@ def get_prioritized_actions():
 failures = 0
 
 def print_dots():
-    print('...', end=' ')
+    print('...', end='\n')
     sys.stdout.flush()
 
 def is_unprovable_assert(asrt):

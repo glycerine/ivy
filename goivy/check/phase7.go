@@ -118,8 +118,8 @@ func ShowAssertions(mod *module.Module) string {
 //
 //	def print_dots(): print('...', end=' ')
 func PrintDots() string {
-	fmt.Print("... ")
-	return "... "
+	fmt.Println("...")
+	return "...\n"
 }
 
 // FilterFcs filters a list of checkers based on the global CheckLineno.

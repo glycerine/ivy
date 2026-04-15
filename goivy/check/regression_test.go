@@ -516,7 +516,7 @@ func TestRegression_Bug15_Identity(t *testing.T) {
 
 func TestRegression_Bug16_NoParams(t *testing.T) {
 	result := PrintDots()
-	if result != "... " {
+	if result != "...\n" {
 		t.Errorf("PrintDots() = %q, want %q", result, "... ")
 	}
 }
