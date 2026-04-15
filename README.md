@@ -2605,20 +2605,15 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845762  go : XTRACE: ast.LF.__init__ id=2306 counter=2307
-        py : XTRACE: ast.LF.__init__ id=2306 counter=2307
 
-845763  go : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
-        py : XTRACE: l2s.SharedStep12 EXIT nResults=1 err=None
+845765  go : XTRACE: module.Copy ENTER actions=24 isolates=16
+        py : XTRACE: module.Copy ENTER actions=24 isolates=16
 
-845764  go : XTRACE: ast.LF.__init__ id=2307 counter=2308
-        py : XTRACE: ast.LF.__init__ id=2307 counter=2308
+845766  go : XTRACE: module.Copy EXIT actions=24 isolates=16
+        py : XTRACE: module.Copy EXIT actions=24 isolates=16
 
-845765  go : XTRACE: check.CheckSubgoals ENTER nGoals=1 nLabeledAxioms=20 method=False
-        py : XTRACE: check.CheckSubgoals ENTER nGoals=1 nLabeledAxioms=20 method=False
+845767  go : XTRACE: check.CheckSubgoals temporal prems nTotal=11 nLF=11 nProp=11
+        py : XTRACE: check.CheckSubgoals temporal prems nTotal=1 nLF=0 nProp=0
 
-845766  go : XTRACE: check.CheckSubgoals goal[0] formula=SchemaBody nElems=12 concType=TemporalModels isTM=True
-        py : XTRACE: check.CheckSubgoals goal[0] concType=TemporalModels formulaType=SchemaBody isTM=True
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 845766, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 845767, counting from 0.
 ~~~
