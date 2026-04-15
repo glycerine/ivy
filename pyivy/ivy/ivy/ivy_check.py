@@ -138,13 +138,13 @@ def check_temporals():
     for prop in props:
         if prop.temporal:
             if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
-                print('  ivy_check temporal: admitting axiom...', pretty_lf(prop))
+                print('  ivy_check temporal: admitting axiom...\n', pretty_lf(prop))
                 if opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
                     print('     ... admitting ', prop.label, ' as axiom because it is an externally assumed property and unchecked property file is supplied.')
                 pc.admit_axiom(prop)
             else:
                 print('\n    The following temporal property is being proved:\n')
-                print(pretty_lf(prop) + ' ...', end=' ')
+                print(pretty_lf(prop) + ' ...', end='\n')
                 sys.stdout.flush()
                 if prop.temporal:
                     proof = pmap.get(prop.id,None)
@@ -255,7 +255,7 @@ class Checker(object):
         return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get() # ignore failures if not diagnosing
     def _pass(self):
         if self.report_pass:
-            print('PASS')
+            print('PASS\n')
         return True
 
 def pretty_label(label):
@@ -750,10 +750,10 @@ def check_isolate(trace_hook = None):
                                    some_failed = True
                                    break
                         if not some_failed:
-                            print('PASS')
+                            print('PASS\n')
                         act.checked_assert.value = old_checked_assert
                     else:
-                        print("")
+                        print("\n")
 
         im.module.assumed_invariants.extend(im.module.labeled_conjs)
         im.module.labeled_conjs = []
