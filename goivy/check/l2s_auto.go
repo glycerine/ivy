@@ -940,7 +940,7 @@ func l2sAutoInvariants(
 	for i, iinv := range iinvs {
 		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv, proofLineno)
 	}
-	invars = appendLF(autoAcfg, invars, "neg_prop_init", negPropInit)
+	invars = appendLF(autoAcfg, invars, "neg_prop_init", negPropInit, proofLineno)
 
 	// C15 / Python ivy_l2s.py:664-676: l2s_when_<i> invariants for
 	// WhenOperator nodes with name=="first" found in invars + property prems.
@@ -997,7 +997,7 @@ func l2sAutoInvariants(
 			}
 		}
 		for i, w := range winvs {
-			invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_when_%d", i), w)
+			invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_when_%d", i), w, proofLineno)
 		}
 	}
 

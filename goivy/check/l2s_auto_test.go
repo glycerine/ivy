@@ -219,7 +219,7 @@ func TestCloneLHS_Other(t *testing.T) {
 // --- appendLF ---
 
 func TestAppendLF(t *testing.T) {
-	result := appendLF(autoTestAstCfg, nil, "foo", lg.True)
+	result := appendLF(autoTestAstCfg, nil, "foo", lg.True, ast.Location{})
 	if len(result) != 1 {
 		t.Fatalf("expected 1 element, got %d", len(result))
 	}

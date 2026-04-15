@@ -295,6 +295,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	}
 	// default when not known: "nowhere"; matches ivy_utils.py:248 / ivy_check.py:684
 	lineno := ast.Location{Filename: "nowhere", Line: 0}
+	// Get actual proof location for labeling invariants.
+	// Python: proof.lineno = source location of the proof tactic.
+	proofLineno := pf.GetLineno()
 
 	// Get the goal's conclusion. After the TemporalModels API broadening,
 	// proof.GoalConc returns the inner conclusion (TemporalModels in this case)
@@ -482,7 +485,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	if strings.HasPrefix(tacticName, "l2s_auto") {
 		var err error
 		invars, autoTasks, autoTriggers, err = l2sAutoInvariants(tacticName, goal, invars, proofLabel,
-			fmla, finiteSorts, uninterpretedSorts, m)
+			fmla, finiteSorts, uninterpretedSorts, m, proofLineno)
 		if err != nil {
 			return nil, fmt.Errorf("l2s_auto: %w", err)
 		}
