@@ -844,7 +844,7 @@ def check_subgoals(goals,method=None):
                                 if diagnose.get():
                                     gui_art(foo)
                             else:
-                                print("PASS_3\n")
+                                print("PASS\n")
                     else:
                         if hasattr(goal,"trace_hook"):
                             mod.trace_hook = goal.trace_hook
