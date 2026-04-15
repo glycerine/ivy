@@ -7,6 +7,7 @@ package module
 
 import (
 	"fmt"
+	"strings"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -236,7 +237,7 @@ func TrimClauses(cls *Clauses) *Clauses {
 		syms := UsedSymbolsAST(seed)
 		for _, sym := range syms {
 			name := lg.ExprName(sym)
-			if len(name) >= 2 && name[0] == '_' && name[1] == '_' {
+			if strings.Contains(name, "__") {
 				if !usedSyms[name] {
 					usedSyms[name] = true
 					if idx, ok := cls.DefIdx[lg.Key(sym)]; ok && idx < len(cls.Defs) {

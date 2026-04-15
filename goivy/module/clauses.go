@@ -329,9 +329,11 @@ func unwrapSingleton(f lg.Expr) lg.Expr {
 	return f
 }
 
-// isSkolem returns true if the constant name starts with "__" (Skolem convention).
+// isSkolem returns true if the constant name contains "__" (Skolem convention).
+// Python: Symbol.is_skolem = lambda self: self.contains('__')
+// where contains = lambda self, s: (s in self.name)
 func isSkolem(c *lg.Const) bool {
-	return len(c.Name) >= 2 && c.Name[0] == '_' && c.Name[1] == '_'
+	return strings.Contains(c.Name, "__")
 }
 
 
