@@ -2081,6 +2081,48 @@ func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], 
 	return env
 }
 
+// BuildEnvActionFromAction constructs an EnvAction wrapping a given action
+// object (not looked up by name). This matches Python's env_action(actname, label)
+// when actname is an action object rather than a string.
+// Corresponds to Python's env_action (ivy_actions.py:1817-1845) with non-string actname.
+func BuildEnvActionFromAction(cfg *ActionsConfig, action Action, label string) *EnvAction {
+	xtracer.Trace("actions.env_action ENTER")
+	xtracer.Trace("actions.env_action post actNames")
+
+	var branches []lg.Expr
+	// Single iteration: actname is an action, not a string
+	xtracer.Trace("actions.env_action loop iter")
+	// Python: act = actname (isinstance(a,str) is False, so act = actname)
+	xtracer.Trace("actions.env_action loop post lookup")
+	retAct := &ReturnAction{}
+	seq := NewSequence(action, retAct)
+	xtracer.Trace("actions.env_action loop post NewSequence")
+	// Copy formal params/returns from the action
+	if fp := action.GetFormalParams(); fp != nil {
+		seq.SetFormalParams(fp)
+	}
+	if fr := action.GetFormalReturns(); fr != nil {
+		seq.SetFormalReturns(fr)
+	}
+	xtracer.Trace("actions.env_action loop post formals")
+	// Python: isinstance(a, str) is False, so do NOT set label on ract
+	branches = append(branches, seq)
+	xtracer.Trace("actions.env_action loop end")
+
+	xtracer.Trace("actions.env_action post loop")
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	env := &EnvAction{}
+	env.UniqueID = id
+	env.ActCfg = cfg
+	env.Branches = branches
+	if label != "" {
+		env.Label = label
+	}
+	xtracer.Trace("actions.env_action EXIT")
+	return env
+}
+
 // --- Decompose implementations ---
 
 // SubgoalAction inherits Decompose from AssertAction.

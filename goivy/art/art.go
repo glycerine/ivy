@@ -1534,28 +1534,55 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 		}
 		if len(seqChildren) > 0 {
 			// Step 1: Sequence(*initializers)
+			// Python: action = Sequence(*[a for n,a in domain.initializers])
 			seq := actions.NewSequence(seqChildren...)
 
-			// Step 2: env_action(action, 'init') — wrap in EnvAction with label
-			retAct := &actions.ReturnAction{}
-			innerSeq := actions.NewSequence(seq, retAct)
-			env := actions.NewEnvActionOn(mod.Cfg.ActCfg, innerSeq)
-			env.SetLabels([]string{"init"})
+			// Step 2: env_action(action, 'init')
+			// Python: action = env_action(action, 'init')
+			// Must use BuildEnvActionFromAction to emit the same 9 traces
+			// as Python's env_action().
+			env := actions.BuildEnvActionFromAction(mod.Cfg.ActCfg, seq, "init")
 
-			// Step 3: action_app(action, s) — build expression
+			// Step 3: action_app(action, s)
 			actionAppExpr := NewActionApp(env, s)
 
 			// Step 4: eval_state(s) under AC(no_add=True) + EvalContext(check=False)
+			// Python: eval_state(s) → apply_action(expr, expr.rep, v, s)
+			// Python's apply_action emits only 1 trace before GetUpdate:
+			//   "interp.ApplyAction calling GetUpdate actionName=%s type=%s"
+			// Then calls action.update(domain, in_scope) → concrete_post(upd, state, ...)
 			interpState := ArtToInterpState(s)
-			//ec := interp.NewEvalContext(false)
-			//ec.Enter()
-			s2interp, err := interp.ApplyAction(checkPrecondFalse, nil, "init", env, interpState)
-			//ec.Exit()
+			xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s",
+				actions.ActionTypeName(env), actions.ActionTypeName(env))
+			ctx := &actions.UpdateContext{
+				Domain:       interpState.Domain,
+				PVars:        interpState.InScope,
+				ActCfg:       mod.Cfg.ActCfg,
+				Instantiator: mod.Instantiator,
+				GetAction: func(name string) actions.Action {
+					if mod != nil {
+						if a, ok := mod.Actions.Get2(name); ok {
+							if act, ok2 := a.(actions.Action); ok2 {
+								return act
+							}
+						}
+					}
+					return nil
+				},
+			}
+			upd := actions.GetUpdate(env, ctx)
+			if upd == nil {
+				upd = actions.NullUpdate()
+			}
+			actionAppNode := interp.ActionApp(interpState.AstCfg(), "init", interp.WrapState(interpState))
+			s2interp, err := interp.ConcretePost(checkPrecondFalse, upd, interpState, actionAppNode)
 
 			if err != nil {
 				log.Printf("art.AddInitialState: ApplyAction error: %v", err)
 				// Fall through to no-initializer path
 			} else {
+				s2interp.Action = env
+				s2interp.ActionName = "init"
 				s2 := InterpToArtState(s2interp)
 				s2.Prov = actionAppExpr
 				ag.Add(s2, nil)
