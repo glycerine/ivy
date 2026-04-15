@@ -116,7 +116,7 @@ func ShowAssertions(mod *module.Module) string {
 // PrintDots prints progress dots to stdout.
 // Corresponds to Python's print_dots (ivy_check.py lines 201-203):
 //
-//	def print_dots(): print('...', end=' ')
+//	def print_dots(): print('...', end='\n')
 func PrintDots() string {
 	fmt.Println("...")
 	return "...\n"

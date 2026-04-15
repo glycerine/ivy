@@ -172,7 +172,7 @@ func NewConjChecker(mod *module.Module, lf *ast.LabeledFormula, indent int) *Con
 
 func (c *ConjChecker) Start() {
 	fmt.Print(PrettyLF(c.LF, c.Indent), " ")
-	fmt.Print("... ")
+	fmt.Print("...\n")
 }
 
 func (c *ConjChecker) GetAnnot() interface{} {
