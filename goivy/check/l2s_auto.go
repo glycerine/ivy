@@ -1005,7 +1005,7 @@ func l2sAutoInvariants(
 	// debug mode (the Python code prints unconditionally; we gate behind
 	// L2SDebug to avoid noise in normal runs).
 	if m != nil && m.Cfg != nil && m.Cfg.L2SDebug {
-		fmt.Println("\n--- begin l2s_auto invariants ---\n")
+		fmt.Printf("\n--- begin l2s_auto invariants ---\n\n")
 		for _, inv := range invars {
 			fmt.Printf("invariant %v\n", inv)
 		}

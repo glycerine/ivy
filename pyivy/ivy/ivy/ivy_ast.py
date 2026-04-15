@@ -1888,8 +1888,11 @@ def symbols_ivy_ast(ast):
         if __debug__:
             src = type(ast).__name__
             val = ast.rep
+            name = val
             val_type = type(val).__name__
-            xtracer.trace("vocab.add src=%s name=%s val_type=%s" % (src, val, val_type))
+            if not isinstance(val, NamedBinder):
+                #name = val.name
+                xtracer.trace("vocab.add src=%s name=%s val_type=%s\nstr(ast)=%s ; vars(ast)=%s" % (src, name, val_type, str(ast), vars(ast) ))
         yield ast.rep
     if ast != None and not isinstance(ast,str):
 #        if not hasattr(ast,'args'):

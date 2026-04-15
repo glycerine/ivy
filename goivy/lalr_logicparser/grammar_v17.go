@@ -231,7 +231,7 @@ const v17EofCode = 1
 const v17ErrCode = 2
 const v17InitialStackSize = 16
 
-//line grammar_v17.y:998
+//line grammar_v17.y:1000
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
 func lalrMakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
@@ -1285,43 +1285,45 @@ v17default:
 //line grammar_v17.y:479
 		{
 			binder := acfg(v17lex).NewNamedBinder(v17Dollar[3].str, v17Dollar[4].nodes, v17Dollar[6].node)
-			v17VAL.node = acfg(v17lex).NewAtom("", append([]ast.Node{binder}, v17Dollar[9].nodes...)...)
+			//binder.SetLineno(getLineno(v17lex))
+			v17VAL.node = acfg(v17lex).NewApp(binder, v17Dollar[9].nodes...)
+			//$$.(*ast.App).SetLineno(getLineno(v17lex))
 		}
 	case 63:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:484
+//line grammar_v17.y:486
 		{
 			v17VAL.node = acfg(v17lex).NewNamedBinder(v17Dollar[2].str, nil, v17Dollar[4].node)
 		}
 	case 64:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:488
+//line grammar_v17.y:490
 		{
 			v17VAL.node = acfg(v17lex).NewNamedBinder(v17Dollar[2].str, nil, v17Dollar[4].node)
 		}
 	case 65:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:497
+//line grammar_v17.y:499
 		{
 			// Python: app_to_atom(p[1]) — convert top-level App to Atom in formula position.
 			v17VAL.node = ast.AppToAtom(v17Dollar[1].node)
 		}
 	case 66:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:509
+//line grammar_v17.y:511
 		{
 			v17VAL.node = acfg(v17lex).NewLabeledFormula(nil, v17Dollar[1].node)
 		}
 	case 67:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:522
+//line grammar_v17.y:524
 		{
 			a := acfg(v17lex).NewAtom(v17Dollar[1].str)
 			v17VAL.node = a
 		}
 	case 68:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:527
+//line grammar_v17.y:529
 		{
 			a := acfg(v17lex).NewAtom(v17Dollar[1].str)
 			a.ASort = v17Dollar[3].node
@@ -1329,7 +1331,7 @@ v17default:
 		}
 	case 69:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:533
+//line grammar_v17.y:535
 		{
 			// Ghost parameter: ^name : type
 			a := acfg(v17lex).NewAtom(v17Dollar[2].str)
@@ -1338,19 +1340,19 @@ v17default:
 		}
 	case 70:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:543
+//line grammar_v17.y:545
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 71:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:547
+//line grammar_v17.y:549
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 72:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:556
+//line grammar_v17.y:558
 		{
 			a := acfg(v17lex).NewAtom(v17Dollar[1].str)
 			a.ASort = v17Dollar[3].node
@@ -1358,7 +1360,7 @@ v17default:
 		}
 	case 73:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:562
+//line grammar_v17.y:564
 		{
 			a := acfg(v17lex).NewAtom(v17Dollar[2].str)
 			a.ASort = v17Dollar[4].node
@@ -1366,199 +1368,199 @@ v17default:
 		}
 	case 74:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:571
+//line grammar_v17.y:573
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 75:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:575
+//line grammar_v17.y:577
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 76:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:584
+//line grammar_v17.y:586
 		{
 			v17VAL.node = acfg(v17lex).NewAnd()
 		}
 	case 77:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:588
+//line grammar_v17.y:590
 		{
 			v17VAL.node = lalrMakeSequence(acfg(v17lex), v17Dollar[2].nodes)
 		}
 	case 78:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:592
+//line grammar_v17.y:594
 		{
 			v17VAL.node = lalrMakeSequence(acfg(v17lex), v17Dollar[2].nodes)
 		}
 	case 79:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:599
+//line grammar_v17.y:601
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 80:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:603
+//line grammar_v17.y:605
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 81:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:607
+//line grammar_v17.y:609
 		{
 			// complexact after complexact (no semicolon needed)
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 82:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:615
+//line grammar_v17.y:617
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 83:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:619
+//line grammar_v17.y:621
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 84:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:628
+//line grammar_v17.y:630
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("assume", v17Dollar[2].node)
 		}
 	case 85:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:632
+//line grammar_v17.y:634
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("assert", v17Dollar[2].node)
 		}
 	case 86:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:636
+//line grammar_v17.y:638
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("require", v17Dollar[2].node)
 		}
 	case 87:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:640
+//line grammar_v17.y:642
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("ensure", v17Dollar[2].node)
 		}
 	case 88:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:644
+//line grammar_v17.y:646
 		{
 			v17VAL.node = acfg(v17lex).NewAtom(":=", v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 89:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:648
+//line grammar_v17.y:650
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("havoc", v17Dollar[1].node)
 		}
 	case 90:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:652
+//line grammar_v17.y:654
 		{
 			v17VAL.node = acfg(v17lex).NewVarAction(v17Dollar[2].node)
 		}
 	case 91:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:656
+//line grammar_v17.y:658
 		{
 			v17VAL.node = acfg(v17lex).NewVarAction(v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 92:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:660
+//line grammar_v17.y:662
 		{
 			// Simple call: call f(x)
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 93:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:665
+//line grammar_v17.y:667
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("instantiate", v17Dollar[2].node)
 		}
 	case 94:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:669
+//line grammar_v17.y:671
 		{
 			// When check_unprovable is False (default), unprovable statements are no-ops
 			v17VAL.node = acfg(v17lex).NewAnd()
 		}
 	case 95:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:674
+//line grammar_v17.y:676
 		{
 			// Bare expression (procedure call)
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 96:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:684
+//line grammar_v17.y:686
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 97:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:688
+//line grammar_v17.y:690
 		{
 			v17VAL.node = acfg(v17lex).NewIte(v17Dollar[2].node, v17Dollar[3].node, acfg(v17lex).NewAnd())
 		}
 	case 98:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:692
+//line grammar_v17.y:694
 		{
 			v17VAL.node = acfg(v17lex).NewIte(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 99:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:696
+//line grammar_v17.y:698
 		{
 			// ChoiceAction: if * { ... } else { ... }
 			v17VAL.node = acfg(v17lex).NewIte(acfg(v17lex).NewSymbol("*", nil), v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 100:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:701
+//line grammar_v17.y:703
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("while", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 101:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:705
+//line grammar_v17.y:707
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("while", v17Dollar[2].node, v17Dollar[5].node)
 		}
 	case 102:
 		v17Dollar = v17S[v17pt-7 : v17pt+1]
-//line grammar_v17.y:709
+//line grammar_v17.y:711
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("for", v17Dollar[2].node, v17Dollar[4].node, v17Dollar[6].node, v17Dollar[7].node)
 		}
 	case 103:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:713
+//line grammar_v17.y:715
 		{
 			args := append(v17Dollar[2].nodes, v17Dollar[3].node)
 			v17VAL.node = acfg(v17lex).NewAtom("local", args...)
 		}
 	case 104:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:718
+//line grammar_v17.y:720
 		{
 			v17VAL.node = acfg(v17lex).NewAtom("let", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 105:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
-//line grammar_v17.y:729
+//line grammar_v17.y:731
 		{
 			elems := append([]ast.Node{v17Dollar[3].node}, v17Dollar[5].nodes...)
 			sdef := acfg(v17lex).NewScenarioDef(elems)
@@ -1566,49 +1568,49 @@ v17default:
 		}
 	case 106:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:738
+//line grammar_v17.y:740
 		{
 			v17VAL.node = acfg(v17lex).NewPlaceList(v17Dollar[2].nodes)
 		}
 	case 107:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:745
+//line grammar_v17.y:747
 		{
 			v17VAL.nodes = []ast.Node{acfg(v17lex).NewAtom(v17Dollar[1].str)}
 		}
 	case 108:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:749
+//line grammar_v17.y:751
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, acfg(v17lex).NewAtom(v17Dollar[3].str))
 		}
 	case 109:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:756
+//line grammar_v17.y:758
 		{
 			v17VAL.nodes = nil
 		}
 	case 110:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:760
+//line grammar_v17.y:762
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 111:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:767
+//line grammar_v17.y:769
 		{
 			v17VAL.node = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList(v17Dollar[1].nodes), acfg(v17lex).NewPlaceList(v17Dollar[3].nodes), v17Dollar[5].node)
 		}
 	case 112:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:771
+//line grammar_v17.y:773
 		{
 			v17VAL.node = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList(v17Dollar[1].nodes), acfg(v17lex).NewPlaceList(nil), v17Dollar[3].node)
 		}
 	case 113:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:778
+//line grammar_v17.y:780
 		{
 			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1619,7 +1621,7 @@ v17default:
 		}
 	case 114:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:787
+//line grammar_v17.y:789
 		{
 			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1630,211 +1632,211 @@ v17default:
 		}
 	case 115:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:806
+//line grammar_v17.y:808
 		{
 			v17VAL.node = acfg(v17lex).NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 116:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:814
+//line grammar_v17.y:816
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 117:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:818
+//line grammar_v17.y:820
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 118:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:826
+//line grammar_v17.y:828
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 119:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:830
+//line grammar_v17.y:832
 		{
 			v17VAL.node = acfg(v17lex).NewDefinition(v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 120:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:834
+//line grammar_v17.y:836
 		{
 			v17VAL.node = acfg(v17lex).NewTrigger(nil, append([]ast.Node{v17Dollar[2].node}, v17Dollar[4].nodes...)...)
 		}
 	case 121:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:842
+//line grammar_v17.y:844
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 122:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:846
+//line grammar_v17.y:848
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 123:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:854
+//line grammar_v17.y:856
 		{
 			v17VAL.node = acfg(v17lex).NewTacticWith(v17Dollar[1].nodes)
 		}
 	case 124:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:858
+//line grammar_v17.y:860
 		{
 			v17VAL.node = acfg(v17lex).NewTacticLets(v17Dollar[1].nodes)
 		}
 	case 125:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:866
+//line grammar_v17.y:868
 		{
 			v17VAL.node = acfg(v17lex).NewTacticWith(nil)
 		}
 	case 126:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:870
+//line grammar_v17.y:872
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 127:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:874
+//line grammar_v17.y:876
 		{
 			v17VAL.node = acfg(v17lex).NewTacticWith(v17Dollar[3].nodes)
 		}
 	case 128:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:882
+//line grammar_v17.y:884
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 129:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:886
+//line grammar_v17.y:888
 		{
 			v17VAL.node = acfg(v17lex).NewNullTactic()
 		}
 	case 130:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:894
+//line grammar_v17.y:896
 		{
 			v17VAL.node = acfg(v17lex).NewNoneAST()
 		}
 	case 131:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:898
+//line grammar_v17.y:900
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 132:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:906
+//line grammar_v17.y:908
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 133:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:910
+//line grammar_v17.y:912
 		{
 			v17VAL.node = acfg(v17lex).NewComposeTactics([]ast.Node{v17Dollar[1].node, v17Dollar[3].node})
 		}
 	case 134:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:914
+//line grammar_v17.y:916
 		{
 			v17VAL.node = acfg(v17lex).NewComposeTactics([]ast.Node{v17Dollar[1].node, v17Dollar[2].node})
 		}
 	case 135:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:923
+//line grammar_v17.y:925
 		{
 			v17VAL.node = acfg(v17lex).NewSchemaInstantiation(v17Dollar[2].node, acfg(v17lex).NewNoneAST())
 		}
 	case 136:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:928
+//line grammar_v17.y:930
 		{
 			v17VAL.node = acfg(v17lex).NewAssumeTactic(v17Dollar[2].node, acfg(v17lex).NewNoneAST())
 		}
 	case 137:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:933
+//line grammar_v17.y:935
 		{
 			v17VAL.node = acfg(v17lex).NewShowGoalsTactic()
 		}
 	case 138:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:938
+//line grammar_v17.y:940
 		{
 			v17VAL.node = acfg(v17lex).NewDeferGoalTactic()
 		}
 	case 139:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:943
+//line grammar_v17.y:945
 		{
 			v17VAL.node = acfg(v17lex).NewSpoilTactic(v17Dollar[2].node)
 		}
 	case 140:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:948
+//line grammar_v17.y:950
 		{
 			v17VAL.node = acfg(v17lex).NewTacticTactic(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[4].node)
 		}
 	case 141:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:953
+//line grammar_v17.y:955
 		{
 			v17VAL.node = acfg(v17lex).NewPropertyTactic(v17Dollar[2].node, acfg(v17lex).NewNoneAST(), v17Dollar[3].node)
 		}
 	case 142:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:958
+//line grammar_v17.y:960
 		{
 			v17VAL.node = acfg(v17lex).NewFunctionTactic([]ast.Node{v17Dollar[2].node})
 		}
 	case 143:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:963
+//line grammar_v17.y:965
 		{
 			v17VAL.node = acfg(v17lex).NewProofTactic(acfg(v17lex).NewAtom(v17Dollar[2].str), v17Dollar[3].node)
 		}
 	case 144:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:968
+//line grammar_v17.y:970
 		{
 			v17VAL.node = acfg(v17lex).NewLetTactic(v17Dollar[2].nodes)
 		}
 	case 145:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:973
+//line grammar_v17.y:975
 		{
 			v17VAL.node = acfg(v17lex).NewWitnessTactic(v17Dollar[3].nodes)
 		}
 	case 146:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:978
+//line grammar_v17.y:980
 		{
 			v17VAL.node = acfg(v17lex).NewIfTactic(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 147:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:983
+//line grammar_v17.y:985
 		{
 			v17VAL.node = acfg(v17lex).NewUnfoldTactic(acfg(v17lex).NewNoneAST(), []ast.Node{v17Dollar[3].node})
 		}
 	case 148:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:988
+//line grammar_v17.y:990
 		{
 			v17VAL.node = acfg(v17lex).NewForgetTactic([]ast.Node{v17Dollar[2].node})
 		}
 	case 149:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:993
+//line grammar_v17.y:995
 		{
 			v17VAL.node = v17Dollar[1].node
 		}

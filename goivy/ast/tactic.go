@@ -466,18 +466,27 @@ func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
 		case string:
 			vn.Set(v, true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=Atom name=%s val_type=str", v)
+				xtracer.Trace("vocab.add src=Atom name=%s val_type=str\n string", v)
 			}
 		case *Symbol:
 			vn.Set(v.Rep, true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=App name=%s val_type=str", v.Rep)
+				xtracer.Trace("vocab.add src=App name=%s val_type=str\n Symbol='%#v'", v.Rep, v)
 			}
 		case *This:
 			vn.Set("this", true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=App name=this val_type=str")
+				xtracer.Trace("vocab.add src=App name=this val_type=str\n *This='%#v'", v)
 			}
+		case *NamedBinder:
+			//vn.Set(v.Name, true)
+			// Python adds the NamedBinder object to the set, but it never matches
+			// any string lookup (it's inert). Skipping xtrace on both sides.
+			//if xtracer.Enabled {
+			//	xtracer.Trace("vocab.add src=App name=%v val_type=NamedBinder", v.Name)
+			//}
+		default:
+			panicf("unhandled type=%T/val=%v", val, val)
 		}
 	}
 }

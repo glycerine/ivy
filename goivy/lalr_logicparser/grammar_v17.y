@@ -478,7 +478,9 @@ term:
     | TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN
     {
         binder := acfg(v17lex).NewNamedBinder($3, $4, $6)
-        $$ = acfg(v17lex).NewAtom("", append([]ast.Node{binder}, $9...)...)
+        //binder.SetLineno(getLineno(v17lex))
+        $$ = acfg(v17lex).NewApp(binder, $9...)
+        //$$.(*ast.App).SetLineno(getLineno(v17lex))
     }
     | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
     {
