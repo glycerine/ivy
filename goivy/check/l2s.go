@@ -720,7 +720,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	}
 
 	var assertNoFairCycleAction actions.Action = setLineno(
-		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno)
+		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno) // "nowhere" file, no lineno
+	// Python ivy_l2s.py:991: assert_no_fair_cycle.lineno = goal.lineno
+	assertNoFairCycleAction.SetLineno(goal.GetLineno()) // actual lineno from here!
 
 	// H1 / Python ivy_l2s.py:910-911: if the user supplied a tactic_proof
 	// (e.g. `tactic l2s_auto2 proof { <subproof> }`), apply it to the

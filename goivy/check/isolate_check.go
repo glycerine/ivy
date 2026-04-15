@@ -457,6 +457,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				callers := callgraph[actname]
 				if mod.PublicActions.Get(actname) {
 					callers = append(callers, "the environment")
+					callgraph[actname] = callers // persist mutation, matching Python's list.append
 				}
 				prettyname := actname
 				if strings.HasPrefix(prettyname, "ext:") {
@@ -537,6 +538,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				callers := callgraph[actname]
 				if mod.PublicActions.Get(actname) {
 					callers = append(callers, "the environment")
+					callgraph[actname] = callers // persist mutation, matching Python's list.append
 				}
 				prettyname := actname
 				if strings.HasPrefix(prettyname, "ext:") {
