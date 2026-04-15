@@ -708,10 +708,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				for _, c := range np.Calls {
 					fakeMod.PublicActions.Set(c, true)
 				}
-				bmap := np.BindingMap()
 				fakeMod.Actions = iu.NewInsMap[string, module.Action]()
-				for k, v := range bmap {
-					fakeMod.Actions.Set(k, v)
+				for _, b := range np.Bindings {
+					fakeMod.Actions.Set(b.Name, b.Action.Stmt)
 				}
 				if np.Init != nil {
 					fakeMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}
