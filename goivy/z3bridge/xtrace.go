@@ -60,6 +60,7 @@ func (s *Z3Solver) TraceCheck(result CheckResult) {
 		return
 	}
 	seq := s.ctx.z3CheckCounter.Add(1)
+	vv("seq = %v (from s.ctx.z3CheckCounter, corresponds to ivy_solver.py:1386)", seq)
 	asserts := s.CanonZ3Assertions()
 
 	var rs string
