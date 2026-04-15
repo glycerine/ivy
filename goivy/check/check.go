@@ -20,11 +20,11 @@ import (
 	"github.com/glycerine/ivy/goivy/mc"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
 	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/temporal"
 	"github.com/glycerine/ivy/goivy/vmt"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 const checkPrecondFalse = false
@@ -321,7 +321,7 @@ func CheckTemporals(mod *module.Module) error {
 			pc.AdmitAxiom(prop)
 		} else {
 			fmt.Print("\n    The following temporal property is being proved:\n")
-			fmt.Print(PrettyLF(prop, 4) + " ... ")
+			fmt.Print(PrettyLF(prop, 4) + " ...\n")
 
 			// Python: proof = pmap.get(prop.id, None)
 			pf := pmap[prop.ID]
