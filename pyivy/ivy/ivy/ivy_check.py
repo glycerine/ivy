@@ -792,7 +792,12 @@ def check_subgoals(goals,method=None):
             mod.assumed_invariants = model.asms
             mod.params = list(mod.params)
             mod.updates = list(mod.updates)
-            for prem in ivy_proof.goal_prems(goal):
+            _goal_prems = ivy_proof.goal_prems(goal)
+            if __debug__:
+                _nLF = sum(1 for p in _goal_prems if isinstance(p, ivy_ast.LabeledFormula))
+                _nProp = sum(1 for p in _goal_prems if ivy_proof.goal_is_property(p))
+                xtracer.trace("check.CheckSubgoals temporal prems nTotal=%d nLF=%d nProp=%d" % (len(_goal_prems), _nLF, _nProp))
+            for prem in _goal_prems:
                 # if hasattr(prem,'temporal') and prem.temporal:
                 if ivy_proof.goal_is_property(prem):
                     # print ('using premise: {}'.format(prem))

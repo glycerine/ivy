@@ -738,7 +738,20 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			//             elif ivy_proof.goal_is_defn(prem):
 			//                 dfnd = ivy_proof.goal_defines(prem)
 			//                 if lg.is_constant(dfnd): mod.params.append(dfnd)
-			for _, premNode := range proof.GoalPrems(goal) {
+			goalPrems := proof.GoalPrems(goal)
+			if xtracer.Enabled {
+				nLF, nProp := 0, 0
+				for _, p := range goalPrems {
+					if lf, ok := p.(*ast.LabeledFormula); ok {
+						nLF++
+						if proof.GoalIsProperty(lf) {
+							nProp++
+						}
+					}
+				}
+				xtracer.Trace("check.CheckSubgoals temporal prems nTotal=%d nLF=%d nProp=%d", len(goalPrems), nLF, nProp)
+			}
+			for _, premNode := range goalPrems {
 				premLF, ok := premNode.(*ast.LabeledFormula)
 				if !ok {
 					continue
