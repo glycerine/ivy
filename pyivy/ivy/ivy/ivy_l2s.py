@@ -704,10 +704,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             invars.append(ivy_ast.LabeledFormula(ivy_ast.Atom("l2s_when_"+str(i)),winv).sln(proof.lineno))
 
 
-        print ('--- l2s_auto invariants ---')
+        print ('\n--- begin l2s_auto invariants ---\n')
         for inv in invars:
             print('invariant {}'.format(inv))
-        print ('---------------------------')
+        print ('\n--- end l2s_auto invariants ---\n')
+
 
 
         
