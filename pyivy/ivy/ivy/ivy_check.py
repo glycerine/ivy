@@ -255,7 +255,7 @@ class Checker(object):
         return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get() # ignore failures if not diagnosing
     def _pass(self):
         if self.report_pass:
-            print('PASS_2\n')
+            print('PASS')
         return True
 
 def pretty_label(label):
@@ -750,7 +750,7 @@ def check_isolate(trace_hook = None):
                                    some_failed = True
                                    break
                         if not some_failed:
-                            print('PASS_1\n')
+                            print('PASS')
                         act.checked_assert.value = old_checked_assert
                     else:
                         print("\n")
