@@ -2605,43 +2605,30 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845777  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assertions=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assertions=[]
+845787  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theorems=(hash)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theorems=(hash)
 
-845778  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assumedInvs=[(labeledFormula label:(atom rep:"invar108" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Eq t1:(Symbol name:cfabric.t_rd_arr_min sort:(UninterpretedSort name:tar_cf_clock)) t2:(Variable name:Tarr  ...(truncated long line to 300 bytes)
+845788  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  predicates=(hash)
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  predicates=(hash)
 
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  assumedInvs=[(labeledFormula label:(atom rep:"invar108" terms:[] aSort:nil) formula:(Implies t1:(And terms:[(Eq t1:(Symbol name:cfabric.t_rd_arr_min sort:(UninterpretedSort name:tar_cf_clock)) t2:(Variable name:Tarr 
+845789  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  initCond=(clauses fmlas:[] defs:[])
+
+845790  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theory=(clauses fmlas:[(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSort name:index) (BooleanSort)])) terms:[(Variable name:X sort:(Uninterpre ...(truncated long line to 300 bytes)
+
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  theory=(clauses fmlas:[(Implies t1:(Apply func:(Symbol name:index.succ sort:(FunctionSort sorts:[(UninterpretedSort name:index) (UninterpretedSort name:index) (BooleanSort)])) terms:[(Variable name:X sort:(Uninterpre
  ...(truncated long line to 300 bytes)
 
-845779  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  nativeDefinitions=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  nativeDefinitions=[]
+845791  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  actions.keys=25 keys=ext:cfabric.complete_hook,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,idle,ext:ifabric.step,ext:memc.memc_push_hook,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:dramc.step_rd,ext:ta ...(truncated long line to 300 bytes)
 
-845780  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  allRelations=[(Symbol name:index.max2 sort:(FunctionSort sorts:[(TopSort name:alpha0) (TopSort name:alpha1) (TopSort name:alpha2)])) (Symbol name:index.mod sort:(FunctionSort sorts:[(TopSort name:alpha0) (TopSort nam ...(truncated long line to 300 bytes)
-
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjSubgoals=[]
+        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  actions.keys=25 keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:
+ ...(truncated long line to 300 bytes)
 
 
 === S-expression diff (go '-' vs py '+') ===
-- allRelations=[
-+ conjSubgoals=[]
--   (Symbol
-+ 
--     name:index.max2
-+ 
--     sort:(FunctionSort
-+ 
--       sorts:[
-+ 
--         (TopSort
-+ 
--           name:alpha0)
-+ 
--         (TopSort
-+ 
--           name:alpha1)
-+ 
--         (TopSort
-+ 
+   actions.keys=25
+- keys=ext:cfabric.complete_hook,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,idle,ext:ifabric.step,ext:memc.memc_push_hook,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:dramc.step_rd,ext:tar_clock.next,ext:ref.create,ext:memc.memc_cpl_hook,ext:memc.step,ext:arm.step_south,ext:lclock.next,ext:tar_cf_clock.next,ext:cfabric.step,ext:memc.memc_arr_hook,ext:dramc.step_wr,rfn.abs.trying1.raise,rfn.abs.trying2.raise,ext:ref.perform,ext:ref.perform_grd
++ keys=ext:lclock.next,ext:tar_clock.next,ext:tar_cf_clock.next,ext:ref.create,ext:ref.perform,ext:ref.perform_grd,ext:cfabric.complete_hook,ext:cfabric.step,ext:ifabric.step,ext:memc.memc_arr_hook,ext:memc.memc_push_hook,ext:memc.memc_cpl_hook,ext:memc.step,ext:arm.issue_hook,ext:arm.retire_hook,ext:arm.step_north,ext:arm.step_south,ext:dramc.step_rd,ext:dramc.step_wr,rfn.abs.send,rfn.abs.recv1,rfn.abs.recv2,rfn.abs.trying1.raise,rfn.abs.trying2.raise,idle
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 845780, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 845791, counting from 0.
 ~~~
