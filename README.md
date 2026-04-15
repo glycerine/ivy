@@ -2606,108 +2606,18 @@ with very fine grained xtraces:
 
 was:
 ~~~
-846073  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+867284  go : XTRACE: transrel.iteUpdate c1 HASH canon= (clauses fmlas:[(Apply func:(Symbol name:< sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:__new_fml:x sort:(UninterpretedSort name:lclock)) (Symbol name:__fml:y sort:(Uninterpret ...(truncated long line to 300 bytes)
 
-846074  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=1 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=1 nArgs=2
-
-846075  go : XTRACE: transrel.ComposeUpdates result nTRfmlas=0 nTRdefs=2 nPREfmlas=1 nPREdefs=0
-        py : XTRACE: transrel.ComposeUpdates result nTRfmlas=0 nTRdefs=2 nPREfmlas=1 nPREdefs=0
-
-846076  go : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:__m_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:proc) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:proc))]) rhs:(Ite cond:(And terms:[(Eq t1:(Variable ...(truncated long line to 300 bytes)
-
-        py : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:new_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:proc) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:proc))]) rhs:(Ite cond:(And terms:[(Eq t1:(Variable
+        py : XTRACE: transrel.iteUpdate c1 HASH canon= (clauses fmlas:[(Apply func:(Symbol name:< sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:__new_fml:x sort:(UninterpretedSort name:lclock)) (Symbol name:__fml:y sort:(Uninterpret
  ...(truncated long line to 300 bytes)
 
+867285  go : XTRACE: transrel.iteUpdate c2 HASH canon= (clauses fmlas:[] defs:[(Def lhs:(Symbol name:new_ref.lt sort:(UninterpretedSort name:lclock)) rhs:(Symbol name:ref.lt sort:(UninterpretedSort name:lclock))) (Def lhs:(Apply func:(Symbol name:new_isd.rd sort:(FunctionSort sorts:[(UninterpretedSort name:proc) ...(truncated long line to 300 bytes)
 
-=== S-expression diff (go '-' vs py '+') ===
-   TR=(clauses
-     fmlas:[]
-     defs:[
-       (Def
-         lhs:(Apply
-           func:(Symbol
--           name:__m_l2s_d
-+           name:new_l2s_d
-             sort:(FunctionSort
-               sorts:[
-                 (UninterpretedSort
-                   name:proc)
-                 (BooleanSort)]))
-           terms:[
-             (Variable
-               name:V0
-               sort:(UninterpretedSort
-                 name:proc))])
-         rhs:(Ite
-           cond:(And
-             terms:[
-               (Eq
-                 t1:(Variable
-                   name:V0
-                   sort:(UninterpretedSort
-                     name:proc))
-                 t2:(Symbol
-                   name:fml:p
-                   sort:(UninterpretedSort
-                     name:proc)))])
-           then:(And
-             terms:[])
-           else:(Apply
-             func:(Symbol
-               name:l2s_d
-               sort:(FunctionSort
-                 sorts:[
-                   (UninterpretedSort
-                     name:proc)
-                   (BooleanSort)]))
-             terms:[
-               (Variable
-                 name:V0
-                 sort:(UninterpretedSort
-                   name:proc))])))
-       (Def
-         lhs:(Apply
-           func:(Symbol
-             name:new_l2s_d
-             sort:(FunctionSort
-               sorts:[
-                 (UninterpretedSort
-                   name:mem_type)
-                 (BooleanSort)]))
-           terms:[
-             (Variable
-               name:V0
-               sort:(UninterpretedSort
-                 name:mem_type))])
-         rhs:(Ite
-           cond:(And
-             terms:[
-               (Eq
-                 t1:(Variable
-                   name:V0
-                   sort:(UninterpretedSort
-                     name:mem_type))
-                 t2:(Symbol
-                   name:fml:m
-                   sort:(UninterpretedSort
-                     name:mem_type)))])
-           then:(And
-             terms:[])
-           else:(Apply
-             func:(Symbol
-               name:l2s_d
-               sort:(FunctionSort
-                 sorts:[
-                   (UninterpretedSort
-                     name:mem_type)
-                   (BooleanSort)]))
-             terms:[
-               (Variable
-                 name:V0
-                 sort:(UninterpretedSort
-                   name:mem_type))])))])
+        py : XTRACE: transrel.iteUpdate c2 HASH canon= (clauses fmlas:[] defs:[(Def lhs:(Symbol name:new_ref.lt sort:(UninterpretedSort name:lclock)) rhs:(Symbol name:ref.lt sort:(UninterpretedSort name:lclock))) (Def lhs:(Apply func:(Symbol name:new_isd.rd sort:(FunctionSort sorts:[(UninterpretedSort name:proc)
+ ...(truncated long line to 300 bytes)
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 846076, counting from 0.
+867286  go : XTRACE: ops.elimDeadDefinitions nArgs=2 nDefined=75 nCaptured=56 nDead=24 nToRename=32
+        py : XTRACE: ops.elimDeadDefinitions nArgs=2 nDefined=75 nCaptured=56 nDead=23 nToRename=33
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 867286, counting from 0.
 ~~~
