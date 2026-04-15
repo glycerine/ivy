@@ -2604,6 +2604,7 @@ Estimated People Required 26.621735
 
 with very fine grained xtraces:
 
+was:
 ~~~
 846068  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
         py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
@@ -2618,3 +2619,20 @@ with very fine grained xtraces:
     golden_test.go:452: ivy_check and goivy_check differ at line 846070, counting from 0.
 ~~~
 
+now, after 2c02fa2d
+
+~~~
+203264  go : XTRACE: actions.Sequence.int_update compose[2] childType=IfAction childModified=['loc:rd', 'loc:wr']
+        py : XTRACE: actions.Sequence.int_update compose[2] childType=IfAction childModified=['loc:rd', 'loc:wr']
+
+203265  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['loc:rd', 'loc:wr'](modAll=False) u2.Modified=['loc:rd', 'loc:wr'](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['loc:rd', 'loc:wr'](modAll=False) u2.Modified=['loc:rd', 'loc:wr'](modAll=False)
+
+203266  go : XTRACE: transrel.ComposeUpdates newUpdated=['loc:rd', 'loc:wr'](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates newUpdated=['loc:rd', 'loc:wr'](modAll=False)
+
+203267  go : XTRACE: transrel.FrameDefConst HASH canon= sym=loc:wr sort=Boolean lhsSort=Boolean def=(Def lhs:(Symbol name:new_loc:wr sort:(BooleanSort)) rhs:(Symbol name:loc:wr sort:(BooleanSort)))
+        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 203267, counting from 0.
+~~~
