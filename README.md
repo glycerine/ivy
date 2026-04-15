@@ -2629,7 +2629,6 @@ PASS
 PASS
         <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 1719: invar229 ... XTRACE: solver.ClausesToZ3 ENTER fmlas=1 defs=0
     golden_test.go:452: ivy_check and goivy_check differ at line 998123, counting from 0.
-    
 ~~~
 
 but after module.Copy also copies the z3SessionCache, we have:
