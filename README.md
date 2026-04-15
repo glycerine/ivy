@@ -2605,33 +2605,16 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-845850  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  named=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  named=[]
+846068  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
 
-845851  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  subgoals=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  subgoals=[]
+846069  go : XTRACE: transrel.ComposeUpdates newUpdated=['l2s_d', 'l2s_d'](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates newUpdated=['l2s_d', 'l2s_d'](modAll=False)
 
-845852  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjActions=(hash dramc_nb2.memc_arriving.invar215:["arm.step_north" "arm.step_south" "cfabric.step" "dramc.step_rd" "dramc.step_wr" "ifabric.step" "memc.step"] dramc_nb2.memc_pushing.invar215:["arm.step_north" "arm. ...(truncated long line to 300 bytes)
-
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  conjActions=(hash dramc_nb2.memc_arriving.invar215:["arm.step_north" "arm.step_south" "cfabric.step" "dramc.step_rd" "dramc.step_wr" "ifabric.step" "memc.step"] dramc_nb2.memc_pushing.invar215:["arm.step_north" "arm.
+846070  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
+        py : XTRACE: transrel.FrameDefConst HASH canon= sym=l2s_d sort=mem_type -> Boolean lhsSort=Boolean def=(Def lhs:(Apply func:(Symbol name:new_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:mem_type))]) rhs:(Apply fun
  ...(truncated long line to 300 bytes)
 
-845853  go : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  params=[]
-        py : XTRACE: module.CanonSnapshot fragment/fragment.go:1001 CheckFragment() HASH canon=  params=[(Symbol name:_T sort:(UninterpretedSort name:lclock))]
-
-
-=== S-expression diff (go '-' vs py '+') ===
-- params=[]
-+ params=[
-- 
-+   (Symbol
-- 
-+     name:_T
-- 
-+     sort:(UninterpretedSort
-- 
-+       name:lclock))]
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 845853, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 846070, counting from 0.
 ~~~
 
