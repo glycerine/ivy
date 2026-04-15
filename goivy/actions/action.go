@@ -1091,12 +1091,35 @@ func (a *EnvAction) GetFormalParams() []*lg.Const  { return nil }
 func (a *EnvAction) GetFormalReturns() []*lg.Const { return nil }
 
 func (a *EnvAction) String() string {
-	// If all branches have labels, show them.
+	// Python: ivy_actions.py:933-936
+	//   if all(hasattr(a,'label') for a in self.args):
+	//       return '{' + ','.join(a.label for a in self.args) + '}'
+	//   return super(ChoiceAction, self).__str__()  → Action.__str__
+	//
+	// Action.__str__: self.name() + ' ' + ', '.join(str(x) for x in self.args)
+	// ChoiceAction.name() = 'choice' (inherited by EnvAction in Python)
+	type labeled interface{ GetLabel() string }
+	allLabels := len(a.Branches) > 0
+	for _, b := range a.Branches {
+		if l, ok := b.(labeled); ok && l.GetLabel() != "" {
+			continue
+		}
+		allLabels = false
+		break
+	}
+	if allLabels {
+		labels := make([]string, len(a.Branches))
+		for i, b := range a.Branches {
+			labels[i] = b.(labeled).GetLabel()
+		}
+		return "{" + strings.Join(labels, ",") + "}"
+	}
+	// Fallthrough: Action.__str__ equivalent
 	parts := make([]string, len(a.Branches))
 	for i, b := range a.Branches {
 		parts[i] = fmt.Sprint(b)
 	}
-	return "{" + strings.Join(parts, ",") + "}"
+	return "choice " + strings.Join(parts, ", ")
 }
 
 // --- ReturnAction ---

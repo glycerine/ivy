@@ -1553,7 +1553,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 			// Then calls action.update(domain, in_scope) → concrete_post(upd, state, ...)
 			interpState := ArtToInterpState(s)
 			xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s",
-				actions.ActionTypeName(env), actions.ActionTypeName(env))
+				env, actions.ActionTypeName(env))
 			ctx := &actions.UpdateContext{
 				Domain:       interpState.Domain,
 				PVars:        interpState.InScope,
