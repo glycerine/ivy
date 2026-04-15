@@ -32,8 +32,9 @@ examples_dir = os.environ.get('IVY_EXAMPLES_DIR', defaultEx)
 
 def trace(msg, *args):
     """Print an XTRACE line to stdout, flushed immediately."""
-    if __debug__ and enabled:
-    #if args: # turn off everything except vocab calls for a moment
+    if __debug__:
+        if enabled:
+        #if args: # turn off everything except vocab calls for a moment
             msg = normalize_filename(msg)
             print("XTRACE: " + msg, file=sys.stdout, flush=True)
 
