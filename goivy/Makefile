@@ -31,6 +31,9 @@ golden-v: # to see all productions not just last 10
 golden-nonstop: # to see all productions and not stop at first diff.
 	cd parser && go test -v -run TestVerboseNonstopOrdLive &> ../log.nonstop
 
+tlb:
+	if [ -f log.tlb ]; then mv log.tlb log.tlb.prev; fi
+	cd parser && go test -v -timeout=0 -count=1 -run TestIvyTlbModel &> ../log.tlb
 
 ord: # xtraced 
 	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy

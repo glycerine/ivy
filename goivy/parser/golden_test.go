@@ -452,6 +452,11 @@ func TestOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, false, true, path)
 }
 
+func TestIvyTlbModel(t *testing.T) {
+	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
+	GoldenPathCompareIvyCheck(t, false, true, path)
+}
+
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
