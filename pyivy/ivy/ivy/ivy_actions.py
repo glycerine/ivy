@@ -826,7 +826,7 @@ class InstantiateAction(Action):
 
 def my_str(x,depth=0):
     if depth > 25:
-        return '...'
+        return '...\n'
     return x.dstr(depth) if hasattr(x,'dstr') else str(x)
 
 class Sequence(Action):

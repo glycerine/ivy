@@ -48,7 +48,7 @@ def check_isolate(n_steps,n_unroll=None):
         post = ag.execute(init_action, None, None, 'initialize')
 
     for n in range(n_steps + 1):
-        print('Checking invariants at depth {}...'.format(n))
+        print('Checking invariants at depth {}...\n'.format(n))
         res = ivy_trace.check_final_cond(ag,post,clauses,[],True)
         if res is not None:
             print('BMC with bound {} found a counter-example...'.format(n))

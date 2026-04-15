@@ -662,13 +662,13 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
     # Expand the axioms schemata into axioms
 
     if verbose:
-        print('Expanding schemata...')
+        print('Expanding schemata...\n')
     axioms = mod.labeled_axioms + expand_schemata(mod,sort_constants,funs)
     for a in axioms:
         logfile.write('axiom {}\n'.format(a))
 
     if verbose:
-        print('Instantiating axioms...')
+        print('Instantiating axioms...\n')
     
     # Get all the triggers. For now only automatic triggers
 
@@ -1237,7 +1237,7 @@ def to_aiger(mod,ext_act,method="mc"):
     sort_constants = mine_constants(mod,trans,il.And(invariant,from_asserts))
     sort_constants2 = mine_constants2(mod,trans,invariant)
     if verbose:
-        print('\nInstantiating quantifiers (see {} for instantiations)...'.format(logfile_name))
+        print('\nInstantiating quantifiers (see {} for instantiations)...\n'.format(logfile_name))
     logfile.write('\ninstantiations:\n')
     trans,invariant = Qelim(sort_constants,sort_constants2)(trans,invariant,indhyps)
 #    iu.dbg('invariant')

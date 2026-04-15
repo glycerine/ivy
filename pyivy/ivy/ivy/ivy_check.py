@@ -138,13 +138,13 @@ def check_temporals():
     for prop in props:
         if prop.temporal:
             if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
-                print('  ivy_check temporal: admitting axiom...', pretty_lf(prop))
+                print('  ivy_check temporal: admitting axiom...\n', pretty_lf(prop))
                 if opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
                     print('     ... admitting ', prop.label, ' as axiom because it is an externally assumed property and unchecked property file is supplied.')
                 pc.admit_axiom(prop)
             else:
                 print('\n    The following temporal property is being proved:\n')
-                print(pretty_lf(prop) + ' ...', end=' ')
+                print(pretty_lf(prop) + ' ...\n', end=' ')
                 sys.stdout.flush()
                 if prop.temporal:
                     proof = pmap.get(prop.id,None)
@@ -208,7 +208,7 @@ def get_prioritized_actions():
 failures = 0
 
 def print_dots():
-    print('...', end=' ')
+    print('...\n', end=' ')
     sys.stdout.flush()
 
 def is_unprovable_assert(asrt):
@@ -315,7 +315,7 @@ class MatchHandler(object):
         self.started = False
         self.renaming = dict()
         print()
-        print('Trace follows...')
+        print('Trace follows...\n')
         print(80 * '*')
 
     def show_sym(self,sym,renamed_sym):
@@ -527,7 +527,7 @@ def check_isolate(trace_hook = None):
         return
     import time
     if opt_ivy_stats.get():
-        print('calling fragment checker...')
+        print('calling fragment checker...\n')
     fc_start = time.time()
 
     if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
@@ -1044,7 +1044,7 @@ def start():
     with im.Module():
         with utl.ErrorPrinter():
             if opt_ivy_stats.get():
-                print(" +++ IVY_STATS reading in source file", sys.argv[1], " ...")
+                print(" +++ IVY_STATS reading in source file", sys.argv[1], " ...\n")
             src_file_read_start_time = time.time() 
             ivy_init.source_file(sys.argv[1],ivy_init.open_read(sys.argv[1]),create_isolate=False)
             if opt_ivy_stats.get():
@@ -1091,7 +1091,7 @@ def main():
     ivy_init.read_params()
 
     if profiling.get():
-        print('\n ivy_check: profiling option set to true. Running with cProfile...')
+        print('\n ivy_check: profiling option set to true. Running with cProfile...\n')
         cProfile.runctx('ivy_check.start()', globals(), locals())
     else:
         #quiet print('\n ivy_check: profiling option set to false. ')

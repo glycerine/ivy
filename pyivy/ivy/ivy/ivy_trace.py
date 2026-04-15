@@ -345,7 +345,7 @@ def check_vc(clauses,action,final_cond=None,rels_to_min=[],shrink=False,handler_
         vocab = lut.used_symbols_clauses(mclauses)
         handler = (handler_class(mclauses,model,vocab) if handler_class is not None
                    else Trace(mclauses,model,vocab))
-        print("Converting model to trace...")
+        print("Converting model to trace...\n")
         act.match_annotation(action,clauses.annot,handler)
         handler.end()
         return handler
@@ -404,7 +404,7 @@ def make_vc(action,precond=[],postcond=[],check_asserts=True):
 
 def value_to_str(val,eval_in_state):
     if val is None:
-        return '...'
+        return '...\n'
     if lg.is_constant(val):
         sort = val.sort
         end = lg.sig.symbols.get(iu.compose_names(sort.name,'end'),None)

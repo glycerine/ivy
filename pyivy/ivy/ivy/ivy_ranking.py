@@ -74,7 +74,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     model.asms.extend([p.clone([p.label,p.formula.args[0]]) for p in assumed_gprops])
 
     if debug.get():
-        print('ivy_ranking : the following are assumed global properties ........................')
+        print('ivy_ranking : the following are assumed global properties ........................\n')
         for gprop in assumed_gprops:
             print('     ASSUMED GPROP : ', str(gprop))
             print(' ------------------------------------------------------------------- ')
@@ -86,7 +86,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
 
     if debug.get():
-        print('ivy_ranking : the following are temporal premises ........................')
+        print('ivy_ranking : the following are temporal premises ........................\n')
         for temporal_prem in temporal_prems:
             print('     TEMPORAL PREMISE : ', str(temporal_prem))
             print(' ------------------------------------------------------------------- ')

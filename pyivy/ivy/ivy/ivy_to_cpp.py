@@ -5853,7 +5853,7 @@ def main_int(is_ivyc):
     
                     if isolate:
                         if len(isolates) > 1:
-                            print("Compiling isolate {}...".format(isolate))
+                            print("Compiling isolate {}...\n".format(isolate))
 
                     if (not iu.version_le(iu.get_string_version(),"1.6") and
                         target.get() == 'repl' and isolate in im.module.isolates):

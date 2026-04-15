@@ -222,13 +222,13 @@ def instantiate_axioms(mod,fmlas,triggers):
     # Expand the axioms schemata into axioms
 
     if verbose:
-        print('Expanding schemata...')
+        print('Expanding schemata...\n')
     axioms = mod.labeled_axioms + expand_schemata(mod,sort_constants,funs)
     for a in axioms:
         logfile.write('axiom {}\n'.format(a))
 
     if verbose:
-        print('Instantiating axioms...')
+        print('Instantiating axioms...\n')
     
     # Get all the triggers. For now only automatic triggers
 

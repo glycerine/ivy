@@ -980,7 +980,7 @@ class HerbrandModel(object):
         try:
             fun = z3.Function
             self.model[order.to_z3()]
-#            print "sorting..."
+#            print "sorting...\n"
             elems = sorted(elems,key=functools.cmp_to_key(SortOrder(z3_vs,order_atom,self.model)))
         except IndexError:
             if __debug__: xtracer.trace("ivy_solver.py:939 HerbrandModel.sorted_sort_universe(): IndexError from order.to_z3() | solver/herbrand.go:143")
@@ -1514,7 +1514,7 @@ def get_small_model(clauses, sorts_to_minimize, relations_to_minimize, final_con
         return None
 
     if shrink:
-        print("searching for a small model...", end=' ')
+        print("searching for a small model...\n", end=' ')
         sys.stdout.flush()
         for x in chain(sorts_to_minimize, relations_to_minimize):
             for n in itertools.count(1):
