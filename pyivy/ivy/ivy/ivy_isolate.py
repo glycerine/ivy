@@ -1317,8 +1317,8 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
         if __debug__: xtracer.trace("isolate.proof[%d].vocab delta=%d total=%d" % (i, len(all_names) - before, len(all_names)), 1)
     if __debug__:
         xtracer.trace("isolate.allNames_from_proofs n=%d" % len(all_names), 1)
-        for name in sorted(str(x) for x in all_names):
-            xtracer.trace("isolate.allNames_from_proofs.name %s" % name, 1)
+        #for name in sorted(str(x) for x in all_names):
+        #    xtracer.trace("isolate.allNames_from_proofs.name %s" % name, 1)
 
     for x in mod.definitions:
         if x.formula.defines().name in all_names:

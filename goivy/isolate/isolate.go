@@ -1079,9 +1079,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if xtracer.Enabled {
 		xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
 		// Omap.All() iterates in sorted order
-		for name, _ := range allNames.All() {
-			xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
-		}
+		//for name, _ := range allNames.All() {
+		//	xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
+		//}
 	}
 
 	// Add definition-defined symbols that are in allNames

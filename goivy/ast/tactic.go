@@ -479,6 +479,8 @@ func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
 				xtracer.Trace("vocab.add src=App name=this val_type=str\n *This='%#v'", v)
 			}
 		case *NamedBinder:
+			vn.Set(fmt.Sprintf("ptr=%p; v=%#v", v, v), true)
+			//vn.Set(string(v.Canon()), true)
 			//vn.Set(v.Name, true)
 			// Python adds the NamedBinder object to the set, but it never matches
 			// any string lookup (it's inert). Skipping xtrace on both sides.
