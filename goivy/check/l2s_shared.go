@@ -430,25 +430,33 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		}
 	}
 
-	// Dump all keys in each map
-	fmt.Printf("l2s.SharedStep7 symprops keys: %v\n", func() []string {
-		keys := make([]string, 0, len(symprops))
-		for k := range symprops { keys = append(keys, k) }
-		sort.Strings(keys)
-		return keys
-	}())
-	fmt.Printf("l2s.SharedStep7 symwhens keys: %v\n", func() []string {
-		keys := make([]string, 0, len(symwhens))
-		for k := range symwhens { keys = append(keys, k) }
-		sort.Strings(keys)
-		return keys
-	}())
-	fmt.Printf("l2s.SharedStep7 symwaits keys: %v\n", func() []string {
-		keys := make([]string, 0, len(symwaits))
-		for k := range symwaits { keys = append(keys, k) }
-		sort.Strings(keys)
-		return keys
-	}())
+	if false {
+		// Dump all keys in each map
+		fmt.Printf("l2s.SharedStep7 symprops keys: %v\n", func() []string {
+			keys := make([]string, 0, len(symprops))
+			for k := range symprops {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			return keys
+		}())
+		fmt.Printf("l2s.SharedStep7 symwhens keys: %v\n", func() []string {
+			keys := make([]string, 0, len(symwhens))
+			for k := range symwhens {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			return keys
+		}())
+		fmt.Printf("l2s.SharedStep7 symwaits keys: %v\n", func() []string {
+			keys := make([]string, 0, len(symwaits))
+			for k := range symwaits {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			return keys
+		}())
+	}
 
 	lineno := cfg.Lineno
 

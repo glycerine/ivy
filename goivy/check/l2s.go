@@ -604,16 +604,18 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	xtracer.Trace("l2s.SharedStep1 EXIT nInvars=%d nAsms=%d nBindings=%d nPrems=%d",
 		len(model.Invars), len(model.Asms), len(model.Bindings), len(prems))
 
-	if cfg.Mod.Cfg.L2SDebug {
-		fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
-		for _, triple := range cfg.L2sGs {
-			env := "<nil>"
-			if triple.Environ != nil {
-				env = *triple.Environ
+	if false {
+		if cfg.Mod.Cfg.L2SDebug {
+			fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
+			for _, triple := range cfg.L2sGs {
+				env := "<nil>"
+				if triple.Environ != nil {
+					env = *triple.Environ
+				}
+				fmt.Printf("l2s_g: %v %v %s\n", triple.Vars, triple.Body, env)
 			}
-			fmt.Printf("l2s_g: %v %v %s\n", triple.Vars, triple.Body, env)
+			fmt.Println(strings.Repeat("=", 80))
 		}
-		fmt.Println(strings.Repeat("=", 80))
 	}
 
 	// ---------------------------------------------------------------
