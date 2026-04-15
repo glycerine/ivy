@@ -725,6 +725,42 @@ func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error)
 		// Already checked via Key above
 		return n, nil
 	}
+	// Python: substitute_ast (ivy_logic_utils.py:178-180) — filter bound
+	// variables from substitution before recursing into quantifier bodies.
+	//   if is_quantifier(ast):
+	//       bounds = set(x.name for x in quantifier_vars(ast))
+	//       subs = dict((x,y) for x,y in subs.items() if x not in bounds)
+	switch q := n.(type) {
+	case *lg.ForAll:
+		fsubs := filterBoundVarSubs(subs, q.Variables)
+		newBody, err := substituteNodesRec(q.Body, fsubs)
+		if err != nil {
+			return nil, err
+		}
+		return &lg.ForAll{Variables: q.Variables, Body: newBody}, nil
+	case *lg.Exists:
+		fsubs := filterBoundVarSubs(subs, q.Variables)
+		newBody, err := substituteNodesRec(q.Body, fsubs)
+		if err != nil {
+			return nil, err
+		}
+		return &lg.Exists{Variables: q.Variables, Body: newBody}, nil
+	case *lg.Lambda:
+		fsubs := filterBoundVarSubs(subs, q.Variables)
+		newBody, err := substituteNodesRec(q.Body, fsubs)
+		if err != nil {
+			return nil, err
+		}
+		return &lg.Lambda{Variables: q.Variables, Body: newBody}, nil
+	case *lg.NamedBinder:
+		fsubs := filterBoundVarSubs(subs, q.Variables)
+		newBody, err := substituteNodesRec(q.Body, fsubs)
+		if err != nil {
+			return nil, err
+		}
+		return &lg.NamedBinder{Name: q.Name, Variables: q.Variables, Environ: q.Environ, Body: newBody}, nil
+	}
+
 	// Recurse into children
 	children := n.Children()
 	if len(children) == 0 {
@@ -739,6 +775,28 @@ func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error)
 		newChildren[i] = nc
 	}
 	return il.CloneNode(n, newChildren), nil
+}
+
+// filterBoundVarSubs removes bound variables from a substitution map.
+// Matches Python substitute_ast (ivy_logic_utils.py:178-180):
+//
+//	bounds = set(x.name for x in quantifier_vars(ast))
+//	subs = dict((x,y) for x,y in subs.items() if x not in bounds)
+func filterBoundVarSubs(subs map[lg.NodeKey]lg.Expr, vars []*lg.Variable) map[lg.NodeKey]lg.Expr {
+	if len(vars) == 0 {
+		return subs
+	}
+	boundSet := make(map[lg.NodeKey]struct{}, len(vars))
+	for _, v := range vars {
+		boundSet[lg.Key(v)] = struct{}{}
+	}
+	filtered := make(map[lg.NodeKey]lg.Expr, len(subs))
+	for k, v := range subs {
+		if _, isBound := boundSet[k]; !isBound {
+			filtered[k] = v
+		}
+	}
+	return filtered
 }
 
 // --- internal helpers ---
