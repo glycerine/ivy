@@ -1383,7 +1383,7 @@ def _canon_z3_assertions(s):
 def _trace_z3_check(s, res):
     """Emit Merkle-chained Z3 solver state and result via xtracer."""
     _z3_check_counter[0] += 1
-    if __debug__: print("ivy_solver.py:1386 _trace_z3_check(): seq = %d" % _z3_check_counter[0])
+    ##if __debug__: print("ivy_solver.py:1386 _trace_z3_check(): seq = %d" % _z3_check_counter[0])
     asserts = _canon_z3_assertions(s)
     rs = 'sat' if res == z3.sat else ('unsat' if res == z3.unsat else 'unknown')
     # Merkle-chain the solver state + result. The field is named "canon="
