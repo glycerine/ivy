@@ -685,13 +685,17 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	clauses2 = RenameDistinctClauses(clauses2, clauses1)
 	pre2 = RenameDistinctClauses(pre2, clauses1)
 
-	// Compute symbol set for intersection
-	us2 := constSetFromSlice(updated2)
+	// Compute symbol set for intersection — use structural (name+sort) keys
+	// to match Python's set(updated2) with recstruct equality.
+	us2 := make(map[lg.NodeKey]bool, len(updated2))
+	for _, s := range updated2 {
+		us2[lg.Key(s)] = true
+	}
 
-	// mid = symbols modified by both (by name)
+	// mid = symbols modified by both (structural match)
 	var mid []*lg.Const
 	for _, s := range updated1 {
-		if constSetContains(us2, s.Name) {
+		if us2[lg.Key(s)] {
 			mid = append(mid, s)
 		}
 	}
@@ -1881,22 +1885,6 @@ func (ce *CounterExample) String() string {
 // Const-based helpers for Update refactor (matching Python Symbol objects)
 // -----------------------------------------------------------------------
 
-// constSetFromSlice creates a name-indexed set from a []*Const slice.
-func constSetFromSlice(syms []*lg.Const) map[string]*lg.Const {
-	m := make(map[string]*lg.Const, len(syms))
-	for _, s := range syms {
-		m[s.Name] = s
-	}
-	return m
-}
-
-// constSetContains checks if a name is in a Const set.
-func constSetContains(set map[string]*lg.Const, name string) bool {
-	_, ok := set[name]
-	return ok
-}
-
-// constNames extracts names from a []*Const slice.
 // constKeys returns a set of structural identity keys for a slice of constants.
 // Matches Python's set(symbols) with structural equality (name + sort).
 func constKeys(syms []*lg.Const) map[lg.NodeKey]bool {
