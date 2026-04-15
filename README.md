@@ -2606,33 +2606,108 @@ with very fine grained xtraces:
 
 was:
 ~~~
-846068  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['l2s_d'](modAll=False) u2.Modified=['l2s_d'](modAll=False)
+846073  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
 
-846069  go : XTRACE: transrel.ComposeUpdates newUpdated=['l2s_d', 'l2s_d'](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates newUpdated=['l2s_d', 'l2s_d'](modAll=False)
+846074  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=1 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=1 nArgs=2
 
-846070  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-        py : XTRACE: transrel.FrameDefConst HASH canon= sym=l2s_d sort=mem_type -> Boolean lhsSort=Boolean def=(Def lhs:(Apply func:(Symbol name:new_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:mem_type))]) rhs:(Apply fun
+846075  go : XTRACE: transrel.ComposeUpdates result nTRfmlas=0 nTRdefs=2 nPREfmlas=1 nPREdefs=0
+        py : XTRACE: transrel.ComposeUpdates result nTRfmlas=0 nTRdefs=2 nPREfmlas=1 nPREdefs=0
+
+846076  go : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:__m_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:proc) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:proc))]) rhs:(Ite cond:(And terms:[(Eq t1:(Variable ...(truncated long line to 300 bytes)
+
+        py : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[] defs:[(Def lhs:(Apply func:(Symbol name:new_l2s_d sort:(FunctionSort sorts:[(UninterpretedSort name:proc) (BooleanSort)])) terms:[(Variable name:V0 sort:(UninterpretedSort name:proc))]) rhs:(Ite cond:(And terms:[(Eq t1:(Variable
  ...(truncated long line to 300 bytes)
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 846070, counting from 0.
-~~~
 
-now, after 2c02fa2d
+=== S-expression diff (go '-' vs py '+') ===
+   TR=(clauses
+     fmlas:[]
+     defs:[
+       (Def
+         lhs:(Apply
+           func:(Symbol
+-           name:__m_l2s_d
++           name:new_l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:proc)
+                 (BooleanSort)]))
+           terms:[
+             (Variable
+               name:V0
+               sort:(UninterpretedSort
+                 name:proc))])
+         rhs:(Ite
+           cond:(And
+             terms:[
+               (Eq
+                 t1:(Variable
+                   name:V0
+                   sort:(UninterpretedSort
+                     name:proc))
+                 t2:(Symbol
+                   name:fml:p
+                   sort:(UninterpretedSort
+                     name:proc)))])
+           then:(And
+             terms:[])
+           else:(Apply
+             func:(Symbol
+               name:l2s_d
+               sort:(FunctionSort
+                 sorts:[
+                   (UninterpretedSort
+                     name:proc)
+                   (BooleanSort)]))
+             terms:[
+               (Variable
+                 name:V0
+                 sort:(UninterpretedSort
+                   name:proc))])))
+       (Def
+         lhs:(Apply
+           func:(Symbol
+             name:new_l2s_d
+             sort:(FunctionSort
+               sorts:[
+                 (UninterpretedSort
+                   name:mem_type)
+                 (BooleanSort)]))
+           terms:[
+             (Variable
+               name:V0
+               sort:(UninterpretedSort
+                 name:mem_type))])
+         rhs:(Ite
+           cond:(And
+             terms:[
+               (Eq
+                 t1:(Variable
+                   name:V0
+                   sort:(UninterpretedSort
+                     name:mem_type))
+                 t2:(Symbol
+                   name:fml:m
+                   sort:(UninterpretedSort
+                     name:mem_type)))])
+           then:(And
+             terms:[])
+           else:(Apply
+             func:(Symbol
+               name:l2s_d
+               sort:(FunctionSort
+                 sorts:[
+                   (UninterpretedSort
+                     name:mem_type)
+                   (BooleanSort)]))
+             terms:[
+               (Variable
+                 name:V0
+                 sort:(UninterpretedSort
+                   name:mem_type))])))])
 
-~~~
-203264  go : XTRACE: actions.Sequence.int_update compose[2] childType=IfAction childModified=['loc:rd', 'loc:wr']
-        py : XTRACE: actions.Sequence.int_update compose[2] childType=IfAction childModified=['loc:rd', 'loc:wr']
-
-203265  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['loc:rd', 'loc:wr'](modAll=False) u2.Modified=['loc:rd', 'loc:wr'](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=['loc:rd', 'loc:wr'](modAll=False) u2.Modified=['loc:rd', 'loc:wr'](modAll=False)
-
-203266  go : XTRACE: transrel.ComposeUpdates newUpdated=['loc:rd', 'loc:wr'](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates newUpdated=['loc:rd', 'loc:wr'](modAll=False)
-
-203267  go : XTRACE: transrel.FrameDefConst HASH canon= sym=loc:wr sort=Boolean lhsSort=Boolean def=(Def lhs:(Symbol name:new_loc:wr sort:(BooleanSort)) rhs:(Symbol name:loc:wr sort:(BooleanSort)))
-        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 203267, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 846076, counting from 0.
 ~~~
