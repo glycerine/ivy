@@ -320,7 +320,7 @@ func CheckTemporals(mod *module.Module) error {
 			}
 			pc.AdmitAxiom(prop)
 		} else {
-			fmt.Print("\n    The following temporal property is being proved:\n")
+			fmt.Print("\n    The following temporal property is being proved:\n\n")
 			fmt.Print(PrettyLF(prop, 4) + " ...\n")
 
 			// Python: proof = pmap.get(prop.id, None)

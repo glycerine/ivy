@@ -707,7 +707,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         print ('\n--- begin l2s_auto invariants ---\n')
         for inv in invars:
             print('invariant {}'.format(inv))
-        print ('\n--- end l2s_auto invariants ---\n')
+        print ('\n--- end l2s_auto invariants ---')
 
 
 
