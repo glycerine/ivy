@@ -952,9 +952,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                          + [lg.Not(t), _post_replace]))
             ).set_lineno(lineno))
 
-    print ('reset_w:')
-    for x in reset_w:
-        print (x)
+    #print ('ivy_l2s.py:955 reset_w:')
+    #for x in reset_w:
+    #    print (x)
     if __debug__: xtracer.trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d" % (len(save_state), len(done_waiting), len(reset_w)))
 
     fair_cycle = [l2s_saved]
