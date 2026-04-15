@@ -293,7 +293,9 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			xtracer.Trace("l2s.l2sTacticInt goal.Formula is SchemaBody, conc type=%s", iu.TypeName(conc))
 		}
 	}
-	lineno := ast.Location{Filename: "l2s", Line: 0}
+	// default when not known: "nowhere"; matches ivy_utils.py:248 / ivy_check.py:684
+	lineno := ast.Location{Filename: "nowhere", Line: 0}
+
 	// Get the goal's conclusion. After the TemporalModels API broadening,
 	// proof.GoalConc returns the inner conclusion (TemporalModels in this case)
 	// regardless of whether the goal's Formula is a SchemaBody or a direct
