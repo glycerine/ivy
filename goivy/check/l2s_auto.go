@@ -853,7 +853,7 @@ func l2sAutoInvariants(
 	}
 
 	for i, ninv := range ninvs {
-		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_globally_%d", i), ninv)
+		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_globally_%d", i), ninv, proofLineno)
 	}
 
 	// M3: invariant emission order matches Python
@@ -861,13 +861,13 @@ func l2sAutoInvariants(
 
 	// --- l2s_status invariants ---
 	invars = appendLF(autoAcfg, invars, "l2s_status_0",
-		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
+		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_1",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_2",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_3",
-		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}}, proofLineno)
 
 	// --- l2s_consts_d ---
 	var constsDTerms []lg.Expr
@@ -890,7 +890,7 @@ func l2sAutoInvariants(
 	}
 	// M5 / Python ivy_l2s.py:634-638: always emit l2s_consts_d, even when
 	// constsDTerms is empty (And() = true).
-	invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...))
+	invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...), proofLineno)
 
 	// --- convert_to_init: wrap temporal formula with l2s_init ---
 	var iinvs []lg.Expr
@@ -938,7 +938,7 @@ func l2sAutoInvariants(
 
 	negPropInit := &lg.Not{Body: convertToInit(fmla)}
 	for i, iinv := range iinvs {
-		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv)
+		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv, proofLineno)
 	}
 	invars = appendLF(autoAcfg, invars, "neg_prop_init", negPropInit)
 
