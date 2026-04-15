@@ -8,6 +8,8 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
+var _ iu.Canonical
+
 // z3VarPattern matches Z3 internal variable names like !k!0, !k!1, etc.
 var z3VarPattern = regexp.MustCompile(`!k!\d+`)
 
@@ -72,7 +74,9 @@ func (s *Z3Solver) TraceCheck(result CheckResult) {
 	// Merkle-chain the solver state + result. The field is named "canon="
 	// (not "smt2=") because golden_test.go's structured s-expression diff
 	// fires only when both lines contain "HASH" and "canon=".
-	cs := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s canon=%s)", seq, rs, asserts))
-	leaf, root := s.ctx.z3Merkle.AddLeaf(cs)
-	xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s", seq, rs, leaf, root, asserts)
+	//cs := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s canon=%s)", seq, rs, asserts))
+	//leaf, root := s.ctx.z3Merkle.AddLeaf(cs)
+	//_, _ = leaf, root
+	//xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s", seq, rs, leaf, root, asserts)
+	xtracer.Trace("z3.check seq=%d result=%s HASH canon=%s", seq, rs, asserts)
 }
