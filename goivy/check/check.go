@@ -416,7 +416,7 @@ func ApplyConjProofs(mod *module.Module) {
 		pmap[pe.Formula.ID] = pe.Proof
 	}
 
-	var conjs []*ast.LabeledFormula
+	conjs := make([]*ast.LabeledFormula, 0)
 	for _, lf := range mod.LabeledConjs {
 		if p, hasProof := pmap[lf.ID]; hasProof {
 			// Python: subgoals = pc.admit_proposition(lf, proof)
