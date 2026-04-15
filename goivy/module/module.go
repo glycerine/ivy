@@ -496,6 +496,7 @@ func (m *Module) Copy() *Module {
 	c.AdmitDefinitionFn = m.AdmitDefinitionFn
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory
+	c.z3SessionCache = m.z3SessionCache
 
 	// Copy signature (deep)
 	c.Sig = m.Sig.Copy()
