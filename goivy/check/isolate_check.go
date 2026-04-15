@@ -253,7 +253,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		copy(inits, mod.Initializers)
 		sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
 		for _, na := range inits {
-			fmt.Printf("        %s%s\n", PrettyActionLineno(na.Action), na.Name)
+			fmt.Printf("initializer:        %s %s\n", PrettyActionLineno(na.Action), na.Name)
 		}
 	}
 

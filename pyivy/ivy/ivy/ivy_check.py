@@ -609,7 +609,7 @@ def check_isolate(trace_hook = None):
         if mod.initializers:
             print("\n    The following initializers are present:")
             for actname,action in sorted(mod.initializers, key=lambda x: x[0]):
-                print("        {}{}".format(pretty_lineno(action),actname))
+                print("initializer:        {} {}".format(pretty_lineno(action) if not None else "(internal)", actname))
 
         if checked_invariants and not checked_action.get() and not unprovable:
             print("\n    Initialization must establish the invariant")
