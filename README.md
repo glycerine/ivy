@@ -2631,3 +2631,33 @@ PASS
     golden_test.go:452: ivy_check and goivy_check differ at line 998123, counting from 0.
     
 ~~~
+
+but after module.Copy also copies the z3SessionCache, we have:
+
+~~~
+995983  go : XTRACE: TranslateSort_call callsite=atom_to_z3_relation HASH canon=(Symbol name:l2s_g_3 sort:(BooleanSort))
+        py : XTRACE: TranslateSort_call callsite=atom_to_z3_relation HASH canon=(Symbol name:l2s_g_3 sort:(BooleanSort))
+
+995984  go : XTRACE: ivy_solver.py:65 solver_name() ENTER name=l2s_g_3
+        py : XTRACE: ivy_solver.py:65 solver_name() ENTER name=l2s_g_3
+
+995985  go : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+        py : XTRACE: ivy_solver.py:87 solver_name() EXIT 5
+
+995986  go : XTRACE: atom_to_z3 ENTER HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) cacheHit=True
+        py : XTRACE: atom_to_z3 ENTER HASH canon=(Symbol name:cf_live.issued_memc sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) cacheHit=False
+
+
+=== S-expression diff (go '-' vs py '+') ===
+   (Symbol
+     name:cf_live.issued_memc
+     sort:(FunctionSort
+       sorts:[
+         (UninterpretedSort
+           name:lclock)
+         (BooleanSort)]))
+- cacheHit=True
++ cacheHit=False
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 995986, counting from 0.
+~~~
