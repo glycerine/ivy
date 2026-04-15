@@ -2605,21 +2605,179 @@ Estimated People Required 26.621735
 with very fine grained xtraces:
 
 ~~~
-992197  go : XTRACE: actions.env_action loop post formals
-        py : XTRACE: actions.env_action loop post formals
+995738  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Implies t1:(And terms:[(Symbol name:l2s_saved sort:(BooleanSort)) (Apply func:(Symbol name:l2s_s_0 sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:@T sort:(Uninterp ...(truncated long line to 300 bytes)
 
-992198  go : XTRACE: actions.env_action loop end
-        py : XTRACE: actions.env_action loop end
-
-992199  go : XTRACE: actions.env_action post loop
-        py : XTRACE: actions.env_action post loop
-
-992200  go : XTRACE: actions.env_action EXIT
-        py : XTRACE: actions.env_action EXIT
-
-992201  go : XTRACE: interp.ApplyAction calling GetUpdate actionName=EnvAction type=EnvAction
-        py : XTRACE: interp.ApplyAction calling GetUpdate actionName=choice {{{{{isd.wr(P,M,A,T) := false; isd.rd(P,M,A,T) := false; {}}; {ref.lt := 0:lclock; ref.lt_tar(M) := 0:tar_clock; ref.lt_tar_cf := 0:tar_cf_clock; ref.evs.req(T) := nop; ref.evs.cmp(T) := nop; ref.evs.op_ack(T) := normal; ref.evs.serializ
+        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[(Implies t1:(And terms:[(Symbol name:l2s_saved sort:(BooleanSort)) (Apply func:(Symbol name:l2s_s_0 sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:@T sort:(Uninterp
  ...(truncated long line to 300 bytes)
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 992201, counting from 0
+995739  go : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+        py : XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0
+
+995740  go : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
+        py : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[])
+
+995741  go : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
+        py : XTRACE: ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = (And terms:[])
+
+995742  go : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
+        py : XTRACE: ops.ToOpenFormula nFmlas=1 nDefs=0
+
+995743  go : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[(Implies t1:(And terms:[(And terms:[(Not body:(ForAll vars:[(Variable name:T sort:(UninterpretedSort name:lclock))] body:(Implies t1:(And terms:[(Apply func:(Symbol name:<= sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (Uninterprete ...(truncated long line to 300 bytes)
+
+        py : XTRACE: logicutil.CloseEPR HASH canon= fmla=(And terms:[(Implies t1:(And terms:[(And terms:[(Not body:(ForAll vars:[(Variable name:T sort:(UninterpretedSort name:lclock))] body:(Implies t1:(And terms:[(Apply func:(Symbol name:<= sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (Uninterprete
+ ...(truncated long line to 300 bytes)
+
+
+=== S-expression diff (go '-' vs py '+') ===
+   fmla=(And
+     terms:[
+       (Implies
+         t1:(And
+           terms:[
+             (And
+               terms:[
+                 (Not
+                   body:(ForAll
+                     vars:[
+                       (Variable
+                         name:T
+                         sort:(UninterpretedSort
+                           name:lclock))]
+                     body:(Implies
+                       t1:(And
+                         terms:[
+                           (Apply
+                             func:(Symbol
+                               name:<=
+                               sort:(FunctionSort
+                                 sorts:[
+                                   (UninterpretedSort
+                                     name:lclock)
+                                   (UninterpretedSort
+                                     name:lclock)
+                                   (BooleanSort)]))
+                             terms:[
+-                             (Symbol
++                             (Variable
+-                               name:@T
++                               name:T
+                                 sort:(UninterpretedSort
+                                   name:lclock))
+                               (Symbol
+                                 name:_T
+                                 sort:(UninterpretedSort
+                                   name:lclock))])
+                           (Eq
+                             t1:(Apply
+                               func:(Symbol
+                                 name:ref.evs.req
+                                 sort:(FunctionSort
+                                   sorts:[
+                                     (UninterpretedSort
+                                       name:lclock)
+                                     (EnumeratedSort
+                                       name:op_type
+                                       ext:[nop,write,read,rrsp,wr_cmp])]))
+                               terms:[
+                                 (Symbol
+                                   name:_T
+                                   sort:(UninterpretedSort
+                                     name:lclock))])
+                             t2:(Symbol
+                               name:read
+                               sort:(EnumeratedSort
+                                 name:op_type
+                                 ext:[nop,write,read,rrsp,wr_cmp])))])
+                       t2:(Apply
+                         func:(Symbol
+                           name:l2s_s_0
+                           sort:(FunctionSort
+                             sorts:[
+                               (UninterpretedSort
+                                 name:lclock)
+                               (BooleanSort)]))
+                         terms:[
+-                         (Symbol
++                         (Variable
+-                           name:@T
++                           name:T
+                             sort:(UninterpretedSort
+                               name:lclock))]))))
+                 (Not
+                   body:(Or
+                     terms:[]))])
+             (Symbol
+               name:l2s_saved
+               sort:(BooleanSort))
+             (Not
+               body:(Symbol
+                 name:l2s_init_2
+                 sort:(BooleanSort)))
+             (Not
+               body:(Symbol
+                 name:l2s_w_1
+                 sort:(BooleanSort)))])
+         t2:(Exists
+           vars:[
+             (Variable
+               name:T
+               sort:(UninterpretedSort
+                 name:lclock))]
+           body:(And
+             terms:[
+               (Not
+                 body:(Apply
+                   func:(Symbol
+                     name:l2s_s_0
+                     sort:(FunctionSort
+                       sorts:[
+                         (UninterpretedSort
+                           name:lclock)
+                         (BooleanSort)]))
+                   terms:[
+-                   (Symbol
++                   (Variable
+-                     name:@T
++                     name:T
+                       sort:(UninterpretedSort
+                         name:lclock))]))
+               (And
+                 terms:[
+                   (And
+                     terms:[
+                       (And
+                         terms:[
+                           (Not
+                             body:(Apply
+                               func:(Symbol
+                                 name:cf_live.issued_memc
+                                 sort:(FunctionSort
+                                   sorts:[
+                                     (UninterpretedSort
+                                       name:lclock)
+                                     (BooleanSort)]))
+                               terms:[
+-                               (Symbol
++                               (Variable
+-                                 name:@T
++                                 name:T
+                                   sort:(UninterpretedSort
+                                     name:lclock))]))
+                           (Apply
+                             func:(Symbol
+                               name:<=
+                               sort:(FunctionSort
+                                 sorts:[
+                                   (UninterpretedSort
+                                     name:lclock)
+                                   (UninterpretedSort
+                                     name:lclock)
+                                   (BooleanSort)]))
+                             terms:[
+-                             (Symbol
++                             (Variable
+-                               name:@T
++                               name:T
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 995743, counting from 0.
 ~~~
