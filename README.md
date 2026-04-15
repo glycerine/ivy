@@ -2604,19 +2604,22 @@ Estimated People Required 26.621735
 
 with very fine grained xtraces:
 
-was:
 ~~~
-992189  go : XTRACE: ast.LF.__init__ id=2517 counter=2518
-        py : XTRACE: ast.LF.__init__ id=2517 counter=2518
+992197  go : XTRACE: actions.env_action loop post formals
+        py : XTRACE: actions.env_action loop post formals
 
-992190  go : XTRACE: ast.LF.__init__ id=2518 counter=2519
-        py : XTRACE: ast.LF.__init__ id=2518 counter=2519
+992198  go : XTRACE: actions.env_action loop end
+        py : XTRACE: actions.env_action loop end
 
-992191  go : XTRACE: ast.LF.__init__ id=2519 counter=2520
-        py : XTRACE: ast.LF.__init__ id=2519 counter=2520
+992199  go : XTRACE: actions.env_action post loop
+        py : XTRACE: actions.env_action post loop
 
-992192  go : XTRACE: interp.ApplyAction ENTER actionName=EnvAction
-        py : XTRACE: actions.env_action ENTER
+992200  go : XTRACE: actions.env_action EXIT
+        py : XTRACE: actions.env_action EXIT
 
-    golden_test.go:452: ivy_check and goivy_check differ at line 992192
+992201  go : XTRACE: interp.ApplyAction calling GetUpdate actionName=EnvAction type=EnvAction
+        py : XTRACE: interp.ApplyAction calling GetUpdate actionName=choice {{{{{isd.wr(P,M,A,T) := false; isd.rd(P,M,A,T) := false; {}}; {ref.lt := 0:lclock; ref.lt_tar(M) := 0:tar_clock; ref.lt_tar_cf := 0:tar_cf_clock; ref.evs.req(T) := nop; ref.evs.cmp(T) := nop; ref.evs.op_ack(T) := normal; ref.evs.serializ
+ ...(truncated long line to 300 bytes)
+
+    golden_test.go:452: ivy_check and goivy_check differ at line 992201, counting from 0
 ~~~
