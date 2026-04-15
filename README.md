@@ -2606,18 +2606,17 @@ with very fine grained xtraces:
 
 was:
 ~~~
-867284  go : XTRACE: transrel.iteUpdate c1 HASH canon= (clauses fmlas:[(Apply func:(Symbol name:< sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:__new_fml:x sort:(UninterpretedSort name:lclock)) (Symbol name:__fml:y sort:(Uninterpret ...(truncated long line to 300 bytes)
+992189  go : XTRACE: ast.LF.__init__ id=2517 counter=2518
+        py : XTRACE: ast.LF.__init__ id=2517 counter=2518
 
-        py : XTRACE: transrel.iteUpdate c1 HASH canon= (clauses fmlas:[(Apply func:(Symbol name:< sort:(FunctionSort sorts:[(UninterpretedSort name:lclock) (UninterpretedSort name:lclock) (BooleanSort)])) terms:[(Symbol name:__new_fml:x sort:(UninterpretedSort name:lclock)) (Symbol name:__fml:y sort:(Uninterpret
- ...(truncated long line to 300 bytes)
+992190  go : XTRACE: ast.LF.__init__ id=2518 counter=2519
+        py : XTRACE: ast.LF.__init__ id=2518 counter=2519
 
-867285  go : XTRACE: transrel.iteUpdate c2 HASH canon= (clauses fmlas:[] defs:[(Def lhs:(Symbol name:new_ref.lt sort:(UninterpretedSort name:lclock)) rhs:(Symbol name:ref.lt sort:(UninterpretedSort name:lclock))) (Def lhs:(Apply func:(Symbol name:new_isd.rd sort:(FunctionSort sorts:[(UninterpretedSort name:proc) ...(truncated long line to 300 bytes)
+992191  go : XTRACE: ast.LF.__init__ id=2519 counter=2520
+        py : XTRACE: ast.LF.__init__ id=2519 counter=2520
 
-        py : XTRACE: transrel.iteUpdate c2 HASH canon= (clauses fmlas:[] defs:[(Def lhs:(Symbol name:new_ref.lt sort:(UninterpretedSort name:lclock)) rhs:(Symbol name:ref.lt sort:(UninterpretedSort name:lclock))) (Def lhs:(Apply func:(Symbol name:new_isd.rd sort:(FunctionSort sorts:[(UninterpretedSort name:proc)
- ...(truncated long line to 300 bytes)
+992192  go : XTRACE: interp.ApplyAction ENTER actionName=EnvAction
+        py : XTRACE: actions.env_action ENTER
 
-867286  go : XTRACE: ops.elimDeadDefinitions nArgs=2 nDefined=75 nCaptured=56 nDead=24 nToRename=32
-        py : XTRACE: ops.elimDeadDefinitions nArgs=2 nDefined=75 nCaptured=56 nDead=23 nToRename=33
-
-    golden_test.go:452: ivy_check and goivy_check differ at line 867286, counting from 0.
+    golden_test.go:452: ivy_check and goivy_check differ at line 992192
 ~~~
