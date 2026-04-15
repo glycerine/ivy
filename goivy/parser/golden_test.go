@@ -449,19 +449,21 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path)
+	args := []string{"isolate=cf_live"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args)
 }
 
 func TestIvyTlbModel(t *testing.T) {
 	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil)
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	GoldenPathCompareIvyCheck(t, true, true, path)
+	args := []string{"isolate=cf_live"}
+	GoldenPathCompareIvyCheck(t, true, true, path, args)
 }
 
 // TestVerboseNonstopOrdLive does not stop
@@ -469,10 +471,11 @@ func TestVerboseOrdLive(t *testing.T) {
 // and xtraced lines.
 func TestVerboseNonstopOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	GoldenPathCompareIvyCheck(t, true, false, path)
+	args := []string{"isolate=cf_live"}
+	GoldenPathCompareIvyCheck(t, true, false, path, args)
 }
 
-func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string) {
+func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
 		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
@@ -490,7 +493,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 		t.Skipf("target path not found at %s", path)
 	}
 
-	args := []string{"isolate=cf_live"}
+	//args := []string{"isolate=cf_live"}
 
 	// Get Python AST
 	ivyPipe, pyProc, pyErr := ivy_check(t, args, path, repo)
