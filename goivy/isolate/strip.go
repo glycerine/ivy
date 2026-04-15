@@ -691,35 +691,40 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				}
 			}
 
-			// Check if already added via StripAddedSymbols
-			alreadyAdded := false
-			for _, added := range isoCfg.StripAddedSymbols {
-				if added.Name == paramName {
-					alreadyAdded = true
-					break
-				}
-			}
-
 			if mod.Sig != nil {
-				if alreadyAdded {
-					// Use existing symbol
-					continue
+				// Python: add_map = dict((s.name,s) for s in strip_added_symbols)
+				// Python: if s.rep not in add_map:
+				//             sym = ivy_logic.add_symbol(s.rep, mod.sig.sorts[s.sort])
+				//             mod.params.append(sym)
+				//         else:
+				//             mod.params.append(add_map[s.rep])
+				//         mod.param_defaults.append(None)
+				//
+				// Key: Python ALWAYS appends to mod.params. add_symbol
+				// returns the existing symbol if already registered.
+				var addedSym *lg.Const
+				for _, added := range isoCfg.StripAddedSymbols {
+					if added.Name == paramName {
+						addedSym = added
+						break
+					}
 				}
-				if _, exists := mod.Sig.Symbols.Get2(paramName); exists {
-					continue
-				}
-				// Look up the sort from the parameter's sort name
-				if paramSort != nil {
-					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: paramSort})
-					newSym := lg.NewConst(paramName, paramSort)
-					mod.Params = append(mod.Params, newSym)
-					mod.ParamDefaults = append(mod.ParamDefaults, nil)
+				if addedSym != nil {
+					// Python: mod.params.append(add_map[s.rep])
+					mod.Params = append(mod.Params, addedSym)
+				} else if paramSort != nil {
+					// Python: sym = ivy_logic.add_symbol(s.rep, mod.sig.sorts[s.sort])
+					if _, exists := mod.Sig.Symbols.Get2(paramName); !exists {
+						mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: paramSort})
+					}
+					mod.Params = append(mod.Params, lg.NewConst(paramName, paramSort))
 				} else if s, ok := mod.Sig.Sorts.Get2(paramName); ok {
-					newSym := lg.NewConst(paramName, s)
-					mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
-					mod.Params = append(mod.Params, newSym)
-					mod.ParamDefaults = append(mod.ParamDefaults, nil)
+					if _, exists := mod.Sig.Symbols.Get2(paramName); !exists {
+						mod.Sig.Symbols.Set(paramName, &il.SymbolEntry{Name: paramName, Sort: s})
+					}
+					mod.Params = append(mod.Params, lg.NewConst(paramName, s))
 				}
+				mod.ParamDefaults = append(mod.ParamDefaults, nil)
 			}
 		}
 	} else {
