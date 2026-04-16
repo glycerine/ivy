@@ -171,9 +171,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 					checkers = append(checkers, NewConjChecker(mod, prop, 8))
 				}
 			}
-			if len(checkers) > 0 {
-				CheckFcsInStateWithAG(mod, ag, pre, checkers)
-			}
+			// Python ivy_check.py:572 calls check_fcs_in_state unconditionally,
+			// even when fcs is empty.
+			CheckFcsInStateWithAG(mod, ag, pre, checkers)
 		} else {
 			// Python: else: for lf in schema_instances + mod.labeled_props: print(pretty_lf(lf))
 			for _, lf := range schemaInstances {

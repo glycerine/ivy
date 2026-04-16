@@ -474,9 +474,9 @@ func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
 //     call MatchAnnotation, display trace
 //  2. normal: Call history.SatisfyWithCond(axioms, gmc, fcs)
 func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, checkers []Checker) bool {
-	if len(checkers) == 0 {
-		return true
-	}
+	// Python check_fcs_in_state has NO early return for empty fcs.
+	// Even with zero checkers it builds history, fetches background_theory,
+	// emits the checkFcsNormalPath xtrace, and calls history.satisfy(...).
 
 	// Get history and background theory
 	var history *actions.History
