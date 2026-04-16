@@ -242,8 +242,27 @@ C. **Unexpected case**: Go emits `compile_app ENTER` but at a different point th
 - `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/compiler/compiler.go:988-…` — `compileNamedBinder`
 - `/Users/jaten/go/src/github.com/glycerine/ivy/goivy/lalr_logicparser/grammar_v17.go:1287-1289` — confirms parser produces `App{Rep: *ast.NamedBinder}` (grammar case 62)
 
+## Thing↔Cmpl audit (full pass over all Python `.cmpl()` sites)
+
+Audit done across `~/ivy/pyivy/ivy/ivy/*.py` to catch every site where Python calls `X.cmpl()` directly (skipping the `thing()`/`Thing` wrapper) and confirm Go uses `Cmpl` (not `Thing`) at each.
+
+| # | Python site | Context | Go site | Go usage | Status |
+|---|---|---|---|---|---|
+| 1 | `ivy_compiler.py:92` | `result = self.cmpl()` inside `thing()` itself (the dispatch path) | `compiler/phase6.go:53` — `c.CompileNode(node)` inside `Thing()` | dispatch, not a wrapper-skip case | ✓ correct by design |
+| 2 | `ivy_compiler.py:399` | `rep.cmpl()` in `compile_app` (NamedBinder rep branch) | `compiler/compiler.go:824` — `c.Thing(n.Rep)` | **MISMATCH** | ✗ **fixed by this plan** |
+| 3 | `ivy_compiler.py:660` | commented-out line `# return c.cmpl()` | — | — | N/A |
+| 4 | `ivy_compiler.py:710` | `[a.cmpl() for a in self.args[1:]]` in `compile_call` non-action / field-reference returns | `compiler/action.go:847` — `c.Cmpl(r)` | matches | ✓ correct |
+| 5 | `ivy_compiler.py:720` | `args = [a.cmpl() for a in self.args[0].args]` in `compile_call` action-call callee args | `compiler/action.go:895` — `c.Cmpl(a)` | matches | ✓ correct |
+| 6 | `ivy_compiler.py:729` | `[a.cmpl() for a in self.args[1:]]` in `compile_call` action-call returns into `CallAction` | `compiler/action.go:949` — `c.Cmpl(r)` | matches | ✓ correct |
+| 7 | `ivy_actions.py:823` | dead code: appears after `return self` on line 822 in `InstantiateAction.cmpl` | — | — | N/A (unreachable) |
+
+**Result**: the audit identified exactly ONE live mismatch — the one this plan fixes. All three other live sites (`action.go:847`, `:895`, `:949` in `CompileCall`) already use `Cmpl` correctly. The two N/A sites are commented-out / dead code.
+
+A complementary reverse-direction audit was also performed: `grep c.Cmpl(` across all of `goivy/` returns exactly the three `action.go` call sites listed above — confirming there are no stray Go `Cmpl` calls without a corresponding Python `.cmpl()`.
+
+After the edit in this plan, every live Python `.cmpl()` site has a matching Go `Cmpl` site, and no Go `Cmpl` call is unmotivated.
+
 ## What we are NOT investigating in this plan
 
 - Cleaning up the Symbol→Atom conversion pattern repeated in `compileAppNode`, `compileOld`, and `CompileOld`. The user confirmed this is out of scope for fixing xtrace 775993; address as a separate refactor.
-- Other potential `Thing(rep)` → `Cmpl(rep)` mismatches at sites where Python uses `rep.cmpl()` rather than `rep.compile()`/`thing()`. Address them only if they surface as future trace divergences.
 - The original `invar386` TopSort panic. Each fix in this sequence moves the trace divergence further along; the panic, if still present, will surface once the trace is fully aligned.
