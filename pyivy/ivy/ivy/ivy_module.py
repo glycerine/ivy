@@ -274,7 +274,11 @@ class Module(object):
         for i,cax in enumerate(mod.labeled_conjs):
             fmla = cax.formula
             csname = 'conjecture:'+ str(i)
-            variables = list(lu.used_variables_ast(fmla))
+            # Use deterministic left-to-right traversal order (first-occurrence
+            # dedup) instead of set hash-bucket order, so Go can produce the
+            # identical concept-space label ordering for cross-language canon
+            # comparison.
+            variables = list(lu.used_variables_in_order_ast(fmla))
             sort = il.RelationSort([v.sort for v in variables])
             sym = il.Symbol(csname,sort)
             space = ics.NamedSpace(il.Literal(0,fmla))

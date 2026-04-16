@@ -817,12 +817,12 @@ func copyMapBool(m map[string]bool) map[string]bool {
 // For each conjecture, it creates a named concept space suitable for
 // the UI's counterexample-guided abstraction refinement loop.
 //
-// Corresponds to Python Module.update_conjs (ivy_module.py:268-277):
+// Corresponds to Python Module.update_conjs (ivy_module.py:268-281):
 //
 //	for i,cax in enumerate(mod.labeled_conjs):
 //	    fmla = cax.formula
 //	    csname = 'conjecture:'+ str(i)
-//	    variables = list(lu.used_variables_ast(fmla))
+//	    variables = list(lu.used_variables_in_order_ast(fmla))
 //	    sort = il.RelationSort([v.sort for v in variables])
 //	    sym = il.Symbol(csname,sort)
 //	    space = ics.NamedSpace(il.Literal(0,fmla))
@@ -838,14 +838,11 @@ func (m *Module) UpdateConjs() {
 		}
 		csname := fmt.Sprintf("conjecture:%d", i)
 
-		// Collect used variables from the formula.
-		varMap := UsedVariablesAST(fmla)
-		var variables []*lg.Variable
-		for _, v := range varMap {
-			if vr, ok := v.(*lg.Variable); ok {
-				variables = append(variables, vr)
-			}
-		}
+		// Collect free variables in left-to-right traversal order with
+		// first-occurrence dedup. Python uses lu.used_variables_in_order_ast
+		// in ivy_module.py:277 for the same reason: deterministic, portable
+		// ordering of concept-space label variables across languages.
+		variables := VariablesAST(fmla)
 
 		// Build sort: RelationSort([v.sort for v in variables])
 		sorts := make([]lg.Sort, len(variables))
