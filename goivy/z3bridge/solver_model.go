@@ -149,7 +149,17 @@ func (s *Solver) GetSmallModelWithCond(
 	// Python: ivy_solver.py:1221-1265
 	overallResult := Unsat
 	var assumes []*module.Clauses // track assumed conditions for non-incremental replay
-	if len(finalCond) > 0 {
+	// Python ivy_solver.py:1469-1512:
+	//   if final_cond is not None:    → Go: finalCond != nil
+	//       for fc in final_cond: ... (empty list ⇒ no-op, returns nil)
+	//   else:                          → Go: finalCond == nil
+	//       res = decide(s)
+	// nil finalCond ≡ Python None: caller did not request checker-driven
+	// verification, so we ask the solver if the state is satisfiable.
+	// Non-nil but empty finalCond ≡ Python []: caller had no checkers
+	// after filtering — there is nothing to check, so we return nil
+	// without calling decide(), exactly like Python.
+	if finalCond != nil {
 		for _, fc := range finalCond {
 			// NON-INCREMENTAL: create fresh solver before each non-assumed check.
 			// Python (ivy_solver.py:1226-1230):

@@ -641,8 +641,11 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	// Python: filter_fcs(fcs) — filter by check_lineno
 	filteredCheckers := FilterCheckers(checkers, mod.Cfg.CheckLineno)
 
-	// Convert checkers to solver.FinalCond for history.SatisfyWithCond
-	var finalConds []solver.FinalCond
+	// Convert checkers to solver.FinalCond for history.SatisfyWithCond.
+	// Python: filter_fcs(fcs) ALWAYS returns a list (possibly empty), never None.
+	// Initialize as an empty slice (non-nil) so GetSmallModelWithCond takes
+	// the "Python list" branch even when no checkers survived filtering.
+	finalConds := make([]solver.FinalCond, 0, len(filteredCheckers))
 	for _, fc := range filteredCheckers {
 		finalConds = append(finalConds, fc)
 	}
