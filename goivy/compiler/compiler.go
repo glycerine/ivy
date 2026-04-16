@@ -820,12 +820,17 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 		atom.ASort = n.ASort
 		return c.CompileApp(atom, false)
 	}
-	// If the rep is a NamedBinder, compile it and apply.
-	repNode, err := c.Thing(n.Rep)
-	if err != nil {
-		return nil, err
-	}
+	// NamedBinder-rep branch. Mirrors Python ivy_compiler.py:382-408, 457
+	// (App.cmpl == Atom.cmpl == compile_app). Any rep type reaching
+	// compile_app emits the same "compile_app ENTER" + args-loop trace
+	// sequence; for a NamedBinder rep the rep is resolved via Python's
+	// `rep.cmpl()` (line 399), which is a direct cmpl() dispatch without
+	// the thing()/Thing() wrapper trace — so use c.Cmpl, not c.Thing.
+	xtracer.Trace("compiler.compile_app ENTER old=%v", false)
+	xtracer.Trace("compiler.CompileApp args loop nTerms=%d", len(n.Terms))
 
+	// Args FIRST (Python ivy_compiler.py:391-394: with ReturnContext(None):
+	// args = [a.compile() for a in self.args]).
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	args := make([]lg.Expr, len(n.Terms))
@@ -838,6 +843,12 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 		args[i] = r
 	}
 	c.ReturnCtx = saved
+
+	// Then compile the rep (must be NamedBinder here; Python ivy_compiler.py:399).
+	repNode, err := c.Cmpl(n.Rep)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(args) == 0 {
 		return repNode, nil
