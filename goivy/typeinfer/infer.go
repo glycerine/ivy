@@ -525,17 +525,21 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		var resultSort SortOrVar
 		if len(n.Variables) > 0 {
+			// Python type_inference.py:254-255 returns
+			//     FunctionSort(*(vars_s + [body_s]))
+			// where vars_s are still SortVars. Python's FunctionSort can hold
+			// SortVars directly; Go's logic.FunctionSort cannot, so we use the
+			// typeinfer wrapper FunctionSortVar that preserves SortVar linkage.
+			// This matches the *logic.Apply arm above (see line 102).
+			//
+			// Eagerly unwrapping to logic.Sort here breaks invariants like
+			//   ($l2s_s P0. active(P0))(P)
+			// where P's sort must be inferred from the binder's domain — bound
+			// variables' SortVars may still be un-concretized at this point and
+			// would silently become TopSort, propagating to the free argument
+			// and ultimately panicking in z3bridge.TranslateSort.
 			allSorts := append(varSorts, bodyRes.Sort)
-			fsSorts := make([]logic.Sort, len(allSorts))
-			for i, sv := range allSorts {
-				if c := Unwrap(sv); c != nil {
-					fsSorts[i] = c
-				} else {
-					fsSorts[i] = logic.NewTopSort()
-				}
-			}
-			fs, _ := logic.NewFunctionSort(fsSorts...)
-			resultSort = Wrap(fs)
+			resultSort = NewFunctionSortVar(allSorts...)
 		} else {
 			resultSort = bodyRes.Sort
 		}
