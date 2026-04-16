@@ -466,17 +466,20 @@ func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
 		case string:
 			vn.Set(v, true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=Atom name=%s val_type=str\n string", v)
+				//xtracer.Trace("vocab.add src=Atom name=%s val_type=str\n string", v)
+				xtracer.Trace("vocab.add src=Atom name=%s val_type=str", v)
 			}
 		case *Symbol:
 			vn.Set(v.Rep, true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=App name=%s val_type=str\n Symbol='%#v'", v.Rep, v)
+				//xtracer.Trace("vocab.add src=App name=%s val_type=str\n Symbol='%#v'", v.Rep, v)
+				xtracer.Trace("vocab.add src=App name=%s val_type=str", v.Rep)
 			}
 		case *This:
 			vn.Set("this", true)
 			if xtracer.Enabled {
-				xtracer.Trace("vocab.add src=App name=this val_type=str\n *This='%#v'", v)
+				//xtracer.Trace("vocab.add src=App name=this val_type=str\n *This='%#v'", v)
+				xtracer.Trace("vocab.add src=App name=this val_type=str")
 			}
 		case *NamedBinder:
 			vn.Set(fmt.Sprintf("ptr=%p; v=%#v", v, v), true)
