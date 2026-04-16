@@ -1000,12 +1000,20 @@ func collectAllNamedBinders(model *temporal.NormalProgram) *iu.InsMap[string, []
 		collectActionNBs(b.Action.Stmt, result)
 	}
 
-	// Deduplicate and sort within each name
+	// Deduplicate and sort within each name.
+	// Dedup key = Sexp (structural canonical form), matching Python's
+	// set(v) which uses NamedBinder __eq__/__hash__ from recstruct
+	// (compares (name, variables_tuple, environ, body) where each Var
+	// element compares (name, sort)). String (PrettyFmla) drops variable
+	// sort annotations and would collapse normalize-renamed binders that
+	// share var names (V0,V1,...) but differ in variable sorts.
+	// Sort key = String (PrettyFmla), matching Python's
+	// sorted(set(v), key=str) where str(NamedBinder) = pretty form.
 	for k, v := range result.All() {
 		seen := make(map[string]bool)
 		var deduped []*lg.NamedBinder
 		for _, b := range v {
-			key := b.String()
+			key := string(b.Sexp())
 			if !seen[key] {
 				seen[key] = true
 				deduped = append(deduped, b)

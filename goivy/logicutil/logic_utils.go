@@ -1126,12 +1126,16 @@ func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 // --- ReplaceNamedBindersAst ---
 
 // ReplaceNamedBindersAst replaces named binders that are present in subs.
-// subs maps NamedBinder string keys to replacement nodes.
+// subs maps NamedBinder Sexp (structural canonical form) keys to
+// replacement nodes. Lookups must use the same key as the construction
+// site (see check/l2s_shared.go:786) — Sexp, not String/PrettyFmla.
+// Python's replace_named_binders_ast (ivy_logic_utils.py:1142+) uses
+// `if ast in subs` which is struct-eq via NamedBinder.__hash__/__eq__.
 // Named binders inside other named binders are NOT replaced.
 func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 	xtracer.Trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s", iu.ShortTypeName(n), n.Canon())
 	if nb, ok := n.(*logic.NamedBinder); ok {
-		key := nb.String()
+		key := string(nb.Sexp())
 		if rep, found := subs[key]; found {
 			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", iu.ShortTypeName(n), rep.Canon())
 			return rep
@@ -1149,7 +1153,7 @@ func ReplaceNamedBindersAst(n ast.Node, subs map[string]logic.Expr) ast.Node {
 		}
 		newFunc := app.Func
 		if nb, ok := app.Func.(*logic.NamedBinder); ok {
-			key := nb.String()
+			key := string(nb.Sexp())
 			if rep, found := subs[key]; found {
 				newFunc = rep
 			}

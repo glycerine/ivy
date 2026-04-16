@@ -660,13 +660,19 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				symwaits[sym] = nil
 			}
 			for _, prop := range symprops[sym] {
-				eventProps[prop.String()] = prop
+				// Key by Sexp (structural canonical form) not String (PrettyFmla,
+				// drops sort annotations). Mirrors Python's set() in event_props
+				// (ivy_l2s.py:1286,1310-1317), which uses NamedBinder struct
+				// equality and so keeps sort-distinct binders separate. String
+				// dedup would collapse normalized binders that share var names
+				// (V0,V1,...) but differ in variable sorts.
+				eventProps[string(prop.Sexp())] = prop
 			}
 			for _, when := range symwhens[sym] {
-				eventWhens[when.String()] = when
+				eventWhens[string(when.Sexp())] = when
 			}
 			for _, wait := range symwaits[sym] {
-				eventWaits[wait.String()] = wait
+				eventWaits[string(wait.Sexp())] = wait
 			}
 		}
 
@@ -779,7 +785,18 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	for k, binders := range namedBinders.All() {
 		for i, b := range binders {
 			freshName := fmt.Sprintf("%s_%d", k, i)
-			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())
+			// Key subs by Sexp (structural canonical form), matching the dedup
+			// in collectAllNamedBinders. Python ivy_l2s.py:1432-1436 keys subs
+			// by the NamedBinder OBJECT itself (struct eq via recstruct
+			// __hash__/__eq__). String (PrettyFmla) drops variable sort
+			// annotations and would collapse 4 sort-distinct entries into one,
+			// causing ReplaceNamedBindersAst to substitute several distinct
+			// binders with the same fresh constant.
+			//
+			// cfg.Subs (the inverse trace-display map) and the trace text
+			// remain keyed/displayed by b.String() so trace output continues
+			// to match Python's str(b) format.
+			subs[string(b.Sexp())] = lg.NewConst(freshName, b.NodeSort())
 			cfg.Subs[freshName] = b.String()
 			xtracer.Trace("l2s.SharedStep11 sub freshName=%s binderKey=%s", freshName, b.String())
 		}
