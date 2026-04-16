@@ -734,6 +734,10 @@ func l2sAutoInvariants(
 	}
 
 	// --- init_globally: generate l2s_globally invariants ---
+	// Key knownInits by Sexp (structural canonical form), mirroring
+	// Python's set() at ivy_l2s.py:626 (known_inits.add(prop) at 582,
+	// `cond not in known_inits` at 671) which uses Expr struct equality.
+	// fmt.Sprint(prop) calls String=PrettyFmla and drops sort annotations.
 	knownInits := make(map[string]bool)
 	var ninvs []lg.Expr
 
@@ -741,7 +745,7 @@ func l2sAutoInvariants(
 	initGlobally = func(prop lg.Expr, res *[]lg.Expr, pos bool) {
 		switch p := prop.(type) {
 		case *lg.Globally:
-			knownInits[fmt.Sprint(prop)] = true
+			knownInits[string(prop.Sexp())] = true
 			if pos {
 				*res = append(*res, prop)
 				initGlobally(p.Body, res, pos)
@@ -763,7 +767,7 @@ func l2sAutoInvariants(
 				}
 			}
 		case *lg.Eventually:
-			knownInits[fmt.Sprint(prop)] = true
+			knownInits[string(prop.Sexp())] = true
 			if !pos {
 				*res = append(*res, &lg.Not{Body: prop})
 				initGlobally(p.Body, res, pos)
@@ -923,7 +927,10 @@ func l2sAutoInvariants(
 			vs := collectVarsSlice(f)
 			initNB := l2sInit(vs, f, proofLabel)
 			ini := applyNB(initNB, varsToNodes(vs)...)
-			key := fmt.Sprint(f)
+			// Same struct-eq dedup as the initGlobally walker above —
+			// keyed by Sexp to match Python ivy_l2s.py:670-673
+			// (add_ini_invar uses `cond not in known_inits` / .add).
+			key := string(f.Sexp())
 			if _, ok := f.(*lg.Globally); ok && !knownInits[key] {
 				iinvs = append(iinvs, &lg.Implies{T1: ini, T2: f})
 				knownInits[key] = true
@@ -962,7 +969,10 @@ func l2sAutoInvariants(
 			}
 		}
 		allFmlas = append(allFmlas, ntPrems...)
-		// Collect WhenOperator{Name:"first"} via TemporalsAst, dedup by string.
+		// Collect WhenOperator{Name:"first"} via TemporalsAst, dedup by Sexp.
+		// Mirrors Python ivy_l2s.py:695 `iu.unique(ilu.temporals_asts(...))`
+		// which uses Expr struct equality (recstruct __hash__/__eq__).
+		// fmt.Sprint = String = PrettyFmla drops sort annotations.
 		seen := make(map[string]bool)
 		var winvs []lg.Expr
 		for _, f := range allFmlas {
@@ -971,7 +981,7 @@ func l2sAutoInvariants(
 				if !ok || when.Name != "first" {
 					continue
 				}
-				key := fmt.Sprint(when)
+				key := string(when.Sexp())
 				if seen[key] {
 					continue
 				}

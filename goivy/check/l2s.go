@@ -175,10 +175,16 @@ type varBodyPair struct {
 }
 
 func dedupeVarBodyPairs(pairs []varBodyPair) []varBodyPair {
+	// Key by structural canonical form (Sexp) on each Var and on Body.
+	// Mirrors Python's dict.fromkeys(v) at ivy_l2s.py:883,908 which dedups
+	// (vs, body) tuples by struct equality (Var compares (name,sort);
+	// Expr compares full structure). fmt.Sprintf("%v",...) on logic types
+	// calls String() = PrettyFmla which drops sort annotations and would
+	// collapse normalize-renamed binders (V0,V1,...) of different sorts.
 	seen := make(map[string]bool)
 	var result []varBodyPair
 	for _, p := range pairs {
-		key := fmt.Sprintf("%v:%v", p.Vars, p.Body)
+		key := lg.VarsSexp(p.Vars) + ":" + string(p.Body.Sexp())
 		if !seen[key] {
 			seen[key] = true
 			result = append(result, p)

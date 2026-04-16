@@ -316,7 +316,11 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 				if !ok || wo.Name != "first" {
 					continue
 				}
-				key := wo.String()
+				// Key by Sexp (structural canonical form). The Python
+				// ranking equivalent uses Expr struct equality on
+				// WhenOperator. wo.String() = PrettyFmla drops sort
+				// annotations and would collapse sort-distinct WhenOps.
+				key := string(wo.Sexp())
 				if seen[key] {
 					continue
 				}

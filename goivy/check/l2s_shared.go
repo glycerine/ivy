@@ -114,13 +114,17 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 	}
 	_l2sWhen := func(name string, vs []*lg.Variable, t lg.Expr) *lg.NamedBinder {
 		fmt.Printf("l2s._l2sWhen CALLED name=%s nVars=%d HASH canon=%s\n", name, len(vs), t.Canon())
+		// Key by Sexp (structural canonical form) not String (PrettyFmla,
+		// drops sort annotations). Mirrors Python's set() in
+		// l2s_whens (ivy_l2s.py:806,818,822) which dedups by NamedBinder
+		// struct equality.
 		if name == "first" {
 			res := l2sWhen("next", vs, t, cfg.ProofLabel)
-			cfg.L2sWhensSet[res.String()] = res
+			cfg.L2sWhensSet[string(res.Sexp())] = res
 			return l2sInit(vs, applyNB(res, varsToNodes(vs)...), cfg.ProofLabel)
 		}
 		res := l2sWhen(name, vs, t, cfg.ProofLabel)
-		cfg.L2sWhensSet[res.String()] = res
+		cfg.L2sWhensSet[string(res.Sexp())] = res
 		return res
 	}
 
@@ -193,9 +197,13 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		if _, ok := cfg.NamedBindersConjs["l2s_s"]; !ok {
 			cfg.NamedBindersConjs["l2s_s"] = nil
 		}
+		// Key by Sexp (structural canonical form) not fmt.Sprint (which
+		// calls String = PrettyFmla, drops sort annotations). Mirrors
+		// Python's set(t for (vs,t) in named_binders_conjs['l2s_s'])
+		// (ivy_l2s.py:892) which dedups by Expr struct equality.
 		seenSave := make(map[string]bool)
 		for _, vb := range cfg.NamedBindersConjs["l2s_s"] {
-			seenSave[fmt.Sprint(vb.Body)] = true
+			seenSave[string(vb.Body.Sexp())] = true
 		}
 		m := cfg.Mod
 		for _, bnd := range model.Bindings {
@@ -212,7 +220,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 							} else {
 								expr = lg.NewConst(symName, entry.Sort)
 							}
-							key := fmt.Sprint(expr)
+							key := string(expr.Sexp())
 							if !seenSave[key] {
 								seenSave[key] = true
 								cfg.NamedBindersConjs["l2s_s"] = append(cfg.NamedBindersConjs["l2s_s"],
@@ -228,15 +236,18 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		if _, ok := cfg.NamedBindersConjs["l2s_w"]; !ok {
 			cfg.NamedBindersConjs["l2s_w"] = nil
 		}
+		// Key by Sexp (structural canonical form). Mirrors Python's
+		// set(t for (vs,t) in named_binders_conjs['l2s_w']) at
+		// ivy_l2s.py:900 — Expr struct equality.
 		seenWait := make(map[string]bool)
 		for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
-			seenWait[fmt.Sprint(vb.Body)] = true
+			seenWait[string(vb.Body.Sexp())] = true
 		}
 		normNotLf := lu.NormalizeNamedBinders(cfg.NotLf, nil).(lg.Expr)
 		for _, b := range lu.NamedBindersAst(normNotLf) {
 			if b.Name == "l2s_g" {
 				negBody := module.Negate(b.Body)
-				key := fmt.Sprint(negBody)
+				key := string(negBody.Sexp())
 				if !seenWait[key] {
 					seenWait[key] = true
 					cfg.NamedBindersConjs["l2s_w"] = append(cfg.NamedBindersConjs["l2s_w"],
