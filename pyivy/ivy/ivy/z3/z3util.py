@@ -281,7 +281,7 @@ def get_models(f,k):
     If f is not satisfiable, returns False.
     If f cannot be solved, returns None
     If f is satisfiable, returns the first k models
-    Note that if f is a tautology, e.g.\ True, then the result is []
+    Note that if f is a tautology, e.g. True, then the result is []
     
     Based on http://stackoverflow.com/questions/11867611/z3py-checking-all-solutions-for-equation
 
