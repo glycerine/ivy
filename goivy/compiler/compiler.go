@@ -1173,9 +1173,18 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 //
 //	res = concretize_sorts(term, sort)
 //	check_concretely_sorted(res)
+//
+// The check_concretely_sorted step raises if any used variable or constant
+// in the result still has TopSort or polymorphic sort. Mirroring this surfaces
+// type-inference bugs at compile time (with a meaningful error) instead of
+// letting silent TopSorts propagate to z3bridge.TranslateSort, which can only
+// panic.
 func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 	res, err := typeinfer.ConcretizeSorts(node, nil)
 	if err != nil {
+		return nil, err
+	}
+	if err := il.CheckConcretelySorted(res, nil); err != nil {
 		return nil, err
 	}
 	return res, nil

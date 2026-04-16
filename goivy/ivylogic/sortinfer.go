@@ -72,7 +72,16 @@ func Sortify(sig *Sig, node lg.Expr) lg.Expr {
 // term have concrete sorts (no TopSort or polymorphic elements).
 // Returns an error if any unsorted element is found.
 // unsortedVarNames, if non-nil, lists variable names to exempt from the check.
-// Corresponds to Python's check_concretely_sorted.
+// Corresponds to Python's check_concretely_sorted (ivy_logic.py:1194-1200):
+//
+//	for x in chain(lu.used_variables(term), lu.used_constants(term)):
+//	    if lg.contains_topsort(x.sort) or lg.is_polymorphic(x.sort):
+//	        ...
+//
+// Note: Python checks the SORT of x, not x itself. A Const named "X" or "<="
+// is name-polymorphic, but its inferred sort is concrete — Python deems it OK.
+// Earlier Go versions checked the node itself (lg.IsPolymorphic(v)), which
+// over-rejected name-polymorphic constants whose sort was actually concrete.
 func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error {
 	usedVars := lu.UsedVariables(term)
 	for _, v := range usedVars {
@@ -81,7 +90,8 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 				continue
 			}
 		}
-		if lg.ContainsTopSort(v) || lg.IsPolymorphic(v) {
+		s := v.NodeSort()
+		if lg.ContainsTopSort(s) || lg.IsPolymorphic(s) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", v, term),
 			}
@@ -93,7 +103,8 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 		if unsortedVarNames != nil && unsortedVarNames[name] {
 			continue
 		}
-		if lg.ContainsTopSort(sym) || lg.IsPolymorphic(sym) {
+		s := sym.NodeSort()
+		if lg.ContainsTopSort(s) || lg.IsPolymorphic(s) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", sym, term),
 			}
