@@ -138,6 +138,12 @@ def _let_sexp(self):
 def _literal_sexp(self):
     return '(Literal polarity:%d atom:%s)' % (self.polarity, self.atom.sexp())
 
+def _named_space_sexp(self):
+    # Python wraps the concept space body in NamedSpace; Go stores the
+    # underlying Literal directly in module.ConceptSpace.Body. Delegate to
+    # lit.sexp() so canon output matches Go's canonConceptSpaceSlice.
+    return self.lit.sexp()
+
 
 # --- Clauses (in ivy_logic_utils.py) ---
 
@@ -171,6 +177,7 @@ def install():
     from . import logic as lg
     from . import ivy_logic as il
     from . import ivy_logic_utils as lut
+    from . import ivy_concept_space as ics
 
     # Sort types
     lg.UninterpretedSort.sexp = _uninterpreted_sort_sexp
@@ -212,6 +219,12 @@ def install():
     il.Some.sexp = _some_sexp
     il.Let.sexp = _let_sexp
     il.Literal.sexp = _literal_sexp
+
+    # Concept space body wrappers (from ivy_concept_space)
+    # Go's module.ConceptSpace.Body is a bare Literal; Python wraps in
+    # NamedSpace. Delegate sexp/canon to the inner lit so the canon output
+    # matches Go's canonConceptSpaceSlice.
+    ics.NamedSpace.sexp = _named_space_sexp
 
     # Clauses
     lut.Clauses.sexp = _clauses_sexp
@@ -259,6 +272,9 @@ def install():
     il.Some.canon = _some_sexp
     il.Let.canon = _let_sexp
     il.Literal.canon = _literal_sexp
+
+    # Concept space body wrappers
+    ics.NamedSpace.canon = _named_space_sexp
 
     # Clauses
     lut.Clauses.canon = _clauses_sexp
