@@ -256,14 +256,20 @@ func (d *DeclBase) Defines() []string {
 				names = append(names, n)
 			}
 		case *Atom:
+			// Python: ConstantDecl.defines() / RelationDecl.defines()
+			// filter out polymorphic symbols like <, <=, +, *, etc.
 			if a.Rep != "" {
-				names = append(names, a.Rep)
+				if _, poly := iu.PolymorphicSymbols[a.Rep]; !poly {
+					names = append(names, a.Rep)
+				}
 			}
 		case *App:
 			// Python: App.rep is used for defines() — matches ConstantDecl args
 			if a.Rep != nil {
 				if s, ok := a.Rep.(*Symbol); ok && s.Rep != "" {
-					names = append(names, s.Rep)
+					if _, poly := iu.PolymorphicSymbols[s.Rep]; !poly {
+						names = append(names, s.Rep)
+					}
 				}
 			}
 		case *ActionDef:
