@@ -383,7 +383,11 @@ func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location)
 	if err := CheckNameClash(g1, g2); err != nil {
 		return nil, err
 	}
-	prems := append(GoalPrems(g1), GoalPrems(g2)...)
+	// Copy to avoid overwriting SchemaBody conclusion via shared backing array.
+	p1, p2 := GoalPrems(g1), GoalPrems(g2)
+	prems := make([]ast.Node, 0, len(p1)+len(p2))
+	prems = append(prems, p1...)
+	prems = append(prems, p2...)
 	return MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2)), nil
 }
 
