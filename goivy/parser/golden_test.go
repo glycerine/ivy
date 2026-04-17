@@ -846,8 +846,8 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 	}
 
 	go func() {
-		cmd.Wait()
-		vv("ivy_check command has finished. closing cmdPw so the scanner will finish its loop.")
+		err := cmd.Wait()
+		vv("ivy_check command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
 		cmdPw.Close()
 	}()
 
@@ -951,8 +951,8 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	}
 
 	go func() {
-		cmd.Wait()
-		vv("goivy_check_xtrace command has finished. closing cmdPw so the scanner will finish its loop.")
+		err := cmd.Wait()
+		vv("goivy_check_xtrace command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
 		cmdPw.Close()
 	}()
 
