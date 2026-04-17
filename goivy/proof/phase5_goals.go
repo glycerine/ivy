@@ -664,11 +664,11 @@ func applyUnfoldRec(key lg.NodeKey, union *ExprListOrLambdaUnion, fmla lg.Expr) 
 				}
 				// Non-lambda: apply as function to args.
 				// Python: Symbol.__call__(*args) creates Apply(fun, args).
-				if c, ok := lam.(*lg.Const); ok && len(newArgs) > 0 {
-					return lg.MustApply(c, newArgs...)
-				}
 				if len(newArgs) > 0 {
-					return lg.MustApply(lam, newArgs...)
+					app, err := lg.NewApply(lam, newArgs...)
+					if err == nil {
+						return app
+					}
 				}
 				return lam
 			}

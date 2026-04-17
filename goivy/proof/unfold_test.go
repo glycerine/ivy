@@ -392,3 +392,393 @@ func TestApplyUnfoldRec_UnderQuantifier(t *testing.T) {
 		t.Errorf("expected body c, got %T: %v", fa.Body, fa.Body)
 	}
 }
+
+// ==========================================================================
+// CR-1: MatchFromDefn must reject duplicate parameters (Python: iu.distinct)
+// ==========================================================================
+
+func TestMatchFromDefn_DuplicateParams(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	fs, _ := lg.NewFunctionSort(s, s, s) // S x S -> S
+	f := mkConst("f", fs)
+	c := mkConst("c", s)
+
+	// Build: forall X. f(X, X) = c — X appears twice as arg to f
+	app := lg.MustApply(f, x, x)
+	eq := &lg.Eq{T1: app, T2: c}
+	body := &lg.ForAll{Variables: []*lg.Variable{x}, Body: eq}
+	defn := mkLF(testAstCfg.NewAtom("def"), body)
+
+	_, err := MatchFromDefn(defn)
+	if err == nil {
+		t.Fatal("expected error for duplicate parameters f(X, X)")
+	}
+}
+
+func TestMatchFromDefn_DistinctParams(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+	fs, _ := lg.NewFunctionSort(s, s, s) // S x S -> S
+	f := mkConst("f", fs)
+	c := mkConst("c", s)
+
+	// Build: forall X, Y. f(X, Y) = c — distinct params, should succeed
+	app := lg.MustApply(f, x, y)
+	eq := &lg.Eq{T1: app, T2: c}
+	body := &lg.ForAll{Variables: []*lg.Variable{x, y}, Body: eq}
+	defn := mkLF(testAstCfg.NewAtom("def"), body)
+
+	match, err := MatchFromDefn(defn)
+	if err != nil {
+		t.Fatalf("unexpected error for distinct params: %v", err)
+	}
+	lam, ok := match[lg.Key(f)]
+	if !ok {
+		t.Fatal("expected f in match")
+	}
+	l, ok := lam.(*lg.Lambda)
+	if !ok {
+		t.Fatalf("expected *lg.Lambda, got %T", lam)
+	}
+	if len(l.Variables) != 2 {
+		t.Errorf("expected 2 lambda variables, got %d", len(l.Variables))
+	}
+}
+
+func TestMatchFromDefn_DuplicateParams_Iff(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	fs, _ := lg.NewFunctionSort(s, s, lg.Boolean) // S x S -> Bool
+	p := mkConst("p", fs)
+
+	// Build: forall X. p(X, X) <-> true — duplicate params via Iff
+	app := lg.MustApply(p, x, x)
+	iff := &lg.Iff{T1: app, T2: lg.True}
+	body := &lg.ForAll{Variables: []*lg.Variable{x}, Body: iff}
+	defn := mkLF(testAstCfg.NewAtom("def"), body)
+
+	_, err := MatchFromDefn(defn)
+	if err == nil {
+		t.Fatal("expected error for duplicate parameters p(X, X) via Iff")
+	}
+}
+
+func TestDistinctVars(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+
+	if !distinctVars([]*lg.Variable{x, y}) {
+		t.Error("X, Y should be distinct")
+	}
+	if !distinctVars([]*lg.Variable{x}) {
+		t.Error("single var should be distinct")
+	}
+	if !distinctVars(nil) {
+		t.Error("empty should be distinct")
+	}
+	if distinctVars([]*lg.Variable{x, x}) {
+		t.Error("X, X should NOT be distinct")
+	}
+}
+
+// ==========================================================================
+// CR-2: betaReduce must use capture-detecting substitution
+// ==========================================================================
+
+func TestBetaReduce_CaptureDetected(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+
+	// Lambda(X, forall Y. X = Y)
+	eq := &lg.Eq{T1: x, T2: y}
+	body := &lg.ForAll{Variables: []*lg.Variable{y}, Body: eq}
+	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: body}
+
+	// Apply to arg Y — this would capture Y in the forall
+	result := betaReduce(lam, []lg.Expr{y})
+
+	// Should NOT produce forall Y. Y = Y (captured).
+	// betaReduce returns lam.Body on CaptureError.
+	if fa, ok := result.(*lg.ForAll); ok {
+		if eq, ok := fa.Body.(*lg.Eq); ok {
+			// If both sides are the same variable Y, that's capture corruption
+			lv, lOk := eq.T1.(*lg.Variable)
+			rv, rOk := eq.T2.(*lg.Variable)
+			if lOk && rOk && lv.Name == "Y" && rv.Name == "Y" {
+				t.Fatal("capture detected: betaReduce produced forall Y. Y=Y")
+			}
+		}
+	}
+	// Result should be the unchanged lambda body (forall Y. X = Y)
+	// because capture was detected and substitution was skipped.
+	fa, ok := result.(*lg.ForAll)
+	if !ok {
+		t.Fatalf("expected ForAll, got %T", result)
+	}
+	if eqR, ok := fa.Body.(*lg.Eq); ok {
+		if lv, ok := eqR.T1.(*lg.Variable); ok {
+			if lv.Name != "X" {
+				t.Errorf("expected X in LHS (unsubstituted), got %s", lv.Name)
+			}
+		}
+	}
+}
+
+func TestBetaReduce_NoCaptureSucceeds(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	c := mkConst("c", s)
+
+	// Lambda(X, X) applied to c — identity, no capture possible
+	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: x}
+	result := betaReduce(lam, []lg.Expr{c})
+
+	rc, ok := result.(*lg.Const)
+	if !ok {
+		t.Fatalf("expected Const c, got %T: %v", result, result)
+	}
+	if rc.Name != "c" {
+		t.Errorf("expected c, got %s", rc.Name)
+	}
+}
+
+func TestApplyMatch_CaptureNotCorrupted(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+
+	// match: {f: Lambda(X, forall Y. X = Y)}
+	eq := &lg.Eq{T1: x, T2: y}
+	body := &lg.ForAll{Variables: []*lg.Variable{y}, Body: eq}
+	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: body}
+	match := map[lg.NodeKey]lg.Expr{lg.Key(f): lam}
+
+	// formula: f(Y) — applying match would substitute Y for X,
+	// but Y is also bound in the lambda body's forall.
+	fmla := lg.MustApply(f, y)
+
+	result := ApplyMatch(match, fmla)
+
+	// Result should NOT have Y captured by the forall.
+	// With capture detection, betaReduce returns the lambda body unchanged.
+	if result == nil {
+		t.Fatal("result should not be nil")
+	}
+}
+
+// ==========================================================================
+// CR-3: applyMatchAltRec must handle LambdaApply errors (not return nil)
+// ==========================================================================
+
+func TestApplyMatchAltRec_LambdaApplyError_NotNil(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+
+	// match: {f: Lambda(X, forall Y. X = Y)}
+	eq := &lg.Eq{T1: x, T2: y}
+	body := &lg.ForAll{Variables: []*lg.Variable{y}, Body: eq}
+	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: body}
+	match := map[lg.NodeKey]lg.Expr{lg.Key(f): lam}
+
+	// formula: f(Y) — capture scenario
+	fmla := lg.MustApply(f, y)
+	env := make(map[lg.NodeKey]bool)
+
+	result := applyMatchAltRec(match, fmla, env)
+
+	// Must NOT be nil — that would cause a crash downstream
+	if result == nil {
+		t.Fatal("applyMatchAltRec returned nil on CaptureError — should return fmla")
+	}
+}
+
+// ==========================================================================
+// CR-4: applyUnfoldRec must handle LambdaApply errors
+// ==========================================================================
+
+func TestApplyUnfoldRec_CaptureReturnsOriginal(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	y := mkVar("Y", s)
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+
+	// Lambda whose body has bound Y: Lambda(X, forall Y. X = Y)
+	eq := &lg.Eq{T1: x, T2: y}
+	body := &lg.ForAll{Variables: []*lg.Variable{y}, Body: eq}
+	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: body}
+	union := &ExprListOrLambdaUnion{Items: []lg.Expr{lam}}
+
+	// Formula: f(Y) — applying lambda would capture Y
+	fmla := lg.MustApply(f, y)
+
+	result := applyUnfoldRec(lg.Key(f), union, fmla)
+
+	// Must NOT be nil
+	if result == nil {
+		t.Fatal("applyUnfoldRec returned nil on capture — should return original fmla")
+	}
+}
+
+// ==========================================================================
+// CR-5: applyUnfoldGoal must filter ConstantDecl matching unfold key
+// ==========================================================================
+
+func TestApplyUnfoldGoal_FiltersConstantDeclPremise(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+	c := mkConst("c", s)
+	a := mkConst("a", s)
+
+	// Lambda: f(X) = c
+	lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
+	union := &ExprListOrLambdaUnion{Items: []lg.Expr{lam}}
+	freeVars := unfoldRhsVars(union)
+
+	// Goal with ConstantDecl(f) premise + conclusion f(a)
+	cd := testAstCfg.NewConstantDecl(f)
+	app := lg.MustApply(f, a)
+	sb := testAstCfg.NewSchemaBody(cd, app)
+	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+
+	result := applyUnfoldGoal(testAstCfg, lg.Key(f), union, freeVars, goal)
+
+	// The ConstantDecl(f) premise should be FILTERED OUT
+	// (Python: transformed to lambda-typed, then filtered by is_lambda check)
+	prems := GoalPrems(result)
+	for _, p := range prems {
+		if cd, ok := p.(*ast.ConstantDecl); ok {
+			args := cd.Args()
+			if len(args) > 0 {
+				if rc, ok := args[0].(*lg.Const); ok && rc.Name == "f" {
+					t.Error("ConstantDecl(f) should have been filtered from premises")
+				}
+			}
+		}
+	}
+
+	// Conclusion should be unfolded: f(a) → c
+	conc := GoalConc(result)
+	if rc, ok := conc.(*lg.Const); ok {
+		if rc.Name != "c" {
+			t.Errorf("expected conclusion c, got %s", rc.Name)
+		}
+	} else {
+		t.Errorf("expected *lg.Const conclusion, got %T", conc)
+	}
+}
+
+func TestApplyUnfoldGoal_KeepsNonMatchingConstantDecl(t *testing.T) {
+	s := mkSort("S")
+	x := mkVar("X", s)
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+	g := mkConst("g", fs)
+	c := mkConst("c", s)
+	a := mkConst("a", s)
+
+	// Lambda: f(X) = c
+	lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
+	union := &ExprListOrLambdaUnion{Items: []lg.Expr{lam}}
+	freeVars := unfoldRhsVars(union)
+
+	// Goal with ConstantDecl(g) premise (NOT the unfold key f) + conclusion f(a)
+	cd := testAstCfg.NewConstantDecl(g)
+	app := lg.MustApply(f, a)
+	sb := testAstCfg.NewSchemaBody(cd, app)
+	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+
+	result := applyUnfoldGoal(testAstCfg, lg.Key(f), union, freeVars, goal)
+
+	// ConstantDecl(g) should be KEPT (different symbol from unfold key)
+	prems := GoalPrems(result)
+	foundG := false
+	for _, p := range prems {
+		if cd, ok := p.(*ast.ConstantDecl); ok {
+			args := cd.Args()
+			if len(args) > 0 {
+				if rc, ok := args[0].(*lg.Const); ok && rc.Name == "g" {
+					foundG = true
+				}
+			}
+		}
+	}
+	if !foundG {
+		t.Error("ConstantDecl(g) should have been kept in premises")
+	}
+}
+
+// ==========================================================================
+// CR-6: applyUnfoldRec non-lambda Pop must apply to args (Python Symbol.__call__)
+// ==========================================================================
+
+func TestApplyUnfoldRec_NonLambdaPopAppliesArgs(t *testing.T) {
+	s := mkSort("S")
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+	g := mkConst("g", fs)
+	a := mkConst("a", s)
+
+	// Union contains a non-lambda Const (g) instead of a Lambda.
+	// Python: Symbol.__call__(*args) creates Apply(g, args).
+	union := &ExprListOrLambdaUnion{Items: []lg.Expr{g}}
+
+	// Formula: f(a)
+	fmla := lg.MustApply(f, a)
+
+	result := applyUnfoldRec(lg.Key(f), union, fmla)
+
+	// Result should be g(a) — the popped g applied to the processed arg a.
+	// NOT just g with args dropped.
+	app, ok := result.(*lg.Apply)
+	if !ok {
+		t.Fatalf("expected Apply (g applied to a), got %T: %v", result, result)
+	}
+	if rc, ok := app.Func.(*lg.Const); !ok || rc.Name != "g" {
+		t.Errorf("expected function g, got %v", app.Func)
+	}
+	if len(app.Terms) != 1 {
+		t.Fatalf("expected 1 arg, got %d", len(app.Terms))
+	}
+	if rc, ok := app.Terms[0].(*lg.Const); !ok || rc.Name != "a" {
+		t.Errorf("expected arg a, got %v", app.Terms[0])
+	}
+}
+
+func TestApplyUnfoldRec_NonLambdaPopSortMismatch(t *testing.T) {
+	s := mkSort("S")
+	fs, _ := lg.NewFunctionSort(s, s)
+	f := mkConst("f", fs)
+	c := mkConst("c", s) // sort S, NOT a function sort
+
+	// Union contains a non-lambda, non-function-sort Const.
+	// NewApply would fail (sort mismatch), so the fallback returns c itself.
+	union := &ExprListOrLambdaUnion{Items: []lg.Expr{c}}
+
+	// Formula: f(a)
+	a := mkConst("a", s)
+	fmla := lg.MustApply(f, a)
+	result := applyUnfoldRec(lg.Key(f), union, fmla)
+
+	// Must not panic, must not be nil
+	if result == nil {
+		t.Fatal("result should not be nil")
+	}
+	// Result is c itself (NewApply fails due to sort mismatch)
+	if rc, ok := result.(*lg.Const); ok {
+		if rc.Name != "c" {
+			t.Errorf("expected c, got %s", rc.Name)
+		}
+	}
+}
