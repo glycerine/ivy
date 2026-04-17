@@ -2155,6 +2155,15 @@ def handle_before_after(kind,atom,action,ivy,optargs=[],optreturns=[]):
         ivy.declare(ActionDecl(df))
         handle_mixin(kind,mixer,atom,ivy)
     
+def p_optwith(p):
+    'optwith : '
+    if __debug__: xtracer.trace("parser.p_optwith ENTER (optwith)")
+    p[0] = []
+def p_optwith_with_callatoms(p):
+    'optwith : WITH callatoms'
+    if __debug__: xtracer.trace("parser.p_optwith_with_callatoms ENTER (optwith)")
+    p[0] = p[2]
+
 if not (iu.get_numeric_version() <= [1,1]):
     def p_top_mixin_callatom_before_callatom(p):
         'top : top MIXIN callatom BEFORE callatom'
@@ -2256,14 +2265,6 @@ if not (iu.get_numeric_version() <= [1,1]):
         d.lineno = get_lineno(p,3)
         p[0] = p[1]
         p[0].declare(d)
-    def p_optwith(p):
-        'optwith : '
-        if __debug__: xtracer.trace("parser.p_optwith ENTER (optwith)")
-        p[0] = []
-    def p_optwith_with_callatoms(p):
-        'optwith : WITH callatoms'
-        if __debug__: xtracer.trace("parser.p_optwith_with_callatoms ENTER (optwith)")
-        p[0] = p[2]
     def p_top_opttrusted_isolate_callatom_eq_lcb_top_rcb_optwith(p):
         'top : top opttrusted ISOLATE SYMBOL optargs EQ LCB top RCB optwith'
         if __debug__: xtracer.trace("parser.p_top_opttrusted_isolate_callatom_eq_lcb_top_rcb_optwith ENTER (top)")

@@ -44,7 +44,7 @@ tokens = (
     'WHENLAST',
     'WHENPREV',
     'WHENNEXT',
-    'UNPROVABLE'
+    'UNPROVABLE',
     'TRIGGER'
 )
 
