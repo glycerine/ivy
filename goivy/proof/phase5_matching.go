@@ -955,7 +955,10 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 					return fmla
 				}
 				if lam, ok := replacement.(*lg.Lambda); ok {
-					result, _ := il.LambdaApply(lam, newTerms)
+					result, lerr := il.LambdaApply(lam, newTerms)
+					if lerr != nil {
+						return fmla // capture — return original
+					}
 					return result
 				}
 				if newC, ok := replacement.(*lg.Const); ok {
@@ -983,7 +986,10 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			}
 			// replacement is a lambda
 			if lam, ok := replacement.(*lg.Lambda); ok {
-				result, _ := il.LambdaApply(lam, newTerms)
+				result, lerr := il.LambdaApply(lam, newTerms)
+				if lerr != nil {
+					return fmla // capture — return original
+				}
 				return result
 			}
 		}

@@ -503,7 +503,12 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	if eq, ok := fmla.(*lg.Eq); ok {
 		if app, ok := eq.T1.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Const); ok {
-				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: eq.T2}
+				vars := nodesToVarsPhase5(app.Terms)
+				// Python: if iu.distinct(lhs.args)
+				if !distinctVars(vars) {
+					return nil, &ProofError{Msg: "not a definition: duplicate parameters"}
+				}
+				lam := &lg.Lambda{Variables: vars, Body: eq.T2}
 				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam
 				return result, nil
@@ -513,7 +518,12 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	if iff, ok := fmla.(*lg.Iff); ok {
 		if app, ok := iff.T1.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Const); ok {
-				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: iff.T2}
+				vars := nodesToVarsPhase5(app.Terms)
+				// Python: if iu.distinct(lhs.args)
+				if !distinctVars(vars) {
+					return nil, &ProofError{Msg: "not a definition: duplicate parameters"}
+				}
+				lam := &lg.Lambda{Variables: vars, Body: iff.T2}
 				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam
 				return result, nil
@@ -531,6 +541,20 @@ func nodesToVarsPhase5(nodes []lg.Expr) []*lg.Variable {
 		}
 	}
 	return result
+}
+
+// distinctVars returns true if all variables have distinct NodeKeys.
+// Corresponds to Python's iu.distinct(lhs.args) in match_from_defn.
+func distinctVars(vars []*lg.Variable) bool {
+	seen := make(map[lg.NodeKey]bool, len(vars))
+	for _, v := range vars {
+		k := lg.Key(v)
+		if seen[k] {
+			return false
+		}
+		seen[k] = true
+	}
+	return true
 }
 
 // ExprListOrLambdaUnion holds either a single lambda or a list of lambdas
@@ -632,8 +656,19 @@ func applyUnfoldRec(key lg.NodeKey, union *ExprListOrLambdaUnion, fmla lg.Expr) 
 			if c, ok := app.Func.(*lg.Const); ok && lg.Key(c) == key {
 				lam := union.Pop()
 				if l, ok := lam.(*lg.Lambda); ok {
-					result, _ := il.LambdaApply(l, newArgs)
+					result, err := il.LambdaApply(l, newArgs)
+					if err != nil {
+						return fmla // capture — return original
+					}
 					return result
+				}
+				// Non-lambda: apply as function to args.
+				// Python: Symbol.__call__(*args) creates Apply(fun, args).
+				if c, ok := lam.(*lg.Const); ok && len(newArgs) > 0 {
+					return lg.MustApply(c, newArgs...)
+				}
+				if len(newArgs) > 0 {
+					return lg.MustApply(lam, newArgs...)
 				}
 				return lam
 			}
@@ -664,6 +699,26 @@ func applyUnfoldGoal(cfg *ast.AstConfig, key lg.NodeKey, union *ExprListOrLambda
 			newPrems = append(newPrems, p)
 		}
 	}
+	// Filter ConstantDecl premises matching the unfold key.
+	// Python: apply_match_goal transforms ConstantDecl via apply_match_func_alt
+	// (which pops a lambda via match_get), then filters lambda-typed premises:
+	//   prems = [p for p in prems if not is_lambda(p)]
+	// For the unfold path, a ConstantDecl whose symbol matches the unfold key
+	// would become lambda-typed and then be filtered out.
+	filtered := make([]ast.Node, 0, len(newPrems))
+	for _, p := range newPrems {
+		if cd, ok := p.(*ast.ConstantDecl); ok {
+			args := cd.Args()
+			if len(args) > 0 {
+				if c, ok := args[0].(*lg.Const); ok && lg.Key(c) == key {
+					continue // Python would make this lambda-typed, then filter
+				}
+			}
+		}
+		filtered = append(filtered, p)
+	}
+	newPrems = filtered
+
 	// Unfold the conclusion with alpha-avoid + destructive pop
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		c = il.AlphaAvoidMap(c, freeVars)

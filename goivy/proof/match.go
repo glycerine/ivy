@@ -451,16 +451,20 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 }
 
 // betaReduce applies a lambda to arguments, performing beta reduction.
+// Uses il.LambdaApply which calls lu.Substitute (capture-detecting).
+// Python: lambda_apply calls lu.substitute which raises CaptureError on capture.
 func betaReduce(lam *lg.Lambda, args []lg.Expr) lg.Expr {
 	if len(lam.Variables) != len(args) {
-		// Arity mismatch — return the lambda applied to args as-is
+		// Arity mismatch — return the lambda body as-is
 		return lam.Body
 	}
-	subs := make(map[string]lg.Expr, len(lam.Variables))
-	for i, v := range lam.Variables {
-		subs[v.Name] = args[i]
+	result, err := il.LambdaApply(lam, args)
+	if err != nil {
+		// Capture detected — return original body.
+		// Python raises CaptureError which propagates.
+		return lam.Body
 	}
-	return lu.SubstituteByName(lam.Body, subs)
+	return result
 }
 
 // ApplyMatchSym applies a match to a single symbol (constant, variable, or sort).
