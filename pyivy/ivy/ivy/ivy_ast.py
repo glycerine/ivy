@@ -1634,7 +1634,7 @@ class AstRewriteSubstConstants(object):
         self.subst = subst
     def rewrite_name(self,name):
         return name
-    def rewrite_atom(self,atom):
+    def rewrite_atom(self,atom,always=False):
         subst = self.subst
         return subst[atom.rep] if not atom.args and atom.rep in subst else atom
 
@@ -1644,7 +1644,7 @@ class AstRewriteSubstConstantsParams(object):
         self.psubst = psubst
     def rewrite_name(self,name):
         return subst_subscripts(name,self.psubst)
-    def rewrite_atom(self,atom):
+    def rewrite_atom(self,atom,always=False):
         subst = self.subst
         return subst[atom.rep] if not atom.args and atom.rep in subst else atom
 
