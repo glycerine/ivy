@@ -330,6 +330,37 @@ func TestGoalAddPrem_Existing(t *testing.T) {
 	}
 }
 
+func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
+	s := mkSort("S")
+	c := mkConst("c", s)
+	tm := testAstCfg.NewTemporalModels(testAstCfg.NewNoneAST(), lg.True)
+
+	// Goal: SchemaBody{[ConstantDecl, TemporalModels]}
+	cd := testAstCfg.NewConstantDecl(c)
+	sb := testAstCfg.NewSchemaBody(cd, tm)
+	goal := mkLF(testAstCfg.NewAtom("goal"), sb)
+
+	prem := mkLF(testAstCfg.NewAtom("prem"), c)
+
+	// Verify precondition
+	if _, ok := GoalConc(goal).(*ast.TemporalModels); !ok {
+		t.Fatalf("precondition: expected TemporalModels conclusion, got %T", GoalConc(goal))
+	}
+
+	result := GoalAddPrem(testAstCfg, goal, prem, ast.Location{})
+
+	// The conclusion must still be TemporalModels
+	conc := GoalConc(result)
+	if _, ok := conc.(*ast.TemporalModels); !ok {
+		t.Fatalf("GoalAddPrem lost TemporalModels conclusion, got %T", conc)
+	}
+	// Should have 2 premises now: ConstantDecl + prem
+	prems := GoalPrems(result)
+	if len(prems) != 2 {
+		t.Fatalf("expected 2 premises, got %d", len(prems))
+	}
+}
+
 func TestGoalRemovePrem_Found(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)

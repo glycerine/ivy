@@ -605,8 +605,13 @@ func astNodeToLogicNode(n ast.Node) lg.Expr {
 // goalAddPrem adds a premise to a goal.
 // Corresponds to Python goal_add_prem.
 func (pc *ProofChecker) goalAddPrem(goal *ast.LabeledFormula, prem *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
-	prems := GoalPrems(goal)
-	prems = append(prems, prem)
+	// Copy premises to avoid overwriting the SchemaBody's conclusion
+	// via append on the shared backing array (GoalPrems returns a
+	// sub-slice of SchemaBody.Elems with spare capacity).
+	existing := GoalPrems(goal)
+	prems := make([]ast.Node, len(existing)+1)
+	copy(prems, existing)
+	prems[len(existing)] = prem
 	conc := GoalConc(goal)
 	result := MakeGoal(pc.astCfg(), loc, goal.Label, prems, conc)
 	return result

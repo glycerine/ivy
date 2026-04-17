@@ -389,7 +389,13 @@ func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location)
 
 // GoalAddPrem adds a premise to a goal.
 func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
-	prems := append(GoalPrems(goal), prem)
+	// Copy premises to avoid overwriting the SchemaBody's conclusion
+	// element via append on the shared backing array (GoalPrems returns
+	// a sub-slice of SchemaBody.Elems with spare capacity).
+	existing := GoalPrems(goal)
+	prems := make([]ast.Node, len(existing)+1)
+	copy(prems, existing)
+	prems[len(existing)] = prem
 	return MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
 }
 
