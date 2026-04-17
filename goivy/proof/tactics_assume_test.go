@@ -314,7 +314,14 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 	skolemized := SkolemizeGoal(testAstCfg, goal, true)
 
 	// Verify TemporalModels survived skolemization
+	t.Logf("after skolemize: Formula type=%T", skolemized.Formula)
 	concAfterSkolem := GoalConc(skolemized)
+	t.Logf("after skolemize: GoalConc type=%T", concAfterSkolem)
+	premsAfterSkolem := GoalPrems(skolemized)
+	t.Logf("after skolemize: nPrems=%d", len(premsAfterSkolem))
+	for i, p := range premsAfterSkolem {
+		t.Logf("  prem[%d] type=%T", i, p)
+	}
 	if _, ok := concAfterSkolem.(*ast.TemporalModels); !ok {
 		t.Fatalf("after skolemize: expected TemporalModels conclusion, got %T", concAfterSkolem)
 	}
@@ -329,8 +336,17 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 		t.Fatalf("expected 1 result, got %d", len(result))
 	}
 
-	// The conclusion must STILL be TemporalModels
+	// Diagnose the result
+	t.Logf("after assume: Formula type=%T", result[0].Formula)
 	concFinal := GoalConc(result[0])
+	t.Logf("after assume: GoalConc type=%T", concFinal)
+	premsFinal := GoalPrems(result[0])
+	t.Logf("after assume: nPrems=%d", len(premsFinal))
+	for i, p := range premsFinal {
+		t.Logf("  prem[%d] type=%T label=%v", i, p, p)
+	}
+
+	// The conclusion must STILL be TemporalModels
 	if _, ok := concFinal.(*ast.TemporalModels); !ok {
 		t.Fatalf("REGRESSION: after skolemize+instantiate, conclusion is %T, not *ast.TemporalModels", concFinal)
 	}
