@@ -695,37 +695,37 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 			}
 			// Python: mod = im.module.copy(); set fields from model
-			fakeMod := mod.Copy()
-			fakeMod.IsolateProof = nil
-			fakeMod.LabeledProps = nil
-			fakeMod.ConceptSpaces = nil
+			withLocalMod := mod.Copy()
+			withLocalMod.IsolateProof = nil
+			withLocalMod.LabeledProps = nil
+			withLocalMod.ConceptSpaces = nil
 
 			// Extract fields from NormalProgram if available.
 			if np, ok := model.(*temporal.NormalProgram); ok {
-				fakeMod.LabeledConjs = np.Invars
+				withLocalMod.LabeledConjs = np.Invars
 				if np.Postconds != nil {
-					fakeMod.Postconds = np.Postconds
+					withLocalMod.Postconds = np.Postconds
 				}
-				fakeMod.PublicActions = iu.NewInsMap[string, bool]()
+				withLocalMod.PublicActions = iu.NewInsMap[string, bool]()
 				for _, c := range np.Calls {
-					fakeMod.PublicActions.Set(c, true)
+					withLocalMod.PublicActions.Set(c, true)
 				}
-				fakeMod.Actions = iu.NewInsMap[string, module.Action]()
+				withLocalMod.Actions = iu.NewInsMap[string, module.Action]()
 				for _, b := range np.Bindings {
-					fakeMod.Actions.Set(b.Name, b.Action.Stmt)
+					withLocalMod.Actions.Set(b.Name, b.Action.Stmt)
 				}
 				if np.Init != nil {
-					fakeMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}
+					withLocalMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}
 				} else {
-					fakeMod.Initializers = nil
+					withLocalMod.Initializers = nil
 				}
-				fakeMod.AssumedInvs = np.Asms
+				withLocalMod.AssumedInvs = np.Asms
 			}
 
 			// Python: mod.labeled_axioms = list(mod.labeled_axioms)
-			axiomsCopy := make([]*ast.LabeledFormula, len(fakeMod.LabeledAxioms))
-			copy(axiomsCopy, fakeMod.LabeledAxioms)
-			fakeMod.LabeledAxioms = axiomsCopy
+			axiomsCopy := make([]*ast.LabeledFormula, len(withLocalMod.LabeledAxioms))
+			copy(axiomsCopy, withLocalMod.LabeledAxioms)
+			withLocalMod.LabeledAxioms = axiomsCopy
 
 			// Python: mod.params = list(mod.params)
 			// Python: mod.updates = list(mod.updates)
@@ -769,18 +769,18 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 							if children := df.Children(); len(children) > 0 {
 								sym = children[0]
 							}
-							fakeMod.Updates = append(fakeMod.Updates, module.NewDerivedUpdate(sym, df))
+							withLocalMod.Updates = append(withLocalMod.Updates, module.NewDerivedUpdate(sym, df))
 						}
 					}
 					modLF := AstLFToModuleLF(premLF)
 					if modLF != nil {
-						fakeMod.LabeledAxioms = append(fakeMod.LabeledAxioms, modLF)
+						withLocalMod.LabeledAxioms = append(withLocalMod.LabeledAxioms, modLF)
 					}
 				} else if proof.GoalIsDefn(premNode) {
 					dfnd := proof.GoalDefines(premNode)
 					if dfnd != nil && il.IsConstant(dfnd) {
 						if sym, ok := dfnd.(*lg.Const); ok {
-							fakeMod.Params = append(fakeMod.Params, sym)
+							withLocalMod.Params = append(withLocalMod.Params, sym)
 						}
 					}
 				}
@@ -791,12 +791,12 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			//             if method is not None: with im.module.theory_context(): method()
 			//             else: check_isolate()
 			vocab := proof.GoalVocab(goal)
-			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
+			ws := il.NewWithSymbols(withLocalMod.Sig, vocab.Symbols)
 			ws.Enter()
-			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
+			wsorts := il.NewWithSorts(withLocalMod.Sig, vocab.Sorts)
 			wsorts.Enter()
 			if method != nil {
-				cleanup := fakeMod.TheoryContext()
+				cleanup := withLocalMod.TheoryContext()
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
@@ -811,7 +811,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					// Python ivy_check.py:829-830:
 					//   if hasattr(goal,"trace_hook"): foo = goal.trace_hook(foo)
 					// The Go trace-hook propagation differs (it acts on a
-					// MatchHandler via fakeMod.TraceHook in the no-method
+					// MatchHandler via withLocalMod.TraceHook in the no-method
 					// branch below, not as a transformer here). For now we
 					// honor opt_trace and diagnose without re-routing the
 					// failure value through goal.TraceHook — see followup
@@ -844,9 +844,14 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				// to the module so check.go's trace formatter can use it.
 				// No TheoryContext here — CheckIsolate handles its own.
 				if goal.TraceHook != nil {
-					fakeMod.TraceHook = goal.TraceHook
+					withLocalMod.TraceHook = goal.TraceHook
 				}
-				err := CheckIsolate(fakeMod, nil)
+				failsBefore := withLocalMod.Cfg.Failures
+				err := CheckIsolate(withLocalMod, nil)
+				// Python's failures is a module-level global, so all
+				// Checker.fail() calls aggregate regardless of which module
+				// copy is active. Propagate the delta back to the original.
+				mod.Cfg.Failures += withLocalMod.Cfg.Failures - failsBefore
 				if err != nil {
 					wsorts.Exit()
 					ws.Exit()
@@ -859,27 +864,27 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 		} else {
 			// Non-temporal branch (Python lines 765-776)
 			pgoal := compiler.TheoremToProperty(AstLFToModuleLF(goal), mod)
-			fakeMod := mod.Copy()
-			fakeMod.LabeledProps = []*ast.LabeledFormula{pgoal}
-			fakeMod.ConceptSpaces = nil
-			fakeMod.LabeledConjs = nil
-			fakeMod.PublicActions = iu.NewInsMap[string, bool]()
-			fakeMod.Actions = iu.NewInsMap[string, module.Action]()
-			fakeMod.Initializers = nil
-			fakeMod.IsolateProof = nil
-			fakeMod.IsolateInfo = nil
+			withLocalMod := mod.Copy()
+			withLocalMod.LabeledProps = []*ast.LabeledFormula{pgoal}
+			withLocalMod.ConceptSpaces = nil
+			withLocalMod.LabeledConjs = nil
+			withLocalMod.PublicActions = iu.NewInsMap[string, bool]()
+			withLocalMod.Actions = iu.NewInsMap[string, module.Action]()
+			withLocalMod.Initializers = nil
+			withLocalMod.IsolateProof = nil
+			withLocalMod.IsolateInfo = nil
 
 			// Enter module context and check with vocab
 			// Python: with lg.WithSymbols → with lg.WithSorts →
 			//             if method is not None: with im.module.theory_context(): method()
 			//             else: check_isolate()
 			vocab := proof.GoalVocab(goal)
-			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
+			ws := il.NewWithSymbols(withLocalMod.Sig, vocab.Symbols)
 			ws.Enter()
-			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
+			wsorts := il.NewWithSorts(withLocalMod.Sig, vocab.Sorts)
 			wsorts.Enter()
 			if method != nil {
-				cleanup := fakeMod.TheoryContext()
+				cleanup := withLocalMod.TheoryContext()
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
@@ -921,9 +926,11 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				// to the module so check.go's trace formatter can use it.
 				// No TheoryContext here — CheckIsolate handles its own.
 				if goal.TraceHook != nil {
-					fakeMod.TraceHook = goal.TraceHook
+					withLocalMod.TraceHook = goal.TraceHook
 				}
-				err := CheckIsolate(fakeMod, nil)
+				failsBefore := withLocalMod.Cfg.Failures
+				err := CheckIsolate(withLocalMod, nil)
+				mod.Cfg.Failures += withLocalMod.Cfg.Failures - failsBefore
 				if err != nil {
 					wsorts.Exit()
 					ws.Exit()
@@ -1112,7 +1119,7 @@ func CheckModule(mod *module.Module) error {
 
 	fmt.Println()
 	if mod.Cfg.Failures > 0 {
-		return fmt.Errorf("check/isolate_check.go:1115 failed checks: %d", mod.Cfg.Failures)
+		return fmt.Errorf("failed checks: %d", mod.Cfg.Failures)
 	}
 	if mod.Cfg.CheckedAction != "" && !mod.Cfg.CheckedActionFound {
 		return fmt.Errorf("%s is not an exported action of any isolate",
