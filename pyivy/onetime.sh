@@ -14,10 +14,12 @@ gcc -O2 -o aigtoaig aigtoaig.c aiger.c
 ## --> ~/ivy/pyivy/ivy/ivy/bin/aigtoaig
 cp -p aigtoaig ../../bin/
 cp -p aigtoaig ../../ivy/bin/
+cp -p aigtoaig ${GOPATH}/bin/
 cd ../../..
 
 cd ivy/submodules/abc
 make -j4 ## it takes a few minutes to compile binary 'abc'.
 cp -p abc ../../bin/
 cp -p abc ../../ivy/bin/
+cp -p abc ${GOPATH}/bin/
 cd ../../..
