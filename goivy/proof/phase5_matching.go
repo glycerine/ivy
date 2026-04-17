@@ -1374,10 +1374,21 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 		}
 		newPrems = filtered
 	}
+	// Build env from goal_defns: symbols defined in the goal's premises that
+	// are NOT already in match. These should be treated as bound when checking
+	// for capture in the conclusion.
+	// Python: bound = [s for s in goal_defns(x) if s not in match]
+	//         with il.BindSymbols(env, bound): ... apply_match(match, conc, env)
+	env := make(map[lg.NodeKey]bool)
+	for k := range GoalDefns(goal) {
+		if _, inMatch := match[k]; !inMatch {
+			env[k] = true
+		}
+	}
 	// ApplyToConc unwraps *ast.TemporalModels so ApplyMatchAlt runs on the
 	// inner formula; the wrapper is preserved.
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return ApplyMatchAlt(match, c, nil)
+		return ApplyMatchAlt(match, c, env)
 	})
 	return CloneGoal(cfg, goal, newPrems, newConc)
 }

@@ -238,3 +238,6 @@ trees are structurally identical.
    Use sliceCanon() in Go and slice_canon() in Python. These produce "[]" for
    empty slices. Do NOT conditionally omit slice fields — this breaks cross-language
    matching since the other side may emit "[]".
+
+9. only run the ~/ivy/goivy test suite via "cd ~/ivy/goivy && make test". 
+ If you "cd ~/ivy/goivy && go test ./..." it will take FOREVER because XTRACE is on by default, and you will waste everyone's time.
