@@ -383,23 +383,13 @@ func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location)
 	if err := CheckNameClash(g1, g2); err != nil {
 		return nil, err
 	}
-	// Copy to avoid overwriting SchemaBody conclusion via shared backing array.
-	p1, p2 := GoalPrems(g1), GoalPrems(g2)
-	prems := make([]ast.Node, 0, len(p1)+len(p2))
-	prems = append(prems, p1...)
-	prems = append(prems, p2...)
+	prems := append(GoalPrems(g1), GoalPrems(g2)...)
 	return MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2)), nil
 }
 
 // GoalAddPrem adds a premise to a goal.
 func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
-	// Copy premises to avoid overwriting the SchemaBody's conclusion
-	// element via append on the shared backing array (GoalPrems returns
-	// a sub-slice of SchemaBody.Elems with spare capacity).
-	existing := GoalPrems(goal)
-	prems := make([]ast.Node, len(existing)+1)
-	copy(prems, existing)
-	prems[len(existing)] = prem
+	prems := append(GoalPrems(goal), prem)
 	return MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
 }
 

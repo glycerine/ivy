@@ -903,10 +903,16 @@ func (s *SchemaBody) Args() []Node           { return s.Elems }
 func (s *SchemaBody) Clone(args []Node) Node { return &SchemaBody{Base: s.Base, Elems: args} }
 func (s *SchemaBody) String() string         { return "{...}" }
 func (s *SchemaBody) Prems() []Node {
-	if len(s.Elems) == 0 {
+	if len(s.Elems) <= 1 {
 		return nil
 	}
-	return s.Elems[:len(s.Elems)-1]
+	// Return a copy so callers can append without overwriting the
+	// conclusion element via the shared backing array. Matches
+	// Python's list(g.formula.prems()) which returns a fresh list.
+	src := s.Elems[:len(s.Elems)-1]
+	cp := make([]Node, len(src))
+	copy(cp, src)
+	return cp
 }
 func (s *SchemaBody) Conc() Node {
 	if len(s.Elems) == 0 {
