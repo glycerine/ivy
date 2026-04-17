@@ -533,68 +533,173 @@ func nodesToVarsPhase5(nodes []lg.Expr) []*lg.Variable {
 	return result
 }
 
+// ExprListOrLambdaUnion holds either a single lambda or a list of lambdas
+// for multi-definition unfolding. Used by MatchFromDefns.
+// Does NOT implement lg.Expr — stays localized to the unfold path.
+//
+// Python: match_from_defns returns {sym: [lambda1, lambda2, ...]}
+// Python: match_get pops the first element on each access:
+//
+//	val = save[0]; if len(save) > 1: del save[0]
+type ExprListOrLambdaUnion struct {
+	Items []lg.Expr // always len >= 1; Pop returns next
+}
+
+// Pop returns the first item. If more than one item, removes it.
+// Mirrors Python: val = save[0]; if len(save) > 1: del save[0]
+func (u *ExprListOrLambdaUnion) Pop() lg.Expr {
+	if len(u.Items) == 0 {
+		return nil
+	}
+	val := u.Items[0]
+	if len(u.Items) > 1 {
+		u.Items = u.Items[1:]
+	}
+	return val
+}
+
 // MatchFromDefns extracts matches from multiple definition formulas.
 // Corresponds to Python's match_from_defns (ivy_proof.py:1543-1547).
 //
-// Python creates a list-valued match {lhs: [lambda1, lambda2, ...]} for
-// multi-step unfolding where each occurrence of lhs gets a different lambda.
-// Go currently implements the single-lambda case: all definitions must share
-// the same LHS symbol. The first definition's lambda is used.
-// (Full list-valued match behavior for multi-renaming unfold is a TODO.)
-func MatchFromDefns(defns []*ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
+// Python:
+//
+//	matches = [match_from_defn(d) for d in defns]
+//	lhs = list(matches[0].keys())[0]
+//	assert all(lhs in m for m in matches)
+//	return {lhs: [m[lhs] for m in matches]}
+func MatchFromDefns(defns []*ast.LabeledFormula) (lg.NodeKey, *ExprListOrLambdaUnion, error) {
 	if len(defns) == 0 {
-		return nil, &ProofError{Msg: "no definitions"}
+		return "", nil, &ProofError{Msg: "no definitions"}
 	}
-	// Get first match to determine the LHS key
-	firstMatch, err := MatchFromDefn(defns[0])
-	if err != nil {
-		return nil, err
-	}
-	// Verify all definitions share the same LHS symbol (Python: assert)
-	if len(defns) > 1 {
-		var firstKey lg.NodeKey
-		for k := range firstMatch {
-			firstKey = k
-			break
+	// Python: matches = [match_from_defn(d) for d in defns]
+	matches := make([]map[lg.NodeKey]lg.Expr, len(defns))
+	for i, d := range defns {
+		m, err := MatchFromDefn(d)
+		if err != nil {
+			return "", nil, err
 		}
-		for _, defn := range defns[1:] {
-			m, err := MatchFromDefn(defn)
-			if err != nil {
-				return nil, err
-			}
-			if _, ok := m[firstKey]; !ok {
-				return nil, &ProofError{Msg: "match_from_defns: definitions have different LHS symbols"}
+		matches[i] = m
+	}
+	// Python: lhs = list(matches[0].keys())[0]
+	var lhsKey lg.NodeKey
+	for k := range matches[0] {
+		lhsKey = k
+		break
+	}
+	// Python: assert all(lhs in m for m in matches)
+	for _, m := range matches[1:] {
+		if _, ok := m[lhsKey]; !ok {
+			return "", nil, &ProofError{Msg: "match_from_defns: definitions have different LHS symbols"}
+		}
+	}
+	// Python: return {lhs: [m[lhs] for m in matches]}
+	items := make([]lg.Expr, len(matches))
+	for i, m := range matches {
+		items[i] = m[lhsKey]
+	}
+	return lhsKey, &ExprListOrLambdaUnion{Items: items}, nil
+}
+
+// unfoldRhsVars computes free vars from all lambdas in a union.
+// Python: match_rhs_vars handles list values via:
+//
+//	for v in w if isinstance(w, list) else [w]: ...
+func unfoldRhsVars(union *ExprListOrLambdaUnion) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
+	for _, item := range union.Items {
+		for k, sym := range FmlaVocab(item) {
+			result[k] = sym
+		}
+	}
+	return result
+}
+
+// applyUnfoldRec recursively unfolds a formula with destructive pop.
+// Simplified version of applyMatchAltRec for the single-key unfold case.
+// Each occurrence of the unfold key pops the next lambda from the union.
+func applyUnfoldRec(key lg.NodeKey, union *ExprListOrLambdaUnion, fmla lg.Expr) lg.Expr {
+	if fmla == nil {
+		return nil
+	}
+	args := il.NodeArgs(fmla)
+	newArgs := make([]lg.Expr, len(args))
+	for i, a := range args {
+		newArgs[i] = applyUnfoldRec(key, union, a)
+	}
+	// App: if function matches the unfold key, pop and beta-reduce
+	if il.IsApp(fmla) {
+		if app, ok := fmla.(*lg.Apply); ok {
+			if c, ok := app.Func.(*lg.Const); ok && lg.Key(c) == key {
+				lam := union.Pop()
+				if l, ok := lam.(*lg.Lambda); ok {
+					result, _ := il.LambdaApply(l, newArgs)
+					return result
+				}
+				return lam
 			}
 		}
 	}
-	// Return first definition's match (single-lambda case).
-	// Python uses a list-valued match for multi-occurrence unfolding,
-	// but that requires significant type changes not yet implemented.
-	return firstMatch, nil
+	// Binder: clone with processed vars and body
+	if il.IsQuantifier(fmla) && len(newArgs) > 0 {
+		vars := il.BinderVars(fmla)
+		return il.CloneBinder(fmla, vars, newArgs[0])
+	}
+	if len(args) == 0 {
+		return fmla
+	}
+	return il.CloneNode(fmla, newArgs)
+}
+
+// applyUnfoldGoal applies unfold to a goal (premises + conclusion).
+// Recurses into premises, then unfolds the conclusion with destructive pop.
+// Corresponds to Python's apply_match_goal called from unfold_goal.
+func applyUnfoldGoal(cfg *ast.AstConfig, key lg.NodeKey, union *ExprListOrLambdaUnion, freeVars map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	// Process premises recursively
+	prems := GoalPrems(goal)
+	var newPrems []ast.Node
+	for _, p := range prems {
+		if lf, ok := p.(*ast.LabeledFormula); ok {
+			newPrems = append(newPrems, applyUnfoldGoal(cfg, key, union, freeVars, lf))
+		} else {
+			newPrems = append(newPrems, p)
+		}
+	}
+	// Unfold the conclusion with alpha-avoid + destructive pop
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		c = il.AlphaAvoidMap(c, freeVars)
+		return applyUnfoldRec(key, union, c)
+	})
+	return CloneGoal(cfg, goal, newPrems, newConc)
 }
 
 // UnfoldGoal unfolds definitions in a goal.
-// Corresponds to Python's unfold_goal.
+// Corresponds to Python's unfold_goal (ivy_proof.py:1549-1553).
 func UnfoldGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, defns [][]*ast.LabeledFormula) *ast.LabeledFormula {
 	for _, rdefs := range defns {
-		match, err := MatchFromDefns(rdefs)
+		key, union, err := MatchFromDefns(rdefs)
 		if err != nil {
 			continue
 		}
-		goal = ApplyMatchGoalNode(cfg, match, goal)
+		freeVars := unfoldRhsVars(union)
+		goal = applyUnfoldGoal(cfg, key, union, freeVars, goal)
 	}
 	return goal
 }
 
 // UnfoldFmla unfolds definitions in a formula.
-// Corresponds to Python's unfold_fmla.
+// Corresponds to Python's unfold_fmla (ivy_proof.py:1555-1559).
 func UnfoldFmla(fmla lg.Expr, defns [][]*ast.LabeledFormula) lg.Expr {
 	for _, rdefs := range defns {
-		match, err := MatchFromDefns(rdefs)
+		key, union, err := MatchFromDefns(rdefs)
 		if err != nil {
 			continue
 		}
-		fmla = ApplyMatchAlt(match, fmla, nil)
+		// Alpha-avoid: rename bound vars that clash with free vars in ALL lambdas.
+		// Python: apply_match_alt calls match_rhs_vars then alpha_avoid.
+		freeVars := unfoldRhsVars(union)
+		fmla = il.AlphaAvoidMap(fmla, freeVars)
+		// Single-pass unfold with destructive pop
+		fmla = applyUnfoldRec(key, union, fmla)
 	}
 	return fmla
 }
