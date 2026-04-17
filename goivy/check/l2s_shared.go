@@ -85,14 +85,19 @@ func sortNamedBinderMap(m map[string]*lg.NamedBinder) []*lg.NamedBinder {
 }
 
 // sortL2sGTriples extracts values from a map[lg.NodeKey]L2sGTriple and
-// returns them sorted by Body.Canon() for deterministic cross-language ordering.
+// returns them sorted by the full triple canon (Vars + Body + Environ) for
+// strongly deterministic cross-language ordering. Sorting by Body.Canon()
+// alone would leave ties for two triples with the same body but different
+// vars or environ — a latent landmine that fires whenever such triples
+// appear. Python ivy_l2s.py:1051 and :1202 are kept in lockstep using
+// _l2s_g_triple_canon producing the byte-identical key format.
 func sortL2sGTriples(m map[lg.NodeKey]L2sGTriple) []L2sGTriple {
 	sorted := make([]L2sGTriple, 0, len(m))
 	for _, v := range m {
 		sorted = append(sorted, v)
 	}
 	sort.Slice(sorted, func(i, j int) bool {
-		return string(sorted[i].Body.Canon()) < string(sorted[j].Body.Canon())
+		return string(sorted[i].key()) < string(sorted[j].key())
 	})
 	return sorted
 }
@@ -334,8 +339,13 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	for _, triple := range cfg.L2sGs {
 		toG = append(toG, triple)
 	}
+	// Sort by the full triple canon (Vars + Body + Environ), not Body.Canon()
+	// alone. Two triples with the same body but different vars/environ would
+	// tie under body-only sort, leaving nondeterministic order for those ties.
+	// triple.key() is byte-identical to Python's _l2s_g_triple_canon used at
+	// ivy_l2s.py:1051 and :1202, so the sort orders agree across languages.
 	sort.Slice(toG, func(i, j int) bool {
-		return string(toG[i].Body.Canon()) < string(toG[j].Body.Canon())
+		return string(toG[i].key()) < string(toG[j].key())
 	})
 
 	// assume_g_axioms

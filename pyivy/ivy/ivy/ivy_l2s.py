@@ -66,6 +66,21 @@ from . import xtracer
 
 debug = iu.BooleanParameter("l2s_debug",False)
 
+def _l2s_g_triple_canon(vs, t, env):
+    """Canonical sort key for (vars, body, environ) triples used by l2s_g.
+
+    Matches Go's l2sGTriple.key() at goivy/check/l2s.go:162-168 byte-for-byte
+    so Python and Go produce the same sorted order. Sorting by t.canon()
+    alone leaves ties for triples that share a body but differ in vars or
+    environ — those ties produce divergent fresh-name assignments between
+    languages because Python's sorted() is stable over set/dict hash order
+    while Go's sort.Slice is unstable. Used at the two l2s_g triple sort
+    sites in this file."""
+    env_str = env if env is not None else 'nil'
+    var_sexps = sorted(v.sexp() for v in vs)
+    vars_str = '[' + ' '.join(var_sexps) + ']'
+    return '(l2sGTriple environ:%s vars:%s body:%s)' % (env_str, vars_str, t.canon())
+
 def forall(vs, body):
     return lg.ForAll(vs, body) if len(vs) > 0 else body
 
@@ -1048,7 +1063,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     to_g = [] # list of (variables, formula)
     to_g += list(l2s_gs)
     to_g = list(dict.fromkeys(to_g))
-    to_g.sort(key=lambda x: x[1].canon())
+    # Sort by full triple canon (vars + body + environ), not body alone.
+    # Body-only sort leaves ties for triples sharing a body but differing
+    # in vars or environ; ties get nondeterministic order across runs and
+    # diverge from Go. _l2s_g_triple_canon matches Go's l2sGTriple.key().
+    to_g.sort(key=lambda x: _l2s_g_triple_canon(*x))
     if debug.get():
         print('='*40 + "\nto_g:\n")
         for vs, t, env in to_g:
@@ -1199,7 +1218,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     symwhens = defaultdict(list)
     # Build maps (no traces yet — traces go after SharedStep6 EXIT to match Go ordering)
     _symprops_trace = []
-    for vs, t, env in sorted(l2s_gs, key=lambda x: x[1].canon()):
+    # Sort by full triple canon, mirroring the to_g sort above and Go's
+    # toG sort. Body-only key would tie for triples sharing a body but
+    # differing in vars or environ.
+    for vs, t, env in sorted(l2s_gs, key=lambda x: _l2s_g_triple_canon(*x)):
         prop = l2s_g(vs,t,env)
         envprops[env].append(prop)
         for sym in ilu.symbols_ilu_ast(t):
@@ -1419,7 +1441,14 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             [b.action for b in model.bindings],
     )):
         named_binders[b.name].append(b)
-    named_binders = defaultdict(list, ((k,list(sorted(set(v),key=str))) for k,v in named_binders.items()))
+    # Sort by canon (full Sexp), not str (PrettyFmla). PrettyFmla strips
+    # variable sort annotations so two sort-distinct binders that share a
+    # pretty form would tie in the sort, leaving nondeterministic order
+    # across runs (set's hash-iteration order combined with stable sort).
+    # canon is fully discriminating, matching Go's sort by Sexp at
+    # check/l2s.go:1028. This eliminates the divergence at xtrace 931827
+    # (l2s_g_21 vs l2s_g_20).
+    named_binders = defaultdict(list, ((k,list(sorted(set(v),key=lambda b: b.canon()))) for k,v in named_binders.items()))
     for _k in sorted(named_binders.keys()):
         if __debug__: xtracer.trace("l2s.SharedStep11 namedBinders key=%s count=%d" % (_k, len(named_binders[_k])))
     # make sure old_l2s_g is consistent with l2s_g

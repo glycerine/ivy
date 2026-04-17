@@ -1025,8 +1025,15 @@ func collectAllNamedBinders(model *temporal.NormalProgram) *iu.InsMap[string, []
 				deduped = append(deduped, b)
 			}
 		}
+		// Sort by Sexp (full structural canonical form), matching Python's
+		// sorted(set(v), key=lambda b: b.canon()) at ivy_l2s.py:1422.
+		// String() (PrettyFmla) drops variable sort annotations and would
+		// produce ties for sort-distinct same-pretty-form binders, leaving
+		// nondeterministic ordering between Go (sort.Slice unstable) and
+		// Python (sorted stable over set's hash-ordered iteration). Sexp
+		// is fully discriminating, so no ties remain.
 		sort.Slice(deduped, func(i, j int) bool {
-			return deduped[i].String() < deduped[j].String()
+			return string(deduped[i].Sexp()) < string(deduped[j].Sexp())
 		})
 		result.Set(k, deduped)
 	}
