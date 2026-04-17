@@ -130,17 +130,45 @@ Key design points:
 - `this.onConnectionLost` callback — future hook for UI error message
 - Guard `if (!this.sessionId) return` — don't even try to connect without a session
 
-#### `webui/static/js/ivyweb_app.js` — wire up `onConnectionLost` (optional, minimal)
+#### `webui/static/js/ivyweb_app.js` — wire up `onConnectionLost` to visible UI
 
-In `init()`, after `connectEvents` (line 93), add:
+In `init()`, after `connectEvents` (line 93), add the callback that surfaces the error in two places: the status bar AND a non-modal toast notification that the user can dismiss:
 
 ```javascript
 this.api.onConnectionLost = function () {
     self.controls.setStatus('Server connection lost', 'error');
+    self._showToast('Connection to server lost. Check that the server is running and reload the page.', 'error');
 };
 ```
 
-This gives immediate user feedback when the SSE connection fails permanently. It's a one-liner that leverages the existing `setStatus` infrastructure.
+Add the `_showToast` method to `IvyApp`:
+
+```javascript
+/**
+ * Show a non-modal toast notification. Auto-dismisses after 10s
+ * or on click. Appends to document body so it floats over everything.
+ */
+_showToast(message, level) {
+    var toast = document.createElement('div');
+    toast.className = 'ivy-toast ivy-toast-' + (level || 'info');
+    toast.textContent = message;
+    toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;' +
+        'padding:12px 20px;border-radius:6px;max-width:400px;cursor:pointer;' +
+        'font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+    if (level === 'error') {
+        toast.style.background = '#d32f2f';
+        toast.style.color = '#fff';
+    } else {
+        toast.style.background = '#333';
+        toast.style.color = '#fff';
+    }
+    toast.onclick = function () { toast.remove(); };
+    document.body.appendChild(toast);
+    setTimeout(function () { toast.remove(); }, 10000);
+}
+```
+
+This gives the user immediate, visible feedback when the SSE connection dies — not hidden in the console. The toast auto-dismisses after 10 seconds and can be clicked away. The status bar also shows the error persistently.
 
 ## Files to modify
 
