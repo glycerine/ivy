@@ -426,9 +426,21 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 		return fmla
 	}
 
-	// Binder: avoid capture by excluding bound variables
-	if il.IsQuantifier(fmla) {
-		// Already handled by recursion into body
+	// Binder: apply match to bound variable sorts, then use CloneBinder.
+	// Python: with il.BindSymbols(env, fmla.variables):
+	//             fmla = fmla.clone_binder([apply_match_rec(match,v,env) for v in fmla.variables], args[0])
+	if il.IsQuantifier(fmla) && len(newArgs) > 0 {
+		vars := il.BinderVars(fmla)
+		newVars := make([]*lg.Variable, len(vars))
+		for i, v := range vars {
+			processed := applyMatchRec(match, v)
+			if nv, ok := processed.(*lg.Variable); ok {
+				newVars[i] = nv
+			} else {
+				newVars[i] = v
+			}
+		}
+		return il.CloneBinder(fmla, newVars, newArgs[0])
 	}
 
 	// Clone with new args

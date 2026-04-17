@@ -9,9 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
 )
 
@@ -235,15 +233,28 @@ func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
 }
 
 // unfoldTactic unfolds definitions in the goal.
-// Corresponds to Python ProofChecker.unfold_tactic (lines 376-392).
+// Corresponds to Python ProofChecker.unfold_tactic (ivy_proof.py:384-398).
+//
+// Python:
+//
+//	for unfspec in proof.unfspecs:
+//	    defn = self.lookup_schema(defname, decl, proof)   # schemata first
+//	    rdefs = [rename_goal(defn, rn) for rn in unfspec.renamings]
+//	    rdefs.append(defn)
+//	    defns.append(rdefs)
+//	if proof.has_premise:
+//	    decl = goal_apply_to_prem(decl, premname, lambda g: unfold_goal(g, defns))
+//	else:
+//	    decl = goal_apply_to_conc(decl, lambda fmla: unfold_fmla(fmla, defns))
+//	return [decl] + decls[1:]
 func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.UnfoldTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "unfold tactic: no goals"}
 	}
 	goal := decls[0]
 
-	// Look up each definition to unfold
-	var defns []lg.Expr
+	// Python: for unfspec in proof.unfspecs:
+	var defns [][]*ast.LabeledFormula
 	for _, unfspecNode := range proof.UnfSpecs {
 		unfspec, ok := unfspecNode.(*ast.UnfoldSpec)
 		if !ok {
@@ -256,55 +267,87 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		if defName == "" {
 			continue
 		}
-		defLF, ok := pc.Definitions[defName]
-		if !ok {
-			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: definition %s not found", defName)}
+
+		// Python: defn = self.lookup_schema(defname, decl, proof)
+		// lookup_schema checks schemata first, then definitions
+		defn, err := pc.LookupSchema(defName, goal, proof, false)
+		if err != nil {
+			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: %s not found", defName)}
 		}
-		// Definitions are always lg.Expr (never *ast.TemporalModels).
-		defConc := GoalConcExpr(defLF)
-		if defConc != nil {
-			defns = append(defns, defConc)
+
+		// Python: rdefs = [rename_goal(defn, rn) for rn in unfspec.renamings]
+		// rdefs.append(defn)
+		var rdefs []*ast.LabeledFormula
+		for _, rn := range unfspec.Renamings {
+			renamed, rerr := RenameGoal(pc.astCfg(), defn, rn)
+			if rerr != nil {
+				return nil, rerr
+			}
+			rdefs = append(rdefs, renamed)
 		}
+		rdefs = append(rdefs, defn)
+
+		// Python: defns.append(rdefs)
+		defns = append(defns, rdefs)
 	}
 
 	if len(defns) == 0 {
 		return decls, nil
 	}
 
-	// Unfold in the conclusion. ApplyToConc unwraps *ast.TemporalModels so
-	// the unfold runs on the inner formula and the wrapper is preserved.
-	if GoalConc(goal) == nil {
-		return decls, nil
+	// Python: if proof.has_premise: ... else: ...
+	if proof.HasPremise() {
+		// Python: premname = proof.premname
+		// Python: decl = goal_apply_to_prem(decl, premname, lambda g: unfold_goal(g, defns))
+		premName := fmt.Sprint(proof.Premise)
+		newGoal := GoalApplyToPrem(pc.astCfg(), goal, premName, func(prem *ast.LabeledFormula) *ast.LabeledFormula {
+			return UnfoldGoal(pc.astCfg(), prem, defns)
+		})
+		if newGoal == nil {
+			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: no premise %s found", premName), Node: proof}
+		}
+		goal = newGoal
+	} else {
+		// Python: decl = goal_apply_to_conc(decl, lambda fmla: unfold_fmla(fmla, defns))
+		goal = GoalApplyToConc(pc.astCfg(), goal, func(node ast.Node) ast.Node {
+			if fmla, ok := node.(lg.Expr); ok {
+				return UnfoldFmla(fmla, defns)
+			}
+			return node
+		})
 	}
-	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return unfoldFmla(c, defns)
-	})
-	result := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
-	return append([]*ast.LabeledFormula{result}, decls[1:]...), nil
+
+	// Python: return [decl] + decls[1:]
+	return append([]*ast.LabeledFormula{goal}, decls[1:]...), nil
 }
 
-// unfoldFmla substitutes definitions into a formula.
-func unfoldFmla(fmla lg.Expr, defns []lg.Expr) lg.Expr {
-	result := fmla
-	for _, defn := range defns {
-		if def, ok := defn.(*il.Definition); ok {
-			// Build substitution: defined symbol → definition body
-			defSym := def.Defines()
-			if c, ok := defSym.(*lg.Const); ok {
-				subs := map[string]lg.Expr{c.Name: def.Rhs}
-				result = lu.SubstituteByName(result, subs)
-			}
+// attribGoals sets lineno on all goals from proof's lineno.
+// Python: ivy_proof.py:33-36 attrib_goals
+func attribGoals(proof ast.Node, goals []*ast.LabeledFormula) []*ast.LabeledFormula {
+	if proof == nil {
+		return goals
+	}
+	ln := proof.GetLineno()
+	if ln.Line > 0 {
+		for _, g := range goals {
+			g.SetLineno(ln)
 		}
 	}
-	return result
+	return goals
 }
 
 // ifTactic splits the goal into two subgoals based on a condition.
-// Corresponds to Python ProofChecker.if_tactic (lines 402-410).
+// Corresponds to Python ProofChecker.if_tactic (ivy_proof.py:410-418).
 //
-// Given condition C and proof branches P1, P2, the goal G becomes:
-//   C -> G  (proved by P1)
-//   ~C -> G (proved by P2)
+// Python:
+//   cond = proof.args[0]
+//   true_goal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
+//   true_goal.lineno = decls[0].lineno
+//   false_goal = ia.LabeledFormula(decls[0].label, il.Implies(il.Not(cond), decls[0].formula))
+//   false_goal.lineno = decls[0].lineno
+//   return (attrib_goals(proof.args[1], apply_proof([true_goal], proof.args[1])) +
+//           attrib_goals(proof.args[2], apply_proof([false_goal], proof.args[2])) +
+//           decls[1:])
 func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "if tactic: no goals"}
@@ -312,31 +355,37 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 	goal := decls[0]
 
 	// Get condition as logic node
+	// Python: cond = proof.args[0]
 	cond := astNodeToLogicNode(proof.Cond)
 	if cond == nil {
 		return nil, &ProofError{Msg: "if tactic: could not convert condition to logic node"}
 	}
 
-	if GoalConc(goal) == nil {
-		return nil, &ProofError{Msg: "if tactic: goal has no conclusion"}
+	// Python: true_goal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
+	// Uses decls[0].formula directly (not goal_conc). If formula is lg.Expr, wrap it.
+	// For SchemaBody (rare), fall back to wrapping just the conclusion.
+	var trueGoal, falseGoal *ast.LabeledFormula
+	if goalExpr, ok := goal.Formula.(lg.Expr); ok {
+		trueGoal = pc.astCfg().NewLabeledFormula(goal.Label,
+			lg.Expr(&lg.Implies{T1: cond, T2: goalExpr}))
+		falseGoal = pc.astCfg().NewLabeledFormula(goal.Label,
+			lg.Expr(&lg.Implies{T1: &lg.Not{Body: cond}, T2: goalExpr}))
+	} else {
+		// SchemaBody or other non-expr: wrap the conclusion (best approximation)
+		trueConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+			return &lg.Implies{T1: cond, T2: c}
+		})
+		trueGoal = CloneGoal(pc.astCfg(), goal, GoalPrems(goal), trueConc)
+		falseConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+			return &lg.Implies{T1: &lg.Not{Body: cond}, T2: c}
+		})
+		falseGoal = CloneGoal(pc.astCfg(), goal, GoalPrems(goal), falseConc)
 	}
-
-	// Build true_goal: C -> G. ApplyToConc unwraps *ast.TemporalModels so the
-	// implication wraps the inner formula and the temporal wrapper is preserved.
-	trueConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return &lg.Implies{T1: cond, T2: c}
-	})
-	trueGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), trueConc)
 	trueGoal.SetLineno(goal.GetLineno())
-
-	// Build false_goal: ~C -> G (same TemporalModels treatment).
-	falseConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return &lg.Implies{T1: &lg.Not{Body: cond}, T2: c}
-	})
-	falseGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), falseConc)
 	falseGoal.SetLineno(goal.GetLineno())
 
-	// Apply proof branches
+	// Apply proof branches with attrib_goals lineno attribution
+	// Python: attrib_goals(proof.args[1], self.apply_proof([true_goal], proof.args[1]))
 	var result []*ast.LabeledFormula
 
 	if proof.Then != nil {
@@ -344,17 +393,18 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, trueResult...)
+		result = append(result, attribGoals(proof.Then, trueResult)...)
 	} else {
 		result = append(result, trueGoal)
 	}
 
+	// Python: attrib_goals(proof.args[2], self.apply_proof([false_goal], proof.args[2]))
 	if proof.Else != nil {
 		falseResult, err := pc.ApplyProof([]*ast.LabeledFormula{falseGoal}, proof.Else)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, falseResult...)
+		result = append(result, attribGoals(proof.Else, falseResult)...)
 	} else {
 		result = append(result, falseGoal)
 	}
@@ -364,96 +414,117 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 }
 
 // propertyTactic introduces a property (cut) in a proof.
-// Corresponds to Python ProofChecker.property_tactic (lines 225-273).
+// Corresponds to Python ProofChecker.property_tactic (ivy_proof.py:232-281).
+//
+// Python:
+//   vocab = goal_vocab(goal)
+//   cut = compile_expr_vocab(proof.args[0], vocab)
+//   cut = normalize_goal(cut)
+//   subgoal = goal_subst(goal, cut, cut.lineno)
+//   [handle Skolem if proof.args[1] not NoneAST]
+//   subgoals = [subgoal]
+//   if proof.args[2] not NoneAST: subgoals = apply_proof(subgoals, proof.args[2])
+//   return [goal_add_prem(goal, cut, cut.lineno)] + decls[1:] + subgoals
 func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.PropertyTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "property tactic: no goals"}
 	}
 	goal := decls[0]
 
-	// The property tactic introduces a "cut" formula. The goal G becomes:
-	//   cut (as a subgoal)
-	//   cut -> G (modified goal with cut as premise)
-	//
-	// Python: ivy_proof.py:225-273
-	cutFormula := astNodeToLogicNode(proof.Prop)
-	if cutFormula == nil {
-		return nil, &ProofError{Msg: "property tactic: could not convert cut formula"}
+	// Python: vocab = goal_vocab(goal)
+	vocab := GoalVocab(goal)
+
+	// Python: cut = compile_expr_vocab(proof.args[0], vocab)
+	// proof.Prop is a LabeledFormula from the grammar
+	var cut *ast.LabeledFormula
+	if propLF, ok := proof.Prop.(*ast.LabeledFormula); ok {
+		cut = CompileExprVocabExtLF(propLF, vocab, pc.Mod)
+	}
+	if cut == nil {
+		// Fallback: compile as expression, wrap in LabeledFormula
+		compiled := CompileExprVocab(proof.Prop, vocab, pc.Mod)
+		if compiled != nil {
+			cut = pc.astCfg().NewLabeledFormula(nil, compiled)
+			cut.SetLineno(proof.Prop.GetLineno())
+		}
+	}
+	if cut == nil {
+		return nil, &ProofError{Msg: "property tactic: could not compile cut formula"}
 	}
 
-	if GoalConc(goal) == nil {
-		return nil, &ProofError{Msg: "property tactic: goal has no conclusion"}
+	// Python: cut = normalize_goal(cut)
+	cut = NormalizeGoal(pc.astCfg(), cut)
+
+	// Python: subgoal = goal_subst(goal, cut, cut.lineno)
+	subgoal, err := GoalSubst(pc.astCfg(), goal, cut, cut.GetLineno())
+	if err != nil {
+		return nil, err
 	}
 
-	// Create the cut subgoal: prove the cut formula. The cut formula is a plain
-	// lg.Expr (not a TemporalModels) — we don't wrap it.
-	cutGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), cutFormula)
+	// Python: lhs = proof.args[1]; if not isinstance(lhs, ia.NoneAST): [Skolem handling]
+	// proof.PName is always NoneAST from current Go grammar (optskolem not yet parsed)
+	if !isNoneAST(proof.PName) {
+		return nil, &ProofError{Msg: "property tactic: Skolem function witness not implemented"}
+	}
 
-	// Modify the original goal: add cut as premise (cut -> G). ApplyToConc
-	// unwraps *ast.TemporalModels so the implication wraps the inner formula.
-	modifiedConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return &lg.Implies{T1: cutFormula, T2: c}
-	})
-	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
+	// Python: subgoals = [subgoal]
+	subgoals := []*ast.LabeledFormula{subgoal}
 
-	// If there's a proof for the cut, apply it
-	var result []*ast.LabeledFormula
-	if proof.Proof != nil {
-		cutResult, err := pc.ApplyProof([]*ast.LabeledFormula{cutGoal}, proof.Proof)
+	// Python: pf = proof.args[2]; if not isinstance(pf, ia.NoneAST): subgoals = apply_proof(subgoals, pf)
+	if !isNoneAST(proof.Proof) {
+		applied, err := pc.ApplyProof(subgoals, proof.Proof)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, cutResult...)
-	} else {
-		result = append(result, cutGoal)
+		if applied == nil {
+			return nil, nil
+		}
+		subgoals = applied
 	}
-	result = append(result, modifiedGoal)
+
+	// Python: return [goal_add_prem(goal, cut, cut.lineno)] + decls[1:] + subgoals
+	modifiedGoal := GoalAddPrem(pc.astCfg(), goal, cut, cut.GetLineno())
+	result := []*ast.LabeledFormula{modifiedGoal}
 	result = append(result, decls[1:]...)
+	result = append(result, subgoals...)
 	return result, nil
 }
 
 // functionTactic introduces a function definition in a proof.
-// Corresponds to Python ProofChecker.function_tactic (lines 275-304).
+// Corresponds to Python ProofChecker.function_tactic (ivy_proof.py:282-312).
+//
+// Python:
+//
+//	for df in proof.args:
+//	    if isinstance(df, ia.ConstantDecl): assert False
+//	    else: compile definition, add ConstantDecl + definition LF as premises
+//	return [goal] + decls[1:]
 func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.FunctionTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "function tactic: no goals"}
 	}
 	goal := decls[0]
 
-	// The function tactic introduces a fresh function symbol with a definition.
-	// The definition defn(x) = body is added as a universally quantified
-	// equality premise: forall x. defn(x) = body(x).
-	//
-	// Python: ivy_proof.py:275-304
-	// The function tactic's elements contain the definition
-	var defFormula lg.Expr
-	for _, elem := range proof.Elems {
-		if n := astNodeToLogicNode(elem); n != nil {
-			defFormula = n
-			break
+	// Python: for df in proof.args:
+	for _, df := range proof.Elems {
+		// Python: if isinstance(df, ia.ConstantDecl): assert False
+		if _, isCD := df.(*ast.ConstantDecl); isCD {
+			return nil, &ProofError{Msg: "function tactic: unexpected ConstantDecl element"}
+		}
+		// Python else: compile definition and add ConstantDecl + LF as premises.
+		// CompileDefinitionGoalVocab implements Python compile_definition_goal_vocab
+		// (ivy_proof.py:1477-1506), which is the factored-out version of the
+		// inline code in function_tactic.
+		var err error
+		goal, err = CompileDefinitionGoalVocab(pc.astCfg(), df, goal, pc.Mod)
+		if err != nil {
+			return nil, err
 		}
 	}
-	if defFormula == nil {
-		return nil, &ProofError{Msg: "function tactic: could not convert definition"}
-	}
 
-	if GoalConc(goal) == nil {
-		return nil, &ProofError{Msg: "function tactic: goal has no conclusion"}
-	}
-
-	// Add the definition as a premise: defn -> G. ApplyToConc unwraps
-	// *ast.TemporalModels so the implication wraps the inner formula.
-	modifiedConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return &lg.Implies{T1: defFormula, T2: c}
-	})
-	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
-
-	return append([]*ast.LabeledFormula{modifiedGoal}, decls[1:]...), nil
+	// Python: return [goal] + decls[1:]
+	return append([]*ast.LabeledFormula{goal}, decls[1:]...), nil
 }
-
-// ensure imports are used
-var _ = il.IsApp
-var _ = lu.SubstituteByName
 
 // witnessTactic provides witnesses for existentially quantified variables.
 // Corresponds to Python ProofChecker.witness_tactic (ivy_proof.py:459-471).
@@ -473,141 +544,45 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 		return nil, &ProofError{Msg: "temporal operator not allowed in instantiation", Node: proof}
 	}
 
-	// Build witness map from proof witnesses
-	// Each witness is x = e, mapping variable x to expression e
-	witMap := make(map[string]lg.Expr)
-	for _, w := range proof.Witnesses {
-		wargs := w.Args()
-		if len(wargs) >= 2 {
-			lhs := astNodeToLogicNode(wargs[0])
-			rhs := astNodeToLogicNode(wargs[1])
-			if lhs != nil && rhs != nil {
-				if v, ok := lhs.(*lg.Variable); ok {
-					witMap[v.Name] = rhs
-				}
-			}
+	// Python: wits = compile_witness_list(proof, decls[0])
+	wits := CompileWitnessList(proof, goal, pc.Mod)
+
+	// Python: for wit in wits: if not il.is_variable(wit.args[0]): raise error
+	// Python: wit_map = dict((x.args[0], x.args[1]) for x in wits)
+	witness := make(map[lg.NodeKey]lg.Expr)
+	for _, w := range wits {
+		defn, ok := w.(*lg.Definition)
+		if !ok {
+			continue
 		}
+		v, ok := defn.Lhs.(*lg.Variable)
+		if !ok {
+			return nil, &ProofError{Msg: "left-hand side of witness must be a variable"}
+		}
+		witness[lg.Key(v)] = defn.Rhs
 	}
 
-	if len(witMap) == 0 {
+	if len(witness) == 0 {
 		return decls, nil
 	}
 
-	// Apply witness substitution to the conclusion. ApplyToConc unwraps
-	// *ast.TemporalModels so the witness substitution runs on the inner
-	// formula and the temporal wrapper is preserved.
 	// Python: conc = lu.witness_ast(False, [], wit_map, conc)
-	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return applyWitness(c, witMap)
-	})
+	rawConc := GoalConc(goal)
+	var newConc ast.Node
+	if concExpr, ok := rawConc.(lg.Expr); ok {
+		witnessed, werr := module.WitnessAst(false, nil, witness, concExpr)
+		if werr != nil {
+			return nil, &ProofError{Msg: fmt.Sprintf("witness tactic: %v", werr)}
+		}
+		newConc = witnessed
+	} else {
+		newConc = rawConc
+	}
 
+	// Python: prems = goal_prems(decl); return [clone_goal(decl,prems,conc)] + decls[1:]
 	prems := GoalPrems(goal)
 	newGoal := CloneGoal(pc.astCfg(), goal, prems, newConc)
-	result := []*ast.LabeledFormula{newGoal}
-	result = append(result, decls[1:]...)
-	return result, nil
-}
-
-// applyWitness substitutes witness values for existentially quantified variables.
-// Corresponds to Python lu.witness_ast.
-func applyWitness(fmla lg.Expr, witMap map[string]lg.Expr) lg.Expr {
-	if fmla == nil || len(witMap) == 0 {
-		return fmla
-	}
-	switch f := fmla.(type) {
-	case *lg.Exists:
-		// Check if any of the bound variables have witnesses
-		var remainingVars []*lg.Variable
-		subs := make(map[string]lg.Expr)
-		for _, v := range f.Variables {
-			if wit, ok := witMap[v.Name]; ok {
-				subs[v.Name] = wit
-			} else {
-				remainingVars = append(remainingVars, v)
-			}
-		}
-		body := f.Body
-		if len(subs) > 0 {
-			body = substituteVarsInNode(body, subs)
-		}
-		body = applyWitness(body, witMap)
-		if len(remainingVars) == 0 {
-			return body
-		}
-		return &lg.Exists{Variables: remainingVars, Body: body}
-	case *lg.And:
-		terms := make([]lg.Expr, len(f.Terms))
-		for i, t := range f.Terms {
-			terms[i] = applyWitness(t, witMap)
-		}
-		return &lg.And{Terms: terms}
-	case *lg.Or:
-		terms := make([]lg.Expr, len(f.Terms))
-		for i, t := range f.Terms {
-			terms[i] = applyWitness(t, witMap)
-		}
-		return &lg.Or{Terms: terms}
-	case *lg.Not:
-		return &lg.Not{Body: applyWitness(f.Body, witMap)}
-	case *lg.Implies:
-		return &lg.Implies{T1: applyWitness(f.T1, witMap), T2: applyWitness(f.T2, witMap)}
-	case *lg.ForAll:
-		return &lg.ForAll{Variables: f.Variables, Body: applyWitness(f.Body, witMap)}
-	}
-	return fmla
-}
-
-// substituteVarsInNode replaces variables with their substitutions.
-func substituteVarsInNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
-	if node == nil {
-		return nil
-	}
-	switch n := node.(type) {
-	case *lg.Variable:
-		if r, ok := subs[n.Name]; ok {
-			return r
-		}
-		return node
-	case *lg.Const:
-		return node
-	case *lg.Apply:
-		newFunc := substituteVarsInNode(n.Func, subs)
-		newTerms := make([]lg.Expr, len(n.Terms))
-		changed := newFunc != n.Func
-		for i, t := range n.Terms {
-			newTerms[i] = substituteVarsInNode(t, subs)
-			if newTerms[i] != t {
-				changed = true
-			}
-		}
-		if !changed {
-			return node
-		}
-		return lg.MustApply(newFunc, newTerms...)
-	case *lg.And:
-		terms := make([]lg.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			terms[i] = substituteVarsInNode(t, subs)
-		}
-		return &lg.And{Terms: terms}
-	case *lg.Or:
-		terms := make([]lg.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			terms[i] = substituteVarsInNode(t, subs)
-		}
-		return &lg.Or{Terms: terms}
-	case *lg.Not:
-		return &lg.Not{Body: substituteVarsInNode(n.Body, subs)}
-	case *lg.Implies:
-		return &lg.Implies{T1: substituteVarsInNode(n.T1, subs), T2: substituteVarsInNode(n.T2, subs)}
-	case *lg.Eq:
-		return &lg.Eq{T1: substituteVarsInNode(n.T1, subs), T2: substituteVarsInNode(n.T2, subs)}
-	case *lg.ForAll:
-		return &lg.ForAll{Variables: n.Variables, Body: substituteVarsInNode(n.Body, subs)}
-	case *lg.Exists:
-		return &lg.Exists{Variables: n.Variables, Body: substituteVarsInNode(n.Body, subs)}
-	}
-	return node
+	return append([]*ast.LabeledFormula{newGoal}, decls[1:]...), nil
 }
 
 // astNodeToLogicNode converts an ast.Node to a logic.Expr if possible.
