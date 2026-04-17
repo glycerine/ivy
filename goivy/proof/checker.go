@@ -214,7 +214,7 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	}
 
 	if len(goals) > 0 && goals[0] != nil {
-		xtracer.Trace1("proof.ApplyProof ENTER proofType=%s goal[0].Formula type=%s", iu.TypeName(proof), iu.TypeName(goals[0].Formula))
+		xstracer.Trace("proof.ApplyProof ENTER proofType=%s goal[0].Formula type=%s", iu.TypeName(proof), iu.TypeName(goals[0].Formula))
 	}
 
 	// Dispatch on proof type.
@@ -519,11 +519,11 @@ func (pc *ProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
 // composeProofs applies a sequence of proofs one after another.
 // Corresponds to Python's compose_proofs.
 func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.Node) ([]*ast.LabeledFormula, error) {
-	xtracer.Trace1("proof.composeProofs ENTER nproofs=%d ndecls=%d", len(proofs), len(decls))
+	xstracer.Trace("proof.composeProofs ENTER nproofs=%d ndecls=%d", len(proofs), len(decls))
 	var err error
 	for i, proof := range proofs {
 		if len(decls) > 0 && decls[0] != nil {
-			xtracer.Trace1("proof.composeProofs step=%d/%d proofType=%s goal[0].Formula type=%s", i, len(proofs), iu.TypeName(proof), iu.TypeName(decls[0].Formula))
+			xstracer.Trace("proof.composeProofs step=%d/%d proofType=%s goal[0].Formula type=%s", i, len(proofs), iu.TypeName(proof), iu.TypeName(decls[0].Formula))
 		}
 		decls, err = pc.ApplyProof(decls, proof)
 		if err != nil {
@@ -586,7 +586,7 @@ func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.Proo
 func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.TacticTactic) ([]*ast.LabeledFormula, error) {
 	tn := nodeToString(proof.TName)
 	if len(decls) > 0 && decls[0] != nil {
-		xtracer.Trace1("proof.tacticTactic name='%s' goal[0].Formula type=%s", tn, iu.TypeName(decls[0].Formula))
+		xstracer.Trace("proof.tacticTactic name='%s' goal[0].Formula type=%s", tn, iu.TypeName(decls[0].Formula))
 	}
 	tactic, ok := pc.Cfg.Tactics[tn]
 	if !ok {
