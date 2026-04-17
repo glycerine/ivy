@@ -86,7 +86,7 @@ func setupBrowser(t *testing.T) *rod.Browser {
 func newPage(t *testing.T, browser *rod.Browser, url string) *rod.Page {
 	t.Helper()
 	incognito := browser.MustIncognito()
-	page := incognito.MustPage(url)
+	page := incognito.MustPage(url).Timeout(30 * time.Second)
 	t.Cleanup(func() {
 		page.MustClose()
 		incognito.MustClose()
