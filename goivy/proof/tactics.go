@@ -12,6 +12,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // letTactic introduces local definitions in a proof.
@@ -69,18 +70,17 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 }
 
 // assumeTactic introduces an assumption from a schema or premise.
-// Corresponds to Python ProofChecker.assume_tactic (lines 342-374).
+// Faithful port of Python ProofChecker.assume_tactic (ivy_proof.py:350-382).
 //
-// This is a complex tactic that involves schema matching and witness
-// substitution. The full implementation requires setup_matching,
-// compile_match, and witness_ast.
-func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.AssumeTactic) ([]*ast.LabeledFormula, error) {
+// isGlobal distinguishes AssumeGlobalTactic (from "assume" keyword) from
+// AssumeTactic (from "instantiate" keyword). Python uses isinstance() check.
+func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.AssumeTactic, isGlobal bool) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "assume tactic: no goals"}
 	}
-	goal := decls[0]
+	decl := decls[0]
 
-	// Get the schema name from the proof
+	// Python: schemaname = proof.schemaname()
 	schemaName := ""
 	if proof.SchemaName != nil {
 		schemaName = fmt.Sprint(proof.SchemaName)
@@ -89,41 +89,128 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		return nil, &ProofError{Msg: "assume tactic: no schema name"}
 	}
 
-	// Look up in premises first
+	// Python: premmap = dict((x.name,x) for x in goal_prem_goals(decl))
 	premMap := make(map[string]*ast.LabeledFormula)
-	for _, pg := range GoalPremGoals(goal) {
+	for _, pg := range GoalPremGoals(decl) {
 		premMap[pg.LabelName()] = pg
 	}
 
+	// Python lines 354-359: AssumeGlobalTactic vs AssumeTactic distinction.
+	// AssumeTactic looks in premises first; AssumeGlobalTactic skips to global.
 	var schema *ast.LabeledFormula
-	if prem, ok := premMap[schemaName]; ok {
-		schema = prem
-	} else {
+	if !isGlobal {
+		if prem, ok := premMap[schemaName]; ok {
+			schema = prem
+			// Python: if isinstance(proof.label, ia.NoneAST): decl = goal_remove_prem(...)
+			if isNoneAST(proof.TLabel) {
+				decl = GoalRemovePrem(pc.astCfg(), decl, schemaName)
+			}
+		}
+	}
+	if schema == nil {
 		var err error
-		schema, err = pc.LookupSchema(schemaName, goal, proof, false)
+		schema, err = pc.LookupSchema(schemaName, decl, proof, false)
 		if err != nil {
-			return nil, &ProofError{Msg: fmt.Sprintf("No property %s exists in the current context", schemaName)}
+			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
+				"No property %s exists in the current context", schemaName)}
 		}
 	}
 
-	// Add schema as premise to goal
-	prem := schema
-	if proof.TLabel != nil {
-		// Rename with given label
+	// Python: schema = remove_explicit(schema)
+	schema = RemoveExplicit(schema)
+
+	// Python: prob, pmatch = self.setup_schema_matching(decl, proof, schema, allow_witness=True)
+	prob, pmatch, err := pc.SetupSchemaMatchingRaw(decl, proof.Ren, proof.Matches, schema, true)
+	if err != nil {
+		return nil, err
+	}
+
+	// Python lines 365-367: extract witnesses (variables not in freesyms).
+	// iswit = lambda x: isinstance(x, il.Variable) and x not in prob.freesyms
+	witness := make(map[lg.NodeKey]lg.Expr)
+	pmatchClean := make(map[lg.NodeKey]lg.Expr)
+	for k, v := range pmatch {
+		if isWitVar(k, v, prob) {
+			witness[k] = v
+		} else {
+			pmatchClean[k] = v
+		}
+	}
+	pmatch = pmatchClean
+
+	// Python: prem = prob.schema
+	prem := prob.SchemaLF
+
+	// Python: if schemaname not in premmap: prem = close_unmatched(prem, pmatch)
+	if _, inPrems := premMap[schemaName]; !inPrems {
+		prem = CloseUnmatched(pc.astCfg(), prem, pmatch)
+	}
+
+	// Python: conc = goal_conc(prem)
+	//         conc = lu.witness_ast(True, [], witness, conc)
+	//         prem = clone_goal(prem, goal_prems(prem), conc)
+	if len(witness) > 0 {
+		rawConc := GoalConc(prem)
+		if concExpr, ok := rawConc.(lg.Expr); ok {
+			newConc, werr := module.WitnessAst(true, nil, witness, concExpr)
+			if werr == nil {
+				prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), newConc)
+			}
+		}
+	}
+
+	// Python: prem = apply_match_goal(pmatch, prem, apply_match_alt)
+	prem = ApplyMatchGoalNode(pc.astCfg(), pmatch, prem)
+
+	// Python: prem = drop_supplied_prems(prem, decl, proof.match())
+	prem = DropSuppliedPrems(pc.astCfg(), prem, decl, proof.Matches)
+
+	// Python lines 374-377: label handling.
+	// When label is NoneAST, keep the schema's own label (Python creates
+	// Atom(proof.label.rep, prem.label.args) which effectively preserves
+	// the schema label name). When label is explicit, use it.
+	if !isNoneAST(proof.TLabel) {
 		prem = prem.CloneWithFreshID([]ast.Node{proof.TLabel, prem.Formula})
 	}
 
-	// Check for name clash
-	for _, pg := range GoalPremGoals(goal) {
+	// Python lines 378-381: clash detection.
+	// AssumeGlobalTactic renames to avoid clash; AssumeTactic errors.
+	for _, pg := range GoalPremGoals(decl) {
 		if pg.LabelName() == prem.LabelName() {
-			return nil, &ProofError{Msg: fmt.Sprintf("instance name %s clashes with context", prem.LabelName())}
+			if isGlobal {
+				prem = RenamePremNoClash(prem, decl)
+			} else {
+				return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
+					"instance name %s clashes with context", prem.LabelName())}
+			}
+			break
 		}
 	}
 
-	newGoal := pc.goalAddPrem(goal, prem, proof.GetLineno())
+	// Python: return [goal_add_prem(decl, prem, proof.lineno)] + decls[1:]
+	newGoal := pc.goalAddPrem(decl, prem, proof.GetLineno())
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
 	return result, nil
+}
+
+// isNoneAST checks if a node is a NoneAST (or nil).
+func isNoneAST(n ast.Node) bool {
+	if n == nil {
+		return true
+	}
+	_, ok := n.(*ast.NoneAST)
+	return ok
+}
+
+// isWitVar checks if a match entry is a witness variable.
+// Python: iswit = lambda x: isinstance(x, il.Variable) and x not in prob.freesyms
+func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
+	if _, isVar := val.(*lg.Variable); !isVar {
+		return false
+	}
+	_, inFree := prob.FreeSyms[key]
+	return !inFree
 }
 
 // unfoldTactic unfolds definitions in the goal.

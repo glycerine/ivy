@@ -264,8 +264,11 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	case *ast.LetTactic:
 		return pc.letTactic(goals, p)
 
+	case *ast.AssumeGlobalTactic:
+		return pc.assumeTactic(goals, &p.AssumeTactic, true)
+
 	case *ast.AssumeTactic:
-		return pc.assumeTactic(goals, p)
+		return pc.assumeTactic(goals, p, false)
 
 	case *ast.UnfoldTactic:
 		return pc.unfoldTactic(goals, p)

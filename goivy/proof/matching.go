@@ -22,26 +22,31 @@ func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.Schem
 	return pc.SetupSchemaMatching(decl, proof, schema, false, mod)
 }
 
-// SetupSchemaMatching implements the complete Python pipeline from ivy_proof.py:329-340:
+// SetupSchemaMatchingRaw implements the complete Python pipeline from
+// ivy_proof.py:337-348 (setup_schema_matching), taking raw ren/matches
+// fields so it can be used by both MatchSchema (SchemaInstantiation)
+// and assumeTactic (AssumeTactic).
+//
+// Pipeline steps:
 //  1. rename_goal(schema, proof.renaming())
 //  2. transform_defn_schema(schema, decl)
 //  3. match_problem(schema, decl)
 //  4. transform_defn_match(prob)
 //  5. add_prem_match(proof.match(), prob, decl, self)
 //  6. compile_match(proof_match, prob, decl, allow_witness)
-func (pc *ProofChecker) SetupSchemaMatching(
+func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	decl *ast.LabeledFormula,
-	proof *ast.SchemaInstantiation,
+	ren ast.Node,
+	matches []ast.Node,
 	schema *ast.LabeledFormula,
 	allowWitness bool,
-	mod *module.Module,
 ) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 
 	// Step 1: Rename schema using proof renaming
 	// Python: schema = rename_goal(schema, proof.renaming())
-	if proof != nil && proof.Ren != nil {
+	if ren != nil {
 		var err error
-		schema, err = RenameGoal(pc.astCfg(), schema, proof.Ren)
+		schema, err = RenameGoal(pc.astCfg(), schema, ren)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -62,28 +67,43 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	// Python: prob = transform_defn_match(prob)
 	prob = TransformDefnMatch(pc.astCfg(), prob)
 	if prob == nil {
-		return nil, nil, &NoMatch{Node: proof, Msg: "definition does not match the given schema"}
+		return nil, nil, &NoMatch{Msg: "definition does not match the given schema"}
 	}
 
 	// Step 5: Process premise matches
 	// Python: proof_match, prob = add_prem_match(proof.match(), prob, decl, self)
-	var proofMatches []ast.Node
-	if proof != nil {
-		proofMatches = proof.Matches
-	}
+	proofMatches := matches
 	proofMatches, prob = AddPremMatch(proofMatches, prob, decl, pc)
 
 	// Step 6: Compile symbolic matches
 	// Python: pmatch = compile_match(proof_match, prob, decl, allow_witness)
-	pmatch := CompileMatchFull(proofMatches, prob, decl, allowWitness, mod)
+	pmatch := CompileMatchFull(proofMatches, prob, decl, allowWitness, pc.Mod)
 	if pmatch == nil && len(proofMatches) > 0 {
-		return nil, nil, &ProofError{Node: proof, Msg: "Match is inconsistent"}
+		return nil, nil, &ProofError{Msg: "Match is inconsistent"}
 	}
 	if pmatch == nil {
 		pmatch = make(map[lg.NodeKey]lg.Expr)
 	}
 
 	return prob, pmatch, nil
+}
+
+// SetupSchemaMatching is the SchemaInstantiation-specific wrapper around
+// SetupSchemaMatchingRaw. Extracts ren/matches from the proof node.
+func (pc *ProofChecker) SetupSchemaMatching(
+	decl *ast.LabeledFormula,
+	proof *ast.SchemaInstantiation,
+	schema *ast.LabeledFormula,
+	allowWitness bool,
+	mod *module.Module,
+) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+	var ren ast.Node
+	var matches []ast.Node
+	if proof != nil {
+		ren = proof.Ren
+		matches = proof.Matches
+	}
+	return pc.SetupSchemaMatchingRaw(decl, ren, matches, schema, allowWitness)
 }
 
 // buildMatchProblem creates a MatchProblem from a schema and declaration.
