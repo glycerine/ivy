@@ -334,3 +334,4 @@ func normalizedAndBin(first lg.Expr, rest []lg.Expr) lg.Expr {
 	}
 	return normalizedAndBin(&lg.And{Terms: []lg.Expr{first, rest[0]}}, rest[1:])
 }
+

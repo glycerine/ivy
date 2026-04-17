@@ -462,6 +462,44 @@ func AlphaAvoid(fmla lg.Expr, vs []*lg.Variable) lg.Expr {
 	return vu.rec(fmla, vmap)
 }
 
+// AlphaAvoidMap alpha-converts a formula so that bound variable names do not
+// clash with any named symbol in vs. vs is a map[lg.NodeKey]lg.Expr (e.g.,
+// from MatchRhsVars) which may contain Variables, Consts, and Sort values.
+// Only Variables have names that can clash with bound variables — other
+// node types in vs are still reserved (if they have names) to prevent
+// accidental shadowing.
+//
+// Corresponds to Python's alpha_avoid called with match_rhs_vars(match).
+func AlphaAvoidMap(fmla lg.Expr, vs map[lg.NodeKey]lg.Expr) lg.Expr {
+	if len(vs) == 0 {
+		return fmla
+	}
+	vu := NewVariableUniqifier(nil)
+	// Reserve names of all values in vs
+	for _, v := range vs {
+		if vv, ok := v.(*lg.Variable); ok {
+			vu.rn.Rename(vv.Name)
+		} else if c, ok := v.(*lg.Const); ok {
+			vu.rn.Rename(c.Name)
+		} else if us, ok := v.(*lg.UninterpretedSort); ok {
+			vu.rn.Rename(us.Name)
+		}
+	}
+	fvs := lu.FreeVariablesList(fmla)
+	vmap := make(map[lg.NodeKey]*lg.Variable)
+	for _, v := range fvs {
+		vu.rn.Rename(v.Name)
+		vmap[lg.Key(v)] = v // preserve free variable
+	}
+	// Preserve variable values in vs
+	for _, v := range vs {
+		if vv, ok := v.(*lg.Variable); ok {
+			vmap[lg.Key(vv)] = vv
+		}
+	}
+	return vu.rec(fmla, vmap)
+}
+
 // NormalizeOps converts conjunctions and disjunctions to binary ops
 // and quantifiers to single-variable quantifiers.
 func NormalizeOps(fmla lg.Expr) lg.Expr {

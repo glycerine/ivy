@@ -907,11 +907,18 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 }
 
 // ApplyMatchAlt applies a match to a formula with capture checking.
-// Corresponds to Python's apply_match_alt.
+// Corresponds to Python's apply_match_alt (ivy_proof.py:1125-1138).
+//
+// Python first calls alpha_avoid to rename bound variables that would clash
+// with free variables introduced by the substitution, then recurses.
 func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if fmla == nil || len(match) == 0 {
 		return fmla
 	}
+	// Alpha-rename bound vars in fmla to avoid capture by match RHS free vars.
+	// Python: freevars = list(match_rhs_vars(match)); fmla = il.alpha_avoid(fmla, freevars)
+	freeVars := MatchRhsVars(match)
+	fmla = il.AlphaAvoidMap(fmla, freeVars)
 	if env == nil {
 		env = make(map[lg.NodeKey]bool)
 	}

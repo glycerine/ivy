@@ -361,11 +361,17 @@ func ComposeMatches(freesyms map[lg.NodeKey]lg.Expr, mat1, mat2 map[lg.NodeKey]l
 // Substitutes all symbols in the match with the corresponding lambda terms
 // and performs beta reduction. Alpha-renames to avoid capture.
 //
-// Python: ivy_proof.py:1117-1131, 1140-1158 (apply_match_alt / apply_match_alt_rec)
+// Python: ivy_proof.py:1075-1086 (apply_match / apply_match_rec)
+// Python first calls alpha_avoid to rename bound variables that would clash
+// with free variables introduced by the substitution.
 func ApplyMatch(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 	if len(match) == 0 {
 		return fmla
 	}
+	// Alpha-rename bound vars to avoid capture by match RHS free vars.
+	// Python: freevars = match_rhs_vars(match); fmla = il.alpha_avoid(fmla, freevars)
+	freeVars := MatchRhsVars(match)
+	fmla = il.AlphaAvoidMap(fmla, freeVars)
 	return applyMatchRec(match, fmla)
 }
 
