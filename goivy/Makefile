@@ -35,6 +35,10 @@ tlb:
 	if [ -f log.tlb ]; then mv log.tlb log.tlb.prev; fi
 	cd parser && go test -v -timeout=0 -count=1 -run TestIvyTlbModel &> ../log.tlb
 
+tilelink: # an ivy v1.1 .ivy file: ivy/ivy-lang-examples/examples/tilelink/tilelink1.ivy
+	if [ -f log.tilelink ]; then mv log.tilelink log.tilelink.prev; fi
+	cd parser && go test -v -timeout=0 -count=1 -run TestIvy_1dot1_tilelink1_model &> ../log.tilelink
+
 ord: # xtraced 
 	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
