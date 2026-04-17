@@ -1123,7 +1123,7 @@ func CheckModule(mod *module.Module) error {
 
 	fmt.Println()
 	if mod.Cfg.Failures > 0 {
-		return fmt.Errorf("failed checks: %d", mod.Cfg.Failures)
+		return fmt.Errorf("check/isolate_check.go:1126: failed checks: %d", mod.Cfg.Failures)
 	}
 	if mod.Cfg.CheckedAction != "" && !mod.Cfg.CheckedActionFound {
 		return fmt.Errorf("%s is not an exported action of any isolate",
