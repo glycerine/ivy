@@ -1277,111 +1277,41 @@ func TestCheckConjsInState(t *testing.T) {
 // Python's ivy_check.py uses a module-level global `failures` counter
 // (line 208). All Checker.fail() calls increment it regardless of which
 // module copy is active. Go stores Failures on mod.Cfg, so Module.Copy()
-// creates a separate counter. The propagation pattern
-//   failsBefore := copy.Cfg.Failures
-//   ... run checkers on copy ...
-//   parent.Cfg.Failures += copy.Cfg.Failures - failsBefore
-// must be applied after every CheckIsolate(copy) call.
-
-func TestFailuresPropagateAcrossModuleCopy(t *testing.T) {
-	// Simulate the pattern in CheckModule (isolate_check.go):
-	//   isoMod := mod.Copy()
-	//   CheckIsolate(isoMod) → BaseChecker.Fail() increments isoMod.Cfg.Failures
-	//   mod.Cfg.Failures += isoMod.Cfg.Failures - failsBefore
-
-	mod := module.New()
-	mod.Cfg.Failures = 0
-
-	// Copy the module (as CheckModule does at line 1021)
-	isoMod := mod.Copy()
-	failsBefore := isoMod.Cfg.Failures
-
-	// Simulate two checker failures inside CheckIsolate(isoMod)
-	c1 := NewBaseChecker(isoMod, lg.True, false, true)
-	c1.Fail()
-	c2 := NewBaseChecker(isoMod, lg.True, false, true)
-	c2.Fail()
-
-	// Without propagation, parent mod sees nothing
-	if mod.Cfg.Failures != 0 {
-		t.Fatalf("before propagation: expected mod.Cfg.Failures=0, got %d", mod.Cfg.Failures)
-	}
-	if isoMod.Cfg.Failures != 2 {
-		t.Fatalf("expected isoMod.Cfg.Failures=2, got %d", isoMod.Cfg.Failures)
-	}
-
-	// Apply propagation (same formula as isolate_check.go)
-	mod.Cfg.Failures += isoMod.Cfg.Failures - failsBefore
-
-	if mod.Cfg.Failures != 2 {
-		t.Errorf("after propagation: expected mod.Cfg.Failures=2, got %d", mod.Cfg.Failures)
-	}
-}
-
-func TestFailuresPropagateNestedCopies(t *testing.T) {
-	// Simulate the nested copy chain:
-	//   CheckModule(mod) → isoMod := mod.Copy()
-	//     CheckIsolate(isoMod) → CheckSubgoals(isoMod)
-	//       withLocalMod := isoMod.Copy()
-	//         CheckIsolate(withLocalMod) → checker.Fail()
-	//       isoMod.Cfg.Failures += delta  (CheckSubgoals propagation)
-	//     mod.Cfg.Failures += delta  (CheckModule propagation)
-
-	mod := module.New()
-	mod.Cfg.Failures = 0
-
-	// Level 1: CheckModule copies mod
-	isoMod := mod.Copy()
-	isoFailsBefore := isoMod.Cfg.Failures
-
-	// Level 2: CheckSubgoals copies isoMod
-	withLocalMod := isoMod.Copy()
-	localFailsBefore := withLocalMod.Cfg.Failures
-
-	// Checker fails inside withLocalMod
-	c := NewBaseChecker(withLocalMod, lg.True, false, true)
-	c.Fail()
-	c.Fail()
-	c.Fail()
-
-	if withLocalMod.Cfg.Failures != 3 {
-		t.Fatalf("withLocalMod.Cfg.Failures: expected 3, got %d", withLocalMod.Cfg.Failures)
-	}
-
-	// Level 2 propagation (CheckSubgoals → isoMod)
-	isoMod.Cfg.Failures += withLocalMod.Cfg.Failures - localFailsBefore
-	if isoMod.Cfg.Failures != 3 {
-		t.Errorf("after level-2 propagation: expected isoMod.Cfg.Failures=3, got %d", isoMod.Cfg.Failures)
-	}
-
-	// Level 1 propagation (CheckModule → mod)
-	mod.Cfg.Failures += isoMod.Cfg.Failures - isoFailsBefore
-	if mod.Cfg.Failures != 3 {
-		t.Errorf("after level-1 propagation: expected mod.Cfg.Failures=3, got %d", mod.Cfg.Failures)
-	}
-}
+// creates a separate counter. CheckModule and CheckSubgoals must propagate
+// the delta back after every CheckIsolate(copy) call.
 
 func TestCheckModuleReportsFailures(t *testing.T) {
-	// When mod.Cfg.Failures > 0 at the end of CheckModule,
-	// it must return an error matching Python's "failed checks: N".
+	// Integration test: exercises the full CheckModule → isoMod := mod.Copy()
+	// → CheckIsolate(isoMod) → ConjChecker.Fail() → propagation chain.
+	//
+	// 3 false conjectures (empty Or = False). ConjChecker inverts (dualizes)
+	// each → True → trivially SAT → Fail(). Failures accumulate on
+	// isoMod.Cfg.Failures inside the copy; the propagation code at
+	// isolate_check.go must bring them back to mod.Cfg.Failures.
 	mod := module.New()
-	mod.Cfg.Failures = 3
+	acfg := mod.Cfg.AstCfg
+	for i := 0; i < 3; i++ {
+		label := acfg.NewAtom(fmt.Sprintf("false_conj_%d", i))
+		lf := acfg.NewLabeledFormula(label, &lg.Or{})
+		mod.LabeledConjs = append(mod.LabeledConjs, lf)
+	}
 
 	err := CheckModule(mod)
 	if err == nil {
-		t.Fatal("expected error from CheckModule when Failures > 0, got nil")
+		t.Fatal("expected error from CheckModule with false conjectures, got nil")
 	}
-	if !strings.Contains(err.Error(), "failed checks: 3") {
-		t.Errorf("expected error containing %q, got %q", "failed checks: 3", err.Error())
+	if !strings.Contains(err.Error(), "failed checks:") {
+		t.Errorf("expected error containing 'failed checks:', got %q", err.Error())
+	}
+	if mod.Cfg.Failures != 3 {
+		t.Errorf("expected mod.Cfg.Failures=3 (propagated from isoMod copy), got %d", mod.Cfg.Failures)
 	}
 }
 
 func TestCheckModuleNoFailuresReturnsNil(t *testing.T) {
 	mod := module.New()
-	mod.Cfg.Failures = 0
-
 	err := CheckModule(mod)
 	if err != nil {
-		t.Errorf("expected nil error when Failures=0, got: %v", err)
+		t.Errorf("expected nil error when no conjectures fail, got: %v", err)
 	}
 }
