@@ -680,12 +680,61 @@ func extractSymbol(n ast.Node) *lg.Const {
 }
 
 // CompileOneMatch compiles a single match between two expressions.
-// Corresponds to Python's compile_one_match.
+// Corresponds to Python's compile_one_match (ivy_proof.py:905-924).
+//
+// Three branches:
+//  1. Variable LHS → fo_match
+//  2. Non-UninterpretedSort RHS → compute vmatch (sort-variable matches),
+//     apply vmatch to lhs, run match, compose
+//  3. UninterpretedSort RHS → match_sort
 func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
 	if _, isVar := lhs.(*lg.Variable); isVar {
 		return FOMatch(lhs, rhs, freesyms, constants)
 	}
-	return Match(lhs, rhs, freesyms, constants)
+	if _, isUS := rhs.(*lg.UninterpretedSort); !isUS {
+		// Branch 2: Non-UninterpretedSort RHS
+		// Build rhsvs: name → variable, for free variables in rhs
+		rhsVarList := lu.FreeVariablesList(rhs)
+		rhsvs := make(map[string]*lg.Variable, len(rhsVarList))
+		for _, v := range rhsVarList {
+			rhsvs[v.Name] = v
+		}
+		// Build vmatches: for each lhs free var whose sort is free and name appears in rhs,
+		// map lhs-var-sort → rhs-var-sort
+		lhsVarList := lu.FreeVariablesList(lhs)
+		vmatchList := make([]map[lg.NodeKey]lg.Expr, 0, len(lhsVarList))
+		for _, v := range lhsVarList {
+			rhsV, inRhs := rhsvs[v.Name]
+			if !inRhs {
+				continue
+			}
+			if freesyms[lg.Key(v.VSort)] == nil {
+				continue
+			}
+			// {v.sort: rhsvs[v.name].sort}
+			entry := map[lg.NodeKey]lg.Expr{lg.Key(v.VSort): rhsV.VSort}
+			vmatchList = append(vmatchList, entry)
+		}
+		vmatch := MergeMatches(vmatchList...)
+		if vmatch == nil {
+			return nil
+		}
+		updatedLhs := ApplyMatchAlt(vmatch, lhs, nil)
+		newFreesyms := ApplyMatchFreesyms(vmatch, freesyms)
+		somatch := Match(updatedLhs, rhs, newFreesyms, constants)
+		if somatch == nil {
+			return nil
+		}
+		somatch = ComposeMatches(freesyms, vmatch, somatch, vmatch)
+		return MergeMatches(vmatch, somatch)
+	}
+	// Branch 3: UninterpretedSort RHS → match_sort
+	lhsSort, ok := lhs.(lg.Sort)
+	if !ok {
+		return nil
+	}
+	rhsSort := rhs.(lg.Sort) // safe: checked isUS above
+	return MatchSort(lhsSort, rhsSort, freesyms)
 }
 
 // CompileMatchFull compiles all matches from a proof.
@@ -870,7 +919,13 @@ func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKe
 }
 
 // applyMatchAltRec recursively applies a match with capture checking.
-// Corresponds to Python's apply_match_alt_rec.
+// Corresponds to Python's apply_match_alt_rec (ivy_proof.py:1148-1166).
+//
+// Key differences from apply_match_rec:
+//  - Uses match_get (MatchGet) for variable/app lookups to detect capture
+//  - Binder cases add their variables to env before recursing into the body
+//    (Python: `with il.BindSymbols(env, fmla.variables):`)
+//  - After the binder body is processed, the variables are removed from env
 func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if fmla == nil {
 		return nil
@@ -878,23 +933,51 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 
 	switch t := fmla.(type) {
 	case *lg.Apply:
-		// Apply match to arguments
+		// First recurse into arguments (with current env, not extended)
 		newTerms := make([]lg.Expr, len(t.Terms))
 		for i, arg := range t.Terms {
 			newTerms[i] = applyMatchAltRec(match, arg, env)
 		}
-		// Check if function is in match
+		// Check if function is in match — use MatchGet for capture detection
 		if c, ok := t.Func.(*lg.Const); ok {
 			k := lg.Key(c)
-			if replacement, exists := match[k]; exists {
+			if _, exists := match[k]; exists {
+				replacement, err := MatchGet(match, c, env, c)
+				if err != nil {
+					// Capture detected — skip substitution for this symbol
+					return fmla
+				}
 				if lam, ok := replacement.(*lg.Lambda); ok {
 					result, _ := il.LambdaApply(lam, newTerms)
 					return result
 				}
 				if newC, ok := replacement.(*lg.Const); ok {
-					app, _ := lg.NewApply(newC, newTerms...)
+					if len(newTerms) > 0 {
+						app, _ := lg.NewApply(newC, newTerms...)
+						return app
+					}
+					return newC
+				}
+				return replacement
+			}
+			// Apply sort mapping to function symbol, then match_get
+			newC := ApplyMatchFunc(match, c)
+			replacement, err := MatchGet(match, newC, env, newC)
+			if err != nil {
+				// Capture detected — skip substitution for this symbol
+				return fmla
+			}
+			if newRC, ok := replacement.(*lg.Const); ok {
+				if len(newTerms) > 0 {
+					app, _ := lg.NewApply(newRC, newTerms...)
 					return app
 				}
+				return newRC
+			}
+			// replacement is a lambda
+			if lam, ok := replacement.(*lg.Lambda); ok {
+				result, _ := il.LambdaApply(lam, newTerms)
+				return result
 			}
 		}
 		newFunc := applyMatchAltRec(match, t.Func, env)
@@ -903,16 +986,29 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 
 	case *lg.Variable:
 		k := lg.Key(t)
-		if replacement, exists := match[k]; exists {
+		if _, exists := match[k]; exists {
+			// match_get checks for capture via env
+			replacement, err := MatchGet(match, t, env, t)
+			if err != nil {
+				// Capture detected — skip substitution
+				return fmla
+			}
 			return replacement
 		}
-		// Apply sort match
+		// Apply sort match, then try match_get again
 		newSort := ApplyMatchSort(match, t.VSort)
+		newVar := t
 		if newSort != t.VSort {
 			v, _ := lg.NewVariable(t.Name, newSort)
-			return v
+			newVar = v
 		}
-		return fmla
+		// match_get with default = newVar (capture-safe)
+		replacement, err := MatchGet(match, newVar, env, newVar)
+		if err != nil {
+			// Capture detected — return updated variable without further substitution
+			return newVar
+		}
+		return replacement
 
 	case *lg.Const:
 		k := lg.Key(t)
@@ -922,6 +1018,12 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 		return fmla
 
 	case *lg.ForAll:
+		// Python: with il.BindSymbols(env, fmla.variables):
+		//   fmla = fmla.clone_binder([apply_match_alt_rec(match, v, env) for v in fmla.variables], args[0])
+		// Add bound variables to env before recursing into vars and body
+		for _, v := range t.Variables {
+			env[lg.Key(v)] = true
+		}
 		newVars := make([]*lg.Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
@@ -932,9 +1034,16 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			}
 		}
 		newBody := applyMatchAltRec(match, t.Body, env)
+		// Remove bound variables from env (restore)
+		for _, v := range t.Variables {
+			delete(env, lg.Key(v))
+		}
 		return &lg.ForAll{Variables: newVars, Body: newBody}
 
 	case *lg.Exists:
+		for _, v := range t.Variables {
+			env[lg.Key(v)] = true
+		}
 		newVars := make([]*lg.Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
@@ -945,9 +1054,15 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			}
 		}
 		newBody := applyMatchAltRec(match, t.Body, env)
+		for _, v := range t.Variables {
+			delete(env, lg.Key(v))
+		}
 		return &lg.Exists{Variables: newVars, Body: newBody}
 
 	case *lg.Lambda:
+		for _, v := range t.Variables {
+			env[lg.Key(v)] = true
+		}
 		newVars := make([]*lg.Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
@@ -958,6 +1073,9 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			}
 		}
 		newBody := applyMatchAltRec(match, t.Body, env)
+		for _, v := range t.Variables {
+			delete(env, lg.Key(v))
+		}
 		return &lg.Lambda{Variables: newVars, Body: newBody}
 	}
 

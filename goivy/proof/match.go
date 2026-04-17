@@ -268,7 +268,12 @@ func MatchQuants(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) 
 			mbody := ApplyMatch(mat, il.BinderBody(pat))
 			bodyFreesyms := ApplyMatchFreesyms(mat, freesyms)
 			bodyMat := Match(mbody, il.BinderBody(inst), bodyFreesyms, constants)
-			bodyMat = ComposeMatches(freesyms, mat, bodyMat, patVars)
+			// Build quants map from patVars (Python: quants=pat.variables, checked with `sym not in quants`)
+			patVarMap := make(map[lg.NodeKey]lg.Expr, len(patVars))
+			for _, v := range patVars {
+				patVarMap[lg.Key(v)] = v
+			}
+			bodyMat = ComposeMatches(freesyms, mat, bodyMat, patVarMap)
 			mat = MergeMatches(mat, bodyMat)
 		}
 		if mat != nil {
@@ -329,17 +334,16 @@ func FOMatch(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[
 // ComposeMatches composes two matches: for each free symbol not in quants,
 // if mat1 maps it to sym1 and sym1 is in mat2, the result maps the original
 // to mat2[sym1].
-func ComposeMatches(freesyms map[lg.NodeKey]lg.Expr, mat1, mat2 map[lg.NodeKey]lg.Expr, quants []*lg.Variable) map[lg.NodeKey]lg.Expr {
+// quants is a set of symbol keys to exclude (not-in-quants check).
+// Python: compose_matches(freesyms, mat1, mat2, quants) where quants can be
+// a list of variables or a dict — both checked with `sym not in quants`.
+func ComposeMatches(freesyms map[lg.NodeKey]lg.Expr, mat1, mat2 map[lg.NodeKey]lg.Expr, quants map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
 	if mat1 == nil || mat2 == nil {
 		return nil
 	}
-	quantSet := make(map[lg.NodeKey]lg.Expr, len(quants))
-	for _, q := range quants {
-		quantSet[lg.Key(q)] = q
-	}
 	res := make(map[lg.NodeKey]lg.Expr)
 	for symKey, symNode := range freesyms {
-		if quantSet[symKey] != nil {
+		if quants[symKey] != nil {
 			continue
 		}
 		if symNode == nil {

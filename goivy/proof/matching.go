@@ -169,8 +169,8 @@ func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob 
 	// Apply match to pattern — use ApplyMatchAlt for capture safety
 	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
 
-	// Update free symbols
-	prob.FreeSyms = ApplyMatchFreesymsAlt(match, prob.FreeSyms)
+	// Update free symbols — Python uses non-alt apply_match_freesyms here.
+	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
 
 	// Remove matched symbols from revmap
 	for k := range prob.RevMap {
