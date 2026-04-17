@@ -79,6 +79,10 @@ Remove the file:line prefix to match Python's format:
 		return fmt.Errorf("failed checks: %d", mod.Cfg.Failures)
 ```
 
+### Site 4: Rename `fakeMod` → `withLocalMod` (all 39 occurrences in `isolate_check.go`)
+
+`replace_all` edit: `fakeMod` → `withLocalMod`. This is a faithful port of Python's `mod = im.module.copy()` used inside `with mod:` — the name `withLocalMod` reflects that better than `fakeMod`.
+
 ### Why this works
 
 - `fakeMod.Cfg.Failures` starts equal to `mod.Cfg.Failures` (from the struct copy)
