@@ -129,19 +129,17 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 		constants[lg.Key(v)] = v
 	}
 
-	// Schemata don't apply to *ast.TemporalModels goals; mirror Python
-	// ivy_proof.py:429 which raises NoMatch in this case.
-	if _, isTM := GoalConc(schema).(*ast.TemporalModels); isTM {
-		return nil
-	}
-	if _, isTM := GoalConc(decl).(*ast.TemporalModels); isTM {
-		return nil
-	}
-	schemaConc := GoalConcExpr(schema)
-	declConc := GoalConcExpr(decl)
-	if schemaConc == nil || declConc == nil {
-		return nil
-	}
+	// Python: MatchProblem(schema, goal_conc(schema), goal_conc(decl), freesyms, constants)
+	// Python is duck-typed and passes conclusions as-is. Go needs lg.Expr
+	// for Pat/Inst; when the conclusion is *ast.TemporalModels (or other
+	// non-lg.Expr), Pat/Inst will be nil. This is fine — assume_tactic
+	// uses the prob primarily for SchemaLF/FreeSyms, and the matching
+	// pipeline tolerates nil Pat/Inst when there are no proof matches.
+	// Note: the TemporalModels rejection for match_schema lives in
+	// MatchSchema (checker.go:307), NOT here. Python's match_problem
+	// (ivy_proof.py:779-784) has no such rejection.
+	schemaConc, _ := GoalConc(schema).(lg.Expr)
+	declConc, _ := GoalConc(decl).(lg.Expr)
 
 	// Store the schema LabeledFormula reference in the problem
 	prob := NewMatchProblem(nil, schemaConc, declConc, freesyms, constants)
