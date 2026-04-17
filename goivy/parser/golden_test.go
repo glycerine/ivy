@@ -498,6 +498,10 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 		t.Skipf("target path not found at %s", path)
 	}
 
+	// let the other finish too, whoever finishes first should
+	// not be able to terminate the test prematurely.
+	var goDone, pyDone bool
+
 	//args := []string{"isolate=cf_live"}
 
 	// Get Python AST
@@ -543,30 +547,36 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	var goCheck, ivCheck string
 	var err, err1, err2 error
 
+top:
 	for i := 0; ; i++ {
 
 		//if i > 0 && i%10_000 == 0 {
 		//	fmt.Fprintf(os.Stderr, "progress: i = %v\n", i)
 		//}
 
-		if err != nil {
-			fmt.Printf("stopping (after i=%v) on goivy_check_xtrace error %v\n", i-1, err)
-			return
+		if !goDone && err != nil {
+			fmt.Printf("Go stopping (after i=%v) on goivy_check_xtrace error %v\n", i-1, err)
+			goDone = true
 		}
-		if err1 != nil {
-			fmt.Printf("stopping (after i=%v) on ivy_check error %v\n", i-1, err1)
+		if !pyDone && err1 != nil {
+			fmt.Printf("Python stopping (after i=%v) on ivy_check error %v\n", i-1, err1)
+			pyDone = true
+		}
+		if goDone && pyDone {
+			fmt.Printf("both sides are done. (after i=%v)\n", i-1)
 			return
 		}
 
-		for {
+		for !goDone {
 			goCheck, err = goivyR.ReadString('\n')
 			if strings.HasPrefix(goCheck, "XTRACE:") {
 				break
 			}
 			if err != nil {
 				//handleEOF(t, "go", goCheck, ivyR, "py", i)
-				fmt.Printf("stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
-				return
+				fmt.Printf("Go stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
+				goDone = true
+				break
 			}
 
 			if showNonXtraceLines {
@@ -574,21 +584,66 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 				fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
 			}
 		}
-		for {
+		for !pyDone {
 			ivCheck, err1 = ivyR.ReadString('\n')
 			if strings.HasPrefix(ivCheck, "XTRACE:") {
 				break
 			}
 			if err1 != nil {
 				//handleEOF(t, "py", ivCheck, goivyR, "go", i)
-				fmt.Printf("stopping on (i=%v) ivy_check error %v\n", i, err1)
-				return
+				fmt.Printf("python stopping on (i=%v) ivy_check error %v\n", i, err1)
+				pyDone = true
+				continue top
 			}
 			if showNonXtraceLines {
 				// allow stack traces/other debug prints through
 				fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
 			}
 		}
+		if goDone && pyDone {
+			fmt.Printf("both sides are done. (after i=%v)\n", i)
+			return
+		}
+		// asymmetry: drain the other side so we see "OK" or other side errors
+		if goDone && !pyDone {
+			fmt.Printf("goDone but not python, so drain python side til EOF, ignoring XTRACE:\n")
+			for {
+				ivCheck, err1 = ivyR.ReadString('\n')
+				if strings.HasPrefix(ivCheck, "XTRACE:") {
+					continue // ignore these now. right?
+				}
+				if err1 != nil {
+					//handleEOF(t, "py", ivCheck, goivyR, "go", i)
+					fmt.Printf("python stopping on (i=%v) ivy_check error %v\n", i, err1)
+					pyDone = true
+					return
+				}
+				if showNonXtraceLines {
+					// allow stack traces/other debug prints through
+					fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
+				}
+			}
+			// keep draining until error or EOF
+		}
+		if !goDone && pyDone {
+			goCheck, err = goivyR.ReadString('\n')
+			if strings.HasPrefix(goCheck, "XTRACE:") {
+				continue // ignore
+			}
+			if err != nil {
+				//handleEOF(t, "go", goCheck, ivyR, "py", i)
+				fmt.Printf("Go stopping (i=%v) on goivy_check_xtrace error %v\n", i, err)
+				goDone = true
+				return
+			}
+
+			if showNonXtraceLines {
+				// allow stack traces/other debug prints through
+				fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
+			}
+			// keep draining until error or EOF
+		}
+
 		var goNorm, ivNorm string
 		if xtracer.Enabled {
 			goNorm = xtracer.NormalizeLine(goCheck)
