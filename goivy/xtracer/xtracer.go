@@ -84,7 +84,7 @@ func Trace1(format string, args ...interface{}) {
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func Trace(format string, args ...interface{}) {
-	trace(format, args...)
+	//trace(format, args...)
 }
 
 // Trace prints an execution trace line to stdout.
