@@ -258,7 +258,7 @@ def invariance_tactic(prover,goals,proof):
     goal = goals[0]                  # pick up the first proof goal
     conc = ipr.goal_conc(goal)       # get its conclusion
     if not isinstance(conc,TemporalModels):
-        raise iu.IvyError(proof,'proof goal is not temporal')
+        raise iu.IvyError(proof,'[4]proof goal is not temporal')
     model = conc.model
     fmla = conc.fmla
     if not isinstance(fmla,il.Globally):

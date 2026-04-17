@@ -313,7 +313,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	tm, isTM := conc.(*ast.TemporalModels)
 	xtracer.Trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)", iu.TypeName(conc), pyBool(isTM))
 	if !isTM {
-		return nil, fmt.Errorf("l2s: proof goal is not temporal")
+		return nil, fmt.Errorf("check/l2s: [2]proof goal is not temporal")
 	}
 
 	// Extract the model (NormalProgram) and formula.

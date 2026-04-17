@@ -166,11 +166,11 @@ type ProofDecl struct {
 //
 // Given a set of proof goals, it transforms the first goal's temporal
 // conclusion (M |= phi) into a safety property by:
-//   1. Extracting temporal premises and globally assumptions
-//   2. Building ranking functions from tactic declarations
-//   3. Constructing the L2S monitor with ghost state
-//   4. Instrumenting the model's actions with tableau updates
-//   5. Replacing the conclusion with M |= true
+//  1. Extracting temporal premises and globally assumptions
+//  2. Building ranking functions from tactic declarations
+//  3. Constructing the L2S monitor with ghost state
+//  4. Instrumenting the model's actions with tableau updates
+//  5. Replacing the conclusion with M |= true
 //
 // Returns the modified goal stack.
 // RankingL2STactic is the ranking-tactic entry point. The "Ranking" prefix
@@ -194,7 +194,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			return nil, fmt.Errorf("goal has no conclusion")
 		}
 		if !temporal.IsTemporalFormula(conc) && !isTemporalModels(conc) {
-			return nil, fmt.Errorf("proof goal is not temporal")
+			return nil, fmt.Errorf("check/ranking: [1]proof goal is not temporal")
 		}
 	}
 

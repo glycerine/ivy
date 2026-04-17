@@ -26,7 +26,6 @@ func pcAstCfg(pc module.ProofCheckerInterface) *ast.AstConfig {
 	return ast.NewAstConfig()
 }
 
-
 // ---------- helper functions ----------
 
 // VcToGoal converts a verification condition to a goal.
@@ -240,7 +239,7 @@ func ApplyTempind(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.No
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
 	tm, isTM := fmlaNode.(*ast.TemporalModels)
 	if !goal.IsTemporal() && !isTM {
-		return nil, fmt.Errorf("proof goal is not temporal")
+		return nil, fmt.Errorf("tactics/ivy_tactics: [3]proof goal is not temporal")
 	}
 
 	var newFmla ast.Node

@@ -68,9 +68,9 @@ func (at *ActionTerm) CloneStmt(stmt actions.Action) *ActionTerm {
 // --- ast.Node interface for ActionTerm ---
 // Python: ActionTerm(ia.AST) with args=[self.stmt]
 
-func (at *ActionTerm) Args() []ast.Node           { return []ast.Node{at.Stmt} }
-func (at *ActionTerm) GetLineno() ast.Location     { return at.Loc }
-func (at *ActionTerm) SetLineno(l ast.Location)    { at.Loc = l; at.HasLoc = true }
+func (at *ActionTerm) Args() []ast.Node             { return []ast.Node{at.Stmt} }
+func (at *ActionTerm) GetLineno() ast.Location      { return at.Loc }
+func (at *ActionTerm) SetLineno(l ast.Location)     { at.Loc = l; at.HasLoc = true }
 func (at *ActionTerm) GetAstConfig() *ast.AstConfig { return at.Cfg }
 
 // Clone creates a copy with transformed children (ast.Node interface).
@@ -128,7 +128,7 @@ func (b *ActionTermBinding) CloneAction(action *ActionTerm) *ActionTermBinding {
 
 // --- ast.Node interface for ActionTermBinding ---
 
-func (b *ActionTermBinding) Args() []ast.Node            { return []ast.Node{b.Action} }
+func (b *ActionTermBinding) Args() []ast.Node             { return []ast.Node{b.Action} }
 func (b *ActionTermBinding) GetLineno() ast.Location      { return b.Loc }
 func (b *ActionTermBinding) SetLineno(l ast.Location)     { b.Loc = l; b.HasLoc = true }
 func (b *ActionTermBinding) GetAstConfig() *ast.AstConfig { return b.Cfg }
@@ -564,7 +564,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	// Find the TemporalModels conclusion
 	tm := findTemporalModels(goal)
 	if tm == nil {
-		return nil, fmt.Errorf("invariance: proof goal is not temporal")
+		return nil, fmt.Errorf("temporal/temporal: invariance: [4]proof goal is not temporal")
 	}
 
 	fmla, _ := tm.Fmla.(lg.Expr)
