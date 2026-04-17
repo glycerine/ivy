@@ -91,6 +91,10 @@ class IvyApp {
         // Connect to SSE for real-time updates
         if (this.api.sessionId) {
             this.api.connectEvents(this.handleEvent.bind(this));
+            this.api.onConnectionLost = function () {
+                self.controls.setStatus('Server connection lost', 'error');
+                self._showToast('Connection to server lost. Check that the server is running and reload the page.', 'error');
+            };
         }
 
         // Restore saved session if available (survives page reload).
@@ -2793,6 +2797,29 @@ class IvyApp {
         } catch (e) {
             console.error('refreshAfterLoad error:', e);
         }
+    }
+
+    /**
+     * Show a non-modal toast notification. Auto-dismisses after 10s
+     * or on click. Appends to document body so it floats over everything.
+     */
+    _showToast(message, level) {
+        var toast = document.createElement('div');
+        toast.className = 'ivy-toast ivy-toast-' + (level || 'info');
+        toast.textContent = message;
+        toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;' +
+            'padding:12px 20px;border-radius:6px;max-width:400px;cursor:pointer;' +
+            'font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        if (level === 'error') {
+            toast.style.background = '#d32f2f';
+            toast.style.color = '#fff';
+        } else {
+            toast.style.background = '#333';
+            toast.style.color = '#fff';
+        }
+        toast.onclick = function () { toast.remove(); };
+        document.body.appendChild(toast);
+        setTimeout(function () { toast.remove(); }, 10000);
     }
 }
 

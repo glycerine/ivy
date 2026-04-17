@@ -294,26 +294,63 @@ class IvyAPI {
 
     /**
      * Connect to Server-Sent Events for real-time updates.
+     * Uses manual reconnect with exponential backoff instead of
+     * EventSource's default auto-reconnect, which can storm
+     * indefinitely and destabilize browser tests.
+     *
      * @param {function} onEvent - Callback receiving parsed event objects
      */
     connectEvents(onEvent) {
-        if (this.eventSource) {
-            this.eventSource.close();
-        }
-        var url = this.baseURL + '/api/session/' + this.sessionId + '/events';
-        this.eventSource = new EventSource(url);
+        this.disconnectEvents();
+        this._sseRetries = 0;
+        this._sseMaxRetries = 5;
+        this._sseClosed = false;
+        this._sseOnEvent = onEvent;
+        this._sseConnect();
+    }
 
-        this.eventSource.onmessage = function (e) {
+    /**
+     * Internal: open one EventSource connection.
+     * On error, reconnects with exponential backoff up to _sseMaxRetries.
+     */
+    _sseConnect() {
+        if (this._sseClosed || !this.sessionId) return;
+
+        var url = this.baseURL + '/api/session/' + this.sessionId + '/events';
+        var es = new EventSource(url);
+        this.eventSource = es;
+        var self = this;
+
+        es.onopen = function () {
+            self._sseRetries = 0;  // reset on successful connect
+        };
+
+        es.onmessage = function (e) {
             try {
                 var event = JSON.parse(e.data);
-                onEvent(event);
+                self._sseOnEvent(event);
             } catch (err) {
                 console.error('Failed to parse SSE event:', err, e.data);
             }
         };
 
-        this.eventSource.onerror = function () {
-            console.warn('SSE connection error, will auto-reconnect');
+        es.onerror = function () {
+            es.close();  // stop browser auto-reconnect
+            if (self._sseClosed) return;
+            self._sseRetries++;
+            if (self._sseRetries > self._sseMaxRetries) {
+                console.error('SSE: max retries exceeded, giving up');
+                if (self.onConnectionLost) {
+                    self.onConnectionLost();
+                }
+                return;
+            }
+            var delay = Math.min(1000 * Math.pow(2, self._sseRetries - 1), 16000);
+            console.warn('SSE: reconnect attempt ' + self._sseRetries +
+                         '/' + self._sseMaxRetries + ' in ' + delay + 'ms');
+            self._sseTimer = setTimeout(function () {
+                self._sseConnect();
+            }, delay);
         };
     }
 
@@ -321,6 +358,11 @@ class IvyAPI {
      * Disconnect from Server-Sent Events.
      */
     disconnectEvents() {
+        this._sseClosed = true;
+        if (this._sseTimer) {
+            clearTimeout(this._sseTimer);
+            this._sseTimer = null;
+        }
         if (this.eventSource) {
             this.eventSource.close();
             this.eventSource = null;
