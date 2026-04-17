@@ -1101,7 +1101,11 @@ func CheckModule(mod *module.Module) error {
 			// Python check_module (ivy_check.py:974) calls check_isolate()
 			// without a theory_context() wrapper. CheckIsolate handles
 			// TheoryContext internally (after CheckFragment).
+			failsBefore := isoMod.Cfg.Failures
 			err := CheckIsolate(isoMod, nil)
+			// Python's failures is a module-level global; propagate
+			// delta back from the copy to the original mod.
+			mod.Cfg.Failures += isoMod.Cfg.Failures - failsBefore
 			if err != nil {
 				return err
 			}
