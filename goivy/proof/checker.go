@@ -356,7 +356,8 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 		// Non-tuple: single pattern matching
 		fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
 		if fomatch != nil && len(fomatch) > 0 {
-			ApplyMatchToProblem(pc.astCfg(), fomatch, prob)
+			// Python: apply_match_to_problem(fomatch, prob, apply_match) — non-alt
+			ApplyMatchToProblemNonAlt(pc.astCfg(), fomatch, prob)
 		}
 
 		somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)

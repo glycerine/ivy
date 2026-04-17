@@ -1356,10 +1356,97 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 			newPrems = append(newPrems, p)
 		}
 	}
+	// Filter out lambda-typed ConstantDecl premises.
+	// Python: prems = [p for p in prems if not is_lambda(p)]
+	// where is_lambda(p) = isinstance(p, ia.ConstantDecl) and isinstance(p.args[0], il.Lambda)
+	if newPrems != nil {
+		filtered := newPrems[:0]
+		for _, p := range newPrems {
+			if cd, ok := p.(*ast.ConstantDecl); ok {
+				args := cd.Args()
+				if len(args) > 0 {
+					if _, isLam := args[0].(*lg.Lambda); isLam {
+						continue // filter out lambda-typed ConstantDecl
+					}
+				}
+			}
+			filtered = append(filtered, p)
+		}
+		newPrems = filtered
+	}
 	// ApplyToConc unwraps *ast.TemporalModels so ApplyMatchAlt runs on the
 	// inner formula; the wrapper is preserved.
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		return ApplyMatchAlt(match, c, nil)
+	})
+	return CloneGoal(cfg, goal, newPrems, newConc)
+}
+
+// ApplyMatchGoalNodeNonAlt applies a match to a goal using the non-alt
+// (non-capture-checking) apply function. Used for fomatch applications.
+// Corresponds to Python's apply_match_goal called with apply_match.
+func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	if len(match) == 0 {
+		return goal
+	}
+	prems := GoalPrems(goal)
+	var newPrems []ast.Node
+	for _, p := range prems {
+		if lf, ok := p.(*ast.LabeledFormula); ok {
+			newPrems = append(newPrems, ApplyMatchGoalNodeNonAlt(cfg, match, lf))
+		} else if s, ok := p.(lg.Sort); ok {
+			key := lg.Key(s)
+			if rep, found := match[key]; found {
+				if rs, ok := rep.(lg.Sort); ok {
+					newPrems = append(newPrems, rs)
+					continue
+				}
+			}
+			newPrems = append(newPrems, p)
+		} else if cd, ok := p.(*ast.ConstantDecl); ok {
+			args := cd.Args()
+			if len(args) > 0 {
+				if sym, ok := args[0].(*lg.Const); ok {
+					newSym := ApplyMatchFunc(match, sym)
+					symKey := lg.Key(newSym)
+					if rep, found := match[symKey]; found {
+						if repNode, ok := rep.(ast.Node); ok {
+							newPrems = append(newPrems, cd.Clone([]ast.Node{repNode}))
+						} else {
+							newPrems = append(newPrems, cd.Clone([]ast.Node{newSym}))
+						}
+					} else {
+						newPrems = append(newPrems, cd.Clone([]ast.Node{newSym}))
+					}
+				} else {
+					newPrems = append(newPrems, p)
+				}
+			} else {
+				newPrems = append(newPrems, p)
+			}
+		} else {
+			newPrems = append(newPrems, p)
+		}
+	}
+	// Filter out lambda-typed ConstantDecl premises.
+	if newPrems != nil {
+		filtered := newPrems[:0]
+		for _, p := range newPrems {
+			if cd, ok := p.(*ast.ConstantDecl); ok {
+				args := cd.Args()
+				if len(args) > 0 {
+					if _, isLam := args[0].(*lg.Lambda); isLam {
+						continue
+					}
+				}
+			}
+			filtered = append(filtered, p)
+		}
+		newPrems = filtered
+	}
+	// Non-alt: use ApplyMatch (no capture detection)
+	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
+		return ApplyMatch(match, c)
 	})
 	return CloneGoal(cfg, goal, newPrems, newConc)
 }

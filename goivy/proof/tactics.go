@@ -16,26 +16,48 @@ import (
 )
 
 // letTactic introduces local definitions in a proof.
-// Corresponds to Python ProofChecker.let_tactic (lines 213-223).
+// Corresponds to Python ProofChecker.let_tactic (ivy_proof.py:213-223).
 //
-// Given definitions x1=e1, ..., xn=en, the goal G becomes:
-//   (x1=e1 & ... & xn=en) -> G
+// Python:
+//   vocab = goal_vocab(goal)
+//   defs = [compile_expr_vocab(ia.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.args]
+//   cond = il.And(*[il.Equals(a.args[0], a.args[1]) for a in defs])
+//   goal = ia.LabeledFormula(goal.label, il.Implies(cond, goal.formula))
+//   return [goal] + decls[1:]
 func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "let tactic: no goals"}
 	}
 	goal := decls[0]
 
-	// Build the condition: conjunction of all equalities
+	vocab := GoalVocab(goal)
+
+	// Compile each equality definition with goal vocabulary.
+	// Python: defs = [compile_expr_vocab(ia.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.args]
+	// Then: cond = il.And(*[il.Equals(a.args[0], a.args[1]) for a in defs])
 	var eqs []lg.Expr
 	for _, def := range proof.Defs {
-		// Each def should be an equality atom: = lhs rhs
-		defArgs := def.Args()
-		if len(defArgs) >= 2 {
-			lhs := astNodeToLogicNode(defArgs[0])
-			rhs := astNodeToLogicNode(defArgs[1])
-			if lhs != nil && rhs != nil {
-				eqs = append(eqs, &lg.Eq{T1: lhs, T2: rhs})
+		// Each def is an equality atom. Compile it with goal vocab.
+		compiled := CompileExprVocab(def, vocab, pc.Mod)
+		if compiled == nil {
+			// Fallback: try direct extraction without compilation
+			defArgs := def.Args()
+			if len(defArgs) >= 2 {
+				lhs := astNodeToLogicNode(defArgs[0])
+				rhs := astNodeToLogicNode(defArgs[1])
+				if lhs != nil && rhs != nil {
+					eqs = append(eqs, &lg.Eq{T1: lhs, T2: rhs})
+				}
+			}
+			continue
+		}
+		// Extract LHS and RHS from compiled equality (il.Equals(a.args[0], a.args[1]))
+		if eq, ok := compiled.(*lg.Eq); ok {
+			eqs = append(eqs, eq)
+		} else if app, ok := compiled.(*lg.Apply); ok {
+			// Some compilers produce Apply(=, args...) — extract
+			if len(app.Terms) >= 2 {
+				eqs = append(eqs, &lg.Eq{T1: app.Terms[0], T2: app.Terms[1]})
 			}
 		}
 	}
@@ -51,10 +73,9 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 		cond = &lg.And{Terms: eqs}
 	}
 
-	// Build subgoal: cond -> original formula. ApplyToConc unwraps
-	// *ast.TemporalModels so the implication wraps the inner formula and the
-	// TemporalModels stays outermost — mirrors Python goal_apply_to_conc
-	// which delegates to the substitution function (here: building Implies).
+	// Build subgoal: cond -> original formula.
+	// Python uses goal.formula directly (wraps entire formula including SchemaBody).
+	// Go uses ApplyToConc to handle *ast.TemporalModels wrapping correctly.
 	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "let tactic: goal has no conclusion"}
 	}
@@ -435,7 +456,7 @@ var _ = il.IsApp
 var _ = lu.SubstituteByName
 
 // witnessTactic provides witnesses for existentially quantified variables.
-// Corresponds to Python ProofChecker.witness_tactic (lines 451-463).
+// Corresponds to Python ProofChecker.witness_tactic (ivy_proof.py:459-471).
 func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.WitnessTactic) ([]*ast.LabeledFormula, error) {
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "witness tactic: no goals"}
@@ -444,6 +465,12 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 
 	if GoalConc(goal) == nil {
 		return nil, &ProofError{Msg: "witness tactic: goal has no conclusion"}
+	}
+
+	// Python: if ia.has_temporal(proof) and not goal_is_temporal(goal): raise error
+	// (Python has `goal` here but means `decl`/`goal` = decls[0])
+	if ast.HasTemporal(proof) && !GoalIsTemporal(goal) {
+		return nil, &ProofError{Msg: "temporal operator not allowed in instantiation", Node: proof}
 	}
 
 	// Build witness map from proof witnesses

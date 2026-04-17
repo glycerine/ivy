@@ -534,12 +534,43 @@ func nodesToVarsPhase5(nodes []lg.Expr) []*lg.Variable {
 }
 
 // MatchFromDefns extracts matches from multiple definition formulas.
-// Corresponds to Python's match_from_defns.
+// Corresponds to Python's match_from_defns (ivy_proof.py:1543-1547).
+//
+// Python creates a list-valued match {lhs: [lambda1, lambda2, ...]} for
+// multi-step unfolding where each occurrence of lhs gets a different lambda.
+// Go currently implements the single-lambda case: all definitions must share
+// the same LHS symbol. The first definition's lambda is used.
+// (Full list-valued match behavior for multi-renaming unfold is a TODO.)
 func MatchFromDefns(defns []*ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	if len(defns) == 0 {
 		return nil, &ProofError{Msg: "no definitions"}
 	}
-	return MatchFromDefn(defns[0])
+	// Get first match to determine the LHS key
+	firstMatch, err := MatchFromDefn(defns[0])
+	if err != nil {
+		return nil, err
+	}
+	// Verify all definitions share the same LHS symbol (Python: assert)
+	if len(defns) > 1 {
+		var firstKey lg.NodeKey
+		for k := range firstMatch {
+			firstKey = k
+			break
+		}
+		for _, defn := range defns[1:] {
+			m, err := MatchFromDefn(defn)
+			if err != nil {
+				return nil, err
+			}
+			if _, ok := m[firstKey]; !ok {
+				return nil, &ProofError{Msg: "match_from_defns: definitions have different LHS symbols"}
+			}
+		}
+	}
+	// Return first definition's match (single-lambda case).
+	// Python uses a list-valued match for multi-occurrence unfolding,
+	// but that requires significant type changes not yet implemented.
+	return firstMatch, nil
 }
 
 // UnfoldGoal unfolds definitions in a goal.

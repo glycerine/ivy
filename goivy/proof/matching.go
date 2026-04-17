@@ -149,10 +149,10 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 
 // ApplyMatchToProblem applies a match map to a MatchProblem, updating
 // the schema, pattern, and free symbols.
-// Includes capture avoidance and uses ApplyMatchGoalNode for full schema
-// processing (premises + conclusion).
+// Uses apply_match_alt (capture-checking) for schema and pattern.
+// Used for somatch applications.
 //
-// Python: ivy_proof.py:994-999 (apply_match_to_problem)
+// Python: ivy_proof.py:1002-1007 (apply_match_to_problem with apply_match_alt)
 func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if len(match) == 0 {
 		return
@@ -173,6 +173,28 @@ func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob 
 	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
 
 	// Remove matched symbols from revmap
+	for k := range prob.RevMap {
+		if _, matched := match[k]; matched {
+			delete(prob.RevMap, k)
+		}
+	}
+}
+
+// ApplyMatchToProblemNonAlt applies a match map using the non-alt (non-capture-checking)
+// apply function. Used for fomatch applications.
+//
+// Python: ivy_proof.py:1002-1007 (apply_match_to_problem with apply_match)
+func ApplyMatchToProblemNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
+	if len(match) == 0 {
+		return
+	}
+	AvoidCaptureProblem(cfg, prob, match)
+	if prob.SchemaLF != nil {
+		prob.SchemaLF = ApplyMatchGoalNodeNonAlt(cfg, match, prob.SchemaLF)
+	}
+	// Non-alt: use ApplyMatch (no capture detection)
+	prob.Pat = ApplyMatch(match, prob.Pat)
+	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
 	for k := range prob.RevMap {
 		if _, matched := match[k]; matched {
 			delete(prob.RevMap, k)
