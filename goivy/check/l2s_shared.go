@@ -63,6 +63,16 @@ type InstrumentationConfig struct {
 	Subs     map[string]string
 	Tasks    map[string]map[string]*lg.Eq
 	Triggers map[string]map[string]*lg.Eq
+
+	// RSubs maps nonce const name → original NamedBinder (inverse of subs).
+	// Used by extractJusticePredMap to resolve nonces back to original
+	// NamedBinders for navigating formula structure.
+	// Python: rsubs = dict((x,y) for (y,x) in subs.items())
+	RSubs map[string]*lg.NamedBinder
+	// FullSubs maps binder.Sexp() → nonce Const (the SharedStep11 subs map).
+	// Used by extractJusticePredMap to resolve NamedBinders to their nonces.
+	// Python: subs[jfmla.rep] at ivy_l2s.py:1551
+	FullSubs map[string]lg.Expr
 }
 
 // L2sGTriple holds the vars, body, and environ of an l2s_g binder.
@@ -801,6 +811,10 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	if cfg.Subs == nil {
 		cfg.Subs = make(map[string]string)
 	}
+	// RSubs/FullSubs: used by extractJusticePredMap to navigate
+	// l2s_progress_invar formulas through the nonce substitution.
+	// Python: rsubs = dict((x,y) for (y,x) in subs.items())
+	cfg.RSubs = make(map[string]*lg.NamedBinder)
 	// Python iterates named_binders.items() in insertion order (Python 3.7+).
 	// InsMap preserves insertion order, matching Python's dict.
 	for k, binders := range namedBinders.All() {
@@ -819,9 +833,12 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 			// to match Python's str(b) format.
 			subs[string(b.Sexp())] = lg.NewConst(freshName, b.NodeSort())
 			cfg.Subs[freshName] = b.String()
+			cfg.RSubs[freshName] = b
 			xtracer.Trace("l2s.SharedStep11 sub freshName=%s binderKey=%s", freshName, b.String())
 		}
 	}
+	// FullSubs: the binder.Sexp() → nonce Const map for forward resolution.
+	cfg.FullSubs = subs
 
 	modPass("ReplaceNamedBindersAst", func(n ast.Node) ast.Node {
 		return lu.ReplaceNamedBindersAst(n, subs)

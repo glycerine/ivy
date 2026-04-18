@@ -339,58 +339,21 @@ func TestApplyPredToVals_NilRep(t *testing.T) {
 	}
 }
 
-// --- extractJusticePred ---
+// --- extractJusticePredMap ---
 
-func TestExtractJP_ForAllImplies(t *testing.T) {
-	s := &lg.UninterpretedSort{Name: "S"}
-	v, _ := lg.NewVariable("X", s)
-	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	j := lg.NewConst("justice_pred", fs)
-	app := lg.MustApply(j, v)
-	fmla := &lg.ForAll{
-		Variables: []*lg.Variable{v},
-		Body: &lg.Implies{
-			T1: lg.True,
-			T2: &lg.Eq{T1: app, T2: lg.True},
-		},
-	}
-
-	result := extractJusticePred(fmla)
-	if result == nil {
-		t.Fatal("expected non-nil result")
-	}
-	if result.Name != "justice_pred" {
-		t.Errorf("expected justice_pred, got %s", result.Name)
+func TestExtractJusticePredMap_NilMaps(t *testing.T) {
+	result := extractJusticePredMap(nil, nil, nil)
+	if len(result) != 0 {
+		t.Errorf("expected empty map, got %d entries", len(result))
 	}
 }
 
-func TestExtractJP_NoMatch(t *testing.T) {
-	result := extractJusticePred(&lg.And{Terms: []lg.Expr{lg.True}})
-	if result != nil {
-		t.Errorf("expected nil for non-matching formula, got %v", result)
-	}
-}
-
-func TestExtractJP_NestedForAll(t *testing.T) {
-	s := &lg.UninterpretedSort{Name: "S"}
-	v, _ := lg.NewVariable("X", s)
-	w, _ := lg.NewVariable("Y", s)
-	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	j := lg.NewConst("J", fs)
-	app := lg.MustApply(j, w)
-	fmla := &lg.ForAll{
-		Variables: []*lg.Variable{v},
-		Body: &lg.ForAll{
-			Variables: []*lg.Variable{w},
-			Body: &lg.Implies{
-				T1: lg.True,
-				T2: &lg.Eq{T1: app, T2: lg.True},
-			},
-		},
-	}
-	result := extractJusticePred(fmla)
-	if result == nil || result.Name != "J" {
-		t.Errorf("expected J, got %v", result)
+func TestExtractJusticePredMap_NoProgressInvar(t *testing.T) {
+	rsubs := make(map[string]*lg.NamedBinder)
+	fullSubs := make(map[string]lg.Expr)
+	result := extractJusticePredMap(nil, rsubs, fullSubs)
+	if len(result) != 0 {
+		t.Errorf("expected empty map, got %d entries", len(result))
 	}
 }
 

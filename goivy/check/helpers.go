@@ -188,8 +188,13 @@ func NewMatchHandler(clauses *module.Clauses, model *solver.ModelResult, vocab [
 				switch f := fmla.(type) {
 				case *lg.Eq:
 					// Python: if lg.is_eq(fmla): lhs,rhs = fmla.args; if lg.is_app(lhs): eqs[lhs.rep].append(fmla)
+					// Python is_app returns True for Apply, Const, and nullary NamedBinder.
 					if app, ok := f.T1.(*lg.Apply); ok {
 						key := lg.Key(app.Func)
+						h.Eqs[key] = append(h.Eqs[key], fmla)
+					} else if cnst, ok := f.T1.(*lg.Const); ok {
+						// Python: is_app(Symbol) is True; eqs[lhs.rep].append(fmla)
+						key := lg.Key(cnst)
 						h.Eqs[key] = append(h.Eqs[key], fmla)
 					}
 				case *lg.Not:
@@ -197,12 +202,18 @@ func NewMatchHandler(clauses *module.Clauses, model *solver.ModelResult, vocab [
 					if app, ok := f.Body.(*lg.Apply); ok {
 						key := lg.Key(app.Func)
 						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: app, T2: &lg.Or{}})
+					} else if cnst, ok := f.Body.(*lg.Const); ok {
+						key := lg.Key(cnst)
+						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: cnst, T2: &lg.Or{}})
 					}
 				default:
 					// Python: elif lg.is_app(fmla): eqs[fmla.rep].append(Equals(fmla, And()))
 					if app, ok := fmla.(*lg.Apply); ok {
 						key := lg.Key(app.Func)
 						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: app, T2: &lg.And{}})
+					} else if cnst, ok := fmla.(*lg.Const); ok {
+						key := lg.Key(cnst)
+						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: cnst, T2: &lg.And{}})
 					}
 				}
 			}

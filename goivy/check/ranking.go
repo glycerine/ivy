@@ -564,11 +564,13 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			subs := icfg.Subs
 			tasks := icfg.Tasks
 			triggers := icfg.Triggers
+			rsubs := icfg.RSubs
+			fullSubs := icfg.FullSubs
 			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
 				if subs != nil {
 					applyRenamingToHandler(handler, subs)
 				}
-				applyAutoDiagnosticsToHandler(handler, fcs, tasks, triggers)
+				applyAutoDiagnosticsToHandler(handler, fcs, tasks, triggers, rsubs, fullSubs)
 			})
 		}
 		return result, nil

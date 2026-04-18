@@ -5,6 +5,7 @@ package check
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
@@ -105,11 +106,17 @@ func applyRenamingToHandler(handler *MatchHandler, subs map[string]string) {
 // applyAutoDiagnosticsToHandler dispatches to the auto-failure diagnostic
 // printer based on which checker failed. Mirrors Python ivy_l2s.py:1528-1702
 // auto_hook.
+//
+// rsubs maps nonce const name → original NamedBinder (inverse of SharedStep11 subs).
+// fullSubs maps binder.Sexp() → nonce Const (the SharedStep11 subs map).
+// Both are needed by extractJusticePredMap to navigate l2s_progress_invar formulas.
 func applyAutoDiagnosticsToHandler(
 	handler *MatchHandler,
 	fcs []Checker,
 	tasks map[string]map[string]*lg.Eq,
 	triggers map[string]map[string]*lg.Eq,
+	rsubs map[string]*lg.NamedBinder,
+	fullSubs map[string]lg.Expr,
 ) {
 	if handler == nil {
 		return
@@ -135,18 +142,29 @@ func applyAutoDiagnosticsToHandler(
 
 	// Python ivy_l2s.py:1541-1552: extract justice_pred_map from progress_invar
 	// checkers, used by the l2s_progress_made case.
-	justicePredMap := extractJusticePredMap(fcs, handler)
+	justicePredMap := extractJusticePredMap(fcs, rsubs, fullSubs)
 
 	name := lfName(lf)
 	diagnoseAutoFailure(name, tasks, triggers, lf, handler, justicePredMap)
 }
 
 // extractJusticePredMap builds a map from task suffix to justice predicate
-// symbol by scanning l2s_progress_invar checkers.
-// Python ivy_l2s.py:1541-1552.
-func extractJusticePredMap(fcs []Checker, handler *MatchHandler) map[string]*lg.Const {
+// nonce symbol by scanning l2s_progress_invar checkers.
+// Faithfully ports Python ivy_l2s.py:1541-1552 which uses rsubs/subs to
+// navigate the substituted formula:
+//
+//	gfmla = rsubs[lf.formula.args[1].rep]     # nonce → NamedBinder
+//	jfmla = gfmla.body.args[0]                 # navigate body
+//	jfmla = subs[jfmla.rep]                     # NamedBinder → nonce
+//
+// rsubs maps nonce const name → original NamedBinder.
+// fullSubs maps binder.Sexp() → nonce Const.
+func extractJusticePredMap(fcs []Checker,
+	rsubs map[string]*lg.NamedBinder,
+	fullSubs map[string]lg.Expr,
+) map[string]*lg.Const {
 	result := make(map[string]*lg.Const)
-	if handler == nil {
+	if rsubs == nil || fullSubs == nil {
 		return result
 	}
 	for _, fc := range fcs {
@@ -159,37 +177,56 @@ func extractJusticePredMap(fcs []Checker, handler *MatchHandler) map[string]*lg.
 			continue
 		}
 		sfx := fcName[len("l2s_progress_invar"):]
-		// Python: gfmla = rsubs[lf.formula.args[1].rep]; jfmla = gfmla.body.args[0]
-		// The formula structure is complex; extract the justice predicate if possible.
-		if fmla, ok := fcLF.Formula.(lg.Expr); ok {
-			if jp := extractJusticePred(fmla); jp != nil {
-				result[sfx] = jp
-			}
+
+		// Python: gfmla = rsubs[lf.formula.args[1].rep]
+		// After SharedStep11, formula is Implies(T1, Apply(nonce, args)).
+		impl, ok := fcLF.Formula.(*lg.Implies)
+		if !ok {
+			continue
+		}
+		t2App, ok := impl.T2.(*lg.Apply)
+		if !ok {
+			continue
+		}
+		nonceName := applyFuncName(t2App)
+		if nonceName == "" {
+			continue
+		}
+		gfmla, ok := rsubs[nonceName]
+		if !ok || gfmla == nil {
+			continue
+		}
+
+		// Python: jfmla = gfmla.body.args[0]
+		// gfmla is the outer l2s_g NamedBinder (pre-substitution).
+		// Its body is Not(Apply(inner_l2s_g_NB, args)) where the inner
+		// l2s_g was created from the Eventually inside Globally.
+		notExpr, ok := gfmla.Body.(*lg.Not)
+		if !ok {
+			continue
+		}
+		innerApp, ok := notExpr.Body.(*lg.Apply)
+		if !ok {
+			continue
+		}
+		// innerApp.Func is the inner l2s_g NamedBinder (pre-substitution).
+		innerNB, ok := innerApp.Func.(*lg.NamedBinder)
+		if !ok {
+			continue
+		}
+
+		// Python: jfmla = subs[jfmla.rep]
+		// Look up the inner NamedBinder in fullSubs to get its nonce Const.
+		key := string(innerNB.Sexp())
+		nonceExpr, ok := fullSubs[key]
+		if !ok {
+			continue
+		}
+		if c, ok := nonceExpr.(*lg.Const); ok {
+			result[sfx] = c
 		}
 	}
 	return result
-}
-
-// extractJusticePred attempts to extract a justice predicate Const from
-// an l2s_progress_invar formula. Returns nil if structure doesn't match.
-func extractJusticePred(fmla lg.Expr) *lg.Const {
-	// The formula is typically a ForAll wrapping an Implies.
-	// We need to navigate to the justice condition.
-	// Python: lf.formula.args[1].rep → gfmla; gfmla.body.args[0] → jfmla
-	// This is brittle; return nil if we can't find it.
-	switch f := fmla.(type) {
-	case *lg.ForAll:
-		return extractJusticePred(f.Body)
-	case *lg.Implies:
-		if eq, ok := f.T2.(*lg.Eq); ok {
-			if app, ok := eq.T1.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Const); ok {
-					return c
-				}
-			}
-		}
-	}
-	return nil
 }
 
 // evalSkolemInHandler evaluates a Skolem symbol (@name) by looking it up
@@ -379,7 +416,7 @@ func diagnoseAutoFailure(
 			rep := predLHSRep(wc)
 			pred := applyPredToVals(rep, vals)
 			fmt.Printf("Note: %s is true in the post-state of the action, but not in the pre-state,\n", pred)
-			fmt.Println("and its argument(s) are not visited during the action execution.")
+			fmt.Printf("and its argument(s) are not visited during the action execution.\n\n")
 		}
 		if handler != nil {
 			handler.HiddenSymbols = TemporalAndL2S
@@ -685,9 +722,17 @@ func diagnoseAutoFailure(
 
 	// Python ivy_l2s.py:1692-1695
 	case strings.HasPrefix(name, "l2s_not_all_done"):
+		// Sort task suffixes for deterministic order (Python iterates in
+		// insertion order; sorting is a safe approximation for suffixes
+		// like "", "_1", "_2").
+		var sfxs []string
+		for sfx := range tasks {
+			sfxs = append(sfxs, sfx)
+		}
+		sort.Strings(sfxs)
 		var rankNames []string
-		for sfx, task := range tasks {
-			if task["work_needed"] != nil {
+		for _, sfx := range sfxs {
+			if tasks[sfx]["work_needed"] != nil {
 				rankNames = append(rankNames, "work_needed"+sfx)
 			}
 		}
@@ -699,13 +744,18 @@ func diagnoseAutoFailure(
 
 	// Python ivy_l2s.py:1697-1700
 	case strings.HasPrefix(name, "l2s_sched_exists"):
+		var sfxs []string
+		for sfx := range tasks {
+			sfxs = append(sfxs, sfx)
+		}
+		sort.Strings(sfxs)
 		var rankNames []string
-		for sfx, task := range tasks {
-			if task["work_helpful"] != nil {
+		for _, sfx := range sfxs {
+			if tasks[sfx]["work_helpful"] != nil {
 				rankNames = append(rankNames, "work_helpful"+sfx)
 			}
 		}
-		fmt.Printf("The helpful set(s) %s have become empty, but termination has not occurred.\n",
+		fmt.Printf("The helpful set(s)  %s have become empty, but termination has not occurred\n",
 			strings.Join(rankNames, " and "))
 		if handler != nil {
 			handler.HiddenSymbols = TemporalAndL2S
