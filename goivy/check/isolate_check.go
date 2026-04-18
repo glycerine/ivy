@@ -281,6 +281,32 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// Python: guarantees = [sub for sub in action.iter_subactions()
 	//           if isinstance(sub, (act.AssertAction, act.Ranking))
 	//           for action in mod.initializers]
+	//
+	// code review comments:
+	// **A2. Python `check_isolate` initializer guarantee list comprehension
+	// is a Python bug; Go behavior diverges**
+	//
+	// Python `ivy_check.py` lines ~635-645:
+	// ```python
+	// if mod.initializers:
+	//     guarantees = [sub for sub in action.iter_subactions()
+	//                   if isinstance(sub,(act.AssertAction,act.Ranking))
+	//                   for action in mod.initializers]
+	// ```
+	// In Python 3, `action.iter_subactions()` at the START of the
+	// comprehension uses `action` from the **outer scope** (the last
+	// `env_action` from the preceding checked-actions loop), NOT from
+	// `for action in mod.initializers`. This is a Python 3 scoping bug
+	// in the original — the comprehension iterates the initializerslist
+	// but applies `iter_subactions()` on the WRONG action.
+	//
+	// Go's `isolate_check.go:284-358` correctly iterates each initializer
+	// action separately. **Go is more correct than Python here, but
+	// it diverges.** The test oracle should know about this.
+	//
+	// *Files:* `isolate_check.go:310-324
+	// *Severity:* MEDIUM — Go is BETTER than Python, but produces different output/behavior
+
 	if len(mod.Initializers) > 0 {
 		var guarantees []actions.Action
 		for _, na := range mod.Initializers {
