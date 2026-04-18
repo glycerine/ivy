@@ -961,6 +961,11 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     
     mod.isolate_info = im.IsolateInfo()
 
+    if __debug__: xtracer.trace("isolate.pre_autoVivify mod.Mixins.Len=%d" % len(mod.mixins))
+    if __debug__: xtracer.trace("isolate.implMixins_build mod.Actions.Len=%d mod.Mixins.Len=%d" % (len(mod.actions), len(mod.mixins)))
+    _nonEmpty = sum(1 for ms in mod.mixins.values() if len(ms) > 0)
+    _empty = sum(1 for ms in mod.mixins.values() if len(ms) == 0)
+    if __debug__: xtracer.trace("isolate.implMixins_build mod.Mixins.nonEmpty=%d mod.Mixins.empty=%d" % (_nonEmpty, _empty))
     impl_mixins = defaultdict(list)
     # delegate all the stub actions to their implementations
     for actname,ms in mod.mixins.items():
@@ -982,6 +987,8 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
                 mod.actions[m.mixee()] = action
                 mod.isolate_info.implementations.append((m.mixer(),m.mixee(),action))
             implementation_map[m.mixee()] = m.mixer()
+
+    if __debug__: xtracer.trace("isolate.implMixins_built implMixins.Len=%d" % len(impl_mixins))
 
     new_actions = {}
     use_mixin = lambda name: startswith_some(name,present,mod)
