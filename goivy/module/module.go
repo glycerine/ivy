@@ -176,8 +176,20 @@ type Module struct {
 	// all module copies; this field provides the equivalent in Go by
 	// letting copied modules create fresh Z3SessionCaches that reuse the
 	// same Z3Context (and its z3CheckCounter).
-	// Stored as `any` for the same import-cycle reason as z3SessionCache.
-	z3SharedCtx any
+	//
+	// Uses *z3CtxHolder (pointer to holder) so that Copy() shares the
+	// same holder by pointer. When any copy's solver initializes the
+	// Z3Context, all copies (past and future) see it through the holder.
+	z3SharedCtx *z3CtxHolder
+}
+
+// z3CtxHolder is a shared container for the Z3Context pointer.
+// All module copies from the same New() call share a single holder
+// via pointer, so when any copy's solver initializes the Z3Context,
+// all other copies see it. This matches Python's process-global
+// _z3_check_counter which accumulates across all module copies.
+type z3CtxHolder struct {
+	ctx any
 }
 
 // GetZ3SessionCache returns the opaque z3bridge cache attached to this
@@ -195,14 +207,23 @@ func (m *Module) SetZ3SessionCache(c any) {
 // GetZ3SharedCtx returns the opaque *z3bridge.Z3Context shared across
 // module copies, or nil. Type-assert to *z3bridge.Z3Context in z3bridge code.
 func (m *Module) GetZ3SharedCtx() any {
-	return m.z3SharedCtx
+	if m.z3SharedCtx == nil {
+		return nil
+	}
+	return m.z3SharedCtx.ctx
 }
 
 // SetZ3SharedCtx attaches a shared Z3Context to this module. Called by
 // z3bridge.getOrCreateModuleCache on first cache creation so that future
 // Module.Copy() calls propagate the Z3Context (and its z3CheckCounter).
+// Because z3SharedCtx is a *z3CtxHolder shared by pointer across copies,
+// setting ctx on any copy makes it visible to all copies from the same
+// New() family.
 func (m *Module) SetZ3SharedCtx(ctx any) {
-	m.z3SharedCtx = ctx
+	if m.z3SharedCtx == nil {
+		m.z3SharedCtx = &z3CtxHolder{}
+	}
+	m.z3SharedCtx.ctx = ctx
 }
 
 // NamedAction pairs a name with an action.
@@ -259,7 +280,8 @@ type MixinTriple struct {
 // New creates a fresh empty module with a new signature.
 func New() *Module {
 	m := &Module{
-		Cfg: NewConfig(),
+		Cfg:         NewConfig(),
+		z3SharedCtx: &z3CtxHolder{},
 	}
 	m.Clear()
 	m.SigMerkle = &iu.MerkleState{}
