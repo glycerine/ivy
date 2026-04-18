@@ -1634,6 +1634,7 @@ def auto_hook(tasks,triggers,subs,tr,fcs):
             trigger_happened_pred_nonce = all_helpful_happened.body.args[1].args[0].rep
         else:
             trigger_happened_pred_nonce = all_helpful_happened.args[1].args[0].rep
+        if __debug__: xtracer.trace("l2s.diagnoseAutoFailure l2s_progress_made sfx=%s wasHelpfulNonce=%s triggerNonce=%s" % (sfx, was_helpful_pred_nonce, trigger_happened_pred_nonce))
         work_progress = tasks[sfx]['work_progress']
         happened_maps = [dict(),dict()]
         for idx in range(2):

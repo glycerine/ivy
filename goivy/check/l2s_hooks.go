@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // TraceHookFn is the function type stored in ast.LabeledFormula.TraceHook
@@ -301,6 +303,51 @@ func applyPredToVals(rep *lg.Const, vals []lg.Expr) string {
 	return fmt.Sprintf("%s(%s)", rep.Name, strings.Join(parts, ","))
 }
 
+// termsKey encodes up to 8 ground terms as a fixed-size string array.
+// Mirrors Python tuple(eqn.args[0].args) used as a dict key.
+type termsKey [8]string
+
+// makeTermsKey builds a termsKey from a slice of ground-term expressions.
+func makeTermsKey(terms []lg.Expr) termsKey {
+	var k termsKey
+	for i, t := range terms {
+		if i >= len(k) {
+			break
+		}
+		k[i] = fmt.Sprint(t)
+	}
+	return k
+}
+
+// applyFuncName returns the Const name of an Apply's function symbol, or "".
+// Apply.Func is lg.Expr; this helper type-asserts to *lg.Const.
+func applyFuncName(app *lg.Apply) string {
+	if c, ok := app.Func.(*lg.Const); ok {
+		return c.Name
+	}
+	return ""
+}
+
+// formatKeyWithRep formats "rep(arg0,arg1,...)" from a termsKey and a predicate rep.
+// Used in diagnostic loops to display counterexample arguments.
+// Mirrors Python: pred_eq.args[0].rep(*args).
+func formatKeyWithRep(rep *lg.Const, k termsKey) string {
+	var parts []string
+	for _, s := range k {
+		if s == "" {
+			break
+		}
+		parts = append(parts, s)
+	}
+	if rep == nil {
+		return strings.Join(parts, ",")
+	}
+	if len(parts) == 0 {
+		return rep.Name
+	}
+	return fmt.Sprintf("%s(%s)", rep.Name, strings.Join(parts, ","))
+}
+
 // diagnoseAutoFailure prints diagnostic information based on the failed
 // invariant name. Faithful port of the dispatch table in Python's auto_hook
 // (ivy_l2s.py:1393-1537).
@@ -413,7 +460,7 @@ func diagnoseAutoFailure(
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1453-1509
+	// Python ivy_l2s.py:1617-1673
 	case strings.HasPrefix(name, "l2s_progress_made"):
 		sfx := name[len("l2s_progress_made"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s decreases when a helpful transition occurs\n", sfx)
@@ -423,17 +470,179 @@ func diagnoseAutoFailure(
 			break
 		}
 
-		// Python lines 1457-1462: extract helpful predicate nonce from invar formula.
-		// Python lines 1464-1468: build helpful_map from state 0 clauses.
-		// Python lines 1469-1480: build happened_maps for both states.
-		// Python lines 1481-1488: build justice_map.
-		// Python lines 1489-1500: two diagnostic loops.
-		//
-		// The full evaluation requires access to multiple trace states (pre and post).
-		// The Go MatchHandler represents a single state. We implement the post-state
-		// evaluation (work_needed check) and print the available diagnostics.
+		// --- Extract nonce predicate names from invar formula ---
+		// Python ivy_l2s.py:1621-1636
+		// lf.Formula = Implies(And(l2s_saved, eventually_start, exists, not_all_was_done,
+		//   ForAll(progress_args, Implies(nad, Not(waiting_for_progress)))), ...)
+		// For l2s_auto5 (only tactic that calls applyAutoDiagnosticsToHandler):
+		//   Terms[4] = ForAll(progress_args, Implies(nad, Not(waiting)))
+		//   body.args[0] = nad = Apply(l2s_s_i, ...) → Func.(*lg.Const).Name = was_helpful_pred_nonce
+		//   body.args[1].args[0] = Apply(l2s_w_j, ...) → Func.(*lg.Const).Name = trigger_happened_pred_nonce
+		var wasHelpfulNonce, triggerNonce string
+		if impl, ok := lf.Formula.(*lg.Implies); ok {
+			if ant, ok := impl.T1.(*lg.And); ok && len(ant.Terms) >= 5 {
+				allHH := ant.Terms[4]
+				if fa, ok := allHH.(*lg.ForAll); ok {
+					// ForAll case (l2s_auto5): body = Implies(nad, Not(waiting_for_progress))
+					if bodyImpl, ok := fa.Body.(*lg.Implies); ok {
+						// was_helpful_pred_nonce = body.args[0].rep
+						if app, ok := bodyImpl.T1.(*lg.Apply); ok {
+							if c, ok := app.Func.(*lg.Const); ok {
+								wasHelpfulNonce = c.Name
+							}
+						}
+						// trigger_happened_pred_nonce = body.args[1].args[0].rep
+						if notExpr, ok := bodyImpl.T2.(*lg.Not); ok {
+							if app, ok := notExpr.Body.(*lg.Apply); ok {
+								if c, ok := app.Func.(*lg.Const); ok {
+									triggerNonce = c.Name
+								}
+							}
+						}
+					}
+				} else {
+					// Non-forall variant: all_helpful_happened.args[0].rep
+					if app, ok := allHH.(*lg.Apply); ok {
+						if c, ok := app.Func.(*lg.Const); ok {
+							wasHelpfulNonce = c.Name
+						}
+					}
+				}
+			}
+		}
+		xtracer.Trace("l2s.diagnoseAutoFailure l2s_progress_made sfx=%s wasHelpfulNonce=%s triggerNonce=%s", sfx, wasHelpfulNonce, triggerNonce)
 
-		// Python lines 1501-1508: evaluate work_needed in post-state
+		// --- Build helpful_map from pre-state (Python: tr.states[0].clauses.fmlas) ---
+		// Python ivy_l2s.py:1627-1632
+		// In Go: pre-state equalities in handler.Eqs are keyed by the bare symbol name.
+		// handler.Eqs is populated from the combined 2-state clauses model, which includes
+		// both pre-state atoms (bare names) and post-state atoms ("new_" prefix).
+		wh := task["work_helpful"]
+		helpfulMap := make(map[termsKey]bool)
+		if wasHelpfulNonce != "" {
+			for _, eqs := range handler.Eqs {
+				for _, eqExpr := range eqs {
+					eq, ok := eqExpr.(*lg.Eq)
+					if !ok {
+						continue
+					}
+					app, ok := eq.T1.(*lg.Apply)
+					if !ok || applyFuncName(app) != wasHelpfulNonce {
+						continue
+					}
+					k := makeTermsKey(app.Terms)
+					helpfulMap[k] = lg.IsTrue(eq.T2)
+					if wh != nil {
+						rep := predLHSRep(wh)
+						fmt.Printf("%s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+					}
+				}
+			}
+		}
+
+		// --- Build happened_maps for both states ---
+		// Python ivy_l2s.py:1637-1644: for idx in range(2) over tr.states[idx]
+		// In Go: tr.states[0] = bare name, tr.states[1] = "new_" + name (actions.New)
+		wp := task["work_progress"]
+		happenedMaps := [2]map[termsKey]bool{
+			make(map[termsKey]bool),
+			make(map[termsKey]bool),
+		}
+		if triggerNonce != "" {
+			triggerNames := [2]string{triggerNonce, actions.New(triggerNonce)}
+			for idx := 0; idx < 2; idx++ {
+				tname := triggerNames[idx]
+				fmt.Println()
+				for _, eqs := range handler.Eqs {
+					for _, eqExpr := range eqs {
+						eq, ok := eqExpr.(*lg.Eq)
+						if !ok {
+							continue
+						}
+						app, ok := eq.T1.(*lg.Apply)
+						if !ok || applyFuncName(app) != tname {
+							continue
+						}
+						k := makeTermsKey(app.Terms)
+						happenedMaps[idx][k] = lg.IsTrue(eq.T2)
+						if wp != nil {
+							rep := predLHSRep(wp)
+							fmt.Printf("~happened %s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+						}
+					}
+				}
+			}
+		}
+
+		// --- Build justice_map from pre-state (Python: tr.states[0].clauses.fmlas) ---
+		// Python ivy_l2s.py:1645-1652
+		justiceMap := make(map[termsKey]bool)
+		if jp, ok := justicePredMap[sfx]; ok && jp != nil {
+			fmt.Println()
+			jpKey := lg.Key(jp)
+			for _, eqExpr := range handler.Eqs[jpKey] {
+				eq, ok := eqExpr.(*lg.Eq)
+				if !ok {
+					continue
+				}
+				app, ok := eq.T1.(*lg.Apply)
+				if !ok {
+					continue
+				}
+				k := makeTermsKey(app.Terms)
+				justiceMap[k] = lg.IsTrue(eq.T2)
+				if wp != nil {
+					rep := predLHSRep(wp)
+					fmt.Printf("~eventually %s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+				}
+			}
+		}
+
+		// --- Diagnostic loop 1 ---
+		// Python ivy_l2s.py:1653-1658:
+		// if helpful[args] and happened[0][args]=true and happened[1][args]=false
+		// → trigger occurred during action but work_needed not reduced
+		if wh != nil && wp != nil {
+			whRep := predLHSRep(wh)
+			wpRep := predLHSRep(wp)
+		outer1:
+			for k, isHelpful := range helpfulMap {
+				if !isHelpful {
+					continue
+				}
+				h0, ok0 := happenedMaps[0][k]
+				h1, ok1 := happenedMaps[1][k]
+				if ok0 && ok1 && h0 && !h1 {
+					fmt.Printf("\nNote: %s is true and %s occurs during the action, but work_needed is not reduced.\n\n",
+						formatKeyWithRep(whRep, k), formatKeyWithRep(wpRep, k))
+					break outer1
+				}
+			}
+		}
+
+		// --- Diagnostic loop 2 ---
+		// Python ivy_l2s.py:1659-1664:
+		// if helpful[args] and happened[0][args]=true and justice[args]=true
+		// → helpful condition is eventually enabled but not satisfied
+		if wh != nil && wp != nil {
+			whRep := predLHSRep(wh)
+			wpRep := predLHSRep(wp)
+		outer2:
+			for k, isHelpful := range helpfulMap {
+				if !isHelpful {
+					continue
+				}
+				h0, ok0 := happenedMaps[0][k]
+				j, okJ := justiceMap[k]
+				if ok0 && okJ && h0 && j {
+					fmt.Printf("\nNote: %s is true and eventually %s is false.\n\n",
+						formatKeyWithRep(whRep, k), formatKeyWithRep(wpRep, k))
+					break outer2
+				}
+			}
+		}
+
+		// --- work_needed post-state eval (Python ivy_l2s.py:1665-1672) ---
 		wn := task["work_needed"]
 		if wn != nil {
 			vs := predLHSArgs(wn)
@@ -445,7 +654,7 @@ func diagnoseAutoFailure(
 				fmt.Printf("Note: work_invar%s is true and %s changes from false to true.\n\n", sfx, pred)
 			}
 		}
-		// Python line 1509: tr.hidden_symbols = temporal_and_l2s (commented out in Python)
+		// Python line 1673: tr.hidden_symbols = temporal_and_l2s (commented out in Python, omit)
 
 	// Python ivy_l2s.py:1511-1525
 	case strings.HasPrefix(name, "l2s_sched_stable"):
