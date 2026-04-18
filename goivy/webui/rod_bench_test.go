@@ -83,8 +83,12 @@ func BenchmarkRodOpsOnLivePage(b *testing.B) {
 	page.MustWaitLoad()
 	page.MustWaitStable()
 	b.Cleanup(func() {
-		page.MustClose()
-		incognito.MustClose()
+		if err := page.Close(); err != nil {
+			b.Logf("cleanup: page.Close: %v", err)
+		}
+		if err := incognito.Close(); err != nil {
+			b.Logf("cleanup: incognito.Close: %v", err)
+		}
 	})
 
 	// Create a session so the app is fully initialized.
@@ -112,8 +116,12 @@ func BenchmarkRodSubOperations(b *testing.B) {
 	page.MustWaitLoad()
 	page.MustWaitStable()
 	b.Cleanup(func() {
-		page.MustClose()
-		incognito.MustClose()
+		if err := page.Close(); err != nil {
+			b.Logf("cleanup: page.Close: %v", err)
+		}
+		if err := incognito.Close(); err != nil {
+			b.Logf("cleanup: incognito.Close: %v", err)
+		}
 	})
 
 	// Create session.

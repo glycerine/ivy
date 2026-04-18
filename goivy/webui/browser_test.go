@@ -51,7 +51,9 @@ func initSharedBrowser() {
 func TestMain(m *testing.M) {
 	code := m.Run()
 	if sharedBrowser != nil {
-		sharedBrowser.MustClose()
+		if err := sharedBrowser.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "TestMain: browser.Close: %v\n", err)
+		}
 	}
 	os.Exit(code)
 }
@@ -85,13 +87,27 @@ func setupBrowser(t *testing.T) *rod.Browser {
 // cross-talk between tests while reusing the single Chrome process.
 func newPage(t *testing.T, browser *rod.Browser, url string) *rod.Page {
 	t.Helper()
-	incognito := browser.MustIncognito()
-	page := incognito.MustPage(url).Timeout(30 * time.Second)
+	incognito, err := browser.Incognito()
+	if err != nil {
+		t.Fatalf("newPage: Incognito: %v", err)
+	}
+	page, err := incognito.Page(proto.TargetCreateTarget{URL: url})
+	if err != nil {
+		_ = incognito.Close()
+		t.Fatalf("newPage: Page(%s): %v", url, err)
+	}
+	page = page.Timeout(30 * time.Second)
 	t.Cleanup(func() {
-		page.MustClose()
-		incognito.MustClose()
+		if err := page.Close(); err != nil {
+			t.Logf("newPage cleanup: page.Close: %v", err)
+		}
+		if err := incognito.Close(); err != nil {
+			t.Logf("newPage cleanup: incognito.Close: %v", err)
+		}
 	})
-	page.MustWaitLoad()
+	if err := page.WaitLoad(); err != nil {
+		t.Fatalf("newPage: WaitLoad: %v", err)
+	}
 	return page
 }
 
