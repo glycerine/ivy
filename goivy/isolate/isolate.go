@@ -329,35 +329,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	mod.IsolateInfo = &module.IsolateInfo{}
 
-	xtracer.Trace("isolate.pre_autoVivify mod.Mixins.Len=%d", mod.Mixins.Len())
-
-	// Match Python defaultdict(list) behavior: ensure mod.Mixins has an entry
-	// for every action in mod.Actions. Python's mod.mixins is a defaultdict(list);
-	// reading mod.mixins[actname] at any point auto-creates an entry. Multiple
-	// call sites in ivy_isolate.py access mod.mixins[actname] for various
-	// actnames before the impl_mixins loop (e.g., add_mixins line 70,
-	// get_calls_mods line 543, main action loop line 1076, export processing
-	// line 1118). These auto-created entries are then visible when
-	// impl_mixins is built from mod.mixins.items() at line 966.
-	for actname := range mod.Actions.All() {
-		if _, ok := mod.Mixins.Get2(actname); !ok {
-			mod.Mixins.Set(actname, nil)
-		}
-	}
-
 	// Process implementation mixins
-	xtracer.Trace("isolate.implMixins_build mod.Actions.Len=%d mod.Mixins.Len=%d", mod.Actions.Len(), mod.Mixins.Len())
-	{
-		var nonEmpty, empty int
-		for _, ms := range mod.Mixins.All() {
-			if len(ms) > 0 {
-				nonEmpty++
-			} else {
-				empty++
-			}
-		}
-		xtracer.Trace("isolate.implMixins_build mod.Mixins.nonEmpty=%d mod.Mixins.empty=%d", nonEmpty, empty)
-	}
 	implMixins := iu.NewInsMap[string, []MixinDef]()
 	for actname, ms := range mod.Mixins.All() {
 		var implements []MixinDef
@@ -405,8 +377,6 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			implementationMap[mixeeName] = mixerName
 		}
 	}
-
-	xtracer.Trace("isolate.implMixins_built implMixins.Len=%d", implMixins.Len())
 
 	// Build action classification lambdas
 	useMixin := func(name string) bool {

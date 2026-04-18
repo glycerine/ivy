@@ -586,14 +586,17 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					mixee := m.Mixee()
 					existing, _ := mod.Mixins.Get2(mixee)
 					mod.Mixins.Set(mixee, append(existing, m))
+					xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixee, m.Mixer(), "MixinBeforeDef")
 				case *ast.MixinAfterDef:
 					mixee := m.Mixee()
 					existing, _ := mod.Mixins.Get2(mixee)
 					mod.Mixins.Set(mixee, append(existing, m))
+					xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixee, m.Mixer(), "MixinAfterDef")
 				case *ast.MixinImplementDef:
 					mixee := m.Mixee()
 					existing, _ := mod.Mixins.Get2(mixee)
 					mod.Mixins.Set(mixee, append(existing, m))
+					xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixee, m.Mixer(), "MixinImplementDef")
 				}
 			}
 		case *ast.AssertDecl:
@@ -822,6 +825,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		mixee := mdef.Mixee()
 		existing, _ := mod.Mixins.Get2(mixee)
 		mod.Mixins.Set(mixee, append(existing, mdef))
+		xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixee, mdef.Mixer(), "MixinAfterDef")
 	}
 
 	// 4. For each action's transitions, create mixer actions
@@ -1014,6 +1018,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				mixeeName := mdef.Mixee()
 				existingM, _ := mod.Mixins.Get2(mixeeName)
 				mod.Mixins.Set(mixeeName, append(existingM, mdef))
+				xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixeeName, mdef.Mixer(), "MixinBeforeDef")
 			}
 		}
 
@@ -1039,6 +1044,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				mixeeName := mdef.Mixee()
 				existingM, _ := mod.Mixins.Get2(mixeeName)
 				mod.Mixins.Set(mixeeName, append(existingM, mdef))
+				xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixeeName, mdef.Mixer(), "MixinAfterDef")
 			}
 		}
 	}

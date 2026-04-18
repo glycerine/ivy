@@ -1650,6 +1650,7 @@ class IvyARGSetup(IvyDeclInterp):
 #        if any(a.args for a in m.args):
 #            raise IvyError(m,"mixins may not have parameters")
         self.mod.mixins[m.args[1].relname].append(m)
+        if __debug__: xtracer.trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s" % (m.args[1].relname, m.args[0].relname, type(m).__name__))
     def _assert(self,a):
         if __debug__: xtracer.trace("compiler.ARGSetup._assert ENTER")
         with ASTContext(a):
