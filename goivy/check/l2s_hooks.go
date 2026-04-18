@@ -1,6 +1,6 @@
 // l2s_hooks.go implements the L2S diagnostic trace hooks invoked by the
 // trace formatter in check.go after a checker fails. These mirror Python's
-// renaming_hook (ivy_l2s.py:1349-1350) and auto_hook (ivy_l2s.py:1364-1537).
+// renaming_hook (ivy_l2s.py:1513-1514) and auto_hook (ivy_l2s.py:1528-1702).
 package check
 
 import (
@@ -103,7 +103,7 @@ func applyRenamingToHandler(handler *MatchHandler, subs map[string]string) {
 }
 
 // applyAutoDiagnosticsToHandler dispatches to the auto-failure diagnostic
-// printer based on which checker failed. Mirrors Python ivy_l2s.py:1364-1537
+// printer based on which checker failed. Mirrors Python ivy_l2s.py:1528-1702
 // auto_hook.
 func applyAutoDiagnosticsToHandler(
 	handler *MatchHandler,
@@ -133,7 +133,7 @@ func applyAutoDiagnosticsToHandler(
 		return
 	}
 
-	// Python line 1379-1388: extract justice_pred_map from progress_invar
+	// Python ivy_l2s.py:1541-1552: extract justice_pred_map from progress_invar
 	// checkers, used by the l2s_progress_made case.
 	justicePredMap := extractJusticePredMap(fcs, handler)
 
@@ -143,7 +143,7 @@ func applyAutoDiagnosticsToHandler(
 
 // extractJusticePredMap builds a map from task suffix to justice predicate
 // symbol by scanning l2s_progress_invar checkers.
-// Python ivy_l2s.py:1379-1388.
+// Python ivy_l2s.py:1541-1552.
 func extractJusticePredMap(fcs []Checker, handler *MatchHandler) map[string]*lg.Const {
 	result := make(map[string]*lg.Const)
 	if handler == nil {
@@ -350,7 +350,7 @@ func formatKeyWithRep(rep *lg.Const, k termsKey) string {
 
 // diagnoseAutoFailure prints diagnostic information based on the failed
 // invariant name. Faithful port of the dispatch table in Python's auto_hook
-// (ivy_l2s.py:1393-1537).
+// (ivy_l2s.py:1557-1700).
 func diagnoseAutoFailure(
 	name string,
 	tasks, triggers map[string]map[string]*lg.Eq,
@@ -360,7 +360,7 @@ func diagnoseAutoFailure(
 ) {
 	switch {
 
-	// Python ivy_l2s.py:1393-1405
+	// Python ivy_l2s.py:1557-1569
 	case strings.HasPrefix(name, "l2s_created"):
 		sfx := name[len("l2s_created"):]
 		fmt.Printf("\n\nFailed to prove that work_created%s is finite by induction.\n", sfx)
@@ -385,7 +385,7 @@ func diagnoseAutoFailure(
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1407-1423
+	// Python ivy_l2s.py:1571-1587
 	case strings.HasPrefix(name, "l2s_needed_when_start"):
 		sfx := name[len("l2s_needed_when_start"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is a subset of work_created%s when the start condition has occurred.\n", sfx, sfx)
@@ -412,7 +412,7 @@ func diagnoseAutoFailure(
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1425-1437
+	// Python ivy_l2s.py:1589-1601
 	case strings.HasPrefix(name, "l2s_work_preserved"):
 		sfx := name[len("l2s_work_preserved"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
@@ -436,7 +436,7 @@ func diagnoseAutoFailure(
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1439-1451
+	// Python ivy_l2s.py:1603-1615
 	case strings.HasPrefix(name, "l2s_needed_are_frozen"):
 		sfx := name[len("l2s_needed_are_frozen"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
@@ -534,7 +534,7 @@ func diagnoseAutoFailure(
 					helpfulMap[k] = lg.IsTrue(eq.T2)
 					if wh != nil {
 						rep := predLHSRep(wh)
-						fmt.Printf("%s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+						fmt.Printf("%s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
 					}
 				}
 			}
@@ -567,7 +567,7 @@ func diagnoseAutoFailure(
 						happenedMaps[idx][k] = lg.IsTrue(eq.T2)
 						if wp != nil {
 							rep := predLHSRep(wp)
-							fmt.Printf("~happened %s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+							fmt.Printf("~happened %s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
 						}
 					}
 				}
@@ -593,7 +593,7 @@ func diagnoseAutoFailure(
 				justiceMap[k] = lg.IsTrue(eq.T2)
 				if wp != nil {
 					rep := predLHSRep(wp)
-					fmt.Printf("~eventually %s = %v\n", applyPredToVals(rep, app.Terms), eq.T2)
+					fmt.Printf("~eventually %s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
 				}
 			}
 		}
@@ -656,7 +656,7 @@ func diagnoseAutoFailure(
 		}
 		// Python line 1673: tr.hidden_symbols = temporal_and_l2s (commented out in Python, omit)
 
-	// Python ivy_l2s.py:1511-1525
+	// Python ivy_l2s.py:1676-1690
 	case strings.HasPrefix(name, "l2s_sched_stable"):
 		sfx := name[len("l2s_sched_stable"):]
 		fmt.Printf("\n\nFailed to prove that work_helpful%s is stable until helpful transition occurs\n", sfx)
@@ -668,7 +668,7 @@ func diagnoseAutoFailure(
 		wp := task["work_progress"]
 		wh := task["work_helpful"]
 		if wp != nil && wh != nil {
-			vs := predLHSArgs(wh)
+			vs := predLHSArgs(wp)
 			sks := makeSkolems(vs)
 			vals := evalSkolems(handler, sks)
 			if vals != nil {
@@ -676,14 +676,14 @@ func diagnoseAutoFailure(
 				wpRep := predLHSRep(wp)
 				pred1 := applyPredToVals(whRep, vals)
 				pred2 := applyPredToVals(wpRep, vals)
-				fmt.Printf("Note: %s changes and %s does not occur during the action.\n\n", pred1, pred2)
+				fmt.Printf("Note: work_invar%s is true and %s changes from true to false, but %s does not occur during the action.\n\n", sfx, pred1, pred2)
 			}
 		}
 		if handler != nil {
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1527-1530
+	// Python ivy_l2s.py:1692-1695
 	case strings.HasPrefix(name, "l2s_not_all_done"):
 		var rankNames []string
 		for sfx, task := range tasks {
@@ -697,7 +697,7 @@ func diagnoseAutoFailure(
 			handler.HiddenSymbols = TemporalAndL2S
 		}
 
-	// Python ivy_l2s.py:1532-1535
+	// Python ivy_l2s.py:1697-1700
 	case strings.HasPrefix(name, "l2s_sched_exists"):
 		var rankNames []string
 		for sfx, task := range tasks {
