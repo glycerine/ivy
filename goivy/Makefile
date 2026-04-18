@@ -93,8 +93,8 @@ tr: # xtracer builds:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
 
-trt: tr  # xtracer test
-	XTRACE_OFF=1 time goivy_check_xtrace isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+trt: build tr  # xtracer test
+	XTRACE_OFF=1 time goivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.go.trt.ord_live.standalone
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
