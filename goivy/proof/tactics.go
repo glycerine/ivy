@@ -168,15 +168,16 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Python: conc = goal_conc(prem)
 	//         conc = lu.witness_ast(True, [], witness, conc)
 	//         prem = clone_goal(prem, goal_prems(prem), conc)
+	rawConc := GoalConc(prem)
 	if len(witness) > 0 {
-		rawConc := GoalConc(prem)
 		if concExpr, ok := rawConc.(lg.Expr); ok {
 			newConc, werr := module.WitnessAst(true, nil, witness, concExpr)
 			if werr == nil {
-				prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), newConc)
+				rawConc = newConc
 			}
 		}
 	}
+	prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), rawConc)
 
 	// Python: prem = apply_match_goal(pmatch, prem, apply_match_alt)
 	prem = ApplyMatchGoalNode(pc.astCfg(), pmatch, prem)
