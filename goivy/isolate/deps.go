@@ -179,7 +179,7 @@ func GetCallsModsRecFull(
 
 	// Python lines 511-520: Process mixins for this action.
 	if mod.Mixins != nil {
-		for _, mixin := range mod.Mixins.Get(actname) {
+		for _, mixin := range mixinsAutoVivify(mod, actname) {
 			calledName := mixin.Mixer()
 			if !summarizedActions[calledName] {
 				if mixins != nil {
@@ -361,7 +361,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 			// unsummarized before-mixins of the called action.
 			preRefed := make(map[string]bool)
 			if mod.Mixins != nil {
-				for _, m := range mod.Mixins.Get(calledName) {
+				for _, m := range mixinsAutoVivify(mod, calledName) {
 					if !m.IsAfter() && !summarizedActions[m.Mixer()] {
 						if mixerAct, ok := mod.Actions.Get2(m.Mixer()); ok {
 							collectActionSymbolNames(mixerAct, preRefed)
@@ -372,10 +372,8 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 
 			// Build list of all related actions: callee + mixins + impl_mixins
 			allCalls := []string{calledName}
-			if modMixins, ok := mod.Mixins.Get2(calledName); ok {
-				for _, m := range modMixins {
-					allCalls = append(allCalls, m.Mixer())
-				}
+			for _, m := range mixinsAutoVivify(mod, calledName) {
+				allCalls = append(allCalls, m.Mixer())
 			}
 			if ims, ok := implMixins.Get2(calledName); ok {
 				for _, m := range ims {
@@ -471,10 +469,8 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		calledName := CanonAct(exp.Exported())
 
 		allCalls := []string{calledName}
-		if modMixins, ok := mod.Mixins.Get2(calledName); ok {
-			for _, m := range modMixins {
-				allCalls = append(allCalls, m.Mixer())
-			}
+		for _, m := range mixinsAutoVivify(mod, calledName) {
+			allCalls = append(allCalls, m.Mixer())
 		}
 		if ims, ok := implMixins.Get2(calledName); ok {
 			for _, m := range ims {

@@ -1762,8 +1762,10 @@ def create_isolate(iso,mod = None,**kwargs):
             brackets = apply_present_conjectures(mod.isolates[iso],mod)
 
         # treat initializers as exports
+        if __debug__: xtracer.trace("check.CreateIsolate.preInitDel mod.Mixins.Len=%d" % len(mod.mixins))
         after_inits = mod.mixins["init"]
         del  mod.mixins["init"]
+        if __debug__: xtracer.trace("check.CreateIsolate.postInitDel mod.Mixins.Len=%d" % len(mod.mixins))
         mod.exports.extend(ivy_ast.ExportDef(ivy_ast.Atom(a.mixer()),ivy_ast.Atom('')) for a in after_inits)
 
         # check all mixin declarations
@@ -1870,6 +1872,7 @@ def create_isolate(iso,mod = None,**kwargs):
         # Determine the mixin order (as a side effect on module.mixins)
 
         get_mixin_order(iso,mod)
+        if __debug__: xtracer.trace("check.CreateIsolate.postMixinOrder mod.Mixins.Len=%d" % len(mod.mixins))
 
         # Construct an isolate
 

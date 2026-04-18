@@ -81,8 +81,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Treat initializers as exports
+	xtracer.Trace("check.CreateIsolate.preInitDel mod.Mixins.Len=%d", mod.Mixins.Len())
 	afterInits := mod.Mixins.Get("init")
 	mod.Mixins.Delkey("init")
+	xtracer.Trace("check.CreateIsolate.postInitDel mod.Mixins.Len=%d", mod.Mixins.Len())
 
 	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
@@ -139,6 +141,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	if err := GetMixinOrder(iso, mod); err != nil {
 		return err
 	}
+	xtracer.Trace("check.CreateIsolate.postMixinOrder mod.Mixins.Len=%d", mod.Mixins.Len())
 
 	// Construct the isolate
 	if iso != "" {

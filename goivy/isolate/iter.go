@@ -429,7 +429,8 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 			}
 
 			// Check mixin assertions
-			if mixins, ok := mod.Mixins.Get2(callee); ok {
+			// Python: mod.mixins[callee] — auto-vivifies
+			if mixins := mixinsAutoVivify(mod, callee); len(mixins) > 0 {
 				for _, mixin := range mixins {
 					mixed := mixin.Mixer()
 					// Match Python defaultdict(set) auto-vivification
@@ -498,7 +499,8 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 				Msg:    "assertion is not checked when called from the environment",
 			})
 		}
-		if mixins, ok := mod.Mixins.Get2(callee); ok {
+		// Python: mod.mixins[callee] — auto-vivifies
+		if mixins := mixinsAutoVivify(mod, callee); len(mixins) > 0 {
 			for _, mixin := range mixins {
 				mixed := mixin.Mixer()
 				// Match Python defaultdict(set) auto-vivification

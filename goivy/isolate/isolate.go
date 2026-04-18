@@ -89,6 +89,21 @@ func LookupAction(mod *module.Module, name string) (actions.Action, error) {
 	return act, nil
 }
 
+// mixinsAutoVivify reads mod.Mixins[actname] and auto-vivifies
+// (creates an empty entry) if the key doesn't exist, matching
+// Python's defaultdict(list) behavior where every read of
+// mod.mixins[actname] creates the key. These auto-vivified entries
+// accumulate across multiple create_isolate calls and must be
+// visible in subsequent mod.Mixins.All() iterations.
+func mixinsAutoVivify(mod *module.Module, actname string) []MixinDef {
+	v, ok := mod.Mixins.Get2(actname)
+	if !ok {
+		mod.Mixins.Set(actname, nil)
+		return nil
+	}
+	return v
+}
+
 // AddMixins applies before/after mixins to an action.
 // The useMixin predicate controls which mixins are applied (by mixer name).
 // If useMixin is nil, all mixins are applied.
@@ -103,8 +118,8 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		// in the Go action types, this is a no-op for now.
 		// The action is used as-is, which is safe (just not optimal).
 	}
-	mixins, ok := mod.Mixins.Get2(actname)
-	if !ok {
+	mixins := mixinsAutoVivify(mod, actname)
+	if len(mixins) == 0 {
 		return res
 	}
 	for _, mx := range mixins {
@@ -568,7 +583,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 
 		// Record monitor info
-		if mixins, ok := mod.Mixins.Get2(actname); ok {
+		// Python: for mixin in mod.mixins[actname] — auto-vivifies
+		if mixins := mixinsAutoVivify(mod, actname); len(mixins) > 0 {
 			for _, mx := range mixins {
 				if mi, ok := mx.(MixinDef); ok {
 					if useMixin(mi.Mixer()) {
@@ -600,7 +616,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			act = EmptyClone(action)
 		}
 		// Apply before mixins
-		for _, mx := range mod.Mixins.Get(actname) {
+		// Python: for mixin in mod.mixins[actname] — auto-vivifies
+		for _, mx := range mixinsAutoVivify(mod, actname) {
 			mi, ok := mx.(MixinDef)
 			if !ok {
 				continue
@@ -649,7 +666,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			c := ca.CalleeName()
 			if !StartsWithEqSome(c, present, mod, implementationMap) {
 				hasMixinPresent := false
-				if mixins, ok := mod.Mixins.Get2(c); ok {
+				// Python: mod.mixins[c] — auto-vivifies
+				if mixins := mixinsAutoVivify(mod, c); len(mixins) > 0 {
 					for _, mx := range mixins {
 						if mi, ok := mx.(MixinDef); ok {
 							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {

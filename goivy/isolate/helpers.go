@@ -52,8 +52,8 @@ func AddMixinsExt(
 	if mod.Cfg.IsolateCfg.CreateImports {
 		res = actions.DropInvariants(res)
 	}
-	mixins, ok := mod.Mixins.Get2(actname)
-	if !ok {
+	mixins := mixinsAutoVivify(mod, actname)
+	if len(mixins) == 0 {
 		return res
 	}
 	for _, mx := range mixins {
@@ -898,8 +898,9 @@ const (
 // actname is not in summarized_actions.
 // Corresponds to Python has_unsummarized_mixins (lines 523-525).
 func HasUnsummarizedMixins(mod *module.Module, actname string, summarizedActions map[string]bool, kind MixinKind) bool {
-	mixins, ok := mod.Mixins.Get2(actname)
-	if !ok {
+	// Python: mod.mixins[actname] — auto-vivifies
+	mixins := mixinsAutoVivify(mod, actname)
+	if len(mixins) == 0 {
 		return false
 	}
 	for _, mx := range mixins {

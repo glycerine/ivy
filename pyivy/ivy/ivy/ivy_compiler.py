@@ -2528,7 +2528,7 @@ def ivy_compile(decls,mod=None,create_isolate=True,**kwargs):
                 action_count = sum(1 for d in decls.decls if d.name() == 'action')
                 xtracer.trace("compiler.ARGSetup.ProcessDecls ENTER total_decls=%d action_decls=%d" % (len(decls.decls), action_count))
             IvyARGSetup(mod)(decls)
-            if __debug__: xtracer.trace("compiler.ARGSetup EXIT")
+            if __debug__: xtracer.trace("compiler.ARGSetup EXIT mod.Mixins.Len=%d" % len(mod.mixins))
             if __debug__: mod.canon_snapshot("after-arg-setup")
         mod.macros = decls.macros
         # progress properties are not state symbols -- remove from sig
@@ -2578,7 +2578,7 @@ def ivy_compile(decls,mod=None,create_isolate=True,**kwargs):
             iso.create_isolate(isolate.get(),mod,**kwargs)
             im.module.labeled_axioms.extend(im.module.labeled_props)
             im.module.theory_context().__enter__()
-        if __debug__: xtracer.trace("compiler.IvyCompile EXIT")
+        if __debug__: xtracer.trace("compiler.IvyCompile EXIT mod.Mixins.Len=%d" % len(mod.mixins))
 
 
 def clear_rules(modname):
