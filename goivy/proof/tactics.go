@@ -189,7 +189,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Atom(proof.label.rep, prem.label.args) which effectively preserves
 	// the schema label name). When label is explicit, use it.
 	if !isNoneAST(proof.TLabel) {
-		prem = prem.CloneWithFreshID([]ast.Node{proof.TLabel, prem.Formula})
+		prem = prem.Clone([]ast.Node{proof.TLabel, prem.Formula}).(*ast.LabeledFormula)
 	}
 
 	// Python lines 378-381: clash detection.
