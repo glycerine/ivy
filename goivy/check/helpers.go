@@ -153,6 +153,15 @@ type MatchHandler struct {
 	// should be hidden in trace output. Mirrors Python tr.hidden_symbols
 	// (set by l2s diagnostic hooks to filter l2s_* auxiliary symbols).
 	HiddenSymbols func(name string) bool
+
+	// PP is an optional pretty-printer applied to formulas before display.
+	// Mirrors Python tr.pp (set by auto_hook to ls2_g_to_globally).
+	PP func(lg.Expr) lg.Expr
+
+	// LoopStart is the index of the state that starts the fairness loop.
+	// Set by the l2s_full trace hook. -1 means not set.
+	// Mirrors Python tr.states[idx-1].loop_start = True (ivy_l2s.py:119).
+	LoopStart int
 }
 
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
@@ -160,13 +169,14 @@ type MatchHandler struct {
 // then calls islv.clauses_model_to_clauses to extract ground equalities.
 func NewMatchHandler(clauses *module.Clauses, model *solver.ModelResult, vocab []*lg.Const, slv *solver.Solver) *MatchHandler {
 	h := &MatchHandler{
-		Clauses:  clauses,
-		Model:    model,
-		Slv:      slv,
-		Vocab:    vocab,
-		Current:  make(map[lg.NodeKey]string),
-		Eqs:      make(map[lg.NodeKey][]lg.Expr),
-		Renaming: make(map[lg.NodeKey]*lg.Const),
+		Clauses:   clauses,
+		Model:     model,
+		Slv:       slv,
+		Vocab:     vocab,
+		Current:   make(map[lg.NodeKey]string),
+		Eqs:       make(map[lg.NodeKey][]lg.Expr),
+		Renaming:  make(map[lg.NodeKey]*lg.Const),
+		LoopStart: -1,
 	}
 
 	// Python: mod_clauses = islv.clauses_model_to_clauses(clauses, model=model, numerals=True)
@@ -313,9 +323,10 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 		// Python checks is_new(sym) and is_skolem(sym) on the ORIGINAL sym.
 		origSym := vocabByKey[symKey]
 		if origSym == nil {
-			// If original not in vocab, reconstruct from key info.
-			// Fallback: use renamedSym for checks (may not be fully correct).
-			origSym = renamedSym
+			// Python's env only contains symbols from vocab, so skip
+			// any that aren't in vocab. Using renamedSym as fallback
+			// would check IsNew/IsSkolem on the wrong symbol name.
+			continue
 		}
 		if !actions.IsNew(origSym.Name) && !h.IsSkolem(origSym) {
 			h.ShowSym(origSym, renamedSym)

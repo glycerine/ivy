@@ -908,10 +908,20 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 					applyRenamingToHandler(handler, subs)
 				}
 			})
-		case tacticName == "l2s_full":
-			// No MatchHandler-side hook for l2s_full — Python's trace_hook
-			// marks loop_start on a trace.TraceBase, which we don't build
-			// in this path. Leave TraceHook nil.
+		default:
+			// Plain l2s and l2s_full: apply renaming_hook.
+			// Python ivy_l2s.py:1503-1504:
+			//   goal.trace_hook = lambda tr,fcs: renaming_hook(subs,tr,fcs)
+			// For l2s_full, also mark loop start (Python ivy_l2s.py:103,113-122).
+			isFull := tacticName == "l2s_full"
+			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+				if subs != nil {
+					applyRenamingToHandler(handler, subs)
+				}
+				if isFull {
+					markLoopStart(handler)
+				}
+			})
 		}
 	}
 	return result, nil

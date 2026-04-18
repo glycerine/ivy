@@ -669,14 +669,30 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	} else {
 		// No history — fall back to direct solver check.
 		// This happens when ag/post are nil (e.g., property checking with true pre-state).
+		// Python never takes this path (always provides ag/post), but Go has
+		// CheckFcsInState which can reach here. We must invoke checker callbacks
+		// just as history.SatisfyWithCond would.
 		baseClauses := module.TrueClauses(actions.EmptyAnnotation{})
 		combined := module.AndClausesTyped(baseClauses, axioms)
 
-		gmc := func(cls *module.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			mr, _ := actions.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
-			return mr
+		for _, fc := range filteredCheckers {
+			fc.Start()
+			if fc.Assume() {
+				continue
+			}
+			// Check this individual checker against the combined clauses.
+			fcConds := []solver.FinalCond{fc}
+			mr, _ := actions.SmallModelClauses(combined, fcConds, mod.Cfg.Diagnose, mod)
+			if mr != nil {
+				// SAT — checker fails (condition is satisfiable)
+				if !fc.Sat() {
+					break
+				}
+			} else {
+				// UNSAT — checker passes
+				fc.Unsat()
+			}
 		}
-		gmc(combined, finalConds)
 	}
 
 	return !anyFailed(checkers)
@@ -793,17 +809,11 @@ func GetPrioritizedActions(cfg *module.Config) []string {
 	return result
 }
 
-// ConvertPostconds converts postconditions by renaming old symbols.
-// Corresponds to Python's convert_postconds which replaces "old"
-// symbols with their pre-state counterparts using transrel.old_of /
-// transrel.is_old and lut.rename_ast. Until the transition-relation
-// module is fully ported, postconditions pass through unchanged.
-// ConvertPostconds converts postconditions by renaming old symbols.
-// Matches Python ivy_check.py convert_postconds (lines 418-426):
-//   - For symbols that are "old" (old_X), rename to their base name
-//   - For updated symbols, map old(s) → __s (pre-state prefix)
-//
-// The update parameter may be nil, in which case postconds pass through.
+// ConvertPostconds converts postconditions WITHOUT an update context.
+// Python's convert_postconds(state, postconds) always receives a state
+// with an update. This no-update convenience wrapper passes postconds
+// through UNCHANGED (no old-symbol renaming). Callers with a post-state
+// should use ConvertPostcondsWithUpdate or CheckConjsInStateWithAG.
 func ConvertPostconds(postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 	return ConvertPostcondsWithUpdate(nil, postconds)
 }

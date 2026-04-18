@@ -838,7 +838,8 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 // Python ivy_l2s.py:1461: conc = ivy_ast.TemporalModels(model, lg.And())
 // The model parameter is the l2s-modified NormalProgram, not tm.Model (the original).
 func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, model ast.Node) ([]*ast.LabeledFormula, error) {
-	newConc := acfg.NewTemporalModels(model, lg.True)
+	// Python ivy_l2s.py:1491: lg.And() — empty And is True but canons as "(and)".
+	newConc := acfg.NewTemporalModels(model, &lg.And{})
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {

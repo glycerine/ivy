@@ -9,6 +9,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 // TraceHookFn is the function type stored in ast.LabeledFormula.TraceHook
@@ -28,6 +29,52 @@ type TraceHookFn func(handler *MatchHandler, fcs []Checker)
 func TemporalAndL2S(name string) bool {
 	return (strings.HasPrefix(name, "l2s") && !strings.HasPrefix(name, "l2s_g")) ||
 		strings.HasPrefix(name, "_old_l2s")
+}
+
+// L2sGToGlobally converts l2s_g named binders back to Globally operators
+// for readable display. Mirrors Python ivy_l2s.py:1520-1526 ls2_g_to_globally.
+func L2sGToGlobally(expr lg.Expr) lg.Expr {
+	g2g := func(nb *lg.NamedBinder) lg.Expr {
+		if nb.Name == "l2s_g" {
+			return &lg.Globally{Environ: nb.Environ, Body: nb.Body}
+		}
+		return nil
+	}
+	res := lu.ExpandNamedBindersAst(expr, g2g)
+	return lu.DenormalizeTemporal(res)
+}
+
+// markLoopStart scans MatchHandler's Eqs for l2s_saved = true and sets
+// LoopStart. Mirrors Python ivy_l2s.py:113-122 trace_hook.
+//
+//	def trace_hook(tr,fcs):
+//	    for idx,state in enumerate(tr.states):
+//	        for c in state.clauses.fmlas:
+//	            s1,s2 = list(map(str,c.args))
+//	            if s1 == 'l2s_saved' and s2 == 'true':
+//	                tr.states[0 if idx == 0 else idx-1].loop_start = True
+//	                return tr
+//	    print("failed to find loop start!")
+//	    return tr
+func markLoopStart(handler *MatchHandler) {
+	if handler == nil {
+		return
+	}
+	savedKey := lg.Key(lg.NewConst("l2s_saved", lg.Boolean))
+	eqs, ok := handler.Eqs[savedKey]
+	if !ok {
+		fmt.Println("failed to find loop start!")
+		return
+	}
+	for _, eq := range eqs {
+		if e, ok := eq.(*lg.Eq); ok {
+			if lg.IsTrue(e.T2) {
+				handler.LoopStart = 0
+				return
+			}
+		}
+	}
+	fmt.Println("failed to find loop start!")
 }
 
 // applyRenamingToHandler applies subs to the MatchHandler's Lines.
@@ -65,6 +112,9 @@ func applyAutoDiagnosticsToHandler(
 	if handler == nil {
 		return
 	}
+	// Python ivy_l2s.py:1529: tr.pp = ls2_g_to_globally
+	handler.PP = L2sGToGlobally
+
 	// Python: failed_fc = [fc for fc in fcs if fc.failed()][0]
 	var failedFC Checker
 	for _, fc := range fcs {
