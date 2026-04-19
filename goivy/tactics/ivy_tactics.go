@@ -454,7 +454,11 @@ func Tempind(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proof
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempind(goal, proof)
-	goal, err := ApplyTempind(pc.GetModule(), pcAstCfg(pc), goal, proofNode)
+	var mod *module.Module
+	if pc != nil {
+		mod = pc.GetModule()
+	}
+	goal, err := ApplyTempind(mod, pcAstCfg(pc), goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
