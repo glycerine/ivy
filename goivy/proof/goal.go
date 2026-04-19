@@ -135,6 +135,21 @@ func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, c
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
 }
 
+// CloneGoalPreserveID is like CloneGoal but preserves the original goal's LF ID.
+// Corresponds to Python's x.clone([x.label, fmla]) pattern (ivy_proof.py:988).
+func CloneGoalPreserveID(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+	var formula ast.Node
+	if len(prems) > 0 {
+		elems := make([]ast.Node, len(prems)+1)
+		copy(elems, prems)
+		elems[len(prems)] = conc
+		formula = cfg.NewSchemaBody(elems...)
+	} else {
+		formula = conc
+	}
+	return goal.Clone([]ast.Node{goal.Label, formula}).(*ast.LabeledFormula)
+}
+
 // MakeGoal creates a goal with the given label, premises, and conclusion.
 // conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
 // mirroring Python's make_goal which is duck-typed.

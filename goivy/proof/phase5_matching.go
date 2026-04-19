@@ -1396,7 +1396,7 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		return ApplyMatchAlt(match, c, env)
 	})
-	return CloneGoal(cfg, goal, newPrems, newConc)
+	return CloneGoalPreserveID(cfg, goal, newPrems, newConc)
 }
 
 // ApplyMatchGoalNodeNonAlt applies a match to a goal using the non-alt
@@ -1465,7 +1465,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		return ApplyMatch(match, c)
 	})
-	return CloneGoal(cfg, goal, newPrems, newConc)
+	return CloneGoalPreserveID(cfg, goal, newPrems, newConc)
 }
 
 // CompileWitnessList compiles witness terms for existential instantiation.

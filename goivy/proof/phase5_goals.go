@@ -866,7 +866,7 @@ func DropSuppliedPrems(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, pro
 // Corresponds to Python's remove_explicit.
 func RemoveExplicit(goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if goal.Explicit {
-		newGoal := goal.CloneWithFreshID(goal.Args())
+		newGoal := goal.Clone(goal.Args()).(*ast.LabeledFormula)
 		newGoal.Explicit = false
 		return newGoal
 	}
