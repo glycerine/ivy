@@ -454,7 +454,7 @@ func TestOrdLive(t *testing.T) {
 }
 
 // takes two hours to check all isolates.
-func TestOrdLive2hr(t *testing.T) {
+func Test2hrOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
 	GoldenPathCompareIvyCheck(t, false, true, path, nil)

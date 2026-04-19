@@ -27,7 +27,7 @@ golden: # parse with python ivy_check and goivy_check_xtrace. full xtrace output
 
 golden-2hr: # takes 2 hours to check all isolates.
 	if [ -f log.golden.2hr ]; then mv log.golden.2hr log.golden.2hr.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestOrdLive2hr &> ../log.golden.2hr
+	cd parser && go test -v -timeout=0 -count=1 -run Test2hrOrdLive &> ../log.golden.2hr
 
 
 golden-v: # to see all productions not just last 10
