@@ -1318,9 +1318,8 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
 func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
-	if len(match) == 0 {
-		return goal
-	}
+	// Python's apply_match_goal has no early return for empty match — it always
+	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
 	var newPrems []ast.Node
 	for _, p := range prems {
@@ -1403,9 +1402,8 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 // (non-capture-checking) apply function. Used for fomatch applications.
 // Corresponds to Python's apply_match_goal called with apply_match.
 func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
-	if len(match) == 0 {
-		return goal
-	}
+	// Python's apply_match_goal has no early return for empty match — it always
+	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
 	var newPrems []ast.Node
 	for _, p := range prems {
