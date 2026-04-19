@@ -53,9 +53,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 			sks[i] = sk
 			subs[lg.Key(v)] = sk
 		}
-		if len(subs) > 0 {
-			goal = varSubstGoal(cfg, goal, subs)
-		}
+		goal = varSubstGoal(cfg, goal, subs)
 		skfuns = append(skfuns, sks...)
 	}
 
