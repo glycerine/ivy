@@ -156,7 +156,7 @@ func TempindFmla(fmla lg.Expr, cond lg.Expr, params []lg.Expr, vs []*lg.Variable
 // compileTacticLets extracts and compiles let-bindings from a TacticTactic proof node.
 // Returns (compiled definitions as Eq nodes, condition, params).
 // Shared between ApplyTempind and ApplyTempcase.
-func compileTacticLets(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr, lg.Expr, []lg.Expr, error) {
+func compileTacticLets(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr, lg.Expr, []lg.Expr, error) {
 	tt, ok := proofNode.(*ast.TacticTactic)
 	if !ok {
 		return nil, nil, nil, fmt.Errorf("expected TacticTactic, got %T", proofNode)
@@ -184,7 +184,7 @@ func compileTacticLets(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode a
 			return nil, nil, nil, fmt.Errorf("let binding must have two arguments")
 		}
 		atom := cfg.NewAtom("=", args[0], args[1])
-		compiled := proof.CompileExprVocab(atom, vocab, nil)
+		compiled := proof.CompileExprVocab(atom, vocab, mod)
 		if compiled == nil {
 			return nil, nil, nil, fmt.Errorf("could not compile let binding: %v", letNode)
 		}
@@ -224,8 +224,8 @@ func compileTacticLets(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode a
 
 // ApplyTempind applies temporal induction transformation to a proof goal.
 // Corresponds to Python: apply_tempind (ivy_tactics.py lines 73-89).
-func ApplyTempind(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
-	_, cond, params, err := compileTacticLets(cfg, goal, proofNode)
+func ApplyTempind(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
+	_, cond, params, err := compileTacticLets(mod, cfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -320,8 +320,8 @@ func TempcaseFmla(fmla lg.Expr, cond lg.Expr, vs []lg.Expr, proofNode ast.Node) 
 
 // ApplyTempcase applies temporal case analysis transformation to a proof goal.
 // Corresponds to Python: apply_tempcase (ivy_tactics.py lines 110-125).
-func ApplyTempcase(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
-	_, cond, params, err := compileTacticLets(cfg, goal, proofNode)
+func ApplyTempcase(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
+	_, cond, params, err := compileTacticLets(mod, cfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -454,7 +454,7 @@ func Tempind(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proof
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempind(goal, proof)
-	goal, err := ApplyTempind(pcAstCfg(pc), goal, proofNode)
+	goal, err := ApplyTempind(pc.GetModule(), pcAstCfg(pc), goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -472,7 +472,7 @@ func Tempcase(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proo
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempcase(goal, proof)
-	goal, err := ApplyTempcase(pcAstCfg(pc), goal, proofNode)
+	goal, err := ApplyTempcase(pc.GetModule(), pcAstCfg(pc), goal, proofNode)
 	if err != nil {
 		return nil, err
 	}

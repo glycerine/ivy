@@ -114,7 +114,12 @@ func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, defini
 }
 
 // GetModule returns the current module. Implements module.ProofCheckerInterface.
-func (pc *ProofChecker) GetModule() *module.Module { return pc.Mod }
+func (pc *ProofChecker) GetModule() *module.Module {
+	if pc == nil {
+		return nil
+	}
+	return pc.Mod
+}
 
 // GetAstCfg returns the AST configuration. Implements module.ProofCheckerInterface.
 func (pc *ProofChecker) GetAstCfg() *ast.AstConfig { return pc.AstCfg }
