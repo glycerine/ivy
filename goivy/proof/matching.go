@@ -154,9 +154,7 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 //
 // Python: ivy_proof.py:1002-1007 (apply_match_to_problem with apply_match_alt)
 func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
-	if len(match) == 0 {
-		return
-	}
+	// Python's apply_match_to_problem has no early return for empty match.
 
 	// Avoid capture before applying — Python: avoid_capture_problem(prob, match)
 	AvoidCaptureProblem(cfg, prob, match)
@@ -185,9 +183,7 @@ func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob 
 //
 // Python: ivy_proof.py:1002-1007 (apply_match_to_problem with apply_match)
 func ApplyMatchToProblemNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
-	if len(match) == 0 {
-		return
-	}
+	// Python's apply_match_to_problem has no early return for empty match.
 	AvoidCaptureProblem(cfg, prob, match)
 	if prob.SchemaLF != nil {
 		prob.SchemaLF = ApplyMatchGoalNodeNonAlt(cfg, match, prob.SchemaLF)

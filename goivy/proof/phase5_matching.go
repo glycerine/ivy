@@ -912,7 +912,8 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 // Python first calls alpha_avoid to rename bound variables that would clash
 // with free variables introduced by the substitution, then recurses.
 func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
-	if fmla == nil || len(match) == 0 {
+	// Python's apply_match_alt has no early return for empty match.
+	if fmla == nil {
 		return fmla
 	}
 	// Alpha-rename bound vars in fmla to avoid capture by match RHS free vars.
@@ -1092,11 +1093,8 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 		return &lg.Lambda{Variables: newVars, Body: newBody}
 	}
 
-	// Generic: recurse into children
+	// Generic: recurse into children — Python always clones even with empty children.
 	children := fmla.Children()
-	if len(children) == 0 {
-		return fmla
-	}
 	newChildren := make([]lg.Expr, len(children))
 	for i, c := range children {
 		newChildren[i] = applyMatchAltRec(match, c, env)

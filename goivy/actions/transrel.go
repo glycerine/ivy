@@ -369,7 +369,8 @@ func nameSetToSlice(m map[string]bool) []string {
 // will preserve the original concrete sort when it encounters a TopSort
 // replacement (see clauseops/astutil.go renameASTRec).
 func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
-	if len(nameMap) == 0 || node == nil {
+	// Python's rename_ast has no early return for empty subs — always recurses.
+	if node == nil {
 		return node
 	}
 	// Scan the formula for actual constants with real sorts, then build
@@ -383,9 +384,6 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 				constMap[lg.Key(c)] = lg.NewConst(newName, c.CSort)
 			}
 		}
-	}
-	if len(constMap) == 0 {
-		return node
 	}
 	return module.RenameAST(node, constMap)
 }
@@ -596,7 +594,8 @@ func MyAnnotOp(annots ...interface{}) interface{} {
 // Python's exist_quant_map. Symbols are []*lg.Const with sorts preserved,
 // matching Python where syms is a set of Symbol objects.
 func ExistQuantMap(syms []*lg.Const, node lg.Expr) (map[lg.NodeKey]*lg.Const, lg.Expr) {
-	if len(syms) == 0 || node == nil {
+	// Python's exist_quant_map has no early return for empty syms.
+	if node == nil {
 		return nil, node
 	}
 	used := usedSymbolNameSlice(node)

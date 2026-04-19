@@ -605,9 +605,7 @@ func cloneNode(n logic.Expr, children []logic.Expr) logic.Expr {
 // This mirrors Python's substitute_ast(ast, subs) where subs maps
 // variable names to replacement terms.
 func SubstituteByName(ast logic.Expr, subs map[string]logic.Expr) logic.Expr {
-	if len(subs) == 0 {
-		return ast
-	}
+	// Python's substitute_ast has no early return for empty subs — always recurses.
 	return substituteByNameRec(ast, subs)
 }
 

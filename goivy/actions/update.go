@@ -211,9 +211,7 @@ func nodeArgs(n lg.Expr) []lg.Expr {
 // For an Apply, appends params to its Terms.
 // Corresponds to Python's add_parameters_ast (ivy_ast.py:1756).
 func addParametersAST(node lg.Expr, params []lg.Expr) lg.Expr {
-	if len(params) == 0 {
-		return node
-	}
+	// Python's add_parameters_ast has no early return for empty params.
 	switch t := node.(type) {
 	case *lg.Const:
 		app, _ := lg.NewApply(t, params...)

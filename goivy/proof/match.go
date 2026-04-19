@@ -365,9 +365,7 @@ func ComposeMatches(freesyms map[lg.NodeKey]lg.Expr, mat1, mat2 map[lg.NodeKey]l
 // Python first calls alpha_avoid to rename bound variables that would clash
 // with free variables introduced by the substitution.
 func ApplyMatch(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
-	if len(match) == 0 {
-		return fmla
-	}
+	// Python's apply_match has no early return for empty match — always processes.
 	// Alpha-rename bound vars to avoid capture by match RHS free vars.
 	// Python: freevars = match_rhs_vars(match); fmla = il.alpha_avoid(fmla, freevars)
 	freeVars := MatchRhsVars(match)
@@ -443,10 +441,7 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 		return il.CloneBinder(fmla, newVars, newArgs[0])
 	}
 
-	// Clone with new args
-	if len(args) == 0 {
-		return fmla
-	}
+	// Clone with new args — Python always clones even with empty args.
 	return il.CloneNode(fmla, newArgs)
 }
 
