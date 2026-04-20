@@ -232,10 +232,22 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 	return res
 }
 
-// GoalVocab returns the vocabulary of a goal: the sorts, symbols, and
-// variables that are bound in the goal's premises and conclusion.
-// Mirrors Python ivy_proof.py:580 — when conc is *ast.TemporalModels,
-// extracts conc.Fmla as the formula to scan.
+// GoalVocab returns the vocabulary of a goal: the sorts, symbols, and FREE
+// variables in the goal's premises and conclusion. Mirrors Python
+// `goal_vocab(goal, bound=False)` (ivy_proof.py:572-583) which uses
+// `lu.used_variables_asts = apply_gen_to_list(variables_ast)` — and
+// `variables_ast` (ivy_logic_utils.py:523-535) yields ONLY variables that
+// are NOT bound by any enclosing binder in each fmla.
+//
+// IMPORTANT: returning all variables (including bound) is incorrect —
+// callers that need bound vars (e.g. compilation of terms that reference
+// them) should use `GoalVocabBound` or augment locally (see
+// `CompileMatchList` which adds used_variables(conc) when allow_witness=True).
+// Putting bound vars into the default vocab corrupts `prob.FreeSyms`
+// because `buildMatchProblem` copies `vocab.Variables` there; downstream
+// `assume_tactic`'s iswit check then misclassifies bound-variable match
+// keys. See the `ifabric_rw_fair_ax` divergence in log.golden.2hr at index
+// 2411549 for the failure mode this mismatch caused.
 func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
@@ -280,11 +292,14 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 		fmlas = append(fmlas, concExpr)
 	}
 
-	// Collect variables from formulas
+	// Collect FREE variables from each formula independently and union.
+	// Python: `used_variables_asts(fmlas)` = `apply_gen_to_list(variables_ast)` —
+	// each fmla scanned via `variables_ast` (free-only), results unioned.
+	// A variable bound in one fmla but free in another is in the final set.
 	varSet := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range fmlas {
-		for _, v := range lu.UsedVariables(f) {
-			varSet[lg.Key(v)] = v
+		for k, v := range lu.FreeVariables(f).All() {
+			varSet[k] = v
 		}
 	}
 	var variables []*lg.Variable
