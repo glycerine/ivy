@@ -671,6 +671,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Move conjectures to assumed invariants
+	xtracer.Trace("check.CheckIsolate preMove nAssumedInvs=%d nLabeledConjs=%d", len(mod.AssumedInvs), len(mod.LabeledConjs))
 	mod.AssumedInvs = append(mod.AssumedInvs, mod.LabeledConjs...)
 	mod.LabeledConjs = nil
 
@@ -746,6 +747,8 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					withLocalMod.Initializers = nil
 				}
 				withLocalMod.AssumedInvs = np.Asms
+				xtracer.Trace("check.CheckSubgoals TemporalModels applied mod.AssumedInvs nAsms=%d nLabeledConjs=%d nInvars_from_model=%d",
+					len(withLocalMod.AssumedInvs), len(withLocalMod.LabeledConjs), len(np.Invars))
 			}
 
 			// Python: mod.labeled_axioms = list(mod.labeled_axioms)
@@ -878,6 +881,14 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				// Checker.fail() calls aggregate regardless of which module
 				// copy is active. Propagate the delta back to the original.
 				mod.Cfg.Failures += withLocalMod.Cfg.Failures - failsBefore
+				// Mirror Python's list aliasing (ivy_check.py:795 mod.assumed_invariants
+				// = model.asms — same list object as im.module.assumed_invariants).
+				// Inside the recursive check_isolate (line 761) extending that list
+				// persists past the `with mod:` exit. In Go, slices are values, so
+				// we propagate the accumulated AssumedInvs back to the outer mod
+				// explicitly. Without this, the next iteration of check_temporals'
+				// prop loop sees a stale mod.AssumedInvs.
+				mod.AssumedInvs = withLocalMod.AssumedInvs
 				if err != nil {
 					wsorts.Exit()
 					ws.Exit()

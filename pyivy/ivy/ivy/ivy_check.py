@@ -137,6 +137,7 @@ def check_temporals():
     pc = ivy_proof.ProofChecker(_ct_axioms,mod.definitions,mod.schemata)
     for prop in props:
         if prop.temporal:
+            if __debug__: xtracer.trace("check.CheckTemporals prop start label=%s nAssumedInvs=%d nLabeledConjs=%d nLabeledProps=%d nLabeledAxioms=%d" % (str(prop.label), len(mod.assumed_invariants), len(mod.labeled_conjs), len(mod.labeled_props), len(mod.labeled_axioms)))
             if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
                 print('  ivy_check temporal: admitting axiom...\n', pretty_lf(prop))
                 if opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
@@ -758,6 +759,7 @@ def check_isolate(trace_hook = None):
                     else:
                         print("\n")
 
+        if __debug__: xtracer.trace("check.CheckIsolate preMove nAssumedInvs=%d nLabeledConjs=%d" % (len(im.module.assumed_invariants), len(im.module.labeled_conjs)))
         im.module.assumed_invariants.extend(im.module.labeled_conjs)
         im.module.labeled_conjs = []
         if not unprovable:
@@ -793,6 +795,7 @@ def check_subgoals(goals,method=None):
             mod.initializers = [('init',model.init)]
             mod.labeled_axioms = list(mod.labeled_axioms)
             mod.assumed_invariants = model.asms
+            if __debug__: xtracer.trace("check.CheckSubgoals TemporalModels applied mod.AssumedInvs nAsms=%d nLabeledConjs=%d nInvars_from_model=%d" % (len(mod.assumed_invariants), len(mod.labeled_conjs), len(model.invars)))
             mod.params = list(mod.params)
             mod.updates = list(mod.updates)
             _goal_prems = ivy_proof.goal_prems(goal)

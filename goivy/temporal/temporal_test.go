@@ -356,10 +356,16 @@ func TestNormalProgramClone(t *testing.T) {
 		Calls:    []string{"a"},
 	}
 	cloned := NormalProgramClone(np)
-	// Modify the clone and verify original is unaffected
-	cloned.Calls = append(cloned.Calls, "b")
-	if len(np.Calls) != 1 {
-		t.Error("modifying clone should not affect original")
+
+	// Mirror Python's NormalProgram.clone (ivy_temporal.py:179-183): the
+	// clone's slice fields are the SAME slice headers as the original.
+	// Verify by checking that the slice base pointers (via reflect or
+	// element identity through length-preserving operations) match.
+	if &cloned.Calls[0] != &np.Calls[0] {
+		t.Error("Calls: clone must share slice with original")
+	}
+	if &cloned.Bindings[0] != &np.Bindings[0] {
+		t.Error("Bindings: clone must share slice with original")
 	}
 }
 

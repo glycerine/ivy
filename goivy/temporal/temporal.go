@@ -20,6 +20,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ActionTerm represents an action term with inputs, outputs, labels, and a body statement.
@@ -387,6 +388,8 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	}
 	sort.Strings(calls)
 
+	xtracer.Trace("temporal.NormalProgramFromModule EXIT nInvars=%d nAsms=%d nBindings=%d",
+		len(mod.LabeledConjs), len(mod.AssumedInvs), len(bindings))
 	return &NormalProgram{
 		Bindings: bindings,
 		Init:     init,
@@ -523,30 +526,24 @@ func EnvironStr(n lg.Expr) string {
 	return ""
 }
 
-// NormalProgramClone creates a shallow copy of a NormalProgram,
-// allowing modification of specific fields.
+// NormalProgramClone mirrors Python NormalProgram.clone (ivy_temporal.py:179-183),
+// which constructs a new NormalProgram with the SAME slice/map references
+// as the original — appending to a clone's slice mutates the original.
+// goivy must preserve this aliasing because Python's check_isolate /
+// l2s_tactic_int flow relies on it (e.g. ivy_l2s.py:159 model.asms.append
+// mutates im.module.assumed_invariants in place; ivy_check.py:761 then
+// extends the same shared list).
 func NormalProgramClone(np *NormalProgram) *NormalProgram {
-	bindings := make([]*ActionTermBinding, len(np.Bindings))
-	copy(bindings, np.Bindings)
-	invars := make([]*ast.LabeledFormula, len(np.Invars))
-	copy(invars, np.Invars)
-	asms := make([]*ast.LabeledFormula, len(np.Asms))
-	copy(asms, np.Asms)
-	calls := make([]string, len(np.Calls))
-	copy(calls, np.Calls)
 	result := &NormalProgram{
 		Base:     np.Base,
-		Bindings: bindings,
+		Bindings: np.Bindings,
 		Init:     np.Init,
-		Invars:   invars,
-		Asms:     asms,
-		Calls:    calls,
+		Invars:   np.Invars,
+		Asms:     np.Asms,
+		Calls:    np.Calls,
 	}
 	if np.Postconds != nil {
-		result.Postconds = make(map[string][]*ast.LabeledFormula, len(np.Postconds))
-		for k, v := range np.Postconds {
-			result.Postconds[k] = v
-		}
+		result.Postconds = np.Postconds
 	}
 	return result
 }

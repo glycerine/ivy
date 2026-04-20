@@ -120,6 +120,7 @@ from . import ivy_proof as ipr
 from . import ivy_utils as iu
 from . import ivy_actions as iact
 from . import ivy_logic_utils as ilu
+from . import xtracer
 from collections import defaultdict
 
 class ActionTerm(ia.AST):
@@ -220,6 +221,7 @@ def normal_program_from_module(mod):
     invars = mod.labeled_conjs
     asms = mod.assumed_invariants
     calls = sorted(mod.public_actions)
+    if __debug__: xtracer.trace("temporal.NormalProgramFromModule EXIT nInvars=%d nAsms=%d nBindings=%d" % (len(invars), len(asms), len(bindings)))
     return NormalProgram(bindings,init,invars,asms,calls)
 
 # The creates an "environment action" from a list of action

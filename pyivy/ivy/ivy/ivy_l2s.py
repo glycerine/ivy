@@ -134,6 +134,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     if not isinstance(conc,ivy_ast.TemporalModels):
         raise iu.IvyError(proof,'proof goal is not temporal')
     model = conc.model.clone([])
+    if __debug__: xtracer.trace("l2s.l2sTacticInt postClone nAsms=%d nInvars=%d" % (len(model.asms), len(model.invars)))
     fmla = conc.fmla
 
     if proof.tactic_lets:

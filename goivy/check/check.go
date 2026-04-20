@@ -309,6 +309,8 @@ func CheckTemporals(mod *module.Module) error {
 		if !prop.IsTemporal() {
 			continue
 		}
+		xtracer.Trace("check.CheckTemporals prop start label=%s nAssumedInvs=%d nLabeledConjs=%d nLabeledProps=%d nLabeledAxioms=%d",
+			fmt.Sprint(prop.Label), len(mod.AssumedInvs), len(mod.LabeledConjs), len(mod.LabeledProps), len(mod.LabeledAxioms))
 
 		// Python: if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
 		propLabel := fmt.Sprint(prop.Label)

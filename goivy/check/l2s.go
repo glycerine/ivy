@@ -326,6 +326,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		return nil, fmt.Errorf("l2s: TemporalModels.Model is not a NormalProgram (got %T)", tm.Model)
 	}
 	model := temporal.NormalProgramClone(np)
+	xtracer.Trace("l2s.l2sTacticInt postClone nAsms=%d nInvars=%d", len(model.Asms), len(model.Invars))
 	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
 		return nil, fmt.Errorf("l2s: could not extract temporal formula from goal")
