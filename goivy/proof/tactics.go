@@ -73,16 +73,10 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 		cond = &lg.And{Terms: eqs}
 	}
 
-	// Build subgoal: cond -> original formula.
-	// Python uses goal.formula directly (wraps entire formula including SchemaBody).
-	// Go uses ApplyToConc to handle *ast.TemporalModels wrapping correctly.
-	if GoalConc(goal) == nil {
-		return nil, &ProofError{Msg: "let tactic: goal has no conclusion"}
-	}
-	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return &lg.Implies{T1: cond, T2: c}
-	})
-	subgoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
+	// Python ivy_proof.py:226:
+	//   subgoal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
+	// Wrap the ENTIRE goal.Formula (SchemaBody or TemporalModels included) — no descent.
+	subgoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), cond, goal.Formula))
 	subgoal.SetLineno(goal.GetLineno())
 
 	result := []*ast.LabeledFormula{subgoal}
@@ -394,26 +388,13 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 		return nil, &ProofError{Msg: "if tactic: could not convert condition to logic node"}
 	}
 
-	// Python: true_goal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
-	// Uses decls[0].formula directly (not goal_conc). If formula is lg.Expr, wrap it.
-	// For SchemaBody (rare), fall back to wrapping just the conclusion.
-	var trueGoal, falseGoal *ast.LabeledFormula
-	if goalExpr, ok := goal.Formula.(lg.Expr); ok {
-		trueGoal = pc.astCfg().NewLabeledFormula(goal.Label,
-			lg.Expr(&lg.Implies{T1: cond, T2: goalExpr}))
-		falseGoal = pc.astCfg().NewLabeledFormula(goal.Label,
-			lg.Expr(&lg.Implies{T1: &lg.Not{Body: cond}, T2: goalExpr}))
-	} else {
-		// SchemaBody or other non-expr: wrap the conclusion (best approximation)
-		trueConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-			return &lg.Implies{T1: cond, T2: c}
-		})
-		trueGoal = CloneGoal(pc.astCfg(), goal, GoalPrems(goal), trueConc)
-		falseConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-			return &lg.Implies{T1: &lg.Not{Body: cond}, T2: c}
-		})
-		falseGoal = CloneGoal(pc.astCfg(), goal, GoalPrems(goal), falseConc)
-	}
+	// Python ivy_proof.py:414-416:
+	//   true_goal  = ia.LabeledFormula(decls[0].label, il.Implies(cond,      decls[0].formula))
+	//   false_goal = ia.LabeledFormula(decls[0].label, il.Implies(Not(cond), decls[0].formula))
+	// Wrap the ENTIRE goal.Formula (SchemaBody or TemporalModels included) — no descent.
+	notCond := &lg.Not{Body: cond}
+	trueGoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), cond, goal.Formula))
+	falseGoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), notCond, goal.Formula))
 	trueGoal.SetLineno(goal.GetLineno())
 	falseGoal.SetLineno(goal.GetLineno())
 

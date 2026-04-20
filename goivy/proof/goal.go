@@ -87,6 +87,23 @@ func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
 	return conc
 }
 
+// WrapImplies mirrors Python's il.Implies(cond, formula) duck-typed wrapping
+// used by if_tactic and let_tactic (ivy_proof.py:226, :414, :416). It wraps
+// the ENTIRE formula in Implies(cond, formula) without descending into any
+// *ast.TemporalModels or *ast.SchemaBody wrapper.
+//
+// Python's il.Implies accepts any formula as its second argument. Go's
+// lg.Implies requires lg.Expr fields, so when formula is not an lg.Expr
+// (i.e. *ast.TemporalModels or *ast.SchemaBody) we fall back to ast.Implies
+// which has ast.Node fields. The common case (formula is lg.Expr) still
+// produces *lg.Implies so downstream *lg.Implies type-switches keep matching.
+func WrapImplies(cfg *ast.AstConfig, cond lg.Expr, formula ast.Node) ast.Node {
+	if e, ok := formula.(lg.Expr); ok {
+		return &lg.Implies{T1: cond, T2: e}
+	}
+	return cfg.NewImplies(cond, formula)
+}
+
 // GoalApplyToConc clones a goal with fn applied to its conclusion.
 // Mirrors Python ivy_proof.py:1572-1573 goal_apply_to_conc.
 // NOTE: fn is called with the raw conclusion (ast.Node) — fn is responsible
