@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- helpers for assumeTactic tests ---
@@ -353,5 +354,104 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 	concFinal := GoalConc(result[0])
 	if _, ok := concFinal.(*ast.TemporalModels); !ok {
 		t.Fatalf("REGRESSION: after skolemize+instantiate, conclusion is %T, not *ast.TemporalModels", concFinal)
+	}
+}
+
+// TestIsWitVar_BoundVariableKey verifies that isWitVar correctly identifies a
+// match key as a witness-eligible Variable when the key is a bound variable
+// of the schema's conclusion AND is not in prob.FreeSyms.
+//
+// Python: iswit(x) = isinstance(x, il.Variable) and x not in prob.freesyms
+// where x is the match KEY. The prior Go port checked val.(*lg.Variable)
+// which broke for `instantiate ... with P=_P` when _P is a skolem Const.
+// See plan: /Users/jaten/.claude/plans/the-latest-divergence-of-synchronous-creek.md
+func TestIsWitVar_BoundVariableKey(t *testing.T) {
+	procSort := mkSort("proc")
+	p := mkVar("P", procSort)
+	underP := mkConst("_P", procSort)
+
+	// Schema conc: forall P:proc. true  (stand-in for the axiom body)
+	body := lg.True
+	fa, _ := lg.NewForAll([]*lg.Variable{p}, body)
+	schema := mkLF(testAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
+
+	// prob.FreeSyms excludes P (bound), matching Python goal_vocab semantics.
+	prob := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{}, nil)
+	prob.SchemaLF = schema
+
+	// Match {P: _P} — key P is a Variable, val _P is a Const.
+	pKey := lg.Key(p)
+
+	if !isWitVar(pKey, underP, prob) {
+		t.Error("isWitVar should return true for bound-variable key P with Const witness _P")
+	}
+
+	// Sanity: a symbol-LHS key that IS in prob.FreeSyms must NOT be a witness.
+	sym := mkConst("f", procSort)
+	probFS := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{lg.Key(sym): sym}, nil)
+	probFS.SchemaLF = schema
+	if isWitVar(lg.Key(sym), underP, probFS) {
+		t.Error("isWitVar should return false for symbol-LHS key already in FreeSyms")
+	}
+}
+
+// TestIsWitVar_DropsForAllViaWitnessAst verifies the end-to-end interaction
+// between the fixed isWitVar and module.WitnessAst: when isWitVar correctly
+// identifies a bound-Variable key, WitnessAst is called with it in the witness
+// map and drops the vacuous ForAll.
+//
+// Mirrors the `instantiate ifabric_rw_fair_ax with P=_P` scenario from
+// ord_live.ivy that caused the neg_prop_init divergence at log.golden.2hr
+// index 2411549.
+func TestIsWitVar_DropsForAllViaWitnessAst(t *testing.T) {
+	procSort := mkSort("proc")
+	p := mkVar("P", procSort)
+	underP := mkConst("_P", procSort)
+
+	// Build `rd_fair(P) & wr_fair(P)` body.
+	boolFs, _ := lg.NewFunctionSort(procSort, lg.Boolean)
+	rdFair := mkConst("rd_fair", boolFs)
+	wrFair := mkConst("wr_fair", boolFs)
+	rdFairP, _ := lg.NewApply(rdFair, p)
+	wrFairP, _ := lg.NewApply(wrFair, p)
+	body := &lg.And{Terms: []lg.Expr{rdFairP, wrFairP}}
+
+	// Schema conc: forall P:proc. (rd_fair(P) & wr_fair(P))
+	fa, _ := lg.NewForAll([]*lg.Variable{p}, body)
+	schema := mkLF(testAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
+
+	// prob with P excluded from FreeSyms (bound variable semantics).
+	prob := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{}, nil)
+	prob.SchemaLF = schema
+
+	// Simulate the pmatch split manually: pmatch = {P: _P}.
+	pmatch := map[lg.NodeKey]lg.Expr{lg.Key(p): underP}
+	witness := make(map[lg.NodeKey]lg.Expr)
+	pmatchClean := make(map[lg.NodeKey]lg.Expr)
+	for k, v := range pmatch {
+		if isWitVar(k, v, prob) {
+			witness[k] = v
+		} else {
+			pmatchClean[k] = v
+		}
+	}
+	if len(witness) != 1 {
+		t.Fatalf("expected 1 witness entry, got %d", len(witness))
+	}
+	if len(pmatchClean) != 0 {
+		t.Fatalf("expected 0 pmatchClean entries, got %d", len(pmatchClean))
+	}
+
+	// Run WitnessAst on the schema conclusion; the ForAll must be dropped.
+	newConc, err := module.WitnessAst(true, nil, witness, fa)
+	if err != nil {
+		t.Fatalf("WitnessAst failed: %v", err)
+	}
+	if _, isFA := newConc.(*lg.ForAll); isFA {
+		t.Errorf("REGRESSION: WitnessAst did not drop vacuous ForAll; got %v", newConc.Canon())
+	}
+	// The result should be an And (the substituted body), not a ForAll.
+	if _, isAnd := newConc.(*lg.And); !isAnd {
+		t.Errorf("expected result to be *lg.And (body), got %T: %v", newConc, newConc.Canon())
 	}
 }

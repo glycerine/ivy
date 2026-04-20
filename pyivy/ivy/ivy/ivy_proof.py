@@ -363,12 +363,14 @@ class ProofChecker(object):
             return isinstance(x,il.Variable) and x not in prob.freesyms
         witness = dict((x,y) for x,y in pmatch.items() if iswit(x))
         pmatch = dict((x,y) for x,y in pmatch.items() if not iswit(x))
+        if __debug__: xtracer.trace("proof.assumeTactic witnessSplit schema=%s nWitness=%d nPmatch=%d" % (schemaname, len(witness), len(pmatch)))
 #        prem = make_goal(proof.lineno,fresh_label(goal_prems(decl)),[],schema)
         prem = prob.schema
         if schemaname not in premmap:
             prem = close_unmatched(prem,pmatch)
         conc = goal_conc(prem)
         conc = lu.witness_ast(True,[],witness,conc)
+        if __debug__: xtracer.trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%s" % (schemaname, conc.canon() if hasattr(conc,'canon') else type(conc).__name__))
         prem = clone_goal(prem,goal_prems(prem),conc)
         prem  = apply_match_goal(pmatch,prem,apply_match_alt)
         prem = drop_supplied_prems(prem,decl,proof.match())

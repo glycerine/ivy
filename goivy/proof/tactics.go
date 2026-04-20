@@ -10,7 +10,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // letTactic introduces local definitions in a proof.
@@ -156,6 +158,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		}
 	}
 	pmatch = pmatchClean
+	xtracer.Trace("proof.assumeTactic witnessSplit schema=%s nWitness=%d nPmatch=%d", schemaName, len(witness), len(pmatch))
 
 	// Python: prem = prob.schema
 	prem := prob.SchemaLF
@@ -176,6 +179,11 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 				rawConc = newConc
 			}
 		}
+	}
+	if concExpr, ok := rawConc.(lg.Expr); ok {
+		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%v", schemaName, concExpr.Canon())
+	} else {
+		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s concType=%T", schemaName, rawConc)
 	}
 	prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), rawConc)
 
@@ -225,12 +233,32 @@ func isNoneAST(n ast.Node) bool {
 
 // isWitVar checks if a match entry is a witness variable.
 // Python: iswit = lambda x: isinstance(x, il.Variable) and x not in prob.freesyms
+//
+// x is the match KEY (the LHS), not the value. A key is a witness-eligible
+// Variable iff it is a Variable used in the schema conclusion (bound or free)
+// AND it is not in prob.FreeSyms. This mirrors Python's CompileMatchFull
+// behavior: when allow_witness=True, the local freesyms is augmented with
+// used_variables(conc); the keys added beyond prob.FreeSyms are exactly the
+// bound variables we want to treat as witnesses.
+//
+// Earlier Go port incorrectly checked val.(*lg.Variable). For
+// `instantiate ifabric_rw_fair_ax with P=_P`, _P is a skolemized Const, so
+// the old check rejected it, leaving {P: _P} in pmatch. Downstream
+// applyMatchAltRec then preserved the vacuous `ForAll([P], body_with__P)`
+// wrapping — the divergence observed at log.golden.2hr index 2411549.
 func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
-	if _, isVar := val.(*lg.Variable); !isVar {
+	if _, inFree := prob.FreeSyms[key]; inFree {
 		return false
 	}
-	_, inFree := prob.FreeSyms[key]
-	return !inFree
+	if prob.SchemaLF == nil {
+		return false
+	}
+	conc := ConcAsExpr(GoalConc(prob.SchemaLF))
+	if conc == nil {
+		return false
+	}
+	_, isUsedVar := lu.UsedVariables(conc)[key]
+	return isUsedVar
 }
 
 // unfoldTactic unfolds definitions in the goal.
