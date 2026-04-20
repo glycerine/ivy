@@ -112,7 +112,7 @@ D2. NEVER search, read, grep, or glob files under these directories:
    - ivy-lang-examples/
    These are in .claudeignore. Skip any search results from them.
 
-E. All plans produced should have the creation date and creation time just after their title.
+E. All plans produced should have the creation date and creation time just after their title. Exact clock time in UTC time zone is expected and encouraged.
 
 F. Canonical S-expression System for Cross-Language AST Comparison
 
