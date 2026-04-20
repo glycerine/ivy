@@ -171,14 +171,18 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Python: conc = goal_conc(prem)
 	//         conc = lu.witness_ast(True, [], witness, conc)
 	//         prem = clone_goal(prem, goal_prems(prem), conc)
+	// module.WitnessAst takes ast.Node and handles *ast.TemporalModels
+	// internally, matching Python's duck-typed recursion at
+	// ivy_logic_utils.py:1704. Python swallows no errors here; a capture
+	// error aborts the tactic (vs Python re-raising via iu.IvyError).
 	rawConc := GoalConc(prem)
 	if len(witness) > 0 {
-		if concExpr, ok := rawConc.(lg.Expr); ok {
-			newConc, werr := module.WitnessAst(true, nil, witness, concExpr)
-			if werr == nil {
-				rawConc = newConc
-			}
+		newConc, werr := module.WitnessAst(true, nil, witness, rawConc)
+		if werr != nil {
+			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
+				"assume tactic witness substitution: %v", werr)}
 		}
+		rawConc = newConc
 	}
 	if concExpr, ok := rawConc.(lg.Expr); ok {
 		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%v", schemaName, concExpr.Canon())
@@ -338,11 +342,11 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		goal = newGoal
 	} else {
 		// Python: decl = goal_apply_to_conc(decl, lambda fmla: unfold_fmla(fmla, defns))
+		// UnfoldFmla takes ast.Node and handles *ast.TemporalModels
+		// internally (unwrap/recurse/rewrap), matching Python's duck-typed
+		// recursion through the wrapper.
 		goal = GoalApplyToConc(pc.astCfg(), goal, func(node ast.Node) ast.Node {
-			if fmla, ok := node.(lg.Expr); ok {
-				return UnfoldFmla(fmla, defns)
-			}
-			return node
+			return UnfoldFmla(node, defns)
 		})
 	}
 
@@ -596,16 +600,12 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	}
 
 	// Python: conc = lu.witness_ast(False, [], wit_map, conc)
-	rawConc := GoalConc(goal)
-	var newConc ast.Node
-	if concExpr, ok := rawConc.(lg.Expr); ok {
-		witnessed, werr := module.WitnessAst(false, nil, witness, concExpr)
-		if werr != nil {
-			return nil, &ProofError{Msg: fmt.Sprintf("witness tactic: %v", werr)}
-		}
-		newConc = witnessed
-	} else {
-		newConc = rawConc
+	// module.WitnessAst takes ast.Node and handles *ast.TemporalModels
+	// internally (unwrap/recurse/rewrap), matching Python's duck-typed
+	// recursion at ivy_logic_utils.py:1704.
+	newConc, err := module.WitnessAst(false, nil, witness, GoalConc(goal))
+	if err != nil {
+		return nil, &ProofError{Msg: fmt.Sprintf("witness tactic: %v", err)}
 	}
 
 	// Python: prems = goal_prems(decl); return [clone_goal(decl,prems,conc)] + decls[1:]

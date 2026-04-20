@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -211,15 +212,42 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 // WitnessAst substitutes witness values for existentially quantified
 // variables (in negative position) or universally quantified variables
 // (in positive position).
-// Corresponds to Python's witness_ast (ivy_logic_utils.py:1584-1615).
-func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, fmla lg.Expr) (lg.Expr, error) {
-	if il.IsQuantifier(fmla) {
-		isExists := il.IsExists(fmla)
-		isForall := il.IsForall(fmla)
+// Corresponds to Python's witness_ast (ivy_logic_utils.py:1673-1704).
+//
+// Takes/returns ast.Node so it can handle *ast.TemporalModels (mirroring
+// Python's duck-typed generic-branch recursion at line 1704:
+// `return fmla.clone([witness_ast(pos,vs,witnesses,arg) for arg in fmla.args])`).
+// For lg.Expr inputs, behaves identically to the previous lg.Expr-only
+// signature. This mirrors the ast.Node broadening already applied to
+// SkolemizeFmla (proof/skolem.go:100).
+func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, fmla ast.Node) (ast.Node, error) {
+	// TemporalModels — recurse into the wrapped inner formula and rewrap,
+	// mirroring Python's generic fmla.clone([... for arg in fmla.args]) branch.
+	if tm, ok := fmla.(*ast.TemporalModels); ok {
+		innerExpr, ok := tm.Fmla.(lg.Expr)
+		if !ok {
+			return tm, nil
+		}
+		newInner, err := WitnessAst(pos, vs, witnesses, innerExpr)
+		if err != nil {
+			return nil, err
+		}
+		return tm.Clone([]ast.Node{newInner}), nil
+	}
+
+	// Everything else in witness_ast's dispatch operates on lg.Expr.
+	expr, ok := fmla.(lg.Expr)
+	if !ok {
+		return fmla, nil
+	}
+
+	if il.IsQuantifier(expr) {
+		isExists := il.IsExists(expr)
+		isForall := il.IsForall(expr)
 		// Apply witnesses to: exists in negative, forall in positive
 		if (isExists && !pos) || (isForall && pos) {
-			vars := il.BinderVars(fmla)
-			body := il.BinderBody(fmla)
+			vars := il.BinderVars(expr)
+			body := il.BinderBody(expr)
 
 			var newVars []*lg.Variable
 			for idx, v := range vars {
@@ -241,29 +269,29 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 					newVars = append(newVars, v)
 				}
 			}
-			var err error
-			body, err = WitnessAst(pos, vs, witnesses, body)
+			bodyNode, err := WitnessAst(pos, vs, witnesses, body)
 			if err != nil {
 				return nil, err
 			}
+			body = witnessExpr(bodyNode, body)
 			if len(newVars) > 0 {
-				return il.CloneBinder(fmla, newVars, body), nil
+				return il.CloneBinder(expr, newVars, body), nil
 			}
 			return body, nil
 		}
 	}
 
-	if _, ok := fmla.(*lg.Not); ok {
-		args := il.NodeArgs(fmla)
+	if _, ok := expr.(*lg.Not); ok {
+		args := il.NodeArgs(expr)
 		newArg, err := WitnessAst(!pos, vs, witnesses, args[0])
 		if err != nil {
 			return nil, err
 		}
-		return il.CloneNode(fmla, []lg.Expr{newArg}), nil
+		return il.CloneNode(expr, []lg.Expr{witnessExpr(newArg, args[0])}), nil
 	}
 
-	if _, ok := fmla.(*lg.Implies); ok {
-		args := il.NodeArgs(fmla)
+	if _, ok := expr.(*lg.Implies); ok {
+		args := il.NodeArgs(expr)
 		newLhs, err := WitnessAst(!pos, vs, witnesses, args[0])
 		if err != nil {
 			return nil, err
@@ -272,12 +300,15 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		if err != nil {
 			return nil, err
 		}
-		return il.CloneNode(fmla, []lg.Expr{newLhs, newRhs}), nil
+		return il.CloneNode(expr, []lg.Expr{
+			witnessExpr(newLhs, args[0]),
+			witnessExpr(newRhs, args[1]),
+		}), nil
 	}
 
-	args := il.NodeArgs(fmla)
+	args := il.NodeArgs(expr)
 	if len(args) == 0 {
-		return fmla, nil
+		return expr, nil
 	}
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
@@ -285,9 +316,22 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		if err != nil {
 			return nil, err
 		}
-		newArgs[i] = na
+		newArgs[i] = witnessExpr(na, a)
 	}
-	return il.CloneNode(fmla, newArgs), nil
+	return il.CloneNode(expr, newArgs), nil
+}
+
+// witnessExpr type-asserts a WitnessAst result back to lg.Expr.
+// Recursive calls through *ast.TemporalModels can legitimately return
+// non-lg.Expr nodes; callers of witnessExpr are only inside lg.Expr
+// subtrees where the result must be lg.Expr, so a failed assertion
+// would indicate a contract violation. fallback is used as a safety
+// net.
+func witnessExpr(n ast.Node, fallback lg.Expr) lg.Expr {
+	if e, ok := n.(lg.Expr); ok {
+		return e
+	}
+	return fallback
 }
 
 // ReskolemizeClauses re-skolemizes clauses by replacing Skolem constants

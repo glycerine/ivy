@@ -742,8 +742,29 @@ func UnfoldGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, defns [][]*ast.Lab
 }
 
 // UnfoldFmla unfolds definitions in a formula.
-// Corresponds to Python's unfold_fmla (ivy_proof.py:1555-1559).
-func UnfoldFmla(fmla lg.Expr, defns [][]*ast.LabeledFormula) lg.Expr {
+// Corresponds to Python's unfold_fmla (ivy_proof.py:1557-1561).
+//
+// Takes/returns ast.Node so it can handle *ast.TemporalModels (mirroring
+// Python's duck-typed recursion via apply_match_alt at
+// ivy_proof.py:1150-1168 which does
+// `fmla.clone([apply_match_alt_rec(match,f,env) for f in fmla.args])`).
+// For lg.Expr inputs, behaves identically to the previous lg.Expr-only
+// signature. This mirrors the ast.Node broadening already applied to
+// SkolemizeFmla (proof/skolem.go:100) and WitnessAst (module/skolem.go).
+func UnfoldFmla(fmla ast.Node, defns [][]*ast.LabeledFormula) ast.Node {
+	// TemporalModels — recurse into the wrapped inner formula and rewrap,
+	// mirroring Python's generic apply_match_alt_rec recursion.
+	if tm, ok := fmla.(*ast.TemporalModels); ok {
+		innerExpr, ok := tm.Fmla.(lg.Expr)
+		if !ok {
+			return tm
+		}
+		return tm.Clone([]ast.Node{UnfoldFmla(innerExpr, defns)})
+	}
+	expr, ok := fmla.(lg.Expr)
+	if !ok {
+		return fmla
+	}
 	for _, rdefs := range defns {
 		key, union, err := MatchFromDefns(rdefs)
 		if err != nil {
@@ -752,11 +773,11 @@ func UnfoldFmla(fmla lg.Expr, defns [][]*ast.LabeledFormula) lg.Expr {
 		// Alpha-avoid: rename bound vars that clash with free vars in ALL lambdas.
 		// Python: apply_match_alt calls match_rhs_vars then alpha_avoid.
 		freeVars := unfoldRhsVars(union)
-		fmla = il.AlphaAvoidMap(fmla, freeVars)
+		expr = il.AlphaAvoidMap(expr, freeVars)
 		// Single-pass unfold with destructive pop
-		fmla = applyUnfoldRec(key, union, fmla)
+		expr = applyUnfoldRec(key, union, expr)
 	}
-	return fmla
+	return expr
 }
 
 // GoalApplyToPrem applies a function to a specific premise by name.

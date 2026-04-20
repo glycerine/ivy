@@ -221,7 +221,11 @@ func FuzzUnfoldFmla(f *testing.F) {
 			fmla = &lg.And{Terms: terms}
 		}
 
-		result := UnfoldFmla(fmla, [][]*ast.LabeledFormula{defns})
+		resultNode := UnfoldFmla(fmla, [][]*ast.LabeledFormula{defns})
+		result, ok := resultNode.(lg.Expr)
+		if !ok {
+			t.Fatalf("expected lg.Expr result, got %T", resultNode)
+		}
 
 		// Verify: each occurrence should have been replaced by the
 		// corresponding rhs constant (or the last one if nDefns < nOccurrences).
