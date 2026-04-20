@@ -137,13 +137,23 @@ Check for an existing `proof/tactics_test.go`. If present, add:
 
 If no `tactics_test.go` exists, create `proof/tactics_let_if_test.go`. Use `test_vectors/` directory convention per `feedback_test_vectors_dir.md` if any file fixtures are needed (they are not for these tests).
 
-## Downstream-impact audit
+## Downstream-impact audit (completed)
 
-`*ast.Implies` is a *new* top-level shape for subgoals whose formula is `TemporalModels` or `SchemaBody`. The next tactic in the proof will see `*ast.Implies` at the top of `goal.Formula`. Grep shows no production site currently handles `*ast.Implies`, but this is OK because:
+`*ast.Implies` is a *new* top-level shape for subgoals whose formula was `TemporalModels` or `SchemaBody`. Full audit of every `.Formula.(*lg.Implies)` and `case *lg.Implies:` site that touches a `LabeledFormula.Formula`:
 
-- Python's downstream is duck-typed: it accesses `.args[0]`, `.args[1]`. Nothing Python does with `Implies(cond, TemporalModels(...))` inspects the wrapper Implies type.
-- Go's downstream `*lg.Implies` type-switches (check/ranking.go, check/l2s_hooks.go, ivylogic/, gogen/, leangen/, fragment/, compiler/) all run on goals whose formulas are plain logic expressions, NOT on SchemaBody/TemporalModels goals. The edge cases that produce `*ast.Implies` do not flow into those passes.
-- If a downstream consumer *does* need to see through the edge-case `*ast.Implies`, add a parallel `case *ast.Implies` arm where needed. Do NOT widen `*lg.Implies.T1/T2` to `ast.Node` — that would ripple through every existing `case *lg.Implies` in the codebase.
+| Site | Exposed to post-if/let subgoal? | Notes |
+|------|------|------|
+| `check/l2s_hooks.go:183` | No | `fcLF` is an L2S-transformed fairness-constraint formula, not a proof subgoal. |
+| `check/l2s_hooks.go:519` | No | `lf` is a conjecture from `LabeledConjs`/L2S output, not a proof subgoal. |
+| `ast/decl_ast.go:1275` | No | Pre-compile parse-time check; already uses `*ast.Implies`. |
+| `compiler/theorem_to_property_test.go:246,297,324` | No | Tests theorem→property conversion; doesn't flow subgoals. |
+| `fragment/fragment.go:994-1010` | No | Iterates `LabeledProps`/`AssumedInvs`/`LabeledConjs`; not proof subgoals. |
+
+Subgoal bookkeeping path: `ApplyProof` → `SubgoalEntry{Formula: <original prop>, Subgoals: <unproven goals>}` in `mod.Subgoals`. Downstream iterators (`fragment.go:987`, `isolate/helpers.go:648-649`, `check/isolate_check.go:115`, `interp/helpers.go:438,478`) read only `.ID`, never `.Formula` shape.
+
+Intermediate tactics after `ifTactic`/`letTactic` access goal shape via `GoalConc`/`GoalPrems`/`GoalConcUnwrap` — SchemaBody-aware helpers. For `*ast.Implies`-wrapped goals: `GoalPrems` returns `[]`, `GoalConc` returns the full `*ast.Implies`, `GoalConcUnwrap` returns `nil`. Python behaves identically on this shape.
+
+**Verdict: zero existing type-switches break.** The `ast.Implies` fallback is fully self-contained in `WrapImplies`. Python-structural parity is preserved. If a future downstream consumer needs to see through the edge-case wrapper, add a parallel `case *ast.Implies` arm where needed; do NOT widen `*lg.Implies.T1/T2` to `ast.Node`.
 
 ## Verification
 
