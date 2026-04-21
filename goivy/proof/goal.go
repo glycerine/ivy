@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
@@ -103,6 +104,28 @@ func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
 	return conc
 }
 
+// normalizeOpsConc mirrors Python's `il.normalize_ops(goal_conc(x))` in
+// ivy_proof.py:770 normalize_goal. Python uses duck typing (.args/.clone)
+// so normalize_ops handles TemporalModels transparently. In Go,
+// il.NormalizeOps is typed func(lg.Expr) lg.Expr and cannot accept
+// *ast.TemporalModels, so we unwrap/rewrap it here. Emits no xtrace —
+// Python's normalize_goal does not call apply_to_conc.
+func normalizeOpsConc(conc ast.Node) ast.Node {
+	if conc == nil {
+		return conc
+	}
+	if tm, ok := conc.(*ast.TemporalModels); ok {
+		if inner, ok := tm.Fmla.(lg.Expr); ok {
+			return tm.Clone([]ast.Node{il.NormalizeOps(inner)})
+		}
+		return tm
+	}
+	if expr, ok := conc.(lg.Expr); ok {
+		return il.NormalizeOps(expr)
+	}
+	return conc
+}
+
 // WrapImplies mirrors Python's il.Implies(cond, formula) duck-typed wrapping
 // used by if_tactic and let_tactic (ivy_proof.py:226, :414, :416). It wraps
 // the ENTIRE formula in Implies(cond, formula) without descending into any
@@ -164,7 +187,7 @@ func GoalPremGoals(goal *ast.LabeledFormula) []*ast.LabeledFormula {
 // conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
 // mirroring Python's clone_goal which is duck-typed.
 func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.CloneGoal ENTER label=%s nprems=%d concType=%T", goal.LabelName(), len(prems), conc)
+	xtracer.Trace("proof.CloneGoal ENTER label=%s nprems=%d concType=%s", goal.LabelName(), len(prems), iu.TypeName(conc))
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -234,10 +257,11 @@ func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormul
 			normPrems[i] = p
 		}
 	}
-	// ApplyToConc unwraps *ast.TemporalModels so NormalizeOps runs on the inner
-	// formula, then re-wraps. For plain lg.Expr conclusions, NormalizeOps runs
-	// directly. For unknown types, the conc is passed through unchanged.
-	newConc := ApplyToConc(GoalConc(g), il.NormalizeOps)
+	// Mirror Python ivy_proof.py:770: `il.normalize_ops(goal_conc(x))`.
+	// Uses the private normalizeOpsConc helper (not ApplyToConc) so no
+	// spurious ApplyToConc xtrace is emitted here — Python's normalize_goal
+	// does not call apply_to_conc.
+	newConc := normalizeOpsConc(GoalConc(g))
 	result := CloneGoal(cfg, g, normPrems, newConc)
 	xtracer.Trace("proof.NormalizeGoal EXIT HASH canon=%v", result.Canon())
 	return result
