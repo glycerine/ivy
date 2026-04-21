@@ -136,10 +136,13 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 		freesyms[lg.Key(v)] = v
 	}
 
+	// Python: constants = set(v for v in goal_free(decl) if il.is_variable(v))
+	// — walks premises + conc to find all free items, then filters to variables.
 	constants := make(map[lg.NodeKey]lg.Expr)
-	freeVars := GoalFreeVars(decl)
-	for _, v := range freeVars {
-		constants[lg.Key(v)] = v
+	for k, n := range GoalFree(decl) {
+		if _, isVar := n.(*lg.Variable); isVar {
+			constants[k] = n
+		}
 	}
 
 	// Python: MatchProblem(schema, goal_conc(schema), goal_conc(decl), freesyms, constants)
