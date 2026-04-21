@@ -7,6 +7,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -124,12 +125,6 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	case *ast.ObjectDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Object(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.ModuleDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.ModuleD(arg); err != nil {
 				return err
 			}
 		}
@@ -558,7 +553,8 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 	if _, ok := cax.Formula.(*ast.SchemaBody); ok {
 		labelName := cax.LabelName()
 		if labelName != "" {
-			d.Compiler.Module.Schemata[labelName] = cax
+			xtracer.Trace("compiler.DomainSetup.axiom schemata.insert key='%s' value=%s", labelName, cax.Canon())
+			d.Compiler.Module.Schemata.Set(labelName, cax)
 		}
 	} else {
 		d.Compiler.Module.LabeledAxioms = append(d.Compiler.Module.LabeledAxioms, cax)
@@ -930,19 +926,6 @@ func (d *DomainSetup) Object(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.object ENTER")
 	if atom, ok := node.(*ast.Atom); ok {
 		d.Compiler.Module.AddObject(atom.Rep)
-	}
-	return nil
-}
-
-// ModuleD processes a module declaration.
-// Module instantiation is complex and deferred; we store the raw node.
-func (d *DomainSetup) ModuleD(node ast.Node) error {
-	// Module declarations define parameterized modules. They are not
-	// compiled eagerly; they are stored and instantiated later when
-	// an "instantiate" declaration references them.
-	// Store as-is in the module's schemata keyed by name.
-	if atom, ok := node.(*ast.Atom); ok {
-		d.Compiler.Module.Schemata[atom.Rep] = node
 	}
 	return nil
 }
@@ -1343,15 +1326,7 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 	// Python: schema(self, sch) accesses sch.defn.args[1] and compiles
 	// it if it's a SchemaBody. We must do the same — not just store raw.
 	if schema, ok := node.(*ast.Schema); ok {
-		defn, ok := schema.Defn.(*ast.Definition)
-		if !ok {
-			// No defn — store raw
-			name := schema.Defines()
-			if name != "" {
-				d.Compiler.Module.Schemata[name] = schema
-			}
-			return nil
-		}
+		defn := schema.Defn.(*ast.Definition)
 		// Check if RHS is SchemaBody — if so, compile it
 		// Python: if isinstance(sch.defn.args[1], ivy_ast.SchemaBody):
 		//   ldf = ivy_ast.LabeledFormula(label, sch.defn.args[1].compile())
@@ -1366,40 +1341,13 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 			label := cfg.NewAtom(defName)
 			clf := cfg.NewLabeledFormula(label, compiled)
 			clf.SetLineno(schema.GetLineno())
-			d.Compiler.Module.Schemata[label.Rep] = clf
+			xtracer.Trace("compiler.DomainSetup.schema.body schemata.insert key='%s' value=%s", label.Rep, clf.Canon())
+			d.Compiler.Module.Schemata.Set(label.Rep, clf)
 		} else {
-			d.Compiler.Module.Schemata[schema.Defines()] = schema
+			xtracer.Trace("compiler.DomainSetup.schema.nonBody schemata.insert key='%s' value=%s", schema.Defines(), schema.Canon())
+			d.Compiler.Module.Schemata.Set(schema.Defines(), schema)
 		}
 		return nil
-	}
-
-	// A schema has a defn with args[0]=name, args[1]=body.
-	// If the body is a SchemaBody, compile it and store as a labeled formula.
-	// Otherwise store the raw schema.
-	lf, ok := node.(*ast.LabeledFormula)
-	if !ok {
-		return nil
-	}
-	if lf.Formula == nil {
-		return nil
-	}
-	df, ok := lf.Formula.(*ast.Definition)
-	if !ok {
-		return nil
-	}
-	defName := df.Defines()
-	if _, ok := df.Rhs.(*ast.SchemaBody); ok {
-		compiled, err := d.Compiler.Thing(df.Rhs)
-		if err != nil {
-			return err
-		}
-		cfg := d.Compiler.Module.Cfg.AstCfg
-		label := cfg.NewAtom(defName)
-		clf := cfg.NewLabeledFormula(label, compiled)
-		clf.SetLineno(lf.GetLineno())
-		d.Compiler.Module.Schemata[defName] = clf
-	} else {
-		d.Compiler.Module.Schemata[defName] = node
 	}
 	return nil
 }
@@ -1424,8 +1372,15 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 		return nil
 	}
 
-	schema, ok := d.Compiler.Module.Schemata[instName]
-	if !ok {
+	schema, ok := d.Compiler.Module.Schemata.Get2(instName)
+	if ok {
+		if c, canOk := schema.(iu.Canonizer); canOk {
+			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%s", instName, c.Canon())
+		} else {
+			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%v", instName, schema)
+		}
+	} else {
+		xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=false", instName)
 		return lg.NewIvyError(inst, fmt.Sprintf("%s undefined in instantiation", instName))
 	}
 

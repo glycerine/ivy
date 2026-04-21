@@ -1252,7 +1252,8 @@ func CreateConstructorSchemata(mod *module.Module) error {
 
 		// goal = LabeledFormula(name, sch)
 		goal := cfg.NewLabeledFormula(schemaName, sch)
-		mod.Schemata[schemaName.Relname()] = goal
+		xtracer.Trace("compiler.CreateConstructorSchemata schemata.insert key='%s' value=%s", schemaName.Relname(), goal.Canon())
+		mod.Schemata.Set(schemaName.Relname(), goal)
 
 		// Part B: per-constructor schema
 		conss, ok := mod.SortConstructors[sortname]
@@ -1334,7 +1335,8 @@ func CreateConstructorSchemata(mod *module.Module) error {
 
 			// goal = LabeledFormula(name, sch)
 			consGoal := cfg.NewLabeledFormula(consSchemaName, consSch)
-			mod.Schemata[consSchemaName.Relname()] = consGoal
+			xtracer.Trace("compiler.CreateConstructorSchemata.nested schemata.insert key='%s' value=%s", consSchemaName.Relname(), consGoal.Canon())
+			mod.Schemata.Set(consSchemaName.Relname(), consGoal)
 		}
 	}
 
@@ -1648,10 +1650,10 @@ func CheckDefinitions(mod *module.Module) error {
 	// create LabeledFormulas that advance the LF counter.
 	var defProver module.ProofCheckerInterface
 	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
-		schemataTyped := make(map[string]*ast.LabeledFormula)
-		for k, v := range mod.Schemata {
+		schemataTyped := iu.NewInsMap[string, *ast.LabeledFormula]()
+		for k, v := range mod.Schemata.All() {
 			if lf, ok := v.(*ast.LabeledFormula); ok {
-				schemataTyped[k] = lf
+				schemataTyped.Set(k, lf)
 			}
 		}
 		defProver = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, nil, schemataTyped)

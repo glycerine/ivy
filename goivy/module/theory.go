@@ -128,7 +128,7 @@ func (m *Module) GetAxioms() []lg.Expr {
 	// In Python, schema instances are accumulated on sch.formula.instances.
 	// Here we iterate over schemata and collect any instances if they
 	// implement an interface that provides them.
-	for _, sch := range m.Schemata {
+	for _, sch := range m.Schemata.All() {
 		if si, ok := sch.(SchemaWithInstances); ok {
 			res = append(res, si.Instances()...)
 		}

@@ -341,14 +341,14 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
-	beforeSchemata := len(c.Module.Schemata)
+	beforeSchemata := c.Module.Schemata.Len()
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl native int): %v", err)
 	}
 
-	afterSchemata := len(c.Module.Schemata)
+	afterSchemata := c.Module.Schemata.Len()
 	if afterSchemata <= beforeSchemata {
 		t.Fatalf("expected Schemata to grow after native int interpretation (int theory adds rec/ind/lep schemata), before=%d after=%d",
 			beforeSchemata, afterSchemata)
@@ -372,14 +372,14 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
-	beforeSchemata := len(c.Module.Schemata)
+	beforeSchemata := c.Module.Schemata.Len()
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl range): %v", err)
 	}
 
-	afterSchemata := len(c.Module.Schemata)
+	afterSchemata := c.Module.Schemata.Len()
 	if afterSchemata <= beforeSchemata {
 		t.Fatalf("expected Schemata to grow after range interpretation (range theory adds schemata), before=%d after=%d",
 			beforeSchemata, afterSchemata)
@@ -403,14 +403,14 @@ func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
-	beforeSchemata := len(c.Module.Schemata)
+	beforeSchemata := c.Module.Schemata.Len()
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl solver sort): %v", err)
 	}
 
-	afterSchemata := len(c.Module.Schemata)
+	afterSchemata := c.Module.Schemata.Len()
 	if afterSchemata <= beforeSchemata {
 		t.Fatalf("expected Schemata to grow after solver sort interpretation (theory adds schemata), before=%d after=%d",
 			beforeSchemata, afterSchemata)

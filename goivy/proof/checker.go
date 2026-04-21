@@ -24,7 +24,10 @@ type ProofChecker struct {
 	// Definitions maps symbol names to their definitions.
 	Definitions map[string]*ast.LabeledFormula
 	// Schemata maps names to proof schemata.
-	Schemata map[string]*ast.LabeledFormula
+	// Python: self.schemata = dict() at ivy_proof.py:55. Python 3.7+ dicts are
+	// insertion-ordered; we use InsMap to match that guarantee so dumps/snapshots
+	// are deterministic on both sides.
+	Schemata *iu.InsMap[string, *ast.LabeledFormula]
 	// Stale is the set of symbols that have been referenced and are not fresh.
 	Stale map[string]bool
 }
@@ -33,7 +36,7 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
+func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, definitions []*ast.LabeledFormula, schemata *iu.InsMap[string, *ast.LabeledFormula], astCfgs ...*ast.AstConfig) *ProofChecker {
 	if cfg == nil {
 		cfg = module.TacticNewConfig()
 	}
@@ -52,20 +55,16 @@ func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, defini
 		AstCfg:      acfg,
 		Mod:         mod,
 		Definitions: make(map[string]*ast.LabeledFormula),
-		Schemata:    make(map[string]*ast.LabeledFormula),
+		Schemata:    iu.NewInsMap[string, *ast.LabeledFormula](),
 		Stale:       make(map[string]bool),
 	}
 
-	// Normalize axioms
+	// Python: self.axioms = [normalize_goal(ax) for ax in axioms]
 	for _, ax := range axioms {
-		norm := NormalizeGoal(pc.AstCfg, ax)
-		pc.Axioms = append(pc.Axioms, norm)
-		if ax.Label != nil {
-			pc.Schemata[ax.LabelName()] = ax
-		}
+		pc.Axioms = append(pc.Axioms, NormalizeGoal(pc.AstCfg, ax))
 	}
 
-	// Normalize definitions — key by defines().name per Python ivy_proof.py:53
+	// Python: self.definitions = dict((d.formula.defines().name, normalize_goal(d)) for d in definitions)
 	for _, d := range definitions {
 		norm := NormalizeGoal(pc.AstCfg, d)
 		name := ""
@@ -80,10 +79,24 @@ func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, defini
 		pc.Definitions[name] = norm
 	}
 
-	// Normalize schemata
+	// Python: if schemata is not None:
+	//             for _skey, _sval in schemata.items():
+	//                 self.schemata[_skey] = normalize_goal(_sval)
 	if schemata != nil {
-		for name, s := range schemata {
-			pc.Schemata[name] = NormalizeGoal(pc.AstCfg, s)
+		for name, s := range schemata.All() {
+			norm := NormalizeGoal(pc.AstCfg, s)
+			xtracer.Trace("proof.ProofChecker.__init__.fromMod schemata.insert key='%s' value=%s", name, norm.Canon())
+			pc.Schemata.Set(name, norm)
+		}
+	}
+
+	// Python: for ax in axioms:
+	//             if ax.label is not None:
+	//                 self.schemata[ax.name] = ax
+	for _, ax := range axioms {
+		if ax.Label != nil {
+			xtracer.Trace("proof.ProofChecker.__init__.axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+			pc.Schemata.Set(ax.LabelName(), ax)
 		}
 	}
 
@@ -102,7 +115,7 @@ func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, defini
 	}
 	// Also mark stale from schemata vocabularies.
 	if schemata != nil {
-		for _, s := range schemata {
+		for _, s := range schemata.All() {
 			vocab := GoalVocab(s)
 			for _, sym := range vocab.Symbols {
 				pc.Stale[sym.Name] = true
@@ -144,7 +157,8 @@ func (pc *ProofChecker) AdmitAxiom(ax *ast.LabeledFormula) {
 	norm := NormalizeGoal(pc.AstCfg, ax)
 	pc.Axioms = append(pc.Axioms, norm)
 	if ax.Label != nil {
-		pc.Schemata[ax.LabelName()] = ax
+		xtracer.Trace("proof.ProofChecker.admit_axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+		pc.Schemata.Set(ax.LabelName(), ax)
 	}
 }
 
@@ -157,12 +171,14 @@ func (pc *ProofChecker) AdmitAxiom(ax *ast.LabeledFormula) {
 //
 // Python: ivy_proof.py:306-322
 func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errNode interface{}, close bool) (*ast.LabeledFormula, error) {
-	if s, ok := pc.Schemata[name]; ok {
+	if s, ok := pc.Schemata.Get2(name); ok {
+		xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=true value=%s", name, s.Canon())
 		if err := CheckSchemaCapture(s, goal); err != nil {
 			return nil, err
 		}
 		return s, nil
 	}
+	xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=false", name)
 	if d, ok := pc.Definitions[name]; ok {
 		// Convert definition to constraint — Python: goal_conc(schema).to_constraint()
 		conc := GoalConc(d)
@@ -552,7 +568,8 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 		return nil, err
 	}
 	pc.Axioms = append(pc.Axioms, prop)
-	pc.Schemata[prop.LabelName()] = prop
+	xtracer.Trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s", prop.LabelName(), prop.Canon())
+	pc.Schemata.Set(prop.LabelName(), prop)
 	vocab := GoalVocab(prop)
 	for _, sym := range vocab.Symbols {
 		pc.Stale[sym.Name] = true
@@ -591,7 +608,8 @@ func (pc *ProofChecker) SetLastAxiom(prop *ast.LabeledFormula) {
 
 // SetSchema updates a schema entry by name.
 func (pc *ProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
-	pc.Schemata[name] = prop
+	xtracer.Trace("proof.ProofChecker.SetSchema schemata.insert key='%s' value=%s", name, prop.Canon())
+	pc.Schemata.Set(name, prop)
 }
 
 // --- Helper methods for ApplyProof ---

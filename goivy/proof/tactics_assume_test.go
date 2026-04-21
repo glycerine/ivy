@@ -15,7 +15,7 @@ func mkPC(schemas ...*ast.LabeledFormula) *ProofChecker {
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	for _, s := range schemas {
 		name := s.LabelName()
-		pc.Schemata[name] = s
+		pc.Schemata.Set(name, s)
 	}
 	return pc
 }

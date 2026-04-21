@@ -212,7 +212,7 @@ func TestSetLastAxiomAndSetSchema(t *testing.T) {
 
 	// SetSchema
 	pc.SetSchema("myschema", prop2)
-	if pc.Schemata["myschema"] != prop2 {
+	if got, _ := pc.Schemata.Get2("myschema"); got != prop2 {
 		t.Fatal("SetSchema did not update")
 	}
 }

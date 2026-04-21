@@ -25,7 +25,7 @@ func (m *Module) Canon() iu.Canonical {
 		parts = append(parts, "sig.sorts:"+canonSortMap(m.Sig.Sorts))
 		parts = append(parts, "sig.interp:"+canonInterpMap(m.Sig.Interp))
 	}
-	parts = append(parts, "schemata:"+canonSchemaMap(m.Schemata))
+	parts = append(parts, "schemata:"+canonInsMapSchemata(m.Schemata))
 	if m.InitCond != nil {
 		parts = append(parts, "initCond:"+string(m.InitCond.Canon()))
 	}
@@ -72,7 +72,7 @@ func (m *Module) CanonSnapshot(label string) {
 	xtracer.Trace("module.CanonSnapshot %s functions=%s", label, canonInsMapSort(m.Functions))
 
 	// Group 5: Schemata, theorems, predicates
-	xtracer.Trace("module.CanonSnapshot %s schemata=%s", label, canonSchemaMap(m.Schemata))
+	xtracer.Trace("module.CanonSnapshot %s schemata=%s", label, canonInsMapSchemata(m.Schemata))
 	xtracer.Trace("module.CanonSnapshot %s theorems=%s", label, canonSchemaMap(m.Theorems))
 	xtracer.Trace("module.CanonSnapshot %s predicates=%s", label, canonSchemaMap(m.Predicates))
 
@@ -271,6 +271,32 @@ func canonSchemaMap(schemata map[string]ast.Node) string {
 	var parts []string
 	for _, k := range keys {
 		v := schemata[k]
+		var vs string
+		if c, ok := v.(iu.Canonizer); ok {
+			vs = string(c.Canon())
+		} else {
+			vs = fmt.Sprintf("%v", v)
+		}
+		parts = append(parts, fmt.Sprintf("%s:%s", k, vs))
+	}
+	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
+}
+
+// canonInsMapSchemata is like canonSchemaMap but for *iu.InsMap[string, ast.Node].
+// Keys are sorted for canonical output (matches Python's canon_schema_map which
+// sorts keys for deterministic output regardless of insertion order).
+func canonInsMapSchemata(schemata *iu.InsMap[string, ast.Node]) string {
+	if schemata == nil || schemata.Len() == 0 {
+		return "(hash)"
+	}
+	keys := make([]string, 0, schemata.Len())
+	for k := range schemata.All() {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var parts []string
+	for _, k := range keys {
+		v, _ := schemata.Get2(k)
 		var vs string
 		if c, ok := v.(iu.Canonizer); ok {
 			vs = string(c.Canon())

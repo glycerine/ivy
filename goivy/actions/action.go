@@ -2301,7 +2301,17 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	// Python: if inst.relname in domain.schemata:
 	//           clauses = domain.schemata[inst.relname].get_instance(inst.args)
 	//           return ([], clauses, false_clauses())
-	if schema, ok := ctx.Domain.Schemata[instName]; ok {
+	schema, schemaOk := ctx.Domain.Schemata.Get2(instName)
+	if schemaOk {
+		if cz, canOk := schema.(iu.Canonizer); canOk {
+			xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=true value=%s", instName, cz.Canon())
+		} else {
+			xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=true value=%v", instName, schema)
+		}
+	} else {
+		xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=false", instName)
+	}
+	if schemaOk {
 		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
 			fmla, ok := mlf.Formula.(lg.Expr)
 			if !ok {

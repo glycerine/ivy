@@ -262,7 +262,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 	}
 
 	// For each schema, try to match its premises
-	for name, lf := range mod.Schemata {
+	for name, lf := range mod.Schemata.All() {
 		// Skip recursive/inductive schemata
 		if len(name) >= 4 && (name[:4] == "rec[" || name[:4] == "lep[" || name[:4] == "ind[") {
 			continue

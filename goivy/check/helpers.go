@@ -7,6 +7,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	solver "github.com/glycerine/ivy/goivy/z3bridge"
@@ -464,17 +465,18 @@ func AstLFToModuleLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
 	return lf
 }
 
-// ModuleSchemataToAst converts a module schemata map to ast schemata map.
-// Module.Schemata is map[string]ast.Node — values may be *ast.LabeledFormula
-// or other ast.Node types depending on how they were stored.
-func ModuleSchemataToAst(schemata map[string]ast.Node) map[string]*ast.LabeledFormula {
+// ModuleSchemataToAst converts a module schemata InsMap to an ast schemata InsMap.
+// Module.Schemata is *iu.InsMap[string, ast.Node] — values may be *ast.LabeledFormula
+// or other ast.Node types depending on how they were stored. Preserves insertion
+// order so ProofChecker receives entries in the same order Python sees them.
+func ModuleSchemataToAst(schemata *iu.InsMap[string, ast.Node]) *iu.InsMap[string, *ast.LabeledFormula] {
 	if schemata == nil {
 		return nil
 	}
-	result := make(map[string]*ast.LabeledFormula, len(schemata))
-	for k, v := range schemata {
+	result := iu.NewInsMap[string, *ast.LabeledFormula]()
+	for k, v := range schemata.All() {
 		if s, ok := v.(*ast.LabeledFormula); ok {
-			result[k] = s
+			result.Set(k, s)
 		}
 	}
 	return result

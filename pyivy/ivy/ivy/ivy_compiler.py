@@ -1068,7 +1068,9 @@ ivy_ast.SchemaBody.compile = compile_schema_body
 
 def lookup_schema(name,proof):
     if name in im.module.schemata:
+        if __debug__: xtracer.trace("compiler.LookupSchema schemata.lookup key='%s' found=true value=%s" % (name, im.module.schemata[name].canon()))
         return im.module.schemata[name]
+    if __debug__: xtracer.trace("compiler.LookupSchema schemata.lookup key='%s' found=false" % name)
     if name in im.module.theorems:
         return im.module.theorems[name]
     raise iu.IvyError(proof,'applied schema {} does not exist'.format(name))
@@ -1198,6 +1200,7 @@ class IvyDomainSetup(IvyDeclInterp):
         if __debug__: xtracer.trace("compiler.DomainSetup.axiom ENTER")
         cax = ax.compile()
         if isinstance(cax.formula,ivy_ast.SchemaBody):
+            if __debug__: xtracer.trace("compiler.DomainSetup.axiom schemata.insert key='%s' value=%s" % (cax.label.relname, cax.canon()))
             self.domain.schemata[cax.label.relname] = cax
         else:
             self.domain.labeled_axioms.append(cax)
@@ -1248,8 +1251,10 @@ class IvyDomainSetup(IvyDeclInterp):
             ldf = ivy_ast.LabeledFormula(label,sch.defn.args[1].compile())
             ldf.lineno = sch.defn.args[1].lineno
 #            self.domain.labeled_axioms.append(ldf)
+            if __debug__: xtracer.trace("compiler.DomainSetup.schema.body schemata.insert key='%s' value=%s" % (label.relname, ldf.canon()))
             self.domain.schemata[label.relname] = ldf
         else:
+            if __debug__: xtracer.trace("compiler.DomainSetup.schema.nonBody schemata.insert key='%s' value=%s" % (sch.defn.defines(), sch.canon()))
             self.domain.schemata[sch.defn.defines()] = sch
     def theorem(self,sch):
         if __debug__: xtracer.trace("compiler.DomainSetup.theorem ENTER")
@@ -1263,6 +1268,10 @@ class IvyDomainSetup(IvyDeclInterp):
     def instantiate(self,instantiation):
         if __debug__: xtracer.trace("compiler.DomainSetup.instantiate ENTER")
         pref, inst = instantiation.args
+        if inst.relname in self.domain.schemata:
+            if __debug__: xtracer.trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%s" % (inst.relname, self.domain.schemata[inst.relname].canon()))
+        else:
+            if __debug__: xtracer.trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=false" % inst.relname)
         try:
             self.domain.schemata[inst.relname].instantiate(inst.args)
         except LookupError:
@@ -2143,6 +2152,7 @@ def create_constructor_schemata(mod):
         sch.instances = []
         goal = ivy_ast.LabeledFormula(name,sch)
         goal.lineno = None
+        if __debug__: xtracer.trace("compiler.CreateConstructorSchemata schemata.insert key='%s' value=%s" % (name.relname, goal.canon()))
         mod.schemata[name.relname] = goal
 
         for cons in mod.sort_constructors[sortname]:
@@ -2164,6 +2174,7 @@ def create_constructor_schemata(mod):
             sch.instances = []
             goal = ivy_ast.LabeledFormula(name,sch)
             goal.lineno = None
+            if __debug__: xtracer.trace("compiler.CreateConstructorSchemata.nested schemata.insert key='%s' value=%s" % (name.relname, goal.canon()))
             mod.schemata[name.relname] = goal
 
     for sortname,conss in mod.sort_constructors.items():
@@ -2290,6 +2301,7 @@ def check_properties(mod):
             if not isinstance(prop.formula,ivy_logic.Definition):
                 prop = named_trans(prop)
                 prover.axioms[-1] = prop
+                if __debug__: xtracer.trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'" % prop.name)
                 prover.schemata[prop.name] = prop
             if len(subgoals) == 0:
                 if not isinstance(prop.formula,ivy_ast.SchemaBody):
@@ -2301,6 +2313,7 @@ def check_properties(mod):
                         mod.labeled_axioms.append(prop)
                 else:
                     if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> schemata (proved, 0 subgoals, schema)" % _plbl)
+                    if __debug__: xtracer.trace("compiler.CheckProperties.classify.noSubgoals schemata.insert key='%s' value=%s" % (prop.label.relname, prop.canon()))
                     mod.schemata[prop.label.relname] = prop
             else:
                 if __debug__: xtracer.trace("compiler.CheckProperties.classify label=%s -> props (proved, %d subgoals)" % (_plbl, len(subgoals)))
@@ -2317,6 +2330,7 @@ def check_properties(mod):
                     else:
                         mod.labeled_props.append(prop)
                 else:
+                    if __debug__: xtracer.trace("compiler.CheckProperties.classify.subgoals schemata.insert key='%s' value=%s" % (prop.label.relname, prop.canon()))
                     mod.schemata[prop.label.relname] = prop
             mod.subgoals.append((prop,subgoals))
         #     from ivy_l2s import l2s

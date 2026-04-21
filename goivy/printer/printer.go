@@ -11,6 +11,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/module"
 )
 
@@ -43,9 +44,9 @@ func FormatModule(mod *module.Module) string {
 	}
 
 	// Schemata
-	names := sortedKeysNode(mod.Schemata)
+	names := sortedInsMapKeys(mod.Schemata)
 	for _, x := range names {
-		y := mod.Schemata[x]
+		y, _ := mod.Schemata.Get2(x)
 		b.WriteString(fmt.Sprintf("schema [%s]%v\n", x, y))
 	}
 
@@ -123,6 +124,18 @@ func sortedKeys(m map[string]interface{}) []string {
 func sortedKeysNode(m map[string]ast.Node) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func sortedInsMapKeys(m *iu.InsMap[string, ast.Node]) []string {
+	if m == nil {
+		return nil
+	}
+	keys := make([]string, 0, m.Len())
+	for k := range m.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

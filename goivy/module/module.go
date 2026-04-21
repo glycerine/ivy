@@ -45,7 +45,7 @@ type Module struct {
 	// Module structure
 	Hierarchy      *iu.InsMap[string, *iu.InsMap[string, bool]] // parent → children
 	Updates        []interface{}
-	Schemata       map[string]ast.Node
+	Schemata       *iu.InsMap[string, ast.Node]
 	Theorems       map[string]ast.Node
 	Instantiations []Instantiation
 
@@ -308,7 +308,7 @@ func (m *Module) Clear() {
 	m.Relations = iu.NewInsMap[string, lg.Sort]()
 	m.Functions = iu.NewInsMap[string, lg.Sort]()
 	m.Updates = nil
-	m.Schemata = make(map[string]ast.Node)
+	m.Schemata = iu.NewInsMap[string, ast.Node]()
 	m.Theorems = make(map[string]ast.Node)
 
 	m.Instantiations = nil
@@ -444,7 +444,7 @@ func (m *Module) Copy() *Module {
 	for k, v := range m.Actions.All() {
 		c.Actions.Set(k, v)
 	}
-	c.Schemata = copyMapNode(m.Schemata)
+	c.Schemata = copyInsMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
 	c.Isolates = make(map[string]*ast.IsolateDef, len(m.Isolates))
 	for k, v := range m.Isolates {
@@ -807,6 +807,17 @@ func copyMapNode(m map[string]ast.Node) map[string]ast.Node {
 	c := make(map[string]ast.Node, len(m))
 	for k, v := range m {
 		c[k] = v
+	}
+	return c
+}
+
+func copyInsMapNode(m *iu.InsMap[string, ast.Node]) *iu.InsMap[string, ast.Node] {
+	c := iu.NewInsMap[string, ast.Node]()
+	if m == nil {
+		return c
+	}
+	for k, v := range m.All() {
+		c.Set(k, v)
 	}
 	return c
 }

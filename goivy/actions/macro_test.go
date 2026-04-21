@@ -415,7 +415,7 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 	mod.Macros = map[string]*ast.Definition{} // no macros
 
 	fmla := lg.NewConst("p", lg.Boolean)
-	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
+	mod.Schemata.Set("myschema", testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla))
 
 	a := NewInstantiateAction(nil)
 	a.AstInst = testAstCfg.NewAtom("myschema")
@@ -462,7 +462,7 @@ func TestInstantiateActionIntUpdateCompiledExprFallback(t *testing.T) {
 	mod := module.New()
 
 	fmla := lg.NewConst("q", lg.Boolean)
-	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
+	mod.Schemata.Set("myschema", testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla))
 
 	sym := lg.NewConst("myschema", lg.TopS)
 	a := NewInstantiateAction(sym)

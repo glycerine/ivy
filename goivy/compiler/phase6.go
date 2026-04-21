@@ -1361,9 +1361,15 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 // LookupSchema looks up a schema by name in the module.
 // Corresponds to Python's lookup_schema(name, proof) (ivy_compiler.py:905-910).
 func (c *Compiler) LookupSchema(name string) (interface{}, error) {
-	if s, ok := c.Module.Schemata[name]; ok {
+	if s, ok := c.Module.Schemata.Get2(name); ok {
+		if cz, canOk := s.(iu.Canonizer); canOk {
+			xtracer.Trace("compiler.LookupSchema schemata.lookup key='%s' found=true value=%s", name, cz.Canon())
+		} else {
+			xtracer.Trace("compiler.LookupSchema schemata.lookup key='%s' found=true value=%v", name, s)
+		}
 		return s, nil
 	}
+	xtracer.Trace("compiler.LookupSchema schemata.lookup key='%s' found=false", name)
 	if t, ok := c.Module.Theorems[name]; ok {
 		return t, nil
 	}
@@ -1710,7 +1716,7 @@ func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
 		}
 	}
 	// Also include schemata already in the module
-	for name := range mod.Schemata {
+	for name := range mod.Schemata.All() {
 		schemata[name] = true
 	}
 	// Validate instantiations
@@ -2321,10 +2327,10 @@ func CheckProperties(mod *module.Module) error {
 	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
 	var prover module.ProofCheckerInterface
 	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
-		schemataTyped := make(map[string]*ast.LabeledFormula)
-		for k, v := range mod.Schemata {
+		schemataTyped := iu.NewInsMap[string, *ast.LabeledFormula]()
+		for k, v := range mod.Schemata.All() {
 			if lf, ok := v.(*ast.LabeledFormula); ok {
-				schemataTyped[k] = lf
+				schemataTyped.Set(k, lf)
 			}
 		}
 		prover = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, mod.Definitions, schemataTyped)
@@ -2360,6 +2366,7 @@ func CheckProperties(mod *module.Module) error {
 				// Update prover's last axiom and schemata with named-transformed prop
 				if prover != nil {
 					prover.SetLastAxiom(prop)
+					xtracer.Trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'", prop.LabelName())
 					prover.SetSchema(prop.LabelName(), prop)
 				}
 			}
@@ -2377,9 +2384,10 @@ func CheckProperties(mod *module.Module) error {
 					xtracer.Trace("compiler.CheckProperties.classify label=%s -> schemata (proved, 0 subgoals, schema)", propLabel)
 					name := labeledFormulaName(prop)
 					if mod.Schemata == nil {
-						mod.Schemata = make(map[string]ast.Node)
+						mod.Schemata = iu.NewInsMap[string, ast.Node]()
 					}
-					mod.Schemata[name] = prop
+					xtracer.Trace("compiler.CheckProperties.classify.noSubgoals schemata.insert key='%s' value=%s", name, prop.Canon())
+					mod.Schemata.Set(name, prop)
 				}
 			} else {
 				// Has subgoals — convert via TheoremToProperty
@@ -2408,9 +2416,10 @@ func CheckProperties(mod *module.Module) error {
 				} else {
 					name := labeledFormulaName(prop)
 					if mod.Schemata == nil {
-						mod.Schemata = make(map[string]ast.Node)
+						mod.Schemata = iu.NewInsMap[string, ast.Node]()
 					}
-					mod.Schemata[name] = prop
+					xtracer.Trace("compiler.CheckProperties.classify.subgoals schemata.insert key='%s' value=%s", name, prop.Canon())
+					mod.Schemata.Set(name, prop)
 				}
 			}
 			mod.Subgoals = append(mod.Subgoals, module.SubgoalEntry{
@@ -2676,7 +2685,8 @@ func ShowCallGraph(mod *module.Module) string {
 // ClearRules removes rules associated with a name from the module.
 // Corresponds to clearing rules in Python's ivy_compiler.py.
 func ClearRules(mod *module.Module, name string) {
-	delete(mod.Schemata, name)
+	xtracer.Trace("compiler.ClearRules schemata.delete key='%s'", name)
+	mod.Schemata.Delkey(name)
 }
 
 // IvyLoadFile loads and compiles an Ivy file into a module.

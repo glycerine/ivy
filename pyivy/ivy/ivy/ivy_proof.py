@@ -52,9 +52,15 @@ class ProofChecker(object):
     
         self.axioms  = [normalize_goal(ax) for ax in axioms]
         self.definitions = dict((d.formula.defines().name,normalize_goal(d)) for d in definitions)
-        self.schemata = dict((x,normalize_goal(y)) for x,y in schemata.items()) if schemata is not None else dict()
+        self.schemata = dict()
+        if schemata is not None:
+            for _skey, _sval in schemata.items():
+                _norm = normalize_goal(_sval)
+                if __debug__: xtracer.trace("proof.ProofChecker.__init__.fromMod schemata.insert key='%s' value=%s" % (_skey, _norm.canon()))
+                self.schemata[_skey] = _norm
         for ax in axioms:
             if ax.label is not None:
+                if __debug__: xtracer.trace("proof.ProofChecker.__init__.axiom schemata.insert key='%s' value=%s" % (ax.name, ax.canon()))
                 self.schemata[ax.name] = ax
         self.stale = set() # set of symbols that are not fresh
         for lf in axioms + definitions:
@@ -66,6 +72,7 @@ class ProofChecker(object):
     def admit_axiom(self,ax):
         self.axioms.append(normalize_goal(ax))
         if ax.label is not None:
+            if __debug__: xtracer.trace("proof.ProofChecker.admit_axiom schemata.insert key='%s' value=%s" % (ax.name, ax.canon()))
             self.schemata[ax.name] = ax
 
     def admit_definition(self,defn,proof=None):
@@ -116,6 +123,7 @@ class ProofChecker(object):
         if subgoals is None:
             raise NoMatch(proof,"goal does not match the given schema")
         self.axioms.append(prop)
+        if __debug__: xtracer.trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
         self.schemata[prop.name] = prop
         vocab = goal_vocab(prop)
         self.stale.update(vocab.symbols)
@@ -389,14 +397,17 @@ class ProofChecker(object):
         if __debug__: xtracer.trace("proof.LookupSchema ENTER schemaName=%s close=%s" % (schemaname, close))
         if schemaname in self.schemata:
             schema = self.schemata[schemaname]
+            if __debug__: xtracer.trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=true value=%s" % (schemaname, schema.canon()))
             check_schema_capture(schema,decl)
         elif schemaname in self.definitions:
+            if __debug__: xtracer.trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=false" % schemaname)
             schema = self.definitions[schemaname]
             fmla = goal_conc(schema).to_constraint()
             fmla = il.close_formula(fmla) if close else fmla
             schema = clone_goal(schema,goal_prems(schema),fmla)
             check_schema_capture(schema,decl)
         else:
+            if __debug__: xtracer.trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=false" % schemaname)
             premmap = dict((x.name,x) for x in goal_prem_goals(decl))
             if schemaname in premmap:
                 schema = premmap[schemaname]

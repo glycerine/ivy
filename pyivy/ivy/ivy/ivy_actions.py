@@ -814,9 +814,11 @@ class InstantiateAction(Action):
                 if __debug__: xtracer.trace("actions.InstantiateAction.int_update EXIT")
                 return res
         if inst.relname in domain.schemata:
+            if __debug__: xtracer.trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=true value=%s" % (inst.relname, domain.schemata[inst.relname].canon()))
             clauses = domain.schemata[inst.relname].get_instance(inst.args)
             if __debug__: xtracer.trace("actions.InstantiateAction.int_update EXIT")
             return ([],clauses, false_clauses())
+        if __debug__: xtracer.trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=false" % inst.relname)
         raise IvyError(inst,"instantiation of undefined: {}".format(inst.relname))
     def cmpl(self):
         return self
