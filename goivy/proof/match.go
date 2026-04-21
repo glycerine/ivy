@@ -7,6 +7,7 @@ import (
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // MatchProblem describes a schema-instantiation matching problem.
@@ -195,8 +196,11 @@ func EquivAlpha(x, y lg.Expr) bool {
 // Returns an assignment sigma to freesyms such that sigma(pat) =_alpha inst.
 // Returns nil on failure.
 func Match(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	xtracer.Trace("proof.Match ENTER patType=%T instType=%T nfreesyms=%d", pat, inst, len(freesyms))
 	if il.IsQuantifier(pat) {
-		return MatchQuants(pat, inst, freesyms, constants)
+		result := MatchQuants(pat, inst, freesyms, constants)
+		xtracer.Trace("proof.Match EXIT viaQuants success=%v", result != nil)
+		return result
 	}
 	if HeadsMatch(pat, inst, freesyms) {
 		patArgs := il.NodeArgs(pat)
@@ -216,7 +220,9 @@ func Match(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg
 		if v, ok := pat.(*lg.Variable); ok {
 			matches = append(matches, map[lg.NodeKey]lg.Expr{lg.Key(v): inst})
 		}
-		return MergeMatches(matches...)
+		result := MergeMatches(matches...)
+		xtracer.Trace("proof.Match EXIT viaHeads success=%v", result != nil)
+		return result
 	}
 
 	// If pat is a free application, try to extract lambda
@@ -234,10 +240,13 @@ func Match(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg
 						matches = append(matches, MatchSort(ps[i], ls[i], freesyms))
 					}
 				}
-				return MergeMatches(matches...)
+				result := MergeMatches(matches...)
+				xtracer.Trace("proof.Match EXIT viaLambda success=%v", result != nil)
+				return result
 			}
 		}
 	}
+	xtracer.Trace("proof.Match EXIT noMatch")
 	return nil
 }
 
@@ -290,6 +299,7 @@ func MatchQuants(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) 
 // Matches free FO variables to ground terms, but ignores variable
 // occurrences under free second-order symbols.
 func FOMatch(pat, inst lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	xtracer.Trace("proof.FOMatch ENTER patType=%T instType=%T", pat, inst)
 	if v, ok := pat.(*lg.Variable); ok {
 		if freesyms[lg.Key(v)] != nil && allVariablesAreConstants(inst, constants) {
 			res := map[lg.NodeKey]lg.Expr{lg.Key(v): inst}
@@ -365,12 +375,19 @@ func ComposeMatches(freesyms map[lg.NodeKey]lg.Expr, mat1, mat2 map[lg.NodeKey]l
 // Python first calls alpha_avoid to rename bound variables that would clash
 // with free variables introduced by the substitution.
 func ApplyMatch(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
+	xtracer.Trace("proof.ApplyMatch ENTER nmatch=%d fmlaType=%T", len(match), fmla)
 	// Python's apply_match has no early return for empty match — always processes.
 	// Alpha-rename bound vars to avoid capture by match RHS free vars.
 	// Python: freevars = match_rhs_vars(match); fmla = il.alpha_avoid(fmla, freevars)
 	freeVars := MatchRhsVars(match)
 	fmla = il.AlphaAvoidMap(fmla, freeVars)
-	return applyMatchRec(match, fmla)
+	result := applyMatchRec(match, fmla)
+	if result != nil {
+		xtracer.Trace("proof.ApplyMatch EXIT HASH canon=%v", result.Canon())
+	} else {
+		xtracer.Trace("proof.ApplyMatch EXIT resultNil")
+	}
+	return result
 }
 
 // applyMatchRec recursively applies a match to a formula with beta reduction.

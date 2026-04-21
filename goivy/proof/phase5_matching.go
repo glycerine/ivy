@@ -13,6 +13,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // === Batch 5.2: Match Compilation ===
@@ -22,7 +23,9 @@ import (
 // and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
 func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
+	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%T", expr)
 	if expr == nil {
+		xtracer.Trace("proof.CompileExprVocab EXIT exprNil")
 		return nil
 	}
 
@@ -60,6 +63,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 		// Fallback: try simple symbol lookup
 		compiled = compileSimple(expr, vocab)
 		if compiled == nil {
+			xtracer.Trace("proof.CompileExprVocab EXIT err=compileFailed err=%v", err)
 			return nil
 		}
 	}
@@ -72,8 +76,10 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 	}
 	inferred, err := il.SortInferList(terms, nil, nil)
 	if err != nil {
+		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v HASH canon=%v", err, compiled.Canon())
 		return compiled // return without sort inference on error
 	}
+	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", inferred[0].Canon())
 	return inferred[0]
 }
 
@@ -742,8 +748,10 @@ func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Exp
 // the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
 func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool, mod *module.Module) map[lg.NodeKey]lg.Expr {
+	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelName(), allowWitness)
 	schema := prob.SchemaLF
 	if schema == nil {
+		xtracer.Trace("proof.CompileMatchFull EXIT schemaLFNil")
 		return nil
 	}
 	freesyms := copyNodeMap(prob.FreeSyms)
@@ -768,7 +776,9 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 		oneMatch := CompileOneMatch(lhs, rhs, freesyms, prob.Constants)
 		matches = append(matches, oneMatch)
 	}
-	return MergeMatches(matches...)
+	result := MergeMatches(matches...)
+	xtracer.Trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d", len(matches), len(result))
+	return result
 }
 
 // unwrapLogicNode extracts a lg.Expr from an ast.Node.
@@ -914,8 +924,10 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	// Python's apply_match_alt has no early return for empty match.
 	if fmla == nil {
+		xtracer.Trace("proof.ApplyMatchAlt ENTER fmlaNil nmatch=%d", len(match))
 		return fmla
 	}
+	xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%T", len(match), fmla)
 	// Alpha-rename bound vars in fmla to avoid capture by match RHS free vars.
 	// Python: freevars = list(match_rhs_vars(match)); fmla = il.alpha_avoid(fmla, freevars)
 	freeVars := MatchRhsVars(match)
@@ -923,7 +935,13 @@ func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKe
 	if env == nil {
 		env = make(map[lg.NodeKey]bool)
 	}
-	return applyMatchAltRec(match, fmla, env)
+	result := applyMatchAltRec(match, fmla, env)
+	if result != nil {
+		xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", result.Canon())
+	} else {
+		xtracer.Trace("proof.ApplyMatchAlt EXIT resultNil")
+	}
+	return result
 }
 
 // applyMatchAltRec recursively applies a match with capture checking.
@@ -1316,6 +1334,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
 func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelName(), len(match))
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1393,13 +1412,16 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		return ApplyMatchAlt(match, c, env)
 	})
-	return CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	return result
 }
 
 // ApplyMatchGoalNodeNonAlt applies a match to a goal using the non-alt
 // (non-capture-checking) apply function. Used for fomatch applications.
 // Corresponds to Python's apply_match_goal called with apply_match.
 func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt ENTER label=%s nmatch=%d", goal.LabelName(), len(match))
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1461,20 +1483,27 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
 		return ApplyMatch(match, c)
 	})
-	return CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=%v", result.Canon())
+	return result
 }
 
 // CompileWitnessList compiles witness terms for existential instantiation.
 // Corresponds to Python's compile_witness_list.
 func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula, mod *module.Module) []lg.Expr {
+	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelName())
 	vocab := GoalVocab(goal)
 	var result []lg.Expr
-	for _, arg := range proof.Args() {
+	for i, arg := range proof.Args() {
 		compiled := CompileExprVocab(arg, vocab, mod)
 		if compiled != nil {
+			xtracer.Trace("proof.CompileWitnessList arg=%d HASH canon=%v", i, compiled.Canon())
 			result = append(result, compiled)
+		} else {
+			xtracer.Trace("proof.CompileWitnessList arg=%d compiledNil", i)
 		}
 	}
+	xtracer.Trace("proof.CompileWitnessList EXIT nresult=%d", len(result))
 	return result
 }
 

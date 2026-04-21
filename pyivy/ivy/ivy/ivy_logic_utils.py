@@ -1671,8 +1671,12 @@ def skolemize_ast(pos,vs,used_names,skolems,fmla,prefix=None):
     return fmla.clone([skolemize_ast(pos,vs,used_names,skolems,arg,prefix) for arg in fmla.args])
 
 def witness_ast(pos,vs,witnesses,fmla):
+    if __debug__: xtracer.trace("ilu.witnessAst ENTER pos=%s type=%s nwitnesses=%d" % (pos, type(fmla).__name__, len(witnesses)))
     if is_quantifier(fmla):
-        if is_exists(fmla) if not pos else is_forall(fmla):
+        isE = is_exists(fmla)
+        isA = is_forall(fmla)
+        if (isE and not pos) or (isA and pos):
+            if __debug__: xtracer.trace("ilu.witnessAst branch type=Quantifier pos=%s isE=%s isA=%s nvars=%d" % (pos, isE, isA, len(fmla.variables)))
             used_vars = used_variables_ast(fmla.body)
             mvs = [w for w in vs if w in used_vars]
             subst = {}
@@ -1680,28 +1684,44 @@ def witness_ast(pos,vs,witnesses,fmla):
             body = fmla.body
             fvars = list(fmla.variables)
             for idx,v in enumerate(fvars):
-                if v in witnesses:
+                found = v in witnesses
+                if __debug__: xtracer.trace("ilu.witnessAst quantifierVar v=%s key=%s found=%s" % (v.name, v.canon() if hasattr(v,'canon') else str(v), found))
+                if found:
                     term = witnesses[v]
                     term_vars = used_variables_ast(term)
                     for w in fvars[idx+1:]:
                         if w in term_vars:
+                            if __debug__: xtracer.trace("ilu.witnessAst EXIT err=capture var=%s" % w.name)
                             raise iu.IvyError(fmla,'variable {} captured by substution'.format(w))
                     try:
                         body = logic_util.substitute(body,{v:term})
                     except logic_util.CaptureError as err:
+                        if __debug__: xtracer.trace("ilu.witnessAst EXIT err=substCapture")
                         raise iu.IvyError(fmla,'variable{} {} captured by substution'.format('s' if len(err.variables) > 1 else '',  ','.join(str(w) for w in err.variables)))
                 else:
                     new_vars.append(v)
             body = witness_ast(pos,vs,witnesses,body)
             if new_vars:
-                return fmla.clone_binder(new_vars,body)
+                result = fmla.clone_binder(new_vars,body)
+                if __debug__: xtracer.trace("ilu.witnessAst EXIT type=Quantifier nnewVars=%d HASH canon=%s" % (len(new_vars), result.canon()))
+                return result
+            if __debug__: xtracer.trace("ilu.witnessAst EXIT type=Quantifier allSubstituted HASH canon=%s" % body.canon())
             return body
     if isinstance(fmla,Not):
-        return fmla.clone([witness_ast(not pos,vs,witnesses,fmla.body)])
+        if __debug__: xtracer.trace("ilu.witnessAst branch type=Not pos=%s" % pos)
+        result = fmla.clone([witness_ast(not pos,vs,witnesses,fmla.body)])
+        if __debug__: xtracer.trace("ilu.witnessAst EXIT type=Not HASH canon=%s" % result.canon())
+        return result
     if isinstance(fmla,Implies):
-        return fmla.clone([witness_ast(not pos,vs,witnesses,fmla.args[0]),
+        if __debug__: xtracer.trace("ilu.witnessAst branch type=Implies pos=%s" % pos)
+        result = fmla.clone([witness_ast(not pos,vs,witnesses,fmla.args[0]),
                            witness_ast(pos,vs,witnesses,fmla.args[1])])
-    return fmla.clone([witness_ast(pos,vs,witnesses,arg) for arg in fmla.args])
+        if __debug__: xtracer.trace("ilu.witnessAst EXIT type=Implies HASH canon=%s" % result.canon())
+        return result
+    if __debug__: xtracer.trace("ilu.witnessAst branch type=generic pos=%s exprType=%s nargs=%d" % (pos, type(fmla).__name__, len(fmla.args)))
+    result = fmla.clone([witness_ast(pos,vs,witnesses,arg) for arg in fmla.args])
+    if __debug__: xtracer.trace("ilu.witnessAst EXIT type=generic exprType=%s HASH canon=%s" % (type(fmla).__name__, result.canon() if hasattr(result,'canon') else type(result).__name__))
+    return result
 
 
 def reskolemize_clauses(clauses, skolemizer):

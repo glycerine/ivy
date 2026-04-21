@@ -25,7 +25,9 @@ import (
 //   goal = ia.LabeledFormula(goal.label, il.Implies(cond, goal.formula))
 //   return [goal] + decls[1:]
 func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.letTactic ENTER ndecls=%d nDefs=%d", len(decls), len(proof.Defs))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.letTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "let tactic: no goals"}
 	}
 	goal := decls[0]
@@ -63,6 +65,7 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 	}
 
 	if len(eqs) == 0 {
+		xtracer.Trace("proof.letTactic EXIT passthrough ndecls=%d", len(decls))
 		return decls, nil
 	}
 
@@ -81,6 +84,7 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 
 	result := []*ast.LabeledFormula{subgoal}
 	result = append(result, decls[1:]...)
+	xtracer.Trace("proof.letTactic EXIT HASH canon=%v", subgoal.Canon())
 	return result, nil
 }
 
@@ -90,7 +94,9 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 // isGlobal distinguishes AssumeGlobalTactic (from "assume" keyword) from
 // AssumeTactic (from "instantiate" keyword). Python uses isinstance() check.
 func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.AssumeTactic, isGlobal bool) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.assumeTactic ENTER ndecls=%d isGlobal=%v", len(decls), isGlobal)
 	if len(decls) == 0 {
+		xtracer.Trace("proof.assumeTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "assume tactic: no goals"}
 	}
 	decl := decls[0]
@@ -101,6 +107,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		schemaName = fmt.Sprint(proof.SchemaName)
 	}
 	if schemaName == "" {
+		xtracer.Trace("proof.assumeTactic EXIT err=noSchemaName")
 		return nil, &ProofError{Msg: "assume tactic: no schema name"}
 	}
 
@@ -126,6 +133,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		var err error
 		schema, err = pc.LookupSchema(schemaName, decl, proof, false)
 		if err != nil {
+			xtracer.Trace("proof.assumeTactic EXIT err=noSchema schema=%s", schemaName)
 			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
 				"No property %s exists in the current context", schemaName)}
 		}
@@ -137,6 +145,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Python: prob, pmatch = self.setup_schema_matching(decl, proof, schema, allow_witness=True)
 	prob, pmatch, err := pc.SetupSchemaMatchingRaw(decl, proof.Ren, proof.Matches, schema, true)
 	if err != nil {
+		xtracer.Trace("proof.assumeTactic EXIT err=%v schema=%s", err, schemaName)
 		return nil, err
 	}
 
@@ -173,6 +182,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	if len(witness) > 0 {
 		newConc, werr := module.WitnessAst(true, nil, witness, rawConc)
 		if werr != nil {
+			xtracer.Trace("proof.assumeTactic EXIT err=witnessSubst schema=%s err=%v", schemaName, werr)
 			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
 				"assume tactic witness substitution: %v", werr)}
 		}
@@ -206,6 +216,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 			if isGlobal {
 				prem = RenamePremNoClash(prem, decl)
 			} else {
+				xtracer.Trace("proof.assumeTactic EXIT err=clash prem=%s", prem.LabelName())
 				return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
 					"instance name %s clashes with context", prem.LabelName())}
 			}
@@ -217,6 +228,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	newGoal := pc.goalAddPrem(decl, prem, proof.GetLineno())
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
+	xtracer.Trace("proof.assumeTactic EXIT schema=%s HASH canon=%v", schemaName, newGoal.Canon())
 	return result, nil
 }
 
@@ -246,16 +258,20 @@ func isNoneAST(n ast.Node) bool {
 // wrapping — the divergence observed at log.golden.2hr index 2411549.
 func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
 	if _, inFree := prob.FreeSyms[key]; inFree {
+		xtracer.Trace("proof.isWitVar key=%s result=false reason=inFreeSyms", string(key))
 		return false
 	}
 	if prob.SchemaLF == nil {
+		xtracer.Trace("proof.isWitVar key=%s result=false reason=schemaLFNil", string(key))
 		return false
 	}
 	conc := ConcAsExpr(GoalConc(prob.SchemaLF))
 	if conc == nil {
+		xtracer.Trace("proof.isWitVar key=%s result=false reason=concNil", string(key))
 		return false
 	}
 	_, isUsedVar := lu.UsedVariables(conc)[key]
+	xtracer.Trace("proof.isWitVar key=%s result=%v", string(key), isUsedVar)
 	return isUsedVar
 }
 
@@ -275,7 +291,9 @@ func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
 //	    decl = goal_apply_to_conc(decl, lambda fmla: unfold_fmla(fmla, defns))
 //	return [decl] + decls[1:]
 func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.UnfoldTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.unfoldTactic ENTER ndecls=%d nUnfSpecs=%d", len(decls), len(proof.UnfSpecs))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.unfoldTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "unfold tactic: no goals"}
 	}
 	goal := decls[0]
@@ -299,6 +317,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		// lookup_schema checks schemata first, then definitions
 		defn, err := pc.LookupSchema(defName, goal, proof, false)
 		if err != nil {
+			xtracer.Trace("proof.unfoldTactic EXIT err=notFound defName=%s", defName)
 			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: %s not found", defName)}
 		}
 
@@ -308,6 +327,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		for _, rn := range unfspec.Renamings {
 			renamed, rerr := RenameGoal(pc.astCfg(), defn, rn)
 			if rerr != nil {
+				xtracer.Trace("proof.unfoldTactic EXIT err=rename defName=%s err=%v", defName, rerr)
 				return nil, rerr
 			}
 			rdefs = append(rdefs, renamed)
@@ -319,6 +339,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 	}
 
 	if len(defns) == 0 {
+		xtracer.Trace("proof.unfoldTactic EXIT passthrough ndecls=%d", len(decls))
 		return decls, nil
 	}
 
@@ -331,6 +352,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 			return UnfoldGoal(pc.astCfg(), prem, defns)
 		})
 		if newGoal == nil {
+			xtracer.Trace("proof.unfoldTactic EXIT err=noPremise premName=%s", premName)
 			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: no premise %s found", premName), Node: proof}
 		}
 		goal = newGoal
@@ -345,6 +367,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 	}
 
 	// Python: return [decl] + decls[1:]
+	xtracer.Trace("proof.unfoldTactic EXIT HASH canon=%v", goal.Canon())
 	return append([]*ast.LabeledFormula{goal}, decls[1:]...), nil
 }
 
@@ -376,7 +399,9 @@ func attribGoals(proof ast.Node, goals []*ast.LabeledFormula) []*ast.LabeledForm
 //           attrib_goals(proof.args[2], apply_proof([false_goal], proof.args[2])) +
 //           decls[1:])
 func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.ifTactic ENTER ndecls=%d", len(decls))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.ifTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "if tactic: no goals"}
 	}
 	goal := decls[0]
@@ -385,6 +410,7 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 	// Python: cond = proof.args[0]
 	cond := astNodeToLogicNode(proof.Cond)
 	if cond == nil {
+		xtracer.Trace("proof.ifTactic EXIT err=condConversion")
 		return nil, &ProofError{Msg: "if tactic: could not convert condition to logic node"}
 	}
 
@@ -405,6 +431,7 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 	if proof.Then != nil {
 		trueResult, err := pc.ApplyProof([]*ast.LabeledFormula{trueGoal}, proof.Then)
 		if err != nil {
+			xtracer.Trace("proof.ifTactic EXIT err=%v branch=true", err)
 			return nil, err
 		}
 		result = append(result, attribGoals(proof.Then, trueResult)...)
@@ -416,6 +443,7 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 	if proof.Else != nil {
 		falseResult, err := pc.ApplyProof([]*ast.LabeledFormula{falseGoal}, proof.Else)
 		if err != nil {
+			xtracer.Trace("proof.ifTactic EXIT err=%v branch=false", err)
 			return nil, err
 		}
 		result = append(result, attribGoals(proof.Else, falseResult)...)
@@ -424,6 +452,7 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 	}
 
 	result = append(result, decls[1:]...)
+	xtracer.Trace("proof.ifTactic EXIT nresult=%d", len(result))
 	return result, nil
 }
 
@@ -440,7 +469,9 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 //   if proof.args[2] not NoneAST: subgoals = apply_proof(subgoals, proof.args[2])
 //   return [goal_add_prem(goal, cut, cut.lineno)] + decls[1:] + subgoals
 func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.PropertyTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.propertyTactic ENTER ndecls=%d", len(decls))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.propertyTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "property tactic: no goals"}
 	}
 	goal := decls[0]
@@ -463,6 +494,7 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 		}
 	}
 	if cut == nil {
+		xtracer.Trace("proof.propertyTactic EXIT err=compileFailed")
 		return nil, &ProofError{Msg: "property tactic: could not compile cut formula"}
 	}
 
@@ -472,12 +504,14 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	// Python: subgoal = goal_subst(goal, cut, cut.lineno)
 	subgoal, err := GoalSubst(pc.astCfg(), goal, cut, cut.GetLineno())
 	if err != nil {
+		xtracer.Trace("proof.propertyTactic EXIT err=goalSubst err=%v", err)
 		return nil, err
 	}
 
 	// Python: lhs = proof.args[1]; if not isinstance(lhs, ia.NoneAST): [Skolem handling]
 	// proof.PName is always NoneAST from current Go grammar (optskolem not yet parsed)
 	if !isNoneAST(proof.PName) {
+		xtracer.Trace("proof.propertyTactic EXIT err=skolemNotImpl")
 		return nil, &ProofError{Msg: "property tactic: Skolem function witness not implemented"}
 	}
 
@@ -488,9 +522,11 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	if !isNoneAST(proof.Proof) {
 		applied, err := pc.ApplyProof(subgoals, proof.Proof)
 		if err != nil {
+			xtracer.Trace("proof.propertyTactic EXIT err=applyProof err=%v", err)
 			return nil, err
 		}
 		if applied == nil {
+			xtracer.Trace("proof.propertyTactic EXIT applied=nil")
 			return nil, nil
 		}
 		subgoals = applied
@@ -501,6 +537,7 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	result := []*ast.LabeledFormula{modifiedGoal}
 	result = append(result, decls[1:]...)
 	result = append(result, subgoals...)
+	xtracer.Trace("proof.propertyTactic EXIT nresult=%d nsubgoals=%d", len(result), len(subgoals))
 	return result, nil
 }
 
@@ -514,7 +551,9 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 //	    else: compile definition, add ConstantDecl + definition LF as premises
 //	return [goal] + decls[1:]
 func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.FunctionTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.functionTactic ENTER ndecls=%d nElems=%d", len(decls), len(proof.Elems))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.functionTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "function tactic: no goals"}
 	}
 	goal := decls[0]
@@ -523,6 +562,7 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 	for _, df := range proof.Elems {
 		// Python: if isinstance(df, ia.ConstantDecl): assert False
 		if _, isCD := df.(*ast.ConstantDecl); isCD {
+			xtracer.Trace("proof.functionTactic EXIT err=unexpectedConstantDecl")
 			return nil, &ProofError{Msg: "function tactic: unexpected ConstantDecl element"}
 		}
 		// Python else: compile definition and add ConstantDecl + LF as premises.
@@ -532,34 +572,44 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 		var err error
 		goal, err = CompileDefinitionGoalVocab(pc.astCfg(), df, goal, pc.Mod)
 		if err != nil {
+			xtracer.Trace("proof.functionTactic EXIT err=%v", err)
 			return nil, err
 		}
 	}
 
 	// Python: return [goal] + decls[1:]
+	xtracer.Trace("proof.functionTactic EXIT HASH canon=%v", goal.Canon())
 	return append([]*ast.LabeledFormula{goal}, decls[1:]...), nil
 }
 
 // witnessTactic provides witnesses for existentially quantified variables.
 // Corresponds to Python ProofChecker.witness_tactic (ivy_proof.py:459-471).
 func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.WitnessTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.witnessTactic ENTER ndecls=%d nArgs=%d", len(decls), len(proof.Witnesses))
 	if len(decls) == 0 {
+		xtracer.Trace("proof.witnessTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "witness tactic: no goals"}
 	}
 	goal := decls[0]
 
 	if GoalConc(goal) == nil {
+		xtracer.Trace("proof.witnessTactic EXIT err=noConclusion")
 		return nil, &ProofError{Msg: "witness tactic: goal has no conclusion"}
+	}
+	if gc := GoalConc(goal); gc != nil {
+		xtracer.Trace("proof.witnessTactic preConc HASH canon=%v", gc.Canon())
 	}
 
 	// Python: if ia.has_temporal(proof) and not goal_is_temporal(goal): raise error
 	// (Python has `goal` here but means `decl`/`goal` = decls[0])
 	if ast.HasTemporal(proof) && !GoalIsTemporal(goal) {
+		xtracer.Trace("proof.witnessTactic EXIT err=temporalInNonTemporal")
 		return nil, &ProofError{Msg: "temporal operator not allowed in instantiation", Node: proof}
 	}
 
 	// Python: wits = compile_witness_list(proof, decls[0])
 	wits := CompileWitnessList(proof, goal, pc.Mod)
+	xtracer.Trace("proof.witnessTactic compiled nwits=%d", len(wits))
 
 	// Python: for wit in wits: if not il.is_variable(wit.args[0]): raise error
 	// Python: wit_map = dict((x.args[0], x.args[1]) for x in wits)
@@ -567,16 +617,20 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	for _, w := range wits {
 		defn, ok := w.(*lg.Definition)
 		if !ok {
+			xtracer.Trace("proof.witnessTactic witnessSkip nonDefn type=%T", w)
 			continue
 		}
 		v, ok := defn.Lhs.(*lg.Variable)
 		if !ok {
+			xtracer.Trace("proof.witnessTactic EXIT err=lhsNotVariable type=%T", defn.Lhs)
 			return nil, &ProofError{Msg: "left-hand side of witness must be a variable"}
 		}
 		witness[lg.Key(v)] = defn.Rhs
+		xtracer.Trace("proof.witnessTactic witnessPair key=%s rhs HASH canon=%v", string(lg.Key(v)), defn.Rhs.Canon())
 	}
 
 	if len(witness) == 0 {
+		xtracer.Trace("proof.witnessTactic EXIT passthrough nwitness=0")
 		return decls, nil
 	}
 
@@ -586,12 +640,17 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	// recursion at ivy_logic_utils.py:1704.
 	newConc, err := module.WitnessAst(false, nil, witness, GoalConc(goal))
 	if err != nil {
+		xtracer.Trace("proof.witnessTactic EXIT err=witnessAst err=%v", err)
 		return nil, &ProofError{Msg: fmt.Sprintf("witness tactic: %v", err)}
+	}
+	if newConc != nil {
+		xtracer.Trace("proof.witnessTactic postWitnessAst HASH canon=%v", newConc.Canon())
 	}
 
 	// Python: prems = goal_prems(decl); return [clone_goal(decl,prems,conc)] + decls[1:]
 	prems := GoalPrems(goal)
 	newGoal := CloneGoal(pc.astCfg(), goal, prems, newConc)
+	xtracer.Trace("proof.witnessTactic EXIT HASH canon=%v", newGoal.Canon())
 	return append([]*ast.LabeledFormula{newGoal}, decls[1:]...), nil
 }
 
@@ -617,6 +676,9 @@ func astNodeToLogicNode(n ast.Node) lg.Expr {
 // goalAddPrem adds a premise to a goal.
 // Corresponds to Python goal_add_prem.
 func (pc *ProofChecker) goalAddPrem(goal *ast.LabeledFormula, prem *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
+	xtracer.Trace("proof.goalAddPrem ENTER goalLabel=%s premLabel=%s", goal.LabelName(), prem.LabelName())
 	prems := append(GoalPrems(goal), prem)
-	return MakeGoal(pc.astCfg(), loc, goal.Label, prems, GoalConc(goal))
+	result := MakeGoal(pc.astCfg(), loc, goal.Label, prems, GoalConc(goal))
+	xtracer.Trace("proof.goalAddPrem EXIT HASH canon=%v", result.Canon())
+	return result
 }

@@ -12,6 +12,7 @@ import (
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // LogicParseError is raised when parsing a logic expression fails.
@@ -221,23 +222,30 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 // signature. This mirrors the ast.Node broadening already applied to
 // SkolemizeFmla (proof/skolem.go:100).
 func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, fmla ast.Node) (ast.Node, error) {
+	xtracer.Trace("ilu.witnessAst ENTER pos=%v type=%T nwitnesses=%d", pos, fmla, len(witnesses))
 	// TemporalModels — recurse into the wrapped inner formula and rewrap,
 	// mirroring Python's generic fmla.clone([... for arg in fmla.args]) branch.
 	if tm, ok := fmla.(*ast.TemporalModels); ok {
+		xtracer.Trace("ilu.witnessAst branch type=TemporalModels pos=%v", pos)
 		innerExpr, ok := tm.Fmla.(lg.Expr)
 		if !ok {
+			xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels innerNotExpr")
 			return tm, nil
 		}
 		newInner, err := WitnessAst(pos, vs, witnesses, innerExpr)
 		if err != nil {
+			xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels err=%v", err)
 			return nil, err
 		}
-		return tm.Clone([]ast.Node{newInner}), nil
+		result := tm.Clone([]ast.Node{newInner})
+		xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels HASH canon=%v", result.Canon())
+		return result, nil
 	}
 
 	// Everything else in witness_ast's dispatch operates on lg.Expr.
 	expr, ok := fmla.(lg.Expr)
 	if !ok {
+		xtracer.Trace("ilu.witnessAst EXIT notExpr type=%T", fmla)
 		return fmla, nil
 	}
 
@@ -248,20 +256,25 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		if (isExists && !pos) || (isForall && pos) {
 			vars := il.BinderVars(expr)
 			body := il.BinderBody(expr)
+			xtracer.Trace("ilu.witnessAst branch type=Quantifier pos=%v isE=%v isA=%v nvars=%d", pos, isExists, isForall, len(vars))
 
 			var newVars []*lg.Variable
 			for idx, v := range vars {
-				if term, ok := witnesses[lg.Key(v)]; ok {
+				term, found := witnesses[lg.Key(v)]
+				xtracer.Trace("ilu.witnessAst quantifierVar v=%s key=%s found=%v", v.Name, string(lg.Key(v)), found)
+				if found {
 					// Check for capture by subsequent variables
 					termVars := lu.UsedVariables(term)
 					for _, w := range vars[idx+1:] {
 						if _, used := termVars[lg.Key(w)]; used {
+							xtracer.Trace("ilu.witnessAst EXIT err=capture var=%s", w.Name)
 							return nil, fmt.Errorf("variable %s captured by substitution", w.Name)
 						}
 					}
 					subs := map[lg.NodeKey]lg.Expr{lg.Key(v): term}
 					newBody, err := lu.Substitute(body, subs)
 					if err != nil {
+						xtracer.Trace("ilu.witnessAst EXIT err=substCapture %v", err)
 						return nil, fmt.Errorf("variable capture during witness substitution: %v", err)
 					}
 					body = newBody
@@ -275,22 +288,29 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 			}
 			body = witnessExpr(bodyNode, body)
 			if len(newVars) > 0 {
-				return il.CloneBinder(expr, newVars, body), nil
+				result := il.CloneBinder(expr, newVars, body)
+				xtracer.Trace("ilu.witnessAst EXIT type=Quantifier nnewVars=%d HASH canon=%v", len(newVars), result.Canon())
+				return result, nil
 			}
+			xtracer.Trace("ilu.witnessAst EXIT type=Quantifier allSubstituted HASH canon=%v", body.Canon())
 			return body, nil
 		}
 	}
 
 	if _, ok := expr.(*lg.Not); ok {
+		xtracer.Trace("ilu.witnessAst branch type=Not pos=%v", pos)
 		args := il.NodeArgs(expr)
 		newArg, err := WitnessAst(!pos, vs, witnesses, args[0])
 		if err != nil {
 			return nil, err
 		}
-		return il.CloneNode(expr, []lg.Expr{witnessExpr(newArg, args[0])}), nil
+		result := il.CloneNode(expr, []lg.Expr{witnessExpr(newArg, args[0])})
+		xtracer.Trace("ilu.witnessAst EXIT type=Not HASH canon=%v", result.Canon())
+		return result, nil
 	}
 
 	if _, ok := expr.(*lg.Implies); ok {
+		xtracer.Trace("ilu.witnessAst branch type=Implies pos=%v", pos)
 		args := il.NodeArgs(expr)
 		newLhs, err := WitnessAst(!pos, vs, witnesses, args[0])
 		if err != nil {
@@ -300,16 +320,20 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		if err != nil {
 			return nil, err
 		}
-		return il.CloneNode(expr, []lg.Expr{
+		result := il.CloneNode(expr, []lg.Expr{
 			witnessExpr(newLhs, args[0]),
 			witnessExpr(newRhs, args[1]),
-		}), nil
+		})
+		xtracer.Trace("ilu.witnessAst EXIT type=Implies HASH canon=%v", result.Canon())
+		return result, nil
 	}
 
 	args := il.NodeArgs(expr)
 	if len(args) == 0 {
+		xtracer.Trace("ilu.witnessAst EXIT type=%T leaf", expr)
 		return expr, nil
 	}
+	xtracer.Trace("ilu.witnessAst branch type=generic pos=%v exprType=%T nargs=%d", pos, expr, len(args))
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		na, err := WitnessAst(pos, vs, witnesses, a)
@@ -318,7 +342,9 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		}
 		newArgs[i] = witnessExpr(na, a)
 	}
-	return il.CloneNode(expr, newArgs), nil
+	result := il.CloneNode(expr, newArgs)
+	xtracer.Trace("ilu.witnessAst EXIT type=generic exprType=%T HASH canon=%v", expr, result.Canon())
+	return result, nil
 }
 
 // witnessExpr type-asserts a WitnessAst result back to lg.Expr.

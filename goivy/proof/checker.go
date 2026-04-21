@@ -225,22 +225,32 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	// Dispatch on proof type.
 	switch p := proof.(type) {
 	case *ast.SchemaInstantiation:
+		xtracer.Trace("proof.ApplyProof dispatch name=SchemaInstantiation")
 		m, err := pc.MatchSchema(goals[0], p)
 		if err != nil {
+			xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation err=%v", err)
 			return nil, err
 		}
 		if m == nil {
+			xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation err=NoMatch")
 			return nil, &NoMatch{Msg: "goal does not match the given schema"}
 		}
+		xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation ngoals=%d", len(m)+len(goals)-1)
 		return append(m, goals[1:]...), nil
 
 	case *ast.ComposeTactics:
-		return pc.composeProofs(goals, p.Tactics)
+		xtracer.Trace("proof.ApplyProof dispatch name=ComposeTactics")
+		res, err := pc.composeProofs(goals, p.Tactics)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ComposeTactics ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.NullTactic:
+		xtracer.Trace("proof.ApplyProof dispatch name=NullTactic")
+		xtracer.Trace("proof.ApplyProof EXIT proofType=NullTactic ngoals=%d", len(goals))
 		return goals, nil
 
 	case *ast.ShowGoalsTactic:
+		xtracer.Trace("proof.ApplyProof dispatch name=ShowGoalsTactic")
 		fmt.Println()
 		loc := p.GetLineno()
 		fmt.Printf("line %d: Proof goals:\n", loc.Line)
@@ -249,49 +259,88 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 			fmt.Println("theorem " + decl.String())
 			fmt.Println()
 		}
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ShowGoalsTactic ngoals=%d", len(goals))
 		return goals, nil
 
 	case *ast.DeferGoalTactic:
+		xtracer.Trace("proof.ApplyProof dispatch name=DeferGoalTactic")
 		if len(goals) <= 1 {
+			xtracer.Trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d", len(goals))
 			return goals, nil
 		}
-		return append(goals[1:], goals[0]), nil
+		res := append(goals[1:], goals[0])
+		xtracer.Trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d", len(res))
+		return res, nil
 
 	case *ast.ForgetTactic:
-		return pc.forgetTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=ForgetTactic")
+		res, err := pc.forgetTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.ProofTactic:
-		return pc.proofTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=ProofTactic")
+		res, err := pc.proofTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.TacticTactic:
-		return pc.tacticTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=TacticTactic")
+		res, err := pc.tacticTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=TacticTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.LetTactic:
-		return pc.letTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=LetTactic")
+		res, err := pc.letTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.AssumeGlobalTactic:
-		return pc.assumeTactic(goals, &p.AssumeTactic, true)
+		xtracer.Trace("proof.ApplyProof dispatch name=AssumeGlobalTactic")
+		res, err := pc.assumeTactic(goals, &p.AssumeTactic, true)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeGlobalTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.AssumeTactic:
-		return pc.assumeTactic(goals, p, false)
+		xtracer.Trace("proof.ApplyProof dispatch name=AssumeTactic")
+		res, err := pc.assumeTactic(goals, p, false)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.UnfoldTactic:
-		return pc.unfoldTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=UnfoldTactic")
+		res, err := pc.unfoldTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=UnfoldTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.IfTactic:
-		return pc.ifTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=IfTactic")
+		res, err := pc.ifTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=IfTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.PropertyTactic:
-		return pc.propertyTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=PropertyTactic")
+		res, err := pc.propertyTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=PropertyTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.FunctionTactic:
-		return pc.functionTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=FunctionTactic")
+		res, err := pc.functionTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=FunctionTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 
 	case *ast.WitnessTactic:
-		return pc.witnessTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof dispatch name=WitnessTactic")
+		res, err := pc.witnessTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=WitnessTactic ngoals=%d err=%v", len(res), err)
+		return res, err
 	}
 
 	// Fallback: unrecognised proof type.
+	xtracer.Trace("proof.ApplyProof EXIT proofType=%s err=unknown", iu.TypeName(proof))
 	return nil, &ProofError{Msg: fmt.Sprintf("unknown proof type %T", proof)}
 }
 
@@ -306,13 +355,16 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 //  4. detect_nonce_symbols
 //  5. extract subgoals
 func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaInstantiation) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.MatchSchema ENTER goalLabel=%s HASH canon=%v", goal.LabelName(), goal.Canon())
 	goalConc := GoalConc(goal)
 	if goalConc == nil {
+		xtracer.Trace("proof.MatchSchema EXIT err=noConclusion")
 		return nil, &NoMatch{Msg: "goal has no conclusion"}
 	}
 	// Schema matching does not apply to *ast.TemporalModels goals.
 	// Mirror Python ivy_proof.py:429 which raises NoMatch in this case.
 	if _, isTM := goalConc.(*ast.TemporalModels); isTM {
+		xtracer.Trace("proof.MatchSchema EXIT err=temporalModels")
 		return nil, &NoMatch{Msg: "schema matching does not apply to temporal-models goals"}
 	}
 
@@ -367,6 +419,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 
 		somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
 		if somatch == nil {
+			xtracer.Trace("proof.MatchSchema EXIT err=matchFailed")
 			return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 		}
 		if len(somatch) > 0 {
@@ -376,26 +429,34 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 
 	// Step 5: Detect nonce symbol clashes
 	if err := DetectNonceSymbols(prob); err != nil {
+		xtracer.Trace("proof.MatchSchema EXIT err=%v", err)
 		return nil, err
 	}
 
 	// Step 6: Extract subgoals from matched schema
 	if prob.SchemaLF == nil {
+		xtracer.Trace("proof.MatchSchema EXIT err=schemaLFNil")
 		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
-	return GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal)
+	result, err := GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal)
+	xtracer.Trace("proof.MatchSchema EXIT nsubgoals=%d err=%v", len(result), err)
+	return result, err
 }
 
 // InstSchema instantiates a schema against a goal using the given match.
 // Constructs a synthetic SchemaInstantiation and delegates to MatchSchema.
 func InstSchema(checker *ProofChecker, schema, goal *ast.LabeledFormula, match map[string]string) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.InstSchema ENTER schemaLabel=%s goalLabel=%s", schema.LabelName(), goal.LabelName())
 	schemaName := schema.LabelName()
 	if schemaName == "" {
+		xtracer.Trace("proof.InstSchema EXIT err=noLabel")
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
 	// Build a synthetic SchemaInstantiation with no renaming and no matches
 	proof := checker.astCfg().NewSchemaInstantiation(checker.astCfg().NewAtom(schemaName), nil)
-	return checker.MatchSchema(goal, proof)
+	result, err := checker.MatchSchema(goal, proof)
+	xtracer.Trace("proof.InstSchema EXIT nsubgoals=%d err=%v", len(result), err)
+	return result, err
 }
 
 // CheckSchema checks whether a goal matches a schema.
@@ -415,6 +476,7 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 // default heuristic matching is used.
 // Corresponds to Python's ProofChecker.admit_definition (ivy_proof.py:70-96).
 func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.AdmitDefinition ENTER defnLabel=%s hasProof=%v", defn.LabelName(), proof != nil)
 	defn = NormalizeGoal(pc.astCfg(), defn)
 	// Extract the defined symbol
 	def, ok := defn.Formula.(*lg.Definition)
@@ -448,15 +510,18 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 	var subgoals []*ast.LabeledFormula
 	if recursive {
 		if proof == nil {
+			xtracer.Trace("proof.AdmitDefinition EXIT err=noProof")
 			return nil, &NoMatch{Node: defn, Msg: "no proof given for recursive definition"}
 		}
 		var err error
 		subgoals, err = pc.ApplyProof([]*ast.LabeledFormula{defn}, proof)
 		if err != nil {
+			xtracer.Trace("proof.AdmitDefinition EXIT err=%v", err)
 			return nil, err
 		}
 	}
 	pc.Definitions[symSym.Name] = defn
+	xtracer.Trace("proof.AdmitDefinition EXIT nsubgoals=%d sym=%s", len(subgoals), symSym.Name)
 	return subgoals, nil
 }
 
@@ -465,11 +530,14 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 // else default heuristic matching is used.
 // Corresponds to Python's ProofChecker.admit_proposition (ivy_proof.py:98-121).
 func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Node, existingSubgoals ...*ast.LabeledFormula) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.AdmitProposition ENTER propLabel=%s hasProof=%v nExistingSubgoals=%d", prop.LabelName(), proof != nil, len(existingSubgoals))
 	prop = NormalizeGoal(pc.astCfg(), prop)
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
+		xtracer.Trace("proof.AdmitProposition delegateToDefinition")
 		return pc.AdmitDefinition(prop, proof)
 	}
 	if proof == nil {
+		xtracer.Trace("proof.AdmitProposition EXIT err=noProof")
 		return nil, &NoMatch{Node: prop, Msg: "no proof given for property"}
 	}
 	// Python: subgoals = subgoals or [prop]
@@ -480,6 +548,7 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 	var err error
 	subgoals, err = pc.ApplyProof(subgoals, proof)
 	if err != nil {
+		xtracer.Trace("proof.AdmitProposition EXIT err=%v", err)
 		return nil, err
 	}
 	pc.Axioms = append(pc.Axioms, prop)
@@ -488,6 +557,7 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 	for _, sym := range vocab.Symbols {
 		pc.Stale[sym.Name] = true
 	}
+	xtracer.Trace("proof.AdmitProposition EXIT nsubgoals=%d", len(subgoals))
 	return subgoals, nil
 }
 
@@ -495,15 +565,19 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 // prop, but does not admit prop in the context. Note, prop may not be a definition.
 // Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
 func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.GetSubgoals ENTER propLabel=%s", prop.LabelName())
 	// Python: assert not isinstance(prop.formula, il.Definition) — checked BEFORE normalize
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
+		xtracer.Trace("proof.GetSubgoals EXIT err=isDefinition")
 		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}
 	}
 	prop = NormalizeGoal(pc.astCfg(), prop)
 	subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{prop}, proof)
 	if err != nil {
+		xtracer.Trace("proof.GetSubgoals EXIT err=%v", err)
 		return nil, err
 	}
+	xtracer.Trace("proof.GetSubgoals EXIT nsubgoals=%d", len(subgoals))
 	return subgoals, nil
 }
 
@@ -533,18 +607,22 @@ func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.
 		}
 		decls, err = pc.ApplyProof(decls, proof)
 		if err != nil {
+			xtracer.Trace("proof.composeProofs EXIT err=%v step=%d", err, i)
 			return nil, err
 		}
 		if len(decls) == 0 {
+			xtracer.Trace("proof.composeProofs EXIT ndecls=0 step=%d", i)
 			return decls, nil
 		}
 	}
+	xtracer.Trace("proof.composeProofs EXIT ndecls=%d", len(decls))
 	return decls, nil
 }
 
 // forgetTactic removes named premises from the first goal.
 // Corresponds to Python's forget_tactic.
 func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.ForgetTactic) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.forgetTactic ENTER ndecls=%d nNames=%d", len(decls), len(proof.Names))
 	decl := decls[0]
 	forgetNames := make(map[string]bool)
 	for _, n := range proof.Names {
@@ -563,6 +641,7 @@ func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.For
 	newGoal := CloneGoal(pc.astCfg(), decl, kept, GoalConc(decl))
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
+	xtracer.Trace("proof.forgetTactic EXIT nkept=%d", len(kept))
 	return result, nil
 }
 
@@ -570,10 +649,12 @@ func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.For
 // Corresponds to Python's proof_tactic.
 func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.ProofTactic) ([]*ast.LabeledFormula, error) {
 	labelStr := nodeToString(proof.TLabel)
+	xtracer.Trace("proof.proofTactic ENTER label=%s ndecls=%d", labelStr, len(decls))
 	for idx, decl := range decls {
 		if nodeToString(decl.Label) == labelStr {
 			subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{decl}, proof.Proof)
 			if err != nil {
+				xtracer.Trace("proof.proofTactic EXIT err=%v", err)
 				return nil, err
 			}
 			// Remove the matched goal and append subgoals at the end.
@@ -581,9 +662,11 @@ func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.Proo
 			rest = append(rest, decls[:idx]...)
 			rest = append(rest, decls[idx+1:]...)
 			rest = append(rest, subgoals...)
+			xtracer.Trace("proof.proofTactic EXIT nsubgoals=%d ndecls=%d", len(subgoals), len(rest))
 			return rest, nil
 		}
 	}
+	xtracer.Trace("proof.proofTactic EXIT err=noLabel label=%s", labelStr)
 	return nil, &ProofError{Msg: fmt.Sprintf("no goal with label %s", labelStr)}
 }
 
@@ -596,9 +679,12 @@ func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.Tac
 	}
 	tactic, ok := pc.Cfg.Tactics[tn]
 	if !ok {
+		xtracer.Trace("proof.tacticTactic EXIT name=%s err=unknownTactic", tn)
 		return nil, &ProofError{Msg: fmt.Sprintf("unknown tactic: %s", tn)}
 	}
-	return tactic(pc, decls, proof)
+	result, err := tactic(pc, decls, proof)
+	xtracer.Trace("proof.tacticTactic EXIT name=%s nresult=%d err=%v", tn, len(result), err)
+	return result, err
 }
 
 // ApplyMatchGoal applies a match (symbol substitution map) to a goal.
@@ -612,7 +698,9 @@ func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.Tac
 //   - For LabeledFormula with plain formula: apply match to the formula
 //   - Uses alpha-renaming to avoid capture by binders
 func ApplyMatchGoal(cfg *ast.AstConfig, match map[string]string, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	xtracer.Trace("proof.ApplyMatchGoal ENTER nmatch=%d goalNil=%v", len(match), goal == nil)
 	if len(match) == 0 || goal == nil {
+		xtracer.Trace("proof.ApplyMatchGoal EXIT passthrough")
 		return goal
 	}
 	// Build substitution map: string name → AST node
@@ -631,7 +719,9 @@ func ApplyMatchGoal(cfg *ast.AstConfig, match map[string]string, goal *ast.Label
 			fmla = ast.SubstituteAst(fmla, subs)
 		}
 	}
-	return goal.Clone([]ast.Node{goal.Label, fmla}).(*ast.LabeledFormula)
+	result := goal.Clone([]ast.Node{goal.Label, fmla}).(*ast.LabeledFormula)
+	xtracer.Trace("proof.ApplyMatchGoal EXIT HASH canon=%v", result.Canon())
+	return result
 }
 
 // --- Helpers ---

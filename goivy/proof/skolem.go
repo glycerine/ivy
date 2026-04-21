@@ -5,9 +5,10 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // SkolemizeGoal converts a goal to skolem normal form:
@@ -15,6 +16,7 @@ import (
 // existential prenex form.
 // If prenex is false, don't convert to prenex form.
 func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
+	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelName(), goal.Canon())
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
 	for _, s := range vocab.Symbols {
@@ -45,6 +47,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 				variables = append(variables, vv)
 			}
 		}
+		xtracer.Trace("proof.SkolemizeGoal freeVarsPass nvariables=%d", len(variables))
 		sks := make([]*lg.Const, len(variables))
 		subs := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range variables {
@@ -52,6 +55,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 			sk := lg.NewConst(name, v.VSort)
 			sks[i] = sk
 			subs[lg.Key(v)] = sk
+			xtracer.Trace("proof.SkolemizeGoal substitute v=%s sk=%s", v.Name, name)
 		}
 		goal = varSubstGoal(cfg, goal, subs)
 		skfuns = append(skfuns, sks...)
@@ -84,7 +88,9 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 		newPrems = append(newPrems, cd)
 	}
 	newPrems = append(newPrems, GoalPrems(goal)...)
-	return CloneGoal(cfg, goal, newPrems, GoalConc(goal))
+	result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
+	xtracer.Trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%v", len(skfuns), result.Canon())
+	return result
 }
 
 // SkolemizeFmla skolemizes a formula.
@@ -98,6 +104,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 // Python ivy_proof.py:1443-1450). For lg.Expr inputs, behaves identically
 // to the previous lg.Expr-only signature.
 func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) ast.Node {
+	xtracer.Trace("proof.SkolemizeFmla ENTER pos=%v prenex=%v type=%T", pos, prenex, fmla)
 	var univs []*lg.Variable
 	var outer []*lg.Variable
 
@@ -107,24 +114,29 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 		//   if isinstance(fmla,ia.TemporalModels):
 		//       return fmla.clone([rec(fmla.args[0],pos)])
 		if tm, ok := fmla.(*ast.TemporalModels); ok {
+			xtracer.Trace("proof.SkolemizeFmla branch type=TemporalModels pos=%v", pos)
 			return tm.Clone([]ast.Node{rec(tm.Args()[0], pos)})
 		}
 
 		switch f := fmla.(type) {
 		case *lg.Not:
+			xtracer.Trace("proof.SkolemizeFmla branch type=Not pos=%v", pos)
 			return &lg.Not{Body: recExpr(rec, f.Body, !pos)}
 		case *lg.Implies:
+			xtracer.Trace("proof.SkolemizeFmla branch type=Implies pos=%v", pos)
 			return &lg.Implies{
 				T1: recExpr(rec, f.T1, !pos),
 				T2: recExpr(rec, f.T2, pos),
 			}
 		case *lg.And:
+			xtracer.Trace("proof.SkolemizeFmla branch type=And pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)
 			}
 			return &lg.And{Terms: terms}
 		case *lg.Or:
+			xtracer.Trace("proof.SkolemizeFmla branch type=Or pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)
@@ -144,6 +156,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			expr := fmla.(lg.Expr) // safe because isE/isA imply lg.Expr
 			vars := il.BinderVars(expr)
 			body := il.BinderBody(expr)
+			xtracer.Trace("proof.SkolemizeFmla branch type=Skolemize pos=%v isE=%v isA=%v nvars=%d", pos, isE, isA, len(vars))
 
 			// Collect outer universal variables for the skolem function domain
 			fvs := outerVarsInFormula(expr, outer)
@@ -189,6 +202,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			expr := fmla.(lg.Expr) // safe because isE/isA imply lg.Expr
 			vars := il.BinderVars(expr)
 			body := il.BinderBody(expr)
+			xtracer.Trace("proof.SkolemizeFmla branch type=Universalize pos=%v isE=%v isA=%v nvars=%d", pos, isE, isA, len(vars))
 
 			vu := il.NewVariableUniqifier(keysFromRenamer(renamer))
 			for _, v := range vars {
@@ -202,6 +216,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 				if err == nil {
 					body = newBody
 				}
+				xtracer.Trace("proof.SkolemizeFmla universalize v=%s u=%s", v.Name, u.Name)
 			}
 			res := recExpr(rec, body, pos)
 			if !prenex {
@@ -216,6 +231,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			outer = outer[:len(outer)-len(vars)]
 			return res
 		}
+		xtracer.Trace("proof.SkolemizeFmla branch type=passthrough pos=%v astType=%T", pos, fmla)
 		return fmla
 	}
 
@@ -226,6 +242,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 	//   else:
 	//       body = quant(univs,body)
 	if len(univs) > 0 {
+		xtracer.Trace("proof.SkolemizeFmla univsWrap pos=%v nunivs=%d", pos, len(univs))
 		if tm, ok := body.(*ast.TemporalModels); ok {
 			innerExpr, _ := tm.Args()[0].(lg.Expr)
 			var quantBody lg.Expr
@@ -243,6 +260,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			}
 		}
 	}
+	xtracer.Trace("proof.SkolemizeFmla EXIT nskfuns=%d", len(*skfuns))
 	return body
 }
 
@@ -291,6 +309,7 @@ func outerVarsInFormula(fmla lg.Expr, outer []*lg.Variable) []*lg.Variable {
 // so the substitution runs on the inner formula of *ast.TemporalModels and
 // the wrapper is preserved.
 func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
+	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goal.LabelName(), len(subs))
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
@@ -307,7 +326,9 @@ func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.Node
 		}
 		return result
 	})
-	return CloneGoal(cfg, goal, newPrems, newConc)
+	result := CloneGoal(cfg, goal, newPrems, newConc)
+	xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
+	return result
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.

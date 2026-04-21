@@ -7,6 +7,7 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // SetupMatching creates a MatchProblem for matching a schema to a declaration.
@@ -15,11 +16,15 @@ import (
 // Python: ivy_proof.py:324-327
 func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.SchemaInstantiation, mod *module.Module) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 	schemaName := nodeToString(proof.SchemaName)
+	xtracer.Trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s", schemaName, decl.LabelName())
 	schema, err := pc.LookupSchema(schemaName, decl, proof, false)
 	if err != nil {
+		xtracer.Trace("proof.SetupMatching EXIT err=%v", err)
 		return nil, nil, err
 	}
-	return pc.SetupSchemaMatching(decl, proof, schema, false, mod)
+	prob, pm, e := pc.SetupSchemaMatching(decl, proof, schema, false, mod)
+	xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, len(pm))
+	return prob, pm, e
 }
 
 // SetupSchemaMatchingRaw implements the complete Python pipeline from
@@ -42,12 +47,15 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	allowWitness bool,
 ) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 
+	xtracer.Trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%v", schema.LabelName(), decl.LabelName(), len(matches), allowWitness)
+
 	// Step 1: Rename schema using proof renaming
 	// Python: schema = rename_goal(schema, proof.renaming())
 	if ren != nil {
 		var err error
 		schema, err = RenameGoal(pc.astCfg(), schema, ren)
 		if err != nil {
+			xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=renameGoal err=%v", err)
 			return nil, nil, err
 		}
 	}
@@ -60,6 +68,7 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	// Python: prob = match_problem(schema, decl)
 	prob := buildMatchProblem(schema, decl)
 	if prob == nil {
+		xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=buildMatchProblemNil")
 		return nil, nil, &NoMatch{Msg: "cannot build match problem from schema and goal"}
 	}
 
@@ -67,6 +76,7 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	// Python: prob = transform_defn_match(prob)
 	prob = TransformDefnMatch(pc.astCfg(), prob)
 	if prob == nil {
+		xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=transformDefnMatchNil")
 		return nil, nil, &NoMatch{Msg: "definition does not match the given schema"}
 	}
 
@@ -79,12 +89,14 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	// Python: pmatch = compile_match(proof_match, prob, decl, allow_witness)
 	pmatch := CompileMatchFull(proofMatches, prob, decl, allowWitness, pc.Mod)
 	if pmatch == nil && len(proofMatches) > 0 {
+		xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=matchInconsistent nmatches=%d", len(proofMatches))
 		return nil, nil, &ProofError{Msg: "Match is inconsistent"}
 	}
 	if pmatch == nil {
 		pmatch = make(map[lg.NodeKey]lg.Expr)
 	}
 
+	xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT npmatch=%d", len(pmatch))
 	return prob, pmatch, nil
 }
 
@@ -97,6 +109,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	allowWitness bool,
 	mod *module.Module,
 ) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelName(), decl.LabelName(), allowWitness)
 	var ren ast.Node
 	var matches []ast.Node
 	if proof != nil {
@@ -243,9 +256,13 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 // Unwraps *ast.TemporalModels via ConcAsExpr — mirrors Python's
 // duck-typed access to free variables across temporal goals.
 func GoalFreeVars(g *ast.LabeledFormula) []*lg.Variable {
+	xtracer.Trace("proof.GoalFreeVars ENTER label=%s", g.LabelName())
 	conc := GoalConcUnwrap(g)
 	if conc == nil {
+		xtracer.Trace("proof.GoalFreeVars EXIT concNil")
 		return nil
 	}
-	return lu.FreeVariablesList(conc)
+	result := lu.FreeVariablesList(conc)
+	xtracer.Trace("proof.GoalFreeVars EXIT nvars=%d", len(result))
+	return result
 }

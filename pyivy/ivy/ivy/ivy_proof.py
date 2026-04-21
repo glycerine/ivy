@@ -145,46 +145,102 @@ class ProofChecker(object):
             if len(decls) > 0 and decls[0] is not None:
                 if __debug__: xtracer.trace("proof.ApplyProof ENTER proofType=%s goal[0].Formula type=%s" % (type(proof).__name__, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
             if isinstance(proof,ia.SchemaInstantiation):
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=SchemaInstantiation")
                 m = self.match_schema(decls[0],proof)
-                return None if m is None else m + decls[1:]
+                result = None if m is None else m + decls[1:]
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=SchemaInstantiation ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.LetTactic):
-                return self.let_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=LetTactic")
+                result = self.let_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.ComposeTactics):
-                return self.compose_proofs(decls,proof.args)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ComposeTactics")
+                result = self.compose_proofs(decls,proof.args)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ComposeTactics ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.AssumeTactic):
-                return self.assume_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=AssumeTactic")
+                result = self.assume_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.UnfoldTactic):
-                return self.unfold_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=UnfoldTactic")
+                result = self.unfold_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=UnfoldTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.ForgetTactic):
-                return self.forget_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ForgetTactic")
+                result = self.forget_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.ShowGoalsTactic):
-                return self.show_goals_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ShowGoalsTactic")
+                result = self.show_goals_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ShowGoalsTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.DeferGoalTactic):
-                return self.defer_goal_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=DeferGoalTactic")
+                result = self.defer_goal_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.DeferGoalTactic):
-                return self.defer_goal_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=DeferGoalTactic")
+                result = self.defer_goal_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.LetTactic):
-                return self.let_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=LetTactic")
+                result = self.let_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.IfTactic):
-                return self.if_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=IfTactic")
+                result = self.if_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=IfTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.NullTactic):
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=NullTactic")
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=NullTactic ngoals=%d" % len(decls))
                 return decls
             elif isinstance(proof,ia.PropertyTactic):
-                return self.property_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=PropertyTactic")
+                result = self.property_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=PropertyTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.FunctionTactic):
-                return self.function_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=FunctionTactic")
+                result = self.function_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=FunctionTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.TacticTactic):
-                return self.tactic_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=TacticTactic")
+                result = self.tactic_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=TacticTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.ProofTactic):
-                return self.proof_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ProofTactic")
+                result = self.proof_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             elif isinstance(proof,ia.WitnessTactic):
-                return self.witness_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof dispatch name=WitnessTactic")
+                result = self.witness_tactic(decls,proof)
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=WitnessTactic ngoals=%d" % (len(result) if result is not None else -1))
+                return result
             assert False,"unknown proof type {}".format(type(proof))
 
     def proof_tactic(self,decls,proof):
+        labelStr = str(proof.label)
+        if __debug__: xtracer.trace("proof.proofTactic ENTER label=%s ndecls=%d" % (labelStr, len(decls)))
         for idx,decl in enumerate(decls):
             if decl.label.rep == proof.label.rep:
-                return decls[:idx] + decls[idx+1:] + self.apply_proof([decl],proof.proof)
+                subgoals = self.apply_proof([decl],proof.proof)
+                rest = decls[:idx] + decls[idx+1:] + subgoals
+                if __debug__: xtracer.trace("proof.proofTactic EXIT nsubgoals=%d ndecls=%d" % (len(subgoals) if subgoals is not None else -1, len(rest) if rest is not None else -1))
+                return rest
+        if __debug__: xtracer.trace("proof.proofTactic EXIT err=noLabel label=%s" % labelStr)
         raise iu.IvyError(proof,'no goal with label {}'.format(proof.label))
 
     def tactic_tactic(self,decls,proof):
@@ -192,9 +248,12 @@ class ProofChecker(object):
         if len(decls) > 0 and decls[0] is not None:
             if __debug__: xtracer.trace("proof.tacticTactic name=%r goal[0].Formula type=%s" % (tn, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
         if tn not in registered_tactics:
+            if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s err=unknownTactic" % tn)
             raise iu.IvyError(proof,'unknown tactic: {}'.format(tn))
         tactic = registered_tactics[tn]
-        return tactic(self,decls,proof)
+        result = tactic(self,decls,proof)
+        if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s nresult=%d" % (tn, len(result) if result is not None else -1))
+        return result
 
     def compose_proofs(self,decls,proofs):
         if __debug__: xtracer.trace("proof.composeProofs ENTER nproofs=%d ndecls=%d" % (len(proofs), len(decls)))
@@ -203,22 +262,30 @@ class ProofChecker(object):
                 if __debug__: xtracer.trace("proof.composeProofs step=%d/%d proofType=%s goal[0].Formula type=%s" % (i, len(proofs), type(proof).__name__, type(decls[0].formula).__name__ if hasattr(decls[0],'formula') else 'N/A'))
             decls = self.apply_proof(decls,proof)
             if decls is None or len(decls) == 0:
+                if __debug__: xtracer.trace("proof.composeProofs EXIT ndecls=%d step=%d" % (len(decls) if decls is not None else -1, i))
                 return decls
+        if __debug__: xtracer.trace("proof.composeProofs EXIT ndecls=%d" % len(decls))
         return decls
 
     def show_goals_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.showGoalsTactic ENTER ndecls=%d" % len(decls))
         print()
         print('{}Proof goals:'.format(proof.lineno))
         for decl in decls:
             print()
             print('theorem ' + str(decl))
             print()
+        if __debug__: xtracer.trace("proof.showGoalsTactic EXIT ndecls=%d" % len(decls))
         return decls
 
     def defer_goal_tactic(self,decls,proof):
-        return decls[1:] + decls[0:1]
+        if __debug__: xtracer.trace("proof.deferGoalTactic ENTER ndecls=%d" % len(decls))
+        result = decls[1:] + decls[0:1]
+        if __debug__: xtracer.trace("proof.deferGoalTactic EXIT ndecls=%d" % len(result))
+        return result
 
     def let_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.letTactic ENTER ndecls=%d nDefs=%d" % (len(decls), len(proof.args)))
         goal = decls[0]
         vocab = goal_vocab(goal)
         defs = [compile_expr_vocab(ia.Atom('=',x.args[0],x.args[1]),vocab) for x in proof.args]
@@ -228,9 +295,11 @@ class ProofChecker(object):
             print('has no line number: {}'.format(decls[0]))
             exit(1)
         subgoal.lineno = decls[0].lineno
+        if __debug__: xtracer.trace("proof.letTactic EXIT HASH canon=%s" % subgoal.canon())
         return attrib_goals(proof,[subgoal]) + decls[1:]
 
     def property_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.propertyTactic ENTER ndecls=%d" % len(decls))
         goal = decls[0]
         vocab = goal_vocab(goal)
         cut = compile_expr_vocab(proof.args[0],vocab)
@@ -277,10 +346,14 @@ class ProofChecker(object):
         if not isinstance(pf,ia.NoneAST):
             subgoals = self.apply_proof(subgoals,pf)
             if subgoals is None:
+                if __debug__: xtracer.trace("proof.propertyTactic EXIT applied=None")
                 return None
-        return [goal_add_prem(goal,cut,cut.lineno)] + decls[1:] + subgoals
+        result = [goal_add_prem(goal,cut,cut.lineno)] + decls[1:] + subgoals
+        if __debug__: xtracer.trace("proof.propertyTactic EXIT nresult=%d nsubgoals=%d" % (len(result), len(subgoals)))
+        return result
 
     def function_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.functionTactic ENTER ndecls=%d nElems=%d" % (len(decls), len(proof.args)))
         goal = decls[0]
         vocab = goal_vocab(goal)
         free = goal_free(goal)
@@ -309,9 +382,11 @@ class ProofChecker(object):
                 goal = goal_add_prem(goal,lf,lf.lineno)
             if sym in vocab.sorts or sym in vocab.symbols or sym in free:
                 raise Redefinition(df,"redefinition of {}".format(sym))
+        if __debug__: xtracer.trace("proof.functionTactic EXIT HASH canon=%s" % goal.canon())
         return [goal] + decls[1:]
 
     def lookup_schema(self,schemaname,decl,ast,close=False):
+        if __debug__: xtracer.trace("proof.LookupSchema ENTER schemaName=%s close=%s" % (schemaname, close))
         if schemaname in self.schemata:
             schema = self.schemata[schemaname]
             check_schema_capture(schema,decl)
@@ -326,28 +401,38 @@ class ProofChecker(object):
             if schemaname in premmap:
                 schema = premmap[schemaname]
             else:
+                if __debug__: xtracer.trace("proof.LookupSchema EXIT err=notFound schemaName=%s" % schemaname)
                 raise ProofError(ast,"No property {} exists in the current context".format(schemaname))
+        if __debug__: xtracer.trace("proof.LookupSchema EXIT HASH canon=%s" % schema.canon())
         return schema
-    
+
     def setup_matching(self,decl,proof,allow_witness=False):
         schemaname = proof.schemaname()
+        if __debug__: xtracer.trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s" % (schemaname, decl.label))
         schema = self.lookup_schema(schemaname,decl,proof)
-        return self.setup_schema_matching(decl,proof,schema,allow_witness=allow_witness)
-        
+        result = self.setup_schema_matching(decl,proof,schema,allow_witness=allow_witness)
+        if __debug__: xtracer.trace("proof.SetupMatching EXIT npmatch=%d" % len(result[1]))
+        return result
+
     def setup_schema_matching(self,decl,proof,schema,allow_witness=False):
+        if __debug__: xtracer.trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%s" % (schema.label, decl.label, len(proof.match() or []), allow_witness))
         schema = rename_goal(schema,proof.renaming())
         schema = transform_defn_schema(schema,decl)
         prob = match_problem(schema,decl)
         prob = transform_defn_match(prob)
         if prob is None:
+            if __debug__: xtracer.trace("proof.SetupSchemaMatchingRaw EXIT err=transformDefnMatchNil")
             raise NoMatch(proof,'definition does not match the given schema')
         proof_match,prob = add_prem_match(proof.match(),prob,decl,self)
         pmatch = compile_match(proof_match,prob,decl,allow_witness)
         if pmatch is None:
+            if __debug__: xtracer.trace("proof.SetupSchemaMatchingRaw EXIT err=matchInconsistent nmatches=%d" % len(proof_match))
             raise ProofError(proof,'Match is inconsistent')
+        if __debug__: xtracer.trace("proof.SetupSchemaMatchingRaw EXIT npmatch=%d" % len(pmatch))
         return prob, pmatch
 
     def assume_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.assumeTactic ENTER ndecls=%d isGlobal=%s" % (len(decls), isinstance(proof,ia.AssumeGlobalTactic)))
         decl = decls[0]
         schemaname = proof.schemaname()
         premmap = dict((x.name,x) for x in goal_prem_goals(decl))
@@ -380,10 +465,14 @@ class ProofChecker(object):
             if isinstance(proof,ia.AssumeGlobalTactic):
                 prem = rename_prem_no_clash(prem,decl)
             else:
+                if __debug__: xtracer.trace("proof.assumeTactic EXIT err=clash prem=%s" % prem.name)
                 raise ProofError(proof,'instance name {} clashes with context'.format(prem.name))
-        return [goal_add_prem(decl,prem,proof.lineno)] + decls[1:]
+        newGoal = goal_add_prem(decl,prem,proof.lineno)
+        if __debug__: xtracer.trace("proof.assumeTactic EXIT schema=%s HASH canon=%s" % (schemaname, newGoal.canon()))
+        return [newGoal] + decls[1:]
 
     def unfold_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.unfoldTactic ENTER ndecls=%d nUnfSpecs=%d" % (len(decls), len(proof.unfspecs)))
         decl = decls[0]
         defns = []
         for unfspec in proof.unfspecs:
@@ -396,28 +485,35 @@ class ProofChecker(object):
             premname = proof.premname
             decl = goal_apply_to_prem(decl,premname,lambda goal: unfold_goal(goal,defns))
             if decl is None:
+                if __debug__: xtracer.trace("proof.unfoldTactic EXIT err=noPremise premName=%s" % premname)
                 raise ProofError(proof,'no premise {} found to unfold in'.format(premname))
         else:
             decl = goal_apply_to_conc(decl,lambda fmla: unfold_fmla(fmla,defns))
+        if __debug__: xtracer.trace("proof.unfoldTactic EXIT HASH canon=%s" % decl.canon())
         return [decl] + decls[1:]
 
     def forget_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.forgetTactic ENTER ndecls=%d nNames=%d" % (len(decls), len(proof.premnames)))
         decl = decls[0]
         prems = goal_prems(decl)
         prems = [p for p in prems if not (isinstance(p,ia.LabeledFormula)
                                           and p.name in proof.premnames)]
         decl = clone_goal(decl,prems,goal_conc(decl))
+        if __debug__: xtracer.trace("proof.forgetTactic EXIT nkept=%d" % len(prems))
         return [decl] + decls[1:]
 
     def if_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.ifTactic ENTER ndecls=%d" % len(decls))
         cond = proof.args[0]
         true_goal = ia.LabeledFormula(decls[0].label,il.Implies(cond,decls[0].formula))
         true_goal.lineno = decls[0].lineno
         false_goal = ia.LabeledFormula(decls[0].label,il.Implies(il.Not(cond),decls[0].formula))
         false_goal.lineno = decls[0].lineno
-        return (attrib_goals(proof.args[1],self.apply_proof([true_goal],proof.args[1])) +
+        result = (attrib_goals(proof.args[1],self.apply_proof([true_goal],proof.args[1])) +
                 attrib_goals(proof.args[2],self.apply_proof([false_goal],proof.args[2])) +
                 decls[1:])
+        if __debug__: xtracer.trace("proof.ifTactic EXIT nresult=%d" % len(result))
+        return result
 
     def match_schema(self,decl,proof):
         """ attempt to match a definition or property decl to a schema
@@ -428,7 +524,9 @@ class ProofChecker(object):
         Returns a match or None
         """
 
+        if __debug__: xtracer.trace("proof.MatchSchema ENTER goalLabel=%s HASH canon=%s" % (decl.label, decl.canon()))
         if isinstance(goal_conc(decl),ia.TemporalModels):
+            if __debug__: xtracer.trace("proof.MatchSchema EXIT err=temporalModels")
             raise NoMatch(proof,"goal does not match the given schema")
         prob, pmatch = self.setup_matching(decl,proof)
         apply_match_to_problem(pmatch,prob,apply_match_alt)
@@ -439,6 +537,7 @@ class ProofChecker(object):
                     apply_match_to_problem(fomatch,prob,apply_match)
                 somatch = match(prob.pat.args[idx],prob.inst.args[idx],prob.freesyms,prob.constants)
                 if somatch is None:
+                    if __debug__: xtracer.trace("proof.MatchSchema EXIT err=matchFailed")
                     raise NoMatch(proof,"goal does not match the given schema")
                 apply_match_to_problem(somatch,prob,apply_match_alt)
         else:
@@ -447,6 +546,7 @@ class ProofChecker(object):
                 apply_match_to_problem(fomatch,prob,apply_match)
             somatch = match(prob.pat,prob.inst,prob.freesyms,prob.constants)
             if somatch is None:
+                if __debug__: xtracer.trace("proof.MatchSchema EXIT err=matchFailed")
                 raise NoMatch(proof,"goal does not match the given schema")
             apply_match_to_problem(somatch,prob,apply_match_alt)
         detect_nonce_symbols(prob)
@@ -456,21 +556,38 @@ class ProofChecker(object):
             # tmatch = apply_match_match(fomatch,pmatch,apply_match)
             # tmatch = apply_match_match(somatch,tmatch,apply_match_alt)
             # schema = apply_match_goal(tmatch,schema,apply_match_alt)
-        return goal_subgoals(prob.schema,decl,proof.lineno)
+        result = goal_subgoals(prob.schema,decl,proof.lineno)
+        if __debug__: xtracer.trace("proof.MatchSchema EXIT nsubgoals=%d" % len(result))
+        return result
 
     def witness_tactic(self,decls,proof):
+        if __debug__: xtracer.trace("proof.witnessTactic ENTER ndecls=%d nArgs=%d" % (len(decls), len(proof.args)))
         decl = decls[0]
         conc = goal_conc(decl)
+        if conc is not None and hasattr(conc,'canon'):
+            if __debug__: xtracer.trace("proof.witnessTactic preConc HASH canon=%s" % conc.canon())
         if ia.has_temporal(proof) and not goal_is_temporal(goal):
+            if __debug__: xtracer.trace("proof.witnessTactic EXIT err=temporalInNonTemporal")
             raise iu.IvyError(proof,'temporal operator not allowed in instantiation')
         wits = compile_witness_list(proof,decls[0])
+        if __debug__: xtracer.trace("proof.witnessTactic compiled nwits=%d" % len(wits))
         for wit in wits:
             if not il.is_variable(wit.args[0]):
+                if __debug__: xtracer.trace("proof.witnessTactic EXIT err=lhsNotVariable")
                 raise iu.IvyError(wit,'left-hand side of witness must be a variable')
         wit_map = dict((x.args[0],x.args[1]) for x in wits)
+        for v, term in wit_map.items():
+            if __debug__: xtracer.trace("proof.witnessTactic witnessPair key=%s rhs HASH canon=%s" % (v.canon() if hasattr(v,'canon') else str(v), term.canon() if hasattr(term,'canon') else str(term)))
+        if not wit_map:
+            if __debug__: xtracer.trace("proof.witnessTactic EXIT passthrough nwitness=0")
+            return decls
         conc = lu.witness_ast(False,[],wit_map,conc)
+        if conc is not None and hasattr(conc,'canon'):
+            if __debug__: xtracer.trace("proof.witnessTactic postWitnessAst HASH canon=%s" % conc.canon())
         prems = goal_prems(decl)
-        return [clone_goal(decl,prems,conc)] + decls[1:]
+        newGoal = clone_goal(decl,prems,conc)
+        if __debug__: xtracer.trace("proof.witnessTactic EXIT HASH canon=%s" % newGoal.canon())
+        return [newGoal] + decls[1:]
  
 
 # A proof goal is a LabeledFormula whose body is either a Formula or a SchemaBody
@@ -491,23 +608,31 @@ def goal_prems(g):
 # Make a goal with given label, premises (goals), conclusion (formula)
 
 def make_goal(lineno,label,prems,conc,annot=None):
+    if __debug__: xtracer.trace("proof.MakeGoal ENTER nprems=%d concType=%s" % (len(prems), type(conc).__name__))
     if isinstance(label,str):
         label = ia.Atom(label)
     res =  ia.LabeledFormula(label,ia.SchemaBody(*(prems+[conc])) if prems else conc)
     res.lineno = lineno
     if annot is not None:
         res.annot = annot
+    if __debug__: xtracer.trace("proof.MakeGoal EXIT id=%d" % (res.id if hasattr(res,'id') else -1))
     return res
 
 # Replace the premises and conclusions of a goal, keeping label and lineno
 def clone_goal(goal,prems,conc):
-    return goal.clone_with_fresh_id([goal.label,ia.SchemaBody(*(prems+[conc])) if prems else conc])
+    if __debug__: xtracer.trace("proof.CloneGoal ENTER label=%s nprems=%d concType=%s" % (goal.label, len(prems), type(conc).__name__))
+    result = goal.clone_with_fresh_id([goal.label,ia.SchemaBody(*(prems+[conc])) if prems else conc])
+    if __debug__: xtracer.trace("proof.CloneGoal EXIT label=%s newID=%d" % (result.label, result.id if hasattr(result,'id') else -1))
+    return result
 
 # Substitute a goal g2 for the conclusion of goal g1. The result has the label of g2.
 
 def goal_subst(g1,g2,lineno):
+    if __debug__: xtracer.trace("proof.GoalSubst ENTER g1Label=%s g2Label=%s" % (g1.label, g2.label))
     check_name_clash(g1,g2)
-    return make_goal(lineno, g2.label, goal_prems(g1) + goal_prems(g2), goal_conc(g2))
+    result = make_goal(lineno, g2.label, goal_prems(g1) + goal_prems(g2), goal_conc(g2))
+    if __debug__: xtracer.trace("proof.GoalSubst EXIT HASH canon=%s" % result.canon())
+    return result
 
 # Substitute a sequence of subgoals in to the conclusion of the first goal
 
@@ -525,11 +650,17 @@ def fresh_label(goals):
 # Add a premise to a goal
 
 def goal_add_prem(goal,prem,lineno):
-    return make_goal(lineno,goal.label,goal_prems(goal) + [prem], goal_conc(goal))
-    
+    if __debug__: xtracer.trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%s" % (goal.label, type(prem).__name__))
+    result = make_goal(lineno,goal.label,goal_prems(goal) + [prem], goal_conc(goal))
+    if __debug__: xtracer.trace("proof.GoalAddPrem EXIT HASH canon=%s" % result.canon())
+    return result
+
 
 def goal_remove_prem(goal,prem_name):
-    goal = clone_goal(goal,[x for x in goal_prems(goal) if x.name != prem_name],goal_conc(goal))
+    if __debug__: xtracer.trace("proof.GoalRemovePrem ENTER goalLabel=%s premName=%s" % (goal.label, prem_name))
+    new_prems = [x for x in goal_prems(goal) if x.name != prem_name]
+    goal = clone_goal(goal,new_prems,goal_conc(goal))
+    if __debug__: xtracer.trace("proof.GoalRemovePrem EXIT nprems=%d" % len(new_prems))
     return goal
 
 # Add a premise to a goal
@@ -556,10 +687,13 @@ def goal_prem_goals(goal):
 # Check that there are no name clashes in a pair of goals
 
 def check_name_clash(g1,g2):
+    if __debug__: xtracer.trace("proof.CheckNameClash ENTER g1Label=%s g2Label=%s" % (g1.label, g2.label))
     d1,d2 = list(map(goal_defns,(g1,g2)))
     for s1 in d1:
         if s1 in d2:
+            if __debug__: xtracer.trace("proof.CheckNameClash EXIT err=clash key=%s" % s1)
             raise ProofError(None,'premise {} of sugboal clashes with context'.format(s1))
+    if __debug__: xtracer.trace("proof.CheckNameClash EXIT ok")
 
 # A *vocabulary* consists of three lists: sorts, symbols and variables
 
@@ -572,6 +706,10 @@ class Vocab(object):
 # include the bound variables in the conclusion.
 
 def goal_vocab(goal,bound=False):
+    if bound:
+        if __debug__: xtracer.trace("proof.GoalVocabBound ENTER label=%s" % goal.label)
+    else:
+        if __debug__: xtracer.trace("proof.GoalVocab ENTER label=%s" % goal.label)
     prems = goal_prems(goal)
     conc = goal_conc(goal)
     symbols = [x.args[0] for x in prems if isinstance(x,ia.ConstantDecl)]
@@ -582,6 +720,9 @@ def goal_vocab(goal,bound=False):
         conc_fmla = conc.fmla if isinstance(conc,ia.TemporalModels) else conc
         variables = variables + [x for x in logic_util.bound_variables(conc_fmla)
                                  if x not in variables]
+        if __debug__: xtracer.trace("proof.GoalVocabBound EXIT nvariables=%d" % len(variables))
+    else:
+        if __debug__: xtracer.trace("proof.GoalVocab EXIT nsorts=%d nsymbols=%d nvariables=%d" % (len(sorts), len(symbols), len(variables)))
     return Vocab(sorts,symbols,variables)
 
 # Check that the conclusions of two goals match
@@ -619,12 +760,16 @@ def goal_defines(x):
 def normalize_goal(x):
     """ normalize the subformulas of a goal, so there are only binary
     conjunctions/disjunctions and single-variable quantifiers. """
+    if __debug__: xtracer.trace("proof.NormalizeGoal ENTER label=%s" % (x.label if hasattr(x,'label') else 'N/A'))
     if goal_is_defn(x):
+        if __debug__: xtracer.trace("proof.NormalizeGoal EXIT passthrough=isDefn")
         return x
     if not hasattr(x,'formula'):
         print(x)
         print(type(x))
-    return clone_goal(x,list(map(normalize_goal,goal_prems(x))),il.normalize_ops(goal_conc(x)))
+    result = clone_goal(x,list(map(normalize_goal,goal_prems(x))),il.normalize_ops(goal_conc(x)))
+    if __debug__: xtracer.trace("proof.NormalizeGoal EXIT HASH canon=%s" % result.canon())
+    return result
 
 def get_unprovided_defns(g1,g2):
     defns = goal_defns(g2)
@@ -642,6 +787,7 @@ def get_unprovided_defns(g1,g2):
 # symbols and types in the goal must be provided by the environment.
 
 def goal_subgoals(schema,goal,lineno):
+    if __debug__: xtracer.trace("proof.GoalSubgoals ENTER schemaLabel=%s goalLabel=%s" % (schema.label, goal.label))
     check_concs_match(schema,goal)
     upds = get_unprovided_defns(schema,goal)
     g = clone_goal(goal,upds,goal_conc(goal))
@@ -650,6 +796,7 @@ def goal_subgoals(schema,goal,lineno):
     subgoals = [goal_subst(goal,x,lineno) for x in goal_prem_goals(schema)
                 if not any(goals_eq_mod_alpha(x,y) for y in gpms)]
     subgoals = [s for s in subgoals if not trivial_goal(s)]
+    if __debug__: xtracer.trace("proof.GoalSubgoals EXIT nsubgoals=%d" % len(subgoals))
     return subgoals
 
 def fmla_vocab(fmla):
@@ -663,6 +810,7 @@ def fmla_vocab(fmla):
 
 def goal_free(goal):
     """ Get the free vocabulary of a goal, including sorts, symbols and variables """
+    if __debug__: xtracer.trace("proof.GoalFree ENTER label=%s" % goal.label)
     bound = set()
     def rec_fmla(fmla,res):
         for y in fmla_vocab(fmla):
@@ -679,6 +827,7 @@ def goal_free(goal):
             rec_fmla(goal_conc(goal),res)
     res = set()
     rec(goal,res)
+    if __debug__: xtracer.trace("proof.GoalFree EXIT nfree=%d" % len(res))
     return res
 
 # Make sure the free vocabulry of the schema we are about to use is not captured
@@ -735,13 +884,17 @@ def rename_goal(goal,renaming):
 # Compile an expression using a vocabulary. The expression could be a formula or a type.
 
 def compile_expr_vocab(expr,vocab):
+    if __debug__: xtracer.trace("proof.CompileExprVocab ENTER exprType=%s" % type(expr).__name__)
     with il.WithSymbols(vocab.symbols):
         with il.WithSorts(vocab.sorts):
             if isinstance(expr,ia.Atom) and expr.rep in il.sig.sorts:
-                return il.sig.sorts[expr.rep]
+                result = il.sig.sorts[expr.rep]
+                if __debug__: xtracer.trace("proof.CompileExprVocab EXIT viaSort")
+                return result
             with il.top_sort_as_default():
                 with ia.ASTContext(expr):
                     expr = il.sort_infer_list([expr.compile()] + vocab.variables)[0]
+                    if __debug__: xtracer.trace("proof.CompileExprVocab EXIT HASH canon=%s" % (expr.canon() if hasattr(expr,'canon') else str(expr)))
                     return expr
 
 
@@ -930,6 +1083,7 @@ def compile_match(proof_match,prob,decl,allow_witness=False):
     """ Compiles match in a proof. Only the symbols in
     freesyms may be used in the match."""
 
+    if __debug__: xtracer.trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%s" % (len(proof_match), decl.label, allow_witness))
     schema = prob.schema
     freesyms = prob.freesyms.copy()
     if allow_witness:
@@ -937,6 +1091,7 @@ def compile_match(proof_match,prob,decl,allow_witness=False):
     matches = compile_match_list(proof_match,schema,decl,allow_witness=allow_witness)
     matches = [compile_one_match(m.lhs(),m.rhs(),freesyms,prob.constants) for m in matches]
     res = merge_matches(*matches)
+    if __debug__: xtracer.trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d" % (len(matches), len(res) if res else 0))
     return res
         
         
@@ -976,6 +1131,9 @@ def goal_is_schema(x):
 
 def apply_match_goal(match,x,apply_match,env = None):
     """ Apply a match to a goal """
+    is_top = env is None
+    if is_top:
+        if __debug__: xtracer.trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d" % (x.label if hasattr(x,'label') else 'N/A', len(match)))
     env = env if env is not None else set()
     if isinstance(x,ia.LabeledFormula):
         fmla = x.formula
@@ -988,6 +1146,8 @@ def apply_match_goal(match,x,apply_match,env = None):
         else:
             fmla = apply_match(match,fmla,env)
         g = x.clone([x.label,fmla])
+        if is_top:
+            if __debug__: xtracer.trace("proof.ApplyMatchGoalNode EXIT HASH canon=%s" % g.canon())
         return g
     if isinstance(x,(il.UninterpretedSort,il.EnumeratedSort)):
         return apply_match_sort(match,x)
@@ -1125,7 +1285,7 @@ def match_get(match,sym,env,default=None):
     
 
 def apply_match_alt(match,fmla,env = None):
-    """ apply a match to a formula. 
+    """ apply a match to a formula.
 
     In effect, substitute all symbols in the match with the
     corresponding lambda terms and apply beta reduction
@@ -1135,9 +1295,15 @@ def apply_match_alt(match,fmla,env = None):
     capture and cause CaptureError to be raised.
 
     """
+    if __debug__: xtracer.trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s" % (len(match), type(fmla).__name__))
     freevars = list(match_rhs_vars(match))
     fmla = il.alpha_avoid(fmla,freevars)
-    return apply_match_alt_rec(match,fmla,env if env is not None else set())
+    result = apply_match_alt_rec(match,fmla,env if env is not None else set())
+    if result is not None and hasattr(result,'canon'):
+        if __debug__: xtracer.trace("proof.ApplyMatchAlt EXIT HASH canon=%s" % result.canon())
+    else:
+        if __debug__: xtracer.trace("proof.ApplyMatchAlt EXIT resultType=%s" % type(result).__name__)
+    return result
 
 
 def apply_fun(fun,args):
@@ -1244,6 +1410,7 @@ def fo_match(pat,inst,freesyms,constants):
     """ Compute a partial first-order match. Matches free FO variables to ground terms,
     but ignores variable occurrences under free second-order symbols. """
 
+    if __debug__: xtracer.trace("proof.FOMatch ENTER patType=%s instType=%s" % (type(pat).__name__, type(inst).__name__))
     if il.is_variable(pat):
         if pat in freesyms and all(x in constants for x in lu.variables_ast(inst)):
             res = {pat:inst}
@@ -1271,14 +1438,18 @@ def match(pat,inst,freesyms,constants):
 
     """
 
+    if __debug__: xtracer.trace("proof.Match ENTER patType=%s instType=%s nfreesyms=%d" % (type(pat).__name__, type(inst).__name__, len(freesyms)))
     if il.is_quantifier(pat):
-        return match_quants(pat,inst,freesyms,constants)
+        result = match_quants(pat,inst,freesyms,constants)
+        if __debug__: xtracer.trace("proof.Match EXIT viaQuants success=%s" % (result is not None))
+        return result
     if heads_match(pat,inst,freesyms):
         matches = [match(x,y,freesyms,constants) for x,y in zip(pat.args,inst.args)]
         matches.extend([match_sort(x,y,freesyms) for x,y in zip(term_sorts(pat),term_sorts(inst))])
         if il.is_variable(pat):
             matches.append({pat:inst})
         res = merge_matches(*matches)
+        if __debug__: xtracer.trace("proof.Match EXIT viaHeads success=%s" % (res is not None))
         return res
     elif il.is_app(pat) and pat.rep in freesyms:
         B = extract_terms(inst,pat.args)
@@ -1286,7 +1457,9 @@ def match(pat,inst,freesyms,constants):
             matches = [{pat.rep:B}]
             matches.extend([match_sort(x,y,freesyms) for x,y in zip(term_sorts(pat),lambda_sorts(B))])
             res = merge_matches(*matches)
+            if __debug__: xtracer.trace("proof.Match EXIT viaLambda success=%s" % (res is not None))
             return res
+    if __debug__: xtracer.trace("proof.Match EXIT noMatch")
         
 
 
@@ -1356,29 +1529,47 @@ def equiv_alpha(x,y):
     pass
 
 def goal_free_vars(goal):
+    if __debug__: xtracer.trace("proof.GoalFreeVars ENTER label=%s" % (goal.label if hasattr(goal,'label') else 'N/A'))
     prems = goal_prems(goal)
     conc = goal_conc(goal)
     fmlas = [x.formula for x in prems if isinstance(x,ia.LabeledFormula)] + [conc]
-    return list(lu.used_variables_in_order_asts(fmlas))
+    result = list(lu.used_variables_in_order_asts(fmlas))
+    if __debug__: xtracer.trace("proof.GoalFreeVars EXIT nvars=%d" % len(result))
+    return result
 
 def var_subst_goal(goal,subst):
     """ Apply a variable substitution to a goal. """
+    if __debug__: xtracer.trace("proof.varSubstGoal ENTER label=%s nsubs=%d" % (goal.label, len(subst)))
     prems = [var_subst_goal(prem,subst) for prem in goal_prems(goal)]
     conc = goal_conc(goal)
     if not isinstance(conc,ia.SchemaBody):
         conc = apply_to_conc(conc,lambda x: il.substitute(x,subst))
-    return clone_goal(goal,prems,conc)
+    result = clone_goal(goal,prems,conc)
+    if __debug__: xtracer.trace("proof.varSubstGoal EXIT HASH canon=%s" % result.canon())
+    return result
 
 def apply_to_conc(conc,func):
+    if conc is None:
+        if __debug__: xtracer.trace("proof.ApplyToConc ENTER concNil=true")
+        return conc
+    if __debug__: xtracer.trace("proof.ApplyToConc ENTER type=%s HASH canon=%s" % (type(conc).__name__, conc.canon() if hasattr(conc,'canon') else str(conc)))
     if isinstance(conc,ia.TemporalModels):
-        return conc.clone([func(conc.fmla)])
-    return func(conc)
+        result = conc.clone([func(conc.fmla)])
+        if __debug__: xtracer.trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%s" % result.canon())
+        return result
+    result = func(conc)
+    if result is not None and hasattr(result,'canon'):
+        if __debug__: xtracer.trace("proof.ApplyToConc EXIT type=Expr HASH canon=%s" % result.canon())
+    else:
+        if __debug__: xtracer.trace("proof.ApplyToConc EXIT type=%s passthrough" % type(result).__name__)
+    return result
 
 # Convert a goal to skolem normal form. This means the premises are in
 # universal prenex form and the conclusion is in existential prenex
 # form. If argument 'prenex' is false, don't convert to prenex form.
 
 def skolemize_goal(goal,prenex=True):
+    if __debug__: xtracer.trace("proof.SkolemizeGoal ENTER prenex=%s label=%s HASH canon=%s" % (prenex, goal.label, goal.canon()))
     var_uniq = il.VariableUniqifier()
     vocab = goal_vocab(goal)
     used_names = set(x.name for x in vocab.symbols)
@@ -1387,11 +1578,14 @@ def skolemize_goal(goal,prenex=True):
     skfuns = []
     if not prenex:
         variables = goal_free_vars(goal)
+        if __debug__: xtracer.trace("proof.SkolemizeGoal freeVarsPass nvariables=%d" % len(variables))
         sks = [il.Symbol(renamer('_'+v.name),v.sort) for v in variables]
+        for v, sk in zip(variables, sks):
+            if __debug__: xtracer.trace("proof.SkolemizeGoal substitute v=%s sk=%s" % (v.name, sk.name))
         subst = list(zip(variables,sks))
         goal = var_subst_goal(goal,subst)
         skfuns += sks
-        
+
     def rec(goal,pos):
         if not isinstance(goal,ia.LabeledFormula):
             return goal
@@ -1399,28 +1593,35 @@ def skolemize_goal(goal,prenex=True):
         conc = skolemize_fmla(goal_conc(goal),pos,renamer,skfuns,prenex)
         return clone_goal(goal,prems,conc)
     goal = rec(goal,True)
-    return clone_goal(goal,[ia.ConstantDecl(s) for s in skfuns]+goal_prems(goal), goal_conc(goal))
+    result = clone_goal(goal,[ia.ConstantDecl(s) for s in skfuns]+goal_prems(goal), goal_conc(goal))
+    if __debug__: xtracer.trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%s" % (len(skfuns), result.canon()))
+    return result
 
 
 def skolemize_fmla(fmla,pos,renamer,skfuns,prenex=True):
+    if __debug__: xtracer.trace("proof.SkolemizeFmla ENTER pos=%s prenex=%s type=%s" % (pos, prenex, type(fmla).__name__))
     univs = []
     outer = []
     var_uniq = il.VariableUniqifier(used=renamer.used) # don't capture any free symbols!
     def rec( fmla,pos):
         if isinstance(fmla,il.Not):
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Not pos=%s" % pos)
             return fmla.clone([rec(fmla.args[0],not pos)])
         if isinstance(fmla,il.Implies):
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Implies pos=%s" % pos)
             return fmla.clone([
                 rec(fmla.args[0],not pos),
                 rec(fmla.args[1],pos),
             ])
         if isinstance(fmla,(il.And,il.Or)):
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=%s pos=%s nterms=%d" % (type(fmla).__name__, pos, len(fmla.args)))
             return fmla.clone([rec(arg,pos) for arg in fmla.args])
         is_e = il.is_exists(fmla)
         is_a = il.is_forall(fmla)
         if is_a and pos or is_e and not pos:
             fvs = list(x for x in iu.unique(lu.variables_ast(fmla)) if x in outer)
             body = fmla.body
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Skolemize pos=%s isE=%s isA=%s nvars=%d" % (pos, is_e, is_a, len(fmla.variables)))
             for v in fmla.variables:
                 sym = il.Symbol(renamer('_'+v.name),
                                 il.FuncConstSort(*([w.sort for w in fvs] + [v.sort])))
@@ -1430,12 +1631,14 @@ def skolemize_fmla(fmla,pos,renamer,skfuns,prenex=True):
             return rec(body,pos)
         if is_e and pos or is_a and not pos:
             body = fmla.body
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Universalize pos=%s isE=%s isA=%s nvars=%d" % (pos, is_e, is_a, len(fmla.variables)))
             for v in fmla.variables:
                 u = var_uniq(v)
                 if prenex:
                     univs.append(u)
                 outer.append(u)
                 body = il.substitute(body,[(v,u)])
+                if __debug__: xtracer.trace("proof.SkolemizeFmla universalize v=%s u=%s" % (v.name, u.name))
             res = rec(body,pos)
             if not prenex:
                 res = type(fmla)(outer[-len(fmla.variables):],res)
@@ -1443,22 +1646,36 @@ def skolemize_fmla(fmla,pos,renamer,skfuns,prenex=True):
                 outer.pop()
             return res
         if isinstance(fmla,ia.TemporalModels):
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=TemporalModels pos=%s" % pos)
             return fmla.clone([rec(fmla.args[0],pos)])
+        if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=passthrough pos=%s astType=%s" % (pos, type(fmla).__name__))
         return fmla
     body = rec(fmla,pos)
     if univs:
+        if __debug__: xtracer.trace("proof.SkolemizeFmla univsWrap pos=%s nunivs=%d" % (pos, len(univs)))
         quant = il.Exists if pos else il.ForAll
         if isinstance(body,ia.TemporalModels):
             body = body.clone([quant(univs,body.args[0])])
         else:
             body = quant(univs,body)
+    if __debug__: xtracer.trace("proof.SkolemizeFmla EXIT nskfuns=%d" % len(skfuns))
     return body
 
 def compile_witness_list(proof,goal):
+    if __debug__: xtracer.trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s" % (len(proof.args), goal.label))
 #    the_goal_vocab = goal_vocab(goal,get_bound_vars=True)
     the_goal_vocab = goal_vocab(goal)
     the_goal_vocab.variables.extend(list(logic_util.used_variables(goal_conc(goal))))
-    return [compile_expr_vocab(d,the_goal_vocab) for d in proof.args]
+    result = []
+    for i, d in enumerate(proof.args):
+        compiled = compile_expr_vocab(d,the_goal_vocab)
+        if compiled is not None:
+            if __debug__: xtracer.trace("proof.CompileWitnessList arg=%d HASH canon=%s" % (i, compiled.canon() if hasattr(compiled,'canon') else str(compiled)))
+            result.append(compiled)
+        else:
+            if __debug__: xtracer.trace("proof.CompileWitnessList arg=%d compiledNil" % i)
+    if __debug__: xtracer.trace("proof.CompileWitnessList EXIT nresult=%d" % len(result))
+    return result
     
 def compile_with_goal_vocab(expr,goal):
 #    the_goal_vocab = goal_vocab(goal,get_bound_vars=True)
@@ -1561,35 +1778,47 @@ def unfold_fmla(fmla,defns):
     return fmla
 
 def goal_apply_to_prem(goal,premname,fn):
+    if __debug__: xtracer.trace("proof.GoalApplyToPrem ENTER goalLabel=%s premName=%s" % (goal.label, premname))
     prems = goal_prems(goal)
     premmap = dict((x.name,idx) for idx,x in enumerate(prems))
     if premname in premmap:
         idx = premmap[premname]
         prem = prems[idx]
         if not isinstance(prem,ia.LabeledFormula):
+            if __debug__: xtracer.trace("proof.GoalApplyToPrem EXIT notLabeledFormula")
             return None
-        return clone_goal(goal,prems[0:idx]+[fn(prems[idx])]+prems[idx+1:],goal_conc(goal))
+        result = clone_goal(goal,prems[0:idx]+[fn(prems[idx])]+prems[idx+1:],goal_conc(goal))
+        if __debug__: xtracer.trace("proof.GoalApplyToPrem EXIT HASH canon=%s" % result.canon())
+        return result
+    if __debug__: xtracer.trace("proof.GoalApplyToPrem EXIT notFound premName=%s" % premname)
     return None
 
 def goal_apply_to_conc(goal,fn):
-    return clone_goal(goal,goal_prems(goal),fn(goal_conc(goal)))
+    if __debug__: xtracer.trace("proof.GoalApplyToConc ENTER label=%s" % goal.label)
+    result = clone_goal(goal,goal_prems(goal),fn(goal_conc(goal)))
+    if __debug__: xtracer.trace("proof.GoalApplyToConc EXIT HASH canon=%s" % result.canon())
+    return result
 
 # When instantiating a schema, unmatched free variables occurring only
-# in the conclusion can be universally quantified. 
+# in the conclusion can be universally quantified.
 
 def close_unmatched(goal,match):
+    if __debug__: xtracer.trace("proof.CloseUnmatched ENTER label=%s nmatch=%d" % (goal.label, len(match)))
     conc = goal_conc(goal)
     prem_vars = lu.used_variables_asts(goal_prem_goals(goal))
     conc_vars = [x for x in iu.unique(lu.variables_ast(conc))
                  if x not in match and x not in prem_vars]
     for v in reversed(conc_vars):
         conc = il.ForAll([v],conc)
-    return clone_goal(goal,goal_prems(goal),conc)
+    result = clone_goal(goal,goal_prems(goal),conc)
+    if __debug__: xtracer.trace("proof.CloseUnmatched EXIT ntoClose=%d HASH canon=%s" % (len(conc_vars), result.canon()))
+    return result
 
 # When instantiating a schema, we drop the premises that supplied in the
-# proof goal. 
+# proof goal.
 
 def drop_supplied_prems(schema,goal,proof_match):
+    if __debug__: xtracer.trace("proof.DropSuppliedPrems ENTER schemaLabel=%s goalLabel=%s nMatch=%d" % (schema.label, goal.label, len(proof_match)))
     gprems = goal_prems_by_name(goal)
     pmap = dict()
     for m in proof_match:
@@ -1602,21 +1831,31 @@ def drop_supplied_prems(schema,goal,proof_match):
             gname = pmap[prem.name]
             return gname in gprems and goals_eq_mod_alpha(prem,gprems[gname])
         return False
-    return clone_goal(schema,[x for x in goal_prems(schema) if not is_supplied(x)],
-                      goal_conc(schema))
+    new_prems = [x for x in goal_prems(schema) if not is_supplied(x)]
+    result = clone_goal(schema,new_prems,goal_conc(schema))
+    if __debug__: xtracer.trace("proof.DropSuppliedPrems EXIT nnewPrems=%d" % len(new_prems))
+    return result
 
 # Remove the "explicit" tag from a goal
 
 def remove_explicit(goal):
+    if __debug__: xtracer.trace("proof.RemoveExplicit ENTER label=%s explicit=%s" % (goal.label, hasattr(goal,'explicit') and goal.explicit))
     if hasattr(goal,'explicit') and goal.explicit:
         goal = goal.clone(goal.args)
         goal.explicit = False
+        if __debug__: xtracer.trace("proof.RemoveExplicit EXIT cleared")
+        return goal
+    if __debug__: xtracer.trace("proof.RemoveExplicit EXIT passthrough")
     return goal
 
 def rename_prem_no_clash(prem,decl):
+    if __debug__: xtracer.trace("proof.RenamePremNoClash ENTER premLabel=%s declLabel=%s" % (prem.label, decl.label))
     names = set(x.name for x in goal_prem_goals(decl))
     rn = iu.UniqueRenamer(used=names)
-    return prem.rename(rn(prem.name))
+    new_name = rn(prem.name)
+    result = prem.rename(new_name)
+    if __debug__: xtracer.trace("proof.RenamePremNoClash EXIT newName=%s" % new_name)
+    return result
 
 class AddSymbols(object):
     """ temporarily add some symbols to a set of symbols """
