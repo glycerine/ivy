@@ -342,11 +342,12 @@ func unwrapCompiledNode(x ast.Node) ast.Node {
 func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 	res := make(map[lg.NodeKey]lg.Expr)
 	for _, p := range GoalPrems(goal) {
+		p = unwrapCompiledNode(p)
 		// Python: isinstance(x, ia.ConstantDecl) and isinstance(x.args[0], il.Symbol)
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if c, ok := args[0].(*lg.Const); ok {
+				if c, ok := unwrapCompiledNode(args[0]).(*lg.Const); ok {
 					res[lg.Key(c)] = c
 				}
 			}
@@ -385,34 +386,24 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	var fmlas []lg.Expr
 
 	for _, p := range prems {
-		// Collect sorts: Python: sorts = [s for s in prems if isinstance(s, il.UninterpretedSort)]
-		if s, ok := p.(lg.Sort); ok {
-			if _, isUninterp := s.(*lg.UninterpretedSort); isUninterp {
-				sorts = append(sorts, s)
-			}
+		p = unwrapCompiledNode(p)
+		// Python: sorts = [s for s in prems if isinstance(s, il.UninterpretedSort)]
+		if us, ok := p.(*lg.UninterpretedSort); ok {
+			sorts = append(sorts, us)
 		}
+		// Python: symbols = [x.args[0] for x in prems if isinstance(x, ia.ConstantDecl)]
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if c, ok := args[0].(lg.Expr); ok {
-					if cc, ok := c.(*lg.Const); ok {
-						symbols = append(symbols, cc)
-					}
+				if cc, ok := unwrapCompiledNode(args[0]).(*lg.Const); ok {
+					symbols = append(symbols, cc)
 				}
 			}
 		}
 		// Python: fmlas = [x.formula for x in prems if isinstance(x, ia.LabeledFormula)]
-		// Python passes x.formula which could be a SchemaBody; used_variables_asts
-		// traverses all its children. In Go, extract each element individually.
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			if sb, ok := lf.Formula.(*ast.SchemaBody); ok {
-				for _, elem := range sb.Elems {
-					if e, ok := elem.(lg.Expr); ok {
-						fmlas = append(fmlas, e)
-					}
-				}
-			} else if fc := ConcAsExpr(GoalConc(lf)); fc != nil {
-				fmlas = append(fmlas, fc)
+			if f, ok := lf.Formula.(lg.Expr); ok {
+				fmlas = append(fmlas, f)
 			}
 		}
 	}
@@ -420,22 +411,10 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 		fmlas = append(fmlas, concExpr)
 	}
 
-	// Collect FREE variables from each formula independently and union.
-	// Python: `used_variables_asts(fmlas)` = `apply_gen_to_list(variables_ast)` —
-	// each fmla scanned via `variables_ast` (free-only), results unioned.
-	// A variable bound in one fmla but free in another is in the final set.
-	varSet := make(map[lg.NodeKey]lg.Expr)
-	for _, f := range fmlas {
-		for k, v := range lu.FreeVariables(f).All() {
-			varSet[k] = v
-		}
-	}
-	var variables []*lg.Variable
-	for _, node := range varSet {
-		if v, ok := node.(*lg.Variable); ok {
-			variables = append(variables, v)
-		}
-	}
+	// Python: variables = list(lu.used_variables_asts(fmlas))
+	// used_variables_asts = apply_gen_to_list(variables_ast) — yields each
+	// free-variable OCCURRENCE (not deduped). Count / order match Python.
+	variables := lu.UsedVariablesAsts(fmlas)
 
 	xtracer.Trace("proof.GoalVocab EXIT nsorts=%d nsymbols=%d nvariables=%d", len(sorts), len(symbols), len(variables))
 	return &Vocab{

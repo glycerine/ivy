@@ -675,6 +675,7 @@ func extractSymbol(n ast.Node) *lg.Const {
 	if n == nil {
 		return nil
 	}
+	n = unwrapCompiledNode(n)
 	if s, ok := n.(*lg.Const); ok {
 		return s
 	}
@@ -1340,9 +1341,10 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 	prems := GoalPrems(goal)
 	var newPrems []ast.Node
 	for _, p := range prems {
-		if lf, ok := p.(*ast.LabeledFormula); ok {
+		pu := unwrapCompiledNode(p)
+		if lf, ok := pu.(*ast.LabeledFormula); ok {
 			newPrems = append(newPrems, ApplyMatchGoalNode(cfg, match, lf))
-		} else if s, ok := p.(lg.Sort); ok {
+		} else if s, ok := pu.(lg.Sort); ok {
 			// Apply sort renaming: match[sort] → newSort
 			key := lg.Key(s)
 			if rep, found := match[key]; found {
@@ -1352,11 +1354,11 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 				}
 			}
 			newPrems = append(newPrems, p)
-		} else if cd, ok := p.(*ast.ConstantDecl); ok {
+		} else if cd, ok := pu.(*ast.ConstantDecl); ok {
 			// Apply symbol renaming via ApplyMatchFunc
 			args := cd.Args()
 			if len(args) > 0 {
-				if sym, ok := args[0].(*lg.Const); ok {
+				if sym, ok := unwrapCompiledNode(args[0]).(*lg.Const); ok {
 					newSym := ApplyMatchFunc(match, sym)
 					symKey := lg.Key(newSym)
 					if rep, found := match[symKey]; found {
@@ -1387,7 +1389,7 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 			if cd, ok := p.(*ast.ConstantDecl); ok {
 				args := cd.Args()
 				if len(args) > 0 {
-					if _, isLam := args[0].(*lg.Lambda); isLam {
+					if _, isLam := unwrapCompiledNode(args[0]).(*lg.Lambda); isLam {
 						continue // filter out lambda-typed ConstantDecl
 					}
 				}
@@ -1427,9 +1429,10 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 	prems := GoalPrems(goal)
 	var newPrems []ast.Node
 	for _, p := range prems {
-		if lf, ok := p.(*ast.LabeledFormula); ok {
+		pu := unwrapCompiledNode(p)
+		if lf, ok := pu.(*ast.LabeledFormula); ok {
 			newPrems = append(newPrems, ApplyMatchGoalNodeNonAlt(cfg, match, lf))
-		} else if s, ok := p.(lg.Sort); ok {
+		} else if s, ok := pu.(lg.Sort); ok {
 			key := lg.Key(s)
 			if rep, found := match[key]; found {
 				if rs, ok := rep.(lg.Sort); ok {
@@ -1438,10 +1441,10 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 				}
 			}
 			newPrems = append(newPrems, p)
-		} else if cd, ok := p.(*ast.ConstantDecl); ok {
+		} else if cd, ok := pu.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if sym, ok := args[0].(*lg.Const); ok {
+				if sym, ok := unwrapCompiledNode(args[0]).(*lg.Const); ok {
 					newSym := ApplyMatchFunc(match, sym)
 					symKey := lg.Key(newSym)
 					if rep, found := match[symKey]; found {
@@ -1470,7 +1473,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 			if cd, ok := p.(*ast.ConstantDecl); ok {
 				args := cd.Args()
 				if len(args) > 0 {
-					if _, isLam := args[0].(*lg.Lambda); isLam {
+					if _, isLam := unwrapCompiledNode(args[0]).(*lg.Lambda); isLam {
 						continue
 					}
 				}

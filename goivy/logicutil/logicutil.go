@@ -685,6 +685,55 @@ func copyBoolKeySet(s map[logic.NodeKey]bool) map[logic.NodeKey]bool {
 	return r
 }
 
+// UsedVariablesAsts mirrors Python ivy_logic_utils.used_variables_asts
+// = apply_gen_to_list(variables_ast). Returns free-variable occurrences
+// (NOT deduped) across every formula in fmlas, in DFS order. Matches
+// Python's `list(lu.used_variables_asts(fmlas))` used by goal_vocab.
+func UsedVariablesAsts(fmlas []logic.Expr) []*logic.Variable {
+	var result []*logic.Variable
+	for _, f := range fmlas {
+		variablesAstOccurrencesRec(f, &result, nil)
+	}
+	return result
+}
+
+func variablesAstOccurrencesRec(t logic.Expr, result *[]*logic.Variable, bound map[logic.NodeKey]bool) {
+	switch n := t.(type) {
+	case *logic.Variable:
+		if _, isBound := bound[logic.Key(n)]; !isBound {
+			*result = append(*result, n)
+		}
+	case *logic.ForAll:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstOccurrencesRec(n.Body, result, newBound)
+	case *logic.Exists:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstOccurrencesRec(n.Body, result, newBound)
+	case *logic.Lambda:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstOccurrencesRec(n.Body, result, newBound)
+	case *logic.NamedBinder:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[logic.Key(v)] = true
+		}
+		variablesAstOccurrencesRec(n.Body, result, newBound)
+	default:
+		for _, c := range t.Children() {
+			variablesAstOccurrencesRec(c, result, bound)
+		}
+	}
+}
+
 // --- helpers ---
 
 func copyVarSet(s map[logic.NodeKey]logic.Expr) map[logic.NodeKey]logic.Expr {
