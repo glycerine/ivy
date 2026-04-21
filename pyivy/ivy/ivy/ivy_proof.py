@@ -173,27 +173,27 @@ class ProofChecker(object):
             elif isinstance(proof,ia.LetTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=LetTactic")
                 result = self.let_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.ComposeTactics):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ComposeTactics")
                 result = self.compose_proofs(decls,proof.args)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ComposeTactics ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ComposeTactics ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.AssumeTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=AssumeTactic")
                 result = self.assume_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.UnfoldTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=UnfoldTactic")
                 result = self.unfold_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=UnfoldTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=UnfoldTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.ForgetTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ForgetTactic")
                 result = self.forget_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.ShowGoalsTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ShowGoalsTactic")
@@ -213,12 +213,12 @@ class ProofChecker(object):
             elif isinstance(proof,ia.LetTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=LetTactic")
                 result = self.let_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.IfTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=IfTactic")
                 result = self.if_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=IfTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=IfTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.NullTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=NullTactic")
@@ -227,27 +227,27 @@ class ProofChecker(object):
             elif isinstance(proof,ia.PropertyTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=PropertyTactic")
                 result = self.property_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=PropertyTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=PropertyTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.FunctionTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=FunctionTactic")
                 result = self.function_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=FunctionTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=FunctionTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.TacticTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=TacticTactic")
                 result = self.tactic_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=TacticTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=TacticTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.ProofTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=ProofTactic")
                 result = self.proof_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             elif isinstance(proof,ia.WitnessTactic):
                 if __debug__: xtracer.trace("proof.ApplyProof dispatch name=WitnessTactic")
                 result = self.witness_tactic(decls,proof)
-                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=WitnessTactic ngoals=%d" % (len(result) if result is not None else -1))
+                if __debug__: xtracer.trace("proof.ApplyProof EXIT proofType=WitnessTactic ngoals=%d err=<nil>" % (len(result) if result is not None else -1))
                 return result
             assert False,"unknown proof type {}".format(type(proof))
 
