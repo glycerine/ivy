@@ -1345,11 +1345,15 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 		return nil, err
 	}
 
-	// Build a new SchemaBody with compiled premises and conclusion
+	// Build a new SchemaBody with compiled premises and conclusion.
+	// Python: res = ivy_ast.SchemaBody(*(prems+[compile_schema_conc(...)])).
+	// compile_schema_conc returns a bare ivy_logic object (Definition or
+	// sortified formula) — NOT wrapped. lg.Expr satisfies ast.Node via
+	// ast_compat.go, so we append the bare compiled conclusion directly.
 	allElems := make([]ast.Node, 0, len(compiledPrems)+1)
 	allElems = append(allElems, compiledPrems...)
 	if compiledConc != nil {
-		allElems = append(allElems, c.Module.Cfg.AstCfg.NewCompiledNode(compiledConc))
+		allElems = append(allElems, compiledConc)
 	}
 	cfg := c.Module.Cfg.AstCfg
 	newBody := cfg.NewSchemaBody(allElems...)

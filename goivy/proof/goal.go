@@ -242,20 +242,35 @@ func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.
 
 // NormalizeGoal normalizes the subformulas of a goal so there are only
 // binary conjunctions/disjunctions and single-variable quantifiers.
-// Mirrors Python ivy_proof.normalize_goal for the top-level case:
-// LF in, LF out. Premise recursion is delegated to normalizeGoalPremise
-// so non-LabeledFormula premises (ConstantDecl / UninterpretedSort) get
-// their goal_is_defn passthrough trace emitted.
+// Public API stays concrete (LF in, LF out). The actual body lives in
+// normalizeGoalAny, which Python-style accepts any ast.Node so it can
+// handle non-LabeledFormula premises (ConstantDecl / UninterpretedSort)
+// via the goal_is_defn passthrough. Proof that the cast is safe:
+// top-level callers always pass an LF, and for an LF input the body
+// either hits GoalIsDefn (unreachable for LF — it matches only
+// ConstantDecl / UninterpretedSort) and returns the LF unchanged, or
+// falls through to CloneGoal which is typed to return LF.
 func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.NormalizeGoal ENTER label=%s", g.LabelName())
-	if GoalIsDefn(g) {
+	return normalizeGoalAny(cfg, g).(*ast.LabeledFormula)
+}
+
+// normalizeGoalAny mirrors Python ivy_proof.normalize_goal exactly.
+// Emits exactly one ENTER xtrace per invocation. Non-LF inputs
+// (ConstantDecl, UninterpretedSort) are handled by the GoalIsDefn
+// passthrough; LF inputs flow through to CloneGoal.
+func normalizeGoalAny(cfg *ast.AstConfig, x ast.Node) ast.Node {
+	xtracer.Trace("proof.NormalizeGoal ENTER label=%s", normalizeGoalLabel(x))
+	if GoalIsDefn(x) {
 		xtracer.Trace("proof.NormalizeGoal EXIT passthrough=isDefn")
-		return g
+		return x
 	}
+	// After GoalIsDefn early-exit, Python requires x to expose
+	// .formula / .label / .clone_with_fresh_id — i.e. an LF.
+	g := x.(*ast.LabeledFormula)
 	prems := GoalPrems(g)
 	normPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
-		normPrems[i] = normalizeGoalPremise(cfg, p)
+		normPrems[i] = normalizeGoalAny(cfg, p)
 	}
 	// Mirror Python ivy_proof.py:770: `il.normalize_ops(goal_conc(x))`.
 	// Uses the private normalizeOpsConc helper (not ApplyToConc) so no
@@ -267,26 +282,14 @@ func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormul
 	return result
 }
 
-// normalizeGoalPremise is the duck-typed recursion that Python's
-// normalize_goal gets for free. A SchemaBody premise can be a
-// *ast.LabeledFormula OR a non-LF node (*ast.ConstantDecl,
-// *lg.UninterpretedSort); the latter take the GoalIsDefn passthrough.
-func normalizeGoalPremise(cfg *ast.AstConfig, p ast.Node) ast.Node {
-	xtracer.Trace("proof.NormalizeGoal ENTER label=%s", premiseLabel(p))
-	if GoalIsDefn(p) {
-		xtracer.Trace("proof.NormalizeGoal EXIT passthrough=isDefn")
-		return p
-	}
-	return NormalizeGoal(cfg, p.(*ast.LabeledFormula))
-}
-
-// premiseLabel mirrors Python's
+// normalizeGoalLabel mirrors Python's
 //
 //	(x.label if hasattr(x,'label') else 'N/A')
 //
-// so the ENTER xtrace matches for non-LabeledFormula premises.
-func premiseLabel(p ast.Node) string {
-	if lf, ok := p.(*ast.LabeledFormula); ok {
+// for the ENTER xtrace. Returns "N/A" for non-LabeledFormula inputs so
+// the cross-language trace lines match.
+func normalizeGoalLabel(x ast.Node) string {
+	if lf, ok := x.(*ast.LabeledFormula); ok {
 		return lf.LabelName()
 	}
 	return "N/A"
@@ -294,12 +297,20 @@ func premiseLabel(p ast.Node) string {
 
 // GoalIsDefn returns true if x is a non-lambda constant declaration
 // or an uninterpreted sort.
+//
+// Go-specific note: Go's compile_schema_prem wraps compiled values in
+// *ast.CompiledNode (a Go-only adapter) where Python returns bare
+// il.UninterpretedSort / a ConstantDecl whose arg is a bare ivy_logic
+// symbol. We unwrap CompiledNode here so the isinstance-style checks
+// match Python's goal_is_defn.
 func GoalIsDefn(x ast.Node) bool {
+	x = unwrapCompiledNode(x)
 	if cd, ok := x.(*ast.ConstantDecl); ok {
 		args := cd.Args()
 		if len(args) > 0 {
-			// Check if the arg is a Lambda
-			if _, isLam := args[0].(*lg.Lambda); isLam {
+			// Check if the arg is a Lambda (unwrapping Go's CompiledNode
+			// around the compiled symbol / definition body).
+			if _, isLam := unwrapCompiledNode(args[0]).(*lg.Lambda); isLam {
 				return false
 			}
 		}
@@ -310,6 +321,20 @@ func GoalIsDefn(x ast.Node) bool {
 		return true
 	}
 	return false
+}
+
+// unwrapCompiledNode returns the inner ast.Node of a *ast.CompiledNode
+// wrapper, or x unchanged if it isn't one. Python has no CompiledNode —
+// compile_schema_prem there returns bare il.UninterpretedSort and bare
+// symbols. This helper bridges the port so type-dispatch checks see
+// through Go's wrapper.
+func unwrapCompiledNode(x ast.Node) ast.Node {
+	if cn, ok := x.(*ast.CompiledNode); ok {
+		if inner, ok := cn.Node.(ast.Node); ok {
+			return inner
+		}
+	}
+	return x
 }
 
 // GoalDefns returns the symbols and types defined in the premises of a goal.
