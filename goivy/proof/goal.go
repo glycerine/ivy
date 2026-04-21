@@ -154,7 +154,7 @@ func WrapImplies(cfg *ast.AstConfig, cond lg.Expr, formula ast.Node) ast.Node {
 // for handling *ast.TemporalModels itself, OR the caller can wrap fn with
 // ApplyToConc.
 func GoalApplyToConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, fn func(ast.Node) ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.GoalApplyToConc ENTER label=%s", goal.LabelName())
+	xtracer.Trace("proof.GoalApplyToConc ENTER label=%s", goal.LabelForTrace())
 	result := CloneGoal(cfg, goal, GoalPrems(goal), fn(GoalConc(goal)))
 	xtracer.Trace("proof.GoalApplyToConc EXIT HASH canon=%v", result.Canon())
 	return result
@@ -187,7 +187,7 @@ func GoalPremGoals(goal *ast.LabeledFormula) []*ast.LabeledFormula {
 // conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
 // mirroring Python's clone_goal which is duck-typed.
 func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.CloneGoal ENTER label=%s nprems=%d concType=%s", goal.LabelName(), len(prems), iu.TypeName(conc))
+	xtracer.Trace("proof.CloneGoal ENTER label=%s nprems=%d concType=%s", goal.LabelForTrace(), len(prems), iu.TypeName(conc))
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -198,7 +198,7 @@ func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, c
 		formula = conc
 	}
 	result := goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
-	xtracer.Trace("proof.CloneGoal EXIT label=%s newID=%d", result.LabelName(), result.ID)
+	xtracer.Trace("proof.CloneGoal EXIT label=%s newID=%d", result.LabelForTrace(), result.ID)
 	return result
 }
 
@@ -290,7 +290,7 @@ func normalizeGoalAny(cfg *ast.AstConfig, x ast.Node) ast.Node {
 // the cross-language trace lines match.
 func normalizeGoalLabel(x ast.Node) string {
 	if lf, ok := x.(*ast.LabeledFormula); ok {
-		return lf.LabelName()
+		return lf.LabelForTrace()
 	}
 	return "N/A"
 }
@@ -377,7 +377,7 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 // keys. See the `ifabric_rw_fair_ax` divergence in log.golden.2hr at index
 // 2411549 for the failure mode this mismatch caused.
 func GoalVocab(goal *ast.LabeledFormula) *Vocab {
-	xtracer.Trace("proof.GoalVocab ENTER label=%s", goal.LabelName())
+	xtracer.Trace("proof.GoalVocab ENTER label=%s", goal.LabelForTrace())
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
 
@@ -428,7 +428,7 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 // the conclusion, matching Python's goal_vocab(goal, bound=True)
 // (ivy_proof.py:579-582).
 func GoalVocabBound(goal *ast.LabeledFormula) *Vocab {
-	xtracer.Trace("proof.GoalVocabBound ENTER label=%s", goal.LabelName())
+	xtracer.Trace("proof.GoalVocabBound ENTER label=%s", goal.LabelForTrace())
 	v := GoalVocab(goal)
 
 	// Python: conc_fmla = conc.fmla if isinstance(conc,ia.TemporalModels) else conc
@@ -462,7 +462,7 @@ func GoalVocabBound(goal *ast.LabeledFormula) *Vocab {
 // Symmetric with GoalVocab — when conc is *ast.TemporalModels, extracts
 // conc.Fmla as the formula to scan.
 func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
-	xtracer.Trace("proof.GoalFree ENTER label=%s", goal.LabelName())
+	xtracer.Trace("proof.GoalFree ENTER label=%s", goal.LabelForTrace())
 	bound := make(map[lg.NodeKey]lg.Expr)
 	res := make(map[lg.NodeKey]lg.Expr)
 
@@ -523,7 +523,7 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 // The result has the label of g2.
 // Python ivy_proof.py:506-508: calls check_name_clash(g1,g2) before substituting.
 func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location) (*ast.LabeledFormula, error) {
-	xtracer.Trace("proof.GoalSubst ENTER g1Label=%s g2Label=%s", g1.LabelName(), g2.LabelName())
+	xtracer.Trace("proof.GoalSubst ENTER g1Label=%s g2Label=%s", g1.LabelForTrace(), g2.LabelForTrace())
 	if err := CheckNameClash(g1, g2); err != nil {
 		xtracer.Trace("proof.GoalSubst EXIT err=%v", err)
 		return nil, err
@@ -536,7 +536,7 @@ func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location)
 
 // GoalAddPrem adds a premise to a goal.
 func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
-	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%T", goal.LabelName(), prem)
+	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%T", goal.LabelForTrace(), prem)
 	prems := append(GoalPrems(goal), prem)
 	result := MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
 	xtracer.Trace("proof.GoalAddPrem EXIT HASH canon=%v", result.Canon())
@@ -545,7 +545,7 @@ func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, lo
 
 // GoalRemovePrem removes a premise by name from a goal.
 func GoalRemovePrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName string) *ast.LabeledFormula {
-	xtracer.Trace("proof.GoalRemovePrem ENTER goalLabel=%s premName=%s", goal.LabelName(), premName)
+	xtracer.Trace("proof.GoalRemovePrem ENTER goalLabel=%s premName=%s", goal.LabelForTrace(), premName)
 	var prems []ast.Node
 	for _, p := range GoalPrems(goal) {
 		if lf, ok := p.(*ast.LabeledFormula); ok {

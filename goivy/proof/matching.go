@@ -16,7 +16,7 @@ import (
 // Python: ivy_proof.py:324-327
 func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.SchemaInstantiation, mod *module.Module) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 	schemaName := nodeToString(proof.SchemaName)
-	xtracer.Trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s", schemaName, decl.LabelName())
+	xtracer.Trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s", schemaName, decl.LabelForTrace())
 	schema, err := pc.LookupSchema(schemaName, decl, proof, false)
 	if err != nil {
 		xtracer.Trace("proof.SetupMatching EXIT err=%v", err)
@@ -47,7 +47,7 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	allowWitness bool,
 ) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 
-	xtracer.Trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%v", schema.LabelName(), decl.LabelName(), len(matches), allowWitness)
+	xtracer.Trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), len(matches), allowWitness)
 
 	// Step 1: Rename schema using proof renaming
 	// Python: schema = rename_goal(schema, proof.renaming())
@@ -109,7 +109,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	allowWitness bool,
 	mod *module.Module,
 ) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
-	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelName(), decl.LabelName(), allowWitness)
+	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), allowWitness)
 	var ren ast.Node
 	var matches []ast.Node
 	if proof != nil {
@@ -256,7 +256,7 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 // Unwraps *ast.TemporalModels via ConcAsExpr — mirrors Python's
 // duck-typed access to free variables across temporal goals.
 func GoalFreeVars(g *ast.LabeledFormula) []*lg.Variable {
-	xtracer.Trace("proof.GoalFreeVars ENTER label=%s", g.LabelName())
+	xtracer.Trace("proof.GoalFreeVars ENTER label=%s", g.LabelForTrace())
 	conc := GoalConcUnwrap(g)
 	if conc == nil {
 		xtracer.Trace("proof.GoalFreeVars EXIT concNil")

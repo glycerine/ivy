@@ -16,7 +16,7 @@ import (
 // existential prenex form.
 // If prenex is false, don't convert to prenex form.
 func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
-	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelName(), goal.Canon())
+	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelForTrace(), goal.Canon())
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
 	for _, s := range vocab.Symbols {
@@ -309,7 +309,7 @@ func outerVarsInFormula(fmla lg.Expr, outer []*lg.Variable) []*lg.Variable {
 // so the substitution runs on the inner formula of *ast.TemporalModels and
 // the wrapper is preserved.
 func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
-	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goal.LabelName(), len(subs))
+	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goal.LabelForTrace(), len(subs))
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {

@@ -136,6 +136,18 @@ func (lf *LabeledFormula) LabelName() string {
 	}
 	return fmt.Sprint(lf.Label)
 }
+
+// LabelForTrace mirrors Python's `%s goal.label` — includes Atom args
+// in parentheses (full __repr__), not just the relation name. Use this
+// for XTRACE lines that correspond to Python sites emitting `%s goal.label`.
+// For name-only needs (map keys, equality), use LabelName().
+func (lf *LabeledFormula) LabelForTrace() string {
+	if lf.Label == nil {
+		return ""
+	}
+	return fmt.Sprint(lf.Label)
+}
+
 func (lf *LabeledFormula) Rename(s string) *LabeledFormula {
 	newLabel := lf.Label
 	if a, ok := lf.Label.(*Atom); ok {

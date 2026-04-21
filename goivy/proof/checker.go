@@ -371,7 +371,7 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 //  4. detect_nonce_symbols
 //  5. extract subgoals
 func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaInstantiation) ([]*ast.LabeledFormula, error) {
-	xtracer.Trace("proof.MatchSchema ENTER goalLabel=%s HASH canon=%v", goal.LabelName(), goal.Canon())
+	xtracer.Trace("proof.MatchSchema ENTER goalLabel=%s HASH canon=%v", goal.LabelForTrace(), goal.Canon())
 	goalConc := GoalConc(goal)
 	if goalConc == nil {
 		xtracer.Trace("proof.MatchSchema EXIT err=noConclusion")

@@ -86,7 +86,7 @@ func GoalPrefixPrems(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.N
 // CheckNameClash checks that two goals have no overlapping symbol definitions.
 // Corresponds to Python's check_name_clash.
 func CheckNameClash(g1, g2 *ast.LabeledFormula) error {
-	xtracer.Trace("proof.CheckNameClash ENTER g1Label=%s g2Label=%s", g1.LabelName(), g2.LabelName())
+	xtracer.Trace("proof.CheckNameClash ENTER g1Label=%s g2Label=%s", g1.LabelForTrace(), g2.LabelForTrace())
 	d1 := GoalDefns(g1)
 	d2 := GoalDefns(g2)
 	for k := range d1 {
@@ -184,7 +184,7 @@ func GetUnprovidedDefns(g1, g2 *ast.LabeledFormula) []ast.Node {
 // GoalSubgoals extracts subgoals from a schema instantiation.
 // Corresponds to Python's goal_subgoals.
 func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.Location) ([]*ast.LabeledFormula, error) {
-	xtracer.Trace("proof.GoalSubgoals ENTER schemaLabel=%s goalLabel=%s", schema.LabelName(), goal.LabelName())
+	xtracer.Trace("proof.GoalSubgoals ENTER schemaLabel=%s goalLabel=%s", schema.LabelForTrace(), goal.LabelForTrace())
 	if err := CheckConcsMatch(schema, goal); err != nil {
 		xtracer.Trace("proof.GoalSubgoals EXIT err=concMismatch err=%v", err)
 		return nil, err
@@ -792,7 +792,7 @@ func UnfoldFmla(fmla ast.Node, defns [][]*ast.LabeledFormula) ast.Node {
 // GoalApplyToPrem applies a function to a specific premise by name.
 // Corresponds to Python's goal_apply_to_prem.
 func GoalApplyToPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName string, fn func(*ast.LabeledFormula) *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.GoalApplyToPrem ENTER goalLabel=%s premName=%s", goal.LabelName(), premName)
+	xtracer.Trace("proof.GoalApplyToPrem ENTER goalLabel=%s premName=%s", goal.LabelForTrace(), premName)
 	prems := GoalPrems(goal)
 	for i, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
@@ -820,7 +820,7 @@ func GoalApplyToPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName stri
 // For *ast.TemporalModels conclusions, the quantifiers are placed inside
 // the TemporalModels wrapper via ApplyToConc.
 func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
-	xtracer.Trace("proof.CloseUnmatched ENTER label=%s nmatch=%d", goal.LabelName(), len(match))
+	xtracer.Trace("proof.CloseUnmatched ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
 	rawConc := GoalConc(goal)
 	if rawConc == nil {
 		xtracer.Trace("proof.CloseUnmatched EXIT rawConcNil")
@@ -864,7 +864,7 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 // DropSuppliedPrems removes premises from schema that are supplied by goal.
 // Corresponds to Python's drop_supplied_prems.
 func DropSuppliedPrems(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, proofMatch []ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.DropSuppliedPrems ENTER schemaLabel=%s goalLabel=%s nMatch=%d", schema.LabelName(), goal.LabelName(), len(proofMatch))
+	xtracer.Trace("proof.DropSuppliedPrems ENTER schemaLabel=%s goalLabel=%s nMatch=%d", schema.LabelForTrace(), goal.LabelForTrace(), len(proofMatch))
 	gprems := GoalPremsByName(goal)
 	pmap := make(map[string]string)
 	for _, m := range proofMatch {
@@ -907,7 +907,7 @@ func DropSuppliedPrems(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, pro
 // RemoveExplicit clears the explicit flag on a goal.
 // Corresponds to Python's remove_explicit.
 func RemoveExplicit(goal *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.RemoveExplicit ENTER label=%s explicit=%v", goal.LabelName(), goal.Explicit)
+	xtracer.Trace("proof.RemoveExplicit ENTER label=%s explicit=%v", goal.LabelForTrace(), goal.Explicit)
 	if goal.Explicit {
 		newGoal := goal.Clone(goal.Args()).(*ast.LabeledFormula)
 		newGoal.Explicit = false
@@ -921,7 +921,7 @@ func RemoveExplicit(goal *ast.LabeledFormula) *ast.LabeledFormula {
 // RenamePremNoClash renames a premise to avoid clashing with existing premise names.
 // Corresponds to Python's rename_prem_no_clash.
 func RenamePremNoClash(prem, decl *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.RenamePremNoClash ENTER premLabel=%s declLabel=%s", prem.LabelName(), decl.LabelName())
+	xtracer.Trace("proof.RenamePremNoClash ENTER premLabel=%s declLabel=%s", prem.LabelForTrace(), decl.LabelForTrace())
 	var used []string
 	for _, pg := range GoalPremGoals(decl) {
 		used = append(used, pg.LabelName())

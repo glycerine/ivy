@@ -749,7 +749,7 @@ func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Exp
 // the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
 func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool, mod *module.Module) map[lg.NodeKey]lg.Expr {
-	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelName(), allowWitness)
+	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelForTrace(), allowWitness)
 	schema := prob.SchemaLF
 	if schema == nil {
 		xtracer.Trace("proof.CompileMatchFull EXIT schemaLFNil")
@@ -1335,7 +1335,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
 func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelName(), len(match))
+	xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1423,7 +1423,7 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 // (non-capture-checking) apply function. Used for fomatch applications.
 // Corresponds to Python's apply_match_goal called with apply_match.
 func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
-	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt ENTER label=%s nmatch=%d", goal.LabelName(), len(match))
+	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1494,7 +1494,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 // CompileWitnessList compiles witness terms for existential instantiation.
 // Corresponds to Python's compile_witness_list.
 func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula, mod *module.Module) []lg.Expr {
-	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelName())
+	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelForTrace())
 	vocab := GoalVocab(goal)
 	var result []lg.Expr
 	for i, arg := range proof.Args() {
