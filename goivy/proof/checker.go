@@ -171,11 +171,13 @@ func (pc *ProofChecker) AdmitAxiom(ax *ast.LabeledFormula) {
 //
 // Python: ivy_proof.py:306-322
 func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errNode interface{}, close bool) (*ast.LabeledFormula, error) {
+	xtracer.Trace("proof.LookupSchema ENTER schemaName=%s close=%v", name, close)
 	if s, ok := pc.Schemata.Get2(name); ok {
 		xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=true value=%s", name, s.Canon())
 		if err := CheckSchemaCapture(s, goal); err != nil {
 			return nil, err
 		}
+		xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", s.Canon())
 		return s, nil
 	}
 	xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=false", name)
@@ -191,20 +193,24 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errN
 			if err := CheckSchemaCapture(schema, goal); err != nil {
 				return nil, err
 			}
+			xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", schema.Canon())
 			return schema, nil
 		}
 		// Not a *lg.Definition — return as-is
 		if err := CheckSchemaCapture(d, goal); err != nil {
 			return nil, err
 		}
+		xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", d.Canon())
 		return d, nil
 	}
 	// Check goal premises
 	for _, pg := range GoalPremGoals(goal) {
 		if pg.LabelName() == name {
+			xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", pg.Canon())
 			return pg, nil
 		}
 	}
+	xtracer.Trace("proof.LookupSchema EXIT err=notFound schemaName=%s", name)
 	return nil, &ProofError{Node: errNode, Msg: "No property " + name + " exists in the current context"}
 }
 

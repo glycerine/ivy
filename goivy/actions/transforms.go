@@ -212,7 +212,7 @@ func modifiesRec(action Action, result *[]*lg.Const, cfg *ActionsConfig) {
 	case *CrashAction:
 		// Python: CrashAction.modifies() walks domain.hierarchy to find all
 		// non-polymorphic, non-interpreted symbols under the target.
-		xtracer.Trace("actions.CrashAction.modifies ENTER target_type=%T", a.Target)
+		xtracer.Trace("actions.CrashAction.modifies ENTER target_type=%s", iu.TypeName(a.Target))
 		if cfg != nil && cfg.Context != nil {
 			mod := cfg.Context.GetDomain()
 			if mod != nil && a.Target != nil {
@@ -222,7 +222,7 @@ func modifiesRec(action Action, result *[]*lg.Const, cfg *ActionsConfig) {
 					if sym, ok := app.Func.(*lg.Const); ok {
 						targetName = sym.Name
 					}
-					xtracer.Trace("actions.CrashAction.modifies ENTER target=Apply func_type=%T targetName=%s", app.Func, targetName)
+					xtracer.Trace("actions.CrashAction.modifies ENTER target=Apply func_type=%s targetName=%s", iu.TypeName(app.Func), targetName)
 				} else if sym, ok := a.Target.(*lg.Const); ok {
 					targetName = sym.Name
 					xtracer.Trace("actions.CrashAction.modifies ENTER target=Symbol targetName=%s", targetName)

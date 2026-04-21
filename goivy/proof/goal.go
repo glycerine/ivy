@@ -81,7 +81,7 @@ func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
 		xtracer.Trace("proof.ApplyToConc ENTER concNil=true")
 		return conc
 	}
-	xtracer.Trace("proof.ApplyToConc ENTER type=%T HASH canon=%v", conc, conc.Canon())
+	xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", iu.TypeName(conc), conc.Canon())
 	if tm, ok := conc.(*ast.TemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
 			result := tm.Clone([]ast.Node{fn(innerExpr)})
@@ -100,7 +100,7 @@ func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
 		}
 		return result
 	}
-	xtracer.Trace("proof.ApplyToConc EXIT type=%T passthrough", conc)
+	xtracer.Trace("proof.ApplyToConc EXIT type=%s passthrough", iu.TypeName(conc))
 	return conc
 }
 
@@ -137,7 +137,7 @@ func normalizeOpsConc(conc ast.Node) ast.Node {
 // which has ast.Node fields. The common case (formula is lg.Expr) still
 // produces *lg.Implies so downstream *lg.Implies type-switches keep matching.
 func WrapImplies(cfg *ast.AstConfig, cond lg.Expr, formula ast.Node) ast.Node {
-	xtracer.Trace("proof.WrapImplies ENTER formulaType=%T", formula)
+	xtracer.Trace("proof.WrapImplies ENTER formulaType=%s", iu.TypeName(formula))
 	if e, ok := formula.(lg.Expr); ok {
 		result := &lg.Implies{T1: cond, T2: e}
 		xtracer.Trace("proof.WrapImplies EXIT type=lgImplies HASH canon=%v", result.Canon())
@@ -205,7 +205,7 @@ func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, c
 // CloneGoalPreserveID is like CloneGoal but preserves the original goal's LF ID.
 // Corresponds to Python's x.clone([x.label, fmla]) pattern (ivy_proof.py:988).
 func CloneGoalPreserveID(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%T id=%d", goal.LabelName(), len(prems), conc, goal.ID)
+	xtracer.Trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%s id=%d", goal.LabelName(), len(prems), iu.TypeName(conc), goal.ID)
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -224,7 +224,7 @@ func CloneGoalPreserveID(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []a
 // conc is ast.Node so it can carry *ast.TemporalModels (and any other ast type),
 // mirroring Python's make_goal which is duck-typed.
 func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.MakeGoal ENTER nprems=%d concType=%T", len(prems), conc)
+	xtracer.Trace("proof.MakeGoal ENTER nprems=%d concType=%s", len(prems), iu.TypeName(conc))
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -536,7 +536,7 @@ func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location)
 
 // GoalAddPrem adds a premise to a goal.
 func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
-	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%T", goal.LabelForTrace(), prem)
+	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%s", goal.LabelForTrace(), iu.TypeName(prem))
 	prems := append(GoalPrems(goal), prem)
 	result := MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
 	xtracer.Trace("proof.GoalAddPrem EXIT HASH canon=%v", result.Canon())
@@ -774,6 +774,10 @@ func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.Label
 // it calls elf.compile() → _labeled_formula_cmpl → lf.clone([...]) → PRESERVE,
 // then runs sort_infer_list on [compiled_formula] + vocab.variables.
 func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module) (*ast.LabeledFormula, error) {
+	// Python's compile_expr_vocab emits this ENTER trace (ivy_proof.py:914).
+	// The LF-specialized Go helper must mirror it.
+	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%s", iu.TypeName(lf))
+
 	sig := getSigFrom(mod)
 
 	// Python: with il.WithSymbols(vocab.symbols):
@@ -829,6 +833,8 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 		}
 	}
 
+	// Python compile_expr_vocab emits EXIT HASH canon=... right before return.
+	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", compiled.Canon())
 	return compiled, nil
 }
 

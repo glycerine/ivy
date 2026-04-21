@@ -23,7 +23,7 @@ import (
 // and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
 func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
-	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%T", expr)
+	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%s", iu.TypeName(expr))
 	if expr == nil {
 		xtracer.Trace("proof.CompileExprVocab EXIT exprNil")
 		return nil
@@ -928,7 +928,7 @@ func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKe
 		xtracer.Trace("proof.ApplyMatchAlt ENTER fmlaNil nmatch=%d", len(match))
 		return fmla
 	}
-	xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%T", len(match), fmla)
+	xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s", len(match), iu.TypeName(fmla))
 	// Alpha-rename bound vars in fmla to avoid capture by match RHS free vars.
 	// Python: freevars = list(match_rhs_vars(match)); fmla = il.alpha_avoid(fmla, freevars)
 	freeVars := MatchRhsVars(match)

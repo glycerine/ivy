@@ -104,7 +104,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 // Python ivy_proof.py:1443-1450). For lg.Expr inputs, behaves identically
 // to the previous lg.Expr-only signature.
 func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) ast.Node {
-	xtracer.Trace("proof.SkolemizeFmla ENTER pos=%v prenex=%v type=%T", pos, prenex, fmla)
+	xtracer.Trace("proof.SkolemizeFmla ENTER pos=%v prenex=%v type=%s", pos, prenex, iu.TypeName(fmla))
 	var univs []*lg.Variable
 	var outer []*lg.Variable
 
@@ -231,7 +231,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			outer = outer[:len(outer)-len(vars)]
 			return res
 		}
-		xtracer.Trace("proof.SkolemizeFmla branch type=passthrough pos=%v astType=%T", pos, fmla)
+		xtracer.Trace("proof.SkolemizeFmla branch type=passthrough pos=%v astType=%s", pos, iu.TypeName(fmla))
 		return fmla
 	}
 

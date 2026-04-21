@@ -271,8 +271,12 @@ class ProofChecker(object):
             if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s err=unknownTactic" % tn)
             raise iu.IvyError(proof,'unknown tactic: {}'.format(tn))
         tactic = registered_tactics[tn]
-        result = tactic(self,decls,proof)
-        if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s nresult=%d" % (tn, len(result) if result is not None else -1))
+        try:
+            result = tactic(self,decls,proof)
+        except BaseException as _tt_e:
+            if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s nresult=-1 err=%s" % (tn, str(_tt_e)))
+            raise
+        if __debug__: xtracer.trace("proof.tacticTactic EXIT name=%s nresult=%d err=<nil>" % (tn, len(result) if result is not None else -1))
         return result
 
     def compose_proofs(self,decls,proofs):

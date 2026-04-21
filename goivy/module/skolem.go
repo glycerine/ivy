@@ -222,7 +222,7 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 // signature. This mirrors the ast.Node broadening already applied to
 // SkolemizeFmla (proof/skolem.go:100).
 func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, fmla ast.Node) (ast.Node, error) {
-	xtracer.Trace("ilu.witnessAst ENTER pos=%v type=%T nwitnesses=%d", pos, fmla, len(witnesses))
+	xtracer.Trace("ilu.witnessAst ENTER pos=%v type=%s nwitnesses=%d", pos, iu.TypeName(fmla), len(witnesses))
 	// TemporalModels — recurse into the wrapped inner formula and rewrap,
 	// mirroring Python's generic fmla.clone([... for arg in fmla.args]) branch.
 	if tm, ok := fmla.(*ast.TemporalModels); ok {
@@ -245,7 +245,7 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 	// Everything else in witness_ast's dispatch operates on lg.Expr.
 	expr, ok := fmla.(lg.Expr)
 	if !ok {
-		xtracer.Trace("ilu.witnessAst EXIT notExpr type=%T", fmla)
+		xtracer.Trace("ilu.witnessAst EXIT notExpr type=%s", iu.TypeName(fmla))
 		return fmla, nil
 	}
 
@@ -330,10 +330,10 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 
 	args := il.NodeArgs(expr)
 	if len(args) == 0 {
-		xtracer.Trace("ilu.witnessAst EXIT type=%T leaf", expr)
+		xtracer.Trace("ilu.witnessAst EXIT type=%s leaf", iu.TypeName(expr))
 		return expr, nil
 	}
-	xtracer.Trace("ilu.witnessAst branch type=generic pos=%v exprType=%T nargs=%d", pos, expr, len(args))
+	xtracer.Trace("ilu.witnessAst branch type=generic pos=%v exprType=%s nargs=%d", pos, iu.TypeName(expr), len(args))
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		na, err := WitnessAst(pos, vs, witnesses, a)
@@ -343,7 +343,7 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		newArgs[i] = witnessExpr(na, a)
 	}
 	result := il.CloneNode(expr, newArgs)
-	xtracer.Trace("ilu.witnessAst EXIT type=generic exprType=%T HASH canon=%v", expr, result.Canon())
+	xtracer.Trace("ilu.witnessAst EXIT type=generic exprType=%s HASH canon=%v", iu.TypeName(expr), result.Canon())
 	return result, nil
 }
 

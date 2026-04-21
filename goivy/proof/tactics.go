@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
@@ -191,7 +192,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	if concExpr, ok := rawConc.(lg.Expr); ok {
 		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%v", schemaName, concExpr.Canon())
 	} else {
-		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s concType=%T", schemaName, rawConc)
+		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s concType=%s", schemaName, iu.TypeName(rawConc))
 	}
 	prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), rawConc)
 
@@ -617,12 +618,12 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	for _, w := range wits {
 		defn, ok := w.(*lg.Definition)
 		if !ok {
-			xtracer.Trace("proof.witnessTactic witnessSkip nonDefn type=%T", w)
+			xtracer.Trace("proof.witnessTactic witnessSkip nonDefn type=%s", iu.TypeName(w))
 			continue
 		}
 		v, ok := defn.Lhs.(*lg.Variable)
 		if !ok {
-			xtracer.Trace("proof.witnessTactic EXIT err=lhsNotVariable type=%T", defn.Lhs)
+			xtracer.Trace("proof.witnessTactic EXIT err=lhsNotVariable type=%s", iu.TypeName(defn.Lhs))
 			return nil, &ProofError{Msg: "left-hand side of witness must be a variable"}
 		}
 		witness[lg.Key(v)] = defn.Rhs
