@@ -76,13 +76,14 @@ class ProofChecker(object):
             self.schemata[ax.name] = ax
 
     def admit_definition(self,defn,proof=None):
-        """ Admits a definition if it is non-recursive or match a definition schema. 
+        """ Admits a definition if it is non-recursive or match a definition schema.
             If a proof is given it is used to match the definition to a schema, else
             default heuristic matching is used.
-        
+
         - defn is an ivy_ast.LabeledFormula
         """
 
+        if __debug__: xtracer.trace("proof.AdmitDefinition ENTER defnLabel=%s hasProof=%s" % (defn.name, proof is not None))
         defn = normalize_goal(defn)
         sym = defn.formula.defines()
         if sym.name in self.definitions:
@@ -94,13 +95,16 @@ class ProofChecker(object):
         if sym in deps:
             # Recursive definitions must match a schema
             if proof is None:
+                if __debug__: xtracer.trace("proof.AdmitDefinition EXIT err=noProof")
                 raise NoMatch(defn,"no proof given for recursive definition")
             subgoals = self.apply_proof([defn],proof)
             if subgoals is None:
+                if __debug__: xtracer.trace("proof.AdmitDefinition EXIT err=%s" % "recursive definition does not match the given schema")
                 raise NoMatch(defn,"recursive definition does not match the given schema")
         else:
             subgoals = []
         self.definitions[sym.name] = defn
+        if __debug__: xtracer.trace("proof.AdmitDefinition EXIT nsubgoals=%d sym=%s" % (len(subgoals), sym.name))
         return subgoals
         
     def admit_proposition(self,prop,proof=None,subgoals=None):
@@ -109,24 +113,29 @@ class ProofChecker(object):
             heuristic matching is used. If a list of subgoals is supplied, it is
             assumed that these entail prop and the proof is applied to
             the subgoals.
-        
+
         - prop is an ivy_ast.LabeledFormula
         """
 
+        if __debug__: xtracer.trace("proof.AdmitProposition ENTER propLabel=%s hasProof=%s nExistingSubgoals=%d" % (prop.name, proof is not None, len(subgoals or [])))
         prop = normalize_goal(prop)
         if isinstance(prop.formula,il.Definition):
+            if __debug__: xtracer.trace("proof.AdmitProposition delegateToDefinition")
             return self.admit_definition(prop,proof)
         if proof is None:
+            if __debug__: xtracer.trace("proof.AdmitProposition EXIT err=noProof")
             raise NoMatch(prop,"no proof given for property")
         subgoals = subgoals or [prop]
         subgoals = self.apply_proof(subgoals,proof)
         if subgoals is None:
+            if __debug__: xtracer.trace("proof.AdmitProposition EXIT err=%s" % "goal does not match the given schema")
             raise NoMatch(proof,"goal does not match the given schema")
         self.axioms.append(prop)
         if __debug__: xtracer.trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
         self.schemata[prop.name] = prop
         vocab = goal_vocab(prop)
         self.stale.update(vocab.symbols)
+        if __debug__: xtracer.trace("proof.AdmitProposition EXIT nsubgoals=%d" % len(subgoals))
         return subgoals
 
     def get_subgoals(self,prop,proof):
@@ -135,11 +144,14 @@ class ProofChecker(object):
             be a definition.
 
         """
+        if __debug__: xtracer.trace("proof.GetSubgoals ENTER propLabel=%s" % prop.name)
         assert not isinstance(prop.formula,il.Definition)
         prop = normalize_goal(prop)
         subgoals = self.apply_proof([prop],proof)
         if subgoals is None:
+            if __debug__: xtracer.trace("proof.GetSubgoals EXIT err=%s" % "goal does not match the given schema")
             raise NoMatch(proof,"goal does not match the given schema")
+        if __debug__: xtracer.trace("proof.GetSubgoals EXIT nsubgoals=%d" % len(subgoals))
         return subgoals
         
 
