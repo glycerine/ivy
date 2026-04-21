@@ -854,7 +854,10 @@ def goal_free(goal):
             rec_fmla(goal_conc(goal),res)
     res = set()
     rec(goal,res)
-    if __debug__: xtracer.trace("proof.GoalFree EXIT nfree=%d" % len(res))
+    if __debug__:
+        _gf_items = sorted([str(x) for x in res])
+        xtracer.trace("proof.GoalFree items=[%s]" % ",".join(_gf_items))
+        xtracer.trace("proof.GoalFree EXIT nfree=%d" % len(res))
     return res
 
 # Make sure the free vocabulry of the schema we are about to use is not captured

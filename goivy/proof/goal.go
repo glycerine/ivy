@@ -2,6 +2,8 @@ package proof
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
@@ -515,6 +517,14 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 		}
 	}
 	rec(goal)
+	{
+		items := make([]string, 0, len(res))
+		for _, v := range res {
+			items = append(items, fmt.Sprint(v))
+		}
+		sort.Strings(items)
+		xtracer.Trace("proof.GoalFree items=[%s]", strings.Join(items, ","))
+	}
 	xtracer.Trace("proof.GoalFree EXIT nfree=%d", len(res))
 	return res
 }

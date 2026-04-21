@@ -25,21 +25,41 @@ func SortsAst(ast logic.Expr) map[logic.NodeKey]logic.Sort {
 }
 
 func sortsAstRec(ast logic.Expr, result map[logic.NodeKey]logic.Sort) {
-	// Matches Python sorts_ast (ivy_logic_utils.py:570-583):
-	// For Apply: yield rep.sort.rng and rep.sort.dom, or recurse into binder body.
-	// For Var: yield sort. Then iterate ast.args (Terms only).
+	// Matches Python sorts_ast (ivy_logic_utils.py:632-645):
+	// For is_app(ast) [App OR bare Const OR 0-arity NamedBinder]:
+	//   if is_binder(rep): recurse into rep.body
+	//   else: yield rep.sort.rng and rep.sort.dom
+	// For Variable: yield sort. Then iterate ast.args.
+	//
+	// Python is_app(Const) == True means a bare Symbol also yields
+	// its sort's rng/dom. For non-FunctionSort (BooleanSort,
+	// UninterpretedSort, EnumeratedSort, ConstantSort), Python's
+	// rng property returns self and dom returns []; we mirror that
+	// by yielding the sort itself.
+	yieldFuncSort := func(s logic.Sort) {
+		if fs, ok := s.(*logic.FunctionSort); ok {
+			rng := fs.Range()
+			result[logic.SortKey(rng)] = rng
+			for _, d := range fs.Domain() {
+				result[logic.SortKey(d)] = d
+			}
+		} else {
+			result[logic.SortKey(s)] = s
+		}
+	}
 	if app, ok := ast.(*logic.Apply); ok {
 		if nb, ok := app.Func.(*logic.NamedBinder); ok {
 			sortsAstRec(nb.Body, result)
 		} else if c, ok := app.Func.(*logic.Const); ok {
-			if fs, ok := c.CSort.(*logic.FunctionSort); ok {
-				rng := fs.Range()
-				result[logic.SortKey(rng)] = rng
-				for _, d := range fs.Domain() {
-					result[logic.SortKey(d)] = d
-				}
-			}
+			yieldFuncSort(c.CSort)
 		}
+	} else if c, ok := ast.(*logic.Const); ok {
+		// Python: is_app(Const) == True → yield rep.sort.rng/rep.sort.dom.
+		yieldFuncSort(c.CSort)
+	} else if nb, ok := ast.(*logic.NamedBinder); ok && len(nb.Variables) == 0 {
+		// Python: is_app(NamedBinder with no vars) == True → is_binder path,
+		// recurse into body (not the binder's .sort).
+		sortsAstRec(nb.Body, result)
 	} else if v, ok := ast.(*logic.Variable); ok {
 		result[logic.SortKey(v.VSort)] = v.VSort
 	}
