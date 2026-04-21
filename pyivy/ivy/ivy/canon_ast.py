@@ -84,9 +84,36 @@ def install():
             lineno_fields(self), self.polarity, node_canon(self.atom))
     ast.Literal.canon = _literal_canon
 
-    # --- Dot (field access via App with '.' in rep) ---
-    # Note: Python doesn't have a Dot class; dots are handled differently.
-    # If Go's Dot maps to a Python pattern, we handle it there.
+    # --- Dot (Python ivy_ast.Dot, not the App-with-dot-rep convention) ---
+    def _dot_canon(self):
+        return '(dot{} left:{} right:{})'.format(
+            lineno_fields(self),
+            node_canon(self.args[0]),
+            node_canon(self.args[1]))
+    ast.Dot.canon = _dot_canon
+
+    # --- Bracket (subscript a[b]) ---
+    def _bracket_canon(self):
+        return '(bracket{} left:{} right:{})'.format(
+            lineno_fields(self),
+            node_canon(self.args[0]),
+            node_canon(self.args[1]))
+    ast.Bracket.canon = _bracket_canon
+
+    # --- KeyArg (App subclass with ^ prefix) ---
+    # Go emits "(keyArg app:{})" with NO lineno_fields; Python mirrors that.
+    def _keyarg_canon(self):
+        # Use the same formatter as App.canon but wrap in keyArg.
+        return '(keyArg app:{})'.format(_app_canon(self))
+    ast.KeyArg.canon = _keyarg_canon
+
+    # --- DebugItem (name=value pair) ---
+    def _debugitem_canon(self):
+        return '(debugItem{} name:{} value:{})'.format(
+            lineno_fields(self),
+            node_canon(self.args[0]),
+            node_canon(self.args[1]))
+    ast.DebugItem.canon = _debugitem_canon
 
     # --- Tuple ---
     def _tuple_canon(self):
@@ -558,6 +585,83 @@ def install():
         if cls is not None:
             cls.canon = _make_decl_canon(name)
 
+    # --- Def types (Python AST subclasses held by Decl nodes) ---
+    # Go emits these with their specific fields. Python previously fell
+    # through to _ast_canon (empty). Match Go's format for visibility.
+
+    def _make_empty_def_canon(name):
+        def _canon(self):
+            return '({}{})'.format(name, lineno_fields(self))
+        return _canon
+
+    # Empty-body Defs: Go emits "(defName{lf})" with no body fields.
+    for _name, _cls_name in [
+        ('attributeDef', 'AttributeDef'),
+        ('delegateDef', 'DelegateDef'),
+        ('importDef', 'ImportDef'),
+        ('exportDef', 'ExportDef'),
+        ('instantiation', 'Instantiation'),
+        ('mixinAfterDef', 'MixinAfterDef'),
+        ('mixinBeforeDef', 'MixinBeforeDef'),
+        ('mixinImplementDef', 'MixinImplementDef'),
+        ('nativeCode', 'NativeCode'),
+        ('nativeType', 'NativeType'),
+        ('nativeExpr', 'NativeExpr'),
+        ('nativeDef', 'NativeDef'),
+        ('placeList', 'PlaceList'),
+        ('scenarioTransition', 'ScenarioTransition'),
+        ('stateDef', 'StateDef'),
+    ]:
+        _cls = getattr(ast, _cls_name, None)
+        if _cls is not None:
+            _cls.canon = _make_empty_def_canon(_name)
+
+    # Defs with extra structural fields:
+
+    def _variantdef_canon(self):
+        # Python VariantDef.__init__(self,name,sort): self.args = [name, sort]
+        name = self.args[0] if len(self.args) > 0 else None
+        vsort = self.args[1] if len(self.args) > 1 else None
+        return '(variantDef{} name:{} vSort:{})'.format(
+            lineno_fields(self), node_canon(name), node_canon(vsort))
+    if hasattr(ast, 'VariantDef'):
+        ast.VariantDef.canon = _variantdef_canon
+
+    def _scenariodef_canon(self):
+        return '(scenarioDef{} elems:{})'.format(
+            lineno_fields(self), slice_canon(list(self.args)))
+    if hasattr(ast, 'ScenarioDef'):
+        ast.ScenarioDef.canon = _scenariodef_canon
+
+    def _scenariobeforemixin_canon(self):
+        # Parser: ScenarioBeforeMixin(mixer, df) → args[0]=mixer, args[1]=def
+        mixer = self.args[0] if len(self.args) > 0 else None
+        defn = self.args[1] if len(self.args) > 1 else None
+        return '(scenarioBeforeMixin{} mixer:{} def:{})'.format(
+            lineno_fields(self), node_canon(mixer), node_canon(defn))
+    if hasattr(ast, 'ScenarioBeforeMixin'):
+        ast.ScenarioBeforeMixin.canon = _scenariobeforemixin_canon
+
+    def _scenarioaftermixin_canon(self):
+        mixer = self.args[0] if len(self.args) > 0 else None
+        defn = self.args[1] if len(self.args) > 1 else None
+        return '(scenarioAfterMixin{} mixer:{} def:{})'.format(
+            lineno_fields(self), node_canon(mixer), node_canon(defn))
+    if hasattr(ast, 'ScenarioAfterMixin'):
+        ast.ScenarioAfterMixin.canon = _scenarioaftermixin_canon
+
+    def _privatedef_canon(self):
+        return '(privateDef{} elems:{})'.format(
+            lineno_fields(self), slice_canon(list(self.args)))
+    if hasattr(ast, 'PrivateDef'):
+        ast.PrivateDef.canon = _privatedef_canon
+
+    def _implementtypedef_canon(self):
+        return '(implementTypeDef{} elems:{})'.format(
+            lineno_fields(self), slice_canon(list(self.args)))
+    if hasattr(ast, 'ImplementTypeDef'):
+        ast.ImplementTypeDef.canon = _implementtypedef_canon
+
     # --- Action types (ivy_actions.py) ---
     # Use the AST elems: format for both .sexp and .canon, matching
     # Go's ast.*Action.Canon() and actions.*Action.Sexp() (now converged).
@@ -734,6 +838,37 @@ def install():
             lineno_fields(self), string_canon(self.name), node_canon(self.action))
     itm.ActionTermBinding.canon = _actiontermbinding_canon
     itm.ActionTermBinding.sexp = _actiontermbinding_canon
+
+    # --- TemporalModels (ivy_ast.py) ---
+    # Go: "(temporalModels{lf} model:{} fmla:{})" at ast/ast.go:1683.
+    def _temporalmodels_canon(self):
+        return '(temporalModels{} model:{} fmla:{})'.format(
+            lineno_fields(self),
+            node_canon(self.model),
+            node_canon(self.fmla))
+    if hasattr(ast, 'TemporalModels'):
+        ast.TemporalModels.canon = _temporalmodels_canon
+
+    # --- NormalProgram (ivy_temporal.py) ---
+    # Go: "(normalProgram{lf} bindings:{} init:{} invars:{} asms:{} calls:{} postconds:{})"
+    # postconds is a dict — sort keys for determinism.
+    def _normalprogram_canon(self):
+        postconds_sexp = '(hash)'
+        if hasattr(self, 'postconds') and self.postconds:
+            parts = []
+            for k in sorted(self.postconds.keys()):
+                parts.append('{}:{}'.format(
+                    string_canon(k), slice_canon(list(self.postconds[k]))))
+            postconds_sexp = '(hash ' + ' '.join(parts) + ')'
+        return '(normalProgram{} bindings:{} init:{} invars:{} asms:{} calls:{} postconds:{})'.format(
+            lineno_fields(self),
+            slice_canon(list(self.bindings)),
+            node_canon(self.init),
+            slice_canon(list(self.invars)),
+            slice_canon(list(self.asms)),
+            string_slice_canon(list(self.calls)),
+            postconds_sexp)
+    itm.NormalProgram.canon = _normalprogram_canon
 
     # Install canon on fragment checker types (UFNode etc.)
     from .canon_fragment import install as install_fragment

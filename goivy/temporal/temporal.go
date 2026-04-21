@@ -278,6 +278,71 @@ func (np *NormalProgram) Formulas() []interface{} {
 	return res
 }
 
+// Canon returns a canonical s-expression for the normal program.
+// Postconds map keys are sorted to keep output deterministic.
+func (np *NormalProgram) Canon() iu.Canonical {
+	var lf string
+	if np.HasLoc {
+		lf = fmt.Sprintf(" lineno:%d", np.Loc.Line)
+	}
+	init := "nil"
+	if np.Init != nil {
+		init = string(np.Init.Canon())
+	}
+	return iu.Canonical(fmt.Sprintf(
+		"(normalProgram%s bindings:%s init:%s invars:%s asms:%s calls:%s postconds:%s)",
+		lf,
+		bindingSliceCanon(np.Bindings),
+		init,
+		lfSliceCanon(np.Invars),
+		lfSliceCanon(np.Asms),
+		stringSliceCanon(np.Calls),
+		postcondsHashCanon(np.Postconds),
+	))
+}
+
+// bindingSliceCanon canonicalizes []*ActionTermBinding.
+func bindingSliceCanon(bs []*ActionTermBinding) string {
+	if len(bs) == 0 {
+		return "[]"
+	}
+	parts := make([]string, len(bs))
+	for i, b := range bs {
+		parts[i] = string(b.Canon())
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
+// lfSliceCanon canonicalizes []*ast.LabeledFormula.
+func lfSliceCanon(lfs []*ast.LabeledFormula) string {
+	if len(lfs) == 0 {
+		return "[]"
+	}
+	parts := make([]string, len(lfs))
+	for i, lf := range lfs {
+		parts[i] = string(lf.Canon())
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
+// postcondsHashCanon canonicalizes map[string][]*ast.LabeledFormula
+// as "(hash "k1":[...] "k2":[...])" with keys sorted lexicographically.
+func postcondsHashCanon(m map[string][]*ast.LabeledFormula) string {
+	if len(m) == 0 {
+		return "(hash)"
+	}
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	parts := make([]string, 0, len(keys))
+	for _, k := range keys {
+		parts = append(parts, fmt.Sprintf("%q:%s", k, lfSliceCanon(m[k])))
+	}
+	return "(hash " + strings.Join(parts, " ") + ")"
+}
+
 // String returns a human-readable representation of the normal program.
 func (np *NormalProgram) String() string {
 	var b strings.Builder
