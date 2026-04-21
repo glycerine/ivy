@@ -242,6 +242,10 @@ func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.
 
 // NormalizeGoal normalizes the subformulas of a goal so there are only
 // binary conjunctions/disjunctions and single-variable quantifiers.
+// Mirrors Python ivy_proof.normalize_goal for the top-level case:
+// LF in, LF out. Premise recursion is delegated to normalizeGoalPremise
+// so non-LabeledFormula premises (ConstantDecl / UninterpretedSort) get
+// their goal_is_defn passthrough trace emitted.
 func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormula {
 	xtracer.Trace("proof.NormalizeGoal ENTER label=%s", g.LabelName())
 	if GoalIsDefn(g) {
@@ -251,11 +255,7 @@ func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormul
 	prems := GoalPrems(g)
 	normPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
-		if lf, ok := p.(*ast.LabeledFormula); ok {
-			normPrems[i] = NormalizeGoal(cfg, lf)
-		} else {
-			normPrems[i] = p
-		}
+		normPrems[i] = normalizeGoalPremise(cfg, p)
 	}
 	// Mirror Python ivy_proof.py:770: `il.normalize_ops(goal_conc(x))`.
 	// Uses the private normalizeOpsConc helper (not ApplyToConc) so no
@@ -265,6 +265,31 @@ func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormul
 	result := CloneGoal(cfg, g, normPrems, newConc)
 	xtracer.Trace("proof.NormalizeGoal EXIT HASH canon=%v", result.Canon())
 	return result
+}
+
+// normalizeGoalPremise is the duck-typed recursion that Python's
+// normalize_goal gets for free. A SchemaBody premise can be a
+// *ast.LabeledFormula OR a non-LF node (*ast.ConstantDecl,
+// *lg.UninterpretedSort); the latter take the GoalIsDefn passthrough.
+func normalizeGoalPremise(cfg *ast.AstConfig, p ast.Node) ast.Node {
+	xtracer.Trace("proof.NormalizeGoal ENTER label=%s", premiseLabel(p))
+	if GoalIsDefn(p) {
+		xtracer.Trace("proof.NormalizeGoal EXIT passthrough=isDefn")
+		return p
+	}
+	return NormalizeGoal(cfg, p.(*ast.LabeledFormula))
+}
+
+// premiseLabel mirrors Python's
+//
+//	(x.label if hasattr(x,'label') else 'N/A')
+//
+// so the ENTER xtrace matches for non-LabeledFormula premises.
+func premiseLabel(p ast.Node) string {
+	if lf, ok := p.(*ast.LabeledFormula); ok {
+		return lf.LabelName()
+	}
+	return "N/A"
 }
 
 // GoalIsDefn returns true if x is a non-lambda constant declaration
