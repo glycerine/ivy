@@ -8,7 +8,6 @@ package compiler
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
@@ -21,15 +20,11 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// typeName returns the bare struct name for a value, stripping pointer and
-// package prefix. e.g. *ast.Variable → "Variable". Matches Python's
-// type(self).__name__ output for cross-language trace comparison.
+// typeName is a shim to iu.TypeName, preserving the package-local helper
+// name used by existing call sites. iu.TypeName maps Go's "Variable" to
+// Python's "Var" so trace output aligns across languages.
 func typeName(v interface{}) string {
-	t := reflect.TypeOf(v)
-	for t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-	return t.Name()
+	return iu.TypeName(v)
 }
 
 // ActionInfo holds metadata about a declared action: its formal parameters,
