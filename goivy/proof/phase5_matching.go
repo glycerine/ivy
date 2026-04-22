@@ -757,7 +757,11 @@ func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Exp
 // Compiles the match list, then compiles each individual match against
 // the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
-func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool, mod *module.Module) map[lg.NodeKey]lg.Expr {
+//
+// Returns *iu.InsMap to preserve Python dict's insertion-order iteration
+// (CPython 3.7+). Callers that need to match Python's xtrace emission
+// order iterate via result.All(); lookup-only callers can Get2(k).
+func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool, mod *module.Module) *iu.InsMap[lg.NodeKey, lg.Expr] {
 	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelForTrace(), allowWitness)
 	schema := prob.SchemaLF
 	if schema == nil {
@@ -776,7 +780,12 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 		}
 	}
 	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness, mod)
-	matches := make([]map[lg.NodeKey]lg.Expr, 0, len(compiledMatches))
+	// Python's compile_match:
+	//   matches = [compile_one_match(m.lhs(),m.rhs(),...) for m in matches]
+	//   res = merge_matches(*matches)
+	// merge_matches preserves insertion order of proofMatch entries; mirror
+	// that using InsMap so iteration later matches Python's dict order.
+	matches := make([]*iu.InsMap[lg.NodeKey, lg.Expr], 0, len(compiledMatches))
 	for _, m := range compiledMatches {
 		lhs := unwrapLogicNode(m.Lhs)
 		rhs := unwrapLogicNode(m.Rhs)
@@ -784,11 +793,67 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 			continue
 		}
 		oneMatch := CompileOneMatch(lhs, rhs, freesyms, prob.Constants)
-		matches = append(matches, oneMatch)
+		if oneMatch == nil {
+			// Propagate failure (matches Python merge_matches nil-propagation).
+			matches = append(matches, nil)
+			continue
+		}
+		// Convert oneMatch (plain map) → InsMap. For a Var LHS, oneMatch
+		// has one entry {Key(lhs): rhs}; otherwise (sort match) it may
+		// have multiple. Insert lhsKey first, then the rest in map order.
+		ins := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+		lhsKey := lg.Key(lhs)
+		if v, ok := oneMatch[lhsKey]; ok {
+			ins.Set(lhsKey, v)
+		}
+		for k, v := range oneMatch {
+			if k == lhsKey {
+				continue
+			}
+			ins.Set(k, v)
+		}
+		matches = append(matches, ins)
 	}
-	result := MergeMatches(matches...)
-	xtracer.Trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d", len(matches), len(result))
+	result := MergeMatchesIns(matches...)
+	n := 0
+	if result != nil {
+		n = result.Len()
+	}
+	xtracer.Trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d", len(matches), n)
 	return result
+}
+
+// MergeMatchesIns is the InsMap-preserving variant of MergeMatches.
+// Python's merge_matches iterates matches[0] then matches[1:], adding
+// only new keys — equivalent to a left-biased insertion-order merge.
+// Returns nil if any input is nil (Python: `any(m is None for m in matches)`)
+// or a conflict is detected.
+func MergeMatchesIns(matches ...*iu.InsMap[lg.NodeKey, lg.Expr]) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	res := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	if len(matches) == 0 {
+		return res
+	}
+	for _, m := range matches {
+		if m == nil {
+			return nil
+		}
+	}
+	for k, v := range matches[0].All() {
+		res.Set(k, v)
+	}
+	for _, m := range matches[1:] {
+		for k, v := range m.All() {
+			if prev, ok := res.Get2(k); ok {
+				// Python: if not equiv_alpha(lmda,res[sym]): return None
+				if !EquivAlpha(v, prev) {
+					return nil
+				}
+				continue
+			}
+			res.Set(k, v)
+		}
+	}
+	return res
 }
 
 // unwrapLogicNode extracts a lg.Expr from an ast.Node.
@@ -800,6 +865,21 @@ func unwrapLogicNode(n ast.Node) lg.Expr {
 		return ln
 	}
 	return nil
+}
+
+// insMapToMap flattens an InsMap into a plain Go map for passing to
+// downstream functions that don't care about iteration order (i.e.,
+// they only do lookups). Callers that DO care about order iterate the
+// InsMap directly via .All() at the observation point.
+func insMapToMap(ins *iu.InsMap[lg.NodeKey, lg.Expr]) map[lg.NodeKey]lg.Expr {
+	if ins == nil {
+		return nil
+	}
+	m := make(map[lg.NodeKey]lg.Expr, ins.Len())
+	for k, v := range ins.All() {
+		m[k] = v
+	}
+	return m
 }
 
 // copyNodeMap copies a map[lg.NodeKey]lg.Expr.
@@ -958,10 +1038,10 @@ func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKe
 // Corresponds to Python's apply_match_alt_rec (ivy_proof.py:1148-1166).
 //
 // Key differences from apply_match_rec:
-//  - Uses match_get (MatchGet) for variable/app lookups to detect capture
-//  - Binder cases add their variables to env before recursing into the body
-//    (Python: `with il.BindSymbols(env, fmla.variables):`)
-//  - After the binder body is processed, the variables are removed from env
+//   - Uses match_get (MatchGet) for variable/app lookups to detect capture
+//   - Binder cases add their variables to env before recursing into the body
+//     (Python: `with il.BindSymbols(env, fmla.variables):`)
+//   - After the binder body is processed, the variables are removed from env
 func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if fmla == nil {
 		return nil

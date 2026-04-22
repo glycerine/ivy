@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
@@ -14,7 +15,7 @@ import (
 // This is the first stage of the proof matching pipeline.
 //
 // Python: ivy_proof.py:324-327
-func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.SchemaInstantiation, mod *module.Module) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.SchemaInstantiation, mod *module.Module) (*MatchProblem, *iu.InsMap[lg.NodeKey, lg.Expr], error) {
 	schemaName := nodeToString(proof.SchemaName)
 	xtracer.Trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s", schemaName, decl.LabelForTrace())
 	schema, err := pc.LookupSchema(schemaName, decl, proof, false)
@@ -23,7 +24,11 @@ func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.Schem
 		return nil, nil, err
 	}
 	prob, pm, e := pc.SetupSchemaMatching(decl, proof, schema, false, mod)
-	xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, len(pm))
+	var n int
+	if pm != nil {
+		n = pm.Len()
+	}
+	xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, n)
 	return prob, pm, e
 }
 
@@ -45,7 +50,7 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	matches []ast.Node,
 	schema *ast.LabeledFormula,
 	allowWitness bool,
-) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+) (*MatchProblem, *iu.InsMap[lg.NodeKey, lg.Expr], error) {
 
 	xtracer.Trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), len(matches), allowWitness)
 
@@ -93,10 +98,10 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 		return nil, nil, &ProofError{Msg: "Match is inconsistent"}
 	}
 	if pmatch == nil {
-		pmatch = make(map[lg.NodeKey]lg.Expr)
+		pmatch = iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	}
 
-	xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT npmatch=%d", len(pmatch))
+	xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT npmatch=%d", pmatch.Len())
 	return prob, pmatch, nil
 }
 
@@ -108,7 +113,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	schema *ast.LabeledFormula,
 	allowWitness bool,
 	mod *module.Module,
-) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+) (*MatchProblem, *iu.InsMap[lg.NodeKey, lg.Expr], error) {
 	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), allowWitness)
 	var ren ast.Node
 	var matches []ast.Node

@@ -391,10 +391,11 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 	}
 
 	// Step 1: Build match problem (full pipeline)
-	prob, pmatch, err := pc.SetupMatching(goal, proof, pc.Mod)
+	prob, pmatchIns, err := pc.SetupMatching(goal, proof, pc.Mod)
 	if err != nil {
 		return nil, err
 	}
+	pmatch := insMapToMap(pmatchIns)
 
 	// Step 2: Apply initial proof match (from compile_match) to problem
 	if len(pmatch) > 0 {

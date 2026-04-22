@@ -20,11 +20,12 @@ import (
 // Corresponds to Python ProofChecker.let_tactic (ivy_proof.py:213-223).
 //
 // Python:
-//   vocab = goal_vocab(goal)
-//   defs = [compile_expr_vocab(ia.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.args]
-//   cond = il.And(*[il.Equals(a.args[0], a.args[1]) for a in defs])
-//   goal = ia.LabeledFormula(goal.label, il.Implies(cond, goal.formula))
-//   return [goal] + decls[1:]
+//
+//	vocab = goal_vocab(goal)
+//	defs = [compile_expr_vocab(ia.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.args]
+//	cond = il.And(*[il.Equals(a.args[0], a.args[1]) for a in defs])
+//	goal = ia.LabeledFormula(goal.label, il.Implies(cond, goal.formula))
+//	return [goal] + decls[1:]
 func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTactic) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("proof.letTactic ENTER ndecls=%d nDefs=%d", len(decls), len(proof.Defs))
 	if len(decls) == 0 {
@@ -152,24 +153,31 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 
 	// Python lines 365-367: extract witnesses (variables not in freesyms).
 	// iswit = lambda x: isinstance(x, il.Variable) and x not in prob.freesyms
-	witness := make(map[lg.NodeKey]lg.Expr)
-	pmatchClean := make(map[lg.NodeKey]lg.Expr)
-	for k, v := range pmatch {
+	// pmatch is an InsMap — iteration is insertion-order, matching
+	// CPython 3.7+ dict iteration so our isWitVar traces line up with
+	// Python's witness-arg order.
+	witness := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	pmatchClean := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	for k, v := range pmatch.All() {
 		if isWitVar(k, v, prob) {
-			witness[k] = v
+			witness.Set(k, v)
 		} else {
-			pmatchClean[k] = v
+			pmatchClean.Set(k, v)
 		}
 	}
 	pmatch = pmatchClean
-	xtracer.Trace("proof.assumeTactic witnessSplit schema=%s nWitness=%d nPmatch=%d", schemaName, len(witness), len(pmatch))
+	xtracer.Trace("proof.assumeTactic witnessSplit schema=%s nWitness=%d nPmatch=%d", schemaName, witness.Len(), pmatch.Len())
 
 	// Python: prem = prob.schema
 	prem := prob.SchemaLF
 
+	// Downstream functions take plain map; convert InsMap lookup-views.
+	pmatchMap := insMapToMap(pmatch)
+	witnessMap := insMapToMap(witness)
+
 	// Python: if schemaname not in premmap: prem = close_unmatched(prem, pmatch)
 	if _, inPrems := premMap[schemaName]; !inPrems {
-		prem = CloseUnmatched(pc.astCfg(), prem, pmatch)
+		prem = CloseUnmatched(pc.astCfg(), prem, pmatchMap)
 	}
 
 	// Python: conc = goal_conc(prem)
@@ -178,7 +186,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Python calls witness_ast unconditionally — empty witness map is
 	// fine and still emits the ENTER/EXIT traces. Match that here.
 	rawConc := GoalConc(prem)
-	newConc, werr := module.WitnessAst(true, nil, witness, rawConc)
+	newConc, werr := module.WitnessAst(true, nil, witnessMap, rawConc)
 	if werr != nil {
 		xtracer.Trace("proof.assumeTactic EXIT err=witnessSubst schema=%s err=%v", schemaName, werr)
 		return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
@@ -193,7 +201,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	prem = CloneGoal(pc.astCfg(), prem, GoalPrems(prem), rawConc)
 
 	// Python: prem = apply_match_goal(pmatch, prem, apply_match_alt)
-	prem = ApplyMatchGoalNode(pc.astCfg(), pmatch, prem)
+	prem = ApplyMatchGoalNode(pc.astCfg(), pmatchMap, prem)
 
 	// Python: prem = drop_supplied_prems(prem, decl, proof.match())
 	prem = DropSuppliedPrems(pc.astCfg(), prem, decl, proof.Matches)
@@ -387,14 +395,15 @@ func attribGoals(proof ast.Node, goals []*ast.LabeledFormula) []*ast.LabeledForm
 // Corresponds to Python ProofChecker.if_tactic (ivy_proof.py:410-418).
 //
 // Python:
-//   cond = proof.args[0]
-//   true_goal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
-//   true_goal.lineno = decls[0].lineno
-//   false_goal = ia.LabeledFormula(decls[0].label, il.Implies(il.Not(cond), decls[0].formula))
-//   false_goal.lineno = decls[0].lineno
-//   return (attrib_goals(proof.args[1], apply_proof([true_goal], proof.args[1])) +
-//           attrib_goals(proof.args[2], apply_proof([false_goal], proof.args[2])) +
-//           decls[1:])
+//
+//	cond = proof.args[0]
+//	true_goal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
+//	true_goal.lineno = decls[0].lineno
+//	false_goal = ia.LabeledFormula(decls[0].label, il.Implies(il.Not(cond), decls[0].formula))
+//	false_goal.lineno = decls[0].lineno
+//	return (attrib_goals(proof.args[1], apply_proof([true_goal], proof.args[1])) +
+//	        attrib_goals(proof.args[2], apply_proof([false_goal], proof.args[2])) +
+//	        decls[1:])
 func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTactic) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("proof.ifTactic ENTER ndecls=%d", len(decls))
 	if len(decls) == 0 {
@@ -457,14 +466,15 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 // Corresponds to Python ProofChecker.property_tactic (ivy_proof.py:232-281).
 //
 // Python:
-//   vocab = goal_vocab(goal)
-//   cut = compile_expr_vocab(proof.args[0], vocab)
-//   cut = normalize_goal(cut)
-//   subgoal = goal_subst(goal, cut, cut.lineno)
-//   [handle Skolem if proof.args[1] not NoneAST]
-//   subgoals = [subgoal]
-//   if proof.args[2] not NoneAST: subgoals = apply_proof(subgoals, proof.args[2])
-//   return [goal_add_prem(goal, cut, cut.lineno)] + decls[1:] + subgoals
+//
+//	vocab = goal_vocab(goal)
+//	cut = compile_expr_vocab(proof.args[0], vocab)
+//	cut = normalize_goal(cut)
+//	subgoal = goal_subst(goal, cut, cut.lineno)
+//	[handle Skolem if proof.args[1] not NoneAST]
+//	subgoals = [subgoal]
+//	if proof.args[2] not NoneAST: subgoals = apply_proof(subgoals, proof.args[2])
+//	return [goal_add_prem(goal, cut, cut.lineno)] + decls[1:] + subgoals
 func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.PropertyTactic) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("proof.propertyTactic ENTER ndecls=%d", len(decls))
 	if len(decls) == 0 {
@@ -669,4 +679,3 @@ func astNodeToLogicNode(n ast.Node) lg.Expr {
 	}
 	return nil
 }
-
