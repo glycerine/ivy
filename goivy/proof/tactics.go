@@ -222,7 +222,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	}
 
 	// Python: return [goal_add_prem(decl, prem, proof.lineno)] + decls[1:]
-	newGoal := pc.goalAddPrem(decl, prem, proof.GetLineno())
+	newGoal := GoalAddPrem(pc.astCfg(), decl, prem, proof.GetLineno())
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
 	xtracer.Trace("proof.assumeTactic EXIT schema=%s HASH canon=%v", schemaName, newGoal.Canon())
@@ -670,12 +670,3 @@ func astNodeToLogicNode(n ast.Node) lg.Expr {
 	return nil
 }
 
-// goalAddPrem adds a premise to a goal.
-// Corresponds to Python goal_add_prem.
-func (pc *ProofChecker) goalAddPrem(goal *ast.LabeledFormula, prem *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
-	xtracer.Trace("proof.goalAddPrem ENTER goalLabel=%s premLabel=%s", goal.LabelName(), prem.LabelName())
-	prems := append(GoalPrems(goal), prem)
-	result := MakeGoal(pc.astCfg(), loc, goal.Label, prems, GoalConc(goal))
-	xtracer.Trace("proof.goalAddPrem EXIT HASH canon=%v", result.Canon())
-	return result
-}

@@ -1175,7 +1175,21 @@ def apply_match_goal(match,x,apply_match,env = None):
                 fmla = fmla.clone(prems+[apply_match(match,fmla.conc(),env)])
         else:
             fmla = apply_match(match,fmla,env)
+        # Mirror Go's CloneGoalPreserveID ENTER/EXIT wrapper (proof/goal.go:209).
+        if __debug__:
+            if isinstance(fmla, ia.SchemaBody):
+                _cgp_nprems = len(fmla.prems())
+                _cgp_conc = fmla.conc()
+                _cgp_conc_type = type(_cgp_conc).__name__
+            else:
+                _cgp_nprems = 0
+                _cgp_conc_type = type(fmla).__name__
+            xtracer.trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%s id=%d" % (
+                x.label if hasattr(x,'label') else 'N/A',
+                _cgp_nprems, _cgp_conc_type,
+                x.id if hasattr(x,'id') else -1))
         g = x.clone([x.label,fmla])
+        if __debug__: xtracer.trace("proof.CloneGoalPreserveID EXIT label=%s" % (g.label if hasattr(g,'label') else 'N/A'))
         if is_top:
             if __debug__: xtracer.trace("proof.ApplyMatchGoalNode EXIT HASH canon=%s" % g.canon())
         return g
