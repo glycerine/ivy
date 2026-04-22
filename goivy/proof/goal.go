@@ -380,6 +380,15 @@ func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 // 2411549 for the failure mode this mismatch caused.
 func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	xtracer.Trace("proof.GoalVocab ENTER label=%s", goal.LabelForTrace())
+	v := goalVocabRaw(goal)
+	xtracer.Trace("proof.GoalVocab EXIT nsorts=%d nsymbols=%d nvariables=%d", len(v.Sorts), len(v.Symbols), len(v.Variables))
+	return v
+}
+
+// goalVocabRaw builds the vocab without emitting any xtrace — for use
+// by callers that emit their own trace wrapper (GoalVocabBound).
+// Python: goal_vocab(goal, bound=False) computes the same three lists.
+func goalVocabRaw(goal *ast.LabeledFormula) *Vocab {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
 
@@ -418,7 +427,6 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	// free-variable OCCURRENCE (not deduped). Count / order match Python.
 	variables := lu.UsedVariablesAsts(fmlas)
 
-	xtracer.Trace("proof.GoalVocab EXIT nsorts=%d nsymbols=%d nvariables=%d", len(sorts), len(symbols), len(variables))
 	return &Vocab{
 		Sorts:     sorts,
 		Symbols:   symbols,
@@ -431,7 +439,9 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 // (ivy_proof.py:579-582).
 func GoalVocabBound(goal *ast.LabeledFormula) *Vocab {
 	xtracer.Trace("proof.GoalVocabBound ENTER label=%s", goal.LabelForTrace())
-	v := GoalVocab(goal)
+	// Python: goal_vocab(goal, bound=True) — single function, one trace pair.
+	// Use goalVocabRaw to avoid emitting the inner GoalVocab ENTER/EXIT.
+	v := goalVocabRaw(goal)
 
 	// Python: conc_fmla = conc.fmla if isinstance(conc,ia.TemporalModels) else conc
 	conc := GoalConc(goal)
