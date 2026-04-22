@@ -223,22 +223,22 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 // SkolemizeFmla (proof/skolem.go:100).
 func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, fmla ast.Node) (ast.Node, error) {
 	xtracer.Trace("ilu.witnessAst ENTER pos=%v type=%s nwitnesses=%d", pos, iu.TypeName(fmla), len(witnesses))
-	// TemporalModels — recurse into the wrapped inner formula and rewrap,
-	// mirroring Python's generic fmla.clone([... for arg in fmla.args]) branch.
+	// TemporalModels — Python falls through to the generic fmla.clone
+	// branch (ivy_logic_utils.py:1721-1724). We must emit the same generic
+	// trace here so our xtrace aligns.
 	if tm, ok := fmla.(*ast.TemporalModels); ok {
-		xtracer.Trace("ilu.witnessAst branch type=TemporalModels pos=%v", pos)
-		innerExpr, ok := tm.Fmla.(lg.Expr)
-		if !ok {
-			xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels innerNotExpr")
-			return tm, nil
+		tmArgs := tm.Args()
+		xtracer.Trace("ilu.witnessAst branch type=generic pos=%v exprType=TemporalModels nargs=%d", pos, len(tmArgs))
+		newArgs := make([]ast.Node, len(tmArgs))
+		for i, a := range tmArgs {
+			newArg, err := WitnessAst(pos, vs, witnesses, a)
+			if err != nil {
+				return nil, err
+			}
+			newArgs[i] = newArg
 		}
-		newInner, err := WitnessAst(pos, vs, witnesses, innerExpr)
-		if err != nil {
-			xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels err=%v", err)
-			return nil, err
-		}
-		result := tm.Clone([]ast.Node{newInner})
-		xtracer.Trace("ilu.witnessAst EXIT type=TemporalModels HASH canon=%v", result.Canon())
+		result := tm.Clone(newArgs)
+		xtracer.Trace("ilu.witnessAst EXIT type=generic exprType=TemporalModels HASH canon=%v", result.Canon())
 		return result, nil
 	}
 
