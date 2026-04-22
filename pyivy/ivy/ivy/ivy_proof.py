@@ -471,10 +471,21 @@ class ProofChecker(object):
             schema = self.lookup_schema(schemaname,decl,proof,close=False)
         schema = remove_explicit(schema)
         prob, pmatch = self.setup_schema_matching(decl,proof,schema,allow_witness=True)
-        def iswit(x):
-            return isinstance(x,il.Variable) and x not in prob.freesyms
-        witness = dict((x,y) for x,y in pmatch.items() if iswit(x))
-        pmatch = dict((x,y) for x,y in pmatch.items() if not iswit(x))
+        # Mirror Go's single-call isWitVar pattern (proof/tactics.go:157) —
+        # call iswit once per pmatch item and partition, not twice via
+        # separate comprehensions (which would double the xtrace lines).
+        witness = {}
+        _new_pmatch = {}
+        for x,y in pmatch.items():
+            r = isinstance(x,il.Variable) and x not in prob.freesyms
+            if __debug__:
+                _xk = x.canon() if hasattr(x,'canon') else str(x)
+                xtracer.trace("proof.isWitVar key=%s result=%s" % (_xk, r))
+            if r:
+                witness[x] = y
+            else:
+                _new_pmatch[x] = y
+        pmatch = _new_pmatch
         if __debug__: xtracer.trace("proof.assumeTactic witnessSplit schema=%s nWitness=%d nPmatch=%d" % (schemaname, len(witness), len(pmatch)))
 #        prem = make_goal(proof.lineno,fresh_label(goal_prems(decl)),[],schema)
         prem = prob.schema
