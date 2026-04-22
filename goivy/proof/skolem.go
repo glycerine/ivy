@@ -40,13 +40,9 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 	var skfuns []*lg.Const
 
 	if !prenex {
-		// Replace free variables with fresh skolem constants
-		var variables []*lg.Variable
-		for _, freeNode := range free {
-			if vv, ok := freeNode.(*lg.Variable); ok {
-				variables = append(variables, vv)
-			}
-		}
+		// Python: variables = goal_free_vars(goal)
+		// — distinct from goal_free; walks prems+conc for variables in DFS order.
+		variables := GoalFreeVars(goal)
 		xtracer.Trace("proof.SkolemizeGoal freeVarsPass nvariables=%d", len(variables))
 		sks := make([]*lg.Const, len(variables))
 		subs := make(map[lg.NodeKey]lg.Expr)

@@ -255,17 +255,42 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 	return subgoals, nil
 }
 
-// GoalFreeVars returns the free variables of a goal's conclusion.
-// Unwraps *ast.TemporalModels via ConcAsExpr — mirrors Python's
-// duck-typed access to free variables across temporal goals.
+// GoalFreeVars returns the free variables of a goal, walking each
+// prem formula (LabeledFormula only) + conc in DFS first-occurrence
+// order, deduped. Mirrors Python's goal_free_vars (ivy_proof.py:1558):
+//
+//	prems = goal_prems(goal)
+//	conc = goal_conc(goal)
+//	fmlas = [x.formula for x in prems if isinstance(x, ia.LabeledFormula)] + [conc]
+//	result = list(lu.used_variables_in_order_asts(fmlas))
 func GoalFreeVars(g *ast.LabeledFormula) []*lg.Variable {
 	xtracer.Trace("proof.GoalFreeVars ENTER label=%s", g.LabelForTrace())
-	conc := GoalConcUnwrap(g)
-	if conc == nil {
-		xtracer.Trace("proof.GoalFreeVars EXIT concNil")
-		return nil
+	var result []*lg.Variable
+	seen := make(map[lg.NodeKey]bool)
+	// Walk each LabeledFormula premise's formula.
+	for _, p := range GoalPrems(g) {
+		if lf, ok := p.(*ast.LabeledFormula); ok {
+			if f, ok := lf.Formula.(lg.Expr); ok {
+				for _, v := range lu.VariablesAstList(f) {
+					k := lg.Key(v)
+					if !seen[k] {
+						seen[k] = true
+						result = append(result, v)
+					}
+				}
+			}
+		}
 	}
-	result := lu.FreeVariablesList(conc)
+	// Walk conc.
+	if conc := ConcAsExpr(GoalConc(g)); conc != nil {
+		for _, v := range lu.VariablesAstList(conc) {
+			k := lg.Key(v)
+			if !seen[k] {
+				seen[k] = true
+				result = append(result, v)
+			}
+		}
+	}
 	xtracer.Trace("proof.GoalFreeVars EXIT nvars=%d", len(result))
 	return result
 }

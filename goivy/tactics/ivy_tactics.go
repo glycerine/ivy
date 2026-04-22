@@ -262,7 +262,7 @@ func ApplyTempind(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledFormu
 	}
 
 	// Python: return pr.clone_goal(goal, pr.goal_prems(goal), fmla)
-	newGoal := goal.CloneWithFreshID([]ast.Node{goal.Label, newFmla})
+	newGoal := proof.CloneGoal(cfg, goal, proof.GoalPrems(goal), newFmla)
 	newGoal.Temporal = goal.Temporal
 	return newGoal, nil
 }
@@ -354,7 +354,9 @@ func ApplyTempcase(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledForm
 		newFmla = transformed
 	}
 
-	newGoal := goal.CloneWithFreshID([]ast.Node{goal.Label, newFmla})
+	// Python: subgoal = pr.clone_goal(goal, pr.goal_prems(goal), fmla)
+	// Use proof.CloneGoal to emit matching CloneGoal ENTER/EXIT traces.
+	newGoal := proof.CloneGoal(cfg, goal, proof.GoalPrems(goal), newFmla)
 	newGoal.Temporal = goal.Temporal
 	return newGoal, nil
 }
