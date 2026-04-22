@@ -1524,10 +1524,28 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 }
 
 // CompileWitnessList compiles witness terms for existential instantiation.
-// Corresponds to Python's compile_witness_list.
+// Corresponds to Python's compile_witness_list (ivy_proof.py:1719).
+//
+// Python extends vocab.variables with used_variables(goal_conc(goal)) so
+// that bound variables in the conc are visible when compiling witness
+// expressions. Without this, witness terms like `P = _P` where P is a
+// bound var of the goal can't resolve P's sort, leaving P as TopSort.
 func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula, mod *module.Module) []lg.Expr {
 	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelForTrace())
 	vocab := GoalVocab(goal)
+	// Python: the_goal_vocab.variables.extend(list(logic_util.used_variables(goal_conc(goal))))
+	if concExpr := ConcAsExpr(GoalConc(goal)); concExpr != nil {
+		existing := make(map[lg.NodeKey]bool, len(vocab.Variables))
+		for _, v := range vocab.Variables {
+			existing[lg.Key(v)] = true
+		}
+		for _, v := range lu.UsedVariables(concExpr) {
+			if vv, ok := v.(*lg.Variable); ok && !existing[lg.Key(vv)] {
+				vocab.Variables = append(vocab.Variables, vv)
+				existing[lg.Key(vv)] = true
+			}
+		}
+	}
 	var result []lg.Expr
 	for i, arg := range proof.Args() {
 		compiled := CompileExprVocab(arg, vocab, mod)
