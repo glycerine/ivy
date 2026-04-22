@@ -1409,11 +1409,24 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 			env[k] = true
 		}
 	}
-	// ApplyToConc unwraps *ast.TemporalModels so ApplyMatchAlt runs on the
-	// inner formula; the wrapper is preserved.
-	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return ApplyMatchAlt(match, c, env)
-	})
+	// Python: fmla = apply_match(match, fmla, env) — direct call, no
+	// apply_to_conc wrapper (ivy_proof.py:1176-1177).
+	rawConc := GoalConc(goal)
+	var newConc ast.Node
+	if concExpr, ok := rawConc.(lg.Expr); ok {
+		newConc = ApplyMatchAlt(match, concExpr, env)
+	} else if tm, ok := rawConc.(*ast.TemporalModels); ok {
+		// Python walks TemporalModels as a generic node via apply_match_alt_rec's
+		// fmla.clone(args) branch. Emulate that here by recursing into the inner
+		// formula (no apply_to_conc trace).
+		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
+			newConc = tm.Clone([]ast.Node{ApplyMatchAlt(match, innerExpr, env)})
+		} else {
+			newConc = tm
+		}
+	} else {
+		newConc = rawConc
+	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
 	xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
 	return result
@@ -1482,10 +1495,20 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 		}
 		newPrems = filtered
 	}
-	// Non-alt: use ApplyMatch (no capture detection)
-	newConc := ApplyToConc(GoalConc(goal), func(c lg.Expr) lg.Expr {
-		return ApplyMatch(match, c)
-	})
+	// Python: fmla = apply_match(match, fmla, env) — direct call (non-alt variant).
+	rawConc := GoalConc(goal)
+	var newConc ast.Node
+	if concExpr, ok := rawConc.(lg.Expr); ok {
+		newConc = ApplyMatch(match, concExpr)
+	} else if tm, ok := rawConc.(*ast.TemporalModels); ok {
+		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
+			newConc = tm.Clone([]ast.Node{ApplyMatch(match, innerExpr)})
+		} else {
+			newConc = tm
+		}
+	} else {
+		newConc = rawConc
+	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
 	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=%v", result.Canon())
 	return result
