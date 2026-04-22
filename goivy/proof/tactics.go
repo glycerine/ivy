@@ -175,20 +175,16 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 	// Python: conc = goal_conc(prem)
 	//         conc = lu.witness_ast(True, [], witness, conc)
 	//         prem = clone_goal(prem, goal_prems(prem), conc)
-	// module.WitnessAst takes ast.Node and handles *ast.TemporalModels
-	// internally, matching Python's duck-typed recursion at
-	// ivy_logic_utils.py:1704. Python swallows no errors here; a capture
-	// error aborts the tactic (vs Python re-raising via iu.IvyError).
+	// Python calls witness_ast unconditionally — empty witness map is
+	// fine and still emits the ENTER/EXIT traces. Match that here.
 	rawConc := GoalConc(prem)
-	if len(witness) > 0 {
-		newConc, werr := module.WitnessAst(true, nil, witness, rawConc)
-		if werr != nil {
-			xtracer.Trace("proof.assumeTactic EXIT err=witnessSubst schema=%s err=%v", schemaName, werr)
-			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
-				"assume tactic witness substitution: %v", werr)}
-		}
-		rawConc = newConc
+	newConc, werr := module.WitnessAst(true, nil, witness, rawConc)
+	if werr != nil {
+		xtracer.Trace("proof.assumeTactic EXIT err=witnessSubst schema=%s err=%v", schemaName, werr)
+		return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
+			"assume tactic witness substitution: %v", werr)}
 	}
+	rawConc = newConc
 	if concExpr, ok := rawConc.(lg.Expr); ok {
 		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%v", schemaName, concExpr.Canon())
 	} else {

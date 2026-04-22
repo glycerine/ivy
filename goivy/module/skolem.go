@@ -328,11 +328,9 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 		return result, nil
 	}
 
+	// Python has no leaf short-circuit — generic branch handles 0-arg
+	// nodes too (ivy_logic_utils.py:1721-1724).
 	args := il.NodeArgs(expr)
-	if len(args) == 0 {
-		xtracer.Trace("ilu.witnessAst EXIT type=%s leaf", iu.TypeName(expr))
-		return expr, nil
-	}
 	xtracer.Trace("ilu.witnessAst branch type=generic pos=%v exprType=%s nargs=%d", pos, iu.TypeName(expr), len(args))
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
