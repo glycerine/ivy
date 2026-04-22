@@ -3,6 +3,7 @@ package typeinfer
 import (
 	"fmt"
 
+	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -563,7 +564,44 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		}, nil
 
 	default:
-		return nil, fmt.Errorf("unsupported node type: %T", t)
+		// Mirror Python type_inference.py:264-269 generic fallback:
+		//   elif hasattr(t,'clone'):
+		//       xys = [infer_sorts(tt, env) for tt in t.args]
+		//       terms_t = [y for x, y in xys]
+		//       return TopSort(), lambda: t.clone([x() for x in terms_t])
+		//
+		// Needed for *logic.Definition (Def lhs rhs) and any other
+		// logic node that lacks a specialized case above. Children's
+		// sorts are inferred (so free vars get unified through the
+		// shared env); the whole node's sort is TopSort.
+		children := t.Children()
+		childResults := make([]*InferResult, len(children))
+		for i, c := range children {
+			r, err := InferSorts(c, env)
+			if err != nil {
+				return nil, err
+			}
+			childResults[i] = r
+		}
+		return &InferResult{
+			Sort: Wrap(logic.TopS),
+			Concretize: func() (logic.Expr, error) {
+				newChildren := make([]ast.Node, len(childResults))
+				for i, r := range childResults {
+					c, err := r.Concretize()
+					if err != nil {
+						return nil, err
+					}
+					newChildren[i] = c
+				}
+				cloned := t.Clone(newChildren)
+				e, ok := cloned.(logic.Expr)
+				if !ok {
+					return nil, fmt.Errorf("clone result is not logic.Expr: %T", cloned)
+				}
+				return e, nil
+			},
+		}, nil
 	}
 }
 
