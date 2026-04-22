@@ -5,6 +5,7 @@ package proof
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
@@ -76,7 +77,15 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 	}
 	inferred, err := il.SortInferList(terms, nil, nil)
 	if err != nil {
-		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v HASH canon=%v", err, compiled.Canon())
+		// On sort-infer failure, dump the vocab so we can see which
+		// variables were available for unification. This helps diagnose
+		// cases where Go and Python disagree about vocab contents.
+		vocabStrs := make([]string, 0, len(vocab.Variables))
+		for _, v := range vocab.Variables {
+			vocabStrs = append(vocabStrs, fmt.Sprintf("%s:%s", v.Name, v.VSort))
+		}
+		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v vocabVars=[%s] HASH canon=%v",
+			err, strings.Join(vocabStrs, ","), compiled.Canon())
 		return compiled // return without sort inference on error
 	}
 	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", inferred[0].Canon())
