@@ -1676,10 +1676,11 @@ def skolemize_fmla(fmla,pos,renamer,skfuns,prenex=True):
         if is_a and pos or is_e and not pos:
             fvs = list(x for x in iu.unique(lu.variables_ast(fmla)) if x in outer)
             body = fmla.body
-            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Skolemize pos=%s isE=%s isA=%s nvars=%d" % (pos, is_e, is_a, len(fmla.variables)))
+            if __debug__: xtracer.trace("proof.SkolemizeFmla branch type=Skolemize pos=%s isE=%s isA=%s nvars=%d varNames=%s" % (pos, is_e, is_a, len(fmla.variables), [v.name for v in fmla.variables]))
             for v in fmla.variables:
                 sym = il.Symbol(renamer('_'+v.name),
                                 il.FuncConstSort(*([w.sort for w in fvs] + [v.sort])))
+                if __debug__: xtracer.trace("proof.SkolemizeFmla skolemize v=%s sk=%s" % (v.name, sym.name))
                 term = sym(*fvs) if fvs else sym
                 skfuns.append(sym)
                 body =  il.substitute(body,[(v,term)])

@@ -2,6 +2,7 @@ package proof
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -152,7 +153,13 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			expr := fmla.(lg.Expr) // safe because isE/isA imply lg.Expr
 			vars := il.BinderVars(expr)
 			body := il.BinderBody(expr)
-			xtracer.Trace("proof.SkolemizeFmla branch type=Skolemize pos=%v isE=%v isA=%v nvars=%d", pos, isE, isA, len(vars))
+			if xtracer.Enabled {
+				vnames := make([]string, len(vars))
+				for vi, vv := range vars {
+					vnames[vi] = "'" + vv.Name + "'"
+				}
+				xtracer.Trace("proof.SkolemizeFmla branch type=Skolemize pos=%v isE=%v isA=%v nvars=%d varNames=[%s]", pos, isE, isA, len(vars), strings.Join(vnames, ", "))
+			}
 
 			// Collect outer universal variables for the skolem function domain
 			fvs := outerVarsInFormula(expr, outer)
@@ -166,6 +173,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 				skSort := il.FuncConstSort(domSorts...)
 
 				name := renamer.Rename("_" + v.Name)
+				xtracer.Trace("proof.SkolemizeFmla skolemize v=%s sk=%s", v.Name, name)
 				sym := lg.NewConst(name, skSort)
 				*skfuns = append(*skfuns, sym)
 
@@ -188,6 +196,8 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 				newBody, err := lu.Substitute(body, subs)
 				if err == nil {
 					body = newBody
+				} else {
+					xtracer.Trace("proof.SkolemizeFmla skolemize substitute err=%v v=%s", err, v.Name)
 				}
 			}
 			return rec(body, pos)
