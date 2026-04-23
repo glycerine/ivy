@@ -273,24 +273,13 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 
 	case *ast.ShowGoalsTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=ShowGoalsTactic")
-		fmt.Println()
-		loc := p.GetLineno()
-		fmt.Printf("line %d: Proof goals:\n", loc.Line)
-		for _, decl := range goals {
-			fmt.Println()
-			fmt.Println("theorem " + decl.String())
-			fmt.Println()
-		}
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ShowGoalsTactic ngoals=%d", len(goals))
-		return goals, nil
+		res := pc.showGoalsTactic(goals, p)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ShowGoalsTactic ngoals=%d", len(res))
+		return res, nil
 
 	case *ast.DeferGoalTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=DeferGoalTactic")
-		if len(goals) <= 1 {
-			xtracer.Trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d", len(goals))
-			return goals, nil
-		}
-		res := append(goals[1:], goals[0])
+		res := pc.deferGoalTactic(goals, p)
 		xtracer.Trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d", len(res))
 		return res, nil
 
@@ -644,8 +633,27 @@ func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.
 	return decls, nil
 }
 
-// forgetTactic removes named premises from the first goal.
-// Corresponds to Python's forget_tactic.
+func (pc *ProofChecker) deferGoalTactic(decls []*ast.LabeledFormula, proof *ast.DeferGoalTactic) []*ast.LabeledFormula {
+	xtracer.Trace("proof.deferGoalTactic ENTER ndecls=%d", len(decls))
+	result := append(decls[1:], decls[0:1]...)
+	xtracer.Trace("proof.deferGoalTactic EXIT ndecls=%d", len(result))
+	return result
+}
+
+func (pc *ProofChecker) showGoalsTactic(decls []*ast.LabeledFormula, proof *ast.ShowGoalsTactic) []*ast.LabeledFormula {
+	xtracer.Trace("proof.showGoalsTactic ENTER ndecls=%d", len(decls))
+	fmt.Println()
+	loc := proof.GetLineno()
+	fmt.Printf("line %d: Proof goals:\n", loc.Line)
+	for _, decl := range decls {
+		fmt.Println()
+		fmt.Println("theorem " + decl.String())
+		fmt.Println()
+	}
+	xtracer.Trace("proof.showGoalsTactic EXIT ndecls=%d", len(decls))
+	return decls
+}
+
 func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.ForgetTactic) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("proof.forgetTactic ENTER ndecls=%d nNames=%d", len(decls), len(proof.Names))
 	decl := decls[0]
