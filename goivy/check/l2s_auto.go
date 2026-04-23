@@ -759,12 +759,13 @@ func l2sAutoInvariants(
 					&lg.Not{Body: applyNB(wNB, varsToNodes(vs)...)},
 				}}
 				*res = append(*res, &lg.Implies{T1: prop, T2: notWaiting})
-				initNB := l2sInit(vs, &lg.Not{Body: prop}, proofLabel)
-				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
 				// C16 / Python ivy_l2s.py:572-576: AG-pattern extra invariant.
+				// Must come BEFORE l2s_init to match Python's append order.
 				if isEventuallyOrNotGlobally(arg) {
 					*res = append(*res, &lg.Implies{T1: notWaiting, T2: &lg.Not{Body: arg}})
 				}
+				initNB := l2sInit(vs, &lg.Not{Body: prop}, proofLabel)
+				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
 			}
 		case *lg.Eventually:
 			knownInits[string(prop.Sexp())] = true
@@ -780,12 +781,13 @@ func l2sAutoInvariants(
 					&lg.Not{Body: applyNB(wNB, varsToNodes(vs)...)},
 				}}
 				*res = append(*res, &lg.Implies{T1: &lg.Not{Body: prop}, T2: notWaiting})
-				initNB := l2sInit(vs, prop, proofLabel)
-				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
 				// C16 / Python ivy_l2s.py:564-568: EF-pattern extra invariant.
+				// Must come BEFORE l2s_init to match Python's append order.
 				if isGloballyOrNotEventually(arg) {
 					*res = append(*res, &lg.Implies{T1: notWaiting, T2: arg})
 				}
+				initNB := l2sInit(vs, prop, proofLabel)
+				*res = append(*res, applyNB(initNB, varsToNodes(vs)...))
 			}
 		case *lg.Implies:
 			if !pos {
