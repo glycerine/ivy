@@ -226,8 +226,12 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			}
 			res := recExpr(rec, body, pos)
 			if !prenex {
-				// Wrap in same quantifier type with the new variables
-				tail := outer[len(outer)-len(vars):]
+				// Copy the tail to avoid slice aliasing: outer's underlying
+				// array is reused by sibling universalize calls via append,
+				// which would corrupt the ForAll's Variables slice.
+				src := outer[len(outer)-len(vars):]
+				tail := make([]*lg.Variable, len(src))
+				copy(tail, src)
 				if isE {
 					res = il.Exists(tail, res)
 				} else {
