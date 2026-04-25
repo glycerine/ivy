@@ -1130,7 +1130,11 @@ var z3Builtins = map[string]bool{
 // Matches Python iu.polymorphic_symbols (ivy_utils.py:696-714).
 func isPolymorphicOp(name string) bool {
 	switch name {
-	case "+", "-", "*", "/", "<", "<=", ">", ">=":
+	case "<", "<=", ">", ">=",
+		"+", "*", "-", "/", "*>",
+		"bvand", "bvor", "bvnot",
+		"cast",
+		"arrsel", "arrupd", "arrcst":
 		return true
 	}
 	return false

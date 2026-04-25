@@ -513,19 +513,7 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		// Non-Boolean Apply: corresponds to Python term_to_z3 "else"
 		// branch (line 483–497) for function applications.
 		if c, ok := node.Func.(*lg.Const); ok {
-			// Check if the function is a built-in operation (arithmetic, BV, etc.)
-			result, handled, err := t.translateBuiltinOp(c.Name, node.Terms)
-			if err != nil {
-				return Expr{}, err
-			}
-			if handled {
-				return result, nil
-			}
-
-			// Check for native interpretation via callback (handles polymorphic
-			// symbols, range sort clamped arithmetic, nat interpretation, etc.)
 			// Python: fun = lookup_native(term.rep, functions, "function")
-
 			if result := t.LookupNative(c.Name, c.CSort, "function"); result != nil {
 				if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
 					args := make([]Expr, len(node.Terms))
@@ -723,15 +711,6 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	}
 	if cached, ok := t.cache.z3_predicates[predKey]; ok {
 		return t.applyZ3Func(cached, app.Terms) // in atomToZ3() here.
-	}
-
-	// Check builtin ops (Go-specific: Python handles via polymacs inside lookup_native)
-	result, handled, err := t.translateBuiltinOp(c.Name, app.Terms)
-	if err != nil {
-		return Expr{}, err
-	}
-	if handled {
-		return result, nil
 	}
 
 	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
@@ -1397,192 +1376,11 @@ func (t *Translator) Implies(f1, f2 lg.Expr) (bool, error) {
 	}
 }
 
-// translateBuiltinOp handles built-in operations that map to Z3 primitives
-// rather than uninterpreted functions. Returns (result, handled, error).
-// If handled is false, the caller should fall back to getFuncDecl.
-//
-// Corresponds to Python ivy_solver.py functions_dict and relations_dict.
-func (t *Translator) translateBuiltinOp(name string, terms []lg.Expr) (Expr, bool, error) {
-	// Translate arguments
-	translateArgs := func() ([]Expr, error) {
-		args := make([]Expr, len(terms))
-		for i, term := range terms {
-			a, err := t.TermToZ3(term)
-			if err != nil {
-				return nil, err
-			}
-			args[i] = a
-		}
-		return args, nil
-	}
-
-	switch name {
-	// --- Arithmetic ---
-	case "+":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Add(args[0], args[1]), true, nil
-		}
-	case "-":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Sub(args[0], args[1]), true, nil
-		}
-		// Unary minus: 0 - x
-		if len(args) == 1 {
-			zero := t.Ctx.IntVal(0)
-			return t.Ctx.Sub(zero, args[0]), true, nil
-		}
-	case "*":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Mul(args[0], args[1]), true, nil
-		}
-	case "/", "div":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Div(args[0], args[1]), true, nil
-		}
-
-	// --- Comparisons ---
-	// Comparison operators (<, <=, >, >=) are NOT handled here.
-	// They are polymorphic: for interpreted sorts (int, nat, bv) they
-	// use Z3 built-in comparisons via LookupNative → lookupBuiltinRelation;
-	// for uninterpreted sorts they become sort-qualified uninterpreted
-	// functions via getFuncDecl (e.g., "<:lclock:lclock").
-	// Handling them here with hardcoded ctx.Lt/Le/Gt/Ge causes Z3 Sort
-	// mismatch panics on uninterpreted sorts.
-	// Matches Python ivy_solver.py:atom_to_z3 which dispatches via
-	// lookup_native → relations_dict for interpreted sorts, or creates
-	// z3.Function(solver_name(sym), *sig) for uninterpreted sorts.
-
-	// --- Bit-vector operations ---
-	case "bvand":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvAnd(args[0], args[1]), true, nil
-		}
-	case "bvor":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvOr(args[0], args[1]), true, nil
-		}
-	case "bvxor":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvXor(args[0], args[1]), true, nil
-		}
-	case "bvnot":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 1 {
-			return t.Ctx.BvNot(args[0]), true, nil
-		}
-	case "bvadd":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvAdd(args[0], args[1]), true, nil
-		}
-	case "bvsub":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvSub(args[0], args[1]), true, nil
-		}
-	case "bvmul":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvMul(args[0], args[1]), true, nil
-		}
-	case "bvudiv":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvUdiv(args[0], args[1]), true, nil
-		}
-	case "bvshl":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvShl(args[0], args[1]), true, nil
-		}
-	case "bvlshr":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvLshr(args[0], args[1]), true, nil
-		}
-	case "bvashr":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.BvAshr(args[0], args[1]), true, nil
-		}
-	case "concat":
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 2 {
-			return t.Ctx.Concat(args[0], args[1]), true, nil
-		}
-	}
-
-	// Check for bfe[lo:hi] pattern (bit-field extract)
-	if len(name) > 4 && name[:3] == "bfe" && name[3] == '[' {
-		args, err := translateArgs()
-		if err != nil {
-			return Expr{}, true, err
-		}
-		if len(args) == 1 {
-			lo, hi, ok := parseBfeParams(name)
-			if ok {
-				return t.Ctx.Extract(hi, lo, args[0]), true, nil
-			}
-		}
-	}
-
-	return Expr{}, false, nil
-}
+// translateBuiltinOp — REMOVED.
+// Python has no equivalent; all function applications go through
+// lookup_native → functions()/relations() dispatch. Go must do the same
+// via LookupNative → Functions()/Relations(). See ivy_solver.py lines
+// 530-541 (term_to_z3 "else" branch) and lines 519-523 (atom_to_z3).
 
 // parseBfeParams parses "bfe[lo:hi]", "bfe[lo,hi]", or "bfe[lo][hi]" and returns (lo, hi, ok).
 // Python uses bfe[lo][hi] format via parse_int_params.
