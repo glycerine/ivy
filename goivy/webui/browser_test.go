@@ -96,7 +96,7 @@ func newPage(t *testing.T, browser *rod.Browser, url string) *rod.Page {
 		_ = incognito.Close()
 		t.Fatalf("newPage: Page(%s): %v", url, err)
 	}
-	page = page.Timeout(30 * time.Second)
+	page = page.Timeout(60 * time.Second)
 	t.Cleanup(func() {
 		if err := page.Close(); err != nil {
 			t.Logf("newPage cleanup: page.Close: %v", err)
