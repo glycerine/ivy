@@ -104,6 +104,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 	xtracer.Trace("proof.SkolemizeFmla ENTER pos=%v prenex=%v type=%s", pos, prenex, iu.TypeName(fmla))
 	var univs []*lg.Variable
 	var outer []*lg.Variable
+	vu := il.NewVariableUniqifier(keysFromRenamer(renamer))
 
 	var rec func(ast.Node, bool) ast.Node
 	rec = func(fmla ast.Node, pos bool) ast.Node {
@@ -210,7 +211,6 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			body := il.BinderBody(expr)
 			xtracer.Trace("proof.SkolemizeFmla branch type=Universalize pos=%v isE=%v isA=%v nvars=%d", pos, isE, isA, len(vars))
 
-			vu := il.NewVariableUniqifier(keysFromRenamer(renamer))
 			for _, v := range vars {
 				u := uniquifyVar(vu, v)
 				if prenex {
