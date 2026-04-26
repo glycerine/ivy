@@ -1097,6 +1097,14 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if result, err := t.Numeral(name, sort); result != nil {
 			return *result, err
 		}
+	} else if es, ok := sort.(*lg.EnumeratedSort); ok && t.s != nil && t.s.sig != nil {
+		// Python ivy_solver.py:511:
+		//   elif ivy_logic.is_enumerated(term) and ivy_logic.is_interpreted_sort(term.sort):
+		//       res = enumerated_to_numeral(term)
+		if _, interped := t.s.sig.Interp[es.Name]; interped {
+			xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
+			return Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
+		}
 	}
 
 	// Python term_to_z3() at ivy_solver.py:479 does:

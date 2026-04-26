@@ -745,8 +745,13 @@ func (s *Solver) lookupPolymorphicNative(sym *lg.Const, table func(string) any) 
 		}
 	}
 
-	// Python line 337: z3val = table(thing.name)
-	return table(sym.Name)
+	// Python line 337-339: z3val = table(thing.name)
+	//   if z3val == None: raise iu.IvyError(None, '{} is not a supported Z3 {}'.format(thing.name, kind))
+	z3val := table(sym.Name)
+	if z3val == nil {
+		panic(fmt.Sprintf("%s is not a supported Z3 function", sym.Name))
+	}
+	return z3val
 }
 
 // lookupBuiltinFunc returns the native Z3 function for a built-in name.
