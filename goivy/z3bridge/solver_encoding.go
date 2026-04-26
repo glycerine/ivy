@@ -366,31 +366,18 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (Expr, error) {
 	ctx := s.tr.Ctx
 	sortName := il.SortName(num.CSort)
 
-	// Check if the sort has a native interpretation.
 	// Python: z3sort = lookup_native(num.sort, sorts, "sort")
-	// If z3sort is None, Python creates a Const, not a value.
-	// We must NOT create IntVal for constants of uninterpreted sorts
-	// that happen to have numeric names (e.g., universe element "0" of sort T).
-	hasNativeInterp := false
-	if s.sig != nil {
-		if _, ok := s.sig.Interp[sortName]; ok {
-			hasNativeInterp = true
-		}
-	}
-	// Python numeral_to_z3 (ivy_solver.py:435) only calls .to_z3() when
-	// lookup_native returns None (i.e., uninterpreted sort). It emits the
-	// callsite trace inside that branch. We mirror it here.
-	if !hasNativeInterp {
-		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3 HASH canon=%s", num.CSort.Sexp())
-	}
-	z3sort, err := s.tr.TranslateSort(num.CSort)
-	if err != nil {
-		return Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)
-	}
-	if !hasNativeInterp {
-		// Uninterpreted sort: Python line 391-392
+	nativeResult := s.tr.LookupNative(sortName, num.CSort, "sort")
+	z3sort, isSort := nativeResult.(Sort)
+	if !isSort {
+		// Uninterpreted sort: Python lines 457-459
 		// return z3.Const(num.name+':'+num.sort.name, num.sort.to_z3())
-		return ctx.Const(num.Name+":"+sortName, z3sort), nil
+		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3 HASH canon=%s", num.CSort.Sexp())
+		translated, err := s.tr.TranslateSort(num.CSort)
+		if err != nil {
+			return Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)
+		}
+		return ctx.Const(num.Name+":"+sortName, translated), nil
 	}
 
 	// Strip quotes if present.
