@@ -355,20 +355,28 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
 	// used_symbols_clauses = gen_to_set(apply_gen_to_clauses(symbols_ilu_ast))
 	// i.e. applies symbols_ilu_ast to each fmla and def, collects into a set.
-	allSyms := make(map[lg.NodeKey]lg.Expr)
+	// Collect symbols preserving AST-walk insertion order (dedup by key).
+	// Python's set() for small sizes approximates insertion order from the
+	// generator, so we must preserve that order to match traces.
+	seen := make(map[lg.NodeKey]bool)
+	var clauseSyms []lg.Expr
 	for _, f := range clauses.Fmlas {
-		for k, v := range il.UsedSymbolsAst(f) {
-			allSyms[k] = v
+		for _, sym := range il.UsedSymbolsInOrderAst(f) {
+			k := lg.Key(sym)
+			if !seen[k] {
+				seen[k] = true
+				clauseSyms = append(clauseSyms, sym)
+			}
 		}
 	}
 	for _, d := range clauses.Defs {
-		for k, v := range il.UsedSymbolsAst(d) {
-			allSyms[k] = v
+		for _, sym := range il.UsedSymbolsInOrderAst(d) {
+			k := lg.Key(sym)
+			if !seen[k] {
+				seen[k] = true
+				clauseSyms = append(clauseSyms, sym)
+			}
 		}
-	}
-	clauseSyms := make([]lg.Expr, 0, len(allSyms))
-	for _, sym := range allSyms {
-		clauseSyms = append(clauseSyms, sym)
 	}
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
@@ -555,11 +563,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
 	// used_symbols_ast = gen_to_set(symbols_ilu_ast)  (ivy_logic_utils.py:610)
-	symMap := il.UsedSymbolsAst(fmla)
-	usedSyms := make([]lg.Expr, 0, len(symMap))
-	for _, sym := range symMap {
-		usedSyms = append(usedSyms, sym)
-	}
+	usedSyms := il.UsedSymbolsInOrderAst(fmla)
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, iu.ShortTypeName(fmla))
