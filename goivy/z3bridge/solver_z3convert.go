@@ -839,6 +839,13 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 // For comparison operators (<, <=, >, >=), dispatches to unsigned BV
 // comparisons when operands are bitvectors, matching Python's relations_dict
 // which checks z3.is_bv(x) at ivy_solver.py:152-155.
+//
+// Python's z3py comparison operators have a subclass dispatch quirk:
+// when `x < y` is evaluated and y's type (e.g. IntNumRef) is a proper
+// subclass of x's type (ArithRef), Python tries y's reflected method
+// first. So `x < IntVal(0)` calls `IntVal(0).__gt__(x)` → Z3_mk_gt(0,x)
+// instead of `x.__lt__(IntVal(0))` → Z3_mk_lt(x,0). These produce
+// different Z3 ASTs. We must match this behavior.
 func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	ctx := s.tr.Ctx
 	switch name {
@@ -847,6 +854,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUlt(args[0], args[1])
+				}
+				if !args[0].IsNumeral() && args[1].IsNumeral() {
+					return ctx.Gt(args[1], args[0])
 				}
 				return ctx.Lt(args[0], args[1])
 			}
@@ -858,6 +868,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUle(args[0], args[1])
 				}
+				if !args[0].IsNumeral() && args[1].IsNumeral() {
+					return ctx.Ge(args[1], args[0])
+				}
 				return ctx.Le(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
@@ -868,6 +881,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUgt(args[0], args[1])
 				}
+				if !args[0].IsNumeral() && args[1].IsNumeral() {
+					return ctx.Lt(args[1], args[0])
+				}
 				return ctx.Gt(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
@@ -877,6 +893,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUge(args[0], args[1])
+				}
+				if !args[0].IsNumeral() && args[1].IsNumeral() {
+					return ctx.Le(args[1], args[0])
 				}
 				return ctx.Ge(args[0], args[1])
 			}
