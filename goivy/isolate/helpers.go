@@ -687,11 +687,11 @@ func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.E
 	}
 	if len(conjs) == 0 {
 		// Anything or true is true: clear preconds
-		*preconds = nil
-	} else {
-		and := makeAnd(conjs...)
-		*preconds = append(*preconds, and)
+		// Python: del preconds[:]
+		*preconds = (*preconds)[:0]
 	}
+	// Python line 936 runs unconditionally: preconds.append(And(*conjs))
+	*preconds = append(*preconds, makeAnd(conjs...))
 }
 
 func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
