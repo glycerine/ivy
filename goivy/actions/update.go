@@ -317,8 +317,13 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.AssumeAction.action_update ENTER")
 	defer xtracer.Trace("actions.AssumeAction.action_update EXIT")
 	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
+	// Python returns true_clauses/false_clauses directly, not formula_to_clauses.
 	if a.Unprovable {
-		return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
+		return &Update{
+			Modified: []*lg.Const{},
+			TR:       module.TrueClauses(EmptyAnnotation{}),
+			Pre:      module.FalseClauses(EmptyAnnotation{}),
+		}
 	}
 	fmla := a.Formula
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
@@ -354,19 +359,32 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	unprovable := a.Unprovable
 
 	// Python: if check_unprovable.get() != unprovable: skip
+	// Python returns ([], true_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation()))
+	// — pre-built Clauses, NOT formula_to_clauses(). Do NOT use makeUpdate here.
 	if ctx.CheckUnprovable != unprovable {
-		return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
+		return &Update{
+			Modified: []*lg.Const{},
+			TR:       module.TrueClauses(EmptyAnnotation{}),
+			Pre:      module.FalseClauses(EmptyAnnotation{}),
+		}
 	}
 
 	// Python: if checked_assert is set and doesn't match this lineno
 	if ctx.CheckedAssert != "" {
 		if ctx.CheckedAssert != a.GetLineno().String() {
 			if unprovable {
-				// Unprovable assertion not selected: skip entirely
-				return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
+				return &Update{
+					Modified: []*lg.Const{},
+					TR:       module.TrueClauses(EmptyAnnotation{}),
+					Pre:      module.FalseClauses(EmptyAnnotation{}),
+				}
 			}
-			// Provable assertion not selected: return formula as-is (not dual)
-			return makeUpdate([]*lg.Const{}, fmla, lg.False, EmptyAnnotation{})
+			// Python: return ([],formula_to_clauses(fmla,annot=EmptyAnnotation()),false_clauses(annot=EmptyAnnotation()))
+			return &Update{
+				Modified: []*lg.Const{},
+				TR:       module.FormulaToClauses(fmla, EmptyAnnotation{}),
+				Pre:      module.FalseClauses(EmptyAnnotation{}),
+			}
 		}
 	}
 
