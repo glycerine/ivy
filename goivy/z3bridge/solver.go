@@ -355,29 +355,26 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	// Python clauses_to_z3 line 645: z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
 	// used_symbols_clauses = gen_to_set(apply_gen_to_clauses(symbols_ilu_ast))
 	// i.e. applies symbols_ilu_ast to each fmla and def, collects into a set.
-	// Collect symbols preserving AST-walk insertion order (dedup by key).
-	// Python's set() for small sizes approximates insertion order from the
-	// generator, so we must preserve that order to match traces.
-	seen := make(map[lg.NodeKey]bool)
-	var clauseSyms []lg.Expr
+	// Collect unique symbols, then sort to match Python's
+	// type_constraints(sorted(syms)) ordering.
+	allSyms := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range clauses.Fmlas {
-		for _, sym := range il.UsedSymbolsInOrderAst(f) {
-			k := lg.Key(sym)
-			if !seen[k] {
-				seen[k] = true
-				clauseSyms = append(clauseSyms, sym)
-			}
+		for k, v := range il.UsedSymbolsAst(f) {
+			allSyms[k] = v
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, sym := range il.UsedSymbolsInOrderAst(d) {
-			k := lg.Key(sym)
-			if !seen[k] {
-				seen[k] = true
-				clauseSyms = append(clauseSyms, sym)
-			}
+		for k, v := range il.UsedSymbolsAst(d) {
+			allSyms[k] = v
 		}
 	}
+	clauseSyms := make([]lg.Expr, 0, len(allSyms))
+	for _, sym := range allSyms {
+		clauseSyms = append(clauseSyms, sym)
+	}
+	sort.Slice(clauseSyms, func(i, j int) bool {
+		return lg.Key(clauseSyms[i]) < lg.Key(clauseSyms[j])
+	})
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
 		return Expr{}, tcErr
@@ -563,7 +560,14 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
 	// used_symbols_ast = gen_to_set(symbols_ilu_ast)  (ivy_logic_utils.py:610)
-	usedSyms := il.UsedSymbolsInOrderAst(fmla)
+	usedSymsMap := il.UsedSymbolsAst(fmla)
+	usedSyms := make([]lg.Expr, 0, len(usedSymsMap))
+	for _, sym := range usedSymsMap {
+		usedSyms = append(usedSyms, sym)
+	}
+	sort.Slice(usedSyms, func(i, j int) bool {
+		return lg.Key(usedSyms[i]) < lg.Key(usedSyms[j])
+	})
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, iu.ShortTypeName(fmla))

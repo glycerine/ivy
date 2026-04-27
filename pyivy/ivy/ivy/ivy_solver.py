@@ -635,6 +635,7 @@ def conj_to_z3(cl):
 
 def type_constraints(syms):
     if __debug__: xtracer.trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d" % len(syms))#; traceback.print_stack(limit=20)
+    syms = sorted(syms)
     natsyms = [s for s in syms
                if ivy_logic.sig.interp.get(s.sort.rng.name,None) == 'nat'
                   and not ivy_logic.is_interpreted_symbol(s)]
