@@ -134,7 +134,11 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 			xtracer.Trace("isolate.add_mixins SKIP lookup_failed mixer=%s", mixerName)
 			continue
 		}
-		res = actions.ApplyMixin(action1, res, mx.IsAfter())
+		var applyErr error
+		res, applyErr = actions.ApplyMixin(action1, res, mx.IsAfter())
+		if applyErr != nil {
+			panic(applyErr)  // Python raises IvyError here; halt compilation
+		}
 	}
 	return res
 }
@@ -384,7 +388,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				}
 				mixer, _ := LookupAction(mod, mixerName)
 				xtracer.Trace("isolate.impl_mixin mixer=%s mixee=%s", mixerName, mixeeName)
-				mixed := actions.ApplyMixin(mixer, action, false)
+				mixed, err := actions.ApplyMixin(mixer, action, false)
+				if err != nil {
+					panic(err)  // Python raises IvyError here; halt compilation
+				}
 				mod.Actions.Set(mixeeName, mixed)
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
 					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
@@ -631,7 +638,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				xtracer.Trace("isolate.make_before_export actname=%s mixer=%s", actname, mixerName)
 				action1 = actions.AssertToAssume(action1, makeKindSet("assert", "require"))
 				action1 = extModMixin(allMixins)(mx, action1)
-				act = actions.ApplyMixin(action1, act, false)
+				var err error
+				act, err = actions.ApplyMixin(action1, act, false)
+				if err != nil {
+					panic(err)  // Python raises IvyError here; halt compilation
+				}
 			}
 		}
 		if mod.BeforeExport == nil {

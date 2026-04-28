@@ -464,7 +464,10 @@ func TestApplyMixin(t *testing.T) {
 	a2.SetFormalReturns(nil)
 
 	// After mixin: a1 appended after a2
-	result := ApplyMixin(a1, a2, true)
+	result, err := ApplyMixin(a1, a2, true)
+	if err != nil {
+		t.Fatalf("ApplyMixin failed: %v", err)
+	}
 	if result.GetLineno().Line != 1 {
 		t.Errorf("ApplyMixin should use action1 lineno, got %d", result.GetLineno().Line)
 	}

@@ -2,7 +2,6 @@ package actions
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 
@@ -136,29 +135,28 @@ func ActionDefToStr(name string, action Action) string {
 
 // ApplyMixin combines two actions as a mixin. If isAfter is true,
 // action1 is appended after action2; otherwise it is prepended before.
+// Returns an error if param/return counts or sorts don't match (matching Python's IvyError).
 //
 // Matches Python ivy_actions.py:1338-1367 apply_mixin:
 // validates param/return counts and sorts, substitutes action1's formals
 // to match action2's, then concatenates.
-func ApplyMixin(action1, action2 Action, isAfter bool) Action {
+func ApplyMixin(action1, action2 Action, isAfter bool) (Action, error) {
 	xtracer.Trace("actions.apply_mixin ENTER")
 	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
 	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
 	xtracer.Trace("actions.apply_mixin fp1=%d fp2=%d fr1=%d fr2=%d isAfter=%v",
 		len(fp1), len(fp2), len(fr1), len(fr2), isAfter)
 
-	// Validate param/return counts match.
-	// Python: raise IvyError (caught upstream, compilation continues).
-	// We skip the mixin and return action2 unchanged instead of panicking.
+	// Validate param/return counts match (Python: raise IvyError).
 	if len(fp1) != len(fp2) {
 		xtracer.Trace("actions.apply_mixin EARLY_RETURN fp_mismatch")
-		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of input parameters: %d vs %d, skipping\n", len(fp1), len(fp2))
-		return action2
+		msg := fmt.Sprintf("mixin has wrong number of input parameters: %d vs %d", len(fp1), len(fp2))
+		return nil, lg.NewIvyError(action1, msg)
 	}
 	if len(fr1) != len(fr2) {
 		xtracer.Trace("actions.apply_mixin EARLY_RETURN fr_mismatch")
-		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of output parameters: %d vs %d, skipping\n", len(fr1), len(fr2))
-		return action2
+		msg := fmt.Sprintf("mixin has wrong number of output parameters: %d vs %d", len(fr1), len(fr2))
+		return nil, lg.NewIvyError(action1, msg)
 	}
 
 	// Build combined formals lists and validate sorts match
@@ -173,8 +171,8 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 		y := formals2[i]
 		if x.CSort != nil && y.CSort != nil && lg.SortKey(x.CSort) != lg.SortKey(y.CSort) {
 			xtracer.Trace("actions.apply_mixin EARLY_RETURN sort_mismatch param=%s", x.Name)
-			fmt.Fprintf(os.Stderr, "warning: parameter %s of mixin has wrong sort, skipping\n", x.Name)
-			return action2
+			msg := fmt.Sprintf("parameter %s of mixin has wrong sort", x.Name)
+			return nil, lg.NewIvyError(action1, msg)
 		}
 	}
 
@@ -203,7 +201,7 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 		}
 	}
 	xtracer.Trace("actions.apply_mixin EXIT")
-	return res
+	return res, nil
 }
 
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.

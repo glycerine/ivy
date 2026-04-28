@@ -77,7 +77,10 @@ func AddMixinsExt(
 		if modMixin != nil {
 			action1 = modMixin(mx, action1)
 		}
-		res = actions.ApplyMixin(action1, res, mx.IsAfter())
+		res, err := actions.ApplyMixin(action1, res, mx.IsAfter())
+		if err != nil {
+			panic(err)  // Python raises IvyError here; halt compilation
+		}
 		if seq, ok := res.(*actions.Sequence); ok {
 			xtracer.Trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_nargs=%d action1_nargs=%d",
 				actname, mixerName, len(seq.Elems), len(action1.Args()))

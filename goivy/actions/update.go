@@ -1236,6 +1236,8 @@ func IntUpdate(action Action, ctx *UpdateContext) *Update {
 		// IntUpdate type=<inner>" trace and recursively calls IntUpdate
 		// on the inner action, matching Python fail_action.int_update.
 		return a.IntUpdate(ctx)
+	case *InstantiateAction:
+		return a.IntUpdate(ctx)
 	default:
 		// Generic fallback: null update
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
@@ -1685,22 +1687,44 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 		invariants = append(invariants, inv)
 	}
 
-	// Build assert invariants
+	// Build assert invariants (keeping Actions as-is, wrapping formulas in AssertAction)
 	var asserts []Action
 	for _, inv := range invariants {
-		asserts = append(asserts, NewAssertAction(inv))
+		if act, ok := inv.(Action); ok {
+			asserts = append(asserts, act)
+		} else {
+			asserts = append(asserts, NewAssertAction(inv))
+		}
 	}
 
 	// Build assume invariants (assert→assume conversion)
+	// Filter out SubgoalAction, convert via AssertToAssume([AssertAction])
 	var assumes []Action
-	for _, inv := range invariants {
-		assumes = append(assumes, NewAssumeAction(inv))
+	for _, asrt := range asserts {
+		if _, ok := asrt.(*SubgoalAction); !ok {
+			// Apply assert_to_assume([AssertAction]) transformation
+			converted := AssertToAssume(asrt, map[string]bool{"assert": true})
+			if converted != nil {
+				assumes = append(assumes, converted.(Action))
+			}
+		}
 	}
+
+	// Filter asserts to remove AssumeAction
+	var filteredAsserts []Action
+	for _, asrt := range asserts {
+		if _, ok := asrt.(*AssumeAction); !ok {
+			filteredAsserts = append(filteredAsserts, asrt)
+		}
+	}
+	asserts = filteredAsserts
 
 	// Build havocs for modified symbols
 	var havocs []Action
 	for _, sym := range modset {
-		havocs = append(havocs, NewHavocAction(sym))
+		h := NewHavocAction(sym)
+		h.SetLineno(a.GetLineno())
+		havocs = append(havocs, h)
 	}
 
 	// Handle ranking function if present

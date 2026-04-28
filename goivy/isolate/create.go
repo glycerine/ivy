@@ -183,7 +183,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 				}
 
 				xtracer.Trace("isolate.create_no_iso mixer=%s mixee=%s", mx.Mixer(), mx.Mixee())
-				mixed := actions.ApplyMixin(action1, action2, mx.IsAfter())
+				mixed, err := actions.ApplyMixin(action1, action2, mx.IsAfter())
+				if err != nil {
+					panic(err)  // Python raises IvyError here; halt compilation
+				}
 				mod.Actions.Set(mixedName, mixed)
 				implemented[mx.Mixer()] = true
 				implemented[mx.Mixee()] = true
