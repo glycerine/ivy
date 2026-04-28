@@ -646,14 +646,6 @@ func substituteByNameRec(ast logic.Expr, subs map[string]logic.Expr) logic.Expr 
 		newsubs := removeBoundNames(subs, t.Variables)
 		body := substituteByNameRec(t.Body, newsubs)
 		return &logic.Exists{Variables: t.Variables, Body: body}
-	case *logic.Lambda:
-		newsubs := removeBoundNames(subs, t.Variables)
-		body := substituteByNameRec(t.Body, newsubs)
-		return &logic.Lambda{Variables: t.Variables, Body: body}
-	case *logic.NamedBinder:
-		newsubs := removeBoundNames(subs, t.Variables)
-		body := substituteByNameRec(t.Body, newsubs)
-		return &logic.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: body}
 	}
 	children := ast.Children()
 	if len(children) == 0 {
