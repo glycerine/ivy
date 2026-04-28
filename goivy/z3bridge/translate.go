@@ -512,10 +512,45 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 
 		// Non-Boolean Apply: corresponds to Python term_to_z3 "else"
 		// branch (line 483–497) for function applications.
+		//
+		// Python checks z3_functions.get(term.rep) BEFORE calling
+		// lookup_native. The z3_functions cache stores both native
+		// functions (from lookup_native) and z3.Function objects.
+		// On cache hit, lookup_native is skipped entirely — no
+		// functions() trace fires. We mirror this with two caches:
+		// nativeFuncs for lookup_native results, z3_functions for
+		// FuncDecls created by makeFuncDecl.
 		if c, ok := node.Func.(*lg.Const); ok {
-			// Python: fun = lookup_native(term.rep, functions, "function")
+			key := lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
+
+			// Python: fun = z3_functions.get(term.rep) — check cache first.
+			if cachedNative, ok := t.cache.nativeFuncs[key]; ok {
+				args := make([]Expr, len(node.Terms))
+				for i, term := range node.Terms {
+					a, err := t.TermToZ3(term)
+					if err != nil {
+						return Expr{}, err
+					}
+					args[i] = a
+				}
+				return cachedNative(args...), nil
+			}
+			if cachedFD, ok := t.cache.z3_functions[key]; ok {
+				args := make([]Expr, len(node.Terms))
+				for i, term := range node.Terms {
+					a, err := t.TermToZ3(term)
+					if err != nil {
+						return Expr{}, err
+					}
+					args[i] = a
+				}
+				return cachedFD.Apply(args...), nil
+			}
+
+			// Cache miss: try lookup_native (Python lines 500-508)
 			if result := t.LookupNative(c.Name, c.CSort, "function"); result != nil {
 				if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
+					t.cache.nativeFuncs[key] = nativeFn
 					args := make([]Expr, len(node.Terms))
 					for i, term := range node.Terms {
 						a, err := t.TermToZ3(term)

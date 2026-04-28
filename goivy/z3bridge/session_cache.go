@@ -44,6 +44,7 @@ type Z3SessionCache struct {
 	consts        map[lg.NodeKey]Expr
 	z3_functions  map[lg.NodeKey]FuncDecl
 	z3_predicates map[lg.NodeKey]func(args ...Expr) Expr
+	nativeFuncs   map[lg.NodeKey]func(args ...Expr) Expr
 }
 
 // NewZ3SessionCache builds a fresh cache with its own Z3 context and empty
@@ -86,6 +87,7 @@ func (c *Z3SessionCache) resetMaps() {
 	c.consts = make(map[lg.NodeKey]Expr)
 	c.z3_functions = make(map[lg.NodeKey]FuncDecl)
 	c.z3_predicates = make(map[lg.NodeKey]func(args ...Expr) Expr)
+	c.nativeFuncs = make(map[lg.NodeKey]func(args ...Expr) Expr)
 	c.z3_predicates[eqCanonPredKey] = func(args ...Expr) Expr {
 		return MyEq(c.Ctx, args[0], args[1])
 	}
