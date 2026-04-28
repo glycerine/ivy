@@ -174,10 +174,12 @@ func (s *State) Update() *actions.Update {
 	xtracer.Trace("interp.State.Update calling GetUpdate type=%s", actions.ActionTypeName(action))
 
 	ctx := &actions.UpdateContext{
-		Domain:       s.Domain,
-		PVars:        s.InScope,
-		ActCfg:       s.Domain.Cfg.ActCfg,
-		Instantiator: s.Domain.Instantiator,
+		Domain:          s.Domain,
+		PVars:           s.InScope,
+		ActCfg:          s.Domain.Cfg.ActCfg,
+		Instantiator:    s.Domain.Instantiator,
+		CheckUnprovable: s.Domain.Cfg.OnlyCheckUnprovable,
+		CheckedAssert:   s.Domain.Cfg.CheckLineno,
 		GetAction: func(name string) actions.Action {
 			if v, ok := s.Domain.Actions.Get2(name); ok {
 				if act, ok := v.(actions.Action); ok {

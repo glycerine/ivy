@@ -3,6 +3,7 @@ package actions
 // Tests for all 15 fixes from AUDIT18MARCH.md §5.1 (MISSING items).
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -606,7 +607,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_Selected(t *testing.T) {
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 
 	ctx := testCtx()
-	ctx.CheckedAssert = a.GetLineno().String() // matches this assertion
+	ctx.CheckedAssert = fmt.Sprintf("%d", a.GetLineno().Line) // matches this assertion
 
 	u := a.ActionUpdate(ctx)
 

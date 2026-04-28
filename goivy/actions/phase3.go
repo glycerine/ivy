@@ -432,10 +432,12 @@ func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *mod
 
 	// Python: return aa.action_update(domain, pvars)
 	ctx := &UpdateContext{
-		Domain:       domain,
-		PVars:        pvars,
-		ActCfg:       domain.Cfg.ActCfg,
-		Instantiator: domain.Instantiator,
+		Domain:          domain,
+		PVars:           pvars,
+		ActCfg:          domain.Cfg.ActCfg,
+		Instantiator:    domain.Instantiator,
+		CheckUnprovable: domain.Cfg.OnlyCheckUnprovable,
+		CheckedAssert:   domain.Cfg.CheckLineno,
 	}
 	return aa.ActionUpdate(ctx)
 }

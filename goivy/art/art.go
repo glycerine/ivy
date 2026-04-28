@@ -776,10 +776,12 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 	// fires here, exactly where Python's lazy property would fire.
 	if state.Update == nil && state.Action != nil && state.Domain != nil {
 		ctx := &actions.UpdateContext{
-			Domain:       state.Domain,
-			PVars:        state.InScope,
-			ActCfg:       state.Domain.Cfg.ActCfg,
-			Instantiator: state.Domain.Instantiator,
+			Domain:          state.Domain,
+			PVars:           state.InScope,
+			ActCfg:          state.Domain.Cfg.ActCfg,
+			Instantiator:    state.Domain.Instantiator,
+			CheckUnprovable: state.Domain.Cfg.OnlyCheckUnprovable,
+			CheckedAssert:   state.Domain.Cfg.CheckLineno,
 			GetAction: func(name string) actions.Action {
 				if v, ok := state.Domain.Actions.Get2(name); ok {
 					if act, ok := v.(actions.Action); ok {
@@ -1555,10 +1557,12 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 			xtracer.Trace("interp.ApplyAction calling GetUpdate actionName=%s type=%s",
 				env, actions.ActionTypeName(env))
 			ctx := &actions.UpdateContext{
-				Domain:       interpState.Domain,
-				PVars:        interpState.InScope,
-				ActCfg:       mod.Cfg.ActCfg,
-				Instantiator: mod.Instantiator,
+				Domain:          interpState.Domain,
+				PVars:           interpState.InScope,
+				ActCfg:          mod.Cfg.ActCfg,
+				Instantiator:    mod.Instantiator,
+				CheckUnprovable: mod.Cfg.OnlyCheckUnprovable,
+				CheckedAssert:   mod.Cfg.CheckLineno,
 				GetAction: func(name string) actions.Action {
 					if mod != nil {
 						if a, ok := mod.Actions.Get2(name); ok {

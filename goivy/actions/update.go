@@ -370,8 +370,9 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	}
 
 	// Python: if checked_assert is set and doesn't match this lineno
+	// CheckedAssert is stored as fmt.Sprintf("%d", lineno.Line) — compare consistently.
 	if ctx.CheckedAssert != "" {
-		if ctx.CheckedAssert != a.GetLineno().String() {
+		if ctx.CheckedAssert != fmt.Sprintf("%d", a.GetLineno().Line) {
 			if unprovable {
 				return &Update{
 					Modified: []*lg.Const{},
