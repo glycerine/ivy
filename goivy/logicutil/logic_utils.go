@@ -1740,7 +1740,20 @@ func substituteApplyRec(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc
 			for i, term := range n.Terms {
 				newTerms[i] = substituteApplyRec(term, subs)
 			}
-			return fn(newTerms)
+			result := fn(newTerms)
+			// Python logic_util.py:222-224: assert fvr <= fvt
+			termFVs := make(map[logic.NodeKey]bool)
+			for _, term := range newTerms {
+				for _, v := range FreeVariables(term).All() {
+					termFVs[logic.Key(v)] = true
+				}
+			}
+			for _, v := range FreeVariables(result).All() {
+				if !termFVs[logic.Key(v)] {
+					panic(fmt.Sprintf("SubstituteApply: new free variables introduced by substitution"))
+				}
+			}
+			return result
 		}
 		return substituteApplyChildren(t, subs)
 

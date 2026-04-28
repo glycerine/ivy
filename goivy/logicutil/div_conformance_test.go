@@ -109,25 +109,21 @@ func TestDIV4_SubstituteApplyMissingAssertion(t *testing.T) {
 		return eq
 	}
 
-	result := logicutil.SubstituteApply(app, subs)
+	// Python: assert fvr <= fvt fires. Go should panic.
+	panicked := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				panicked = true
+			}
+		}()
+		logicutil.SubstituteApply(app, subs)
+	}()
 
-	// Check: result has Z as a free variable that wasn't in the input terms
-	inputFVs := logicutil.FreeVariables(app)
-	resultFVs := logicutil.FreeVariables(result)
-
-	if _, zInInput := inputFVs.Get2(logic.Key(Z)); zInInput {
-		t.Fatal("Z should not be free in original Apply(f, X)")
+	if !panicked {
+		t.Errorf("DIV-4: Go SubstituteApply did not panic on new free variable Z.\n"+
+			"  Python asserts fv(result) <= fv(terms). Go should panic.")
 	}
-	_, zInResult := resultFVs.Get2(logic.Key(Z))
-	if !zInResult {
-		t.Fatal("Z should be free in result (substitution introduced it)")
-	}
-
-	// DIV-4: Go should detect this and panic/error (Python asserts).
-	// Currently Go silently allows new free variables.
-	t.Errorf("DIV-4: Go SubstituteApply does not detect new free variable Z.\n"+
-		"  Python asserts fv(result) <= fv(terms). Go should do the same.\n"+
-		"  result fvs: %v", freeVarNames(result))
 
 	// Cross-check with Python
 	py := runPyDiv(t, "div4")
