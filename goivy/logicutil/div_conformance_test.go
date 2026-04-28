@@ -200,20 +200,31 @@ func TestDIV7_NormalizeQuantifiersLambda(t *testing.T) {
 	}
 }
 
-// TestDIV8_CloseEPRVariableOrdering tests that CloseEPR uses the same
-// variable ordering as Python.
+// TestDIV8_CloseEPRVariableOrdering verifies that CloseEPR variable
+// ordering matches between Go and Python.
 //
-// Python: uses set(variables_ast(fmla)) — set ordering (not DFS).
-// Go: uses FreeVariablesList via Omap — DFS insertion order.
+// VERIFIED NON-BUG: Python's ForAll._preprocess_ (logic.py:380) sorts
+// variables by name: tuple(sorted(set(variables), key=lambda v: v.name)).
+// Go's FreeVariablesList sorts by NodeKey string, which also sorts by
+// name first. Both produce the same alphabetical ordering.
+//
+// This test uses a 3-variable mixed-sort formula to exercise the hardest
+// ordering case and confirms they agree.
 func TestDIV8_CloseEPRVariableOrdering(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	Y, _ := logic.NewVariable("Y", S)
-	X, _ := logic.NewVariable("X", S)
+	T := &logic.UninterpretedSort{Name: "T"}
+	B_T, _ := logic.NewVariable("B", T)
+	C_S, _ := logic.NewVariable("C", S)
+	A_S, _ := logic.NewVariable("A", S)
 
-	// Y appears before X in the Eq (DFS order: Y, X).
-	eq, _ := logic.NewEq(Y, X)
-	result := logicutil.CloseEPR(eq)
+	// B:T appears first in DFS, then C:S, then A:S.
+	// Python ForAll sorts by name → [A:S, B:T, C:S].
+	// Go FreeVariablesList sorts by NodeKey → [A:S, B:T, C:S].
+	inner, _ := logic.NewEq(C_S, A_S)
+	outer, _ := logic.NewEq(B_T, B_T)
+	fmla := &logic.Implies{T1: outer, T2: inner}
 
+	result := logicutil.CloseEPR(fmla)
 	fa, ok := result.(*logic.ForAll)
 	if !ok {
 		t.Fatalf("CloseEPR should produce ForAll, got %T", result)
@@ -221,16 +232,16 @@ func TestDIV8_CloseEPRVariableOrdering(t *testing.T) {
 
 	goOrder := nameList(fa.Variables)
 
-	// Get Python's ordering
+	// Get Python's ordering for the same formula
 	py := runPyDiv(t, "div8")
 	pyOrder := py["var_order"]
 
 	goOrderStr := strings.Join(goOrder, ",")
 	if goOrderStr != pyOrder {
 		t.Errorf("DIV-8: CloseEPR variable ordering differs.\n"+
-			"  Go order:     %s (DFS via Omap)\n"+
-			"  Python order: %s (via set)\n"+
-			"  They must match for canon comparison.",
+			"  Go order:     %s\n"+
+			"  Python order: %s\n"+
+			"  Both should sort alphabetically by name.",
 			goOrderStr, pyOrder)
 	}
 }

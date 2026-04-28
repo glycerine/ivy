@@ -71,12 +71,14 @@ def div7():
 
 
 def div8():
-    """CloseEPR: Python uses set ordering for variables."""
+    """CloseEPR: 3-variable mixed-sort ordering test."""
     S = lg.UninterpretedSort('S')
-    Y = lg.Var('Y', S)
-    X = lg.Var('X', S)
-    eq = lg.Eq(Y, X)  # Y before X in DFS
-    result = ilu.close_epr(eq)
+    T = lg.UninterpretedSort('T')
+    B_T = lg.Var('B', T)
+    C_S = lg.Var('C', S)
+    A_S = lg.Var('A', S)
+    fmla = lg.Implies(lg.Eq(B_T, B_T), lg.Eq(C_S, A_S))
+    result = ilu.close_epr(fmla)
     if hasattr(result, 'variables'):
         names = [v.name for v in result.variables]
         print('var_order=' + ','.join(names))
