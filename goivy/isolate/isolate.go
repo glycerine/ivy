@@ -112,11 +112,8 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 	res := action
 	if isoCfg.CreateImports {
 		// When creating imports, strip invariants from the action.
-		// In the Python code, this calls action.drop_invariants().
-		// Since invariant-dropping requires tracking which sub-actions
-		// are invariant assertions, and we don't yet distinguish those
-		// in the Go action types, this is a no-op for now.
-		// The action is used as-is, which is safe (just not optimal).
+		// Matches Python: res.drop_invariants()
+		res = actions.DropInvariants(res)
 	}
 	mixins := mixinsAutoVivify(mod, actname)
 	if len(mixins) == 0 {
