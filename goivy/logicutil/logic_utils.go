@@ -436,7 +436,7 @@ func CloseEPR(fmla logic.Expr) logic.Expr {
 		}
 		return &logic.And{Terms: terms}
 	}
-	fvs := FreeVariablesList(fmla)
+	fvs := VariablesAstList(fmla)
 	if len(fvs) == 0 {
 		return fmla
 	}
@@ -1671,9 +1671,8 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 			}
 			return NormalizeQuantifiers(&logic.And{Terms: terms})
 		}
-		// Otherwise, restrict variables to those actually free in the body
-		body := NormalizeQuantifiers(n.Body)
-		fvs := FreeVariables(body)
+		// Restrict variables based on free vars of the ORIGINAL (un-normalized) body
+		fvs := FreeVariables(n.Body)
 		var vars []*logic.Variable
 		for _, v := range n.Variables {
 			if _, ok := fvs.Get2(logic.Key(v)); ok {
@@ -1681,9 +1680,9 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 			}
 		}
 		if len(vars) == 0 {
-			return body
+			return NormalizeQuantifiers(n.Body)
 		}
-		return &logic.ForAll{Variables: vars, Body: body}
+		return &logic.ForAll{Variables: vars, Body: NormalizeQuantifiers(n.Body)}
 
 	case *logic.Exists:
 		// Exists(vars, Or(a,b)) -> Or(Exists(vars,a), Exists(vars,b))
@@ -1694,9 +1693,8 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 			}
 			return NormalizeQuantifiers(&logic.Or{Terms: terms})
 		}
-		// Otherwise, restrict variables to those actually free in the body
-		body := NormalizeQuantifiers(n.Body)
-		fvs := FreeVariables(body)
+		// Restrict variables based on free vars of the ORIGINAL (un-normalized) body
+		fvs := FreeVariables(n.Body)
 		var vars []*logic.Variable
 		for _, v := range n.Variables {
 			if _, ok := fvs.Get2(logic.Key(v)); ok {
@@ -1704,9 +1702,12 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 			}
 		}
 		if len(vars) == 0 {
-			return body
+			return NormalizeQuantifiers(n.Body)
 		}
-		return &logic.Exists{Variables: vars, Body: body}
+		return &logic.Exists{Variables: vars, Body: NormalizeQuantifiers(n.Body)}
+
+	case *logic.Lambda:
+		panic(fmt.Sprintf("NormalizeQuantifiers called on Lambda: %T", t))
 	}
 
 	// Fallback for other node types
@@ -1844,4 +1845,54 @@ func filterSubs(subs map[logic.NodeKey]SubstituteApplyFunc, vars []*logic.Variab
 		}
 	}
 	return newSubs
+}
+
+// RenameAst substitutes symbol names in an AST. The subs map maps old symbol
+// names to new symbol names (both strings). Variables are not renamed.
+// Corresponds to Python ivy_logic_utils.py:196-207 rename_ast.
+func RenameAst(ast logic.Expr, subs map[string]string) logic.Expr {
+	return renameAstRec(ast, subs)
+}
+
+func renameAstRec(ast logic.Expr, subs map[string]string) logic.Expr {
+	// Recursively rename in children
+	children := ast.Children()
+	newChildren := make([]logic.Expr, len(children))
+	for i, child := range children {
+		newChildren[i] = renameAstRec(child, subs)
+	}
+
+	// Check if this is an App (Apply with a Const func), and not a binder
+	if app, ok := ast.(*logic.Apply); ok {
+		// Check if func is a Const
+		if constFunc, ok := app.Func.(*logic.Const); ok {
+			// Look up the symbol name in the subs map
+			newName := subs[constFunc.Name]
+			if newName == "" {
+				newName = constFunc.Name // Use original if not in map
+			}
+
+			// Create new symbol with same sort but new name
+			newSym := logic.NewConst(newName, constFunc.CSort)
+
+			// If no args, return the constant itself
+			if len(newChildren) == 0 {
+				return newSym
+			}
+			// Otherwise apply to args
+			return logic.MustApply(newSym, newChildren...)
+		}
+	}
+
+	// For Const nodes (constants without args)
+	if constNode, ok := ast.(*logic.Const); ok {
+		newName := subs[constNode.Name]
+		if newName == "" {
+			newName = constNode.Name
+		}
+		return logic.NewConst(newName, constNode.CSort)
+	}
+
+	// For all other nodes, clone with renamed children
+	return cloneNode(ast, newChildren)
 }
