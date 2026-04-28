@@ -412,10 +412,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	var defnDeps map[string][]string
 	if tt, ok := pf.(*ast.TacticTactic); ok {
 		// M1: reject tactic_lets (Python line 124-125).
-		if tt.Body != nil {
-			if _, isLets := tt.Body.(*ast.TacticLets); isLets {
-				return nil, fmt.Errorf("tactic does not take lets")
-			}
+		if len(tt.TacticLetsList()) > 0 {
+			return nil, fmt.Errorf("tactic does not take lets")
 		}
 
 		decls := tt.TacticDeclsList()
