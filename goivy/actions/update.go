@@ -372,7 +372,9 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Python: if checked_assert is set and doesn't match this lineno
 	// CheckedAssert is stored as fmt.Sprintf("%d", lineno.Line) — compare consistently.
 	if ctx.CheckedAssert != "" {
-		if ctx.CheckedAssert != fmt.Sprintf("%d", a.GetLineno().Line) {
+		lineno := a.GetLineno()
+		checkedAssertStr := fmt.Sprintf("%s:%d", lineno.Filename, lineno.Line)
+		if ctx.CheckedAssert != checkedAssertStr {
 			if unprovable {
 				return &Update{
 					Modified: []*lg.Const{},
@@ -873,12 +875,23 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	var tr lg.Expr
 	vsNodes := varsToNodes(vs)
 
-	if il.IsBoolean(sym) || il.IsRelationalSort(sym.CSort) {
+	// Check if lhs is an atom (syntactic type check, matching Python is_atom)
+	isAtom := false
+	if _, ok := lhs.(*lg.Eq); ok {
+		isAtom = true
+	} else if app, ok := lhs.(*lg.Apply); ok && il.IsBoolean(app.NodeSort()) {
+		isAtom = true
+	} else if const_, ok := lhs.(*lg.Const); ok && il.IsBoolean(const_.NodeSort()) {
+		isAtom = true
+	}
+
+	if isAtom {
 		// Relation: at non-havocked indices, old and new agree
 		// For each eq in eqs: (new_n(Vs) <-> n(Vs)) | eq
+		// Use il.Atom to preserve node type (e.g., Eq instead of always Apply)
 		var terms []lg.Expr
-		newApp := applyToNodes(newN, vsNodes)
-		oldApp := applyToNodes(sym, vsNodes)
+		newApp := il.Atom(newN, vsNodes)
+		oldApp := il.Atom(sym, vsNodes)
 		for _, eq := range eqs {
 			impl1, _ := lg.NewOr(&lg.Not{Body: newApp}, oldApp, eq)
 			impl2, _ := lg.NewOr(newApp, &lg.Not{Body: oldApp}, eq)
@@ -891,8 +904,8 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 		}
 	} else if il.IsIndividual(sym) {
 		// Function: at non-havocked indices, new = old
-		newApp := applyToNodes(newN, vsNodes)
-		oldApp := applyToNodes(sym, vsNodes)
+		newApp := il.Atom(newN, vsNodes)
+		oldApp := il.Atom(sym, vsNodes)
 		var terms []lg.Expr
 		for _, eq := range eqs {
 			clause, _ := lg.NewOr(&lg.Eq{T1: newApp, T2: oldApp}, eq)
