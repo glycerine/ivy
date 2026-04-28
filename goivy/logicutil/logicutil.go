@@ -2,6 +2,7 @@ package logicutil
 
 import (
 	"fmt"
+	"reflect"
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/logic"
@@ -113,8 +114,23 @@ func freeVariablesRec(t logic.Expr, result *iu.Omap[logic.NodeKey, logic.Expr], 
 		}
 		freeVariablesRec(n.Body, result, newBound)
 	default:
-		for _, c := range t.Children() {
-			freeVariablesRec(c, result, bound)
+		// Handle Some binder (from ivylogic) without importing it
+		if iu.TypeName(t) == "Some" {
+			newBound := copyVarSet(bound)
+			if params, err := getSomeParams(t); err == nil {
+				for _, p := range params {
+					if v, ok := p.(*logic.Variable); ok {
+						newBound[logic.Key(v)] = v
+					}
+				}
+			}
+			for _, c := range t.Children() {
+				freeVariablesRec(c, result, newBound)
+			}
+		} else {
+			for _, c := range t.Children() {
+				freeVariablesRec(c, result, bound)
+			}
 		}
 	}
 }
@@ -150,8 +166,23 @@ func freeVariablesByNameRec(t logic.Expr, result map[string]struct{}, bound map[
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
 	default:
-		for _, c := range t.Children() {
-			freeVariablesByNameRec(c, result, bound)
+		// Handle Some binder (from ivylogic) without importing it
+		if iu.TypeName(t) == "Some" {
+			newBound := copyStringSet(bound)
+			if params, err := getSomeParams(t); err == nil {
+				for _, p := range params {
+					if v, ok := p.(*logic.Variable); ok {
+						newBound[v.Name] = struct{}{}
+					}
+				}
+			}
+			for _, c := range t.Children() {
+				freeVariablesByNameRec(c, result, newBound)
+			}
+		} else {
+			for _, c := range t.Children() {
+				freeVariablesByNameRec(c, result, bound)
+			}
 		}
 	}
 }
@@ -671,8 +702,27 @@ func variablesAstRec(t logic.Expr, result *[]*logic.Variable, seen map[logic.Nod
 		}
 		variablesAstRec(n.Body, result, seen, newBound)
 	default:
-		for _, c := range t.Children() {
-			variablesAstRec(c, result, seen, bound)
+		// Handle Some binder (from ivylogic) without importing it
+		// Some has Params that should be excluded like quantifier variables
+		if iu.TypeName(t) == "Some" {
+			newBound := copyBoolKeySet(bound)
+			// Try to get Params field and add to bound set
+			if params, err := getSomeParams(t); err == nil {
+				for _, p := range params {
+					if v, ok := p.(*logic.Variable); ok {
+						newBound[logic.Key(v)] = true
+					}
+				}
+			}
+			// Recurse into Fmla and optional IfVal/ElseVal
+			for _, c := range t.Children() {
+				variablesAstRec(c, result, seen, newBound)
+			}
+		} else {
+			// Default: process all children unchanged
+			for _, c := range t.Children() {
+				variablesAstRec(c, result, seen, bound)
+			}
 		}
 	}
 }
@@ -683,6 +733,37 @@ func copyBoolKeySet(s map[logic.NodeKey]bool) map[logic.NodeKey]bool {
 		r[k] = v
 	}
 	return r
+}
+
+// getSomeParams extracts Params from a Some node without importing ivylogic.
+// Returns error if the node is not a Some or doesn't have Params field.
+func getSomeParams(n logic.Expr) ([]logic.Expr, error) {
+	// Check if it has a Params field using reflection
+	nVal := reflect.ValueOf(n)
+	if nVal.Kind() == reflect.Ptr {
+		nVal = nVal.Elem()
+	}
+	if nVal.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("not a struct")
+	}
+
+	paramsField := nVal.FieldByName("Params")
+	if !paramsField.IsValid() {
+		return nil, fmt.Errorf("no Params field")
+	}
+
+	if paramsField.Kind() != reflect.Slice {
+		return nil, fmt.Errorf("Params is not a slice")
+	}
+
+	result := make([]logic.Expr, paramsField.Len())
+	for i := 0; i < paramsField.Len(); i++ {
+		elem := paramsField.Index(i).Interface()
+		if expr, ok := elem.(logic.Expr); ok {
+			result[i] = expr
+		}
+	}
+	return result, nil
 }
 
 // UsedVariablesAsts mirrors Python ivy_logic_utils.used_variables_asts
