@@ -264,9 +264,13 @@ func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 
 	result := call.SplitReturns(NewActionsConfig())
 
-	// With no returns, should return self unchanged
-	if result != call {
-		t.Error("SplitReturns with no returns should return self")
+	// Python has no early return — always wraps in LocalAction(Sequence(call)).
+	local, ok := result.(*LocalAction)
+	if !ok {
+		t.Fatalf("expected *LocalAction, got %T", result)
+	}
+	if local.Body == nil {
+		t.Fatal("LocalAction body should not be nil")
 	}
 }
 
