@@ -675,12 +675,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 						aConjs = append(aConjs, mustApply(L2SA(v.VSort), v))
 					}
 				}
-				if len(aConjs) > 0 {
-					fairCycle = append(fairCycle,
-						forall(vb.Vars, &lg.Implies{T1: makeAnd(aConjs...), T2: iff}))
-				} else {
-					fairCycle = append(fairCycle, forall(vb.Vars, iff))
-				}
+				fairCycle = append(fairCycle,
+					forall(vb.Vars, &lg.Implies{T1: &lg.And{Terms: aConjs}, T2: iff}))
 			} else {
 				fairCycle = append(fairCycle, iff)
 			}
@@ -715,12 +711,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 						mustApply(L2SA(bodySort), vb.Body),
 					}})
 			}
-			if len(aConjs) > 0 {
-				fairCycle = append(fairCycle,
-					forall(vb.Vars, &lg.Implies{T1: makeAnd(aConjs...), T2: eq}))
-			} else {
-				fairCycle = append(fairCycle, forall(vb.Vars, eq))
-			}
+			fairCycle = append(fairCycle,
+				forall(vb.Vars, &lg.Implies{T1: &lg.And{Terms: aConjs}, T2: eq}))
 		}
 	}
 
