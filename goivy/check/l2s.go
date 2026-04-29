@@ -409,7 +409,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 
 	// C6/C7/M1: process user-supplied tactic_decls.
 	// Python ivy_l2s.py:124-125, 141-153, 175.
-	var defnDeps map[string][]string
+	var defnDeps map[lg.NodeKey][]lg.NodeKey
 	if tt, ok := pf.(*ast.TacticTactic); ok {
 		// M1: reject tactic_lets (Python line 124-125).
 		if len(tt.TacticLetsList()) > 0 {

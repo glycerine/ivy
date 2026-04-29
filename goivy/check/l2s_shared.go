@@ -41,7 +41,7 @@ type InstrumentationConfig struct {
 
 	// Collected state (populated by shared steps)
 	L2sGs             map[lg.NodeKey]L2sGTriple
-	L2sWhensSet       map[string]*lg.NamedBinder
+	L2sWhensSet       map[lg.NodeKey]*lg.NamedBinder
 	NamedBindersConjs map[string][]VarBodyPair
 	ToWait            []VarBodyPair
 	ToSave            []VarBodyPair
@@ -52,7 +52,7 @@ type InstrumentationConfig struct {
 	// Functions built during step 1
 	ReplaceTemporals func(ast.Node) ast.Node
 	// Dependencies closure (built by caller from defnDeps)
-	Dependencies func(map[string]bool) map[string]bool
+	Dependencies func(map[lg.NodeKey]bool) map[lg.NodeKey]bool
 
 	// C5 trace_hook plumbing: data populated by l2sAutoInvariants and
 	// SharedStep11_ReplaceNamedBinders, used to attach a hook to the
@@ -81,9 +81,9 @@ type L2sGTriple = l2sGTriple
 // VarBodyPair holds a pair of variables and a body expression.
 type VarBodyPair = varBodyPair
 
-// sortNamedBinderMap extracts values from a map[string]*lg.NamedBinder and
+// sortNamedBinderMap extracts values from a map[lg.NodeKey]*lg.NamedBinder and
 // returns them sorted by Canon() for deterministic cross-language ordering.
-func sortNamedBinderMap(m map[string]*lg.NamedBinder) []*lg.NamedBinder {
+func sortNamedBinderMap(m map[lg.NodeKey]*lg.NamedBinder) []*lg.NamedBinder {
 	sorted := make([]*lg.NamedBinder, 0, len(m))
 	for _, v := range m {
 		sorted = append(sorted, v)
@@ -119,7 +119,7 @@ func sortL2sGTriples(m map[lg.NodeKey]L2sGTriple) []L2sGTriple {
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
 func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(string, func(ast.Node) ast.Node)) {
 	cfg.L2sGs = make(map[lg.NodeKey]L2sGTriple)
-	cfg.L2sWhensSet = make(map[string]*lg.NamedBinder)
+	cfg.L2sWhensSet = make(map[lg.NodeKey]*lg.NamedBinder)
 
 	_l2sG := func(vs []*lg.Variable, t lg.Expr, env *string) *lg.NamedBinder {
 		res := l2sG(vs, t, env)
@@ -135,11 +135,11 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		// struct equality.
 		if name == "first" {
 			res := l2sWhen("next", vs, t, cfg.ProofLabel)
-			cfg.L2sWhensSet[string(res.Sexp())] = res
+			cfg.L2sWhensSet[res.Sexp()] = res
 			return l2sInit(vs, applyNB(res, varsToNodes(vs)...), cfg.ProofLabel)
 		}
 		res := l2sWhen(name, vs, t, cfg.ProofLabel)
-		cfg.L2sWhensSet[string(res.Sexp())] = res
+		cfg.L2sWhensSet[res.Sexp()] = res
 		return res
 	}
 
@@ -379,7 +379,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	for _, when := range sortedWhens {
 		cond, ok := when.Body.(*lg.Cond)
 		if !ok {
-			continue
+			panic(fmt.Sprintf("assume_when_axioms: when binder %s has non-Cond body type %T", when.Name, when.Body))
 		}
 		inner := forall(when.Variables, &lg.Implies{
 			T1: cond.T1,
@@ -413,18 +413,19 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 // SharedStep7_InstrumentActions instruments all binding actions with
 // prop events, when events, and wait events.
 func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.NormalProgram) {
-	symprops := make(map[string][]*lg.NamedBinder)
-	symwaits := make(map[string][]*lg.NamedBinder)
-	symwhens := make(map[string][]*lg.NamedBinder)
-
+	symprops := make(map[lg.NodeKey][]*lg.NamedBinder)
+	symwaits := make(map[lg.NodeKey][]*lg.NamedBinder)
+	symwhens := make(map[lg.NodeKey][]*lg.NamedBinder)
 	sortedTriples := sortL2sGTriples(cfg.L2sGs)
 	for ti, triple := range sortedTriples {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
 		si := 0
 		for sym := range il.SymbolsIluAst(triple.Body) {
 			if c, ok := sym.(*lg.Const); ok {
+				k := c.Sexp()
 				xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", ti, si, c.Name, triple.Body.Canon())
-				symprops[c.Name] = append(symprops[c.Name], prop)
+				symprops[k] = append(symprops[k], prop)
+
 				si++
 			}
 		}
@@ -434,11 +435,13 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		si := 0
 		for sym := range il.SymbolsIluAst(when.Body) {
 			if c, ok := sym.(*lg.Const); ok {
+				k := c.Sexp()
 				if xtracer.Enabled {
 					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
 					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, c.Name, when.Body.Canon())
 				}
-				symwhens[c.Name] = append(symwhens[c.Name], when)
+				symwhens[k] = append(symwhens[k], when)
+
 				si++
 			} else {
 				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwhens when[%d] when='%v' sym=%s HASH canon= when.Body=%s\n", sym, wi, when, sym, when.Body.Canon())
@@ -450,8 +453,10 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		si := 0
 		for sym := range il.SymbolsIluAst(vb.Body) {
 			if c, ok := sym.(*lg.Const); ok {
+				k := c.Sexp()
 				xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
-				symwaits[c.Name] = append(symwaits[c.Name], wait)
+				symwaits[k] = append(symwaits[k], wait)
+
 				si++
 			} else {
 				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwaits toWait[%d] sym=%s HASH canon= vb.Body=%s\n", sym, wi, sym, vb.Body.Canon())
@@ -464,7 +469,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		fmt.Printf("l2s.SharedStep7 symprops keys: %v\n", func() []string {
 			keys := make([]string, 0, len(symprops))
 			for k := range symprops {
-				keys = append(keys, k)
+				keys = append(keys, string(k))
 			}
 			sort.Strings(keys)
 			return keys
@@ -472,7 +477,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		fmt.Printf("l2s.SharedStep7 symwhens keys: %v\n", func() []string {
 			keys := make([]string, 0, len(symwhens))
 			for k := range symwhens {
-				keys = append(keys, k)
+				keys = append(keys, string(k))
 			}
 			sort.Strings(keys)
 			return keys
@@ -480,7 +485,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		fmt.Printf("l2s.SharedStep7 symwaits keys: %v\n", func() []string {
 			keys := make([]string, 0, len(symwaits))
 			for k := range symwaits {
-				keys = append(keys, k)
+				keys = append(keys, string(k))
 			}
 			sort.Strings(keys)
 			return keys
@@ -489,7 +494,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	lineno := cfg.Lineno
 
-	propEventsFunc := func(gprops map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
+	propEventsFunc := func(gprops map[lg.NodeKey]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
 		var pre, post []actions.Action
 		sortedProps := sortNamedBinderMap(gprops)
 		for _, gprop := range sortedProps {
@@ -533,13 +538,13 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	// Python ivy_l2s.py:1070-1085: when_events.
 	// when.body is a Cond(condition, value); decompose T1=cond, T2=val.
-	whenEventsFunc := func(whens map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
+	whenEventsFunc := func(whens map[lg.NodeKey]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
 		var pre, post []actions.Action
 		sortedWhens := sortNamedBinderMap(whens)
 		for _, when := range sortedWhens {
 			condVal, ok := when.Body.(*lg.Cond)
 			if !ok {
-				continue
+				panic(fmt.Sprintf("whenEventsFunc: when binder %s has non-Cond body type %T", when.Name, when.Body))
 			}
 			vs := when.Variables
 			cond := condVal.T1
@@ -561,7 +566,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		for _, when := range sortedWhens {
 			condVal, ok := when.Body.(*lg.Cond)
 			if !ok {
-				continue
+				panic(fmt.Sprintf("whenEventsFunc: when binder %s has non-Cond body type %T", when.Name, when.Body))
 			}
 			post = append(post,
 				setLineno(actions.NewAssumeAction(forall(when.Variables,
@@ -573,7 +578,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		return pre, post
 	}
 
-	waitEventsFunc := func(waits map[string]*lg.NamedBinder) []actions.Action {
+	waitEventsFunc := func(waits map[lg.NodeKey]*lg.NamedBinder) []actions.Action {
 		var res []actions.Action
 		sortedWaits := sortNamedBinderMap(waits)
 		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
@@ -605,28 +610,28 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				returns := callArgs[1:] // []lg.Expr of CallAction.ActualReturns
 				monitored := false
 				for ri, r := range returns {
-					// Extract symbol name from return, handling both bare
+					// Extract symbol from return, handling both bare
 					// Const and Apply(Const, terms) forms. Python checks
 					// `sym in symprops` using structural equality on
-					// Const objects; Go checks by string name.
-					var k string
+					// Const objects; Go uses NodeKey (Sexp) for matching.
+					var k lg.NodeKey
+					var symName string
 					switch v := r.(type) {
 					case *lg.Const:
-						k = v.Name
+						k = v.Sexp()
+						symName = v.Name
 					case *lg.Apply:
 						if c, ok := v.Func.(*lg.Const); ok {
-							k = c.Name
+							k = c.Sexp()
+							symName = c.Name
 						}
 					}
-					// Python uses `sym in symprops` which checks key existence
-					// in a defaultdict — True even for empty-list entries created
-					// by bracket access in the dependency loop above.
 					_, inSP := symprops[k]
 					_, inSWh := symwhens[k]
 					_, inSWa := symwaits[k]
 					if xtracer.Enabled {
 						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s",
-							ri, iu.ShortTypeName(r), k, pyBool(inSP), pyBool(inSWh), pyBool(inSWa))
+							ri, iu.ShortTypeName(r), symName, pyBool(inSP), pyBool(inSWh), pyBool(inSWa))
 					}
 					if k != "" && (inSP || inSWh || inSWa) {
 						monitored = true
@@ -651,57 +656,51 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		}
 		res := stmt.ActionClone(newArgs)
 
-		eventProps := make(map[string]*lg.NamedBinder)
-		eventWhens := make(map[string]*lg.NamedBinder)
-		eventWaits := make(map[string]*lg.NamedBinder)
+		eventProps := make(map[lg.NodeKey]*lg.NamedBinder)
+		eventWhens := make(map[lg.NodeKey]*lg.NamedBinder)
+		eventWaits := make(map[lg.NodeKey]*lg.NamedBinder)
 
 		modifiedSyms := actions.Modifies(stmt)
-		modSet := make(map[string]bool, len(modifiedSyms))
+		modSet := make(map[lg.NodeKey]bool, len(modifiedSyms))
 		for _, sym := range modifiedSyms {
-			modSet[sym.Name] = true
+			modSet[sym.Sexp()] = true
 		}
 		allDeps := cfg.Dependencies(modSet)
 		{
 			sortedDeps := make([]string, 0, len(allDeps))
 			for sym := range allDeps {
-				sortedDeps = append(sortedDeps, sym)
+				sortedDeps = append(sortedDeps, string(sym))
 			}
 			sort.Strings(sortedDeps)
 			sortedMods := make([]string, 0, len(modSet))
 			for sym := range modSet {
-				sortedMods = append(sortedMods, sym)
+				sortedMods = append(sortedMods, string(sym))
 			}
 			sort.Strings(sortedMods)
 			xtracer.Trace("l2s.SharedStep7 instrStmt mods=[%s] deps=[%s]", strings.Join(sortedMods, ","), strings.Join(sortedDeps, ","))
 		}
-		for sym := range allDeps {
+		for k := range allDeps {
 			// Python uses defaultdict(list) for symprops/symwhens/symwaits.
 			// Bracket access on defaultdict creates an empty-list entry for
 			// missing keys. Later, the monitoring check uses `sym in symprops`
 			// which finds these entries. Replicate by touching the Go maps.
-			if _, ok := symprops[sym]; !ok {
-				symprops[sym] = nil
+			if _, ok := symprops[k]; !ok {
+				symprops[k] = nil
 			}
-			if _, ok := symwhens[sym]; !ok {
-				symwhens[sym] = nil
+			if _, ok := symwhens[k]; !ok {
+				symwhens[k] = nil
 			}
-			if _, ok := symwaits[sym]; !ok {
-				symwaits[sym] = nil
+			if _, ok := symwaits[k]; !ok {
+				symwaits[k] = nil
 			}
-			for _, prop := range symprops[sym] {
-				// Key by Sexp (structural canonical form) not String (PrettyFmla,
-				// drops sort annotations). Mirrors Python's set() in event_props
-				// (ivy_l2s.py:1286,1310-1317), which uses NamedBinder struct
-				// equality and so keeps sort-distinct binders separate. String
-				// dedup would collapse normalized binders that share var names
-				// (V0,V1,...) but differ in variable sorts.
-				eventProps[string(prop.Sexp())] = prop
+			for _, prop := range symprops[k] {
+				eventProps[prop.Sexp()] = prop
 			}
-			for _, when := range symwhens[sym] {
-				eventWhens[string(when.Sexp())] = when
+			for _, when := range symwhens[k] {
+				eventWhens[when.Sexp()] = when
 			}
-			for _, wait := range symwaits[sym] {
-				eventWaits[string(wait.Sexp())] = wait
+			for _, wait := range symwaits[k] {
+				eventWaits[wait.Sexp()] = wait
 			}
 		}
 
@@ -878,7 +877,7 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			for _, sym := range insertionOrderSymbols(mod) {
-				if sym.CSort != nil && sym.CSort.String() == s.String() {
+				if sym.CSort != nil && lg.SortEqual(sym.CSort, s) {
 					addConstsToD = append(addConstsToD,
 						setLineno(actions.NewAssignAction(mustApply(L2SD(s), sym), lg.True), lineno))
 				}
@@ -906,8 +905,8 @@ func insertionOrderSymbols(mod *module.Module) []*lg.Const {
 // H12 / Python ivy_l2s.py:159-166: also include premise definitions
 // from the goal (premises with IsDefinition == true), not just the
 // module-level definitions.
-func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]string {
-	defnDeps := make(map[string][]string)
+func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[lg.NodeKey][]lg.NodeKey {
+	defnDeps := make(map[lg.NodeKey][]lg.NodeKey)
 	addEq := func(formula lg.Expr) {
 		// DropUniversals already applied by caller (matching Python ivy_l2s.py:181).
 		// Python Definition inherits from Eq, so isinstance(f, Eq) is True
@@ -923,22 +922,22 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 		}
 		// Python: defn_deps[sym].append(fml.args[0].rep)
 		// .rep works for both Apply(Const,args) and bare Const.
-		var lhsName string
+		var lhsKey lg.NodeKey
 		switch lhs := t1.(type) {
 		case *lg.Apply:
 			if c, ok := lhs.Func.(*lg.Const); ok {
-				lhsName = c.Name
+				lhsKey = c.Sexp()
 			}
 		case *lg.Const:
-			lhsName = lhs.Name
+			lhsKey = lhs.Sexp()
 		default:
 			panicf("how to handle t1=%T here?; canon=%v", t1, t1.Canon())
 		}
-		if lhsName != "" {
+		if lhsKey != "" {
 			// Python ivy_l2s.py:183: for sym in iu.unique(ilu.symbols_ilu_ast(fml.args[1])):
 			for _, x := range il.UsedSymbolsInOrderAst(t2) {
 				if sym, ok := x.(*lg.Const); ok {
-					defnDeps[sym.Name] = append(defnDeps[sym.Name], lhsName)
+					defnDeps[sym.Sexp()] = append(defnDeps[sym.Sexp()], lhsKey)
 				} else {
 					panicf("how to handle x=%T here? x=%v", x, x.Canon())
 				}
@@ -978,21 +977,26 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[string][]strin
 	{
 		keys := make([]string, 0, len(defnDeps))
 		for k := range defnDeps {
-			keys = append(keys, k)
+			keys = append(keys, string(k))
 		}
 		sort.Strings(keys)
 		for _, k := range keys {
-			xtracer.Trace("l2s.BuildDefnDeps result dep[%s] -> [%s]", k, strings.Join(defnDeps[k], ","))
+			nk := lg.NodeKey(k)
+			vals := make([]string, len(defnDeps[nk]))
+			for i, v := range defnDeps[nk] {
+				vals[i] = string(v)
+			}
+			xtracer.Trace("l2s.BuildDefnDeps result dep[%s] -> [%s]", k, strings.Join(vals, ","))
 		}
 	}
 	return defnDeps
 }
 
 // BuildDependenciesFunc builds a dependency closure function from defnDeps.
-func BuildDependenciesFunc(defnDeps map[string][]string) func(map[string]bool) map[string]bool {
-	return func(syms map[string]bool) map[string]bool {
-		result := make(map[string]bool)
-		var stack []string
+func BuildDependenciesFunc(defnDeps map[lg.NodeKey][]lg.NodeKey) func(map[lg.NodeKey]bool) map[lg.NodeKey]bool {
+	return func(syms map[lg.NodeKey]bool) map[lg.NodeKey]bool {
+		result := make(map[lg.NodeKey]bool)
+		var stack []lg.NodeKey
 		for s := range syms {
 			stack = append(stack, s)
 		}

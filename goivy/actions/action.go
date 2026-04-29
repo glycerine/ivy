@@ -790,9 +790,7 @@ func calleeFromAtom(atom *ast.Atom) lg.Expr {
 // returns followed by assignments from temps to actual returns.
 // Python: CallAction.split_returns()
 func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
-	if len(a.ActualReturns) == 0 {
-		return a
-	}
+	// Python has no early return — always runs rename+split logic.
 	// Collect used symbol names for unique naming
 	usedMap := module.UsedSymbolsAST(a.Callee)
 	for _, r := range a.ActualReturns {
@@ -808,12 +806,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 
 	newReturns := make([]lg.Expr, len(a.ActualReturns))
 	for i, ret := range a.ActualReturns {
-		if sym, ok := ret.(*lg.Const); ok {
-			newName := rn.Rename(sym.Name)
-			newReturns[i] = lg.NewConst(newName, sym.CSort)
-		} else {
-			newReturns[i] = ret
-		}
+		newReturns[i] = renameExpr(ret, rn)
 	}
 
 	// Build: Sequence(call_with_new_returns, assign1, assign2, ...)
@@ -839,6 +832,24 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 }
 
 // --- LocalAction ---
+
+// renameExpr renames the top-level symbol in an expression using a
+// UniqueRenamer. Matches Python's x.rename(rn) for Const, Apply, and
+// Variable types used as CallAction returns.
+func renameExpr(e lg.Expr, rn *iu.UniqueRenamer) lg.Expr {
+	switch v := e.(type) {
+	case *lg.Const:
+		return lg.NewConst(rn.Rename(v.Name), v.CSort)
+	case *lg.Apply:
+		newFunc := renameExpr(v.Func, rn)
+		return lg.MustApply(newFunc, v.Terms...)
+	case *lg.Variable:
+		nv, _ := lg.NewVariable(rn.Rename(v.Name), v.VSort)
+		return nv
+	default:
+		return e
+	}
+}
 
 // LocalAction introduces local variables hidden from the outside.
 type LocalAction struct {

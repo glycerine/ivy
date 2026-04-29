@@ -2,6 +2,7 @@ package check
 
 import (
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/ast"
@@ -149,27 +150,55 @@ func TestBuildDefnDeps_GoalPrems(t *testing.T) {
 	assertDep(t, deps, "a", []string{"g"})
 }
 
-// assertDep checks that deps[key] contains exactly the expected values (sorted).
-func assertDep(t *testing.T, deps map[string][]string, key string, expected []string) {
+// assertDep checks that deps contains an entry whose key Sexp contains keyName,
+// and that the values' Sexps contain exactly the expected names (sorted).
+func assertDep(t *testing.T, deps map[lg.NodeKey][]lg.NodeKey, keyName string, expectedNames []string) {
 	t.Helper()
-	got, ok := deps[key]
-	if !ok {
-		t.Errorf("expected deps[%q] to exist, got no entry; full map: %v", key, deps)
+	// Find the key whose Sexp contains keyName.
+	var matchKey lg.NodeKey
+	var found bool
+	for k := range deps {
+		if strings.Contains(string(k), keyName) {
+			matchKey = k
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("expected deps entry containing %q, got no match; keys: %v", keyName, func() []string {
+			var ks []string
+			for k := range deps {
+				ks = append(ks, string(k))
+			}
+			return ks
+		}())
 		return
 	}
-	sortedGot := make([]string, len(got))
-	copy(sortedGot, got)
-	sort.Strings(sortedGot)
-	sortedExp := make([]string, len(expected))
-	copy(sortedExp, expected)
+	got := deps[matchKey]
+	gotNames := make([]string, len(got))
+	for i, v := range got {
+		// Extract the name from the NodeKey Sexp.
+		for _, en := range expectedNames {
+			if strings.Contains(string(v), en) {
+				gotNames[i] = en
+				break
+			}
+		}
+		if gotNames[i] == "" {
+			gotNames[i] = string(v)
+		}
+	}
+	sort.Strings(gotNames)
+	sortedExp := make([]string, len(expectedNames))
+	copy(sortedExp, expectedNames)
 	sort.Strings(sortedExp)
-	if len(sortedGot) != len(sortedExp) {
-		t.Errorf("deps[%q]: expected %v, got %v", key, sortedExp, sortedGot)
+	if len(gotNames) != len(sortedExp) {
+		t.Errorf("deps[%q]: expected %v, got %v", keyName, sortedExp, gotNames)
 		return
 	}
-	for i := range sortedGot {
-		if sortedGot[i] != sortedExp[i] {
-			t.Errorf("deps[%q]: expected %v, got %v", key, sortedExp, sortedGot)
+	for i := range gotNames {
+		if gotNames[i] != sortedExp[i] {
+			t.Errorf("deps[%q]: expected %v, got %v", keyName, sortedExp, gotNames)
 			return
 		}
 	}
