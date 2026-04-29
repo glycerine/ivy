@@ -1,5 +1,11 @@
 package logicutil_test
 
+// separate logicutil_test avoids this import cycle:
+//
+// package github.com/glycerine/ivy/goivy/logicutil
+//  imports github.com/glycerine/ivy/goivy/ivylogic from div_conformance_test.go
+//  imports github.com/glycerine/ivy/goivy/logicutil from classify.go: import cycle not allowed in test
+
 import (
 	"fmt"
 	"os/exec"
@@ -121,7 +127,7 @@ func TestDIV4_SubstituteApplyMissingAssertion(t *testing.T) {
 	}()
 
 	if !panicked {
-		t.Errorf("DIV-4: Go SubstituteApply did not panic on new free variable Z.\n"+
+		t.Errorf("DIV-4: Go SubstituteApply did not panic on new free variable Z.\n" +
 			"  Python asserts fv(result) <= fv(terms). Go should panic.")
 	}
 
@@ -193,7 +199,7 @@ func TestDIV7_NormalizeQuantifiersLambda(t *testing.T) {
 	}()
 
 	if !panicked {
-		t.Errorf("DIV-7: Go NormalizeQuantifiers did not panic on Lambda.\n"+
+		t.Errorf("DIV-7: Go NormalizeQuantifiers did not panic on Lambda.\n" +
 			"  Python crashes with 'assert False, type(t)' on Lambda input.")
 	}
 
