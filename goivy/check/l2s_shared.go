@@ -237,7 +237,6 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 							}
 							key := string(expr.Sexp())
 							if !seenSave[key] {
-								seenSave[key] = true
 								cfg.NamedBindersConjs["l2s_s"] = append(cfg.NamedBindersConjs["l2s_s"],
 									VarBodyPair{vs, expr})
 							}
@@ -264,7 +263,6 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 				negBody := module.Negate(b.Body)
 				key := string(negBody.Sexp())
 				if !seenWait[key] {
-					seenWait[key] = true
 					cfg.NamedBindersConjs["l2s_w"] = append(cfg.NamedBindersConjs["l2s_w"],
 						VarBodyPair{b.Variables, negBody})
 				}
