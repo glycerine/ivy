@@ -1,7 +1,7 @@
 // Additional logic utility functions.
 // Ports of functions from Python's ivy_logic_utils.py that are used by
 // multiple subsystems.
-package ivyutils
+package logicutil
 
 import (
 	"fmt"

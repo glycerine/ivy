@@ -1,4 +1,4 @@
-package ivyutils_test
+package logicutil_test
 
 import (
 	"fmt"

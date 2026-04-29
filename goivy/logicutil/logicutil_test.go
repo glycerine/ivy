@@ -1,4 +1,4 @@
-package ivyutils
+package logicutil
 
 import (
 	"errors"
