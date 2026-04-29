@@ -601,7 +601,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 						// Python: old_checked_assert = act.checked_assert.get()
 						//         act.checked_assert.value = sub.lineno
 						oldCheckedAssert := mod.Cfg.CheckLineno
-						mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno.Line)
+						mod.Cfg.CheckLineno = fmt.Sprintf("%s:%d", lineno.Filename, lineno.Line)
 						someFailed := false
 						for root := range checkedActions {
 							if !roots[root] {
@@ -1219,7 +1219,7 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	for _, lineno := range linenos {
 		modCopy := mod.Copy()
 		oldCheckedAssert := mod.Cfg.CheckLineno
-		mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno)
+		mod.Cfg.CheckLineno = fmt.Sprintf(":%d", lineno)
 		cleanup := modCopy.TheoryContext()
 		err := method()
 		cleanup()

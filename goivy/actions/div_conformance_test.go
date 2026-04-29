@@ -146,13 +146,20 @@ func TestDIV11_ApplyMixinErrorOnMismatch(t *testing.T) {
 	})
 	action2.SetFormalReturns(nil)
 
-	result := ApplyMixin(action1, action2, false)
+	// Python: raises IvyError. Go should panic.
+	panicked := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				panicked = true
+			}
+		}()
+		ApplyMixin(action1, action2, false)
+	}()
 
-	// Python: raises IvyError("mixin has wrong number of input parameters").
-	// Go BUG: returns action2 unchanged, silently swallowing the error.
-	if result == action2 {
-		t.Errorf("DIV-11: ApplyMixin returned action2 unchanged on param count mismatch.\n"+
-			"  Python raises IvyError. Go should return an error, not silently skip.\n"+
+	if !panicked {
+		t.Errorf("DIV-11: ApplyMixin did not panic on param count mismatch.\n"+
+			"  Python raises IvyError. Go should panic.\n"+
 			"  action1 has %d params, action2 has %d params.",
 			len(action1.GetFormalParams()), len(action2.GetFormalParams()))
 	}
@@ -174,21 +181,31 @@ func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 		ActCfg: NewActionsConfig(),
 	}
 
-	result := IntUpdate(ia, ctx)
+	// With the dispatch fix, InstantiateAction.IntUpdate runs and will
+	// panic (no CompileActionBody set) or return a real update.
+	// Either outcome proves the switch dispatches correctly.
+	// Getting NullUpdate silently means the switch hit default (the bug).
+	var result *Update
+	panicked := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				panicked = true
+			}
+		}()
+		result = IntUpdate(ia, ctx)
+	}()
 
-	// NullUpdate has Modified=[] (empty, non-nil), TR=true, Pre=false.
-	// A properly dispatched InstantiateAction.IntUpdate would either:
-	// a) compile and return a real update, or
-	// b) panic because no CompileActionBody is set
-	//
-	// Getting NullUpdate silently means the switch didn't route to the method.
+	if panicked {
+		return // panic proves dispatch worked
+	}
+
 	nullUpd := NullUpdate()
 	if result.TR.IsTrue() && result.Pre.IsFalse() && len(result.Modified) == 0 {
 		if nullUpd.TR.IsTrue() && nullUpd.Pre.IsFalse() {
 			t.Errorf("DIV-12: IntUpdate returned NullUpdate for InstantiateAction.\n"+
 				"  The switch in IntUpdate has no case *InstantiateAction.\n"+
-				"  It hits default → NullUpdate(), making InstantiateAction.IntUpdate dead code.\n"+
-				"  Python dispatches to InstantiateAction.int_update correctly.")
+				"  It hits default → NullUpdate(), making InstantiateAction.IntUpdate dead code.")
 		}
 	}
 }
@@ -212,33 +229,26 @@ func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 	a2 := NewAssertAction(fmla)
 	a2.SetLineno(ast.Location{Filename: "bar.ivy", Line: 42})
 
-	// Set checked_assert to match bar.ivy:42
-	// In Python, this would be Location("bar.ivy", 42).
-	// In Go, CheckedAssert is just "42" (line only).
+	// CheckedAssert targets bar.ivy:42 specifically.
+	// Python: Location("bar.ivy", 42) != Location("foo.ivy", 42).
 	ctx := &UpdateContext{
 		Domain: module.New(),
 		ActCfg: NewActionsConfig(),
-		CheckedAssert: "42",
+		CheckedAssert: "bar.ivy:42",
 	}
 
 	u1 := a1.ActionUpdate(ctx)
 	u2 := a2.ActionUpdate(ctx)
 
-	// Go BUG: both match because Go compares "42" == "42", ignoring file.
-	// Python: only bar.ivy:42 matches Location("bar.ivy", 42).
-	//
-	// Both produce the "matched" update (dual_formula path).
-	// If we could distinguish, a1 (foo.ivy:42) should produce the
-	// "not matched" update (formula_to_clauses path) because the file differs.
-	//
-	// We can detect the bug by checking that Go treats them identically:
+	// a1 (foo.ivy:42) should NOT match → filtered (Pre is false).
+	// a2 (bar.ivy:42) should match → dual formula (Pre is non-false).
 	u1IsDual := u1.Pre != nil && !u1.Pre.IsFalse()
 	u2IsDual := u2.Pre != nil && !u2.Pre.IsFalse()
+
 	if u1IsDual == u2IsDual {
 		t.Errorf("DIV-14: Go treats foo.ivy:42 and bar.ivy:42 identically.\n"+
-			"  CheckedAssert compares only line number %q, ignoring file.\n"+
-			"  Python compares full Location(file, line).\n"+
-			"  Two asserts at the same line in different files should be distinguishable.",
+			"  CheckedAssert=%q should only match bar.ivy:42.\n"+
+			"  foo.ivy:42 should be filtered out (different file).",
 			ctx.CheckedAssert)
 	}
 }

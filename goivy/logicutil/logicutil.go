@@ -1,4 +1,4 @@
-package logicutil
+package ivyutils
 
 import (
 	"fmt"
@@ -627,6 +627,11 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 	return result
 }
 
+type binderLike interface {
+	BinderVars() []*logic.Variable
+	BinderBody() logic.Expr
+}
+
 // VariablesAstList returns the free variables of t in DFS first-occurrence
 // order, matching Python's list(iu.unique(ilu.variables_ast(t))).
 // This is the Go equivalent of Python ivy_logic_utils.py:474-486 variables_ast
@@ -671,6 +676,14 @@ func variablesAstRec(t logic.Expr, result *[]*logic.Variable, seen map[logic.Nod
 		}
 		variablesAstRec(n.Body, result, seen, newBound)
 	default:
+		if b, ok := t.(binderLike); ok {
+			newBound := copyBoolKeySet(bound)
+			for _, v := range b.BinderVars() {
+				newBound[logic.Key(v)] = true
+			}
+			variablesAstRec(b.BinderBody(), result, seen, newBound)
+			return
+		}
 		for _, c := range t.Children() {
 			variablesAstRec(c, result, seen, bound)
 		}

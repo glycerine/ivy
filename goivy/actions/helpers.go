@@ -2,7 +2,7 @@ package actions
 
 import (
 	"fmt"
-	"os"
+
 	"sort"
 	"strings"
 
@@ -147,21 +147,16 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	xtracer.Trace("actions.apply_mixin fp1=%d fp2=%d fr1=%d fr2=%d isAfter=%v",
 		len(fp1), len(fp2), len(fr1), len(fr2), isAfter)
 
-	// Validate param/return counts match.
-	// Python: raise IvyError (caught upstream, compilation continues).
-	// We skip the mixin and return action2 unchanged instead of panicking.
+	// Python: raise IvyError on param/return count or sort mismatch.
 	if len(fp1) != len(fp2) {
 		xtracer.Trace("actions.apply_mixin EARLY_RETURN fp_mismatch")
-		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of input parameters: %d vs %d, skipping\n", len(fp1), len(fp2))
-		return action2
+		panic(fmt.Sprintf("mixin has wrong number of input parameters: %d vs %d", len(fp1), len(fp2)))
 	}
 	if len(fr1) != len(fr2) {
 		xtracer.Trace("actions.apply_mixin EARLY_RETURN fr_mismatch")
-		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of output parameters: %d vs %d, skipping\n", len(fr1), len(fr2))
-		return action2
+		panic(fmt.Sprintf("mixin has wrong number of output parameters: %d vs %d", len(fr1), len(fr2)))
 	}
 
-	// Build combined formals lists and validate sorts match
 	formals1 := make([]*lg.Const, 0, len(fp1)+len(fr1))
 	formals1 = append(formals1, fp1...)
 	formals1 = append(formals1, fr1...)
@@ -173,8 +168,7 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 		y := formals2[i]
 		if x.CSort != nil && y.CSort != nil && lg.SortKey(x.CSort) != lg.SortKey(y.CSort) {
 			xtracer.Trace("actions.apply_mixin EARLY_RETURN sort_mismatch param=%s", x.Name)
-			fmt.Fprintf(os.Stderr, "warning: parameter %s of mixin has wrong sort, skipping\n", x.Name)
-			return action2
+			panic(fmt.Sprintf("parameter %s of mixin has wrong sort", x.Name))
 		}
 	}
 

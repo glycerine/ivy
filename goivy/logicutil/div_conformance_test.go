@@ -1,4 +1,4 @@
-package logicutil_test
+package ivyutils_test
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicutil"
+	logicutil "github.com/glycerine/ivy/goivy/logicutil"
 )
 
 func divPyScript() string {
@@ -180,13 +180,21 @@ func TestDIV7_NormalizeQuantifiersLambda(t *testing.T) {
 	eq, _ := logic.NewEq(X, X)
 	lam := &logic.Lambda{Variables: []*logic.Variable{X}, Body: eq}
 
-	// Go: silently returns Lambda unchanged.
 	// Python: assert False, type(t) — a "should never reach here" guard.
-	result := logicutil.NormalizeQuantifiers(lam)
-	if _, isLam := result.(*logic.Lambda); isLam {
-		t.Errorf("DIV-7: Go NormalizeQuantifiers silently accepts Lambda.\n"+
-			"  Python crashes with 'assert False, type(t)' on Lambda input.\n"+
-			"  Go should either panic or refuse Lambda.")
+	// Go should panic to match.
+	panicked := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				panicked = true
+			}
+		}()
+		logicutil.NormalizeQuantifiers(lam)
+	}()
+
+	if !panicked {
+		t.Errorf("DIV-7: Go NormalizeQuantifiers did not panic on Lambda.\n"+
+			"  Python crashes with 'assert False, type(t)' on Lambda input.")
 	}
 
 	// Cross-check with Python

@@ -1,7 +1,7 @@
 // Additional logic utility functions.
 // Ports of functions from Python's ivy_logic_utils.py that are used by
 // multiple subsystems.
-package logicutil
+package ivyutils
 
 import (
 	"fmt"
@@ -1705,8 +1705,8 @@ func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 		return &logic.Exists{Variables: vars, Body: body}
 	}
 
-	// Fallback for other node types
-	return t
+	// Python logic_util.py:271: assert False, type(t)
+	panic(fmt.Sprintf("NormalizeQuantifiers: unexpected type %T", t))
 }
 
 // -----------------------------------------------------------------------

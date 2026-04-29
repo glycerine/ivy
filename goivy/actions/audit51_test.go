@@ -607,7 +607,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_Selected(t *testing.T) {
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 
 	ctx := testCtx()
-	ctx.CheckedAssert = fmt.Sprintf("%d", a.GetLineno().Line) // matches this assertion
+	ctx.CheckedAssert = fmt.Sprintf("%s:%d", a.GetLineno().Filename, a.GetLineno().Line) // matches this assertion
 
 	u := a.ActionUpdate(ctx)
 

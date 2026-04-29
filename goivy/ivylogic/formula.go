@@ -94,6 +94,20 @@ func (s *Some) Equal(n lg.Expr) bool {
 	return true
 }
 
+func (s *Some) BinderVars() []*lg.Variable {
+	vars := make([]*lg.Variable, 0, len(s.Params))
+	for _, p := range s.Params {
+		if v, ok := p.(*lg.Variable); ok {
+			vars = append(vars, v)
+		}
+	}
+	return vars
+}
+
+func (s *Some) BinderBody() lg.Expr {
+	return s.Fmla
+}
+
 // CloneBinder clones the Some with new variables and body.
 func (s *Some) CloneBinder(vs []lg.Expr, body lg.Expr) *Some {
 	result := &Some{Params: vs, Fmla: body}

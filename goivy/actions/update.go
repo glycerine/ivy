@@ -369,10 +369,12 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 		}
 	}
 
-	// Python: if checked_assert is set and doesn't match this lineno
-	// CheckedAssert is stored as fmt.Sprintf("%d", lineno.Line) — compare consistently.
+	// Python: if ca != self.lineno — compares full Location(file, line).
+	// CheckedAssert format: "file:line" matching Python's Location.
 	if ctx.CheckedAssert != "" {
-		if ctx.CheckedAssert != fmt.Sprintf("%d", a.GetLineno().Line) {
+		loc := a.GetLineno()
+		locStr := fmt.Sprintf("%s:%d", loc.Filename, loc.Line)
+		if ctx.CheckedAssert != locStr {
 			if unprovable {
 				return &Update{
 					Modified: []*lg.Const{},
@@ -1236,6 +1238,8 @@ func IntUpdate(action Action, ctx *UpdateContext) *Update {
 		// IntUpdate type=<inner>" trace and recursively calls IntUpdate
 		// on the inner action, matching Python fail_action.int_update.
 		return a.IntUpdate(ctx)
+	case *InstantiateAction:
+		return a.IntUpdate(ctx)
 	default:
 		// Generic fallback: null update
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
@@ -1686,21 +1690,34 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	}
 
 	// Build assert invariants
+	// Python ivy_actions.py:1070: asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
 	var asserts []Action
 	for _, inv := range invariants {
+		if _, isAssume := inv.(*AssumeAction); isAssume {
+			continue
+		}
 		asserts = append(asserts, NewAssertAction(inv))
 	}
 
 	// Build assume invariants (assert→assume conversion)
+	// Python ivy_actions.py:1069: assumes = [... for a in asserts if not isinstance(a, SubgoalAction)]
 	var assumes []Action
 	for _, inv := range invariants {
+		if _, isSG := inv.(*SubgoalAction); isSG {
+			continue
+		}
 		assumes = append(assumes, NewAssumeAction(inv))
 	}
 
 	// Build havocs for modified symbols
+	// Python ivy_actions.py:1083-1085: for h in havocs: h.lineno = self.lineno
 	var havocs []Action
 	for _, sym := range modset {
-		havocs = append(havocs, NewHavocAction(sym))
+		h := NewHavocAction(sym)
+		if a.HasLineno() {
+			h.SetLineno(a.GetLineno())
+		}
+		havocs = append(havocs, h)
 	}
 
 	// Handle ranking function if present
