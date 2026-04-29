@@ -24,7 +24,7 @@ After reading ~6000 lines of Go and ~3500 lines of Python across l2s and its sup
 - **Python** `ivy_actions.py:1437`: No early return — always runs rename+split logic
 - **Go** `actions/action.go:792-795`: `if len(a.ActualReturns) == 0 { return a }` — returns unmodified
 - **Impact:** If a CallAction somehow has 0 actual returns but still reaches `split_returns`, Python would process it (creating an empty LocalAction wrapper) while Go skips entirely. This changes the resulting action tree structure.
-- **Fix:** Remove the early return, or verify Python never reaches this path with 0 returns.
+- **Fix:** Remove the early return.
 
 ### D2. `SplitReturns` renaming scope
 - **Python** `ivy_actions.py:1440`: `new_returns = [x.rename(rn) for x in actual_returns]` — calls `.rename()` on every return expr (handles Apply, Const, Variable, anything with a rename method)
@@ -42,14 +42,14 @@ After reading ~6000 lines of Go and ~3500 lines of Python across l2s and its sup
 ### D4. `SymPlaceholders` return value for 0-arity symbols
 - **Python** `ivy_logic_utils.py:863-867`: Returns `[]` (empty list) for constants with empty domain
 - **Go** `module/clauses.go:374`: Returns `nil` for 0-arity symbols
-- **Impact:** In Go, `nil` and `[]` behave the same for `len()` and `range`, but differ for `== nil` checks and some slice operations. In `SharedStep3_CollectNamedBinders` full mode (line 233), `if len(vs) > 0` is used, so `nil` vs `[]` doesn't matter there. But if any downstream code does `vs == nil` to distinguish "no variables" from "empty variable list", behavior would diverge.
-- **Fix:** Return `make([]*lg.Variable, 0)` instead of `nil` for 0-arity symbols.
+- **Impact:** In Go, `nil` and `[]` behave the same for `len()` and `range`, but differ for `== nil` checks and some slice operations.
+- **Fix:** Go returning nil is idiomatic and avoids allocation. Instead, audit all callers to ensure they use `len(vs) > 0` rather than `vs == nil` or `vs != nil`. Fix any callers that use nil-checks.
 
 ### D5. `GoalPrems` return value for non-SchemaBody
 - **Python** `ivy_proof.py:644`: Returns `[]` (empty list) for non-schema goals
 - **Go** `proof/goal.go:173`: Returns `nil`
-- **Impact:** Similar to D4 — `nil` vs `[]` are interchangeable for most Go operations but could diverge in length-dependent conditional logic or when passed to functions that check for nil.
-- **Fix:** Return `[]ast.Node{}` instead of `nil`.
+- **Impact:** Similar to D4 — `nil` vs `[]` are interchangeable for most Go operations but could diverge if callers use nil-checks.
+- **Fix:** Go returning nil is idiomatic and avoids allocation. Audit callers to ensure they use `len() > 0` checks, not nil-checks.
 
 ### D6. `CopyFormalsTo` missing `EnvAction` exclusion
 - **Python** `ivy_actions.py:241`: `if not isinstance(res, EnvAction):` — skips copying formal params/returns to EnvAction destinations
@@ -63,11 +63,11 @@ After reading ~6000 lines of Go and ~3500 lines of Python across l2s and its sup
 - **Impact:** Go sets lineno on when axioms but Python doesn't. This is a Python omission that Go "fixed" — but since Python is the source of truth, Go technically diverges by adding lineno. This could affect error reporting location but not verification correctness.
 - **Status:** Go is arguably better here. Keep Go's behavior.
 
-### D8. `assume_when_axioms` — extra Cond type check in Go
+### D8. `assume_when_axioms` — Go silently skips malformed input
 - **Go** `check/l2s_shared.go:380-382`: `if !ok { continue }` — silently skips non-Cond bodies
-- **Python**: No type check — assumes `when.body` is always a Cond
-- **Impact:** If a when binder has a non-Cond body (which shouldn't happen in well-formed input), Go silently skips it while Python would crash. Not a semantic divergence for valid inputs but changes error behavior.
-- **Status:** Go is more defensive. Keep Go's behavior.
+- **Python**: No type check — would crash on malformed input, surfacing the bug to the user
+- **Impact:** Go hides bad user input. If a when binder has a non-Cond body, the user should be told about it, not left wondering why their axiom vanished.
+- **Fix:** Replace `continue` with `panic(fmt.Sprintf("assume_when_axioms: when binder %s has non-Cond body type %T", when.Name, when.Body))`. Apply to all three locations where this pattern appears (SharedStep6 when axioms, whenEventsFunc first loop, whenEventsFunc second loop).
 
 ---
 
@@ -81,22 +81,25 @@ After reading ~6000 lines of Go and ~3500 lines of Python across l2s and its sup
 ### D10. Sort comparison strategy in `BuildAddConstsToD`
 - **Python** `ivy_l2s.py:875`: `c.sort == s` — structural equality
 - **Go** `check/l2s_shared.go:881`: `sym.CSort.String() == s.String()` — string comparison
-- **Impact:** For `UninterpretedSort`, `.String()` returns the name, matching Python's `__eq__`. Equivalent in practice.
+- **Impact:** "Equivalent in practice" is a recipe for bugs. `.String()` is the pretty-printer (PrettyFmla) which drops annotations. Use proper structural comparison via NodeKey/Sexp/Canon, consistent with how D12 already correctly uses structural keys.
+- **Fix:** Use `lg.SortEqual(sym.CSort, s)` or compare via `sym.CSort.Sexp() == s.Sexp()` (NodeKey-based), not `.String()`.
 
 ### D11. `RemoveUnusedDefinitionsGoal` — caller extracts concFmlas
 - **Python**: Function internally extracts `conc.model.fmlas + [conc.fmla]` from TemporalModels
 - **Go**: Caller passes `concFmlas` as parameter
 - **Impact:** Same formulas are used; just different function boundary. Go's l2s.go:863-876 extracts the same formulas.
 
-### D12. Event dedup strategy in `instrStmt`
+### D12. Event dedup strategy in `instrStmt` — wrong map key type
 - **Python**: Uses Python `set()` (object hash/eq) for `event_props`, `event_whens`, `event_waits`
-- **Go**: Uses `map[string]*lg.NamedBinder` with `Sexp()` as key
-- **Impact:** Both deduplicate structurally-identical NamedBinders. `Sexp()` is the structural canonical form, equivalent to Python's `__hash__`/`__eq__` for NamedBinder (which compares name, variables, environ, body recursively). Functionally identical.
+- **Go**: Uses `map[string]*lg.NamedBinder` with `Sexp()` cast to string as key
+- **Impact:** The Sexp comparison is structurally correct, but the key type should be `map[lg.NodeKey]*lg.NamedBinder` not `map[string]*lg.NamedBinder`. `lg.NodeKey` is the project-standard type for structural keys (it IS `[]byte` under the hood, same as Sexp output). Using raw `string` is inconsistent and loses the semantic intent.
+- **Fix:** Change `eventProps`, `eventWhens`, `eventWaits` from `map[string]*lg.NamedBinder` to `map[lg.NodeKey]*lg.NamedBinder`. Use `prop.Sexp()` directly as key (already returns `lg.NodeKey`), removing the `string()` cast. File: `check/l2s_shared.go:654-656,698,701,704`
 
-### D13. `symprops`/`symwhens`/`symwaits` key type
-- **Python**: Const objects as defaultdict keys (hash by structure)
-- **Go**: String names as map keys
-- **Impact:** Since symbols are uniquely identified by name in Ivy's type system (sort is determined by name), these are equivalent. A symbol cannot exist with the same name but different sorts in a well-formed signature.
+### D13. `symprops`/`symwhens`/`symwaits` key type — wrong map key type
+- **Python**: Const objects as defaultdict keys (hash by structure — compares name + sort)
+- **Go**: String names as map keys (`map[string][]*lg.NamedBinder`)
+- **Impact:** Using bare string names assumes symbol names are unique in the signature, which is true today but fragile. Python's structural equality compares the full Const (name + sort). Go should use `map[lg.NodeKey]` with `Sexp()` keys to match Python's structural comparison, consistent with D12 and the rest of the codebase.
+- **Fix:** Change `symprops`, `symwhens`, `symwaits` from `map[string][]*lg.NamedBinder` to `map[lg.NodeKey][]*lg.NamedBinder`. Key by `lg.NodeKey(sym.Sexp())` instead of `c.Name`. Update all lookup sites (instrStmt return monitoring, dependency loop, defaultdict touching). File: `check/l2s_shared.go:416-460,624-690`
 
 ---
 
@@ -129,18 +132,24 @@ The following were verified to be correct ports:
 
 ## Recommended Investigation Order
 
-### Phase 1: Verify and fix D1-D2 (high severity)
-1. **D2** — Port full `.rename()` dispatch to `SplitReturns` so Apply returns (destructured assignments) are also renamed, not just Const returns. File: `actions/action.go:811-816`
-2. **D1** — Remove the early return in `SplitReturns` for 0-arity returns, matching Python's behavior of always wrapping in LocalAction. File: `actions/action.go:792-795`. Note: this path is likely unreachable from l2s (guarded by `len(callArgs) > 1`), so this is defensive.
+### Phase 1: Fix D1-D2 (high severity — SplitReturns)
+1. **D1** — Remove the early return in `SplitReturns`. File: `actions/action.go:792-795`
+2. **D2** — Port full `.rename()` dispatch to `SplitReturns` so Apply/Variable returns are also renamed, not just Const. File: `actions/action.go:811-816`
 
-### Phase 2: Fix D4-D6 (medium severity)
-4. **D4** — Change `SymPlaceholders` to return empty slice instead of nil. File: `module/clauses.go:374`
-5. **D5** — Change `GoalPrems` to return empty slice instead of nil. File: `proof/goal.go:173`
-6. **D6** — Add EnvAction guard to `CopyFormalsTo`. File: `actions/helpers.go:231`
+### Phase 2: Fix D8, D10, D12, D13 (structural correctness)
+3. **D8** — Replace `continue` with panic on non-Cond when binder body. Files: `check/l2s_shared.go:380-382`, `check/l2s_shared.go:540-542`, `check/l2s_shared.go:562-564`
+4. **D10** — Replace `sym.CSort.String() == s.String()` with proper structural sort comparison. File: `check/l2s_shared.go:881`
+5. **D12** — Change event dedup maps from `map[string]` to `map[lg.NodeKey]`. File: `check/l2s_shared.go:654-656`
+6. **D13** — Change symprops/symwhens/symwaits from `map[string]` to `map[lg.NodeKey]`. File: `check/l2s_shared.go:416-460,624-690`
 
-### Phase 3: Run tests
-7. Run `cd ~/ivy/goivy && make test` to verify no regressions
-8. Compare xtrace output for an l2s test case between Go and Python to verify canon alignment
+### Phase 3: Fix D4-D6 (caller audits and guards)
+7. **D4** — Audit callers of `SymPlaceholders` for nil-vs-empty checks; fix any that use `== nil` instead of `len() > 0`
+8. **D5** — Audit callers of `GoalPrems` for nil-vs-empty checks; fix any that use `== nil` instead of `len() > 0`
+9. **D6** — Add EnvAction guard to `CopyFormalsTo`. File: `actions/helpers.go:231`
+
+### Phase 4: Run tests
+10. Run `cd ~/ivy/goivy && make test` to verify no regressions
+11. Compare xtrace output for an l2s test case between Go and Python to verify canon alignment
 
 ---
 
@@ -159,7 +168,11 @@ For targeted l2s verification, pick an l2s test case from the test suite and com
 
 | File | Divergence | Change |
 |------|-----------|--------|
-| `actions/action.go` | D1, D2 | Fix SplitReturns: remove early return, port full .rename() dispatch for Apply returns |
-| `module/clauses.go` | D4 | Return empty slice from SymPlaceholders instead of nil |
-| `proof/goal.go` | D5 | Return empty slice from GoalPrems instead of nil |
+| `actions/action.go` | D1, D2 | Fix SplitReturns: remove early return, port full .rename() dispatch for Apply/Variable returns |
+| `check/l2s_shared.go` | D8 | Panic on non-Cond when binder body instead of silent `continue` |
+| `check/l2s_shared.go` | D10 | Use structural sort comparison (`SortEqual` or Sexp-based) instead of `.String()` |
+| `check/l2s_shared.go` | D12 | Change event dedup maps to `map[lg.NodeKey]*lg.NamedBinder` |
+| `check/l2s_shared.go` | D13 | Change symprops/symwhens/symwaits to `map[lg.NodeKey][]*lg.NamedBinder` |
+| callers of `SymPlaceholders` | D4 | Audit for `== nil` checks, fix to use `len() > 0` |
+| callers of `GoalPrems` | D5 | Audit for `== nil` checks, fix to use `len() > 0` |
 | `actions/helpers.go` | D6 | Add EnvAction guard to CopyFormalsTo |
