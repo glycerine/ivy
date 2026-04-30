@@ -142,7 +142,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		CheckUnprovable: mod.Cfg.OnlyCheckUnprovable,
 		CheckedAssert:   mod.Cfg.CheckLineno,
 	}
-	xtracer.Trace("mc.toaiger calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
+	xtracer.Trace("mc.ActionToTR calling GetUpdate type=%s", actions.ActionTypeName(composedAction))
 	upd := actions.GetUpdate(composedAction, ctx)
 
 	// Add post axioms: rename axioms for modified symbols
