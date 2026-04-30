@@ -27,15 +27,17 @@ type Qelim struct {
 	SortConstants  map[string][]*lg.Const  // sort -> constants for invariant
 	SortConstants2 map[string][]*lg.Const  // sort -> constants for transition
 	IuCfg          *iu.IvyUtilsConfig      // for IsMacro/ExpandMacro
+	FullQI         bool                    // Python: fullqi parameter (default false)
 }
 
 // NewQelim creates a new quantifier elimination context.
-func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const, iuCfg *iu.IvyUtilsConfig) *Qelim {
+func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const, iuCfg *iu.IvyUtilsConfig, fullQI bool) *Qelim {
 	return &Qelim{
 		Syms:           make(map[string]lg.Expr),
 		SortConstants:  sortConstants,
 		SortConstants2: sortConstants2,
 		IuCfg:          iuCfg,
+		FullQI:         fullQI,
 	}
 }
 
@@ -124,10 +126,6 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, s
 	constSets := make([][]*lg.Const, len(vars))
 	for i, v := range vars {
 		constSets[i] = q.GetConsts(v.VSort, sortConstants)
-		if len(constSets[i]) == 0 {
-			// No constants for this sort — can't fully eliminate
-			constSets[i] = []*lg.Const{lg.NewConst("_dummy_"+v.Name, v.VSort)}
-		}
 	}
 
 	// Generate all combinations (cartesian product)
@@ -179,7 +177,11 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, s
 // Python: ivy_mc.py:903-914
 func (q *Qelim) Apply(transFmlas, transDefs []lg.Expr, invariant lg.Expr, indhyps []lg.Expr) ([]lg.Expr, []lg.Expr, lg.Expr) {
 	// Apply to transition relation
-	constants := q.SortConstants2
+	// Python: constants = self.sort_constants2 if fullqi.get() else self.sort_constants
+	constants := q.SortConstants
+	if q.FullQI {
+		constants = q.SortConstants2
+	}
 	newDefs := make([]lg.Expr, len(transDefs))
 	for i, def := range transDefs {
 		newDefs[i] = q.QE(def, constants)

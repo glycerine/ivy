@@ -162,6 +162,9 @@ type Config struct {
 	MCVerbose bool `json:"-"`
 	// McIteCtr is the counter for ITE elimination fresh variables. (from mc.iteCtr)
 	McIteCtr int64 `json:"-"`
+	// FullQI controls full quantifier instantiation for transition QE.
+	// Python: fullqi = iu.BooleanParameter("fullqi", False) at ivy_mc.py:36
+	FullQI bool `json:"-"`
 	// OptionAbsInit controls whether the initial state is abstracted. (from art.OptionAbsInit)
 	OptionAbsInit bool `json:"-"`
 	// VMTVerbose enables verbose VMT output. (from vmt.Verbose)

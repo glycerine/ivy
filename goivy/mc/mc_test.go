@@ -1008,7 +1008,7 @@ func TestApplyMatch(t *testing.T) {
 // ============================================================
 
 func TestQelimFresh(t *testing.T) {
-	q := NewQelim(nil, nil, nil)
+	q := NewQelim(nil, nil, nil, false)
 	name := q.Fresh("expr1")
 	if name.Name != "__qe[0]" {
 		t.Errorf("first fresh should be __qe[0], got %s", name.Name)
@@ -1029,7 +1029,7 @@ func TestQelimGetConsts(t *testing.T) {
 		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
 		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
 	}
-	q := NewQelim(sc, nil, nil)
+	q := NewQelim(sc, nil, nil, false)
 	consts := q.GetConsts(intSort, sc)
 	if len(consts) != 3 {
 		t.Errorf("expected 3 constants for int, got %d", len(consts))
@@ -1065,7 +1065,7 @@ func TestDefToConstraintIndividualSort(t *testing.T) {
 func TestQEEqTautologyElimination(t *testing.T) {
 	x := lg.NewConst("x", lg.Boolean)
 	eq := &lg.Eq{T1: x, T2: x}
-	q := NewQelim(nil, nil, nil)
+	q := NewQelim(nil, nil, nil, false)
 	result := q.QE(eq, nil)
 	a, ok := result.(*lg.And)
 	if !ok || len(a.Terms) != 0 {
@@ -1082,7 +1082,7 @@ func TestQEEqCanonicalOrder(t *testing.T) {
 	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{arg}}
 	gApp := &lg.Apply{Func: g, Terms: []lg.Expr{arg}}
 	eq := &lg.Eq{T1: gApp, T2: fApp}
-	q := NewQelim(nil, nil, nil)
+	q := NewQelim(nil, nil, nil, false)
 	result := q.QE(eq, nil)
 	eqR, ok := result.(*lg.Eq)
 	if !ok {
@@ -1123,7 +1123,7 @@ func TestQENestedEqNormalization(t *testing.T) {
 		&lg.Eq{T1: x, T2: x},
 		&lg.Eq{T1: gApp, T2: fApp},
 	}}
-	q := NewQelim(nil, nil, nil)
+	q := NewQelim(nil, nil, nil, false)
 	result := q.QE(expr, nil)
 	a, ok := result.(*lg.And)
 	if !ok {

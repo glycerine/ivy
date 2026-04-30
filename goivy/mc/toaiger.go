@@ -292,7 +292,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	sortConstants := MineConstants(mod, trans, mineTarget)
 	sortConstants2 := MineConstants2(mod, trans, invariant)
 
-	qelim := NewQelim(sortConstants, sortConstants2, mod.Cfg.IuCfg)
+	qelim := NewQelim(sortConstants, sortConstants2, mod.Cfg.IuCfg, mod.Cfg.FullQI)
 	qeFmlas, qeDefs, newInvariant := qelim.Apply(trans.Fmlas, defsToNodes(trans.Defs), invariant, indHyps)
 	invariant = newInvariant
 	trans = module.NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
