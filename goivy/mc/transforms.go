@@ -2,6 +2,7 @@ package mc
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -250,141 +251,266 @@ func defToConstraint(def *il.Definition) lg.Expr {
 	return &lg.Eq{T1: def.Lhs, T2: def.Rhs}
 }
 
+// schemaMatch implements Python's Match class (ivy_mc.py:551-576).
+// It supports backtracking unification of sorts and symbols.
+type schemaMatch struct {
+	mp    map[string]lg.Expr
+	stack [][]string
+}
+
+func newSchemaMatch() *schemaMatch {
+	return &schemaMatch{
+		mp:    make(map[string]lg.Expr),
+		stack: [][]string{{}},
+	}
+}
+
+func (m *schemaMatch) add(key string, val lg.Expr) {
+	m.mp[key] = val
+	m.stack[len(m.stack)-1] = append(m.stack[len(m.stack)-1], key)
+}
+
+func (m *schemaMatch) push() {
+	m.stack = append(m.stack, []string{})
+}
+
+func (m *schemaMatch) pop() {
+	top := m.stack[len(m.stack)-1]
+	m.stack = m.stack[:len(m.stack)-1]
+	for _, k := range top {
+		delete(m.mp, k)
+	}
+}
+
+// unify tries to unify sort x with sort y.
+// Python: if x not in self.map: self.add(x,y); return True
+//         return self.map[x] == y
+func (m *schemaMatch) unify(x, y lg.Sort) bool {
+	key := sortName(x)
+	if _, has := m.mp[key]; !has {
+		if strings.HasSuffix(key, "_finite") && !isFiniteSort(y) {
+			return false
+		}
+		m.add(key, y)
+		return true
+	}
+	return sortName(m.mp[key].(lg.Sort)) == sortName(y)
+}
+
+func (m *schemaMatch) unifyLists(xl, yl []lg.Sort) bool {
+	if len(xl) != len(yl) {
+		return false
+	}
+	for i := range xl {
+		if !m.unify(xl[i], yl[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func sortName(s lg.Sort) string {
+	if s == nil {
+		return ""
+	}
+	return s.String()
+}
+
 // ExpandSchemata expands axiom schemata into axioms by matching schema
 // premises against the sort constants and functions.
 //
-// Python: ivy_mc.py:637-655
-func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
+// Python: ivy_mc.py:638-656
+func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]*lg.Const) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
 		return result
 	}
 
-	// For each schema, try to match its premises
-	for name, lf := range mod.Schemata.All() {
-		// Skip recursive/inductive schemata
-		if len(name) >= 4 && (name[:4] == "rec[" || name[:4] == "lep[" || name[:4] == "ind[") {
+	match := newSchemaMatch()
+	// Python: for s in list(mod.sig.sorts.values()):
+	//             if not il.is_function_sort(s): match.add(s, s)
+	for _, s := range mod.Sig.Sorts.All() {
+		if !il.IsFunctionSort(s) {
+			match.add(sortName(s), s)
+		}
+	}
+
+	for name, lfNode := range mod.Schemata.All() {
+		if strings.HasPrefix(name, "rec[") || strings.HasPrefix(name, "lep[") || strings.HasPrefix(name, "ind[") {
 			continue
 		}
 
-		// The schema is stored as interface{} — try to extract it
-		schema, ok := extractSchemaFormula(lf)
-		if !ok || schema == nil {
+		lf, ok := lfNode.(*ast.LabeledFormula)
+		if !ok {
 			continue
 		}
 
-		children := schema.Children()
-		if len(children) < 2 {
+		// Python: schema = lf.formula; conc = schema.args[-1]; prems = list(schema.args[:-1])
+		sb, ok := lf.Formula.(*ast.SchemaBody)
+		if !ok {
+			continue
+		}
+		prems := sb.Prems()
+		conc := sb.Conc()
+		if conc == nil {
 			continue
 		}
 
-		conc := children[len(children)-1]
-		prems := children[:len(children)-1]
-
-		// Collect bound sorts from premises
 		boundSorts := make(map[string]bool)
-		for _, prem := range prems {
-			if us, ok := prem.(*lg.UninterpretedSort); ok {
-				boundSorts[us.Name] = true
+		for _, p := range prems {
+			if us, ok := p.(*lg.UninterpretedSort); ok {
+				boundSorts[sortName(us)] = true
 			}
 		}
 
-		// For each matching of premises, instantiate conclusion
-		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
-			inst := lu.SubstituteByName(conc, mp)
-			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(nil, inst))
+		matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, func(mp map[string]lg.Expr) {
+			inst := applyMatch(mp, conc)
+			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(
+				mod.Cfg.AstCfg.NewAtom(name), inst))
 		})
 	}
 
 	return result
 }
 
-// extractSchemaFormula attempts to extract a lg.Expr formula from a schema interface{}.
-func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
-	switch t := lf.(type) {
-	case *ast.LabeledFormula:
-		if t.Formula == nil {
-			return nil, false
-		}
-		expr, ok := t.Formula.(lg.Expr)
-		return expr, ok
-	case lg.Expr:
-		return t, true
-	}
-	return nil, false
-}
-
-// matchSchemaPremsNode tries to match schema premises against available constants/functions.
-func matchSchemaPremsNode(prems []lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
-	mp := make(map[string]lg.Expr)
-	matchSchemaPremsRec(prems, 0, sortConstants, funs, boundSorts, mp, callback)
-}
-
-func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*lg.Const, funs map[string]bool, boundSorts map[string]bool, mp map[string]lg.Expr, callback func(map[string]lg.Expr)) {
-	if idx >= len(prems) {
-		// All premises matched, call back with copy of map
-		result := make(map[string]lg.Expr, len(mp))
-		for k, v := range mp {
+// matchSchemaPrems is the faithful port of Python's match_schema_prems
+// (ivy_mc.py:582-617). It uses a stack-based premise list (pop/append)
+// matching Python's generator pattern.
+func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, funs map[string]*lg.Const, match *schemaMatch, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
+	if len(prems) == 0 {
+		result := make(map[string]lg.Expr, len(match.mp))
+		for k, v := range match.mp {
 			result[k] = v
 		}
 		callback(result)
 		return
 	}
 
-	prem := prems[idx]
+	// Python: prem = prems.pop()
+	prem := prems[len(prems)-1]
+	prems = prems[:len(prems)-1]
 
-	// If premise is an uninterpreted sort, try matching to known sorts
-	if us, ok := prem.(*lg.UninterpretedSort); ok {
-		for sortName := range sortConstants {
-			old, hadOld := mp[us.Name]
-			mp[us.Name] = lg.NewConst(sortName, nil)
-			matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
-			if hadOld {
-				mp[us.Name] = old
-			} else {
-				delete(mp, us.Name)
-			}
-		}
-		return
-	}
-
-	// For other premises (variables), try matching to constants
-	if v, ok := prem.(*lg.Variable); ok {
-		sortKey := sortKeyStr(v.VSort)
-		consts := sortConstants[sortKey]
-		for _, c := range consts {
-			old, hadOld := mp[v.Name]
-			mp[v.Name] = c
-			matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
-			if hadOld {
-				mp[v.Name] = old
-			} else {
-				delete(mp, v.Name)
-			}
-		}
-		return
-	}
-
-	// For function-typed premises, try matching to function symbols
-	if c, ok := prem.(*lg.Const); ok {
-		if il.IsFunctionSort(c.CSort) {
-			for funName := range funs {
-				old, hadOld := mp[c.Name]
-				mp[c.Name] = lg.NewConst(funName, c.CSort)
-				matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
-				if hadOld {
-					mp[c.Name] = old
-				} else {
-					delete(mp, c.Name)
-				}
-			}
+	if cd, ok := prem.(*ast.ConstantDecl); ok {
+		args := cd.Args()
+		if len(args) == 0 {
+			prems = append(prems, prem)
 			return
 		}
+		sym, ok := args[0].(*lg.Const)
+		if !ok {
+			prems = append(prems, prem)
+			return
+		}
+
+		if il.IsFunctionSort(sym.CSort) {
+			// Python: sorts = sym.sort.dom + (sym.sort.rng,)
+			fs := sym.CSort.(*lg.FunctionSort)
+			sorts := append(fs.Domain(), fs.Range())
+
+			for _, f := range funs {
+				if !il.IsFunctionSort(f.CSort) {
+					continue
+				}
+				ffs := f.CSort.(*lg.FunctionSort)
+				fsorts := append(ffs.Domain(), ffs.Range())
+
+				match.push()
+				for _, s := range sorts {
+					key := sortName(s)
+					if !boundSorts[key] {
+						if _, has := match.mp[key]; !has {
+							match.add(key, s)
+						}
+					}
+				}
+				if match.unifyLists(sorts, fsorts) {
+					match.add(sym.Name, f)
+					matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, callback)
+				}
+				match.pop()
+			}
+		} else {
+			// Non-function constant premise
+			symSortKey := sortName(sym.CSort)
+			var cands []*lg.Const
+			if _, mapped := match.mp[symSortKey]; mapped || !boundSorts[symSortKey] {
+				lookupKey := symSortKey
+				if mapped, ok := match.mp[symSortKey]; ok {
+					lookupKey = sortName(mapped.(lg.Sort))
+				}
+				cands = sortConstants[lookupKey]
+			} else {
+				for _, v := range sortConstants {
+					cands = append(cands, v...)
+				}
+			}
+			for _, cand := range cands {
+				match.push()
+				if match.unify(sym.CSort, cand.CSort) {
+					match.add(sym.Name, cand)
+					matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, callback)
+				}
+				match.pop()
+			}
+		}
+	} else if _, ok := prem.(*lg.UninterpretedSort); ok {
+		// Python: just recurse without consuming
+		matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, callback)
 	}
 
-	// Default: skip premise
-	matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
+	// Python: prems.append(prem) — restore for backtracking
+	prems = append(prems, prem)
+}
+
+// applyMatch applies a match substitution to a formula, performing beta
+// reduction for matched function symbols.
+// Python: ivy_mc.py:619-636
+func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
+	expr, ok := fmla.(lg.Expr)
+	if !ok {
+		return nil
+	}
+
+	children := expr.Children()
+	args := make([]lg.Expr, len(children))
+	for i, c := range children {
+		args[i] = applyMatch(mp, c)
+	}
+
+	// Python: if il.is_app(fmla) and fmla.rep in match: func = match[fmla.rep]; return func(*args)
+	if app, ok := expr.(*lg.Apply); ok {
+		if f, ok := app.Func.(*lg.Const); ok {
+			if repl, has := mp[f.Name]; has {
+				if rc, ok := repl.(*lg.Const); ok {
+					return &lg.Apply{Func: rc, Terms: args}
+				}
+			}
+		}
+		return &lg.Apply{Func: app.Func, Terms: args}
+	}
+
+	// Python: elif il.is_variable(fmla): return Variable(fmla.name, match.get(fmla.sort, fmla.sort))
+	if v, ok := expr.(*lg.Variable); ok {
+		newSort := v.VSort
+		if mapped, has := mp[sortName(v.VSort)]; has {
+			if ms, ok := mapped.(lg.Sort); ok {
+				newSort = ms
+			}
+		}
+		return &lg.Variable{Name: v.Name, VSort: newSort}
+	}
+
+	// Default: clone with recursed args
+	astArgs := make([]ast.Node, len(args))
+	for i, a := range args {
+		astArgs[i] = a
+	}
+	result := expr.Clone(astArgs)
+	if re, ok := result.(lg.Expr); ok {
+		return re
+	}
+	return expr
 }
 
 // InstantiateAxioms performs pattern-based eager axiom instantiation.
@@ -393,7 +519,7 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]*lg.Const) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 

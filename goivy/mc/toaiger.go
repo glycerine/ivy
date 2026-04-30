@@ -221,10 +221,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, sym := range module.UsedSymbolsAST(invariant) {
 		allSyms[lg.ExprName(sym)] = sym
 	}
-	funs := make(map[string]bool)
+	funs := make(map[string]*lg.Const)
 	for name, sym := range allSyms {
 		if il.IsFunctionSort(sym.NodeSort()) {
-			funs[name] = true
+			if c, ok := sym.(*lg.Const); ok {
+				funs[name] = c
+			}
 		}
 	}
 
