@@ -200,8 +200,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             defn_deps[sym].append(fml.args[0].rep)
 
     if __debug__:
-        for _k in sorted(defn_deps.keys(), key=str):
-            if __debug__: xtracer.trace("l2s.BuildDefnDeps result dep[%s] -> [%s]" % (str(_k), ','.join(str(v) for v in defn_deps[_k])))
+        for _k in sorted(defn_deps.keys(), key=lambda x: x.canon() if hasattr(x,'canon') else str(x)):
+            if __debug__: xtracer.trace("l2s.BuildDefnDeps result dep[%s] -> [%s]" % (_k.canon() if hasattr(_k,'canon') else str(_k), ','.join(v.canon() if hasattr(v,'canon') else str(v) for v in defn_deps[_k])))
 
     def dependencies(syms):
         return iu.reachable(syms,lambda x: defn_deps.get(x) or [])
@@ -1326,8 +1326,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         # Notice we have to consider defined functions that depend on the modified symbols
                     
         _all_deps = list(dependencies(stmt.modifies()))
-        _mods = sorted(str(s) for s in stmt.modifies())
-        _deps = sorted(str(s) for s in _all_deps)
+        _mods = sorted(s.canon() if hasattr(s,'canon') else str(s) for s in stmt.modifies())
+        _deps = sorted(s.canon() if hasattr(s,'canon') else str(s) for s in _all_deps)
         if __debug__: xtracer.trace("l2s.SharedStep7 instrStmt mods=[%s] deps=[%s]" % (','.join(_mods), ','.join(_deps)))
         for sym in _all_deps:
             for prop in symprops[sym]:
