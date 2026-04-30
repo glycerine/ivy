@@ -826,8 +826,8 @@ def check_with_parameters(mod,isolate_name):
         raise iu.IvyError(None,"undefined isolate: {}".format(isolate_name))
     isolate = mod.isolates[isolate_name]
 
-    verified = set(a.relname for a in isolate.verified())
-    present = set(a.relname for a in isolate.present())
+    verified = dict.fromkeys(a.relname for a in isolate.verified())
+    present = dict.fromkeys(a.relname for a in isolate.present())
     present.update(verified)
 
     if iu.version_le(iu.get_string_version(),"1.6"):
@@ -854,8 +854,8 @@ def check_with_parameters(mod,isolate_name):
 
 
 def get_isolate_info(mod,isolate,kind,extra_with=[]):
-    verified = set(a.relname for a in (isolate.verified()+tuple(extra_with)))
-    present = set(a.relname for a in isolate.present())
+    verified = dict.fromkeys(a.relname for a in (isolate.verified()+tuple(extra_with)))
+    present = dict.fromkeys(a.relname for a in isolate.present())
     present.update(verified)
 
 
@@ -1801,7 +1801,7 @@ def create_isolate(iso,mod = None,**kwargs):
         if create_imports.get():
             set_up_implementation_map(mod)
             newimps = []
-            outcalls = set()
+            outcalls = dict()
             for imp in mod.imports:
                 if imp.args[1].rep == '':
                     impname = imp.args[0].rep
@@ -1810,7 +1810,7 @@ def create_isolate(iso,mod = None,**kwargs):
                     action = mod.actions[impname]
                     if not(type(action) == ia.Sequence and not action.args):
                         raise iu.IvyError(imp,"cannot import implemented action: {}".format(impname))
-                    outcalls.add(impname)
+                    outcalls[impname] = None
                 else:
                     newimps.append(imp)
 
@@ -1819,14 +1819,14 @@ def create_isolate(iso,mod = None,**kwargs):
                 verified,present = get_isolate_info(mod,isolate,'impl')
                 save_privates = mod.privates
                 set_privates(mod,isolate)
-                verified_actions = set(a for a in mod.actions if vstartswith_eq_some(a,verified,mod))
-                present_actions = set(a for a in mod.actions if startswith_eq_some(a,present,mod))
+                verified_actions = dict.fromkeys(a for a in mod.actions if vstartswith_eq_some(a,verified,mod))
+                present_actions = dict.fromkeys(a for a in mod.actions if startswith_eq_some(a,present,mod))
                 present_actions.update(verified_actions)
                 mod.privates = save_privates
                 for actname in present_actions:
                     for called in im.module.actions[actname].iter_calls():
                         if called not in present_actions:
-                            outcalls.add(called)
+                            outcalls[called] = None
             for name in outcalls:
                 impname = name
                 extname = 'imp__' + impname
@@ -2042,8 +2042,8 @@ def check_isolate_completeness(mod = None):
         verified,present = get_isolate_info(mod,isolate,'impl')
         save_privates = mod.privates
         set_privates(mod,isolate)
-        verified_actions = set(a for a in mod.actions if vstartswith_eq_some(a,verified,mod))
-        present_actions = set(a for a in mod.actions if startswith_eq_some(a,present,mod))
+        verified_actions = dict.fromkeys(a for a in mod.actions if vstartswith_eq_some(a,verified,mod))
+        present_actions = dict.fromkeys(a for a in mod.actions if startswith_eq_some(a,present,mod))
         mod.privates = save_privates
 
         for a in verified_actions:

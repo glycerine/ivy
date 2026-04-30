@@ -1918,7 +1918,7 @@ def tarjan_arcs(arcs,notriv=True):
 def get_symbol_dependencies(mp,res,t):
     for s in lu.used_symbols_ast(t):
         if s not in res:
-            res.add(s)
+            res[s] = None
             if s in mp:
                 get_symbol_dependencies(mp,res,mp[s])
 
@@ -1956,7 +1956,7 @@ def check_definitions(mod):
 
     # get the definitions that have no dependence on proofs
 
-    stale = set()
+    stale = dict()
     props = mod.labeled_props
     mod.labeled_props = []
     with_proofs = set()
@@ -1968,7 +1968,7 @@ def check_definitions(mod):
                 if not any(s in stale for s in lu.used_symbols_ast(prop.formula)):
                     mod.definitions.append(prop)
                     continue
-            stale.add(prop.formula.defines())
+            stale[prop.formula.defines()] = None
         mod.labeled_props.append(prop)
     # print "definitions:"
     # for prop in mod.definitions:
@@ -2020,7 +2020,7 @@ def check_definitions(mod):
         if not opt_mutax.get():
             for lf in mod.labeled_axioms:
                 if not lf.temporal:
-                    deps = set()
+                    deps = dict()
                     get_symbol_dependencies(mp,deps,lf.formula)
                     for s in deps:
                         if s in side_effects:
@@ -2419,11 +2419,11 @@ def create_conj_actions(mod):
         while lbl != 'this' and lbl not in objects:
             lbl,_ = iu.parent_child_name(lbl)
         if lbl == 'this':
-            actions = set([exp.exported() for exp in mod.exports])
+            actions = dict.fromkeys(exp.exported() for exp in mod.exports)
         else:
-            actions = set()
+            actions = dict()
             for isol in objects[lbl]:
-                actions.update(myexports[isol.name()])
+                actions.update(dict.fromkeys(myexports[isol.name()]))
         mod.conj_actions[conj.label.rep] = actions
     action_isos = defaultdict(set)
 

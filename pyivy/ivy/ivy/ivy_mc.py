@@ -1286,7 +1286,7 @@ def to_aiger(mod,ext_act,method="mc"):
     # step 5: eliminate all non-propositional atoms by replacing with fresh booleans
     # An atom with next-state symbols is converted to a next-state symbol if possible
 
-    stvarset = set(stvars)
+    stvarset = dict.fromkeys(stvars)
     prop_abs = dict()  # map from atoms to proposition variables
     global prop_abs_ctr  # sigh -- python lameness
     prop_abs_ctr = 0   # counter for fresh symbols

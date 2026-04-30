@@ -1331,7 +1331,7 @@ def or_clauses(*args):
     elif len(args) == 1:
         res,vs = args[0],[And()]
     else:
-        used = set(chain(*[arg.symbols() for arg in args]))
+        used = dict.fromkeys(chain(*[arg.symbols() for arg in args]))
         rn = UniqueRenamer('__ts0',used)
         res,vs,args = or_clauses_int(rn,args)
     fixed_vs = []
@@ -1357,8 +1357,8 @@ def ite_clauses(cond,args):
         args[0] = Clauses(args[0].fmlas,args[1].defs,args[0].annot) 
     elif args[1].is_false():
         args[1] = Clauses(args[1].fmlas,args[0].defs,args[1].annot) 
-    used = set(chain(*[arg.symbols() for arg in args]))
-    used.update(symbols_ilu_ast(cond))
+    used = dict.fromkeys(chain(*[arg.symbols() for arg in args]))
+    used.update(dict.fromkeys(symbols_ilu_ast(cond)))
     rn = UniqueRenamer('__ts0',used)
     return ite_clauses_int(rn,cond,args)
 
@@ -1389,7 +1389,7 @@ def elim_dead_definitions(rn,args):
     """ If a symbol defined in one arg occurs free in another,
     then eliminate the definition by converting it to clauses """
     defd = dict.fromkeys(d.defines() for a in args for d in a.defs)
-    occurs = [set(a.symbols()) for a in args]
+    occurs = [dict.fromkeys(a.symbols()) for a in args]
     captured = [sym for sym in defd if any (sym not in a.defidx for a in args)]
     dead = [sym for sym in captured if not sym.is_skolem()]
     to_rename = [sym for sym in captured if sym.is_skolem()]

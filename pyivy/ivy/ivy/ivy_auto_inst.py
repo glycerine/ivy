@@ -211,10 +211,10 @@ def instantiate_axioms(mod,fmlas,triggers):
         logfile = open(logfile_name,'w')
 
     sort_constants = defaultdict(list)
-    syms = set()
+    syms = dict()
     for fmla in fmlas:
         syms.update(ilu.used_symbols_ast(fmla))
-    funs = set(sym for sym in syms if  il.is_function_sort(sym.sort))
+    funs = dict.fromkeys(sym for sym in syms if il.is_function_sort(sym.sort))
     for c in syms:
         if not il.is_function_sort(c.sort):
             sort_constants[c.sort].append(c)
