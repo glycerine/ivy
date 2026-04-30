@@ -9,7 +9,11 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/goccy/go-yaml"
 )
+
+var _ = yaml.NewDecoder
 
 // Config holds per-session ACL state (ignore/assume lists).
 type Config struct {

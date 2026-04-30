@@ -14,6 +14,7 @@ require (
 	github.com/cristalhq/base64 v0.1.2 // indirect
 	github.com/glycerine/blake3 v1.5.2 // indirect
 	github.com/glycerine/one_tree_rwmut v1.0.0 // indirect
+	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/ysmood/fetchup v0.2.3 // indirect
 	github.com/ysmood/goob v0.4.0 // indirect
