@@ -1187,10 +1187,10 @@ func cloneProofWithTacticLets(proofNode ast.Node) ast.Node {
 // plus all ivy_tactics.py proof tactics (vcgen, skolemize, skolemizenp, tempind, tempcase, sorry).
 func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
 	proofCfg.RegisterTactic("mc", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
-		return MCTactic(pc, goals, p, mod)
+		return MCTactic(pc, goals, p, pc.GetModule())
 	})
 	proofCfg.RegisterTactic("vmt", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
-		return VMTTactic(pc, goals, p, mod)
+		return VMTTactic(pc, goals, p, pc.GetModule())
 	})
 	// Register all ivy_tactics.py proof tactics.
 	tactics.RegisterProofTactics(proofCfg)
