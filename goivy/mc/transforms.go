@@ -313,6 +313,26 @@ func (m *schemaMatch) unifyLists(xl, yl []lg.Sort) bool {
 	return true
 }
 
+// unwrapSort extracts an UninterpretedSort from a node, handling
+// CompiledNode wrapping that occurs after schema compilation.
+func unwrapSort(n ast.Node) (*lg.UninterpretedSort, bool) {
+	if us, ok := n.(*lg.UninterpretedSort); ok {
+		return us, true
+	}
+	if cn, ok := n.(*ast.CompiledNode); ok {
+		if us, ok2 := cn.Node.(*lg.UninterpretedSort); ok2 {
+			return us, true
+		}
+		if s, ok2 := cn.Node.(lg.Sort); ok2 {
+			if us, ok3 := s.(*lg.UninterpretedSort); ok3 {
+				return us, true
+			}
+		}
+		xtracer.Trace("mc.unwrapSort CompiledNode.Node type=%T", cn.Node)
+	}
+	return nil, false
+}
+
 func sortName(s lg.Sort) string {
 	if s == nil {
 		return ""
@@ -328,8 +348,10 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
+		xtracer.Trace("mc.ExpandSchemata nSchemata=0 (nil) nSortConstants=%d nFuns=%d", len(sortConstants), funs.Len())
 		return result
 	}
+	xtracer.Trace("mc.ExpandSchemata nSchemata=%d nSorts=%d nSortConstants=%d nFuns=%d", mod.Schemata.Len(), mod.Sig.Sorts.Len(), len(sortConstants), funs.Len())
 
 	match := newSchemaMatch()
 	// Python: for s in list(mod.sig.sorts.values()):
@@ -341,18 +363,21 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 	}
 
 	for name, lfNode := range mod.Schemata.All() {
+		xtracer.Trace("mc.ExpandSchemata entry name=%s", name)
 		if strings.HasPrefix(name, "rec[") || strings.HasPrefix(name, "lep[") || strings.HasPrefix(name, "ind[") {
 			continue
 		}
 
 		lf, ok := lfNode.(*ast.LabeledFormula)
 		if !ok {
+			xtracer.Trace("mc.ExpandSchemata skip name=%s reason=notLF type=%T", name, lfNode)
 			continue
 		}
 
 		// Python: schema = lf.formula; conc = schema.args[-1]; prems = list(schema.args[:-1])
 		sb, ok := lf.Formula.(*ast.SchemaBody)
 		if !ok {
+			xtracer.Trace("mc.ExpandSchemata skip name=%s reason=notSchemaBody formulaType=%T", name, lf.Formula)
 			continue
 		}
 		prems := sb.Prems()
@@ -360,10 +385,11 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 		if conc == nil {
 			continue
 		}
+		xtracer.Trace("mc.ExpandSchemata schema name=%s nPrems=%d", name, len(prems))
 
 		boundSorts := make(map[string]bool)
 		for _, p := range prems {
-			if us, ok := p.(*lg.UninterpretedSort); ok {
+			if us, ok := unwrapSort(p); ok {
 				boundSorts[sortName(us)] = true
 			}
 		}
@@ -375,6 +401,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 		})
 	}
 
+	xtracer.Trace("mc.ExpandSchemata result nExpanded=%d", len(result))
 	return result
 }
 
@@ -394,6 +421,13 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 	// Python: prem = prems.pop()
 	prem := prems[len(prems)-1]
 	prems = prems[:len(prems)-1]
+	premForType := prem
+	if cn, ok := prem.(*ast.CompiledNode); ok && cn.Node != nil {
+		if n, ok2 := cn.Node.(ast.Node); ok2 {
+			premForType = n
+		}
+	}
+	xtracer.Trace("mc.matchSchemaPrems premType=%s nPremsLeft=%d", iu.ShortTypeName(premForType), len(prems))
 
 	if cd, ok := prem.(*ast.ConstantDecl); ok {
 		args := cd.Args()
@@ -401,11 +435,21 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 			prems = append(prems, prem)
 			return
 		}
-		sym, ok := args[0].(*lg.Const)
-		if !ok {
+		var sym *lg.Const
+		switch a := args[0].(type) {
+		case *lg.Const:
+			sym = a
+		case *ast.CompiledNode:
+			if c, ok2 := a.Node.(*lg.Const); ok2 {
+				sym = c
+			}
+		}
+		if sym == nil {
+			xtracer.Trace("mc.matchSchemaPrems args0 type=%T", args[0])
 			prems = append(prems, prem)
 			return
 		}
+		xtracer.Trace("mc.matchSchemaPrems sym=%s isFuncSort=%v", sym.Name, il.IsFunctionSort(sym.CSort))
 
 		if il.IsFunctionSort(sym.CSort) {
 			// Python: sorts = sym.sort.dom + (sym.sort.rng,)
@@ -437,13 +481,16 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 		} else {
 			// Non-function constant premise
 			symSortKey := sortName(sym.CSort)
+			_, inMap := match.mp[symSortKey]
+			inBound := boundSorts[symSortKey]
 			var cands []*lg.Const
-			if _, mapped := match.mp[symSortKey]; mapped || !boundSorts[symSortKey] {
+			if inMap || !inBound {
 				lookupKey := symSortKey
 				if mapped, ok := match.mp[symSortKey]; ok {
 					lookupKey = sortName(mapped.(lg.Sort))
 				}
 				cands = sortConstants[lookupKey]
+				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d", symSortKey, inMap, inBound, len(cands))
 			} else {
 				scKeys := make([]string, 0, len(sortConstants))
 				for k := range sortConstants {
@@ -453,6 +500,7 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 				for _, k := range scKeys {
 					cands = append(cands, sortConstants[k]...)
 				}
+				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d (allSorts)", symSortKey, inMap, inBound, len(cands))
 			}
 			for _, cand := range cands {
 				match.push()
@@ -463,7 +511,7 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 				match.pop()
 			}
 		}
-	} else if _, ok := prem.(*lg.UninterpretedSort); ok {
+	} else if _, ok := unwrapSort(prem); ok {
 		// Python: just recurse without consuming
 		matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, callback)
 	}

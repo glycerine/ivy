@@ -592,8 +592,10 @@ def match_schema_prems(prems,sort_constants,funs,match,bound_sorts):
         yield match.map.copy()
     else:
         prem = prems.pop()
+        if __debug__: xtracer.trace("mc.matchSchemaPrems premType=%s nPremsLeft=%d" % (type(prem).__name__, len(prems)))
         if isinstance(prem,ivy_ast.ConstantDecl):
             sym = prem.args[0]
+            if __debug__: xtracer.trace("mc.matchSchemaPrems sym=%s isFuncSort=%s" % (sym.name, il.is_function_sort(sym.sort)))
             if il.is_function_sort(sym.sort):
                 sorts = sym.sort.dom + (sym.sort.rng,)
                 for f in funs:
@@ -610,8 +612,10 @@ def match_schema_prems(prems,sort_constants,funs,match,bound_sorts):
             else:
                 if sym.sort in match.map or sym.sort not in bound_sorts:
                     cands = sort_constants[match.map.get(sym.sort,sym.sort)]
+                    if __debug__: xtracer.trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%s isBound=%s nCands=%d" % (sym.sort, sym.sort in match.map, sym.sort in bound_sorts, len(cands)))
                 else:
                     cands = [s for v in list(sort_constants.values()) for s in v]
+                    if __debug__: xtracer.trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%s isBound=%s nCands=%d (allSorts)" % (sym.sort, sym.sort in match.map, sym.sort in bound_sorts, len(cands)))
                 for cand in cands:
                     match.push()
                     if match.unify(sym.sort,cand.sort):
@@ -644,23 +648,27 @@ def apply_match(match,fmla):
     return fmla.clone(args)
 
 def expand_schemata(mod,sort_constants,funs):
+    if __debug__: xtracer.trace("mc.ExpandSchemata nSchemata=%d nSorts=%d nSortConstants=%d nFuns=%d" % (len(mod.schemata), len(list(mod.sig.sorts.values())), len(sort_constants), len(funs)))
     match = Match()
     res = []
     for s in list(mod.sig.sorts.values()):
         if not il.is_function_sort(s):
             match.add(s,s)
     for name,lf in mod.schemata.items():
+        if __debug__: xtracer.trace("mc.ExpandSchemata entry name=%s" % name)
         schema = lf.formula
         if any(name.startswith(pref) for pref in ['rec[','lep[','ind[']):
             continue
         conc = schema.args[-1]
         prems = list(schema.args[:-1])
+        if __debug__: xtracer.trace("mc.ExpandSchemata schema name=%s nPrems=%d" % (name, len(prems)))
         bound_sorts = [s for s in prems if isinstance(s,il.UninterpretedSort)]
         for m in match_schema_prems(prems,sort_constants,funs,match,bound_sorts):
             # print ('m: {}'.format(str_map(m)))
             # print ('conc: {}'.format(conc))
             inst = apply_match(m,conc)
             res.append(ivy_ast.LabeledFormula(ivy_ast.Atom(name),inst))
+    if __debug__: xtracer.trace("mc.ExpandSchemata result nExpanded=%d" % len(res))
     return res
                 
 # This is where we do pattern-based eager instantiation of the axioms
