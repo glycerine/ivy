@@ -505,12 +505,17 @@ func (e *Encoder) evalRec(expr lg.Expr, getdef GetDefFunc) ([]int, error) {
 func (e *Encoder) DefList(defs []lg.Expr) error {
 	dmap := make(map[lg.NodeKey]lg.Expr)
 	for _, df := range defs {
-		if eq, ok := df.(*lg.Eq); ok {
-			if c, ok := eq.T1.(*lg.Const); ok {
-				dmap[lg.Key(c)] = eq.T2
-			} else if app, ok := eq.T1.(*lg.Apply); ok {
+		switch d := df.(type) {
+		case *lg.Definition:
+			if c, ok := d.Defines().(*lg.Const); ok {
+				dmap[lg.Key(c)] = d.Rhs
+			}
+		case *lg.Eq:
+			if c, ok := d.T1.(*lg.Const); ok {
+				dmap[lg.Key(c)] = d.T2
+			} else if app, ok := d.T1.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Const); ok {
-					dmap[lg.Key(c)] = eq.T2
+					dmap[lg.Key(c)] = d.T2
 				}
 			}
 		}
@@ -531,22 +536,31 @@ func (e *Encoder) DefList(defs []lg.Expr) error {
 	}
 
 	for _, df := range defs {
-		if eq, ok := df.(*lg.Eq); ok {
-			var symName string
-			if c, ok := eq.T1.(*lg.Const); ok {
+		var symName string
+		var rhs lg.Expr
+		switch d := df.(type) {
+		case *lg.Definition:
+			if c, ok := d.Defines().(*lg.Const); ok {
 				symName = c.Name
-			} else if app, ok := eq.T1.(*lg.Apply); ok {
+				rhs = d.Rhs
+			}
+		case *lg.Eq:
+			if c, ok := d.T1.(*lg.Const); ok {
+				symName = c.Name
+				rhs = d.T2
+			} else if app, ok := d.T1.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Const); ok {
 					symName = c.Name
+					rhs = d.T2
 				}
 			}
-			if symName != "" {
-				val, err := e.Eval(eq.T2, getdef)
-				if err != nil {
-					return err
-				}
-				e.DefineSym(symName, val)
+		}
+		if symName != "" && rhs != nil {
+			val, err := e.Eval(rhs, getdef)
+			if err != nil {
+				return err
 			}
+			e.DefineSym(symName, val)
 		}
 	}
 	return nil
