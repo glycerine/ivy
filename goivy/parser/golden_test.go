@@ -478,6 +478,15 @@ func TestVerboseOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, true, true, path, args)
 }
 
+// This isolate is the 9th one in. Seen at XTRACE 28_234_303
+// when running golden-2hr, which takes 3 hours to crash, so
+// try just running this isolate alone instead.
+func TestRfnAbsIso(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	args := []string{"isolate=rfn.abs.iso"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args)
+}
+
 // TestVerboseNonstopOrdLive does not stop
 // at the first divergence. It prints all parsed
 // and xtraced lines.
