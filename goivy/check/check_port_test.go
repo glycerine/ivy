@@ -4,6 +4,7 @@
 package check
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -499,5 +500,89 @@ func TestRegisterTacticsWiring(t *testing.T) {
 		if _, ok := mod.Cfg.ProofCfg.Tactics[name]; !ok {
 			t.Errorf("expected tactic %q to be registered, but it was not", name)
 		}
+	}
+}
+
+// spyPC wraps a ProofCheckerInterface and records GetModule calls.
+// If the tactic closure correctly calls pc.GetModule(), getModuleCalls > 0.
+// If it uses a closure-captured module instead, getModuleCalls == 0.
+type spyPC struct {
+	module.ProofCheckerInterface
+	mod            *module.Module
+	getModuleCalls int
+}
+
+func (s *spyPC) GetModule() *module.Module {
+	s.getModuleCalls++
+	return s.mod
+}
+
+// TestMCVMTTacticClosureUsesProofCheckerModule verifies that the mc and vmt
+// tactic closures registered by RegisterTactics use pc.GetModule() — the
+// isolate-processed module from the proof checker — not the original module
+// captured in the closure at registration time.
+//
+// Regression test for the bug where MCTactic/VMTTactic received the
+// pre-CreateIsolate module (94 actions) instead of the post-CreateIsolate
+// module (5 actions), causing divergence at XTRACE 28253287.
+func TestMCVMTTacticClosureUsesProofCheckerModule(t *testing.T) {
+	// origMod: the module passed to RegisterTactics (simulates
+	// the compilation-level module with many actions).
+	origMod := module.New()
+	origMod.Cfg = module.NewConfig()
+	for i := 0; i < 10; i++ {
+		seq := actions.NewSequence()
+		origMod.Actions.Set(fmt.Sprintf("orig_action_%d", i), seq)
+	}
+
+	proof.RegisterFactories(origMod.Cfg, module.TacticNewConfig())
+	RegisterTactics(origMod.Cfg.ProofCfg, origMod)
+
+	// isoMod: the isolate-processed module (simulates post-CreateIsolate
+	// with a smaller action set). This is what pc.GetModule() should return.
+	isoMod := module.New()
+	isoMod.Cfg = module.NewConfig()
+	seq := actions.NewSequence()
+	isoMod.Actions.Set("iso_action", seq)
+
+	// Build a TemporalModels goal with fmla=lg.True so the temporal
+	// tactic chain is a no-op (it skips when fmla is true).
+	acfg := isoMod.Cfg.AstCfg
+	np := &temporal.NormalProgram{
+		Invars:   []*ast.LabeledFormula{acfg.NewLabeledFormula(nil, lg.True)},
+		Asms:     []*ast.LabeledFormula{acfg.NewLabeledFormula(nil, lg.True)},
+		Calls:    []string{"iso_action"},
+		Bindings: []*temporal.ActionTermBinding{{Name: "iso_action", Action: &temporal.ActionTerm{Stmt: seq}}},
+		Init:     actions.NewSequence(),
+	}
+	tm := acfg.NewTemporalModels(np, lg.True)
+	goal := acfg.NewLabeledFormula(acfg.NewAtom("test_goal"), tm)
+	goals := []*ast.LabeledFormula{goal}
+
+	for _, tacticName := range []string{"mc", "vmt"} {
+		t.Run(tacticName, func(t *testing.T) {
+			tactic, ok := origMod.Cfg.ProofCfg.Tactics[tacticName]
+			if !ok {
+				t.Fatalf("tactic %q not registered", tacticName)
+			}
+
+			// Create a real proof checker with isoMod, then wrap in spy.
+			realPC := proof.NewProofChecker(origMod.Cfg.ProofCfg, isoMod, nil, nil, nil)
+			spy := &spyPC{ProofCheckerInterface: realPC, mod: isoMod}
+
+			// Invoke the registered tactic closure. MCTactic/VMTTactic
+			// will call CheckSubgoals which may panic deep in the mc/vmt
+			// checker (no real Z3/solver). Recover and check the spy.
+			func() {
+				defer func() { recover() }()
+				_, _ = tactic(spy, goals, nil)
+			}()
+
+			if spy.getModuleCalls == 0 {
+				t.Errorf("tactic %q closure did NOT call pc.GetModule(); "+
+					"it is using the closure-captured original module instead of "+
+					"the proof checker's isolate-processed module", tacticName)
+			}
+		})
 	}
 }
