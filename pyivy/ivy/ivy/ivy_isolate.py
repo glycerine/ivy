@@ -859,14 +859,14 @@ def get_isolate_info(mod,isolate,kind,extra_with=[]):
     present.update(verified)
 
 
-    xtra = set(iu.compose_names(a.relname,kind) for a in isolate.verified())
+    xtra = dict.fromkeys(iu.compose_names(a.relname,kind) for a in isolate.verified())
     verified.update(xtra)
     present.update(xtra)
 
-    vp = set()
+    vp = dict()
     for isol in list(mod.isolates.values()):
         for v in isol.verified():
-            vp.add(v.rep)
+            vp[v.rep] = None
     for name in mod.attributes:
         p,c = iu.parent_child_name(name)
         if c == kind or c == "private":
@@ -875,8 +875,8 @@ def get_isolate_info(mod,isolate,kind,extra_with=[]):
                 p1,c1 = iu.parent_child_name(p1)
                 if p1 in verified:
                     if not is_iso:
-                        verified.add(p)
-                    present.add(p)
+                        verified[p] = None
+                    present[p] = None
                 else:
                     if p1 != 'this' and p1 not in vp:
                         recur(p1)
