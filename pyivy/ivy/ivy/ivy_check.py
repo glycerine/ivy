@@ -857,6 +857,7 @@ def check_subgoals(goals,method=None):
                         check_isolate()
                 
 def mc_tactic(prover,goals,proof):
+    if __debug__: xtracer.trace("check.MCTactic ENTER nGoals=%d" % len(goals))
     goal = goals[0]
     conc = ivy_proof.goal_conc(goal)
     if isinstance(conc,ivy_ast.TemporalModels):
@@ -865,7 +866,9 @@ def mc_tactic(prover,goals,proof):
             goals = ivy_tactics.skolemizenp(prover,goals,proof)
             l2s_pf = proof.clone([proof.args[0],ivy_ast.TacticLets()]+list(proof.args[2:]))
             goals = ivy_l2s.l2s_tactic_full(prover,goals,l2s_pf)
+    if __debug__: xtracer.trace("check.MCTactic postTacticChain nGoals=%d" % len(goals))
     check_subgoals(goals[0:1],method=ivy_mc.check_isolate)
+    if __debug__: xtracer.trace("check.MCTactic EXIT nRemainingGoals=%d err=<nil>" % len(goals[1:]))
     return goals[1:]
 
 ivy_proof.register_tactic('mc',mc_tactic)

@@ -117,6 +117,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	invariant = module.SubstituteAstByName(invariant, sksubs)
 	invarSyms := module.UsedSymbolsAST(invariant)
+	xtracer.Trace("mc.ToAiger postSkolemize HASH canon= invariant=%s", invariant.Sexp())
 
 	// Step 3: Compute transition relation
 	bgt := mod.BackgroundTheory(nil)
@@ -167,6 +168,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	if len(rn) > 0 && updWithAxioms.Pre != nil {
 		_ = module.RenameClauses(updWithAxioms.Pre, rn)
 	}
+
+	xtracer.Trace("mc.ToAiger postAddPostAxioms nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(updWithAxioms.Modified), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Python: stvars = [x for x in stvars if x not in defsyms]
 	// Use []*lg.Const (matching Python's stvars [Symbol]) to preserve sort info.
@@ -292,6 +295,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	qeFmlas, qeDefs, newInvariant := qelim.Apply(trans.Fmlas, defsToNodes(trans.Defs), invariant, indHyps)
 	invariant = newInvariant
 	trans = module.NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
+	xtracer.Trace("mc.ToAiger postQelim nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 4d: Instantiate axioms using pattern matching
 	stVarNameList := constNames(stVars)
@@ -305,6 +309,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		allDefs := append(trans.Defs, axDef)
 		trans = module.NewClauses(allFmlas, allDefs, trans.Annot)
 	}
+	xtracer.Trace("mc.ToAiger postAxiomInst nAxioms=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(axs), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 4e: Table lookup for finite-domain functions
 	trans, invariant = ToTableLookup(trans, invariant)
@@ -373,6 +378,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		trans = module.NewClauses(trans.Fmlas, allDefs, trans.Annot)
 	}
 
+	xtracer.Trace("mc.ToAiger postPropAbs nStVars=%d nNewStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(propAbs.NewStVars), len(trans.Fmlas), len(trans.Defs), trans.Canon())
+
 	// Apply propositional abstraction to invariant
 	invariant = propAbs.MkPropAbs(invariant)
 
@@ -394,6 +401,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		finiteStVars = append(finiteStVars, pv)
 	}
 	stVars = finiteStVars
+	xtracer.Trace("mc.ToAiger invariant HASH canon= %s", invariant.Sexp())
 
 	// Step 5: State variable management
 	// For each state var, create variables for latch inputs.
@@ -431,6 +439,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	allDefs3 := append(trans.Defs, extraDefs...)
 	trans = module.NewClauses(trans.Fmlas, allDefs3, trans.Annot)
+	xtracer.Trace("mc.ToAiger postRename nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 6: Turn transition constraint into a definition
 	cnstVar := lg.NewConst("__cnst", lg.Boolean)
@@ -452,6 +461,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	finalDefs = append(finalDefs, il.NewDefinition(fixCnst, cnstBody))
 	stVars = append(stVars, lg.NewConst("__cnst", lg.Boolean))
 	trans = module.NewClauses(nil, finalDefs, trans.Annot)
+
+	xtracer.Trace("mc.ToAiger finalTrans nStVars=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(trans.Defs), trans.Canon())
 
 	// Step 7: Determine inputs, outputs, build Encoder
 	defSet := make(map[string]bool)
@@ -538,6 +549,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		return nil, fmt.Errorf("miter eval failed: %w", err)
 	}
 	aiger.SetSym(fail, miterVal)
+
+	xtracer.Trace("mc.ToAiger aigerDone nInputs=%d nLatches=%d nOutputs=%d", len(aiger.Inputs), len(aiger.Latches), len(aiger.Outputs))
 
 	// Build decoder
 	decoder := make(map[string]lg.Expr)

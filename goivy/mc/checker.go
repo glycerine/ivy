@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ModelChecker is the interface for hardware model checkers.
@@ -133,6 +134,7 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	if method == "" {
 		method = "mc"
 	}
+	xtracer.Trace("mc.CheckIsolate ENTER method=%s", method)
 
 	if mod.Cfg.MCVerbose {
 		fmt.Println()
@@ -148,22 +150,27 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 
 	// Get AIGER string
 	aigerStr := result.Aiger.String()
+	xtracer.Trace("mc.CheckIsolate postToAiger aigerLen=%d", len(aigerStr))
 
 	// Run ABC model checker
 	checkResult, err := RunABC(aigerStr, nil, mod)
 	if err != nil {
+		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", err)
 		return nil, fmt.Errorf("model checker failed: %w", err)
 	}
 
 	if checkResult.Proved {
+		xtracer.Trace("mc.CheckIsolate EXIT proved=true err=<nil>")
 		return &CheckResult{Proved: true}, nil
 	}
 
 	if checkResult.Error != nil {
+		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", checkResult.Error)
 		return checkResult, nil
 	}
 
 	// If counterexample found, we would reconstruct the trace here
 	// using aiger_witness_to_ivy_trace2. For now, return the raw trace.
+	xtracer.Trace("mc.CheckIsolate EXIT proved=false err=<nil>")
 	return checkResult, nil
 }

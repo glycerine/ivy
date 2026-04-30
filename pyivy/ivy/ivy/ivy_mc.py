@@ -25,6 +25,14 @@ import os
 
 logfile = None
 verbose = False
+
+def clauses_canon(clauses):
+    """Produce canonical s-expression for Clauses, matching Go module.Clauses.Canon()."""
+    if clauses is None:
+        return 'nil'
+    fmlas = ' '.join(f.sexp() if hasattr(f,'sexp') else str(f) for f in clauses.fmlas)
+    defs = ' '.join(d.sexp() if hasattr(d,'sexp') else str(d) for d in clauses.defs)
+    return '(clauses fmlas:[%s] defs:[%s])' % (fmlas, defs)
 fullqi = iu.BooleanParameter("fullqi",False)
 
 def get_truth(digits,idx,syms):
@@ -1156,7 +1164,8 @@ def to_aiger(mod,ext_act,method="mc"):
     sksubs = dict((v.rep,skolemizer(v)) for v in vs)
     invariant = ilu.substitute_ast(invariant,sksubs)
     invar_syms = ilu.used_symbols_ast(invariant)
-    
+    if __debug__: xtracer.trace("mc.ToAiger postSkolemize HASH canon= invariant=%s" % invariant.sexp())
+
     # compute the transition relation
 
     bgt = mod.background_theory()
@@ -1174,7 +1183,7 @@ def to_aiger(mod,ext_act,method="mc"):
     trans = ilu.rename_clauses(trans,rn)
     error = ilu.rename_clauses(error,rn)
     stvars = [x for x in stvars if x not in defsyms]  # Remove symbols with state-dependent definitions
-    # iu.dbg('trans')
+    if __debug__: xtracer.trace("mc.ToAiger postAddPostAxioms nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s" % (len(stvars), len(trans.fmlas), len(trans.defs), clauses_canon(trans)))
     
 
 #    print 'action : {}'.format(action)
@@ -1240,9 +1249,9 @@ def to_aiger(mod,ext_act,method="mc"):
         print('\nInstantiating quantifiers (see {} for instantiations)...'.format(logfile_name))
     logfile.write('\ninstantiations:\n')
     trans,invariant = Qelim(sort_constants,sort_constants2)(trans,invariant,indhyps)
-#    iu.dbg('invariant')
-    
-    
+    if __debug__: xtracer.trace("mc.ToAiger postQelim nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s" % (len(stvars), len(trans.fmlas), len(trans.defs), clauses_canon(trans)))
+
+
 #    print 'after qe:'
 #    print 'trans: {}'.format(trans)
 #    print 'invariant: {}'.format(invariant)
@@ -1259,8 +1268,7 @@ def to_aiger(mod,ext_act,method="mc"):
     ax_def = il.Definition(ax_var,ax_conj)
     invariant = il.Implies(ax_var,invariant)
     trans = ilu.Clauses(trans.fmlas+[ax_var],trans.defs+[ax_def])
-
-#    iu.dbg('trans')
+    if __debug__: xtracer.trace("mc.ToAiger postAxiomInst nAxioms=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s" % (len(axs), len(trans.fmlas), len(trans.defs), clauses_canon(trans)))
     # print "\ndefinitions:"
     # for df3 in trans.defs:
     #     print df3
@@ -1344,6 +1352,8 @@ def to_aiger(mod,ext_act,method="mc"):
 
 #    iu.dbg('trans')
     
+    if __debug__: xtracer.trace("mc.ToAiger postPropAbs nStVars=%d nNewStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s" % (len(stvars), len(new_stvars), len(trans.fmlas), len(trans.defs), clauses_canon(trans)))
+
     # apply propositional abstraction to the invariant
     invariant = mk_prop_abs(invariant)
 
@@ -1353,11 +1363,7 @@ def to_aiger(mod,ext_act,method="mc"):
 
     # update the state variables by removing the non-finite ones and adding the fresh state booleans
     stvars = [sym for sym in stvars if is_finite_sort(sym.sort)] + new_stvars
-
-#    iu.dbg('trans')
-#    iu.dbg('stvars')
-#    iu.dbg('invariant')
-#    exit(0)
+    if __debug__: xtracer.trace("mc.ToAiger invariant HASH canon= %s" % invariant.sexp())
 
     # For each state var, create a variable that corresponds to the input of its latch
     # Also, havoc all the state bits except the init flag at the initial time. This
@@ -1376,7 +1382,8 @@ def to_aiger(mod,ext_act,method="mc"):
     new_defs = trans.defs + [il.Definition(ilu.sym_inst(tr.new(v)),ilu.sym_inst(fix(v))) for v in stvars]
     new_defs.extend(il.Definition(curval(v),il.Ite(init_var,v,initchoice(v))) for v in stvars if  v != init_var)
     trans = ilu.Clauses(trans.fmlas,new_defs)
-    
+    if __debug__: xtracer.trace("mc.ToAiger postRename nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s" % (len(stvars), len(trans.fmlas), len(trans.defs), clauses_canon(trans)))
+
     # Turn the transition constraint into a definition
     
     cnst_var = il.Symbol('__cnst',il.find_sort('bool'))
@@ -1385,7 +1392,8 @@ def to_aiger(mod,ext_act,method="mc"):
     new_defs.append(il.Definition(fix(cnst_var),il.Or(cnst_var,il.Not(il.And(*trans.fmlas)))))
     stvars.append(cnst_var)
     trans = ilu.Clauses([],new_defs)
-    
+    if __debug__: xtracer.trace("mc.ToAiger finalTrans nStVars=%d nTRdefs=%d HASH canon= trans=%s" % (len(stvars), len(trans.defs), clauses_canon(trans)))
+
     # Input are all the non-defined symbols. Output indicates invariant is false.
 
 #    iu.dbg('trans')
@@ -1416,8 +1424,7 @@ def to_aiger(mod,ext_act,method="mc"):
             aiger.set(tr.new_of(df.defines()),aiger.eval(df.args[1]))
     miter = il.And(init_var,il.Not(cnst_var),il.Or(invar_fail,il.And(fix(erf),il.Not(fix(cnst_var)))))
     aiger.set(fail,aiger.eval(miter))
-
-#    aiger.sub.debug()
+    if __debug__: xtracer.trace("mc.ToAiger aigerDone nInputs=%d nLatches=%d nOutputs=%d" % (len(aiger.inputs), len(aiger.latches), len(aiger.outputs)))
 
     # make a decoder for the abstract propositions
 
@@ -1685,7 +1692,8 @@ class ABCModelChecker(ModelChecker):
 
 
 def check_isolate(method="mc"):
-    
+    if __debug__: xtracer.trace("mc.CheckIsolate ENTER method=%s" % method)
+
     if verbose:
         print()
         print(80*'*')
@@ -1706,14 +1714,13 @@ def check_isolate(method="mc"):
     # convert to aiger
 
     aiger,decoder,annot,cnsts,action,stvarset = to_aiger(mod,ext_act,method=method)
-#    print aiger
 
     # output aiger to temp file
 
     with tempfile.NamedTemporaryFile(mode='wt', suffix='.aag',delete=False) as f:
         name = f.name
-#        print 'file name: {}'.format(name)
         f.write(str(aiger))
+    if __debug__: xtracer.trace("mc.CheckIsolate postToAiger aigerLen=%d" % len(str(aiger)))
     
     # convert aag to aig format
 
@@ -1765,11 +1772,13 @@ def check_isolate(method="mc"):
     # scrape the output to get the answer
 
     if mc.scrape(alltext):
+        if __debug__: xtracer.trace("mc.CheckIsolate EXIT proved=true err=<nil>")
         return None
     else:
-        return aiger_witness_to_ivy_trace2(aiger,outfilename,action,stvarset,ext_act,annot,cnsts,decoder)        
-        
-    
+        if __debug__: xtracer.trace("mc.CheckIsolate EXIT proved=false err=<nil>")
+        return aiger_witness_to_ivy_trace2(aiger,outfilename,action,stvarset,ext_act,annot,cnsts,decoder)
+
+
 
 
     

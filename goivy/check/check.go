@@ -1071,6 +1071,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 // MCTactic implements the model-checking tactic.
 // Corresponds to Python's mc_tactic (ivy_check.py:805-817).
 func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
+	xtracer.Trace("check.MCTactic ENTER nGoals=%d", len(goals))
 	if len(goals) == 0 {
 		return nil, nil
 	}
@@ -1078,6 +1079,7 @@ func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Nod
 	if err != nil {
 		return nil, err
 	}
+	xtracer.Trace("check.MCTactic postTacticChain nGoals=%d", len(goals))
 	// Python: check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
 	mcMethod := func(m *module.Module) error {
 		res, mcErr := mc.CheckIsolate(m, "mc")
@@ -1090,6 +1092,7 @@ func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Nod
 		return nil
 	}
 	err = CheckSubgoals(goals[0:1], mcMethod, mod)
+	xtracer.Trace("check.MCTactic EXIT nRemainingGoals=%d err=%v", len(goals[1:]), err)
 	return goals[1:], err
 }
 
