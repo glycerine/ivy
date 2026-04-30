@@ -1041,6 +1041,100 @@ func TestQelimGetConsts(t *testing.T) {
 	}
 }
 
+func TestDefToConstraintBooleanSort(t *testing.T) {
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
+	def := lg.NewDefinition(p, q)
+	result := defToConstraint(def)
+	if _, ok := result.(*lg.Iff); !ok {
+		t.Errorf("Boolean-sorted def should produce Iff, got %T", result)
+	}
+}
+
+func TestDefToConstraintIndividualSort(t *testing.T) {
+	s := &lg.UninterpretedSort{Name: "mySort"}
+	x := lg.NewConst("x", s)
+	y := lg.NewConst("y", s)
+	def := lg.NewDefinition(x, y)
+	result := defToConstraint(def)
+	if _, ok := result.(*lg.Eq); !ok {
+		t.Errorf("individual-sorted def should produce Eq, got %T", result)
+	}
+}
+
+func TestQEEqTautologyElimination(t *testing.T) {
+	x := lg.NewConst("x", lg.Boolean)
+	eq := &lg.Eq{T1: x, T2: x}
+	q := NewQelim(nil, nil, nil)
+	result := q.QE(eq, nil)
+	a, ok := result.(*lg.And)
+	if !ok || len(a.Terms) != 0 {
+		t.Errorf("Eq(x,x) should normalize to And{} (true), got %T: %v", result, result)
+	}
+}
+
+func TestQEEqCanonicalOrder(t *testing.T) {
+	s := &lg.UninterpretedSort{Name: "S"}
+	fSort := &lg.FunctionSort{Sorts: []lg.Sort{s, s}}
+	f := lg.NewConst("f", fSort)
+	g := lg.NewConst("g", fSort)
+	arg := lg.NewConst("c", s)
+	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{arg}}
+	gApp := &lg.Apply{Func: g, Terms: []lg.Expr{arg}}
+	eq := &lg.Eq{T1: gApp, T2: fApp}
+	q := NewQelim(nil, nil, nil)
+	result := q.QE(eq, nil)
+	eqR, ok := result.(*lg.Eq)
+	if !ok {
+		t.Fatalf("expected Eq, got %T", result)
+	}
+	t1App, ok := eqR.T1.(*lg.Apply)
+	if !ok {
+		t.Fatalf("expected Apply for T1, got %T", eqR.T1)
+	}
+	if t1App.Func.(*lg.Const).Name != "f" {
+		t.Errorf("Eq(g(c),f(c)) should canonicalize to Eq(f(c),g(c)), got T1 func=%s", t1App.Func.(*lg.Const).Name)
+	}
+}
+
+func TestQENestedEqNormalization(t *testing.T) {
+	s := &lg.UninterpretedSort{Name: "S"}
+	fSort := &lg.FunctionSort{Sorts: []lg.Sort{s, s}}
+	f := lg.NewConst("f", fSort)
+	g := lg.NewConst("g", fSort)
+	arg := lg.NewConst("c", s)
+	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{arg}}
+	gApp := &lg.Apply{Func: g, Terms: []lg.Expr{arg}}
+	x := lg.NewConst("x", lg.Boolean)
+	expr := &lg.And{Terms: []lg.Expr{
+		&lg.Eq{T1: x, T2: x},
+		&lg.Eq{T1: gApp, T2: fApp},
+	}}
+	q := NewQelim(nil, nil, nil)
+	result := q.QE(expr, nil)
+	a, ok := result.(*lg.And)
+	if !ok {
+		t.Fatalf("expected And, got %T", result)
+	}
+	if len(a.Terms) != 2 {
+		t.Fatalf("expected 2 children, got %d", len(a.Terms))
+	}
+	if _, ok := a.Terms[0].(*lg.And); !ok {
+		t.Errorf("Eq(x,x) child should become And{} (tautology), got %T", a.Terms[0])
+	}
+	eqR, ok := a.Terms[1].(*lg.Eq)
+	if !ok {
+		t.Fatalf("second child should be Eq, got %T", a.Terms[1])
+	}
+	t1App, ok := eqR.T1.(*lg.Apply)
+	if !ok {
+		t.Fatalf("expected Apply for T1, got %T", eqR.T1)
+	}
+	if t1App.Func.(*lg.Const).Name != "f" {
+		t.Errorf("nested Eq(g(c),f(c)) should canonicalize, got T1 func=%s", t1App.Func.(*lg.Const).Name)
+	}
+}
+
 func TestElimIteKey(t *testing.T) {
 	key := ElimIteKey("bool")
 	if !strings.HasPrefix(key, "__ite[") {
