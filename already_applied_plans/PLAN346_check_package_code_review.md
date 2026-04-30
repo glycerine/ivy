@@ -111,7 +111,7 @@ Also fix: `mod.Cfg.CheckLineno` should be set on `modCopy.Cfg`, not `mod.Cfg`.
 
 ### D6. `CheckLineno` format mismatch (three incompatible formats)
 
-**Files:** `isolate_check.go:604,1222`, `helpers.go:409-410`
+**Files:** `isolate_check.go:604,1222,329,538,1324`, `helpers.go:409-410`, `isolate_check.go:1446`
 
 Three different formats are used in Go, none of which match each other:
 
@@ -120,15 +120,44 @@ Three different formats are used in Go, none of which match each other:
 | Guarantee inner loop (line 604) | `"%s:%d"` | `"foo.ivy:42"` |
 | MCIsolate per-assertion (line 1222) | `":%d"` | `":42"` |
 | FilterCheckers comparison (line 409-410) | `"line %d"` or `"%d"` | `"line 42"` or `"42"` |
+| Inline guarantee filter (lines 329, 538) | `"%d"` | `"42"` |
+| CheckConjsInStateWithAG (line 1446) | `"%d"` | `"42"` |
+| AllAssertLinenos parse (line 1326) | `fmt.Sscanf("%d")` | extracts bare int |
 
-Python uses raw `lineno` objects (LocationTuple) everywhere and compares with `==` on the same type.
+The **actions layer** (`update.go:374-377`) already uses `"file:line"` format correctly — `fmt.Sprintf("%s:%d", loc.Filename, loc.Line)`. Tests confirm this (`audit51_test.go:614`, `div_conformance_test.go:237`). All other sites must align to this format.
 
-**Fix:** Standardize on a single format throughout:
-1. Use the raw line number integer consistently. Store `CheckLineno` as `int` (or `string` of bare digits like `"42"`).
-2. At line 604: `mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno.Line)`
-3. At line 1222: `mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno)`
-4. At FilterCheckers line 409: compare `fmt.Sprintf("%d", cc.LF.Lineno()) == checkLineno` (already does this for the second branch).
-5. Remove the `"line %d"` format from FilterCheckers — it's dead code that never matches.
+**Fix:** Standardize ALL sites on `"file:line"` format for maximum readability:
+
+1. **Guarantee inner loop** (`isolate_check.go:604`): Already correct — `fmt.Sprintf("%s:%d", lineno.Filename, lineno.Line)`. No change needed.
+
+2. **MCIsolate per-assertion** (`isolate_check.go:1222`): Change `fmt.Sprintf(":%d", lineno)` to produce `"file:line"`. `AllAssertLinenos` must return `[]ast.Location` (not `[]int`) so the filename is available.
+
+3. **AllAssertLinenos** (`isolate_check.go:1292-1335`): Change return type from `([]int, error)` to `([]ast.Location, error)`. Capture full `sub.GetLineno()` Location instead of just `.Line`. The `CheckLineno` filter at line 1324 must compare full `"file:line"` strings.
+
+4. **FilterCheckers** (`helpers.go:409-410`): Replace the `"line %d"` / `"%d"` comparisons with `"file:line"`:
+   ```go
+   loc := cc.LF.GetLineno()
+   locStr := fmt.Sprintf("%s:%d", loc.Filename, loc.Line)
+   if locStr == checkLineno { result = append(result, fc) }
+   ```
+
+5. **Inline guarantee filter** (`isolate_check.go:329, 538`): Replace `fmt.Sprintf("%d", sub.GetLineno().Line) == mod.Cfg.CheckLineno` with:
+   ```go
+   loc := sub.GetLineno()
+   fmt.Sprintf("%s:%d", loc.Filename, loc.Line) == mod.Cfg.CheckLineno
+   ```
+
+6. **CheckConjsInStateWithAG** (`isolate_check.go:1446`): Replace `fmt.Sprintf("%d", c.Lineno())` with:
+   ```go
+   loc := c.GetLineno()
+   fmt.Sprintf("%s:%d", loc.Filename, loc.Line)
+   ```
+
+7. **AllAssertLinenos parse** (`isolate_check.go:1324-1326`): Replace `fmt.Sscanf(mod.Cfg.CheckLineno, "%d", &checkLine)` with full `"file:line"` string comparison against the locations in `seen`.
+
+8. **check.go:1236, 1324** (`"none.ivy:0"` sentinel): These already use `"file:line"` format. No change needed.
+
+9. **CheckConjsInState** (`check.go:743-751`): Same fix as item 6 — use `GetLineno()` to produce `"file:line"` for comparison.
 
 ---
 
