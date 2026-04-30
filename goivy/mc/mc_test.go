@@ -1149,7 +1149,8 @@ func TestQENestedEqNormalization(t *testing.T) {
 }
 
 func TestElimIteKey(t *testing.T) {
-	key := ElimIteKey("bool")
+	var ctr int64
+	key := ElimIteKey("bool", &ctr)
 	if !strings.HasPrefix(key, "__ite[") {
 		t.Errorf("ElimIteKey should start with '__ite[', got %s", key)
 	}

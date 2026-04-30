@@ -693,8 +693,8 @@ func TestClausesSymbols(t *testing.T) {
 	b := mkConst("b")
 	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	syms := c.Symbols()
-	if len(syms) != 2 {
-		t.Errorf("expected 2 symbols, got %d", len(syms))
+	if syms.Len() != 2 {
+		t.Errorf("expected 2 symbols, got %d", syms.Len())
 	}
 }
 

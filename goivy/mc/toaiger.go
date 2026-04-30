@@ -254,15 +254,16 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 4b: Eliminate ITEs over non-finite sorts
 	var iteCnsts []lg.Expr
+	mcIteCtr := &mod.Cfg.McIteCtr
 	elimDefs := make([]*il.Definition, len(trans.Defs))
 	for i, df := range trans.Defs {
-		newLhs := ElimIte(df.Lhs, &iteCnsts)
-		newRhs := ElimIte(df.Rhs, &iteCnsts)
+		newLhs := ElimIte(df.Lhs, &iteCnsts, mcIteCtr)
+		newRhs := ElimIte(df.Rhs, &iteCnsts, mcIteCtr)
 		elimDefs[i] = il.NewDefinition(newLhs, newRhs)
 	}
 	elimFmlas := make([]lg.Expr, len(trans.Fmlas))
 	for i, f := range trans.Fmlas {
-		elimFmlas[i] = ElimIte(f, &iteCnsts)
+		elimFmlas[i] = ElimIte(f, &iteCnsts, mcIteCtr)
 	}
 	allFmlas := append(elimFmlas, iteCnsts...)
 	trans = module.NewClauses(allFmlas, elimDefs, trans.Annot)

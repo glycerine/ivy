@@ -10,12 +10,9 @@ import (
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
 
-// Global counter for ITE elimination fresh variables.
-var iteCtr int64
-
-// NextIteCtr returns the next unique ITE counter value.
-func NextIteCtr() int64 {
-	return atomic.AddInt64(&iteCtr, 1) - 1
+// nextIteCtr increments the ITE counter on the given pointer and returns the old value.
+func nextIteCtr(ctr *int64) int64 {
+	return atomic.AddInt64(ctr, 1) - 1
 }
 
 // Qelim implements quantifier elimination by finite instantiation.
@@ -241,8 +238,8 @@ func closeFormula(fmla lg.Expr) lg.Expr {
 }
 
 // ElimIteKey generates a fresh variable name for ITE elimination.
-func ElimIteKey(sortName string) string {
-	ctr := NextIteCtr()
+func ElimIteKey(sortName string, iteCtr *int64) string {
+	ctr := nextIteCtr(iteCtr)
 	return fmt.Sprintf("__ite[%d]:%s", ctr, sortName)
 }
 

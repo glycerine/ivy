@@ -19,40 +19,36 @@ import (
 // As an optimization, (z = (x if c else y)) → (z=x if c else z=y) directly.
 //
 // Python: ivy_mc.py:757-772
-func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
+func ElimIte(expr lg.Expr, cnsts *[]lg.Expr, iteCtr *int64) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.Ite:
 		if !isFiniteSort(t.Then.NodeSort()) {
-			// Create fresh variable
-			name := fmt.Sprintf("__ite[%d]", NextIteCtr())
+			name := fmt.Sprintf("__ite[%d]", nextIteCtr(iteCtr))
 			v := lg.NewConst(name, t.Then.NodeSort())
-			// Add constraint: ite(c, v=x, v=y)
-			cElim := ElimIte(t.Cond, cnsts)
-			eqThen := ElimIte(&lg.Eq{T1: v, T2: t.Then}, cnsts)
-			eqElse := ElimIte(&lg.Eq{T1: v, T2: t.Else}, cnsts)
+			cElim := ElimIte(t.Cond, cnsts, iteCtr)
+			eqThen := ElimIte(&lg.Eq{T1: v, T2: t.Then}, cnsts, iteCtr)
+			eqElse := ElimIte(&lg.Eq{T1: v, T2: t.Else}, cnsts, iteCtr)
 			*cnsts = append(*cnsts, &lg.Ite{Cond: cElim, Then: eqThen, Else: eqElse})
 			return v
 		}
 	case *lg.Eq:
-		// Optimization: (z = ite(c,x,y)) → ite(c, z=x, z=y)
 		if ite, ok := t.T2.(*lg.Ite); ok {
 			if !isFiniteSort(ite.Then.NodeSort()) {
-				cElim := ElimIte(ite.Cond, cnsts)
-				eqThen := ElimIte(&lg.Eq{T1: t.T1, T2: ite.Then}, cnsts)
-				eqElse := ElimIte(&lg.Eq{T1: t.T1, T2: ite.Else}, cnsts)
+				cElim := ElimIte(ite.Cond, cnsts, iteCtr)
+				eqThen := ElimIte(&lg.Eq{T1: t.T1, T2: ite.Then}, cnsts, iteCtr)
+				eqElse := ElimIte(&lg.Eq{T1: t.T1, T2: ite.Else}, cnsts, iteCtr)
 				return &lg.Ite{Cond: cElim, Then: eqThen, Else: eqElse}
 			}
 		}
 	}
 
-	// Recurse into children
 	children := expr.Children()
 	if len(children) == 0 {
 		return expr
 	}
 	newChildren := make([]lg.Expr, len(children))
 	for i, child := range children {
-		newChildren[i] = ElimIte(child, cnsts)
+		newChildren[i] = ElimIte(child, cnsts, iteCtr)
 	}
 	return il.CloneNode(expr, newChildren)
 }

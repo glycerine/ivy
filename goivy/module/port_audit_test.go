@@ -363,7 +363,7 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 	// The result should reference the custom-prefixed skolem
 	syms := result.Symbols()
 	found := false
-	for _, s := range syms {
+	for _, s := range syms.All() {
 		if lg.ExprName(s) == customPrefix+"X" {
 			found = true
 		}
