@@ -307,7 +307,8 @@ func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
 		if t.Formula == nil {
 			return nil, false
 		}
-		return t.Formula.(lg.Expr), true
+		expr, ok := t.Formula.(lg.Expr)
+		return expr, ok
 	case lg.Expr:
 		return t, true
 	}

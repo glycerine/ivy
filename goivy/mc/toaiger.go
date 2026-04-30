@@ -39,17 +39,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	AddErrFlagMod(mod, erf, &errConds)
 
 	// Step 1: Build the composed external action
-	// We use a special state variable __init to indicate the initial state
+	// Python: ext_acts = [mod.actions[x].add_label(x) for x in sorted(mod.public_actions)]
+	//         ext_act = ia.EnvAction(*ext_acts)
 	pubNames := sortedPublicActions(mod)
-	extActs := make([]lg.Expr, len(pubNames))
-	for i, name := range pubNames {
+	extActs := make([]lg.Expr, 0, len(pubNames))
+	for _, name := range pubNames {
 		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}
 		if a, ok := act.(actions.Action); ok {
-			labeled := addLabelToAction(a, name)
-			extActs[i] = &actionNodeWrapper{action: labeled}
+			extActs = append(extActs, addLabelToAction(a, name))
 		}
 	}
 
@@ -57,36 +57,21 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	initVar := lg.NewConst("__init", lg.Boolean)
 
-	// Build initializer sequence
+	// Python: init = add_err_flag(Sequence(*([a for n,a in mod.initializers]+[AssignAction(init_var,And())])), erf, errconds)
 	var initParts []lg.Expr
 	for _, ni := range mod.Initializers {
 		if a, ok := ni.Action.(actions.Action); ok {
-			initParts = append(initParts, &actionNodeWrapper{action: a})
+			initParts = append(initParts, a)
 		}
 	}
-	initParts = append(initParts, &actionNodeWrapper{
-		action: actions.NewAssignAction(initVar, &lg.And{Terms: nil}), // true
-	})
+	initParts = append(initParts, actions.NewAssignAction(initVar, &lg.And{Terms: nil}))
 	initSeq := actions.NewSequence(initParts...)
 	initAction := AddErrFlag(initSeq, erf, &errConds, mod.Instantiator)
 
-	// action = Sequence(erf := false, if init_var then ext_act else init)
-	erfReset := actions.NewAssignAction(erf, &lg.Or{Terms: nil})     // false
-	ifAction := actions.NewIfAction(&actionNodeWrapper{action: nil}, // placeholder
-		&actionNodeWrapper{action: extAct},
-		&actionNodeWrapper{action: initAction},
-	)
-	// Build proper IfAction with initVar as condition
-	ifAct := &actions.IfAction{}
-	ifAct.Cond = initVar
-	ifAct.ThenBody = &actionNodeWrapper{action: extAct}
-	ifAct.ElseBody = &actionNodeWrapper{action: initAction}
-
-	composedAction := actions.NewSequence(
-		&actionNodeWrapper{action: erfReset},
-		&actionNodeWrapper{action: ifAct},
-	)
-	_ = ifAction // unused placeholder
+	// Python: action = Sequence(AssignAction(erf, Or()), IfAction(init_var, ext_act, init))
+	erfReset := actions.NewAssignAction(erf, &lg.Or{Terms: nil})
+	ifAct := actions.NewIfAction(initVar, extAct, initAction)
+	composedAction := actions.NewSequence(erfReset, ifAct)
 
 	// Step 2: Get invariant to prove, applying proof tactics.
 	// Python: ivy_mc.py:1136-1158
@@ -649,7 +634,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
 			}
@@ -661,7 +646,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
 			}
@@ -673,7 +658,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
 			}
@@ -685,7 +670,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
 			}
@@ -698,7 +683,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if ca, ok := args[i].(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = args[i]
 			}
@@ -715,7 +700,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		// Last arg is the body
 		last := args[len(args)-1]
 		if ca, ok := last.(actions.Action); ok {
-			newArgs[len(newArgs)-1] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
+			newArgs[len(newArgs)-1] = AddErrFlag(ca, erf, errConds, instantiator)
 		}
 		return a.ActionClone(newArgs)
 	}
