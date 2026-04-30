@@ -40,6 +40,8 @@ func ExprName(x Expr) string {
 		return t.Name
 	case *NamedBinder:
 		return t.Name
+	case *Apply:
+		return ExprName(t.Func)
 	}
 	panicf("ExprName not implemented for %T", x)
 	return ""

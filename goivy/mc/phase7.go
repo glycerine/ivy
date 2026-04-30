@@ -99,17 +99,13 @@ func termOrd(x, y lg.Expr) int {
 	if xs > ys {
 		return 1
 	}
-	if ax, ok := x.(*lg.Apply); ok {
-		if ay, ok := y.(*lg.Apply); ok {
-			xn := nodeName(ax.Func)
-			yn := nodeName(ay.Func)
-			if xn < yn {
-				return -1
-			}
-			if xn > yn {
-				return 1
-			}
-		}
+	xn := lg.ExprName(x)
+	yn := lg.ExprName(y)
+	if xn < yn {
+		return -1
+	}
+	if xn > yn {
+		return 1
 	}
 	xargs := il.NodeArgs(x)
 	yargs := il.NodeArgs(y)
@@ -128,17 +124,6 @@ func termOrd(x, y lg.Expr) int {
 	return 0
 }
 
-// nodeName extracts a name string from a logic node (Symbol or Variable).
-func nodeName(n lg.Expr) string {
-	switch t := n.(type) {
-	case *lg.Const:
-		return t.Name
-	case *lg.Variable:
-		return t.Name
-	default:
-		return fmt.Sprintf("%v", n)
-	}
-}
 
 // UncomposeAnnot decomposes a ComposeAnnotation into a flat slice of
 // its right-hand components.

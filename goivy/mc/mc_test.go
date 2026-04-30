@@ -1095,6 +1095,19 @@ func TestQEEqCanonicalOrder(t *testing.T) {
 	if t1App.Func.(*lg.Const).Name != "f" {
 		t.Errorf("Eq(g(c),f(c)) should canonicalize to Eq(f(c),g(c)), got T1 func=%s", t1App.Func.(*lg.Const).Name)
 	}
+
+	// Bare Const nodes must also be ordered by name
+	a := lg.NewConst("__prm:M", s)
+	b := lg.NewConst("__ts0__ts0__new_prm:M_a", s)
+	eq2 := &lg.Eq{T1: b, T2: a}
+	result2 := q.QE(eq2, nil)
+	eqR2, ok := result2.(*lg.Eq)
+	if !ok {
+		t.Fatalf("expected Eq, got %T", result2)
+	}
+	if eqR2.T1.(*lg.Const).Name != "__prm:M" {
+		t.Errorf("Eq of two Consts should canonicalize by name, got T1=%s", eqR2.T1.(*lg.Const).Name)
+	}
 }
 
 func TestQENestedEqNormalization(t *testing.T) {
