@@ -160,6 +160,8 @@ type Config struct {
 	TraceDetailed bool `json:"-"`
 	// MCVerbose enables verbose MC output. (from mc.Verbose)
 	MCVerbose bool `json:"-"`
+	// McIteCtr is the counter for ITE elimination fresh variables. (from mc.iteCtr)
+	McIteCtr int64 `json:"-"`
 	// OptionAbsInit controls whether the initial state is abstracted. (from art.OptionAbsInit)
 	OptionAbsInit bool `json:"-"`
 	// VMTVerbose enables verbose VMT output. (from vmt.Verbose)
