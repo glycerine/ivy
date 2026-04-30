@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -375,7 +376,8 @@ func TestClausesUsingSymbols(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Expr{a, b}, nil, nil)
-	syms := map[lg.NodeKey]lg.Expr{lg.Key(a): a}
+	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
+	syms.Set(lg.Key(a), a)
 	result := ClausesUsingSymbols(syms, c)
 	if len(result.Fmlas) != 1 {
 		t.Errorf("expected 1 formula using symbol 'a', got %d", len(result.Fmlas))
@@ -402,7 +404,7 @@ func TestUsedSymbolsAST(t *testing.T) {
 	x := mkVar("X")
 	app := lg.MustApply(f, x)
 	syms := UsedSymbolsAST(app)
-	if _, ok := syms[lg.Key(f)]; !ok {
+	if _, ok := syms.Get2(lg.Key(f)); !ok {
 		t.Error("should contain function symbol f")
 	}
 }

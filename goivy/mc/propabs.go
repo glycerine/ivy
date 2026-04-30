@@ -5,6 +5,7 @@ import (
 	//"sync/atomic"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -24,7 +25,7 @@ import (
 // Python: ivy_mc.py:1287-1318
 type PropAbs struct {
 	// Map from expression key to abstract proposition
-	Map map[string]*lg.Const
+	Map *iu.InsMap[string, *lg.Const]
 	// Counter for fresh symbols
 	Ctr int
 	// New state variables introduced by abstraction
@@ -43,7 +44,7 @@ type PropAbs struct {
 // NewPropAbs creates a new propositional abstraction context.
 func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) *PropAbs {
 	return &PropAbs{
-		Map:           make(map[string]*lg.Const),
+		Map:           iu.NewInsMap[string, *lg.Const](),
 		FiniteSymsSet: make(map[string]bool),
 		StVarSet:      stVarSet,
 		SortConstants: sortConstants,
@@ -56,7 +57,7 @@ func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) 
 // Python: ivy_mc.py:1287-1303
 func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 	key := fmt.Sprint(expr)
-	if res, ok := pa.Map[key]; ok {
+	if res, ok := pa.Map.Get2(key); ok {
 		return res
 	}
 
@@ -68,14 +69,14 @@ func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 		nextName := fmt.Sprintf("__abs[%d]", pa.Ctr)
 		pa.Ctr++
 		res := lg.NewConst(nextName, lg.Boolean)
-		pa.Map[key] = res
+		pa.Map.Set(key, res)
 		return res
 	}
 
 	name := fmt.Sprintf("__abs[%d]", pa.Ctr)
 	pa.Ctr++
 	res := lg.NewConst(name, lg.Boolean)
-	pa.Map[key] = res
+	pa.Map.Set(key, res)
 	return res
 }
 

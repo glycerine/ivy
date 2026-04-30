@@ -793,7 +793,7 @@ func collectAllSymbols(formulas []lg.Expr) []*lg.Const {
 	seen := make(map[string]lg.Expr)
 	for _, f := range formulas {
 		syms := module.UsedSymbolsAST(f)
-		for _, sym := range syms {
+		for _, sym := range syms.All() {
 			name := lg.ExprName(sym)
 			if _, ok := seen[name]; !ok {
 				seen[name] = sym

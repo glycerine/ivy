@@ -326,13 +326,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Find immutable abstract variables and give them next definitions
 	invarSymSet := make(map[string]bool)
-	for _, sym := range invarSyms {
+	for _, sym := range invarSyms.All() {
 		invarSymSet[lg.ExprName(sym)] = true
 	}
 
 	isImmutableExpr := func(expr lg.Expr) bool {
 		syms := module.UsedSymbolsAST(expr)
-		for _, sym := range syms {
+		for _, sym := range syms.All() {
 			n := lg.ExprName(sym)
 			if actions.IsSkolem(n) && !invarSymSet[n] {
 				return false
@@ -354,7 +354,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	var addDefs []*il.Definition
-	for exprKey, v := range propAbs.Map {
+	for exprKey, v := range propAbs.Map.All() {
 		_ = exprKey
 		if isImmutableExpr(v) && !isExprDefined(v) {
 			propAbs.NewStVars = append(propAbs.NewStVars, v)
@@ -479,7 +479,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, sym := range module.SymbolsClauses(trans) {
 		usedSyms[lg.ExprName(sym)] = sym
 	}
-	for _, sym := range module.UsedSymbolsAST(invariant) {
+	for _, sym := range module.UsedSymbolsAST(invariant).All() {
 		usedSyms[lg.ExprName(sym)] = sym
 	}
 
@@ -554,7 +554,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Build decoder
 	decoder := make(map[string]lg.Expr)
-	for exprKey, v := range propAbs.Map {
+	for exprKey, v := range propAbs.Map.All() {
 		_ = exprKey
 		decoder[v.Name] = v
 	}

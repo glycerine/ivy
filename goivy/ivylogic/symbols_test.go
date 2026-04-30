@@ -417,13 +417,13 @@ func TestUsedSymbolsAst_Dedup(t *testing.T) {
 	app := testApply(f, a, a)
 
 	syms := UsedSymbolsAst(app)
-	if len(syms) != 2 {
-		t.Errorf("expected 2 unique symbols, got %d", len(syms))
+	if syms.Len() != 2 {
+		t.Errorf("expected 2 unique symbols, got %d", syms.Len())
 	}
-	if _, ok := syms[lg.Key(f)]; !ok {
+	if _, ok := syms.Get2(lg.Key(f)); !ok {
 		t.Error("set should contain f")
 	}
-	if _, ok := syms[lg.Key(a)]; !ok {
+	if _, ok := syms.Get2(lg.Key(a)); !ok {
 		t.Error("set should contain a")
 	}
 }
@@ -439,11 +439,11 @@ func TestUsedSymbolsAsts_MultipleNodes(t *testing.T) {
 	nodes := []lg.Expr{testApply(f, a), testApply(g, b)}
 
 	syms := UsedSymbolsAsts(nodes)
-	if len(syms) != 4 {
-		t.Errorf("expected 4 unique symbols, got %d", len(syms))
+	if syms.Len() != 4 {
+		t.Errorf("expected 4 unique symbols, got %d", syms.Len())
 	}
 	for _, c := range []*lg.Const{f, g, a, b} {
-		if _, ok := syms[lg.Key(c)]; !ok {
+		if _, ok := syms.Get2(lg.Key(c)); !ok {
 			t.Errorf("set should contain %s", c.Name)
 		}
 	}
@@ -457,8 +457,8 @@ func TestUsedSymbolsAsts_OverlapDedup(t *testing.T) {
 	nodes := []lg.Expr{testApply(f, a), testApply(g, a)}
 
 	syms := UsedSymbolsAsts(nodes)
-	if len(syms) != 3 {
-		t.Errorf("expected 3 unique symbols, got %d", len(syms))
+	if syms.Len() != 3 {
+		t.Errorf("expected 3 unique symbols, got %d", syms.Len())
 	}
 }
 

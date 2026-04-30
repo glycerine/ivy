@@ -541,8 +541,8 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 
 		// Python: vocab = lut.used_symbols_clauses(mclauses)
 		vocabMap := mclauses.Symbols()
-		vocab := make([]*lg.Const, 0, len(vocabMap))
-		for _, sym := range vocabMap {
+		vocab := make([]*lg.Const, 0, vocabMap.Len())
+		for _, sym := range vocabMap.All() {
 			if c, ok := sym.(*lg.Const); ok {
 				vocab = append(vocab, c)
 			}
@@ -836,7 +836,7 @@ func ConvertPostcondsWithUpdate(update *actions.Update, postconds []*ast.Labeled
 			continue
 		}
 		usedSyms := module.UsedSymbolsAST(pc.Formula.(lg.Expr))
-		for _, sym := range usedSyms {
+		for _, sym := range usedSyms.All() {
 			if s, ok := sym.(*lg.Const); ok && actions.IsOld(s.Name) {
 				renaming[lg.Key(s)] = lg.NewConst(actions.OldOf(s.Name), s.CSort)
 			}
