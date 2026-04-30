@@ -228,7 +228,7 @@ func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.
 func FmlaVocab(fmla lg.Expr) map[lg.NodeKey]lg.Expr {
 	result := make(map[lg.NodeKey]lg.Expr)
 	// Use clauseops.UsedSymbolsAST for symbols
-	for k, v := range module.UsedSymbolsAST(fmla) {
+	for k, v := range module.UsedSymbolsAST(fmla).All() {
 		result[k] = v
 	}
 	// Use clauseops.VariablesAST for variables
@@ -445,7 +445,7 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, c
 	// Python: syms = lu.used_symbols_asts(fmlas)
 	usedSyms := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range concFmlas {
-		for k, v := range module.UsedSymbolsAST(f) {
+		for k, v := range module.UsedSymbolsAST(f).All() {
 			usedSyms[k] = v
 		}
 	}
@@ -485,7 +485,7 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, c
 			}
 		}
 		if n, ok := x.(lg.Expr); ok {
-			for k, v := range module.UsedSymbolsAST(n) {
+			for k, v := range module.UsedSymbolsAST(n).All() {
 				usedSyms[k] = v
 			}
 		}

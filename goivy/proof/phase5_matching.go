@@ -998,7 +998,7 @@ func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool
 	}
 	// Check for capture
 	vocab := module.UsedSymbolsAST(val)
-	for vk := range vocab {
+	for vk := range vocab.All() {
 		if env[vk] {
 			return nil, RaiseCapture(sym)
 		}

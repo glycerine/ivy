@@ -493,7 +493,7 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 			}
 		}
 		// Python: lu.used_symbols_ast(fmla)
-		for cKey, cNode := range il.UsedSymbolsAst(fmla) {
+		for cKey, cNode := range il.UsedSymbolsAst(fmla).All() {
 			if bound[cKey] == nil {
 				res[cKey] = cNode
 			}

@@ -197,7 +197,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Save original symbols for trace
 	origSyms := make(map[string]bool)
-	for _, sym := range module.UsedSymbolsAST(invariant) {
+	for _, sym := range module.UsedSymbolsAST(invariant).All() {
 		origSyms[lg.ExprName(sym)] = true
 	}
 	for _, sym := range module.SymbolsClauses(trans) {
@@ -211,16 +211,16 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	//         funs = set(sym for sym in funs if is_function_sort(sym.sort))
 	allSyms := make(map[string]lg.Expr)
 	for _, df := range trans.Defs {
-		for _, sym := range module.UsedSymbolsAST(df.Rhs) {
+		for _, sym := range module.UsedSymbolsAST(df.Rhs).All() {
 			allSyms[lg.ExprName(sym)] = sym
 		}
 	}
 	for _, fmla := range trans.Fmlas {
-		for _, sym := range module.UsedSymbolsAST(fmla) {
+		for _, sym := range module.UsedSymbolsAST(fmla).All() {
 			allSyms[lg.ExprName(sym)] = sym
 		}
 	}
-	for _, sym := range module.UsedSymbolsAST(invariant) {
+	for _, sym := range module.UsedSymbolsAST(invariant).All() {
 		allSyms[lg.ExprName(sym)] = sym
 	}
 	funs := make(map[string]*lg.Const)
@@ -274,7 +274,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	//             if tr.is_skolem(x) and not il.is_function_sort(x.sort)])
 	var fromAssertTerms []lg.Expr
 	errCondsConj := &lg.And{Terms: errConds}
-	for _, sym := range module.UsedSymbolsAST(errCondsConj) {
+	for _, sym := range module.UsedSymbolsAST(errCondsConj).All() {
 		if actions.IsSkolem(lg.ExprName(sym)) && !il.IsFunctionSort(sym.NodeSort()) {
 			fromAssertTerms = append(fromAssertTerms, il.NewEquals(sym, sym))
 		}
@@ -282,8 +282,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	fromAsserts := &lg.And{Terms: fromAssertTerms}
 
 	// Python: invar_syms.update(ilu.used_symbols_ast(from_asserts))
-	for k, sym := range module.UsedSymbolsAST(fromAsserts) {
-		invarSyms[k] = sym
+	for k, sym := range module.UsedSymbolsAST(fromAsserts).All() {
+		invarSyms.Set(k, sym)
 	}
 
 	// Python: sort_constants = mine_constants(mod, trans, il.And(invariant, from_asserts))

@@ -150,13 +150,13 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	// Collect from formula
 	formula := s.ToFormula()
 	if formula != nil {
-		for _, c := range il.UsedSymbolsAst(formula) {
+		for _, c := range il.UsedSymbolsAst(formula).All() {
 			used[logic.ExprName(c)] = true
 		}
 	}
 	// Collect from concept formulas
 	s.Domain.Concepts.ForEachConcept(func(_ string, c *CDConcept) {
-		for _, uc := range il.UsedSymbolsAst(c.Formula) {
+		for _, uc := range il.UsedSymbolsAst(c.Formula).All() {
 			used[logic.ExprName(uc)] = true
 		}
 	})
@@ -306,7 +306,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 	}
 
 	var constants []*logic.Const
-	for _, sym := range il.UsedSymbolsAst(concept.Formula) {
+	for _, sym := range il.UsedSymbolsAst(concept.Formula).All() {
 		if c, ok := sym.(*logic.Const); ok {
 			constants = append(constants, c)
 		}

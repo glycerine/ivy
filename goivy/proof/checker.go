@@ -787,7 +787,7 @@ func collectStaleSymbols(n ast.Node, stale map[string]bool) {
 	// If this node is an lg.Expr, use the existing UsedSymbolsAST
 	// which handles logic-level nodes efficiently.
 	if expr, ok := n.(lg.Expr); ok {
-		for _, c := range module.UsedSymbolsAST(expr) {
+		for _, c := range module.UsedSymbolsAST(expr).All() {
 			stale[lg.ExprName(c)] = true
 		}
 		return

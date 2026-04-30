@@ -30,7 +30,7 @@ func MineConstants(mod *module.Module, trans *module.Clauses, invariant lg.Expr)
 	seen := make(map[string]bool)
 	for _, fmla := range fmlas {
 		syms := module.UsedSymbolsAST(fmla)
-		for _, symExpr := range syms {
+		for _, symExpr := range syms.All() {
 			sym, ok := symExpr.(*lg.Const)
 			if !ok {
 				continue
@@ -61,7 +61,7 @@ func MineConstants2(mod *module.Module, trans *module.Clauses, invariant lg.Expr
 
 	// Collect symbols from invariant
 	syms := module.UsedSymbolsAST(invariant)
-	for _, symExpr := range syms {
+	for _, symExpr := range syms.All() {
 		sym, ok := symExpr.(*lg.Const)
 		if !ok {
 			continue
@@ -119,7 +119,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	symsMap := module.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems
-	for _, symExpr := range symsMap {
+	for _, symExpr := range symsMap.All() {
 		sym, ok := symExpr.(*lg.Const)
 		if !ok {
 			continue
@@ -144,7 +144,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 
 	// Find new_ symbols
 	var newSyms []*lg.Const
-	for _, symExpr := range symsMap {
+	for _, symExpr := range symsMap.All() {
 		if sym, ok := symExpr.(*lg.Const); ok && actions.IsNew(sym.Name) {
 			newSyms = append(newSyms, sym)
 		}
