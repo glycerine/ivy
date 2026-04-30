@@ -541,9 +541,9 @@ variables_clauses = variables_cubes = apply_gen_to_clauses(variables_ast)
 
 # get set of variables occurring
 
-used_variables_ast = gen_to_set(variables_ast)
-used_variables_clause = gen_to_set(variables_clause)
-used_variables_clauses = gen_to_set(variables_clauses)
+used_variables_ast = gen_to_ordered_dict(variables_ast)
+used_variables_clause = gen_to_ordered_dict(variables_clause)
+used_variables_clauses = gen_to_ordered_dict(variables_clauses)
 
 # generate variables in order of first occurrence
 
@@ -575,9 +575,9 @@ constants_clauses = constants_cubes = apply_gen_to_clauses(constants_ast)
 
 # get set of constants occurring
 
-used_constants_ast = gen_to_set(constants_ast)
-used_constants_clause = gen_to_set(constants_clause)
-used_constants_clauses = gen_to_set(constants_clauses)
+used_constants_ast = gen_to_ordered_dict(constants_ast)
+used_constants_clause = gen_to_ordered_dict(constants_clause)
+used_constants_clauses = gen_to_ordered_dict(constants_clauses)
 
 # generate constants in order of first occurrence
 

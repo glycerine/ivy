@@ -5,7 +5,7 @@
 Ivy abstract syntax trees.
 """
 
-from .ivy_utils import flatten, gen_to_set, UniqueRenamer, compose_names, split_name, IvyError, base_name, ivy_compose_character, LocationTuple
+from .ivy_utils import flatten, gen_to_set, gen_to_ordered_dict, UniqueRenamer, compose_names, split_name, IvyError, base_name, ivy_compose_character, LocationTuple
 from . import ivy_utils as iu
 from . import ivy_logic
 from . import xtracer
@@ -1881,7 +1881,7 @@ def variables_ast(ast):
             for x in variables_ast(arg):
                 yield x
 
-used_variables_ast = gen_to_set(variables_ast)
+used_variables_ast = gen_to_ordered_dict(variables_ast)
 
 def symbols_ivy_ast(ast):
     if isinstance(ast,(App,Atom)):

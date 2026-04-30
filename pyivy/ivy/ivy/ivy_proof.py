@@ -840,7 +840,7 @@ def goal_subgoals(schema,goal,lineno):
 def fmla_vocab(fmla):
     """ Get the free vocabulary of a formula, including sorts, symbols and variables """
     
-    things = lu.used_sorts_ast(fmla)
+    things = dict(lu.used_sorts_ast(fmla))
     things.update(lu.used_symbols_ast(fmla))
     things.update(lu.used_variables_ast(fmla))
     return things
