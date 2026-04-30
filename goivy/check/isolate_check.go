@@ -988,6 +988,18 @@ func CheckModule(mod *module.Module) error {
 		fmt.Printf(" +++ IVY_STATS starting checking module. Num isolates = %d\n", len(isolates))
 	}
 
+	// Python: if opt_unchecked_properties.get() != None:
+	//             ivy_acl.register_from_file(opt_unchecked_properties.get())
+	// Load ACL rules ONCE before the isolate loop (matching Python line 982-983).
+	var aclCfg *acl.Config
+	if mod.Cfg.OptUncheckedProps != "" {
+		var err error
+		aclCfg, err = acl.RegisterFromFile(mod.Cfg.OptUncheckedProps)
+		if err != nil {
+			return err
+		}
+	}
+
 	for _, isolate := range isolates {
 		if mod.Cfg.OptIvyStats {
 			fmt.Printf("\n\tIVY_STATS checking isolate %s\n", isolate)

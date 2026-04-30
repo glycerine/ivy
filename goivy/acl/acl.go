@@ -6,14 +6,14 @@
 package acl
 
 import (
+	"fmt"
+	"os"
 	"regexp"
 	"strings"
 	"sync"
 
 	"github.com/goccy/go-yaml"
 )
-
-var _ = yaml.NewDecoder
 
 // Config holds per-session ACL state (ignore/assume lists).
 type Config struct {
@@ -53,7 +53,8 @@ func (cfg *Config) RegisterIgnores(ignList []string) error {
 	cfg.ignores = newIgnores
 
 	if len(regexParts) > 0 {
-		combined := strings.Join(regexParts, "|")
+		// Anchor with ^(?:...) to match Python's re.match() (start-of-string only)
+		combined := "^(?:" + strings.Join(regexParts, "|") + ")"
 		var err error
 		cfg.ignoresRegex, err = regexp.Compile(combined)
 		if err != nil {
@@ -85,7 +86,8 @@ func (cfg *Config) RegisterAssumes(assList []string) error {
 	cfg.assumes = newAssumes
 
 	if len(regexParts) > 0 {
-		combined := strings.Join(regexParts, "|")
+		// Anchor with ^(?:...) to match Python's re.match() (start-of-string only)
+		combined := "^(?:" + strings.Join(regexParts, "|") + ")"
 		var err error
 		cfg.assumesRegex, err = regexp.Compile(combined)
 		if err != nil {
@@ -163,6 +165,30 @@ func (cfg *Config) GetAssumesList() map[string]bool {
 		result[k] = v
 	}
 	return result
+}
+
+// RegisterFromFile loads ACL rules from a YAML file.
+// The file should have optional keys "ignores" and "assumes", each a list of
+// strings. Matches Python ivy_acl.register_from_file (ivy_acl.py:55-71).
+func RegisterFromFile(path string) (*Config, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("acl: reading %s: %w", path, err)
+	}
+	var doc struct {
+		Ignores []string `yaml:"ignores"`
+		Assumes []string `yaml:"assumes"`
+	}
+	if len(data) > 0 {
+		if err := yaml.Unmarshal(data, &doc); err != nil {
+			return nil, fmt.Errorf("acl: parsing %s: %w", path, err)
+		}
+	}
+	cfg := NewConfig()
+	if err := cfg.Register(doc.Ignores, doc.Assumes); err != nil {
+		return nil, fmt.Errorf("acl: %s: %w", path, err)
+	}
+	return cfg, nil
 }
 
 // Clear resets all ACL state.

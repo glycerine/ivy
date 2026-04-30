@@ -151,6 +151,13 @@ type Module struct {
 	// (ivy_check.py:406-407, 829-840).
 	TraceHook interface{}
 
+	// AclCfg holds the loaded ACL config (*acl.Config) for unchecked
+	// property filtering. Stored as interface{} because module cannot
+	// import acl (cycle avoidance). Set by check.CheckModule from the
+	// OptUncheckedProps file, matching Python ivy_acl.register_from_file
+	// (ivy_check.py:982-983).
+	AclCfg interface{}
+
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
 	// oldSig is saved by Enter() and restored by Exit().
