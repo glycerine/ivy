@@ -1,9 +1,5 @@
-// Ported to Go from ivy_vmt.py.
-
-// Package vmt provides VMT (Verification Modulo Theories) format export
-// for model checking. It converts Ivy modules into VMT format files that
-// can be consumed by VMT-compatible model checkers.
-package vmt
+// Ported to Go from ivy_vmt.py. Merged into check/ from the former vmt/ package.
+package check
 
 import (
 	"fmt"
@@ -401,14 +397,14 @@ func encodeAssignRecur(m *module.Module, sig *il.Sig, asgn actions.Action,
 	return updApp, nil
 }
 
-// UFToArrayAction converts uninterpreted functions to array operations in an action.
+// ufToArrayAction converts uninterpreted functions to array operations in an action.
 // Corresponds to Python's uf_to_array_action.
-func UFToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actions.Action {
+func ufToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actions.Action {
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if childAct, ok := toAction(arg); ok {
-			newArgs[i] = UFToArrayAction(m, sig, childAct)
+			newArgs[i] = ufToArrayAction(m, sig, childAct)
 		} else {
 			newArgs[i] = ufToArrAST(m, sig, arg)
 		}
@@ -441,10 +437,10 @@ func hasAssert(action actions.Action) bool {
 	return false
 }
 
-// CheckIsolate performs VMT-based model checking on the current module.
+// VMTCheckIsolate performs VMT-based model checking on the current module.
 // It writes the VMT file to "ivy.vmt" and exits.
-// Corresponds to Python's check_isolate.
-func CheckIsolate(method string, m *module.Module) error {
+// Corresponds to Python's ivy_vmt.check_isolate.
+func VMTCheckIsolate(method string, m *module.Module) error {
 	if method == "" {
 		method = "mc"
 	}
@@ -563,11 +559,11 @@ func CheckIsolate(method string, m *module.Module) error {
 	for i, na := range actionList {
 		actionList[i] = namedAction{
 			Name:   na.Name,
-			Action: UFToArrayAction(m, sig, na.Action),
+			Action: ufToArrayAction(m, sig, na.Action),
 		}
 	}
 
-	initAction = UFToArrayAction(m, sig, initAction).(*actions.Sequence)
+	initAction = ufToArrayAction(m, sig, initAction).(*actions.Sequence)
 
 	// Convert conjecture formulas. Python ivy_vmt.py:228:
 	//   conjs = [conj.clone([conj.label, uf_to_arr_ast(conj.formula)]) for conj in conjs]

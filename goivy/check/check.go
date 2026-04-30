@@ -22,7 +22,6 @@ import (
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/temporal"
-	"github.com/glycerine/ivy/goivy/vmt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
@@ -1106,7 +1105,7 @@ func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.No
 	}
 	// Python: check_subgoals(goals[0:1], method=ivy_vmt.check_isolate)
 	vmtMethod := func() error {
-		return vmt.CheckIsolate("vmt", mod)
+		return VMTCheckIsolate("vmt", mod)
 	}
 	err = CheckSubgoals(goals[0:1], vmtMethod, mod)
 	return goals[1:], err

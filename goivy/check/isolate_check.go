@@ -23,7 +23,6 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/temporal"
-	"github.com/glycerine/ivy/goivy/vmt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -1074,7 +1073,7 @@ func CheckModule(mod *module.Module) error {
 			}
 		case methodName == "vmt":
 			vmtMethod := func(m *module.Module) error {
-				return vmt.CheckIsolate("mc", m)
+				return VMTCheckIsolate("mc", m)
 			}
 			if err := MCIsolate(isolate, isoMod, vmtMethod); err != nil {
 				return err
@@ -1151,7 +1150,7 @@ func CheckModule(mod *module.Module) error {
 // The method parameter is the model checking backend to call:
 //   - mc.CheckIsolate (default)
 //   - bmc.CheckIsolate
-//   - vmt.CheckIsolate
+//   - VMTCheckIsolate
 //
 // If method is nil, this is a no-op (the caller should have provided one).
 func MCIsolate(isolate string, mod *module.Module, method func(*module.Module) error) error {
