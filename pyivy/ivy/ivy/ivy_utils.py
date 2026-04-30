@@ -45,6 +45,11 @@ def gen_to_dict(gen):
     """ return a function that applies generator and returns result as a dict """
     return lambda *args: dict(gen(*args))
 
+def gen_to_ordered_dict(gen):
+    """ return a function that applies generator and returns result as an
+    ordered dict (deduped, insertion/DFS-first-occurrence order). """
+    return lambda *args: dict.fromkeys(gen(*args))
+
 def unique(gen):
     """ given a generator, returns a generator of unique elements in
     sequence.  elements of sequence must be hashable. """

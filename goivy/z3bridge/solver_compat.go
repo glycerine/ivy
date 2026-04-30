@@ -323,12 +323,12 @@ func (s *Solver) ModelIfNone(clauses *module.Clauses, implied *module.Clauses, m
 			// Collect vocabulary
 			symSet := clauses.Symbols()
 			if implied != nil {
-				for sKey, sNode := range implied.Symbols() {
-					symSet[sKey] = sNode
+				for sKey, sNode := range implied.Symbols().All() {
+					symSet.Set(sKey, sNode)
 				}
 			}
-			vocab := make([]*lg.Const, 0, len(symSet))
-			for _, sym := range symSet {
+			vocab := make([]*lg.Const, 0, symSet.Len())
+			for _, sym := range symSet.All() {
 				if c, ok := sym.(*lg.Const); ok {
 					vocab = append(vocab, c)
 				}

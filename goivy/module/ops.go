@@ -601,19 +601,19 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 // UsedSymbolsClauses returns all symbols referenced in a Clauses
 // object. This matches Python's used_symbols_clauses
 // which returns a set of Symbol objects (with sorts).
-func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]lg.Expr {
+func UsedSymbolsClauses(clauses *Clauses) *iu.InsMap[lg.NodeKey, lg.Expr] {
 	if clauses == nil {
-		return make(map[lg.NodeKey]lg.Expr)
+		return iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	}
-	result := make(map[lg.NodeKey]lg.Expr)
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for _, f := range clauses.Fmlas {
-		for k, v := range UsedSymbolsAST(f) {
-			result[k] = v
+		for k, v := range UsedSymbolsAST(f).All() {
+			result.Set(k, v)
 		}
 	}
 	for _, d := range clauses.Defs {
-		for k, v := range UsedSymbolsAST(d) {
-			result[k] = v
+		for k, v := range UsedSymbolsAST(d).All() {
+			result.Set(k, v)
 		}
 	}
 	return result
@@ -621,7 +621,7 @@ func UsedSymbolsClauses(clauses *Clauses) map[lg.NodeKey]lg.Expr {
 
 
 
-func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses {
+func ClausesUsingSymbols(syms *iu.InsMap[lg.NodeKey, lg.Expr], clauses *Clauses) *Clauses {
 	var fmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if usesSymbolsAST(syms, f) {
@@ -822,12 +822,12 @@ func coerceArgsToClauses(args []interface{}) []*Clauses {
 func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
-		for _, s := range cls.Symbols() {
+		for _, s := range cls.Symbols().All() {
 			seen[lg.ExprName(s)] = struct{}{}
 		}
 	}
 	if extra != nil {
-		for _, s := range il.UsedSymbolsAst(extra) {
+		for _, s := range il.UsedSymbolsAst(extra).All() {
 			seen[lg.ExprName(s)] = struct{}{}
 		}
 	}
@@ -1146,7 +1146,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	seen := make(map[string]bool)
 	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
-		for _, sym := range il.UsedSymbolsAst(f) {
+		for _, sym := range il.UsedSymbolsAst(f).All() {
 			if cc, ok := sym.(*lg.Const); ok {
 				if !seen[cc.Name] {
 					seen[cc.Name] = true
@@ -1156,7 +1156,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, sym := range il.UsedSymbolsAst(d) {
+		for _, sym := range il.UsedSymbolsAst(d).All() {
 			if cc, ok := sym.(*lg.Const); ok {
 				if !seen[cc.Name] {
 					seen[cc.Name] = true
@@ -1175,8 +1175,8 @@ func SymbolsClauses(clauses *Clauses) []lg.Expr {
 		return nil
 	}
 	result := clauses.Symbols()
-	syms := make([]lg.Expr, 0, len(result))
-	for _, s := range result {
+	syms := make([]lg.Expr, 0, result.Len())
+	for _, s := range result.All() {
 		syms = append(syms, s)
 	}
 	return syms

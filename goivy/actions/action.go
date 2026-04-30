@@ -794,12 +794,12 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	// Collect used symbol names for unique naming
 	usedMap := module.UsedSymbolsAST(a.Callee)
 	for _, r := range a.ActualReturns {
-		for k, v := range module.UsedSymbolsAST(r) {
-			usedMap[k] = v
+		for k, v := range module.UsedSymbolsAST(r).All() {
+			usedMap.Set(k, v)
 		}
 	}
-	usedNames := make([]string, 0, len(usedMap))
-	for _, sym := range usedMap {
+	usedNames := make([]string, 0, usedMap.Len())
+	for _, sym := range usedMap.All() {
 		usedNames = append(usedNames, lg.ExprName(sym))
 	}
 	rn := iu.NewUniqueRenamer("", usedNames)

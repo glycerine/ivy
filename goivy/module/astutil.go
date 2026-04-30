@@ -17,8 +17,8 @@ import (
 // Delegates to the faithful port il.UsedSymbolsAst (via symbols_ilu_ast).
 func SymbolsAST(node lg.Expr) []lg.Expr {
 	m := il.UsedSymbolsAst(node)
-	result := make([]lg.Expr, 0, len(m))
-	for _, sym := range m {
+	result := make([]lg.Expr, 0, m.Len())
+	for _, sym := range m.All() {
 		result = append(result, sym)
 	}
 	return result
@@ -26,7 +26,8 @@ func SymbolsAST(node lg.Expr) []lg.Expr {
 
 // UsedSymbolsAST returns the set of used symbols in a node.
 // Delegates to the faithful port il.UsedSymbolsAst (via symbols_ilu_ast).
-func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
+// Returns InsMap preserving DFS first-occurrence order.
+func UsedSymbolsAST(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
 	return il.UsedSymbolsAst(node)
 }
 

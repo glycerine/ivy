@@ -235,7 +235,7 @@ func TrimClauses(cls *Clauses) *Clauses {
 		seed := seeds[len(seeds)-1]
 		seeds = seeds[:len(seeds)-1]
 		syms := UsedSymbolsAST(seed)
-		for _, sym := range syms {
+		for _, sym := range syms.All() {
 			name := lg.ExprName(sym)
 			if strings.Contains(name, "__") {
 				if !usedSyms[name] {

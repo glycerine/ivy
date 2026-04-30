@@ -656,9 +656,9 @@ temporals_asts = apply_gen_to_list(temporals_ast)
 
 # get set of symbols occurring
 
-used_symbols_ast = gen_to_set(symbols_ilu_ast)
-used_symbols_asts = used_symbols_clause = gen_to_set(symbols_clause)
-used_symbols_clauses = gen_to_set(symbols_clauses)
+used_symbols_ast = gen_to_ordered_dict(symbols_ilu_ast)
+used_symbols_asts = used_symbols_clause = gen_to_ordered_dict(symbols_clause)
+used_symbols_clauses = gen_to_ordered_dict(symbols_clauses)
 
 # get set of symbols occurring
 

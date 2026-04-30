@@ -139,7 +139,7 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 	}
 	for _, f := range c.Fmlas {
 		syms := il.UsedSymbolsAst(f)
-		for _, s := range syms {
+		for _, s := range syms.All() {
 			name := lg.ExprName(s)
 			if len(name) >= 2 && name[0] == '_' && name[1] == '_' {
 				return false
@@ -194,16 +194,16 @@ func (c *Clauses) Equal(other *Clauses) bool {
 
 // Symbols yields all symbols used in the Clauses.
 // Delegates to the faithful port il.UsedSymbolsAst (via symbols_ilu_ast).
-func (c *Clauses) Symbols() map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+func (c *Clauses) Symbols() *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for _, f := range c.Fmlas {
-		for k, v := range il.UsedSymbolsAst(f) {
-			result[k] = v
+		for k, v := range il.UsedSymbolsAst(f).All() {
+			result.Set(k, v)
 		}
 	}
 	for _, d := range c.Defs {
-		for k, v := range il.UsedSymbolsAst(d) {
-			result[k] = v
+		for k, v := range il.UsedSymbolsAst(d).All() {
+			result.Set(k, v)
 		}
 	}
 	return result
@@ -338,10 +338,10 @@ func isSkolem(c *lg.Const) bool {
 
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
-func usesSymbolsAST(syms map[lg.NodeKey]lg.Expr, node lg.Expr) bool {
+func usesSymbolsAST(syms *iu.InsMap[lg.NodeKey, lg.Expr], node lg.Expr) bool {
 	used := il.UsedSymbolsAst(node)
-	for s := range syms {
-		if _, ok := used[s]; ok {
+	for s := range syms.All() {
+		if _, ok := used.Get2(s); ok {
 			return true
 		}
 	}

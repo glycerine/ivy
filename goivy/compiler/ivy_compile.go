@@ -1444,7 +1444,7 @@ func CheckDefinitions(mod *module.Module) error {
 				// Check if any used symbols are stale
 				hasStale := false
 				if expr, ok := prop.Formula.(lg.Expr); ok {
-					for _, sym := range il.UsedSymbolsAst(expr) {
+					for _, sym := range il.UsedSymbolsAst(expr).All() {
 						if stale[lg.Key(sym)] {
 							hasStale = true
 							break
@@ -1630,7 +1630,7 @@ func CheckDefinitions(mod *module.Module) error {
 			defKey := definesKey(logicDef)
 			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
-				for _, sym := range il.UsedSymbolsAst(rhs) {
+				for _, sym := range il.UsedSymbolsAst(rhs).All() {
 					arcs = append(arcs, [2]string{string(defKey), string(lg.Key(sym))})
 				}
 			}

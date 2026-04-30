@@ -339,7 +339,7 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 	symbolSet := make(map[string]*lg.Const)
 	for _, f := range fmlas {
 		//for _, sym := range il.SymbolsAst(f) { // I suspect this porting choice is buggy.
-		for _, expr := range il.UsedSymbolsAst(f) {
+		for _, expr := range il.UsedSymbolsAst(f).All() {
 			switch sym := expr.(type) {
 			case *lg.Const:
 				symbolSet[sym.Name] = sym

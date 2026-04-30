@@ -1206,14 +1206,14 @@ def to_aiger(mod,ext_act,method="mc"):
     # next_axioms = ilu.rename_clauses(axioms,rn)
     # return ilu.and_clauses(axioms,next_axioms)
 
-    funs = set()
+    funs = dict()
     for df in trans.defs:
         funs.update(ilu.used_symbols_ast(df.args[1]))
     for fmla in trans.fmlas:
         funs.update(ilu.used_symbols_ast(fmla))
 #   funs = ilu.used_symbols_clauses(trans)
     funs.update(ilu.used_symbols_ast(invariant))
-    funs = set(sym for sym in funs if  il.is_function_sort(sym.sort))
+    funs = dict((sym, None) for sym in funs if il.is_function_sort(sym.sort))
 
     # Propositionally abstract
 

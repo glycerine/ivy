@@ -98,7 +98,7 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 		}
 	}
 	usedSyms := UsedSymbolsAst(term)
-	for _, sym := range usedSyms {
+	for _, sym := range usedSyms.All() {
 		name := lg.ExprName(sym)
 		if unsortedVarNames != nil && unsortedVarNames[name] {
 			continue

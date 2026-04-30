@@ -327,8 +327,8 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Expr {
 // usedSymbolNames returns all constant symbol names referenced in a formula.
 func usedSymbolNames(node lg.Expr) map[string]bool {
 	syms := module.UsedSymbolsAST(node)
-	result := make(map[string]bool, len(syms))
-	for _, c := range syms {
+	result := make(map[string]bool, syms.Len())
+	for _, c := range syms.All() {
 		result[lg.ExprName(c)] = true
 	}
 	return result
@@ -378,7 +378,7 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	// which uses recstruct (name, sort) equality.
 	actualSyms := module.UsedSymbolsAST(node)
 	constMap := make(map[lg.NodeKey]*lg.Const)
-	for _, s := range actualSyms {
+	for _, s := range actualSyms.All() {
 		if c, ok := s.(*lg.Const); ok {
 			if newName, ok := nameMap[c.Name]; ok {
 				constMap[lg.Key(c)] = lg.NewConst(newName, c.CSort)
@@ -1121,7 +1121,7 @@ func StateToAction(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = NewConst(s)
 	}
-	for _, sym := range module.UsedSymbolsClauses(u.TR) {
+	for _, sym := range module.UsedSymbolsClauses(u.TR).All() {
 		if s, ok := sym.(*lg.Const); ok && IsOld(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
@@ -1141,7 +1141,7 @@ func ActionToState(u *Update) *Update {
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = OldConst(s)
 	}
-	for _, sym := range module.UsedSymbolsClauses(u.TR) {
+	for _, sym := range module.UsedSymbolsClauses(u.TR).All() {
 		if s, ok := sym.(*lg.Const); ok && IsNew(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(NewOf(s.Name), s.CSort)
 		}
@@ -1645,7 +1645,7 @@ func caseClausesFilter(clauses *module.Clauses) *module.Clauses {
 		}
 		// Python: not any(is_skolem(r) for r,n in relations_clause(cl))
 		hasSkolem := false
-		for _, c := range module.UsedSymbolsAST(f) {
+		for _, c := range module.UsedSymbolsAST(f).All() {
 			if IsSkolem(lg.ExprName(c)) {
 				hasSkolem = true
 				break
@@ -1803,7 +1803,7 @@ func BindOldsClausesClauses(clauses *module.Clauses) *module.Clauses {
 	}
 	used := module.UsedSymbolsClauses(clauses)
 	renaming := make(map[lg.NodeKey]*lg.Const)
-	for _, sym := range used {
+	for _, sym := range used.All() {
 		if s, ok := sym.(*lg.Const); ok && IsOld(s.Name) {
 			renaming[lg.Key(s)] = lg.NewConst(OldOf(s.Name), s.CSort)
 		}
@@ -1820,12 +1820,12 @@ func BindOldsClausesClauses(clauses *module.Clauses) *module.Clauses {
 func SubstAction(u *Update, subst map[string]string) *Update {
 	// Collect actual constants from both TR and Pre to get real sorts
 	allSyms := module.UsedSymbolsClauses(u.TR)
-	for k, v := range module.UsedSymbolsClauses(u.Pre) {
-		allSyms[k] = v
+	for k, v := range module.UsedSymbolsClauses(u.Pre).All() {
+		allSyms.Set(k, v)
 	}
 	// Build (name,sort)-keyed renaming from actual constants
 	renaming := make(map[lg.NodeKey]*lg.Const)
-	for _, sym := range allSyms {
+	for _, sym := range allSyms.All() {
 		if s, ok := sym.(*lg.Const); ok {
 			if newName, ok := subst[s.Name]; ok {
 				renaming[lg.Key(s)] = lg.NewConst(newName, s.CSort)

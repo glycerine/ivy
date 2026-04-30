@@ -359,12 +359,12 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	// type_constraints(sorted(syms)) ordering.
 	allSyms := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range clauses.Fmlas {
-		for k, v := range il.UsedSymbolsAst(f) {
+		for k, v := range il.UsedSymbolsAst(f).All() {
 			allSyms[k] = v
 		}
 	}
 	for _, d := range clauses.Defs {
-		for k, v := range il.UsedSymbolsAst(d) {
+		for k, v := range il.UsedSymbolsAst(d).All() {
 			allSyms[k] = v
 		}
 	}
@@ -561,8 +561,8 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
 	// used_symbols_ast = gen_to_set(symbols_ilu_ast)  (ivy_logic_utils.py:610)
 	usedSymsMap := il.UsedSymbolsAst(fmla)
-	usedSyms := make([]lg.Expr, 0, len(usedSymsMap))
-	for _, sym := range usedSymsMap {
+	usedSyms := make([]lg.Expr, 0, usedSymsMap.Len())
+	for _, sym := range usedSymsMap.All() {
 		usedSyms = append(usedSyms, sym)
 	}
 	sort.Slice(usedSyms, func(i, j int) bool {

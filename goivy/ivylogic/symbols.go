@@ -5,6 +5,7 @@ package ivylogic
 import (
 	"iter"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -78,21 +79,23 @@ func SymbolsAsts(nodes []lg.Expr) iter.Seq[lg.Expr] {
 }
 
 // UsedSymbolsAst returns the set of symbols occurring in a single AST.
-// Matches Python: used_symbols_ast = gen_to_set(symbols_ilu_ast)
-func UsedSymbolsAst(node lg.Expr) map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+// Matches Python: used_symbols_ast = gen_to_ordered_dict(symbols_ilu_ast)
+// Returns InsMap preserving DFS first-occurrence order.
+func UsedSymbolsAst(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for sym := range SymbolsIluAst(node) {
-		result[lg.Key(sym)] = sym
+		result.Set(lg.Key(sym), sym)
 	}
 	return result
 }
 
 // UsedSymbolsAsts returns the set of symbols occurring in a list of ASTs.
-// Matches Python: used_symbols_asts = gen_to_set(symbols_clause)
-func UsedSymbolsAsts(nodes []lg.Expr) map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+// Matches Python: used_symbols_asts = gen_to_ordered_dict(symbols_clause)
+// Returns InsMap preserving DFS first-occurrence order.
+func UsedSymbolsAsts(nodes []lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
+	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for sym := range SymbolsAsts(nodes) {
-		result[lg.Key(sym)] = sym
+		result.Set(lg.Key(sym), sym)
 	}
 	return result
 }

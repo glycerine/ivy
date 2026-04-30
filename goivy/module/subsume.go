@@ -266,7 +266,7 @@ func collectUsedSymbolNames(c1, c2 [][]*il.Literal) []string {
 	for _, cls := range [][]*il.Literal{} {
 		for _, lit := range cls {
 			syms := UsedSymbolsAST(lit.Atom)
-			for _, s := range syms {
+			for _, s := range syms.All() {
 				names[lg.ExprName(s)] = true
 			}
 		}
@@ -275,7 +275,7 @@ func collectUsedSymbolNames(c1, c2 [][]*il.Literal) []string {
 		for _, cls := range clauses {
 			for _, lit := range cls {
 				syms := UsedSymbolsAST(lit.Atom)
-				for _, s := range syms {
+				for _, s := range syms.All() {
 					names[lg.ExprName(s)] = true
 				}
 			}
@@ -476,15 +476,15 @@ func ExistsQuantClausesMap(syms []*lg.Const, clauses *Clauses) (map[lg.NodeKey]*
 func collectAllUsedNames(clauses *Clauses) []string {
 	names := make(map[string]bool)
 	for _, f := range clauses.Fmlas {
-		for _, s := range UsedSymbolsAST(f) {
+		for _, s := range UsedSymbolsAST(f).All() {
 			names[lg.ExprName(s)] = true
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, s := range UsedSymbolsAST(d.Lhs) {
+		for _, s := range UsedSymbolsAST(d.Lhs).All() {
 			names[lg.ExprName(s)] = true
 		}
-		for _, s := range UsedSymbolsAST(d.Rhs) {
+		for _, s := range UsedSymbolsAST(d.Rhs).All() {
 			names[lg.ExprName(s)] = true
 		}
 	}

@@ -572,7 +572,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 
 	// Constant values
 	symSet := clauses.Symbols()
-	for _, symExpr := range symSet {
+	for _, symExpr := range symSet.All() {
 		sym, ok := symExpr.(*lg.Const)
 		if !ok {
 			continue
@@ -595,7 +595,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 	}
 
 	// Relation values
-	for _, symExpr := range symSet {
+	for _, symExpr := range symSet.All() {
 		sym, ok := symExpr.(*lg.Const)
 		if !ok {
 			continue
@@ -615,7 +615,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *module.C
 	}
 
 	// Function values
-	for _, symExpr := range symSet {
+	for _, symExpr := range symSet.All() {
 		sym, ok := symExpr.(*lg.Const)
 		if !ok {
 			continue
@@ -848,8 +848,8 @@ func (s *Solver) GetModelFromClauses(clauses *module.Clauses) (*HerbrandModel, e
 
 	// Collect vocabulary
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Const, 0, len(symSet))
-	for _, sym := range symSet {
+	vocab := make([]*lg.Const, 0, symSet.Len())
+	for _, sym := range symSet.All() {
 		if c, ok := sym.(*lg.Const); ok {
 			vocab = append(vocab, c)
 		}
