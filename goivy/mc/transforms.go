@@ -6,9 +6,11 @@ import (
 
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ElimIte eliminates ITEs over non-finite sorts by introducing fresh variables
@@ -246,9 +248,14 @@ func cartesianProductNodes(sets [][]lg.Expr) [][]lg.Expr {
 	return result
 }
 
-// defToConstraint converts a definition to a constraint (equality).
+// defToConstraint converts a definition to a constraint formula.
 func defToConstraint(def *il.Definition) lg.Expr {
-	return &lg.Eq{T1: def.Lhs, T2: def.Rhs}
+	result := il.DefinitionToConstraint(def)
+	if xtracer.Enabled {
+		lhsSort := def.Lhs.NodeSort()
+		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v", lhsSort, iu.ShortTypeName(result))
+	}
+	return result
 }
 
 // schemaMatch implements Python's Match class (ivy_mc.py:551-576).
