@@ -209,25 +209,25 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	//         for fmla in trans.fmlas: funs.update(used_symbols_ast(fmla))
 	//         funs.update(used_symbols_ast(invariant))
 	//         funs = set(sym for sym in funs if is_function_sort(sym.sort))
-	allSyms := make(map[string]lg.Expr)
+	allSyms := iu.NewInsMap[string, lg.Expr]()
 	for _, df := range trans.Defs {
 		for _, sym := range module.UsedSymbolsAST(df.Rhs).All() {
-			allSyms[lg.ExprName(sym)] = sym
+			allSyms.Set(lg.ExprName(sym), sym)
 		}
 	}
 	for _, fmla := range trans.Fmlas {
 		for _, sym := range module.UsedSymbolsAST(fmla).All() {
-			allSyms[lg.ExprName(sym)] = sym
+			allSyms.Set(lg.ExprName(sym), sym)
 		}
 	}
 	for _, sym := range module.UsedSymbolsAST(invariant).All() {
-		allSyms[lg.ExprName(sym)] = sym
+		allSyms.Set(lg.ExprName(sym), sym)
 	}
-	funs := make(map[string]*lg.Const)
-	for name, sym := range allSyms {
+	funs := iu.NewInsMap[string, *lg.Const]()
+	for name, sym := range allSyms.All() {
 		if il.IsFunctionSort(sym.NodeSort()) {
 			if c, ok := sym.(*lg.Const); ok {
-				funs[name] = c
+				funs.Set(name, c)
 			}
 		}
 	}

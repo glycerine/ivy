@@ -662,7 +662,7 @@ used_symbols_clauses = gen_to_ordered_dict(symbols_clauses)
 
 # get set of symbols occurring
 
-used_sorts_ast = gen_to_set(sorts_ast)
+used_sorts_ast = gen_to_ordered_dict(sorts_ast)
 
 # generate symbols in order of first occurrence
 
