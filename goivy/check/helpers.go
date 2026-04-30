@@ -397,8 +397,9 @@ func PrettyActionName(name string) string {
 	return name
 }
 
-// FilterCheckers filters checkers by line number.
+// FilterCheckers filters checkers by location in "file:line" format.
 // If checkLineno is empty, returns all checkers.
+// Non-ConjChecker items always pass through (matching Python filter_fcs).
 func FilterCheckers(checkers []Checker, checkLineno string) []Checker {
 	if checkLineno == "" {
 		return checkers
@@ -406,8 +407,7 @@ func FilterCheckers(checkers []Checker, checkLineno string) []Checker {
 	var result []Checker
 	for _, fc := range checkers {
 		if cc, ok := fc.(*ConjChecker); ok {
-			if fmt.Sprintf("line %d", cc.LF.Lineno()) == checkLineno ||
-				fmt.Sprintf("%d", cc.LF.Lineno()) == checkLineno {
+			if cc.LF.GetLineno().FileLineKey() == checkLineno {
 				result = append(result, fc)
 			}
 		} else {

@@ -370,11 +370,10 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	}
 
 	// Python: if ca != self.lineno — compares full Location(file, line).
-	// CheckedAssert format: "file:line" matching Python's Location.
+	// CheckedAssert format: "file:line" via Location.FileLineKey().
 	if ctx.CheckedAssert != "" {
 		loc := a.GetLineno()
-		locStr := fmt.Sprintf("%s:%d", loc.Filename, loc.Line)
-		if ctx.CheckedAssert != locStr {
+		if ctx.CheckedAssert != loc.FileLineKey() {
 			if unprovable {
 				return &Update{
 					Modified: []*lg.Const{},

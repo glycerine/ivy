@@ -326,7 +326,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		if mod.Cfg.CheckLineno != "" {
 			var filtered []actions.Action
 			for _, sub := range guarantees {
-				if fmt.Sprintf("%d", sub.GetLineno().Line) == mod.Cfg.CheckLineno {
+				if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
 					filtered = append(filtered, sub)
 				}
 			}
@@ -334,52 +334,47 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 		// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
 		// (already filtered above)
-		// Python: if guarantees and not unprovable:
-		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable && check {
+		// Python: if guarantees and not unprovable: print header always; if check: verify
+		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
-			ag := art.NewAnalysisGraph(mod)
-			ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor
-			if len(ag.States) > 0 {
-				// Python: fail = itp.State(expr = itp.fail_expr(ag.states[0].expr))
-				//         check_safety_in_state(mod, ag, fail)
-				// Python State() defaults to value=top_state() (true clauses),
-				// only the expr field is set from fail_expr.
-				// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
-				initState := ag.States[0]
+			if check {
+				ag := art.NewAnalysisGraph(mod)
+				ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor
+				if len(ag.States) > 0 {
+					initState := ag.States[0]
 
-				failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
+					failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 
-				// Recover the inner action: AddInitialState stores either an
-				// action object or a string label.
-				var innerAction actions.Action
-				if aa, ok := initState.Prov.(*art.ActionApp); ok {
-					switch rep := aa.Rep.(type) {
-					case string:
-						failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
-						if v, ok := mod.Actions.Get2(rep); ok {
-							if a, ok := v.(actions.Action); ok {
-								innerAction = a
+					var innerAction actions.Action
+					if aa, ok := initState.Prov.(*art.ActionApp); ok {
+						switch rep := aa.Rep.(type) {
+						case string:
+							failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
+							if v, ok := mod.Actions.Get2(rep); ok {
+								if a, ok := v.(actions.Action); ok {
+									innerAction = a
+								}
 							}
+						case actions.Action:
+							failState.Prov = art.NewActionApp("fail_"+rep.Name(), aa.Args...)
+							innerAction = rep
 						}
-					case actions.Action:
-						failState.Prov = art.NewActionApp("fail_"+rep.Name(), aa.Args...)
-						innerAction = rep
 					}
-				}
-				if innerAction == nil {
-					innerAction = initState.Action
-				}
-
-				if innerAction != nil {
-					failState.Action = actions.NewFailAction(innerAction)
-					if initState.Pred != nil {
-						failState.Pred = initState.Pred
-					} else if aa, ok := initState.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
-						failState.Pred = aa.Args[0]
+					if innerAction == nil {
+						innerAction = initState.Action
 					}
-				}
 
-				CheckSafetyInStateWithAG(mod, ag, failState, true)
+					if innerAction != nil {
+						failState.Action = actions.NewFailAction(innerAction)
+						if initState.Pred != nil {
+							failState.Pred = initState.Pred
+						} else if aa, ok := initState.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
+							failState.Pred = aa.Args[0]
+						}
+					}
+
+					CheckSafetyInStateWithAG(mod, ag, failState, true)
+				}
 			}
 		}
 	}
@@ -436,235 +431,209 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 	}
 
-	// Check guarantees (assert actions)
-	// Python: iterates all actions, finds AssertActions, checks reachable
-	// roots in checked_actions, and verifies safety for each.
-	if !mod.Cfg.NoCheckGuarantees && check {
-		// Build call graph
-		callgraph := make(map[string][]string)
+	// Python: callgraph, assumptions, and guarantee printing all run unconditionally.
+	// Only the actual SMT verification is gated on `check`. The guarantee
+	// header/loop is gated on `!NoCheckGuarantees` but NOT on `check`.
+
+	// Build call graph (always — used by assumptions and guarantees)
+	callgraph := make(map[string][]string)
+	for actname, action := range mod.Actions.All() {
+		if act, ok := action.(actions.Action); ok {
+			for _, calledName := range act.IterCalls() {
+				callgraph[calledName] = append(callgraph[calledName], actname)
+			}
+		}
+	}
+
+	if actions.AssertLocEnabled {
 		for actname, action := range mod.Actions.All() {
-			if act, ok := action.(actions.Action); ok {
-				for _, calledName := range act.IterCalls() {
-					callgraph[calledName] = append(callgraph[calledName], actname)
+			if a, ok := action.(actions.Action); ok {
+				actions.AssertEveryActionHasLoc(a, "check.isolate_check.print actname="+actname)
+			}
+		}
+	}
+
+	// Print assumptions (always — not gated on check or NoCheckGuarantees)
+	someAssumps := false
+	for actname, action := range mod.Actions.All() {
+		act, ok := action.(actions.Action)
+		if !ok {
+			continue
+		}
+		var assumptions []actions.Action
+		for _, sub := range act.IterSubactions() {
+			if _, isAssume := sub.(*actions.AssumeAction); isAssume {
+				if !IsUnprovableAssert(sub) {
+					assumptions = append(assumptions, sub)
 				}
 			}
 		}
-
-		// Defensive: validate Loc-on-action invariant before the print
-		// stage. No-op when AssertLocEnabled is false.
-		if actions.AssertLocEnabled {
-			for actname, action := range mod.Actions.All() {
-				if a, ok := action.(actions.Action); ok {
-					actions.AssertEveryActionHasLoc(a, "check.isolate_check.print actname="+actname)
+		if len(assumptions) > 0 {
+			if !someAssumps {
+				fmt.Println("\n    The following program assertions are treated as assumptions:")
+				someAssumps = true
+			}
+			callers := callgraph[actname]
+			if mod.PublicActions.Get(actname) {
+				callers = append(callers, "the environment")
+				callgraph[actname] = callers
+			}
+			prettyname := actname
+			if strings.HasPrefix(prettyname, "ext:") {
+				prettyname = prettyname[4:]
+			}
+			var prettycallers []string
+			for _, c := range callers {
+				if strings.HasPrefix(c, "ext:") {
+					prettycallers = append(prettycallers, c[4:])
+				} else {
+					prettycallers = append(prettycallers, c)
 				}
+			}
+			fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
+			for _, sub := range assumptions {
+				fmt.Printf("            %sassumption\n", PrettyActionLineno(sub))
 			}
 		}
+	}
 
-		// Print assumptions
-		someAssumps := false
-		for actname, action := range mod.Actions.All() {
-			act, ok := action.(actions.Action)
-			if !ok {
-				continue
-			}
-			var assumptions []actions.Action
-			for _, sub := range act.IterSubactions() {
-				if _, isAssume := sub.(*actions.AssumeAction); isAssume {
-					if !IsUnprovableAssert(sub) {
-						assumptions = append(assumptions, sub)
-					}
-				}
-			}
-			if len(assumptions) > 0 {
-				if !someAssumps {
-					fmt.Println("\n    The following program assertions are treated as assumptions:")
-					someAssumps = true
-				}
-				callers := callgraph[actname]
-				if mod.PublicActions.Get(actname) {
-					callers = append(callers, "the environment")
-					callgraph[actname] = callers // persist mutation, matching Python's list.append
-				}
-				prettyname := actname
-				if strings.HasPrefix(prettyname, "ext:") {
-					prettyname = prettyname[4:]
-				}
-				var prettycallers []string
-				for _, c := range callers {
-					if strings.HasPrefix(c, "ext:") {
-						prettycallers = append(prettycallers, c[4:])
-					} else {
-						prettycallers = append(prettycallers, c)
-					}
-				}
-				fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
-				for _, sub := range assumptions {
-					fmt.Printf("            %sassumption\n", PrettyActionLineno(sub))
-				}
+	// Guarantee phase (always iterates; only SMT verification gated on check)
+	xtracer.Trace("check.guarantee_phase ENTER")
+	tried := make(map[string]bool)
+	someGuarants := false
+	for actname, action := range mod.Actions.All() {
+		xtracer.Trace("check.guarantee_phase actname iter actname=%s", actname)
+		act, ok := action.(actions.Action)
+		if !ok {
+			xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
+			continue
+		}
+		xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
+		var guarantees []actions.Action
+		subCount := 0
+		for _, sub := range act.IterSubactions() {
+			subCount++
+			isAssert := actions.IsAssertLike(sub)
+			_, isRanking := sub.(*actions.Ranking)
+			xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, actions.ActionTypeName(sub), isAssert, isRanking, sub.Canon())
+			if isAssert || isRanking {
+				guarantees = append(guarantees, sub)
 			}
 		}
-
-		// Check guarantees
-		// Python: guarantees = [sub for sub in action.iter_subactions()
-		//             if isinstance(sub, (act.AssertAction, act.Ranking))]
-		xtracer.Trace("check.guarantee_phase ENTER")
-		tried := make(map[string]bool)
-		someGuarants := false
-		for actname, action := range mod.Actions.All() {
-			xtracer.Trace("check.guarantee_phase actname iter actname=%s", actname)
-			act, ok := action.(actions.Action)
-			if !ok {
-				xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
-				continue
-			}
-			xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
-			var guarantees []actions.Action
-			subCount := 0
-			for _, sub := range act.IterSubactions() {
-				subCount++
-				isAssert := actions.IsAssertLike(sub)
-				_, isRanking := sub.(*actions.Ranking)
-				xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, actions.ActionTypeName(sub), isAssert, isRanking, sub.Canon())
-				if isAssert || isRanking {
-					guarantees = append(guarantees, sub)
+		xtracer.Trace("check.guarantee_phase post iter_subactions actname=%s subCount=%d guarantees=%d", actname, subCount, len(guarantees))
+		if mod.Cfg.CheckLineno != "" {
+			var filtered []actions.Action
+			for _, sub := range guarantees {
+				if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
+					filtered = append(filtered, sub)
 				}
 			}
-			xtracer.Trace("check.guarantee_phase post iter_subactions actname=%s subCount=%d guarantees=%d", actname, subCount, len(guarantees))
-			// Python: if check_lineno is not None:
-			//             guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
-			if mod.Cfg.CheckLineno != "" {
-				var filtered []actions.Action
-				for _, sub := range guarantees {
-					if fmt.Sprintf("%d", sub.GetLineno().Line) == mod.Cfg.CheckLineno {
-						filtered = append(filtered, sub)
+			guarantees = filtered
+			xtracer.Trace("check.guarantee_phase post check_lineno_filter actname=%s guarantees=%d", actname, len(guarantees))
+		}
+		{
+			var filtered []actions.Action
+			for _, sub := range guarantees {
+				pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
+				xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
+				if pass {
+					filtered = append(filtered, sub)
+				}
+			}
+			guarantees = filtered
+			xtracer.Trace("check.guarantee_phase post unprov_filter actname=%s guarantees=%d", actname, len(guarantees))
+		}
+		// Python: if guarantees and not(no_check_guarantees.get()):
+		if len(guarantees) > 0 && !mod.Cfg.NoCheckGuarantees {
+			if !someGuarants {
+				fmt.Println("\n    The following program assertions are treated as guarantees:")
+				someGuarants = true
+			}
+			callers := callgraph[actname]
+			if mod.PublicActions.Get(actname) {
+				callers = append(callers, "the environment")
+				callgraph[actname] = callers
+			}
+			prettyname := actname
+			if strings.HasPrefix(prettyname, "ext:") {
+				prettyname = prettyname[4:]
+			}
+			var prettycallers []string
+			for _, c := range callers {
+				if strings.HasPrefix(c, "ext:") {
+					prettycallers = append(prettycallers, c[4:])
+				} else {
+					prettycallers = append(prettycallers, c)
+				}
+			}
+			fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
+
+			roots := reachable([]string{actname}, func(x string) []string { return callgraph[x] })
+			for _, sub := range guarantees {
+				xtracer.Trace("check.guarantee_outer iter")
+				lineno := sub.GetLineno()
+				fmt.Printf("            %sguarantee ", PrettyActionLineno(sub))
+				linenoKey := lineno.FileLineKey()
+
+				anyUntried := false
+				for root := range checkedActions {
+					if roots[root] && !tried[root+":"+linenoKey] {
+						anyUntried = true
+						break
 					}
 				}
-				guarantees = filtered
-				xtracer.Trace("check.guarantee_phase post check_lineno_filter actname=%s guarantees=%d", actname, len(guarantees))
-			}
-			// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
-			{
-				var filtered []actions.Action
-				for _, sub := range guarantees {
-					pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
-					xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
-					if pass {
-						filtered = append(filtered, sub)
-					}
-				}
-				guarantees = filtered
-				xtracer.Trace("check.guarantee_phase post unprov_filter actname=%s guarantees=%d", actname, len(guarantees))
-			}
-			// Python: if guarantees and not(no_check_guarantees.get()):
-			if len(guarantees) > 0 {
-				if !someGuarants {
-					fmt.Println("\n    The following program assertions are treated as guarantees:")
-					someGuarants = true
-				}
-				callers := callgraph[actname]
-				if mod.PublicActions.Get(actname) {
-					callers = append(callers, "the environment")
-					callgraph[actname] = callers // persist mutation, matching Python's list.append
-				}
-				prettyname := actname
-				if strings.HasPrefix(prettyname, "ext:") {
-					prettyname = prettyname[4:]
-				}
-				var prettycallers []string
-				for _, c := range callers {
-					if strings.HasPrefix(c, "ext:") {
-						prettycallers = append(prettycallers, c[4:])
-					} else {
-						prettycallers = append(prettycallers, c)
-					}
-				}
-				fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
 
-				roots := reachable([]string{actname}, func(x string) []string { return callgraph[x] })
-				for _, sub := range guarantees {
-					xtracer.Trace("check.guarantee_outer iter")
-					lineno := sub.GetLineno()
-					fmt.Printf("            %sguarantee ", PrettyActionLineno(sub))
-					linenoKey := fmt.Sprintf("%d", lineno.Line)
-
-					// Check if any root is in checked actions and hasn't been tried
-					anyUntried := false
+				if anyUntried && check {
+					PrintDots()
+					oldCheckedAssert := mod.Cfg.CheckLineno
+					mod.Cfg.CheckLineno = linenoKey
+					someFailed := false
 					for root := range checkedActions {
-						if roots[root] && !tried[root+":"+linenoKey] {
-							anyUntried = true
-							break
+						if !roots[root] {
+							continue
+						}
+						tried[root+":"+linenoKey] = true
+						xtracer.Trace("check.guarantee_loop pre BuildEnvAction")
+						envAction := actions.BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, root, "")
+						xtracer.Trace("check.guarantee_loop post BuildEnvAction")
+						ag := art.NewAnalysisGraph(mod)
+						xtracer.Trace("check.guarantee_loop post NewAnalysisGraph")
+						pre := art.NewState(mod, GetConjs(mod))
+						xtracer.Trace("check.guarantee_loop post NewState+GetConjs")
+						ag.Add(pre, nil)
+						xtracer.Trace("check.guarantee_loop post ag.Add")
+						xtracer.Trace("check.guarantee_loop pre ag.Execute")
+						post, execErr := ag.Execute(false, envAction, pre, nil, root)
+						if execErr != nil {
+							fmt.Printf("WARNING: Execute %s failed: %v\n", root, execErr)
+							continue
+						}
+						if post != nil {
+							failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
+							if aa, ok := post.Prov.(*art.ActionApp); ok {
+								if rep, ok := aa.Rep.(string); ok {
+									failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
+								}
+							}
+							failState.Action = actions.NewFailAction(envAction)
+							if post.Pred != nil {
+								failState.Pred = post.Pred
+							} else if aa, ok := post.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
+								failState.Pred = aa.Args[0]
+							}
+
+							if !CheckSafetyInStateWithAG(mod, ag, failState, false) {
+								someFailed = true
+								break
+							}
 						}
 					}
-
-					if anyUntried && check {
-						PrintDots()
-						// Python: old_checked_assert = act.checked_assert.get()
-						//         act.checked_assert.value = sub.lineno
-						oldCheckedAssert := mod.Cfg.CheckLineno
-						mod.Cfg.CheckLineno = fmt.Sprintf("%s:%d", lineno.Filename, lineno.Line)
-						someFailed := false
-						for root := range checkedActions {
-							if !roots[root] {
-								continue
-							}
-							tried[root+":"+linenoKey] = true
-							xtracer.Trace("check.guarantee_loop pre BuildEnvAction")
-							envAction := actions.BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, root, "")
-							xtracer.Trace("check.guarantee_loop post BuildEnvAction")
-							ag := art.NewAnalysisGraph(mod)
-							xtracer.Trace("check.guarantee_loop post NewAnalysisGraph")
-							pre := art.NewState(mod, GetConjs(mod))
-							xtracer.Trace("check.guarantee_loop post NewState+GetConjs")
-							ag.Add(pre, nil)
-							xtracer.Trace("check.guarantee_loop post ag.Add")
-							xtracer.Trace("check.guarantee_loop pre ag.Execute")
-							post, execErr := ag.Execute(false, envAction, pre, nil, root)
-							if execErr != nil {
-								fmt.Printf("WARNING: Execute %s failed: %v\n", root, execErr)
-								continue
-							}
-							if post != nil {
-								// Python: fail = itp.State(expr = itp.fail_expr(post.expr))
-								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
-								// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
-								//
-								// The fail state's lazy update is computed in art.GetHistory once
-								// we set failState.Action and failState.Pred.
-								failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
-								if aa, ok := post.Prov.(*art.ActionApp); ok {
-									if rep, ok := aa.Rep.(string); ok {
-										failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
-									}
-								}
-
-								// Wrap the original envAction with FailAction. Python's
-								// fail_action(post.expr.rep) — see ivy_interp.py:406.
-								failState.Action = actions.NewFailAction(envAction)
-
-								// Set predecessor so ag.GetHistory walks back through it.
-								// Python: fail.pred (lazy from fail.expr.args[0]) == pre.
-								// post.Pred is set by interp.ApplyAction → InterpToArtState above;
-								// fall back to post.Prov.Args[0] defensively.
-								if post.Pred != nil {
-									failState.Pred = post.Pred
-								} else if aa, ok := post.Prov.(*art.ActionApp); ok && len(aa.Args) > 0 {
-									failState.Pred = aa.Args[0]
-								}
-
-								if !CheckSafetyInStateWithAG(mod, ag, failState, false) {
-									someFailed = true
-									break
-								}
-							}
-						}
-						if !someFailed {
-							fmt.Println("PASS")
-						}
-						// Python: act.checked_assert.value = old_checked_assert
-						mod.Cfg.CheckLineno = oldCheckedAssert
-					} else {
-						fmt.Println("")
+					if !someFailed {
+						fmt.Println("PASS")
 					}
+					mod.Cfg.CheckLineno = oldCheckedAssert
+				} else {
+					fmt.Println("")
 				}
 			}
 		}
@@ -825,14 +794,15 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			wsorts := il.NewWithSorts(withLocalMod.Sig, vocab.Sorts)
 			wsorts.Enter()
 			if method != nil {
-				cleanup := withLocalMod.TheoryContext()
+				// Python: if act.check_unprovable.get(): print("SKIPPED\n"); return
+				// Check BEFORE entering theory context (matching Python ordering).
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
-					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					continue
+					return nil
 				}
+				cleanup := withLocalMod.TheoryContext()
 				err := method()
 				if err != nil {
 					mod.Cfg.Failures++
@@ -921,14 +891,15 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			wsorts := il.NewWithSorts(withLocalMod.Sig, vocab.Sorts)
 			wsorts.Enter()
 			if method != nil {
-				cleanup := withLocalMod.TheoryContext()
+				// Python: if act.check_unprovable.get(): print("SKIPPED\n"); return
+				// Check BEFORE entering theory context (matching Python ordering).
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
-					cleanup()
 					wsorts.Exit()
 					ws.Exit()
-					continue
+					return nil
 				}
+				cleanup := withLocalMod.TheoryContext()
 				err := method()
 				if err != nil {
 					mod.Cfg.Failures++
@@ -1072,9 +1043,8 @@ func CheckModule(mod *module.Module) error {
 		methodName := GetIsolateMethod(isolate, isoMod)
 		switch {
 		case methodName == "mc":
-			// Python: mc_isolate(isolate) — default meth=ivy_mc.check_isolate
-			mcMethod := func() error {
-				res, err := mc.CheckIsolate(isoMod, "mc")
+			mcMethod := func(m *module.Module) error {
+				res, err := mc.CheckIsolate(m, "mc")
 				if err != nil {
 					return err
 				}
@@ -1090,30 +1060,22 @@ func CheckModule(mod *module.Module) error {
 				return err
 			}
 		case methodName == "vmt":
-			// Python: mc_isolate(isolate, meth=ivy_vmt.check_isolate)
-			vmtMethod := func() error {
-				return vmt.CheckIsolate("mc", isoMod)
+			vmtMethod := func(m *module.Module) error {
+				return vmt.CheckIsolate("mc", m)
 			}
 			if err := MCIsolate(isolate, isoMod, vmtMethod); err != nil {
 				return err
 			}
 		case strings.HasPrefix(methodName, "bmc["):
-			// Python ivy_check.py:995-996:
-			//   global some_bounded
-			//   some_bounded = True
-			// We write to the PARENT mod.Cfg, NOT isoMod.Cfg, because Module.Copy
-			// (module.go:337) does *c.Cfg = *m.Cfg, so writes to isoMod.Cfg are
-			// discarded when the loop iteration ends.
 			mod.Cfg.SomeBounded = true
-			// Python: mc_isolate(isolate, lambda: ivy_bmc.check_isolate(prms[0], n_unroll=prms[1]))
 			nSteps, nUnroll, err := parseBMCParams(methodName)
 			if err != nil {
 				return err
 			}
-			bmcMethod := func() error {
+			bmcMethod := func(m *module.Module) error {
 				cfg := &bmc.Config{
 					NSteps: nSteps,
-					Module: isoMod,
+					Module: m,
 				}
 				if nUnroll >= 0 {
 					nu := nUnroll
@@ -1179,9 +1141,7 @@ func CheckModule(mod *module.Module) error {
 //   - vmt.CheckIsolate
 //
 // If method is nil, this is a no-op (the caller should have provided one).
-func MCIsolate(isolate string, mod *module.Module, method func() error) error {
-	// Check that all properties are temporal.
-	// Python: if any(not x.temporal for x in im.module.labeled_props): raise
+func MCIsolate(isolate string, mod *module.Module, method func(*module.Module) error) error {
 	for _, p := range mod.LabeledProps {
 		if !p.IsTemporal() {
 			return fmt.Errorf("model checking not supported for non-temporal property yet")
@@ -1193,9 +1153,8 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	}
 
 	if !CheckSeparately(isolate, mod) {
-		// Python: with im.module.theory_context(): res = meth()
 		cleanup := mod.TheoryContext()
-		err := method()
+		err := method(mod)
 		cleanup()
 		if err != nil {
 			fmt.Println(err)
@@ -1205,10 +1164,8 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 		return nil
 	}
 
-	// Check separately per assertion line.
 	// Python: for lineno in all_assert_linenos():
 	//             with im.module.copy():
-	//                 old_checked_assert = act.checked_assert.get()
 	//                 act.checked_assert.value = lineno
 	//                 with im.module.theory_context(): res = meth()
 	//                 act.checked_assert.value = old_checked_assert
@@ -1219,9 +1176,9 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	for _, lineno := range linenos {
 		modCopy := mod.Copy()
 		oldCheckedAssert := mod.Cfg.CheckLineno
-		mod.Cfg.CheckLineno = fmt.Sprintf(":%d", lineno)
+		modCopy.Cfg.CheckLineno = lineno.FileLineKey()
 		cleanup := modCopy.TheoryContext()
-		err := method()
+		err := method(modCopy)
 		cleanup()
 		mod.Cfg.CheckLineno = oldCheckedAssert
 		if err != nil {
@@ -1286,24 +1243,25 @@ func CheckSeparately(isolate string, mod *module.Module) bool {
 	return GetIsolateAttr(isolate, "separate", "false", mod) == "true"
 }
 
-// AllAssertLinenos returns all unique assertion line numbers in the module.
+// AllAssertLinenos returns all unique assertion locations in the module.
 // Corresponds to Python all_assert_linenos (ivy_check.py:833-852).
+// Returns full ast.Location values so callers can produce "file:line" keys.
 // Returns an error if a checked_assert line is specified but not found.
-func AllAssertLinenos(mod *module.Module) ([]int, error) {
-	seen := make(map[int]bool)
-	var result []int
+func AllAssertLinenos(mod *module.Module) ([]ast.Location, error) {
+	seen := make(map[string]bool)
+	var result []ast.Location
 
 	for _, action := range mod.Actions.All() {
 		if act, ok := action.(interface{ IterSubactions() []actions.Action }); ok {
 			for _, sub := range act.IterSubactions() {
-				// Python: isinstance(sub, (act.AssertAction, act.Ranking))
 				isAssert := actions.IsAssertLike(sub)
 				_, isRanking := sub.(*actions.Ranking)
 				if isAssert || isRanking {
 					loc := sub.GetLineno()
-					if !seen[loc.Line] {
-						seen[loc.Line] = true
-						result = append(result, loc.Line)
+					key := loc.FileLineKey()
+					if !seen[key] {
+						seen[key] = true
+						result = append(result, loc)
 					}
 				}
 			}
@@ -1311,25 +1269,23 @@ func AllAssertLinenos(mod *module.Module) ([]int, error) {
 	}
 
 	for _, lf := range mod.LabeledConjs {
-		if !seen[lf.Lineno()] {
-			seen[lf.Lineno()] = true
-			result = append(result, lf.Lineno())
+		loc := lf.GetLineno()
+		key := loc.FileLineKey()
+		if !seen[key] {
+			seen[key] = true
+			result = append(result, loc)
 		}
 	}
 
-	// Python: check_lineno = act.checked_assert.get()
-	//         if check_lineno:
-	//             if check_lineno in seen: return [check_lineno]
-	//             raise IvyError(None, 'There is no assertion at the specified line')
 	if mod.Cfg.CheckLineno != "" {
-		checkLine := 0
-		fmt.Sscanf(mod.Cfg.CheckLineno, "%d", &checkLine)
-		if checkLine > 0 {
-			if seen[checkLine] {
-				return []int{checkLine}, nil
+		if seen[mod.Cfg.CheckLineno] {
+			for _, loc := range result {
+				if loc.FileLineKey() == mod.Cfg.CheckLineno {
+					return []ast.Location{loc}, nil
+				}
 			}
-			return nil, fmt.Errorf("there is no assertion at the specified line")
 		}
+		return nil, fmt.Errorf("there is no assertion at the specified line")
 	}
 	return result, nil
 }
@@ -1438,12 +1394,12 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 		checkable = append(checkable, converted...)
 	}
 
-	// Apply line-number filter if set.
+	// Apply line-number filter if set (file:line format).
 	checkLineno := mod.Cfg.CheckLineno
 	if checkLineno != "" {
 		var filtered []*ast.LabeledFormula
 		for _, c := range checkable {
-			if fmt.Sprintf("%d", c.Lineno()) == checkLineno {
+			if c.GetLineno().FileLineKey() == checkLineno {
 				filtered = append(filtered, c)
 			}
 		}

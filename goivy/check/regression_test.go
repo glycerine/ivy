@@ -380,25 +380,19 @@ func TestRegression_Bug11_FilterCheckers(t *testing.T) {
 	mod := module.New()
 	ac := mod.Cfg.AstCfg
 	lf10 := ac.NewLabeledFormula(nil, lg.True)
-	lf10.SetLineno(ast.Location{Line: 10})
+	lf10.SetLineno(ast.Location{Filename: "test.ivy", Line: 10})
 	lf20 := ac.NewLabeledFormula(nil, lg.True)
-	lf20.SetLineno(ast.Location{Line: 20})
+	lf20.SetLineno(ast.Location{Filename: "test.ivy", Line: 20})
 
 	checkers := []Checker{
 		NewConjChecker(mod, lf10, 0),
 		NewConjChecker(mod, lf20, 0),
 	}
 
-	// Filter by line 10 — should return 1 result.
-	filtered := FilterCheckers(checkers, "10")
+	// Filter by file:line — should return 1 result.
+	filtered := FilterCheckers(checkers, "test.ivy:10")
 	if len(filtered) != 1 {
-		t.Fatalf("expected 1 checker for line 10, got %d", len(filtered))
-	}
-
-	// Filter by "line 10" format — should also return 1 result.
-	filtered2 := FilterCheckers(checkers, "line 10")
-	if len(filtered2) != 1 {
-		t.Fatalf("expected 1 checker for 'line 10', got %d", len(filtered2))
+		t.Fatalf("expected 1 checker for test.ivy:10, got %d", len(filtered))
 	}
 
 	// Empty filter — should return all.
@@ -448,18 +442,18 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 	mod := module.New()
 	ac := mod.Cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, lg.True)
-	lf42.SetLineno(ast.Location{Line: 42})
+	lf42.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 	lf99 := ac.NewLabeledFormula(nil, lg.True)
-	lf99.SetLineno(ast.Location{Line: 99})
+	lf99.SetLineno(ast.Location{Filename: "test.ivy", Line: 99})
 
 	checkers := []Checker{
 		NewConjChecker(mod, lf42, 0),
 		NewConjChecker(mod, lf99, 0),
 	}
 
-	filtered := FilterCheckers(checkers, "42")
+	filtered := FilterCheckers(checkers, "test.ivy:42")
 	if len(filtered) != 1 {
-		t.Fatalf("expected 1 checker for line 42, got %d", len(filtered))
+		t.Fatalf("expected 1 checker for test.ivy:42, got %d", len(filtered))
 	}
 	cc := filtered[0].(*ConjChecker)
 	if cc.LF.Lineno() != 42 {

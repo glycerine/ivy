@@ -46,6 +46,12 @@ func (l Location) String() string {
 	return res
 }
 
+// FileLineKey returns a compact "file:line" string for use as a comparison
+// key. Matches the format used by actions/update.go for CheckedAssert.
+func (l Location) FileLineKey() string {
+	return l.Filename + ":" + strconv.Itoa(l.Line)
+}
+
 // safeLinenoAddRef extracts cfg from a node and applies LinenoAddRef.
 // Returns loc unchanged if the node has no AstConfig (nil-safe).
 func safeLinenoAddRef(n Node, loc Location) Location {

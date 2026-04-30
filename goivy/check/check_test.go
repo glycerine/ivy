@@ -468,11 +468,11 @@ func TestFilterCheckersWithLineFilter(t *testing.T) {
 	mod := module.New()
 
 	lf1 := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf1.SetLineno(ast.Location{Line: 10})
+	lf1.SetLineno(ast.Location{Filename: "test.ivy", Line: 10})
 	lf2 := mod.Cfg.AstCfg.NewLabeledFormula(nil, lg.True)
-	lf2.SetLineno(ast.Location{Line: 20})
+	lf2.SetLineno(ast.Location{Filename: "test.ivy", Line: 20})
 	checkers := []Checker{NewConjChecker(mod, lf1, 8), NewConjChecker(mod, lf2, 8)}
-	result := FilterCheckers(checkers, "10")
+	result := FilterCheckers(checkers, "test.ivy:10")
 	if len(result) != 1 {
 		t.Errorf("expected 1 checker after filter, got %d", len(result))
 	}
@@ -685,7 +685,7 @@ func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
 	mod.LabeledProps = []*ast.LabeledFormula{
 		{Formula: lg.True, Temporal: &falseVal},
 	}
-	err := MCIsolate("test", mod, func() error { return nil })
+	err := MCIsolate("test", mod, func(_ *module.Module) error { return nil })
 	if err == nil {
 		t.Fatal("MCIsolate should reject non-temporal properties")
 	}
@@ -702,7 +702,7 @@ func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
 		{Formula: lg.True, Temporal: &trueVal},
 		{Formula: lg.True, Temporal: &falseVal},
 	}
-	err := MCIsolate("test", mod, func() error { return nil })
+	err := MCIsolate("test", mod, func(_ *module.Module) error { return nil })
 	if err == nil {
 		t.Fatal("MCIsolate should reject when any property is non-temporal")
 	}
@@ -717,7 +717,7 @@ func TestMCIsolateAllTemporalPasses(t *testing.T) {
 		{Formula: lg.True, Temporal: &trueVal2},
 	}
 	called := false
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		called = true
 		return nil
 	})
@@ -734,7 +734,7 @@ func TestMCIsolateNoPropsCallsMethod(t *testing.T) {
 	// No LabeledProps → the temporal check loop has no iterations,
 	// so it passes. Method should be called.
 	called := false
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		called = true
 		return nil
 	})
@@ -748,7 +748,7 @@ func TestMCIsolateNoPropsCallsMethod(t *testing.T) {
 
 func TestMCIsolateMethodErrorPropagates(t *testing.T) {
 	mod := module.New()
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		return fmt.Errorf("counterexample found")
 	})
 	if err == nil {
@@ -762,7 +762,7 @@ func TestMCIsolateMethodErrorPropagates(t *testing.T) {
 func TestMCIsolateCallsMethodOnce(t *testing.T) {
 	mod := module.New()
 	callCount := 0
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		callCount++
 		return nil
 	})
@@ -795,7 +795,7 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 	oldCheckLineno := cfg.CheckLineno
 	defer func() { cfg.CheckLineno = oldCheckLineno }()
 
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		callCount++
 		return nil
 	})
@@ -826,7 +826,7 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 	cfg.CheckLineno = originalLineno
 	defer func() { cfg.CheckLineno = "" }()
 
-	err := MCIsolate("test", mod, func() error { return nil })
+	err := MCIsolate("test", mod, func(_ *module.Module) error { return nil })
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -857,7 +857,7 @@ func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 	defer func() { cfg.CheckLineno = "" }()
 
 	callCount := 0
-	err := MCIsolate("test", mod, func() error {
+	err := MCIsolate("test", mod, func(_ *module.Module) error {
 		callCount++
 		return fmt.Errorf("fail at call %d", callCount)
 	})
@@ -1192,7 +1192,7 @@ func TestAllAssertLinenosIncludesConjs(t *testing.T) {
 	result, _ := AllAssertLinenos(mod)
 	found := false
 	for _, l := range result {
-		if l == 55 {
+		if l.Line == 55 {
 			found = true
 		}
 	}

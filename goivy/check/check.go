@@ -738,13 +738,13 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 		checkable = append(checkable, converted...)
 	}
 
-	// Apply line-number filter if set.
+	// Apply line-number filter if set (file:line format).
 	// Python: check_lineno = act.checked_assert.get()
 	checkLineno := mod.Cfg.CheckLineno
 	if checkLineno != "" {
 		var filtered []*ast.LabeledFormula
 		for _, c := range checkable {
-			if fmt.Sprintf("%d", c.Lineno()) == checkLineno {
+			if c.GetLineno().FileLineKey() == checkLineno {
 				filtered = append(filtered, c)
 			}
 		}
