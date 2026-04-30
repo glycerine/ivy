@@ -5,6 +5,7 @@ import (
 	"sync/atomic"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
 )
@@ -28,14 +29,16 @@ type Qelim struct {
 	Fmlas          []lg.Expr               // accumulated constraints
 	SortConstants  map[string][]*lg.Const  // sort -> constants for invariant
 	SortConstants2 map[string][]*lg.Const  // sort -> constants for transition
+	IuCfg          *iu.IvyUtilsConfig      // for IsMacro/ExpandMacro
 }
 
 // NewQelim creates a new quantifier elimination context.
-func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const) *Qelim {
+func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const, iuCfg *iu.IvyUtilsConfig) *Qelim {
 	return &Qelim{
 		Syms:           make(map[string]lg.Expr),
 		SortConstants:  sortConstants,
 		SortConstants2: sortConstants2,
+		IuCfg:          iuCfg,
 	}
 }
 
@@ -96,6 +99,10 @@ func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 		return q.qeQuantifier(t.Variables, t.Body, false, sortConstants)
 	}
 
+	if il.IsMacro(expr, q.IuCfg) {
+		return q.QE(il.ExpandMacro(expr), sortConstants)
+	}
+
 	// Recurse into children
 	children := expr.Children()
 	if len(children) == 0 {
@@ -105,7 +112,7 @@ func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 	for i, c := range children {
 		newChildren[i] = q.QE(c, sortConstants)
 	}
-	return il.CloneNode(expr, newChildren)
+	return cloneNormal(expr, newChildren)
 }
 
 // qeQuantifier handles quantifier elimination for a single quantifier.

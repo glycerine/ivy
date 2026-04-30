@@ -1008,7 +1008,7 @@ func TestApplyMatch(t *testing.T) {
 // ============================================================
 
 func TestQelimFresh(t *testing.T) {
-	q := NewQelim(nil, nil)
+	q := NewQelim(nil, nil, nil)
 	name := q.Fresh("expr1")
 	if name.Name != "__qe[0]" {
 		t.Errorf("first fresh should be __qe[0], got %s", name.Name)
@@ -1029,7 +1029,7 @@ func TestQelimGetConsts(t *testing.T) {
 		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
 		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
 	}
-	q := NewQelim(sc, nil)
+	q := NewQelim(sc, nil, nil)
 	consts := q.GetConsts(intSort, sc)
 	if len(consts) != 3 {
 		t.Errorf("expected 3 constants for int, got %d", len(consts))
