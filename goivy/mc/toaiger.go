@@ -103,7 +103,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 			continue
 		}
 		if mod.Cfg.MCVerbose {
-			fmt.Printf("%vModel checking invariant\n", lf.Lineno)
+			fmt.Printf("%vModel checking invariant\n", lf.GetLineno())
 		}
 		if p, ok := pmap[lf.ID]; ok {
 			subgoals, err := pc.AdmitProposition(lf, p)
