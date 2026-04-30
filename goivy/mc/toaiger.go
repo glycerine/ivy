@@ -169,14 +169,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Python: stvars = [x for x in stvars if x not in defsyms]
-	stVarNames := actions.ModifiedNames(updWithAxioms)
-	filteredStVars := make([]string, 0, len(stVarNames))
-	for _, sv := range stVarNames {
-		if _, isDef := defSymsByName[sv]; !isDef {
-			filteredStVars = append(filteredStVars, sv)
+	// Use []*lg.Const (matching Python's stvars [Symbol]) to preserve sort info.
+	stVars := make([]*lg.Const, 0, len(updWithAxioms.Modified))
+	for _, sv := range updWithAxioms.Modified {
+		if _, isDef := defSymsByName[sv.Name]; !isDef {
+			stVars = append(stVars, sv)
 		}
 	}
-	stVarNames = filteredStVars
 
 	annot := trans.Annot
 
@@ -295,8 +294,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans = module.NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
 
 	// Step 4d: Instantiate axioms using pattern matching
-	stVarList := stVarNames
-	axs := InstantiateAxioms(mod, stVarList, trans, invariant, sortConstants, funs)
+	stVarNameList := constNames(stVars)
+	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs)
 	if len(axs) > 0 {
 		axConj := &lg.And{Terms: axs}
 		axVar := lg.NewConst("__axioms", lg.Boolean)
@@ -311,9 +310,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans, invariant = ToTableLookup(trans, invariant)
 
 	// Step 4f: Propositional abstraction
-	stVarSet := make(map[string]bool, len(stVarNames))
-	for _, sv := range stVarNames {
-		stVarSet[sv] = true
+	stVarSet := make(map[string]bool, len(stVars))
+	for _, sv := range stVars {
+		stVarSet[sv.Name] = true
 	}
 
 	propAbs := NewPropAbs(stVarSet, sortConstants)
@@ -378,57 +377,57 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	invariant = propAbs.MkPropAbs(invariant)
 
 	// Create next-state symbols for atoms in the invariant
-	rnInv := make(map[lg.NodeKey]*lg.Const, len(stVarNames))
-	for _, sv := range stVarNames {
-		svSym := lg.NewConst(sv, lg.TopS)
-		rnInv[lg.Key(svSym)] = lg.NewConst(actions.New(sv), nil)
+	rnInv := make(map[lg.NodeKey]*lg.Const, len(stVars))
+	for _, sv := range stVars {
+		rnInv[lg.Key(sv)] = lg.NewConst(actions.New(sv.Name), sv.CSort)
 	}
 	propAbs.MkPropAbs(module.RenameAST(invariant, rnInv))
 
-	// Update state variables
-	var finiteStVars []string
-	for _, sv := range stVarNames {
-		if isFiniteSortByName(sv) {
+	// Update state variables: filter to finite sorts + add new prop-abs vars
+	var finiteStVars []*lg.Const
+	for _, sv := range stVars {
+		if isFiniteSortByName(sv.Name) {
 			finiteStVars = append(finiteStVars, sv)
 		}
 	}
 	for _, pv := range propAbs.NewStVars {
-		finiteStVars = append(finiteStVars, pv.Name)
+		finiteStVars = append(finiteStVars, pv)
 	}
-	stVarNames = finiteStVars
+	stVars = finiteStVars
 
 	// Step 5: State variable management
 	// For each state var, create variables for latch inputs.
 	// Also havoc all state bits except init flag at initial time.
+	// Python: stvars_fix_map = dict((tr.new(v),fix(v)) for v in stvars)
+	//         stvars_fix_map.update((v,curval(v)) for v in stvars if v != init_var)
 	fixRn := make(map[lg.NodeKey]*lg.Const)
-	for _, v := range stVarNames {
-		newVSym := lg.NewConst(actions.New(v), lg.TopS)
-		fixRn[lg.Key(newVSym)] = lg.NewConst("nondet"+v, nil)
+	for _, v := range stVars {
+		newV := lg.NewConst(actions.New(v.Name), v.CSort)
+		fixRn[lg.Key(newV)] = lg.NewConst("nondet"+v.Name, v.CSort)
 	}
-	for _, v := range stVarNames {
-		if v != "__init" {
-			vSym := lg.NewConst(v, lg.TopS)
-			fixRn[lg.Key(vSym)] = lg.NewConst("curval"+v, nil)
+	for _, v := range stVars {
+		if v.Name != "__init" {
+			fixRn[lg.Key(v)] = lg.NewConst("curval"+v.Name, v.CSort)
 		}
 	}
 	trans = module.RenameClauses(trans, fixRn)
 
 	// Add next-state definitions and curval definitions
+	// Python: new_defs = trans.defs + [il.Definition(sym_inst(tr.new(v)),sym_inst(fix(v))) for v in stvars]
 	var extraDefs []*il.Definition
-	for _, v := range stVarNames {
-		newV := lg.NewConst(actions.New(v), nil)
-		fixV := lg.NewConst("nondet"+v, nil)
+	for _, v := range stVars {
+		newV := lg.NewConst(actions.New(v.Name), v.CSort)
+		fixV := lg.NewConst("nondet"+v.Name, v.CSort)
 		extraDefs = append(extraDefs, il.NewDefinition(newV, fixV))
 	}
-	for _, v := range stVarNames {
-		if v == "__init" {
+	for _, v := range stVars {
+		if v.Name == "__init" {
 			continue
 		}
-		curvalV := lg.NewConst("curval"+v, nil)
-		origV := lg.NewConst(v, nil)
-		initChoice := lg.NewConst("initchoice"+v, nil)
+		curvalV := lg.NewConst("curval"+v.Name, v.CSort)
+		initChoice := lg.NewConst("initchoice"+v.Name, v.CSort)
 		extraDefs = append(extraDefs, il.NewDefinition(curvalV,
-			&lg.Ite{Cond: initVar, Then: origV, Else: initChoice}))
+			&lg.Ite{Cond: initVar, Then: v, Else: initChoice}))
 	}
 	allDefs3 := append(trans.Defs, extraDefs...)
 	trans = module.NewClauses(trans.Fmlas, allDefs3, trans.Annot)
@@ -437,9 +436,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	cnstVar := lg.NewConst("__cnst", lg.Boolean)
 	var finalDefs []*il.Definition
 	finalDefs = append(finalDefs, trans.Defs...)
-	fixCnst := lg.NewConst("nondet__cnst", nil)
+	fixCnst := lg.NewConst("nondet__cnst", lg.Boolean)
 	finalDefs = append(finalDefs, il.NewDefinition(
-		lg.NewConst(actions.New("__cnst"), nil),
+		lg.NewConst(actions.New("__cnst"), lg.Boolean),
 		fixCnst,
 	))
 	// fix(cnst_var) = or(cnst_var, not(and(trans.fmlas)))
@@ -451,7 +450,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		cnstBody = &lg.Or{Terms: []lg.Expr{cnstVar, &lg.Not{Body: fmlaConj}}}
 	}
 	finalDefs = append(finalDefs, il.NewDefinition(fixCnst, cnstBody))
-	stVarNames = append(stVarNames, "__cnst")
+	stVars = append(stVars, lg.NewConst("__cnst", lg.Boolean))
 	trans = module.NewClauses(nil, finalDefs, trans.Annot)
 
 	// Step 7: Determine inputs, outputs, build Encoder
@@ -461,8 +460,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 			defSet[c.Name] = true
 		}
 	}
-	for _, sv := range stVarNames {
-		defSet[sv] = true
+	for _, sv := range stVars {
+		defSet[sv.Name] = true
 	}
 
 	usedSyms := make(map[string]lg.Expr)
@@ -473,31 +472,21 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		usedSyms[lg.ExprName(sym)] = sym
 	}
 
-	var inputs []string
+	var inputs []*lg.Const
 	for name, sym := range usedSyms {
 		cc, isConst := sym.(*lg.Const)
 		if !defSet[name] && !(isConst && isInterpretedSymbol(cc)) {
-			inputs = append(inputs, name)
+			if isConst {
+				inputs = append(inputs, cc)
+			}
 		}
 	}
-	sort.Strings(inputs)
+	sort.Slice(inputs, func(i, j int) bool { return inputs[i].Name < inputs[j].Name })
 
 	fail := lg.NewConst("__fail", lg.Boolean)
-	outputs := []string{fail.Name}
+	outputs := []*lg.Const{fail}
 
-	// Build bit widths map
-	bitWidths := make(map[string]int)
-	for _, name := range inputs {
-		bitWidths[name] = 1 // boolean by default
-	}
-	for _, name := range stVarNames {
-		bitWidths[name] = 1
-	}
-	for _, name := range outputs {
-		bitWidths[name] = 1
-	}
-
-	aiger := NewEncoder(inputs, stVarNames, outputs, bitWidths)
+	aiger := NewEncoder(inputs, stVars, outputs)
 
 	// Process combinational definitions (non-next-state)
 	var combDefs []lg.Expr
@@ -518,15 +507,16 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Set next-state values for latches
+	// Python: aiger.set(tr.new_of(df.defines()), aiger.eval(df.args[1]))
 	for _, df := range trans.Defs {
 		if c, ok := df.Defines().(*lg.Const); ok {
 			if actions.IsNew(c.Name) {
-				oldName := actions.NewOf(c.Name)
+				oldSym := lg.NewConst(actions.NewOf(c.Name), c.CSort)
 				val, err := aiger.Eval(df.Rhs, nil)
 				if err != nil {
 					continue // skip errors in non-critical definitions
 				}
-				aiger.SetSym(oldName, val)
+				aiger.SetSym(oldSym, val)
 			}
 		}
 	}
@@ -538,8 +528,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		&lg.Or{Terms: []lg.Expr{
 			invarFail,
 			&lg.And{Terms: []lg.Expr{
-				lg.NewConst("nondet"+"err_flag", nil),
-				&lg.Not{Body: lg.NewConst("nondet"+"__cnst", nil)},
+				lg.NewConst("nondet"+"err_flag", lg.Boolean),
+				&lg.Not{Body: lg.NewConst("nondet"+"__cnst", lg.Boolean)},
 			}},
 		}},
 	}}
@@ -547,7 +537,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	if err != nil {
 		return nil, fmt.Errorf("miter eval failed: %w", err)
 	}
-	aiger.SetSym(fail.Name, miterVal)
+	aiger.SetSym(fail, miterVal)
 
 	// Build decoder
 	decoder := make(map[string]lg.Expr)
@@ -556,15 +546,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		decoder[v.Name] = v
 	}
 	for _, sym := range aiger.Inputs {
-		if origSyms[sym] {
-			c := lg.NewConst(sym, nil)
-			decoder[sym] = c
+		if origSyms[sym.Name] {
+			decoder[sym.Name] = sym
 		}
 	}
 	for _, sym := range aiger.Latches {
-		if origSyms[sym] {
-			c := lg.NewConst(sym, nil)
-			decoder[sym] = c
+		if origSyms[sym.Name] {
+			decoder[sym.Name] = sym
 		}
 	}
 
@@ -584,6 +572,15 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		Action:   composedAction,
 		StVarSet: stVarSet,
 	}, nil
+}
+
+// constNames extracts string names from a slice of typed Const symbols.
+func constNames(syms []*lg.Const) []string {
+	names := make([]string, len(syms))
+	for i, s := range syms {
+		names[i] = s.Name
+	}
+	return names
 }
 
 // AddErrFlagMod instruments all actions in the module with error flag tracking.

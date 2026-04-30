@@ -10,11 +10,13 @@ import (
 
 // Encoder wraps an Aiger circuit with multi-bit encoding for finite sorts.
 // Non-boolean sorts are represented as multiple AIGER bits (binary encoding).
+// Python: ivy_mc.py Encoder class — inputs/latches/outputs are [Symbol],
+// encoding maps Symbol → [Symbol].
 type Encoder struct {
-	Inputs            []string                     // original multi-bit input names
-	Latches           []string                     // original multi-bit latch names
-	Outputs           []string                     // original multi-bit output names
-	Encoding          map[string][]string          // symbol -> list of sub-bit symbol names
+	Inputs            []*lg.Const                  // original multi-bit input symbols
+	Latches           []*lg.Const                  // original multi-bit latch symbols
+	Outputs           []*lg.Const                  // original multi-bit output symbols
+	Encoding          map[lg.NodeKey][]string      // lg.Key(sym) -> list of sub-bit names
 	Sub               *Aiger                       // underlying AIGER circuit
 	Ops               map[string]ArithOp           // arithmetic operations
 	IsConstructor     func(*lg.Const) bool         // checks if symbol is a constructor
@@ -25,36 +27,35 @@ type Encoder struct {
 type ArithOp func(nbits int, x, y []int) []int
 
 // NewEncoder creates a new Encoder with the given inputs, latches, and outputs.
-// Each symbol is expanded into multiple bits based on its bit width.
-func NewEncoder(inputs, latches, outputs []string, bitWidths map[string]int) *Encoder {
+// Each symbol is expanded into multiple bits based on its sort.
+// Python: Encoder.__init__(inputs, latches, outputs) — all [Symbol].
+func NewEncoder(inputs, latches, outputs []*lg.Const) *Encoder {
 	enc := &Encoder{
 		Inputs:   inputs,
 		Latches:  latches,
 		Outputs:  outputs,
-		Encoding: make(map[string][]string),
+		Encoding: make(map[lg.NodeKey][]string),
 	}
 
-	subInputs := encodeVarNames(inputs, bitWidths, enc.Encoding)
-	subLatches := encodeVarNames(latches, bitWidths, enc.Encoding)
-	subOutputs := encodeVarNames(outputs, bitWidths, enc.Encoding)
+	subInputs := encodeVars(inputs, enc.Encoding)
+	subLatches := encodeVars(latches, enc.Encoding)
+	subOutputs := encodeVars(outputs, enc.Encoding)
 	enc.Sub = NewAiger(subInputs, subLatches, subOutputs)
 
 	return enc
 }
 
-// encodeVarNames expands variable names into bit-level names.
-func encodeVarNames(syms []string, bitWidths map[string]int, encoding map[string][]string) []string {
+// encodeVars expands typed symbols into bit-level names using sort for bit width.
+// Python: encode_vars(syms, encoding) — uses get_encoding_bits(sym.sort).
+func encodeVars(syms []*lg.Const, encoding map[lg.NodeKey][]string) []string {
 	var res []string
 	for _, sym := range syms {
-		n := 1
-		if bw, ok := bitWidths[sym]; ok {
-			n = bw
-		}
+		n := getEncodingBits(sym.CSort)
 		vs := make([]string, n)
 		for i := 0; i < n; i++ {
-			vs[i] = fmt.Sprintf("%s[%d]", sym, i)
+			vs[i] = fmt.Sprintf("%s[%d]", sym.Name, i)
 		}
-		encoding[sym] = vs
+		encoding[lg.Key(sym)] = vs
 		res = append(res, vs...)
 	}
 	return res
@@ -70,9 +71,10 @@ func (e *Encoder) False() []int {
 	return []int{e.Sub.False()}
 }
 
-// Lit returns the multi-bit literal for a symbol.
-func (e *Encoder) Lit(sym string) ([]int, bool) {
-	enc, ok := e.Encoding[sym]
+// Lit returns the multi-bit literal for a typed symbol.
+// Python: Encoder.lit(sym) — sym is a Symbol, looks up self.encoding[sym].
+func (e *Encoder) Lit(sym *lg.Const) ([]int, bool) {
+	enc, ok := e.Encoding[lg.Key(sym)]
 	if !ok {
 		return nil, false
 	}
@@ -88,25 +90,26 @@ func (e *Encoder) Lit(sym string) ([]int, bool) {
 }
 
 // MustLit returns the multi-bit literal, panicking if not found.
-func (e *Encoder) MustLit(sym string) []int {
+func (e *Encoder) MustLit(sym *lg.Const) []int {
 	res, ok := e.Lit(sym)
 	if !ok {
-		panic(fmt.Sprintf("no encoding for symbol: %s", sym))
+		panic(fmt.Sprintf("no encoding for symbol: %s", sym.Name))
 	}
 	return res
 }
 
-// DefineSym maps a symbol to multi-bit values by adding encoding entries.
-func (e *Encoder) DefineSym(sym string, val []int) {
-	// Create encoding if it doesn't exist
-	if _, ok := e.Encoding[sym]; !ok {
+// DefineSym maps a typed symbol to multi-bit values by adding encoding entries.
+// Python: Encoder.define(sym, val) — sym is a Symbol.
+func (e *Encoder) DefineSym(sym *lg.Const, val []int) {
+	key := lg.Key(sym)
+	if _, ok := e.Encoding[key]; !ok {
 		vs := make([]string, len(val))
 		for i := range val {
-			vs[i] = fmt.Sprintf("%s[%d]", sym, i)
+			vs[i] = fmt.Sprintf("%s[%d]", sym.Name, i)
 		}
-		e.Encoding[sym] = vs
+		e.Encoding[key] = vs
 	}
-	enc := e.Encoding[sym]
+	enc := e.Encoding[key]
 	for i, v := range val {
 		if i < len(enc) {
 			e.Sub.Define(enc[i], v)
@@ -179,9 +182,10 @@ func (e *Encoder) IffMulti(x, y []int) []int {
 	return res
 }
 
-// SetSym sets the next-state values for a multi-bit symbol.
-func (e *Encoder) SetSym(sym string, val []int) {
-	enc := e.Encoding[sym]
+// SetSym sets the next-state values for a multi-bit typed symbol.
+// Python: Encoder.set(sym, val) — sym is a Symbol, looks up self.encoding[sym].
+func (e *Encoder) SetSym(sym *lg.Const, val []int) {
+	enc := e.Encoding[lg.Key(sym)]
 	for i, v := range val {
 		if i < len(enc) {
 			e.Sub.Set(enc[i], v)
@@ -412,7 +416,7 @@ func (e *Encoder) evalRec(expr lg.Expr, getdef GetDefFunc) ([]int, error) {
 
 		// Plain symbol lookup (nullary)
 		if len(t.Terms) == 0 {
-			if lit, ok := e.Lit(sym.Name); ok {
+			if lit, ok := e.Lit(sym); ok {
 				return lit, nil
 			}
 			if getdef != nil {
@@ -424,7 +428,7 @@ func (e *Encoder) evalRec(expr lg.Expr, getdef GetDefFunc) ([]int, error) {
 
 	case *lg.Const:
 		// Plain symbol
-		if lit, ok := e.Lit(t.Name); ok {
+		if lit, ok := e.Lit(t); ok {
 			return lit, nil
 		}
 		if getdef != nil {
@@ -531,36 +535,36 @@ func (e *Encoder) DefList(defs []lg.Expr) error {
 		if err != nil {
 			return nil, err
 		}
-		e.DefineSym(sym.Name, val)
+		e.DefineSym(sym, val)
 		return val, nil
 	}
 
 	for _, df := range defs {
-		var symName string
+		var sym *lg.Const
 		var rhs lg.Expr
 		switch d := df.(type) {
 		case *lg.Definition:
 			if c, ok := d.Defines().(*lg.Const); ok {
-				symName = c.Name
+				sym = c
 				rhs = d.Rhs
 			}
 		case *lg.Eq:
 			if c, ok := d.T1.(*lg.Const); ok {
-				symName = c.Name
+				sym = c
 				rhs = d.T2
 			} else if app, ok := d.T1.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Const); ok {
-					symName = c.Name
+					sym = c
 					rhs = d.T2
 				}
 			}
 		}
-		if symName != "" && rhs != nil {
+		if sym != nil && rhs != nil {
 			val, err := e.Eval(rhs, getdef)
 			if err != nil {
 				return err
 			}
-			e.DefineSym(symName, val)
+			e.DefineSym(sym, val)
 		}
 	}
 	return nil

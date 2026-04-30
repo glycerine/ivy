@@ -415,21 +415,25 @@ func TestAigerGateGeneration(t *testing.T) {
 // ============================================================
 
 func TestEncoderNewEncoder(t *testing.T) {
-	bw := map[string]int{"x": 3, "s": 2}
-	enc := NewEncoder([]string{"x"}, []string{"s"}, []string{"o"}, bw)
-	if len(enc.Encoding["x"]) != 3 {
-		t.Errorf("x should have 3 bits, got %d", len(enc.Encoding["x"]))
+	sort3 := &lg.EnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}} // 8 vals → 3 bits
+	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}                      // 4 vals → 2 bits
+	xSym := lg.NewConst("x", sort3)
+	sSym := lg.NewConst("s", sort2)
+	oSym := lg.NewConst("o", lg.Boolean)
+	enc := NewEncoder([]*lg.Const{xSym}, []*lg.Const{sSym}, []*lg.Const{oSym})
+	if len(enc.Encoding[lg.Key(xSym)]) != 3 {
+		t.Errorf("x should have 3 bits, got %d", len(enc.Encoding[lg.Key(xSym)]))
 	}
-	if len(enc.Encoding["s"]) != 2 {
-		t.Errorf("s should have 2 bits, got %d", len(enc.Encoding["s"]))
+	if len(enc.Encoding[lg.Key(sSym)]) != 2 {
+		t.Errorf("s should have 2 bits, got %d", len(enc.Encoding[lg.Key(sSym)]))
 	}
-	if len(enc.Encoding["o"]) != 1 {
-		t.Errorf("o should have 1 bit (default), got %d", len(enc.Encoding["o"]))
+	if len(enc.Encoding[lg.Key(oSym)]) != 1 {
+		t.Errorf("o should have 1 bit (default), got %d", len(enc.Encoding[lg.Key(oSym)]))
 	}
 }
 
 func TestEncoderBinEnc(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	bits := enc.BinEnc(5, 4) // 5 = 0101 in 4 bits
 	if len(bits) != 4 {
 		t.Fatalf("expected 4 bits, got %d", len(bits))
@@ -444,7 +448,7 @@ func TestEncoderBinEnc(t *testing.T) {
 }
 
 func TestEncoderBinDec(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	bits := enc.BinEnc(7, 3) // 7 = 111 in 3 bits
 	val := enc.BinDec(bits)
 	if val != 7 {
@@ -459,7 +463,7 @@ func TestEncoderBinDec(t *testing.T) {
 }
 
 func TestEncoderBinEncDecRoundtrip(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	for n := 0; n < 16; n++ {
 		bits := enc.BinEnc(n, 4)
 		got := enc.BinDec(bits)
@@ -470,7 +474,7 @@ func TestEncoderBinEncDecRoundtrip(t *testing.T) {
 }
 
 func TestEncoderTrueFalse(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	tr := enc.True()
 	if len(tr) != 1 || tr[0] != enc.Sub.True() {
 		t.Errorf("True() should be [1], got %v", tr)
@@ -482,7 +486,7 @@ func TestEncoderTrueFalse(t *testing.T) {
 }
 
 func TestEncoderNotlMulti(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	bits := enc.BinEnc(5, 4) // 0101
 	neg := enc.NotlMulti(bits)
 	if len(neg) != 4 {
@@ -498,7 +502,7 @@ func TestEncoderNotlMulti(t *testing.T) {
 }
 
 func TestEncoderAndlMulti(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	a := enc.BinEnc(3, 2) // 11
 	b := enc.BinEnc(2, 2) // 10
 	res := enc.AndlMulti(a, b)
@@ -508,7 +512,7 @@ func TestEncoderAndlMulti(t *testing.T) {
 }
 
 func TestEncoderOrlMulti(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	a := enc.BinEnc(1, 2) // 01
 	b := enc.BinEnc(2, 2) // 10
 	res := enc.OrlMulti(a, b)
@@ -518,7 +522,7 @@ func TestEncoderOrlMulti(t *testing.T) {
 }
 
 func TestEncoderGeBin(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	// GeBin with constant true bits
 	bits := enc.BinEnc(5, 3) // 101
 	// 5 >= 0 should be true (returns True constant)
@@ -541,7 +545,7 @@ func TestEncoderGeBin(t *testing.T) {
 }
 
 func TestEncoderEncodePlusInt(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(3, 4)
 	y := enc.BinEnc(2, 4)
 	res, _ := enc.EncodePlusInt(x, y, enc.Sub.False())
@@ -552,7 +556,7 @@ func TestEncoderEncodePlusInt(t *testing.T) {
 }
 
 func TestEncoderEncodePlus(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(7, 4)
 	y := enc.BinEnc(3, 4)
 	res := enc.EncodePlus(x, y)
@@ -563,7 +567,7 @@ func TestEncoderEncodePlus(t *testing.T) {
 }
 
 func TestEncoderEncodeMinus(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(7, 4)
 	y := enc.BinEnc(3, 4)
 	res := enc.EncodeMinus(x, y)
@@ -574,7 +578,7 @@ func TestEncoderEncodeMinus(t *testing.T) {
 }
 
 func TestEncoderEncodeTimes(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(3, 4)
 	y := enc.BinEnc(2, 4)
 	res := enc.EncodeTimes(x, y)
@@ -585,7 +589,7 @@ func TestEncoderEncodeTimes(t *testing.T) {
 }
 
 func TestEncoderEncodeEquality(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(5, 3)
 	y := enc.BinEnc(5, 3)
 	res := enc.EncodeEquality(8, x, y)
@@ -598,7 +602,7 @@ func TestEncoderEncodeEquality(t *testing.T) {
 	}
 
 	// Test inequality: 5 != 3
-	enc2 := NewEncoder(nil, nil, nil, nil)
+	enc2 := NewEncoder(nil, nil, nil)
 	x2 := enc2.BinEnc(5, 3)
 	y2 := enc2.BinEnc(3, 3)
 	res2 := enc2.EncodeEquality(8, x2, y2)
@@ -609,7 +613,7 @@ func TestEncoderEncodeEquality(t *testing.T) {
 }
 
 func TestEncoderEncodeIte(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	x := enc.BinEnc(5, 3)
 	y := enc.BinEnc(3, 3)
 	res := enc.EncodeIte(enc.Sub.True(), x, y)
@@ -618,7 +622,7 @@ func TestEncoderEncodeIte(t *testing.T) {
 		t.Errorf("ITE(true, 5, 3) should be 5, got %d", val)
 	}
 
-	enc2 := NewEncoder(nil, nil, nil, nil)
+	enc2 := NewEncoder(nil, nil, nil)
 	x2 := enc2.BinEnc(5, 3)
 	y2 := enc2.BinEnc(3, 3)
 	res2 := enc2.EncodeIte(enc2.Sub.False(), x2, y2)
@@ -629,11 +633,13 @@ func TestEncoderEncodeIte(t *testing.T) {
 }
 
 func TestEncoderDefineSym(t *testing.T) {
-	bw := map[string]int{"x": 3}
-	enc := NewEncoder([]string{"x"}, nil, nil, bw)
+	sort3 := &lg.EnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}}
+	xSym := lg.NewConst("x", sort3)
+	enc := NewEncoder([]*lg.Const{xSym}, nil, nil)
 	val := enc.BinEnc(5, 3)
-	enc.DefineSym("extra", val)
-	got, ok := enc.Lit("extra")
+	extraSym := lg.NewConst("extra", sort3)
+	enc.DefineSym(extraSym, val)
+	got, ok := enc.Lit(extraSym)
 	if !ok {
 		t.Fatal("DefineSym should make symbol available via Lit")
 	}
@@ -643,11 +649,12 @@ func TestEncoderDefineSym(t *testing.T) {
 }
 
 func TestEncoderSetSym(t *testing.T) {
-	bw := map[string]int{"s": 2}
-	enc := NewEncoder(nil, []string{"s"}, nil, bw)
+	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	sSym := lg.NewConst("s", sort2)
+	enc := NewEncoder(nil, []*lg.Const{sSym}, nil)
 	val := enc.BinEnc(3, 2)
-	enc.SetSym("s", val)
-	for _, subSym := range enc.Encoding["s"] {
+	enc.SetSym(sSym, val)
+	for _, subSym := range enc.Encoding[lg.Key(sSym)] {
 		if _, ok := enc.Sub.Values[subSym]; !ok {
 			t.Errorf("SetSym should set sub values for %s", subSym)
 		}
@@ -655,10 +662,13 @@ func TestEncoderSetSym(t *testing.T) {
 }
 
 func TestEncoderString(t *testing.T) {
-	bw := map[string]int{"x": 2, "s": 1}
-	enc := NewEncoder([]string{"x"}, []string{"s"}, []string{"o"}, bw)
-	enc.SetSym("s", enc.BinEnc(0, 1))
-	enc.SetSym("o", enc.BinEnc(1, 1))
+	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	xSym := lg.NewConst("x", sort2)
+	sSym := lg.NewConst("s", lg.Boolean)
+	oSym := lg.NewConst("o", lg.Boolean)
+	enc := NewEncoder([]*lg.Const{xSym}, []*lg.Const{sSym}, []*lg.Const{oSym})
+	enc.SetSym(sSym, enc.BinEnc(0, 1))
+	enc.SetSym(oSym, enc.BinEnc(1, 1))
 	s := enc.String()
 	if !strings.HasPrefix(s, "aag") {
 		t.Errorf("String should start with 'aag', got: %s", s)
@@ -1115,8 +1125,11 @@ func TestABCModelCheckerScrape(t *testing.T) {
 }
 
 func TestToAigerEncoder(t *testing.T) {
-	bw := map[string]int{"x": 2}
-	enc := NewEncoder([]string{"x"}, []string{"s"}, []string{"o"}, bw)
+	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	xSym := lg.NewConst("x", sort2)
+	sSym := lg.NewConst("s", lg.Boolean)
+	oSym := lg.NewConst("o", lg.Boolean)
+	enc := NewEncoder([]*lg.Const{xSym}, []*lg.Const{sSym}, []*lg.Const{oSym})
 	if enc == nil {
 		t.Fatal("NewEncoder should return non-nil")
 	}
@@ -1168,7 +1181,7 @@ func TestAigerFullCircuit(t *testing.T) {
 func TestEncoderArithmeticRoundtrip(t *testing.T) {
 	for a := 0; a < 8; a++ {
 		for b := 0; b <= a; b++ {
-			enc := NewEncoder(nil, nil, nil, nil)
+			enc := NewEncoder(nil, nil, nil)
 			x := enc.BinEnc(a, 4)
 			y := enc.BinEnc(b, 4)
 			sum := enc.EncodePlus(x, y)
@@ -1177,7 +1190,7 @@ func TestEncoderArithmeticRoundtrip(t *testing.T) {
 				t.Errorf("%d + %d = %d, want %d", a, b, sumVal, (a+b)%16)
 			}
 
-			enc2 := NewEncoder(nil, nil, nil, nil)
+			enc2 := NewEncoder(nil, nil, nil)
 			x2 := enc2.BinEnc(a, 4)
 			y2 := enc2.BinEnc(b, 4)
 			diff := enc2.EncodeMinus(x2, y2)
@@ -1192,7 +1205,7 @@ func TestEncoderArithmeticRoundtrip(t *testing.T) {
 func TestEncoderMultiplicationSmall(t *testing.T) {
 	for a := 0; a < 4; a++ {
 		for b := 0; b < 4; b++ {
-			enc := NewEncoder(nil, nil, nil, nil)
+			enc := NewEncoder(nil, nil, nil)
 			x := enc.BinEnc(a, 4)
 			y := enc.BinEnc(b, 4)
 			prod := enc.EncodeTimes(x, y)
@@ -1208,7 +1221,7 @@ func TestEncoderMultiplicationSmall(t *testing.T) {
 func TestEncoderLtLe(t *testing.T) {
 	for a := 0; a < 8; a++ {
 		for b := 0; b < 8; b++ {
-			enc := NewEncoder(nil, nil, nil, nil)
+			enc := NewEncoder(nil, nil, nil)
 			x := enc.BinEnc(a, 3)
 			y := enc.BinEnc(b, 3)
 			lt := enc.EncodeLt(x, y, enc.Sub.False())
@@ -1217,7 +1230,7 @@ func TestEncoderLtLe(t *testing.T) {
 				t.Errorf("%d < %d = %v, want %v", a, b, ltVal, a < b)
 			}
 
-			enc2 := NewEncoder(nil, nil, nil, nil)
+			enc2 := NewEncoder(nil, nil, nil)
 			x2 := enc2.BinEnc(a, 3)
 			y2 := enc2.BinEnc(b, 3)
 			le := enc2.EncodeLe(x2, y2)
@@ -1343,7 +1356,7 @@ func FuzzEncoderArith(f *testing.F) {
 		a := int(a8 % 16) // 4-bit values
 		b := int(b8 % 16)
 
-		enc := NewEncoder(nil, nil, nil, nil)
+		enc := NewEncoder(nil, nil, nil)
 		x := enc.BinEnc(a, 4)
 		y := enc.BinEnc(b, 4)
 		sum := enc.EncodePlus(x, y)
@@ -1352,7 +1365,7 @@ func FuzzEncoderArith(f *testing.F) {
 			t.Errorf("%d + %d = %d, want %d", a, b, sumVal, (a+b)%16)
 		}
 
-		enc2 := NewEncoder(nil, nil, nil, nil)
+		enc2 := NewEncoder(nil, nil, nil)
 		x2 := enc2.BinEnc(a, 4)
 		y2 := enc2.BinEnc(b, 4)
 		diff := enc2.EncodeMinus(x2, y2)
@@ -1386,8 +1399,8 @@ func TestAigerMustLitPanic(t *testing.T) {
 }
 
 func TestEncoderLitNotFound(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
-	_, ok := enc.Lit("nonexistent")
+	enc := NewEncoder(nil, nil, nil)
+	_, ok := enc.Lit(lg.NewConst("nonexistent", lg.Boolean))
 	if ok {
 		t.Error("Lit should return false for nonexistent symbol")
 	}
@@ -1417,7 +1430,7 @@ func TestMatchPopEmpty(t *testing.T) {
 }
 
 func TestEncoderEncodeLeConstants(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	// 0 <= 0 should be true
 	x := enc.BinEnc(0, 3)
 	y := enc.BinEnc(0, 3)
@@ -1479,7 +1492,7 @@ func TestAigerGetInConstants(t *testing.T) {
 }
 
 func TestEncoderAndlMultiEmpty(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	res := enc.AndlMulti()
 	if len(res) != 1 || res[0] != enc.Sub.True() {
 		t.Errorf("AndlMulti() should be True, got %v", res)
@@ -1487,7 +1500,7 @@ func TestEncoderAndlMultiEmpty(t *testing.T) {
 }
 
 func TestEncoderOrlMultiEmpty(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	res := enc.OrlMulti()
 	if len(res) != 1 || res[0] != enc.Sub.False() {
 		t.Errorf("OrlMulti() should be False, got %v", res)
@@ -1524,7 +1537,7 @@ func BenchmarkAigerAndChain(b *testing.B) {
 }
 
 func BenchmarkEncoderBinEncDec(b *testing.B) {
-	enc := NewEncoder(nil, nil, nil, nil)
+	enc := NewEncoder(nil, nil, nil)
 	r := rand.New(rand.NewSource(42))
 	for i := 0; i < b.N; i++ {
 		v := r.Intn(256)

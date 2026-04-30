@@ -43,7 +43,7 @@ func (h *AigerMatchHandler) Eval(cond lg.Expr) bool {
 	}
 	// Try to get the symbol value from the AIGER circuit
 	if c, ok := cond.(*lg.Const); ok {
-		lit, ok := h.Aiger.Lit(c.Name)
+		lit, ok := h.Aiger.Lit(c)
 		if ok && len(lit) > 0 {
 			return lit[0] == h.Aiger.Sub.True()
 		}
@@ -64,15 +64,15 @@ func (h *AigerMatchHandler) Handle(action interface{}, env map[string]string) {
 
 	// Show input symbols
 	for _, v := range h.Aiger.Inputs {
-		if decoded, ok := h.Decoder[v]; ok {
-			h.showSym(v, decoded, h.getSymValue(v), invEnv, env)
+		if decoded, ok := h.Decoder[v.Name]; ok {
+			h.showSym(v.Name, decoded, h.getSymValue(v), invEnv, env)
 		}
 	}
 
 	// Show next-state latch symbols
 	for _, v := range h.Aiger.Latches {
-		if decoded, ok := h.Decoder[v]; ok {
-			h.showSym(v, decoded, h.getSymValue(v), invEnv, env)
+		if decoded, ok := h.Decoder[v.Name]; ok {
+			h.showSym(v.Name, decoded, h.getSymValue(v), invEnv, env)
 		}
 	}
 }
@@ -86,8 +86,8 @@ func (h *AigerMatchHandler) isSkolem(name string) bool {
 	return actions.IsSkolem(name) && !h.Consts[name]
 }
 
-func (h *AigerMatchHandler) getSymValue(name string) lg.Expr {
-	lit, ok := h.Aiger.Lit(name)
+func (h *AigerMatchHandler) getSymValue(sym *lg.Const) lg.Expr {
+	lit, ok := h.Aiger.Lit(sym)
 	if !ok || len(lit) == 0 {
 		return nil
 	}
@@ -141,7 +141,7 @@ func (h *AigerMatchHandler2) Eval(cond lg.Expr) bool {
 		return !h.Eval(n.Body)
 	}
 	if c, ok := cond.(*lg.Const); ok {
-		lit, ok := h.Aiger.Lit(c.Name)
+		lit, ok := h.Aiger.Lit(c)
 		if ok && len(lit) > 0 {
 			return lit[0] == h.Aiger.Sub.True()
 		}
@@ -162,7 +162,7 @@ func (h *AigerMatchHandler2) NewState(env map[string]string) {
 
 	// Input symbols
 	for _, v := range h.Aiger.Inputs {
-		if decoded, ok := h.Decoder[v]; ok {
+		if decoded, ok := h.Decoder[v.Name]; ok {
 			val := h.getSymValue(v)
 			if val != nil {
 				eqns = append(eqns, &lg.Eq{T1: decoded, T2: val})
@@ -172,7 +172,7 @@ func (h *AigerMatchHandler2) NewState(env map[string]string) {
 
 	// Latch symbols (current and next state)
 	for _, v := range h.Aiger.Latches {
-		if decoded, ok := h.Decoder[v]; ok {
+		if decoded, ok := h.Decoder[v.Name]; ok {
 			val := h.getSymValue(v)
 			if val != nil {
 				eqns = append(eqns, &lg.Eq{T1: decoded, T2: val})
@@ -189,7 +189,7 @@ func (h *AigerMatchHandler2) FinalState() {
 
 	var stvals []lg.Expr
 	for _, v := range h.Aiger.Latches {
-		if decoded, ok := h.Decoder[v]; ok {
+		if decoded, ok := h.Decoder[v.Name]; ok {
 			if c, ok2 := decoded.(*lg.Const); ok2 && c.Name == "__init" {
 				continue
 			}
@@ -206,8 +206,8 @@ func (h *AigerMatchHandler2) isSkolem(name string) bool {
 	return actions.IsSkolem(name) && !h.Consts[name]
 }
 
-func (h *AigerMatchHandler2) getSymValue(name string) lg.Expr {
-	lit, ok := h.Aiger.Lit(name)
+func (h *AigerMatchHandler2) getSymValue(sym *lg.Const) lg.Expr {
+	lit, ok := h.Aiger.Lit(sym)
 	if !ok || len(lit) == 0 {
 		return nil
 	}
@@ -268,7 +268,7 @@ func AigerWitnessToIvyTrace2(
 		// Check if this is the last step and invariant fails
 		if count == len(lines)-1 {
 			invarFail := lg.NewConst("invar__fail", lg.Boolean)
-			lit, ok := result.Aiger.Lit(invarFail.Name)
+			lit, ok := result.Aiger.Lit(invarFail)
 			if ok && len(lit) > 0 && lit[0] == result.Aiger.Sub.True() {
 				break
 			}
