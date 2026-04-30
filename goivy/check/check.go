@@ -1079,8 +1079,8 @@ func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Nod
 		return nil, err
 	}
 	// Python: check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
-	mcMethod := func() error {
-		res, mcErr := mc.CheckIsolate(mod, "mc")
+	mcMethod := func(m *module.Module) error {
+		res, mcErr := mc.CheckIsolate(m, "mc")
 		if mcErr != nil {
 			return mcErr
 		}
@@ -1104,8 +1104,8 @@ func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.No
 		return nil, err
 	}
 	// Python: check_subgoals(goals[0:1], method=ivy_vmt.check_isolate)
-	vmtMethod := func() error {
-		return VMTCheckIsolate("vmt", mod)
+	vmtMethod := func(m *module.Module) error {
+		return VMTCheckIsolate("vmt", m)
 	}
 	err = CheckSubgoals(goals[0:1], vmtMethod, mod)
 	return goals[1:], err

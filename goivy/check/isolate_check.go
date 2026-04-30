@@ -661,7 +661,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 //   - If conclusion is TemporalModels: build a fake module from the model
 //     and call CheckIsolate recursively
 //   - Otherwise: convert goal to property and check in a minimal module
-func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module.Module) error {
+func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) error, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
 	}
@@ -802,7 +802,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					return nil
 				}
 				cleanup := withLocalMod.TheoryContext()
-				err := method()
+				err := method(withLocalMod)
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
@@ -899,7 +899,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					return nil
 				}
 				cleanup := withLocalMod.TheoryContext()
-				err := method()
+				err := method(withLocalMod)
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
