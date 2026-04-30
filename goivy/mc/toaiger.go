@@ -7,9 +7,10 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -87,34 +88,49 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	)
 	_ = ifAction // unused placeholder
 
-	// Step 2: Get invariant to prove, applying proof tactics
-	// Replace free variables with Skolems
+	// Step 2: Get invariant to prove, applying proof tactics.
+	// Python: ivy_mc.py:1136-1158
+	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, mod.LabeledAxioms, mod.Definitions, moduleSchemataToLF(mod.Schemata), mod.Cfg.AstCfg)
+	pmap := make(map[int64]ast.Node)
+	for _, pe := range mod.Proofs {
+		pmap[pe.Formula.ID] = pe.Proof
+	}
 	var conjs []*ast.LabeledFormula
+	checkedAssert := mod.Cfg.CheckLineno
 	for _, lf := range mod.LabeledConjs {
-		conjs = append(conjs, lf)
+		// Python: if not checked(lf): continue
+		if checkedAssert != "" && checkedAssert != lf.GetLineno().String() {
+			continue
+		}
+		if mod.Cfg.MCVerbose {
+			fmt.Printf("%vModel checking invariant\n", lf.Lineno)
+		}
+		if p, ok := pmap[lf.ID]; ok {
+			subgoals, err := pc.AdmitProposition(lf, p)
+			if err != nil {
+				return nil, fmt.Errorf("admit_proposition failed: %w", err)
+			}
+			conjs = append(conjs, subgoals...)
+		} else {
+			conjs = append(conjs, lf)
+		}
 	}
 
+	// Python: invariant = il.And(*[il.drop_universals(lf.formula) for lf in conjs])
 	var invTerms []lg.Expr
 	for _, lf := range conjs {
 		invTerms = append(invTerms, il.DropUniversals(lf.Formula.(lg.Expr)))
 	}
-	var invariant lg.Expr
-	if len(invTerms) == 0 {
-		invariant = &lg.And{Terms: nil} // true
-	} else {
-		invariant = &lg.And{Terms: invTerms}
-	}
+	var invariant lg.Expr = &lg.And{Terms: invTerms}
 
-	// Skolemize free variables in invariant
-	freeVars := lu.FreeVariablesList(invariant)
-	if len(freeVars) > 0 {
-		sksubs := make(map[string]lg.Expr, len(freeVars))
-		for _, v := range freeVars {
-			skName := "__" + v.Name
-			sksubs[v.Name] = lg.NewConst(skName, v.VSort)
-		}
-		invariant = lu.SubstituteByName(invariant, sksubs)
+	// Python: skolemizer = lambda v: ilu.var_to_skolem('__', il.Variable(v.rep, v.sort))
+	//         vs = ilu.used_variables_in_order_ast(invariant)
+	vs := module.UsedVariablesOrdered(module.NewClauses([]lg.Expr{invariant}, nil, nil))
+	sksubs := make(map[string]lg.Expr, len(vs))
+	for _, v := range vs {
+		sksubs[v.Name] = module.VarToSkolem("__", v)
 	}
+	invariant = module.SubstituteAstByName(invariant, sksubs)
 	invarSyms := module.UsedSymbolsAST(invariant)
 
 	// Step 3: Compute transition relation
@@ -138,15 +154,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		trans = module.AndClausesTyped(trans, module.NewClauses(nil, bgt.Defs, nil))
 	}
 
-	// Rename defined symbols in next-state to avoid name collisions.
-	// defSymsByName maps name -> *Const (preserving sort), matching Python's
-	// set of Symbol objects with structural equality.
+	// D7: Build defsyms from bgt.Defs (not trans.Defs) to match Python.
+	// Python: defsyms = set(x.defines() for x in bgt.defs)
 	defSymsByName := make(map[string]*lg.Const)
-	for _, d := range trans.Defs {
-		if c, ok := d.Defines().(*lg.Const); ok {
-			defSymsByName[c.Name] = c
+	if bgt != nil {
+		for _, d := range bgt.Defs {
+			if c, ok := d.Defines().(*lg.Const); ok {
+				defSymsByName[c.Name] = c
+			}
 		}
 	}
+	// Python: rn = dict((tr.new(sym), tr.new(sym).prefix('__')) for sym in defsyms)
 	rn := make(map[lg.NodeKey]*lg.Const)
 	for name, sym := range defSymsByName {
 		newName := actions.New(name)
@@ -159,8 +177,14 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		trans = module.RenameClauses(trans, rn)
 	}
 
+	// D6: Rename error (Pre) clauses alongside trans.
+	// Python: error = ilu.rename_clauses(error, rn)
+	if len(rn) > 0 && updWithAxioms.Pre != nil {
+		_ = module.RenameClauses(updWithAxioms.Pre, rn)
+	}
+
+	// Python: stvars = [x for x in stvars if x not in defsyms]
 	stVarNames := actions.ModifiedNames(updWithAxioms)
-	// Remove symbols with state-dependent definitions
 	filteredStVars := make([]string, 0, len(stVarNames))
 	for _, sv := range stVarNames {
 		if _, isDef := defSymsByName[sv]; !isDef {
@@ -171,17 +195,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	annot := trans.Annot
 
-	// Build inductive hypotheses
+	// D3: Build inductive hypotheses using CloseFormula.
+	// Python: indhyps = [il.close_formula(il.Implies(init_var, lf.formula))
+	//                     for lf in mod.labeled_conjs + mod.assumed_invariants]
 	var indHyps []lg.Expr
 	for _, lf := range mod.LabeledConjs {
-		indHyps = append(indHyps, &lg.ForAll{
-			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
-		})
+		indHyps = append(indHyps, il.CloseFormula(
+			&lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)}))
 	}
 	for _, lf := range mod.AssumedInvs {
-		indHyps = append(indHyps, &lg.ForAll{
-			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
-		})
+		indHyps = append(indHyps, il.CloseFormula(
+			&lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)}))
 	}
 
 	// Save original symbols for trace
@@ -193,17 +217,29 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		origSyms[lg.ExprName(sym)] = true
 	}
 
-	// Collect function symbols
-	funs := make(map[string]bool)
-	for _, sym := range module.SymbolsClauses(trans) {
-		if il.IsFunctionSort(sym.NodeSort()) {
-			funs[lg.ExprName(sym)] = true
+	// D4: Collect function symbols from def RHS only + fmlas + invariant.
+	// Python: for df in trans.defs: funs.update(used_symbols_ast(df.args[1]))
+	//         for fmla in trans.fmlas: funs.update(used_symbols_ast(fmla))
+	//         funs.update(used_symbols_ast(invariant))
+	//         funs = set(sym for sym in funs if is_function_sort(sym.sort))
+	allSyms := make(map[string]lg.Expr)
+	for _, df := range trans.Defs {
+		for _, sym := range module.UsedSymbolsAST(df.Rhs) {
+			allSyms[lg.ExprName(sym)] = sym
 		}
 	}
-	invSymsAST := module.UsedSymbolsAST(invariant)
-	for _, sym := range invSymsAST {
+	for _, fmla := range trans.Fmlas {
+		for _, sym := range module.UsedSymbolsAST(fmla) {
+			allSyms[lg.ExprName(sym)] = sym
+		}
+	}
+	for _, sym := range module.UsedSymbolsAST(invariant) {
+		allSyms[lg.ExprName(sym)] = sym
+	}
+	funs := make(map[string]bool)
+	for name, sym := range allSyms {
 		if il.IsFunctionSort(sym.NodeSort()) {
-			funs[lg.ExprName(sym)] = true
+			funs[name] = true
 		}
 	}
 
@@ -243,17 +279,27 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans = module.NewClauses(allFmlas, elimDefs, trans.Annot)
 
 	// Step 4c: Quantifier elimination via finite instantiation
-	// Collect error condition symbols for invar_syms
-	for _, ec := range errConds {
-		ecSyms := module.UsedSymbolsAST(ec)
-		for k, sym := range ecSyms {
-			if actions.IsSkolem(lg.ExprName(sym)) && !il.IsFunctionSort(sym.NodeSort()) {
-				invarSyms[k] = sym
-			}
+	// D5: Build from_asserts and pass And(invariant, fromAsserts) to MineConstants.
+	// Python: from_asserts = il.And(*[il.Equals(x,x) for x in
+	//             ilu.used_symbols_ast(il.And(*errconds))
+	//             if tr.is_skolem(x) and not il.is_function_sort(x.sort)])
+	var fromAssertTerms []lg.Expr
+	errCondsConj := &lg.And{Terms: errConds}
+	for _, sym := range module.UsedSymbolsAST(errCondsConj) {
+		if actions.IsSkolem(lg.ExprName(sym)) && !il.IsFunctionSort(sym.NodeSort()) {
+			fromAssertTerms = append(fromAssertTerms, il.NewEquals(sym, sym))
 		}
 	}
+	fromAsserts := &lg.And{Terms: fromAssertTerms}
 
-	sortConstants := MineConstants(mod, trans, invariant)
+	// Python: invar_syms.update(ilu.used_symbols_ast(from_asserts))
+	for k, sym := range module.UsedSymbolsAST(fromAsserts) {
+		invarSyms[k] = sym
+	}
+
+	// Python: sort_constants = mine_constants(mod, trans, il.And(invariant, from_asserts))
+	mineTarget := &lg.And{Terms: []lg.Expr{invariant, fromAsserts}}
+	sortConstants := MineConstants(mod, trans, mineTarget)
 	sortConstants2 := MineConstants2(mod, trans, invariant)
 
 	qelim := NewQelim(sortConstants, sortConstants2)
@@ -675,6 +721,22 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 	}
 
 	return action
+}
+
+// moduleSchemataToLF converts Module.Schemata (*InsMap[string, ast.Node])
+// to *InsMap[string, *ast.LabeledFormula] for NewProofChecker.
+// Mirrors check.ModuleSchemataToAst (can't import check from mc).
+func moduleSchemataToLF(schemata *iu.InsMap[string, ast.Node]) *iu.InsMap[string, *ast.LabeledFormula] {
+	if schemata == nil {
+		return nil
+	}
+	result := iu.NewInsMap[string, *ast.LabeledFormula]()
+	for k, v := range schemata.All() {
+		if s, ok := v.(*ast.LabeledFormula); ok {
+			result.Set(k, s)
+		}
+	}
+	return result
 }
 
 // sortedPublicActions returns public action names sorted.
