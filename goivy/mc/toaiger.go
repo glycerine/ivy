@@ -67,7 +67,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		action: actions.NewAssignAction(initVar, &lg.And{Terms: nil}), // true
 	})
 	initSeq := actions.NewSequence(initParts...)
-	initAction := AddErrFlag(initSeq, erf, &errConds)
+	initAction := AddErrFlag(initSeq, erf, &errConds, mod.Instantiator)
 
 	// action = Sequence(erf := false, if init_var then ext_act else init)
 	erfReset := actions.NewAssignAction(erf, &lg.Or{Terms: nil})     // false
@@ -560,7 +560,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
 	for actname, act := range mod.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
-			newAction := AddErrFlag(a, erf, errConds)
+			newAction := AddErrFlag(a, erf, errConds, mod.Instantiator)
 			newAction.SetFormalParams(a.GetFormalParams())
 			newAction.SetFormalReturns(a.GetFormalReturns())
 			mod.SetAction(actname, newAction)
@@ -569,15 +569,15 @@ func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
 }
 
 // AddErrFlag recursively instruments an action with error flag tracking.
-// Assert actions become erf := or(erf, not(formula)).
+// Assert actions become erf := or(erf, dual_formula(formula)).
 // Assume actions become assume(or(erf, formula)).
 //
 // Python: ivy_mc.py:1020-1046
-func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actions.Action {
+func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, instantiator func([]lg.Expr) *module.Clauses) actions.Action {
 	switch a := action.(type) {
 	case *actions.AssertAction:
-		// Assert: compute error condition and set error flag
-		errCond := &lg.Not{Body: il.DropUniversals(a.Formula)}
+		// Python: errcond = ilu.dual_formula(il.drop_universals(action.formula))
+		errCond := module.DualFormula(il.DropUniversals(a.Formula), nil, instantiator)
 		*errConds = append(*errConds, errCond)
 		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
@@ -603,7 +603,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 			} else {
 				newArgs[i] = child
 			}
@@ -615,7 +615,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 			} else {
 				newArgs[i] = child
 			}
@@ -627,7 +627,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 			} else {
 				newArgs[i] = child
 			}
@@ -639,7 +639,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 			} else {
 				newArgs[i] = child
 			}
@@ -652,7 +652,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if ca, ok := args[i].(actions.Action); ok {
-				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 			} else {
 				newArgs[i] = args[i]
 			}
@@ -669,7 +669,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr) actio
 		// Last arg is the body
 		last := args[len(args)-1]
 		if ca, ok := last.(actions.Action); ok {
-			newArgs[len(newArgs)-1] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
+			newArgs[len(newArgs)-1] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds, instantiator)}
 		}
 		return a.ActionClone(newArgs)
 	}
