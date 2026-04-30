@@ -1047,9 +1047,10 @@ func CheckModule(mod *module.Module) error {
 			continue
 		}
 
-		// Preprocess assumed/ignored properties if ACL file is specified
-		if mod.Cfg.OptUncheckedProps != "" {
-			PreprocessAssumedIgnoredProperties(isoMod, acl.NewConfig())
+		// Preprocess assumed/ignored properties using the pre-loaded ACL config
+		if aclCfg != nil {
+			isoMod.AclCfg = aclCfg
+			PreprocessAssumedIgnoredProperties(isoMod, aclCfg)
 		}
 
 		methodName := GetIsolateMethod(isolate, isoMod)

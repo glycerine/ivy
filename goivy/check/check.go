@@ -299,10 +299,10 @@ func CheckTemporals(mod *module.Module) error {
 
 	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
-	// Build ACL config if unchecked properties file is specified
+	// Use the ACL config loaded by CheckModule and stored on the module.
 	var aclCfg *acl.Config
-	if mod.Cfg.OptUncheckedProps != "" {
-		aclCfg = acl.NewConfig()
+	if mod.AclCfg != nil {
+		aclCfg, _ = mod.AclCfg.(*acl.Config)
 	}
 
 	for _, prop := range mod.LabeledProps {
