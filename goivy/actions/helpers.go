@@ -229,11 +229,14 @@ func AppendToAction(action1, action2 Action) Action {
 // from src to dst, provided src is an Action. This is a convenience
 // wrapper around ActionBase.CopyFormalsTo.
 func CopyFormalsTo(src, dst Action) {
-	if fp := src.GetFormalParams(); fp != nil {
-		dst.SetFormalParams(fp)
-	}
-	if fr := src.GetFormalReturns(); fr != nil {
-		dst.SetFormalReturns(fr)
+	// Python: if not isinstance(res, EnvAction): copy params/returns
+	if _, isEnvAction := dst.(*EnvAction); !isEnvAction {
+		if fp := src.GetFormalParams(); fp != nil {
+			dst.SetFormalParams(fp)
+		}
+		if fr := src.GetFormalReturns(); fr != nil {
+			dst.SetFormalReturns(fr)
+		}
 	}
 	if labeler, ok := src.(interface{ GetLabels() []string }); ok {
 		if labels := labeler.GetLabels(); labels != nil {

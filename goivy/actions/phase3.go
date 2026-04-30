@@ -279,8 +279,10 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *module.Module) (lg.Expr, *mo
 	// Python: dlhs = n(*([lval] + vs[1:]))
 	dlhsArgs := make([]lg.Expr, 0, 1+len(vs))
 	dlhsArgs = append(dlhsArgs, lval)
-	for _, v := range vs[1:] {
-		dlhsArgs = append(dlhsArgs, v)
+	if len(vs) > 1 {
+		for _, v := range vs[1:] {
+			dlhsArgs = append(dlhsArgs, v)
+		}
 	}
 	dlhs := applyToNodes(nSym, dlhsArgs)
 
@@ -325,13 +327,17 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *module.Module) (lg.Expr, *mo
 				phs := module.SymPlaceholders(destr)
 				a1 := make([]lg.Expr, 0, 1+len(phs))
 				a1 = append(a1, lval)
-				for _, v := range phs[1:] {
-					a1 = append(a1, v)
+				if len(phs) > 1 {
+					for _, v := range phs[1:] {
+						a1 = append(a1, v)
+					}
 				}
 				a2 := make([]lg.Expr, 0, 1+len(phs))
 				a2 = append(a2, mut)
-				for _, v := range phs[1:] {
-					a2 = append(a2, v)
+				if len(phs) > 1 {
+					for _, v := range phs[1:] {
+						a2 = append(a2, v)
+					}
 				}
 				d1 := applyToNodes(destr, a1)
 				d2 := applyToNodes(destr, a2)

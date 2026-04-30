@@ -483,6 +483,9 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 	if xtra > 0 {
 		// Extend lhs and rhs with fresh placeholder variables
 		phs := module.SymPlaceholders(sym)
+		if len(phs) < xtra {
+			return NullUpdate()
+		}
 		extend := make([]lg.Expr, xtra)
 		for i := 0; i < xtra; i++ {
 			extend[i] = phs[len(phs)-xtra+i]
