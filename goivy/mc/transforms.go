@@ -632,7 +632,13 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		}
 	}
 
-	xtracer.Trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d", len(axioms), len(triggers))
+	if xtracer.Enabled {
+		xtracer.Trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d", len(axioms), len(triggers))
+
+		for i, te := range triggers {
+			xtracer.Trace("mc.InstantiateAxioms trigger[%d] trig=%s axiom=%s", i, te.trigger, te.axiom.Formula)
+		}
+	}
 
 	// Match triggers against all expressions in trans and invariant
 	instSet := make(map[lg.NodeKey]bool)
@@ -668,6 +674,9 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	scanExpr(invariant)
 
 	xtracer.Trace("mc.InstantiateAxioms result nUnique=%d", len(instList))
+	for i, inst := range instList {
+		xtracer.Trace("mc.InstantiateAxioms inst[%d] %s", i, inst)
+	}
 	return instList
 }
 
@@ -711,21 +720,21 @@ func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 		return true
 	}
 
-	if il.IsApp(pat) {
-		if !il.IsApp(expr) {
+	if app, ok := pat.(*lg.Apply); ok {
+		eapp, ok2 := expr.(*lg.Apply)
+		if !ok2 {
 			return false
 		}
-		if appRepSexp(pat) != appRepSexp(expr) {
+		pFunc, ok3 := app.Func.(*lg.Const)
+		eFunc, ok4 := eapp.Func.(*lg.Const)
+		if !ok3 || !ok4 || pFunc.Name != eFunc.Name {
 			return false
 		}
-		patArgs := appMatchArgs(pat)
-		exprArgs := appMatchArgs(expr)
-		n := len(patArgs)
-		if len(exprArgs) < n {
-			n = len(exprArgs)
+		if len(app.Terms) != len(eapp.Terms) {
+			return false
 		}
-		for i := 0; i < n; i++ {
-			if !matchNodes(patArgs[i], exprArgs[i], mp) {
+		for i := range app.Terms {
+			if !matchNodes(app.Terms[i], eapp.Terms[i], mp) {
 				return false
 			}
 		}
@@ -814,25 +823,4 @@ func copyMap(m map[string]lg.Expr) map[string]lg.Expr {
 		cp[k] = v
 	}
 	return cp
-}
-
-// appRepSexp returns the Sexp of the "rep" (representative symbol) for is_app types.
-// Matches Python's pat.rep: Apply → self.func, Const → self, NamedBinder → self.
-func appRepSexp(x lg.Expr) lg.NodeKey {
-	if app, ok := x.(*lg.Apply); ok {
-		return app.Func.Sexp()
-	}
-	return x.Sexp()
-}
-
-// appMatchArgs returns the matchable arguments for is_app types.
-// Matches Python's pat.args: Apply → terms, Const → [], NamedBinder → [body].
-func appMatchArgs(x lg.Expr) []lg.Expr {
-	if app, ok := x.(*lg.Apply); ok {
-		return app.Terms
-	}
-	if nb, ok := x.(*lg.NamedBinder); ok {
-		return []lg.Expr{nb.Body}
-	}
-	return nil
 }

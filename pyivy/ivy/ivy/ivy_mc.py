@@ -711,7 +711,10 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
 #                iu.dbg('ax')
                 triggers.append((trig,ax))
 
-    if __debug__: xtracer.trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d" % (len(axioms), len(triggers)))
+    if __debug__: 
+        xtracer.trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d" % (len(axioms), len(triggers)))
+        for i, (trig, ax) in enumerate(triggers):
+            xtracer.trace("mc.InstantiateAxioms trigger[%d] trig=%s axiom=%s" % (i, trig, ax.formula))
 
     insts = set()
     global inst_list # python lamemess -- should be local but inner function cannot access
@@ -760,6 +763,8 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
         recur(f)
                     
     if __debug__: xtracer.trace("mc.InstantiateAxioms result nUnique=%d" % len(inst_list))
+    for i, f in enumerate(inst_list):
+        if __debug__: xtracer.trace("mc.InstantiateAxioms inst[%d] %s" % (i, f))
     for f in inst_list:
         logfile.write('    {}\n'.format(f))
     return inst_list
