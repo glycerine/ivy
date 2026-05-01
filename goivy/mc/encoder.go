@@ -3,9 +3,11 @@ package mc
 import (
 	"fmt"
 	"math"
+	"strconv"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/theory"
 )
 
 // Encoder wraps an Aiger circuit with multi-bit encoding for finite sorts.
@@ -21,6 +23,7 @@ type Encoder struct {
 	Ops               map[string]ArithOp           // arithmetic operations
 	IsConstructor     func(*lg.Const) bool         // checks if symbol is a constructor
 	ConstructorIndexFn func(*lg.Const) (int, int)  // returns (index, total) for constructor
+	Interp            map[string]interface{}       // sort interpretations for DecodeVal
 }
 
 // ArithOp is a function type for multi-bit arithmetic operations.
@@ -627,4 +630,115 @@ func isInterpretedSort(s lg.Sort) bool {
 	// Check by name for common interpreted sorts
 	name := s.String()
 	return name == "int" || name == "nat" || name == "bool" || name == "bv"
+}
+
+// bitsToBoolExprs converts a string of '0'/'1' chars into a slice of
+// lg.Expr where '1' → &lg.And{} (true) and '0' → &lg.Or{} (false).
+// Python: [il.And() if b == '1' else il.Or() for b in abits]
+func bitsToBoolExprs(s string) []lg.Expr {
+	bits := make([]lg.Expr, len(s))
+	for i, b := range s {
+		if b == '1' {
+			bits[i] = &lg.And{Terms: nil}
+		} else {
+			bits[i] = &lg.Or{Terms: nil}
+		}
+	}
+	return bits
+}
+
+// binDecBool converts boolean expression bits to an integer.
+// Each bit is &lg.And{} (true=1) or &lg.Or{} (false=0), LSB first.
+// Python: Encoder.bindec(bits) in ivy_mc.py.
+func binDecBool(bits []lg.Expr) int {
+	res := 0
+	for idx, bit := range bits {
+		if isTrueNode(bit) {
+			res += 1 << idx
+		}
+	}
+	return res
+}
+
+// DecodeVal converts multi-bit simulation values to an Ivy expression
+// based on the sort's theory.
+// Python: ivy_mc.py:490-508 Encoder.decode_val(bits, v)
+func (e *Encoder) DecodeVal(bits []lg.Expr, v *lg.Const) lg.Expr {
+	interp := theory.GetSortTheory(v.CSort, e.Interp)
+	switch s := interp.(type) {
+	case *lg.EnumeratedSort:
+		num := binDecBool(bits)
+		vals := s.Extension
+		if num >= len(vals) {
+			num = len(vals) - 1
+		}
+		return lg.NewConst(vals[num], v.CSort)
+	case *lg.RangeSort:
+		num := binDecBool(bits)
+		maxVal, _ := strconv.Atoi(s.Ub.BoundString())
+		if num > maxVal {
+			num = maxVal
+		}
+		return lg.NewConst(strconv.Itoa(num), v.CSort)
+	case *theory.Theory:
+		if s.Kind == theory.BitVectorKind {
+			num := binDecBool(bits)
+			return lg.NewConst(strconv.Itoa(num), v.CSort)
+		}
+	}
+	if il.IsBooleanSort(v.CSort) {
+		return bits[0]
+	}
+	panic(fmt.Sprintf("variable has unexpected sort: %s %v", v.Name, v.CSort))
+}
+
+// GetSym reads the current simulation value for a typed symbol.
+// Returns nil if the symbol is not encoded in the circuit.
+// Python: ivy_mc.py:520-524 Encoder.get_sym(v)
+func (e *Encoder) GetSym(v *lg.Const) lg.Expr {
+	enc, ok := e.Encoding[lg.Key(v)]
+	if !ok || len(enc) == 0 {
+		return nil
+	}
+	abits := e.Sub.SymVals(enc)
+	bits := bitsToBoolExprs(abits)
+	return e.DecodeVal(bits, v)
+}
+
+// GetNextSym reads the next-state simulation value for a typed symbol.
+// Returns nil if the symbol is not encoded in the circuit.
+// Python: ivy_mc.py:526-530 Encoder.get_next_sym(v)
+func (e *Encoder) GetNextSym(v *lg.Const) lg.Expr {
+	enc, ok := e.Encoding[lg.Key(v)]
+	if !ok || len(enc) == 0 {
+		return nil
+	}
+	abits := e.Sub.SymNextVals(enc)
+	bits := bitsToBoolExprs(abits)
+	return e.DecodeVal(bits, v)
+}
+
+// GetEncoderState returns a map from typed latch symbol to its decoded
+// Ivy value, given a post-state string.
+// Python: ivy_mc.py:511-518 Encoder.get_state(post)
+func (e *Encoder) GetEncoderState(post string) map[lg.NodeKey]lg.Expr {
+	subres := e.Sub.GetState(post)
+	res := make(map[lg.NodeKey]lg.Expr)
+	for _, v := range e.Latches {
+		enc := e.Encoding[lg.Key(v)]
+		bits := make([]lg.Expr, len(enc))
+		for i, s := range enc {
+			b := subres[s]
+			if b == '1' {
+				bits[i] = &lg.And{Terms: nil}
+			} else if b == '0' {
+				bits[i] = &lg.Or{Terms: nil}
+			} else {
+				bits[i] = nil
+			}
+		}
+		val := e.DecodeVal(bits, v)
+		res[lg.Key(v)] = val
+	}
+	return res
 }

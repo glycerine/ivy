@@ -497,6 +497,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	outputs := []*lg.Const{fail}
 
 	aiger := NewEncoder(inputs, stVars, outputs)
+	if mod.Sig != nil {
+		aiger.Interp = mod.Sig.Interp
+	}
 
 	// Process combinational definitions (non-next-state)
 	var combDefs []lg.Expr

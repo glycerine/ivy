@@ -54,9 +54,10 @@ func (mc *ABCModelChecker) Scrape(alltext string) bool {
 
 // CheckResult holds the result of a model checking run.
 type CheckResult struct {
-	Proved  bool          // true if property holds
-	Trace   *WitnessTrace // non-nil if counterexample found
-	Error   error         // non-nil if model checker failed
+	Proved       bool                 // true if property holds
+	Trace        *WitnessTrace        // raw witness (non-nil if counterexample found)
+	DecodedTrace *AigerMatchHandler2  // decoded Ivy trace (non-nil if counterexample decoded)
+	Error        error                // non-nil if model checker failed
 }
 
 // RunABC runs ABC on the given AIGER string and returns the result.
@@ -126,10 +127,10 @@ func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult,
 }
 
 // CheckIsolate is the main entry point for model checking an isolate.
-// It calls ToAiger to convert the module to AIGER, writes it to a temp file,
-// runs the ABC model checker, and parses the result.
+// It converts the module to AIGER, runs the ABC model checker, and on
+// counterexample decodes the witness into an Ivy trace.
 //
-// Python: ivy_mc.py:1684-1767
+// Python: ivy_mc.py:1716-1802 check_isolate
 func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	if method == "" {
 		method = "mc"
@@ -142,6 +143,12 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 		fmt.Println()
 	}
 
+	// Open logfile (Go uses goivy_mc.log to avoid conflicting with ivy_mc.log)
+	logfile, err := os.OpenFile("goivy_mc.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err == nil {
+		defer logfile.Close()
+	}
+
 	// Convert to AIGER
 	result, err := ToAiger(mod, method)
 	if err != nil {
@@ -152,25 +159,71 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	aigerStr := result.Aiger.String()
 	xtracer.Trace("mc.CheckIsolate postToAiger aigerLen=%d", len(aigerStr))
 
-	// Run ABC model checker
-	checkResult, err := RunABC(aigerStr, nil, mod)
+	// Write AIGER to temp file
+	tmpFile, err := os.CreateTemp("", "ivy_mc_*.aag")
 	if err != nil {
-		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", err)
-		return nil, fmt.Errorf("model checker failed: %w", err)
+		return nil, fmt.Errorf("failed to create temp file: %w", err)
+	}
+	aagName := tmpFile.Name()
+	defer os.Remove(aagName)
+
+	if _, err := tmpFile.WriteString(aigerStr); err != nil {
+		tmpFile.Close()
+		return nil, fmt.Errorf("failed to write AIGER: %w", err)
+	}
+	tmpFile.Close()
+
+	// Convert AAG to AIG
+	aigName := strings.TrimSuffix(aagName, ".aag") + ".aig"
+	defer os.Remove(aigName)
+
+	aigtoaigPath := "aigtoaig"
+	if mod.Cfg.MCVerbose {
+		fmt.Printf("aigtoaig_path:%s\n", aigtoaigPath)
+	}
+	ret := exec.Command(aigtoaigPath, aagName, aigName)
+	if err := ret.Run(); err != nil {
+		aigName = aagName
 	}
 
-	if checkResult.Proved {
+	// Run model checker
+	outName := strings.TrimSuffix(aagName, ".aag") + ".out"
+	defer os.Remove(outName)
+
+	checker := &ABCModelChecker{}
+	cmd := checker.Cmd(aigName, outName)
+	p := exec.Command(cmd[0], cmd[1:]...)
+	var stdout bytes.Buffer
+	p.Stdout = &stdout
+
+	if err := p.Run(); err != nil {
+		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=model checker failed")
+		return nil, fmt.Errorf("failed to run model checker: %w", err)
+	}
+
+	alltext := stdout.String()
+	if mod.Cfg.MCVerbose {
+		fmt.Println("\nModel checker output:")
+		fmt.Println(strings.Repeat("-", 80))
+		fmt.Print(alltext)
+		fmt.Println(strings.Repeat("-", 80))
+	}
+
+	if p.ProcessState != nil && !p.ProcessState.Success() {
+		return nil, fmt.Errorf("model checker returned non-zero status")
+	}
+
+	if checker.Scrape(alltext) {
 		xtracer.Trace("mc.CheckIsolate EXIT proved=true err=<nil>")
 		return &CheckResult{Proved: true}, nil
 	}
 
-	if checkResult.Error != nil {
-		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", checkResult.Error)
-		return checkResult, nil
+	// Counterexample found — decode the witness into an Ivy trace
+	xtracer.Trace("mc.CheckIsolate EXIT proved=false err=<nil>")
+	decodedTrace, err := AigerWitnessToIvyTrace2(result, outName, mod)
+	if err != nil {
+		return &CheckResult{Error: fmt.Errorf("trace decode failed: %w", err)}, nil
 	}
 
-	// If counterexample found, we would reconstruct the trace here
-	// using aiger_witness_to_ivy_trace2. For now, return the raw trace.
-	xtracer.Trace("mc.CheckIsolate EXIT proved=false err=<nil>")
-	return checkResult, nil
+	return &CheckResult{DecodedTrace: decodedTrace}, nil
 }
