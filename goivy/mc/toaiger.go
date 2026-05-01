@@ -477,16 +477,14 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		defSet[sv.Name] = true
 	}
 
-	usedSyms := make(map[string]lg.Expr)
-	for _, sym := range module.SymbolsClauses(trans) {
-		usedSyms[lg.ExprName(sym)] = sym
-	}
-	for _, sym := range module.UsedSymbolsAST(invariant).All() {
-		usedSyms[lg.ExprName(sym)] = sym
+	usedSyms := trans.Symbols()
+	for k, v := range module.UsedSymbolsAST(invariant).All() {
+		usedSyms.Set(k, v)
 	}
 
 	var inputs []*lg.Const
-	for name, sym := range usedSyms {
+	for _, sym := range usedSyms.All() {
+		name := lg.ExprName(sym)
 		cc, isConst := sym.(*lg.Const)
 		if !defSet[name] && !(isConst && isInterpretedSymbol(cc)) {
 			if isConst {
@@ -494,7 +492,6 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 			}
 		}
 	}
-	sort.Slice(inputs, func(i, j int) bool { return inputs[i].Name < inputs[j].Name })
 
 	fail := lg.NewConst("__fail", lg.Boolean)
 	outputs := []*lg.Const{fail}
