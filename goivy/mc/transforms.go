@@ -653,6 +653,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	// Match triggers against all expressions in trans and invariant
 	instSet := make(map[lg.NodeKey]bool)
 	var instList []lg.Expr
+	instCount := 0
 
 	var scanExpr func(expr lg.Expr)
 	scanExpr = func(expr lg.Expr) {
@@ -667,6 +668,8 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 				if !instSet[instKey] {
 					instSet[instKey] = true
 					instList = append(instList, inst)
+					xtracer.Trace("mc.InstantiateAxioms addUnique[%d] %s", instCount, inst)
+					instCount++
 				}
 			}
 		}

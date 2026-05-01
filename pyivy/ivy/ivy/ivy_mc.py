@@ -747,6 +747,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
         return all(match(x,y,mp) for x,y in zip(pat.args,expr.args))
                                                                 
     # TODO: make sure matches are ground
+    inst_count = [0]
     def recur(expr):
         for e in expr.args:
             recur(e)
@@ -757,6 +758,8 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
                 if fmla not in insts:
                     insts.add(fmla)
                     inst_list.append(fmla)
+                    if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] %s" % (inst_count[0], fmla))
+                    inst_count[0] += 1
 
     # match triggers against the defs and fmlas and invariant
     for f in trans.defs + trans.fmlas + [invariant]:
