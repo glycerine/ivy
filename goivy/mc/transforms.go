@@ -525,8 +525,11 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 // Python: ivy_mc.py:619-636
 func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 	if cn, ok := fmla.(*ast.CompiledNode); ok {
+		if e, ok2 := cn.Node.(lg.Expr); ok2 {
+			return applyMatch(mp, e)
+		}
 		if n, ok2 := cn.Node.(ast.Node); ok2 {
-			fmla = n
+			return applyMatch(mp, n)
 		}
 	}
 	expr, ok := fmla.(lg.Expr)
@@ -550,6 +553,33 @@ func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 			}
 		}
 		return &lg.Apply{Func: app.Func, Terms: args}
+	}
+
+	// Python: elif il.is_binder(fmla): vs = [apply_match(match,v) for v in fmla.variables]
+	//          return fmla.clone_binder(vs, apply_match(match, fmla.body))
+	if fa, ok := expr.(*lg.ForAll); ok {
+		newVars := make([]*lg.Variable, len(fa.Variables))
+		for i, v := range fa.Variables {
+			nv := applyMatch(mp, v)
+			if rv, ok := nv.(*lg.Variable); ok {
+				newVars[i] = rv
+			} else {
+				newVars[i] = v
+			}
+		}
+		return &lg.ForAll{Variables: newVars, Body: args[0]}
+	}
+	if ex, ok := expr.(*lg.Exists); ok {
+		newVars := make([]*lg.Variable, len(ex.Variables))
+		for i, v := range ex.Variables {
+			nv := applyMatch(mp, v)
+			if rv, ok := nv.(*lg.Variable); ok {
+				newVars[i] = rv
+			} else {
+				newVars[i] = v
+			}
+		}
+		return &lg.Exists{Variables: newVars, Body: args[0]}
 	}
 
 	// Python: elif il.is_variable(fmla): return Variable(fmla.name, match.get(fmla.sort, fmla.sort))
@@ -620,12 +650,19 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		for _, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
-				inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
-				instKey := fmt.Sprint(inst)
-				if !instSet[instKey] {
-					instSet[instKey] = true
-					instList = append(instList, inst)
-				}
+				func() {
+					defer func() {
+						if r := recover(); r != nil {
+							xtracer.Trace("mc.InstantiateAxioms RECOVERED panic=%v axiom=%s", r, te.axiom.LabelName())
+						}
+					}()
+					inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
+					instKey := fmt.Sprint(inst)
+					if !instSet[instKey] {
+						instSet[instKey] = true
+						instList = append(instList, inst)
+					}
+				}()
 			}
 		}
 	}
