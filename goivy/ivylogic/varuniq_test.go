@@ -269,3 +269,84 @@ func TestVariableUniqifierInvMap(t *testing.T) {
 		t.Error("InvMap should contain entry for X_a")
 	}
 }
+
+func TestAlphaAvoidMapEmptyVsRenamesShadowedBound(t *testing.T) {
+	// Regression: AlphaAvoidMap must still rename bound variables that
+	// shadow free variables even when vs is empty. Python's alpha_avoid
+	// has no early return for empty vs — it always collects free variables
+	// and renames clashing bound variables.
+	//
+	// Formula: And(M, ForAll([M:S], Eq(M, M)))
+	//   - M is FREE in the first And term
+	//   - M is BOUND in the ForAll
+	// After AlphaAvoidMap with empty vs, the bound M must become M_a.
+	S := &lg.UninterpretedSort{Name: "S"}
+	M, _ := lg.NewVariable("M", S)
+	eqBody := &lg.Eq{T1: M, T2: M}
+	forall := &lg.ForAll{Variables: []*lg.Variable{M}, Body: eqBody}
+	fmla := &lg.And{Terms: []lg.Expr{M, forall}}
+
+	emptyVs := make(map[lg.NodeKey]lg.Expr)
+	result := AlphaAvoidMap(fmla, emptyVs)
+
+	and, ok := result.(*lg.And)
+	if !ok {
+		t.Fatalf("expected And, got %T", result)
+	}
+
+	// Free M in first term must stay "M"
+	freeM, ok := and.Terms[0].(*lg.Variable)
+	if !ok {
+		t.Fatalf("expected Variable in And.Terms[0], got %T", and.Terms[0])
+	}
+	if freeM.Name != "M" {
+		t.Errorf("free M should stay M, got %s", freeM.Name)
+	}
+
+	// Bound M in ForAll must be renamed to M_a
+	fa, ok := and.Terms[1].(*lg.ForAll)
+	if !ok {
+		t.Fatalf("expected ForAll in And.Terms[1], got %T", and.Terms[1])
+	}
+	if fa.Variables[0].Name != "M_a" {
+		t.Errorf("bound M should be renamed to M_a, got %s", fa.Variables[0].Name)
+	}
+
+	// Body references inside ForAll must use the renamed M_a
+	eq, ok := fa.Body.(*lg.Eq)
+	if !ok {
+		t.Fatalf("expected Eq in ForAll body, got %T", fa.Body)
+	}
+	t1v := eq.T1.(*lg.Variable)
+	t2v := eq.T2.(*lg.Variable)
+	if t1v.Name != "M_a" {
+		t.Errorf("Eq.T1 inside ForAll should be M_a, got %s", t1v.Name)
+	}
+	if t2v.Name != "M_a" {
+		t.Errorf("Eq.T2 inside ForAll should be M_a, got %s", t2v.Name)
+	}
+}
+
+func TestAlphaAvoidMapNonEmptyVsAlsoRenamesShadowed(t *testing.T) {
+	// When vs is non-empty AND the formula has free-vs-bound shadowing,
+	// both the vs names and free variable names must be reserved.
+	//
+	// Formula: And(M, ForAll([M:S], Eq(M, M)))
+	// vs contains a variable named "Q"
+	// Both "Q" and "M" (free) should be reserved. Bound M → M_a.
+	S := &lg.UninterpretedSort{Name: "S"}
+	M, _ := lg.NewVariable("M", S)
+	Q, _ := lg.NewVariable("Q", S)
+	eqBody := &lg.Eq{T1: M, T2: M}
+	forall := &lg.ForAll{Variables: []*lg.Variable{M}, Body: eqBody}
+	fmla := &lg.And{Terms: []lg.Expr{M, forall}}
+
+	vs := map[lg.NodeKey]lg.Expr{lg.Key(Q): Q}
+	result := AlphaAvoidMap(fmla, vs)
+
+	and := result.(*lg.And)
+	fa := and.Terms[1].(*lg.ForAll)
+	if fa.Variables[0].Name != "M_a" {
+		t.Errorf("bound M should be renamed to M_a, got %s", fa.Variables[0].Name)
+	}
+}
