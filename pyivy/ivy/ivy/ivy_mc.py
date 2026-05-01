@@ -1423,7 +1423,7 @@ def to_aiger(mod,ext_act,method="mc"):
     def_set.update(stvars)
 #    iu.dbg('def_set')
     used = ilu.used_symbols_clauses(trans)
-    used.update(ilu.symbols_ilu_ast(invariant))
+    used.update(ilu.used_symbols_ast(invariant))
     inputs = [sym for sym in used if
               sym not in def_set and not il.is_interpreted_symbol(sym)]
     fail = il.Symbol('__fail',il.find_sort('bool'))
