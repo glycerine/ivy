@@ -51,7 +51,6 @@ func pythonAvailable() bool {
 
 // parsePythonAST runs the Python AST dumper on a file and returns the output lines.
 func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
-	t.Helper()
 	dumper := pythonDumper()
 	data, err := os.ReadFile(ivyFile)
 	if err != nil {
@@ -95,7 +94,6 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 // parseLALRFullAST parses a file with the LALR full parser and returns the output
 // in the same format as the Python dumper: "[i] DeclType name"
 func parseLALRFullAST(t *testing.T, ivyFile string) ([]string, error) {
-	t.Helper()
 	data, err := os.ReadFile(ivyFile)
 	if err != nil {
 		return nil, err
@@ -502,7 +500,6 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
 		return // off to check everything else under make test.
 	}
-	t.Helper()
 	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v')", repoRelPath)
 
 	repo := mustGetRepoDir(t)
@@ -664,6 +661,16 @@ top:
 		if xtracer.Enabled {
 			goNorm = xtracer.NormalizeLine(goCheck)
 			ivNorm = xtracer.NormalizeLine(ivCheck)
+
+			if strings.Contains(goCheck, `<IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry`) {
+				vv("1st: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
+				vv("_1st ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm) // empty strings
+			}
+			if strings.Contains(goCheck, `transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)`) {
+				vv("2nd: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
+				vv("_2nd ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm)
+			}
+
 		} else {
 			goNorm = normalizeLine(repo, goCheck)
 			ivNorm = normalizeLine(repo, ivCheck)
@@ -689,18 +696,18 @@ top:
 		}
 
 		if goNorm != ivNorm {
-			vv("we have divergence at i = %v", i)
+			vv("we have divergence at i = %v becuase (len %v) goNorm='%v' != (len %v) ivNorm='%v'", i, len(goNorm), goNorm, len(ivNorm), ivNorm) // we are in here!
 			if !verbose {
 				n := len(pyLast30)
 				if i > showLast30Lines {
-					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
+					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n) // we seen this
 				}
 				// note: truncate to first 2000 bytes to
 				// avoid regurgitating very long canonical
 				// strings for modules of matching stuff.
 				for j, pys := range pyLast30 {
 					if true {
-						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
+						fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j]) // this is printing the INCLUDE line without the XTRACE
 						if len(goLast30[j]) > 300 {
 							fmt.Printf(" ...(truncated long line to 300 bytes)\n\n")
 						}
@@ -779,7 +786,6 @@ top:
 // next, and fails the test.
 func handleEOF(t *testing.T, deadName string, deadData string,
 	aliveReader *bufio.Reader, aliveName string, i int) {
-	t.Helper()
 	// 1. Print any data returned alongside the EOF (ReadString returns
 	//    partial data before the error — the current code was discarding this).
 	if trimmed := strings.TrimSpace(deadData); trimmed != "" {
@@ -817,7 +823,6 @@ const showLast30Lines = 300
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
 func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
-	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
@@ -892,7 +897,6 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 // goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
 // It streams output back on r, a pipe, asynchronously.
 func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
-	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
