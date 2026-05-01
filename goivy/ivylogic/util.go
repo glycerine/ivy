@@ -471,9 +471,6 @@ func AlphaAvoid(fmla lg.Expr, vs []*lg.Variable) lg.Expr {
 //
 // Corresponds to Python's alpha_avoid called with match_rhs_vars(match).
 func AlphaAvoidMap(fmla lg.Expr, vs map[lg.NodeKey]lg.Expr) lg.Expr {
-	if len(vs) == 0 {
-		return fmla
-	}
 	vu := NewVariableUniqifier(nil)
 	// Reserve names of all values in vs
 	for _, v := range vs {

@@ -227,6 +227,10 @@ func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.
 // Corresponds to Python's fmla_vocab.
 func FmlaVocab(fmla lg.Expr) map[lg.NodeKey]lg.Expr {
 	result := make(map[lg.NodeKey]lg.Expr)
+	// Python: lu.used_sorts_ast(fmla)
+	for k, s := range lu.SortsAst(fmla) {
+		result[k] = s
+	}
 	// Use clauseops.UsedSymbolsAST for symbols
 	for k, v := range module.UsedSymbolsAST(fmla).All() {
 		result[k] = v
