@@ -751,7 +751,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
     def recur(expr):
         for e in expr.args:
             recur(e)
-        for trig,ax in triggers:
+        for ti,(trig,ax) in enumerate(triggers):
             mp = dict()
             if match(trig,expr,mp):
                 raw = il.substitute(ax.formula,mp)
@@ -760,7 +760,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
                     insts.add(fmla)
                     inst_list.append(fmla)
                     mp_str = ' '.join('%s->%s' % (k.name, v) for k, v in sorted(mp.items(), key=lambda x: x[0].name))
-                    if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] mp={%s} preNorm=%s postNorm=%s" % (inst_count[0], mp_str, raw, fmla))
+                    if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] trig[%d] axiom=%s mp={%s} preNorm=%s postNorm=%s" % (inst_count[0], ti, ax.formula, mp_str, raw, fmla))
                     inst_count[0] += 1
 
     # match triggers against the defs and fmlas and invariant

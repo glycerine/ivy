@@ -660,7 +660,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		for _, child := range expr.Children() {
 			scanExpr(child)
 		}
-		for _, te := range triggers {
+		for ti, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
 				raw := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
@@ -670,7 +670,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 					instSet[instKey] = true
 					instList = append(instList, inst)
 					mpStr := fmtMp(mp)
-					xtracer.Trace("mc.InstantiateAxioms addUnique[%d] mp={%s} preNorm=%s postNorm=%s", instCount, mpStr, raw, inst)
+					xtracer.Trace("mc.InstantiateAxioms addUnique[%d] trig[%d] axiom=%s mp={%s} preNorm=%s postNorm=%s", instCount, ti, te.axiom.Formula, mpStr, raw, inst)
 					instCount++
 				}
 			}
