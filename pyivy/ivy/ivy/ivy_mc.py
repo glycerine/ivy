@@ -683,6 +683,14 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
     axioms = mod.labeled_axioms + expanded
     for a in axioms:
         logfile.write('axiom {}\n'.format(a))
+    import sys
+    nlab = len(mod.labeled_axioms)
+    print("PY mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d" % (nlab, len(expanded), len(axioms)), file=sys.stderr)
+    for i, a in enumerate(axioms):
+        vs = list(ilu.used_variables_ast(a.formula))
+        src = "labeled" if i < nlab else "expanded"
+        print("PY axiom[%d] src=%s vars=%d axiom=%s" % (i, src, len(vs), a.formula), file=sys.stderr)
+
 
     if verbose:
         print('Instantiating axioms...')
