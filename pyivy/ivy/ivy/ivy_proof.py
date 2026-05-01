@@ -477,10 +477,15 @@ class ProofChecker(object):
         witness = {}
         _new_pmatch = {}
         for x,y in pmatch.items():
-            r = isinstance(x,il.Variable) and x not in prob.freesyms
+            if x in prob.freesyms:
+                r = False
+                _reason = " reason=inFreeSyms"
+            else:
+                r = isinstance(x, il.Variable)
+                _reason = ""
             if __debug__:
                 _xk = x.canon() if hasattr(x,'canon') else str(x)
-                xtracer.trace("proof.isWitVar key=%s result=%s" % (_xk, r))
+                xtracer.trace("proof.isWitVar key=%s result=%s%s" % (_xk, r, _reason))
             if r:
                 witness[x] = y
             else:

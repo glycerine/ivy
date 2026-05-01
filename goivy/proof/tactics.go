@@ -263,16 +263,16 @@ func isNoneAST(n ast.Node) bool {
 // wrapping — the divergence observed at log.golden.2hr index 2411549.
 func isWitVar(key lg.NodeKey, val lg.Expr, prob *MatchProblem) bool {
 	if _, inFree := prob.FreeSyms[key]; inFree {
-		xtracer.Trace("proof.isWitVar key=%s result=false reason=inFreeSyms", string(key))
+		xtracer.Trace("proof.isWitVar key=%s result=%v reason=inFreeSyms", string(key), false)
 		return false
 	}
 	if prob.SchemaLF == nil {
-		xtracer.Trace("proof.isWitVar key=%s result=false reason=schemaLFNil", string(key))
+		xtracer.Trace("proof.isWitVar key=%s result=%v reason=schemaLFNil", string(key), false)
 		return false
 	}
 	conc := ConcAsExpr(GoalConc(prob.SchemaLF))
 	if conc == nil {
-		xtracer.Trace("proof.isWitVar key=%s result=false reason=concNil", string(key))
+		xtracer.Trace("proof.isWitVar key=%s result=%v reason=concNil", string(key), false)
 		return false
 	}
 	_, isUsedVar := lu.UsedVariables(conc)[key]
