@@ -683,9 +683,6 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
     axioms = mod.labeled_axioms + expanded
     for a in axioms:
         logfile.write('axiom {}\n'.format(a))
-    import sys
-    nlab = len(mod.labeled_axioms)
-
 
     if verbose:
         print('Instantiating axioms...')
@@ -715,10 +712,6 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
 #                iu.dbg('ax')
                 triggers.append((trig,ax))
 
-    print("PY mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d" % (nlab, len(expanded), len(axioms), len(triggers)), file=sys.stderr)
-    for i, (trig, ax) in enumerate(triggers):
-        if i < 20:
-            print("PY trigger[%d] trig=%s axiom=%s" % (i, trig, ax.formula), file=sys.stderr)
     if __debug__:
         xtracer.trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d" % (len(mod.labeled_axioms), len(expanded), len(axioms), len(triggers)))
         for i, (trig, ax) in enumerate(triggers):

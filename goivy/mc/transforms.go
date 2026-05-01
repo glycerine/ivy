@@ -2,7 +2,6 @@ package mc
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 
@@ -644,12 +643,6 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		}
 	}
 
-	fmt.Fprintf(os.Stderr, "GO mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d\n", len(mod.LabeledAxioms), len(expandedAxioms), len(axioms), len(triggers))
-	for i, te := range triggers {
-		if i < 20 {
-			fmt.Fprintf(os.Stderr, "GO trigger[%d] trig=%s axiom=%s\n", i, te.trigger, te.axiom.Formula)
-		}
-	}
 	if xtracer.Enabled {
 		xtracer.Trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d", len(mod.LabeledAxioms), len(expandedAxioms), len(axioms), len(triggers))
 
@@ -791,6 +784,19 @@ func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 			mp[k] = v
 		}
 		return matchNodes(peq.T1, eeq.T2, mp) && matchNodes(peq.T2, eeq.T1, mp)
+	}
+
+	// Bare constants: must match by name (and sort).
+	// Python represents constants as Apply(rep=sym, args=[]) and the
+	// is_app branch checks pat.rep == expr.rep. In Go, bare *lg.Const
+	// nodes have no children, so the generic fallback would wrongly
+	// treat any Const as matching any other Const.
+	if c, ok := pat.(*lg.Const); ok {
+		ec, ok2 := expr.(*lg.Const)
+		if !ok2 {
+			return false
+		}
+		return c.Name == ec.Name
 	}
 
 	// Generic: same type, same number of children, match all children
