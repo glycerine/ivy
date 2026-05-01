@@ -105,7 +105,7 @@ func applyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return nb
 	}
-	return lg.TryApply(nb, args...)
+	return lg.MustApply(nb, args...)
 }
 
 func mustApply(f lg.Expr, args ...lg.Expr) lg.Expr {

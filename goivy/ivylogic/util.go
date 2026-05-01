@@ -18,7 +18,7 @@ func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 		return t // variables are immutable
 	case *lg.Apply:
 		if len(args) > 0 {
-			return lg.MustApply(t.Func, args...)
+			return lg.CloneApplyTerms(t, args)
 		}
 		return t
 	case *lg.Eq:

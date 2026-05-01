@@ -170,7 +170,7 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 		for i, arg := range t.Terms {
 			newTerms[i] = renameASTRec(arg, subs)
 		}
-		return lg.MustApply(newFunc, newTerms...)
+		return lg.TryApply(newFunc, newTerms...)
 	case *il.Definition:
 		lhs := renameASTRec(t.Lhs, subs)
 		rhs := renameASTRec(t.Rhs, subs)
