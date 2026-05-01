@@ -575,14 +575,8 @@ func cloneNode(n logic.Expr, children []logic.Expr) logic.Expr {
 		}
 	case *logic.Apply:
 		// Matches Python Apply.clone(args) = Apply(self.func, *args).
-		// Children() returns Terms only, so children ARE the new terms.
-		// Preserve the original Func.
-		result, err := logic.NewApply(t.Func, children...)
-		if err != nil {
-			// Fallback: construct directly (may have TopSort issues)
-			return n
-		}
-		return result
+		// Preserves Func and aSort; skips sort validation to match Python.
+		return logic.CloneApplyTerms(t, children)
 	case *logic.ForAll:
 		if len(children) >= 1 {
 			return &logic.ForAll{Variables: t.Variables, Body: children[0]}

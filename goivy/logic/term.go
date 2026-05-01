@@ -176,7 +176,7 @@ func NewApply(fn Expr, terms ...Expr) (*Apply, error) {
 		for i := range terms {
 			tSort := terms[i].NodeSort()
 			dSort := domain[i]
-			if tSort.Equal(dSort) {
+			if tSort == nil || dSort == nil || tSort.Equal(dSort) {
 				continue
 			}
 			_, tIsTop := tSort.(*TopSort)
@@ -205,6 +205,44 @@ func MustApply(fn Expr, terms ...Expr) *Apply {
 		panic(fmt.Sprintf("MustApply: %v", err))
 	}
 	return a
+}
+
+// TryApply is like NewApply but falls back to NewApplyUnchecked on error
+// instead of returning an error. Use this in contexts where sort mismatches
+// are expected (e.g., formulas containing schema parameter sorts).
+func TryApply(fn Expr, terms ...Expr) *Apply {
+	a, err := NewApply(fn, terms...)
+	if err != nil {
+		return NewApplyUnchecked(fn, terms...)
+	}
+	return a
+}
+
+// CloneApplyTerms creates a new Apply with the same Func and aSort but new terms.
+// Skips sort validation, matching Python's Apply.clone(args) behavior.
+func CloneApplyTerms(orig *Apply, newTerms []Expr) *Apply {
+	cp := make([]Expr, len(newTerms))
+	copy(cp, newTerms)
+	return &Apply{Func: orig.Func, Terms: cp, aSort: orig.aSort}
+}
+
+// NewApplyUnchecked creates an Apply without sort validation, computing
+// aSort from the function's sort. Matches Python's Apply construction
+// in contexts where sort mismatches are expected (e.g., schema expansion).
+func NewApplyUnchecked(fn Expr, terms ...Expr) *Apply {
+	cp := make([]Expr, len(terms))
+	copy(cp, terms)
+	var resultSort Sort
+	if fnSort := fn.NodeSort(); fnSort != nil {
+		if fs, ok := fnSort.(*FunctionSort); ok {
+			resultSort = fs.Range()
+		} else {
+			resultSort = TopS
+		}
+	} else {
+		resultSort = TopS
+	}
+	return &Apply{Func: fn, Terms: cp, aSort: resultSort}
 }
 
 func (a *Apply) NodeSort() Sort { return a.aSort }

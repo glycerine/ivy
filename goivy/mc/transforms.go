@@ -328,7 +328,6 @@ func unwrapSort(n ast.Node) (*lg.UninterpretedSort, bool) {
 				return us, true
 			}
 		}
-		xtracer.Trace("mc.unwrapSort CompiledNode.Node type=%T", cn.Node)
 	}
 	return nil, false
 }
@@ -370,14 +369,12 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 
 		lf, ok := lfNode.(*ast.LabeledFormula)
 		if !ok {
-			xtracer.Trace("mc.ExpandSchemata skip name=%s reason=notLF type=%T", name, lfNode)
 			continue
 		}
 
 		// Python: schema = lf.formula; conc = schema.args[-1]; prems = list(schema.args[:-1])
 		sb, ok := lf.Formula.(*ast.SchemaBody)
 		if !ok {
-			xtracer.Trace("mc.ExpandSchemata skip name=%s reason=notSchemaBody formulaType=%T", name, lf.Formula)
 			continue
 		}
 		prems := sb.Prems()
@@ -422,13 +419,12 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 	prem := prems[len(prems)-1]
 	prems = prems[:len(prems)-1]
 	premForType := prem
-	if cn, ok := prem.(*ast.CompiledNode); ok && cn.Node != nil {
-		if n, ok2 := cn.Node.(ast.Node); ok2 {
+	if cn, ok2 := prem.(*ast.CompiledNode); ok2 && cn.Node != nil {
+		if n, ok3 := cn.Node.(ast.Node); ok3 {
 			premForType = n
 		}
 	}
 	xtracer.Trace("mc.matchSchemaPrems premType=%s nPremsLeft=%d", iu.ShortTypeName(premForType), len(prems))
-
 	if cd, ok := prem.(*ast.ConstantDecl); ok {
 		args := cd.Args()
 		if len(args) == 0 {
@@ -445,7 +441,6 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 			}
 		}
 		if sym == nil {
-			xtracer.Trace("mc.matchSchemaPrems args0 type=%T", args[0])
 			prems = append(prems, prem)
 			return
 		}
@@ -481,16 +476,14 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 		} else {
 			// Non-function constant premise
 			symSortKey := sortName(sym.CSort)
-			_, inMap := match.mp[symSortKey]
-			inBound := boundSorts[symSortKey]
 			var cands []*lg.Const
-			if inMap || !inBound {
+			if _, mapped := match.mp[symSortKey]; mapped || !boundSorts[symSortKey] {
 				lookupKey := symSortKey
 				if mapped, ok := match.mp[symSortKey]; ok {
 					lookupKey = sortName(mapped.(lg.Sort))
 				}
 				cands = sortConstants[lookupKey]
-				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d", symSortKey, inMap, inBound, len(cands))
+				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d", symSortKey, match.mp[symSortKey] != nil, boundSorts[symSortKey], len(cands))
 			} else {
 				scKeys := make([]string, 0, len(sortConstants))
 				for k := range sortConstants {
@@ -500,7 +493,7 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 				for _, k := range scKeys {
 					cands = append(cands, sortConstants[k]...)
 				}
-				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d (allSorts)", symSortKey, inMap, inBound, len(cands))
+				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d (allSorts)", symSortKey, match.mp[symSortKey] != nil, boundSorts[symSortKey], len(cands))
 			}
 			for _, cand := range cands {
 				match.push()
@@ -548,11 +541,11 @@ func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 		if f, ok := app.Func.(*lg.Const); ok {
 			if repl, has := mp[f.Name]; has {
 				if rc, ok := repl.(*lg.Const); ok {
-					return &lg.Apply{Func: rc, Terms: args}
+					return lg.NewApplyUnchecked(rc, args...)
 				}
 			}
 		}
-		return &lg.Apply{Func: app.Func, Terms: args}
+		return lg.CloneApplyTerms(app, args)
 	}
 
 	// Python: elif il.is_binder(fmla): vs = [apply_match(match,v) for v in fmla.variables]
@@ -650,19 +643,12 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		for _, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
-				func() {
-					defer func() {
-						if r := recover(); r != nil {
-							xtracer.Trace("mc.InstantiateAxioms RECOVERED panic=%v axiom=%s", r, te.axiom.LabelName())
-						}
-					}()
-					inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
-					instKey := fmt.Sprint(inst)
-					if !instSet[instKey] {
-						instSet[instKey] = true
-						instList = append(instList, inst)
-					}
-				}()
+				inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
+				instKey := fmt.Sprint(inst)
+				if !instSet[instKey] {
+					instSet[instKey] = true
+					instList = append(instList, inst)
+				}
 			}
 		}
 	}
