@@ -207,7 +207,7 @@ func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, c
 // CloneGoalPreserveID is like CloneGoal but preserves the original goal's LF ID.
 // Corresponds to Python's x.clone([x.label, fmla]) pattern (ivy_proof.py:988).
 func CloneGoalPreserveID(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	xtracer.Trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%s id=%d", goal.LabelName(), len(prems), iu.TypeName(conc), goal.ID)
+	xtracer.Trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%s id=%d", goal.LabelForTrace(), len(prems), iu.TypeName(conc), goal.ID)
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -218,7 +218,7 @@ func CloneGoalPreserveID(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []a
 		formula = conc
 	}
 	result := goal.Clone([]ast.Node{goal.Label, formula}).(*ast.LabeledFormula)
-	xtracer.Trace("proof.CloneGoalPreserveID EXIT label=%s", result.LabelName())
+	xtracer.Trace("proof.CloneGoalPreserveID EXIT label=%s", result.LabelForTrace())
 	return result
 }
 
