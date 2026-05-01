@@ -604,7 +604,7 @@ func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs *iu.InsMap[string, *lg.Const]) []lg.Expr {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs *iu.InsMap[string, *lg.Const], iuCfg *iu.IvyUtilsConfig) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 
@@ -631,6 +631,8 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		}
 	}
 
+	xtracer.Trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d", len(axioms), len(triggers))
+
 	// Match triggers against all expressions in trans and invariant
 	instSet := make(map[string]bool)
 	var instList []lg.Expr
@@ -643,7 +645,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		for _, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
-				inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
+				inst := normalize(lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp), iuCfg)
 				instKey := fmt.Sprint(inst)
 				if !instSet[instKey] {
 					instSet[instKey] = true
@@ -664,6 +666,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	}
 	scanExpr(invariant)
 
+	xtracer.Trace("mc.InstantiateAxioms result nUnique=%d", len(instList))
 	return instList
 }
 

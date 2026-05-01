@@ -711,6 +711,8 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
 #                iu.dbg('ax')
                 triggers.append((trig,ax))
 
+    if __debug__: xtracer.trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d" % (len(axioms), len(triggers)))
+
     insts = set()
     global inst_list # python lamemess -- should be local but inner function cannot access
     inst_list = []
@@ -757,6 +759,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
     for f in trans.defs + trans.fmlas + [invariant]:
         recur(f)
                     
+    if __debug__: xtracer.trace("mc.InstantiateAxioms result nUnique=%d" % len(inst_list))
     for f in inst_list:
         logfile.write('    {}\n'.format(f))
     return inst_list

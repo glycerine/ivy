@@ -300,7 +300,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 4d: Instantiate axioms using pattern matching
 	stVarNameList := constNames(stVars)
-	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs)
+	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs, mod.Cfg.IuCfg)
 	if len(axs) > 0 {
 		axConj := &lg.And{Terms: axs}
 		axVar := lg.NewConst("__axioms", lg.Boolean)
