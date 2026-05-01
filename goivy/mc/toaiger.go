@@ -356,8 +356,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	var addDefs []*il.Definition
 	for exprKey, v := range propAbs.Map.All() {
-		_ = exprKey
-		if isImmutableExpr(v) && !isExprDefined(v) {
+		origExpr, _ := propAbs.OrigExprs.Get2(exprKey)
+		if origExpr != nil && isImmutableExpr(origExpr) && !isExprDefined(origExpr) {
 			propAbs.NewStVars = append(propAbs.NewStVars, v)
 			addDefs = append(addDefs, il.NewDefinition(
 				lg.NewConst(actions.New(v.Name), v.CSort),
@@ -392,9 +392,10 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	propAbs.MkPropAbs(module.RenameAST(invariant, rnInv))
 
 	// Update state variables: filter to finite sorts + add new prop-abs vars
+	// Python: stvars = [sym for sym in stvars if is_finite_sort(sym.sort)] + new_stvars
 	var finiteStVars []*lg.Const
 	for _, sv := range stVars {
-		if isFiniteSortByName(sv.Name) {
+		if isFiniteSort(sv.CSort) {
 			finiteStVars = append(finiteStVars, sv)
 		}
 	}
@@ -804,8 +805,3 @@ func nodesToDefs(nodes []lg.Expr) []*il.Definition {
 
 // isFiniteSortByName is a heuristic check for state variable names
 // that are boolean (most abstract state vars are boolean).
-func isFiniteSortByName(name string) bool {
-	// Boolean-named state vars are always finite
-	// Abstract vars (__abs, __qe, __ite, __init, __cnst, __axioms) are boolean
-	return true // In the propositionally abstracted system, all remaining vars are boolean
-}

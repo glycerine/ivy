@@ -4,6 +4,7 @@ import (
 	"fmt"
 	//"sync/atomic"
 
+	"github.com/glycerine/ivy/goivy/actions"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -26,6 +27,10 @@ import (
 type PropAbs struct {
 	// Map from expression key to abstract proposition
 	Map *iu.InsMap[string, *lg.Const]
+	// OrigExprs maps the same string keys to the original expressions,
+	// so we can check immutability of the original (not the abstract var).
+	// Python keeps this naturally since prop_abs maps expr->var directly.
+	OrigExprs *iu.InsMap[string, lg.Expr]
 	// Counter for fresh symbols
 	Ctr int
 	// New state variables introduced by abstraction
@@ -45,6 +50,7 @@ type PropAbs struct {
 func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) *PropAbs {
 	return &PropAbs{
 		Map:           iu.NewInsMap[string, *lg.Const](),
+		OrigExprs:     iu.NewInsMap[string, lg.Expr](),
 		FiniteSymsSet: make(map[string]bool),
 		StVarSet:      stVarSet,
 		SortConstants: sortConstants,
@@ -56,7 +62,7 @@ func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) 
 // it links the new variable to the old one.
 // Python: ivy_mc.py:1287-1303
 func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
-	key := fmt.Sprint(expr)
+	key := string(expr.Sexp())
 	if res, ok := pa.Map.Get2(key); ok {
 		return res
 	}
@@ -65,11 +71,11 @@ func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 	if prevExpr := pa.prevExpr(expr); prevExpr != nil {
 		prevAbs := pa.newProp(prevExpr)
 		pa.NewStVars = append(pa.NewStVars, prevAbs)
-		// Create next-state version
-		nextName := fmt.Sprintf("__abs[%d]", pa.Ctr)
-		pa.Ctr++
-		res := lg.NewConst(nextName, lg.Boolean)
+		// Python: res = tr.new(pva) — reuses pva's name with new_ prefix,
+		// does NOT consume a fresh counter value.
+		res := lg.NewConst(actions.New(prevAbs.Name), prevAbs.CSort)
 		pa.Map.Set(key, res)
+		pa.OrigExprs.Set(key, expr)
 		return res
 	}
 
@@ -77,6 +83,7 @@ func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 	pa.Ctr++
 	res := lg.NewConst(name, lg.Boolean)
 	pa.Map.Set(key, res)
+	pa.OrigExprs.Set(key, expr)
 	return res
 }
 
@@ -103,30 +110,35 @@ func (pa *PropAbs) prevExpr(expr lg.Expr) lg.Expr {
 //
 // Python: ivy_mc.py:1308-1318
 func (pa *PropAbs) MkPropAbs(expr lg.Expr) lg.Expr {
-	// Check if this needs abstraction
+	// Check if this needs abstraction.
+	// Python: if (is_quantifier(expr) or
+	//            len(expr.args) > 0 and (
+	//              any(not is_finite_sort(a.sort) for a in expr.args)
+	//              or is_app(expr) and not is_interpreted_symbol(expr.func))):
 	needsAbstraction := false
 
-	switch t := expr.(type) {
+	switch expr.(type) {
 	case *lg.ForAll, *lg.Exists:
 		needsAbstraction = true
-	case *lg.Apply:
-		// Check if any argument has non-finite sort
-		for _, arg := range t.Terms {
-			if !isFiniteSort(arg.NodeSort()) {
-				needsAbstraction = true
-				break
-			}
-		}
-		// Uninterpreted function application
-		if !needsAbstraction {
-			if c, ok := t.Func.(*lg.Const); ok {
-				if !isInterpretedSymbol(c) {
+	default:
+		children := expr.Children()
+		if len(children) > 0 {
+			for _, child := range children {
+				if !isFiniteSort(child.NodeSort()) {
 					needsAbstraction = true
+					break
+				}
+			}
+			if !needsAbstraction {
+				if app, ok := expr.(*lg.Apply); ok {
+					if c, ok := app.Func.(*lg.Const); ok {
+						if !isInterpretedSymbol(c) {
+							needsAbstraction = true
+						}
+					}
 				}
 			}
 		}
-	default:
-		// Not a compound expression needing abstraction
 	}
 
 	if needsAbstraction {
