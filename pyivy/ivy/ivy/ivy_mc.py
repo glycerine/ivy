@@ -685,11 +685,6 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
         logfile.write('axiom {}\n'.format(a))
     import sys
     nlab = len(mod.labeled_axioms)
-    print("PY mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d" % (nlab, len(expanded), len(axioms)), file=sys.stderr)
-    for i, a in enumerate(axioms):
-        vs = list(ilu.used_variables_ast(a.formula))
-        src = "labeled" if i < nlab else "expanded"
-        print("PY axiom[%d] src=%s vars=%d axiom=%s" % (i, src, len(vs), a.formula), file=sys.stderr)
 
 
     if verbose:
@@ -720,7 +715,11 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
 #                iu.dbg('ax')
                 triggers.append((trig,ax))
 
-    if __debug__: 
+    print("PY mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d" % (nlab, len(expanded), len(axioms), len(triggers)), file=sys.stderr)
+    for i, (trig, ax) in enumerate(triggers):
+        if i < 20:
+            print("PY trigger[%d] trig=%s axiom=%s" % (i, trig, ax.formula), file=sys.stderr)
+    if __debug__:
         xtracer.trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d" % (len(mod.labeled_axioms), len(expanded), len(axioms), len(triggers)))
         for i, (trig, ax) in enumerate(triggers):
             xtracer.trace("mc.InstantiateAxioms trigger[%d] trig=%s axiom=%s" % (i, trig, ax.formula))

@@ -645,14 +645,10 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	}
 
 	fmt.Fprintf(os.Stderr, "GO mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d\n", len(mod.LabeledAxioms), len(expandedAxioms), len(axioms), len(triggers))
-	for i, ax := range axioms {
-		fmla := ax.Formula.(lg.Expr)
-		vars := lu.FreeVariablesList(fmla)
-		src := "labeled"
-		if i >= len(mod.LabeledAxioms) {
-			src = "expanded"
+	for i, te := range triggers {
+		if i < 20 {
+			fmt.Fprintf(os.Stderr, "GO trigger[%d] trig=%s axiom=%s\n", i, te.trigger, te.axiom.Formula)
 		}
-		fmt.Fprintf(os.Stderr, "GO axiom[%d] src=%s vars=%d axiom=%s\n", i, src, len(vars), fmla)
 	}
 	if xtracer.Enabled {
 		xtracer.Trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d", len(mod.LabeledAxioms), len(expandedAxioms), len(axioms), len(triggers))
