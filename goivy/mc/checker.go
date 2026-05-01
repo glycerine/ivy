@@ -35,10 +35,10 @@ type ABCModelChecker struct {
 func (mc *ABCModelChecker) Cmd(aigfilename, outfilename string) []string {
 	abcPath := mc.ABCPath
 	if abcPath == "" {
-		// Default: look for abc in a bin/ subdirectory of the executable
+		// Default: look for abc next to the executable
 		exePath, err := os.Executable()
 		if err == nil {
-			abcPath = filepath.Join(filepath.Dir(exePath), "bin", "abc")
+			abcPath = filepath.Join(filepath.Dir(exePath), "abc")
 		} else {
 			abcPath = "abc"
 		}
