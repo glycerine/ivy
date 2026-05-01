@@ -394,6 +394,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 
 		matchSchemaPrems(prems, sortConstants, funs, match, boundSorts, func(mp map[string]lg.Expr) {
 			inst := applyMatch(mp, conc)
+			xtracer.Trace("mc.ExpandSchemata expanded[%d] schema=%s mp={%s} inst=%s", len(result), name, fmtMp(mp), inst)
 			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(
 				mod.Cfg.AstCfg.NewAtom(name), inst))
 		})
@@ -643,7 +644,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	}
 
 	if xtracer.Enabled {
-		xtracer.Trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d", len(axioms), len(triggers))
+		xtracer.Trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d", len(mod.LabeledAxioms), len(expandedAxioms), len(axioms), len(triggers))
 
 		for i, te := range triggers {
 			xtracer.Trace("mc.InstantiateAxioms trigger[%d] trig=%s axiom=%s", i, te.trigger, te.axiom.Formula)

@@ -664,9 +664,9 @@ def expand_schemata(mod,sort_constants,funs):
         if __debug__: xtracer.trace("mc.ExpandSchemata schema name=%s nPrems=%d" % (name, len(prems)))
         bound_sorts = [s for s in prems if isinstance(s,il.UninterpretedSort)]
         for m in match_schema_prems(prems,sort_constants,funs,match,bound_sorts):
-            # print ('m: {}'.format(str_map(m)))
-            # print ('conc: {}'.format(conc))
             inst = apply_match(m,conc)
+            m_str = ' '.join('%s->%s' % (k, v) for k, v in sorted(m.items(), key=lambda x: str(x[0])))
+            if __debug__: xtracer.trace("mc.ExpandSchemata expanded[%d] schema=%s mp={%s} inst=%s" % (len(res), name, m_str, inst))
             res.append(ivy_ast.LabeledFormula(ivy_ast.Atom(name),inst))
     if __debug__: xtracer.trace("mc.ExpandSchemata result nExpanded=%d" % len(res))
     return res
@@ -679,7 +679,8 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
 
     if verbose:
         print('Expanding schemata...')
-    axioms = mod.labeled_axioms + expand_schemata(mod,sort_constants,funs)
+    expanded = expand_schemata(mod,sort_constants,funs)
+    axioms = mod.labeled_axioms + expanded
     for a in axioms:
         logfile.write('axiom {}\n'.format(a))
 
@@ -712,7 +713,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
                 triggers.append((trig,ax))
 
     if __debug__: 
-        xtracer.trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d" % (len(axioms), len(triggers)))
+        xtracer.trace("mc.InstantiateAxioms nLabeled=%d nExpanded=%d nAxioms=%d nTriggers=%d" % (len(mod.labeled_axioms), len(expanded), len(axioms), len(triggers)))
         for i, (trig, ax) in enumerate(triggers):
             xtracer.trace("mc.InstantiateAxioms trigger[%d] trig=%s axiom=%s" % (i, trig, ax.formula))
 
