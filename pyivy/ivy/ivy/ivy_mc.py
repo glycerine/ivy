@@ -759,7 +759,7 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
                 if fmla not in insts:
                     insts.add(fmla)
                     inst_list.append(fmla)
-                    mp_str = ' '.join('%s->%s' % (k, v) for k, v in sorted(mp.items(), key=lambda x: str(x[0])))
+                    mp_str = ' '.join('%s->%s' % (k.name, v) for k, v in sorted(mp.items(), key=lambda x: x[0].name))
                     if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] mp={%s} preNorm=%s postNorm=%s" % (inst_count[0], mp_str, raw, fmla))
                     inst_count[0] += 1
 
