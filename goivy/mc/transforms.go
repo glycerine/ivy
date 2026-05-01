@@ -587,6 +587,16 @@ func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 		return &lg.Variable{Name: v.Name, VSort: newSort}
 	}
 
+	// Bare zero-arity constants.
+	// Python: zero-arity constants are Apply(rep=x, args=[]) and hit the
+	// is_app branch. In Go they are bare *lg.Const nodes.
+	if c, ok := expr.(*lg.Const); ok {
+		if repl, has := mp[c.Name]; has {
+			return repl
+		}
+		return c
+	}
+
 	// Default: clone with recursed args
 	astArgs := make([]ast.Node, len(args))
 	for i, a := range args {
