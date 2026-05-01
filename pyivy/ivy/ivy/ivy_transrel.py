@@ -331,8 +331,8 @@ def compose_updates(update1,axioms,update2):
     mid = [s for s in updated1 if s in us2]
     mid_ax = clauses_using_symbols(mid,axioms)
     used = used_symbols_clauses(and_clauses(clauses1,clauses2))
-    used.update(symbols_clauses(pre1))
-    used.update(symbols_clauses(pre2))
+    used.update(dict.fromkeys(symbols_clauses(pre1)))
+    used.update(dict.fromkeys(symbols_clauses(pre2)))
     rn = UniqueRenamer('__m_',used)
     map1 = dict()
     map2 = dict()

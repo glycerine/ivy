@@ -669,8 +669,8 @@ top:
 				vv("_1st ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm) // empty strings
 			}
 			if strings.Contains(goCheck, `transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)`) {
-				vv("2nd: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
-				vv("_2nd ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm)
+				vv("2nd: from goCheck='%v' to goNorm='%v' (equal: %v)", goCheck, goNorm, goCheck == goNorm)
+				vv("_2nd ivy  ivCheck='%v' to ivNorm='%v' (equal: %v)", ivCheck, ivNorm, ivCheck == ivNorm)
 			}
 
 		} else {
