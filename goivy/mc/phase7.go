@@ -99,13 +99,21 @@ func termOrd(x, y lg.Expr) int {
 	if xs > ys {
 		return 1
 	}
-	xn := lg.ExprName(x)
-	yn := lg.ExprName(y)
-	if xn < yn {
-		return -1
-	}
-	if xn > yn {
-		return 1
+	if ax, ok := x.(*lg.Apply); ok {
+		ay := y.(*lg.Apply)
+		xn, yn := "", ""
+		if fc, ok := ax.Func.(*lg.Const); ok {
+			xn = fc.Name
+		}
+		if fc, ok := ay.Func.(*lg.Const); ok {
+			yn = fc.Name
+		}
+		if xn < yn {
+			return -1
+		}
+		if xn > yn {
+			return 1
+		}
 	}
 	xargs := il.NodeArgs(x)
 	yargs := il.NodeArgs(y)

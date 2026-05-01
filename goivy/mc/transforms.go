@@ -705,7 +705,7 @@ func getTrigger(expr lg.Expr, vars []*lg.Variable) lg.Expr {
 func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 	if v, ok := pat.(*lg.Variable); ok {
 		if existing, ok := mp[v.Name]; ok {
-			return fmt.Sprint(existing) == fmt.Sprint(expr)
+			return existing.Sexp() == expr.Sexp()
 		}
 		mp[v.Name] = expr
 		return true
