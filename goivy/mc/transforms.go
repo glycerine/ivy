@@ -524,6 +524,11 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 // reduction for matched function symbols.
 // Python: ivy_mc.py:619-636
 func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
+	if cn, ok := fmla.(*ast.CompiledNode); ok {
+		if n, ok2 := cn.Node.(ast.Node); ok2 {
+			fmla = n
+		}
+	}
 	expr, ok := fmla.(lg.Expr)
 	if !ok {
 		return nil
