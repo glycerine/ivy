@@ -640,7 +640,7 @@ top:
 		}
 		if !goDone && pyDone {
 			goCheck, err = goivyR.ReadString('\n')
-			vv("pyDone but not goDone. goCheck = '%v'", goCheck)
+			//vv("pyDone but not goDone. goCheck = '%v'", goCheck)
 			if strings.HasPrefix(goCheck, "XTRACE:") {
 				continue // ignore
 			}
@@ -663,15 +663,15 @@ top:
 			goNorm = xtracer.NormalizeLine(goCheck)
 			ivNorm = xtracer.NormalizeLine(ivCheck)
 
-			if strings.Contains(goCheck, `<IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry`) {
-				vv("1st: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
-				// golden_test.go:666 [goID 6] 2026-05-01 18:46:35.349569000 +0000 UTC 1st: from goCheck='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n' to goNorm='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n'
-				vv("_1st ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm) // empty strings
-			}
-			if strings.Contains(goCheck, `transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)`) {
-				vv("2nd: from goCheck='%v' to goNorm='%v' (equal: %v)", goCheck, goNorm, goCheck == goNorm)
-				vv("_2nd ivy  ivCheck='%v' to ivNorm='%v' (equal: %v)", ivCheck, ivNorm, ivCheck == ivNorm)
-			}
+			//if strings.Contains(goCheck, `<IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry`) {
+			//	vv("1st: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
+			//	// golden_test.go:666 [goID 6] 2026-05-01 18:46:35.349569000 +0000 UTC 1st: from goCheck='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n' to goNorm='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n'
+			//	vv("_1st ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm) // empty strings
+			//}
+			//if strings.Contains(goCheck, `transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)`) {
+			//vv("2nd: from goCheck='%v' to goNorm='%v' (equal: %v)", goCheck, goNorm, goCheck == goNorm)
+			//vv("_2nd ivy  ivCheck='%v' to ivNorm='%v' (equal: %v)", ivCheck, ivNorm, ivCheck == ivNorm)
+			//}
 
 		} else {
 			goNorm = normalizeLine(repo, goCheck)
