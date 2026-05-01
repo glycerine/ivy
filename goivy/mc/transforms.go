@@ -663,12 +663,14 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 		for _, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
-				inst := normalize(lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp), iuCfg)
+				raw := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
+				inst := normalize(raw, iuCfg)
 				instKey := inst.Sexp()
 				if !instSet[instKey] {
 					instSet[instKey] = true
 					instList = append(instList, inst)
-					xtracer.Trace("mc.InstantiateAxioms addUnique[%d] %s", instCount, inst)
+					mpStr := fmtMp(mp)
+					xtracer.Trace("mc.InstantiateAxioms addUnique[%d] mp={%s} preNorm=%s postNorm=%s", instCount, mpStr, raw, inst)
 					instCount++
 				}
 			}
@@ -798,6 +800,19 @@ func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 		}
 	}
 	return true
+}
+
+func fmtMp(mp map[string]lg.Expr) string {
+	keys := make([]string, 0, len(mp))
+	for k := range mp {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	parts := make([]string, len(keys))
+	for i, k := range keys {
+		parts[i] = fmt.Sprintf("%s->%s", k, mp[k])
+	}
+	return strings.Join(parts, " ")
 }
 
 // Helper functions

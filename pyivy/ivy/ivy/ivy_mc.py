@@ -754,11 +754,13 @@ def instantiate_axioms(mod,stvars,trans,invariant,sort_constants,funs):
         for trig,ax in triggers:
             mp = dict()
             if match(trig,expr,mp):
-                fmla = normalize(il.substitute(ax.formula,mp))
+                raw = il.substitute(ax.formula,mp)
+                fmla = normalize(raw)
                 if fmla not in insts:
                     insts.add(fmla)
                     inst_list.append(fmla)
-                    if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] %s" % (inst_count[0], fmla))
+                    mp_str = ' '.join('%s->%s' % (k, v) for k, v in sorted(mp.items(), key=lambda x: str(x[0])))
+                    if __debug__: xtracer.trace("mc.InstantiateAxioms addUnique[%d] mp={%s} preNorm=%s postNorm=%s" % (inst_count[0], mp_str, raw, fmla))
                     inst_count[0] += 1
 
     # match triggers against the defs and fmlas and invariant
