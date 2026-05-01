@@ -743,7 +743,7 @@ func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 		}
 		pFunc, ok3 := app.Func.(*lg.Const)
 		eFunc, ok4 := eapp.Func.(*lg.Const)
-		if !ok3 || !ok4 || pFunc.Name != eFunc.Name {
+		if !ok3 || !ok4 || !pFunc.Equal(eFunc) {
 			return false
 		}
 		if len(app.Terms) != len(eapp.Terms) {
