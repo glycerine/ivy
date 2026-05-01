@@ -485,6 +485,13 @@ func TestRfnAbsIso(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, false, true, path, args)
 }
 
+// see "isolate sys_live = " in ivy-lang-examples/doc/examples/apple/ord_live.ivy
+func TestSysLiveIso(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	args := []string{"isolate=sys_live"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args)
+}
+
 // TestVerboseNonstopOrdLive does not stop
 // at the first divergence. It prints all parsed
 // and xtraced lines.
