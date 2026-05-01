@@ -288,7 +288,8 @@ func (m *schemaMatch) pop() {
 
 // unify tries to unify sort x with sort y.
 // Python: if x not in self.map: self.add(x,y); return True
-//         return self.map[x] == y
+//
+//	return self.map[x] == y
 func (m *schemaMatch) unify(x, y lg.Sort) bool {
 	key := sortName(x)
 	if _, has := m.mp[key]; !has {
@@ -634,7 +635,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 	xtracer.Trace("mc.InstantiateAxioms nAxioms=%d nTriggers=%d", len(axioms), len(triggers))
 
 	// Match triggers against all expressions in trans and invariant
-	instSet := make(map[string]bool)
+	instSet := make(map[lg.NodeKey]bool)
 	var instList []lg.Expr
 
 	var scanExpr func(expr lg.Expr)
@@ -646,7 +647,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clause
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
 				inst := normalize(lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp), iuCfg)
-				instKey := fmt.Sprint(inst)
+				instKey := inst.Sexp()
 				if !instSet[instKey] {
 					instSet[instKey] = true
 					instList = append(instList, inst)
