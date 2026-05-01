@@ -640,6 +640,7 @@ top:
 		}
 		if !goDone && pyDone {
 			goCheck, err = goivyR.ReadString('\n')
+			vv("pyDone but not goDone. goCheck = '%v'", goCheck)
 			if strings.HasPrefix(goCheck, "XTRACE:") {
 				continue // ignore
 			}
@@ -664,6 +665,7 @@ top:
 
 			if strings.Contains(goCheck, `<IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry`) {
 				vv("1st: from goCheck='%v' to goNorm='%v'", goCheck, goNorm)
+				// golden_test.go:666 [goID 6] 2026-05-01 18:46:35.349569000 +0000 UTC 1st: from goCheck='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n' to goNorm='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]\n'
 				vv("_1st ivy  ivCheck='%v' to ivNorm='%v'", ivCheck, ivNorm) // empty strings
 			}
 			if strings.Contains(goCheck, `transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)`) {
@@ -696,7 +698,9 @@ top:
 		}
 
 		if goNorm != ivNorm {
-			vv("we have divergence at i = %v becuase (len %v) goNorm='%v' != (len %v) ivNorm='%v'", i, len(goNorm), goNorm, len(ivNorm), ivNorm) // we are in here!
+			vv("we have divergence at i = %v becuase (len %v) goNorm='%v' != (len %v) ivNorm='%v'", i, len(goNorm), goNorm, len(ivNorm), ivNorm) // we are in here!:
+			// golden_test.go:699 [goID 6] 2026-05-01 18:46:35.349619000 +0000 UTC we have divergence at i = 263993 becuase (len 80) goNorm='        <IVY_INCLUDE>/1.8/order.ivy: line 5: index.spec.antisymmetry  [assumed]
+			// ' != (len 0) ivNorm=''
 			if !verbose {
 				n := len(pyLast30)
 				if i > showLast30Lines {
