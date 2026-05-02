@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
 
@@ -370,7 +371,7 @@ func TestGoalNodeActionsEmpty(t *testing.T) {
 // --- CTI UI tests ---
 
 func TestNewCTIAnalysisGraphUI(t *testing.T) {
-	ui := NewCTIAnalysisGraphUI()
+	ui := NewCTIAnalysisGraphUI(nil)
 	if ui == nil {
 		t.Fatal("NewCTIAnalysisGraphUI returned nil")
 	}
@@ -380,7 +381,7 @@ func TestNewCTIAnalysisGraphUI(t *testing.T) {
 }
 
 func TestCTIMenus(t *testing.T) {
-	ui := NewCTIAnalysisGraphUI()
+	ui := NewCTIAnalysisGraphUI(nil)
 	menus := ui.CTIMenus()
 	if len(menus) != 2 {
 		t.Fatalf("expected 2 CTI menus, got %d", len(menus))
@@ -391,14 +392,17 @@ func TestCTIMenus(t *testing.T) {
 }
 
 func TestCTIWeaken(t *testing.T) {
-	ui := NewCTIAnalysisGraphUI()
-	ui.Conjectures = []string{"conj1", "conj2", "conj3"}
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2, c3}
 	removed, err := ui.Weaken([]int{1})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(removed) != 1 || removed[0] != "conj2" {
-		t.Errorf("expected [conj2] removed, got %v", removed)
+	if len(removed) != 1 || removed[0] != c2 {
+		t.Errorf("expected c2 removed, got %v", removed)
 	}
 	if len(ui.Conjectures) != 2 {
 		t.Errorf("expected 2 conjectures remaining, got %d", len(ui.Conjectures))
@@ -406,7 +410,7 @@ func TestCTIWeaken(t *testing.T) {
 }
 
 func TestCTIWeakenEmpty(t *testing.T) {
-	ui := NewCTIAnalysisGraphUI()
+	ui := NewCTIAnalysisGraphUI(nil)
 	_, err := ui.Weaken(nil)
 	if err == nil {
 		t.Error("expected error for empty indices")
@@ -414,14 +418,16 @@ func TestCTIWeakenEmpty(t *testing.T) {
 }
 
 func TestCTISaveConjectures(t *testing.T) {
-	ui := NewCTIAnalysisGraphUI()
-	ui.Conjectures = []string{"p(X)", "q(X,Y)"}
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2}
 	result := ui.SaveConjectures()
-	if !strings.Contains(result, "invariant p(X)") {
-		t.Error("save should contain 'invariant p(X)'")
+	if !strings.Contains(result, "invariant") {
+		t.Error("save should contain 'invariant'")
 	}
-	if !strings.Contains(result, "invariant q(X,Y)") {
-		t.Error("save should contain 'invariant q(X,Y)'")
+	if !strings.Contains(result, "# conjectures") {
+		t.Error("save should contain '# conjectures' header")
 	}
 }
 

@@ -1,0 +1,549 @@
+//go:build web
+
+package webui
+
+import (
+	"strings"
+	"testing"
+
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
+)
+
+// --- CTI struct tests ---
+
+func TestCTIAnalysisGraphUIFields(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	if ui.HaveCTI {
+		t.Error("HaveCTI should be false initially")
+	}
+	if ui.CurrentConjecture != nil {
+		t.Error("CurrentConjecture should be nil initially")
+	}
+	if ui.CurrentBound != -1 {
+		t.Errorf("CurrentBound should be -1, got %d", ui.CurrentBound)
+	}
+	if ui.RelationsToMinimize != "relations to minimize" {
+		t.Errorf("RelationsToMinimize wrong: %q", ui.RelationsToMinimize)
+	}
+	if ui.Mod != nil {
+		t.Error("Mod should be nil when created with nil module")
+	}
+	if ui.Solver != nil {
+		t.Error("Solver should be nil when created with nil module")
+	}
+}
+
+func TestCTIConjecturesTypeClauses(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2}
+
+	if len(ui.Conjectures) != 2 {
+		t.Fatalf("expected 2 conjectures, got %d", len(ui.Conjectures))
+	}
+	if ui.Conjectures[0] != c1 {
+		t.Error("first conjecture should be c1")
+	}
+	if ui.Conjectures[1] != c2 {
+		t.Error("second conjecture should be c2")
+	}
+}
+
+// --- AutodetectTransitive tests ---
+
+func TestAutodetectTransitiveNilModule(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.AutodetectTransitive()
+	if len(ui.TransitiveRelations) != 0 {
+		t.Errorf("expected 0 transitive relations with nil module, got %d", len(ui.TransitiveRelations))
+	}
+}
+
+func TestAutodetectTransitiveEmptySig(t *testing.T) {
+	mod := module.New()
+	ui := NewCTIAnalysisGraphUI(mod)
+	ui.AutodetectTransitive()
+	if len(ui.TransitiveRelations) != 0 {
+		t.Errorf("expected 0 transitive relations with empty sig, got %d", len(ui.TransitiveRelations))
+	}
+}
+
+// --- CheckInductiveness tests ---
+
+func TestCheckInductivenessNilModule(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ok, msg := ui.CheckInductiveness()
+	if !ok {
+		t.Error("expected inductive with nil module")
+	}
+	if !strings.Contains(msg, "Inductive") {
+		t.Errorf("expected 'Inductive' in message, got: %s", msg)
+	}
+	if ui.HaveCTI {
+		t.Error("HaveCTI should be false")
+	}
+}
+
+func TestCheckInductivenessNoConjectures(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.Conjectures = nil
+	ok, _ := ui.CheckInductiveness()
+	if !ok {
+		t.Error("expected inductive with no conjectures")
+	}
+}
+
+// --- BoundedCheck tests ---
+
+func TestBoundedCheckNilModule(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	found, msg := ui.BoundedCheck(0, nil)
+	if found {
+		t.Error("should not find counter-example with nil module")
+	}
+	if !strings.Contains(msg, "no module") {
+		t.Errorf("expected 'no module' in message, got: %s", msg)
+	}
+}
+
+func TestBoundedCheckNoConjectures(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.Conjectures = nil
+	found, msg := ui.BoundedCheck(5, nil)
+	if found {
+		t.Error("should not find counter-example with no conjectures")
+	}
+	if !strings.Contains(msg, "no module") {
+		t.Errorf("expected 'no module' in message, got: %s", msg)
+	}
+}
+
+func TestBoundedCheckStoresBound(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.BoundedCheck(7, nil)
+	if ui.CurrentBound != 7 {
+		t.Errorf("CurrentBound should be 7, got %d", ui.CurrentBound)
+	}
+}
+
+// --- Diagram tests ---
+
+func TestDiagramNilModule(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	_, err := ui.Diagram()
+	if err != nil {
+		t.Logf("Expected error with nil module: %v", err)
+	}
+}
+
+func TestDiagramNoCtI(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.HaveCTI = false
+	result, err := ui.Diagram()
+	if err != nil {
+		t.Logf("Got expected error: %v", err)
+	}
+	_ = result
+}
+
+// --- Weaken tests ---
+
+func TestWeakenMultipleIndices(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2, c3}
+
+	removed, err := ui.Weaken([]int{0, 2})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(removed) != 2 {
+		t.Fatalf("expected 2 removed, got %d", len(removed))
+	}
+	if len(ui.Conjectures) != 1 {
+		t.Errorf("expected 1 remaining, got %d", len(ui.Conjectures))
+	}
+	if ui.Conjectures[0] != c2 {
+		t.Error("remaining conjecture should be c2")
+	}
+	if ui.HaveCTI {
+		t.Error("HaveCTI should be false after weaken")
+	}
+}
+
+func TestWeakenOutOfBounds(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1}
+
+	removed, err := ui.Weaken([]int{5})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(removed) != 0 {
+		t.Errorf("expected 0 removed for out-of-bounds, got %d", len(removed))
+	}
+	if len(ui.Conjectures) != 1 {
+		t.Errorf("conjectures should be unchanged, got %d", len(ui.Conjectures))
+	}
+}
+
+func TestWeakenClearsHaveCTI(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1}
+	ui.HaveCTI = true
+
+	ui.Weaken([]int{0})
+	if ui.HaveCTI {
+		t.Error("HaveCTI should be false after weaken")
+	}
+}
+
+// --- SaveConjectures tests ---
+
+func TestSaveConjecturesEmpty(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.Conjectures = nil
+	result := ui.SaveConjectures()
+	if !strings.Contains(result, "generated by ivy") {
+		t.Error("should contain header")
+	}
+	if strings.Contains(result, "invariant") {
+		t.Error("should not contain 'invariant' with no conjectures")
+	}
+}
+
+func TestSaveConjecturesMultiple(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2}
+	result := ui.SaveConjectures()
+	count := strings.Count(result, "invariant")
+	if count != 2 {
+		t.Errorf("expected 2 invariant lines, got %d", count)
+	}
+}
+
+// --- ShowUsedRelations tests ---
+
+func TestShowUsedRelationsNilGraph(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.CurrentConceptGraph = nil
+	ui.ShowUsedRelations(nil, false)
+}
+
+func TestShowUsedRelationsNilClauses(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.ShowUsedRelations(nil, false)
+}
+
+// --- GatherFacts tests ---
+
+func TestGatherFactsNilSession(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+	w.CISess = nil
+	w.GatherFacts()
+	if len(w.ActiveFactExprs) != 0 {
+		t.Errorf("expected 0 facts with nil session, got %d", len(w.ActiveFactExprs))
+	}
+}
+
+// --- GetSelectedConjecture tests ---
+
+func TestGetSelectedConjectureEmpty(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+	w.ActiveFactExprs = nil
+	conj := w.GetSelectedConjecture()
+	if conj != nil {
+		t.Error("expected nil conjecture with no facts")
+	}
+}
+
+func TestGetSelectedConjectureBasic(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+
+	// Set up simple ground facts (no free variables).
+	a := lg.NewConst("a", mkSort("S"))
+	b := lg.NewConst("b", mkSort("S"))
+	eq, _ := lg.NewEq(a, b)
+	w.ActiveFactExprs = []lg.Expr{eq}
+
+	conj := w.GetSelectedConjecture()
+	if conj == nil {
+		t.Fatal("expected non-nil conjecture")
+	}
+	if len(conj.Fmlas) != 1 {
+		t.Fatalf("expected 1 formula, got %d", len(conj.Fmlas))
+	}
+}
+
+func TestGetSelectedConjectureWithFreeVarsReturnsNil(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+
+	// A fact with free variables should be rejected.
+	x := mkVar("X", mkSort("S"))
+	a := lg.NewConst("a", mkSort("S"))
+	eq, _ := lg.NewEq(x, a)
+	w.ActiveFactExprs = []lg.Expr{eq}
+
+	conj := w.GetSelectedConjecture()
+	if conj != nil {
+		t.Error("expected nil conjecture when facts have free variables")
+	}
+}
+
+// --- Strengthen tests ---
+
+func TestStrengthenNoFacts(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+	w.ActiveFactExprs = nil
+
+	_, err := w.Strengthen()
+	if err == nil {
+		t.Error("expected error with no facts")
+	}
+}
+
+func TestCTIStrengthenAddsConjecture(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+
+	a := lg.NewConst("a", mkSort("S"))
+	b := lg.NewConst("b", mkSort("S"))
+	eq, _ := lg.NewEq(a, b)
+	w.ActiveFactExprs = []lg.Expr{eq}
+
+	before := len(ui.Conjectures)
+	conj, err := w.Strengthen()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if conj == nil {
+		t.Fatal("expected non-nil conjecture")
+	}
+	if len(ui.Conjectures) != before+1 {
+		t.Errorf("expected %d conjectures, got %d", before+1, len(ui.Conjectures))
+	}
+	if ui.HaveCTI {
+		t.Error("HaveCTI should be false after strengthen")
+	}
+}
+
+// --- MinimizeConjecture tests ---
+
+func TestMinimizeConjectureNilModule(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+
+	_, err := w.MinimizeConjecture(0)
+	if err == nil {
+		t.Error("expected error with nil module")
+	}
+}
+
+// --- IsSufficient tests ---
+
+func TestIsSufficientNoConj(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+	w.ActiveFactExprs = nil
+
+	ok, msg := w.IsSufficient()
+	if ok {
+		t.Error("should not be sufficient with no conjecture")
+	}
+	if !strings.Contains(msg, "no conjecture") {
+		t.Errorf("expected 'no conjecture' in msg, got: %s", msg)
+	}
+}
+
+func TestIsSufficientNoTarget(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+
+	a := lg.NewConst("a", mkSort("S"))
+	b := lg.NewConst("b", mkSort("S"))
+	eq, _ := lg.NewEq(a, b)
+	w.ActiveFactExprs = []lg.Expr{eq}
+
+	ok, msg := w.IsSufficient()
+	if ok {
+		t.Error("should not be sufficient with no target")
+	}
+	if !strings.Contains(msg, "no current CTI") {
+		t.Errorf("expected 'no current CTI' in msg, got: %s", msg)
+	}
+}
+
+// --- IsInductive tests ---
+
+func TestIsInductiveNoConj(t *testing.T) {
+	gs := NewGraphStack(nil)
+	ui := NewCTIAnalysisGraphUI(nil)
+	w := NewCTIConceptGraphWidget(gs, ui)
+	w.ActiveFactExprs = nil
+
+	ok, msg := w.IsInductive()
+	if ok {
+		t.Error("should not be inductive with no conjecture")
+	}
+	if !strings.Contains(msg, "no conjecture") {
+		t.Errorf("expected 'no conjecture' in msg, got: %s", msg)
+	}
+}
+
+// --- FormulaToConceptl tests ---
+
+func TestFormulaToConceptlBasic(t *testing.T) {
+	S := mkSort("S")
+	X := mkVar("X", S)
+	Y := mkVar("Y", S)
+	r := mkConst("r", mkFuncSort(S, S, lg.Boolean))
+	fmla := mkApply(r, X, Y)
+
+	concept := FormulaToConceptl(fmla)
+	if concept == nil {
+		t.Fatal("expected non-nil concept")
+	}
+	if concept.Arity() != 2 {
+		t.Errorf("expected arity 2, got %d", concept.Arity())
+	}
+	if concept.Name == "" {
+		t.Error("concept name should not be empty")
+	}
+	if !strings.Contains(concept.Name, "r") {
+		t.Errorf("concept name should reference 'r', got: %s", concept.Name)
+	}
+}
+
+func TestFormulaToConceptlUnary(t *testing.T) {
+	S := mkSort("S")
+	X := mkVar("X", S)
+	p := mkConst("p", mkFuncSort(S, lg.Boolean))
+	fmla := mkApply(p, X)
+
+	concept := FormulaToConceptl(fmla)
+	if concept == nil {
+		t.Fatal("expected non-nil concept")
+	}
+	if concept.Arity() != 1 {
+		t.Errorf("expected arity 1, got %d", concept.Arity())
+	}
+}
+
+func TestFormulaToConceptlGround(t *testing.T) {
+	concept := FormulaToConceptl(lg.True)
+	if concept == nil {
+		t.Fatal("expected non-nil concept")
+	}
+	if concept.Arity() != 0 {
+		t.Errorf("expected arity 0 for ground formula, got %d", concept.Arity())
+	}
+}
+
+// --- shouldFilterFact tests ---
+
+func TestShouldFilterFactNotEqOrdered(t *testing.T) {
+	a := lg.NewConst("a", mkSort("S"))
+	b := lg.NewConst("b", mkSort("S"))
+
+	// Not(a = b): should filter if "a" >= "b"
+	eq, _ := lg.NewEq(a, b)
+	notEq, _ := lg.NewNot(eq)
+
+	result := shouldFilterFact(notEq)
+	// "a" < "b", so a >= b is false, should NOT filter
+	if result {
+		t.Error("should not filter Not(a=b) since 'a' < 'b'")
+	}
+
+	// Not(b = a): "b" >= "a" is true, should filter
+	eq2, _ := lg.NewEq(b, a)
+	notEq2, _ := lg.NewNot(eq2)
+	result2 := shouldFilterFact(notEq2)
+	if !result2 {
+		t.Error("should filter Not(b=a) since 'b' >= 'a'")
+	}
+}
+
+func TestShouldFilterFactPositive(t *testing.T) {
+	a := lg.NewConst("a", mkSort("S"))
+	b := lg.NewConst("b", mkSort("S"))
+	eq, _ := lg.NewEq(a, b)
+
+	if shouldFilterFact(eq) {
+		t.Error("should not filter positive equalities")
+	}
+}
+
+func TestShouldFilterFactTrue(t *testing.T) {
+	if shouldFilterFact(lg.True) {
+		t.Error("should not filter True")
+	}
+}
+
+// --- ctiWitness tests ---
+
+func TestCtiWitness(t *testing.T) {
+	witness := ctiWitness(nil)
+	v := mkVar("V", mkSort("S"))
+	result := witness(v)
+
+	c, ok := result.(*lg.Const)
+	if !ok {
+		t.Fatal("witness should return a Const")
+	}
+	if c.Name != "@V" {
+		t.Errorf("expected '@V', got %q", c.Name)
+	}
+}
+
+func TestCtiWitnessWithUsedNames(t *testing.T) {
+	used := map[string]bool{"@V": true}
+	witness := ctiWitness(used)
+	v := mkVar("V", mkSort("S"))
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("expected panic for name collision")
+		}
+	}()
+	witness(v)
+}
+
+// --- Integration: Weaken then save ---
+
+func TestWeakenThenSave(t *testing.T) {
+	ui := NewCTIAnalysisGraphUI(nil)
+	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
+	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	ui.Conjectures = []*module.Clauses{c1, c2, c3}
+
+	ui.Weaken([]int{1})
+	result := ui.SaveConjectures()
+	count := strings.Count(result, "invariant")
+	if count != 2 {
+		t.Errorf("expected 2 invariant lines after weaken, got %d", count)
+	}
+}

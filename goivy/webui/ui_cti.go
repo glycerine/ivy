@@ -9,6 +9,18 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/bmc"
+	"github.com/glycerine/ivy/goivy/interp"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicutil"
+	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/trace"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // CTIAnalysisGraphUI extends AnalysisGraphUI with CTI-specific operations
@@ -18,32 +30,47 @@ type CTIAnalysisGraphUI struct {
 
 	mu2 sync.Mutex
 
-	// TransitiveRelations tracks detected transitive relations.
+	// Mod is the compiled module providing axioms, sig, actions.
+	Mod *module.Module
+
+	// Solver is the Z3 solver instance for this session.
+	Solver *z3bridge.Solver
+
+	// AG is the stored analysis graph from the last CheckInductiveness.
+	AG *art.AnalysisGraph
+
+	// TransitiveRelations tracks detected transitive relation names.
 	TransitiveRelations []string
 
 	// TransitiveRelationConcepts tracks the concepts for transitive relations.
-	TransitiveRelationConcepts []*Concept
+	TransitiveRelationConcepts []*CDConcept
 
 	// RelationsToMinimize is the set of relations to minimize during checking.
 	RelationsToMinimize string
 
-	// Conjectures is the current list of conjectures (formula strings).
-	Conjectures []string
+	// Conjectures is the current list of conjectures (Python: self.conjectures = im.module.conjs).
+	Conjectures []*module.Clauses
 
 	// HaveCTI indicates whether a counterexample to induction exists.
 	HaveCTI bool
 
 	// CurrentConjecture is the conjecture currently being checked.
-	CurrentConjecture string
+	CurrentConjecture *module.Clauses
 
 	// CurrentBound is the last BMC bound used.
 	CurrentBound int
 }
 
 // NewCTIAnalysisGraphUI creates a new CTI-variant UI.
-func NewCTIAnalysisGraphUI() *CTIAnalysisGraphUI {
+func NewCTIAnalysisGraphUI(mod *module.Module) *CTIAnalysisGraphUI {
+	var solver *z3bridge.Solver
+	if mod != nil {
+		solver = z3bridge.NewSolver(mod, nil)
+	}
 	return &CTIAnalysisGraphUI{
-		AnalysisGraphUI:    NewAnalysisGraphUI(),
+		AnalysisGraphUI: NewAnalysisGraphUI(),
+		Mod:             mod,
+		Solver:          solver,
 		RelationsToMinimize: "relations to minimize",
 		CurrentBound:       -1,
 	}
@@ -76,7 +103,7 @@ func (ui *CTIAnalysisGraphUI) CTIMenus() []MenuDef {
 
 // StartCTI initializes the CTI UI, detecting transitive relations
 // (Python: AnalysisGraphUI.start in ivy_ui_cti.py).
-func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []string) {
+func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []*module.Clauses) {
 	ui.AnalysisGraphUI.Start()
 	ui.TransitiveRelations = nil
 	ui.TransitiveRelationConcepts = nil
@@ -93,11 +120,98 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 	defer ui.mu2.Unlock()
 	ui.TransitiveRelations = nil
 	ui.TransitiveRelationConcepts = nil
-	// Stub: real implementation checks axioms for transitive + defined_symmetry.
-	// For each qualifying symbol c:
-	//   transitive = ForAll([X,Y,Z], Or(Not(c(X,Y)), Not(c(Y,Z)), c(X,Z)))
-	//   defined_symmetry = ForAll([X,Y], Or(c(X,X), Not(c(Y,Y))))
-	//   if axioms imply both: add to transitive_relations
+
+	if ui.Mod == nil || ui.Solver == nil {
+		return
+	}
+
+	axioms := ui.Mod.BackgroundTheory(nil)
+	if axioms == nil {
+		return
+	}
+
+	for _, c := range ui.Mod.Sig.AllSymbols() {
+		fs, ok := c.CSort.(*lg.FunctionSort)
+		if !ok || fs.Arity() != 2 {
+			continue
+		}
+		if !lg.SortEqual(fs.Domain()[0], fs.Domain()[1]) {
+			continue
+		}
+		if !lg.SortEqual(fs.Range(), lg.Boolean) {
+			continue
+		}
+
+		domSort := fs.Domain()[0]
+		xv, _ := lg.NewVariable("X", domSort)
+		yv, _ := lg.NewVariable("Y", domSort)
+		zv, _ := lg.NewVariable("Z", domSort)
+
+		cxy := lg.MustApply(c, xv, yv)
+		cyz := lg.MustApply(c, yv, zv)
+		cxz := lg.MustApply(c, xv, zv)
+		cxx := lg.MustApply(c, xv, xv)
+		cyy := lg.MustApply(c, yv, yv)
+
+		notCxy, _ := lg.NewNot(cxy)
+		notCyz, _ := lg.NewNot(cyz)
+		notCyy, _ := lg.NewNot(cyy)
+
+		// transitive = ForAll([X,Y,Z], Or(Not(c(X,Y)), Not(c(Y,Z)), c(X,Z)))
+		transOr, _ := lg.NewOr(notCxy, notCyz, cxz)
+		transitive, _ := lg.NewForAll([]*lg.Variable{xv, yv, zv}, transOr)
+
+		// defined_symmetry = ForAll([X,Y], Or(c(X,X), Not(c(Y,Y))))
+		symOr, _ := lg.NewOr(cxx, notCyy)
+		definedSym, _ := lg.NewForAll([]*lg.Variable{xv, yv}, symOr)
+
+		t := module.NewClauses([]lg.Expr{transitive, definedSym}, nil, nil)
+		implied, err := ui.Solver.ClausesImply(axioms, t)
+		if err != nil || !implied {
+			continue
+		}
+
+		ui.TransitiveRelations = append(ui.TransitiveRelations, c.Name)
+
+		concept := FormulaToConceptl(cxy)
+		ui.TransitiveRelationConcepts = append(ui.TransitiveRelationConcepts, concept)
+
+		if ui.CurrentConceptGraph != nil {
+			ui.CurrentConceptGraph.ShowRelation(
+				&Concept{Name: concept.Name, Arity: concept.Arity()},
+				"T", true, false,
+			)
+		}
+	}
+
+	if len(ui.TransitiveRelations) > 0 && ui.CurrentConceptGraph != nil {
+		ui.CurrentConceptGraph.Update()
+	}
+}
+
+// ctiWitness returns a Skolem witness function that creates '@'-prefixed constants.
+// (Python: def witness(v): c = lg.Const('@'+v.name, v.sort))
+func ctiWitness(usedNames map[string]bool) module.Skolemizer {
+	return func(v *lg.Variable) lg.Expr {
+		name := "@" + v.Name
+		if usedNames != nil {
+			if _, exists := usedNames[name]; exists {
+				panic(fmt.Sprintf("witness name collision: %s", name))
+			}
+		}
+		return lg.NewConst(name, v.VSort)
+	}
+}
+
+// collectUsedNames returns the set of symbol names from the module signature.
+func (ui *CTIAnalysisGraphUI) collectUsedNames() map[string]bool {
+	names := make(map[string]bool)
+	if ui.Mod != nil && ui.Mod.Sig != nil {
+		for _, sym := range ui.Mod.Sig.AllSymbols() {
+			names[sym.Name] = true
+		}
+	}
+	return names
 }
 
 // CheckInductiveness checks all conjectures for relative inductiveness
@@ -105,48 +219,167 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 func (ui *CTIAnalysisGraphUI) CheckInductiveness() (bool, string) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
+	return ui.checkInductivenessUnlocked()
+}
 
-	// Determine relations to minimize.
+func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
+	if ui.Mod == nil {
+		ui.HaveCTI = false
+		return true, "Inductive invariant found (no module)"
+	}
+
+	// Auto-detect relations to minimize from sig.
+	// Python: self.relations_to_minimize.value = ' '.join(sorted(k for k,v ...))
 	if ui.RelationsToMinimize == "relations to minimize" {
-		ui.RelationsToMinimize = "" // auto-detect (stub)
+		transSet := make(map[string]bool)
+		for _, tr := range ui.TransitiveRelations {
+			transSet[tr] = true
+		}
+		var relNames []string
+		for _, sym := range ui.Mod.Sig.AllSymbols() {
+			fs, ok := sym.CSort.(*lg.FunctionSort)
+			if !ok {
+				continue
+			}
+			if !lg.SortEqual(fs.Range(), lg.Boolean) {
+				continue
+			}
+			if transSet[sym.Name] {
+				continue
+			}
+			relNames = append(relNames, sym.Name)
+		}
+		sort.Strings(relNames)
+		ui.RelationsToMinimize = strings.Join(relNames, " ")
 	}
 
-	toTest := make([]string, 0, len(ui.Conjectures)+1)
-	toTest = append(toTest, "") // empty string = check safety
-	toTest = append(toTest, ui.Conjectures...)
-
-	for _, conj := range toTest {
-		// Stub: real implementation creates analysis graph, computes
-		// dual_clauses(conj), calls check_final_cond, and checks for CTI.
-		_ = conj
+	// Python: ag, succeed, fail = ivy_trace.make_check_art(precond=self.conjectures)
+	ag, succeed, fail, err := trace.MakeCheckArt(ui.Mod, "", ui.Conjectures)
+	if err != nil {
+		return true, fmt.Sprintf("CheckInductiveness: make_check_art failed: %v", err)
 	}
 
-	// If we reach here without finding a CTI, the invariant is inductive.
+	usedNames := ui.collectUsedNames()
+	witness := ctiWitness(usedNames)
+
+	// Python: to_test = [None] + list(self.conjectures)
+	type testEntry struct {
+		conj *module.Clauses // nil = safety check
+	}
+	toTest := make([]testEntry, 0, len(ui.Conjectures)+1)
+	toTest = append(toTest, testEntry{nil})
+	for _, c := range ui.Conjectures {
+		toTest = append(toTest, testEntry{c})
+	}
+
+	// Build relations to minimize list.
+	var relsToMin []string
+	if ui.RelationsToMinimize != "" {
+		relsToMin = strings.Fields(ui.RelationsToMinimize)
+	}
+
+	for _, entry := range toTest {
+		var clauses *module.Clauses
+		var post *art.State
+
+		if entry.conj == nil {
+			clauses = module.TrueClauses(nil)
+			post = fail
+		} else {
+			clauses = module.DualClauses(entry.conj, witness, nil)
+			post = succeed
+		}
+		clauses.Annot = actions.EmptyAnnotation{}
+
+		res := trace.CheckFinalCond(ag, post, clauses, relsToMin, true)
+		if res != nil {
+			ui.CurrentConjecture = entry.conj
+			ui.AG = res.AnalysisGraph
+			ui.HaveCTI = true
+
+			if entry.conj != nil {
+				ui.showUsedRelationsUnlocked(clauses, false)
+			}
+
+			if entry.conj == nil {
+				return false, "An assertion failed. A failing state is displayed."
+			}
+			fmla := module.DropUniversals(entry.conj.ToFormula())
+			return false, fmt.Sprintf("The following conjecture is not relatively inductive:\n%v", fmla)
+		}
+	}
+
 	ui.HaveCTI = false
-	result := strings.Join(ui.Conjectures, "\n")
-	return true, fmt.Sprintf("Inductive invariant found:\n%s", result)
+	var conjStrs []string
+	for _, conj := range ui.Conjectures {
+		conjStrs = append(conjStrs, fmt.Sprintf("%v", conj.ToFormula()))
+	}
+	return true, fmt.Sprintf("Inductive invariant found:\n%s", strings.Join(conjStrs, "\n"))
 }
 
 // BoundedCheck performs bounded model checking for a conjecture
 // (Python: AnalysisGraphUI.bmc_conjecture).
-func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture string) (bool, string) {
+func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses) (bool, string) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
 	ui.CurrentBound = bound
 
-	if conjecture == "" && len(ui.Conjectures) > 0 {
-		conjecture = strings.Join(ui.Conjectures, " & ")
+	if ui.Mod == nil {
+		return false, "no module loaded"
 	}
 
-	// Stub: real implementation creates analysis graph, executes steps,
-	// and checks final condition at each step.
+	// Python: if conj is None: conj = and_clauses(*self.conjectures)
+	conj := conjecture
+	if conj == nil && len(ui.Conjectures) > 0 {
+		conj = ui.Conjectures[0]
+		for _, c := range ui.Conjectures[1:] {
+			conj = module.AndClausesTyped(conj, c)
+		}
+	}
+	if conj == nil {
+		return false, "no conjectures to check"
+	}
+
+	usedNames := ui.collectUsedNames()
+	witness := ctiWitness(usedNames)
+	clauses := module.DualClauses(conj, witness, nil)
+
+	// Python: ag = self.new_ag()
+	ag := art.NewAnalysisGraph(ui.Mod)
+	ag.Add(art.NewState(ui.Mod, ag.InitCond), nil)
+	post := ag.States[0]
+
+	// Python: if 'initialize' in im.module.actions: ...
+	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {
+		if act, ok2 := initAct.(actions.Action); ok2 {
+			var err error
+			post, err = ag.Execute(true, act, post, nil, "initialize")
+			if err != nil {
+				return false, fmt.Sprintf("initialize action failed: %v", err)
+			}
+		}
+	}
+
+	stepAction := bmc.EnvAction(ui.Mod)
+
 	for n := 0; n <= bound; n++ {
-		// check at step n
-		_ = n
+		res := trace.CheckFinalCond(ag, post, clauses, nil, true)
+		if res != nil {
+			fmla := conj.ToFormula()
+			return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla)
+		}
+		if n < bound && stepAction != nil {
+			var err error
+			post, err = ag.Execute(true, stepAction, post, nil, "")
+			if err != nil {
+				return false, fmt.Sprintf("step %d failed: %v", n, err)
+			}
+		}
 	}
 
-	return false, fmt.Sprintf("BMC with bound %d did not find a counter-example", bound)
+	fmla := conj.ToFormula()
+	return false, fmt.Sprintf("BMC with bound %d did not find a counter-example to:\n%v", bound, fmla)
 }
 
 // Diagram computes a diagram abstraction of the current CTI
@@ -155,27 +388,72 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
+	if ui.Mod == nil {
+		return "", fmt.Errorf("no module loaded")
+	}
+
 	if !ui.HaveCTI {
 		ok, msg := ui.checkInductivenessUnlocked()
-		if ok {
+		if ok || ui.AG == nil || len(ui.AG.States) < 2 {
 			return msg, nil
 		}
 	}
 
-	// Stub: real implementation computes reverse image, gets model,
-	// extracts diagram, and updates the concept graph.
-	return "diagram computed", nil
-}
+	if ui.AG == nil || len(ui.AG.States) < 2 {
+		return "", fmt.Errorf("no CTI states available")
+	}
 
-// checkInductivenessUnlocked is the internal unlocked version.
-func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
-	ui.HaveCTI = false
-	return true, "Inductive invariant found"
+	// Python: post = dual_clauses(conj) if conj else true_clauses()
+	var post *module.Clauses
+	if ui.CurrentConjecture != nil {
+		post = module.DualClauses(ui.CurrentConjecture, nil, nil)
+	} else {
+		post = module.TrueClauses(nil)
+	}
+
+	pre := ui.AG.States[0].Clauses
+	axioms := ui.Mod.BackgroundTheory(nil)
+
+	// Python: uc = universe_constraint(self.g.states[0])
+	interpState := &interp.State{Universe: ui.AG.States[0].Universe}
+	uc := interp.UniverseConstraint(interpState)
+	axiomsUc := module.AndClausesTyped(axioms, uc)
+
+	// Python: rev = reverse_image(post, axioms, self.g.states[1].update)
+	rev := actions.ReverseImage(post, axioms, ui.AG.States[1].Value)
+
+	// Python: clauses = and_clauses(and_clauses(pre, rev), axioms_uc)
+	combined := module.AndClausesTyped(module.AndClausesTyped(pre, rev), axiomsUc)
+
+	if ui.Solver == nil {
+		return "", fmt.Errorf("no solver available")
+	}
+
+	modelResult, err := ui.Solver.GetModelClauses(combined)
+	if err != nil {
+		return "", fmt.Errorf("get_model_clauses failed: %w", err)
+	}
+	if modelResult == nil {
+		return "", fmt.Errorf("no model found (UNSAT)")
+	}
+
+	isSkolemConst := func(c *lg.Const) bool { return trace.IsSkolem(c.Name) }
+	diag, err := ui.Solver.ClausesModelToDiagram(rev, isSkolemConst, axioms)
+	if err != nil {
+		return "", fmt.Errorf("clauses_model_to_diagram failed: %w", err)
+	}
+
+	// Python: self.view_state(self.g.states[0], clauses=diag, reset=True)
+	// Python: self.show_used_relations(diag, both=True)
+	// Python: self.current_concept_graph.gather_facts()
+	ui.showUsedRelationsUnlocked(diag, true)
+
+	return fmt.Sprintf("%v", diag.ToFormula()), nil
 }
 
 // Weaken removes conjectures from the current set
 // (Python: AnalysisGraphUI.weaken).
-func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]string, error) {
+func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]*module.Clauses, error) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
@@ -184,7 +462,7 @@ func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]string, error) {
 	}
 
 	sort.Sort(sort.Reverse(sort.IntSlice(indices)))
-	var removed []string
+	var removed []*module.Clauses
 	for _, idx := range indices {
 		if idx < 0 || idx >= len(ui.Conjectures) {
 			continue
@@ -207,7 +485,8 @@ func (ui *CTIAnalysisGraphUI) SaveConjectures() string {
 	if len(ui.Conjectures) > 0 {
 		sb.WriteString("# conjectures\n\n")
 		for _, conj := range ui.Conjectures {
-			sb.WriteString(fmt.Sprintf("invariant %s\n", conj))
+			fmla := module.DropUniversals(conj.ToFormula())
+			sb.WriteString(fmt.Sprintf("invariant %v\n", fmla))
 		}
 	}
 	return sb.String()
@@ -215,14 +494,87 @@ func (ui *CTIAnalysisGraphUI) SaveConjectures() string {
 
 // ShowUsedRelations enables display of relations used in given clauses
 // (Python: AnalysisGraphUI.show_used_relations).
-func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauseStr string, both bool) {
-	if ui.CurrentConceptGraph == nil {
+func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauses *module.Clauses, both bool) {
+	ui.mu2.Lock()
+	defer ui.mu2.Unlock()
+	ui.showUsedRelationsUnlocked(clauses, both)
+}
+
+func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *module.Clauses, both bool) {
+	if ui.CurrentConceptGraph == nil || clauses == nil {
 		return
 	}
 	ui.CurrentConceptGraph.ClearEdges()
-	// Stub: real implementation parses clauses, finds used symbols,
-	// and enables checkboxes for matching relations.
+
+	// Python: used = set(il.normalize_symbol(s) for s in lu.used_constants(clauses.to_formula()))
+	fmla := clauses.ToFormula()
+	usedSyms := module.UsedSymbolsAST(fmla)
+	usedNames := make(map[string]bool)
+	if usedSyms != nil {
+		for _, sym := range usedSyms.All() {
+			if cnst, ok := sym.(*lg.Const); ok {
+				usedNames[cnst.Name] = true
+			}
+		}
+	}
+
+	g := ui.CurrentConceptGraph.G()
+	if g == nil {
+		return
+	}
+
+	// Python: for rel in rels: if any(c in used ...) for c in used_constants(fmla)
+	for _, relName := range g.RelationIDs() {
+		concept := g.ConceptFromID(relName)
+		if concept == nil {
+			continue
+		}
+		if hasUsedNonSkolem(concept.Formula, usedNames) {
+			ui.CurrentConceptGraph.ShowRelation(concept, "+", true, false)
+			if both {
+				ui.CurrentConceptGraph.ShowRelation(concept, "-", true, false)
+			}
+		}
+	}
+
+	// Python: handle arity-3 applications
+	needUpdateRelations := false
+	for _, app := range module.AppsClauses(clauses) {
+		applyExpr, ok := app.(*lg.Apply)
+		if !ok || len(applyExpr.Terms) != 3 {
+			continue
+		}
+		if !il.IsNumeral(applyExpr.Terms[0]) {
+			continue
+		}
+		xv, _ := lg.NewVariable("X", applyExpr.Terms[1].NodeSort())
+		yv, _ := lg.NewVariable("Y", applyExpr.Terms[2].NodeSort())
+		newFmla := lg.MustApply(applyExpr.Func, applyExpr.Terms[0], xv, yv)
+		newConcept := FormulaToConceptl(newFmla)
+		simpleConcept := &Concept{Name: newConcept.Name, Arity: newConcept.Arity()}
+		g.NewRelation(simpleConcept)
+		needUpdateRelations = true
+		ui.CurrentConceptGraph.ShowRelation(simpleConcept, "+", true, false)
+		if both {
+			ui.CurrentConceptGraph.ShowRelation(simpleConcept, "-", true, false)
+		}
+	}
+	_ = needUpdateRelations
+
 	ui.CurrentConceptGraph.Update()
+}
+
+// hasUsedNonSkolem checks if a formula string contains any used non-Skolem constants.
+func hasUsedNonSkolem(formulaStr string, usedNames map[string]bool) bool {
+	for name := range usedNames {
+		if strings.HasPrefix(name, "@") {
+			continue
+		}
+		if strings.Contains(formulaStr, name) {
+			return true
+		}
+	}
+	return false
 }
 
 // ConceptGraphUIMenus returns the CTI concept-graph-specific menus
@@ -259,8 +611,14 @@ func ConceptGraphUIMenus() []MenuDef {
 type CTIConceptGraphWidget struct {
 	*GraphWidget
 
-	// Parent is the CTIAnalysisGraphUI that owns this widget.
+	// ParentCTI is the CTIAnalysisGraphUI that owns this widget.
 	ParentCTI *CTIAnalysisGraphUI
+
+	// CISess is the full interactive concept session (Python: self.g.concept_session).
+	CISess *ConceptInteractiveSession
+
+	// ActiveFactExprs stores gathered fact expressions for GetSelectedConjecture.
+	ActiveFactExprs []lg.Expr
 }
 
 // NewCTIConceptGraphWidget creates a new CTI concept graph widget.
@@ -275,6 +633,10 @@ func NewCTIConceptGraphWidget(gs *GraphStack, parent *CTIAnalysisGraphUI) *CTICo
 // (Python: ConceptGraphUI.gather_facts).
 func (w *CTIConceptGraphWidget) GatherFacts() {
 	g := w.G()
+	if g == nil || w.CISess == nil {
+		return
+	}
+
 	selectedNodes := make([]string, 0)
 	w.mu.Lock()
 	for n := range w.NodeSelection {
@@ -283,24 +645,125 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 	w.mu.Unlock()
 	sort.Strings(selectedNodes)
 
-	// If nothing selected, use all nodes.
 	if len(selectedNodes) == 0 {
 		selectedNodes = g.NodeIDs()
 	}
 
-	// Stub: real implementation collects node facts and edge facts,
-	// filters duplicates, and sets them as constraints.
-	_ = selectedNodes
+	selectedSet := make(map[string]bool, len(selectedNodes))
+	for _, n := range selectedNodes {
+		selectedSet[n] = true
+	}
+
+	type factEntry struct {
+		formula lg.Expr
+	}
+
+	var facts []factEntry
+
+	// Python: for node in selected_nodes: facts += [(f, elems) for f in g.concept_session.get_node_facts(node)]
+	for _, node := range selectedNodes {
+		for _, f := range w.CISess.GetNodeFacts(node) {
+			facts = append(facts, factEntry{f})
+		}
+	}
+
+	// Python: edges = set(tag[-3:] for tag, value in g.concept_session.abstract_value
+	//                     if tag[0] == 'edge_info' and tag[-2] in selected_nodes and tag[-1] in selected_nodes)
+	type edgeTriple struct{ edge, source, target string }
+	edgeSet := make(map[edgeTriple]bool)
+	for _, tv := range w.CISess.AbstractValue {
+		tag := tv.Tag
+		if len(tag) < 4 || tag[0] != "edge_info" {
+			continue
+		}
+		src := tag[len(tag)-2]
+		tgt := tag[len(tag)-1]
+		edge := tag[len(tag)-3]
+		if selectedSet[src] && selectedSet[tgt] {
+			edgeSet[edgeTriple{edge, src, tgt}] = true
+		}
+	}
+
+	// Sort edges for determinism.
+	var edges []edgeTriple
+	for e := range edgeSet {
+		edges = append(edges, e)
+	}
+	sort.Slice(edges, func(i, j int) bool {
+		if edges[i].edge != edges[j].edge {
+			return edges[i].edge < edges[j].edge
+		}
+		if edges[i].source != edges[j].source {
+			return edges[i].source < edges[j].source
+		}
+		return edges[i].target < edges[j].target
+	})
+
+	for _, e := range edges {
+		checks := g.Checks
+
+		// Python: if g.edge_display_checkboxes[edge]['all_to_all'].value:
+		if checks.EdgeVisible(e.edge, EdgeDisplayAllToAll) {
+			// Python: if transitive and source==target: continue
+			if checks.EdgeVisible(e.edge, EdgeDisplayTransitive) && e.source == e.target {
+				continue
+			}
+			polTrue := true
+			for _, f := range w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polTrue) {
+				facts = append(facts, factEntry{f})
+			}
+		}
+
+		// Python: if g.edge_display_checkboxes[edge]['none_to_none'].value or edge == '=':
+		if checks.EdgeVisible(e.edge, EdgeDisplayNoneToNone) || e.edge == "=" {
+			polFalse := false
+			for _, f := range w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polFalse) {
+				facts = append(facts, factEntry{f})
+			}
+		}
+	}
+
+	// Python: filter double equalities: Not(Eq(t1,t2)) where t1 >= t2
+	var filtered []factEntry
+	for _, fe := range facts {
+		if shouldFilterFact(fe.formula) {
+			continue
+		}
+		filtered = append(filtered, fe)
+	}
+
+	// Extract formulas and set on graph.
+	w.ActiveFactExprs = make([]lg.Expr, len(filtered))
+	factStrs := make([]string, len(filtered))
+	for i, fe := range filtered {
+		w.ActiveFactExprs[i] = fe.formula
+		factStrs[i] = fmt.Sprintf("%v", fe.formula)
+	}
+	g.SetFacts(factStrs)
 	w.Update()
 	w.HighlightSelectedFacts()
 }
 
+// shouldFilterFact returns true for facts that should be filtered out.
+// Python: (type(f) is Not and type(f.body) is Eq and f.body.t1 >= f.body.t2)
+func shouldFilterFact(f lg.Expr) bool {
+	notExpr, ok := f.(*lg.Not)
+	if !ok {
+		return false
+	}
+	eq, ok := notExpr.Body.(*lg.Eq)
+	if !ok {
+		return false
+	}
+	return fmt.Sprintf("%v", eq.T1) >= fmt.Sprintf("%v", eq.T2)
+}
+
 // Strengthen adds a new conjecture from selected facts
 // (Python: ConceptGraphUI.strengthen).
-func (w *CTIConceptGraphWidget) Strengthen() (string, error) {
+func (w *CTIConceptGraphWidget) Strengthen() (*module.Clauses, error) {
 	conj := w.GetSelectedConjecture()
-	if conj == "" {
-		return "", fmt.Errorf("no facts selected")
+	if conj == nil {
+		return nil, fmt.Errorf("no facts selected")
 	}
 	if w.ParentCTI != nil {
 		w.ParentCTI.HaveCTI = false
@@ -311,37 +774,273 @@ func (w *CTIConceptGraphWidget) Strengthen() (string, error) {
 
 // GetSelectedConjecture returns a positive universal conjecture from selected facts
 // (Python: ConceptGraphUI.get_selected_conjecture).
-func (w *CTIConceptGraphWidget) GetSelectedConjecture() string {
-	facts := w.GetActiveFacts()
+func (w *CTIConceptGraphWidget) GetSelectedConjecture() *module.Clauses {
+	facts := w.ActiveFactExprs
 	if len(facts) == 0 {
-		return ""
+		return nil
 	}
-	// Stub: real implementation negates facts, substitutes skolem constants
-	// with variables, simplifies, and returns the conjecture formula.
-	return strings.Join(facts, " & ")
+
+	// Python: assert len(free_variables(*facts)) == 0
+	for _, f := range facts {
+		fv := logicutil.FreeVariables(f)
+		if fv != nil && fv.Len() > 0 {
+			return nil
+		}
+	}
+
+	// Python: collect constants, substitute numerals of uninterpreted sorts
+	rn := iu.NewVariableGenerator()
+	subs := make(map[lg.NodeKey]lg.Expr)
+
+	var allConsts []*lg.Const
+	for _, f := range facts {
+		syms := module.UsedSymbolsAST(f)
+		if syms == nil {
+			continue
+		}
+		for _, sym := range syms.All() {
+			if c, ok := sym.(*lg.Const); ok {
+				allConsts = append(allConsts, c)
+			}
+		}
+	}
+
+	// Sort for determinism.
+	sort.Slice(allConsts, func(i, j int) bool {
+		return allConsts[i].Name < allConsts[j].Name
+	})
+
+	seen := make(map[string]bool)
+	for _, c := range allConsts {
+		if seen[c.Name] {
+			continue
+		}
+		seen[c.Name] = true
+		if il.IsNumeralName(c.Name) && w.ParentCTI != nil && w.ParentCTI.Mod != nil {
+			if il.IsUninterpretedSort(w.ParentCTI.Mod.Sig, c.CSort) {
+				varName := rn.Generate(fmt.Sprintf("%v", c.CSort))
+				v, _ := lg.NewVariable(varName, c.CSort)
+				subs[lg.Key(c)] = v
+			}
+		}
+	}
+
+	// Python: literals = [negate(substitute(f, subs)) for f in facts]
+	var literals []lg.Expr
+	for _, f := range facts {
+		substituted, err := logicutil.Substitute(f, subs)
+		if err != nil {
+			substituted = f
+		}
+		negated := module.Negate(substituted)
+		literals = append(literals, negated)
+	}
+
+	// Python: result = Clauses([Or(*literals)])
+	var orExpr lg.Expr
+	if len(literals) == 1 {
+		orExpr = literals[0]
+	} else {
+		orExpr, _ = lg.NewOr(literals...)
+	}
+
+	result := module.NewClauses([]lg.Expr{orExpr}, nil, nil)
+	result = module.SimplifyClauses(result)
+
+	// Python: convert Or to Not(And(negate(each_lit)))
+	if len(result.Fmlas) == 1 {
+		if orNode, ok := result.Fmlas[0].(*lg.Or); ok {
+			var innerLits []lg.Expr
+			for _, lit := range orNode.Terms {
+				innerLits = append(innerLits, module.Negate(lit))
+			}
+			andExpr, _ := lg.NewAnd(innerLits...)
+			notExpr, _ := lg.NewNot(andExpr)
+			result = module.NewClauses([]lg.Expr{notExpr}, nil, nil)
+		}
+	}
+
+	return result
 }
 
 // MinimizeConjecture minimizes the active conjecture using unsat cores
 // (Python: ConceptGraphUI.minimize_conjecture).
-func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (string, error) {
-	// Stub: real implementation does BMC, then unsat_core minimization.
-	return "", fmt.Errorf("minimization not yet implemented")
+func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, error) {
+	if w.ParentCTI == nil || w.ParentCTI.Mod == nil {
+		return nil, fmt.Errorf("no module loaded")
+	}
+
+	// Python: if self.bmc_conjecture(bound=bound, tell_unsat=False): return
+	conj := w.GetSelectedConjecture()
+	if conj != nil {
+		found, _ := w.ParentCTI.BoundedCheck(bound, conj)
+		if found {
+			return nil, fmt.Errorf("BMC found a counter-example")
+		}
+	}
+
+	mod := w.ParentCTI.Mod
+	nSteps := w.ParentCTI.CurrentBound
+	if nSteps < 0 {
+		nSteps = bound
+	}
+
+	// Python: ag = self.parent.new_ag(); execute env_action n_steps times
+	ag := art.NewAnalysisGraph(mod)
+	ag.Add(art.NewState(mod, ag.InitCond), nil)
+	post := ag.States[0]
+
+	stepAction := bmc.EnvAction(mod)
+	for n := 0; n < nSteps; n++ {
+		if stepAction == nil {
+			break
+		}
+		var err error
+		post, err = ag.Execute(true, stepAction, post, nil, "")
+		if err != nil {
+			return nil, fmt.Errorf("step %d failed: %v", n, err)
+		}
+	}
+
+	axioms := mod.BackgroundTheory(nil)
+	postClauses := module.AndClausesTyped(post.Clauses, axioms)
+
+	facts := w.ActiveFactExprs
+	if len(facts) == 0 {
+		return nil, fmt.Errorf("no facts to minimize")
+	}
+
+	factsClauses := module.NewClauses(facts, nil, nil)
+
+	if w.ParentCTI.Solver == nil {
+		return nil, fmt.Errorf("no solver available")
+	}
+
+	core, err := w.ParentCTI.Solver.UnsatCore(factsClauses, postClauses, nil, nil)
+	if err != nil {
+		return nil, fmt.Errorf("unsat_core failed: %w", err)
+	}
+	if core == nil {
+		core = module.NewClauses(nil, nil, nil)
+	}
+
+	// Python: core_formulas = frozenset(core.fmlas)
+	coreSet := make(map[string]bool)
+	for _, cf := range core.Fmlas {
+		coreSet[fmt.Sprintf("%v", cf)] = true
+	}
+
+	// Python: self.set_facts([fact for fact in facts if fact in core_formulas])
+	var filteredFacts []lg.Expr
+	var filteredStrs []string
+	for _, f := range facts {
+		key := fmt.Sprintf("%v", f)
+		if coreSet[key] {
+			filteredFacts = append(filteredFacts, f)
+			filteredStrs = append(filteredStrs, key)
+		}
+	}
+	w.ActiveFactExprs = filteredFacts
+
+	g := w.G()
+	if g != nil {
+		g.SetFacts(filteredStrs)
+	}
+	w.HighlightSelectedFacts()
+
+	minimized := w.GetSelectedConjecture()
+	return minimized, nil
+}
+
+// checkInductionHelper is the shared implementation for IsSufficient and IsInductive.
+// (Python: is_sufficient and is_inductive share the same structure)
+func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *module.Clauses) (bool, string) {
+	if w.ParentCTI == nil || w.ParentCTI.Mod == nil {
+		return false, "no module loaded"
+	}
+
+	mod := w.ParentCTI.Mod
+
+	// Python: pre.clauses = and_clauses(conj, *self.parent.conjectures)
+	pre := conj
+	for _, c := range w.ParentCTI.Conjectures {
+		pre = module.AndClausesTyped(pre, c)
+	}
+	pre.Annot = actions.EmptyAnnotation{}
+
+	preState := art.NewState(mod, pre)
+	ag := art.NewAnalysisGraph(mod)
+	ag.Add(preState, nil)
+
+	// Python: action = ia.env_action(None); post = ag.execute(action, pre)
+	stepAction := bmc.EnvAction(mod)
+	if stepAction == nil {
+		return false, "no actions available"
+	}
+	post, err := ag.Execute(true, stepAction, preState, nil, "")
+	if err != nil {
+		return false, fmt.Sprintf("execute failed: %v", err)
+	}
+	trueCl := module.TrueClauses(nil)
+	trueCl.Annot = actions.EmptyAnnotation{}
+	post.Clauses = trueCl
+
+	// Python: clauses = dual_clauses(target_conj, witness)
+	usedNames := w.ParentCTI.collectUsedNames()
+	witness := ctiWitness(usedNames)
+	clauses := module.DualClauses(targetConj, witness, nil)
+	clauses.Annot = actions.EmptyAnnotation{}
+
+	res := trace.CheckFinalCond(ag, post, clauses, nil, true)
+
+	conjStr := fmt.Sprintf("%v", conj.ToFormula())
+	targetStr := fmt.Sprintf("%v", targetConj.ToFormula())
+
+	if res != nil {
+		return false, fmt.Sprintf("(1) %s\n(2) %s\n(1) does not imply (2) at the next time.", conjStr, targetStr)
+	}
+	return true, fmt.Sprintf("(1) %s\n(2) %s\n(1) implies (2) at the next time.", conjStr, targetStr)
 }
 
 // IsSufficient checks if the active conjecture implies the current CTI conjecture
 // (Python: ConceptGraphUI.is_sufficient).
 func (w *CTIConceptGraphWidget) IsSufficient() (bool, string) {
-	// Stub: real implementation creates analysis graph, sets up pre/post states,
-	// and checks using check_final_cond.
-	return false, "sufficiency check not yet implemented"
+	conj := w.GetSelectedConjecture()
+	if conj == nil {
+		return false, "no conjecture selected"
+	}
+	if w.ParentCTI == nil || w.ParentCTI.CurrentConjecture == nil {
+		return false, "no current CTI conjecture"
+	}
+	return w.checkInductionHelper(conj, w.ParentCTI.CurrentConjecture)
 }
 
 // IsInductive checks if the active conjecture is relatively inductive
 // (Python: ConceptGraphUI.is_inductive).
 func (w *CTIConceptGraphWidget) IsInductive() (bool, string) {
-	// Stub: real implementation is similar to IsSufficient but with
-	// target_conj = conj (self-induction check).
-	return false, "induction check not yet implemented"
+	conj := w.GetSelectedConjecture()
+	if conj == nil {
+		return false, "no conjecture selected"
+	}
+	// Python: target_conj = conj (self-induction check)
+	return w.checkInductionHelper(conj, conj)
+}
+
+// FormulaToConceptl creates a CDConcept from a formula.
+// (Python: concept_from_formula in ivy_graph.py:23-28)
+func FormulaToConceptl(fmla lg.Expr) *CDConcept {
+	vs := logicutil.UsedVariablesAsts([]lg.Expr{fmla})
+	sort.Slice(vs, func(i, j int) bool {
+		return fmt.Sprintf("%v", vs[i]) < fmt.Sprintf("%v", vs[j])
+	})
+
+	var parts []string
+	for _, v := range vs {
+		parts = append(parts, fmt.Sprintf("%v:%v", v, v.VSort))
+	}
+	name := strings.Join(parts, ",") + "." + fmt.Sprintf("%v", fmla)
+	c, _ := NewCDConcept(name, vs, fmla)
+	return c
 }
 
 // WriteConjecture formats a conjecture for file output.
