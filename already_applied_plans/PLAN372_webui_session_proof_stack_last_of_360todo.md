@@ -14,22 +14,23 @@ The proof stack shows interactive proof goals in the web UI — conjectures to p
 
 ### 1. Add `ProofMgr` field to Session — `webui/session.go:46`
 
-Add `ProofMgr *proof.ProofManager` to the `Session` struct (after the `ProofStack` field). Add imports for `proof`, `tactics`, `temporal`.
+Add `ProofMgr *proof.ProofManager` to the `Session` struct (after the `ProofStack` field). Add imports for `proof`, `check`, `tactics`, `temporal`.
 
 ### 2. Wire `proof.RegisterFactories` before compilation — `webui/session.go:114-118`
 
-In `LoadFileContent`, between `mod := module.New()` and `compiler.IvyCompile(...)`, add:
+In `LoadFileContent`, between `mod := module.New()` and `compiler.IvyCompile(...)`, add the full Python-matching registration sequence — exactly mirroring `check.Start()` at `check/check.go:1306-1310`:
 ```go
-proofCfg := module.TacticNewConfig()
-proof.RegisterFactories(mod.Cfg, proofCfg)
-tactics.RegisterProofTactics(proofCfg)
-temporal.RegisterTactics(proofCfg)
+check.WireAdmitDefinitionFactory(mod)
+proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+check.RegisterTactics(mod.Cfg.ProofCfg, mod)
 ```
-This enables the ProofChecker during phase6 `attach_proofs`. Without this, proofs are never checked during webui compilation. Matches `check.Start()` at `check/check.go:1309-1310`.
+This enables the ProofChecker during phase6 `attach_proofs` and registers all tactics (mc, vmt, vcgen, skolemize, tempind, tempcase, sorry, l2s, invariance). Without this, proofs are never checked during webui compilation.
 
-We skip `check.RegisterTactics` (which adds `mc`/`vmt` tactics) because importing `check` from `webui` would create an import cycle. The `proof`, `tactics`, and `temporal` packages have no such restriction.
+There is no import cycle: `check` does not import `webui`, and `webui` does not currently import `check`. The new import is safe.
 
-**Reuses:** `proof.RegisterFactories` at `proof/register.go:12`, `tactics.RegisterProofTactics` at `tactics/ivy_tactics.go:508`, `temporal.RegisterTactics` at `temporal/temporal.go:857`.
+Note: `check.wireAdmitDefinitionFactory` is currently unexported (lowercase). We must export it as `WireAdmitDefinitionFactory` so `webui` can call it. This is a one-character rename in `check/check.go:36`.
+
+**Reuses:** `check.wireAdmitDefinitionFactory` at `check/check.go:36`, `proof.RegisterFactories` at `proof/register.go:12`, `check.RegisterTactics` at `check/check.go:1190`.
 
 ### 3. Populate ProofManager from conjectures — `webui/session.go:197`
 
@@ -101,6 +102,7 @@ Or targeted: `cd ~/ivy/goivy && XTRACE_OFF=1 go test -v ./webui -count=1 -tags x
 
 ## Files to modify
 
-- `webui/session.go` — ProofMgr field, imports, RegisterFactories call, conjecture population, syncProofStack, ProofStackData, ProofGoalAction
+- `check/check.go:36` — export `wireAdmitDefinitionFactory` → `WireAdmitDefinitionFactory` (one-character rename)
+- `webui/session.go` — ProofMgr field, imports (`check`, `proof`), RegisterFactories+RegisterTactics+WireAdmitDefinitionFactory call, conjecture population, syncProofStack, ProofStackData, ProofGoalAction
 - `webui/backend_go.go` — one-line change in GetProof (line 507)
 - `webui/ui_test.go` — 10 new test functions
