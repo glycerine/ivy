@@ -2635,18 +2635,60 @@ green "make rfn"
 green "make tlb" takes just over an hour to run.
 
 latest "make golden-2hr":
+
+make golden-2hr got to: 33_783_298 in about 4 hours:
+
 ~~~
-33778929  go : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
-        py : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
+...
+33783285  go : XTRACE: actions.AssumeAction.action_update EXIT
+        py : XTRACE: actions.AssumeAction.action_update EXIT
 
-33778930  go : XTRACE: actions.substitute_constants_action ENTER type=IfAction nargs=2
-        py : XTRACE: actions.substitute_constants_action ENTER type=IfAction nargs=2
+33783286  go : XTRACE: actions.applyUpdateAxioms ENTER numUpdates=45 modNames=[]
+        py : XTRACE: actions.applyUpdateAxioms ENTER numUpdates=45 modNames=[]
 
-33778931  go : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
-        py : XTRACE: actions.substitute_constants_action ENTER type=Not nargs=1
+33783287  go : XTRACE: actions.Sequence.int_update compose[20] childType=AssumeAction childModified=[]
+        py : XTRACE: actions.Sequence.int_update compose[20] childType=AssumeAction childModified=[]
 
-    golden_test.go:790: ivy_check and goivy_check differ at line 33_778_931, counting from 0.
---- FAIL: Test2hrOrdLive (13881.78s)
+33783288  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)
+
+33783289  go : XTRACE: transrel.ComposeUpdates newUpdated=[](modAll=False)
+        py : XTRACE: transrel.ComposeUpdates newUpdated=[](modAll=False)
+
+33783290  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
+        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
+
+33783291  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+
+33783292  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+
+33783293  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
+
+33783294  go : XTRACE: transrel.ComposeUpdates result nTRfmlas=21 nTRdefs=0 nPREfmlas=1 nPREdefs=0
+        py : XTRACE: transrel.ComposeUpdates result nTRfmlas=21 nTRdefs=0 nPREfmlas=1 nPREdefs=0
+
+33783295  go : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[(Not body:(Apply func:(Symbol name:rfn.abs.trying1.now sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort name:mem_type))])) (Not body:(Apply func:(Symbol n ...(truncated long line to 300 bytes)
+
+        py : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[(Not body:(Apply func:(Symbol name:rfn.abs.trying1.now sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort name:mem_type))])) (Not body:(Apply func:(Symbol n
+ ...(truncated long line to 300 bytes)
+
+33783296  go : XTRACE: transrel.ComposeUpdates result HASH canon= Pre=(clauses fmlas:[(Or terms:[])] defs:[])
+        py : XTRACE: transrel.ComposeUpdates result HASH canon= Pre=(clauses fmlas:[(Or terms:[])] defs:[])
+
+33783297  go : XTRACE: actions.Sequence.int_update compose[20] resultModified=[]
+        py : XTRACE: actions.Sequence.int_update compose[20] resultModified=[]
+
+33783298  go : XTRACE: actions.LocalAction.int_update ENTER
+        py : XTRACE: actions.Sequence.int_update ENTER
+
+    golden_test.go:790: ivy_check and goivy_check differ at line 33783298, counting from 0.
+--- FAIL: Test2hrOrdLive (14009.21s)
+FAIL
+exit status 1
+FAIL	github.com/glycerine/ivy/goivy/parser	14009.231s
 ~~~
 
 how big is the full ord_live.py runs; something like this (but we have
@@ -2670,5 +2712,3 @@ OK
  37005934
  (goivy-venv) jaten@aorus ~/ivy/goivy (master) $
 ~~~ 
-
-
