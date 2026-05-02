@@ -11,6 +11,7 @@ package actions
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -1883,11 +1884,11 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CallAction.int_update ENTER")
 	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
-	xtracer.Trace("actions.CallAction.int_update callee=%s", calleeName)
+	vv("DIAG CallAction.IntUpdate callee='%v'", calleeName)
 	if calleeName == "" {
 		// Python (ivy_actions.py:1318): name = self.args[0].rep — would
 		// AttributeError if .rep is missing. Faithful port panics.
-		panic(fmt.Sprintf("CallAction.IntUpdate: callee has no name: %T", a.Callee))
+		panicf("CallAction.IntUpdate: callee has no name: '%#v'", a.Callee)
 	}
 
 	// Resolve the callee
