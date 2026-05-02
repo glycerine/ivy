@@ -51,18 +51,45 @@ Since **all** runtime code paths preserve Not, the inner IfAction's `Cond` was s
 
 3. **Double-compilation:** The condition node was already a compiled `lg.Apply` (not `ast.Not`) when it reached `CompileIf`, so `CompileNode` routed it through `OtherThing` → `compileGeneric` instead of `compileNot`, producing a re-wrapped Apply without the Not.
 
+## The bug
+
+Go's inner IfAction has `Cond = Apply(...)` where Python has `args[0] = Not(Apply(...))`. Go's behavior MUST conform to Python's. The Go IfAction must have `Cond = Not(Apply(...))` to match.
+
 ## Plan
 
-### Phase 1: Add targeted diagnostic assertions
+### Phase 1: Add callee name xtrace (permanent, both Go and Python)
+
+The callee name is not currently logged. Add it as a proper xtrace so it becomes part of the golden conformance comparison.
+
+#### 1a. Go: `CallAction.IntUpdate` — log callee name
+
+**File:** `actions/update.go` — inside `IntUpdate`, after `calleeName` is computed (~line 1885)
+
+```go
+xtracer.Trace("actions.CallAction.int_update callee=%s", calleeName)
+```
+
+Place this right after the existing `"actions.CallAction.int_update ENTER"` trace.
+
+#### 1b. Python: `CallAction.int_update` — log callee name
+
+**File:** `~/ivy/pyivy/ivy/ivy/ivy_actions.py` — inside `int_update` (~line 1348)
+
+```python
+if __debug__: xtracer.trace("actions.CallAction.int_update callee=%s" % v.name())
+```
+
+Place this right after the existing `"actions.CallAction.int_update ENTER"` trace, after `v = self.get_callee()`.
+
+### Phase 2: Add targeted diagnostic assertions (temporary)
 
 Add **panic-on-detection** assertions that fire at the exact moment the Not wrapper is found missing, producing a stack trace. These use `panic()` so they don't affect XTRACE golden comparison.
 
-#### 1a. In `CompileIf` — catch compilation-time loss
+#### 2a. In `CompileIf` — catch compilation-time loss
 
 **File:** `compiler/action.go:1255` (after `SortifyWithInference` returns)
 
 ```go
-// DIAGNOSTIC: detect Not lost during compilation
 if _, isAstNot := condNode.(*ast.Not); isAstNot {
     if _, isLgNot := cond.(*lg.Not); !isLgNot {
         panic(fmt.Sprintf("CompileIf: ast.Not compiled to non-lg.Not: condNode=%T, cond=%T(%v)", condNode, cond, cond))
@@ -72,12 +99,11 @@ if _, isAstNot := condNode.(*ast.Not); isAstNot {
 
 If this fires → the compiler's `SortifyWithInference` lost the Not.
 
-#### 1b. In `IfAction.Clone` — catch clone-time loss
+#### 2b. In `IfAction.Clone` — catch clone-time loss
 
 **File:** `actions/action_expr.go:356` (in the `default` case)
 
 ```go
-// DIAGNOSTIC: detect Not-stripping in Clone
 if _, origIsNot := a.Cond.(*lg.Not); origIsNot {
     if _, newIsNot := args[0].(*lg.Not); !newIsNot {
         panic(fmt.Sprintf("IfAction.Clone: Not lost! orig=%T, args[0]=%T(%v)", a.Cond, args[0], args[0]))
@@ -87,22 +113,11 @@ if _, origIsNot := a.Cond.(*lg.Not); origIsNot {
 
 If this fires → `SubstituteConstantsAST` returned a non-Not for args[0].
 
-#### 1c. In `CallAction.IntUpdate` — identify the callee
-
-**File:** `actions/update.go:1883` (after calleeName is computed)
-
-```go
-fmt.Fprintf(os.Stderr, "DIAG CallAction.IntUpdate callee=%s\n", calleeName)
-```
-
-This identifies which action definition is involved (stderr doesn't affect golden comparison).
-
-#### 1d. In `SubstituteConstantsAST` — catch Not.Clone loss
+#### 2c. In `SubstituteConstantsAST` — catch Not.Clone loss
 
 **File:** `module/astutil.go:131` (after `node.Clone(newArgs)`)
 
 ```go
-// DIAGNOSTIC: detect Not.Clone producing non-Not
 if _, isNot := node.(*lg.Not); isNot {
     if _, resultIsNot := node.Clone(newArgs).(*lg.Not); !resultIsNot {
         panic(fmt.Sprintf("SubstituteConstantsAST: Not.Clone lost Not: %T", node.Clone(newArgs)))
@@ -110,36 +125,39 @@ if _, isNot := node.(*lg.Not); isNot {
 }
 ```
 
-### Phase 2: Run test once (4 hours)
+### Phase 3: Run test (4 hours)
 
 ```bash
-cd ~/ivy/goivy && make golden-2hr 2>diag.stderr
+cd ~/ivy/goivy && make golden-2hr
 ```
 
 Analyze results:
-- **If 1a fires:** Fix is in `SortifyWithInference` or `CompileNode` — the sort inference or re-compilation path loses Not.
-- **If 1b fires:** Fix is in the clone/substitution path — `SubstituteConstantsAST` returned a body-of-Not instead of Not.
-- **If 1d fires:** Fix is in `lg.Not.Clone()`.
-- **If NONE fires and test still diverges:** The AST condition was NEVER `ast.Not`. This is a **parser bug** or **action composition bug**. Use the callee name from 1c to trace backward to the Ivy source and the compilation path.
+- **If 2a fires:** Fix is in `SortifyWithInference` or `CompileNode` — the sort inference or re-compilation path loses Not.
+- **If 2b fires:** Fix is in the clone/substitution path — `SubstituteConstantsAST` returned a body-of-Not instead of Not.
+- **If 2c fires:** Fix is in `lg.Not.Clone()`.
+- **If NONE fires and test still diverges:** The AST condition was NEVER `ast.Not`. This is a **parser bug** or **action composition bug**. Use the callee name from the new xtrace (1a) to trace backward to the Ivy source and the compilation path.
 
-### Phase 3: Fix the root cause
+### Phase 4: Fix the root cause
 
-Based on Phase 2 results:
+Based on Phase 3 results:
 
 | Trigger | Root cause | Fix location |
 |---------|-----------|--------------|
-| 1a fires | `SortifyWithInference` or `SortInfer` strips Not | `compiler/compiler.go` or `compiler/phase6.go` |
-| 1b fires | Clone receives unwrapped arg | Trace caller via stack trace |
-| 1d fires | `lg.Not.Clone` implementation bug | `logic/ast_compat.go:76` |
+| 2a fires | `SortifyWithInference` or `SortInfer` strips Not | `compiler/compiler.go` or `compiler/phase6.go` |
+| 2b fires | Clone receives unwrapped arg | Trace caller via stack trace |
+| 2c fires | `lg.Not.Clone` implementation bug | `logic/ast_compat.go:76` |
 | None fire | Parser or composition doesn't produce Not | Parser grammar rules or mixin composition in `isolate/` |
 
-For the "none fire" case (most likely): use callee name from stderr to find the Ivy source, then check the Go parser's AST output for that specific if-condition. Compare with Python parser's output.
+For the "none fire" case (most likely): use callee name from the new xtrace to find the Ivy source, then check the Go parser's AST output for that specific if-condition. Compare with Python parser's output.
 
-### Phase 4: Verify
+The fix must make Go's IfAction.Cond match Python's IfAction.args[0] — i.e., the condition must be `Not(Apply(...))`, not bare `Apply(...)`.
 
-1. Remove all diagnostic assertions
-2. Run `cd ~/ivy/goivy && make test` — verify no regressions
-3. Run `cd ~/ivy/goivy && make golden-2hr` — verify test advances past line 33778931
+### Phase 5: Verify
+
+1. Remove all temporary diagnostic assertions (Phase 2)
+2. Keep the callee name xtraces (Phase 1) — they are permanent conformance coverage
+3. Run `cd ~/ivy/goivy && make test` — verify no regressions
+4. Run `cd ~/ivy/goivy && make golden-2hr` — verify test advances past line 33778931
 
 ## Critical files
 
