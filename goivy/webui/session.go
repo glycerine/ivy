@@ -195,11 +195,11 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 
-	// Step 7: Build the persistent AnalysisGraph and compute the initial
-	// state from the module's init condition + initializer actions.
-	// Matches Python: self.g = AnalysisGraph(...); add_initial_state(...)
+	// Step 7: Build the persistent AnalysisGraph.
+	// Matches Python: self.g = AnalysisGraph() in ivy_compiler.ivy_new().
+	// Python does NOT call add_initial_state here — the ARG starts empty.
+	// States are added later when the user runs verification operations.
 	s.AG = art.NewAnalysisGraph(s.CompiledModule)
-	s.AG.AddInitialState(nil, nil)
 	s.syncARGToGraph()
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{
