@@ -47,6 +47,7 @@ type Session struct {
 	CompiledModule *module.Module          // populated by full compiler pipeline
 	CompiledSig    *il.Sig                 // populated by full compiler pipeline
 	AG             *art.AnalysisGraph      // persistent analysis graph for interactive verification
+	AGUI           *AnalysisGraphUI       // ARG navigation UI (delegates to AG)
 }
 
 // NewSession creates a new verification session with the given id.
@@ -200,6 +201,10 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Python does NOT call add_initial_state here — the ARG starts empty.
 	// States are added later when the user runs verification operations.
 	s.AG = art.NewAnalysisGraph(s.CompiledModule)
+	s.AGUI = NewAnalysisGraphUI()
+	s.AGUI.AG = s.AG
+	s.AGUI.Mod = s.CompiledModule
+	s.AGUI.SyncCallback = func() { s.syncARGToGraph() }
 	s.syncARGToGraph()
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{
@@ -218,29 +223,7 @@ func (s *Session) syncARGToGraph() {
 	if s.AG == nil {
 		return
 	}
-	gs := NewAnalysisGraphState()
-	for _, st := range s.AG.States {
-		gs.States = append(gs.States, ARGNode{
-			ID:       st.ID,
-			Label:    st.Label,
-			IsBottom: st.IsBottom(),
-			Info:     fmt.Sprintf("State %d", st.ID),
-		})
-	}
-	for _, t := range s.AG.Transitions {
-		gs.Transitions = append(gs.Transitions, ARGTransition{
-			SourceID: t.Pre.ID,
-			TargetID: t.Post.ID,
-			Label:    t.Label,
-		})
-	}
-	for _, c := range s.AG.Covering {
-		gs.Covering = append(gs.Covering, ARGCover{
-			CoveredID:  c.Covered.ID,
-			CoveringID: c.Covering.ID,
-		})
-	}
-	s.Graph = gs
+	s.Graph = ArtToGraphState(s.AG)
 }
 
 func sortNames(m map[string]logic.Sort) []string {
@@ -713,6 +696,8 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		"action": action,
 	}
 
+	var err error
+
 	switch action {
 	case "view_state":
 		// View state triggers concept graph update
@@ -721,132 +706,140 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			s.syncAbstractValue()
 		}
 	case "check_safety":
-		// Check safety at this node — would use check.CheckSafetyInState
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			safe, msg := s.AGUI.CheckSafetyNode(stateIdx)
+			result["safe"] = safe
+			result["message"] = msg
+		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Safety check at node " + nodeID}})
-	case "extend":
-		// Execute all public actions from this state, extending the ARG.
-		// Matches Python ivy_ui.py execute_action.
-		if s.CompiledModule != nil {
-			stateIdx := -1
-			fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-			if stateIdx >= 0 && stateIdx < len(s.Graph.States) {
-				for name := range s.CompiledModule.Actions.All() {
-					newID := len(s.Graph.States)
-					s.Graph.States = append(s.Graph.States, ARGNode{
-						ID:    newID,
-						Label: fmt.Sprintf("%d", newID),
-					})
-					s.Graph.Transitions = append(s.Graph.Transitions, ARGTransition{
-						SourceID: stateIdx,
-						TargetID: newID,
-						Label:    name,
-					})
-				}
-				// Re-render the ARG
+	case "extend", "find_extension":
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			label, extErr := s.AGUI.FindExtension(stateIdx)
+			if extErr != nil {
+				err = extErr
+			} else {
+				result["extension"] = label
 				cy := RenderARG(s.Graph)
 				result["arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extended from node " + nodeID}})
-	case "mark":
-		// Mark node for covering
+	case "mark", "mark_node":
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			s.AGUI.MarkNode(&ARGStateRef{ID: stateIdx})
+		}
 		result["marked"] = true
-	case "cover":
-		// Cover node by marked — would use art.AnalysisGraph.Cover
+	case "cover", "cover_node":
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			ok, coverErr := s.AGUI.CoverNode(stateIdx)
+			result["covered"] = ok
+			if coverErr != nil {
+				err = coverErr
+			}
+		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Cover node " + nodeID}})
-	case "join":
-		// Join with marked node
+	case "join", "join_node":
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			err = s.AGUI.JoinNode(stateIdx)
+		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Join at node " + nodeID}})
 	case "try_conjecture":
-		// Try current conjecture at node
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		conjStr, _ := args["conjecture"].(string)
+		if s.AGUI != nil && stateIdx >= 0 {
+			err = s.AGUI.TryConjecture(stateIdx, conjStr)
+		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try conjecture at node " + nodeID}})
 	case "try_remembered":
-		// Try remembered graph at node
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try remembered at node " + nodeID}})
-	case "delete":
-		// Delete node from ARG
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Delete node " + nodeID}})
-	case "recalculate":
-		// Recalculate: recompute the transition from pre to post state.
-		// Matches Python ivy_ui.py recalculate_edge → art.recalculate.
-		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
-			s.syncAbstractValue()
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		goalName, _ := args["goal"].(string)
+		if s.AGUI != nil && stateIdx >= 0 {
+			err = s.AGUI.TryRememberedGraph(stateIdx, goalName)
 		}
-		// Re-render the ARG
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try remembered at node " + nodeID}})
+	case "delete", "delete_node":
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if s.AGUI != nil && stateIdx >= 0 {
+			s.AGUI.DeleteNode(stateIdx)
+		}
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Delete node " + nodeID}})
+	case "recalculate", "recalculate_edge":
+		srcIdx := -1
+		tgtIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &srcIdx)
+		if args != nil {
+			if t, ok := args["target"].(string); ok {
+				fmt.Sscanf(t, "state_%d", &tgtIdx)
+			}
+		}
+		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
+			s.AGUI.RecalculateEdge(srcIdx, tgtIdx)
+		} else if s.AGUI != nil {
+			s.AGUI.RecalculateAll()
+		}
 		cy := RenderARG(s.Graph)
 		result["arg"] = map[string]interface{}{"elements": cy.Elements}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculated at " + nodeID}})
-	case "decompose":
-		// Step into / decompose: create a sub-ARG showing the decomposed action steps.
-		// Matches Python ivy_ui.py decompose_edge → art.decompose_state.
-		// Find the target state in the graph and decompose it.
-		targetID := ""
+	case "decompose", "decompose_edge":
+		srcIdx := -1
+		tgtIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &srcIdx)
 		if args != nil {
 			if t, ok := args["target"].(string); ok {
-				targetID = t
+				fmt.Sscanf(t, "state_%d", &tgtIdx)
 			}
 		}
-		if targetID == "" {
-			targetID = nodeID
-		}
-		// Build a decomposed sub-graph for this state
-		// For now, decompose the actions in the compiled module
-		var subElements []CyElement
-		if s.CompiledModule != nil {
-			// Collect all actions and build a decomposed ARG showing each action as a step
-			var actionNames []string
-			for name := range s.CompiledModule.Actions.All() {
-				actionNames = append(actionNames, name)
+		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
+			subGraph, decompErr := s.AGUI.DecomposeEdge(srcIdx, tgtIdx)
+			if decompErr != nil {
+				err = decompErr
+			} else if subGraph != nil {
+				result["decomposed"] = true
+				cy := RenderARG(subGraph)
+				result["sub_arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
-			// Build ARG elements: state 0 → action → state 1 → action → ...
-			subCy := NewCyElements()
-			subCy.AddNode("state_pre", "pre", []string{"state"}, "Pre-state", "Pre-state", nil, "ellipse")
-			for i, aName := range actionNames {
-				postLabel := fmt.Sprintf("post_%s", aName)
-				subCy.AddNode(postLabel, fmt.Sprintf("%d: %s", i+1, aName), []string{"state"}, aName, aName, nil, "ellipse")
-				subCy.AddEdge(
-					fmt.Sprintf("tr_%d", i), "state_pre", postLabel, aName,
-					[]string{"transition_action"}, aName, aName,
-				)
-			}
-			subElements = subCy.Elements
-		}
-		result["decomposed"] = true
-		result["sub_arg"] = map[string]interface{}{
-			"elements": subElements,
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Decomposed at " + nodeID}})
-	case "view_source":
-		// View source code for this transition.
-		// Matches Python ivy_ui.py view_source_edge: shows the action definition.
-		result["file"] = s.FilePath
-		if s.FileContent != "" {
-			result["source"] = s.FileContent
-			// Try to find the action definition line
-			targetAction := ""
-			if args != nil {
-				if t, ok := args["target"].(string); ok {
-					targetAction = t
-				}
+	case "view_source", "view_source_edge":
+		srcIdx := -1
+		tgtIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &srcIdx)
+		if args != nil {
+			if t, ok := args["target"].(string); ok {
+				fmt.Sscanf(t, "state_%d", &tgtIdx)
 			}
-			// Search for the action in the source
-			lines := strings.Split(s.FileContent, "\n")
-			for i, line := range lines {
-				trimmed := strings.TrimSpace(line)
-				if strings.HasPrefix(trimmed, "action ") && targetAction != "" &&
-					strings.Contains(trimmed, targetAction) {
-					result["lineno"] = i + 1
-					break
-				}
+		}
+		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
+			filename, lineno, vsErr := s.AGUI.ViewSourceEdge(srcIdx, tgtIdx)
+			if vsErr == nil {
+				result["file"] = filename
+				result["lineno"] = lineno
+			} else {
+				result["file"] = s.FilePath
 			}
 		} else {
-			result["source"] = "// No source file loaded"
+			result["file"] = s.FilePath
 		}
 	default:
-		return result, fmt.Errorf("unknown ARG action: %s", action)
+		err = fmt.Errorf("unknown ARG action: %s", action)
 	}
 
+	if err != nil {
+		return result, err
+	}
 	s.emit(Event{Type: "action_completed", Data: map[string]string{"action": action}})
 	return result, nil
 }

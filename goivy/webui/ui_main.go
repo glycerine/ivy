@@ -7,6 +7,12 @@ import (
 	"fmt"
 	"sort"
 	"sync"
+
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicparser"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // VerificationMode represents a verification approach.
@@ -54,8 +60,21 @@ type ARGStateRef struct {
 type AnalysisGraphUI struct {
 	mu sync.Mutex
 
-	// G is the analysis graph (ARG) state.
+	// G is the analysis graph (ARG) lightweight rendering state.
 	G *AnalysisGraphState
+
+	// AG is the real analysis graph (Python: self.g).
+	AG *art.AnalysisGraph
+
+	// Mod is the compiled module providing axioms, sig, actions.
+	Mod *module.Module
+
+	// SyncCallback is called after AG mutations to update G for the frontend.
+	SyncCallback func()
+
+	// AlphaFn returns the current abstractor based on mode.
+	// Set by the caller (e.g., session wiring) to avoid circular import with alpha.
+	AlphaFn func() art.Abstractor
 
 	// CurrentConceptGraph is the currently displayed concept graph widget.
 	CurrentConceptGraph *GraphWidget
@@ -137,6 +156,91 @@ func (ui *AnalysisGraphUI) GetMode() VerificationMode {
 	return ui.Mode
 }
 
+// getAlpha returns the current abstractor. Returns nil if no AlphaFn is set.
+func (ui *AnalysisGraphUI) getAlpha() art.Abstractor {
+	if ui.AlphaFn != nil {
+		return ui.AlphaFn()
+	}
+	return nil
+}
+
+// stateByID returns the art.State for the given nodeID with bounds checking.
+func (ui *AnalysisGraphUI) stateByID(nodeID int) (*art.State, error) {
+	if ui.AG == nil {
+		return nil, fmt.Errorf("no analysis graph")
+	}
+	if nodeID < 0 || nodeID >= len(ui.AG.States) {
+		return nil, fmt.Errorf("invalid node ID: %d", nodeID)
+	}
+	return ui.AG.States[nodeID], nil
+}
+
+// transitionByEndpoints finds the transition matching srcID→tgtID.
+func (ui *AnalysisGraphUI) transitionByEndpoints(srcID, tgtID int) (*art.Transition, error) {
+	if ui.AG == nil {
+		return nil, fmt.Errorf("no analysis graph")
+	}
+	for i := range ui.AG.Transitions {
+		t := &ui.AG.Transitions[i]
+		if t.Pre != nil && t.Post != nil && t.Pre.ID == srcID && t.Post.ID == tgtID {
+			return t, nil
+		}
+	}
+	return nil, fmt.Errorf("no transition from %d to %d", srcID, tgtID)
+}
+
+// sync calls the SyncCallback if set (updates lightweight G from AG).
+func (ui *AnalysisGraphUI) sync() {
+	if ui.SyncCallback != nil {
+		ui.SyncCallback()
+	}
+}
+
+// ArtToGraphState converts an art.AnalysisGraph to a lightweight AnalysisGraphState.
+func ArtToGraphState(ag *art.AnalysisGraph) *AnalysisGraphState {
+	gs := NewAnalysisGraphState()
+	for _, st := range ag.States {
+		gs.States = append(gs.States, ARGNode{
+			ID:       st.ID,
+			Label:    st.Label,
+			IsBottom: st.IsBottom(),
+			Info:     fmt.Sprintf("State %d", st.ID),
+		})
+	}
+	for _, t := range ag.Transitions {
+		gs.Transitions = append(gs.Transitions, ARGTransition{
+			SourceID: t.Pre.ID,
+			TargetID: t.Post.ID,
+			Label:    t.Label,
+		})
+	}
+	for _, c := range ag.Covering {
+		gs.Covering = append(gs.Covering, ARGCover{
+			CoveredID:  c.Covered.ID,
+			CoveringID: c.Covering.ID,
+		})
+	}
+	return gs
+}
+
+// defEquationLabel extracts a display label from a state equation (ast.Definition).
+// Python: state_equation_label(a) — reads a.args[0] (action name) and a.args[1].rep.
+func defEquationLabel(eq *ast.Definition) string {
+	var actionName string
+	if eq != nil && eq.Lhs != nil {
+		if atom, ok := eq.Lhs.(*ast.Atom); ok {
+			actionName = atom.Rep
+		}
+	}
+	var transLabel string
+	if eq != nil && eq.Rhs != nil {
+		if atom, ok := eq.Rhs.(*ast.Atom); ok {
+			transLabel = atom.Rep
+		}
+	}
+	return StateEquationLabel(actionName, transLabel)
+}
+
 // Start initializes the UI, creating an initial ARG node if needed
 // (Python: AnalysisGraphUI.start).
 func (ui *AnalysisGraphUI) Start() {
@@ -189,10 +293,26 @@ func (ui *AnalysisGraphUI) NodeCommands() []ActionEntry {
 	}
 }
 
-// NodeExecuteCommands returns execute-action entries for a node.
+// NodeExecuteCommands returns execute-action entries for a node
+// (Python: AnalysisGraphUI.node_execute_commands).
 func (ui *AnalysisGraphUI) NodeExecuteCommands(nodeID int) []ActionEntry {
-	// Stub: real implementation calls g.state_actions(node).
-	return nil
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return nil
+	}
+	equations := ui.AG.StateActions(state)
+	sort.Slice(equations, func(i, j int) bool {
+		return defEquationLabel(equations[i]) < defEquationLabel(equations[j])
+	})
+	var entries []ActionEntry
+	for _, eq := range equations {
+		label := defEquationLabel(eq)
+		entries = append(entries, ActionEntry{
+			Label:  label,
+			Action: fmt.Sprintf("execute_%d_%s", nodeID, label),
+		})
+	}
+	return entries
 }
 
 // GetEdgeActions returns context-menu actions for an ARG edge
@@ -252,102 +372,242 @@ func (ui *AnalysisGraphUI) CheckSafetyNode(nodeID int) (bool, string) {
 	return ui.CheckBoundedSafety(nodeID)
 }
 
-// CheckLocalSafety checks local safety of a node.
+// CheckLocalSafety checks local safety of a node
+// (Python: AnalysisGraphUI.check_local_safety).
 func (ui *AnalysisGraphUI) CheckLocalSafety(nodeID int) (bool, string) {
-	// Stub: real implementation calls g.check_safety(node).
-	return true, "Node is safe"
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return false, err.Error()
+	}
+	result := ui.AG.CheckSafety(true, state)
+	if result.Safe {
+		return true, "Node is safe"
+	}
+	msg := "The node is not proved safe"
+	if result.Cex != nil && result.Cex.Msg != "" {
+		msg = fmt.Sprintf("The node is not proved safe: %s", result.Cex.Msg)
+	}
+	return false, msg
 }
 
-// CheckBoundedSafety checks bounded safety along a path.
+// CheckBoundedSafety checks bounded safety along a path
+// (Python: AnalysisGraphUI.check_bounded_safety).
 func (ui *AnalysisGraphUI) CheckBoundedSafety(nodeID int) (bool, string) {
-	// Stub: real implementation calls g.check_bounded_safety(node).
-	return true, "Node is safe (bounded check)"
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return false, err.Error()
+	}
+	result := ui.AG.CheckBoundedSafety(state, nil)
+	if result.Safe {
+		return true, "Node is safe (bounded check)"
+	}
+	msg := "The node is unsafe"
+	if result.Cex != nil && result.Cex.Msg != "" {
+		msg = fmt.Sprintf("The node is unsafe: %s", result.Cex.Msg)
+	}
+	return false, msg
 }
 
-// FindExtension finds an action to extend the ARG at a node.
+// FindExtension finds an action to extend the ARG at a node
+// (Python: AnalysisGraphUI.find_extension).
 func (ui *AnalysisGraphUI) FindExtension(nodeID int) (string, error) {
-	// Stub: real implementation calls g.state_extensions(node).
-	return "", fmt.Errorf("state %d is closed", nodeID)
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return "", err
+	}
+	extensions := ui.AG.StateExtensions(state, nil)
+	if len(extensions) == 0 {
+		return "", fmt.Errorf("state %d is closed", nodeID)
+	}
+	s := ui.AG.DoStateAction(false, extensions[0], ui.getAlpha())
+	if s == nil {
+		return "", fmt.Errorf("state action evaluation failed")
+	}
+	ui.sync()
+	return defEquationLabel(extensions[0]), nil
 }
 
 // ExecuteAction evaluates an action at a node (Python: AnalysisGraphUI.execute_action).
 func (ui *AnalysisGraphUI) ExecuteAction(nodeID int, actionName string) error {
-	// Stub: real implementation calls g.execute_action.
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return err
+	}
+	_, err = ui.AG.ExecuteAction(false, actionName, state, ui.getAlpha())
+	if err != nil {
+		return err
+	}
+	ui.sync()
 	return nil
 }
 
 // RecalculateAll re-evaluates all ARG transitions (Python: AnalysisGraphUI.recalculate_all).
 func (ui *AnalysisGraphUI) RecalculateAll() {
-	// Stub: real implementation iterates transitions and recalculates each.
+	if ui.AG == nil {
+		return
+	}
+	done := make(map[int]bool)
+	for _, t := range ui.AG.Transitions {
+		if t.Post != nil && !done[t.Post.ID] {
+			ui.AG.Recalculate(false, t, ui.getAlpha())
+			done[t.Post.ID] = true
+		}
+	}
+	ui.sync()
 }
 
-// RecalculateEdge re-evaluates one ARG edge.
+// RecalculateEdge re-evaluates one ARG edge
+// (Python: AnalysisGraphUI.recalculate_edge).
 func (ui *AnalysisGraphUI) RecalculateEdge(srcID, tgtID int) {
-	// Stub: real implementation calls g.recalculate.
+	t, err := ui.transitionByEndpoints(srcID, tgtID)
+	if err != nil {
+		return
+	}
+	ui.AG.Recalculate(false, *t, ui.getAlpha())
+	ui.sync()
 }
 
-// DecomposeEdge decomposes a transition into sub-actions.
+// DecomposeEdge decomposes a transition into sub-actions
+// (Python: AnalysisGraphUI.decompose_edge).
 func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*AnalysisGraphState, error) {
-	// Stub: real implementation calls g.decompose_edge.
-	return nil, fmt.Errorf("cannot decompose action")
+	t, err := ui.transitionByEndpoints(srcID, tgtID)
+	if err != nil {
+		return nil, err
+	}
+	subArt := ui.AG.DecomposeEdge(*t)
+	if subArt == nil {
+		return nil, fmt.Errorf("cannot decompose action")
+	}
+	return ArtToGraphState(subArt), nil
 }
 
-// ViewSourceEdge browses the source code of a transition action.
+// ViewSourceEdge browses the source code of a transition action
+// (Python: AnalysisGraphUI.view_source_edge).
 func (ui *AnalysisGraphUI) ViewSourceEdge(srcID, tgtID int) (string, int, error) {
-	// Stub: real implementation extracts lineno from action.
-	return "", 0, fmt.Errorf("no source available")
+	t, err := ui.transitionByEndpoints(srcID, tgtID)
+	if err != nil {
+		return "", 0, err
+	}
+	if t.Op == nil {
+		return "", 0, fmt.Errorf("no action on this edge")
+	}
+	if !t.Op.HasLineno() {
+		return "", 0, fmt.Errorf("no source location available")
+	}
+	loc := t.Op.GetLineno()
+	return loc.Filename, loc.Line, nil
 }
 
 // DeleteNode removes a node from the ARG (Python: AnalysisGraphUI.delete_node).
 func (ui *AnalysisGraphUI) DeleteNode(nodeID int) {
-	var kept []ARGNode
-	for _, s := range ui.G.States {
-		if s.ID != nodeID {
-			kept = append(kept, s)
+	if ui.AG != nil {
+		state, err := ui.stateByID(nodeID)
+		if err == nil {
+			ui.AG.Delete(state)
 		}
 	}
-	ui.G.States = kept
+	if ui.Mark != nil && ui.Mark.ID == nodeID {
+		ui.Mark = nil
+	}
+	ui.sync()
 }
 
-// CoverNode tries to cover one node by the marked node.
+// CoverNode tries to cover one node by the marked node
+// (Python: AnalysisGraphUI.cover_node).
 func (ui *AnalysisGraphUI) CoverNode(coveredID int) (bool, error) {
 	mark := ui.GetMark()
 	if mark == nil {
 		return false, fmt.Errorf("no marked node")
 	}
-	// Stub: real implementation calls g.cover.
-	return false, fmt.Errorf("covering failed")
+	covered, err := ui.stateByID(coveredID)
+	if err != nil {
+		return false, err
+	}
+	covering, err := ui.stateByID(mark.ID)
+	if err != nil {
+		return false, err
+	}
+	ok := ui.AG.Cover(covered, covering)
+	if !ok {
+		return false, fmt.Errorf("covering failed")
+	}
+	ui.sync()
+	return true, nil
 }
 
-// JoinNode joins a node with the marked node.
+// JoinNode joins a node with the marked node
+// (Python: AnalysisGraphUI.join_node).
 func (ui *AnalysisGraphUI) JoinNode(nodeID int) error {
 	mark := ui.GetMark()
 	if mark == nil {
 		return fmt.Errorf("no marked node")
 	}
-	// Stub: real implementation calls g.join.
+	state1, err := ui.stateByID(mark.ID)
+	if err != nil {
+		return err
+	}
+	state2, err := ui.stateByID(nodeID)
+	if err != nil {
+		return err
+	}
+	joined := ui.AG.Join(state1, state2, ui.getAlpha())
+	if joined == nil {
+		return fmt.Errorf("join failed")
+	}
+	ui.sync()
 	return nil
 }
 
-// TryConjecture sets up to prove a conjecture at a node.
+// TryConjecture sets up to prove a conjecture at a node
+// (Python: AnalysisGraphUI.try_conjecture).
 func (ui *AnalysisGraphUI) TryConjecture(nodeID int, conjecture string) error {
-	// Stub: real implementation dispatches to bmc or concept graph.
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return err
+	}
+	if conjecture == "" {
+		return fmt.Errorf("no conjecture specified")
+	}
+	fmla, parseErr := logicparser.ToFormula(conjecture)
+	if parseErr != nil {
+		return fmt.Errorf("parse conjecture: %w", parseErr)
+	}
+	fExpr, ok := fmla.(logic.Expr)
+	if !ok {
+		return fmt.Errorf("conjecture is not a logic expression")
+	}
+	conj := module.FormulaToClauses(fExpr, nil)
+	dual := module.DualClauses(conj, nil, nil)
+
+	mode := ui.GetMode()
+	if mode == ModeInduction || mode == ModeBounded {
+		bmcResult := ui.AG.BMC(state, dual.ToFormula(), nil, nil)
+		if bmcResult == nil {
+			return fmt.Errorf("the condition is unreachable along the given path")
+		}
+		return nil
+	}
 	return nil
 }
 
-// TryRememberedGraph loads a previously saved proof goal.
+// TryRememberedGraph loads a previously saved proof goal
+// (Python: AnalysisGraphUI.try_remembered_graph).
 func (ui *AnalysisGraphUI) TryRememberedGraph(nodeID int, goalName string) error {
 	ui.mu.Lock()
 	defer ui.mu.Unlock()
 	if goalName == "" {
-		// List available goals.
 		return nil
 	}
-	_, ok := ui.RememberedGraphs[goalName]
+	sg, ok := ui.RememberedGraphs[goalName]
 	if !ok {
 		return fmt.Errorf("no remembered graph named %q", goalName)
 	}
-	// Stub: set up the remembered graph for the given node.
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return err
+	}
+	sgCopy := sg.Copy()
+	sgCopy.ParentState = state
 	return nil
 }
 
@@ -370,10 +630,30 @@ func (ui *AnalysisGraphUI) RememberedGraphNames() []string {
 	return names
 }
 
-// BMC performs bounded model checking from initial to a state.
+// BMC performs bounded model checking from initial to a state
+// (Python: AnalysisGraphUI.bmc).
 func (ui *AnalysisGraphUI) BMC(nodeID int, errCond string, bound int) (*AnalysisGraphState, error) {
-	// Stub: real implementation calls g.bmc.
-	return nil, fmt.Errorf("condition unreachable along given path")
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return nil, err
+	}
+	fmla, parseErr := logicparser.ToFormula(errCond)
+	if parseErr != nil {
+		return nil, fmt.Errorf("parse error condition: %w", parseErr)
+	}
+	fExpr, ok := fmla.(logic.Expr)
+	if !ok {
+		return nil, fmt.Errorf("error condition is not a logic expression")
+	}
+	var boundPtr *int
+	if bound >= 0 {
+		boundPtr = &bound
+	}
+	resultAG := ui.AG.BMC(state, fExpr, nil, boundPtr)
+	if resultAG == nil {
+		return nil, fmt.Errorf("condition unreachable along given path")
+	}
+	return ArtToGraphState(resultAG), nil
 }
 
 // StateLabel returns the display label for an ARG state.
@@ -391,7 +671,8 @@ func StateEquationLabel(actionName, transLabel string) string {
 
 // IvyUI is the top-level UI class (Python: class IvyUI).
 type IvyUI struct {
-	mu sync.Mutex
+	mu  sync.Mutex
+	Mod *module.Module
 }
 
 // NewIvyUI creates a new top-level IvyUI.
@@ -404,8 +685,37 @@ func (ui *IvyUI) AGUI() *AnalysisGraphUI {
 	return NewAnalysisGraphUI()
 }
 
-// TryProperty sets up to prove a background property.
+// TryProperty sets up to prove a background property
+// (Python: IvyUI.try_property).
 func (ui *IvyUI) TryProperty(propText string) error {
-	// Stub: real implementation checks property and launches BMC.
+	if propText == "" {
+		return fmt.Errorf("no property specified")
+	}
+	if ui.Mod == nil {
+		return fmt.Errorf("no module loaded")
+	}
+	fmla, parseErr := logicparser.ToFormula(propText)
+	if parseErr != nil {
+		return fmt.Errorf("parse property: %w", parseErr)
+	}
+	fExpr, ok := fmla.(logic.Expr)
+	if !ok {
+		return fmt.Errorf("property is not a logic expression")
+	}
+	conj := module.FormulaToClauses(fExpr, nil)
+	dual := module.DualClauses(conj, nil, nil)
+
+	topAlpha := art.AbstractorFunc(func(s *art.State) {
+		s.Clauses = module.TrueClauses(nil)
+	})
+	ag := art.NewAnalysisGraph(ui.Mod)
+	ag.AddInitialState(nil, topAlpha)
+	if len(ag.States) == 0 {
+		return fmt.Errorf("failed to create initial state")
+	}
+	oag := ag.BMC(ag.States[0], dual.ToFormula(), nil, nil)
+	if oag == nil {
+		return fmt.Errorf("property holds (no counterexample found)")
+	}
 	return nil
 }

@@ -1,0 +1,558 @@
+//go:build web
+
+package webui
+
+import (
+	"testing"
+
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/module"
+)
+
+// loadARGTestSession creates a session with ivySample loaded and an initial state.
+func loadARGTestSession(t *testing.T) (*Session, *AnalysisGraphUI) {
+	t.Helper()
+	cfg := module.NewConfig()
+	s := NewSession(cfg, "test-arg")
+	if err := s.LoadFileContent("test.ivy", []byte(ivySample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	drainEvents(s)
+	if s.AGUI == nil {
+		t.Fatal("AGUI should be non-nil after LoadFileContent")
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	return s, s.AGUI
+}
+
+// makeMinimalAGUI builds an AnalysisGraphUI backed by a fresh AnalysisGraph
+// with one initial state. No module/solver needed.
+func makeMinimalAGUI(t *testing.T, mod *module.Module) *AnalysisGraphUI {
+	t.Helper()
+	ui := NewAnalysisGraphUI()
+	ui.AG = art.NewAnalysisGraph(mod)
+	ui.Mod = mod
+	ui.AG.AddInitialState(nil, nil)
+	return ui
+}
+
+// --- Helpers ---
+
+func TestStateByIDValid(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	state, err := ui.stateByID(0)
+	if err != nil {
+		t.Fatalf("stateByID(0): %v", err)
+	}
+	if state == nil {
+		t.Fatal("expected non-nil state")
+	}
+	if state.ID != 0 {
+		t.Errorf("expected state ID 0, got %d", state.ID)
+	}
+}
+
+func TestStateByIDOutOfBounds(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_, err := ui.stateByID(999)
+	if err == nil {
+		t.Fatal("expected error for out-of-bounds ID")
+	}
+	_, err = ui.stateByID(-1)
+	if err == nil {
+		t.Fatal("expected error for negative ID")
+	}
+}
+
+func TestStateByIDNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, err := ui.stateByID(0)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+func TestTransitionByEndpointsNotFound(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_, err := ui.transitionByEndpoints(0, 99)
+	if err == nil {
+		t.Fatal("expected error for nonexistent transition")
+	}
+}
+
+func TestTransitionByEndpointsNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, err := ui.transitionByEndpoints(0, 1)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+func TestArtToGraphState(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	gs := ArtToGraphState(s.AG)
+	if gs == nil {
+		t.Fatal("expected non-nil AnalysisGraphState")
+	}
+	if len(gs.States) != len(s.AG.States) {
+		t.Errorf("state count mismatch: got %d, want %d", len(gs.States), len(s.AG.States))
+	}
+}
+
+// --- Stub 1: NodeExecuteCommands ---
+
+func TestNodeExecuteCommands(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	entries := ui.NodeExecuteCommands(0)
+	if len(entries) == 0 {
+		t.Skip("no actions available in this module")
+	}
+	for i := 1; i < len(entries); i++ {
+		if entries[i-1].Label > entries[i].Label {
+			t.Errorf("entries not sorted: %q > %q", entries[i-1].Label, entries[i].Label)
+		}
+	}
+}
+
+func TestNodeExecuteCommandsNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	entries := ui.NodeExecuteCommands(0)
+	if entries != nil {
+		t.Errorf("expected nil, got %v", entries)
+	}
+}
+
+func TestNodeExecuteCommandsBadNode(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	entries := ui.NodeExecuteCommands(999)
+	if entries != nil {
+		t.Errorf("expected nil for invalid nodeID, got %v", entries)
+	}
+}
+
+// --- Stub 2: CheckLocalSafety ---
+
+func TestCheckLocalSafetySafe(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	safe, msg := ui.CheckLocalSafety(0)
+	if !safe {
+		t.Errorf("expected initial state to be safe, got msg: %s", msg)
+	}
+}
+
+func TestCheckLocalSafetyNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	safe, msg := ui.CheckLocalSafety(0)
+	if safe {
+		t.Error("expected false when AG is nil")
+	}
+	if msg == "" {
+		t.Error("expected non-empty error message")
+	}
+}
+
+// --- Stub 3: CheckBoundedSafety ---
+
+func TestCheckBoundedSafetySafe(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	safe, msg := ui.CheckBoundedSafety(0)
+	if !safe {
+		t.Errorf("expected initial state bounded-safe, got msg: %s", msg)
+	}
+}
+
+func TestCheckBoundedSafetyNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	safe, msg := ui.CheckBoundedSafety(0)
+	if safe {
+		t.Error("expected false when AG is nil")
+	}
+	if msg == "" {
+		t.Error("expected non-empty error message")
+	}
+}
+
+// --- Stub 4: FindExtension ---
+
+func TestFindExtensionNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, err := ui.FindExtension(0)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+// --- Stub 5: ExecuteAction ---
+
+func TestExecuteAction(t *testing.T) {
+	s, ui := loadARGTestSession(t)
+	before := len(s.AG.States)
+	err := ui.ExecuteAction(0, "ext:connect")
+	if err != nil {
+		t.Fatalf("ExecuteAction: %v", err)
+	}
+	after := len(s.AG.States)
+	if after != before+1 {
+		t.Errorf("expected state count %d, got %d", before+1, after)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Error("expected at least one transition after execute")
+	}
+}
+
+func TestExecuteActionBadName(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.ExecuteAction(0, "nonexistent_action")
+	if err == nil {
+		t.Fatal("expected error for unknown action name")
+	}
+}
+
+func TestExecuteActionBadNode(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.ExecuteAction(999, "ext:connect")
+	if err == nil {
+		t.Fatal("expected error for invalid node ID")
+	}
+}
+
+func TestExecuteActionSyncsGraph(t *testing.T) {
+	s, ui := loadARGTestSession(t)
+	synced := false
+	ui.SyncCallback = func() { synced = true; s.syncARGToGraph() }
+	_ = ui.ExecuteAction(0, "ext:connect")
+	if !synced {
+		t.Error("SyncCallback was not called")
+	}
+	if len(s.Graph.States) != len(s.AG.States) {
+		t.Errorf("Graph states (%d) != AG states (%d)", len(s.Graph.States), len(s.AG.States))
+	}
+}
+
+// --- Stub 6: RecalculateAll ---
+
+func TestRecalculateAll(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_ = ui.ExecuteAction(0, "ext:connect")
+	before := len(ui.AG.States)
+	ui.RecalculateAll()
+	after := len(ui.AG.States)
+	if after != before {
+		t.Errorf("state count changed: %d → %d", before, after)
+	}
+}
+
+func TestRecalculateAllNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	ui.RecalculateAll() // should not panic
+}
+
+// --- Stub 7: RecalculateEdge ---
+
+func TestRecalculateEdge(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_ = ui.ExecuteAction(0, "ext:connect")
+	if len(ui.AG.Transitions) == 0 {
+		t.Skip("no transitions to recalculate")
+	}
+	tr := ui.AG.Transitions[0]
+	ui.RecalculateEdge(tr.Pre.ID, tr.Post.ID) // should not panic
+}
+
+func TestRecalculateEdgeBadIDs(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	ui.RecalculateEdge(99, 100) // should not panic, just a no-op
+}
+
+// --- Stub 8: DecomposeEdge ---
+
+func TestDecomposeEdgeBadIDs(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_, err := ui.DecomposeEdge(99, 100)
+	if err == nil {
+		t.Fatal("expected error for nonexistent edge")
+	}
+}
+
+func TestDecomposeEdgeNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, err := ui.DecomposeEdge(0, 1)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+// --- Stub 9: ViewSourceEdge ---
+
+func TestViewSourceEdgeBadIDs(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_, _, err := ui.ViewSourceEdge(99, 100)
+	if err == nil {
+		t.Fatal("expected error for nonexistent edge")
+	}
+}
+
+func TestViewSourceEdgeNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, _, err := ui.ViewSourceEdge(0, 1)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+// --- Stub 10: CoverNode ---
+
+func TestCoverNodeNoMark(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	ok, err := ui.CoverNode(0)
+	if ok {
+		t.Error("expected false without mark")
+	}
+	if err == nil {
+		t.Fatal("expected error without mark")
+	}
+}
+
+func TestCoverNodeBadID(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	ui.MarkNode(&ARGStateRef{ID: 0})
+	ok, err := ui.CoverNode(999)
+	if ok {
+		t.Error("expected false for invalid ID")
+	}
+	if err == nil {
+		t.Fatal("expected error for invalid ID")
+	}
+}
+
+func TestCoverNodeWithMark(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_ = ui.ExecuteAction(0, "ext:connect")
+	if len(ui.AG.States) < 2 {
+		t.Skip("need at least 2 states for cover test")
+	}
+	ui.MarkNode(&ARGStateRef{ID: 0})
+	ok, err := ui.CoverNode(1)
+	// Covering may or may not succeed depending on state ordering.
+	// The important thing is it doesn't panic.
+	_ = ok
+	_ = err
+}
+
+// --- Stub 11: JoinNode ---
+
+func TestJoinNodeNoMark(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.JoinNode(0)
+	if err == nil {
+		t.Fatal("expected error without mark")
+	}
+}
+
+func TestJoinNodeBadID(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	ui.MarkNode(&ARGStateRef{ID: 0})
+	err := ui.JoinNode(999)
+	if err == nil {
+		t.Fatal("expected error for invalid ID")
+	}
+}
+
+func TestJoinNodeWithMark(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_ = ui.ExecuteAction(0, "ext:connect")
+	if len(ui.AG.States) < 2 {
+		t.Skip("need at least 2 states for join test")
+	}
+	before := len(ui.AG.States)
+	ui.MarkNode(&ARGStateRef{ID: 0})
+	err := ui.JoinNode(1)
+	if err != nil {
+		t.Fatalf("JoinNode: %v", err)
+	}
+	after := len(ui.AG.States)
+	if after != before+1 {
+		t.Errorf("expected state count %d after join, got %d", before+1, after)
+	}
+}
+
+// --- Stub 12: TryConjecture ---
+
+func TestTryConjectureEmpty(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.TryConjecture(0, "")
+	if err == nil {
+		t.Fatal("expected error for empty conjecture")
+	}
+}
+
+func TestTryConjectureNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	err := ui.TryConjecture(0, "true")
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+// --- Stub 13: TryRememberedGraph ---
+
+func TestTryRememberedGraphEmpty(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.TryRememberedGraph(0, "")
+	if err != nil {
+		t.Fatalf("empty goalName should return nil, got: %v", err)
+	}
+}
+
+func TestTryRememberedGraphNotFound(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	err := ui.TryRememberedGraph(0, "nonexistent")
+	if err == nil {
+		t.Fatal("expected error for nonexistent graph")
+	}
+}
+
+// --- Stub 14: BMC ---
+
+func TestBMCBadNode(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_, err := ui.BMC(999, "true", 5)
+	if err == nil {
+		t.Fatal("expected error for invalid node ID")
+	}
+}
+
+func TestBMCNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	_, err := ui.BMC(0, "true", 5)
+	if err == nil {
+		t.Fatal("expected error when AG is nil")
+	}
+}
+
+// --- Stub 15: TryProperty ---
+
+func TestTryPropertyEmpty(t *testing.T) {
+	ui := NewIvyUI()
+	err := ui.TryProperty("")
+	if err == nil {
+		t.Fatal("expected error for empty property")
+	}
+}
+
+func TestTryPropertyNoModule(t *testing.T) {
+	ui := NewIvyUI()
+	err := ui.TryProperty("true")
+	if err == nil {
+		t.Fatal("expected error when no module loaded")
+	}
+}
+
+// --- DeleteNode ---
+
+func TestDeleteNodeDelegates(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	_ = ui.ExecuteAction(0, "ext:connect")
+	before := len(ui.AG.States)
+	if before < 2 {
+		t.Skip("need at least 2 states for delete test")
+	}
+	ui.DeleteNode(before - 1)
+	after := len(ui.AG.States)
+	if after >= before {
+		t.Errorf("expected state count to decrease after delete: %d → %d", before, after)
+	}
+}
+
+func TestDeleteNodeClearsMark(t *testing.T) {
+	_, ui := loadARGTestSession(t)
+	ui.MarkNode(&ARGStateRef{ID: 0})
+	ui.DeleteNode(0)
+	if ui.GetMark() != nil {
+		t.Error("expected mark to be cleared after deleting marked node")
+	}
+}
+
+func TestDeleteNodeNilAG(t *testing.T) {
+	ui := NewAnalysisGraphUI()
+	ui.DeleteNode(0) // should not panic
+}
+
+// --- Session ArgNodeAction dispatch ---
+
+func TestArgNodeActionCheckSafety(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	drainEvents(s)
+	result, err := s.ArgNodeAction("state_0", "check_safety", nil)
+	if err != nil {
+		t.Fatalf("ArgNodeAction: %v", err)
+	}
+	if _, ok := result["safe"]; !ok {
+		t.Error("expected 'safe' key in result")
+	}
+}
+
+func TestArgNodeActionMark(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	drainEvents(s)
+	result, err := s.ArgNodeAction("state_0", "mark", nil)
+	if err != nil {
+		t.Fatalf("ArgNodeAction: %v", err)
+	}
+	if result["marked"] != true {
+		t.Error("expected marked=true")
+	}
+	if s.AGUI.GetMark() == nil {
+		t.Error("expected AGUI mark to be set")
+	}
+}
+
+func TestArgNodeActionUnknown(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	drainEvents(s)
+	_, err := s.ArgNodeAction("state_0", "totally_unknown_action", nil)
+	if err == nil {
+		t.Fatal("expected error for unknown action")
+	}
+}
+
+func TestArgNodeActionDelete(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	drainEvents(s)
+	before := len(s.AG.States)
+	_, err := s.ArgNodeAction("state_0", "delete", nil)
+	if err != nil {
+		t.Fatalf("ArgNodeAction delete: %v", err)
+	}
+	after := len(s.AG.States)
+	if after >= before {
+		t.Errorf("expected state count to decrease: %d → %d", before, after)
+	}
+}
+
+// --- AGUI wiring on Session ---
+
+func TestSessionAGUIWired(t *testing.T) {
+	s := loadTestSession(t)
+	if s.AGUI == nil {
+		t.Fatal("AGUI should be set after LoadFileContent")
+	}
+	if s.AGUI.AG != s.AG {
+		t.Error("AGUI.AG should point to session AG")
+	}
+	if s.AGUI.Mod != s.CompiledModule {
+		t.Error("AGUI.Mod should point to session CompiledModule")
+	}
+	if s.AGUI.SyncCallback == nil {
+		t.Error("AGUI.SyncCallback should be set")
+	}
+}
+
+func TestSyncARGToGraphUsesArtToGraphState(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	s.syncARGToGraph()
+	if len(s.Graph.States) != len(s.AG.States) {
+		t.Errorf("Graph states (%d) != AG states (%d)", len(s.Graph.States), len(s.AG.States))
+	}
+}
