@@ -135,19 +135,28 @@ func TestAnalysisGraphUIRememberGraph(t *testing.T) {
 }
 
 func TestAnalysisGraphUIDeleteNode(t *testing.T) {
-	ui := NewAnalysisGraphUI()
-	ui.G.States = []ARGNode{{ID: 0}, {ID: 1}, {ID: 2}}
-	ui.DeleteNode(1)
-	if len(ui.G.States) != 2 {
-		t.Errorf("expected 2 states after delete, got %d", len(ui.G.States))
+	_, ui := loadARGTestSession(t)
+	// Execute an action to get a second state (ID 1).
+	err := ui.ExecuteAction(0, "ext:connect")
+	if err != nil {
+		t.Fatalf("ExecuteAction: %v", err)
+	}
+	before := len(ui.AG.States)
+	if before < 2 {
+		t.Fatalf("expected at least 2 states, got %d", before)
+	}
+	ui.DeleteNode(before - 1)
+	after := len(ui.AG.States)
+	if after >= before {
+		t.Errorf("expected fewer states after delete, got %d → %d", before, after)
 	}
 }
 
 func TestAnalysisGraphUICheckSafety(t *testing.T) {
-	ui := NewAnalysisGraphUI()
+	_, ui := loadARGTestSession(t)
 	safe, msg := ui.CheckSafetyNode(0)
 	if !safe {
-		t.Errorf("stub should return safe, got msg: %s", msg)
+		t.Errorf("initial state should be safe, got msg: %s", msg)
 	}
 }
 
