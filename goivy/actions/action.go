@@ -676,7 +676,7 @@ type ChoiceAction struct {
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=actions.NewChoiceActionOn", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
 	c := &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 	c.ActCfg = cfg
 	return c
@@ -1083,7 +1083,7 @@ type EnvAction struct {
 func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=actions.NewEnvActionOn", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
 	e := &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
 	e.ActCfg = cfg
 	return e
@@ -2106,7 +2106,7 @@ func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], 
 	xtracer.Trace("actions.env_action post loop")
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=actions.BuildEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
 	env := &EnvAction{}
 	env.UniqueID = id
 	env.ActCfg = cfg
@@ -2149,7 +2149,7 @@ func BuildEnvActionFromAction(cfg *ActionsConfig, action Action, label string) *
 	xtracer.Trace("actions.env_action post loop")
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=actions.BuildEnvActionFromAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
 	env := &EnvAction{}
 	env.UniqueID = id
 	env.ActCfg = cfg
