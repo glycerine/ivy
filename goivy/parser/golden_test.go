@@ -492,6 +492,13 @@ func TestSysLiveIso(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, false, true, path, args)
 }
 
+// see "isolate this" in ivy-lang-examples/doc/examples/apple/ord_live.ivy
+func TestThisIso(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	args := []string{"isolate=this"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args)
+}
+
 // TestVerboseNonstopOrdLive does not stop
 // at the first divergence. It prints all parsed
 // and xtraced lines.

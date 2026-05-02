@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden setup
+.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden setup this
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -36,6 +36,10 @@ rfn: # TestRfnAbsIso start 3 hours in on golden-2hr. start with it. do we go fas
 syslive: # parser/golden_test.go:489 TestSysLiveIso
 	if [ -f log.syslive ]; then mv log.syslive log.syslive.prev; fi
 	cd parser && go test -v -timeout=0 -count=1 -run TestSysLiveIso &> ../log.syslive
+
+this: # parser/golden_test.go:496 TestThisIso
+	if [ -f log.this ]; then mv log.this log.this.prev; fi
+	cd parser && go test -v -timeout=0 -count=1 -run TestThisIso &> ../log.this
 
 golden-v: # to see all productions not just last 10
 	cd parser && go test -v -run TestVerboseOrdLive &> ../log.all.til.div
