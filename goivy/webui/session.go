@@ -6,16 +6,22 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/compiler"
+	"github.com/glycerine/ivy/goivy/interp"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/logicparser"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/trace"
 	"github.com/glycerine/ivy/goivy/typeinfer"
 	"github.com/glycerine/ivy/goivy/updr"
+	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -38,8 +44,9 @@ type Session struct {
 	FileContent    string // file content (when uploaded via browser)
 	toggles        *Toggles
 	ProofStack     *ProofStack
-	CompiledModule *module.Module // populated by full compiler pipeline
-	CompiledSig    *il.Sig        // populated by full compiler pipeline
+	CompiledModule *module.Module          // populated by full compiler pipeline
+	CompiledSig    *il.Sig                 // populated by full compiler pipeline
+	AG             *art.AnalysisGraph      // persistent analysis graph for interactive verification
 }
 
 // NewSession creates a new verification session with the given id.
@@ -188,10 +195,12 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 
-	// Step 7: Start with empty ARG, matching Python's ivy_new() which
-	// returns an AnalysisGraph with no states or transitions.
-	// The ARG is populated later by execute/check operations.
-	s.Graph = NewAnalysisGraphState()
+	// Step 7: Build the persistent AnalysisGraph and compute the initial
+	// state from the module's init condition + initializer actions.
+	// Matches Python: self.g = AnalysisGraph(...); add_initial_state(...)
+	s.AG = art.NewAnalysisGraph(s.CompiledModule)
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{
 		"filename":  filename,
@@ -201,6 +210,37 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		"actions":   actionNames,
 	}})
 	return nil
+}
+
+// syncARGToGraph converts the persistent AnalysisGraph (s.AG) into the
+// lightweight AnalysisGraphState (s.Graph) for frontend rendering.
+func (s *Session) syncARGToGraph() {
+	if s.AG == nil {
+		return
+	}
+	gs := NewAnalysisGraphState()
+	for _, st := range s.AG.States {
+		gs.States = append(gs.States, ARGNode{
+			ID:       st.ID,
+			Label:    st.Label,
+			IsBottom: st.IsBottom(),
+			Info:     fmt.Sprintf("State %d", st.ID),
+		})
+	}
+	for _, t := range s.AG.Transitions {
+		gs.Transitions = append(gs.Transitions, ARGTransition{
+			SourceID: t.Pre.ID,
+			TargetID: t.Post.ID,
+			Label:    t.Label,
+		})
+	}
+	for _, c := range s.AG.Covering {
+		gs.Covering = append(gs.Covering, ARGCover{
+			CoveredID:  c.Covered.ID,
+			CoveringID: c.Covering.ID,
+		})
+	}
+	s.Graph = gs
 }
 
 func sortNames(m map[string]logic.Sort) []string {
@@ -286,23 +326,209 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 
 	// --- Verification operations (check/art packages) ---
 	case "pdr_step":
-		// Single PDR strengthening step — uses Z3 via solver
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "PDR step: not yet wired to solver"}})
+		// PDR/IC3 verification via updr package.
+		// Matches Python ivy_updr.py CheckModule().
+		if s.CompiledModule == nil {
+			err = fmt.Errorf("pdr_step: no compiled module")
+			break
+		}
+		pdrResult, pdrErr := updr.CheckModule(s.CompiledModule)
+		if pdrErr != nil {
+			err = pdrErr
+			break
+		}
+		result["valid"] = pdrResult.Valid
+		result["invariant"] = pdrResult.Invariant
+		result["error_msg"] = pdrResult.Error
+		result["stats"] = map[string]int{
+			"num_frames":       pdrResult.Stats.NumFrames,
+			"num_iterations":   pdrResult.Stats.NumIterations,
+			"num_sat_queries":  pdrResult.Stats.NumSATQueries,
+			"num_clauses":      pdrResult.Stats.NumClauses,
+			"num_univ_clauses": pdrResult.Stats.NumUnivClauses,
+		}
+		msg := "PDR: counterexample found"
+		if pdrResult.Valid {
+			msg = fmt.Sprintf("PDR: invariant found (%d clauses)", pdrResult.Stats.NumClauses)
+		}
+		s.emit(Event{Type: "pdr_complete", Data: map[string]string{"message": msg}})
+
 	case "concrete":
-		// Compute concrete model — uses Z3
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Concrete: not yet wired to solver"}})
+		// Compute concrete model via Z3.
+		// Matches Python ivy_solver.py get_model_clauses().
+		if s.CompiledModule == nil || s.AG == nil {
+			err = fmt.Errorf("concrete: no compiled module")
+			break
+		}
+		state := s.AG.LastState()
+		if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
+			state = s.AG.States[int(stateID)]
+		}
+		if state == nil || state.Clauses == nil {
+			err = fmt.Errorf("concrete: no state available")
+			break
+		}
+		axioms := s.CompiledModule.BackgroundTheory(state.InScope)
+		concrClauses := module.AndClausesTyped(state.Clauses, axioms)
+		solver := z3bridge.NewSolver(s.CompiledModule, nil)
+		defer solver.Close()
+		mr, solverErr := solver.GetModelClauses(concrClauses)
+		if solverErr != nil {
+			err = solverErr
+			break
+		}
+		if mr == nil {
+			result["sat"] = false
+			s.emit(Event{Type: "concrete_result", Data: map[string]string{"sat": "false"}})
+		} else {
+			result["sat"] = true
+			valMap := make(map[string]string)
+			if modelVals, mErr := solver.ModelValues(mr.Model, mr.Vocab); mErr == nil {
+				for name, val := range modelVals {
+					valMap[name] = val.String()
+				}
+			}
+			result["model"] = valMap
+			s.emit(Event{Type: "concrete_result", Data: map[string]interface{}{
+				"sat": "true", "model": valMap,
+			}})
+		}
+
 	case "reverse":
-		// Compute reverse image — uses transrel + Z3
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Reverse: not yet wired to solver"}})
+		// Compute reverse image (weakest precondition).
+		// Matches Python ivy_transrel.py reverse_image().
+		if s.CompiledModule == nil || s.AG == nil {
+			err = fmt.Errorf("reverse: no compiled module")
+			break
+		}
+		state := s.AG.LastState()
+		if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
+			state = s.AG.States[int(stateID)]
+		}
+		if state == nil {
+			err = fmt.Errorf("reverse: no state available")
+			break
+		}
+		if state.Update == nil {
+			err = fmt.Errorf("reverse: state has no transition (execute an action first)")
+			break
+		}
+		axioms := s.CompiledModule.BackgroundTheory(state.InScope)
+		preClauses := actions.ReverseImage(state.Clauses, axioms, state.Update)
+		if preClauses == nil {
+			err = fmt.Errorf("reverse: reverse image returned nil")
+			break
+		}
+		preStr := logic.PrettyFmla(preClauses.ToFormula())
+		result["pre_state"] = preStr
+		s.emit(Event{Type: "reverse_result", Data: map[string]string{"pre_state": preStr}})
+
 	case "path_reach", "reach":
-		// Reachability analysis — uses art + Z3
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Reach: not yet wired to solver"}})
+		// Reachability: forward image from predecessor, SAT check, extract model.
+		// Matches Python ivy_interp.py reach_state().
+		if s.CompiledModule == nil || s.AG == nil {
+			err = fmt.Errorf("reach: no compiled module")
+			break
+		}
+		state := s.AG.LastState()
+		if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
+			state = s.AG.States[int(stateID)]
+		}
+		if state == nil {
+			err = fmt.Errorf("reach: no state available")
+			break
+		}
+		interpState := art.ArtToInterpState(state)
+		reached := interp.ReachState(interpState, nil)
+		if reached == nil {
+			result["reachable"] = false
+			s.emit(Event{Type: "reach_result", Data: map[string]string{"reachable": "false"}})
+		} else {
+			result["reachable"] = true
+			artReached := art.InterpToArtState(reached)
+			if artReached.Clauses != nil {
+				result["reached_state"] = logic.PrettyFmla(artReached.Clauses.ToFormula())
+			}
+			state.Unders = append(state.Unders, artReached)
+			s.syncARGToGraph()
+			s.emit(Event{Type: "reach_result", Data: map[string]string{"reachable": "true"}})
+		}
+
 	case "weaken":
-		// Weaken invariant
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Weaken: not yet wired"}})
+		// Remove selected conjectures from the invariant.
+		// Matches Python ivy_ui_cti.py weaken().
+		if s.CompiledModule == nil {
+			err = fmt.Errorf("weaken: no compiled module")
+			break
+		}
+		indices, ok := args["indices"].([]interface{})
+		if !ok || len(indices) == 0 {
+			err = fmt.Errorf("weaken: no conjecture indices specified")
+			break
+		}
+		toRemove := make(map[int]bool, len(indices))
+		for _, idx := range indices {
+			if fi, ok := idx.(float64); ok {
+				toRemove[int(fi)] = true
+			}
+		}
+		var kept []*ast.LabeledFormula
+		var removed []string
+		for i, lc := range s.CompiledModule.LabeledConjs {
+			if toRemove[i] {
+				formula := ""
+				if lc.Formula != nil {
+					if fExpr, ok := lc.Formula.(logic.Expr); ok {
+						formula = logic.PrettyFmla(module.DropUniversals(fExpr))
+					}
+				}
+				removed = append(removed, formula)
+			} else {
+				kept = append(kept, lc)
+			}
+		}
+		s.CompiledModule.LabeledConjs = kept
+		result["removed_count"] = len(removed)
+		result["removed"] = removed
+		result["remaining_count"] = len(kept)
+		s.emit(Event{Type: "weaken_result", Data: map[string]interface{}{"removed": removed}})
+
 	case "save_abstraction":
-		// Save abstraction to file — export concept spaces
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Save abstraction: not yet wired"}})
+		// Save abstraction: export concept spaces and conjectures.
+		// Matches Python ivy_ui.py save_abstraction() + ivy_ui_cti.py save_conjectures().
+		if s.CompiledModule == nil {
+			err = fmt.Errorf("save_abstraction: no compiled module")
+			break
+		}
+		var sb strings.Builder
+		sb.WriteString("# This file was generated by ivy.\n\n")
+		for _, cs := range s.CompiledModule.ConceptSpaces {
+			sb.WriteString(fmt.Sprintf("concept %v = %v\n", cs.Label, cs.Body))
+		}
+		if len(s.CompiledModule.LabeledConjs) > 0 {
+			sb.WriteString("\n# conjectures\n\n")
+			for _, lc := range s.CompiledModule.LabeledConjs {
+				label := ""
+				if lc.Label != nil {
+					label = fmt.Sprint(lc.Label)
+				}
+				formula := ""
+				if lc.Formula != nil {
+					if fExpr, ok := lc.Formula.(logic.Expr); ok {
+						formula = logic.PrettyFmla(module.DropUniversals(fExpr))
+					} else {
+						formula = fmt.Sprint(lc.Formula)
+					}
+				}
+				if label != "" {
+					sb.WriteString(fmt.Sprintf("invariant [%s] %s\n", label, formula))
+				} else {
+					sb.WriteString(fmt.Sprintf("invariant %s\n", formula))
+				}
+			}
+		}
+		result["content"] = sb.String()
+		s.emit(Event{Type: "export", Data: map[string]string{"content": sb.String()}})
 	case "export":
 		// Export current conjecture
 		if s.ConceptSess != nil {
@@ -332,11 +558,27 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 		result["conjectures"] = conjs
 	case "add_relation":
-		// Add a relation from a user-entered formula string
+		// Parse a user-entered formula string and add as a concept relation.
+		// Matches Python ivy_graph.py string_to_concept() + ivy_graph_ui.py add_concept_from_string().
 		if formula, ok := args["formula"].(string); ok && formula != "" {
-			s.emit(Event{Type: "status", Data: map[string]string{
-				"message": "Add relation '" + formula + "': not yet wired to parser",
+			_, parseErr := logicparser.ToFormula(formula)
+			if parseErr != nil {
+				err = fmt.Errorf("add_relation: parse error: %w", parseErr)
+				break
+			}
+			c := &Concept{
+				Name:    formula,
+				Formula: formula,
+			}
+			if s.SimpleSess != nil {
+				s.SimpleSess.Domain.Concepts[formula] = c
+			}
+			result["concept_name"] = formula
+			s.emit(Event{Type: "concept_updated", Data: map[string]interface{}{
+				"name": formula, "formula": formula,
 			}})
+		} else {
+			err = fmt.Errorf("add_relation: missing formula argument")
 		}
 	case "splatter":
 		// Splatter: split a concept node into one sub-node per constant of its sort.
@@ -372,8 +614,41 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 
 	default:
-		// Unknown actions are accepted but logged — allows forward compatibility
-		// as new verification operations are added.
+		// Check if actionName is a known module action — execute it on the ARG.
+		// Matches Python ivy_art.py execute_action() → execute() → post_state() → concrete_post().
+		// Try exact match first, then with "ext:" prefix (exported actions are
+		// stored as "ext:name" in the module's action map).
+		if s.CompiledModule != nil && s.AG != nil {
+			resolvedName := actionName
+			if _, ok := s.CompiledModule.Actions.Get2(resolvedName); !ok {
+				resolvedName = "ext:" + actionName
+			}
+			if _, ok := s.CompiledModule.Actions.Get2(resolvedName); ok {
+				prestate := s.AG.LastState()
+				if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
+					prestate = s.AG.States[int(stateID)]
+				}
+				if prestate != nil {
+					poststate, execErr := s.AG.ExecuteAction(false, resolvedName, prestate, nil)
+					if execErr != nil {
+						err = execErr
+						break
+					}
+					if poststate != nil {
+						s.syncARGToGraph()
+						result["post_state_id"] = poststate.ID
+						if poststate.Clauses != nil {
+							result["post_state"] = logic.PrettyFmla(poststate.Clauses.ToFormula())
+						}
+						s.emit(Event{Type: "action_executed", Data: map[string]interface{}{
+							"action": resolvedName, "post_id": poststate.ID,
+						}})
+					}
+					break
+				}
+			}
+		}
+		// Unknown actions are accepted but logged — allows forward compatibility.
 		s.emit(Event{Type: "status", Data: map[string]string{
 			"message": "Action '" + actionName + "' accepted (not yet wired to engine)",
 		}})
