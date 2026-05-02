@@ -44,9 +44,16 @@ func actionToTR(m *module.Module, action actions.Action, method string) ([]strin
 	// Get background theory
 	bgt := m.BackgroundTheory(nil)
 
+	// For fsmc method, unroll loops before computing the update.
+	// Python: with ia.UnrollContext(im.module.sort_card): ...
+	if method == "fsmc" && m.Cfg != nil && m.Cfg.ActCfg != nil {
+		uc := actions.NewUnrollContext(m.SortCard, m, m.Cfg.ActCfg)
+		uc.Enter()
+		defer uc.Exit()
+	}
+
 	// Compute the update (transition relation) for the action.
 	// In Python: upd = action.update(im.module, None)
-	// For fsmc method, loops would be unrolled first - not yet implemented.
 	upd := computeUpdate(m, action)
 	if upd == nil {
 		return nil, lg.True, lg.False, fmt.Errorf("failed to compute update for action")

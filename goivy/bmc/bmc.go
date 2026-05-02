@@ -238,13 +238,27 @@ func BuildConjecture(mod *module.Module) *module.Clauses {
 	return module.NewClauses(fmlas, nil, nil)
 }
 
-// UnrollAction is a placeholder for loop unrolling.
-// The full implementation would traverse the action AST and unroll
-// While loops up to n iterations.
+// UnrollAction applies bounded loop unrolling to an action tree.
+// While loops are converted to bounded if-then-else chains with
+// at most n iterations. Non-while actions pass through cloned.
+// Matches Python's action.unroll_loops(lambda x: n_unroll) from ivy_bmc.py.
 func UnrollAction(act actions.Action, n int) actions.Action {
-	// Stub: return the action unchanged.
-	// Full implementation would unroll loops.
-	return act
+	if act == nil {
+		return nil
+	}
+	card := actions.CardFunc(func(s lg.Sort) int {
+		return n
+	})
+	var result actions.Action
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				result = act
+			}
+		}()
+		result = actions.UnrollLoops(act, card)
+	}()
+	return result
 }
 
 // computeFailUpdate computes the failure update for an action.

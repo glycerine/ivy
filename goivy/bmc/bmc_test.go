@@ -6,6 +6,7 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -195,12 +196,172 @@ func TestBuildConjectureWithConj(t *testing.T) {
 
 // --- UnrollAction tests ---
 
-func TestUnrollAction(t *testing.T) {
+func mkWhileAction(sortName string) *actions.WhileAction {
+	sortT := &lg.UninterpretedSort{Name: sortName}
+	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
+	xSym := lg.NewConst("x", sortT)
+	boundSym := lg.NewConst("bound", sortT)
+	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
+	body := actions.NewAssignAction(xSym, xSym)
+	return actions.NewWhileAction(cond, body)
+}
+
+func TestUnrollAction_NonWhile(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
 	result := UnrollAction(act, 3)
-	if result != act {
-		t.Error("stub UnrollAction should return same action")
+	if result == nil {
+		t.Fatal("expected non-nil result")
 	}
+	if _, ok := result.(*actions.AssumeAction); !ok {
+		t.Errorf("expected *AssumeAction, got %T", result)
+	}
+}
+
+func TestUnrollAction_WhileUnrolled(t *testing.T) {
+	wa := mkWhileAction("T")
+	result := UnrollAction(wa, 3)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	if _, ok := result.(*actions.IfAction); !ok {
+		t.Errorf("expected *IfAction (unrolled while), got %T", result)
+	}
+}
+
+func TestUnrollAction_NilAction(t *testing.T) {
+	result := UnrollAction(nil, 3)
+	if result != nil {
+		t.Errorf("expected nil, got %T", result)
+	}
+}
+
+func TestUnrollAction_ZeroUnroll(t *testing.T) {
+	wa := mkWhileAction("T")
+	result := UnrollAction(wa, 0)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	// card=0: just the base case if(cond, assume(false))
+	ifAct, ok := result.(*actions.IfAction)
+	if !ok {
+		t.Fatalf("expected *IfAction, got %T", result)
+	}
+	if _, ok := ifAct.ThenBody.(*actions.AssumeAction); !ok {
+		t.Errorf("base case should be AssumeAction, got %T", ifAct.ThenBody)
+	}
+}
+
+func TestUnrollAction_LargeUnroll(t *testing.T) {
+	wa := mkWhileAction("T")
+	result := UnrollAction(wa, 200)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	// Should recover from panic and return original action
+	if _, ok := result.(*actions.WhileAction); !ok {
+		t.Errorf("expected original WhileAction back after panic recovery, got %T", result)
+	}
+}
+
+func TestUnrollAction_WhileInsideSequence(t *testing.T) {
+	assume := actions.NewAssumeAction(lg.True)
+	wa := mkWhileAction("T")
+	seq := actions.NewSequence(assume, wa)
+
+	result := UnrollAction(seq, 2)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	s, ok := result.(*actions.Sequence)
+	if !ok {
+		t.Fatalf("expected *Sequence, got %T", result)
+	}
+	if len(s.Elems) != 2 {
+		t.Fatalf("expected 2 elements, got %d", len(s.Elems))
+	}
+	if _, ok := s.Elems[0].(*actions.AssumeAction); !ok {
+		t.Errorf("elem 0: expected *AssumeAction, got %T", s.Elems[0])
+	}
+	if _, ok := s.Elems[1].(*actions.IfAction); !ok {
+		t.Errorf("elem 1: expected *IfAction (unrolled while), got %T", s.Elems[1])
+	}
+}
+
+func TestUnrollAction_NestedWhile(t *testing.T) {
+	inner := mkWhileAction("T")
+	outer := actions.NewWhileAction(inner.Cond, inner)
+
+	result := UnrollAction(outer, 2)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	// Neither while should remain
+	if containsWhileAction(result) {
+		t.Error("unrolled result should not contain any WhileAction")
+	}
+}
+
+func TestUnrollAction_FormalsPreserved(t *testing.T) {
+	wa := mkWhileAction("T")
+	sortT := &lg.UninterpretedSort{Name: "T"}
+	params := []*lg.Const{lg.NewConst("p", sortT)}
+	returns := []*lg.Const{lg.NewConst("r", sortT)}
+	wa.SetFormalParams(params)
+	wa.SetFormalReturns(returns)
+
+	result := UnrollAction(wa, 2)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	act := result.(actions.Action)
+	fp := act.GetFormalParams()
+	fr := act.GetFormalReturns()
+	if len(fp) != 1 || fp[0].Name != "p" {
+		t.Errorf("formal params not preserved: %v", fp)
+	}
+	if len(fr) != 1 || fr[0].Name != "r" {
+		t.Errorf("formal returns not preserved: %v", fr)
+	}
+}
+
+func TestCheckIsolateWithUnroll_WhileAction(t *testing.T) {
+	mod := testModuleWithConj()
+	wa := mkWhileAction("T")
+	mod.Actions.Set("step", wa)
+	mod.PublicActions.Set("step", true)
+
+	n := 2
+	cfg := &Config{
+		NSteps:  1,
+		NUnroll: &n,
+		Module:  mod,
+	}
+	result := CheckIsolate(cfg)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	// Actions should be restored after the call.
+	restored, ok := mod.Actions.Get2("step")
+	if !ok {
+		t.Fatal("action 'step' should be restored")
+	}
+	if _, ok := restored.(*actions.WhileAction); !ok {
+		t.Errorf("restored action should be *WhileAction, got %T", restored)
+	}
+}
+
+func containsWhileAction(act actions.Action) bool {
+	if _, ok := act.(*actions.WhileAction); ok {
+		return true
+	}
+	for _, arg := range act.ActionArgs() {
+		if child, ok := arg.(actions.Action); ok {
+			if containsWhileAction(child) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // --- BMCResult tests ---
