@@ -729,12 +729,12 @@ def check_isolate(trace_hook = None):
                 for sub in guarantees:
                     if __debug__: xtracer.trace("check.guarantee_outer iter")
                     print("            {}guarantee".format(pretty_lineno(sub)), end=' ')
-                    if check and any(r in roots and (r,sub.lineno) not in tried for r in checked_actions):
+                    if check and any(r in roots and (r,sub.lineno) not in tried for r in actions):
                         print_dots()
                         old_checked_assert = act.checked_assert.get()
                         act.checked_assert.value = sub.lineno
                         some_failed = False
-                        for root in checked_actions:
+                        for root in actions:
                             if root in roots:
                                tried.add((root,sub.lineno))
                                if __debug__: xtracer.trace("check.guarantee_loop pre BuildEnvAction")
