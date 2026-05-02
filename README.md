@@ -2633,3 +2633,12 @@ make golden-2hr latest fix is for divergence at XTRACE 28_253_287
 green "make golden"
 green "make rfn"
 green "make tlb" takes just over an hour to run.
+
+latest "make golden-2hr":
+~~~
+28624662  go : XTRACE: mc.matchSchemaPrems nonFunc sortKey=t inMap=True isBound=True nCands=2
+        py : XTRACE: mc.matchSchemaPrems nonFunc sortKey=t inMap=True isBound=True nCands=1
+
+    golden_test.go:790: ivy_check and goivy_check differ at line 28624662, counting from 0.
+--- FAIL: Test2hrOrdLive (11661.42s)
+~~~
