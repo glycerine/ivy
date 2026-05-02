@@ -354,6 +354,12 @@ func (a *IfAction) Clone(args []ast.Node) ast.Node {
 	default:
 		cond = args[0].(lg.Expr)
 		astCond = a.AstCond
+		// PLAN368 DIAGNOSTIC: detect Not-stripping in Clone
+		if _, origIsNot := a.Cond.(*lg.Not); origIsNot {
+			if _, newIsNot := args[0].(*lg.Not); !newIsNot {
+				panic(fmt.Sprintf("IfAction.Clone: Not lost! orig=%T, args[0]=%T(%v)", a.Cond, args[0], args[0]))
+			}
+		}
 	}
 
 	thenBody := args[1].(lg.Expr)

@@ -1253,6 +1253,12 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 		c.ExprCtx = savedCtx
 		return nil, fmt.Errorf("compiling if condition: %w", err)
 	}
+	// PLAN368 DIAGNOSTIC: detect Not lost during compilation
+	if _, isAstNot := condNode.(*ast.Not); isAstNot {
+		if _, isLgNot := cond.(*lg.Not); !isLgNot {
+			panic(fmt.Sprintf("CompileIf: ast.Not compiled to non-lg.Not: condNode=%T, cond=%T(%v)", condNode, cond, cond))
+		}
+	}
 
 	ctx := c.ExprCtx
 	c.ExprCtx = savedCtx

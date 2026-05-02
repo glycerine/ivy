@@ -1344,6 +1344,7 @@ class CallAction(Action):
         return v
     def int_update(self,domain,pvars):
         if __debug__: xtracer.trace("actions.CallAction.int_update ENTER")
+        if __debug__: xtracer.trace("actions.CallAction.int_update callee=%s" % self.args[0].rep)
 #        print "got here!"
         v = self.get_callee()
         if not isinstance(v,tuple):

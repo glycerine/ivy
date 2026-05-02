@@ -128,7 +128,14 @@ func SubstituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node
 	for i, arg := range args {
 		newArgs[i] = SubstituteConstantsAST(arg, subs)
 	}
-	return node.Clone(newArgs)
+	result := node.Clone(newArgs)
+	// PLAN368 DIAGNOSTIC: detect Not.Clone producing non-Not
+	if _, isNot := node.(*lg.Not); isNot {
+		if _, resultIsNot := result.(*lg.Not); !resultIsNot {
+			panic(fmt.Sprintf("SubstituteConstantsAST: Not.Clone lost Not: input=%T, result=%T", node, result))
+		}
+	}
+	return result
 }
 
 // SubstituteConstantsExpr is SubstituteConstantsAST for lg.Expr callers.
