@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden
+.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden setup
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -161,3 +161,7 @@ vs:
 	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
 	-goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	-diff py.ord.out log.gox > diffs
+
+setup: # install abc and aigtoaig binaries that we shell out to.
+	cd ../pyivy && ./onetime.sh
+
