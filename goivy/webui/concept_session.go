@@ -108,16 +108,41 @@ func (cs *ConceptSession) Undo() error {
 	return nil
 }
 
-// Materialize creates a concrete witness for a concept.
-// Stub implementation for now.
+// Materialize creates a concrete witness for a concept (Python: _materialize_node).
+// Creates an equality witness concept and splits the original, matching the
+// structural side of Python's ConceptInteractiveSession._materialize_node.
+// For Z3-backed materialization, use ConceptInteractiveSession.MaterializeNode.
 func (cs *ConceptSession) Materialize(concept string) error {
-	if _, ok := cs.Domain.Concepts[concept]; !ok {
+	c, ok := cs.Domain.Concepts[concept]
+	if !ok {
 		return fmt.Errorf("concept %q not found", concept)
 	}
 	cs.push()
-	// Real implementation will invoke Z3 to find a witness constant.
+	freshName := cs.freshConstName()
+	witnessName := "=" + freshName
+	cs.Domain.Concepts[witnessName] = &Concept{
+		Name:      witnessName,
+		Variables: c.Variables,
+		Formula:   fmt.Sprintf("(X = %s)", freshName),
+		Sorts:     c.Sorts,
+		Arity:     c.Arity,
+	}
+	cs.Split(concept, witnessName)
 	cs.Recompute()
 	return nil
+}
+
+// freshConstName generates a unique constant name not colliding with
+// existing concept names.
+func (cs *ConceptSession) freshConstName() string {
+	for i := 0; ; i++ {
+		name := fmt.Sprintf("__c%d", i)
+		if _, ok := cs.Domain.Concepts[name]; !ok {
+			if _, ok2 := cs.Domain.Concepts["="+name]; !ok2 {
+				return name
+			}
+		}
+	}
 }
 
 // Reset restores the concept domain to its initial state, clearing

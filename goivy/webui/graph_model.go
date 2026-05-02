@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // Edge display class constants (Python: _edge_display_classes).
@@ -165,6 +167,10 @@ type Graph struct {
 
 	// ConceptSess is the interactive concept session that holds domain + abstract value.
 	ConceptSess *ConceptSession
+
+	// InteractiveSess is the full Z3-backed concept session (nil when no Z3 context).
+	// Graph methods delegate to this when available for real solver-backed operations.
+	InteractiveSess *ConceptInteractiveSession
 
 	// Display state: checkbox management.
 	Checks *DisplayCheckboxes
@@ -482,7 +488,23 @@ func (g *Graph) MaterializeNode(nodeID string, recompute bool) (string, error) {
 
 // MaterializeEdge materializes a witness for an edge (Python: Graph.materialize_edge).
 func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recompute bool) ([]string, error) {
-	// Stub: real implementation invokes concept session edge materialization.
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.InteractiveSess != nil {
+		g.InteractiveSess.Push()
+		headC, tailC := g.InteractiveSess.materializeEdge(relID, headID, tailID, truth)
+		if recompute {
+			g.InteractiveSess.Recompute(nil)
+		}
+		var witnesses []string
+		if headC != nil {
+			witnesses = append(witnesses, headC.Name)
+		}
+		if tailC != nil {
+			witnesses = append(witnesses, tailC.Name)
+		}
+		return witnesses, nil
+	}
 	witnesses := []string{
 		headID + "_witness",
 		tailID + "_witness",
@@ -495,21 +517,85 @@ func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recomp
 
 // AddConstraints appends constraints to the concept session (Python: Graph.add_constraints).
 func (g *Graph) AddConstraints(constraints []string, recompute bool) {
-	// Stub: would extend concept_session.suppose_constraints.
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.InteractiveSess != nil {
+		for _, cs := range constraints {
+			expr, err := parseConstraintString(cs)
+			if err != nil {
+				continue
+			}
+			g.InteractiveSess.Suppose(expr)
+		}
+		if recompute {
+			g.InteractiveSess.Recompute(nil)
+		}
+		return
+	}
 	if recompute {
 		g.Recompute()
 	}
 }
 
+// AddConstraintsExpr appends logic.Expr constraints to the interactive session.
+func (g *Graph) AddConstraintsExpr(constraints []logic.Expr, recompute bool) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.InteractiveSess != nil {
+		for _, expr := range constraints {
+			g.InteractiveSess.Suppose(expr)
+		}
+		if recompute {
+			g.InteractiveSess.Recompute(nil)
+		}
+	}
+}
+
 // SetFacts sets the constraint facts (Python: Graph.set_facts).
 func (g *Graph) SetFacts(facts []string) {
-	// Stub: would set concept_session.suppose_constraints = facts.
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.InteractiveSess != nil {
+		g.InteractiveSess.SupposeConstraints = nil
+		for _, f := range facts {
+			expr, err := parseConstraintString(f)
+			if err != nil {
+				continue
+			}
+			g.InteractiveSess.SupposeConstraints = append(g.InteractiveSess.SupposeConstraints, expr)
+		}
+	}
+}
+
+// SetFactsExpr replaces suppose constraints with the given logic.Expr slice.
+func (g *Graph) SetFactsExpr(facts []logic.Expr) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if g.InteractiveSess != nil {
+		g.InteractiveSess.SupposeConstraints = append([]logic.Expr{}, facts...)
+	}
 }
 
 // GetFacts gathers definite facts from the current abstract value (Python: Graph.get_facts).
 func (g *Graph) GetFacts(definite bool) []string {
-	// Stub: would query concept_session.get_facts.
-	return nil
+	g.mu.RLock()
+	defer g.mu.RUnlock()
+	if g.InteractiveSess != nil {
+		proj := func(a, b, c string) bool { return true }
+		facts := g.InteractiveSess.GetFacts(proj)
+		result := make([]string, 0, len(facts))
+		for _, f := range facts {
+			result = append(result, f.String())
+		}
+		return result
+	}
+	var result []string
+	for k, v := range g.ConceptSess.AbstractValue {
+		if v {
+			result = append(result, k)
+		}
+	}
+	return result
 }
 
 // FindNodeWithLabels finds a node whose label lines match all given labels.

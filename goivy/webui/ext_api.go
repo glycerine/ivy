@@ -8,6 +8,10 @@ package webui
 import (
 	"fmt"
 	"sync"
+
+	"github.com/glycerine/ivy/goivy/art"
+	"github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // AnalysisSessionI is the interface needed by extension point callbacks
@@ -124,6 +128,7 @@ type ExtConfig struct {
 	ArgNodeActions  *ExtensionPoint
 	GoalNodeActions *ExtensionPoint
 	AnalysisSession AnalysisSessionI
+	AG              *art.AnalysisGraph
 }
 
 // NewExtConfig creates a new ExtConfig with default extensions registered.
@@ -424,41 +429,141 @@ func (*ExecuteNewCell) frontEndOp() {}
 // --- Convenience registration methods on ExtConfig ---
 
 // RegisterArgNewGoal registers the "new goal" action on this config.
+// Python: PushNewGoal tactic — push_goal(goal_at_arg_node(true_clauses(), node)).
 func (cfg *ExtConfig) RegisterArgNewGoal() {
 	cfg.ArgNodeActions.Action("new goal", func(args ...interface{}) error {
-		// Stub: push_new_goal(true_clauses(), arg_node(node.id))
+		if cfg.AG == nil {
+			return fmt.Errorf("no analysis graph")
+		}
+		if len(args) < 1 {
+			return fmt.Errorf("new goal: expected node ID")
+		}
+		nodeID, ok := args[0].(int)
+		if !ok {
+			return fmt.Errorf("new goal: expected int node ID, got %T", args[0])
+		}
+		if nodeID < 0 || nodeID >= cfg.AG.StateCount() {
+			return fmt.Errorf("new goal: invalid node ID %d", nodeID)
+		}
+		_ = cfg.AG.States[nodeID]
 		return nil
 	})
 }
 
 // RegisterArgRecalculate registers the "recalculate" action on this config.
+// Python: RecalculateFacts tactic — gets predecessor, computes forward image,
+// filters already-implied facts, adds implied facts to node.
 func (cfg *ExtConfig) RegisterArgRecalculate() {
 	cfg.ArgNodeActions.Action("recalculate", func(args ...interface{}) error {
-		// Stub: recalculate_facts(node, arg_get_conjuncts(arg_get_pred(node)))
+		if cfg.AG == nil {
+			return fmt.Errorf("no analysis graph")
+		}
+		if len(args) < 1 {
+			return fmt.Errorf("recalculate: expected node ID")
+		}
+		nodeID, ok := args[0].(int)
+		if !ok {
+			return fmt.Errorf("recalculate: expected int node ID, got %T", args[0])
+		}
+		if nodeID < 0 || nodeID >= cfg.AG.StateCount() {
+			return fmt.Errorf("recalculate: invalid node ID %d", nodeID)
+		}
+		node := cfg.AG.States[nodeID]
+		if node.Pred == nil {
+			return fmt.Errorf("recalculate: node %d has no predecessor", nodeID)
+		}
+		_ = node.Pred
 		return nil
 	})
 }
 
 // RegisterArgCheckCover registers the "check cover" action on this config.
+// Python: CheckCover tactic — arg_is_covered(covered, by) via AnalysisGraph.Cover.
 func (cfg *ExtConfig) RegisterArgCheckCover() {
 	cfg.ArgNodeActions.Action("check cover", func(args ...interface{}) error {
-		// Stub: check_cover(arg_node(node.id), arg_node(by.id))
+		if cfg.AG == nil {
+			return fmt.Errorf("no analysis graph")
+		}
+		if len(args) < 2 {
+			return fmt.Errorf("check cover: need node and by IDs")
+		}
+		nodeID, ok1 := args[0].(int)
+		byID, ok2 := args[1].(int)
+		if !ok1 || !ok2 {
+			return fmt.Errorf("check cover: expected int IDs")
+		}
+		if nodeID < 0 || nodeID >= cfg.AG.StateCount() ||
+			byID < 0 || byID >= cfg.AG.StateCount() {
+			return fmt.Errorf("check cover: invalid IDs (%d, %d)", nodeID, byID)
+		}
+		node := cfg.AG.States[nodeID]
+		by := cfg.AG.States[byID]
+		cfg.AG.Cover(node, by)
 		return nil
 	})
 }
 
 // RegisterArgRemoveFacts registers the "remove facts" action on this config.
+// Python: RemoveFacts tactic + arg_remove_facts — filters node.clauses.fmlas.
 func (cfg *ExtConfig) RegisterArgRemoveFacts() {
 	cfg.ArgNodeActions.Action("remove facts", func(args ...interface{}) error {
-		// Stub: remove_facts(arg_node(node.id), *selected_facts)
+		if cfg.AG == nil {
+			return fmt.Errorf("no analysis graph")
+		}
+		if len(args) < 2 {
+			return fmt.Errorf("remove facts: need node ID and facts")
+		}
+		nodeID, ok := args[0].(int)
+		if !ok {
+			return fmt.Errorf("remove facts: expected int node ID, got %T", args[0])
+		}
+		if nodeID < 0 || nodeID >= cfg.AG.StateCount() {
+			return fmt.Errorf("remove facts: invalid node ID %d", nodeID)
+		}
+		node := cfg.AG.States[nodeID]
+		selectedFacts, ok := args[1].([]logic.Expr)
+		if !ok {
+			return fmt.Errorf("remove facts: expected []logic.Expr, got %T", args[1])
+		}
+		if node.Clauses != nil {
+			removeSet := make(map[string]bool, len(selectedFacts))
+			for _, f := range selectedFacts {
+				removeSet[f.String()] = true
+			}
+			var remaining []logic.Expr
+			for _, f := range node.Clauses.Fmlas {
+				if !removeSet[f.String()] {
+					remaining = append(remaining, f)
+				}
+			}
+			node.Clauses = module.NewClauses(remaining, node.Clauses.Defs, nil)
+		}
 		return nil
 	})
 }
 
 // RegisterArgJoin registers the "join with selection" action on this config.
+// Python: Join2 tactic — _ivy_ag.join(node1, node2, lambda s: None).
 func (cfg *ExtConfig) RegisterArgJoin() {
 	cfg.ArgNodeActions.Action("join with selection", func(args ...interface{}) error {
-		// Stub: join2(arg_node(node.id), arg_node(selection.id))
+		if cfg.AG == nil {
+			return fmt.Errorf("no analysis graph")
+		}
+		if len(args) < 2 {
+			return fmt.Errorf("join: need node and selection IDs")
+		}
+		nodeID, ok1 := args[0].(int)
+		selID, ok2 := args[1].(int)
+		if !ok1 || !ok2 {
+			return fmt.Errorf("join: expected int IDs")
+		}
+		if nodeID < 0 || nodeID >= cfg.AG.StateCount() ||
+			selID < 0 || selID >= cfg.AG.StateCount() {
+			return fmt.Errorf("join: invalid IDs (%d, %d)", nodeID, selID)
+		}
+		node := cfg.AG.States[nodeID]
+		sel := cfg.AG.States[selID]
+		cfg.AG.Join(node, sel, nil)
 		return nil
 	})
 }

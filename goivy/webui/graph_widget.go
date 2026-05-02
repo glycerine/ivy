@@ -8,6 +8,10 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/glycerine/ivy/goivy/art"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // MenuDef describes a top-level menu in the UI.
@@ -278,10 +282,54 @@ func (w *GraphWidget) DematerializeEdge(relID, headID, tailID string) ([]string,
 	return w.MaterializeEdge(relID, headID, tailID, false)
 }
 
-// Splatter splits a node using all available constants.
+// Splatter splits a node using all available constants (Python: Graph.splatter).
 func (w *GraphWidget) Splatter(nodeID string) {
 	w.Checkpoint(false)
-	// Stub: real implementation calls g.splatter(node).
+	g := w.G()
+	if g.InteractiveSess != nil {
+		s := g.InteractiveSess
+		concept := s.Domain.Concepts.GetConcept(nodeID)
+		if concept == nil || concept.Arity() != 1 {
+			w.Update()
+			return
+		}
+		s.Push()
+		cSort := concept.Variables[0].VSort
+
+		seen := make(map[string]bool)
+		var constants []*logic.Const
+		for _, sc := range s.SupposeConstraints {
+			for _, sym := range il.UsedSymbolsAst(sc).All() {
+				if c, ok := sym.(*logic.Const); ok {
+					if seen[c.Name] {
+						continue
+					}
+					if logic.SortEqual(c.CSort, cSort) || isTopSort(c.CSort) {
+						constants = append(constants, c)
+						seen[c.Name] = true
+					}
+				}
+			}
+		}
+
+		if len(constants) > 0 {
+			splatterName := nodeID + ".splatter"
+			var eqNames []string
+			for _, c := range constants {
+				X := mustVar("X", c.CSort)
+				eq, _ := logic.NewEq(X, c)
+				eqName := "=" + c.Name
+				s.Domain.Concepts.SetConcept(eqName,
+					MustCDConcept(eqName, []*logic.Variable{X}, eq))
+				eqNames = append(eqNames, eqName)
+			}
+			s.Domain.Concepts.SetSet(splatterName, NewCDConceptSet(eqNames...))
+			s.Domain.Split(nodeID, splatterName)
+		}
+		s.Recompute(nil)
+	} else {
+		g.ConceptSess.Splatter(nodeID, nil)
+	}
 	w.Update()
 }
 
@@ -305,9 +353,21 @@ func (w *GraphWidget) Update() {
 	w.G().Recompute()
 }
 
-// Recalculate recalculates the current state from the parent.
+// Recalculate recalculates the current state from the parent (Python: GraphWidget.recalculate).
 func (w *GraphWidget) Recalculate() {
-	// Stub: real implementation calls parent.recalculate_state.
+	g := w.G()
+	if g.ParentState != nil {
+		if agui, ok := w.Parent.(*AnalysisGraphUI); ok && agui != nil && agui.AG != nil {
+			if ps, ok := g.ParentState.(*art.State); ok && ps.Clauses != nil {
+				clauses := ps.Clauses.ToFormula()
+				if g.InteractiveSess != nil {
+					g.InteractiveSess.State = clauses
+					g.InteractiveSess.Recompute(nil)
+				}
+				g.SetState(clauses.String(), true, false, false)
+			}
+		}
+	}
 	w.Update()
 }
 
