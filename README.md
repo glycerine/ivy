@@ -2636,9 +2636,15 @@ green "make tlb" takes just over an hour to run.
 
 latest "make golden-2hr":
 ~~~
-28624662  go : XTRACE: mc.matchSchemaPrems nonFunc sortKey=t inMap=True isBound=True nCands=2
-        py : XTRACE: mc.matchSchemaPrems nonFunc sortKey=t inMap=True isBound=True nCands=1
+33778929  go : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
+        py : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
 
-    golden_test.go:790: ivy_check and goivy_check differ at line 28624662, counting from 0.
---- FAIL: Test2hrOrdLive (11661.42s)
+33778930  go : XTRACE: actions.substitute_constants_action ENTER type=IfAction nargs=2
+        py : XTRACE: actions.substitute_constants_action ENTER type=IfAction nargs=2
+
+33778931  go : XTRACE: actions.substitute_constants_action ENTER type=Apply nargs=2
+        py : XTRACE: actions.substitute_constants_action ENTER type=Not nargs=1
+
+    golden_test.go:790: ivy_check and goivy_check differ at line 33_778_931, counting from 0.
+--- FAIL: Test2hrOrdLive (13881.78s)
 ~~~
