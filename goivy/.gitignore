@@ -15,3 +15,6 @@ GPATH
 GRTAGS
 .gtags.files
 check/ivy.vmt
+check/goivy_mc.log
+goivy_mc.log
+ivy_mc.log
