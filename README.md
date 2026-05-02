@@ -2648,3 +2648,30 @@ latest "make golden-2hr":
     golden_test.go:790: ivy_check and goivy_check differ at line 33_778_931, counting from 0.
 --- FAIL: Test2hrOrdLive (13881.78s)
 ~~~
+
+how big is the full ord_live.py runs; something like this (but we have
+added more xtracer calls in the meantime):
+~~~
+(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ tail alone.python.ord_live.out
+XTRACE: proof.GoalVocab ENTER label=rfn2.abs.lt6
+XTRACE: proof.GoalVocab EXIT nsorts=2 nsymbols=4 nvariables=4
+XTRACE: proof.GoalVocab ENTER label=rfn2.abs.succ_minus
+XTRACE: proof.GoalVocab EXIT nsorts=0 nsymbols=2 nvariables=6
+XTRACE: check.CheckIsolate EXIT
+XTRACE: check.CheckIsolate EXIT
+
+XTRACE: check.CheckModule EXIT
+XTRACE: check.start EXIT
+OK
+
+(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ wc -l alone.python.ord_live.out
+37140931 alone.python.ord_live.out
+(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ grep XTRACE alone.python.ord_live.out|wc -l
+ 37005934
+ (goivy-venv) jaten@aorus ~/ivy/goivy (master) $
+~~~ 
+
+[ ]
+I don't know the callee action name (trace doesn't log it)
+
+
