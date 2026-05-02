@@ -5,6 +5,7 @@ package webui
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/glycerine/ivy/goivy/module"
 )
@@ -17,17 +18,22 @@ func ShowVerification(cfg *module.Config, filePath string) (*Session, error) {
 		return nil, fmt.Errorf("empty file path")
 	}
 
-	// Create a new session.
-	sess := NewSession(cfg, "show_"+filePath)
-	if err := sess.LoadFile(filePath); err != nil {
-		return nil, fmt.Errorf("failed to load file: %w", err)
+	// Python: ivy_init.open_read(sys.argv[1])
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
 
-	// Stub: real implementation would:
-	// 1. ivy_init.read_params()
-	// 2. ivy_init.source_file(filePath)
-	// 3. ivy_isolate.create_isolate(isolate)
-	// 4. Launch the UI main loop.
+	// Python: iu.set_parameters({'show_compiled':'true'})
+	cfg.IsolateCfg.ShowCompiled = true
+
+	// Python: ivy_init.source_file(...) + check_module()
+	// LoadFileContent runs the full pipeline: parse → compile (with
+	// CreateIsolate) → extract sorts/symbols → concept sessions → AG.
+	sess := NewSession(cfg, "show_"+filePath)
+	if err := sess.LoadFileContent(filePath, content); err != nil {
+		return nil, fmt.Errorf("failed to compile file: %w", err)
+	}
 
 	return sess, nil
 }
@@ -77,7 +83,6 @@ func CheckModuleAndShow(cfg *module.Config, filePath string, addr string) error 
 		return err
 	}
 
-	// Start serving (blocking).
-	_ = srv
-	return nil
+	// Python: ui_main_loop() — blocks until shutdown.
+	return srv.Start()
 }

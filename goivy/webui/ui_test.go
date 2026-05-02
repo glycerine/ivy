@@ -3,6 +3,8 @@
 package webui
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -685,19 +687,136 @@ func TestBuildMenuBar(t *testing.T) {
 
 // --- Show tests ---
 
-func TestShowVerification(t *testing.T) {
+func TestShowVerificationEmptyPath(t *testing.T) {
 	cfg := module.NewConfig()
 	_, err := ShowVerification(cfg, "")
 	if err == nil {
 		t.Error("expected error for empty path")
 	}
+}
 
-	sess, err := ShowVerification(cfg, "test.ivy")
+func TestShowVerificationNonexistentFile(t *testing.T) {
+	cfg := module.NewConfig()
+	_, err := ShowVerification(cfg, "nonexistent_file_9999.ivy")
+	if err == nil {
+		t.Fatal("expected error for nonexistent file")
+	}
+	if !strings.Contains(err.Error(), "failed to read file") {
+		t.Errorf("error should mention file read failure, got: %v", err)
+	}
+}
+
+func TestShowVerificationInvalidContent(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "bad.ivy")
+	if err := os.WriteFile(path, []byte("@@@ not valid ivy @@@"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	cfg := module.NewConfig()
+	_, err := ShowVerification(cfg, path)
+	if err == nil {
+		t.Error("expected error for invalid ivy content")
+	}
+	if !strings.Contains(err.Error(), "failed to compile file") {
+		t.Errorf("error should mention compile failure, got: %v", err)
+	}
+}
+
+func TestShowVerificationSuccess(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "client_server.ivy")
+	if err := os.WriteFile(path, []byte(ivySample), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cfg := module.NewConfig()
+	sess, err := ShowVerification(cfg, path)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	if sess == nil {
 		t.Fatal("session is nil")
+	}
+	if sess.CompiledModule == nil {
+		t.Error("CompiledModule should be non-nil")
+	}
+	if sess.CompiledSig == nil {
+		t.Error("CompiledSig should be non-nil")
+	}
+	if sess.AG == nil {
+		t.Error("AnalysisGraph should be non-nil")
+	}
+	if sess.AGUI == nil {
+		t.Error("AGUI should be non-nil")
+	}
+	if sess.ConceptSess == nil {
+		t.Error("ConceptSess should be non-nil")
+	}
+	if sess.SimpleSess == nil {
+		t.Error("SimpleSess should be non-nil")
+	}
+	if sess.FileContent != string(ivySample) {
+		t.Error("FileContent should match input")
+	}
+	if !cfg.IsolateCfg.ShowCompiled {
+		t.Error("ShowCompiled should be true after ShowVerification")
+	}
+}
+
+func TestShowVerificationFromTestVectors(t *testing.T) {
+	path := filepath.Join("..", "test_vectors", "bmc_minimal.ivy")
+	if _, err := os.Stat(path); err != nil {
+		t.Skipf("test vector not available: %v", err)
+	}
+	cfg := module.NewConfig()
+	sess, err := ShowVerification(cfg, path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if sess.CompiledModule == nil {
+		t.Error("CompiledModule should be non-nil")
+	}
+	if sess.AG == nil {
+		t.Error("AG should be non-nil")
+	}
+}
+
+func TestShowVerificationNoHeader(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "noheader.ivy")
+	src := "type t\nrelation r(X:t)\nafter init { r(X) := false }\n"
+	if err := os.WriteFile(path, []byte(src), 0644); err != nil {
+		t.Fatal(err)
+	}
+	cfg := module.NewConfig()
+	sess, err := ShowVerification(cfg, path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if sess.CompiledModule == nil {
+		t.Error("CompiledModule should be non-nil")
+	}
+}
+
+func TestCheckModuleAndShowComponents(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "test.ivy")
+	if err := os.WriteFile(path, []byte(ivySample), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cfg := module.NewConfig()
+	sess, err := ShowVerification(cfg, path)
+	if err != nil {
+		t.Fatalf("ShowVerification: %v", err)
+	}
+
+	srv, err := LaunchUI(cfg, sess, ":0")
+	if err != nil {
+		t.Fatalf("LaunchUI: %v", err)
+	}
+	if srv == nil {
+		t.Fatal("server is nil")
 	}
 }
 
