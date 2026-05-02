@@ -37,8 +37,10 @@ func TestSolverARGInitialized(t *testing.T) {
 	if s.AG == nil {
 		t.Fatal("AG should be non-nil after LoadFileContent")
 	}
-	if len(s.AG.States) == 0 {
-		t.Fatal("AG should have at least 1 state (initial)")
+	// Python's ivy_new() creates an empty ARG — initial state is added
+	// lazily by each operation that needs it (matching Python behavior).
+	if len(s.AG.States) != 0 {
+		t.Fatalf("AG should have 0 states after load (Python conformance), got %d", len(s.AG.States))
 	}
 	if s.Graph == nil {
 		t.Fatal("Graph should be non-nil")

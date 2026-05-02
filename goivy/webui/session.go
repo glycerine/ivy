@@ -364,6 +364,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
 			state = s.AG.States[int(stateID)]
 		}
+		if state == nil {
+			s.AG.AddInitialState(nil, nil)
+			s.syncARGToGraph()
+			state = s.AG.LastState()
+		}
 		if state == nil || state.Clauses == nil {
 			err = fmt.Errorf("concrete: no state available")
 			break
@@ -406,6 +411,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			state = s.AG.States[int(stateID)]
 		}
 		if state == nil {
+			s.AG.AddInitialState(nil, nil)
+			s.syncARGToGraph()
+			state = s.AG.LastState()
+		}
+		if state == nil {
 			err = fmt.Errorf("reverse: no state available")
 			break
 		}
@@ -433,6 +443,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		state := s.AG.LastState()
 		if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
 			state = s.AG.States[int(stateID)]
+		}
+		if state == nil {
+			s.AG.AddInitialState(nil, nil)
+			s.syncARGToGraph()
+			state = s.AG.LastState()
 		}
 		if state == nil {
 			err = fmt.Errorf("reach: no state available")
@@ -627,6 +642,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				prestate := s.AG.LastState()
 				if stateID, ok := args["state_id"].(float64); ok && int(stateID) < len(s.AG.States) {
 					prestate = s.AG.States[int(stateID)]
+				}
+				if prestate == nil {
+					s.AG.AddInitialState(nil, nil)
+					s.syncARGToGraph()
+					prestate = s.AG.LastState()
 				}
 				if prestate != nil {
 					poststate, execErr := s.AG.ExecuteAction(false, resolvedName, prestate, nil)
