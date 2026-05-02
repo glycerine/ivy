@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
@@ -244,6 +245,34 @@ func isNoneAST(n ast.Node) bool {
 	}
 	_, ok := n.(*ast.NoneAST)
 	return ok
+}
+
+// defargNameSort extracts the name and sort-top-ness from a defarg parameter
+// node. The grammar's defnlhs produces an *ast.Atom whose Terms are either
+// *ast.App (from lparam: SYMBOLx:atype) or *ast.Variable (from var).
+// Returns (name, sortName, isTopSort).
+func defargNameSort(n ast.Node) (string, string, bool) {
+	switch a := n.(type) {
+	case *ast.App:
+		name := a.Relname()
+		if a.ASort == nil {
+			return name, "", true
+		}
+		sn := fmt.Sprint(a.ASort)
+		return name, sn, false
+	case *ast.Variable:
+		if a.VSort == "" || a.VSort == "S" {
+			return a.Rep, a.VSort, true
+		}
+		return a.Rep, a.VSort, false
+	case *ast.Atom:
+		if a.ASort == nil {
+			return a.Rep, "", true
+		}
+		sn := fmt.Sprint(a.ASort)
+		return a.Rep, sn, false
+	}
+	return fmt.Sprint(n), "", true
 }
 
 // isWitVar checks if a match entry is a witness variable.
@@ -516,10 +545,112 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	}
 
 	// Python: lhs = proof.args[1]; if not isinstance(lhs, ia.NoneAST): [Skolem handling]
-	// proof.PName is always NoneAST from current Go grammar (optskolem not yet parsed)
 	if !isNoneAST(proof.PName) {
-		xtracer.Trace("proof.propertyTactic EXIT err=skolemNotImpl")
-		return nil, &ProofError{Msg: "property tactic: Skolem function witness not implemented"}
+		lhs, ok := proof.PName.(*ast.Atom)
+		if !ok {
+			return nil, &ProofError{Msg: "property tactic: optskolem must be an Atom"}
+		}
+
+		// Python: fmla = il.drop_universals(cut.formula)
+		cutExpr := GoalConcUnwrap(cut)
+		if cutExpr == nil {
+			return nil, &ProofError{Msg: "property tactic: cut formula is not a logic expression"}
+		}
+		fmla := il.DropUniversals(cutExpr)
+
+		// Python: if not il.is_exists(fmla) or len(fmla.variables) != 1:
+		if !il.IsExists(fmla) || len(il.BinderVars(fmla)) != 1 {
+			xtracer.Trace("proof.propertyTactic EXIT err=notExistential")
+			return nil, &ProofError{Msg: "property is not existential"}
+		}
+		evar := il.BinderVars(fmla)[0]
+		rng := evar.VSort
+
+		// Python: vmap = dict((x.name, x) for x in lu.variables_ast(fmla))
+		varsList := lu.VariablesAstList(fmla)
+		vmap := make(map[string]*lg.Variable, len(varsList))
+		for _, v := range varsList {
+			vmap[v.Name] = v
+		}
+
+		// Python: used = set(); args = lhs.args; targs = []
+		used := make(map[string]bool)
+		args := lhs.Terms
+		targs := make([]lg.Expr, 0, len(args))
+
+		for _, a := range args {
+			aName, aSortName, aIsTop := defargNameSort(a)
+
+			// Python: if a.name in used: raise IvyError(lhs,'repeat parameter: ...')
+			if used[aName] {
+				return nil, &ProofError{Msg: fmt.Sprintf("repeat parameter: %s", aName)}
+			}
+			used[aName] = true
+
+			// Python: if a.name in vmap:
+			if v, inVmap := vmap[aName]; inVmap {
+				targs = append(targs, v)
+				// Python: if not (il.is_topsort(a.sort) or a.sort != v.sort):
+				vSortName := lg.SortName(v.VSort)
+				if !aIsTop && aSortName == vSortName {
+					return nil, &ProofError{Msg: fmt.Sprintf("bad sort for %s", aName)}
+				}
+			} else {
+				// Python: if il.is_topsort(a.sort): raise IvyError(...)
+				if aIsTop {
+					return nil, &ProofError{Msg: fmt.Sprintf("cannot infer sort for %s", aName)}
+				}
+				paramVar := &lg.Variable{Name: aName, VSort: &lg.UninterpretedSort{Name: aSortName}}
+				targs = append(targs, paramVar)
+			}
+		}
+
+		// Python: for x in vmap: if x not in used: raise IvyError(...)
+		for x := range vmap {
+			if !used[x] {
+				return nil, &ProofError{Msg: fmt.Sprintf("%s must be a parameter of %s", x, lhs.Rep)}
+			}
+		}
+
+		// Python: dom = [x.sort for x in targs]
+		domSorts := make([]lg.Sort, 0, len(targs)+1)
+		for _, t := range targs {
+			domSorts = append(domSorts, t.NodeSort())
+		}
+		domSorts = append(domSorts, rng)
+		symSort := il.FuncConstSort(domSorts...)
+
+		// Python: sym = il.Symbol(lhs.rep, il.FuncConstSort(*(dom+[rng])))
+		sym := &lg.Const{Name: lhs.Rep, CSort: symSort}
+
+		// Python: if sym in self.stale or sym in goal_defns(goal):
+		goalDefns := GoalDefns(goal)
+		if pc.Stale[sym.Name] {
+			return nil, &ProofError{Msg: fmt.Sprintf("%s is not fresh", sym.Name)}
+		}
+		if _, inDefns := goalDefns[lg.Key(sym)]; inDefns {
+			return nil, &ProofError{Msg: fmt.Sprintf("%s is not fresh", sym.Name)}
+		}
+
+		// Python: term = sym(*targs) if targs else sym
+		var term lg.Expr
+		if len(targs) > 0 {
+			term = &lg.Apply{Func: sym, Terms: targs}
+		} else {
+			term = sym
+		}
+
+		// Python: fmla = lu.substitute_ast(fmla.body, {evar.name: term})
+		body := il.BinderBody(fmla)
+		substituted := module.SubstituteAstByName(body, map[string]lg.Expr{evar.Name: term})
+
+		// Python: cut = clone_goal(cut, [], fmla)
+		cut = CloneGoal(pc.astCfg(), cut, nil, substituted)
+
+		// Python: goal = goal_add_prem(goal, ia.ConstantDecl(sym), goal.lineno)
+		goal = GoalAddPrem(pc.astCfg(), goal, pc.astCfg().NewConstantDecl(sym), goal.GetLineno())
+
+		xtracer.Trace("proof.propertyTactic skolem sym=%s nTargs=%d", sym.Name, len(targs))
 	}
 
 	// Python: subgoals = [subgoal]
