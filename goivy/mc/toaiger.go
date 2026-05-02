@@ -573,7 +573,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Collect all constants from sort_constants
 	cnstSet := make(map[string]bool)
-	for _, consts := range sortConstants {
+	for _, consts := range sortConstants.All() {
 		for _, c := range consts {
 			cnstSet[c.Name] = true
 		}

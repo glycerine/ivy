@@ -24,14 +24,14 @@ type Qelim struct {
 	Syms           map[string]lg.Expr      // cached quantifier -> result mapping
 	SymsCtr        int                     // counter for fresh symbols
 	Fmlas          []lg.Expr               // accumulated constraints
-	SortConstants  map[string][]*lg.Const  // sort -> constants for invariant
-	SortConstants2 map[string][]*lg.Const  // sort -> constants for transition
+	SortConstants  *iu.InsMap[string, []*lg.Const] // sort -> constants for invariant
+	SortConstants2 *iu.InsMap[string, []*lg.Const] // sort -> constants for transition
 	IuCfg          *iu.IvyUtilsConfig      // for IsMacro/ExpandMacro
 	FullQI         bool                    // Python: fullqi parameter (default false)
 }
 
 // NewQelim creates a new quantifier elimination context.
-func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const, iuCfg *iu.IvyUtilsConfig, fullQI bool) *Qelim {
+func NewQelim(sortConstants, sortConstants2 *iu.InsMap[string, []*lg.Const], iuCfg *iu.IvyUtilsConfig, fullQI bool) *Qelim {
 	return &Qelim{
 		Syms:           make(map[string]lg.Expr),
 		SortConstants:  sortConstants,
@@ -51,12 +51,12 @@ func (q *Qelim) Fresh(exprKey string) *lg.Const {
 }
 
 // GetConsts returns the constants to instantiate for a given sort.
-func (q *Qelim) GetConsts(s lg.Sort, sortConstants map[string][]*lg.Const) []*lg.Const {
+func (q *Qelim) GetConsts(s lg.Sort, sortConstants *iu.InsMap[string, []*lg.Const]) []*lg.Const {
 	if s == nil {
 		return nil
 	}
 	name := s.String()
-	if consts, ok := sortConstants[name]; ok {
+	if consts, ok := sortConstants.Get2(name); ok {
 		return consts
 	}
 	// For enumerated sorts, generate all values
@@ -90,7 +90,7 @@ func isFiniteSort(s lg.Sort) bool {
 // For infinite sorts, it creates a fresh proposition with constraints.
 //
 // Python: ivy_mc.py:881-902
-func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
+func (q *Qelim) QE(expr lg.Expr, sortConstants *iu.InsMap[string, []*lg.Const]) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.ForAll:
 		return q.qeQuantifier(t.Variables, t.Body, true, sortConstants)
@@ -115,7 +115,7 @@ func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 }
 
 // qeQuantifier handles quantifier elimination for a single quantifier.
-func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, sortConstants map[string][]*lg.Const) lg.Expr {
+func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, sortConstants *iu.InsMap[string, []*lg.Const]) lg.Expr {
 	// Check cache
 	key := fmt.Sprintf("%v:%v:%v", vars, body, isForall)
 	if old, ok := q.Syms[key]; ok {

@@ -344,14 +344,14 @@ func sortName(s lg.Sort) string {
 // premises against the sort constants and functions.
 //
 // Python: ivy_mc.py:638-656
-func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs *iu.InsMap[string, *lg.Const]) []*ast.LabeledFormula {
+func ExpandSchemata(mod *module.Module, sortConstants *iu.InsMap[string, []*lg.Const], funs *iu.InsMap[string, *lg.Const]) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
-		xtracer.Trace("mc.ExpandSchemata nSchemata=0 (nil) nSortConstants=%d nFuns=%d", len(sortConstants), funs.Len())
+		xtracer.Trace("mc.ExpandSchemata nSchemata=0 (nil) nSortConstants=%d nFuns=%d", sortConstants.Len(), funs.Len())
 		return result
 	}
-	xtracer.Trace("mc.ExpandSchemata nSchemata=%d nSorts=%d nSortConstants=%d nFuns=%d", mod.Schemata.Len(), mod.Sig.Sorts.Len(), len(sortConstants), funs.Len())
+	xtracer.Trace("mc.ExpandSchemata nSchemata=%d nSorts=%d nSortConstants=%d nFuns=%d", mod.Schemata.Len(), mod.Sig.Sorts.Len(), sortConstants.Len(), funs.Len())
 
 	match := newSchemaMatch()
 	// Python: for s in list(mod.sig.sorts.values()):
@@ -407,7 +407,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, fu
 // matchSchemaPrems is the faithful port of Python's match_schema_prems
 // (ivy_mc.py:582-617). It uses a stack-based premise list (pop/append)
 // matching Python's generator pattern.
-func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, funs *iu.InsMap[string, *lg.Const], match *schemaMatch, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
+func matchSchemaPrems(prems []ast.Node, sortConstants *iu.InsMap[string, []*lg.Const], funs *iu.InsMap[string, *lg.Const], match *schemaMatch, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
 	if len(prems) == 0 {
 		result := make(map[string]lg.Expr, len(match.mp))
 		for k, v := range match.mp {
@@ -484,16 +484,11 @@ func matchSchemaPrems(prems []ast.Node, sortConstants map[string][]*lg.Const, fu
 				if mapped, ok := match.mp[symSortKey]; ok {
 					lookupKey = sortName(mapped.(lg.Sort))
 				}
-				cands = sortConstants[lookupKey]
+				cands = sortConstants.Get(lookupKey)
 				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d", symSortKey, match.mp[symSortKey] != nil, boundSorts[symSortKey], len(cands))
 			} else {
-				scKeys := make([]string, 0, len(sortConstants))
-				for k := range sortConstants {
-					scKeys = append(scKeys, k)
-				}
-				sort.Strings(scKeys)
-				for _, k := range scKeys {
-					cands = append(cands, sortConstants[k]...)
+				for _, v := range sortConstants.All() {
+					cands = append(cands, v...)
 				}
 				xtracer.Trace("mc.matchSchemaPrems nonFunc sortKey=%s inMap=%v isBound=%v nCands=%d (allSorts)", symSortKey, match.mp[symSortKey] != nil, boundSorts[symSortKey], len(cands))
 			}
@@ -616,7 +611,7 @@ func applyMatch(mp map[string]lg.Expr, fmla ast.Node) lg.Expr {
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs *iu.InsMap[string, *lg.Const], iuCfg *iu.IvyUtilsConfig) []lg.Expr {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *module.Clauses, invariant lg.Expr, sortConstants *iu.InsMap[string, []*lg.Const], funs *iu.InsMap[string, *lg.Const], iuCfg *iu.IvyUtilsConfig) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 

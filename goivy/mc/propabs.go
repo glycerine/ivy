@@ -41,13 +41,13 @@ type PropAbs struct {
 	// State variable set (for prev_expr detection)
 	StVarSet map[string]bool
 	// Sort constants (for prev_expr detection)
-	SortConstants map[string][]*lg.Const
+	SortConstants *iu.InsMap[string, []*lg.Const]
 	// Accumulated formulas from abstraction
 	Fmlas []lg.Expr
 }
 
 // NewPropAbs creates a new propositional abstraction context.
-func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) *PropAbs {
+func NewPropAbs(stVarSet map[string]bool, sortConstants *iu.InsMap[string, []*lg.Const]) *PropAbs {
 	return &PropAbs{
 		Map:           iu.NewInsMap[string, *lg.Const](),
 		OrigExprs:     iu.NewInsMap[string, lg.Expr](),
