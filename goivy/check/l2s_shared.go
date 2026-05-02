@@ -417,17 +417,21 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	symwaits := make(map[lg.NodeKey][]*lg.NamedBinder)
 	symwhens := make(map[lg.NodeKey][]*lg.NamedBinder)
 	sortedTriples := sortL2sGTriples(cfg.L2sGs)
-	for ti, triple := range sortedTriples {
+	displayTi := 0
+	for _, triple := range sortedTriples {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
 		si := 0
 		for sym := range il.SymbolsIluAst(triple.Body) {
 			if c, ok := sym.(*lg.Const); ok {
 				k := c.Sexp()
-				xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", ti, si, c.Name, triple.Body.Canon())
+				xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, c.Name, triple.Body.Canon())
 				symprops[k] = append(symprops[k], prop)
 
 				si++
 			}
+		}
+		if si > 0 {
+			displayTi++
 		}
 	}
 	sortedWhens7 := sortNamedBinderMap(cfg.L2sWhensSet)
