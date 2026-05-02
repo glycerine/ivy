@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/check"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -18,6 +19,7 @@ import (
 	"github.com/glycerine/ivy/goivy/logicparser"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/parser"
+	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/trace"
 	"github.com/glycerine/ivy/goivy/typeinfer"
 	"github.com/glycerine/ivy/goivy/updr"
@@ -44,6 +46,7 @@ type Session struct {
 	FileContent    string // file content (when uploaded via browser)
 	toggles        *Toggles
 	ProofStack     *ProofStack
+	ProofMgr       *proof.ProofManager     // live proof state (goals + reachability graph)
 	CompiledModule *module.Module          // populated by full compiler pipeline
 	CompiledSig    *il.Sig                 // populated by full compiler pipeline
 	AG             *art.AnalysisGraph      // persistent analysis graph for interactive verification
@@ -116,6 +119,13 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	sig := il.NewSig()
 	mod := module.New()
 	mod.Sig = sig
+
+	// Wire proof checker factory and register all tactics before compilation
+	// so phase6 attach_proofs can create ProofCheckers. Matches check.Start().
+	check.WireAdmitDefinitionFactory(mod)
+	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+	check.RegisterTactics(mod.Cfg.ProofCfg, mod)
+
 	compileErr := compiler.IvyCompile(decls, mod, true)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
@@ -196,6 +206,20 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 
+	// Step 6.5: Initialize ProofManager from module conjectures.
+	// Python: AnalysisState.__init__ creates self.goal_stack = ProofGoalStack()
+	// then push_goal is called for each conjecture during interactive verification.
+	// Here we pre-populate with the module's conjectures as initial proof goals.
+	s.ProofMgr = proof.NewProofManager()
+	for _, conj := range mod.LabeledConjs {
+		if conj.Formula != nil {
+			if fmla, ok := conj.Formula.(logic.Expr); ok {
+				s.ProofMgr.Goals.Push(&proof.ProofGoal{Formula: fmla})
+			}
+		}
+	}
+	s.syncProofStack()
+
 	// Step 7: Build the persistent AnalysisGraph.
 	// Matches Python: self.g = AnalysisGraph() in ivy_compiler.ivy_new().
 	// Python does NOT call add_initial_state here — the ARG starts empty.
@@ -224,6 +248,35 @@ func (s *Session) syncARGToGraph() {
 		return
 	}
 	s.Graph = ArtToGraphState(s.AG)
+}
+
+// syncProofStack converts the live proof.ProofGoalStack (s.ProofMgr)
+// into the lightweight webui.ProofStack for frontend rendering.
+func (s *Session) syncProofStack() {
+	if s.ProofMgr == nil || s.ProofMgr.Goals == nil {
+		s.ProofStack = &ProofStack{}
+		return
+	}
+	ps := &ProofStack{}
+	for _, g := range s.ProofMgr.Goals.Stack {
+		parentID := -1
+		if g.Parent != nil {
+			parentID = g.Parent.ID
+		}
+		label := fmt.Sprintf("goal_%d", g.ID)
+		info := ""
+		if g.Formula != nil {
+			info = logic.PrettyFmla(g.Formula)
+		}
+		ps.Goals = append(ps.Goals, ProofGoal{
+			ID:       g.ID,
+			Label:    label,
+			Refuted:  false,
+			Info:     info,
+			ParentID: parentID,
+		})
+	}
+	s.ProofStack = ps
 }
 
 func sortNames(m map[string]logic.Sort) []string {
@@ -668,6 +721,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 // ProofStack holds proof goal state for rendering.
 // Stub: will be wired to the proof/ package.
 func (s *Session) ProofStackData() *ProofStack {
+	s.syncProofStack()
 	return s.ProofStack
 }
 
@@ -856,18 +910,66 @@ func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}
 		"action": action,
 	}
 
+	// Find the goal by ID.
+	var goal *proof.ProofGoal
+	if s.ProofMgr != nil {
+		id := -1
+		fmt.Sscanf(goalID, "goal_%d", &id)
+		if id < 0 {
+			fmt.Sscanf(goalID, "%d", &id)
+		}
+		for _, g := range s.ProofMgr.Goals.Stack {
+			if g.ID == id {
+				goal = g
+				break
+			}
+		}
+	}
+
 	switch action {
 	case "view":
-		// View proof goal details
-		result["info"] = "Proof goal " + goalID
+		if goal != nil && goal.Formula != nil {
+			result["info"] = logic.PrettyFmla(goal.Formula)
+			result["id"] = goal.ID
+			if goal.Parent != nil {
+				result["parent_id"] = goal.Parent.ID
+			}
+		} else {
+			result["info"] = "Proof goal " + goalID + " (no formula)"
+		}
+
 	case "apply_tactic":
-		// Apply a proof tactic — requires proof.ProofChecker
 		s.emit(Event{Type: "status", Data: map[string]string{
-			"message": "Apply tactic at goal " + goalID + ": requires proof pipeline",
+			"message": "Tactic application at goal " + goalID + ": proof infrastructure wired, Z3 required",
 		}})
+
 	case "refute":
-		// Mark goal as refuted
-		result["refuted"] = true
+		if goal != nil {
+			s.ProofMgr.Goals.Remove(goal)
+			result["refuted"] = true
+			s.syncProofStack()
+			s.emit(Event{Type: "proof_updated", Data: nil})
+		} else {
+			result["refuted"] = false
+		}
+
+	case "push":
+		if goal != nil {
+			sub := &proof.ProofGoal{Formula: goal.Formula}
+			s.ProofMgr.Goals.Push(sub)
+			s.syncProofStack()
+			s.emit(Event{Type: "proof_updated", Data: nil})
+			result["new_goal_id"] = sub.ID
+		}
+
+	case "pop":
+		popped := s.ProofMgr.Goals.Pop()
+		if popped != nil {
+			result["popped_id"] = popped.ID
+			s.syncProofStack()
+			s.emit(Event{Type: "proof_updated", Data: nil})
+		}
+
 	default:
 		return result, fmt.Errorf("unknown proof action: %s", action)
 	}

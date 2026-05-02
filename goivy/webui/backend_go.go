@@ -504,7 +504,7 @@ func (gbe *GoBackend) GetProof(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
-		cy := RenderProofStack(sess.ProofStack)
+		cy := RenderProofStack(sess.ProofStackData())
 		by, err = canonicalJSON(cy)
 		return nil
 	})

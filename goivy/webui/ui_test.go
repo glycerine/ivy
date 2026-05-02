@@ -3,6 +3,7 @@
 package webui
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -834,6 +835,195 @@ func TestLaunchUI(t *testing.T) {
 	}
 	if srv == nil {
 		t.Fatal("server is nil")
+	}
+}
+
+// --- Proof stack tests ---
+
+func loadProofTestSession(t *testing.T) *Session {
+	t.Helper()
+	cfg := module.NewConfig()
+	s := NewSession(cfg, "test-proof")
+	if err := s.LoadFileContent("test.ivy", []byte(ivySample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	return s
+}
+
+func TestProofManagerCreatedAfterLoad(t *testing.T) {
+	s := loadProofTestSession(t)
+	if s.ProofMgr == nil {
+		t.Fatal("ProofMgr should be non-nil after LoadFileContent")
+	}
+	if s.ProofMgr.Goals == nil {
+		t.Fatal("ProofMgr.Goals should be non-nil")
+	}
+}
+
+func TestProofStackPopulatedFromConjectures(t *testing.T) {
+	s := loadProofTestSession(t)
+	// ivySample has 1 conjecture: "conjecture link(X,Y) -> ~semaphore(Y)"
+	ps := s.ProofStackData()
+	if ps == nil {
+		t.Fatal("ProofStackData() returned nil")
+	}
+	if len(ps.Goals) != 1 {
+		t.Fatalf("expected 1 proof goal from 1 conjecture, got %d", len(ps.Goals))
+	}
+}
+
+func TestProofStackDataNonNilAfterLoad(t *testing.T) {
+	s := loadProofTestSession(t)
+	ps := s.ProofStackData()
+	if ps == nil {
+		t.Fatal("ProofStackData() should not be nil")
+	}
+}
+
+func TestProofStackRenderFromSync(t *testing.T) {
+	s := loadProofTestSession(t)
+	ps := s.ProofStackData()
+	cy := RenderProofStack(ps)
+	if cy == nil {
+		t.Fatal("RenderProofStack returned nil")
+	}
+	// 1 conjecture → 1 goal node, no parent edges
+	if len(cy.Elements) < 1 {
+		t.Fatalf("expected at least 1 element, got %d", len(cy.Elements))
+	}
+}
+
+func TestProofGoalActionView(t *testing.T) {
+	s := loadProofTestSession(t)
+	result, err := s.ProofGoalAction("goal_0", "view")
+	if err != nil {
+		t.Fatalf("view error: %v", err)
+	}
+	info, ok := result["info"]
+	if !ok {
+		t.Fatal("result should contain 'info' key")
+	}
+	infoStr, ok := info.(string)
+	if !ok || infoStr == "" {
+		t.Error("info should be a non-empty string with formula text")
+	}
+}
+
+func TestProofGoalActionRefute(t *testing.T) {
+	s := loadProofTestSession(t)
+	ps := s.ProofStackData()
+	initialCount := len(ps.Goals)
+	if initialCount == 0 {
+		t.Skip("no goals to refute")
+	}
+
+	result, err := s.ProofGoalAction("goal_0", "refute")
+	if err != nil {
+		t.Fatalf("refute error: %v", err)
+	}
+	if result["refuted"] != true {
+		t.Error("expected refuted=true")
+	}
+	ps = s.ProofStackData()
+	if len(ps.Goals) != initialCount-1 {
+		t.Errorf("expected %d goals after refute, got %d", initialCount-1, len(ps.Goals))
+	}
+}
+
+func TestProofGoalActionPushPop(t *testing.T) {
+	s := loadProofTestSession(t)
+	ps := s.ProofStackData()
+	initialCount := len(ps.Goals)
+
+	// Push a sub-goal from goal_0
+	result, err := s.ProofGoalAction("goal_0", "push")
+	if err != nil {
+		t.Fatalf("push error: %v", err)
+	}
+	if _, ok := result["new_goal_id"]; !ok {
+		t.Error("push result should contain new_goal_id")
+	}
+	ps = s.ProofStackData()
+	if len(ps.Goals) != initialCount+1 {
+		t.Errorf("expected %d goals after push, got %d", initialCount+1, len(ps.Goals))
+	}
+
+	// Pop the top goal
+	result, err = s.ProofGoalAction("", "pop")
+	if err != nil {
+		t.Fatalf("pop error: %v", err)
+	}
+	if _, ok := result["popped_id"]; !ok {
+		t.Error("pop result should contain popped_id")
+	}
+	ps = s.ProofStackData()
+	if len(ps.Goals) != initialCount {
+		t.Errorf("expected %d goals after pop, got %d", initialCount, len(ps.Goals))
+	}
+}
+
+func TestEmptyModuleEmptyProofStack(t *testing.T) {
+	cfg := module.NewConfig()
+	s := NewSession(cfg, "test-empty")
+	src := "type t\nrelation r(X:t)\nafter init { r(X) := false }\n"
+	if err := s.LoadFileContent("empty.ivy", []byte(src)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	ps := s.ProofStackData()
+	if ps == nil {
+		t.Fatal("ProofStackData() should not be nil even with no conjectures")
+	}
+	if len(ps.Goals) != 0 {
+		t.Errorf("expected 0 goals for module with no conjectures, got %d", len(ps.Goals))
+	}
+}
+
+func TestProofGoalParentRelationships(t *testing.T) {
+	s := loadProofTestSession(t)
+	// Push a second goal to create a parent relationship
+	s.ProofGoalAction("goal_0", "push")
+	ps := s.ProofStackData()
+	if len(ps.Goals) < 2 {
+		t.Fatalf("expected at least 2 goals, got %d", len(ps.Goals))
+	}
+	// The pushed goal should have the previous top as parent
+	lastGoal := ps.Goals[len(ps.Goals)-1]
+	if lastGoal.ParentID < 0 {
+		t.Errorf("pushed goal should have a parent, got ParentID=%d", lastGoal.ParentID)
+	}
+}
+
+func TestGetProofNonEmptyJSON(t *testing.T) {
+	cfg := module.NewConfig()
+	be := NewGoBackend(cfg)
+	defer be.Close()
+
+	byNew, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	// Extract session ID
+	var resp map[string]string
+	if err := json.Unmarshal(byNew, &resp); err != nil {
+		t.Fatalf("unmarshal session: %v", err)
+	}
+	sid := resp["session_id"]
+
+	_, err = be.Load(sid, "test.ivy", []byte(ivySample))
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	data, err := be.GetProof(sid)
+	if err != nil {
+		t.Fatalf("GetProof: %v", err)
+	}
+	if len(data) == 0 {
+		t.Fatal("GetProof returned empty data")
+	}
+	// Should contain at least 1 element (the conjecture goal)
+	if !strings.Contains(string(data), "elements") {
+		t.Error("GetProof JSON should contain 'elements' key")
 	}
 }
 

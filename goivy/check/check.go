@@ -29,11 +29,11 @@ import (
 const checkPrecondFalse = false
 const checkPrecondTrue = true
 
-// wireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
+// WireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
 // compiler.CheckDefinitions can call proof.ProofChecker.AdmitDefinition
 // without a direct import cycle.
 // Python: prover.admit_definition(d, pmap[d.id])
-func wireAdmitDefinitionFactory(mod *module.Module) {
+func WireAdmitDefinitionFactory(mod *module.Module) {
 	if mod.Cfg == nil {
 		return
 	}
@@ -1217,7 +1217,7 @@ func deprecated_dup_start_9828(args []string) error {
 
 	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry
 	mod.Cfg.SomeBounded = false
-	wireAdmitDefinitionFactory(mod)
+	WireAdmitDefinitionFactory(mod)
 	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
@@ -1305,7 +1305,7 @@ func Start(args []string, cfg *module.Config) error {
 
 	mod := module.New()
 	mod.Cfg = cfg
-	wireAdmitDefinitionFactory(mod)
+	WireAdmitDefinitionFactory(mod)
 	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
