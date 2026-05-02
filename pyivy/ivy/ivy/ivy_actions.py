@@ -1343,8 +1343,9 @@ class CallAction(Action):
             raise IvyError(self,"no value for {}".format(name))
         return v
     def int_update(self,domain,pvars):
-        if __debug__: xtracer.trace("actions.CallAction.int_update ENTER")
-        print("DIAG CallAction.int_update callee=%s" % self.args[0].rep)
+        if __debug__: 
+            xtracer.trace("actions.CallAction.int_update ENTER")
+            print("DIAG CallAction.int_update callee=%s" % self.args[0].rep)
 #        print "got here!"
         v = self.get_callee()
         if not isinstance(v,tuple):
