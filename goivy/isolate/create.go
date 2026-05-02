@@ -334,10 +334,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			}
 		}
 		// Python: ext_act = ia.EnvAction(*ext_acts)
-		if len(extBranches) > 0 {
-			extAct := actions.NewEnvActionOn(mod.Cfg.ActCfg, extBranches...)
-			mod.Actions.Set(extAction, extAct)
-		}
+		extAct := actions.NewEnvActionOn(mod.Cfg.ActCfg, extBranches...)
+		mod.Actions.Set(extAction, extAct)
 		mod.PublicActions.Set(extAction, true)
 	}
 	xtracer.Trace("check.CreateIsolate after_ext_action")
