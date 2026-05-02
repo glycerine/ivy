@@ -41,7 +41,7 @@ func TestPDR_TrivialSafe(t *testing.T) {
 	init := ctx.Not(x)        // init: x = false
 	trans := ctx.Iff(xn, x)   // trans: x' = x (identity)
 	bad := ctx.BoolVal(false) // bad: never
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (bad=false), got invalid")
@@ -55,7 +55,7 @@ func TestPDR_TrivialUnsafe(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, x)
 	bad := ctx.Not(x) // bad = ¬x, same as init
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if result.Valid {
 		t.Fatal("expected invalid (init ∧ bad is SAT), got valid")
@@ -74,7 +74,7 @@ func TestPDR_OneBitFlip(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, ctx.Not(x)) // flip
 	bad := x                         // bad when x=true
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if result.Valid {
 		t.Fatal("expected counterexample (bit flips to bad in 1 step)")
@@ -90,7 +90,7 @@ func TestPDR_OneBitStaysFalse(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Not(xn) // x' always false
 	bad := x             // bad when x=true
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (x stays false)")
@@ -126,7 +126,7 @@ func TestPDR_TwoBitCounterUnsafe(t *testing.T) {
 	x0 := []z3bridge.Expr{a, b}
 	xn := []z3bridge.Expr{an, bn}
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if result.Valid {
 		t.Fatal("expected counterexample (counter reaches 3)")
@@ -158,7 +158,7 @@ func TestPDR_TwoBitCounterSafe(t *testing.T) {
 	x0 := []z3bridge.Expr{a, b}
 	xn := []z3bridge.Expr{an, bn}
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (a stays false)")
@@ -192,7 +192,7 @@ func TestPDR_MutualExclusion(t *testing.T) {
 	x0 := []z3bridge.Expr{t0, t1}
 	xn := []z3bridge.Expr{t0n, t1n}
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (mutex maintained)")
@@ -228,7 +228,7 @@ func TestPDR_MultiStep(t *testing.T) {
 	x0 := []z3bridge.Expr{a, b, c}
 	xn := []z3bridge.Expr{an, bn, cn}
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if result.Valid {
 		t.Fatal("expected counterexample (infection reaches c in 2 steps)")
@@ -263,7 +263,7 @@ func TestPDR_MultiStepSafe(t *testing.T) {
 	x0 := []z3bridge.Expr{a, b, c}
 	xn := []z3bridge.Expr{an, bn, cn}
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (c always stays false)")
@@ -277,7 +277,7 @@ func TestPDR_Identity(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, x) // identity
 	bad := x
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (identity preserves init)")
@@ -291,7 +291,7 @@ func TestPDR_NondeterministicUnsafe(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.BoolVal(true) // xn can be anything
 	bad := x
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if result.Valid {
 		t.Fatal("expected counterexample (nondeterministic can reach bad)")
@@ -312,7 +312,7 @@ func TestPDR_WithInputs(t *testing.T) {
 	trans := ctx.Iff(xn, ctx.And(x, inp))
 	bad := x
 
-	pdr := NewPDR(ctx, init, trans, bad,
+	pdr := newPDRCompat(ctx, init, trans, bad,
 		[]z3bridge.Expr{x}, []z3bridge.Expr{inp}, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if !result.Valid {
@@ -334,7 +334,7 @@ func TestPDR_InputCausesUnsafe(t *testing.T) {
 	trans := ctx.Iff(xn, inp)
 	bad := x
 
-	pdr := NewPDR(ctx, init, trans, bad,
+	pdr := newPDRCompat(ctx, init, trans, bad,
 		[]z3bridge.Expr{x}, []z3bridge.Expr{inp}, []z3bridge.Expr{xn})
 	result := pdr.Run()
 	if result.Valid {
@@ -349,7 +349,7 @@ func TestPDR_Statistics(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, x)
 	bad := ctx.BoolVal(false)
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	pdr.Run()
 
 	if pdr.SATQueryCount == 0 {
@@ -367,7 +367,7 @@ func TestPDR_String(t *testing.T) {
 	init := ctx.Not(x)
 	trans := ctx.Iff(xn, x)
 	bad := ctx.BoolVal(false)
-	pdr := NewPDR(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
+	pdr := newPDRCompat(ctx, init, trans, bad, []z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 	s := pdr.String()
 	if s == "" {
 		t.Fatal("expected non-empty string")
@@ -566,7 +566,7 @@ func TestPDR_IrrelevantVariable(t *testing.T) {
 	xnv := []z3bridge.Expr{xn, yn}
 	_ = y // suppress unused
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xnv)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xnv)
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid (x stays false regardless of y)")
@@ -728,7 +728,7 @@ func TestPDR_ThreeBitNondeterministic(t *testing.T) {
 	trans := ctx.And(transParts...)
 	bad := x0[0] // bad: first bit true
 
-	pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+	pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 	result := pdr.Run()
 	if !result.Valid {
 		t.Fatal("expected valid")
@@ -755,7 +755,7 @@ func TestPDR_DelayedBad(t *testing.T) {
 	// bad: b=1 (happens at step 2: a flips to 1 at step 1, b gets 1 at step 2)
 	bad := b
 
-	pdr := NewPDR(ctx, init, trans, bad,
+	pdr := newPDRCompat(ctx, init, trans, bad,
 		[]z3bridge.Expr{a, b}, nil, []z3bridge.Expr{an, bn})
 	result := pdr.Run()
 	if result.Valid {
@@ -797,7 +797,7 @@ func FuzzPDR_RandomOneBit(f *testing.F) {
 			bad = ctx.Not(x)
 		}
 
-		pdr := NewPDR(ctx, init, trans, bad,
+		pdr := newPDRCompat(ctx, init, trans, bad,
 			[]z3bridge.Expr{x}, nil, []z3bridge.Expr{xn})
 
 		// Just verify it terminates without panic
@@ -840,11 +840,159 @@ func TestPDR_RandomSmall(t *testing.T) {
 		// bad: first bit true
 		bad := x0[0]
 
-		pdr := NewPDR(ctx, init, trans, bad, x0, nil, xn)
+		pdr := newPDRCompat(ctx, init, trans, bad, x0, nil, xn)
 		result := pdr.Run()
 		if !result.Valid {
 			t.Fatalf("trial %d: expected valid (all bits stay false)", trial)
 		}
+	}
+}
+
+// ---------- Test 35: PDR with background axioms (safe) ----------
+// Two vars a, b. Background: a => b (invariant relationship).
+// Init: a=false, b=false. Trans: a'=a, b'=b (identity).
+// Bad: a ∧ ¬b. With background a=>b in the frame solver,
+// any state satisfying a also satisfies b, so a ∧ ¬b is UNSAT.
+
+func TestPDR_WithBackground_Safe(t *testing.T) {
+	ctx := z3bridge.NewZ3Context()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+	an := ctx.Const("an", bs)
+	bn := ctx.Const("bn", bs)
+
+	init := ctx.And(ctx.Not(a), ctx.Not(b))
+	trans := ctx.And(ctx.Iff(an, a), ctx.Iff(bn, b)) // identity
+	bad := ctx.And(a, ctx.Not(b))                     // bad: a=true, b=false
+	bg := ctx.Or(ctx.Not(a), b)                       // background: a => b
+
+	lsyms := [][2]z3bridge.Expr{{a, an}, {b, bn}}
+	pdr := NewPDR(ctx, init, trans, bad, &bg, nil, lsyms, nil, false)
+	result := pdr.Run()
+	if !result.Valid {
+		t.Fatal("expected valid (background a=>b makes bad unreachable)")
+	}
+}
+
+// ---------- Test 36: PDR with background axioms (unsafe) ----------
+
+func TestPDR_WithBackground_Unsafe(t *testing.T) {
+	ctx := z3bridge.NewZ3Context()
+	bs := ctx.BoolSort()
+	x := ctx.Const("x", bs)
+	xn := ctx.Const("xn", bs)
+
+	init := ctx.Not(x)
+	trans := ctx.BoolVal(true) // unconstrained
+	bad := x                  // bad when x=true
+	bg := ctx.BoolVal(true)   // background: trivially true (no help)
+
+	lsyms := [][2]z3bridge.Expr{{x, xn}}
+	pdr := NewPDR(ctx, init, trans, bad, &bg, nil, lsyms, nil, false)
+	result := pdr.Run()
+	if result.Valid {
+		t.Fatal("expected counterexample (background doesn't prevent x=true)")
+	}
+}
+
+// ---------- Test 37: PDR with nil background ----------
+
+func TestPDR_NilBackground(t *testing.T) {
+	ctx := z3bridge.NewZ3Context()
+	bs := ctx.BoolSort()
+	x := ctx.Const("x", bs)
+	xn := ctx.Const("xn", bs)
+
+	init := ctx.Not(x)
+	trans := ctx.Iff(xn, x)
+	bad := x
+
+	lsyms := [][2]z3bridge.Expr{{x, xn}}
+	pdr := NewPDR(ctx, init, trans, bad, nil, nil, lsyms, nil, false)
+	result := pdr.Run()
+	if !result.Valid {
+		t.Fatal("expected valid (x stays false with identity transition)")
+	}
+}
+
+// ---------- Test 38: PDR via lsyms constructor ----------
+
+func TestPDR_Lsyms(t *testing.T) {
+	ctx := z3bridge.NewZ3Context()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+	an := ctx.Const("an", bs)
+	bn := ctx.Const("bn", bs)
+
+	init := ctx.And(ctx.Not(a), ctx.Not(b))
+	trans := ctx.And(ctx.Not(an), ctx.Not(bn))
+	bad := a
+
+	lsyms := [][2]z3bridge.Expr{{a, an}, {b, bn}}
+	pdr := NewPDR(ctx, init, trans, bad, nil, nil, lsyms, nil, false)
+	result := pdr.Run()
+	if !result.Valid {
+		t.Fatal("expected valid (both stay false)")
+	}
+	if len(pdr.x0) != 2 || len(pdr.xn) != 2 {
+		t.Fatalf("expected x0/xn length 2, got %d/%d", len(pdr.x0), len(pdr.xn))
+	}
+}
+
+// ---------- Test 39: PDR with gsyms and relations stored ----------
+
+func TestPDR_SymbolClassification(t *testing.T) {
+	ctx := z3bridge.NewZ3Context()
+	bs := ctx.BoolSort()
+	x := ctx.Const("x", bs)
+	xn := ctx.Const("xn", bs)
+	g := ctx.Const("g", bs) // global/inflexible
+
+	init := ctx.Not(x)
+	trans := ctx.Iff(xn, x)
+	bad := ctx.BoolVal(false)
+
+	lsyms := [][2]z3bridge.Expr{{x, xn}}
+	gsyms := []z3bridge.Expr{g}
+	rels := []z3bridge.Expr{g, xn}
+
+	pdr := NewPDR(ctx, init, trans, bad, nil, gsyms, lsyms, rels, true)
+	result := pdr.Run()
+	if !result.Valid {
+		t.Fatal("expected valid")
+	}
+	if len(pdr.gsyms) != 1 {
+		t.Fatalf("expected 1 gsym, got %d", len(pdr.gsyms))
+	}
+	if len(pdr.relations) != 2 {
+		t.Fatalf("expected 2 relations, got %d", len(pdr.relations))
+	}
+	if !pdr.useRelations {
+		t.Fatal("expected useRelations=true")
+	}
+}
+
+// ---------- Test 40: CheckModule with empty module ----------
+
+func TestCheckModule_EmptyModule(t *testing.T) {
+	mod := module.New()
+	result, err := CheckModule(mod)
+	if err != nil {
+		t.Fatalf("CheckModule failed: %v", err)
+	}
+	if !result.Valid {
+		t.Fatal("expected valid for empty module (no actions)")
+	}
+}
+
+// ---------- Test 41: CheckModule nil ----------
+
+func TestCheckModule_Nil(t *testing.T) {
+	_, err := CheckModule(nil)
+	if err == nil {
+		t.Fatal("expected error for nil module")
 	}
 }
 

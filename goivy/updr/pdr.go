@@ -76,9 +76,15 @@ type PDR struct {
 	xn     []z3bridge.Expr // next-state variables
 	inputs []z3bridge.Expr // input variables
 
-	init  z3bridge.Expr // initial state formula (over x0)
-	trans z3bridge.Expr // transition relation (over x0, xn, inputs)
-	bad   z3bridge.Expr // bad state formula (over x0)
+	init       z3bridge.Expr // initial state formula (over x0)
+	trans      z3bridge.Expr // transition relation (over x0, xn, inputs)
+	bad        z3bridge.Expr // bad state formula (over x0)
+	background *z3bridge.Expr // background axioms (asserted in every frame solver; nil = none)
+
+	gsyms        []z3bridge.Expr    // global/inflexible symbols
+	lsyms        [][2]z3bridge.Expr // local symbol pairs: [0]=current, [1]=next
+	relations    []z3bridge.Expr    // relation symbols for generalization
+	useRelations bool               // flag for relation-based generalization
 
 	frames []*Frame  // F0, F1, ..., Fn
 	goals  *GoalHeap // priority queue of proof obligations
@@ -91,40 +97,79 @@ type PDR struct {
 
 // NewPDR creates a new PDR instance.
 //
+// Matches Python mini_pdr.PDR(init, rho, bad, background, gsyms, lsyms, relations, useRelations).
+//
 // Parameters:
 //   - ctx: Z3 context
 //   - init: initial state formula (over x0 variables)
 //   - trans: transition relation (over x0, xn, inputs)
 //   - bad: bad/error state formula (over x0 variables)
-//   - x0: current-state variables
-//   - inputs: input variables (may be nil)
-//   - xn: next-state variables (must correspond 1-to-1 with x0)
+//   - background: background axioms (asserted in every frame solver; may be zero-value)
+//   - gsyms: global/inflexible symbols
+//   - lsyms: local/flexible symbol pairs [current, next]
+//   - relations: relation symbols for generalization
+//   - useRelations: flag for relation-based generalization
+//
+// x0 and xn are derived from lsyms when lsyms is non-empty.
+// For backward compatibility, callers that pass empty lsyms should pass
+// x0/xn via the old positional slots (see newPDRCompat).
 func NewPDR(ctx *z3bridge.Z3Context, init, trans, bad z3bridge.Expr,
-	x0, inputs, xn []z3bridge.Expr) *PDR {
+	background *z3bridge.Expr,
+	gsyms []z3bridge.Expr, lsyms [][2]z3bridge.Expr,
+	relations []z3bridge.Expr, useRelations bool) *PDR {
+
+	var x0, xn []z3bridge.Expr
+	for _, pair := range lsyms {
+		x0 = append(x0, pair[0])
+		xn = append(xn, pair[1])
+	}
 
 	p := &PDR{
-		ctx:    ctx,
-		x0:     x0,
-		xn:     xn,
-		inputs: inputs,
-		init:   init,
-		trans:  trans,
-		bad:    bad,
+		ctx:          ctx,
+		x0:           x0,
+		xn:           xn,
+		init:         init,
+		trans:        trans,
+		bad:          bad,
+		background:   background,
+		gsyms:        gsyms,
+		lsyms:        lsyms,
+		relations:    relations,
+		useRelations: useRelations,
 	}
 
 	gh := &GoalHeap{}
 	heap.Init(gh)
 	p.goals = gh
 
-	// Create F0: solver with init asserted
+	// Create F0: solver with init and background asserted
 	f0 := &Frame{
 		clauses: make(map[string]z3bridge.Expr),
 		solver:  ctx.NewZ3Solver(),
 	}
 	f0.solver.Assert(init)
+	if p.background != nil {
+		f0.solver.Assert(*p.background)
+	}
 	p.frames = []*Frame{f0}
 	p.N = 0
 
+	return p
+}
+
+// newPDRCompat creates a PDR with explicit x0/inputs/xn (no lsyms).
+// Used by tests that build transition systems from raw Z3 variables.
+func newPDRCompat(ctx *z3bridge.Z3Context, init, trans, bad z3bridge.Expr,
+	x0, inputs, xn []z3bridge.Expr) *PDR {
+
+	var lsyms [][2]z3bridge.Expr
+	for i := range x0 {
+		if i < len(xn) {
+			lsyms = append(lsyms, [2]z3bridge.Expr{x0[i], xn[i]})
+		}
+	}
+	p := NewPDR(ctx, init, trans, bad, nil, nil, lsyms, nil, false)
+	p.inputs = inputs
 	return p
 }
 
@@ -172,11 +217,14 @@ func (p *PDR) Run() PDRResult {
 	}
 }
 
-// addFrame adds a new empty frame.
+// addFrame adds a new empty frame with background axioms asserted.
 func (p *PDR) addFrame() {
 	f := &Frame{
 		clauses: make(map[string]z3bridge.Expr),
 		solver:  p.ctx.NewZ3Solver(),
+	}
+	if p.background != nil {
+		f.solver.Assert(*p.background)
 	}
 	p.frames = append(p.frames, f)
 	p.N = len(p.frames) - 1

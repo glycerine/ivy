@@ -15,6 +15,7 @@ import (
 	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/trace"
 	"github.com/glycerine/ivy/goivy/typeinfer"
+	"github.com/glycerine/ivy/goivy/updr"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -801,7 +802,22 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
 		}
-		return &CheckResult{Result: "pass", Message: "PDR check completed via Z3"}
+		if s.CompiledModule == nil {
+			return &CheckResult{Result: "error", Message: "PDR: no compiled module"}
+		}
+		pdrResult, pdrErr := updr.CheckModule(s.CompiledModule)
+		if pdrErr != nil {
+			return &CheckResult{Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
+		}
+		if pdrResult.Valid {
+			return &CheckResult{
+				Result:  "pass",
+				Message: fmt.Sprintf("Invariant found (%d clauses, %d universal). %s",
+					pdrResult.Stats.NumClauses, pdrResult.Stats.NumUnivClauses,
+					pdrResult.Invariant),
+			}
+		}
+		return &CheckResult{Result: "fail", Message: pdrResult.Error}
 
 	case "concrete":
 		return &CheckResult{Result: "pass", Message: "Concrete check completed"}
