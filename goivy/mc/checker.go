@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/actions"
+	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -148,6 +150,19 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	if err == nil {
 		defer logfile.Close()
 	}
+
+	// Python: check_isolate lines 1733-1734
+	// ext_acts = [mod.actions[x] for x in sorted(mod.public_actions)]
+	// ext_act = ia.EnvAction(*ext_acts)
+	// Note: to_aiger shadows this parameter, but the creation still increments the counter.
+	pubNames := sortedPublicActions(mod)
+	wastedExtActs := make([]lg.Expr, 0, len(pubNames))
+	for _, name := range pubNames {
+		if act, ok := mod.Actions.Get2(name); ok {
+			wastedExtActs = append(wastedExtActs, act)
+		}
+	}
+	_ = actions.NewEnvActionOn(mod.Cfg.ActCfg, wastedExtActs...)
 
 	// Convert to AIGER
 	result, err := ToAiger(mod, method)
