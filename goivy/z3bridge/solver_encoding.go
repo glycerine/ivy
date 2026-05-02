@@ -433,16 +433,23 @@ func (s *Solver) NumeralToZ3(num *lg.Const) (Expr, error) {
 }
 
 // EnumeratedToNumeral converts an enumerated constant to its ordinal number.
+// note: python raises error currently. Thus so do we.
 func EnumeratedToNumeral(term *lg.Const) int {
 	xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
-	sort := term.CSort
-	if es, ok := sort.(*lg.EnumeratedSort); ok {
-		for i, name := range es.Extension {
-			if name == term.Name {
-				return i
-			}
-		}
-	}
+
+	// python:
+	//raise iu.IvyError(None,'Cannot interpret enumerated type "{}" as a native sort (not yet supported)'.format(term.sort.name))
+
+	panicf(`Cannot interpret enumerated type "%v" as a native sort (not yet supported)`, lg.ExprName(term.CSort))
+
+	// sort := term.CSort
+	// if es, ok := sort.(*lg.EnumeratedSort); ok {
+	// 	for i, name := range es.Extension {
+	// 		if name == term.Name {
+	// 			return i
+	// 		}
+	// 	}
+	// }
 	return -1
 }
 

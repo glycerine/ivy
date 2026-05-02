@@ -6,6 +6,7 @@ package z3bridge
 
 import (
 	"fmt"
+	"strconv"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
 	lg "github.com/glycerine/ivy/goivy/logic"
@@ -359,8 +360,9 @@ func (h *HerbrandModel) getModelConstant(c *lg.Const) *lg.Const {
 	xtracer.Trace("ivy_solver.py:1005 get_model_constant() ENTER")
 	sort := il.SortRange(c.CSort)
 
-	// Handle enumerated sorts without native Z3 enums
-	if es, ok := sort.(*lg.EnumeratedSort); ok {
+	// Handle enumerated sorts without native Z3 enums.
+	// Python (ivy_solver.py:1055): if isinstance(s, EnumeratedSort) and not use_z3_enums:
+	if es, ok := sort.(*lg.EnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
 		for _, name := range es.Extension {
 			w := lg.NewConst(name, sort)
 			zc, err1 := h.tr.Translate(c)
@@ -389,7 +391,20 @@ func (h *HerbrandModel) getModelConstant(c *lg.Const) *lg.Const {
 	if !ok {
 		return lg.NewConst("?", sort)
 	}
-	return constantFromZ3(sort, val)
+	result := constantFromZ3(sort, val)
+
+	// When EnableInterpretedEnums is active and this is an interpreted enum,
+	// the model value is a numeral — map it back to the enum constant name.
+	if EnableInterpretedEnums {
+		if es, ok2 := sort.(*lg.EnumeratedSort); ok2 && h.sig != nil {
+			if _, interped := h.sig.Interp[es.Name]; interped {
+				if idx, err := strconv.Atoi(result.Name); err == nil && idx >= 0 && idx < len(es.Extension) {
+					return lg.NewConst(es.Extension[idx], sort)
+				}
+			}
+		}
+	}
+	return result
 }
 
 // mineInterpretedConstants discovers interpreted constants from the vocabulary
@@ -685,8 +700,9 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Const) []lg.Expr {
 	}
 	fTerm := lg.MustApply(f, vars...)
 
-	// For enumerated range, check each possible value
-	if es, ok := rng.(*lg.EnumeratedSort); ok {
+	// For enumerated range, check each possible value.
+	// Python (ivy_solver.py:1800): if isinstance(rng, EnumeratedSort) and not use_z3_enums:
+	if es, ok := rng.(*lg.EnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
 		var result []lg.Expr
 		for _, name := range es.Extension {
 			c := lg.NewConst(name, rng)

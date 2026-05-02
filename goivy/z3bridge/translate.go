@@ -3,6 +3,7 @@ package z3bridge
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -10,6 +11,13 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
+
+// EnableInterpretedEnums gates the enumerated_to_numeral feature: converting
+// enum constants to integer ordinals when the enum sort has a numeric
+// interpretation (e.g., "interpret color -> int"). This is OFF during
+// xtrace conformance testing against Python (which also has this stubbed).
+// Flip to true once the Go port is verified faithful.
+const EnableInterpretedEnums = false
 
 /*
 // LookupNativeFunc is a callback matching Python lookup_native(thing, table, kind)
@@ -1138,7 +1146,20 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		//       res = enumerated_to_numeral(term)
 		if _, interped := t.s.sig.Interp[es.Name]; interped {
 			xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
-			return Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
+			if !EnableInterpretedEnums {
+				return Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
+			}
+			ordinal := -1
+			for i, eName := range es.Extension {
+				if eName == name {
+					ordinal = i
+					break
+				}
+			}
+			if ordinal < 0 {
+				return Expr{}, fmt.Errorf("enum constant %q not found in sort %q extension", name, es.Name)
+			}
+			return t.enumeratedToNumeralZ3(ordinal, es)
 		}
 	}
 
@@ -1235,6 +1256,37 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 	}
 
 	return Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
+}
+
+// enumeratedToNumeralZ3 converts an enum ordinal to a Z3 expression in the
+// sort that the enum is interpreted as. Called when EnableInterpretedEnums
+// is true and the enum sort has a numeric interpretation in sig.Interp.
+func (t *Translator) enumeratedToNumeralZ3(ordinal int, es *lg.EnumeratedSort) (Expr, error) {
+	itp := t.s.sig.Interp[es.Name]
+	switch v := itp.(type) {
+	case string:
+		switch v {
+		case "int", "nat":
+			return t.Ctx.IntVal(int64(ordinal)), nil
+		default:
+			if strings.HasPrefix(v, "bv[") && strings.HasSuffix(v, "]") {
+				widthStr := v[3 : len(v)-1]
+				width, err := strconv.Atoi(widthStr)
+				if err != nil {
+					return Expr{}, fmt.Errorf("bad bv width in interpretation of %q: %v", es.Name, err)
+				}
+				if ordinal >= (1 << width) {
+					return Expr{}, fmt.Errorf("enum ordinal %d exceeds bv[%d] capacity", ordinal, width)
+				}
+				return t.Ctx.BvVal(int64(ordinal), width), nil
+			}
+			return Expr{}, fmt.Errorf("cannot interpret enum %q as native sort %q", es.Name, v)
+		}
+	case *lg.RangeSort:
+		return t.Ctx.IntVal(int64(ordinal)), nil
+	default:
+		return Expr{}, fmt.Errorf("cannot interpret enum %q: unsupported interpretation type %T", es.Name, itp)
+	}
 }
 
 func (t *Translator) getFuncDecl(fn lg.Expr) (FuncDecl, error) {
