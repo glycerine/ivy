@@ -877,6 +877,8 @@ class ChoiceAction(Action):
         global choice_action_ctr
         self.unique_id = choice_action_ctr
         choice_action_ctr += 1
+        if __debug__:
+            xtracer.trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=%s" % (self.unique_id, choice_action_ctr, type(self).__name__))
     def name(self):
         return 'choice'
     def __str__(self):
