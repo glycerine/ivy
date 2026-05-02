@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
@@ -1025,10 +1026,9 @@ func TestQelimFresh(t *testing.T) {
 func TestQelimGetConsts(t *testing.T) {
 	intSort := &lg.UninterpretedSort{Name: "int"}
 	boolSort := lg.Boolean
-	sc := map[string][]*lg.Const{
-		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
-		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
-	}
+	sc := iu.NewInsMap[string, []*lg.Const]()
+	sc.Set("int", []*lg.Const{lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)})
+	sc.Set("bool", []*lg.Const{lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)})
 	q := NewQelim(sc, nil, nil, false)
 	consts := q.GetConsts(intSort, sc)
 	if len(consts) != 3 {
