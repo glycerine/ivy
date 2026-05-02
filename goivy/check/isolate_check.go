@@ -575,7 +575,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				linenoKey := lineno.FileLineKey()
 
 				anyUntried := false
-				for root := range checkedActions {
+				for _, root := range actionOrder {
 					if roots[root] && !tried[root+":"+linenoKey] {
 						anyUntried = true
 						break
@@ -587,7 +587,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 					oldCheckedAssert := mod.Cfg.CheckLineno
 					mod.Cfg.CheckLineno = linenoKey
 					someFailed := false
-					for root := range checkedActions {
+					for _, root := range actionOrder {
 						if !roots[root] {
 							continue
 						}
