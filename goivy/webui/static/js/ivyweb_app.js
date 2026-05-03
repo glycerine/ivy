@@ -2109,8 +2109,15 @@ class IvyApp {
     async runCheck() {
         var mode = document.getElementById('mode-select').value;
         this.controls.showLoading('Running ' + mode + ' check...');
-        this.controls.setStatus('Running ' + mode + ' check...');
+        this.controls.setStatus('Recompiling editor content...');
         try {
+            // Always recompile from the current editor content so the
+            // server checks exactly what the user sees, not a stale cache.
+            var editorContent = this.cmEditor ? this.cmEditor.getValue() : this._persistedFileContent;
+            if (editorContent) {
+                await this.api.reloadContent(editorContent, this._persistedFileName || 'model.ivy');
+            }
+            this.controls.setStatus('Running ' + mode + ' check...');
             var result = await this.api.runCheck(mode);
             this.showCheckResult(result);
 

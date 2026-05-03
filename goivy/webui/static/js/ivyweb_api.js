@@ -64,6 +64,22 @@ class IvyAPI {
     }
 
     /**
+     * Re-upload editor content so the server recompiles before a check.
+     * @param {string} content - current editor text
+     * @param {string} filename - file name for the server
+     * @returns {Promise<object>} load result
+     */
+    async reloadContent(content, filename) {
+        var blob = new Blob([content], { type: 'text/plain' });
+        var formData = new FormData();
+        formData.append('file', blob, filename || 'model.ivy');
+        return this._request('/api/session/' + this.sessionId + '/load', {
+            method: 'POST',
+            body: formData,
+        });
+    }
+
+    /**
      * Get the current Analysis Reachability Graph.
      * @returns {Promise<object>} ARG graph data (Cytoscape elements JSON)
      */
