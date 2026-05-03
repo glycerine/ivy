@@ -8,9 +8,14 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/check"
+	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
+	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/parser"
+	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -1016,31 +1021,25 @@ func TestCheckModule_Nil(t *testing.T) {
 // Regression: before the fix, when no "error" action existed in the module,
 // CheckModule defaulted to errorClauses = TrueClauses ("every state is bad"),
 // causing PDR to trivially report a counterexample.
+// TestCheckModule_InductiveConjectureValid uses a propositional model
+// where the conjecture is trivially inductive.
+// Regression: before the fix, CheckModule defaulted errorClauses to
+// TrueClauses (every state is bad) when no "error" action existed.
 func TestCheckModule_InductiveConjectureValid(t *testing.T) {
-	S := &lg.UninterpretedSort{Name: "S"}
-	X, _ := lg.NewVariable("X", S)
-	pSort, _ := lg.NewFunctionSort(S, lg.Boolean)
-	P := lg.NewConst("P", pSort)
-	PX, _ := lg.NewApply(P, X)
+	p := lg.NewConst("p", lg.Boolean)
 
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	mod.Sig.Sorts.Set("S", S)
-	mod.Sig.Symbols.Set("P", &il.SymbolEntry{Sort: pSort})
+	mod.Sig.Symbols.Set("p", &il.SymbolEntry{Sort: lg.Boolean})
 
-	// Initializer: P(X) := true
-	mod.Initializers = append(mod.Initializers, module.NamedAction{
-		Name:   "init",
-		Action: actions.NewAssignAction(PX, lg.True),
-	})
+	mod.InitCond = module.NewClauses([]lg.Expr{p}, nil, nil)
 
-	// Action: P(X) := P(X) (identity, preserves conjecture)
-	mod.Actions.Set("ext:step", actions.NewAssignAction(PX, PX))
+	// p := p — identity; marks p as a state variable for PDR
+	mod.Actions.Set("ext:step", actions.NewAssignAction(p, p))
 	mod.PublicActions.Set("ext:step", true)
 
-	// Conjecture: P(X)
 	mod.LabeledConjs = []*ast.LabeledFormula{
-		{Formula: PX},
+		{Formula: p},
 	}
 
 	result, err := CheckModule(mod)
@@ -1050,6 +1049,54 @@ func TestCheckModule_InductiveConjectureValid(t *testing.T) {
 	if !result.Valid {
 		t.Errorf("PDR should report Valid for inductive conjecture, got: Valid=%v Error=%q",
 			result.Valid, result.Error)
+	}
+}
+
+// TestCheckModule_InductiveWithInitializer compiles a real .ivy spec
+// through the full pipeline (parse → compile → CheckModule) and
+// verifies PDR reports Valid.
+// Regression: before the fix, PDR used mod.InitCond (nil for imperative
+// initializers) instead of computing init from AddInitialState.
+func TestCheckModule_InductiveWithInitializer(t *testing.T) {
+	src := `#lang ivy1.7
+
+type node
+
+relation flag(X:node)
+
+after init {
+    flag(X) := true
+}
+
+action step(n:node) = {
+    flag(n) := flag(n)
+}
+export step
+
+conjecture flag(X)
+`
+	version := lexer.Version{1, 7}
+	result, err := parser.Parse(src, version)
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	mod := module.New()
+	mod.Sig = il.NewSig()
+	check.WireAdmitDefinitionFactory(mod)
+	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+	check.RegisterTactics(mod.Cfg.ProofCfg, mod)
+	err = compiler.IvyCompile(result.Decls, mod, true)
+	if err != nil {
+		t.Fatalf("compile error: %v", err)
+	}
+
+	pdrResult, pdrErr := CheckModule(mod)
+	if pdrErr != nil {
+		t.Fatalf("CheckModule returned error: %v", pdrErr)
+	}
+	if !pdrResult.Valid {
+		t.Errorf("PDR should report Valid for inductive conjecture with initializer, got: Valid=%v Error=%q",
+			pdrResult.Valid, pdrResult.Error)
 	}
 }
 

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/art"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/z3bridge"
@@ -159,9 +160,43 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	}
 
 	// Python: init = forward_clauses(state.clauses, inflex)
-	initClauses := mod.InitCond
+	// In Python, state.clauses comes from ag.states[0] which was produced
+	// by add_initial_state() — which runs the full interpreter on
+	// initializers. We do the same: build an AG, call AddInitialState,
+	// and use the resulting state's clauses.
+	// Initializer effects land in Clauses.Defs (as definitions like
+	// "flag(V0) = true"). We promote these to Fmlas so ClausesToZ3
+	// universally quantifies them via conjToZ3 → formulaToZ3Closed.
+	var initClauses *module.Clauses
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				// AddInitialState may panic if interpreter infrastructure
+				// is incomplete (e.g. unit tests with hand-built modules).
+			}
+		}()
+		tmpAG := art.NewAnalysisGraph(mod)
+		initState := tmpAG.AddInitialState(mod.InitCond, nil)
+		if initState != nil && initState.Clauses != nil {
+			c := initState.Clauses
+			// Promote definitions to formulas so they get ForAll-closed
+			// by conjToZ3. Definitions like "flag(V0) = true" are Exprs
+			// but ClausesToZ3 translates them via formulaToZ3 (no ForAll)
+			// rather than conjToZ3 (which adds ForAll for free variables).
+			var fmlas []lg.Expr
+			fmlas = append(fmlas, c.Fmlas...)
+			for _, d := range c.Defs {
+				fmlas = append(fmlas, d)
+			}
+			initClauses = module.NewClauses(fmlas, nil, c.Annot)
+		}
+	}()
 	if initClauses == nil {
-		initClauses = module.TrueClauses(nil)
+		if mod.InitCond != nil {
+			initClauses = mod.InitCond
+		} else {
+			initClauses = module.TrueClauses(nil)
+		}
 	}
 	initClauses = forwardClausesIvy(initClauses, inflexSet)
 
@@ -176,10 +211,16 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	solver := z3bridge.NewSolver(mod, nil)
 
 	// Python: init_z3 = sv.clauses_to_z3(init)
+	fmt.Printf("PDR DEBUG initClauses fmlas=%d defs=%d\n", len(initClauses.Fmlas), len(initClauses.Defs))
+	for i, f := range initClauses.Fmlas {
+		fmt.Printf("  fmla[%d] type=%T val=%v\n", i, f, f)
+	}
 	initZ3, err := solver.ClausesToZ3(initClauses)
 	if err != nil {
 		return nil, fmt.Errorf("updr: init clauses_to_z3: %w", err)
 	}
+
+	fmt.Printf("PDR DEBUG initZ3 = %v\n", initZ3)
 
 	// Python: rho_z3 = z3.Or(*[sv.clauses_to_z3(lu.simplify_clauses(a[1])) for a in updates])
 	var rhoTerms []z3bridge.Expr
@@ -197,6 +238,8 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	} else {
 		rhoZ3 = solver.Context().Or(rhoTerms...)
 	}
+
+	fmt.Printf("PDR DEBUG rhoZ3 = %v\n", rhoZ3)
 
 	// Python: bad_z3 = sv.clauses_to_z3(error)
 	badZ3, err := solver.ClausesToZ3(errorClauses)
