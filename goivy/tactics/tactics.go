@@ -227,71 +227,94 @@ func (tc *TacticsContext) ImpliedFacts(premise *module.Clauses, factsToCheck []*
 }
 
 // GetDiagram returns the diagram (abstract state representation) for a goal.
-// Corresponds to Python's get_diagram().
-func (tc *TacticsContext) GetDiagram(goal *proof.ProofGoal) *proof.ProofGoal {
+// Python tactics_api.py:323-333 get_diagram(goal, weaken=False).
+func (tc *TacticsContext) GetDiagram(goal *proof.ProofGoal, weaken bool) *proof.ProofGoal {
 	if goal == nil {
 		return nil
 	}
-	// In the full implementation, this calls ivy_solver.clauses_model_to_diagram
-	// to compute a minimal diagram from the goal's node clauses conjoined with
-	// the goal formula. For now, return the goal itself.
-	return goal
+	node, ok := goal.Node.(*art.State)
+	if !ok || node == nil {
+		return nil
+	}
+
+	// Python: axioms = _ivy_interp.background_theory()
+	axioms := tc.BackgroundTheoryClauses()
+
+	// Python: and_clauses(goal.node.clauses, goal.formula)
+	goalClauses := module.FormulaToClauses(goal.Formula, nil)
+	combined := module.AndClausesTyped(node.Clauses, goalClauses)
+
+	// Python: is_skolem
+	isSkolem := func(c *lg.Const) bool {
+		return actions.IsSkolem(c.Name)
+	}
+
+	// Python: ivy_solver.clauses_model_to_diagram(
+	//     combined, is_skolem, false_clauses(), axioms=axioms, weaken=weaken)
+	slv := z3bridge.NewSolver(tc.Mod, tc.modSolverOpts())
+	d, err := slv.ClausesModelToDiagramFull(
+		combined,
+		isSkolem,
+		module.FalseClauses(nil),
+		nil,
+		axioms,
+		weaken,
+		true,
+		true,
+	)
+	if err != nil || d == nil {
+		return nil
+	}
+
+	// Python: return goal_at_arg_node(d, goal.node)
+	return GoalAtArgNode(d.ToFormula(), node)
 }
 
 // RefineOrReverse attempts to refine or reverse a goal.
-// Refinement succeeds if a forward interpolant exists between the predecessor
-// state and the goal formula. If refinement fails, the backward image is
-// computed and a new goal is pushed.
-// Returns (refined bool, result) where result is either the interpolant
-// (if refined) or a new proof goal (if reversed).
-// Corresponds to Python's refine_or_reverse().
+// Returns (true, *module.Clauses) with the interpolant if refinement succeeds,
+// or (false, *proof.ProofGoal) with the backward image goal if it fails.
+// Python tactics_api.py:286-307 refine_or_reverse(goal).
 func (tc *TacticsContext) RefineOrReverse(goal *proof.ProofGoal) (bool, interface{}) {
 	if goal == nil {
 		return false, nil
 	}
 	node, ok := goal.Node.(*art.State)
-	if !ok || node == nil || node.Pred == nil {
+	if !ok || node == nil {
 		return false, nil
 	}
+
+	// Python: preds, action = arg_get_preds_action(goal.node)
 	pred := node.Pred
-	if pred.Clauses == nil {
-		return false, nil
-	}
-
-	// Get the action that transitions from pred to node
 	action := node.Action
-	if action == nil {
+	if pred == nil || action == nil {
 		return false, nil
 	}
 
+	// Python: axioms = _ivy_interp.background_theory()
+	axioms := tc.BackgroundTheoryClauses()
+
+	// Python: action.update(_ivy_interp, None)
 	update := actions.GetUpdateForArt(action, tc.Mod, nil)
 	if update == nil {
 		return false, nil
 	}
 
-	// Try forward interpolation:
-	// Check if pred.clauses & TR => ~goal.formula
-	// If so, we can refine (find an interpolant).
-	preFmla := pred.Clauses.ToFormula()
-	goalFmla := goal.Formula
-	postFmla := conjoinNodes(preFmla, update.TRNode())
-	negGoal := &lg.Not{Body: goalFmla}
+	// Python: x = ivy_transrel.forward_interpolant(
+	//     pred.clauses, action.update(...), goal.formula, axioms, None)
+	goalClauses := module.FormulaToClauses(goal.Formula, nil)
+	fmt.Println("calling ForwardInterpolant")
+	x := actions.ForwardInterpolant(tc.Mod, pred.Clauses, update, goalClauses, axioms, nil)
+	fmt.Printf("    got: %v\n", x)
 
-	slv := z3bridge.NewSolver(tc.Mod, tc.modSolverOpts())
-	implies, err := slv.Implies(postFmla, negGoal)
-	if err == nil && implies {
-		// Refinement succeeds: the goal is unreachable from pred.
-		// The interpolant is the forward image of pred through the action
-		// conjoined with the negation of the goal.
-		// For now, return the negation of the goal as the "new fact".
-		return true, negGoal
+	if x == nil {
+		// Python: bi = backward_image(goal.formula, action)
+		//         return False, goal_at_arg_node(bi, pred)
+		bi := tc.BackwardImage(goalClauses, action)
+		newGoal := GoalAtArgNode(bi.ToFormula(), pred)
+		return false, newGoal
 	}
-
-	// Refinement fails: compute backward image and push new goal.
-	goalClauses := module.FormulaToClauses(goalFmla, nil)
-	bi := tc.BackwardImage(goalClauses, action)
-	newGoal := GoalAtArgNode(bi.ToFormula(), pred)
-	return false, newGoal
+	// Python: return True, x[1]  # x is (core, interpolant)
+	return true, x.Itp
 }
 
 // -----------------------------------------------------------------------
@@ -393,20 +416,19 @@ func (t *RefineOrReverseTactic) Name() string { return "RefineOrReverse" }
 func (t *RefineOrReverseTactic) Apply(goal *proof.ProofGoal) (bool, error) {
 	refined, result := t.TC.RefineOrReverse(goal)
 	if refined {
-		// Add the new fact to the goal's node
-		if newFact, ok := result.(lg.Expr); ok {
+		// Python: ta.arg_add_facts(goal.node, y)
+		if newFact, ok := result.(*module.Clauses); ok {
 			node, ok := goal.Node.(*art.State)
 			if ok && node != nil {
-				factClauses := module.FormulaToClauses(newFact, nil)
-				ArgAddFacts(node, factClauses)
+				ArgAddFacts(node, newFact)
 			}
 		}
-		// Remove refuted goals in the chain
+		// Python: walk g = g.parent removing refuted goals
 		if t.AutoRemove {
 			g := goal
 			for g != nil && t.TC.RefutedGoal(g) {
 				t.TC.RemoveGoal(g)
-				g = t.TC.TopGoal()
+				g = g.Parent
 			}
 		}
 		return true, nil
@@ -841,15 +863,10 @@ func CustomRefineOrReverse(tc *TacticsContext, goal *proof.ProofGoal, x bool, y 
 		}
 		if autoRemove {
 			// Python: walk up via g.parent removing refuted goals.
-			// Go ProofGoal does not currently have a Parent field, so we
-			// only remove the immediate goal if refuted (matching the
-			// minimum behavior). When ProofGoal.Parent is added, this
-			// loop should mirror the Python while-loop.
 			g := goal
 			for g != nil && tc.RefutedGoal(g) {
 				tc.RemoveGoal(g)
-				// g = g.Parent  // not yet available in Go
-				break
+				g = g.Parent
 			}
 		}
 	} else {
