@@ -91,10 +91,30 @@ ta._ivy_ag.actions[repr(action)] = action
 
 Add `exprsToClausesList` and `setDifference` as file-local helpers in `tactics.go` (same logic as `iupdr/iupdr.go:597-656`).
 
+### 8. Fix z3bridge NumeralToZ3 context leak (root cause of Z3 sort mismatch panic)
+
+**File:** `z3bridge/solver_encoding.go:377-394` and `z3bridge/translate.go:185-192`
+**Red test:** `tactics/updr_tactics_test.go:TestUPDR_InductiveWithInitializer`
+
+**Root cause:** `Translator.Numeral()` at translate.go:187 calls `t.s.NumeralToZ3(num)` where `t.s` is the original solver. Inside `NumeralToZ3`, line 379 does `ctx := s.tr.Ctx` — this is the **original solver's Z3Context**, not the interpolation translator's context. When called during `BinaryInterpolant`, the constant "0:node" gets created in the original context while `flag` was declared in the interpolation context → Z3 detects the cross-context sort mismatch.
+
+**The crash path:**
+1. `NegateClauses(safetyProp)` produces `~flag(0)` where `0` is a numeral constant of sort `node`
+2. `BinaryInterpolant` creates a fresh interpolation Z3Context
+3. First `ClausesToZ3` translates the forward image (definitions for `flag`, `__flag`) — declares `flag` and `node` in the interpolation context
+4. Second `ClausesToZ3` translates `~flag(0)`:
+   - `flag` found in z3_predicates cache (interpolation context) ✓
+   - `0` goes through `isNumeralName("0")=true` → `t.Numeral("0", nodeSort)` → `t.s.NumeralToZ3(...)` → creates `ctx.Const("0:node", translated)` using the **original** context ✗
+   - `flag(0)` applies a function from context A to a constant from context B → panic
+
+**Fix:** `Translator.Numeral()` must handle the uninterpreted-sort case directly using `t.Ctx` and `t.TranslateSort()`, bypassing `t.s.NumeralToZ3()`. For native sorts (int/bv/string), `NumeralToZ3` also uses `s.tr.Ctx`, so those must also be translated in the caller's context. The cleanest approach: duplicate the `NumeralToZ3` logic into `Translator.Numeral()` using `t.Ctx` throughout. Keep `NumeralToZ3` for non-interpolation callers that use the solver's own translator.
+
 ## Critical Files
 
 | File | Role |
 |------|------|
+| `z3bridge/translate.go:185-192` | `Translator.Numeral()` — must use `t.Ctx` not `t.s.tr.Ctx` |
+| `z3bridge/solver_encoding.go:377` | `NumeralToZ3` — the method that uses the wrong context |
 | `tactics/tactics.go` | Main file: GetDiagram, RefineOrReverse, UPDR.Apply, tactic structs |
 | `iupdr/iupdr.go:442` | One-line signature update for GetDiagram |
 | `actions/transrel.go:1501` | ForwardInterpolant — already complete, called by fix |
@@ -103,9 +123,4 @@ Add `exprsToClausesList` and `setDifference` as file-local helpers in `tactics.g
 
 ## Verification
 
-Run `cd ~/ivy/goivy && make test` to verify no regressions. The existing `updr_tactics_test.go` integration test (currently skipped) should be un-skipped and extended to cover:
-1. GetDiagram returns non-nil diagram for satisfiable goals
-2. RefineOrReverse returns `*module.Clauses` interpolant on refinement
-3. RefineOrReverse returns `*proof.ProofGoal` backward image on reversal
-4. Parent chain traversal removes all refuted goals
-5. UPDR finds invariant on a simple example (client_server_sorted.ivy)
+Run `cd ~/ivy/goivy && make test` to verify no regressions. The existing `TestUPDR_InductiveWithInitializer` (tactics/updr_tactics_test.go) is the red test — it panics at the `ForwardInterpolant` call. After fixing the z3bridge context leak (step 8), this test should pass (or at least not panic), allowing the UPDR algorithm changes (steps 1-7) to be exercised.
