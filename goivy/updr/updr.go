@@ -49,6 +49,9 @@ func forwardClausesIvy(clauses *module.Clauses, inflex map[lg.NodeKey]bool) *mod
 		if inflex[k] {
 			continue
 		}
+		if actions.IsNew(c.Name) || actions.IsSkolem(c.Name) {
+			continue
+		}
 		subs[k] = lg.NewConst(actions.New(c.Name), c.CSort)
 	}
 	return module.RenameClauses(clauses, subs)
@@ -239,13 +242,15 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 		rhoZ3 = solver.Context().Or(rhoTerms...)
 	}
 
-	fmt.Printf("PDR DEBUG rhoZ3 = %v\n", rhoZ3)
+	fmt.Printf("PDR DEBUG rhoZ3 = %v\n", rhoZ3.String())
 
 	// Python: bad_z3 = sv.clauses_to_z3(error)
 	badZ3, err := solver.ClausesToZ3(errorClauses)
 	if err != nil {
 		return nil, fmt.Errorf("updr: bad clauses_to_z3: %w", err)
 	}
+
+	fmt.Printf("PDR DEBUG badZ3 = %v\n", badZ3)
 
 	// Python: background_z3 = sv.clauses_to_z3(axioms)
 	backgroundZ3, err := solver.ClausesToZ3(axioms)
@@ -266,6 +271,15 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 			continue
 		}
 		lsyms = append(lsyms, [2]z3bridge.Expr{z3Cur, z3Next})
+	}
+
+	fmt.Printf("PDR DEBUG lsyms count=%d\n", len(lsyms))
+	for i, pair := range lsyms {
+		fmt.Printf("  lsyms[%d] = (%v, %v)\n", i, pair[0], pair[1])
+	}
+	fmt.Printf("PDR DEBUG flexConsts count=%d\n", len(flexConsts))
+	for i, c := range flexConsts {
+		fmt.Printf("  flex[%d] = %v sort=%v\n", i, c.Name, c.CSort)
 	}
 
 	// Python: gsyms = [ns(sym) for sym in inflex]
