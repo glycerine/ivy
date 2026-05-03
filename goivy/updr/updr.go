@@ -83,6 +83,26 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 		}
 	}
 	if errorClauses == nil {
+		// No explicit "error" action — build error condition from the
+		// negated conjectures: a state is an error if any conjecture
+		// is violated, i.e., ¬(conj_1 ∧ conj_2 ∧ ...).
+		if len(mod.LabeledConjs) > 0 {
+			var conjFmlas []lg.Expr
+			for _, lc := range mod.LabeledConjs {
+				if lc.Formula != nil {
+					conjFmlas = append(conjFmlas, lc.Formula.(lg.Expr))
+				}
+			}
+			if len(conjFmlas) > 0 {
+				conj := module.NewClauses(conjFmlas, nil, nil)
+				witness := func(v *lg.Variable) lg.Expr {
+					return module.VarToSkolem("@", v)
+				}
+				errorClauses = module.DualClauses(conj, witness, mod.Instantiator)
+			}
+		}
+	}
+	if errorClauses == nil {
 		errorClauses = module.TrueClauses(nil)
 	}
 
