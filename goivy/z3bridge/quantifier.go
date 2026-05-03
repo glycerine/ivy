@@ -825,6 +825,18 @@ func (ctx *Z3Context) Function(name string, domain []Sort, range_ Sort) FuncDecl
 	return fd
 }
 
+// AsExpr converts a FuncDecl to an Expr via Z3_func_decl_to_ast.
+// This is needed for Z3_substitute which operates on AST nodes.
+// Matches Python's FuncDeclRef.as_ast() used in z3.substitute().
+func (fd FuncDecl) AsExpr() Expr {
+	var e Expr
+	fd.ctx.do(func() {
+		e = fd.ctx.newExpr(C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
+	})
+	runtime.KeepAlive(fd)
+	return e
+}
+
 // Apply applies the function declaration to arguments, returning an expression.
 func (fd FuncDecl) Apply(args ...Expr) Expr {
 	cargs := make([]C.Z3_ast, len(args))

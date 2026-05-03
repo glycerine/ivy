@@ -333,13 +333,26 @@ func IsSolverOp(name string) bool {
 	return false
 }
 
-// NativeSymbol returns the Z3 native symbol for a given Ivy symbol, if any.
-func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
+// NativeSymbolToZ3 converts an Ivy symbol to its Z3 Const representation.
+// Only handles constant-sorted (first-order) symbols. Returns false for
+// isFuncSorted if the symbol is function-sorted — the caller must handle
+// function-sorted symbols separately since Z3_substitute cannot substitute
+// function declarations (Z3_substitute_funs does not exist in this Z3 version).
+//
+// Based on Python native_symbol (ivy_solver.py:432-438). The Python
+// version has a bug (references undefined `name`) and was never run.
+func (s *Solver) NativeSymbolToZ3(sym *lg.Const) (z3 Expr, isFuncSorted bool, err error) {
 	xtracer.Trace("ivy_solver.py:398 native_symbol() ENTER sym=%v", sym)
-	if il.IsInterpretedSymbol(sig, sym) {
-		return sym
+	if lg.FirstOrderSort(sym.CSort) {
+		xtracer.Trace("TranslateSort_call callsite=native_symbol_const HASH canon=%s", sym.Sexp())
+		zs, zerr := s.tr.TranslateSort(sym.CSort)
+		if zerr != nil {
+			return Expr{}, false, zerr
+		}
+		z3name := s.tr.z3Name(sym.Name, sym.CSort)
+		return s.tr.Ctx.Const(z3name, zs), false, nil
 	}
-	return nil
+	return Expr{}, true, nil
 }
 
 // --- Collection utilities ---

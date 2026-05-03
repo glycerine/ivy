@@ -76,9 +76,9 @@ type PDR struct {
 	xn     []z3bridge.Expr // next-state variables
 	inputs []z3bridge.Expr // input variables
 
-	init       z3bridge.Expr // initial state formula (over x0)
-	trans      z3bridge.Expr // transition relation (over x0, xn, inputs)
-	bad        z3bridge.Expr // bad state formula (over x0)
+	init       z3bridge.Expr  // initial state formula (over x0)
+	trans      z3bridge.Expr  // transition relation (over x0, xn, inputs)
+	bad        z3bridge.Expr  // bad state formula (over x0)
 	background *z3bridge.Expr // background axioms (asserted in every frame solver; nil = none)
 
 	gsyms        []z3bridge.Expr    // global/inflexible symbols

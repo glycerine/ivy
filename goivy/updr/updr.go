@@ -49,9 +49,6 @@ func forwardClausesIvy(clauses *module.Clauses, inflex map[lg.NodeKey]bool) *mod
 		if inflex[k] {
 			continue
 		}
-		if actions.IsNew(c.Name) || actions.IsSkolem(c.Name) {
-			continue
-		}
 		subs[k] = lg.NewConst(actions.New(c.Name), c.CSort)
 	}
 	return module.RenameClauses(clauses, subs)
@@ -77,9 +74,9 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 
 	// Python: err_act = ag.actions["error"].update(ag.domain, state.in_scope)
 	// Python: error = tr.reverse_image([], axioms, err_act)
+	updateCtx := makeUpdateContext(mod)
 	var errorClauses *module.Clauses
 	if errAct, ok := mod.Actions.Get2("error"); ok {
-		updateCtx := makeUpdateContext(mod)
 		errUpd := actions.GetUpdate(errAct, updateCtx)
 		if errUpd != nil {
 			errorClauses = actions.ReverseImage(
@@ -87,9 +84,11 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 		}
 	}
 	if errorClauses == nil {
-		// No explicit "error" action — build error condition from the
-		// negated conjectures: a state is an error if any conjecture
-		// is violated, i.e., ¬(conj_1 ∧ conj_2 ∧ ...).
+		// No explicit "error" action — construct one from negated
+		// conjectures, matching the Python pattern:
+		//   Sequence(HavocAction(v1), ..., AssumeAction(~conj))
+		// Then pass through GetUpdate + ReverseImage, exactly as
+		// Python does for user-defined error actions.
 		if len(mod.LabeledConjs) > 0 {
 			var conjFmlas []lg.Expr
 			for _, lc := range mod.LabeledConjs {
@@ -98,11 +97,27 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 				}
 			}
 			if len(conjFmlas) > 0 {
-				conj := module.NewClauses(conjFmlas, nil, nil)
-				witness := func(v *lg.Variable) lg.Expr {
-					return module.VarToSkolem("@", v)
+				conjClauses := module.NewClauses(conjFmlas, nil, nil)
+				vars := module.UsedVariablesOrdered(conjClauses)
+
+				varSubs := make(map[lg.NodeKey]lg.Expr)
+				var seqElems []lg.Expr
+				for _, v := range vars {
+					c := lg.NewConst(v.Name, v.VSort)
+					varSubs[lg.Key(v)] = c
+					seqElems = append(seqElems, actions.NewHavocAction(c))
 				}
-				errorClauses = module.DualClauses(conj, witness, mod.Instantiator)
+
+				substConj := module.SubstituteNodesClauses(conjClauses, varSubs)
+				negFmla := module.Negate(module.ClausesToFormula(substConj))
+				seqElems = append(seqElems, actions.NewAssumeAction(negFmla))
+				errAction := actions.NewSequence(seqElems...)
+
+				errUpd := actions.GetUpdate(errAction, updateCtx)
+				if errUpd != nil {
+					errorClauses = actions.ReverseImage(
+						module.TrueClauses(nil), axioms, errUpd)
+				}
 			}
 		}
 	}
@@ -111,7 +126,6 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	}
 
 	// Python: actions_list = [ag.actions[lab] for lab in ag.actions if lab != "error"]
-	updateCtx := makeUpdateContext(mod)
 	var updates []*actions.Update
 	for name, act := range mod.Actions.All() {
 		if name == "error" {
@@ -214,16 +228,10 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	solver := z3bridge.NewSolver(mod, nil)
 
 	// Python: init_z3 = sv.clauses_to_z3(init)
-	fmt.Printf("PDR DEBUG initClauses fmlas=%d defs=%d\n", len(initClauses.Fmlas), len(initClauses.Defs))
-	for i, f := range initClauses.Fmlas {
-		fmt.Printf("  fmla[%d] type=%T val=%v\n", i, f, f)
-	}
 	initZ3, err := solver.ClausesToZ3(initClauses)
 	if err != nil {
 		return nil, fmt.Errorf("updr: init clauses_to_z3: %w", err)
 	}
-
-	fmt.Printf("PDR DEBUG initZ3 = %v\n", initZ3)
 
 	// Python: rho_z3 = z3.Or(*[sv.clauses_to_z3(lu.simplify_clauses(a[1])) for a in updates])
 	var rhoTerms []z3bridge.Expr
@@ -242,15 +250,11 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 		rhoZ3 = solver.Context().Or(rhoTerms...)
 	}
 
-	fmt.Printf("PDR DEBUG rhoZ3 = %v\n", rhoZ3.String())
-
 	// Python: bad_z3 = sv.clauses_to_z3(error)
 	badZ3, err := solver.ClausesToZ3(errorClauses)
 	if err != nil {
 		return nil, fmt.Errorf("updr: bad clauses_to_z3: %w", err)
 	}
-
-	fmt.Printf("PDR DEBUG badZ3 = %v\n", badZ3)
 
 	// Python: background_z3 = sv.clauses_to_z3(axioms)
 	backgroundZ3, err := solver.ClausesToZ3(axioms)
@@ -258,35 +262,33 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 		return nil, fmt.Errorf("updr: background clauses_to_z3: %w", err)
 	}
 
+	// Python: ns = sv.native_symbol
 	// Python: lsyms = [(ns(sym), ns(tr.new(sym))) for sym in flex]
+	//
+	// Function-sorted symbols (relations like flag:node→bool) are excluded
+	// from lsyms because Z3_substitute cannot substitute function declarations
+	// and Z3_substitute_funs is not available in this Z3 version. The
+	// vocabulary rename for function-sorted symbols is already handled at the
+	// Ivy level by forwardClausesIvy before Z3 conversion.
 	var lsyms [][2]z3bridge.Expr
 	for _, sym := range flexConsts {
-		z3Cur, cerr := solver.FormulaToZ3(sym)
-		if cerr != nil {
+		z3Cur, isFuncSorted, cerr := solver.NativeSymbolToZ3(sym)
+		if cerr != nil || isFuncSorted {
 			continue
 		}
 		newSym := lg.NewConst(actions.New(sym.Name), sym.CSort)
-		z3Next, nerr := solver.FormulaToZ3(newSym)
+		z3Next, _, nerr := solver.NativeSymbolToZ3(newSym)
 		if nerr != nil {
 			continue
 		}
 		lsyms = append(lsyms, [2]z3bridge.Expr{z3Cur, z3Next})
 	}
 
-	fmt.Printf("PDR DEBUG lsyms count=%d\n", len(lsyms))
-	for i, pair := range lsyms {
-		fmt.Printf("  lsyms[%d] = (%v, %v)\n", i, pair[0], pair[1])
-	}
-	fmt.Printf("PDR DEBUG flexConsts count=%d\n", len(flexConsts))
-	for i, c := range flexConsts {
-		fmt.Printf("  flex[%d] = %v sort=%v\n", i, c.Name, c.CSort)
-	}
-
 	// Python: gsyms = [ns(sym) for sym in inflex]
 	var gsyms []z3bridge.Expr
 	for _, sym := range inflexConsts {
-		z3Sym, serr := solver.FormulaToZ3(sym)
-		if serr != nil {
+		z3Sym, isFuncSorted, serr := solver.NativeSymbolToZ3(sym)
+		if serr != nil || isFuncSorted {
 			continue
 		}
 		gsyms = append(gsyms, z3Sym)
