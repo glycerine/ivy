@@ -2634,61 +2634,42 @@ green "make golden"
 green "make rfn"
 green "make tlb" takes just over an hour to run.
 
-latest "make golden-2hr":
-
-make golden-2hr got to: 33_783_298 in about 4 hours:
+green "make golden-2hr": finished after 37_019_447 in about 4 hours 12 minutes.
 
 ~~~
+make golden-2hr
 ...
-33783285  go : XTRACE: actions.AssumeAction.action_update EXIT
-        py : XTRACE: actions.AssumeAction.action_update EXIT
+~py[after i=36993110]: DIAG CallAction.int_update callee=ext:tar_clock.next
+~go[after i=36995285]: 
+~go[after i=36995285]: update.go:1887 [goID 1] 2026-05-03 00:40:28.969682759 +0000 UTC DIAG CallAction.IntUpdate callee='ext:memc.memc_cpl_hook'
+~py[after i=36995285]: DIAG CallAction.int_update callee=ext:memc.memc_cpl_hook
+~go[after i=37008967]: PASS
+~py[after i=37008967]: PASS
+~go[after i=37009178]:         in action idle when called from the environment,the environment:
+~py[after i=37009178]:         in action idle when called from the environment,the environment:
+~go[after i=37009179]:             <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 2100: guarantee ...
+~py[after i=37009179]:             <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 2100: guarantee ...
+~go[after i=37016852]: PASS
+~py[after i=37016852]: PASS
+~go[after i=37019444]: 
+~py[after i=37019444]: 
+~go[after i=37019445]: OK
 
-33783286  go : XTRACE: actions.applyUpdateAxioms ENTER numUpdates=45 modNames=[]
-        py : XTRACE: actions.applyUpdateAxioms ENTER numUpdates=45 modNames=[]
+golden_test.go:889 [goID 9] 2026-05-03 00:40:47.403611363 +0000 UTC ivy_check command has finished. closing cmdPw so the scanner will finish its loop. err='<nil>'
 
-33783287  go : XTRACE: actions.Sequence.int_update compose[20] childType=AssumeAction childModified=[]
-        py : XTRACE: actions.Sequence.int_update compose[20] childType=AssumeAction childModified=[]
+golden_test.go:993 [goID 66] 2026-05-03 00:40:47.631757660 +0000 UTC goivy_check_xtrace command has finished. closing cmdPw so the scanner will finish its loop. err='<nil>'
 
-33783288  go : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates ENTER u1.Modified=[](modAll=False) u2.Modified=[](modAll=False)
+golden_test.go:1006 [goID 67] 2026-05-03 00:40:47.631802325 +0000 UTC goivy_check_xtrace scanner has finished. scanner.Err()='<nil>'
+Go stopping (i=37019447) on goivy_check_xtrace error EOF
 
-33783289  go : XTRACE: transrel.ComposeUpdates newUpdated=[](modAll=False)
-        py : XTRACE: transrel.ComposeUpdates newUpdated=[](modAll=False)
-
-33783290  go : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-        py : XTRACE: transrel.DiffFrameConst nDefs=0 syms=[]
-
-33783291  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-
-33783292  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-
-33783293  go : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-        py : XTRACE: ops.andClauses FALSE-DROP droppingDefs=0 nArgs=2
-
-33783294  go : XTRACE: transrel.ComposeUpdates result nTRfmlas=21 nTRdefs=0 nPREfmlas=1 nPREdefs=0
-        py : XTRACE: transrel.ComposeUpdates result nTRfmlas=21 nTRdefs=0 nPREfmlas=1 nPREdefs=0
-
-33783295  go : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[(Not body:(Apply func:(Symbol name:rfn.abs.trying1.now sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort name:mem_type))])) (Not body:(Apply func:(Symbol n ...(truncated long line to 300 bytes)
-
-        py : XTRACE: transrel.ComposeUpdates result HASH canon= TR=(clauses fmlas:[(Not body:(Apply func:(Symbol name:rfn.abs.trying1.now sort:(FunctionSort sorts:[(UninterpretedSort name:mem_type) (BooleanSort)])) terms:[(Variable name:M sort:(UninterpretedSort name:mem_type))])) (Not body:(Apply func:(Symbol n
- ...(truncated long line to 300 bytes)
-
-33783296  go : XTRACE: transrel.ComposeUpdates result HASH canon= Pre=(clauses fmlas:[(Or terms:[])] defs:[])
-        py : XTRACE: transrel.ComposeUpdates result HASH canon= Pre=(clauses fmlas:[(Or terms:[])] defs:[])
-
-33783297  go : XTRACE: actions.Sequence.int_update compose[20] resultModified=[]
-        py : XTRACE: actions.Sequence.int_update compose[20] resultModified=[]
-
-33783298  go : XTRACE: actions.LocalAction.int_update ENTER
-        py : XTRACE: actions.Sequence.int_update ENTER
-
-    golden_test.go:790: ivy_check and goivy_check differ at line 33783298, counting from 0.
---- FAIL: Test2hrOrdLive (14009.21s)
-FAIL
-exit status 1
-FAIL	github.com/glycerine/ivy/goivy/parser	14009.231s
+golden_test.go:902 [goID 10] 2026-05-03 00:40:47.631844074 +0000 UTC ivy_check scanner has finished. scanner.Err()='<nil>'
+~py[after i=37019446]: OK
+python stopping on (i=37019447) ivy_check error EOF
+both sides are done. (after i=37019447)
+--- PASS: Test2hrOrdLive (15107.71s)
+PASS
+ok  	github.com/glycerine/ivy/goivy/parser	15107.728s
+(goivy-venv) jaten@rog ~/ivy/goivy (master) $
 ~~~
 
 how big is the full ord_live.py runs; something like this (but we have
