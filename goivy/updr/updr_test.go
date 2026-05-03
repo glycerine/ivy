@@ -6,6 +6,10 @@ import (
 	"math/rand"
 	"testing"
 
+	"github.com/glycerine/ivy/goivy/actions"
+	"github.com/glycerine/ivy/goivy/ast"
+	il "github.com/glycerine/ivy/goivy/ivylogic"
+	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
@@ -993,6 +997,59 @@ func TestCheckModule_Nil(t *testing.T) {
 	_, err := CheckModule(nil)
 	if err == nil {
 		t.Fatal("expected error for nil module")
+	}
+}
+
+// ---------- Test: PDR must not report false counterexample for inductive model ----------
+
+// TestCheckModule_InductiveConjectureValid builds a module analogous to
+// client_server_example.ivy with a known-inductive conjecture and verifies
+// that PDR reports Valid=true (no counterexample).
+//
+// The module has:
+//   - sort S
+//   - relation P : S -> bool
+//   - after init { P(X) := true }            (initializer)
+//   - action step { P(X) := P(X) }           (identity — preserves P)
+//   - conjecture forall X:S. P(X)            (inductive: init establishes, step preserves)
+//
+// Regression: before the fix, when no "error" action existed in the module,
+// CheckModule defaulted to errorClauses = TrueClauses ("every state is bad"),
+// causing PDR to trivially report a counterexample.
+func TestCheckModule_InductiveConjectureValid(t *testing.T) {
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	pSort, _ := lg.NewFunctionSort(S, lg.Boolean)
+	P := lg.NewConst("P", pSort)
+	PX, _ := lg.NewApply(P, X)
+
+	mod := module.New()
+	mod.Sig = il.NewSig()
+	mod.Sig.Sorts.Set("S", S)
+	mod.Sig.Symbols.Set("P", &il.SymbolEntry{Sort: pSort})
+
+	// Initializer: P(X) := true
+	mod.Initializers = append(mod.Initializers, module.NamedAction{
+		Name:   "init",
+		Action: actions.NewAssignAction(PX, lg.True),
+	})
+
+	// Action: P(X) := P(X) (identity, preserves conjecture)
+	mod.Actions.Set("ext:step", actions.NewAssignAction(PX, PX))
+	mod.PublicActions.Set("ext:step", true)
+
+	// Conjecture: P(X)
+	mod.LabeledConjs = []*ast.LabeledFormula{
+		{Formula: PX},
+	}
+
+	result, err := CheckModule(mod)
+	if err != nil {
+		t.Fatalf("CheckModule returned error: %v", err)
+	}
+	if !result.Valid {
+		t.Errorf("PDR should report Valid for inductive conjecture, got: Valid=%v Error=%q",
+			result.Valid, result.Error)
 	}
 }
 
