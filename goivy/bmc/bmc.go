@@ -113,30 +113,11 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	}
 	dualConj := module.DualClauses(conj, witness, mod.Instantiator)
 
-	// Create the analysis graph.
+	// Create the analysis graph and add the initial state.
+	// Uses AddInitialState which handles both mod.InitCond and
+	// mod.Initializers (after init { ... } blocks), matching Python.
 	ag := art.NewAnalysisGraph(mod)
-
-	// Add initial state.
-	initClauses := module.TrueClauses(actions.EmptyAnnotation{})
-	initState := art.NewState(mod, initClauses)
-	ag.Add(initState, nil)
-	post := initState
-
-	// Execute the initialize action if present.
-	if initAct, ok := mod.Actions.Get2("initialize"); ok {
-		if act, ok2 := initAct.(actions.Action); ok2 {
-			initPost, err := ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
-			if err != nil {
-				return &BMCResult{
-					Found:   false,
-					Message: fmt.Sprintf("initialize action failed: %v", err),
-				}
-			}
-			if initPost != nil {
-				post = initPost
-			}
-		}
-	}
+	post := ag.AddInitialState(nil, nil)
 
 	// BMC loop.
 	for n := 0; n <= nSteps; n++ {
