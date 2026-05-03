@@ -1145,6 +1145,13 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			if cexTrace != nil {
 				// Counterexample found — conjecture is not inductive.
+				// Replace the session AG with the check AG so the
+				// frontend shows the CTI pre/post states with the
+				// labelled transition. Matches Python: self.g = ag.
+				s.AG = ag
+				s.AGUI.AG = ag
+				s.syncARGToGraph()
+
 				// Collect used relations matching Python show_used_relations:
 				// all relations from the signature that appear in the CTI.
 				var usedRels []string

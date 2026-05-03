@@ -2114,6 +2114,12 @@ class IvyApp {
             var result = await this.api.runCheck(mode);
             this.showCheckResult(result);
 
+            // After check: refresh ARG to show counterexample states.
+            var argData = await this.api.getARG();
+            if (argData && argData.elements) {
+                this.argGraph.update(argData.elements, argData.positions);
+            }
+
             // After check: refresh concept graph to pick up new abstract_value.
             // Matches Python: view_state() → set_parent_state() → recompute().
             var conceptData = await this.api.getConceptGraph();
