@@ -93,15 +93,18 @@ z3-build:
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
-build: # be sure .y -> .go up to date
+build: # grammer_gen
+	go install  -tags xtracer_off ./cmd/ivyweb
+	go install  -tags xtracer_off ./cmd/goivy_check
+
+grammar_gen: # be sure .y -> .go up to date
 	cd parser && go generate # grammar_v17.y
 	cd conceptspace && go generate # cs_grammar.y
 	cd lalr_logicparser/v12 && go generate # grammar_v12.y
 	cd lalr_logicparser/v16 && go generate # grammar_v16.y
 	cd lalr_logicparser && go generate # grammar_v17.y
 	cd evparser && go generate # ev_grammar.y
-	go install  -tags xtracer_off ./cmd/ivyweb
-	go install  -tags xtracer_off ./cmd/goivy_check
+
 
 GOBIN ?= $(HOME)/go/bin
 
