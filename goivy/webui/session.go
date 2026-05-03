@@ -22,9 +22,9 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/parser"
 	"github.com/glycerine/ivy/goivy/proof"
+	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/trace"
 	"github.com/glycerine/ivy/goivy/typeinfer"
-	"github.com/glycerine/ivy/goivy/updr"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -374,30 +374,30 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 
 	// --- Verification operations (check/art packages) ---
 	case "pdr_step":
-		// PDR/IC3 verification via updr package.
-		// Matches Python ivy_updr.py CheckModule().
+		// PDR/IC3 verification via tactics.UPDR.
+		// Matches Python ivy_graph_ui.py pdr_step() which uses the
+		// AG-level tactics (reverse, backtrack, recalculate), and
+		// Python tactics.py UPDR class.
 		if s.CompiledModule == nil {
 			err = fmt.Errorf("pdr_step: no compiled module")
 			break
 		}
-		pdrResult, pdrErr := updr.CheckModule(s.CompiledModule)
+		valid, pdrErr := s.runUPDR()
 		if pdrErr != nil {
 			err = pdrErr
 			break
 		}
-		result["valid"] = pdrResult.Valid
-		result["invariant"] = pdrResult.Invariant
-		result["error_msg"] = pdrResult.Error
+		result["valid"] = valid
+		numFrames := 0
+		if s.AG != nil {
+			numFrames = len(s.AG.States)
+		}
 		result["stats"] = map[string]int{
-			"num_frames":       pdrResult.Stats.NumFrames,
-			"num_iterations":   pdrResult.Stats.NumIterations,
-			"num_sat_queries":  pdrResult.Stats.NumSATQueries,
-			"num_clauses":      pdrResult.Stats.NumClauses,
-			"num_univ_clauses": pdrResult.Stats.NumUnivClauses,
+			"num_frames": numFrames,
 		}
 		msg := "PDR: counterexample found"
-		if pdrResult.Valid {
-			msg = fmt.Sprintf("PDR: invariant found (%d clauses)", pdrResult.Stats.NumClauses)
+		if valid {
+			msg = fmt.Sprintf("PDR: invariant found (%d frames)", numFrames)
 		}
 		s.emit(Event{Type: "pdr_complete", Data: map[string]string{"message": msg}})
 
@@ -1239,7 +1239,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 
 	case "pdr":
-		// PDR/IC3 via updr package + Z3.
+		// PDR/IC3 via tactics.UPDR (matches Python tactics.py UPDR class).
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
@@ -1247,20 +1247,22 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		if s.CompiledModule == nil {
 			return &CheckResult{Result: "error", Message: "PDR: no compiled module"}
 		}
-		pdrResult, pdrErr := updr.CheckModule(s.CompiledModule)
+		valid, pdrErr := s.runUPDR()
 		if pdrErr != nil {
 			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
 		}
-		if pdrResult.Valid {
+		if valid {
+			numFrames := 0
+			if s.AG != nil {
+				numFrames = len(s.AG.States)
+			}
 			return &CheckResult{
 				Z3Contacted: true,
 				Result:      "pass",
-				Message: fmt.Sprintf("Invariant found (%d clauses, %d universal). %s",
-					pdrResult.Stats.NumClauses, pdrResult.Stats.NumUnivClauses,
-					pdrResult.Invariant),
+				Message:     fmt.Sprintf("Invariant found (%d frames)", numFrames),
 			}
 		}
-		return &CheckResult{Z3Contacted: true, Result: "fail", Message: pdrResult.Error}
+		return &CheckResult{Z3Contacted: true, Result: "fail", Message: "Counterexample found"}
 
 	case "concrete":
 		// Concrete checking: checks conjectures hold in the initial state.
@@ -1465,6 +1467,50 @@ func (s *Session) SetToggle(edge, displayClass string, value bool) {
 		s.toggles.Edges[edge] = make(map[string]bool)
 	}
 	s.toggles.Edges[edge][displayClass] = value
+}
+
+// runUPDR runs the tactics-based UPDR algorithm on the session's compiled
+// module. Matches Python tactics.py UPDR class invoked from the Tk GUI's
+// pdr_step button (ivy_graph_ui.py:292).
+func (s *Session) runUPDR() (bool, error) {
+	mod := s.CompiledModule
+	if mod == nil {
+		return false, fmt.Errorf("runUPDR: no compiled module")
+	}
+
+	if s.AG == nil {
+		s.AG = art.NewAnalysisGraph(mod)
+	}
+	if len(s.AG.States) == 0 {
+		s.AG.AddInitialState(mod.InitCond, nil)
+	}
+	if len(s.AG.States) == 0 {
+		return false, fmt.Errorf("runUPDR: could not establish initial state")
+	}
+
+	tc := tactics.NewTacticsContext(s.AG, mod)
+
+	// Build bad states from negated conjectures
+	var conjFmlas []logic.Expr
+	for _, lc := range mod.LabeledConjs {
+		if lc.Formula != nil {
+			conjFmlas = append(conjFmlas, lc.Formula.(logic.Expr))
+		}
+	}
+	if len(conjFmlas) == 0 {
+		return true, nil // no conjectures = trivially safe
+	}
+	safetyProp := module.NewClauses(conjFmlas, nil, nil)
+	badClauses := module.NegateClauses(safetyProp)
+	badFormula := badClauses.ToFormula()
+
+	goal := &proof.ProofGoal{
+		Formula: badFormula,
+		Node:    s.AG.States[0],
+	}
+
+	u := &tactics.UPDR{TC: tc, MaxFrames: 100}
+	return u.Apply(goal)
 }
 
 // emit sends an event on the SSE channel (non-blocking drop if full).
