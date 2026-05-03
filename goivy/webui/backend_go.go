@@ -472,6 +472,7 @@ func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
 			"result":            cr.Result,
 			"mode":              mode,
 			"message":           cr.Message,
+			"z3_contacted":      cr.Z3Contacted,
 			"failed_conjecture": cr.FailedConjecture,
 			"failed_label":      cr.FailedLabel,
 			"used_relations":    cr.UsedRelations,

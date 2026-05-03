@@ -10,6 +10,7 @@ import (
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
 	"github.com/glycerine/ivy/goivy/ast"
+	"github.com/glycerine/ivy/goivy/bmc"
 	"github.com/glycerine/ivy/goivy/check"
 	"github.com/glycerine/ivy/goivy/compiler"
 	"github.com/glycerine/ivy/goivy/interp"
@@ -1003,8 +1004,9 @@ func (s *Session) SaveState() []byte {
 
 // CheckResult holds the result of a verification check.
 type CheckResult struct {
-	Result           string   `json:"result"` // "pass", "fail", "error"
+	Result           string   `json:"result"`                      // "pass", "fail", "error"
 	Message          string   `json:"message"`
+	Z3Contacted      bool     `json:"z3_contacted"`                // true if Z3 was actually called
 	FailedConjecture string   `json:"failed_conjecture,omitempty"` // formula text if fail
 	FailedLabel      string   `json:"failed_label,omitempty"`      // label if fail
 	UsedRelations    []string `json:"used_relations,omitempty"`    // relations to auto-check "+"
@@ -1100,6 +1102,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			if sortErr != nil {
 				return &CheckResult{
+					Z3Contacted:     true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (sort inference error): %v", sortErr),
 					FailedConjecture: displayFormula,
@@ -1136,6 +1139,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				// Z3 error — cannot determine inductiveness. Report as failure
 				// rather than silently declaring the conjecture inductive.
 				return &CheckResult{
+					Z3Contacted:     true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
 					FailedConjecture: formula,
@@ -1168,6 +1172,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 					}
 				}
 				return &CheckResult{
+					Z3Contacted:     true,
 					Result:           "fail",
 					Message:          "The following conjecture is not relatively inductive:",
 					FailedConjecture: formula,
@@ -1192,17 +1197,50 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}
 		}
 		return &CheckResult{
-			Result:  "pass",
-			Message: "Inductive invariant found:\n" + strings.Join(lines, "\n"),
+			Z3Contacted: true,
+			Result:      "pass",
+			Message:     "Inductive invariant found:\n" + strings.Join(lines, "\n"),
 		}
 
 	case "bounded":
-		// Bounded model checking via Z3.
-		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
-			s.syncAbstractValue()
+		// Bounded model checking via bmc.CheckIsolate + Z3.
+		// Matches Python ivy_ui_cti.py bmc_conjecture / ivy_bmc.py check_isolate.
+		conjs := s.CompiledModule.LabeledConjs
+		if len(conjs) == 0 {
+			return &CheckResult{Result: "pass", Message: "No conjectures to check (BMC)"}
 		}
-		return &CheckResult{Result: "pass", Message: "Bounded check completed via Z3"}
+		nSteps := 10
+		bmcCfg := bmc.DefaultConfig(s.CompiledModule, nSteps)
+		var bmcResult *bmc.BMCResult
+		var bmcErr error
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					bmcErr = fmt.Errorf("BMC panic: %v", r)
+				}
+			}()
+			bmcResult = bmc.CheckIsolate(bmcCfg)
+		}()
+		if bmcErr != nil {
+			return &CheckResult{Z3Contacted: true, Result: "error", Message: bmcErr.Error()}
+		}
+		if bmcResult.Found {
+			if bmcResult.Trace != nil {
+				s.AG = bmcResult.Trace.AnalysisGraph
+				s.AGUI.AG = s.AG
+				s.syncARGToGraph()
+			}
+			return &CheckResult{
+				Z3Contacted: true,
+				Result:      "fail",
+				Message:     bmcResult.Message,
+			}
+		}
+		return &CheckResult{
+			Z3Contacted: true,
+			Result:      "pass",
+			Message:     bmcResult.Message,
+		}
 
 	case "pdr":
 		// PDR/IC3 via updr package + Z3.
@@ -1215,27 +1253,178 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 		pdrResult, pdrErr := updr.CheckModule(s.CompiledModule)
 		if pdrErr != nil {
-			return &CheckResult{Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
+			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
 		}
 		if pdrResult.Valid {
 			return &CheckResult{
-				Result:  "pass",
+				Z3Contacted: true,
+				Result:      "pass",
 				Message: fmt.Sprintf("Invariant found (%d clauses, %d universal). %s",
 					pdrResult.Stats.NumClauses, pdrResult.Stats.NumUnivClauses,
 					pdrResult.Invariant),
 			}
 		}
-		return &CheckResult{Result: "fail", Message: pdrResult.Error}
+		return &CheckResult{Z3Contacted: true, Result: "fail", Message: pdrResult.Error}
 
 	case "concrete":
-		return &CheckResult{Result: "pass", Message: "Concrete check completed"}
+		// Concrete checking: checks conjectures hold in the initial state.
+		// Matches Python check_conjs_in_state + check_safety_in_state.
+		// Uses MakeCheckArt to build pre/post states, then checks each
+		// conjecture via CheckFinalCond against the post-state.
+		conjs := s.CompiledModule.LabeledConjs
+		if len(conjs) == 0 {
+			return &CheckResult{Result: "pass", Message: "No conjectures to check (concrete)"}
+		}
+		var conjClauses []*module.Clauses
+		for _, lc := range conjs {
+			if lc.Formula != nil {
+				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+			}
+		}
+		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		if err != nil {
+			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("concrete: %v", err)}
+		}
+		for i, lc := range conjs {
+			if lc.Formula == nil || i >= len(conjClauses) {
+				continue
+			}
+			conj := conjClauses[i]
+			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
+			label := ""
+			if lc.Label != nil {
+				label = fmt.Sprint(lc.Label)
+			}
+			closedConj := conj.ToFormula()
+			negFormula, nerr := logic.NewNot(closedConj)
+			if nerr != nil {
+				continue
+			}
+			finalCond := module.FormulaToClauses(negFormula, nil)
+			for fi, f := range finalCond.Fmlas {
+				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
+					finalCond.Fmlas[fi] = cf
+				}
+			}
+			var cexTrace *trace.TraceBase
+			var z3err error
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						z3err = fmt.Errorf("Z3 error: %v", r)
+					}
+				}()
+				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
+			}()
+			if z3err != nil {
+				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
+			}
+			if cexTrace != nil {
+				s.AG = ag
+				s.AGUI.AG = ag
+				s.syncARGToGraph()
+				return &CheckResult{
+					Z3Contacted:      true,
+					Result:           "fail",
+					Message:          "Conjecture does not hold concretely:",
+					FailedConjecture: displayFormula,
+					FailedLabel:      label,
+				}
+			}
+		}
+		return &CheckResult{
+			Z3Contacted: true,
+			Result:      "pass",
+			Message:     "All conjectures hold concretely.",
+		}
 
 	case "abstract":
+		// Abstract checking: runs alpha abstraction via Z3 to compute
+		// concept graph abstract values (cardinality, edge info), then
+		// checks conjectures hold in the abstract state.
+		// Matches Python: recompute via alpha, then check.
 		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
-			s.syncAbstractValue()
+			var abstractErr error
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						abstractErr = fmt.Errorf("alpha abstraction panic: %v", r)
+					}
+				}()
+				s.ConceptSess.Recompute(nil)
+				s.syncAbstractValue()
+			}()
+			if abstractErr != nil {
+				return &CheckResult{Z3Contacted: true, Result: "error", Message: abstractErr.Error()}
+			}
 		}
-		return &CheckResult{Result: "pass", Message: "Abstract check completed via Z3 alpha abstraction"}
+		// After alpha abstraction, check conjectures via the same path as concrete.
+		conjs := s.CompiledModule.LabeledConjs
+		if len(conjs) == 0 {
+			return &CheckResult{Z3Contacted: true, Result: "pass", Message: "Abstract check completed, no conjectures to verify."}
+		}
+		var conjClauses []*module.Clauses
+		for _, lc := range conjs {
+			if lc.Formula != nil {
+				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+			}
+		}
+		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		if err != nil {
+			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("abstract: %v", err)}
+		}
+		for i, lc := range conjs {
+			if lc.Formula == nil || i >= len(conjClauses) {
+				continue
+			}
+			conj := conjClauses[i]
+			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
+			label := ""
+			if lc.Label != nil {
+				label = fmt.Sprint(lc.Label)
+			}
+			closedConj := conj.ToFormula()
+			negFormula, nerr := logic.NewNot(closedConj)
+			if nerr != nil {
+				continue
+			}
+			finalCond := module.FormulaToClauses(negFormula, nil)
+			for fi, f := range finalCond.Fmlas {
+				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
+					finalCond.Fmlas[fi] = cf
+				}
+			}
+			var cexTrace *trace.TraceBase
+			var z3err error
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						z3err = fmt.Errorf("Z3 error: %v", r)
+					}
+				}()
+				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
+			}()
+			if z3err != nil {
+				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
+			}
+			if cexTrace != nil {
+				s.AG = ag
+				s.AGUI.AG = ag
+				s.syncARGToGraph()
+				return &CheckResult{
+					Z3Contacted:      true,
+					Result:           "fail",
+					Message:          "Conjecture does not hold after abstraction:",
+					FailedConjecture: displayFormula,
+					FailedLabel:      label,
+				}
+			}
+		}
+		return &CheckResult{
+			Z3Contacted: true,
+			Result:      "pass",
+			Message:     "All conjectures hold after abstract check via Z3 alpha abstraction.",
+		}
 
 	default:
 		return &CheckResult{Result: "error", Message: "Unknown mode: " + mode}

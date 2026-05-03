@@ -2180,18 +2180,26 @@ class IvyApp {
     showCheckResult(result) {
         if (!result) return;
 
-        if (result.status === 'pass' || result.status === 'ok') {
-            this.controls.setStatus('Check PASSED', 'success');
-            this.controls.showInfo('Verification Result', 'PASSED: ' + (result.message || 'All properties hold.'));
-        } else if (result.status === 'fail' || result.status === 'counterexample') {
-            this.controls.setStatus('Check FAILED - counterexample found', 'error');
-            this.controls.showInfo('Verification Result', 'FAILED: ' + (result.message || 'Counterexample found.'));
-            // Update ARG if counterexample adds states
+        // The backend returns {status:"ok", result:"pass"/"fail"/"error", ...}.
+        // Use result.result (the verification outcome), not result.status (HTTP status).
+        var verdict = result.result || result.status;
+        var z3note = result.z3_contacted ? ' [Z3: yes]' : ' [Z3: no]';
+        var mode = result.mode ? ' (' + result.mode + ')' : '';
+
+        if (verdict === 'pass') {
+            this.controls.setStatus('Check PASSED' + mode + z3note, 'success');
+            this.controls.showInfo('Verification Result', 'PASSED' + z3note + ': ' + (result.message || 'All properties hold.'));
+        } else if (verdict === 'fail') {
+            this.controls.setStatus('Check FAILED' + mode + z3note + ' - counterexample found', 'error');
+            this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + (result.message || 'Counterexample found.'));
             if (result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);
             }
+        } else if (verdict === 'error') {
+            this.controls.setStatus('Check ERROR' + mode + z3note, 'error');
+            this.controls.showInfo('Verification Error', result.message || 'Unknown error');
         } else {
-            this.controls.setStatus('Check result: ' + result.status);
+            this.controls.setStatus('Check result: ' + verdict + z3note);
             this.controls.showInfo('Verification Result', result.message || JSON.stringify(result));
         }
     }
