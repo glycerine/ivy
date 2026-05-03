@@ -1075,20 +1075,16 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				label = fmt.Sprint(lc.Label)
 			}
 
-			// dual_clauses(conj): negate the conjecture.
+			// dual_clauses(conj, witness): Skolemize variables then negate.
 			// Python: clauses = dual_clauses(conj, witness)
-			//   which does: negate(clauses_to_formula(conj)) → formula_to_clauses
-			// clauses_to_formula adds ForAll, then negate wraps in Not.
-			closedConj := conj.ToFormula() // adds ForAll via close_epr
-			negFormula, err := logic.NewNot(closedConj)
-			if err != nil {
-				continue
+			//   witness = lambda v: lg.Const('@' + v.name, v.sort)
+			// DualClauses replaces universals with Skolem constants, then negates.
+			witness := func(v *logic.Variable) logic.Expr {
+				return module.VarToSkolem("@", v)
 			}
-			finalCond := module.FormulaToClauses(negFormula, nil)
+			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 
 			// Concretize sorts in the final condition for Z3.
-			// If ConcretizeSorts fails, the formula may still contain TopSort,
-			// which will cause a Z3 panic. Treat this as a checking failure.
 			var sortErr error
 			for fi, f := range finalCond.Fmlas {
 				cf, cerr := typeinfer.ConcretizeSorts(f, nil)
@@ -1295,12 +1291,10 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			closedConj := conj.ToFormula()
-			negFormula, nerr := logic.NewNot(closedConj)
-			if nerr != nil {
-				continue
+			witness := func(v *logic.Variable) logic.Expr {
+				return module.VarToSkolem("@", v)
 			}
-			finalCond := module.FormulaToClauses(negFormula, nil)
+			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 			for fi, f := range finalCond.Fmlas {
 				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
 					finalCond.Fmlas[fi] = cf
@@ -1383,12 +1377,10 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			closedConj := conj.ToFormula()
-			negFormula, nerr := logic.NewNot(closedConj)
-			if nerr != nil {
-				continue
+			witness := func(v *logic.Variable) logic.Expr {
+				return module.VarToSkolem("@", v)
 			}
-			finalCond := module.FormulaToClauses(negFormula, nil)
+			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 			for fi, f := range finalCond.Fmlas {
 				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
 					finalCond.Fmlas[fi] = cf
