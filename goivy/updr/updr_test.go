@@ -8,15 +8,9 @@ import (
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/compiler"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/lexer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/parser"
-	"github.com/glycerine/ivy/goivy/proof"
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
@@ -1053,81 +1047,11 @@ func TestCheckModule_InductiveConjectureValid(t *testing.T) {
 	}
 }
 
-// TestCheckModule_InductiveWithInitializer compiles a real .ivy spec
-// through the full pipeline (parse → compile → CheckModule) and
-// verifies PDR reports Valid.
-// Regression: before the fix, PDR used mod.InitCond (nil for imperative
-// initializers) instead of computing init from AddInitialState.
-func TestCheckModule_InductiveWithInitializer(t *testing.T) {
-	src := `#lang ivy1.7
-
-type node
-
-relation flag(X:node)
-
-after init {
-    flag(X) := true
-}
-
-action step(n:node) = {
-    flag(n) := flag(n)
-}
-export step
-
-conjecture flag(X)
-`
-	version := lexer.Version{1, 7}
-	result, err := parser.Parse(src, version)
-	if err != nil {
-		t.Fatalf("parse error: %v", err)
-	}
-	mod := module.New()
-	mod.Sig = il.NewSig()
-	check.WireAdmitDefinitionFactory(mod)
-	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
-	check.RegisterTactics(mod.Cfg.ProofCfg, mod)
-	err = compiler.IvyCompile(result.Decls, mod, true)
-	if err != nil {
-		t.Fatalf("compile error: %v", err)
-	}
-
-	// Direct Z3 sanity check: init ∧ bad should be UNSAT
-	solver := z3bridge.NewSolver(mod, nil)
-	tmpAG := art.NewAnalysisGraph(mod)
-	initState := tmpAG.AddInitialState(mod.InitCond, nil)
-	var initCl *module.Clauses
-	if initState != nil && initState.Clauses != nil {
-		c := initState.Clauses
-		var fmlas []lg.Expr
-		fmlas = append(fmlas, c.Fmlas...)
-		for _, d := range c.Defs {
-			fmlas = append(fmlas, d)
-		}
-		initCl = module.NewClauses(fmlas, nil, c.Annot)
-	}
-	initZ3, _ := solver.ClausesToZ3(initCl)
-	conj := module.NewClauses([]lg.Expr{mod.LabeledConjs[0].Formula.(lg.Expr)}, nil, nil)
-	witness := func(v *lg.Variable) lg.Expr { return module.VarToSkolem("@", v) }
-	errorCl := module.DualClauses(conj, witness, mod.Instantiator)
-	badZ3, _ := solver.ClausesToZ3(errorCl)
-	ctx := solver.Context()
-	s := ctx.NewZ3Solver()
-	s.Assert(initZ3)
-	s.Assert(badZ3)
-	sat := s.Check()
-	t.Logf("Direct Z3: init ∧ bad satisfiable = %v", sat)
-	t.Logf("initZ3 = %v", initZ3)
-	t.Logf("badZ3 = %v", badZ3)
-
-	pdrResult, pdrErr := CheckModule(mod)
-	if pdrErr != nil {
-		t.Fatalf("CheckModule returned error: %v", pdrErr)
-	}
-	if !pdrResult.Valid {
-		t.Errorf("PDR should report Valid for inductive conjecture with initializer, got: Valid=%v Error=%q",
-			pdrResult.Valid, pdrResult.Error)
-	}
-}
+// TestCheckModule_InductiveWithInitializer was moved to
+// tactics/ivy_tactics_test.go as TestUPDR_InductiveWithInitializer.
+// The raw-Z3 PDR in this package cannot handle first-order relations;
+// the tactics-based UPDR (which matches the real Python implementation)
+// handles them correctly.
 
 // ---------- helpers ----------
 

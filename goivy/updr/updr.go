@@ -1,5 +1,19 @@
-// Ported to Go from ivy_updr.py.
-
+// Package updr ports the standalone ivy_updr.py script which uses an
+// external mini_pdr library for raw-Z3-level PDR. The Python script is
+// gated behind `if __name__ == "__main__":`, never imported by other
+// Python files, and its mini_pdr dependency is missing from the tree.
+// Python's native_symbol (ivy_solver.py:432) also has a bug (references
+// undefined `name` variable) and was never successfully called.
+//
+// Deprecated: The actual Python PDR implementation is the UPDR tactic
+// in tactics.py (lines 221-292), which works at the Ivy analysis-graph
+// level. The Go port of that lives in tactics/tactics.go as UPDR.
+// Use tactics.UPDR for first-order models with relations.
+//
+// This package's raw-Z3 PDR (pdr.go) works only for propositional
+// (boolean) state variables because Z3_substitute cannot substitute
+// function declarations, and Z3_substitute_funs is not available in
+// this Z3 version.
 package updr
 
 import (
