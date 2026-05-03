@@ -8,6 +8,7 @@ package tactics
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/art"
@@ -357,13 +358,23 @@ func ArgGetConjuncts(node *art.State) []lg.Expr {
 	return node.Clauses.Fmlas
 }
 
-// GetBigAction creates a nondeterministic choice over all public actions.
-// Corresponds to Python's get_big_action().
+// GetBigAction creates a nondeterministic choice over all exported actions.
+// Python tactics_api.py:71-80:
+//
+//	def get_big_action():
+//	    exported_action_names = [e.exported() for e in _ivy_ag.exports]
+//	    exported_actions = [_ivy_ag.actions[k] for k in exported_action_names]
+//	    result = ChoiceAction(*exported_actions)
+//	    result.label = ' + '.join(exported_action_names)
+//	    return result
 func GetBigAction(ag *art.AnalysisGraph) actions.Action {
+	var names []string
 	var branches []lg.Expr
-	for name := range ag.PublicActions.All() {
+	for _, e := range ag.Exports {
+		name := e.Exported()
 		if act, ok := ag.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
+				names = append(names, name)
 				branches = append(branches, a)
 			}
 		}
@@ -371,7 +382,9 @@ func GetBigAction(ag *art.AnalysisGraph) actions.Action {
 	if len(branches) == 0 {
 		return actions.NewSequence()
 	}
-	return actions.NewEnvActionOn(ag.Domain.Cfg.ActCfg, branches...)
+	result := actions.NewChoiceActionOn(ag.Domain.Cfg.ActCfg, branches...)
+	result.Label = strings.Join(names, " + ")
+	return result
 }
 
 // -----------------------------------------------------------------------

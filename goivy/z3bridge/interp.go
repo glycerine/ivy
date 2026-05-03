@@ -53,6 +53,12 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 	var resErr error
 
 	ctx.do(func() {
+		defer func() {
+			if r := recover(); r != nil {
+				resErr = fmt.Errorf("Z3 interpolation failed: %v", r)
+			}
+		}()
+
 		params := C.Z3_mk_params(ctx.c)
 		C.Z3_params_inc_ref(ctx.c, params)
 		defer C.Z3_params_dec_ref(ctx.c, params)
