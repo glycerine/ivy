@@ -364,6 +364,52 @@ func containsWhileAction(act actions.Action) bool {
 	return false
 }
 
+// TestBMCInitializerRespected verifies that BMC uses AddInitialState
+// (which runs mod.Initializers) rather than an unconstrained TrueClauses
+// initial state. Regression test: before the fix, BMC started from an
+// unconstrained state and trivially found spurious counterexamples at
+// depth 0 even when the init block established the conjecture.
+func TestBMCInitializerRespected(t *testing.T) {
+	// Build a module where:
+	//   - Sort S exists
+	//   - Relation P(X:S) exists
+	//   - after init { P(X) := true }   (initializer sets P to true for all X)
+	//   - conjecture forall X:S. P(X)   (should hold in initial state)
+	//
+	// Regression: before the fix, BMC started from TrueClauses (unconstrained)
+	// and trivially found a spurious counterexample at depth 0.
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVariable("X", S)
+	pSort, _ := lg.NewFunctionSort(S, lg.Boolean)
+	P := lg.NewConst("P", pSort)
+	PX, _ := lg.NewApply(P, X)
+
+	mod := module.New()
+
+	mod.Sig = il.NewSig()
+	mod.Sig.Sorts.Set("S", S)
+	mod.Sig.Symbols.Set("P", &il.SymbolEntry{Sort: pSort})
+
+	assignAction := actions.NewAssignAction(PX, lg.True)
+	mod.Initializers = append(mod.Initializers, module.NamedAction{
+		Name:   "init",
+		Action: assignAction,
+	})
+
+	mod.LabeledConjs = []*ast.LabeledFormula{
+		{Formula: PX},
+	}
+
+	cfg := DefaultConfig(mod, 0)
+	result := CheckIsolate(cfg)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	if result.Found {
+		t.Errorf("BMC should NOT find counterexample at depth 0 when initializer establishes the conjecture; got: %s", result.Message)
+	}
+}
+
 // --- BMCResult tests ---
 
 func TestBMCResultString(t *testing.T) {
