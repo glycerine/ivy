@@ -439,7 +439,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				//         options = OrderedDict()
 				//         for c in simplify_clauses(dg.formula).conjuncts():
 				//             options[str(c)] = c
-				dg := tc.GetDiagram(currentGoal)
+				dg := tc.GetDiagram(currentGoal, false)
 				dgClauses := module.SimplifyClauses(module.FormulaToClauses(dg.Formula, nil))
 				options := webui.NewOrderedMap()
 				for _, c := range dgClauses.Fmlas {

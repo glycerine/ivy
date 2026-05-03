@@ -450,6 +450,7 @@ type UPDR struct {
 
 func (t *UPDR) Name() string { return "UPDR" }
 
+// Apply runs the UPDR algorithm. Python tactics.py:222-292.
 func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 	if t.TC.AG == nil {
 		return false, fmt.Errorf("UPDR: no analysis graph")
@@ -460,13 +461,21 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 		return false, fmt.Errorf("UPDR: no initial state")
 	}
 
-	// The safety property (negated) is the bad states
+	// Python: bad_states = negate_clauses(get_safety_property())
 	badStates := goal.Formula
 	if badStates == nil {
 		return false, fmt.Errorf("UPDR: no goal formula")
 	}
 
+	// Python: action = get_big_action()
 	action := GetBigAction(t.TC.AG)
+
+	// Python: ta._ivy_ag.actions[repr(action)] = action
+	actionKey := fmt.Sprintf("%T@%p", action, action)
+	if _, exists := t.TC.AG.Actions.Get2(actionKey); !exists {
+		t.TC.AG.Actions.Set(actionKey, action)
+	}
+
 	initFrame := frames[0]
 	lastFrame := frames[len(frames)-1]
 
@@ -476,75 +485,73 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 	}
 
 	for iter := 0; iter < maxIter; iter++ {
-		// Check if we found an inductive invariant
+		// Python: check if we found an inductive invariant
 		for i := 0; i < len(frames)-1; i++ {
 			if t.TC.AG.Cover(frames[i+1], frames[i]) {
-				return true, nil // Found inductive invariant
+				return true, nil
 			}
 		}
 
-		// Add new frame
-		var execErr error
-		lastFrame, execErr = t.TC.AG.Execute(checkPrecondTrue, action, lastFrame, nil, "")
-		if execErr != nil {
-			return false, fmt.Errorf("Execute failed: %w", execErr)
-		}
+		// Python: last_frame = ta.arg_add_action_node(last_frame, action, None)
+		lastFrame = t.TC.ArgAddActionNode(lastFrame, action, nil)
 		if lastFrame == nil {
 			break
 		}
 		frames = t.TC.AG.States
 
-		// Push bad states as goal for the new frame
-		newGoal := GoalAtArgNode(badStates, lastFrame)
-		t.TC.PushGoal(newGoal)
+		// Python: push_goal(goal_at_arg_node(bad_states, last_frame))
+		t.TC.PushGoal(GoalAtArgNode(badStates, lastFrame))
 
-		// Process goals
+		// Python: recalculate_facts(last_frame, ta.arg_get_conjuncts(arg_get_pred(last_frame)))
+		predConjs := updrExprsToClausesList(ArgGetConjuncts(ArgGetPred(lastFrame)))
+		RecalculateFactsFn(t.TC, lastFrame, predConjs)
+
+		// Python: while not ic.interrupted:
 		for t.TC.Goals.Len() > 0 {
 			currentGoal := t.TC.TopGoal()
 			if currentGoal == nil {
 				break
 			}
 
-			// Remove if refuted
+			// Python: if remove_if_refuted(current_goal): continue
 			if t.TC.RefutedGoal(currentGoal) {
 				t.TC.RemoveGoal(currentGoal)
 				continue
 			}
 
-			// Check if goal is at initial frame (no invariant)
+			// Python: if current_goal.node == init_frame: return False
 			if goalNode, ok := currentGoal.Node.(*art.State); ok {
 				if goalNode == initFrame {
+					fmt.Println("No Invariant!")
 					return false, fmt.Errorf("UPDR: no invariant found (counterexample reaches initial state)")
 				}
 			}
 
-			// Try to refine or reverse
-			refined, result := t.TC.RefineOrReverse(currentGoal)
-			if refined {
-				// Add the learned fact
-				if newFact, ok := result.(lg.Expr); ok {
-					if goalNode, ok := currentGoal.Node.(*art.State); ok {
-						factClauses := module.FormulaToClauses(newFact, nil)
-						ArgAddFacts(goalNode, factClauses)
-					}
-				}
-				// Remove refuted goals
-				for t.TC.Goals.Len() > 0 {
-					g := t.TC.TopGoal()
-					if g == nil || !t.TC.RefutedGoal(g) {
-						break
-					}
-					t.TC.RemoveGoal(g)
-				}
-			} else {
-				// Push new goal from backward image
-				if newGoal, ok := result.(*proof.ProofGoal); ok {
-					t.TC.PushGoal(newGoal)
-				} else {
-					// Can't make progress
-					break
-				}
+			// Python: push_diagram(current_goal, False)
+			dgGoal := t.TC.GetDiagram(currentGoal, false)
+			if dgGoal == nil {
+				break
 			}
+			t.TC.PushGoal(dgGoal)
+
+			// Python: dg = top_goal()
+			dg := t.TC.TopGoal()
+
+			// Python: if refine_or_reverse(dg, False):
+			rorTactic := &RefineOrReverseTactic{TC: t.TC, AutoRemove: false}
+			rorTactic.Apply(dg)
+		}
+
+		// Python: propagate phase
+		// for i in range(1, len(frames)):
+		//     facts_to_check = set(arg_get_conjuncts(frames[i-1])) - set(arg_get_conjuncts(frames[i]))
+		//     recalculate_facts(frames[i], list(facts_to_check))
+		frames = t.TC.AG.States
+		for i := 1; i < len(frames); i++ {
+			prev := ArgGetConjuncts(frames[i-1])
+			cur := ArgGetConjuncts(frames[i])
+			diff := updrSetDifference(prev, cur)
+			RecalculateFactsFn(t.TC, frames[i], updrExprsToClausesList(diff))
 		}
 	}
 
@@ -604,7 +611,7 @@ type PushDiagram struct {
 func (t *PushDiagram) Name() string { return "PushDiagram" }
 
 func (t *PushDiagram) Apply(goal *proof.ProofGoal) (bool, error) {
-	dg := t.TC.GetDiagram(goal)
+	dg := t.TC.GetDiagram(goal, t.Weaken)
 	if dg != nil {
 		t.TC.PushGoal(dg)
 	}
@@ -882,13 +889,29 @@ func CustomRefineOrReverse(tc *TacticsContext, goal *proof.ProofGoal, x bool, y 
 // Helper functions
 // -----------------------------------------------------------------------
 
-func conjoinNodes(a, b lg.Expr) lg.Expr {
-	if a == nil || lg.IsTrue(a) {
-		return b
+// updrExprsToClausesList wraps each formula as a single-formula Clauses.
+func updrExprsToClausesList(es []lg.Expr) []*module.Clauses {
+	if len(es) == 0 {
+		return nil
 	}
-	if b == nil || lg.IsTrue(b) {
-		return a
+	out := make([]*module.Clauses, 0, len(es))
+	for _, e := range es {
+		out = append(out, module.NewClauses([]lg.Expr{e}, nil, nil))
 	}
-	and, _ := lg.NewAnd(a, b)
-	return and
+	return out
+}
+
+// updrSetDifference returns elements in prev not in cur (by pointer identity).
+func updrSetDifference(prev, cur []lg.Expr) []lg.Expr {
+	curSet := make(map[lg.Expr]bool, len(cur))
+	for _, c := range cur {
+		curSet[c] = true
+	}
+	out := make([]lg.Expr, 0, len(prev))
+	for _, p := range prev {
+		if !curSet[p] {
+			out = append(out, p)
+		}
+	}
+	return out
 }
