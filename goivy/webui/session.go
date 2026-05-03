@@ -3,6 +3,7 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 	"sync"
 
@@ -222,13 +223,23 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 
 	// Step 7: Build the persistent AnalysisGraph.
 	// Matches Python: self.g = AnalysisGraph() in ivy_compiler.ivy_new().
-	// Python does NOT call add_initial_state here — the ARG starts empty.
-	// States are added later when the user runs verification operations.
 	s.AG = art.NewAnalysisGraph(s.CompiledModule)
 	s.AGUI = NewAnalysisGraphUI()
 	s.AGUI.AG = s.AG
 	s.AGUI.Mod = s.CompiledModule
 	s.AGUI.SyncCallback = func() { s.syncARGToGraph() }
+
+	// Seed the ARG with an initial state (state 0) so the frontend
+	// has something to display before the user runs verification.
+	// Matches Python's add_initial_state() call in ivy_new().
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Printf("webui: AddInitialState recovered from panic: %v", r)
+			}
+		}()
+		s.AG.AddInitialState(nil, nil)
+	}()
 	s.syncARGToGraph()
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{

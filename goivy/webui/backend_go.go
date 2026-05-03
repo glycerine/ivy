@@ -171,11 +171,13 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 			return nil
 		}
 
-		// Build concept data matching Python's output exactly.
-		// Python builds from im.module.sig: sorts become nodes,
-		// unary boolean relations become node_labels,
-		// binary boolean relations become edges.
-		// Relation names are bare (no parameter lists).
+		// Render concept graph with octagon nodes, edges, and per-sort colors.
+		cy := RenderConceptGraph(sess.SimpleSess, nil)
+		if cy.Elements == nil {
+			cy.Elements = []CyElement{}
+		}
+
+		// Gather metadata for the state checkbox panel and JS rendering.
 		var nodes []string
 		var edges []string
 		var nodeLabels []string
@@ -187,10 +189,8 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 			nodes = append(nodes, d.Nodes...)
 			edges = append(edges, d.Edges...)
 			nodeLabels = append(nodeLabels, d.NodeLabels...)
-			// Build relations list: all concepts that are relations (not sorts).
 			for name, c := range d.Concepts {
 				if c != nil && c.Arity >= 1 {
-					// Check if this is a sort concept (formula is "X = X") or a relation.
 					isSort := false
 					for _, n := range d.Nodes {
 						if n == name {
@@ -199,7 +199,6 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 						}
 					}
 					if !isSort {
-						// Format as "name(X,Y)" with parameter names, not bare "name".
 						if len(c.Variables) > 0 {
 							relations = append(relations, name+"("+strings.Join(c.Variables, ",")+")")
 						} else {
@@ -208,7 +207,6 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 					}
 				}
 			}
-			// Build label_sorts from node_labels.
 			for _, lbl := range d.NodeLabels {
 				c := d.Concepts[lbl]
 				if c != nil && len(c.Sorts) > 0 {
@@ -222,30 +220,6 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 		sort.Strings(nodeLabels)
 		sort.Strings(nodes)
 
-		// Build CyElements matching Python: one node per sort, no edges.
-		// Python's elements include "cluster", "locked", and use "ellipse" shape.
-		var elements []map[string]interface{}
-		for i, name := range nodes {
-			elements = append(elements, map[string]interface{}{
-				"classes": "node_unknown",
-				"data": map[string]interface{}{
-					"cluster":    nil,
-					"id":         fmt.Sprintf("n%d", i),
-					"label":      name,
-					"long_info":  name,
-					"obj":        name,
-					"shape":      "ellipse",
-					"short_info": name,
-				},
-				"group":  "nodes",
-				"locked": true,
-			})
-		}
-
-		// Ensure empty slices are [] not null, and empty maps are {}.
-		if elements == nil {
-			elements = []map[string]interface{}{}
-		}
 		if relations == nil {
 			relations = []string{}
 		}
@@ -259,10 +233,20 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 			nodes = []string{}
 		}
 
+		// Include real abstract_value from the concept session (for node labels).
+		abstractValue := make(map[string]bool)
+		if sess.SimpleSess != nil {
+			for k, v := range sess.SimpleSess.AbstractValue {
+				if strings.HasPrefix(k, "node_label|") {
+					abstractValue[k] = v
+				}
+			}
+		}
+
 		by, err = canonicalJSON(map[string]interface{}{
-			"abstract_value": map[string]bool{},
+			"abstract_value": abstractValue,
 			"edges":          edges,
-			"elements":       elements,
+			"elements":       cy.Elements,
 			"label_sorts":    labelSorts,
 			"node_labels":    nodeLabels,
 			"nodes":          nodes,

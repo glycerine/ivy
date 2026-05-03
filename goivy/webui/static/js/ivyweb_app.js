@@ -976,14 +976,18 @@ class IvyApp {
         }
         this._edgeVisibility[edgeName][displayClass] = checked;
 
-        // Also track as a node label (Python does both: set_checkbox sets BOTH dicts)
+        // Also track as a node label (Python does both: set_checkbox sets BOTH dicts).
+        // Store under the bare name (e.g. "semaphore") since _applyNodeLabels
+        // looks up by bare node_label names, not the parameterized relation
+        // names like "semaphore(X)" that the checkboxes display.
         var labelKeyMap = { 'all_to_all': 'node_necessarily', 'edge_unknown': 'node_maybe', 'none_to_none': 'node_necessarily_not' };
         var labelKey = labelKeyMap[displayClass];
         if (labelKey) {
-            if (!this._labelVisibility[edgeName]) {
-                this._labelVisibility[edgeName] = { node_necessarily: false, node_maybe: false, node_necessarily_not: false };
+            var bareName = edgeName.split('(')[0];
+            if (!this._labelVisibility[bareName]) {
+                this._labelVisibility[bareName] = { node_necessarily: false, node_maybe: false, node_necessarily_not: false };
             }
-            this._labelVisibility[edgeName][labelKey] = checked;
+            this._labelVisibility[bareName][labelKey] = checked;
         }
 
         // Apply visibility to edges and node labels

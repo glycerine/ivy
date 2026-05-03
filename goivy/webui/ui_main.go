@@ -200,9 +200,13 @@ func (ui *AnalysisGraphUI) sync() {
 func ArtToGraphState(ag *art.AnalysisGraph) *AnalysisGraphState {
 	gs := NewAnalysisGraphState()
 	for _, st := range ag.States {
+		label := st.Label
+		if label == "" {
+			label = fmt.Sprintf("%d", st.ID)
+		}
 		gs.States = append(gs.States, ARGNode{
 			ID:       st.ID,
-			Label:    st.Label,
+			Label:    label,
 			IsBottom: st.IsBottom(),
 			Info:     fmt.Sprintf("State %d", st.ID),
 		})
