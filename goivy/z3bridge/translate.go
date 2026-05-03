@@ -182,13 +182,63 @@ func (t *Translator) EnumEq(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (*Expr, err
 // Numeral is for custom numeral handling (range sort clamping).
 // Returns non-nil Expr to override default; nil to use default.
 // Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
+//
+// This method must use t.Ctx (the translator's own Z3Context) for all
+// Z3 object creation. It CANNOT delegate to t.s.NumeralToZ3() because
+// that uses s.tr.Ctx (the solver's default Z3Context), which is wrong
+// when this translator operates in an interpolation context.
 func (t *Translator) Numeral(name string, sort lg.Sort) (*Expr, error) {
-	num := lg.NewConst(name, sort)
-	result, err := t.s.NumeralToZ3(num)
-	if err != nil {
-		return nil, err
+	xtracer.Trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%s:%s", name, il.SortName(sort))
+	sortName := il.SortName(sort)
+
+	nativeResult := t.LookupNative(sortName, sort, "sort")
+	z3sort, isSort := nativeResult.(Sort)
+	if !isSort {
+		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3 HASH canon=%s", sort.Sexp())
+		translated, err := t.TranslateSort(sort)
+		if err != nil {
+			return nil, fmt.Errorf("cannot translate sort for numeral %q: %w", name, err)
+		}
+		result := t.Ctx.Const(name+":"+sortName, translated)
+		return &result, nil
 	}
-	return &result, nil
+
+	cleanName := name
+	if len(cleanName) >= 2 && cleanName[0] == '"' && cleanName[len(cleanName)-1] == '"' {
+		cleanName = cleanName[1 : len(cleanName)-1]
+	}
+
+	if z3sort.Kind() == SortSeq {
+		result := t.Ctx.StringVal(cleanName)
+		return &result, nil
+	}
+
+	intVal, err := strconv.ParseInt(cleanName, 0, 64)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse numeral %q: %w", cleanName, err)
+	}
+
+	var val Expr
+	switch z3sort.Kind() {
+	case SortInt:
+		val = t.Ctx.IntVal(intVal)
+	case SortBV:
+		val = t.Ctx.BvVal(intVal, t.Ctx.BvSortSize(z3sort))
+	default:
+		val = t.Ctx.IntVal(intVal)
+	}
+
+	if t.s != nil && t.s.sig != nil && t.s.HandleRangeSorts {
+		if itp, ok := t.s.sig.Interp[sortName]; ok {
+			if rs, isRS := itp.(*lg.RangeSort); isRS {
+				lb, ub, err2 := t.s.RangeSortBoundsToZ3(rs)
+				if err2 == nil {
+					val = t.Ctx.Ite(t.Ctx.Lt(val, lb), lb, t.Ctx.Ite(t.Ctx.Lt(ub, val), ub, val))
+				}
+			}
+		}
+	}
+	return &val, nil
 }
 
 // NewTranslator creates a Translator that owns its own private cache
