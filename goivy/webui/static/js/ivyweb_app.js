@@ -207,9 +207,30 @@ class IvyApp {
         var fileInput = document.getElementById('file-input');
 
         // File > Load...
+        // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
+        // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
         document.getElementById('file-load').addEventListener('click', function (e) {
             e.preventDefault();
-            self.flashAndClose(this, function () { fileInput.click(); });
+            self.flashAndClose(this, async function () {
+                if (window.showOpenFilePicker) {
+                    try {
+                        var handles = await window.showOpenFilePicker({
+                            types: [{ description: 'Ivy files', accept: { 'text/plain': ['.ivy'] } }],
+                            multiple: false,
+                        });
+                        var handle = handles[0];
+                        var file = await handle.getFile();
+                        self._fileHandle = handle;
+                        await self.loadFile(file);
+                    } catch (ex) {
+                        if (ex.name !== 'AbortError') {
+                            self.controls.setStatus('Load failed: ' + ex.message, 'error');
+                        }
+                    }
+                } else {
+                    fileInput.click();
+                }
+            });
         });
         fileInput.addEventListener('change', function () {
             if (fileInput.files.length > 0) {
@@ -1783,7 +1804,6 @@ class IvyApp {
             self._persistedFileName = file.name;
             self._persistedFilePath = file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
-            self._fileHandle = null; // no writable handle from a plain file-picker load
 
             // Populate the model editor with the file content (also marks clean via setEditorContent)
             this.setEditorContent(fileContent);
