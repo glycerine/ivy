@@ -1930,6 +1930,10 @@ class IvyApp {
             this._fileHandle = handle;
             this._persistedFileName = handle.name;
             IvyPersist.setFileName(handle.name);
+            var editorLabel = document.getElementById('model-editor-label');
+            if (editorLabel) {
+                editorLabel.textContent = 'Model: ' + handle.name;
+            }
             this.controls.setStatus('Saved: ' + handle.name, 'success');
         } catch (e) {
             if (e.name === 'AbortError') {
