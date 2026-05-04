@@ -137,10 +137,19 @@ var IvyPersist = {
         try {
             var key = IvyPersist._handleKey(app);
             if (!key) return;
+            var legacyKey = '';
+            if (app._persistedFileName && app.api && app.api.sessionId) {
+                var sid = IvyPersist.getSessionIdFromURL() || app.api.sessionId;
+                legacyKey = sid + '|' + app._persistedFileName + '|' + app._persistedFileName;
+            }
             var db = await IvyPersist._openHandleDB();
             await new Promise(function (resolve, reject) {
                 var tx = db.transaction(IvyPersist.HANDLE_STORE, 'readwrite');
-                tx.objectStore(IvyPersist.HANDLE_STORE).put(app._fileHandle, key);
+                var store = tx.objectStore(IvyPersist.HANDLE_STORE);
+                store.put(app._fileHandle, key);
+                if (legacyKey && legacyKey !== key) {
+                    store.put(app._fileHandle, legacyKey);
+                }
                 tx.oncomplete = resolve;
                 tx.onerror = function () { reject(tx.error || new Error('store file handle failed')); };
             });
@@ -155,11 +164,33 @@ var IvyPersist = {
             var key = IvyPersist._handleKey(state);
             if (!key) return null;
             var db = await IvyPersist._openHandleDB();
+            var keys = [key];
+            if (state.fileName) {
+                var legacyKey = (state.sessionId || '') + '|' + state.fileName + '|' + state.fileName;
+                if (legacyKey && legacyKey !== key) {
+                    keys.push(legacyKey);
+                }
+            }
             var handle = await new Promise(function (resolve, reject) {
                 var tx = db.transaction(IvyPersist.HANDLE_STORE, 'readonly');
-                var req = tx.objectStore(IvyPersist.HANDLE_STORE).get(key);
-                req.onsuccess = function () { resolve(req.result || null); };
-                req.onerror = function () { reject(req.error || new Error('load file handle failed')); };
+                var store = tx.objectStore(IvyPersist.HANDLE_STORE);
+                var index = 0;
+                var tryNext = function () {
+                    if (index >= keys.length) {
+                        resolve(null);
+                        return;
+                    }
+                    var req = store.get(keys[index++]);
+                    req.onsuccess = function () {
+                        if (req.result) {
+                            resolve(req.result);
+                        } else {
+                            tryNext();
+                        }
+                    };
+                    req.onerror = function () { reject(req.error || new Error('load file handle failed')); };
+                };
+                tryNext();
             });
             db.close();
             return handle || null;

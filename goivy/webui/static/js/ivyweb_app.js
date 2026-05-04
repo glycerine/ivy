@@ -209,7 +209,7 @@ class IvyApp {
     _updateReopenLastFileButton() {
         var btn = document.getElementById('file-reopen-last');
         if (!btn) return;
-        if (!this._persistedFileName && this._lastClosedFileHandle) {
+        if (!this._fileHandle && this._lastClosedFileHandle) {
             btn.textContent = 'Re-open last file ' + (this._lastClosedFileName || 'file');
             btn.style.display = '';
         } else {
@@ -2321,8 +2321,8 @@ class IvyApp {
         if (editorLabel) {
             editorLabel.textContent = 'Model: (unsaved file)';
         }
-        this._updateReopenLastFileButton();
         IvyPersist.setFileName('');
+        this._updateReopenLastFileButton();
         var tbody = document.getElementById('state-checkbox-body');
         if (tbody) tbody.innerHTML = '';
 
