@@ -1227,6 +1227,13 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	return result, nil
 }
 
+// CompileWithSortInference is the adapter used by ast.Schema.GetInstance.
+// Python exposes compile_with_sort_inference directly on AST nodes; Go keeps
+// the operation on Compiler.
+func (c *Compiler) CompileWithSortInference(node ast.Node) (ast.Node, error) {
+	return c.SortifyWithInference(node)
+}
+
 // CompileConst compiles a constant declaration, adding it to the signature.
 func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
 	xtracer.Trace("compiler.CompileConst ENTER")

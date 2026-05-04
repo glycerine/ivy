@@ -1384,9 +1384,21 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 		return lg.NewIvyError(inst, fmt.Sprintf("%s undefined in instantiation", instName))
 	}
 
-	// Store the instantiation for later processing
-	d.Compiler.Module.Instantiations = append(d.Compiler.Module.Instantiations,
-		module.Instantiation{Schema: schema, Inst: node})
+	// Python applies top-level schema instantiations immediately:
+	// self.domain.schemata[inst.relname].instantiate(inst.args)
+	sch, ok := schema.(*ast.Schema)
+	if !ok {
+		return lg.NewIvyError(inst, fmt.Sprintf("%s is not an instantiable schema", instName))
+	}
+	instAtom, ok := inst.Sort.(*ast.Atom)
+	if !ok {
+		return lg.NewIvyError(inst, fmt.Sprintf("%s undefined in instantiation", instName))
+	}
+	fmla, err := sch.GetInstance(instAtom.Terms, d.Compiler, nil, false)
+	if err != nil {
+		return lg.NewIvyError(inst, "wrong number of parameters in instantiation")
+	}
+	sch.Instances = append(sch.Instances, fmla)
 	return nil
 }
 
