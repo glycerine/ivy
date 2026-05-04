@@ -208,15 +208,15 @@ class IvyApp {
     }
 
     async _confirmNoExternalChangeBeforeSave(content) {
-        if (!this._fileHandle) return true;
+        if (!this._fileHandle) return 'ok';
         var diskContent = await this._readFileHandleContent();
         var lastSaved = this._savedFileContent || '';
         if (diskContent === lastSaved || diskContent === content) {
-            return true;
+            return 'ok';
         }
         var choice = await this.showExternalChangeDialog();
         if (choice === 'overwrite') {
-            return true;
+            return 'overwrite';
         }
         if (choice === 'reload') {
             this.setEditorContent(diskContent);
@@ -227,7 +227,7 @@ class IvyApp {
         } else {
             this.controls.setStatus('Save cancelled: file changed on disk', 'warning');
         }
-        return false;
+        return 'skip';
     }
 
     showExternalChangeDialog() {
@@ -2056,11 +2056,11 @@ class IvyApp {
                     this.controls.setStatus('Save permission denied', 'error');
                     return;
                 }
-                var shouldWrite = await this._confirmNoExternalChangeBeforeSave(content);
-                if (!shouldWrite) {
+                var saveDecision = await this._confirmNoExternalChangeBeforeSave(content);
+                if (saveDecision === 'skip') {
                     return;
                 }
-                if (!dirty) {
+                if (!dirty && saveDecision !== 'overwrite') {
                     this._updateEditorLabel();
                     return;
                 }
