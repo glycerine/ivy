@@ -841,6 +841,24 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		var mixer *ast.Atom
 		var mixee ast.Node
 
+		renameToFirstTransition := func(act actions.Action, body actions.Action) actions.Action {
+			aparams := append([]*lg.Const{}, body.GetFormalParams()...)
+			aparams = append(aparams, body.GetFormalReturns()...)
+			canonical := append([]*lg.Const{}, params...)
+			canonical = append(canonical, returns...)
+
+			subst := make(map[lg.NodeKey]lg.Expr)
+			for j := 0; j < len(aparams) && j < len(canonical); j++ {
+				subst[lg.Key(aparams[j])] = canonical[j]
+			}
+			if len(subst) == 0 {
+				return act
+			}
+			renamed := actions.SubstituteConstantsAction(act, subst)
+			renamed.SetLineno(act.GetLineno())
+			return renamed
+		}
+
 		for i, te := range trs {
 			tr := te.tr
 			var scmix ast.Node
@@ -926,13 +944,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 						}
 					}
 				} else {
-					// Rename params for 2nd+ transitions
-					// Python: aparams = df.formal_params + df.formal_returns
-					//         subst = dict(zip(aparams, params+returns))
-					//         seq = substitute_constants_ast(seq, subst)
-					// This works at the compiled level — for simplicity, we skip
-					// param renaming for now (it's only needed for multi-transition
-					// scenarios on the same action with different param names)
+					seqAction = renameToFirstTransition(seqAction, body).(*actions.Sequence)
 				}
 
 				choices = append(choices, seqAction)
@@ -998,6 +1010,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 							mixee = adef.Name
 						}
 					}
+				} else {
+					ifAct = renameToFirstTransition(ifAct, body).(*actions.IfAction)
 				}
 
 				afters = append(afters, ifAct)
