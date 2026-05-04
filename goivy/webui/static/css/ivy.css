@@ -195,11 +195,35 @@ html, body {
     max-width: 720px;
 }
 
+.dirty-close-dialog-box {
+    max-width: 520px;
+}
+
 .loaded-file {
     color: #aad;
     font-size: 12px;
     margin-left: 10px;
     font-style: italic;
+}
+
+.editor-close-btn {
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    margin-right: 6px;
+    padding: 0;
+    border: 1px solid #555;
+    border-radius: 3px;
+    background: #333;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.editor-close-btn:hover {
+    background: #4a2b2b;
+    border-color: #8a4444;
+    color: #fff;
 }
 
 /* --- Editor panel (in right section, beside state panel) --- */

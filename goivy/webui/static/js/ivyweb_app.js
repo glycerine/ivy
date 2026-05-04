@@ -189,6 +189,14 @@ class IvyApp {
         }
     }
 
+    _editorContent() {
+        return this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+    }
+
+    _editorDirty() {
+        return this._editorContent() !== (this._savedFileContent || '');
+    }
+
     async _ensureFileHandleWritable() {
         if (!this._fileHandle) return false;
         if (!this._fileHandle.queryPermission || !this._fileHandle.requestPermission) {
@@ -299,6 +307,45 @@ class IvyApp {
         });
     }
 
+    showDirtyCloseDialog() {
+        var self = this;
+        return new Promise(function (resolve) {
+            var overlay = document.getElementById('dirty-close-dialog-overlay');
+            var msg = document.getElementById('dirty-close-dialog-message');
+            var save = document.getElementById('dirty-close-save');
+            var discard = document.getElementById('dirty-close-discard');
+            if (!overlay || !msg || !save || !discard) {
+                resolve('save');
+                return;
+            }
+            msg.textContent = 'File "' + (self._persistedFileName || 'model') + '" has changed. Save before closing?';
+            overlay.style.display = 'flex';
+            save.focus();
+
+            var done = function (choice) {
+                overlay.style.display = 'none';
+                save.removeEventListener('click', onSave);
+                discard.removeEventListener('click', onDiscard);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(choice);
+            };
+            var onSave = function () { done('save'); };
+            var onDiscard = function () { done('discard'); };
+            var onKeyDown = function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    done('save');
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    done('discard');
+                }
+            };
+            save.addEventListener('click', onSave);
+            discard.addEventListener('click', onDiscard);
+            document.addEventListener('keydown', onKeyDown);
+        });
+    }
+
     scrollEditorToLine(lineno) {
         if (this.cmEditor) {
             var line = lineno - 1;
@@ -371,6 +418,14 @@ class IvyApp {
             e.preventDefault();
             self.flashAndClose(this, function () { self.newModel(); });
         });
+
+        var closeCurrent = document.getElementById('file-close-current');
+        if (closeCurrent) {
+            closeCurrent.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.closeCurrentFile();
+            });
+        }
 
         // File > Save Invariant
         document.getElementById('file-save-invariant').addEventListener('click', function (e) {
@@ -2076,22 +2131,22 @@ class IvyApp {
      * for subsequent saves.
      */
     async save() {
-        var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
-        var dirty = content !== (this._savedFileContent || '');
+        var content = this._editorContent();
+        var dirty = this._editorDirty();
         if (this._fileHandle) {
             try {
                 var writableAllowed = await this._ensureFileHandleWritable();
                 if (!writableAllowed) {
                     this.controls.setStatus('Save permission denied', 'error');
-                    return;
+                    return false;
                 }
                 var saveDecision = await this._confirmNoExternalChangeBeforeSave(content);
                 if (saveDecision === 'skip') {
-                    return;
+                    return false;
                 }
                 if (!dirty && saveDecision !== 'overwrite') {
                     this._updateEditorLabel();
-                    return;
+                    return true;
                 }
                 var writable = await this._fileHandle.createWritable();
                 await writable.write(content);
@@ -2100,29 +2155,31 @@ class IvyApp {
                 this._savedFileContent = content;
                 this._updateEditorLabel();
                 this.controls.setStatus('Saved: ' + this._persistedFileName, 'success');
+                return true;
             } catch (e) {
                 this.controls.setStatus('Save failed: ' + e.message, 'error');
+                return false;
             }
         } else {
             if (!dirty) {
                 this._updateEditorLabel();
-                return;
+                return true;
             }
-            await this.saveAs();
+            return await this.saveAs();
         }
     }
 
     async saveAs() {
-        var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        var content = this._editorContent();
         if (!content) {
             this.controls.setStatus('No model loaded to save', 'error');
-            return;
+            return false;
         }
         try {
             if (!window.showSaveFilePicker) {
                 // Fallback for browsers without File System Access API
                 this.controls.setStatus('Save as... not supported in this browser — use Download instead', 'error');
-                return;
+                return false;
             }
             var handle = await window.showSaveFilePicker({
                 suggestedName: this._persistedFileName || 'model.ivy',
@@ -2145,6 +2202,7 @@ class IvyApp {
             IvyPersist.setFileName(handle.name);
             this._updateEditorLabel();
             this.controls.setStatus('Saved: ' + handle.name, 'success');
+            return true;
         } catch (e) {
             if (e.name === 'AbortError') {
                 // User cancelled the dialog
@@ -2152,18 +2210,33 @@ class IvyApp {
             } else {
                 this.controls.setStatus('Save as failed: ' + e.message, 'error');
             }
+            return false;
         }
     }
 
     // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
     async saveSession() { return this.downloadModel(); }
 
+    async closeCurrentFile() {
+        if (this._editorDirty()) {
+            var choice = await this.showDirtyCloseDialog();
+            if (choice === 'save') {
+                var saved = await this.save();
+                if (!saved) {
+                    return;
+                }
+            }
+        }
+        await this.newModel({ skipSaveCurrent: true });
+    }
+
     /**
      * Start a new model. Saves any existing state first, then clears everything.
      */
-    async newModel() {
+    async newModel(options) {
+        options = options || {};
         // Save current state before clearing
-        if (this._persistedFileContent) {
+        if (!options.skipSaveCurrent && this._persistedFileContent) {
             IvyPersist.save(this);
         }
 

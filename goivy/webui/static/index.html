@@ -174,11 +174,13 @@
             <!-- Model editor column (outside tabs, always visible) -->
             <div id="editor-panel">
                 <div class="panel-header">
+                    <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
                     <span id="model-editor-label">Model</span>
                     <span class="keymap-radios">
                         <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
                         <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>
                         <label><input type="radio" name="keymap" value="vim"> Vim</label>
+                        <a href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">docs</a>
                     </span>
                 </div>
                 <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
@@ -229,6 +231,18 @@
                 <button id="external-change-reload" class="dialog-btn">Revert to on-disk version</button>
                 <button id="external-change-merge" class="dialog-btn">Merge disk version into edit buffer</button>
                 <button id="external-change-overwrite" class="dialog-btn dialog-btn-danger">Overwrite on-disk with edited buffer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dirty file close dialog -->
+    <div id="dirty-close-dialog-overlay" class="dialog-overlay" style="display:none;">
+        <div class="dialog-box dirty-close-dialog-box">
+            <div class="dialog-title">File has changed</div>
+            <div class="dialog-message" id="dirty-close-dialog-message"></div>
+            <div class="dialog-buttons">
+                <button id="dirty-close-save" class="dialog-btn">Save</button>
+                <button id="dirty-close-discard" class="dialog-btn dialog-btn-danger">Discard Edits</button>
             </div>
         </div>
     </div>
