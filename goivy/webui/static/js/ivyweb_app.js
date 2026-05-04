@@ -97,24 +97,9 @@ class IvyApp {
             };
         }
 
-        // Restore saved session if available (survives page reload).
-        if (savedState && savedState.fileContent) {
-            console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
-            var restored = await IvyPersist.restore(this, savedState);
-            if (restored) {
-                // Keep the URL hash from the saved session (don't overwrite)
-                IvyPersist.setFileName(savedState.fileName);
-                this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
-            } else {
-                this.controls.setStatus('Ready');
-            }
-        } else {
-            this.controls.setStatus('Ready');
-        }
-
         // Initialize CodeMirror on the model editor textarea.
+        // Must happen BEFORE restore so setEditorContent() can call cmEditor.setValue().
         var modelEditor = document.getElementById('model-editor');
-        var self = this;
         if (modelEditor) {
             this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
@@ -135,6 +120,21 @@ class IvyApp {
                     self.cmEditor.setOption('keyMap', this.value);
                 });
             }
+        }
+
+        // Restore saved session if available (survives page reload).
+        if (savedState && savedState.fileContent) {
+            console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
+            var restored = await IvyPersist.restore(this, savedState);
+            if (restored) {
+                // Keep the URL hash from the saved session (don't overwrite)
+                IvyPersist.setFileName(savedState.fileName);
+                this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
+            } else {
+                this.controls.setStatus('Ready');
+            }
+        } else {
+            this.controls.setStatus('Ready');
         }
 
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
