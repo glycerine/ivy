@@ -1,49 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ivy leaf on a green diagonal ribbon over black background">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="White ivy leaf outline on a kelly green diagonal ribbon over black background">
   <rect width="512" height="512" fill="#000000"/>
 
-  <!-- Kelly green diagonal ribbon -->
-  <rect x="-140" y="146" width="792" height="300" fill="#00C83C" transform="rotate(-45 256 256)"/>
+  <!-- In-frame green ribbon -->
+  <polygon points="128,0 512,0 512,384 384,512 0,512 0,128" fill="#00C83C"/>
 
-  <!-- Subtle shadow so the white outline reads well at small sizes -->
-  <g transform="translate(0 2)">
-    <path d="M256 58
-             C218 95 193 149 183 196
-             C146 188 87 191 56 211
-             C68 252 97 280 120 303
-             C101 334 88 367 87 390
-             C134 397 184 378 222 348
-             C221 389 206 423 196 449
-             C220 453 247 444 251 413
-             C255 388 258 364 259 344
-             C296 376 350 397 425 390
-             C423 363 405 331 392 304
-             C418 280 447 241 456 211
-             C417 192 360 188 329 196
-             C319 148 294 96 256 58 Z"
-          fill="none" stroke="#000000" stroke-width="30" stroke-linejoin="round" stroke-linecap="round" opacity="0.16"/>
-  </g>
-
-  <!-- Ivy leaf outline -->
-  <path d="M256 58
-           C218 95 193 149 183 196
-           C146 188 87 191 56 211
-           C68 252 97 280 120 303
-           C101 334 88 367 87 390
-           C134 397 184 378 222 348
-           C221 389 206 423 196 449
-           C220 453 247 444 251 413
-           C255 388 258 364 259 344
-           C296 376 350 397 425 390
-           C423 363 405 331 392 304
-           C418 280 447 241 456 211
-           C417 192 360 188 329 196
-           C319 148 294 96 256 58 Z"
-        fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Ivy leaf outline, kept fully inside the green ribbon -->
+  <path d="M256 72
+           C220 107 198 154 189 193
+           C156 186 105 189 79 205
+           C91 239 117 266 138 287
+           C121 316 110 344 109 364
+           C149 370 192 354 225 329
+           C224 365 212 393 204 416
+           C224 419 246 411 250 384
+           C253 362 255 342 256 325
+           C288 352 335 370 400 364
+           C398 340 382 313 370 289
+           C393 267 420 234 431 205
+           C397 189 347 186 323 193
+           C314 153 291 107 256 72 Z"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="22"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
 
   <!-- Veins -->
-  <path d="M256 332 L256 115" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
-  <path d="M256 332 C229 296 180 262 126 234" stroke="#171717" stroke-width="8" stroke-linecap="round" fill="none"/>
-  <path d="M256 332 C283 296 332 262 386 234" stroke="#171717" stroke-width="8" stroke-linecap="round" fill="none"/>
-  <path d="M256 332 C254 372 241 416 231 439" stroke="#7A7A7A" stroke-width="9" stroke-linecap="round" fill="none"/>
-  <path d="M256 332 C252 358 245 392 236 426" stroke="#111111" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <path d="M256 318 L256 132" stroke="#101010" stroke-width="7" stroke-linecap="round"/>
+  <path d="M256 318 C232 288 190 260 138 236" stroke="#171717" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M256 318 C280 288 322 260 374 236" stroke="#171717" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M256 318 C254 353 244 390 236 410" stroke="#7A7A7A" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M256 318 C252 341 246 370 239 399" stroke="#111111" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.55"/>
 </svg>
