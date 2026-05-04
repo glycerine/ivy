@@ -1,30 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Yellow-green capital I with black drop shadow on a transparent background">
   <defs>
-    <linearGradient id="ivyGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#C8F000"/>
-      <stop offset="100%" stop-color="#E7F92B"/>
-    </linearGradient>
+    <path id="ivyI" d="M52 28
+                         L460 28
+                         L460 124
+                         L312 124
+                         L312 388
+                         L460 388
+                         L460 484
+                         L52 484
+                         L52 388
+                         L200 388
+                         L200 124
+                         L52 124
+                         Z"/>
   </defs>
 
-  <!-- transparent background -->
+  <!-- Transparent background -->
 
-  <!-- black drop shadow, down-right at 45 degrees, without inner horizontal shadow lines -->
-  <g fill="#000000">
-    <!-- top beam: right-side shadow only -->
-    <polygon points="460,28 484,52 484,148 460,124"/>
+  <!-- Black drop shadow, offset down-right at 45 degrees -->
+  <use href="#ivyI" fill="#000000" transform="translate(24 24)"/>
 
-    <!-- center beam: right-side shadow only -->
-    <polygon points="312,124 336,148 336,412 312,388"/>
-
-    <!-- bottom beam: right-side and bottom shadow -->
-    <polygon points="460,388 484,412 484,508 460,484"/>
-    <polygon points="52,484 460,484 484,508 76,508"/>
-  </g>
-
-  <!-- main I -->
-  <g fill="url(#ivyGrad)">
-    <rect x="52" y="28" width="408" height="96"/>
-    <rect x="200" y="124" width="112" height="264"/>
-    <rect x="52" y="388" width="408" height="96"/>
-  </g>
+  <!-- Main I: one polygon, one solid color -->
+  <use href="#ivyI" fill="#D8F31A"/>
 </svg>
