@@ -1988,11 +1988,17 @@ class IvyApp {
 
         // Clear state
         this._persistedFileName = '';
+        this._persistedFilePath = '';
         this._persistedFileContent = '';
         this._persistedConceptRelations = null;
         this.selectedArgNode = null;
 
         // Clear UI
+        this.setEditorContent('');
+        var editorLabel = document.getElementById('model-editor-label');
+        if (editorLabel) {
+            editorLabel.textContent = 'Model: (unsaved file)';
+        }
         IvyPersist.setFileName('');
         var tbody = document.getElementById('state-checkbox-body');
         if (tbody) tbody.innerHTML = '';
@@ -2099,7 +2105,9 @@ class IvyApp {
 
         var restored = await IvyPersist.restore(this, state);
         if (restored) {
-            IvyPersist.setSessionIdInURL(this.api.sessionId);
+            // Keep the URL set by restore() (state.sessionId) — do NOT clobber it with
+            // api.sessionId, which resets to s1/s2/... on every server restart and would
+            // overwrite unrelated historical sessions stored under those same IDs.
             IvyPersist.setFileName(state.fileName);
             var sessionEl = document.getElementById('session-id');
             if (sessionEl) {

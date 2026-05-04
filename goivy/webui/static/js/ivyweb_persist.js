@@ -169,6 +169,7 @@ var IvyPersist = {
 
             // Store for future saves
             app._persistedFileName = state.fileName;
+            app._persistedFilePath = state.filePath || state.fileName || '';
             app._persistedFileContent = state.fileContent;
 
             // Populate the model editor via the abstraction layer
