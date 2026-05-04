@@ -214,20 +214,60 @@ class IvyApp {
         if (diskContent === lastSaved || diskContent === content) {
             return true;
         }
-        var reload = window.confirm(
-            'The file has changed on disk since IvyWeb loaded it.\n\n' +
-            'Press OK to reload the disk version first.\n' +
-            'Press Cancel to overwrite the external changes with the editor buffer.'
-        );
-        if (!reload) {
+        var choice = await this.showExternalChangeDialog();
+        if (choice === 'overwrite') {
             return true;
         }
-        this.setEditorContent(diskContent);
-        this._persistedFileContent = diskContent;
-        this._savedFileContent = diskContent;
-        IvyPersist.save(this);
-        this.controls.setStatus('Reloaded from disk: ' + (this._persistedFileName || 'model'), 'success');
+        if (choice === 'reload') {
+            this.setEditorContent(diskContent);
+            this._persistedFileContent = diskContent;
+            this._savedFileContent = diskContent;
+            IvyPersist.save(this);
+            this.controls.setStatus('Reverted to on-disk version: ' + (this._persistedFileName || 'model'), 'success');
+        } else {
+            this.controls.setStatus('Save cancelled: file changed on disk', 'warning');
+        }
         return false;
+    }
+
+    showExternalChangeDialog() {
+        var self = this;
+        return new Promise(function (resolve) {
+            var overlay = document.getElementById('external-change-dialog-overlay');
+            var msg = document.getElementById('external-change-dialog-message');
+            var doNothing = document.getElementById('external-change-do-nothing');
+            var reload = document.getElementById('external-change-reload');
+            var overwrite = document.getElementById('external-change-overwrite');
+            if (!overlay || !msg || !doNothing || !reload || !overwrite) {
+                resolve('do-nothing');
+                return;
+            }
+            msg.textContent = 'The file "' + (self._persistedFileName || 'model') + '" has changed outside IvyWeb. Choose how to handle the current editor buffer.';
+            overlay.style.display = 'flex';
+            doNothing.focus();
+
+            var done = function (choice) {
+                overlay.style.display = 'none';
+                doNothing.removeEventListener('click', onDoNothing);
+                reload.removeEventListener('click', onReload);
+                overwrite.removeEventListener('click', onOverwrite);
+                document.removeEventListener('keydown', onKeyDown);
+                resolve(choice);
+            };
+            var onDoNothing = function () { done('do-nothing'); };
+            var onReload = function () { done('reload'); };
+            var onOverwrite = function () { done('overwrite'); };
+            var onKeyDown = function (e) {
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    e.preventDefault();
+                    done('do-nothing');
+                }
+            };
+            doNothing.addEventListener('click', onDoNothing);
+            reload.addEventListener('click', onReload);
+            overwrite.addEventListener('click', onOverwrite);
+            document.addEventListener('keydown', onKeyDown);
+        });
     }
 
     scrollEditorToLine(lineno) {

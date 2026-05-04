@@ -219,6 +219,19 @@
         </div>
     </div>
 
+    <!-- External file change dialog -->
+    <div id="external-change-dialog-overlay" class="dialog-overlay" style="display:none;">
+        <div class="dialog-box external-change-dialog-box">
+            <div class="dialog-title">File changed on disk</div>
+            <div class="dialog-message" id="external-change-dialog-message"></div>
+            <div class="dialog-buttons">
+                <button id="external-change-do-nothing" class="dialog-btn">Do nothing</button>
+                <button id="external-change-reload" class="dialog-btn">Revert to on-disk version</button>
+                <button id="external-change-overwrite" class="dialog-btn dialog-btn-danger">Overwrite on-disk with edited buffer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading overlay -->
     <div id="loading-overlay" style="display:none;">
         <div class="spinner"></div>

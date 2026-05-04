@@ -178,6 +178,19 @@ html, body {
     background: #007acc;
 }
 
+.dialog-btn-danger {
+    background: #7a2c2c;
+    border-color: #c72e2e;
+}
+
+.dialog-btn-danger:hover {
+    background: #a33a3a;
+}
+
+.external-change-dialog-box {
+    max-width: 640px;
+}
+
 .loaded-file {
     color: #aad;
     font-size: 12px;
