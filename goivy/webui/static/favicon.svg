@@ -8,17 +8,23 @@
 
   <!-- transparent background -->
 
-  <!-- thick black drop shadow, offset down-right at 45 degrees -->
-  <g fill="#000000" transform="translate(24 24)">
-    <rect x="52" y="28" width="408" height="96"/>
-    <rect x="208" y="124" width="96" height="264"/>
-    <rect x="52" y="388" width="408" height="96"/>
+  <!-- black drop shadow, down-right at 45 degrees, without inner horizontal shadow lines -->
+  <g fill="#000000">
+    <!-- top beam: right-side shadow only -->
+    <polygon points="460,28 484,52 484,148 460,124"/>
+
+    <!-- center beam: right-side shadow only -->
+    <polygon points="312,124 336,148 336,412 312,388"/>
+
+    <!-- bottom beam: right-side and bottom shadow -->
+    <polygon points="460,388 484,412 484,508 460,484"/>
+    <polygon points="52,484 460,484 484,508 76,508"/>
   </g>
 
   <!-- main I -->
   <g fill="url(#ivyGrad)">
     <rect x="52" y="28" width="408" height="96"/>
-    <rect x="208" y="124" width="96" height="264"/>
+    <rect x="200" y="124" width="112" height="264"/>
     <rect x="52" y="388" width="408" height="96"/>
   </g>
 </svg>
