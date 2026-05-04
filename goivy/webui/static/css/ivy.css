@@ -270,6 +270,12 @@ html, body {
     vertical-align: middle;
     cursor: pointer;
 }
+.keymap-docs-link {
+    color: #f0b84a;
+}
+.keymap-docs-link:hover {
+    color: #ffd37a;
+}
 
 /* CodeMirror dark theme overrides to match existing editor style */
 #editor-panel .CodeMirror {
