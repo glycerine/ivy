@@ -111,7 +111,12 @@ class IvyApp {
                 tabSize: 4,
                 indentUnit: 4,
                 lineWrapping: false,
-                matchBrackets: true
+                matchBrackets: true,
+                extraKeys: {
+                    'Ctrl-Z': 'undo',
+                    'Ctrl-Y': 'redo',
+                    'Ctrl-Shift-Z': 'redo',
+                }
             });
             // Sync edits back to persisted content and update dirty marker.
             this.cmEditor.on('change', function () {
