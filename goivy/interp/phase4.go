@@ -181,7 +181,14 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 	if err != nil {
 		return nil, err
 	}
+	return DecomposeAction(checkPrecond, cfg, state2, state1, act)
+}
 
+// DecomposeAction decomposes an already-resolved action between two states.
+// This is the same implementation as DecomposeActionApp after evaluating the
+// action and pre-state expression, but it also supports action provenance that
+// is not addressable by a module action name, such as env actions.
+func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *State, act actions.Action) (*State, error) {
 	// Compute update
 	ctx := &actions.UpdateContext{
 		Domain:          state1.Domain,

@@ -1035,10 +1035,12 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 		return nil
 	}
 	var actionName string
+	var action actions.Action
 	switch rep := aa.Rep.(type) {
 	case string:
 		actionName = rep
 	case actions.Action:
+		action = rep
 		actionName = rep.Name()
 	}
 	if actionName == "" || len(aa.Args) == 0 {
@@ -1047,9 +1049,15 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 
 	interpState := ArtToInterpState(state)
 	interpPre := ArtToInterpState(aa.Args[0])
-	exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
 
-	resultState, err := interp.DecomposeActionApp(true, ag.Domain.Cfg.IuCfg, interpState, exprNode)
+	var resultState *interp.State
+	var err error
+	if action != nil {
+		resultState, err = interp.DecomposeAction(true, ag.Domain.Cfg.IuCfg, interpState, interpPre, action)
+	} else {
+		exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
+		resultState, err = interp.DecomposeActionApp(true, ag.Domain.Cfg.IuCfg, interpState, exprNode)
+	}
 	if err != nil || resultState == nil {
 		return nil
 	}

@@ -47,12 +47,12 @@ type RadioOption struct {
 // ARGStateRef is a lightweight reference to an ARG state node,
 // used to avoid pulling in the full art package.
 type ARGStateRef struct {
-	ID       int
-	Clauses  string
-	IsSafe   bool
-	HasPred  bool
-	PredID   int
-	Label    string
+	ID      int
+	Clauses string
+	IsSafe  bool
+	HasPred bool
+	PredID  int
+	Label   string
 }
 
 // AnalysisGraphUI manages the ARG display and user interactions
@@ -478,11 +478,36 @@ func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*AnalysisGraphState,
 	if err != nil {
 		return nil, err
 	}
-	subArt := ui.AG.DecomposeEdge(*t)
+	var subArt *art.AnalysisGraph
+	func() {
+		defer func() {
+			if recover() != nil {
+				subArt = nil
+			}
+		}()
+		subArt = ui.AG.DecomposeEdge(*t)
+	}()
+	if subArt == nil {
+		subArt = ui.fallbackStepInGraph(t)
+	}
 	if subArt == nil {
 		return nil, fmt.Errorf("cannot decompose action")
 	}
 	return ArtToGraphState(subArt), nil
+}
+
+func (ui *AnalysisGraphUI) fallbackStepInGraph(t *art.Transition) *art.AnalysisGraph {
+	if ui == nil || ui.AG == nil || t == nil || t.Pre == nil || t.Post == nil || t.Op == nil {
+		return nil
+	}
+	subArt := art.NewAnalysisGraph(ui.AG.Domain)
+	pre := art.NewState(ui.AG.Domain, t.Pre.Clauses)
+	pre.Label = t.Pre.Label
+	post := art.NewState(ui.AG.Domain, t.Post.Clauses)
+	post.Label = t.Post.Label
+	subArt.Add(pre, nil)
+	subArt.Add(post, art.NewActionApp(t.Op, pre))
+	return subArt
 }
 
 // ViewSourceEdge browses the source code of a transition action
