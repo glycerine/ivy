@@ -189,6 +189,47 @@ class IvyApp {
         }
     }
 
+    async _ensureFileHandleWritable() {
+        if (!this._fileHandle) return false;
+        if (!this._fileHandle.queryPermission || !this._fileHandle.requestPermission) {
+            return true;
+        }
+        var opts = { mode: 'readwrite' };
+        var perm = await this._fileHandle.queryPermission(opts);
+        if (perm === 'granted') return true;
+        perm = await this._fileHandle.requestPermission(opts);
+        return perm === 'granted';
+    }
+
+    async _readFileHandleContent() {
+        if (!this._fileHandle) return null;
+        var file = await this._fileHandle.getFile();
+        return await file.text();
+    }
+
+    async _confirmNoExternalChangeBeforeSave(content) {
+        if (!this._fileHandle) return true;
+        var diskContent = await this._readFileHandleContent();
+        var lastSaved = this._savedFileContent || '';
+        if (diskContent === lastSaved || diskContent === content) {
+            return true;
+        }
+        var reload = window.confirm(
+            'The file has changed on disk since IvyWeb loaded it.\n\n' +
+            'Press OK to reload the disk version first.\n' +
+            'Press Cancel to overwrite the external changes with the editor buffer.'
+        );
+        if (!reload) {
+            return true;
+        }
+        this.setEditorContent(diskContent);
+        this._persistedFileContent = diskContent;
+        this._savedFileContent = diskContent;
+        IvyPersist.save(this);
+        this.controls.setStatus('Reloaded from disk: ' + (this._persistedFileName || 'model'), 'success');
+        return false;
+    }
+
     scrollEditorToLine(lineno) {
         if (this.cmEditor) {
             var line = lineno - 1;
@@ -1809,6 +1850,9 @@ class IvyApp {
             self._persistedFileName = file.name;
             self._persistedFilePath = file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
+            if (self._fileHandle) {
+                await IvyPersist.saveFileHandle(self);
+            }
 
             // Populate the model editor with the file content (also marks clean via setEditorContent)
             this.setEditorContent(fileContent);
@@ -1971,6 +2015,15 @@ class IvyApp {
         }
         if (this._fileHandle) {
             try {
+                var writableAllowed = await this._ensureFileHandleWritable();
+                if (!writableAllowed) {
+                    this.controls.setStatus('Save permission denied', 'error');
+                    return;
+                }
+                var shouldWrite = await this._confirmNoExternalChangeBeforeSave(content);
+                if (!shouldWrite) {
+                    return;
+                }
                 var writable = await this._fileHandle.createWritable();
                 await writable.write(content);
                 await writable.close();
@@ -2012,8 +2065,10 @@ class IvyApp {
             // Remember the handle and path for future saves
             this._fileHandle = handle;
             this._persistedFileName = handle.name;
+            this._persistedFilePath = handle.name;
             this._persistedFileContent = content;
             this._savedFileContent = content;
+            await IvyPersist.saveFileHandle(this);
             IvyPersist.setFileName(handle.name);
             this._updateEditorLabel();
             this.controls.setStatus('Saved: ' + handle.name, 'success');

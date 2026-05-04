@@ -26,6 +26,8 @@
 var IvyPersist = {
 
     MAX_SESSIONS: 1000, // effectively unlimited — never discard user data
+    HANDLE_DB: 'ivy_file_handles',
+    HANDLE_STORE: 'handles',
 
     /**
      * Save the current app state to localStorage.
@@ -102,6 +104,71 @@ var IvyPersist = {
         }
     },
 
+    _handleKey: function (appOrState) {
+        if (!appOrState) return '';
+        var sid = '';
+        if (appOrState.api && appOrState.api.sessionId) {
+            sid = IvyPersist.getSessionIdFromURL() || appOrState.api.sessionId;
+        } else {
+            sid = appOrState.sessionId || '';
+        }
+        var fileName = appOrState._persistedFileName || appOrState.fileName || '';
+        var filePath = appOrState._persistedFilePath || appOrState.filePath || fileName;
+        return sid + '|' + filePath + '|' + fileName;
+    },
+
+    _openHandleDB: function () {
+        return new Promise(function (resolve, reject) {
+            if (!window.indexedDB) {
+                reject(new Error('IndexedDB unavailable'));
+                return;
+            }
+            var req = indexedDB.open(IvyPersist.HANDLE_DB, 1);
+            req.onupgradeneeded = function () {
+                req.result.createObjectStore(IvyPersist.HANDLE_STORE);
+            };
+            req.onsuccess = function () { resolve(req.result); };
+            req.onerror = function () { reject(req.error || new Error('open IndexedDB failed')); };
+        });
+    },
+
+    saveFileHandle: async function (app) {
+        if (!app || !app._fileHandle) return;
+        try {
+            var key = IvyPersist._handleKey(app);
+            if (!key) return;
+            var db = await IvyPersist._openHandleDB();
+            await new Promise(function (resolve, reject) {
+                var tx = db.transaction(IvyPersist.HANDLE_STORE, 'readwrite');
+                tx.objectStore(IvyPersist.HANDLE_STORE).put(app._fileHandle, key);
+                tx.oncomplete = resolve;
+                tx.onerror = function () { reject(tx.error || new Error('store file handle failed')); };
+            });
+            db.close();
+        } catch (e) {
+            console.warn('IvyPersist.saveFileHandle failed:', e);
+        }
+    },
+
+    loadFileHandle: async function (state) {
+        try {
+            var key = IvyPersist._handleKey(state);
+            if (!key) return null;
+            var db = await IvyPersist._openHandleDB();
+            var handle = await new Promise(function (resolve, reject) {
+                var tx = db.transaction(IvyPersist.HANDLE_STORE, 'readonly');
+                var req = tx.objectStore(IvyPersist.HANDLE_STORE).get(key);
+                req.onsuccess = function () { resolve(req.result || null); };
+                req.onerror = function () { reject(req.error || new Error('load file handle failed')); };
+            });
+            db.close();
+            return handle || null;
+        } catch (e) {
+            console.warn('IvyPersist.loadFileHandle failed:', e);
+            return null;
+        }
+    },
+
     /**
      * List all saved sessions, newest first.
      * @returns {Array<{id: string, fileName: string, timestamp: number}>}
@@ -162,25 +229,36 @@ var IvyPersist = {
 
         app.controls.setStatus('Restoring session...');
         try {
-            // Populate editor and store state FIRST, before the server call.
-            // The server may reject an incomplete/invalid file, but the user
-            // should still see their content in the editor so they can fix it.
+            // Restore the browser's file handle first. If it is available,
+            // disk is the source of truth; localStorage is only a fallback.
             app._persistedFileName = state.fileName;
             app._persistedFilePath = state.filePath || state.fileName || '';
-            app._persistedFileContent = state.fileContent;
+            app._fileHandle = await IvyPersist.loadFileHandle(state);
+            var restoredContent = state.fileContent || '';
+            if (app._fileHandle) {
+                try {
+                    var diskFile = await app._fileHandle.getFile();
+                    restoredContent = await diskFile.text();
+                    app._persistedFileName = diskFile.name || app._persistedFileName;
+                    app._persistedFilePath = app._persistedFilePath || app._persistedFileName;
+                } catch (e) {
+                    console.warn('IvyPersist.restore: could not read disk file handle, using cached content:', e);
+                }
+            }
+            app._persistedFileContent = restoredContent;
             if (app.setEditorContent) {
-                app.setEditorContent(state.fileContent || '');
+                app.setEditorContent(restoredContent);
             }
             var editorLabel = document.getElementById('model-editor-label');
             if (editorLabel) {
-                editorLabel.textContent = 'Model: ' + (state.fileName || '');
+                editorLabel.textContent = 'Model: ' + (app._persistedFileName || state.fileName || '');
             }
 
             // Re-upload the file to the server to rebuild compiled module.
             // A parse/syntax error from the server is non-fatal: the editor
             // already has the content so the user can continue editing.
-            var blob = new Blob([state.fileContent], { type: 'text/plain' });
-            var file = new File([blob], state.fileName || 'restored.ivy');
+            var blob = new Blob([restoredContent], { type: 'text/plain' });
+            var file = new File([blob], app._persistedFileName || state.fileName || 'restored.ivy');
             var parseOk = true;
             var parseErr = '';
             try {
