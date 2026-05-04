@@ -1737,11 +1737,23 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 			rankSort := rankExpr.NodeSort()
 			aux := lg.NewConst("$rank", rankSort)
 			rankLocal = aux
-			assumes = append(assumes, NewAssumeAction(&lg.Eq{T1: aux, T2: rankExpr}))
+			rankAssume := NewAssumeAction(&lg.Eq{T1: aux, T2: rankExpr})
+			if ranking.HasLineno() {
+				rankAssume.SetLineno(ranking.GetLineno())
+			}
+			assumes = append(assumes, rankAssume)
 			ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{rankSort, rankSort}))
-			exitAsserts = append(exitAsserts, NewAssertAction(lg.MustApply(ltSym, rankExpr, aux)))
+			exitAssert := NewAssertAction(lg.MustApply(ltSym, rankExpr, aux))
+			if ranking.HasLineno() {
+				exitAssert.SetLineno(ranking.GetLineno())
+			}
+			exitAsserts = append(exitAsserts, exitAssert)
 			zeroSym := lg.NewConst("0", rankSort)
-			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: lg.MustApply(ltSym, rankExpr, zeroSym)}))
+			entryAssert := NewAssertAction(&lg.Not{Body: lg.MustApply(ltSym, rankExpr, zeroSym)})
+			if ranking.HasLineno() {
+				entryAssert.SetLineno(ranking.GetLineno())
+			}
+			entryAsserts = append(entryAsserts, entryAssert)
 		}
 	}
 

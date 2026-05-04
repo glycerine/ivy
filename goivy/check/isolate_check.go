@@ -661,6 +661,21 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 //   - If conclusion is TemporalModels: build a fake module from the model
 //     and call CheckIsolate recursively
 //   - Otherwise: convert goal to property and check in a minimal module
+func applyGoalTraceHook(goal *ast.LabeledFormula) {
+	if goal == nil || goal.TraceHook == nil {
+		return
+	}
+	hook, ok := goal.TraceHook.(TraceHookFn)
+	if !ok {
+		return
+	}
+	hook(&MatchHandler{
+		Current:  make(map[lg.NodeKey]string),
+		Eqs:      make(map[lg.NodeKey][]lg.Expr),
+		Renaming: make(map[lg.NodeKey]*lg.Const),
+	}, nil)
+}
+
 func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) error, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
@@ -806,14 +821,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) erro
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
-					// Python ivy_check.py:829-830:
-					//   if hasattr(goal,"trace_hook"): foo = goal.trace_hook(foo)
-					// The Go trace-hook propagation differs (it acts on a
-					// MatchHandler via withLocalMod.TraceHook in the no-method
-					// branch below, not as a transformer here). For now we
-					// honor opt_trace and diagnose without re-routing the
-					// failure value through goal.TraceHook — see followup
-					// item 5 of plans/velvety-kindling-shamir.md.
+					applyGoalTraceHook(goal)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(err)
@@ -903,8 +911,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) erro
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
-					// Python ivy_check.py:829-835. See the parallel block in
-					// the temporal branch above for the trace-hook caveat.
+					applyGoalTraceHook(goal)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(err)
