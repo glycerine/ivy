@@ -2633,8 +2633,7 @@ make golden-2hr latest fix is for divergence at XTRACE 28_253_287
 green "make golden"
 green "make rfn"
 green "make tlb" takes just over an hour to run.
-
-green "make golden-2hr": finished after 37_019_447 in about 4 hours 12 minutes.
+green "make golden-2hr": finished after 37_019_447 in about 4 hours 12 minutes. (4.2 hours)
 
 ~~~
 make golden-2hr
