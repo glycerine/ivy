@@ -28,6 +28,7 @@ class IvyApp {
         // File System Access API handle for in-place saves (Ctrl+S).
         this._fileHandle = null;
         this._lastClosedFileHandle = null;
+        this._lastClosedSessionId = '';
         this._lastClosedFileName = '';
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
@@ -201,15 +202,18 @@ class IvyApp {
     }
 
     _rememberLastOpenFile() {
-        if (!this._fileHandle) return;
+        var name = this._persistedFileName || (this._fileHandle && this._fileHandle.name) || '';
+        if (!name) return;
         this._lastClosedFileHandle = this._fileHandle;
-        this._lastClosedFileName = this._persistedFileName || this._fileHandle.name || 'file';
+        this._lastClosedSessionId = IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '';
+        this._lastClosedFileName = name || 'file';
     }
 
     _updateReopenLastFileButton() {
         var btn = document.getElementById('file-reopen-last');
         if (!btn) return;
-        if (!this._fileHandle && this._lastClosedFileHandle) {
+        var noCurrentFile = !this._fileHandle && !this._persistedFileName;
+        if (noCurrentFile && (this._lastClosedFileHandle || this._lastClosedSessionId)) {
             btn.textContent = 'Re-open last file ' + (this._lastClosedFileName || 'file');
             btn.style.display = '';
         } else {
@@ -218,11 +222,15 @@ class IvyApp {
     }
 
     async reopenLastFile() {
-        if (!this._lastClosedFileHandle) return;
+        if (!this._lastClosedFileHandle && !this._lastClosedSessionId) return;
         try {
-            var file = await this._lastClosedFileHandle.getFile();
-            this._fileHandle = this._lastClosedFileHandle;
-            await this.loadFile(file);
+            if (this._lastClosedFileHandle) {
+                var file = await this._lastClosedFileHandle.getFile();
+                this._fileHandle = this._lastClosedFileHandle;
+                await this.loadFile(file);
+            } else {
+                await this.loadRecentSession(this._lastClosedSessionId);
+            }
         } catch (e) {
             this.controls.setStatus('Re-open failed: ' + e.message, 'error');
         }
