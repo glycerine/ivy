@@ -522,7 +522,7 @@ html, body {
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 100%;
+    top: calc(100% + 1px);
     left: 0;
     background-color: #2d2d2d;
     border: 1px solid #555;
