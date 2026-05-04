@@ -1,6 +1,7 @@
 package isolate
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/actions"
@@ -355,6 +356,45 @@ func TestAddMixinsNoMixins(t *testing.T) {
 	}
 }
 
+func TestAddMixinsExtRejectsMissingMixinAction(t *testing.T) {
+	m := mkModule()
+	cfg := ast.NewAstConfig()
+
+	m.Mixins.Set("a", []module.MixinDef{
+		cfg.NewMixinBeforeDef(cfg.NewAtom("missing_monitor"), cfg.NewAtom("a")),
+	})
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("AddMixinsExt silently skipped undefined mixin action missing_monitor; Python lookup_action rejects this")
+		}
+	}()
+
+	AddMixinsExt(m, "a", actions.NewSequence(), nil, nil, nil)
+}
+
+func TestCreateIsolateRejectsMissingMixinAction(t *testing.T) {
+	m := mkModule()
+	cfg := ast.NewAstConfig()
+
+	m.Actions.Set("a", actions.NewSequence())
+	m.Mixins.Set("a", []module.MixinDef{
+		cfg.NewMixinBeforeDef(cfg.NewAtom("missing_monitor"), cfg.NewAtom("a")),
+	})
+	m.Isolates["iso"] = cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("iso"), cfg.NewAtom("a")},
+		0,
+	)
+
+	err := CreateIsolate("iso", m)
+	if err == nil {
+		t.Fatal("CreateIsolate succeeded with an undefined mixin action missing_monitor; Python lookup_action rejects this")
+	}
+	if !strings.Contains(err.Error(), "missing_monitor") {
+		t.Fatalf("CreateIsolate error %q does not name missing mixin action missing_monitor", err)
+	}
+}
+
 // --- IsolateComponent ---
 
 func TestIsolateComponentEmpty(t *testing.T) {
@@ -387,7 +427,7 @@ func TestIsolateComponentFound(t *testing.T) {
 
 func TestGetCallsMods(t *testing.T) {
 	// An action that calls "bar" and assigns to "x".
-	call := actions.NewCallActionOn(actions.NewActionsConfig(),mkConst("bar"))
+	call := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("bar"))
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	seq := actions.NewSequence(call, assign)
 
@@ -469,7 +509,7 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	barSeq := actions.NewSequence(assign)
 
-	call := actions.NewCallActionOn(actions.NewActionsConfig(),mkConst("bar"))
+	call := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("bar"))
 	fooSeq := actions.NewSequence(call)
 
 	actionMap := actionsInsMap(map[string]actions.Action{
