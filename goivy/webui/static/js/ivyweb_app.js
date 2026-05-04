@@ -2033,6 +2033,9 @@ class IvyApp {
             seen[dedupKey] = true;
             unique.push(sess);
         }
+        unique.sort(function (a, b) {
+            return (a.fileName || '').localeCompare(b.fileName || '');
+        });
 
         // Check for duplicate basenames to decide if path context is needed.
         var baseNameCount = {};
