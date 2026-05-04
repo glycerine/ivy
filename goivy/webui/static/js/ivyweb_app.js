@@ -224,10 +224,35 @@ class IvyApp {
             this._savedFileContent = diskContent;
             IvyPersist.save(this);
             this.controls.setStatus('Reverted to on-disk version: ' + (this._persistedFileName || 'model'), 'success');
+        } else if (choice === 'merge') {
+            var merged = this._mergeDiskVersionIntoEditBuffer(lastSaved, content, diskContent);
+            this._persistedFileContent = merged;
+            this._savedFileContent = diskContent;
+            if (this.cmEditor) {
+                this.cmEditor.setValue(merged);
+            }
+            this._updateEditorLabel();
+            IvyPersist.save(this);
+            this.controls.setStatus('Merged disk changes into editor buffer; resolve conflict markers before saving', 'warning');
         } else {
             this.controls.setStatus('Save cancelled: file changed on disk', 'warning');
         }
         return 'skip';
+    }
+
+    _mergeDiskVersionIntoEditBuffer(baseContent, editorContent, diskContent) {
+        if (editorContent === baseContent) return diskContent;
+        if (diskContent === baseContent) return editorContent;
+        return [
+            '<<<<<<< EDIT BUFFER',
+            editorContent.replace(/\s*$/, ''),
+            '||||||| LAST SAVED',
+            baseContent.replace(/\s*$/, ''),
+            '=======',
+            diskContent.replace(/\s*$/, ''),
+            '>>>>>>> ON DISK',
+            ''
+        ].join('\n');
     }
 
     showExternalChangeDialog() {
@@ -237,8 +262,9 @@ class IvyApp {
             var msg = document.getElementById('external-change-dialog-message');
             var doNothing = document.getElementById('external-change-do-nothing');
             var reload = document.getElementById('external-change-reload');
+            var merge = document.getElementById('external-change-merge');
             var overwrite = document.getElementById('external-change-overwrite');
-            if (!overlay || !msg || !doNothing || !reload || !overwrite) {
+            if (!overlay || !msg || !doNothing || !reload || !merge || !overwrite) {
                 resolve('do-nothing');
                 return;
             }
@@ -250,12 +276,14 @@ class IvyApp {
                 overlay.style.display = 'none';
                 doNothing.removeEventListener('click', onDoNothing);
                 reload.removeEventListener('click', onReload);
+                merge.removeEventListener('click', onMerge);
                 overwrite.removeEventListener('click', onOverwrite);
                 document.removeEventListener('keydown', onKeyDown);
                 resolve(choice);
             };
             var onDoNothing = function () { done('do-nothing'); };
             var onReload = function () { done('reload'); };
+            var onMerge = function () { done('merge'); };
             var onOverwrite = function () { done('overwrite'); };
             var onKeyDown = function (e) {
                 if (e.key === 'Escape' || e.key === 'Enter') {
@@ -265,6 +293,7 @@ class IvyApp {
             };
             doNothing.addEventListener('click', onDoNothing);
             reload.addEventListener('click', onReload);
+            merge.addEventListener('click', onMerge);
             overwrite.addEventListener('click', onOverwrite);
             document.addEventListener('keydown', onKeyDown);
         });

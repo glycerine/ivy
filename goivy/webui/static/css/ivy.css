@@ -162,6 +162,10 @@ html, body {
 .dialog-buttons {
     margin-top: 12px;
     text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .dialog-btn {
@@ -188,7 +192,7 @@ html, body {
 }
 
 .external-change-dialog-box {
-    max-width: 640px;
+    max-width: 720px;
 }
 
 .loaded-file {
