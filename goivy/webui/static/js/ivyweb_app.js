@@ -281,6 +281,13 @@ class IvyApp {
             }
         });
 
+        // --- Escape key closes open dropdowns ---
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                self.closeAllDropdowns();
+            }
+        });
+
         // --- Prevent browser context menu on graph containers ---
         document.getElementById('arg-graph').addEventListener('contextmenu', function (e) {
             e.preventDefault();
@@ -2014,16 +2021,14 @@ class IvyApp {
             return;
         }
 
-        // Deduplicate: keep only the most recent entry per (fileName, contentLength).
+        // Deduplicate: keep only the most recent entry per file path.
+        // sessions is newest-first, so the first occurrence of each path is the most recent.
         var seen = {};
         var unique = [];
         for (var i = 0; i < sessions.length; i++) {
             var sess = sessions[i];
             if (!sess.fileName || sess.fileName === '(unnamed)') continue;
-            // Load full state to get content length for dedup key
-            var state = IvyPersist.loadSession(sess.id);
-            var contentLen = (state && state.fileContent) ? state.fileContent.length : 0;
-            var dedupKey = sess.fileName + '|' + contentLen;
+            var dedupKey = sess.filePath || sess.fileName;
             if (seen[dedupKey]) continue;
             seen[dedupKey] = true;
             unique.push(sess);
