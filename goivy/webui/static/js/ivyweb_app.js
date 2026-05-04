@@ -2049,10 +2049,6 @@ class IvyApp {
     async save() {
         var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
         var dirty = content !== (this._savedFileContent || '');
-        if (!dirty) {
-            this._updateEditorLabel();
-            return;
-        }
         if (this._fileHandle) {
             try {
                 var writableAllowed = await this._ensureFileHandleWritable();
@@ -2062,6 +2058,10 @@ class IvyApp {
                 }
                 var shouldWrite = await this._confirmNoExternalChangeBeforeSave(content);
                 if (!shouldWrite) {
+                    return;
+                }
+                if (!dirty) {
+                    this._updateEditorLabel();
                     return;
                 }
                 var writable = await this._fileHandle.createWritable();
@@ -2075,6 +2075,10 @@ class IvyApp {
                 this.controls.setStatus('Save failed: ' + e.message, 'error');
             }
         } else {
+            if (!dirty) {
+                this._updateEditorLabel();
+                return;
+            }
             await this.saveAs();
         }
     }
