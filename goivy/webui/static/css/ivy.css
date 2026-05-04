@@ -262,7 +262,7 @@ html, body {
 
 /* --- Editor panel (in right section, beside state panel) --- */
 #editor-panel {
-    flex: 1;
+    flex: 0 0 38%;
     display: flex;
     flex-direction: column;
     min-width: 200px;
