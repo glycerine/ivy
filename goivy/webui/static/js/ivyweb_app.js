@@ -312,34 +312,35 @@ class IvyApp {
         return new Promise(function (resolve) {
             var overlay = document.getElementById('dirty-close-dialog-overlay');
             var msg = document.getElementById('dirty-close-dialog-message');
+            var cancel = document.getElementById('dirty-close-cancel');
             var save = document.getElementById('dirty-close-save');
             var discard = document.getElementById('dirty-close-discard');
-            if (!overlay || !msg || !save || !discard) {
-                resolve('save');
+            if (!overlay || !msg || !cancel || !save || !discard) {
+                resolve('cancel');
                 return;
             }
             msg.textContent = 'File "' + (self._persistedFileName || 'model') + '" has changed. Save before closing?';
             overlay.style.display = 'flex';
-            save.focus();
+            cancel.focus();
 
             var done = function (choice) {
                 overlay.style.display = 'none';
+                cancel.removeEventListener('click', onCancel);
                 save.removeEventListener('click', onSave);
                 discard.removeEventListener('click', onDiscard);
                 document.removeEventListener('keydown', onKeyDown);
                 resolve(choice);
             };
+            var onCancel = function () { done('cancel'); };
             var onSave = function () { done('save'); };
             var onDiscard = function () { done('discard'); };
             var onKeyDown = function (e) {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' || e.key === 'Escape') {
                     e.preventDefault();
-                    done('save');
-                } else if (e.key === 'Escape') {
-                    e.preventDefault();
-                    done('discard');
+                    done('cancel');
                 }
             };
+            cancel.addEventListener('click', onCancel);
             save.addEventListener('click', onSave);
             discard.addEventListener('click', onDiscard);
             document.addEventListener('keydown', onKeyDown);
@@ -2220,6 +2221,10 @@ class IvyApp {
     async closeCurrentFile() {
         if (this._editorDirty()) {
             var choice = await this.showDirtyCloseDialog();
+            if (choice === 'cancel') {
+                this.controls.setStatus('Close cancelled');
+                return;
+            }
             if (choice === 'save') {
                 var saved = await this.save();
                 if (!saved) {
