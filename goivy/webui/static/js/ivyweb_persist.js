@@ -171,13 +171,43 @@ var IvyPersist = {
                     keys.push(legacyKey);
                 }
             }
+            var fileName = state.fileName || '';
+            var filePath = state.filePath || fileName;
             var handle = await new Promise(function (resolve, reject) {
                 var tx = db.transaction(IvyPersist.HANDLE_STORE, 'readonly');
                 var store = tx.objectStore(IvyPersist.HANDLE_STORE);
                 var index = 0;
+                var finishByScanning = function () {
+                    if (!fileName) {
+                        resolve(null);
+                        return;
+                    }
+                    var cursorReq = store.openCursor();
+                    var nameOnlyMatch = null;
+                    cursorReq.onsuccess = function () {
+                        var cursor = cursorReq.result;
+                        if (!cursor) {
+                            resolve(nameOnlyMatch);
+                            return;
+                        }
+                        var storedKey = String(cursor.key || '');
+                        var parts = storedKey.split('|');
+                        var storedPath = parts.length > 1 ? parts[1] : '';
+                        var storedName = parts.length > 2 ? parts[2] : '';
+                        if (storedName === fileName && (storedPath === filePath || storedPath === fileName)) {
+                            resolve(cursor.value);
+                            return;
+                        }
+                        if (!nameOnlyMatch && storedName === fileName) {
+                            nameOnlyMatch = cursor.value;
+                        }
+                        cursor.continue();
+                    };
+                    cursorReq.onerror = function () { reject(cursorReq.error || new Error('scan file handles failed')); };
+                };
                 var tryNext = function () {
                     if (index >= keys.length) {
-                        resolve(null);
+                        finishByScanning();
                         return;
                     }
                     var req = store.get(keys[index++]);
@@ -361,6 +391,9 @@ var IvyPersist = {
             // (stable) not the new server session ID (increments on reload).
             IvyPersist.setFileName(state.fileName, state.filePath);
             IvyPersist.setSessionIdInURL(state.sessionId);
+            if (app._fileHandle) {
+                await IvyPersist.saveFileHandle(app);
+            }
 
             if (parseOk) {
                 app.controls.setStatus('Restored: ' + (state.fileName || 'session'), 'success');
