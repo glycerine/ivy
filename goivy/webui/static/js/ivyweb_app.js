@@ -27,6 +27,8 @@ class IvyApp {
         this._lastConceptData = null;
         // File System Access API handle for in-place saves (Ctrl+S).
         this._fileHandle = null;
+        this._lastClosedFileHandle = null;
+        this._lastClosedFileName = '';
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
     }
@@ -187,6 +189,7 @@ class IvyApp {
         } else {
             editorLabel.textContent = 'Model: ' + name + ' [saved]';
         }
+        this._updateReopenLastFileButton();
     }
 
     _editorContent() {
@@ -195,6 +198,34 @@ class IvyApp {
 
     _editorDirty() {
         return this._editorContent() !== (this._savedFileContent || '');
+    }
+
+    _rememberLastOpenFile() {
+        if (!this._fileHandle) return;
+        this._lastClosedFileHandle = this._fileHandle;
+        this._lastClosedFileName = this._persistedFileName || this._fileHandle.name || 'file';
+    }
+
+    _updateReopenLastFileButton() {
+        var btn = document.getElementById('file-reopen-last');
+        if (!btn) return;
+        if (!this._persistedFileName && this._lastClosedFileHandle) {
+            btn.textContent = 'Re-open last file ' + (this._lastClosedFileName || 'file');
+            btn.style.display = '';
+        } else {
+            btn.style.display = 'none';
+        }
+    }
+
+    async reopenLastFile() {
+        if (!this._lastClosedFileHandle) return;
+        try {
+            var file = await this._lastClosedFileHandle.getFile();
+            this._fileHandle = this._lastClosedFileHandle;
+            await this.loadFile(file);
+        } catch (e) {
+            this.controls.setStatus('Re-open failed: ' + e.message, 'error');
+        }
     }
 
     async _ensureFileHandleWritable() {
@@ -425,6 +456,13 @@ class IvyApp {
             closeCurrent.addEventListener('click', function (e) {
                 e.preventDefault();
                 self.closeCurrentFile();
+            });
+        }
+        var reopenLast = document.getElementById('file-reopen-last');
+        if (reopenLast) {
+            reopenLast.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.reopenLastFile();
             });
         }
 
@@ -2244,6 +2282,7 @@ class IvyApp {
         if (!options.skipSaveCurrent && this._persistedFileContent) {
             IvyPersist.save(this);
         }
+        this._rememberLastOpenFile();
 
         // Create a fresh server session
         try {
@@ -2282,6 +2321,7 @@ class IvyApp {
         if (editorLabel) {
             editorLabel.textContent = 'Model: (unsaved file)';
         }
+        this._updateReopenLastFileButton();
         IvyPersist.setFileName('');
         var tbody = document.getElementById('state-checkbox-body');
         if (tbody) tbody.innerHTML = '';

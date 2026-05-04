@@ -226,6 +226,22 @@ html, body {
     color: #fff;
 }
 
+.reopen-last-btn {
+    margin-left: 8px;
+    padding: 2px 8px;
+    border: 1px solid #7a6528;
+    border-radius: 3px;
+    background: #3a311c;
+    color: #f0b84a;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.reopen-last-btn:hover {
+    background: #4a3d22;
+    color: #ffd37a;
+}
+
 /* --- Editor panel (in right section, beside state panel) --- */
 #editor-panel {
     flex: 1;
