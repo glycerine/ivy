@@ -140,7 +140,7 @@ class IvyApp {
             var restored = await IvyPersist.restore(this, savedState);
             if (restored) {
                 // Keep the URL hash from the saved session (don't overwrite)
-                IvyPersist.setFileName(savedState.fileName);
+                IvyPersist.setFileName(savedState.fileName, savedState.filePath);
                 this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
             } else {
                 this.controls.setStatus('Ready');
@@ -2011,7 +2011,7 @@ class IvyApp {
             });
             var fileContent = await contentPromise;
             self._persistedFileName = file.name;
-            self._persistedFilePath = file.webkitRelativePath || file.name;
+            self._persistedFilePath = file.path || file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
             if (self._fileHandle) {
                 await IvyPersist.saveFileHandle(self);
@@ -2039,7 +2039,7 @@ class IvyApp {
             this.populateStateCheckboxes(conceptData);
             // Update state label and file name display
             this.updateStateLabel(0);
-            IvyPersist.setFileName(file.name);
+            IvyPersist.setFileName(file.name, this._persistedFilePath);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
 
             // Auto-save after file load
@@ -2238,7 +2238,7 @@ class IvyApp {
             this._persistedFileContent = content;
             this._savedFileContent = content;
             await IvyPersist.saveFileHandle(this);
-            IvyPersist.setFileName(handle.name);
+            IvyPersist.setFileName(handle.name, this._persistedFilePath);
             this._updateEditorLabel();
             this.controls.setStatus('Saved: ' + handle.name, 'success');
             return true;
@@ -2431,7 +2431,7 @@ class IvyApp {
             // Keep the URL set by restore() (state.sessionId) — do NOT clobber it with
             // api.sessionId, which resets to s1/s2/... on every server restart and would
             // overwrite unrelated historical sessions stored under those same IDs.
-            IvyPersist.setFileName(state.fileName);
+            IvyPersist.setFileName(state.fileName, state.filePath);
             var sessionEl = document.getElementById('session-id');
             if (sessionEl) {
                 sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);

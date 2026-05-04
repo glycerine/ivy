@@ -240,7 +240,7 @@ var IvyPersist = {
                     var diskFile = await app._fileHandle.getFile();
                     restoredContent = await diskFile.text();
                     app._persistedFileName = diskFile.name || app._persistedFileName;
-                    app._persistedFilePath = app._persistedFilePath || app._persistedFileName;
+                    app._persistedFilePath = diskFile.path || app._persistedFilePath || app._persistedFileName;
                 } catch (e) {
                     console.warn('IvyPersist.restore: could not read disk file handle, using cached content:', e);
                 }
@@ -328,7 +328,7 @@ var IvyPersist = {
 
             // Update file name display and URL — use the SAVED session ID
             // (stable) not the new server session ID (increments on reload).
-            IvyPersist.setFileName(state.fileName);
+            IvyPersist.setFileName(state.fileName, state.filePath);
             IvyPersist.setSessionIdInURL(state.sessionId);
 
             if (parseOk) {
@@ -470,11 +470,14 @@ var IvyPersist = {
     /**
      * Update the file name display in the menubar.
      * @param {string} fileName
+     * @param {string} filePath
      */
-    setFileName: function (fileName) {
+    setFileName: function (fileName, filePath) {
         var el = document.getElementById('loaded-file');
         if (el) {
-            el.textContent = fileName || '';
+            var display = filePath || fileName || '';
+            el.textContent = display;
+            el.title = display;
         }
     },
 
