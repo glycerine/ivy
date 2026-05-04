@@ -13,8 +13,10 @@ import (
 // filters SubgoalAction from the assumes list.
 //
 // Python (ivy_actions.py:1069):
-//   assumes = [a.assert_to_assume([AssertAction]) for a in asserts
-//              if not isinstance(a, SubgoalAction)]
+//
+//	assumes = [a.assert_to_assume([AssertAction]) for a in asserts
+//	           if not isinstance(a, SubgoalAction)]
+//
 // SubgoalActions are excluded from assumes.
 //
 // Go BUG: all invariants are unconditionally added to both asserts
@@ -86,7 +88,8 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 // WhileAction.Expand inherit the while loop's lineno.
 //
 // Python (ivy_actions.py:1083-1085):
-//   for h in havocs: h.lineno = self.lineno
+//
+//	for h in havocs: h.lineno = self.lineno
 //
 // Go BUG: havocs are created without setting lineno.
 func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
@@ -120,6 +123,51 @@ func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
 				"  Expected lineno=99 (from while), got none.", i)
 		} else if h.GetLineno().Line != 99 {
 			t.Errorf("DIV-10: havoc[%d] lineno=%d, want 99", i, h.GetLineno().Line)
+		}
+	}
+}
+
+func TestWhileExpandRankingChecksUseDecreasesLineno(t *testing.T) {
+	cond := lg.NewConst("cond", lg.Boolean)
+	target := lg.NewConst("x", lg.Boolean)
+	rankExpr := lg.NewConst("rank_value", lg.TopS)
+	body := NewAssignAction(target, lg.True)
+
+	ranking := NewRanking(nil, rankExpr)
+	ranking.SetLineno(ast.Location{Filename: "test.ivy", Line: 123})
+
+	wa := NewWhileAction(cond, body, ranking)
+	wa.SetLineno(ast.Location{Filename: "test.ivy", Line: 99})
+
+	ctx := &UpdateContext{
+		Domain: module.New(),
+		ActCfg: NewActionsConfig(),
+	}
+	expanded := wa.Expand(ctx)
+
+	var rankingActions []Action
+	walkActions(expanded, func(a Action) {
+		switch act := a.(type) {
+		case *AssumeAction:
+			if eq, ok := act.Formula.(*lg.Eq); ok {
+				if c, ok := eq.T1.(*lg.Const); ok && c.Name == "$rank" {
+					rankingActions = append(rankingActions, act)
+				}
+			}
+		case *AssertAction:
+			rankingActions = append(rankingActions, act)
+		}
+	})
+
+	if len(rankingActions) != 3 {
+		t.Fatalf("expected three generated ranking checks, got %d", len(rankingActions))
+	}
+	for i, act := range rankingActions {
+		if !act.HasLineno() {
+			t.Fatalf("generated ranking check %d has no lineno; Python uses the decreases line 123", i)
+		}
+		if got := act.GetLineno().Line; got != 123 {
+			t.Fatalf("generated ranking check %d lineno=%d, want decreases line 123", i, got)
 		}
 	}
 }
@@ -203,8 +251,8 @@ func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 	nullUpd := NullUpdate()
 	if result.TR.IsTrue() && result.Pre.IsFalse() && len(result.Modified) == 0 {
 		if nullUpd.TR.IsTrue() && nullUpd.Pre.IsFalse() {
-			t.Errorf("DIV-12: IntUpdate returned NullUpdate for InstantiateAction.\n"+
-				"  The switch in IntUpdate has no case *InstantiateAction.\n"+
+			t.Errorf("DIV-12: IntUpdate returned NullUpdate for InstantiateAction.\n" +
+				"  The switch in IntUpdate has no case *InstantiateAction.\n" +
 				"  It hits default → NullUpdate(), making InstantiateAction.IntUpdate dead code.")
 		}
 	}
@@ -214,10 +262,12 @@ func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 // compares the full location (file + line), not just line number.
 //
 // Python (ivy_actions.py:384): if ca != self.lineno
-//   where ca is a Location(file, line) object.
+//
+//	where ca is a Location(file, line) object.
 //
 // Go BUG (update.go:375): compares only line number via
-//   fmt.Sprintf("%d", a.GetLineno().Line)
+//
+//	fmt.Sprintf("%d", a.GetLineno().Line)
 func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 	fmla := lg.NewConst("p", lg.Boolean)
 
@@ -232,8 +282,8 @@ func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 	// CheckedAssert targets bar.ivy:42 specifically.
 	// Python: Location("bar.ivy", 42) != Location("foo.ivy", 42).
 	ctx := &UpdateContext{
-		Domain: module.New(),
-		ActCfg: NewActionsConfig(),
+		Domain:        module.New(),
+		ActCfg:        NewActionsConfig(),
 		CheckedAssert: "bar.ivy:42",
 	}
 

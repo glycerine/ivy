@@ -26,6 +26,15 @@ schema reflex = a = a
 instantiate reflex
 `
 
+const topLevelSchemaAxiomCollectionSource = `#lang ivy1.7
+
+type t
+individual a : t
+relation p(X:t)
+schema adds_p = p(a)
+instantiate adds_p
+`
+
 const actionSchemaInstantiationSource = `#lang ivy1.7
 
 type t
@@ -86,6 +95,34 @@ func TestTopLevelSchemaInstantiationMatchesPython(t *testing.T) {
 	if got, want := strings.Join(goInstanceTexts, "\n"), strings.Join(py.SchemaInstanceTexts["reflex"], "\n"); got != want {
 		t.Fatalf("top-level schema instantiation mismatch for schema %q:\nGo instances:\n%s\nPython instances:\n%s\nGo module instantiations=%d, Python module instantiations=%d",
 			"reflex", got, want, len(mod.Instantiations), py.ModuleInstantiations)
+	}
+}
+
+func TestTopLevelSchemaInstancesAppearInGetAxioms(t *testing.T) {
+	result, err := parser.Parse(topLevelSchemaAxiomCollectionSource, lexer.Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse Go Ivy source: %v", err)
+	}
+
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	if err := CheckInstantiations(mod, result.Decls); err != nil {
+		t.Fatalf("Go CheckInstantiations: %v", err)
+	}
+
+	c := NewFromModule(mod)
+	c.TopCtx = CollectActions(result.Decls)
+	if err := NewDomainSetup(c).ProcessDecls(result.Decls); err != nil {
+		t.Fatalf("Go DomainSetup: %v", err)
+	}
+
+	axioms := mod.GetAxioms()
+	var got []string
+	for _, ax := range axioms {
+		got = append(got, fmt.Sprint(ax))
+	}
+	if !containsString(got, "p(a)") {
+		t.Fatalf("Module.GetAxioms() did not include top-level schema instance p(a); got %v", got)
 	}
 }
 
@@ -208,6 +245,15 @@ with im.Module():
 		t.Fatalf("python oracle sanity check failed: reflex instance texts=%v", res.SchemaInstanceTexts["reflex"])
 	}
 	return res
+}
+
+func containsString(xs []string, want string) bool {
+	for _, x := range xs {
+		if x == want {
+			return true
+		}
+	}
+	return false
 }
 
 func testRepoRoot(t *testing.T) string {
