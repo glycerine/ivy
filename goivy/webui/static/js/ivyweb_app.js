@@ -177,8 +177,10 @@ class IvyApp {
         var dirty = current !== (this._savedFileContent || '');
         if (!name) {
             editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + '(unsaved file)';
+        } else if (dirty) {
+            editorLabel.textContent = 'Model: ** ' + name;
         } else {
-            editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + name;
+            editorLabel.textContent = 'Model: ' + name + ' [saved]';
         }
     }
 
