@@ -258,6 +258,21 @@ class IvyApp {
         return await file.text();
     }
 
+    async _restoreFileHandleForCurrentFile() {
+        if (this._fileHandle) return true;
+        if (!this._persistedFileName) return false;
+        var state = {
+            sessionId: IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '',
+            fileName: this._persistedFileName,
+            filePath: this._persistedFilePath || this._persistedFileName,
+        };
+        var handle = await IvyPersist.loadFileHandle(state);
+        if (!handle) return false;
+        this._fileHandle = handle;
+        await IvyPersist.saveFileHandle(this);
+        return true;
+    }
+
     async _confirmNoExternalChangeBeforeSave(content) {
         if (!this._fileHandle) return 'ok';
         var diskContent = await this._readFileHandleContent();
@@ -2184,6 +2199,7 @@ class IvyApp {
     async save() {
         var content = this._editorContent();
         var dirty = this._editorDirty();
+        await this._restoreFileHandleForCurrentFile();
         if (this._fileHandle) {
             try {
                 var writableAllowed = await this._ensureFileHandleWritable();
