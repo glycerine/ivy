@@ -25,6 +25,10 @@ class IvyApp {
         this._labelVisibility = {};
         // Concept data from last server response (for node/label sort info)
         this._lastConceptData = null;
+        // File System Access API handle for in-place saves (Ctrl+S).
+        this._fileHandle = null;
+        // Content as last written to disk; used to detect unsaved changes.
+        this._savedFileContent = null;
     }
 
     /**
@@ -109,9 +113,10 @@ class IvyApp {
                 lineWrapping: false,
                 matchBrackets: true
             });
-            // Sync edits back to persisted content.
+            // Sync edits back to persisted content and update dirty marker.
             this.cmEditor.on('change', function () {
                 self._persistedFileContent = self.cmEditor.getValue();
+                self._updateEditorLabel();
             });
             // Keymap radio button switching.
             var radios = document.querySelectorAll('input[name="keymap"]');
@@ -157,8 +162,23 @@ class IvyApp {
 
     setEditorContent(content) {
         this._persistedFileContent = content;
+        this._savedFileContent = content;
         if (this.cmEditor) {
             this.cmEditor.setValue(content);
+        }
+        this._updateEditorLabel();
+    }
+
+    _updateEditorLabel() {
+        var editorLabel = document.getElementById('model-editor-label');
+        if (!editorLabel) return;
+        var name = this._persistedFileName || '';
+        var current = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        var dirty = current !== (this._savedFileContent || '');
+        if (!name) {
+            editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + '(unsaved file)';
+        } else {
+            editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + name;
         }
     }
 
@@ -281,10 +301,14 @@ class IvyApp {
             }
         });
 
-        // --- Escape key closes open dropdowns ---
+        // --- Escape key closes open dropdowns; Ctrl+S saves ---
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 self.closeAllDropdowns();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                self.save();
             }
         });
 
@@ -1757,8 +1781,9 @@ class IvyApp {
             self._persistedFileName = file.name;
             self._persistedFilePath = file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
+            self._fileHandle = null; // no writable handle from a plain file-picker load
 
-            // Populate the model editor with the file content
+            // Populate the model editor with the file content (also marks clean via setEditorContent)
             this.setEditorContent(fileContent);
             var editorLabel = document.getElementById('model-editor-label');
             if (editorLabel) {
@@ -1910,8 +1935,27 @@ class IvyApp {
      * to let the user choose a disk path. Remembers the file handle
      * for subsequent saves.
      */
+    async save() {
+        var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        if (this._fileHandle) {
+            try {
+                var writable = await this._fileHandle.createWritable();
+                await writable.write(content);
+                await writable.close();
+                this._persistedFileContent = content;
+                this._savedFileContent = content;
+                this._updateEditorLabel();
+                this.controls.setStatus('Saved: ' + this._persistedFileName, 'success');
+            } catch (e) {
+                this.controls.setStatus('Save failed: ' + e.message, 'error');
+            }
+        } else {
+            await this.saveAs();
+        }
+    }
+
     async saveAs() {
-        var content = this._persistedFileContent || '';
+        var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
         if (!content) {
             this.controls.setStatus('No model loaded to save', 'error');
             return;
@@ -1936,11 +1980,10 @@ class IvyApp {
             // Remember the handle and path for future saves
             this._fileHandle = handle;
             this._persistedFileName = handle.name;
+            this._persistedFileContent = content;
+            this._savedFileContent = content;
             IvyPersist.setFileName(handle.name);
-            var editorLabel = document.getElementById('model-editor-label');
-            if (editorLabel) {
-                editorLabel.textContent = 'Model: ' + handle.name;
-            }
+            this._updateEditorLabel();
             this.controls.setStatus('Saved: ' + handle.name, 'success');
         } catch (e) {
             if (e.name === 'AbortError') {
@@ -1991,6 +2034,8 @@ class IvyApp {
         this._persistedFilePath = '';
         this._persistedFileContent = '';
         this._persistedConceptRelations = null;
+        this._fileHandle = null;
+        this._savedFileContent = null;
         this.selectedArgNode = null;
 
         // Clear UI
