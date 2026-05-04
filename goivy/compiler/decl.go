@@ -1372,12 +1372,12 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 		return nil
 	}
 
-	schema, ok := d.Compiler.Module.Schemata.Get2(instName)
+	schema, ok := d.Compiler.Module.Schemata.Get2(instName) // Schemata *iu.InsMap[string, ast.Node]
 	if ok {
 		if c, canOk := schema.(iu.Canonizer); canOk {
 			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%s", instName, c.Canon())
 		} else {
-			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%v", instName, schema)
+			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%v", instName, schema) // fallback. should not need?
 		}
 	} else {
 		xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=false", instName)
