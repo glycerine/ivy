@@ -327,6 +327,8 @@ class IvyControls {
             bar.classList.add('error');
         } else if (level === 'success') {
             bar.classList.add('success');
+        } else if (level === 'warning') {
+            bar.classList.add('warning');
         }
     }
 

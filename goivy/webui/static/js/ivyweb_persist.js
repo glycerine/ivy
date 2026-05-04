@@ -162,23 +162,33 @@ var IvyPersist = {
 
         app.controls.setStatus('Restoring session...');
         try {
-            // Re-upload the file to the server to rebuild compiled module
-            var blob = new Blob([state.fileContent], { type: 'text/plain' });
-            var file = new File([blob], state.fileName || 'restored.ivy');
-            var result = await app.api.loadFile(file);
-
-            // Store for future saves
+            // Populate editor and store state FIRST, before the server call.
+            // The server may reject an incomplete/invalid file, but the user
+            // should still see their content in the editor so they can fix it.
             app._persistedFileName = state.fileName;
             app._persistedFilePath = state.filePath || state.fileName || '';
             app._persistedFileContent = state.fileContent;
-
-            // Populate the model editor via the abstraction layer
             if (app.setEditorContent) {
                 app.setEditorContent(state.fileContent || '');
             }
             var editorLabel = document.getElementById('model-editor-label');
             if (editorLabel) {
                 editorLabel.textContent = 'Model: ' + (state.fileName || '');
+            }
+
+            // Re-upload the file to the server to rebuild compiled module.
+            // A parse/syntax error from the server is non-fatal: the editor
+            // already has the content so the user can continue editing.
+            var blob = new Blob([state.fileContent], { type: 'text/plain' });
+            var file = new File([blob], state.fileName || 'restored.ivy');
+            var parseOk = true;
+            var parseErr = '';
+            try {
+                await app.api.loadFile(file);
+            } catch (e) {
+                parseOk = false;
+                parseErr = e.message || String(e);
+                console.warn('IvyPersist.restore: server rejected file (parse error):', parseErr);
             }
 
             // Restore edge visibility BEFORE graph update so _applyEdgeVisibility
@@ -190,17 +200,19 @@ var IvyPersist = {
                 app._labelVisibility = state.labelVisibility;
             }
 
-            // Refresh graphs from server (rebuilt from re-uploaded file)
-            var argData = await app.api.getARG();
-            if (argData && argData.elements) {
-                app.argGraph.update(argData.elements, argData.positions);
+            if (parseOk) {
+                // Refresh graphs from server (rebuilt from re-uploaded file)
+                var argData = await app.api.getARG();
+                if (argData && argData.elements) {
+                    app.argGraph.update(argData.elements, argData.positions);
+                }
+                var conceptData = await app.api.getConceptGraph();
+                if (conceptData && conceptData.elements) {
+                    app.conceptGraph.update(conceptData.elements, conceptData.positions);
+                }
+                app._persistedConceptRelations = conceptData;
+                app.populateStateCheckboxes(conceptData);
             }
-            var conceptData = await app.api.getConceptGraph();
-            if (conceptData && conceptData.elements) {
-                app.conceptGraph.update(conceptData.elements, conceptData.positions);
-            }
-            app._persistedConceptRelations = conceptData;
-            app.populateStateCheckboxes(conceptData);
 
             // Restore mode
             if (state.mode) {
@@ -241,7 +253,11 @@ var IvyPersist = {
             IvyPersist.setFileName(state.fileName);
             IvyPersist.setSessionIdInURL(state.sessionId);
 
-            app.controls.setStatus('Restored: ' + (state.fileName || 'session'), 'success');
+            if (parseOk) {
+                app.controls.setStatus('Restored: ' + (state.fileName || 'session'), 'success');
+            } else {
+                app.controls.setStatus('Loaded (parse error): ' + (state.fileName || 'session'), 'warning');
+            }
             return true;
         } catch (e) {
             console.error('IvyPersist.restore failed:', e);
