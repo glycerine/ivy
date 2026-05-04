@@ -1,23 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="White ivy leaf outline on kelly green background">
-  <rect width="512" height="512" fill="#00B140"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ivy leaf on a green diagonal ribbon over black background">
+  <rect width="512" height="512" fill="#000000"/>
 
-  <!-- Subtle shadow to help the white outline read at favicon sizes -->
-  <path d="M256 58
-           C218 95 193 149 183 196
-           C146 188 87 191 56 211
-           C68 252 97 280 120 303
-           C101 334 88 367 87 390
-           C134 397 184 378 222 348
-           C221 389 206 423 196 449
-           C220 453 247 444 251 413
-           C255 388 258 364 259 344
-           C296 376 350 397 425 390
-           C423 363 405 331 392 304
-           C418 280 447 241 456 211
-           C417 192 360 188 329 196
-           C319 148 294 96 256 58 Z"
-        fill="none" stroke="#222222" stroke-width="26" stroke-linejoin="round" stroke-linecap="round" opacity="0.22"
-        transform="translate(4 5)"/>
+  <!-- Kelly green diagonal ribbon -->
+  <rect x="-140" y="146" width="792" height="300" fill="#00C83C" transform="rotate(-45 256 256)"/>
+
+  <!-- Subtle shadow so the white outline reads well at small sizes -->
+  <g transform="translate(0 2)">
+    <path d="M256 58
+             C218 95 193 149 183 196
+             C146 188 87 191 56 211
+             C68 252 97 280 120 303
+             C101 334 88 367 87 390
+             C134 397 184 378 222 348
+             C221 389 206 423 196 449
+             C220 453 247 444 251 413
+             C255 388 258 364 259 344
+             C296 376 350 397 425 390
+             C423 363 405 331 392 304
+             C418 280 447 241 456 211
+             C417 192 360 188 329 196
+             C319 148 294 96 256 58 Z"
+          fill="none" stroke="#000000" stroke-width="30" stroke-linejoin="round" stroke-linecap="round" opacity="0.16"/>
+  </g>
 
   <!-- Ivy leaf outline -->
   <path d="M256 58
@@ -36,10 +40,10 @@
            C319 148 294 96 256 58 Z"
         fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linejoin="round" stroke-linecap="round"/>
 
-  <!-- Black and gray vein accents -->
+  <!-- Veins -->
   <path d="M256 332 L256 115" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
   <path d="M256 332 C229 296 180 262 126 234" stroke="#171717" stroke-width="8" stroke-linecap="round" fill="none"/>
   <path d="M256 332 C283 296 332 262 386 234" stroke="#171717" stroke-width="8" stroke-linecap="round" fill="none"/>
-  <path d="M256 332 C254 372 241 416 231 439" stroke="#6F6F6F" stroke-width="9" stroke-linecap="round" fill="none"/>
+  <path d="M256 332 C254 372 241 416 231 439" stroke="#7A7A7A" stroke-width="9" stroke-linecap="round" fill="none"/>
   <path d="M256 332 C252 358 245 392 236 426" stroke="#111111" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.55"/>
 </svg>
