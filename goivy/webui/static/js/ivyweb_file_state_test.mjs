@@ -22,6 +22,9 @@ const sandbox = {
         setStatus(message, kind) {
             this.lastStatus = { message, kind };
         }
+        showInfo(shortInfo, longInfo) {
+            this.lastInfo = { shortInfo, longInfo };
+        }
     },
     IvyGraph: class {},
     IvyPersist: {
@@ -125,5 +128,21 @@ async function testSaveAsMissingHandleNoticeIsNonModal() {
     assert.equal(written, 'old content ');
 }
 
+function testCheckFailureDetailsIncludesFailedConjecture() {
+    const app = new sandbox.IvyApp();
+
+    app.showCheckResult({
+        result: 'fail',
+        z3_contacted: true,
+        message: 'The following conjecture is not relatively inductive:',
+        failed_conjecture: '~(X ~= Z & link(X,Y) & link(Z,Y))',
+    });
+
+    assert.equal(app.controls.lastInfo.shortInfo, 'Verification Result');
+    assert.match(app.controls.lastInfo.longInfo, /FAILED \[Z3: yes\]: The following conjecture is not relatively inductive:/);
+    assert.match(app.controls.lastInfo.longInfo, /link\(X,Y\)/);
+}
+
 await testSaveRecoversPersistedHandleBeforeSaveAs();
 await testSaveAsMissingHandleNoticeIsNonModal();
+testCheckFailureDetailsIncludesFailedConjecture();

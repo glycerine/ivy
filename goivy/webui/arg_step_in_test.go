@@ -3,6 +3,7 @@ package webui
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/module"
@@ -22,6 +23,12 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	cr := s.RunCheck("induction")
 	if cr.Result != "fail" {
 		t.Fatalf("RunCheck induction result = %q, want fail; message: %s", cr.Result, cr.Message)
+	}
+	if cr.FailedConjecture == "" {
+		t.Fatalf("RunCheck induction failed without reporting failed conjecture; message: %s", cr.Message)
+	}
+	if !strings.Contains(cr.FailedConjecture, "link") {
+		t.Fatalf("failed conjecture %q does not mention expected relation link", cr.FailedConjecture)
 	}
 
 	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{"target": "state_1"})

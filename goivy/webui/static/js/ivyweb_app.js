@@ -2592,8 +2592,12 @@ class IvyApp {
             this.controls.setStatus('Check PASSED' + mode + z3note, 'success');
             this.controls.showInfo('Verification Result', 'PASSED' + z3note + ': ' + (result.message || 'All properties hold.'));
         } else if (verdict === 'fail') {
+            var failDetails = result.message || 'Counterexample found.';
+            if (result.failed_conjecture) {
+                failDetails += '\n\n' + result.failed_conjecture;
+            }
             this.controls.setStatus('Check FAILED' + mode + z3note + ' - counterexample found', 'error');
-            this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + (result.message || 'Counterexample found.'));
+            this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + failDetails);
             if (result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);
             }
