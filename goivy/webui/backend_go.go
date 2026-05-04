@@ -8,9 +8,9 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"github.com/glycerine/idem"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/idem"
 )
 
 // GoBackend is the native Go implementation of Backend.
@@ -467,16 +467,23 @@ func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
 			"mode":    mode,
 			"message": cr.Message,
 		}})
-		by, err = canonicalJSON(map[string]interface{}{
+
+		m := map[string]interface{}{
 			"status":            "ok",
 			"result":            cr.Result,
 			"mode":              mode,
 			"message":           cr.Message,
-			"z3_contacted":      cr.Z3Contacted,
 			"failed_conjecture": cr.FailedConjecture,
 			"failed_label":      cr.FailedLabel,
 			"used_relations":    cr.UsedRelations,
-		})
+		}
+		if !gbe.cfg.WebUIConformCheck {
+			// python does not have this new/extra flag
+			// and we are comparing byte-for-byte.
+			// TODO: better solution would be to add to python too.
+			m["z3_contacted"] = cr.Z3Contacted
+		}
+		by, err = canonicalJSON(m)
 		return nil
 	})
 	return

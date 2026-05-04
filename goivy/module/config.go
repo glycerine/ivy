@@ -180,6 +180,11 @@ type Config struct {
 
 	// ProofCfg holds the per-session proof configuration (tactic registry).
 	ProofCfg *ProofConfig `json:"-"`
+
+	// WebUIConformCheck lets the Go backend know it is being
+	// compared to the python so it can omit the new extra z3_contacted flag
+	// and not trigger a spurious mismatch report.
+	WebUIConformCheck bool
 }
 
 // SolverOptions controls per-solver Z3 behavior.

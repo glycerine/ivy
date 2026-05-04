@@ -38,6 +38,7 @@ func main() {
 	var backend webui.Backend
 	switch {
 	case *conform:
+		cfg.WebUIConformCheck = true
 		goBE := webui.NewGoBackend(cfg)
 		defer goBE.Close()
 		pyBE, err := webui.NewPyBackend(cfg)
