@@ -2296,13 +2296,16 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	// Get the instantiation name and args from the compiled expr
 	var instName string
+	var astArgs []ast.Node
+	var exprArgs []lg.Expr
 	if a.Inst != nil {
-		instName, _ = extractInstInfo(a.Inst)
+		instName, exprArgs = extractInstInfo(a.Inst)
 	} else if a.AstInst != nil {
 		// Fall back to AST node for the name
 		switch n := a.AstInst.(type) {
 		case *ast.Atom:
 			instName = n.Rep
+			astArgs = n.Terms
 		case *ast.Symbol:
 			instName = n.Rep
 		}
@@ -2327,6 +2330,36 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 		xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=false", instName)
 	}
 	if schemaOk {
+		if sch, ok := schema.(*ast.Schema); ok {
+			compileFn := ctx.CompileWithSortInference
+			if compileFn == nil && ctx.Domain.CompileWithSortInferenceFn != nil {
+				compileFn = ctx.Domain.CompileWithSortInferenceFn
+			}
+			if compileFn == nil {
+				panic("InstantiateAction.IntUpdate: schema matched but no CompileWithSortInference hook is registered")
+			}
+			params := astArgs
+			if params == nil && len(exprArgs) > 0 {
+				params = make([]ast.Node, len(exprArgs))
+				for i, arg := range exprArgs {
+					params[i] = arg
+				}
+			}
+			inst, err := sch.GetInstance(params, schemaCompilerFunc(compileFn), nil, false)
+			if err != nil {
+				panic(fmt.Sprintf("InstantiateAction.IntUpdate: schema instance failed for %s: %v", instName, err))
+			}
+			fmla, ok := inst.(lg.Expr)
+			if !ok {
+				panic(fmt.Sprintf("InstantiateAction.IntUpdate: schema %s returned wrong formula type %T", instName, inst))
+			}
+			clauses := module.FormulaToClauses(fmla, nil)
+			return &Update{
+				Modified: []*lg.Const{},
+				TR:       clauses,
+				Pre:      module.FalseClauses(nil),
+			}
+		}
 		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
 			fmla, ok := mlf.Formula.(lg.Expr)
 			if !ok {
@@ -2343,6 +2376,12 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	// Python: raise IvyError(inst, "instantiation of undefined: {}".format(inst.relname))
 	panic(fmt.Sprintf("instantiation of undefined: %s", instName))
+}
+
+type schemaCompilerFunc func(ast.Node) (ast.Node, error)
+
+func (f schemaCompilerFunc) CompileWithSortInference(node ast.Node) (ast.Node, error) {
+	return f(node)
 }
 
 // extractInstInfo extracts the name and args from an instantiation node.

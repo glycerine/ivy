@@ -120,6 +120,11 @@ type Module struct {
 	// in InstantiateAction.int_update (ivy_actions.py:755).
 	CompileActionBodyFn func(node ast.Node) (Action, error)
 
+	// CompileWithSortInferenceFn compiles an AST formula with sort inference.
+	// Set by the compiler for schema instantiation in actions, matching
+	// Python's schema.get_instance(...).compile_with_sort_inference() path.
+	CompileWithSortInferenceFn func(node ast.Node) (ast.Node, error)
+
 	// AdmitDefinitionFn is injected by the driver to call proof.ProofChecker.AdmitDefinition
 	// without creating a compiler→proof import cycle. Python: prover.admit_definition(d, pmap[d.id])
 	AdmitDefinitionFn func(defn *ast.LabeledFormula, proof ast.Node) error
@@ -543,6 +548,7 @@ func (m *Module) Copy() *Module {
 	// Shared pointers / callbacks (Python: copy.copy does shallow copy)
 	c.CompCfg = m.CompCfg
 	c.CompileActionBodyFn = m.CompileActionBodyFn
+	c.CompileWithSortInferenceFn = m.CompileWithSortInferenceFn
 	c.AdmitDefinitionFn = m.AdmitDefinitionFn
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory

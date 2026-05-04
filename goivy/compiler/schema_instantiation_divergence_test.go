@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/glycerine/ivy/goivy/actions"
 	"github.com/glycerine/ivy/goivy/ast"
 	"github.com/glycerine/ivy/goivy/lexer"
 	"github.com/glycerine/ivy/goivy/module"
@@ -25,11 +26,27 @@ schema reflex = a = a
 instantiate reflex
 `
 
+const actionSchemaInstantiationSource = `#lang ivy1.7
+
+type t
+relation p(X:t)
+individual a : t
+individual b : t
+schema use_p(X) = p(X)
+action act = {
+    instantiate use_p(a)
+}
+`
+
 type pythonSchemaInstantiationResult struct {
 	LabeledAxioms        int                 `json:"labeled_axioms"`
 	ModuleInstantiations int                 `json:"module_instantiations"`
 	SchemaInstances      map[string]int      `json:"schema_instances"`
 	SchemaInstanceTexts  map[string][]string `json:"schema_instance_texts"`
+}
+
+type pythonActionInstantiationResult struct {
+	TRFmlas []string `json:"tr_fmlas"`
 }
 
 func TestTopLevelSchemaInstantiationMatchesPython(t *testing.T) {
@@ -69,6 +86,54 @@ func TestTopLevelSchemaInstantiationMatchesPython(t *testing.T) {
 	if got, want := strings.Join(goInstanceTexts, "\n"), strings.Join(py.SchemaInstanceTexts["reflex"], "\n"); got != want {
 		t.Fatalf("top-level schema instantiation mismatch for schema %q:\nGo instances:\n%s\nPython instances:\n%s\nGo module instantiations=%d, Python module instantiations=%d",
 			"reflex", got, want, len(mod.Instantiations), py.ModuleInstantiations)
+	}
+}
+
+func TestActionLevelSchemaInstantiationMatchesPython(t *testing.T) {
+	wantTRFmlas := []string{"p(X)"}
+
+	result, err := parser.Parse(actionSchemaInstantiationSource, lexer.Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse Go Ivy source: %v", err)
+	}
+
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	if err := CheckInstantiations(mod, result.Decls); err != nil {
+		t.Fatalf("Go CheckInstantiations: %v", err)
+	}
+
+	c := NewFromModule(mod)
+	c.TopCtx = CollectActions(result.Decls)
+	if err := NewDomainSetup(c).ProcessDecls(result.Decls); err != nil {
+		t.Fatalf("Go DomainSetup: %v", err)
+	}
+
+	var update *actions.Update
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("Go action-level schema instantiation panicked; Python TR formulas=%v; panic=%v", wantTRFmlas, r)
+			}
+		}()
+		inst := mod.Cfg.AstCfg.NewAtom("use_p", mod.Cfg.AstCfg.NewApp(mod.Cfg.AstCfg.NewSymbol("a", nil)))
+		act := actions.NewInstantiateAction(nil)
+		act.AstInst = inst
+		update = actions.IntUpdate(act, &actions.UpdateContext{
+			Domain:                   mod,
+			CompileWithSortInference: c.CompileWithSortInference,
+		})
+	}()
+	if update == nil || update.TR == nil {
+		t.Fatalf("Go action-level schema instantiation returned nil update/TR; Python TR formulas=%v", wantTRFmlas)
+	}
+
+	goTRFmlas := make([]string, len(update.TR.Fmlas))
+	for i, fmla := range update.TR.Fmlas {
+		goTRFmlas[i] = fmt.Sprint(fmla)
+	}
+	if got, want := strings.Join(goTRFmlas, "\n"), strings.Join(wantTRFmlas, "\n"); got != want {
+		t.Fatalf("action-level schema instantiation mismatch:\nGo TR formulas:\n%s\nPython TR formulas:\n%s", got, want)
 	}
 }
 

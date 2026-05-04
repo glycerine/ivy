@@ -268,6 +268,10 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 		cc := NewFromModule(mod)
 		return cc.CompileActionBody(node)
 	}
+	mod.CompileWithSortInferenceFn = func(node ast.Node) (ast.Node, error) {
+		cc := NewFromModule(mod)
+		return cc.CompileWithSortInference(node)
+	}
 
 	xtracer.Trace("compiler.IvyCompile EXIT mod.Mixins.Len=%d", mod.Mixins.Len())
 	return nil

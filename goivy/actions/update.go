@@ -47,6 +47,11 @@ type UpdateContext struct {
 	// Used by InstantiateAction to compile macro expansions at runtime.
 	CompileActionBody func(node ast.Node) (Action, error)
 
+	// CompileWithSortInference compiles an AST formula with sort inference.
+	// Used by action-level schema instantiation, matching Python's
+	// schema.get_instance(inst.args) path.
+	CompileWithSortInference func(node ast.Node) (ast.Node, error)
+
 	// CheckUnprovable corresponds to Python's check_unprovable parameter.
 	// When true, only unprovable assertions are checked.
 	CheckUnprovable bool
