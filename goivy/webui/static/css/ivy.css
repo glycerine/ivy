@@ -23,7 +23,7 @@ html, body {
 /* --- Menu Bar --- */
 #menubar {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     height: 36px;
     background-color: #2d2d2d;
     border-bottom: 1px solid #3c3c3c;
@@ -37,6 +37,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 4px;
+    align-self: stretch;
 }
 
 .menu-right {
@@ -516,7 +517,9 @@ html, body {
 /* --- Dropdown Menus (panel header menus) --- */
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
 }
 
 .dropdown-content {
