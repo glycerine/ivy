@@ -556,6 +556,11 @@ html, body {
     display: block;
 }
 
+.dropdown-content a.menu-flash {
+    background-color: #c8c8c8;
+    color: #1e1e1e;
+}
+
 #state-label {
     font-size: 12px;
     font-weight: 600;

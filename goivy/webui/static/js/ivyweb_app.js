@@ -187,8 +187,7 @@ class IvyApp {
         // File > Load...
         document.getElementById('file-load').addEventListener('click', function (e) {
             e.preventDefault();
-            self.closeAllDropdowns(e);
-            fileInput.click();
+            self.flashAndClose(this, function () { fileInput.click(); });
         });
         fileInput.addEventListener('change', function () {
             if (fileInput.files.length > 0) {
@@ -200,29 +199,25 @@ class IvyApp {
         // File > Save as... (uses File System Access API to write to a chosen path)
         document.getElementById('file-save-as').addEventListener('click', function (e) {
             e.preventDefault();
-            self.closeAllDropdowns(e);
-            self.saveAs();
+            self.flashAndClose(this, function () { self.saveAs(); });
         });
 
         // File > Download current model (browser download)
         document.getElementById('file-download').addEventListener('click', function (e) {
             e.preventDefault();
-            self.closeAllDropdowns(e);
-            self.downloadModel();
+            self.flashAndClose(this, function () { self.downloadModel(); });
         });
 
         // File > New Model
         document.getElementById('file-new').addEventListener('click', function (e) {
             e.preventDefault();
-            self.closeAllDropdowns(e);
-            self.newModel();
+            self.flashAndClose(this, function () { self.newModel(); });
         });
 
         // File > Save Invariant
         document.getElementById('file-save-invariant').addEventListener('click', function (e) {
             e.preventDefault();
-            self.closeAllDropdowns(e);
-            self.saveInvariant();
+            self.flashAndClose(this, function () { self.saveInvariant(); });
         });
 
         // --- Check ---
@@ -281,7 +276,9 @@ class IvyApp {
         // --- Click anywhere to dismiss context menu and dropdowns ---
         document.addEventListener('click', function (e) {
             self.controls.hideContextMenu();
-            self.closeAllDropdowns(e);
+            if (!e.target.closest('.dropdown')) {
+                self.closeAllDropdowns();
+            }
         });
 
         // --- Prevent browser context menu on graph containers ---
@@ -2053,8 +2050,7 @@ class IvyApp {
                 }
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    self.closeAllDropdowns(e);
-                    self.loadRecentSession(s.id);
+                    self.flashAndClose(this, function () { self.loadRecentSession(s.id); });
                 });
                 container.appendChild(link);
             })(unique[j]);
@@ -2409,11 +2405,7 @@ class IvyApp {
     /**
      * Close all open dropdown menus.
      */
-    closeAllDropdowns(e) {
-        // Don't close if clicking inside a dropdown
-        if (e && e.target && e.target.closest && e.target.closest('.dropdown-content')) {
-            return;
-        }
+    closeAllDropdowns() {
         var all = document.querySelectorAll('.dropdown.open');
         for (var j = 0; j < all.length; j++) {
             all[j].classList.remove('open');
@@ -2421,20 +2413,29 @@ class IvyApp {
     }
 
     /**
+     * Flash a menu item (macOS Cocoa style invert) then close dropdowns and invoke callback.
+     */
+    flashAndClose(el, callback) {
+        var self = this;
+        el.classList.add('menu-flash');
+        setTimeout(function () {
+            el.classList.remove('menu-flash');
+            self.closeAllDropdowns();
+            if (callback) callback();
+        }, 50);
+    }
+
+    /**
      * Bind a menu item by ID to a callback, with dropdown auto-close.
      */
     bindMenuAction(id, callback) {
+        var self = this;
         var el = document.getElementById(id);
         if (!el) return;
         el.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            // Close all dropdowns
-            var all = document.querySelectorAll('.dropdown.open');
-            for (var j = 0; j < all.length; j++) {
-                all[j].classList.remove('open');
-            }
-            callback();
+            self.flashAndClose(this, callback);
         });
     }
 
