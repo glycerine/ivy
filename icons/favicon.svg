@@ -1,29 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Black ivy leaf on a kelly green diagonal ribbon with transparent corners">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Black five-lobed ivy leaf on a kelly green diagonal ribbon with transparent corners">
   <!-- Transparent corners/background -->
 
   <!-- In-frame green ribbon -->
   <polygon points="128,0 512,0 512,384 384,512 0,512 0,128" fill="#00C83C"/>
 
-  <!-- Ivy leaf: solid black, recognizably ivy-shaped, a bit pointier than before -->
-  <path d="M256 66
-           Q229 112 219 170
-           Q170 156 116 181
-           Q141 220 163 244
-           Q139 275 132 326
-           Q183 324 222 297
-           Q222 360 206 420
-           Q236 412 250 382
-           Q254 360 256 323
-           Q258 360 262 382
-           Q276 412 306 420
-           Q290 360 290 297
-           Q329 324 380 326
-           Q373 275 349 244
-           Q371 220 396 181
-           Q342 156 293 170
-           Q283 112 256 66 Z"
-        fill="#000000"/>
-
-  <!-- Stem -->
-  <path d="M250 382 Q256 430 256 458 Q256 430 262 382 Z" fill="#000000"/>
+  <!-- Enlarged ivy leaf: no stem, no lower lobes, five upper lobes only -->
+  <g transform="translate(256 230) scale(1.3) translate(-256 -230)">
+    <path d="M256 78
+             L232 118
+             Q225 146 220 170
+             L164 156
+             L116 184
+             L140 228
+             Q128 262 132 298
+             Q176 298 220 278
+             Q242 266 256 244
+             Q270 266 292 278
+             Q336 298 380 298
+             Q384 262 372 228
+             L396 184
+             L348 156
+             L292 170
+             Q287 146 280 118
+             Z"
+          fill="#000000"/>
+  </g>
 </svg>
