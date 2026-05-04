@@ -17,6 +17,7 @@ Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
               z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h
 
 all: build
+	ivyweb
 
 # for bashisms like &>
 SHELL := /bin/bash
