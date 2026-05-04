@@ -231,6 +231,10 @@ class IvyApp {
             } else {
                 await this.loadRecentSession(this._lastClosedSessionId);
             }
+            IvyPersist.setFileName(
+                this._persistedFileName || this._lastClosedFileName,
+                this._persistedFilePath || this._persistedFileName || this._lastClosedFileName
+            );
         } catch (e) {
             this.controls.setStatus('Re-open failed: ' + e.message, 'error');
         }
@@ -2439,7 +2443,10 @@ class IvyApp {
             // Keep the URL set by restore() (state.sessionId) — do NOT clobber it with
             // api.sessionId, which resets to s1/s2/... on every server restart and would
             // overwrite unrelated historical sessions stored under those same IDs.
-            IvyPersist.setFileName(state.fileName, state.filePath);
+            IvyPersist.setFileName(
+                this._persistedFileName || state.fileName,
+                this._persistedFilePath || state.filePath || state.fileName
+            );
             var sessionEl = document.getElementById('session-id');
             if (sessionEl) {
                 sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);
