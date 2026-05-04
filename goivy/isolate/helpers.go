@@ -61,8 +61,7 @@ func AddMixinsExt(
 		xtracer.Trace("isolate.add_mixins_ext actname=%s mixer=%s", actname, mixerName)
 		action1, err := LookupAction(mod, mixerName)
 		if err != nil {
-			xtracer.Trace("isolate.add_mixins_ext SKIP lookup_failed mixer=%s", mixerName)
-			continue
+			panic(err)
 		}
 		if useMixin != nil && !useMixin(mixerName) {
 			xtracer.Trace("isolate.add_mixins_ext SKIP use_mixin=false mixer=%s", mixerName)

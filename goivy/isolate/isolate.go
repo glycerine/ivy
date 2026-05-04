@@ -131,8 +131,7 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		}
 		action1, err := LookupAction(mod, mixerName)
 		if err != nil {
-			xtracer.Trace("isolate.add_mixins SKIP lookup_failed mixer=%s", mixerName)
-			continue
+			panic(err)
 		}
 		res = actions.ApplyMixin(action1, res, mx.IsAfter())
 	}
