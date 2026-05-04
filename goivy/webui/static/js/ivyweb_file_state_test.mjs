@@ -87,4 +87,43 @@ async function testSaveRecoversPersistedHandleBeforeSaveAs() {
     assert.equal(written, 'old content ');
 }
 
+async function testSaveAsMissingHandleNoticeIsNonModal() {
+    const notice = { style: { display: 'none' } };
+    let pickerCalledWithNoticeVisible = false;
+    let written = '';
+    sandbox.document.getElementById = function (id) {
+        return id === 'save-as-explain-notice' ? notice : null;
+    };
+    sandbox.window.showSaveFilePicker = async function () {
+        pickerCalledWithNoticeVisible = notice.style.display === 'block';
+        return {
+            name: 'helloworld.ivy',
+            async createWritable() {
+                return {
+                    async write(content) {
+                        written = content;
+                    },
+                    async close() {},
+                };
+            },
+        };
+    };
+
+    const app = new sandbox.IvyApp();
+    app._persistedFileName = 'helloworld.ivy';
+    app._persistedFilePath = 'helloworld.ivy';
+    app._persistedFileContent = 'old content ';
+    app._savedFileContent = 'old content';
+    app.cmEditor = { getValue: () => 'old content ' };
+    app._updateEditorLabel = function () {};
+
+    const saved = await app.saveAs({ explainMissingHandle: true });
+
+    assert.equal(saved, true);
+    assert.equal(pickerCalledWithNoticeVisible, true);
+    assert.equal(notice.style.display, 'none');
+    assert.equal(written, 'old content ');
+}
+
 await testSaveRecoversPersistedHandleBeforeSaveAs();
+await testSaveAsMissingHandleNoticeIsNonModal();

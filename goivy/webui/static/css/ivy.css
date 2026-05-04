@@ -146,6 +146,24 @@ html, body {
     margin-bottom: 10px;
 }
 
+.save-as-explain-notice {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    max-width: min(720px, calc(100vw - 32px));
+    padding: 10px 14px;
+    border: 1px solid #7a6528;
+    border-radius: 4px;
+    background: #3a311c;
+    color: #f0b84a;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    font-size: 13px;
+    line-height: 1.35;
+    pointer-events: none;
+}
+
 .dialog-text {
     width: 100%;
     font-family: monospace;

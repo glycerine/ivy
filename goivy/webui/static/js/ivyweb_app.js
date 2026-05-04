@@ -405,6 +405,20 @@ class IvyApp {
         });
     }
 
+    showSaveAsExplanationNotice() {
+        var notice = document.getElementById('save-as-explain-notice');
+        if (notice) {
+            notice.style.display = 'block';
+        }
+    }
+
+    hideSaveAsExplanationNotice() {
+        var notice = document.getElementById('save-as-explain-notice');
+        if (notice) {
+            notice.style.display = 'none';
+        }
+    }
+
     scrollEditorToLine(lineno) {
         if (this.cmEditor) {
             var line = lineno - 1;
@@ -2232,11 +2246,12 @@ class IvyApp {
                 this._updateEditorLabel();
                 return true;
             }
-            return await this.saveAs();
+            return await this.saveAs({ explainMissingHandle: true });
         }
     }
 
-    async saveAs() {
+    async saveAs(options) {
+        options = options || {};
         var content = this._editorContent();
         if (!content) {
             this.controls.setStatus('No model loaded to save', 'error');
@@ -2248,13 +2263,23 @@ class IvyApp {
                 this.controls.setStatus('Save as... not supported in this browser — use Download instead', 'error');
                 return false;
             }
-            var handle = await window.showSaveFilePicker({
-                suggestedName: this._persistedFileName || 'model.ivy',
-                types: [{
-                    description: 'Ivy files',
-                    accept: { 'text/plain': ['.ivy'] },
-                }],
-            });
+            if (options.explainMissingHandle) {
+                this.showSaveAsExplanationNotice();
+            }
+            var handle;
+            try {
+                handle = await window.showSaveFilePicker({
+                    suggestedName: this._persistedFileName || 'model.ivy',
+                    types: [{
+                        description: 'Ivy files',
+                        accept: { 'text/plain': ['.ivy'] },
+                    }],
+                });
+            } finally {
+                if (options.explainMissingHandle) {
+                    this.hideSaveAsExplanationNotice();
+                }
+            }
             var writable = await handle.createWritable();
             await writable.write(content);
             await writable.close();
