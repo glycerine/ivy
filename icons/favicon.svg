@@ -4,7 +4,31 @@
   <!-- In-frame green ribbon -->
   <polygon points="128,0 512,0 512,384 384,512 0,512 0,128" fill="#00C83C"/>
 
-  <!-- Ivy leaf outline, kept fully inside the green ribbon -->
+  <!-- Heavy black shadow behind leaf outline for favicon readability -->
+  <g transform="translate(8 8)">
+    <path d="M256 72
+             C220 107 198 154 189 193
+             C156 186 105 189 79 205
+             C91 239 117 266 138 287
+             C121 316 110 344 109 364
+             C149 370 192 354 225 329
+             C224 365 212 393 204 416
+             C224 419 246 411 250 384
+             C253 362 255 342 256 325
+             C288 352 335 370 400 364
+             C398 340 382 313 370 289
+             C393 267 420 234 431 205
+             C397 189 347 186 323 193
+             C314 153 291 107 256 72 Z"
+          fill="none"
+          stroke="#000000"
+          stroke-width="36"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          opacity="0.78"/>
+  </g>
+
+  <!-- Ivy leaf outline -->
   <path d="M256 72
            C220 107 198 154 189 193
            C156 186 105 189 79 205
