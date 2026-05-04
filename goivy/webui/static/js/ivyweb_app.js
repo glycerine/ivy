@@ -1959,6 +1959,11 @@ class IvyApp {
      */
     async save() {
         var content = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        var dirty = content !== (this._savedFileContent || '');
+        if (!dirty) {
+            this._updateEditorLabel();
+            return;
+        }
         if (this._fileHandle) {
             try {
                 var writable = await this._fileHandle.createWritable();
