@@ -11,7 +11,7 @@ import (
 type ToAigerResult struct {
 	Aiger    *Encoder
 	Decoder  map[string]Expr // abstract prop -> original expression
-	Annot    interface{}     // annotation for trace reconstruction
+	Annot    Annotation      // annotation for trace reconstruction
 	Consts   map[string]bool // set of constant symbols used in sort_constants
 	Action   ActionsAction   // the composed action
 	StVarSet map[string]bool // set of original state variable names

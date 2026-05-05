@@ -836,9 +836,10 @@ func TestNewStateFromClauses(t *testing.T) {
 
 func TestNewStateFromClausesWithAnnot(t *testing.T) {
 	m := New()
-	cls := NewClauses(nil, nil, "existing_annot")
+	existingAnnot := EmptyAnnotation{}
+	cls := NewClauses(nil, nil, existingAnnot)
 	s := NewStateFromClauses(m, cls)
-	if s.Clauses.Annot != "existing_annot" {
+	if s.Clauses.Annot != existingAnnot {
 		t.Error("should preserve existing annotation")
 	}
 }

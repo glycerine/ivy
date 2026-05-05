@@ -650,11 +650,7 @@ func applyGoalTraceHook(goal *LabeledFormula) {
 	if goal == nil || goal.TraceHook == nil {
 		return
 	}
-	hook, ok := goal.TraceHook.(TraceHookFn)
-	if !ok {
-		return
-	}
-	hook(&MatchHandler{
+	goal.TraceHook(&MatchHandler{
 		Current:  make(map[NodeKey]string),
 		Eqs:      make(map[NodeKey][]Expr),
 		Renaming: make(map[NodeKey]*Const),

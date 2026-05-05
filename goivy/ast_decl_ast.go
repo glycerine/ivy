@@ -33,13 +33,12 @@ type LabeledFormula struct {
 	Unprovable   bool
 	// Annot holds the annotation for trace reconstruction, or nil.
 	// In Python this is a dynamically-attached attribute (lf.annot).
-	// It carries (action, annotation) pair context for proof checking.
-	Annot interface{}
+	// It carries the (action, annotation) pair context for proof checking.
+	Annot *ActionAnnotation
 	// TraceHook is a diagnostic hook closure attached by tactics (e.g. l2s).
-	// The concrete type is check.TraceHookFn; the field is interface{} only
-	// because ast cannot import check (cycle). Mirrors Python's
-	// dynamically-attached lf.trace_hook attribute (ivy_l2s.py:88, 1311, 1313).
-	TraceHook interface{}
+	// Mirrors Python's dynamically-attached lf.trace_hook attribute
+	// (ivy_l2s.py:88, 1311, 1313).
+	TraceHook TraceHookFn
 }
 
 // Lineno returns the line number from the node's Location.

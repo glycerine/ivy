@@ -667,8 +667,8 @@ func buildAnnotatedTraceGraph(mod *Module, clauses *Clauses, finalCond *Clauses,
 	}
 
 	if action != nil {
-		if annot, ok := clauses.Annot.(Annotation); ok && annot != nil {
-			MatchAnnotation(action, annot, handler, mod)
+		if clauses.Annot != nil {
+			MatchAnnotation(action, clauses.Annot, handler, mod)
 		}
 	}
 	handler.End()

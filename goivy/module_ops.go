@@ -7,28 +7,6 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// AnnotConjoiner is implemented by annotation values that support conjunction.
-// clauseops uses this interface to conjoin annotations without importing actions.
-type AnnotConjoiner interface {
-	ConjWith(other interface{}) interface{}
-}
-
-// AnnotRenamer is implemented by annotation values that support renaming.
-// Matches Python's annot.rename(map).
-type AnnotRenamer interface {
-	Rename(m map[NodeKey]Expr) interface{}
-}
-
-// OpsConfig holds per-session clauseops state.
-type OpsConfig struct {
-	AnnotConjFunc func(a, b interface{}) interface{}
-}
-
-// NewOpsConfig creates a new OpsConfig.
-func NewOpsConfig() *OpsConfig {
-	return &OpsConfig{}
-}
-
 // AndClauses computes the conjunction of Clauses and/or formulas.
 // Each argument can be *Clauses or lg.Expr. If no argument is a *Clauses,
 // returns an And formula directly. If any input is False, the result is False.
@@ -57,13 +35,13 @@ func AndClauses(args ...interface{}) interface{} {
 	}
 
 	// Combine annotations via conj (matching Python's and_clauses default)
-	var annot interface{}
+	var annot Annotation
 	for _, c := range clauses {
 		if c.Annot != nil {
 			if annot == nil {
 				annot = c.Annot
-			} else if conjer, ok := annot.(AnnotConjoiner); ok {
-				annot = conjer.ConjWith(c.Annot)
+			} else {
+				annot = annot.Conj(c.Annot)
 			}
 		}
 	}
@@ -97,7 +75,7 @@ func AndClauses(args ...interface{}) interface{} {
 // AnnotOp is an optional annotation combiner matching Python's annot_op parameter.
 // It takes the annotations of the input clauses and returns the combined annotation.
 // Corresponds to Python's annot_op parameter in and_clauses / conjoin.
-type AnnotOp func(annots ...interface{}) interface{}
+type AnnotOp func(annots ...Annotation) Annotation
 
 func AndClausesTyped(args ...*Clauses) *Clauses {
 	return andClausesImpl(nil, args)
@@ -115,10 +93,10 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 	}
 
 	// Compute annotation
-	var annot interface{}
+	var annot Annotation
 	if annotOp != nil {
 		// Python: annot = annot_op(*[c.annot for c in args])
-		annots := make([]interface{}, len(args))
+		annots := make([]Annotation, len(args))
 		for i, c := range args {
 			annots[i] = c.Annot
 		}
@@ -129,10 +107,8 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 			if c.Annot != nil {
 				if annot == nil {
 					annot = c.Annot
-				} else if conjer, ok := annot.(AnnotConjoiner); ok {
-					// Inline annotation conjunction via ConjWith method.
-					// Replaces the old AnnotConjFunc global callback.
-					annot = conjer.ConjWith(c.Annot)
+				} else {
+					annot = annot.Conj(c.Annot)
 				}
 			}
 		}
@@ -260,10 +236,6 @@ func OrClausesTyped(args ...*Clauses) *Clauses {
 	return fixOrAnnot(res, fixedVs, fixedArgs)
 }
 
-// AnnotIteFunc is a callback for computing annot.ite(v, other) without
-// importing the actions package. Set by the actions package at init time.
-var AnnotIteFunc func(annot interface{}, cond Expr, other interface{}) interface{}
-
 // fixOrAnnot reconstructs annotations for or_clauses results.
 // Matches Python's fix_or_annot.
 func fixOrAnnot(res *Clauses, vs []Expr, args []*Clauses) *Clauses {
@@ -275,8 +247,8 @@ func fixOrAnnot(res *Clauses, vs []Expr, args []*Clauses) *Clauses {
 		a := args[i].Annot
 		if annot == nil || a == nil {
 			annot = nil
-		} else if AnnotIteFunc != nil {
-			annot = AnnotIteFunc(a, vs[i], annot)
+		} else {
+			annot = a.Ite(vs[i], annot)
 		}
 	}
 	return NewClauses(res.Fmlas, res.Defs, annot)
@@ -432,10 +404,10 @@ func iteClausesInt(rn *UniqueRenamer, cond Expr, args []*Clauses) *Clauses {
 	defs = append(defs, NewIvyDefinition(v, cond))
 
 	// Compute annotation matching Python: annot = None if a0 is None or a1 is None else a0.ite(v,a1)
-	var annot interface{}
+	var annot Annotation
 	a0, a1 := args[0].Annot, args[1].Annot
-	if a0 != nil && a1 != nil && AnnotIteFunc != nil {
-		annot = AnnotIteFunc(a0, v, a1)
+	if a0 != nil && a1 != nil {
+		annot = a0.Ite(v, a1)
 	}
 	result := NewClauses(fmlas, defs, annot)
 	if xtracer.Enabled {
@@ -640,16 +612,13 @@ func RenameClauses(clauses *Clauses, subs map[NodeKey]*Const) *Clauses {
 	}
 	result := clauses.Apply(fn)
 
-	// Rename annotation if it supports it (Python: annot_fun=rename_clauses_annot_fun)
+	// Rename annotation (Python: annot_fun=rename_clauses_annot_fun)
 	if result.Annot != nil {
-		// Convert subs to lg.Expr map for the AnnotRenamer interface
 		exprSubs := make(map[NodeKey]Expr, len(subs))
 		for k, v := range subs {
 			exprSubs[k] = v
 		}
-		if renamer, ok := result.Annot.(AnnotRenamer); ok {
-			result.Annot = renamer.Rename(exprSubs)
-		}
+		result.Annot = result.Annot.Rename(exprSubs)
 	}
 
 	return result

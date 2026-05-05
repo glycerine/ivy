@@ -146,18 +146,14 @@ type Module struct {
 	Theory *Clauses
 
 	// TraceHook is a diagnostic hook closure propagated from a goal's
-	// LabeledFormula.TraceHook field. The concrete type is check.TraceHookFn;
-	// the field is interface{} only because module cannot import check
-	// (cycle). Mirrors Python's dynamically-attached mod.trace_hook
-	// (ivy_check.py:406-407, 829-840).
-	TraceHook interface{}
+	// LabeledFormula.TraceHook field. Mirrors Python's dynamically-attached
+	// mod.trace_hook (ivy_check.py:406-407, 829-840).
+	TraceHook TraceHookFn
 
-	// AclCfg holds the loaded ACL config (*acl.Config) for unchecked
-	// property filtering. Stored as interface{} because module cannot
-	// import acl (cycle avoidance). Set by check.CheckModule from the
-	// OptUncheckedProps file, matching Python ivy_acl.register_from_file
-	// (ivy_check.py:982-983).
-	AclCfg interface{}
+	// AclCfg holds the loaded ACL config for unchecked property filtering.
+	// Set by CheckModule from the OptUncheckedProps file, matching Python
+	// ivy_acl.register_from_file (ivy_check.py:982-983).
+	AclCfg *ACLConfig
 
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module

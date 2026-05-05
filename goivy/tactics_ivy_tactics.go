@@ -23,7 +23,7 @@ func pcAstCfg(pc ProofCheckerInterface) *AstConfig {
 //
 //	pr.make_goal(lineno, name, [], lg.Not(lu.clauses_to_formula(vc)),
 //	    annot=(action, vc.annot))
-func VcToGoal(cfg *AstConfig, loc Location, name string, vc *Clauses, action interface{}) *LabeledFormula {
+func VcToGoal(cfg *AstConfig, loc Location, name string, vc *Clauses, action ActionsAction) *LabeledFormula {
 	fmla := ClausesToFormula(vc)
 	negFmla, err := NewNot(fmla)
 	if err != nil {
@@ -31,7 +31,9 @@ func VcToGoal(cfg *AstConfig, loc Location, name string, vc *Clauses, action int
 		negFmla = &Not{Body: fmla}
 	}
 	label := cfg.NewAtom(name)
-	return MakeGoal(cfg, loc, label, nil, negFmla)
+	goal := MakeGoal(cfg, loc, label, nil, negFmla)
+	goal.Annot = &ActionAnnotation{Action: action, Annot: vc.Annot}
+	return goal
 }
 
 // TripleToGoal converts a Hoare triple (precondition, action, postcondition) to a goal.

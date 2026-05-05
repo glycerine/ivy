@@ -76,7 +76,7 @@ func (ctx *UpdateContext) BackgroundTheory() *Clauses {
 // makeUpdate creates a transrel.Update from individual components,
 // wrapping lg.Expr values into Clauses. This is a transitional helper
 // for porting action updates from bare Node to Clauses.
-func makeUpdate(modified []*Const, tr Expr, pre Expr, annot interface{}) *Update {
+func makeUpdate(modified []*Const, tr Expr, pre Expr, annot Annotation) *Update {
 	return &Update{
 		Modified: modified,
 		TR:       FormulaToClauses(tr, annot),
@@ -86,7 +86,7 @@ func makeUpdate(modified []*Const, tr Expr, pre Expr, annot interface{}) *Update
 
 // makeUpdateDefs creates a transrel.Update with definitions in the TR.
 // This matches Python's pattern of Clauses([], [Definition(...)], annot).
-func makeUpdateDefs(modified []*Const, defs []*IvyDefinition, annot interface{}) *Update {
+func makeUpdateDefs(modified []*Const, defs []*IvyDefinition, annot Annotation) *Update {
 	return &Update{
 		Modified: modified,
 		TR:       NewClauses(nil, defs, annot),

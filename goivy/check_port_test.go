@@ -73,11 +73,11 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 
 func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &And{})
-	lf.Annot = "test_annotation"
+	lf.Annot = &ActionAnnotation{Action: NewSequence(), Annot: EmptyAnnotation{}}
 	cc := NewConjChecker(New(), lf, 8)
 	got := cc.GetAnnot()
-	if got != "test_annotation" {
-		t.Errorf("GetAnnot() = %v, want 'test_annotation'", got)
+	if got != lf.Annot {
+		t.Errorf("GetAnnot() = %v, want %v", got, lf.Annot)
 	}
 }
 
@@ -271,9 +271,9 @@ func TestStartNonIvyFile(t *testing.T) {
 
 func TestLabeledFormulaClonePreservesAnnot(t *testing.T) {
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &And{})
-	lf.Annot = "my_annot"
+	lf.Annot = &ActionAnnotation{Action: NewSequence(), Annot: EmptyAnnotation{}}
 	cloned := lf.Clone([]Node{lf.Label, lf.Formula}).(*LabeledFormula)
-	if cloned.Annot != "my_annot" {
+	if cloned.Annot != lf.Annot {
 		t.Errorf("Clone should preserve Annot, got %v", cloned.Annot)
 	}
 }

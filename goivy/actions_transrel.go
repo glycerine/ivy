@@ -560,7 +560,7 @@ func ConjoinClausesWithAnnotOp(c1, c2 *Clauses, annotOp AnnotOp) *Clauses {
 //
 //	def my_annot_op(x, y):
 //	    return x.compose(y) if x is not None and y is not None else None
-func MyAnnotOp(annots ...interface{}) interface{} {
+func MyAnnotOp(annots ...Annotation) Annotation {
 	if len(annots) < 2 {
 		if len(annots) == 1 {
 			return annots[0]
@@ -571,12 +571,7 @@ func MyAnnotOp(annots ...interface{}) interface{} {
 	if x == nil || y == nil {
 		return nil
 	}
-	xa, ok1 := x.(Annotation)
-	ya, ok2 := y.(Annotation)
-	if !ok1 || !ok2 {
-		return nil
-	}
-	return xa.Compose(ya)
+	return x.Compose(y)
 }
 
 // -----------------------------------------------------------------------
@@ -619,7 +614,7 @@ func ExistQuant(syms []*Const, node Expr) Expr {
 //
 // Returns nil if any input annotation is nil. Otherwise returns the
 // left-fold of Compose() over all annotations, producing a *ComposeAnnotation.
-func composeAnnotOp(annots ...interface{}) interface{} {
+func composeAnnotOp(annots ...Annotation) Annotation {
 	if len(annots) == 0 {
 		return nil
 	}
@@ -628,14 +623,10 @@ func composeAnnotOp(annots ...interface{}) interface{} {
 		if a == nil {
 			return nil
 		}
-		ann, ok := a.(Annotation)
-		if !ok {
-			return nil
-		}
 		if result == nil {
-			result = ann
+			result = a
 		} else {
-			result = result.Compose(ann)
+			result = result.Compose(a)
 		}
 	}
 	return result

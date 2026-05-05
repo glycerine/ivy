@@ -11,11 +11,10 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// TraceHookFn is the function type stored in ast.LabeledFormula.TraceHook
-// (and propagated to module.Module.TraceHook) by L2S tactics. It is invoked
-// by the trace formatter in check.go after constructing a MatchHandler from
-// the failing checker. Mirrors Python's goal.trace_hook closure
-// (ivy_l2s.py:1311-1313).
+// TraceHookFn is the function type stored in LabeledFormula.TraceHook and
+// propagated to Module.TraceHook by L2S tactics. It is invoked by the trace
+// formatter in check.go after constructing a MatchHandler from the failing
+// checker. Mirrors Python's goal.trace_hook closure (ivy_l2s.py:1311-1313).
 type TraceHookFn func(handler *MatchHandler, fcs []Checker)
 
 // TemporalAndL2S returns true for symbol names that are temporal/l2s

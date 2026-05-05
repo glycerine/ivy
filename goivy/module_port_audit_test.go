@@ -229,29 +229,26 @@ func TestNewClausesDropUniversalsNot(t *testing.T) {
 // TestIteClausesIntAnnotation verifies that iteClausesInt preserves
 // annotations, matching Python: annot = None if a0 is None or a1 is None else a0.ite(v,a1).
 func TestIteClausesIntAnnotation(t *testing.T) {
-	// Set up AnnotIteFunc to capture the call
-	origFunc := AnnotIteFunc
-	defer func() { AnnotIteFunc = origFunc }()
-
-	var calledWith struct {
-		annot, other interface{}
-		cond         Expr
-	}
-	AnnotIteFunc = func(annot interface{}, cond Expr, other interface{}) interface{} {
-		calledWith.annot = annot
-		calledWith.cond = cond
-		calledWith.other = other
-		return "combined"
-	}
-
-	cls1 := NewClauses([]Expr{moduleMkConst("p")}, nil, "annot1")
-	cls2 := NewClauses([]Expr{moduleMkConst("q")}, nil, "annot2")
+	a0 := EmptyAnnotation{}
+	a1 := EmptyAnnotation{}
+	cls1 := NewClauses([]Expr{moduleMkConst("p")}, nil, a0)
+	cls2 := NewClauses([]Expr{moduleMkConst("q")}, nil, a1)
 	cond := moduleMkConst("c")
 
 	result := IteClauses(cond, cls1, cls2)
 
-	if result.Annot != "combined" {
-		t.Errorf("expected combined annotation, got %v", result.Annot)
+	ite, ok := result.Annot.(*IteAnnotation)
+	if !ok {
+		t.Fatalf("expected IteAnnotation, got %T", result.Annot)
+	}
+	if ite.Cond == nil {
+		t.Fatal("expected IteAnnotation condition")
+	}
+	if _, ok := ite.ThenB.(EmptyAnnotation); !ok {
+		t.Errorf("expected then annotation to be EmptyAnnotation, got %T", ite.ThenB)
+	}
+	if _, ok := ite.ElseB.(EmptyAnnotation); !ok {
+		t.Errorf("expected else annotation to be EmptyAnnotation, got %T", ite.ElseB)
 	}
 
 	// With one nil annotation, result should be nil

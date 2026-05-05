@@ -16,7 +16,7 @@ type Clauses struct {
 	Fmlas  []Expr           // conjuncts (formulas)
 	Defs   []*IvyDefinition // definitions
 	DefIdx map[NodeKey]int  // definition index: moduleDefinesKey() -> index in Defs
-	Annot  interface{}      // annotation (for trace reconstruction)
+	Annot  Annotation       // annotation for trace reconstruction
 }
 
 // NewClauses constructs a Clauses value. Each formula is first normalized
@@ -24,7 +24,7 @@ type Clauses struct {
 // coerce_clause_to_formula), then flattened: any top-level And is expanded
 // into its conjuncts (collect_and_list).
 // Definitions are indexed by their defining symbol name.
-func NewClauses(fmlas []Expr, defs []*IvyDefinition, annot interface{}) *Clauses {
+func NewClauses(fmlas []Expr, defs []*IvyDefinition, annot Annotation) *Clauses {
 	coerced := make([]Expr, len(fmlas))
 	for i, f := range fmlas {
 		coerced[i] = dropUniversals(f)
@@ -229,18 +229,18 @@ func (c *Clauses) Apply(fn func(Expr) Expr) *Clauses {
 // --- Constructors ---
 
 // TrueClauses returns a Clauses representing logical True (empty clause set = tautology).
-func TrueClauses(annot interface{}) *Clauses {
+func TrueClauses(annot Annotation) *Clauses {
 	return NewClauses(nil, nil, annot)
 }
 
 // FalseClauses returns a Clauses representing logical False.
-func FalseClauses(annot interface{}) *Clauses {
+func FalseClauses(annot Annotation) *Clauses {
 	return NewClauses([]Expr{False}, nil, annot)
 }
 
 // FormulaToClauses wraps a single formula as a Clauses.
 // If the formula is an And or Or with one element, it is unwrapped.
-func FormulaToClauses(f Expr, annot interface{}) *Clauses {
+func FormulaToClauses(f Expr, annot Annotation) *Clauses {
 	// Unwrap single-element And/Or
 	f = unwrapSingleton(f)
 	// Drop universals (strip leading ForAll)

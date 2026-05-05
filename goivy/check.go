@@ -54,8 +54,8 @@ type Checker interface {
 	Fail() bool
 	// Pass marks the check as passed.
 	Pass() bool
-	// GetAnnot returns the annotation for trace reconstruction, or nil.
-	GetAnnot() interface{}
+	// GetAnnot returns an action/annotation pair for trace reconstruction, or nil.
+	GetAnnot() *ActionAnnotation
 	// Failed returns whether this checker has failed.
 	Failed() bool
 	// GetLF returns the labeled formula if this is a conjecture checker.
@@ -116,10 +116,10 @@ func (c *BaseChecker) Unsat() bool {
 	}
 	return c.Pass()
 }
-func (c *BaseChecker) Assume() bool           { return false }
-func (c *BaseChecker) GetAnnot() interface{}  { return nil }
-func (c *BaseChecker) Failed() bool           { return c.FailedFlag }
-func (c *BaseChecker) GetLF() *LabeledFormula { return nil }
+func (c *BaseChecker) Assume() bool                { return false }
+func (c *BaseChecker) GetAnnot() *ActionAnnotation { return nil }
+func (c *BaseChecker) Failed() bool                { return c.FailedFlag }
+func (c *BaseChecker) GetLF() *LabeledFormula      { return nil }
 
 func (c *BaseChecker) Fail() bool {
 	fmt.Println("FAIL")
@@ -160,7 +160,7 @@ func (c *ConjChecker) Start() {
 	fmt.Print("...\n")
 }
 
-func (c *ConjChecker) GetAnnot() interface{} {
+func (c *ConjChecker) GetAnnot() *ActionAnnotation {
 	// Python: return self.lf.annot if hasattr(self.lf,'annot') else None
 	if c.LF != nil && c.LF.Annot != nil {
 		return c.LF.Annot
@@ -285,10 +285,7 @@ func CheckTemporals(mod *Module) error {
 	pc := NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 	// Use the ACL config loaded by CheckModule and stored on the module.
-	var aclCfg *ACLConfig
-	if mod.AclCfg != nil {
-		aclCfg, _ = mod.AclCfg.(*ACLConfig)
-	}
+	aclCfg := mod.AclCfg
 
 	for _, prop := range mod.LabeledProps {
 		if !prop.IsTemporal() {
@@ -560,33 +557,22 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 				actionExprs = append(actionExprs, a)
 			}
 			action := NewSequence(actionExprs...)
-			var annot Annotation
 			if clauses.Annot != nil {
-				annot, _ = clauses.Annot.(Annotation)
-			}
-			if annot != nil {
-				MatchAnnotation(action, annot, handler, mod)
+				MatchAnnotation(action, clauses.Annot, handler, mod)
 			}
 		} else {
 			// Python: action, annot = thing
-			type annotPair struct {
-				Action ActionsAction
-				Annot  Annotation
-			}
-			if pair, ok := thing.(*annotPair); ok {
-				MatchAnnotation(pair.Action, pair.Annot, handler, mod)
+			if thing.Annot != nil {
+				MatchAnnotation(thing.Action, thing.Annot, handler, mod)
 			}
 		}
 		handler.End()
 
 		// C5 / Python ivy_check.py:406-407 (and ivy_l2s.py:1310-1313):
 		// Apply the trace hook attached by L2S tactics, if any. The hook is
-		// stored as TraceHookFn (boxed in interface{} on Module/LabeledFormula
-		// because ast and module cannot import check).
+		// stored on Module/LabeledFormula.
 		if mod.TraceHook != nil {
-			if hook, ok := mod.TraceHook.(TraceHookFn); ok {
-				hook(handler, ffcs)
-			}
+			mod.TraceHook(handler, ffcs)
 		}
 
 		// Python: ff = failed[0]
