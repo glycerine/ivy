@@ -248,17 +248,6 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 		mod.UpdateTheory()
 	}
 
-	// Set CompileActionBodyFn on the module so that InstantiateAction.IntUpdate
-	// can compile macro expansions at runtime. Python: im.compile().int_update(...)
-	mod.CompileActionBodyFn = func(node Node) (Action, error) {
-		cc := NewFromModule(mod)
-		return cc.CompileActionBody(node)
-	}
-	mod.CompileWithSortInferenceFn = func(node Node) (Node, error) {
-		cc := NewFromModule(mod)
-		return cc.CompileWithSortInference(node)
-	}
-
 	xtracer.Trace("compiler.IvyCompile EXIT mod.Mixins.Len=%d", mod.Mixins.Len())
 	return nil
 }
@@ -1999,26 +1988,6 @@ func t2pApplyMatchFunc(match map[NodeKey]Expr, c *Const) *Const {
 	return NewConst(c.Name, newSort)
 }
 
-// t2pGoalConc returns the conclusion of a goal as an Expr.
-// Duplicates proof.GoalConcExpr logic to avoid circular import (compiler
-// cannot import proof). Same semantics: returns nil for non-lg.Expr
-// formulas like *ast.TemporalModels.
-func t2pGoalConc(g *LabeledFormula) Expr {
-	if sb, ok := g.Formula.(*SchemaBody); ok {
-		conc := sb.Conc()
-		if conc != nil {
-			if ln, ok := conc.(Expr); ok {
-				return ln
-			}
-		}
-		return nil
-	}
-	if ln, ok := g.Formula.(Expr); ok {
-		return ln
-	}
-	return nil
-}
-
 // t2pApplyMatchSort applies a match to a sort, returning the matched sort or original.
 func t2pApplyMatchSort(match map[NodeKey]Expr, sort Sort) Sort {
 	if sort == nil {
@@ -2148,7 +2117,7 @@ func t2pApplyMatchGoalNode(match map[NodeKey]Expr, goal *LabeledFormula, mod *Mo
 	sb, ok := goal.Formula.(*SchemaBody)
 	if !ok {
 		// Non-schema: apply match to formula directly
-		conc := t2pGoalConc(goal)
+		conc := GoalConcExpr(goal)
 		if conc != nil {
 			conc = t2pApplyMatchAlt(match, conc)
 		}
@@ -2197,7 +2166,7 @@ func t2pApplyMatchGoalNode(match map[NodeKey]Expr, goal *LabeledFormula, mod *Mo
 			newPrems = append(newPrems, p)
 		}
 	}
-	conc := t2pGoalConc(goal)
+	conc := GoalConcExpr(goal)
 	if conc != nil {
 		conc = t2pApplyMatchAlt(match, conc)
 	}

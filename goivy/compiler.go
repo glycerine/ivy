@@ -181,10 +181,18 @@ func NewCompiler(sig *Sig, mod *Module) *Compiler {
 	} else {
 		c.SigMerkle = &MerkleState{}
 	}
-	// Ensure ActCfg is always set (IvyCompile seeds it from AstConfig;
-	// standalone tests get a fresh one).
+	// Ensure ActCfg is always set. IvyCompile seeds mod.Cfg.ActCfg from the
+	// AstConfig; compilers created later from the same module reuse it so
+	// runtime macro compilation shares Python's action-counter state.
 	if c.ActCfg == nil {
-		c.ActCfg = NewModuleActionsConfig()
+		if c.Module != nil && c.Module.Cfg != nil && c.Module.Cfg.ActCfg != nil {
+			c.ActCfg = c.Module.Cfg.ActCfg
+		} else {
+			c.ActCfg = NewModuleActionsConfig()
+			if c.Module != nil && c.Module.Cfg != nil && c.Module.Cfg.AstCfg != nil {
+				c.ActCfg.IuCfg = c.Module.Cfg.AstCfg.IuCfg
+			}
+		}
 	}
 	return c
 }

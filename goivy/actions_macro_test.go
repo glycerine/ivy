@@ -324,84 +324,34 @@ func TestInstantiateActionIntUpdateNilDomain(t *testing.T) {
 
 func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	// Set up a macro: macro incr(x) = assume x
-	// The body after rewriting should be "assume y"
+	// The body after rewriting should be compiled just like Python's
+	// im.compile().int_update(domain, pvars) path.
 	body := actionsTestAstCfg.NewAtom("assume", actionsTestAstCfg.NewAtom("x"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
 	mod := New()
+	if _, err := mod.Sig.AddSymbol("p", Boolean); err != nil {
+		t.Fatalf("AddSymbol(p): %v", err)
+	}
 	mod.Macros = map[string]*AstDefinition{
 		"incr": defn,
 	}
 
 	// Create the action with AstInst
 	a := NewInstantiateAction(nil)
-	a.AstInst = actionsTestAstCfg.NewAtom("incr", actionsTestAstCfg.NewAtom("y"))
+	a.AstInst = actionsTestAstCfg.NewAtom("incr", actionsTestAstCfg.NewAtom("p"))
 
-	// Set up a CompileActionBody callback
-	compileCalled := false
 	ctx := &UpdateContext{
 		Domain: mod,
 		PVars:  nil,
-		CompileActionBody: func(node Node) (ActionsAction, error) {
-			compileCalled = true
-			// The rewritten node should be "assume y"
-			atom, ok := node.(*Atom)
-			if !ok {
-				t.Errorf("compiled node should be *ast.Atom, got %T", node)
-				return NewSequence(), nil
-			}
-			if atom.Rep != "assume" {
-				t.Errorf("expected 'assume', got %q", atom.Rep)
-			}
-			// Return a simple assume action
-			return NewAssumeAction(True), nil
-		},
 	}
 
 	u := a.IntUpdate(ctx)
-	if !compileCalled {
-		t.Error("CompileActionBody should have been called")
-	}
 	if u == nil {
 		t.Fatal("IntUpdate should return non-nil")
 	}
-	// The assume(true) should produce a true TR
-	if !u.TR.IsTrue() {
-		t.Errorf("expected true TR from assume(true), got %s", u.TR)
-	}
-}
-
-func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
-	// Test that the module's CompileActionBodyFn is used as fallback
-	body := actionsTestAstCfg.NewAtom("x")
-	defn := makeMacroDef("m", []string{"x"}, body)
-
-	mod := New()
-	mod.Macros = map[string]*AstDefinition{
-		"m": defn,
-	}
-
-	moduleFnCalled := false
-	mod.CompileActionBodyFn = func(node Node) (Action, error) {
-		moduleFnCalled = true
-		return NewAssumeAction(True), nil
-	}
-
-	a := NewInstantiateAction(nil)
-	a.AstInst = actionsTestAstCfg.NewAtom("m", actionsTestAstCfg.NewAtom("y"))
-
-	ctx := &UpdateContext{
-		Domain: mod,
-		PVars:  nil,
-		// No CompileActionBody set — should fall back to module's callback
-	}
-
-	u := a.IntUpdate(ctx)
-	if !moduleFnCalled {
-		t.Error("module CompileActionBodyFn should have been called")
-	}
-	if u == nil {
-		t.Fatal("IntUpdate returned nil")
+	if u.TR == nil || u.TR.IsTrue() {
+		t.Errorf("expected non-trivial TR from assume(p), got %s", u.TR)
 	}
 }
 
@@ -630,43 +580,6 @@ func TestInstantiateMacroRandomizedMissing(t *testing.T) {
 	}
 }
 
-// -----------------------------------------------------------------------
-// Integration test: UpdateContext.CompileActionBody wiring
-// -----------------------------------------------------------------------
-
-func TestUpdateContextCompileActionBodyField(t *testing.T) {
-	ctx := &UpdateContext{
-		Domain: New(),
-		PVars:  nil,
-	}
-	// Should be nil by default
-	if ctx.CompileActionBody != nil {
-		t.Error("CompileActionBody should be nil by default")
-	}
-
-	// Set it and verify it works
-	called := false
-	ctx.CompileActionBody = func(node Node) (ActionsAction, error) {
-		called = true
-		return NewSequence(), nil
-	}
-
-	act, err := ctx.CompileActionBody(actionsTestAstCfg.NewSymbol("test", nil))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !called {
-		t.Error("callback not called")
-	}
-	if act == nil {
-		t.Error("callback returned nil")
-	}
-}
-
-// -----------------------------------------------------------------------
-// Integration test: full macro expansion through IntUpdate
-// -----------------------------------------------------------------------
-
 func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	// Scenario: macro double_assume(x) = assume x
 	// Action: instantiate double_assume(p)
@@ -675,6 +588,9 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	defn := makeMacroDef("double_assume", []string{"x"}, body)
 
 	mod := New()
+	if _, err := mod.Sig.AddSymbol("p", Boolean); err != nil {
+		t.Fatalf("AddSymbol(p): %v", err)
+	}
 	mod.Macros = map[string]*AstDefinition{
 		"double_assume": defn,
 	}
@@ -683,29 +599,9 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	a := NewInstantiateAction(nil)
 	a.AstInst = actionsTestAstCfg.NewAtom("double_assume", actionsTestAstCfg.NewAtom("p"))
 
-	p := NewConst("p", Boolean)
-
 	ctx := &UpdateContext{
 		Domain: mod,
 		PVars:  nil,
-		CompileActionBody: func(node Node) (ActionsAction, error) {
-			// Verify the rewritten AST is "assume p"
-			atom, ok := node.(*Atom)
-			if !ok {
-				return nil, fmt.Errorf("expected Atom, got %T", node)
-			}
-			if atom.Rep != "assume" {
-				return nil, fmt.Errorf("expected 'assume', got %q", atom.Rep)
-			}
-			if len(atom.Terms) != 1 {
-				return nil, fmt.Errorf("expected 1 term, got %d", len(atom.Terms))
-			}
-			termAtom, ok := atom.Terms[0].(*Atom)
-			if !ok || termAtom.Rep != "p" {
-				return nil, fmt.Errorf("expected 'p', got %s", atom.Terms[0])
-			}
-			return NewAssumeAction(p), nil
-		},
 	}
 
 	u := a.IntUpdate(ctx)

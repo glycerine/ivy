@@ -2254,30 +2254,7 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	if ctx.Domain.Macros != nil && a.AstInst != nil {
 		if rewritten := instantiateMacro(a.AstInst, ctx.Domain.Macros); rewritten != nil {
 			// Python (ivy_actions.py:812): res = im.compile().int_update(domain, pvars)
-			// The monkey-patched .compile() is always available; the Go equivalent
-			// is ctx.CompileActionBody (test override) or ctx.Domain.CompileActionBodyFn
-			// (registered by ivy_compile.go:265 during IvyCompile).
-			compileFn := ctx.CompileActionBody
-			if compileFn == nil && ctx.Domain.CompileActionBodyFn != nil {
-				moduleFn := ctx.Domain.CompileActionBodyFn
-				compileFn = func(node Node) (ActionsAction, error) {
-					result, err := moduleFn(node)
-					if err != nil {
-						return nil, err
-					}
-					if act, ok := result.(ActionsAction); ok {
-						return act, nil
-					}
-					return nil, fmt.Errorf("CompileActionBodyFn returned non-Action type %T", result)
-				}
-			}
-			if compileFn == nil {
-				// Python: .compile() is monkey-patched at startup and is always
-				// present. If neither hook is set, callback registration is
-				// broken upstream.
-				panic("InstantiateAction.IntUpdate: macro matched but no CompileActionBody hook is registered")
-			}
-			compiled, err := compileFn(rewritten)
+			compiled, err := NewFromModule(ctx.Domain).CompileActionBody(rewritten)
 			if err != nil {
 				// Python would propagate the exception from im.compile().
 				panic(fmt.Sprintf("InstantiateAction.IntUpdate: compile failed for macro expansion: %v", err))
@@ -2326,13 +2303,6 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	}
 	if schemaOk {
 		if sch, ok := schema.(*AstSchema); ok {
-			compileFn := ctx.CompileWithSortInference
-			if compileFn == nil && ctx.Domain.CompileWithSortInferenceFn != nil {
-				compileFn = ctx.Domain.CompileWithSortInferenceFn
-			}
-			if compileFn == nil {
-				panic("InstantiateAction.IntUpdate: schema matched but no CompileWithSortInference hook is registered")
-			}
 			params := astArgs
 			if params == nil && len(exprArgs) > 0 {
 				params = make([]Node, len(exprArgs))
@@ -2340,7 +2310,7 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 					params[i] = arg
 				}
 			}
-			inst, err := sch.GetInstance(params, schemaCompilerFunc(compileFn), nil, false)
+			inst, err := sch.GetInstance(params, NewFromModule(ctx.Domain), nil, false)
 			if err != nil {
 				panic(fmt.Sprintf("InstantiateAction.IntUpdate: schema instance failed for %s: %v", instName, err))
 			}
@@ -2371,12 +2341,6 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	// Python: raise IvyError(inst, "instantiation of undefined: {}".format(inst.relname))
 	panic(fmt.Sprintf("instantiation of undefined: %s", instName))
-}
-
-type schemaCompilerFunc func(Node) (Node, error)
-
-func (f schemaCompilerFunc) CompileWithSortInference(node Node) (Node, error) {
-	return f(node)
 }
 
 // extractInstInfo extracts the name and args from an instantiation node.

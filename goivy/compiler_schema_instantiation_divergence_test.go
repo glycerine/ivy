@@ -151,8 +151,7 @@ func TestActionLevelSchemaInstantiationMatchesPython(t *testing.T) {
 		act := NewInstantiateAction(nil)
 		act.AstInst = inst
 		update = IntUpdate(act, &UpdateContext{
-			Domain:                   mod,
-			CompileWithSortInference: c.CompileWithSortInference,
+			Domain: mod,
 		})
 	}()
 	if update == nil || update.TR == nil {

@@ -82,34 +82,30 @@ func NewSolverFromSig(sig *Sig, opts *SolverOptions) *Solver {
 // getOrCreateModuleCache returns mod's Z3SessionCache, lazily creating
 // and attaching it on first access. For mod == nil, returns a fresh
 // per-Solver cache (no sharing — preserves legacy/test behavior).
-//
-// Stored as `any` on module.Module to avoid the module → z3bridge import
-// cycle.
 func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 	if mod == nil {
 		return NewZ3SessionCache()
 	}
-	if existing := mod.GetZ3SessionCache(); existing != nil {
-		if c, ok := existing.(*Z3SessionCache); ok {
-			return c
-		}
+	if mod.z3SessionCache != nil {
+		return mod.z3SessionCache
 	}
 	// Create new cache: reuse shared Z3Context if available (preserves
 	// z3CheckCounter across module copies — Python's _z3_check_counter
 	// is a process global that persists), otherwise create fresh.
 	var cache *Z3SessionCache
-	if sharedCtx := mod.GetZ3SharedCtx(); sharedCtx != nil {
-		if ctx, ok := sharedCtx.(*Z3Context); ok {
-			cache = NewZ3SessionCacheWithCtx(ctx)
-		}
+	if mod.z3SharedCtx != nil && mod.z3SharedCtx.ctx != nil {
+		cache = NewZ3SessionCacheWithCtx(mod.z3SharedCtx.ctx)
 	}
 	if cache == nil {
 		cache = NewZ3SessionCache()
 	}
-	mod.SetZ3SessionCache(cache)
+	mod.z3SessionCache = cache
 	// Ensure z3SharedCtx is set for future copies of this module.
-	if mod.GetZ3SharedCtx() == nil {
-		mod.SetZ3SharedCtx(cache.Ctx)
+	if mod.z3SharedCtx == nil {
+		mod.z3SharedCtx = &z3CtxHolder{}
+	}
+	if mod.z3SharedCtx.ctx == nil {
+		mod.z3SharedCtx.ctx = cache.Ctx
 	}
 	return cache
 }
@@ -150,9 +146,8 @@ func (s *Solver) Close() error {
 // get translated. When entering a new module (different signature), the
 // old Z3 translations could be stale, so Python wipes them.
 //
-// In Go, the equivalent state lives on a *Z3SessionCache attached to the
-// module.Module. Module.Enter() (context.go) calls cache.Clear() via the
-// Z3CacheClearer interface to reset that state.
+// In Go, the equivalent state lives on a *Z3SessionCache attached to Module.
+// Module.Enter() calls cache.Clear() to reset that state.
 //
 // Solver.Clear() here resets the cache associated with this Solver's
 // Translator. If the cache is shared with other Solvers (because they

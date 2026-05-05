@@ -36,17 +36,6 @@ type UpdateContext struct {
 	// the caller (typically from module.Actions or an ActionContext).
 	GetAction func(name string) ActionsAction
 
-	// CompileActionBody compiles an AST node as an action body.
-	// This callback avoids a circular import between actions and compiler.
-	// Set by callers that have access to the compiler.
-	// Used by InstantiateAction to compile macro expansions at runtime.
-	CompileActionBody func(node Node) (ActionsAction, error)
-
-	// CompileWithSortInference compiles an AST formula with sort inference.
-	// Used by action-level schema instantiation, matching Python's
-	// schema.get_instance(inst.args) path.
-	CompileWithSortInference func(node Node) (Node, error)
-
 	// CheckUnprovable corresponds to Python's check_unprovable parameter.
 	// When true, only unprovable assertions are checked.
 	CheckUnprovable bool

@@ -90,12 +90,6 @@ type Config struct {
 	// and OptSeparateSet indicates whether it was explicitly provided.
 	OptSeparateSet bool `json:"separate_set"`
 
-	// SolverClearFn is called by Module.Enter() to clear cached Z3 values
-	// when changing the active module/sig. Set by the solver package at
-	// init time. Corresponds to Python's ivy_solver.clear() call in
-	// Module.__enter__ (ivy_module.py:101).
-	SolverClearFn func() `json:"-"`
-
 	// CompleteLogic is the comma-separated logic parameter (Python: param_logic).
 	// Default is "" meaning use il.DefaultLogics. Set via CLI --complete flag
 	// or programmatically. Corresponds to Python's iu.Parameter("complete", ...).
@@ -232,8 +226,10 @@ func NewConfig() *Config {
 	iuCfg := NewIvyUtilsConfig()
 	astCfg := NewAstConfig()
 	astCfg.IuCfg = iuCfg
+	actCfg := NewModuleActionsConfig()
+	actCfg.IuCfg = iuCfg
 	return &Config{
-		ActCfg:           NewModuleActionsConfig(),
+		ActCfg:           actCfg,
 		Coverage:         true,
 		SolverOpts:       DefaultSolverOptions(),
 		GlobalIncluded:   make(map[string]bool),

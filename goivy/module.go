@@ -110,17 +110,6 @@ type Module struct {
 	// CompCfg holds the per-session compiler config.
 	CompCfg *CompilerConfig
 
-	// CompileActionBodyFn is a callback to compile an AST node as an action body.
-	// Set by the compiler after compilation. Used for runtime macro expansion
-	// in InstantiateAction.IntUpdate. Corresponds to Python's im.compile() call
-	// in InstantiateAction.int_update (ivy_actions.py:755).
-	CompileActionBodyFn func(node Node) (Action, error)
-
-	// CompileWithSortInferenceFn compiles an AST formula with sort inference.
-	// Set by the compiler for schema instantiation in actions, matching
-	// Python's schema.get_instance(...).compile_with_sort_inference() path.
-	CompileWithSortInferenceFn func(node Node) (Node, error)
-
 	// Signature (captured at module creation time)
 	Sig *Sig
 
@@ -162,16 +151,10 @@ type Module struct {
 	// (ivy_solver.py:252-260). All z3bridge.Solver instances created via
 	// NewSolver(mod, ...) share this single cache, mirroring Python's
 	// "z3.Solver() instances within a Module context share z3_sorts" rule.
-	//
-	// Stored as `any` because the concrete type *z3bridge.Z3SessionCache
-	// lives in the z3bridge package, which already imports module — so the
-	// reverse import is a cycle. Accessed only via GetZ3SessionCache /
-	// SetZ3SessionCache from z3bridge code.
-	//
 	// Cleared by Module.Enter() (mirroring Python's clear() in __enter__).
-	z3SessionCache any
+	z3SessionCache *Z3SessionCache
 
-	// z3SharedCtx holds the *z3bridge.Z3Context shared across module copies.
+	// z3SharedCtx holds the *Z3Context shared across module copies.
 	// Python's _z3_check_counter is a process-global that persists across
 	// all module copies; this field provides the equivalent in Go by
 	// letting copied modules create fresh Z3SessionCaches that reuse the
@@ -189,41 +172,7 @@ type Module struct {
 // all other copies see it. This matches Python's process-global
 // _z3_check_counter which accumulates across all module copies.
 type z3CtxHolder struct {
-	ctx any
-}
-
-// GetZ3SessionCache returns the opaque z3bridge cache attached to this
-// module, or nil. Type-assert to *z3bridge.Z3SessionCache in z3bridge code.
-func (m *Module) GetZ3SessionCache() any {
-	return m.z3SessionCache
-}
-
-// SetZ3SessionCache attaches a z3bridge cache to this module. Called by
-// z3bridge.NewSolver on first access (lazy creation).
-func (m *Module) SetZ3SessionCache(c any) {
-	m.z3SessionCache = c
-}
-
-// GetZ3SharedCtx returns the opaque *z3bridge.Z3Context shared across
-// module copies, or nil. Type-assert to *z3bridge.Z3Context in z3bridge code.
-func (m *Module) GetZ3SharedCtx() any {
-	if m.z3SharedCtx == nil {
-		return nil
-	}
-	return m.z3SharedCtx.ctx
-}
-
-// SetZ3SharedCtx attaches a shared Z3Context to this module. Called by
-// z3bridge.getOrCreateModuleCache on first cache creation so that future
-// Module.Copy() calls propagate the Z3Context (and its z3CheckCounter).
-// Because z3SharedCtx is a *z3CtxHolder shared by pointer across copies,
-// setting ctx on any copy makes it visible to all copies from the same
-// New() family.
-func (m *Module) SetZ3SharedCtx(ctx any) {
-	if m.z3SharedCtx == nil {
-		m.z3SharedCtx = &z3CtxHolder{}
-	}
-	m.z3SharedCtx.ctx = ctx
+	ctx *Z3Context
 }
 
 // NamedAction pairs a name with an action.
@@ -533,10 +482,8 @@ func (m *Module) Copy() *Module {
 		c.Interps[k] = append([]Node{}, v...)
 	}
 
-	// Shared pointers / callbacks (Python: copy.copy does shallow copy)
+	// Shared per-session pointers (Python: copy.copy does shallow copy)
 	c.CompCfg = m.CompCfg
-	c.CompileActionBodyFn = m.CompileActionBodyFn
-	c.CompileWithSortInferenceFn = m.CompileWithSortInferenceFn
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory
 	c.z3SharedCtx = m.z3SharedCtx
