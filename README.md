@@ -2693,4 +2693,4 @@ OK
  (goivy-venv) jaten@aorus ~/ivy/goivy (master) $
 ~~~ 
 
-atg after collapse of most into one package.
+atg after collapse of most into one package. golden 2 hrs looks good.
