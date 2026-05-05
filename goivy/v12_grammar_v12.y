@@ -8,33 +8,32 @@
 // - Simpler precedence table (12 levels)
 
 %{
-package v12
+package goivy
 
 import (
 	"fmt"
-	"github.com/glycerine/ivy/goivy/ast"
 )
 
-func lalr12AtypeToString(n ast.Node) string {
+func lalr12AtypeToString(n Node) string {
 	switch v := n.(type) {
-	case *ast.Symbol:
+	case *Symbol:
 		return v.Rep
-	case *ast.This:
+	case *This:
 		return "this"
 	default:
 		return fmt.Sprint(n)
 	}
 }
 
-func lalr12Acfg(lex lalr12Lexer) *ast.AstConfig {
+func lalr12Acfg(lex lalr12Lexer) *AstConfig {
 	return lex.(*lalr12LexAdapter).cfg
 }
 
 %}
 
 %union {
-	node     ast.Node
-	nodes    []ast.Node
+	node     Node
+	nodes    []Node
 	str      string
 }
 
@@ -99,13 +98,13 @@ aterm:
     { $$ = lalr12Acfg(lalr12lex).NewAtom($1) }
     | aterm LALR12_TOK_LPAREN terms LALR12_TOK_RPAREN
     {
-        a := $1.(*ast.Atom)
+        a := $1.(*Atom)
         a.Terms = append(a.Terms, $3...)
         $$ = a
     }
     | aterm LALR12_TOK_COLON SYMBOLx
     {
-        lhs := $1.(*ast.Atom)
+        lhs := $1.(*Atom)
         $$ = lalr12Acfg(lalr12lex).NewAtom(lhs.Rep + ":" + $3, lhs.Terms...)
     }
     ;
@@ -126,14 +125,14 @@ simplevar:
 
 vars:
     var
-    { $$ = []ast.Node{$1} }
+    { $$ = []Node{$1} }
     | vars LALR12_TOK_COMMA var
     { $$ = append($1, $3) }
     ;
 
 simplevars:
     simplevar
-    { $$ = []ast.Node{$1} }
+    { $$ = []Node{$1} }
     | simplevars LALR12_TOK_COMMA simplevar
     { $$ = append($1, $3) }
     ;
@@ -142,7 +141,7 @@ terms:
     /* empty */
     { $$ = nil }
     | term
-    { $$ = []ast.Node{$1} }
+    { $$ = []Node{$1} }
     | terms LALR12_TOK_COMMA term
     { $$ = append($1, $3) }
     ;

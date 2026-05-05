@@ -26,13 +26,8 @@ conjecture link(X,Y) -> ~semaphore(Y)
 
 // pyBackendAvailable checks whether the Python sidecar can start.
 func pyBackendAvailable() bool {
-	root := os.Getenv("PYIVY_ROOT")
-	if root == "" {
-		home, _ := os.UserHomeDir()
-		root = filepath.Join(home, "ivy", "pyivy", "ivy", "ivy")
-	}
-	// ~/ivy/pyivy/ivy/ivy/z3/
-	z3Dir := filepath.Join(root, "z3")
+	root := pyIvyRoot()
+	z3Dir := filepath.Join(root, "ivy", "z3")
 	if _, err := os.Stat(z3Dir); err != nil {
 		return false
 	}

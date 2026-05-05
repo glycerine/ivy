@@ -10,19 +10,18 @@
 //   < PLUS/MINUS < TIMES/DIV < DOLLAR < OLD < DOT
 
 %{
-package parser
+package goivy
 
 import (
 	"fmt"
 	"path/filepath"
 	"strings"
-	"github.com/glycerine/ivy/goivy/ast"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
+
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
-func parser17Acfg(lex parser17Lexer) *ast.AstConfig {
+// acfg extracts the *AstConfig from the lexer for use in grammar actions.
+func parser17Acfg(lex parser17Lexer) *AstConfig {
 	return lex.(*parser17LexAdapter).astCfg
 }
 
@@ -30,10 +29,10 @@ func parser17Acfg(lex parser17Lexer) *ast.AstConfig {
 // See newIvyAccum(parent, parentObjName) in ivy_module.go.
 
 // getLineno returns a Location for the current token position.
-// Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
-func getLineno(lex *parser17LexAdapter) ast.Location {
+// Matches Python's get_lineno(p, n) → Location(filename, p.lineno(n)).
+func getLineno(lex *parser17LexAdapter) Location {
 	//xtracer.Trace("parser.get_lineno ENTER")
-	return ast.Location{
+	return Location{
 		//Filename: normalizeFilename(lex.filename),
                 // xtracer.NormalizeLine handles IVY_EXAMPLES too:
                 Filename: xtracer.NormalizeLine(lex.filename),
@@ -46,7 +45,7 @@ func getLineno(lex *parser17LexAdapter) ast.Location {
 // Python: stores the raw path; the golden test normalizes for display.
 // For hashing, both sides must agree, so we normalize here.
 func normalizeFilename(f string) string {
-	stdDir := iu.NewIvyUtilsConfig().GetStdIncludeDir()
+	stdDir := NewIvyUtilsConfig().GetStdIncludeDir()
 	if stdDir == "" {
 		return f
 	}
@@ -62,7 +61,7 @@ func normalizeFilename(f string) string {
 }
 
 // newLabel generates a unique label with the given prefix, matching Python newlabel().
-func newLabel(cfg *ast.AstConfig, pref string) *ast.Atom {
+func newLabel(cfg *AstConfig, pref string) *Atom {
 	xtracer.Trace("parser.newlabel ENTER")
 	cfg.LabelCounter++
 	return cfg.NewAtom(fmt.Sprintf("%s%d", pref, cfg.LabelCounter))
@@ -70,7 +69,7 @@ func newLabel(cfg *ast.AstConfig, pref string) *ast.Atom {
 
 // addLabel adds a label to a LabeledFormula if it doesn't have one.
 // Matches Python addlabel() (ivy_parser.py:443-448).
-func parser17AddLabel(cfg *ast.AstConfig, lf *ast.LabeledFormula, pref string) *ast.LabeledFormula {
+func parser17AddLabel(cfg *AstConfig, lf *LabeledFormula, pref string) *LabeledFormula {
 	xtracer.Trace("parser.addlabel ENTER")
 	if lf.Label != nil {
 		return lf
@@ -84,7 +83,7 @@ func parser17AddLabel(cfg *ast.AstConfig, lf *ast.LabeledFormula, pref string) *
 
 // mkLF wraps a node in a LabeledFormula with no label.
 // Matches Python mk_lf (ivy_parser.py:1187).
-func parser17MkLF(cfg *ast.AstConfig, x ast.Node) *ast.LabeledFormula {
+func parser17MkLF(cfg *AstConfig, x Node) *LabeledFormula {
 	xtracer.Trace("parser.mk_lf ENTER")
 	lf := cfg.NewLabeledFormula(nil, x)
 	if x != nil && x.GetLineno().Line > 0 {
@@ -97,13 +96,13 @@ func parser17MkLF(cfg *ast.AstConfig, x ast.Node) *ast.LabeledFormula {
 // Matches Python check_non_temporal() (ivy_parser.py:231-248).
 // For LabeledFormula, recursively checks the formula part.
 // Reports an error if temporal operators are found.
-func checkNonTemporal(x ast.Node) ast.Node {
+func checkNonTemporal(x Node) Node {
 	xtracer.Trace("parser.check_non_temporal ENTER")
-	if lf, ok := x.(*ast.LabeledFormula); ok {
+	if lf, ok := x.(*LabeledFormula); ok {
 		checkNonTemporal(lf.Formula)
 		return x
 	}
-	if ast.HasTemporal(x) {
+	if HasTemporal(x) {
 		// TODO: report_error(IvyError(x, "non-temporal formula expected"))
 		fmt.Printf("warning: non-temporal formula expected\n")
 	}
@@ -112,7 +111,7 @@ func checkNonTemporal(x ast.Node) ast.Node {
 
 // addUnprovable marks a LabeledFormula as unprovable if cond is non-nil.
 // Matches Python addunprovable() (ivy_parser.py:453-457).
-func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
+func addUnprovable(lf *LabeledFormula, cond Node) *LabeledFormula {
 	xtracer.Trace("parser.addunprovable ENTER")
 	if cond != nil {
 		lf.Unprovable = true
@@ -122,7 +121,7 @@ func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
 
 // addTemporal marks a LabeledFormula as temporal.
 // Matches Python addtemporal() (ivy_parser.py:438-441).
-func addTemporal(lf *ast.LabeledFormula) *ast.LabeledFormula {
+func addTemporal(lf *LabeledFormula) *LabeledFormula {
 	xtracer.Trace("parser.addtemporal ENTER")
 	t := true
 	lf.Temporal = &t
@@ -131,7 +130,7 @@ func addTemporal(lf *ast.LabeledFormula) *ast.LabeledFormula {
 
 // addExplicit marks a LabeledFormula as explicit.
 // Matches Python addexplicit() (ivy_parser.py:459-462).
-func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
+func addExplicit(lf *LabeledFormula) *LabeledFormula {
 	xtracer.Trace("parser.addexplicit ENTER")
 	lf.Explicit = true
 	return lf
@@ -140,10 +139,10 @@ func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
 // nodeLineno extracts the Location from a Node's GetLineno().
 // Used when we need the line of a child node instead of lastTok (which is the lookahead).
 // Emits the get_lineno trace to match Python's get_lineno(p, n) call.
-func nodeLineno(n ast.Node) ast.Location {
+func nodeLineno(n Node) Location {
 	//xtracer.Trace("parser.get_lineno ENTER")
 	if n == nil {
-		return ast.Location{}
+		return Location{}
 	}
 	loc := n.GetLineno()
 	loc.Filename = xtracer.NormalizeLine(loc.Filename)
@@ -151,12 +150,12 @@ func nodeLineno(n ast.Node) ast.Location {
 }
 
 // atypeToString extracts the string sort name from an atype Node.
-// Python atype returns a plain string; Go atype returns *ast.Symbol or *ast.This.
-func parser17AtypeToString(n ast.Node) string {
+// Python atype returns a plain string; Go atype returns *Symbol or *This.
+func parser17AtypeToString(n Node) string {
 	switch v := n.(type) {
-	case *ast.Symbol:
+	case *Symbol:
 		return v.Rep
-	case *ast.This:
+	case *This:
 		return "this"
 	default:
 		return fmt.Sprint(n)
@@ -165,12 +164,12 @@ func parser17AtypeToString(n ast.Node) string {
 
 // atypeToAtom converts an atype Node (Symbol or This) into an Atom,
 // matching Python's Atom(p[n]) where atype returns a string.
-// Python atype returns a string; Go atype returns *ast.Symbol or *ast.This.
-func atypeToAtom(cfg *ast.AstConfig, n ast.Node) *ast.Atom {
+// Python atype returns a string; Go atype returns *Symbol or *This.
+func atypeToAtom(cfg *AstConfig, n Node) *Atom {
 	switch v := n.(type) {
-	case *ast.Symbol:
+	case *Symbol:
 		return cfg.NewAtom(v.Rep)
-	case *ast.This:
+	case *This:
 		return cfg.NewAtom("this")
 	default:
 		return cfg.NewAtom(fmt.Sprint(n))
@@ -179,19 +178,19 @@ func atypeToAtom(cfg *ast.AstConfig, n ast.Node) *ast.Atom {
 
 // makeMixinName generates a unique mixin name.
 // Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
-func makeMixinName(cfg *ast.AstConfig, atom *ast.Atom, suffix string) *ast.Atom {
+func makeMixinName(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
 	cfg.LabelCounter++
-	// Python: name = atom.rep.replace(iu.ivy_compose_character, '_') + '[' + suffix + str(label_counter) + ']'
+	// Python: name = atom.rep.replace(ivy_compose_character, '_') + '[' + suffix + str(label_counter) + ']'
 	rep := strings.ReplaceAll(atom.Rep, ".", "_")
 	return cfg.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, cfg.LabelCounter))
 }
 
 // handleMixin declares a mixin (before/after/implement).
 // Matches Python handle_mixin() (ivy_parser.py:2083-2090).
-func handleMixin(cfg *ast.AstConfig, kind string, mixer *ast.Atom, mixee *ast.Atom, ivy *ivyAccum) {
+func handleMixin(cfg *AstConfig, kind string, mixer *Atom, mixee *Atom, ivy *ivyAccum) {
 	xtracer.Trace("parser.handle_mixin ENTER")
-	var m ast.Node
+	var m Node
 	switch kind {
 	case "before":
 		m = cfg.NewMixinBeforeDef(mixer, mixee)
@@ -213,7 +212,7 @@ func handleMixin(cfg *ast.AstConfig, kind string, mixer *ast.Atom, mixee *ast.At
 // Matches Python infer_action_params() (ivy_parser.py:2093-2103).
 // stackActionLookup searches the accumulator stack for an action definition.
 // Matches Python stack_action_lookup() (ivy_parser.py:125-133).
-func stackActionLookup(ivy *ivyAccum, name string) (ast.Node, int) {
+func stackActionLookup(ivy *ivyAccum, name string) (Node, int) {
 	xtracer.Trace("parser.stack_action_lookup ENTER")
 	params := 0
 	for cur := ivy; cur != nil; cur = cur.parent {
@@ -228,7 +227,7 @@ func stackActionLookup(ivy *ivyAccum, name string) (ast.Node, int) {
 	return nil, 0
 }
 
-func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, returns []ast.Node) ([]ast.Node, []ast.Node) {
+func inferActionParams(ivy *ivyAccum, actname string, formals []Node, returns []Node) ([]Node, []Node) {
 	xtracer.Trace("parser.infer_action_params ENTER")
 	mixee, numParams := stackActionLookup(ivy, actname)
 	if mixee == nil {
@@ -236,7 +235,7 @@ func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, return
 	}
 	// Python: if ("common" in mixee.attributes) != ("common" in stack[-1].attributes):
 	//             return formals, returns
-	mixeeDef, ok := mixee.(*ast.ActionDef)
+	mixeeDef, ok := mixee.(*ActionDef)
 	if !ok {
 		return formals, returns
 	}
@@ -260,7 +259,7 @@ func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, return
 	return formals, returns
 }
 
-func handleBeforeAfter(cfg *ast.AstConfig, kind string, atom *ast.Atom, action ast.Node, ivy *ivyAccum, optargs []ast.Node, optreturns []ast.Node) {
+func handleBeforeAfter(cfg *AstConfig, kind string, atom *Atom, action Node, ivy *ivyAccum, optargs []Node, optreturns []Node) {
 	xtracer.Trace("parser.handle_before_after ENTER")
 	mixer := makeMixinName(cfg, atom, kind)
 	optargs, optreturns = inferActionParams(ivy, atom.Rep, optargs, optreturns)
@@ -278,7 +277,7 @@ func handleBeforeAfter(cfg *ast.AstConfig, kind string, atom *ast.Atom, action a
 
 // parseNativequote parses a native code block, splitting on backtick-delimited references.
 // Matches Python parse_nativequote() (ivy_parser.py:2457-2470).
-func parseNativequote(cfg *ast.AstConfig, raw string, lex *parser17LexAdapter) (string, []ast.Node) {
+func parseNativequote(cfg *AstConfig, raw string, lex *parser17LexAdapter) (string, []Node) {
 	xtracer.Trace("parser.parse_nativequote ENTER")
 	// Drop the <<< and >>> quotation marks
 	s := raw
@@ -286,7 +285,7 @@ func parseNativequote(cfg *ast.AstConfig, raw string, lex *parser17LexAdapter) (
 		s = s[3 : len(s)-3]
 	}
 	fields := strings.Split(s, "`")
-	var bqs []ast.Node
+	var bqs []Node
 	for idx, f := range fields {
 		if idx%2 == 1 {
 			if f == "this" {
@@ -312,16 +311,16 @@ func parseNativequote(cfg *ast.AstConfig, raw string, lex *parser17LexAdapter) (
 
 // methcall matches Python methcall(lhs, rhs) at ivy_parser.py:3034-3038.
 // If lhs is an App or Atom with no args, compose; otherwise create MethodCall.
-func methcall(cfg *ast.AstConfig, lhs, rhs ast.Node) ast.Node {
+func methcall(cfg *AstConfig, lhs, rhs Node) Node {
 	xtracer.Trace("parser.methcall ENTER")
 	switch l := lhs.(type) {
-	case *ast.App:
+	case *App:
 		if len(l.Terms) == 0 {
-			return ast.ComposeAtomsGeneric(l, rhs)
+			return ComposeAtomsGeneric(l, rhs)
 		}
-	case *ast.Atom:
+	case *Atom:
 		if len(l.Terms) == 0 {
-			return ast.ComposeAtomsGeneric(l, rhs)
+			return ComposeAtomsGeneric(l, rhs)
 		}
 	}
 	return cfg.NewMethodCall(lhs, rhs)
@@ -329,17 +328,17 @@ func methcall(cfg *ast.AstConfig, lhs, rhs ast.Node) ast.Node {
 
 // fixIfPart handles the `some` condition case in if/while actions.
 // Matches Python fix_if_part() (ivy_parser.py:2932-2938).
-func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
+func fixIfPart(cond Node, part Node) Node {
 	xtracer.Trace("parser.fix_if_part ENTER")
 	// Python: isinstance(cond, Some) — matches Some, SomeMin, SomeMax (all subclasses).
 	// Extract params from whichever type matches.
-	var params []ast.Node
+	var params []Node
 	switch s := cond.(type) {
-	case *ast.AstSome:
+	case *AstSome:
 		params = s.Params
-	case *ast.AstSomeMin:
+	case *AstSomeMin:
 		params = s.Params
-	case *ast.AstSomeMax:
+	case *AstSomeMax:
 		params = s.Params
 	}
 	if params != nil {
@@ -347,13 +346,13 @@ func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
 		for _, p := range params {
 			// Python: subst = dict((x.rep[4:],x.rep) for x in args)
 			// Params can be App, Atom, Variable, etc. — use NodeRep generically.
-			rep := ast.NodeRep(p)
+			rep := NodeRep(p)
 			if len(rep) > 4 {
 				subst[rep[4:]] = rep
 			}
 		}
 		if len(subst) > 0 {
-			part = ast.SubstPrefixAtomsAst(part, subst, nil, nil, nil)
+			part = SubstPrefixAtomsAst(part, subst, nil, nil, nil)
 		}
 	}
 	return part
@@ -362,16 +361,16 @@ func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
 // createObject processes an object declaration by expanding its body
 // with prefix substitution via instMod.
 // Matches Python create_object() (ivy_parser.py:678-693) EXACTLY.
-func createObject(cfg *ast.AstConfig, top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *ivyAccum, lineno ast.Location, continuation bool) {
+func createObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs []Node, module *ivyAccum, lineno Location, continuation bool) {
 	xtracer.Trace("parser.create_object ENTER name=%s", name.Rep)
 
 	// Python line 680: prefargs = [Variable('V'+str(idx),pr.sort) for idx,pr in enumerate(objectargs)]
-	var prefargs []ast.Node
+	var prefargs []Node
 	for idx, pr := range objectargs {
 		vname := fmt.Sprintf("V%d", idx)
 		var sort string
-		if a, ok := pr.(*ast.Atom); ok && a.ASort != nil {
-			if sym, ok := a.ASort.(*ast.Symbol); ok {
+		if a, ok := pr.(*Atom); ok && a.ASort != nil {
+			if sym, ok := a.ASort.(*Symbol); ok {
 				sort = sym.Rep
 			} else {
 				sort = fmt.Sprint(a.ASort)
@@ -392,11 +391,11 @@ func createObject(cfg *ast.AstConfig, top *ivyAccum, name *ast.Atom, objectargs 
 	}
 
 	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
-	vsubst := make(map[string]*ast.Variable)
+	vsubst := make(map[string]*AstVariable)
 	for i, pr := range objectargs {
 		if i < len(prefargs) {
 			prName := nodeRep(pr)
-			if v, ok := prefargs[i].(*ast.Variable); ok {
+			if v, ok := prefargs[i].(*AstVariable); ok {
 				vsubst[prName] = v
 			}
 		}
@@ -418,9 +417,9 @@ type TokenInfo struct {
 // tokLineno creates a Location from a TokenInfo, using the normalized filename
 // from the lex adapter. This replaces getLineno for cases where we have direct
 // access to the token's position.
-func tokLineno(lex *parser17LexAdapter, tok TokenInfo) ast.Location {
+func tokLineno(lex *parser17LexAdapter, tok TokenInfo) Location {
         //xtracer.Trace("parser.get_lineno ENTER")
-	return ast.Location{
+	return Location{
 		Filename: xtracer.NormalizeLine(lex.filename),
 		Line:     tok.Line,
 	}
@@ -430,8 +429,8 @@ func tokLineno(lex *parser17LexAdapter, tok TokenInfo) ast.Location {
 
 // The union type for semantic values.
 %union {
-	node     ast.Node
-	nodes    []ast.Node
+	node     Node
+	nodes    []Node
 	str      string
 	tok      TokenInfo
 	bval     bool
@@ -762,7 +761,7 @@ top:
     {
         xtracer.Trace("parser.p_top_axiom_optlabel_gprop ENTER (top)")
         $$ = $1
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $5.(*ast.LabeledFormula), "axiom")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $5.(*LabeledFormula), "axiom")
         // Python: lf = addexplicit(lf) if p[2] else lf  (explicit first)
         if $2 != nil {
             lf = addExplicit(lf)
@@ -782,7 +781,7 @@ top:
     {
         xtracer.Trace("parser.p_top_property_labeledfmla ENTER (top)")
         $$ = $1
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $5.(*ast.LabeledFormula), "prop")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $5.(*LabeledFormula), "prop")
         // Python: lf = addtemporal(lf) if p[3] else check_non_temporal(lf)
         if $3 != nil {
             lf = addTemporal(lf)
@@ -808,7 +807,7 @@ top:
     {
         xtracer.Trace("parser.p_top_conjecture_labeledfmla ENTER (top)")
         $$ = $1
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "conj")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "conj")
         d := parser17Acfg(parser17lex).NewConjectureDecl(lf)
         d.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$.declare(d)
@@ -818,7 +817,7 @@ top:
     {
         xtracer.Trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         $$ = $1
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $4.(*ast.LabeledFormula), "invar")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $4.(*LabeledFormula), "invar")
         lf.Unprovable = false
         if $2 != nil {
             lf.Explicit = true
@@ -835,7 +834,7 @@ top:
     {
         xtracer.Trace("parser.p_top_unprovable_invariant_labeledfmla ENTER (top)")
         $$ = $1
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $4.(*ast.LabeledFormula), "invar")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $4.(*LabeledFormula), "invar")
         lf.Unprovable = true
         lf.Explicit = true
         d := parser17Acfg(parser17lex).NewConjectureDecl(lf)
@@ -856,20 +855,20 @@ top:
         modAccum := $9
         // Store ivyAccum directly as module body, matching Python where p[9] (Ivy instance)
         // is stored in Definition(name, ivy_instance). This preserves .objects, .defined, .static.
-        d := parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($5), modAccum)
+        d := parser17Acfg(parser17lex).NewDefinition(AppToAtom($5), modAccum)
         $$.declare(parser17Acfg(parser17lex).NewModuleDecl(d))
         // Python: if p[4] == "isolate": ... with get_lineno(p,2) on this, iso, d.args[0], d
         if $4 != nil {
-            if catAtom, ok := $4.(*ast.Atom); ok && catAtom.Rep == "isolate" {
+            if catAtom, ok := $4.(*Atom); ok && catAtom.Rep == "isolate" {
                 thisAtom := parser17Acfg(parser17lex).NewAtom("this")
                 thisAtom.SetLineno(tokLineno(lex, $2))
                 iso := parser17Acfg(parser17lex).NewAtom("iso")
                 iso.SetLineno(tokLineno(lex, $2))
-                isoElems := append([]ast.Node{iso, thisAtom}, $6...)
+                isoElems := append([]Node{iso, thisAtom}, $6...)
                 isoDef := parser17Acfg(parser17lex).NewIsolateDef(isoElems, len($6))
                 isoDef.SetLineno(tokLineno(lex, $2))
                 isoDecl := parser17Acfg(parser17lex).NewIsolateDecl(isoDef)
-                isoDecl.Attributes = []ast.Node{parser17Acfg(parser17lex).NewAtom("common")}
+                isoDecl.Attributes = []Node{parser17Acfg(parser17lex).NewAtom("common")}
                 isoDecl.SetLineno(tokLineno(lex, $2))
                 modAccum.declare(isoDecl)
             }
@@ -884,7 +883,7 @@ top:
         xtracer.Trace("parser.p_top_object_symbol_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         objAccum := $8
-        pref := $3.(*ast.Atom)
+        pref := $3.(*Atom)
         lineno := nodeLineno($3)
         createObject(parser17Acfg(parser17lex), $$, pref, $4, objAccum, lineno, $7)
         // Python: create_object does stack.pop() at ivy_parser.py:692
@@ -919,7 +918,7 @@ top:
         }
 
         // Python: create_object(p[0], p[3], p[4], p[8], get_lineno(p,3), p[7])
-        createObject(parser17Acfg(parser17lex), $$, $3.(*ast.Atom), $4, objAccum, nodeLineno($3), $7)
+        createObject(parser17Acfg(parser17lex), $$, $3.(*Atom), $4, objAccum, nodeLineno($3), $7)
 
         // Python: stack.pop() equivalent
         lex.accum = $$
@@ -947,19 +946,19 @@ top:
 
         // Python: vdfn = VariantDef(scnst, Atom(p[5]))
         // Python: p[9].declare(VariantDecl(vdfn))
-        vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Acfg(parser17lex).NewAtom(ast.NodeRep($5)))
+        vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Acfg(parser17lex).NewAtom(NodeRep($5)))
         objAccum.declare(parser17Acfg(parser17lex).NewVariantDecl(vdfn))
 
         // Python: p[9].decls = p[9].decls[-2:] + p[9].decls[:-2]
         if n := len(objAccum.decls); n > 2 {
-            rotated := make([]ast.Node, n)
+            rotated := make([]Node, n)
             copy(rotated, objAccum.decls[n-2:])
             copy(rotated[2:], objAccum.decls[:n-2])
             objAccum.decls = rotated
         }
 
         // Python: create_object(p[0], p[3], [], p[9], get_lineno(p,3), p[8])
-        createObject(parser17Acfg(parser17lex), $$, $3.(*ast.Atom), []ast.Node{}, objAccum, nodeLineno($3), $8)
+        createObject(parser17Acfg(parser17lex), $$, $3.(*Atom), []Node{}, objAccum, nodeLineno($3), $8)
 
         // Python: stack.pop() equivalent
         lex.accum = $$
@@ -973,7 +972,7 @@ top:
         // Python: if p[2]: foo = DefinitionSchema(*foo.args); foo.lineno = p[5].lineno
         gdefn := $5
         if $2 != nil { // optexplicit is True
-            if def, ok := gdefn.(*ast.AstDefinition); ok {
+            if def, ok := gdefn.(*AstDefinition); ok {
                 ds := parser17Acfg(parser17lex).NewDefinitionSchema(*def)
                 ds.SetLineno(def.GetLineno())
                 gdefn = ds
@@ -1081,7 +1080,7 @@ top:
     {
         xtracer.Trace("parser.p_top_derived_defns ENTER (top)")
         $$ = $1
-        args := make([]ast.Node, len($3))
+        args := make([]Node, len($3))
         for i, x := range $3 {
             args[i] = parser17AddLabel(parser17Acfg(parser17lex), parser17MkLF(parser17Acfg(parser17lex), x), "def")
         }
@@ -1094,10 +1093,10 @@ top:
         xtracer.Trace("parser.p_top_type_symbol ENTER (top)")
         $$ = $1
         lex := parser17lex.(*parser17LexAdapter)
-        scnst := parser17Acfg(parser17lex).NewAtom($5.(*ast.Atom).Rep)
+        scnst := parser17Acfg(parser17lex).NewAtom($5.(*Atom).Rep)
         scnst.SetLineno(nodeLineno($5))
         // Python: tdfn = (GhostTypeDef if p[3] else TypeDef)(scnst, UninterpretedSort())
-        var tdfnNode ast.Node
+        var tdfnNode Node
         if $3 { // optghost
             gt := parser17Acfg(parser17lex).NewGhostTypeDef(*parser17Acfg(parser17lex).NewTypeDef(scnst, parser17Acfg(parser17lex).NewUninterpretedSortAST()))
             if $2 { gt.Finite = true }
@@ -1118,12 +1117,12 @@ top:
         xtracer.Trace("parser.p_top_type_symbol_eq_sort ENTER (top)")
         $$ = $1
         lex := parser17lex.(*parser17LexAdapter)
-        scnst := parser17Acfg(parser17lex).NewAtom($5.(*ast.Atom).Rep)
+        scnst := parser17Acfg(parser17lex).NewAtom($5.(*Atom).Rep)
         scnst.SetLineno(nodeLineno($5))
 
         // Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
         sortNode := $7
-        _, isRange := sortNode.(*ast.AstRange)
+        _, isRange := sortNode.(*AstRange)
         if isRange {
             sortNode = parser17Acfg(parser17lex).NewUninterpretedSortAST()
         }
@@ -1132,7 +1131,7 @@ top:
         tdfn := parser17Acfg(parser17lex).NewTypeDef(scnst, sortNode)
         if $2 { tdfn.Finite = true }
         tdfn.SetLineno(tokLineno(lex, $6))
-        var tdfnNode ast.Node = tdfn
+        var tdfnNode Node = tdfn
         if $3 {
             tdfnNode = parser17Acfg(parser17lex).NewGhostTypeDef(*tdfn)
         }
@@ -1216,7 +1215,7 @@ top:
     {
         xtracer.Trace("parser.p_top_macro_atom_eq_lcb_action_rcb ENTER (top)")
         $$ = $1
-        d := parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($3), $5)
+        d := parser17Acfg(parser17lex).NewDefinition(AppToAtom($3), $5)
         md := parser17Acfg(parser17lex).NewMacroDecl(d)
         $$.declare(md)
     }
@@ -1229,13 +1228,13 @@ top:
         // Python almost always has lineno set, so get_lineno rarely fires.
         // Match Python by checking HasLoc on the base node.
         adef := $7
-        var lineno ast.Location
+        var lineno Location
         if adef != nil {
             if b, ok := adef.(interface{ HasLocSet() bool }); ok && b.HasLocSet() {
                 lineno = adef.GetLineno()
             }
         }
-        if lineno == (ast.Location{}) {
+        if lineno == (Location{}) {
             lineno = tokLineno(parser17lex.(*parser17LexAdapter), $4)
         }
 
@@ -1251,15 +1250,15 @@ top:
             selfArg.ASort = parser17Acfg(parser17lex).NewThis()
             selfArg.SetLineno(lineno)
             // Python: formals = [arg0] + formals
-            formals = append([]ast.Node{selfArg}, formals...)
+            formals = append([]Node{selfArg}, formals...)
         }
 
         // Python: if isinstance(adef, CrashAction):
         //             adef = adef.clone([Atom(This(), formals)])
-        if ca, ok := adef.(*ast.AstCrashAction); ok {
+        if ca, ok := adef.(*AstCrashAction); ok {
             thisAtom := parser17Acfg(parser17lex).NewAtom("this", formals...)
             thisAtom.SetLineno(lineno)
-            adef = ca.Clone([]ast.Node{thisAtom})
+            adef = ca.Clone([]Node{thisAtom})
         }
 
         theAtom := parser17Acfg(parser17lex).NewAtom($4.Val)
@@ -1298,7 +1297,7 @@ top:
     {
         xtracer.Trace("parser.p_top_before_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
-        atom := parser17Acfg(parser17lex).NewAtom($3.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($3.(*Symbol).Rep)
         atom.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         handleBeforeAfter(parser17Acfg(parser17lex), "before", atom, $6, $$, $4, $5)
     }
@@ -1307,7 +1306,7 @@ top:
     {
         xtracer.Trace("parser.p_top_after_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
-        atom := parser17Acfg(parser17lex).NewAtom($3.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($3.(*Symbol).Rep)
         atom.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         handleBeforeAfter(parser17Acfg(parser17lex), "after", atom, $6, $$, $4, $5)
     }
@@ -1316,7 +1315,7 @@ top:
     {
         xtracer.Trace("parser.p_top_around_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
-        atom := parser17Acfg(parser17lex).NewAtom($3.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($3.(*Symbol).Rep)
         aroundLoc := tokLineno(parser17lex.(*parser17LexAdapter), $2)
         before := parser17MakeSequence(parser17Acfg(parser17lex), $7)
         after := parser17MakeSequence(parser17Acfg(parser17lex), $10)
@@ -1355,7 +1354,7 @@ top:
     {
         xtracer.Trace("parser.p_top_implement_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
-        atom := parser17Acfg(parser17lex).NewAtom($3.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($3.(*Symbol).Rep)
         atom.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         handleBeforeAfter(parser17Acfg(parser17lex), "implement", atom, $6, $$, $4, $5)
     }
@@ -1372,7 +1371,7 @@ top:
         a2 := parser17Acfg(parser17lex).NewAtom($6.Val)
         a2.SetLineno(tokLineno(lex, $6))
         // Python: impl = ImplementTypeDef(a1,a2); impl.lineno = get_lineno(p,5)
-        impl := parser17Acfg(parser17lex).NewImplementTypeDef([]ast.Node{a1, a2})
+        impl := parser17Acfg(parser17lex).NewImplementTypeDef([]Node{a1, a2})
         impl.SetLineno(tokLineno(lex, $5))
         // Python: d = ImplementTypeDecl(mk_lf(impl)); d.lineno = get_lineno(p,2)
         d := parser17Acfg(parser17lex).NewImplementTypeDecl(parser17MkLF(parser17Acfg(parser17lex), impl))
@@ -1388,7 +1387,7 @@ top:
         // Python: ty = TrustedIsolateDef if p[2] else IsolateDef
         // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7])))
         nameAtom := parser17Acfg(parser17lex).NewAtom($4.Val, $5...)
-        elems := append([]ast.Node{nameAtom}, $7...)
+        elems := append([]Node{nameAtom}, $7...)
         idef := parser17Acfg(parser17lex).NewIsolateDef(elems, 0)
         idef.Trusted = $2
         idef.Elems[0].SetLineno(tokLineno(lex, $3))
@@ -1405,7 +1404,7 @@ top:
         // Python: ty = TrustedIsolateDef if p[2] else IsolateDef
         // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7] + p[9])))
         nameAtom := parser17Acfg(parser17lex).NewAtom($4.Val, $5...)
-        elems := append(append([]ast.Node{nameAtom}, $7...), $9...)
+        elems := append(append([]Node{nameAtom}, $7...), $9...)
         idef := parser17Acfg(parser17lex).NewIsolateDef(elems, len($9))
         idef.Trusted = $2
         idef.Elems[0].SetLineno(tokLineno(lex, $3))
@@ -1427,7 +1426,7 @@ top:
         // Python: df = ty(*([Atom(p[4],p[5]),Atom(p[4],p[5])]+p[10]))
         a1 := parser17Acfg(parser17lex).NewAtom($4.Val, $5...)
         a2 := parser17Acfg(parser17lex).NewAtom($4.Val, $5...)
-        elems := append([]ast.Node{a1, a2}, $10...)
+        elems := append([]Node{a1, a2}, $10...)
         idef := parser17Acfg(parser17lex).NewIsolateDef(elems, len($10))
         idef.Trusted = $2
         idef.IsObject = true
@@ -1445,14 +1444,14 @@ top:
         $$ = $1
         lex := parser17lex.(*parser17LexAdapter)
         objAccum := $7
-        pref := $3.(*ast.Atom)
+        pref := $3.(*Atom)
         // Python: create_object(p[0],p[3],p[4],p[7],get_lineno(p,3))
         createObject(parser17Acfg(parser17lex), $$, pref, $4, objAccum, nodeLineno($3), false)
         // Python: ty = ProcessDef
         // Python: d = IsolateObjectDecl(ty(*([Atom(p[3],p[4]),Atom(p[3],p[4])]+p[9])))
         a1 := parser17Acfg(parser17lex).NewAtom(pref.Rep, $4...)
         a2 := parser17Acfg(parser17lex).NewAtom(pref.Rep, $4...)
-        elems := append([]ast.Node{a1, a2}, $9...)
+        elems := append([]Node{a1, a2}, $9...)
         idefInner := parser17Acfg(parser17lex).NewIsolateDef(elems, len($9)+1)
         idefInner.IsObject = true
         edef := parser17Acfg(parser17lex).NewExtractDef(*idefInner)
@@ -1474,9 +1473,9 @@ top:
         lex.accum.params = nil
         lex.parentObjName = ""
         // Python: d = IsolateDecl(ExtractDef(*([Atom(p[3],p[4])] + p[6])))
-        pref := $3.(*ast.Atom)
+        pref := $3.(*Atom)
         nameAtom := parser17Acfg(parser17lex).NewAtom(pref.Rep, $4...)
-        elems := append([]ast.Node{nameAtom}, $6...)
+        elems := append([]Node{nameAtom}, $6...)
         edef := parser17Acfg(parser17lex).NewExtractDef(*parser17Acfg(parser17lex).NewIsolateDef(elems, len($6)))
         edef.Elems[0].SetLineno(tokLineno(lex, $2))
         edef.SetLineno(tokLineno(lex, $2))
@@ -1506,12 +1505,12 @@ top:
     {
         xtracer.Trace("parser.p_top_delegate_callatom_opt ENTER (top)")
         $$ = $1
-        args := make([]ast.Node, len($3))
+        args := make([]Node, len($3))
         for i, s := range $3 {
             if $4 != nil {
-                args[i] = parser17Acfg(parser17lex).NewDelegateDef([]ast.Node{s, $4})
+                args[i] = parser17Acfg(parser17lex).NewDelegateDef([]Node{s, $4})
             } else {
-                args[i] = parser17Acfg(parser17lex).NewDelegateDef([]ast.Node{s})
+                args[i] = parser17Acfg(parser17lex).NewDelegateDef([]Node{s})
             }
         }
         dd := parser17Acfg(parser17lex).NewDelegateDecl(args...)
@@ -1552,13 +1551,13 @@ top:
         names := append([]string{$6.Val}, func() []string {
             var r []string
             for _, n := range $7 {
-                if a, ok := n.(*ast.Atom); ok {
+                if a, ok := n.(*Atom); ok {
                     r = append(r, a.Rep)
                 }
             }
             return r
         }()...)
-        atoms := make([]ast.Node, len(names))
+        atoms := make([]Node, len(names))
         for i, n := range names {
             atoms[i] = parser17Acfg(parser17lex).NewAtom(n)
         }
@@ -1596,7 +1595,7 @@ top:
     {
         xtracer.Trace("parser.p_top_variant_symbol_of_atype ENTER (top)")
         $$ = $1
-        scnst := parser17Acfg(parser17lex).NewAtom($3.(*ast.Atom).Rep)
+        scnst := parser17Acfg(parser17lex).NewAtom($3.(*Atom).Rep)
         scnst.SetLineno(nodeLineno($3))
         tdfn := parser17Acfg(parser17lex).NewTypeDef(scnst, parser17Acfg(parser17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $4))
@@ -1611,7 +1610,7 @@ top:
     {
         xtracer.Trace("parser.p_top_variant_symbol_of_symbol_eq_sort ENTER (top)")
         $$ = $1
-        scnst := parser17Acfg(parser17lex).NewAtom($3.(*ast.Atom).Rep)
+        scnst := parser17Acfg(parser17lex).NewAtom($3.(*Atom).Rep)
         scnst.SetLineno(nodeLineno($3))
         tdfn := parser17Acfg(parser17lex).NewTypeDef(scnst, $7)
         tdfn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $4))
@@ -1631,7 +1630,7 @@ top:
         // Python: thing = NativeDecl(defn)
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $2.Val, parser17lex.(*parser17LexAdapter))
         label := newLabel(parser17Acfg(parser17lex), "native")
-        defnArgs := append([]ast.Node{label, parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
+        defnArgs := append([]Node{label, parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
         defn := parser17Acfg(parser17lex).NewNativeDef(defnArgs)
         defn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         thing := parser17Acfg(parser17lex).NewNativeDecl(defn)
@@ -1643,7 +1642,7 @@ top:
     {
         xtracer.Trace("parser.p_top_scenario_lcb_sceninit_semi_scentranss_rcb ENTER (top)")
         $$ = $1
-        elems := append([]ast.Node{$4}, $6...)
+        elems := append([]Node{$4}, $6...)
         sdef := parser17Acfg(parser17lex).NewScenarioDef(elems)
         sdef.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         sd := parser17Acfg(parser17lex).NewScenarioDecl(sdef)
@@ -1680,7 +1679,7 @@ top:
     {
         xtracer.Trace("parser.p_top_assert_symbol_arrow_assert_rhs ENTER (top)")
         $$ = $1
-        // Python: this rule is guarded by `if iu.get_numeric_version() <= [1,6]:`
+        // Python: this rule is guarded by `if get_numeric_version() <= [1,6]:`
         // Since Go grammar is v1.7+, the body is intentionally empty.
         // v1.6 would do: Implies(Atom(p[3],[]),p[5]) → AssertDecl → declare
     }
@@ -1734,9 +1733,9 @@ atype:
     | atype PARSER_TOK_DOT SYMBOLx
     {
         xtracer.Trace("parser.p_atype_atype_dot_symbol ENTER (atype)")
-        if _, ok := $1.(*ast.This); ok {
+        if _, ok := $1.(*This); ok {
             $$ = parser17Acfg(parser17lex).NewSymbol($3.Val, nil)
-        } else if sym, ok := $1.(*ast.Symbol); ok {
+        } else if sym, ok := $1.(*Symbol); ok {
             $$ = parser17Acfg(parser17lex).NewSymbol(sym.Rep + "." + $3.Val, nil)
         } else {
             $$ = parser17Acfg(parser17lex).NewSymbol($3.Val, nil)
@@ -1788,7 +1787,7 @@ aterm:
     | aterm PARSER_TOK_DOT appelem
     {
         xtracer.Trace("parser.p_aterm_aterm_dot_appelem ENTER (aterm)")
-        $$ = ast.ComposeAtoms($1.(*ast.Atom), $3.(*ast.Atom))
+        $$ = ComposeAtoms($1.(*Atom), $3.(*Atom))
     }
     ;
 
@@ -1838,7 +1837,7 @@ vars:
     var
     {
         xtracer.Trace("parser.p_vars_var ENTER (vars)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | vars PARSER_TOK_COMMA var
     {
@@ -1851,7 +1850,7 @@ simplevars:
     simplevar
     {
         xtracer.Trace("parser.p_simplevars_simplevar ENTER (simplevars)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | simplevars PARSER_TOK_COMMA simplevar
     {
@@ -1873,7 +1872,7 @@ terms:
     | term
     {
         xtracer.Trace("parser.p_terms_term ENTER (terms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | terms PARSER_TOK_COMMA term
     {
@@ -1919,16 +1918,16 @@ term:
         //             p[0] = MethodCall(p[1],p[3])
         //             p[0].lineno = get_lineno(p,2)
         switch lhs := $1.(type) {
-        case *ast.Atom:
-            composed := ast.ComposeAtomsGeneric(lhs, $3)
+        case *Atom:
+            composed := ComposeAtomsGeneric(lhs, $3)
             composed.SetLineno(tokLineno(lex, $2))
             $$ = composed
-        case *ast.App:
-            composed := ast.ComposeAtomsGeneric(lhs, $3)
+        case *App:
+            composed := ComposeAtomsGeneric(lhs, $3)
             composed.SetLineno(tokLineno(lex, $2))
             $$ = composed
-        case *ast.AstOld:
-            t := ast.ComposeAtomsGeneric(lhs.Term, $3)
+        case *AstOld:
+            t := ComposeAtomsGeneric(lhs.Term, $3)
             t.SetLineno(tokLineno(lex, $2))
             lhs.Term = t
             $$ = lhs
@@ -2056,7 +2055,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
         // Python: if isinstance(p[1],And): append; else: new And with get_lineno
-        if existing, ok := $1.(*ast.AstAnd); ok {
+        if existing, ok := $1.(*AstAnd); ok {
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
@@ -2069,7 +2068,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
         // Python: if isinstance(p[1],Or): append; else: new Or with get_lineno
-        if existing, ok := $1.(*ast.AstOr); ok {
+        if existing, ok := $1.(*AstOr); ok {
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
@@ -2183,17 +2182,17 @@ term:
         // Python: if hasattr(p[1],"sort"): raise IvyError("multiple sort annotations")
         // Python: p[1].sort = p[3]; p[0] = p[1]
         switch n := $1.(type) {
-        case *ast.Variable:
+        case *AstVariable:
             if n.VSort != "" {
                 parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
             }
             n.VSort = parser17AtypeToString($3)
-        case *ast.Atom:
+        case *Atom:
             if n.ASort != nil {
                 parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
             }
             n.ASort = $3
-        case *ast.App:
+        case *App:
             if n.ASort != nil {
                 parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
             }
@@ -2232,7 +2231,7 @@ fmla:
     term
     {
         xtracer.Trace("parser.p_fmla_term ENTER (fmla)")
-        $$ = ast.AppToAtom($1)
+        $$ = AppToAtom($1)
     }
     ;
 
@@ -2497,7 +2496,7 @@ defargs:
     defarg
     {
         xtracer.Trace("parser.p_defargs_defarg ENTER (defargs)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | defargs PARSER_TOK_COMMA defarg
     {
@@ -2516,9 +2515,9 @@ typeddefn:
     {
         xtracer.Trace("parser.p_typeddefn_defnlhs_colon_atype ENTER (typeddefn)")
         // set sort on the defnlhs
-        if a, ok := $1.(*ast.Atom); ok {
+        if a, ok := $1.(*Atom); ok {
             a.ASort = $3
-        } else if app, ok := $1.(*ast.App); ok {
+        } else if app, ok := $1.(*App); ok {
             app.ASort = $3
         }
         $$ = $1
@@ -2540,7 +2539,7 @@ defnrhs:
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $1.Val, parser17lex.(*parser17LexAdapter))
-        elems := append([]ast.Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
         ne := parser17Acfg(parser17lex).NewNativeExpr(elems)
         ne.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = ne
@@ -2551,7 +2550,7 @@ defn:
     typeddefn PARSER_TOK_EQ defnrhs
     {
         xtracer.Trace("parser.p_defn_atom_fmla ENTER (defn)")
-        d := parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($1), $3)
+        d := parser17Acfg(parser17lex).NewDefinition(AppToAtom($1), $3)
         d.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = d
     }
@@ -2561,7 +2560,7 @@ defns:
     defn
     {
         xtracer.Trace("parser.p_defns_defn ENTER (defns)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | defns PARSER_TOK_COMMA defn
     {
@@ -2579,7 +2578,7 @@ gdefn:
     | PARSER_TOK_LCB defn PARSER_TOK_RCB
     {
         xtracer.Trace("parser.p_gdefn_lcb_defn_rcb ENTER (gdefn)")
-        d := $2.(*ast.AstDefinition)
+        d := $2.(*AstDefinition)
         $$ = parser17Acfg(parser17lex).NewDefinitionSchema(*d)
     }
     ;
@@ -2645,37 +2644,37 @@ schdecl:
     PARSER_TOK_FUNCTION funs
     {
         xtracer.Trace("parser.p_schdecl_funcdecl ENTER (schdecl)")
-        $$ = make([]ast.Node, len($2))
+        $$ = make([]Node, len($2))
         copy($$, $2)
     }
     | PARSER_TOK_FRESH PARSER_TOK_FUNCTION funs
     {
         xtracer.Trace("parser.p_schdecl_fresh_funcdecl ENTER (schdecl)")
-        $$ = make([]ast.Node, len($3))
+        $$ = make([]Node, len($3))
         copy($$, $3)
     }
     | PARSER_TOK_INDIV funs
     {
         xtracer.Trace("parser.p_schdecl_indivdecl ENTER (schdecl)")
-        $$ = make([]ast.Node, len($2))
+        $$ = make([]Node, len($2))
         copy($$, $2)
     }
     | PARSER_TOK_FRESH PARSER_TOK_INDIV funs
     {
         xtracer.Trace("parser.p_schdecl_fresh_indivdecl ENTER (schdecl)")
-        $$ = make([]ast.Node, len($3))
+        $$ = make([]Node, len($3))
         copy($$, $3)
     }
     | PARSER_TOK_RELATION rels
     {
         xtracer.Trace("parser.p_schdecl_relation_rel ENTER (schdecl)")
-        $$ = make([]ast.Node, len($2))
+        $$ = make([]Node, len($2))
         copy($$, $2)
     }
     | PARSER_TOK_FRESH PARSER_TOK_RELATION rels
     {
         xtracer.Trace("parser.p_schdecl_fresh_relation_rel ENTER (schdecl)")
-        $$ = make([]ast.Node, len($3))
+        $$ = make([]Node, len($3))
         copy($$, $3)
     }
     | PARSER_TOK_TYPE SYMBOLx
@@ -2685,22 +2684,22 @@ schdecl:
         scnst.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         tdfn := parser17Acfg(parser17lex).NewTypeDef(scnst, parser17Acfg(parser17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
-        $$ = []ast.Node{tdfn}
+        $$ = []Node{tdfn}
     }
     | optexplicit PARSER_TOK_PROPERTY lgprop
     {
         xtracer.Trace("parser.p_schdecl_propdecl ENTER (schdecl)")
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "prop")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "prop")
         if $1 != nil {
             lf.Explicit = true
         }
-        $$ = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
+        $$ = []Node{checkNonTemporal(lf).(*LabeledFormula)}
     }
     | PARSER_TOK_THEOREM lgprop
     {
         xtracer.Trace("parser.p_schdecl_theorem_lgprop ENTER (schdecl)")
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*ast.LabeledFormula), "prop")
-        $$ = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*LabeledFormula), "prop")
+        $$ = []Node{checkNonTemporal(lf).(*LabeledFormula)}
     }
     | schdefnrhs
     {
@@ -2710,7 +2709,7 @@ schdecl:
             lf.SetLineno($1.GetLineno())
         }
         lf = parser17AddLabel(parser17Acfg(parser17lex), lf, "sch")
-        $$ = []ast.Node{lf}
+        $$ = []Node{lf}
     }
     ;
 
@@ -2736,7 +2735,7 @@ schconc:
     | optexplicit PARSER_TOK_PROPERTY lgprop
     {
         xtracer.Trace("parser.p_schconc_propdecl ENTER (schconc)")
-        lf := $3.(*ast.LabeledFormula)
+        lf := $3.(*LabeledFormula)
         // Python: p[0] = check_non_temporal(fmla)
         $$ = checkNonTemporal(lf.Formula)
     }
@@ -2746,7 +2745,7 @@ schdefn:
     defnlhs PARSER_TOK_EQ schdefnrhs
     {
         xtracer.Trace("parser.p_schdefn_atom_eq_fmla ENTER (schdefn)")
-        $$ = parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($1), $3)
+        $$ = parser17Acfg(parser17lex).NewDefinition(AppToAtom($1), $3)
         $$.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
     }
     ;
@@ -2777,9 +2776,9 @@ symdecl:
         arg0.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         // Python: tterms = [x.clone([arg0]+x.args) for x in p[2]]
         // Python: for x,y in zip(p[2],tterms): y.lineno = x.lineno
-        cloned := make([]ast.Node, len($2))
+        cloned := make([]Node, len($2))
         for i, x := range $2 {
-            newArgs := append([]ast.Node{arg0}, x.Args()...)
+            newArgs := append([]Node{arg0}, x.Args()...)
             cloned[i] = x.Clone(newArgs)
             cloned[i].SetLineno(x.GetLineno())
         }
@@ -2793,7 +2792,7 @@ symdecl:
         // Python: for t in p[2]: if not hasattr(t,'sort'): t.sort = This()
         lex := parser17lex.(*parser17LexAdapter)
         for _, t := range $2 {
-            if app, ok := t.(*ast.App); ok && app.ASort == nil {
+            if app, ok := t.(*App); ok && app.ASort == nil {
                 thisNode := parser17Acfg(parser17lex).NewThis()
                 thisNode.SetLineno(tokLineno(lex, $1))
                 app.ASort = thisNode
@@ -2876,7 +2875,7 @@ tapp:
     | SYMBOLx targs
     {
         xtracer.Trace("parser.p_tapp_symbol_targs ENTER (tapp)")
-        args := make([]ast.Node, len($2))
+        args := make([]Node, len($2))
         copy(args, $2)
         a := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($1.Val, nil), args...)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
@@ -2900,7 +2899,7 @@ tterm:
     | tapp PARSER_TOK_COLON atype
     {
         xtracer.Trace("parser.p_tterm_term_colon_symbol ENTER (tterm)")
-        if app, ok := $1.(*ast.App); ok {
+        if app, ok := $1.(*App); ok {
             app.ASort = $3
         }
         $$ = $1
@@ -2911,7 +2910,7 @@ tterms:
     tterm
     {
         xtracer.Trace("parser.p_tterms_tterm ENTER (tterms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tterms PARSER_TOK_COMMA tterm
     {
@@ -2937,7 +2936,7 @@ tsyms:
     var
     {
         xtracer.Trace("parser.p_tsyms_tsym ENTER (tsyms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tsyms PARSER_TOK_COMMA var
     {
@@ -2971,7 +2970,7 @@ tatoms:
     tatom
     {
         xtracer.Trace("parser.p_tatoms_tatom ENTER (tatoms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tatoms PARSER_TOK_COMMA tatom
     {
@@ -2985,9 +2984,9 @@ rel:
     {
         xtracer.Trace("parser.p_rel_defnlhs ENTER (rel)")
         // Python: p[1].sort = 'bool' — relation declarations have bool sort
-        if a, ok := $1.(*ast.Atom); ok {
+        if a, ok := $1.(*Atom); ok {
             a.ASort = parser17Acfg(parser17lex).NewSymbol("bool", nil)
-        } else if app, ok := $1.(*ast.App); ok {
+        } else if app, ok := $1.(*App); ok {
             app.ASort = parser17Acfg(parser17lex).NewSymbol("bool", nil)
         }
         d := parser17Acfg(parser17lex).NewConstantDecl($1)
@@ -3006,7 +3005,7 @@ rels:
     rel
     {
         xtracer.Trace("parser.p_rels_rel ENTER (rels)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | rels PARSER_TOK_COMMA rel
     {
@@ -3025,7 +3024,7 @@ fun:
     | typeddefn PARSER_TOK_EQ defnrhs
     {
         xtracer.Trace("parser.p_fun_defn ENTER (fun)")
-        df := parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($1), $3)
+        df := parser17Acfg(parser17lex).NewDefinition(AppToAtom($1), $3)
         df.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         lf := parser17AddLabel(parser17Acfg(parser17lex), parser17MkLF(parser17Acfg(parser17lex), df), "def")
         d := parser17Acfg(parser17lex).NewDerivedDecl(lf)
@@ -3037,7 +3036,7 @@ funs:
     fun
     {
         xtracer.Trace("parser.p_funs_fun ENTER (funs)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | funs PARSER_TOK_COMMA fun
     {
@@ -3098,7 +3097,7 @@ sort:
     | PARSER_TOK_LCB SYMBOLx PARSER_TOK_COMMA names PARSER_TOK_RCB
     {
         xtracer.Trace("parser.p_sort_lcb_names_rcb ENTER (sort)")
-        vals := []ast.Node{parser17Acfg(parser17lex).NewAtom($2.Val)}
+        vals := []Node{parser17Acfg(parser17lex).NewAtom($2.Val)}
         for _, n := range $4 {
             vals = append(vals, n)
         }
@@ -3126,7 +3125,7 @@ names:
     SYMBOLx
     {
         xtracer.Trace("parser.p_names_symbol ENTER (names)")
-        $$ = []ast.Node{parser17Acfg(parser17lex).NewAtom($1.Val)}
+        $$ = []Node{parser17Acfg(parser17lex).NewAtom($1.Val)}
     }
     | names PARSER_TOK_COMMA SYMBOLx
     {
@@ -3180,7 +3179,7 @@ atoms:
     atom
     {
         xtracer.Trace("parser.p_atoms_atom ENTER (atoms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | atoms PARSER_TOK_COMMA atom
     {
@@ -3211,7 +3210,7 @@ apps:
     app
     {
         xtracer.Trace("parser.p_apps_app ENTER (apps)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | apps PARSER_TOK_COMMA app
     {
@@ -3248,7 +3247,7 @@ lit:
     {
         xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
         // Python: p[0] = ~p[2] — flips Literal polarity
-        if lit, ok := $2.(*ast.AstLiteral); ok {
+        if lit, ok := $2.(*AstLiteral); ok {
             $$ = parser17Acfg(parser17lex).NewLiteral(1 - lit.Polarity, lit.Atom)
         } else {
             $$ = parser17Acfg(parser17lex).NewLiteral(0, $2)
@@ -3282,9 +3281,9 @@ callatom:
     | callatom PARSER_TOK_DOT callatom
     {
         xtracer.Trace("parser.p_callatom_callatom_dot_callatom ENTER (callatom)")
-        lhs := $1.(*ast.Atom)
-        rhs := $3.(*ast.Atom)
-        $$ = ast.ComposeAtoms(lhs, rhs)
+        lhs := $1.(*Atom)
+        rhs := $3.(*Atom)
+        $$ = ComposeAtoms(lhs, rhs)
         $$.SetLineno(nodeLineno($1))
     }
     ;
@@ -3293,7 +3292,7 @@ callatoms:
     callatom
     {
         xtracer.Trace("parser.p_callatoms_callatom ENTER (callatoms)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | callatoms PARSER_TOK_COMMA callatom
     {
@@ -3469,7 +3468,7 @@ params:
     param
     {
         xtracer.Trace("parser.p_params_param ENTER (params)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | params PARSER_TOK_COMMA param
     {
@@ -3519,7 +3518,7 @@ lparams:
     lparam
     {
         xtracer.Trace("parser.p_lparams_lparam ENTER (lparams)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | lparams PARSER_TOK_COMMA lparam
     {
@@ -3561,7 +3560,7 @@ topseq:
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
         // Python: NativeAction(*([text] + bqs))
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $2.Val, parser17lex.(*parser17LexAdapter))
-        args := append([]ast.Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
+        args := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
         na := parser17Acfg(parser17lex).NewNativeAction(args...)
         na.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = na
@@ -3649,7 +3648,7 @@ insts:
     inst
     {
         xtracer.Trace("parser.p_insts_inst ENTER (insts)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | insts PARSER_TOK_COMMA inst
     {
@@ -3662,14 +3661,14 @@ inst:
     modinst
     {
         xtracer.Trace("parser.p_inst_modinst ENTER (inst)")
-        n := parser17Acfg(parser17lex).NewInstantiation(nil, ast.AppToAtom($1))
+        n := parser17Acfg(parser17lex).NewInstantiation(nil, AppToAtom($1))
         n.SetLineno(nodeLineno($1))
         $$ = n
     }
     | modinst PARSER_TOK_COLON modinst
     {
         xtracer.Trace("parser.p_inst_atom_colon_modinst ENTER (inst)")
-        inst := parser17Acfg(parser17lex).NewInstantiation(ast.AppToAtom($1), ast.AppToAtom($3))
+        inst := parser17Acfg(parser17lex).NewInstantiation(AppToAtom($1), AppToAtom($3))
         inst.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = inst
     }
@@ -3696,9 +3695,9 @@ pname:
         xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
         var rep string
         switch v := $1.(type) {
-        case *ast.Symbol:
+        case *Symbol:
             rep = v.Rep
-        case *ast.This:
+        case *This:
             rep = "this"
         default:
             rep = fmt.Sprint($1)
@@ -3753,7 +3752,7 @@ pnames:
     | pname
     {
         xtracer.Trace("parser.p_pnames_pname ENTER (pnames)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | pnames PARSER_TOK_COMMA pname
     {
@@ -3771,9 +3770,9 @@ oper:
     {
         xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
         // Python: p[0] = Atom(p[1]) — atype returns a string, oper wraps in Atom
-        if sym, ok := $1.(*ast.Symbol); ok {
+        if sym, ok := $1.(*Symbol); ok {
             $$ = parser17Acfg(parser17lex).NewAtom(sym.Rep)
-        } else if th, ok := $1.(*ast.This); ok {
+        } else if th, ok := $1.(*This); ok {
             a := parser17Acfg(parser17lex).NewAtom("this")
             a.SetLineno(th.GetLineno())
             $$ = a
@@ -3795,7 +3794,7 @@ oper:
     {
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $1.Val, parser17lex.(*parser17LexAdapter))
-        elems := append([]ast.Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
         nt := parser17Acfg(parser17lex).NewNativeType(elems...)
         nt.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = nt
@@ -3868,14 +3867,14 @@ sequence:
         xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
         stmts := lowerVarStmts($2)
         seq := parser17MakeSequence(parser17Acfg(parser17lex), stmts)
-        if s, ok := seq.(*ast.AstSequence); ok {
+        if s, ok := seq.(*AstSequence); ok {
             s.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         } else {
             // Single node — mark as having a location without calling getLineno
             // (Python always has lineno set on these nodes from their own rules)
             if b, ok := seq.(interface{ HasLocSet() bool }); ok && !b.HasLocSet() {
                 loc := parser17lex.(*parser17LexAdapter).lastTok.Line
-                seq.SetLineno(ast.Location{Line: loc})
+                seq.SetLineno(Location{Line: loc})
             }
         }
         $$ = seq
@@ -3913,12 +3912,12 @@ actseqrev:
     simpleact
     {
         xtracer.Trace("parser.p_actseqrev_simpleact ENTER (actseqrev)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | complexact
     {
         xtracer.Trace("parser.p_actseqrev_complexact ENTER (actseqrev)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | simpleact PARSER_TOK_SEMI actseqrev
     {
@@ -3928,7 +3927,7 @@ actseqrev:
     | simpleact PARSER_TOK_SEMI
     {
         xtracer.Trace("parser.p_actseqrev_simpact_semi ENTER (actseqrev)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | complexact actseqrev
     {
@@ -3943,7 +3942,7 @@ actseqrev:
     | complexact PARSER_TOK_SEMI
     {
         xtracer.Trace("parser.p_actseqrev_complexact_semi ENTER (actseqrev)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     ;
 
@@ -3969,7 +3968,7 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
         // Python: AssumeAction(check_non_temporal(addlabel(p[2],'asrt')))
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*ast.LabeledFormula), "asrt")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*LabeledFormula), "asrt")
         a := parser17Acfg(parser17lex).NewAssumeAction(checkNonTemporal(lf))
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = a
@@ -3977,8 +3976,8 @@ simpleact:
     | optunprovable PARSER_TOK_ASSERT labeledfmla
     {
         xtracer.Trace("parser.p_action_assert ENTER (simpleact)")
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewAssertAction(lf)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -3994,8 +3993,8 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_assert_proof_proofstep ENTER (simpleact)")
         // Python: AssertAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewAssertAction(lf, $5)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -4011,8 +4010,8 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_require ENTER (simpleact)")
         // Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')))
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewRequiresAction(lf)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -4028,8 +4027,8 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_require_proof_proofstep ENTER (simpleact)")
         // Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewRequiresAction(lf, $5)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -4045,8 +4044,8 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_ensure ENTER (simpleact)")
         // Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')))
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewEnsuresAction(lf)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -4062,8 +4061,8 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_ensure_proof_proofstep ENTER (simpleact)")
         // Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt")
-        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*LabeledFormula)
         addUnprovable(lf, $1)
         a := parser17Acfg(parser17lex).NewEnsuresAction(lf, $5)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -4087,7 +4086,7 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_termtuple_assign_fmla ENTER (simpleact)")
         // Python: CallAction(*([p[3]]+list(p[1].args)))
-        callArgs := append([]ast.Node{$3}, $1.Args()...)
+        callArgs := append([]Node{$3}, $1.Args()...)
         $$ = parser17Acfg(parser17lex).NewCallAction(callArgs...)
         $$.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
     }
@@ -4114,7 +4113,7 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_call_optreturns_callatom ENTER (simpleact)")
         // Python: CallAction(*([p[3]] + p[2]))
-        callArgs := append([]ast.Node{$3}, $2...)
+        callArgs := append([]Node{$3}, $2...)
         $$ = parser17Acfg(parser17lex).NewCallAction(callArgs...)
         $$.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
     }
@@ -4152,7 +4151,7 @@ simpleact:
         if !strings.HasPrefix($2.Val, "\"") {
             parser17lex.Error(fmt.Sprintf("expected string constant after 'debug', got %s", $2.Val))
         }
-        args := append([]ast.Node{action}, $3...)
+        args := append([]Node{action}, $3...)
         a := parser17Acfg(parser17lex).NewDebugAction(args...)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = a
@@ -4170,7 +4169,7 @@ termtuple:
     PARSER_TOK_LPAREN term PARSER_TOK_COMMA terms PARSER_TOK_RPAREN
     {
         xtracer.Trace("parser.p_termtuple_lp_term_comma_terms_rp ENTER (termtuple)")
-        args := append([]ast.Node{$2}, $4...)
+        args := append([]Node{$2}, $4...)
         t := parser17Acfg(parser17lex).NewTuple(args...)
         t.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = t
@@ -4194,7 +4193,7 @@ debugargs:
     debugarg
     {
         xtracer.Trace("parser.p_debugargs ENTER (debugargs)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | debugargs PARSER_TOK_COMMA debugarg
     {
@@ -4260,7 +4259,7 @@ complexact:
         // Python: WhileAction(cond, body, *invariants, *decreases)
         cond := checkNonTemporal($2)
         body := fixIfPart($2, $5)
-        args := []ast.Node{cond, body}
+        args := []Node{cond, body}
         args = append(args, $3...)
         args = append(args, $4...)
         w := parser17Acfg(parser17lex).NewWhileAction(args...)
@@ -4272,18 +4271,18 @@ complexact:
         xtracer.Trace("parser.p_action_for_tterm_comma_tterm_in_expr_invariants_decreases_lcb_action_rcb ENTER (complexact)")
 
         // Python: itr,val,fmla,invars,decrs,seq = p[2],p[4],check_non_temporal(p[6]),p[7],p[8],p[9]
-        itr := $2                       // *ast.App from tterm
-        val := $4                       // *ast.App from tterm
+        itr := $2                       // *App from tterm
+        val := $4                       // *App from tterm
         forFmla := checkNonTemporal($6) // formula
-        invars := $7                    // []ast.Node from invariants
-        decrs := $8                     // []ast.Node from decreases
-        seq := $9                       // ast.Node from sequence
+        invars := $7                    // []Node from invariants
+        decrs := $8                     // []Node from decreases
+        seq := $9                       // Node from sequence
 
         // Python: iend = itr.rename('loc:end')
-        var iend ast.Node
-        if itrApp, ok := itr.(*ast.App); ok {
+        var iend Node
+        if itrApp, ok := itr.(*App); ok {
             iend = itrApp.Rename("loc:end")
-        } else if itrAtom, ok := itr.(*ast.Atom); ok {
+        } else if itrAtom, ok := itr.(*Atom); ok {
             iend = itrAtom.Rename("loc:end")
         } else {
             iend = itr // fallback
@@ -4325,21 +4324,21 @@ complexact:
         incr.SetLineno(ln)
 
         // Python: body = Sequence(*lower_var_stmts([dval, seq, incr])).sln(ln)
-        bodyStmts := ast.LowerVarStatements([]ast.Node{dval, seq, incr})
+        bodyStmts := LowerVarStatements([]Node{dval, seq, incr})
         body := parser17Acfg(parser17lex).NewSequence(bodyStmts...)
         body.SetLineno(ln)
 
         // Python: loop = WhileAction(*([App('<', itr, iend).sln(ln), body] + invars + decrs)).sln(ln)
         ltCond := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("<", nil), itr, iend)
         ltCond.SetLineno(ln)
-        loopArgs := []ast.Node{ltCond, body}
+        loopArgs := []Node{ltCond, body}
         loopArgs = append(loopArgs, invars...)
         loopArgs = append(loopArgs, decrs...)
         loop := parser17Acfg(parser17lex).NewWhileAction(loopArgs...)
         loop.SetLineno(ln)
 
         // Python: p[0] = Sequence(*lower_var_stmts([didx, dend, loop])).sln(ln)
-        outerStmts := ast.LowerVarStatements([]ast.Node{didx, dend, loop})
+        outerStmts := LowerVarStatements([]Node{didx, dend, loop})
         result := parser17Acfg(parser17lex).NewSequence(outerStmts...)
         result.SetLineno(ln)
         $$ = result
@@ -4352,13 +4351,13 @@ complexact:
         // Python: action = subst_prefix_atoms_ast(p[3],subst,None,None)
         // Python: p[0] = LocalAction(*(lsyms+[action]))
         bounds := $2
-        lsyms := make([]ast.Node, len(bounds))
+        lsyms := make([]Node, len(bounds))
         subst := make(map[string]string)
         for i, s := range bounds {
-            lsyms[i] = ast.PrefixNode(s, "loc:")
-            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
         }
-        action := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        action := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
         args := append(lsyms, action)
         la := parser17Acfg(parser17lex).NewLocalAction("parser.local_action_rule", args...)
         la.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
@@ -4383,7 +4382,7 @@ complexact:
         label.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         actionAtom := parser17Acfg(parser17lex).NewAtom($3.Val, $4...)
         actionAtom.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $3))
-        sortAtom := parser17Acfg(parser17lex).NewAtom(ast.NodeRep($6))
+        sortAtom := parser17Acfg(parser17lex).NewAtom(NodeRep($6))
         ta := parser17Acfg(parser17lex).NewThunkAction(label, actionAtom, sortAtom, $8)
         ta.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = ta
@@ -4408,17 +4407,17 @@ somefmla:
         // Python: fmla = subst_prefix_atoms_ast(fmla,subst,None,None)
         // Python: p[0] = Some(*(lsyms+[fmla]))
         lhs := $1
-        lsym := ast.PrefixNode(lhs, "loc:")
-        if a, ok := lsym.(*ast.Atom); ok {
-            if orig, ok2 := lhs.(*ast.Atom); ok2 {
+        lsym := PrefixNode(lhs, "loc:")
+        if a, ok := lsym.(*Atom); ok {
+            if orig, ok2 := lhs.(*Atom); ok2 {
                 a.ASort = orig.ASort
             }
         }
-        subst := map[string]string{ast.NodeRep(lhs): ast.NodeRep(lsym)}
+        subst := map[string]string{NodeRep(lhs): NodeRep(lsym)}
         fmla := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("*>", nil), $3, lhs)
         fmla.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
-        fmla2 := ast.SubstPrefixAtomsAst(fmla, subst, nil, nil, nil)
-        some := parser17Acfg(parser17lex).NewSome([]ast.Node{lsym}, fmla2)
+        fmla2 := SubstPrefixAtomsAst(fmla, subst, nil, nil, nil)
+        some := parser17Acfg(parser17lex).NewSome([]Node{lsym}, fmla2)
         some.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = some
     }
@@ -4426,13 +4425,13 @@ somefmla:
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
         bounds := $2
-        lsyms := make([]ast.Node, len(bounds))
+        lsyms := make([]Node, len(bounds))
         subst := make(map[string]string)
         for i, s := range bounds {
-            lsyms[i] = ast.PrefixNode(s, "loc:")
-            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
         }
-        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
         some := parser17Acfg(parser17lex).NewSome(lsyms, fmla)
         some.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = some
@@ -4441,14 +4440,14 @@ somefmla:
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
         bounds := $2
-        lsyms := make([]ast.Node, len(bounds))
+        lsyms := make([]Node, len(bounds))
         subst := make(map[string]string)
         for i, s := range bounds {
-            lsyms[i] = ast.PrefixNode(s, "loc:")
-            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
         }
-        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
-        index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := SubstPrefixAtomsAst($5, subst, nil, nil, nil)
         smin := parser17Acfg(parser17lex).NewSomeMin(lsyms, fmla, index)
         smin.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = smin
@@ -4457,14 +4456,14 @@ somefmla:
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
         bounds := $2
-        lsyms := make([]ast.Node, len(bounds))
+        lsyms := make([]Node, len(bounds))
         subst := make(map[string]string)
         for i, s := range bounds {
-            lsyms[i] = ast.PrefixNode(s, "loc:")
-            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
         }
-        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
-        index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := SubstPrefixAtomsAst($5, subst, nil, nil, nil)
         smax := parser17Acfg(parser17lex).NewSomeMax(lsyms, fmla, index)
         smax.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = smax
@@ -4494,7 +4493,7 @@ invariants:
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
         // Python: a = AssertAction(check_non_temporal(addlabel(p[3],'asrt')))
-        inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt"))
+        inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt"))
         a := parser17Acfg(parser17lex).NewAssertAction(inv)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = append($1, a)
@@ -4503,7 +4502,7 @@ invariants:
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
         // Python: a = AssertAction(inv, p[5])
-        inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "asrt"))
+        inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "asrt"))
         a := parser17Acfg(parser17lex).NewAssertAction(inv, $5)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$ = append($1, a)
@@ -4523,7 +4522,7 @@ decreases:
         fmla := checkNonTemporal($2)
         rank := parser17Acfg(parser17lex).NewRanking(fmla)
         rank.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
-        $$ = []ast.Node{rank}
+        $$ = []Node{rank}
     }
     ;
 
@@ -4542,7 +4541,7 @@ eqns:
     eqn
     {
         xtracer.Trace("parser.p_eqns_eqn ENTER (eqns)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | eqns PARSER_TOK_COMMA eqn
     {
@@ -4571,7 +4570,7 @@ places:
         xtracer.Trace("parser.p_places_symbol ENTER (places)")
         a := parser17Acfg(parser17lex).NewAtom($1.Val)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
-        $$ = []ast.Node{a}
+        $$ = []Node{a}
     }
     | places PARSER_TOK_COMMA SYMBOLx
     {
@@ -4632,7 +4631,7 @@ scenariomixin:
     PARSER_TOK_BEFORE atype optargs optreturns sequence
     {
         xtracer.Trace("parser.p_scenariomixin_before_callatom_lcb_action_rcb ENTER (scenariomixin)")
-        atom := parser17Acfg(parser17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($2.(*Symbol).Rep)
         atom.SetLineno(nodeLineno($2))
         mixer := makeMixinName(parser17Acfg(parser17lex), atom, "before")
         // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
@@ -4645,7 +4644,7 @@ scenariomixin:
     | PARSER_TOK_AFTER atype optargs optreturns sequence
     {
         xtracer.Trace("parser.p_scenariomixin_after_callatom_lcb_action_rcb ENTER (scenariomixin)")
-        atom := parser17Acfg(parser17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := parser17Acfg(parser17lex).NewAtom($2.(*Symbol).Rep)
         atom.SetLineno(nodeLineno($2))
         mixer := makeMixinName(parser17Acfg(parser17lex), atom, "after")
         // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
@@ -4675,7 +4674,7 @@ pflets:
     pflet
     {
         xtracer.Trace("parser.p_pflets_pflet ENTER (pflets)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | pflets PARSER_TOK_COMMA pflet
     {
@@ -4689,12 +4688,12 @@ tacticwithelem:
     {
         xtracer.Trace("parser.p_tacticwithelem_invariant ENTER (tacticwithelem)")
         // Python: p[0] = addlabel(p[2], 'invar')
-        $$ = parser17AddLabel(parser17Acfg(parser17lex), $2.(*ast.LabeledFormula), "invar")
+        $$ = parser17AddLabel(parser17Acfg(parser17lex), $2.(*LabeledFormula), "invar")
     }
     | PARSER_TOK_DEFINITION typeddefn PARSER_TOK_EQ fmla
     {
         xtracer.Trace("parser.p_tacticwithelem_fun_defn ENTER (tacticwithelem)")
-        df := parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($2), $4)
+        df := parser17Acfg(parser17lex).NewDefinition(AppToAtom($2), $4)
         df.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $3))
         lf := parser17AddLabel(parser17Acfg(parser17lex), parser17MkLF(parser17Acfg(parser17lex), df), "def")
         $$ = parser17Acfg(parser17lex).NewDerivedDecl(lf)
@@ -4714,7 +4713,7 @@ tacticwithlist:
     tacticwithelem
     {
         xtracer.Trace("parser.p_tactwithlist_tacticwithelem ENTER (tacticwithlist)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tacticwithlist tacticwithelem
     {
@@ -4793,7 +4792,7 @@ proofseq:
     | proofseq optsemi proofstep
     {
         xtracer.Trace("parser.p_proofseq_proofseq_semi_proofstep ENTER (proofseq)")
-        $$ = parser17Acfg(parser17lex).NewComposeTactics([]ast.Node{$1, $3})
+        $$ = parser17Acfg(parser17lex).NewComposeTactics([]Node{$1, $3})
         $$.SetLineno(nodeLineno($2))
     }
     ;
@@ -4819,7 +4818,7 @@ matches:
     match
     {
         xtracer.Trace("parser.p_matches ENTER (matches)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | matches PARSER_TOK_COMMA match
     {
@@ -4846,7 +4845,7 @@ renaminglist:
     renamingitem
     {
         xtracer.Trace("parser.p_renaminglist_renamingitem ENTER (renaminglist)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | renaminglist PARSER_TOK_COMMA renamingitem
     {
@@ -4908,7 +4907,7 @@ unfspecs:
     unfspec
     {
         xtracer.Trace("parser.p_unfspecs_unfspec ENTER (unfspecs)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | unfspecs PARSER_TOK_COMMA unfspec
     {
@@ -5044,7 +5043,7 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_tactic ENTER (proofstep)")
         a := parser17Acfg(parser17lex).NewAtom($2.Val)
         a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
-        proof := ast.Node($4)
+        proof := Node($4)
         if proof == nil {
             proof = parser17Acfg(parser17lex).NewNoneAST()
         }
@@ -5055,16 +5054,16 @@ proofstep:
     | opttemporal PARSER_TOK_PROPERTY labeledfmla optskolem optproofgroup
     {
         xtracer.Trace("parser.p_proofstep_property ENTER (proofstep)")
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*ast.LabeledFormula), "prop")
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $3.(*LabeledFormula), "prop")
         // Python: prop = addtemporal(lf) if p[1] else check_non_temporal(lf)
         if $1 != nil {
             lf = addTemporal(lf)
         } else {
             checkNonTemporal(lf)
         }
-        name := ast.Node($4)
+        name := Node($4)
         if name == nil { name = parser17Acfg(parser17lex).NewNoneAST() }
-        proof := ast.Node($5)
+        proof := Node($5)
         if proof == nil { proof = parser17Acfg(parser17lex).NewNoneAST() }
         pt := parser17Acfg(parser17lex).NewPropertyTactic(lf, name, proof)
         pt.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
@@ -5080,8 +5079,8 @@ proofstep:
     | PARSER_TOK_THEOREM lgprop optproofgroup
     {
         xtracer.Trace("parser.p_proofstep_theorem ENTER (proofstep)")
-        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*ast.LabeledFormula), "thm")
-        proof := ast.Node($3)
+        lf := parser17AddLabel(parser17Acfg(parser17lex), $2.(*LabeledFormula), "thm")
+        proof := Node($3)
         if proof == nil { proof = parser17Acfg(parser17lex).NewNoneAST() }
         pt := parser17Acfg(parser17lex).NewPropertyTactic(lf, parser17Acfg(parser17lex).NewNoneAST(), proof)
         pt.SetLineno(nodeLineno($2))
@@ -5273,7 +5272,7 @@ cdefn:
     atom PARSER_TOK_EQ expr
     {
         xtracer.Trace("parser.p_cdefn_atom_expr ENTER (cdefn)")
-        $$ = parser17Acfg(parser17lex).NewDefinition(ast.AppToAtom($1), $3)
+        $$ = parser17Acfg(parser17lex).NewDefinition(AppToAtom($1), $3)
         $$.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
     }
     ;
@@ -5282,7 +5281,7 @@ cdefns:
     cdefn
     {
         xtracer.Trace("parser.p_cdefns_cdefn ENTER (cdefns)")
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | cdefns PARSER_TOK_COMMA cdefn
     {
@@ -5354,7 +5353,7 @@ prod:
     expr PARSER_TOK_TIMES expr
     {
         xtracer.Trace("parser.p_prod_expr_expr ENTER (prod)")
-        $$ = []ast.Node{$1, $3}
+        $$ = []Node{$1, $3}
     }
     | prod PARSER_TOK_TIMES expr
     {
@@ -5367,7 +5366,7 @@ sum:
     expr PARSER_TOK_PLUS expr
     {
         xtracer.Trace("parser.p_sum_expr_expr ENTER (sum)")
-        $$ = []ast.Node{$1, $3}
+        $$ = []Node{$1, $3}
     }
     | sum PARSER_TOK_PLUS expr
     {
@@ -5397,7 +5396,7 @@ symbols:
     SYMBOLx
     {
         xtracer.Trace("parser.p_symbols ENTER (symbols)")
-        $$ = []ast.Node{parser17Acfg(parser17lex).NewAtom($1.Val)}
+        $$ = []Node{parser17Acfg(parser17lex).NewAtom($1.Val)}
     }
     | symbols PARSER_TOK_COMMA SYMBOLx
     {
@@ -5411,15 +5410,15 @@ symbols:
 // lalrMakeSequence wraps a list of action nodes into a single sequence node.
 // lowerVarStmts transforms VarAction (local variable declarations) into
 // LocalAction with proper scoping. Matches Python lower_var_stmts (ivy_parser.py:2670-2697).
-func lowerVarStmts(stmts []ast.Node) []ast.Node {
-	return ast.LowerVarStatements(stmts)
+func lowerVarStmts(stmts []Node) []Node {
+	return LowerVarStatements(stmts)
 }
 
 // lalrMakeSequence matches Python p_sequence_lcb_actseq_rcb (ivy_parser.py:2705-2713).
 // Python: stmts = lower_var_stmts(p[2]); if len(stmts)==1: return stmts[0]
 //         else: Sequence(*lower_var_stmts(stmts))
 // So lower_var_stmts is called ONCE always, and a SECOND time only if len > 1.
-func parser17MakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
+func parser17MakeSequence(cfg *AstConfig, stmts []Node) Node {
 	if len(stmts) == 0 {
 		return cfg.NewSequence()
 	}

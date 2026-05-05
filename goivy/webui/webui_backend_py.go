@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -29,34 +30,49 @@ type PyBackend struct {
 }
 
 // pyIvyRoot returns the root of the Python Ivy source tree.
-// It checks PYIVY_ROOT env var, then falls back to ~/pyivy/ivy.
+// It checks PYIVY_ROOT env var, then falls back to the repo-local pyivy/ivy.
 func pyIvyRoot() string {
 	if root := os.Getenv("PYIVY_ROOT"); root != "" {
 		return root
 	}
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return filepath.Join("../../pyivy/ivy")
+	if repoRoot := webuiRepoRoot(); repoRoot != "" {
+		root := filepath.Join(repoRoot, "pyivy", "ivy")
+		if _, err := os.Stat(root); err == nil {
+			return root
+		}
 	}
-	return filepath.Join(home, "ivy/pyivy/ivy")
+	if home, err := os.UserHomeDir(); err == nil {
+		root := filepath.Join(home, "ivy", "pyivy", "ivy")
+		if _, err := os.Stat(root); err == nil {
+			return root
+		}
+		return root
+	}
+	return filepath.Join("..", "..", "pyivy", "ivy")
 }
 
 // pyIvyPython returns the Python interpreter to use for the sidecar.
-// Priority: PYIVY_PYTHON env var > ~/pyivy/venv/bin/python3 > python3.
+// Priority: PYIVY_PYTHON env var > pyivy/goivy-venv/bin/python3 > python3.
 func pyIvyPython() string {
 	if py := os.Getenv("PYIVY_PYTHON"); py != "" {
 		return py
 	}
-	home, err := os.UserHomeDir()
-	_ = home
-	if err == nil {
-		//venvPy := filepath.Join(home, "pyivy", "venv", "bin", "python3")
-		venvPy := filepath.Join("..", "pyivy", "goivy-venv", "bin", "python3")
+	root := pyIvyRoot()
+	if root != "" {
+		venvPy := filepath.Join(filepath.Dir(root), "goivy-venv", "bin", "python3")
 		if _, err := os.Stat(venvPy); err == nil {
 			return venvPy
 		}
 	}
 	return "python3"
+}
+
+func webuiRepoRoot() string {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		return ""
+	}
+	return filepath.Clean(filepath.Join(filepath.Dir(file), "..", ".."))
 }
 
 // NewPyBackend starts the Python sidecar and returns a PyBackend.
@@ -103,7 +119,10 @@ func NewPyBackend(cfg *goivy.Config) (*PyBackend, error) {
 	// Build environment with path to bundled Z3 library.
 	env := os.Environ()
 	env = appendEnvPath(env, "DYLD_LIBRARY_PATH", z3Dir)
+	env = appendEnvPath(env, "PYTHONPATH", root)
+	env = setEnv(env, "IVY_HOME", root)
 	cmd.Env = env
+	cmd.Dir = root
 	cmd.Stdin = bytes.NewBuffer(pytesthelper.SidecarDotPy)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -143,11 +162,22 @@ func appendEnvPath(env []string, key, dir string) []string {
 	prefix := key + "="
 	for i, e := range env {
 		if strings.HasPrefix(e, prefix) {
-			env[i] = prefix + dir + ":" + e[len(prefix):]
+			env[i] = prefix + dir + string(os.PathListSeparator) + e[len(prefix):]
 			return env
 		}
 	}
 	return append(env, key+"="+dir)
+}
+
+func setEnv(env []string, key, value string) []string {
+	prefix := key + "="
+	for i, e := range env {
+		if strings.HasPrefix(e, prefix) {
+			env[i] = prefix + value
+			return env
+		}
+	}
+	return append(env, key+"="+value)
 }
 
 func (b *PyBackend) Close() error {

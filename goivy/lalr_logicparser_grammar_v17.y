@@ -13,27 +13,26 @@
 //   < PLUS/MINUS < TIMES/DIV < DOLLAR < OLD < DOT
 
 %{
-package lalr_logicparser
+package goivy
 
 import (
 	"fmt"
-	"github.com/glycerine/ivy/goivy/ast"
 )
 
 // labelCounter is a package-level counter for generating unique mixer names.
 var lalrLabelCounter int
 
-// acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
-func lalr17Acfg(lex lalr17Lexer) *ast.AstConfig {
+// acfg extracts the *AstConfig from the lexer for use in grammar actions.
+func lalr17Acfg(lex lalr17Lexer) *AstConfig {
 	return lex.(*lalr17LexAdapter).cfg
 }
 
 // atypeToString extracts the string sort name from an atype Node.
-func lalr17AtypeToString(n ast.Node) string {
+func lalr17AtypeToString(n Node) string {
 	switch v := n.(type) {
-	case *ast.Symbol:
+	case *Symbol:
 		return v.Rep
-	case *ast.This:
+	case *This:
 		return "this"
 	default:
 		return fmt.Sprint(n)
@@ -44,8 +43,8 @@ func lalr17AtypeToString(n ast.Node) string {
 
 // The union type for semantic values.
 %union {
-	node     ast.Node
-	nodes    []ast.Node
+	node     Node
+	nodes    []Node
 	str      string
 }
 
@@ -184,9 +183,9 @@ atype:
     }
     | atype LALR17_TOK_DOT SYMBOLx
     {
-        if _, ok := $1.(*ast.This); ok {
+        if _, ok := $1.(*This); ok {
             $$ = lalr17Acfg(lalr17lex).NewSymbol($3, nil)
-        } else if sym, ok := $1.(*ast.Symbol); ok {
+        } else if sym, ok := $1.(*Symbol); ok {
             $$ = lalr17Acfg(lalr17lex).NewSymbol(sym.Rep + "." + $3, nil)
         } else {
             $$ = lalr17Acfg(lalr17lex).NewSymbol($3, nil)
@@ -199,7 +198,7 @@ atype:
     ;
 
 // --- appelem (v1.7+: application elements) ---
-// Bare symbol or symbol(terms...) — produces *ast.Atom for the LALR parser
+// Bare symbol or symbol(terms...) — produces *Atom for the LALR parser
 // (matching what the hand-written parser produces).
 
 appelem:
@@ -243,7 +242,7 @@ simplevar:
 vars:
     var
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | vars LALR17_TOK_COMMA var
     {
@@ -254,7 +253,7 @@ vars:
 simplevars:
     simplevar
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | simplevars LALR17_TOK_COMMA simplevar
     {
@@ -271,7 +270,7 @@ terms:
     }
     | term
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | terms LALR17_TOK_COMMA term
     {
@@ -297,18 +296,18 @@ term:
     | term LALR17_TOK_DOT appelem
     {
         switch lhs := $1.(type) {
-        case *ast.Atom:
-            rhs := $3.(*ast.Atom)
+        case *Atom:
+            rhs := $3.(*Atom)
             newRep := lhs.Rep + "." + rhs.Rep
-            newTerms := make([]ast.Node, 0, len(lhs.Terms)+len(rhs.Terms))
+            newTerms := make([]Node, 0, len(lhs.Terms)+len(rhs.Terms))
             newTerms = append(newTerms, lhs.Terms...)
             newTerms = append(newTerms, rhs.Terms...)
             $$ = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
-        case *ast.AstOld:
-            if inner, ok := lhs.Term.(*ast.Atom); ok {
-                rhs := $3.(*ast.Atom)
+        case *AstOld:
+            if inner, ok := lhs.Term.(*Atom); ok {
+                rhs := $3.(*Atom)
                 newRep := inner.Rep + "." + rhs.Rep
-                newTerms := make([]ast.Node, 0, len(inner.Terms)+len(rhs.Terms))
+                newTerms := make([]Node, 0, len(inner.Terms)+len(rhs.Terms))
                 newTerms = append(newTerms, inner.Terms...)
                 newTerms = append(newTerms, rhs.Terms...)
                 lhs.Term = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
@@ -393,7 +392,7 @@ term:
         // Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = And(p[1], p[3])
         // This flattens left-associative chains and absorbs true (And{}) identity.
-        if a, ok := $1.(*ast.AstAnd); ok {
+        if a, ok := $1.(*AstAnd); ok {
             a.Terms = append(a.Terms, $3)
             $$ = a
         } else {
@@ -404,7 +403,7 @@ term:
     {
         // Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = Or(p[1], p[3])
-        if o, ok := $1.(*ast.AstOr); ok {
+        if o, ok := $1.(*AstOr); ok {
             o.Terms = append(o.Terms, $3)
             $$ = o
         } else {
@@ -469,7 +468,7 @@ term:
     // --- Sort annotation ---
     | term LALR17_TOK_COLON atype
     {
-        if v, ok := $1.(*ast.Variable); ok {
+        if v, ok := $1.(*AstVariable); ok {
             v.VSort = lalr17AtypeToString($3)
         }
         $$ = $1
@@ -480,7 +479,7 @@ term:
         binder := lalr17Acfg(lalr17lex).NewNamedBinder($3, $4, $6)
         //binder.SetLineno(getLineno(lalr17lex))
         $$ = lalr17Acfg(lalr17lex).NewApp(binder, $9...)
-        //$$.(*ast.App).SetLineno(getLineno(lalr17lex))
+        //$$.(*App).SetLineno(getLineno(lalr17lex))
     }
     | LALR17_TOK_DOLLAR SYMBOLx LALR17_TOK_DOT fmla     %prec LALR17_TOK_SEMI
     {
@@ -498,7 +497,7 @@ fmla:
     term
     {
         // Python: app_to_atom(p[1]) — convert top-level App to Atom in formula position.
-        $$ = ast.AppToAtom($1)
+        $$ = AppToAtom($1)
     }
     ;
 
@@ -543,7 +542,7 @@ tterm:
 tterms:
     tterm
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tterms LALR17_TOK_COMMA tterm
     {
@@ -571,7 +570,7 @@ lparam:
 lparams:
     lparam
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | lparams LALR17_TOK_COMMA lparam
     {
@@ -599,7 +598,7 @@ sequence:
 actseq:
     action
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | actseq LALR17_TOK_SEMI action
     {
@@ -729,7 +728,7 @@ complexact:
 scenario:
     LALR17_TOK_SCENARIO LALR17_TOK_LCB sceninit LALR17_TOK_SEMI scentranss LALR17_TOK_RCB
     {
-        elems := append([]ast.Node{$3}, $5...)
+        elems := append([]Node{$3}, $5...)
         sdef := lalr17Acfg(lalr17lex).NewScenarioDef(elems)
         $$ = lalr17Acfg(lalr17lex).NewScenarioDecl(sdef)
     }
@@ -745,7 +744,7 @@ sceninit:
 places:
     LALR17_TOK_PRESYMBOL
     {
-        $$ = []ast.Node{lalr17Acfg(lalr17lex).NewAtom($1)}
+        $$ = []Node{lalr17Acfg(lalr17lex).NewAtom($1)}
     }
     | places LALR17_TOK_COMMA LALR17_TOK_PRESYMBOL
     {
@@ -778,7 +777,7 @@ scentrans:
 scenariomixin:
     LALR17_TOK_BEFORE atype sequence
     {
-        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
         mixer := lalr17Acfg(lalr17lex).NewAtom(mixerName)
@@ -787,7 +786,7 @@ scenariomixin:
     }
     | LALR17_TOK_AFTER atype sequence
     {
-        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
         mixer := lalr17Acfg(lalr17lex).NewAtom(mixerName)
@@ -814,7 +813,7 @@ pflet:
 pflets:
     pflet
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | pflets LALR17_TOK_COMMA pflet
     {
@@ -834,7 +833,7 @@ tacticwithelem:
     }
     | LALR17_TOK_TRIGGER atype LALR17_TOK_WITH terms
     {
-        $$ = lalr17Acfg(lalr17lex).NewTrigger(nil, append([]ast.Node{$2}, $4...)...)
+        $$ = lalr17Acfg(lalr17lex).NewTrigger(nil, append([]Node{$2}, $4...)...)
     }
     ;
 
@@ -842,7 +841,7 @@ tacticwithelem:
 tacticwithlist:
     tacticwithelem
     {
-        $$ = []ast.Node{$1}
+        $$ = []Node{$1}
     }
     | tacticwithlist tacticwithelem
     {
@@ -910,11 +909,11 @@ proofseq:
     }
     | proofseq LALR17_TOK_SEMI proofstep
     {
-        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]ast.Node{$1, $3})
+        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]Node{$1, $3})
     }
     | proofseq proofstep
     {
-        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]ast.Node{$1, $2})
+        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]Node{$1, $2})
     }
     ;
 
@@ -958,7 +957,7 @@ proofstep:
     // proofstep : FUNCTION atype
     | LALR17_TOK_FUNCTION atype
     {
-        $$ = lalr17Acfg(lalr17lex).NewFunctionTactic([]ast.Node{$2})
+        $$ = lalr17Acfg(lalr17lex).NewFunctionTactic([]Node{$2})
     }
     // proofstep : PROOF LABEL proofgroup
     | LALR17_TOK_PROOF LALR17_TOK_LABEL proofgroup
@@ -983,12 +982,12 @@ proofstep:
     // proofstep : UNFOLD WITH atype (simplified)
     | LALR17_TOK_UNFOLD LALR17_TOK_WITH atype
     {
-        $$ = lalr17Acfg(lalr17lex).NewUnfoldTactic(lalr17Acfg(lalr17lex).NewNoneAST(), []ast.Node{$3})
+        $$ = lalr17Acfg(lalr17lex).NewUnfoldTactic(lalr17Acfg(lalr17lex).NewNoneAST(), []Node{$3})
     }
     // proofstep : FORGET atype
     | LALR17_TOK_FORGET atype
     {
-        $$ = lalr17Acfg(lalr17lex).NewForgetTactic([]ast.Node{$2})
+        $$ = lalr17Acfg(lalr17lex).NewForgetTactic([]Node{$2})
     }
     // proofstep : proofgroup (nested braces)
     | proofgroup
@@ -1000,9 +999,9 @@ proofstep:
 %%
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
-func lalr17MakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
+func lalr17MakeSequence(cfg *AstConfig, stmts []Node) Node {
 	// Lower var declarations into nested local scopes, matching Python/HW parser.
-	stmts = ast.LowerVarStatements(stmts)
+	stmts = LowerVarStatements(stmts)
 	if len(stmts) == 0 {
 		return cfg.NewAnd()
 	}

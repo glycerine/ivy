@@ -99,11 +99,12 @@ build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/goivy_check
 
 grammar_gen: # be sure .y -> .go up to date
-	cd parser && go generate # grammar_v17.y
+	goyacc -o parser_grammar_v17.go -p parser17 parser_grammar_v17.y
+	go run parser_patch_parser.go
 	cd conceptspace && go generate # cs_grammar.y
-	cd lalr_logicparser/v12 && go generate # grammar_v12.y
-	cd lalr_logicparser/v16 && go generate # grammar_v16.y
-	cd lalr_logicparser && go generate # grammar_v17.y
+	goyacc -o v12_grammar_v12.go -p lalr12 v12_grammar_v12.y
+	goyacc -o v16_grammar_v16.go -p lalr16 v16_grammar_v16.y
+	goyacc -o lalr_logicparser_grammar_v17.go -p lalr17 lalr_logicparser_grammar_v17.y
 	cd evparser && go generate # ev_grammar.y
 
 
