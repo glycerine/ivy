@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-web vitest-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -109,6 +109,9 @@ grammar_gen: # be sure .y -> .go up to date
 
 
 GOBIN ?= $(HOME)/go/bin
+NODE_MODULES_DIR := ../node_modules
+VITEST_BIN := $(NODE_MODULES_DIR)/.bin/vitest
+PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
 
 tr: # xtracer builds:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
@@ -126,13 +129,18 @@ dylib_test: z3ivy
 test:
 	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
-test-js:
+$(VITEST_BIN) $(PLAYWRIGHT_BIN): ../package.json ../package-lock.json
+	cd .. && npm ci
+
+vitest-setup: $(VITEST_BIN) $(PLAYWRIGHT_BIN)
+
+test-js: $(VITEST_BIN)
 	cd .. && npm run test:webui:js
 
-test-js-watch:
+test-js-watch: $(VITEST_BIN)
 	cd .. && npm run test:webui:js:watch
 
-test-browser:
+test-browser: $(PLAYWRIGHT_BIN)
 	cd .. && npm run test:webui:browser
 
 dylib_test-web: z3ivy
