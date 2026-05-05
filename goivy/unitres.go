@@ -71,7 +71,7 @@ func AtomEqual(a, b *ResolutionAtom) bool {
 // rep returns the name of a Var or Const.
 func unitresRep(n Expr) string {
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return t.Name
 	case *Const:
 		return t.Name
@@ -82,7 +82,7 @@ func unitresRep(n Expr) string {
 
 // isVar returns true if the node is a *logic.Variable.
 func isVar(n Expr) bool {
-	_, ok := n.(*Variable)
+	_, ok := n.(*LogicVariable)
 	return ok
 }
 
@@ -115,9 +115,9 @@ func isTautEqualityLit(lit *UnitResLiteral) bool {
 
 // isTrueLit returns true if the literal is trivially true.
 func isTrueLit(lit *UnitResLiteral) bool {
-	// A literal with atom = And() (empty And = True) and polarity 1
+	// A literal with atom = LogicAnd() (empty And = True) and polarity 1
 	if lit.Polarity == 1 && len(lit.Atom.Args) == 1 {
-		if a, ok := lit.Atom.Args[0].(*And); ok && len(a.Terms) == 0 {
+		if a, ok := lit.Atom.Args[0].(*LogicAnd); ok && len(a.Terms) == 0 {
 			return true
 		}
 	}

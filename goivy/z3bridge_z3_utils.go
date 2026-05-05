@@ -102,7 +102,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		// Python: _z3_interpreted[Boolean] → z3.BoolSort()
 		return u.Ctx.BoolSort(), nil
 
-	case *And:
+	case *LogicAnd:
 		if len(node.Terms) == 0 {
 			// Python: _z3_interpreted[true] → z3.BoolVal(True)
 			return u.Ctx.BoolVal(true), nil
@@ -118,7 +118,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.And(args...), nil
 
-	case *Or:
+	case *LogicOr:
 		if len(node.Terms) == 0 {
 			// Python: _z3_interpreted[false] → z3.BoolVal(False)
 			return u.Ctx.BoolVal(false), nil
@@ -145,11 +145,11 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		return zs, nil
 
 	// Python lines 66-67: FunctionSort → assert False
-	case *FunctionSort:
+	case *LogicFunctionSort:
 		return nil, fmt.Errorf("z3_utils: FunctionSort's aren't converted to Z3")
 
 	// Python lines 69-81: Var/Const with various sort types
-	case *Variable:
+	case *LogicVariable:
 		return u.toZ3VarOrConst(node.Name, node.VSort, false)
 
 	case *Const:
@@ -194,7 +194,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.Eq(t1, t2), nil
 
-	case *Not:
+	case *LogicNot:
 		// Python: _z3_operators[Not] → z3.Not
 		body, err := u.ToZ3Expr(node.Body)
 		if err != nil {
@@ -202,7 +202,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.Not(body), nil
 
-	case *Implies:
+	case *LogicImplies:
 		// Python: _z3_operators[Implies] → z3.Implies
 		t1, err := u.ToZ3Expr(node.T1)
 		if err != nil {
@@ -214,7 +214,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.Implies(t1, t2), nil
 
-	case *Iff:
+	case *LogicIff:
 		// Python: _z3_operators[Iff] → lambda t1, t2: t1 == t2
 		// NOTE: maps to Eq (z3 equality), NOT Iff
 		t1, err := u.ToZ3Expr(node.T1)
@@ -227,7 +227,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.Eq(t1, t2), nil
 
-	case *Ite:
+	case *LogicIte:
 		// Python: _z3_operators[Ite] → z3.If
 		cond, err := u.ToZ3Expr(node.Cond)
 		if err != nil {
@@ -264,7 +264,7 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.ForAll(bound, body), nil
 
-	case *Exists:
+	case *LogicExists:
 		if len(node.Variables) == 0 {
 			return u.ToZ3Expr(node.Body)
 		}
@@ -302,7 +302,7 @@ func (u *Z3Utils) toZ3VarOrConst(name string, sort Sort, isConst bool) (any, err
 		return u.Ctx.Const(name+":"+sort.String(), zs), nil
 	}
 
-	fs, ok := sort.(*FunctionSort)
+	fs, ok := sort.(*LogicFunctionSort)
 	if !ok {
 		return nil, fmt.Errorf("z3_utils: expected FunctionSort for non-first-order sort, got %T", sort)
 	}
@@ -359,7 +359,7 @@ func (u *Z3Utils) Z3Implies(f1, f2 Expr, timeout bool) (bool, error) {
 	}
 	s.Assert(zf1)
 
-	negF2 := &Not{Body: f2}
+	negF2 := &LogicNot{Body: f2}
 	zNegF2, err := u.ToZ3Expr(negF2)
 	if err != nil {
 		return false, err
@@ -405,7 +405,7 @@ func (u *Z3Utils) Z3ImpliesBatch(premise Expr, formulas []Expr, timeout bool) ([
 		}
 
 		s.Push()
-		negF := &Not{Body: f}
+		negF := &LogicNot{Body: f}
 		zNeg, err := u.ToZ3Expr(negF)
 		if err != nil {
 			return nil, err

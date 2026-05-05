@@ -20,7 +20,7 @@ func TestGoalIsDefn_ConstantDecl(t *testing.T) {
 func TestGoalIsDefn_ConstDeclLambda(t *testing.T) {
 	s := proofMkSort("S")
 	v := proofMkVar("X", s)
-	lam, _ := NewLambda([]*Variable{v}, v)
+	lam, _ := NewLambda([]*LogicVariable{v}, v)
 	cd := proofTestAstCfg.NewConstantDecl(lam)
 	if GoalIsDefn(cd) {
 		t.Error("ConstantDecl with Lambda arg should NOT be a definition")
@@ -161,7 +161,7 @@ func TestGoalSubst_NameClash(t *testing.T) {
 func TestGoalVocabBound_IncludesBound(t *testing.T) {
 	s := proofMkSort("S")
 	x := proofMkVar("X", s)
-	body := &ForAll{Variables: []*Variable{x}, Body: True}
+	body := &ForAll{Variables: []*LogicVariable{x}, Body: True}
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), body)
 
 	v := GoalVocabBound(goal)
@@ -181,8 +181,8 @@ func TestGoalVocabBound_TemporalModels(t *testing.T) {
 	// Bug 4 regression: TemporalModels wrapping a ForAll.
 	s := proofMkSort("S")
 	x := proofMkVar("X", s)
-	body := &ForAll{Variables: []*Variable{x}, Body: True}
-	tm := &AstTemporalModels{Fmla: body}
+	body := &ForAll{Variables: []*LogicVariable{x}, Body: True}
+	tm := &TemporalModels{Fmla: body}
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), tm)
 
 	v := GoalVocabBound(goal)
@@ -222,7 +222,7 @@ func TestConcAsExpr_Expr(t *testing.T) {
 func TestConcAsExpr_TemporalModels(t *testing.T) {
 	s := proofMkSort("S")
 	c := proofMkConst("c", s)
-	tm := &AstTemporalModels{Fmla: c}
+	tm := &TemporalModels{Fmla: c}
 	result := ConcAsExpr(tm)
 	if result != c {
 		t.Error("expected inner Const from TemporalModels")
@@ -240,7 +240,7 @@ func TestConcAsExpr_NonExpr(t *testing.T) {
 func TestGoalConcUnwrap(t *testing.T) {
 	s := proofMkSort("S")
 	c := proofMkConst("c", s)
-	tm := &AstTemporalModels{Fmla: c}
+	tm := &TemporalModels{Fmla: c}
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), tm)
 	result := GoalConcUnwrap(goal)
 	if result != c {
@@ -252,30 +252,30 @@ func TestGoalConcUnwrap(t *testing.T) {
 
 func TestApplyToConc_PlainExpr(t *testing.T) {
 	c := proofMkConst("c", proofMkSort("S"))
-	negate := func(e Expr) Expr { return &Not{Body: e} }
+	negate := func(e Expr) Expr { return &LogicNot{Body: e} }
 	result := ApplyToConc(c, negate)
-	if not, ok := result.(*Not); !ok || not.Body != c {
-		t.Error("expected Not{c}")
+	if not, ok := result.(*LogicNot); !ok || not.Body != c {
+		t.Error("expected LogicNot{c}")
 	}
 }
 
 func TestApplyToConc_TemporalModels(t *testing.T) {
 	c := proofMkConst("c", proofMkSort("S"))
-	tm := &AstTemporalModels{Fmla: c}
-	negate := func(e Expr) Expr { return &Not{Body: e} }
+	tm := &TemporalModels{Fmla: c}
+	negate := func(e Expr) Expr { return &LogicNot{Body: e} }
 	result := ApplyToConc(tm, negate)
-	rtm, ok := result.(*AstTemporalModels)
+	rtm, ok := result.(*TemporalModels)
 	if !ok {
 		t.Fatalf("expected *ast.TemporalModels, got %T", result)
 	}
-	if _, ok := rtm.Fmla.(*Not); !ok {
+	if _, ok := rtm.Fmla.(*LogicNot); !ok {
 		t.Error("expected inner formula to be negated")
 	}
 }
 
 func TestApplyToConc_NonExpr(t *testing.T) {
 	atom := proofTestAstCfg.NewAtom("a")
-	negate := func(e Expr) Expr { return &Not{Body: e} }
+	negate := func(e Expr) Expr { return &LogicNot{Body: e} }
 	result := ApplyToConc(atom, negate)
 	if result != atom {
 		t.Error("non-Expr should pass through unchanged")
@@ -288,13 +288,13 @@ func TestGoalApplyToConc(t *testing.T) {
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), c)
 	fn := func(n Node) Node {
 		if e, ok := n.(Expr); ok {
-			return &Not{Body: e}
+			return &LogicNot{Body: e}
 		}
 		return n
 	}
 	result := GoalApplyToConc(proofTestAstCfg, goal, fn)
 	conc := GoalConc(result)
-	if _, ok := conc.(*Not); !ok {
+	if _, ok := conc.(*LogicNot); !ok {
 		t.Errorf("expected Not conclusion, got %T", conc)
 	}
 }
@@ -340,7 +340,7 @@ func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
 	prem := mkLF(proofTestAstCfg.NewAtom("prem"), c)
 
 	// Verify precondition
-	if _, ok := GoalConc(goal).(*AstTemporalModels); !ok {
+	if _, ok := GoalConc(goal).(*TemporalModels); !ok {
 		t.Fatalf("precondition: expected TemporalModels conclusion, got %T", GoalConc(goal))
 	}
 
@@ -348,7 +348,7 @@ func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
 
 	// The conclusion must still be TemporalModels
 	conc := GoalConc(result)
-	if _, ok := conc.(*AstTemporalModels); !ok {
+	if _, ok := conc.(*TemporalModels); !ok {
 		t.Fatalf("GoalAddPrem lost TemporalModels conclusion, got %T", conc)
 	}
 	// Should have 2 premises now: ConstantDecl + prem
@@ -421,7 +421,7 @@ func FuzzGoalIsDefn(f *testing.F) {
 			node = proofMkConst("c", s)
 		case 3:
 			v := proofMkVar("X", s)
-			lam, _ := NewLambda([]*Variable{v}, v)
+			lam, _ := NewLambda([]*LogicVariable{v}, v)
 			node = proofTestAstCfg.NewConstantDecl(lam)
 		}
 		_ = GoalIsDefn(node) // must not panic

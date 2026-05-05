@@ -971,7 +971,7 @@ func (ag *AnalysisGraph) CheckBoundedSafety(state *State, bound *int) *SafetyRes
 		if !ok {
 			continue
 		}
-		errorCond := &Not{Body: fmla}
+		errorCond := &LogicNot{Body: fmla}
 		cexArt := ag.BMC(state, errorCond, nil, bound)
 		if cexArt != nil {
 			labelStr := ""
@@ -1153,11 +1153,11 @@ func (ag *AnalysisGraph) MakeConcreteTrace(state *State, conc interface{}) {
 // If the state has a label, returns predicate-based equations.
 // Otherwise returns equations for each public action applied to the state.
 // Python ivy_art.py:134-137.
-func (ag *AnalysisGraph) StateActions(state *State) []*AstDefinition {
+func (ag *AnalysisGraph) StateActions(state *State) []*Definition {
 	if state.Label != "" {
 		// Labeled state: use predicates
 		interpState := ArtToInterpState(state)
-		var result []*AstDefinition
+		var result []*Definition
 		for post, e := range ag.Predicates {
 			if e == nil {
 				continue
@@ -1172,7 +1172,7 @@ func (ag *AnalysisGraph) StateActions(state *State) []*AstDefinition {
 		return result
 	}
 	// Unlabeled state: apply each public action
-	var result []*AstDefinition
+	var result []*Definition
 	for actionName := range ag.Actions.All() {
 		if !ag.PublicActions.Get(actionName) {
 			continue
@@ -1190,7 +1190,7 @@ func (ag *AnalysisGraph) StateActions(state *State) []*AstDefinition {
 //
 // Note: python UI path uses false for checkPrecond here (for
 // when we get to that point in the porting).
-func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *AstDefinition, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *Definition, abstractor Abstractor) *State {
 	ac := ag.Context()
 	_ = ac
 	rhs := equation.Rhs
@@ -1243,10 +1243,10 @@ func (ag *AnalysisGraph) RecalculateState(checkPrecond bool, state *State, abstr
 // StateExtensions yields state equations for extending the given state
 // that are not yet covered by the fixpoint candidate.
 // Python ivy_art.py:434-440.
-func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *State) *State) []*AstDefinition {
+func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *State) *State) []*Definition {
 	sas := ag.StateActions(state)
 	fpc := ag.FixedpointCandidate(joinFn)
-	var result []*AstDefinition
+	var result []*Definition
 	for _, equation := range sas {
 		// Get the label from the LHS
 		label := ""
@@ -1345,7 +1345,7 @@ func (ag *AnalysisGraph) AsCyElements(dotLayout func(*CyElements) *CyElements) *
 		var longInfo interface{} = shortInfo
 		if s.Clauses != nil {
 			openFmla := s.Clauses.ToOpenFormula()
-			if and, ok := openFmla.(*And); ok && len(and.Terms) > 0 {
+			if and, ok := openFmla.(*LogicAnd); ok && len(and.Terms) > 0 {
 				fmlaStrings := make([]string, len(and.Terms))
 				for i, term := range and.Terms {
 					fmlaStrings[i] = term.String()
@@ -1543,7 +1543,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *Clauses, abstractor Abstractor) *St
 
 	if len(mod.Initializers) > 0 {
 		// Python ivy_art.py:106-114:
-		//   action = Sequence(*[a for n,a in domain.initializers])
+		//   action = LogicSequence(*[a for n,a in domain.initializers])
 		//   action = env_action(action, 'init')
 		//   s = action_app(action, s)
 		//   with AC(self, no_add=True):
@@ -1559,7 +1559,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *Clauses, abstractor Abstractor) *St
 		}
 		if len(seqChildren) > 0 {
 			// Step 1: Sequence(*initializers)
-			// Python: action = Sequence(*[a for n,a in domain.initializers])
+			// Python: action = LogicSequence(*[a for n,a in domain.initializers])
 			seq := NewSequence(seqChildren...)
 
 			// Step 2: env_action(action, 'init')
@@ -1799,7 +1799,7 @@ func interpExprToProvenance(expr Node, memo map[*InterpState]*State) Provenance 
 		return &ActionApp{Rep: rep, Args: args}
 	}
 	if IsInterpStateJoin(expr) {
-		or := expr.(*AstOr)
+		or := expr.(*Or)
 		var args []*State
 		for _, term := range or.Terms {
 			if is := UnwrapState(term); is != nil {

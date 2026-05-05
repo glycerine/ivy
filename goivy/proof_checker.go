@@ -63,7 +63,7 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	for _, d := range definitions {
 		norm := NormalizeGoal(pc.AstCfg, d)
 		name := ""
-		if def, ok := d.Formula.(*Definition); ok {
+		if def, ok := d.Formula.(*LogicDefinition); ok {
 			if sym, ok := def.Defines().(*Const); ok {
 				name = sym.Name
 			}
@@ -179,7 +179,7 @@ func (pc *ProofChecker) LookupSchema(name string, goal *LabeledFormula, errNode 
 	if d, ok := pc.Definitions[name]; ok {
 		// Convert definition to constraint — Python: goal_conc(schema).to_constraint()
 		conc := GoalConc(d)
-		if def, ok := conc.(*Definition); ok {
+		if def, ok := conc.(*LogicDefinition); ok {
 			fmla := DefinitionToConstraint(def)
 			if close {
 				fmla = CloseFormula(fmla)
@@ -284,10 +284,10 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 		xtracer.Trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d err=%v", len(res), err)
 		return res, err
 
-	case *AstProofTactic:
-		xtracer.Trace("proof.ApplyProof dispatch name=ProofTactic")
+	case *ProofTactic:
+		xtracer.Trace("proof.ApplyProof dispatch name= LogicProofTactic")
 		res, err := pc.proofTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=%v", len(res), err)
+		xtracer.Trace("proof.ApplyProof EXIT proofType= LogicProofTactic ngoals=%d err=%v", len(res), err)
 		return res, err
 
 	case *TacticTactic:
@@ -369,7 +369,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 	}
 	// Schema matching does not apply to *ast.TemporalModels goals.
 	// Mirror Python ivy_proof.py:429 which raises NoMatch in this case.
-	if _, isTM := goalConc.(*AstTemporalModels); isTM {
+	if _, isTM := goalConc.(*TemporalModels); isTM {
 		xtracer.Trace("proof.MatchSchema EXIT err=temporalModels")
 		return nil, &NoMatch{Msg: "schema matching does not apply to temporal-models goals"}
 	}
@@ -486,7 +486,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*La
 	xtracer.Trace("proof.AdmitDefinition ENTER defnLabel=%s hasProof=%v", defn.LabelName(), proof != nil)
 	defn = NormalizeGoal(pc.astCfg(), defn)
 	// Extract the defined symbol
-	def, ok := defn.Formula.(*Definition)
+	def, ok := defn.Formula.(*LogicDefinition)
 	if !ok {
 		return nil, &ProofError{Msg: "admit_definition: formula is not a Definition"}
 	}
@@ -539,7 +539,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*La
 func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, existingSubgoals ...*LabeledFormula) ([]*LabeledFormula, error) {
 	xtracer.Trace("proof.AdmitProposition ENTER propLabel=%s hasProof=%v nExistingSubgoals=%d", prop.LabelName(), proof != nil, len(existingSubgoals))
 	prop = NormalizeGoal(pc.astCfg(), prop)
-	if _, isDef := prop.Formula.(*Definition); isDef {
+	if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 		xtracer.Trace("proof.AdmitProposition delegateToDefinition")
 		return pc.AdmitDefinition(prop, proof)
 	}
@@ -575,7 +575,7 @@ func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, exist
 func (pc *ProofChecker) GetSubgoals(prop *LabeledFormula, proof Node) ([]*LabeledFormula, error) {
 	xtracer.Trace("proof.GetSubgoals ENTER propLabel=%s", prop.LabelName())
 	// Python: assert not isinstance(prop.formula, il.IvyDefinition) — checked BEFORE normalize
-	if _, isDef := prop.Formula.(*Definition); isDef {
+	if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 		xtracer.Trace("proof.GetSubgoals EXIT err=isDefinition")
 		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}
 	}
@@ -675,7 +675,7 @@ func (pc *ProofChecker) forgetTactic(decls []*LabeledFormula, proof *ForgetTacti
 
 // proofTactic applies a proof to a specific labeled goal.
 // Corresponds to Python's proof_tactic.
-func (pc *ProofChecker) proofTactic(decls []*LabeledFormula, proof *AstProofTactic) ([]*LabeledFormula, error) {
+func (pc *ProofChecker) proofTactic(decls []*LabeledFormula, proof *ProofTactic) ([]*LabeledFormula, error) {
 	labelStr := nodeToString(proof.TLabel)
 	xtracer.Trace("proof.proofTactic ENTER label=%s ndecls=%d", labelStr, len(decls))
 	for idx, decl := range decls {

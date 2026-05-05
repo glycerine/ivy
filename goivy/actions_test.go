@@ -400,7 +400,7 @@ func TestPrefixAction(t *testing.T) {
 	stmt := NewAssumeAction(actionsMkConst("pre"))
 	result := PrefixAction(body, []ActionsAction{stmt})
 
-	if _, ok := result.(*Sequence); !ok {
+	if _, ok := result.(*LogicSequence); !ok {
 		t.Error("PrefixAction should return a Sequence")
 	}
 	if result.GetLineno().Line != 5 {
@@ -418,7 +418,7 @@ func TestPostfixAction(t *testing.T) {
 
 	stmt := NewAssumeAction(actionsMkConst("post"))
 	result = PostfixAction(body, []ActionsAction{stmt})
-	if _, ok := result.(*Sequence); !ok {
+	if _, ok := result.(*LogicSequence); !ok {
 		t.Error("PostfixAction should return a Sequence")
 	}
 }

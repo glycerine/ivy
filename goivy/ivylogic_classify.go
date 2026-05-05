@@ -20,7 +20,7 @@ func IsPrenexUniversal(n Expr) bool {
 	if fa, ok := n.(*ForAll); ok {
 		return IsPrenexUniversal(fa.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		return IsPrenexExistential(neg.Body)
 	}
 	return IsQF(n)
@@ -28,10 +28,10 @@ func IsPrenexUniversal(n Expr) bool {
 
 // IsPrenexExistential returns true if the formula is in prenex existential form.
 func IsPrenexExistential(n Expr) bool {
-	if ex, ok := n.(*Exists); ok {
+	if ex, ok := n.(*LogicExists); ok {
 		return IsPrenexExistential(ex.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		return IsPrenexUniversal(neg.Body)
 	}
 	return IsQF(n)
@@ -48,10 +48,10 @@ func IsAE(n Expr) bool {
 	if fa, ok := n.(*ForAll); ok {
 		return IsAE(fa.Body)
 	}
-	if ex, ok := n.(*Exists); ok {
+	if ex, ok := n.(*LogicExists); ok {
 		return IsPrenexExistential(ex.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		return IsEA(neg.Body)
 	}
 	return IsQF(n)
@@ -59,13 +59,13 @@ func IsAE(n Expr) bool {
 
 // IsEA returns true if the formula is in EA form (exists-forall).
 func IsEA(n Expr) bool {
-	if ex, ok := n.(*Exists); ok {
+	if ex, ok := n.(*LogicExists); ok {
 		return IsEA(ex.Body)
 	}
 	if fa, ok := n.(*ForAll); ok {
 		return IsPrenexUniversal(fa.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		return IsAE(neg.Body)
 	}
 	return IsQF(n)
@@ -76,11 +76,11 @@ func IvyDropUniversals(n Expr) Expr {
 	if fa, ok := n.(*ForAll); ok {
 		return IvyDropUniversals(fa.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		notBody := DropExistentials(neg.Body)
-		return &Not{Body: notBody}
+		return &LogicNot{Body: notBody}
 	}
-	if and, ok := n.(*And); ok && len(and.Terms) == 1 {
+	if and, ok := n.(*LogicAnd); ok && len(and.Terms) == 1 {
 		return IvyDropUniversals(and.Terms[0])
 	}
 	return n
@@ -88,12 +88,12 @@ func IvyDropUniversals(n Expr) Expr {
 
 // DropExistentials strips leading existential quantifiers and handles negation.
 func DropExistentials(n Expr) Expr {
-	if ex, ok := n.(*Exists); ok {
+	if ex, ok := n.(*LogicExists); ok {
 		return DropExistentials(ex.Body)
 	}
-	if neg, ok := n.(*Not); ok {
+	if neg, ok := n.(*LogicNot); ok {
 		notBody := IvyDropUniversals(neg.Body)
-		return &Not{Body: notBody}
+		return &LogicNot{Body: notBody}
 	}
 	return n
 }
@@ -144,7 +144,7 @@ func SimpAnd(x, y Expr) Expr {
 	if IvyIsFalse(y) {
 		return y
 	}
-	return &And{Terms: []Expr{x, y}}
+	return &LogicAnd{Terms: []Expr{x, y}}
 }
 
 // SimpOr simplifies Or(x, y) with constant folding.
@@ -161,21 +161,21 @@ func SimpOr(x, y Expr) Expr {
 	if IvyIsTrue(y) {
 		return y
 	}
-	return &Or{Terms: []Expr{x, y}}
+	return &LogicOr{Terms: []Expr{x, y}}
 }
 
 // SimpNot simplifies Not(x) with constant folding and double-negation.
 func SimpNot(x Expr) Expr {
-	if neg, ok := x.(*Not); ok {
+	if neg, ok := x.(*LogicNot); ok {
 		return neg.Body
 	}
 	if IvyIsTrue(x) {
-		return &Or{} // false
+		return &LogicOr{} // false
 	}
 	if IvyIsFalse(x) {
-		return &And{} // true
+		return &LogicAnd{} // true
 	}
-	return &Not{Body: x}
+	return &LogicNot{Body: x}
 }
 
 // SimpIte simplifies Ite(i, t, e) with constant folding.
@@ -201,7 +201,7 @@ func SimpIte(i, t, e Expr) Expr {
 	if IvyIsFalse(e) {
 		return SimpAnd(i, t)
 	}
-	return &Ite{ISort: t.NodeSort(), Cond: i, Then: t, Else: e}
+	return &LogicIte{ISort: t.NodeSort(), Cond: i, Then: t, Else: e}
 }
 
 // NegatePolarity negates a polarity value (0 ↔ 1, nil stays nil).
@@ -217,16 +217,16 @@ func NegatePolarity(pol int) int {
 // fmla has polarity pol. Returns -1 for "both polarities".
 func Polar(fmla Expr, pos, pol int) int {
 	switch fmla.(type) {
-	case *Not:
+	case *LogicNot:
 		return NegatePolarity(pol)
-	case *Implies:
+	case *LogicImplies:
 		if pos == 1 {
 			return pol
 		}
 		return NegatePolarity(pol)
-	case *ForAll, *Exists, *And, *Or:
+	case *ForAll, *LogicExists, *LogicAnd, *LogicOr:
 		return pol
-	case *Ite:
+	case *LogicIte:
 		if pos == 0 {
 			return -1
 		}

@@ -26,7 +26,7 @@ func logicLoadVectors(t *testing.T) map[string]string {
 	return m
 }
 
-func logicMustVar(t *testing.T, name string, s Sort) *Variable {
+func logicMustVar(t *testing.T, name string, s Sort) *LogicVariable {
 	t.Helper()
 	v, err := NewVariable(name, s)
 	if err != nil {
@@ -35,7 +35,7 @@ func logicMustVar(t *testing.T, name string, s Sort) *Variable {
 	return v
 }
 
-func logicMustFuncSort(t *testing.T, sorts ...Sort) *FunctionSort {
+func logicMustFuncSort(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 	t.Helper()
 	fs, err := NewFunctionSort(sorts...)
 	if err != nil {
@@ -63,7 +63,7 @@ func logicMustEq(t *testing.T, t1, t2 Expr) *Eq {
 }
 
 // helper sorts and variables used across tests
-func setupCommon(t *testing.T) (Sort, *Variable, *Variable, *Eq) {
+func setupCommon(t *testing.T) (Sort, *LogicVariable, *LogicVariable, *Eq) {
 	t.Helper()
 	S := &UninterpretedSort{Name: "S"}
 	X := logicMustVar(t, "X", S)
@@ -112,13 +112,13 @@ func TestLogicSexpFunctionSort(t *testing.T) {
 func TestLogicSexpEnumeratedSort(t *testing.T) {
 	vecs := logicLoadVectors(t)
 
-	es := &EnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
 	logicCheckSexp(t, vecs, "enum_sort", string(es.Sexp()))
 
-	es1 := &EnumeratedSort{Name: "X", Extension: []string{"a"}}
+	es1 := &LogicEnumeratedSort{Name: "X", Extension: []string{"a"}}
 	logicCheckSexp(t, vecs, "enum_sort_single", string(es1.Sexp()))
 
-	es0 := &EnumeratedSort{Name: "E", Extension: []string{}}
+	es0 := &LogicEnumeratedSort{Name: "E", Extension: []string{}}
 	logicCheckSexp(t, vecs, "enum_sort_empty", string(es0.Sexp()))
 }
 
@@ -326,7 +326,7 @@ func TestLogicSexpForAll(t *testing.T) {
 	vecs := logicLoadVectors(t)
 	S, X, _, eq := setupCommon(t)
 
-	fa, err := NewForAll([]*Variable{X}, eq)
+	fa, err := NewForAll([]*LogicVariable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -336,7 +336,7 @@ func TestLogicSexpForAll(t *testing.T) {
 	A := logicMustVar(t, "A", S)
 	Z := logicMustVar(t, "Z", S)
 	eqAZ := logicMustEq(t, A, Z)
-	fa2, err := NewForAll([]*Variable{Z, A}, eqAZ)
+	fa2, err := NewForAll([]*LogicVariable{Z, A}, eqAZ)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -346,7 +346,7 @@ func TestLogicSexpForAll(t *testing.T) {
 func TestLogicSexpExists(t *testing.T) {
 	vecs := logicLoadVectors(t)
 	_, X, _, eq := setupCommon(t)
-	ex, err := NewExists([]*Variable{X}, eq)
+	ex, err := NewExists([]*LogicVariable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -356,7 +356,7 @@ func TestLogicSexpExists(t *testing.T) {
 func TestLogicSexpLambda(t *testing.T) {
 	vecs := logicLoadVectors(t)
 	_, X, _, _ := setupCommon(t)
-	lam, err := NewLambda([]*Variable{X}, X)
+	lam, err := NewLambda([]*LogicVariable{X}, X)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -367,14 +367,14 @@ func TestLogicSexpNamedBinder(t *testing.T) {
 	vecs := logicLoadVectors(t)
 	_, X, _, eq := setupCommon(t)
 
-	nb1, err := NewNamedBinder("nb", []*Variable{X}, nil, eq)
+	nb1, err := NewNamedBinder("nb", []*LogicVariable{X}, nil, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
 	logicCheckSexp(t, vecs, "named_binder_nil_env", string(nb1.Sexp()))
 
 	env := "e1"
-	nb2, err := NewNamedBinder("nb", []*Variable{X}, &env, eq)
+	nb2, err := NewNamedBinder("nb", []*LogicVariable{X}, &env, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -421,7 +421,7 @@ func TestLogicCanonEqualsSexp(t *testing.T) {
 		{"UninterpretedSort", string(S.Sexp()), string(S.Canon())},
 		{"BooleanSort", string(Boolean.Sexp()), string(Boolean.Canon())},
 		{"FunctionSort", string(fs.Sexp()), string(fs.Canon())},
-		{"EnumeratedSort", string((&EnumeratedSort{Name: "E", Extension: []string{"a"}}).Sexp()), string((&EnumeratedSort{Name: "E", Extension: []string{"a"}}).Canon())},
+		{"EnumeratedSort", string((&LogicEnumeratedSort{Name: "E", Extension: []string{"a"}}).Sexp()), string((&LogicEnumeratedSort{Name: "E", Extension: []string{"a"}}).Canon())},
 		{"RangeSort", string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Sexp()), string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Canon())},
 		{"TopSort", string(TopS.Sexp()), string(TopS.Canon())},
 		{"Variable", string(X.Sexp()), string(X.Canon())},
@@ -462,16 +462,16 @@ func TestLogicCanonEqualsSexp(t *testing.T) {
 	cond, _ := NewCond(X, Y)
 	nodes = append(nodes, testCase{"Cond", string(cond.Sexp()), string(cond.Canon())})
 
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 	nodes = append(nodes, testCase{"ForAll", string(fa.Sexp()), string(fa.Canon())})
 
-	ex, _ := NewExists([]*Variable{X}, eq)
+	ex, _ := NewExists([]*LogicVariable{X}, eq)
 	nodes = append(nodes, testCase{"Exists", string(ex.Sexp()), string(ex.Canon())})
 
-	lam, _ := NewLambda([]*Variable{X}, X)
+	lam, _ := NewLambda([]*LogicVariable{X}, X)
 	nodes = append(nodes, testCase{"Lambda", string(lam.Sexp()), string(lam.Canon())})
 
-	nb, _ := NewNamedBinder("nb", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("nb", []*LogicVariable{X}, nil, eq)
 	nodes = append(nodes, testCase{"NamedBinder", string(nb.Sexp()), string(nb.Canon())})
 
 	def := NewDefinition(X, Y)

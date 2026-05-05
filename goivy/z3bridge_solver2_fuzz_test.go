@@ -256,7 +256,7 @@ func FuzzSortCard(f *testing.F) {
 			for i := range ext {
 				ext[i] = string(rune('a' + i%26))
 			}
-			sort = &EnumeratedSort{Name: "E", Extension: ext}
+			sort = &LogicEnumeratedSort{Name: "E", Extension: ext}
 		case 1:
 			lo := 0
 			hi := param
@@ -386,7 +386,7 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			for i := range ext {
 				ext[i] = string(rune('a' + i))
 			}
-			es := &EnumeratedSort{Name: "E", Extension: ext}
+			es := &LogicEnumeratedSort{Name: "E", Extension: ext}
 
 			sig := NewSig()
 			for _, name := range ext {
@@ -493,9 +493,9 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 
 			var fmla Expr
 			if isForall {
-				fmla = &ForAll{Variables: []*Variable{x}, Body: pApp}
+				fmla = &ForAll{Variables: []*LogicVariable{x}, Body: pApp}
 			} else {
-				fmla = &Exists{Variables: []*Variable{x}, Body: pApp}
+				fmla = &LogicExists{Variables: []*LogicVariable{x}, Body: pApp}
 			}
 
 			_, _ = s.FormulaToZ3(fmla)

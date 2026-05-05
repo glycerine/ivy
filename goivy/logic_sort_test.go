@@ -92,14 +92,14 @@ func TestLogicFunctionSortEquality(t *testing.T) {
 }
 
 func TestLogicEnumeratedSort(t *testing.T) {
-	es := &EnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
 	if es.Card() != 3 {
 		t.Errorf("Card() = %d, want 3", es.Card())
 	}
 	if es.String() != "{red,green,blue}" {
 		t.Errorf("String() = %q, want %q", es.String(), "{red,green,blue}")
 	}
-	es2 := &EnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
+	es2 := &LogicEnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
 	if !SortEqual(es, es2) {
 		t.Error("Same EnumeratedSorts should be equal")
 	}
@@ -244,7 +244,7 @@ func FuzzNewFunctionSort(f *testing.F) {
 }
 
 // dup of logicMustFuncSort
-// func mustFS(t *testing.T, sorts ...Sort) *FunctionSort {
+// func mustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 // 	t.Helper()
 // 	fs, err := NewFunctionSort(sorts...)
 // 	if err != nil {

@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-func mkWhileActionForTest(sortName string) *WhileAction {
+func mkWhileActionForTest(sortName string) *LogicWhileAction {
 	sortT := actionsMkSort(sortName)
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	cond, _ := NewApply(ltSym, xSym, boundSym)
@@ -31,8 +31,8 @@ func TestUnrollLoops_NoWhile(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := result.(*AssumeAction); !ok {
-		t.Errorf("expected *AssumeAction, got %T", result)
+	if _, ok := result.(*LogicAssumeAction); !ok {
+		t.Errorf("expected *LogicAssumeAction, got %T", result)
 	}
 }
 
@@ -42,9 +42,9 @@ func TestUnrollLoops_SimpleWhile(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	top, ok := result.(*IfAction)
+	top, ok := result.(*LogicIfAction)
 	if !ok {
-		t.Fatalf("expected *IfAction at top, got %T", result)
+		t.Fatalf("expected *LogicIfAction at top, got %T", result)
 	}
 	depth := countIfNesting(top)
 	// card=3 means 3 iterations + 1 base case = 4 nested IfActions
@@ -63,21 +63,21 @@ func TestUnrollLoops_WhileInSequence(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	s, ok := result.(*Sequence)
+	s, ok := result.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", result)
+		t.Fatalf("expected *LogicSequence, got %T", result)
 	}
 	if len(s.Elems) != 3 {
 		t.Fatalf("expected 3 elements, got %d", len(s.Elems))
 	}
-	if _, ok := s.Elems[0].(*AssumeAction); !ok {
-		t.Errorf("elem 0: expected *AssumeAction, got %T", s.Elems[0])
+	if _, ok := s.Elems[0].(*LogicAssumeAction); !ok {
+		t.Errorf("elem 0: expected *LogicAssumeAction, got %T", s.Elems[0])
 	}
-	if _, ok := s.Elems[1].(*IfAction); !ok {
-		t.Errorf("elem 1: expected *IfAction (unrolled while), got %T", s.Elems[1])
+	if _, ok := s.Elems[1].(*LogicIfAction); !ok {
+		t.Errorf("elem 1: expected *LogicIfAction (unrolled while), got %T", s.Elems[1])
 	}
-	if _, ok := s.Elems[2].(*AssumeAction); !ok {
-		t.Errorf("elem 2: expected *AssumeAction, got %T", s.Elems[2])
+	if _, ok := s.Elems[2].(*LogicAssumeAction); !ok {
+		t.Errorf("elem 2: expected *LogicAssumeAction, got %T", s.Elems[2])
 	}
 }
 
@@ -90,17 +90,17 @@ func TestUnrollLoops_WhileInIf(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	top, ok := result.(*IfAction)
+	top, ok := result.(*LogicIfAction)
 	if !ok {
-		t.Fatalf("expected *IfAction, got %T", result)
+		t.Fatalf("expected *LogicIfAction, got %T", result)
 	}
 	// The then-branch should now be an IfAction (unrolled while), not a WhileAction
-	if _, ok := top.ThenBody.(*IfAction); !ok {
-		t.Errorf("then-branch: expected *IfAction (unrolled while), got %T", top.ThenBody)
+	if _, ok := top.ThenBody.(*LogicIfAction); !ok {
+		t.Errorf("then-branch: expected *LogicIfAction (unrolled while), got %T", top.ThenBody)
 	}
 	// The else-branch should still be an AssumeAction
-	if _, ok := top.ElseBody.(*AssumeAction); !ok {
-		t.Errorf("else-branch: expected *AssumeAction, got %T", top.ElseBody)
+	if _, ok := top.ElseBody.(*LogicAssumeAction); !ok {
+		t.Errorf("else-branch: expected *LogicAssumeAction, got %T", top.ElseBody)
 	}
 }
 
@@ -123,7 +123,7 @@ func TestUnrollLoops_NotEqCondition(t *testing.T) {
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	eq := &Eq{T1: xSym, T2: boundSym}
-	cond := &Not{Body: eq}
+	cond := &LogicNot{Body: eq}
 
 	body := NewSequence()
 	wa := NewWhileAction(cond, body)
@@ -132,19 +132,19 @@ func TestUnrollLoops_NotEqCondition(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := result.(*IfAction); !ok {
-		t.Errorf("expected *IfAction, got %T", result)
+	if _, ok := result.(*LogicIfAction); !ok {
+		t.Errorf("expected *LogicIfAction, got %T", result)
 	}
 }
 
 func TestUnrollLoops_AndCondition(t *testing.T) {
 	sortT := actionsMkSort("T")
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	ltCond, _ := NewApply(ltSym, xSym, boundSym)
 	flag := NewConst("flag", Boolean)
-	andCond := &And{Terms: []Expr{ltCond, flag}}
+	andCond := &LogicAnd{Terms: []Expr{ltCond, flag}}
 
 	wa := NewWhileAction(andCond, NewSequence())
 
@@ -152,8 +152,8 @@ func TestUnrollLoops_AndCondition(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := result.(*IfAction); !ok {
-		t.Errorf("expected *IfAction, got %T", result)
+	if _, ok := result.(*LogicIfAction); !ok {
+		t.Errorf("expected *LogicIfAction, got %T", result)
 	}
 }
 
@@ -229,43 +229,43 @@ func TestUnrollLoops_VerifyNesting(t *testing.T) {
 	//     IfAction(cond,
 	//       Sequence(body,
 	//         IfAction(cond,
-	//           AssumeAction(Or{}))))))
+	//           AssumeAction(LogicOr{}))))))
 	//
 	// 3 IfActions total: 2 iterations + 1 base case
 
-	if1, ok := result.(*IfAction)
+	if1, ok := result.(*LogicIfAction)
 	if !ok {
-		t.Fatalf("level 1: expected *IfAction, got %T", result)
+		t.Fatalf("level 1: expected *LogicIfAction, got %T", result)
 	}
-	seq1, ok := if1.ThenBody.(*Sequence)
+	seq1, ok := if1.ThenBody.(*LogicSequence)
 	if !ok {
-		t.Fatalf("level 1 then: expected *Sequence, got %T", if1.ThenBody)
+		t.Fatalf("level 1 then: expected *LogicSequence, got %T", if1.ThenBody)
 	}
 	if len(seq1.Elems) != 2 {
 		t.Fatalf("level 1 seq: expected 2 elements, got %d", len(seq1.Elems))
 	}
 
-	if2, ok := seq1.Elems[1].(*IfAction)
+	if2, ok := seq1.Elems[1].(*LogicIfAction)
 	if !ok {
-		t.Fatalf("level 2: expected *IfAction, got %T", seq1.Elems[1])
+		t.Fatalf("level 2: expected *LogicIfAction, got %T", seq1.Elems[1])
 	}
-	seq2, ok := if2.ThenBody.(*Sequence)
+	seq2, ok := if2.ThenBody.(*LogicSequence)
 	if !ok {
-		t.Fatalf("level 2 then: expected *Sequence, got %T", if2.ThenBody)
+		t.Fatalf("level 2 then: expected *LogicSequence, got %T", if2.ThenBody)
 	}
 	if len(seq2.Elems) != 2 {
 		t.Fatalf("level 2 seq: expected 2 elements, got %d", len(seq2.Elems))
 	}
 
-	if3, ok := seq2.Elems[1].(*IfAction)
+	if3, ok := seq2.Elems[1].(*LogicIfAction)
 	if !ok {
-		t.Fatalf("base case: expected *IfAction, got %T", seq2.Elems[1])
+		t.Fatalf("base case: expected *LogicIfAction, got %T", seq2.Elems[1])
 	}
-	assumeAct, ok := if3.ThenBody.(*AssumeAction)
+	assumeAct, ok := if3.ThenBody.(*LogicAssumeAction)
 	if !ok {
-		t.Fatalf("base case then: expected *AssumeAction, got %T", if3.ThenBody)
+		t.Fatalf("base case then: expected *LogicAssumeAction, got %T", if3.ThenBody)
 	}
-	if _, ok := assumeAct.Formula.(*Or); !ok {
+	if _, ok := assumeAct.Formula.(*LogicOr); !ok {
 		t.Errorf("base case assume: expected *lg.Or (false), got %T", assumeAct.Formula)
 	}
 }
@@ -280,18 +280,18 @@ func TestUnrollLoops_ChoiceAction(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	ch, ok := result.(*ChoiceAction)
+	ch, ok := result.(*LogicChoiceAction)
 	if !ok {
-		t.Fatalf("expected *ChoiceAction, got %T", result)
+		t.Fatalf("expected *LogicChoiceAction, got %T", result)
 	}
 	if len(ch.Branches) != 2 {
 		t.Fatalf("expected 2 branches, got %d", len(ch.Branches))
 	}
-	if _, ok := ch.Branches[0].(*IfAction); !ok {
-		t.Errorf("branch 0: expected *IfAction (unrolled while), got %T", ch.Branches[0])
+	if _, ok := ch.Branches[0].(*LogicIfAction); !ok {
+		t.Errorf("branch 0: expected *LogicIfAction (unrolled while), got %T", ch.Branches[0])
 	}
-	if _, ok := ch.Branches[1].(*AssumeAction); !ok {
-		t.Errorf("branch 1: expected *AssumeAction, got %T", ch.Branches[1])
+	if _, ok := ch.Branches[1].(*LogicAssumeAction); !ok {
+		t.Errorf("branch 1: expected *LogicAssumeAction, got %T", ch.Branches[1])
 	}
 }
 
@@ -302,24 +302,24 @@ func TestUnrollLoops_ZeroCard(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// card=0 means just the base case: if(cond, assume(false))
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
-		t.Fatalf("expected *IfAction, got %T", result)
+		t.Fatalf("expected *LogicIfAction, got %T", result)
 	}
-	if _, ok := ifAct.ThenBody.(*AssumeAction); !ok {
-		t.Errorf("then-body: expected *AssumeAction, got %T", ifAct.ThenBody)
+	if _, ok := ifAct.ThenBody.(*LogicAssumeAction); !ok {
+		t.Errorf("then-body: expected *LogicAssumeAction, got %T", ifAct.ThenBody)
 	}
 }
 
 // --- helpers ---
 
 func countIfNesting(act ActionsAction) int {
-	ifAct, ok := act.(*IfAction)
+	ifAct, ok := act.(*LogicIfAction)
 	if !ok {
 		return 0
 	}
 	count := 1
-	if seq, ok := ifAct.ThenBody.(*Sequence); ok {
+	if seq, ok := ifAct.ThenBody.(*LogicSequence); ok {
 		for _, e := range seq.Elems {
 			if child, ok := e.(ActionsAction); ok {
 				n := countIfNesting(child)
@@ -335,7 +335,7 @@ func countIfNesting(act ActionsAction) int {
 }
 
 func containsWhile(act ActionsAction) bool {
-	if _, ok := act.(*WhileAction); ok {
+	if _, ok := act.(*LogicWhileAction); ok {
 		return true
 	}
 	for _, arg := range act.ActionArgs() {

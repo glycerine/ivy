@@ -143,7 +143,7 @@ func TestConcretizeSortsBasic(t *testing.T) {
 	xs := NewConst("x", S)
 	ps := NewConst("p", UnaryRelationS)
 
-	// f1 = And(ps(XS), ps(xs))
+	// f1 = LogicAnd(ps(XS), ps(xs))
 	psXS, err := NewApply(ps, XS)
 	if err != nil {
 		t.Fatal(err)
@@ -180,7 +180,7 @@ func TestConcretizeSortsWithTopSort(t *testing.T) {
 	ps := NewConst("p", UnaryRelationS)
 	pt := NewConst("p", UnaryRelationT)
 
-	// f2 = And(ps(XT), pt(xs))
+	// f2 = LogicAnd(ps(XT), pt(xs))
 	psXT, err := NewApply(ps, XT)
 	if err != nil {
 		t.Fatal(err)
@@ -211,7 +211,7 @@ func TestConcretizeNamedBinder(t *testing.T) {
 	ps := NewConst("p", UnaryRelationS)
 	psXT, _ := NewApply(ps, XT)
 
-	f6, err := NewNamedBinder("mybinder", []*Variable{XT}, nil, psXT)
+	f6, err := NewNamedBinder("mybinder", []*LogicVariable{XT}, nil, psXT)
 	if err != nil {
 		t.Fatal(err)
 	}

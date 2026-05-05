@@ -12,15 +12,15 @@ import (
 // Tactics are used in proof scripts.
 
 // Tactic is the base for all tactic nodes.
-type AstTactic struct {
+type Tactic struct {
 	Base
 	Elems []Node
 }
 
-func (t *AstTactic) Args() []Node           { return t.Elems }
-func (t *AstTactic) Clone(args []Node) Node { return &AstTactic{Base: t.Base, Elems: args} }
-func (t *AstTactic) String() string         { return "tactic" }
-func (t *AstTactic) Canon() Canonical {
+func (t *Tactic) Args() []Node           { return t.Elems }
+func (t *Tactic) Clone(args []Node) Node { return &Tactic{Base: t.Base, Elems: args} }
+func (t *Tactic) String() string         { return "tactic" }
+func (t *Tactic) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(tactic%v elems:%v)", t.Base.canonFields(), SliceCanon(t.Elems)))
 }
 
@@ -398,20 +398,20 @@ func (t *TacticTactic) TacticProofNode() Node {
 }
 
 // ProofTactic wraps a labeled proof.
-type AstProofTactic struct {
+type ProofTactic struct {
 	Base
 	TLabel Node
 	Proof  Node
 }
 
-func (p *AstProofTactic) Args() []Node { return []Node{p.TLabel, p.Proof} }
-func (p *AstProofTactic) Clone(args []Node) Node {
-	return &AstProofTactic{Base: p.Base, TLabel: args[0], Proof: args[1]}
+func (p *ProofTactic) Args() []Node { return []Node{p.TLabel, p.Proof} }
+func (p *ProofTactic) Clone(args []Node) Node {
+	return &ProofTactic{Base: p.Base, TLabel: args[0], Proof: args[1]}
 }
-func (p *AstProofTactic) String() string {
+func (p *ProofTactic) String() string {
 	return "proof [" + fmt.Sprint(p.TLabel) + "] {" + fmt.Sprint(p.Proof) + "}"
 }
-func (p *AstProofTactic) Canon() Canonical {
+func (p *ProofTactic) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(proofTactic%v tLabel:%v proof:%v)", p.Base.canonFields(), nodeCanon(p.TLabel), nodeCanon(p.Proof)))
 }
 
@@ -480,14 +480,14 @@ func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
 				//xtracer.Trace("vocab.add src=App name=this val_type=str\n *This='%#v'", v)
 				xtracer.Trace("vocab.add src=App name=this val_type=str")
 			}
-		case *AstNamedBinder:
+		case *NamedBinder:
 			vn.Set(fmt.Sprintf("ptr=%p; v=%#v", v, v), true)
 			//vn.Set(string(v.Canon()), true)
 			//vn.Set(v.Name, true)
 			// Python adds the NamedBinder object to the set, but it never matches
 			// any string lookup (it's inert). Skipping xtrace on both sides.
 			//if xtracer.Enabled {
-			//	xtracer.Trace("vocab.add src=App name=%v val_type=NamedBinder", v.Name)
+			//	xtracer.Trace("vocab.add src=App name=%v val_type= LogicNamedBinder", v.Name)
 			//}
 		default:
 			panicf("unhandled type=%T/val=%v", val, val)
@@ -627,7 +627,7 @@ func (t *TacticTactic) Vocab(names *VocabNames) {
 
 // ProofTactic.Vocab — Python ProofTactic.vocab (ivy_ast.py:934)
 // Python: self.args[1].vocab(names)
-func (p *AstProofTactic) Vocab(names *VocabNames) {
+func (p *ProofTactic) Vocab(names *VocabNames) {
 	VocabNode(p.Proof, names)
 }
 
@@ -677,8 +677,8 @@ func (cfg *AstConfig) NewAssumeTacticWithMatches(schemaName, ren Node, matches [
 	return a
 }
 
-func (cfg *AstConfig) NewRenaming(elems []Node) *AstRenaming {
-	r := &AstRenaming{Elems: elems}
+func (cfg *AstConfig) NewRenaming(elems []Node) *Renaming {
+	r := &Renaming{Elems: elems}
 	r.Cfg = cfg
 	return r
 }
@@ -767,8 +767,8 @@ func (cfg *AstConfig) NewTacticTactic(tName, body, proof Node) *TacticTactic {
 	return t
 }
 
-func (cfg *AstConfig) NewProofTactic(tLabel, proof Node) *AstProofTactic {
-	p := &AstProofTactic{TLabel: tLabel, Proof: proof}
+func (cfg *AstConfig) NewProofTactic(tLabel, proof Node) *ProofTactic {
+	p := &ProofTactic{TLabel: tLabel, Proof: proof}
 	p.Cfg = cfg
 	return p
 }

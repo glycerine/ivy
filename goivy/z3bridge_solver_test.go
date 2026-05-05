@@ -20,12 +20,12 @@ func intSort() *RangeSort {
 	return &RangeSort{Name: "int", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "0"}}
 }
 
-func z3BoolVar(name string) *Variable {
+func z3BoolVar(name string) *LogicVariable {
 	v, _ := NewVariable(name, Boolean)
 	return v
 }
 
-func uiVar(name string, sort Sort) *Variable {
+func uiVar(name string, sort Sort) *LogicVariable {
 	v, _ := NewVariable(name, sort)
 	return v
 }
@@ -120,7 +120,7 @@ func TestZ3BridgeIsSatFalse(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	// p AND NOT p
-	fmla := &And{Terms: []Expr{p, &Not{Body: p}}}
+	fmla := &LogicAnd{Terms: []Expr{p, &LogicNot{Body: p}}}
 	sat, err := s.IsSat(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -161,7 +161,7 @@ func TestZ3BridgeImpliesValid(t *testing.T) {
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
 	// (p AND q) => p
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 	result, err := s.Implies(pAndQ, p)
 	if err != nil {
 		t.Fatal(err)
@@ -188,7 +188,7 @@ func TestZ3BridgeImpliesTrueImpliesAnything(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	// NOT p OR p is a tautology; True => (p | ~p)
-	pOrNotP := &Or{Terms: []Expr{p, &Not{Body: p}}}
+	pOrNotP := &LogicOr{Terms: []Expr{p, &LogicNot{Body: p}}}
 	result, err := s.Implies(True, pOrNotP)
 	if err != nil {
 		t.Fatal(err)
@@ -216,7 +216,7 @@ func TestZ3BridgeClausesSatTrue(t *testing.T) {
 func TestZ3BridgeClausesSatFalse(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
-	clauses := NewClauses([]Expr{p, &Not{Body: p}}, nil, nil)
+	clauses := NewClauses([]Expr{p, &LogicNot{Body: p}}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -318,7 +318,7 @@ func TestZ3BridgeFormulaToZ3And(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	fmla := &And{Terms: []Expr{p, q}}
+	fmla := &LogicAnd{Terms: []Expr{p, q}}
 	expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -333,7 +333,7 @@ func TestZ3BridgeFormulaToZ3Or(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	fmla := &Or{Terms: []Expr{p, q}}
+	fmla := &LogicOr{Terms: []Expr{p, q}}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -343,7 +343,7 @@ func TestZ3BridgeFormulaToZ3Or(t *testing.T) {
 func TestZ3BridgeFormulaToZ3Not(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
-	fmla := &Not{Body: p}
+	fmla := &LogicNot{Body: p}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -354,7 +354,7 @@ func TestZ3BridgeFormulaToZ3Implies(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	fmla := &Implies{T1: p, T2: q}
+	fmla := &LogicImplies{T1: p, T2: q}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -365,7 +365,7 @@ func TestZ3BridgeFormulaToZ3Iff(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	fmla := &Iff{T1: p, T2: q}
+	fmla := &LogicIff{T1: p, T2: q}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -449,7 +449,7 @@ func TestZ3BridgeNotClausesToZ3(t *testing.T) {
 func TestZ3BridgeSortSizeConstraint(t *testing.T) {
 	sort := z3UnintSort("S")
 	constraint := SortSizeConstraint(sort, 3)
-	orNode, ok := constraint.(*Or)
+	orNode, ok := constraint.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected Or, got %T", constraint)
 	}
@@ -471,7 +471,7 @@ func TestZ3BridgeRelationSizeConstraint(t *testing.T) {
 	sort := z3UnintSort("S")
 	rel := relConst("r", sort)
 	constraint := RelationSizeConstraint(rel, 2)
-	orNode, ok := constraint.(*Or)
+	orNode, ok := constraint.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected Or, got %T", constraint)
 	}
@@ -494,7 +494,7 @@ func TestZ3BridgeRelationSizeConstraintNonFunction(t *testing.T) {
 func TestZ3BridgeSizeConstraintSort(t *testing.T) {
 	sort := z3UnintSort("S")
 	constraint := SizeConstraint(sort, 2)
-	if _, ok := constraint.(*Or); !ok {
+	if _, ok := constraint.(*LogicOr); !ok {
 		t.Fatalf("expected Or, got %T", constraint)
 	}
 }
@@ -503,7 +503,7 @@ func TestZ3BridgeSizeConstraintRelation(t *testing.T) {
 	sort := z3UnintSort("S")
 	rel := relConst("r", sort)
 	constraint := SizeConstraint(rel, 2)
-	if _, ok := constraint.(*Or); !ok {
+	if _, ok := constraint.(*LogicOr); !ok {
 		t.Fatalf("expected Or, got %T", constraint)
 	}
 }
@@ -537,7 +537,7 @@ func TestZ3BridgeGetModelClausesSat(t *testing.T) {
 func TestZ3BridgeGetModelClausesUnsat(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
-	clauses := NewClauses([]Expr{p, &Not{Body: p}}, nil, nil)
+	clauses := NewClauses([]Expr{p, &LogicNot{Body: p}}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -606,7 +606,7 @@ func TestZ3BridgeCheckCubeSat(t *testing.T) {
 	z3solver := s.NewZ3Solver()
 
 	lit := NewLiteral(1, p)
-	sat, err := s.CheckCube(z3solver, []*Literal{lit}, nil, false)
+	sat, err := s.CheckCube(z3solver, []*LogicLiteral{lit}, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -621,11 +621,11 @@ func TestZ3BridgeCheckCubeUnsat(t *testing.T) {
 
 	// Assert NOT p in solver, then check cube [p]
 	z3solver := s.NewZ3Solver()
-	notP, _ := s.FormulaToZ3(&Not{Body: p})
+	notP, _ := s.FormulaToZ3(&LogicNot{Body: p})
 	z3solver.Assert(notP)
 
 	lit := NewLiteral(1, p)
-	sat, err := s.CheckCube(z3solver, []*Literal{lit}, nil, false)
+	sat, err := s.CheckCube(z3solver, []*LogicLiteral{lit}, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -663,7 +663,7 @@ func TestZ3BridgeCubeToZ3Single(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	lit := NewLiteral(1, p)
-	_, err := s.CubeToZ3([]*Literal{lit})
+	_, err := s.CubeToZ3([]*LogicLiteral{lit})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -673,7 +673,7 @@ func TestZ3BridgeCubeToZ3Negative(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	lit := NewLiteral(0, p)
-	expr, err := s.CubeToZ3([]*Literal{lit})
+	expr, err := s.CubeToZ3([]*LogicLiteral{lit})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -757,7 +757,7 @@ func TestZ3BridgeDecideUnsat(t *testing.T) {
 	z3solver := s.NewZ3Solver()
 	p := z3BoolConst("p")
 	zp, _ := s.FormulaToZ3(p)
-	znp, _ := s.FormulaToZ3(&Not{Body: p})
+	znp, _ := s.FormulaToZ3(&LogicNot{Body: p})
 	z3solver.Assert(zp)
 	z3solver.Assert(znp)
 
@@ -951,7 +951,7 @@ func TestZ3BridgeForAllTranslation(t *testing.T) {
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
 	body := MustApply(r, x)
-	fmla := &ForAll{Variables: []*Variable{x}, Body: body}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -964,7 +964,7 @@ func TestZ3BridgeExistsTranslation(t *testing.T) {
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
 	body := MustApply(r, x)
-	fmla := &Exists{Variables: []*Variable{x}, Body: body}
+	fmla := &LogicExists{Variables: []*LogicVariable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -1005,7 +1005,7 @@ func TestZ3BridgeGetSmallModelSat(t *testing.T) {
 func TestZ3BridgeGetSmallModelUnsat(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
-	clauses := NewClauses([]Expr{p, &Not{Body: p}}, nil, nil)
+	clauses := NewClauses([]Expr{p, &LogicNot{Body: p}}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1062,7 +1062,7 @@ func FuzzSortSizeConstraint(f *testing.F) {
 		sort := z3UnintSort(name)
 		constraint := SortSizeConstraint(sort, size)
 		if size == 0 {
-			orNode, ok := constraint.(*Or)
+			orNode, ok := constraint.(*LogicOr)
 			if !ok {
 				t.Fatal("expected Or")
 			}
@@ -1070,7 +1070,7 @@ func FuzzSortSizeConstraint(f *testing.F) {
 				t.Fatal("size=0 should yield empty Or (false)")
 			}
 		} else {
-			orNode, ok := constraint.(*Or)
+			orNode, ok := constraint.(*LogicOr)
 			if !ok {
 				t.Fatalf("expected Or, got %T", constraint)
 			}
@@ -1571,7 +1571,7 @@ func TestZ3BridgeSortFromZ3RoundTrip(t *testing.T) {
 	// z3_sorts_inv, so SortFromZ3 returns false for directly-translated
 	// EnumeratedSorts. The reverse map is populated by the uninterpretedsort
 	// path (the normal entry point for interpreted sorts in production).
-	enumSort := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	enumSort := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	z3enum, err := tr.TranslateSort(enumSort)
 	if err != nil {
 		t.Fatalf("TranslateSort(EnumeratedSort): %v", err)
@@ -1815,13 +1815,13 @@ func TestZ3BridgeTranslateDefinition(t *testing.T) {
 }
 
 // TestTranslateDefinitionTrueSimplification verifies MyEq True optimization.
-// Definition{Lhs: p, Rhs: True} should translate to just p (via MyEq).
+// LogicDefinition{Lhs: p, Rhs: True} should translate to just p (via MyEq).
 func TestZ3BridgeTranslateDefinitionTrueSimplification(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 
 	// Create a Definition where RHS is Ivy True (empty And)
-	// When translated, And{} becomes BoolVal(true), then MyEq sees y.IsTrue()
+	// When translated, LogicAnd{} becomes BoolVal(true), then MyEq sees y.IsTrue()
 	def := NewDefinition(p, True)
 
 	result, err := s.Translator().Translate(def)
@@ -1850,7 +1850,7 @@ func TestZ3BridgeTranslateDefinitionFalseSimplification(t *testing.T) {
 	}
 	str := result.String()
 	t.Logf("Definition(p, False) = %s", str)
-	// MyEq should return Not(x) when y is False
+	// MyEq should return LogicNot(x) when y is False
 	if !strings.Contains(str, "not") && !strings.Contains(str, "Not") {
 		t.Errorf("expected Not(...) result, got %s", str)
 	}
@@ -1895,7 +1895,7 @@ func TestZ3BridgeEqMyEqFalseOptimization(t *testing.T) {
 
 // TestEnumEqBinaryEncoding verifies EncodeEqualityZ3 is used when UseZ3Enums=false.
 func TestZ3BridgeEnumEqBinaryEncoding(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -2059,14 +2059,14 @@ func TestZ3BridgeFilterRedundantFactsActivationLiterals(t *testing.T) {
 	c := z3BoolConst("c")
 
 	// Axiom: a → Not(b) (if a is true, b must be false)
-	axiomFmla := &Implies{T1: a, T2: &Not{Body: b}}
+	axiomFmla := &LogicImplies{T1: a, T2: &LogicNot{Body: b}}
 	axioms := NewClauses([]Expr{axiomFmla}, nil, nil)
 
 	// Positive formula: a
 	// Negative 1: Not(b) — REDUNDANT: axiom + a → Not(b), so it's implied
 	// Negative 2: Not(c) — NOT redundant: c is independent
-	neg1 := &Not{Body: b}
-	neg2 := &Not{Body: c}
+	neg1 := &LogicNot{Body: b}
+	neg2 := &LogicNot{Body: c}
 
 	clauses := NewClauses([]Expr{a, neg1, neg2}, nil, nil)
 
@@ -2080,7 +2080,7 @@ func TestZ3BridgeFilterRedundantFactsActivationLiterals(t *testing.T) {
 	hasNegB := false
 	hasNegC := false
 	for _, f := range result.Fmlas {
-		if not, ok := f.(*Not); ok {
+		if not, ok := f.(*LogicNot); ok {
 			if sym, ok2 := not.Body.(*Const); ok2 {
 				if sym.Name == "b" {
 					hasNegB = true
@@ -2122,8 +2122,8 @@ func TestZ3BridgeFilterRedundantFactsAllKept(t *testing.T) {
 	// Two independent negative formulas
 	a := z3BoolConst("a")
 	b := z3BoolConst("b")
-	neg1 := &Not{Body: a}
-	neg2 := &Not{Body: b}
+	neg1 := &LogicNot{Body: a}
+	neg2 := &LogicNot{Body: b}
 
 	clauses := NewClauses([]Expr{neg1, neg2}, nil, nil)
 	axioms := TrueClauses(nil)
@@ -2134,7 +2134,7 @@ func TestZ3BridgeFilterRedundantFactsAllKept(t *testing.T) {
 	}
 	negCount := 0
 	for _, f := range result.Fmlas {
-		if _, ok := f.(*Not); ok {
+		if _, ok := f.(*LogicNot); ok {
 			negCount++
 		}
 	}
@@ -2180,7 +2180,7 @@ func TestZ3BridgeZ3ImpliesValid(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 	result, err := s.Z3Implies(pAndQ, p, false)
 	if err != nil {
 		t.Fatal(err)
@@ -2232,8 +2232,8 @@ func TestZ3BridgeZ3ImpliesCache(t *testing.T) {
 func TestZ3BridgeZ3ImpliesTautology(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
-	notP := &Not{Body: p}
-	pOrNotP := &Or{Terms: []Expr{p, notP}}
+	notP := &LogicNot{Body: p}
+	pOrNotP := &LogicOr{Terms: []Expr{p, notP}}
 	// true implies (p | ~p)
 	result, err := s.Z3Implies(True, pOrNotP, false)
 	if err != nil {
@@ -2262,7 +2262,7 @@ func TestZ3BridgeImpliesBatchValid(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 	results, err := s.ImpliesBatch(pAndQ, []Expr{p, q}, false)
 	if err != nil {
 		t.Fatal(err)
@@ -2296,7 +2296,7 @@ func TestZ3BridgeImpliesBatchMixed(t *testing.T) {
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
 	r := z3BoolConst("r")
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 	results, err := s.ImpliesBatch(pAndQ, []Expr{p, r, q}, false)
 	if err != nil {
 		t.Fatal(err)
@@ -2328,7 +2328,7 @@ func TestZ3BridgeImpliesBatchCache(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 	// First call
 	results1, err := s.ImpliesBatch(pAndQ, []Expr{p}, false)
 	if err != nil {
@@ -2411,7 +2411,7 @@ func TestZ3BridgeTranslateComparisonUninterpretedSort(t *testing.T) {
 	}
 
 	// Wrap in a ForAll so formulaToZ3 can handle it
-	fmla := &ForAll{Variables: []*Variable{x, y}, Body: app}
+	fmla := &ForAll{Variables: []*LogicVariable{x, y}, Body: app}
 
 	// This previously panicked with "Sort mismatch at argument #1 for
 	// function (declare-fun < (Int Int) Bool) supplied sort is lclock"
@@ -2444,7 +2444,7 @@ func TestZ3BridgeTranslateComparisonInterpretedSort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmla := &ForAll{Variables: []*Variable{x, y}, Body: app}
+	fmla := &ForAll{Variables: []*LogicVariable{x, y}, Body: app}
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatalf("FormulaToZ3 failed: %v", err)
@@ -2475,7 +2475,7 @@ func TestZ3BridgeTranslateComparisonBVSort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmla := &ForAll{Variables: []*Variable{x, y}, Body: app}
+	fmla := &ForAll{Variables: []*LogicVariable{x, y}, Body: app}
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatalf("FormulaToZ3 failed: %v", err)

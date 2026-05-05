@@ -139,12 +139,12 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 
 	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
 	if mod.Macros == nil {
-		mod.Macros = make(map[string]*AstDefinition)
+		mod.Macros = make(map[string]*Definition)
 	}
 	for _, decl := range decls {
 		if md, ok := decl.(*MacroDecl); ok {
 			for _, arg := range md.DeclArgs {
-				if defn, ok := arg.(*AstDefinition); ok {
+				if defn, ok := arg.(*Definition); ok {
 					mod.Macros[defn.Defines()] = defn
 				}
 			}
@@ -464,7 +464,7 @@ func (cs *ConjSetup) ProcessDecls(decls []Node) error {
 			xtracer.Trace("compiler.ConjSetup.theorem ENTER")
 			// Python: theorem(self, sch): self.last_fact = None
 			cs.lastFact = nil
-		case *AstProofDecl:
+		case *ProofDecl:
 			xtracer.Trace("compiler.ConjSetup.proof ENTER")
 			// Python: proof(self, pf):
 			//   if self.last_fact is None or isinstance(pf, ivy_ast.LabeledFormula): return
@@ -712,7 +712,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 			//   self.mod.predicates[a.args[0].relname] = a.args[1]
 			for _, arg := range n.DeclArgs {
 				if lf, ok := arg.(*LabeledFormula); ok {
-					if def, ok := lf.Formula.(*AstDefinition); ok {
+					if def, ok := lf.Formula.(*Definition); ok {
 						key := compilerExtractSortRep(def.Lhs)
 						if key != "" {
 							mod.Predicates[key] = def.Rhs
@@ -786,9 +786,9 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 		iname := pi.Name + "[init]"
 		var rhs Expr
 		if initTokens[pi.Name] {
-			rhs = &And{} // true
+			rhs = &LogicAnd{} // true
 		} else {
-			rhs = &Or{} // false
+			rhs = &LogicOr{} // false
 		}
 		iact := NewAssignAction(sym, rhs)
 		iact.SetFormalParams(nil)
@@ -883,7 +883,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							assn := NewAssignAction(sym, &Or{})
+							assn := NewAssignAction(sym, &LogicOr{})
 							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
@@ -893,7 +893,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							assn := NewAssignAction(sym, &And{})
+							assn := NewAssignAction(sym, &LogicAnd{})
 							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
@@ -919,7 +919,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						}
 					}
 				} else {
-					seqAction = renameToFirstTransition(seqAction, body).(*Sequence)
+					seqAction = renameToFirstTransition(seqAction, body).(*LogicSequence)
 				}
 
 				choices = append(choices, seqAction)
@@ -929,7 +929,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							assn := NewAssignAction(sym, &Or{})
+							assn := NewAssignAction(sym, &LogicOr{})
 							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
@@ -939,7 +939,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							assn := NewAssignAction(sym, &And{})
+							assn := NewAssignAction(sym, &LogicAnd{})
 							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
@@ -961,11 +961,11 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 				}
 				var condExpr Expr
 				if len(conds) == 0 {
-					condExpr = &And{}
+					condExpr = &LogicAnd{}
 				} else if len(conds) == 1 {
 					condExpr = conds[0]
 				} else {
-					condExpr = &And{Terms: conds}
+					condExpr = &LogicAnd{Terms: conds}
 				}
 				ifAct := NewIfAction(condExpr, seqAction)
 				ifAct.SetLineno(tr.GetLineno())
@@ -986,7 +986,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						}
 					}
 				} else {
-					ifAct = renameToFirstTransition(ifAct, body).(*IfAction)
+					ifAct = renameToFirstTransition(ifAct, body).(*LogicIfAction)
 				}
 
 				afters = append(afters, ifAct)
@@ -1062,7 +1062,7 @@ func FixConstructors(mod *Module) {
 		// Skip higher-order: any destructor with len(dom) > 1
 		higherOrder := false
 		for _, f := range destrs {
-			if fs, ok := f.CSort.(*FunctionSort); ok {
+			if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 				if len(fs.Domain()) > 1 {
 					higherOrder = true
 					break
@@ -1082,7 +1082,7 @@ func FixConstructors(mod *Module) {
 		for _, cons := range conss {
 			// Get domain of constructor
 			var dom []Sort
-			if fs, ok := cons.CSort.(*FunctionSort); ok {
+			if fs, ok := cons.CSort.(*LogicFunctionSort); ok {
 				dom = fs.Domain()
 			}
 			// If zero-arg constructor but sort has destructors, rebuild
@@ -1090,13 +1090,13 @@ func FixConstructors(mod *Module) {
 				// new_dom = [f.sort.rng for f in destrs]
 				newDomPlusRng := make([]Sort, 0, len(destrs)+1)
 				for _, f := range destrs {
-					if fs, ok := f.CSort.(*FunctionSort); ok {
+					if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 						newDomPlusRng = append(newDomPlusRng, fs.Range())
 					}
 				}
 				// Append the constructor's range sort
 				var rng Sort
-				if fs, ok := cons.CSort.(*FunctionSort); ok {
+				if fs, ok := cons.CSort.(*LogicFunctionSort); ok {
 					rng = fs.Range()
 				} else {
 					rng = cons.CSort
@@ -1187,7 +1187,7 @@ func CreateConstructorSchemata(mod *Module) error {
 		// Skip higher-order: any destructor with len(dom) > 1
 		higherOrder := false
 		for _, f := range destrs {
-			if fs, ok := f.CSort.(*FunctionSort); ok {
+			if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 				if len(fs.Domain()) > 1 {
 					higherOrder = true
 					break
@@ -1204,7 +1204,7 @@ func CreateConstructorSchemata(mod *Module) error {
 		}
 
 		// Part A: generic existence schema
-		// Y = Variable('Y', sort)
+		// Y = LogicVariable('Y', sort)
 		yVar, err := NewVariable("Y", sort)
 		if err != nil {
 			continue
@@ -1214,7 +1214,7 @@ func CreateConstructorSchemata(mod *Module) error {
 		eqs := make([]Expr, 0, len(destrs))
 		for n, f := range destrs {
 			var rng Sort
-			if fs, ok := f.CSort.(*FunctionSort); ok {
+			if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 				rng = fs.Range()
 			} else {
 				continue
@@ -1232,8 +1232,8 @@ func CreateConstructorSchemata(mod *Module) error {
 			eqs = append(eqs, NewEquals(fY, xVar))
 		}
 
-		// fmla = Exists([Y], And(*eqs))
-		fmla := IvyExists([]*Variable{yVar}, NormalizedAnd(eqs...))
+		// fmla = LogicExists([Y], And(*eqs))
+		fmla := IvyExists([]*LogicVariable{yVar}, NormalizedAnd(eqs...))
 
 		// name = Atom(compose_names(sortname, 'constr'), [])
 		schemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(sortname, "constr"))
@@ -1256,7 +1256,7 @@ func CreateConstructorSchemata(mod *Module) error {
 		for _, cons := range conss {
 			// Validate arg count matches destructor count
 			var dom []Sort
-			if fs, ok := cons.CSort.(*FunctionSort); ok {
+			if fs, ok := cons.CSort.(*LogicFunctionSort); ok {
 				dom = fs.Domain()
 			}
 			if len(dom) != len(destrs) {
@@ -1268,7 +1268,7 @@ func CreateConstructorSchemata(mod *Module) error {
 			}
 			// Validate each arg sort matches destructor range sort
 			for i, d := range dom {
-				if fs, ok := destrs[i].CSort.(*FunctionSort); ok {
+				if fs, ok := destrs[i].CSort.(*LogicFunctionSort); ok {
 					if len(fs.Domain()) != 1 {
 						// Python: raise IvyError(cons, "Cannot define constructor ... because field ... has higher type")
 						xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
@@ -1289,7 +1289,7 @@ func CreateConstructorSchemata(mod *Module) error {
 			// xvars = [Variable('X'+n, f.sort.rng) for n,f in enumerate(destrs)]
 			xvars := make([]Expr, 0, len(destrs))
 			for n, f := range destrs {
-				if fs, ok := f.CSort.(*FunctionSort); ok {
+				if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 					xv, err := NewVariable(fmt.Sprintf("X%d", n), fs.Range())
 					if err != nil {
 						continue
@@ -1307,7 +1307,7 @@ func CreateConstructorSchemata(mod *Module) error {
 			// eqs = [Equals(f(Y), X_n) for each destructor]
 			consEqs := make([]Expr, 0, len(destrs))
 			for n, f := range destrs {
-				if fs, ok := f.CSort.(*FunctionSort); ok {
+				if fs, ok := f.CSort.(*LogicFunctionSort); ok {
 					fY, err := f.Call(consY)
 					if err != nil {
 						continue
@@ -1317,7 +1317,7 @@ func CreateConstructorSchemata(mod *Module) error {
 				}
 			}
 
-			// fmla = And(*eqs)
+			// fmla = LogicAnd(*eqs)
 			consFmla := NormalizedAnd(consEqs...)
 
 			// name = Atom(compose_names(cons.name, 'constr'), [])
@@ -1431,7 +1431,7 @@ func CheckDefinitions(mod *Module) error {
 	mod.LabeledProps = nil
 
 	for _, prop := range props {
-		if logicDef, ok := prop.Formula.(*Definition); ok {
+		if logicDef, ok := prop.Formula.(*LogicDefinition); ok {
 			defKey := compilerDefinesKey(logicDef)
 			if !withProofs[prop.ID] {
 				// Check if any used symbols are stale
@@ -1477,7 +1477,7 @@ func CheckDefinitions(mod *Module) error {
 		return nil
 	}
 	for _, ldf := range mod.Definitions {
-		if logicDef, ok := ldf.Formula.(*Definition); ok {
+		if logicDef, ok := ldf.Formula.(*LogicDefinition); ok {
 			defExpr := logicDef.Defines()
 			key := Key(defExpr)
 			name := defExprName(defExpr)
@@ -1493,7 +1493,7 @@ func CheckDefinitions(mod *Module) error {
 	// Python: for ldf in mod.native_definitions: checkdef(ldf.formula.defines(), ldf)
 	for _, ldf := range mod.NativeDefinitions {
 		if ldf != nil {
-			if logicDef, ok := ldf.Formula.(*Definition); ok {
+			if logicDef, ok := ldf.Formula.(*LogicDefinition); ok {
 				defExpr := logicDef.Defines()
 				key := Key(defExpr)
 				name := defExprName(defExpr)
@@ -1577,7 +1577,7 @@ func CheckDefinitions(mod *Module) error {
 		// Build definition map for transitive dep lookup (NodeKey keys).
 		interferenceDefMap := make(map[NodeKey]interface{})
 		for _, lf := range mod.Definitions {
-			if def, ok := lf.Formula.(*Definition); ok {
+			if def, ok := lf.Formula.(*LogicDefinition); ok {
 				interferenceDefMap[compilerDefinesKey(def)] = def.Rhs
 			}
 		}
@@ -1603,7 +1603,7 @@ func CheckDefinitions(mod *Module) error {
 		}
 		// Check definitions: LHS must not be modified
 		for _, lf := range mod.Definitions {
-			if def, ok := lf.Formula.(*Definition); ok {
+			if def, ok := lf.Formula.(*LogicDefinition); ok {
 				key := compilerDefinesKey(def)
 				if modified[key] {
 					xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
@@ -1619,7 +1619,7 @@ func CheckDefinitions(mod *Module) error {
 	var arcs [][2]string
 	dmap := make(map[NodeKey]*LabeledFormula)
 	for _, d := range mod.Definitions {
-		if logicDef, ok := d.Formula.(*Definition); ok {
+		if logicDef, ok := d.Formula.(*LogicDefinition); ok {
 			defKey := compilerDefinesKey(logicDef)
 			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(Expr); ok {
@@ -1684,7 +1684,7 @@ func labelName(label Node) string {
 // equality (name + sort). Uses lg.Key() / Sexp() for structural equivalence.
 // Use this for maps that compare definition symbols against each other
 // (defs, stale, arcs, dmap).
-func compilerDefinesKey(d *Definition) NodeKey {
+func compilerDefinesKey(d *LogicDefinition) NodeKey {
 	return Key(d.Defines())
 }
 
@@ -1879,7 +1879,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 
 	// Step D: Check conclusion is not a Definition
 	conc := sb.Conc()
-	if _, isDef := conc.(*Definition); isDef {
+	if _, isDef := conc.(*LogicDefinition); isDef {
 		panic(fmt.Sprintf("definitional subgoal must be discharged"))
 	}
 
@@ -1961,7 +1961,7 @@ func exprDefinesName(expr Expr) string {
 		if sym, ok := e.Func.(*Const); ok {
 			return sym.Name
 		}
-	case *Definition:
+	case *LogicDefinition:
 		defNode := e.Defines()
 		if sym, ok := defNode.(*Const); ok {
 			return sym.Name

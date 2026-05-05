@@ -6,7 +6,7 @@ import (
 
 // CaptureError is raised when a substitution would create variable capture.
 type LogicUtilCaptureError struct {
-	Variables []*Variable
+	Variables []*LogicVariable
 }
 
 func (e *LogicUtilCaptureError) Error() string {
@@ -22,14 +22,14 @@ func UsedVariables(t Expr) map[NodeKey]Expr {
 
 func logicutilUsedVariablesRec(t Expr, result map[NodeKey]Expr) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		result[Key(n)] = n
 	case *ForAll:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
 		logicutilUsedVariablesRec(n.Body, result)
-	case *Exists:
+	case *LogicExists:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
@@ -39,7 +39,7 @@ func logicutilUsedVariablesRec(t Expr, result map[NodeKey]Expr) {
 			result[Key(v)] = v
 		}
 		logicutilUsedVariablesRec(n.Body, result)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
@@ -81,7 +81,7 @@ func FreeVariablesByName(t Expr) map[string]struct{} {
 
 func freeVariablesRec(t Expr, result *Omap[NodeKey, Expr], bound map[NodeKey]Expr) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if _, isBound := bound[Key(n)]; !isBound {
 			result.Set(Key(n), n)
 		}
@@ -91,7 +91,7 @@ func freeVariablesRec(t Expr, result *Omap[NodeKey, Expr], bound map[NodeKey]Exp
 			newBound[Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
-	case *Exists:
+	case *LogicExists:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = v
@@ -103,7 +103,7 @@ func freeVariablesRec(t Expr, result *Omap[NodeKey, Expr], bound map[NodeKey]Exp
 			newBound[Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = v
@@ -118,7 +118,7 @@ func freeVariablesRec(t Expr, result *Omap[NodeKey, Expr], bound map[NodeKey]Exp
 
 func freeVariablesByNameRec(t Expr, result map[string]struct{}, bound map[string]struct{}) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if _, isBound := bound[n.Name]; !isBound {
 			result[n.Name] = struct{}{}
 		}
@@ -128,7 +128,7 @@ func freeVariablesByNameRec(t Expr, result map[string]struct{}, bound map[string
 			newBound[v.Name] = struct{}{}
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
-	case *Exists:
+	case *LogicExists:
 		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
@@ -140,7 +140,7 @@ func freeVariablesByNameRec(t Expr, result map[string]struct{}, bound map[string
 			newBound[v.Name] = struct{}{}
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
@@ -162,14 +162,14 @@ func BoundVariables(t Expr) map[NodeKey]Expr {
 
 func boundVariablesRec(t Expr, result map[NodeKey]Expr) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		// leaf — no bound variables
 	case *ForAll:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
-	case *Exists:
+	case *LogicExists:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
@@ -179,7 +179,7 @@ func boundVariablesRec(t Expr, result map[NodeKey]Expr) {
 			result[Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
@@ -204,7 +204,7 @@ func Substitute(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 
 func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if r, ok := subs[Key(n)]; ok {
 			return r, nil
 		}
@@ -240,7 +240,7 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewEq(t1, t2)
 
-	case *Ite:
+	case *LogicIte:
 		c, err := substituteRec(n.Cond, subs)
 		if err != nil {
 			return nil, err
@@ -255,14 +255,14 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewIte(c, th, el)
 
-	case *Not:
+	case *LogicNot:
 		b, err := substituteRec(n.Body, subs)
 		if err != nil {
 			return nil, err
 		}
 		return NewNot(b)
 
-	case *And:
+	case *LogicAnd:
 		terms := make([]Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			nt, err := substituteRec(term, subs)
@@ -273,7 +273,7 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewAnd(terms...)
 
-	case *Or:
+	case *LogicOr:
 		terms := make([]Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			nt, err := substituteRec(term, subs)
@@ -284,7 +284,7 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewOr(terms...)
 
-	case *Implies:
+	case *LogicImplies:
 		t1, err := substituteRec(n.T1, subs)
 		if err != nil {
 			return nil, err
@@ -295,7 +295,7 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewImplies(t1, t2)
 
-	case *Iff:
+	case *LogicIff:
 		t1, err := substituteRec(n.T1, subs)
 		if err != nil {
 			return nil, err
@@ -306,21 +306,21 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		}
 		return NewIff(t1, t2)
 
-	case *Globally:
+	case *LogicGlobally:
 		b, err := substituteRec(n.Body, subs)
 		if err != nil {
 			return nil, err
 		}
 		return NewGlobally(n.Environ, b)
 
-	case *Eventually:
+	case *LogicEventually:
 		b, err := substituteRec(n.Body, subs)
 		if err != nil {
 			return nil, err
 		}
 		return NewEventually(n.Environ, b)
 
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		t1, err := substituteRec(n.T1, subs)
 		if err != nil {
 			return nil, err
@@ -332,21 +332,21 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 		return NewWhenOperator(n.Name, t1, t2)
 
 	case *ForAll:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*Variable, body Expr) (Expr, error) {
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
 			return NewForAll(vars, body)
 		})
 
-	case *Exists:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*Variable, body Expr) (Expr, error) {
+	case *LogicExists:
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
 			return NewExists(vars, body)
 		})
 
 	case *Lambda:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*Variable, body Expr) (Expr, error) {
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
 			return NewLambda(vars, body)
 		})
 
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return substituteNamedBinder(n, subs)
 
 	default:
@@ -356,10 +356,10 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 
 // substituteBinder handles substitution into ForAll, Exists, Lambda.
 func substituteBinder(
-	variables []*Variable,
+	variables []*LogicVariable,
 	body Expr,
 	subs map[NodeKey]Expr,
-	construct func([]*Variable, Expr) (Expr, error),
+	construct func([]*LogicVariable, Expr) (Expr, error),
 ) (Expr, error) {
 	// Remove bound variables from substitution
 	newsubs := make(map[NodeKey]Expr)
@@ -383,7 +383,7 @@ func substituteBinder(
 	}
 	for _, v := range variables {
 		if _, captured := forbidden[Key(v)]; captured {
-			return nil, &LogicUtilCaptureError{Variables: []*Variable{v}}
+			return nil, &LogicUtilCaptureError{Variables: []*LogicVariable{v}}
 		}
 	}
 
@@ -394,7 +394,7 @@ func substituteBinder(
 	return construct(variables, newBody)
 }
 
-func substituteNamedBinder(nb *NamedBinder, subs map[NodeKey]Expr) (Expr, error) {
+func substituteNamedBinder(nb *LogicNamedBinder, subs map[NodeKey]Expr) (Expr, error) {
 	newsubs := make(map[NodeKey]Expr)
 	varSet := make(map[NodeKey]struct{})
 	for _, v := range nb.Variables {
@@ -415,7 +415,7 @@ func substituteNamedBinder(nb *NamedBinder, subs map[NodeKey]Expr) (Expr, error)
 	}
 	for _, v := range nb.Variables {
 		if _, captured := forbidden[Key(v)]; captured {
-			return nil, &LogicUtilCaptureError{Variables: []*Variable{v}}
+			return nil, &LogicUtilCaptureError{Variables: []*LogicVariable{v}}
 		}
 	}
 
@@ -438,20 +438,20 @@ func IsTautologyEquality(t Expr) bool {
 // pushableMap is a map with push/pop semantics for alpha-conversion.
 type pushableMap struct {
 	stack []pushEntry
-	m     map[*Variable]int
+	m     map[*LogicVariable]int
 }
 
 type pushEntry struct {
-	key *Variable
+	key *LogicVariable
 	val int
 	had bool
 }
 
 func newPushableMap() *pushableMap {
-	return &pushableMap{m: make(map[*Variable]int)}
+	return &pushableMap{m: make(map[*LogicVariable]int)}
 }
 
-func (pm *pushableMap) push(key *Variable, val int) {
+func (pm *pushableMap) push(key *LogicVariable, val int) {
 	old, had := pm.m[key]
 	pm.stack = append(pm.stack, pushEntry{key, old, had})
 	pm.m[key] = val
@@ -467,7 +467,7 @@ func (pm *pushableMap) pop() {
 	}
 }
 
-func (pm *pushableMap) get(key *Variable) (int, bool) {
+func (pm *pushableMap) get(key *LogicVariable) (int, bool) {
 	v, ok := pm.m[key]
 	return v, ok
 }
@@ -479,8 +479,8 @@ func EqualModAlpha(t, u Expr) bool {
 }
 
 func equalModAlphaRec(t, u Expr, m1, m2 *pushableMap, n int) bool {
-	tv, tIsVar := t.(*Variable)
-	uv, uIsVar := u.(*Variable)
+	tv, tIsVar := t.(*LogicVariable)
+	uv, uIsVar := u.(*LogicVariable)
 	if tIsVar && uIsVar {
 		tn, tok := m1.get(tv)
 		un, uok := m2.get(uv)
@@ -515,8 +515,8 @@ func equalModAlphaRec(t, u Expr, m1, m2 *pushableMap, n int) bool {
 		}
 		return res
 
-	case *Exists:
-		ub, ok := u.(*Exists)
+	case *LogicExists:
+		ub, ok := u.(*LogicExists)
 		if !ok || len(tb.Variables) != len(ub.Variables) {
 			return false
 		}
@@ -549,8 +549,8 @@ func equalModAlphaRec(t, u Expr, m1, m2 *pushableMap, n int) bool {
 		}
 		return res
 
-	case *NamedBinder:
-		ub, ok := u.(*NamedBinder)
+	case *LogicNamedBinder:
+		ub, ok := u.(*LogicNamedBinder)
 		if !ok || tb.Name != ub.Name || len(tb.Variables) != len(ub.Variables) {
 			return false
 		}
@@ -613,11 +613,11 @@ func equalModAlphaRec(t, u Expr, m1, m2 *pushableMap, n int) bool {
 // FreeVariablesList returns free variables as a slice in sorted NodeKey order
 // (alphabetical). Use VariablesAstList when DFS first-occurrence order is needed
 // (matching Python's list(iu.unique(ilu.variables_ast(t)))).
-func FreeVariablesList(t Expr) []*Variable {
+func FreeVariablesList(t Expr) []*LogicVariable {
 	fv := FreeVariables(t)
-	result := make([]*Variable, 0, fv.Len())
+	result := make([]*LogicVariable, 0, fv.Len())
 	for _, node := range fv.All() {
-		if v, ok := node.(*Variable); ok {
+		if v, ok := node.(*LogicVariable); ok {
 			result = append(result, v)
 		}
 	}
@@ -625,7 +625,7 @@ func FreeVariablesList(t Expr) []*Variable {
 }
 
 type binderLike interface {
-	BinderVars() []*Variable
+	BinderVars() []*LogicVariable
 	BinderBody() Expr
 }
 
@@ -633,16 +633,16 @@ type binderLike interface {
 // order, matching Python's list(iu.unique(ilu.variables_ast(t))).
 // This is the Go equivalent of Python ivy_logic_utils.py:474-486 variables_ast
 // wrapped with iu.unique (ivy_utils.py:48-55).
-func VariablesAstList(t Expr) []*Variable {
-	var result []*Variable
+func VariablesAstList(t Expr) []*LogicVariable {
+	var result []*LogicVariable
 	seen := make(map[NodeKey]bool)
 	variablesAstRec(t, &result, seen, nil)
 	return result
 }
 
-func variablesAstRec(t Expr, result *[]*Variable, seen map[NodeKey]bool, bound map[NodeKey]bool) {
+func variablesAstRec(t Expr, result *[]*LogicVariable, seen map[NodeKey]bool, bound map[NodeKey]bool) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		k := Key(n)
 		if !bound[k] && !seen[k] {
 			seen[k] = true
@@ -654,7 +654,7 @@ func variablesAstRec(t Expr, result *[]*Variable, seen map[NodeKey]bool, bound m
 			newBound[Key(v)] = true
 		}
 		variablesAstRec(n.Body, result, seen, newBound)
-	case *Exists:
+	case *LogicExists:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = true
@@ -666,7 +666,7 @@ func variablesAstRec(t Expr, result *[]*Variable, seen map[NodeKey]bool, bound m
 			newBound[Key(v)] = true
 		}
 		variablesAstRec(n.Body, result, seen, newBound)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = true
@@ -699,17 +699,17 @@ func copyBoolKeySet(s map[NodeKey]bool) map[NodeKey]bool {
 // = apply_gen_to_list(variables_ast). Returns free-variable occurrences
 // (NOT deduped) across every formula in fmlas, in DFS order. Matches
 // Python's `list(lu.used_variables_asts(fmlas))` used by goal_vocab.
-func UsedVariablesAsts(fmlas []Expr) []*Variable {
-	var result []*Variable
+func UsedVariablesAsts(fmlas []Expr) []*LogicVariable {
+	var result []*LogicVariable
 	for _, f := range fmlas {
 		variablesAstOccurrencesRec(f, &result, nil)
 	}
 	return result
 }
 
-func variablesAstOccurrencesRec(t Expr, result *[]*Variable, bound map[NodeKey]bool) {
+func variablesAstOccurrencesRec(t Expr, result *[]*LogicVariable, bound map[NodeKey]bool) {
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if _, isBound := bound[Key(n)]; !isBound {
 			*result = append(*result, n)
 		}
@@ -719,7 +719,7 @@ func variablesAstOccurrencesRec(t Expr, result *[]*Variable, bound map[NodeKey]b
 			newBound[Key(v)] = true
 		}
 		variablesAstOccurrencesRec(n.Body, result, newBound)
-	case *Exists:
+	case *LogicExists:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = true
@@ -731,7 +731,7 @@ func variablesAstOccurrencesRec(t Expr, result *[]*Variable, bound map[NodeKey]b
 			newBound[Key(v)] = true
 		}
 		variablesAstOccurrencesRec(n.Body, result, newBound)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = true

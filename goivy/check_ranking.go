@@ -27,7 +27,7 @@ import (
 
 // CheckForAll wraps a body in a CheckForAll quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func CheckForAll(vs []*Variable, body Expr) Expr {
+func CheckForAll(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -40,7 +40,7 @@ func CheckForAll(vs []*Variable, body Expr) Expr {
 
 // CheckExists wraps a body in an CheckExists quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func CheckExists(vs []*Variable, body Expr) Expr {
+func CheckExists(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -67,31 +67,31 @@ func CheckOldOf(fmla Expr) Expr {
 		}
 		return app
 	case *Const:
-		return NewConst(Old(f.Name), f.CSort)
+		return NewConst(LogicOld(f.Name), f.CSort)
 	case *Eq:
 		return &Eq{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
-	case *Not:
-		return &Not{Body: CheckOldOf(f.Body)}
-	case *And:
+	case *LogicNot:
+		return &LogicNot{Body: CheckOldOf(f.Body)}
+	case *LogicAnd:
 		terms := make([]Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = CheckOldOf(t)
 		}
-		return &And{Terms: terms}
-	case *Or:
+		return &LogicAnd{Terms: terms}
+	case *LogicOr:
 		terms := make([]Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = CheckOldOf(t)
 		}
-		return &Or{Terms: terms}
-	case *Implies:
-		return &Implies{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
-	case *Iff:
-		return &Iff{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
+		return &LogicOr{Terms: terms}
+	case *LogicImplies:
+		return &LogicImplies{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
+	case *LogicIff:
+		return &LogicIff{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
 	case *ForAll:
 		return &ForAll{Variables: f.Variables, Body: CheckOldOf(f.Body)}
-	case *Exists:
-		return &Exists{Variables: f.Variables, Body: CheckOldOf(f.Body)}
+	case *LogicExists:
+		return &LogicExists{Variables: f.Variables, Body: CheckOldOf(f.Body)}
 	default:
 		return fmla
 	}
@@ -100,7 +100,7 @@ func CheckOldOf(fmla Expr) Expr {
 func makeOldFunc(fn Expr) Expr {
 	switch f := fn.(type) {
 	case *Const:
-		return NewConst(Old(f.Name), f.CSort)
+		return NewConst(LogicOld(f.Name), f.CSort)
 	default:
 		return fn
 	}
@@ -131,7 +131,7 @@ type Task struct {
 }
 
 // Trigger holds the trigger condition for a task.
-type Trigger struct {
+type LogicTrigger struct {
 	WorkStart Expr // definition of work_start
 }
 
@@ -143,11 +143,11 @@ type L2STacticConfig struct {
 	ProofLabel string
 	Mod        *Module
 	Goals      []*LabeledFormula
-	Proof      *ProofDecl
+	Proof      *LogicProofDecl
 }
 
 // ProofDecl represents a proof declaration with tactic parameters.
-type ProofDecl struct {
+type LogicProofDecl struct {
 	TacticName  string
 	TacticDecls []Node
 	TacticLets  []Node
@@ -227,7 +227,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	}
 	if len(temporalPrems) > 0 {
 		premConj := rankingMakeAnd(temporalPrems...)
-		fmla = &Implies{T1: premConj, T2: fmla}
+		fmla = &LogicImplies{T1: premConj, T2: fmla}
 	}
 
 	proofLabel := cfg.ProofLabel
@@ -305,7 +305,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		var winvs []Expr
 		for _, f := range allFmlas {
 			for _, t := range TemporalsAst(f) {
-				wo, ok := t.(*WhenOperator)
+				wo, ok := t.(*LogicWhenOperator)
 				if !ok || wo.Name != "first" {
 					continue
 				}
@@ -318,16 +318,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 					continue
 				}
 				seen[key] = true
-				nws := &Or{Terms: []Expr{
-					&Not{Body: L2SWaiting()},
-					&Not{Body: applyNB(l2sW(nil, wo.T2, proofLabel))},
+				nws := &LogicOr{Terms: []Expr{
+					&LogicNot{Body: L2SWaiting()},
+					&LogicNot{Body: applyNB(l2sW(nil, wo.T2, proofLabel))},
 				}}
-				tmp := &Implies{
-					T1: &Not{Body: nws},
-					T2: &Eq{T1: wo, T2: &WhenOperator{Name: "next", T1: wo.T1, T2: wo.T2}},
+				tmp := &LogicImplies{
+					T1: &LogicNot{Body: nws},
+					T2: &Eq{T1: wo, T2: &LogicWhenOperator{Name: "next", T1: wo.T1, T2: wo.T2}},
 				}
-				tmp2 := &Implies{
-					T1: applyNB(l2sInit(nil, &Eventually{Environ: strPtr(proofLabel), Body: wo.T2}, proofLabel)),
+				tmp2 := &LogicImplies{
+					T1: applyNB(l2sInit(nil, &LogicEventually{Environ: strPtr(proofLabel), Body: wo.T2}, proofLabel)),
 					T2: tmp,
 				}
 				winvs = append(winvs, tmp2)
@@ -613,7 +613,7 @@ type DiagnosticInfo struct {
 }
 
 // DiagnoseFailure provides diagnostic information when a ranking check fails.
-func DiagnoseFailure(name string, tasks map[string]*Task, triggers map[string]*Trigger) *DiagnosticInfo {
+func DiagnoseFailure(name string, tasks map[string]*Task, triggers map[string]*LogicTrigger) *DiagnosticInfo {
 	info := &DiagnosticInfo{Name: name}
 
 	switch {
@@ -670,28 +670,28 @@ func trigGlobRec(prop Expr, pos bool, result *[]Expr) {
 		return
 	}
 	switch p := prop.(type) {
-	case *Globally:
+	case *LogicGlobally:
 		if pos {
 			*result = append(*result, p)
 			trigGlobRec(p.Body, pos, result)
 		}
-	case *Eventually:
+	case *LogicEventually:
 		if !pos {
-			*result = append(*result, &Not{Body: p})
+			*result = append(*result, &LogicNot{Body: p})
 			trigGlobRec(p.Body, pos, result)
 		}
-	case *Implies:
+	case *LogicImplies:
 		if !pos {
 			trigGlobRec(p.T1, !pos, result)
 			trigGlobRec(p.T2, pos, result)
 		}
-	case *And:
+	case *LogicAnd:
 		if pos {
 			for _, t := range p.Terms {
 				trigGlobRec(t, pos, result)
 			}
 		}
-	case *Or:
+	case *LogicOr:
 		if !pos {
 			for _, t := range p.Terms {
 				trigGlobRec(t, pos, result)
@@ -701,11 +701,11 @@ func trigGlobRec(prop Expr, pos bool, result *[]Expr) {
 		if pos {
 			trigGlobRec(p.Body, pos, result)
 		}
-	case *Exists:
+	case *LogicExists:
 		if !pos {
 			trigGlobRec(p.Body, pos, result)
 		}
-	case *Not:
+	case *LogicNot:
 		trigGlobRec(p.Body, !pos, result)
 	}
 }
@@ -745,7 +745,7 @@ type PropEvent struct {
 // For each property:
 //   - Pre: save old value, havoc current value, assume monotonicity constraints
 //   - Post: assume semantic constraint (g(V) -> body)
-func NewPropEvents(gprops []*NamedBinder, lineno Location) *PropEvent {
+func NewPropEvents(gprops []*LogicNamedBinder, lineno Location) *PropEvent {
 	pe := &PropEvent{}
 
 	for _, gprop := range gprops {
@@ -797,7 +797,7 @@ func NewPropEvents(gprops []*NamedBinder, lineno Location) *PropEvent {
 // --- Wait events ---
 
 // WaitEvent creates assignment actions for updating waiting predicates.
-func WaitEvent(waits []*NamedBinder, proofLabel string, lineno Location) []ActionsAction {
+func WaitEvent(waits []*LogicNamedBinder, proofLabel string, lineno Location) []ActionsAction {
 	var result []ActionsAction
 	for _, wait := range waits {
 		vs := wait.Variables
@@ -828,7 +828,7 @@ func newHavocAction(target Expr, lineno Location) ActionsAction {
 	return act
 }
 
-func makeAssumeForAll(vs []*Variable, body Expr, lineno Location) ActionsAction {
+func makeAssumeForAll(vs []*LogicVariable, body Expr, lineno Location) ActionsAction {
 	fmla := CheckForAll(vs, body)
 	act := NewAssumeAction(fmla)
 	act.SetLineno(lineno)
@@ -877,7 +877,7 @@ func RankingDesugar(expr Expr, proofLabel string, l2sSaved Expr) Expr {
 	if expr == nil {
 		return nil
 	}
-	if nb, ok := expr.(*NamedBinder); ok {
+	if nb, ok := expr.(*LogicNamedBinder); ok {
 		switch nb.Name {
 		case "was":
 			if len(nb.Variables) > 0 {
@@ -899,24 +899,24 @@ func RankingDesugar(expr Expr, proofLabel string, l2sSaved Expr) Expr {
 
 func applyWas(expr Expr, proofLabel string) Expr {
 	switch e := expr.(type) {
-	case *And:
+	case *LogicAnd:
 		terms := make([]Expr, len(e.Terms))
 		for i, t := range e.Terms {
 			terms[i] = applyWas(t, proofLabel)
 		}
-		return &And{Terms: terms}
-	case *Or:
+		return &LogicAnd{Terms: terms}
+	case *LogicOr:
 		terms := make([]Expr, len(e.Terms))
 		for i, t := range e.Terms {
 			terms[i] = applyWas(t, proofLabel)
 		}
-		return &Or{Terms: terms}
-	case *Not:
-		return &Not{Body: applyWas(e.Body, proofLabel)}
-	case *Implies:
-		return &Implies{T1: applyWas(e.T1, proofLabel), T2: applyWas(e.T2, proofLabel)}
-	case *Iff:
-		return &Iff{T1: applyWas(e.T1, proofLabel), T2: applyWas(e.T2, proofLabel)}
+		return &LogicOr{Terms: terms}
+	case *LogicNot:
+		return &LogicNot{Body: applyWas(e.Body, proofLabel)}
+	case *LogicImplies:
+		return &LogicImplies{T1: applyWas(e.T1, proofLabel), T2: applyWas(e.T2, proofLabel)}
+	case *LogicIff:
+		return &LogicIff{T1: applyWas(e.T1, proofLabel), T2: applyWas(e.T2, proofLabel)}
 	default:
 		// Atomic: create l2s_s binder
 		nb := l2sS(nil, expr, proofLabel)
@@ -936,28 +936,28 @@ func cloneWithTransform(node Expr, transform func(Expr) Expr) Expr {
 		return nil
 	}
 	switch n := node.(type) {
-	case *And:
+	case *LogicAnd:
 		terms := make([]Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = transform(t)
 		}
-		return &And{Terms: terms}
-	case *Or:
+		return &LogicAnd{Terms: terms}
+	case *LogicOr:
 		terms := make([]Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = transform(t)
 		}
-		return &Or{Terms: terms}
-	case *Not:
-		return &Not{Body: transform(n.Body)}
-	case *Implies:
-		return &Implies{T1: transform(n.T1), T2: transform(n.T2)}
-	case *Iff:
-		return &Iff{T1: transform(n.T1), T2: transform(n.T2)}
+		return &LogicOr{Terms: terms}
+	case *LogicNot:
+		return &LogicNot{Body: transform(n.Body)}
+	case *LogicImplies:
+		return &LogicImplies{T1: transform(n.T1), T2: transform(n.T2)}
+	case *LogicIff:
+		return &LogicIff{T1: transform(n.T1), T2: transform(n.T2)}
 	case *ForAll:
 		return &ForAll{Variables: n.Variables, Body: transform(n.Body)}
-	case *Exists:
-		return &Exists{Variables: n.Variables, Body: transform(n.Body)}
+	case *LogicExists:
+		return &LogicExists{Variables: n.Variables, Body: transform(n.Body)}
 	case *Eq:
 		return &Eq{T1: transform(n.T1), T2: transform(n.T2)}
 	default:
@@ -1016,34 +1016,34 @@ func ConvertToInit(fmla Expr, proofLabel string) Expr {
 		return nil
 	}
 	switch f := fmla.(type) {
-	case *And:
+	case *LogicAnd:
 		terms := make([]Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = ConvertToInit(t, proofLabel)
 		}
-		return &And{Terms: terms}
-	case *Or:
+		return &LogicAnd{Terms: terms}
+	case *LogicOr:
 		terms := make([]Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = ConvertToInit(t, proofLabel)
 		}
-		return &Or{Terms: terms}
-	case *Not:
-		return &Not{Body: ConvertToInit(f.Body, proofLabel)}
-	case *Implies:
-		return &Implies{
+		return &LogicOr{Terms: terms}
+	case *LogicNot:
+		return &LogicNot{Body: ConvertToInit(f.Body, proofLabel)}
+	case *LogicImplies:
+		return &LogicImplies{
 			T1: ConvertToInit(f.T1, proofLabel),
 			T2: ConvertToInit(f.T2, proofLabel),
 		}
-	case *Iff:
-		return &Iff{
+	case *LogicIff:
+		return &LogicIff{
 			T1: ConvertToInit(f.T1, proofLabel),
 			T2: ConvertToInit(f.T2, proofLabel),
 		}
 	case *ForAll:
 		return &ForAll{Variables: f.Variables, Body: ConvertToInit(f.Body, proofLabel)}
-	case *Exists:
-		return &Exists{Variables: f.Variables, Body: ConvertToInit(f.Body, proofLabel)}
+	case *LogicExists:
+		return &LogicExists{Variables: f.Variables, Body: ConvertToInit(f.Body, proofLabel)}
 	default:
 		// Wrap in l2s_init
 		return l2sInit(nil, fmla, proofLabel)

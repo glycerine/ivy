@@ -60,7 +60,7 @@ func SortToString(s goivy.Sort) (string, error) {
 		return `(sort.ui "` + st.Name + `")`, nil
 	case *goivy.BooleanSort:
 		return "sort.bool", nil
-	case *goivy.FunctionSort:
+	case *goivy.LogicFunctionSort:
 		domain := st.Domain()
 		parts := make([]string, len(domain))
 		for i, d := range domain {
@@ -95,7 +95,7 @@ func (g *Generator) EmitSymbolDef(name string, s goivy.Sort) error {
 // EmitExpr emits the Lean representation of a logic node (formula/term).
 func (g *Generator) EmitExpr(f goivy.Expr) error {
 	switch n := f.(type) {
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		ss, err := SortToString(n.VSort)
 		if err != nil {
 			return err
@@ -132,7 +132,7 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.Iff:
+	case *goivy.LogicIff:
 		g.Emit("(fmla.eq ")
 		if err := g.EmitExpr(n.T1); err != nil {
 			return err
@@ -144,7 +144,7 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.Ite:
+	case *goivy.LogicIte:
 		g.Emit("(ite_fmla ")
 		for _, term := range []goivy.Expr{n.Cond, n.Then, n.Else} {
 			g.Emit(" ")
@@ -155,11 +155,11 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.Not:
+	case *goivy.LogicNot:
 		g.Emit("\u00ac") // NOT sign
 		return g.EmitExpr(n.Body)
 
-	case *goivy.And:
+	case *goivy.LogicAnd:
 		if len(n.Terms) == 0 {
 			g.Emit("ltrue")
 			return nil
@@ -176,7 +176,7 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.Or:
+	case *goivy.LogicOr:
 		if len(n.Terms) == 0 {
 			g.Emit("lfalse")
 			return nil
@@ -193,7 +193,7 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.Implies:
+	case *goivy.LogicImplies:
 		g.Emit("(")
 		if err := g.EmitExpr(n.T1); err != nil {
 			return err
@@ -223,7 +223,7 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 		}
 		return nil
 
-	case *goivy.Exists:
+	case *goivy.LogicExists:
 		for _, v := range n.Variables {
 			g.Emit("(fmla.proj ")
 			if err := g.EmitExpr(v); err != nil {
@@ -263,11 +263,11 @@ func (g *Generator) EmitExpr(f goivy.Expr) error {
 // EmitAction emits the Lean representation of an action.
 func (g *Generator) EmitAction(a goivy.ActionsAction) error {
 	switch act := a.(type) {
-	case *goivy.AssignAction:
+	case *goivy.LogicAssignAction:
 		g.Emit("    " + fmt.Sprint(act.LHS) + " ::= ")
 		return g.EmitExpr(act.RHS)
 
-	case *goivy.Sequence:
+	case *goivy.LogicSequence:
 		g.Emit("(")
 		for i, child := range act.Elems {
 			if i > 0 {
@@ -283,7 +283,7 @@ func (g *Generator) EmitAction(a goivy.ActionsAction) error {
 		g.Emit(")")
 		return nil
 
-	case *goivy.IfAction:
+	case *goivy.LogicIfAction:
 		g.Emit("(PL.pterm.ite ")
 		if err := g.EmitExpr(act.Cond); err != nil {
 			return err

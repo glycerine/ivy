@@ -34,32 +34,32 @@ import (
 type Space interface {
 	String() string
 	// Enumerate returns all valid clause combinations from this space.
-	Enumerate(memo map[string]MemoEntry, test func([]*goivy.Literal) bool) [][]*goivy.Literal
+	Enumerate(memo map[string]MemoEntry, test func([]*goivy.LogicLiteral) bool) [][]*goivy.LogicLiteral
 }
 
 // MemoEntry stores a cached (params, clauses) pair for a relation name.
 type MemoEntry struct {
 	Params []goivy.Expr
-	Value  [][]*goivy.Literal
+	Value  [][]*goivy.LogicLiteral
 }
 
 // NamedSpace is a leaf concept space containing a single literal.
 type NamedSpace struct {
-	Lit *goivy.Literal
+	Lit *goivy.LogicLiteral
 }
 
 func (ns *NamedSpace) String() string {
 	return ns.Lit.String()
 }
 
-func (ns *NamedSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.Literal) bool) [][]*goivy.Literal {
+func (ns *NamedSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.LogicLiteral) bool) [][]*goivy.LogicLiteral {
 	// Check if the atom's relation name is in memo
 	if ns.Lit.Polarity == 1 {
 		if app, ok := ns.Lit.Atom.(*goivy.Apply); ok {
 			if c, ok2 := app.Func.(*goivy.Const); ok2 {
 				if entry, found := memo[c.Name]; found {
 					if len(entry.Params) == len(app.Terms) {
-						var result [][]*goivy.Literal
+						var result [][]*goivy.LogicLiteral
 						subs := make(map[goivy.NodeKey]goivy.Expr)
 						for i, p := range entry.Params {
 							subs[goivy.Key(p)] = app.Terms[i]
@@ -74,9 +74,9 @@ func (ns *NamedSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.Li
 			}
 		}
 	}
-	clause := []*goivy.Literal{ns.Lit}
+	clause := []*goivy.LogicLiteral{ns.Lit}
 	if test(clause) {
-		return [][]*goivy.Literal{clause}
+		return [][]*goivy.LogicLiteral{clause}
 	}
 	return nil
 }
@@ -94,8 +94,8 @@ func (ss *SumSpace) String() string {
 	return "(" + strings.Join(parts, " + ") + ")"
 }
 
-func (ss *SumSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.Literal) bool) [][]*goivy.Literal {
-	var result [][]*goivy.Literal
+func (ss *SumSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.LogicLiteral) bool) [][]*goivy.LogicLiteral {
+	var result [][]*goivy.LogicLiteral
 	for _, s := range ss.Spaces {
 		result = append(result, s.Enumerate(memo, test)...)
 	}
@@ -115,17 +115,17 @@ func (ps *ProductSpace) String() string {
 	return "(" + strings.Join(parts, " * ") + ")"
 }
 
-func (ps *ProductSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.Literal) bool) [][]*goivy.Literal {
+func (ps *ProductSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.LogicLiteral) bool) [][]*goivy.LogicLiteral {
 	if len(ps.Spaces) == 0 {
-		return [][]*goivy.Literal{{}}
+		return [][]*goivy.LogicLiteral{{}}
 	}
 	fs := ps.Spaces[0].Enumerate(memo, test)
 	for _, s := range ps.Spaces[1:] {
 		fs2 := s.Enumerate(memo, test)
-		var prod [][]*goivy.Literal
+		var prod [][]*goivy.LogicLiteral
 		for _, x := range fs {
 			for _, y := range fs2 {
-				combined := make([]*goivy.Literal, 0, len(x)+len(y))
+				combined := make([]*goivy.LogicLiteral, 0, len(x)+len(y))
 				combined = append(combined, x...)
 				combined = append(combined, y...)
 				if test(combined) {
@@ -146,7 +146,7 @@ func (ps *ProductSpace) Enumerate(memo map[string]MemoEntry, test func([]*goivy.
 // Corresponds to Python's relalg parameter in concept space eval.
 type RelAlg interface {
 	// Prim computes the relational value for a primitive literal.
-	Prim(lit *goivy.Literal) interface{}
+	Prim(lit *goivy.LogicLiteral) interface{}
 	// Empty checks if a relational value is empty.
 	Empty(v interface{}) bool
 	// Top returns the universe (non-empty) relational value.
@@ -159,7 +159,7 @@ type RelAlg interface {
 
 // EvalEntry is a (clause, relational-value) pair returned by Eval.
 type EvalEntry struct {
-	Clause []*goivy.Literal
+	Clause []*goivy.LogicLiteral
 	Value  interface{}
 }
 
@@ -197,7 +197,7 @@ func (ns *NamedSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry
 	}
 	v := ra.Prim(ns.Lit)
 	if !ra.Empty(v) {
-		return []EvalEntry{{Clause: []*goivy.Literal{ns.Lit}, Value: v}}
+		return []EvalEntry{{Clause: []*goivy.LogicLiteral{ns.Lit}, Value: v}}
 	}
 	return nil
 }
@@ -220,7 +220,7 @@ func (ps *ProductSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEnt
 		var prod []EvalEntry
 		for _, x := range fs {
 			for _, y := range fs2 {
-				combined := make([]*goivy.Literal, 0, len(x.Clause)+len(y.Clause))
+				combined := make([]*goivy.LogicLiteral, 0, len(x.Clause)+len(y.Clause))
 				combined = append(combined, x.Clause...)
 				combined = append(combined, y.Clause...)
 				v := ra.Prod(x.Value, y.Value)
@@ -253,8 +253,8 @@ func evalSpace(s Space, memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
 // -----------------------------------------------------------------------
 
 // substituteLiterals applies a node substitution to a slice of literals.
-func substituteLiterals(lits []*goivy.Literal, subs map[goivy.NodeKey]goivy.Expr) []*goivy.Literal {
-	result := make([]*goivy.Literal, len(lits))
+func substituteLiterals(lits []*goivy.LogicLiteral, subs map[goivy.NodeKey]goivy.Expr) []*goivy.LogicLiteral {
+	result := make([]*goivy.LogicLiteral, len(lits))
 	for i, lit := range lits {
 		newAtom := substituteNode(lit.Atom, subs)
 		result[i] = goivy.NewLiteral(lit.Polarity, newAtom)
@@ -273,7 +273,7 @@ func substituteNode(n goivy.Expr, subs map[goivy.NodeKey]goivy.Expr) goivy.Expr 
 			newTerms[i] = substituteNode(term, subs)
 		}
 		return goivy.MustApply(t.Func, newTerms...)
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		if r, ok := subs[goivy.Key(t)]; ok {
 			return r
 		}

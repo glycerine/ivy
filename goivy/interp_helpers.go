@@ -445,7 +445,7 @@ func FalseProperties(mod *Module) []*LabeledFormula {
 		}
 		if subgoalMap[prop.ID] {
 			// Subgoal: assume it for subsequent checks.
-			premise = &And{Terms: []Expr{premise, prop.Formula.(Expr)}}
+			premise = &LogicAnd{Terms: []Expr{premise, prop.Formula.(Expr)}}
 			continue
 		}
 		// Assert: check if axioms (plus accumulated subgoals) imply this property.
@@ -492,7 +492,7 @@ func GetPropertyContext(mod *Module, prop *LabeledFormula) *Clauses {
 // (returning nil for them). Mirrors eval_state_facts.
 func EvalStateFacts(checkPrecond bool, expr Node, mod *Module) (*InterpState, error) {
 	if IsInterpStateJoin(expr) {
-		or := expr.(*AstOr)
+		or := expr.(*Or)
 		var result *InterpState
 		for _, term := range or.Terms {
 			s, err := EvalStateFacts(checkPrecond, term, mod)
@@ -538,7 +538,7 @@ func EvalStateFacts(checkPrecond bool, expr Node, mod *Module) (*InterpState, er
 // that reference the given predecessor state. Mirrors eval_state_actions.
 func EvalStateActions(expr Node, pre *InterpState) []*Atom {
 	if IsInterpStateJoin(expr) {
-		or := expr.(*AstOr)
+		or := expr.(*Or)
 		var result []*Atom
 		for _, term := range or.Terms {
 			result = append(result, EvalStateActions(term, pre)...)

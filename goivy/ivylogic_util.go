@@ -10,7 +10,7 @@ func CloneNode(n Expr, args []Expr) Expr {
 	switch t := n.(type) {
 	case *Const:
 		return t // constants are immutable
-	case *Variable:
+	case *LogicVariable:
 		return t // variables are immutable
 	case *Apply:
 		if len(args) > 0 {
@@ -22,29 +22,29 @@ func CloneNode(n Expr, args []Expr) Expr {
 			return &Eq{T1: args[0], T2: args[1]}
 		}
 		return t
-	case *Not:
+	case *LogicNot:
 		if len(args) == 1 {
-			return &Not{Body: args[0]}
+			return &LogicNot{Body: args[0]}
 		}
 		return t
-	case *And:
-		return &And{Terms: args}
-	case *Or:
-		return &Or{Terms: args}
-	case *Implies:
+	case *LogicAnd:
+		return &LogicAnd{Terms: args}
+	case *LogicOr:
+		return &LogicOr{Terms: args}
+	case *LogicImplies:
 		if len(args) == 2 {
-			return &Implies{T1: args[0], T2: args[1]}
+			return &LogicImplies{T1: args[0], T2: args[1]}
 		}
 		return t
-	case *Iff:
+	case *LogicIff:
 		if len(args) == 2 {
-			return &Iff{T1: args[0], T2: args[1]}
+			return &LogicIff{T1: args[0], T2: args[1]}
 		}
 		return t
-	case *Ite:
+	case *LogicIte:
 		if len(args) == 3 {
 			// Python's Ite.__init__ recomputes sort from t_then.sort
-			return &Ite{ISort: args[1].NodeSort(), Cond: args[0], Then: args[1], Else: args[2]}
+			return &LogicIte{ISort: args[1].NodeSort(), Cond: args[0], Then: args[1], Else: args[2]}
 		}
 		return t
 	case *ForAll:
@@ -52,9 +52,9 @@ func CloneNode(n Expr, args []Expr) Expr {
 			return &ForAll{Variables: t.Variables, Body: args[0]}
 		}
 		return t
-	case *Exists:
+	case *LogicExists:
 		if len(args) == 1 {
-			return &Exists{Variables: t.Variables, Body: args[0]}
+			return &LogicExists{Variables: t.Variables, Body: args[0]}
 		}
 		return t
 	case *Lambda:
@@ -62,25 +62,25 @@ func CloneNode(n Expr, args []Expr) Expr {
 			return &Lambda{Variables: t.Variables, Body: args[0]}
 		}
 		return t
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		if len(args) == 1 {
-			return &NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: args[0]}
+			return &LogicNamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: args[0]}
 		}
 		return t
-	case *Globally:
+	case *LogicGlobally:
 		if len(args) == 1 {
-			return &Globally{Environ: t.Environ, Body: args[0]}
+			return &LogicGlobally{Environ: t.Environ, Body: args[0]}
 		}
 		return t
-	case *Eventually:
+	case *LogicEventually:
 		if len(args) == 1 {
-			return &Eventually{Environ: t.Environ, Body: args[0]}
+			return &LogicEventually{Environ: t.Environ, Body: args[0]}
 		}
 		return t
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		if len(args) == 2 {
 			// Python's WhenOperator.__init__ recomputes sort from t1.sort
-			return &WhenOperator{WSort: args[0].NodeSort(), Name: t.Name, T1: args[0], T2: args[1]}
+			return &LogicWhenOperator{WSort: args[0].NodeSort(), Name: t.Name, T1: args[0], T2: args[1]}
 		}
 		return t
 	case *Cond:
@@ -94,14 +94,14 @@ func CloneNode(n Expr, args []Expr) Expr {
 			return &IvyDefinition{Lhs: args[0], Rhs: args[1]}
 		}
 		return t
-	case *Some:
+	case *LogicSome:
 		// Python's Some extends AST, so clone = type(self)(*args) replaces all args.
 		// Python's Some.args = (params_node, fmla_node, [if_val, [else_val]])
 		// Go's Some.Children() = params... + fmla + [if_val] + [else_val]
 		// To match Python clone semantics, we reconstruct from all args.
 		nParams := len(t.Params)
 		if len(args) >= nParams+1 {
-			s := &Some{
+			s := &LogicSome{
 				Params: args[:nParams],
 				Fmla:   args[nParams],
 			}
@@ -119,17 +119,17 @@ func CloneNode(n Expr, args []Expr) Expr {
 }
 
 // CloneBinder clones a binder with new variables and body.
-func CloneBinder(n Expr, vars []*Variable, body Expr) Expr {
+func CloneBinder(n Expr, vars []*LogicVariable, body Expr) Expr {
 	switch t := n.(type) {
 	case *ForAll:
 		return &ForAll{Variables: vars, Body: body}
-	case *Exists:
-		return &Exists{Variables: vars, Body: body}
+	case *LogicExists:
+		return &LogicExists{Variables: vars, Body: body}
 	case *Lambda:
 		return &Lambda{Variables: vars, Body: body}
-	case *NamedBinder:
-		return &NamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
-	case *Some:
+	case *LogicNamedBinder:
+		return &LogicNamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
+	case *LogicSome:
 		// Python: clone_binder(vs, body) → Some(*(vs + self.args[1:]))
 		// Replaces params with vs. IGNORES body parameter — keeps original
 		// fmla, if_val, else_val from self.args[1:]. This matches Python's
@@ -139,27 +139,27 @@ func CloneBinder(n Expr, vars []*Variable, body Expr) Expr {
 			params[i] = v
 		}
 		_ = body // Python discards the body parameter for Some
-		return &Some{Params: params, Fmla: t.Fmla, IfVal: t.IfVal, ElseVal: t.ElseVal}
+		return &LogicSome{Params: params, Fmla: t.Fmla, IfVal: t.IfVal, ElseVal: t.ElseVal}
 	}
 	return n
 }
 
 // BinderVars returns the bound variables of a binder node.
-func BinderVars(n Expr) []*Variable {
+func BinderVars(n Expr) []*LogicVariable {
 	switch t := n.(type) {
 	case *ForAll:
 		return t.Variables
-	case *Exists:
+	case *LogicExists:
 		return t.Variables
 	case *Lambda:
 		return t.Variables
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return t.Variables
-	case *Some:
+	case *LogicSome:
 		// Some's Params are the bound variables
-		vars := make([]*Variable, 0, len(t.Params))
+		vars := make([]*LogicVariable, 0, len(t.Params))
 		for _, p := range t.Params {
-			if v, ok := p.(*Variable); ok {
+			if v, ok := p.(*LogicVariable); ok {
 				vars = append(vars, v)
 			}
 		}
@@ -173,13 +173,13 @@ func BinderBody(n Expr) Expr {
 	switch t := n.(type) {
 	case *ForAll:
 		return t.Body
-	case *Exists:
+	case *LogicExists:
 		return t.Body
 	case *Lambda:
 		return t.Body
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return t.Body
-	case *Some:
+	case *LogicSome:
 		return t.Fmla
 	}
 	return nil
@@ -190,50 +190,50 @@ func NodeArgs(n Expr) []Expr {
 	switch t := n.(type) {
 	case *Const:
 		return nil
-	case *Variable:
+	case *LogicVariable:
 		return nil
 	case *Apply:
 		return t.Terms
 	case *Eq:
 		return []Expr{t.T1, t.T2}
-	case *Not:
+	case *LogicNot:
 		return []Expr{t.Body}
-	case *And:
+	case *LogicAnd:
 		return t.Terms
-	case *Or:
+	case *LogicOr:
 		return t.Terms
-	case *Implies:
+	case *LogicImplies:
 		return []Expr{t.T1, t.T2}
-	case *Iff:
+	case *LogicIff:
 		return []Expr{t.T1, t.T2}
-	case *Ite:
+	case *LogicIte:
 		return []Expr{t.Cond, t.Then, t.Else}
 	case *ForAll:
 		return []Expr{t.Body}
-	case *Exists:
+	case *LogicExists:
 		return []Expr{t.Body}
 	case *Lambda:
 		return []Expr{t.Body}
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return []Expr{t.Body}
-	case *Globally:
+	case *LogicGlobally:
 		return []Expr{t.Body}
-	case *Eventually:
+	case *LogicEventually:
 		return []Expr{t.Body}
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		return []Expr{t.T1, t.T2}
 	case *Cond:
 		return []Expr{t.T1, t.T2}
 	case *IvyDefinition:
 		return []Expr{t.Lhs, t.Rhs}
-	case *Literal:
+	case *LogicLiteral:
 		return []Expr{t.Atom}
 	}
 	return n.Children()
 }
 
 // ForAll creates a ForAll node, or returns the body if vars is empty.
-func IvyForAll(vs []*Variable, body Expr) Expr {
+func IvyForAll(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -241,11 +241,11 @@ func IvyForAll(vs []*Variable, body Expr) Expr {
 }
 
 // Exists creates an Exists node, or returns the body if vars is empty.
-func IvyExists(vs []*Variable, body Expr) Expr {
+func IvyExists(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
-	return &Exists{Variables: vs, Body: body}
+	return &LogicExists{Variables: vs, Body: body}
 }
 
 // CloseFormula universally quantifies over all free variables.
@@ -268,12 +268,12 @@ func IsGroundFormula(fmla Expr) bool {
 // forall X:S, Y:S. (d1(X) = d1(Y) & d2(X) = d2(Y) & ...) -> X = Y
 func Extensionality(destrs []*Const) Expr {
 	if len(destrs) == 0 {
-		return &Or{} // false
+		return &LogicOr{} // false
 	}
 	// Get the sort from the first destructor's domain
-	fs, ok := destrs[0].CSort.(*FunctionSort)
+	fs, ok := destrs[0].CSort.(*LogicFunctionSort)
 	if !ok || fs.Arity() == 0 {
-		return &Or{}
+		return &LogicOr{}
 	}
 	sort := fs.Domain()[0]
 	x, _ := NewVariable("X", sort)
@@ -281,7 +281,7 @@ func Extensionality(destrs []*Const) Expr {
 
 	var conjuncts []Expr
 	for _, d := range destrs {
-		dfs, ok := d.CSort.(*FunctionSort)
+		dfs, ok := d.CSort.(*LogicFunctionSort)
 		if !ok {
 			continue
 		}
@@ -290,7 +290,7 @@ func Extensionality(destrs []*Const) Expr {
 			continue
 		}
 		// Create extra variables for multi-arg destructors
-		var extraVars []*Variable
+		var extraVars []*LogicVariable
 		for i := 1; i < len(dom); i++ {
 			v, _ := NewVariable(varName(i-1), dom[i])
 			extraVars = append(extraVars, v)
@@ -315,9 +315,9 @@ func Extensionality(destrs []*Const) Expr {
 		}
 	}
 
-	antecedent := &And{Terms: conjuncts}
+	antecedent := &LogicAnd{Terms: conjuncts}
 	consequent := &Eq{T1: x, T2: y}
-	return &Implies{T1: antecedent, T2: consequent}
+	return &LogicImplies{T1: antecedent, T2: consequent}
 }
 
 func varName(idx int) string {
@@ -327,9 +327,9 @@ func varName(idx int) string {
 // PartialFunction returns a formula stating that rel is a partial function:
 // forall X, Y, Z. (rel(X,Y) & rel(X,Z)) -> Y = Z
 func PartialFunction(rel *Const) Expr {
-	fs, ok := rel.CSort.(*FunctionSort)
+	fs, ok := rel.CSort.(*LogicFunctionSort)
 	if !ok || fs.Arity() < 2 {
-		return &And{} // true
+		return &LogicAnd{} // true
 	}
 	dom := fs.Domain()
 	x, _ := NewVariable("X", dom[0])
@@ -338,41 +338,41 @@ func PartialFunction(rel *Const) Expr {
 
 	relXY := MustApply(rel, x, y)
 	relXZ := MustApply(rel, x, z)
-	premise := &And{Terms: []Expr{relXY, relXZ}}
+	premise := &LogicAnd{Terms: []Expr{relXY, relXZ}}
 	conclusion := &Eq{T1: y, T2: z}
-	body := &Implies{T1: premise, T2: conclusion}
-	return &ForAll{Variables: []*Variable{x, y, z}, Body: body}
+	body := &LogicImplies{T1: premise, T2: conclusion}
+	return &ForAll{Variables: []*LogicVariable{x, y, z}, Body: body}
 }
 
 // VariableUniqifier alpha-converts formulas so all bound variables are unique.
 type VariableUniqifier struct {
 	rn     *UniqueRenamer
-	InvMap map[NodeKey]*Variable // renamed var → original var
+	InvMap map[NodeKey]*LogicVariable // renamed var → original var
 }
 
 // NewVariableUniqifier creates a new uniqifier, reserving the given names.
 func NewVariableUniqifier(used []string) *VariableUniqifier {
 	return &VariableUniqifier{
 		rn:     NewUniqueRenamer("", used),
-		InvMap: make(map[NodeKey]*Variable),
+		InvMap: make(map[NodeKey]*LogicVariable),
 	}
 }
 
 // Uniquify alpha-converts a formula so all bound variables have unique names.
 func (vu *VariableUniqifier) Uniquify(fmla Expr) Expr {
-	vmap := make(map[NodeKey]*Variable)
+	vmap := make(map[NodeKey]*LogicVariable)
 	return vu.rec(fmla, vmap)
 }
 
-func (vu *VariableUniqifier) rec(fmla Expr, vmap map[NodeKey]*Variable) Expr {
+func (vu *VariableUniqifier) rec(fmla Expr, vmap map[NodeKey]*LogicVariable) Expr {
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
 
 		// Save old bindings
 		type saved struct {
-			v   *Variable
-			old *Variable
+			v   *LogicVariable
+			old *LogicVariable
 		}
 		var obs []saved
 		for _, v := range vars {
@@ -382,7 +382,7 @@ func (vu *VariableUniqifier) rec(fmla Expr, vmap map[NodeKey]*Variable) Expr {
 		}
 
 		// Create new variable names
-		newVars := make([]*Variable, len(vars))
+		newVars := make([]*LogicVariable, len(vars))
 		for i, v := range vars {
 			newName := vu.rn.Rename(v.Name)
 			nv, _ := NewVariable(newName, v.VSort)
@@ -405,7 +405,7 @@ func (vu *VariableUniqifier) rec(fmla Expr, vmap map[NodeKey]*Variable) Expr {
 		return result
 	}
 
-	if v, ok := fmla.(*Variable); ok {
+	if v, ok := fmla.(*LogicVariable); ok {
 		if mapped, exists := vmap[Key(v)]; exists {
 			return mapped
 		}
@@ -440,14 +440,14 @@ func (vu *VariableUniqifier) Undo(fmla Expr) Expr {
 
 // AlphaAvoid alpha-converts a formula so that bound variable names do not
 // clash with the given set of variables.
-func AlphaAvoid(fmla Expr, vs []*Variable) Expr {
+func AlphaAvoid(fmla Expr, vs []*LogicVariable) Expr {
 	vu := NewVariableUniqifier(nil)
 	// Reserve names of vs and free variables
 	for _, v := range vs {
 		vu.rn.Rename(v.Name)
 	}
 	fvs := FreeVariablesList(fmla)
-	vmap := make(map[NodeKey]*Variable)
+	vmap := make(map[NodeKey]*LogicVariable)
 	for _, v := range fvs {
 		vu.rn.Rename(v.Name)
 		vmap[Key(v)] = v // preserve free variable
@@ -470,7 +470,7 @@ func AlphaAvoidMap(fmla Expr, vs map[NodeKey]Expr) Expr {
 	vu := NewVariableUniqifier(nil)
 	// Reserve names of all values in vs
 	for _, v := range vs {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			vu.rn.Rename(vv.Name)
 		} else if c, ok := v.(*Const); ok {
 			vu.rn.Rename(c.Name)
@@ -479,14 +479,14 @@ func AlphaAvoidMap(fmla Expr, vs map[NodeKey]Expr) Expr {
 		}
 	}
 	fvs := FreeVariablesList(fmla)
-	vmap := make(map[NodeKey]*Variable)
+	vmap := make(map[NodeKey]*LogicVariable)
 	for _, v := range fvs {
 		vu.rn.Rename(v.Name)
 		vmap[Key(v)] = v // preserve free variable
 	}
 	// Preserve variable values in vs
 	for _, v := range vs {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			vmap[Key(vv)] = vv
 		}
 	}
@@ -503,7 +503,7 @@ func NormalizeOps(fmla Expr) Expr {
 	}
 
 	switch fmla.(type) {
-	case *And, *Or:
+	case *LogicAnd, *LogicOr:
 		if len(newArgs) == 0 {
 			return CloneNode(fmla, nil)
 		}
@@ -512,7 +512,7 @@ func NormalizeOps(fmla Expr) Expr {
 		vars := BinderVars(fmla)
 		sort.Slice(vars, func(i, j int) bool { return vars[i].Name < vars[j].Name })
 		return makeQuant(fmla, vars, newArgs[0])
-	case *Exists:
+	case *LogicExists:
 		vars := BinderVars(fmla)
 		sort.Slice(vars, func(i, j int) bool { return vars[i].Name < vars[j].Name })
 		return makeQuant(fmla, vars, newArgs[0])
@@ -533,7 +533,7 @@ func makeBin(proto Expr, first Expr, rest []Expr) Expr {
 	return combined
 }
 
-func makeQuant(proto Expr, vars []*Variable, body Expr) Expr {
+func makeQuant(proto Expr, vars []*LogicVariable, body Expr) Expr {
 	if len(vars) == 0 {
 		return body
 	}
@@ -572,8 +572,8 @@ func ASTMatch(x, y Expr, placeholders map[NodeKey]Expr, subst map[NodeKey]Expr) 
 	}
 
 	// Literal
-	if litX, ok := x.(*Literal); ok {
-		litY := y.(*Literal)
+	if litX, ok := x.(*LogicLiteral); ok {
+		litY := y.(*LogicLiteral)
 		if litX.Polarity != litY.Polarity {
 			return false
 		}
@@ -600,7 +600,7 @@ func astMatchLists(xs, ys []Expr, placeholders map[NodeKey]Expr, subst map[NodeK
 
 func typeTag(n Expr) string {
 	switch n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return "Var"
 	case *Const:
 		return "Const"
@@ -608,39 +608,39 @@ func typeTag(n Expr) string {
 		return "Apply"
 	case *Eq:
 		return "Eq"
-	case *Not:
+	case *LogicNot:
 		return "Not"
-	case *And:
+	case *LogicAnd:
 		return "And"
-	case *Or:
+	case *LogicOr:
 		return "Or"
-	case *Implies:
+	case *LogicImplies:
 		return "Implies"
-	case *Iff:
+	case *LogicIff:
 		return "Iff"
-	case *Ite:
+	case *LogicIte:
 		return "Ite"
 	case *ForAll:
 		return "ForAll"
-	case *Exists:
+	case *LogicExists:
 		return "Exists"
 	case *Lambda:
 		return "Lambda"
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return "NamedBinder"
-	case *Globally:
+	case *LogicGlobally:
 		return "Globally"
-	case *Eventually:
+	case *LogicEventually:
 		return "Eventually"
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		return "WhenOperator"
 	case *Cond:
 		return "Cond"
 	case *IvyDefinition:
 		return "IvyDefinition"
-	case *Literal:
+	case *LogicLiteral:
 		return "Literal"
-	case *Some:
+	case *LogicSome:
 		return "Some"
 	default:
 		return "unknown"
@@ -650,19 +650,19 @@ func typeTag(n Expr) string {
 // LabelTemporal labels temporal operators with a given label string.
 func LabelTemporal(fmla Expr, label string) Expr {
 	switch t := fmla.(type) {
-	case *Globally:
-		return &Globally{Environ: &label, Body: LabelTemporal(t.Body, label)}
-	case *Eventually:
-		return &Eventually{Environ: &label, Body: LabelTemporal(t.Body, label)}
-	case *WhenOperator:
-		return &WhenOperator{
+	case *LogicGlobally:
+		return &LogicGlobally{Environ: &label, Body: LabelTemporal(t.Body, label)}
+	case *LogicEventually:
+		return &LogicEventually{Environ: &label, Body: LabelTemporal(t.Body, label)}
+	case *LogicWhenOperator:
+		return &LogicWhenOperator{
 			WSort: t.WSort,
 			Name:  t.Name,
 			T1:    LabelTemporal(t.T1, label),
 			T2:    LabelTemporal(t.T2, label),
 		}
-	case *NamedBinder:
-		return &NamedBinder{
+	case *LogicNamedBinder:
+		return &LogicNamedBinder{
 			Name:      t.Name,
 			Variables: t.Variables,
 			Environ:   &label,

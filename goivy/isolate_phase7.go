@@ -106,7 +106,7 @@ func HasSideEffectRec(mod *Module, newActions *InsMap[string, ActionsAction], ac
 
 	for _, sub := range action.IterSubactions() {
 		// Impure native actions have side effects.
-		if na, ok := sub.(*NativeAction); ok && na.Impure {
+		if na, ok := sub.(*LogicNativeAction); ok && na.Impure {
 			return true
 		}
 		// Modifications to signature symbols have side effects.
@@ -123,11 +123,11 @@ func HasSideEffectRec(mod *Module, newActions *InsMap[string, ActionsAction], ac
 			return true
 		}
 		// Python line 472-473: Ranking has side effects.
-		if _, isRanking := sub.(*Ranking); isRanking {
+		if _, isRanking := sub.(*LogicRanking); isRanking {
 			return true
 		}
 		// Follow through calls.
-		if ca, ok := sub.(*CallAction); ok {
+		if ca, ok := sub.(*LogicCallAction); ok {
 			calleeName := ca.CalleeName()
 			if HasSideEffectRec(mod, newActions, calleeName, memo) {
 				return true
@@ -196,7 +196,7 @@ func CollectRelevantDestructors(mod *Module, syms map[string]bool) map[string]bo
 		}
 		// If the sort has a range (i.e., is a FunctionSort), collect
 		// destructors for the range sort.
-		if fs, ok := entry.Sort.(*FunctionSort); ok {
+		if fs, ok := entry.Sort.(*LogicFunctionSort); ok {
 			rngName := isolateSortToName(fs.Range())
 			if rngName != "" {
 				CollectSortDestructors(mod, rngName, result, memo)
@@ -252,7 +252,7 @@ func FindSomeCall(mod *Module, actname string, callee string) ActionsAction {
 		return nil
 	}
 	for _, sub := range act.IterSubactions() {
-		if ca, ok := sub.(*CallAction); ok {
+		if ca, ok := sub.(*LogicCallAction); ok {
 			if ca.CalleeName() == callee {
 				return sub
 			}

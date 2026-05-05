@@ -251,13 +251,13 @@ func (s *Sig) String() string {
 		for _, sort := range sorts {
 			if IsRelationalSort(sort) {
 				b.WriteString("relation ")
-			} else if fs, ok := sort.(*FunctionSort); ok && fs.Arity() > 0 {
+			} else if fs, ok := sort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
 				b.WriteString("function ")
 			} else {
 				b.WriteString("individual ")
 			}
 			b.WriteString(name)
-			if fs, ok := sort.(*FunctionSort); ok && fs.Arity() > 0 {
+			if fs, ok := sort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
 				b.WriteByte('(')
 				dom := fs.Domain()
 				for i, d := range dom {

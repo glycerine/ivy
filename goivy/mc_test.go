@@ -413,8 +413,8 @@ func TestAigerGateGeneration(t *testing.T) {
 // ============================================================
 
 func TestEncoderNewEncoder(t *testing.T) {
-	sort3 := &EnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}} // 8 vals → 3 bits
-	sort2 := &EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}                     // 4 vals → 2 bits
+	sort3 := &LogicEnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}} // 8 vals → 3 bits
+	sort2 := &LogicEnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}                     // 4 vals → 2 bits
 	xSym := NewConst("x", sort3)
 	sSym := NewConst("s", sort2)
 	oSym := NewConst("o", Boolean)
@@ -631,7 +631,7 @@ func TestEncoderEncodeIte(t *testing.T) {
 }
 
 func TestEncoderDefineSym(t *testing.T) {
-	sort3 := &EnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}}
+	sort3 := &LogicEnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}}
 	xSym := NewConst("x", sort3)
 	enc := NewEncoder([]*Const{xSym}, nil, nil)
 	val := enc.BinEnc(5, 3)
@@ -647,7 +647,7 @@ func TestEncoderDefineSym(t *testing.T) {
 }
 
 func TestEncoderSetSym(t *testing.T) {
-	sort2 := &EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	sort2 := &LogicEnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
 	sSym := NewConst("s", sort2)
 	enc := NewEncoder(nil, []*Const{sSym}, nil)
 	val := enc.BinEnc(3, 2)
@@ -660,7 +660,7 @@ func TestEncoderSetSym(t *testing.T) {
 }
 
 func TestEncoderString(t *testing.T) {
-	sort2 := &EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	sort2 := &LogicEnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
 	xSym := NewConst("x", sort2)
 	sSym := NewConst("s", Boolean)
 	oSym := NewConst("o", Boolean)
@@ -704,7 +704,7 @@ func TestCeilLog2(t *testing.T) {
 
 func TestGetEncodingBitsSimple(t *testing.T) {
 	// Enumerated sort with 3 values -> 2 bits
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	n, err := GetEncodingBitsSimple(es)
 	if err != nil {
 		t.Fatal(err)
@@ -742,7 +742,7 @@ func TestGetEncodingBitsSimple(t *testing.T) {
 
 func TestGetEncodingBitsWithInterp(t *testing.T) {
 	// Enumerated sort
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	n, err := GetEncodingBits(es, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -762,7 +762,7 @@ func TestGetEncodingBitsWithInterp(t *testing.T) {
 }
 
 func TestIsFiniteSort(t *testing.T) {
-	if !IsFiniteSort(&EnumeratedSort{Name: "e", Extension: []string{"a", "b"}}) {
+	if !IsFiniteSort(&LogicEnumeratedSort{Name: "e", Extension: []string{"a", "b"}}) {
 		t.Error("EnumeratedSort should be finite")
 	}
 	if !IsFiniteSort(&RangeSort{Name: "r", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "3"}}) {
@@ -782,7 +782,7 @@ func TestIsFiniteSort(t *testing.T) {
 
 func TestSortValues(t *testing.T) {
 	// Enumerated
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	vals, err := SortValues(es)
 	if err != nil {
 		t.Fatal(err)
@@ -1043,7 +1043,7 @@ func TestDefToConstraintBooleanSort(t *testing.T) {
 	q := NewConst("q", Boolean)
 	def := NewDefinition(p, q)
 	result := mcDefToConstraint(def)
-	if _, ok := result.(*Iff); !ok {
+	if _, ok := result.(*LogicIff); !ok {
 		t.Errorf("Boolean-sorted def should produce Iff, got %T", result)
 	}
 }
@@ -1064,15 +1064,15 @@ func TestQEEqTautologyElimination(t *testing.T) {
 	eq := &Eq{T1: x, T2: x}
 	q := NewQelim(nil, nil, nil, false)
 	result := q.QE(eq, nil)
-	a, ok := result.(*And)
+	a, ok := result.(*LogicAnd)
 	if !ok || len(a.Terms) != 0 {
-		t.Errorf("Eq(x,x) should normalize to And{} (true), got %T: %v", result, result)
+		t.Errorf("Eq(x,x) should normalize to LogicAnd{} (true), got %T: %v", result, result)
 	}
 }
 
 func TestQEEqCanonicalOrder(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
-	fSort := &FunctionSort{Sorts: []Sort{s, s}}
+	fSort := &LogicFunctionSort{Sorts: []Sort{s, s}}
 	f := NewConst("f", fSort)
 	g := NewConst("g", fSort)
 	arg := NewConst("c", s)
@@ -1109,28 +1109,28 @@ func TestQEEqCanonicalOrder(t *testing.T) {
 
 func TestQENestedEqNormalization(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
-	fSort := &FunctionSort{Sorts: []Sort{s, s}}
+	fSort := &LogicFunctionSort{Sorts: []Sort{s, s}}
 	f := NewConst("f", fSort)
 	g := NewConst("g", fSort)
 	arg := NewConst("c", s)
 	fApp := &Apply{Func: f, Terms: []Expr{arg}}
 	gApp := &Apply{Func: g, Terms: []Expr{arg}}
 	x := NewConst("x", Boolean)
-	expr := &And{Terms: []Expr{
+	expr := &LogicAnd{Terms: []Expr{
 		&Eq{T1: x, T2: x},
 		&Eq{T1: gApp, T2: fApp},
 	}}
 	q := NewQelim(nil, nil, nil, false)
 	result := q.QE(expr, nil)
-	a, ok := result.(*And)
+	a, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
 	if len(a.Terms) != 2 {
 		t.Fatalf("expected 2 children, got %d", len(a.Terms))
 	}
-	if _, ok := a.Terms[0].(*And); !ok {
-		t.Errorf("Eq(x,x) child should become And{} (tautology), got %T", a.Terms[0])
+	if _, ok := a.Terms[0].(*LogicAnd); !ok {
+		t.Errorf("Eq(x,x) child should become LogicAnd{} (tautology), got %T", a.Terms[0])
 	}
 	eqR, ok := a.Terms[1].(*Eq)
 	if !ok {
@@ -1230,7 +1230,7 @@ func TestABCModelCheckerScrape(t *testing.T) {
 }
 
 func TestToAigerEncoder(t *testing.T) {
-	sort2 := &EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
+	sort2 := &LogicEnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}
 	xSym := NewConst("x", sort2)
 	sSym := NewConst("s", Boolean)
 	oSym := NewConst("o", Boolean)

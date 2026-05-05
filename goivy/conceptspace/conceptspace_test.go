@@ -106,7 +106,7 @@ func TestEnumerateNamedSpace(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	result := s.Enumerate(nil, func(lits []*goivy.Literal) bool { return true })
+	result := s.Enumerate(nil, func(lits []*goivy.LogicLiteral) bool { return true })
 	if len(result) != 1 {
 		t.Errorf("expected 1 clause, got %d", len(result))
 	}
@@ -117,7 +117,7 @@ func TestEnumerateNamedSpaceFails(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	result := s.Enumerate(nil, func(lits []*goivy.Literal) bool { return false })
+	result := s.Enumerate(nil, func(lits []*goivy.LogicLiteral) bool { return false })
 	if len(result) != 0 {
 		t.Errorf("expected 0 clauses, got %d", len(result))
 	}

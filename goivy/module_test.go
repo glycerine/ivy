@@ -57,7 +57,7 @@ func TestModuleCopy(t *testing.T) {
 	sort := &UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
 	m.Actions.Set("act1", &dummyAction{Tag: "dummy"})
-	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, &And{}))
+	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, &LogicAnd{}))
 	m.GhostSorts["ghost"] = true
 
 	c := m.Copy()
@@ -169,7 +169,7 @@ func TestModuleVariantIndex(t *testing.T) {
 func TestModuleSortCard(t *testing.T) {
 	m := New()
 	// Enumerated sort should return card
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	if SortCardDefault(es) != 3 {
 		t.Errorf("expected 3, got %d", SortCardDefault(es))
 	}
@@ -232,7 +232,7 @@ func TestModuleNewWithSig(t *testing.T) {
 
 func TestModuleLabeledFormula(t *testing.T) {
 	acfg := NewAstConfig()
-	lf := acfg.NewLabeledFormula(nil, &And{})
+	lf := acfg.NewLabeledFormula(nil, &LogicAnd{})
 	lf.Temporal = BoolPtr(true)
 	lf.SetLineno(Location{Line: 42})
 	if !lf.IsTemporal() {

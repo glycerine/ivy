@@ -14,7 +14,7 @@ func testConst(name string) *Const {
 	return NewConst(name, testSort())
 }
 
-func testVar(name string) *Variable {
+func testVar(name string) *LogicVariable {
 	v, err := NewVariable(name, testSort())
 	if err != nil {
 		panic("testVar: " + err.Error())
@@ -27,17 +27,17 @@ func testApply(fn Expr, terms ...Expr) *Apply {
 	return &Apply{Func: fn, Terms: terms}
 }
 
-func testForAll(vars []*Variable, body Expr) *ForAll {
+func testForAll(vars []*LogicVariable, body Expr) *ForAll {
 	// Build directly to avoid sort-checking in NewForAll.
 	return &ForAll{Variables: vars, Body: body}
 }
 
-func testLambda(vars []*Variable, body Expr) *Lambda {
+func testLambda(vars []*LogicVariable, body Expr) *Lambda {
 	return &Lambda{Variables: vars, Body: body}
 }
 
-func testExists(vars []*Variable, body Expr) *Exists {
-	return &Exists{Variables: vars, Body: body}
+func testExists(vars []*LogicVariable, body Expr) *LogicExists {
+	return &LogicExists{Variables: vars, Body: body}
 }
 
 // collectSyms collects all yielded symbols from SymbolsIluAst into a slice.
@@ -95,7 +95,7 @@ func TestNodeRep_Const(t *testing.T) {
 }
 
 func TestNodeRep_NamedBinder0Vars(t *testing.T) {
-	nb := &NamedBinder{
+	nb := &LogicNamedBinder{
 		Name:      "nb",
 		Variables: nil,
 		Body:      testConst("body"),
@@ -108,9 +108,9 @@ func TestNodeRep_NamedBinder0Vars(t *testing.T) {
 
 func TestNodeRep_NamedBinderWithVars(t *testing.T) {
 	v := testVar("X")
-	nb := &NamedBinder{
+	nb := &LogicNamedBinder{
 		Name:      "nb",
-		Variables: []*Variable{v},
+		Variables: []*LogicVariable{v},
 		Body:      testConst("body"),
 	}
 	rep := IvyNodeRep(nb)
@@ -180,7 +180,7 @@ func TestSymbolsIluAst_BinderFunc(t *testing.T) {
 	a := testConst("a")
 	fOfX := testApply(f, x)
 	v := testVar("V")
-	lam := testLambda([]*Variable{v}, fOfX)
+	lam := testLambda([]*LogicVariable{v}, fOfX)
 	app := testApply(lam, a)
 
 	syms := collectSyms(app)
@@ -206,8 +206,8 @@ func TestSymbolsIluAst_ForAllFormula(t *testing.T) {
 	v := testVar("X")
 	fOfA := testApply(f, a)
 	gOfB := testApply(g, b)
-	body := &And{Terms: []Expr{fOfA, gOfB}}
-	fa := testForAll([]*Variable{v}, body)
+	body := &LogicAnd{Terms: []Expr{fOfA, gOfB}}
+	fa := testForAll([]*LogicVariable{v}, body)
 
 	syms := collectSyms(fa)
 	names := symNames(syms)
@@ -230,9 +230,9 @@ func TestSymbolsIluAst_NestedBinders(t *testing.T) {
 	v := testVar("V")
 	w := testVar("W")
 	fOfC := testApply(f, c)
-	lam := testLambda([]*Variable{w}, fOfC)
+	lam := testLambda([]*LogicVariable{w}, fOfC)
 	app := testApply(lam, a)
-	fa := testForAll([]*Variable{v}, app)
+	fa := testForAll([]*LogicVariable{v}, app)
 
 	syms := collectSyms(fa)
 	names := symNames(syms)
@@ -257,7 +257,7 @@ func TestSymbolsIluAst_And(t *testing.T) {
 	g := testConst("g")
 	a := testConst("a")
 	b := testConst("b")
-	and := &And{Terms: []Expr{testApply(f, a), testApply(g, b)}}
+	and := &LogicAnd{Terms: []Expr{testApply(f, a), testApply(g, b)}}
 
 	syms := collectSyms(and)
 	names := symNames(syms)
@@ -291,7 +291,7 @@ func TestSymbolsIluAst_NamedBinder0VarsAsApp(t *testing.T) {
 	f := testConst("f")
 	a := testConst("a")
 	fOfA := testApply(f, a)
-	nb := &NamedBinder{
+	nb := &LogicNamedBinder{
 		Name:      "nb",
 		Variables: nil,
 		Body:      fOfA,
@@ -309,7 +309,7 @@ func TestSymbolsIluAst_Not(t *testing.T) {
 	// Not(f(a)) — Not is not an app. Args = [body] = [f(a)].
 	f := testConst("f")
 	a := testConst("a")
-	not := &Not{Body: testApply(f, a)}
+	not := &LogicNot{Body: testApply(f, a)}
 
 	syms := collectSyms(not)
 	names := symNames(syms)
@@ -325,7 +325,7 @@ func TestSymbolsIluAst_Implies(t *testing.T) {
 	g := testConst("g")
 	a := testConst("a")
 	b := testConst("b")
-	imp := &Implies{T1: testApply(f, a), T2: testApply(g, b)}
+	imp := &LogicImplies{T1: testApply(f, a), T2: testApply(g, b)}
 
 	syms := collectSyms(imp)
 	names := symNames(syms)
@@ -342,7 +342,7 @@ func TestSymbolsIluAst_Ite(t *testing.T) {
 	g := testConst("g")
 	a := testConst("a")
 	b := testConst("b")
-	ite := &Ite{Cond: p, Then: testApply(f, a), Else: testApply(g, b)}
+	ite := &LogicIte{Cond: p, Then: testApply(f, a), Else: testApply(g, b)}
 
 	syms := collectSyms(ite)
 	names := symNames(syms)
@@ -357,7 +357,7 @@ func TestSymbolsIluAst_ExistsFormula(t *testing.T) {
 	f := testConst("f")
 	a := testConst("a")
 	v := testVar("X")
-	ex := testExists([]*Variable{v}, testApply(f, a))
+	ex := testExists([]*LogicVariable{v}, testApply(f, a))
 
 	syms := collectSyms(ex)
 	names := symNames(syms)
@@ -378,7 +378,7 @@ func TestSymbolsIluAst_ApplyWithForAllFunc(t *testing.T) {
 	a := testConst("a")
 	v := testVar("V")
 	gOfC := testApply(g, c)
-	fa := testForAll([]*Variable{v}, gOfC)
+	fa := testForAll([]*LogicVariable{v}, gOfC)
 	app := testApply(fa, a)
 
 	syms := collectSyms(app)

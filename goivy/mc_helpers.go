@@ -23,7 +23,7 @@ func MCCeilLog2(n int) int {
 func GetEncodingBits(sort Sort, interp map[string]interface{}) (int, error) {
 	th := GetSortTheory(sort, interp)
 	switch t := th.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return MCCeilLog2(len(t.Extension)), nil
 	case *RangeSort:
 		ub, err := strconv.Atoi(t.UbString())
@@ -48,7 +48,7 @@ func GetEncodingBits(sort Sort, interp map[string]interface{}) (int, error) {
 // simplified lookup, working with concrete sort types only.
 func GetEncodingBitsSimple(sort Sort) (int, error) {
 	switch t := sort.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return MCCeilLog2(len(t.Extension)), nil
 	case *RangeSort:
 		ub, err := strconv.Atoi(t.UbString())
@@ -66,11 +66,11 @@ func GetEncodingBitsSimple(sort Sort) (int, error) {
 // IsFiniteSort returns true if the sort is finite (enumerated, range,
 // bit-vector, or boolean).
 func IsFiniteSort(sort Sort) bool {
-	if _, ok := sort.(*FunctionSort); ok {
+	if _, ok := sort.(*LogicFunctionSort); ok {
 		return false
 	}
 	switch sort.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return true
 	case *RangeSort:
 		return true
@@ -83,11 +83,11 @@ func IsFiniteSort(sort Sort) bool {
 // IsFiniteSortWithInterp checks whether a sort is finite, considering
 // theory interpretation.
 func IsFiniteSortWithInterp(sort Sort, interp map[string]interface{}) bool {
-	if _, ok := sort.(*FunctionSort); ok {
+	if _, ok := sort.(*LogicFunctionSort); ok {
 		return false
 	}
 	switch sort.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return true
 	case *RangeSort:
 		return true
@@ -96,7 +96,7 @@ func IsFiniteSortWithInterp(sort Sort, interp map[string]interface{}) bool {
 	}
 	th := GetSortTheory(sort, interp)
 	switch th.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return true
 	case *RangeSort:
 		return true
@@ -114,7 +114,7 @@ func IsFiniteSortWithInterp(sort Sort, interp map[string]interface{}) bool {
 // For boolean sorts, ["false", "true"].
 func SortValues(sort Sort) ([]string, error) {
 	switch t := sort.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return t.Extension, nil
 	case *RangeSort:
 		lb, err := strconv.Atoi(t.LbString())

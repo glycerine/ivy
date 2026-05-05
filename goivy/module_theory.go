@@ -40,15 +40,15 @@ func (m *Module) UpdateTheory() {
 	for _, ldf := range m.Definitions {
 		fmla := ldf.Formula
 
-		// Extract Definition — handle both *Definition and *DefinitionSchema.
-		// In Go, *DefinitionSchema embeds Definition but doesn't satisfy
-		// the *Definition type assertion. Python isinstance() handles both.
+		// Extract Definition — handle both *LogicDefinition and *LogicDefinitionSchema.
+		// In Go, *LogicDefinitionSchema embeds Definition but doesn't satisfy
+		// the *LogicDefinition type assertion. Python isinstance() handles both.
 		var def *IvyDefinition
 		var isSchema bool
 		if d, ok := fmla.(*IvyDefinition); ok {
 			def = d
 		} else if ds, ok := fmla.(*IvyDefinitionSchema); ok {
-			def = &ds.Definition
+			def = &ds.LogicDefinition
 			isSchema = true
 		} else {
 			continue
@@ -71,7 +71,7 @@ func (m *Module) UpdateTheory() {
 		}
 
 		// If RHS is a Some, convert to constraint and add as axiom.
-		if _, isSome := def.Rhs.(*Some); isSome {
+		if _, isSome := def.Rhs.(*LogicSome); isSome {
 			ax := moduleDefToConstraint(def)
 			if len(lhsArgs) > 0 {
 				vars := nodesToVars(lhsArgs)
@@ -125,7 +125,7 @@ func (m *Module) GetAxioms() []Expr {
 	// Here we iterate over schemata and collect any instances if they
 	// implement an interface that provides them.
 	for _, sch := range m.Schemata.All() {
-		if astSchema, ok := sch.(*AstSchema); ok {
+		if astSchema, ok := sch.(*Schema); ok {
 			for _, inst := range astSchema.Instances {
 				if expr, ok := inst.(Expr); ok {
 					res = append(res, expr)
@@ -185,12 +185,12 @@ func (m *Module) TheoryContext() func() {
 	// Collect non-EPR definitions (definitions with non-variable parameters).
 	nonEPR := make(map[NodeKey]nonEPREntry)
 	for _, ldf := range m.Definitions {
-		// Extract Definition — handle both *Definition and *DefinitionSchema.
+		// Extract Definition — handle both *LogicDefinition and *LogicDefinitionSchema.
 		var def *IvyDefinition
 		if d, ok := ldf.Formula.(*IvyDefinition); ok {
 			def = d
 		} else if ds, ok := ldf.Formula.(*IvyDefinitionSchema); ok {
-			def = &ds.Definition
+			def = &ds.LogicDefinition
 		} else {
 			continue
 		}
@@ -347,7 +347,7 @@ func instantiateNonEPREntries(nonEPR map[NodeKey]nonEPREntry, groundTerms []Expr
 			if i >= len(termArgs) {
 				break
 			}
-			if _, isVar := v.(*Variable); !isVar {
+			if _, isVar := v.(*LogicVariable); !isVar {
 				if c, ok := v.(*Const); ok {
 					subst[Key(c)] = termArgs[i]
 				}
@@ -378,7 +378,7 @@ func isGroundNode(n Expr) bool {
 	if n == nil {
 		return true
 	}
-	if _, isVar := n.(*Variable); isVar {
+	if _, isVar := n.(*LogicVariable); isVar {
 		return false
 	}
 	for _, c := range n.Children() {
@@ -439,7 +439,7 @@ func (m *Module) VariantAxioms() []Expr {
 // Corresponds to Python's il.exclusivity (ivy_logic.py:694-706):
 //
 //	def exclusivity(sort, variants):
-//	    def pto(s): return Symbol('*>', RelationSort([sort, s]))
+//	    def pto(s): return Symbol('*>', LogicRelationSort([sort, s]))
 //	    excs = [partial_function(pto(s)) for s in variants]
 //	    for s in variants:
 //	        x,y,z = [Variable(n,s) for n,s in [('X',sort),('Y',sort),('Z',s)]]
@@ -448,7 +448,7 @@ func (m *Module) VariantAxioms() []Expr {
 //	        for s2 in variants[:i1]:
 //	            x,y,z = [Variable(n,s) for n,s in [('X',sort),('Y',s1),('Z',s2)]]
 //	            excs.append(Not(And(pto(s1)(x,y),pto(s2)(x,z))))
-//	    return And(*excs)
+//	    return LogicAnd(*excs)
 //
 // Generates three categories of axioms:
 //  1. Partial function axioms: ∀X,Y,Z. (pto(s)(X,Y) ∧ pto(s)(X,Z)) → Y=Z
@@ -456,12 +456,12 @@ func (m *Module) VariantAxioms() []Expr {
 //  3. Pairwise exclusion: ∀X,Y,Z. ¬(pto(s1)(X,Y) ∧ pto(s2)(X,Z))
 func Exclusivity(parentSort Sort, variants []Sort) Expr {
 	if len(variants) == 0 {
-		return &And{} // true
+		return &LogicAnd{} // true
 	}
 
-	// pto(s) = Symbol("*>", RelationSort([parentSort, s]))
+	// pto(s) = Symbol("*>", LogicRelationSort([parentSort, s]))
 	pto := func(s Sort) *Const {
-		rsort := RelationSort([]Sort{parentSort, s})
+		rsort := LogicRelationSort([]Sort{parentSort, s})
 		return NewConst("*>", rsort)
 	}
 
@@ -481,11 +481,11 @@ func Exclusivity(parentSort Sort, variants []Sort) Expr {
 		z, _ := NewVariable("Z", s)
 		relXZ := MustApply(rel, x, z)
 		relYZ := MustApply(rel, y, z)
-		body := &Implies{
-			T1: &And{Terms: []Expr{relXZ, relYZ}},
+		body := &LogicImplies{
+			T1: &LogicAnd{Terms: []Expr{relXZ, relYZ}},
 			T2: &Eq{T1: x, T2: y},
 		}
-		excs = append(excs, &ForAll{Variables: []*Variable{x, y, z}, Body: body})
+		excs = append(excs, &ForAll{Variables: []*LogicVariable{x, y, z}, Body: body})
 	}
 
 	// 3. Pairwise exclusion
@@ -495,15 +495,15 @@ func Exclusivity(parentSort Sort, variants []Sort) Expr {
 			x, _ := NewVariable("X", parentSort)
 			y, _ := NewVariable("Y", s1)
 			z, _ := NewVariable("Z", s2)
-			body := &Not{Body: &And{Terms: []Expr{
+			body := &LogicNot{Body: &LogicAnd{Terms: []Expr{
 				MustApply(pto(s1), x, y),
 				MustApply(pto(s2), x, z),
 			}}}
-			excs = append(excs, &ForAll{Variables: []*Variable{x, y, z}, Body: body})
+			excs = append(excs, &ForAll{Variables: []*LogicVariable{x, y, z}, Body: body})
 		}
 	}
 
-	return &And{Terms: excs}
+	return &LogicAnd{Terms: excs}
 }
 
 // DropLabel removes the label from a LabeledFormula, returning just
@@ -536,7 +536,7 @@ func getLhsArgs(def *IvyDefinition) []Expr {
 // allVariables returns true if all nodes are *lg.Variable.
 func allVariables(nodes []Expr) bool {
 	for _, n := range nodes {
-		if _, ok := n.(*Variable); !ok {
+		if _, ok := n.(*LogicVariable); !ok {
 			return false
 		}
 	}
@@ -545,10 +545,10 @@ func allVariables(nodes []Expr) bool {
 
 // nodesToVars converts a slice of lg.Expr to a slice of *lg.Variable,
 // skipping any non-variable nodes.
-func nodesToVars(nodes []Expr) []*Variable {
-	var vars []*Variable
+func nodesToVars(nodes []Expr) []*LogicVariable {
+	var vars []*LogicVariable
 	for _, n := range nodes {
-		if v, ok := n.(*Variable); ok {
+		if v, ok := n.(*LogicVariable); ok {
 			vars = append(vars, v)
 		}
 	}

@@ -33,46 +33,46 @@ func ReprNode(n Node) string {
 }
 
 // Variable represents a variable. Name must start with uppercase.
-type Variable struct {
+type LogicVariable struct {
 	Base
 	Name  string
 	VSort Sort
 }
 
-func NewVariable(name string, sort Sort) (*Variable, error) {
+func NewVariable(name string, sort Sort) (*LogicVariable, error) {
 	if len(name) == 0 || !isUpper(name[0]) {
 		return nil, &IvyError{Msg: fmt.Sprintf("Bad variable name: %q", name)}
 	}
-	return &Variable{Name: name, VSort: sort}, nil
+	return &LogicVariable{Name: name, VSort: sort}, nil
 }
 
-func (v *Variable) NodeSort() Sort   { return v.VSort }
-func (v *Variable) Children() []Expr { return nil }
+func (v *LogicVariable) NodeSort() Sort   { return v.VSort }
+func (v *LogicVariable) Children() []Expr { return nil }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Var.__str__ = pretty_fmla. PrettyFmla calls
 // drop_annotations(False, set()).ugly(0).
-func (v *Variable) String() string { return PrettyFmla(v) }
+func (v *LogicVariable) String() string { return PrettyFmla(v) }
 
-// Repr returns a sort-qualified string, matching Python ast.AstVariable.__repr__
+// Repr returns a sort-qualified string, matching Python ast.Variable.__repr__
 // which always includes ':sort'. String() matches Python logic.Var.__str__
 // which returns just the name.
-func (v *Variable) Repr() string {
+func (v *LogicVariable) Repr() string {
 	if v.VSort != nil && !IsTopSort(v.VSort) {
 		return v.Name + ":" + v.VSort.String()
 	}
 	return v.Name
 }
 
-func (v *Variable) Equal(n Expr) bool {
-	if o, ok := n.(*Variable); ok {
+func (v *LogicVariable) Equal(n Expr) bool {
+	if o, ok := n.(*LogicVariable); ok {
 		return v.Name == o.Name && v.VSort.Equal(o.VSort)
 	}
 	return false
 }
 
 // Call applies the variable as a function. Returns self if no args.
-func (v *Variable) Call(terms ...Expr) (Expr, error) {
+func (v *LogicVariable) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
 		return v, nil
 	}
@@ -127,7 +127,7 @@ func (c *Const) Equal(n Expr) bool {
 // If zero args and CSort is NOT FunctionSort, returns self.
 func (c *Const) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
-		if _, isFS := c.CSort.(*FunctionSort); isFS {
+		if _, isFS := c.CSort.(*LogicFunctionSort); isFS {
 			return NewApply(c) // nullary application
 		}
 		return c, nil
@@ -153,7 +153,7 @@ func NewApply(fn Expr, terms ...Expr) (*Apply, error) {
 		copy(cp, terms)
 		return &Apply{Func: fn, Terms: cp, aSort: TopS}, nil
 
-	case *FunctionSort:
+	case *LogicFunctionSort:
 		if fs == nil {
 			// Nil typed pointer — treat like TopSort
 			cp := make([]Expr, len(terms))
@@ -232,7 +232,7 @@ func NewApplyUnchecked(fn Expr, terms ...Expr) *Apply {
 	copy(cp, terms)
 	var resultSort Sort
 	if fnSort := fn.NodeSort(); fnSort != nil {
-		if fs, ok := fnSort.(*FunctionSort); ok {
+		if fs, ok := fnSort.(*LogicFunctionSort); ok {
 			resultSort = fs.Range()
 		} else {
 			resultSort = TopS
@@ -262,7 +262,7 @@ func (a *Apply) String() string { return PrettyFmla(a) }
 
 // Repr returns the sort-qualified representation, using Repr() on children.
 // Matches Python ast.Atom.__repr__ which calls str() on args (which for
-// ast.AstVariable invokes __repr__ including sort qualifiers).
+// ast.Variable invokes __repr__ including sort qualifiers).
 func (a *Apply) Repr() string {
 	if len(a.Terms) == 0 {
 		return ReprExpr(a.Func)

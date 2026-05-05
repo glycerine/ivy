@@ -104,7 +104,7 @@ func FindAssertions(actionName string, mod *Module) []ActionsAction {
 		}
 		for _, sub := range act.IterSubactions() {
 			isAssert := IsAssertLike(sub)
-			_, isRanking := sub.(*Ranking)
+			_, isRanking := sub.(*LogicRanking)
 			if isAssert || isRanking {
 				result = append(result, sub)
 			}
@@ -191,23 +191,23 @@ func NewMatchHandler(clauses *Clauses, model *ModelResult, vocab []*Const, slv *
 						key := Key(cnst)
 						h.Eqs[key] = append(h.Eqs[key], fmla)
 					}
-				case *Not:
+				case *LogicNot:
 					// Python: elif isinstance(fmla, lg.Not): app = fmla.args[0]; eqs[app.rep].append(Equals(app, Or()))
 					if app, ok := f.Body.(*Apply); ok {
 						key := Key(app.Func)
-						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: app, T2: &Or{}})
+						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: app, T2: &LogicOr{}})
 					} else if cnst, ok := f.Body.(*Const); ok {
 						key := Key(cnst)
-						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: cnst, T2: &Or{}})
+						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: cnst, T2: &LogicOr{}})
 					}
 				default:
 					// Python: elif lg.is_app(fmla): eqs[fmla.rep].append(Equals(fmla, And()))
 					if app, ok := fmla.(*Apply); ok {
 						key := Key(app.Func)
-						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: app, T2: &And{}})
+						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: app, T2: &LogicAnd{}})
 					} else if cnst, ok := fmla.(*Const); ok {
 						key := Key(cnst)
-						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: cnst, T2: &And{}})
+						h.Eqs[key] = append(h.Eqs[key], &Eq{T1: cnst, T2: &LogicAnd{}})
 					}
 				}
 			}
@@ -429,9 +429,9 @@ func hasTemporalRec(n Expr) bool {
 		return false
 	}
 	switch n.(type) {
-	case *Globally, *Eventually, *WhenOperator:
+	case *LogicGlobally, *LogicEventually, *LogicWhenOperator:
 		return true
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return true
 	}
 	for _, c := range n.Children() {

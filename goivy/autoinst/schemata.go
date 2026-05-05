@@ -106,7 +106,7 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		// Match to constants of the appropriate sort
 		sortKey := p.VSort.String()
 		// Match Python defaultdict auto-vivification
@@ -175,7 +175,7 @@ func extractSchemaNode(lf interface{}) (goivy.Expr, bool) {
 // GetTrigger finds a trigger expression in a formula that covers all bound variables.
 //
 // Python: ivy_mc.py:674-684, also used in ivy_auto_inst.py
-func GetTrigger(expr goivy.Expr, vars []*goivy.Variable) goivy.Expr {
+func GetTrigger(expr goivy.Expr, vars []*goivy.LogicVariable) goivy.Expr {
 	if goivy.IsQuantifier(expr) || goivy.IsVariable(expr) {
 		return nil
 	}
@@ -201,7 +201,7 @@ func isEqNode(n goivy.Expr) bool {
 	return ok
 }
 
-func containsAllVars(have []*goivy.Variable, need []*goivy.Variable) bool {
+func containsAllVars(have []*goivy.LogicVariable, need []*goivy.LogicVariable) bool {
 	haveSet := make(map[string]bool, len(have))
 	for _, v := range have {
 		haveSet[v.Name] = true

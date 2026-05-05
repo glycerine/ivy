@@ -224,7 +224,7 @@ func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 
 // defEquationLabel extracts a display label from a state equation (ast.Definition).
 // Python: state_equation_label(a) — reads a.args[0] (action name) and a.args[1].rep.
-func defEquationLabel(eq *goivy.AstDefinition) string {
+func defEquationLabel(eq *goivy.Definition) string {
 	var actionName string
 	if eq != nil && eq.Lhs != nil {
 		if atom, ok := eq.Lhs.(*goivy.Atom); ok {

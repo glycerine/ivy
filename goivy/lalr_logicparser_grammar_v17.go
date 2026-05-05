@@ -1053,7 +1053,7 @@ lalr17default:
 				newTerms = append(newTerms, lhs.Terms...)
 				newTerms = append(newTerms, rhs.Terms...)
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
-			case *AstOld:
+			case *Old:
 				if inner, ok := lhs.Term.(*Atom); ok {
 					rhs := lalr17Dollar[3].node.(*Atom)
 					newRep := inner.Rep + "." + rhs.Rep
@@ -1170,9 +1170,9 @@ lalr17default:
 //line lalr_logicparser_grammar_v17.y:391
 		{
 			// Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
-			//         else: p[0] = And(p[1], p[3])
-			// This flattens left-associative chains and absorbs true (And{}) identity.
-			if a, ok := lalr17Dollar[1].node.(*AstAnd); ok {
+			//         else: p[0] = LogicAnd(p[1], p[3])
+			// This flattens left-associative chains and absorbs true (LogicAnd{}) identity.
+			if a, ok := lalr17Dollar[1].node.(*And); ok {
 				a.Terms = append(a.Terms, lalr17Dollar[3].node)
 				lalr17VAL.node = a
 			} else {
@@ -1184,8 +1184,8 @@ lalr17default:
 //line lalr_logicparser_grammar_v17.y:403
 		{
 			// Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
-			//         else: p[0] = Or(p[1], p[3])
-			if o, ok := lalr17Dollar[1].node.(*AstOr); ok {
+			//         else: p[0] = LogicOr(p[1], p[3])
+			if o, ok := lalr17Dollar[1].node.(*Or); ok {
 				o.Terms = append(o.Terms, lalr17Dollar[3].node)
 				lalr17VAL.node = o
 			} else {
@@ -1274,7 +1274,7 @@ lalr17default:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:470
 		{
-			if v, ok := lalr17Dollar[1].node.(*AstVariable); ok {
+			if v, ok := lalr17Dollar[1].node.(*Variable); ok {
 				v.VSort = lalr17AtypeToString(lalr17Dollar[3].node)
 			}
 			lalr17VAL.node = lalr17Dollar[1].node

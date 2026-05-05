@@ -87,7 +87,7 @@ func FuzzMatchFromDefn(f *testing.F) {
 		fn := proofMkConst("f", fs)
 
 		// Build parameters
-		params := make([]*Variable, arity)
+		params := make([]*LogicVariable, arity)
 		paramExprs := make([]Expr, arity)
 		for i := range params {
 			params[i] = proofMkVar("X"+string(rune('0'+i)), s)
@@ -100,7 +100,7 @@ func FuzzMatchFromDefn(f *testing.F) {
 
 		var body Expr
 		if useIff {
-			body = &Iff{T1: app, T2: True}
+			body = &LogicIff{T1: app, T2: True}
 		} else {
 			body = &Eq{T1: app, T2: c}
 		}
@@ -215,7 +215,7 @@ func FuzzUnfoldFmla(f *testing.F) {
 		if len(terms) == 1 {
 			fmla = terms[0]
 		} else {
-			fmla = &And{Terms: terms}
+			fmla = &LogicAnd{Terms: terms}
 		}
 
 		resultNode := UnfoldFmla(fmla, [][]*LabeledFormula{defns})
@@ -229,7 +229,7 @@ func FuzzUnfoldFmla(f *testing.F) {
 		var resultTerms []Expr
 		if nOccurrences == 1 {
 			resultTerms = []Expr{result}
-		} else if andR, ok := result.(*And); ok {
+		} else if andR, ok := result.(*LogicAnd); ok {
 			resultTerms = andR.Terms
 		} else {
 			t.Fatalf("expected And or single term, got %T", result)
@@ -280,7 +280,7 @@ func FuzzApplyUnfoldRec(f *testing.F) {
 		a := proofMkConst("a", s)
 		c := proofMkConst("c", s)
 
-		lam, _ := NewLambda([]*Variable{x}, c)
+		lam, _ := NewLambda([]*LogicVariable{x}, c)
 		union := &ExprListOrLambdaUnion{Items: []Expr{lam}}
 
 		// Build base formula with nOccurrences of f(a)
@@ -292,7 +292,7 @@ func FuzzApplyUnfoldRec(f *testing.F) {
 		if len(terms) == 1 {
 			inner = terms[0]
 		} else {
-			inner = &And{Terms: terms}
+			inner = &LogicAnd{Terms: terms}
 		}
 
 		// Wrap in different structures
@@ -301,9 +301,9 @@ func FuzzApplyUnfoldRec(f *testing.F) {
 		case 0:
 			fmla = inner
 		case 1:
-			fmla = &Not{Body: inner}
+			fmla = &LogicNot{Body: inner}
 		case 2:
-			fmla = &Implies{T1: inner, T2: True}
+			fmla = &LogicImplies{T1: inner, T2: True}
 		}
 
 		result := applyUnfoldRec(Key(fn), union, fmla)

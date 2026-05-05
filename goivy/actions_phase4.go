@@ -34,7 +34,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *Clauses {
 		arity, isRel := relations[sym.Name]
 		if isRel && arity > 0 {
 			// Build variables V0, V1, ...
-			vars := make([]*Variable, arity)
+			vars := make([]*LogicVariable, arity)
 			varNodes := make([]Expr, arity)
 			for i := 0; i < arity; i++ {
 				v, _ := NewVariable(fmt.Sprintf("V%d", i), TopS)
@@ -45,10 +45,10 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *Clauses {
 			newSym := NewActionConst(sym)
 			oldApp, _ := NewApply(sym, varNodes...)
 			newApp, _ := NewApply(newSym, varNodes...)
-			// Iff(old, new) = And(Or(Not(old), new), Or(old, Not(new)))
-			iff := &And{Terms: []Expr{
-				&Or{Terms: []Expr{&Not{Body: oldApp}, newApp}},
-				&Or{Terms: []Expr{oldApp, &Not{Body: newApp}}},
+			// Iff(old, new) = LogicAnd(Or(Not(old), new), Or(old, Not(new)))
+			iff := &LogicAnd{Terms: []Expr{
+				&LogicOr{Terms: []Expr{&LogicNot{Body: oldApp}, newApp}},
+				&LogicOr{Terms: []Expr{oldApp, &LogicNot{Body: newApp}}},
 			}}
 			// ForAll V0,...: iff
 			fmla := IvyForAll(vars, iff)

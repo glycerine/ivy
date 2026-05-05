@@ -190,9 +190,9 @@ func TestBuildConjectureWithConj(t *testing.T) {
 
 // --- UnrollAction tests ---
 
-func mkWhileAction(sortName string) *WhileAction {
+func mkWhileAction(sortName string) *LogicWhileAction {
 	sortT := &UninterpretedSort{Name: sortName}
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	cond, _ := NewApply(ltSym, xSym, boundSym)
@@ -206,8 +206,8 @@ func TestUnrollAction_NonWhile(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := result.(*AssumeAction); !ok {
-		t.Errorf("expected *AssumeAction, got %T", result)
+	if _, ok := result.(*LogicAssumeAction); !ok {
+		t.Errorf("expected *LogicAssumeAction, got %T", result)
 	}
 }
 
@@ -217,8 +217,8 @@ func TestUnrollAction_WhileUnrolled(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := result.(*IfAction); !ok {
-		t.Errorf("expected *IfAction (unrolled while), got %T", result)
+	if _, ok := result.(*LogicIfAction); !ok {
+		t.Errorf("expected *LogicIfAction (unrolled while), got %T", result)
 	}
 }
 
@@ -236,11 +236,11 @@ func TestUnrollAction_ZeroUnroll(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// card=0: just the base case if(cond, assume(false))
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
-		t.Fatalf("expected *IfAction, got %T", result)
+		t.Fatalf("expected *LogicIfAction, got %T", result)
 	}
-	if _, ok := ifAct.ThenBody.(*AssumeAction); !ok {
+	if _, ok := ifAct.ThenBody.(*LogicAssumeAction); !ok {
 		t.Errorf("base case should be AssumeAction, got %T", ifAct.ThenBody)
 	}
 }
@@ -252,7 +252,7 @@ func TestUnrollAction_LargeUnroll(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// Should recover from panic and return original action
-	if _, ok := result.(*WhileAction); !ok {
+	if _, ok := result.(*LogicWhileAction); !ok {
 		t.Errorf("expected original WhileAction back after panic recovery, got %T", result)
 	}
 }
@@ -266,18 +266,18 @@ func TestUnrollAction_WhileInsideSequence(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	s, ok := result.(*Sequence)
+	s, ok := result.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", result)
+		t.Fatalf("expected *LogicSequence, got %T", result)
 	}
 	if len(s.Elems) != 2 {
 		t.Fatalf("expected 2 elements, got %d", len(s.Elems))
 	}
-	if _, ok := s.Elems[0].(*AssumeAction); !ok {
-		t.Errorf("elem 0: expected *AssumeAction, got %T", s.Elems[0])
+	if _, ok := s.Elems[0].(*LogicAssumeAction); !ok {
+		t.Errorf("elem 0: expected *LogicAssumeAction, got %T", s.Elems[0])
 	}
-	if _, ok := s.Elems[1].(*IfAction); !ok {
-		t.Errorf("elem 1: expected *IfAction (unrolled while), got %T", s.Elems[1])
+	if _, ok := s.Elems[1].(*LogicIfAction); !ok {
+		t.Errorf("elem 1: expected *LogicIfAction (unrolled while), got %T", s.Elems[1])
 	}
 }
 
@@ -339,13 +339,13 @@ func TestCheckIsolateWithUnroll_WhileAction(t *testing.T) {
 	if !ok {
 		t.Fatal("action 'step' should be restored")
 	}
-	if _, ok := restored.(*WhileAction); !ok {
-		t.Errorf("restored action should be *WhileAction, got %T", restored)
+	if _, ok := restored.(*LogicWhileAction); !ok {
+		t.Errorf("restored action should be *LogicWhileAction, got %T", restored)
 	}
 }
 
 func containsWhileAction(act ActionsAction) bool {
-	if _, ok := act.(*WhileAction); ok {
+	if _, ok := act.(*LogicWhileAction); ok {
 		return true
 	}
 	for _, arg := range act.ActionArgs() {

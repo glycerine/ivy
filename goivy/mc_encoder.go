@@ -361,7 +361,7 @@ func (e *Encoder) Eval(expr Expr, getdef GetDefFunc) ([]int, error) {
 
 func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 	switch t := expr.(type) {
-	case *Ite:
+	case *LogicIte:
 		cond, err := e.evalRec(t.Cond, getdef)
 		if err != nil {
 			return nil, err
@@ -435,7 +435,7 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		}
 		return nil, fmt.Errorf("eval: no definition for %s", t.Name)
 
-	case *And:
+	case *LogicAnd:
 		args := make([][]int, len(t.Terms))
 		for i, term := range t.Terms {
 			v, err := e.evalRec(term, getdef)
@@ -446,7 +446,7 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		}
 		return e.AndlMulti(args...), nil
 
-	case *Or:
+	case *LogicOr:
 		args := make([][]int, len(t.Terms))
 		for i, term := range t.Terms {
 			v, err := e.evalRec(term, getdef)
@@ -457,14 +457,14 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		}
 		return e.OrlMulti(args...), nil
 
-	case *Not:
+	case *LogicNot:
 		v, err := e.evalRec(t.Body, getdef)
 		if err != nil {
 			return nil, err
 		}
 		return e.NotlMulti(v), nil
 
-	case *Implies:
+	case *LogicImplies:
 		lhs, err := e.evalRec(t.T1, getdef)
 		if err != nil {
 			return nil, err
@@ -475,7 +475,7 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		}
 		return e.ImpliesMulti(lhs, rhs), nil
 
-	case *Iff:
+	case *LogicIff:
 		lhs, err := e.evalRec(t.T1, getdef)
 		if err != nil {
 			return nil, err
@@ -509,7 +509,7 @@ func (e *Encoder) DefList(defs []Expr) error {
 	dmap := make(map[NodeKey]Expr)
 	for _, df := range defs {
 		switch d := df.(type) {
-		case *Definition:
+		case *LogicDefinition:
 			if c, ok := d.Defines().(*Const); ok {
 				dmap[Key(c)] = d.Rhs
 			}
@@ -542,7 +542,7 @@ func (e *Encoder) DefList(defs []Expr) error {
 		var sym *Const
 		var rhs Expr
 		switch d := df.(type) {
-		case *Definition:
+		case *LogicDefinition:
 			if c, ok := d.Defines().(*Const); ok {
 				sym = c
 				rhs = d.Rhs
@@ -592,7 +592,7 @@ func ceilLog2(n int) int {
 
 // getEncodingBits returns the number of bits needed to encode a sort's values.
 func getEncodingBits(s Sort) int {
-	if es, ok := s.(*EnumeratedSort); ok {
+	if es, ok := s.(*LogicEnumeratedSort); ok {
 		return ceilLog2(len(es.Extension))
 	}
 	// Default: 1 bit for boolean, more for numeric types
@@ -601,7 +601,7 @@ func getEncodingBits(s Sort) int {
 
 // getSortSize returns the number of values in a sort (for equality encoding).
 func getSortSize(s Sort) int {
-	if es, ok := s.(*EnumeratedSort); ok {
+	if es, ok := s.(*LogicEnumeratedSort); ok {
 		return len(es.Extension)
 	}
 	return 2 // boolean
@@ -620,7 +620,7 @@ func isInterpretedSort(s Sort) bool {
 		return false
 	}
 	switch s.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return true
 	}
 	// Check by name for common interpreted sorts
@@ -635,9 +635,9 @@ func bitsToBoolExprs(s string) []Expr {
 	bits := make([]Expr, len(s))
 	for i, b := range s {
 		if b == '1' {
-			bits[i] = &And{Terms: nil}
+			bits[i] = &LogicAnd{Terms: nil}
 		} else {
-			bits[i] = &Or{Terms: nil}
+			bits[i] = &LogicOr{Terms: nil}
 		}
 	}
 	return bits
@@ -662,7 +662,7 @@ func binDecBool(bits []Expr) int {
 func (e *Encoder) DecodeVal(bits []Expr, v *Const) Expr {
 	interp := GetSortTheory(v.CSort, e.Interp)
 	switch s := interp.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		num := binDecBool(bits)
 		vals := s.Extension
 		if num >= len(vals) {
@@ -726,9 +726,9 @@ func (e *Encoder) GetEncoderState(post string) map[NodeKey]Expr {
 		for i, s := range enc {
 			b := subres[s]
 			if b == '1' {
-				bits[i] = &And{Terms: nil}
+				bits[i] = &LogicAnd{Terms: nil}
 			} else if b == '0' {
-				bits[i] = &Or{Terms: nil}
+				bits[i] = &LogicOr{Terms: nil}
 			} else {
 				bits[i] = nil
 			}

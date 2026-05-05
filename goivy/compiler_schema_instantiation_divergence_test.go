@@ -77,7 +77,7 @@ func TestTopLevelSchemaInstantiationMatchesPython(t *testing.T) {
 	if !ok {
 		t.Fatalf("Go did not register schema reflex")
 	}
-	goSchema, ok := schemaNode.(*AstSchema)
+	goSchema, ok := schemaNode.(*Schema)
 	if !ok {
 		t.Fatalf("Go schema reflex has type %T, want *ast.Schema", schemaNode)
 	}

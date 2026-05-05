@@ -247,7 +247,7 @@ func (m *ivyAccum) declare(decl Node) {
 	// Track modules for lookup during instantiation.
 	if md, ok := decl.(*ModuleDecl); ok {
 		for _, arg := range md.Args() {
-			if d, ok := arg.(*AstDefinition); ok {
+			if d, ok := arg.(*Definition); ok {
 				if a, ok := d.Lhs.(*Atom); ok {
 					m.modules[a.Rep] = md
 				}

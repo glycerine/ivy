@@ -48,7 +48,7 @@ func TestCompileAnd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile and: %v", err)
 	}
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -70,7 +70,7 @@ func TestCompileOr(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile or: %v", err)
 	}
-	or, ok := result.(*Or)
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T", result)
 	}
@@ -91,7 +91,7 @@ func TestCompileNot(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile not: %v", err)
 	}
-	not, ok := result.(*Not)
+	not, ok := result.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected *lg.Not, got %T", result)
 	}
@@ -113,7 +113,7 @@ func TestCompileImplies(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile implies: %v", err)
 	}
-	imp, ok := result.(*Implies)
+	imp, ok := result.(*LogicImplies)
 	if !ok {
 		t.Fatalf("expected *lg.Implies, got %T", result)
 	}
@@ -138,7 +138,7 @@ func TestCompileIff(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile iff: %v", err)
 	}
-	if _, ok := result.(*Iff); !ok {
+	if _, ok := result.(*LogicIff); !ok {
 		t.Fatalf("expected *lg.Iff, got %T", result)
 	}
 }
@@ -155,7 +155,7 @@ func TestCompileVariable(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile variable: %v", err)
 	}
-	lv, ok := result.(*Variable)
+	lv, ok := result.(*LogicVariable)
 	if !ok {
 		t.Fatalf("expected *lg.Variable, got %T", result)
 	}
@@ -187,8 +187,8 @@ func TestCompileEquality(t *testing.T) {
 	}
 	// Use .Name (not .String()) to check identity — String() now returns
 	// sort-qualified output via PrettyFmla.
-	t1Var, ok1 := eqNode.T1.(*Variable)
-	t2Var, ok2 := eqNode.T2.(*Variable)
+	t1Var, ok1 := eqNode.T1.(*LogicVariable)
+	t2Var, ok2 := eqNode.T2.(*LogicVariable)
 	if !ok1 || !ok2 || t1Var.Name != "X" || t2Var.Name != "Y" {
 		t.Errorf("expected X = Y, got %s = %s", eqNode.T1, eqNode.T2)
 	}
@@ -234,7 +234,7 @@ func TestCompileQuantifierExists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile exists: %v", err)
 	}
-	ex, ok := result.(*Exists)
+	ex, ok := result.(*LogicExists)
 	if !ok {
 		t.Fatalf("expected *lg.Exists, got %T", result)
 	}
@@ -304,7 +304,7 @@ func TestCompileGlobally(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile globally: %v", err)
 	}
-	glob, ok := result.(*Globally)
+	glob, ok := result.(*LogicGlobally)
 	if !ok {
 		t.Fatalf("expected *lg.Globally, got %T", result)
 	}
@@ -325,7 +325,7 @@ func TestCompileEventually(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile eventually: %v", err)
 	}
-	ev, ok := result.(*Eventually)
+	ev, ok := result.(*LogicEventually)
 	if !ok {
 		t.Fatalf("expected *lg.Eventually, got %T", result)
 	}
@@ -388,7 +388,7 @@ func TestDeclInterpEnumType(t *testing.T) {
 	if !ok {
 		t.Fatal("color not in sig sorts")
 	}
-	es, ok := sort.(*EnumeratedSort)
+	es, ok := sort.(*LogicEnumeratedSort)
 	if !ok {
 		t.Fatalf("expected EnumeratedSort, got %T", sort)
 	}
@@ -511,7 +511,7 @@ func TestCompileNestedFormula(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.ForAll, got %T", result)
 	}
-	imp, ok := fa.Body.(*Implies)
+	imp, ok := fa.Body.(*LogicImplies)
 	if !ok {
 		t.Fatalf("expected *lg.Implies body, got %T", fa.Body)
 	}
@@ -556,7 +556,7 @@ func TestCompileIte(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile ite: %v", err)
 	}
-	iteNode, ok := result.(*Ite)
+	iteNode, ok := result.(*LogicIte)
 	if !ok {
 		t.Fatalf("expected *lg.Ite, got %T", result)
 	}

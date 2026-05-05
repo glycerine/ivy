@@ -26,14 +26,14 @@ func (e *LogicParseError) Error() string {
 
 // VarToConstant converts a variable to a constant with the given name.
 // Corresponds to Python's var_to_constant (ivy_logic_utils.py:1486-1488).
-func VarToConstant(v *Variable, name string) Expr {
+func VarToConstant(v *LogicVariable, name string) Expr {
 	sym := NewConst(name, v.VSort)
 	return Constant(sym)
 }
 
 // VarToSkolem converts a variable to a Skolem constant with name prefix+v.name.
 // Corresponds to Python's var_to_skolem (ivy_logic_utils.py:1483-1484).
-func VarToSkolem(prefix string, v *Variable) Expr {
+func VarToSkolem(prefix string, v *LogicVariable) Expr {
 	return VarToConstant(v, prefix+v.Name)
 }
 
@@ -42,9 +42,9 @@ func VarToSkolem(prefix string, v *Variable) Expr {
 // (ivy_logic_utils.py:1527-1537).
 // If instantiator is non-nil, definition instances are conjoined with the
 // negated formula (matching Python's `if instantiator != None` check).
-func DualFormula(fmla Expr, skolemizer func(*Variable) Expr, instantiator func([]Expr) *Clauses) Expr {
+func DualFormula(fmla Expr, skolemizer func(*LogicVariable) Expr, instantiator func([]Expr) *Clauses) Expr {
 	if skolemizer == nil {
-		skolemizer = func(v *Variable) Expr {
+		skolemizer = func(v *LogicVariable) Expr {
 			return VarToSkolem("__", v)
 		}
 	}
@@ -58,13 +58,13 @@ func DualFormula(fmla Expr, skolemizer func(*Variable) Expr, instantiator func([
 		fmla = SubstituteAstByName(fmla, subs)
 	}
 	fmla = Negate(fmla)
-	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Python: if instantiator != None: fmla = LogicAnd(fmla, clauses_to_formula(insts))
 	// Matches Python dual_formula (ivy_logic_utils.py:1567-1577) — unconditional
 	// (no len(insts.Fmlas) > 0 guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := AppsAst(fmla)
 		insts := instantiator(gts)
-		fmla = &And{Terms: []Expr{fmla, clausesToFormula(insts)}}
+		fmla = &LogicAnd{Terms: []Expr{fmla, clausesToFormula(insts)}}
 	}
 	return fmla
 }
@@ -73,15 +73,15 @@ func DualFormula(fmla Expr, skolemizer func(*Variable) Expr, instantiator func([
 // Corresponds to Python's skolemize_formula (ivy_logic_utils.py:1539-1552).
 // If instantiator is non-nil, definition instances are conjoined with the
 // skolemized formula (matching Python's `if instantiator != None` check).
-func SkolemizeFormula(fmla Expr, skolemizer func(*Variable) Expr, instantiator func([]Expr) *Clauses) Expr {
+func SkolemizeFormula(fmla Expr, skolemizer func(*LogicVariable) Expr, instantiator func([]Expr) *Clauses) Expr {
 	if skolemizer == nil {
-		skolemizer = func(v *Variable) Expr {
+		skolemizer = func(v *LogicVariable) Expr {
 			return VarToSkolem("__sk__", v)
 		}
 	}
-	var vs []*Variable
+	var vs []*LogicVariable
 	for {
-		if ex, ok := fmla.(*Exists); ok {
+		if ex, ok := fmla.(*LogicExists); ok {
 			vs = append(vs, ex.Variables...)
 			fmla = ex.Body
 		} else {
@@ -95,20 +95,20 @@ func SkolemizeFormula(fmla Expr, skolemizer func(*Variable) Expr, instantiator f
 		}
 		fmla = SubstituteAstByName(fmla, subs)
 	}
-	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Python: if instantiator != None: fmla = LogicAnd(fmla, clauses_to_formula(insts))
 	// Matches Python skolemize_formula (ivy_logic_utils.py:1579-1592) — unconditional
 	// (no len(insts.Fmlas) > 0 guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := AppsAst(fmla)
 		insts := instantiator(gts)
-		fmla = &And{Terms: []Expr{fmla, clausesToFormula(insts)}}
+		fmla = &LogicAnd{Terms: []Expr{fmla, clausesToFormula(insts)}}
 	}
 	return fmla
 }
 
 // SkolemizeAst performs full polarity-aware Skolemization on an AST.
 // Corresponds to Python's skolemize_ast (ivy_logic_utils.py:1554-1582).
-func SkolemizeAst(pos bool, vs []*Variable, usedNames map[string]bool,
+func SkolemizeAst(pos bool, vs []*LogicVariable, usedNames map[string]bool,
 	skolems *[]*Const, fmla Expr, prefix string) Expr {
 
 	if IsQuantifier(fmla) {
@@ -121,7 +121,7 @@ func SkolemizeAst(pos bool, vs []*Variable, usedNames map[string]bool,
 
 			// Collect outer universal variables that appear in body
 			usedVars := UsedVariables(body)
-			var mvs []*Variable
+			var mvs []*LogicVariable
 			for _, w := range vs {
 				if _, used := usedVars[Key(w)]; used {
 					mvs = append(mvs, w)
@@ -174,20 +174,20 @@ func SkolemizeAst(pos bool, vs []*Variable, usedNames map[string]bool,
 		// Universal: recurse into body with extended variable scope
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
-		newVs := make([]*Variable, len(vs)+len(vars))
+		newVs := make([]*LogicVariable, len(vs)+len(vars))
 		copy(newVs, vs)
 		copy(newVs[len(vs):], vars)
 		newBody := SkolemizeAst(pos, newVs, usedNames, skolems, body, prefix)
 		return CloneBinder(fmla, vars, newBody)
 	}
 
-	if _, ok := fmla.(*Not); ok {
+	if _, ok := fmla.(*LogicNot); ok {
 		args := NodeArgs(fmla)
 		newArg := SkolemizeAst(!pos, vs, usedNames, skolems, args[0], prefix)
 		return CloneNode(fmla, []Expr{newArg})
 	}
 
-	if _, ok := fmla.(*Implies); ok {
+	if _, ok := fmla.(*LogicImplies); ok {
 		args := NodeArgs(fmla)
 		newLhs := SkolemizeAst(!pos, vs, usedNames, skolems, args[0], prefix)
 		newRhs := SkolemizeAst(pos, vs, usedNames, skolems, args[1], prefix)
@@ -216,7 +216,7 @@ func SkolemizeAst(pos bool, vs []*Variable, usedNames map[string]bool,
 // For lg.Expr inputs, behaves identically to the previous lg.Expr-only
 // signature. This mirrors the ast.Node broadening already applied to
 // SkolemizeFmla (proof/skolem.go:100).
-func WitnessAst(pos bool, vs []*Variable, witnesses map[NodeKey]Expr, fmla Node) (Node, error) {
+func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla Node) (Node, error) {
 	xtracer.Trace("ilu.witnessAst ENTER pos=%v type=%s nwitnesses=%d", pos, TypeName(fmla), len(witnesses))
 
 	// Specialized Python dispatch (ivy_logic_utils.py:1675-1720) only applies
@@ -236,7 +236,7 @@ func WitnessAst(pos bool, vs []*Variable, witnesses map[NodeKey]Expr, fmla Node)
 				body := BinderBody(expr)
 				xtracer.Trace("ilu.witnessAst branch type=Quantifier pos=%v isE=%v isA=%v nvars=%d", pos, isExists, isForall, len(vars))
 
-				var newVars []*Variable
+				var newVars []*LogicVariable
 				for idx, v := range vars {
 					term, found := witnesses[Key(v)]
 					xtracer.Trace("ilu.witnessAst quantifierVar v=%s key=%s found=%v", v.Name, string(Key(v)), found)
@@ -275,19 +275,19 @@ func WitnessAst(pos bool, vs []*Variable, witnesses map[NodeKey]Expr, fmla Node)
 			}
 		}
 
-		if _, ok := expr.(*Not); ok {
-			xtracer.Trace("ilu.witnessAst branch type=Not pos=%v", pos)
+		if _, ok := expr.(*LogicNot); ok {
+			xtracer.Trace("ilu.witnessAst branch type= LogicNot pos=%v", pos)
 			args := NodeArgs(expr)
 			newArg, err := WitnessAst(!pos, vs, witnesses, args[0])
 			if err != nil {
 				return nil, err
 			}
 			result := CloneNode(expr, []Expr{witnessExpr(newArg, args[0])})
-			xtracer.Trace("ilu.witnessAst EXIT type=Not HASH canon=%v", result.Canon())
+			xtracer.Trace("ilu.witnessAst EXIT type= LogicNot HASH canon=%v", result.Canon())
 			return result, nil
 		}
 
-		if _, ok := expr.(*Implies); ok {
+		if _, ok := expr.(*LogicImplies); ok {
 			xtracer.Trace("ilu.witnessAst branch type=Implies pos=%v", pos)
 			args := NodeArgs(expr)
 			newLhs, err := WitnessAst(!pos, vs, witnesses, args[0])
@@ -342,7 +342,7 @@ func witnessExpr(n Node, fallback Expr) Expr {
 // ReskolemizeClauses re-skolemizes clauses by replacing Skolem constants
 // (those with '__' in their name) using the given skolemizer.
 // Corresponds to Python's reskolemize_clauses (ivy_logic_utils.py:1618-1623).
-func ReskolemizeClauses(clauses *Clauses, skolemizer func(*Variable) Expr) *Clauses {
+func ReskolemizeClauses(clauses *Clauses, skolemizer func(*LogicVariable) Expr) *Clauses {
 	// Find all constants with '__' in their name
 	consts := ConstantsClauses(clauses)
 	subs := make(map[NodeKey]Expr)

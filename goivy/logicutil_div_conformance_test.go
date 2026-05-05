@@ -57,7 +57,7 @@ func TestDIV2_SubstituteByNameLambda(t *testing.T) {
 	Z, _ := goivy.NewVariable("Z", S)
 
 	eq, _ := goivy.NewEq(X, Y)
-	lam := &goivy.Lambda{Variables: []*goivy.Variable{X}, Body: eq}
+	lam := &goivy.Lambda{Variables: []*goivy.LogicVariable{X}, Body: eq}
 
 	subs := map[string]goivy.Expr{"X": Z}
 	result := goivy.SubstituteByName(lam, subs)
@@ -73,9 +73,9 @@ func TestDIV2_SubstituteByNameLambda(t *testing.T) {
 
 	// Python: body.t1 becomes Z (substitution flows through Lambda).
 	// Go bug: body.t1 stays X (Lambda blocks substitution).
-	t1Var, ok := resultEq.T1.(*goivy.Variable)
+	t1Var, ok := resultEq.T1.(*goivy.LogicVariable)
 	if !ok {
-		t.Fatalf("body.T1 should be *Variable, got %T", resultEq.T1)
+		t.Fatalf("body.T1 should be *LogicVariable, got %T", resultEq.T1)
 	}
 	if t1Var.Name != "Z" {
 		t.Errorf("DIV-2: Go SubstituteByName blocks substitution inside Lambda.\n"+
@@ -181,7 +181,7 @@ func TestDIV7_NormalizeQuantifiersLambda(t *testing.T) {
 	S := &goivy.UninterpretedSort{Name: "S"}
 	X, _ := goivy.NewVariable("X", S)
 	eq, _ := goivy.NewEq(X, X)
-	lam := &goivy.Lambda{Variables: []*goivy.Variable{X}, Body: eq}
+	lam := &goivy.Lambda{Variables: []*goivy.LogicVariable{X}, Body: eq}
 
 	// Python: assert False, type(t) — a "should never reach here" guard.
 	// Go should panic to match.
@@ -230,7 +230,7 @@ func TestDIV8_CloseEPRVariableOrdering(t *testing.T) {
 	// Go FreeVariablesList sorts by NodeKey → [A:S, B:T, C:S].
 	inner, _ := goivy.NewEq(C_S, A_S)
 	outer, _ := goivy.NewEq(B_T, B_T)
-	fmla := &goivy.Implies{T1: outer, T2: inner}
+	fmla := &goivy.LogicImplies{T1: outer, T2: inner}
 
 	result := goivy.CloseEPR(fmla)
 	fa, ok := result.(*goivy.ForAll)
@@ -254,7 +254,7 @@ func TestDIV8_CloseEPRVariableOrdering(t *testing.T) {
 	}
 }
 
-func nameList(vars []*goivy.Variable) []string {
+func nameList(vars []*goivy.LogicVariable) []string {
 	names := make([]string, len(vars))
 	for i, v := range vars {
 		names[i] = v.Name

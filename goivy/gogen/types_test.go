@@ -14,14 +14,14 @@ func TestGoType_BooleanSort(t *testing.T) {
 }
 
 func TestGoType_EnumeratedSort(t *testing.T) {
-	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	if got := GoType(s); got != "Color" {
 		t.Errorf("GoType(EnumeratedSort) = %q, want %q", got, "Color")
 	}
 }
 
 func TestGoType_EnumeratedSort_Empty(t *testing.T) {
-	s := &goivy.EnumeratedSort{Name: "", Extension: nil}
+	s := &goivy.LogicEnumeratedSort{Name: "", Extension: nil}
 	if got := GoType(s); got != "Enum" {
 		t.Errorf("GoType(EnumeratedSort{empty}) = %q, want %q", got, "Enum")
 	}
@@ -118,7 +118,7 @@ func TestGoZeroValue(t *testing.T) {
 		want string
 	}{
 		{&goivy.BooleanSort{}, "false"},
-		{&goivy.EnumeratedSort{Name: "color"}, "0"},
+		{&goivy.LogicEnumeratedSort{Name: "color"}, "0"},
 		{&goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "0"}}, "0"},
 		{&goivy.UninterpretedSort{Name: "node"}, "0"},
 	}
@@ -145,7 +145,7 @@ func TestGoSortValues_Boolean(t *testing.T) {
 }
 
 func TestGoSortValues_Enumerated(t *testing.T) {
-	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	vals := GoSortValues(s)
 	if len(vals) != 3 {
 		t.Fatalf("GoSortValues(color) len = %d, want 3", len(vals))
@@ -173,7 +173,7 @@ func TestGoSortValues_Uninterpreted_Nil(t *testing.T) {
 
 func TestEmitEnumDecl(t *testing.T) {
 	w := NewCodeWriter()
-	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	EmitEnumDecl(w, s)
 	out := w.String()
 
@@ -196,7 +196,7 @@ func TestEmitEnumDecl(t *testing.T) {
 
 func TestEmitEnumDecl_Empty(t *testing.T) {
 	w := NewCodeWriter()
-	s := &goivy.EnumeratedSort{Name: "empty", Extension: nil}
+	s := &goivy.LogicEnumeratedSort{Name: "empty", Extension: nil}
 	EmitEnumDecl(w, s)
 	out := w.String()
 	if !strings.Contains(out, "type Empty int") {
@@ -223,7 +223,7 @@ func TestEmitRangeHelpers(t *testing.T) {
 
 func TestEmitSortDecls_WithModule(t *testing.T) {
 	mod := goivy.New()
-	colorSort := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	colorSort := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	mod.SortOrder = []string{"color"}
 	mod.Sig.Sorts.Set("color", colorSort)
 

@@ -50,7 +50,7 @@ func NewOf(name string) string {
 }
 
 // Old returns the "old" version of a symbol name (pre-state vocabulary).
-func Old(name string) string {
+func LogicOld(name string) string {
 	return "old_" + name
 }
 
@@ -402,7 +402,7 @@ func conjoinFormulas(a, b Expr) Expr {
 	}
 	and, err := NewAnd(a, b)
 	if err != nil {
-		return &And{Terms: []Expr{a, b}}
+		return &LogicAnd{Terms: []Expr{a, b}}
 	}
 	return and
 }
@@ -426,7 +426,7 @@ func disjoinFormulas(a, b Expr) Expr {
 	}
 	or, err := NewOr(a, b)
 	if err != nil {
-		return &Or{Terms: []Expr{a, b}}
+		return &LogicOr{Terms: []Expr{a, b}}
 	}
 	return or
 }
@@ -774,7 +774,7 @@ func filterAxiomsBySyms(syms []string, axioms Expr) Expr {
 		symSet[s] = true
 	}
 	// If axioms is an And, filter its conjuncts
-	if and, ok := axioms.(*And); ok {
+	if and, ok := axioms.(*LogicAnd); ok {
 		var relevant []Expr
 		for _, term := range and.Terms {
 			if formulaUsesSyms(term, symSet) {
@@ -913,10 +913,10 @@ func iteUpdate(cond Expr, u1, u2 *Update, op func(*Const) *Const, axioms *Clause
 
 // negateFormula negates a formula with double-negation elimination.
 func negateFormula(f Expr) Expr {
-	if n, ok := f.(*Not); ok {
+	if n, ok := f.(*LogicNot); ok {
 		return n.Body
 	}
-	return &Not{Body: f}
+	return &LogicNot{Body: f}
 }
 
 // -----------------------------------------------------------------------
@@ -1353,44 +1353,44 @@ func actionsRenameNode(node Expr, rn map[string]string) Expr {
 			newTerms[i] = actionsRenameNode(t, rn)
 		}
 		return MustApply(newFunc, newTerms...)
-	case *And:
+	case *LogicAnd:
 		newTerms := make([]Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			newTerms[i] = actionsRenameNode(t, rn)
 		}
-		return &And{Terms: newTerms}
-	case *Or:
+		return &LogicAnd{Terms: newTerms}
+	case *LogicOr:
 		newTerms := make([]Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			newTerms[i] = actionsRenameNode(t, rn)
 		}
-		return &Or{Terms: newTerms}
-	case *Not:
+		return &LogicOr{Terms: newTerms}
+	case *LogicNot:
 		newBody := actionsRenameNode(n.Body, rn)
-		return &Not{Body: newBody}
-	case *Implies:
+		return &LogicNot{Body: newBody}
+	case *LogicImplies:
 		newT1 := actionsRenameNode(n.T1, rn)
 		newT2 := actionsRenameNode(n.T2, rn)
-		return &Implies{T1: newT1, T2: newT2}
+		return &LogicImplies{T1: newT1, T2: newT2}
 	case *Eq:
 		newT1 := actionsRenameNode(n.T1, rn)
 		newT2 := actionsRenameNode(n.T2, rn)
 		return &Eq{T1: newT1, T2: newT2}
 	case *ForAll:
 		newBody := actionsRenameNode(n.Body, rn)
-		vars := make([]*Variable, len(n.Variables))
+		vars := make([]*LogicVariable, len(n.Variables))
 		copy(vars, n.Variables)
 		return &ForAll{Variables: vars, Body: newBody}
-	case *Exists:
+	case *LogicExists:
 		newBody := actionsRenameNode(n.Body, rn)
-		vars := make([]*Variable, len(n.Variables))
+		vars := make([]*LogicVariable, len(n.Variables))
 		copy(vars, n.Variables)
-		return &Exists{Variables: vars, Body: newBody}
-	case *Ite:
+		return &LogicExists{Variables: vars, Body: newBody}
+	case *LogicIte:
 		newCond := actionsRenameNode(n.Cond, rn)
 		newThen := actionsRenameNode(n.Then, rn)
 		newElse := actionsRenameNode(n.Else, rn)
-		return &Ite{ISort: n.ISort, Cond: newCond, Then: newThen, Else: newElse}
+		return &LogicIte{ISort: n.ISort, Cond: newCond, Then: newThen, Else: newElse}
 	}
 	return node
 }
@@ -1547,7 +1547,7 @@ func InterpolantCase(mod *Module, preState *Clauses, post *Clauses, axioms *Clau
 //	    i = 0
 //	    for v in core_consts:
 //	        if v not in clauses2_consts or v.is_skolem():
-//	            renaming[v] = Variable('V' + str(i),Constant(v).get_sort())
+//	            renaming[v] = LogicVariable('V' + str(i),Constant(v).get_sort())
 //	            i += 1
 //	    renamed_core = substitute_constants_clauses(core,renaming)
 //	    res = simplify_clauses(Clauses([Or(*[negate(c) for c in renamed_core.fmlas])]))
@@ -1572,7 +1572,7 @@ func InterpFromUnsatCore(clauses1, clauses2, core *Clauses, interpreted map[stri
 	}
 
 	// Python: for v in core_consts: if v not in clauses2_consts or v.is_skolem():
-	//             renaming[v] = Variable('V' + str(i), Constant(v).get_sort())
+	//             renaming[v] = LogicVariable('V' + str(i), Constant(v).get_sort())
 	//             i += 1
 	renaming := make(map[NodeKey]Expr, len(coreConsts))
 	i := 0
@@ -1593,7 +1593,7 @@ func InterpFromUnsatCore(clauses1, clauses2, core *Clauses, interpreted map[stri
 	// Python: res = simplify_clauses(Clauses([Or(*[negate(c) for c in renamed_core.fmlas])]))
 	negs := make([]Expr, 0, len(renamedCore.Fmlas))
 	for _, f := range renamedCore.Fmlas {
-		negs = append(negs, &Not{Body: f})
+		negs = append(negs, &LogicNot{Body: f})
 	}
 	if len(negs) == 0 {
 		return SimplifyClauses(NewClauses([]Expr{False}, nil, nil))
@@ -1621,7 +1621,7 @@ func caseClausesFilter(clauses *Clauses) *Clauses {
 	var filtered []Expr
 	for _, f := range clauses.Fmlas {
 		// Python: len(cl) <= 1 — drop multi-literal disjunctions.
-		if or, ok := f.(*Or); ok && len(or.Terms) > 1 {
+		if or, ok := f.(*LogicOr); ok && len(or.Terms) > 1 {
 			continue
 		}
 		// Python: is_ground_clause(cl) — no free variables.
@@ -1896,7 +1896,7 @@ func NewActionConst(sym *Const) *Const {
 
 // OldConst returns a Const with "old_" prefix, preserving sort.
 func OldConst(sym *Const) *Const {
-	return NewConst(Old(sym.Name), sym.CSort)
+	return NewConst(LogicOld(sym.Name), sym.CSort)
 }
 
 // UpdatedJoinConst computes the union of two Modified lists (by name, deduped).
@@ -2001,14 +2001,14 @@ func ModifiedNames(u *Update) []string {
 // state at each time step.
 type History struct {
 	Cfg     *IvyUtilsConfig
-	Post    *Clauses   // characteristic clauses of the current state (matches Python self.post)
-	Maps    []Renaming // sequence of symbol renamings from forward images
-	Actions []Expr     // actions taken at each step
-	Mod     *Module    // module for sort/symbol lookups (replaces global)
+	Post    *Clauses        // characteristic clauses of the current state (matches Python self.post)
+	Maps    []LogicRenaming // sequence of symbol renamings from forward images
+	Actions []Expr          // actions taken at each step
+	Mod     *Module         // module for sort/symbol lookups (replaces global)
 }
 
 // Renaming maps symbol names to renamed versions.
-type Renaming map[string]string
+type LogicRenaming map[string]string
 
 // NewHistory creates a history from a pure-state update.
 func NewHistory(cfg *IvyUtilsConfig, state *Update) *History {
@@ -2031,7 +2031,7 @@ func (h *History) ForwardStep(axioms *Clauses, u *Update, action Expr) *History 
 	eqMap, result := ForwardImageMap(h.Post, axioms, u)
 
 	// Convert NodeKey→Const map to name→name Renaming.
-	renaming := make(Renaming, len(eqMap))
+	renaming := make(LogicRenaming, len(eqMap))
 	for _, s := range u.Modified {
 		if renamed, ok := eqMap[Key(s)]; ok {
 			renaming[s.Name] = renamed.Name
@@ -2039,7 +2039,7 @@ func (h *History) ForwardStep(axioms *Clauses, u *Update, action Expr) *History 
 	}
 
 	// Build new maps and actions slices (immutable append)
-	newMaps := make([]Renaming, len(h.Maps)+1)
+	newMaps := make([]LogicRenaming, len(h.Maps)+1)
 	copy(newMaps, h.Maps)
 	newMaps[len(h.Maps)] = renaming
 
@@ -2125,7 +2125,7 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 	// We reconstruct the sub-model for each state composing the
 	// recorded renamings in reverse order. Here "renaming" maps
 	// symbols representing a past time onto current time skolems.
-	renaming := make(Renaming)
+	renaming := make(LogicRenaming)
 	var states []*Clauses
 	mapsReversed := reverseRenamings(h.Maps)
 
@@ -2146,7 +2146,7 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 		}
 
 		// Build ignore function matching Python's History.ignore
-		renamingCopy := make(Renaming, len(renaming))
+		renamingCopy := make(LogicRenaming, len(renaming))
 		for k, v := range renaming {
 			renamingCopy[k] = v
 		}
@@ -2220,9 +2220,9 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 }
 
 // reverseRenamings returns a reversed copy of a renaming slice.
-func reverseRenamings(maps []Renaming) []Renaming {
+func reverseRenamings(maps []LogicRenaming) []LogicRenaming {
 	n := len(maps)
-	result := make([]Renaming, n)
+	result := make([]LogicRenaming, n)
 	for i, m := range maps {
 		result[n-1-i] = m
 	}
@@ -2231,8 +2231,8 @@ func reverseRenamings(maps []Renaming) []Renaming {
 
 // ComposeMaps composes two renamings: first applies m1, then m2.
 // Corresponds to Python's compose_maps.
-func ActionComposeMaps(m1, m2 Renaming) Renaming {
-	result := make(Renaming, len(m1)+len(m2))
+func ActionComposeMaps(m1, m2 LogicRenaming) LogicRenaming {
+	result := make(LogicRenaming, len(m1)+len(m2))
 	// Start with m2
 	for k, v := range m2 {
 		result[k] = v
@@ -2249,8 +2249,8 @@ func ActionComposeMaps(m1, m2 Renaming) Renaming {
 }
 
 // InverseMap returns the inverse of a renaming.
-func ActionInverseMap(m Renaming) Renaming {
-	result := make(Renaming, len(m))
+func ActionInverseMap(m LogicRenaming) LogicRenaming {
+	result := make(LogicRenaming, len(m))
 	for k, v := range m {
 		result[v] = k
 	}

@@ -65,10 +65,10 @@ func TestExprListOrLambdaUnion_PopEmpty(t *testing.T) {
 // --- MatchFromDefn tests ---
 
 // mkDefnLF builds a LabeledFormula for a definition: forall X. f(X) = rhs
-func mkDefnLF(name string, param *Variable, f *Const, rhs Expr) *LabeledFormula {
+func mkDefnLF(name string, param *LogicVariable, f *Const, rhs Expr) *LabeledFormula {
 	app := MustApply(f, param)
 	eq := &Eq{T1: app, T2: rhs}
-	body := &ForAll{Variables: []*Variable{param}, Body: eq}
+	body := &ForAll{Variables: []*LogicVariable{param}, Body: eq}
 	return mkLF(proofTestAstCfg.NewAtom(name), body)
 }
 
@@ -191,8 +191,8 @@ func TestUnfoldRhsVars(t *testing.T) {
 	c2 := proofMkConst("c2", s)
 
 	// Lambdas whose bodies contain free constants c1, c2
-	lam1, _ := NewLambda([]*Variable{x}, c1) // Lambda(X, c1) — c1 is free
-	lam2, _ := NewLambda([]*Variable{x}, c2) // Lambda(X, c2) — c2 is free
+	lam1, _ := NewLambda([]*LogicVariable{x}, c1) // Lambda(X, c1) — c1 is free
+	lam2, _ := NewLambda([]*LogicVariable{x}, c2) // Lambda(X, c2) — c2 is free
 
 	union := &ExprListOrLambdaUnion{Items: []Expr{lam1, lam2}}
 	vars := unfoldRhsVars(union)
@@ -371,12 +371,12 @@ func TestApplyUnfoldRec_UnderQuantifier(t *testing.T) {
 	c := proofMkConst("c", s)
 
 	// Lambda for f: f(X) = c
-	lam, _ := NewLambda([]*Variable{x}, c)
+	lam, _ := NewLambda([]*LogicVariable{x}, c)
 	union := &ExprListOrLambdaUnion{Items: []Expr{lam}}
 
 	// Formula: forall Y. f(Y)
 	app := MustApply(f, y)
-	fmla := &ForAll{Variables: []*Variable{y}, Body: app}
+	fmla := &ForAll{Variables: []*LogicVariable{y}, Body: app}
 
 	result := applyUnfoldRec(Key(f), union, fmla)
 
@@ -404,7 +404,7 @@ func TestMatchFromDefn_DuplicateParams(t *testing.T) {
 	// Build: forall X. f(X, X) = c — X appears twice as arg to f
 	app := MustApply(f, x, x)
 	eq := &Eq{T1: app, T2: c}
-	body := &ForAll{Variables: []*Variable{x}, Body: eq}
+	body := &ForAll{Variables: []*LogicVariable{x}, Body: eq}
 	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	_, err := MatchFromDefn(defn)
@@ -424,7 +424,7 @@ func TestMatchFromDefn_DistinctParams(t *testing.T) {
 	// Build: forall X, Y. f(X, Y) = c — distinct params, should succeed
 	app := MustApply(f, x, y)
 	eq := &Eq{T1: app, T2: c}
-	body := &ForAll{Variables: []*Variable{x, y}, Body: eq}
+	body := &ForAll{Variables: []*LogicVariable{x, y}, Body: eq}
 	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	match, err := MatchFromDefn(defn)
@@ -452,8 +452,8 @@ func TestMatchFromDefn_DuplicateParams_Iff(t *testing.T) {
 
 	// Build: forall X. p(X, X) <-> true — duplicate params via Iff
 	app := MustApply(p, x, x)
-	iff := &Iff{T1: app, T2: True}
-	body := &ForAll{Variables: []*Variable{x}, Body: iff}
+	iff := &LogicIff{T1: app, T2: True}
+	body := &ForAll{Variables: []*LogicVariable{x}, Body: iff}
 	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	_, err := MatchFromDefn(defn)
@@ -467,16 +467,16 @@ func TestDistinctVars(t *testing.T) {
 	x := proofMkVar("X", s)
 	y := proofMkVar("Y", s)
 
-	if !distinctVars([]*Variable{x, y}) {
+	if !distinctVars([]*LogicVariable{x, y}) {
 		t.Error("X, Y should be distinct")
 	}
-	if !distinctVars([]*Variable{x}) {
+	if !distinctVars([]*LogicVariable{x}) {
 		t.Error("single var should be distinct")
 	}
 	if !distinctVars(nil) {
 		t.Error("empty should be distinct")
 	}
-	if distinctVars([]*Variable{x, x}) {
+	if distinctVars([]*LogicVariable{x, x}) {
 		t.Error("X, X should NOT be distinct")
 	}
 }
@@ -492,8 +492,8 @@ func TestBetaReduce_CaptureDetected(t *testing.T) {
 
 	// Lambda(X, forall Y. X = Y)
 	eq := &Eq{T1: x, T2: y}
-	body := &ForAll{Variables: []*Variable{y}, Body: eq}
-	lam := &Lambda{Variables: []*Variable{x}, Body: body}
+	body := &ForAll{Variables: []*LogicVariable{y}, Body: eq}
+	lam := &Lambda{Variables: []*LogicVariable{x}, Body: body}
 
 	// Apply to arg Y — this would capture Y in the forall
 	result := betaReduce(lam, []Expr{y})
@@ -503,8 +503,8 @@ func TestBetaReduce_CaptureDetected(t *testing.T) {
 	if fa, ok := result.(*ForAll); ok {
 		if eq, ok := fa.Body.(*Eq); ok {
 			// If both sides are the same variable Y, that's capture corruption
-			lv, lOk := eq.T1.(*Variable)
-			rv, rOk := eq.T2.(*Variable)
+			lv, lOk := eq.T1.(*LogicVariable)
+			rv, rOk := eq.T2.(*LogicVariable)
 			if lOk && rOk && lv.Name == "Y" && rv.Name == "Y" {
 				t.Fatal("capture detected: betaReduce produced forall Y. Y=Y")
 			}
@@ -517,7 +517,7 @@ func TestBetaReduce_CaptureDetected(t *testing.T) {
 		t.Fatalf("expected ForAll, got %T", result)
 	}
 	if eqR, ok := fa.Body.(*Eq); ok {
-		if lv, ok := eqR.T1.(*Variable); ok {
+		if lv, ok := eqR.T1.(*LogicVariable); ok {
 			if lv.Name != "X" {
 				t.Errorf("expected X in LHS (unsubstituted), got %s", lv.Name)
 			}
@@ -531,7 +531,7 @@ func TestBetaReduce_NoCaptureSucceeds(t *testing.T) {
 	c := proofMkConst("c", s)
 
 	// Lambda(X, X) applied to c — identity, no capture possible
-	lam := &Lambda{Variables: []*Variable{x}, Body: x}
+	lam := &Lambda{Variables: []*LogicVariable{x}, Body: x}
 	result := betaReduce(lam, []Expr{c})
 
 	rc, ok := result.(*Const)
@@ -552,8 +552,8 @@ func TestApplyMatch_CaptureNotCorrupted(t *testing.T) {
 
 	// match: {f: Lambda(X, forall Y. X = Y)}
 	eq := &Eq{T1: x, T2: y}
-	body := &ForAll{Variables: []*Variable{y}, Body: eq}
-	lam := &Lambda{Variables: []*Variable{x}, Body: body}
+	body := &ForAll{Variables: []*LogicVariable{y}, Body: eq}
+	lam := &Lambda{Variables: []*LogicVariable{x}, Body: body}
 	match := map[NodeKey]Expr{Key(f): lam}
 
 	// formula: f(Y) — applying match would substitute Y for X,
@@ -582,8 +582,8 @@ func TestApplyMatchAltRec_LambdaApplyError_NotNil(t *testing.T) {
 
 	// match: {f: Lambda(X, forall Y. X = Y)}
 	eq := &Eq{T1: x, T2: y}
-	body := &ForAll{Variables: []*Variable{y}, Body: eq}
-	lam := &Lambda{Variables: []*Variable{x}, Body: body}
+	body := &ForAll{Variables: []*LogicVariable{y}, Body: eq}
+	lam := &Lambda{Variables: []*LogicVariable{x}, Body: body}
 	match := map[NodeKey]Expr{Key(f): lam}
 
 	// formula: f(Y) — capture scenario
@@ -611,8 +611,8 @@ func TestApplyUnfoldRec_CaptureReturnsOriginal(t *testing.T) {
 
 	// Lambda whose body has bound Y: Lambda(X, forall Y. X = Y)
 	eq := &Eq{T1: x, T2: y}
-	body := &ForAll{Variables: []*Variable{y}, Body: eq}
-	lam := &Lambda{Variables: []*Variable{x}, Body: body}
+	body := &ForAll{Variables: []*LogicVariable{y}, Body: eq}
+	lam := &Lambda{Variables: []*LogicVariable{x}, Body: body}
 	union := &ExprListOrLambdaUnion{Items: []Expr{lam}}
 
 	// Formula: f(Y) — applying lambda would capture Y
@@ -639,7 +639,7 @@ func TestApplyUnfoldGoal_FiltersConstantDeclPremise(t *testing.T) {
 	a := proofMkConst("a", s)
 
 	// Lambda: f(X) = c
-	lam, _ := NewLambda([]*Variable{x}, c)
+	lam, _ := NewLambda([]*LogicVariable{x}, c)
 	union := &ExprListOrLambdaUnion{Items: []Expr{lam}}
 	freeVars := unfoldRhsVars(union)
 
@@ -686,7 +686,7 @@ func TestApplyUnfoldGoal_KeepsNonMatchingConstantDecl(t *testing.T) {
 	a := proofMkConst("a", s)
 
 	// Lambda: f(X) = c
-	lam, _ := NewLambda([]*Variable{x}, c)
+	lam, _ := NewLambda([]*LogicVariable{x}, c)
 	union := &ExprListOrLambdaUnion{Items: []Expr{lam}}
 	freeVars := unfoldRhsVars(union)
 

@@ -43,14 +43,14 @@ func (s *UninterpretedSort) Sexp() NodeKey {
 	return NodeKey("(UninterpretedSort name:" + s.Name + ")")
 }
 func (s *BooleanSort) Sexp() NodeKey { return "(BooleanSort)" }
-func (s *FunctionSort) Sexp() NodeKey {
+func (s *LogicFunctionSort) Sexp() NodeKey {
 	parts := make([]string, len(s.Sorts))
 	for i, sub := range s.Sorts {
 		parts[i] = string(sub.Sexp())
 	}
 	return NodeKey("(FunctionSort sorts:[" + strings.Join(parts, " ") + "])")
 }
-func (s *EnumeratedSort) Sexp() NodeKey {
+func (s *LogicEnumeratedSort) Sexp() NodeKey {
 	return NodeKey("(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])")
 }
 func (s *RangeSort) Sexp() NodeKey {
@@ -60,7 +60,7 @@ func (s *TopSort) Sexp() NodeKey { return NodeKey("(TopSort name:" + s.Name + ")
 
 // --- Sexp() methods on Term types ---
 
-func (v *Variable) Sexp() NodeKey {
+func (v *LogicVariable) Sexp() NodeKey {
 	return NodeKey("(Variable name:" + v.Name + " sort:" + string(v.VSort.Sexp()) + ")")
 }
 
@@ -82,11 +82,11 @@ func (e *Eq) Sexp() NodeKey {
 	return NodeKey("(Eq t1:" + string(e.T1.Sexp()) + " t2:" + string(e.T2.Sexp()) + ")")
 }
 
-func (n *Not) Sexp() NodeKey {
+func (n *LogicNot) Sexp() NodeKey {
 	return NodeKey("(Not body:" + string(n.Body.Sexp()) + ")")
 }
 
-func (a *And) Sexp() NodeKey {
+func (a *LogicAnd) Sexp() NodeKey {
 	parts := make([]string, len(a.Terms))
 	for i, t := range a.Terms {
 		parts[i] = string(t.Sexp())
@@ -94,7 +94,7 @@ func (a *And) Sexp() NodeKey {
 	return NodeKey("(And terms:[" + strings.Join(parts, " ") + "])")
 }
 
-func (o *Or) Sexp() NodeKey {
+func (o *LogicOr) Sexp() NodeKey {
 	parts := make([]string, len(o.Terms))
 	for i, t := range o.Terms {
 		parts[i] = string(t.Sexp())
@@ -102,19 +102,19 @@ func (o *Or) Sexp() NodeKey {
 	return NodeKey("(Or terms:[" + strings.Join(parts, " ") + "])")
 }
 
-func (i *Implies) Sexp() NodeKey {
+func (i *LogicImplies) Sexp() NodeKey {
 	return NodeKey("(Implies t1:" + string(i.T1.Sexp()) + " t2:" + string(i.T2.Sexp()) + ")")
 }
 
-func (i *Iff) Sexp() NodeKey {
+func (i *LogicIff) Sexp() NodeKey {
 	return NodeKey("(Iff t1:" + string(i.T1.Sexp()) + " t2:" + string(i.T2.Sexp()) + ")")
 }
 
-func (t *Ite) Sexp() NodeKey {
+func (t *LogicIte) Sexp() NodeKey {
 	return NodeKey("(Ite cond:" + string(t.Cond.Sexp()) + " then:" + string(t.Then.Sexp()) + " else:" + string(t.Else.Sexp()) + ")")
 }
 
-func (g *Globally) Sexp() NodeKey {
+func (g *LogicGlobally) Sexp() NodeKey {
 	env := "nil"
 	if g.Environ != nil {
 		env = *g.Environ
@@ -122,7 +122,7 @@ func (g *Globally) Sexp() NodeKey {
 	return NodeKey("(Globally environ:" + env + " body:" + string(g.Body.Sexp()) + ")")
 }
 
-func (e *Eventually) Sexp() NodeKey {
+func (e *LogicEventually) Sexp() NodeKey {
 	env := "nil"
 	if e.Environ != nil {
 		env = *e.Environ
@@ -130,7 +130,7 @@ func (e *Eventually) Sexp() NodeKey {
 	return NodeKey("(Eventually environ:" + env + " body:" + string(e.Body.Sexp()) + ")")
 }
 
-func (w *WhenOperator) Sexp() NodeKey {
+func (w *LogicWhenOperator) Sexp() NodeKey {
 	return NodeKey("(WhenOperator name:" + w.Name + " t1:" + string(w.T1.Sexp()) + " t2:" + string(w.T2.Sexp()) + ")")
 }
 
@@ -138,7 +138,7 @@ func (c *Cond) Sexp() NodeKey {
 	return NodeKey("(Cond t1:" + string(c.T1.Sexp()) + " t2:" + string(c.T2.Sexp()) + ")")
 }
 
-func VarsSexp(vars []*Variable) string {
+func VarsSexp(vars []*LogicVariable) string {
 	parts := make([]string, len(vars))
 	for i, v := range vars {
 		parts[i] = string(v.Sexp())
@@ -151,7 +151,7 @@ func (f *ForAll) Sexp() NodeKey {
 	return NodeKey("(ForAll vars:" + VarsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
 }
 
-func (e *Exists) Sexp() NodeKey {
+func (e *LogicExists) Sexp() NodeKey {
 	return NodeKey("(Exists vars:" + VarsSexp(e.Variables) + " body:" + string(e.Body.Sexp()) + ")")
 }
 
@@ -159,7 +159,7 @@ func (l *Lambda) Sexp() NodeKey {
 	return NodeKey("(Lambda vars:" + VarsSexp(l.Variables) + " body:" + string(l.Body.Sexp()) + ")")
 }
 
-func (nb *NamedBinder) Sexp() NodeKey {
+func (nb *LogicNamedBinder) Sexp() NodeKey {
 	env := "nil"
 	if nb.Environ != nil {
 		env = *nb.Environ
@@ -169,11 +169,11 @@ func (nb *NamedBinder) Sexp() NodeKey {
 
 // --- Sexp() on Definition ---
 
-func (d *Definition) Sexp() NodeKey {
+func (d *LogicDefinition) Sexp() NodeKey {
 	return NodeKey("(Def lhs:" + string(d.Lhs.Sexp()) + " rhs:" + string(d.Rhs.Sexp()) + ")")
 }
 
-func (ds *DefinitionSchema) Sexp() NodeKey {
+func (ds *LogicDefinitionSchema) Sexp() NodeKey {
 	return NodeKey("(DefSchema lhs:" + string(ds.Lhs.Sexp()) + " rhs:" + string(ds.Rhs.Sexp()) + ")")
 }
 

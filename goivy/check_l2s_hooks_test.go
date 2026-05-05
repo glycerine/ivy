@@ -71,7 +71,7 @@ func TestApplyRenaming_MultiLine(t *testing.T) {
 
 // --- helpers ---
 
-func hooksVar(name string, s Sort) *Variable {
+func hooksVar(name string, s Sort) *LogicVariable {
 	v, _ := NewVariable(name, s)
 	return v
 }
@@ -217,7 +217,7 @@ func TestExprNameSort_Panic(t *testing.T) {
 			t.Errorf("unexpected panic message: %v", r)
 		}
 	}()
-	exprNameSort(&And{Terms: []Expr{True}})
+	exprNameSort(&LogicAnd{Terms: []Expr{True}})
 }
 
 // --- evalSkolemInHandler ---
@@ -346,7 +346,7 @@ func TestExtractJusticePredMap_NilMaps(t *testing.T) {
 }
 
 func TestExtractJusticePredMap_NoProgressInvar(t *testing.T) {
-	rsubs := make(map[string]*NamedBinder)
+	rsubs := make(map[string]*LogicNamedBinder)
 	fullSubs := make(map[string]Expr)
 	result := extractJusticePredMap(nil, rsubs, fullSubs)
 	if len(result) != 0 {

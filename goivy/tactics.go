@@ -15,7 +15,7 @@ const tacticsCheckPrecondTrue = true
 const tacticsCheckPrecondFalse = false
 
 // Tactic is the interface for proof refinement tactics.
-type Tactic interface {
+type LogicTactic interface {
 	Apply(goal *ProofGoal) (bool, error)
 	Name() string
 }
@@ -119,7 +119,7 @@ func (tc *TacticsContext) RefutedGoal(goal *ProofGoal) bool {
 		return false
 	}
 	// Quick check: formula is False (empty Or)
-	if or, ok := goal.Formula.(*Or); ok && len(or.Terms) == 0 {
+	if or, ok := goal.Formula.(*LogicOr); ok && len(or.Terms) == 0 {
 		return true
 	}
 	node, ok := goal.Node.(*State)
@@ -134,8 +134,8 @@ func (tc *TacticsContext) RefutedGoal(goal *ProofGoal) bool {
 	combined := AndClausesTyped(axioms, node.Clauses)
 	premise := combined.ToFormula()
 
-	// Python: f = Not(goal.formula.to_formula())
-	negGoal := &Not{Body: goal.Formula}
+	// Python: f = LogicNot(goal.formula.to_formula())
+	negGoal := &LogicNot{Body: goal.Formula}
 
 	// Python: return z3_implies(premise, f)
 	slv := NewSolver(tc.Mod, tc.modSolverOpts())
@@ -355,7 +355,7 @@ func ArgGetConjuncts(node *State) []Expr {
 //	def get_big_action():
 //	    exported_action_names = [e.exported() for e in _ivy_ag.exports]
 //	    exported_actions = [_ivy_ag.actions[k] for k in exported_action_names]
-//	    result = ChoiceAction(*exported_actions)
+//	    result = LogicChoiceAction(*exported_actions)
 //	    result.label = ' + '.join(exported_action_names)
 //	    return result
 func GetBigAction(ag *AnalysisGraph) ActionsAction {

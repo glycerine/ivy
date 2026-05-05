@@ -323,8 +323,8 @@ func defLhsArgs(def *IvyDefinition) []Expr {
 // of matching the right-hand sides. Requires prob.Inst is a definition.
 // Corresponds to Python's transform_defn_match.
 func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
-	conc, concIsDef := prob.Pat.(*Definition)
-	decl, declIsDef := prob.Inst.(*Definition)
+	conc, concIsDef := prob.Pat.(*LogicDefinition)
+	decl, declIsDef := prob.Inst.(*LogicDefinition)
 	if !concIsDef || !declIsDef {
 		return prob
 	}
@@ -351,7 +351,7 @@ func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
 		y := declargs[i]
 		// resort y to x's sort
 		resorted := resortNode(y, x.NodeSort())
-		if v, ok := x.(*Variable); ok {
+		if v, ok := x.(*LogicVariable); ok {
 			vmap[v.Name] = resorted
 		} else if s, ok := x.(*Const); ok {
 			vmap[s.Name] = resorted
@@ -440,7 +440,7 @@ func defArgs(lhs Expr) []Expr {
 // resortNode creates a copy of the node with a different sort.
 func resortNode(n Expr, s Sort) Expr {
 	switch v := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		nv, _ := NewVariable(v.Name, s)
 		return nv
 	case *Const:
@@ -475,7 +475,7 @@ func AddPremMatch(proofMatch []Node, prob *MatchProblem, goal *LabeledFormula, c
 	var newMatch []Node
 
 	for _, m := range proofMatch {
-		defn, ok := m.(*AstDefinition)
+		defn, ok := m.(*Definition)
 		if !ok {
 			newMatch = append(newMatch, m)
 			continue
@@ -578,7 +578,7 @@ func ParameterizeSchema(cfg *AstConfig, sorts []Sort, schema *LabeledFormula) *L
 		// Get domain and range of the symbol's sort
 		var dom []Sort
 		var rng Sort
-		if fs, ok := sym.CSort.(*FunctionSort); ok {
+		if fs, ok := sym.CSort.(*LogicFunctionSort); ok {
 			dom = fs.Domain()
 			rng = fs.Range()
 		} else {
@@ -586,7 +586,7 @@ func ParameterizeSchema(cfg *AstConfig, sorts []Sort, schema *LabeledFormula) *L
 		}
 
 		// Create variables X0, X1, ... for existing domain sorts
-		vs2 := make([]*Variable, len(dom))
+		vs2 := make([]*LogicVariable, len(dom))
 		for i, y := range dom {
 			vs2[i], _ = NewVariable(fmt.Sprintf("X%d", i), y)
 		}
@@ -643,7 +643,7 @@ func ParameterizeSchema(cfg *AstConfig, sorts []Sort, schema *LabeledFormula) *L
 // If allowWitness is true, extends leftGoal's vocab with used variables
 // from the left goal's conclusion.
 // Corresponds to Python's compile_match_list.
-func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, allowWitness bool, mod *Module) []*AstDefinition {
+func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, allowWitness bool, mod *Module) []*Definition {
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
 	if allowWitness {
@@ -653,15 +653,15 @@ func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, al
 		if conc != nil {
 			usedVars := UsedVariables(conc)
 			for _, v := range usedVars {
-				if vv, ok := v.(*Variable); ok {
+				if vv, ok := v.(*LogicVariable); ok {
 					leftVocab.Variables = append(leftVocab.Variables, vv)
 				}
 			}
 		}
 	}
-	result := make([]*AstDefinition, 0, len(proofMatch))
+	result := make([]*Definition, 0, len(proofMatch))
 	for _, m := range proofMatch {
-		defn, ok := m.(*AstDefinition)
+		defn, ok := m.(*Definition)
 		if !ok {
 			continue
 		}
@@ -697,14 +697,14 @@ func extractSymbol(n Node) *Const {
 //     apply vmatch to lhs, run match, compose
 //  3. UninterpretedSort RHS → match_sort
 func CompileOneMatch(lhs, rhs Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
-	if _, isVar := lhs.(*Variable); isVar {
+	if _, isVar := lhs.(*LogicVariable); isVar {
 		return FOMatch(lhs, rhs, freesyms, constants)
 	}
 	if _, isUS := rhs.(*UninterpretedSort); !isUS {
 		// Branch 2: Non-UninterpretedSort RHS
 		// Build rhsvs: name → variable, for free variables in rhs
 		rhsVarList := FreeVariablesList(rhs)
-		rhsvs := make(map[string]*Variable, len(rhsVarList))
+		rhsvs := make(map[string]*LogicVariable, len(rhsVarList))
 		for _, v := range rhsVarList {
 			rhsvs[v.Name] = v
 		}
@@ -947,7 +947,7 @@ func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]E
 		if c, ok := v.(*Const); ok {
 			matchNames[c.Name] = true
 		}
-		if v2, ok := v.(*Variable); ok {
+		if v2, ok := v.(*LogicVariable); ok {
 			matchNames[v2.Name] = true
 		}
 	}
@@ -1099,7 +1099,7 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		app, _ := NewApply(newFunc, newTerms...)
 		return app
 
-	case *Variable:
+	case *LogicVariable:
 		k := Key(t)
 		if _, exists := match[k]; exists {
 			// match_get checks for capture via env
@@ -1139,10 +1139,10 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		for _, v := range t.Variables {
 			env[Key(v)] = true
 		}
-		newVars := make([]*Variable, len(t.Variables))
+		newVars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*Variable); ok {
+			if nv, ok := newV.(*LogicVariable); ok {
 				newVars[i] = nv
 			} else {
 				newVars[i] = v
@@ -1155,14 +1155,14 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		}
 		return &ForAll{Variables: newVars, Body: newBody}
 
-	case *Exists:
+	case *LogicExists:
 		for _, v := range t.Variables {
 			env[Key(v)] = true
 		}
-		newVars := make([]*Variable, len(t.Variables))
+		newVars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*Variable); ok {
+			if nv, ok := newV.(*LogicVariable); ok {
 				newVars[i] = nv
 			} else {
 				newVars[i] = v
@@ -1172,16 +1172,16 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		for _, v := range t.Variables {
 			delete(env, Key(v))
 		}
-		return &Exists{Variables: newVars, Body: newBody}
+		return &LogicExists{Variables: newVars, Body: newBody}
 
 	case *Lambda:
 		for _, v := range t.Variables {
 			env[Key(v)] = true
 		}
-		newVars := make([]*Variable, len(t.Variables))
+		newVars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*Variable); ok {
+			if nv, ok := newV.(*LogicVariable); ok {
 				newVars[i] = nv
 			} else {
 				newVars[i] = v
@@ -1283,7 +1283,7 @@ func RenameGoal(cfg *AstConfig, goal *LabeledFormula, renaming Node) (*LabeledFo
 	// Build rename map: old name → new name
 	rmap := make(map[string]string)
 	for _, arg := range renaming.Args() {
-		defn, ok := arg.(*AstDefinition)
+		defn, ok := arg.(*Definition)
 		if !ok {
 			continue
 		}
@@ -1383,7 +1383,7 @@ func nodeNameStr(n Expr) string {
 	switch t := n.(type) {
 	case *Const:
 		return t.Name
-	case *Variable:
+	case *LogicVariable:
 		return t.Name
 	default:
 		return ""
@@ -1395,7 +1395,7 @@ func renameNode(n Expr, newName string) Expr {
 	switch t := n.(type) {
 	case *Const:
 		return NewConst(newName, t.CSort)
-	case *Variable:
+	case *LogicVariable:
 		v, _ := NewVariable(newName, t.VSort)
 		return v
 	default:
@@ -1405,8 +1405,8 @@ func renameNode(n Expr, newName string) Expr {
 
 // MakeDistinctVars creates fresh variables with distinct names from given ASTs.
 // Corresponds to Python's make_distinct_vars.
-func MakeDistinctVars(sorts []Sort, asts ...Expr) []*Variable {
-	vars := make([]*Variable, len(sorts))
+func MakeDistinctVars(sorts []Sort, asts ...Expr) []*LogicVariable {
+	vars := make([]*LogicVariable, len(sorts))
 	for i, sort := range sorts {
 		v, _ := NewVariable(fmt.Sprintf("V%d", i), sort)
 		vars[i] = v
@@ -1497,7 +1497,7 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 	var newConc Node
 	if concExpr, ok := rawConc.(Expr); ok {
 		newConc = ApplyMatchAlt(match, concExpr, env)
-	} else if tm, ok := rawConc.(*AstTemporalModels); ok {
+	} else if tm, ok := rawConc.(*TemporalModels); ok {
 		// Python walks TemporalModels as a generic node via apply_match_alt_rec's
 		// fmla.clone(args) branch. Emulate that here by recursing into the inner
 		// formula (no apply_to_conc trace).
@@ -1582,7 +1582,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 	var newConc Node
 	if concExpr, ok := rawConc.(Expr); ok {
 		newConc = ApplyMatch(match, concExpr)
-	} else if tm, ok := rawConc.(*AstTemporalModels); ok {
+	} else if tm, ok := rawConc.(*TemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(Expr); ok {
 			newConc = tm.Clone([]Node{ApplyMatch(match, innerExpr)})
 		} else {
@@ -1613,7 +1613,7 @@ func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
 			existing[Key(v)] = true
 		}
 		for _, v := range UsedVariables(concExpr) {
-			if vv, ok := v.(*Variable); ok && !existing[Key(vv)] {
+			if vv, ok := v.(*LogicVariable); ok && !existing[Key(vv)] {
 				vocab.Variables = append(vocab.Variables, vv)
 				existing[Key(vv)] = true
 			}

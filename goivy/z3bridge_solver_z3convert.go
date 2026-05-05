@@ -75,7 +75,7 @@ func Z3DeclToSymbol(z3decl FuncDecl) *Const {
 // Z3ToFormula converts a Z3 expression back to an Ivy formula.
 // The vars parameter holds de Bruijn variable bindings (innermost first).
 // Corresponds to Python's z3_to_formula.
-func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
+func Z3ToFormula(z3expr Z3Expr, vars []*LogicVariable) (Expr, error) {
 	xtracer.Trace("ivy_solver.py:1817 z3_to_formula() ENTER")
 	// Application (includes constants, And, Or, Not, Eq, etc.)
 	if z3expr.IsApp() {
@@ -99,19 +99,19 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 			if len(args) == 0 {
 				return True, nil
 			}
-			return &And{Terms: args}, nil
+			return &LogicAnd{Terms: args}, nil
 
 		case DeclOr:
 			if len(args) == 0 {
 				return False, nil
 			}
-			return &Or{Terms: args}, nil
+			return &LogicOr{Terms: args}, nil
 
 		case DeclNot:
 			if len(args) != 1 {
 				return nil, fmt.Errorf("z3_to_formula: Not with %d args", len(args))
 			}
-			return &Not{Body: args[0]}, nil
+			return &LogicNot{Body: args[0]}, nil
 
 		case DeclEq:
 			if len(args) != 2 {
@@ -123,7 +123,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 			if len(args) != 3 {
 				return nil, fmt.Errorf("z3_to_formula: ITE with %d args", len(args))
 			}
-			return &Ite{Cond: args[0], Then: args[1], Else: args[2]}, nil
+			return &LogicIte{Cond: args[0], Then: args[1], Else: args[2]}, nil
 
 		case DeclTrue:
 			return True, nil
@@ -135,7 +135,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 			if len(args) != 2 {
 				return nil, fmt.Errorf("z3_to_formula: Iff with %d args", len(args))
 			}
-			return &Iff{T1: args[0], T2: args[1]}, nil
+			return &LogicIff{T1: args[0], T2: args[1]}, nil
 
 		default:
 			// Uninterpreted function/constant
@@ -150,7 +150,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 	// Quantifier
 	if z3expr.IsQuantifier() {
 		nVars := z3expr.QuantNumVars()
-		qVars := make([]*Variable, nVars)
+		qVars := make([]*LogicVariable, nVars)
 		for i := 0; i < nVars; i++ {
 			name := z3expr.QuantVarName(i)
 			// Strip the ":sort" suffix from var name if present
@@ -171,7 +171,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 
 		// Build new vars list: reversed qVars prepended to existing vars
 		// (de Bruijn: innermost bindings come first)
-		newVars := make([]*Variable, 0, len(qVars)+len(vars))
+		newVars := make([]*LogicVariable, 0, len(qVars)+len(vars))
 		for i := len(qVars) - 1; i >= 0; i-- {
 			newVars = append(newVars, qVars[i])
 		}
@@ -185,7 +185,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*Variable) (Expr, error) {
 		if z3expr.IsForAll() {
 			return &ForAll{Variables: qVars, Body: body}, nil
 		}
-		return &Exists{Variables: qVars, Body: body}, nil
+		return &LogicExists{Variables: qVars, Body: body}, nil
 	}
 
 	// Bound variable (de Bruijn index)
@@ -285,7 +285,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *Clauses) (*Clauses, error
 func computeZ3Interpolant(ctx *Z3Context, a, b Z3Expr) (Z3Expr, error) {
 	// Build the interpolation pattern: And(Interpolant(a), b)
 	// This mirrors Python's z3.binary_interpolant which does:
-	//   f = And(Interpolant(a), b)
+	//   f = LogicAnd(Interpolant(a), b)
 	//   ti = tree_interpolant(f)
 	//   return ti[0]
 	marked := ctx.MkInterpolant(a)
@@ -618,7 +618,7 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 		//   if sort.name in ivy_logic.sig.interp:
 		//     return lambda x: z3.K(sort.to_z3().domain(), x)
 		if name == "arrcst" {
-			if fs, ok := thing.CSort.(*FunctionSort); ok {
+			if fs, ok := thing.CSort.(*LogicFunctionSort); ok {
 				rngSort := fs.Range()
 				rngName := sortToName(rngSort)
 				if _, inInterp := s.sig.Interp[rngName]; inInterp {
@@ -647,7 +647,7 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 	// Python line 342-343: if isinstance(z3name, (EnumeratedSort, RangeSort)):
 	//   return z3name.to_z3()
 	switch v := z3name.(type) {
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		xtracer.Trace("TranslateSort_call callsite=lookup_native_enum_or_range HASH canon=%s", v.Sexp())
 		zs, err := s.tr.TranslateSort(v)
 		if err != nil {
@@ -678,7 +678,7 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 
 	// Python line 322: sort = thing.sort.domain[0].name
 	var domSort Sort
-	if fs, ok := sym.CSort.(*FunctionSort); ok && len(fs.Sorts) > 1 {
+	if fs, ok := sym.CSort.(*LogicFunctionSort); ok && len(fs.Sorts) > 1 {
 		domSort = fs.Sorts[0]
 	}
 	if domSort == nil {
@@ -691,7 +691,7 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 	if !ok {
 		return nil
 	}
-	if _, isEnum := interp.(*EnumeratedSort); isEnum {
+	if _, isEnum := interp.(*LogicEnumeratedSort); isEnum {
 		return nil
 	}
 
@@ -947,7 +947,7 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 	ctx := s.tr.Ctx
 
 	// Get domain and range sorts from the symbol's FunctionSort
-	fs, ok := sym.CSort.(*FunctionSort)
+	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok || fs.Arity() < 1 {
 		// Fallback: simple extract
 		return func(args ...Z3Expr) Z3Expr {
@@ -1086,14 +1086,14 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 	} else if _, isPoly := PolymorphicSymbols[name]; isPoly {
 		// Python: elif name in iu.polymorphic_symbols:
 		if sig != nil {
-			fs, isFuncSort := sym.CSort.(*FunctionSort)
+			fs, isFuncSort := sym.CSort.(*LogicFunctionSort)
 			if isFuncSort && len(fs.Domain()) > 0 {
 				domName := sortToName(fs.Domain()[0])
 				if name == "arrcst" {
 					domName = sortToName(fs.Range())
 				}
 				if interp, has := sig.Interp[domName]; has {
-					if _, isEnum := interp.(*EnumeratedSort); !isEnum {
+					if _, isEnum := interp.(*LogicEnumeratedSort); !isEnum {
 						xtracer.Trace("ivy_solver.py:74 solver_name() EXIT 2")
 						return "", nil // native interpretation
 					}
@@ -1168,7 +1168,7 @@ func sortToName(s Sort) string {
 	switch st := s.(type) {
 	case *UninterpretedSort:
 		return st.Name
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return st.Name
 	case *RangeSort:
 		return st.Name

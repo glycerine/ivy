@@ -71,13 +71,13 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 	evEnv, _ := goivy.NewEventually(&env1, eq)
 	when, _ := goivy.NewWhenOperator("when", X, eq)
 	cond, _ := goivy.NewCond(X, Y)
-	faSingle, _ := goivy.NewForAll([]*goivy.Variable{X}, eq)
-	faMulti, _ := goivy.NewForAll([]*goivy.Variable{Z, A}, eqAZ)
-	ex, _ := goivy.NewExists([]*goivy.Variable{X}, eq)
-	lam, _ := goivy.NewLambda([]*goivy.Variable{X}, X)
-	nbNil, _ := goivy.NewNamedBinder("nb", []*goivy.Variable{X}, nil, eq)
+	faSingle, _ := goivy.NewForAll([]*goivy.LogicVariable{X}, eq)
+	faMulti, _ := goivy.NewForAll([]*goivy.LogicVariable{Z, A}, eqAZ)
+	ex, _ := goivy.NewExists([]*goivy.LogicVariable{X}, eq)
+	lam, _ := goivy.NewLambda([]*goivy.LogicVariable{X}, X)
+	nbNil, _ := goivy.NewNamedBinder("nb", []*goivy.LogicVariable{X}, nil, eq)
 	e1Str := "e1"
-	nbEnv, _ := goivy.NewNamedBinder("nb", []*goivy.Variable{X}, &e1Str, eq)
+	nbEnv, _ := goivy.NewNamedBinder("nb", []*goivy.LogicVariable{X}, &e1Str, eq)
 	def := goivy.NewDefinition(X, Y)
 	defSchema := goivy.NewDefinitionSchema(X, Y)
 
@@ -86,9 +86,9 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 		"boolean_sort":          string(goivy.Boolean.Sexp()),
 		"func_sort_binary":      string(fsBin.Sexp()),
 		"func_sort_unary":       string(fsUn.Sexp()),
-		"enum_sort":             string((&goivy.EnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}).Sexp()),
-		"enum_sort_single":      string((&goivy.EnumeratedSort{Name: "X", Extension: []string{"a"}}).Sexp()),
-		"enum_sort_empty":       string((&goivy.EnumeratedSort{Name: "E", Extension: []string{}}).Sexp()),
+		"enum_sort":             string((&goivy.LogicEnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}).Sexp()),
+		"enum_sort_single":      string((&goivy.LogicEnumeratedSort{Name: "X", Extension: []string{"a"}}).Sexp()),
+		"enum_sort_empty":       string((&goivy.LogicEnumeratedSort{Name: "E", Extension: []string{}}).Sexp()),
 		"range_sort":            string((&goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "10"}}).Sexp()),
 		"top_sort_default":      string(goivy.TopS.Sexp()),
 		"top_sort_named":        string((&goivy.TopSort{Name: "Alpha"}).Sexp()),

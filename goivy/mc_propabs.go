@@ -113,7 +113,7 @@ func (pa *PropAbs) MkPropAbs(expr Expr) Expr {
 	needsAbstraction := false
 
 	switch expr.(type) {
-	case *ForAll, *Exists:
+	case *ForAll, *LogicExists:
 		needsAbstraction = true
 	default:
 		children := expr.Children()

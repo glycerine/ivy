@@ -371,7 +371,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			if StartsWithEqSome(mixerName, present, mod, implementationMap) {
 				action, _ := LookupAction(mod, mixeeName)
 				// Check that mixee is empty (no multiple implementations)
-				if seq, ok := action.(*Sequence); ok && len(seq.Elems) == 0 {
+				if seq, ok := action.(*LogicSequence); ok && len(seq.Elems) == 0 {
 					// OK
 				} else if action != nil {
 					return fmt.Errorf("multiple implementations of action %s", mixeeName)
@@ -653,7 +653,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			continue
 		}
 		for _, sub := range act.IterSubactions() {
-			ca, ok := sub.(*CallAction)
+			ca, ok := sub.(*LogicCallAction)
 			if !ok {
 				continue
 			}
@@ -1205,7 +1205,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		for actname, action := range mod.Actions.All() {
 			if StartsWithEqSome(actname, present, mod, implementationMap) {
 				for _, sub := range action.IterSubactions() {
-					ca, ok := sub.(*CallAction)
+					ca, ok := sub.(*LogicCallAction)
 					if !ok {
 						continue
 					}
@@ -1217,11 +1217,11 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 						}
 						if called, ok := mod.Actions.Get2(imp); ok {
 							// Check it's not an empty Sequence
-							if seq, isSeq := called.(*Sequence); isSeq && len(seq.ActionArgs()) == 0 {
+							if seq, isSeq := called.(*LogicSequence); isSeq && len(seq.ActionArgs()) == 0 {
 								continue
 							}
 							// Check if it's a NativeAction or has non-ghost formal returns
-							if _, isNative := called.(*NativeAction); isNative {
+							if _, isNative := called.(*LogicNativeAction); isNative {
 								return fmt.Errorf("no implementation for action %s", c)
 							}
 						}
@@ -1288,7 +1288,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		if y.Formula == nil {
 			continue
 		}
-		if sch, ok := y.Formula.(*DefinitionSchema); ok {
+		if sch, ok := y.Formula.(*LogicDefinitionSchema); ok {
 			defName := ""
 			if d := sch.Defines(); d != nil {
 				if s, ok2 := d.(*Const); ok2 {
@@ -1300,7 +1300,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 				yName = ReprNode(y.Label)
 			}
 			if exactPresent[defName] || exactPresent[yName] {
-				newDef := &Definition{Lhs: sch.Lhs, Rhs: sch.Rhs}
+				newDef := &LogicDefinition{Lhs: sch.Lhs, Rhs: sch.Rhs}
 				newLf := mod.Cfg.AstCfg.NewLabeledFormula(y.Label, newDef)
 				newLf.Loc = y.Loc
 				mod.Definitions[i] = newLf
@@ -1670,14 +1670,14 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	_, isExactIsolate := iso.(*IsolateDef)
 	if isExactIsolate && isoCfg.IsolateMode == "check" {
 		for _, actIface := range mod.Actions.All() {
-			if _, ok := actIface.(*NativeAction); ok {
+			if _, ok := actIface.(*LogicNativeAction); ok {
 				return fmt.Errorf("trusted code used in untrusted isolate")
 			}
 		}
 		// Python lines 1369-1371: Also check definitions for NativeExpr.
 		for _, dfn := range mod.Definitions {
 			if dfn.Formula != nil {
-				if _, isNative := dfn.Formula.(*AstNativeExpr); isNative {
+				if _, isNative := dfn.Formula.(*NativeExpr); isNative {
 					return fmt.Errorf("trusted code used in untrusted isolate (in definition)")
 				}
 			}
@@ -1727,14 +1727,14 @@ func isolateNodeToExpr(n Node) Expr {
 // makeAnd creates an And node, ignoring sort errors.
 func isolateMakeAnd(terms ...Expr) Expr {
 	if len(terms) == 0 {
-		return &And{Terms: nil} // empty conjunction = true
+		return &LogicAnd{Terms: nil} // empty conjunction = true
 	}
 	if len(terms) == 1 {
 		return terms[0]
 	}
 	a, err := NewAnd(terms...)
 	if err != nil {
-		return &And{Terms: terms}
+		return &LogicAnd{Terms: terms}
 	}
 	return a
 }
@@ -1742,21 +1742,21 @@ func isolateMakeAnd(terms ...Expr) Expr {
 // makeOr creates an Or node, ignoring sort errors.
 func makeOr(terms ...Expr) Expr {
 	if len(terms) == 0 {
-		return &Or{Terms: nil} // empty disjunction = false
+		return &LogicOr{Terms: nil} // empty disjunction = false
 	}
 	if len(terms) == 1 {
 		return terms[0]
 	}
 	o, err := NewOr(terms...)
 	if err != nil {
-		return &Or{Terms: terms}
+		return &LogicOr{Terms: terms}
 	}
 	return o
 }
 
 // addSortDeps recursively adds sort dependencies using the addDeps function.
 func addSortDeps(s Sort, allSorts map[string]bool, addDeps func(string)) {
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		for _, d := range fs.Domain() {
 			addSortDeps(d, allSorts, addDeps)
 		}

@@ -23,7 +23,7 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 		if c, ok := node.(*Const); ok {
 			usedNames[c.Name] = struct{}{}
 		}
-		if v, ok := node.(*Variable); ok {
+		if v, ok := node.(*LogicVariable); ok {
 			usedNames[v.Name] = struct{}{}
 		}
 	}
@@ -97,8 +97,8 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 // to the previous lg.Expr-only signature.
 func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const, prenex bool) Node {
 	xtracer.Trace("proof.SkolemizeFmla ENTER pos=%v prenex=%v type=%s", pos, prenex, TypeName(fmla))
-	var univs []*Variable
-	var outer []*Variable
+	var univs []*LogicVariable
+	var outer []*LogicVariable
 	vu := NewVariableUniqifier(keysFromRenamer(renamer))
 
 	var rec func(Node, bool) Node
@@ -106,35 +106,35 @@ func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const
 		// Mirror Python ivy_proof.py:1443-1444:
 		//   if isinstance(fmla,ia.TemporalModels):
 		//       return fmla.clone([rec(fmla.args[0],pos)])
-		if tm, ok := fmla.(*AstTemporalModels); ok {
+		if tm, ok := fmla.(*TemporalModels); ok {
 			xtracer.Trace("proof.SkolemizeFmla branch type=TemporalModels pos=%v", pos)
 			return tm.Clone([]Node{rec(tm.Args()[0], pos)})
 		}
 
 		switch f := fmla.(type) {
-		case *Not:
-			xtracer.Trace("proof.SkolemizeFmla branch type=Not pos=%v", pos)
-			return &Not{Body: recExpr(rec, f.Body, !pos)}
-		case *Implies:
+		case *LogicNot:
+			xtracer.Trace("proof.SkolemizeFmla branch type= LogicNot pos=%v", pos)
+			return &LogicNot{Body: recExpr(rec, f.Body, !pos)}
+		case *LogicImplies:
 			xtracer.Trace("proof.SkolemizeFmla branch type=Implies pos=%v", pos)
-			return &Implies{
+			return &LogicImplies{
 				T1: recExpr(rec, f.T1, !pos),
 				T2: recExpr(rec, f.T2, pos),
 			}
-		case *And:
-			xtracer.Trace("proof.SkolemizeFmla branch type=And pos=%v nterms=%d", pos, len(f.Terms))
+		case *LogicAnd:
+			xtracer.Trace("proof.SkolemizeFmla branch type= LogicAnd pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)
 			}
-			return &And{Terms: terms}
-		case *Or:
-			xtracer.Trace("proof.SkolemizeFmla branch type=Or pos=%v nterms=%d", pos, len(f.Terms))
+			return &LogicAnd{Terms: terms}
+		case *LogicOr:
+			xtracer.Trace("proof.SkolemizeFmla branch type= LogicOr pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)
 			}
-			return &Or{Terms: terms}
+			return &LogicOr{Terms: terms}
 		}
 
 		// IsExists/IsForall take lg.Expr; guard with type assertion.
@@ -225,7 +225,7 @@ func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const
 				// array is reused by sibling universalize calls via append,
 				// which would corrupt the ForAll's Variables slice.
 				src := outer[len(outer)-len(vars):]
-				tail := make([]*Variable, len(src))
+				tail := make([]*LogicVariable, len(src))
 				copy(tail, src)
 				if isE {
 					res = IvyExists(tail, res)
@@ -248,7 +248,7 @@ func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const
 	//       body = quant(univs,body)
 	if len(univs) > 0 {
 		xtracer.Trace("proof.SkolemizeFmla univsWrap pos=%v nunivs=%d", pos, len(univs))
-		if tm, ok := body.(*AstTemporalModels); ok {
+		if tm, ok := body.(*TemporalModels); ok {
 			innerExpr, _ := tm.Args()[0].(Expr)
 			var quantBody Expr
 			if pos {
@@ -286,7 +286,7 @@ func recExpr(rec func(Node, bool) Node, fmla Expr, pos bool) Expr {
 
 // outerVarsInFormula returns the outer universal variables that appear
 // free in the given formula.
-func outerVarsInFormula(fmla Expr, outer []*Variable) []*Variable {
+func outerVarsInFormula(fmla Expr, outer []*LogicVariable) []*LogicVariable {
 	if len(outer) == 0 {
 		return nil
 	}
@@ -295,12 +295,12 @@ func outerVarsInFormula(fmla Expr, outer []*Variable) []*Variable {
 	for _, v := range outer {
 		outerSet[Key(v)] = v
 	}
-	var result []*Variable
+	var result []*LogicVariable
 	// preserve order
 	seen := make(map[NodeKey]Expr)
 	for vKey, vNode := range used {
 		if outerSet[vKey] != nil && seen[vKey] == nil {
-			if vv, ok := vNode.(*Variable); ok {
+			if vv, ok := vNode.(*LogicVariable); ok {
 				result = append(result, vv)
 			}
 			seen[vKey] = vNode
@@ -346,9 +346,9 @@ func keysFromRenamer(rn *UniqueRenamer) []string {
 }
 
 // uniquifyVar creates a new variable with a unique name using a VariableUniqifier.
-func uniquifyVar(vu *VariableUniqifier, v *Variable) *Variable {
+func uniquifyVar(vu *VariableUniqifier, v *LogicVariable) *LogicVariable {
 	// Use the uniqifier to generate a fresh name
-	fmla := IvyForAll([]*Variable{v}, v)
+	fmla := IvyForAll([]*LogicVariable{v}, v)
 	result := vu.Uniquify(fmla)
 	if fa, ok := result.(*ForAll); ok && len(fa.Variables) > 0 {
 		return fa.Variables[0]

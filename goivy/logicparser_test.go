@@ -21,21 +21,21 @@ func nodeShape(n Node) string {
 		return fmt.Sprintf("Atom(%s,[%s])", t.Rep, shapeList(t.Terms))
 	case *App:
 		return fmt.Sprintf("App(%v,[%s])", t.Rep, shapeList(t.Terms))
-	case *AstAnd:
+	case *And:
 		if len(t.Terms) == 0 {
 			return "True"
 		}
 		return fmt.Sprintf("And(%s)", shapeList(t.Terms))
-	case *AstOr:
+	case *Or:
 		if len(t.Terms) == 0 {
 			return "False"
 		}
 		return fmt.Sprintf("Or(%s)", shapeList(t.Terms))
-	case *AstNot:
+	case *Not:
 		return fmt.Sprintf("Not(%s)", nodeShape(t.Body))
-	case *AstImplies:
+	case *Implies:
 		return fmt.Sprintf("Implies(%s,%s)", nodeShape(t.T1), nodeShape(t.T2))
-	case *AstIff:
+	case *Iff:
 		return fmt.Sprintf("Iff(%s,%s)", nodeShape(t.T1), nodeShape(t.T2))
 	default:
 		return fmt.Sprintf("?(%T)", n)

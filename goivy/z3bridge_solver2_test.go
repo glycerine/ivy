@@ -24,7 +24,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 	pApp := MustApply(p, x)
 
 	// ForAll(X:mynat, P(X))
-	fmla := &ForAll{Variables: []*Variable{x}, Body: pApp}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: pApp}
 
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -64,7 +64,7 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 	pApp := MustApply(p, x)
 
 	// Exists(X:mynat, P(X))
-	fmla := &Exists{Variables: []*Variable{x}, Body: pApp}
+	fmla := &LogicExists{Variables: []*LogicVariable{x}, Body: pApp}
 
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -105,7 +105,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 	p := relConst("P", rangeSort)
 	pApp := MustApply(p, x)
 
-	fmla := &ForAll{Variables: []*Variable{x}, Body: pApp}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: pApp}
 
 	z3expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -136,7 +136,7 @@ func TestQuantConstraints_NoInterp(t *testing.T) {
 	x, _ := NewVariable("X", sort)
 	p := relConst("P", sort)
 	pApp := MustApply(p, x)
-	fmla := &ForAll{Variables: []*Variable{x}, Body: pApp}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: pApp}
 
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -222,7 +222,7 @@ func TestGebin_OverflowIsFalse(t *testing.T) {
 	}
 }
 
-// TestGebin_TwoBitsGeTwo checks Gebin([a,b], 2) = And(a, ...).
+// TestGebin_TwoBitsGeTwo checks Gebin([a,b], 2) = LogicAnd(a, ...).
 // With MSB-first: bits >= 2 means the MSB must be 1.
 // 2 in binary (2 bits, MSB first) = [1, 0], so bits >= 2 iff a=1 (MSB).
 func TestGebin_TwoBitsGeTwo(t *testing.T) {
@@ -233,7 +233,7 @@ func TestGebin_TwoBitsGeTwo(t *testing.T) {
 
 	result := Gebin(ctx, bits, 2)
 	// bits >= 2 with 2 bits MSB first means: a must be true
-	// (hval=2, 2<=2, so And(a, Gebin([b], 0)) = And(a, true) = a)
+	// (hval=2, 2<=2, so And(a, Gebin([b], 0)) = LogicAnd(a, true) = a)
 	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, a)))
 	if slv.Check() != Unsat {
@@ -241,9 +241,9 @@ func TestGebin_TwoBitsGeTwo(t *testing.T) {
 	}
 }
 
-// TestGebin_TwoBitsGeOne checks Gebin([a,b], 1) = Or(a, b).
+// TestGebin_TwoBitsGeOne checks Gebin([a,b], 1) = LogicOr(a, b).
 // bits >= 1 with MSB-first: hval=2 > 1, so Or(a, Gebin([b], 1))
-// = Or(a, And(b, Gebin([], 0))) = Or(a, b).
+// = LogicOr(a, And(b, Gebin([], 0))) = LogicOr(a, b).
 func TestGebin_TwoBitsGeOne(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
@@ -262,8 +262,8 @@ func TestGebin_TwoBitsGeOne(t *testing.T) {
 // TestGebin_ThreeBitsGeFive checks a 3-bit example.
 // 3 bits MSB first: values 0-7. Gebin(bits, 5) = bits >= 5.
 // 5 = 101 in binary. hval=4, 4<=5, so And(bits[0], Gebin(bits[1:], 1)).
-// Gebin([b,c], 1): hval=2>1, Or(b, Gebin([c],1)) = Or(b, c).
-// So Gebin([a,b,c], 5) = And(a, Or(b, c)).
+// Gebin([b,c], 1): hval=2>1, Or(b, Gebin([c],1)) = LogicOr(b, c).
+// So Gebin([a,b,c], 5) = LogicAnd(a, Or(b, c)).
 func TestGebin_ThreeBitsGeFive(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
@@ -287,7 +287,7 @@ func TestGebin_ThreeBitsGeFive(t *testing.T) {
 // TestEncodeTermZ3_Constructor checks that a constructor is encoded as its bit pattern.
 func TestEncodeTermZ3_Constructor(t *testing.T) {
 	// Enum sort with 3 values: {a, b, c} -> needs 2 bits
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -314,7 +314,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 
 // TestEncodeTermZ3_Variable checks that a variable produces named Bool consts.
 func TestEncodeTermZ3_Variable(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	s := NewSolverFromSig(sig, nil)
 
@@ -332,7 +332,7 @@ func TestEncodeTermZ3_Variable(t *testing.T) {
 
 // TestEncodeEqualityZ3 checks that binary-encoded equality is correct.
 func TestEncodeEqualityZ3(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -434,13 +434,13 @@ func TestClauseModelSimp_EarlyReturn(t *testing.T) {
 	model := slv.Model()
 
 	// Clause: p | q | r
-	clause := &Or{Terms: []Expr{p, q, r}}
+	clause := &LogicOr{Terms: []Expr{p, q, r}}
 
 	result := s.clauseModelSimp(model, clause)
 
 	// Python returns [l] (just p) because p is true in the model.
 	// Go should return p (the single literal), not Or(p).
-	if _, isOr := result.(*Or); isOr {
+	if _, isOr := result.(*LogicOr); isOr {
 		t.Fatalf("clauseModelSimp should return single literal, got Or: %v", result)
 	}
 	sym, ok := result.(*Const)
@@ -468,12 +468,12 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 
 	// Use a non-ground literal (variable) so it's always kept
 	xVar := z3BoolVar("X")
-	clause := &Or{Terms: []Expr{p, xVar}}
+	clause := &LogicOr{Terms: []Expr{p, xVar}}
 
 	result := s.clauseModelSimp(model, clause)
 	// p is false → dropped. X is non-ground → kept.
 	// Result should be just X.
-	if _, isVar := result.(*Variable); !isVar {
+	if _, isVar := result.(*LogicVariable); !isVar {
 		t.Fatalf("expected single variable after dropping false literal, got %T: %v", result, result)
 	}
 }
@@ -491,7 +491,7 @@ func TestClausesModelToDiagram_NoTautologies(t *testing.T) {
 	b := NewConst("b", sort)
 
 	// Simple clauses: a != b
-	fmla := &Not{Body: &Eq{T1: a, T2: b}}
+	fmla := &LogicNot{Body: &Eq{T1: a, T2: b}}
 	clauses := NewClauses([]Expr{fmla}, nil, nil)
 
 	result, err := s.ClausesModelToDiagram(clauses, nil, nil)
@@ -518,7 +518,7 @@ func TestClausesModelToDiagram_NoTautologies(t *testing.T) {
 
 // TestSortCard_Enumerated checks cardinality of an enumerated sort.
 func TestSortCard_Enumerated(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	card := SortCard(es, nil)
 	if card != 3 {
 		t.Fatalf("SortCard(color) = %d, want 3", card)

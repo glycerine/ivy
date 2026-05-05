@@ -61,7 +61,7 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Action, got %T", mod.Actions.Get("test_act"))
 	}
-	seq, ok := result.(*Sequence)
+	seq, ok := result.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected Sequence, got %T: %v", result, result)
 	}
@@ -74,14 +74,14 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	// First two should be SubgoalAction
 	for i := 0; i < 2; i++ {
 		sub, _ := args[i].(ActionsAction)
-		if _, ok := sub.(*SubgoalAction); !ok {
+		if _, ok := sub.(*LogicSubgoalAction); !ok {
 			t.Errorf("arg[%d]: expected SubgoalAction, got %T", i, sub)
 		}
 	}
 
 	// Last should be AssumeAction
 	last, _ := args[2].(ActionsAction)
-	if _, ok := last.(*AssumeAction); !ok {
+	if _, ok := last.(*LogicAssumeAction); !ok {
 		t.Errorf("arg[2]: expected AssumeAction, got %T", last)
 	}
 }
@@ -102,7 +102,7 @@ func TestApplyAssertProofsWithProver_NoProof(t *testing.T) {
 	}
 
 	result := mod.Actions.Get("test_act").(ActionsAction)
-	if _, ok := result.(*AssertAction); !ok {
+	if _, ok := result.(*LogicAssertAction); !ok {
 		t.Fatalf("expected AssertAction unchanged, got %T", result)
 	}
 }
@@ -125,7 +125,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 	}
 
 	result := mod.Actions.Get("test_act").(ActionsAction)
-	ra, ok := result.(*AssertAction)
+	ra, ok := result.(*LogicAssertAction)
 	if !ok {
 		t.Fatalf("expected AssertAction, got %T", result)
 	}
@@ -163,7 +163,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 	}
 
 	result := mod.Actions.Get("test_act").(ActionsAction)
-	rw, ok := result.(*WhileAction)
+	rw, ok := result.(*LogicWhileAction)
 	if !ok {
 		t.Fatalf("expected WhileAction, got %T", result)
 	}
@@ -208,7 +208,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 	}
 
 	result := mod.Actions.Get("test_act").(ActionsAction)
-	rSeq, ok := result.(*Sequence)
+	rSeq, ok := result.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected Sequence, got %T", result)
 	}
@@ -220,18 +220,18 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 
 	// First child: LocalAction whose body should now be a Sequence (proof was expanded)
 	firstAct, _ := args[0].(ActionsAction)
-	la, ok := firstAct.(*LocalAction)
+	la, ok := firstAct.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("arg[0]: expected LocalAction, got %T", firstAct)
 	}
 	bodyAct, _ := la.Body.(ActionsAction)
-	if _, ok := bodyAct.(*Sequence); !ok {
+	if _, ok := bodyAct.(*LogicSequence); !ok {
 		t.Errorf("LocalAction body: expected Sequence (expanded proof), got %T", bodyAct)
 	}
 
 	// Second child: AssertAction should be unchanged (no proof)
 	secondAct, _ := args[1].(ActionsAction)
-	if _, ok := secondAct.(*AssertAction); !ok {
+	if _, ok := secondAct.(*LogicAssertAction); !ok {
 		t.Errorf("arg[1]: expected AssertAction, got %T", secondAct)
 	}
 }
@@ -252,7 +252,7 @@ func TestCompileAssertFormula_WithProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	aa, ok := act.(*AssertAction)
+	aa, ok := act.(*LogicAssertAction)
 	if !ok {
 		t.Fatalf("expected AssertAction, got %T", act)
 	}
@@ -275,7 +275,7 @@ func TestCompileAssertFormula_NoProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	aa, ok := act.(*AssertAction)
+	aa, ok := act.(*LogicAssertAction)
 	if !ok {
 		t.Fatalf("expected AssertAction, got %T", act)
 	}

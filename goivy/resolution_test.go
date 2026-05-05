@@ -8,7 +8,7 @@ import (
 )
 
 // helper to make a variable with TopSort (Python variables have no case restriction in ivy_logic)
-func resolutionMkVar(name string) *Variable {
+func resolutionMkVar(name string) *LogicVariable {
 	v, err := NewVariable(name, TopS)
 	if err != nil {
 		panic(fmt.Sprintf("resolutionMkVar(%q): %v", name, err))
@@ -370,7 +370,7 @@ func FuzzTermsMGU(f *testing.F) {
 			for k, v := range subs {
 				_ = k
 				// The result should not be a variable that is also in the env
-				if vr, ok := v.(*Variable); ok {
+				if vr, ok := v.(*LogicVariable); ok {
 					if _, found := subs[vr.Name]; found && vr.Name != k {
 						// This would indicate an un-resolved chain
 						t.Errorf("unresolved chain: %s -> %s -> ...", k, vr.Name)

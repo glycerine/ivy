@@ -16,23 +16,23 @@ import (
 // Python: ivy_mc.py:757-772
 func ElimIte(expr Expr, cnsts *[]Expr, iteCtr *int64) Expr {
 	switch t := expr.(type) {
-	case *Ite:
+	case *LogicIte:
 		if !isFiniteSort(t.Then.NodeSort()) {
 			name := fmt.Sprintf("__ite[%d]", nextIteCtr(iteCtr))
 			v := NewConst(name, t.Then.NodeSort())
 			cElim := ElimIte(t.Cond, cnsts, iteCtr)
 			eqThen := ElimIte(&Eq{T1: v, T2: t.Then}, cnsts, iteCtr)
 			eqElse := ElimIte(&Eq{T1: v, T2: t.Else}, cnsts, iteCtr)
-			*cnsts = append(*cnsts, &Ite{Cond: cElim, Then: eqThen, Else: eqElse})
+			*cnsts = append(*cnsts, &LogicIte{Cond: cElim, Then: eqThen, Else: eqElse})
 			return v
 		}
 	case *Eq:
-		if ite, ok := t.T2.(*Ite); ok {
+		if ite, ok := t.T2.(*LogicIte); ok {
 			if !isFiniteSort(ite.Then.NodeSort()) {
 				cElim := ElimIte(ite.Cond, cnsts, iteCtr)
 				eqThen := ElimIte(&Eq{T1: t.T1, T2: ite.Then}, cnsts, iteCtr)
 				eqElse := ElimIte(&Eq{T1: t.T1, T2: ite.Else}, cnsts, iteCtr)
-				return &Ite{Cond: cElim, Then: eqThen, Else: eqElse}
+				return &LogicIte{Cond: cElim, Then: eqThen, Else: eqElse}
 			}
 		}
 	}
@@ -142,7 +142,7 @@ func ToTableLookup(trans *Clauses, invariant Expr) (*Clauses, Expr) {
 			}
 		}
 		if len(constraints) > 0 {
-			newInv = &Implies{T1: &And{Terms: constraints}, T2: newInv}
+			newInv = &LogicImplies{T1: &LogicAnd{Terms: constraints}, T2: newInv}
 		}
 	}
 
@@ -212,9 +212,9 @@ func tableLookupApp(app *Apply, funcSym *Const, argSym func(Sort) *Const, newDef
 			if len(eqs) == 1 {
 				cond = eqs[0]
 			} else {
-				cond = &And{Terms: eqs}
+				cond = &LogicAnd{Terms: eqs}
 			}
-			result = &Ite{Cond: cond, Then: fApp, Else: result}
+			result = &LogicIte{Cond: cond, Then: fApp, Else: result}
 		}
 	}
 	return result
@@ -444,14 +444,14 @@ func matchSchemaPrems(prems []Node, sortConstants *InsMap[string, []*Const], fun
 
 		if IsFunctionSort(sym.CSort) {
 			// Python: sorts = sym.sort.dom + (sym.sort.rng,)
-			fs := sym.CSort.(*FunctionSort)
+			fs := sym.CSort.(*LogicFunctionSort)
 			sorts := append(fs.Domain(), fs.Range())
 
 			for _, f := range funs.All() {
 				if !IsFunctionSort(f.CSort) {
 					continue
 				}
-				ffs := f.CSort.(*FunctionSort)
+				ffs := f.CSort.(*LogicFunctionSort)
 				fsorts := append(ffs.Domain(), ffs.Range())
 
 				match.push()
@@ -542,10 +542,10 @@ func applyMatch(mp map[string]Expr, fmla Node) Expr {
 	// Python: elif il.is_binder(fmla): vs = [apply_match(match,v) for v in fmla.variables]
 	//          return fmla.clone_binder(vs, apply_match(match, fmla.body))
 	if fa, ok := expr.(*ForAll); ok {
-		newVars := make([]*Variable, len(fa.Variables))
+		newVars := make([]*LogicVariable, len(fa.Variables))
 		for i, v := range fa.Variables {
 			nv := applyMatch(mp, v)
-			if rv, ok := nv.(*Variable); ok {
+			if rv, ok := nv.(*LogicVariable); ok {
 				newVars[i] = rv
 			} else {
 				newVars[i] = v
@@ -553,28 +553,28 @@ func applyMatch(mp map[string]Expr, fmla Node) Expr {
 		}
 		return &ForAll{Variables: newVars, Body: args[0]}
 	}
-	if ex, ok := expr.(*Exists); ok {
-		newVars := make([]*Variable, len(ex.Variables))
+	if ex, ok := expr.(*LogicExists); ok {
+		newVars := make([]*LogicVariable, len(ex.Variables))
 		for i, v := range ex.Variables {
 			nv := applyMatch(mp, v)
-			if rv, ok := nv.(*Variable); ok {
+			if rv, ok := nv.(*LogicVariable); ok {
 				newVars[i] = rv
 			} else {
 				newVars[i] = v
 			}
 		}
-		return &Exists{Variables: newVars, Body: args[0]}
+		return &LogicExists{Variables: newVars, Body: args[0]}
 	}
 
-	// Python: elif il.is_variable(fmla): return Variable(fmla.name, match.get(fmla.sort, fmla.sort))
-	if v, ok := expr.(*Variable); ok {
+	// Python: elif il.is_variable(fmla): return LogicVariable(fmla.name, match.get(fmla.sort, fmla.sort))
+	if v, ok := expr.(*LogicVariable); ok {
 		newSort := v.VSort
 		if mapped, has := mp[sortName(v.VSort)]; has {
 			if ms, ok := mapped.(Sort); ok {
 				newSort = ms
 			}
 		}
-		return &Variable{Name: v.Name, VSort: newSort}
+		return &LogicVariable{Name: v.Name, VSort: newSort}
 	}
 
 	// Bare zero-arity constants.
@@ -689,7 +689,7 @@ func InstantiateAxioms(mod *Module, stVars []string, trans *Clauses, invariant E
 // A trigger is a function application or equality that contains all bound variables.
 //
 // Python: ivy_mc.py:674-684
-func getTrigger(expr Expr, vars []*Variable) Expr {
+func getTrigger(expr Expr, vars []*LogicVariable) Expr {
 	if IsQuantifier(expr) || IsVariable(expr) {
 		return nil
 	}
@@ -717,7 +717,7 @@ func getTrigger(expr Expr, vars []*Variable) Expr {
 //
 // Python: ivy_mc.py:701-725
 func matchNodes(pat, expr Expr, mp map[string]Expr) bool {
-	if v, ok := pat.(*Variable); ok {
+	if v, ok := pat.(*LogicVariable); ok {
 		if existing, ok := mp[v.Name]; ok {
 			return existing.Sexp() == expr.Sexp()
 		}
@@ -825,7 +825,7 @@ func isEq(n Expr) bool {
 	return ok
 }
 
-func containsAllVars(have []*Variable, need []*Variable) bool {
+func containsAllVars(have []*LogicVariable, need []*LogicVariable) bool {
 	haveSet := make(map[string]bool, len(have))
 	for _, v := range have {
 		haveSet[v.Name] = true

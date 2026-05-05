@@ -53,31 +53,31 @@ func sliceSexp(s []Expr) string {
 // 1. Sequence
 // =========================================================================
 
-func (a *Sequence) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *Sequence) Clone(args []Node) Node {
+func (a *LogicSequence) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicSequence) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *Sequence) Children() []Expr         { return a.ActionArgs() }
-func (a *Sequence) NodeSort() Sort           { return ActionS }
-func (a *Sequence) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *Sequence) GetAstConfig() *AstConfig { return nil }
-func (a *Sequence) Sexp() NodeKey {
+func (a *LogicSequence) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicSequence) NodeSort() Sort           { return ActionS }
+func (a *LogicSequence) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicSequence) GetAstConfig() *AstConfig { return nil }
+func (a *LogicSequence) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(sequence%v stmts:%v)", a.CanonFields(), sliceSexp(a.Elems)))
 }
-func (a *Sequence) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSequence) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 2. AssumeAction
 // =========================================================================
 
-func (a *AssumeAction) Args() []Node {
+func (a *LogicAssumeAction) Args() []Node {
 	if a.LF != nil {
 		return []Node{a.LF}
 	}
 	return []Node{a.Formula}
 }
-func (a *AssumeAction) Clone(args []Node) Node {
-	r := &AssumeAction{ActionBase: a.ActionBase, Unprovable: a.Unprovable}
+func (a *LogicAssumeAction) Clone(args []Node) Node {
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Unprovable: a.Unprovable}
 	if len(args) >= 1 {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
@@ -88,23 +88,23 @@ func (a *AssumeAction) Clone(args []Node) Node {
 	}
 	return r
 }
-func (a *AssumeAction) Children() []Expr         { return a.ActionArgs() }
-func (a *AssumeAction) NodeSort() Sort           { return ActionS }
-func (a *AssumeAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *AssumeAction) GetAstConfig() *AstConfig { return nil }
-func (a *AssumeAction) Sexp() NodeKey {
+func (a *LogicAssumeAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicAssumeAction) NodeSort() Sort           { return ActionS }
+func (a *LogicAssumeAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicAssumeAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicAssumeAction) Sexp() NodeKey {
 	if a.LF != nil {
 		return NodeKey(fmt.Sprintf("(assumeAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
 	}
 	return NodeKey(fmt.Sprintf("(assumeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *AssumeAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssumeAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 3. AssertAction
 // =========================================================================
 
-func (a *AssertAction) Args() []Node {
+func (a *LogicAssertAction) Args() []Node {
 	first := Node(a.Formula)
 	if a.LF != nil {
 		first = a.LF
@@ -114,8 +114,8 @@ func (a *AssertAction) Args() []Node {
 	}
 	return []Node{first}
 }
-func (a *AssertAction) Clone(args []Node) Node {
-	r := &AssertAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
+func (a *LogicAssertAction) Clone(args []Node) Node {
+	r := &LogicAssertAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) >= 1 {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
@@ -129,23 +129,23 @@ func (a *AssertAction) Clone(args []Node) Node {
 	}
 	return r
 }
-func (a *AssertAction) Children() []Expr         { return a.ActionArgs() }
-func (a *AssertAction) NodeSort() Sort           { return ActionS }
-func (a *AssertAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *AssertAction) GetAstConfig() *AstConfig { return nil }
-func (a *AssertAction) Sexp() NodeKey {
+func (a *LogicAssertAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicAssertAction) NodeSort() Sort           { return ActionS }
+func (a *LogicAssertAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicAssertAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicAssertAction) Sexp() NodeKey {
 	if a.LF != nil {
 		return NodeKey(fmt.Sprintf("(assertAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
 	}
 	return NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *AssertAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssertAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 4. RequiresAction
 // =========================================================================
 
-func (a *RequiresAction) Args() []Node {
+func (a *LogicRequiresAction) Args() []Node {
 	first := Node(a.Formula)
 	if a.LF != nil {
 		first = a.LF
@@ -155,8 +155,8 @@ func (a *RequiresAction) Args() []Node {
 	}
 	return []Node{first}
 }
-func (a *RequiresAction) Clone(args []Node) Node {
-	r := &RequiresAction{}
+func (a *LogicRequiresAction) Clone(args []Node) Node {
+	r := &LogicRequiresAction{}
 	r.ActionBase = a.ActionBase
 	r.Kind = a.Kind
 	r.Unprovable = a.Unprovable
@@ -173,23 +173,23 @@ func (a *RequiresAction) Clone(args []Node) Node {
 	}
 	return r
 }
-func (a *RequiresAction) Children() []Expr         { return a.ActionArgs() }
-func (a *RequiresAction) NodeSort() Sort           { return ActionS }
-func (a *RequiresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *RequiresAction) GetAstConfig() *AstConfig { return nil }
-func (a *RequiresAction) Sexp() NodeKey {
+func (a *LogicRequiresAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicRequiresAction) NodeSort() Sort           { return ActionS }
+func (a *LogicRequiresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicRequiresAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicRequiresAction) Sexp() NodeKey {
 	if a.LF != nil {
 		return NodeKey(fmt.Sprintf("(requiresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
 	}
 	return NodeKey(fmt.Sprintf("(requiresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *RequiresAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicRequiresAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 5. EnsuresAction
 // =========================================================================
 
-func (a *EnsuresAction) Args() []Node {
+func (a *LogicEnsuresAction) Args() []Node {
 	first := Node(a.Formula)
 	if a.LF != nil {
 		first = a.LF
@@ -199,8 +199,8 @@ func (a *EnsuresAction) Args() []Node {
 	}
 	return []Node{first}
 }
-func (a *EnsuresAction) Clone(args []Node) Node {
-	r := &EnsuresAction{}
+func (a *LogicEnsuresAction) Clone(args []Node) Node {
+	r := &LogicEnsuresAction{}
 	r.ActionBase = a.ActionBase
 	r.Kind = a.Kind
 	r.Unprovable = a.Unprovable
@@ -217,29 +217,29 @@ func (a *EnsuresAction) Clone(args []Node) Node {
 	}
 	return r
 }
-func (a *EnsuresAction) Children() []Expr         { return a.ActionArgs() }
-func (a *EnsuresAction) NodeSort() Sort           { return ActionS }
-func (a *EnsuresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *EnsuresAction) GetAstConfig() *AstConfig { return nil }
-func (a *EnsuresAction) Sexp() NodeKey {
+func (a *LogicEnsuresAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicEnsuresAction) NodeSort() Sort           { return ActionS }
+func (a *LogicEnsuresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicEnsuresAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicEnsuresAction) Sexp() NodeKey {
 	if a.LF != nil {
 		return NodeKey(fmt.Sprintf("(ensuresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
 	}
 	return NodeKey(fmt.Sprintf("(ensuresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *EnsuresAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicEnsuresAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 6. AssignAction
 // =========================================================================
 
-func (a *AssignAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *AssignAction) Clone(args []Node) Node {
+func (a *LogicAssignAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicAssignAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
 
 /* regresses our golden matching from 155259 -> 149446, commenting out.
-func (a *AssignAction) Args() []ast.Node {
+func (a *LogicAssignAction) Args() []ast.Node {
 	// Return AST-level nodes when available, matching Python's self.args = [lhs, rhs]
 	// where lhs/rhs are Atoms (not logic.Apply).
 	lhs := ast.Node(a.AstLHS)
@@ -253,35 +253,35 @@ func (a *AssignAction) Args() []ast.Node {
 	return []ast.Node{lhs, rhs}
 }
 
-func (a *AssignAction) Clone(args []ast.Node) ast.Node {
+func (a *LogicAssignAction) Clone(args []ast.Node) ast.Node {
 	// After tree rewriting, Args() may have returned AST nodes (Atom, App)
 	// which got rewritten. Sync both AST and logic fields.
 	newLHS, newAstLHS := syncAstLogic(args[0], a.LHS, a.AstLHS)
 	newRHS, newAstRHS := syncAstLogic(args[1], a.RHS, a.AstRHS)
-	r := &AssignAction{ActionBase: a.ActionBase, LHS: newLHS, RHS: newRHS, AstLHS: newAstLHS, AstRHS: newAstRHS}
+	r := &LogicAssignAction{ActionBase: a.ActionBase, LHS: newLHS, RHS: newRHS, AstLHS: newAstLHS, AstRHS: newAstRHS}
 	return r
 }
 */
 
-func (a *AssignAction) Children() []Expr         { return a.ActionArgs() }
-func (a *AssignAction) NodeSort() Sort           { return ActionS }
-func (a *AssignAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *AssignAction) GetAstConfig() *AstConfig { return nil }
-func (a *AssignAction) Sexp() NodeKey {
+func (a *LogicAssignAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicAssignAction) NodeSort() Sort           { return ActionS }
+func (a *LogicAssignAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicAssignAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicAssignAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(assignAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *AssignAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssignAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 7. HavocAction
 // =========================================================================
 
-//func (a *HavocAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
-//func (a *HavocAction) Clone(args []ast.Node) ast.Node {
+//func (a *LogicHavocAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+//func (a *LogicHavocAction) Clone(args []ast.Node) ast.Node {
 //	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 //}
 
-func (a *HavocAction) Args() []Node {
+func (a *LogicHavocAction) Args() []Node {
 	// Return AST-level node when available, matching Python's self.args = [target]
 	// where target is an Atom (not logic.Apply/Const).
 	tgt := Node(a.AstTarget)
@@ -291,43 +291,43 @@ func (a *HavocAction) Args() []Node {
 	return []Node{tgt}
 }
 
-func (a *HavocAction) Clone(args []Node) Node {
+func (a *LogicHavocAction) Clone(args []Node) Node {
 	newTarget, newAstTarget := syncAstLogic(args[0], a.Target, a.AstTarget)
-	r := &HavocAction{ActionBase: a.ActionBase, Target: newTarget, AstTarget: newAstTarget}
+	r := &LogicHavocAction{ActionBase: a.ActionBase, Target: newTarget, AstTarget: newAstTarget}
 	return r
 }
 
-func (a *HavocAction) Children() []Expr         { return a.ActionArgs() }
-func (a *HavocAction) NodeSort() Sort           { return ActionS }
-func (a *HavocAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *HavocAction) GetAstConfig() *AstConfig { return nil }
-func (a *HavocAction) Sexp() NodeKey {
+func (a *LogicHavocAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicHavocAction) NodeSort() Sort           { return ActionS }
+func (a *LogicHavocAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicHavocAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicHavocAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(havocAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *HavocAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicHavocAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 8. SetAction
 // =========================================================================
 
-func (a *SetAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *SetAction) Clone(args []Node) Node {
+func (a *LogicSetAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicSetAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *SetAction) Children() []Expr         { return a.ActionArgs() }
-func (a *SetAction) NodeSort() Sort           { return ActionS }
-func (a *SetAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *SetAction) GetAstConfig() *AstConfig { return nil }
-func (a *SetAction) Sexp() NodeKey {
+func (a *LogicSetAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicSetAction) NodeSort() Sort           { return ActionS }
+func (a *LogicSetAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicSetAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicSetAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(setAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *SetAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSetAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 9. IfAction
 // =========================================================================
 
-func (a *IfAction) Args() []Node {
+func (a *LogicIfAction) Args() []Node {
 	// Python: IfAction.args = [condition, thenBody, elseBody?]
 	// When condition is Some/SomeMin/SomeMax, return the AST node (matching Python).
 	first := Node(a.Cond)
@@ -339,12 +339,12 @@ func (a *IfAction) Args() []Node {
 	}
 	return []Node{first, a.ThenBody}
 }
-func (a *IfAction) Clone(args []Node) Node {
+func (a *LogicIfAction) Clone(args []Node) Node {
 	var cond Expr
 	var astCond Node
 
 	switch args[0].(type) {
-	case *AstSome, *AstSomeMin, *AstSomeMax:
+	case *Some, *SomeMin, *SomeMax:
 		astCond = args[0]
 		cond = someCondFromAST(args[0])
 	default:
@@ -358,7 +358,7 @@ func (a *IfAction) Clone(args []Node) Node {
 		elseBody = args[2].(Expr)
 	}
 
-	var res *IfAction
+	var res *LogicIfAction
 	if elseBody != nil {
 		res = NewIfAction(cond, thenBody, elseBody)
 	} else {
@@ -368,20 +368,20 @@ func (a *IfAction) Clone(args []Node) Node {
 	res.ActionBase = a.ActionBase
 	return res
 }
-func (a *IfAction) Children() []Expr         { return a.ActionArgs() }
-func (a *IfAction) NodeSort() Sort           { return ActionS }
-func (a *IfAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *IfAction) GetAstConfig() *AstConfig { return nil }
-func (a *IfAction) Sexp() NodeKey {
+func (a *LogicIfAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicIfAction) NodeSort() Sort           { return ActionS }
+func (a *LogicIfAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicIfAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicIfAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)", a.CanonFields(), actionsExprSexp(a.Cond), actionsExprSexp(a.ThenBody), actionsExprSexp(a.ElseBody)))
 }
-func (a *IfAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicIfAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 10. WhileAction
 // =========================================================================
 
-func (a *WhileAction) Args() []Node {
+func (a *LogicWhileAction) Args() []Node {
 	// Python: WhileAction.args = [condition, body, *invariants]
 	// When condition is Some/SomeMin/SomeMax, return the AST node (matching Python).
 	first := Node(a.Cond)
@@ -394,12 +394,12 @@ func (a *WhileAction) Args() []Node {
 	}
 	return result
 }
-func (a *WhileAction) Clone(args []Node) Node {
+func (a *LogicWhileAction) Clone(args []Node) Node {
 	var cond Expr
 	var astCond Node
 
 	switch args[0].(type) {
-	case *AstSome, *AstSomeMin, *AstSomeMax:
+	case *Some, *SomeMin, *SomeMax:
 		astCond = args[0]
 		cond = someCondFromAST(args[0])
 	default:
@@ -418,37 +418,37 @@ func (a *WhileAction) Clone(args []Node) Node {
 	res.ActionBase = a.ActionBase
 	return res
 }
-func (a *WhileAction) Children() []Expr         { return a.ActionArgs() }
-func (a *WhileAction) NodeSort() Sort           { return ActionS }
-func (a *WhileAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *WhileAction) GetAstConfig() *AstConfig { return nil }
-func (a *WhileAction) Sexp() NodeKey {
+func (a *LogicWhileAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicWhileAction) NodeSort() Sort           { return ActionS }
+func (a *LogicWhileAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicWhileAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicWhileAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(whileAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *WhileAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicWhileAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 11. ChoiceAction
 // =========================================================================
 
-func (a *ChoiceAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *ChoiceAction) Clone(args []Node) Node {
+func (a *LogicChoiceAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicChoiceAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *ChoiceAction) Children() []Expr         { return a.ActionArgs() }
-func (a *ChoiceAction) NodeSort() Sort           { return ActionS }
-func (a *ChoiceAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *ChoiceAction) GetAstConfig() *AstConfig { return nil }
-func (a *ChoiceAction) Sexp() NodeKey {
+func (a *LogicChoiceAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicChoiceAction) NodeSort() Sort           { return ActionS }
+func (a *LogicChoiceAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicChoiceAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicChoiceAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(choiceAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *ChoiceAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicChoiceAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 12. CallAction
 // =========================================================================
 
-func (a *CallAction) Args() []Node {
+func (a *LogicCallAction) Args() []Node {
 	// Python: CallAction.args = [Atom(name, compiled_args), *actual_returns]
 	// Return AstCallee (Atom) as first child, matching Python's .args[0].
 	first := Node(a.AstCallee)
@@ -463,7 +463,7 @@ func (a *CallAction) Args() []Node {
 	}
 	return result
 }
-func (a *CallAction) Clone(args []Node) Node {
+func (a *LogicCallAction) Clone(args []Node) Node {
 	// When Args() returns [AstCallee(Atom), ...returns], recursive
 	// functions (substituteConstantsAST, etc.) process the Atom's children
 	// and clone it, producing a new Atom as args[0].
@@ -492,7 +492,7 @@ func (a *CallAction) Clone(args []Node) Node {
 	r.AstCallee = newAstCallee
 	return r
 }
-func (a *CallAction) Children() []Expr {
+func (a *LogicCallAction) Children() []Expr {
 	// Python's CallAction.args[0] is an ivy_ast.Atom (AST level).
 	// is_app(Atom) returns False (Atom is not lg.Apply), so symbols_ilu_ast
 	// does NOT yield the callee name — it only iterates atom.args (the actual
@@ -511,10 +511,10 @@ func (a *CallAction) Children() []Expr {
 	result = append(result, a.ActualReturns...)
 	return result
 }
-func (a *CallAction) NodeSort() Sort           { return ActionS }
-func (a *CallAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *CallAction) GetAstConfig() *AstConfig { return nil }
-func (a *CallAction) Sexp() NodeKey {
+func (a *LogicCallAction) NodeSort() Sort           { return ActionS }
+func (a *LogicCallAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicCallAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicCallAction) Sexp() NodeKey {
 	if a.AstCallee != nil {
 		// Use preserved AST atom for callee, matching Python's
 		// compile_call which creates ivy_ast.Atom(name, compiled_args).
@@ -530,126 +530,126 @@ func (a *CallAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(callAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *CallAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCallAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 13. LocalAction
 // =========================================================================
 
-func (a *LocalAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *LocalAction) Clone(args []Node) Node {
+func (a *LogicLocalAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicLocalAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *LocalAction) Children() []Expr         { return a.ActionArgs() }
-func (a *LocalAction) NodeSort() Sort           { return ActionS }
-func (a *LocalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *LocalAction) GetAstConfig() *AstConfig { return nil }
-func (a *LocalAction) Sexp() NodeKey {
+func (a *LogicLocalAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicLocalAction) NodeSort() Sort           { return ActionS }
+func (a *LogicLocalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicLocalAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicLocalAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(localAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *LocalAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicLocalAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 14. LetAction
 // =========================================================================
 
-func (a *LetAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *LetAction) Clone(args []Node) Node {
+func (a *LogicLetAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicLetAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *LetAction) Children() []Expr         { return a.ActionArgs() }
-func (a *LetAction) NodeSort() Sort           { return ActionS }
-func (a *LetAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *LetAction) GetAstConfig() *AstConfig { return nil }
-func (a *LetAction) Sexp() NodeKey {
+func (a *LogicLetAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicLetAction) NodeSort() Sort           { return ActionS }
+func (a *LogicLetAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicLetAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicLetAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(letAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LetAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicLetAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 15. BindOldsAction
 // =========================================================================
 
-func (a *BindOldsAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *BindOldsAction) Clone(args []Node) Node {
+func (a *LogicBindOldsAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicBindOldsAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *BindOldsAction) Children() []Expr         { return a.ActionArgs() }
-func (a *BindOldsAction) NodeSort() Sort           { return ActionS }
-func (a *BindOldsAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *BindOldsAction) GetAstConfig() *AstConfig { return nil }
-func (a *BindOldsAction) Sexp() NodeKey {
+func (a *LogicBindOldsAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicBindOldsAction) NodeSort() Sort           { return ActionS }
+func (a *LogicBindOldsAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicBindOldsAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicBindOldsAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(bindOldsAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *BindOldsAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicBindOldsAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 16. NativeAction
 // =========================================================================
 
-func (a *NativeAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *NativeAction) Clone(args []Node) Node {
+func (a *LogicNativeAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicNativeAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *NativeAction) Children() []Expr         { return a.ActionArgs() }
-func (a *NativeAction) NodeSort() Sort           { return ActionS }
-func (a *NativeAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *NativeAction) GetAstConfig() *AstConfig { return nil }
-func (a *NativeAction) Sexp() NodeKey {
+func (a *LogicNativeAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicNativeAction) NodeSort() Sort           { return ActionS }
+func (a *LogicNativeAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicNativeAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicNativeAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(nativeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *NativeAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicNativeAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 17. CrashAction
 // =========================================================================
 
-func (a *CrashAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *CrashAction) Clone(args []Node) Node {
+func (a *LogicCrashAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicCrashAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *CrashAction) Children() []Expr         { return a.ActionArgs() }
-func (a *CrashAction) NodeSort() Sort           { return ActionS }
-func (a *CrashAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *CrashAction) GetAstConfig() *AstConfig { return nil }
-func (a *CrashAction) Sexp() NodeKey {
+func (a *LogicCrashAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicCrashAction) NodeSort() Sort           { return ActionS }
+func (a *LogicCrashAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicCrashAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicCrashAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(crashAction%v declArgs:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *CrashAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCrashAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 18. ThunkAction
 // =========================================================================
 
-func (a *ThunkAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *ThunkAction) Clone(args []Node) Node {
+func (a *LogicThunkAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicThunkAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *ThunkAction) Children() []Expr         { return a.ActionArgs() }
-func (a *ThunkAction) NodeSort() Sort           { return ActionS }
-func (a *ThunkAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *ThunkAction) GetAstConfig() *AstConfig { return nil }
-func (a *ThunkAction) Sexp() NodeKey {
+func (a *LogicThunkAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicThunkAction) NodeSort() Sort           { return ActionS }
+func (a *LogicThunkAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicThunkAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicThunkAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(thunkAction%v children:%v)", a.CanonFields(), sliceSexp(a.Elems)))
 }
-func (a *ThunkAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicThunkAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 19. EnvAction
 // =========================================================================
 
-func (a *EnvAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *EnvAction) Clone(args []Node) Node {
+func (a *LogicEnvAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicEnvAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *EnvAction) Children() []Expr         { return a.ActionArgs() }
-func (a *EnvAction) NodeSort() Sort           { return ActionS }
-func (a *EnvAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *EnvAction) GetAstConfig() *AstConfig { return nil }
-func (a *EnvAction) Sexp() NodeKey {
+func (a *LogicEnvAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicEnvAction) NodeSort() Sort           { return ActionS }
+func (a *LogicEnvAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicEnvAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicEnvAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(envAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *EnvAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicEnvAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 20. ReturnAction
@@ -685,7 +685,7 @@ func (a *IgnoreAction) Canon() Canonical         { return Canonical(a.Sexp()) }
 // 22. SubgoalAction
 // =========================================================================
 
-func (a *SubgoalAction) Args() []Node {
+func (a *LogicSubgoalAction) Args() []Node {
 	first := Node(a.Formula)
 	if a.LF != nil {
 		first = a.LF
@@ -695,8 +695,8 @@ func (a *SubgoalAction) Args() []Node {
 	}
 	return []Node{first}
 }
-func (a *SubgoalAction) Clone(args []Node) Node {
-	r := &SubgoalAction{SubgoalKind: a.SubgoalKind}
+func (a *LogicSubgoalAction) Clone(args []Node) Node {
+	r := &LogicSubgoalAction{SubgoalKind: a.SubgoalKind}
 	r.ActionBase = a.ActionBase
 	r.Kind = a.Kind
 	r.Unprovable = a.Unprovable
@@ -713,100 +713,100 @@ func (a *SubgoalAction) Clone(args []Node) Node {
 	}
 	return r
 }
-func (a *SubgoalAction) Children() []Expr         { return a.ActionArgs() }
-func (a *SubgoalAction) NodeSort() Sort           { return ActionS }
-func (a *SubgoalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *SubgoalAction) GetAstConfig() *AstConfig { return nil }
-func (a *SubgoalAction) Sexp() NodeKey {
+func (a *LogicSubgoalAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicSubgoalAction) NodeSort() Sort           { return ActionS }
+func (a *LogicSubgoalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicSubgoalAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicSubgoalAction) Sexp() NodeKey {
 	if a.LF != nil {
 		return NodeKey(fmt.Sprintf("(subgoalAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
 	}
 	return NodeKey(fmt.Sprintf("(subgoalAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *SubgoalAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSubgoalAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 23. AssignFieldAction
 // =========================================================================
 
-func (a *AssignFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *AssignFieldAction) Clone(args []Node) Node {
+func (a *LogicAssignFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicAssignFieldAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *AssignFieldAction) Children() []Expr         { return a.ActionArgs() }
-func (a *AssignFieldAction) NodeSort() Sort           { return ActionS }
-func (a *AssignFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *AssignFieldAction) GetAstConfig() *AstConfig { return nil }
-func (a *AssignFieldAction) Sexp() NodeKey {
+func (a *LogicAssignFieldAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicAssignFieldAction) NodeSort() Sort           { return ActionS }
+func (a *LogicAssignFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicAssignFieldAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicAssignFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(assignFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *AssignFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssignFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 24. NullFieldAction
 // =========================================================================
 
-func (a *NullFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *NullFieldAction) Clone(args []Node) Node {
+func (a *LogicNullFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicNullFieldAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *NullFieldAction) Children() []Expr         { return a.ActionArgs() }
-func (a *NullFieldAction) NodeSort() Sort           { return ActionS }
-func (a *NullFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *NullFieldAction) GetAstConfig() *AstConfig { return nil }
-func (a *NullFieldAction) Sexp() NodeKey {
+func (a *LogicNullFieldAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicNullFieldAction) NodeSort() Sort           { return ActionS }
+func (a *LogicNullFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicNullFieldAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicNullFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(nullFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *NullFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicNullFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 25. CopyFieldAction
 // =========================================================================
 
-func (a *CopyFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *CopyFieldAction) Clone(args []Node) Node {
+func (a *LogicCopyFieldAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicCopyFieldAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *CopyFieldAction) Children() []Expr         { return a.ActionArgs() }
-func (a *CopyFieldAction) NodeSort() Sort           { return ActionS }
-func (a *CopyFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *CopyFieldAction) GetAstConfig() *AstConfig { return nil }
-func (a *CopyFieldAction) Sexp() NodeKey {
+func (a *LogicCopyFieldAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicCopyFieldAction) NodeSort() Sort           { return ActionS }
+func (a *LogicCopyFieldAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicCopyFieldAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicCopyFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(copyFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *CopyFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCopyFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 26. Ranking
 // =========================================================================
 
-func (a *Ranking) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *Ranking) Clone(args []Node) Node {
+func (a *LogicRanking) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicRanking) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *Ranking) Children() []Expr         { return a.ActionArgs() }
-func (a *Ranking) NodeSort() Sort           { return ActionS }
-func (a *Ranking) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *Ranking) GetAstConfig() *AstConfig { return nil }
-func (a *Ranking) Sexp() NodeKey {
+func (a *LogicRanking) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicRanking) NodeSort() Sort           { return ActionS }
+func (a *LogicRanking) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicRanking) GetAstConfig() *AstConfig { return nil }
+func (a *LogicRanking) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(ranking%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *Ranking) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicRanking) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 27. PatternBasedUpdate
 // =========================================================================
 
-func (a *PatternBasedUpdate) Args() []Node { return nil }
-func (a *PatternBasedUpdate) Clone(args []Node) Node {
+func (a *LogicPatternBasedUpdate) Args() []Node { return nil }
+func (a *LogicPatternBasedUpdate) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *PatternBasedUpdate) Children() []Expr         { return nil }
-func (a *PatternBasedUpdate) NodeSort() Sort           { return ActionS }
-func (a *PatternBasedUpdate) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *PatternBasedUpdate) GetAstConfig() *AstConfig { return nil }
-func (a *PatternBasedUpdate) Sexp() NodeKey            { return "(patternBasedUpdate)" }
-func (a *PatternBasedUpdate) Canon() Canonical         { return Canonical(a.Sexp()) }
+func (a *LogicPatternBasedUpdate) Children() []Expr         { return nil }
+func (a *LogicPatternBasedUpdate) NodeSort() Sort           { return ActionS }
+func (a *LogicPatternBasedUpdate) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicPatternBasedUpdate) GetAstConfig() *AstConfig { return nil }
+func (a *LogicPatternBasedUpdate) Sexp() NodeKey            { return "(patternBasedUpdate)" }
+func (a *LogicPatternBasedUpdate) Canon() Canonical         { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 28. NamedUpdate
@@ -831,32 +831,32 @@ func (a *NamedUpdate) Canon() Canonical { return Canonical(a.Sexp()) }
 // 29. InstantiateAction
 // =========================================================================
 
-func (a *InstantiateAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *InstantiateAction) Clone(args []Node) Node {
+func (a *LogicInstantiateAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicInstantiateAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *InstantiateAction) Children() []Expr         { return a.ActionArgs() }
-func (a *InstantiateAction) NodeSort() Sort           { return ActionS }
-func (a *InstantiateAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *InstantiateAction) GetAstConfig() *AstConfig { return nil }
-func (a *InstantiateAction) Sexp() NodeKey {
+func (a *LogicInstantiateAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicInstantiateAction) NodeSort() Sort           { return ActionS }
+func (a *LogicInstantiateAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicInstantiateAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicInstantiateAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(instantiateAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *InstantiateAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicInstantiateAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
 // =========================================================================
 // 30. DebugAction
 // =========================================================================
 
-func (a *DebugAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
-func (a *DebugAction) Clone(args []Node) Node {
+func (a *LogicDebugAction) Args() []Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *LogicDebugAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *DebugAction) Children() []Expr         { return a.ActionArgs() }
-func (a *DebugAction) NodeSort() Sort           { return ActionS }
-func (a *DebugAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
-func (a *DebugAction) GetAstConfig() *AstConfig { return nil }
-func (a *DebugAction) Sexp() NodeKey {
+func (a *LogicDebugAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicDebugAction) NodeSort() Sort           { return ActionS }
+func (a *LogicDebugAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
+func (a *LogicDebugAction) GetAstConfig() *AstConfig { return nil }
+func (a *LogicDebugAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(debugAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *DebugAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicDebugAction) Canon() Canonical { return Canonical(a.Sexp()) }

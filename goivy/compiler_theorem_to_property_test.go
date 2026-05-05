@@ -238,7 +238,7 @@ func TestTheoremToProperty_ExplicitPremiseSkipped(t *testing.T) {
 
 	// Result formula should be just the conclusion (no premises)
 	// since the explicit premise is skipped
-	if _, ok := result.Formula.(*Implies); ok {
+	if _, ok := result.Formula.(*LogicImplies); ok {
 		t.Error("expected no implication since explicit premise should be skipped")
 	}
 }
@@ -289,7 +289,7 @@ func TestTheoremToProperty_ImplicationBuilt(t *testing.T) {
 
 	// With 2 premises both being True, the antecedent is And(True, True)
 	// and result should be Implies(And(True, True), True)
-	if _, ok := result.Formula.(*Implies); !ok {
+	if _, ok := result.Formula.(*LogicImplies); !ok {
 		// With True premises, NormalizedAnd may simplify, so just check
 		// that result is non-nil
 		t.Logf("result formula type: %T (may be simplified)", result.Formula)
@@ -316,7 +316,7 @@ func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
 
 	// The inner schema should have been recursively processed
 	// Result should be an Implies since inner schema produces a premise
-	if _, ok := result.Formula.(*Implies); !ok {
+	if _, ok := result.Formula.(*LogicImplies); !ok {
 		t.Logf("result formula type: %T (may be simplified for True→True)", result.Formula)
 	}
 }

@@ -18,11 +18,11 @@ func TestGetFacts_InteractiveSession(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nodeC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
+	nodeC := MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nodeC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
-	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
+	linkC := MustCDConcept("link", []*goivy.LogicVariable{X, Y}, mkEq(X, Y))
 	domain.Concepts.SetConcept("link", linkC)
 	domain.Concepts.SetSet("edges", NewCDConceptSet("link"))
 
@@ -74,7 +74,7 @@ func TestSetFactsExpr(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -97,7 +97,7 @@ func TestSetFactsExpr_Replaces(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -122,7 +122,7 @@ func TestAddConstraintsExpr(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -150,7 +150,7 @@ func TestAddConstraintsExpr_FiltersTautology(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -177,9 +177,9 @@ func TestMaterializeEdge_Interactive(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	n1C := MustCDConcept("n1", []*goivy.Variable{X}, mkEq(X, mkConst("c1", S)))
-	n2C := MustCDConcept("n2", []*goivy.Variable{X}, mkEq(X, mkConst("c2", S)))
-	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
+	n1C := MustCDConcept("n1", []*goivy.LogicVariable{X}, mkEq(X, mkConst("c1", S)))
+	n2C := MustCDConcept("n2", []*goivy.LogicVariable{X}, mkEq(X, mkConst("c2", S)))
+	linkC := MustCDConcept("link", []*goivy.LogicVariable{X, Y}, mkEq(X, Y))
 
 	domain.Concepts.SetConcept("n1", n1C)
 	domain.Concepts.SetConcept("n2", n2C)
@@ -227,8 +227,8 @@ func TestMaterializeEdge_NegativePolarity(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	n1C := MustCDConcept("n1", []*goivy.Variable{X}, mkEq(X, mkConst("c1", S)))
-	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
+	n1C := MustCDConcept("n1", []*goivy.LogicVariable{X}, mkEq(X, mkConst("c1", S)))
+	linkC := MustCDConcept("link", []*goivy.LogicVariable{X, Y}, mkEq(X, Y))
 
 	domain.Concepts.SetConcept("n1", n1C)
 	domain.Concepts.SetConcept("link", linkC)
@@ -327,7 +327,7 @@ func TestSplatter_Interactive(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
@@ -363,7 +363,7 @@ func TestSplatter_NoConstants(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
@@ -390,7 +390,7 @@ func TestSplatter_NonexistentConcept(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 
 	sess := NewConceptInteractiveSession(
@@ -424,7 +424,7 @@ func TestRecalculate_WithParentState(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.LogicVariable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 
 	sess := NewConceptInteractiveSession(

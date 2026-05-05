@@ -9,17 +9,17 @@ import (
 
 // NativeExpr is a compiled native expression that preserves all children
 // with TopSort. Python: res = self.clone([a.compile() for a in self.args]); res.sort = TopS
-type NativeExpr struct {
+type LogicNativeExpr struct {
 	Base
 	CompiledChildren []Expr
 }
 
-func (n *NativeExpr) NodeSort() Sort   { return TopS }
-func (n *NativeExpr) Children() []Expr { return n.CompiledChildren }
-func (n *NativeExpr) String() string   { return fmt.Sprintf("native(%d)", len(n.CompiledChildren)) }
+func (n *LogicNativeExpr) NodeSort() Sort   { return TopS }
+func (n *LogicNativeExpr) Children() []Expr { return n.CompiledChildren }
+func (n *LogicNativeExpr) String() string   { return fmt.Sprintf("native(%d)", len(n.CompiledChildren)) }
 
-func (n *NativeExpr) Equal(other Expr) bool {
-	o, ok := other.(*NativeExpr)
+func (n *LogicNativeExpr) Equal(other Expr) bool {
+	o, ok := other.(*LogicNativeExpr)
 	if !ok || len(n.CompiledChildren) != len(o.CompiledChildren) {
 		return false
 	}
@@ -31,7 +31,7 @@ func (n *NativeExpr) Equal(other Expr) bool {
 	return true
 }
 
-func (n *NativeExpr) Sexp() NodeKey {
+func (n *LogicNativeExpr) Sexp() NodeKey {
 	s := "(NativeExpr"
 	for _, c := range n.CompiledChildren {
 		s += " " + string(c.Sexp())
@@ -39,7 +39,7 @@ func (n *NativeExpr) Sexp() NodeKey {
 	return NodeKey(s + ")")
 }
 
-func (n *NativeExpr) Args() []Node {
+func (n *LogicNativeExpr) Args() []Node {
 	r := make([]Node, len(n.CompiledChildren))
 	for i, c := range n.CompiledChildren {
 		r[i] = c
@@ -47,10 +47,10 @@ func (n *NativeExpr) Args() []Node {
 	return r
 }
 
-func (n *NativeExpr) Clone(args []Node) Node {
+func (n *LogicNativeExpr) Clone(args []Node) Node {
 	children := make([]Expr, len(args))
 	for i, a := range args {
 		children[i] = a.(Expr)
 	}
-	return &NativeExpr{Base: n.Base, CompiledChildren: children}
+	return &LogicNativeExpr{Base: n.Base, CompiledChildren: children}
 }

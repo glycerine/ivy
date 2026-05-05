@@ -15,7 +15,7 @@ type Env map[string]ResolutionTerm
 func EnvFind(env Env, t ResolutionTerm) ResolutionTerm {
 	v := t
 	for {
-		vr, ok := v.(*Variable)
+		vr, ok := v.(*LogicVariable)
 		if !ok {
 			return v
 		}
@@ -36,7 +36,7 @@ func ResolutionIsConstant(n ResolutionTerm) bool {
 // rep returns the name of a Var or Const.
 func rep(n ResolutionTerm) string {
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return t.Name
 	case *Const:
 		return t.Name

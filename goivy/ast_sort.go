@@ -9,27 +9,27 @@ import (
 // These represent sort annotations in the parsed syntax, distinct from logic.Sort.
 
 // ConstantSort is an uninterpreted sort (also aliased as UninterpretedSort).
-type AstConstantSort struct {
+type ConstantSort struct {
 	Base
 	Elems []Node // from AST args
 }
 
-func (r *AstConstantSort) Canon() Canonical {
+func (r *ConstantSort) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(constantSort%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
-func (cfg *AstConfig) NewConstantSort(elems ...Node) *AstConstantSort {
-	result := &AstConstantSort{Elems: elems}
+func (cfg *AstConfig) NewConstantSort(elems ...Node) *ConstantSort {
+	result := &ConstantSort{Elems: elems}
 	result.Cfg = cfg
 	return result
 }
 
-func (s *AstConstantSort) Args() []Node           { return s.Elems }
-func (s *AstConstantSort) Clone(args []Node) Node { return &AstConstantSort{Base: s.Base, Elems: args} }
-func (s *AstConstantSort) String() string         { return "uninterpreted" }
-func (s *AstConstantSort) Defines() []string      { return nil }
-func (s *AstConstantSort) Rng() Node              { return s }
-func (s *AstConstantSort) Dom() []Node            { return nil }
+func (s *ConstantSort) Args() []Node           { return s.Elems }
+func (s *ConstantSort) Clone(args []Node) Node { return &ConstantSort{Base: s.Base, Elems: args} }
+func (s *ConstantSort) String() string         { return "uninterpreted" }
+func (s *ConstantSort) Defines() []string      { return nil }
+func (s *ConstantSort) Rng() Node              { return s }
+func (s *ConstantSort) Dom() []Node            { return nil }
 
 // UninterpretedSortAST is the AST-level (parse-time) representation of
 // Python's UninterpretedSort() from logic.py:21.
@@ -68,65 +68,65 @@ func (s *UninterpretedSortAST) Rng() Node              { return s }
 func (s *UninterpretedSortAST) Dom() []Node            { return nil }
 
 // EnumeratedSort is a sort with named elements like {a, b, c}.
-type AstEnumeratedSort struct {
+type EnumeratedSort struct {
 	Base
 	Elems []Node // Symbol nodes representing the extension values
 }
 
-func (r *AstEnumeratedSort) Canon() Canonical {
+func (r *EnumeratedSort) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(enumeratedSort%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
-func (cfg *AstConfig) NewEnumeratedSort(elems ...Node) *AstEnumeratedSort {
-	result := &AstEnumeratedSort{Elems: elems}
+func (cfg *AstConfig) NewEnumeratedSort(elems ...Node) *EnumeratedSort {
+	result := &EnumeratedSort{Elems: elems}
 	result.Cfg = cfg
 	return result
 }
 
-func (s *AstEnumeratedSort) Args() []Node { return s.Elems }
-func (s *AstEnumeratedSort) Clone(args []Node) Node {
-	return &AstEnumeratedSort{Base: s.Base, Elems: args}
+func (s *EnumeratedSort) Args() []Node { return s.Elems }
+func (s *EnumeratedSort) Clone(args []Node) Node {
+	return &EnumeratedSort{Base: s.Base, Elems: args}
 }
-func (s *AstEnumeratedSort) String() string {
+func (s *EnumeratedSort) String() string {
 	return "{" + strings.Join(s.Extension(), ",") + "}"
 }
-func (s *AstEnumeratedSort) Extension() []string {
+func (s *EnumeratedSort) Extension() []string {
 	ext := make([]string, len(s.Elems))
 	for i, e := range s.Elems {
 		ext[i] = NodeRep(e)
 	}
 	return ext
 }
-func (s *AstEnumeratedSort) Defines() []string { return s.Extension() }
-func (s *AstEnumeratedSort) Rng() Node         { return s }
-func (s *AstEnumeratedSort) Dom() []Node       { return nil }
+func (s *EnumeratedSort) Defines() []string { return s.Extension() }
+func (s *EnumeratedSort) Rng() Node         { return s }
+func (s *EnumeratedSort) Dom() []Node       { return nil }
 
 // StructSort represents a struct type with named fields.
-type AstStructSort struct {
+type StructSort struct {
 	Base
 	Fields []Node // field declarations
 }
 
-func (r *AstStructSort) Canon() Canonical {
+func (r *StructSort) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(structSort%v fields:%v)", r.Base.canonFields(), SliceCanon(r.Fields)))
 }
 
-func (cfg *AstConfig) NewStructSort(fields ...Node) *AstStructSort {
-	result := &AstStructSort{Fields: fields}
+func (cfg *AstConfig) NewStructSort(fields ...Node) *StructSort {
+	result := &StructSort{Fields: fields}
 	result.Cfg = cfg
 	return result
 }
 
-func (s *AstStructSort) Args() []Node           { return s.Fields }
-func (s *AstStructSort) Clone(args []Node) Node { return &AstStructSort{Base: s.Base, Fields: args} }
-func (s *AstStructSort) String() string {
+func (s *StructSort) Args() []Node           { return s.Fields }
+func (s *StructSort) Clone(args []Node) Node { return &StructSort{Base: s.Base, Fields: args} }
+func (s *StructSort) String() string {
 	parts := make([]string, len(s.Fields))
 	for i, f := range s.Fields {
 		parts[i] = fmt.Sprint(f)
 	}
 	return "struct {" + strings.Join(parts, ",") + "}"
 }
-func (s *AstStructSort) Defines() []string {
+func (s *StructSort) Defines() []string {
 	defs := make([]string, len(s.Fields))
 	for i, f := range s.Fields {
 		if a, ok := f.(*Atom); ok {
@@ -147,78 +147,78 @@ func (s *AstStructSort) Defines() []string {
 }
 
 // FunctionSort represents a function sort: domain -> range.
-type AstFunctionSort struct {
+type FunctionSort struct {
 	Base
 	Dom []Node
 	Rng Node
 }
 
-func (r *AstFunctionSort) Canon() Canonical {
+func (r *FunctionSort) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(functionSort%v dom:%v range:%v)", r.Base.canonFields(), SliceCanon(r.Dom), nodeCanon(r.Rng)))
 }
 
-func (cfg *AstConfig) NewFunctionSort(dom []Node, rng Node) *AstFunctionSort {
-	result := &AstFunctionSort{Dom: dom, Rng: rng}
+func (cfg *AstConfig) NewFunctionSort(dom []Node, rng Node) *FunctionSort {
+	result := &FunctionSort{Dom: dom, Rng: rng}
 	result.Cfg = cfg
 	return result
 }
 
-func (s *AstFunctionSort) Args() []Node { return nil }
-func (s *AstFunctionSort) Clone(args []Node) Node {
-	return &AstFunctionSort{Base: s.Base, Dom: s.Dom, Rng: s.Rng}
+func (s *FunctionSort) Args() []Node { return nil }
+func (s *FunctionSort) Clone(args []Node) Node {
+	return &FunctionSort{Base: s.Base, Dom: s.Dom, Rng: s.Rng}
 }
-func (s *AstFunctionSort) String() string {
+func (s *FunctionSort) String() string {
 	parts := make([]string, len(s.Dom))
 	for i, d := range s.Dom {
 		parts[i] = fmt.Sprint(d)
 	}
 	return strings.Join(parts, " * ") + " -> " + fmt.Sprint(s.Rng)
 }
-func (s *AstFunctionSort) Defines() []string { return nil }
+func (s *FunctionSort) Defines() []string { return nil }
 
 // RelationSort represents a relation sort (domain only, boolean range).
-type AstRelationSort struct {
+type RelationSort struct {
 	Base
 	Dom []Node
 }
 
-func (r *AstRelationSort) Canon() Canonical {
+func (r *RelationSort) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(relationSort%v dom:%v)", r.Base.canonFields(), SliceCanon(r.Dom)))
 }
 
-func (cfg *AstConfig) NewRelationSort(dom []Node) *AstRelationSort {
-	result := &AstRelationSort{Dom: dom}
+func (cfg *AstConfig) NewRelationSort(dom []Node) *RelationSort {
+	result := &RelationSort{Dom: dom}
 	result.Cfg = cfg
 	return result
 }
 
-func (s *AstRelationSort) Args() []Node { return nil }
-func (s *AstRelationSort) Clone(args []Node) Node {
-	return &AstRelationSort{Base: s.Base, Dom: s.Dom}
+func (s *RelationSort) Args() []Node { return nil }
+func (s *RelationSort) Clone(args []Node) Node {
+	return &RelationSort{Base: s.Base, Dom: s.Dom}
 }
-func (s *AstRelationSort) String() string {
+func (s *RelationSort) String() string {
 	parts := make([]string, len(s.Dom))
 	for i, d := range s.Dom {
 		parts[i] = fmt.Sprint(d)
 	}
 	return strings.Join(parts, " * ")
 }
-func (s *AstRelationSort) Defines() []string { return nil }
+func (s *RelationSort) Defines() []string { return nil }
 
 // Range represents a numeric range sort {lo..hi}.
-type AstRange struct {
+type Range struct {
 	Base
 	Lo Node
 	Hi Node
 }
 
-func (cfg *AstConfig) NewRange(lo, hi Node) *AstRange {
-	result := &AstRange{Lo: lo, Hi: hi}
+func (cfg *AstConfig) NewRange(lo, hi Node) *Range {
+	result := &Range{Lo: lo, Hi: hi}
 	result.Cfg = cfg
 	return result
 }
 
-func (r *AstRange) Canon() Canonical {
+func (r *Range) Canon() Canonical {
 	return Canonical(
 		fmt.Sprintf("(range%v lo:%v hi:%v)",
 			r.Base.canonFields(),
@@ -227,10 +227,10 @@ func (r *AstRange) Canon() Canonical {
 		))
 }
 
-func (r *AstRange) Args() []Node { return []Node{r.Lo, r.Hi} }
-func (r *AstRange) Clone(args []Node) Node {
-	return &AstRange{Base: r.Base, Lo: args[0], Hi: args[1]}
+func (r *Range) Args() []Node { return []Node{r.Lo, r.Hi} }
+func (r *Range) Clone(args []Node) Node {
+	return &Range{Base: r.Base, Lo: args[0], Hi: args[1]}
 }
-func (r *AstRange) String() string {
+func (r *Range) String() string {
 	return "{" + fmt.Sprint(r.Lo) + ".." + fmt.Sprint(r.Hi) + "}"
 }

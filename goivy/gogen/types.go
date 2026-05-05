@@ -11,7 +11,7 @@ func GoType(s goivy.Sort) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return "bool"
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		name := st.Name
 		if name == "" {
 			name = "Enum"
@@ -21,7 +21,7 @@ func GoType(s goivy.Sort) string {
 		return "int"
 	case *goivy.UninterpretedSort:
 		return "int"
-	case *goivy.FunctionSort:
+	case *goivy.LogicFunctionSort:
 		dom := st.Domain()
 		rng := st.Range()
 		if len(dom) == 0 {
@@ -66,7 +66,7 @@ func GoType(s goivy.Sort) string {
 // Function (K -> V) -> map[K]V
 // Individual / constant -> value type
 func StateFieldType(name string, s goivy.Sort) string {
-	fs, ok := s.(*goivy.FunctionSort)
+	fs, ok := s.(*goivy.LogicFunctionSort)
 	if !ok {
 		// Non-function sort: individual/constant value.
 		return GoType(s)
@@ -111,13 +111,13 @@ func GoZeroValue(s goivy.Sort) string {
 	switch s.(type) {
 	case *goivy.BooleanSort:
 		return "false"
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		return "0"
 	case *goivy.RangeSort:
 		return "0"
 	case *goivy.UninterpretedSort:
 		return "0"
-	case *goivy.FunctionSort:
+	case *goivy.LogicFunctionSort:
 		return "nil"
 	default:
 		return "nil"
@@ -130,7 +130,7 @@ func GoSortValues(s goivy.Sort) []string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return []string{"false", "true"}
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		vals := make([]string, len(st.Extension))
 		for i, ext := range st.Extension {
 			vals[i] = goExportedName(ext)
@@ -159,7 +159,7 @@ func EmitSortDecls(w *CodeWriter, mod *goivy.Module) {
 		if !ok {
 			continue
 		}
-		if es, ok := s.(*goivy.EnumeratedSort); ok {
+		if es, ok := s.(*goivy.LogicEnumeratedSort); ok {
 			EmitEnumDecl(w, es)
 			w.BlankLine()
 		}
@@ -175,7 +175,7 @@ func EmitSortDecls(w *CodeWriter, mod *goivy.Module) {
 //	    Blue
 //	)
 //	var allColor = [...]Color{Red, Green, Blue}
-func EmitEnumDecl(w *CodeWriter, sort *goivy.EnumeratedSort) {
+func EmitEnumDecl(w *CodeWriter, sort *goivy.LogicEnumeratedSort) {
 	typeName := goExportedName(sort.Name)
 	if typeName == "" {
 		typeName = "Enum"

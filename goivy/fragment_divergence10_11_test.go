@@ -22,7 +22,7 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmla1 := &ForAll{Variables: []*Variable{origX}, Body: origX}
+	fmla1 := &ForAll{Variables: []*LogicVariable{origX}, Body: origX}
 	c.varUniq.Uniquify(fmla1)         // X -> X (first pass, no rename needed)
 	res2 := c.varUniq.Uniquify(fmla1) // X -> X_a (name collision with first pass)
 
@@ -108,7 +108,7 @@ func TestDivergence11SkolemMapInReportArc(t *testing.T) {
 	astNode.SetLineno(Location{Filename: "test.ivy", Line: 10})
 
 	skolemFmla := &ForAll{
-		Variables: []*Variable{eVar},
+		Variables: []*LogicVariable{eVar},
 		Body:      eVar,
 	}
 	c.skolemMap[makeVarID(eVar)] = skolemEntry{

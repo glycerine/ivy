@@ -218,7 +218,7 @@ func TestPythonExample(t *testing.T) {
 	// transitive1: ForAll (X,Y,Z). Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z))
 	andTerm, _ := NewAnd(leqXY, leqYZ)
 	impl, _ := NewImplies(andTerm, leqXZ)
-	trans1, err := NewForAll([]*Variable{X, Y, Z}, impl)
+	trans1, err := NewForAll([]*LogicVariable{X, Y, Z}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}

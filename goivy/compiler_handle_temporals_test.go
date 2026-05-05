@@ -160,7 +160,7 @@ func TestHandleTemporals_NoIsolates(t *testing.T) {
 
 	HandleTemporals(mod)
 
-	for name, act := range map[string]*Sequence{"act1": seq1, "act2": seq2} {
+	for name, act := range map[string]*LogicSequence{"act1": seq1, "act2": seq2} {
 		labels := getTestLabels(act)
 		if len(labels) != 0 {
 			t.Fatalf("%s: expected empty labels, got %v", name, labels)
@@ -184,7 +184,7 @@ func FuzzHandleTemporals(f *testing.F) {
 
 		// Create actions
 		actNames := make([]string, numActions)
-		actPtrs := make([]*Sequence, numActions)
+		actPtrs := make([]*LogicSequence, numActions)
 		for i := 0; i < numActions; i++ {
 			name := string(rune('a' + i))
 			actNames[i] = name

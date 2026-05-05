@@ -12,7 +12,7 @@ func testConst(name string, s goivy.Sort) *goivy.Const {
 }
 
 // Helper to create a simple lg.Variable node.
-func testVar(name string, s goivy.Sort) *goivy.Variable {
+func testVar(name string, s goivy.Sort) *goivy.LogicVariable {
 	v, _ := goivy.NewVariable(name, s)
 	return v
 }

@@ -25,13 +25,13 @@ func TestSortEqual_ReconstructedBoolean(t *testing.T) {
 // identifies a FunctionSort's range as Boolean.
 func TestSortEqual_FunctionSortRangeBoolean(t *testing.T) {
 	S := &UninterpretedSort{Name: "node"}
-	fs := &FunctionSort{Sorts: []Sort{S, Boolean}}
+	fs := &LogicFunctionSort{Sorts: []Sort{S, Boolean}}
 
 	if !SortEqual(fs.Range(), Boolean) {
 		t.Error("SortEqual must recognize FunctionSort.Range() as Boolean")
 	}
 	// Also verify with a freshly constructed BooleanSort.
-	fs2 := &FunctionSort{Sorts: []Sort{S, &BooleanSort{}}}
+	fs2 := &LogicFunctionSort{Sorts: []Sort{S, &BooleanSort{}}}
 	if !SortEqual(fs2.Range(), Boolean) {
 		t.Error("SortEqual must recognize FunctionSort.Range() as Boolean even with fresh BooleanSort")
 	}
@@ -60,15 +60,15 @@ func TestIsTrue_Singleton(t *testing.T) {
 }
 
 // TestIsTrue_NonSingleton verifies IsTrue recognizes a freshly constructed
-// empty &And{} that is NOT the True singleton pointer.
+// empty &LogicAnd{} that is NOT the True singleton pointer.
 // Bug: code used n == lg.True (pointer comparison) which misses non-singletons.
 func TestIsTrue_NonSingleton(t *testing.T) {
-	freshTrue := &And{} // structurally True, but different pointer
+	freshTrue := &LogicAnd{} // structurally True, but different pointer
 	if freshTrue == True {
 		t.Fatal("test precondition: freshTrue must be a different pointer than singleton True")
 	}
 	if !IsTrue(freshTrue) {
-		t.Error("IsTrue must recognize &And{} as True even when not the singleton pointer")
+		t.Error("IsTrue must recognize &LogicAnd{} as True even when not the singleton pointer")
 	}
 }
 
@@ -77,7 +77,7 @@ func TestIsTrue_NonEmpty(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nonEmpty := &And{Terms: []Expr{eq}}
+	nonEmpty := &LogicAnd{Terms: []Expr{eq}}
 	if IsTrue(nonEmpty) {
 		t.Error("IsTrue must reject non-empty And")
 	}
@@ -103,15 +103,15 @@ func TestIsFalse_Singleton(t *testing.T) {
 }
 
 // TestIsFalse_NonSingleton verifies IsFalse recognizes a freshly constructed
-// empty &Or{} that is NOT the False singleton pointer.
+// empty &LogicOr{} that is NOT the False singleton pointer.
 // Bug: code used n == lg.False (pointer comparison) which misses non-singletons.
 func TestIsFalse_NonSingleton(t *testing.T) {
-	freshFalse := &Or{} // structurally False, but different pointer
+	freshFalse := &LogicOr{} // structurally False, but different pointer
 	if freshFalse == False {
 		t.Fatal("test precondition: freshFalse must be a different pointer than singleton False")
 	}
 	if !IsFalse(freshFalse) {
-		t.Error("IsFalse must recognize &Or{} as False even when not the singleton pointer")
+		t.Error("IsFalse must recognize &LogicOr{} as False even when not the singleton pointer")
 	}
 }
 
@@ -120,7 +120,7 @@ func TestIsFalse_NonEmpty(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nonEmpty := &Or{Terms: []Expr{eq}}
+	nonEmpty := &LogicOr{Terms: []Expr{eq}}
 	if IsFalse(nonEmpty) {
 		t.Error("IsFalse must reject non-empty Or")
 	}

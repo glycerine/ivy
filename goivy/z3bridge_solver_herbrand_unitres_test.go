@@ -74,26 +74,26 @@ func TestRoundTripLitConversion(t *testing.T) {
 	// Test: il.Literal → unitres.Literal → il.Literal preserves semantics
 	cases := []struct {
 		name     string
-		makeLit  func() *Literal
+		makeLit  func() *LogicLiteral
 		checkStr string
 	}{
 		{
 			name: "positive nullary",
-			makeLit: func() *Literal {
+			makeLit: func() *LogicLiteral {
 				return NewLiteral(1, z3BoolConst("q"))
 			},
 			checkStr: "q",
 		},
 		{
 			name: "negative nullary",
-			makeLit: func() *Literal {
+			makeLit: func() *LogicLiteral {
 				return NewLiteral(0, z3BoolConst("q"))
 			},
 			checkStr: "~q",
 		},
 		{
 			name: "positive apply",
-			makeLit: func() *Literal {
+			makeLit: func() *LogicLiteral {
 				p := relConst("r", z3UnintSort("T"))
 				x := NewConst("x", z3UnintSort("T"))
 				return NewLiteral(1, MustApply(p, x))
@@ -102,7 +102,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 		},
 		{
 			name: "equality",
-			makeLit: func() *Literal {
+			makeLit: func() *LogicLiteral {
 				s := z3UnintSort("U")
 				return NewLiteral(1, &Eq{T1: NewConst("a", s), T2: NewConst("b", s)})
 			},
@@ -138,7 +138,7 @@ func TestIvyLitsToUnitResClauses(t *testing.T) {
 	p := z3BoolConst("p")
 	q := z3BoolConst("q")
 
-	cnf := [][]*Literal{
+	cnf := [][]*LogicLiteral{
 		{NewLiteral(1, p), NewLiteral(0, q)}, // p ∨ ¬q
 		{NewLiteral(0, p)},                   // ¬p
 	}
@@ -217,7 +217,7 @@ func TestClausesCaseUNSAT(t *testing.T) {
 	s := NewSolver(nil, nil)
 	p := z3BoolConst("p")
 	// p AND NOT p — UNSAT
-	fmlas := []Expr{p, &Not{Body: p}}
+	fmlas := []Expr{p, &LogicNot{Body: p}}
 	clauses := NewClauses(fmlas, nil, nil)
 
 	result, err := s.ClausesCase(clauses)
@@ -265,9 +265,9 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 	a := z3BoolConst("a")
 	b := z3BoolConst("b")
 	c := z3BoolConst("c")
-	notA := &Not{Body: a}
-	aOrB := &Or{Terms: []Expr{a, b}}
-	notBOrC := &Or{Terms: []Expr{&Not{Body: b}, c}}
+	notA := &LogicNot{Body: a}
+	aOrB := &LogicOr{Terms: []Expr{a, b}}
+	notBOrC := &LogicOr{Terms: []Expr{&LogicNot{Body: b}, c}}
 
 	fmlas := []Expr{notA, aOrB, notBOrC}
 	clauses := NewClauses(fmlas, nil, nil)
@@ -290,7 +290,7 @@ func TestClausesCaseSingleClause(t *testing.T) {
 	s := NewSolver(nil, nil)
 	a := z3BoolConst("a")
 	b := z3BoolConst("b")
-	aOrB := &Or{Terms: []Expr{a, b}}
+	aOrB := &LogicOr{Terms: []Expr{a, b}}
 
 	clauses := NewClauses([]Expr{aOrB}, nil, nil)
 	result, err := s.ClausesCase(clauses)

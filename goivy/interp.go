@@ -377,7 +377,7 @@ func IsInterpActionApp(expr Node) bool {
 
 // IsStateJoin returns true if expr is an Or, representing a join of states.
 func IsInterpStateJoin(expr Node) bool {
-	_, ok := expr.(*AstOr)
+	_, ok := expr.(*Or)
 	return ok
 }
 
@@ -387,7 +387,7 @@ func InterpActionApp(cfg *AstConfig, actionName string, arg Node) *Atom {
 }
 
 // StateJoin constructs a state-join expression (disjunction).
-func InterpStateJoin(cfg *AstConfig, args ...Node) *AstOr {
+func InterpStateJoin(cfg *AstConfig, args ...Node) *Or {
 	return cfg.NewOr(args...)
 }
 
@@ -399,7 +399,7 @@ func IsStateSymbol(expr Node) bool {
 }
 
 // StateEquation constructs a state equation: lhs = rhs.
-func StateEquation(cfg *AstConfig, lhs, rhs Node) *AstDefinition {
+func StateEquation(cfg *AstConfig, lhs, rhs Node) *Definition {
 	return cfg.NewDefinition(lhs, rhs)
 }
 

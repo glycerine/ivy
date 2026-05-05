@@ -56,7 +56,7 @@ func (mp *MatchProblem) String() string {
 
 // FuncSorts returns the domain sorts followed by the range sort of a constant.
 func FuncSorts(c *Const) []Sort {
-	if fs, ok := c.CSort.(*FunctionSort); ok {
+	if fs, ok := c.CSort.(*LogicFunctionSort); ok {
 		dom := fs.Domain()
 		result := make([]Sort, len(dom)+1)
 		copy(result, dom)
@@ -110,7 +110,7 @@ func TermSorts(term Expr) []Sort {
 	if c := appFunc(term); c != nil {
 		return FuncSorts(c)
 	}
-	if v, ok := term.(*Variable); ok {
+	if v, ok := term.(*LogicVariable); ok {
 		return []Sort{v.VSort}
 	}
 	return nil
@@ -213,7 +213,7 @@ func Match(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Exp
 				matches = append(matches, MatchSort(ps[i], is[i], freesyms))
 			}
 		}
-		if v, ok := pat.(*Variable); ok {
+		if v, ok := pat.(*LogicVariable); ok {
 			matches = append(matches, map[NodeKey]Expr{Key(v): inst})
 		}
 		result := MergeMatches(matches...)
@@ -296,7 +296,7 @@ func MatchQuants(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeK
 // occurrences under free second-order symbols.
 func FOMatch(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
 	xtracer.Trace("proof.FOMatch ENTER patType=%s instType=%s", TypeName(pat), TypeName(inst))
-	if v, ok := pat.(*Variable); ok {
+	if v, ok := pat.(*LogicVariable); ok {
 		if freesyms[Key(v)] != nil && allVariablesAreConstants(inst, constants) {
 			res := map[NodeKey]Expr{Key(v): inst}
 			if freesyms[Key(v.VSort)] != nil {
@@ -424,7 +424,7 @@ func applyMatchRec(match map[NodeKey]Expr, fmla Expr) Expr {
 	}
 
 	// Variable: check if in match
-	if v, ok := fmla.(*Variable); ok {
+	if v, ok := fmla.(*LogicVariable); ok {
 		if replacement, ok := match[Key(v)]; ok {
 			return replacement
 		}
@@ -442,10 +442,10 @@ func applyMatchRec(match map[NodeKey]Expr, fmla Expr) Expr {
 	//             fmla = fmla.clone_binder([apply_match_rec(match,v,env) for v in fmla.variables], args[0])
 	if IsQuantifier(fmla) && len(newArgs) > 0 {
 		vars := BinderVars(fmla)
-		newVars := make([]*Variable, len(vars))
+		newVars := make([]*LogicVariable, len(vars))
 		for i, v := range vars {
 			processed := applyMatchRec(match, v)
-			if nv, ok := processed.(*Variable); ok {
+			if nv, ok := processed.(*LogicVariable); ok {
 				newVars[i] = nv
 			} else {
 				newVars[i] = v
@@ -480,7 +480,7 @@ func ApplyMatchSym(match map[NodeKey]Expr, sym Expr) Expr {
 	if v, ok := match[Key(sym)]; ok {
 		return v
 	}
-	if v, ok := sym.(*Variable); ok {
+	if v, ok := sym.(*LogicVariable); ok {
 		newSort := matchGetSort(match, v.VSort)
 		if newSort != v.VSort {
 			nv, _ := NewVariable(v.Name, newSort)
@@ -541,7 +541,7 @@ func ExtractTerms(inst Expr, terms []Expr, constants map[NodeKey]Expr) *Lambda {
 	if len(terms) == 0 {
 		return nil
 	}
-	vars := make([]*Variable, len(terms))
+	vars := make([]*LogicVariable, len(terms))
 	for i, t := range terms {
 		name := fmt.Sprintf("V%d", i)
 		v, _ := NewVariable(name, t.NodeSort())
@@ -570,7 +570,7 @@ func ExtractTerms(inst Expr, terms []Expr, constants map[NodeKey]Expr) *Lambda {
 	return lam
 }
 
-func extractRec(inst Expr, terms []Expr, vars []*Variable) Expr {
+func extractRec(inst Expr, terms []Expr, vars []*LogicVariable) Expr {
 	for i, t := range terms {
 		if t.Equal(inst) {
 			return vars[i]
@@ -666,7 +666,7 @@ func sameNodeType(a, b Expr) bool {
 
 // allVariablesAreConstants checks that all variables in a term are in the constants set.
 func allVariablesAreConstants(n Expr, constants map[NodeKey]Expr) bool {
-	if v, ok := n.(*Variable); ok {
+	if v, ok := n.(*LogicVariable); ok {
 		return constants[Key(v)] != nil
 	}
 	for _, c := range n.Children() {

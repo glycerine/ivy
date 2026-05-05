@@ -385,7 +385,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (Z3Expr, error) {
 // Matches Python type_constraints lines 610-611 / 621-622.
 func (s *Solver) buildConstraintTerm(sym Expr) Expr {
 	var term Expr = sym
-	if fs, ok := sym.NodeSort().(*FunctionSort); ok {
+	if fs, ok := sym.NodeSort().(*LogicFunctionSort); ok {
 		dom := fs.Domain()
 		args := make([]Expr, len(dom))
 		for i, ds := range dom {
@@ -429,13 +429,13 @@ func (s *Solver) natConstraintForSymbol(sym Expr) []Expr {
 	}
 	// ¬(term < 0)
 	zero := NewConst("0", rng)
-	ltSort := RelationSort([]Sort{rng, rng})
+	ltSort := LogicRelationSort([]Sort{rng, rng})
 	lt := NewConst("<", ltSort)
 	ltApp, err := NewApply(lt, term, zero)
 	if err != nil {
 		return nil
 	}
-	return []Expr{&Not{Body: ltApp}}
+	return []Expr{&LogicNot{Body: ltApp}}
 }
 
 // rangeConstraintsForSymbol returns ¬(term < lb) and ¬(ub < term)
@@ -467,17 +467,17 @@ func (s *Solver) rangeConstraintsForSymbol(sym Expr) []Expr {
 	var constraints []Expr
 	lb := NewConst(rs.LbString(), rng)
 	ub := NewConst(rs.UbString(), rng)
-	ltSort := RelationSort([]Sort{rng, rng})
+	ltSort := LogicRelationSort([]Sort{rng, rng})
 	lt := NewConst("<", ltSort)
 	// Lower bound: ¬(term < lb)
 	ltLbApp, err := NewApply(lt, term, lb)
 	if err == nil {
-		constraints = append(constraints, &Not{Body: ltLbApp})
+		constraints = append(constraints, &LogicNot{Body: ltLbApp})
 	}
 	// Upper bound: ¬(ub < term)
 	ltUbApp, err := NewApply(lt, ub, term)
 	if err == nil {
-		constraints = append(constraints, &Not{Body: ltUbApp})
+		constraints = append(constraints, &LogicNot{Body: ltUbApp})
 	}
 	return constraints
 }
@@ -605,7 +605,7 @@ func (s *Solver) formulaToZ3Closed(fmla Expr) (Z3Expr, error) {
 	// Definition: raw z3.ForAll (no quant constraints)
 	// Other: forall() with quant constraints
 	// Matches Python formula_to_z3_closed lines 653-654
-	if _, isDef := fmla.(*Definition); isDef {
+	if _, isDef := fmla.(*LogicDefinition); isDef {
 		return s.tr.Ctx.ForAll(z3Vars, z3Formula), nil
 	}
 	return s.forall(freeVars, z3Vars, z3Formula), nil
@@ -617,7 +617,7 @@ func (s *Solver) formulaToZ3Closed(fmla Expr) (Z3Expr, error) {
 // Otherwise: delegates to formulaToZ3Closed.
 func (s *Solver) conjToZ3(fmla Expr) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%v", ShortTypeName(fmla))
-	if and, ok := fmla.(*And); ok {
+	if and, ok := fmla.(*LogicAnd); ok {
 		z3Args := make([]Z3Expr, len(and.Terms))
 		for i, t := range and.Terms {
 			var err error
@@ -633,7 +633,7 @@ func (s *Solver) conjToZ3(fmla Expr) (Z3Expr, error) {
 
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
 // Delegates to the solver's translator. Used by formulaToZ3Closed.
-func (s *Solver) forall(vars []*Variable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
+func (s *Solver) forall(vars []*LogicVariable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
 	return s.tr.forall(vars, z3Vars, z3Body)
 }
 
@@ -755,7 +755,7 @@ func (s *Solver) ClausesImplyFormula(clauses1 *Clauses, fmla2 Expr) (bool, error
 	}
 	z3solver.Assert(z1)
 
-	negFmla := &Not{Body: fmla2}
+	negFmla := &LogicNot{Body: fmla2}
 	z2, err := s.formulaToZ3(negFmla)
 	if err != nil {
 		return false, err
@@ -967,14 +967,14 @@ func SortSizeConstraint(sort Sort, size int) Expr {
 		syms[i] = NewConst(fmt.Sprintf("__%s$%d", us.Name, i), sort)
 		eqs[i] = &Eq{T1: v, T2: syms[i]}
 	}
-	return &Or{Terms: eqs}
+	return &LogicOr{Terms: eqs}
 }
 
 // RelationSizeConstraint generates a constraint limiting a relation to at most 'size' true entries.
 // Corresponds to Python's relation_size_constraint.
 func RelationSizeConstraint(relation *Const, size int) Expr {
 	xtracer.Trace("ivy_solver.py:1199 relation_size_constraint() ENTER size=%d", size)
-	fs, ok := relation.CSort.(*FunctionSort)
+	fs, ok := relation.CSort.(*LogicFunctionSort)
 	if !ok {
 		return True
 	}
@@ -998,7 +998,7 @@ func RelationSizeConstraint(relation *Const, size int) Expr {
 	}
 
 	// Build: ~relation(X0,...) | (X0=c00 & X1=c01 &...) | (X0=c10 & X1=c11 &...) | ...
-	negApp := &Not{Body: MustApply(relation, vs...)}
+	negApp := &LogicNot{Body: MustApply(relation, vs...)}
 
 	disjuncts := []Expr{negApp}
 	for i := 0; i < size; i++ {
@@ -1006,9 +1006,9 @@ func RelationSizeConstraint(relation *Const, size int) Expr {
 		for j := range domain {
 			conjuncts[j] = &Eq{T1: consts[i][j], T2: vs[j]}
 		}
-		disjuncts = append(disjuncts, &And{Terms: conjuncts})
+		disjuncts = append(disjuncts, &LogicAnd{Terms: conjuncts})
 	}
-	return &Or{Terms: disjuncts}
+	return &LogicOr{Terms: disjuncts}
 }
 
 // SizeConstraint generates a size constraint for either a sort or a relation.
@@ -1018,7 +1018,7 @@ func SizeConstraint(x Expr, size int) Expr {
 		return SortSizeConstraint(us, size)
 	}
 	if c, ok := x.(*Const); ok {
-		if _, isFS := c.CSort.(*FunctionSort); isFS {
+		if _, isFS := c.CSort.(*LogicFunctionSort); isFS {
 			return RelationSizeConstraint(c, size)
 		}
 	}

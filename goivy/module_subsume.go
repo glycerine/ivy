@@ -28,7 +28,7 @@ func TermSubsume(term1, term2 Expr, env map[string]Expr) bool {
 		}
 		return true
 	}
-	if v, ok := term1.(*Variable); ok {
+	if v, ok := term1.(*LogicVariable); ok {
 		if existing, exists := env[v.Name]; exists {
 			return existing.Equal(term2)
 		}
@@ -61,7 +61,7 @@ func TermSubsume(term1, term2 Expr, env map[string]Expr) bool {
 
 // LitSubsume tries to make lit1 match lit2.
 // Corresponds to Python's lit_subsume (ivy_logic_utils.py:1133-1142).
-func LitSubsume(lit1, lit2 *Literal, env map[string]Expr) bool {
+func LitSubsume(lit1, lit2 *LogicLiteral, env map[string]Expr) bool {
 	if lit1.Polarity != lit2.Polarity {
 		return false
 	}
@@ -107,7 +107,7 @@ func AtomSubsume(at1, at2 Expr) bool {
 
 // CommuteLit swaps the arguments of an equality literal.
 // Corresponds to Python's commute_lit (ivy_logic_utils.py:1156-1157).
-func CommuteLit(lit *Literal) *Literal {
+func CommuteLit(lit *LogicLiteral) *LogicLiteral {
 	if eq, ok := lit.Atom.(*Eq); ok {
 		return NewLiteral(lit.Polarity, &Eq{T1: eq.T2, T2: eq.T1})
 	}
@@ -124,7 +124,7 @@ func CommuteLit(lit *Literal) *Literal {
 // ClauseSubsumeRecur recursively tries all possibilities of making
 // cl1 subsume cl2. Returns true on success.
 // Corresponds to Python's clause_subsume_recur (ivy_logic_utils.py:1159-1180).
-func ClauseSubsumeRecur(cl1, cl2 []*Literal, env map[string]Expr) bool {
+func ClauseSubsumeRecur(cl1, cl2 []*LogicLiteral, env map[string]Expr) bool {
 	if len(cl1) == 0 {
 		return true
 	}
@@ -134,7 +134,7 @@ func ClauseSubsumeRecur(cl1, cl2 []*Literal, env map[string]Expr) bool {
 		envCopy := moduleCopyEnv(env)
 		if LitSubsume(lit, lit2, env) {
 			// Remove lit2 from cl2
-			remaining := make([]*Literal, 0, len(cl2)-1)
+			remaining := make([]*LogicLiteral, 0, len(cl2)-1)
 			remaining = append(remaining, cl2[:i]...)
 			remaining = append(remaining, cl2[i+1:]...)
 			if ClauseSubsumeRecur(rest, remaining, env) {
@@ -152,7 +152,7 @@ func ClauseSubsumeRecur(cl1, cl2 []*Literal, env map[string]Expr) bool {
 			if len(args2) == 2 {
 				envCopy2 := moduleCopyEnv(env)
 				if LitSubsume(lit, CommuteLit(lit2), env) {
-					remaining := make([]*Literal, 0, len(cl2)-1)
+					remaining := make([]*LogicLiteral, 0, len(cl2)-1)
 					remaining = append(remaining, cl2[:i]...)
 					remaining = append(remaining, cl2[i+1:]...)
 					if ClauseSubsumeRecur(rest, remaining, env) {
@@ -185,14 +185,14 @@ func restoreEnv(env, saved map[string]Expr) {
 
 // ClauseSubsume returns true iff cl2 is subsumed by cl1 (i.e., cl1 => cl2).
 // Corresponds to Python's clause_subsume (ivy_logic_utils.py:1183-1188).
-func ClauseSubsume(cl1, cl2 []*Literal) bool {
+func ClauseSubsume(cl1, cl2 []*LogicLiteral) bool {
 	env := make(map[string]Expr)
 	return ClauseSubsumeRecur(cl1, cl2, env)
 }
 
 // Subsume returns true iff cl is subsumed by a clause in clauses.
 // Corresponds to Python's subsume (ivy_logic_utils.py:1190-1197).
-func Subsume(clauses [][]*Literal, cl []*Literal) bool {
+func Subsume(clauses [][]*LogicLiteral, cl []*LogicLiteral) bool {
 	for _, clp := range clauses {
 		if ClauseSubsume(clp, cl) {
 			return true
@@ -203,7 +203,7 @@ func Subsume(clauses [][]*Literal, cl []*Literal) bool {
 
 // RenameVariable renames a variable to a new name, preserving its sort.
 // Corresponds to Python's rename_variable (ivy_logic_utils.py:1203-1204).
-func RenameVariable(v *Variable, name string) *Variable {
+func RenameVariable(v *LogicVariable, name string) *LogicVariable {
 	nv, _ := NewVariable(name, v.VSort)
 	return nv
 }
@@ -217,7 +217,7 @@ func IsIndividualAst(ast Expr) bool {
 // OrClauses2 takes the logical or of two literal clause sets using
 // a fresh Tseitin variable.
 // Corresponds to Python's or_clauses2 (ivy_logic_utils.py:1232-1244).
-func OrClauses2(clauses1, clauses2 [][]*Literal) [][]*Literal {
+func OrClauses2(clauses1, clauses2 [][]*LogicLiteral) [][]*LogicLiteral {
 	if len(clauses1) == 0 || len(clauses2) == 0 {
 		return nil
 	}
@@ -236,19 +236,19 @@ func OrClauses2(clauses1, clauses2 [][]*Literal) [][]*Literal {
 	used := collectUsedSymbolNames(clauses1, clauses2)
 	rn := NewUniqueRenamer("__ts", used)
 	vName := rn.Rename("")
-	v := NewConst(vName, RelationSort(nil))
+	v := NewConst(vName, LogicRelationSort(nil))
 	posLit := NewLiteral(1, v)
 	negLit := NewLiteral(0, v)
 
-	var result [][]*Literal
+	var result [][]*LogicLiteral
 	for _, c := range clauses1 {
-		newC := make([]*Literal, 0, len(c)+1)
+		newC := make([]*LogicLiteral, 0, len(c)+1)
 		newC = append(newC, posLit)
 		newC = append(newC, c...)
 		result = append(result, newC)
 	}
 	for _, c := range clauses2 {
-		newC := make([]*Literal, 0, len(c)+1)
+		newC := make([]*LogicLiteral, 0, len(c)+1)
 		newC = append(newC, negLit)
 		newC = append(newC, c...)
 		result = append(result, newC)
@@ -256,9 +256,9 @@ func OrClauses2(clauses1, clauses2 [][]*Literal) [][]*Literal {
 	return result
 }
 
-func collectUsedSymbolNames(c1, c2 [][]*Literal) []string {
+func collectUsedSymbolNames(c1, c2 [][]*LogicLiteral) []string {
 	names := make(map[string]bool)
-	for _, cls := range [][]*Literal{} {
+	for _, cls := range [][]*LogicLiteral{} {
 		for _, lit := range cls {
 			syms := UsedSymbolsAST(lit.Atom)
 			for _, s := range syms.All() {
@@ -266,7 +266,7 @@ func collectUsedSymbolNames(c1, c2 [][]*Literal) []string {
 			}
 		}
 	}
-	for _, clauses := range [][][]*Literal{c1, c2} {
+	for _, clauses := range [][][]*LogicLiteral{c1, c2} {
 		for _, cls := range clauses {
 			for _, lit := range cls {
 				syms := UsedSymbolsAST(lit.Atom)
@@ -369,14 +369,14 @@ func FindTrueDisjunct(clauses *Clauses, evalFun func(Expr) bool) int {
 	}
 	// The first formula should be a disjunction; check each disjunct
 	fmla := clauses.Fmlas[0]
-	if a, ok := fmla.(*And); ok {
+	if a, ok := fmla.(*LogicAnd); ok {
 		// Actually Python checks fmlas[0].args (And terms)
 		for idx, atom := range a.Terms {
 			if evalFun(atom) {
 				return idx
 			}
 		}
-	} else if o, ok := fmla.(*Or); ok {
+	} else if o, ok := fmla.(*LogicOr); ok {
 		for idx, atom := range o.Terms {
 			if evalFun(atom) {
 				return idx
@@ -498,7 +498,7 @@ func HasEnumeratedSort(sig *Sig, sym *Const) bool {
 	if IsEnumeratedSort(sort) {
 		return true
 	}
-	if fs, ok := sort.(*FunctionSort); ok {
+	if fs, ok := sort.(*LogicFunctionSort); ok {
 		return IsEnumeratedSort(fs.Range())
 	}
 	return false
@@ -507,9 +507,9 @@ func HasEnumeratedSort(sig *Sig, sym *Const) bool {
 // Update ReduceClauses to use proper subsumption now that we have it
 // (replaces the simplified version from litclause.go).
 // This is the version that uses full clause subsumption.
-func ReduceClausesFull(clauses [][]*Literal) [][]*Literal {
-	var used [][]*Literal
-	unexplored := make([][]*Literal, len(clauses))
+func ReduceClausesFull(clauses [][]*LogicLiteral) [][]*LogicLiteral {
+	var used [][]*LogicLiteral
+	unexplored := make([][]*LogicLiteral, len(clauses))
 	copy(unexplored, clauses)
 	for len(unexplored) > 0 {
 		cl := unexplored[0]

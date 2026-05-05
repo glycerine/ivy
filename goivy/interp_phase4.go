@@ -47,7 +47,7 @@ func ModuleOrder(state1, state2 *InterpState) (bool, *CounterExample) {
 // ModuleSkolemizer returns a skolemizer function for the module.
 // The skolemizer converts variables to fresh constants using a unique renamer.
 // Corresponds to Python's module_skolemizer.
-func ModuleSkolemizer(mod *Module) func(*Variable) *Const {
+func ModuleSkolemizer(mod *Module) func(*LogicVariable) *Const {
 	// Build the list of existing function names
 	var funcNames []string
 	if mod.Functions != nil {
@@ -56,7 +56,7 @@ func ModuleSkolemizer(mod *Module) func(*Variable) *Const {
 		}
 	}
 	rn := NewUniqueRenamer("", funcNames)
-	return func(v *Variable) *Const {
+	return func(v *LogicVariable) *Const {
 		name := rn.Rename(v.Name)
 		return NewConst(name, v.VSort)
 	}
@@ -288,7 +288,7 @@ func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *Module) (*InterpS
 	//       rhs = ivy_actions.RME(And(), None, rhs)
 	//   with ivy_actions.ActionContext(domain):
 	//       return eval_state(rhs)
-	rmeVal, ok := rhs.(*RME)
+	rmeVal, ok := rhs.(*LogicRME)
 	if !ok {
 		// Wrap non-RME in RME(And(), nil, rhs)
 		var rhsNode Expr
@@ -300,7 +300,7 @@ func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *Module) (*InterpS
 			_ = ctx
 			return EvalState(checkPrecond, n, domain)
 		}
-		rmeVal = NewRME(&And{}, nil, rhsNode)
+		rmeVal = NewRME(&LogicAnd{}, nil, rhsNode)
 	}
 
 	// Evaluate within an ActionContext
@@ -325,7 +325,7 @@ func EvalStateOrder(checkPrecond bool, lhs, rhs Node, mod *Module) (bool, error)
 		return false, err
 	}
 	if IsInterpStateJoin(rhs) {
-		or := rhs.(*AstOr)
+		or := rhs.(*Or)
 		for _, r := range or.Terms {
 			rState, err := EvalState(checkPrecond, r, mod)
 			if err != nil {
@@ -470,7 +470,7 @@ func UniverseConstraint(state *InterpState) *Clauses {
 		for _, v := range values {
 			disjuncts = append(disjuncts, &Eq{T1: x, T2: v})
 		}
-		fmla := IvyForAll([]*Variable{x}, &Or{Terms: disjuncts})
+		fmla := IvyForAll([]*LogicVariable{x}, &LogicOr{Terms: disjuncts})
 		fmlas = append(fmlas, fmla)
 	}
 	if len(fmlas) == 0 {

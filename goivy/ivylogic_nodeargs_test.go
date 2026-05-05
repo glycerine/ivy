@@ -51,7 +51,7 @@ func TestNodeArgsApplyNoTerms(t *testing.T) {
 
 func TestNodeArgsNot(t *testing.T) {
 	body := NewConst("p", Boolean)
-	not := &Not{Body: body}
+	not := &LogicNot{Body: body}
 	args := NodeArgs(not)
 
 	if len(args) != 1 {
@@ -65,7 +65,7 @@ func TestNodeArgsNot(t *testing.T) {
 func TestNodeArgsImplies(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
-	imp := &Implies{T1: a, T2: b}
+	imp := &LogicImplies{T1: a, T2: b}
 	args := NodeArgs(imp)
 
 	if len(args) != 2 {
@@ -83,7 +83,7 @@ func TestNodeArgsAnd(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
 	c := NewConst("c", Boolean)
-	and := &And{Terms: []Expr{a, b, c}}
+	and := &LogicAnd{Terms: []Expr{a, b, c}}
 	args := NodeArgs(and)
 
 	if len(args) != 3 {
@@ -94,7 +94,7 @@ func TestNodeArgsAnd(t *testing.T) {
 func TestNodeArgsOr(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
-	or := &Or{Terms: []Expr{a, b}}
+	or := &LogicOr{Terms: []Expr{a, b}}
 	args := NodeArgs(or)
 
 	if len(args) != 2 {
@@ -105,7 +105,7 @@ func TestNodeArgsOr(t *testing.T) {
 func TestNodeArgsIff(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
-	iff := &Iff{T1: a, T2: b}
+	iff := &LogicIff{T1: a, T2: b}
 	args := NodeArgs(iff)
 
 	if len(args) != 2 {
@@ -132,7 +132,7 @@ func TestNodeArgsIte(t *testing.T) {
 	cond := NewConst("c", Boolean)
 	then := NewConst("t", Boolean)
 	els := NewConst("e", Boolean)
-	ite := &Ite{Cond: cond, Then: then, Else: els}
+	ite := &LogicIte{Cond: cond, Then: then, Else: els}
 	args := NodeArgs(ite)
 
 	if len(args) != 3 {
@@ -153,7 +153,7 @@ func TestNodeArgsForAllExcludesVars(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	v, _ := NewVariable("X", S)
 	body := NewConst("p", Boolean)
-	fa := &ForAll{Variables: []*Variable{v}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: body}
 	args := NodeArgs(fa)
 
 	if len(args) != 1 {
@@ -168,7 +168,7 @@ func TestNodeArgsExistsExcludesVars(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	v, _ := NewVariable("X", S)
 	body := NewConst("p", Boolean)
-	ex := &Exists{Variables: []*Variable{v}, Body: body}
+	ex := &LogicExists{Variables: []*LogicVariable{v}, Body: body}
 	args := NodeArgs(ex)
 
 	if len(args) != 1 {
@@ -204,7 +204,7 @@ func TestNodeArgsPolarConsistency(t *testing.T) {
 	b := NewConst("b", Boolean)
 
 	// Implies: pos=0 gets negated polarity, pos=1 gets same polarity
-	imp := &Implies{T1: a, T2: b}
+	imp := &LogicImplies{T1: a, T2: b}
 	impArgs := NodeArgs(imp)
 	if len(impArgs) != 2 {
 		t.Fatal("Implies should have 2 args")
@@ -220,7 +220,7 @@ func TestNodeArgsPolarConsistency(t *testing.T) {
 	cond := NewConst("c", Boolean)
 	then := NewConst("t", Boolean)
 	els := NewConst("e", Boolean)
-	ite := &Ite{Cond: cond, Then: then, Else: els}
+	ite := &LogicIte{Cond: cond, Then: then, Else: els}
 	if Polar(ite, 0, 0) != -1 { // condition: both polarities
 		t.Errorf("Polar(Ite, 0, 0) should be -1 (both), got %d", Polar(ite, 0, 0))
 	}
@@ -239,13 +239,13 @@ func TestNodeArgsPolarConsistency(t *testing.T) {
 	}
 
 	// Not: single arg gets negated polarity
-	not := &Not{Body: a}
+	not := &LogicNot{Body: a}
 	if Polar(not, 0, 0) != 1 {
 		t.Errorf("Polar(Not, 0, 0) should be 1 (negated), got %d", Polar(not, 0, 0))
 	}
 
 	// And/Or/ForAll/Exists: all positions keep same polarity
-	and := &And{Terms: []Expr{a, b}}
+	and := &LogicAnd{Terms: []Expr{a, b}}
 	if Polar(and, 0, 0) != 0 {
 		t.Errorf("Polar(And, 0, 0) should be 0 (same), got %d", Polar(and, 0, 0))
 	}

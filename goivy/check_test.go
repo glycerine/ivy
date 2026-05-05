@@ -1286,7 +1286,7 @@ func TestCheckModuleReportsFailures(t *testing.T) {
 	acfg := mod.Cfg.AstCfg
 	for i := 0; i < 3; i++ {
 		label := acfg.NewAtom(fmt.Sprintf("false_conj_%d", i))
-		lf := acfg.NewLabeledFormula(label, &Or{})
+		lf := acfg.NewLabeledFormula(label, &LogicOr{})
 		mod.LabeledConjs = append(mod.LabeledConjs, lf)
 	}
 

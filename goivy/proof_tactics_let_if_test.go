@@ -16,7 +16,7 @@ func TestWrapImplies_LgExpr_ProducesLgImplies(t *testing.T) {
 
 	out := WrapImplies(proofTestAstCfg, cond, body)
 
-	imp, ok := out.(*Implies)
+	imp, ok := out.(*LogicImplies)
 	if !ok {
 		t.Fatalf("expected *lg.Implies for lg.Expr body, got %T", out)
 	}
@@ -37,7 +37,7 @@ func TestWrapImplies_TemporalModels_ProducesAstImplies(t *testing.T) {
 
 	out := WrapImplies(proofTestAstCfg, cond, tm)
 
-	imp, ok := out.(*AstImplies)
+	imp, ok := out.(*Implies)
 	if !ok {
 		t.Fatalf("expected *ast.Implies for TemporalModels body, got %T", out)
 	}
@@ -55,7 +55,7 @@ func TestWrapImplies_SchemaBody_ProducesAstImplies(t *testing.T) {
 
 	out := WrapImplies(proofTestAstCfg, cond, sb)
 
-	imp, ok := out.(*AstImplies)
+	imp, ok := out.(*Implies)
 	if !ok {
 		t.Fatalf("expected *ast.Implies for SchemaBody body, got %T", out)
 	}
@@ -87,18 +87,18 @@ func TestIfTactic_LgExprGoal_WrapsWithLgImplies(t *testing.T) {
 	if len(result) != 2 {
 		t.Fatalf("expected 2 subgoals, got %d", len(result))
 	}
-	trueImp, ok := result[0].Formula.(*Implies)
+	trueImp, ok := result[0].Formula.(*LogicImplies)
 	if !ok {
 		t.Fatalf("true subgoal: expected *lg.Implies, got %T", result[0].Formula)
 	}
 	if trueImp.T2 != body {
 		t.Errorf("true subgoal T2: expected same body pointer (no descent)")
 	}
-	falseImp, ok := result[1].Formula.(*Implies)
+	falseImp, ok := result[1].Formula.(*LogicImplies)
 	if !ok {
 		t.Fatalf("false subgoal: expected *lg.Implies, got %T", result[1].Formula)
 	}
-	if _, isNot := falseImp.T1.(*Not); !isNot {
+	if _, isNot := falseImp.T1.(*LogicNot); !isNot {
 		t.Errorf("false subgoal T1: expected *lg.Not, got %T", falseImp.T1)
 	}
 	if falseImp.T2 != body {
@@ -124,7 +124,7 @@ func TestIfTactic_TemporalModelsGoal_WrapsWholeWithoutDescent(t *testing.T) {
 	}
 	// Python ivy_proof.py:414: Implies(cond, TemporalModels(...))
 	// NOT TemporalModels(model, Implies(cond, phi)) — that's the bug we fixed.
-	trueImp, ok := result[0].Formula.(*AstImplies)
+	trueImp, ok := result[0].Formula.(*Implies)
 	if !ok {
 		t.Fatalf("true subgoal: expected *ast.Implies (TemporalModels at top means ast.Implies fallback), got %T", result[0].Formula)
 	}
@@ -149,7 +149,7 @@ func TestIfTactic_SchemaBodyGoal_WrapsWholeWithoutDescent(t *testing.T) {
 		t.Fatalf("expected 2 subgoals, got %d", len(result))
 	}
 	// Python wraps the entire SchemaBody in Implies, no descent.
-	trueImp, ok := result[0].Formula.(*AstImplies)
+	trueImp, ok := result[0].Formula.(*Implies)
 	if !ok {
 		t.Fatalf("true subgoal: expected *ast.Implies for SchemaBody, got %T", result[0].Formula)
 	}

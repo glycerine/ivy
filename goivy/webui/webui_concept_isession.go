@@ -388,7 +388,7 @@ func (s *ConceptInteractiveSession) materializeNode(conceptName string) *goivy.C
 	X := webuiMustVar("X", c.CSort)
 	eq, _ := goivy.NewEq(X, c)
 	eqName := "=" + c.Name
-	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*goivy.Variable{X}, eq))
+	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*goivy.LogicVariable{X}, eq))
 	s.Domain.Split(conceptName, eqName)
 
 	f, err := concept.Call(c)
@@ -660,7 +660,7 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 		for _, v := range tConcept.Variables {
 			if goivy.SortEqual(v.VSort, w.CSort) {
 				// Create a projected binary concept.
-				var variables []*goivy.Variable
+				var variables []*goivy.LogicVariable
 				for _, x := range tConcept.Variables {
 					if x != v {
 						variables = append(variables, x)

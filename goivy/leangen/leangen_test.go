@@ -49,7 +49,7 @@ func TestSortToStringFunction(t *testing.T) {
 }
 
 func TestSortToStringEnumerated(t *testing.T) {
-	s := &goivy.EnumeratedSort{Name: "e", Extension: []string{"a", "b"}}
+	s := &goivy.LogicEnumeratedSort{Name: "e", Extension: []string{"a", "b"}}
 	_, err := SortToString(s)
 	if err == nil {
 		t.Error("expected error for enumerated sort")
@@ -198,7 +198,7 @@ func TestEmitExprForAll(t *testing.T) {
 	g := NewGenerator()
 	v, _ := goivy.NewVariable("X", goivy.Boolean)
 	body := goivy.NewConst("p", goivy.Boolean)
-	fa, _ := goivy.NewForAll([]*goivy.Variable{v}, body)
+	fa, _ := goivy.NewForAll([]*goivy.LogicVariable{v}, body)
 	err := g.EmitExpr(fa)
 	if err != nil {
 		t.Fatal(err)
@@ -217,7 +217,7 @@ func TestEmitExprExists(t *testing.T) {
 	g := NewGenerator()
 	v, _ := goivy.NewVariable("X", goivy.Boolean)
 	body := goivy.NewConst("p", goivy.Boolean)
-	ex, _ := goivy.NewExists([]*goivy.Variable{v}, body)
+	ex, _ := goivy.NewExists([]*goivy.LogicVariable{v}, body)
 	err := g.EmitExpr(ex)
 	if err != nil {
 		t.Fatal(err)
@@ -232,7 +232,7 @@ func TestEmitExprLambda(t *testing.T) {
 	g := NewGenerator()
 	v, _ := goivy.NewVariable("X", goivy.Boolean)
 	body := goivy.NewConst("p", goivy.Boolean)
-	lam, _ := goivy.NewLambda([]*goivy.Variable{v}, body)
+	lam, _ := goivy.NewLambda([]*goivy.LogicVariable{v}, body)
 	err := g.EmitExpr(lam)
 	if err != nil {
 		t.Fatal(err)

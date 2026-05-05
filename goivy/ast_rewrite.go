@@ -329,7 +329,7 @@ type AstRewritable interface {
 // Python: duck-typed objects with rewrite_name and rewrite_atom methods.
 //
 // RewriteAtom returns Node (not *Atom) so rewriters can substitute with any
-// node type — Atom, App, AstVariable, NamedBinder — matching Python's
+// node type — Atom, App, Variable, NamedBinder — matching Python's
 // rewrite_atom which returns subst[atom.rep], an unconstrained type.
 type AstRewriter interface {
 	RewriteName(name string) string
@@ -355,7 +355,7 @@ func (r *AstRewriteSubstConstants) RewriteName(name string) string {
 func (r *AstRewriteSubstConstants) RewriteAtom(atom *Atom, always bool) Node {
 	// Python (ivy_ast.py:1633-1635):
 	//   return subst[atom.rep] if not atom.args and atom.rep in subst else atom
-	// The replacement can be any Node type — Atom, App, AstVariable, etc.
+	// The replacement can be any Node type — Atom, App, Variable, etc.
 	if len(atom.Terms) == 0 {
 		if repl, ok := r.Subst[atom.Rep]; ok {
 			return repl
@@ -526,8 +526,8 @@ func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 // Go has no inheritance, so we enumerate all tactic struct types.
 func isTacticType(x Node) bool {
 	switch x.(type) {
-	case *AstTactic, *TacticTactic, *TacticWith, *TacticLets,
-		*ComposeTactics, *AstProofTactic, *SchemaInstantiation,
+	case *Tactic, *TacticTactic, *TacticWith, *TacticLets,
+		*ComposeTactics, *ProofTactic, *SchemaInstantiation,
 		*AssumeTactic, *AssumeGlobalTactic, *UnfoldTactic,
 		*ForgetTactic, *ShowGoalsTactic, *DeferGoalTactic,
 		*NullTactic, *LetTactic, *WitnessTactic, *SpoilTactic,
@@ -553,7 +553,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	}
 
 	// Python: isinstance(x, Tactic) — sets local=True during rewrite.
-	// Must check before the type switch because Go's case *Tactic only
+	// Must check before the type switch because Go's case *LogicTactic only
 	// matches the base type, not subtypes like TacticTactic, ComposeTactics, etc.
 	if isTacticType(x) {
 		sp, isSP := rewrite.(*AstRewriteSubstPrefix)
@@ -571,8 +571,8 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	}
 
 	switch n := x.(type) {
-	case *AstVariable:
-		// Python: AstVariable → resort(rewrite_sort(rewrite, x.sort))
+	case *Variable:
+		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
 		// RewriteSort already applies PrefixStr internally via RewriteAtom.
 		newSort := RewriteSort(rewrite, n.VSort, n.Cfg)
 		return n.Resort(newSort)
@@ -597,7 +597,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if !BaseNameDiffers(n.Rep, newRep) {
 			rewritten := rewrite.RewriteAtom(tmpAtom, false)
 			// RewriteAtom may return a non-Atom Node (e.g., a substitution value
-			// from instantiate_macro that's an App, AstVariable, etc.). Return it
+			// from instantiate_macro that's an App, Variable, etc.). Return it
 			// directly when it's not an Atom — there's no way to coerce an App
 			// back into a Symbol.
 			if a, ok := rewritten.(*Atom); ok {
@@ -652,7 +652,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 
 		// Check if Rep is a NamedBinder
-		if nb, ok := n.Rep.(*AstNamedBinder); ok {
+		if nb, ok := n.Rep.(*NamedBinder); ok {
 			newRep := AstRewrite(nb, rewrite)
 			newArgs := AstRewriteSlice(n.Terms, rewrite)
 			newApp := &App{Rep: newRep, Terms: newArgs}
@@ -685,7 +685,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		appAtom.ASort = newApp.ASort
 		rewritten := rewrite.RewriteAtom(appAtom, false)
 		// RewriteAtom may return a non-Atom Node (e.g., a substitution value
-		// from instantiate_macro that's an App, AstVariable, NamedBinder, etc.).
+		// from instantiate_macro that's an App, Variable, NamedBinder, etc.).
 		// In that case return it directly.
 		rAtom, isAtom := rewritten.(*Atom)
 		if !isAtom {
@@ -701,30 +701,30 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 		return newApp
 
-	case *AstLiteral:
+	case *Literal:
 		// Python: isinstance(x, Literal)
 		newAtom := AstRewrite(n.Atom, rewrite)
-		lit := &AstLiteral{Polarity: n.Polarity, Atom: newAtom}
+		lit := &Literal{Polarity: n.Polarity, Atom: newAtom}
 		lit.Cfg = n.Cfg
 		return lit
 
-	case *AstForall:
+	case *Forall:
 		// Python: isinstance(x, Quantifier) — Forall is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &AstForall{Base: n.Base, Bounds: newBounds, Body: newBody}
+		return &Forall{Base: n.Base, Bounds: newBounds, Body: newBody}
 
-	case *AstExists:
+	case *Exists:
 		// Python: isinstance(x, Quantifier) — Exists is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &AstExists{Base: n.Base, Bounds: newBounds, Body: newBody}
+		return &Exists{Base: n.Base, Bounds: newBounds, Body: newBody}
 
-	case *AstNamedBinder:
+	case *NamedBinder:
 		// Python: isinstance(x, NamedBinder)
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &AstNamedBinder{Base: n.Base, Name: n.Name, Bounds: newBounds, Body: newBody}
+		return &NamedBinder{Base: n.Base, Name: n.Name, Bounds: newBounds, Body: newBody}
 
 	case *LabeledFormula:
 		// Python: isinstance(x, LabeledFormula)
@@ -803,7 +803,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 		return &SchemaBody{Base: n.Base, Elems: newElems}
 
-	// Note: *Tactic and all tactic subtypes are handled by isTacticType() check above.
+	// Note: *LogicTactic and all tactic subtypes are handled by isTacticType() check above.
 
 	case *DebugItem:
 		// Python: isinstance(x, DebugItem)
@@ -880,7 +880,7 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 		return nil
 	}
 	switch n := node.(type) {
-	case *AstVariable:
+	case *Variable:
 		if repl, ok := subs[n.Rep]; ok {
 			return repl
 		}
@@ -998,22 +998,22 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 	return res
 }
 
-// --- AstVariable distinct renaming ---
+// --- Variable distinct renaming ---
 
-// UsedVariablesAst collects all AstVariable nodes in an AST.
-// Python: used_variables_ast(ast) — returns a set of AstVariable objects.
-func UsedVariablesAst(node Node) []*AstVariable {
-	var result []*AstVariable
+// UsedVariablesAst collects all Variable nodes in an AST.
+// Python: used_variables_ast(ast) — returns a set of Variable objects.
+func UsedVariablesAst(node Node) []*Variable {
+	var result []*Variable
 	seen := make(map[string]bool)
 	usedVariablesRec(node, &result, seen)
 	return result
 }
 
-func usedVariablesRec(node Node, result *[]*AstVariable, seen map[string]bool) {
+func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
 	if node == nil {
 		return
 	}
-	if v, ok := node.(*AstVariable); ok {
+	if v, ok := node.(*Variable); ok {
 		if !seen[v.Rep] {
 			seen[v.Rep] = true
 			*result = append(*result, v)
@@ -1031,10 +1031,10 @@ func usedVariablesRec(node Node, result *[]*AstVariable, seen map[string]bool) {
 // Python: distinct_variable_renaming(vars1, vars2)
 // IMPORTANT: Maps ALL vars1 variables, not just clashing ones.
 // Python uses UniqueRenamer which always returns a mapping for every var in vars1,
-// preserving the original AstVariable's sort. This is load-bearing: inst_mod's
+// preserving the original Variable's sort. This is load-bearing: inst_mod's
 // buildVVSubst uses map1[y.Rep] to carry sort annotations from the prefix
 // to the substitution map.
-func DistinctVariableRenaming(vars1, vars2 []*AstVariable) map[string]Node {
+func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
 	used := make(map[string]bool)
 	for _, v := range vars2 {
 		used[v.Rep] = true
@@ -1048,7 +1048,7 @@ func DistinctVariableRenaming(vars1, vars2 []*AstVariable) map[string]Node {
 			}
 		}
 		used[newName] = true
-		nv := &AstVariable{Rep: newName, VSort: v.VSort}
+		nv := &Variable{Rep: newName, VSort: v.VSort}
 		nv.Cfg = v.Cfg
 		result[v.Rep] = nv
 	}

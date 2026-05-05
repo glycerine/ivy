@@ -70,7 +70,7 @@ func TestResortSortFunctionSort(t *testing.T) {
 	rn := mkSortRefinement(old, new_)
 
 	result := ResortSort(fs, rn)
-	rfs, ok := result.(*FunctionSort)
+	rfs, ok := result.(*LogicFunctionSort)
 	if !ok {
 		t.Fatal("expected FunctionSort")
 	}
@@ -90,7 +90,7 @@ func TestResortAST(t *testing.T) {
 	// Test variable resort
 	v, _ := NewVariable("X", old)
 	result := ResortAST(v, rn)
-	rv, ok := result.(*Variable)
+	rv, ok := result.(*LogicVariable)
 	if !ok {
 		t.Fatal("expected Var")
 	}
@@ -135,7 +135,7 @@ func TestResortSymbol(t *testing.T) {
 
 func TestCanonizeTypesNoOp(t *testing.T) {
 	m := New()
-	f := &And{Terms: []Expr{True}}
+	f := &LogicAnd{Terms: []Expr{True}}
 	m.LabeledAxioms = []*LabeledFormula{{Formula: f}}
 
 	// Empty refinement should be a no-op.
@@ -225,7 +225,7 @@ func TestCanonActionMapWithActions(t *testing.T) {
 	}
 
 	// Verify each entry contains the action sexp
-	// lg.True = And{} with empty terms, lg.False = Or{} with empty terms
+	// lg.True = LogicAnd{} with empty terms, lg.False = LogicOr{} with empty terms
 	exp1 := fmt.Sprintf("act1:(assume formula:%s)", string(True.Sexp()))
 	exp2 := fmt.Sprintf("act2:(assert formula:%s)", string(False.Sexp()))
 	if !strings.Contains(got, exp1) {

@@ -68,7 +68,7 @@ func StripActionFull(action ActionsAction, stripMap StripMap, mod *Module,
 func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 	binding map[NodeKey]string, isInit bool, initParams []string) ActionsAction {
 	switch a := action.(type) {
-	case *CallAction:
+	case *LogicCallAction:
 		// Python lines 243-248: Strip call action arguments.
 		calleeName := CanonAct(a.CalleeName())
 		// Recursively strip call arguments.
@@ -91,7 +91,7 @@ func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 		}
 		return a.ActionClone(newArgs)
 
-	case *AssignAction:
+	case *LogicAssignAction:
 		// Python lines 260-266: Handle init_params for initializer actions.
 		localBinding := binding
 		if len(initParams) > 0 {
@@ -128,7 +128,7 @@ func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 		}
 		return action.ActionClone(newActionArgs)
 
-	case *Sequence:
+	case *LogicSequence:
 		newChildren := make([]Expr, len(a.Elems))
 		for i, child := range a.Elems {
 			if act, ok := child.(ActionsAction); ok {
@@ -223,7 +223,7 @@ func stripNodeFull(node Expr, stripMap StripMap, mod *Module, binding map[NodeKe
 					}
 				}
 				return NewConst(sname, n.CSort)
-			case *Variable:
+			case *LogicVariable:
 				if mod.Sig != nil {
 					if _, exists := mod.Sig.Symbols.Get2(sname); !exists {
 						mod.Sig.Symbols.Set(sname, &SymbolEntry{Name: sname, Sort: n.VSort})
@@ -256,7 +256,7 @@ func StripAction(action ActionsAction, stripMap StripMap, mod *Module) ActionsAc
 // stripActionRec recursively strips isolate parameters from an action.
 func stripActionRec(action ActionsAction, stripMap StripMap, mod *Module) ActionsAction {
 	switch a := action.(type) {
-	case *CallAction:
+	case *LogicCallAction:
 		// For call actions, strip parameters from the callee.
 		calleeName := CanonAct(a.CalleeName())
 		stripParams := StripMapLookup(calleeName, stripMap, mod)
@@ -275,7 +275,7 @@ func stripActionRec(action ActionsAction, stripMap StripMap, mod *Module) Action
 		// No stripping needed for this call, but recurse into children.
 		newArgs := stripNodes(a.ActionArgs(), stripMap, mod)
 		return a.ActionClone(newArgs)
-	case *Sequence:
+	case *LogicSequence:
 		newChildren := make([]Expr, len(a.Elems))
 		for i, child := range a.Elems {
 			if act, ok := child.(ActionsAction); ok {
@@ -349,7 +349,7 @@ func stripNode(node Expr, stripMap StripMap, mod *Module) Expr {
 	case *Const:
 		// Constants are leaf nodes; no stripping needed at this level.
 		return n
-	case *Variable:
+	case *LogicVariable:
 		return n
 	default:
 		// For other node types, return as-is.
@@ -465,7 +465,7 @@ func StripLabeledFormulas(lfs []*LabeledFormula, stripMap StripMap, mod *Module)
 // If the result has no domain and was relational, we still return a FunctionSort.
 // Otherwise if the result has no domain, return just the range sort.
 func StripSort(sort Sort, numParams int) Sort {
-	fs, ok := sort.(*FunctionSort)
+	fs, ok := sort.(*LogicFunctionSort)
 	if !ok || numParams == 0 {
 		return sort
 	}
@@ -546,7 +546,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 		ipl := pp.Params()
 		hasVar := false
 		for _, p := range ipl {
-			if _, isVar := p.(*AstVariable); isVar {
+			if _, isVar := p.(*Variable); isVar {
 				hasVar = true
 				break
 			}
@@ -554,7 +554,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 		if hasVar {
 			subst := make(map[string]Expr)
 			for _, p := range ipl {
-				if v, isVar := p.(*AstVariable); isVar {
+				if v, isVar := p.(*Variable); isVar {
 					var sort Sort
 					if mod.Sig != nil {
 						if s, ok := mod.Sig.Sorts.Get2(v.VSort); ok {
@@ -993,11 +993,11 @@ func sortReferencesName(s Sort, sortName string) bool {
 	switch t := s.(type) {
 	case *UninterpretedSort:
 		return t.Name == sortName
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return t.Name == sortName
 	case *RangeSort:
 		return t.Name == sortName
-	case *FunctionSort:
+	case *LogicFunctionSort:
 		for _, d := range t.Domain() {
 			if sortReferencesName(d, sortName) {
 				return true

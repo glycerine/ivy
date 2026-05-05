@@ -37,7 +37,7 @@ func ivyLogicCheckSexp(t *testing.T, vecs map[string]string, id string, got stri
 	}
 }
 
-func setup(t *testing.T) (*UninterpretedSort, *Variable, *Variable, *Eq) {
+func setup(t *testing.T) (*UninterpretedSort, *LogicVariable, *LogicVariable, *Eq) {
 	t.Helper()
 	S := &UninterpretedSort{Name: "S"}
 	X, err := NewVariable("X", S)

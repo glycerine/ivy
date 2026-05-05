@@ -16,8 +16,8 @@ func TestVariableUniqifierExactNames(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	body := &Eq{T1: X, T2: Y}
-	inner := &Exists{Variables: []*Variable{Y}, Body: body}
-	outer := &ForAll{Variables: []*Variable{X}, Body: inner}
+	inner := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	outer := &ForAll{Variables: []*LogicVariable{X}, Body: inner}
 
 	vu := NewVariableUniqifier(nil)
 	result := vu.Uniquify(outer)
@@ -29,7 +29,7 @@ func TestVariableUniqifierExactNames(t *testing.T) {
 	if fa.Variables[0].Name != "X" {
 		t.Errorf("first ForAll var should be X, got %s", fa.Variables[0].Name)
 	}
-	ex, ok := fa.Body.(*Exists)
+	ex, ok := fa.Body.(*LogicExists)
 	if !ok {
 		t.Fatalf("expected Exists body, got %T", fa.Body)
 	}
@@ -41,14 +41,14 @@ func TestVariableUniqifierExactNames(t *testing.T) {
 		t.Fatalf("expected Eq body, got %T", ex.Body)
 	}
 	// Both T1 and T2 should be the renamed versions
-	t1v, ok := eq.T1.(*Variable)
+	t1v, ok := eq.T1.(*LogicVariable)
 	if !ok {
 		t.Fatalf("expected Variable in Eq.T1, got %T", eq.T1)
 	}
 	if t1v.Name != "X" {
 		t.Errorf("Eq.T1 should be X, got %s", t1v.Name)
 	}
-	t2v, ok := eq.T2.(*Variable)
+	t2v, ok := eq.T2.(*LogicVariable)
 	if !ok {
 		t.Fatalf("expected Variable in Eq.T2, got %T", eq.T2)
 	}
@@ -62,7 +62,7 @@ func TestVariableUniqifierMultipleFormulas(t *testing.T) {
 	// should produce different names the second time (since names accumulate).
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	body := &ForAll{Variables: []*Variable{X}, Body: X}
+	body := &ForAll{Variables: []*LogicVariable{X}, Body: X}
 
 	vu := NewVariableUniqifier(nil)
 
@@ -95,9 +95,9 @@ func TestVariableUniqifierBinderShadowing(t *testing.T) {
 	// The outer body reference to X should use "X", not "X_a"
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	innerBody := &ForAll{Variables: []*Variable{X}, Body: X}
-	outerBody := &And{Terms: []Expr{X, innerBody}}
-	fmla := &ForAll{Variables: []*Variable{X}, Body: outerBody}
+	innerBody := &ForAll{Variables: []*LogicVariable{X}, Body: X}
+	outerBody := &LogicAnd{Terms: []Expr{X, innerBody}}
+	fmla := &ForAll{Variables: []*LogicVariable{X}, Body: outerBody}
 
 	vu := NewVariableUniqifier(nil)
 	result := vu.Uniquify(fmla)
@@ -108,9 +108,9 @@ func TestVariableUniqifierBinderShadowing(t *testing.T) {
 		t.Errorf("outer var should be X, got %s", outerVarName)
 	}
 
-	and := fa.Body.(*And)
+	and := fa.Body.(*LogicAnd)
 	// First term of And should reference the OUTER renamed X
-	outerRef, ok := and.Terms[0].(*Variable)
+	outerRef, ok := and.Terms[0].(*LogicVariable)
 	if !ok {
 		t.Fatalf("expected Variable, got %T", and.Terms[0])
 	}
@@ -129,7 +129,7 @@ func TestVariableUniqifierBinderShadowing(t *testing.T) {
 	}
 
 	// Inner body should reference the inner renamed X
-	innerRef := innerFa.Body.(*Variable)
+	innerRef := innerFa.Body.(*LogicVariable)
 	if innerRef.Name != innerVarName {
 		t.Errorf("inner body ref should be %s, got %s", innerVarName, innerRef.Name)
 	}
@@ -147,8 +147,8 @@ func TestVariableUniqifierFreeVariables(t *testing.T) {
 	result := vu.Uniquify(fmla)
 
 	eq := result.(*Eq)
-	xv := eq.T1.(*Variable)
-	yv := eq.T2.(*Variable)
+	xv := eq.T1.(*LogicVariable)
+	yv := eq.T2.(*LogicVariable)
 
 	// First time: X → "X", Y → "Y"
 	if xv.Name != "X" {
@@ -161,8 +161,8 @@ func TestVariableUniqifierFreeVariables(t *testing.T) {
 	// Second call with same uniqifier: X → "X_a", Y → "Y_a"
 	result2 := vu.Uniquify(fmla)
 	eq2 := result2.(*Eq)
-	xv2 := eq2.T1.(*Variable)
-	yv2 := eq2.T2.(*Variable)
+	xv2 := eq2.T1.(*LogicVariable)
+	yv2 := eq2.T2.(*LogicVariable)
 	if xv2.Name != "X_a" {
 		t.Errorf("second free X should be X_a, got %s", xv2.Name)
 	}
@@ -195,8 +195,8 @@ func TestVariableUniqifierApplyPreservesFunc(t *testing.T) {
 	if len(rapp.Terms) != 2 {
 		t.Fatalf("expected 2 terms, got %d", len(rapp.Terms))
 	}
-	xv := rapp.Terms[0].(*Variable)
-	yv := rapp.Terms[1].(*Variable)
+	xv := rapp.Terms[0].(*LogicVariable)
+	yv := rapp.Terms[1].(*LogicVariable)
 	if xv.Name != "X" {
 		t.Errorf("first term should be X, got %s", xv.Name)
 	}
@@ -209,7 +209,7 @@ func TestVariableUniqifierSuffixSequence(t *testing.T) {
 	// Verify the suffix sequence matches Python: a, b, c, ..., z, a0, b0, ...
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("V", S)
-	fmla := &ForAll{Variables: []*Variable{X}, Body: X}
+	fmla := &ForAll{Variables: []*LogicVariable{X}, Body: X}
 
 	vu := NewVariableUniqifier(nil)
 
@@ -242,7 +242,7 @@ func TestVariableUniqifierInvMap(t *testing.T) {
 	// Verify InvMap tracks renamed → original correctly
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	fmla := &ForAll{Variables: []*Variable{X}, Body: X}
+	fmla := &ForAll{Variables: []*LogicVariable{X}, Body: X}
 
 	vu := NewVariableUniqifier(nil)
 	vu.Uniquify(fmla) // X → X
@@ -256,7 +256,7 @@ func TestVariableUniqifierInvMap(t *testing.T) {
 	// Check that "X_a" maps back to original "X"
 	found := false
 	for k, v := range vu.InvMap {
-		if k == Key(&Variable{Name: "X_a", VSort: S}) {
+		if k == Key(&LogicVariable{Name: "X_a", VSort: S}) {
 			if v.Name != "X" {
 				t.Errorf("InvMap[X_a] should map to X, got %s", v.Name)
 			}
@@ -281,19 +281,19 @@ func TestAlphaAvoidMapEmptyVsRenamesShadowedBound(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	M, _ := NewVariable("M", S)
 	eqBody := &Eq{T1: M, T2: M}
-	forall := &ForAll{Variables: []*Variable{M}, Body: eqBody}
-	fmla := &And{Terms: []Expr{M, forall}}
+	forall := &ForAll{Variables: []*LogicVariable{M}, Body: eqBody}
+	fmla := &LogicAnd{Terms: []Expr{M, forall}}
 
 	emptyVs := make(map[NodeKey]Expr)
 	result := AlphaAvoidMap(fmla, emptyVs)
 
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
 
 	// Free M in first term must stay "M"
-	freeM, ok := and.Terms[0].(*Variable)
+	freeM, ok := and.Terms[0].(*LogicVariable)
 	if !ok {
 		t.Fatalf("expected Variable in And.Terms[0], got %T", and.Terms[0])
 	}
@@ -315,8 +315,8 @@ func TestAlphaAvoidMapEmptyVsRenamesShadowedBound(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Eq in ForAll body, got %T", fa.Body)
 	}
-	t1v := eq.T1.(*Variable)
-	t2v := eq.T2.(*Variable)
+	t1v := eq.T1.(*LogicVariable)
+	t2v := eq.T2.(*LogicVariable)
 	if t1v.Name != "M_a" {
 		t.Errorf("Eq.T1 inside ForAll should be M_a, got %s", t1v.Name)
 	}
@@ -336,13 +336,13 @@ func TestAlphaAvoidMapNonEmptyVsAlsoRenamesShadowed(t *testing.T) {
 	M, _ := NewVariable("M", S)
 	Q, _ := NewVariable("Q", S)
 	eqBody := &Eq{T1: M, T2: M}
-	forall := &ForAll{Variables: []*Variable{M}, Body: eqBody}
-	fmla := &And{Terms: []Expr{M, forall}}
+	forall := &ForAll{Variables: []*LogicVariable{M}, Body: eqBody}
+	fmla := &LogicAnd{Terms: []Expr{M, forall}}
 
 	vs := map[NodeKey]Expr{Key(Q): Q}
 	result := AlphaAvoidMap(fmla, vs)
 
-	and := result.(*And)
+	and := result.(*LogicAnd)
 	fa := and.Terms[1].(*ForAll)
 	if fa.Variables[0].Name != "M_a" {
 		t.Errorf("bound M should be renamed to M_a, got %s", fa.Variables[0].Name)

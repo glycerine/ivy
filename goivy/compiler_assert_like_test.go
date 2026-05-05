@@ -23,7 +23,7 @@ func TestCompileRequiresAction_NoProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ra, ok := act.(*RequiresAction)
+	ra, ok := act.(*LogicRequiresAction)
 	if !ok {
 		t.Fatalf("expected *actions.RequiresAction, got %T", act)
 	}
@@ -48,7 +48,7 @@ func TestCompileRequiresAction_WithProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ra, ok := act.(*RequiresAction)
+	ra, ok := act.(*LogicRequiresAction)
 	if !ok {
 		t.Fatalf("expected *actions.RequiresAction, got %T", act)
 	}
@@ -73,7 +73,7 @@ func TestCompileRequiresAction_WithLabeledFormula(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ra, ok := act.(*RequiresAction)
+	ra, ok := act.(*LogicRequiresAction)
 	if !ok {
 		t.Fatalf("expected *actions.RequiresAction, got %T", act)
 	}
@@ -101,7 +101,7 @@ func TestCompileEnsuresAction_NoProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ea, ok := act.(*EnsuresAction)
+	ea, ok := act.(*LogicEnsuresAction)
 	if !ok {
 		t.Fatalf("expected *actions.EnsuresAction, got %T", act)
 	}
@@ -126,7 +126,7 @@ func TestCompileEnsuresAction_WithProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ea, ok := act.(*EnsuresAction)
+	ea, ok := act.(*LogicEnsuresAction)
 	if !ok {
 		t.Fatalf("expected *actions.EnsuresAction, got %T", act)
 	}
@@ -151,7 +151,7 @@ func TestCompileEnsuresAction_Unprovable(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	ea, ok := act.(*EnsuresAction)
+	ea, ok := act.(*LogicEnsuresAction)
 	if !ok {
 		t.Fatalf("expected *actions.EnsuresAction, got %T", act)
 	}
@@ -176,7 +176,7 @@ func TestCompileSubgoalAction_NoProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	sa, ok := act.(*SubgoalAction)
+	sa, ok := act.(*LogicSubgoalAction)
 	if !ok {
 		t.Fatalf("expected *actions.SubgoalAction, got %T", act)
 	}
@@ -201,7 +201,7 @@ func TestCompileSubgoalAction_WithProof(t *testing.T) {
 		t.Fatalf("CompileActionBody failed: %v", err)
 	}
 
-	sa, ok := act.(*SubgoalAction)
+	sa, ok := act.(*LogicSubgoalAction)
 	if !ok {
 		t.Fatalf("expected *actions.SubgoalAction, got %T", act)
 	}
@@ -227,7 +227,7 @@ func TestCompileNode_RequiresAction(t *testing.T) {
 		t.Fatalf("CompileNode failed: %v", err)
 	}
 
-	if _, ok := result.(*RequiresAction); !ok {
+	if _, ok := result.(*LogicRequiresAction); !ok {
 		t.Fatalf("CompileNode should dispatch RequiresAction to CompileActionBody, got %T", result)
 	}
 }
@@ -244,7 +244,7 @@ func TestCompileNode_EnsuresAction(t *testing.T) {
 		t.Fatalf("CompileNode failed: %v", err)
 	}
 
-	if _, ok := result.(*EnsuresAction); !ok {
+	if _, ok := result.(*LogicEnsuresAction); !ok {
 		t.Fatalf("CompileNode should dispatch EnsuresAction to CompileActionBody, got %T", result)
 	}
 }
@@ -261,7 +261,7 @@ func TestCompileNode_SubgoalAction(t *testing.T) {
 		t.Fatalf("CompileNode failed: %v", err)
 	}
 
-	if _, ok := result.(*SubgoalAction); !ok {
+	if _, ok := result.(*LogicSubgoalAction); !ok {
 		t.Fatalf("CompileNode should dispatch SubgoalAction to CompileActionBody, got %T", result)
 	}
 }
@@ -290,7 +290,7 @@ func TestCompileLocal_WithRequiresBody(t *testing.T) {
 		t.Fatalf("CompileLocal failed: %v", err)
 	}
 
-	la, ok := result.(*LocalAction)
+	la, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -318,7 +318,7 @@ func TestCompileLocal_WithEnsuresBody(t *testing.T) {
 		t.Fatalf("CompileLocal failed: %v", err)
 	}
 
-	la, ok := result.(*LocalAction)
+	la, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -357,19 +357,19 @@ func TestCompileAssertLikeFormula_FactoryPreservesType(t *testing.T) {
 
 			switch tt.name {
 			case "Assert":
-				if _, ok := act.(*AssertAction); !ok {
+				if _, ok := act.(*LogicAssertAction); !ok {
 					t.Fatalf("expected %s, got %T", tt.wantType, act)
 				}
 			case "Requires":
-				if _, ok := act.(*RequiresAction); !ok {
+				if _, ok := act.(*LogicRequiresAction); !ok {
 					t.Fatalf("expected %s, got %T", tt.wantType, act)
 				}
 			case "Ensures":
-				if _, ok := act.(*EnsuresAction); !ok {
+				if _, ok := act.(*LogicEnsuresAction); !ok {
 					t.Fatalf("expected %s, got %T", tt.wantType, act)
 				}
 			case "Subgoal":
-				if _, ok := act.(*SubgoalAction); !ok {
+				if _, ok := act.(*LogicSubgoalAction); !ok {
 					t.Fatalf("expected %s, got %T", tt.wantType, act)
 				}
 			}

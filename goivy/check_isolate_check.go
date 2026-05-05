@@ -54,9 +54,9 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		model := NormalProgramFromModule(mod)
 		acfg := mod.Cfg.AstCfg
 		safetyLabel := acfg.NewAtom("safety")
-		prop := acfg.NewLabeledFormula(safetyLabel, &And{})
+		prop := acfg.NewLabeledFormula(safetyLabel, &LogicAnd{})
 
-		tm := acfg.NewTemporalModels(model, &And{})
+		tm := acfg.NewTemporalModels(model, &LogicAnd{})
 		subgoal := acfg.NewLabeledFormula(safetyLabel, tm)
 		// Python: subgoal.lineno = mod.isolate_proof.lineno
 		if pfNode, ok := mod.IsolateProof.(Node); ok {
@@ -297,7 +297,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			if act, ok := na.Action.(ActionsAction); ok {
 				for _, sub := range act.IterSubactions() {
 					isAssert := IsAssertLike(sub)
-					_, isRanking := sub.(*Ranking)
+					_, isRanking := sub.(*LogicRanking)
 					if isAssert || isRanking {
 						if IsGuaranteeModUnprovable(mod.Cfg, sub) {
 							guarantees = append(guarantees, sub)
@@ -446,7 +446,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		}
 		var assumptions []ActionsAction
 		for _, sub := range act.IterSubactions() {
-			if _, isAssume := sub.(*AssumeAction); isAssume {
+			if _, isAssume := sub.(*LogicAssumeAction); isAssume {
 				if !IsUnprovableAssert(sub) {
 					assumptions = append(assumptions, sub)
 				}
@@ -498,7 +498,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		for _, sub := range act.IterSubactions() {
 			subCount++
 			isAssert := IsAssertLike(sub)
-			_, isRanking := sub.(*Ranking)
+			_, isRanking := sub.(*LogicRanking)
 			xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, ActionTypeName(sub), isAssert, isRanking, sub.Canon())
 			if isAssert || isRanking {
 				guarantees = append(guarantees, sub)
@@ -667,13 +667,13 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 
 		// Check for TemporalModels via the formula directly, since
 		// GoalConc returns lg.Expr and TemporalModels is ast.Node.
-		var tm *AstTemporalModels
+		var tm *TemporalModels
 		if sb, ok := goal.Formula.(*SchemaBody); ok {
 			if c := sb.Conc(); c != nil {
-				tm, _ = c.(*AstTemporalModels)
+				tm, _ = c.(*TemporalModels)
 			}
 		} else if goal.Formula != nil {
-			tm, _ = goal.Formula.(*AstTemporalModels)
+			tm, _ = goal.Formula.(*TemporalModels)
 		}
 
 		if tm != nil {
@@ -1257,7 +1257,7 @@ func AllAssertLinenos(mod *Module) ([]Location, error) {
 		}); ok {
 			for _, sub := range act.IterSubactions() {
 				isAssert := IsAssertLike(sub)
-				_, isRanking := sub.(*Ranking)
+				_, isRanking := sub.(*LogicRanking)
 				if isAssert || isRanking {
 					loc := sub.GetLineno()
 					key := loc.FileLineKey()
@@ -1418,7 +1418,7 @@ func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 
 // CheckSafetyInStateWithAG checks safety in a state using the analysis graph.
 func CheckSafetyInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, reportPass bool) bool {
-	checker := NewBaseChecker(mod, &Or{}, reportPass, true)
+	checker := NewBaseChecker(mod, &LogicOr{}, reportPass, true)
 	return CheckFcsInStateWithAG(mod, ag, post, []Checker{checker})
 }
 

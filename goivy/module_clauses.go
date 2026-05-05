@@ -102,7 +102,7 @@ func (c *Clauses) ToOpenFormula() Expr {
 		conjuncts = append(conjuncts, moduleDefToConstraint(d))
 	}
 	conjuncts = append(conjuncts, c.Fmlas...)
-	return &And{Terms: conjuncts}
+	return &LogicAnd{Terms: conjuncts}
 }
 
 // ToFormula converts to a closed formula by universally quantifying
@@ -268,7 +268,7 @@ func moduleDefToConstraint(d *IvyDefinition) Expr {
 func collectAndList(fmlas []Expr) []Expr {
 	var result []Expr
 	for _, f := range fmlas {
-		if a, ok := f.(*And); ok {
+		if a, ok := f.(*LogicAnd); ok {
 			if len(a.Terms) > 0 {
 				result = append(result, collectAndList(a.Terms)...)
 			}
@@ -287,9 +287,9 @@ func dropUniversals(f Expr) Expr {
 	switch t := f.(type) {
 	case *ForAll:
 		return dropUniversals(t.Body)
-	case *Not:
-		return &Not{Body: dropExistentials(t.Body)}
-	case *And:
+	case *LogicNot:
+		return &LogicNot{Body: dropExistentials(t.Body)}
+	case *LogicAnd:
 		if len(t.Terms) == 1 {
 			return dropUniversals(t.Terms[0])
 		}
@@ -302,10 +302,10 @@ func dropUniversals(f Expr) Expr {
 // dropUniversals on the negated body.
 func dropExistentials(f Expr) Expr {
 	switch t := f.(type) {
-	case *Exists:
+	case *LogicExists:
 		return dropExistentials(t.Body)
-	case *Not:
-		return &Not{Body: dropUniversals(t.Body)}
+	case *LogicNot:
+		return &LogicNot{Body: dropUniversals(t.Body)}
 	}
 	return f
 }
@@ -313,11 +313,11 @@ func dropExistentials(f Expr) Expr {
 // unwrapSingleton unwraps a single-element And or Or.
 func unwrapSingleton(f Expr) Expr {
 	switch t := f.(type) {
-	case *And:
+	case *LogicAnd:
 		if len(t.Terms) == 1 {
 			return t.Terms[0]
 		}
-	case *Or:
+	case *LogicOr:
 		if len(t.Terms) == 1 {
 			return t.Terms[0]
 		}
@@ -345,10 +345,10 @@ func usesSymbolsAST(syms *InsMap[NodeKey, Expr], node Expr) bool {
 
 // Negate negates a formula with double-negation elimination.
 func Negate(f Expr) Expr {
-	if n, ok := f.(*Not); ok {
+	if n, ok := f.(*LogicNot); ok {
 		return n.Body
 	}
-	return &Not{Body: f}
+	return &LogicNot{Body: f}
 }
 
 // IsTrue returns true if the node is logical True (empty And).
@@ -363,12 +363,12 @@ func ModuleIsFalse(n Expr) bool {
 
 // SymPlaceholders returns placeholder variables V0, V1, ... for each
 // domain sort of the given symbol's function sort.
-func SymPlaceholders(sym *Const) []*Variable {
+func SymPlaceholders(sym *Const) []*LogicVariable {
 	dom := SortDomain(sym.CSort)
 	if len(dom) == 0 {
 		return nil
 	}
-	result := make([]*Variable, len(dom))
+	result := make([]*LogicVariable, len(dom))
 	for i, s := range dom {
 		v, _ := NewVariable(fmt.Sprintf("V%d", i), s)
 		result[i] = v
@@ -402,6 +402,6 @@ func EqAtom(x, y Expr) Expr {
 
 // EqLit returns an equality literal (positive): x == y.
 // Returns an il.Literal with polarity 1.
-func EqLit(x, y Expr) *Literal {
+func EqLit(x, y Expr) *LogicLiteral {
 	return NewLiteral(1, EqAtom(x, y))
 }

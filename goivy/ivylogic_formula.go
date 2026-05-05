@@ -5,7 +5,7 @@ import (
 )
 
 // Some represents "some X:t. phi" — an indefinite description.
-type Some struct {
+type LogicSome struct {
 	Base
 	Params  []Expr // bound variables
 	Fmla    Expr   // formula/constraint
@@ -13,22 +13,22 @@ type Some struct {
 	ElseVal Expr   // optional: value if not exists (may be nil)
 }
 
-func NewSome(params []Expr, fmla Expr) *Some {
-	return &Some{Params: params, Fmla: fmla}
+func NewSome(params []Expr, fmla Expr) *LogicSome {
+	return &LogicSome{Params: params, Fmla: fmla}
 }
 
-func NewSomeWithElse(params []Expr, fmla, ifVal, elseVal Expr) *Some {
-	return &Some{Params: params, Fmla: fmla, IfVal: ifVal, ElseVal: elseVal}
+func NewSomeWithElse(params []Expr, fmla, ifVal, elseVal Expr) *LogicSome {
+	return &LogicSome{Params: params, Fmla: fmla, IfVal: ifVal, ElseVal: elseVal}
 }
 
-func (s *Some) NodeSort() Sort {
+func (s *LogicSome) NodeSort() Sort {
 	if len(s.Params) > 0 {
 		return s.Params[0].NodeSort()
 	}
 	return TopS
 }
 
-func (s *Some) Children() []Expr {
+func (s *LogicSome) Children() []Expr {
 	result := make([]Expr, 0, len(s.Params)+3)
 	result = append(result, s.Params...)
 	result = append(result, s.Fmla)
@@ -41,7 +41,7 @@ func (s *Some) Children() []Expr {
 	return result
 }
 
-func (s *Some) String() string {
+func (s *LogicSome) String() string {
 	var b strings.Builder
 	b.WriteString("some ")
 	if len(s.Params) > 0 {
@@ -60,8 +60,8 @@ func (s *Some) String() string {
 	return b.String()
 }
 
-func (s *Some) Equal(n Expr) bool {
-	o, ok := n.(*Some)
+func (s *LogicSome) Equal(n Expr) bool {
+	o, ok := n.(*LogicSome)
 	if !ok {
 		return false
 	}
@@ -91,23 +91,23 @@ func (s *Some) Equal(n Expr) bool {
 	return true
 }
 
-func (s *Some) BinderVars() []*Variable {
-	vars := make([]*Variable, 0, len(s.Params))
+func (s *LogicSome) BinderVars() []*LogicVariable {
+	vars := make([]*LogicVariable, 0, len(s.Params))
 	for _, p := range s.Params {
-		if v, ok := p.(*Variable); ok {
+		if v, ok := p.(*LogicVariable); ok {
 			vars = append(vars, v)
 		}
 	}
 	return vars
 }
 
-func (s *Some) BinderBody() Expr {
+func (s *LogicSome) BinderBody() Expr {
 	return s.Fmla
 }
 
 // CloneBinder clones the Some with new variables and body.
-func (s *Some) CloneBinder(vs []Expr, body Expr) *Some {
-	result := &Some{Params: vs, Fmla: body}
+func (s *LogicSome) CloneBinder(vs []Expr, body Expr) *LogicSome {
+	result := &LogicSome{Params: vs, Fmla: body}
 	if s.IfVal != nil {
 		result.IfVal = s.IfVal
 	}
@@ -118,40 +118,40 @@ func (s *Some) CloneBinder(vs []Expr, body Expr) *Some {
 }
 
 // IvyDefinition is now in the logic package. Re-exported here for backward compatibility.
-type IvyDefinition = Definition
+type IvyDefinition = LogicDefinition
 
 func NewIvyDefinition(lhs, rhs Expr) *IvyDefinition {
 	return NewDefinition(lhs, rhs)
 }
 
 // IvyDefinitionSchema is a parametrized definition.
-type IvyDefinitionSchema = DefinitionSchema
+type IvyDefinitionSchema = LogicDefinitionSchema
 
 func NewIvyDefinitionSchema(lhs, rhs Expr) *IvyDefinitionSchema {
 	return NewDefinitionSchema(lhs, rhs)
 }
 
 // Let represents "let defs in body".
-type Let struct {
+type LogicLet struct {
 	Base
 	Defs []Expr
 	Body Expr
 }
 
-func NewLet(defs []Expr, body Expr) *Let {
-	return &Let{Defs: defs, Body: body}
+func NewLet(defs []Expr, body Expr) *LogicLet {
+	return &LogicLet{Defs: defs, Body: body}
 }
 
-func (l *Let) NodeSort() Sort { return l.Body.NodeSort() }
+func (l *LogicLet) NodeSort() Sort { return l.Body.NodeSort() }
 
-func (l *Let) Children() []Expr {
+func (l *LogicLet) Children() []Expr {
 	result := make([]Expr, 0, len(l.Defs)+1)
 	result = append(result, l.Defs...)
 	result = append(result, l.Body)
 	return result
 }
 
-func (l *Let) String() string {
+func (l *LogicLet) String() string {
 	if len(l.Defs) == 0 {
 		return l.Body.String()
 	}
@@ -162,8 +162,8 @@ func (l *Let) String() string {
 	return "let " + strings.Join(parts, ", ") + " in " + l.Body.String()
 }
 
-func (l *Let) Equal(n Expr) bool {
-	o, ok := n.(*Let)
+func (l *LogicLet) Equal(n Expr) bool {
+	o, ok := n.(*LogicLet)
 	if !ok {
 		return false
 	}
@@ -180,31 +180,31 @@ func (l *Let) Equal(n Expr) bool {
 
 // Literal represents a positive or negative atomic formula.
 // Literals are not formulas — use Not(IvyAtom(...)) for a negated formula.
-type Literal struct {
+type LogicLiteral struct {
 	Base
 	Polarity int // 1 = positive, 0 = negative
 	Atom     Expr
 }
 
-func NewLiteral(polarity int, atom Expr) *Literal {
-	return &Literal{Polarity: polarity, Atom: atom}
+func NewLiteral(polarity int, atom Expr) *LogicLiteral {
+	return &LogicLiteral{Polarity: polarity, Atom: atom}
 }
 
-func (l *Literal) NodeSort() Sort { return Boolean }
+func (l *LogicLiteral) NodeSort() Sort { return Boolean }
 
-func (l *Literal) Children() []Expr {
+func (l *LogicLiteral) Children() []Expr {
 	return []Expr{l.Atom}
 }
 
-func (l *Literal) String() string {
+func (l *LogicLiteral) String() string {
 	if l.Polarity == 0 {
 		return "~" + l.Atom.String()
 	}
 	return l.Atom.String()
 }
 
-func (l *Literal) Equal(n Expr) bool {
-	o, ok := n.(*Literal)
+func (l *LogicLiteral) Equal(n Expr) bool {
+	o, ok := n.(*LogicLiteral)
 	if !ok {
 		return false
 	}
@@ -212,8 +212,8 @@ func (l *Literal) Equal(n Expr) bool {
 }
 
 // Invert returns the negation of this literal.
-func (l *Literal) Invert() *Literal {
-	return &Literal{Polarity: 1 - l.Polarity, Atom: l.Atom}
+func (l *LogicLiteral) Invert() *LogicLiteral {
+	return &LogicLiteral{Polarity: 1 - l.Polarity, Atom: l.Atom}
 }
 
 // Predicate is a literal factory (not an AST node).
@@ -223,7 +223,7 @@ type Predicate struct {
 }
 
 // Call creates a positive literal from the predicate applied to terms.
-func (p *Predicate) Call(terms ...Expr) *Literal {
+func (p *Predicate) Call(terms ...Expr) *LogicLiteral {
 	app := MustApply(NewConst(p.Name, TopS), terms...)
 	return NewLiteral(1, app)
 }

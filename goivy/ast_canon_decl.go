@@ -70,7 +70,7 @@ func (d *ConjectureDecl) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(conjectureDecl%v)", d.DeclBase.canonFields()))
 }
 
-func (d *AstProofDecl) Canon() Canonical {
+func (d *ProofDecl) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(proofDecl%v)", d.DeclBase.canonFields()))
 }
 
@@ -237,7 +237,7 @@ func (s *SchemaBody) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(schemaBody%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
-func (s *AstSchema) Canon() Canonical {
+func (s *Schema) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(schema%v defn:%v fresh:%v instances:%v)",
 		s.Base.canonFields(), nodeCanon(s.Defn), SliceCanon(s.Fresh), SliceCanon(s.Instances)))
 }
@@ -290,7 +290,7 @@ func (n *NativeType) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(nativeType%v)", n.Base.canonFields()))
 }
 
-func (n *AstNativeExpr) Canon() Canonical {
+func (n *NativeExpr) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(nativeExpr%v)", n.Base.canonFields()))
 }
 
@@ -302,7 +302,7 @@ func (a *AttributeDef) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(attributeDef%v)", a.Base.canonFields()))
 }
 
-func (i *AstInstantiation) Canon() Canonical {
+func (i *Instantiation) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(instantiation%v)", i.Base.canonFields()))
 }
 
@@ -311,7 +311,7 @@ func (s *StateDef) Canon() Canonical {
 }
 
 // Renaming has specific canon in Python: (renaming lineno elems:[...])
-func (r *AstRenaming) Canon() Canonical {
+func (r *Renaming) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(renaming%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
@@ -345,37 +345,37 @@ func (d *ImplementTypeDef) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(implementTypeDef%v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
 }
 
-func (p *AstPatternBasedUpdate) Canon() Canonical {
+func (p *PatternBasedUpdate) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(patternBasedUpdate%v dfns:%v deps:%v patterns:%v)",
 		p.Base.canonFields(), nodeCanon(p.Dfns), nodeCanon(p.Deps), nodeCanon(p.Patterns)))
 }
 
-func (u *AstUpdatePattern) Canon() Canonical {
+func (u *UpdatePattern) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(updatePattern%v params:%v action:%v requires:%v ensures:%v)",
 		u.Base.canonFields(), nodeCanon(u.Params), nodeCanon(u.Action), nodeCanon(u.Requires), nodeCanon(u.Ensures)))
 }
 
-func (u *AstUpdatePatternList) Canon() Canonical {
+func (u *UpdatePatternList) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(updatePatternList%v elems:%v)", u.Base.canonFields(), SliceCanon(u.Elems)))
 }
 
-func (s *AstSymbolList) Canon() Canonical {
+func (s *SymbolList) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(symbolList%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
-func (r *AstRME) Canon() Canonical {
+func (r *RME) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(rME%v requiresFmla:%v modifiesList:%v ensuresFmla:%v)",
 		r.Base.canonFields(), nodeCanon(r.RequiresFmla), SliceCanon(r.ModifiesList), nodeCanon(r.EnsuresFmla)))
 }
 
-func (n *AstNamedSpace) Canon() Canonical {
+func (n *NamedSpace) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(namedSpace%v lit:%v)", n.Base.canonFields(), nodeCanon(n.Lit)))
 }
 
-func (p *AstProductSpace) Canon() Canonical {
+func (p *ProductSpace) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(productSpace%v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
 }
 
-func (s *AstSumSpace) Canon() Canonical {
+func (s *SumSpace) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(sumSpace%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }

@@ -8,7 +8,7 @@ import (
 // SimpIte-simplified) in definition merging, matching Python's or_clauses_int.
 func TestOrClausesIntBareIte(t *testing.T) {
 	sym := moduleMkConst("x")
-	rhs1 := &And{} // true
+	rhs1 := &LogicAnd{} // true
 	rhs2 := moduleMkConst("y")
 
 	def1 := NewIvyDefinition(sym, rhs1)
@@ -26,7 +26,7 @@ func TestOrClausesIntBareIte(t *testing.T) {
 		if d.Lhs.Equal(sym) {
 			// The RHS should be a bare Ite, NOT an Or (which SimpIte would produce
 			// since rhs1 is true: SimpIte(v, true, y) → Or(v, y))
-			if _, ok := d.Rhs.(*Ite); !ok {
+			if _, ok := d.Rhs.(*LogicIte); !ok {
 				t.Errorf("expected bare Ite in def RHS, got %T: %v", d.Rhs, d.Rhs)
 			}
 			found = true
@@ -126,7 +126,7 @@ func TestOrClausesBothNonFalse(t *testing.T) {
 	}
 
 	// First formula should be an Or with 2 terms
-	if or, ok := result.Fmlas[0].(*Or); !ok {
+	if or, ok := result.Fmlas[0].(*LogicOr); !ok {
 		t.Errorf("first formula should be Or, got %T", result.Fmlas[0])
 	} else if len(or.Terms) != 2 {
 		t.Errorf("Or should have 2 terms, got %d", len(or.Terms))
@@ -136,7 +136,7 @@ func TestOrClausesBothNonFalse(t *testing.T) {
 // TestIteClausesSimpIte verifies that IteClauses uses simp_ite for def merging.
 func TestIteClausesSimpIte(t *testing.T) {
 	sym := moduleMkConst("x")
-	rhs1 := &And{} // true
+	rhs1 := &LogicAnd{} // true
 	rhs2 := moduleMkConst("y")
 
 	def1 := NewIvyDefinition(sym, rhs1)
@@ -152,7 +152,7 @@ func TestIteClausesSimpIte(t *testing.T) {
 	for _, d := range result.Defs {
 		if d.Lhs.Equal(sym) {
 			// SimpIte(v, true, y) → Or(v, y). So RHS should be Or, not Ite.
-			if _, ok := d.Rhs.(*Ite); ok {
+			if _, ok := d.Rhs.(*LogicIte); ok {
 				t.Error("IteClauses should use SimpIte which simplifies Ite(v, true, y) to Or(v, y)")
 			}
 		}
@@ -174,7 +174,7 @@ func TestIteClausesSimpIte(t *testing.T) {
 func TestNewClausesDropUniversals(t *testing.T) {
 	v, _ := NewVariable("V", Boolean)
 	// ForAll(V, Or()) = ForAll(V, false)
-	fmla := &ForAll{Variables: []*Variable{v}, Body: &Or{}}
+	fmla := &ForAll{Variables: []*LogicVariable{v}, Body: &LogicOr{}}
 
 	cls := NewClauses([]Expr{fmla}, nil, nil)
 
@@ -191,8 +191,8 @@ func TestNewClausesCollectAndList(t *testing.T) {
 	c := moduleMkConst("c")
 
 	// And(a, And(b, c))
-	inner := &And{Terms: []Expr{b, c}}
-	outer := &And{Terms: []Expr{a, inner}}
+	inner := &LogicAnd{Terms: []Expr{b, c}}
+	outer := &LogicAnd{Terms: []Expr{a, inner}}
 
 	cls := NewClauses([]Expr{outer}, nil, nil)
 
@@ -209,7 +209,7 @@ func TestNewClausesDropUniversalsNot(t *testing.T) {
 	v, _ := NewVariable("V", Boolean)
 	body := moduleMkConst("p")
 	// Not(Exists(V, p)) → should strip Exists under Not
-	fmla := &Not{Body: &Exists{Variables: []*Variable{v}, Body: body}}
+	fmla := &LogicNot{Body: &LogicExists{Variables: []*LogicVariable{v}, Body: body}}
 
 	cls := NewClauses([]Expr{fmla}, nil, nil)
 
@@ -219,7 +219,7 @@ func TestNewClausesDropUniversalsNot(t *testing.T) {
 	if len(cls.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(cls.Fmlas))
 	}
-	if not, ok := cls.Fmlas[0].(*Not); !ok {
+	if not, ok := cls.Fmlas[0].(*LogicNot); !ok {
 		t.Errorf("expected Not, got %T", cls.Fmlas[0])
 	} else if !not.Body.Equal(body) {
 		t.Errorf("expected Not(p), got Not(%v)", not.Body)
@@ -311,7 +311,7 @@ func TestToFormulaCloseEPR(t *testing.T) {
 	f := cls.ToFormula()
 
 	// CloseEPR(And(X, Y)) → And(CloseEPR(X), CloseEPR(Y)) → And(ForAll(X,X), ForAll(Y,Y))
-	and, ok := f.(*And)
+	and, ok := f.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And at top level, got %T", f)
 	}
@@ -347,7 +347,7 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 	cls := NewClauses([]Expr{x}, nil, nil)
 
 	customPrefix := "@test_"
-	skolemizer := func(v *Variable) Expr {
+	skolemizer := func(v *LogicVariable) Expr {
 		return NewConst(customPrefix+v.Name, v.VSort)
 	}
 
@@ -373,7 +373,7 @@ func TestDualFormulaInstantiator(t *testing.T) {
 
 	// With nil instantiator: just negate
 	result1 := DualFormula(p, nil, nil)
-	if _, ok := result1.(*Not); !ok {
+	if _, ok := result1.(*LogicNot); !ok {
 		t.Fatalf("DualFormula(p, nil, nil) should be Not, got %T", result1)
 	}
 
@@ -382,7 +382,7 @@ func TestDualFormulaInstantiator(t *testing.T) {
 		return NewClauses([]Expr{moduleMkConst("inst")}, nil, nil)
 	}
 	result2 := DualFormula(p, nil, instantiator)
-	and, ok := result2.(*And)
+	and, ok := result2.(*LogicAnd)
 	if !ok {
 		t.Fatalf("DualFormula with instantiator should produce And, got %T", result2)
 	}
@@ -390,7 +390,7 @@ func TestDualFormulaInstantiator(t *testing.T) {
 		t.Fatalf("expected 2 And terms, got %d", len(and.Terms))
 	}
 	// First term should be Not(p), second should be the instantiated formula
-	if _, ok := and.Terms[0].(*Not); !ok {
+	if _, ok := and.Terms[0].(*LogicNot); !ok {
 		t.Errorf("first And term should be Not, got %T", and.Terms[0])
 	}
 }
@@ -400,7 +400,7 @@ func TestDualFormulaInstantiator(t *testing.T) {
 func TestSkolemizeFormulaInstantiator(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
 	body := v
-	ex, _ := NewExists([]*Variable{v}, body)
+	ex, _ := NewExists([]*LogicVariable{v}, body)
 
 	// With nil instantiator: just skolemize
 	result1 := SkolemizeFormula(ex, nil, nil)
@@ -413,7 +413,7 @@ func TestSkolemizeFormulaInstantiator(t *testing.T) {
 		return NewClauses([]Expr{moduleMkConst("inst")}, nil, nil)
 	}
 	result2 := SkolemizeFormula(ex, nil, instantiator)
-	and, ok := result2.(*And)
+	and, ok := result2.(*LogicAnd)
 	if !ok {
 		t.Fatalf("SkolemizeFormula with instantiator should produce And, got %T", result2)
 	}
@@ -434,7 +434,7 @@ func TestTaggedOrClausesPrefix(t *testing.T) {
 	if len(result.Fmlas) < 1 {
 		t.Fatal("expected at least 1 formula")
 	}
-	or, ok := result.Fmlas[0].(*Or)
+	or, ok := result.Fmlas[0].(*LogicOr)
 	if !ok {
 		t.Fatalf("first formula should be Or, got %T", result.Fmlas[0])
 	}
@@ -466,7 +466,7 @@ func TestTaggedOrClausesNoFalseFilter(t *testing.T) {
 	if len(result.Fmlas) < 1 {
 		t.Fatal("expected at least 1 formula")
 	}
-	or, ok := result.Fmlas[0].(*Or)
+	or, ok := result.Fmlas[0].(*LogicOr)
 	if !ok {
 		t.Fatalf("first formula should be Or, got %T", result.Fmlas[0])
 	}

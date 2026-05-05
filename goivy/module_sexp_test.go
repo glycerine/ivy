@@ -57,7 +57,7 @@ func TestSexpClausesBasic(t *testing.T) {
 
 	cl := &Clauses{
 		Fmlas: []Expr{eq},
-		Defs:  []*Definition{def},
+		Defs:  []*LogicDefinition{def},
 	}
 	moduleCheckSexp(t, vecs, "clauses_basic", string(cl.Canon()))
 }
@@ -67,7 +67,7 @@ func TestSexpClausesEmpty(t *testing.T) {
 
 	cl := &Clauses{
 		Fmlas: []Expr{},
-		Defs:  []*Definition{},
+		Defs:  []*LogicDefinition{},
 	}
 	moduleCheckSexp(t, vecs, "clauses_empty", string(cl.Canon()))
 }

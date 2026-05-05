@@ -101,7 +101,7 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 	//       assert c.name not in used_names
 	//       return c
 	//   clauses = ilu.dual_clauses(conj, witness)
-	witness := func(v *Variable) Expr {
+	witness := func(v *LogicVariable) Expr {
 		return VarToSkolem("@", v)
 	}
 	dualConj := DualClauses(conj, witness, mod.Instantiator)

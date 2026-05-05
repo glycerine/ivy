@@ -694,8 +694,8 @@ func TestActionsHistorySatisfyNilPostReturnsNil(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestActionsComposeMaps(t *testing.T) {
-	m1 := Renaming{"a": "b", "c": "d"}
-	m2 := Renaming{"b": "e"}
+	m1 := LogicRenaming{"a": "b", "c": "d"}
+	m2 := LogicRenaming{"b": "e"}
 	result := ActionComposeMaps(m1, m2)
 	// a -> b -> e
 	if result["a"] != "e" {
@@ -712,8 +712,8 @@ func TestActionsComposeMaps(t *testing.T) {
 }
 
 func TestActionsComposeMapEmpty(t *testing.T) {
-	m1 := Renaming{"a": "b"}
-	m2 := Renaming{}
+	m1 := LogicRenaming{"a": "b"}
+	m2 := LogicRenaming{}
 	result := ActionComposeMaps(m1, m2)
 	if result["a"] != "b" {
 		t.Errorf("ComposeMaps with empty m2: a -> %s, want b", result["a"])
@@ -721,7 +721,7 @@ func TestActionsComposeMapEmpty(t *testing.T) {
 }
 
 func TestActionsInverseMap(t *testing.T) {
-	m := Renaming{"a": "b", "c": "d"}
+	m := LogicRenaming{"a": "b", "c": "d"}
 	inv := ActionInverseMap(m)
 	if inv["b"] != "a" {
 		t.Errorf("InverseMap b -> %s, want a", inv["b"])

@@ -82,7 +82,7 @@ func CheckConcretelySorted(term Expr, unsortedVarNames map[string]bool) error {
 	usedVars := UsedVariables(term)
 	for _, v := range usedVars {
 		if unsortedVarNames != nil {
-			if vv, ok := v.(*Variable); ok && unsortedVarNames[vv.Name] {
+			if vv, ok := v.(*LogicVariable); ok && unsortedVarNames[vv.Name] {
 				continue
 			}
 		}

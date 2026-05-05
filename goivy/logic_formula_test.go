@@ -173,7 +173,7 @@ func TestLogicForAll(t *testing.T) {
 	andTerm, _ := NewAnd(leqXY, leqYZ)
 	impl, _ := NewImplies(andTerm, leqXZ)
 
-	fa, err := NewForAll([]*Variable{X, Y, Z}, impl)
+	fa, err := NewForAll([]*LogicVariable{X, Y, Z}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -184,7 +184,7 @@ func TestLogicForAll(t *testing.T) {
 }
 
 func TestLogicForAllEmpty(t *testing.T) {
-	_, err := NewForAll([]*Variable{}, True)
+	_, err := NewForAll([]*LogicVariable{}, True)
 	if err == nil {
 		t.Error("Expected error for empty variables")
 	}
@@ -193,7 +193,7 @@ func TestLogicForAllEmpty(t *testing.T) {
 func TestLogicForAllBadBody(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	_, err := NewForAll([]*Variable{X}, X) // body is sort S
+	_, err := NewForAll([]*LogicVariable{X}, X) // body is sort S
 	if err == nil {
 		t.Error("Expected error for non-Boolean body")
 	}
@@ -203,7 +203,7 @@ func TestLogicExists(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	ex, err := NewExists([]*Variable{X}, eq)
+	ex, err := NewExists([]*LogicVariable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -214,7 +214,7 @@ func TestLogicLambda(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	lam, err := NewLambda([]*Variable{X}, eq)
+	lam, err := NewLambda([]*LogicVariable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -318,7 +318,7 @@ func TestLogicNamedBinder(t *testing.T) {
 	eqYZ, _ := NewEq(Y, Z)
 	impl, _ := NewImplies(andTerm, eqYZ)
 
-	b, err := NewNamedBinder("mybinder", []*Variable{X, Y, Z}, nil, impl)
+	b, err := NewNamedBinder("mybinder", []*LogicVariable{X, Y, Z}, nil, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -326,7 +326,7 @@ func TestLogicNamedBinder(t *testing.T) {
 	t.Log("NamedBinder sort:", b.NodeSort().String())
 
 	// Sort should be TopSort * TopSort * TopSort -> Boolean
-	fs, ok := b.NodeSort().(*FunctionSort)
+	fs, ok := b.NodeSort().(*LogicFunctionSort)
 	if !ok {
 		t.Fatalf("Expected FunctionSort, got %T", b.NodeSort())
 	}
@@ -340,7 +340,7 @@ func TestLogicNamedBinderNoVars(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	Z, _ := NewVariable("Z", S)
 
-	b, err := NewNamedBinder("mybinder", []*Variable{X, Y_(), Z}, nil, Z)
+	b, err := NewNamedBinder("mybinder", []*LogicVariable{X, Y_(), Z}, nil, Z)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -352,7 +352,7 @@ func TestLogicNamedBinderCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nb, _ := NewNamedBinder("nb", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("nb", []*LogicVariable{X}, nil, eq)
 
 	// Call with no args returns self
 	result, err := nb.Call()
@@ -370,7 +370,7 @@ func TestLogicFormulaChildren(t *testing.T) {
 	eq, _ := NewEq(X, X)
 
 	// ForAll children should be [body] only, not variables
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 	children := fa.Children()
 	if len(children) != 1 {
 		t.Errorf("ForAll Children() len = %d, want 1", len(children))
@@ -396,7 +396,7 @@ func TestLogicFormulaEquality(t *testing.T) {
 }
 
 // Y_ helper for creating Y variable with TopSort
-func Y_() *Variable {
+func Y_() *LogicVariable {
 	v, _ := NewVariable("Y", TopS)
 	return v
 }
@@ -413,7 +413,7 @@ func TestLogicAntisymmetric(t *testing.T) {
 	andTerm, _ := NewAnd(leqXY, leqYX)
 	eqYX, _ := NewEq(Y, X)
 	impl, _ := NewImplies(andTerm, eqYX)
-	antisym, err := NewForAll([]*Variable{X, Y}, impl)
+	antisym, err := NewForAll([]*LogicVariable{X, Y}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -474,7 +474,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fa, err := NewForAll([]*Variable{T}, body)
+		fa, err := NewForAll([]*LogicVariable{T}, body)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -495,7 +495,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		ex, err := NewExists([]*Variable{T}, body)
+		ex, err := NewExists([]*LogicVariable{T}, body)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -516,7 +516,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		lam, err := NewLambda([]*Variable{T}, body)
+		lam, err := NewLambda([]*LogicVariable{T}, body)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -539,7 +539,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fa, err := NewForAll([]*Variable{X}, body)
+		fa, err := NewForAll([]*LogicVariable{X}, body)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -566,7 +566,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fa, err := NewForAll([]*Variable{T, U}, leApp)
+		fa, err := NewForAll([]*LogicVariable{T, U}, leApp)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -592,7 +592,7 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		nb, err := NewNamedBinder("l2s_s", []*Variable{T}, nil, body)
+		nb, err := NewNamedBinder("l2s_s", []*LogicVariable{T}, nil, body)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -616,11 +616,11 @@ func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		innerFA, err := NewForAll([]*Variable{U}, innerBody)
+		innerFA, err := NewForAll([]*LogicVariable{U}, innerBody)
 		if err != nil {
 			t.Fatal(err)
 		}
-		outerFA, err := NewForAll([]*Variable{T}, innerFA)
+		outerFA, err := NewForAll([]*LogicVariable{T}, innerFA)
 		if err != nil {
 			t.Fatal(err)
 		}

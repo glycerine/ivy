@@ -246,14 +246,14 @@ func TestIvyLogicIsApp(t *testing.T) {
 
 func TestIvyLogicIsQuantifier(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
-	fa := &ForAll{Variables: []*Variable{v}, Body: &And{}}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: &LogicAnd{}}
 	if !IsQuantifier(fa) {
 		t.Error("ForAll should be IsQuantifier")
 	}
 	if !IsForall(fa) {
 		t.Error("ForAll should be IsForall")
 	}
-	ex := &Exists{Variables: []*Variable{v}, Body: &And{}}
+	ex := &LogicExists{Variables: []*LogicVariable{v}, Body: &LogicAnd{}}
 	if !IsQuantifier(ex) {
 		t.Error("Exists should be IsQuantifier")
 	}
@@ -264,36 +264,36 @@ func TestIvyLogicIsQuantifier(t *testing.T) {
 
 func TestIvyLogicIsBinder(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
-	fa := &ForAll{Variables: []*Variable{v}, Body: &And{}}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: &LogicAnd{}}
 	if !IsBinder(fa) {
 		t.Error("ForAll should be IsBinder")
 	}
-	some := NewSome([]Expr{v}, &And{})
+	some := NewSome([]Expr{v}, &LogicAnd{})
 	if !IsBinder(some) {
 		t.Error("Some should be IsBinder")
 	}
 }
 
 func TestIvyLogicIsTemporal(t *testing.T) {
-	body := &And{}
-	g := &Globally{Body: body}
+	body := &LogicAnd{}
+	g := &LogicGlobally{Body: body}
 	if !IsTemporal(g) {
 		t.Error("Globally should be IsTemporal")
 	}
-	e := &Eventually{Body: body}
+	e := &LogicEventually{Body: body}
 	if !IsTemporal(e) {
 		t.Error("Eventually should be IsTemporal")
 	}
 }
 
 func TestIvyLogicHasTemporal(t *testing.T) {
-	body := &And{}
-	g := &Globally{Body: body}
-	imp := &Implies{T1: body, T2: g}
+	body := &LogicAnd{}
+	g := &LogicGlobally{Body: body}
+	imp := &LogicImplies{T1: body, T2: g}
 	if !IvyHasTemporal(imp) {
 		t.Error("Implies with Globally child should have temporal")
 	}
-	noTemp := &And{Terms: []Expr{body}}
+	noTemp := &LogicAnd{Terms: []Expr{body}}
 	if IvyHasTemporal(noTemp) {
 		t.Error("plain And should not have temporal")
 	}
@@ -320,13 +320,13 @@ func TestIvyLogicIsNumeralName(t *testing.T) {
 }
 
 func TestIvyLogicIsTrueFalse(t *testing.T) {
-	if !IvyIsTrue(&And{}) {
+	if !IvyIsTrue(&LogicAnd{}) {
 		t.Error("empty And should be true")
 	}
-	if IvyIsTrue(&And{Terms: []Expr{&And{}}}) {
+	if IvyIsTrue(&LogicAnd{Terms: []Expr{&LogicAnd{}}}) {
 		t.Error("non-empty And should not be true")
 	}
-	if !IvyIsFalse(&Or{}) {
+	if !IvyIsFalse(&LogicOr{}) {
 		t.Error("empty Or should be false")
 	}
 }
@@ -339,7 +339,7 @@ func TestIvyLogicIsQF(t *testing.T) {
 		t.Error("constant should be QF")
 	}
 	v, _ := NewVariable("X", TopS)
-	fa := &ForAll{Variables: []*Variable{v}, Body: &And{}}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: &LogicAnd{}}
 	if IsQF(fa) {
 		t.Error("ForAll should not be QF")
 	}
@@ -348,14 +348,14 @@ func TestIvyLogicIsQF(t *testing.T) {
 func TestIvyLogicIsPrenexUniversal(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
 	c := NewConst("p", Boolean)
-	fa := &ForAll{Variables: []*Variable{v}, Body: c}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: c}
 	if !IsPrenexUniversal(fa) {
 		t.Error("forall X. p should be prenex universal")
 	}
 
 	// Not(exists X. p) is prenex universal
-	ex := &Exists{Variables: []*Variable{v}, Body: c}
-	neg := &Not{Body: ex}
+	ex := &LogicExists{Variables: []*LogicVariable{v}, Body: c}
+	neg := &LogicNot{Body: ex}
 	if !IsPrenexUniversal(neg) {
 		t.Error("~exists X. p should be prenex universal")
 	}
@@ -364,7 +364,7 @@ func TestIvyLogicIsPrenexUniversal(t *testing.T) {
 func TestIvyLogicIsPrenexExistential(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
 	c := NewConst("p", Boolean)
-	ex := &Exists{Variables: []*Variable{v}, Body: c}
+	ex := &LogicExists{Variables: []*LogicVariable{v}, Body: c}
 	if !IsPrenexExistential(ex) {
 		t.Error("exists X. p should be prenex existential")
 	}
@@ -373,7 +373,7 @@ func TestIvyLogicIsPrenexExistential(t *testing.T) {
 func TestIvyLogicDropUniversals(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
 	c := NewConst("p", Boolean)
-	fa := &ForAll{Variables: []*Variable{v}, Body: c}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: c}
 	result := IvyDropUniversals(fa)
 	if !result.Equal(c) {
 		t.Errorf("expected p, got %v", result)
@@ -383,7 +383,7 @@ func TestIvyLogicDropUniversals(t *testing.T) {
 func TestIvyLogicSubterms(t *testing.T) {
 	c1 := NewConst("a", Boolean)
 	c2 := NewConst("b", Boolean)
-	and := &And{Terms: []Expr{c1, c2}}
+	and := &LogicAnd{Terms: []Expr{c1, c2}}
 	subs := Subterms(and)
 	if len(subs) != 3 { // and, c1, c2
 		t.Errorf("expected 3 subterms, got %d", len(subs))
@@ -393,8 +393,8 @@ func TestIvyLogicSubterms(t *testing.T) {
 // --- Simplification tests ---
 
 func TestIvyLogicSimpAnd(t *testing.T) {
-	tr := &And{} // true
-	fa := &Or{}  // false
+	tr := &LogicAnd{} // true
+	fa := &LogicOr{}  // false
 	p := NewConst("p", Boolean)
 
 	if !SimpAnd(tr, p).Equal(p) {
@@ -412,8 +412,8 @@ func TestIvyLogicSimpAnd(t *testing.T) {
 }
 
 func TestIvyLogicSimpOr(t *testing.T) {
-	tr := &And{}
-	fa := &Or{}
+	tr := &LogicAnd{}
+	fa := &LogicOr{}
 	p := NewConst("p", Boolean)
 
 	if !SimpOr(fa, p).Equal(p) {
@@ -429,10 +429,10 @@ func TestIvyLogicSimpOr(t *testing.T) {
 
 func TestIvyLogicSimpNot(t *testing.T) {
 	p := NewConst("p", Boolean)
-	tr := &And{}
+	tr := &LogicAnd{}
 
 	// Double negation
-	result := SimpNot(&Not{Body: p})
+	result := SimpNot(&LogicNot{Body: p})
 	if !result.Equal(p) {
 		t.Error("~~p = p")
 	}
@@ -447,7 +447,7 @@ func TestIvyLogicSimpNot(t *testing.T) {
 
 func TestIvyLogicSome(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
-	fmla := &And{}
+	fmla := &LogicAnd{}
 	s := NewSome([]Expr{v}, fmla)
 	if s.NodeSort() != TopS {
 		t.Errorf("expected TopS, got %v", s.NodeSort())
@@ -460,7 +460,7 @@ func TestIvyLogicSome(t *testing.T) {
 
 func TestIvyLogicSomeWithElse(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
-	fmla := &And{}
+	fmla := &LogicAnd{}
 	ifVal := NewConst("a", TopS)
 	elseVal := NewConst("b", TopS)
 	s := NewSomeWithElse([]Expr{v}, fmla, ifVal, elseVal)
@@ -472,7 +472,7 @@ func TestIvyLogicSomeWithElse(t *testing.T) {
 
 func TestIvyLogicDefinition(t *testing.T) {
 	lhs := NewConst("f", Boolean)
-	rhs := &And{}
+	rhs := &LogicAnd{}
 	d := NewIvyDefinition(lhs, rhs)
 	if !SortEqual(d.NodeSort(), Boolean) {
 		t.Error("IvyDefinition should have Boolean sort")
@@ -484,9 +484,9 @@ func TestIvyLogicDefinition(t *testing.T) {
 
 func TestIvyLogicLet(t *testing.T) {
 	lhs := NewConst("f", Boolean)
-	rhs := &And{}
+	rhs := &LogicAnd{}
 	def := NewIvyDefinition(lhs, rhs)
-	body := &And{}
+	body := &LogicAnd{}
 	l := NewLet([]Expr{def}, body)
 	if !SortEqual(l.NodeSort(), Boolean) {
 		t.Error("Let should have body's sort")
@@ -560,11 +560,11 @@ func TestIvyLogicIsInequalitySymbol(t *testing.T) {
 
 func TestIvyLogicRelationSort(t *testing.T) {
 	sort := &UninterpretedSort{Name: "t"}
-	rs := RelationSort([]Sort{sort, sort})
+	rs := LogicRelationSort([]Sort{sort, sort})
 	if !IsRelationalSort(rs) {
 		t.Error("RelationSort should produce a relational sort")
 	}
-	empty := RelationSort(nil)
+	empty := LogicRelationSort(nil)
 	if !SortEqual(empty, Boolean) {
 		t.Error("empty RelationSort should be Boolean")
 	}
@@ -579,7 +579,7 @@ func TestIvyLogicFuncConstSort(t *testing.T) {
 	}
 	// Multiple sorts: make function sort
 	s2 := FuncConstSort(sort, sort)
-	if _, ok := s2.(*FunctionSort); !ok {
+	if _, ok := s2.(*LogicFunctionSort); !ok {
 		t.Error("multi-sort FuncConstSort should return FunctionSort")
 	}
 }
@@ -609,9 +609,9 @@ func TestIvyLogicSortDomainRange(t *testing.T) {
 func TestIvyLogicCloneNode(t *testing.T) {
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	and := &And{Terms: []Expr{p}}
+	and := &LogicAnd{Terms: []Expr{p}}
 	cloned := CloneNode(and, []Expr{q})
-	if a, ok := cloned.(*And); ok {
+	if a, ok := cloned.(*LogicAnd); ok {
 		if len(a.Terms) != 1 || !a.Terms[0].Equal(q) {
 			t.Error("cloned And should have q")
 		}
@@ -623,9 +623,9 @@ func TestIvyLogicCloneNode(t *testing.T) {
 func TestIvyLogicCloneBinder(t *testing.T) {
 	v1, _ := NewVariable("X", TopS)
 	v2, _ := NewVariable("Y", TopS)
-	body := &And{}
-	fa := &ForAll{Variables: []*Variable{v1}, Body: body}
-	cloned := CloneBinder(fa, []*Variable{v2}, body)
+	body := &LogicAnd{}
+	fa := &ForAll{Variables: []*LogicVariable{v1}, Body: body}
+	cloned := CloneBinder(fa, []*LogicVariable{v2}, body)
 	if f, ok := cloned.(*ForAll); ok {
 		if f.Variables[0].Name != "Y" {
 			t.Errorf("expected Y, got %s", f.Variables[0].Name)
@@ -638,7 +638,7 @@ func TestIvyLogicCloneBinder(t *testing.T) {
 func TestIvyLogicNodeArgs(t *testing.T) {
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	and := &And{Terms: []Expr{p, q}}
+	and := &LogicAnd{Terms: []Expr{p, q}}
 	args := NodeArgs(and)
 	if len(args) != 2 {
 		t.Errorf("expected 2 args, got %d", len(args))
@@ -647,15 +647,15 @@ func TestIvyLogicNodeArgs(t *testing.T) {
 
 func TestIvyLogicForAllExists(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
-	body := &And{}
+	body := &LogicAnd{}
 
 	// Non-empty vars: returns ForAll/Exists
-	fa := IvyForAll([]*Variable{v}, body)
+	fa := IvyForAll([]*LogicVariable{v}, body)
 	if _, ok := fa.(*ForAll); !ok {
 		t.Error("expected ForAll")
 	}
-	ex := IvyExists([]*Variable{v}, body)
-	if _, ok := ex.(*Exists); !ok {
+	ex := IvyExists([]*LogicVariable{v}, body)
+	if _, ok := ex.(*LogicExists); !ok {
 		t.Error("expected Exists")
 	}
 
@@ -686,7 +686,7 @@ func TestIvyLogicVariableUniqifier(t *testing.T) {
 	v1, _ := NewVariable("X", TopS)
 	v2, _ := NewVariable("Y", TopS)
 	body := &Eq{T1: v1, T2: v2}
-	fa := &ForAll{Variables: []*Variable{v1}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{v1}, Body: body}
 
 	vu := NewVariableUniqifier(nil)
 	result := vu.Uniquify(fa)
@@ -711,10 +711,10 @@ func TestIvyLogicNormalizeOps(t *testing.T) {
 	r := NewConst("r", Boolean)
 
 	// 3-way And → nested binary Ands
-	and3 := &And{Terms: []Expr{p, q, r}}
+	and3 := &LogicAnd{Terms: []Expr{p, q, r}}
 	normalized := NormalizeOps(and3)
 	// Should be binary nesting
-	if a, ok := normalized.(*And); ok {
+	if a, ok := normalized.(*LogicAnd); ok {
 		if len(a.Terms) > 2 {
 			t.Error("normalized And should be binary")
 		}
@@ -746,10 +746,10 @@ func TestIvyLogicASTMatch(t *testing.T) {
 }
 
 func TestIvyLogicLabelTemporal(t *testing.T) {
-	body := &And{}
-	g := &Globally{Body: body}
+	body := &LogicAnd{}
+	g := &LogicGlobally{Body: body}
 	labeled := LabelTemporal(g, "L1")
-	lg2, ok := labeled.(*Globally)
+	lg2, ok := labeled.(*LogicGlobally)
 	if !ok {
 		t.Fatal("expected Globally")
 	}
@@ -773,7 +773,7 @@ func TestIvyLogicExtensionality(t *testing.T) {
 	dSort, _ := NewFunctionSort(sort, sort)
 	destr := NewConst("d", dSort)
 	ext := Extensionality([]*Const{destr})
-	if _, ok := ext.(*Implies); !ok {
+	if _, ok := ext.(*LogicImplies); !ok {
 		t.Errorf("expected Implies, got %T", ext)
 	}
 }

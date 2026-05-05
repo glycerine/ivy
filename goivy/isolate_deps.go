@@ -19,18 +19,18 @@ func GetCallsMods(action ActionsAction) (calls []string, mods []string) {
 
 	for _, sub := range action.IterSubactions() {
 		switch a := sub.(type) {
-		case *CallAction:
+		case *LogicCallAction:
 			name := a.CalleeName()
 			callSet[CanonAct(name)] = true
-		case *AssignAction:
+		case *LogicAssignAction:
 			if c, ok := a.LHS.(*Const); ok {
 				modSet[c.Name] = true
 			}
-		case *HavocAction:
+		case *LogicHavocAction:
 			if c, ok := a.Target.(*Const); ok {
 				modSet[c.Name] = true
 			}
-		case *SetAction:
+		case *LogicSetAction:
 			if c, ok := a.Lit.(*Const); ok {
 				modSet[c.Name] = true
 			}
@@ -54,7 +54,7 @@ func GetCallsMods(action ActionsAction) (calls []string, mods []string) {
 
 // whileHasRanking checks if a WhileAction has a Ranking (decreases clause).
 // In Go, Ranking is stored as a RankingWrapper in the last Invariants slot.
-func whileHasRanking(w *WhileAction) bool {
+func whileHasRanking(w *LogicWhileAction) bool {
 	if len(w.Invariants) == 0 {
 		return false
 	}
@@ -133,14 +133,14 @@ func GetCallsModsRecFull(
 		}
 
 		// Python line 509: Detect WhileAction without Ranking.
-		if wa, ok := sub.(*WhileAction); ok && loopMap != nil {
+		if wa, ok := sub.(*LogicWhileAction); ok && loopMap != nil {
 			if !whileHasRanking(wa) {
 				loopMap[actname] = append(loopMap[actname], wa)
 			}
 		}
 
 		// Collect calls and recurse.
-		if ca, ok := sub.(*CallAction); ok {
+		if ca, ok := sub.(*LogicCallAction); ok {
 			calledName := CanonAct(ca.CalleeName())
 			if !summarizedActions[calledName] {
 				acalls[calledName] = true
@@ -345,7 +345,7 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 		}
 		xtracer.Trace("isolate.CheckInterferenceFull non_summarized actname=%s", actname)
 		for _, sub := range action.IterSubactions() {
-			ca, ok := sub.(*CallAction)
+			ca, ok := sub.(*LogicCallAction)
 			if !ok {
 				continue
 			}
@@ -576,7 +576,7 @@ func ConeOfInfluenceFilter(mod *Module, goals []*LabeledFormula) error {
 		switch n := node.(type) {
 		case *Const:
 			allSyms[n.Name] = true
-		case *Variable:
+		case *LogicVariable:
 			// Variables are not module symbols.
 		case *Apply:
 			collectSymbols(n.Func)
@@ -720,13 +720,13 @@ func addSortName(s Sort, set map[string]bool) {
 	switch t := s.(type) {
 	case *UninterpretedSort:
 		set[t.Name] = true
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		set[t.Name] = true
 	case *RangeSort:
 		set[t.Name] = true
 	case *BooleanSort:
 		set["bool"] = true
-	case *FunctionSort:
+	case *LogicFunctionSort:
 		for _, d := range t.Domain() {
 			addSortName(d, set)
 		}
@@ -739,7 +739,7 @@ func isolateSortToName(s Sort) string {
 	switch t := s.(type) {
 	case *UninterpretedSort:
 		return t.Name
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return t.Name
 	case *RangeSort:
 		return t.Name
@@ -757,7 +757,7 @@ func collectRelevantDestructorsForSym(mod *Module, sym Expr, result map[string]b
 	if !ok || c.CSort == nil {
 		return
 	}
-	fs, ok := c.CSort.(*FunctionSort)
+	fs, ok := c.CSort.(*LogicFunctionSort)
 	if !ok {
 		return // sym.sort has no .rng — matches Python's hasattr(sym.sort, 'rng') check
 	}
@@ -780,7 +780,7 @@ func CollectSortDestructors(mod *Module, sortName string, result map[string]bool
 		for _, d := range destrs {
 			result[d.Name] = true
 			// Recursively collect destructors of the range sort.
-			if fs, ok := d.CSort.(*FunctionSort); ok {
+			if fs, ok := d.CSort.(*LogicFunctionSort); ok {
 				rng := fs.Range()
 				if us, ok := rng.(*UninterpretedSort); ok {
 					CollectSortDestructors(mod, us.Name, result, memo)
@@ -806,7 +806,7 @@ func ActionCallGraph(mod *Module) map[string][]string {
 	graph := make(map[string][]string)
 	for actname, act := range mod.Actions.All() {
 		for _, sub := range act.IterSubactions() {
-			if ca, ok := sub.(*CallAction); ok {
+			if ca, ok := sub.(*LogicCallAction); ok {
 				calledName := CanonAct(ca.CalleeName())
 				graph[calledName] = append(graph[calledName], actname)
 			}

@@ -152,7 +152,7 @@ func (f *fmlaPair) Canon() Canonical { return Canonical(f.Sexp()) }
 // --- checker ---
 
 // sorted-map helper: map[varID]*lg.Variable
-func varIDVarMapSexp(m map[varID]*Variable) string {
+func varIDVarMapSexp(m map[varID]*LogicVariable) string {
 	if m == nil {
 		return "nil"
 	}

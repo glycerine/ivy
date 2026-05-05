@@ -22,19 +22,19 @@ type ProofCheckerInterface interface {
 
 // ProofTactic is a function that applies a proof tactic to a goal,
 // producing subgoals or an error.
-type ProofTactic func(checker ProofCheckerInterface, goals []*LabeledFormula, proof Node) ([]*LabeledFormula, error)
+type LogicProofTactic func(checker ProofCheckerInterface, goals []*LabeledFormula, proof Node) ([]*LabeledFormula, error)
 
 // ProofConfig holds per-session proof state (tactic registry).
 type ProofConfig struct {
-	Tactics map[string]ProofTactic
+	Tactics map[string]LogicProofTactic
 }
 
 // TacticNewConfig creates a new ProofConfig with an empty tactic registry.
 func TacticNewConfig() *ProofConfig {
-	return &ProofConfig{Tactics: make(map[string]ProofTactic)}
+	return &ProofConfig{Tactics: make(map[string]LogicProofTactic)}
 }
 
 // RegisterTactic registers a named tactic on this config.
-func (cfg *ProofConfig) RegisterTactic(name string, t ProofTactic) {
+func (cfg *ProofConfig) RegisterTactic(name string, t LogicProofTactic) {
 	cfg.Tactics[name] = t
 }

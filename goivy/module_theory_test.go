@@ -54,7 +54,7 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 func TestAxioms(t *testing.T) {
 	m := New()
 	f1 := NewConst("axiom", Boolean)
-	f2 := &Or{Terms: []Expr{True}}
+	f2 := &LogicOr{Terms: []Expr{True}}
 	falseVal := false
 	trueVal2 := true
 	m.LabeledAxioms = []*LabeledFormula{
@@ -101,7 +101,7 @@ func TestGetAxiomsNoSchemata(t *testing.T) {
 }
 
 func TestDropLabel(t *testing.T) {
-	f := &And{}
+	f := &LogicAnd{}
 	acfg := NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, f)
 	result := DropLabel(lf)
@@ -214,7 +214,7 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 func TestConjsReturnType(t *testing.T) {
 	m := New()
 	m.LabeledConjs = []*LabeledFormula{
-		{Formula: &And{}},
+		{Formula: &LogicAnd{}},
 	}
 	conjs := m.Conjs()
 	if len(conjs) != 1 {

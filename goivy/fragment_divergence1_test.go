@@ -52,7 +52,7 @@ func TestMapFmlaEqualityPerExpressionKeys(t *testing.T) {
 	c := newChecker(sig, nil)
 
 	// Register x, y, z as universal vars
-	for _, v := range []*Variable{x, y, z} {
+	for _, v := range []*LogicVariable{x, y, z} {
 		vid := makeVarID(v)
 		c.universallyQuantifiedVars[vid] = v
 	}

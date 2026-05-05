@@ -32,7 +32,7 @@ type InstrumentationConfig struct {
 
 	// Collected state (populated by shared steps)
 	L2sGs             map[NodeKey]L2sGTriple
-	L2sWhensSet       map[NodeKey]*NamedBinder
+	L2sWhensSet       map[NodeKey]*LogicNamedBinder
 	NamedBindersConjs map[string][]VarBodyPair
 	ToWait            []VarBodyPair
 	ToSave            []VarBodyPair
@@ -59,7 +59,7 @@ type InstrumentationConfig struct {
 	// Used by extractJusticePredMap to resolve nonces back to original
 	// NamedBinders for navigating formula structure.
 	// Python: rsubs = dict((x,y) for (y,x) in subs.items())
-	RSubs map[string]*NamedBinder
+	RSubs map[string]*LogicNamedBinder
 	// FullSubs maps binder.Sexp() → nonce Const (the SharedStep11 subs map).
 	// Used by extractJusticePredMap to resolve NamedBinders to their nonces.
 	// Python: subs[jfmla.rep] at ivy_l2s.py:1551
@@ -74,8 +74,8 @@ type VarBodyPair = varBodyPair
 
 // sortNamedBinderMap extracts values from a map[lg.NodeKey]*lg.NamedBinder and
 // returns them sorted by Canon() for deterministic cross-language ordering.
-func sortNamedBinderMap(m map[NodeKey]*NamedBinder) []*NamedBinder {
-	sorted := make([]*NamedBinder, 0, len(m))
+func sortNamedBinderMap(m map[NodeKey]*LogicNamedBinder) []*LogicNamedBinder {
+	sorted := make([]*LogicNamedBinder, 0, len(m))
 	for _, v := range m {
 		sorted = append(sorted, v)
 	}
@@ -110,15 +110,15 @@ func sortL2sGTriples(m map[NodeKey]L2sGTriple) []L2sGTriple {
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
 func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *NormalProgram, modPass func(string, func(Node) Node)) {
 	cfg.L2sGs = make(map[NodeKey]L2sGTriple)
-	cfg.L2sWhensSet = make(map[NodeKey]*NamedBinder)
+	cfg.L2sWhensSet = make(map[NodeKey]*LogicNamedBinder)
 
-	_l2sG := func(vs []*Variable, t Expr, env *string) *NamedBinder {
+	_l2sG := func(vs []*LogicVariable, t Expr, env *string) *LogicNamedBinder {
 		res := l2sG(vs, t, env)
 		triple := L2sGTriple{vs, t, env}
 		cfg.L2sGs[triple.key()] = triple
 		return res
 	}
-	_l2sWhen := func(name string, vs []*Variable, t Expr) *NamedBinder {
+	_l2sWhen := func(name string, vs []*LogicVariable, t Expr) *LogicNamedBinder {
 		fmt.Printf("l2s._l2sWhen CALLED name=%s nVars=%d HASH canon=%s\n", name, len(vs), t.Canon())
 		// Key by Sexp (structural canonical form) not String (PrettyFmla,
 		// drops sort annotations). Mirrors Python's set() in
@@ -136,10 +136,10 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *NormalProgr
 
 	cfg.ReplaceTemporals = func(n Node) Node {
 		return ReplaceTemporalsByNamedBinder(n,
-			func(vs []*Variable, body Expr, env *string) *NamedBinder {
+			func(vs []*LogicVariable, body Expr, env *string) *LogicNamedBinder {
 				return _l2sG(vs, body, env)
 			},
-			func(name string, vs []*Variable, body Expr) *NamedBinder {
+			func(name string, vs []*LogicVariable, body Expr) *LogicNamedBinder {
 				return _l2sWhen(name, vs, body)
 			},
 		)
@@ -148,7 +148,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *NormalProgr
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
 	xtracer.Trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s", cfg.Fmla.Canon())
 	ResetRtrDepth()
-	cfg.NotLf = cfg.ReplaceTemporals(&Not{Body: cfg.Fmla}).(Expr)
+	cfg.NotLf = cfg.ReplaceTemporals(&LogicNot{Body: cfg.Fmla}).(Expr)
 	xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
 
 	// Normalize named binders
@@ -303,7 +303,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	for i, vb := range cfg.ToWait {
 		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
-		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &Not{Body: inner}))
+		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &LogicNot{Body: inner}))
 	}
 
 	// reset_w actions
@@ -317,10 +317,10 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 				conjuncts = append(conjuncts, checkMustApply(L2SD(v.VSort), v))
 			}
 		}
-		conjuncts = append(conjuncts, &Not{Body: vb.Body})
+		conjuncts = append(conjuncts, &LogicNot{Body: vb.Body})
 		negatedBody := Negate(vb.Body)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
-		preReplaceInput := &Not{Body: &Globally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
+		preReplaceInput := &LogicNot{Body: &LogicGlobally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
 		ResetRtrDepth()
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(Expr)
@@ -353,7 +353,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	}
 	cfg.AssumeGAxioms = nil
 	for _, triple := range toG {
-		inner := &Implies{
+		inner := &LogicImplies{
 			T1: applyNB(l2sG(triple.Vars, triple.Body, triple.Environ), checkVarsToNodes(triple.Vars)...),
 			T2: triple.Body,
 		}
@@ -372,7 +372,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 		if !ok {
 			panic(fmt.Sprintf("assume_when_axioms: when binder %s has non-Cond body type %T", when.Name, when.Body))
 		}
-		inner := forall(when.Variables, &Implies{
+		inner := forall(when.Variables, &LogicImplies{
 			T1: cond.T1,
 			T2: &Eq{T1: applyNB(when, checkVarsToNodes(when.Variables)...), T2: cond.T2},
 		})
@@ -393,7 +393,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	cfg.AssumeWAxioms = nil
 	for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
 		wApp := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
-		inner := forall(vb.Vars, &Not{Body: &And{Terms: []Expr{vb.Body, wApp}}})
+		inner := forall(vb.Vars, &LogicNot{Body: &LogicAnd{Terms: []Expr{vb.Body, wApp}}})
 		cfg.AssumeWAxioms = append(cfg.AssumeWAxioms,
 			setLineno(NewAssumeAction(inner), cfg.Lineno))
 	}
@@ -404,9 +404,9 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 // SharedStep7_InstrumentActions instruments all binding actions with
 // prop events, when events, and wait events.
 func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProgram) {
-	symprops := make(map[NodeKey][]*NamedBinder)
-	symwaits := make(map[NodeKey][]*NamedBinder)
-	symwhens := make(map[NodeKey][]*NamedBinder)
+	symprops := make(map[NodeKey][]*LogicNamedBinder)
+	symwaits := make(map[NodeKey][]*LogicNamedBinder)
+	symwhens := make(map[NodeKey][]*LogicNamedBinder)
 	sortedTriples := sortL2sGTriples(cfg.L2sGs)
 	displayTi := 0
 	for _, triple := range sortedTriples {
@@ -489,7 +489,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 
 	lineno := cfg.Lineno
 
-	propEventsFunc := func(gprops map[NodeKey]*NamedBinder) ([]ActionsAction, []ActionsAction) {
+	propEventsFunc := func(gprops map[NodeKey]*LogicNamedBinder) ([]ActionsAction, []ActionsAction) {
 		var pre, post []ActionsAction
 		sortedProps := sortNamedBinderMap(gprops)
 		for _, gprop := range sortedProps {
@@ -508,22 +508,22 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
 			pre = append(pre,
 				setLineno(NewAssumeAction(forall(vs,
-					&Implies{
+					&LogicImplies{
 						T1: applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...),
 						T2: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 					})), lineno))
 			pre = append(pre,
 				setLineno(NewAssumeAction(forall(vs,
-					&Implies{
-						T1: &And{Terms: []Expr{
-							&Not{Body: applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...)},
+					&LogicImplies{
+						T1: &LogicAnd{Terms: []Expr{
+							&LogicNot{Body: applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...)},
 							t,
 						}},
-						T2: &Not{Body: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...)},
+						T2: &LogicNot{Body: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...)},
 					})), lineno))
 			post = append(post,
 				setLineno(NewAssumeAction(forall(vs,
-					&Implies{
+					&LogicImplies{
 						T1: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 						T2: t,
 					})), lineno))
@@ -533,7 +533,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 
 	// Python ivy_l2s.py:1070-1085: when_events.
 	// when.body is a Cond(condition, value); decompose T1=cond, T2=val.
-	whenEventsFunc := func(whens map[NodeKey]*NamedBinder) ([]ActionsAction, []ActionsAction) {
+	whenEventsFunc := func(whens map[NodeKey]*LogicNamedBinder) ([]ActionsAction, []ActionsAction) {
 		var pre, post []ActionsAction
 		sortedWhens := sortNamedBinderMap(whens)
 		for _, when := range sortedWhens {
@@ -565,7 +565,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			}
 			post = append(post,
 				setLineno(NewAssumeAction(forall(when.Variables,
-					&Implies{
+					&LogicImplies{
 						T1: condVal.T1,
 						T2: &Eq{T1: applyNB(when, checkVarsToNodes(when.Variables)...), T2: condVal.T2},
 					})), lineno))
@@ -573,7 +573,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		return pre, post
 	}
 
-	waitEventsFunc := func(waits map[NodeKey]*NamedBinder) []ActionsAction {
+	waitEventsFunc := func(waits map[NodeKey]*LogicNamedBinder) []ActionsAction {
 		var res []ActionsAction
 		sortedWaits := sortNamedBinderMap(waits)
 		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
@@ -581,10 +581,10 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, checkVarsToNodes(vs)...)
-			rhs := &And{Terms: []Expr{
+			rhs := &LogicAnd{Terms: []Expr{
 				waitApp,
-				&Not{Body: t},
-				cfg.ReplaceTemporals(&Not{Body: &Globally{
+				&LogicNot{Body: t},
+				cfg.ReplaceTemporals(&LogicNot{Body: &LogicGlobally{
 					Environ: strPtr(cfg.ProofLabel),
 					Body:    Negate(t),
 				}}).(Expr),
@@ -599,7 +599,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		// H7 / Python ivy_l2s.py:1127-1131: if a CallAction's returns
 		// include any monitored symbol (in symprops, symwhens, or symwaits),
 		// split the call so the assignment is a separate statement.
-		if call, ok := stmt.(*CallAction); ok {
+		if call, ok := stmt.(*LogicCallAction); ok {
 			callArgs := call.ActionArgs()
 			if len(callArgs) > 1 {
 				returns := callArgs[1:] // []lg.Expr of CallAction.ActualReturns
@@ -651,9 +651,9 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		}
 		res := stmt.ActionClone(newArgs)
 
-		eventProps := make(map[NodeKey]*NamedBinder)
-		eventWhens := make(map[NodeKey]*NamedBinder)
-		eventWaits := make(map[NodeKey]*NamedBinder)
+		eventProps := make(map[NodeKey]*LogicNamedBinder)
+		eventWhens := make(map[NodeKey]*LogicNamedBinder)
+		eventWaits := make(map[NodeKey]*LogicNamedBinder)
 
 		modifiedSyms := Modifies(stmt)
 		modSet := make(map[NodeKey]bool, len(modifiedSyms))
@@ -789,10 +789,10 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *NormalP
 		namedBinders.Set("l2s_g", nil)
 	}
 	l2sGBinders, _ := namedBinders.Get2("l2s_g")
-	var oldL2sG []*NamedBinder
+	var oldL2sG []*LogicNamedBinder
 	for _, b := range l2sGBinders {
 		oldL2sG = append(oldL2sG,
-			&NamedBinder{Name: "_old_l2s_g", Variables: b.Variables, Environ: b.Environ, Body: b.Body})
+			&LogicNamedBinder{Name: "_old_l2s_g", Variables: b.Variables, Environ: b.Environ, Body: b.Body})
 	}
 	namedBinders.Set("_old_l2s_g", oldL2sG)
 
@@ -806,7 +806,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *NormalP
 	// RSubs/FullSubs: used by extractJusticePredMap to navigate
 	// l2s_progress_invar formulas through the nonce substitution.
 	// Python: rsubs = dict((x,y) for (y,x) in subs.items())
-	cfg.RSubs = make(map[string]*NamedBinder)
+	cfg.RSubs = make(map[string]*LogicNamedBinder)
 	// Python iterates named_binders.items() in insertion order (Python 3.7+).
 	// InsMap preserves insertion order, matching Python's dict.
 	for k, binders := range namedBinders.All() {
@@ -848,7 +848,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *NormalP
 // The model parameter is the l2s-modified NormalProgram, not tm.Model (the original).
 func SharedStep12_BuildGoal(acfg *AstConfig, goal *LabeledFormula, goals []*LabeledFormula, prems []Node, model Node) ([]*LabeledFormula, error) {
 	// Python ivy_l2s.py:1491: lg.And() — empty And is True but canons as "(and)".
-	newConc := acfg.NewTemporalModels(model, &And{})
+	newConc := acfg.NewTemporalModels(model, &LogicAnd{})
 
 	var nonTemporalPrems []Node
 	for _, p := range prems {
@@ -910,7 +910,7 @@ func BuildDefnDeps(mod *Module, goalPrems ...Node) map[NodeKey][]NodeKey {
 		switch ff := formula.(type) {
 		case *Eq:
 			t1, t2 = ff.T1, ff.T2
-		case *Definition:
+		case *LogicDefinition:
 			t1, t2 = ff.Lhs, ff.Rhs
 		default:
 			return
@@ -1009,7 +1009,7 @@ func BuildDependenciesFunc(defnDeps map[NodeKey][]NodeKey) func(map[NodeKey]bool
 }
 
 // FindTemporalModels looks through the goal formula for a TemporalModels node.
-func FindTemporalModels(goal *LabeledFormula) *AstTemporalModels {
+func FindTemporalModels(goal *LabeledFormula) *TemporalModels {
 	return checkFindTemporalModels(goal)
 }
 

@@ -63,7 +63,7 @@ func TestRankingClone(t *testing.T) {
 	fmla := cfg.NewAtom("x")
 	r := cfg.NewRanking(fmla)
 	cloned := r.Clone([]Node{cfg.NewAtom("y")})
-	rc, ok := cloned.(*AstRanking)
+	rc, ok := cloned.(*Ranking)
 	if !ok {
 		t.Fatalf("expected *ast.Ranking, got %T", cloned)
 	}

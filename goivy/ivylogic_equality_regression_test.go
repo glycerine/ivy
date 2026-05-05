@@ -68,16 +68,16 @@ func TestGetSortRefinement_ReturnType(t *testing.T) {
 // ivylogic.IvyIsFalse handle non-singleton empty And/Or nodes.
 //
 // Bug: code used n == lg.True (pointer comparison) which would miss
-// freshly constructed &And{} / &Or{} nodes.
+// freshly constructed &LogicAnd{} / &LogicOr{} nodes.
 func TestIsTrueIsFalse_NonSingleton(t *testing.T) {
-	freshTrue := &And{} // different pointer than lg.True
-	freshFalse := &Or{} // different pointer than lg.False
+	freshTrue := &LogicAnd{} // different pointer than lg.True
+	freshFalse := &LogicOr{} // different pointer than lg.False
 
 	if !IvyIsTrue(freshTrue) {
-		t.Error("ivylogic.IvyIsTrue must recognize non-singleton &And{}")
+		t.Error("ivylogic.IvyIsTrue must recognize non-singleton &LogicAnd{}")
 	}
 	if !IvyIsFalse(freshFalse) {
-		t.Error("ivylogic.IvyIsFalse must recognize non-singleton &Or{}")
+		t.Error("ivylogic.IvyIsFalse must recognize non-singleton &LogicOr{}")
 	}
 
 	// Singletons should also work.

@@ -50,8 +50,8 @@ func TestActionsNewOf(t *testing.T) {
 }
 
 func TestActionsOld(t *testing.T) {
-	if got := Old("x"); got != "old_x" {
-		t.Errorf("Old(x) = %q, want %q", got, "old_x")
+	if got := LogicOld("x"); got != "old_x" {
+		t.Errorf("LogicOld(x) = %q, want %q", got, "old_x")
 	}
 }
 
@@ -127,8 +127,8 @@ func TestActionsNewOldRoundTrip(t *testing.T) {
 		if got := NewOf(ActionNewName(n)); got != n {
 			t.Errorf("NewOf(ActionNewName(%q)) = %q, want %q", n, got, n)
 		}
-		if got := OldOf(Old(n)); got != n {
-			t.Errorf("OldOf(Old(%q)) = %q, want %q", n, got, n)
+		if got := OldOf(LogicOld(n)); got != n {
+			t.Errorf("OldOf(LogicOld(%q)) = %q, want %q", n, got, n)
 		}
 	}
 }
@@ -253,7 +253,7 @@ func TestActionsFrameDefNew(t *testing.T) {
 }
 
 func TestActionsFrameDefOld(t *testing.T) {
-	node := FrameDef("x", Old)
+	node := FrameDef("x", LogicOld)
 	eq, ok := node.(*Eq)
 	if !ok {
 		t.Fatalf("FrameDef should return *Eq, got %T", node)
@@ -287,9 +287,9 @@ func TestActionsFrameEmpty(t *testing.T) {
 
 func TestActionsFrameMultiple(t *testing.T) {
 	node := Frame([]string{"x", "y"}, ActionNewName)
-	and, ok := node.(*And)
+	and, ok := node.(*LogicAnd)
 	if !ok {
-		t.Fatalf("Frame should return *And, got %T", node)
+		t.Fatalf("Frame should return *LogicAnd, got %T", node)
 	}
 	if len(and.Terms) != 2 {
 		t.Errorf("Frame([x,y]) should have 2 terms, got %d", len(and.Terms))
@@ -564,8 +564,8 @@ func TestActionsNewEmptyString(t *testing.T) {
 }
 
 func TestActionsOldEmptyString(t *testing.T) {
-	if got := Old(""); got != "old_" {
-		t.Errorf("Old('') = %q, want %q", got, "old_")
+	if got := LogicOld(""); got != "old_" {
+		t.Errorf("LogicOld('') = %q, want %q", got, "old_")
 	}
 	if !IsOld("old_") {
 		t.Error("IsOld('old_') should be true")
@@ -661,13 +661,13 @@ func FuzzOldIsOldRoundTrip(f *testing.F) {
 	f.Add("old_")
 	f.Add("new_")
 	f.Fuzz(func(t *testing.T, name string) {
-		oldName := Old(name)
+		oldName := LogicOld(name)
 		if !IsOld(oldName) {
-			t.Errorf("IsOld(Old(%q)) should be true", name)
+			t.Errorf("IsOld(LogicOld(%q)) should be true", name)
 		}
 		recovered := OldOf(oldName)
 		if recovered != name {
-			t.Errorf("OldOf(Old(%q)) = %q, want %q", name, recovered, name)
+			t.Errorf("OldOf(LogicOld(%q)) = %q, want %q", name, recovered, name)
 		}
 	})
 }

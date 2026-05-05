@@ -22,7 +22,7 @@ func (s *Solver) CheckNativeCompatSym(sym *Const) (retErr error) {
 	if !IsFunctionSort(sym.CSort) {
 		return nil // non-function sorts are always compatible
 	}
-	fs, ok := sym.CSort.(*FunctionSort)
+	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok {
 		return nil
 	}
@@ -110,7 +110,7 @@ func CheckNativeCompatSymStatic(sig *Sig, sym *Const) error {
 	if !IsFunctionSort(sym.CSort) {
 		return nil
 	}
-	fs, ok := sym.CSort.(*FunctionSort)
+	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok {
 		return nil
 	}
@@ -216,7 +216,7 @@ func TermsMatch(tl1, tl2 []Expr) bool {
 	for i := range tl1 {
 		x := tl1[i]
 		y := tl2[i]
-		if v, ok := x.(*Variable); ok {
+		if v, ok := x.(*LogicVariable); ok {
 			yName := exprName(y)
 			if prev, exists := env[v.Name]; exists {
 				if yName != prev {
@@ -240,7 +240,7 @@ func exprName(e Expr) string {
 	switch v := e.(type) {
 	case *Const:
 		return v.Name
-	case *Variable:
+	case *LogicVariable:
 		return v.Name
 	default:
 		return fmt.Sprint(e)
@@ -463,25 +463,25 @@ func GetPolymacs(op string) func([]Expr) Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			lt := MustApply(NewConst("<", RelationSort([]Sort{args[0].NodeSort(), args[1].NodeSort()})), args...)
+			lt := MustApply(NewConst("<", LogicRelationSort([]Sort{args[0].NodeSort(), args[1].NodeSort()})), args...)
 			eq := &Eq{T1: args[0], T2: args[1]}
-			return &Or{Terms: []Expr{lt, eq}}
+			return &LogicOr{Terms: []Expr{lt, eq}}
 		}
 	case ">":
 		return func(args []Expr) Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			return MustApply(NewConst("<", RelationSort([]Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
+			return MustApply(NewConst("<", LogicRelationSort([]Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
 		}
 	case ">=":
 		return func(args []Expr) Expr {
 			if len(args) != 2 {
 				return nil
 			}
-			lt := MustApply(NewConst("<", RelationSort([]Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
+			lt := MustApply(NewConst("<", LogicRelationSort([]Sort{args[1].NodeSort(), args[0].NodeSort()})), args[1], args[0])
 			eq := &Eq{T1: args[0], T2: args[1]}
-			return &Or{Terms: []Expr{lt, eq}}
+			return &LogicOr{Terms: []Expr{lt, eq}}
 		}
 	}
 	return nil

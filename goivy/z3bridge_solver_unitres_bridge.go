@@ -7,7 +7,7 @@ package goivy
 // ivyLitToUnitResLit converts an ivylogic.Literal to a unitres.Literal.
 // Records the original *lg.Const in symMap so the reverse conversion
 // can reconstruct the full AST.
-func ivyLitToUnitResLit(lit *Literal, symMap map[string]*Const) *UnitResLiteral {
+func ivyLitToUnitResLit(lit *LogicLiteral, symMap map[string]*Const) *UnitResLiteral {
 	var atom *ResolutionAtom
 	switch a := lit.Atom.(type) {
 	case *Apply:
@@ -38,7 +38,7 @@ func ivyLitToUnitResLit(lit *Literal, symMap map[string]*Const) *UnitResLiteral 
 
 // unitResLitToIvyLit converts a unitres.Literal back to an ivylogic.Literal.
 // Uses symMap to reconstruct the *lg.Const for non-equality atoms.
-func unitResLitToIvyLit(lit *UnitResLiteral, symMap map[string]*Const) *Literal {
+func unitResLitToIvyLit(lit *UnitResLiteral, symMap map[string]*Const) *LogicLiteral {
 	var atom Expr
 	if lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		atom = &Eq{T1: lit.Atom.Args[0], T2: lit.Atom.Args[1]}
@@ -63,7 +63,7 @@ func unitResLitToIvyLit(lit *UnitResLiteral, symMap map[string]*Const) *Literal 
 // ivyLitsToUnitResClauses converts a CNF clause set from ivylogic
 // literal lists to unitres literal lists, building a symbol map for
 // reverse conversion.
-func ivyLitsToUnitResClauses(cnf [][]*Literal) ([][]*UnitResLiteral, map[string]*Const) {
+func ivyLitsToUnitResClauses(cnf [][]*LogicLiteral) ([][]*UnitResLiteral, map[string]*Const) {
 	symMap := make(map[string]*Const)
 	result := make([][]*UnitResLiteral, len(cnf))
 	for i, clause := range cnf {
@@ -79,18 +79,18 @@ func ivyLitsToUnitResClauses(cnf [][]*Literal) ([][]*UnitResLiteral, map[string]
 // extractUnitResResults extracts the propagation results from a UnitRes
 // engine. Returns [[l] for l in r.UnitQueue] + r.Clauses converted to
 // ivylogic literal lists, matching Python's clauses_case output assembly.
-func extractUnitResResults(r *UnitRes, symMap map[string]*Const) [][]*Literal {
-	var result [][]*Literal
+func extractUnitResResults(r *UnitRes, symMap map[string]*Const) [][]*LogicLiteral {
+	var result [][]*LogicLiteral
 
 	// Unit queue: each unit literal becomes a single-literal clause
 	for _, ulit := range r.UnitQueue {
 		ivyLit := unitResLitToIvyLit(ulit, symMap)
-		result = append(result, []*Literal{ivyLit})
+		result = append(result, []*LogicLiteral{ivyLit})
 	}
 
 	// Remaining multi-literal clauses
 	for _, ucl := range r.Clauses {
-		litClause := make([]*Literal, len(ucl))
+		litClause := make([]*LogicLiteral, len(ucl))
 		for j, ulit := range ucl {
 			litClause[j] = unitResLitToIvyLit(ulit, symMap)
 		}

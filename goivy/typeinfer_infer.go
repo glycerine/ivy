@@ -19,7 +19,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 	}
 
 	switch n := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		// Check env first - if this variable was bound by a quantifier,
 		// the env has a sort var that will be unified with the concrete
 		// sort from the body's function applications.
@@ -147,7 +147,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Ite:
+	case *LogicIte:
 		rCond, err := InferSorts(n.Cond, env)
 		if err != nil {
 			return nil, err
@@ -185,7 +185,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Not:
+	case *LogicNot:
 		r, err := InferSorts(n.Body, env)
 		if err != nil {
 			return nil, err
@@ -204,7 +204,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *And:
+	case *LogicAnd:
 		results := make([]*InferResult, len(n.Terms))
 		for i, term := range n.Terms {
 			res, err := InferSorts(term, env)
@@ -231,7 +231,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Or:
+	case *LogicOr:
 		results := make([]*InferResult, len(n.Terms))
 		for i, term := range n.Terms {
 			res, err := InferSorts(term, env)
@@ -258,7 +258,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Implies:
+	case *LogicImplies:
 		r1, err := InferSorts(n.T1, env)
 		if err != nil {
 			return nil, err
@@ -288,7 +288,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Iff:
+	case *LogicIff:
 		r1, err := InferSorts(n.T1, env)
 		if err != nil {
 			return nil, err
@@ -318,7 +318,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Globally:
+	case *LogicGlobally:
 		r, err := InferSorts(n.Body, env)
 		if err != nil {
 			return nil, err
@@ -337,7 +337,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Eventually:
+	case *LogicEventually:
 		r, err := InferSorts(n.Body, env)
 		if err != nil {
 			return nil, err
@@ -356,7 +356,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		rThen, err := InferSorts(n.T1, env)
 		if err != nil {
 			return nil, err
@@ -442,7 +442,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 		return &InferResult{
 			Sort: Wrap(Boolean),
 			Concretize: func() (Expr, error) {
-				vars := make([]*Variable, len(origVars))
+				vars := make([]*LogicVariable, len(origVars))
 				for i, v := range origVars {
 					// Use the resolved sort from the bound sort variable
 					// (which was unified during body inference).
@@ -460,7 +460,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *Exists:
+	case *LogicExists:
 		envCopy := copyEnv(env)
 		boundSortVars := make([]SortOrVar, len(n.Variables))
 		for i, v := range n.Variables {
@@ -486,7 +486,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 		return &InferResult{
 			Sort: Wrap(Boolean),
 			Concretize: func() (Expr, error) {
-				vars := make([]*Variable, len(origVars))
+				vars := make([]*LogicVariable, len(origVars))
 				for i, v := range origVars {
 					cs := ConvertFromSortVars(boundSortVars[i])
 					vars[i], err = NewVariable(v.Name, cs)
@@ -502,7 +502,7 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		envCopy := copyEnv(env)
 		for _, v := range n.Variables {
 			envCopy[v.Name] = NewSortVar()
@@ -544,13 +544,13 @@ func InferSorts(t Expr, env map[string]SortOrVar) (*InferResult, error) {
 		return &InferResult{
 			Sort: resultSort,
 			Concretize: func() (Expr, error) {
-				vars := make([]*Variable, len(varResults))
+				vars := make([]*LogicVariable, len(varResults))
 				for i, vr := range varResults {
 					v, err := vr.Concretize()
 					if err != nil {
 						return nil, err
 					}
-					vars[i] = v.(*Variable)
+					vars[i] = v.(*LogicVariable)
 				}
 				body, err := bodyRes.Concretize()
 				if err != nil {
@@ -664,7 +664,7 @@ func ConcretizeTerms(terms []Expr, sorts []Sort) ([]Expr, error) {
 
 func collectNames(n Expr, env map[string]SortOrVar) {
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if _, ok := env[t.Name]; !ok {
 			env[t.Name] = NewSortVar()
 		}
@@ -685,11 +685,11 @@ func collectNames(n Expr, env map[string]SortOrVar) {
 		for _, v := range t.Variables {
 			collectNames(v, env)
 		}
-	case *Exists:
+	case *LogicExists:
 		for _, v := range t.Variables {
 			collectNames(v, env)
 		}
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		for _, v := range t.Variables {
 			collectNames(v, env)
 		}

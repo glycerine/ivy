@@ -32,9 +32,9 @@ func TemporalAndL2S(name string) bool {
 // L2sGToGlobally converts l2s_g named binders back to Globally operators
 // for readable display. Mirrors Python ivy_l2s.py:1520-1526 ls2_g_to_globally.
 func L2sGToGlobally(expr Expr) Expr {
-	g2g := func(nb *NamedBinder) Expr {
+	g2g := func(nb *LogicNamedBinder) Expr {
 		if nb.Name == "l2s_g" {
-			return &Globally{Environ: nb.Environ, Body: nb.Body}
+			return &LogicGlobally{Environ: nb.Environ, Body: nb.Body}
 		}
 		return nil
 	}
@@ -110,7 +110,7 @@ func applyAutoDiagnosticsToHandler(
 	fcs []Checker,
 	tasks map[string]map[string]*Eq,
 	triggers map[string]map[string]*Eq,
-	rsubs map[string]*NamedBinder,
+	rsubs map[string]*LogicNamedBinder,
 	fullSubs map[string]Expr,
 ) {
 	if handler == nil {
@@ -155,7 +155,7 @@ func applyAutoDiagnosticsToHandler(
 // rsubs maps nonce const name → original NamedBinder.
 // fullSubs maps binder.Sexp() → nonce Const.
 func extractJusticePredMap(fcs []Checker,
-	rsubs map[string]*NamedBinder,
+	rsubs map[string]*LogicNamedBinder,
 	fullSubs map[string]Expr,
 ) map[string]*Const {
 	result := make(map[string]*Const)
@@ -175,7 +175,7 @@ func extractJusticePredMap(fcs []Checker,
 
 		// Python: gfmla = rsubs[lf.formula.args[1].rep]
 		// After SharedStep11, formula is Implies(T1, Apply(nonce, args)).
-		impl, ok := fcLF.Formula.(*Implies)
+		impl, ok := fcLF.Formula.(*LogicImplies)
 		if !ok {
 			continue
 		}
@@ -196,7 +196,7 @@ func extractJusticePredMap(fcs []Checker,
 		// gfmla is the outer l2s_g NamedBinder (pre-substitution).
 		// Its body is Not(Apply(inner_l2s_g_NB, args)) where the inner
 		// l2s_g was created from the Eventually inside Globally.
-		notExpr, ok := gfmla.Body.(*Not)
+		notExpr, ok := gfmla.Body.(*LogicNot)
 		if !ok {
 			continue
 		}
@@ -205,7 +205,7 @@ func extractJusticePredMap(fcs []Checker,
 			continue
 		}
 		// innerApp.Func is the inner l2s_g NamedBinder (pre-substitution).
-		innerNB, ok := innerApp.Func.(*NamedBinder)
+		innerNB, ok := innerApp.Func.(*LogicNamedBinder)
 		if !ok {
 			continue
 		}
@@ -293,7 +293,7 @@ func makeSkolems(vs []Expr) []*Const {
 // mirroring Python's duck-typed access to .name and .sort.
 func exprNameSort(e Expr) (string, Sort) {
 	switch t := e.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return t.Name, t.VSort
 	case *Const:
 		return t.Name, t.CSort
@@ -511,12 +511,12 @@ func diagnoseAutoFailure(
 		//   body.args[0] = nad = Apply(l2s_s_i, ...) → Func.(*lg.Const).Name = was_helpful_pred_nonce
 		//   body.args[1].args[0] = Apply(l2s_w_j, ...) → Func.(*lg.Const).Name = trigger_happened_pred_nonce
 		var wasHelpfulNonce, triggerNonce string
-		if impl, ok := lf.Formula.(*Implies); ok {
-			if ant, ok := impl.T1.(*And); ok && len(ant.Terms) >= 5 {
+		if impl, ok := lf.Formula.(*LogicImplies); ok {
+			if ant, ok := impl.T1.(*LogicAnd); ok && len(ant.Terms) >= 5 {
 				allHH := ant.Terms[4]
 				if fa, ok := allHH.(*ForAll); ok {
 					// CheckForAll case (l2s_auto5): body = Implies(nad, Not(waiting_for_progress))
-					if bodyImpl, ok := fa.Body.(*Implies); ok {
+					if bodyImpl, ok := fa.Body.(*LogicImplies); ok {
 						// was_helpful_pred_nonce = body.args[0].rep
 						if app, ok := bodyImpl.T1.(*Apply); ok {
 							if c, ok := app.Func.(*Const); ok {
@@ -524,7 +524,7 @@ func diagnoseAutoFailure(
 							}
 						}
 						// trigger_happened_pred_nonce = body.args[1].args[0].rep
-						if notExpr, ok := bodyImpl.T2.(*Not); ok {
+						if notExpr, ok := bodyImpl.T2.(*LogicNot); ok {
 							if app, ok := notExpr.Body.(*Apply); ok {
 								if c, ok := app.Func.(*Const); ok {
 									triggerNonce = c.Name

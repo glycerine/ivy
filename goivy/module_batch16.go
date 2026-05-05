@@ -11,7 +11,7 @@ func SubstituteAstByName(ast Expr, subs map[string]Expr) Expr {
 	if len(subs) == 0 {
 		return ast
 	}
-	if v, ok := ast.(*Variable); ok {
+	if v, ok := ast.(*LogicVariable); ok {
 		if r, ok := subs[v.Name]; ok {
 			return r
 		}
@@ -72,7 +72,7 @@ func constantsAstRec(ast Expr, result *[]*Const, seen map[string]bool) {
 
 // IsGroundClause returns true if a literal clause has no free variables.
 // Corresponds to Python's is_ground_clause (ivy_logic_utils.py:763-765).
-func IsGroundClause(clause []*Literal) bool {
+func IsGroundClause(clause []*LogicLiteral) bool {
 	for _, lit := range clause {
 		vars := VariablesAST(lit.Atom)
 		if len(vars) > 0 {
@@ -96,7 +96,7 @@ func AtomEq(at1, at2 Expr) bool {
 
 // LitEq returns true if two literals are structurally equal.
 // Corresponds to Python's lit_eq (ivy_logic_utils.py:785-787).
-func LitEq(lit1, lit2 *Literal) bool {
+func LitEq(lit1, lit2 *LogicLiteral) bool {
 	return lit1.Polarity == lit2.Polarity && lit1.Atom.Equal(lit2.Atom)
 }
 
@@ -107,7 +107,7 @@ func UsedVariableNamesAst(ast Expr) []string {
 	vars := UsedVariables(ast)
 	result := make([]string, 0, len(vars))
 	for _, v := range vars {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			result = append(result, vv.Name)
 		}
 	}
@@ -135,7 +135,7 @@ func ModuleDistinctVariableRenaming(vars1, vars2 map[NodeKey]Expr) map[string]Ex
 	// Collect all used names from vars2
 	used := make(map[string]bool)
 	for _, v := range vars2 {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			used[vv.Name] = true
 		}
 	}
@@ -143,7 +143,7 @@ func ModuleDistinctVariableRenaming(vars1, vars2 map[NodeKey]Expr) map[string]Ex
 	// UniqueRenamer which always returns a mapping for every variable.
 	result := make(map[string]Expr)
 	for _, v := range vars1 {
-		vv, ok := v.(*Variable)
+		vv, ok := v.(*LogicVariable)
 		if !ok {
 			continue
 		}
@@ -164,7 +164,7 @@ func ModuleDistinctVariableRenaming(vars1, vars2 map[NodeKey]Expr) map[string]Ex
 // of the given asts. Returns the renamed variables.
 // Corresponds to Python's rename_variables_distinct_asts
 // (ivy_logic_utils.py:1216-1220).
-func RenameVariablesDistinctAsts(vars []*Variable, asts []Expr) []*Variable {
+func RenameVariablesDistinctAsts(vars []*LogicVariable, asts []Expr) []*LogicVariable {
 	// Collect all used variables from all asts
 	allUsed := make(map[NodeKey]Expr)
 	for _, ast := range asts {
@@ -178,10 +178,10 @@ func RenameVariablesDistinctAsts(vars []*Variable, asts []Expr) []*Variable {
 		vars1[Key(v)] = v
 	}
 	renaming := ModuleDistinctVariableRenaming(vars1, allUsed)
-	result := make([]*Variable, len(vars))
+	result := make([]*LogicVariable, len(vars))
 	for i, v := range vars {
 		if r, ok := renaming[v.Name]; ok {
-			if rv, ok := r.(*Variable); ok {
+			if rv, ok := r.(*LogicVariable); ok {
 				result[i] = rv
 			} else {
 				result[i] = v
@@ -220,7 +220,7 @@ func VariablesDistinctListAst(astList []Expr, ast2 Expr) []Expr {
 
 // ResortVar resorts a variable using a sort substitution map.
 // Corresponds to Python's resort_var (ivy_logic_utils.py:415-416).
-func ResortVar(v *Variable, subs map[NodeKey]Sort) *Variable {
+func ResortVar(v *LogicVariable, subs map[NodeKey]Sort) *LogicVariable {
 	newSort := resortSortBySort(v.VSort, subs)
 	if SortEqual(newSort, v.VSort) {
 		return v
@@ -235,7 +235,7 @@ func resortSortBySort(s Sort, subs map[NodeKey]Sort) Sort {
 	if newSort, ok := subs[k]; ok {
 		return newSort
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		dom := fs.Domain()
 		rng := fs.Range()
 		newDom := make([]Sort, len(dom))

@@ -319,7 +319,7 @@ func (s *Solver) EvalFormula(model *Model, fmla Expr) (bool, error) {
 
 // CubeToZ3 converts a list of literals (a cube) to a Z3 conjunction.
 // Corresponds to Python's cube_to_z3.
-func (s *Solver) CubeToZ3(cube []*Literal) (Z3Expr, error) {
+func (s *Solver) CubeToZ3(cube []*LogicLiteral) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:774 cube_to_z3() ENTER nlits=%d", len(cube))
 	if len(cube) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
@@ -339,7 +339,7 @@ func (s *Solver) CubeToZ3(cube []*Literal) (Z3Expr, error) {
 }
 
 // LiteralToZ3 converts a single literal to a Z3 expression.
-func (s *Solver) LiteralToZ3(lit *Literal) (Z3Expr, error) {
+func (s *Solver) LiteralToZ3(lit *LogicLiteral) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%v", lit.Polarity)
 	zAtom, err := s.tr.Translate(lit.Atom)
 	if err != nil {
@@ -369,7 +369,7 @@ type CubeMemoEntry struct {
 // Corresponds to Python's check_cube (ivy_solver.py:714-733).
 func (s *Solver) CheckCube(
 	z3solver *Z3Solver,
-	cube []*Literal,
+	cube []*LogicLiteral,
 	memo map[uint]*CubeMemoEntry,
 	memoUnsatOnly bool,
 ) (bool, error) {
@@ -499,7 +499,7 @@ func (s *Solver) FilterRedundantFacts(clauses *Clauses, axioms *Clauses) (*Claus
 	// Python: pos_fmlas = [f for f in fmlas if not isinstance(f, ivy_logic.Not)]
 	var posFmlas, negFmlas []Expr
 	for _, f := range clauses.Fmlas {
-		if _, isNot := f.(*Not); isNot {
+		if _, isNot := f.(*LogicNot); isNot {
 			negFmlas = append(negFmlas, f)
 		} else {
 			posFmlas = append(posFmlas, f)

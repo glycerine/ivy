@@ -11,10 +11,10 @@ import (
 
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
-func ConcatActions(actions ...ActionsAction) *Sequence {
+func ConcatActions(actions ...ActionsAction) *LogicSequence {
 	var all []Expr
 	for _, a := range actions {
-		if seq, ok := a.(*Sequence); ok {
+		if seq, ok := a.(*LogicSequence); ok {
 			all = append(all, seq.Elems...)
 		} else {
 			all = append(all, a)
@@ -27,7 +27,7 @@ func ConcatActions(actions ...ActionsAction) *Sequence {
 // indicating it has actual executable content.
 func HasCode(action ActionsAction) bool {
 	for _, a := range action.IterSubactions() {
-		if _, isSeq := a.(*Sequence); !isSeq {
+		if _, isSeq := a.(*LogicSequence); !isSeq {
 			return true
 		}
 	}
@@ -118,7 +118,7 @@ func ActionDefToStr(name string, action ActionsAction) string {
 		res += " returns" + ParamsToStr(fr)
 	}
 	res += " = "
-	if _, ok := action.(*Sequence); ok {
+	if _, ok := action.(*LogicSequence); ok {
 		res += action.String()
 	} else {
 		res += "{" + action.String() + "}"
@@ -174,7 +174,7 @@ func ApplyMixin(action1, action2 ActionsAction, isAfter bool) ActionsAction {
 	// Apply substitution to action1
 	action1Renamed := SubstituteConstantsAction(action1, subs)
 
-	var res *Sequence
+	var res *LogicSequence
 	if isAfter {
 		res = ConcatActions(action2, action1Renamed)
 	} else {
@@ -222,7 +222,7 @@ func AppendToAction(action1, action2 ActionsAction) ActionsAction {
 // wrapper around ActionBase.CopyFormalsTo.
 func CopyFormalsTo(src, dst ActionsAction) {
 	// Python: if not isinstance(res, EnvAction): copy params/returns
-	if _, isEnvAction := dst.(*EnvAction); !isEnvAction {
+	if _, isEnvAction := dst.(*LogicEnvAction); !isEnvAction {
 		if fp := src.GetFormalParams(); fp != nil {
 			dst.SetFormalParams(fp)
 		}

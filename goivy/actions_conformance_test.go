@@ -75,9 +75,9 @@ func TestNativeAction_ImpureFlag(t *testing.T) {
 	// Set and verify clone preserves it
 	a.Impure = true
 	cloned := a.ActionClone([]Expr{code})
-	na, ok := cloned.(*NativeAction)
+	na, ok := cloned.(*LogicNativeAction)
 	if !ok {
-		t.Fatal("ActionClone should return *NativeAction")
+		t.Fatal("ActionClone should return *LogicNativeAction")
 	}
 	if !na.Impure {
 		t.Error("ActionClone should preserve Impure=true")
@@ -230,8 +230,8 @@ func TestNew_Old_Prefixes(t *testing.T) {
 	if ActionNewName("x") != "new_x" {
 		t.Errorf("ActionNewName(x) = %q", ActionNewName("x"))
 	}
-	if Old("x") != "old_x" {
-		t.Errorf("Old(x) = %q", Old("x"))
+	if LogicOld("x") != "old_x" {
+		t.Errorf("LogicOld(x) = %q", LogicOld("x"))
 	}
 	if !IsNew("new_x") {
 		t.Error("IsNew(new_x) should be true")
@@ -300,9 +300,9 @@ func TestIfAction_Subactions_Boolean(t *testing.T) {
 	}
 
 	// ifPart should be a Sequence containing AssumeAction(cond) + thenBody
-	ifSeq, ok := ifPart.(*Sequence)
+	ifSeq, ok := ifPart.(*LogicSequence)
 	if !ok {
-		t.Fatalf("ifPart should be *Sequence, got %T", ifPart)
+		t.Fatalf("ifPart should be *LogicSequence, got %T", ifPart)
 	}
 	if len(ifSeq.Elems) != 2 {
 		t.Errorf("ifPart Sequence has %d elems, want 2", len(ifSeq.Elems))

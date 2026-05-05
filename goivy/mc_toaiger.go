@@ -57,12 +57,12 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 			initParts = append(initParts, a)
 		}
 	}
-	initParts = append(initParts, NewAssignAction(initVar, &And{Terms: nil}))
+	initParts = append(initParts, NewAssignAction(initVar, &LogicAnd{Terms: nil}))
 	initSeq := NewSequence(initParts...)
 	initAction := AddErrFlag(initSeq, erf, &errConds, mod.Instantiator)
 
-	// Python: action = Sequence(AssignAction(erf, Or()), IfAction(init_var, ext_act, init))
-	erfReset := NewAssignAction(erf, &Or{Terms: nil})
+	// Python: action = LogicSequence(AssignAction(erf, Or()), IfAction(init_var, ext_act, init))
+	erfReset := NewAssignAction(erf, &LogicOr{Terms: nil})
 	ifAct := NewIfAction(initVar, extAct, initAction)
 	composedAction := NewSequence(erfReset, ifAct)
 
@@ -99,7 +99,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	for _, lf := range conjs {
 		invTerms = append(invTerms, IvyDropUniversals(lf.Formula.(Expr)))
 	}
-	var invariant Expr = &And{Terms: invTerms}
+	var invariant Expr = &LogicAnd{Terms: invTerms}
 
 	// Python: skolemizer = lambda v: ilu.var_to_skolem('__', il.Variable(v.rep, v.sort))
 	//         vs = ilu.used_variables_in_order_ast(invariant)
@@ -181,11 +181,11 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	var indHyps []Expr
 	for _, lf := range mod.LabeledConjs {
 		indHyps = append(indHyps, CloseFormula(
-			&Implies{T1: initVar, T2: lf.Formula.(Expr)}))
+			&LogicImplies{T1: initVar, T2: lf.Formula.(Expr)}))
 	}
 	for _, lf := range mod.AssumedInvs {
 		indHyps = append(indHyps, CloseFormula(
-			&Implies{T1: initVar, T2: lf.Formula.(Expr)}))
+			&LogicImplies{T1: initVar, T2: lf.Formula.(Expr)}))
 	}
 
 	// Save original symbols for trace
@@ -267,13 +267,13 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	//             ilu.used_symbols_ast(il.And(*errconds))
 	//             if tr.is_skolem(x) and not il.is_function_sort(x.sort)])
 	var fromAssertTerms []Expr
-	errCondsConj := &And{Terms: errConds}
+	errCondsConj := &LogicAnd{Terms: errConds}
 	for _, sym := range UsedSymbolsAST(errCondsConj).All() {
 		if IsSkolem(ExprName(sym)) && !IsFunctionSort(sym.NodeSort()) {
 			fromAssertTerms = append(fromAssertTerms, NewEquals(sym, sym))
 		}
 	}
-	fromAsserts := &And{Terms: fromAssertTerms}
+	fromAsserts := &LogicAnd{Terms: fromAssertTerms}
 
 	// Python: invar_syms.update(ilu.used_symbols_ast(from_asserts))
 	for k, sym := range UsedSymbolsAST(fromAsserts).All() {
@@ -281,7 +281,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Python: sort_constants = mine_constants(mod, trans, il.And(invariant, from_asserts))
-	mineTarget := &And{Terms: []Expr{invariant, fromAsserts}}
+	mineTarget := &LogicAnd{Terms: []Expr{invariant, fromAsserts}}
 	sortConstants := MineConstants(mod, trans, mineTarget)
 	sortConstants2 := MineConstants2(mod, trans, invariant)
 
@@ -295,10 +295,10 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	stVarNameList := mcConstNames(stVars)
 	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs, mod.Cfg.IuCfg)
 	if len(axs) > 0 {
-		axConj := &And{Terms: axs}
+		axConj := &LogicAnd{Terms: axs}
 		axVar := NewConst("__axioms", Boolean)
 		axDef := NewIvyDefinition(axVar, axConj)
-		invariant = &Implies{T1: axVar, T2: invariant}
+		invariant = &LogicImplies{T1: axVar, T2: invariant}
 		allFmlas := append(trans.Fmlas, axVar)
 		allDefs := append(trans.Defs, axDef)
 		trans = NewClauses(allFmlas, allDefs, trans.Annot)
@@ -430,7 +430,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 		curvalV := NewConst("curval"+v.Name, v.CSort)
 		initChoice := NewConst("initchoice"+v.Name, v.CSort)
 		extraDefs = append(extraDefs, NewIvyDefinition(curvalV,
-			&Ite{Cond: initVar, Then: v, Else: initChoice}))
+			&LogicIte{Cond: initVar, Then: v, Else: initChoice}))
 	}
 	allDefs3 := append(trans.Defs, extraDefs...)
 	trans = NewClauses(trans.Fmlas, allDefs3, trans.Annot)
@@ -450,8 +450,8 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	if len(trans.Fmlas) == 0 {
 		cnstBody = cnstVar
 	} else {
-		fmlaConj := &And{Terms: trans.Fmlas}
-		cnstBody = &Or{Terms: []Expr{cnstVar, &Not{Body: fmlaConj}}}
+		fmlaConj := &LogicAnd{Terms: trans.Fmlas}
+		cnstBody = &LogicOr{Terms: []Expr{cnstVar, &LogicNot{Body: fmlaConj}}}
 	}
 	finalDefs = append(finalDefs, NewIvyDefinition(fixCnst, cnstBody))
 	stVars = append(stVars, NewConst("__cnst", Boolean))
@@ -506,7 +506,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 
 	// Add invariant fail definition
 	invarFail := NewConst("invar__fail", Boolean)
-	combDefs = append(combDefs, NewIvyDefinition(invarFail, &Not{Body: invariant}))
+	combDefs = append(combDefs, NewIvyDefinition(invarFail, &LogicNot{Body: invariant}))
 
 	if err := aiger.DefList(combDefs); err != nil {
 		return nil, fmt.Errorf("deflist failed: %w", err)
@@ -528,14 +528,14 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Set output: miter = and(init_var, not(cnst_var), or(invar__fail, and(fix(erf), not(fix(cnst_var)))))
-	miter := &And{Terms: []Expr{
+	miter := &LogicAnd{Terms: []Expr{
 		initVar,
-		&Not{Body: cnstVar},
-		&Or{Terms: []Expr{
+		&LogicNot{Body: cnstVar},
+		&LogicOr{Terms: []Expr{
 			invarFail,
-			&And{Terms: []Expr{
+			&LogicAnd{Terms: []Expr{
 				NewConst("nondet"+"err_flag", Boolean),
-				&Not{Body: NewConst("nondet"+"__cnst", Boolean)},
+				&LogicNot{Body: NewConst("nondet"+"__cnst", Boolean)},
 			}},
 		}},
 	}}
@@ -613,30 +613,30 @@ func AddErrFlagMod(mod *Module, erf *Const, errConds *[]Expr) {
 // Python: ivy_mc.py:1020-1046
 func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator func([]Expr) *Clauses) ActionsAction {
 	switch a := action.(type) {
-	case *AssertAction:
+	case *LogicAssertAction:
 		// Python: errcond = ilu.dual_formula(il.drop_universals(action.formula))
 		errCond := DualFormula(IvyDropUniversals(a.Formula), nil, instantiator)
 		*errConds = append(*errConds, errCond)
-		res := NewAssignAction(erf, &Or{Terms: []Expr{erf, errCond}})
+		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
 		return res
 
-	case *RequiresAction:
+	case *LogicRequiresAction:
 		// Require is a kind of assert
-		errCond := &Not{Body: IvyDropUniversals(a.Formula)}
+		errCond := &LogicNot{Body: IvyDropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)
-		res := NewAssignAction(erf, &Or{Terms: []Expr{erf, errCond}})
+		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
 		return res
 
-	case *SubgoalAction:
+	case *LogicSubgoalAction:
 		// Skip subgoals
 		return NewSequence()
 
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		// Assume: weaken to assume(or(erf, formula))
-		res := NewAssumeAction(&Or{Terms: []Expr{erf, a.Formula}})
+		res := NewAssumeAction(&LogicOr{Terms: []Expr{erf, a.Formula}})
 		return res
 
-	case *Sequence:
+	case *LogicSequence:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		for i, child := range args {
@@ -648,7 +648,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		}
 		return a.ActionClone(newArgs)
 
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		for i, child := range args {
@@ -660,7 +660,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		}
 		return a.ActionClone(newArgs)
 
-	case *EnvAction:
+	case *LogicEnvAction:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		for i, child := range args {
@@ -672,7 +672,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		}
 		return a.ActionClone(newArgs)
 
-	case *BindOldsAction:
+	case *LogicBindOldsAction:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		for i, child := range args {
@@ -684,7 +684,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		}
 		return a.ActionClone(newArgs)
 
-	case *IfAction:
+	case *LogicIfAction:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
@@ -697,7 +697,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		}
 		return a.ActionClone(newArgs)
 
-	case *LocalAction:
+	case *LogicLocalAction:
 		args := a.ActionArgs()
 		if len(args) == 0 {
 			return action

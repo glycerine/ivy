@@ -375,7 +375,7 @@ func isCallOrEnv(action ActionsAction) bool {
 		return false
 	}
 	switch action.(type) {
-	case *CallAction, *EnvAction:
+	case *LogicCallAction, *LogicEnvAction:
 		return true
 	}
 	return false
@@ -385,7 +385,7 @@ func isCallAction(action ActionsAction) bool {
 	if action == nil {
 		return false
 	}
-	_, ok := action.(*CallAction)
+	_, ok := action.(*LogicCallAction)
 	return ok
 }
 
@@ -753,12 +753,12 @@ func collectUninterpSorts(n Expr, out *[]Sort) {
 		return
 	}
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if us, ok := t.VSort.(*UninterpretedSort); ok {
 			addSortIfNew(out, us)
 		}
 	case *Const:
-		if fs, ok := t.CSort.(*FunctionSort); ok {
+		if fs, ok := t.CSort.(*LogicFunctionSort); ok {
 			for _, s := range fs.Domain() {
 				if us, ok := s.(*UninterpretedSort); ok {
 					addSortIfNew(out, us)
@@ -802,7 +802,7 @@ func MakeVC(action ActionsAction, precond []*Clauses,
 	var postFmlas []Expr
 	for _, p := range postcond {
 		for _, f := range p.Fmlas {
-			postFmlas = append(postFmlas, &Not{Body: f})
+			postFmlas = append(postFmlas, &LogicNot{Body: f})
 		}
 	}
 

@@ -34,17 +34,17 @@ func copyNodes(nodes []Expr) []Expr           { return CopyNodes(nodes) }
 // The canonical Go equivalent is ast.Schema (in ast/decl.go) which has
 // GetInstance with full substitution+compilation. This actions.Schema
 // is retained for cases where schemas are needed with compiled expressions.
-type Schema struct {
+type LogicSchema struct {
 	Defn      Expr // the definition (typically a LabeledFormula)
 	Fresh     []Expr
 	Instances []Expr
 }
 
-func NewSchema(defn Expr) *Schema {
-	return &Schema{Defn: defn}
+func NewSchema(defn Expr) *LogicSchema {
+	return &LogicSchema{Defn: defn}
 }
 
-func (s *Schema) String() string {
+func (s *LogicSchema) String() string {
 	res := fmt.Sprint(s.Defn)
 	if len(s.Fresh) > 0 {
 		parts := make([]string, len(s.Fresh))
@@ -57,7 +57,7 @@ func (s *Schema) String() string {
 }
 
 // Defines returns the symbol defined by this schema.
-func (s *Schema) Defines() Expr {
+func (s *LogicSchema) Defines() Expr {
 	type definer interface {
 		Defines() Expr
 	}
@@ -73,9 +73,9 @@ func (s *Schema) Defines() Expr {
 // For actions.Schema (compiled expressions), this performs substitution on the
 // definition's compiled form. For full AST-level substitution+compilation,
 // use ast.Schema.GetInstance instead.
-func (s *Schema) GetInstance(params []Expr, toClauses bool) (Expr, error) {
+func (s *LogicSchema) GetInstance(params []Expr, toClauses bool) (Expr, error) {
 	// Extract formal parameters and body from definition
-	defn, ok := s.Defn.(*Definition)
+	defn, ok := s.Defn.(*LogicDefinition)
 	if !ok {
 		return nil, fmt.Errorf("schema defn is not a Definition")
 	}
@@ -102,7 +102,7 @@ func (s *Schema) GetInstance(params []Expr, toClauses bool) (Expr, error) {
 // Instantiate creates an instance via GetInstance and appends it.
 // Corresponds to Python's Schema.instantiate(self, params) which calls
 // get_instance(params, False) and stores the result.
-func (s *Schema) Instantiate(params []Expr) {
+func (s *LogicSchema) Instantiate(params []Expr) {
 	inst, err := s.GetInstance(params, false)
 	if err == nil {
 		s.Instances = append(s.Instances, inst)
@@ -112,35 +112,35 @@ func (s *Schema) Instantiate(params []Expr) {
 // --- Sequence ---
 
 // Sequence represents a sequence of actions executed in order.
-type Sequence struct {
+type LogicSequence struct {
 	ActionBase
 	Elems []Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
-func NewSequence(args ...Expr) *Sequence {
-	return &Sequence{Elems: copyNodes(args)}
+func NewSequence(args ...Expr) *LogicSequence {
+	return &LogicSequence{Elems: copyNodes(args)}
 }
 
-func (s *Sequence) Name() string       { return "sequence" }
-func (s *Sequence) ActionArgs() []Expr { return s.Elems }
-func (s *Sequence) ActionClone(args []Expr) ActionsAction {
-	r := &Sequence{ActionBase: s.ActionBase, Elems: copyNodes(args)}
+func (s *LogicSequence) Name() string       { return "sequence" }
+func (s *LogicSequence) ActionArgs() []Expr { return s.Elems }
+func (s *LogicSequence) ActionClone(args []Expr) ActionsAction {
+	r := &LogicSequence{ActionBase: s.ActionBase, Elems: copyNodes(args)}
 	return r
 }
-func (s *Sequence) String() string {
+func (s *LogicSequence) String() string {
 	parts := make([]string, len(s.Elems))
 	for i, c := range s.Elems {
 		parts[i] = fmt.Sprint(c)
 	}
 	return "{" + strings.Join(parts, "; ") + "}"
 }
-func (s *Sequence) IterCalls() []string             { return defaultIterCalls(s.Elems) }
-func (s *Sequence) IterSubactions() []ActionsAction { return defaultIterSubactions(s) }
+func (s *LogicSequence) IterCalls() []string             { return defaultIterCalls(s.Elems) }
+func (s *LogicSequence) IterSubactions() []ActionsAction { return defaultIterSubactions(s) }
 
 // --- AssumeAction ---
 
 // AssumeAction assumes a formula holds.
-type AssumeAction struct {
+type LogicAssumeAction struct {
 	ActionBase
 	Formula Expr
 	LF      *LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
@@ -150,32 +150,32 @@ type AssumeAction struct {
 	Unprovable bool // from LabeledFormula.unprovable; if true, skip in action_update
 }
 
-func NewAssumeAction(fmla Expr) *AssumeAction {
-	return &AssumeAction{Formula: fmla}
+func NewAssumeAction(fmla Expr) *LogicAssumeAction {
+	return &LogicAssumeAction{Formula: fmla}
 }
 
 // GetLF/SetLF are used by check/ and ranking/ packages to access the
 // LabeledFormula on assert/assume actions. Args()/Clone() in action_expr.go
 // include LF as a first-class child for recursive tree-walking.
 
-func (a *AssumeAction) GetLF() *LabeledFormula   { return a.LF }
-func (a *AssumeAction) SetLF(lf *LabeledFormula) { a.LF = lf }
+func (a *LogicAssumeAction) GetLF() *LabeledFormula   { return a.LF }
+func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) { a.LF = lf }
 
-func (a *AssumeAction) Name() string       { return "assume" }
-func (a *AssumeAction) ActionArgs() []Expr { return []Expr{a.Formula} }
-func (a *AssumeAction) ActionClone(args []Expr) ActionsAction {
-	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
+func (a *LogicAssumeAction) Name() string       { return "assume" }
+func (a *LogicAssumeAction) ActionArgs() []Expr { return []Expr{a.Formula} }
+func (a *LogicAssumeAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
 }
-func (a *AssumeAction) String() string {
+func (a *LogicAssumeAction) String() string {
 	return "assume " + fmt.Sprint(a.Formula)
 }
-func (a *AssumeAction) IterCalls() []string             { return nil }
-func (a *AssumeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicAssumeAction) IterCalls() []string             { return nil }
+func (a *LogicAssumeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- AssertAction ---
 
 // AssertAction asserts a formula (can fail verification).
-type AssertAction struct {
+type LogicAssertAction struct {
 	ActionBase
 	Formula Expr
 	LF      *LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
@@ -187,54 +187,54 @@ type AssertAction struct {
 	Unprovable bool   // from LabeledFormula.unprovable; used by checked_assert filtering
 }
 
-func NewAssertAction(fmla Expr, proof ...Expr) *AssertAction {
-	a := &AssertAction{Formula: fmla}
+func NewAssertAction(fmla Expr, proof ...Expr) *LogicAssertAction {
+	a := &LogicAssertAction{Formula: fmla}
 	if len(proof) > 0 {
 		a.Proof = proof[0]
 	}
 	return a
 }
 
-func (a *AssertAction) GetLF() *LabeledFormula   { return a.LF }
-func (a *AssertAction) SetLF(lf *LabeledFormula) { a.LF = lf }
+func (a *LogicAssertAction) GetLF() *LabeledFormula   { return a.LF }
+func (a *LogicAssertAction) SetLF(lf *LabeledFormula) { a.LF = lf }
 
-func (a *AssertAction) Name() string { return "assert" }
-func (a *AssertAction) ActionArgs() []Expr {
+func (a *LogicAssertAction) Name() string { return "assert" }
+func (a *LogicAssertAction) ActionArgs() []Expr {
 	if a.Proof != nil {
 		return []Expr{a.Formula, a.Proof}
 	}
 	return []Expr{a.Formula}
 }
-func (a *AssertAction) ActionClone(args []Expr) ActionsAction {
-	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
+func (a *LogicAssertAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
 	return r
 }
-func (a *AssertAction) String() string {
+func (a *LogicAssertAction) String() string {
 	return "assert " + fmt.Sprint(a.Formula)
 }
-func (a *AssertAction) IterCalls() []string             { return nil }
-func (a *AssertAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicAssertAction) IterCalls() []string             { return nil }
+func (a *LogicAssertAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- RequiresAction ---
 
 // RequiresAction is an assert for preconditions.
 // Python: class RequiresAction(AssertAction)
-type RequiresAction struct {
-	AssertAction
+type LogicRequiresAction struct {
+	LogicAssertAction
 }
 
-func NewRequiresAction(fmla Expr) *RequiresAction {
-	return &RequiresAction{AssertAction: AssertAction{Formula: fmla}}
+func NewRequiresAction(fmla Expr) *LogicRequiresAction {
+	return &LogicRequiresAction{LogicAssertAction: LogicAssertAction{Formula: fmla}}
 }
 
 // Python: RequiresAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *RequiresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
-func (a *RequiresAction) ActionClone(args []Expr) ActionsAction {
-	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
+func (a *LogicRequiresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicRequiresAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicRequiresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -245,19 +245,19 @@ func (a *RequiresAction) ActionClone(args []Expr) ActionsAction {
 
 // EnsuresAction is an assert for postconditions.
 // Python: class EnsuresAction(AssertAction)
-type EnsuresAction struct {
-	AssertAction
+type LogicEnsuresAction struct {
+	LogicAssertAction
 }
 
-func NewEnsuresAction(fmla Expr) *EnsuresAction {
-	return &EnsuresAction{AssertAction: AssertAction{Formula: fmla}}
+func NewEnsuresAction(fmla Expr) *LogicEnsuresAction {
+	return &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{Formula: fmla}}
 }
 
 // Python: EnsuresAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *EnsuresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
-func (a *EnsuresAction) ActionClone(args []Expr) ActionsAction {
-	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
+func (a *LogicEnsuresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicEnsuresAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -266,11 +266,11 @@ func (a *EnsuresAction) ActionClone(args []Expr) ActionsAction {
 
 // IsAssertLike returns true if the action is an AssertAction or any of its
 // subclasses (RequiresAction, EnsuresAction, SubgoalAction).
-// This mirrors Python's isinstance(action, ia.AssertAction) which matches
+// This mirrors Python's isinstance(action, ia.LogicAssertAction) which matches
 // all subclasses due to inheritance.
 func IsAssertLike(action ActionsAction) bool {
 	switch action.(type) {
-	case *AssertAction, *RequiresAction, *EnsuresAction, *SubgoalAction:
+	case *LogicAssertAction, *LogicRequiresAction, *LogicEnsuresAction, *LogicSubgoalAction:
 		return true
 	}
 	return false
@@ -279,7 +279,7 @@ func IsAssertLike(action ActionsAction) bool {
 // --- AssignAction ---
 
 // AssignAction represents lhs := rhs assignment.
-type AssignAction struct {
+type LogicAssignAction struct {
 	ActionBase
 	LHS Expr
 	RHS Expr
@@ -290,14 +290,14 @@ type AssignAction struct {
 	AstRHS Node
 }
 
-func NewAssignAction(lhs, rhs Expr) *AssignAction {
-	return &AssignAction{LHS: lhs, RHS: rhs}
+func NewAssignAction(lhs, rhs Expr) *LogicAssignAction {
+	return &LogicAssignAction{LHS: lhs, RHS: rhs}
 }
 
-func (a *AssignAction) Name() string       { return "assign" }
-func (a *AssignAction) ActionArgs() []Expr { return []Expr{a.LHS, a.RHS} }
-func (a *AssignAction) ActionClone(args []Expr) ActionsAction {
-	return &AssignAction{
+func (a *LogicAssignAction) Name() string       { return "assign" }
+func (a *LogicAssignAction) ActionArgs() []Expr { return []Expr{a.LHS, a.RHS} }
+func (a *LogicAssignAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicAssignAction{
 		ActionBase: a.ActionBase,
 		LHS:        args[0],
 		RHS:        args[1],
@@ -305,16 +305,16 @@ func (a *AssignAction) ActionClone(args []Expr) ActionsAction {
 		AstRHS:     a.AstRHS,
 	}
 }
-func (a *AssignAction) String() string {
+func (a *LogicAssignAction) String() string {
 	return fmt.Sprint(a.LHS) + " := " + fmt.Sprint(a.RHS)
 }
-func (a *AssignAction) IterCalls() []string             { return nil }
-func (a *AssignAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicAssignAction) IterCalls() []string             { return nil }
+func (a *LogicAssignAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- HavocAction ---
 
 // HavocAction represents nondeterministic assignment.
-type HavocAction struct {
+type LogicHavocAction struct {
 	ActionBase
 	Target Expr
 
@@ -322,48 +322,48 @@ type HavocAction struct {
 	AstTarget Node
 }
 
-func NewHavocAction(target Expr) *HavocAction {
-	return &HavocAction{Target: target}
+func NewHavocAction(target Expr) *LogicHavocAction {
+	return &LogicHavocAction{Target: target}
 }
 
-func (a *HavocAction) Name() string       { return "havoc" }
-func (a *HavocAction) ActionArgs() []Expr { return []Expr{a.Target} }
-func (a *HavocAction) ActionClone(args []Expr) ActionsAction {
-	return &HavocAction{ActionBase: a.ActionBase, Target: args[0], AstTarget: a.AstTarget}
+func (a *LogicHavocAction) Name() string       { return "havoc" }
+func (a *LogicHavocAction) ActionArgs() []Expr { return []Expr{a.Target} }
+func (a *LogicHavocAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicHavocAction{ActionBase: a.ActionBase, Target: args[0], AstTarget: a.AstTarget}
 }
-func (a *HavocAction) String() string {
+func (a *LogicHavocAction) String() string {
 	return fmt.Sprint(a.Target) + " := *"
 }
-func (a *HavocAction) IterCalls() []string             { return nil }
-func (a *HavocAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicHavocAction) IterCalls() []string             { return nil }
+func (a *LogicHavocAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- SetAction ---
 
 // SetAction represents a set operation on a relation.
-type SetAction struct {
+type LogicSetAction struct {
 	ActionBase
 	Lit Expr // a literal (polarity + atom)
 }
 
-func NewSetAction(lit Expr) *SetAction {
-	return &SetAction{Lit: lit}
+func NewSetAction(lit Expr) *LogicSetAction {
+	return &LogicSetAction{Lit: lit}
 }
 
-func (a *SetAction) Name() string       { return "set" }
-func (a *SetAction) ActionArgs() []Expr { return []Expr{a.Lit} }
-func (a *SetAction) ActionClone(args []Expr) ActionsAction {
-	return &SetAction{ActionBase: a.ActionBase, Lit: args[0]}
+func (a *LogicSetAction) Name() string       { return "set" }
+func (a *LogicSetAction) ActionArgs() []Expr { return []Expr{a.Lit} }
+func (a *LogicSetAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicSetAction{ActionBase: a.ActionBase, Lit: args[0]}
 }
-func (a *SetAction) String() string {
+func (a *LogicSetAction) String() string {
 	return "set " + fmt.Sprint(a.Lit)
 }
-func (a *SetAction) IterCalls() []string             { return nil }
-func (a *SetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicSetAction) IterCalls() []string             { return nil }
+func (a *LogicSetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- IfAction ---
 
 // IfAction represents if/else branching.
-type IfAction struct {
+type LogicIfAction struct {
 	ActionBase
 	Cond     Expr // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
 	AstCond  Node // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
@@ -371,37 +371,37 @@ type IfAction struct {
 	ElseBody Expr // Action, may be nil
 }
 
-func NewIfAction(cond, thenBody Expr, elseBody ...Expr) *IfAction {
-	a := &IfAction{Cond: cond, ThenBody: thenBody}
+func NewIfAction(cond, thenBody Expr, elseBody ...Expr) *LogicIfAction {
+	a := &LogicIfAction{Cond: cond, ThenBody: thenBody}
 	if len(elseBody) > 0 {
 		a.ElseBody = elseBody[0]
 	}
 	return a
 }
 
-func (a *IfAction) Name() string { return "if" }
-func (a *IfAction) ActionArgs() []Expr {
+func (a *LogicIfAction) Name() string { return "if" }
+func (a *LogicIfAction) ActionArgs() []Expr {
 	if a.ElseBody != nil {
 		return []Expr{a.Cond, a.ThenBody, a.ElseBody}
 	}
 	return []Expr{a.Cond, a.ThenBody}
 }
-func (a *IfAction) ActionClone(args []Expr) ActionsAction {
-	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, ThenBody: args[1]}
+func (a *LogicIfAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicIfAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, ThenBody: args[1]}
 	if len(args) >= 3 {
 		r.ElseBody = args[2]
 	}
 	return r
 }
-func (a *IfAction) String() string {
+func (a *LogicIfAction) String() string {
 	res := "if " + fmt.Sprint(a.Cond) + " {" + fmt.Sprint(a.ThenBody) + "}"
 	if a.ElseBody != nil {
 		res += " else {" + fmt.Sprint(a.ElseBody) + "}"
 	}
 	return res
 }
-func (a *IfAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *IfAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicIfAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicIfAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // SomeCondition wraps an ast.Some/SomeMin/SomeMax as lg.Expr so it can be
 // stored in IfAction.Cond. Matches Python where IfAction.args[0] can directly
@@ -467,19 +467,19 @@ func (s *SomeCondition) String() string {
 // Some/SomeMin/SomeMax node whose children are already compiled lg.Expr.
 func someCondFromAST(node Node) *SomeCondition {
 	switch s := node.(type) {
-	case *AstSome:
+	case *Some:
 		params := make([]*Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*Const)
 		}
 		return &SomeCondition{Params: params, Fmla: s.Fmla.(Expr), Kind: "some"}
-	case *AstSomeMin:
+	case *SomeMin:
 		params := make([]*Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*Const)
 		}
 		return &SomeCondition{Params: params, Fmla: s.Fmla.(Expr), Kind: "some_min", Index: s.Index.(Expr)}
-	case *AstSomeMax:
+	case *SomeMax:
 		params := make([]*Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*Const)
@@ -491,12 +491,12 @@ func someCondFromAST(node Node) *SomeCondition {
 
 // Subactions decomposes the if into (ifPart, elsePart).
 // Python: IfAction.subactions()
-func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
+func (a *LogicIfAction) Subactions(actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
 	if some, ok := a.Cond.(*SomeCondition); ok {
 		return a.subactionsSome(some, actCfg)
 	}
 	// Simple boolean condition
-	// Python: if_part = Sequence(AssumeAction(self.args[0]), self.args[1])
+	// Python: if_part = LogicSequence(AssumeAction(self.args[0]), self.args[1])
 	ifPart = NewSequence(NewAssumeAction(a.Cond), a.ThenBody)
 	elseAction := a.ElseBody
 	if elseAction == nil {
@@ -509,12 +509,12 @@ func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart ActionsAction, else
 
 // subactionsSome handles the Some/SomeMinMax case of Subactions.
 // Python: IfAction.subactions() when isinstance(self.args[0], ivy_ast.Some)
-func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
+func (a *LogicIfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
 	ps := some.Params
 	fmla := some.Fmla
 
 	// Create fresh variables for each param
-	vs := make([]*Variable, len(ps))
+	vs := make([]*LogicVariable, len(ps))
 	subst := make(map[NodeKey]Expr, len(ps))
 	for i, p := range ps {
 		v, _ := NewVariable(fmt.Sprintf("V%d", i), p.CSort)
@@ -544,7 +544,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 				if idxSort == nil {
 					idxSort = TopS
 				}
-				leqSym := NewConst("<=", RelationSort([]Sort{idxSort, idxSort}))
+				leqSym := NewConst("<=", LogicRelationSort([]Sort{idxSort, idxSort}))
 				// comp = operator(ivar, idx) or operator(idx, ivar)
 				var leqApp, eqNode Expr
 				if isMin {
@@ -553,32 +553,32 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 					leqApp, _ = NewApply(leqSym, idx, ivar)
 				}
 				eqNode = NewEqualsNode(ivar, idx)
-				comp, _ := NewAnd(leqApp, &Not{Body: eqNode})
+				comp, _ := NewAnd(leqApp, &LogicNot{Body: eqNode})
 				notSfmlaComp, _ := NewAnd(sfmla, comp)
-				fmla, _ = NewAnd(fmla, &Not{Body: notSfmlaComp})
+				fmla, _ = NewAnd(fmla, &LogicNot{Body: notSfmlaComp})
 			} else {
-				// Python: ltsym = Symbol('<', RelationSort(...))
+				// Python: ltsym = Symbol('<', LogicRelationSort(...))
 				idxSort := idx.NodeSort()
 				if idxSort == nil {
 					idxSort = TopS
 				}
-				ltSym := NewConst("<", RelationSort([]Sort{idxSort, idxSort}))
+				ltSym := NewConst("<", LogicRelationSort([]Sort{idxSort, idxSort}))
 				ivar = SubstituteConstantsExpr(idx, subst)
 				var comp Expr
 				if isMin {
 					ltApp, _ := NewApply(ltSym, ivar, idx)
-					comp = &Not{Body: ltApp}
+					comp = &LogicNot{Body: ltApp}
 				} else {
 					ltApp, _ := NewApply(ltSym, idx, ivar)
-					comp = &Not{Body: ltApp}
+					comp = &LogicNot{Body: ltApp}
 				}
-				implNode := &Implies{T1: sfmla, T2: comp}
+				implNode := &LogicImplies{T1: sfmla, T2: comp}
 				fmla, _ = NewAnd(fmla, implNode)
 			}
 		}
 	}
 
-	// Python: if_part = LocalAction(*(ps+[Sequence(AssumeAction(fmla),self.args[1])]))
+	// Python: if_part = LogicLocalAction(*(ps+[Sequence(AssumeAction(fmla),self.args[1])]))
 	assumeNode := NewAssumeAction(fmla)
 	innerSeq := NewSequence(assumeNode, a.ThenBody)
 	localArgs := make([]Expr, 0, len(ps)+1)
@@ -593,17 +593,17 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 	if elseAction == nil {
 		elseAction = NewSequence()
 	}
-	elsePart = NewSequence(NewAssumeAction(&Not{Body: sfmla}), elseAction)
+	elsePart = NewSequence(NewAssumeAction(&LogicNot{Body: sfmla}), elseAction)
 	return
 }
 
 // GetCond returns the effective boolean condition.
 // For Some conditions, returns Exists(vs, substituted_fmla).
 // Python: IfAction.get_cond()
-func (a *IfAction) GetCond() Expr {
+func (a *LogicIfAction) GetCond() Expr {
 	if some, ok := a.Cond.(*SomeCondition); ok {
 		ps := some.Params
-		vs := make([]*Variable, len(ps))
+		vs := make([]*LogicVariable, len(ps))
 		subst := make(map[NodeKey]Expr, len(ps))
 		for i, p := range ps {
 			v, _ := NewVariable(fmt.Sprintf("V%d", i), p.CSort)
@@ -620,7 +620,7 @@ func (a *IfAction) GetCond() Expr {
 // --- WhileAction ---
 
 // WhileAction represents a while loop with an invariant.
-type WhileAction struct {
+type LogicWhileAction struct {
 	ActionBase
 	Cond       Expr   // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
 	AstCond    Node   // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
@@ -628,24 +628,24 @@ type WhileAction struct {
 	Invariants []Expr // optional invariant assertions
 }
 
-func NewWhileAction(cond, body Expr, invariants ...Expr) *WhileAction {
-	return &WhileAction{Cond: cond, Body: body, Invariants: copyNodes(invariants)}
+func NewWhileAction(cond, body Expr, invariants ...Expr) *LogicWhileAction {
+	return &LogicWhileAction{Cond: cond, Body: body, Invariants: copyNodes(invariants)}
 }
 
-func (a *WhileAction) Name() string { return "while" }
-func (a *WhileAction) ActionArgs() []Expr {
+func (a *LogicWhileAction) Name() string { return "while" }
+func (a *LogicWhileAction) ActionArgs() []Expr {
 	args := []Expr{a.Cond, a.Body}
 	args = append(args, a.Invariants...)
 	return args
 }
-func (a *WhileAction) ActionClone(args []Expr) ActionsAction {
-	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, Body: args[1]}
+func (a *LogicWhileAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicWhileAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, Body: args[1]}
 	if len(args) > 2 {
 		r.Invariants = copyNodes(args[2:])
 	}
 	return r
 }
-func (a *WhileAction) String() string {
+func (a *LogicWhileAction) String() string {
 	res := "while " + fmt.Sprint(a.Cond) + "\n"
 	for _, inv := range a.Invariants {
 		res += "invariant " + fmt.Sprint(inv) + "\n"
@@ -653,13 +653,13 @@ func (a *WhileAction) String() string {
 	res += "{" + fmt.Sprint(a.Body) + "}"
 	return res
 }
-func (a *WhileAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *WhileAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicWhileAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicWhileAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- ChoiceAction ---
 
 // ChoiceAction represents nondeterministic choice between branches.
-type ChoiceAction struct {
+type LogicChoiceAction struct {
 	ActionBase
 	Branches []Expr // each is an Action
 	UniqueID int64
@@ -668,26 +668,26 @@ type ChoiceAction struct {
 // NewChoiceActionOn creates a ChoiceAction with a proper UniqueID from the
 // shared ChoiceActionCtr, matching Python's choice_action_ctr global.
 // All production callers must use this constructor.
-func NewChoiceActionOn(cfg *ActionsConfig, branches ...Expr) *ChoiceAction {
+func NewChoiceActionOn(cfg *ActionsConfig, branches ...Expr) *LogicChoiceAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
-	c := &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
+	c := &LogicChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 	c.ActCfg = cfg
 	return c
 }
 
-func (a *ChoiceAction) Name() string       { return "choice" }
-func (a *ChoiceAction) ActionArgs() []Expr { return a.Branches }
-func (a *ChoiceAction) ActionClone(args []Expr) ActionsAction {
+func (a *LogicChoiceAction) Name() string       { return "choice" }
+func (a *LogicChoiceAction) ActionArgs() []Expr { return a.Branches }
+func (a *LogicChoiceAction) ActionClone(args []Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewChoiceActionOn(a.ActCfg, args...)
 		r.ActionBase = a.ActionBase
 		return r
 	}
-	return &ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}
+	return &LogicChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}
 }
-func (a *ChoiceAction) String() string {
+func (a *LogicChoiceAction) String() string {
 	parts := make([]string, len(a.Branches))
 	for i, b := range a.Branches {
 		if i < len(a.Branches)-1 {
@@ -698,13 +698,13 @@ func (a *ChoiceAction) String() string {
 	}
 	return strings.Join(parts, "")
 }
-func (a *ChoiceAction) IterCalls() []string             { return defaultIterCalls(a.Branches) }
-func (a *ChoiceAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicChoiceAction) IterCalls() []string             { return defaultIterCalls(a.Branches) }
+func (a *LogicChoiceAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CallAction ---
 
 // CallAction represents an action call (inlines a named action).
-type CallAction struct {
+type LogicCallAction struct {
 	ActionBase
 	Callee        Expr   // the called action (compiled lg.Expr for runtime)
 	AstCallee     *Atom  // preserved AST atom for sexp output (matches Python)
@@ -712,22 +712,22 @@ type CallAction struct {
 	UniqueID      int64
 }
 
-func NewCallActionOn(cfg *ActionsConfig, callee Expr, returns ...Expr) *CallAction {
+func NewCallActionOn(cfg *ActionsConfig, callee Expr, returns ...Expr) *LogicCallAction {
 	id := cfg.IuCfg.CallActionCtr
 	cfg.IuCfg.CallActionCtr++
 	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr)
-	c := &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
+	c := &LogicCallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
 	c.ActCfg = cfg
 	return c
 }
 
-func (a *CallAction) Name() string { return "call" }
-func (a *CallAction) ActionArgs() []Expr {
+func (a *LogicCallAction) Name() string { return "call" }
+func (a *LogicCallAction) ActionArgs() []Expr {
 	args := []Expr{a.Callee}
 	args = append(args, a.ActualReturns...)
 	return args
 }
-func (a *CallAction) ActionClone(args []Expr) ActionsAction {
+func (a *LogicCallAction) ActionClone(args []Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewCallActionOn(a.ActCfg, args[0], args[1:]...)
 		r.ActionBase = a.ActionBase
@@ -735,13 +735,13 @@ func (a *CallAction) ActionClone(args []Expr) ActionsAction {
 		return r
 	}
 	panic("a.ActCfg should have been set.")
-	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee}
+	r := &LogicCallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
 	}
 	return r
 }
-func (a *CallAction) String() string {
+func (a *LogicCallAction) String() string {
 	res := "call "
 	if len(a.ActualReturns) > 0 {
 		parts := make([]string, len(a.ActualReturns))
@@ -753,16 +753,16 @@ func (a *CallAction) String() string {
 	res += fmt.Sprint(a.Callee)
 	return res
 }
-func (a *CallAction) CalleeName() string {
+func (a *LogicCallAction) CalleeName() string {
 	if a.AstCallee != nil {
 		return a.AstCallee.Rep
 	}
 	return fmt.Sprint(a.Callee)
 }
-func (a *CallAction) IterCalls() []string {
+func (a *LogicCallAction) IterCalls() []string {
 	return []string{a.CalleeName()}
 }
-func (a *CallAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicCallAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // calleeFromAtom reconstructs a compiled lg.Expr callee from an ast.Atom.
 // This is the inverse of the compiler's pattern:
@@ -785,7 +785,7 @@ func calleeFromAtom(atom *Atom) Expr {
 // SplitReturns decomposes a call with returns into a call with temp
 // returns followed by assignments from temps to actual returns.
 // Python: CallAction.split_returns()
-func (a *CallAction) SplitReturns(actCfg *ActionsConfig) ActionsAction {
+func (a *LogicCallAction) SplitReturns(actCfg *ActionsConfig) ActionsAction {
 	// Python has no early return — always runs rename+split logic.
 	// Collect used symbol names for unique naming
 	usedMap := UsedSymbolsAST(a.Callee)
@@ -839,7 +839,7 @@ func renameExpr(e Expr, rn *UniqueRenamer) Expr {
 	case *Apply:
 		newFunc := renameExpr(v.Func, rn)
 		return MustApply(newFunc, v.Terms...)
-	case *Variable:
+	case *LogicVariable:
 		nv, _ := NewVariable(rn.Rename(v.Name), v.VSort)
 		return nv
 	default:
@@ -848,14 +848,14 @@ func renameExpr(e Expr, rn *UniqueRenamer) Expr {
 }
 
 // LocalAction introduces local variables hidden from the outside.
-type LocalAction struct {
+type LogicLocalAction struct {
 	ActionBase
 	Locals   []Expr // all but last are local declarations
 	Body     Expr   // last arg is the body action
 	UniqueID int64
 }
 
-func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...Expr) *LocalAction {
+func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...Expr) *LogicLocalAction {
 	if cfg == nil {
 		panic("cfg must not be nil")
 	}
@@ -865,11 +865,11 @@ func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...Expr) *LocalAct
 	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))
-	var la *LocalAction
+	var la *LogicLocalAction
 	if len(args) == 0 {
-		la = &LocalAction{UniqueID: id}
+		la = &LogicLocalAction{UniqueID: id}
 	} else {
-		la = &LocalAction{
+		la = &LogicLocalAction{
 			Locals:   copyNodes(args[:len(args)-1]),
 			Body:     args[len(args)-1],
 			UniqueID: id,
@@ -879,8 +879,8 @@ func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...Expr) *LocalAct
 	return la
 }
 
-func (a *LocalAction) Name() string { return "local" }
-func (a *LocalAction) ActionArgs() []Expr {
+func (a *LogicLocalAction) Name() string { return "local" }
+func (a *LogicLocalAction) ActionArgs() []Expr {
 	args := make([]Expr, 0, len(a.Locals)+1)
 	args = append(args, a.Locals...)
 	if a.Body != nil {
@@ -888,7 +888,7 @@ func (a *LocalAction) ActionArgs() []Expr {
 	}
 	return args
 }
-func (a *LocalAction) ActionClone(args []Expr) ActionsAction {
+func (a *LogicLocalAction) ActionClone(args []Expr) ActionsAction {
 	if a.ActCfg == nil {
 		panic("actions: LocalAction.ActionClone called with nil ActCfg — was not created via cfg.NewLocalAction()")
 	}
@@ -896,37 +896,37 @@ func (a *LocalAction) ActionClone(args []Expr) ActionsAction {
 	r.ActionBase = a.ActionBase
 	return r
 }
-func (a *LocalAction) String() string {
+func (a *LogicLocalAction) String() string {
 	parts := make([]string, len(a.Locals))
 	for i, l := range a.Locals {
 		parts[i] = fmt.Sprint(l)
 	}
 	return "local " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LocalAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *LocalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicLocalAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicLocalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- LetAction ---
 
 // LetAction binds symbols in an action.
-type LetAction struct {
+type LogicLetAction struct {
 	ActionBase
 	Bindings []Expr // all but last are binding definitions
 	Body     Expr   // last arg is the body
 }
 
-func NewLetAction(args ...Expr) *LetAction {
+func NewLetAction(args ...Expr) *LogicLetAction {
 	if len(args) == 0 {
-		return &LetAction{}
+		return &LogicLetAction{}
 	}
-	return &LetAction{
+	return &LogicLetAction{
 		Bindings: copyNodes(args[:len(args)-1]),
 		Body:     args[len(args)-1],
 	}
 }
 
-func (a *LetAction) Name() string { return "let" }
-func (a *LetAction) ActionArgs() []Expr {
+func (a *LogicLetAction) Name() string { return "let" }
+func (a *LogicLetAction) ActionArgs() []Expr {
 	args := make([]Expr, 0, len(a.Bindings)+1)
 	args = append(args, a.Bindings...)
 	if a.Body != nil {
@@ -934,121 +934,121 @@ func (a *LetAction) ActionArgs() []Expr {
 	}
 	return args
 }
-func (a *LetAction) ActionClone(args []Expr) ActionsAction {
-	r := &LetAction{ActionBase: a.ActionBase}
+func (a *LogicLetAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicLetAction{ActionBase: a.ActionBase}
 	if len(args) > 0 {
 		r.Bindings = copyNodes(args[:len(args)-1])
 		r.Body = args[len(args)-1]
 	}
 	return r
 }
-func (a *LetAction) String() string {
+func (a *LogicLetAction) String() string {
 	parts := make([]string, len(a.Bindings))
 	for i, b := range a.Bindings {
 		parts[i] = fmt.Sprint(b)
 	}
 	return "let " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LetAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *LetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicLetAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicLetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- BindOldsAction ---
 
 // BindOldsAction binds old values of symbols.
-type BindOldsAction struct {
+type LogicBindOldsAction struct {
 	ActionBase
 	Inner Expr // the wrapped action
 }
 
-func NewBindOldsAction(inner Expr) *BindOldsAction {
-	return &BindOldsAction{Inner: inner}
+func NewBindOldsAction(inner Expr) *LogicBindOldsAction {
+	return &LogicBindOldsAction{Inner: inner}
 }
 
-func (a *BindOldsAction) Name() string       { return "bindolds" }
-func (a *BindOldsAction) ActionArgs() []Expr { return []Expr{a.Inner} }
-func (a *BindOldsAction) ActionClone(args []Expr) ActionsAction {
-	return &BindOldsAction{ActionBase: a.ActionBase, Inner: args[0]}
+func (a *LogicBindOldsAction) Name() string       { return "bindolds" }
+func (a *LogicBindOldsAction) ActionArgs() []Expr { return []Expr{a.Inner} }
+func (a *LogicBindOldsAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicBindOldsAction{ActionBase: a.ActionBase, Inner: args[0]}
 }
-func (a *BindOldsAction) String() string {
+func (a *LogicBindOldsAction) String() string {
 	return "bindolds {" + fmt.Sprint(a.Inner) + "}"
 }
-func (a *BindOldsAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *BindOldsAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicBindOldsAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicBindOldsAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- NativeAction ---
 
 // NativeAction represents native code escape.
-type NativeAction struct {
+type LogicNativeAction struct {
 	ActionBase
 	Code   Expr
 	Params []Expr
 	Impure bool
 }
 
-func NewNativeAction(code Expr, params ...Expr) *NativeAction {
-	return &NativeAction{Code: code, Params: copyNodes(params)}
+func NewNativeAction(code Expr, params ...Expr) *LogicNativeAction {
+	return &LogicNativeAction{Code: code, Params: copyNodes(params)}
 }
 
-func (a *NativeAction) Name() string { return "native" }
-func (a *NativeAction) ActionArgs() []Expr {
+func (a *LogicNativeAction) Name() string { return "native" }
+func (a *LogicNativeAction) ActionArgs() []Expr {
 	args := []Expr{a.Code}
 	args = append(args, a.Params...)
 	return args
 }
-func (a *NativeAction) ActionClone(args []Expr) ActionsAction {
-	r := &NativeAction{ActionBase: a.ActionBase, Impure: a.Impure, Code: args[0]}
+func (a *LogicNativeAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicNativeAction{ActionBase: a.ActionBase, Impure: a.Impure, Code: args[0]}
 	if len(args) > 1 {
 		r.Params = copyNodes(args[1:])
 	}
 	return r
 }
-func (a *NativeAction) String() string {
+func (a *LogicNativeAction) String() string {
 	return "native <<<...>>>"
 }
-func (a *NativeAction) IterCalls() []string             { return nil }
-func (a *NativeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicNativeAction) IterCalls() []string             { return nil }
+func (a *LogicNativeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CrashAction ---
 
 // CrashAction represents a crash/failure action.
-type CrashAction struct {
+type LogicCrashAction struct {
 	ActionBase
 	Target Expr
 }
 
-func NewCrashAction(target Expr) *CrashAction {
-	return &CrashAction{Target: target}
+func NewCrashAction(target Expr) *LogicCrashAction {
+	return &LogicCrashAction{Target: target}
 }
 
-func (a *CrashAction) Name() string       { return "crash" }
-func (a *CrashAction) ActionArgs() []Expr { return []Expr{a.Target} }
-func (a *CrashAction) ActionClone(args []Expr) ActionsAction {
-	return &CrashAction{ActionBase: a.ActionBase, Target: args[0]}
+func (a *LogicCrashAction) Name() string       { return "crash" }
+func (a *LogicCrashAction) ActionArgs() []Expr { return []Expr{a.Target} }
+func (a *LogicCrashAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicCrashAction{ActionBase: a.ActionBase, Target: args[0]}
 }
-func (a *CrashAction) String() string {
+func (a *LogicCrashAction) String() string {
 	return "crash " + fmt.Sprint(a.Target)
 }
-func (a *CrashAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
-func (a *CrashAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicCrashAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LogicCrashAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- ThunkAction ---
 
 // ThunkAction represents a deferred (thunked) action.
-type ThunkAction struct {
+type LogicThunkAction struct {
 	ActionBase
 	Elems []Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
-func NewThunkAction(args ...Expr) *ThunkAction {
-	return &ThunkAction{Elems: copyNodes(args)}
+func NewThunkAction(args ...Expr) *LogicThunkAction {
+	return &LogicThunkAction{Elems: copyNodes(args)}
 }
 
-func (a *ThunkAction) Name() string       { return "thunk" }
-func (a *ThunkAction) ActionArgs() []Expr { return a.Elems }
-func (a *ThunkAction) ActionClone(args []Expr) ActionsAction {
-	return &ThunkAction{ActionBase: a.ActionBase, Elems: copyNodes(args)}
+func (a *LogicThunkAction) Name() string       { return "thunk" }
+func (a *LogicThunkAction) ActionArgs() []Expr { return a.Elems }
+func (a *LogicThunkAction) ActionClone(args []Expr) ActionsAction {
+	return &LogicThunkAction{ActionBase: a.ActionBase, Elems: copyNodes(args)}
 }
-func (a *ThunkAction) String() string {
+func (a *LogicThunkAction) String() string {
 	if len(a.Elems) >= 4 {
 		res := "thunk [" + fmt.Sprint(a.Elems[0]) + "] " +
 			fmt.Sprint(a.Elems[1]) + " : " +
@@ -1061,44 +1061,44 @@ func (a *ThunkAction) String() string {
 	}
 	return "thunk " + actionsNodeSliceStr(a.Elems)
 }
-func (a *ThunkAction) IterCalls() []string             { return defaultIterCalls(a.Elems) }
-func (a *ThunkAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicThunkAction) IterCalls() []string             { return defaultIterCalls(a.Elems) }
+func (a *LogicThunkAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- EnvAction ---
 
 // EnvAction represents an environment action (choice of public actions).
 // It is similar to ChoiceAction but hides child parameters.
-type EnvAction struct {
-	ChoiceAction
+type LogicEnvAction struct {
+	LogicChoiceAction
 }
 
 // NewEnvActionOn creates an EnvAction with a proper UniqueID from the
 // shared ChoiceActionCtr, matching Python's choice_action_ctr global.
 // All production callers must use this constructor.
-func NewEnvActionOn(cfg *ActionsConfig, branches ...Expr) *EnvAction {
+func NewEnvActionOn(cfg *ActionsConfig, branches ...Expr) *LogicEnvAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
-	e := &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	e := &LogicEnvAction{LogicChoiceAction: LogicChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
 	e.ActCfg = cfg
 	return e
 }
 
-func (a *EnvAction) Name() string { return "env" }
-func (a *EnvAction) ActionClone(args []Expr) ActionsAction {
+func (a *LogicEnvAction) Name() string { return "env" }
+func (a *LogicEnvAction) ActionClone(args []Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewEnvActionOn(a.ActCfg, args...)
 		r.ActionBase = a.ActionBase
 		return r
 	}
-	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}}
+	return &LogicEnvAction{LogicChoiceAction: LogicChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}}
 }
 
 // EnvAction always returns empty formal params/returns.
-func (a *EnvAction) GetFormalParams() []*Const  { return nil }
-func (a *EnvAction) GetFormalReturns() []*Const { return nil }
+func (a *LogicEnvAction) GetFormalParams() []*Const  { return nil }
+func (a *LogicEnvAction) GetFormalReturns() []*Const { return nil }
 
-func (a *EnvAction) String() string {
+func (a *LogicEnvAction) String() string {
 	// Python: ivy_actions.py:933-936
 	//   if all(hasattr(a,'label') for a in self.args):
 	//       return '{' + ','.join(a.label for a in self.args) + '}'
@@ -1169,17 +1169,17 @@ func (a *IgnoreAction) IterSubactions() []ActionsAction { return []ActionsAction
 // --- RME ---
 
 // RME represents a requires-modifies-ensures clause.
-type RME struct {
+type LogicRME struct {
 	Requires Expr
 	Modifies []string
 	Ensures  Expr
 }
 
-func NewRME(requires Expr, modifies []string, ensures Expr) *RME {
-	return &RME{Requires: requires, Modifies: modifies, Ensures: ensures}
+func NewRME(requires Expr, modifies []string, ensures Expr) *LogicRME {
+	return &LogicRME{Requires: requires, Modifies: modifies, Ensures: ensures}
 }
 
-func (r *RME) String() string {
+func (r *LogicRME) String() string {
 	var res string
 	if r.Requires != nil {
 		res += "requires " + fmt.Sprint(r.Requires) + " "
@@ -1250,7 +1250,7 @@ func IterInternalDefines(action ActionsAction) []InternalDefine {
 		return nil
 	}
 	// ThunkAction override
-	if thunk, ok := action.(*ThunkAction); ok {
+	if thunk, ok := action.(*LogicThunkAction); ok {
 		return iterInternalDefinesThunk(thunk)
 	}
 	var result []InternalDefine
@@ -1264,7 +1264,7 @@ func IterInternalDefines(action ActionsAction) []InternalDefine {
 
 // iterInternalDefinesThunk is the ThunkAction override.
 // Python: ThunkAction.iter_internal_defines yields (name, lineno) and (name+".run", lineno).
-func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
+func iterInternalDefinesThunk(a *LogicThunkAction) []InternalDefine {
 	lineno := a.GetLineno()
 	var name string
 	if len(a.Elems) > 0 {
@@ -1290,7 +1290,7 @@ func GetTypeNames(action ActionsAction, names map[string]bool) {
 		return
 	}
 	for _, sub := range action.IterSubactions() {
-		if local, ok := sub.(*LocalAction); ok {
+		if local, ok := sub.(*LogicLocalAction); ok {
 			for _, decl := range local.Locals {
 				collectTypeNamesFromDecl(decl, names)
 			}
@@ -1338,26 +1338,26 @@ func collectTypeNamesFromDecl(decl Expr, names map[string]bool) {
 // atomicDecompose is the default: action is indivisible, returns [[self]].
 func atomicDecompose(a ActionsAction) [][]ActionsAction { return [][]ActionsAction{{a}} }
 
-func (a *AssumeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
-func (a *AssertAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
-func (a *RequiresAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
-func (a *EnsuresAction) Decompose() [][]ActionsAction  { return atomicDecompose(a) }
-func (a *AssignAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
-func (a *HavocAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
-func (a *SetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
-func (a *CallAction) Decompose() [][]ActionsAction     { return atomicDecompose(a) }
-func (a *LocalAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
-func (a *LetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
-func (a *BindOldsAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
-func (a *NativeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
-func (a *CrashAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
-func (a *ThunkAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
-func (a *ReturnAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
-func (a *IgnoreAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *LogicAssumeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *LogicAssertAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *LogicRequiresAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
+func (a *LogicEnsuresAction) Decompose() [][]ActionsAction  { return atomicDecompose(a) }
+func (a *LogicAssignAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *LogicHavocAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *LogicSetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
+func (a *LogicCallAction) Decompose() [][]ActionsAction     { return atomicDecompose(a) }
+func (a *LogicLocalAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *LogicLetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
+func (a *LogicBindOldsAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
+func (a *LogicNativeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *LogicCrashAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *LogicThunkAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *ReturnAction) Decompose() [][]ActionsAction        { return atomicDecompose(a) }
+func (a *IgnoreAction) Decompose() [][]ActionsAction        { return atomicDecompose(a) }
 
 // Sequence: returns all sub-actions in one path.
 // Python: return [(pre, self.args, post)]
-func (s *Sequence) Decompose() [][]ActionsAction {
+func (s *LogicSequence) Decompose() [][]ActionsAction {
 	var acts []ActionsAction
 	for _, arg := range s.Elems {
 		if a, ok := arg.(ActionsAction); ok {
@@ -1370,9 +1370,9 @@ func (s *Sequence) Decompose() [][]ActionsAction {
 	return [][]ActionsAction{acts}
 }
 
-// ChoiceAction: each branch is a separate decomposition path.
+// LogicChoiceAction: each branch is a separate decomposition path.
 // Python: return [(pre, [a], post) for a in self.args]
-func (a *ChoiceAction) Decompose() [][]ActionsAction {
+func (a *LogicChoiceAction) Decompose() [][]ActionsAction {
 	var paths [][]ActionsAction
 	for _, branch := range a.Branches {
 		if act, ok := branch.(ActionsAction); ok {
@@ -1387,7 +1387,7 @@ func (a *ChoiceAction) Decompose() [][]ActionsAction {
 
 // IfAction: each branch is a separate decomposition path.
 // Python: return [(pre, [a], post) for a in self.subactions()]
-func (a *IfAction) Decompose() [][]ActionsAction {
+func (a *LogicIfAction) Decompose() [][]ActionsAction {
 	var paths [][]ActionsAction
 	if thenAct, ok := a.ThenBody.(ActionsAction); ok {
 		paths = append(paths, []ActionsAction{thenAct})
@@ -1405,7 +1405,7 @@ func (a *IfAction) Decompose() [][]ActionsAction {
 
 // WhileAction: expand and then decompose.
 // Python: return self.expand(module, []).decompose(pre, post, fail)
-func (a *WhileAction) Decompose() [][]ActionsAction {
+func (a *LogicWhileAction) Decompose() [][]ActionsAction {
 	// Python: return self.expand(ivy_module.module, []).decompose(pre, post, fail)
 	// Without a global context, we can't expand. Callers should use
 	// DecomposeWithState or provide a module explicitly.
@@ -1416,7 +1416,7 @@ func (a *WhileAction) Decompose() [][]ActionsAction {
 }
 
 // DecomposeWithModule expands the while loop using the given module and decomposes.
-func (a *WhileAction) DecomposeWithModule(m *Module) [][]ActionsAction {
+func (a *LogicWhileAction) DecomposeWithModule(m *Module) [][]ActionsAction {
 	if m == nil {
 		return a.Decompose()
 	}
@@ -1445,7 +1445,7 @@ type DecompTriple struct {
 // This is the Python-compatible version: decompose(self, pre, post, fail=False).
 func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTriple {
 	switch act := a.(type) {
-	case *Sequence:
+	case *LogicSequence:
 		// Python: return [(pre, self.args, post)]
 		var acts []ActionsAction
 		for _, arg := range act.Elems {
@@ -1455,7 +1455,7 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 		}
 		return []DecompTriple{{Pre: pre, Actions: acts, Post: post}}
 
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		// Python: each branch is (pre, [branch], post)
 		var result []DecompTriple
 		for _, branch := range act.Branches {
@@ -1465,7 +1465,7 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 		}
 		return result
 
-	case *IfAction:
+	case *LogicIfAction:
 		// Python: each branch is (pre, [branch], post)
 		var result []DecompTriple
 		if then, ok := act.ThenBody.(ActionsAction); ok {
@@ -1478,7 +1478,7 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 		}
 		return result
 
-	case *LocalAction:
+	case *LogicLocalAction:
 		// Python: hide symbols from pre/post, then recurse on body
 		// For now, recurse on body without state hiding (requires HideState infrastructure)
 		if act.Body != nil {
@@ -1488,7 +1488,7 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 		}
 		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
 
-	case *WhileAction:
+	case *LogicWhileAction:
 		// Python: expand then decompose
 		// Simplified: treat body as a single step
 		if body, ok := act.Body.(ActionsAction); ok {
@@ -1509,29 +1509,29 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 // SubgoalAction extends AssertAction with an optional kind tag.
 // Python: class SubgoalAction(AssertAction)
 // It inherits action_update from AssertAction.
-type SubgoalAction struct {
-	AssertAction
+type LogicSubgoalAction struct {
+	LogicAssertAction
 	SubgoalKind string // optional kind tag (distinct from AssertAction.Kind to avoid shadowing)
 }
 
-func NewSubgoalAction(fmla Expr) *SubgoalAction {
-	return &SubgoalAction{AssertAction: AssertAction{Formula: fmla}}
+func NewSubgoalAction(fmla Expr) *LogicSubgoalAction {
+	return &LogicSubgoalAction{LogicAssertAction: LogicAssertAction{Formula: fmla}}
 }
 
 // Python: SubgoalAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *SubgoalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
-func (a *SubgoalAction) ActionClone(args []Expr) ActionsAction {
-	r := &SubgoalAction{
-		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable},
-		SubgoalKind:  a.SubgoalKind,
+func (a *LogicSubgoalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicSubgoalAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicSubgoalAction{
+		LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable},
+		SubgoalKind:       a.SubgoalKind,
 	}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
 	return r
 }
-func (a *SubgoalAction) String() string {
+func (a *LogicSubgoalAction) String() string {
 	return fmt.Sprintf("subgoal(%s)", a.Formula)
 }
 
@@ -1539,28 +1539,28 @@ func (a *SubgoalAction) String() string {
 
 // VarAction is an AST marker node, NOT an action.
 // Python: class VarAction(AST): pass
-type VarAction struct {
+type LogicVarAction struct {
 	Base
 }
 
 // --- AssignFieldAction ---
 
 // AssignFieldAction assigns to a destructor field.
-type AssignFieldAction struct {
+type LogicAssignFieldAction struct {
 	ActionBase
 	Field Expr // destructor/field
 	Obj   Expr // object
 	Value Expr // new value
 }
 
-func NewAssignFieldAction(field, obj, value Expr) *AssignFieldAction {
-	return &AssignFieldAction{Field: field, Obj: obj, Value: value}
+func NewAssignFieldAction(field, obj, value Expr) *LogicAssignFieldAction {
+	return &LogicAssignFieldAction{Field: field, Obj: obj, Value: value}
 }
 
-func (a *AssignFieldAction) Name() string       { return "assign_field" }
-func (a *AssignFieldAction) ActionArgs() []Expr { return []Expr{a.Field, a.Obj, a.Value} }
-func (a *AssignFieldAction) ActionClone(args []Expr) ActionsAction {
-	r := &AssignFieldAction{ActionBase: a.ActionBase}
+func (a *LogicAssignFieldAction) Name() string       { return "assign_field" }
+func (a *LogicAssignFieldAction) ActionArgs() []Expr { return []Expr{a.Field, a.Obj, a.Value} }
+func (a *LogicAssignFieldAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicAssignFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
 	}
@@ -1572,29 +1572,29 @@ func (a *AssignFieldAction) ActionClone(args []Expr) ActionsAction {
 	}
 	return r
 }
-func (a *AssignFieldAction) String() string {
+func (a *LogicAssignFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s", a.Obj, a.Field, a.Value)
 }
-func (a *AssignFieldAction) IterCalls() []string             { return nil }
-func (a *AssignFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicAssignFieldAction) IterCalls() []string             { return nil }
+func (a *LogicAssignFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- NullFieldAction ---
 
 // NullFieldAction sets a destructor field to null/default.
-type NullFieldAction struct {
+type LogicNullFieldAction struct {
 	ActionBase
 	Field Expr
 	Obj   Expr
 }
 
-func NewNullFieldAction(field, obj Expr) *NullFieldAction {
-	return &NullFieldAction{Field: field, Obj: obj}
+func NewNullFieldAction(field, obj Expr) *LogicNullFieldAction {
+	return &LogicNullFieldAction{Field: field, Obj: obj}
 }
 
-func (a *NullFieldAction) Name() string       { return "null_field" }
-func (a *NullFieldAction) ActionArgs() []Expr { return []Expr{a.Field, a.Obj} }
-func (a *NullFieldAction) ActionClone(args []Expr) ActionsAction {
-	r := &NullFieldAction{ActionBase: a.ActionBase}
+func (a *LogicNullFieldAction) Name() string       { return "null_field" }
+func (a *LogicNullFieldAction) ActionArgs() []Expr { return []Expr{a.Field, a.Obj} }
+func (a *LogicNullFieldAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicNullFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
 	}
@@ -1603,18 +1603,18 @@ func (a *NullFieldAction) ActionClone(args []Expr) ActionsAction {
 	}
 	return r
 }
-func (a *NullFieldAction) String() string {
+func (a *LogicNullFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := null", a.Obj, a.Field)
 }
-func (a *NullFieldAction) IterCalls() []string             { return nil }
-func (a *NullFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicNullFieldAction) IterCalls() []string             { return nil }
+func (a *LogicNullFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CopyFieldAction ---
 
 // CopyFieldAction copies a destructor field from one object to another.
 // Python: CopyFieldAction has 4 args: (l, lf, r, rf) where lf is destination
 // field and rf is source field.
-type CopyFieldAction struct {
+type LogicCopyFieldAction struct {
 	ActionBase
 	Dst      Expr // destination object (l)
 	Field    Expr // destination field (lf)
@@ -1624,16 +1624,16 @@ type CopyFieldAction struct {
 
 // NewCopyFieldAction creates a CopyFieldAction with 4 args matching Python.
 // Python: CopyFieldAction(l, lf, r, rf)
-func NewCopyFieldAction(dst, field, src, srcField Expr) *CopyFieldAction {
-	return &CopyFieldAction{Dst: dst, Field: field, Src: src, SrcField: srcField}
+func NewCopyFieldAction(dst, field, src, srcField Expr) *LogicCopyFieldAction {
+	return &LogicCopyFieldAction{Dst: dst, Field: field, Src: src, SrcField: srcField}
 }
 
-func (a *CopyFieldAction) Name() string { return "copy_field" }
-func (a *CopyFieldAction) ActionArgs() []Expr {
+func (a *LogicCopyFieldAction) Name() string { return "copy_field" }
+func (a *LogicCopyFieldAction) ActionArgs() []Expr {
 	return []Expr{a.Dst, a.Field, a.Src, a.SrcField}
 }
-func (a *CopyFieldAction) ActionClone(args []Expr) ActionsAction {
-	r := &CopyFieldAction{ActionBase: a.ActionBase}
+func (a *LogicCopyFieldAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicCopyFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Dst = args[0]
 	}
@@ -1648,27 +1648,27 @@ func (a *CopyFieldAction) ActionClone(args []Expr) ActionsAction {
 	}
 	return r
 }
-func (a *CopyFieldAction) String() string {
+func (a *LogicCopyFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s.%s", a.Dst, a.Field, a.Src, a.SrcField)
 }
-func (a *CopyFieldAction) IterCalls() []string             { return nil }
-func (a *CopyFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicCopyFieldAction) IterCalls() []string             { return nil }
+func (a *LogicCopyFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- Ranking ---
 
 // Ranking represents a ranking function for liveness proofs.
 // In Python, Ranking extends Action.
-type Ranking struct {
+type LogicRanking struct {
 	ActionBase
 	Relation Expr // the ranking relation
 	RArgs    []Expr
 }
 
-func NewRanking(rel Expr, args ...Expr) *Ranking {
-	return &Ranking{Relation: rel, RArgs: args}
+func NewRanking(rel Expr, args ...Expr) *LogicRanking {
+	return &LogicRanking{Relation: rel, RArgs: args}
 }
 
-func (r *Ranking) String() string {
+func (r *LogicRanking) String() string {
 	parts := make([]string, len(r.RArgs))
 	for i, a := range r.RArgs {
 		parts[i] = fmt.Sprint(a)
@@ -1676,14 +1676,14 @@ func (r *Ranking) String() string {
 	return fmt.Sprintf("rank(%s, %s)", r.Relation, strings.Join(parts, ", "))
 }
 
-func (r *Ranking) Name() string { return "decreases" }
-func (r *Ranking) ActionClone(args []Expr) ActionsAction {
-	return &Ranking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args}
+func (r *LogicRanking) Name() string { return "decreases" }
+func (r *LogicRanking) ActionClone(args []Expr) ActionsAction {
+	return &LogicRanking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args}
 }
-func (r *Ranking) ActionArgs() []Expr              { return r.RArgs }
-func (r *Ranking) IterCalls() []string             { return nil }
-func (r *Ranking) IterSubactions() []ActionsAction { return defaultIterSubactions(r) }
-func (r *Ranking) Decompose() [][]ActionsAction    { return [][]ActionsAction{{r}} }
+func (r *LogicRanking) ActionArgs() []Expr              { return r.RArgs }
+func (r *LogicRanking) IterCalls() []string             { return nil }
+func (r *LogicRanking) IterSubactions() []ActionsAction { return defaultIterSubactions(r) }
+func (r *LogicRanking) Decompose() [][]ActionsAction    { return [][]ActionsAction{{r}} }
 
 // --- SymExContext ---
 
@@ -1732,7 +1732,7 @@ func RunWithSymExContext(cfg *ActionsConfig, params []Expr, fn func()) {
 // which case it matches a variable.
 //
 // Corresponds to Python ivy_actions.py UpdatePattern.
-type UpdatePattern struct {
+type LogicUpdatePattern struct {
 	Placeholders []Expr        // placeholder constants for pattern matching
 	Pattern      ActionsAction // the action pattern to match against
 	Precond      Expr          // precondition formula
@@ -1747,7 +1747,7 @@ type UpdatePattern struct {
 // Match checks if the given action matches this pattern.
 // If it matches, returns (precond_clauses, transrel_clauses), else returns nil, nil.
 // Corresponds to Python UpdatePattern.match (ivy_actions.py:122-130).
-func (p *UpdatePattern) Match(action ActionsAction) (*Clauses, *Clauses) {
+func (p *LogicUpdatePattern) Match(action ActionsAction) (*Clauses, *Clauses) {
 	if p.Pattern == nil {
 		return nil, nil
 	}
@@ -1763,7 +1763,7 @@ func (p *UpdatePattern) Match(action ActionsAction) (*Clauses, *Clauses) {
 	}
 
 	// Build precondition and transition relation clauses with substitution applied
-	precondFmla := &Not{Body: p.Precond}
+	precondFmla := &LogicNot{Body: p.Precond}
 	precondClauses := FormulaToClauses(precondFmla, nil)
 	precondClauses = SubstBothClauses(precondClauses, subst)
 
@@ -1862,15 +1862,15 @@ func nodeMatch(actual, pattern Expr, placeholders []Expr, subst map[NodeKey]Expr
 }
 
 // UpdatePatternList is a list of update patterns.
-type UpdatePatternList struct {
-	Patterns []*UpdatePattern
+type LogicUpdatePatternList struct {
+	Patterns []*LogicUpdatePattern
 }
 
-func NewUpdatePatternList() *UpdatePatternList {
-	return &UpdatePatternList{}
+func NewUpdatePatternList() *LogicUpdatePatternList {
+	return &LogicUpdatePatternList{}
 }
 
-func (l *UpdatePatternList) Add(pat *UpdatePattern) {
+func (l *LogicUpdatePatternList) Add(pat *LogicUpdatePattern) {
 	l.Patterns = append(l.Patterns, pat)
 }
 
@@ -1881,37 +1881,37 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 // depends on), and patterns (pattern list for matching).
 //
 // Corresponds to Python ivy_actions.py PatternBasedUpdate.
-type PatternBasedUpdate struct {
+type LogicPatternBasedUpdate struct {
 	ActionBase
-	Defines      []*Const           // symbols defined by this update
-	Dependencies []*Const           // symbols this update depends on
-	Patterns     *UpdatePatternList // patterns for matching
+	Defines      []*Const                // symbols defined by this update
+	Dependencies []*Const                // symbols this update depends on
+	Patterns     *LogicUpdatePatternList // patterns for matching
 }
 
-func NewPatternBasedUpdate(defines, deps []*Const, patterns *UpdatePatternList) *PatternBasedUpdate {
-	return &PatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
+func NewPatternBasedUpdate(defines, deps []*Const, patterns *LogicUpdatePatternList) *LogicPatternBasedUpdate {
+	return &LogicPatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
 }
 
-func (a *PatternBasedUpdate) Name() string       { return "pattern_update" }
-func (a *PatternBasedUpdate) ActionArgs() []Expr { return nil }
-func (a *PatternBasedUpdate) ActionClone(args []Expr) ActionsAction {
-	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
+func (a *LogicPatternBasedUpdate) Name() string       { return "pattern_update" }
+func (a *LogicPatternBasedUpdate) ActionArgs() []Expr { return nil }
+func (a *LogicPatternBasedUpdate) ActionClone(args []Expr) ActionsAction {
+	return &LogicPatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
-func (a *PatternBasedUpdate) String() string {
+func (a *LogicPatternBasedUpdate) String() string {
 	nPatterns := 0
 	if a.Patterns != nil {
 		nPatterns = len(a.Patterns.Patterns)
 	}
 	return fmt.Sprintf("pattern_update(%d patterns)", nPatterns)
 }
-func (a *PatternBasedUpdate) IterCalls() []string             { return nil }
-func (a *PatternBasedUpdate) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicPatternBasedUpdate) IterCalls() []string             { return nil }
+func (a *LogicPatternBasedUpdate) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency is in the updated set.
 // If so, adds all defines to updated and finds a matching pattern.
 // Returns (updated, transrel_clauses, precond_clauses).
 // Corresponds to Python PatternBasedUpdate.get_update_axioms.
-func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*Const, action ActionsAction) ([]*Const, *Clauses, *Clauses) {
+func (a *LogicPatternBasedUpdate) GetUpdateAxioms(updated []*Const, action ActionsAction) ([]*Const, *Clauses, *Clauses) {
 	// Check if any dependency is in the updated set
 	depSet := make(map[string]bool)
 	for _, d := range a.Dependencies {
@@ -2042,7 +2042,7 @@ type Updater interface {
 // BuildEnvAction constructs an environment (external) action for the given action name.
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
-func BuildEnvAction(cfg *ActionsConfig, publicActions *InsMap[string, bool], actionsMap *InsMap[string, ActionsAction], actName string, label string) *EnvAction {
+func BuildEnvAction(cfg *ActionsConfig, publicActions *InsMap[string, bool], actionsMap *InsMap[string, ActionsAction], actName string, label string) *LogicEnvAction {
 	xtracer.Trace("actions.env_action ENTER")
 	var actNames []string
 	if actName == "" {
@@ -2088,8 +2088,8 @@ func BuildEnvAction(cfg *ActionsConfig, publicActions *InsMap[string, bool], act
 	xtracer.Trace("actions.env_action post loop")
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
-	env := &EnvAction{}
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	env := &LogicEnvAction{}
 	env.UniqueID = id
 	env.ActCfg = cfg
 	env.Branches = branches
@@ -2104,7 +2104,7 @@ func BuildEnvAction(cfg *ActionsConfig, publicActions *InsMap[string, bool], act
 // object (not looked up by name). This matches Python's env_action(actname, label)
 // when actname is an action object rather than a string.
 // Corresponds to Python's env_action (ivy_actions.py:1817-1845) with non-string actname.
-func BuildEnvActionFromAction(cfg *ActionsConfig, action ActionsAction, label string) *EnvAction {
+func BuildEnvActionFromAction(cfg *ActionsConfig, action ActionsAction, label string) *LogicEnvAction {
 	xtracer.Trace("actions.env_action ENTER")
 	xtracer.Trace("actions.env_action post actNames")
 
@@ -2131,8 +2131,8 @@ func BuildEnvActionFromAction(cfg *ActionsConfig, action ActionsAction, label st
 	xtracer.Trace("actions.env_action post loop")
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
-	env := &EnvAction{}
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	env := &LogicEnvAction{}
 	env.UniqueID = id
 	env.ActCfg = cfg
 	env.Branches = branches
@@ -2146,11 +2146,11 @@ func BuildEnvActionFromAction(cfg *ActionsConfig, action ActionsAction, label st
 // --- Decompose implementations ---
 
 // SubgoalAction inherits Decompose from AssertAction.
-func (a *AssignFieldAction) Decompose() [][]ActionsAction  { return [][]ActionsAction{{a}} }
-func (a *NullFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
-func (a *CopyFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
-func (a *PatternBasedUpdate) Decompose() [][]ActionsAction { return [][]ActionsAction{{a}} }
-func (a *NamedUpdate) Decompose() [][]ActionsAction        { return [][]ActionsAction{{a}} }
+func (a *LogicAssignFieldAction) Decompose() [][]ActionsAction  { return [][]ActionsAction{{a}} }
+func (a *LogicNullFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
+func (a *LogicCopyFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
+func (a *LogicPatternBasedUpdate) Decompose() [][]ActionsAction { return [][]ActionsAction{{a}} }
+func (a *NamedUpdate) Decompose() [][]ActionsAction             { return [][]ActionsAction{{a}} }
 
 // --- TypeCheckAction ---
 
@@ -2169,7 +2169,7 @@ func TypeCheckAction(action ActionsAction) error {
 
 func typeCheckSingleAction(action ActionsAction) error {
 	switch a := action.(type) {
-	case *AssignAction:
+	case *LogicAssignAction:
 		// Check that LHS and RHS sorts match
 		if a.LHS != nil && a.RHS != nil {
 			lSort := a.LHS.NodeSort()
@@ -2178,12 +2178,12 @@ func typeCheckSingleAction(action ActionsAction) error {
 				return fmt.Errorf("type mismatch in assignment: %s vs %s", lSort, rSort)
 			}
 		}
-	case *AssertAction:
+	case *LogicAssertAction:
 		// Check that the assertion is Boolean
 		if a.Formula != nil && !SortEqual(a.Formula.NodeSort(), Boolean) {
 			return fmt.Errorf("assert expression must be Boolean")
 		}
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		// Check that the assumption is Boolean
 		if a.Formula != nil && !SortEqual(a.Formula.NodeSort(), Boolean) {
 			return fmt.Errorf("assume expression must be Boolean")
@@ -2200,35 +2200,35 @@ func typeCheckSingleAction(action ActionsAction) error {
 // In Python, int_update first checks domain.macros for macro expansion,
 // then falls back to domain.schemata for schema instantiation. The cmpl()
 // method returns self (the compile step is identity in current Python).
-type InstantiateAction struct {
+type LogicInstantiateAction struct {
 	ActionBase
 	Inst    Expr // The instantiation atom (name + args), compiled
 	AstInst Node // Raw AST callatom for macro expansion (preserved through compilation)
 }
 
-func NewInstantiateAction(inst Expr) *InstantiateAction {
-	return &InstantiateAction{Inst: inst}
+func NewInstantiateAction(inst Expr) *LogicInstantiateAction {
+	return &LogicInstantiateAction{Inst: inst}
 }
 
-func (a *InstantiateAction) Name() string       { return "instantiate" }
-func (a *InstantiateAction) ActionArgs() []Expr { return []Expr{a.Inst} }
-func (a *InstantiateAction) ActionClone(args []Expr) ActionsAction {
-	r := &InstantiateAction{ActionBase: a.ActionBase, AstInst: a.AstInst}
+func (a *LogicInstantiateAction) Name() string       { return "instantiate" }
+func (a *LogicInstantiateAction) ActionArgs() []Expr { return []Expr{a.Inst} }
+func (a *LogicInstantiateAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicInstantiateAction{ActionBase: a.ActionBase, AstInst: a.AstInst}
 	if len(args) >= 1 {
 		r.Inst = args[0]
 	}
 	return r
 }
-func (a *InstantiateAction) String() string {
+func (a *LogicInstantiateAction) String() string {
 	return "instantiate " + fmt.Sprint(a.Inst)
 }
-func (a *InstantiateAction) IterCalls() []string             { return nil }
-func (a *InstantiateAction) IterSubactions() []ActionsAction { return []ActionsAction{a} }
-func (a *InstantiateAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
+func (a *LogicInstantiateAction) IterCalls() []string             { return nil }
+func (a *LogicInstantiateAction) IterSubactions() []ActionsAction { return []ActionsAction{a} }
+func (a *LogicInstantiateAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
 
 // IntUpdate computes the update for an instantiation action.
 // Python: InstantiateAction.int_update checks macros first, then schemata.
-func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicInstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.InstantiateAction.int_update ENTER")
 	defer xtracer.Trace("actions.InstantiateAction.int_update EXIT")
 	if ctx.Domain == nil {
@@ -2289,7 +2289,7 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 		xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=false", instName)
 	}
 	if schemaOk {
-		if sch, ok := schema.(*AstSchema); ok {
+		if sch, ok := schema.(*Schema); ok {
 			params := astArgs
 			if params == nil && len(exprArgs) > 0 {
 				params = make([]Node, len(exprArgs))
@@ -2354,7 +2354,7 @@ func extractInstInfo(inst Expr) (string, []Expr) {
 //	subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
 //	psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams) if ...)
 //	return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
-func instantiateMacro(astInst Node, macros map[string]*AstDefinition) Node {
+func instantiateMacro(astInst Node, macros map[string]*Definition) Node {
 	// Python (ivy_actions.py:783-784): if inst.relname in defns
 	//   would AttributeError on .relname / .args if inst is not Atom-like.
 	var name string

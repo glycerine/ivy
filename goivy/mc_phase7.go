@@ -10,14 +10,14 @@ import (
 // EncodeVars encodes a list of variables into binary-encoded sub-bits,
 // populating the encoding map and returning the flat list of sub-bit variables.
 // Corresponds to Python's encode_vars (ivy_mc.py lines 248-255).
-func EncodeVars(vars []*Variable, encoding map[*Variable][]*Variable) []*Variable {
-	var res []*Variable
+func EncodeVars(vars []*LogicVariable, encoding map[*LogicVariable][]*LogicVariable) []*LogicVariable {
+	var res []*LogicVariable
 	for _, v := range vars {
 		n, err := GetEncodingBitsSimple(v.VSort)
 		if err != nil || n == 0 {
 			n = 1 // default to 1 bit
 		}
-		subVars := make([]*Variable, n)
+		subVars := make([]*LogicVariable, n)
 		for i := 0; i < n; i++ {
 			name := fmt.Sprintf("%s[%d]", v.Name, i)
 			subVars[i], _ = NewVariable(name, Boolean)
@@ -40,7 +40,7 @@ func CloneNormal(clauses *Clauses, iuCfg *IvyUtilsConfig) *Clauses {
 	for _, f := range clauses.Fmlas {
 		nf := normalize(f, iuCfg)
 		// Filter out trivially-true formulas (empty And).
-		if a, ok := nf.(*And); ok && len(a.Terms) == 0 {
+		if a, ok := nf.(*LogicAnd); ok && len(a.Terms) == 0 {
 			continue
 		}
 		newFmlas = append(newFmlas, nf)
@@ -72,7 +72,7 @@ func cloneNormal(expr Expr, args []Expr) Expr {
 	if _, ok := expr.(*Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
-			return &And{} // tautology → true
+			return &LogicAnd{} // tautology → true
 		}
 		if termOrd(x, y) == 1 {
 			x, y = y, x

@@ -96,7 +96,7 @@ func ApplyMatch(matchMap map[string]interface{}, fmla goivy.Expr) goivy.Expr {
 }
 
 func applyMatchRec(matchMap map[string]interface{}, fmla goivy.Expr) goivy.Expr {
-	if v, ok := fmla.(*goivy.Variable); ok {
+	if v, ok := fmla.(*goivy.LogicVariable); ok {
 		// Check if the variable's sort should be remapped
 		sortStr := v.VSort.String()
 		if newSort, exists := matchMap[sortStr]; exists {
@@ -121,10 +121,10 @@ func applyMatchRec(matchMap map[string]interface{}, fmla goivy.Expr) goivy.Expr 
 	if goivy.IsBinder(fmla) {
 		vars := goivy.BinderVars(fmla)
 		body := goivy.BinderBody(fmla)
-		newVars := make([]*goivy.Variable, len(vars))
+		newVars := make([]*goivy.LogicVariable, len(vars))
 		for i, v := range vars {
 			nv := applyMatchRec(matchMap, v)
-			if rv, ok := nv.(*goivy.Variable); ok {
+			if rv, ok := nv.(*goivy.LogicVariable); ok {
 				newVars[i] = rv
 			} else {
 				newVars[i] = v
@@ -215,7 +215,7 @@ func cloneNormal(expr goivy.Expr, args []goivy.Expr) goivy.Expr {
 	if _, ok := expr.(*goivy.Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
-			return &goivy.And{} // true
+			return &goivy.LogicAnd{} // true
 		}
 		if TermOrd(x, y) == 1 {
 			x, y = y, x
@@ -229,7 +229,7 @@ func cloneNormal(expr goivy.Expr, args []goivy.Expr) goivy.Expr {
 
 // PatternMatch checks if a pattern matches an expression, filling in variable bindings.
 func PatternMatch(pat, expr goivy.Expr, mp map[string]goivy.Expr) bool {
-	if v, ok := pat.(*goivy.Variable); ok {
+	if v, ok := pat.(*goivy.LogicVariable); ok {
 		if existing, found := mp[v.Name]; found {
 			return expr.Equal(existing)
 		}

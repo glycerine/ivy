@@ -111,7 +111,7 @@ func TestAssumeAction_Unprovable(t *testing.T) {
 
 func TestVarAction_IsNotAction(t *testing.T) {
 	// VarAction should NOT implement Action interface
-	va := &VarAction{}
+	va := &LogicVarAction{}
 	var _ interface{} = va // just make sure it compiles
 
 	// Type-assert to Action should fail
@@ -156,12 +156,12 @@ func TestSubgoalAction_HasKind(t *testing.T) {
 
 	// Clone should preserve kind
 	cloned := sa.ActionClone([]Expr{fmla})
-	if sc, ok := cloned.(*SubgoalAction); ok {
+	if sc, ok := cloned.(*LogicSubgoalAction); ok {
 		if sc.SubgoalKind != "safety" {
 			t.Errorf("Clone should preserve SubgoalKind, got %q", sc.SubgoalKind)
 		}
 	} else {
-		t.Errorf("Clone should return *SubgoalAction, got %T", cloned)
+		t.Errorf("Clone should return *LogicSubgoalAction, got %T", cloned)
 	}
 }
 
@@ -224,7 +224,7 @@ func TestCopyFieldAction_DifferentSourceField(t *testing.T) {
 func TestWhileAction_Unroll(t *testing.T) {
 	// Create a simple while loop: while x < bound
 	sortT := actionsMkSort("T")
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	cond, _ := NewApply(ltSym, xSym, boundSym)
@@ -249,14 +249,14 @@ func TestWhileAction_Unroll(t *testing.T) {
 	}
 
 	// Should be an IfAction
-	if _, ok := unrolled.(*IfAction); !ok {
-		t.Errorf("Unrolled should be *IfAction, got %T", unrolled)
+	if _, ok := unrolled.(*LogicIfAction); !ok {
+		t.Errorf("Unrolled should be *LogicIfAction, got %T", unrolled)
 	}
 }
 
 func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
 	sortT := actionsMkSort("T")
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	cond, _ := NewApply(ltSym, xSym, boundSym)
@@ -278,7 +278,7 @@ func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	eq := &Eq{T1: xSym, T2: boundSym}
-	cond := &Not{Body: eq}
+	cond := &LogicNot{Body: eq}
 
 	body := NewSequence()
 	wa := NewWhileAction(cond, body)
@@ -294,15 +294,15 @@ func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unroll with Not(Eq) condition failed: %v", err)
 	}
-	if _, ok := unrolled.(*IfAction); !ok {
-		t.Errorf("Unrolled should be *IfAction, got %T", unrolled)
+	if _, ok := unrolled.(*LogicIfAction); !ok {
+		t.Errorf("Unrolled should be *LogicIfAction, got %T", unrolled)
 	}
 }
 
 func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 	// Test that IntUpdate checks for UnrollContext
 	sortT := actionsMkSort("T")
-	ltSym := NewConst("<", RelationSort([]Sort{sortT, sortT}))
+	ltSym := NewConst("<", LogicRelationSort([]Sort{sortT, sortT}))
 	xSym := NewConst("x", sortT)
 	boundSym := NewConst("bound", sortT)
 	cond, _ := NewApply(ltSym, xSym, boundSym)
@@ -332,7 +332,7 @@ func TestAssignAction_PartialApplication(t *testing.T) {
 	// f : S -> S -> Bool, assign f(a) := g(a)
 	// This is a partial application; xtra = 1 (needs 2 args, has 1)
 	sortS := actionsMkSort("S")
-	fSort := RelationSort([]Sort{sortS, sortS})
+	fSort := LogicRelationSort([]Sort{sortS, sortS})
 	fSym := NewConst("f", fSort)
 	gSym := NewConst("g", fSort)
 	aSym := NewConst("a", sortS)
@@ -353,7 +353,7 @@ func TestAssignAction_PartialApplication(t *testing.T) {
 func TestAssignAction_VariableCheck(t *testing.T) {
 	// f(X) := g(Y) where Y is not in LHS — should return null update
 	sortS := actionsMkSort("S")
-	fSort := RelationSort([]Sort{sortS})
+	fSort := LogicRelationSort([]Sort{sortS})
 	fSym := NewConst("f", fSort)
 	gSym := NewConst("g", fSort)
 	xVar, err := NewVariable("X", sortS)

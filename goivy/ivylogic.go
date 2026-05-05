@@ -11,7 +11,7 @@ func IvySortName(s Sort) string {
 	switch t := s.(type) {
 	case *UninterpretedSort:
 		return t.Name
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return t.Name
 	case *RangeSort:
 		return t.Name
@@ -19,7 +19,7 @@ func IvySortName(s Sort) string {
 		return "bool"
 	case *TopSort:
 		return t.Name
-	case *FunctionSort:
+	case *LogicFunctionSort:
 		return t.String()
 	default:
 		return s.String()
@@ -28,7 +28,7 @@ func IvySortName(s Sort) string {
 
 // SortDomain returns the domain sorts of a sort, or nil for first-order sorts.
 func SortDomain(s Sort) []Sort {
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		return fs.Domain()
 	}
 	return nil
@@ -36,7 +36,7 @@ func SortDomain(s Sort) []Sort {
 
 // SortRange returns the range sort of a sort, or the sort itself for first-order sorts.
 func SortRange(s Sort) Sort {
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		return fs.Range()
 	}
 	return s
@@ -48,14 +48,14 @@ func IsRelationalSort(s Sort) bool {
 	if _, ok := s.(*BooleanSort); ok {
 		return true
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		return SortEqual(fs.Range(), Boolean)
 	}
 	return false
 }
 
 // RelationSort creates a relation sort (function sort with Boolean range).
-func RelationSort(dom []Sort) Sort {
+func LogicRelationSort(dom []Sort) Sort {
 	if len(dom) == 0 {
 		return Boolean
 	}
@@ -102,7 +102,7 @@ func alphaName(idx int) string {
 
 // IsVariable returns true if the node is a logic.Variable.
 func IsVariable(n Expr) bool {
-	_, ok := n.(*Variable)
+	_, ok := n.(*LogicVariable)
 	return ok
 }
 
@@ -120,7 +120,7 @@ func IsApp(n Expr) bool {
 		return true
 	case *Const:
 		return true
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return len(t.Variables) == 0
 	}
 	return false
@@ -157,7 +157,7 @@ func IsForall(n Expr) bool {
 
 // IsExists returns true if the node is an Exists.
 func IsExists(n Expr) bool {
-	_, ok := n.(*Exists)
+	_, ok := n.(*LogicExists)
 	return ok
 }
 
@@ -175,7 +175,7 @@ func IsQuantifier(n Expr) bool {
 // IsBinder returns true for ForAll, Exists, Lambda, NamedBinder, or Some.
 func IsBinder(n Expr) bool {
 	switch n.(type) {
-	case *ForAll, *Exists, *Lambda, *NamedBinder, *Some:
+	case *ForAll, *LogicExists, *Lambda, *LogicNamedBinder, *LogicSome:
 		return true
 	}
 	return false
@@ -183,14 +183,14 @@ func IsBinder(n Expr) bool {
 
 // IsNamedBinder returns true if the node is a NamedBinder.
 func IsNamedBinder(n Expr) bool {
-	_, ok := n.(*NamedBinder)
+	_, ok := n.(*LogicNamedBinder)
 	return ok
 }
 
 // IsTemporal returns true if the node is a temporal operator.
 func IsTemporal(n Expr) bool {
 	switch n.(type) {
-	case *Globally, *Eventually, *WhenOperator:
+	case *LogicGlobally, *LogicEventually, *LogicWhenOperator:
 		return true
 	}
 	return false
@@ -217,13 +217,13 @@ func IsEq(n Expr) bool {
 
 // IsIte returns true if the node is an Ite.
 func IsIte(n Expr) bool {
-	_, ok := n.(*Ite)
+	_, ok := n.(*LogicIte)
 	return ok
 }
 
 // IsEnumeratedSort returns true if the sort is an EnumeratedSort.
 func IsEnumeratedSort(s Sort) bool {
-	_, ok := s.(*EnumeratedSort)
+	_, ok := s.(*LogicEnumeratedSort)
 	return ok
 }
 
@@ -251,7 +251,7 @@ func IsFirstOrderSort(s Sort) bool {
 
 // IsFunctionSort returns true if the sort is a FunctionSort.
 func IsFunctionSort(s Sort) bool {
-	_, ok := s.(*FunctionSort)
+	_, ok := s.(*LogicFunctionSort)
 	return ok
 }
 
@@ -320,7 +320,7 @@ func IvyIsFalse(n Expr) bool {
 // IsGprop returns true if the formula is Globally(phi) where phi has
 // no temporal operators.
 func IsGprop(n Expr) bool {
-	g, ok := n.(*Globally)
+	g, ok := n.(*LogicGlobally)
 	if !ok {
 		return false
 	}
@@ -330,7 +330,7 @@ func IsGprop(n Expr) bool {
 // --- IvyEquals symbol ---
 
 // IvyEquals is the built-in equality symbol.
-var IvyEquals = NewConst("=", RelationSort([]Sort{TopS, TopS}))
+var IvyEquals = NewConst("=", LogicRelationSort([]Sort{TopS, TopS}))
 
 // IsEquals returns true if the constant is the equality symbol.
 func IvyIsEquals(c *Const) bool {

@@ -120,7 +120,7 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 	}
 
 	for _, c := range ui.Mod.Sig.AllSymbols() {
-		fs, ok := c.CSort.(*goivy.FunctionSort)
+		fs, ok := c.CSort.(*goivy.LogicFunctionSort)
 		if !ok || fs.Arity() != 2 {
 			continue
 		}
@@ -148,11 +148,11 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 
 		// transitive = ForAll([X,Y,Z], Or(Not(c(X,Y)), Not(c(Y,Z)), c(X,Z)))
 		transOr, _ := goivy.NewOr(notCxy, notCyz, cxz)
-		transitive, _ := goivy.NewForAll([]*goivy.Variable{xv, yv, zv}, transOr)
+		transitive, _ := goivy.NewForAll([]*goivy.LogicVariable{xv, yv, zv}, transOr)
 
 		// defined_symmetry = ForAll([X,Y], Or(c(X,X), Not(c(Y,Y))))
 		symOr, _ := goivy.NewOr(cxx, notCyy)
-		definedSym, _ := goivy.NewForAll([]*goivy.Variable{xv, yv}, symOr)
+		definedSym, _ := goivy.NewForAll([]*goivy.LogicVariable{xv, yv}, symOr)
 
 		t := goivy.NewClauses([]goivy.Expr{transitive, definedSym}, nil, nil)
 		implied, err := ui.Solver.ClausesImply(axioms, t)
@@ -181,7 +181,7 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 // ctiWitness returns a Skolem witness function that creates '@'-prefixed constants.
 // (Python: def witness(v): c = lg.Const('@'+v.name, v.sort))
 func ctiWitness(usedNames map[string]bool) goivy.Skolemizer {
-	return func(v *goivy.Variable) goivy.Expr {
+	return func(v *goivy.LogicVariable) goivy.Expr {
 		name := "@" + v.Name
 		if usedNames != nil {
 			if _, exists := usedNames[name]; exists {
@@ -226,7 +226,7 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 		}
 		var relNames []string
 		for _, sym := range ui.Mod.Sig.AllSymbols() {
-			fs, ok := sym.CSort.(*goivy.FunctionSort)
+			fs, ok := sym.CSort.(*goivy.LogicFunctionSort)
 			if !ok {
 				continue
 			}
@@ -736,7 +736,7 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 // shouldFilterFact returns true for facts that should be filtered out.
 // Python: (type(f) is Not and type(f.body) is Eq and f.body.t1 >= f.body.t2)
 func shouldFilterFact(f goivy.Expr) bool {
-	notExpr, ok := f.(*goivy.Not)
+	notExpr, ok := f.(*goivy.LogicNot)
 	if !ok {
 		return false
 	}
@@ -838,7 +838,7 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 
 	// Python: convert Or to Not(And(negate(each_lit)))
 	if len(result.Fmlas) == 1 {
-		if orNode, ok := result.Fmlas[0].(*goivy.Or); ok {
+		if orNode, ok := result.Fmlas[0].(*goivy.LogicOr); ok {
 			var innerLits []goivy.Expr
 			for _, lit := range orNode.Terms {
 				innerLits = append(innerLits, goivy.Negate(lit))

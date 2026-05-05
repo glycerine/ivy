@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func z3MustFS(t *testing.T, sorts ...Sort) *FunctionSort {
+func z3MustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 	t.Helper()
 	fs, err := NewFunctionSort(sorts...)
 	if err != nil {
@@ -223,7 +223,7 @@ func TestZ3BridgeTranslateForAll(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X, Y}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X, Y}, eq)
 
 	zfa, err := tr.Translate(fa)
 	if err != nil {
@@ -248,18 +248,18 @@ func TestZ3BridgeTransitiveImplication(t *testing.T) {
 	// transitive1: ForAll (X,Y,Z). Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z))
 	andTerm, _ := NewAnd(leqXY, leqYZ)
 	impl, _ := NewImplies(andTerm, leqXZ)
-	transitive1, _ := NewForAll([]*Variable{X, Y, Z}, impl)
+	transitive1, _ := NewForAll([]*LogicVariable{X, Y, Z}, impl)
 
 	// transitive2: ForAll (X,Y,Z). Or(Not(leq(X,Y)), Not(leq(Y,Z)), leq(X,Z))
 	notXY, _ := NewNot(leqXY)
 	notYZ, _ := NewNot(leqYZ)
 	orTerm, _ := NewOr(notXY, notYZ, leqXZ)
-	transitive2, _ := NewForAll([]*Variable{X, Y, Z}, orTerm)
+	transitive2, _ := NewForAll([]*LogicVariable{X, Y, Z}, orTerm)
 
 	// transitive3: Not(Exists (X,Y,Z). And(leq(X,Y), leq(Y,Z), Not(leq(X,Z))))
 	notXZ, _ := NewNot(leqXZ)
 	andTerm3, _ := NewAnd(leqXY, leqYZ, notXZ)
-	existsTerm, _ := NewExists([]*Variable{X, Y, Z}, andTerm3)
+	existsTerm, _ := NewExists([]*LogicVariable{X, Y, Z}, andTerm3)
 	transitive3, _ := NewNot(existsTerm)
 
 	tr := NewSolver(nil, nil).NewTranslator()
@@ -312,7 +312,7 @@ func TestZ3BridgeAntisymmetricNotImplied(t *testing.T) {
 	// transitive3: Not(Exists (X,Y,Z). And(leq(X,Y), leq(Y,Z), Not(leq(X,Z))))
 	notXZ, _ := NewNot(leqXZ)
 	andTerm3, _ := NewAnd(leqXY, leqYZ, notXZ)
-	existsTerm, _ := NewExists([]*Variable{X, Y, Z}, andTerm3)
+	existsTerm, _ := NewExists([]*LogicVariable{X, Y, Z}, andTerm3)
 	transitive3, _ := NewNot(existsTerm)
 
 	// antisymmetric: ForAll (X,Y). Implies(And(leq(X,Y), leq(Y,X)), Eq(Y,X))
@@ -320,7 +320,7 @@ func TestZ3BridgeAntisymmetricNotImplied(t *testing.T) {
 	andAS, _ := NewAnd(leqXY, leqYX)
 	eqYX, _ := NewEq(Y, X)
 	implAS, _ := NewImplies(andAS, eqYX)
-	antisymmetric, _ := NewForAll([]*Variable{X, Y}, implAS)
+	antisymmetric, _ := NewForAll([]*LogicVariable{X, Y}, implAS)
 
 	// transitive3 should NOT imply antisymmetric
 	tr := NewSolver(nil, nil).NewTranslator()
@@ -762,10 +762,10 @@ func buildRandomLogicNode(data []byte, depth int) (Expr, []byte) {
 		name, rest := extractVarName(data)
 		v, err := NewVariable(name, S)
 		if err != nil {
-			v = &Variable{Name: "X", VSort: S}
+			v = &LogicVariable{Name: "X", VSort: S}
 		}
 		body, rest := buildRandomLogicNode(rest, depth+1)
-		fa, err := NewForAll([]*Variable{v}, body)
+		fa, err := NewForAll([]*LogicVariable{v}, body)
 		if err != nil {
 			return body, rest
 		}
@@ -775,10 +775,10 @@ func buildRandomLogicNode(data []byte, depth int) (Expr, []byte) {
 		name, rest := extractVarName(data)
 		v, err := NewVariable(name, S)
 		if err != nil {
-			v = &Variable{Name: "X", VSort: S}
+			v = &LogicVariable{Name: "X", VSort: S}
 		}
 		body, rest := buildRandomLogicNode(rest, depth+1)
-		ex, err := NewExists([]*Variable{v}, body)
+		ex, err := NewExists([]*LogicVariable{v}, body)
 		if err != nil {
 			return body, rest
 		}

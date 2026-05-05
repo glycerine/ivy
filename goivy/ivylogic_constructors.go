@@ -55,7 +55,7 @@ func QuantifierBody(term Expr) Expr {
 // For others, returns [body].
 // Corresponds to Python's binder_args (ivy_logic.py:646).
 func BinderArgs(term Expr) []Expr {
-	if s, ok := term.(*Some); ok {
+	if s, ok := term.(*LogicSome); ok {
 		// Python: return term.args[1:] — everything after the params
 		result := []Expr{s.Fmla}
 		if s.IfVal != nil {
@@ -75,13 +75,13 @@ func BinderArgs(term Expr) []Expr {
 
 // EqLit creates a positive equality literal.
 // Corresponds to Python's _eq_lit (ivy_logic.py:748).
-func IvyEqLit(x, y Expr) *Literal {
+func IvyEqLit(x, y Expr) *LogicLiteral {
 	return NewLiteral(1, IvyAtom(IvyEquals, []Expr{x, y}))
 }
 
 // NeqLit creates a negative equality literal.
 // Corresponds to Python's _neq_lit (ivy_logic.py:750).
-func NeqLit(x, y Expr) *Literal {
+func NeqLit(x, y Expr) *LogicLiteral {
 	return NewLiteral(0, IvyAtom(IvyEquals, []Expr{x, y}))
 }
 
@@ -105,13 +105,13 @@ func SymDeclToStr(sym *Const) string {
 	var res string
 	if IsRelationalSort(sort) {
 		res = "relation "
-	} else if fs, ok := sort.(*FunctionSort); ok && fs.Arity() > 0 {
+	} else if fs, ok := sort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
 		res = "function "
 	} else {
 		res = "individual "
 	}
 	res += sym.Name
-	if fs, ok := sort.(*FunctionSort); ok && fs.Arity() > 0 {
+	if fs, ok := sort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
 		dom := fs.Domain()
 		parts := make([]string, len(dom))
 		for i, d := range dom {
@@ -144,7 +144,7 @@ func SigToStr(sig *Sig) string {
 // Pto creates a pointer-to symbol with the given argument sorts.
 // Corresponds to Python's pto (ivy_logic.py:1609).
 func Pto(sorts ...Sort) *Const {
-	return NewConst("*>", RelationSort(sorts))
+	return NewConst("*>", LogicRelationSort(sorts))
 }
 
 // LambdaApply applies a Lambda to arguments by substituting its bound
@@ -182,17 +182,17 @@ func RenameVarsNoClash(fmlas1, fmlas2 []Expr) []Expr {
 	// Build a renamer from all used variable names
 	usedNames := make([]string, 0, len(uvs))
 	for _, v := range uvs {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			usedNames = append(usedNames, vv.Name)
 		}
 	}
 	rn := NewUniqueRenamer("", usedNames)
 
 	// Collect free variables from fmlas1
-	freeVars := make(map[NodeKey]*Variable)
+	freeVars := make(map[NodeKey]*LogicVariable)
 	for _, f := range fmlas1 {
 		for k, v := range FreeVariables(f).All() {
-			if vv, ok := v.(*Variable); ok {
+			if vv, ok := v.(*LogicVariable); ok {
 				freeVars[k] = vv
 			}
 		}
@@ -233,7 +233,7 @@ func alphaRenameRec(nmap map[string]string, fmla Expr, vmap map[NodeKey]Expr) (E
 		body := BinderBody(fmla)
 
 		// Rename bound variables
-		newVars := make([]*Variable, len(vars))
+		newVars := make([]*LogicVariable, len(vars))
 		for i, v := range vars {
 			newName := v.Name
 			if mapped, ok := nmap[v.Name]; ok {
@@ -255,7 +255,7 @@ func alphaRenameRec(nmap map[string]string, fmla Expr, vmap map[NodeKey]Expr) (E
 		}
 		for _, nv := range newVars {
 			if forbidden[Key(nv)] {
-				return nil, &LogicUtilCaptureError{Variables: []*Variable{nv}}
+				return nil, &LogicUtilCaptureError{Variables: []*LogicVariable{nv}}
 			}
 		}
 
@@ -292,7 +292,7 @@ func alphaRenameRec(nmap map[string]string, fmla Expr, vmap map[NodeKey]Expr) (E
 		return CloneBinder(fmla, newVars, newBody), nil
 	}
 
-	if v, ok := fmla.(*Variable); ok {
+	if v, ok := fmla.(*LogicVariable); ok {
 		if mapped, exists := vmap[Key(v)]; exists {
 			return mapped, nil
 		}
@@ -319,7 +319,7 @@ func alphaRenameRec(nmap map[string]string, fmla Expr, vmap map[NodeKey]Expr) (E
 // Corresponds to Python's normalized_and (ivy_logic.py:1725).
 func NormalizedAnd(args ...Expr) Expr {
 	if len(args) == 0 {
-		return &And{} // true
+		return &LogicAnd{} // true
 	}
 	return normalizedAndBin(args[0], args[1:])
 }
@@ -328,5 +328,5 @@ func normalizedAndBin(first Expr, rest []Expr) Expr {
 	if len(rest) == 0 {
 		return first
 	}
-	return normalizedAndBin(&And{Terms: []Expr{first, rest[0]}}, rest[1:])
+	return normalizedAndBin(&LogicAnd{Terms: []Expr{first, rest[0]}}, rest[1:])
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func logicutilMustFS(t *testing.T, sorts ...Sort) *FunctionSort {
+func logicutilMustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 	t.Helper()
 	fs, err := NewFunctionSort(sorts...)
 	if err != nil {
@@ -40,7 +40,7 @@ func TestFreeVariablesForAll(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 
 	fv := FreeVariables(fa)
 	if _, ok := fv.Get2(Key(X)); ok {
@@ -62,7 +62,7 @@ func TestFreeVariablesByIdentity(t *testing.T) {
 	X2, _ := NewVariable("X", s2)
 
 	eq, _ := NewEq(X2, X2)
-	fa, _ := NewForAll([]*Variable{X1}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X1}, eq)
 
 	// By identity: ForAll X:s1 does NOT bind X:s2
 	fv := FreeVariables(fa)
@@ -78,7 +78,7 @@ func TestFreeVariablesByName(t *testing.T) {
 	X2, _ := NewVariable("X", s2)
 
 	eq, _ := NewEq(X2, X2)
-	fa, _ := NewForAll([]*Variable{X1}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X1}, eq)
 
 	// By name: ForAll X:s1 DOES bind X:s2
 	fvn := FreeVariablesByName(fa)
@@ -102,7 +102,7 @@ func TestBoundVariables(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 
 	bv := BoundVariables(fa)
 	if _, ok := bv[Key(X)]; !ok {
@@ -119,7 +119,7 @@ func TestUsedVariables(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 
 	uv := UsedVariables(fa)
 	if _, ok := uv[Key(X)]; !ok {
@@ -175,7 +175,7 @@ func TestSubstituteSkipsBound(t *testing.T) {
 	Z, _ := NewVariable("Z", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 
 	// Substituting X -> Z should NOT affect bound X
 	subs := map[NodeKey]Expr{Key(X): Z}
@@ -195,7 +195,7 @@ func TestSubstituteCaptureError(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 
 	// Substituting Y -> X would create capture (X is bound)
 	subs := map[NodeKey]Expr{Key(Y): X}
@@ -248,10 +248,10 @@ func TestEqualModAlphaSimple(t *testing.T) {
 
 	// ForAll X. X == X  should equal  ForAll Y. Y == Y
 	eq1, _ := NewEq(X, X)
-	fa1, _ := NewForAll([]*Variable{X}, eq1)
+	fa1, _ := NewForAll([]*LogicVariable{X}, eq1)
 
 	eq2, _ := NewEq(Y, Y)
-	fa2, _ := NewForAll([]*Variable{Y}, eq2)
+	fa2, _ := NewForAll([]*LogicVariable{Y}, eq2)
 
 	if !EqualModAlpha(fa1, fa2) {
 		t.Error("ForAll X. X==X should be alpha-equal to ForAll Y. Y==Y")
@@ -266,10 +266,10 @@ func TestEqualModAlphaNotEqual(t *testing.T) {
 
 	// ForAll X. X == X  vs  ForAll Y. Y == Z
 	eq1, _ := NewEq(X, X)
-	fa1, _ := NewForAll([]*Variable{X}, eq1)
+	fa1, _ := NewForAll([]*LogicVariable{X}, eq1)
 
 	eq2, _ := NewEq(Y, Z)
-	fa2, _ := NewForAll([]*Variable{Y}, eq2)
+	fa2, _ := NewForAll([]*LogicVariable{Y}, eq2)
 
 	if EqualModAlpha(fa1, fa2) {
 		t.Error("should not be alpha-equal")
@@ -339,7 +339,7 @@ func TestFreeVariablesNested(t *testing.T) {
 	Z, _ := NewVariable("Z", S)
 
 	eq, _ := NewEq(X, Y)
-	fa, _ := NewForAll([]*Variable{X}, eq)
+	fa, _ := NewForAll([]*LogicVariable{X}, eq)
 	and, _ := NewAnd(fa)
 
 	// Z is not mentioned at all
@@ -364,7 +364,7 @@ func TestFreeVariablesLambda(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	lam, _ := NewLambda([]*Variable{X}, eq)
+	lam, _ := NewLambda([]*LogicVariable{X}, eq)
 
 	fv := FreeVariables(lam)
 	if _, ok := fv.Get2(Key(X)); ok {
@@ -381,7 +381,7 @@ func TestFreeVariablesNamedBinder(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq, _ := NewEq(X, Y)
-	nb, _ := NewNamedBinder("nb", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("nb", []*LogicVariable{X}, nil, eq)
 
 	fv := FreeVariables(nb)
 	if _, ok := fv.Get2(Key(X)); ok {
@@ -398,10 +398,10 @@ func TestEqualModAlphaExists(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	eq1, _ := NewEq(X, X)
-	ex1, _ := NewExists([]*Variable{X}, eq1)
+	ex1, _ := NewExists([]*LogicVariable{X}, eq1)
 
 	eq2, _ := NewEq(Y, Y)
-	ex2, _ := NewExists([]*Variable{Y}, eq2)
+	ex2, _ := NewExists([]*LogicVariable{Y}, eq2)
 
 	if !EqualModAlpha(ex1, ex2) {
 		t.Error("Exists X. X==X should be alpha-equal to Exists Y. Y==Y")
@@ -446,12 +446,12 @@ func TestNNB_SimpleNamedBinder(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nb, _ := NewNamedBinder("g", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, eq)
 
 	result := NormalizeNamedBinders(nb, nil)
-	rnb, ok := result.(*NamedBinder)
+	rnb, ok := result.(*LogicNamedBinder)
 	if !ok {
-		t.Fatalf("expected *NamedBinder, got %T", result)
+		t.Fatalf("expected *LogicNamedBinder, got %T", result)
 	}
 	if rnb.Name != "g" {
 		t.Errorf("expected name 'g', got '%s'", rnb.Name)
@@ -467,11 +467,11 @@ func TestNNB_SimpleNamedBinder(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *Eq body, got %T", rnb.Body)
 	}
-	v0t1, ok := body.T1.(*Variable)
+	v0t1, ok := body.T1.(*LogicVariable)
 	if !ok || v0t1.Name != "V0" {
 		t.Errorf("expected V0 in Eq.T1, got %s", body.T1)
 	}
-	v0t2, ok := body.T2.(*Variable)
+	v0t2, ok := body.T2.(*LogicVariable)
 	if !ok || v0t2.Name != "V0" {
 		t.Errorf("expected V0 in Eq.T2, got %s", body.T2)
 	}
@@ -483,10 +483,10 @@ func TestNNB_MultiVarNamedBinder(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
-	nb, _ := NewNamedBinder("g", []*Variable{X, Y}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X, Y}, nil, eq)
 
 	result := NormalizeNamedBinders(nb, nil)
-	rnb := result.(*NamedBinder)
+	rnb := result.(*LogicNamedBinder)
 	if len(rnb.Variables) != 2 {
 		t.Fatalf("expected 2 variables, got %d", len(rnb.Variables))
 	}
@@ -497,10 +497,10 @@ func TestNNB_MultiVarNamedBinder(t *testing.T) {
 		t.Errorf("expected V1, got %s", rnb.Variables[1].Name)
 	}
 	body := rnb.Body.(*Eq)
-	if body.T1.(*Variable).Name != "V0" {
+	if body.T1.(*LogicVariable).Name != "V0" {
 		t.Errorf("expected V0 in T1, got %s", body.T1)
 	}
-	if body.T2.(*Variable).Name != "V1" {
+	if body.T2.(*LogicVariable).Name != "V1" {
 		t.Errorf("expected V1 in T2, got %s", body.T2)
 	}
 }
@@ -511,12 +511,12 @@ func TestNNB_NamedBinderNotInNames(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nb, _ := NewNamedBinder("g", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, eq)
 
 	// Only normalize binders named "h", not "g"
 	names := map[string]bool{"h": true}
 	result := NormalizeNamedBinders(nb, names)
-	rnb := result.(*NamedBinder)
+	rnb := result.(*LogicNamedBinder)
 	// Variables should NOT be renamed (name not in set)
 	if rnb.Variables[0].Name != "X" {
 		t.Errorf("expected X unchanged, got %s", rnb.Variables[0].Name)
@@ -530,12 +530,12 @@ func TestNNB_NamesNil(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 	eqX, _ := NewEq(X, X)
 	eqY, _ := NewEq(Y, Y)
-	nbG, _ := NewNamedBinder("g", []*Variable{X}, nil, eqX)
-	nbH, _ := NewNamedBinder("h", []*Variable{Y}, nil, eqY)
+	nbG, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, eqX)
+	nbH, _ := NewNamedBinder("h", []*LogicVariable{Y}, nil, eqY)
 
 	// Test each NamedBinder independently (can't put FunctionSort binders in And)
-	rG := NormalizeNamedBinders(nbG, nil).(*NamedBinder)
-	rH := NormalizeNamedBinders(nbH, nil).(*NamedBinder)
+	rG := NormalizeNamedBinders(nbG, nil).(*LogicNamedBinder)
+	rH := NormalizeNamedBinders(nbH, nil).(*LogicNamedBinder)
 	if rG.Variables[0].Name != "V0" {
 		t.Errorf("expected V0 in g binder, got %s", rG.Variables[0].Name)
 	}
@@ -563,7 +563,7 @@ func TestNNB_ApplyResult(t *testing.T) {
 		t.Errorf("expected Const 'f', got %v", rApp.Func)
 	}
 	// Term should be Variable X
-	rTerm, ok := rApp.Terms[0].(*Variable)
+	rTerm, ok := rApp.Terms[0].(*LogicVariable)
 	if !ok || rTerm.Name != "X" {
 		t.Errorf("expected Variable X, got %v", rApp.Terms[0])
 	}
@@ -586,10 +586,10 @@ func TestNNB_ApplyMultipleTerms(t *testing.T) {
 	if len(rApp.Terms) != 2 {
 		t.Fatalf("expected 2 terms, got %d", len(rApp.Terms))
 	}
-	if rApp.Terms[0].(*Variable).Name != "X" {
+	if rApp.Terms[0].(*LogicVariable).Name != "X" {
 		t.Errorf("expected X, got %s", rApp.Terms[0])
 	}
-	if rApp.Terms[1].(*Variable).Name != "Y" {
+	if rApp.Terms[1].(*LogicVariable).Name != "Y" {
 		t.Errorf("expected Y, got %s", rApp.Terms[1])
 	}
 }
@@ -604,7 +604,7 @@ func TestNNB_NestedApplyInFormula(t *testing.T) {
 	and, _ := NewAnd(app)
 
 	result := NormalizeNamedBinders(and, nil)
-	rAnd := result.(*And)
+	rAnd := result.(*LogicAnd)
 	rApp := rAnd.Terms[0].(*Apply)
 	if rApp.Func.(*Const).Name != "f" {
 		t.Errorf("expected Const 'f' in nested Apply, got %v", rApp.Func)
@@ -618,23 +618,23 @@ func TestNNB_NamedBinderAsApplyFunc(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 
 	// NamedBinder g(X) = X : S -> S
-	nb, _ := NewNamedBinder("g", []*Variable{X}, nil, X)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, X)
 	// Apply g to Y
 	app := MustApply(nb, Y)
 
 	result := NormalizeNamedBinders(app, nil)
 	rApp := result.(*Apply)
-	rnb := rApp.Func.(*NamedBinder)
+	rnb := rApp.Func.(*LogicNamedBinder)
 	if rnb.Variables[0].Name != "V0" {
 		t.Errorf("expected V0 in Apply.Func NamedBinder, got %s", rnb.Variables[0].Name)
 	}
 	// Body of the NamedBinder should have V0 substituted for X
-	rBody := rnb.Body.(*Variable)
+	rBody := rnb.Body.(*LogicVariable)
 	if rBody.Name != "V0" {
 		t.Errorf("expected V0 in NamedBinder body, got %s", rBody.Name)
 	}
 	// The term Y should be unchanged
-	rTerm := rApp.Terms[0].(*Variable)
+	rTerm := rApp.Terms[0].(*LogicVariable)
 	if rTerm.Name != "Y" {
 		t.Errorf("expected Y in Apply term, got %s", rTerm.Name)
 	}
@@ -648,11 +648,11 @@ func TestNNB_ForAllBody(t *testing.T) {
 
 	// nb = g(Y) { Eq(X, Y) } : FunctionSort(S, Boolean)
 	eq, _ := NewEq(X, Y)
-	nb, _ := NewNamedBinder("g", []*Variable{Y}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{Y}, nil, eq)
 	// Apply nb to X → Boolean
 	app := MustApply(nb, X)
 	// ForAll X. nb(X)
-	fa, _ := NewForAll([]*Variable{X}, app)
+	fa, _ := NewForAll([]*LogicVariable{X}, app)
 
 	result := NormalizeNamedBinders(fa, nil)
 	rFa := result.(*ForAll)
@@ -662,7 +662,7 @@ func TestNNB_ForAllBody(t *testing.T) {
 	}
 	// Apply inside ForAll should have NamedBinder as Func
 	rApp := rFa.Body.(*Apply)
-	rnb := rApp.Func.(*NamedBinder)
+	rnb := rApp.Func.(*LogicNamedBinder)
 	if rnb.Variables[0].Name != "V0" {
 		t.Errorf("expected V0 in inner NamedBinder, got %s", rnb.Variables[0].Name)
 	}
@@ -675,43 +675,43 @@ func TestNNB_NotAndOrImplies(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
 	// nb = g(X) { Eq(X, Y) } : FunctionSort(S, Boolean)
-	nb, _ := NewNamedBinder("g", []*Variable{X}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, eq)
 	// Apply nb to Y → BooleanSort
 	app := MustApply(nb, Y)
 
 	// Not
 	notApp, _ := NewNot(app)
-	rNot := NormalizeNamedBinders(notApp, nil).(*Not)
+	rNot := NormalizeNamedBinders(notApp, nil).(*LogicNot)
 	rNotApp := rNot.Body.(*Apply)
-	if rNotApp.Func.(*NamedBinder).Variables[0].Name != "V0" {
+	if rNotApp.Func.(*LogicNamedBinder).Variables[0].Name != "V0" {
 		t.Error("Not: inner NamedBinder not normalized")
 	}
 
 	// And
 	andApp, _ := NewAnd(app)
-	rAnd := NormalizeNamedBinders(andApp, nil).(*And)
+	rAnd := NormalizeNamedBinders(andApp, nil).(*LogicAnd)
 	rAndApp := rAnd.Terms[0].(*Apply)
-	if rAndApp.Func.(*NamedBinder).Variables[0].Name != "V0" {
+	if rAndApp.Func.(*LogicNamedBinder).Variables[0].Name != "V0" {
 		t.Error("And: inner NamedBinder not normalized")
 	}
 
 	// Or
 	orApp, _ := NewOr(app)
-	rOr := NormalizeNamedBinders(orApp, nil).(*Or)
+	rOr := NormalizeNamedBinders(orApp, nil).(*LogicOr)
 	rOrApp := rOr.Terms[0].(*Apply)
-	if rOrApp.Func.(*NamedBinder).Variables[0].Name != "V0" {
+	if rOrApp.Func.(*LogicNamedBinder).Variables[0].Name != "V0" {
 		t.Error("Or: inner NamedBinder not normalized")
 	}
 
 	// Implies
 	implApp, _ := NewImplies(app, app)
-	rImpl := NormalizeNamedBinders(implApp, nil).(*Implies)
+	rImpl := NormalizeNamedBinders(implApp, nil).(*LogicImplies)
 	rImplT1 := rImpl.T1.(*Apply)
 	rImplT2 := rImpl.T2.(*Apply)
-	if rImplT1.Func.(*NamedBinder).Variables[0].Name != "V0" {
+	if rImplT1.Func.(*LogicNamedBinder).Variables[0].Name != "V0" {
 		t.Error("Implies.T1: inner NamedBinder not normalized")
 	}
-	if rImplT2.Func.(*NamedBinder).Variables[0].Name != "V0" {
+	if rImplT2.Func.(*LogicNamedBinder).Variables[0].Name != "V0" {
 		t.Error("Implies.T2: inner NamedBinder not normalized")
 	}
 }
@@ -724,22 +724,22 @@ func TestNNB_DeepNesting(t *testing.T) {
 
 	// nb = g(X) { Eq(X,X) } : FunctionSort(S, Boolean)
 	eqXX, _ := NewEq(X, X)
-	nb, _ := NewNamedBinder("g", []*Variable{X}, nil, eqXX)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X}, nil, eqXX)
 	// app = nb(Y) → BooleanSort
 	app := MustApply(nb, Y)
-	// and = And(app) → BooleanSort
+	// and = LogicAnd(app) → BooleanSort
 	and, _ := NewAnd(app)
 
 	result := NormalizeNamedBinders(and, nil)
-	rAnd := result.(*And)
+	rAnd := result.(*LogicAnd)
 	rApp := rAnd.Terms[0].(*Apply)
-	rnb := rApp.Func.(*NamedBinder)
+	rnb := rApp.Func.(*LogicNamedBinder)
 	if rnb.Variables[0].Name != "V0" {
 		t.Errorf("deep nesting: expected V0, got %s", rnb.Variables[0].Name)
 	}
 	// Body should have V0 substituted for X in Eq(X,X) → Eq(V0,V0)
 	rBody := rnb.Body.(*Eq)
-	if rBody.T1.(*Variable).Name != "V0" {
+	if rBody.T1.(*LogicVariable).Name != "V0" {
 		t.Errorf("deep nesting: expected V0 in body Eq.T1, got %s", rBody.T1)
 	}
 }
@@ -750,13 +750,13 @@ func TestNNB_Idempotent(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
-	nb, _ := NewNamedBinder("g", []*Variable{X, Y}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{X, Y}, nil, eq)
 
 	r1 := NormalizeNamedBinders(nb, nil)
 	r2 := NormalizeNamedBinders(r1, nil)
 
-	rnb1 := r1.(*NamedBinder)
-	rnb2 := r2.(*NamedBinder)
+	rnb1 := r1.(*LogicNamedBinder)
+	rnb2 := r2.(*LogicNamedBinder)
 	if rnb1.Variables[0].Name != rnb2.Variables[0].Name ||
 		rnb1.Variables[1].Name != rnb2.Variables[1].Name {
 		t.Errorf("not idempotent: first=%v second=%v",
@@ -775,19 +775,19 @@ func TestNNB_ExistsBody(t *testing.T) {
 
 	// nb = g(Y) { Eq(X, Y) } : FunctionSort(S, Boolean)
 	eq, _ := NewEq(X, Y)
-	nb, _ := NewNamedBinder("g", []*Variable{Y}, nil, eq)
+	nb, _ := NewNamedBinder("g", []*LogicVariable{Y}, nil, eq)
 	// Apply nb to X → Boolean
 	app := MustApply(nb, X)
 	// Exists X. nb(X)
-	ex, _ := NewExists([]*Variable{X}, app)
+	ex, _ := NewExists([]*LogicVariable{X}, app)
 
 	result := NormalizeNamedBinders(ex, nil)
-	rEx := result.(*Exists)
+	rEx := result.(*LogicExists)
 	if rEx.Variables[0].Name != "X" {
 		t.Errorf("expected Exists variable X preserved, got %s", rEx.Variables[0].Name)
 	}
 	rApp := rEx.Body.(*Apply)
-	rnb := rApp.Func.(*NamedBinder)
+	rnb := rApp.Func.(*LogicNamedBinder)
 	if rnb.Variables[0].Name != "V0" {
 		t.Errorf("expected V0 in inner NamedBinder, got %s", rnb.Variables[0].Name)
 	}
@@ -801,10 +801,10 @@ func TestNNB_Eq(t *testing.T) {
 
 	result := NormalizeNamedBinders(logicutilMustEq(t, X, Y), nil)
 	rEq := result.(*Eq)
-	if rEq.T1.(*Variable).Name != "X" {
+	if rEq.T1.(*LogicVariable).Name != "X" {
 		t.Errorf("expected X in Eq.T1, got %s", rEq.T1)
 	}
-	if rEq.T2.(*Variable).Name != "Y" {
+	if rEq.T2.(*LogicVariable).Name != "Y" {
 		t.Errorf("expected Y in Eq.T2, got %s", rEq.T2)
 	}
 }

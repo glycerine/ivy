@@ -108,9 +108,9 @@ func TestSummarizeActionBasic(t *testing.T) {
 	}
 
 	// Body should be empty (or just havoc actions).
-	seq, ok := summarized.(*Sequence)
+	seq, ok := summarized.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", summarized)
+		t.Fatalf("expected *LogicSequence, got %T", summarized)
 	}
 	// "r" is not in params, so no havoc.
 	if len(seq.Elems) != 0 {
@@ -128,9 +128,9 @@ func TestSummarizeActionWithInOutParams(t *testing.T) {
 	isoCfg.IsolateMode = "check"
 
 	summarized := SummarizeAction(body, isoCfg)
-	seq, ok := summarized.(*Sequence)
+	seq, ok := summarized.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", summarized)
+		t.Fatalf("expected *LogicSequence, got %T", summarized)
 	}
 	// x is in both params and returns, should be havoced.
 	if len(seq.Elems) != 1 {
@@ -148,9 +148,9 @@ func TestSummarizeActionNonCheckMode(t *testing.T) {
 	isoCfg.IsolateMode = "test"
 
 	summarized := SummarizeAction(body, isoCfg)
-	seq, ok := summarized.(*Sequence)
+	seq, ok := summarized.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", summarized)
+		t.Fatalf("expected *LogicSequence, got %T", summarized)
 	}
 	// In test mode, no havoc.
 	if len(seq.Elems) != 0 {
@@ -165,9 +165,9 @@ func TestEmptyClone(t *testing.T) {
 	body.SetFormalParams([]*Const{isolateMkConst("x")})
 
 	clone := EmptyClone(body)
-	seq, ok := clone.(*Sequence)
+	seq, ok := clone.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expected *Sequence, got %T", clone)
+		t.Fatalf("expected *LogicSequence, got %T", clone)
 	}
 	if len(seq.Elems) != 0 {
 		t.Errorf("empty clone should have 0 children, got %d", len(seq.Elems))
@@ -623,7 +623,7 @@ func TestStripSort(t *testing.T) {
 	}
 
 	result := StripSort(fs, 1)
-	rfs, ok := result.(*FunctionSort)
+	rfs, ok := result.(*LogicFunctionSort)
 	if !ok {
 		t.Fatalf("expected FunctionSort, got %T", result)
 	}

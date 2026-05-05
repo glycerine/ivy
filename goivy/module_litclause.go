@@ -15,7 +15,7 @@ import (
 // (ivy_logic_utils.py:35-38).
 func CoerceClauseToFormula(c interface{}) Expr {
 	switch v := c.(type) {
-	case []*Literal:
+	case []*LogicLiteral:
 		return ClauseToFormula(v)
 	case Expr:
 		return DropUniversals(v)
@@ -27,38 +27,38 @@ func CoerceClauseToFormula(c interface{}) Expr {
 // Corresponds to Python's condition_conj (ivy_logic_utils.py:877-879).
 func ConditionConj(c, p Expr) []Expr {
 	var ps []Expr
-	if a, ok := p.(*And); ok {
+	if a, ok := p.(*LogicAnd); ok {
 		ps = a.Terms
 	} else {
 		ps = []Expr{p}
 	}
 	result := make([]Expr, len(ps))
 	for i, q := range ps {
-		result[i] = &Or{Terms: []Expr{c, q}}
+		result[i] = &LogicOr{Terms: []Expr{c, q}}
 	}
 	return result
 }
 
 // FormulaToCube converts a formula to a cube (list of Literal).
 // Corresponds to Python's formula_to_cube (ivy_logic_utils.py:919-924).
-func FormulaToCube(f Expr) []*Literal {
+func FormulaToCube(f Expr) []*LogicLiteral {
 	f = ExpandAbbrevs(f)
-	if not, ok := f.(*Not); ok {
+	if not, ok := f.(*LogicNot); ok {
 		// De Morgan: ~(A|B|...) => ~A & ~B & ...
 		clause := formulaToClauseLits(not.Body)
-		result := make([]*Literal, len(clause))
+		result := make([]*LogicLiteral, len(clause))
 		for i, lit := range clause {
 			result[i] = lit.Invert()
 		}
 		return result
 	}
 	var lits []Expr
-	if a, ok := f.(*And); ok {
+	if a, ok := f.(*LogicAnd); ok {
 		lits = a.Terms
 	} else {
 		lits = []Expr{f}
 	}
-	result := make([]*Literal, len(lits))
+	result := make([]*LogicLiteral, len(lits))
 	for i, x := range lits {
 		result[i] = formulaToLitLiteral(x)
 	}
@@ -66,9 +66,9 @@ func FormulaToCube(f Expr) []*Literal {
 }
 
 // formulaToLitLiteral converts a formula to an il.Literal.
-func formulaToLitLiteral(f Expr) *Literal {
+func formulaToLitLiteral(f Expr) *LogicLiteral {
 	f = ExpandAbbrevs(f)
-	if not, ok := f.(*Not); ok {
+	if not, ok := f.(*LogicNot); ok {
 		inner := formulaToLitLiteral(not.Body)
 		return inner.Invert()
 	}
@@ -76,42 +76,42 @@ func formulaToLitLiteral(f Expr) *Literal {
 }
 
 // formulaToClauseLits converts a formula to a clause as a list of il.Literal.
-func formulaToClauseLits(f Expr) []*Literal {
+func formulaToClauseLits(f Expr) []*LogicLiteral {
 	f = ExpandAbbrevs(f)
 	f = DeMorgan(f)
 	if LogicUtilIsTrue(f) {
-		return []*Literal{NewLiteral(1, f)}
+		return []*LogicLiteral{NewLiteral(1, f)}
 	}
-	if or, ok := f.(*Or); ok {
-		var result []*Literal
+	if or, ok := f.(*LogicOr); ok {
+		var result []*LogicLiteral
 		for _, t := range or.Terms {
 			result = append(result, formulaToClauseLits(t)...)
 		}
 		return result
 	}
-	return []*Literal{formulaToLitLiteral(f)}
+	return []*LogicLiteral{formulaToLitLiteral(f)}
 }
 
 // FormulaToClausesAux clausifies a formula into a list of clauses
 // (each clause is a list of Literal). Requires the formula to be in CNF.
 // Corresponds to Python's formula_to_clauses_aux (ivy_logic_utils.py:953-966).
-func FormulaToClausesAux(f Expr) [][]*Literal {
+func FormulaToClausesAux(f Expr) [][]*LogicLiteral {
 	f = DropUniversals(f)
 	f = DeMorgan(f)
 	if IvyIsFalse(f) {
-		return [][]*Literal{{}} // empty clause = false
+		return [][]*LogicLiteral{{}} // empty clause = false
 	}
-	if _, isAnd := f.(*And); !isAnd {
+	if _, isAnd := f.(*LogicAnd); !isAnd {
 		cls := formulaToClauseLits(f)
 		for _, lit := range cls {
 			if isTautLiteral(lit) {
 				return nil // tautological clause removed
 			}
 		}
-		return [][]*Literal{cls}
+		return [][]*LogicLiteral{cls}
 	}
-	a := f.(*And)
-	var result [][]*Literal
+	a := f.(*LogicAnd)
+	var result [][]*LogicLiteral
 	for _, x := range a.Terms {
 		result = append(result, FormulaToClausesAux(x)...)
 	}
@@ -119,43 +119,43 @@ func FormulaToClausesAux(f Expr) [][]*Literal {
 }
 
 // isTautLiteral checks if an il.Literal is a tautology.
-func isTautLiteral(lit *Literal) bool {
+func isTautLiteral(lit *LogicLiteral) bool {
 	if lit.Polarity == 1 {
 		return IsTautLit(lit.Atom)
 	}
-	return IsTautLit(&Not{Body: lit.Atom})
+	return IsTautLit(&LogicNot{Body: lit.Atom})
 }
 
 // isVacLiteral checks if an il.Literal is vacuously false.
-func isVacLiteral(lit *Literal) bool {
+func isVacLiteral(lit *LogicLiteral) bool {
 	if lit.Polarity == 1 {
 		return IsVacLit(lit.Atom)
 	}
-	return IsVacLit(&Not{Body: lit.Atom})
+	return IsVacLit(&LogicNot{Body: lit.Atom})
 }
 
 // LitToFormula converts a Literal to a formula.
 // Corresponds to Python's lit_to_formula (ivy_logic_utils.py:988-989).
-func LitToFormula(lit *Literal) Expr {
+func LitToFormula(lit *LogicLiteral) Expr {
 	if lit.Polarity == 1 {
 		return lit.Atom
 	}
-	return &Not{Body: lit.Atom}
+	return &LogicNot{Body: lit.Atom}
 }
 
 // CubeToFormula converts a cube (list of Literal) to a conjunction formula.
 // Corresponds to Python's cube_to_formula (ivy_logic_utils.py:991-992).
-func CubeToFormula(c []*Literal) Expr {
+func CubeToFormula(c []*LogicLiteral) Expr {
 	terms := make([]Expr, len(c))
 	for i, lit := range c {
 		terms[i] = LitToFormula(lit)
 	}
-	return &And{Terms: terms}
+	return &LogicAnd{Terms: terms}
 }
 
 // ClauseToFormula converts a clause (list of Literal) to a disjunction formula.
 // Corresponds to Python's clause_to_formula (ivy_logic_utils.py:994-996).
-func ClauseToFormula(c []*Literal) Expr {
+func ClauseToFormula(c []*LogicLiteral) Expr {
 	lits := make([]Expr, len(c))
 	for i, lit := range c {
 		lits[i] = LitToFormula(lit)
@@ -163,15 +163,15 @@ func ClauseToFormula(c []*Literal) Expr {
 	if len(lits) == 1 {
 		return lits[0]
 	}
-	return &Or{Terms: lits}
+	return &LogicOr{Terms: lits}
 }
 
 // CanonizeClause rewrites a clause so variables occur in order V0, V1, ...
 // Corresponds to Python's canonize_clause (ivy_logic_utils.py:1010-1014).
-func CanonizeClause(cl []*Literal) []*Literal {
+func CanonizeClause(cl []*LogicLiteral) []*LogicLiteral {
 	// Collect used variables in order
 	seen := make(map[string]bool)
-	var vars []*Variable
+	var vars []*LogicVariable
 	for _, lit := range cl {
 		collectVarsOrderedLit(lit, seen, &vars)
 	}
@@ -184,12 +184,12 @@ func CanonizeClause(cl []*Literal) []*Literal {
 	return SubstituteLitClause(cl, subs)
 }
 
-func collectVarsOrderedLit(lit *Literal, seen map[string]bool, result *[]*Variable) {
+func collectVarsOrderedLit(lit *LogicLiteral, seen map[string]bool, result *[]*LogicVariable) {
 	collectVarsOrderedNode(lit.Atom, seen, result)
 }
 
-func collectVarsOrderedNode(node Expr, seen map[string]bool, result *[]*Variable) {
-	if v, ok := node.(*Variable); ok {
+func collectVarsOrderedNode(node Expr, seen map[string]bool, result *[]*LogicVariable) {
+	if v, ok := node.(*LogicVariable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
 			*result = append(*result, v)
@@ -202,8 +202,8 @@ func collectVarsOrderedNode(node Expr, seen map[string]bool, result *[]*Variable
 }
 
 // SubstituteLitClause applies a substitution to a clause of Literals.
-func SubstituteLitClause(cl []*Literal, subs map[NodeKey]Expr) []*Literal {
-	result := make([]*Literal, len(cl))
+func SubstituteLitClause(cl []*LogicLiteral, subs map[NodeKey]Expr) []*LogicLiteral {
+	result := make([]*LogicLiteral, len(cl))
 	for i, lit := range cl {
 		newAtom, err := Substitute(lit.Atom, subs)
 		if err != nil {
@@ -255,7 +255,7 @@ func TrimClauses(cls *Clauses) *Clauses {
 
 // RewriteClause rewrites a clause by substituting a variable with a term.
 // Corresponds to Python's rewrite_clause (ivy_logic_utils.py:1039-1042).
-func RewriteClause(clause []*Literal, v Expr, t Expr) []*Literal {
+func RewriteClause(clause []*LogicLiteral, v Expr, t Expr) []*LogicLiteral {
 	rep := GetAppRep(v)
 	if rep == nil {
 		return clause
@@ -266,8 +266,8 @@ func RewriteClause(clause []*Literal, v Expr, t Expr) []*Literal {
 
 // TrivFmlaToLit converts a formula to a Literal without full clausification.
 // Corresponds to Python's triv_fmla_to_lit (ivy_logic_utils.py:1044-1047).
-func TrivFmlaToLit(f Expr) *Literal {
-	if not, ok := f.(*Not); ok {
+func TrivFmlaToLit(f Expr) *LogicLiteral {
+	if not, ok := f.(*LogicNot); ok {
 		return NewLiteral(0, not.Body)
 	}
 	return NewLiteral(1, f)
@@ -275,9 +275,9 @@ func TrivFmlaToLit(f Expr) *Literal {
 
 // TrivFmlaToClause converts a formula to a clause without full clausification.
 // Corresponds to Python's triv_fmla_to_clause (ivy_logic_utils.py:1062-1063).
-func TrivFmlaToClause(fmla Expr) []*Literal {
+func TrivFmlaToClause(fmla Expr) []*LogicLiteral {
 	ors := CollectOr(fmla)
-	result := make([]*Literal, len(ors))
+	result := make([]*LogicLiteral, len(ors))
 	for i, f := range ors {
 		result[i] = TrivFmlaToLit(f)
 	}
@@ -294,7 +294,7 @@ func SimplifyClauseFmla(fmla Expr) Expr {
 // SimplifyClause simplifies a clause by rewriting with negative equalities
 // and removing tautologies/vacuous literals.
 // Corresponds to Python's simplify_clause (ivy_logic_utils.py:1069-1078).
-func SimplifyClause(clause []*Literal) []*Literal {
+func SimplifyClause(clause []*LogicLiteral) []*LogicLiteral {
 	// Rewrite using negative equalities: ~(X=t) => substitute X->t
 	for _, lit := range clause {
 		if lit.Polarity == 0 {
@@ -306,7 +306,7 @@ func SimplifyClause(clause []*Literal) []*Literal {
 					} else {
 						lhs, rhs = eq.T2, eq.T1
 					}
-					if _, ok := lhs.(*Variable); ok {
+					if _, ok := lhs.(*LogicVariable); ok {
 						clause = RewriteClause(clause, lhs, rhs)
 						break
 					}
@@ -317,11 +317,11 @@ func SimplifyClause(clause []*Literal) []*Literal {
 	// Check for tautology
 	for _, lit := range clause {
 		if isTautLiteral(lit) {
-			return []*Literal{NewLiteral(1, &And{})} // [true]
+			return []*LogicLiteral{NewLiteral(1, &LogicAnd{})} // [true]
 		}
 	}
 	// Remove vacuous literals and duplicates
-	var filtered []*Literal
+	var filtered []*LogicLiteral
 	for _, lit := range clause {
 		if !isVacLiteral(lit) {
 			filtered = append(filtered, lit)
@@ -332,7 +332,7 @@ func SimplifyClause(clause []*Literal) []*Literal {
 
 // IsTautology checks if a literal clause is a tautology.
 // Corresponds to Python's is_tautology (ivy_logic_utils.py:1080-1087).
-func IsTautology(clause []*Literal) bool {
+func IsTautology(clause []*LogicLiteral) bool {
 	for _, lit := range clause {
 		if isTautLiteral(lit) {
 			return true
@@ -354,7 +354,7 @@ func IsTautologyFmla(fmla Expr) bool {
 
 // LitInClause checks if a literal is in a clause (by structural equality).
 // Corresponds to Python's lit_in_clause (ivy_logic_utils.py:1092-1096).
-func LitInClause(lit1 *Literal, clause []*Literal) bool {
+func LitInClause(lit1 *LogicLiteral, clause []*LogicLiteral) bool {
 	for _, lit2 := range clause {
 		if lit1.Polarity == lit2.Polarity && lit1.Atom.Equal(lit2.Atom) {
 			return true
@@ -365,8 +365,8 @@ func LitInClause(lit1 *Literal, clause []*Literal) bool {
 
 // RemoveDuplicatesLit removes duplicate literals from a clause.
 // Corresponds to Python's remove_duplicates (ivy_logic_utils.py:1098-1103).
-func RemoveDuplicatesLit(clause []*Literal) []*Literal {
-	var res []*Literal
+func RemoveDuplicatesLit(clause []*LogicLiteral) []*LogicLiteral {
+	var res []*LogicLiteral
 	for _, lit1 := range clause {
 		if !LitInClause(lit1, res) {
 			res = append(res, lit1)
@@ -379,8 +379,8 @@ func RemoveDuplicatesLit(clause []*Literal) []*Literal {
 // Corresponds to Python's reduce_clauses (ivy_logic_utils.py:1105-1115).
 // Note: This requires subsume() which is in Batch 1.7; for now uses
 // a simplified version that only removes exact duplicates.
-func ReduceClauses(clauses [][]*Literal) [][]*Literal {
-	var used [][]*Literal
+func ReduceClauses(clauses [][]*LogicLiteral) [][]*LogicLiteral {
+	var used [][]*LogicLiteral
 	for _, cl := range clauses {
 		subsumed := false
 		for _, u := range used {
@@ -397,7 +397,7 @@ func ReduceClauses(clauses [][]*Literal) [][]*Literal {
 }
 
 // clauseEqual checks if two literal clauses are equal (same literals in order).
-func clauseEqual(c1, c2 []*Literal) bool {
+func clauseEqual(c1, c2 []*LogicLiteral) bool {
 	if len(c1) != len(c2) {
 		return false
 	}
@@ -412,6 +412,6 @@ func clauseEqual(c1, c2 []*Literal) bool {
 // BoolConst creates a boolean constant (0-arity relation).
 // Corresponds to Python's bool_const (ivy_logic_utils.py:1388-1389).
 func BoolConst(name string) Expr {
-	sym := NewConst(name, RelationSort(nil))
+	sym := NewConst(name, LogicRelationSort(nil))
 	return IvyAtom(sym, nil)
 }

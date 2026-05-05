@@ -10,7 +10,7 @@ var autoTestAstCfg = NewAstConfig()
 
 func TestBuildOrExpr_Empty(t *testing.T) {
 	result := buildOrExpr(nil)
-	or, ok := result.(*Or)
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T", result)
 	}
@@ -23,7 +23,7 @@ func TestBuildOrExpr_Single(t *testing.T) {
 	a := NewConst("a", Boolean)
 	result := buildOrExpr([]Expr{a})
 	// Single element should be wrapped in Or (matching Python behavior).
-	or, ok := result.(*Or)
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T", result)
 	}
@@ -36,7 +36,7 @@ func TestBuildOrExpr_Multiple(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
 	result := buildOrExpr([]Expr{a, b})
-	or, ok := result.(*Or)
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T", result)
 	}
@@ -48,21 +48,21 @@ func TestBuildOrExpr_Multiple(t *testing.T) {
 // --- isGloballyOrNotEventually ---
 
 func TestIsGloballyOrNotEventually_Globally(t *testing.T) {
-	g := &Globally{Body: True}
+	g := &LogicGlobally{Body: True}
 	if !isGloballyOrNotEventually(g) {
 		t.Error("expected true for Globally")
 	}
 }
 
 func TestIsGloballyOrNotEventually_NotEventually(t *testing.T) {
-	ne := &Not{Body: &Eventually{Body: True}}
+	ne := &LogicNot{Body: &LogicEventually{Body: True}}
 	if !isGloballyOrNotEventually(ne) {
-		t.Error("expected true for Not{Eventually}")
+		t.Error("expected true for LogicNot{Eventually}")
 	}
 }
 
 func TestIsGloballyOrNotEventually_Eventually(t *testing.T) {
-	e := &Eventually{Body: True}
+	e := &LogicEventually{Body: True}
 	if isGloballyOrNotEventually(e) {
 		t.Error("expected false for Eventually")
 	}
@@ -76,30 +76,30 @@ func TestIsGloballyOrNotEventually_Plain(t *testing.T) {
 }
 
 func TestIsGloballyOrNotEventually_NotGlobally(t *testing.T) {
-	ng := &Not{Body: &Globally{Body: True}}
+	ng := &LogicNot{Body: &LogicGlobally{Body: True}}
 	if isGloballyOrNotEventually(ng) {
-		t.Error("expected false for Not{Globally}")
+		t.Error("expected false for LogicNot{Globally}")
 	}
 }
 
 // --- isEventuallyOrNotGlobally ---
 
 func TestIsEventuallyOrNotGlobally_Eventually(t *testing.T) {
-	e := &Eventually{Body: True}
+	e := &LogicEventually{Body: True}
 	if !isEventuallyOrNotGlobally(e) {
 		t.Error("expected true for Eventually")
 	}
 }
 
 func TestIsEventuallyOrNotGlobally_NotGlobally(t *testing.T) {
-	ng := &Not{Body: &Globally{Body: True}}
+	ng := &LogicNot{Body: &LogicGlobally{Body: True}}
 	if !isEventuallyOrNotGlobally(ng) {
-		t.Error("expected true for Not{Globally}")
+		t.Error("expected true for LogicNot{Globally}")
 	}
 }
 
 func TestIsEventuallyOrNotGlobally_Globally(t *testing.T) {
-	g := &Globally{Body: True}
+	g := &LogicGlobally{Body: True}
 	if isEventuallyOrNotGlobally(g) {
 		t.Error("expected false for Globally")
 	}

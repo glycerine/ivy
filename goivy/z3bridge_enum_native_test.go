@@ -17,7 +17,7 @@ import (
 // getModelConstant takes the general constant_from_z3 path (not the iteration
 // path). This tests the fix for the missing "not use_z3_enums" guard.
 func TestGetModelConstant_NativeEnum(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -69,7 +69,7 @@ func TestGetModelConstant_NativeEnum(t *testing.T) {
 // TestGetModelConstant_BinaryEncoding verifies that with UseZ3Enums=false,
 // the iteration path (checking each enum value) works correctly.
 func TestGetModelConstant_BinaryEncoding(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -119,7 +119,7 @@ func TestGetModelConstant_BinaryEncoding(t *testing.T) {
 // TestGetModelConstant_AllEnumValues verifies model extraction for each
 // possible enum value with both UseZ3Enums=true and false.
 func TestGetModelConstant_AllEnumValues(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 
 	for _, useNative := range []bool{true, false} {
 		for _, expected := range es.Extension {
@@ -190,7 +190,7 @@ func TestEnumeratedToNumeral_FlagOff(t *testing.T) {
 		t.Skip("EnableInterpretedEnums is true; this test checks the disabled path")
 	}
 
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Constructors["red"] = true
 	sig.Constructors["green"] = true
@@ -214,7 +214,7 @@ func TestEnumeratedToNumeral_FlagOff(t *testing.T) {
 // TestEnumeratedToNumeralZ3_Int directly tests the enumeratedToNumeralZ3 helper
 // with int interpretation, bypassing the flag check.
 func TestEnumeratedToNumeralZ3_Int(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = "int"
 
@@ -238,7 +238,7 @@ func TestEnumeratedToNumeralZ3_Int(t *testing.T) {
 
 // TestEnumeratedToNumeralZ3_Nat tests enum interpreted as "nat".
 func TestEnumeratedToNumeralZ3_Nat(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = "nat"
 
@@ -260,7 +260,7 @@ func TestEnumeratedToNumeralZ3_Nat(t *testing.T) {
 
 // TestEnumeratedToNumeralZ3_Bv tests enum interpreted as bitvector.
 func TestEnumeratedToNumeralZ3_Bv(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = "bv[2]"
 
@@ -286,7 +286,7 @@ func TestEnumeratedToNumeralZ3_Bv(t *testing.T) {
 // TestEnumeratedToNumeralZ3_BvOverflow verifies that an enum with too many
 // values for the bitvector width produces an error.
 func TestEnumeratedToNumeralZ3_BvOverflow(t *testing.T) {
-	es := &EnumeratedSort{
+	es := &LogicEnumeratedSort{
 		Name:      "big",
 		Extension: []string{"a", "b", "c", "d", "e"},
 	}
@@ -314,7 +314,7 @@ func TestEnumeratedToNumeralZ3_BvOverflow(t *testing.T) {
 
 // TestEnumeratedToNumeralZ3_RangeSort tests enum interpreted as a RangeSort.
 func TestEnumeratedToNumeralZ3_RangeSort(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = &RangeSort{
 		Name: "color_range",
@@ -341,7 +341,7 @@ func TestEnumeratedToNumeralZ3_RangeSort(t *testing.T) {
 // TestEnumeratedToNumeralZ3_UnsupportedInterp verifies error for unsupported
 // interpretation types.
 func TestEnumeratedToNumeralZ3_UnsupportedInterp(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = "float" // not a supported native sort
 
@@ -359,7 +359,7 @@ func TestEnumeratedToNumeralZ3_UnsupportedInterp(t *testing.T) {
 
 // TestEnumeratedToNumeralZ3_BadBvWidth verifies error for malformed bv width.
 func TestEnumeratedToNumeralZ3_BadBvWidth(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
 	sig.Interp["color"] = "bv[abc]" // bad width
 

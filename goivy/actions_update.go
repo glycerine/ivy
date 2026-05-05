@@ -248,9 +248,9 @@ func mkAssignClauses(lhs, rhs Expr) *Update {
 	rn := make(map[string]Expr)
 	for i, ph := range phs {
 		if i < len(args) {
-			if _, isVar := args[i].(*Variable); isVar {
+			if _, isVar := args[i].(*LogicVariable); isVar {
 				// Variable arg: record substitution (arg.Name → placeholder)
-				rn[args[i].(*Variable).Name] = ph
+				rn[args[i].(*LogicVariable).Name] = ph
 			} else {
 				// Non-variable: add equality constraint
 				eqs = append(eqs, &Eq{T1: ph, T2: args[i]})
@@ -271,7 +271,7 @@ func mkAssignClauses(lhs, rhs Expr) *Update {
 		if rhsSort == nil {
 			rhsSort = TopS
 		}
-		drhs = &Ite{ISort: rhsSort, Cond: eqConj, Then: drhs, Else: oldVal}
+		drhs = &LogicIte{ISort: rhsSort, Cond: eqConj, Then: drhs, Else: oldVal}
 	}
 
 	// Python: Clauses([], [Definition(dlhs, drhs)], EmptyAnnotation())
@@ -284,7 +284,7 @@ func mkAssignClauses(lhs, rhs Expr) *Update {
 	}
 }
 
-func actionsVarsToNodes(vars []*Variable) []Expr {
+func actionsVarsToNodes(vars []*LogicVariable) []Expr {
 	nodes := make([]Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
@@ -302,7 +302,7 @@ func actionsVarsToNodes(vars []*Variable) []Expr {
 // An assume adds the formula as a constraint on the current state.
 // If the formula came from a LabeledFormula with unprovable=true, skip entirely.
 // Python: action_update returns ([], clauses, false_clauses())
-func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicAssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.AssumeAction.action_update ENTER")
 	defer xtracer.Trace("actions.AssumeAction.action_update EXIT")
 	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
@@ -341,9 +341,9 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 // An assert generates a precondition (negative) from the dual of the formula.
 // Implements Python's selective assertion checking via check_unprovable and checked_assert.
 // Python: action_update (ivy_actions.py:343-362)
-func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
-	xtracer.Trace("actions.AssertAction.action_update ENTER")
-	defer xtracer.Trace("actions.AssertAction.action_update EXIT")
+func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
+	xtracer.Trace("actions.LogicAssertAction.action_update ENTER")
+	defer xtracer.Trace("actions.LogicAssertAction.action_update EXIT")
 	fmla := a.Formula
 	unprovable := a.Unprovable
 
@@ -400,20 +400,20 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 
 // --- RequiresAction ---
 
-func (a *RequiresAction) ActionUpdate(ctx *UpdateContext) *Update {
-	return a.AssertAction.ActionUpdate(ctx)
+func (a *LogicRequiresAction) ActionUpdate(ctx *UpdateContext) *Update {
+	return a.LogicAssertAction.ActionUpdate(ctx)
 }
 
 // --- EnsuresAction ---
 
-func (a *EnsuresAction) ActionUpdate(ctx *UpdateContext) *Update {
-	return a.AssertAction.ActionUpdate(ctx)
+func (a *LogicEnsuresAction) ActionUpdate(ctx *UpdateContext) *Update {
+	return a.LogicAssertAction.ActionUpdate(ctx)
 }
 
 // --- SubgoalAction ---
 
-func (a *SubgoalAction) ActionUpdate(ctx *UpdateContext) *Update {
-	return a.AssertAction.ActionUpdate(ctx)
+func (a *LogicSubgoalAction) ActionUpdate(ctx *UpdateContext) *Update {
+	return a.LogicAssertAction.ActionUpdate(ctx)
 }
 
 // --- AssignAction ---
@@ -425,7 +425,7 @@ func (a *SubgoalAction) ActionUpdate(ctx *UpdateContext) *Update {
 // 3. Destructor assignments (mutate through destructors)
 // 4. Variant assignments
 // 5. Simple assignments
-func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicAssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.AssignAction.action_update ENTER")
 	defer xtracer.Trace("actions.AssignAction.action_update EXIT")
 	lhs, rhs := a.LHS, a.RHS
@@ -481,7 +481,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 		// Make variables distinct from those already used in lhs and rhs
 		// Python: extend = variables_distinct_list_ast(extend, self)
 		// We combine lhs and rhs into a single expression for variable collection
-		combined := &And{Terms: []Expr{lhs, rhs}}
+		combined := &LogicAnd{Terms: []Expr{lhs, rhs}}
 		extend = VariablesDistinctListAst(extend, combined)
 
 		lhs = addParametersAST(lhs, extend)
@@ -609,7 +609,7 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 	// eqs = [eq_atom(v,a) for (v,a) in list(zip(vs,lhs.args))[1:] if not isinstance(a,Variable)]
 	var eqs []Expr
 	for i := 1; i < len(vs) && i < len(lhsArgs); i++ {
-		if _, isVar := lhsArgs[i].(*Variable); !isVar {
+		if _, isVar := lhsArgs[i].(*LogicVariable); !isVar {
 			eqs = append(eqs, &Eq{T1: vs[i], T2: lhsArgs[i]})
 		}
 	}
@@ -620,7 +620,7 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 		if len(eqs) == 1 {
 			guard = eqs[0]
 		} else {
-			guard = &And{Terms: eqs}
+			guard = &LogicAnd{Terms: eqs}
 		}
 		equiv := equivAST(dlhs, drhs)
 		*fmlas = append(*fmlas, disjoin(guard, equiv))
@@ -672,7 +672,7 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 
 // destructorAssignUpdate handles assignment through destructors.
 // Python: destructor case in AssignAction.action_update (ivy_actions.py:533-538).
-func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs Expr) *Update {
+func (a *LogicAssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs Expr) *Update {
 	var fmlas []Expr
 	nondetLhs, newClauses, mutN := destrAsgnVal(lhs, &fmlas, ctx.Domain)
 	if mutN == nil {
@@ -735,7 +735,7 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 	var eqs []Expr
 	for i, v := range vs {
 		if i < len(args) {
-			if _, isVar := args[i].(*Variable); !isVar {
+			if _, isVar := args[i].(*LogicVariable); !isVar {
 				eqs = append(eqs, &Eq{T1: v, T2: args[i]})
 			}
 		}
@@ -746,7 +746,7 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 	rn := make(map[string]Expr)
 	for i, v := range vs {
 		if i < len(args) {
-			if varArg, isVar := args[i].(*Variable); isVar {
+			if varArg, isVar := args[i].(*LogicVariable); isVar {
 				rn[varArg.Name] = v
 			}
 		}
@@ -772,7 +772,7 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 		if len(eqs) == 1 {
 			guard = eqs[0]
 		} else {
-			guard = &And{Terms: eqs}
+			guard = &LogicAnd{Terms: eqs}
 		}
 		origApply := applyToNodes(sym, phNodes) // n(*dlhs.args)
 		ite, err := NewIte(guard, nondet, origApply)
@@ -810,14 +810,14 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 				xv, _ := NewVariable("X", s)
 				ptoS := Pto(lhsSort, s)
 				ptoSApp := applyToNodes(ptoS, append([]Expr{dlhs}, xv))
-				fmlas = append(fmlas, &Not{Body: ptoSApp})
+				fmlas = append(fmlas, &LogicNot{Body: ptoSApp})
 			}
 		}
 	}
 
 	// Return as update with definition: Definition(dlhs, nondet)
 	defn := NewIvyDefinition(dlhs, nondet)
-	defs := []*Definition{defn}
+	defs := []*LogicDefinition{defn}
 
 	// Combine: formulas go in TR, definition goes in defs
 	// Python: new_clauses = Clauses(fmlas, [Definition(dlhs, nondet)])
@@ -834,7 +834,7 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 // ActionUpdate computes the transition relation for havoc (nondeterministic assignment).
 // The new value is unconstrained at the specified indices, but equal to the old
 // value at all other indices.
-func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicHavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.HavocAction.action_update ENTER")
 	defer xtracer.Trace("actions.HavocAction.action_update EXIT")
 	lhs := a.Target
@@ -847,7 +847,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	dom := SortDomain(sym.CSort)
 
 	// Create fresh variables for the domain
-	vs := make([]*Variable, len(dom))
+	vs := make([]*LogicVariable, len(dom))
 	for i, s := range dom {
 		v, _ := NewVariable(fmt.Sprintf("X%d", i), s)
 		vs[i] = v
@@ -857,7 +857,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	var eqs []Expr
 	for i, v := range vs {
 		if i < len(args) {
-			if _, isVar := args[i].(*Variable); !isVar {
+			if _, isVar := args[i].(*LogicVariable); !isVar {
 				eqs = append(eqs, &Eq{T1: v, T2: args[i]})
 			}
 		}
@@ -873,8 +873,8 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 		newApp := applyToNodes(newN, vsNodes)
 		oldApp := applyToNodes(sym, vsNodes)
 		for _, eq := range eqs {
-			impl1, _ := NewOr(&Not{Body: newApp}, oldApp, eq)
-			impl2, _ := NewOr(newApp, &Not{Body: oldApp}, eq)
+			impl1, _ := NewOr(&LogicNot{Body: newApp}, oldApp, eq)
+			impl2, _ := NewOr(newApp, &LogicNot{Body: oldApp}, eq)
 			terms = append(terms, impl1, impl2)
 		}
 		if len(terms) == 0 {
@@ -916,7 +916,7 @@ func applyToNodes(fn Expr, args []Expr) Expr {
 // Python: SetAction.action_update (ivy_actions.py:624-636).
 // Builds clauses with frame conditions ensuring values at non-matching indices
 // are preserved.
-func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicSetAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.SetAction.action_update ENTER")
 	defer xtracer.Trace("actions.SetAction.action_update EXIT")
 	if a.Lit == nil {
@@ -926,7 +926,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Determine polarity and atom
 	lit := a.Lit
 	positive := true
-	if n, ok := lit.(*Not); ok {
+	if n, ok := lit.(*LogicNot); ok {
 		positive = false
 		lit = n.Body
 	}
@@ -956,14 +956,14 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 	var eqs []Expr
 	for i, v := range vs {
 		if i < len(args) {
-			if _, isVar := args[i].(*Variable); !isVar {
+			if _, isVar := args[i].(*LogicVariable); !isVar {
 				eqs = append(eqs, &Eq{T1: v, T2: args[i]})
 			}
 		}
 	}
 
 	// Build the formula components
-	// Python: new_clauses = And(*(
+	// Python: new_clauses = LogicAnd(*(
 	//   [Or(sign(lit.polarity, Atom(new_n, vs)), sign(1-lit.polarity, Atom(n, vs))),
 	//    sign(lit.polarity, Atom(new_n, args))] +
 	//   [Or(*([sign(0, Atom(new_n, vs)), sign(1, Atom(n, vs))] + [eq])) for eq in eqs] +
@@ -997,7 +997,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 // IntUpdate for NativeAction is a no-op — skips update axioms.
 // Python: NativeAction.int_update (ivy_actions.py:1286) returns
 // ([], true_clauses(), false_clauses()) — annot is None.
-func (a *NativeAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicNativeAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(a))
 	return NullUpdate()
 }
@@ -1007,7 +1007,7 @@ func (a *NativeAction) IntUpdate(ctx *UpdateContext) *Update {
 // IntUpdate for DebugAction is a no-op — skips update axioms.
 // Python: DebugAction.int_update (ivy_actions.py:1267) returns
 // ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation())).
-func (a *DebugAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicDebugAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(a))
 	return &Update{
 		Modified: []*Const{},
@@ -1037,12 +1037,12 @@ func (a *ReturnAction) IntUpdate(ctx *UpdateContext) *Update {
 // makeFieldUpdateFunc constructs a field-update AssignAction using a callable
 // RHS builder and returns its ActionUpdate.
 // Python: make_field_update(self, l, f, r_func, domain, pvars) with lambda r_func.
-func makeFieldUpdateFunc(field, obj Expr, rhsFunc func(v *Variable) Expr, ctx *UpdateContext) *Update {
+func makeFieldUpdateFunc(field, obj Expr, rhsFunc func(v *LogicVariable) Expr, ctx *UpdateContext) *Update {
 	sym, ok := field.(*Const)
 	if sym == nil || !ok {
 		return NullUpdate()
 	}
-	fs, ok := sym.CSort.(*FunctionSort)
+	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok || !IsRelationalSort(sym.CSort) || len(fs.Domain()) != 2 {
 		// "field must be a binary relation"
 		return NullUpdate()
@@ -1057,28 +1057,28 @@ func makeFieldUpdateFunc(field, obj Expr, rhsFunc func(v *Variable) Expr, ctx *U
 
 // ActionUpdate for AssignFieldAction.
 // Python: l,f,r = self.args; make_field_update(self,l,f,lambda v: Equals(v,r),domain,pvars)
-func (a *AssignFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
-	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *Variable) Expr {
+func (a *LogicAssignFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
+	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *LogicVariable) Expr {
 		return NewEqualsNode(v, a.Value)
 	}, ctx)
 }
 
 // ActionUpdate for NullFieldAction.
 // Python: l,f = self.args; make_field_update(self,l,f,lambda v: Or(),domain,pvars)
-func (a *NullFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
-	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *Variable) Expr {
-		return &Or{} // Or() with no args = false
+func (a *LogicNullFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
+	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *LogicVariable) Expr {
+		return &LogicOr{} // Or() with no args = false
 	}, ctx)
 }
 
 // ActionUpdate for CopyFieldAction.
 // Python: l,lf,r,rf = self.args; make_field_update(self,l,lf,lambda v: rf(r,v),domain,pvars)
-func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicCopyFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
 	srcField := a.SrcField
 	if srcField == nil {
 		srcField = a.Field // backward compat: same field for both
 	}
-	return makeFieldUpdateFunc(a.Field, a.Dst, func(v *Variable) Expr {
+	return makeFieldUpdateFunc(a.Field, a.Dst, func(v *LogicVariable) Expr {
 		if sym, ok := srcField.(*Const); ok {
 			app, _ := NewApply(sym, a.Src, v)
 			return app
@@ -1094,61 +1094,61 @@ func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *Update {
 // actionTypeName returns the Python class name for the action type (for xtracer).
 func ActionTypeName(a interface{}) string {
 	switch a.(type) {
-	case *Sequence:
+	case *LogicSequence:
 		return "Sequence"
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		return "ChoiceAction"
-	case *EnvAction:
+	case *LogicEnvAction:
 		return "EnvAction"
-	case *IfAction:
+	case *LogicIfAction:
 		return "IfAction"
-	case *WhileAction:
+	case *LogicWhileAction:
 		return "WhileAction"
-	case *LocalAction:
+	case *LogicLocalAction:
 		return "LocalAction"
-	case *LetAction:
+	case *LogicLetAction:
 		return "LetAction"
-	case *CallAction:
+	case *LogicCallAction:
 		return "CallAction"
-	case *BindOldsAction:
+	case *LogicBindOldsAction:
 		return "BindOldsAction"
-	case *AssignAction:
+	case *LogicAssignAction:
 		return "AssignAction"
-	case *SetAction:
+	case *LogicSetAction:
 		return "SetAction"
-	case *HavocAction:
+	case *LogicHavocAction:
 		return "HavocAction"
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		return "AssumeAction"
-	case *AssertAction:
+	case *LogicAssertAction:
 		return "AssertAction"
-	case *CrashAction:
+	case *LogicCrashAction:
 		return "CrashAction"
-	case *InstantiateAction:
+	case *LogicInstantiateAction:
 		return "InstantiateAction"
-	case *NativeAction:
+	case *LogicNativeAction:
 		return "NativeAction"
-	case *DebugAction:
+	case *LogicDebugAction:
 		return "DebugAction"
-	case *RequiresAction:
+	case *LogicRequiresAction:
 		return "RequiresAction"
-	case *EnsuresAction:
+	case *LogicEnsuresAction:
 		return "EnsuresAction"
-	case *ThunkAction:
+	case *LogicThunkAction:
 		return "ThunkAction"
 	case *ReturnAction:
 		return "ReturnAction"
 	case *IgnoreAction:
 		return "IgnoreAction"
-	case *SubgoalAction:
+	case *LogicSubgoalAction:
 		return "SubgoalAction"
-	case *VarAction:
+	case *LogicVarAction:
 		return "VarAction"
-	case *AssignFieldAction:
+	case *LogicAssignFieldAction:
 		return "AssignFieldAction"
-	case *NullFieldAction:
+	case *LogicNullFieldAction:
 		return "NullFieldAction"
-	case *CopyFieldAction:
+	case *LogicCopyFieldAction:
 		return "CopyFieldAction"
 	case *FailAction:
 		return "fail_action" // Python class name is snake_case
@@ -1167,61 +1167,61 @@ func IntUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 	// trace (matching Python's Action.int_update which traces
 	// "actions.IntUpdate ENTER type=%s").
 	switch a := action.(type) {
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *AssertAction:
+	case *LogicAssertAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *RequiresAction:
+	case *LogicRequiresAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *EnsuresAction:
+	case *LogicEnsuresAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *AssignAction:
+	case *LogicAssignAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *HavocAction:
+	case *LogicHavocAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *SetAction:
+	case *LogicSetAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *NativeAction:
+	case *LogicNativeAction:
 		return a.IntUpdate(ctx)
-	case *DebugAction:
+	case *LogicDebugAction:
 		return a.IntUpdate(ctx)
 	case *ReturnAction:
 		return a.IntUpdate(ctx)
-	case *AssignFieldAction:
+	case *LogicAssignFieldAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *NullFieldAction:
+	case *LogicNullFieldAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *CopyFieldAction:
+	case *LogicCopyFieldAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
-	case *Sequence:
+	case *LogicSequence:
 		return a.IntUpdate(ctx)
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		return a.IntUpdate(ctx)
-	case *EnvAction:
+	case *LogicEnvAction:
 		return a.IntUpdateEnv(ctx)
-	case *IfAction:
+	case *LogicIfAction:
 		return a.IntUpdate(ctx)
-	case *WhileAction:
+	case *LogicWhileAction:
 		return a.IntUpdate(ctx)
-	case *LocalAction:
+	case *LogicLocalAction:
 		return a.IntUpdate(ctx)
-	case *LetAction:
+	case *LogicLetAction:
 		return a.IntUpdate(ctx)
-	case *CallAction:
+	case *LogicCallAction:
 		return a.IntUpdate(ctx)
-	case *BindOldsAction:
+	case *LogicBindOldsAction:
 		return a.IntUpdate(ctx)
-	case *CrashAction:
+	case *LogicCrashAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *FailAction:
@@ -1229,7 +1229,7 @@ func IntUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 		// IntUpdate type=<inner>" trace and recursively calls IntUpdate
 		// on the inner action, matching Python fail_action.int_update.
 		return a.IntUpdate(ctx)
-	case *InstantiateAction:
+	case *LogicInstantiateAction:
 		return a.IntUpdate(ctx)
 	default:
 		// Generic fallback: null update
@@ -1319,7 +1319,7 @@ func applyUpdateAxioms(update *Update, action ActionsAction, ctx *UpdateContext)
 // Python: Sequence.int_update (ivy_actions.py:839) composes each child via
 // compose_updates and pins the source op's lineno onto the resulting TR
 // annotation after each composition.
-func (s *Sequence) IntUpdate(ctx *UpdateContext) *Update {
+func (s *LogicSequence) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.Sequence.int_update ENTER")
 	defer xtracer.Trace("actions.Sequence.int_update EXIT")
 	// Python (ivy_actions.py:841):
@@ -1393,16 +1393,16 @@ func sortedModNames(mods []*Const) []string {
 
 // IntUpdate computes the nondeterministic choice between branches.
 // Python: ChoiceAction.int_update uses join_action for each branch.
-func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.ChoiceAction.int_update ENTER")
 	defer xtracer.Trace("actions.ChoiceAction.int_update EXIT")
 	// Python: if determinize and len(self.args) == 2:
 	//   cond = bool_const('___branch:' + str(self.unique_id))
-	//   ite = IfAction(Not(cond), self.args[0], self.args[1])
+	//   ite = LogicIfAction(Not(cond), self.args[0], self.args[1])
 	//   return ite.int_update(domain, pvars)
 	if ctx.ActCfg != nil && ctx.ActCfg.Determinize && len(a.Branches) == 2 {
 		cond := BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
-		ite := NewIfAction(&Not{Body: cond}, a.Branches[0], a.Branches[1])
+		ite := NewIfAction(&LogicNot{Body: cond}, a.Branches[0], a.Branches[1])
 		return ite.IntUpdate(ctx)
 	}
 	// Python (ivy_actions.py:889):
@@ -1434,12 +1434,12 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *Update {
 
 // IntUpdateEnv is like ChoiceAction.IntUpdate but calls GetUpdate
 // (with hide_formals) instead of IntUpdate for each branch.
-func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
+func (a *LogicEnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.EnvAction.int_update ENTER")
 	defer xtracer.Trace("actions.EnvAction.int_update EXIT")
 	// Python: if determinize and len(self.args) == 2:
 	//   cond = bool_const('___branch:' + str(self.unique_id))
-	//   ite = IfAction(cond, self.args[0], self.args[1])
+	//   ite = LogicIfAction(cond, self.args[0], self.args[1])
 	//   return ite.update(domain, pvars)
 	// Note: EnvAction uses cond (positive), ChoiceAction uses Not(cond).
 	// Note: EnvAction calls update (GetUpdate), not int_update (IntUpdate).
@@ -1477,7 +1477,7 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 
 // IntUpdate computes the if-then-else transition relation.
 // Python: IfAction.int_update uses ite_action for simple conditions.
-func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.IfAction.int_update ENTER")
 	defer xtracer.Trace("actions.IfAction.int_update EXIT")
 	cond := a.Cond
@@ -1530,7 +1530,7 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 
 // intUpdateWithSubactions handles the Some/SomeMinMax case.
 // Python: if_part,else_part = (a.int_update(domain,pvars) for a in self.subactions())
-func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
+func (a *LogicIfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 	ifPart, elsePart := a.Subactions(ctx.ActCfg)
 
 	ifUpdate := IntUpdate(ifPart, ctx)
@@ -1548,7 +1548,7 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 	if res.TR != nil {
 		if ite, ok := res.TR.Annot.(*IteAnnotation); ok {
 			res.TR.Annot = &IteAnnotation{
-				Cond:  &Not{Body: ite.Cond},
+				Cond:  &LogicNot{Body: ite.Cond},
 				ThenB: ite.ElseB,
 				ElseB: ite.ThenB,
 			}
@@ -1557,7 +1557,7 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 	if res.Pre != nil {
 		if ite, ok := res.Pre.Annot.(*IteAnnotation); ok {
 			res.Pre.Annot = &IteAnnotation{
-				Cond:  &Not{Body: ite.Cond},
+				Cond:  &LogicNot{Body: ite.Cond},
 				ThenB: ite.ElseB,
 				ElseB: ite.ThenB,
 			}
@@ -1572,7 +1572,7 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *Update {
 // IntUpdate computes the while loop's transition relation by expanding
 // the loop into assume/assert/havoc/if structure.
 // Python: WhileAction.int_update checks for UnrollContext first, then calls expand().
-func (a *WhileAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicWhileAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.WhileAction.int_update ENTER")
 	defer xtracer.Trace("actions.WhileAction.int_update EXIT")
 	// Python: if isinstance(context, UnrollContext): return self.unroll(context.card).int_update(domain, pvars)
@@ -1598,11 +1598,11 @@ func (a *WhileAction) IntUpdate(ctx *UpdateContext) *Update {
 // Unroll determines the iteration bound from the loop condition's index sort
 // and unrolls the loop into nested IfActions.
 // Python: WhileAction.unroll (ivy_actions.py:1025-1046)
-func (a *WhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAction, error) {
+func (a *LogicWhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAction, error) {
 	cond := a.Cond
 	// Unwrap nested And to find comparison
 	for {
-		if andN, ok := cond.(*And); ok && len(andN.Terms) > 0 {
+		if andN, ok := cond.(*LogicAnd); ok && len(andN.Terms) > 0 {
 			cond = andN.Terms[0]
 		} else {
 			break
@@ -1618,7 +1618,7 @@ func (a *WhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAc
 				}
 			}
 		}
-	} else if notN, ok := cond.(*Not); ok {
+	} else if notN, ok := cond.(*LogicNot); ok {
 		if eq, ok := notN.Body.(*Eq); ok {
 			idxSort = eq.T1.NodeSort()
 		}
@@ -1637,7 +1637,7 @@ func (a *WhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAc
 	}
 
 	// Build nested IfActions from inside out
-	// Python: res = IfAction(self.args[0], AssumeAction(Or()))
+	// Python: res = LogicIfAction(self.args[0], AssumeAction(Or()))
 	var bodyExpr Expr
 	if body != nil {
 		bodyExpr = body
@@ -1646,7 +1646,7 @@ func (a *WhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAc
 	}
 
 	// Innermost: if cond then assume false (empty Or = false)
-	res := NewIfAction(a.Cond, NewAssumeAction(&Or{}))
+	res := NewIfAction(a.Cond, NewAssumeAction(&LogicOr{}))
 	for i := 0; i < cardsort; i++ {
 		seq := NewSequence(bodyExpr, res)
 		res = NewIfAction(a.Cond, seq)
@@ -1658,7 +1658,7 @@ func (a *WhileAction) Unroll(card func(Sort) int, body ActionsAction) (ActionsAc
 // Expand converts the while loop into an equivalent sequence of
 // assert invariants, havoc modified, assume invariants, if cond then body.
 // This is the standard Floyd-Hoare approach to while loops.
-func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
+func (a *LogicWhileAction) Expand(ctx *UpdateContext) ActionsAction {
 	// First, compute the modify set from the body
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
@@ -1684,7 +1684,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
 	// Python ivy_actions.py:1070: asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
 	var asserts []ActionsAction
 	for _, inv := range invariants {
-		if _, isAssume := inv.(*AssumeAction); isAssume {
+		if _, isAssume := inv.(*LogicAssumeAction); isAssume {
 			continue
 		}
 		asserts = append(asserts, NewAssertAction(inv))
@@ -1694,7 +1694,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
 	// Python ivy_actions.py:1069: assumes = [... for a in asserts if not isinstance(a, SubgoalAction)]
 	var assumes []ActionsAction
 	for _, inv := range invariants {
-		if _, isSG := inv.(*SubgoalAction); isSG {
+		if _, isSG := inv.(*LogicSubgoalAction); isSG {
 			continue
 		}
 		assumes = append(assumes, NewAssumeAction(inv))
@@ -1726,14 +1726,14 @@ func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
 				rankAssume.SetLineno(ranking.GetLineno())
 			}
 			assumes = append(assumes, rankAssume)
-			ltSym := NewConst("<", RelationSort([]Sort{rankSort, rankSort}))
+			ltSym := NewConst("<", LogicRelationSort([]Sort{rankSort, rankSort}))
 			exitAssert := NewAssertAction(MustApply(ltSym, rankExpr, aux))
 			if ranking.HasLineno() {
 				exitAssert.SetLineno(ranking.GetLineno())
 			}
 			exitAsserts = append(exitAsserts, exitAssert)
 			zeroSym := NewConst("0", rankSort)
-			entryAssert := NewAssertAction(&Not{Body: MustApply(ltSym, rankExpr, zeroSym)})
+			entryAssert := NewAssertAction(&LogicNot{Body: MustApply(ltSym, rankExpr, zeroSym)})
 			if ranking.HasLineno() {
 				entryAssert.SetLineno(ranking.GetLineno())
 			}
@@ -1786,7 +1786,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
 
 // IntUpdate computes the local action's update by hiding local symbols.
 // Python: LocalAction.int_update computes body.int_update then hide(syms, update).
-func (a *LocalAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicLocalAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.LocalAction.int_update ENTER")
 	defer xtracer.Trace("actions.LocalAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
@@ -1828,7 +1828,7 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *Update {
 
 // IntUpdate computes the let action's update by substituting symbols.
 // Python: LetAction.int_update computes body.int_update then subst_action.
-func (a *LetAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicLetAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.LetAction.int_update ENTER")
 	defer xtracer.Trace("actions.LetAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
@@ -1862,7 +1862,7 @@ func (a *LetAction) IntUpdate(ctx *UpdateContext) *Update {
 
 // IntUpdate wraps the inner action's update with bind_olds.
 // Python: BindOldsAction.int_update returns bind_olds_action(inner.int_update(...)).
-func (a *BindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicBindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.BindOldsAction.int_update ENTER")
 	defer xtracer.Trace("actions.BindOldsAction.int_update EXIT")
 	innerAct := unwrapToAction(a.Inner)
@@ -1880,7 +1880,7 @@ func (a *BindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 // IntUpdate computes the call action's update by inlining the callee.
 // Python: CallAction.int_update resolves the callee, applies actuals,
 // and computes the inlined update.
-func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
+func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CallAction.int_update ENTER")
 	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
@@ -1930,7 +1930,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 // applyActuals inlines the callee with actual parameters.
 // Corresponds to Python CallAction.apply_actuals.
 // Includes capture avoidance via distinct_obj_renaming.
-func (a *CallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Update {
+func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Update {
 	formalParams := callee.GetFormalParams()
 	formalReturns := callee.GetFormalReturns()
 	actualParams := nodeArgs(a.Callee)
@@ -1971,11 +1971,11 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Upd
 	for oldSym, newSym := range renaming {
 		substMap[Key(oldSym)] = newSym
 		// Python (ivy_actions.py:1364-1365): subst[old(s)] = old(t)
-		//   where old(sym) = sym.prefix('old_'). Use the Old() helper here
+		//   where old(sym) = sym.prefix('old_'). Use the LogicOld() helper here
 		//   so the substMap key actually matches a real pre-state symbol in
 		//   the callee body (e.g., from a prior BindOldsAction wrapper).
-		oldOfOldSym := NewConst(Old(oldSym.Name), oldSym.CSort)
-		oldOfNewSym := NewConst(Old(newSym.Name), newSym.CSort)
+		oldOfOldSym := NewConst(LogicOld(oldSym.Name), oldSym.CSort)
+		oldOfNewSym := NewConst(LogicOld(newSym.Name), newSym.CSort)
 		substMap[Key(oldOfOldSym)] = oldOfNewSym
 	}
 	renamedCallee := SubstituteConstantsAction(callee, substMap)
@@ -2126,7 +2126,7 @@ func actionsCollectSymbolNames(node Expr, names map[string]bool) {
 
 // ActionUpdate computes the crash action by havocing all non-spec mutable symbols.
 // Python: CrashAction.action_update — wants update axioms applied via intUpdateFromActionUpdate.
-func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *Update {
+func (a *LogicCrashAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CrashAction.action_update ENTER")
 	defer xtracer.Trace("actions.CrashAction.action_update EXIT")
 	target := a.Target

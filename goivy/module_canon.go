@@ -440,7 +440,7 @@ func canonInsMapSort(m *InsMap[string, Sort]) string {
 // For FunctionSort, arity = len(sorts) - 1 (all args minus the result type).
 // For non-function sorts, arity = 0.
 func sortArity(s Sort) int {
-	if fs, ok := s.(*FunctionSort); ok && len(fs.Sorts) > 0 {
+	if fs, ok := s.(*LogicFunctionSort); ok && len(fs.Sorts) > 0 {
 		return len(fs.Sorts) - 1
 	}
 	return 0
@@ -685,8 +685,8 @@ func canonNamedActionSlice(nas []NamedAction) string {
 	return fmt.Sprintf("[%s]", strings.Join(parts, " "))
 }
 
-// canonInstantiationSlice returns canonical form of []Instantiation.
-func canonInstantiationSlice(insts []Instantiation) string {
+// canonInstantiationSlice returns canonical form of []LogicInstantiation.
+func canonInstantiationSlice(insts []LogicInstantiation) string {
 	if len(insts) == 0 {
 		return "[]"
 	}

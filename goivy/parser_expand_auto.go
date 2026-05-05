@@ -50,7 +50,7 @@ type autoKey struct {
 // It operates on the ivyAccum in-place, matching Python's mutation of ivy.decls.
 func expandAutoInstances(ivy *ivyAccum) {
 	xtracer.Trace("parser.expand_autoinstances ENTER")
-	autos := make(map[autoKey][]*AstInstantiation)
+	autos := make(map[autoKey][]*Instantiation)
 	trefs := make(map[string]bool)
 	decls := ivy.decls
 	xtracer.Trace("parser.expand_auto ENTER decls=%d", len(decls))
@@ -64,7 +64,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 			// Python: for inst in decl.args:
 			//             if len(inst.args) == 2:
 			for _, arg := range aid.Args() {
-				inst, ok := arg.(*AstInstantiation)
+				inst, ok := arg.(*Instantiation)
 				if !ok || inst == nil {
 					continue
 				}
@@ -123,7 +123,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 					}
 					rhs := inst.Sort.Clone(rhsArgs)
 
-					// Python: newinst = Instantiation(lhs, rhs)
+					// Python: newinst = LogicInstantiation(lhs, rhs)
 					newInst := cfg.NewInstantiation(lhs, rhs)
 
 					// Python: if hasattr(decl,"lineno"): newinst.lineno = decl.lineno
@@ -166,7 +166,7 @@ func nodeSort(n Node) string {
 		if x.Sort != nil {
 			return fmt.Sprint(x.Sort)
 		}
-	case *AstVariable:
+	case *Variable:
 		return x.VSort
 	case *Atom:
 		if x.ASort != nil {
@@ -221,7 +221,7 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 		args := d.Args()
 		if len(args) > 0 {
 			mysym := args[0]
-			if defn, ok := mysym.(*AstDefinition); ok {
+			if defn, ok := mysym.(*Definition); ok {
 				if defnArgs := defn.Args(); len(defnArgs) > 0 {
 					mysym = defnArgs[0]
 				}
@@ -236,7 +236,7 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 		//             for s in t.args: tterm_type_names(s, names)
 		for _, arg := range d.Args() {
 			if td, ok := arg.(*TypeDef); ok && td.Value != nil {
-				if ss, ok := td.Value.(*AstStructSort); ok {
+				if ss, ok := td.Value.(*StructSort); ok {
 					for _, s := range ss.Args() {
 						ttermTypeNames(s, names)
 					}
@@ -289,7 +289,7 @@ func getTypeNamesFromAction(action Node, names *TypeNames) {
 	// Walk action tree looking for LocalAction nodes.
 	// Python's iter_subactions yields self and all nested sub-actions.
 	walkActions(action, func(a Node) {
-		if la, ok := a.(*AstLocalAction); ok {
+		if la, ok := a.(*LocalAction); ok {
 			// Python: for c in a.args[:-1] — all args except the last (the body)
 			elems := la.Elems
 			if len(elems) > 1 {

@@ -234,7 +234,7 @@ func CreateIsolate(iso string, mod *Module) error {
 							return fmt.Errorf("undefined action: %s", impname)
 						}
 						action := mod.Actions.Get(impname)
-						if seq, ok := action.(*Sequence); ok && len(seq.Elems) == 0 {
+						if seq, ok := action.(*LogicSequence); ok && len(seq.Elems) == 0 {
 							outcalls[impname] = true
 						} else {
 							return fmt.Errorf("cannot import implemented action: %s", impname)
@@ -849,7 +849,7 @@ func bracketActionInt(mod *Module, actname string, before, after []ActionsAction
 	//   thing = empty_clone(action)
 	//   thing.args.extend(before+[action]+after)
 	// EmptyClone preserves the original action's Loc on the wrapper.
-	wrap := EmptyClone(act).(*Sequence)
+	wrap := EmptyClone(act).(*LogicSequence)
 	wrap.Elems = make([]Expr, 0, len(before)+1+len(after))
 	for _, b := range before {
 		wrap.Elems = append(wrap.Elems, b)

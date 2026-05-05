@@ -386,19 +386,19 @@ func getLabels(act ActionsAction) []string {
 	}
 	// Access Labels field directly if possible through ActionBase
 	switch a := act.(type) {
-	case *Sequence:
+	case *LogicSequence:
 		return a.Labels
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		return a.Labels
-	case *AssertAction:
+	case *LogicAssertAction:
 		return a.Labels
-	case *CallAction:
+	case *LogicCallAction:
 		return a.Labels
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		return a.Labels
-	case *EnvAction:
-		return a.ChoiceAction.Labels
-	case *IfAction:
+	case *LogicEnvAction:
+		return a.LogicChoiceAction.Labels
+	case *LogicIfAction:
 		return a.Labels
 	}
 	return nil
@@ -460,7 +460,7 @@ func NormalProgramFromModule(mod *Module) *NormalProgram {
 
 // EnvAction creates an environment action from a list of action bindings.
 // This represents the environment nondeterministically calling one of the actions.
-func TemporalEnvAction(cfg *ActionsConfig, bindings []*ActionTermBinding) *EnvAction {
+func TemporalEnvAction(cfg *ActionsConfig, bindings []*ActionTermBinding) *LogicEnvAction {
 	var branches []Expr
 	for _, b := range bindings {
 		name := b.Name
@@ -482,16 +482,14 @@ func TemporalEnvAction(cfg *ActionsConfig, bindings []*ActionTermBinding) *EnvAc
 
 // TemporalModels represents M |= phi, a temporal proof goal.
 // It wraps the ast.TemporalModels type for convenience.
-type TemporalModels = AstTemporalModels
-
 // PropEvent computes the event action for a temporal property.
 // For G phi (Globally) formulas, the event is "assume phi".
 // For F ~phi (Eventually with negation) formulas, the event is "assert phi".
 func TemporalPropEvent(gprop Expr, lineno Location) ActionsAction {
 	switch g := gprop.(type) {
-	case *Eventually:
+	case *LogicEventually:
 		// Formula of the form F ~phi translates to "assert phi"
-		if not, ok := g.Body.(*Not); ok {
+		if not, ok := g.Body.(*LogicNot); ok {
 			res := NewAssertAction(not.Body)
 			res.SetLineno(lineno)
 			return res
@@ -500,7 +498,7 @@ func TemporalPropEvent(gprop Expr, lineno Location) ActionsAction {
 		res := NewAssertAction(g.Body)
 		res.SetLineno(lineno)
 		return res
-	case *Globally:
+	case *LogicGlobally:
 		// Formula of the form G phi translates to "assume phi"
 		res := NewAssumeAction(g.Body)
 		res.SetLineno(lineno)
@@ -522,20 +520,20 @@ func PrefixActionTerm(at *ActionTerm, stmts []ActionsAction) *ActionTerm {
 
 // IsGloballyFormula returns true if the given node is a logic.Globally formula.
 func IsGloballyFormula(n Expr) bool {
-	_, ok := n.(*Globally)
+	_, ok := n.(*LogicGlobally)
 	return ok
 }
 
 // IsEventuallyFormula returns true if the given node is a logic.Eventually formula.
 func IsEventuallyFormula(n Expr) bool {
-	_, ok := n.(*Eventually)
+	_, ok := n.(*LogicEventually)
 	return ok
 }
 
 // IsTemporalFormula returns true if the formula is a temporal operator.
 func IsTemporalFormula(n Expr) bool {
 	switch n.(type) {
-	case *Globally, *Eventually, *WhenOperator:
+	case *LogicGlobally, *LogicEventually, *LogicWhenOperator:
 		return true
 	}
 	return false
@@ -558,7 +556,7 @@ func HasTemporalOperator(n Expr) bool {
 // IsGprop returns true if the formula is Globally(phi) where phi
 // has no temporal operators.
 func TemporalIsGprop(n Expr) bool {
-	g, ok := n.(*Globally)
+	g, ok := n.(*LogicGlobally)
 	if !ok {
 		return false
 	}
@@ -568,9 +566,9 @@ func TemporalIsGprop(n Expr) bool {
 // GetEnviron returns the environment label of a temporal formula, or nil.
 func GetEnviron(n Expr) *string {
 	switch g := n.(type) {
-	case *Globally:
+	case *LogicGlobally:
 		return g.Environ
-	case *Eventually:
+	case *LogicEventually:
 		return g.Environ
 	}
 	return nil
@@ -628,7 +626,7 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		return nil, fmt.Errorf("invariance: could not extract formula from goal")
 	}
 
-	glob, ok := fmla.(*Globally)
+	glob, ok := fmla.(*LogicGlobally)
 	if !ok {
 		return nil, fmt.Errorf("invariance: tactic applies only to globally formulas")
 	}
@@ -672,7 +670,7 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 	}
 
 	// Add the negation of the property: F ~phi
-	gprops = append(gprops, &Eventually{Environ: glob.Environ, Body: &Not{Body: invar}})
+	gprops = append(gprops, &LogicEventually{Environ: glob.Environ, Body: &LogicNot{Body: invar}})
 	gpropLines = append(gpropLines, goal.GetLineno())
 
 	// Build memo tables: environ -> props, symbol -> props
@@ -713,7 +711,7 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		eventProps := make(map[string]Expr) // deduped by string
 
 		// If it is a call, check for events on return
-		if call, ok := stmt.(*CallAction); ok {
+		if call, ok := stmt.(*LogicCallAction); ok {
 			calleeName := call.Callee.String()
 			if at, ok := actionMap[calleeName]; ok {
 				labelSet := make(map[string]bool)
@@ -780,7 +778,7 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(Expr); ok {
-					if g, ok := f.(*Globally); ok {
+					if g, ok := f.(*LogicGlobally); ok {
 						model.Asms = append(model.Asms, ax.Clone([]Node{ax.Label, g.Body}).(*LabeledFormula))
 					}
 				}
@@ -802,16 +800,16 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 }
 
 // findTemporalModels looks for a TemporalModels in the goal.
-func temporalFindTemporalModels(goal *LabeledFormula) *AstTemporalModels {
+func temporalFindTemporalModels(goal *LabeledFormula) *TemporalModels {
 	if goal == nil || goal.Formula == nil {
 		return nil
 	}
-	if tm, ok := goal.Formula.(*AstTemporalModels); ok {
+	if tm, ok := goal.Formula.(*TemporalModels); ok {
 		return tm
 	}
 	if sb, ok := goal.Formula.(*SchemaBody); ok {
 		if c := sb.Conc(); c != nil {
-			if tm, ok := c.(*AstTemporalModels); ok {
+			if tm, ok := c.(*TemporalModels); ok {
 				return tm
 			}
 		}

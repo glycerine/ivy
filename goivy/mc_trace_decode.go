@@ -137,7 +137,7 @@ func (h *AigerMatchHandler2) Eval(cond Expr) bool {
 	if isTrueNode(cond) {
 		return true
 	}
-	if n, ok := cond.(*Not); ok {
+	if n, ok := cond.(*LogicNot); ok {
 		return !h.Eval(n.Body)
 	}
 	if c, ok := cond.(*Const); ok {
@@ -438,7 +438,7 @@ func isCallOrEnvAction(action ActionsAction) bool {
 		return false
 	}
 	switch action.(type) {
-	case *CallAction, *EnvAction:
+	case *LogicCallAction, *LogicEnvAction:
 		return true
 	}
 	return false
@@ -448,13 +448,13 @@ func isCallAction2(action ActionsAction) bool {
 	if action == nil {
 		return false
 	}
-	_, ok := action.(*CallAction)
+	_, ok := action.(*LogicCallAction)
 	return ok
 }
 
 // isFalseNode checks if a node is the logical false constant.
 func isFalseNode(n Expr) bool {
-	if o, ok := n.(*Or); ok && len(o.Terms) == 0 {
+	if o, ok := n.(*LogicOr); ok && len(o.Terms) == 0 {
 		return true
 	}
 	if c, ok := n.(*Const); ok && c.Name == "false" {
@@ -465,7 +465,7 @@ func isFalseNode(n Expr) bool {
 
 // isTrueNode checks if a node is the logical true constant.
 func isTrueNode(n Expr) bool {
-	if a, ok := n.(*And); ok && len(a.Terms) == 0 {
+	if a, ok := n.(*LogicAnd); ok && len(a.Terms) == 0 {
 		return true
 	}
 	if c, ok := n.(*Const); ok && c.Name == "true" {

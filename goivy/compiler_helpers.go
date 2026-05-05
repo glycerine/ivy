@@ -225,7 +225,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top 
 	}
 
 	// Apply to arguments
-	if fs, ok := sym.CSort.(*FunctionSort); ok && fs.Arity() > 0 {
+	if fs, ok := sym.CSort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
 		actualArgs, remaining, err := pullArgs(args, fs.Arity(), sym.Name, top)
 		if err != nil {
 			return nil, args, err
@@ -391,7 +391,7 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 					}
 				}
 				// Create variant dispatch: if Some(tmpsym, isa_test) then call variant else original
-				// Python: call = IfAction(ivy_ast.Some(tmpsym, isa_expr), new_call, call)
+				// Python: call = LogicIfAction(ivy_ast.Some(tmpsym, isa_expr), new_call, call)
 				tmpSym := NewConst("self:"+IvySortName(vsort), vsort)
 				tmpArgs := make([]Expr, len(args))
 				copy(tmpArgs, args)
@@ -410,11 +410,11 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 				newCall.AstCallee = c.Module.Cfg.AstCfg.NewAtom(vactName, varAstTerms...)
 				newCall.SetLineno(self.GetLineno())
 				// Build the Some condition: Some(tmpsym, *>(keyArg, tmpsym))
-				isaSort := RelationSort([]Sort{keySort, vsort})
+				isaSort := LogicRelationSort([]Sort{keySort, vsort})
 				isaSym := NewConst("*>", isaSort)
 				isaApp, _ := NewApply(isaSym, keyArg, tmpSym)
 				// Python: ivy_ast.Some(tmpsym, isa_expr)
-				someCond := IvyExists([]*Variable{
+				someCond := IvyExists([]*LogicVariable{
 					{Name: tmpSym.Name, VSort: vsort},
 				}, isaApp)
 				ifAction := NewIfAction(someCond,

@@ -40,7 +40,7 @@ func formulaToSMTLIB2(node Expr) string {
 		return "true"
 	}
 	switch n := node.(type) {
-	case *And:
+	case *LogicAnd:
 		if len(n.Terms) == 0 {
 			return "true"
 		}
@@ -49,7 +49,7 @@ func formulaToSMTLIB2(node Expr) string {
 			args[i] = formulaToSMTLIB2(t)
 		}
 		return "(and " + strings.Join(args, " ") + ")"
-	case *Or:
+	case *LogicOr:
 		if len(n.Terms) == 0 {
 			return "false"
 		}
@@ -58,21 +58,21 @@ func formulaToSMTLIB2(node Expr) string {
 			args[i] = formulaToSMTLIB2(t)
 		}
 		return "(or " + strings.Join(args, " ") + ")"
-	case *Not:
+	case *LogicNot:
 		return "(not " + formulaToSMTLIB2(n.Body) + ")"
-	case *Implies:
+	case *LogicImplies:
 		return "(=> " + formulaToSMTLIB2(n.T1) + " " + formulaToSMTLIB2(n.T2) + ")"
-	case *Iff:
+	case *LogicIff:
 		return "(= " + formulaToSMTLIB2(n.T1) + " " + formulaToSMTLIB2(n.T2) + ")"
 	case *Eq:
 		return "(= " + formulaToSMTLIB2(n.T1) + " " + formulaToSMTLIB2(n.T2) + ")"
 	case *Const:
 		return "|" + n.Name + "|"
-	case *Variable:
+	case *LogicVariable:
 		return "|" + n.Name + "|"
 	case *ForAll:
 		return "(forall (...) " + formulaToSMTLIB2(n.Body) + ")"
-	case *Exists:
+	case *LogicExists:
 		return "(exists (...) " + formulaToSMTLIB2(n.Body) + ")"
 	default:
 		return fmt.Sprint(node)

@@ -54,7 +54,7 @@ func TestDivergence5_QuantifiedTerm(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewApply: %v", err)
 	}
-	fa, err := NewForAll([]*Variable{x}, body)
+	fa, err := NewForAll([]*LogicVariable{x}, body)
 	if err != nil {
 		t.Fatalf("NewForAll: %v", err)
 	}
@@ -86,11 +86,11 @@ func TestDivergence5_NestedBinders(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewApply: %v", err)
 	}
-	exists, err := NewExists([]*Variable{y}, innerBody)
+	exists, err := NewExists([]*LogicVariable{y}, innerBody)
 	if err != nil {
 		t.Fatalf("NewExists: %v", err)
 	}
-	fa, err := NewForAll([]*Variable{x}, exists)
+	fa, err := NewForAll([]*LogicVariable{x}, exists)
 	if err != nil {
 		t.Fatalf("NewForAll: %v", err)
 	}

@@ -88,7 +88,7 @@ func TestAssumeTactic_PreservesTemporalModels(t *testing.T) {
 
 	// The conclusion must still be *ast.TemporalModels
 	conc := GoalConc(result[0])
-	if _, ok := conc.(*AstTemporalModels); !ok {
+	if _, ok := conc.(*TemporalModels); !ok {
 		t.Fatalf("expected conclusion to be *ast.TemporalModels, got %T", conc)
 	}
 }
@@ -291,8 +291,8 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 	v := proofMkVar("X", s)
 
 	// Create a temporal formula: ForAll X. (globally true)
-	globally := &Globally{Body: True}
-	inner := &ForAll{Variables: []*Variable{v}, Body: globally}
+	globally := &LogicGlobally{Body: True}
+	inner := &ForAll{Variables: []*LogicVariable{v}, Body: globally}
 
 	// Wrap in TemporalModels
 	np := proofTestAstCfg.NewNoneAST() // dummy model node (avoids temporal import cycle)
@@ -309,7 +309,7 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 
 	// Step 1: Skolemize
 	skolemized := SkolemizeGoal(proofTestAstCfg, goal, true)
-	if _, ok := GoalConc(skolemized).(*AstTemporalModels); !ok {
+	if _, ok := GoalConc(skolemized).(*TemporalModels); !ok {
 		t.Fatalf("after skolemize: expected TemporalModels conclusion, got %T", GoalConc(skolemized))
 	}
 
@@ -348,7 +348,7 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 
 	// The conclusion must STILL be TemporalModels
 	concFinal := GoalConc(result[0])
-	if _, ok := concFinal.(*AstTemporalModels); !ok {
+	if _, ok := concFinal.(*TemporalModels); !ok {
 		t.Fatalf("REGRESSION: after skolemize+instantiate, conclusion is %T, not *ast.TemporalModels", concFinal)
 	}
 }
@@ -368,7 +368,7 @@ func TestIsWitVar_BoundVariableKey(t *testing.T) {
 
 	// Schema conc: forall P:proc. true  (stand-in for the axiom body)
 	body := True
-	fa, _ := NewForAll([]*Variable{p}, body)
+	fa, _ := NewForAll([]*LogicVariable{p}, body)
 	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob.FreeSyms excludes P (bound), matching Python goal_vocab semantics.
@@ -410,10 +410,10 @@ func TestIsWitVar_DropsForAllViaWitnessAst(t *testing.T) {
 	wrFair := proofMkConst("wr_fair", boolFs)
 	rdFairP, _ := NewApply(rdFair, p)
 	wrFairP, _ := NewApply(wrFair, p)
-	body := &And{Terms: []Expr{rdFairP, wrFairP}}
+	body := &LogicAnd{Terms: []Expr{rdFairP, wrFairP}}
 
 	// Schema conc: forall P:proc. (rd_fair(P) & wr_fair(P))
-	fa, _ := NewForAll([]*Variable{p}, body)
+	fa, _ := NewForAll([]*LogicVariable{p}, body)
 	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob with P excluded from FreeSyms (bound variable semantics).
@@ -447,7 +447,7 @@ func TestIsWitVar_DropsForAllViaWitnessAst(t *testing.T) {
 		t.Errorf("REGRESSION: WitnessAst did not drop vacuous ForAll; got %v", newConc.Canon())
 	}
 	// The result should be an And (the substituted body), not a ForAll.
-	if _, isAnd := newConc.(*And); !isAnd {
+	if _, isAnd := newConc.(*LogicAnd); !isAnd {
 		t.Errorf("expected result to be *lg.And (body), got %T: %v", newConc, newConc.Canon())
 	}
 }

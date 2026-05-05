@@ -12,7 +12,7 @@ func newTestModule() *goivy.Module {
 	mod.Sig = goivy.NewSig()
 
 	// Add an enumerated sort: Color = {red, green, blue}
-	colorSort := &goivy.EnumeratedSort{
+	colorSort := &goivy.LogicEnumeratedSort{
 		Name:      "color",
 		Extension: []string{"red", "green", "blue"},
 	}

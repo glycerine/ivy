@@ -80,7 +80,7 @@ func TestMiss2_ARGSetupStateMultiple(t *testing.T) {
 
 // TestDefinitionDuplicateLHSVariable checks that a definition with duplicate
 // LHS variables raises an error.
-// Python: "Variable {} occurs twice on left-hand side of definition"
+// Python: "LogicVariable{} occurs twice on left-hand side of definition"
 func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
@@ -110,7 +110,7 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 
 // TestDefinitionFreeRHSVariable checks that a definition with an unbound RHS
 // variable raises an error.
-// Python: "Variable {} occurs free on right-hand side of definition"
+// Python: "LogicVariable{} occurs free on right-hand side of definition"
 func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()

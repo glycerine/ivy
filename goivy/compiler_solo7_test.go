@@ -182,7 +182,7 @@ func TestConcept_UsesTermForSortInference(t *testing.T) {
 	if err != nil {
 		t.Fatalf("symbol 'c' not found after Concept: %v", err)
 	}
-	fs, ok := sym.CSort.(*FunctionSort)
+	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok {
 		t.Fatalf("expected FunctionSort for c, got %T", sym.CSort)
 	}

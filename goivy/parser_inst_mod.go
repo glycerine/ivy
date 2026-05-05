@@ -29,7 +29,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 	var others []Node
 
 	for _, instantiation := range insts {
-		inst, ok := instantiation.(*AstInstantiation)
+		inst, ok := instantiation.(*Instantiation)
 		if !ok {
 			others = append(others, instantiation)
 			continue
@@ -67,7 +67,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 		var formalParams []Node
 		var moduleBody Node
 		for _, arg := range defn.Args() {
-			if d, ok := arg.(*AstDefinition); ok {
+			if d, ok := arg.(*Definition); ok {
 				if lhs, ok := d.Lhs.(*Atom); ok {
 					formalParams = lhs.Terms
 				}
@@ -88,13 +88,13 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 		// Python: subst = dict((x.rep,y.rep) for x,y in zip(fparams,aparams) if not isinstance(y,Variable))
 		// Python: vsubst = dict((x.rep,y) for x,y in zip(fparams,aparams) if isinstance(y,Variable))
 		subst := make(map[string]string)
-		vsubst := make(map[string]*AstVariable)
+		vsubst := make(map[string]*Variable)
 		for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
 			formalName := nodeRep(formalParams[i])
 			if formalName == "" {
 				continue
 			}
-			if v, ok := actualArgs[i].(*AstVariable); ok {
+			if v, ok := actualArgs[i].(*Variable); ok {
 				vsubst[formalName] = v
 			} else {
 				subst[formalName] = nodeRep(actualArgs[i])
@@ -105,7 +105,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 		var modAccum *ivyAccum
 		if ma, ok := moduleBody.(*ivyAccum); ok {
 			modAccum = ma
-		} else if seq, ok := moduleBody.(*AstSequence); ok {
+		} else if seq, ok := moduleBody.(*Sequence); ok {
 			// Backward compat: old-style Sequence bodies (before B2 migration)
 			modAccum = &ivyAccum{decls: seq.Stmts}
 		} else {
@@ -146,7 +146,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 // at ivy_parser.py:135-201 EXACTLY.
 // The module parameter is the ivyAccum that was parsed for the module body,
 // matching Python where module is the Ivy class instance stored in Definition.Rhs.
-func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]string, vsubst map[string]*AstVariable, modname string, lineno ...Location) {
+func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]string, vsubst map[string]*Variable, modname string, lineno ...Location) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
@@ -362,7 +362,7 @@ func substAtomVars(pref *Atom, renaming map[string]Node) *Atom {
 
 // buildVVSubst creates the variable-variable substitution map.
 // Python: vvsubst = dict((x, map1[y.rep]) for x, y in dvsubst.items())
-func buildVVSubst(dvsubst map[string]*AstVariable, map1 map[string]Node) map[string]Node {
+func buildVVSubst(dvsubst map[string]*Variable, map1 map[string]Node) map[string]Node {
 	vvsubst := make(map[string]Node, len(dvsubst))
 	for x, y := range dvsubst {
 		if renamed, ok := map1[y.Rep]; ok {
@@ -514,7 +514,7 @@ func nodeRep(n Node) string {
 		return x.Rep
 	case *Symbol:
 		return x.Rep
-	case *AstVariable:
+	case *Variable:
 		return x.Rep
 	case *App:
 		if x.Rep != nil {

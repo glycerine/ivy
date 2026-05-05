@@ -140,7 +140,7 @@ func buildMatchProblem(schema, decl *LabeledFormula) *MatchProblem {
 	// — walks premises + conc to find all free items, then filters to variables.
 	constants := make(map[NodeKey]Expr)
 	for k, n := range GoalFree(decl) {
-		if _, isVar := n.(*Variable); isVar {
+		if _, isVar := n.(*LogicVariable); isVar {
 			constants[k] = n
 		}
 	}
@@ -263,9 +263,9 @@ func GoalSubgoalsFromSchema(cfg *AstConfig, schema *LabeledFormula, goal *Labele
 //	conc = goal_conc(goal)
 //	fmlas = [x.formula for x in prems if isinstance(x, ia.LabeledFormula)] + [conc]
 //	result = list(lu.used_variables_in_order_asts(fmlas))
-func GoalFreeVars(g *LabeledFormula) []*Variable {
+func GoalFreeVars(g *LabeledFormula) []*LogicVariable {
 	xtracer.Trace("proof.GoalFreeVars ENTER label=%s", g.LabelForTrace())
-	var result []*Variable
+	var result []*LogicVariable
 	seen := make(map[NodeKey]bool)
 	// Walk each LabeledFormula premise's formula.
 	for _, p := range GoalPrems(g) {

@@ -154,7 +154,7 @@ func (cc *CongClos) Pop() {
 // nodeName extracts the name used for table lookup from a term.
 func nodeName(t CongClosTerm) string {
 	switch v := t.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return v.Name
 	case *Const:
 		return v.Name

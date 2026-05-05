@@ -248,12 +248,12 @@ func TestProgress_SortifyAndAppend(t *testing.T) {
 	c := newTestCompiler()
 
 	// Register symbols so SortifyWithInference can compile the whole node.
-	// The outer node "progress_decl" needs a sort: RelationSort(boolean, boolean) -> boolean
+	// The outer node "progress_decl" needs a sort: LogicRelationSort(boolean, boolean) -> boolean
 	pSort := Boolean
 	c.Sig.AddSymbol("p", pSort)
 	c.Sig.AddSymbol("q", pSort)
 	// Register the outer node symbol with a function sort accepting two boolean args
-	outerSort := RelationSort([]Sort{pSort, pSort})
+	outerSort := LogicRelationSort([]Sort{pSort, pSort})
 	c.Sig.AddSymbol("progress_decl", outerSort)
 
 	ds := &DomainSetup{Compiler: c}

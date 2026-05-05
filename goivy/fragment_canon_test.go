@@ -11,10 +11,10 @@ import (
 // testFixtures holds shared test data for fragment canon tests.
 type testFixtures struct {
 	S   *UninterpretedSort
-	X   *Variable
-	Y   *Variable
+	X   *LogicVariable
+	Y   *LogicVariable
 	eq  *Eq
-	fs  *FunctionSort
+	fs  *LogicFunctionSort
 	sym *Const
 	n0  *UFNode
 	n1  *UFNode
@@ -290,7 +290,7 @@ func randomSort(rng *rand.Rand) Sort {
 }
 
 // randomVariable generates a random Variable.
-func randomVariable(rng *rand.Rand) *Variable {
+func randomVariable(rng *rand.Rand) *LogicVariable {
 	names := []string{"X", "Y", "Z", "W", "V"}
 	name := names[rng.Intn(len(names))]
 	v, _ := NewVariable(name, randomSort(rng))

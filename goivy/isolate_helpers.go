@@ -71,7 +71,7 @@ func AddMixinsExt(
 			action1 = modMixin(mx, action1)
 		}
 		res = ApplyMixin(action1, res, mx.IsAfter())
-		if seq, ok := res.(*Sequence); ok {
+		if seq, ok := res.(*LogicSequence); ok {
 			xtracer.Trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_nargs=%d action1_nargs=%d",
 				actname, mixerName, len(seq.Elems), len(action1.Args()))
 		} else {
@@ -718,9 +718,9 @@ func GetCone(actionsMap *InsMap[string, ActionsAction], actionName string, cone 
 	}
 	for _, sub := range act.IterSubactions() {
 		switch a := sub.(type) {
-		case *CallAction:
+		case *LogicCallAction:
 			GetCone(actionsMap, a.CalleeName(), cone)
-		case *NativeAction:
+		case *LogicNativeAction:
 			// Python: for arg in a.args[1:]: if isinstance(arg,ivy_ast.Atom) and a.rep in actions
 			// In Go, native params are lg.Expr — Atoms become *lg.Const after compilation
 			for _, arg := range a.Params {
@@ -945,7 +945,7 @@ func GetCalloutsAction(
 	head, tail bool,
 ) {
 	switch a := action.(type) {
-	case *Sequence:
+	case *LogicSequence:
 		for idx, child := range a.Elems {
 			subAct, _ := child.(ActionsAction)
 			if subAct == nil {
@@ -958,7 +958,7 @@ func GetCalloutsAction(
 					head && idx == 0, tail && idx == len(a.Elems)-1)
 			}
 		}
-	case *CallAction:
+	case *LogicCallAction:
 		calledName := a.CalleeName()
 		if summarizedActions[calledName] {
 			h := head

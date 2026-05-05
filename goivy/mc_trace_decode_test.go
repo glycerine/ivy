@@ -24,8 +24,8 @@ func TestBitsToBoolExprs(t *testing.T) {
 }
 
 func TestBinDecBool(t *testing.T) {
-	trueExpr := Expr(&And{Terms: nil})
-	falseExpr := Expr(&Or{Terms: nil})
+	trueExpr := Expr(&LogicAnd{Terms: nil})
+	falseExpr := Expr(&LogicOr{Terms: nil})
 
 	tests := []struct {
 		bits []Expr
@@ -48,8 +48,8 @@ func TestBinDecBool(t *testing.T) {
 func TestDecodeValBoolean(t *testing.T) {
 	enc := &Encoder{Interp: make(map[string]interface{})}
 	sym := NewConst("x", Boolean)
-	trueExpr := Expr(&And{Terms: nil})
-	falseExpr := Expr(&Or{Terms: nil})
+	trueExpr := Expr(&LogicAnd{Terms: nil})
+	falseExpr := Expr(&LogicOr{Terms: nil})
 
 	val := enc.DecodeVal([]Expr{trueExpr}, sym)
 	if !isTrueNode(val) {
@@ -62,12 +62,12 @@ func TestDecodeValBoolean(t *testing.T) {
 }
 
 func TestDecodeValEnumerated(t *testing.T) {
-	es := &EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	enc := &Encoder{Interp: make(map[string]interface{})}
 	sym := NewConst("c", es)
 
-	trueExpr := Expr(&And{Terms: nil})
-	falseExpr := Expr(&Or{Terms: nil})
+	trueExpr := Expr(&LogicAnd{Terms: nil})
+	falseExpr := Expr(&LogicOr{Terms: nil})
 
 	val := enc.DecodeVal([]Expr{falseExpr, falseExpr}, sym)
 	if c, ok := val.(*Const); !ok || c.Name != "red" {
@@ -100,8 +100,8 @@ func TestDecodeValRange(t *testing.T) {
 	enc := &Encoder{Interp: map[string]interface{}{"idx": rs}}
 	sym := NewConst("i", rs)
 
-	trueExpr := Expr(&And{Terms: nil})
-	falseExpr := Expr(&Or{Terms: nil})
+	trueExpr := Expr(&LogicAnd{Terms: nil})
+	falseExpr := Expr(&LogicOr{Terms: nil})
 
 	val := enc.DecodeVal([]Expr{trueExpr, trueExpr}, sym)
 	if c, ok := val.(*Const); !ok || c.Name != "3" {
@@ -175,14 +175,14 @@ func TestAigerMatchHandler2ImplementsAnnotationHandler(t *testing.T) {
 func TestAigerMatchHandler2EvalFalseTrue(t *testing.T) {
 	h := NewAigerMatchHandler2(nil, nil, nil, nil, nil)
 
-	if h.Eval(&Or{Terms: nil}) {
-		t.Error("expected false for Or{}")
+	if h.Eval(&LogicOr{Terms: nil}) {
+		t.Error("expected false for LogicOr{}")
 	}
-	if !h.Eval(&And{Terms: nil}) {
-		t.Error("expected true for And{}")
+	if !h.Eval(&LogicAnd{Terms: nil}) {
+		t.Error("expected true for LogicAnd{}")
 	}
 
-	notTrue := &Not{Body: &And{Terms: nil}}
+	notTrue := &LogicNot{Body: &LogicAnd{Terms: nil}}
 	if h.Eval(notTrue) {
 		t.Error("expected false for Not(true)")
 	}
@@ -208,7 +208,7 @@ func TestAigerMatchHandler2Clone(t *testing.T) {
 func TestAigerMatchHandler2AddState(t *testing.T) {
 	h := NewAigerMatchHandler2(nil, nil, nil, nil, nil)
 	eqns := []Expr{
-		&Eq{T1: NewConst("x", Boolean), T2: &And{Terms: nil}},
+		&Eq{T1: NewConst("x", Boolean), T2: &LogicAnd{Terms: nil}},
 	}
 	h.AddState(eqns)
 	if len(h.States) != 1 {
@@ -354,25 +354,25 @@ func TestAigerMatchHandler2Fail(t *testing.T) {
 }
 
 func TestIsFalseNode(t *testing.T) {
-	if !isFalseNode(&Or{Terms: nil}) {
-		t.Error("Or{} should be false")
+	if !isFalseNode(&LogicOr{Terms: nil}) {
+		t.Error("LogicOr{} should be false")
 	}
 	if !isFalseNode(NewConst("false", Boolean)) {
 		t.Error("Const 'false' should be false")
 	}
-	if isFalseNode(&And{Terms: nil}) {
-		t.Error("And{} should not be false")
+	if isFalseNode(&LogicAnd{Terms: nil}) {
+		t.Error("LogicAnd{} should not be false")
 	}
 }
 
 func TestIsTrueNode(t *testing.T) {
-	if !isTrueNode(&And{Terms: nil}) {
-		t.Error("And{} should be true")
+	if !isTrueNode(&LogicAnd{Terms: nil}) {
+		t.Error("LogicAnd{} should be true")
 	}
 	if !isTrueNode(NewConst("true", Boolean)) {
 		t.Error("Const 'true' should be true")
 	}
-	if isTrueNode(&Or{Terms: nil}) {
-		t.Error("Or{} should not be true")
+	if isTrueNode(&LogicOr{Terms: nil}) {
+		t.Error("LogicOr{} should not be true")
 	}
 }

@@ -36,14 +36,14 @@ func (e *FragmentError) Error() string {
 
 // stratEntry holds metadata associated with a stratification key, for error reporting.
 type stratEntry struct {
-	sym    *Const    // non-nil for appKey entries
-	idx    int       // argument index for appKey entries
-	v      *Variable // non-nil for varKey entries
+	sym    *Const         // non-nil for appKey entries
+	idx    int            // argument index for appKey entries
+	v      *LogicVariable // non-nil for varKey entries
 	isSort bool
 	eqExpr Expr // for equality entries: the expression (matches Python's il.Symbol('=', expr))
 }
 
-func varKey(v *Variable) NodeKey {
+func varKey(v *LogicVariable) NodeKey {
 	return NodeKey("v:" + string(Key(v)))
 }
 
@@ -92,8 +92,8 @@ type checker struct {
 	sig    *Sig
 	interp map[string]interface{} // sort interpretations
 
-	universallyQuantifiedVars map[varID]*Variable // var → lineno origin info
-	universalVarLineno        map[varID]int       // var → lineno
+	universallyQuantifiedVars map[varID]*LogicVariable // var → lineno origin info
+	universalVarLineno        map[varID]int            // var → lineno
 
 	stratMap  map[NodeKey]*UFNode    // maps node key to UFNode
 	stratInfo map[NodeKey]stratEntry // metadata for error reporting
@@ -117,7 +117,7 @@ type varID struct {
 	sort string
 }
 
-func makeVarID(v *Variable) varID {
+func makeVarID(v *LogicVariable) varID {
 	return varID{name: v.Name, sort: v.VSort.String()}
 }
 
@@ -153,7 +153,7 @@ func newChecker(sig *Sig, interp map[string]interface{}) *checker {
 	return &checker{
 		sig:                       sig,
 		interp:                    interp,
-		universallyQuantifiedVars: make(map[varID]*Variable),
+		universallyQuantifiedVars: make(map[varID]*LogicVariable),
 		universalVarLineno:        make(map[varID]int),
 		stratMap:                  make(map[NodeKey]*UFNode),
 		stratInfo:                 make(map[NodeKey]stratEntry),
@@ -186,13 +186,13 @@ func (c *checker) getStratNodeWith(key NodeKey, entry stratEntry) *UFNode {
 }
 
 // isUnivVar checks if a variable is in the universally quantified set.
-func (c *checker) isUnivVar(v *Variable) bool {
+func (c *checker) isUnivVar(v *LogicVariable) bool {
 	_, ok := c.universallyQuantifiedVars[makeVarID(v)]
 	return ok
 }
 
 // getUnivNode gets the strat_map node for a universally quantified variable.
-func (c *checker) getUnivNode(v *Variable) *UFNode {
+func (c *checker) getUnivNode(v *LogicVariable) *UFNode {
 	key := varKey(v)
 	n := c.getStratNodeWith(key, stratEntry{v: v})
 	n.Var = v
@@ -213,7 +213,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 		return nil, make(map[*UFNode]bool)
 	}
 
-	if v, ok := fmla.(*Variable); ok {
+	if v, ok := fmla.(*LogicVariable); ok {
 		vid := makeVarID(v)
 		if c.isUnivVar(v) {
 			node := c.getUnivNode(v)
@@ -437,13 +437,13 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 			appArgs := NodeArgs(app)
 
 			for i := 0; i < len(appArgs) && i < len(lhsArgs); i++ {
-				w, wIsVar := lhsArgs[i].(*Variable)
+				w, wIsVar := lhsArgs[i].(*LogicVariable)
 				if !wIsVar {
 					continue
 				}
 				wid := makeVarID(w)
 
-				v, vIsVar := appArgs[i].(*Variable)
+				v, vIsVar := appArgs[i].(*LogicVariable)
 				if vIsVar {
 					vid := makeVarID(v)
 					if c.isUnivVar(v) {
@@ -469,7 +469,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 					// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
 					fvs := FreeVariables(appArgs[i])
 					for _, uNode := range fvs.All() {
-						u := uNode.(*Variable)
+						u := uNode.(*LogicVariable)
 						uid := makeVarID(u)
 						if c.isUnivVar(u) {
 							node := c.getUnivNode(u)
@@ -511,12 +511,12 @@ func (c *checker) varMapAdd(wid varID, vn *UFNode) {
 // --- Skolem handling ---
 
 // makeSkolems simulates Skolem functions for AE alternations.
-func (c *checker) makeSkolems(fmla Expr, source Node, pol bool, univs []*Variable) {
+func (c *checker) makeSkolems(fmla Expr, source Node, pol bool, univs []*LogicVariable) {
 	switch t := fmla.(type) {
-	case *Not:
+	case *LogicNot:
 		c.makeSkolems(t.Body, source, !pol, univs)
 		return
-	case *Implies:
+	case *LogicImplies:
 		c.makeSkolems(t.T1, source, !pol, univs)
 		c.makeSkolems(t.T2, source, pol, univs)
 		return
@@ -545,7 +545,7 @@ func (c *checker) makeSkolems(fmla Expr, source Node, pol bool, univs []*Variabl
 
 	if (isE && !pol) || (isA && pol) {
 		qvars := QuantifierVars(fmla)
-		newUnivs := make([]*Variable, len(univs)+len(qvars))
+		newUnivs := make([]*LogicVariable, len(univs)+len(qvars))
 		copy(newUnivs, univs)
 		copy(newUnivs[len(univs):], qvars)
 		body := BinderBody(fmla)
@@ -558,14 +558,14 @@ func (c *checker) makeSkolems(fmla Expr, source Node, pol bool, univs []*Variabl
 		c.makeSkolems(arg, source, pol, univs)
 	}
 
-	if _, ok := fmla.(*Ite); ok {
+	if _, ok := fmla.(*LogicIte); ok {
 		args := NodeArgs(fmla)
 		if len(args) > 0 {
 			c.makeSkolems(args[0], source, !pol, univs)
 		}
 	}
 
-	if _, ok := fmla.(*Iff); ok {
+	if _, ok := fmla.(*LogicIff); ok {
 		args := NodeArgs(fmla)
 		if len(args) >= 2 {
 			c.makeSkolems(args[0], source, !pol, univs)
@@ -593,7 +593,7 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 		allFmlas = append(allFmlas, fmlaPair{fmla: closed, source: a.source, lineno: a.lineno})
 	}
 	for _, a := range asserts {
-		negated := &Not{Body: a.fmla}
+		negated := &LogicNot{Body: a.fmla}
 		allFmlas = append(allFmlas, fmlaPair{fmla: negated, source: a.source, lineno: a.lineno})
 	}
 	allFmlas = append(allFmlas, macros...)
@@ -664,7 +664,7 @@ func (c *checker) reportArc(a arc) string {
 				a.argIdx, c.getNodeSort(a.from), term.NodeSort())
 			// Divergence 11 fix: check skolemMap for skolem origin info,
 			// matching Python report_arc lines 418-420.
-			if v, ok := term.(*Variable); ok {
+			if v, ok := term.(*LogicVariable); ok {
 				vid := makeVarID(v)
 				if se, found := c.skolemMap[vid]; found {
 					fmt.Fprintf(&b, "\n    %sskolem function defined by:\n         %s",
@@ -951,7 +951,7 @@ func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macro
 		}
 
 		// Check if RHS is a Some
-		_, isSome := def.Rhs.(*Some)
+		_, isSome := def.Rhs.(*LogicSome)
 
 		if !isRecursive && !isSome {
 			macros = append(macros, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
@@ -1051,7 +1051,7 @@ func fragmentDefToConstraint(d *IvyDefinition) Expr {
 	lhs := d.Lhs
 	rhs := d.Rhs
 	if SortEqual(rhs.NodeSort(), Boolean) {
-		return &Iff{T1: lhs, T2: rhs}
+		return &LogicIff{T1: lhs, T2: rhs}
 	}
 	return &Eq{T1: lhs, T2: rhs}
 }

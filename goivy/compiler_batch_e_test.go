@@ -64,7 +64,7 @@ func TestCompileIfAction_SomeCondition(t *testing.T) {
 	// The result should be an IfAction whose condition is a Some-like construct
 	// (compiled existential). In Python, the condition stays as a Some node
 	// with compiled children.
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		// Currently this may fail because CompileIf doesn't detect Some
 		t.Fatalf("expected *actions.IfAction, got %T: %v", result, result)
@@ -117,7 +117,7 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 		t.Fatalf("CompileIf with SomeMin condition should not error, got: %v", err)
 	}
 
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		t.Fatalf("expected *actions.IfAction, got %T: %v", result, result)
 	}
@@ -160,7 +160,7 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 		t.Fatalf("CompileIf with SomeMax condition should not error, got: %v", err)
 	}
 
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		t.Fatalf("expected *actions.IfAction, got %T: %v", result, result)
 	}
@@ -198,7 +198,7 @@ func TestCompileIfAction_SomeWithElse(t *testing.T) {
 		t.Fatalf("CompileIf with Some + else should not error, got: %v", err)
 	}
 
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		t.Fatalf("expected *actions.IfAction, got %T: %v", result, result)
 	}
@@ -272,7 +272,7 @@ func TestCompileIfAction_SomeMultipleParams(t *testing.T) {
 		t.Fatalf("CompileIf with multi-param Some should not error, got: %v", err)
 	}
 
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		t.Fatalf("expected *actions.IfAction, got %T: %v", result, result)
 	}
@@ -311,7 +311,7 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 		t.Fatalf("CompileIf should succeed when then-branch uses existential var, got: %v", err)
 	}
 
-	ifAct, ok := result.(*IfAction)
+	ifAct, ok := result.(*LogicIfAction)
 	if !ok {
 		t.Fatalf("expected *actions.IfAction, got %T", result)
 	}
@@ -359,7 +359,7 @@ func TestCompileWhile_SomeCondition(t *testing.T) {
 	}
 
 	// Result should be a WhileAction (not IfAction)
-	whileAct, ok := result.(*WhileAction)
+	whileAct, ok := result.(*LogicWhileAction)
 	if !ok {
 		t.Fatalf("expected *actions.WhileAction, got %T: %v", result, result)
 	}
@@ -400,7 +400,7 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 		t.Fatalf("CompileWhile with SomeMin condition should not error, got: %v", err)
 	}
 
-	whileAct, ok := result.(*WhileAction)
+	whileAct, ok := result.(*LogicWhileAction)
 	if !ok {
 		t.Fatalf("expected *actions.WhileAction, got %T: %v", result, result)
 	}
@@ -442,7 +442,7 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 //	args[4] = continuation
 type thunkWith5Args struct {
 	Base
-	inner        *AstThunkAction
+	inner        *ThunkAction
 	continuation Node
 }
 
@@ -514,7 +514,7 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 // Python:
 //
 //	for sym in syms:
-//	    dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+//	    dsort = LogicFunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
 //	    dsym = Symbol(compose_names(subtypename, sym.name[4:]), dsort)
 //	    module.destructor_sorts[dsym.name] = subsort
 //	    module.sort_destructors[subsort.name].append(dsym)
@@ -663,7 +663,7 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 //
 //	lsym = add_symbol('loc:' + self.args[1].relname, subsort)
 //	asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
-//	res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+//	res = LogicLocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
@@ -693,7 +693,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 		t.Fatalf("result should be an action, got: %T", result)
 	}
 
-	localAct, ok := act.(*LocalAction)
+	localAct, ok := act.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T: %v", act, act)
 	}
@@ -711,7 +711,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 //
 // Python:
 //
-//	dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+//	dsort = LogicFunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
 func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
@@ -752,7 +752,7 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 		t.Fatal("destructor handler.x not found in sort_destructors")
 	}
 
-	fs, ok := found.NodeSort().(*FunctionSort)
+	fs, ok := found.NodeSort().(*LogicFunctionSort)
 	if !ok {
 		t.Fatalf("destructor sort should be FunctionSort, got %T", found.NodeSort())
 	}
@@ -794,7 +794,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 	}
 
 	act, _ := result.(ActionsAction)
-	localAct, ok := act.(*LocalAction)
+	localAct, ok := act.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
 	}
@@ -827,7 +827,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 // Python:
 //
 //	asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
-//	res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+//	res = LogicLocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
@@ -852,7 +852,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	}
 
 	act, _ := result.(ActionsAction)
-	localAct, ok := act.(*LocalAction)
+	localAct, ok := act.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
 	}
@@ -865,7 +865,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 
 	seqExpr := args[1]
 	seqAct, _ := seqExpr.(ActionsAction)
-	seq, ok := seqAct.(*Sequence)
+	seq, ok := seqAct.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected Sequence in LocalAction body, got %T", seqAct)
 	}
@@ -879,7 +879,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	// First element should be an AssignAction
 	if len(seqArgs) > 0 {
 		firstAct, _ := seqArgs[0].(ActionsAction)
-		if _, ok := firstAct.(*AssignAction); !ok {
+		if _, ok := firstAct.(*LogicAssignAction); !ok {
 			t.Errorf("first Sequence element should be AssignAction, got %T", firstAct)
 		}
 	}
@@ -940,7 +940,7 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 	}
 
 	act, _ := result.(ActionsAction)
-	localAct, ok := act.(*LocalAction)
+	localAct, ok := act.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
 	}

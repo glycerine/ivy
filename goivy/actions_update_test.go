@@ -61,7 +61,7 @@ func TestAssertActionUpdate(t *testing.T) {
 	if len(u.Pre.Fmlas) != 1 {
 		t.Fatalf("AssertAction Pre should have 1 formula, got %d", len(u.Pre.Fmlas))
 	}
-	not, ok := u.Pre.Fmlas[0].(*Not)
+	not, ok := u.Pre.Fmlas[0].(*LogicNot)
 	if !ok {
 		t.Fatalf("AssertAction Pre should contain Not(p), got %T: %s", u.Pre.Fmlas[0], u.Pre.Fmlas[0])
 	}
@@ -409,7 +409,7 @@ func TestTransrelHideDirectly(t *testing.T) {
 
 	// Build a simple update with loc in Modified and new_loc in TR
 	eq, _ := NewEq(newLoc, loc)
-	tr := &And{Terms: []Expr{eq}}
+	tr := &LogicAnd{Terms: []Expr{eq}}
 
 	u := &Update{
 		Modified: []*Const{loc},
@@ -463,7 +463,7 @@ func TestEquivASTBoolean(t *testing.T) {
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
 	result := equivAST(p, q)
-	if _, ok := result.(*And); !ok {
+	if _, ok := result.(*LogicAnd); !ok {
 		t.Errorf("equivAST for booleans should return And, got %T: %s", result, result)
 	}
 }
@@ -471,7 +471,7 @@ func TestEquivASTBoolean(t *testing.T) {
 func TestDualFormula(t *testing.T) {
 	p := NewConst("p", Boolean)
 	dual := DualFormula(p, nil, nil)
-	not, ok := dual.(*Not)
+	not, ok := dual.(*LogicNot)
 	if !ok {
 		t.Fatalf("DualFormula of constant should be Not, got %T: %s", dual, dual)
 	}
@@ -483,7 +483,7 @@ func TestDualFormula(t *testing.T) {
 func TestSkolemizeFormula(t *testing.T) {
 	v, _ := NewVariable("X", TopS)
 	body := v
-	ex, _ := NewExists([]*Variable{v}, body)
+	ex, _ := NewExists([]*LogicVariable{v}, body)
 	result := SkolemizeFormula(ex, nil, nil)
 	// Should replace X with __sk__X
 	if c, ok := result.(*Const); ok {

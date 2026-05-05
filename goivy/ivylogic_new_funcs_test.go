@@ -241,7 +241,7 @@ func TestIsEPR(t *testing.T) {
 	c := NewConst("p", Boolean)
 
 	// Simple forall X. p is EPR
-	fa := &ForAll{Variables: []*Variable{v}, Body: c}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: c}
 	if !IsEPR(fa) {
 		t.Error("forall X. p should be EPR")
 	}
@@ -251,8 +251,8 @@ func TestIsEPR(t *testing.T) {
 	qSort, _ := NewFunctionSort(TopS, TopS, Boolean)
 	q := NewConst("q", qSort)
 	qApp := MustApply(q, v, y)
-	ex := &Exists{Variables: []*Variable{y}, Body: qApp}
-	fa2 := &ForAll{Variables: []*Variable{v}, Body: ex}
+	ex := &LogicExists{Variables: []*LogicVariable{y}, Body: qApp}
+	fa2 := &ForAll{Variables: []*LogicVariable{v}, Body: ex}
 	// This should be false because free vars of ex include v which is in uvars
 	if IsEPR(fa2) {
 		t.Error("forall X. exists Y. q(X,Y) should NOT be EPR")
@@ -303,7 +303,7 @@ func TestExpandMacro(t *testing.T) {
 	app := MustApply(leSym, x, y)
 
 	expanded := ExpandMacro(app)
-	if _, ok := expanded.(*Or); !ok {
+	if _, ok := expanded.(*LogicOr); !ok {
 		t.Errorf("<= should expand to Or, got %T", expanded)
 	}
 
@@ -335,7 +335,7 @@ func TestIsInLogic(t *testing.T) {
 
 	// QF: forall is not QF
 	v, _ := NewVariable("X", TopS)
-	fa := &ForAll{Variables: []*Variable{v}, Body: c}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: c}
 	if IsInLogic(sig, fa, LogicQF) {
 		t.Error("forall should not be in QF logic")
 	}
@@ -359,7 +359,7 @@ func TestSymbolsOverUniversals(t *testing.T) {
 	pSort, _ := NewFunctionSort(s, Boolean)
 	p := NewConst("p", pSort)
 	pApp := MustApply(p, v)
-	fa := &ForAll{Variables: []*Variable{v}, Body: pApp}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: pApp}
 
 	syms := SymbolsOverUniversals([]Expr{fa})
 	// p should not be in syms because the variable IS the universal var
@@ -375,7 +375,7 @@ func TestUniversalVariables(t *testing.T) {
 	s := &UninterpretedSort{Name: "node"}
 	v, _ := NewVariable("X", s)
 	c := NewConst("p", Boolean)
-	fa := &ForAll{Variables: []*Variable{v}, Body: c}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: c}
 
 	univs := UniversalVariables([]Expr{fa})
 	if len(univs) != 1 {
@@ -424,8 +424,8 @@ func TestIsDefinitional(t *testing.T) {
 	body := NewConst("true", Boolean)
 
 	// forall X. f(X) <-> true
-	iff := &Iff{T1: fApp, T2: body}
-	fa := &ForAll{Variables: []*Variable{v}, Body: iff}
+	iff := &LogicIff{T1: fApp, T2: body}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: iff}
 	if !IsDefinitional(fa) {
 		t.Error("forall X. f(X) <-> true should be definitional")
 	}
@@ -442,7 +442,7 @@ func TestExclusivity(t *testing.T) {
 	v2 := &UninterpretedSort{Name: "dog"}
 
 	result := IvyExclusivity(sort, []Sort{v1, v2})
-	if _, ok := result.(*And); !ok {
+	if _, ok := result.(*LogicAnd); !ok {
 		t.Errorf("expected And, got %T", result)
 	}
 }

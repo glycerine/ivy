@@ -90,13 +90,13 @@ func (s *Solver) BoundQuantifiersClauses(
 			for i, t := range terms {
 				eqs[i] = &Eq{T1: v, T2: t}
 			}
-			constraints = append(constraints, &Or{Terms: eqs})
+			constraints = append(constraints, &LogicOr{Terms: eqs})
 		}
 		if len(constraints) == 0 {
 			return fmla
 		}
-		ante := &And{Terms: constraints}
-		return &Implies{T1: ante, T2: fmla}
+		ante := &LogicAnd{Terms: constraints}
+		return &LogicImplies{T1: ante, T2: fmla}
 	}
 
 	newFmlas := make([]Expr, len(clauses.Fmlas))
@@ -310,7 +310,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 				}
 			}
 			if len(eqs) > 0 {
-				ucFmlas = append(ucFmlas, &Or{Terms: eqs})
+				ucFmlas = append(ucFmlas, &LogicOr{Terms: eqs})
 			}
 		}
 		if len(ucFmlas) > 0 {

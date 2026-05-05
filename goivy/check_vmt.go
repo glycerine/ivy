@@ -103,7 +103,7 @@ func actionToTR(m *Module, action ActionsAction, method string) ([]string, Expr,
 // Corresponds to Python's add_err_flag.
 func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno string, verbose bool) ActionsAction {
 	switch a := action.(type) {
-	case *AssertAction:
+	case *LogicAssertAction:
 		if checkedAction(action, checkLineno) {
 			if verbose {
 				loc := action.GetLineno()
@@ -112,25 +112,25 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 			// errcond = dual of the formula (negate after dropping universals)
 			errcond := dualFormula(IvyDropUniversals(a.Formula))
 			// res = erf := erf | errcond
-			orNode := &Or{Terms: []Expr{erf, errcond}}
+			orNode := &LogicOr{Terms: []Expr{erf, errcond}}
 			res := NewAssignAction(erf, orNode)
 			*errconds = append(*errconds, errcond)
 			res.SetLineno(Location{})
 			return res
 		}
 		// Unchecked assert: treat as assume
-		orNode := &Or{Terms: []Expr{erf, a.Formula}}
+		orNode := &LogicOr{Terms: []Expr{erf, a.Formula}}
 		res := NewAssumeAction(orNode)
 		res.SetLineno(Location{})
 		return res
 
-	case *AssumeAction:
-		orNode := &Or{Terms: []Expr{erf, a.Formula}}
+	case *LogicAssumeAction:
+		orNode := &LogicOr{Terms: []Expr{erf, a.Formula}}
 		res := NewAssumeAction(orNode)
 		res.SetLineno(Location{})
 		return res
 
-	case *Sequence:
+	case *LogicSequence:
 		newArgs := make([]Expr, len(a.Elems))
 		for i, child := range a.Elems {
 			if childAct, ok := checkToAction(child); ok {
@@ -141,7 +141,7 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 		}
 		return a.ActionClone(newArgs)
 
-	case *ChoiceAction:
+	case *LogicChoiceAction:
 		newArgs := make([]Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := checkToAction(child); ok {
@@ -152,7 +152,7 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 		}
 		return a.ActionClone(newArgs)
 
-	case *EnvAction:
+	case *LogicEnvAction:
 		newArgs := make([]Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := checkToAction(child); ok {
@@ -163,7 +163,7 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 		}
 		return a.ActionClone(newArgs)
 
-	case *BindOldsAction:
+	case *LogicBindOldsAction:
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
 		for i, child := range args {
@@ -175,7 +175,7 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 		}
 		return a.ActionClone(newArgs)
 
-	case *IfAction:
+	case *LogicIfAction:
 		// Keep condition, transform then/else branches
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
@@ -189,7 +189,7 @@ func addErrFlag(action ActionsAction, erf Expr, errconds *[]Expr, checkLineno st
 		}
 		return a.ActionClone(newArgs)
 
-	case *LocalAction:
+	case *LogicLocalAction:
 		// Transform only the body (last arg)
 		args := a.ActionArgs()
 		newArgs := make([]Expr, len(args))
@@ -229,7 +229,7 @@ func addErrFlagMod(m *Module, erf Expr, errconds *[]Expr) {
 
 // createArraySort takes a function sort and returns a corresponding array
 // sort name and sort chain. Corresponds to Python's create_array_sort.
-func createArraySort(sig *Sig, fsort *FunctionSort) (string, []Sort) {
+func createArraySort(sig *Sig, fsort *LogicFunctionSort) (string, []Sort) {
 	dom := fsort.Domain()
 	rng := fsort.Range()
 	return createArraySortRec(sig, dom, 0, rng)
@@ -277,7 +277,7 @@ func ufToArrASTRec(m *Module, sig *Sig, node Expr) Expr {
 	if IsApp(node) && !IsNamedBinder(node) && len(args) > 0 {
 		sym := GetAppRep(node)
 		if sym != nil && encodeAsArray(m, sig, sym) {
-			fsort, ok := sym.CSort.(*FunctionSort)
+			fsort, ok := sym.CSort.(*LogicFunctionSort)
 			if ok {
 				sname, ssorts := createArraySort(sig, fsort)
 				_ = sname
@@ -331,7 +331,7 @@ func encodeAssign(m *Module, sig *Sig, asgn ActionsAction, lhs, rhs Expr) (Expr,
 		}
 	}
 
-	fsort, ok := sym.CSort.(*FunctionSort)
+	fsort, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok {
 		return lhs, ufToArrAST(m, sig, rhs), nil
 	}
@@ -410,7 +410,7 @@ func ufToArrayAction(m *Module, sig *Sig, action ActionsAction) ActionsAction {
 		}
 	}
 
-	if assign, ok := action.(*AssignAction); ok {
+	if assign, ok := action.(*LogicAssignAction); ok {
 		lhsArgs := NodeArgs(assign.LHS)
 		if len(lhsArgs) > 0 {
 			sym := GetAppRep(assign.LHS)
@@ -500,7 +500,7 @@ func VMTCheckIsolate(method string, m *Module) error {
 	if hasErf {
 		for i, na := range actionList {
 			// Prepend erf := false to each action
-			erfReset := NewAssignAction(erf, &Or{}) // Or() = false
+			erfReset := NewAssignAction(erf, &LogicOr{}) // Or() = false
 			erfReset.SetLineno(Location{})
 			wrapped := NewSequence(
 				erfReset,
@@ -563,7 +563,7 @@ func VMTCheckIsolate(method string, m *Module) error {
 		}
 	}
 
-	initAction = ufToArrayAction(m, sig, initAction).(*Sequence)
+	initAction = ufToArrayAction(m, sig, initAction).(*LogicSequence)
 
 	// Convert conjecture formulas. Python ivy_vmt.py:228:
 	//   conjs = [conj.clone([conj.label, uf_to_arr_ast(conj.formula)]) for conj in conjs]
@@ -589,7 +589,7 @@ func VMTCheckIsolate(method string, m *Module) error {
 	if len(transs) == 1 {
 		trans = transs[0]
 	} else if len(transs) > 1 {
-		trans = &Or{Terms: transs}
+		trans = &LogicOr{Terms: transs}
 	} else {
 		trans = False
 	}
@@ -734,7 +734,7 @@ func addLabel(a ActionsAction, name string) ActionsAction {
 // dualFormula negates a formula (the "dual"). Corresponds to Python's
 // ilu.dual_formula which negates and existentially quantifies.
 func dualFormula(fmla Expr) Expr {
-	return &Not{Body: fmla}
+	return &LogicNot{Body: fmla}
 }
 
 // backgroundTheory returns the background theory for a module as a formula.
@@ -750,7 +750,7 @@ func backgroundTheory(m *Module) Expr {
 	if len(conjuncts) == 0 {
 		return True
 	}
-	return &And{Terms: conjuncts}
+	return &LogicAnd{Terms: conjuncts}
 }
 
 // computeUpdate computes the transition relation update for an action.

@@ -126,31 +126,31 @@ func TestForLoopDesugaring(t *testing.T) {
 	// iend = itr.rename('loc:end')
 	iend := itr.Rename("loc:end")
 
-	// didx = VarAction(itr, methcall(fmla, App('begin')))
+	// didx = LogicVarAction(itr, methcall(fmla, App('begin')))
 	appBegin := cfg.NewApp(cfg.NewSymbol("begin", nil))
 	didx := cfg.NewVarAction(itr, methcall(cfg, fmla, appBegin))
 
-	// dend = VarAction(iend, methcall(fmla, App('end')))
+	// dend = LogicVarAction(iend, methcall(fmla, App('end')))
 	appEnd := cfg.NewApp(cfg.NewSymbol("end", nil))
 	dend := cfg.NewVarAction(iend, methcall(cfg, fmla, appEnd))
 
-	// dval = VarAction(val, methcall(fmla, App('value', itr)))
+	// dval = LogicVarAction(val, methcall(fmla, App('value', itr)))
 	appValue := cfg.NewApp(cfg.NewSymbol("value", nil), itr)
 	dval := cfg.NewVarAction(val, methcall(cfg, fmla, appValue))
 
-	// incr = AssignAction(itr, methcall(itr, App('next')))
+	// incr = LogicAssignAction(itr, methcall(itr, App('next')))
 	appNext := cfg.NewApp(cfg.NewSymbol("next", nil))
 	incr := cfg.NewAssignAction(itr, methcall(cfg, itr, appNext))
 
-	// body = Sequence(*lower_var_stmts([dval, seq, incr]))
+	// body = LogicSequence(*lower_var_stmts([dval, seq, incr]))
 	bodyStmts := LowerVarStatements([]Node{dval, seq, incr})
 	body := cfg.NewSequence(bodyStmts...)
 
-	// loop = WhileAction(App('<', itr, iend), body)
+	// loop = LogicWhileAction(App('<', itr, iend), body)
 	ltCond := cfg.NewApp(cfg.NewSymbol("<", nil), itr, iend)
 	loop := cfg.NewWhileAction(ltCond, body)
 
-	// result = Sequence(*lower_var_stmts([didx, dend, loop]))
+	// result = LogicSequence(*lower_var_stmts([didx, dend, loop]))
 	outerStmts := LowerVarStatements([]Node{didx, dend, loop})
 	result := cfg.NewSequence(outerStmts...)
 

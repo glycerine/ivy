@@ -228,7 +228,7 @@ func TestPropEvent_Eventually(t *testing.T) {
 	ev, _ := NewEventually(nil, notBody)
 	loc := Location{Line: 42}
 	event := TemporalPropEvent(ev, loc)
-	if _, ok := event.(*AssertAction); !ok {
+	if _, ok := event.(*LogicAssertAction); !ok {
 		t.Error("PropEvent for Eventually should produce AssertAction")
 	}
 	if event.GetLineno().Line != 42 {
@@ -241,7 +241,7 @@ func TestPropEvent_Globally(t *testing.T) {
 	g, _ := NewGlobally(nil, body)
 	loc := Location{Line: 10}
 	event := TemporalPropEvent(g, loc)
-	if _, ok := event.(*AssumeAction); !ok {
+	if _, ok := event.(*LogicAssumeAction); !ok {
 		t.Error("PropEvent for Globally should produce AssumeAction")
 	}
 }

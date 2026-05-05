@@ -28,7 +28,7 @@ func OccursIn(s1, s2 SortOrVar) bool {
 		return true
 	}
 	if sw, ok := s2.(*SortWrapper); ok {
-		if fs, ok := sw.Sort.(*FunctionSort); ok && fs != nil {
+		if fs, ok := sw.Sort.(*LogicFunctionSort); ok && fs != nil {
 			for _, sub := range fs.Sorts {
 				if sub == nil {
 					continue
@@ -103,7 +103,7 @@ func TypeInferUnify(s1, s2 SortOrVar) error {
 	// Handle FunctionSortVar ↔ SortWrapper(FunctionSort)
 	if isFSV1 {
 		if sw2, ok := s2.(*SortWrapper); ok {
-			if fs2, ok := sw2.Sort.(*FunctionSort); ok && fs2 != nil && fsv1.Arity() == fs2.Arity() {
+			if fs2, ok := sw2.Sort.(*LogicFunctionSort); ok && fs2 != nil && fsv1.Arity() == fs2.Arity() {
 				for i := range fsv1.Sorts {
 					if err := TypeInferUnify(fsv1.Sorts[i], Wrap(fs2.Sorts[i])); err != nil {
 						return err
@@ -115,7 +115,7 @@ func TypeInferUnify(s1, s2 SortOrVar) error {
 	}
 	if isFSV2 {
 		if sw1, ok := s1.(*SortWrapper); ok {
-			if fs1, ok := sw1.Sort.(*FunctionSort); ok && fs1 != nil && fs1.Arity() == fsv2.Arity() {
+			if fs1, ok := sw1.Sort.(*LogicFunctionSort); ok && fs1 != nil && fs1.Arity() == fsv2.Arity() {
 				for i := range fsv2.Sorts {
 					if err := TypeInferUnify(Wrap(fs1.Sorts[i]), fsv2.Sorts[i]); err != nil {
 						return err
@@ -133,8 +133,8 @@ func TypeInferUnify(s1, s2 SortOrVar) error {
 		return &SortError{Msg: fmt.Sprintf("Cannot unify sorts: %s, %s", s1, s2)}
 	}
 
-	fs1, isFS1 := sw1.Sort.(*FunctionSort)
-	fs2, isFS2 := sw2.Sort.(*FunctionSort)
+	fs1, isFS1 := sw1.Sort.(*LogicFunctionSort)
+	fs2, isFS2 := sw2.Sort.(*LogicFunctionSort)
 	if isFS1 && isFS2 && fs1 != nil && fs2 != nil && fs1.Arity() == fs2.Arity() {
 		for i := range fs1.Sorts {
 			if err := TypeInferUnify(Wrap(fs1.Sorts[i]), Wrap(fs2.Sorts[i])); err != nil {
@@ -169,7 +169,7 @@ func ConvertFromSortVars(s SortOrVar) Sort {
 		if sortIsNil(sw.Sort) {
 			return NewTopSort()
 		}
-		if fs, ok := sw.Sort.(*FunctionSort); ok && fs != nil {
+		if fs, ok := sw.Sort.(*LogicFunctionSort); ok && fs != nil {
 			sorts := make([]Sort, len(fs.Sorts))
 			for i, sub := range fs.Sorts {
 				if sub == nil {
@@ -196,7 +196,7 @@ func ConvertToSortVars(s Sort) SortOrVar {
 	if _, ok := s.(*TopSort); ok {
 		return NewSortVar()
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		hasSortVar := false
 		sortVars := make([]SortOrVar, len(fs.Sorts))
 		for i, sub := range fs.Sorts {
@@ -238,7 +238,7 @@ func InsertSortVars(s Sort, env map[string]SortOrVar) SortOrVar {
 		env[key] = sv
 		return sv
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		hasSortVar := false
 		sortVars := make([]SortOrVar, len(fs.Sorts))
 		for i, sub := range fs.Sorts {

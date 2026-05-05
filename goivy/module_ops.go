@@ -25,7 +25,7 @@ func AndClauses(args ...interface{}) interface{} {
 		for i, a := range args {
 			nodes[i] = a.(Expr)
 		}
-		return &And{Terms: nodes}
+		return &LogicAnd{Terms: nodes}
 	}
 
 	// Coerce all args to *Clauses
@@ -153,7 +153,7 @@ func OrClauses(args ...interface{}) interface{} {
 		for i, a := range args {
 			nodes[i] = a.(Expr)
 		}
-		return &Or{Terms: nodes}
+		return &LogicOr{Terms: nodes}
 	}
 
 	clauses := coerceArgsToClauses(args)
@@ -290,11 +290,11 @@ func orClausesIntWithVs(rn *UniqueRenamer, args []*Clauses) (*Clauses, []Expr, [
 	// 1. Or(v1, v2, ..., vn)
 	// 2. For each i: Not(vi) OR fmla, for each fmla in args[i].Fmlas
 	var fmlas []Expr
-	fmlas = append(fmlas, &Or{Terms: vsNodes})
+	fmlas = append(fmlas, &LogicOr{Terms: vsNodes})
 	for i, cls := range args {
 		for _, f := range cls.Fmlas {
-			fmlas = append(fmlas, &Or{Terms: []Expr{
-				&Not{Body: vs[i].(*Const)},
+			fmlas = append(fmlas, &LogicOr{Terms: []Expr{
+				&LogicNot{Body: vs[i].(*Const)},
 				f,
 			}})
 		}
@@ -313,7 +313,7 @@ func orClausesIntWithVs(rn *UniqueRenamer, args []*Clauses) (*Clauses, []Expr, [
 				// Only ite_clauses_int uses simp_ite.
 				merged := NewIvyDefinition(
 					d.Lhs,
-					&Ite{ISort: d.Rhs.NodeSort(), Cond: vs[i], Then: d.Rhs, Else: existing.Rhs},
+					&LogicIte{ISort: d.Rhs.NodeSort(), Cond: vs[i], Then: d.Rhs, Else: existing.Rhs},
 				)
 				defIdx.Set(key, merged)
 			}
@@ -371,10 +371,10 @@ func iteClausesInt(rn *UniqueRenamer, cond Expr, args []*Clauses) *Clauses {
 	// For else-branch: v OR fmla
 	var fmlas []Expr
 	for _, f := range args[0].Fmlas {
-		fmlas = append(fmlas, &Or{Terms: []Expr{&Not{Body: v}, f}})
+		fmlas = append(fmlas, &LogicOr{Terms: []Expr{&LogicNot{Body: v}, f}})
 	}
 	for _, f := range args[1].Fmlas {
-		fmlas = append(fmlas, &Or{Terms: []Expr{v, f}})
+		fmlas = append(fmlas, &LogicOr{Terms: []Expr{v, f}})
 	}
 
 	// Merge definitions (InsMap preserves insertion order, matching Python 3.7+ dict)
@@ -427,7 +427,7 @@ func NegateClauses(clauses *Clauses) *Clauses {
 
 // Skolemizer is a function that creates a Skolem constant for a variable.
 // Corresponds to Python's skolemizer parameter in dual_clauses.
-type Skolemizer func(v *Variable) Expr
+type Skolemizer func(v *LogicVariable) Expr
 
 // DualClauses implements the dual construction: replaces variables with
 // Skolem constants, then negates. Corresponds to Python's dual_clauses.
@@ -461,13 +461,13 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]Ex
 	// Negate the formula
 	f := Negate(clausesToFormula(clauses))
 
-	// Python: if instantiator != None: fmla = And(fmla, clauses_to_formula(insts))
+	// Python: if instantiator != None: fmla = LogicAnd(fmla, clauses_to_formula(insts))
 	// Matches Python dual_clauses (ivy_logic_utils.py:1554-1565) — unconditional
 	// (no insts.fmlas guard); Python builds And(fmla, And()) when insts is empty.
 	if instantiator != nil {
 		gts := AppsClauses(clauses)
 		insts := instantiator(gts)
-		f = &And{Terms: []Expr{f, clausesToFormula(insts)}}
+		f = &LogicAnd{Terms: []Expr{f, clausesToFormula(insts)}}
 	}
 
 	return FormulaToClauses(f, nil)
@@ -496,7 +496,7 @@ func ConditionClauses(clauses *Clauses, fmla Expr) *Clauses {
 	negFmla := Negate(fmla)
 	var newFmlas []Expr
 	for _, f := range clauses.Fmlas {
-		newFmlas = append(newFmlas, &Or{Terms: []Expr{negFmla, f}})
+		newFmlas = append(newFmlas, &LogicOr{Terms: []Expr{negFmla, f}})
 	}
 	return NewClauses(newFmlas, clauses.Defs, clauses.Annot)
 }
@@ -684,7 +684,7 @@ func substituteNodesRec(n Expr, subs map[NodeKey]Expr) (Expr, error) {
 	}
 	// Handle standard nodes
 	switch n.(type) {
-	case *Variable, *Const:
+	case *LogicVariable, *Const:
 		// Already checked via Key above
 		return n, nil
 	}
@@ -701,13 +701,13 @@ func substituteNodesRec(n Expr, subs map[NodeKey]Expr) (Expr, error) {
 			return nil, err
 		}
 		return &ForAll{Variables: q.Variables, Body: newBody}, nil
-	case *Exists:
+	case *LogicExists:
 		fsubs := filterBoundVarSubs(subs, q.Variables)
 		newBody, err := substituteNodesRec(q.Body, fsubs)
 		if err != nil {
 			return nil, err
 		}
-		return &Exists{Variables: q.Variables, Body: newBody}, nil
+		return &LogicExists{Variables: q.Variables, Body: newBody}, nil
 	case *Lambda:
 		fsubs := filterBoundVarSubs(subs, q.Variables)
 		newBody, err := substituteNodesRec(q.Body, fsubs)
@@ -715,13 +715,13 @@ func substituteNodesRec(n Expr, subs map[NodeKey]Expr) (Expr, error) {
 			return nil, err
 		}
 		return &Lambda{Variables: q.Variables, Body: newBody}, nil
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		fsubs := filterBoundVarSubs(subs, q.Variables)
 		newBody, err := substituteNodesRec(q.Body, fsubs)
 		if err != nil {
 			return nil, err
 		}
-		return &NamedBinder{Name: q.Name, Variables: q.Variables, Environ: q.Environ, Body: newBody}, nil
+		return &LogicNamedBinder{Name: q.Name, Variables: q.Variables, Environ: q.Environ, Body: newBody}, nil
 	}
 
 	// Recurse into children
@@ -745,7 +745,7 @@ func substituteNodesRec(n Expr, subs map[NodeKey]Expr) (Expr, error) {
 //
 //	bounds = set(x.name for x in quantifier_vars(ast))
 //	subs = dict((x,y) for x,y in subs.items() if x not in bounds)
-func filterBoundVarSubs(subs map[NodeKey]Expr, vars []*Variable) map[NodeKey]Expr {
+func filterBoundVarSubs(subs map[NodeKey]Expr, vars []*LogicVariable) map[NodeKey]Expr {
 	if len(vars) == 0 {
 		return subs
 	}
@@ -958,9 +958,9 @@ func UsedSymbolsExprOrdered(node Expr) *InsMap[NodeKey, Expr] {
 }
 
 // UsedVariablesOrdered returns free variables from the clauses in order.
-func UsedVariablesOrdered(c *Clauses) []*Variable {
+func UsedVariablesOrdered(c *Clauses) []*LogicVariable {
 	seen := make(map[string]bool)
-	var result []*Variable
+	var result []*LogicVariable
 	for _, f := range c.Fmlas {
 		collectVarsOrdered(f, seen, &result)
 	}
@@ -970,8 +970,8 @@ func UsedVariablesOrdered(c *Clauses) []*Variable {
 	return result
 }
 
-func collectVarsOrdered(n Expr, seen map[string]bool, result *[]*Variable) {
-	if v, ok := n.(*Variable); ok {
+func collectVarsOrdered(n Expr, seen map[string]bool, result *[]*LogicVariable) {
+	if v, ok := n.(*LogicVariable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
 			*result = append(*result, v)
@@ -1072,15 +1072,15 @@ func resortClausesBySort(clauses *Clauses, subs map[NodeKey]Sort) *Clauses {
 
 // VariablesClauses returns all free variables across all formulas and defs.
 // Corresponds to Python: variables_clauses = apply_gen_to_clauses(variables_ast)
-func VariablesClauses(clauses *Clauses) []*Variable {
+func VariablesClauses(clauses *Clauses) []*LogicVariable {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*Variable
+	var result []*LogicVariable
 	for _, f := range clauses.Fmlas {
 		for _, vNode := range FreeVariables(f).All() {
-			vv := vNode.(*Variable)
+			vv := vNode.(*LogicVariable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
 				result = append(result, vv)
@@ -1089,7 +1089,7 @@ func VariablesClauses(clauses *Clauses) []*Variable {
 	}
 	for _, d := range clauses.Defs {
 		for _, vNode := range FreeVariables(d).All() {
-			vv := vNode.(*Variable)
+			vv := vNode.(*LogicVariable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
 				result = append(result, vv)
@@ -1272,18 +1272,18 @@ func (tc *tseitinContext) tseitinEncoding(f Expr) Expr {
 	f = ExpandAbbrevs(f)
 
 	switch n := f.(type) {
-	case *And:
+	case *LogicAnd:
 		if len(n.Terms) == 0 {
-			return &And{Terms: nil} // true
+			return &LogicAnd{Terms: nil} // true
 		}
 		args := make([]Expr, len(n.Terms))
 		for i, g := range n.Terms {
 			args[i] = tc.tseitinEncoding(g)
 		}
 		// Collect free variables from f
-		varSet := make(map[string]*Variable)
+		varSet := make(map[string]*LogicVariable)
 		collectFreeVars(f, varSet, nil)
-		var vars []*Variable
+		var vars []*LogicVariable
 		for _, v := range varSet {
 			vars = append(vars, v)
 		}
@@ -1310,25 +1310,25 @@ func (tc *tseitinContext) tseitinEncoding(f Expr) Expr {
 		// Add Tseitin clauses: ~res | arg_i for each i, and res | ~arg_0 | ~arg_1 | ...
 		for _, arg := range args {
 			// ~res | arg
-			tc.clauses = append(tc.clauses, &Or{Terms: []Expr{&Not{Body: res}, arg}})
+			tc.clauses = append(tc.clauses, &LogicOr{Terms: []Expr{&LogicNot{Body: res}, arg}})
 		}
 		// res | ~arg_0 | ~arg_1 | ...
 		negArgs := make([]Expr, len(args)+1)
 		negArgs[0] = res
 		for i, arg := range args {
-			negArgs[i+1] = &Not{Body: arg}
+			negArgs[i+1] = &LogicNot{Body: arg}
 		}
-		tc.clauses = append(tc.clauses, &Or{Terms: negArgs})
+		tc.clauses = append(tc.clauses, &LogicOr{Terms: negArgs})
 		return res
 
-	case *Or:
+	case *LogicOr:
 		// ~(AND(~x for x in args))
 		negArgs := make([]Expr, len(n.Terms))
 		for i, x := range n.Terms {
-			negArgs[i] = &Not{Body: x}
+			negArgs[i] = &LogicNot{Body: x}
 		}
-		inner := &And{Terms: negArgs}
-		return &Not{Body: tc.tseitinEncoding(inner)}
+		inner := &LogicAnd{Terms: negArgs}
+		return &LogicNot{Body: tc.tseitinEncoding(inner)}
 
 	default:
 		// Atomic formula — return as-is
@@ -1337,12 +1337,12 @@ func (tc *tseitinContext) tseitinEncoding(f Expr) Expr {
 }
 
 // collectFreeVars collects free variables from a node.
-func collectFreeVars(node Expr, result map[string]*Variable, bound map[string]bool) {
+func collectFreeVars(node Expr, result map[string]*LogicVariable, bound map[string]bool) {
 	if node == nil {
 		return
 	}
 	switch n := node.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if bound == nil || !bound[n.Name] {
 			result[n.Name] = n
 		}
@@ -1356,7 +1356,7 @@ func collectFreeVars(node Expr, result map[string]*Variable, bound map[string]bo
 		}
 		collectFreeVars(n.Body, result, newBound)
 		return
-	case *Exists:
+	case *LogicExists:
 		newBound := make(map[string]bool)
 		for k, v := range bound {
 			newBound[k] = v
@@ -1429,7 +1429,7 @@ func SimplifyClauses(cls *Clauses) *Clauses {
 func simplifyFormula(f Expr) Expr {
 	// Simplify And/Or by recursing
 	switch n := f.(type) {
-	case *And:
+	case *LogicAnd:
 		terms := make([]Expr, 0, len(n.Terms))
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
@@ -1440,20 +1440,20 @@ func simplifyFormula(f Expr) Expr {
 			terms = append(terms, s)
 		}
 		if len(terms) == 0 {
-			return &And{Terms: nil} // true
+			return &LogicAnd{Terms: nil} // true
 		}
 		if len(terms) == 1 {
 			return terms[0]
 		}
-		return &And{Terms: terms}
+		return &LogicAnd{Terms: terms}
 
-	case *Or:
+	case *LogicOr:
 		terms := make([]Expr, 0, len(n.Terms))
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
 			// If any disjunct is True, whole Or is True
 			if moduleOpsIsTrue(s) {
-				return &And{Terms: nil} // true
+				return &LogicAnd{Terms: nil} // true
 			}
 			// Remove False disjuncts
 			if moduleOpsIsFalse(s) {
@@ -1462,26 +1462,26 @@ func simplifyFormula(f Expr) Expr {
 			terms = append(terms, s)
 		}
 		if len(terms) == 0 {
-			return &Or{Terms: nil} // false
+			return &LogicOr{Terms: nil} // false
 		}
 		if len(terms) == 1 {
 			return terms[0]
 		}
-		return &Or{Terms: terms}
+		return &LogicOr{Terms: terms}
 
-	case *Not:
+	case *LogicNot:
 		inner := simplifyFormula(n.Body)
 		// Double negation elimination
-		if n2, ok := inner.(*Not); ok {
+		if n2, ok := inner.(*LogicNot); ok {
 			return n2.Body
 		}
 		if moduleOpsIsTrue(inner) {
-			return &Or{Terms: nil} // false = Not(true)
+			return &LogicOr{Terms: nil} // false = LogicNot(true)
 		}
 		if moduleOpsIsFalse(inner) {
-			return &And{Terms: nil} // true = Not(false)
+			return &LogicAnd{Terms: nil} // true = LogicNot(false)
 		}
-		return &Not{Body: inner}
+		return &LogicNot{Body: inner}
 
 	default:
 		return f
@@ -1495,7 +1495,7 @@ func isTautologyFormula(f Expr) bool {
 
 // isTrue checks if a formula is the constant true (empty And).
 func moduleOpsIsTrue(f Expr) bool {
-	if a, ok := f.(*And); ok && len(a.Terms) == 0 {
+	if a, ok := f.(*LogicAnd); ok && len(a.Terms) == 0 {
 		return true
 	}
 	return false
@@ -1503,7 +1503,7 @@ func moduleOpsIsTrue(f Expr) bool {
 
 // isFalse checks if a formula is the constant false (empty Or).
 func moduleOpsIsFalse(f Expr) bool {
-	if o, ok := f.(*Or); ok && len(o.Terms) == 0 {
+	if o, ok := f.(*LogicOr); ok && len(o.Terms) == 0 {
 		return true
 	}
 	return false

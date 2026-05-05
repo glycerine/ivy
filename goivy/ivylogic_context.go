@@ -83,7 +83,7 @@ func InterpretedSorts(sig *Sig) []Sort {
 // A Some with fewer than 4 args (no else clause) is non-deterministic.
 // Corresponds to Python's is_deterministic_fmla (ivy_logic.py:1500-1503).
 func IsDeterministicFmla(f Expr) bool {
-	if s, ok := f.(*Some); ok {
+	if s, ok := f.(*LogicSome); ok {
 		// Python: len(f.args) < 4 means no else_val
 		// Some.args = (params..., fmla, [if_val], [else_val])
 		// With else_val, args has 4+ elements; without, it's non-deterministic

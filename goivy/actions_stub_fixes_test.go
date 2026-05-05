@@ -25,7 +25,7 @@ func mkFuncSort(dom []Sort, rng Sort) Sort {
 
 // mkRelSort creates a relational sort: dom... -> Boolean.
 func mkRelSort(dom ...Sort) Sort {
-	return RelationSort(dom)
+	return LogicRelationSort(dom)
 }
 
 // mkTestModule creates a module with optional setup.
@@ -258,7 +258,7 @@ func TestSetAction_ActionUpdate_NegativeLiteral(t *testing.T) {
 	relSym := NewConst("R", relSort)
 	aConst := NewConst("a", TopS)
 	atom := MustApply(relSym, aConst)
-	negLit := &Not{Body: atom}
+	negLit := &LogicNot{Body: atom}
 
 	sa := NewSetAction(negLit)
 	ctx := testCtx()
@@ -366,12 +366,12 @@ func TestMkVariantAssignClauses_MultipleVariants(t *testing.T) {
 	}
 
 	// First formula should be Iff (the target variant constraint)
-	if _, ok := u.TR.Fmlas[0].(*Iff); !ok {
+	if _, ok := u.TR.Fmlas[0].(*LogicIff); !ok {
 		t.Errorf("First formula should be Iff, got %T", u.TR.Fmlas[0])
 	}
 
 	// Second formula should be Not (negative constraint for other variant)
-	if _, ok := u.TR.Fmlas[1].(*Not); !ok {
+	if _, ok := u.TR.Fmlas[1].(*LogicNot); !ok {
 		t.Errorf("Second formula should be Not, got %T", u.TR.Fmlas[1])
 	}
 }

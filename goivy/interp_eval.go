@@ -241,7 +241,7 @@ func EvalStateAtom(expr Node, mod *Module) (*InterpState, error) {
 // Otherwise, it is evaluated as an atom.
 func EvalState(checkPrecond bool, expr Node, mod *Module) (*InterpState, error) {
 	if IsInterpStateJoin(expr) {
-		or := expr.(*AstOr)
+		or := expr.(*Or)
 		if len(or.Terms) == 0 {
 			return nil, fmt.Errorf("EvalState: empty state join")
 		}

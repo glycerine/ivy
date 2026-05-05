@@ -96,7 +96,7 @@ func TestChoiceActionCloneGetsNewID(t *testing.T) {
 	cfg := NewAstConfig()
 	c := cfg.NewChoiceAction(cfg.NewAtom("a"), cfg.NewAtom("b"))
 	cloned := c.Clone([]Node{cfg.NewAtom("c"), cfg.NewAtom("d")})
-	cc, ok := cloned.(*AstChoiceAction)
+	cc, ok := cloned.(*ChoiceAction)
 	if !ok {
 		t.Fatalf("expected *ast.ChoiceAction, got %T", cloned)
 	}

@@ -19,7 +19,7 @@ func IvyNodeRep(n Expr) Expr {
 		return t.Func
 	case *Const:
 		return t
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		if len(t.Variables) == 0 {
 			return t
 		}

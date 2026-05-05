@@ -8,21 +8,21 @@ import (
 
 // True and False are the logical constants (empty And / empty Or).
 var (
-	True  Expr = &And{}
-	False Expr = &Or{}
+	True  Expr = &LogicAnd{}
+	False Expr = &LogicOr{}
 )
 
 // IsTrue returns true if the node is logical true (empty And).
-// Handles both the singleton pointer and any structurally-equivalent &And{}.
+// Handles both the singleton pointer and any structurally-equivalent &LogicAnd{}.
 func IsTrue(n Expr) bool {
-	a, ok := n.(*And)
+	a, ok := n.(*LogicAnd)
 	return ok && len(a.Terms) == 0
 }
 
 // IsFalse returns true if the node is logical false (empty Or).
-// Handles both the singleton pointer and any structurally-equivalent &Or{}.
+// Handles both the singleton pointer and any structurally-equivalent &LogicOr{}.
 func IsFalse(n Expr) bool {
-	o, ok := n.(*Or)
+	o, ok := n.(*LogicOr)
 	return ok && len(o.Terms) == 0
 }
 
@@ -62,7 +62,7 @@ func (e *Eq) Equal(n Expr) bool {
 
 // --- Ite ---
 
-type Ite struct {
+type LogicIte struct {
 	Base
 	ISort Sort
 	Cond  Expr
@@ -70,7 +70,7 @@ type Ite struct {
 	Else  Expr
 }
 
-func NewIte(cond, then_, else_ Expr) (*Ite, error) {
+func NewIte(cond, then_, else_ Expr) (*LogicIte, error) {
 	if !IsBooleanOrTop(cond.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Ite condition must be Boolean: %s", cond)}
 	}
@@ -80,17 +80,17 @@ func NewIte(cond, then_, else_ Expr) (*Ite, error) {
 	if !t1Top && !t2Top && !s1.Equal(s2) {
 		return nil, &SortError{Msg: fmt.Sprintf("Ite then and else terms must have same sort: %s, %s", then_, else_)}
 	}
-	return &Ite{ISort: then_.NodeSort(), Cond: cond, Then: then_, Else: else_}, nil
+	return &LogicIte{ISort: then_.NodeSort(), Cond: cond, Then: then_, Else: else_}, nil
 }
 
-func (t *Ite) NodeSort() Sort   { return t.ISort }
-func (t *Ite) Children() []Expr { return []Expr{t.Cond, t.Then, t.Else} }
+func (t *LogicIte) NodeSort() Sort   { return t.ISort }
+func (t *LogicIte) Children() []Expr { return []Expr{t.Cond, t.Then, t.Else} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Ite.__str__ = pretty_fmla.
-func (t *Ite) String() string { return PrettyFmla(t) }
-func (t *Ite) Equal(n Expr) bool {
-	if o, ok := n.(*Ite); ok {
+func (t *LogicIte) String() string { return PrettyFmla(t) }
+func (t *LogicIte) Equal(n Expr) bool {
+	if o, ok := n.(*LogicIte); ok {
 		return t.Cond.Equal(o.Cond) && t.Then.Equal(o.Then) && t.Else.Equal(o.Else)
 	}
 	return false
@@ -98,27 +98,27 @@ func (t *Ite) Equal(n Expr) bool {
 
 // --- Not ---
 
-type Not struct {
+type LogicNot struct {
 	Base
 	Body Expr
 }
 
-func NewNot(body Expr) (*Not, error) {
+func NewNot(body Expr) (*LogicNot, error) {
 	if !IsBooleanOrTop(body.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Negation body must be Boolean: %s", body)}
 	}
-	return &Not{Body: body}, nil
+	return &LogicNot{Body: body}, nil
 }
 
-func (n *Not) NodeSort() Sort   { return Boolean }
-func (n *Not) Children() []Expr { return []Expr{n.Body} }
+func (n *LogicNot) NodeSort() Sort   { return Boolean }
+func (n *LogicNot) Children() []Expr { return []Expr{n.Body} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Not.__str__ = pretty_fmla. Note Not.ugly handles Not(Eq(a,b)) → "a ~= b"
 // and Not(other) → "~other".
-func (n *Not) String() string { return PrettyFmla(n) }
-func (n *Not) Equal(nd Expr) bool {
-	if o, ok := nd.(*Not); ok {
+func (n *LogicNot) String() string { return PrettyFmla(n) }
+func (n *LogicNot) Equal(nd Expr) bool {
+	if o, ok := nd.(*LogicNot); ok {
 		return n.Body.Equal(o.Body)
 	}
 	return false
@@ -126,30 +126,30 @@ func (n *Not) Equal(nd Expr) bool {
 
 // --- Globally ---
 
-type Globally struct {
+type LogicGlobally struct {
 	Base
 	Environ *string
 	Body    Expr
 }
 
-func NewGlobally(environ *string, body Expr) (*Globally, error) {
+func NewGlobally(environ *string, body Expr) (*LogicGlobally, error) {
 	if !IsBooleanOrTop(body.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Globally body must be Boolean: %s", body)}
 	}
-	return &Globally{Environ: environ, Body: body}, nil
+	return &LogicGlobally{Environ: environ, Body: body}, nil
 }
 
-func (g *Globally) NodeSort() Sort   { return Boolean }
-func (g *Globally) Children() []Expr { return []Expr{g.Body} }
-func (g *Globally) String() string {
+func (g *LogicGlobally) NodeSort() Sort   { return Boolean }
+func (g *LogicGlobally) Children() []Expr { return []Expr{g.Body} }
+func (g *LogicGlobally) String() string {
 	env := ""
 	if g.Environ != nil {
 		env = "[" + *g.Environ + "]"
 	}
 	return fmt.Sprintf("globally%s(%s)", env, g.Body)
 }
-func (g *Globally) Equal(n Expr) bool {
-	if o, ok := n.(*Globally); ok {
+func (g *LogicGlobally) Equal(n Expr) bool {
+	if o, ok := n.(*LogicGlobally); ok {
 		return ptrStrEqual(g.Environ, o.Environ) && g.Body.Equal(o.Body)
 	}
 	return false
@@ -157,30 +157,30 @@ func (g *Globally) Equal(n Expr) bool {
 
 // --- Eventually ---
 
-type Eventually struct {
+type LogicEventually struct {
 	Base
 	Environ *string
 	Body    Expr
 }
 
-func NewEventually(environ *string, body Expr) (*Eventually, error) {
+func NewEventually(environ *string, body Expr) (*LogicEventually, error) {
 	if !IsBooleanOrTop(body.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Eventually body must be Boolean: %s", body)}
 	}
-	return &Eventually{Environ: environ, Body: body}, nil
+	return &LogicEventually{Environ: environ, Body: body}, nil
 }
 
-func (e *Eventually) NodeSort() Sort   { return Boolean }
-func (e *Eventually) Children() []Expr { return []Expr{e.Body} }
-func (e *Eventually) String() string {
+func (e *LogicEventually) NodeSort() Sort   { return Boolean }
+func (e *LogicEventually) Children() []Expr { return []Expr{e.Body} }
+func (e *LogicEventually) String() string {
 	env := ""
 	if e.Environ != nil {
 		env = "[" + *e.Environ + "]"
 	}
 	return fmt.Sprintf("eventually%s(%s)", env, e.Body)
 }
-func (e *Eventually) Equal(n Expr) bool {
-	if o, ok := n.(*Eventually); ok {
+func (e *LogicEventually) Equal(n Expr) bool {
+	if o, ok := n.(*LogicEventually); ok {
 		return ptrStrEqual(e.Environ, o.Environ) && e.Body.Equal(o.Body)
 	}
 	return false
@@ -188,7 +188,7 @@ func (e *Eventually) Equal(n Expr) bool {
 
 // --- WhenOperator ---
 
-type WhenOperator struct {
+type LogicWhenOperator struct {
 	Base
 	WSort Sort
 	Name  string
@@ -196,20 +196,20 @@ type WhenOperator struct {
 	T2    Expr
 }
 
-func NewWhenOperator(name string, t1, t2 Expr) (*WhenOperator, error) {
+func NewWhenOperator(name string, t1, t2 Expr) (*LogicWhenOperator, error) {
 	if !IsBooleanOrTop(t2.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("WhenOperator second argument must be Boolean: %s", t2)}
 	}
-	return &WhenOperator{WSort: t1.NodeSort(), Name: name, T1: t1, T2: t2}, nil
+	return &LogicWhenOperator{WSort: t1.NodeSort(), Name: name, T1: t1, T2: t2}, nil
 }
 
-func (w *WhenOperator) NodeSort() Sort   { return w.WSort }
-func (w *WhenOperator) Children() []Expr { return []Expr{w.T1, w.T2} }
-func (w *WhenOperator) String() string {
+func (w *LogicWhenOperator) NodeSort() Sort   { return w.WSort }
+func (w *LogicWhenOperator) Children() []Expr { return []Expr{w.T1, w.T2} }
+func (w *LogicWhenOperator) String() string {
 	return fmt.Sprintf("WhenOperator(%s,%s,%s)", w.Name, w.T1, w.T2)
 }
-func (w *WhenOperator) Equal(n Expr) bool {
-	if o, ok := n.(*WhenOperator); ok {
+func (w *LogicWhenOperator) Equal(n Expr) bool {
+	if o, ok := n.(*LogicWhenOperator); ok {
 		return w.Name == o.Name && w.T1.Equal(o.T1) && w.T2.Equal(o.T2)
 	}
 	return false
@@ -251,12 +251,12 @@ func (c *Cond) Equal(n Expr) bool {
 
 // --- And ---
 
-type And struct {
+type LogicAnd struct {
 	Base
 	Terms []Expr
 }
 
-func NewAnd(terms ...Expr) (*And, error) {
+func NewAnd(terms ...Expr) (*LogicAnd, error) {
 	for i, t := range terms {
 		if !IsBooleanOrTop(t.NodeSort()) {
 			return nil, &SortError{Msg: fmt.Sprintf("Bad sorts in: And(%s) (positions: [%d])",
@@ -265,17 +265,17 @@ func NewAnd(terms ...Expr) (*And, error) {
 	}
 	cp := make([]Expr, len(terms))
 	copy(cp, terms)
-	return &And{Terms: cp}, nil
+	return &LogicAnd{Terms: cp}, nil
 }
 
-func (a *And) NodeSort() Sort   { return Boolean }
-func (a *And) Children() []Expr { return a.Terms }
+func (a *LogicAnd) NodeSort() Sort   { return Boolean }
+func (a *LogicAnd) Children() []Expr { return a.Terms }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.And.__str__ = pretty_fmla. Empty And renders as "true".
-func (a *And) String() string { return PrettyFmla(a) }
-func (a *And) Equal(n Expr) bool {
-	if o, ok := n.(*And); ok {
+func (a *LogicAnd) String() string { return PrettyFmla(a) }
+func (a *LogicAnd) Equal(n Expr) bool {
+	if o, ok := n.(*LogicAnd); ok {
 		return nodeSliceEqual(a.Terms, o.Terms)
 	}
 	return false
@@ -283,12 +283,12 @@ func (a *And) Equal(n Expr) bool {
 
 // --- Or ---
 
-type Or struct {
+type LogicOr struct {
 	Base
 	Terms []Expr
 }
 
-func NewOr(terms ...Expr) (*Or, error) {
+func NewOr(terms ...Expr) (*LogicOr, error) {
 	for i, t := range terms {
 		if !IsBooleanOrTop(t.NodeSort()) {
 			return nil, &SortError{Msg: fmt.Sprintf("Bad sorts in: Or(%s) (positions: [%d])",
@@ -297,17 +297,17 @@ func NewOr(terms ...Expr) (*Or, error) {
 	}
 	cp := make([]Expr, len(terms))
 	copy(cp, terms)
-	return &Or{Terms: cp}, nil
+	return &LogicOr{Terms: cp}, nil
 }
 
-func (o *Or) NodeSort() Sort   { return Boolean }
-func (o *Or) Children() []Expr { return o.Terms }
+func (o *LogicOr) NodeSort() Sort   { return Boolean }
+func (o *LogicOr) Children() []Expr { return o.Terms }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Or.__str__ = pretty_fmla. Empty Or renders as "false".
-func (o *Or) String() string { return PrettyFmla(o) }
-func (o *Or) Equal(n Expr) bool {
-	if oo, ok := n.(*Or); ok {
+func (o *LogicOr) String() string { return PrettyFmla(o) }
+func (o *LogicOr) Equal(n Expr) bool {
+	if oo, ok := n.(*LogicOr); ok {
 		return nodeSliceEqual(o.Terms, oo.Terms)
 	}
 	return false
@@ -315,26 +315,26 @@ func (o *Or) Equal(n Expr) bool {
 
 // --- Implies ---
 
-type Implies struct {
+type LogicImplies struct {
 	Base
 	T1, T2 Expr
 }
 
-func NewImplies(t1, t2 Expr) (*Implies, error) {
+func NewImplies(t1, t2 Expr) (*LogicImplies, error) {
 	if !IsBooleanOrTop(t1.NodeSort()) || !IsBooleanOrTop(t2.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Bad sorts in: Implies(%s, %s)", t1, t2)}
 	}
-	return &Implies{T1: t1, T2: t2}, nil
+	return &LogicImplies{T1: t1, T2: t2}, nil
 }
 
-func (i *Implies) NodeSort() Sort   { return Boolean }
-func (i *Implies) Children() []Expr { return []Expr{i.T1, i.T2} }
+func (i *LogicImplies) NodeSort() Sort   { return Boolean }
+func (i *LogicImplies) Children() []Expr { return []Expr{i.T1, i.T2} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Implies.__str__ = pretty_fmla.
-func (i *Implies) String() string { return PrettyFmla(i) }
-func (i *Implies) Equal(n Expr) bool {
-	if o, ok := n.(*Implies); ok {
+func (i *LogicImplies) String() string { return PrettyFmla(i) }
+func (i *LogicImplies) Equal(n Expr) bool {
+	if o, ok := n.(*LogicImplies); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
 	}
 	return false
@@ -342,26 +342,26 @@ func (i *Implies) Equal(n Expr) bool {
 
 // --- Iff ---
 
-type Iff struct {
+type LogicIff struct {
 	Base
 	T1, T2 Expr
 }
 
-func NewIff(t1, t2 Expr) (*Iff, error) {
+func NewIff(t1, t2 Expr) (*LogicIff, error) {
 	if !IsBooleanOrTop(t1.NodeSort()) || !IsBooleanOrTop(t2.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Bad sorts in: Iff(%s, %s)", t1, t2)}
 	}
-	return &Iff{T1: t1, T2: t2}, nil
+	return &LogicIff{T1: t1, T2: t2}, nil
 }
 
-func (i *Iff) NodeSort() Sort   { return Boolean }
-func (i *Iff) Children() []Expr { return []Expr{i.T1, i.T2} }
+func (i *LogicIff) NodeSort() Sort   { return Boolean }
+func (i *LogicIff) Children() []Expr { return []Expr{i.T1, i.T2} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Iff.__str__ = pretty_fmla.
-func (i *Iff) String() string { return PrettyFmla(i) }
-func (i *Iff) Equal(n Expr) bool {
-	if o, ok := n.(*Iff); ok {
+func (i *LogicIff) String() string { return PrettyFmla(i) }
+func (i *LogicIff) Equal(n Expr) bool {
+	if o, ok := n.(*LogicIff); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
 	}
 	return false
@@ -371,11 +371,11 @@ func (i *Iff) Equal(n Expr) bool {
 
 type ForAll struct {
 	Base
-	Variables []*Variable
+	Variables []*LogicVariable
 	Body      Expr
 }
 
-func NewForAll(variables []*Variable, body Expr) (*ForAll, error) {
+func NewForAll(variables []*LogicVariable, body Expr) (*ForAll, error) {
 	if len(variables) == 0 {
 		return nil, &IvyError{Msg: "Must quantify over at least one variable"}
 	}
@@ -408,13 +408,13 @@ func (f *ForAll) Equal(n Expr) bool {
 
 // --- Exists ---
 
-type Exists struct {
+type LogicExists struct {
 	Base
-	Variables []*Variable
+	Variables []*LogicVariable
 	Body      Expr
 }
 
-func NewExists(variables []*Variable, body Expr) (*Exists, error) {
+func NewExists(variables []*LogicVariable, body Expr) (*LogicExists, error) {
 	if len(variables) == 0 {
 		return nil, &IvyError{Msg: "Must quantify over at least one variable"}
 	}
@@ -428,17 +428,17 @@ func NewExists(variables []*Variable, body Expr) (*Exists, error) {
 	}
 	// Python stores variables as frozenset (unordered, deduplicated).
 	cp := deduplicateAndSortVars(variables)
-	return &Exists{Variables: cp, Body: body}, nil
+	return &LogicExists{Variables: cp, Body: body}, nil
 }
 
-func (e *Exists) NodeSort() Sort   { return Boolean }
-func (e *Exists) Children() []Expr { return []Expr{e.Body} }
+func (e *LogicExists) NodeSort() Sort   { return Boolean }
+func (e *LogicExists) Children() []Expr { return []Expr{e.Body} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.Exists.__str__ = pretty_fmla.
-func (e *Exists) String() string { return PrettyFmla(e) }
-func (e *Exists) Equal(n Expr) bool {
-	if o, ok := n.(*Exists); ok {
+func (e *LogicExists) String() string { return PrettyFmla(e) }
+func (e *LogicExists) Equal(n Expr) bool {
+	if o, ok := n.(*LogicExists); ok {
 		return varSliceEqual(e.Variables, o.Variables) && e.Body.Equal(o.Body)
 	}
 	return false
@@ -448,17 +448,17 @@ func (e *Exists) Equal(n Expr) bool {
 
 type Lambda struct {
 	Base
-	Variables []*Variable
+	Variables []*LogicVariable
 	Body      Expr
 }
 
-func NewLambda(variables []*Variable, body Expr) (*Lambda, error) {
+func NewLambda(variables []*LogicVariable, body Expr) (*Lambda, error) {
 	for _, v := range variables {
 		if v == nil {
 			return nil, &IvyError{Msg: "Can only abstract over variables"}
 		}
 	}
-	cp := make([]*Variable, len(variables))
+	cp := make([]*LogicVariable, len(variables))
 	copy(cp, variables)
 	return &Lambda{Variables: cp, Body: body}, nil
 }
@@ -478,26 +478,26 @@ func (l *Lambda) Equal(n Expr) bool {
 
 // --- NamedBinder ---
 
-type NamedBinder struct {
+type LogicNamedBinder struct {
 	Base
 	Name      string
-	Variables []*Variable
+	Variables []*LogicVariable
 	Environ   *string
 	Body      Expr
 }
 
-func NewNamedBinder(name string, variables []*Variable, environ *string, body Expr) (*NamedBinder, error) {
+func NewNamedBinder(name string, variables []*LogicVariable, environ *string, body Expr) (*LogicNamedBinder, error) {
 	for _, v := range variables {
 		if v == nil {
 			return nil, &IvyError{Msg: "Can only abstract over variables"}
 		}
 	}
-	cp := make([]*Variable, len(variables))
+	cp := make([]*LogicVariable, len(variables))
 	copy(cp, variables)
-	return &NamedBinder{Name: name, Variables: cp, Environ: environ, Body: body}, nil
+	return &LogicNamedBinder{Name: name, Variables: cp, Environ: environ, Body: body}, nil
 }
 
-func (nb *NamedBinder) NodeSort() Sort {
+func (nb *LogicNamedBinder) NodeSort() Sort {
 	if len(nb.Variables) > 0 {
 		sorts := make([]Sort, len(nb.Variables)+1)
 		for i, v := range nb.Variables {
@@ -514,14 +514,14 @@ func (nb *NamedBinder) NodeSort() Sort {
 	return nb.Body.NodeSort()
 }
 
-func (nb *NamedBinder) Children() []Expr { return []Expr{nb.Body} }
+func (nb *LogicNamedBinder) Children() []Expr { return []Expr{nb.Body} }
 
 // String matches Python ivy_logic.py:1444-1446 which monkey-patches
 // lg.NamedBinder.__str__ = pretty_fmla.
-func (nb *NamedBinder) String() string { return PrettyFmla(nb) }
+func (nb *LogicNamedBinder) String() string { return PrettyFmla(nb) }
 
-func (nb *NamedBinder) Equal(n Expr) bool {
-	if o, ok := n.(*NamedBinder); ok {
+func (nb *LogicNamedBinder) Equal(n Expr) bool {
+	if o, ok := n.(*LogicNamedBinder); ok {
 		return nb.Name == o.Name &&
 			ptrStrEqual(nb.Environ, o.Environ) &&
 			varSliceEqual(nb.Variables, o.Variables) &&
@@ -531,7 +531,7 @@ func (nb *NamedBinder) Equal(n Expr) bool {
 }
 
 // Call applies the binder as a function. Returns self if no args.
-func (nb *NamedBinder) Call(terms ...Expr) (Expr, error) {
+func (nb *LogicNamedBinder) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
 		return nb, nil
 	}
@@ -543,11 +543,11 @@ func (nb *NamedBinder) Call(terms ...Expr) (Expr, error) {
 // deduplicateAndSortVars deduplicates variables by name and sorts by name.
 // This matches Python's frozenset(variables) behavior for ForAll/Exists:
 // unordered, deduplicated. We sort by name to produce a canonical order.
-func deduplicateAndSortVars(vars []*Variable) []*Variable {
+func deduplicateAndSortVars(vars []*LogicVariable) []*LogicVariable {
 	// Uses Sexp-based structural identity to match Python's frozenset
 	// which deduplicates by structural equality (name + sort).
 	seen := make(map[NodeKey]bool, len(vars))
-	var result []*Variable
+	var result []*LogicVariable
 	for _, v := range vars {
 		k := Key(v)
 		if !seen[k] {
@@ -591,7 +591,7 @@ func nodeSliceEqual(a, b []Expr) bool {
 	return true
 }
 
-func varSliceEqual(a, b []*Variable) bool {
+func varSliceEqual(a, b []*LogicVariable) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -604,7 +604,7 @@ func varSliceEqual(a, b []*Variable) bool {
 }
 
 // varSortList returns sorted "V:Sort, W:Sort" string for variables.
-func varSortList(vars []*Variable) string {
+func varSortList(vars []*LogicVariable) string {
 	type vs struct {
 		name string
 		sort string

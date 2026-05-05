@@ -171,7 +171,7 @@ func TestPropertyTactic_BasicSkolemWitness(t *testing.T) {
 				if c, ok := args[0].(*Const); ok && c.Name == "f" {
 					foundSkolem = true
 					// Check the sort: should be S -> S (function sort)
-					if fs, ok := c.CSort.(*FunctionSort); ok {
+					if fs, ok := c.CSort.(*LogicFunctionSort); ok {
 						if len(fs.Sorts) != 2 {
 							t.Errorf("Skolem sort: expected 2-element Sorts (dom+rng), got %d", len(fs.Sorts))
 						}
@@ -223,7 +223,7 @@ func TestPropertyTactic_NullarySkolemConstant(t *testing.T) {
 				if c, ok := args[0].(*Const); ok && c.Name == "c" {
 					foundSkolem = true
 					// Nullary: sort should be just "S", not a FunctionSort
-					if _, ok := c.CSort.(*FunctionSort); ok {
+					if _, ok := c.CSort.(*LogicFunctionSort); ok {
 						t.Error("Skolem sort: expected non-function sort for nullary constant")
 					}
 				}
@@ -437,7 +437,7 @@ func TestPropertyTactic_ExtraParamExplicitSort(t *testing.T) {
 			if len(args) > 0 {
 				if c, ok := args[0].(*Const); ok && c.Name == "f" {
 					foundSkolem = true
-					if fs, ok := c.CSort.(*FunctionSort); ok {
+					if fs, ok := c.CSort.(*LogicFunctionSort); ok {
 						if len(fs.Sorts) != 2 {
 							t.Errorf("expected 2-element Sorts (dom+rng), got %d", len(fs.Sorts))
 						}

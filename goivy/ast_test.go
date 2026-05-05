@@ -87,7 +87,7 @@ func TestAstVariable(t *testing.T) {
 	// Clone returns self
 	c := v.Clone(nil)
 	if c != v {
-		t.Error("AstVariable.Clone should return self")
+		t.Error("Variable.Clone should return self")
 	}
 	// Resort
 	v2 := v.Resort("u")
@@ -472,7 +472,7 @@ func TestAstForallClone(t *testing.T) {
 	body := cfg.NewAtom("p", x)
 	f := cfg.NewForall([]Node{x}, body)
 	newBody := cfg.NewAtom("q", x)
-	c := f.Clone([]Node{newBody}).(*AstForall)
+	c := f.Clone([]Node{newBody}).(*Forall)
 	// Bounds should be preserved
 	if len(c.Bounds) != 1 {
 		t.Errorf("bounds lost in clone")
@@ -561,44 +561,44 @@ var _ Node = (*NoneAST)(nil)
 var _ Node = (*Symbol)(nil)
 var _ Node = (*Atom)(nil)
 var _ Node = (*App)(nil)
-var _ Node = (*AstVariable)(nil)
-var _ Node = (*AstOld)(nil)
+var _ Node = (*Variable)(nil)
+var _ Node = (*Old)(nil)
 var _ Node = (*This)(nil)
 var _ Node = (*MethodCall)(nil)
-var _ Node = (*AstLiteral)(nil)
+var _ Node = (*Literal)(nil)
 var _ Node = (*Dot)(nil)
 var _ Node = (*Bracket)(nil)
 var _ Node = (*Tuple)(nil)
-var _ Node = (*AstSome)(nil)
-var _ Node = (*AstSomeMin)(nil)
-var _ Node = (*AstSomeMax)(nil)
+var _ Node = (*Some)(nil)
+var _ Node = (*SomeMin)(nil)
+var _ Node = (*SomeMax)(nil)
 var _ Node = (*SomeExpr)(nil)
 var _ Node = (*KeyArg)(nil)
 var _ Node = (*DebugItem)(nil)
-var _ Node = (*AstTemporalModels)(nil)
-var _ Node = (*AstAnd)(nil)
-var _ Node = (*AstOr)(nil)
-var _ Node = (*AstNot)(nil)
-var _ Node = (*AstImplies)(nil)
-var _ Node = (*AstIff)(nil)
-var _ Node = (*AstIte)(nil)
-var _ Node = (*AstForall)(nil)
-var _ Node = (*AstExists)(nil)
-var _ Node = (*AstIsa)(nil)
-var _ Node = (*AstGlobally)(nil)
-var _ Node = (*AstEventually)(nil)
-var _ Node = (*AstWhenOperator)(nil)
-var _ Node = (*AstLet)(nil)
-var _ Node = (*AstDefinition)(nil)
-var _ Node = (*AstDefinitionSchema)(nil)
-var _ Node = (*AstNamedBinder)(nil)
-var _ Node = (*AstTrigger)(nil)
-var _ Node = (*AstConstantSort)(nil)
-var _ Node = (*AstEnumeratedSort)(nil)
-var _ Node = (*AstStructSort)(nil)
-var _ Node = (*AstFunctionSort)(nil)
-var _ Node = (*AstRelationSort)(nil)
-var _ Node = (*AstRange)(nil)
+var _ Node = (*TemporalModels)(nil)
+var _ Node = (*And)(nil)
+var _ Node = (*Or)(nil)
+var _ Node = (*Not)(nil)
+var _ Node = (*Implies)(nil)
+var _ Node = (*Iff)(nil)
+var _ Node = (*Ite)(nil)
+var _ Node = (*Forall)(nil)
+var _ Node = (*Exists)(nil)
+var _ Node = (*Isa)(nil)
+var _ Node = (*Globally)(nil)
+var _ Node = (*Eventually)(nil)
+var _ Node = (*WhenOperator)(nil)
+var _ Node = (*Let)(nil)
+var _ Node = (*Definition)(nil)
+var _ Node = (*DefinitionSchema)(nil)
+var _ Node = (*NamedBinder)(nil)
+var _ Node = (*Trigger)(nil)
+var _ Node = (*ConstantSort)(nil)
+var _ Node = (*EnumeratedSort)(nil)
+var _ Node = (*StructSort)(nil)
+var _ Node = (*FunctionSort)(nil)
+var _ Node = (*RelationSort)(nil)
+var _ Node = (*Range)(nil)
 var _ Node = (*LabeledFormula)(nil)
 var _ Node = (*ModuleDecl)(nil)
 var _ Node = (*MacroDecl)(nil)
@@ -618,7 +618,7 @@ var _ Node = (*VariantDef)(nil)
 var _ Node = (*AxiomDecl)(nil)
 var _ Node = (*PropertyDecl)(nil)
 var _ Node = (*ConjectureDecl)(nil)
-var _ Node = (*AstProofDecl)(nil)
+var _ Node = (*ProofDecl)(nil)
 var _ Node = (*NamedDecl)(nil)
 var _ Node = (*SchemaDecl)(nil)
 var _ Node = (*SchemaBody)(nil)
@@ -654,16 +654,16 @@ var _ Node = (*DelegateDef)(nil)
 var _ Node = (*ImplementTypeDecl)(nil)
 var _ Node = (*NativeCode)(nil)
 var _ Node = (*NativeType)(nil)
-var _ Node = (*AstNativeExpr)(nil)
+var _ Node = (*NativeExpr)(nil)
 var _ Node = (*NativeDef)(nil)
 var _ Node = (*NativeDecl)(nil)
 var _ Node = (*AttributeDef)(nil)
 var _ Node = (*AttributeDecl)(nil)
-var _ Node = (*AstInstantiation)(nil)
+var _ Node = (*Instantiation)(nil)
 var _ Node = (*InstantiateDecl)(nil)
 var _ Node = (*AutoInstanceDecl)(nil)
 var _ Node = (*StateDef)(nil)
-var _ Node = (*AstRenaming)(nil)
+var _ Node = (*Renaming)(nil)
 var _ Node = (*ScenarioDecl)(nil)
 var _ Node = (*PlaceList)(nil)
 var _ Node = (*ScenarioTransition)(nil)
@@ -671,7 +671,7 @@ var _ Node = (*ScenarioDef)(nil)
 var _ Node = (*ScenarioBeforeMixin)(nil)
 var _ Node = (*ScenarioAfterMixin)(nil)
 var _ Node = (*IsolateObjectDecl)(nil)
-var _ Node = (*AstTactic)(nil)
+var _ Node = (*Tactic)(nil)
 var _ Node = (*SchemaInstantiation)(nil)
 var _ Node = (*AssumeTactic)(nil)
 var _ Node = (*UnfoldSpec)(nil)
@@ -687,7 +687,7 @@ var _ Node = (*IfTactic)(nil)
 var _ Node = (*PropertyTactic)(nil)
 var _ Node = (*FunctionTactic)(nil)
 var _ Node = (*TacticTactic)(nil)
-var _ Node = (*AstProofTactic)(nil)
+var _ Node = (*ProofTactic)(nil)
 var _ Node = (*ComposeTactics)(nil)
 
 // --- Fuzz test helpers ---
@@ -738,7 +738,7 @@ func buildRandomASTNode(data []byte) (Node, []byte) {
 		sym, rest := buildRandomASTNode(data)
 		arg, rest := buildRandomASTNode(rest)
 		return cfg.NewApp(sym, arg), rest
-	case 4: // AstVariable
+	case 4: // Variable
 		name, rest := extractStr(data)
 		sortSym := "t"
 		return cfg.NewVariable(name, sortSym), rest
@@ -806,8 +806,8 @@ func FuzzASTClone(f *testing.F) {
 		cloneStr := clone.String()
 
 		// For most node types, clone with same args should produce same string
-		// AstVariable.Clone returns self, so we skip that check
-		if _, isVar := node.(*AstVariable); !isVar {
+		// Variable.Clone returns self, so we skip that check
+		if _, isVar := node.(*Variable); !isVar {
 			if origStr != cloneStr {
 				// This is OK for some types where Clone may differ,
 				// but we at least verify no panic
@@ -904,7 +904,7 @@ func TestAstAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 	//         Definition(Atom("idx.t"), Atom("idx"))
 	alias := cfg.NewDefinition(cfg.NewAtom("t"), cfg.NewAtom("this"))
 	resAlias := SubstPrefixAtomsAst(alias, subst, pref, toPref, nil)
-	if def, ok := resAlias.(*AstDefinition); ok {
+	if def, ok := resAlias.(*Definition); ok {
 		if lhs, ok := def.Lhs.(*Atom); !ok || lhs.Rep != "idx.t" {
 			t.Errorf("alias LHS should be \"idx.t\", got %v", def.Lhs)
 		}
@@ -912,7 +912,7 @@ func TestAstAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 			t.Errorf("alias RHS should be \"idx\", got %v", def.Rhs)
 		}
 	} else {
-		t.Fatalf("expected *Definition, got %T", resAlias)
+		t.Fatalf("expected *LogicDefinition, got %T", resAlias)
 	}
 }
 
@@ -1188,7 +1188,7 @@ func TestAstSchema_Defines(t *testing.T) {
 		t.Errorf("Schema.Defines(): got %q, want %q", s.Defines(), "my_schema")
 	}
 	// Schema with nil Defn
-	s2 := &AstSchema{}
+	s2 := &Schema{}
 	if s2.Defines() != "" {
 		t.Errorf("Schema.Defines() with nil Defn: got %q, want %q", s2.Defines(), "")
 	}

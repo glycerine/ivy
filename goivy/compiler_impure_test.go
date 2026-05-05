@@ -20,7 +20,7 @@ func TestCompileNativeAction_ImpureFlag(t *testing.T) {
 		t.Fatalf("CompileNativeAction: %v", err)
 	}
 
-	na, ok := result.(*NativeAction)
+	na, ok := result.(*LogicNativeAction)
 	if !ok {
 		t.Fatalf("expected *actions.NativeAction, got %T", result)
 	}
@@ -52,7 +52,7 @@ func TestCompileNativeAction_NotImpure(t *testing.T) {
 		t.Fatalf("CompileNativeAction: %v", err)
 	}
 
-	na, ok := result.(*NativeAction)
+	na, ok := result.(*LogicNativeAction)
 	if !ok {
 		t.Fatalf("expected *actions.NativeAction, got %T", result)
 	}
@@ -85,7 +85,7 @@ func TestCompileNativeAction_ImpureWithWhitespace(t *testing.T) {
 		t.Fatalf("CompileNativeAction: %v", err)
 	}
 
-	na, ok := result.(*NativeAction)
+	na, ok := result.(*LogicNativeAction)
 	if !ok {
 		t.Fatalf("expected *actions.NativeAction, got %T", result)
 	}
@@ -116,7 +116,7 @@ func TestCompileNativeAction_ImpureOnly(t *testing.T) {
 		t.Fatalf("CompileNativeAction: %v", err)
 	}
 
-	na, ok := result.(*NativeAction)
+	na, ok := result.(*LogicNativeAction)
 	if !ok {
 		t.Fatalf("expected *actions.NativeAction, got %T", result)
 	}

@@ -857,7 +857,7 @@ func (t *TransitionViewWidget) CheckInductiveness(button *ButtonWidget) bool {
 	}
 	// Run BMC for each conjecture; if any is reachable, not inductive.
 	for _, conj := range t.Conjectures {
-		neg := &goivy.Not{Body: conj}
+		neg := &goivy.LogicNot{Body: conj}
 		if len(ag.States) == 0 {
 			continue
 		}
@@ -898,7 +898,7 @@ func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture go
 	if ag == nil || len(ag.States) == 0 {
 		return false
 	}
-	neg := &goivy.Not{Body: conjecture}
+	neg := &goivy.LogicNot{Body: conjecture}
 	res := ag.BMC(ag.States[0], neg, nil, nil)
 	if res != nil {
 		t.ShowResult("Counterexample found.")
@@ -970,7 +970,7 @@ func (t *TransitionViewWidget) IsInductive(button *ButtonWidget) bool {
 	if ag == nil || len(ag.States) == 0 {
 		return false
 	}
-	neg := &goivy.Not{Body: conj}
+	neg := &goivy.LogicNot{Body: conj}
 	return ag.BMC(ag.States[0], neg, nil, nil) == nil
 }
 

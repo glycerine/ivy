@@ -70,7 +70,7 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 	if len(eqs) == 1 {
 		cond = eqs[0]
 	} else {
-		cond = &And{Terms: eqs}
+		cond = &LogicAnd{Terms: eqs}
 	}
 
 	// Python ivy_proof.py:226:
@@ -243,7 +243,7 @@ func isNoneAST(n Node) bool {
 
 // defargNameSort extracts the name and sort-top-ness from a defarg parameter
 // node. The grammar's defnlhs produces an *ast.Atom whose Terms are either
-// *ast.App (from lparam: SYMBOLx:atype) or *ast.AstVariable (from var).
+// *ast.App (from lparam: SYMBOLx:atype) or *ast.Variable (from var).
 // Returns (name, sortName, isTopSort).
 func defargNameSort(n Node) (string, string, bool) {
 	switch a := n.(type) {
@@ -254,7 +254,7 @@ func defargNameSort(n Node) (string, string, bool) {
 		}
 		sn := fmt.Sprint(a.ASort)
 		return name, sn, false
-	case *AstVariable:
+	case *Variable:
 		if a.VSort == "" || a.VSort == "S" {
 			return a.Rep, a.VSort, true
 		}
@@ -447,7 +447,7 @@ func (pc *ProofChecker) ifTactic(decls []*LabeledFormula, proof *IfTactic) ([]*L
 	//   true_goal  = ia.LabeledFormula(decls[0].label, il.Implies(cond,      decls[0].formula))
 	//   false_goal = ia.LabeledFormula(decls[0].label, il.Implies(Not(cond), decls[0].formula))
 	// Wrap the ENTIRE goal.Formula (SchemaBody or TemporalModels included) — no descent.
-	notCond := &Not{Body: cond}
+	notCond := &LogicNot{Body: cond}
 	trueGoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), cond, goal.Formula))
 	falseGoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), notCond, goal.Formula))
 	trueGoal.SetLineno(goal.GetLineno())
@@ -562,7 +562,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 
 		// Python: vmap = dict((x.name, x) for x in lu.variables_ast(fmla))
 		varsList := VariablesAstList(fmla)
-		vmap := make(map[string]*Variable, len(varsList))
+		vmap := make(map[string]*LogicVariable, len(varsList))
 		for _, v := range varsList {
 			vmap[v.Name] = v
 		}
@@ -594,7 +594,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 				if aIsTop {
 					return nil, &ProofError{Msg: fmt.Sprintf("cannot infer sort for %s", aName)}
 				}
-				paramVar := &Variable{Name: aName, VSort: &UninterpretedSort{Name: aSortName}}
+				paramVar := &LogicVariable{Name: aName, VSort: &UninterpretedSort{Name: aSortName}}
 				targs = append(targs, paramVar)
 			}
 		}
@@ -747,12 +747,12 @@ func (pc *ProofChecker) witnessTactic(decls []*LabeledFormula, proof *WitnessTac
 	// Python: wit_map = dict((x.args[0], x.args[1]) for x in wits)
 	witness := make(map[NodeKey]Expr)
 	for _, w := range wits {
-		defn, ok := w.(*Definition)
+		defn, ok := w.(*LogicDefinition)
 		if !ok {
 			xtracer.Trace("proof.witnessTactic witnessSkip nonDefn type=%s", TypeName(w))
 			continue
 		}
-		v, ok := defn.Lhs.(*Variable)
+		v, ok := defn.Lhs.(*LogicVariable)
 		if !ok {
 			xtracer.Trace("proof.witnessTactic EXIT err=lhsNotVariable type=%s", TypeName(defn.Lhs))
 			return nil, &ProofError{Msg: "left-hand side of witness must be a variable"}

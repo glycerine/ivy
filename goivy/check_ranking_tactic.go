@@ -24,7 +24,7 @@ func rankingInvariants(
 	finiteSorts map[string]bool,
 	uninterpretedSorts []Sort,
 	mod *Module,
-) ([]*LabeledFormula, []*LabeledFormula, map[string]*Task, map[string]*Trigger, error) {
+) ([]*LabeledFormula, []*LabeledFormula, map[string]*Task, map[string]*LogicTrigger, error) {
 
 	// Helper: put into nested dict
 	type defnMap map[string]map[string]*Eq
@@ -97,16 +97,16 @@ func rankingInvariants(
 		if _, ok := rawTriggers[sfx]; !ok || rawTriggers[sfx]["work_start"] == nil {
 			gfmla := fmla
 			for {
-				if impl, ok := gfmla.(*Implies); ok {
+				if impl, ok := gfmla.(*LogicImplies); ok {
 					gfmla = impl.T2
 				} else {
 					break
 				}
 			}
-			if g, ok := gfmla.(*Globally); ok {
+			if g, ok := gfmla.(*LogicGlobally); ok {
 				workStart := &Eq{
 					T1: NewConst("work_start"+sfx, &BooleanSort{}),
-					T2: &Not{Body: g.Body},
+					T2: &LogicNot{Body: g.Body},
 				}
 				dictPut(rawTriggers, sfx, "work_start", workStart)
 			}
@@ -124,7 +124,7 @@ func rankingInvariants(
 
 	// Build Task/Trigger maps
 	tasks := make(map[string]*Task)
-	triggers := make(map[string]*Trigger)
+	triggers := make(map[string]*LogicTrigger)
 	for sfx, defs := range rawTasks {
 		t := &Task{}
 		if d := defs["work_created"]; d != nil {
@@ -148,7 +148,7 @@ func rankingInvariants(
 		tasks[sfx] = t
 	}
 	for sfx, defs := range rawTriggers {
-		tr := &Trigger{}
+		tr := &LogicTrigger{}
 		if d := defs["work_start"]; d != nil {
 			tr.WorkStart = d
 		}
@@ -156,11 +156,11 @@ func rankingInvariants(
 	}
 
 	// Helper functions
-	eqLHSArgs := func(eq *Eq) []*Variable {
+	eqLHSArgs := func(eq *Eq) []*LogicVariable {
 		if app, ok := eq.T1.(*Apply); ok {
-			var vars []*Variable
+			var vars []*LogicVariable
 			for _, t := range app.Terms {
-				if v, ok := t.(*Variable); ok {
+				if v, ok := t.(*LogicVariable); ok {
 					vars = append(vars, v)
 				}
 			}
@@ -172,7 +172,7 @@ func rankingInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*Variable) map[NodeKey]Expr {
+	substVars := func(src, dst []*LogicVariable) map[NodeKey]Expr {
 		m := make(map[NodeKey]Expr)
 		for i, v := range src {
 			if i < len(dst) {
@@ -204,9 +204,9 @@ func rankingInvariants(
 		}
 		rhs := eqRHS(eq)
 		if len(cons) == 0 {
-			return &And{Terms: nil}
+			return &LogicAnd{Terms: nil}
 		}
-		return &Implies{T1: rhs, T2: rankingMakeAnd(cons...)}
+		return &LogicImplies{T1: rhs, T2: rankingMakeAnd(cons...)}
 	}
 
 	// Generate invariants and postconditions
@@ -235,7 +235,7 @@ func rankingInvariants(
 		// --- l2s_needed_implies_created postcond ---
 		createdArgs := eqLHSArgs(workCreated)
 		s := substVars(neededArgs, createdArgs)
-		neededImplCreated := &Implies{
+		neededImplCreated := &LogicImplies{
 			T1: rankingMakeAnd(workInvarVal, eqRHS(workNeeded)),
 			T2: subst(eqRHS(workCreated), s),
 		}
@@ -244,21 +244,21 @@ func rankingInvariants(
 
 		// --- l2s_invar postcond ---
 		wBinder := l2sW(nil, eqRHS(workStart), "")
-		notWaitingForTrigger := &Not{Body: wBinder}
+		notWaitingForTrigger := &LogicNot{Body: wBinder}
 		postconds = append(postconds, mklf("l2s_invar"+sfx,
-			&Implies{
-				T1: &Or{Terms: []Expr{CheckOldOf(workInvarVal), notWaitingForTrigger}},
+			&LogicImplies{
+				T1: &LogicOr{Terms: []Expr{CheckOldOf(workInvarVal), notWaitingForTrigger}},
 				T2: workInvarVal,
 			}))
 
 		// --- l2s_needed_preserved postcond ---
-		noHelp := CheckOldOf(&Not{Body: &Or{Terms: helps}})
-		notNeeded := &Implies{
-			T1: CheckOldOf(rankingMakeAnd(workInvarVal, &Not{Body: eqRHS(workNeeded)})),
-			T2: &Not{Body: eqRHS(workNeeded)},
+		noHelp := CheckOldOf(&LogicNot{Body: &LogicOr{Terms: helps}})
+		notNeeded := &LogicImplies{
+			T1: CheckOldOf(rankingMakeAnd(workInvarVal, &LogicNot{Body: eqRHS(workNeeded)})),
+			T2: &LogicNot{Body: eqRHS(workNeeded)},
 		}
 		postconds = append(postconds, mklf("l2s_needed_preserved"+sfx,
-			&Implies{T1: noHelp, T2: notNeeded}))
+			&LogicImplies{T1: noHelp, T2: notNeeded}))
 
 		// Add current task's help to the accumulated helps
 		helps = append(helps, rankingMakeAnd(workInvarVal,
@@ -274,25 +274,25 @@ func rankingInvariants(
 		}
 		decreased := CheckExists(wpargs, rankingMakeAnd(
 			CheckOldOf(eqRHS(workNeeded)),
-			&Not{Body: eqRHS(workNeeded)}))
+			&LogicNot{Body: eqRHS(workNeeded)}))
 		progressCond := rankingMakeAnd(
 			CheckOldOf(workInvarVal),
 			CheckOldOf(eqRHS(workHelpful)),
-			&Not{Body: waitingForProgress})
+			&LogicNot{Body: waitingForProgress})
 		postconds = append(postconds, mklf("l2s_progress"+sfx,
-			&Implies{T1: progressCond, T2: decreased}))
+			&LogicImplies{T1: progressCond, T2: decreased}))
 
 		// --- l2s_progress_eventually postcond ---
-		eventuallyProgress := &Eventually{Body: eqRHS(workProgress)}
+		eventuallyProgress := &LogicEventually{Body: eqRHS(workProgress)}
 		postconds = append(postconds, mklf("l2s_progress_eventually"+sfx,
-			&Implies{
+			&LogicImplies{
 				T1: rankingMakeAnd(CheckOldOf(workInvarVal), CheckOldOf(eqRHS(workHelpful))),
 				T2: eventuallyProgress,
 			}))
 
 		// --- l2s_sched_stable postcond ---
 		schedStable := CheckForAll(progressArgs,
-			&Implies{
+			&LogicImplies{
 				T1: rankingMakeAnd(
 					CheckOldOf(workInvarVal),
 					noHelp,
@@ -310,17 +310,17 @@ func rankingInvariants(
 		workStart := rawTriggers[sfx]["work_start"]
 		workInvarVal := eqRHS(workInvar)
 
-		schedExists := CheckOldOf(&Implies{
+		schedExists := CheckOldOf(&LogicImplies{
 			T1: workInvarVal,
-			T2: &Or{Terms: helps},
+			T2: &LogicOr{Terms: helps},
 		})
 		postconds = append(postconds, mklf("l2s_sched_exists", schedExists))
 
 		// l2s_eventually_start invariant
 		invars = append(invars, mklf("l2s_eventually_start",
-			&Implies{
-				T1: &Not{Body: workInvarVal},
-				T2: &Eventually{Body: eqRHS(workStart)},
+			&LogicImplies{
+				T1: &LogicNot{Body: workInvarVal},
+				T2: &LogicEventually{Body: eqRHS(workStart)},
 			}))
 	}
 
@@ -352,7 +352,7 @@ func rankingInvariants(
 
 // rankingMakeAnd, CheckForAll, CheckExists, CheckOldOf are defined in ranking.go
 
-func rankVarsToNodes(vs []*Variable) []Expr {
+func rankVarsToNodes(vs []*LogicVariable) []Expr {
 	nodes := make([]Expr, len(vs))
 	for i, v := range vs {
 		nodes[i] = v
@@ -360,7 +360,7 @@ func rankVarsToNodes(vs []*Variable) []Expr {
 	return nodes
 }
 
-func rankApplyNB(nb *NamedBinder, args ...Expr) Expr {
+func rankApplyNB(nb *LogicNamedBinder, args ...Expr) Expr {
 	if len(args) == 0 {
 		return nb
 	}

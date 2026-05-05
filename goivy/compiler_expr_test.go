@@ -125,7 +125,7 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 
 	// Build AST matching LowerVarStatements output:
 	// localDecls = [AssignAction(loc:x, y)]
-	// body = Sequence() (empty continuation)
+	// body = LogicSequence() (empty continuation)
 	lhsNode := cfg.NewAtom("loc:x") // no ASort — sort should be inferred
 	rhsNode := cfg.NewAtom("y")
 	localDecls := []Node{cfg.NewAssignAction(lhsNode, rhsNode)}
@@ -136,7 +136,7 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -158,14 +158,14 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	if localAct.Body == nil {
 		t.Fatal("expected non-nil body")
 	}
-	bodySeq, ok := localAct.Body.(*Sequence)
+	bodySeq, ok := localAct.Body.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected body to be *actions.Sequence, got %T", localAct.Body)
 	}
 	if len(bodySeq.Elems) < 1 {
 		t.Fatal("expected body sequence to contain at least the assignment")
 	}
-	if _, ok := bodySeq.Elems[0].(*AssignAction); !ok {
+	if _, ok := bodySeq.Elems[0].(*LogicAssignAction); !ok {
 		t.Errorf("expected first body element to be *actions.AssignAction, got %T", bodySeq.Elems[0])
 	}
 }
@@ -191,7 +191,7 @@ func TestExpr6_CompileLocal_ExplicitSortAnnotation(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -228,7 +228,7 @@ func TestExpr6_CompileLocal_FunctionLikeLHS(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -265,7 +265,7 @@ func TestExpr6_CompileLocal_BareDeclaration(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -295,7 +295,7 @@ func TestExpr6_CompileLocal_MultipleDeclarations(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -329,20 +329,20 @@ func TestExpr6_CompileLocal_BodyWithMultipleStatements(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
 
 	// Body should be Sequence with assignment + 2 original statements = 3 elements
-	bodySeq, ok := localAct.Body.(*Sequence)
+	bodySeq, ok := localAct.Body.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected body to be *actions.Sequence, got %T", localAct.Body)
 	}
 	if len(bodySeq.Elems) != 3 {
 		t.Errorf("expected 3 body elements (asgn + 2 stmts), got %d", len(bodySeq.Elems))
 	}
-	if _, ok := bodySeq.Elems[0].(*AssignAction); !ok {
+	if _, ok := bodySeq.Elems[0].(*LogicAssignAction); !ok {
 		t.Errorf("expected first element to be assignment, got %T", bodySeq.Elems[0])
 	}
 }
@@ -409,7 +409,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 	if len(lowered) != 1 {
 		t.Fatalf("expected 1 lowered node, got %d", len(lowered))
 	}
-	la, ok := lowered[0].(*AstLocalAction)
+	la, ok := lowered[0].(*LocalAction)
 	if !ok {
 		t.Fatalf("expected *ast.LocalAction, got %T", lowered[0])
 	}
@@ -422,7 +422,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 	body := la.Elems[len(la.Elems)-1]
 
 	// The first local decl should be an AssignAction
-	if _, ok := localDecls[0].(*AstAssignAction); !ok {
+	if _, ok := localDecls[0].(*AssignAction); !ok {
 		t.Fatalf("expected localDecls[0] to be *ast.AssignAction, got %T", localDecls[0])
 	}
 
@@ -431,7 +431,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -473,7 +473,7 @@ func TestExpr6_CompileLocal_SymbolShadowing(t *testing.T) {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	localAct, ok := result.(*LocalAction)
+	localAct, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
 	}
@@ -619,7 +619,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 		t.Fatal("Extract() result is not a wrapped action")
 	}
 
-	localAct, ok := act.(*LocalAction)
+	localAct, ok := act.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction from Extract(), got %T", act)
 	}
@@ -641,7 +641,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	if bodyAct == nil {
 		t.Fatal("LocalAction body is not a wrapped action")
 	}
-	seq, ok := bodyAct.(*Sequence)
+	seq, ok := bodyAct.(*LogicSequence)
 	if !ok {
 		t.Fatalf("expected body to be *actions.Sequence, got %T", bodyAct)
 	}

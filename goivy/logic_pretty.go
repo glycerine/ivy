@@ -38,7 +38,7 @@ var precSymbols = map[string]int{
 // Matches Python ivy_logic.py ugly methods.
 func ugly(n Expr, prec int) string {
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		return varUgly(t, prec)
 	case *Const:
 		return constUgly(t, prec)
@@ -46,44 +46,44 @@ func ugly(n Expr, prec int) string {
 		return appUgly(t, prec)
 	case *Eq:
 		return naryUgly("=", []Expr{t.T1, t.T2}, 7, prec)
-	case *Not:
+	case *LogicNot:
 		return notUgly(t, prec)
-	case *And:
+	case *LogicAnd:
 		if len(t.Terms) == 0 {
 			return "true"
 		}
 		return naryParen("&", t.Terms, 5, prec)
-	case *Or:
+	case *LogicOr:
 		if len(t.Terms) == 0 {
 			return "false"
 		}
 		return naryUgly("|", t.Terms, 4, prec)
-	case *Implies:
+	case *LogicImplies:
 		return naryUgly("->", []Expr{t.T1, t.T2}, 3, prec)
-	case *Iff:
+	case *LogicIff:
 		return naryUgly("<->", []Expr{t.T1, t.T2}, 3, prec)
-	case *Ite:
+	case *LogicIte:
 		// Python: '({} if {} else {})'.format(then.ugly(9), cond.ugly(9), else.ugly(9))
 		return fmt.Sprintf("(%s if %s else %s)",
 			ugly(t.Then, 9), ugly(t.Cond, 9), ugly(t.Else, 9))
 	case *Cond:
 		return fmt.Sprintf("(%s => %s)", ugly(t.T1, 9), ugly(t.T2, 9))
-	case *Globally:
+	case *LogicGlobally:
 		// Python uses unicode □ but ugly_environ returns '' always
 		return fmt.Sprintf("\u25A1 %s", ugly(t.Body, 2))
-	case *Eventually:
+	case *LogicEventually:
 		return fmt.Sprintf("\u2B26 %s", ugly(t.Body, 2))
-	case *WhenOperator:
+	case *LogicWhenOperator:
 		return naryUgly("when"+t.Name, []Expr{t.T1, t.T2}, 2, prec)
 	case *ForAll:
 		return quantUgly("forall", t.Variables, t.Body, prec)
-	case *Exists:
+	case *LogicExists:
 		return quantUgly("exists", t.Variables, t.Body, prec)
 	case *Lambda:
 		return quantUgly("lambda", t.Variables, t.Body, prec)
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		return quantUgly("$"+t.Name, t.Variables, t.Body, prec)
-	case *Definition:
+	case *LogicDefinition:
 		// Python: Definition.ugly = nary_ugly('=', self.args, 7, prec)
 		return naryUgly("=", []Expr{t.Lhs, t.Rhs}, 7, prec)
 	default:
@@ -93,7 +93,7 @@ func ugly(n Expr, prec int) string {
 
 // varUgly matches Python lg.Variable.ugly.
 // Shows sort annotation for variables whose sort is concrete (not TopSort/SortVar).
-func varUgly(v *Variable, prec int) string {
+func varUgly(v *LogicVariable, prec int) string {
 	if v.VSort != nil {
 		if _, isTop := v.VSort.(*TopSort); !isTop {
 			// Show sort annotation: "X:sortname"
@@ -117,11 +117,11 @@ func constUgly(c *Const, prec int) string {
 // appUgly matches Python app_ugly (ivy_logic.py:1268-1289).
 func appUgly(a *Apply, prec int) string {
 	var name string
-	if nb, ok := a.Func.(*NamedBinder); ok {
+	if nb, ok := a.Func.(*LogicNamedBinder); ok {
 		name = PrettyFmla(nb)
 	} else if c, ok := a.Func.(*Const); ok {
 		name = c.Name
-	} else if v, ok := a.Func.(*Variable); ok {
+	} else if v, ok := a.Func.(*LogicVariable); ok {
 		name = v.Name
 	} else {
 		name = fmt.Sprint(a.Func)
@@ -165,7 +165,7 @@ func appUgly(a *Apply, prec int) string {
 }
 
 // notUgly matches Python lg.Not.ugly.
-func notUgly(n *Not, prec int) string {
+func notUgly(n *LogicNot, prec int) string {
 	if eq, ok := n.Body.(*Eq); ok {
 		// Not(Eq(a,b)) → "a ~= b"
 		return naryUgly("~=", []Expr{eq.T1, eq.T2}, 8, prec)
@@ -206,7 +206,7 @@ func naryParen(op string, args []Expr, myprec, prec int) string {
 }
 
 // quantUgly matches Python quant_ugly (ivy_logic.py:1332-1341).
-func quantUgly(keyword string, vars []*Variable, body Expr, prec int) string {
+func quantUgly(keyword string, vars []*LogicVariable, body Expr, prec int) string {
 	vparts := make([]string, len(vars))
 	for i, v := range vars {
 		vparts[i] = ugly(v, 1)
@@ -232,10 +232,10 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 	// such inputs and matches Python's effective behavior. The output is
 	// only ever fed to ugly() which does not require fully-validated trees.
 	switch t := n.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if inferredSort || annotatedVars[t.Name] {
 			annotatedVars[t.Name] = true
-			return &Variable{Name: t.Name, VSort: TopS}
+			return &LogicVariable{Name: t.Name, VSort: TopS}
 		}
 		if _, isTop := t.VSort.(*TopSort); !isTop {
 			annotatedVars[t.Name] = true
@@ -273,11 +273,11 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
 		return &Eq{T1: a0, T2: a1}
 
-	case *Ite:
+	case *LogicIte:
 		a1 := dropAnnotations(t.Then, inferredSort, annotatedVars)
 		a2 := dropAnnotations(t.Else, true, annotatedVars)
 		a0 := dropAnnotations(t.Cond, true, annotatedVars)
-		return &Ite{ISort: t.ISort, Cond: a0, Then: a1, Else: a2}
+		return &LogicIte{ISort: t.ISort, Cond: a0, Then: a1, Else: a2}
 
 	case *Cond:
 		a1 := dropAnnotations(t.T2, inferredSort, annotatedVars)
@@ -290,10 +290,10 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		// processing may add variable names, which then strips them from
 		// the quantifier binding.
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		vars := make([]*Variable, len(t.Variables))
+		vars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Variable); ok {
+			if vv, ok := dv.(*LogicVariable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
@@ -301,27 +301,27 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		}
 		return &ForAll{Variables: vars, Body: body}
 
-	case *Exists:
+	case *LogicExists:
 		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		vars := make([]*Variable, len(t.Variables))
+		vars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Variable); ok {
+			if vv, ok := dv.(*LogicVariable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
 			}
 		}
-		return &Exists{Variables: vars, Body: body}
+		return &LogicExists{Variables: vars, Body: body}
 
 	case *Lambda:
 		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		vars := make([]*Variable, len(t.Variables))
+		vars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Variable); ok {
+			if vv, ok := dv.(*LogicVariable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
@@ -329,18 +329,18 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		}
 		return &Lambda{Variables: vars, Body: body}
 
-	case *NamedBinder:
-		vars := make([]*Variable, len(t.Variables))
+	case *LogicNamedBinder:
+		vars := make([]*LogicVariable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Variable); ok {
+			if vv, ok := dv.(*LogicVariable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
 			}
 		}
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		return &NamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
+		return &LogicNamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
 
 	// Default: recurse into children with inferred_sort=true
 	// Matches Python default_drop_annotations for Not, And, Or, Implies, Iff, etc.
@@ -354,39 +354,39 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 // avoid the strict sort validation in the New* constructors.
 func dropAnnotationsDefault(n Expr, annotatedVars map[string]bool) Expr {
 	switch t := n.(type) {
-	case *Not:
+	case *LogicNot:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		return &Not{Body: body}
-	case *And:
+		return &LogicNot{Body: body}
+	case *LogicAnd:
 		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}
-		return &And{Terms: terms}
-	case *Or:
+		return &LogicAnd{Terms: terms}
+	case *LogicOr:
 		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}
-		return &Or{Terms: terms}
-	case *Implies:
+		return &LogicOr{Terms: terms}
+	case *LogicImplies:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		return &Implies{T1: a0, T2: a1}
-	case *Iff:
+		return &LogicImplies{T1: a0, T2: a1}
+	case *LogicIff:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		return &Iff{T1: a0, T2: a1}
-	case *Globally:
+		return &LogicIff{T1: a0, T2: a1}
+	case *LogicGlobally:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		return &Globally{Environ: t.Environ, Body: body}
-	case *Eventually:
+		return &LogicGlobally{Environ: t.Environ, Body: body}
+	case *LogicEventually:
 		body := dropAnnotations(t.Body, true, annotatedVars)
-		return &Eventually{Environ: t.Environ, Body: body}
-	case *WhenOperator:
+		return &LogicEventually{Environ: t.Environ, Body: body}
+	case *LogicWhenOperator:
 		a0 := dropAnnotations(t.T1, true, annotatedVars)
 		a1 := dropAnnotations(t.T2, true, annotatedVars)
-		return &WhenOperator{Name: t.Name, T1: a0, T2: a1}
+		return &LogicWhenOperator{Name: t.Name, T1: a0, T2: a1}
 	}
 	return n
 }
@@ -402,7 +402,7 @@ func SortName(s Sort) string {
 		return st.Name
 	case *BooleanSort:
 		return "bool"
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		return st.Name
 	case *TopSort:
 		return st.Name

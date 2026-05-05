@@ -11,7 +11,7 @@ var rankingTestAstCfg = NewAstConfig()
 
 // --- helpers ---
 
-func checkBoolVar(name string) *Variable {
+func checkBoolVar(name string) *LogicVariable {
 	v, _ := NewVariable(name, Boolean)
 	return v
 }
@@ -37,7 +37,7 @@ func TestCheckForAllEmpty(t *testing.T) {
 func TestCheckForAllWithVars(t *testing.T) {
 	v := checkBoolVar("X")
 	body := True
-	result := CheckForAll([]*Variable{v}, body)
+	result := CheckForAll([]*LogicVariable{v}, body)
 	fa, ok := result.(*ForAll)
 	if !ok {
 		t.Fatalf("expected CheckForAll, got %T", result)
@@ -58,8 +58,8 @@ func TestCheckExistsEmpty(t *testing.T) {
 func TestCheckExistsWithVars(t *testing.T) {
 	v := checkBoolVar("X")
 	body := True
-	result := CheckExists([]*Variable{v}, body)
-	ex, ok := result.(*Exists)
+	result := CheckExists([]*LogicVariable{v}, body)
+	ex, ok := result.(*LogicExists)
 	if !ok {
 		t.Fatalf("expected CheckExists, got %T", result)
 	}
@@ -84,9 +84,9 @@ func TestCheckOldOfConst(t *testing.T) {
 
 func TestCheckOldOfNot(t *testing.T) {
 	c := checkBoolConst("bar")
-	n := &Not{Body: c}
+	n := &LogicNot{Body: c}
 	result := CheckOldOf(n)
-	not, ok := result.(*Not)
+	not, ok := result.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected Not, got %T", result)
 	}
@@ -102,9 +102,9 @@ func TestCheckOldOfNot(t *testing.T) {
 func TestCheckOldOfAnd(t *testing.T) {
 	a := checkBoolConst("A")
 	b := checkBoolConst("B")
-	and := &And{Terms: []Expr{a, b}}
+	and := &LogicAnd{Terms: []Expr{a, b}}
 	result := CheckOldOf(and)
-	ra, ok := result.(*And)
+	ra, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
@@ -116,9 +116,9 @@ func TestCheckOldOfAnd(t *testing.T) {
 func TestCheckOldOfOr(t *testing.T) {
 	a := checkBoolConst("A")
 	b := checkBoolConst("B")
-	or := &Or{Terms: []Expr{a, b}}
+	or := &LogicOr{Terms: []Expr{a, b}}
 	result := CheckOldOf(or)
-	_, ok := result.(*Or)
+	_, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected Or, got %T", result)
 	}
@@ -127,9 +127,9 @@ func TestCheckOldOfOr(t *testing.T) {
 func TestCheckOldOfImplies(t *testing.T) {
 	a := checkBoolConst("A")
 	b := checkBoolConst("B")
-	imp := &Implies{T1: a, T2: b}
+	imp := &LogicImplies{T1: a, T2: b}
 	result := CheckOldOf(imp)
-	ri, ok := result.(*Implies)
+	ri, ok := result.(*LogicImplies)
 	if !ok {
 		t.Fatalf("expected Implies, got %T", result)
 	}
@@ -141,7 +141,7 @@ func TestCheckOldOfImplies(t *testing.T) {
 func TestCheckOldOfForAll(t *testing.T) {
 	v := checkBoolVar("X")
 	body := checkBoolConst("P")
-	fa := &ForAll{Variables: []*Variable{v}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{v}, Body: body}
 	result := CheckOldOf(fa)
 	rfa, ok := result.(*ForAll)
 	if !ok {
@@ -176,9 +176,9 @@ func TestCheckOldOfEq(t *testing.T) {
 func TestCheckOldOfIff(t *testing.T) {
 	a := checkBoolConst("A")
 	b := checkBoolConst("B")
-	iff := &Iff{T1: a, T2: b}
+	iff := &LogicIff{T1: a, T2: b}
 	result := CheckOldOf(iff)
-	_, ok := result.(*Iff)
+	_, ok := result.(*LogicIff)
 	if !ok {
 		t.Fatalf("expected Iff, got %T", result)
 	}
@@ -187,9 +187,9 @@ func TestCheckOldOfIff(t *testing.T) {
 func TestCheckOldOfExists(t *testing.T) {
 	v := checkBoolVar("X")
 	body := checkBoolConst("P")
-	ex := &Exists{Variables: []*Variable{v}, Body: body}
+	ex := &LogicExists{Variables: []*LogicVariable{v}, Body: body}
 	result := CheckOldOf(ex)
-	rex, ok := result.(*Exists)
+	rex, ok := result.(*LogicExists)
 	if !ok {
 		t.Fatalf("expected CheckExists, got %T", result)
 	}
@@ -234,12 +234,12 @@ func TestCheckTrigGlobEventually(t *testing.T) {
 func TestCheckTrigGlobImplies(t *testing.T) {
 	// ~(Q -> G(P)) is equivalent to Q & ~G(P).
 	// In negative polarity, Implies recurses into T1 with !pos=true and T2 with pos=false.
-	// T2 = Globally with pos=false -> no match.
+	// T2 = LogicGlobally with pos=false -> no match.
 	// So we test with a structure where the match works:
 	// Implies(G(P), Q) in negative polarity -> T1 = G(P) with !pos = true -> match!
 	body := checkBoolConst("P")
 	g, _ := NewGlobally(nil, body)
-	imp := &Implies{T1: g, T2: checkBoolConst("Q")}
+	imp := &LogicImplies{T1: g, T2: checkBoolConst("Q")}
 	result := TrigGlob(imp, false)
 	if len(result) == 0 {
 		t.Error("expected results from Implies negative polarity with Globally in antecedent")
@@ -249,7 +249,7 @@ func TestCheckTrigGlobImplies(t *testing.T) {
 func TestCheckTrigGlobAnd(t *testing.T) {
 	body := checkBoolConst("P")
 	g, _ := NewGlobally(nil, body)
-	and := &And{Terms: []Expr{g, checkBoolConst("Q")}}
+	and := &LogicAnd{Terms: []Expr{g, checkBoolConst("Q")}}
 	result := TrigGlob(and, true)
 	if len(result) == 0 {
 		t.Error("expected results from And positive polarity")
@@ -266,7 +266,7 @@ func TestCheckTrigGlobNil(t *testing.T) {
 func TestCheckTrigGlobNot(t *testing.T) {
 	body := checkBoolConst("P")
 	g, _ := NewGlobally(nil, body)
-	n := &Not{Body: g}
+	n := &LogicNot{Body: g}
 	// Not flips polarity: so Globally in negative polarity -> no match
 	result := TrigGlob(n, true)
 	if len(result) != 0 {
@@ -405,7 +405,7 @@ func TestCheckDependenciesCyclic(t *testing.T) {
 func TestCheckConvertToInitConst(t *testing.T) {
 	c := checkBoolConst("P")
 	result := ConvertToInit(c, "label")
-	nb, ok := result.(*NamedBinder)
+	nb, ok := result.(*LogicNamedBinder)
 	if !ok {
 		t.Fatalf("expected NamedBinder, got %T", result)
 	}
@@ -417,9 +417,9 @@ func TestCheckConvertToInitConst(t *testing.T) {
 func TestCheckConvertToInitAnd(t *testing.T) {
 	a := checkBoolConst("A")
 	b := checkBoolConst("B")
-	and := &And{Terms: []Expr{a, b}}
+	and := &LogicAnd{Terms: []Expr{a, b}}
 	result := ConvertToInit(and, "label")
-	ra, ok := result.(*And)
+	ra, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
@@ -428,7 +428,7 @@ func TestCheckConvertToInitAnd(t *testing.T) {
 	}
 	// Each term should be l2s_init wrapped
 	for _, term := range ra.Terms {
-		if _, ok := term.(*NamedBinder); !ok {
+		if _, ok := term.(*LogicNamedBinder); !ok {
 			t.Errorf("expected NamedBinder term, got %T", term)
 		}
 	}
@@ -482,7 +482,7 @@ func TestCheckL2STacticWithLets(t *testing.T) {
 	// we verify the error from the conclusion check instead.
 	cfg := &L2STacticConfig{
 		Goals: []*LabeledFormula{rankingTestAstCfg.NewLabeledFormula(nil, rankingTestAstCfg.NewAtom("true"))},
-		Proof: &ProofDecl{TacticLets: []Node{rankingTestAstCfg.NewAtom("x")}},
+		Proof: &LogicProofDecl{TacticLets: []Node{rankingTestAstCfg.NewAtom("x")}},
 	}
 	_, err := RankingL2STactic(cfg)
 	if err == nil {
@@ -579,9 +579,9 @@ func TestCheckRankingModPass_PropertyPremsTransformed(t *testing.T) {
 	// Define a transform that wraps the formula in Not (handles LabeledFormula).
 	negate := func(n Node) Node {
 		if lf, ok := n.(*LabeledFormula); ok {
-			return lf.Clone([]Node{lf.Label, &Not{Body: lf.Formula.(Expr)}})
+			return lf.Clone([]Node{lf.Label, &LogicNot{Body: lf.Formula.(Expr)}})
 		}
-		return &Not{Body: n.(Expr)}
+		return &LogicNot{Body: n.(Expr)}
 	}
 
 	// Simulate the ranking modPass prems loop (Bug 12 fix).
@@ -602,7 +602,7 @@ func TestCheckRankingModPass_PropertyPremsTransformed(t *testing.T) {
 	if !ok {
 		t.Fatal("expected LabeledFormula")
 	}
-	if _, ok := transformedPrem.Formula.(*Not); !ok {
+	if _, ok := transformedPrem.Formula.(*LogicNot); !ok {
 		t.Errorf("Bug 12 regression: property prem should be transformed, got %T", transformedPrem.Formula)
 	}
 
@@ -616,7 +616,7 @@ func TestCheckRankingModPass_PropertyPremsTransformed(t *testing.T) {
 	}
 
 	// Model invar should also be transformed.
-	if _, ok := model.Invars[0].Formula.(*Not); !ok {
+	if _, ok := model.Invars[0].Formula.(*LogicNot); !ok {
 		t.Errorf("model invar should be transformed, got %T", model.Invars[0].Formula)
 	}
 }
@@ -709,12 +709,12 @@ func TestCheckRankingInvarsMerge_SharedStep3Visible(t *testing.T) {
 
 // --- Bug 14 regression: WhenOperator invariant generation ---
 
-// TestWhenOperatorInvarGeneration verifies that WhenOperator{Name:"first"}
+// TestWhenOperatorInvarGeneration verifies that LogicWhenOperator{Name:"first"}
 // nodes in temporals produce ranking invariants.
 // Bug 14: Go ranking was completely missing this code.
 func TestCheckWhenOperatorInvarGeneration(t *testing.T) {
 	// Build a WhenOperator with Name="first"
-	wo := &WhenOperator{Name: "first", T1: checkBoolConst("cond"), T2: checkBoolConst("val")}
+	wo := &LogicWhenOperator{Name: "first", T1: checkBoolConst("cond"), T2: checkBoolConst("val")}
 
 	// Collect temporals — should find the WhenOperator
 	temporals := TemporalsAst(wo)
@@ -723,23 +723,23 @@ func TestCheckWhenOperatorInvarGeneration(t *testing.T) {
 	}
 	found := false
 	for _, tmp := range temporals {
-		if w, ok := tmp.(*WhenOperator); ok && w.Name == "first" {
+		if w, ok := tmp.(*LogicWhenOperator); ok && w.Name == "first" {
 			found = true
 		}
 	}
 	if !found {
-		t.Error("Bug 14 regression: should find WhenOperator{first} in temporals")
+		t.Error("Bug 14 regression: should find LogicWhenOperator{first} in temporals")
 	}
 }
 
-// TestWhenOperatorInvarGeneration_NoFirst verifies that WhenOperator{Name:"next"}
+// TestWhenOperatorInvarGeneration_NoFirst verifies that LogicWhenOperator{Name:"next"}
 // does NOT generate invariants.
 func TestCheckWhenOperatorInvarGeneration_NoFirst(t *testing.T) {
-	wo := &WhenOperator{Name: "next", T1: checkBoolConst("cond"), T2: checkBoolConst("val")}
+	wo := &LogicWhenOperator{Name: "next", T1: checkBoolConst("cond"), T2: checkBoolConst("val")}
 	temporals := TemporalsAst(wo)
 	for _, tmp := range temporals {
-		if w, ok := tmp.(*WhenOperator); ok && w.Name == "first" {
-			t.Error("should NOT find WhenOperator{first} when name is 'next'")
+		if w, ok := tmp.(*LogicWhenOperator); ok && w.Name == "first" {
+			t.Error("should NOT find LogicWhenOperator{first} when name is 'next'")
 			_ = w
 		}
 	}

@@ -17,7 +17,7 @@ func proofMkSort(name string) *UninterpretedSort {
 	return &UninterpretedSort{Name: name}
 }
 
-func proofMkVar(name string, s Sort) *Variable {
+func proofMkVar(name string, s Sort) *LogicVariable {
 	v, _ := NewVariable(name, s)
 	return v
 }
@@ -131,7 +131,7 @@ func TestHeadsMatch(t *testing.T) {
 	}
 
 	// ForAll should not match anything (quantifiers excluded)
-	fa := &ForAll{Variables: []*Variable{x}, Body: x}
+	fa := &ForAll{Variables: []*LogicVariable{x}, Body: x}
 	if HeadsMatch(fa, y, nil) {
 		t.Error("quantifier should not heads-match variable")
 	}
@@ -230,8 +230,8 @@ func TestEquivAlphaLambda(t *testing.T) {
 	x := proofMkVar("X", s)
 	y := proofMkVar("Y", s)
 
-	lam1, _ := NewLambda([]*Variable{x}, x)
-	lam2, _ := NewLambda([]*Variable{y}, y)
+	lam1, _ := NewLambda([]*LogicVariable{x}, x)
+	lam2, _ := NewLambda([]*LogicVariable{y}, y)
 	if !EquivAlpha(lam1, lam2) {
 		t.Error("alpha-equivalent lambdas should be equiv")
 	}
@@ -333,11 +333,11 @@ func TestMatchQuants(t *testing.T) {
 	x := proofMkVar("X", s)
 	y := proofMkVar("Y", s)
 
-	body1 := &And{Terms: []Expr{x}}
-	body2 := &And{Terms: []Expr{y}}
+	body1 := &LogicAnd{Terms: []Expr{x}}
+	body2 := &LogicAnd{Terms: []Expr{y}}
 
-	fa1 := &ForAll{Variables: []*Variable{x}, Body: body1}
-	fa2 := &ForAll{Variables: []*Variable{y}, Body: body2}
+	fa1 := &ForAll{Variables: []*LogicVariable{x}, Body: body1}
+	fa2 := &ForAll{Variables: []*LogicVariable{y}, Body: body2}
 
 	free := map[NodeKey]Expr{}
 	m := MatchQuants(fa1, fa2, free, nil)
@@ -351,8 +351,8 @@ func TestMatchQuantsDiffType(t *testing.T) {
 	x := proofMkVar("X", s)
 	y := proofMkVar("Y", s)
 
-	fa := &ForAll{Variables: []*Variable{x}, Body: x}
-	ex := &Exists{Variables: []*Variable{y}, Body: y}
+	fa := &ForAll{Variables: []*LogicVariable{x}, Body: x}
+	ex := &LogicExists{Variables: []*LogicVariable{y}, Body: y}
 
 	m := MatchQuants(fa, ex, nil, nil)
 	if m != nil {
@@ -460,7 +460,7 @@ func TestGoalVocab(t *testing.T) {
 	x := proofMkVar("X", s)
 
 	// Create a formula with a variable
-	body := &And{Terms: []Expr{x}}
+	body := &LogicAnd{Terms: []Expr{x}}
 	lf := mkLF(proofTestAstCfg.NewAtom("test"), body)
 	vocab := GoalVocab(lf)
 	if vocab == nil {
@@ -471,7 +471,7 @@ func TestGoalVocab(t *testing.T) {
 func TestGoalFree(t *testing.T) {
 	s := proofMkSort("S")
 	x := proofMkVar("X", s)
-	body := &And{Terms: []Expr{x}}
+	body := &LogicAnd{Terms: []Expr{x}}
 	lf := mkLF(proofTestAstCfg.NewAtom("test"), body)
 	free := GoalFree(lf)
 	if len(free) == 0 {
@@ -584,7 +584,7 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 	fs, _ := NewFunctionSort(s, Boolean)
 	p := proofMkConst("p", fs)
 	body := MustApply(p, x)
-	fmla := &ForAll{Variables: []*Variable{x}, Body: body}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 
 	renamer := NewUniqueRenamer("", nil)
 	var skfuns []*Const
@@ -610,7 +610,7 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 	fs, _ := NewFunctionSort(s, Boolean)
 	p := proofMkConst("p", fs)
 	body := MustApply(p, x)
-	fmla := &Exists{Variables: []*Variable{x}, Body: body}
+	fmla := &LogicExists{Variables: []*LogicVariable{x}, Body: body}
 
 	renamer := NewUniqueRenamer("", nil)
 	var skfuns []*Const
@@ -632,7 +632,7 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 	fs, _ := NewFunctionSort(s, Boolean)
 	p := proofMkConst("p", fs)
 	body := MustApply(p, x)
-	fmla := &ForAll{Variables: []*Variable{x}, Body: body}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 
 	goal := mkLF(proofTestAstCfg.NewAtom("test"), fmla)
 	result := SkolemizeGoal(proofTestAstCfg, goal, true)
@@ -723,7 +723,7 @@ func TestExtractTerms(t *testing.T) {
 		t.Errorf("expected 1 variable, got %d", len(lam.Variables))
 	}
 	// The body should be V0 (the lambda variable)
-	if _, ok := lam.Body.(*Variable); !ok {
+	if _, ok := lam.Body.(*LogicVariable); !ok {
 		t.Errorf("expected body to be a variable, got %T", lam.Body)
 	}
 }
@@ -763,7 +763,7 @@ func FuzzMergeMatches(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, a, b, c, d int, conflict bool) {
 		s := proofMkSort("S")
-		vars := make([]*Variable, 4)
+		vars := make([]*LogicVariable, 4)
 		names := []string{"A", "B", "C", "D"}
 		for i, n := range names {
 			vars[i] = proofMkVar(n, s)

@@ -19,7 +19,7 @@ type csSymType struct {
 	yys    int
 	space  Space
 	spaces []Space
-	lit    *goivy.Literal
+	lit    *goivy.LogicLiteral
 	atom   goivy.Expr
 	term   goivy.Expr
 	terms  []goivy.Expr

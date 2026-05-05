@@ -28,7 +28,7 @@ func VcToGoal(cfg *AstConfig, loc Location, name string, vc *Clauses, action Act
 	negFmla, err := NewNot(fmla)
 	if err != nil {
 		// Fallback: use the formula directly if negation fails (shouldn't happen)
-		negFmla = &Not{Body: fmla}
+		negFmla = &LogicNot{Body: fmla}
 	}
 	label := cfg.NewAtom(name)
 	goal := MakeGoal(cfg, loc, label, nil, negFmla)
@@ -67,27 +67,27 @@ func TripleToGoal(cfg *AstConfig, loc Location, name string, action ActionsActio
 //  1. ForAll: accumulates variables, recurses into body
 //  2. Implies: splits variables by premise/conclusion usage
 //  3. Globally (when vs+params non-empty): creates Or(G(body), WhenOperator("next", body, whencond))
-func TempindFmla(fmla Expr, cond Expr, params []Expr, vs []*Variable) Expr {
+func TempindFmla(fmla Expr, cond Expr, params []Expr, vs []*LogicVariable) Expr {
 	// Case 1: ForAll — accumulate quantified variables
 	if fa, ok := fmla.(*ForAll); ok {
-		newVs := make([]*Variable, len(vs))
+		newVs := make([]*LogicVariable, len(vs))
 		copy(newVs, vs)
 		newVs = append(newVs, fa.Variables...)
 		return TempindFmla(fa.Body, cond, params, newVs)
 	}
 
 	// Case 2: Implies — split variables
-	if imp, ok := fmla.(*Implies); ok {
+	if imp, ok := fmla.(*LogicImplies); ok {
 		// Python: prem_vars = set(ilu.variables_ast(fmla.args[0]))
 		premVarMap := UsedVariables(imp.T1)
 		premVarNames := make(map[string]bool)
 		for _, node := range premVarMap {
-			if v, ok := node.(*Variable); ok {
+			if v, ok := node.(*LogicVariable); ok {
 				premVarNames[v.Name] = true
 			}
 		}
 		// Python: conc = tempind_fmla(fmla.args[1], cond, params, [v for v in vs if v.name not in prem_vars])
-		var concVs []*Variable
+		var concVs []*LogicVariable
 		for _, v := range vs {
 			if !premVarNames[v.Name] {
 				concVs = append(concVs, v)
@@ -97,7 +97,7 @@ func TempindFmla(fmla Expr, cond Expr, params []Expr, vs []*Variable) Expr {
 		// Python: res = lg.Implies(fmla.args[0], conc)
 		res, _ := NewImplies(imp.T1, conc)
 		// Python: uvs = [v for v in vs if v.name in prem_vars]
-		var uvs []*Variable
+		var uvs []*LogicVariable
 		for _, v := range vs {
 			if premVarNames[v.Name] {
 				uvs = append(uvs, v)
@@ -111,7 +111,7 @@ func TempindFmla(fmla Expr, cond Expr, params []Expr, vs []*Variable) Expr {
 	}
 
 	// Case 3: Globally (when vs+params is non-empty)
-	if gb, ok := fmla.(*Globally); ok && (len(vs) > 0 || len(params) > 0) {
+	if gb, ok := fmla.(*LogicGlobally); ok && (len(vs) > 0 || len(params) > 0) {
 		// Python: body = lg.Implies(cond, fmla.body) if params else fmla.body
 		var body Expr
 		if len(params) > 0 {
@@ -127,10 +127,10 @@ func TempindFmla(fmla Expr, cond Expr, params []Expr, vs []*Variable) Expr {
 		// Python: return lg.ForAll(vs+params, lg.Or(gbly, lg.WhenOperator("next", body, whencond)))
 		whenOp, _ := NewWhenOperator("next", body, whencond)
 		orExpr, _ := NewOr(gbly, whenOp)
-		allVs := make([]*Variable, 0, len(vs)+len(params))
+		allVs := make([]*LogicVariable, 0, len(vs)+len(params))
 		allVs = append(allVs, vs...)
 		for _, p := range params {
-			if v, ok := p.(*Variable); ok {
+			if v, ok := p.(*LogicVariable); ok {
 				allVs = append(allVs, v)
 			}
 		}
@@ -229,7 +229,7 @@ func ApplyTempind(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode N
 	fmlaNode := goal.Formula
 
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
-	tm, isTM := fmlaNode.(*AstTemporalModels)
+	tm, isTM := fmlaNode.(*TemporalModels)
 	if !goal.IsTemporal() && !isTM {
 		return nil, fmt.Errorf("tactics/ivy_tactics: [3]proof goal is not temporal")
 	}
@@ -267,7 +267,7 @@ func TempcaseFmla(fmla Expr, cond Expr, vs []Expr, proofNode Node) (Expr, error)
 		// Python: for v in fmla.variables: if v in vs: raise IvyError(...)
 		for _, v := range fa.Variables {
 			for _, vsElem := range vs {
-				if vv, ok := vsElem.(*Variable); ok {
+				if vv, ok := vsElem.(*LogicVariable); ok {
 					if v.Name == vv.Name {
 						return nil, fmt.Errorf("variable %s would be captured by quantifier", v.Name)
 					}
@@ -283,7 +283,7 @@ func TempcaseFmla(fmla Expr, cond Expr, vs []Expr, proofNode Node) (Expr, error)
 	}
 
 	// Case 2: Implies — recurse into conclusion
-	if imp, ok := fmla.(*Implies); ok {
+	if imp, ok := fmla.(*LogicImplies); ok {
 		// Python: return fmla.clone([fmla.args[0], tempcase_fmla(fmla.args[1], cond, vs, proof)])
 		newConc, err := TempcaseFmla(imp.T2, cond, vs, proofNode)
 		if err != nil {
@@ -293,13 +293,13 @@ func TempcaseFmla(fmla Expr, cond Expr, vs []Expr, proofNode Node) (Expr, error)
 	}
 
 	// Case 3: Globally — wrap in ForAll with implied condition
-	if gb, ok := fmla.(*Globally); ok {
+	if gb, ok := fmla.(*LogicGlobally); ok {
 		// Python: return lg.forall(vs, fmla.clone([lg.Implies(cond, fmla.body)]))
 		implBody, _ := NewImplies(cond, gb.Body)
 		cloned := gb.Clone([]Node{implBody}).(Expr)
-		var varList []*Variable
+		var varList []*LogicVariable
 		for _, v := range vs {
-			if vv, ok := v.(*Variable); ok {
+			if vv, ok := v.(*LogicVariable); ok {
 				varList = append(varList, vv)
 			}
 		}
@@ -324,7 +324,7 @@ func ApplyTempcase(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode 
 	fmlaNode := goal.Formula
 
 	var newFmla Node
-	if tm, ok := fmlaNode.(*AstTemporalModels); ok {
+	if tm, ok := fmlaNode.(*TemporalModels); ok {
 		innerFmla, ok := tm.Fmla.(Expr)
 		if !ok {
 			return nil, fmt.Errorf("TemporalModels.Fmla is not lg.Expr: %T", tm.Fmla)
@@ -367,7 +367,7 @@ func Vcgen(pc ProofCheckerInterface, decls []*LabeledFormula, proofNode Node) ([
 
 	// Python: if not isinstance(conc, ivy_ast.TemporalModels) or not lg.is_true(conc.fmla):
 	//            raise iu.IvyError(self, 'vcgen tactic applies only to safety properties')
-	tm, ok := conc.(*AstTemporalModels)
+	tm, ok := conc.(*TemporalModels)
 	if !ok {
 		return nil, fmt.Errorf("vcgen tactic applies only to safety properties")
 	}

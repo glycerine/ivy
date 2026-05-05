@@ -129,7 +129,7 @@ func (h *HerbrandModel) trySortByOrder(sort Sort, elems []Z3Expr) (sorted []Z3Ex
 
 	// Python's approach: (ivy_solver.py:850 in sorted_sort_universe()):
 	//   vs = [Variable("X", sort), Variable("Y", sort)]
-	//   order = Symbol("<", RelationSort([sort, sort]))
+	//   order = Symbol("<", LogicRelationSort([sort, sort]))
 	//   order_atom = atom_to_z3(order(*vs))
 	//   z3_vs = list(map(term_to_z3, vs))
 	//   sorted(elems, key=cmp_to_key(SortOrder(z3_vs, order_atom, self.model)))
@@ -147,7 +147,7 @@ func (h *HerbrandModel) trySortByOrder(sort Sort, elems []Z3Expr) (sorted []Z3Ex
 	// Create Ivy variables and the < application
 	xVar, _ := NewVariable("X", sort)
 	yVar, _ := NewVariable("Y", sort)
-	orderSym := NewConst("<", RelationSort([]Sort{sort, sort}))
+	orderSym := NewConst("<", LogicRelationSort([]Sort{sort, sort}))
 	orderApp, err := NewApply(orderSym, xVar, yVar)
 	if err != nil {
 		return nil, false
@@ -232,12 +232,12 @@ func (h *HerbrandModel) EvalToConstant(t Expr) Expr {
 // Check evaluates a literal against all possible variable assignments.
 // Returns (vars, rows) where each row is a list of Ivy constants that
 // satisfy the literal.
-func (h *HerbrandModel) Check(lit *Literal) ([]*Variable, [][]*Const) {
+func (h *HerbrandModel) Check(lit *LogicLiteral) ([]*LogicVariable, [][]*Const) {
 	// Get free variables in the literal
 	fvMap := FreeVariables(lit)
-	var vs []*Variable
+	var vs []*LogicVariable
 	for _, v := range fvMap.All() {
-		if vv, ok := v.(*Variable); ok {
+		if vv, ok := v.(*LogicVariable); ok {
 			vs = append(vs, vv)
 		}
 	}
@@ -315,12 +315,12 @@ func (h *HerbrandModel) enumerateAssignments(ranges [][]Z3Expr, depth int, curre
 }
 
 // variableRange returns the Z3 universe for a variable's sort.
-func (h *HerbrandModel) variableRange(v *Variable) []Z3Expr {
+func (h *HerbrandModel) variableRange(v *LogicVariable) []Z3Expr {
 	sort := v.VSort
 	sortName := IvySortName(sort)
 
 	// Enumerated sort: use the enumeration values
-	if es, ok := sort.(*EnumeratedSort); ok {
+	if es, ok := sort.(*LogicEnumeratedSort); ok {
 		var result []Z3Expr
 		for _, name := range es.Extension {
 			c := NewConst(name, sort)
@@ -357,7 +357,7 @@ func (h *HerbrandModel) getModelConstant(c *Const) *Const {
 
 	// Handle enumerated sorts without native Z3 enums.
 	// Python (ivy_solver.py:1055): if isinstance(s, EnumeratedSort) and not use_z3_enums:
-	if es, ok := sort.(*EnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
+	if es, ok := sort.(*LogicEnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
 		for _, name := range es.Extension {
 			w := NewConst(name, sort)
 			zc, err1 := h.tr.Translate(c)
@@ -391,7 +391,7 @@ func (h *HerbrandModel) getModelConstant(c *Const) *Const {
 	// When EnableInterpretedEnums is active and this is an interpreted enum,
 	// the model value is a numeral — map it back to the enum constant name.
 	if EnableInterpretedEnums {
-		if es, ok2 := sort.(*EnumeratedSort); ok2 && h.sig != nil {
+		if es, ok2 := sort.(*LogicEnumeratedSort); ok2 && h.sig != nil {
 			if _, interped := h.sig.Interp[es.Name]; interped {
 				if idx, err := strconv.Atoi(result.Name); err == nil && idx >= 0 && idx < len(es.Extension) {
 					return NewConst(es.Extension[idx], sort)
@@ -518,10 +518,10 @@ func constantFromZ3(sort Sort, z3val Z3Expr) *Const {
 func constantFromZ3Expr(sort Sort, z3val Z3Expr) Expr {
 	s := z3val.String()
 	if s == "true" {
-		return True // &And{} — matches Python's ivy_logic.And()
+		return True // &LogicAnd{} — matches Python's ivy_logic.And()
 	}
 	if s == "false" {
-		return False // &Or{} — matches Python's ivy_logic.Or()
+		return False // &LogicOr{} — matches Python's ivy_logic.Or()
 	}
 	return NewConst(s, sort)
 }
@@ -550,13 +550,13 @@ func ModelUniverseFacts(h *HerbrandModel, sort Sort, upclose bool) []Expr {
 		for i, c := range elems {
 			eqs[i] = &Eq{T1: x, T2: c}
 		}
-		result = append(result, &Or{Terms: eqs})
+		result = append(result, &LogicOr{Terms: eqs})
 	}
 
 	// Distinctness: ci != cj for all i < j
 	for i := 0; i < len(elems); i++ {
 		for j := i + 1; j < len(elems); j++ {
-			neq := &Not{Body: &Eq{T1: elems[i], T2: elems[j]}}
+			neq := &LogicNot{Body: &Eq{T1: elems[i], T2: elems[j]}}
 			result = append(result, neq)
 		}
 	}
@@ -615,7 +615,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*Const) bool, clauses *Clauses, up
 		}
 		if IsRelationalSort(sym.CSort) && IsFunctionSort(sym.CSort) {
 			arity := 0
-			if fs, ok := sym.CSort.(*FunctionSort); ok {
+			if fs, ok := sym.CSort.(*LogicFunctionSort); ok {
 				arity = fs.Arity()
 			}
 			if arity > 0 {
@@ -634,7 +634,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*Const) bool, clauses *Clauses, up
 			continue
 		}
 		if IsFunctionSort(sym.CSort) && !IsRelationalSort(sym.CSort) {
-			if fs, ok := sym.CSort.(*FunctionSort); ok && fs.Arity() >= 1 {
+			if fs, ok := sym.CSort.(*LogicFunctionSort); ok && fs.Arity() >= 1 {
 				fmlas = append(fmlas, FunctionModelToClauses(h, sym)...)
 			}
 		}
@@ -649,13 +649,13 @@ func ModelFacts(h *HerbrandModel, ignore func(*Const) bool, clauses *Clauses, up
 func RelationModelToClauses(h *HerbrandModel, rel *Const, arity int) []Expr {
 	xtracer.Trace("ivy_solver.py:1665 relation_model_to_clauses() ENTER")
 	// Create a literal for the relation applied to fresh variables
-	fs, ok := rel.CSort.(*FunctionSort)
+	fs, ok := rel.CSort.(*LogicFunctionSort)
 	if !ok {
 		return nil
 	}
 	dom := fs.Domain()
 	vars := make([]Expr, len(dom))
-	varPtrs := make([]*Variable, len(dom))
+	varPtrs := make([]*LogicVariable, len(dom))
 	for i, s := range dom {
 		v, _ := NewVariable(fmt.Sprintf("V%d", i), s)
 		vars[i] = v
@@ -680,7 +680,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *Const, arity int) []Expr {
 // Corresponds to Python's function_model_to_clauses.
 func FunctionModelToClauses(h *HerbrandModel, f *Const) []Expr {
 	xtracer.Trace("ivy_solver.py:1686 function_model_to_clauses() ENTER")
-	fs, ok := f.CSort.(*FunctionSort)
+	fs, ok := f.CSort.(*LogicFunctionSort)
 	if !ok {
 		return nil
 	}
@@ -697,7 +697,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *Const) []Expr {
 
 	// For enumerated range, check each possible value.
 	// Python (ivy_solver.py:1800): if isinstance(rng, EnumeratedSort) and not use_z3_enums:
-	if es, ok := rng.(*EnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
+	if es, ok := rng.(*LogicEnumeratedSort); ok && (h.tr.s == nil || !h.tr.s.opts.UseZ3Enums) {
 		var result []Expr
 		for _, name := range es.Extension {
 			c := NewConst(name, rng)
@@ -715,7 +715,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *Const) []Expr {
 
 // getLitFacts returns ground instances of a literal that hold in the model.
 // Corresponds to Python's get_lit_facts.
-func getLitFacts(h *HerbrandModel, lit *Literal) []Expr {
+func getLitFacts(h *HerbrandModel, lit *LogicLiteral) []Expr {
 	xtracer.Trace("ivy_solver.py:1676 get_lit_facts() ENTER")
 	vs, rows := h.Check(lit)
 	var result []Expr
@@ -731,7 +731,7 @@ func getLitFacts(h *HerbrandModel, lit *Literal) []Expr {
 			continue
 		}
 		if lit.Polarity == 0 {
-			result = append(result, &Not{Body: newAtom})
+			result = append(result, &LogicNot{Body: newAtom})
 		} else {
 			result = append(result, newAtom)
 		}
@@ -785,7 +785,7 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]Expr {
 // Corresponds to Python's sort_card (ivy_solver.py:357-367).
 func SortCard(sort Sort, sig *Sig) int {
 	xtracer.Trace("ivy_solver.py:383 sort_card() ENTER sort=%v", sort)
-	if es, ok := sort.(*EnumeratedSort); ok {
+	if es, ok := sort.(*LogicEnumeratedSort); ok {
 		return es.Card()
 	}
 	if rs, ok := sort.(*RangeSort); ok {
@@ -823,7 +823,7 @@ func SortCard(sort Sort, sig *Sig) int {
 
 // EnumeratedRange returns Z3 expressions for all elements of an enumerated sort.
 // Corresponds to Python's enumerated_range.
-func (s *Solver) EnumeratedRange(sort *EnumeratedSort) ([]Z3Expr, error) {
+func (s *Solver) EnumeratedRange(sort *LogicEnumeratedSort) ([]Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:903 enumerated_range() ENTER")
 	var result []Z3Expr
 	for _, name := range sort.Extension {
@@ -964,7 +964,7 @@ func (s *Solver) ClausesCase(clauses *Clauses) (*Clauses, error) {
 // Corresponds to Python clause_model_simp (lines 1062-1080).
 func (s *Solver) clauseModelSimp(model *Model, clause Expr) Expr {
 	xtracer.Trace("ivy_solver.py:1160 clause_model_simp() ENTER")
-	or, ok := clause.(*Or)
+	or, ok := clause.(*LogicOr)
 	if !ok || len(or.Terms) <= 1 {
 		return clause
 	}
@@ -996,12 +996,12 @@ func (s *Solver) clauseModelSimp(model *Model, clause Expr) Expr {
 
 	if len(kept) == 0 {
 		// All literals were false — return empty disjunction (false)
-		return &Or{Terms: nil}
+		return &LogicOr{Terms: nil}
 	}
 	if len(kept) == 1 {
 		return kept[0]
 	}
-	return &Or{Terms: kept}
+	return &LogicOr{Terms: kept}
 }
 
 // removeDuplicateFormulas removes duplicate formulas based on string representation.
@@ -1038,7 +1038,7 @@ func (s *Solver) clausesCaseLegacy(clauses *Clauses) (*Clauses, error) {
 
 	var newFmlas []Expr
 	for _, f := range clauses.Fmlas {
-		if or, ok := f.(*Or); ok && len(or.Terms) > 1 {
+		if or, ok := f.(*LogicOr); ok && len(or.Terms) > 1 {
 			// Pick the first disjunct that is true in the model
 			picked := false
 			for _, d := range or.Terms {

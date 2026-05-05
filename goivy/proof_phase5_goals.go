@@ -127,10 +127,10 @@ func GoalIsTemporal(x *LabeledFormula) bool {
 	if conc == nil {
 		return false
 	}
-	if _, ok := conc.(*AstTemporalModels); ok {
+	if _, ok := conc.(*TemporalModels); ok {
 		return true
 	}
-	if nb, ok := conc.(*NamedBinder); ok {
+	if nb, ok := conc.(*LogicNamedBinder); ok {
 		return nb.Name == "globally" || nb.Name == "eventually"
 	}
 	return false
@@ -290,7 +290,7 @@ func CheckRenaming(goal *LabeledFormula, renaming Node) error {
 	fwd := make(map[string]string)
 	rev := make(map[string]string)
 	for _, arg := range renaming.Args() {
-		defn, ok := arg.(*AstDefinition)
+		defn, ok := arg.(*Definition)
 		if !ok {
 			continue
 		}
@@ -413,7 +413,7 @@ func VarSubstGoal(cfg *AstConfig, goal *LabeledFormula, subst map[NodeKey]Expr) 
 func nodeMapToStringMap(m map[NodeKey]Expr) map[string]Expr {
 	result := make(map[string]Expr, len(m))
 	for _, v := range m {
-		if variable, ok := v.(*Variable); ok {
+		if variable, ok := v.(*LogicVariable); ok {
 			result[variable.Name] = v
 		}
 	}
@@ -522,7 +522,7 @@ func MatchFromDefn(defn *LabeledFormula) (map[NodeKey]Expr, error) {
 			}
 		}
 	}
-	if iff, ok := fmla.(*Iff); ok {
+	if iff, ok := fmla.(*LogicIff); ok {
 		if app, ok := iff.T1.(*Apply); ok {
 			if c, ok := app.Func.(*Const); ok {
 				vars := nodesToVarsPhase5(app.Terms)
@@ -540,10 +540,10 @@ func MatchFromDefn(defn *LabeledFormula) (map[NodeKey]Expr, error) {
 	return nil, &ProofError{Msg: "not a definition", Node: fmla}
 }
 
-func nodesToVarsPhase5(nodes []Expr) []*Variable {
-	var result []*Variable
+func nodesToVarsPhase5(nodes []Expr) []*LogicVariable {
+	var result []*LogicVariable
 	for _, n := range nodes {
-		if v, ok := n.(*Variable); ok {
+		if v, ok := n.(*LogicVariable); ok {
 			result = append(result, v)
 		}
 	}
@@ -552,7 +552,7 @@ func nodesToVarsPhase5(nodes []Expr) []*Variable {
 
 // distinctVars returns true if all variables have distinct NodeKeys.
 // Corresponds to Python's iu.distinct(lhs.args) in match_from_defn.
-func distinctVars(vars []*Variable) bool {
+func distinctVars(vars []*LogicVariable) bool {
 	seen := make(map[NodeKey]bool, len(vars))
 	for _, v := range vars {
 		k := Key(v)
@@ -761,7 +761,7 @@ func UnfoldGoal(cfg *AstConfig, goal *LabeledFormula, defns [][]*LabeledFormula)
 func UnfoldFmla(fmla Node, defns [][]*LabeledFormula) Node {
 	// TemporalModels — recurse into the wrapped inner formula and rewrap,
 	// mirroring Python's generic apply_match_alt_rec recursion.
-	if tm, ok := fmla.(*AstTemporalModels); ok {
+	if tm, ok := fmla.(*TemporalModels); ok {
 		innerExpr, ok := tm.Fmla.(Expr)
 		if !ok {
 			return tm
@@ -846,7 +846,7 @@ func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr
 	// Python: conc_vars = [x for x in iu.unique(lu.variables_ast(conc))
 	//                     if x not in match and x not in prem_vars]
 	concVars := VariablesAST(concExpr)
-	var toClose []*Variable
+	var toClose []*LogicVariable
 	for _, v := range concVars {
 		k := Key(v)
 		if _, inMatch := match[k]; !inMatch {
@@ -859,7 +859,7 @@ func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr
 	// Wrap directly without apply_to_conc, matching Python's trace output.
 	newConc := concExpr
 	for i := len(toClose) - 1; i >= 0; i-- {
-		newConc = IvyForAll([]*Variable{toClose[i]}, newConc)
+		newConc = IvyForAll([]*LogicVariable{toClose[i]}, newConc)
 	}
 	var finalConc Node = newConc
 	// If original rawConc was TemporalModels and we added wrappers, the
@@ -867,14 +867,14 @@ func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr
 	// wrappers inside the TemporalModels. To stay close to prior Go
 	// behavior for TemporalModels, only swap to raw newConc if conc was
 	// already a plain lg.Expr.
-	if _, isTM := rawConc.(*AstTemporalModels); isTM && len(toClose) > 0 {
+	if _, isTM := rawConc.(*TemporalModels); isTM && len(toClose) > 0 {
 		// Preserve prior behavior — wrap inside TM. Python semantics differ
 		// here, but no current test hits this branch with toClose > 0.
-		if tm, ok := rawConc.(*AstTemporalModels); ok {
+		if tm, ok := rawConc.(*TemporalModels); ok {
 			if inner, ok := tm.Fmla.(Expr); ok {
 				wrapped := inner
 				for i := len(toClose) - 1; i >= 0; i-- {
-					wrapped = IvyForAll([]*Variable{toClose[i]}, wrapped)
+					wrapped = IvyForAll([]*LogicVariable{toClose[i]}, wrapped)
 				}
 				finalConc = tm.Clone([]Node{wrapped})
 			}
@@ -895,7 +895,7 @@ func DropSuppliedPrems(cfg *AstConfig, schema, goal *LabeledFormula, proofMatch 
 	gprems := GoalPremsByName(goal)
 	pmap := make(map[string]string)
 	for _, m := range proofMatch {
-		defn, ok := m.(*AstDefinition)
+		defn, ok := m.(*Definition)
 		if !ok {
 			continue
 		}

@@ -24,7 +24,7 @@ module m = {
 		}
 		foundModule = true
 		for _, arg := range md.Args() {
-			def, ok := arg.(*AstDefinition)
+			def, ok := arg.(*Definition)
 			if !ok {
 				continue
 			}

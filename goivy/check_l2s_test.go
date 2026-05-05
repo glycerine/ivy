@@ -7,7 +7,7 @@ import (
 
 var l2sTestCfg = NewAstConfig()
 
-func l2sVar(name string, s Sort) *Variable {
+func l2sVar(name string, s Sort) *LogicVariable {
 	v, _ := NewVariable(name, s)
 	return v
 }
@@ -45,7 +45,7 @@ func TestL2SD(t *testing.T) {
 		t.Errorf("expected l2s_d, got %s", c.Name)
 	}
 	// Sort should be a function sort S → Boolean
-	fs, ok := c.CSort.(*FunctionSort)
+	fs, ok := c.CSort.(*LogicFunctionSort)
 	if !ok {
 		t.Fatalf("expected FunctionSort, got %T", c.CSort)
 	}
@@ -68,7 +68,7 @@ func TestL2SA(t *testing.T) {
 func TestL2sW(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	nb := l2sW([]*Variable{v}, True, "lbl")
+	nb := l2sW([]*LogicVariable{v}, True, "lbl")
 	if nb.Name != "l2s_w" {
 		t.Errorf("expected l2s_w, got %s", nb.Name)
 	}
@@ -142,7 +142,7 @@ func TestApplyNB_NoArgs(t *testing.T) {
 func TestApplyNB_WithArgs(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	nb := l2sW([]*Variable{v}, True, "lbl")
+	nb := l2sW([]*LogicVariable{v}, True, "lbl")
 	result := applyNB(nb, v)
 	if _, ok := result.(*Apply); !ok {
 		t.Errorf("expected *lg.Apply, got %T", result)
@@ -162,7 +162,7 @@ func TestVarsToNodes(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	x := l2sVar("X", s)
 	y := l2sVar("Y", s)
-	result := checkVarsToNodes([]*Variable{x, y})
+	result := checkVarsToNodes([]*LogicVariable{x, y})
 	if len(result) != 2 {
 		t.Fatalf("expected 2, got %d", len(result))
 	}
@@ -183,7 +183,7 @@ func TestL2sForall_Empty(t *testing.T) {
 func TestL2sForall_WithVars(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	result := forall([]*Variable{v}, True)
+	result := forall([]*LogicVariable{v}, True)
 	fa, ok := result.(*ForAll)
 	if !ok {
 		t.Fatalf("expected *lg.ForAll, got %T", result)
@@ -203,8 +203,8 @@ func TestL2sExists_Empty(t *testing.T) {
 func TestL2sExists_WithVars(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	result := exists([]*Variable{v}, True)
-	ex, ok := result.(*Exists)
+	result := exists([]*LogicVariable{v}, True)
+	ex, ok := result.(*LogicExists)
 	if !ok {
 		t.Fatalf("expected *lg.Exists, got %T", result)
 	}
@@ -225,7 +225,7 @@ func TestMakeAnd_Zero(t *testing.T) {
 func TestMakeAnd_One(t *testing.T) {
 	c := NewConst("a", Boolean)
 	result := checkMakeAnd(c)
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -238,7 +238,7 @@ func TestMakeAnd_Multi(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
 	result := checkMakeAnd(a, b)
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -254,8 +254,8 @@ func TestDedupeVarBodyPairs_NoDupes(t *testing.T) {
 	v1 := l2sVar("X", s)
 	v2 := l2sVar("Y", s)
 	pairs := []varBodyPair{
-		{Vars: []*Variable{v1}, Body: True},
-		{Vars: []*Variable{v2}, Body: True},
+		{Vars: []*LogicVariable{v1}, Body: True},
+		{Vars: []*LogicVariable{v2}, Body: True},
 	}
 	result := dedupeVarBodyPairs(pairs)
 	if len(result) != 2 {
@@ -267,8 +267,8 @@ func TestDedupeVarBodyPairs_WithDupes(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
 	pairs := []varBodyPair{
-		{Vars: []*Variable{v}, Body: True},
-		{Vars: []*Variable{v}, Body: True},
+		{Vars: []*LogicVariable{v}, Body: True},
+		{Vars: []*LogicVariable{v}, Body: True},
 		{Vars: nil, Body: True},
 	}
 	result := dedupeVarBodyPairs(pairs)
@@ -293,7 +293,7 @@ func TestFindTemporalModels_Nil(t *testing.T) {
 }
 
 func TestFindTemporalModels_DirectTM(t *testing.T) {
-	tm := &AstTemporalModels{Fmla: True}
+	tm := &TemporalModels{Fmla: True}
 	lf := l2sTestCfg.NewLabeledFormula(NewConst("g", Boolean), tm)
 	result := checkFindTemporalModels(lf)
 	if result != tm {
@@ -302,7 +302,7 @@ func TestFindTemporalModels_DirectTM(t *testing.T) {
 }
 
 func TestFindTemporalModels_SchemaTM(t *testing.T) {
-	tm := &AstTemporalModels{Fmla: True}
+	tm := &TemporalModels{Fmla: True}
 	prem := NewConst("p", Boolean)
 	sb := l2sTestCfg.NewSchemaBody(prem, tm)
 	lf := l2sTestCfg.NewLabeledFormula(NewConst("g", Boolean), sb)
@@ -364,12 +364,12 @@ func TestPyBool(t *testing.T) {
 
 func TestDesugar_Was_OK(t *testing.T) {
 	body := NewConst("p", Boolean)
-	nb := &NamedBinder{Name: "was", Variables: nil, Body: body}
+	nb := &LogicNamedBinder{Name: "was", Variables: nil, Body: body}
 	result, err := Desugar(nb, "test")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -383,7 +383,7 @@ func TestDesugar_Was_Error(t *testing.T) {
 	// Bug 3 regression: was with parameters must return error.
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	nb := &NamedBinder{Name: "was", Variables: []*Variable{v}, Body: True}
+	nb := &LogicNamedBinder{Name: "was", Variables: []*LogicVariable{v}, Body: True}
 	_, err := Desugar(nb, "test")
 	if err == nil {
 		t.Fatal("expected error for 'was' with parameters")
@@ -395,12 +395,12 @@ func TestDesugar_Was_Error(t *testing.T) {
 
 func TestDesugar_Happened_OK(t *testing.T) {
 	body := NewConst("p", Boolean)
-	nb := &NamedBinder{Name: "happened", Variables: nil, Body: body}
+	nb := &LogicNamedBinder{Name: "happened", Variables: nil, Body: body}
 	result, err := Desugar(nb, "test")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -409,7 +409,7 @@ func TestDesugar_Happened_OK(t *testing.T) {
 		t.Errorf("expected l2s_saved as first term, got %v", and.Terms[0])
 	}
 	// Second term should be Not(l2s_w(...))
-	if _, ok := and.Terms[1].(*Not); !ok {
+	if _, ok := and.Terms[1].(*LogicNot); !ok {
 		t.Errorf("expected *lg.Not as second term, got %T", and.Terms[1])
 	}
 }
@@ -418,7 +418,7 @@ func TestDesugar_Happened_Error(t *testing.T) {
 	// Bug 3 regression: happened with parameters must return error.
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	nb := &NamedBinder{Name: "happened", Variables: []*Variable{v}, Body: True}
+	nb := &LogicNamedBinder{Name: "happened", Variables: []*LogicVariable{v}, Body: True}
 	_, err := Desugar(nb, "test")
 	if err == nil {
 		t.Fatal("expected error for 'happened' with parameters")
@@ -441,18 +441,18 @@ func TestDesugar_PlainConst(t *testing.T) {
 
 func TestDesugar_NestedWas(t *testing.T) {
 	body := NewConst("p", Boolean)
-	wasNB := &NamedBinder{Name: "was", Variables: nil, Body: body}
-	outer := &And{Terms: []Expr{wasNB, True}}
+	wasNB := &LogicNamedBinder{Name: "was", Variables: nil, Body: body}
+	outer := &LogicAnd{Terms: []Expr{wasNB, True}}
 	result, err := Desugar(outer, "test")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// Result should be an And whose first term is itself an And (the desugared was).
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
-	if _, ok := and.Terms[0].(*And); !ok {
+	if _, ok := and.Terms[0].(*LogicAnd); !ok {
 		t.Errorf("expected nested And from desugared was, got %T", and.Terms[0])
 	}
 }
@@ -462,8 +462,8 @@ func TestDesugar_NestedWas(t *testing.T) {
 func TestApplyWasRec_And(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
-	result := applyWasRec(&And{Terms: []Expr{a, b}}, "lbl")
-	and, ok := result.(*And)
+	result := applyWasRec(&LogicAnd{Terms: []Expr{a, b}}, "lbl")
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
 	}
@@ -474,22 +474,22 @@ func TestApplyWasRec_And(t *testing.T) {
 
 func TestApplyWasRec_Or(t *testing.T) {
 	a := NewConst("a", Boolean)
-	result := applyWasRec(&Or{Terms: []Expr{a}}, "lbl")
-	if _, ok := result.(*Or); !ok {
+	result := applyWasRec(&LogicOr{Terms: []Expr{a}}, "lbl")
+	if _, ok := result.(*LogicOr); !ok {
 		t.Fatalf("expected *lg.Or, got %T", result)
 	}
 }
 
 func TestApplyWasRec_Not(t *testing.T) {
 	a := NewConst("a", Boolean)
-	result := applyWasRec(&Not{Body: a}, "lbl")
-	not, ok := result.(*Not)
+	result := applyWasRec(&LogicNot{Body: a}, "lbl")
+	not, ok := result.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected *lg.Not, got %T", result)
 	}
 	// Body is a leaf Const with no free vars, so l2sS(nil, a, "lbl") is a
 	// NamedBinder and applyNB(nb) with no args returns the NamedBinder itself.
-	if _, ok := not.Body.(*NamedBinder); !ok {
+	if _, ok := not.Body.(*LogicNamedBinder); !ok {
 		t.Errorf("expected body to be *lg.NamedBinder (l2s_s with no free vars), got %T", not.Body)
 	}
 }
@@ -498,8 +498,8 @@ func TestApplyWasRec_Not_WithFreeVars(t *testing.T) {
 	// Strengthen: when the body has free variables, applyNB returns *lg.Apply.
 	s := &UninterpretedSort{Name: "S"}
 	v := l2sVar("X", s)
-	result := applyWasRec(&Not{Body: v}, "lbl")
-	not, ok := result.(*Not)
+	result := applyWasRec(&LogicNot{Body: v}, "lbl")
+	not, ok := result.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected *lg.Not, got %T", result)
 	}
@@ -511,8 +511,8 @@ func TestApplyWasRec_Not_WithFreeVars(t *testing.T) {
 func TestApplyWasRec_Implies(t *testing.T) {
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
-	result := applyWasRec(&Implies{T1: a, T2: b}, "lbl")
-	if _, ok := result.(*Implies); !ok {
+	result := applyWasRec(&LogicImplies{T1: a, T2: b}, "lbl")
+	if _, ok := result.(*LogicImplies); !ok {
 		t.Fatalf("expected *lg.Implies, got %T", result)
 	}
 }
@@ -523,7 +523,7 @@ func TestApplyWasRec_Leaf(t *testing.T) {
 	// Leaf should become l2s_s applied to vars (no free vars → just the NB itself).
 	// With no free variables, VariablesAstList returns empty, so l2sS(nil, c, "lbl")
 	// with applyNB(nb) returns the NamedBinder itself (no args to apply).
-	if _, ok := result.(*NamedBinder); !ok {
+	if _, ok := result.(*LogicNamedBinder); !ok {
 		t.Errorf("expected *lg.NamedBinder for leaf with no free vars, got %T", result)
 	}
 }
@@ -539,21 +539,21 @@ func TestTransformAction_Nil(t *testing.T) {
 
 func TestTransformAction_Simple(t *testing.T) {
 	act := NewAssumeAction(True)
-	negate := func(n Node) Node { return &Not{Body: n.(Expr)} }
+	negate := func(n Node) Node { return &LogicNot{Body: n.(Expr)} }
 	result := transformAction(act, negate)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
 	// The result should be an AssumeAction with negated formula.
-	assume, ok := result.(*AssumeAction)
+	assume, ok := result.(*LogicAssumeAction)
 	if !ok {
-		t.Fatalf("expected *AssumeAction, got %T", result)
+		t.Fatalf("expected *LogicAssumeAction, got %T", result)
 	}
 	args := assume.ActionArgs()
 	if len(args) == 0 {
 		t.Fatal("expected at least 1 arg")
 	}
-	if _, ok := args[0].(*Not); !ok {
+	if _, ok := args[0].(*LogicNot); !ok {
 		t.Errorf("expected negated formula, got %T", args[0])
 	}
 }
@@ -564,20 +564,20 @@ func TestApplyL2sInit_Plain(t *testing.T) {
 	c := NewConst("c", Boolean)
 	result := applyL2sInit(nil, c, "lbl")
 	// With no free vars, returns applyNB(l2sInit(nil, c, "lbl")) = the NamedBinder.
-	if _, ok := result.(*NamedBinder); !ok {
+	if _, ok := result.(*LogicNamedBinder); !ok {
 		t.Errorf("expected *lg.NamedBinder, got %T", result)
 	}
 }
 
 func TestApplyL2sInit_NotWrapped(t *testing.T) {
 	c := NewConst("c", Boolean)
-	result := applyL2sInit(nil, &Not{Body: c}, "lbl")
-	not, ok := result.(*Not)
+	result := applyL2sInit(nil, &LogicNot{Body: c}, "lbl")
+	not, ok := result.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected *lg.Not, got %T", result)
 	}
 	// Inner should be an l2s_init application.
-	if _, ok := not.Body.(*NamedBinder); !ok {
+	if _, ok := not.Body.(*LogicNamedBinder); !ok {
 		t.Errorf("expected inner *lg.NamedBinder, got %T", not.Body)
 	}
 }
@@ -613,12 +613,12 @@ func FuzzDesugar(f *testing.F) {
 			numVars = 5
 		}
 		s := &UninterpretedSort{Name: "S"}
-		var vars []*Variable
+		var vars []*LogicVariable
 		for i := 0; i < numVars; i++ {
 			v, _ := NewVariable("V"+string(rune('0'+i)), s)
 			vars = append(vars, v)
 		}
-		nb := &NamedBinder{Name: name, Variables: vars, Body: True}
+		nb := &LogicNamedBinder{Name: name, Variables: vars, Body: True}
 		result, err := Desugar(nb, "fuzz")
 		if name == "was" || name == "happened" {
 			if numVars > 0 {
@@ -661,7 +661,7 @@ func FuzzMakeAnd_L2S(f *testing.F) {
 				t.Error("expected lg.True for 0 terms")
 			}
 		case n == 1:
-			a, ok := result.(*And)
+			a, ok := result.(*LogicAnd)
 			if !ok {
 				t.Fatalf("expected *lg.And for 1 term, got %T", result)
 			}
@@ -669,7 +669,7 @@ func FuzzMakeAnd_L2S(f *testing.F) {
 				t.Error("expected And with single term")
 			}
 		default:
-			if _, ok := result.(*And); !ok {
+			if _, ok := result.(*LogicAnd); !ok {
 				t.Errorf("expected *lg.And for %d terms, got %T", n, result)
 			}
 		}

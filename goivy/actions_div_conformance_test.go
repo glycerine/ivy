@@ -52,9 +52,9 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 	expanded := wa.Expand(ctx)
 
 	// Extract the top-level sequence children
-	seq, ok := expanded.(*Sequence)
+	seq, ok := expanded.(*LogicSequence)
 	if !ok {
-		t.Fatalf("expanded should be *Sequence, got %T", expanded)
+		t.Fatalf("expanded should be *LogicSequence, got %T", expanded)
 	}
 
 	// Count assumes in the TOP-LEVEL sequence (before the if-action).
@@ -63,7 +63,7 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 	//   (SubgoalAction filtered from assumes, AssumeAction filtered from asserts)
 	var topAssumes int
 	for _, child := range seq.ActionArgs() {
-		if a, ok := child.(*AssumeAction); ok {
+		if a, ok := child.(*LogicAssumeAction); ok {
 			// Exclude the assume(false) inside the if-body
 			if a.Formula != False {
 				topAssumes++
@@ -104,7 +104,7 @@ func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
 
 	// Find HavocActions in the expanded result
 	havocs := collectActionType(expanded, func(a ActionsAction) bool {
-		_, ok := a.(*HavocAction)
+		_, ok := a.(*LogicHavocAction)
 		return ok
 	})
 
@@ -144,13 +144,13 @@ func TestWhileExpandRankingChecksUseDecreasesLineno(t *testing.T) {
 	var rankingActions []ActionsAction
 	actionsWalkActions(expanded, func(a ActionsAction) {
 		switch act := a.(type) {
-		case *AssumeAction:
+		case *LogicAssumeAction:
 			if eq, ok := act.Formula.(*Eq); ok {
 				if c, ok := eq.T1.(*Const); ok && c.Name == "$rank" {
 					rankingActions = append(rankingActions, act)
 				}
 			}
-		case *AssertAction:
+		case *LogicAssertAction:
 			rankingActions = append(rankingActions, act)
 		}
 	})
@@ -213,8 +213,8 @@ func TestDIV11_ApplyMixinErrorOnMismatch(t *testing.T) {
 // dispatches to InstantiateAction.IntUpdate.
 //
 // Python: InstantiateAction.int_update is called via normal dispatch.
-// Go BUG: switch in IntUpdate has no case *InstantiateAction,
-// hits default → returns NullUpdate(). The method on *InstantiateAction
+// Go BUG: switch in IntUpdate has no case *LogicInstantiateAction,
+// hits default → returns NullUpdate(). The method on *LogicInstantiateAction
 // is dead code.
 func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 	inst := NewConst("my_schema", TopS)
@@ -248,7 +248,7 @@ func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 	if result.TR.IsTrue() && result.Pre.IsFalse() && len(result.Modified) == 0 {
 		if nullUpd.TR.IsTrue() && nullUpd.Pre.IsFalse() {
 			t.Errorf("DIV-12: IntUpdate returned NullUpdate for InstantiateAction.\n" +
-				"  The switch in IntUpdate has no case *InstantiateAction.\n" +
+				"  The switch in IntUpdate has no case *LogicInstantiateAction.\n" +
 				"  It hits default → NullUpdate(), making InstantiateAction.IntUpdate dead code.")
 		}
 	}
@@ -327,19 +327,19 @@ func actionsWalkActions(act ActionsAction, fn func(ActionsAction)) {
 	}
 	fn(act)
 	switch a := act.(type) {
-	case *Sequence:
+	case *LogicSequence:
 		for _, sub := range a.ActionArgs() {
 			if sa, ok := sub.(ActionsAction); ok {
 				actionsWalkActions(sa, fn)
 			}
 		}
-	case *IfAction:
+	case *LogicIfAction:
 		for _, sub := range a.ActionArgs() {
 			if sa, ok := sub.(ActionsAction); ok {
 				actionsWalkActions(sa, fn)
 			}
 		}
-	case *LocalAction:
+	case *LogicLocalAction:
 		if body, ok := a.Body.(ActionsAction); ok {
 			actionsWalkActions(body, fn)
 		}

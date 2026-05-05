@@ -13,7 +13,7 @@ import (
 type Vocab struct {
 	Sorts     []Sort
 	Symbols   []*Const
-	Variables []*Variable
+	Variables []*LogicVariable
 }
 
 // GoalConc returns the conclusion of a goal.
@@ -48,7 +48,7 @@ func GoalConcExpr(g *LabeledFormula) Expr {
 // Mirrors Python pattern at ivy_proof.py:580 (`conc_fmla = conc.fmla if
 // isinstance(conc,ia.TemporalModels) else conc`).
 func ConcAsExpr(c Node) Expr {
-	if tm, ok := c.(*AstTemporalModels); ok {
+	if tm, ok := c.(*TemporalModels); ok {
 		if e, ok := tm.Fmla.(Expr); ok {
 			return e
 		}
@@ -77,7 +77,7 @@ func ApplyToConc(conc Node, fn func(Expr) Expr) Node {
 		return conc
 	}
 	xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", TypeName(conc), conc.Canon())
-	if tm, ok := conc.(*AstTemporalModels); ok {
+	if tm, ok := conc.(*TemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(Expr); ok {
 			result := tm.Clone([]Node{fn(innerExpr)})
 			xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%v", result.Canon())
@@ -109,7 +109,7 @@ func normalizeOpsConc(conc Node) Node {
 	if conc == nil {
 		return conc
 	}
-	if tm, ok := conc.(*AstTemporalModels); ok {
+	if tm, ok := conc.(*TemporalModels); ok {
 		if inner, ok := tm.Fmla.(Expr); ok {
 			return tm.Clone([]Node{NormalizeOps(inner)})
 		}
@@ -134,7 +134,7 @@ func normalizeOpsConc(conc Node) Node {
 func WrapImplies(cfg *AstConfig, cond Expr, formula Node) Node {
 	xtracer.Trace("proof.WrapImplies ENTER formulaType=%s", TypeName(formula))
 	if e, ok := formula.(Expr); ok {
-		result := &Implies{T1: cond, T2: e}
+		result := &LogicImplies{T1: cond, T2: e}
 		xtracer.Trace("proof.WrapImplies EXIT type=lgImplies HASH canon=%v", result.Canon())
 		return result
 	}
@@ -452,7 +452,7 @@ func GoalVocabBound(goal *LabeledFormula) *Vocab {
 	}
 	for bk, bn := range BoundVariables(concFmla) {
 		if !existing[bk] {
-			if bv, ok := bn.(*Variable); ok {
+			if bv, ok := bn.(*LogicVariable); ok {
 				v.Variables = append(v.Variables, bv)
 				existing[bk] = true
 			}
@@ -652,7 +652,7 @@ func CompileDefinitionGoalVocab(cfg *AstConfig, df Node, goal *LabeledFormula, m
 
 	// Python: lhs = lf.formula.args[0]
 	// The formula is an *ast.Definition with Lhs and Rhs.
-	defFormula, ok := innerLF.Formula.(*AstDefinition)
+	defFormula, ok := innerLF.Formula.(*Definition)
 	if !ok {
 		return goal, nil
 	}

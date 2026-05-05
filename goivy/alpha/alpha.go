@@ -97,7 +97,7 @@ func (pd *ProgressiveDomain) AddConceptSpace(atom *webui.CSAtom, space webui.CSN
 
 // cubeID computes a string identifier for a cube (list of literals).
 // Corresponds to Python's cube_id.
-func (pd *ProgressiveDomain) cubeID(cube []*goivy.Literal) (string, error) {
+func (pd *ProgressiveDomain) cubeID(cube []*goivy.LogicLiteral) (string, error) {
 	z3cube, err := pd.slvr.CubeToZ3(cube)
 	if err != nil {
 		return "", err
@@ -108,7 +108,7 @@ func (pd *ProgressiveDomain) cubeID(cube []*goivy.Literal) (string, error) {
 
 // inhabitedCube marks a cube as inhabited.
 // Corresponds to Python's inhabited_cube.
-func (pd *ProgressiveDomain) inhabitedCube(cube []*goivy.Literal, truth bool) {
+func (pd *ProgressiveDomain) inhabitedCube(cube []*goivy.LogicLiteral, truth bool) {
 	cube = canonizeClause(cube)
 	id, err := pd.cubeID(cube)
 	if err != nil {
@@ -124,8 +124,8 @@ func (pd *ProgressiveDomain) inhabitedCube(cube []*goivy.Literal, truth bool) {
 
 // inhabitedLit marks a single literal as inhabited.
 // Corresponds to Python's inhabited_lit.
-func (pd *ProgressiveDomain) inhabitedLit(lit *goivy.Literal) {
-	pd.inhabitedCube([]*goivy.Literal{lit}, true)
+func (pd *ProgressiveDomain) inhabitedLit(lit *goivy.LogicLiteral) {
+	pd.inhabitedCube([]*goivy.LogicLiteral{lit}, true)
 }
 
 // modelCheck performs model checking on the current solver state.
@@ -138,7 +138,7 @@ func (pd *ProgressiveDomain) modelCheck() {
 
 // unfoldDefs adds definition instances for a cube to the solver.
 // Corresponds to Python's unfold_defs.
-func (pd *ProgressiveDomain) unfoldDefs(cube []*goivy.Literal) {
+func (pd *ProgressiveDomain) unfoldDefs(cube []*goivy.LogicLiteral) {
 	// In Python: definition_instances(cube_to_formula(cube))
 	// This is a placeholder; full implementation would compute definition
 	// instances and add them to the solver.
@@ -148,7 +148,7 @@ func (pd *ProgressiveDomain) unfoldDefs(cube []*goivy.Literal) {
 // testCube tests whether a cube is consistent with the solver state.
 // Returns true if the cube is satisfiable (inhabited).
 // Corresponds to Python's test_cube.
-func (pd *ProgressiveDomain) testCube(cube []*goivy.Literal) bool {
+func (pd *ProgressiveDomain) testCube(cube []*goivy.LogicLiteral) bool {
 	canonCube := canonizeClause(cube)
 	if pd.log {
 		strs := make([]string, len(canonCube))
@@ -307,7 +307,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *goivy.
 		if len(clause) == 1 {
 			fmlas[i] = clause[0]
 		} else {
-			fmlas[i] = &goivy.Or{Terms: clause}
+			fmlas[i] = &goivy.LogicOr{Terms: clause}
 		}
 	}
 	return goivy.NewClauses(fmlas, nil, nil)
@@ -348,13 +348,13 @@ func (pd *ProgressiveDomain) Post(
 func VarCorr(terms1, terms2 []goivy.Expr) [][2]int {
 	d := make(map[string]int)
 	for i, t := range terms2 {
-		if v, ok := t.(*goivy.Variable); ok {
+		if v, ok := t.(*goivy.LogicVariable); ok {
 			d[v.Name] = i
 		}
 	}
 	var result [][2]int
 	for j, t := range terms1 {
-		if v, ok := t.(*goivy.Variable); ok {
+		if v, ok := t.(*goivy.LogicVariable); ok {
 			if idx, exists := d[v.Name]; exists {
 				result = append(result, [2]int{j, idx})
 			}
@@ -396,7 +396,7 @@ func compactTable(tab *RelTable) *RelTable {
 	memo := make(map[string]bool)
 	var goodCols []int
 	for i, t := range tab.Vars {
-		if v, ok := t.(*goivy.Variable); ok && firstSeen(memo, v.Name) {
+		if v, ok := t.(*goivy.LogicVariable); ok && firstSeen(memo, v.Name) {
 			goodCols = append(goodCols, i)
 		}
 	}
@@ -432,7 +432,7 @@ func NewRelAlg1(slvr *goivy.Solver, z3slvr *goivy.Solver, parent *ProgressiveDom
 // Prim evaluates a primitive literal against the model.
 // Returns a RelTable of matching instances.
 // Corresponds to Python's RelAlg1.prim.
-func (ra *RelAlg1) Prim(lit *goivy.Literal) *RelTable {
+func (ra *RelAlg1) Prim(lit *goivy.LogicLiteral) *RelTable {
 	// Get model instances
 	app, ok := lit.Atom.(*goivy.Apply)
 	if !ok {
@@ -513,7 +513,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]goivy.Expr) *RelTable {
 	newVars := make([]goivy.Expr, len(tab.Vars))
 	for i, v := range tab.Vars {
-		if vv, ok := v.(*goivy.Variable); ok {
+		if vv, ok := v.(*goivy.LogicVariable); ok {
 			if repl, exists := subst[vv.Name]; exists {
 				newVars[i] = repl
 			} else {
@@ -583,7 +583,7 @@ func (ra *RelAlg2) IsSat(f goivy.Z3Expr) bool {
 // Prim evaluates a primitive literal.
 // Returns a list of Z3 cube expressions.
 // Corresponds to Python's RelAlg2.prim.
-func (ra *RelAlg2) Prim(lit *goivy.Literal) []goivy.Z3Expr {
+func (ra *RelAlg2) Prim(lit *goivy.LogicLiteral) []goivy.Z3Expr {
 	z3lit, err := ra.Slvr.LiteralToZ3(lit)
 	if err != nil {
 		return nil
@@ -711,7 +711,7 @@ func NewRelAlg3(
 
 // Prim evaluates a primitive literal using HerbrandModel.Check.
 // Corresponds to Python's RelAlg3.prim.
-func (ra *RelAlg3) Prim(lit *goivy.Literal) []goivy.Z3Expr {
+func (ra *RelAlg3) Prim(lit *goivy.LogicLiteral) []goivy.Z3Expr {
 	if ra.Parent.log {
 		fmt.Printf("prim: %s\n", lit)
 	}
@@ -802,13 +802,13 @@ func PredicateAlpha(state *AlphaState) {
 
 // canonizeClause sorts and deduplicates literals in a clause.
 // Corresponds to Python's canonize_clause.
-func canonizeClause(cube []*goivy.Literal) []*goivy.Literal {
+func canonizeClause(cube []*goivy.LogicLiteral) []*goivy.LogicLiteral {
 	if len(cube) == 0 {
 		return cube
 	}
 	// Deduplicate by string representation
 	seen := make(map[string]bool)
-	var result []*goivy.Literal
+	var result []*goivy.LogicLiteral
 	for _, lit := range cube {
 		key := lit.String()
 		if !seen[key] {
@@ -821,11 +821,11 @@ func canonizeClause(cube []*goivy.Literal) []*goivy.Literal {
 
 // renameClause renames symbols in a clause using the newSym map.
 // Corresponds to Python's rename_clause.
-func renameClause(cube []*goivy.Literal, newSym map[string]*goivy.Const) []*goivy.Literal {
+func renameClause(cube []*goivy.LogicLiteral, newSym map[string]*goivy.Const) []*goivy.LogicLiteral {
 	if len(newSym) == 0 {
 		return cube
 	}
-	result := make([]*goivy.Literal, len(cube))
+	result := make([]*goivy.LogicLiteral, len(cube))
 	for i, lit := range cube {
 		result[i] = renameLit(lit, newSym)
 	}
@@ -834,7 +834,7 @@ func renameClause(cube []*goivy.Literal, newSym map[string]*goivy.Const) []*goiv
 
 // renameLit renames symbols in a literal using the newSym map.
 // Corresponds to Python's rename_lit.
-func renameLit(lit *goivy.Literal, newSym map[string]*goivy.Const) *goivy.Literal {
+func renameLit(lit *goivy.LogicLiteral, newSym map[string]*goivy.Const) *goivy.LogicLiteral {
 	if len(newSym) == 0 {
 		return lit
 	}
@@ -862,8 +862,8 @@ func renameNode(node goivy.Expr, newSym map[string]*goivy.Const) goivy.Expr {
 		return goivy.MustApply(newFunc, newArgs...)
 	case *goivy.Eq:
 		return &goivy.Eq{T1: renameNode(t.T1, newSym), T2: renameNode(t.T2, newSym)}
-	case *goivy.Not:
-		return &goivy.Not{Body: renameNode(t.Body, newSym)}
+	case *goivy.LogicNot:
+		return &goivy.LogicNot{Body: renameNode(t.Body, newSym)}
 	default:
 		return node
 	}
@@ -871,9 +871,9 @@ func renameNode(node goivy.Expr, newSym map[string]*goivy.Const) goivy.Expr {
 
 // usedVariablesClause collects all variables used in a clause.
 // Corresponds to Python's used_variables_clause.
-func usedVariablesClause(cube []*goivy.Literal) []*goivy.Variable {
+func usedVariablesClause(cube []*goivy.LogicLiteral) []*goivy.LogicVariable {
 	seen := make(map[string]bool)
-	var result []*goivy.Variable
+	var result []*goivy.LogicVariable
 	for _, lit := range cube {
 		fvs := goivy.FreeVariablesList(lit.Atom)
 		for _, v := range fvs {
@@ -888,17 +888,17 @@ func usedVariablesClause(cube []*goivy.Literal) []*goivy.Variable {
 
 // varToSkolem creates a Skolem constant for a variable.
 // Corresponds to Python's var_to_skolem.
-func varToSkolem(prefix string, v *goivy.Variable) *goivy.Const {
+func varToSkolem(prefix string, v *goivy.LogicVariable) *goivy.Const {
 	return goivy.NewConst(prefix+v.Name, v.VSort)
 }
 
 // substituteClause applies a substitution to all literals in a clause.
 // Corresponds to Python's substitute_clause.
-func substituteClause(cube []*goivy.Literal, subs map[goivy.NodeKey]goivy.Expr) []*goivy.Literal {
+func substituteClause(cube []*goivy.LogicLiteral, subs map[goivy.NodeKey]goivy.Expr) []*goivy.LogicLiteral {
 	if len(subs) == 0 {
 		return cube
 	}
-	result := make([]*goivy.Literal, len(cube))
+	result := make([]*goivy.LogicLiteral, len(cube))
 	for i, lit := range cube {
 		newAtom, err := goivy.Substitute(lit.Atom, subs)
 		if err != nil {
@@ -912,11 +912,11 @@ func substituteClause(cube []*goivy.Literal, subs map[goivy.NodeKey]goivy.Expr) 
 
 // negateLiteral returns the formula representing the negation of a literal.
 // Corresponds to Python's ~lit.
-func negateLiteral(lit *goivy.Literal) goivy.Expr {
+func negateLiteral(lit *goivy.LogicLiteral) goivy.Expr {
 	if lit.Polarity == 0 {
 		return lit.Atom // double negation
 	}
-	return &goivy.Not{Body: lit.Atom}
+	return &goivy.LogicNot{Body: lit.Atom}
 }
 
 // nodeSlice converts []lg.Expr to a new copy.
@@ -950,8 +950,8 @@ func getAtomArgs(atom goivy.Expr) []goivy.Expr {
 
 // csLitsToILLits converts concept-space literals to ivylogic literals.
 // This bridges the webui.CSLiteral type to il.Literal.
-func csLitsToILLits(csLits []*webui.CSLiteral) []*goivy.Literal {
-	result := make([]*goivy.Literal, len(csLits))
+func csLitsToILLits(csLits []*webui.CSLiteral) []*goivy.LogicLiteral {
+	result := make([]*goivy.LogicLiteral, len(csLits))
 	for i, csl := range csLits {
 		atom := csAtomToNode(csl.Atom)
 		result[i] = goivy.NewLiteral(csl.Polarity, atom)

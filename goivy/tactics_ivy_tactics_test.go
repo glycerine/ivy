@@ -19,7 +19,7 @@ func testPC() *ProofChecker {
 
 // ---------- helpers ----------
 
-func tacticsMustVar(name string) *Variable {
+func tacticsMustVar(name string) *LogicVariable {
 	v, err := NewVariable(name, Boolean)
 	if err != nil {
 		panic(err)
@@ -134,7 +134,7 @@ func TestTempindFmlaDefault(t *testing.T) {
 
 func TestTempindFmlaWithVs(t *testing.T) {
 	x := tacticsMustVar("X")
-	vs := []*Variable{x}
+	vs := []*LogicVariable{x}
 	result := TempindFmla(x, nil, nil, vs)
 	fa, ok := result.(*ForAll)
 	if !ok {
@@ -148,8 +148,8 @@ func TestTempindFmlaWithVs(t *testing.T) {
 func TestTempindFmlaForAll(t *testing.T) {
 	x := tacticsMustVar("X")
 	y := tacticsMustVar("Y")
-	fa, _ := NewForAll([]*Variable{y}, x)
-	result := TempindFmla(fa, nil, nil, []*Variable{x})
+	fa, _ := NewForAll([]*LogicVariable{y}, x)
+	result := TempindFmla(fa, nil, nil, []*LogicVariable{x})
 	resultFa, ok := result.(*ForAll)
 	if !ok {
 		t.Fatalf("Expected ForAll, got %T: %v", result, result)
@@ -162,7 +162,7 @@ func TestTempindFmlaForAll(t *testing.T) {
 func TestTempindFmlaGlobally(t *testing.T) {
 	x := tacticsMustVar("X")
 	gb, _ := NewGlobally(nil, x)
-	vs := []*Variable{x}
+	vs := []*LogicVariable{x}
 	result := TempindFmla(gb, nil, nil, vs)
 	fa, ok := result.(*ForAll)
 	if !ok {
@@ -171,17 +171,17 @@ func TestTempindFmlaGlobally(t *testing.T) {
 	if len(fa.Variables) != 1 {
 		t.Errorf("Expected 1 variable, got %d", len(fa.Variables))
 	}
-	or, ok := fa.Body.(*Or)
+	or, ok := fa.Body.(*LogicOr)
 	if !ok {
 		t.Fatalf("Expected Or body, got %T: %v", fa.Body, fa.Body)
 	}
 	if len(or.Terms) != 2 {
 		t.Errorf("Expected 2 terms in Or, got %d", len(or.Terms))
 	}
-	if _, ok := or.Terms[0].(*Globally); !ok {
+	if _, ok := or.Terms[0].(*LogicGlobally); !ok {
 		t.Errorf("Expected Globally as first Or term, got %T", or.Terms[0])
 	}
-	if _, ok := or.Terms[1].(*WhenOperator); !ok {
+	if _, ok := or.Terms[1].(*LogicWhenOperator); !ok {
 		t.Errorf("Expected WhenOperator as second Or term, got %T", or.Terms[1])
 	}
 }
@@ -201,7 +201,7 @@ func TestTempcaseFmlaDefault(t *testing.T) {
 
 func TestTempcaseFmlaCapture(t *testing.T) {
 	x := tacticsMustVar("X")
-	fa, _ := NewForAll([]*Variable{x}, x)
+	fa, _ := NewForAll([]*LogicVariable{x}, x)
 	vs := []Expr{x}
 	_, err := TempcaseFmla(fa, nil, vs, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
@@ -221,7 +221,7 @@ func TestTempcaseFmlaGlobally(t *testing.T) {
 	if !ok {
 		t.Fatalf("Expected ForAll, got %T: %v", result, result)
 	}
-	if _, ok := fa.Body.(*Globally); !ok {
+	if _, ok := fa.Body.(*LogicGlobally); !ok {
 		t.Errorf("Expected Globally body, got %T", fa.Body)
 	}
 }
@@ -477,7 +477,7 @@ func TestRefutedGoalNilGoal(t *testing.T) {
 func TestRefutedGoalFalseFormula(t *testing.T) {
 	tc := NewTacticsContext(nil, New())
 	// Empty Or is False
-	goal := &ProofGoal{Formula: &Or{Terms: []Expr{}}}
+	goal := &ProofGoal{Formula: &LogicOr{Terms: []Expr{}}}
 	if !tc.RefutedGoal(goal) {
 		t.Error("goal with False formula should be refuted")
 	}

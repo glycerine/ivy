@@ -56,9 +56,9 @@ func CreateRankingDefn(rd *RankingDef) goivy.Expr {
 	if rd.WorkCreated == nil || rd.WorkNeeded == nil {
 		return nil
 	}
-	return &goivy.And{Terms: []goivy.Expr{
+	return &goivy.LogicAnd{Terms: []goivy.Expr{
 		rd.WorkNeeded,
-		&goivy.Not{Body: rd.WorkCreated},
+		&goivy.LogicNot{Body: rd.WorkCreated},
 	}}
 }
 

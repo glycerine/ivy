@@ -49,16 +49,16 @@ func NewUnrollContext(card func(Sort) int, domain *Module, cfg ...*ActionsConfig
 
 // SymbolList is an AST wrapper for a collection of symbol names.
 // Corresponds to Python's SymbolList class.
-type SymbolList struct {
+type LogicSymbolList struct {
 	Symbols []Expr // each is a *lg.Const or string-named node
 }
 
 // NewSymbolList creates a SymbolList from symbols.
-func NewSymbolList(symbols ...Expr) *SymbolList {
-	return &SymbolList{Symbols: symbols}
+func NewSymbolList(symbols ...Expr) *LogicSymbolList {
+	return &LogicSymbolList{Symbols: symbols}
 }
 
-func (sl *SymbolList) String() string {
+func (sl *LogicSymbolList) String() string {
 	parts := make([]string, len(sl.Symbols))
 	for i, s := range sl.Symbols {
 		parts[i] = fmt.Sprint(s)
@@ -67,7 +67,7 @@ func (sl *SymbolList) String() string {
 }
 
 // Args returns the symbols for AST compatibility.
-func (sl *SymbolList) Args() []Expr {
+func (sl *LogicSymbolList) Args() []Expr {
 	return sl.Symbols
 }
 
@@ -86,12 +86,12 @@ func GetCorrectArity(domain *Module, atom Expr) int {
 	switch a := atom.(type) {
 	case *Apply:
 		if c, ok := a.Func.(*Const); ok {
-			if fs, ok := c.CSort.(*FunctionSort); ok {
+			if fs, ok := c.CSort.(*LogicFunctionSort); ok {
 				return len(fs.Sorts) - 1 // domain sorts (all but range)
 			}
 		}
 	case *Const:
-		if fs, ok := a.CSort.(*FunctionSort); ok {
+		if fs, ok := a.CSort.(*LogicFunctionSort); ok {
 			return len(fs.Sorts) - 1
 		}
 	}
@@ -292,7 +292,7 @@ func DestrAsgnVal(lhs Expr, fmlas *[]Expr, m *Module) (Expr, *Clauses, *Const) {
 	// Python: eqs = [eq_atom(v,a) for (v,a) in list(zip(vs,lhs.args))[1:] if not isinstance(a,Variable)]
 	var eqs []Expr
 	for i := 1; i < len(vs) && i < len(app.Terms); i++ {
-		if _, isVar := app.Terms[i].(*Variable); !isVar {
+		if _, isVar := app.Terms[i].(*LogicVariable); !isVar {
 			eqs = append(eqs, &Eq{T1: vs[i], T2: app.Terms[i]})
 		}
 	}
@@ -401,7 +401,7 @@ func Sign(polarity bool, atom Expr) Expr {
 	if polarity {
 		return atom
 	}
-	return &Not{Body: atom}
+	return &LogicNot{Body: atom}
 }
 
 // --- MakeFieldUpdate ---
@@ -413,15 +413,15 @@ func Sign(polarity bool, atom Expr) Expr {
 func MakeFieldUpdate(self ActionsAction, l Expr, f *Const, r Expr, domain *Module, pvars map[string]bool) *Update {
 	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
 	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
-	fs, ok := f.CSort.(*FunctionSort)
+	fs, ok := f.CSort.(*LogicFunctionSort)
 	if !ok || len(fs.Sorts) != 3 { // dom[0], dom[1], range
 		panic(fmt.Sprintf("field %s must be a binary relation", f.Name))
 	}
 
-	// Python: v = Variable('X', f.sort.dom[1])
+	// Python: v = LogicVariable('X', f.sort.dom[1])
 	v, _ := NewVariable("X", fs.Sorts[1])
 
-	// Python: aa = AssignAction(f(l,v), r(v))
+	// Python: aa = LogicAssignAction(f(l,v), r(v))
 	fApp, _ := NewApply(f, l, v)
 	var rVal Expr
 	if IsFunctionSort(r.NodeSort()) {
@@ -478,7 +478,7 @@ func GetDeterminize(cfg *ActionsConfig) bool {
 // BracketAction formats an action with braces if it's not already a Sequence.
 // Corresponds to Python's bracket_action.
 func BracketAction(action ActionsAction, depth int) string {
-	if _, isSeq := action.(*Sequence); isSeq {
+	if _, isSeq := action.(*LogicSequence); isSeq {
 		return MyStr(action, depth)
 	}
 	return "{" + MyStr(action, depth) + "}"
@@ -488,25 +488,25 @@ func BracketAction(action ActionsAction, depth int) string {
 
 // DebugAction is a debug statement action. It is a no-op for semantics.
 // Corresponds to Python's DebugAction class.
-type DebugAction struct {
+type LogicDebugAction struct {
 	ActionBase
 	DebugExpr Expr   // debug expression (first arg)
 	WithExprs []Expr // additional "with" expressions
 }
 
 // NewDebugAction creates a new DebugAction.
-func NewDebugAction(debugExpr Expr, withExprs ...Expr) *DebugAction {
-	return &DebugAction{DebugExpr: debugExpr, WithExprs: copyNodes(withExprs)}
+func NewDebugAction(debugExpr Expr, withExprs ...Expr) *LogicDebugAction {
+	return &LogicDebugAction{DebugExpr: debugExpr, WithExprs: copyNodes(withExprs)}
 }
 
-func (a *DebugAction) Name() string { return "debug" }
-func (a *DebugAction) ActionArgs() []Expr {
+func (a *LogicDebugAction) Name() string { return "debug" }
+func (a *LogicDebugAction) ActionArgs() []Expr {
 	args := []Expr{a.DebugExpr}
 	args = append(args, a.WithExprs...)
 	return args
 }
-func (a *DebugAction) ActionClone(args []Expr) ActionsAction {
-	r := &DebugAction{ActionBase: a.ActionBase}
+func (a *LogicDebugAction) ActionClone(args []Expr) ActionsAction {
+	r := &LogicDebugAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.DebugExpr = args[0]
 	}
@@ -515,7 +515,7 @@ func (a *DebugAction) ActionClone(args []Expr) ActionsAction {
 	}
 	return r
 }
-func (a *DebugAction) String() string {
+func (a *LogicDebugAction) String() string {
 	res := "debug " + fmt.Sprint(a.DebugExpr)
 	if len(a.WithExprs) > 0 {
 		parts := make([]string, len(a.WithExprs))
@@ -526,22 +526,22 @@ func (a *DebugAction) String() string {
 	}
 	return res
 }
-func (a *DebugAction) IterCalls() []string             { return nil }
-func (a *DebugAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
-func (a *DebugAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *LogicDebugAction) IterCalls() []string             { return nil }
+func (a *LogicDebugAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *LogicDebugAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
 
 // --- Entry ---
 
 // Entry creates an RME (Rely-Guarantee relation) entry for action semantics.
 // Corresponds to Python's entry function.
-func Entry(ensures ...Expr) *RME {
+func Entry(ensures ...Expr) *LogicRME {
 	var ensNode Expr
 	if len(ensures) > 0 {
 		ensNode = ensures[0]
 	} else {
-		ensNode = &And{} // And() with no args = true
+		ensNode = &LogicAnd{} // And() with no args = true
 	}
-	return NewRME(&And{}, nil, ensNode)
+	return NewRME(&LogicAnd{}, nil, ensNode)
 }
 
 // --- TypeCheckContext ---

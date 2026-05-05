@@ -55,7 +55,7 @@ func (q *Qelim) GetConsts(s Sort, sortConstants *InsMap[string, []*Const]) []*Co
 		return consts
 	}
 	// For enumerated sorts, generate all values
-	if es, ok := s.(*EnumeratedSort); ok {
+	if es, ok := s.(*LogicEnumeratedSort); ok {
 		consts := make([]*Const, len(es.Extension))
 		for i, v := range es.Extension {
 			consts[i] = NewConst(v, s)
@@ -73,7 +73,7 @@ func isFiniteSort(s Sort) bool {
 	if SortEqual(s, Boolean) {
 		return true
 	}
-	if _, ok := s.(*EnumeratedSort); ok {
+	if _, ok := s.(*LogicEnumeratedSort); ok {
 		return true
 	}
 	return false
@@ -89,7 +89,7 @@ func (q *Qelim) QE(expr Expr, sortConstants *InsMap[string, []*Const]) Expr {
 	switch t := expr.(type) {
 	case *ForAll:
 		return q.qeQuantifier(t.Variables, t.Body, true, sortConstants)
-	case *Exists:
+	case *LogicExists:
 		return q.qeQuantifier(t.Variables, t.Body, false, sortConstants)
 	}
 
@@ -110,7 +110,7 @@ func (q *Qelim) QE(expr Expr, sortConstants *InsMap[string, []*Const]) Expr {
 }
 
 // qeQuantifier handles quantifier elimination for a single quantifier.
-func (q *Qelim) qeQuantifier(vars []*Variable, body Expr, isForall bool, sortConstants *InsMap[string, []*Const]) Expr {
+func (q *Qelim) qeQuantifier(vars []*LogicVariable, body Expr, isForall bool, sortConstants *InsMap[string, []*Const]) Expr {
 	// Check cache
 	key := fmt.Sprintf("%v:%v:%v", vars, body, isForall)
 	if old, ok := q.Syms[key]; ok {
@@ -149,9 +149,9 @@ func (q *Qelim) qeQuantifier(vars []*Variable, body Expr, isForall bool, sortCon
 
 	if allFinite {
 		if isForall {
-			return &And{Terms: insts}
+			return &LogicAnd{Terms: insts}
 		}
-		return &Or{Terms: insts}
+		return &LogicOr{Terms: insts}
 	}
 
 	// Infinite sorts: introduce fresh proposition with constraints
@@ -159,9 +159,9 @@ func (q *Qelim) qeQuantifier(vars []*Variable, body Expr, isForall bool, sortCon
 	for _, inst := range insts {
 		var constraint Expr
 		if isForall {
-			constraint = &Implies{T1: res, T2: inst}
+			constraint = &LogicImplies{T1: res, T2: inst}
 		} else {
-			constraint = &Implies{T1: inst, T2: res}
+			constraint = &LogicImplies{T1: inst, T2: res}
 		}
 		q.Fmlas = append(q.Fmlas, constraint)
 	}

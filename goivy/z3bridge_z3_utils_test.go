@@ -7,7 +7,7 @@ import (
 
 // --- helpers ---
 
-func z3MustVar(t *testing.T, name string, sort Sort) *Variable {
+func z3MustVar(t *testing.T, name string, sort Sort) *LogicVariable {
 	t.Helper()
 	v, err := NewVariable(name, sort)
 	if err != nil {
@@ -25,7 +25,7 @@ func z3MustApply(t *testing.T, fn Expr, terms ...Expr) *Apply {
 	return app
 }
 
-func z3MustForAll(t *testing.T, vars []*Variable, body Expr) *ForAll {
+func z3MustForAll(t *testing.T, vars []*LogicVariable, body Expr) *ForAll {
 	t.Helper()
 	fa, err := NewForAll(vars, body)
 	if err != nil {
@@ -34,7 +34,7 @@ func z3MustForAll(t *testing.T, vars []*Variable, body Expr) *ForAll {
 	return fa
 }
 
-func z3MustExists(t *testing.T, vars []*Variable, body Expr) *Exists {
+func z3MustExists(t *testing.T, vars []*LogicVariable, body Expr) *LogicExists {
 	t.Helper()
 	ex, err := NewExists(vars, body)
 	if err != nil {
@@ -52,7 +52,7 @@ func z3MustEq(t *testing.T, t1, t2 Expr) *Eq {
 	return eq
 }
 
-func mustIte(t *testing.T, cond, then_, else_ Expr) *Ite {
+func mustIte(t *testing.T, cond, then_, else_ Expr) *LogicIte {
 	t.Helper()
 	ite, err := NewIte(cond, then_, else_)
 	if err != nil {
@@ -226,7 +226,7 @@ func TestZ3BridgeToZ3VariableHigherOrderError(t *testing.T) {
 	s := &UninterpretedSort{Name: "S"}
 	fs := z3MustFS(t, s, s)
 	// Construct Variable with FunctionSort directly (NewVariable would reject)
-	v := &Variable{Name: "F", VSort: fs}
+	v := &LogicVariable{Name: "F", VSort: fs}
 	_, err := u.ToZ3(v)
 	if err == nil {
 		t.Fatal("expected error for higher-order variable")
@@ -300,7 +300,7 @@ func TestZ3BridgeToZ3Not(t *testing.T) {
 	defer u.Close()
 
 	p := NewConst("p", Boolean)
-	not := &Not{Body: p}
+	not := &LogicNot{Body: p}
 	result, err := u.ToZ3Expr(not)
 	if err != nil {
 		t.Fatal(err)
@@ -317,7 +317,7 @@ func TestZ3BridgeToZ3And(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	and := &And{Terms: []Expr{p, q}}
+	and := &LogicAnd{Terms: []Expr{p, q}}
 	result, err := u.ToZ3Expr(and)
 	if err != nil {
 		t.Fatal(err)
@@ -334,7 +334,7 @@ func TestZ3BridgeToZ3Or(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	or := &Or{Terms: []Expr{p, q}}
+	or := &LogicOr{Terms: []Expr{p, q}}
 	result, err := u.ToZ3Expr(or)
 	if err != nil {
 		t.Fatal(err)
@@ -350,7 +350,7 @@ func TestZ3BridgeToZ3AndEmpty(t *testing.T) {
 	defer u.Close()
 
 	// Empty And is logic.True → z3 BoolVal(true)
-	and := &And{Terms: []Expr{}}
+	and := &LogicAnd{Terms: []Expr{}}
 	result, err := u.ToZ3Expr(and)
 	if err != nil {
 		t.Fatal(err)
@@ -366,7 +366,7 @@ func TestZ3BridgeToZ3OrEmpty(t *testing.T) {
 	defer u.Close()
 
 	// Empty Or is logic.False → z3 BoolVal(false)
-	or := &Or{Terms: []Expr{}}
+	or := &LogicOr{Terms: []Expr{}}
 	result, err := u.ToZ3Expr(or)
 	if err != nil {
 		t.Fatal(err)
@@ -383,7 +383,7 @@ func TestZ3BridgeToZ3Implies(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	imp := &Implies{T1: p, T2: q}
+	imp := &LogicImplies{T1: p, T2: q}
 	result, err := u.ToZ3Expr(imp)
 	if err != nil {
 		t.Fatal(err)
@@ -401,7 +401,7 @@ func TestZ3BridgeToZ3Iff(t *testing.T) {
 	// Python maps Iff to z3 equality (==), NOT z3 Iff
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	iff := &Iff{T1: p, T2: q}
+	iff := &LogicIff{T1: p, T2: q}
 	result, err := u.ToZ3Expr(iff)
 	if err != nil {
 		t.Fatal(err)
@@ -443,7 +443,7 @@ func TestZ3BridgeToZ3ForAll(t *testing.T) {
 	p := NewConst("P", fs)
 	x := z3MustVar(t, "X", s)
 	body := z3MustApply(t, p, x) // P(X)
-	fa := z3MustForAll(t, []*Variable{x}, body)
+	fa := z3MustForAll(t, []*LogicVariable{x}, body)
 
 	result, err := u.ToZ3Expr(fa)
 	if err != nil {
@@ -466,7 +466,7 @@ func TestZ3BridgeToZ3Exists(t *testing.T) {
 	p := NewConst("P", fs)
 	x := z3MustVar(t, "X", s)
 	body := z3MustApply(t, p, x)
-	ex := z3MustExists(t, []*Variable{x}, body)
+	ex := z3MustExists(t, []*LogicVariable{x}, body)
 
 	result, err := u.ToZ3Expr(ex)
 	if err != nil {
@@ -483,7 +483,7 @@ func TestZ3BridgeToZ3ForAllEmpty(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	// Use struct literal for empty vars (NewForAll rejects empty)
-	fa := &ForAll{Variables: []*Variable{}, Body: p}
+	fa := &ForAll{Variables: []*LogicVariable{}, Body: p}
 	result, err := u.ToZ3Expr(fa)
 	if err != nil {
 		t.Fatal(err)
@@ -499,7 +499,7 @@ func TestZ3BridgeToZ3ExistsEmpty(t *testing.T) {
 	defer u.Close()
 
 	p := NewConst("p", Boolean)
-	ex := &Exists{Variables: []*Variable{}, Body: p}
+	ex := &LogicExists{Variables: []*LogicVariable{}, Body: p}
 	result, err := u.ToZ3Expr(ex)
 	if err != nil {
 		t.Fatal(err)
@@ -575,7 +575,7 @@ func TestZ3BridgeZ3UtilsImpliesValid(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 
 	result, err := u.Z3Implies(pAndQ, p, false)
 	if err != nil {
@@ -635,9 +635,9 @@ func TestZ3BridgeZ3UtilsImpliesTautology(t *testing.T) {
 	defer u.Close()
 
 	p := NewConst("p", Boolean)
-	notP := &Not{Body: p}
-	pOrNotP := &Or{Terms: []Expr{p, notP}}
-	trueVal := &And{Terms: []Expr{}} // logic.True
+	notP := &LogicNot{Body: p}
+	pOrNotP := &LogicOr{Terms: []Expr{p, notP}}
+	trueVal := &LogicAnd{Terms: []Expr{}} // logic.True
 
 	result, err := u.Z3Implies(trueVal, pOrNotP, false)
 	if err != nil {
@@ -654,7 +654,7 @@ func TestZ3BridgeZ3UtilsImpliesTimeout(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 
 	result, err := u.Z3Implies(pAndQ, p, true) // timeout=true
 	if err != nil {
@@ -673,7 +673,7 @@ func TestZ3BridgeZ3UtilsBatchValid(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 
 	results, err := u.Z3ImpliesBatch(pAndQ, []Expr{p, q}, false)
 	if err != nil {
@@ -713,7 +713,7 @@ func TestZ3BridgeZ3UtilsBatchMixed(t *testing.T) {
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
 	r := NewConst("r", Boolean)
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 
 	results, err := u.Z3ImpliesBatch(pAndQ, []Expr{p, r, q}, false)
 	if err != nil {
@@ -750,7 +750,7 @@ func TestZ3BridgeZ3UtilsBatchCacheHit(t *testing.T) {
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
-	pAndQ := &And{Terms: []Expr{p, q}}
+	pAndQ := &LogicAnd{Terms: []Expr{p, q}}
 
 	// First call
 	r1, err := u.Z3ImpliesBatch(pAndQ, []Expr{p}, false)
@@ -782,10 +782,10 @@ func TestZ3BridgeZ3UtilsBatchCacheHit(t *testing.T) {
 //
 //	S = UninterpretedSort('S')
 //	X, Y, Z = (Var(n, S) for n in ['X', 'Y', 'Z'])
-//	BinRel = FunctionSort(S, S, Boolean)
+//	BinRel = LogicFunctionSort(S, S, Boolean)
 //	leq = Const('leq', BinRel)
 func buildTransitivityFixtures(t *testing.T) (
-	leqXY, leqYZ, leqXZ Expr, X, Y, Z *Variable,
+	leqXY, leqYZ, leqXZ Expr, X, Y, Z *LogicVariable,
 	leq *Const,
 	S *UninterpretedSort,
 ) {
@@ -806,7 +806,7 @@ func buildTransitivityFixtures(t *testing.T) (
 //
 //	transitive1 = ForAll((X,Y,Z), Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z)))
 //	transitive2 = ForAll((X,Y,Z), Or(Not(leq(X,Y)), Not(leq(Y,Z)), leq(X,Z)))
-//	transitive3 = Not(Exists((X,Y,Z), And(leq(X,Y), leq(Y,Z), Not(leq(X,Z)))))
+//	transitive3 = LogicNot(Exists((X,Y,Z), And(leq(X,Y), leq(Y,Z), Not(leq(X,Z)))))
 //
 //	z3_implies(transitive1, transitive2) == True
 //	z3_implies(transitive2, transitive3) == True
@@ -816,24 +816,24 @@ func TestZ3BridgeZ3UtilsTransitivityEquivalences(t *testing.T) {
 	defer u.Close()
 
 	leqXY, leqYZ, leqXZ, X, Y, Z, _, _ := buildTransitivityFixtures(t)
-	vars := []*Variable{X, Y, Z}
+	vars := []*LogicVariable{X, Y, Z}
 
 	// transitive1: ForAll(X,Y,Z, Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z)))
-	andPremise := &And{Terms: []Expr{leqXY, leqYZ}}
-	imp := &Implies{T1: andPremise, T2: leqXZ}
+	andPremise := &LogicAnd{Terms: []Expr{leqXY, leqYZ}}
+	imp := &LogicImplies{T1: andPremise, T2: leqXZ}
 	transitive1 := z3MustForAll(t, vars, imp)
 
 	// transitive2: ForAll(X,Y,Z, Or(Not(leq(X,Y)), Not(leq(Y,Z)), leq(X,Z)))
-	notXY := &Not{Body: leqXY}
-	notYZ := &Not{Body: leqYZ}
-	orBody := &Or{Terms: []Expr{notXY, notYZ, leqXZ}}
+	notXY := &LogicNot{Body: leqXY}
+	notYZ := &LogicNot{Body: leqYZ}
+	orBody := &LogicOr{Terms: []Expr{notXY, notYZ, leqXZ}}
 	transitive2 := z3MustForAll(t, vars, orBody)
 
 	// transitive3: Not(Exists(X,Y,Z, And(leq(X,Y), leq(Y,Z), Not(leq(X,Z)))))
-	notXZ := &Not{Body: leqXZ}
-	andInner := &And{Terms: []Expr{leqXY, leqYZ, notXZ}}
+	notXZ := &LogicNot{Body: leqXZ}
+	andInner := &LogicAnd{Terms: []Expr{leqXY, leqYZ, notXZ}}
 	existsInner := z3MustExists(t, vars, andInner)
-	transitive3 := &Not{Body: existsInner}
+	transitive3 := &LogicNot{Body: existsInner}
 
 	// t1 => t2
 	r, err := u.Z3Implies(transitive1, transitive2, false)
@@ -871,23 +871,23 @@ func TestZ3BridgeZ3UtilsTransitivityNotAntisymmetric(t *testing.T) {
 	defer u.Close()
 
 	leqXY, leqYZ, leqXZ, X, Y, Z, _, S := buildTransitivityFixtures(t)
-	vars := []*Variable{X, Y, Z}
+	vars := []*LogicVariable{X, Y, Z}
 
 	// transitive3
-	notXZ := &Not{Body: leqXZ}
-	andInner := &And{Terms: []Expr{leqXY, leqYZ, notXZ}}
+	notXZ := &LogicNot{Body: leqXZ}
+	andInner := &LogicAnd{Terms: []Expr{leqXY, leqYZ, notXZ}}
 	existsInner := z3MustExists(t, vars, andInner)
-	transitive3 := &Not{Body: existsInner}
+	transitive3 := &LogicNot{Body: existsInner}
 
 	// antisymmetric: ForAll(X,Y, Implies(And(leq(X,Y), leq(Y,X), true), Eq(Y,X)))
 	binRel := z3MustFS(t, S, S, Boolean)
 	leq := NewConst("leq", binRel)
 	leqYX := z3MustApply(t, leq, Y, X)
-	trueVal := &And{Terms: []Expr{}} // logic.True
-	andBody := &And{Terms: []Expr{leqXY, leqYX, trueVal}}
+	trueVal := &LogicAnd{Terms: []Expr{}} // logic.True
+	andBody := &LogicAnd{Terms: []Expr{leqXY, leqYX, trueVal}}
 	eqYX := z3MustEq(t, Y, X)
-	impBody := &Implies{T1: andBody, T2: eqYX}
-	antisymmetric := z3MustForAll(t, []*Variable{X, Y}, impBody)
+	impBody := &LogicImplies{T1: andBody, T2: eqYX}
+	antisymmetric := z3MustForAll(t, []*LogicVariable{X, Y}, impBody)
 
 	r, err := u.Z3Implies(transitive3, antisymmetric, false)
 	if err != nil {
@@ -906,21 +906,21 @@ func TestZ3BridgeZ3UtilsIffEquivalence(t *testing.T) {
 	defer u.Close()
 
 	leqXY, leqYZ, leqXZ, X, Y, Z, _, _ := buildTransitivityFixtures(t)
-	vars := []*Variable{X, Y, Z}
+	vars := []*LogicVariable{X, Y, Z}
 
 	// transitive1
-	andPremise := &And{Terms: []Expr{leqXY, leqYZ}}
-	imp := &Implies{T1: andPremise, T2: leqXZ}
+	andPremise := &LogicAnd{Terms: []Expr{leqXY, leqYZ}}
+	imp := &LogicImplies{T1: andPremise, T2: leqXZ}
 	transitive1 := z3MustForAll(t, vars, imp)
 
 	// transitive2
-	notXY := &Not{Body: leqXY}
-	notYZ := &Not{Body: leqYZ}
-	orBody := &Or{Terms: []Expr{notXY, notYZ, leqXZ}}
+	notXY := &LogicNot{Body: leqXY}
+	notYZ := &LogicNot{Body: leqYZ}
+	orBody := &LogicOr{Terms: []Expr{notXY, notYZ, leqXZ}}
 	transitive2 := z3MustForAll(t, vars, orBody)
 
-	trueVal := &And{Terms: []Expr{}}
-	iff := &Iff{T1: transitive1, T2: transitive2}
+	trueVal := &LogicAnd{Terms: []Expr{}}
+	iff := &LogicIff{T1: transitive1, T2: transitive2}
 
 	r, err := u.Z3Implies(trueVal, iff, false)
 	if err != nil {
@@ -957,7 +957,7 @@ func TestZ3BridgeZ3UtilsIteImplications(t *testing.T) {
 	}
 
 	// Test 2: ¬b ⊨ Eq(Ite(b, x, y), y)
-	notB := &Not{Body: b}
+	notB := &LogicNot{Body: b}
 	eqIteY := z3MustEq(t, ite, y)
 	r, err = u.Z3Implies(notB, eqIteY, false)
 	if err != nil {
@@ -969,8 +969,8 @@ func TestZ3BridgeZ3UtilsIteImplications(t *testing.T) {
 
 	// Test 3: ¬Eq(x,y) ⊨ Iff(Eq(Ite(b,x,y),x), b)
 	eqXY := z3MustEq(t, x, y)
-	notEqXY := &Not{Body: eqXY}
-	iffEqB := &Iff{T1: eqIteX, T2: b}
+	notEqXY := &LogicNot{Body: eqXY}
+	iffEqB := &LogicIff{T1: eqIteX, T2: b}
 	r, err = u.Z3Implies(notEqXY, iffEqB, false)
 	if err != nil {
 		t.Fatal(err)

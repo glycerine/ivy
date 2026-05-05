@@ -13,13 +13,13 @@ func randomExpr(seed uint64, maxDepth int) Expr {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	Z, _ := NewVariable("Z", S)
-	vars := []*Variable{X, Y, Z}
+	vars := []*LogicVariable{X, Y, Z}
 	fs, _ := NewFunctionSort(S, Boolean)
 	sym := NewConst("f", fs)
 	return randNode(rng, S, vars, sym, maxDepth)
 }
 
-func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) Expr {
+func randNode(rng *rand.Rand, s Sort, vars []*LogicVariable, sym *Const, depth int) Expr {
 	if depth <= 0 {
 		return vars[rng.Intn(len(vars))]
 	}
@@ -57,7 +57,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 		}
 		a, _ := NewAnd(terms...)
 		if a == nil {
-			return &And{}
+			return &LogicAnd{}
 		}
 		return a
 	case 6: // Or
@@ -68,7 +68,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 		}
 		o, _ := NewOr(terms...)
 		if o == nil {
-			return &Or{}
+			return &LogicOr{}
 		}
 		return o
 	case 7: // Implies
@@ -90,7 +90,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 	case 9: // ForAll
 		v := vars[rng.Intn(len(vars))]
 		body := randBoolNode(rng, s, vars, sym, depth-1)
-		fa, _ := NewForAll([]*Variable{v}, body)
+		fa, _ := NewForAll([]*LogicVariable{v}, body)
 		if fa == nil {
 			return body
 		}
@@ -98,7 +98,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 	case 10: // Exists
 		v := vars[rng.Intn(len(vars))]
 		body := randBoolNode(rng, s, vars, sym, depth-1)
-		ex, _ := NewExists([]*Variable{v}, body)
+		ex, _ := NewExists([]*LogicVariable{v}, body)
 		if ex == nil {
 			return body
 		}
@@ -106,7 +106,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 	case 11: // Lambda
 		v := vars[rng.Intn(len(vars))]
 		body := randNode(rng, s, vars, sym, depth-1)
-		lam, _ := NewLambda([]*Variable{v}, body)
+		lam, _ := NewLambda([]*LogicVariable{v}, body)
 		if lam == nil {
 			return body
 		}
@@ -132,7 +132,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 	case 15: // NamedBinder
 		v := vars[rng.Intn(len(vars))]
 		body := randBoolNode(rng, s, vars, sym, depth-1)
-		nb, _ := NewNamedBinder("nb", []*Variable{v}, nil, body)
+		nb, _ := NewNamedBinder("nb", []*LogicVariable{v}, nil, body)
 		if nb == nil {
 			return body
 		}
@@ -142,14 +142,14 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) E
 }
 
 // randBoolNode generates an Expr guaranteed to be Boolean-sorted.
-func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) Expr {
+func randBoolNode(rng *rand.Rand, s Sort, vars []*LogicVariable, sym *Const, depth int) Expr {
 	if depth <= 0 {
 		// Base case: simple equality
 		v1 := vars[rng.Intn(len(vars))]
 		v2 := vars[rng.Intn(len(vars))]
 		e, _ := NewEq(v1, v2)
 		if e == nil {
-			return &And{} // true
+			return &LogicAnd{} // true
 		}
 		return e
 	}
@@ -161,7 +161,7 @@ func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth in
 		if e != nil {
 			return e
 		}
-		return &And{}
+		return &LogicAnd{}
 	case 1:
 		body := randBoolNode(rng, s, vars, sym, depth-1)
 		n, _ := NewNot(body)
@@ -179,7 +179,7 @@ func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth in
 		if a != nil {
 			return a
 		}
-		return &And{}
+		return &LogicAnd{}
 	case 3:
 		n := rng.Intn(3)
 		terms := make([]Expr, n)
@@ -190,7 +190,7 @@ func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth in
 		if o != nil {
 			return o
 		}
-		return &Or{}
+		return &LogicOr{}
 	case 4:
 		t1 := randBoolNode(rng, s, vars, sym, depth-1)
 		t2 := randBoolNode(rng, s, vars, sym, depth-1)
@@ -200,7 +200,7 @@ func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth in
 		}
 		return t1
 	}
-	return &And{}
+	return &LogicAnd{}
 }
 
 // balanced checks that open/close characters are balanced in s.
@@ -261,7 +261,7 @@ func FuzzSexpCanonEquality(f *testing.F) {
 		// Verify Canon() == Sexp() via type switch on all concrete types.
 		var canon string
 		switch n := node.(type) {
-		case *Variable:
+		case *LogicVariable:
 			canon = string(n.Canon())
 		case *Const:
 			canon = string(n.Canon())
@@ -269,29 +269,29 @@ func FuzzSexpCanonEquality(f *testing.F) {
 			canon = string(n.Canon())
 		case *Eq:
 			canon = string(n.Canon())
-		case *Not:
+		case *LogicNot:
 			canon = string(n.Canon())
-		case *And:
+		case *LogicAnd:
 			canon = string(n.Canon())
-		case *Or:
+		case *LogicOr:
 			canon = string(n.Canon())
-		case *Implies:
+		case *LogicImplies:
 			canon = string(n.Canon())
-		case *Iff:
+		case *LogicIff:
 			canon = string(n.Canon())
 		case *ForAll:
 			canon = string(n.Canon())
-		case *Exists:
+		case *LogicExists:
 			canon = string(n.Canon())
 		case *Lambda:
 			canon = string(n.Canon())
-		case *Globally:
+		case *LogicGlobally:
 			canon = string(n.Canon())
-		case *Eventually:
+		case *LogicEventually:
 			canon = string(n.Canon())
-		case *NamedBinder:
+		case *LogicNamedBinder:
 			canon = string(n.Canon())
-		case *Definition:
+		case *LogicDefinition:
 			canon = string(n.Canon())
 		default:
 			t.Fatalf("unknown type: %T", node)

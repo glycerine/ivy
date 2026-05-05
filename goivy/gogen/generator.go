@@ -127,7 +127,7 @@ func (g *Generator) emitQuantifierHelpers(w *CodeWriter) {
 		if !ok {
 			continue
 		}
-		if _, ok := s.(*goivy.EnumeratedSort); !ok {
+		if _, ok := s.(*goivy.LogicEnumeratedSort); !ok {
 			continue
 		}
 		if !hasAny {

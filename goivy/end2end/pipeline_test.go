@@ -89,7 +89,7 @@ conjecture r(X) | ~r(X)
 	if err != nil {
 		t.Fatalf("symbol 'r' not found: %v", err)
 	}
-	fs, ok := entry.CSort.(*goivy.FunctionSort)
+	fs, ok := entry.CSort.(*goivy.LogicFunctionSort)
 	if !ok {
 		t.Fatalf("r sort should be FunctionSort, got %T", entry.CSort)
 	}
@@ -114,7 +114,7 @@ func TestParseCompile_EnumTypes(t *testing.T) {
 	if !ok {
 		t.Fatal("sort 'color' not found")
 	}
-	es, ok := sort.(*goivy.EnumeratedSort)
+	es, ok := sort.(*goivy.LogicEnumeratedSort)
 	if !ok {
 		t.Fatalf("expected EnumeratedSort for color, got %T", sort)
 	}
@@ -150,7 +150,7 @@ func TestParseCompile_ClientServer(t *testing.T) {
 			t.Errorf("relation '%s' not found: %v", relName, err)
 			continue
 		}
-		fs, ok := entry.CSort.(*goivy.FunctionSort)
+		fs, ok := entry.CSort.(*goivy.LogicFunctionSort)
 		if !ok {
 			t.Errorf("%s sort should be FunctionSort, got %T", relName, entry.CSort)
 			continue
@@ -162,14 +162,14 @@ func TestParseCompile_ClientServer(t *testing.T) {
 
 	// Check link arity = 2 (client, server)
 	linkEntry, _ := mod.Sig.FindSymbol("link", false)
-	linkFS := linkEntry.CSort.(*goivy.FunctionSort)
+	linkFS := linkEntry.CSort.(*goivy.LogicFunctionSort)
 	if linkFS.Arity() != 2 {
 		t.Errorf("link arity should be 2, got %d", linkFS.Arity())
 	}
 
 	// Check semaphore arity = 1 (server)
 	semEntry, _ := mod.Sig.FindSymbol("semaphore", false)
-	semFS := semEntry.CSort.(*goivy.FunctionSort)
+	semFS := semEntry.CSort.(*goivy.LogicFunctionSort)
 	if semFS.Arity() != 1 {
 		t.Errorf("semaphore arity should be 1, got %d", semFS.Arity())
 	}

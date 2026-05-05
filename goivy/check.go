@@ -65,7 +65,7 @@ func NewBaseChecker(mod *Module, conj Expr, reportPass bool, invert bool) *BaseC
 	if invert {
 		// Python: def witness(v): return lg.Symbol('@'+v.name, v.sort)
 		//         self.fc = lut.dual_clauses(self.fc, witness)
-		witness := func(v *Variable) Expr {
+		witness := func(v *LogicVariable) Expr {
 			return VarToSkolem("@", v)
 		}
 		fc = DualClauses(fc, witness, mod.Instantiator)
@@ -715,7 +715,7 @@ func CheckConjsInState(mod *Module, indent int, pcs []*LabeledFormula) bool {
 // lg.Or() with no terms is "false", so after dualization the check
 // succeeds iff the post-state has no assertion violations.
 func CheckSafetyInState(mod *Module, reportPass bool) bool {
-	checker := NewBaseChecker(mod, &Or{}, reportPass, true)
+	checker := NewBaseChecker(mod, &LogicOr{}, reportPass, true)
 	return CheckFcsInState(mod, []Checker{checker})
 }
 
@@ -795,7 +795,7 @@ func ConvertPostcondsWithUpdate(update *Update, postconds []*LabeledFormula) []*
 
 	// Python: for s in updated: renaming[itr.old(s)] = s.prefix('__')
 	for _, s := range update.Modified {
-		oldName := Old(s.Name)
+		oldName := LogicOld(s.Name)
 		oldSym := NewConst(oldName, s.CSort)
 		renaming[Key(oldSym)] = NewConst("__"+s.Name, s.CSort)
 	}
@@ -1080,14 +1080,14 @@ func applyTemporalTacticChain(prover interface{}, goals []*LabeledFormula, proof
 	// Check for TemporalModels via the formula directly, since
 	// GoalConc returns lg.Expr and TemporalModels is ast.Node.
 	// This matches the pattern in CheckSubgoals.
-	var tm *AstTemporalModels
+	var tm *TemporalModels
 	var isTM bool
 	if sb, ok := goal.Formula.(*SchemaBody); ok {
 		if c := sb.Conc(); c != nil {
-			tm, isTM = c.(*AstTemporalModels)
+			tm, isTM = c.(*TemporalModels)
 		}
 	} else if goal.Formula != nil {
-		tm, isTM = goal.Formula.(*AstTemporalModels)
+		tm, isTM = goal.Formula.(*TemporalModels)
 	}
 	if !isTM {
 		return goals, nil

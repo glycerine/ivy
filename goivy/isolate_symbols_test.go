@@ -21,13 +21,13 @@ func tApply(fn Expr, terms ...Expr) *Apply {
 }
 
 func tForAll(body Expr) *ForAll {
-	v := &Variable{Name: "V", VSort: tSort()}
-	return &ForAll{Variables: []*Variable{v}, Body: body}
+	v := &LogicVariable{Name: "V", VSort: tSort()}
+	return &ForAll{Variables: []*LogicVariable{v}, Body: body}
 }
 
 func tLambda(body Expr) *Lambda {
-	v := &Variable{Name: "V", VSort: tSort()}
-	return &Lambda{Variables: []*Variable{v}, Body: body}
+	v := &LogicVariable{Name: "V", VSort: tSort()}
+	return &Lambda{Variables: []*LogicVariable{v}, Body: body}
 }
 
 func symSetNames(syms *InsMap[NodeKey, Expr]) map[string]bool {
@@ -125,7 +125,7 @@ func TestCollectSymbolsInto_ForAllBody(t *testing.T) {
 	g := tConst("g")
 	a := tConst("a")
 	b := tConst("b")
-	body := &And{Terms: []Expr{tApply(f, a), tApply(g, b)}}
+	body := &LogicAnd{Terms: []Expr{tApply(f, a), tApply(g, b)}}
 	fa := tForAll(body)
 
 	syms := NewInsMap[NodeKey, Expr]()
@@ -180,7 +180,7 @@ func randAST(rng *rand.Rand, consts []*Const, depth int) Expr {
 		for i := range terms {
 			terms[i] = randAST(rng, consts, depth-1)
 		}
-		return &And{Terms: terms}
+		return &LogicAnd{Terms: terms}
 	case 3: // ForAll
 		return tForAll(randAST(rng, consts, depth-1))
 	case 4: // Apply with Lambda func (binder case)

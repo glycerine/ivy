@@ -332,7 +332,7 @@ func TestRegression_Bug9_FindAssertionsRanking(t *testing.T) {
 	found := FindAssertions("", mod)
 	foundRanking := false
 	for _, a := range found {
-		if _, ok := a.(*Ranking); ok {
+		if _, ok := a.(*LogicRanking); ok {
 			foundRanking = true
 		}
 	}
@@ -351,10 +351,10 @@ func TestRegression_Bug9_BothTypes(t *testing.T) {
 	found := FindAssertions("", mod)
 	hasAssert, hasRanking := false, false
 	for _, a := range found {
-		if _, ok := a.(*AssertAction); ok {
+		if _, ok := a.(*LogicAssertAction); ok {
 			hasAssert = true
 		}
-		if _, ok := a.(*Ranking); ok {
+		if _, ok := a.(*LogicRanking); ok {
 			hasRanking = true
 		}
 	}

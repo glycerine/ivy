@@ -25,7 +25,7 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		return "", fmt.Errorf("gogen: nil node")
 	}
 	switch n := node.(type) {
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		return goUnexportedName(n.Name), nil
 
 	case *goivy.Const:
@@ -45,14 +45,14 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		}
 		return fmt.Sprintf("(%s == %s)", lhs, rhs), nil
 
-	case *goivy.Not:
+	case *goivy.LogicNot:
 		body, err := e.EmitExpr(n.Body)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("(!%s)", body), nil
 
-	case *goivy.And:
+	case *goivy.LogicAnd:
 		if len(n.Terms) == 0 {
 			return "true", nil
 		}
@@ -66,7 +66,7 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		}
 		return "(" + strings.Join(parts, " && ") + ")", nil
 
-	case *goivy.Or:
+	case *goivy.LogicOr:
 		if len(n.Terms) == 0 {
 			return "false", nil
 		}
@@ -80,7 +80,7 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		}
 		return "(" + strings.Join(parts, " || ") + ")", nil
 
-	case *goivy.Implies:
+	case *goivy.LogicImplies:
 		lhs, err := e.EmitExpr(n.T1)
 		if err != nil {
 			return "", err
@@ -91,7 +91,7 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		}
 		return fmt.Sprintf("(!%s || %s)", lhs, rhs), nil
 
-	case *goivy.Iff:
+	case *goivy.LogicIff:
 		lhs, err := e.EmitExpr(n.T1)
 		if err != nil {
 			return "", err
@@ -102,13 +102,13 @@ func (e *ExprEmitter) EmitExpr(node goivy.Expr) (string, error) {
 		}
 		return fmt.Sprintf("(%s == %s)", lhs, rhs), nil
 
-	case *goivy.Ite:
+	case *goivy.LogicIte:
 		return e.emitIte(n)
 
 	case *goivy.ForAll:
 		return e.emitForAll(n)
 
-	case *goivy.Exists:
+	case *goivy.LogicExists:
 		return e.emitExists(n)
 
 	case *goivy.Lambda:
@@ -152,7 +152,7 @@ func (e *ExprEmitter) emitApply(a *goivy.Apply) (string, error) {
 
 // emitIte generates code for if-then-else expressions.
 // Go has no ternary, so we use a helper function.
-func (e *ExprEmitter) emitIte(ite *goivy.Ite) (string, error) {
+func (e *ExprEmitter) emitIte(ite *goivy.LogicIte) (string, error) {
 	cond, err := e.EmitExpr(ite.Cond)
 	if err != nil {
 		return "", err
@@ -196,7 +196,7 @@ func (e *ExprEmitter) emitForAll(fa *goivy.ForAll) (string, error) {
 }
 
 // emitExists generates an exists helper call for existentially quantified formulas.
-func (e *ExprEmitter) emitExists(ex *goivy.Exists) (string, error) {
+func (e *ExprEmitter) emitExists(ex *goivy.LogicExists) (string, error) {
 	body, err := e.EmitExpr(ex.Body)
 	if err != nil {
 		return "", err
@@ -297,7 +297,7 @@ func sortHelperName(s goivy.Sort) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return "Bool"
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		return goExportedName(st.Name)
 	case *goivy.RangeSort:
 		return goExportedName(st.Name)
@@ -313,7 +313,7 @@ func allValsExpr(s goivy.Sort) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return "[2]bool{false, true}"
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		return "all" + goExportedName(st.Name)
 	case *goivy.RangeSort:
 		name := goExportedName(st.Name)

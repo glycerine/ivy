@@ -13,7 +13,7 @@ import (
 func segVarPat(t *Apply) []NodeKey {
 	result := make([]NodeKey, len(t.Terms))
 	for i, arg := range t.Terms {
-		if v, ok := arg.(*Variable); ok {
+		if v, ok := arg.(*LogicVariable); ok {
 			result[i] = Key(v)
 		}
 	}
@@ -91,7 +91,7 @@ func isEPRRec(term Expr, uvars map[NodeKey]Expr) bool {
 		}
 		return isEPRRec(fa.Body, newUvars)
 	}
-	if ex, ok := term.(*Exists); ok {
+	if ex, ok := term.(*LogicExists); ok {
 		// Check if any free variable of the exists is in uvars
 		fvs := FreeVariables(ex)
 		for _, v := range fvs.All() {
@@ -221,7 +221,7 @@ func symbolsOverUniversalsRec(fmla Expr, syms map[string]*Const, pos bool, univs
 			return res
 		}
 	}
-	if _, ok := fmla.(*Not); ok {
+	if _, ok := fmla.(*LogicNot); ok {
 		pos = !pos
 	}
 	argres := true
@@ -269,7 +269,7 @@ func universalVariablesRec(fmla Expr, pos bool, univs map[NodeKey]Expr) {
 			return
 		}
 	}
-	if _, ok := fmla.(*Implies); ok {
+	if _, ok := fmla.(*LogicImplies); ok {
 		args := NodeArgs(fmla)
 		if len(args) == 2 {
 			universalVariablesRec(args[0], !pos, univs)
@@ -277,7 +277,7 @@ func universalVariablesRec(fmla Expr, pos bool, univs map[NodeKey]Expr) {
 			return
 		}
 	}
-	if _, ok := fmla.(*Not); ok {
+	if _, ok := fmla.(*LogicNot); ok {
 		pos = !pos
 	}
 	for _, a := range NodeArgs(fmla) {
@@ -288,14 +288,14 @@ func universalVariablesRec(fmla Expr, pos bool, univs map[NodeKey]Expr) {
 // UniversalVariables returns the variables that are universally quantified
 // after skolemization.
 // Corresponds to Python's universal_variables.
-func UniversalVariables(fmlas []Expr) []*Variable {
+func UniversalVariables(fmlas []Expr) []*LogicVariable {
 	univs := make(map[NodeKey]Expr)
 	for _, fmla := range fmlas {
 		universalVariablesRec(fmla, true, univs)
 	}
-	result := make([]*Variable, 0, len(univs))
+	result := make([]*LogicVariable, 0, len(univs))
 	for _, node := range univs {
-		if vv, ok := node.(*Variable); ok {
+		if vv, ok := node.(*LogicVariable); ok {
 			result = append(result, vv)
 		}
 	}
@@ -314,7 +314,7 @@ var macroExpansions = map[string]func(*Apply) Expr{
 		ltSym := NewConst("<", t.Func.NodeSort())
 		ltApp := MustApply(ltSym, t.Terms...)
 		eq := &Eq{T1: t.Terms[0], T2: t.Terms[1]}
-		return &Or{Terms: []Expr{ltApp, eq}}
+		return &LogicOr{Terms: []Expr{ltApp, eq}}
 	},
 	">": func(t *Apply) Expr {
 		if len(t.Terms) != 2 {
@@ -332,7 +332,7 @@ var macroExpansions = map[string]func(*Apply) Expr{
 		swapped := []Expr{t.Terms[1], t.Terms[0]}
 		ltApp := MustApply(ltSym, swapped...)
 		eq := &Eq{T1: t.Terms[0], T2: t.Terms[1]}
-		return &Or{Terms: []Expr{ltApp, eq}}
+		return &LogicOr{Terms: []Expr{ltApp, eq}}
 	},
 }
 
@@ -381,7 +381,7 @@ func ExpandMacro(term Expr) Expr {
 // Corresponds to Python's exclusivity.
 func IvyExclusivity(sort Sort, variants []Sort) Expr {
 	pto := func(s Sort) *Const {
-		return NewConst("*>", RelationSort([]Sort{sort, s}))
+		return NewConst("*>", LogicRelationSort([]Sort{sort, s}))
 	}
 
 	var conjuncts []Expr
@@ -398,9 +398,9 @@ func IvyExclusivity(sort Sort, variants []Sort) Expr {
 		z, _ := NewVariable("Z", s)
 		ptoXZ := MustApply(pto(s), x, z)
 		ptoYZ := MustApply(pto(s), y, z)
-		premise := &And{Terms: []Expr{ptoXZ, ptoYZ}}
+		premise := &LogicAnd{Terms: []Expr{ptoXZ, ptoYZ}}
 		conclusion := &Eq{T1: x, T2: y}
-		conjuncts = append(conjuncts, &Implies{T1: premise, T2: conclusion})
+		conjuncts = append(conjuncts, &LogicImplies{T1: premise, T2: conclusion})
 	}
 
 	// Mutual exclusion between different variants
@@ -412,18 +412,18 @@ func IvyExclusivity(sort Sort, variants []Sort) Expr {
 			z, _ := NewVariable("Z", s2)
 			pto1 := MustApply(pto(s1), x, y)
 			pto2 := MustApply(pto(s2), x, z)
-			conjuncts = append(conjuncts, &Not{Body: &And{Terms: []Expr{pto1, pto2}}})
+			conjuncts = append(conjuncts, &LogicNot{Body: &LogicAnd{Terms: []Expr{pto1, pto2}}})
 		}
 	}
 
-	return &And{Terms: conjuncts}
+	return &LogicAnd{Terms: conjuncts}
 }
 
 // Variables generates a list of variables, one for each sort in the list.
 // Variable names are V0, V1, V2, ...
 // Corresponds to Python's variables.
-func Variables(sorts []Sort) []*Variable {
-	vars := make([]*Variable, len(sorts))
+func Variables(sorts []Sort) []*LogicVariable {
+	vars := make([]*LogicVariable, len(sorts))
 	for i, s := range sorts {
 		v, _ := NewVariable(fmt.Sprintf("V%d", i), s)
 		vars[i] = v
@@ -462,7 +462,7 @@ func IsDefinitional(defn Expr) bool {
 	var lhs Expr
 	if eq, ok := defn.(*Eq); ok {
 		lhs = eq.T1
-	} else if iff, ok := defn.(*Iff); ok {
+	} else if iff, ok := defn.(*LogicIff); ok {
 		lhs = iff.T1
 	} else {
 		return false
@@ -476,7 +476,7 @@ func IsDefinitional(defn Expr) bool {
 	args := NodeArgs(lhs)
 	seen := make(map[string]bool)
 	for _, a := range args {
-		v, ok := a.(*Variable)
+		v, ok := a.(*LogicVariable)
 		if !ok {
 			continue
 		}

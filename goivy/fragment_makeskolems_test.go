@@ -16,8 +16,8 @@ func TestMakeSkolemsSkolemRecorded(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	body := &Eq{T1: X, T2: Y}
-	exists := &Exists{Variables: []*Variable{Y}, Body: body}
-	forall := &ForAll{Variables: []*Variable{X}, Body: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	forall := &ForAll{Variables: []*LogicVariable{X}, Body: exists}
 
 	sig := NewSig()
 	sig.AddSort(S)
@@ -44,8 +44,8 @@ func TestMakeSkolemsNotReturnsEarly(t *testing.T) {
 	// Y should NOT be in skolemMap.
 	S := &UninterpretedSort{Name: "S"}
 	Y, _ := NewVariable("Y", S)
-	exists := &Exists{Variables: []*Variable{Y}, Body: Y}
-	not := &Not{Body: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: Y}
+	not := &LogicNot{Body: exists}
 
 	sig := NewSig()
 	sig.AddSort(S)
@@ -68,8 +68,8 @@ func TestMakeSkolemsImpliesReturnsEarly(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	Y, _ := NewVariable("Y", S)
 	p := NewConst("p", Boolean)
-	exists := &Exists{Variables: []*Variable{Y}, Body: Y}
-	imp := &Implies{T1: p, T2: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: Y}
+	imp := &LogicImplies{T1: p, T2: exists}
 
 	sig := NewSig()
 	sig.AddSort(S)
@@ -91,7 +91,7 @@ func TestMakeSkolemsForAllNodeArgsReturnsBody(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	body := NewConst("p", Boolean)
-	fa := &ForAll{Variables: []*Variable{X}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{X}, Body: body}
 
 	args := NodeArgs(fa)
 	if len(args) != 1 {
@@ -106,7 +106,7 @@ func TestMakeSkolemsExistsNodeArgsReturnsBody(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	Y, _ := NewVariable("Y", S)
 	body := NewConst("q", Boolean)
-	ex := &Exists{Variables: []*Variable{Y}, Body: body}
+	ex := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
 
 	args := NodeArgs(ex)
 	if len(args) != 1 {
@@ -121,13 +121,13 @@ func TestMakeSkolemsExistsNodeArgsReturnsBody(t *testing.T) {
 
 // Helper: builds ForAll([X], Exists([Y], Eq(X,Y))) and a separate source marker.
 // Returns the formula, the source, sort S, variable X, and variable Y.
-func buildSkolemTestFormula() (fmla Expr, source Expr, S *UninterpretedSort, X, Y *Variable) {
+func buildSkolemTestFormula() (fmla Expr, source Expr, S *UninterpretedSort, X, Y *LogicVariable) {
 	S = &UninterpretedSort{Name: "S"}
 	X, _ = NewVariable("X", S)
 	Y, _ = NewVariable("Y", S)
 	body := &Eq{T1: X, T2: Y}
-	exists := &Exists{Variables: []*Variable{Y}, Body: body}
-	fmla = &ForAll{Variables: []*Variable{X}, Body: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	fmla = &ForAll{Variables: []*LogicVariable{X}, Body: exists}
 	// Use a distinct Const as the source marker (simulates a LabeledFormula or Action)
 	source = NewConst("__source_marker__", Boolean)
 	return
@@ -162,7 +162,7 @@ func TestMakeSkolemSourcePropagatedThroughNot(t *testing.T) {
 	// Not flips polarity. Not(ForAll([X], Exists([Y], Eq(X,Y)))) with pol=false:
 	// Not flips to pol=true, then ForAll under pol=true is universal, Exists is skolem.
 	fmla, source, S, X, Y := buildSkolemTestFormula()
-	notFmla := &Not{Body: fmla}
+	notFmla := &LogicNot{Body: fmla}
 
 	sig := NewSig()
 	sig.AddSort(S)
@@ -187,7 +187,7 @@ func TestMakeSkolemSourcePropagatedThroughImplies(t *testing.T) {
 	// Implies processes T2 with pol=true → ForAll universal, Exists skolem.
 	fmla, source, S, X, Y := buildSkolemTestFormula()
 	p := NewConst("p", Boolean)
-	imp := &Implies{T1: p, T2: fmla}
+	imp := &LogicImplies{T1: p, T2: fmla}
 
 	sig := NewSig()
 	sig.AddSort(S)
@@ -215,9 +215,9 @@ func TestMakeSkolemSourcePropagatedThroughUniversal(t *testing.T) {
 	Y, _ := NewVariable("Y", S)
 	Z, _ := NewVariable("Z", S)
 	body := &Eq{T1: X, T2: Y}
-	exists := &Exists{Variables: []*Variable{Y}, Body: body}
-	innerForall := &ForAll{Variables: []*Variable{Z}, Body: exists}
-	outerForall := &ForAll{Variables: []*Variable{X}, Body: innerForall}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	innerForall := &ForAll{Variables: []*LogicVariable{Z}, Body: exists}
+	outerForall := &ForAll{Variables: []*LogicVariable{X}, Body: innerForall}
 	source := NewConst("__source_marker__", Boolean)
 
 	sig := NewSig()
@@ -252,8 +252,8 @@ func TestMakeSkolemsDivergence7DifferentSortNoMatch(t *testing.T) {
 	X2, _ := NewVariable("X", S2)
 	Y, _ := NewVariable("Y", S1)
 	body := &Eq{T1: X2, T2: Y}
-	exists := &Exists{Variables: []*Variable{Y}, Body: body}
-	forall := &ForAll{Variables: []*Variable{X1}, Body: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	forall := &ForAll{Variables: []*LogicVariable{X1}, Body: exists}
 
 	sig := NewSig()
 	sig.AddSort(S1)
@@ -278,8 +278,8 @@ func TestMakeSkolemsDivergence7SameSortMatches(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	body := &Eq{T1: X, T2: Y}
-	exists := &Exists{Variables: []*Variable{Y}, Body: body}
-	forall := &ForAll{Variables: []*Variable{X}, Body: exists}
+	exists := &LogicExists{Variables: []*LogicVariable{Y}, Body: body}
+	forall := &ForAll{Variables: []*LogicVariable{X}, Body: exists}
 
 	sig := NewSig()
 	sig.AddSort(S)

@@ -8,9 +8,9 @@ package goivy
 //   - If RHS is Some without if_value: IvyForAll(x, Implies(phi, substitute(phi, {x: lhs})))
 //   - If LHS is Apply (function definition): Eq(lhs, rhs)
 //   - Otherwise (propositional): Iff(lhs, rhs)
-func DefinitionToConstraint(d *Definition) Expr {
+func DefinitionToConstraint(d *LogicDefinition) Expr {
 	// Check if RHS is a Some (conditional definition)
-	if some, ok := d.Rhs.(*Some); ok {
+	if some, ok := d.Rhs.(*LogicSome); ok {
 		return someToConstraint(d.Lhs, some)
 	}
 	// If LHS is individual (non-Boolean sort): use Eq(lhs, rhs)
@@ -19,17 +19,17 @@ func DefinitionToConstraint(d *Definition) Expr {
 		return &Eq{T1: d.Lhs, T2: d.Rhs}
 	}
 	// Otherwise: use Iff(lhs, rhs) for propositional definitions
-	return &Iff{T1: d.Lhs, T2: d.Rhs}
+	return &LogicIff{T1: d.Lhs, T2: d.Rhs}
 }
 
 // someToConstraint converts a definition with a Some RHS to a constraint.
 // Python ivy_logic.py:237-246.
-func someToConstraint(lhs Expr, some *Some) Expr {
+func someToConstraint(lhs Expr, some *LogicSome) Expr {
 	if len(some.Params) == 0 {
 		// Degenerate: no parameters, treat as simple definition
 		return &Eq{T1: lhs, T2: some.Fmla}
 	}
-	x, ok := some.Params[0].(*Variable)
+	x, ok := some.Params[0].(*LogicVariable)
 	if !ok {
 		// Fallback: treat as equality
 		return &Eq{T1: lhs, T2: some}
@@ -45,17 +45,17 @@ func someToConstraint(lhs Expr, some *Some) Expr {
 		ifVal := some.IfVal
 		elseVal := some.ElseVal
 
-		existsInner := &Exists{
-			Variables: []*Variable{x},
-			Body:      &And{Terms: []Expr{phi, &Eq{T1: lhs, T2: ifVal}}},
+		existsInner := &LogicExists{
+			Variables: []*LogicVariable{x},
+			Body:      &LogicAnd{Terms: []Expr{phi, &Eq{T1: lhs, T2: ifVal}}},
 		}
-		arm1 := &Implies{T1: phi, T2: existsInner}
+		arm1 := &LogicImplies{T1: phi, T2: existsInner}
 
-		existsOuter := &Exists{Variables: []*Variable{x}, Body: phi}
+		existsOuter := &LogicExists{Variables: []*LogicVariable{x}, Body: phi}
 		eqElse := &Eq{T1: lhs, T2: elseVal}
-		arm2 := &Or{Terms: []Expr{existsOuter, eqElse}}
+		arm2 := &LogicOr{Terms: []Expr{existsOuter, eqElse}}
 
-		return &And{Terms: []Expr{arm1, arm2}}
+		return &LogicAnd{Terms: []Expr{arm1, arm2}}
 	}
 
 	// Simple case: some X. phi (no if/else)
@@ -69,7 +69,7 @@ func someToConstraint(lhs Expr, some *Some) Expr {
 		return &Eq{T1: lhs, T2: some}
 	}
 	return &ForAll{
-		Variables: []*Variable{x},
-		Body:      &Implies{T1: phi, T2: substPhi},
+		Variables: []*LogicVariable{x},
+		Body:      &LogicImplies{T1: phi, T2: substPhi},
 	}
 }

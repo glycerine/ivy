@@ -414,7 +414,7 @@ func TestARGSetupScenario(t *testing.T) {
 	c := newTestCompiler()
 
 	// First run DomainSetup to create place symbols (pass 1)
-	relSort := RelationSort([]Sort{})
+	relSort := LogicRelationSort([]Sort{})
 	for _, name := range []string{"s0", "s1"} {
 		_, err := c.AddSymbol(name, relSort, c.Sig)
 		if err != nil {
@@ -492,4 +492,4 @@ func TestARGSetupScenario(t *testing.T) {
 }
 
 // Ensure imports are used.
-var _ = RelationSort
+var _ = LogicRelationSort

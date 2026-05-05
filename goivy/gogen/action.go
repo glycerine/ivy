@@ -32,61 +32,61 @@ func (e *ActionEmitter) EmitAction(act goivy.ActionsAction) {
 		return
 	}
 	switch a := act.(type) {
-	case *goivy.AssignAction:
+	case *goivy.LogicAssignAction:
 		e.emitAssign(a)
-	case *goivy.Sequence:
+	case *goivy.LogicSequence:
 		e.emitSequence(a)
-	case *goivy.IfAction:
+	case *goivy.LogicIfAction:
 		e.emitIf(a)
-	case *goivy.WhileAction:
+	case *goivy.LogicWhileAction:
 		e.emitWhile(a)
-	case *goivy.CallAction:
+	case *goivy.LogicCallAction:
 		e.emitCall(a)
-	case *goivy.AssertAction:
+	case *goivy.LogicAssertAction:
 		e.emitAssert(a)
-	case *goivy.RequiresAction:
+	case *goivy.LogicRequiresAction:
 		e.emitRequire(a)
-	case *goivy.EnsuresAction:
+	case *goivy.LogicEnsuresAction:
 		e.emitEnsure(a)
-	case *goivy.AssumeAction:
+	case *goivy.LogicAssumeAction:
 		e.emitAssume(a)
-	case *goivy.HavocAction:
+	case *goivy.LogicHavocAction:
 		e.emitHavoc(a)
-	case *goivy.ChoiceAction:
+	case *goivy.LogicChoiceAction:
 		e.emitChoice(a)
-	case *goivy.EnvAction:
+	case *goivy.LogicEnvAction:
 		e.emitEnv(a)
-	case *goivy.LocalAction:
+	case *goivy.LogicLocalAction:
 		e.emitLocal(a)
-	case *goivy.LetAction:
+	case *goivy.LogicLetAction:
 		e.emitLet(a)
-	case *goivy.NativeAction:
+	case *goivy.LogicNativeAction:
 		e.emitNative(a)
-	case *goivy.CrashAction:
+	case *goivy.LogicCrashAction:
 		e.emitCrash(a)
-	case *goivy.SetAction:
+	case *goivy.LogicSetAction:
 		e.emitSet(a)
-	case *goivy.BindOldsAction:
+	case *goivy.LogicBindOldsAction:
 		e.emitBindOlds(a)
 	case *goivy.ReturnAction:
 		e.emitReturn(a)
 	case *goivy.IgnoreAction:
 		// no-op
-	case *goivy.ThunkAction:
+	case *goivy.LogicThunkAction:
 		e.emitThunk(a)
-	case *goivy.SubgoalAction:
+	case *goivy.LogicSubgoalAction:
 		e.emitSubgoal(a)
-	case *goivy.DebugAction:
+	case *goivy.LogicDebugAction:
 		e.emitDebug(a)
-	case *goivy.AssignFieldAction:
+	case *goivy.LogicAssignFieldAction:
 		e.emitAssignField(a)
-	case *goivy.NullFieldAction:
+	case *goivy.LogicNullFieldAction:
 		e.emitNullField(a)
-	case *goivy.CopyFieldAction:
+	case *goivy.LogicCopyFieldAction:
 		e.emitCopyField(a)
 	// Note: actions.Ranking is not an Action (Args is a field, not a method)
 	// so it cannot appear in this type switch.
-	case *goivy.InstantiateAction:
+	case *goivy.LogicInstantiateAction:
 		e.emitInstantiate(a)
 	// Note: VarAction is an AST marker node (not an Action), so it cannot
 	// appear here. Python: class VarAction(AST): pass
@@ -96,14 +96,14 @@ func (e *ActionEmitter) EmitAction(act goivy.ActionsAction) {
 }
 
 // emitAssign emits: s.Field = value  (or map assignment for relations).
-func (e *ActionEmitter) emitAssign(a *goivy.AssignAction) {
+func (e *ActionEmitter) emitAssign(a *goivy.LogicAssignAction) {
 	lhs := e.exprString(a.LHS)
 	rhs := e.exprString(a.RHS)
 	e.w.Linef("%s = %s", lhs, rhs)
 }
 
 // emitSequence emits each child action in order.
-func (e *ActionEmitter) emitSequence(a *goivy.Sequence) {
+func (e *ActionEmitter) emitSequence(a *goivy.LogicSequence) {
 	for _, child := range a.Elems {
 		childAct := unwrapToAction(child)
 		if childAct != nil {
@@ -113,7 +113,7 @@ func (e *ActionEmitter) emitSequence(a *goivy.Sequence) {
 }
 
 // emitIf emits: if cond { ... } else { ... }
-func (e *ActionEmitter) emitIf(a *goivy.IfAction) {
+func (e *ActionEmitter) emitIf(a *goivy.LogicIfAction) {
 	cond := e.exprString(a.Cond)
 	e.w.OpenBlock(fmt.Sprintf("if %s {", cond))
 	if thenAct := unwrapToAction(a.ThenBody); thenAct != nil {
@@ -130,7 +130,7 @@ func (e *ActionEmitter) emitIf(a *goivy.IfAction) {
 }
 
 // emitWhile emits: for cond { body }
-func (e *ActionEmitter) emitWhile(a *goivy.WhileAction) {
+func (e *ActionEmitter) emitWhile(a *goivy.LogicWhileAction) {
 	cond := e.exprString(a.Cond)
 	e.w.OpenBlock(fmt.Sprintf("for %s {", cond))
 	if bodyAct := unwrapToAction(a.Body); bodyAct != nil {
@@ -147,14 +147,14 @@ func (e *ActionEmitter) emitWhile(a *goivy.WhileAction) {
 }
 
 // emitCall emits: s.ActionName(args...)
-func (e *ActionEmitter) emitCall(a *goivy.CallAction) {
+func (e *ActionEmitter) emitCall(a *goivy.LogicCallAction) {
 	callee := a.CalleeName()
 	goName := GoExportedIdentifier(callee)
 	e.w.Linef("s.%s()", goName)
 }
 
 // emitAssert emits: if !(cond) { panic("assertion failed: ...") }
-func (e *ActionEmitter) emitAssert(a *goivy.AssertAction) {
+func (e *ActionEmitter) emitAssert(a *goivy.LogicAssertAction) {
 	cond := e.exprString(a.Formula)
 	label := "assertion"
 	if a.HasLoc {
@@ -166,7 +166,7 @@ func (e *ActionEmitter) emitAssert(a *goivy.AssertAction) {
 }
 
 // emitRequire emits a precondition check (same shape as assert).
-func (e *ActionEmitter) emitRequire(a *goivy.RequiresAction) {
+func (e *ActionEmitter) emitRequire(a *goivy.LogicRequiresAction) {
 	cond := e.exprString(a.Formula)
 	label := "require"
 	if a.HasLoc {
@@ -178,7 +178,7 @@ func (e *ActionEmitter) emitRequire(a *goivy.RequiresAction) {
 }
 
 // emitEnsure emits a postcondition check (same shape as assert).
-func (e *ActionEmitter) emitEnsure(a *goivy.EnsuresAction) {
+func (e *ActionEmitter) emitEnsure(a *goivy.LogicEnsuresAction) {
 	cond := e.exprString(a.Formula)
 	label := "ensure"
 	if a.HasLoc {
@@ -190,21 +190,21 @@ func (e *ActionEmitter) emitEnsure(a *goivy.EnsuresAction) {
 }
 
 // emitAssume emits a comment for assumptions (not enforced at runtime).
-func (e *ActionEmitter) emitAssume(a *goivy.AssumeAction) {
+func (e *ActionEmitter) emitAssume(a *goivy.LogicAssumeAction) {
 	cond := e.exprString(a.Formula)
 	e.w.Linef("// assume: %s", cond)
 }
 
 // emitHavoc emits a nondeterministic assignment using a zero value or
 // random placeholder.
-func (e *ActionEmitter) emitHavoc(a *goivy.HavocAction) {
+func (e *ActionEmitter) emitHavoc(a *goivy.LogicHavocAction) {
 	target := e.exprString(a.Target)
 	sortStr := sortDefaultValue(a.Target.NodeSort())
 	e.w.Linef("%s = %s // havoc", target, sortStr)
 }
 
 // emitChoice emits nondeterministic choice via switch rand.Intn(N).
-func (e *ActionEmitter) emitChoice(a *goivy.ChoiceAction) {
+func (e *ActionEmitter) emitChoice(a *goivy.LogicChoiceAction) {
 	n := len(a.Branches)
 	if n == 0 {
 		e.w.Line("// empty choice")
@@ -232,12 +232,12 @@ func (e *ActionEmitter) emitChoice(a *goivy.ChoiceAction) {
 
 // emitEnv emits an environment action (nondeterministic choice of exported
 // actions). Same structure as choice.
-func (e *ActionEmitter) emitEnv(a *goivy.EnvAction) {
-	e.emitChoice(&a.ChoiceAction)
+func (e *ActionEmitter) emitEnv(a *goivy.LogicEnvAction) {
+	e.emitChoice(&a.LogicChoiceAction)
 }
 
 // emitLocal emits a block with local variable declarations.
-func (e *ActionEmitter) emitLocal(a *goivy.LocalAction) {
+func (e *ActionEmitter) emitLocal(a *goivy.LogicLocalAction) {
 	e.w.OpenBlock("{")
 	for _, local := range a.Locals {
 		name := nodeIdentName(local)
@@ -251,7 +251,7 @@ func (e *ActionEmitter) emitLocal(a *goivy.LocalAction) {
 }
 
 // emitLet emits let-bindings followed by the body.
-func (e *ActionEmitter) emitLet(a *goivy.LetAction) {
+func (e *ActionEmitter) emitLet(a *goivy.LogicLetAction) {
 	e.w.OpenBlock("{")
 	for _, binding := range a.Bindings {
 		name := nodeIdentName(binding)
@@ -265,25 +265,25 @@ func (e *ActionEmitter) emitLet(a *goivy.LetAction) {
 }
 
 // emitNative emits a comment with the native code.
-func (e *ActionEmitter) emitNative(a *goivy.NativeAction) {
+func (e *ActionEmitter) emitNative(a *goivy.LogicNativeAction) {
 	code := fmt.Sprint(a.Code)
 	e.w.Linef("// native: %s", code)
 }
 
 // emitCrash emits panic("crash").
-func (e *ActionEmitter) emitCrash(a *goivy.CrashAction) {
+func (e *ActionEmitter) emitCrash(a *goivy.LogicCrashAction) {
 	e.w.Line(`panic("crash")`)
 }
 
 // emitSet emits a set operation on a relation (map assignment).
-func (e *ActionEmitter) emitSet(a *goivy.SetAction) {
+func (e *ActionEmitter) emitSet(a *goivy.LogicSetAction) {
 	lit := e.exprString(a.Lit)
 	e.w.Linef("// set: %s", lit)
 }
 
 // emitBindOlds emits the inner action (old-value binding is a
 // verification concept; at runtime we just execute the body).
-func (e *ActionEmitter) emitBindOlds(a *goivy.BindOldsAction) {
+func (e *ActionEmitter) emitBindOlds(a *goivy.LogicBindOldsAction) {
 	if inner := unwrapToAction(a.Inner); inner != nil {
 		e.EmitAction(inner)
 	}
@@ -298,7 +298,7 @@ func (e *ActionEmitter) emitReturn(a *goivy.ReturnAction) {
 // Python ThunkAction args: [thunkVar, name, type, body, ...].
 // In Python, thunks are desugared before code generation; here we emit
 // a Go closure that captures the body action.
-func (e *ActionEmitter) emitThunk(a *goivy.ThunkAction) {
+func (e *ActionEmitter) emitThunk(a *goivy.LogicThunkAction) {
 	args := a.ActionArgs()
 	if len(args) >= 4 {
 		thunkVar := e.exprString(args[0])
@@ -312,28 +312,28 @@ func (e *ActionEmitter) emitThunk(a *goivy.ThunkAction) {
 }
 
 // emitSubgoal emits a subgoal assertion.
-func (e *ActionEmitter) emitSubgoal(a *goivy.SubgoalAction) {
+func (e *ActionEmitter) emitSubgoal(a *goivy.LogicSubgoalAction) {
 	fmla := e.exprString(a.Formula)
 	e.w.Linef("ivy_assert(%s, %q)", fmla, "subgoal")
 }
 
 // emitDebug emits a debug print statement.
-func (e *ActionEmitter) emitDebug(a *goivy.DebugAction) {
+func (e *ActionEmitter) emitDebug(a *goivy.LogicDebugAction) {
 	e.w.Linef("// debug: %s", a.String())
 }
 
 // emitAssignField emits field assignment: obj.field = value.
-func (e *ActionEmitter) emitAssignField(a *goivy.AssignFieldAction) {
+func (e *ActionEmitter) emitAssignField(a *goivy.LogicAssignFieldAction) {
 	e.w.Linef("%s.%s = %s", e.exprString(a.Obj), e.exprString(a.Field), e.exprString(a.Value))
 }
 
 // emitNullField emits field nullification: obj.field = nil.
-func (e *ActionEmitter) emitNullField(a *goivy.NullFieldAction) {
+func (e *ActionEmitter) emitNullField(a *goivy.LogicNullFieldAction) {
 	e.w.Linef("%s.%s = nil", e.exprString(a.Obj), e.exprString(a.Field))
 }
 
 // emitCopyField emits field copy: dst.field = src.field.
-func (e *ActionEmitter) emitCopyField(a *goivy.CopyFieldAction) {
+func (e *ActionEmitter) emitCopyField(a *goivy.LogicCopyFieldAction) {
 	dstField := e.exprString(a.Field)
 	srcField := dstField
 	if a.SrcField != nil {
@@ -344,7 +344,7 @@ func (e *ActionEmitter) emitCopyField(a *goivy.CopyFieldAction) {
 
 // emitInstantiate emits schema instantiation (placeholder — Python
 // desugars instantiation before code generation).
-func (e *ActionEmitter) emitInstantiate(a *goivy.InstantiateAction) {
+func (e *ActionEmitter) emitInstantiate(a *goivy.LogicInstantiateAction) {
 	e.w.Linef("// instantiate: %s", a.String())
 }
 
@@ -369,7 +369,7 @@ func ExprToGo(n goivy.Expr) string {
 	switch v := n.(type) {
 	case *goivy.Const:
 		return GoIdentifier(v.Name)
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		return GoIdentifier(v.Name)
 	case *goivy.Apply:
 		fname := ExprToGo(v.Func)
@@ -380,9 +380,9 @@ func ExprToGo(n goivy.Expr) string {
 		return fmt.Sprintf("%s(%s)", fname, strings.Join(args, ", "))
 	case *goivy.Eq:
 		return fmt.Sprintf("(%s == %s)", ExprToGo(v.T1), ExprToGo(v.T2))
-	case *goivy.Not:
+	case *goivy.LogicNot:
 		return fmt.Sprintf("!(%s)", ExprToGo(v.Body))
-	case *goivy.And:
+	case *goivy.LogicAnd:
 		if len(v.Terms) == 0 {
 			return "true"
 		}
@@ -391,7 +391,7 @@ func ExprToGo(n goivy.Expr) string {
 			parts[i] = ExprToGo(t)
 		}
 		return "(" + strings.Join(parts, " && ") + ")"
-	case *goivy.Or:
+	case *goivy.LogicOr:
 		if len(v.Terms) == 0 {
 			return "false"
 		}
@@ -400,7 +400,7 @@ func ExprToGo(n goivy.Expr) string {
 			parts[i] = ExprToGo(t)
 		}
 		return "(" + strings.Join(parts, " || ") + ")"
-	case *goivy.Implies:
+	case *goivy.LogicImplies:
 		return fmt.Sprintf("(!(%s) || (%s))", ExprToGo(v.T1), ExprToGo(v.T2))
 	case *goivy.ForAll:
 		// Placeholder: forAll requires a helper function
@@ -410,7 +410,7 @@ func ExprToGo(n goivy.Expr) string {
 		}
 		return fmt.Sprintf("forAll(/* %s */ func() bool { return %s })",
 			strings.Join(varNames, ", "), ExprToGo(v.Body))
-	case *goivy.Exists:
+	case *goivy.LogicExists:
 		varNames := make([]string, len(v.Variables))
 		for i, va := range v.Variables {
 			varNames[i] = va.Name
@@ -462,11 +462,11 @@ func goTypeForSort(s goivy.Sort) string {
 		return "bool"
 	case *goivy.UninterpretedSort:
 		return GoExportedIdentifier(st.Name)
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		return GoExportedIdentifier(st.Name)
 	case *goivy.RangeSort:
 		return "int"
-	case *goivy.FunctionSort:
+	case *goivy.LogicFunctionSort:
 		// Functions/relations become maps.
 		dom := st.Domain()
 		rng := st.Range()
@@ -495,7 +495,7 @@ func sortDefaultValue(s goivy.Sort) string {
 		return "false"
 	case *goivy.UninterpretedSort:
 		return "0"
-	case *goivy.EnumeratedSort:
+	case *goivy.LogicEnumeratedSort:
 		return "0"
 	case *goivy.RangeSort:
 		return "0"
@@ -518,7 +518,7 @@ func nodeIdentName(n goivy.Expr) string {
 	switch v := n.(type) {
 	case *goivy.Const:
 		return v.Name
-	case *goivy.Variable:
+	case *goivy.LogicVariable:
 		return v.Name
 	default:
 		return fmt.Sprint(n)

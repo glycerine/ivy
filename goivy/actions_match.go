@@ -79,7 +79,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	}
 
 	// Handle Sequence
-	if seq, ok := action.(*Sequence); ok {
+	if seq, ok := action.(*LogicSequence); ok {
 		if pos < 0 {
 			pos = len(seq.Elems)
 		}
@@ -121,7 +121,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	}
 
 	// Handle IfAction
-	if ifAct, ok := action.(*IfAction); ok {
+	if ifAct, ok := action.(*LogicIfAction); ok {
 		ite, ok := annot.(*IteAnnotation)
 		if !ok {
 			fmt.Println("annotation error: IfAction should have IteAnnotation")
@@ -148,9 +148,9 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	// Handle ChoiceAction. EnvAction subclasses ChoiceAction in Python;
 	// in Go it embeds ChoiceAction, so handle both concrete types here.
 	var branches []Expr
-	if choice, ok := action.(*ChoiceAction); ok {
+	if choice, ok := action.(*LogicChoiceAction); ok {
 		branches = choice.Branches
-	} else if envAct, ok := action.(*EnvAction); ok {
+	} else if envAct, ok := action.(*LogicEnvAction); ok {
 		branches = envAct.Branches
 	}
 	if branches != nil {
@@ -161,7 +161,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		}
 
 		// Handle EnvAction with label
-		if envAct, ok := action.(*EnvAction); ok {
+		if envAct, ok := action.(*LogicEnvAction); ok {
 			if envAct.GetLabel() != "" {
 				handler.Handle(envAct, env)
 			}
@@ -180,9 +180,9 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 				branchAction := extractActionFromNode(branches[i])
 
 				// Handle EnvAction without label
-				if envAct, ok := action.(*EnvAction); ok {
+				if envAct, ok := action.(*LogicEnvAction); ok {
 					if envAct.GetLabel() == "" && branchAction != nil {
-						callAct := &EnvAction{}
+						callAct := &LogicEnvAction{}
 						label := "unknown"
 						if labeled, ok := branchAction.(interface{ GetLabel() string }); ok && labeled.GetLabel() != "" {
 							label = labeled.GetLabel()
@@ -204,9 +204,9 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	// Handle CallAction
 	// Python: handler.handle(action, env)
 	//         callee = ivy_module.module.actions[action.args[0].rep]
-	//         seq = Sequence(IgnoreAction(), callee, ReturnAction())
+	//         seq = LogicSequence(IgnoreAction(), callee, ReturnAction())
 	//         recur(seq, annot, env, None)
-	if callAct, ok := action.(*CallAction); ok {
+	if callAct, ok := action.(*LogicCallAction); ok {
 		handler.Handle(action, env)
 		if mod != nil {
 			calleeName := callAct.CalleeName()
@@ -228,7 +228,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	// Handle WhileAction
 	// Python: expanded = action.expand(ivy_module.module, [])
 	//         recur(expanded, annot, env)
-	if whileAct, ok := action.(*WhileAction); ok {
+	if whileAct, ok := action.(*LogicWhileAction); ok {
 		// Expand the while loop into an if/sequence structure
 		// Python's expand creates: if cond { body; while(cond, body) } else { assume(~cond) }
 		expanded := expandWhile(whileAct, mod)
@@ -252,7 +252,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	}
 
 	// Handle LocalAction
-	if local, ok := action.(*LocalAction); ok {
+	if local, ok := action.(*LogicLocalAction); ok {
 		bodyAction := extractActionFromNode(local.Body)
 		if bodyAction != nil {
 			matchAnnotationRecur(bodyAction, annot, env, handler, -1, mod)
@@ -348,19 +348,19 @@ func extractActionFromNode(n interface{}) ActionsAction {
 //	        rank = decreases.args[0]
 //	        aux = Symbol('$rank', rank.sort)
 //	        assumes.append(AssumeAction(Equals(aux, rank)))
-//	        ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
+//	        ltsym = Symbol('<', LogicRelationSort([rank.sort, rank.sort]))
 //	        exit_asserts.append(AssertAction(ltsym(rank, aux)))
 //	        entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
 //	    havocs = [HavocAction(sym) for sym in modset]
-//	    res = Sequence(*(
+//	    res = LogicSequence(*(
 //	        asserts + havocs + assumes +
 //	        [IfAction(self.args[0],
 //	            Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
 //	            Sequence())]))
 //	    if decreases is not None:
-//	        res = LocalAction(aux, res)
+//	        res = LogicLocalAction(aux, res)
 //	    return res
-func expandWhile(w *WhileAction, mod *Module) ActionsAction {
+func expandWhile(w *LogicWhileAction, mod *Module) ActionsAction {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
 	var modset []*Const
@@ -397,7 +397,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 	// In Python: self.args[2:] are invariants, last may be Ranking.
 	// In Go: WhileAction.Invariants are the invariant actions.
 	var asserts []ActionsAction // invariant assertions
-	var decreasesRanking *Ranking
+	var decreasesRanking *LogicRanking
 
 	for _, inv := range w.Invariants {
 		// Check if it's a RankingWrapper (not an action)
@@ -418,7 +418,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 	assertKinds := map[string]bool{"assert": true}
 	var assumes []ActionsAction
 	for _, a := range asserts {
-		if _, isSub := a.(*SubgoalAction); isSub {
+		if _, isSub := a.(*LogicSubgoalAction); isSub {
 			continue
 		}
 		assumes = append(assumes, AssertToAssume(a, assertKinds))
@@ -427,7 +427,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 	// Filter asserts: remove any that became AssumeActions
 	var filteredAsserts []ActionsAction
 	for _, a := range asserts {
-		if _, isAssume := a.(*AssumeAction); isAssume {
+		if _, isAssume := a.(*LogicAssumeAction); isAssume {
 			continue
 		}
 		filteredAsserts = append(filteredAsserts, a)
@@ -453,8 +453,8 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 		assumeEq.SetLineno(w.GetLineno())
 		assumes = append(assumes, assumeEq)
 
-		// ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
-		ltSort := &FunctionSort{Sorts: []Sort{rankSort, rankSort, Boolean}}
+		// ltsym = Symbol('<', LogicRelationSort([rank.sort, rank.sort]))
+		ltSort := &LogicFunctionSort{Sorts: []Sort{rankSort, rankSort, Boolean}}
 		ltSym := NewConst("<", ltSort)
 
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
@@ -466,7 +466,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
 		zeroSym := NewConst("0", rankSort)
 		ltZero := MustApply(ltSym, rank, zeroSym)
-		entryAssert := NewAssertAction(&Not{Body: ltZero})
+		entryAssert := NewAssertAction(&LogicNot{Body: ltZero})
 		entryAssert.SetLineno(w.GetLineno())
 		entryAsserts = append(entryAsserts, entryAssert)
 	}
@@ -486,7 +486,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 
 	// Step 6: Build the result Sequence.
 	// Python:
-	// res = Sequence(*(
+	// res = LogicSequence(*(
 	//     asserts + havocs + assumes +
 	//     [IfAction(self.args[0],
 	//         Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
@@ -506,7 +506,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 		thenParts = append(thenParts, a)
 	}
 	// AssumeAction(Or()) = assume false (empty disjunction)
-	assumeFalse := NewAssumeAction(&Or{Terms: nil})
+	assumeFalse := NewAssumeAction(&LogicOr{Terms: nil})
 	assumeFalse.SetLineno(w.GetLineno())
 	thenParts = append(thenParts, assumeFalse)
 
@@ -536,7 +536,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 	var res ActionsAction = outerSeq
 
 	// Step 7: Wrap in LocalAction if decreases ranking was used.
-	// Python: if decreases is not None: res = LocalAction(aux, res)
+	// Python: if decreases is not None: res = LogicLocalAction(aux, res)
 	if auxVar != nil {
 		actCfg := mod.Cfg.ActCfg
 		res = NewLocalActionOn(actCfg, "actions.WhileAction.action_update", auxVar, res)
@@ -548,7 +548,7 @@ func expandWhile(w *WhileAction, mod *Module) ActionsAction {
 // RankingWrapper wraps a Ranking as a lg.Expr for storage in WhileAction.Invariants.
 type RankingWrapper struct {
 	Base
-	Ranking *Ranking
+	Ranking *LogicRanking
 }
 
 func (rw *RankingWrapper) NodeSort() Sort    { return Boolean }

@@ -72,7 +72,7 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 // --- Group F: ConjChecker.GetAnnot ---
 
 func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &LogicAnd{})
 	lf.Annot = &ActionAnnotation{Action: NewSequence(), Annot: EmptyAnnotation{}}
 	cc := NewConjChecker(New(), lf, 8)
 	got := cc.GetAnnot()
@@ -82,7 +82,7 @@ func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 }
 
 func TestConjCheckerGetAnnotWithoutAnnot(t *testing.T) {
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &LogicAnd{})
 	cc := NewConjChecker(New(), lf, 8)
 	got := cc.GetAnnot()
 	if got != nil {
@@ -106,7 +106,7 @@ func TestMatchHandlerEqsPopulated(t *testing.T) {
 func TestMatchHandlerEvalWithNilModel(t *testing.T) {
 	h := NewMatchHandler(nil, nil, nil, nil)
 	// With nil model, Eval should return true (fallback)
-	if !h.Eval(&And{}) {
+	if !h.Eval(&LogicAnd{}) {
 		t.Error("Eval with nil model should return true")
 	}
 }
@@ -145,7 +145,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 	mod := New()
 	mod.Cfg = NewConfig()
 	// Non-temporal property should be skipped
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("p1"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("p1"), &LogicAnd{})
 	lf.Temporal = BoolPtr(false)
 	mod.LabeledProps = []*LabeledFormula{lf}
 	err := CheckTemporals(mod)
@@ -157,7 +157,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 func TestCheckTemporalsAssumedProp(t *testing.T) {
 	mod := New()
 	mod.Cfg = NewConfig()
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_assumed"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_assumed"), &LogicAnd{})
 	lf.Temporal = BoolPtr(true)
 	lf.Assumed = true
 	mod.LabeledProps = []*LabeledFormula{lf}
@@ -171,7 +171,7 @@ func TestCheckTemporalsAssumedProp(t *testing.T) {
 func TestCheckTemporalsWithProof(t *testing.T) {
 	mod := New()
 	mod.Cfg = NewConfig()
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_proved"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_proved"), &LogicAnd{})
 	lf.Temporal = BoolPtr(true)
 	mod.LabeledProps = []*LabeledFormula{lf}
 	// Add a proof for this property
@@ -211,7 +211,7 @@ func TestVMTTacticEmptyGoals(t *testing.T) {
 
 func TestApplyTemporalTacticChainNonTemporal(t *testing.T) {
 	// Non-temporal goal should pass through unchanged
-	goal := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("g"), &And{})
+	goal := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("g"), &LogicAnd{})
 	goals := []*LabeledFormula{goal}
 	result, err := applyTemporalTacticChain(nil, goals, nil)
 	if err != nil {
@@ -270,7 +270,7 @@ func TestStartNonIvyFile(t *testing.T) {
 // --- LabeledFormula.Annot preservation ---
 
 func TestLabeledFormulaClonePreservesAnnot(t *testing.T) {
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &LogicAnd{})
 	lf.Annot = &ActionAnnotation{Action: NewSequence(), Annot: EmptyAnnotation{}}
 	cloned := lf.Clone([]Node{lf.Label, lf.Formula}).(*LabeledFormula)
 	if cloned.Annot != lf.Annot {
@@ -290,7 +290,7 @@ func TestNormalProgramFromModuleDoesNotPanic(t *testing.T) {
 
 func TestProofCheckerAdmitAxiomDoesNotPanic(t *testing.T) {
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("ax"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("ax"), &LogicAnd{})
 	pc.AdmitAxiom(lf)
 	// Should not panic
 }
@@ -324,7 +324,7 @@ func TestGetConjs(t *testing.T) {
 
 func TestApplyConjProofsNoProofs(t *testing.T) {
 	mod := New()
-	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("conj1"), &And{})
+	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("conj1"), &LogicAnd{})
 	mod.LabeledConjs = []*LabeledFormula{lf}
 	ApplyConjProofs(mod)
 	if len(mod.ConjSubgoals) != 1 {
@@ -352,7 +352,7 @@ func FuzzMatchHandlerEqs(f *testing.F) {
 		} else {
 			app, _ := NewApply(sym)
 			if app != nil {
-				fmlas = append(fmlas, &Not{Body: app})
+				fmlas = append(fmlas, &LogicNot{Body: app})
 			}
 		}
 		cls := NewClauses(fmlas, nil, nil)
@@ -408,7 +408,7 @@ func FuzzCheckTemporalsProps(f *testing.F) {
 	f.Fuzz(func(t *testing.T, name string, temporal, assumed bool) {
 		mod := New()
 		mod.Cfg = NewConfig()
-		lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom(name), &And{})
+		lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom(name), &LogicAnd{})
 		lf.Temporal = BoolPtr(temporal)
 		lf.Assumed = assumed
 		mod.LabeledProps = []*LabeledFormula{lf}

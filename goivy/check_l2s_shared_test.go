@@ -11,7 +11,7 @@ func boolFuncSort(domains ...Sort) Sort {
 	sorts := make([]Sort, len(domains)+1)
 	copy(sorts, domains)
 	sorts[len(domains)] = Boolean
-	return &FunctionSort{Sorts: sorts}
+	return &LogicFunctionSort{Sorts: sorts}
 }
 
 // TestBuildDefnDeps_Definition verifies that *lg.Definition formulas
@@ -21,12 +21,12 @@ func TestBuildDefnDeps_Definition(t *testing.T) {
 	cfg := NewAstConfig()
 	mod := New()
 
-	// Build: f(X) = And(g(X), h(X))
+	// Build: f(X) = LogicAnd(g(X), h(X))
 	uSort := &UninterpretedSort{Name: "T"}
 	fSym := NewConst("f", boolFuncSort(uSort))
 	gSym := NewConst("g", boolFuncSort(uSort))
 	hSym := NewConst("h", boolFuncSort(uSort))
-	X := &Variable{Name: "X", VSort: uSort}
+	X := &LogicVariable{Name: "X", VSort: uSort}
 
 	lhs, _ := NewApply(fSym, X)
 	gApp, _ := NewApply(gSym, X)
@@ -53,7 +53,7 @@ func TestBuildDefnDeps_Eq(t *testing.T) {
 	uSort := &UninterpretedSort{Name: "T"}
 	fSym := NewConst("f", boolFuncSort(uSort))
 	gSym := NewConst("g", boolFuncSort(uSort))
-	X := &Variable{Name: "X", VSort: uSort}
+	X := &LogicVariable{Name: "X", VSort: uSort}
 
 	lhs, _ := NewApply(fSym, X)
 	gApp, _ := NewApply(gSym, X)
@@ -100,7 +100,7 @@ func TestBuildDefnDeps_NormalizedCanon(t *testing.T) {
 	fSym := NewConst("f", Boolean)
 
 	// Create flat 4-term And (what Go parser produces).
-	flatAnd := &And{Terms: []Expr{a, b, c, d}}
+	flatAnd := &LogicAnd{Terms: []Expr{a, b, c, d}}
 	def := NewDefinition(fSym, flatAnd)
 	lf := cfg.NewLabeledFormula(cfg.NewAtom("def_f"), def)
 	mod.Definitions = append(mod.Definitions, lf)
@@ -114,7 +114,7 @@ func TestBuildDefnDeps_NormalizedCanon(t *testing.T) {
 
 	// Verify NormalizeOps converts 4-term And to binary tree.
 	normalizedAnd := NormalizeOps(flatAnd)
-	outerAnd, ok := normalizedAnd.(*And)
+	outerAnd, ok := normalizedAnd.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", normalizedAnd)
 	}
@@ -122,7 +122,7 @@ func TestBuildDefnDeps_NormalizedCanon(t *testing.T) {
 		t.Fatalf("expected binary And (2 terms), got %d terms", len(outerAnd.Terms))
 	}
 	// The normalized def canon should differ from the flat def canon.
-	normalizedDef := NormalizeOps(def).(*Definition)
+	normalizedDef := NormalizeOps(def).(*LogicDefinition)
 	if string(def.Canon()) == string(normalizedDef.Canon()) {
 		t.Fatal("flat and normalized canons should differ for 4-term And")
 	}

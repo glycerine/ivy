@@ -64,12 +64,12 @@ func BinEncZ3(ctx *Z3Context, m, n int) []Z3Expr {
 // EncodeTermZ3 encodes an Ivy term as a list of Z3 Bool expressions (n bits, MSB first).
 // Used for binary encoding of enumerated sorts when UseZ3Enums is false.
 // Corresponds to Python's encode_term (ivy_solver.py:1587-1615).
-func (s *Solver) EncodeTermZ3(t Expr, n int, sort *EnumeratedSort) ([]Z3Expr, error) {
+func (s *Solver) EncodeTermZ3(t Expr, n int, sort *LogicEnumeratedSort) ([]Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:1742 encode_term() ENTER sort=%s", sort)
 	ctx := s.tr.Ctx
 
 	// ITE: recurse into then/else, zip with element-wise ITE
-	if ite, ok := t.(*Ite); ok {
+	if ite, ok := t.(*LogicIte); ok {
 		cond, err := s.tr.Translate(ite.Cond)
 		if err != nil {
 			return nil, err
@@ -109,7 +109,7 @@ func (s *Solver) EncodeTermZ3(t Expr, n int, sort *EnumeratedSort) ([]Z3Expr, er
 	}
 
 	// Variable: create n Bool constants named "rep:sort:bit_index"
-	if v, ok := t.(*Variable); ok {
+	if v, ok := t.(*LogicVariable); ok {
 		sksym := v.Name + ":" + sort.Name
 		result := make([]Z3Expr, n)
 		for i := 0; i < n; i++ {
@@ -132,7 +132,7 @@ func (s *Solver) EncodeTermZ3(t Expr, n int, sort *EnumeratedSort) ([]Z3Expr, er
 				args[i] = a
 			}
 			// Get domain sorts for the function signature
-			fs, fsOk := sym.CSort.(*FunctionSort)
+			fs, fsOk := sym.CSort.(*LogicFunctionSort)
 			if !fsOk {
 				return nil, fmt.Errorf("encode_term: expected FunctionSort for %s", sym.Name)
 			}
@@ -162,7 +162,7 @@ func (s *Solver) EncodeTermZ3(t Expr, n int, sort *EnumeratedSort) ([]Z3Expr, er
 // EncodeEqualityZ3 encodes an equality between two Ivy terms using binary encoding
 // at the Z3 level. Returns a Z3 expression representing the equality.
 // Corresponds to Python's encode_equality (ivy_solver.py:1617-1627).
-func (s *Solver) EncodeEqualityZ3(t1, t2 Expr, sort *EnumeratedSort) (Z3Expr, error) {
+func (s *Solver) EncodeEqualityZ3(t1, t2 Expr, sort *LogicEnumeratedSort) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:1773 encode_equality() ENTER nterms=%d", 2)
 	ctx := s.tr.Ctx
 	n := sort.Card()

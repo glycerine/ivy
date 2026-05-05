@@ -105,7 +105,7 @@ func (c *Compiler) OtherThing(node Node) (Expr, error) {
 			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 			return result, err
 		}
-		combined := &And{Terms: compiled}
+		combined := &LogicAnd{Terms: compiled}
 		result, err := c.SortInfer(combined)
 		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 		return result, err
@@ -130,17 +130,17 @@ func isSortInferRoot(node Node) bool {
 	// Check AST-level action types (from parser).
 	// These correspond to Python classes with sort_infer_root = True.
 	switch node.(type) {
-	case *AstAssignAction:
+	case *AssignAction:
 		return true
-	case *AstSetAction:
+	case *SetAction:
 		return true
-	case *AstHavocAction:
+	case *HavocAction:
 		return true
-	case *AstAssumeAction:
+	case *AssumeAction:
 		return true
-	case *AstAssertAction:
+	case *AssertAction:
 		return true
-	case *AstCrashAction:
+	case *CrashAction:
 		return false // CrashAction does NOT have sort_infer_root in Python
 	}
 	// Check if it's a CompiledNode wrapping a compiled actions type
@@ -154,21 +154,21 @@ func isSortInferRoot(node Node) bool {
 // with sort_infer_root.
 func isSortInferRootIface(node interface{}) bool {
 	switch node.(type) {
-	case *AssignAction:
+	case *LogicAssignAction:
 		return true
-	case *SetAction:
+	case *LogicSetAction:
 		return true
-	case *HavocAction:
+	case *LogicHavocAction:
 		return true
-	case *AssumeAction:
+	case *LogicAssumeAction:
 		return true
-	case *AssertAction:
+	case *LogicAssertAction:
 		return true
-	case *AssignFieldAction:
+	case *LogicAssignFieldAction:
 		return true
-	case *NullFieldAction:
+	case *LogicNullFieldAction:
 		return true
-	case *CopyFieldAction:
+	case *LogicCopyFieldAction:
 		return true
 	}
 	return false
@@ -326,20 +326,20 @@ func (c *Compiler) CompileIsa(node Node) (Expr, error) {
 		return nil, err
 	}
 	lhsSort := lhs.NodeSort()
-	ptoSort := RelationSort([]Sort{lhsSort, rhs})
+	ptoSort := LogicRelationSort([]Sort{lhsSort, rhs})
 	ptoSym := NewConst("*>", ptoSort)
 	ptoApp, err := NewApply(ptoSym, lhs, v)
 	if err != nil {
 		return nil, err
 	}
-	return IvyExists([]*Variable{v}, ptoApp), nil
+	return IvyExists([]*LogicVariable{v}, ptoApp), nil
 }
 
 // Cquant returns the appropriate quantifier constructor for the given
 // quantifier AST node.
 // Corresponds to Python's cquant(q) (ivy_compiler.py:393-394).
-func Cquant(node Node) func([]*Variable, Expr) Expr {
-	if _, ok := node.(*AstForall); ok {
+func Cquant(node Node) func([]*LogicVariable, Expr) Expr {
+	if _, ok := node.(*Forall); ok {
 		return IvyForAll
 	}
 	return IvyExists
@@ -372,7 +372,7 @@ func (c *Compiler) CompileConstantDecl(node Node) (Expr, error) {
 	if len(compiled) == 1 {
 		return compiled[0], nil
 	}
-	return &And{Terms: compiled}, nil
+	return &LogicAnd{Terms: compiled}, nil
 }
 
 // CompileOld compiles the Old operator by compiling the inner term
@@ -470,7 +470,7 @@ func (c *Compiler) GetRelationSort(args []Node) (Sort, error) {
 	if err != nil {
 		return nil, err
 	}
-	return RelationSort(sorts), nil
+	return LogicRelationSort(sorts), nil
 }
 
 // GetRelationSortWithTerm builds a RelationSort using term for sort inference.
@@ -479,7 +479,7 @@ func (c *Compiler) GetRelationSortWithTerm(args []Node, term Node) (Sort, error)
 	if err != nil {
 		return nil, err
 	}
-	return RelationSort(sorts), nil
+	return LogicRelationSort(sorts), nil
 }
 
 // ============================================================================
@@ -643,7 +643,7 @@ func (c *Compiler) CompileThunkAction(node Node) (Expr, error) {
 
 	// Step 6-7: create destructor symbols and register
 	// Python: for sym in syms:
-	//     dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+	//     dsort = LogicFunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
 	//     dsym = Symbol(compose_names(subtypename, sym.name[4:]), dsort)
 	//     module.destructor_sorts[dsym.name] = subsort
 	//     module.sort_destructors[subsort.name].append(dsym)
@@ -653,7 +653,7 @@ func (c *Compiler) CompileThunkAction(node Node) (Expr, error) {
 	for _, sym := range syms {
 		var sortArgs []Sort
 		sortArgs = append(sortArgs, subsort)
-		if fs, ok := sym.NodeSort().(*FunctionSort); ok {
+		if fs, ok := sym.NodeSort().(*LogicFunctionSort); ok {
 			sortArgs = append(sortArgs, fs.Domain()...)
 			sortArgs = append(sortArgs, fs.Range())
 		} else {
@@ -724,7 +724,7 @@ func (c *Compiler) CompileThunkAction(node Node) (Expr, error) {
 	}
 
 	// Python: asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
-	//         res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+	//         res = LogicLocalAction(lsym, Sequence(*(asgns + [cont])))
 	var seqParts []Expr
 	for i, sym := range syms {
 		dsym := dsyms[i]
@@ -842,7 +842,7 @@ func (c *Compiler) CompileDebugAction(node Node) (Expr, error) {
 //	    res = arg.clone(list(map(sortify_with_inference,arg.args)))  # handles action names
 //	    return res.rename(resolve_alias(res.rep))
 func (c *Compiler) CompileNativeArg(node Node) (Expr, error) {
-	if _, ok := node.(*AstVariable); ok {
+	if _, ok := node.(*Variable); ok {
 		return c.SortifyWithInference(node)
 	}
 	// Check if atom name is in sig.symbols
@@ -1022,7 +1022,7 @@ func (c *Compiler) CompileNativeName(node Node) (Expr, error) {
 	// directly as an AST node. We build the result as lg.Expr without going through CompileNode.
 	vars := make([]Expr, len(atom.Terms))
 	for i, a := range atom.Terms {
-		if v, ok := a.(*AstVariable); ok {
+		if v, ok := a.(*Variable); ok {
 			sortName := v.VSort
 			resolved := ResolveAlias(sortName, c.Module)
 			sort, err := c.Sig.FindSort(resolved, false)
@@ -1263,13 +1263,13 @@ func (c *Compiler) CompileSchemaConcWithSig(conc Node, schemaSig *Sig) (Expr, er
 		ws.Exit()
 	}()
 
-	if df, ok := conc.(*AstDefinition); ok {
+	if df, ok := conc.(*Definition); ok {
 		xtracer.Trace("compiler.CompileSchemaConc Definition branch")
 		//pp("sigSorts=%v", c.Sig.SortNames())
 		return c.CompileDefn(df)
 	}
 	// Handle TemporalModels case
-	if tm, ok := conc.(*AstTemporalModels); ok {
+	if tm, ok := conc.(*TemporalModels); ok {
 		compiled, err := c.SortifyWithInference(tm.Fmla)
 		if err != nil {
 			return nil, err
@@ -1484,7 +1484,7 @@ func (c *Compiler) CompileFunctionTactic(node Node) (Node, error) {
 //	def compile_proof_tactic(self):
 //	    return self.clone([self.label,self.proof.compile()])
 func (c *Compiler) CompileProofTactic(node Node) (Node, error) {
-	pt, ok := node.(*AstProofTactic)
+	pt, ok := node.(*ProofTactic)
 	if !ok {
 		return node, nil
 	}
@@ -1763,7 +1763,7 @@ func TarjanArcs(arcs [][2]string) [][]string {
 // Python:
 //
 //	def prop_to_def(lf):
-//	    return lf.clone([lf.label,ivy_logic.Definition(*lf.formula.args[0].args)])
+//	    return lf.clone([lf.label,ivy_logic.LogicDefinition(*lf.formula.args[0].args)])
 func PropToDef(lf Node, mod *Module) Node {
 	cfg := mod.Cfg.AstCfg
 	if labeled, ok := lf.(*LabeledFormula); ok {
@@ -1975,7 +1975,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		// P4: if isinstance(self, AssertAction):
 		// Python isinstance catches all subclasses: AssertAction, RequiresAction,
 		// EnsuresAction, SubgoalAction. Go must check each concrete type.
-		if a, ok := act.(*AssertAction); ok {
+		if a, ok := act.(*LogicAssertAction); ok {
 			// P5: if len(self.args) > 1:  (has proof — Proof != nil ↔ len(ActionArgs()) > 1)
 			if a.Proof != nil {
 				// P6-P7: if option_verifying: return apply_assert_proof(prover, self, self.args[1])
@@ -1990,11 +1990,11 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 			// P9: return self
 			return a
 		}
-		if a, ok := act.(*RequiresAction); ok {
+		if a, ok := act.(*LogicRequiresAction); ok {
 			// P4-P9 for RequiresAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
+					return applyAssertProofAction(mod, &a.LogicAssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves RequiresAction type
 				stripped := NewRequiresAction(a.Formula)
@@ -2003,11 +2003,11 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 			}
 			return a
 		}
-		if a, ok := act.(*EnsuresAction); ok {
+		if a, ok := act.(*LogicEnsuresAction); ok {
 			// P4-P9 for EnsuresAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
+					return applyAssertProofAction(mod, &a.LogicAssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves EnsuresAction type
 				stripped := NewEnsuresAction(a.Formula)
@@ -2016,11 +2016,11 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 			}
 			return a
 		}
-		if a, ok := act.(*SubgoalAction); ok {
+		if a, ok := act.(*LogicSubgoalAction); ok {
 			// P4-P9 for SubgoalAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
+					return applyAssertProofAction(mod, &a.LogicAssertAction, a.Name(), prover)
 				}
 				// P8: self.clone(self.args[:1]) — preserves SubgoalAction type
 				stripped := NewSubgoalAction(a.Formula)
@@ -2031,7 +2031,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		}
 
 		// P10: if isinstance(self, WhileAction):
-		if w, ok := act.(*WhileAction); ok {
+		if w, ok := act.(*LogicWhileAction); ok {
 			// P11: if len(self.args) > 2:  (has invariants)
 			if len(w.Invariants) > 0 {
 				// P12: new_invars = []
@@ -2050,7 +2050,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 						continue
 					}
 					// P15-P18: if isinstance(r, Sequence): extend else append
-					if seq, ok := r.(*Sequence); ok {
+					if seq, ok := r.(*LogicSequence); ok {
 						newInvars = append(newInvars, seq.ActionArgs()...)
 					} else {
 						newInvars = append(newInvars, r)
@@ -2073,7 +2073,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		}
 
 		// P20: if isinstance(self, LocalAction):
-		if la, ok := act.(*LocalAction); ok {
+		if la, ok := act.(*LogicLocalAction); ok {
 			// P21: with ivy_logic.WithSymbols(self.args[0:-1]):
 			syms := extractLocalSymbols(la.Locals)
 			if mod.Sig != nil && len(syms) > 0 {
@@ -2147,7 +2147,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 // for callers (e.g. l2s) that have a proof object separate from the action.
 //
 // Mirrors Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:2192-2209).
-func ApplyAssertProofWith(mod *Module, a *AssertAction, pf Node, prover ProofCheckerInterface) ActionsAction {
+func ApplyAssertProofWith(mod *Module, a *LogicAssertAction, pf Node, prover ProofCheckerInterface) ActionsAction {
 	if a == nil {
 		return nil
 	}
@@ -2156,7 +2156,7 @@ func ApplyAssertProofWith(mod *Module, a *AssertAction, pf Node, prover ProofChe
 
 // Python: sga.kind = type(self) — preserves the originating action type.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
-func applyAssertProofAction(mod *Module, a *AssertAction, kindName string, prover ProofCheckerInterface) ActionsAction {
+func applyAssertProofAction(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface) ActionsAction {
 	// a.Proof is typed lg.Expr; pass it through as ast.Node (lg.Expr embeds ast.Node).
 	var pf Node
 	if a.Proof != nil {
@@ -2168,7 +2168,7 @@ func applyAssertProofAction(mod *Module, a *AssertAction, kindName string, prove
 // applyAssertProofActionWithProof is the shared implementation for both
 // applyAssertProofAction (proof read from a.Proof) and ApplyAssertProofWith
 // (proof passed in explicitly as an ast.Node, which may not be an lg.Expr).
-func applyAssertProofActionWithProof(mod *Module, a *AssertAction, kindName string, prover ProofCheckerInterface, pf Node) ActionsAction {
+func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface, pf Node) ActionsAction {
 	if prover == nil {
 		assm := NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
@@ -2331,7 +2331,7 @@ func CheckProperties(mod *Module) error {
 			}
 			xtracer.Trace("compiler.CheckProperties.classify label=%s subgoals=%d", propLabel, len(subgoals))
 
-			if _, isDef := prop.Formula.(*Definition); !isDef {
+			if _, isDef := prop.Formula.(*LogicDefinition); !isDef {
 				prop = namedTrans(prop)
 				// Update prover's last axiom and schemata with named-transformed prop
 				if prover != nil {
@@ -2343,7 +2343,7 @@ func CheckProperties(mod *Module) error {
 
 			if len(subgoals) == 0 {
 				if fExpr, ok := prop.Formula.(Expr); ok && !isSchemaBody(fExpr) {
-					if _, isDef := prop.Formula.(*Definition); isDef {
+					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 						xtracer.Trace("compiler.CheckProperties.classify label=%s -> definitions (proved, 0 subgoals, def)", propLabel)
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
@@ -2378,7 +2378,7 @@ func CheckProperties(mod *Module) error {
 					mod.LabeledProps = append(mod.LabeledProps, g.CloneWithFreshID([]Node{label, g.Formula}))
 				}
 				if fExpr, ok := prop.Formula.(Expr); ok && !isSchemaBody(fExpr) {
-					if _, isDef := prop.Formula.(*Definition); isDef {
+					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
 						mod.LabeledProps = append(mod.LabeledProps, prop)
@@ -2399,7 +2399,7 @@ func CheckProperties(mod *Module) error {
 		} else {
 			// No proof
 			xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (no proof)", propLabel)
-			if _, isDef := prop.Formula.(*Definition); isDef {
+			if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 				mod.Definitions = append(mod.Definitions, prop)
 			} else {
 				mod.LabeledProps = append(mod.LabeledProps, prop)
@@ -2804,10 +2804,10 @@ func CheckMutax(mod *Module, mutaxEnabled bool) error {
 	}
 	// Build definition map: NodeKey -> rhs formula
 	// Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
-	// mod.definitions contains compiled *lg.Definition objects.
+	// mod.definitions contains compiled *lg.LogicDefinition objects.
 	defMap := make(map[NodeKey]interface{})
 	for _, lf := range mod.Definitions {
-		if def, ok := lf.Formula.(*Definition); ok {
+		if def, ok := lf.Formula.(*LogicDefinition); ok {
 			defMap[Key(def.Defines())] = def.Rhs
 		}
 	}
@@ -2825,7 +2825,7 @@ func CheckMutax(mod *Module, mutaxEnabled bool) error {
 	// Check definitions: the LHS symbol must not be modified
 	// Python: s = lf.formula.lhs().rep; if s in side_effects: ...
 	for _, lf := range mod.Definitions {
-		if def, ok := lf.Formula.(*Definition); ok {
+		if def, ok := lf.Formula.(*LogicDefinition); ok {
 			lhsKey := Key(def.Defines())
 			if modified[lhsKey] {
 				return &IvyError{Msg: fmt.Sprintf(

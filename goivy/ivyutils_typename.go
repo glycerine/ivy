@@ -2,18 +2,11 @@ package goivy
 
 import "reflect"
 
-// TypeName returns the Python-facing type name for v. It strips pointer and
-// package prefixes, and maps Go type names that had to change during the
-// uni-package merge back to their Python class names.
+// TypeName returns the concrete Go type name for v, stripped of pointer and
+// package prefixes.
 func TypeName(v interface{}) string {
 	if v == nil || isNil(v) {
 		return "nil"
-	}
-	switch v.(type) {
-	case *AstVariable, AstVariable:
-		return "Variable" // Python ivy_ast.Variable
-	case *Variable, Variable:
-		return "Var" // Python logic.Var
 	}
 	t := reflect.TypeOf(v)
 	for t.Kind() == reflect.Ptr {

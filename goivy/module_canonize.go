@@ -121,7 +121,7 @@ func ResortAST(node Expr, rn map[NodeKey]*SortRefinement) Expr {
 
 func resortASTRec(node Expr, rn map[NodeKey]*SortRefinement) Expr {
 	switch t := node.(type) {
-	case *Variable:
+	case *LogicVariable:
 		newSort := ResortSort(t.VSort, rn)
 		if SortEqual(newSort, t.VSort) {
 			return node
@@ -152,20 +152,20 @@ func resortASTRec(node Expr, rn map[NodeKey]*SortRefinement) Expr {
 		newBody := resortASTRec(t.Body, rn)
 		return &ForAll{Variables: newVars, Body: newBody}
 
-	case *Exists:
+	case *LogicExists:
 		newVars := resortVars(t.Variables, rn)
 		newBody := resortASTRec(t.Body, rn)
-		return &Exists{Variables: newVars, Body: newBody}
+		return &LogicExists{Variables: newVars, Body: newBody}
 
 	case *Lambda:
 		newVars := resortVars(t.Variables, rn)
 		newBody := resortASTRec(t.Body, rn)
 		return &Lambda{Variables: newVars, Body: newBody}
 
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newVars := resortVars(t.Variables, rn)
 		newBody := resortASTRec(t.Body, rn)
-		return &NamedBinder{Name: t.Name, Variables: newVars, Environ: t.Environ, Body: newBody}
+		return &LogicNamedBinder{Name: t.Name, Variables: newVars, Environ: t.Environ, Body: newBody}
 
 	case *IvyDefinition:
 		newLhs := resortASTRec(t.Lhs, rn)
@@ -196,7 +196,7 @@ func ResortSort(s Sort, rn map[NodeKey]*SortRefinement) Sort {
 		return sr.New
 	}
 
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		newSorts := make([]Sort, len(fs.Sorts))
 		for i, sub := range fs.Sorts {
 			newSorts[i] = ResortSort(sub, rn)
@@ -221,8 +221,8 @@ func ResortSymbol(c *Const, rn map[NodeKey]*SortRefinement) *Const {
 }
 
 // resortVars applies sort refinement to a slice of variables.
-func resortVars(vars []*Variable, rn map[NodeKey]*SortRefinement) []*Variable {
-	result := make([]*Variable, len(vars))
+func resortVars(vars []*LogicVariable, rn map[NodeKey]*SortRefinement) []*LogicVariable {
+	result := make([]*LogicVariable, len(vars))
 	for i, v := range vars {
 		newSort := ResortSort(v.VSort, rn)
 		if SortEqual(newSort, v.VSort) {

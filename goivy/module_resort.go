@@ -88,7 +88,7 @@ func ResortSig(sig *Sig, subs map[NodeKey]*SortRefinement) {
 
 // resortSymbolSort remaps a symbol's sort.
 func resortSymbolSort(s Sort, subs map[NodeKey]Sort) Sort {
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		dom := fs.Domain()
 		newDom := make([]Sort, len(dom))
 		for i, d := range dom {

@@ -43,7 +43,7 @@ type Module struct {
 	Updates        []interface{}
 	Schemata       *InsMap[string, Node]
 	Theorems       map[string]Node
-	Instantiations []Instantiation
+	Instantiations []LogicInstantiation
 
 	// Isolates
 	Isolates      map[string]*IsolateDef
@@ -100,7 +100,7 @@ type Module struct {
 	AbstractionPredicates []interface{}
 
 	Logics []string
-	Macros map[string]*AstDefinition // macro name → definition
+	Macros map[string]*Definition // macro name → definition
 
 	// SigMerkle is the rolling Merkle hash for compiler conformance auditing.
 	// Matches Python's module-level sig_merkle in ivy_compiler.py.
@@ -214,7 +214,7 @@ type ConceptSpace struct {
 
 // Instantiation pairs a schema with the AST node that instantiates it.
 // Python stores these as (schema, inst) tuples in module.instantiations.
-type Instantiation struct {
+type LogicInstantiation struct {
 	Schema Node // the schema definition (from Module.Schemata)
 	Inst   Node // the instantiation AST node
 }
@@ -324,7 +324,7 @@ func (m *Module) Clear() {
 	// but clear is also used to initialize... hmm... add nil check?
 	// python does not actually have macros on its module.
 	//if m.Macros == nil {
-	m.Macros = make(map[string]*AstDefinition)
+	m.Macros = make(map[string]*Definition)
 	//}
 }
 
@@ -366,7 +366,7 @@ func (m *Module) Copy() *Module {
 	c.Subgoals = append([]SubgoalEntry{}, m.Subgoals...)
 	c.ConjSubgoals = copyLFSlice(m.ConjSubgoals)
 	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
-	c.Instantiations = append([]Instantiation{}, m.Instantiations...)
+	c.Instantiations = append([]LogicInstantiation{}, m.Instantiations...)
 	c.IsolateInfo = m.IsolateInfo
 	c.IsolateProof = m.IsolateProof
 	c.InitCond = m.InitCond
@@ -455,7 +455,7 @@ func (m *Module) Copy() *Module {
 		c.VPrivates = copyMapBool(m.VPrivates)
 	}
 	// Macros: map[string]*ast.Definition
-	c.Macros = make(map[string]*AstDefinition, len(m.Macros))
+	c.Macros = make(map[string]*Definition, len(m.Macros))
 	for k, v := range m.Macros {
 		c.Macros[k] = v
 	}
@@ -605,7 +605,7 @@ func (m *Module) SortCard(sort Sort) int {
 
 // SortCardDefault returns the cardinality based on sort type.
 func SortCardDefault(sort Sort) int {
-	if es, ok := sort.(*EnumeratedSort); ok {
+	if es, ok := sort.(*LogicEnumeratedSort); ok {
 		return es.Card()
 	}
 	return -1
@@ -628,7 +628,7 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 	if destrs, ok := m.SortDestructors[sortName]; ok {
 		var deps []string
 		for _, destr := range destrs {
-			if fs, ok := destr.CSort.(*FunctionSort); ok {
+			if fs, ok := destr.CSort.(*LogicFunctionSort); ok {
 				dom := fs.Domain()
 				for _, d := range dom[1:] {
 					deps = append(deps, IvySortName(d))
@@ -824,12 +824,12 @@ func (m *Module) UpdateConjs() {
 		// ordering of concept-space label variables across languages.
 		variables := VariablesAST(fmla)
 
-		// Build sort: RelationSort([v.sort for v in variables])
+		// Build sort: LogicRelationSort([v.sort for v in variables])
 		sorts := make([]Sort, len(variables))
 		for j, v := range variables {
 			sorts[j] = v.VSort
 		}
-		symSort := RelationSort(sorts)
+		symSort := LogicRelationSort(sorts)
 		sym := NewConst(csname, symSort)
 
 		// Build label: sym(*variables)
@@ -845,7 +845,7 @@ func (m *Module) UpdateConjs() {
 		}
 
 		// Build space: NamedSpace(il.Literal(0, fmla))
-		space := &Literal{Polarity: 0, Atom: fmla}
+		space := &LogicLiteral{Polarity: 0, Atom: fmla}
 
 		m.ConceptSpaces = append(m.ConceptSpaces, ConceptSpace{Label: label, Body: space})
 	}

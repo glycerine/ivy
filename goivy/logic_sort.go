@@ -45,12 +45,12 @@ func (s *BooleanSort) sortSeal()      {}
 
 // --- FunctionSort ---
 
-type FunctionSort struct {
+type LogicFunctionSort struct {
 	Base
 	Sorts []Sort // last element is range, rest is domain
 }
 
-func NewFunctionSort(sorts ...Sort) (*FunctionSort, error) {
+func NewFunctionSort(sorts ...Sort) (*LogicFunctionSort, error) {
 	if len(sorts) == 0 {
 		return nil, &IvyError{Msg: "Must have range sort"}
 	}
@@ -64,14 +64,14 @@ func NewFunctionSort(sorts ...Sort) (*FunctionSort, error) {
 	}
 	cp := make([]Sort, len(sorts))
 	copy(cp, sorts)
-	return &FunctionSort{Sorts: cp}, nil
+	return &LogicFunctionSort{Sorts: cp}, nil
 }
 
-func (s *FunctionSort) Domain() []Sort { return s.Sorts[:len(s.Sorts)-1] }
-func (s *FunctionSort) Range() Sort    { return s.Sorts[len(s.Sorts)-1] }
-func (s *FunctionSort) Arity() int     { return len(s.Sorts) - 1 }
+func (s *LogicFunctionSort) Domain() []Sort { return s.Sorts[:len(s.Sorts)-1] }
+func (s *LogicFunctionSort) Range() Sort    { return s.Sorts[len(s.Sorts)-1] }
+func (s *LogicFunctionSort) Arity() int     { return len(s.Sorts) - 1 }
 
-func (s *FunctionSort) String() string {
+func (s *LogicFunctionSort) String() string {
 	parts := make([]string, len(s.Sorts)-1)
 	for i, d := range s.Domain() {
 		parts[i] = d.String()
@@ -79,22 +79,22 @@ func (s *FunctionSort) String() string {
 	return strings.Join(parts, " * ") + " -> " + s.Range().String()
 }
 
-func (s *FunctionSort) IsFinite() bool { return true }
-func (s *FunctionSort) sortSeal()      {}
+func (s *LogicFunctionSort) IsFinite() bool { return true }
+func (s *LogicFunctionSort) sortSeal()      {}
 
 // --- EnumeratedSort ---
 
-type EnumeratedSort struct {
+type LogicEnumeratedSort struct {
 	Base
 	Name      string
 	Extension []string
 }
 
-func (s *EnumeratedSort) Card() int { return len(s.Extension) }
+func (s *LogicEnumeratedSort) Card() int { return len(s.Extension) }
 
 // Constructors returns a Symbol for each extension element.
 // Matches Python logic.py:60-61: [Symbol(n, self) for n in self.extension].
-func (s *EnumeratedSort) Constructors() []*Const {
+func (s *LogicEnumeratedSort) Constructors() []*Const {
 	result := make([]*Const, len(s.Extension))
 	for i, name := range s.Extension {
 		result[i] = NewConst(name, s)
@@ -102,12 +102,12 @@ func (s *EnumeratedSort) Constructors() []*Const {
 	return result
 }
 
-func (s *EnumeratedSort) String() string {
+func (s *LogicEnumeratedSort) String() string {
 	return "{" + strings.Join(s.Extension, ",") + "}"
 }
 
-func (s *EnumeratedSort) IsFinite() bool { return true }
-func (s *EnumeratedSort) sortSeal()      {}
+func (s *LogicEnumeratedSort) IsFinite() bool { return true }
+func (s *LogicEnumeratedSort) sortSeal()      {}
 
 // --- RangeSort ---
 
@@ -183,7 +183,7 @@ func IsTopSort(s Sort) bool {
 
 // FirstOrderSort returns true if s is not a FunctionSort.
 func FirstOrderSort(s Sort) bool {
-	_, isFunc := s.(*FunctionSort)
+	_, isFunc := s.(*LogicFunctionSort)
 	return !isFunc
 }
 
@@ -215,7 +215,7 @@ func containsTopSortInSort(s Sort) bool {
 	if SortEqual(s, TopS) {
 		return true
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		for _, sub := range fs.Sorts {
 			if containsTopSortInSort(sub) {
 				return true
@@ -258,7 +258,7 @@ func isPolymorphicSort(s Sort) bool {
 	if ts, ok := s.(*TopSort); ok && ts.IsSortVariable() {
 		return true
 	}
-	if fs, ok := s.(*FunctionSort); ok {
+	if fs, ok := s.(*LogicFunctionSort); ok {
 		for _, sub := range fs.Sorts {
 			if isPolymorphicSort(sub) {
 				return true

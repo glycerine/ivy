@@ -34,7 +34,7 @@ func IsInterpretedSort(sig *Sig, s Sort) bool {
 	case *UninterpretedSort:
 		_, ok := sig.Interp[cs.Name]
 		return ok
-	case *EnumeratedSort:
+	case *LogicEnumeratedSort:
 		_, ok := sig.Interp[cs.Name]
 		return ok
 	default:
@@ -287,7 +287,7 @@ func symbolsAstRec(ast Expr, result *[]*Const, seen map[NodeKey]bool) {
 	if IsApp(ast) {
 		switch t := ast.(type) {
 		case *Apply:
-			if nb, ok := t.Func.(*NamedBinder); ok {
+			if nb, ok := t.Func.(*LogicNamedBinder); ok {
 				// Binder as function head: recurse into body
 				symbolsAstRec(nb.Body, result, seen)
 			} else if c, ok := t.Func.(*Const); ok {
@@ -309,11 +309,11 @@ func symbolsAstRec(ast Expr, result *[]*Const, seen map[NodeKey]bool) {
 }
 
 // QuantifierVars returns the bound variables of a quantifier (ForAll or Exists).
-func QuantifierVars(n Expr) []*Variable {
+func QuantifierVars(n Expr) []*LogicVariable {
 	switch t := n.(type) {
 	case *ForAll:
 		return t.Variables
-	case *Exists:
+	case *LogicExists:
 		return t.Variables
 	}
 	return nil
@@ -324,7 +324,7 @@ func QuantifierVars(n Expr) []*Variable {
 //
 //	Symbol.rep = self
 //	Apply.rep  = self.func
-//	Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
+//	Eq.rep     = Symbol('=', LogicRelationSort([t1.sort, t2.sort]))
 //
 // Returns nil if the node has no representative.
 func GetAppRep(n Expr) *Const {
@@ -336,8 +336,8 @@ func GetAppRep(n Expr) *Const {
 	case *Const:
 		return t
 	case *Eq:
-		// Python: Eq.rep = Symbol('=', RelationSort([t1.sort, t2.sort]))
-		relSort := RelationSort([]Sort{t.T1.NodeSort(), t.T2.NodeSort()})
+		// Python: Eq.rep = Symbol('=', LogicRelationSort([t1.sort, t2.sort]))
+		relSort := LogicRelationSort([]Sort{t.T1.NodeSort(), t.T2.NodeSort()})
 		return NewConst("=", relSort)
 	}
 	return nil

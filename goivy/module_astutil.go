@@ -30,8 +30,8 @@ func UsedSymbolsAST(node Expr) *InsMap[NodeKey, Expr] {
 // in left-to-right traversal order with first-occurrence dedup.
 // H6 / Python ivy_logic_utils.py:559-568 + iu.unique(): preserves traversal
 // order so that downstream binder construction is deterministic across runs.
-func VariablesAST(node Expr) []*Variable {
-	var out []*Variable
+func VariablesAST(node Expr) []*LogicVariable {
+	var out []*LogicVariable
 	seen := make(map[string]bool)
 	collectFreeVarsOrdered(node, nil, seen, &out)
 	return out
@@ -46,7 +46,7 @@ func UsedVariablesAST(node Expr) map[NodeKey]Expr {
 
 func variablesASTRec(node Expr, result map[NodeKey]Expr, bound map[string]struct{}) {
 	switch t := node.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if bound != nil {
 			if _, ok := bound[t.Name]; ok {
 				return
@@ -61,7 +61,7 @@ func variablesASTRec(node Expr, result map[NodeKey]Expr, bound map[string]struct
 		}
 		variablesASTRec(t.Body, result, newBound)
 		return
-	case *Exists:
+	case *LogicExists:
 		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
@@ -75,7 +75,7 @@ func variablesASTRec(node Expr, result map[NodeKey]Expr, bound map[string]struct
 		}
 		variablesASTRec(t.Body, result, newBound)
 		return
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
@@ -157,7 +157,7 @@ func renameASTRec(node Expr, subs map[NodeKey]*Const) Expr {
 			return r
 		}
 		return node
-	case *Variable:
+	case *LogicVariable:
 		return node // variables not renamed
 	case *Apply:
 		newFunc := renameASTRec(t.Func, subs)
@@ -197,7 +197,7 @@ func collectConstsByName(node Expr, nameSubs map[string]string, out map[NodeKey]
 		if newName, ok := nameSubs[t.Name]; ok {
 			out[Key(t)] = NewConst(newName, t.CSort)
 		}
-	case *Variable:
+	case *LogicVariable:
 		// variables not collected
 	case *Apply:
 		collectConstsByName(t.Func, nameSubs, out)
@@ -278,7 +278,7 @@ func CollectAndList(fmlas []Expr) []Expr {
 
 // CollectOr flattens nested Or formulas into a flat list.
 func CollectOr(fmla Expr) []Expr {
-	if o, ok := fmla.(*Or); ok {
+	if o, ok := fmla.(*LogicOr); ok {
 		var result []Expr
 		for _, t := range o.Terms {
 			result = append(result, CollectOr(t)...)
@@ -296,9 +296,9 @@ func DropUniversals(f Expr) Expr {
 // NormalizeFreeVariables transforms a formula so free variables are renamed
 // to V0, V1, ... in order of first occurrence.
 // Returns (oldVars, newVars, normalizedFormula).
-func NormalizeFreeVariables(node Expr) ([]*Variable, []*Variable, Expr) {
+func NormalizeFreeVariables(node Expr) ([]*LogicVariable, []*LogicVariable, Expr) {
 	subs := make(map[NodeKey]Expr)
-	var oldVars, newVars []*Variable
+	var oldVars, newVars []*LogicVariable
 	seen := make(map[string]bool)
 
 	// Collect free variables in order
@@ -317,9 +317,9 @@ func NormalizeFreeVariables(node Expr) ([]*Variable, []*Variable, Expr) {
 	return oldVars, newVars, result
 }
 
-func collectFreeVarsOrdered(node Expr, bound map[string]struct{}, seen map[string]bool, result *[]*Variable) {
+func collectFreeVarsOrdered(node Expr, bound map[string]struct{}, seen map[string]bool, result *[]*LogicVariable) {
 	switch t := node.(type) {
-	case *Variable:
+	case *LogicVariable:
 		if bound != nil {
 			if _, ok := bound[t.Name]; ok {
 				return
@@ -337,7 +337,7 @@ func collectFreeVarsOrdered(node Expr, bound map[string]struct{}, seen map[strin
 		}
 		collectFreeVarsOrdered(t.Body, newBound, seen, result)
 		return
-	case *Exists:
+	case *LogicExists:
 		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
@@ -351,7 +351,7 @@ func collectFreeVarsOrdered(node Expr, bound map[string]struct{}, seen map[strin
 		}
 		collectFreeVarsOrdered(t.Body, newBound, seen, result)
 		return
-	case *NamedBinder:
+	case *LogicNamedBinder:
 		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}

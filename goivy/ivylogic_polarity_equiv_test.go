@@ -40,19 +40,19 @@ func TestPolarMixedPropagatesToAllFormulas(t *testing.T) {
 		fmla Expr
 		pos  int
 	}{
-		{"Not/0", &Not{Body: a}, 0},
-		{"Implies/0", &Implies{T1: a, T2: b}, 0},
-		{"Implies/1", &Implies{T1: a, T2: b}, 1},
-		{"And/0", &And{Terms: []Expr{a, b}}, 0},
-		{"And/1", &And{Terms: []Expr{a, b}}, 1},
-		{"Or/0", &Or{Terms: []Expr{a, b}}, 0},
-		{"ForAll/0", &ForAll{Variables: []*Variable{v}, Body: a}, 0},
-		{"Exists/0", &Exists{Variables: []*Variable{v}, Body: a}, 0},
-		{"Ite/0", &Ite{Cond: a, Then: b, Else: a}, 0},
-		{"Ite/1", &Ite{Cond: a, Then: b, Else: a}, 1},
-		{"Ite/2", &Ite{Cond: a, Then: b, Else: a}, 2},
-		{"Iff/0", &Iff{T1: a, T2: b}, 0},
-		{"Iff/1", &Iff{T1: a, T2: b}, 1},
+		{"Not/0", &LogicNot{Body: a}, 0},
+		{"Implies/0", &LogicImplies{T1: a, T2: b}, 0},
+		{"Implies/1", &LogicImplies{T1: a, T2: b}, 1},
+		{"And/0", &LogicAnd{Terms: []Expr{a, b}}, 0},
+		{"And/1", &LogicAnd{Terms: []Expr{a, b}}, 1},
+		{"Or/0", &LogicOr{Terms: []Expr{a, b}}, 0},
+		{"ForAll/0", &ForAll{Variables: []*LogicVariable{v}, Body: a}, 0},
+		{"Exists/0", &LogicExists{Variables: []*LogicVariable{v}, Body: a}, 0},
+		{"Ite/0", &LogicIte{Cond: a, Then: b, Else: a}, 0},
+		{"Ite/1", &LogicIte{Cond: a, Then: b, Else: a}, 1},
+		{"Ite/2", &LogicIte{Cond: a, Then: b, Else: a}, 2},
+		{"Iff/0", &LogicIff{T1: a, T2: b}, 0},
+		{"Iff/1", &LogicIff{T1: a, T2: b}, 1},
 	}
 
 	for _, tt := range tests {
@@ -123,14 +123,14 @@ func TestPolarityMixedPropagatesRecursively(t *testing.T) {
 
 	// Not(Implies(a, b)) with initial pol=-1
 	// Not → NegatePolarity(-1) = -1
-	notPol := Polar(&Not{Body: &Implies{T1: a, T2: b}}, 0, -1)
+	notPol := Polar(&LogicNot{Body: &LogicImplies{T1: a, T2: b}}, 0, -1)
 	if notPol != -1 {
 		t.Errorf("Not with pol=-1 should give -1, got %d", notPol)
 	}
 	// Implies under Not with pol=-1:
 	//   pos=0 → NegatePolarity(-1) = -1
 	//   pos=1 → -1
-	imp := &Implies{T1: a, T2: b}
+	imp := &LogicImplies{T1: a, T2: b}
 	if Polar(imp, 0, notPol) != -1 {
 		t.Error("Implies/0 under mixed should be -1")
 	}

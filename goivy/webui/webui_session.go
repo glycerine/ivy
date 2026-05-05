@@ -138,7 +138,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			symbolMap[name] = goivy.NewConst(name, c)
 		}
 		// Collect relation info for the simple session
-		if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
+		if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
 			ri := RelationInfo{Name: name}
 			dom := fs.Domain()
 			for i, d := range dom {
@@ -640,7 +640,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 						continue
 					}
 					// A constant is a symbol with no domain args whose range matches the sort
-					if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
+					if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
 						if len(fs.Domain()) == 0 && fs.Range().String() == targetSort {
 							constants = append(constants, symName)
 						}
@@ -1056,7 +1056,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			// Python: clauses = dual_clauses(conj, witness)
 			//   witness = lambda v: lg.Const('@' + v.name, v.sort)
 			// DualClauses replaces universals with Skolem constants, then negates.
-			witness := func(v *goivy.Variable) goivy.Expr {
+			witness := func(v *goivy.LogicVariable) goivy.Expr {
 				return goivy.VarToSkolem("@", v)
 			}
 			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
@@ -1137,7 +1137,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 						if entry == nil || entry.Sort == nil {
 							continue
 						}
-						if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
+						if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
 							if goivy.SortEqual(fs.Range(), goivy.Boolean) {
 								usedRels = append(usedRels, symName)
 							}
@@ -1270,7 +1270,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			witness := func(v *goivy.Variable) goivy.Expr {
+			witness := func(v *goivy.LogicVariable) goivy.Expr {
 				return goivy.VarToSkolem("@", v)
 			}
 			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
@@ -1356,7 +1356,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			witness := func(v *goivy.Variable) goivy.Expr {
+			witness := func(v *goivy.LogicVariable) goivy.Expr {
 				return goivy.VarToSkolem("@", v)
 			}
 			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)

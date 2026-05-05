@@ -317,7 +317,7 @@ func (w *GraphWidget) Splatter(nodeID string) {
 				eq, _ := goivy.NewEq(X, c)
 				eqName := "=" + c.Name
 				s.Domain.Concepts.SetConcept(eqName,
-					MustCDConcept(eqName, []*goivy.Variable{X}, eq))
+					MustCDConcept(eqName, []*goivy.LogicVariable{X}, eq))
 				eqNames = append(eqNames, eqName)
 			}
 			s.Domain.Concepts.SetSet(splatterName, NewCDConceptSet(eqNames...))

@@ -37,7 +37,7 @@ func astShape(n Node) string {
 			return fmt.Sprintf("Atom(%s)", t.Rep)
 		}
 		return fmt.Sprintf("Symbol(%s)", t.Rep)
-	case *AstVariable:
+	case *Variable:
 		return fmt.Sprintf("Var(%s)", t.Rep)
 	case *Atom:
 		if len(t.Terms) == 0 {
@@ -48,7 +48,7 @@ func astShape(n Node) string {
 	case *App:
 		args := lalrShapeList(t.Terms)
 		return fmt.Sprintf("App(%v,[%s])", t.Rep, args)
-	case *AstAnd:
+	case *And:
 		if len(t.Terms) == 0 {
 			return "True"
 		}
@@ -56,62 +56,62 @@ func astShape(n Node) string {
 		// they just differ in representation: binary tree vs n-ary).
 		flat := flattenAnd(t)
 		return fmt.Sprintf("And(%s)", lalrShapeList(flat))
-	case *AstOr:
+	case *Or:
 		if len(t.Terms) == 0 {
 			return "False"
 		}
 		flat := flattenOr(t)
 		return fmt.Sprintf("Or(%s)", lalrShapeList(flat))
-	case *AstNot:
+	case *Not:
 		return fmt.Sprintf("Not(%s)", astShape(t.Body))
-	case *AstImplies:
+	case *Implies:
 		return fmt.Sprintf("Implies(%s,%s)", astShape(t.T1), astShape(t.T2))
-	case *AstIff:
+	case *Iff:
 		return fmt.Sprintf("Iff(%s,%s)", astShape(t.T1), astShape(t.T2))
-	case *AstIte:
+	case *Ite:
 		return fmt.Sprintf("Ite(%s,%s,%s)", astShape(t.Cond), astShape(t.Then), astShape(t.Else))
-	case *AstForall:
+	case *Forall:
 		return fmt.Sprintf("Forall([%s],%s)", lalrShapeList(t.Bounds), astShape(t.Body))
-	case *AstExists:
+	case *Exists:
 		return fmt.Sprintf("Exists([%s],%s)", lalrShapeList(t.Bounds), astShape(t.Body))
-	case *AstGlobally:
+	case *Globally:
 		return fmt.Sprintf("Globally(%s)", astShape(t.Body))
-	case *AstEventually:
+	case *Eventually:
 		return fmt.Sprintf("Eventually(%s)", astShape(t.Body))
-	case *AstWhenOperator:
+	case *WhenOperator:
 		return fmt.Sprintf("When(%s,%s,%s)", t.Name, astShape(t.T1), astShape(t.T2))
-	case *AstOld:
-		return fmt.Sprintf("Old(%s)", astShape(t.Term))
+	case *Old:
+		return fmt.Sprintf("LogicOld(%s)", astShape(t.Term))
 	case *This:
 		return "This"
 	case *MethodCall:
 		return fmt.Sprintf("MethodCall(%s,%s)", astShape(t.Obj), astShape(t.Method))
-	case *AstIsa:
+	case *Isa:
 		return fmt.Sprintf("Isa(%s)", lalrShapeList(t.Terms))
-	case *AstNamedBinder:
+	case *NamedBinder:
 		return fmt.Sprintf("NamedBinder(%s,%s)", t.Name, astShape(t.Body))
 	case *Dot:
 		return fmt.Sprintf("Dot(%s,%s)", astShape(t.Left), astShape(t.Right))
 	// --- Action and declaration types for action cross-validation ---
 	case *LabeledFormula:
 		return fmt.Sprintf("LabeledFormula(%s,%s)", astShape(t.Label), astShape(t.Formula))
-	case *AstSequence:
+	case *Sequence:
 		return fmt.Sprintf("Sequence(%s)", lalrShapeList(t.Args()))
-	case *AstAssertAction:
+	case *AssertAction:
 		return fmt.Sprintf("AssertAction(%s)", lalrShapeList(t.Args()))
-	case *AstAssumeAction:
+	case *AssumeAction:
 		return fmt.Sprintf("AssumeAction(%s)", lalrShapeList(t.Args()))
-	case *AstAssignAction:
+	case *AssignAction:
 		return fmt.Sprintf("AssignAction(%s)", lalrShapeList(t.Args()))
-	case *AstCallAction:
+	case *CallAction:
 		return fmt.Sprintf("CallAction(%s)", lalrShapeList(t.Args()))
-	case *AstIfAction:
+	case *IfAction:
 		return fmt.Sprintf("IfAction(%s)", lalrShapeList(t.Args()))
-	case *AstWhileAction:
+	case *WhileAction:
 		return fmt.Sprintf("WhileAction(%s)", lalrShapeList(t.Args()))
-	case *AstLocalAction:
+	case *LocalAction:
 		return fmt.Sprintf("LocalAction(%s)", lalrShapeList(t.Args()))
-	case *AstNativeAction:
+	case *NativeAction:
 		return fmt.Sprintf("NativeAction(%s)", lalrShapeList(t.Args()))
 	default:
 		// Generic fallback using Args() if available
@@ -124,10 +124,10 @@ func astShape(n Node) string {
 }
 
 // flattenAnd recursively flattens nested And nodes into a single list.
-func flattenAnd(n *AstAnd) []Node {
+func flattenAnd(n *And) []Node {
 	var result []Node
 	for _, t := range n.Terms {
-		if inner, ok := t.(*AstAnd); ok && len(inner.Terms) > 0 {
+		if inner, ok := t.(*And); ok && len(inner.Terms) > 0 {
 			result = append(result, flattenAnd(inner)...)
 		} else {
 			result = append(result, t)
@@ -137,10 +137,10 @@ func flattenAnd(n *AstAnd) []Node {
 }
 
 // flattenOr recursively flattens nested Or nodes into a single list.
-func flattenOr(n *AstOr) []Node {
+func flattenOr(n *Or) []Node {
 	var result []Node
 	for _, t := range n.Terms {
-		if inner, ok := t.(*AstOr); ok && len(inner.Terms) > 0 {
+		if inner, ok := t.(*Or); ok && len(inner.Terms) > 0 {
 			result = append(result, flattenOr(inner)...)
 		} else {
 			result = append(result, t)

@@ -11,12 +11,12 @@ func moduleMkConst(name string) *Const {
 	return NewConst(name, Boolean)
 }
 
-func moduleMkVar(name string) *Variable {
+func moduleMkVar(name string) *LogicVariable {
 	v, _ := NewVariable(name, &UninterpretedSort{Name: "S"})
 	return v
 }
 
-func mkBoolVar(name string) *Variable {
+func mkBoolVar(name string) *LogicVariable {
 	v, _ := NewVariable(name, Boolean)
 	return v
 }
@@ -46,7 +46,7 @@ func TestModuleClauseOpsNewClausesEmpty(t *testing.T) {
 func TestModuleClauseOpsNewClausesFlattensAnd(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
-	inner := &And{Terms: []Expr{a, b}}
+	inner := &LogicAnd{Terms: []Expr{a, b}}
 	c := NewClauses([]Expr{inner}, nil, nil)
 	if len(c.Fmlas) != 2 {
 		t.Errorf("expected 2 formulas after flattening, got %d", len(c.Fmlas))
@@ -86,7 +86,7 @@ func TestModuleClauseOpsClausesToOpenFormula(t *testing.T) {
 	b := moduleMkConst("b")
 	c := NewClauses([]Expr{a, b}, nil, nil)
 	f := c.ToOpenFormula()
-	and, ok := f.(*And)
+	and, ok := f.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", f)
 	}
@@ -101,7 +101,7 @@ func TestModuleClauseOpsClausesToOpenFormulaWithDefs(t *testing.T) {
 	def := NewIvyDefinition(a, b)
 	c := NewClauses([]Expr{a}, []*IvyDefinition{def}, nil)
 	f := c.ToOpenFormula()
-	and, ok := f.(*And)
+	and, ok := f.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", f)
 	}
@@ -205,7 +205,7 @@ func TestModuleClauseOpsFormulaToClauses(t *testing.T) {
 
 func TestModuleClauseOpsFormulaToClausesUnwrapsSingleton(t *testing.T) {
 	a := moduleMkConst("a")
-	wrapped := &And{Terms: []Expr{a}}
+	wrapped := &LogicAnd{Terms: []Expr{a}}
 	c := FormulaToClauses(wrapped, nil)
 	if len(c.Fmlas) != 1 {
 		t.Errorf("expected 1 formula, got %d", len(c.Fmlas))
@@ -218,7 +218,7 @@ func TestModuleClauseOpsFormulaToClausesUnwrapsSingleton(t *testing.T) {
 func TestModuleClauseOpsFormulaToClausesStripsForAll(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
-	fa := &ForAll{Variables: []*Variable{x}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 	c := FormulaToClauses(fa, nil)
 	if len(c.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(c.Fmlas))
@@ -270,7 +270,7 @@ func TestModuleClauseOpsOrClausesTyped(t *testing.T) {
 		t.Error("or clauses should produce formulas")
 	}
 	// First formula should be Or(v1, v2)
-	firstOr, ok := result.Fmlas[0].(*Or)
+	firstOr, ok := result.Fmlas[0].(*LogicOr)
 	if !ok {
 		t.Fatalf("first formula should be Or, got %T", result.Fmlas[0])
 	}
@@ -349,7 +349,7 @@ func TestModuleClauseOpsConditionClauses(t *testing.T) {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
 	// Should be Or(Not(b), a)
-	or, ok := result.Fmlas[0].(*Or)
+	or, ok := result.Fmlas[0].(*LogicOr)
 	if !ok {
 		t.Fatalf("expected Or, got %T", result.Fmlas[0])
 	}
@@ -357,7 +357,7 @@ func TestModuleClauseOpsConditionClauses(t *testing.T) {
 		t.Errorf("expected 2 terms in Or, got %d", len(or.Terms))
 	}
 	// First term should be Not(b)
-	notB, ok := or.Terms[0].(*Not)
+	notB, ok := or.Terms[0].(*LogicNot)
 	if !ok {
 		t.Fatalf("expected Not, got %T", or.Terms[0])
 	}
@@ -388,7 +388,7 @@ func TestModuleClauseOpsClausesUsingSymbols(t *testing.T) {
 func TestModuleClauseOpsSymbolsAST(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
-	fmla := &And{Terms: []Expr{a, b}}
+	fmla := &LogicAnd{Terms: []Expr{a, b}}
 	syms := SymbolsAST(fmla)
 	if len(syms) != 2 {
 		t.Errorf("expected 2 symbols, got %d", len(syms))
@@ -408,7 +408,7 @@ func TestModuleClauseOpsUsedSymbolsAST(t *testing.T) {
 func TestModuleClauseOpsVariablesAST(t *testing.T) {
 	x := moduleMkVar("X")
 	y := moduleMkVar("Y")
-	fmla := &And{Terms: []Expr{x, y}}
+	fmla := &LogicAnd{Terms: []Expr{x, y}}
 	vars := VariablesAST(fmla)
 	if len(vars) != 2 {
 		t.Errorf("expected 2 variables, got %d", len(vars))
@@ -418,8 +418,8 @@ func TestModuleClauseOpsVariablesAST(t *testing.T) {
 func TestModuleClauseOpsVariablesASTSkipsBound(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	body := &And{Terms: []Expr{x, y}}
-	fa := &ForAll{Variables: []*Variable{x}, Body: body}
+	body := &LogicAnd{Terms: []Expr{x, y}}
+	fa := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 	vars := VariablesAST(fa)
 	// Only Y should be free
 	if len(vars) != 1 {
@@ -429,7 +429,7 @@ func TestModuleClauseOpsVariablesASTSkipsBound(t *testing.T) {
 
 func TestModuleClauseOpsUsedVariablesAST(t *testing.T) {
 	x := moduleMkVar("X")
-	fmla := &And{Terms: []Expr{x}}
+	fmla := &LogicAnd{Terms: []Expr{x}}
 	vars := UsedVariablesAST(fmla)
 	if len(vars) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(vars))
@@ -439,9 +439,9 @@ func TestModuleClauseOpsUsedVariablesAST(t *testing.T) {
 func TestModuleClauseOpsSubstituteConstantsAST(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
-	fmla := &And{Terms: []Expr{a}}
+	fmla := &LogicAnd{Terms: []Expr{a}}
 	result := SubstituteConstantsAST(fmla, map[NodeKey]Expr{Key(a): b})
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
@@ -453,9 +453,9 @@ func TestModuleClauseOpsSubstituteConstantsAST(t *testing.T) {
 func TestModuleClauseOpsRenameAST(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
-	fmla := &And{Terms: []Expr{a}}
+	fmla := &LogicAnd{Terms: []Expr{a}}
 	result := RenameAST(fmla, map[NodeKey]*Const{Key(a): b})
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
@@ -467,7 +467,7 @@ func TestModuleClauseOpsRenameAST(t *testing.T) {
 func TestModuleClauseOpsNegate(t *testing.T) {
 	a := moduleMkConst("a")
 	notA := Negate(a)
-	not, ok := notA.(*Not)
+	not, ok := notA.(*LogicNot)
 	if !ok {
 		t.Fatalf("expected Not, got %T", notA)
 	}
@@ -575,7 +575,7 @@ func TestModuleClauseOpsCollectAndList(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
 	c := moduleMkConst("c")
-	nested := &And{Terms: []Expr{a, &And{Terms: []Expr{b, c}}}}
+	nested := &LogicAnd{Terms: []Expr{a, &LogicAnd{Terms: []Expr{b, c}}}}
 	result := CollectAndList([]Expr{nested})
 	if len(result) != 3 {
 		t.Errorf("expected 3 after flattening, got %d", len(result))
@@ -586,7 +586,7 @@ func TestModuleClauseOpsCollectOr(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
 	c := moduleMkConst("c")
-	nested := &Or{Terms: []Expr{a, &Or{Terms: []Expr{b, c}}}}
+	nested := &LogicOr{Terms: []Expr{a, &LogicOr{Terms: []Expr{b, c}}}}
 	result := CollectOr(nested)
 	if len(result) != 3 {
 		t.Errorf("expected 3 after flattening, got %d", len(result))
@@ -596,7 +596,7 @@ func TestModuleClauseOpsCollectOr(t *testing.T) {
 func TestModuleClauseOpsDropUniversals(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
-	fa := &ForAll{Variables: []*Variable{x}, Body: body}
+	fa := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 	result := DropUniversals(fa)
 	if _, ok := result.(*ForAll); ok {
 		t.Error("ForAll should be stripped")
@@ -609,9 +609,9 @@ func TestModuleClauseOpsDropUniversals(t *testing.T) {
 func TestModuleClauseOpsDropUniversalsNested(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	body := &And{Terms: []Expr{x, y}}
-	inner := &ForAll{Variables: []*Variable{y}, Body: body}
-	outer := &ForAll{Variables: []*Variable{x}, Body: inner}
+	body := &LogicAnd{Terms: []Expr{x, y}}
+	inner := &ForAll{Variables: []*LogicVariable{y}, Body: body}
+	outer := &ForAll{Variables: []*LogicVariable{x}, Body: inner}
 	result := DropUniversals(outer)
 	// Should strip both ForAlls
 	if _, ok := result.(*ForAll); ok {
@@ -633,7 +633,7 @@ func TestModuleClauseOpsIsGroundAST(t *testing.T) {
 func TestModuleClauseOpsNormalizeFreeVariables(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	fmla := &And{Terms: []Expr{x, y}}
+	fmla := &LogicAnd{Terms: []Expr{x, y}}
 	oldVars, newVars, result := NormalizeFreeVariables(fmla)
 	if len(oldVars) != 2 || len(newVars) != 2 {
 		t.Fatalf("expected 2 old and 2 new vars, got %d, %d", len(oldVars), len(newVars))
@@ -641,12 +641,12 @@ func TestModuleClauseOpsNormalizeFreeVariables(t *testing.T) {
 	if newVars[0].Name != "V0" || newVars[1].Name != "V1" {
 		t.Errorf("expected V0, V1, got %s, %s", newVars[0].Name, newVars[1].Name)
 	}
-	and, ok := result.(*And)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
 	}
 	for _, term := range and.Terms {
-		v, ok := term.(*Variable)
+		v, ok := term.(*LogicVariable)
 		if !ok {
 			t.Fatalf("expected Var, got %T", term)
 		}
@@ -700,8 +700,8 @@ func TestModuleClauseOpsClausesToFormula(t *testing.T) {
 	f := c.ToFormula()
 	// ToFormula uses CloseEPR which distributes through And.
 	// to_open_formula() returns And(X), then CloseEPR(And(X)) → And(ForAll(X, X)).
-	// This matches Python: close_epr(And(X)) = And(close_epr(X)) = And(ForAll([X], X)).
-	and, ok := f.(*And)
+	// This matches Python: close_epr(And(X)) = LogicAnd(close_epr(X)) = LogicAnd(ForAll([X], X)).
+	and, ok := f.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected And (CloseEPR distributes through And), got %T: %s", f, f)
 	}
@@ -730,13 +730,13 @@ func FuzzCollectAndList(f *testing.F) {
 		}
 
 		// Build a nested And
-		inner := &And{Terms: consts}
+		inner := &LogicAnd{Terms: consts}
 		numExtra := abs(n2)%3 + 1
 		outerTerms := []Expr{inner}
 		for i := 0; i < numExtra; i++ {
 			outerTerms = append(outerTerms, moduleMkConst("d"+strings.Repeat("y", i)))
 		}
-		outer := &And{Terms: outerTerms}
+		outer := &LogicAnd{Terms: outerTerms}
 
 		result := CollectAndList([]Expr{outer})
 		// Result should have at least as many elements as inner + outer extras
@@ -746,7 +746,7 @@ func FuzzCollectAndList(f *testing.F) {
 		}
 		// No And should remain at the top level of result
 		for _, r := range result {
-			if a, ok := r.(*And); ok && len(a.Terms) > 0 {
+			if a, ok := r.(*LogicAnd); ok && len(a.Terms) > 0 {
 				t.Error("flattening should not leave non-empty And nodes")
 			}
 		}

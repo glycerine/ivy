@@ -329,11 +329,11 @@ func fixIfPart(cond Node, part Node) Node {
 	// Extract params from whichever type matches.
 	var params []Node
 	switch s := cond.(type) {
-	case *AstSome:
+	case *Some:
 		params = s.Params
-	case *AstSomeMin:
+	case *SomeMin:
 		params = s.Params
-	case *AstSomeMax:
+	case *SomeMax:
 		params = s.Params
 	}
 	if params != nil {
@@ -386,11 +386,11 @@ func createObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs []Node, 
 	}
 
 	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
-	vsubst := make(map[string]*AstVariable)
+	vsubst := make(map[string]*Variable)
 	for i, pr := range objectargs {
 		if i < len(prefargs) {
 			prName := nodeRep(pr)
-			if v, ok := prefargs[i].(*AstVariable); ok {
+			if v, ok := prefargs[i].(*Variable); ok {
 				vsubst[prName] = v
 			}
 		}
@@ -2331,10 +2331,10 @@ parser17default:
 			xtracer.Trace("parser.p_top_definition_optlabel_gdefn_optproof ENTER (top)")
 			parser17VAL.accum = parser17Dollar[1].accum
 			// Python: foo = p[5]
-			// Python: if p[2]: foo = DefinitionSchema(*foo.args); foo.lineno = p[5].lineno
+			// Python: if p[2]: foo = LogicDefinitionSchema(*foo.args); foo.lineno = p[5].lineno
 			gdefn := parser17Dollar[5].node
 			if parser17Dollar[2].node != nil { // optexplicit is True
-				if def, ok := gdefn.(*AstDefinition); ok {
+				if def, ok := gdefn.(*Definition); ok {
 					ds := parser17Acfg(parser17lex).NewDefinitionSchema(*def)
 					ds.SetLineno(def.GetLineno())
 					gdefn = ds
@@ -2500,7 +2500,7 @@ parser17default:
 
 			// Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
 			sortNode := parser17Dollar[7].node
-			_, isRange := sortNode.(*AstRange)
+			_, isRange := sortNode.(*Range)
 			if isRange {
 				sortNode = parser17Acfg(parser17lex).NewUninterpretedSortAST()
 			}
@@ -2644,7 +2644,7 @@ parser17default:
 
 			// Python: if isinstance(adef, CrashAction):
 			//             adef = adef.clone([Atom(This(), formals)])
-			if ca, ok := adef.(*AstCrashAction); ok {
+			if ca, ok := adef.(*CrashAction); ok {
 				thisAtom := parser17Acfg(parser17lex).NewAtom("this", formals...)
 				thisAtom.SetLineno(lineno)
 				adef = ca.Clone([]Node{thisAtom})
@@ -3335,7 +3335,7 @@ parser17default:
 				composed := ComposeAtomsGeneric(lhs, parser17Dollar[3].node)
 				composed.SetLineno(tokLineno(lex, parser17Dollar[2].tok))
 				parser17VAL.node = composed
-			case *AstOld:
+			case *Old:
 				t := ComposeAtomsGeneric(lhs.Term, parser17Dollar[3].node)
 				t.SetLineno(tokLineno(lex, parser17Dollar[2].tok))
 				lhs.Term = t
@@ -3494,7 +3494,7 @@ parser17default:
 		{
 			xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
 			// Python: if isinstance(p[1],And): append; else: new And with get_lineno
-			if existing, ok := parser17Dollar[1].node.(*AstAnd); ok {
+			if existing, ok := parser17Dollar[1].node.(*And); ok {
 				existing.Terms = append(existing.Terms, parser17Dollar[3].node)
 				parser17VAL.node = existing
 			} else {
@@ -3509,7 +3509,7 @@ parser17default:
 		{
 			xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
 			// Python: if isinstance(p[1],Or): append; else: new Or with get_lineno
-			if existing, ok := parser17Dollar[1].node.(*AstOr); ok {
+			if existing, ok := parser17Dollar[1].node.(*Or); ok {
 				existing.Terms = append(existing.Terms, parser17Dollar[3].node)
 				parser17VAL.node = existing
 			} else {
@@ -3647,7 +3647,7 @@ parser17default:
 			// Python: if hasattr(p[1],"sort"): raise IvyError("multiple sort annotations")
 			// Python: p[1].sort = p[3]; p[0] = p[1]
 			switch n := parser17Dollar[1].node.(type) {
-			case *AstVariable:
+			case *Variable:
 				if n.VSort != "" {
 					parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
 				}
@@ -3670,7 +3670,7 @@ parser17default:
 //line parser_grammar_v17.y:2205
 		{
 			xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
-			// Python: x = NamedBinder(p[3], p[4], p[6]); x.lineno = get_lineno(p,2)
+			// Python: x = LogicNamedBinder(p[3], p[4], p[6]); x.lineno = get_lineno(p,2)
 			// Python: p[0] = App(x, p[9]); p[0].lineno = get_lineno(p,2)
 			binder := parser17Acfg(parser17lex).NewNamedBinder(parser17Dollar[3].tok.Val, parser17Dollar[4].nodes, parser17Dollar[6].node)
 			binder.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -4047,7 +4047,7 @@ parser17default:
 //line parser_grammar_v17.y:2579
 		{
 			xtracer.Trace("parser.p_gdefn_lcb_defn_rcb ENTER (gdefn)")
-			d := parser17Dollar[2].node.(*AstDefinition)
+			d := parser17Dollar[2].node.(*Definition)
 			parser17VAL.node = parser17Acfg(parser17lex).NewDefinitionSchema(*d)
 		}
 	case 169:
@@ -4258,7 +4258,7 @@ parser17default:
 //line parser_grammar_v17.y:2771
 		{
 			xtracer.Trace("parser.p_symdecl_field_tterms ENTER (symdecl)")
-			// Python: arg0 = Variable('SELF',This()); arg0.lineno = get_lineno(p,1)
+			// Python: arg0 = LogicVariable('SELF',This()); arg0.lineno = get_lineno(p,1)
 			// Python: Variable('SELF', This()) — This() is special; use "this" as sort string
 			arg0 := parser17Acfg(parser17lex).NewVariable("SELF", "this")
 			arg0.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))
@@ -4795,7 +4795,7 @@ parser17default:
 //line parser_grammar_v17.y:3224
 		{
 			xtracer.Trace("parser.p_lit_atom ENTER (lit)")
-			// Python: p[0] = Literal(1, p[1])
+			// Python: p[0] = LogicLiteral(1, p[1])
 			parser17VAL.node = parser17Acfg(parser17lex).NewLiteral(1, parser17Dollar[1].node)
 			parser17VAL.node.SetLineno(nodeLineno(parser17Dollar[1].node))
 		}
@@ -4804,7 +4804,7 @@ parser17default:
 //line parser_grammar_v17.y:3231
 		{
 			xtracer.Trace("parser.p_lit_term_eq_term ENTER (lit)")
-			// Python: p[0] = Literal(1, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
+			// Python: p[0] = LogicLiteral(1, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
 			a := parser17Acfg(parser17lex).NewAtom("=", parser17Acfg(parser17lex).NewAtom(parser17Dollar[1].tok.Val), parser17Acfg(parser17lex).NewAtom(parser17Dollar[3].tok.Val))
 			parser17VAL.node = parser17Acfg(parser17lex).NewLiteral(1, a)
 			parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -4814,7 +4814,7 @@ parser17default:
 //line parser_grammar_v17.y:3239
 		{
 			xtracer.Trace("parser.p_lit_term_tildaeq_term ENTER (lit)")
-			// Python: p[0] = Literal(0, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
+			// Python: p[0] = LogicLiteral(0, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
 			a := parser17Acfg(parser17lex).NewAtom("=", parser17Acfg(parser17lex).NewAtom(parser17Dollar[1].tok.Val), parser17Acfg(parser17lex).NewAtom(parser17Dollar[3].tok.Val))
 			parser17VAL.node = parser17Acfg(parser17lex).NewLiteral(0, a)
 			parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -4825,7 +4825,7 @@ parser17default:
 		{
 			xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
 			// Python: p[0] = ~p[2] — flips Literal polarity
-			if lit, ok := parser17Dollar[2].node.(*AstLiteral); ok {
+			if lit, ok := parser17Dollar[2].node.(*Literal); ok {
 				parser17VAL.node = parser17Acfg(parser17lex).NewLiteral(1-lit.Polarity, lit.Atom)
 			} else {
 				parser17VAL.node = parser17Acfg(parser17lex).NewLiteral(0, parser17Dollar[2].node)
@@ -5465,7 +5465,7 @@ parser17default:
 			xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
 			stmts := lowerVarStmts(parser17Dollar[2].nodes)
 			seq := parser17MakeSequence(parser17Acfg(parser17lex), stmts)
-			if s, ok := seq.(*AstSequence); ok {
+			if s, ok := seq.(*Sequence); ok {
 				s.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))
 			} else {
 				// Single node — mark as having a location without calling getLineno
@@ -5482,7 +5482,7 @@ parser17default:
 //line parser_grammar_v17.y:3883
 		{
 			xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
-			// Python: p[0] = Sequence(*lower_var_stmts(p[2]))
+			// Python: p[0] = LogicSequence(*lower_var_stmts(p[2]))
 			// Unlike p_sequence_lcb_actseq_rcb, this rule always wraps in Sequence
 			// and only calls lower_var_stmts once (no len==1 shortcut).
 			stmts := lowerVarStmts(parser17Dollar[2].nodes)
@@ -5585,7 +5585,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewAssertAction(lf)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5604,7 +5604,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewAssertAction(lf, parser17Dollar[5].node)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5623,7 +5623,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewRequiresAction(lf)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5642,7 +5642,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewRequiresAction(lf, parser17Dollar[5].node)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5661,7 +5661,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewEnsuresAction(lf)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5680,7 +5680,7 @@ parser17default:
 			addUnprovable(lf, parser17Dollar[1].node)
 			a := parser17Acfg(parser17lex).NewEnsuresAction(lf, parser17Dollar[5].node)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
-			// Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+			// Python: if p[1] and not check_unprovable.get(): p[0] = LogicSequence()
 			if parser17Dollar[1].node != nil && !parser17Acfg(parser17lex).CheckUnprovable {
 				parser17VAL.node = parser17Acfg(parser17lex).NewSequence()
 				parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -5777,7 +5777,7 @@ parser17default:
 			xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
 			// Python: action = Atom(p[2],[]); action.lineno = get_lineno(p,2)
 			// Python: if not p[2].startswith('"'): report_error(...)
-			// Python: p[0] = DebugAction(action,*p[3]); p[0].lineno = get_lineno(p,1)
+			// Python: p[0] = LogicDebugAction(action,*p[3]); p[0].lineno = get_lineno(p,1)
 			action := parser17Acfg(parser17lex).NewAtom(parser17Dollar[2].tok.Val)
 			action.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
 			if !strings.HasPrefix(parser17Dollar[2].tok.Val, "\"") {
@@ -5793,7 +5793,7 @@ parser17default:
 //line parser_grammar_v17.y:4160
 		{
 			xtracer.Trace("parser.p_action_term ENTER (simpleact)")
-			// Python: p[0] = CallAction(p[1]); p[0].lineno = p[1].lineno
+			// Python: p[0] = LogicCallAction(p[1]); p[0].lineno = p[1].lineno
 			parser17VAL.node = parser17Acfg(parser17lex).NewCallAction(parser17Dollar[1].node)
 			parser17VAL.node.SetLineno(parser17Dollar[1].node.GetLineno())
 		}
@@ -5930,7 +5930,7 @@ parser17default:
 			// Python: ln = get_lineno(p,1)
 			ln := tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok)
 
-			// Python: didx = VarAction(itr, methcall(fmla, App('begin').sln(ln)).sln(ln)).sln(ln)
+			// Python: didx = LogicVarAction(itr, methcall(fmla, App('begin').sln(ln)).sln(ln)).sln(ln)
 			appBegin := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("begin", nil))
 			appBegin.SetLineno(ln)
 			mcBegin := methcall(parser17Acfg(parser17lex), forFmla, appBegin)
@@ -5938,7 +5938,7 @@ parser17default:
 			didx := parser17Acfg(parser17lex).NewVarAction(itr, mcBegin)
 			didx.SetLineno(ln)
 
-			// Python: dend = VarAction(iend, methcall(fmla, App('end').sln(ln)).sln(ln)).sln(ln)
+			// Python: dend = LogicVarAction(iend, methcall(fmla, App('end').sln(ln)).sln(ln)).sln(ln)
 			appEnd := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("end", nil))
 			appEnd.SetLineno(ln)
 			mcEnd := methcall(parser17Acfg(parser17lex), forFmla, appEnd)
@@ -5946,7 +5946,7 @@ parser17default:
 			dend := parser17Acfg(parser17lex).NewVarAction(iend, mcEnd)
 			dend.SetLineno(ln)
 
-			// Python: dval = VarAction(val, methcall(fmla, App('value', itr).sln(ln)).sln(ln)).sln(ln)
+			// Python: dval = LogicVarAction(val, methcall(fmla, App('value', itr).sln(ln)).sln(ln)).sln(ln)
 			appValue := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("value", nil), itr)
 			appValue.SetLineno(ln)
 			mcValue := methcall(parser17Acfg(parser17lex), forFmla, appValue)
@@ -5954,7 +5954,7 @@ parser17default:
 			dval := parser17Acfg(parser17lex).NewVarAction(val, mcValue)
 			dval.SetLineno(ln)
 
-			// Python: incr = AssignAction(itr, methcall(itr, App('next').sln(ln)).sln(ln)).sln(ln)
+			// Python: incr = LogicAssignAction(itr, methcall(itr, App('next').sln(ln)).sln(ln)).sln(ln)
 			appNext := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("next", nil))
 			appNext.SetLineno(ln)
 			mcNext := methcall(parser17Acfg(parser17lex), itr, appNext)
@@ -5962,12 +5962,12 @@ parser17default:
 			incr := parser17Acfg(parser17lex).NewAssignAction(itr, mcNext)
 			incr.SetLineno(ln)
 
-			// Python: body = Sequence(*lower_var_stmts([dval, seq, incr])).sln(ln)
+			// Python: body = LogicSequence(*lower_var_stmts([dval, seq, incr])).sln(ln)
 			bodyStmts := LowerVarStatements([]Node{dval, seq, incr})
 			body := parser17Acfg(parser17lex).NewSequence(bodyStmts...)
 			body.SetLineno(ln)
 
-			// Python: loop = WhileAction(*([App('<', itr, iend).sln(ln), body] + invars + decrs)).sln(ln)
+			// Python: loop = LogicWhileAction(*([App('<', itr, iend).sln(ln), body] + invars + decrs)).sln(ln)
 			ltCond := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("<", nil), itr, iend)
 			ltCond.SetLineno(ln)
 			loopArgs := []Node{ltCond, body}
@@ -5976,7 +5976,7 @@ parser17default:
 			loop := parser17Acfg(parser17lex).NewWhileAction(loopArgs...)
 			loop.SetLineno(ln)
 
-			// Python: p[0] = Sequence(*lower_var_stmts([didx, dend, loop])).sln(ln)
+			// Python: p[0] = LogicSequence(*lower_var_stmts([didx, dend, loop])).sln(ln)
 			outerStmts := LowerVarStatements([]Node{didx, dend, loop})
 			result := parser17Acfg(parser17lex).NewSequence(outerStmts...)
 			result.SetLineno(ln)
@@ -5990,7 +5990,7 @@ parser17default:
 			// Python: lsyms = [s.prefix('loc:') for s in p[2]]
 			// Python: subst = dict((x.rep,y.rep) for x,y in zip(p[2],lsyms))
 			// Python: action = subst_prefix_atoms_ast(p[3],subst,None,None)
-			// Python: p[0] = LocalAction(*(lsyms+[action]))
+			// Python: p[0] = LogicLocalAction(*(lsyms+[action]))
 			bounds := parser17Dollar[2].nodes
 			lsyms := make([]Node, len(bounds))
 			subst := make(map[string]string)
@@ -6049,7 +6049,7 @@ parser17default:
 			// Python: subst = dict((x.rep,y.rep) for x,y in zip([p[1]],lsyms))
 			// Python: fmla = App('*>',p[3],p[1])
 			// Python: fmla = subst_prefix_atoms_ast(fmla,subst,None,None)
-			// Python: p[0] = Some(*(lsyms+[fmla]))
+			// Python: p[0] = LogicSome(*(lsyms+[fmla]))
 			lhs := parser17Dollar[1].node
 			lsym := PrefixNode(lhs, "loc:")
 			if a, ok := lsym.(*Atom); ok {
@@ -6144,7 +6144,7 @@ parser17default:
 //line parser_grammar_v17.y:4493
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
-			// Python: a = AssertAction(check_non_temporal(addlabel(p[3],'asrt')))
+			// Python: a = LogicAssertAction(check_non_temporal(addlabel(p[3],'asrt')))
 			inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), parser17Dollar[3].node.(*LabeledFormula), "asrt"))
 			a := parser17Acfg(parser17lex).NewAssertAction(inv)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -6155,7 +6155,7 @@ parser17default:
 //line parser_grammar_v17.y:4502
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
-			// Python: a = AssertAction(inv, p[5])
+			// Python: a = LogicAssertAction(inv, p[5])
 			inv := checkNonTemporal(parser17AddLabel(parser17Acfg(parser17lex), parser17Dollar[3].node.(*LabeledFormula), "asrt"))
 			a := parser17Acfg(parser17lex).NewAssertAction(inv, parser17Dollar[5].node)
 			a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -6173,7 +6173,7 @@ parser17default:
 //line parser_grammar_v17.y:4519
 		{
 			xtracer.Trace("parser.p_decreases_decreases_fmla ENTER (decreases)")
-			// Python: rank = Ranking(check_non_temporal(p[2])); rank.lineno = get_lineno(p,1)
+			// Python: rank = LogicRanking(check_non_temporal(p[2])); rank.lineno = get_lineno(p,1)
 			fmla := checkNonTemporal(parser17Dollar[2].node)
 			rank := parser17Acfg(parser17lex).NewRanking(fmla)
 			rank.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))
@@ -6356,7 +6356,7 @@ parser17default:
 //line parser_grammar_v17.y:4702
 		{
 			xtracer.Trace("parser.p_tacticwithelem_trigger ENTER (tacticwithelem)")
-			// Python: p[0] = Trigger(*([Atom(p[2])]+p[4])); p[0].lineno = get_lineno(p,3)
+			// Python: p[0] = LogicTrigger(*([Atom(p[2])]+p[4])); p[0].lineno = get_lineno(p,3)
 			trigAtom := atypeToAtom(parser17Acfg(parser17lex), parser17Dollar[2].node)
 			trig := parser17Acfg(parser17lex).NewTrigger(trigAtom, parser17Dollar[4].nodes...)
 			trig.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[3].tok))
@@ -6917,7 +6917,7 @@ parser17default:
 			xtracer.Trace("parser.p_upax_params_apps_in_action_arrow_ensures_fmla ENTER (upax)")
 			cfg := parser17Acfg(parser17lex)
 			// Python (ivy_parser.py:1980):
-			//   p[0] = UpdatePattern(ConstantDecl(*p[2]), p[4], p[6], p[7])
+			//   p[0] = LogicUpdatePattern(ConstantDecl(*p[2]), p[4], p[6], p[7])
 			params := cfg.NewConstantDecl(parser17Dollar[2].nodes...)
 			parser17VAL.node = cfg.NewUpdatePattern(params, parser17Dollar[4].node, parser17Dollar[6].node, parser17Dollar[7].node)
 		}

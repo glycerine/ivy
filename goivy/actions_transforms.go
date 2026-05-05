@@ -39,7 +39,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 	}
 
 	switch a := action.(type) {
-	case *RequiresAction:
+	case *LogicRequiresAction:
 		// RequiresAction must be checked before AssertAction since it embeds it
 		if kinds["require"] {
 			assume := NewAssumeAction(a.Formula)
@@ -49,7 +49,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 		}
 		return a
 
-	case *EnsuresAction:
+	case *LogicEnsuresAction:
 		// EnsuresAction must be checked before AssertAction since it embeds it
 		// Python: checks iu.get_numeric_version() <= [1,6] before converting
 		if kinds["ensure"] {
@@ -68,7 +68,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 		}
 		return a
 
-	case *SubgoalAction:
+	case *LogicSubgoalAction:
 		// SubgoalAction embeds AssertAction — match when "assert" is in kinds
 		// Mirrors Python's class hierarchy where SubgoalAction inherits AssertAction
 		if kinds["assert"] || kinds["subgoal"] {
@@ -79,7 +79,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 		}
 		return a
 
-	case *AssertAction:
+	case *LogicAssertAction:
 		// Plain AssertAction (not RequiresAction, EnsuresAction, or SubgoalAction)
 		if kinds["assert"] {
 			assume := NewAssumeAction(a.Formula)
@@ -128,7 +128,7 @@ func ModifiesSingle(action ActionsAction, cfg ...*ActionsConfig) []*Const {
 	}
 	var result []*Const
 	switch action.(type) {
-	case *AssignAction, *HavocAction, *CrashAction:
+	case *LogicAssignAction, *LogicHavocAction, *LogicCrashAction:
 		modifiesRec(action, &result, acfg)
 	}
 	return result
@@ -151,7 +151,7 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 		return
 	}
 	switch a := action.(type) {
-	case *AssignAction:
+	case *LogicAssignAction:
 		// Walk destructor chain to find root symbol.
 		// Python: n = self.args[0]; while n.rep.name in destructor_sorts: n = n.args[0]; return [n.rep]
 		// Python accesses n.rep (the Func/rep of an Apply), not n itself.
@@ -178,7 +178,7 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 			}
 		}
 
-	case *HavocAction:
+	case *LogicHavocAction:
 		// Walk destructor chain to find root symbol, same as AssignAction.
 		// Python: while n.rep.name in ivy_module.module.destructor_sorts: n = n.args[0]; return [n.rep]
 		if a.Target != nil {
@@ -204,7 +204,7 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 			}
 		}
 
-	case *CrashAction:
+	case *LogicCrashAction:
 		// Python: CrashAction.modifies() walks domain.hierarchy to find all
 		// non-polymorphic, non-interpreted symbols under the target.
 		xtracer.Trace("actions.CrashAction.modifies ENTER target_type=%s", TypeName(a.Target))
@@ -227,7 +227,7 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 					// Python: dfnd = [ldf.formula.defines().name for ldf in domain.definitions]
 					dfnd := make(map[string]bool)
 					for _, ldf := range mod.Definitions {
-						if def, ok := ldf.Formula.(*Definition); ok {
+						if def, ok := ldf.Formula.(*LogicDefinition); ok {
 							if sym, ok := def.Defines().(*Const); ok {
 								dfnd[sym.Name] = true
 							}
@@ -324,17 +324,17 @@ func referencesRec(action ActionsAction, result *InsMap[NodeKey, Expr], destruct
 	}
 	// Dispatch: matches Python's specialized references() overrides
 	switch a := action.(type) {
-	case *AssignAction:
+	case *LogicAssignAction:
 		// Python AssignAction.references (ivy_actions.py:496-498):
 		//   refs.update(symbols_ast(self.args[1]))  # RHS
 		//   assign_refs(self, refs)                  # selective LHS
 		collectSymbols(a.RHS, result)
 		assignRefs(a.LHS, result, destructorSorts)
-	case *HavocAction:
+	case *LogicHavocAction:
 		// Python HavocAction.references (ivy_actions.py:675-676):
 		//   assign_refs(self, refs)
 		assignRefs(a.Target, result, destructorSorts)
-	case *CallAction:
+	case *LogicCallAction:
 		// Python: CallAction uses base Action.references() (no override).
 		// self.args[0] is an Atom. symbols_ast(Atom) does NOT yield the
 		// atom's rep (is_app(Atom) is False — Atom is not App/Const/NamedBinder),
@@ -362,7 +362,7 @@ func referencesRec(action ActionsAction, result *InsMap[NodeKey, Expr], destruct
 		for _, arg := range action.ActionArgs() {
 			if _, isAct := arg.(ActionsAction); !isAct && arg != nil {
 				if xtracer.Enabled {
-					if ifAct, ok := action.(*IfAction); ok && arg == ifAct.Cond {
+					if ifAct, ok := action.(*LogicIfAction); ok && arg == ifAct.Cond {
 						if sc, ok := ifAct.Cond.(*SomeCondition); ok {
 							xtracer.Trace("actions.referencesRec.if_cond kind=%s nparams=%d", sc.Kind, len(sc.Params))
 						} else {
@@ -513,7 +513,7 @@ func PrefixCallsFunc(action ActionsAction, renamer func(string) string) ActionsA
 	}
 	xtracer.Trace("actions.prefix_calls ENTER type=%s", ShortTypeName(action))
 	switch a := action.(type) {
-	case *CallAction:
+	case *LogicCallAction:
 		// Python: CallAction.prefix_calls always creates new CallAction
 		// with self.args[0].rename(pref(self.args[0].rep)).
 		if a.AstCallee != nil {
@@ -561,9 +561,9 @@ func DropInvariants(action ActionsAction) ActionsAction {
 		return nil
 	}
 	switch a := action.(type) {
-	case *WhileAction:
+	case *LogicWhileAction:
 		// Remove invariant by setting it to nil
-		newWhile := &WhileAction{
+		newWhile := &LogicWhileAction{
 			ActionBase: a.ActionBase,
 		}
 		newWhile.Cond = a.Cond
@@ -600,7 +600,7 @@ func UnrollLoops(action ActionsAction, card CardFunc) ActionsAction {
 		return nil
 	}
 	switch a := action.(type) {
-	case *WhileAction:
+	case *LogicWhileAction:
 		// Python: WhileAction.unroll_loops first recurses into body,
 		// then calls self.unroll(card, body)
 		bodyAct, _ := a.Body.(ActionsAction)
@@ -628,11 +628,11 @@ func UnrollLoops(action ActionsAction, card CardFunc) ActionsAction {
 // unrollWhile implements Python's WhileAction.unroll(card, body).
 // Examines the condition to determine an index sort, computes cardinality,
 // and builds the unrolled if-then-else chain.
-func unrollWhile(a *WhileAction, card CardFunc, body ActionsAction) ActionsAction {
+func unrollWhile(a *LogicWhileAction, card CardFunc, body ActionsAction) ActionsAction {
 	cond := a.Cond
 	// Peel through And to find the comparison (Python lines 1027-1028)
 	for {
-		if andNode, ok := cond.(*And); ok && len(andNode.Terms) > 0 {
+		if andNode, ok := cond.(*LogicAnd); ok && len(andNode.Terms) > 0 {
 			cond = andNode.Terms[0]
 		} else {
 			break
@@ -649,7 +649,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body ActionsAction) ActionsActio
 				}
 			}
 		}
-	} else if notNode, ok := cond.(*Not); ok {
+	} else if notNode, ok := cond.(*LogicNot); ok {
 		if eq, ok := notNode.Body.(*Eq); ok {
 			idxSort = eq.T1.NodeSort()
 		}
@@ -667,7 +667,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body ActionsAction) ActionsActio
 	}
 	// Build unrolled if-then-else chain (Python lines 1041-1044)
 	// Base case: if cond then AssumeAction(Or()) — equivalent to assume false
-	orExpr := &Or{}
+	orExpr := &LogicOr{}
 	assumeFalse := NewAssumeAction(orExpr)
 	assumeFalse.SetLineno(a.GetLineno())
 	res := NewIfAction(a.Cond, assumeFalse)
@@ -704,7 +704,7 @@ func EraseUnrefed(action ActionsAction, syms *InsMap[NodeKey, Expr], names map[s
 		return nil
 	}
 	switch a := action.(type) {
-	case *AssignAction:
+	case *LogicAssignAction:
 		// If LHS symbol is not referenced, erase
 		// Python: if self.modifies()[0] not in refs and self.modifies()[0].name not in ref_names
 		if c, ok := rootSymbol(a.LHS, destructorSorts); ok {
@@ -716,7 +716,7 @@ func EraseUnrefed(action ActionsAction, syms *InsMap[NodeKey, Expr], names map[s
 			}
 		}
 		return a
-	case *HavocAction:
+	case *LogicHavocAction:
 		// Python HavocAction.erase_unrefed uses modifies() which walks destructor chains
 		if a.Target != nil {
 			if c, ok := rootSymbol(a.Target, destructorSorts); ok {

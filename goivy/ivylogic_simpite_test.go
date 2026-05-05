@@ -23,8 +23,8 @@ func TestSimpIte_TrueThen(t *testing.T) {
 	// Ite(cond, true, x) → Or(cond, x)
 	cond := mkCond()
 	x := mkX()
-	result := SimpIte(cond, &And{}, x)
-	or, ok := result.(*Or)
+	result := SimpIte(cond, &LogicAnd{}, x)
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T: %v", result, result)
 	}
@@ -43,15 +43,15 @@ func TestSimpIte_FalseThen(t *testing.T) {
 	// Ite(cond, false, x) → And(Not(cond), x)
 	cond := mkCond()
 	x := mkX()
-	result := SimpIte(cond, &Or{}, x)
-	and, ok := result.(*And)
+	result := SimpIte(cond, &LogicOr{}, x)
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T: %v", result, result)
 	}
 	if len(and.Terms) != 2 {
 		t.Fatalf("expected 2 terms, got %d", len(and.Terms))
 	}
-	notCond, ok := and.Terms[0].(*Not)
+	notCond, ok := and.Terms[0].(*LogicNot)
 	if !ok {
 		t.Fatalf("expected first term to be *lg.Not, got %T", and.Terms[0])
 	}
@@ -67,15 +67,15 @@ func TestSimpIte_TrueElse(t *testing.T) {
 	// Ite(cond, x, true) → Or(Not(cond), x)
 	cond := mkCond()
 	x := mkX()
-	result := SimpIte(cond, x, &And{})
-	or, ok := result.(*Or)
+	result := SimpIte(cond, x, &LogicAnd{})
+	or, ok := result.(*LogicOr)
 	if !ok {
 		t.Fatalf("expected *lg.Or, got %T: %v", result, result)
 	}
 	if len(or.Terms) != 2 {
 		t.Fatalf("expected 2 terms, got %d", len(or.Terms))
 	}
-	notCond, ok := or.Terms[0].(*Not)
+	notCond, ok := or.Terms[0].(*LogicNot)
 	if !ok {
 		t.Fatalf("expected first term to be *lg.Not, got %T", or.Terms[0])
 	}
@@ -91,8 +91,8 @@ func TestSimpIte_FalseElse(t *testing.T) {
 	// Ite(cond, x, false) → And(cond, x)
 	cond := mkCond()
 	x := mkX()
-	result := SimpIte(cond, x, &Or{})
-	and, ok := result.(*And)
+	result := SimpIte(cond, x, &LogicOr{})
+	and, ok := result.(*LogicAnd)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T: %v", result, result)
 	}
@@ -111,7 +111,7 @@ func TestSimpIte_TrueCond(t *testing.T) {
 	// Ite(true, x, y) → x
 	x := mkX()
 	y := mkY()
-	result := SimpIte(&And{}, x, y)
+	result := SimpIte(&LogicAnd{}, x, y)
 	if !result.Equal(x) {
 		t.Errorf("expected x, got %v", result)
 	}
@@ -121,7 +121,7 @@ func TestSimpIte_FalseCond(t *testing.T) {
 	// Ite(false, x, y) → y
 	x := mkX()
 	y := mkY()
-	result := SimpIte(&Or{}, x, y)
+	result := SimpIte(&LogicOr{}, x, y)
 	if !result.Equal(y) {
 		t.Errorf("expected y, got %v", result)
 	}
@@ -144,7 +144,7 @@ func TestSimpIte_NoSimplification(t *testing.T) {
 	x := mkX()
 	y := mkY()
 	result := SimpIte(cond, x, y)
-	ite, ok := result.(*Ite)
+	ite, ok := result.(*LogicIte)
 	if !ok {
 		t.Fatalf("expected *lg.Ite, got %T: %v", result, result)
 	}

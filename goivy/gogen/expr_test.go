@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 )
 
-func makeVar(name string, s goivy.Sort) *goivy.Variable {
+func makeVar(name string, s goivy.Sort) *goivy.LogicVariable {
 	v, err := goivy.NewVariable(name, s)
 	if err != nil {
 		panic(err)
@@ -29,7 +29,7 @@ func TestEmitExpr_Var(t *testing.T) {
 
 func TestEmitExpr_Const(t *testing.T) {
 	e := NewExprEmitter()
-	c := goivy.NewConst("red", &goivy.EnumeratedSort{Name: "color", Extension: []string{"red"}})
+	c := goivy.NewConst("red", &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red"}})
 	got, err := e.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -74,7 +74,7 @@ func TestEmitExpr_Not(t *testing.T) {
 
 func TestEmitExpr_And_Empty(t *testing.T) {
 	e := NewExprEmitter()
-	and := &goivy.And{}
+	and := &goivy.LogicAnd{}
 	got, err := e.EmitExpr(and)
 	if err != nil {
 		t.Fatal(err)
@@ -103,7 +103,7 @@ func TestEmitExpr_And(t *testing.T) {
 
 func TestEmitExpr_Or_Empty(t *testing.T) {
 	e := NewExprEmitter()
-	or := &goivy.Or{}
+	or := &goivy.LogicOr{}
 	got, err := e.EmitExpr(or)
 	if err != nil {
 		t.Fatal(err)
@@ -242,10 +242,10 @@ func TestEmitExpr_Apply_MultiArg(t *testing.T) {
 
 func TestEmitExpr_ForAll(t *testing.T) {
 	e := NewExprEmitter()
-	colorSort := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	colorSort := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	v := makeVar("C", colorSort)
 	body := makeVar("X", &goivy.BooleanSort{})
-	fa, err := goivy.NewForAll([]*goivy.Variable{v}, body)
+	fa, err := goivy.NewForAll([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -270,7 +270,7 @@ func TestEmitExpr_Exists(t *testing.T) {
 	nodeSort := &goivy.UninterpretedSort{Name: "node"}
 	v := makeVar("N", nodeSort)
 	body := makeVar("X", &goivy.BooleanSort{})
-	ex, err := goivy.NewExists([]*goivy.Variable{v}, body)
+	ex, err := goivy.NewExists([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -289,7 +289,7 @@ func TestEmitExpr_ForAll_MultiVar(t *testing.T) {
 	v1 := makeVar("X", nodeSort)
 	v2 := makeVar("Y", nodeSort)
 	body := makeVar("Z", &goivy.BooleanSort{})
-	fa, err := goivy.NewForAll([]*goivy.Variable{v1, v2}, body)
+	fa, err := goivy.NewForAll([]*goivy.LogicVariable{v1, v2}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -316,7 +316,7 @@ func TestEmitExpr_Lambda(t *testing.T) {
 	nodeSort := &goivy.UninterpretedSort{Name: "node"}
 	v := makeVar("X", nodeSort)
 	body := makeVar("Y", &goivy.BooleanSort{})
-	lam, err := goivy.NewLambda([]*goivy.Variable{v}, body)
+	lam, err := goivy.NewLambda([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -331,7 +331,7 @@ func TestEmitExpr_Lambda(t *testing.T) {
 
 func TestEmitForAllHelper(t *testing.T) {
 	w := NewCodeWriter()
-	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	EmitForAllHelper(w, s)
 	out := w.String()
 	if !strings.Contains(out, "func forAll_Color(f func(Color) bool) bool") {
@@ -347,7 +347,7 @@ func TestEmitForAllHelper(t *testing.T) {
 
 func TestEmitExistsHelper(t *testing.T) {
 	w := NewCodeWriter()
-	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red"}}
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red"}}
 	EmitExistsHelper(w, s)
 	out := w.String()
 	if !strings.Contains(out, "func exists_Color(f func(Color) bool) bool") {
@@ -440,7 +440,7 @@ func TestSortHelperName(t *testing.T) {
 		want string
 	}{
 		{&goivy.BooleanSort{}, "Bool"},
-		{&goivy.EnumeratedSort{Name: "color"}, "Color"},
+		{&goivy.LogicEnumeratedSort{Name: "color"}, "Color"},
 		{&goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "0"}}, "Idx"},
 		{&goivy.UninterpretedSort{Name: "node"}, "Node"},
 	}
@@ -458,7 +458,7 @@ func TestAllValsExpr(t *testing.T) {
 		want string
 	}{
 		{&goivy.BooleanSort{}, "[2]bool{false, true}"},
-		{&goivy.EnumeratedSort{Name: "color"}, "allColor"},
+		{&goivy.LogicEnumeratedSort{Name: "color"}, "allColor"},
 		{&goivy.UninterpretedSort{Name: "node"}, "allNode"},
 	}
 	for _, tt := range tests {

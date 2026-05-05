@@ -23,7 +23,7 @@ func RenderRg(rg *AnalysisGraph) string {
 			label += " (bottom)"
 		} else if s.Clauses != nil {
 			openFmla := s.Clauses.ToOpenFormula()
-			if and, ok := openFmla.(*And); ok && len(and.Terms) > 0 {
+			if and, ok := openFmla.(*LogicAnd); ok && len(and.Terms) > 0 {
 				for _, term := range and.Terms {
 					label += fmt.Sprintf("\n    %s", term.String())
 				}

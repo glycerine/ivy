@@ -15,7 +15,7 @@ import (
 // ============================================================================
 
 // helper: make a lg.Definition wrapping symbol names, usable as LabeledFormula.Formula
-func makeLogicDef(defSym string, rhsSyms ...string) *Definition {
+func makeLogicDef(defSym string, rhsSyms ...string) *LogicDefinition {
 	lhs := NewConst(defSym, Boolean)
 	var rhs Expr
 	if len(rhsSyms) == 0 {
@@ -34,7 +34,7 @@ func makeLogicDef(defSym string, rhsSyms ...string) *Definition {
 }
 
 // helper: wrap a lg.Definition in a LabeledFormula with a label
-func makeLabeledDef(cfg *AstConfig, label string, def *Definition) *LabeledFormula {
+func makeLabeledDef(cfg *AstConfig, label string, def *LogicDefinition) *LabeledFormula {
 	return cfg.NewLabeledFormula(cfg.NewAtom(label), def)
 }
 
@@ -893,11 +893,11 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// Build definition with Apply LHS: f(x) = true_const
-	fSym := NewConst("f", &FunctionSort{Sorts: []Sort{Boolean, Boolean}})
+	fSym := NewConst("f", &LogicFunctionSort{Sorts: []Sort{Boolean, Boolean}})
 	xSym := NewConst("x", Boolean)
 	lhs := MustApply(fSym, xSym)
 	rhs := NewConst("true_const", Boolean)
-	def := &Definition{Lhs: lhs, Rhs: rhs}
+	def := &LogicDefinition{Lhs: lhs, Rhs: rhs}
 
 	defLF := cfg.NewLabeledFormula(cfg.NewAtom("def_f"), def)
 	mod.LabeledProps = []*LabeledFormula{defLF}
@@ -914,8 +914,8 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 
 	// Verify name extraction works correctly via redefinition
 	mod2 := New()
-	def1 := cfg.NewLabeledFormula(cfg.NewAtom("def1"), &Definition{Lhs: lhs, Rhs: rhs})
-	def2 := cfg.NewLabeledFormula(cfg.NewAtom("def2"), &Definition{Lhs: fSym, Rhs: rhs})
+	def1 := cfg.NewLabeledFormula(cfg.NewAtom("def1"), &LogicDefinition{Lhs: lhs, Rhs: rhs})
+	def2 := cfg.NewLabeledFormula(cfg.NewAtom("def2"), &LogicDefinition{Lhs: fSym, Rhs: rhs})
 	mod2.LabeledProps = []*LabeledFormula{def1, def2}
 
 	err = CheckDefinitions(mod2)

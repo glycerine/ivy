@@ -42,7 +42,7 @@ func TestDebugAction_IntUpdate_Dispatch(t *testing.T) {
 
 // mkBinaryRelSort creates a sort for f: A x B -> Boolean.
 func mkBinaryRelSort(dom1, dom2 Sort) Sort {
-	return RelationSort([]Sort{dom1, dom2})
+	return LogicRelationSort([]Sort{dom1, dom2})
 }
 
 func TestAssignFieldAction_ActionUpdate(t *testing.T) {
@@ -110,7 +110,7 @@ func TestMakeFieldUpdateFunc_NonRelationalSort(t *testing.T) {
 	obj := NewConst("obj", TopS)
 	ctx := testCtx()
 
-	u := makeFieldUpdateFunc(fldSym, obj, func(v *Variable) Expr {
+	u := makeFieldUpdateFunc(fldSym, obj, func(v *LogicVariable) Expr {
 		return v
 	}, ctx)
 
@@ -121,7 +121,7 @@ func TestMakeFieldUpdateFunc_NonRelationalSort(t *testing.T) {
 
 func TestMakeFieldUpdateFunc_NilField(t *testing.T) {
 	ctx := testCtx()
-	u := makeFieldUpdateFunc(nil, nil, func(v *Variable) Expr {
+	u := makeFieldUpdateFunc(nil, nil, func(v *LogicVariable) Expr {
 		return v
 	}, ctx)
 
@@ -143,7 +143,7 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	ifPart, elsePart := ifAct.Subactions(NewActionsConfig())
 
 	// ifPart should be Sequence(assume(c), thenBody)
-	ifSeq, ok := ifPart.(*Sequence)
+	ifSeq, ok := ifPart.(*LogicSequence)
 	if !ok {
 		t.Fatalf("ifPart should be Sequence, got %T", ifPart)
 	}
@@ -152,7 +152,7 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	}
 
 	// elsePart should be Sequence(assume(dual(c)), elseBody)
-	elseSeq, ok := elsePart.(*Sequence)
+	elseSeq, ok := elsePart.(*LogicSequence)
 	if !ok {
 		t.Fatalf("elsePart should be Sequence, got %T", elsePart)
 	}
@@ -169,7 +169,7 @@ func TestIfAction_Subactions_NoElse(t *testing.T) {
 	_, elsePart := ifAct.Subactions(NewActionsConfig())
 
 	// elsePart should be a Sequence with assume(dual(c)) and an empty sequence
-	elseSeq, ok := elsePart.(*Sequence)
+	elseSeq, ok := elsePart.(*LogicSequence)
 	if !ok {
 		t.Fatalf("elsePart should be Sequence, got %T", elsePart)
 	}
@@ -244,7 +244,7 @@ func TestIfAction_GetCond_SomeCondition(t *testing.T) {
 	got := ifAct.GetCond()
 
 	// Should return an Exists formula
-	if _, ok := got.(*Exists); !ok {
+	if _, ok := got.(*LogicExists); !ok {
 		t.Errorf("GetCond() with SomeCondition should return Exists, got %T: %s", got, got)
 	}
 }
@@ -260,9 +260,9 @@ func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 	result := call.SplitReturns(NewActionsConfig())
 
 	// Python has no early return — always wraps in LocalAction(Sequence(call)).
-	local, ok := result.(*LocalAction)
+	local, ok := result.(*LogicLocalAction)
 	if !ok {
-		t.Fatalf("expected *LocalAction, got %T", result)
+		t.Fatalf("expected *LogicLocalAction, got %T", result)
 	}
 	if local.Body == nil {
 		t.Fatal("LocalAction body should not be nil")
@@ -277,7 +277,7 @@ func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
 	result := call.SplitReturns(NewActionsConfig())
 
 	// Result should be a LocalAction wrapping a Sequence
-	local, ok := result.(*LocalAction)
+	local, ok := result.(*LogicLocalAction)
 	if !ok {
 		t.Fatalf("SplitReturns should return LocalAction, got %T", result)
 	}
@@ -296,7 +296,7 @@ func TestPrefixCalls_StringPrefix(t *testing.T) {
 	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := PrefixCalls(call, "mod.")
-	callResult, ok := result.(*CallAction)
+	callResult, ok := result.(*LogicCallAction)
 	if !ok {
 		t.Fatalf("PrefixCalls should return CallAction, got %T", result)
 	}
@@ -316,7 +316,7 @@ func TestPrefixCallsFunc_Callable(t *testing.T) {
 	result := PrefixCallsFunc(call, func(name string) string {
 		return strings.ToUpper(name)
 	})
-	callResult, ok := result.(*CallAction)
+	callResult, ok := result.(*LogicCallAction)
 	if !ok {
 		t.Fatalf("PrefixCallsFunc should return CallAction, got %T", result)
 	}
@@ -338,7 +338,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	})
 
 	// Walk into the result sequence to check the renamed call
-	seqResult, ok := result.(*Sequence)
+	seqResult, ok := result.(*LogicSequence)
 	if !ok {
 		t.Fatalf("Should return Sequence, got %T", result)
 	}
@@ -349,7 +349,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	if inner == nil {
 		t.Fatal("inner action should not be nil")
 	}
-	innerCall, ok := inner.(*CallAction)
+	innerCall, ok := inner.(*LogicCallAction)
 	if !ok {
 		t.Fatalf("inner should be CallAction, got %T", inner)
 	}
@@ -368,7 +368,7 @@ func TestPrefixCallsFunc_PreservesReturns(t *testing.T) {
 	result := PrefixCallsFunc(call, func(name string) string {
 		return "ns." + name
 	})
-	callResult := result.(*CallAction)
+	callResult := result.(*LogicCallAction)
 	if len(callResult.ActualReturns) != 1 {
 		t.Errorf("PrefixCallsFunc should preserve ActualReturns, got %d", len(callResult.ActualReturns))
 	}
@@ -552,7 +552,7 @@ func TestTypeCheckContext_Get_ReturnsEmptyWithFormals(t *testing.T) {
 		t.Fatal("TypeCheckContext.Get should return an action")
 	}
 	// Should be a Sequence (empty) but with same formals
-	seq, ok := result.(*Sequence)
+	seq, ok := result.(*LogicSequence)
 	if !ok {
 		t.Fatalf("Should return Sequence, got %T", result)
 	}
@@ -696,7 +696,7 @@ func TestAssertAction_Unprovable_Field(t *testing.T) {
 
 	// Verify the field exists and is propagated through clone
 	cloned := a.ActionClone(a.ActionArgs())
-	if assertCloned, ok := cloned.(*AssertAction); ok {
+	if assertCloned, ok := cloned.(*LogicAssertAction); ok {
 		if !assertCloned.Unprovable {
 			t.Error("ActionClone should preserve Unprovable field")
 		}

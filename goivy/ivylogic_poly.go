@@ -86,7 +86,7 @@ func NewIvyLogicConfigOn(iuCfg *IvyUtilsConfig) *IvyLogicConfig {
 	return &IvyLogicConfig{
 		IuCfg:              iuCfg,
 		PolymorphicSymbols: buildPolymorphicSymbols(),
-		Equals:             NewConst("=", RelationSort([]Sort{TopS, TopS})),
+		Equals:             NewConst("=", LogicRelationSort([]Sort{TopS, TopS})),
 	}
 }
 

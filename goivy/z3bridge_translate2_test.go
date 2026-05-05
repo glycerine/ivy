@@ -186,7 +186,7 @@ func TestQuantConstraints_NilCallback(t *testing.T) {
 	x, _ := NewVariable("X", sort)
 	body := x // non-Bool body — invalid ForAll
 
-	fmla := &ForAll{Variables: []*Variable{x}, Body: body}
+	fmla := &ForAll{Variables: []*LogicVariable{x}, Body: body}
 	_, err := tr.Translate(fmla)
 	if err == nil {
 		t.Fatal("Translate ForAll with non-Bool body should return an error, not succeed")

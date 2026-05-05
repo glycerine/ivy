@@ -286,7 +286,7 @@ func HasRequires(mod *Module, callee string) bool {
 		return false
 	}
 	for _, sub := range act.IterSubactions() {
-		if _, ok := sub.(*RequiresAction); ok {
+		if _, ok := sub.(*LogicRequiresAction); ok {
 			return true
 		}
 	}

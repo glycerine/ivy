@@ -152,16 +152,16 @@ func l2sAutoInvariants(
 		if _, ok := triggers[sfx]; !ok || triggers[sfx]["work_start"] == nil {
 			gfmla := fmla
 			for {
-				if impl, ok := gfmla.(*Implies); ok {
+				if impl, ok := gfmla.(*LogicImplies); ok {
 					gfmla = impl.T2
 				} else {
 					break
 				}
 			}
-			if g, ok := gfmla.(*Globally); ok {
+			if g, ok := gfmla.(*LogicGlobally); ok {
 				workStart := &Eq{
 					T1: NewConst("work_start"+sfx, &BooleanSort{}),
-					T2: &Not{Body: g.Body},
+					T2: &LogicNot{Body: g.Body},
 				}
 				dictPut(triggers, sfx, "work_start", workStart)
 			}
@@ -176,7 +176,7 @@ func l2sAutoInvariants(
 				workNeeded := task["work_needed"]
 				workDone := &Eq{
 					T1: cloneLHS(workNeeded.T1, "work_done"+sfx),
-					T2: &Or{Terms: nil}, // false = empty disjunction
+					T2: &LogicOr{Terms: nil}, // false = empty disjunction
 				}
 				dictPut(tasks, sfx, "work_done", workDone)
 			}
@@ -224,25 +224,25 @@ func l2sAutoInvariants(
 	l2sSaved := L2SSaved()
 
 	// Helpers
-	forall := func(vs []*Variable, body Expr) Expr {
+	forall := func(vs []*LogicVariable, body Expr) Expr {
 		if len(vs) == 0 {
 			return body
 		}
 		return &ForAll{Variables: vs, Body: body}
 	}
-	exists := func(vs []*Variable, body Expr) Expr {
+	exists := func(vs []*LogicVariable, body Expr) Expr {
 		if len(vs) == 0 {
 			return body
 		}
-		return &Exists{Variables: vs, Body: body}
+		return &LogicExists{Variables: vs, Body: body}
 	}
 
 	// Defn helpers
-	eqLHSArgs := func(eq *Eq) []*Variable {
+	eqLHSArgs := func(eq *Eq) []*LogicVariable {
 		if app, ok := eq.T1.(*Apply); ok {
-			var vars []*Variable
+			var vars []*LogicVariable
 			for _, t := range app.Terms {
-				if v, ok := t.(*Variable); ok {
+				if v, ok := t.(*LogicVariable); ok {
 					vars = append(vars, v)
 				}
 			}
@@ -254,7 +254,7 @@ func l2sAutoInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*Variable) map[NodeKey]Expr {
+	substVars := func(src, dst []*LogicVariable) map[NodeKey]Expr {
 		m := make(map[NodeKey]Expr)
 		for i, v := range src {
 			if i < len(dst) {
@@ -290,7 +290,7 @@ func l2sAutoInvariants(
 				}
 			}
 		}
-		return &Implies{T1: eqRHS(eq), T2: checkMakeAnd(cons...)}
+		return &LogicImplies{T1: eqRHS(eq), T2: checkMakeAnd(cons...)}
 	}
 
 	// all_a: all elements in l2s_a
@@ -307,7 +307,7 @@ func l2sAutoInvariants(
 				}
 			}
 		}
-		return &Implies{T1: eqRHS(eq), T2: checkMakeAnd(cons...)}
+		return &LogicImplies{T1: eqRHS(eq), T2: checkMakeAnd(cons...)}
 	}
 
 	// all_created: needed elements are in created set
@@ -317,17 +317,17 @@ func l2sAutoInvariants(
 		createdArgs := eqLHSArgs(workCreated)
 		defnArgs := eqLHSArgs(defnNeeded)
 		s := substVars(defnArgs, createdArgs)
-		return &Implies{T1: subst(eqRHS(defnNeeded), s), T2: eqRHS(workCreated)}
+		return &LogicImplies{T1: subst(eqRHS(defnNeeded), s), T2: eqRHS(workCreated)}
 	}
 
 	// eventuallyStartTask
 	eventuallyStartTask := func(workStart *Eq) Expr {
 		if workStart == nil {
-			return &And{Terms: nil} // true
+			return &LogicAnd{Terms: nil} // true
 		}
 		trigRHS := eqRHS(workStart)
 		// H11 / Python ivy_l2s.py:384: Eventually with proof_label environ.
-		evf := &Eventually{Environ: strPtr(proofLabel), Body: trigRHS}
+		evf := &LogicEventually{Environ: strPtr(proofLabel), Body: trigRHS}
 		vs := eqLHSArgs(workStart)
 		vsNodes := checkVarsToNodes(vs)
 		initNB := l2sInit(vs, evf, proofLabel)
@@ -364,15 +364,15 @@ func l2sAutoInvariants(
 		workHelpful := task["work_helpful"]
 
 		// notWaitingForStart
-		var notWaitingForStart Expr = &And{Terms: nil} // true
+		var notWaitingForStart Expr = &LogicAnd{Terms: nil} // true
 		if workStart != nil {
 			evStart := eventuallyStartTask(workStart)
 			trigRHS := eqRHS(workStart)
 			wBinder := l2sW(nil, trigRHS, proofLabel)
 			notWaitingForStart = checkMakeAnd(evStart,
-				&Or{Terms: []Expr{
-					&Not{Body: l2sWaiting},
-					&Not{Body: wBinder},
+				&LogicOr{Terms: []Expr{
+					&LogicNot{Body: l2sWaiting},
+					&LogicNot{Body: wBinder},
 				}})
 		}
 
@@ -390,9 +390,9 @@ func l2sAutoInvariants(
 			if tacticName != "l2s_auto3" && tacticName != "l2s_auto4" && tacticName != "l2s_auto5" {
 				sNB := l2sS(doneArgsL, eqRHS(workDoneL), proofLabel)
 				wd := applyNB(sNB, checkVarsToNodes(doneArgsL)...)
-				return &Implies{T1: defnsubs, T2: wd}
+				return &LogicImplies{T1: defnsubs, T2: wd}
 			}
-			sNB := l2sS(doneArgsL, &Implies{T1: defnsubs, T2: eqRHS(workDoneL)}, proofLabel)
+			sNB := l2sS(doneArgsL, &LogicImplies{T1: defnsubs, T2: eqRHS(workDoneL)}, proofLabel)
 			return applyNB(sNB, checkVarsToNodes(doneArgsL)...)
 		}
 
@@ -406,16 +406,16 @@ func l2sAutoInvariants(
 		notAllWasDone := func(defn *Eq, skip int) Expr {
 			tmp := getWasDone(defn)
 			if skip >= len(doneArgs) {
-				return &Not{Body: tmp}
+				return &LogicNot{Body: tmp}
 			}
-			return &Not{Body: forall(doneArgs[skip:], tmp)}
+			return &LogicNot{Body: forall(doneArgs[skip:], tmp)}
 		}
 
 		// getDepends: Python ivy_l2s.py:365-372
 		// Substitutes work_helpful.LHS.Args -> work_progress.LHS.Args into work_helpful.RHS.
 		getDepends := func() Expr {
 			if workHelpful == nil {
-				return &And{Terms: nil} // true (workHelpful only used for auto5)
+				return &LogicAnd{Terms: nil} // true (workHelpful only used for auto5)
 			}
 			helpfulArgs := eqLHSArgs(workHelpful)
 			progressArgsL := eqLHSArgs(workProgress)
@@ -436,7 +436,7 @@ func l2sAutoInvariants(
 		nextTaskNotTriggered := func() Expr {
 			nextSfx := sortedTasks[idx+1]
 			trigf := triggers[nextSfx]["work_start"]
-			return &Not{Body: eventuallyStartTask(trigf)}
+			return &LogicNot{Body: eventuallyStartTask(trigf)}
 		}
 
 		// Reset notAllWasDonePreds at scheduler boundaries.
@@ -447,10 +447,10 @@ func l2sAutoInvariants(
 
 		// --- l2s_needed_when_start ---
 		if tacticName != "l2s_auto5" {
-			tmp := &Implies{T1: notWaitingForStart, T2: allCreated(workNeeded, idx)}
+			tmp := &LogicImplies{T1: notWaitingForStart, T2: allCreated(workNeeded, idx)}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp, proofLineno)
 		} else {
-			tmp := &Implies{T1: notWaitingForStart, T2: allD(workNeeded)}
+			tmp := &LogicImplies{T1: notWaitingForStart, T2: allD(workNeeded)}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp, proofLineno)
 		}
 
@@ -460,8 +460,8 @@ func l2sAutoInvariants(
 		// --- l2s_needed_are_frozen ---
 		evStart := eventuallyStartTask(workStart)
 		if tacticName != "l2s_auto4" && tacticName != "l2s_auto5" {
-			tmp := &Implies{
-				T1: checkMakeAnd(evStart, &Not{Body: l2sWaiting}),
+			tmp := &LogicImplies{
+				T1: checkMakeAnd(evStart, &LogicNot{Body: l2sWaiting}),
 				T2: allA(workNeeded),
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp, proofLineno)
@@ -469,8 +469,8 @@ func l2sAutoInvariants(
 			doneSubArgs := eqLHSArgs(workDone)
 			neededArgs := eqLHSArgs(workNeeded)
 			s := substVars(neededArgs, doneSubArgs)
-			isDone := &Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
-			notIsDone := &Not{Body: isDone}
+			isDone := &LogicImplies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
+			notIsDone := &LogicNot{Body: isDone}
 			var aCons []Expr
 			for _, v := range doneSubArgs {
 				if v.VSort != nil && !finiteSorts[v.VSort.String()] {
@@ -481,21 +481,21 @@ func l2sAutoInvariants(
 					}
 				}
 			}
-			tmp := &Implies{
-				T1: checkMakeAnd(evStart, &Not{Body: l2sWaiting}),
-				T2: &Implies{T1: notIsDone, T2: checkMakeAnd(aCons...)},
+			tmp := &LogicImplies{
+				T1: checkMakeAnd(evStart, &LogicNot{Body: l2sWaiting}),
+				T2: &LogicImplies{T1: notIsDone, T2: checkMakeAnd(aCons...)},
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp, proofLineno)
 
 			// C12 / Python ivy_l2s.py:422-425: l2s_needed_were_frozen
 			// uses get_was_done(work_needed) which for auto4/5 expands to
 			//   l2s_s(done_args, Implies(subst(needed.RHS), done.RHS))(done_args).
-			isDoneImplied := &Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
+			isDoneImplied := &LogicImplies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
 			sNBwere := l2sS(doneSubArgs, isDoneImplied, proofLabel)
 			wasDoneWere := applyNB(sNBwere, checkVarsToNodes(doneSubArgs)...)
-			tmp2 := &Implies{
+			tmp2 := &LogicImplies{
 				T1: checkMakeAnd(evStart, l2sSaved),
-				T2: &Implies{T1: &Not{Body: wasDoneWere}, T2: checkMakeAnd(aCons...)},
+				T2: &LogicImplies{T1: &LogicNot{Body: wasDoneWere}, T2: checkMakeAnd(aCons...)},
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_were_frozen"+sfx, tmp2, proofLineno)
 		}
@@ -504,7 +504,7 @@ func l2sAutoInvariants(
 		if tacticName != "l2s_auto3" && tacticName != "l2s_auto4" && tacticName != "l2s_auto5" {
 			createdArgs := eqLHSArgs(workCreated)
 			s := substVars(doneArgs, createdArgs)
-			tmp := &Implies{T1: subst(eqRHS(workDone), s), T2: eqRHS(workCreated)}
+			tmp := &LogicImplies{T1: subst(eqRHS(workDone), s), T2: eqRHS(workCreated)}
 			invars = appendLF(autoAcfg, invars, "l2s_done_implies_created"+sfx, tmp, proofLineno)
 		}
 
@@ -513,9 +513,9 @@ func l2sAutoInvariants(
 			createdArgs := eqLHSArgs(workCreated)
 			neededArgs := eqLHSArgs(workNeeded)
 			s := substVars(neededArgs, createdArgs)
-			tmp := &Implies{
+			tmp := &LogicImplies{
 				T1: notWaitingForStart,
-				T2: &Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workCreated)},
+				T2: &LogicImplies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workCreated)},
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_needed_implies_created"+sfx, tmp, proofLineno)
 		}
@@ -530,15 +530,15 @@ func l2sAutoInvariants(
 			neededArgs := eqLHSArgs(workNeeded)
 			s := substVars(neededArgs, doneArgs)
 			neededSubbed := subst(eqRHS(workNeeded), s)
-			isDoneImplied := &Implies{T1: neededSubbed, T2: eqRHS(workDone)}
+			isDoneImplied := &LogicImplies{T1: neededSubbed, T2: eqRHS(workDone)}
 
 			sNB := l2sS(doneArgs, isDoneImplied, proofLabel)
 			wasDone = applyNB(sNB, checkVarsToNodes(doneArgs)...)
 			isDoneNode = isDoneImplied
 		}
-		tmp := &Implies{T1: checkMakeAnd(l2sSaved, wasDone), T2: isDoneNode}
+		tmp := &LogicImplies{T1: checkMakeAnd(l2sSaved, wasDone), T2: isDoneNode}
 		if tacticName == "l2s_auto5" {
-			tmp = &Implies{T1: evStart, T2: tmp}
+			tmp = &LogicImplies{T1: evStart, T2: tmp}
 		}
 		invars = appendLF(autoAcfg, invars, "l2s_work_preserved"+sfx, tmp, proofLineno)
 
@@ -572,24 +572,24 @@ func l2sAutoInvariants(
 				if nextTaskHasTrigger() {
 					nad = checkMakeAnd(nextTaskNotTriggered(), nad)
 				}
-				progressInv = &Implies{
+				progressInv = &LogicImplies{
 					T1: checkMakeAnd(
 						l2sSaved,
 						evStart,
 						exists(progressArgs, nad),
 						notAllWasDone(workNeeded, 0),
-						forall(progressArgs, &Implies{
+						forall(progressArgs, &LogicImplies{
 							T1: nad,
-							T2: &Not{Body: applyNB(waitingForProgress, checkVarsToNodes(progressArgs)...)},
+							T2: &LogicNot{Body: applyNB(waitingForProgress, checkVarsToNodes(progressArgs)...)},
 						}),
 					),
-					T2: exists(doneArgs, checkMakeAnd(&Not{Body: wasDone}, isDoneNode)),
+					T2: exists(doneArgs, checkMakeAnd(&LogicNot{Body: wasDone}, isDoneNode)),
 				}
 			} else if len(progressArgs) > 0 || len(tasks) > 1 {
 				// Python lines 491-501
 				nad := checkMakeAnd(
 					notAllWasDone(workNeeded, len(progressArgs)),
-					&Not{Body: buildOrExpr(notAllWasDonePreds)},
+					&LogicNot{Body: buildOrExpr(notAllWasDonePreds)},
 				)
 				if nextTaskHasTrigger() {
 					nad = checkMakeAnd(nextTaskNotTriggered(), nad)
@@ -598,20 +598,20 @@ func l2sAutoInvariants(
 				if len(progressArgs) <= len(doneArgs) {
 					skipDoneArgs = doneArgs[len(progressArgs):]
 				}
-				progressInv = forall(progressArgs, &Implies{
+				progressInv = forall(progressArgs, &LogicImplies{
 					T1: checkMakeAnd(
 						nad,
 						l2sSaved,
 						evStart,
-						&Not{Body: applyNB(waitingForProgress, checkVarsToNodes(progressArgs)...)},
+						&LogicNot{Body: applyNB(waitingForProgress, checkVarsToNodes(progressArgs)...)},
 					),
-					T2: exists(skipDoneArgs, checkMakeAnd(&Not{Body: wasDone}, isDoneNode)),
+					T2: exists(skipDoneArgs, checkMakeAnd(&LogicNot{Body: wasDone}, isDoneNode)),
 				})
 			} else {
 				// Python lines 502-505 (the simple case)
-				progressInv = &Implies{
-					T1: checkMakeAnd(l2sSaved, &Not{Body: waitingForProgress}),
-					T2: exists(doneArgs, checkMakeAnd(&Not{Body: wasDone}, isDoneNode)),
+				progressInv = &LogicImplies{
+					T1: checkMakeAnd(l2sSaved, &LogicNot{Body: waitingForProgress}),
+					T2: exists(doneArgs, checkMakeAnd(&LogicNot{Body: wasDone}, isDoneNode)),
 				}
 			}
 			invars = appendLF(autoAcfg, invars, "l2s_progress_made"+sfx, progressInv, proofLineno)
@@ -620,16 +620,16 @@ func l2sAutoInvariants(
 		// --- l2s_progress_invar ---
 		// H11: ensure Globally/Eventually carry the proof label so dedup
 		// matches binders built through SharedStep1.
-		gBody := &Globally{
+		gBody := &LogicGlobally{
 			Environ: strPtr(proofLabel),
-			Body: &Eventually{
+			Body: &LogicEventually{
 				Environ: strPtr(proofLabel),
 				Body:    eqRHS(workProgress),
 			},
 		}
 		initNB := l2sInit(progressArgs, gBody, proofLabel)
 		invars = appendLF(autoAcfg, invars, "l2s_progress_invar"+sfx,
-			&Implies{
+			&LogicImplies{
 				T1: applyNB(initNB, checkVarsToNodes(progressArgs)...),
 				T2: gBody,
 			}, proofLineno)
@@ -639,23 +639,23 @@ func l2sAutoInvariants(
 		// (Python ivy_l2s.py:345-356).
 		neededArgs := eqLHSArgs(workNeeded)
 		s := substVars(neededArgs, doneArgs)
-		var notAllDoneBody Expr = &Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
+		var notAllDoneBody Expr = &LogicImplies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
 		if workEnd != nil {
 			endArgs := eqLHSArgs(workEnd)
 			endSubs := substVars(endArgs, doneArgs)
-			notAllDoneBody = &Implies{T1: subst(eqRHS(workEnd), endSubs), T2: notAllDoneBody}
+			notAllDoneBody = &LogicImplies{T1: subst(eqRHS(workEnd), endSubs), T2: notAllDoneBody}
 		}
 		if workInvar != nil {
-			notAllDoneBody = &Implies{T1: eqRHS(workInvar), T2: notAllDoneBody}
+			notAllDoneBody = &LogicImplies{T1: eqRHS(workInvar), T2: notAllDoneBody}
 		}
-		var notAllDone Expr = &Not{Body: forall(doneArgs, notAllDoneBody)}
+		var notAllDone Expr = &LogicNot{Body: forall(doneArgs, notAllDoneBody)}
 
 		// C3 / Python ivy_l2s.py:354-355: wrap with Or(Not(notWaitingForStart),...)
 		// for auto2/3/4/5.
 		if tacticName == "l2s_auto2" || tacticName == "l2s_auto3" ||
 			tacticName == "l2s_auto4" || tacticName == "l2s_auto5" {
-			notAllDone = &Or{Terms: []Expr{
-				&Not{Body: notWaitingForStart},
+			notAllDone = &LogicOr{Terms: []Expr{
+				&LogicNot{Body: notWaitingForStart},
 				notAllDone,
 			}}
 		}
@@ -669,8 +669,8 @@ func l2sAutoInvariants(
 			if trig, ok := triggers[nextSfx]; ok && trig["work_start"] != nil {
 				trigf := trig["work_start"]
 				orOfPreds := buildOrExpr(notAllDonePreds)
-				tmp := &Implies{
-					T1: &Not{Body: eventuallyStartTask(trigf)},
+				tmp := &LogicImplies{
+					T1: &LogicNot{Body: eventuallyStartTask(trigf)},
 					T2: orOfPreds,
 				}
 				invars = appendLF(autoAcfg, invars, "l2s_not_all_done"+sfx, tmp, proofLineno)
@@ -688,7 +688,7 @@ func l2sAutoInvariants(
 			nad := getDepends()
 			wasNad := applyNB(l2sS(progressArgs, nad, proofLabel), checkVarsToNodes(progressArgs)...)
 			waitingForProgressApp := applyNB(waitingForProgress, checkVarsToNodes(progressArgs)...)
-			stableInv := forall(progressArgs, &Implies{
+			stableInv := forall(progressArgs, &LogicImplies{
 				T1: checkMakeAnd(wasNad, l2sSaved, evStart, waitingForProgressApp),
 				T2: nad,
 			})
@@ -719,9 +719,9 @@ func l2sAutoInvariants(
 	if tacticName == "l2s_auto5" && len(schedExistsPreds) > 0 {
 		evStartHere := lastEvStart
 		if evStartHere == nil {
-			evStartHere = &And{Terms: nil} // true
+			evStartHere = &LogicAnd{Terms: nil} // true
 		}
-		invars = appendLF(autoAcfg, invars, "l2s_sched_exists", &Implies{
+		invars = appendLF(autoAcfg, invars, "l2s_sched_exists", &LogicImplies{
 			T1: checkMakeAnd(l2sSaved, evStartHere),
 			T2: buildOrExpr(schedExistsPreds),
 		}, proofLineno)
@@ -738,7 +738,7 @@ func l2sAutoInvariants(
 	var initGlobally func(prop Expr, res *[]Expr, pos bool)
 	initGlobally = func(prop Expr, res *[]Expr, pos bool) {
 		switch p := prop.(type) {
-		case *Globally:
+		case *LogicGlobally:
 			knownInits[string(prop.Sexp())] = true
 			if pos {
 				*res = append(*res, prop)
@@ -747,54 +747,54 @@ func l2sAutoInvariants(
 				// ~pos, Globally: treat as Eventually(~body)
 				arg := p.Body
 				vs := collectVarsSlice(arg)
-				wNB := l2sW(vs, &Not{Body: arg}, proofLabel)
-				notWaiting := &Or{Terms: []Expr{
-					&Not{Body: l2sWaiting},
-					&Not{Body: applyNB(wNB, checkVarsToNodes(vs)...)},
+				wNB := l2sW(vs, &LogicNot{Body: arg}, proofLabel)
+				notWaiting := &LogicOr{Terms: []Expr{
+					&LogicNot{Body: l2sWaiting},
+					&LogicNot{Body: applyNB(wNB, checkVarsToNodes(vs)...)},
 				}}
-				*res = append(*res, &Implies{T1: prop, T2: notWaiting})
+				*res = append(*res, &LogicImplies{T1: prop, T2: notWaiting})
 				// C16 / Python ivy_l2s.py:572-576: AG-pattern extra invariant.
 				// Must come BEFORE l2s_init to match Python's append order.
 				if isEventuallyOrNotGlobally(arg) {
-					*res = append(*res, &Implies{T1: notWaiting, T2: &Not{Body: arg}})
+					*res = append(*res, &LogicImplies{T1: notWaiting, T2: &LogicNot{Body: arg}})
 				}
-				initNB := l2sInit(vs, &Not{Body: prop}, proofLabel)
+				initNB := l2sInit(vs, &LogicNot{Body: prop}, proofLabel)
 				*res = append(*res, applyNB(initNB, checkVarsToNodes(vs)...))
 			}
-		case *Eventually:
+		case *LogicEventually:
 			knownInits[string(prop.Sexp())] = true
 			if !pos {
-				*res = append(*res, &Not{Body: prop})
+				*res = append(*res, &LogicNot{Body: prop})
 				initGlobally(p.Body, res, pos)
 			} else {
 				arg := p.Body
 				vs := collectVarsSlice(arg)
 				wNB := l2sW(vs, arg, proofLabel)
-				notWaiting := &Or{Terms: []Expr{
-					&Not{Body: l2sWaiting},
-					&Not{Body: applyNB(wNB, checkVarsToNodes(vs)...)},
+				notWaiting := &LogicOr{Terms: []Expr{
+					&LogicNot{Body: l2sWaiting},
+					&LogicNot{Body: applyNB(wNB, checkVarsToNodes(vs)...)},
 				}}
-				*res = append(*res, &Implies{T1: &Not{Body: prop}, T2: notWaiting})
+				*res = append(*res, &LogicImplies{T1: &LogicNot{Body: prop}, T2: notWaiting})
 				// C16 / Python ivy_l2s.py:564-568: EF-pattern extra invariant.
 				// Must come BEFORE l2s_init to match Python's append order.
 				if isGloballyOrNotEventually(arg) {
-					*res = append(*res, &Implies{T1: notWaiting, T2: arg})
+					*res = append(*res, &LogicImplies{T1: notWaiting, T2: arg})
 				}
 				initNB := l2sInit(vs, prop, proofLabel)
 				*res = append(*res, applyNB(initNB, checkVarsToNodes(vs)...))
 			}
-		case *Implies:
+		case *LogicImplies:
 			if !pos {
 				initGlobally(p.T1, res, !pos)
 				initGlobally(p.T2, res, pos)
 			}
-		case *And:
+		case *LogicAnd:
 			if pos {
 				for _, arg := range p.Terms {
 					initGlobally(arg, res, pos)
 				}
 			}
-		case *Or:
+		case *LogicOr:
 			if !pos {
 				for _, arg := range p.Terms {
 					initGlobally(arg, res, pos)
@@ -804,11 +804,11 @@ func l2sAutoInvariants(
 			if pos {
 				initGlobally(p.Body, res, pos)
 			}
-		case *Exists:
+		case *LogicExists:
 			if !pos {
 				initGlobally(p.Body, res, pos)
 			}
-		case *Not:
+		case *LogicNot:
 			initGlobally(p.Body, res, !pos)
 		}
 	}
@@ -827,25 +827,25 @@ func l2sAutoInvariants(
 		}
 		arg := eqRHS(trigDef)
 		// H11: Eventually with proof_label environ.
-		evf := &Eventually{Environ: strPtr(proofLabel), Body: arg}
+		evf := &LogicEventually{Environ: strPtr(proofLabel), Body: arg}
 		vs := eqLHSArgs(trigDef)
 		vsNodes := checkVarsToNodes(vs)
 		initNB := l2sInit(vs, evf, proofLabel)
 		initF := applyNB(initNB, vsNodes...)
-		ninvs = append(ninvs, &Or{Terms: []Expr{initF, &Not{Body: evf}}})
+		ninvs = append(ninvs, &LogicOr{Terms: []Expr{initF, &LogicNot{Body: evf}}})
 		wNB := l2sW(vs, arg, proofLabel)
-		notWaiting := &Or{Terms: []Expr{
-			&Not{Body: l2sWaiting},
-			&Not{Body: applyNB(wNB, vsNodes...)},
+		notWaiting := &LogicOr{Terms: []Expr{
+			&LogicNot{Body: l2sWaiting},
+			&LogicNot{Body: applyNB(wNB, vsNodes...)},
 		}}
-		ninvs = append(ninvs, &Implies{
-			T1: checkMakeAnd(initF, &Not{Body: evf}),
+		ninvs = append(ninvs, &LogicImplies{
+			T1: checkMakeAnd(initF, &LogicNot{Body: evf}),
 			T2: notWaiting,
 		})
 		var tinvs []Expr
 		initGlobally(arg, &tinvs, true)
 		for _, tinv := range tinvs {
-			ninvs = append(ninvs, &Implies{
+			ninvs = append(ninvs, &LogicImplies{
 				T1: checkMakeAnd(initF, notWaiting),
 				T2: tinv,
 			})
@@ -861,13 +861,13 @@ func l2sAutoInvariants(
 
 	// --- l2s_status invariants ---
 	invars = appendLF(autoAcfg, invars, "l2s_status_0",
-		&Or{Terms: []Expr{l2sWaiting, L2SFrozen(), l2sSaved}}, proofLineno)
+		&LogicOr{Terms: []Expr{l2sWaiting, L2SFrozen(), l2sSaved}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_1",
-		&Or{Terms: []Expr{&Not{Body: l2sWaiting}, &Not{Body: L2SFrozen()}}}, proofLineno)
+		&LogicOr{Terms: []Expr{&LogicNot{Body: l2sWaiting}, &LogicNot{Body: L2SFrozen()}}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_2",
-		&Or{Terms: []Expr{&Not{Body: l2sWaiting}, &Not{Body: l2sSaved}}}, proofLineno)
+		&LogicOr{Terms: []Expr{&LogicNot{Body: l2sWaiting}, &LogicNot{Body: l2sSaved}}}, proofLineno)
 	invars = appendLF(autoAcfg, invars, "l2s_status_3",
-		&Or{Terms: []Expr{&Not{Body: L2SFrozen()}, &Not{Body: l2sSaved}}}, proofLineno)
+		&LogicOr{Terms: []Expr{&LogicNot{Body: L2SFrozen()}, &LogicNot{Body: l2sSaved}}}, proofLineno)
 
 	// --- l2s_consts_d ---
 	var constsDTerms []Expr
@@ -897,28 +897,28 @@ func l2sAutoInvariants(
 	var convertToInit func(f Expr) Expr
 	convertToInit = func(f Expr) Expr {
 		switch n := f.(type) {
-		case *And:
+		case *LogicAnd:
 			terms := make([]Expr, len(n.Terms))
 			for i, t := range n.Terms {
 				terms[i] = convertToInit(t)
 			}
-			return &And{Terms: terms}
-		case *Or:
+			return &LogicAnd{Terms: terms}
+		case *LogicOr:
 			terms := make([]Expr, len(n.Terms))
 			for i, t := range n.Terms {
 				terms[i] = convertToInit(t)
 			}
-			return &Or{Terms: terms}
-		case *Not:
-			return &Not{Body: convertToInit(n.Body)}
-		case *Implies:
-			return &Implies{T1: convertToInit(n.T1), T2: convertToInit(n.T2)}
-		case *Iff:
-			return &Iff{T1: convertToInit(n.T1), T2: convertToInit(n.T2)}
+			return &LogicOr{Terms: terms}
+		case *LogicNot:
+			return &LogicNot{Body: convertToInit(n.Body)}
+		case *LogicImplies:
+			return &LogicImplies{T1: convertToInit(n.T1), T2: convertToInit(n.T2)}
+		case *LogicIff:
+			return &LogicIff{T1: convertToInit(n.T1), T2: convertToInit(n.T2)}
 		case *ForAll:
 			return &ForAll{Variables: n.Variables, Body: convertToInit(n.Body)}
-		case *Exists:
-			return &Exists{Variables: n.Variables, Body: convertToInit(n.Body)}
+		case *LogicExists:
+			return &LogicExists{Variables: n.Variables, Body: convertToInit(n.Body)}
 		default:
 			vs := collectVarsSlice(f)
 			initNB := l2sInit(vs, f, proofLabel)
@@ -927,19 +927,19 @@ func l2sAutoInvariants(
 			// keyed by Sexp to match Python ivy_l2s.py:670-673
 			// (add_ini_invar uses `cond not in known_inits` / .add).
 			key := string(f.Sexp())
-			if _, ok := f.(*Globally); ok && !knownInits[key] {
-				iinvs = append(iinvs, &Implies{T1: ini, T2: f})
+			if _, ok := f.(*LogicGlobally); ok && !knownInits[key] {
+				iinvs = append(iinvs, &LogicImplies{T1: ini, T2: f})
 				knownInits[key] = true
 			}
-			if _, ok := f.(*Eventually); ok && !knownInits[key] {
-				iinvs = append(iinvs, &Implies{T1: f, T2: ini})
+			if _, ok := f.(*LogicEventually); ok && !knownInits[key] {
+				iinvs = append(iinvs, &LogicImplies{T1: f, T2: ini})
 				knownInits[key] = true
 			}
 			return ini
 		}
 	}
 
-	negPropInit := &Not{Body: convertToInit(fmla)}
+	negPropInit := &LogicNot{Body: convertToInit(fmla)}
 	for i, iinv := range iinvs {
 		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv, proofLineno)
 	}
@@ -965,7 +965,7 @@ func l2sAutoInvariants(
 			}
 		}
 		allFmlas = append(allFmlas, ntPrems...)
-		// Collect WhenOperator{Name:"first"} via TemporalsAst, dedup by Sexp.
+		// Collect LogicWhenOperator{Name:"first"} via TemporalsAst, dedup by Sexp.
 		// Mirrors Python ivy_l2s.py:695 `iu.unique(ilu.temporals_asts(...))`
 		// which uses Expr struct equality (recstruct __hash__/__eq__).
 		// fmt.Sprint = String = PrettyFmla drops sort annotations.
@@ -973,7 +973,7 @@ func l2sAutoInvariants(
 		var winvs []Expr
 		for _, f := range allFmlas {
 			for _, t := range TemporalsAst(f) {
-				when, ok := t.(*WhenOperator)
+				when, ok := t.(*LogicWhenOperator)
 				if !ok || when.Name != "first" {
 					continue
 				}
@@ -982,20 +982,20 @@ func l2sAutoInvariants(
 					continue
 				}
 				seen[key] = true
-				// nws = Or(Not(l2s_waiting), Not(l2s_w((), when.T2)))
-				nws := &Or{Terms: []Expr{
-					&Not{Body: l2sWaiting},
-					&Not{Body: applyNB(l2sW(nil, when.T2, proofLabel))},
+				// nws = LogicOr(Not(l2s_waiting), Not(l2s_w((), when.T2)))
+				nws := &LogicOr{Terms: []Expr{
+					&LogicNot{Body: l2sWaiting},
+					&LogicNot{Body: applyNB(l2sW(nil, when.T2, proofLabel))},
 				}}
-				// tmp = Implies(Not(nws), Eq(when, WhenOperator{Name:"next", T1:when.T1, T2:when.T2}))
-				nextWhen := &WhenOperator{Name: "next", T1: when.T1, T2: when.T2}
-				inner := &Implies{
-					T1: &Not{Body: nws},
+				// tmp = Implies(Not(nws), Eq(when, LogicWhenOperator{Name:"next", T1:when.T1, T2:when.T2}))
+				nextWhen := &LogicWhenOperator{Name: "next", T1: when.T1, T2: when.T2}
+				inner := &LogicImplies{
+					T1: &LogicNot{Body: nws},
 					T2: &Eq{T1: when, T2: nextWhen},
 				}
 				// Wrap with Implies(l2s_init((), Eventually(when.T2)), inner)
-				initNB := l2sInit(nil, &Eventually{Environ: strPtr(proofLabel), Body: when.T2}, proofLabel)
-				outer := &Implies{
+				initNB := l2sInit(nil, &LogicEventually{Environ: strPtr(proofLabel), Body: when.T2}, proofLabel)
+				outer := &LogicImplies{
 					T1: applyNB(initNB),
 					T2: inner,
 				}
@@ -1033,18 +1033,18 @@ func appendLF(cfg *AstConfig, invars []*LabeledFormula, name string, fmla Expr, 
 // Python's `lg.Or(*xs)`. Empty Or is false (per the codebase convention at
 // l2s_auto.go:141). Single-element Or returns the element directly.
 func buildOrExpr(xs []Expr) Expr {
-	return &Or{Terms: xs}
+	return &LogicOr{Terms: xs}
 }
 
 // isGloballyOrNotEventually returns true if e is *lg.Globally or *lg.Not{*lg.Eventually}.
 // Used for the C16 EF-pattern extra invariant in initGlobally.
 // Mirrors Python ivy_l2s.py:566.
 func isGloballyOrNotEventually(e Expr) bool {
-	if _, ok := e.(*Globally); ok {
+	if _, ok := e.(*LogicGlobally); ok {
 		return true
 	}
-	if n, ok := e.(*Not); ok {
-		if _, ok := n.Body.(*Eventually); ok {
+	if n, ok := e.(*LogicNot); ok {
+		if _, ok := n.Body.(*LogicEventually); ok {
 			return true
 		}
 	}
@@ -1055,11 +1055,11 @@ func isGloballyOrNotEventually(e Expr) bool {
 // Used for the C16 AG-pattern extra invariant in initGlobally.
 // Mirrors Python ivy_l2s.py:574.
 func isEventuallyOrNotGlobally(e Expr) bool {
-	if _, ok := e.(*Eventually); ok {
+	if _, ok := e.(*LogicEventually); ok {
 		return true
 	}
-	if n, ok := e.(*Not); ok {
-		if _, ok := n.Body.(*Globally); ok {
+	if n, ok := e.(*LogicNot); ok {
+		if _, ok := n.Body.(*LogicGlobally); ok {
 			return true
 		}
 	}
@@ -1094,7 +1094,7 @@ func sameLHSSort(a, b *Eq) bool {
 }
 
 // collectVarsSlice collects free variables from a node into a slice.
-func collectVarsSlice(n Expr) []*Variable {
+func collectVarsSlice(n Expr) []*LogicVariable {
 	vars := VariablesAST(n)
 	return vars
 }
