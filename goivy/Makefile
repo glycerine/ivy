@@ -127,15 +127,18 @@ test:
 	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
 test-js:
-	cd webui && npm test
+	cd .. && npm run test:webui:js
 
 test-js-watch:
-	cd webui && npm run test:watch
+	cd .. && npm run test:webui:js:watch
+
+test-browser:
+	cd .. && npm run test:webui:browser
 
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web: test-js
+test-web: test-js test-browser
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 
 unimerge-audit:
@@ -164,16 +167,6 @@ fuzz:
 		echo "\n=== $$fuzz ==="; \
 		/usr/local/bin/go test -run=xxx -fuzz=$$fuzz -fuzztime=30s; \
 	done
-
-pprof: # Quick profile — sub-operations breakdown
-	go test -tags web -bench BenchmarkRodSub -benchtime 5s -count 1 ./webui/
-
-pprof-full:  # Full profile with CPU/mem profiling
-	go test -tags web -bench BenchmarkRod -benchtime 10s -cpuprofile cpu.prof \
-        -memprofile mem.prof ./webui/
-
-# Then inspect
-# go tool pprof cpu.prof
 
 vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace

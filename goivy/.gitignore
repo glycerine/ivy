@@ -25,3 +25,5 @@ log.golden.2hr.prev
 webui/node_modules/
 webui/coverage/
 webui/.vitest/
+webui/playwright-report/
+webui/test-results/
