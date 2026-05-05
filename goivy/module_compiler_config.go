@@ -1,8 +1,7 @@
 package goivy
 
-// CompilerConfig holds per-session compiler state.
-// Moved from compiler/phase6.go to break the import cycle
-// between compiler and module.
+// CompilerConfig holds per-session compiler state. It models Python
+// compiler-level globals explicitly on the active module/session.
 type CompilerConfig struct {
 	OptionVerifying bool
 	PropIDCounter   int64

@@ -121,7 +121,7 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	return pc
 }
 
-// GetModule returns the current module. Implements module.ProofCheckerInterface.
+// GetModule returns the current module. Implements ProofCheckerInterface.
 func (pc *ProofChecker) GetModule() *Module {
 	if pc == nil {
 		return nil
@@ -129,10 +129,10 @@ func (pc *ProofChecker) GetModule() *Module {
 	return pc.Mod
 }
 
-// GetAstCfg returns the AST configuration. Implements module.ProofCheckerInterface.
+// GetAstCfg returns the AST configuration. Implements ProofCheckerInterface.
 func (pc *ProofChecker) GetAstCfg() *AstConfig { return pc.AstCfg }
 
-// GetAxioms returns the list of available axioms. Implements module.ProofCheckerInterface.
+// GetAxioms returns the list of available axioms. Implements ProofCheckerInterface.
 func (pc *ProofChecker) GetAxioms() []*LabeledFormula { return pc.Axioms }
 
 // astCfg returns the AstConfig for this proof checker, preferring

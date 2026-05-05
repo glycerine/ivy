@@ -1819,7 +1819,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 
 	// Step A: Extract vocabulary and build rename match
 	sig := mod.Sig
-	vocab := t2pGoalVocab(goal)
+	vocab := GoalVocab(goal)
 	match := make(map[NodeKey]Expr)
 
 	for _, sort := range vocab.Sorts {
@@ -1847,7 +1847,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 			}
 			newname := UnusedNameWithBase(sym.Name, usedNames)
 			newsym := NewConst(newname, sym.CSort)
-			newsym = t2pApplyMatchFunc(match, newsym)
+			newsym = ApplyMatchFunc(match, newsym)
 			sig.AddSymbol(newsym.Name, newsym.CSort)
 			match[Key(sym)] = newsym
 		} else {
@@ -1858,7 +1858,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 	// Step B: Apply rename match to entire goal
 	prop := goal
 	if len(match) > 0 {
-		prop = t2pApplyMatchGoalNode(match, goal, mod)
+		prop = ApplyMatchGoalNode(mod.Cfg.AstCfg, match, goal)
 	}
 
 	// Step C: Process premises
@@ -1906,278 +1906,6 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 	result := acfg.NewLabeledFormula(prop.Label, fmla)
 	result.SetLineno(prop.GetLineno())
 	return result
-}
-
-// --- TheoremToProperty helpers (avoid circular import with proof package) ---
-
-// t2pVocab holds sorts and symbols extracted from a goal's premises.
-type t2pVocab struct {
-	Sorts   []Sort
-	Symbols []*Const
-}
-
-// t2pGoalVocab extracts sorts and symbols from a goal's premises.
-// Mirrors proof.GoalVocab but lives in compiler to avoid circular import.
-func t2pGoalVocab(goal *LabeledFormula) *t2pVocab {
-	sb, ok := goal.Formula.(*SchemaBody)
-	if !ok {
-		return &t2pVocab{}
-	}
-	prems := sb.Prems()
-	var sorts []Sort
-	var symbols []*Const
-	for _, p := range prems {
-		// Collect sorts: Python: sorts = [s for s in prems if isinstance(s, il.UninterpretedSort)]
-		if s, ok := p.(Sort); ok {
-			if _, isUninterp := s.(*UninterpretedSort); isUninterp {
-				sorts = append(sorts, s)
-			}
-		}
-		// Collect symbols from ConstantDecl
-		if cd, ok := p.(*ConstantDecl); ok {
-			args := cd.Args()
-			if len(args) > 0 {
-				if c, ok := args[0].(Expr); ok {
-					if cc, ok := c.(*Const); ok {
-						symbols = append(symbols, cc)
-					}
-				}
-			}
-		}
-	}
-	return &t2pVocab{Sorts: sorts, Symbols: symbols}
-}
-
-// t2pFuncSorts returns all sorts in a symbol's sort signature.
-// Mirrors proof.FuncSorts.
-func t2pFuncSorts(c *Const) []Sort {
-	if fs, ok := c.CSort.(*FunctionSort); ok {
-		dom := fs.Domain()
-		result := make([]Sort, len(dom)+1)
-		copy(result, dom)
-		result[len(dom)] = fs.Range()
-		return result
-	}
-	return []Sort{c.CSort}
-}
-
-// t2pApplyMatchFunc applies sort mappings to a symbol's sort.
-// Mirrors proof.ApplyMatchFunc.
-func t2pApplyMatchFunc(match map[NodeKey]Expr, c *Const) *Const {
-	sorts := t2pFuncSorts(c)
-	newSorts := make([]Sort, len(sorts))
-	for i, s := range sorts {
-		if rep, ok := match[Key(s)]; ok {
-			if rs, ok := rep.(Sort); ok {
-				newSorts[i] = rs
-				continue
-			}
-		}
-		newSorts[i] = s
-	}
-	var newSort Sort
-	if len(newSorts) == 1 {
-		newSort = newSorts[0]
-	} else {
-		fs, err := NewFunctionSort(newSorts...)
-		if err != nil {
-			return c
-		}
-		newSort = fs
-	}
-	return NewConst(c.Name, newSort)
-}
-
-// t2pApplyMatchSort applies a match to a sort, returning the matched sort or original.
-func t2pApplyMatchSort(match map[NodeKey]Expr, sort Sort) Sort {
-	if sort == nil {
-		return nil
-	}
-	if rep, ok := match[Key(sort)]; ok {
-		if rs, ok := rep.(Sort); ok {
-			return rs
-		}
-	}
-	return sort
-}
-
-// t2pApplyMatchAlt applies a match substitution to an expression.
-// Mirrors proof.ApplyMatchAlt / applyMatchAltRec.
-func t2pApplyMatchAlt(match map[NodeKey]Expr, fmla Expr) Expr {
-	if fmla == nil || len(match) == 0 {
-		return fmla
-	}
-	return t2pApplyMatchAltRec(match, fmla)
-}
-
-func t2pApplyMatchAltRec(match map[NodeKey]Expr, fmla Expr) Expr {
-	if fmla == nil {
-		return nil
-	}
-	switch t := fmla.(type) {
-	case *Apply:
-		newTerms := make([]Expr, len(t.Terms))
-		for i, arg := range t.Terms {
-			newTerms[i] = t2pApplyMatchAltRec(match, arg)
-		}
-		if c, ok := t.Func.(*Const); ok {
-			k := Key(c)
-			if replacement, exists := match[k]; exists {
-				if lam, ok := replacement.(*Lambda); ok {
-					result, _ := LambdaApply(lam, newTerms)
-					return result
-				}
-				if newC, ok := replacement.(*Const); ok {
-					app, _ := NewApply(newC, newTerms...)
-					return app
-				}
-			}
-		}
-		newFunc := t2pApplyMatchAltRec(match, t.Func)
-		app, _ := NewApply(newFunc, newTerms...)
-		return app
-
-	case *Variable:
-		k := Key(t)
-		if replacement, exists := match[k]; exists {
-			return replacement
-		}
-		newSort := t2pApplyMatchSort(match, t.VSort)
-		if newSort != t.VSort {
-			v, _ := NewVariable(t.Name, newSort)
-			return v
-		}
-		return fmla
-
-	case *Const:
-		k := Key(t)
-		if replacement, exists := match[k]; exists {
-			return replacement
-		}
-		return fmla
-
-	case *ForAll:
-		newVars := make([]*Variable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := t2pApplyMatchAltRec(match, v)
-			if nv, ok := newV.(*Variable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := t2pApplyMatchAltRec(match, t.Body)
-		return &ForAll{Variables: newVars, Body: newBody}
-
-	case *Exists:
-		newVars := make([]*Variable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := t2pApplyMatchAltRec(match, v)
-			if nv, ok := newV.(*Variable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := t2pApplyMatchAltRec(match, t.Body)
-		return &Exists{Variables: newVars, Body: newBody}
-
-	case *Lambda:
-		newVars := make([]*Variable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := t2pApplyMatchAltRec(match, v)
-			if nv, ok := newV.(*Variable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := t2pApplyMatchAltRec(match, t.Body)
-		return &Lambda{Variables: newVars, Body: newBody}
-	}
-
-	// Generic: recurse into children
-	children := fmla.Children()
-	if len(children) == 0 {
-		return fmla
-	}
-	newChildren := make([]Expr, len(children))
-	for i, c := range children {
-		newChildren[i] = t2pApplyMatchAltRec(match, c)
-	}
-	return CloneNode(fmla, newChildren)
-}
-
-// t2pApplyMatchGoalNode applies a rename match to a goal node.
-// Mirrors proof.ApplyMatchGoalNode with sort/ConstantDecl premise handling.
-func t2pApplyMatchGoalNode(match map[NodeKey]Expr, goal *LabeledFormula, mod *Module) *LabeledFormula {
-	if len(match) == 0 {
-		return goal
-	}
-	sb, ok := goal.Formula.(*SchemaBody)
-	if !ok {
-		// Non-schema: apply match to formula directly
-		conc := GoalConcExpr(goal)
-		if conc != nil {
-			conc = t2pApplyMatchAlt(match, conc)
-		}
-		result := goal.CloneWithFreshID([]Node{goal.Label, conc})
-		return result
-	}
-
-	prems := sb.Prems()
-	var newPrems []Node
-	for _, p := range prems {
-		if lf, ok := p.(*LabeledFormula); ok {
-			newPrems = append(newPrems, t2pApplyMatchGoalNode(match, lf, mod))
-		} else if s, ok := p.(Sort); ok {
-			// Apply sort renaming
-			skey := Key(s)
-			if rep, found := match[skey]; found {
-				if rs, ok := rep.(Sort); ok {
-					newPrems = append(newPrems, rs)
-					continue
-				}
-			}
-			newPrems = append(newPrems, p)
-		} else if cd, ok := p.(*ConstantDecl); ok {
-			// Apply symbol renaming
-			args := cd.Args()
-			if len(args) > 0 {
-				if sym, ok := args[0].(*Const); ok {
-					newSym := t2pApplyMatchFunc(match, sym)
-					symKey := Key(newSym)
-					if rep, found := match[symKey]; found {
-						if repNode, ok := rep.(Node); ok {
-							newPrems = append(newPrems, cd.Clone([]Node{repNode}))
-						} else {
-							newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-						}
-					} else {
-						newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-					}
-				} else {
-					newPrems = append(newPrems, p)
-				}
-			} else {
-				newPrems = append(newPrems, p)
-			}
-		} else {
-			newPrems = append(newPrems, p)
-		}
-	}
-	conc := GoalConcExpr(goal)
-	if conc != nil {
-		conc = t2pApplyMatchAlt(match, conc)
-	}
-
-	// Build new goal with updated prems and conc
-	elems := make([]Node, len(newPrems)+1)
-	copy(elems, newPrems)
-	elems[len(newPrems)] = conc
-	cfg := mod.Cfg.AstCfg
-	newSB := cfg.NewSchemaBody(elems...)
-	return goal.CloneWithFreshID([]Node{goal.Label, newSB})
 }
 
 // exprSlice converts a []ast.Node to []lg.Expr where possible.

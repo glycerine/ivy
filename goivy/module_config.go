@@ -1,14 +1,14 @@
 package goivy
 
-// GuiArtHook is the concrete type for the analysis-graph GUI hook stored on
-// Config.GuiArtHook. It is invoked by check.GuiArt to display an analysis
-// graph in an interactive UI.
+// GuiArtHook is the type for the analysis-graph GUI hook stored on
+// Config.GuiArtHook. It is invoked by GuiArt to display an analysis graph in
+// an interactive UI.
 //
 // The `target` argument is interface{} to mirror Python's gui_art polymorphism:
 // callers pass either an *art.AnalysisGraph (from the ShowCounterexample /
 // DisplayCex paths) or a *check.MatchHandler (from the trace failure path).
-// We cannot name those types here because module cannot import art or check
-// (cycle), so target stays interface{} and the hook implementation type-switches.
+// target stays interface{} because the Python entry point accepts both shapes,
+// and the hook implementation type-switches on the concrete value.
 //
 // The `isCti` argument carries the failing-conjecture clauses captured by
 // check.MatchHandler.IsCti, or nil for non-CTI counterexamples.
@@ -18,10 +18,9 @@ package goivy
 // (ivy_check.py:102).
 type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
 
-// Config for check, but module is lower in the import graph.
-// - module doesn't import check
-// - check imports module (one-way)
-// - compiler, isolate, interp, actions, webui — all already import module
+// Config holds per-session settings that Python Ivy keeps in module-level
+// parameters/globals. This is the main intentional architectural difference
+// from Python: Go threads explicit config instead of mutable process globals.
 type Config struct {
 
 	// "" means use embeded stdlib files, otherwise
@@ -75,8 +74,6 @@ type Config struct {
 	CheckLineno string
 
 	// SolverOpts controls per-solver Z3 behavior.
-	// Moved from solver.Options so the full config is accessible
-	// from module.Config without import cycles.
 	SolverOpts *SolverOptions
 
 	// Isolate is the user-specified isolate to check.
@@ -164,8 +161,6 @@ type Config struct {
 }
 
 // SolverOptions controls per-solver Z3 behavior.
-// Moved from solver.Options so the full config is accessible
-// from module.Config without import cycles.
 type SolverOptions struct {
 	Seed        int
 	Incremental bool
@@ -185,9 +180,8 @@ func DefaultSolverOptions() *SolverOptions {
 	}
 }
 
-// IsolateConfig holds per-session isolate configuration. Replaces former
-// package-level globals in isolate/ for multi-tenancy safety.
-// Defined in module/ to avoid a circular import (isolate imports module).
+// IsolateConfig holds per-session isolate configuration. It replaces
+// Python-style package-level globals for multi-tenancy safety.
 type IsolateConfig struct {
 	ShowCompiled          bool
 	ConeOfInfluence       bool

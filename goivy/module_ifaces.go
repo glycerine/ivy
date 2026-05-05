@@ -1,9 +1,6 @@
-// Package module — interfaces formerly defined locally in isolate/.
-//
 // These interfaces describe capabilities of AST definition types
-// (MixinBeforeDef, ExportDef, DelegateDef, IsolateDef, etc.)
-// that are stored in Module fields. Moving them here breaks the
-// import cycle between isolate/ and module/.
+// (MixinBeforeDef, ExportDef, DelegateDef, IsolateDef, etc.) that are stored
+// in Module fields.
 
 package goivy
 

@@ -1,11 +1,9 @@
-// proofapi.go defines the proof checker interface, tactic types, and
-// proof configuration that both the compiler and proof packages need.
-// Living in module breaks the compiler <-> proof import cycle:
-// proof imports module, compiler imports module.
+// proofapi.go defines the proof checker interface, tactic type, and proof
+// configuration used by proof, compiler, check, and tactic code.
 package goivy
 
 // ProofCheckerInterface abstracts the proof checker methods needed by the compiler
-// and external tactic implementations. proof.ProofChecker satisfies this interface.
+// and tactic implementations. *ProofChecker satisfies this interface.
 type ProofCheckerInterface interface {
 	AdmitDefinition(defn *LabeledFormula, proof Node) ([]*LabeledFormula, error)
 	AdmitProposition(prop *LabeledFormula, proof Node, existingSubgoals ...*LabeledFormula) ([]*LabeledFormula, error)

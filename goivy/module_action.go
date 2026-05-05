@@ -1,10 +1,5 @@
 // action.go defines the Action interface and ActionBase struct.
 // These are the core abstractions for compiled Ivy actions.
-// They live in module/ (Layer 3) so that module.Module can hold
-// strongly-typed Action maps instead of interface{}.
-//
-// Concrete action types (Sequence, AssumeAction, etc.) remain in
-// the actions/ package (Layer 4) and implement module.Action.
 package goivy
 
 import (

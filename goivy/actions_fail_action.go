@@ -1,12 +1,7 @@
-// Package actions: fail_action implementation, ported from Python's
-// fail_action class in ivy_interp.py:378-404.
-//
-// Lives in actions/ (not interp/) so that actions.GetUpdate /
-// actions.IntUpdate / actions.ActionTypeName can dispatch to it without
-// creating an import cycle (interp imports actions). This is a
-// Go-specific layering accommodation; Python keeps fail_action in
-// ivy_interp.py because its flat namespace makes file location
-// irrelevant.
+// fail_action implementation, ported from Python's fail_action class in
+// ivy_interp.py:378-404. Python keeps this class in ivy_interp.py; in Go the
+// file location is now only organizational because the core port is one
+// package.
 
 package goivy
 

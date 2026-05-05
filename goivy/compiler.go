@@ -1,7 +1,6 @@
-// Package compiler transforms AST nodes (ast/ package) into logic IR nodes
-// (logic/ and ivylogic/ packages). It replaces the Python monkey-patching
-// pattern in ivy_compiler.py with a Compiler struct using a visitor/switch
-// dispatch.
+// Compiler transforms parsed AST nodes into semantic logic/action nodes. It
+// replaces Python's monkey-patched .compile methods with an explicit Compiler
+// visitor/switch dispatch.
 //
 // This corresponds to Python's ivy_compiler.py.
 package goivy

@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-// CheckGuiArtHook is an alias for module.GuiArtHook so check-package callers can
-// declare hooks without importing module by name.
+// CheckGuiArtHook is a compatibility alias for callers that used the old
+// split-package check API name.
 type CheckGuiArtHook = GuiArtHook
 
 // GuiArt launches the GUI for an analysis graph. Corresponds to Python's
@@ -68,8 +68,7 @@ func GuiArt(mod *Module, target interface{}, isCti *Clauses) error {
 	// Python: agui = gui.add(other_art); gui.tk.update_idletasks();
 	//         gui.tk.mainloop(); exit(1)
 	//
-	// In Go, delegate to the registered hook (typically webui). The hook is
-	// a fully-typed module.GuiArtHook — no interface{} unboxing needed.
+	// In Go, delegate to the registered hook (typically webui).
 	if mod.Cfg.GuiArtHook != nil {
 		// Pass the original target (which may be a Trace handler) when we
 		// have one; otherwise pass the freshly-built otherArt from the "art"
@@ -89,7 +88,7 @@ func GuiArt(mod *Module, target interface{}, isCti *Clauses) error {
 	if isCti != nil {
 		fmt.Println("CTI clauses:", isCti)
 	}
-	fmt.Println("GUI mode not available in CLI; register a check.CheckGuiArtHook or use --trace")
+	fmt.Println("GUI mode not available in CLI; register a GuiArtHook or use --trace")
 	return nil
 }
 

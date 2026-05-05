@@ -354,8 +354,7 @@ func ApplyTempcase(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode 
 }
 
 // ---------- tactic entry points ----------
-// All follow module.ProofTactic signature:
-//   func(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
+// All follow the ProofTactic signature.
 
 // Vcgen reduces a safety property to initiation and consecution subgoals.
 // Corresponds to Python: vcgen (ivy_tactics.py lines 21-31).

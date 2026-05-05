@@ -11,9 +11,8 @@ import (
 )
 
 // ParseResult bundles the declarations returned by the LALR parser.
-// This matches the structure of parser.ParseResult so consumers can
-// use either parser interchangeably. We define it here to avoid a
-// circular import on the parser package.
+// This matches the structure returned by the original parser package so
+// consumers can use either parser entry point interchangeably.
 type ParseResult struct {
 	Decls    []Node
 	Modules  map[string]*ModuleDecl

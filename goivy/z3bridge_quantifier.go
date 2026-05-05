@@ -1,5 +1,5 @@
-// Package z3bridge provides a focused Z3 wrapper for translating Ivy logic
-// nodes to Z3 expressions and checking satisfiability.
+// This file provides a focused Z3 wrapper for translating Ivy logic nodes to
+// Z3 expressions and checking satisfiability.
 //
 // This package wraps the Z3 C API directly via CGo rather than depending on
 // go-z3, because go-z3 lacks quantifier support (ForAll/Exists) which is

@@ -60,15 +60,6 @@ type Translator struct {
 	TranslateMerkle MerkleState // rolling Merkle hash for Formula_to_z3_int() input conformance
 	translateDepth  int         // nesting depth; only hash at top level (depth 0)
 
-	// these were pre-merge of solver/ and z3bridge hacks to avoid circular imports
-	/*	LookupNative     LookupNativeFunc                          // optional: Python lookup_native(thing, table, kind) callback
-		SolverName       SolverNameFunc                            // optional: maps symbol to Z3 name (for polymorphic disambiguation)
-		QuantConstraints QuantConstraintsFn                        // optional: generates sort constraints for quantifier-bound variables
-		EqFunc           EqFuncFn                                  // optional: custom equality (MyEq True/False optimization)
-		EnumEqFunc       EnumEqFuncFn                              // optional: custom enumerated equality (binary encoding)
-		NumeralFunc      NumeralFuncFn                             // optional: custom numeral handling (range clamping)
-	*/
-
 }
 
 func (t *Translator) LookupNative(name string, sort Sort, kind string) any {
@@ -311,11 +302,8 @@ func (t *Translator) dumpSortsCanon() (r string) {
 // ivy_logic.RangeSort.to_z3 = lambda self: z3.IntSort()    # line 290
 // ivy_logic.BooleanSort.to_z3 = lambda self: z3.BoolSort() # line 289
 //
-// Our TranslateSort is a structural equivalent. It
-// dispatches on sort type via a switch, doing the same thing
-// as Python's polymorphic dispatch. This also avoids
-// a circular import issue that would need two more interfaces
-// to circumvent.
+// Our TranslateSort is a structural equivalent. It dispatches on sort type
+// via a switch, doing the same thing as Python's polymorphic dispatch.
 func (t *Translator) TranslateSort(s Sort) (Z3Sort, error) {
 	switch st := s.(type) {
 	case *BooleanSort:

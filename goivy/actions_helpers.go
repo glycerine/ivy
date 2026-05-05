@@ -9,12 +9,6 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// shortTypeName delegates to module.ShortTypeName.
-//func shortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
-
-// ShortTypeName delegates to module.ShortTypeName.
-//func ShortTypeName(v interface{}) string { return iu.ShortTypeName(v) }
-
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
 func ConcatActions(actions ...ActionsAction) *Sequence {

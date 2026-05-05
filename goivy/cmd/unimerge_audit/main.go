@@ -1,5 +1,5 @@
-// Command unimerge_audit reports the mechanical blockers for flattening the
-// layered Go Ivy packages into the root goivy package.
+// Command unimerge_audit reports structural issues in the flattened Go Ivy
+// core package and the client packages that import it.
 package main
 
 import (
@@ -19,29 +19,7 @@ import (
 )
 
 var defaultSeeds = []string{
-	"ast",
-	"lexer",
-	"ivyutils",
-	"logic",
-	"parser",
-	"ivylogic",
-	"module",
-	"z3bridge",
-	"logicutil",
-	"logicparser",
-	"actions",
-	"isolate",
-	"interp",
-	"compiler",
-	"art",
-	"proof",
-	"trace",
-	"bmc",
-	"temporal",
-	"tactics",
-	"webui",
-	"iupdr",
-	"check",
+	".",
 }
 
 var defaultExcludes = []string{
@@ -232,9 +210,6 @@ func localClosure(modulePath string, pkgs []goPackage) map[string]goPackage {
 	localPrefix := modulePath + "/"
 	for _, pkg := range pkgs {
 		if pkg.ImportPath != modulePath && !strings.HasPrefix(pkg.ImportPath, localPrefix) {
-			continue
-		}
-		if !strings.Contains(filepath.ToSlash(pkg.Dir), "/goivy/") {
 			continue
 		}
 		closure[pkg.ImportPath] = pkg

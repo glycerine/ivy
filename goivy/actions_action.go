@@ -1,6 +1,6 @@
-// Package actions defines the semantic action types for Ivy programs.
+// This file defines the semantic action types for Ivy programs.
 // These are the imperative action semantics after compilation from AST,
-// distinct from the AST-level action nodes in the ast/ package.
+// distinct from the AST-level action nodes.
 package goivy
 
 import (
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-// ActionsAction is the package-local/exported alias for module.Action.
+// ActionsAction is the package-local/exported alias for Action.
 // The renamed alias avoids a flat-package collision during the uni-package merge.
 type ActionsAction = Action
 
@@ -1193,14 +1193,12 @@ func (r *RME) String() string {
 	return res
 }
 
-// --- ActionContext types are defined in module/config.go ---
-
-// Type aliases for types moved to module/ package.
+// Compatibility aliases retained from the split-package port.
 type IActionContext = ModuleIActionContext
 type ActionsConfig = ModuleActionsConfig
 type ActionContext = ModuleActionContext
 
-// Forwarding constructors for types moved to module/.
+// Compatibility constructor names retained from the split-package port.
 var NewActionsConfig = NewModuleActionsConfig
 var NewActionContext = NewModuleActionContext
 var NewActionContextOn = NewModuleActionContextOn

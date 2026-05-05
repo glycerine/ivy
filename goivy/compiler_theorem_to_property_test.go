@@ -321,7 +321,7 @@ func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
 	}
 }
 
-// TestGoalVocab_CollectsSorts verifies t2pGoalVocab collects UninterpretedSort
+// TestGoalVocab_CollectsSorts verifies GoalVocab collects UninterpretedSort
 // from premises.
 func TestGoalVocab_CollectsSorts(t *testing.T) {
 	cfg := NewAstConfig()
@@ -330,7 +330,7 @@ func TestGoalVocab_CollectsSorts(t *testing.T) {
 	cdPrem := cfg.NewConstantDecl(mySym)
 
 	goal := makeSchemaGoal(nil, []Node{mySort, cdPrem}, True)
-	vocab := t2pGoalVocab(goal)
+	vocab := GoalVocab(goal)
 
 	if len(vocab.Sorts) != 1 {
 		t.Errorf("expected 1 sort, got %d", len(vocab.Sorts))
@@ -340,7 +340,7 @@ func TestGoalVocab_CollectsSorts(t *testing.T) {
 	}
 }
 
-// TestApplyMatchGoalNode_SortPremises verifies that t2pApplyMatchGoalNode
+// TestApplyMatchGoalNode_SortPremises verifies that ApplyMatchGoalNode
 // renames sort premises according to the match.
 func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 	oldSort := &UninterpretedSort{Name: "t"}
@@ -351,7 +351,7 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 	}
 
 	goal := makeSchemaGoal(nil, []Node{oldSort}, True)
-	result := t2pApplyMatchGoalNode(match, goal, makeT2PMod())
+	result := ApplyMatchGoalNode(makeT2PMod().Cfg.AstCfg, match, goal)
 
 	// The result's SchemaBody should have the new sort in premises
 	sb, ok := result.Formula.(*SchemaBody)
@@ -372,7 +372,7 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 	}
 }
 
-// TestApplyMatchGoalNode_ConstantDeclPremises verifies that t2pApplyMatchGoalNode
+// TestApplyMatchGoalNode_ConstantDeclPremises verifies that ApplyMatchGoalNode
 // renames symbols in ConstantDecl premises.
 func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 	cfg := NewAstConfig()
@@ -386,7 +386,7 @@ func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 
 	cdPrem := cfg.NewConstantDecl(oldSym)
 	goal := makeSchemaGoal(nil, []Node{cdPrem}, True)
-	result := t2pApplyMatchGoalNode(match, goal, makeT2PMod())
+	result := ApplyMatchGoalNode(makeT2PMod().Cfg.AstCfg, match, goal)
 
 	sb, ok := result.Formula.(*SchemaBody)
 	if !ok {

@@ -13,7 +13,7 @@ import (
 
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
-	Cfg *Config // really for check. check imports module.
+	Cfg *Config
 
 	// Declarations
 	AllRelations  []Expr // base and derived relations in declaration order

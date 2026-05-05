@@ -571,7 +571,7 @@ type ConceptStateViewWidget struct {
 	ArgNode *goivy.State
 
 	// Python: self.state (an ivy_interp.State)
-	State *interp_State
+	State *goivy.InterpState
 
 	// Python: self.graph = CyGraphWidget(...)
 	// (inherited Graph field on ConceptSessionControls is set here)
@@ -582,11 +582,6 @@ type ConceptStateViewWidget struct {
 	// Python: self.result (Latex widget for SAT/UNSAT result)
 	Result *LatexWidget
 }
-
-// interp_State is a placeholder alias for the Go interp.InterpState type. We
-// can't import interp here (it would create an import cycle), so the
-// caller is responsible for setting State as an opaque value.
-type interp_State = any
 
 // NewConceptStateViewWidget mirrors Python ConceptStateViewWidget.__init__
 // at lines 347-430. The Python init builds an extensive widget tree; the
@@ -1468,6 +1463,6 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 //
 // (See virtualDispatch type defined above.)
 
-// Sentinel use to keep ivylogic imported even when not directly referenced
-// (interp.InterpState / il.* may be added in subsequent iterations).
+// Sentinel use to keep goivy imported even when this mechanical port does
+// not directly reference every planned core type yet.
 var _ = (*goivy.Sig)(nil)
