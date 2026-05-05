@@ -38,8 +38,8 @@ type ActionBase struct {
 	FormalParams  []*Const
 	FormalReturns []*Const
 	Labels        []string
-	Label         string               // Python action.label (singular) -- display/identification, distinct from Labels
-	ActCfg        *ModuleActionsConfig // per-session config for ActionClone to allocate fresh IDs
+	Label         string         // Python action.label (singular) -- display/identification, distinct from Labels
+	ActCfg        *ActionsConfig // per-session config for ActionClone to allocate fresh IDs
 }
 
 // CanonFields returns flattened lineno fields for canonical s-expressions.

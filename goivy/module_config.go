@@ -149,7 +149,7 @@ type Config struct {
 	// ActCfg holds the per-session actions config.
 	// Thread it to action construction sites so LocalAction (etc.) counters
 	// match Python's single global local_action_ctr.
-	ActCfg *ModuleActionsConfig `json:"-"`
+	ActCfg *ActionsConfig `json:"-"`
 
 	// ProofCfg holds the per-session proof configuration (tactic registry).
 	ProofCfg *ProofConfig `json:"-"`
@@ -220,7 +220,7 @@ func NewConfig() *Config {
 	iuCfg := NewIvyUtilsConfig()
 	astCfg := NewAstConfig()
 	astCfg.IuCfg = iuCfg
-	actCfg := NewModuleActionsConfig()
+	actCfg := NewActionsConfig()
 	actCfg.IuCfg = iuCfg
 	return &Config{
 		ActCfg:           actCfg,
@@ -239,20 +239,20 @@ func NewConfig() *Config {
 	}
 }
 
-// --- ModuleActionContext ---
+// --- ActionContext ---
 
-// ModuleIActionContext is the interface for action contexts, matching Python's
-// ModuleActionContext class hierarchy (ModuleActionContext, UnrollContext, TypeCheckContext).
-type ModuleIActionContext interface {
+// IActionContext is the interface for action contexts, matching Python's
+// ActionContext class hierarchy (ActionContext, UnrollContext, TypeCheckContext).
+type IActionContext interface {
 	GetDomain() *Module
 	Get(symbol string) Action
 	Enter()
 	Exit()
 }
 
-// ModuleActionsConfig holds per-session actions state.
-type ModuleActionsConfig struct {
-	Context     ModuleIActionContext
+// ActionsConfig holds per-session actions state.
+type ActionsConfig struct {
+	Context     IActionContext
 	Determinize bool
 	// SymexParams is the current symbolic execution parameter list.
 	// Corresponds to Python's module-level symex_params in ivy_actions.py.
@@ -263,33 +263,33 @@ type ModuleActionsConfig struct {
 	IuCfg *IvyUtilsConfig
 }
 
-// NewModuleActionsConfig creates a new ModuleActionsConfig with a default ModuleActionContext.
-func NewModuleActionsConfig() *ModuleActionsConfig {
-	return &ModuleActionsConfig{Context: &ModuleActionContext{}, IuCfg: NewIvyUtilsConfig()}
+// NewActionsConfig creates a new ActionsConfig with a default ActionContext.
+func NewActionsConfig() *ActionsConfig {
+	return &ActionsConfig{Context: &ActionContext{}, IuCfg: NewIvyUtilsConfig()}
 }
 
-// ModuleActionContext provides context for evaluating states and actions.
-// Corresponds to Python's ModuleActionContext class with __enter__/__exit__.
-type ModuleActionContext struct {
-	Domain     *Module              // module reference (Python: self.domain)
-	OldContext ModuleIActionContext // saved context for restore on Exit
-	Cfg        *ModuleActionsConfig // config this context belongs to
+// ActionContext provides context for evaluating states and actions.
+// Corresponds to Python's ActionContext class with __enter__/__exit__.
+type ActionContext struct {
+	Domain     *Module        // module reference (Python: self.domain)
+	OldContext IActionContext // saved context for restore on Exit
+	Cfg        *ActionsConfig // config this context belongs to
 }
 
-func NewModuleActionContext(domain *Module) *ModuleActionContext {
-	return &ModuleActionContext{Domain: domain}
+func NewActionContext(domain *Module) *ActionContext {
+	return &ActionContext{Domain: domain}
 }
 
-// NewModuleActionContextOn creates an ModuleActionContext bound to a specific ModuleActionsConfig.
-func NewModuleActionContextOn(domain *Module, cfg *ModuleActionsConfig) *ModuleActionContext {
-	return &ModuleActionContext{Domain: domain, Cfg: cfg}
+// NewActionContextOn creates an ActionContext bound to a specific ActionsConfig.
+func NewActionContextOn(domain *Module, cfg *ActionsConfig) *ActionContext {
+	return &ActionContext{Domain: domain, Cfg: cfg}
 }
 
-func (ac *ModuleActionContext) GetDomain() *Module { return ac.Domain }
+func (ac *ActionContext) GetDomain() *Module { return ac.Domain }
 
-// Get resolves an action symbol. Corresponds to Python's ModuleActionContext.get
+// Get resolves an action symbol. Corresponds to Python's ActionContext.get
 // which delegates to ivy_module.find_action.
-func (ac *ModuleActionContext) Get(symbol string) Action {
+func (ac *ActionContext) Get(symbol string) Action {
 	if ac.Domain != nil {
 		if found, ok := ac.Domain.FindAction(symbol); ok {
 			return found
@@ -298,27 +298,27 @@ func (ac *ModuleActionContext) Get(symbol string) Action {
 	return nil
 }
 
-// Enter implements Python's ModuleActionContext.__enter__: saves the old context
-// from the ModuleActionsConfig and installs this one.
+// Enter implements Python's ActionContext.__enter__: saves the old context
+// from the ActionsConfig and installs this one.
 // Update: we mostly pass this as a bool argument on the call stack now, for clarity.
-func (ac *ModuleActionContext) Enter() {
+func (ac *ActionContext) Enter() {
 	if ac.Cfg == nil {
-		panic("ModuleActionContext.Enter: Cfg is nil — use NewModuleActionContextOn or set Cfg before calling Enter")
+		panic("ActionContext.Enter: Cfg is nil — use NewActionContextOn or set Cfg before calling Enter")
 	}
 	ac.OldContext = ac.Cfg.Context
 	ac.Cfg.Context = ac
 }
 
-// Exit implements Python's ModuleActionContext.__exit__: restores the previous context.
-func (ac *ModuleActionContext) Exit() {
+// Exit implements Python's ActionContext.__exit__: restores the previous context.
+func (ac *ActionContext) Exit() {
 	if ac.Cfg == nil {
-		panic("ModuleActionContext.Exit: Cfg is nil")
+		panic("ActionContext.Exit: Cfg is nil")
 	}
 	ac.Cfg.Context = ac.OldContext
 }
 
-// RunWithModuleActionContext executes fn within this context, ensuring Exit is called.
-func RunWithModuleActionContext(ctx ModuleIActionContext, fn func()) {
+// RunWithActionContext executes fn within this context, ensuring Exit is called.
+func RunWithActionContext(ctx IActionContext, fn func()) {
 	ctx.Enter()
 	defer ctx.Exit()
 	fn()

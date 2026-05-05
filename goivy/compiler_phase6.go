@@ -1872,7 +1872,7 @@ func CheckIsAction(mod *Module, name string) error {
 // BalancedChoice builds a balanced binary tree of ChoiceAction from a
 // flat list of branches.
 // Corresponds to Python's BalancedChoice(choices) (ivy_compiler.py:1533-1537).
-func BalancedChoice(items []interface{}, actCfg *ModuleActionsConfig) interface{} {
+func BalancedChoice(items []interface{}, actCfg *ActionsConfig) interface{} {
 	xtracer.Trace("compiler.BalancedChoice ENTER")
 	if len(items) == 0 {
 		return NewSequence()

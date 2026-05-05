@@ -92,7 +92,7 @@ func TestNativeAction_ImpureFlag(t *testing.T) {
 func TestChoiceAction_Determinize(t *testing.T) {
 	// With determinize=true and exactly 2 branches, ChoiceAction should
 	// convert to IfAction behavior. We verify the config field exists.
-	cfg := NewModuleActionsConfig()
+	cfg := NewActionsConfig()
 	if cfg.Determinize {
 		t.Error("NewActionsConfig should default Determinize to false")
 	}
@@ -124,7 +124,7 @@ func TestSequence_Decompose(t *testing.T) {
 
 func TestChoiceAction_Decompose(t *testing.T) {
 	// Python: return [(pre, [a], post) for a in self.args]
-	cfg := NewModuleActionsConfig()
+	cfg := NewActionsConfig()
 	a1 := NewAssumeAction(actionsMkConst("p"))
 	a2 := NewAssumeAction(actionsMkConst("q"))
 	choice := NewChoiceActionOn(cfg, a1, a2)
@@ -285,7 +285,7 @@ func TestTopBottomState(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestIfAction_Subactions_Boolean(t *testing.T) {
-	cfg := NewModuleActionsConfig()
+	cfg := NewActionsConfig()
 	cond := actionsMkConst("c")
 	thenBody := NewAssumeAction(actionsMkConst("p"))
 	elseBody := NewAssumeAction(actionsMkConst("q"))

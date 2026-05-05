@@ -86,7 +86,7 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	// All action counters (LocalActionCtr, CallActionCtr, ChoiceActionCtr)
 	// live on IuCfg and are shared between ast and actions packages,
 	// matching Python's single globals in ivy_actions.py.
-	actCfg := NewModuleActionsConfig()
+	actCfg := NewActionsConfig()
 	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
 		actCfg.IuCfg = mod.Cfg.AstCfg.IuCfg
 	}
@@ -1523,8 +1523,8 @@ func CheckDefinitions(mod *Module) error {
 	if VersionLE("1.7", mod.Cfg.IuCfg.GetStringVersion()) {
 		// Create ActionsConfig with module context so isDestructor() can
 		// check mod.DestructorSorts, matching Python's ivy_module.module.destructor_sorts.
-		interferenceActCfg := &ModuleActionsConfig{
-			Context: NewModuleActionContext(mod),
+		interferenceActCfg := &ActionsConfig{
+			Context: NewActionContext(mod),
 		}
 		// Dump all action keys in insertion order for comparison.
 		{

@@ -1193,17 +1193,6 @@ func (r *RME) String() string {
 	return res
 }
 
-// Compatibility aliases retained from the split-package port.
-type IActionContext = ModuleIActionContext
-type ActionsConfig = ModuleActionsConfig
-type ActionContext = ModuleActionContext
-
-// Compatibility constructor names retained from the split-package port.
-var NewActionsConfig = NewModuleActionsConfig
-var NewActionContext = NewModuleActionContext
-var NewActionContextOn = NewModuleActionContextOn
-var RunWithActionContext = RunWithModuleActionContext
-
 // Actions implement lg.Expr directly — no wrapper types needed.
 
 // TacticNodeWrapper wraps an ast.Node (compiled tactic) so it can be stored
