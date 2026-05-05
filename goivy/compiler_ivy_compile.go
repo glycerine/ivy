@@ -215,7 +215,9 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	if err := CheckProperties(mod); err != nil {
 		return err
 	}
-	CreateConjActions(mod)
+	if err := CreateConjActions(mod); err != nil {
+		return err
+	}
 	HandleTemporals(mod)
 
 	// Python line 2269-2272: if create_isolate: iso.create_isolate(isolate.get(), mod)
@@ -533,15 +535,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 				xtracer.Trace("compiler.ARGSetup.action ENTER name=%s", name)
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
-					// Python: compile_action_def always succeeds. Register
-					// with fallback to avoid "undefined action" later.
-					// CompileAction returns a fallback sequence with formal params
-					// even on body failure. Only create bare sequence if nil.
-					xtracer.Trace("compiler.ARGSetup.action COMPILE_FAIL name=%s err=%v", name, err)
-					pp("ARGSetup: compiling action %s: %v (registering fallback)", name, err)
-					if action == nil {
-						action = NewSequence()
-					}
+					return err
 				}
 				// Defensive: ensure the registered action carries a source
 				// Location, falling back to the ActionDef's Loc set by the
@@ -1697,14 +1691,14 @@ func defExprName(expr Expr) string {
 }
 
 // CreateConjActions creates conjecture actions for runtime verification.
-// Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
+// Corresponds to Python's create_conj_actions (ivy_compiler.py:2404-2451).
 // For each conjecture, determines which actions must preserve it.
-func CreateConjActions(mod *Module) {
+func CreateConjActions(mod *Module) error {
 	xtracer.Trace("compiler.CreateConjActions ENTER")
 	// Python: if iu.version_le(iu.get_string_version(), "1.6"): return
 	if VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
 		xtracer.Trace("compiler.CreateConjActions EXIT")
-		return
+		return nil
 	}
 
 	if mod.ConjActions == nil {
@@ -1766,9 +1760,70 @@ func CreateConjActions(mod *Module) {
 		for act := range actionSet {
 			actionNames = append(actionNames, act)
 		}
+		sort.Strings(actionNames)
 		mod.ConjActions[origLbl] = actionNames
 	}
+
+	doCheckInterference := true
+	if mod.Cfg != nil && mod.Cfg.IsolateCfg != nil {
+		doCheckInterference = mod.Cfg.IsolateCfg.DoCheckInterference
+	}
+	if doCheckInterference {
+		actionIsos := make(map[string]map[string]bool)
+		for ison, actions := range myexports {
+			for action := range actions {
+				if actionIsos[action] == nil {
+					actionIsos[action] = make(map[string]bool)
+				}
+				actionIsos[action][ison] = true
+			}
+		}
+
+		isoNames := make([]string, 0, len(mod.Isolates))
+		for ison := range mod.Isolates {
+			isoNames = append(isoNames, ison)
+		}
+		sort.Strings(isoNames)
+		for _, ison := range isoNames {
+			isol := mod.Isolates[ison]
+			memo := make(map[string]bool)
+			conjs := GetIsolateConjs(mod, isol, false, true)
+			exports := myexports[ison]
+			roots := reachable(sortedBoolMapKeys(exports), func(x string) []string { return cg[x] })
+			for _, conj := range conjs {
+				lbl := labelName(conj.Label)
+				actions := append([]string(nil), mod.ConjActions[lbl]...)
+				sort.Strings(actions)
+				for _, action := range actions {
+					for _, ison1 := range sortedBoolMapKeys(actionIsos[action]) {
+						if ison1 != ison && !memo[action] {
+							memo[action] = true
+							if roots[action] && !exports[action] {
+								for _, victim := range sortedBoolMapKeys(exports) {
+									victimRoots := reachable([]string{victim}, func(x string) []string { return cg[x] })
+									if victimRoots[action] && action != victim {
+										return NewIvyError(conj, fmt.Sprintf("isolate %s depends on invariant %s which might not hold because action %s is called from within action %s, which invalidates the invariant.", ison, lbl, victim, action))
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	xtracer.Trace("compiler.CreateConjActions EXIT")
+	return nil
+}
+
+func sortedBoolMapKeys(m map[string]bool) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // HandleTemporals processes temporal properties.

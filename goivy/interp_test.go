@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -647,14 +649,184 @@ func TestReachStateNoPred(t *testing.T) {
 	}
 }
 
+func TestReachStateRecordsTaggedModelUnderLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_interp as interp
+from ivy import ivy_logic as lg
+from ivy import ivy_logic_utils as lu
+from ivy import ivy_module as im
+
+mod = im.Module()
+im.module = mod
+p = lg.Symbol('p', lg.RelationSort([]))
+mod.relations[p] = p.sort
+pred = interp.State(mod, lu.true_clauses())
+mod.unders = [mod.new_state(lu.false_clauses()), mod.new_state(lu.true_clauses())]
+state = interp.State(mod, lu.Clauses([p]))
+state.pred = pred
+state.update = act.AssignAction(p, lg.And()).update(mod, {})
+post = interp.reach_state(state)
+text = str(post.clauses) if post is not None else ''
+print(json.dumps({
+    "post_none": post is None,
+    "unders_len": len(mod.unders),
+    "pred_index": mod.unders.index(post.pred) if post is not None and hasattr(post, 'pred') else -1,
+    "has_universe": hasattr(post, 'universe') if post is not None else False,
+    "universe_keys": [str(k) for k in post.universe.keys()] if post is not None and hasattr(post, 'universe') else [],
+    "mentions_new_p": "new_p" in text,
+    "mentions_p": "p" in text,
+}, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python ReachState oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		PostNone     bool     `json:"post_none"`
+		UndersLen    int      `json:"unders_len"`
+		PredIndex    int      `json:"pred_index"`
+		HasUniverse  bool     `json:"has_universe"`
+		UniverseKeys []string `json:"universe_keys"`
+		MentionsNewP bool     `json:"mentions_new_p"`
+		MentionsP    bool     `json:"mentions_p"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python ReachState oracle %q: %v", out, err)
+	}
+	if want.PostNone || want.UndersLen != 3 || want.PredIndex != 1 || !want.HasUniverse || len(want.UniverseKeys) != 0 || want.MentionsNewP || !want.MentionsP {
+		t.Fatalf("python ReachState oracle changed: %+v", want)
+	}
+
+	mod := New()
+	p := NewConst("p", Boolean)
+	mod.Relations.Set("p", Boolean)
+	pred := NewInterpState(mod, nil, nil, "")
+	under0 := NewStateFromClauses(mod, FalseClauses(nil))
+	under1 := NewStateFromClauses(mod, TrueClauses(nil))
+	pred.SetUnders([]*InterpState{under0, under1})
+
+	state := NewStateFromClauses(mod, NewClauses([]Expr{p}, nil, nil))
+	state.SetPred(pred)
+	state.SetUpdate(GetUpdate(NewAssignAction(p, True), &UpdateContext{
+		Domain: mod,
+		PVars:  nil,
+		ActCfg: NewActionsConfig(),
+	}))
+
+	post := ReachState(state, nil)
+	gotPostNone := post == nil
+	gotUndersLen := len(state.Unders())
+	gotPredIndex := -1
+	if post != nil {
+		for i, u := range []*InterpState{under0, under1} {
+			if post.Pred() == u {
+				gotPredIndex = i
+			}
+		}
+	}
+	gotHasUniverse := post != nil && post.Universe != nil
+	var gotUniverseKeys []string
+	if post != nil {
+		if universe, ok := post.Universe.(map[string][]Expr); ok {
+			for k := range universe {
+				gotUniverseKeys = append(gotUniverseKeys, k)
+			}
+		}
+	}
+	gotText := ""
+	if post != nil && post.Clauses != nil {
+		gotText = post.Clauses.String()
+	}
+	gotMentionsNewP := strings.Contains(gotText, "new_p")
+	gotMentionsP := strings.Contains(gotText, "p")
+
+	if gotPostNone != want.PostNone ||
+		gotUndersLen != want.UndersLen ||
+		gotPredIndex != want.PredIndex ||
+		gotHasUniverse != want.HasUniverse ||
+		fmt.Sprint(gotUniverseKeys) != fmt.Sprint(want.UniverseKeys) ||
+		gotMentionsNewP != want.MentionsNewP ||
+		gotMentionsP != want.MentionsP {
+		t.Fatalf("Go ReachState differs from Python\nwant none=%v unders=%d pred=%d universe=%v keys=%v new_p=%v p=%v\ngot  none=%v unders=%d pred=%d universe=%v keys=%v new_p=%v p=%v\nclauses: %s",
+			want.PostNone, want.UndersLen, want.PredIndex, want.HasUniverse, want.UniverseKeys, want.MentionsNewP, want.MentionsP,
+			gotPostNone, gotUndersLen, gotPredIndex, gotHasUniverse, gotUniverseKeys, gotMentionsNewP, gotMentionsP, gotText)
+	}
+}
+
 func TestReachStateFromPredNoPred(t *testing.T) {
 	s := NewInterpState(nil, nil, nil, "")
 	result, err := ReachStateFromPred(s, nil)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	if err == nil || !strings.Contains(err.Error(), "name 'pre' is not defined") {
+		t.Fatalf("ReachStateFromPred without pred should match Python's undefined pre failure, got result=%v err=%v", result, err)
 	}
 	if result != nil {
 		t.Error("ReachStateFromPred without pred should return nil")
+	}
+}
+
+func TestReachStateFromPredUnreachableRaisesUndefinedPreLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_interp as interp
+from ivy import ivy_logic as lg
+from ivy import ivy_logic_utils as lu
+from ivy import ivy_module as im
+
+mod = im.Module()
+im.module = mod
+p = lg.Symbol('p', lg.RelationSort([]))
+mod.relations[p] = p.sort
+pred = interp.State(mod, lu.true_clauses())
+state = interp.State(mod, lu.Clauses([p]))
+state.pred = pred
+state.update = act.AssignAction(p, lg.And()).update(mod, {})
+
+try:
+    post = interp.reach_state_from_pred(state)
+    res = {"errored": False, "type": "", "message": "", "post_none": post is None}
+except Exception as err:
+    res = {"errored": True, "type": type(err).__name__, "message": str(err), "post_none": True}
+
+print(json.dumps(res, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python ReachStateFromPred oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		Errored  bool   `json:"errored"`
+		Type     string `json:"type"`
+		Message  string `json:"message"`
+		PostNone bool   `json:"post_none"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python ReachStateFromPred oracle %q: %v", out, err)
+	}
+	if !want.Errored || want.Type != "NameError" || !strings.Contains(want.Message, "name 'pre' is not defined") || !want.PostNone {
+		t.Fatalf("python ReachStateFromPred oracle changed: %+v", want)
+	}
+
+	mod := New()
+	p := NewConst("p", Boolean)
+	mod.Relations.Set("p", Boolean)
+	pred := NewInterpState(mod, nil, nil, "")
+	state := NewStateFromClauses(mod, NewClauses([]Expr{p}, nil, nil))
+	state.SetPred(pred)
+	state.SetUpdate(GetUpdate(NewAssignAction(p, True), &UpdateContext{
+		Domain: mod,
+		PVars:  nil,
+		ActCfg: NewActionsConfig(),
+	}))
+
+	got, gotErr := ReachStateFromPred(state, nil)
+	if got != nil || gotErr == nil ||
+		!strings.Contains(gotErr.Error(), "name 'pre' is not defined") {
+		t.Fatalf("Go ReachStateFromPred differs from Python\nwant error %s\n got result=%v err=%v", want.Message, got, gotErr)
 	}
 }
 
@@ -705,6 +877,88 @@ func TestDiagram(t *testing.T) {
 	result2 := Diagram(s, FalseClauses(nil), nil, nil, true, true)
 	if result2 != nil {
 		t.Error("Diagram of unsatisfiable clauses should return nil")
+	}
+}
+
+func TestDiagramHonorsUpwardCloseLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_interp as interp
+from ivy import ivy_logic as lg
+from ivy import ivy_logic_utils as lu
+from ivy import ivy_module as im
+
+mod = im.Module()
+im.module = mod
+sort_s = lg.UninterpretedSort('S')
+X = lg.Variable('X', sort_s)
+p = lg.Symbol('p', lg.RelationSort([sort_s]))
+mod.relations[p] = p.sort
+state = interp.State(mod)
+clauses = lu.Clauses([lg.Exists([X], p(X))])
+diag_open = interp.diagram(state, clauses, upward_close=True)
+diag_closed = interp.diagram(state, clauses, upward_close=False)
+print(json.dumps({
+    "open_fmlas": len(diag_open.fmlas) if diag_open is not None else -1,
+    "closed_fmlas": len(diag_closed.fmlas) if diag_closed is not None else -1,
+    "closed_has_eq": "=" in str(diag_closed),
+    "strings_equal": str(diag_open) == str(diag_closed),
+}, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python Diagram oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		OpenFmlas    int  `json:"open_fmlas"`
+		ClosedFmlas  int  `json:"closed_fmlas"`
+		ClosedHasEq  bool `json:"closed_has_eq"`
+		StringsEqual bool `json:"strings_equal"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python Diagram oracle %q: %v", out, err)
+	}
+	if want.OpenFmlas != 1 || want.ClosedFmlas != 2 || !want.ClosedHasEq || want.StringsEqual {
+		t.Fatalf("python Diagram oracle changed: %+v", want)
+	}
+
+	mod := New()
+	sortS := &UninterpretedSort{Name: "S"}
+	if err := mod.Sig.AddSort(sortS); err != nil {
+		t.Fatalf("AddSort(S): %v", err)
+	}
+	p, err := mod.Sig.AddSymbol("p", LogicRelationSort([]Sort{sortS}))
+	if err != nil {
+		t.Fatalf("AddSymbol(p): %v", err)
+	}
+	mod.Relations.Set("p", p.CSort)
+	x, _ := NewVariable("X", sortS)
+	exists, err := NewExists([]*LogicVariable{x}, MustApply(p, x))
+	if err != nil {
+		t.Fatalf("NewExists: %v", err)
+	}
+	clauses := NewClauses([]Expr{exists}, nil, nil)
+	state := NewInterpState(mod, nil, nil, "")
+
+	diagOpen := Diagram(state, clauses, nil, nil, true, true)
+	diagClosed := Diagram(state, clauses, nil, nil, true, false)
+	if diagOpen == nil || diagClosed == nil {
+		t.Fatalf("Go Diagram returned nil: open=%v closed=%v", diagOpen, diagClosed)
+	}
+	gotOpenFmlas := len(diagOpen.Fmlas)
+	gotClosedFmlas := len(diagClosed.Fmlas)
+	gotClosedHasEq := strings.Contains(diagClosed.String(), "=")
+	gotStringsEqual := diagOpen.String() == diagClosed.String()
+
+	if gotOpenFmlas != want.OpenFmlas ||
+		gotClosedFmlas != want.ClosedFmlas ||
+		gotClosedHasEq != want.ClosedHasEq ||
+		gotStringsEqual != want.StringsEqual {
+		t.Fatalf("Go Diagram differs from Python upward_close handling\nwant open=%d closed=%d eq=%v equal=%v\ngot  open=%d closed=%d eq=%v equal=%v\nopen: %s\nclosed: %s",
+			want.OpenFmlas, want.ClosedFmlas, want.ClosedHasEq, want.StringsEqual,
+			gotOpenFmlas, gotClosedFmlas, gotClosedHasEq, gotStringsEqual,
+			diagOpen, diagClosed)
 	}
 }
 

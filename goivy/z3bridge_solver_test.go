@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
@@ -45,6 +46,27 @@ func relConst(name string, domain ...Sort) *Const {
 	fs, _ := NewFunctionSort(sorts...)
 	return NewConst(name, fs)
 }
+
+type z3BridgeTestFinalCond struct {
+	cond      *Clauses
+	assume    bool
+	ignoreSat bool
+	starts    int
+	sats      int
+	unsats    int
+}
+
+func (f *z3BridgeTestFinalCond) Cond() *Clauses { return f.cond }
+func (f *z3BridgeTestFinalCond) Start()         { f.starts++ }
+func (f *z3BridgeTestFinalCond) Sat() bool {
+	f.sats++
+	return f.ignoreSat
+}
+func (f *z3BridgeTestFinalCond) Unsat() bool {
+	f.unsats++
+	return true
+}
+func (f *z3BridgeTestFinalCond) Assume() bool { return f.assume }
 
 // --- Test: New creates a working solver ---
 
@@ -595,6 +617,79 @@ func TestZ3BridgeEvalFormula(t *testing.T) {
 	}
 	if !result {
 		t.Fatal("p should be true in model of {p}")
+	}
+}
+
+func TestZ3BridgeFailingFinalCondModelKeepsConditionLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_solver as slv, ivy_logic_utils as lut, logic as lg
+
+S = lg.UninterpretedSort("S")
+a = lg.Const("a", S)
+b = lg.Const("b", S)
+r = lg.Const("r", lg.FunctionSort(S, lg.Boolean))
+clauses = lut.Clauses([lg.Not(lg.Eq(a, b))])
+
+class FC(object):
+    def cond(self):
+        return lut.Clauses([lg.And(r(a), r(b))])
+    def start(self):
+        pass
+    def sat(self):
+        return False
+    def unsat(self):
+        pass
+    def assume(self):
+        return False
+
+m = slv.get_small_model(clauses, [], [r], final_cond=[FC()], shrink=True)
+print(json.dumps([str(m.eval_to_constant(r(a))), str(m.eval_to_constant(r(b)))]))
+`)
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("python oracle failed: %v", err)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want []string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("unmarshal python oracle output %q: %v", out, err)
+	}
+	if len(want) != 2 || want[0] != "true" || want[1] != "true" {
+		t.Fatalf("python oracle expected final condition r(a) and r(b) to remain asserted, got %q", want)
+	}
+
+	s := NewSolver(nil, nil)
+	sort := z3UnintSort("S")
+	a := NewConst("a", sort)
+	b := NewConst("b", sort)
+	r := relConst("r", sort)
+	notEqAB := &LogicNot{Body: &Eq{T1: a, T2: b}}
+	clauses := NewClauses([]Expr{notEqAB}, nil, nil)
+	ra := MustApply(r, a)
+	rb := MustApply(r, b)
+	fc := &z3BridgeTestFinalCond{cond: NewClauses([]Expr{&LogicAnd{Terms: []Expr{ra, rb}}}, nil, nil)}
+
+	mr, err := s.GetSmallModelWithCond(clauses, nil, []*Const{r}, []FinalCond{fc}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mr == nil {
+		t.Fatal("expected failing final condition to return a diagnostic model")
+	}
+	gotRA, err := s.EvalFormula(mr.Model, ra)
+	if err != nil {
+		t.Fatal(err)
+	}
+	gotRB, err := s.EvalFormula(mr.Model, rb)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !gotRA || !gotRB {
+		t.Fatalf("Go model evaluated r(a)=%v r(b)=%v; Python keeps the failing final condition asserted and evaluates both %v", gotRA, gotRB, want)
+	}
+	if fc.starts != 1 || fc.sats != 1 || fc.unsats != 0 {
+		t.Fatalf("unexpected final-condition callbacks: starts=%d sats=%d unsats=%d", fc.starts, fc.sats, fc.unsats)
 	}
 }
 

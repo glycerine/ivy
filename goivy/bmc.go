@@ -111,6 +111,18 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 	// mod.Initializers (after init { ... } blocks), matching Python.
 	ag := NewAnalysisGraph(mod)
 	post := ag.AddInitialState(nil, nil)
+	if initAct, ok := mod.Actions.Get2("initialize"); ok {
+		if act, ok := initAct.(ActionsAction); ok {
+			var err error
+			post, err = ag.Execute(bmcCheckPrecondTrue, act, post, nil, "initialize")
+			if err != nil {
+				return &BMCResult{
+					Found:   false,
+					Message: fmt.Sprintf("initialize action failed: %v", err),
+				}
+			}
+		}
+	}
 
 	// BMC loop.
 	for n := 0; n <= nSteps; n++ {
@@ -140,25 +152,20 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 		post = stepPost
 
 		// Safety check (assertion failures in the step).
-		// The fail_expr extracts precondition-violation conditions from the
-		// step action's update. ActionFailure swaps TR and Pre, so we check
-		// whether the precondition violation (now the TR) is reachable.
+		// Python constructs State(expr=fail_expr(post.expr)); the state is
+		// rooted at the original predecessor, and its lazy update is
+		// fail_action(post.expr.rep).update(...).
 		if post != nil && stepAction != nil {
-			failUpdate := computeFailUpdate(stepAction, mod)
-			if failUpdate != nil && failUpdate.TR != nil && !failUpdate.TR.IsFalse() {
-				failClauses := failUpdate.TR
-				failState := NewState(mod, failClauses)
-				failState.Pred = post.Pred
-				safetyResult := CheckFinalCond(ag, failState, TrueClauses(nil), nil, true)
-				if safetyResult != nil {
-					msg := fmt.Sprintf("BMC with bound %d found an assertion failure", n)
-					cfg.log("%s", msg)
-					return &BMCResult{
-						Found:   true,
-						Depth:   n,
-						Trace:   safetyResult,
-						Message: msg,
-					}
+			failState := bmcFailStateFromPost(mod, post, stepAction)
+			safetyResult := CheckFinalCond(ag, failState, TrueClauses(nil), nil, true)
+			if safetyResult != nil {
+				msg := fmt.Sprintf("BMC with bound %d found an assertion failure", n)
+				cfg.log("%s", msg)
+				return &BMCResult{
+					Found:   true,
+					Depth:   n,
+					Trace:   safetyResult,
+					Message: msg,
 				}
 			}
 		}
@@ -171,28 +178,32 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 	}
 }
 
+func bmcFailStateFromPost(mod *Module, post *State, fallback ActionsAction) *State {
+	failAction := NewFailAction(fallback)
+	failPred := post.Pred
+	if aa, ok := post.Prov.(*ActionApp); ok {
+		if len(aa.Args) > 0 {
+			failPred = aa.Args[0]
+		}
+		if action, ok := aa.Rep.(ActionsAction); ok {
+			failAction = NewFailAction(action)
+		}
+	}
+	failState := NewState(mod, TrueClauses(nil))
+	failState.Pred = failPred
+	failState.Action = failAction
+	failState.Prov = NewActionApp(failAction, failPred)
+	return failState
+}
+
 // EnvAction creates the environment step action from a module's public actions.
-// It produces a nondeterministic choice among all public actions.
+// It produces Python's env_action(None): a sorted environment choice whose
+// branches are labeled Sequence(action, ReturnAction()) wrappers.
 func BMCEnvAction(mod *Module) ActionsAction {
 	if mod == nil {
 		return NewSequence()
 	}
-	var branches []Expr
-	for name := range mod.PublicActions.All() {
-		act, ok := mod.Actions.Get2(name)
-		if !ok {
-			continue
-		}
-		action, ok := act.(ActionsAction)
-		if !ok {
-			continue
-		}
-		branches = append(branches, action)
-	}
-	if len(branches) == 0 {
-		return NewSequence()
-	}
-	return NewEnvActionOn(mod.Cfg.ActCfg, branches...)
+	return BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, "", "")
 }
 
 // BuildConjecture combines a module's conjectures into a single Clauses.
@@ -233,21 +244,4 @@ func UnrollAction(act ActionsAction, n int) ActionsAction {
 		result = UnrollLoops(act, card)
 	}()
 	return result
-}
-
-// computeFailUpdate computes the failure update for an action.
-// This corresponds to Python's fail_expr/fail_action which extracts
-// assertion-violation conditions by computing the action's update and
-// then calling action_failure (which swaps TR and Pre).
-//
-// If the action implements the Updater interface, we compute its update
-// and return action_failure(update). Otherwise returns nil.
-func computeFailUpdate(action ActionsAction, mod *Module) *Update {
-	update := GetUpdateForArt(action, mod, nil)
-	if update == nil {
-		return nil
-	}
-	// action_failure swaps TR and Pre: the precondition (failure condition)
-	// becomes the new TR, and Pre becomes True (always satisfiable).
-	return ActionFailure(update)
 }

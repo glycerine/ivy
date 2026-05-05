@@ -1441,9 +1441,41 @@ type DecompTriple struct {
 	Post    Expr            // post-state clauses
 }
 
-// DecomposeWithState decomposes an action with state threading.
-// This is the Python-compatible version: decompose(self, pre, post, fail=False).
+// UpdateDecompTriple is the faithful state-triple form used by Python:
+// (pre_update, action_list, post_update).
+type UpdateDecompTriple struct {
+	Pre     *Update
+	Actions []ActionsAction
+	Post    *Update
+}
+
+// DecomposeWithState is the legacy formula wrapper around the Python-shaped
+// Update decomposition. New backend code should use DecomposeWithUpdate.
 func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTriple {
+	preUpdate := PureState(pre)
+	postUpdate := PureState(post)
+	comps := DecomposeWithUpdate(nil, a, preUpdate, postUpdate, fail)
+	result := make([]DecompTriple, 0, len(comps))
+	for _, comp := range comps {
+		result = append(result, DecompTriple{
+			Pre:     decompUpdateExpr(comp.Pre),
+			Actions: comp.Actions,
+			Post:    decompUpdateExpr(comp.Post),
+		})
+	}
+	return result
+}
+
+func decompUpdateExpr(u *Update) Expr {
+	if u == nil || u.TR == nil {
+		return nil
+	}
+	return u.TR.ToOpenFormula()
+}
+
+// DecomposeWithUpdate decomposes an action with full Python state triples.
+// This matches ivy_actions.py decompose(self, pre, post, fail=False).
+func DecomposeWithUpdate(ctx *UpdateContext, a ActionsAction, pre, post *Update, fail bool) []UpdateDecompTriple {
 	switch act := a.(type) {
 	case *LogicSequence:
 		// Python: return [(pre, self.args, post)]
@@ -1453,53 +1485,171 @@ func DecomposeWithState(a ActionsAction, pre, post Expr, fail bool) []DecompTrip
 				acts = append(acts, sub)
 			}
 		}
-		return []DecompTriple{{Pre: pre, Actions: acts, Post: post}}
+		return []UpdateDecompTriple{{Pre: pre, Actions: acts, Post: post}}
 
 	case *LogicChoiceAction:
 		// Python: each branch is (pre, [branch], post)
-		var result []DecompTriple
+		var result []UpdateDecompTriple
 		for _, branch := range act.Branches {
 			if sub, ok := branch.(ActionsAction); ok {
-				result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{sub}, Post: post})
+				result = append(result, UpdateDecompTriple{Pre: pre, Actions: []ActionsAction{sub}, Post: post})
 			}
 		}
 		return result
 
 	case *LogicIfAction:
 		// Python: each branch is (pre, [branch], post)
-		var result []DecompTriple
+		var result []UpdateDecompTriple
 		if then, ok := act.ThenBody.(ActionsAction); ok {
-			result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{then}, Post: post})
+			result = append(result, UpdateDecompTriple{Pre: pre, Actions: []ActionsAction{then}, Post: post})
 		}
 		if act.ElseBody != nil {
 			if els, ok := act.ElseBody.(ActionsAction); ok {
-				result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{els}, Post: post})
+				result = append(result, UpdateDecompTriple{Pre: pre, Actions: []ActionsAction{els}, Post: post})
 			}
 		}
 		return result
 
 	case *LogicLocalAction:
 		// Python: hide symbols from pre/post, then recurse on body
-		// For now, recurse on body without state hiding (requires HideState infrastructure)
 		if act.Body != nil {
 			if bodyAct, ok := act.Body.(ActionsAction); ok {
-				return DecomposeWithState(bodyAct, pre, post, fail)
+				syms := decomposeStateSymbols(act.Locals)
+				return DecomposeWithUpdate(ctx, bodyAct, HideState(syms, pre), HideState(syms, post), fail)
 			}
 		}
-		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
+		return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
 
 	case *LogicWhileAction:
 		// Python: expand then decompose
-		// Simplified: treat body as a single step
-		if body, ok := act.Body.(ActionsAction); ok {
-			return []DecompTriple{{Pre: pre, Actions: []ActionsAction{body}, Post: post}}
+		if ctx != nil {
+			return DecomposeWithUpdate(ctx, act.Expand(ctx), pre, post, fail)
 		}
-		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
+		if body, ok := act.Body.(ActionsAction); ok {
+			return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{body}, Post: post}}
+		}
+		return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
+
+	case *LogicCallAction:
+		if ctx != nil {
+			if callee := decomposeResolveCall(ctx, act); callee != nil {
+				return decomposeCallActionWithUpdate(act, callee, pre, post, fail)
+			}
+		}
+		return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
 
 	default:
 		// Atomic: return [(pre, [self], post)]
-		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{a}, Post: post}}
+		return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{a}, Post: post}}
 	}
+}
+
+func decomposeStateSymbols(args []Expr) []*Const {
+	syms := make([]*Const, 0, len(args))
+	for _, arg := range args {
+		if c, ok := arg.(*Const); ok {
+			syms = append(syms, c)
+		}
+	}
+	return syms
+}
+
+func decomposeResolveCall(ctx *UpdateContext, call *LogicCallAction) ActionsAction {
+	name := constName(call.Callee)
+	if name == "" {
+		panic(fmt.Sprintf("CallAction.decompose: callee has no name: %T", call.Callee))
+	}
+	if ctx.GetAction != nil {
+		if act := ctx.GetAction(name); act != nil {
+			return act
+		}
+	}
+	if ctx.Domain != nil && ctx.Domain.Actions != nil {
+		if v, ok := ctx.Domain.Actions.Get2(name); ok {
+			if act, ok := v.(ActionsAction); ok {
+				return act
+			}
+		}
+	}
+	panic(fmt.Sprintf("CallAction.decompose: no value for %s", name))
+}
+
+func decomposeCallActionWithUpdate(call *LogicCallAction, callee ActionsAction, pre, post *Update, fail bool) []UpdateDecompTriple {
+	formalParams := callee.GetFormalParams()
+	formalReturns := callee.GetFormalReturns()
+	actualParams := nodeArgs(call.Callee)
+	actualReturns := call.ActualReturns
+	formals := make([]*Const, 0, len(formalParams)+len(formalReturns))
+	formals = append(formals, formalParams...)
+	formals = append(formals, formalReturns...)
+
+	premap, pre := HideStateMap(formals, pre)
+	postmap, post := HideStateMap(formals, post)
+
+	renamedParams := make([]Expr, len(actualParams))
+	for i, actual := range actualParams {
+		renamedParams[i] = RenameAST(actual, premap)
+	}
+	renamedReturns := make([]Expr, len(actualReturns))
+	for i, actual := range actualReturns {
+		renamedReturns[i] = RenameAST(actual, postmap)
+	}
+
+	pre = ConstrainState(pre, decomposeConjunction(decomposeEqualities(renamedParams, constsToExprs(formalParams))))
+	if !fail {
+		post = ConstrainState(post, decomposeConjunction(decomposeEqualities(renamedReturns, constsToExprs(formalReturns))))
+	}
+
+	hideReturns := make(map[NodeKey]*Const, len(renamedReturns))
+	for _, actual := range renamedReturns {
+		if c, ok := actual.(*Const); ok {
+			hideReturns[Key(c)] = NewConst("__hide:"+c.Name, c.CSort)
+		}
+	}
+	if len(hideReturns) > 0 {
+		post = &Update{
+			Modified:    post.Modified,
+			ModifiedAll: post.ModifiedAll,
+			TR:          RenameClauses(post.TR, hideReturns),
+			Pre:         post.Pre,
+		}
+	}
+
+	cloned := callee.ActionClone(callee.ActionArgs())
+	cloned.SetFormalParams(nil)
+	cloned.SetFormalReturns(nil)
+	return []UpdateDecompTriple{{Pre: pre, Actions: []ActionsAction{cloned}, Post: post}}
+}
+
+func constsToExprs(xs []*Const) []Expr {
+	res := make([]Expr, len(xs))
+	for i, x := range xs {
+		res[i] = x
+	}
+	return res
+}
+
+func decomposeEqualities(xs, ys []Expr) []Expr {
+	n := len(xs)
+	if len(ys) < n {
+		n = len(ys)
+	}
+	res := make([]Expr, 0, n)
+	for i := 0; i < n; i++ {
+		res = append(res, &Eq{T1: xs[i], T2: ys[i]})
+	}
+	return res
+}
+
+func decomposeConjunction(terms []Expr) Expr {
+	if len(terms) == 0 {
+		return True
+	}
+	and, err := NewAnd(terms...)
+	if err != nil {
+		panic(err)
+	}
+	return and
 }
 
 // was in extra_actions.go

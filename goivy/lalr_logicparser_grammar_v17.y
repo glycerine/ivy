@@ -303,7 +303,7 @@ term:
             newTerms = append(newTerms, lhs.Terms...)
             newTerms = append(newTerms, rhs.Terms...)
             $$ = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
-        case *AstOld:
+        case *Old:
             if inner, ok := lhs.Term.(*Atom); ok {
                 rhs := $3.(*Atom)
                 newRep := inner.Rep + "." + rhs.Rep
@@ -392,7 +392,7 @@ term:
         // Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = And(p[1], p[3])
         // This flattens left-associative chains and absorbs true (And{}) identity.
-        if a, ok := $1.(*AstAnd); ok {
+        if a, ok := $1.(*And); ok {
             a.Terms = append(a.Terms, $3)
             $$ = a
         } else {
@@ -403,7 +403,7 @@ term:
     {
         // Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = Or(p[1], p[3])
-        if o, ok := $1.(*AstOr); ok {
+        if o, ok := $1.(*Or); ok {
             o.Terms = append(o.Terms, $3)
             $$ = o
         } else {
@@ -468,7 +468,7 @@ term:
     // --- Sort annotation ---
     | term LALR17_TOK_COLON atype
     {
-        if v, ok := $1.(*AstVariable); ok {
+        if v, ok := $1.(*Variable); ok {
             v.VSort = lalr17AtypeToString($3)
         }
         $$ = $1

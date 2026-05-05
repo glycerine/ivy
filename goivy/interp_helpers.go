@@ -88,17 +88,14 @@ func ReverseUpdateConcreteClauses(state *InterpState, clauses *Clauses) (*Clause
 // ---------------------------------------------------------------------------
 
 // JoinUnders computes the join (disjunction) of all under-approximation
-// states. Returns TrueClauses if there are no under-approximations.
+// states. An empty under-approximation set is the empty disjunction, false.
 func JoinUnders(state *InterpState) *Clauses {
 	unders := state.Unders()
-	if len(unders) == 0 {
-		return TrueClauses(nil)
-	}
 	clauses := make([]*Clauses, len(unders))
 	for i, u := range unders {
 		clauses[i] = u.Clauses
 	}
-	return OrClausesTyped(clauses...)
+	return TaggedOrClauses("__pre", clauses...)
 }
 
 // AddUnder adds an under-approximation state to the target state.
@@ -125,6 +122,10 @@ func ReachState(state *InterpState, clauses *Clauses) *InterpState {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil
 	}
+	predUnders := state.Pred().Unders()
+	if len(predUnders) == 0 {
+		return nil
+	}
 	pre := JoinUnders(state.Pred())
 	if clauses == nil {
 		clauses = state.Clauses
@@ -137,18 +138,40 @@ func ReachState(state *InterpState, clauses *Clauses) *InterpState {
 		axioms,
 		clauses,
 	)
-	// Check satisfiability of the forward image conjoined with the target.
-	// If SAT, a reachable state exists.
 	solver := NewSolver(state.Domain, nil)
-	t := solver.NewTranslator()
-	defer t.Close()
-	result, err := t.IsSat(imgClauses.ToFormula())
-	if err != nil || result != Sat {
+	model, err := solver.GetModelClauses(imgClauses)
+	if err != nil || model == nil {
 		return nil
 	}
-	// The image is satisfiable, so we can reach the target. Use the image
-	// clauses as the under-approximation of the reached state.
-	return AddUnder(state, imgClauses, nil, nil)
+
+	idx := FindTrueDisjunct(pre, func(e Expr) bool {
+		ok, err := solver.EvalFormula(model.Model, e)
+		return err == nil && ok
+	})
+	if idx < 0 || idx >= len(predUnders) {
+		return nil
+	}
+
+	ignore := func(c *Const) bool {
+		if c == nil {
+			return true
+		}
+		_, inRelations := state.Domain.Relations.Get2(c.Name)
+		_, inFunctions := state.Domain.Functions.Get2(c.Name)
+		return !inRelations && !inFunctions
+	}
+	post, hm, err := solver.ClausesModelToClausesWithModelAndHerbrand(imgClauses, model, ignore, false)
+	if err != nil || post == nil {
+		return nil
+	}
+	universe := map[string][]Expr{}
+	if hm != nil {
+		universe = hm.Universes(false)
+	}
+	if universe == nil {
+		universe = map[string][]Expr{}
+	}
+	return AddUnder(state, post, predUnders[idx], universe)
 }
 
 // ReachStateFromPred attempts to reach a state from its predecessor's
@@ -161,21 +184,7 @@ func ReachStateFromPred(state *InterpState, clauses *Clauses) (*InterpState, err
 	if post != nil {
 		return post, nil
 	}
-	// If not reachable, compute a reverse interpolant as abductive inference.
-	// Python: ivy_interp.py:316-318
-	if clauses == nil {
-		clauses = state.Clauses
-	}
-	if state.Pred() != nil && state.Update() != nil {
-		axioms := state.Domain.BackgroundTheory(state.InScope)
-		interpreted := functionsToInterpreted(state.Domain.Functions)
-		pre := JoinUnders(state.Pred())
-		ri := ReverseInterpolantCase(state.Domain, clauses, state.Update(), pre, axioms, interpreted)
-		if ri != nil {
-			return nil, &UnsatCoreWithInterpolant{Core: ri.Core, Itp: ri.Itp}
-		}
-	}
-	return nil, nil
+	return nil, fmt.Errorf("name 'pre' is not defined")
 }
 
 // ---------------------------------------------------------------------------
@@ -284,7 +293,10 @@ func Diagram(state *InterpState, clauses *Clauses, implied *Clauses, extraAxioms
 	isSkolem := func(c *Const) bool {
 		return IsSkolem(c.Name)
 	}
-	diag, err := slv.ClausesModelToDiagram(clauses, isSkolem, axioms)
+	if implied == nil {
+		implied = FalseClauses(nil)
+	}
+	diag, err := slv.ClausesModelToDiagramFull(clauses, isSkolem, implied, nil, axioms, weaken, true, upwardClose)
 	if err != nil || diag == nil {
 		return nil
 	}

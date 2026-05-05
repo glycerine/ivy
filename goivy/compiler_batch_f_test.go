@@ -6,6 +6,7 @@ package goivy
 //   §6.3 #29: ConjSetup pass 2 — implement real conjecture setup
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 )
@@ -496,31 +497,77 @@ func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 	}
 }
 
+const createConjActionsInterferenceSource = `#lang ivy1.7
+individual p : bool
+object x = {
+    action victim = { call o.a }
+}
+object o = {
+    action a = { call x.victim }
+    invariant [inv] p
+}
+object y = {
+    action env = { call x.victim }
+}
+export y.env
+isolate i = x with o
+isolate j = o
+`
+
+type pythonCompileOracle struct {
+	OK  bool   `json:"ok"`
+	Err string `json:"err"`
+}
+
+func pythonCompileSourceOracle(t *testing.T, src string) pythonCompileOracle {
+	t.Helper()
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import io
+import json
+from ivy import ivy_compiler as ic, ivy_module as im
+
+src = `+pythonTripleQuote(src)+`
+try:
+    with im.Module():
+        decls = ic.read_module(io.StringIO(src))
+        ic.ivy_compile(decls, im.module, create_isolate=False)
+        print(json.dumps({"ok": True, "err": ""}))
+except Exception as e:
+    print(json.dumps({"ok": False, "err": str(e)}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python compile oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var got pythonCompileOracle
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &got); err != nil {
+		t.Fatalf("decode python compile oracle %q: %v\nfull output:\n%s", lines[len(lines)-1], err, out)
+	}
+	return got
+}
+
 // Test 17: Interference detection — cross-isolate invariant violations.
-// TODO: Python's create_conj_actions has a do_check_interference section that
-// detects when an isolate's action could invalidate another isolate's conjecture.
-// This is not yet ported to Go. When ported, this test should verify that
-// cross-isolate interference is detected and raises an error.
 func TestCreateConjActions_InterferenceDetection(t *testing.T) {
+	want := pythonCompileSourceOracle(t, createConjActionsInterferenceSource)
+	if want.OK || !strings.Contains(want.Err, "depends on invariant o.inv") {
+		t.Fatalf("python oracle sanity check failed: %+v", want)
+	}
+
+	result, err := Parse(createConjActionsInterferenceSource, Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
 	mod := New()
-	oldVer := mod.Cfg.IuCfg.GetStringVersion()
-	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
-	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
-
-	cfg := mod.Cfg.AstCfg
-
-	conjLF := makeLabeledFormula(cfg, "obj1.inv", cfg.NewAtom("inv1"))
-	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
-
-	exp1 := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
-	mod.Exports = append(mod.Exports, exp1)
-	mod.Isolates["iso1"] = cfg.NewIsolateDef(nil, 0)
-	mod.Isolates["iso2"] = cfg.NewIsolateDef(nil, 0)
-
-	CreateConjActions(mod)
-
-	acts := mod.ConjActions["obj1.inv"]
-	t.Logf("TODO: interference detection not yet ported from Python; got %d actions for obj1.inv", len(acts))
+	mod.Cfg = NewConfig()
+	err = IvyCompile(result.Decls, mod, false)
+	if err == nil {
+		t.Fatalf("IvyCompile accepted object-invariant interference; Python rejected it with: %s", want.Err)
+	}
+	if !strings.Contains(err.Error(), "depends on invariant o.inv") {
+		t.Fatalf("Go compile error differs from Python\nwant substring: %q\ngot: %v", "depends on invariant o.inv", err)
+	}
 }
 
 // ============================================================================

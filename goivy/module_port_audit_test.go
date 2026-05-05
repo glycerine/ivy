@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -472,6 +473,59 @@ func TestTaggedOrClausesNoFalseFilter(t *testing.T) {
 	}
 	if len(or.Terms) != 3 {
 		t.Errorf("expected 3 Or terms (false branch not filtered), got %d", len(or.Terms))
+	}
+}
+
+func TestEmptyTaggedOrAndJoinUndersMatchPythonFalse(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_interp as itp, ivy_logic_utils as lu, ivy_module as im
+
+tagged = lu.tagged_or_clauses('__pre')
+with im.Module() as m:
+    state = itp.State(m, lu.true_clauses())
+    joined = itp.join_unders(state)
+
+print(json.dumps({
+    "tagged_nfmlas": len(tagged.fmlas),
+    "tagged_fmlas": [str(f) for f in tagged.fmlas],
+    "tagged_ndefs": len(tagged.defs),
+    "join_nfmlas": len(joined.fmlas),
+    "join_fmlas": [str(f) for f in joined.fmlas],
+    "join_ndefs": len(joined.defs),
+}, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python empty tagged-or oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		TaggedNFmlas int      `json:"tagged_nfmlas"`
+		TaggedFmlas  []string `json:"tagged_fmlas"`
+		TaggedNDefs  int      `json:"tagged_ndefs"`
+		JoinNFmlas   int      `json:"join_nfmlas"`
+		JoinFmlas    []string `json:"join_fmlas"`
+		JoinNDefs    int      `json:"join_ndefs"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python empty tagged-or oracle %q: %v", out, err)
+	}
+	if want.TaggedNFmlas != 1 || len(want.TaggedFmlas) != 1 || want.TaggedFmlas[0] != "false" || want.TaggedNDefs != 0 {
+		t.Fatalf("python tagged_or_clauses sanity check failed: %+v", want)
+	}
+	if want.JoinNFmlas != 1 || len(want.JoinFmlas) != 1 || want.JoinFmlas[0] != "false" || want.JoinNDefs != 0 {
+		t.Fatalf("python join_unders sanity check failed: %+v", want)
+	}
+
+	tagged := TaggedOrClauses("__pre")
+	if len(tagged.Fmlas) != want.TaggedNFmlas || len(tagged.Defs) != want.TaggedNDefs || !IsFalse(tagged.Fmlas[0]) {
+		t.Fatalf("TaggedOrClauses empty result differs from Python\nwant: one false formula, no defs\ngot:  fmlas=%v defs=%d", tagged.Fmlas, len(tagged.Defs))
+	}
+
+	state := NewInterpState(New(), nil, nil, "")
+	joined := JoinUnders(state)
+	if len(joined.Fmlas) != want.JoinNFmlas || len(joined.Defs) != want.JoinNDefs || !IsFalse(joined.Fmlas[0]) {
+		t.Fatalf("JoinUnders empty result differs from Python\nwant: one false formula, no defs\ngot:  fmlas=%v defs=%d", joined.Fmlas, len(joined.Defs))
 	}
 }
 

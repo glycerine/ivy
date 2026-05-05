@@ -6,6 +6,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // checked returns true if the given labeled formula or action should
@@ -43,6 +45,9 @@ func actionToTR(m *Module, action ActionsAction, method string) ([]string, Expr,
 		uc := NewUnrollContext(m.SortCard, m, m.Cfg.ActCfg)
 		uc.Enter()
 		defer uc.Exit()
+		xtracer.Trace("vmt.ActionToTR calling GetUpdate (fsmc) type=%s", ActionTypeName(action))
+	} else {
+		xtracer.Trace("vmt.ActionToTR calling GetUpdate type=%s", ActionTypeName(action))
 	}
 
 	// Compute the update (transition relation) for the action.
@@ -528,31 +533,15 @@ func VMTCheckIsolate(method string, m *Module) error {
 	}
 	initAction := NewSequence(initParts...)
 
-	// Get the invariant to be proved. Apply proof tactics.
-	// For now, simplified: just collect labeled conjectures.
-	var conjs []*LabeledFormula
-	pmap := make(map[int64]interface{})
-	for _, pe := range m.Proofs {
-		if pe.Formula != nil {
-			pmap[pe.Formula.ID] = pe.Proof
-		}
-	}
-
 	checkLineno := ""
 	vmtVerbose := false
 	if m.Cfg != nil {
 		checkLineno = m.Cfg.CheckLineno
 		vmtVerbose = m.Cfg.VMTVerbose
 	}
-	for _, lf := range m.LabeledConjs {
-		if !checkedLF(lf, checkLineno) {
-			continue
-		}
-		if vmtVerbose {
-			fmt.Printf("%d Model checking invariant\n", lf.Lineno())
-		}
-		// For now, skip proof tactic handling -- add conj directly
-		conjs = append(conjs, lf)
+	conjs, err := vmtCollectConjectures(m, checkLineno, vmtVerbose)
+	if err != nil {
+		return err
 	}
 
 	// Convert uninterpreted functions to arrays, if possible
@@ -711,6 +700,46 @@ func VMTCheckIsolate(method string, m *Module) error {
 // Helper functions
 // -----------------------------------------------------------------------
 
+func vmtCollectConjectures(m *Module, checkLineno string, verbose bool) ([]*LabeledFormula, error) {
+	proofCfg := TacticNewConfig()
+	astCfg := NewAstConfig()
+	if m != nil && m.Cfg != nil {
+		if m.Cfg.ProofCfg != nil {
+			proofCfg = m.Cfg.ProofCfg
+		}
+		if m.Cfg.AstCfg != nil {
+			astCfg = m.Cfg.AstCfg
+		}
+	}
+	pc := NewProofChecker(proofCfg, m, m.LabeledAxioms, m.Definitions, ModuleSchemataToAst(m.Schemata), astCfg)
+	pmap := make(map[int64]Node)
+	for _, pe := range m.Proofs {
+		if pe.Formula != nil && pe.Proof != nil {
+			pmap[pe.Formula.ID] = pe.Proof
+		}
+	}
+
+	var conjs []*LabeledFormula
+	for _, lf := range m.LabeledConjs {
+		if !checkedLF(lf, checkLineno) {
+			continue
+		}
+		if verbose {
+			fmt.Printf("%d Model checking invariant\n", lf.Lineno())
+		}
+		if proof, ok := pmap[lf.ID]; ok {
+			subgoals, err := pc.AdmitProposition(lf, proof)
+			if err != nil {
+				return nil, err
+			}
+			conjs = append(conjs, subgoals...)
+			continue
+		}
+		conjs = append(conjs, lf)
+	}
+	return conjs, nil
+}
+
 // toAction extracts an Action from a lg.Expr.
 func checkToAction(n Expr) (ActionsAction, bool) {
 	if act, ok := n.(ActionsAction); ok {
@@ -754,12 +783,32 @@ func backgroundTheory(m *Module) Expr {
 }
 
 // computeUpdate computes the transition relation update for an action.
-// This is a simplified version; the full implementation would call
-// action.update(module, None) which does full symbolic execution.
+// Python: action.update(im.module, None).
 func computeUpdate(m *Module, action ActionsAction) *Update {
-	// For now, return a trivial update. The full implementation requires
-	// the complete action semantics compiler.
-	return NullUpdate()
+	if m == nil || action == nil {
+		return nil
+	}
+	if m.Cfg == nil {
+		m.Cfg = NewConfig()
+	}
+	if m.Cfg.ActCfg == nil {
+		m.Cfg.ActCfg = NewActionsConfig()
+	}
+	ctx := &UpdateContext{
+		Domain:          m,
+		PVars:           nil,
+		ActCfg:          m.Cfg.ActCfg,
+		Instantiator:    m.Instantiator,
+		CheckUnprovable: m.Cfg.OnlyCheckUnprovable,
+		CheckedAssert:   m.Cfg.CheckLineno,
+		GetAction: func(name string) ActionsAction {
+			if found, ok := m.FindAction(name); ok {
+				return found
+			}
+			return nil
+		},
+	}
+	return GetUpdate(action, ctx)
 }
 
 // conjoinDefs conjoins definition equalities into a formula.

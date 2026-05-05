@@ -1029,7 +1029,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
-		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, postState, _, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
 		}
@@ -1256,7 +1256,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
-		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, postState, _, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("concrete: %v", err)}
 		}
@@ -1342,7 +1342,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
-		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, postState, _, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("abstract: %v", err)}
 		}

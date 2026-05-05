@@ -12,6 +12,8 @@ func CloneNode(n Expr, args []Expr) Expr {
 		return t // constants are immutable
 	case *LogicVariable:
 		return t // variables are immutable
+	case ActionsAction:
+		return t.ActionClone(args)
 	case *Apply:
 		if len(args) > 0 {
 			return CloneApplyTerms(t, args)

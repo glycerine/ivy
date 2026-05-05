@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -40,6 +42,97 @@ func TestAssumeActionUpdateTrue(t *testing.T) {
 	}
 }
 
+func TestSubgoalActionIntUpdateMatchesAssertActionLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_module as im, logic as lg
+
+im.module = im.Module()
+updated, tr, pre = act.SubgoalAction(lg.false).int_update(im.module, {})
+print(json.dumps({
+    "tr_fmlas": len(tr.fmlas),
+    "pre_fmlas": len(pre.fmlas),
+    "pre_is_false": pre.is_false(),
+}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python SubgoalAction int_update oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		TRFmlas    int  `json:"tr_fmlas"`
+		PreFmlas   int  `json:"pre_fmlas"`
+		PreIsFalse bool `json:"pre_is_false"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python SubgoalAction int_update oracle %q: %v", out, err)
+	}
+
+	u := IntUpdate(NewSubgoalAction(False), testCtx())
+	if len(u.TR.Fmlas) != want.TRFmlas || len(u.Pre.Fmlas) != want.PreFmlas || u.Pre.IsFalse() != want.PreIsFalse {
+		t.Fatalf("Go SubgoalAction IntUpdate differs from Python AssertAction inheritance\nwant TR fmlas=%d Pre fmlas=%d PreIsFalse=%v\ngot  TR fmlas=%d Pre fmlas=%d PreIsFalse=%v",
+			want.TRFmlas, want.PreFmlas, want.PreIsFalse,
+			len(u.TR.Fmlas), len(u.Pre.Fmlas), u.Pre.IsFalse())
+	}
+}
+
+func TestAssignFieldActionRejectsNonBinaryRelationLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_logic as lg
+from ivy import ivy_module as im
+
+mod = im.Module()
+sort_s = lg.UninterpretedSort('S')
+obj = lg.Symbol('o', sort_s)
+val = lg.Symbol('v', sort_s)
+field = lg.Symbol('bad', lg.RelationSort([sort_s]))
+action = act.AssignFieldAction(obj, field, val)
+
+try:
+    action.action_update(mod, {})
+    res = {"errored": False, "type": "", "message": ""}
+except Exception as err:
+    res = {"errored": True, "type": type(err).__name__, "message": str(err)}
+
+print(json.dumps(res, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python AssignFieldAction oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		Errored bool   `json:"errored"`
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python AssignFieldAction oracle %q: %v", out, err)
+	}
+	if !want.Errored || want.Type != "IvyError" || !strings.Contains(want.Message, "field bad must be a binary relation") {
+		t.Fatalf("python AssignFieldAction oracle changed: %+v", want)
+	}
+
+	sortS := actionsMkSort("S")
+	field := NewConst("bad", LogicRelationSort([]Sort{sortS}))
+	obj := NewConst("o", sortS)
+	val := NewConst("v", sortS)
+	action := NewAssignFieldAction(field, obj, val)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("AssignFieldAction accepted a unary relation field; Python raised IvyError")
+		}
+		if !strings.Contains(fmt.Sprint(r), "field bad must be a binary relation") {
+			t.Fatalf("wrong panic for invalid field update\nwant substring %q\ngot: %v", "field bad must be a binary relation", r)
+		}
+	}()
+	_ = action.ActionUpdate(testCtx())
+}
+
 // --- AssertAction ---
 
 func TestAssertActionUpdate(t *testing.T) {
@@ -71,6 +164,193 @@ func TestAssertActionUpdate(t *testing.T) {
 }
 
 // --- AssignAction ---
+
+func TestAssignActionRejectsUnboundRHSVariablesLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_logic as lg
+from ivy import ivy_module as im
+
+mod = im.Module()
+sort_s = lg.UninterpretedSort('S')
+x = lg.Variable('X', sort_s)
+y = lg.Variable('Y', sort_s)
+p = lg.Symbol('p', lg.RelationSort([sort_s]))
+q = lg.Symbol('q', lg.RelationSort([sort_s]))
+action = act.AssignAction(p(x), q(y))
+
+try:
+    action.action_update(mod, {})
+    res = {"errored": False, "type": "", "message": ""}
+except Exception as err:
+    res = {"errored": True, "type": type(err).__name__, "message": str(err)}
+
+print(json.dumps(res, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python AssignAction variable oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		Errored bool   `json:"errored"`
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python AssignAction variable oracle %q: %v", out, err)
+	}
+	if !want.Errored || want.Type != "IvyError" || !strings.Contains(want.Message, "multiply assigned: p") {
+		t.Fatalf("python AssignAction variable oracle changed: %+v", want)
+	}
+
+	sortS := actionsMkSort("S")
+	x, _ := NewVariable("X", sortS)
+	y, _ := NewVariable("Y", sortS)
+	p := NewConst("p", LogicRelationSort([]Sort{sortS}))
+	q := NewConst("q", LogicRelationSort([]Sort{sortS}))
+	lhs, _ := NewApply(p, x)
+	rhs, _ := NewApply(q, y)
+	action := NewAssignAction(lhs, rhs)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("AssignAction accepted RHS variable not bound by LHS; Python raised IvyError")
+		}
+		if !strings.Contains(fmt.Sprint(r), "multiply assigned: p") {
+			t.Fatalf("wrong panic for unbound RHS variable\nwant substring %q\ngot: %v", "multiply assigned: p", r)
+		}
+	}()
+	_ = action.ActionUpdate(testCtx())
+}
+
+func TestAssignActionRejectsSortMismatchLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_logic as lg
+from ivy import ivy_module as im
+
+mod = im.Module()
+sort_s = lg.UninterpretedSort('S')
+x = lg.Symbol('x', sort_s)
+action = act.AssignAction(x, lg.And())
+
+try:
+    action.action_update(mod, {})
+    res = {"errored": False, "type": "", "message": ""}
+except Exception as err:
+    res = {"errored": True, "type": type(err).__name__, "message": str(err)}
+
+print(json.dumps(res, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python AssignAction sort oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		Errored bool   `json:"errored"`
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python AssignAction sort oracle %q: %v", out, err)
+	}
+	if !want.Errored || want.Type != "IvyError" || !strings.Contains(want.Message, "sort mismatch in assignment to x") {
+		t.Fatalf("python AssignAction sort oracle changed: %+v", want)
+	}
+
+	sortS := actionsMkSort("S")
+	x := NewConst("x", sortS)
+	action := NewAssignAction(x, True)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("AssignAction accepted individual/boolean sort mismatch; Python raised IvyError")
+		}
+		if !strings.Contains(fmt.Sprint(r), "sort mismatch in assignment to x") {
+			t.Fatalf("wrong panic for assignment sort mismatch\nwant substring %q\ngot: %v", "sort mismatch in assignment to x", r)
+		}
+	}()
+	_ = action.ActionUpdate(testCtx())
+}
+
+func TestAssignActionHierarchyUsesPythonRuntimeKeySemantics(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act
+from ivy import ivy_logic as lg
+from ivy import ivy_module as im
+
+mod = im.Module()
+im.module = mod
+sort_s = lg.UninterpretedSort('S')
+X = lg.Variable('X', sort_s)
+p = lg.Symbol('p', lg.RelationSort([sort_s]))
+q = lg.Symbol('q', lg.RelationSort([sort_s]))
+mod.add_to_hierarchy('p.a')
+mod.add_to_hierarchy('p.b')
+updated, clauses, pre = act.AssignAction(p(X), q(X)).action_update(mod, {})
+text = str(clauses)
+print(json.dumps({
+    "mods": [s.name for s in updated],
+    "mentions_child": ("p.a" in text) or ("p.b" in text) or ("new_p.a" in text) or ("new_p.b" in text),
+    "mentions_parent_new": "new_p" in text,
+    "mentions_rhs": "q" in text,
+}, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python hierarchical AssignAction oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		Mods              []string `json:"mods"`
+		MentionsChild     bool     `json:"mentions_child"`
+		MentionsParentNew bool     `json:"mentions_parent_new"`
+		MentionsRHS       bool     `json:"mentions_rhs"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python hierarchical AssignAction oracle %q: %v", out, err)
+	}
+	if fmt.Sprint(want.Mods) != "[p]" || want.MentionsChild || !want.MentionsParentNew || !want.MentionsRHS {
+		t.Fatalf("python hierarchical AssignAction oracle changed: %+v", want)
+	}
+
+	sortS := actionsMkSort("S")
+	x, _ := NewVariable("X", sortS)
+	p := NewConst("p", LogicRelationSort([]Sort{sortS}))
+	q := NewConst("q", LogicRelationSort([]Sort{sortS}))
+	mod := New()
+	mod.AddToHierarchy("p.a")
+	mod.AddToHierarchy("p.b")
+	u := NewAssignAction(MustApply(p, x), MustApply(q, x)).ActionUpdate(&UpdateContext{
+		Domain: mod,
+		PVars:  nil,
+		ActCfg: NewActionsConfig(),
+	})
+
+	var gotMods []string
+	for _, m := range u.Modified {
+		gotMods = append(gotMods, m.Name)
+	}
+	gotText := u.TR.String()
+	gotMentionsChild := strings.Contains(gotText, "p.a") || strings.Contains(gotText, "p.b") ||
+		strings.Contains(gotText, "new_p.a") || strings.Contains(gotText, "new_p.b")
+	gotMentionsParentNew := strings.Contains(gotText, "new_p")
+	gotMentionsRHS := strings.Contains(gotText, "q")
+
+	if fmt.Sprint(gotMods) != fmt.Sprint(want.Mods) ||
+		gotMentionsChild != want.MentionsChild ||
+		gotMentionsParentNew != want.MentionsParentNew ||
+		gotMentionsRHS != want.MentionsRHS {
+		t.Fatalf("Go hierarchical AssignAction differs from Python runtime behavior\nwant mods=%v child=%v parentNew=%v rhs=%v\ngot  mods=%v child=%v parentNew=%v rhs=%v\nTR: %s",
+			want.Mods, want.MentionsChild, want.MentionsParentNew, want.MentionsRHS,
+			gotMods, gotMentionsChild, gotMentionsParentNew, gotMentionsRHS, gotText)
+	}
+}
 
 func TestAssignActionSimple(t *testing.T) {
 	// x := y where both are constants with TopS sort

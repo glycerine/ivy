@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"encoding/json"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -132,6 +134,138 @@ func TestCheckIsolateMultipleSteps(t *testing.T) {
 	}
 }
 
+func TestBMCCheckIsolateExecutesInitializeActionLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_art, ivy_logic as il, ivy_logic_utils as ilu, ivy_module as im, ivy_trace, logic as lg
+
+im.module = im.Module()
+il.sig = im.module.sig
+P = il.Symbol("P", lg.Boolean)
+im.module.relations["P"] = P
+im.module.actions["initialize"] = act.AssignAction(P, lg.true)
+clauses = ilu.dual_clauses(ilu.formula_to_clauses(P), lambda v: lg.Const("@" + v.name, v.sort))
+
+ag = ivy_art.AnalysisGraph()
+ag.add_initial_state(ag.init_cond)
+post = ag.states[0]
+post = ag.execute(im.module.actions["initialize"], None, None, "initialize")
+res = ivy_trace.check_final_cond(ag, post, clauses, [], True)
+print(json.dumps({"safe_after_initialize": res is None, "states": len(ag.states)}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python BMC initialize oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		SafeAfterInitialize bool `json:"safe_after_initialize"`
+		States              int  `json:"states"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python BMC initialize oracle %q: %v", out, err)
+	}
+	if !want.SafeAfterInitialize || want.States != 2 {
+		t.Fatalf("python BMC initialize oracle did not execute initialize as expected: %+v", want)
+	}
+
+	mod := bmcTestModule()
+	mod.Sig = NewSig()
+	mod.Sig.Symbols.Set("P", &SymbolEntry{Sort: Boolean})
+	mod.Relations.Set("P", Boolean)
+	P := NewConst("P", Boolean)
+	mod.Actions.Set("initialize", NewAssignAction(P, True))
+	mod.LabeledConjs = []*LabeledFormula{{Formula: P}}
+
+	result := BMCCheckIsolate(DefaultConfig(mod, 0))
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	if result.Found {
+		t.Fatalf("BMCCheckIsolate found a depth-0 counterexample; Python executes initialize first: %s", result.Message)
+	}
+}
+
+func TestBMCAssertionFailureTraceUsesFailActionHistoryLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_art, ivy_interp as itp, ivy_logic as il, ivy_logic_utils as ilu, ivy_module as im, ivy_trace, logic as lg
+
+im.module = im.Module()
+il.sig = im.module.sig
+P = il.Symbol("P", lg.Boolean)
+im.module.relations["P"] = P
+step = act.AssertAction(P)
+im.module.actions["step"] = step
+im.module.public_actions["step"] = True
+
+ag = ivy_art.AnalysisGraph()
+ag.add_initial_state(ag.init_cond)
+with itp.EvalContext(False):
+    post = ag.execute(act.env_action(None))
+fail = itp.State(expr=itp.fail_expr(post.expr))
+history = ag.get_history(fail)
+trace = ivy_trace.check_final_cond(ag, fail, ilu.true_clauses(), [], True)
+print(json.dumps({
+    "history_actions": [type(a).__name__ for a in history.actions],
+    "contains_fail_call": "fail call step" in str(trace),
+    "contains_assert": "assert P" in str(trace),
+}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python BMC failure-history oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		HistoryActions   []string `json:"history_actions"`
+		ContainsFailCall bool     `json:"contains_fail_call"`
+		ContainsAssert   bool     `json:"contains_assert"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python BMC failure-history oracle %q: %v", out, err)
+	}
+	if !reflect.DeepEqual(want.HistoryActions, []string{"fail_action"}) || !want.ContainsFailCall || !want.ContainsAssert {
+		t.Fatalf("python BMC failure-history oracle did not expose fail_action trace shape: %+v", want)
+	}
+
+	mod := bmcTestModule()
+	mod.Sig = NewSig()
+	mod.Sig.Symbols.Set("P", &SymbolEntry{Sort: Boolean})
+	mod.Relations.Set("P", Boolean)
+	P := NewConst("P", Boolean)
+	mod.Actions.Set("step", NewAssertAction(P))
+	mod.PublicActions.Set("step", true)
+
+	ag := NewAnalysisGraph(mod)
+	ag.AddInitialState(nil, nil)
+	stepAction := BMCEnvAction(mod)
+	post, err := ag.Execute(false, stepAction, nil, nil, "")
+	if err != nil {
+		t.Fatalf("execute BMC step: %v", err)
+	}
+	failState := bmcFailStateFromPost(mod, post, stepAction)
+	history := ag.GetHistory(failState, nil)
+	gotHistoryActions := make([]string, len(history.Actions))
+	for i, action := range history.Actions {
+		if aa, ok := action.(ActionsAction); ok {
+			gotHistoryActions[i] = ActionTypeName(aa)
+		}
+	}
+	if !reflect.DeepEqual(gotHistoryActions, want.HistoryActions) {
+		t.Fatalf("Go BMC failure history actions differ from Python\nwant: %#v\ngot:  %#v", want.HistoryActions, gotHistoryActions)
+	}
+
+	result := BMCCheckIsolate(DefaultConfig(mod, 0))
+	if result == nil || !result.Found || result.Trace == nil {
+		t.Fatalf("expected BMC assertion failure trace, got %#v", result)
+	}
+	got := result.Trace.String()
+	if !strings.Contains(got, "fail") || !strings.Contains(got, "assert P") {
+		t.Fatalf("Go BMC assertion-failure trace lost fail_action content\nwant substrings: %q and %q\ngot:\n%s", "fail", "assert P", got)
+	}
+}
+
 // --- EnvAction tests ---
 
 func TestEnvActionNilModule(t *testing.T) {
@@ -154,6 +288,112 @@ func TestEnvActionWithActions(t *testing.T) {
 	act := BMCEnvAction(mod)
 	if act == nil {
 		t.Fatal("EnvAction should not return nil")
+	}
+}
+
+type bmcEnvBranchShape struct {
+	Type          string   `json:"type"`
+	Label         string   `json:"label"`
+	ArgTypes      []string `json:"arg_types"`
+	FormalParams  int      `json:"formal_params"`
+	FormalReturns int      `json:"formal_returns"`
+}
+
+func TestBMCEnvActionMatchesPythonEnvActionShape(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_module as im, logic as lg
+
+im.module = im.Module()
+sort_s = lg.UninterpretedSort("S")
+
+zeta = act.AssumeAction(lg.true)
+zeta.formal_params = [lg.Const("x", sort_s)]
+zeta.formal_returns = [lg.Const("r", sort_s)]
+im.module.actions["ext:zeta"] = zeta
+im.module.public_actions["ext:zeta"] = True
+
+alpha = act.AssumeAction(lg.true)
+im.module.actions["alpha"] = alpha
+im.module.public_actions["alpha"] = True
+
+env = act.env_action(None)
+rows = []
+for branch in env.args:
+    rows.append({
+        "type": type(branch).__name__,
+        "label": getattr(branch, "label", ""),
+        "arg_types": [type(x).__name__ for x in getattr(branch, "args", [])],
+        "formal_params": len(getattr(branch, "formal_params", [])),
+        "formal_returns": len(getattr(branch, "formal_returns", [])),
+    })
+print(json.dumps(rows))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python env_action oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want []bmcEnvBranchShape
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python env_action oracle %q: %v", out, err)
+	}
+
+	mod := bmcTestModule()
+	sortS := &UninterpretedSort{Name: "S"}
+	zeta := NewAssumeAction(True)
+	zeta.SetFormalParams([]*Const{NewConst("x", sortS)})
+	zeta.SetFormalReturns([]*Const{NewConst("r", sortS)})
+	mod.Actions.Set("ext:zeta", zeta)
+	mod.PublicActions.Set("ext:zeta", true)
+	alpha := NewAssumeAction(True)
+	mod.Actions.Set("alpha", alpha)
+	mod.PublicActions.Set("alpha", true)
+
+	env, ok := BMCEnvAction(mod).(*LogicEnvAction)
+	if !ok {
+		t.Fatalf("BMCEnvAction returned %T, want *LogicEnvAction", BMCEnvAction(mod))
+	}
+	got := describeBMCEnvBranches(env)
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Go BMCEnvAction shape differs from Python env_action(None)\nwant: %#v\ngot:  %#v", want, got)
+	}
+}
+
+func describeBMCEnvBranches(env *LogicEnvAction) []bmcEnvBranchShape {
+	rows := make([]bmcEnvBranchShape, 0, len(env.Branches))
+	for _, branch := range env.Branches {
+		action, _ := branch.(ActionsAction)
+		row := bmcEnvBranchShape{
+			Type:          pythonBMCActionTypeName(branch),
+			FormalParams:  len(action.GetFormalParams()),
+			FormalReturns: len(action.GetFormalReturns()),
+		}
+		if labeled, ok := branch.(interface{ GetLabel() string }); ok {
+			row.Label = labeled.GetLabel()
+		}
+		if seq, ok := branch.(*LogicSequence); ok {
+			for _, elem := range seq.Elems {
+				row.ArgTypes = append(row.ArgTypes, pythonBMCActionTypeName(elem))
+			}
+		}
+		rows = append(rows, row)
+	}
+	return rows
+}
+
+func pythonBMCActionTypeName(x Expr) string {
+	switch x.(type) {
+	case *LogicSequence:
+		return "Sequence"
+	case *LogicAssumeAction:
+		return "AssumeAction"
+	case *ReturnAction:
+		return "ReturnAction"
+	case *LogicEnvAction:
+		return "EnvAction"
+	default:
+		return TypeName(x)
 	}
 }
 

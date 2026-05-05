@@ -334,11 +334,11 @@ func fixIfPart(cond Node, part Node) Node {
 	// Extract params from whichever type matches.
 	var params []Node
 	switch s := cond.(type) {
-	case *AstSome:
+	case *Some:
 		params = s.Params
-	case *AstSomeMin:
+	case *SomeMin:
 		params = s.Params
-	case *AstSomeMax:
+	case *SomeMax:
 		params = s.Params
 	}
 	if params != nil {
@@ -391,11 +391,11 @@ func createObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs []Node, 
 	}
 
 	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
-	vsubst := make(map[string]*AstVariable)
+	vsubst := make(map[string]*Variable)
 	for i, pr := range objectargs {
 		if i < len(prefargs) {
 			prName := nodeRep(pr)
-			if v, ok := prefargs[i].(*AstVariable); ok {
+			if v, ok := prefargs[i].(*Variable); ok {
 				vsubst[prName] = v
 			}
 		}
@@ -972,7 +972,7 @@ top:
         // Python: if p[2]: foo = DefinitionSchema(*foo.args); foo.lineno = p[5].lineno
         gdefn := $5
         if $2 != nil { // optexplicit is True
-            if def, ok := gdefn.(*AstDefinition); ok {
+            if def, ok := gdefn.(*Definition); ok {
                 ds := parser17Acfg(parser17lex).NewDefinitionSchema(*def)
                 ds.SetLineno(def.GetLineno())
                 gdefn = ds
@@ -1122,7 +1122,7 @@ top:
 
         // Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
         sortNode := $7
-        _, isRange := sortNode.(*AstRange)
+        _, isRange := sortNode.(*Range)
         if isRange {
             sortNode = parser17Acfg(parser17lex).NewUninterpretedSortAST()
         }
@@ -1255,7 +1255,7 @@ top:
 
         // Python: if isinstance(adef, CrashAction):
         //             adef = adef.clone([Atom(This(), formals)])
-        if ca, ok := adef.(*AstCrashAction); ok {
+        if ca, ok := adef.(*CrashAction); ok {
             thisAtom := parser17Acfg(parser17lex).NewAtom("this", formals...)
             thisAtom.SetLineno(lineno)
             adef = ca.Clone([]Node{thisAtom})
@@ -1269,9 +1269,28 @@ top:
         decl := parser17Acfg(parser17lex).NewActionDecl(actdef)
         decl.SetLineno(lineno)
         $$.declare(decl)
-        // If export/import was specified
+        // Python: if p[2]: declare ExportDecl/ImportDecl for this action name.
         if $2 != nil {
-            $$.declare($2)
+            switch $2.(type) {
+            case *ExportDecl:
+                d := parser17Acfg(parser17lex).NewExportDecl(
+                    parser17Acfg(parser17lex).NewExportDef(
+                        parser17Acfg(parser17lex).NewAtom($4.Val),
+                        parser17Acfg(parser17lex).NewAtom(""),
+                    ),
+                )
+                d.SetLineno(lineno)
+                $$.declare(d)
+            case *ImportDecl:
+                d := parser17Acfg(parser17lex).NewImportDecl(
+                    parser17Acfg(parser17lex).NewImportDef(
+                        parser17Acfg(parser17lex).NewAtom($4.Val),
+                        parser17Acfg(parser17lex).NewAtom(""),
+                    ),
+                )
+                d.SetLineno(lineno)
+                $$.declare(d)
+            }
         }
     }
     // --- Mixin before ---
@@ -1926,7 +1945,7 @@ term:
             composed := ComposeAtomsGeneric(lhs, $3)
             composed.SetLineno(tokLineno(lex, $2))
             $$ = composed
-        case *AstOld:
+        case *Old:
             t := ComposeAtomsGeneric(lhs.Term, $3)
             t.SetLineno(tokLineno(lex, $2))
             lhs.Term = t
@@ -2055,7 +2074,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
         // Python: if isinstance(p[1],And): append; else: new And with get_lineno
-        if existing, ok := $1.(*AstAnd); ok {
+        if existing, ok := $1.(*And); ok {
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
@@ -2068,7 +2087,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
         // Python: if isinstance(p[1],Or): append; else: new Or with get_lineno
-        if existing, ok := $1.(*AstOr); ok {
+        if existing, ok := $1.(*Or); ok {
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
@@ -2182,7 +2201,7 @@ term:
         // Python: if hasattr(p[1],"sort"): raise IvyError("multiple sort annotations")
         // Python: p[1].sort = p[3]; p[0] = p[1]
         switch n := $1.(type) {
-        case *AstVariable:
+        case *Variable:
             if n.VSort != "" {
                 parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
             }
@@ -2578,7 +2597,7 @@ gdefn:
     | PARSER_TOK_LCB defn PARSER_TOK_RCB
     {
         xtracer.Trace("parser.p_gdefn_lcb_defn_rcb ENTER (gdefn)")
-        d := $2.(*AstDefinition)
+        d := $2.(*Definition)
         $$ = parser17Acfg(parser17lex).NewDefinitionSchema(*d)
     }
     ;
@@ -3247,7 +3266,7 @@ lit:
     {
         xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
         // Python: p[0] = ~p[2] — flips Literal polarity
-        if lit, ok := $2.(*AstLiteral); ok {
+        if lit, ok := $2.(*Literal); ok {
             $$ = parser17Acfg(parser17lex).NewLiteral(1 - lit.Polarity, lit.Atom)
         } else {
             $$ = parser17Acfg(parser17lex).NewLiteral(0, $2)
@@ -3576,12 +3595,12 @@ optimpex:
     | PARSER_TOK_EXPORT
     {
         xtracer.Trace("parser.p_optimpex_export ENTER (optimpex)")
-        $$ = nil // marker handled in top rule
+        $$ = parser17Acfg(parser17lex).NewExportDecl()
     }
     | PARSER_TOK_IMPORT
     {
         xtracer.Trace("parser.p_optimpex_import ENTER (optimpex)")
-        $$ = nil // marker handled in top rule
+        $$ = parser17Acfg(parser17lex).NewImportDecl()
     }
     ;
 
@@ -3867,7 +3886,7 @@ sequence:
         xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
         stmts := lowerVarStmts($2)
         seq := parser17MakeSequence(parser17Acfg(parser17lex), stmts)
-        if s, ok := seq.(*AstSequence); ok {
+        if s, ok := seq.(*Sequence); ok {
             s.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         } else {
             // Single node — mark as having a location without calling getLineno

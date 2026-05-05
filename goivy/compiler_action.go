@@ -89,27 +89,18 @@ func (c *Compiler) CompileAction(node *ActionDef) (ActionsAction, error) {
 
 	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
 	// Compile both prm:-prefixed AND fml:-prefixed params into formals+sigCopy.
-	// On error, create placeholder symbol to preserve param count. This prevents
-	// ApplyMixin panics when mixin param counts don't match due to compile failures.
 	var formals []*Const
-	var formalsErr error
 	for _, p := range pformals {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
-			if formalsErr == nil {
-				formalsErr = fmt.Errorf("compiling action param: %w", err)
-			}
-			sym = NewConst(fmt.Sprint(p), TopS)
+			return nil, fmt.Errorf("compiling action param: %w", err)
 		}
 		formals = append(formals, sym)
 	}
 	for _, p := range node.FormalParams {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
-			if formalsErr == nil {
-				formalsErr = fmt.Errorf("compiling action fml param: %w", err)
-			}
-			sym = NewConst(fmt.Sprint(p), TopS)
+			return nil, fmt.Errorf("compiling action fml param: %w", err)
 		}
 		formals = append(formals, sym)
 	}
@@ -119,21 +110,9 @@ func (c *Compiler) CompileAction(node *ActionDef) (ActionsAction, error) {
 	for _, r := range node.FormalReturns {
 		sym, err := c.CompileConst(r, sigCopy)
 		if err != nil {
-			if formalsErr == nil {
-				formalsErr = fmt.Errorf("compiling action return: %w", err)
-			}
-			sym = NewConst(fmt.Sprint(r), TopS)
+			return nil, fmt.Errorf("compiling action return: %w", err)
 		}
 		returns = append(returns, sym)
-	}
-
-	// If any formal failed, return fallback with placeholder params
-	if formalsErr != nil {
-		fallback := NewSequence()
-		fallback.SetLineno(node.GetLineno())
-		fallback.SetFormalParams(formals)
-		fallback.SetFormalReturns(returns)
-		return fallback, formalsErr
 	}
 
 	// DEBUG: print formals and body for diagnosis
@@ -159,15 +138,7 @@ func (c *Compiler) CompileAction(node *ActionDef) (ActionsAction, error) {
 	sortResult, sortErr := c.Sortify(bodyToCompile)
 	c.Sig = savedSig
 	if sortErr != nil {
-		// Body failed, but formals are already compiled above.
-		// Return a fallback empty sequence with the correct formal params
-		// so callers can register an action with the right parameter signature.
-		// This prevents panics in ApplyMixin which requires matching param counts.
-		fallback := NewSequence()
-		fallback.SetLineno(node.GetLineno())
-		fallback.SetFormalParams(formals)
-		fallback.SetFormalReturns(returns)
-		return fallback, sortErr
+		return nil, sortErr
 	}
 
 	// Convert lg.Expr to actions.ActionsAction (same pattern as CompileActionBody's Sequence case)

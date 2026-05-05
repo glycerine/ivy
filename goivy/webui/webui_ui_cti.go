@@ -336,8 +336,10 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *goivy.Clauses)
 
 	// Python: ag = self.new_ag()
 	ag := goivy.NewAnalysisGraph(ui.Mod)
-	ag.Add(goivy.NewState(ui.Mod, ag.InitCond), nil)
-	post := ag.States[0]
+	post := ag.AddInitialState(nil, nil)
+	if len(ag.States) > 0 {
+		post = ag.States[0]
+	}
 
 	// Python: if 'initialize' in im.module.actions: ...
 	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {

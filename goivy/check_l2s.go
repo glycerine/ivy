@@ -878,17 +878,18 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 		fullSubs := cfg.FullSubs
 		switch {
 		case strings.HasPrefix(tacticName, "l2s_auto5"):
-			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+			result[0].TraceHook = TraceHookFn(func(trace *Trace, fcs []Checker) *Trace {
 				if subs != nil {
-					applyRenamingToHandler(handler, subs)
+					trace = applyRenamingToTrace(trace, subs)
 				}
-				applyAutoDiagnosticsToHandler(handler, fcs, tasks, triggers, rsubs, fullSubs)
+				return applyAutoDiagnosticsToTrace(trace, fcs, tasks, triggers, rsubs, fullSubs)
 			})
 		case strings.HasPrefix(tacticName, "l2s_auto"):
-			result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+			result[0].TraceHook = TraceHookFn(func(trace *Trace, fcs []Checker) *Trace {
 				if subs != nil {
-					applyRenamingToHandler(handler, subs)
+					trace = applyRenamingToTrace(trace, subs)
 				}
+				return trace
 			})
 		default:
 			// Plain l2s and l2s_full:
@@ -896,14 +897,15 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 			// But for l2s_full, Python ivy_l2s.py:101-104 (l2s_tactic_full)
 			// OVERWRITES with trace_hook = markLoopStart only. No renaming.
 			if tacticName == "l2s_full" {
-				result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
-					markLoopStart(handler)
+				result[0].TraceHook = TraceHookFn(func(trace *Trace, fcs []Checker) *Trace {
+					return markLoopStart(trace)
 				})
 			} else {
-				result[0].TraceHook = TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+				result[0].TraceHook = TraceHookFn(func(trace *Trace, fcs []Checker) *Trace {
 					if subs != nil {
-						applyRenamingToHandler(handler, subs)
+						trace = applyRenamingToTrace(trace, subs)
 					}
+					return trace
 				})
 			}
 		}

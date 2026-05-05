@@ -777,20 +777,21 @@ func TestCheckRankingTraceHook_Pattern(t *testing.T) {
 	// Verify the TraceHookFn type exists and can wrap a function.
 	subs := map[string]string{"_c0": "l2s_w_0"}
 	var hookCalled bool
-	hook := TraceHookFn(func(handler *MatchHandler, fcs []Checker) {
+	hook := TraceHookFn(func(trace *Trace, fcs []Checker) *Trace {
 		hookCalled = true
 		if subs != nil {
-			applyRenamingToHandler(handler, subs)
+			trace = applyRenamingToTrace(trace, subs)
 		}
+		return trace
 	})
-	// Call the hook with a simple handler.
-	handler := &MatchHandler{Lines: []string{"val=_c0"}}
-	hook(handler, nil)
+	// Call the hook with a simple trace.
+	trace := NewTrace(nil, nil, nil, nil, true)
+	hook(trace, nil)
 	if !hookCalled {
 		t.Error("Bug 16 regression: trace hook should be callable")
 	}
-	if handler.Lines[0] != "val=l2s_w_0" {
-		t.Errorf("Bug 16 regression: expected renaming applied, got %q", handler.Lines[0])
+	if trace.Renaming["_c0"] != "l2s_w_0" {
+		t.Errorf("Bug 16 regression: expected renaming applied, got %q", trace.Renaming["_c0"])
 	}
 }
 

@@ -694,40 +694,57 @@ func TestActionsHistorySatisfyNilPostReturnsNil(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestActionsComposeMaps(t *testing.T) {
-	m1 := LogicRenaming{"a": "b", "c": "d"}
-	m2 := LogicRenaming{"b": "e"}
+	a := actionsMkConst("a")
+	b := actionsMkConst("b")
+	c := actionsMkConst("c")
+	d := actionsMkConst("d")
+	e := actionsMkConst("e")
+	m1 := LogicRenaming{}
+	m1.Set(a, b)
+	m1.Set(c, d)
+	m2 := LogicRenaming{}
+	m2.Set(b, e)
 	result := ActionComposeMaps(m1, m2)
 	// a -> b -> e
-	if result["a"] != "e" {
-		t.Errorf("ComposeMaps a -> %s, want e", result["a"])
+	if got, ok := result.Get(a); !ok || got.Name != "e" {
+		t.Errorf("ComposeMaps a -> %v, want e", got)
 	}
 	// c -> d (d not in m2)
-	if result["c"] != "d" {
-		t.Errorf("ComposeMaps c -> %s, want d", result["c"])
+	if got, ok := result.Get(c); !ok || got.Name != "d" {
+		t.Errorf("ComposeMaps c -> %v, want d", got)
 	}
 	// b -> e (from m2)
-	if result["b"] != "e" {
-		t.Errorf("ComposeMaps b -> %s, want e", result["b"])
+	if got, ok := result.Get(b); !ok || got.Name != "e" {
+		t.Errorf("ComposeMaps b -> %v, want e", got)
 	}
 }
 
 func TestActionsComposeMapEmpty(t *testing.T) {
-	m1 := LogicRenaming{"a": "b"}
+	a := actionsMkConst("a")
+	b := actionsMkConst("b")
+	m1 := LogicRenaming{}
+	m1.Set(a, b)
 	m2 := LogicRenaming{}
 	result := ActionComposeMaps(m1, m2)
-	if result["a"] != "b" {
-		t.Errorf("ComposeMaps with empty m2: a -> %s, want b", result["a"])
+	if got, ok := result.Get(a); !ok || got.Name != "b" {
+		t.Errorf("ComposeMaps with empty m2: a -> %v, want b", got)
 	}
 }
 
 func TestActionsInverseMap(t *testing.T) {
-	m := LogicRenaming{"a": "b", "c": "d"}
+	a := actionsMkConst("a")
+	b := actionsMkConst("b")
+	c := actionsMkConst("c")
+	d := actionsMkConst("d")
+	m := LogicRenaming{}
+	m.Set(a, b)
+	m.Set(c, d)
 	inv := ActionInverseMap(m)
-	if inv["b"] != "a" {
-		t.Errorf("InverseMap b -> %s, want a", inv["b"])
+	if got, ok := inv.Get(b); !ok || got.Name != "a" {
+		t.Errorf("InverseMap b -> %v, want a", got)
 	}
-	if inv["d"] != "c" {
-		t.Errorf("InverseMap d -> %s, want c", inv["d"])
+	if got, ok := inv.Get(d); !ok || got.Name != "c" {
+		t.Errorf("InverseMap d -> %v, want c", got)
 	}
 }
 

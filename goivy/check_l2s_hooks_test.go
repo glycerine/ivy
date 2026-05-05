@@ -35,37 +35,37 @@ func TestTemporalAndL2S(t *testing.T) {
 	}
 }
 
-// --- applyRenamingToHandler ---
+// --- applyRenamingToTrace ---
 
-func TestApplyRenaming_NilHandler(t *testing.T) {
+func TestApplyRenaming_NilTrace(t *testing.T) {
 	// Must not panic.
-	applyRenamingToHandler(nil, map[string]string{"a": "b"})
+	if got := applyRenamingToTrace(nil, map[string]string{"a": "b"}); got != nil {
+		t.Errorf("expected nil trace, got %v", got)
+	}
 }
 
 func TestApplyRenaming_EmptySubs(t *testing.T) {
-	h := &MatchHandler{Lines: []string{"hello"}}
-	applyRenamingToHandler(h, nil)
-	if h.Lines[0] != "hello" {
-		t.Errorf("expected unchanged, got %q", h.Lines[0])
+	tr := NewTrace(nil, nil, nil, nil, true)
+	applyRenamingToTrace(tr, nil)
+	if tr.Renaming != nil {
+		t.Errorf("expected nil renaming, got %v", tr.Renaming)
 	}
 }
 
-func TestApplyRenaming_Replace(t *testing.T) {
-	h := &MatchHandler{Lines: []string{"val=_c42"}}
-	applyRenamingToHandler(h, map[string]string{"_c42": "l2s_w(X)"})
-	if h.Lines[0] != "val=l2s_w(X)" {
-		t.Errorf("expected val=l2s_w(X), got %q", h.Lines[0])
+func TestApplyRenaming_StoresStructuralMap(t *testing.T) {
+	tr := NewTrace(nil, nil, nil, nil, true)
+	applyRenamingToTrace(tr, map[string]string{"_c42": "l2s_w(X)"})
+	if got := tr.Renaming["_c42"]; got != "l2s_w(X)" {
+		t.Errorf("expected structural renaming, got %q", got)
 	}
 }
 
-func TestApplyRenaming_MultiLine(t *testing.T) {
-	h := &MatchHandler{Lines: []string{"_c1 and _c2", "_c2 only"}}
-	applyRenamingToHandler(h, map[string]string{"_c1": "a", "_c2": "b"})
-	if h.Lines[0] != "a and b" {
-		t.Errorf("line 0: expected 'a and b', got %q", h.Lines[0])
-	}
-	if h.Lines[1] != "b only" {
-		t.Errorf("line 1: expected 'b only', got %q", h.Lines[1])
+func TestApplyRenaming_RendersStructurally(t *testing.T) {
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState([]Expr{&Eq{T1: NewConst("_c1", Boolean), T2: False}})
+	applyRenamingToTrace(tr, map[string]string{"_c1": "a"})
+	if got := tr.String(); !strings.Contains(got, "a = false") {
+		t.Errorf("expected rendered structural rename, got %q", got)
 	}
 }
 
@@ -224,7 +224,7 @@ func TestExprNameSort_Panic(t *testing.T) {
 
 func TestEvalSkolem_NilHandler(t *testing.T) {
 	sk := NewConst("@X", Boolean)
-	val := evalSkolemInHandler(nil, sk)
+	val := evalSkolemInTrace(nil, sk)
 	if val != nil {
 		t.Error("expected nil for nil handler")
 	}
@@ -233,12 +233,9 @@ func TestEvalSkolem_NilHandler(t *testing.T) {
 func TestEvalSkolem_Found(t *testing.T) {
 	sk := NewConst("@X", Boolean)
 	rhs := NewConst("val42", Boolean)
-	h := &MatchHandler{
-		Eqs: map[NodeKey][]Expr{
-			Key(sk): {&Eq{T1: sk, T2: rhs}},
-		},
-	}
-	val := evalSkolemInHandler(h, sk)
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState([]Expr{&Eq{T1: sk, T2: rhs}})
+	val := evalSkolemInTrace(tr, sk)
 	if val == nil {
 		t.Fatal("expected non-nil value")
 	}
@@ -249,8 +246,9 @@ func TestEvalSkolem_Found(t *testing.T) {
 
 func TestEvalSkolem_NotFound(t *testing.T) {
 	sk := NewConst("@X", Boolean)
-	h := &MatchHandler{Eqs: make(map[NodeKey][]Expr)}
-	val := evalSkolemInHandler(h, sk)
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState(nil)
+	val := evalSkolemInTrace(tr, sk)
 	if val != nil {
 		t.Error("expected nil for missing key")
 	}
@@ -258,12 +256,9 @@ func TestEvalSkolem_NotFound(t *testing.T) {
 
 func TestEvalSkolem_EmptyEqsList(t *testing.T) {
 	sk := NewConst("@X", Boolean)
-	h := &MatchHandler{
-		Eqs: map[NodeKey][]Expr{
-			Key(sk): {},
-		},
-	}
-	val := evalSkolemInHandler(h, sk)
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState(nil)
+	val := evalSkolemInTrace(tr, sk)
 	if val != nil {
 		t.Error("expected nil for empty eqs list")
 	}
@@ -277,13 +272,12 @@ func TestEvalSkolems_AllFound(t *testing.T) {
 	v1 := NewConst("a", Boolean)
 	v2 := NewConst("b", Boolean)
 
-	h := &MatchHandler{
-		Eqs: map[NodeKey][]Expr{
-			Key(sk1): {&Eq{T1: sk1, T2: v1}},
-			Key(sk2): {&Eq{T1: sk2, T2: v2}},
-		},
-	}
-	vals := evalSkolems(h, []*Const{sk1, sk2})
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState([]Expr{
+		&Eq{T1: sk1, T2: v1},
+		&Eq{T1: sk2, T2: v2},
+	})
+	vals := evalSkolems(tr, []*Const{sk1, sk2})
 	if vals == nil {
 		t.Fatal("expected non-nil values")
 	}
@@ -297,13 +291,9 @@ func TestEvalSkolems_MissingOne(t *testing.T) {
 	sk2 := NewConst("@Y", Boolean)
 	v1 := NewConst("a", Boolean)
 
-	h := &MatchHandler{
-		Eqs: map[NodeKey][]Expr{
-			Key(sk1): {&Eq{T1: sk1, T2: v1}},
-			// sk2 missing
-		},
-	}
-	vals := evalSkolems(h, []*Const{sk1, sk2})
+	tr := NewTrace(nil, nil, nil, nil, true)
+	tr.AddState([]Expr{&Eq{T1: sk1, T2: v1}})
+	vals := evalSkolems(tr, []*Const{sk1, sk2})
 	if vals != nil {
 		t.Error("expected nil when one Skolem is missing")
 	}

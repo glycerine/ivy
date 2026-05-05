@@ -685,8 +685,7 @@ func ComposeUpdates(u1 *Update, axioms *Clauses, u2 *Update) *Update {
 	}
 
 	// Python: mid_ax = clauses_using_symbols(mid, axioms)
-	midSymNames := actionsConstNames(mid)
-	midAx := ClausesUsingSymbolNames(midSymNames, axioms)
+	midAx := ClausesUsingSymbols(actionsConstSet(mid), axioms)
 
 	// Python: used = used_symbols_clauses(and_clauses(clauses1, clauses2))
 	//         used.update(symbols_clauses(pre1))
@@ -1172,9 +1171,8 @@ func constSliceFromMap(m map[NodeKey]*Const) []*Const {
 func ForwardImageMap(preState *Clauses, axioms *Clauses, u *Update) (map[NodeKey]*Const, *Clauses) {
 	updated := u.Modified
 
-	// Filter axioms that reference updated symbols
-	updatedNames := actionsConstNames(updated)
-	preAx := ClausesUsingSymbolNames(updatedNames, axioms)
+	// Filter axioms that reference updated symbols.
+	preAx := ClausesUsingSymbols(actionsConstSet(updated), axioms)
 
 	// Conjoin pre-state with relevant axioms
 	pre := ConjoinClauses(preState, preAx)
@@ -1302,10 +1300,10 @@ func ComposeStateAction(
 	// is dead code that rebinds a local but is never read by the subsequent
 	// forward_image call (which is invoked with the original `action` tuple).
 	if !suAll {
-		ssu := actionsConstNames(su)
+		ssu := actionsConstSet(su)
 		rn := make(map[NodeKey]*Const)
 		for _, x := range au {
-			if !ssu[x.Name] {
+			if _, ok := ssu.Get2(Key(x)); !ok {
 				rn[Key(x)] = OldConst(x)
 			}
 		}
@@ -1412,8 +1410,7 @@ func ReverseImage(postState *Clauses, axioms *Clauses, u *Update) *Clauses {
 	updated := u.Modified
 
 	// Python: post_ax = clauses_using_symbols(updated, axioms)
-	updatedNames := actionsConstNames(updated)
-	postAx := ClausesUsingSymbolNames(updatedNames, axioms)
+	postAx := ClausesUsingSymbols(actionsConstSet(updated), axioms)
 
 	// Python: post_clauses = conjoin(post_state, post_ax)
 	postClauses := ConjoinClauses(postState, postAx)
@@ -1741,8 +1738,7 @@ func AddPostAxioms(u *Update, axioms *Clauses) *Update {
 	for _, sym := range u.Modified {
 		renaming[Key(sym)] = NewActionConst(sym)
 	}
-	modNames := actionsConstNames(u.Modified)
-	postAx := ClausesUsingSymbolNames(modNames, axioms)
+	postAx := ClausesUsingSymbols(actionsConstSet(u.Modified), axioms)
 	renamedAx := RenameClauses(postAx, renaming)
 	newTR := AndClausesTyped(u.TR, renamedAx)
 
@@ -1879,11 +1875,12 @@ func constKeys(syms []*Const) map[NodeKey]bool {
 	return m
 }
 
-// constNames returns a set of symbol names for name-based filtering.
-func actionsConstNames(syms []*Const) map[string]bool {
-	m := make(map[string]bool, len(syms))
+func actionsConstSet(syms []*Const) *InsMap[NodeKey, Expr] {
+	m := NewInsMap[NodeKey, Expr]()
 	for _, s := range syms {
-		m[s.Name] = true
+		if s != nil {
+			m.Set(Key(s), s)
+		}
 	}
 	return m
 }
@@ -2007,8 +2004,45 @@ type History struct {
 	Mod     *Module         // module for sort/symbol lookups (replaces global)
 }
 
-// Renaming maps symbol names to renamed versions.
-type LogicRenaming map[string]string
+// ConstRenaming records one structural symbol renaming.
+type ConstRenaming struct {
+	From *Const
+	To   *Const
+}
+
+// LogicRenaming maps structural symbol identity to renamed symbols.
+// Python stores History.maps as dicts keyed by Symbol objects; NodeKey keeps
+// Go from collapsing same-name symbols with different sorts.
+type LogicRenaming map[NodeKey]ConstRenaming
+
+func (m LogicRenaming) Set(from, to *Const) {
+	if from == nil || to == nil {
+		return
+	}
+	m[Key(from)] = ConstRenaming{From: from, To: to}
+}
+
+func (m LogicRenaming) Get(from *Const) (*Const, bool) {
+	if from == nil {
+		return nil, false
+	}
+	entry, ok := m[Key(from)]
+	if !ok {
+		return nil, false
+	}
+	return entry.To, true
+}
+
+func (m LogicRenaming) ToConstMap() map[NodeKey]*Const {
+	if len(m) == 0 {
+		return nil
+	}
+	result := make(map[NodeKey]*Const, len(m))
+	for key, entry := range m {
+		result[key] = entry.To
+	}
+	return result
+}
 
 // NewHistory creates a history from a pure-state update.
 func NewHistory(cfg *IvyUtilsConfig, state *Update) *History {
@@ -2030,11 +2064,10 @@ func NewHistory(cfg *IvyUtilsConfig, state *Update) *History {
 func (h *History) ForwardStep(axioms *Clauses, u *Update, action Expr) *History {
 	eqMap, result := ForwardImageMap(h.Post, axioms, u)
 
-	// Convert NodeKey→Const map to name→name Renaming.
 	renaming := make(LogicRenaming, len(eqMap))
 	for _, s := range u.Modified {
 		if renamed, ok := eqMap[Key(s)]; ok {
-			renaming[s.Name] = renamed.Name
+			renaming.Set(s, renamed)
 		}
 	}
 
@@ -2138,10 +2171,10 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 	for {
 		// Ignore all symbols except those representing the given past time.
 		// img = set of renamed values for non-skolem symbols
-		img := make(map[string]bool)
-		for s, v := range renaming {
-			if !IsSkolem(s) {
-				img[v] = true
+		img := make(map[NodeKey]bool)
+		for _, entry := range renaming {
+			if !IsSkolem(entry.From.Name) {
+				img[Key(entry.To)] = true
 			}
 		}
 
@@ -2150,33 +2183,20 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 		for k, v := range renaming {
 			renamingCopy[k] = v
 		}
-		imgCopy := make(map[string]bool, len(img))
+		imgCopy := make(map[NodeKey]bool, len(img))
 		for k, v := range img {
 			imgCopy[k] = v
 		}
 		ignore := func(sym *Const) bool {
 			// Python: not(s in img or not s.is_skolem() and s not in renaming)
-			inImg := imgCopy[sym.Name]
+			key := Key(sym)
+			inImg := imgCopy[key]
 			isSk := IsSkolem(sym.Name)
-			_, inRenaming := renamingCopy[sym.Name]
+			_, inRenaming := renamingCopy[key]
 			return !(inImg || (!isSk && !inRenaming))
 		}
 
-		// Handle final_cond: if list, or_clauses of conditions
-		allClauses := post
-		if len(finalCond) > 0 {
-			var condFmlas []Expr
-			for _, fc := range finalCond {
-				cond := fc.Cond()
-				if cond != nil {
-					condFmlas = append(condFmlas, cond.Fmlas...)
-				}
-			}
-			if len(condFmlas) > 0 {
-				fcClauses := NewClauses(condFmlas, nil, nil)
-				allClauses = AndClausesTyped(post, fcClauses)
-			}
-		}
+		allClauses := historyAllClausesForFinalCond(post, finalCond)
 
 		// Get the sub-model for the given past time as a formula
 		slv := NewSolver(h.Mod, nil)
@@ -2186,7 +2206,7 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 		}
 
 		// Map this formula into the past using inverse map
-		clauses = RenameClausesByName(clauses, ActionInverseMap(renaming))
+		clauses = RenameClauses(clauses, ActionInverseMap(renaming).ToConstMap())
 
 		// Remove tautology equalities
 		clauses = RemoveTautEqsClauses(clauses)
@@ -2208,15 +2228,39 @@ func (h *History) SatisfyWithCond(axioms *Clauses, getModelClauses func(*Clauses
 	universes := hm.Universes(numerals)
 
 	// Build path: reverse states and wrap each in pure_state
-	path := make([]*Update, len(states))
-	for i, cls := range states {
-		path[len(states)-1-i] = PureState(cls.ToFormula())
-	}
+	path := historyPathFromStates(states)
 
 	return &SatisfyResult{
 		Universes: universes,
 		Path:      path,
 	}
+}
+
+func historyPathFromStates(states []*Clauses) []*Update {
+	path := make([]*Update, len(states))
+	for i, cls := range states {
+		path[len(states)-1-i] = PureStateClauses(cls)
+	}
+	return path
+}
+
+func historyAllClausesForFinalCond(post *Clauses, finalCond []FinalCond) *Clauses {
+	if len(finalCond) == 0 {
+		return post
+	}
+	conds := make([]*Clauses, 0, len(finalCond))
+	for _, fc := range finalCond {
+		if fc == nil {
+			continue
+		}
+		if cond := fc.Cond(); cond != nil {
+			conds = append(conds, cond)
+		}
+	}
+	if len(conds) == 0 {
+		return post
+	}
+	return AndClausesTyped(post, OrClausesTyped(conds...))
 }
 
 // reverseRenamings returns a reversed copy of a renaming slice.
@@ -2238,11 +2282,11 @@ func ActionComposeMaps(m1, m2 LogicRenaming) LogicRenaming {
 		result[k] = v
 	}
 	// Apply m1, but if m1[k] is itself in m2, follow the chain
-	for k, v := range m1 {
-		if v2, ok := m2[v]; ok {
-			result[k] = v2
+	for k, entry := range m1 {
+		if next, ok := m2[Key(entry.To)]; ok {
+			result[k] = ConstRenaming{From: entry.From, To: next.To}
 		} else {
-			result[k] = v
+			result[k] = entry
 		}
 	}
 	return result
@@ -2251,8 +2295,8 @@ func ActionComposeMaps(m1, m2 LogicRenaming) LogicRenaming {
 // InverseMap returns the inverse of a renaming.
 func ActionInverseMap(m LogicRenaming) LogicRenaming {
 	result := make(LogicRenaming, len(m))
-	for k, v := range m {
-		result[v] = k
+	for _, entry := range m {
+		result.Set(entry.To, entry.From)
 	}
 	return result
 }

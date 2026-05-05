@@ -3,7 +3,11 @@
 package webui
 
 import (
+	"encoding/json"
 	goivy "github.com/glycerine/ivy/goivy"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -124,6 +128,89 @@ func TestBoundedCheckStoresBound(t *testing.T) {
 	if ui.CurrentBound != 7 {
 		t.Errorf("CurrentBound should be 7, got %d", ui.CurrentBound)
 	}
+}
+
+func TestBoundedCheckUsesAddInitialStateForInitializers(t *testing.T) {
+	cmd := pythonIvyCommandForWebTest(t, "-O", "-c", `
+import json
+from ivy import ivy_art, ivy_module as im, ivy_actions as act, logic as lg
+
+im.module = im.Module()
+im.module.initializers = [("init", act.AssumeAction(lg.true))]
+ag = ivy_art.AnalysisGraph()
+ag.add_initial_state(ag.init_cond)
+print(json.dumps({
+    "states": len(ag.states),
+    "has_initializer_expr": getattr(ag.states[0], "expr", None) is not None,
+}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python add_initial_state initializer oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		States             int  `json:"states"`
+		HasInitializerExpr bool `json:"has_initializer_expr"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python add_initial_state initializer oracle %q: %v", out, err)
+	}
+	if want.States != 1 || !want.HasInitializerExpr {
+		t.Fatalf("python add_initial_state oracle did not run initializer path: %+v", want)
+	}
+
+	S := &goivy.UninterpretedSort{Name: "S"}
+	X, _ := goivy.NewVariable("X", S)
+	pSort, _ := goivy.NewFunctionSort(S, goivy.Boolean)
+	P := goivy.NewConst("P", pSort)
+	PX, _ := goivy.NewApply(P, X)
+
+	mod := goivy.New()
+	mod.Sig = goivy.NewSig()
+	mod.Sig.Sorts.Set("S", S)
+	mod.Sig.Symbols.Set("P", &goivy.SymbolEntry{Sort: pSort})
+	mod.Relations.Set("P", pSort)
+	mod.Initializers = append(mod.Initializers, goivy.NamedAction{
+		Name:   "init",
+		Action: goivy.NewAssignAction(PX, goivy.True),
+	})
+
+	conj := goivy.NewClauses([]goivy.Expr{PX}, nil, goivy.EmptyAnnotation{})
+	ui := NewCTIAnalysisGraphUI(mod)
+	ui.Conjectures = []*goivy.Clauses{conj}
+
+	found, msg := ui.BoundedCheck(0, nil)
+	if found {
+		t.Fatalf("BoundedCheck found a depth-0 counterexample even though Python add_initial_state runs initializers: %s", msg)
+	}
+}
+
+func pythonIvyCommandForWebTest(t *testing.T, args ...string) *exec.Cmd {
+	t.Helper()
+	repoRoot, err := filepath.Abs("../..")
+	if err != nil {
+		t.Fatal(err)
+	}
+	pyivyRoot := filepath.Join(repoRoot, "pyivy", "ivy")
+	python := filepath.Join(repoRoot, "pyivy", "goivy-venv", "bin", "python3")
+	if _, err := os.Stat(python); err != nil {
+		if _, lookErr := exec.LookPath("python3"); lookErr != nil {
+			t.Skip("python3 not available")
+		}
+		python = "python3"
+	}
+	cmd := exec.Command(python, args...)
+	cmd.Dir = pyivyRoot
+	pythonPath := pyivyRoot
+	if existing := os.Getenv("PYTHONPATH"); existing != "" {
+		pythonPath += string(os.PathListSeparator) + existing
+	}
+	cmd.Env = append(os.Environ(),
+		"IVY_HOME="+pyivyRoot,
+		"PYTHONPATH="+pythonPath,
+	)
+	return cmd
 }
 
 // --- Diagram tests ---

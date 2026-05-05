@@ -507,17 +507,20 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 		// Python: vocab = lut.used_symbols_clauses(mclauses)
 		vocabMap := mclauses.Symbols()
 		vocab := make([]*Const, 0, vocabMap.Len())
+		traceVocab := make([]Expr, 0, vocabMap.Len())
 		for _, sym := range vocabMap.All() {
 			if c, ok := sym.(*Const); ok {
 				vocab = append(vocab, c)
+				traceVocab = append(traceVocab, c)
 			}
 		}
 
 		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
-		// In Go, MatchHandler implements actions.AnnotationHandler and does
-		// the same Eqs extraction as Python's Trace class.
-		// Build handler using the model and solver from SmallModelClauses.
-		handler := NewMatchHandler(mclauses, model, vocab, modelSlv)
+		hm := NewHerbrandModel(modelSlv, model.Solver, model.Model, vocab)
+		handler := NewTraceForModule(mod.Cfg.IuCfg, mod, mclauses, hm, traceVocab, true)
+		if modClauses, err := modelSlv.ClausesModelToClausesWithModel(mclauses, model, nil, true); err == nil {
+			handler.SetEqsFromClauses(modClauses)
+		}
 
 		// Python: thing = failed[-1].get_annot()
 		thing := failed[len(failed)-1].GetAnnot()
@@ -550,7 +553,7 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 		// Apply the trace hook attached by L2S tactics, if any. The hook is
 		// stored on Module/LabeledFormula.
 		if mod.TraceHook != nil {
-			mod.TraceHook(handler, ffcs)
+			handler = mod.TraceHook(handler, ffcs)
 		}
 
 		// Python: ff = failed[0]
@@ -877,17 +880,9 @@ func DisplayCex(mod *Module, msg string, ag interface{}) error {
 //	    state.value = value; state.universe = universe
 //	gui_art(other_art)
 func ShowCounterexample(ag *AnalysisGraph, state *State, bmcRes interface{}) {
-	// bmcRes should be a (universe, path) pair from BMC
-	type bmcResult struct {
-		Universe interface{}
-		Path     []*Update
-	}
-	res, ok := bmcRes.(*bmcResult)
+	// bmcRes should be the (universe, path) pair returned by History.Satisfy.
+	res, ok := bmcRes.(*SatisfyResult)
 	if !ok {
-		// bmcRes is not the expected struct (BMC result plumbing through
-		// history.SatisfyWithCond is incomplete — see followup item 4 in the
-		// merge plan). Hand off to GuiArt with a freshly-built graph so the
-		// hook still has something to display.
 		otherArt := NewAnalysisGraph(ag.Domain)
 		ag.CopyPath(state, otherArt, nil)
 		// Python: gui_art(other_art)
@@ -910,7 +905,7 @@ func ShowCounterexample(ag *AnalysisGraph, state *State, bmcRes interface{}) {
 	for i, s := range otherArt.States[startIdx:] {
 		if i < len(res.Path) {
 			s.Value = res.Path[i]
-			s.Universe = res.Universe
+			s.Universe = res.Universes
 		}
 	}
 

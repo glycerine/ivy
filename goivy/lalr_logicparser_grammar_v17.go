@@ -1170,8 +1170,8 @@ lalr17default:
 //line lalr_logicparser_grammar_v17.y:391
 		{
 			// Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
-			//         else: p[0] = LogicAnd(p[1], p[3])
-			// This flattens left-associative chains and absorbs true (LogicAnd{}) identity.
+			//         else: p[0] = And(p[1], p[3])
+			// This flattens left-associative chains and absorbs true (And{}) identity.
 			if a, ok := lalr17Dollar[1].node.(*And); ok {
 				a.Terms = append(a.Terms, lalr17Dollar[3].node)
 				lalr17VAL.node = a
@@ -1184,7 +1184,7 @@ lalr17default:
 //line lalr_logicparser_grammar_v17.y:403
 		{
 			// Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
-			//         else: p[0] = LogicOr(p[1], p[3])
+			//         else: p[0] = Or(p[1], p[3])
 			if o, ok := lalr17Dollar[1].node.(*Or); ok {
 				o.Terms = append(o.Terms, lalr17Dollar[3].node)
 				lalr17VAL.node = o

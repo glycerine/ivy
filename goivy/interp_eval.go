@@ -327,9 +327,10 @@ func stateValueToUpdate(sv *StateValue) *Update {
 		modified = append(modified, NewConst(name, TopS))
 	}
 	return &Update{
-		Modified: modified,
-		TR:       trClauses,
-		Pre:      preClauses,
+		Modified:    modified,
+		ModifiedAll: sv.Moded == nil,
+		TR:          trClauses,
+		Pre:         preClauses,
 	}
 }
 

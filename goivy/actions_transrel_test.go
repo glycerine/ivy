@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -545,6 +547,212 @@ func TestActionsHistoryForwardStep(t *testing.T) {
 	if len(h.Maps) != 0 {
 		t.Error("ForwardStep should not mutate original history")
 	}
+}
+
+func TestHistoryForwardStepPreservesSameNameSortVariantsLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_transrel as tr, ivy_logic_utils as lut, ivy_actions as act, logic as lg
+
+S = lg.UninterpretedSort("S")
+T = lg.UninterpretedSort("T")
+x_s = lg.Const("x", S)
+x_t = lg.Const("x", T)
+
+state = tr.pure_state(lut.true_clauses(act.EmptyAnnotation()))
+update = ([x_s, x_t], lut.true_clauses(act.EmptyAnnotation()), lut.false_clauses(act.EmptyAnnotation()))
+history = tr.History(state).forward_step(lut.true_clauses(), update)
+print(json.dumps({"map_len": len(history.maps[0])}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python History.forward_step same-name oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		MapLen int `json:"map_len"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python History.forward_step same-name oracle %q: %v", out, err)
+	}
+
+	sortS := &UninterpretedSort{Name: "S"}
+	sortT := &UninterpretedSort{Name: "T"}
+	xS := NewConst("x", sortS)
+	xT := NewConst("x", sortT)
+	update := &Update{
+		Modified: []*Const{xS, xT},
+		TR:       TrueClauses(EmptyAnnotation{}),
+		Pre:      FalseClauses(EmptyAnnotation{}),
+	}
+	history := NewHistory(NewIvyUtilsConfig(), PureStateClauses(TrueClauses(EmptyAnnotation{})))
+	next := history.ForwardStep(TrueClauses(nil), update, nil)
+	if len(next.Maps) != 1 {
+		t.Fatalf("ForwardStep maps len = %d, want 1", len(next.Maps))
+	}
+	if got := len(next.Maps[0]); got != want.MapLen {
+		t.Fatalf("History forward-step renaming collapsed same-name sort variants\nwant map len: %d\ngot map len:  %d", want.MapLen, got)
+	}
+}
+
+func TestForwardImageMapFiltersAxiomsBySymbolIdentityLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_transrel as tr, ivy_logic_utils as lut, ivy_actions as act, logic as lg
+from ivy.ivy_logic import Equals
+
+S = lg.UninterpretedSort("S")
+T = lg.UninterpretedSort("T")
+x_s = lg.Const("x", S)
+c_s = lg.Const("cS", S)
+x_t = lg.Const("x", T)
+c_t = lg.Const("cT", T)
+
+axioms = lut.Clauses([Equals(x_s, c_s), Equals(x_t, c_t)], annot=act.EmptyAnnotation())
+update = ([x_s], lut.true_clauses(act.EmptyAnnotation()), lut.false_clauses(act.EmptyAnnotation()))
+_map, res = tr.forward_image_map(lut.true_clauses(act.EmptyAnnotation()), axioms, update)
+print(json.dumps({"fmlas": len(res.fmlas)}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python forward_image_map axiom-filter oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		Fmlas int `json:"fmlas"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python forward_image_map axiom-filter oracle %q: %v", out, err)
+	}
+
+	sortS := &UninterpretedSort{Name: "S"}
+	sortT := &UninterpretedSort{Name: "T"}
+	xS := NewConst("x", sortS)
+	cS := NewConst("cS", sortS)
+	xT := NewConst("x", sortT)
+	cT := NewConst("cT", sortT)
+	eqS, _ := NewEq(xS, cS)
+	eqT, _ := NewEq(xT, cT)
+	axioms := NewClauses([]Expr{eqS, eqT}, nil, EmptyAnnotation{})
+	update := &Update{
+		Modified: []*Const{xS},
+		TR:       TrueClauses(EmptyAnnotation{}),
+		Pre:      FalseClauses(EmptyAnnotation{}),
+	}
+	_, got := ForwardImageMap(TrueClauses(EmptyAnnotation{}), axioms, update)
+	if len(got.Fmlas) != want.Fmlas {
+		t.Fatalf("ForwardImageMap axiom filtering differs from Python\nwant fmlas: %d\ngot fmlas:  %d\nclauses: %s", want.Fmlas, len(got.Fmlas), got)
+	}
+	if formulaContainsName(got.ToOpenFormula(), "cT") {
+		t.Fatalf("ForwardImageMap kept same-name/different-sort axiom for cT: %s", got)
+	}
+}
+
+type historyTestFinalCond struct {
+	cond *Clauses
+}
+
+func (f *historyTestFinalCond) Cond() *Clauses { return f.cond }
+func (f *historyTestFinalCond) Start()         {}
+func (f *historyTestFinalCond) Sat() bool      { return true }
+func (f *historyTestFinalCond) Unsat() bool    { return true }
+func (f *historyTestFinalCond) Assume() bool   { return false }
+
+func TestHistoryFinalCondListUsesOrClausesLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_logic as il, logic as lg
+from ivy.ivy_logic_utils import Clauses, true_clauses, or_clauses, and_clauses
+
+p = il.Symbol("p", lg.Boolean)
+q = il.Symbol("q", lg.Boolean)
+final_cond = or_clauses(Clauses([p]), Clauses([q]))
+all_clauses = and_clauses(true_clauses(), final_cond)
+print(json.dumps([str(f) for f in all_clauses.fmlas]))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python History final-cond oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want []string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python History final-cond oracle %q: %v", out, err)
+	}
+
+	p := NewConst("p", Boolean)
+	q := NewConst("q", Boolean)
+	allClauses := historyAllClausesForFinalCond(TrueClauses(nil), []FinalCond{
+		&historyTestFinalCond{cond: NewClauses([]Expr{p}, nil, nil)},
+		&historyTestFinalCond{cond: NewClauses([]Expr{q}, nil, nil)},
+	})
+	got := clauseFormulaStrings(allClauses)
+
+	if strings.Join(got, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("History final-cond clauses differ from Python OR semantics\nwant: %#v\ngot:  %#v", want, got)
+	}
+}
+
+type clauseShape struct {
+	Fmlas int  `json:"fmlas"`
+	Defs  int  `json:"defs"`
+	Same  bool `json:"same"`
+}
+
+func TestHistoryPathPreservesStateClausesLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_logic as il, logic as lg
+from ivy.ivy_logic_utils import Clauses
+from ivy.ivy_transrel import pure_state
+
+p = il.Symbol("p", lg.Boolean)
+definition = il.Definition(il.Symbol("d", lg.Boolean), p)
+clauses = Clauses([p], [definition])
+state = pure_state(clauses)
+print(json.dumps({
+    "fmlas": len(state[1].fmlas),
+    "defs": len(state[1].defs),
+    "same": state[1] is clauses,
+}))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python History pure_state oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want clauseShape
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python History pure_state oracle %q: %v", out, err)
+	}
+
+	p := NewConst("p", Boolean)
+	definition := NewIvyDefinition(NewConst("d", Boolean), p)
+	clauses := NewClauses([]Expr{p}, []*IvyDefinition{definition}, EmptyAnnotation{})
+	path := historyPathFromStates([]*Clauses{clauses})
+	if len(path) != 1 {
+		t.Fatalf("historyPathFromStates length=%d, want 1", len(path))
+	}
+	got := clauseShape{
+		Fmlas: len(path[0].TR.Fmlas),
+		Defs:  len(path[0].TR.Defs),
+		Same:  path[0].TR == clauses,
+	}
+
+	if got != want {
+		t.Fatalf("History path state clauses differ from Python pure_state preservation\nwant: %#v\ngot:  %#v", want, got)
+	}
+}
+
+func clauseFormulaStrings(clauses *Clauses) []string {
+	if clauses == nil {
+		return nil
+	}
+	result := make([]string, len(clauses.Fmlas))
+	for i, fmla := range clauses.Fmlas {
+		result[i] = fmla.String()
+	}
+	return result
 }
 
 // -----------------------------------------------------------------------

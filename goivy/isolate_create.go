@@ -38,6 +38,157 @@ type exportStub struct {
 func (e *exportStub) Exported() string { return e.name }
 func (e *exportStub) Scope() string    { return "" }
 
+func createImportWrappers(iso string, mod *Module) ([]string, map[string][]string, error) {
+	implMap := SetUpImplementationMap(mod)
+	outcalls := make(map[string]bool)
+	origImports := make(map[string]bool)
+	newImports := make([]Node, 0, len(mod.Imports))
+
+	for _, imp := range mod.Imports {
+		id, ok := imp.(interface{ Args() []Node })
+		if !ok {
+			newImports = append(newImports, imp)
+			continue
+		}
+		args := id.Args()
+		if len(args) < 2 {
+			newImports = append(newImports, imp)
+			continue
+		}
+		impname := isolateNodeRelname(args[0])
+		scope := isolateNodeRelname(args[1])
+		origImports[impname] = true
+		if scope == "" {
+			action, ok := mod.Actions.Get2(impname)
+			if !ok {
+				return nil, nil, fmt.Errorf("undefined action: %s", impname)
+			}
+			if seq, ok := action.(*LogicSequence); ok && len(seq.Elems) == 0 {
+				outcalls[impname] = true
+			} else {
+				return nil, nil, fmt.Errorf("cannot import implemented action: %s", impname)
+			}
+		} else {
+			newImports = append(newImports, imp)
+		}
+	}
+
+	var isoDef *IsolateDef
+	isoExists := false
+	if iso != "" {
+		isoDef, isoExists = mod.Isolates[iso]
+	}
+	if isoExists {
+		verified, present := GetIsolateInfoFull(mod, isoDef, "impl", nil)
+		savePrivates := mod.Privates
+		mod.Privates = copyMapBool(mod.Privates)
+		SetPrivatesFull(mod, isoDef, "")
+		verifiedActions := make(map[string]bool)
+		presentActions := make(map[string]bool)
+		for actname := range mod.Actions.All() {
+			if VStartsWithEqSome(actname, verified, mod, implMap) {
+				verifiedActions[actname] = true
+			}
+			if StartsWithEqSome(actname, present, mod, implMap) {
+				presentActions[actname] = true
+			}
+		}
+		for actname := range verifiedActions {
+			presentActions[actname] = true
+		}
+		mod.Privates = savePrivates
+		for actname := range presentActions {
+			action, ok := mod.Actions.Get2(actname)
+			if !ok {
+				continue
+			}
+			for _, called := range action.IterCalls() {
+				if !presentActions[called] {
+					outcalls[called] = true
+				}
+			}
+		}
+	}
+
+	extraWith := []string{}
+	extraStrip := make(map[string][]string)
+	outcallNames := make([]string, 0, len(outcalls))
+	for name := range outcalls {
+		outcallNames = append(outcallNames, name)
+	}
+	sort.Strings(outcallNames)
+	for _, name := range outcallNames {
+		impname := name
+		extname := "imp__" + impname
+		if mapped, ok := implMap[impname]; ok {
+			impname = mapped
+		}
+		action, ok := mod.Actions.Get2(impname)
+		if !ok {
+			continue
+		}
+		for _, attr := range []string{"spec", "impl", "private"} {
+			attrname := mod.Cfg.IuCfg.ComposeNames(impname, attr)
+			if val, ok := mod.Attributes[attrname]; ok {
+				extattrname := mod.Cfg.IuCfg.ComposeNames(extname, attr)
+				mod.Attributes[extattrname] = val
+			}
+		}
+
+		fp := action.GetFormalParams()
+		fr := action.GetFormalReturns()
+		calleeConst := NewConst(extname, TopS)
+		var retExprs []Expr
+		for _, r := range fr {
+			retExprs = append(retExprs, r)
+		}
+		call := NewCallActionOn(mod.Cfg.ActCfg, calleeConst, retExprs...)
+		if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
+			terms := make([]Node, len(fp))
+			for i, p := range fp {
+				terms[i] = p
+			}
+			call.AstCallee = mod.Cfg.AstCfg.NewAtom(extname, terms...)
+		}
+		call.SetFormalParams(fp)
+		call.SetFormalReturns(fr)
+		call.SetLineno(action.GetLineno())
+		mod.Actions.Set(impname, call)
+
+		stub := NewSequence()
+		CopyFormalsTo(action, stub)
+		stub.SetLineno(action.GetLineno())
+		mod.Actions.Set(extname, stub)
+
+		isExtract := iso != "" && isoExists && isoDef.IsExtract()
+		if origImports[name] || !isExtract {
+			newImports = append(newImports,
+				mod.Cfg.AstCfg.NewImportDef(mod.Cfg.AstCfg.NewAtom(extname), mod.Cfg.AstCfg.NewAtom("")))
+			extraWith = append(extraWith, impname)
+		}
+		if iso != "" && isoExists && origImports[name] {
+			stripNames := isolateParamStripNames(isoDef.Params())
+			extraStrip[impname] = stripNames
+			extraStrip[extname] = stripNames
+		}
+	}
+
+	mod.Imports = newImports
+	return extraWith, extraStrip, nil
+}
+
+func isolateParamStripNames(params []Node) []string {
+	res := make([]string, 0, len(params))
+	for _, p := range params {
+		if v, ok := p.(*Variable); ok {
+			res = append(res, v.ToConst("iso:").Relname())
+			continue
+		}
+		res = append(res, isolateNodeRelname(p))
+	}
+	return res
+}
+
 // CreateIsolate is the main entry point for isolate creation.
 // It processes an isolate definition, applies mixins, builds the
 // exported action set, and optionally applies the cone of influence filter.
@@ -116,6 +267,16 @@ func CreateIsolate(iso string, mod *Module) error {
 		origExports[expname] = true
 	}
 
+	extraWith := []string{}
+	extraStrip := map[string][]string{}
+	if isoCfg.CreateImports {
+		var err error
+		extraWith, extraStrip, err = createImportWrappers(iso, mod)
+		if err != nil {
+			return err
+		}
+	}
+
 	// Validate with-parameters
 	if iso != "" {
 		if err := CheckWithParameters(mod, iso); err != nil {
@@ -146,7 +307,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		for _, ai := range afterInits {
 			afterInitNames = append(afterInitNames, ai.Mixer())
 		}
-		err := IsolateComponent(mod, iso, nil, nil, afterInitNames)
+		err := IsolateComponent(mod, iso, extraWith, extraStrip, afterInitNames)
 		if err != nil {
 			return err
 		}
@@ -210,75 +371,6 @@ func CreateIsolate(iso string, mod *Module) error {
 	}
 
 	xtracer.Trace("check.CreateIsolate after_isolate_component")
-
-	// Python lines 1609-1673: create_imports processing.
-	// When CreateImports is enabled, create import actions for out-calls
-	// and external stubs.
-	if isoCfg.CreateImports {
-		SetUpImplementationMap(mod)
-		outcalls := make(map[string]bool)
-
-		// Process existing imports: find unimplemented actions
-		var newImports []Node
-		for _, imp := range mod.Imports {
-			type importDef interface {
-				Args() []Node
-			}
-			if id, ok := imp.(importDef); ok {
-				args := id.Args()
-				if len(args) >= 2 {
-					impname := isolateNodeRelname(args[0])
-					scope := isolateNodeRelname(args[1])
-					if scope == "" {
-						if _, ok := mod.Actions.Get2(impname); !ok {
-							return fmt.Errorf("undefined action: %s", impname)
-						}
-						action := mod.Actions.Get(impname)
-						if seq, ok := action.(*LogicSequence); ok && len(seq.Elems) == 0 {
-							outcalls[impname] = true
-						} else {
-							return fmt.Errorf("cannot import implemented action: %s", impname)
-						}
-					} else {
-						newImports = append(newImports, imp)
-					}
-				}
-			}
-		}
-
-		// Create external wrapper actions for out-calls
-		implMap := SetUpImplementationMap(mod)
-		for name := range outcalls {
-			impname := name
-			extname := "imp__" + impname
-			if mapped, ok := implMap[impname]; ok {
-				impname = mapped
-			}
-			action, ok := mod.Actions.Get2(impname)
-			if !ok {
-				continue
-			}
-			// Create a CallAction that calls the external wrapper
-			fp := action.GetFormalParams()
-			fr := action.GetFormalReturns()
-			calleeAtom := NewConst(extname, TopS)
-			var retExprs []Expr
-			for _, r := range fr {
-				retExprs = append(retExprs, r)
-			}
-			actCfg := mod.Cfg.ActCfg
-			call := NewCallActionOn(actCfg, calleeAtom, retExprs...)
-			call.SetFormalParams(fp)
-			call.SetFormalReturns(fr)
-			mod.Actions.Set(impname, call)
-
-			// Create empty stub for the external name
-			stub := NewSequence()
-			CopyFormalsTo(action, stub)
-			mod.Actions.Set(extname, stub)
-		}
-		mod.Imports = newImports
-	}
 
 	// === Post-isolate_component steps, in Python order (lines 1899-1954) ===
 

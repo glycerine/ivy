@@ -1,7 +1,9 @@
 package goivy
 
 import (
+	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -169,6 +171,139 @@ func TestDiagnoseParameter(t *testing.T) {
 
 	if cfg.Diagnose {
 		t.Error("diagnose should default to false")
+	}
+}
+
+func TestShowCounterexampleConsumesSatisfyResultLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_check, ivy_module as im
+
+im.module = im.Module()
+
+captured = {}
+
+class State(object):
+    pass
+
+class AnalysisGraph(object):
+    def copy_path(self, state, other_art, bound):
+        other_art.states = [State()]
+
+def fake_gui_art(other_art):
+    captured["state_count"] = len(other_art.states)
+    captured["value_assigned"] = other_art.states[0].value == "path0"
+    captured["universe_assigned"] = other_art.states[0].universe == {"S": ["0"]}
+
+ivy_check.gui_art = fake_gui_art
+universe = {"S": ["0"]}
+path = ["path0"]
+ivy_check.show_counterexample(AnalysisGraph(), object(), (universe, path))
+print(json.dumps(captured, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python show_counterexample oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want struct {
+		StateCount       int  `json:"state_count"`
+		ValueAssigned    bool `json:"value_assigned"`
+		UniverseAssigned bool `json:"universe_assigned"`
+	}
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python show_counterexample oracle %q: %v", out, err)
+	}
+	if !want.ValueAssigned || !want.UniverseAssigned {
+		t.Fatalf("python show_counterexample oracle did not assign value/universe: %+v", want)
+	}
+
+	mod := New()
+	ag := NewAnalysisGraph(mod)
+	source := NewState(mod, TrueClauses(EmptyAnnotation{}))
+	ag.Add(source, nil)
+	pathValue := PureStateClauses(FalseClauses(EmptyAnnotation{}))
+	sortS := &UninterpretedSort{Name: "S"}
+	universes := map[string][]Expr{"S": {NewConst("0:S", sortS)}}
+
+	var captured *AnalysisGraph
+	mod.Cfg.GuiArtHook = func(_ *Module, target interface{}, _ *Clauses) error {
+		var ok bool
+		captured, ok = target.(*AnalysisGraph)
+		if !ok {
+			t.Fatalf("GuiArtHook target type = %T, want *AnalysisGraph", target)
+		}
+		return nil
+	}
+
+	ShowCounterexample(ag, source, &SatisfyResult{
+		Universes: universes,
+		Path:      []*Update{pathValue},
+	})
+
+	if captured == nil {
+		t.Fatal("GuiArtHook was not called")
+	}
+	if len(captured.States) != want.StateCount {
+		t.Fatalf("ShowCounterexample copied state count differs from Python\nwant: %d\ngot:  %d", want.StateCount, len(captured.States))
+	}
+	got := captured.States[len(captured.States)-1]
+	if got.Value != pathValue {
+		t.Fatalf("ShowCounterexample did not assign SatisfyResult path value to copied state")
+	}
+	gotUniverses, ok := got.Universe.(map[string][]Expr)
+	if !ok || len(gotUniverses["S"]) != 1 {
+		t.Fatalf("ShowCounterexample did not assign SatisfyResult universes to copied state: %#v", got.Universe)
+	}
+}
+
+func TestInitializerGuaranteesUsePythonLeakedActionSemantics(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_module as im, logic as lg
+
+im.module = im.Module()
+first = act.AssertAction(lg.Const("A", lg.Boolean))
+last = act.AssertAction(lg.Const("B", lg.Boolean))
+im.module.initializers = [("a", first), ("z", last)]
+
+for actname, action in sorted(im.module.initializers, key=lambda x: x[0]):
+    pass
+guarantees = [sub for sub in action.iter_subactions()
+              if isinstance(sub, (act.AssertAction, act.Ranking))
+              for action in im.module.initializers]
+print(json.dumps([str(g.args[0]) for g in guarantees]))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python initializer guarantee oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want []string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python initializer guarantee oracle %q: %v", out, err)
+	}
+	if !reflect.DeepEqual(want, []string{"B", "B"}) {
+		t.Fatalf("python initializer guarantee oracle changed: %#v", want)
+	}
+
+	mod := New()
+	first := NewAssertAction(NewConst("A", Boolean))
+	last := NewAssertAction(NewConst("B", Boolean))
+	mod.Initializers = []NamedAction{
+		{Name: "a", Action: first},
+		{Name: "z", Action: last},
+	}
+
+	guarantees := initializerGuaranteesForCheckIsolate(mod)
+	got := make([]string, 0, len(guarantees))
+	for _, guarantee := range guarantees {
+		if assert, ok := guarantee.(*LogicAssertAction); ok {
+			got = append(got, fmt.Sprint(assert.Formula))
+		}
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Go initializer guarantees differ from Python leaked-action semantics\nwant: %#v\ngot:  %#v", want, got)
 	}
 }
 
@@ -399,6 +534,70 @@ func TestMatchHandlerHandle(t *testing.T) {
 	}
 	if len(h.Lines) != 1 {
 		t.Errorf("expected 1 line, got %d", len(h.Lines))
+	}
+}
+
+func TestMatchHandlerFormatsActionLocationLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_logic as il, ivy_utils as iu
+
+action = act.AssertAction(il.And())
+action.lineno = iu.Location("sample.ivy", 7)
+print(json.dumps("{}{}".format(action.lineno, action)))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python MatchHandler location oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python MatchHandler location oracle %q: %v", out, err)
+	}
+
+	h := NewMatchHandler(nil, nil, nil, nil)
+	action := NewAssertAction(True)
+	action.SetLineno(Location{Filename: "sample.ivy", Line: 7})
+	h.Handle(action, nil)
+
+	if len(h.Lines) != 1 {
+		t.Fatalf("MatchHandler line count=%d, want 1", len(h.Lines))
+	}
+	if got := h.Lines[0]; got != want {
+		t.Fatalf("MatchHandler formatted line differs from Python\nwant: %q\ngot:  %q", want, got)
+	}
+}
+
+func TestMatchHandlerHandlesLineZeroLocationLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_logic as il, ivy_utils as iu
+
+action = act.AssertAction(il.And())
+action.lineno = iu.Location("nowhere", 0)
+print(json.dumps("{}{}".format(action.lineno, action)))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python MatchHandler line-zero oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python MatchHandler line-zero oracle %q: %v", out, err)
+	}
+
+	h := NewMatchHandler(nil, nil, nil, nil)
+	action := NewAssertAction(True)
+	action.SetLineno(Location{Filename: "nowhere", Line: 0})
+	h.Handle(action, nil)
+
+	if len(h.Lines) != 1 {
+		t.Fatalf("MatchHandler line count=%d, want 1", len(h.Lines))
+	}
+	if got := h.Lines[0]; got != want {
+		t.Fatalf("MatchHandler line-zero formatted line differs from Python\nwant: %q\ngot:  %q", want, got)
 	}
 }
 

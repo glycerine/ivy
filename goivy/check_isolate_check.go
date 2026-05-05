@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -266,58 +267,12 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	//           if isinstance(sub, (act.AssertAction, act.Ranking))
 	//           for action in mod.initializers]
 	//
-	// code review comments:
-	// **A2. Python `check_isolate` initializer guarantee list comprehension
-	// is a Python bug; Go behavior diverges**
-	//
-	// Python `ivy_check.py` lines ~635-645:
-	// ```python
-	// if mod.initializers:
-	//     guarantees = [sub for sub in action.iter_subactions()
-	//                   if isinstance(sub,(act.AssertAction,act.Ranking))
-	//                   for action in mod.initializers]
-	// ```
-	// In Python 3, `action.iter_subactions()` at the START of the
-	// comprehension uses `action` from the **outer scope** (the last
-	// `env_action` from the preceding checked-actions loop), NOT from
-	// `for action in mod.initializers`. This is a Python 3 scoping bug
-	// in the original — the comprehension iterates the initializerslist
-	// but applies `iter_subactions()` on the WRONG action.
-	//
-	// Go's `isolate_check.go:284-358` correctly iterates each initializer
-	// action separately. **Go is more correct than Python here, but
-	// it diverges.** The test oracle should know about this.
-	//
-	// *Files:* `isolate_check.go:310-324
-	// *Severity:* MEDIUM — Go is BETTER than Python, but produces different output/behavior
+	// Python's comprehension uses the action variable leaked by the sorted
+	// initializer-printing loop above, then repeats those subactions once for
+	// every initializer tuple. This intentionally preserves that oracle shape.
 
 	if len(mod.Initializers) > 0 {
-		var guarantees []ActionsAction
-		for _, na := range mod.Initializers {
-			if act, ok := na.Action.(ActionsAction); ok {
-				for _, sub := range act.IterSubactions() {
-					isAssert := IsAssertLike(sub)
-					_, isRanking := sub.(*LogicRanking)
-					if isAssert || isRanking {
-						if IsGuaranteeModUnprovable(mod.Cfg, sub) {
-							guarantees = append(guarantees, sub)
-						}
-					}
-				}
-			}
-		}
-		// Python: if check_lineno is not None: guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
-		if mod.Cfg.CheckLineno != "" {
-			var filtered []ActionsAction
-			for _, sub := range guarantees {
-				if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
-					filtered = append(filtered, sub)
-				}
-			}
-			guarantees = filtered
-		}
-		// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
-		// (already filtered above)
+		guarantees := initializerGuaranteesForCheckIsolate(mod)
 		// Python: if guarantees and not unprovable: print header always; if check: verify
 		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
@@ -640,21 +595,106 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	return nil
 }
 
+func initializerGuaranteesForCheckIsolate(mod *Module) []ActionsAction {
+	if mod == nil || len(mod.Initializers) == 0 {
+		return nil
+	}
+
+	inits := make([]NamedAction, len(mod.Initializers))
+	copy(inits, mod.Initializers)
+	sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
+	action, _ := inits[len(inits)-1].Action.(ActionsAction)
+	if action == nil {
+		return nil
+	}
+
+	var guarantees []ActionsAction
+	for _, sub := range action.IterSubactions() {
+		isAssert := IsAssertLike(sub)
+		_, isRanking := sub.(*LogicRanking)
+		if isAssert || isRanking {
+			for range mod.Initializers {
+				guarantees = append(guarantees, sub)
+			}
+		}
+	}
+	if mod.Cfg.CheckLineno != "" {
+		var filtered []ActionsAction
+		for _, sub := range guarantees {
+			if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
+				filtered = append(filtered, sub)
+			}
+		}
+		guarantees = filtered
+	}
+	var filtered []ActionsAction
+	for _, sub := range guarantees {
+		if IsGuaranteeModUnprovable(mod.Cfg, sub) {
+			filtered = append(filtered, sub)
+		}
+	}
+	guarantees = filtered
+	return guarantees
+}
+
 // CheckSubgoals checks proof subgoals by constructing fake isolates.
 // Corresponds to Python's check_subgoals (lines 726-803).
 // For each goal:
 //   - If conclusion is TemporalModels: build a fake module from the model
 //     and call CheckIsolate recursively
 //   - Otherwise: convert goal to property and check in a minimal module
-func applyGoalTraceHook(goal *LabeledFormula) {
-	if goal == nil || goal.TraceHook == nil {
-		return
+type TraceFailure struct {
+	Trace *Trace
+	Cause error
+}
+
+func (tf *TraceFailure) Error() string {
+	if tf == nil {
+		return "<nil trace failure>"
 	}
-	goal.TraceHook(&MatchHandler{
-		Current:  make(map[NodeKey]string),
-		Eqs:      make(map[NodeKey][]Expr),
-		Renaming: make(map[NodeKey]*Const),
-	}, nil)
+	if tf.Trace != nil {
+		return tf.Trace.String()
+	}
+	if tf.Cause != nil {
+		return tf.Cause.Error()
+	}
+	return "trace failure"
+}
+
+func (tf *TraceFailure) Unwrap() error {
+	if tf == nil {
+		return nil
+	}
+	return tf.Cause
+}
+
+func traceFailureFromError(err error) (*TraceFailure, bool) {
+	var tf *TraceFailure
+	if errors.As(err, &tf) {
+		return tf, true
+	}
+	return nil, false
+}
+
+func applyGoalTraceHook(goal *LabeledFormula) *Trace {
+	if goal == nil || goal.TraceHook == nil {
+		return nil
+	}
+	return goal.TraceHook(NewTrace(nil, nil, nil, nil, true), nil)
+}
+
+func applyGoalTraceHookToFailure(goal *LabeledFormula, err error) (error, interface{}) {
+	target := interface{}(err)
+	if tf, ok := traceFailureFromError(err); ok && tf.Trace != nil {
+		trace := tf.Trace
+		if goal != nil && goal.TraceHook != nil {
+			trace = goal.TraceHook(trace, nil)
+			tf.Trace = trace
+		}
+		return tf, trace
+	}
+	applyGoalTraceHook(goal)
+	return err, target
 }
 
 func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Module) error {
@@ -802,10 +842,10 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
-					applyGoalTraceHook(goal)
+					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
-						fmt.Println(err)
+						fmt.Println(failureTarget)
 						cleanup()
 						wsorts.Exit()
 						ws.Exit()
@@ -813,7 +853,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					}
 					// Python: if diagnose.get(): gui_art(foo)
 					if mod.Cfg.Diagnose {
-						if guiErr := GuiArt(mod, err, nil); guiErr != nil {
+						if guiErr := GuiArt(mod, failureTarget, nil); guiErr != nil {
 							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
 						}
 					}
@@ -892,10 +932,10 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
-					applyGoalTraceHook(goal)
+					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
-						fmt.Println(err)
+						fmt.Println(failureTarget)
 						cleanup()
 						wsorts.Exit()
 						ws.Exit()
@@ -903,7 +943,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					}
 					// Python: if diagnose.get(): gui_art(foo)
 					if mod.Cfg.Diagnose {
-						if guiErr := GuiArt(mod, err, nil); guiErr != nil {
+						if guiErr := GuiArt(mod, failureTarget, nil); guiErr != nil {
 							fmt.Fprintf(os.Stderr, "GuiArt: %v\n", guiErr)
 						}
 					}

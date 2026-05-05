@@ -43,6 +43,11 @@ func VcToGoal(cfg *AstConfig, loc Location, name string, vc *Clauses, action Act
 //	return vc_to_goal(lineno, name, vc, action)
 func TripleToGoal(cfg *AstConfig, loc Location, name string, action ActionsAction,
 	precond []*LabeledFormula, postcond []*LabeledFormula) *LabeledFormula {
+	return TripleToGoalWithModule(nil, cfg, loc, name, action, precond, postcond)
+}
+
+func TripleToGoalWithModule(mod *Module, cfg *AstConfig, loc Location, name string, action ActionsAction,
+	precond []*LabeledFormula, postcond []*LabeledFormula) *LabeledFormula {
 	// Convert labeled formulas to clauses for MakeVC
 	var preClauses []*Clauses
 	for _, lf := range precond {
@@ -56,7 +61,7 @@ func TripleToGoal(cfg *AstConfig, loc Location, name string, action ActionsActio
 			postClauses = append(postClauses, NewClauses([]Expr{f}, nil, nil))
 		}
 	}
-	vc := MakeVC(action, preClauses, postClauses, false)
+	vc := MakeVCWithModule(mod, action, preClauses, postClauses, false)
 	return VcToGoal(cfg, loc, name, vc, action)
 }
 
@@ -385,15 +390,16 @@ func Vcgen(pc ProofCheckerInterface, decls []*LabeledFormula, proofNode Node) ([
 	loc := proofNode.GetLineno()
 
 	// Python: goal1 = triple_to_goal(proof.lineno, 'initiation', model.init, postcond=model.invars)
-	goal1 := TripleToGoal(pcAstCfg(pc), loc, "initiation", model.Init, nil, model.Invars)
+	mod := pc.GetModule()
+	goal1 := TripleToGoalWithModule(mod, pcAstCfg(pc), loc, "initiation", model.Init, nil, model.Invars)
 
 	// Python: goal2 = triple_to_goal(proof.lineno, 'consecution', tm.env_action(model.bindings),
 	//                                precond=model.invars+model.asms, postcond=model.invars)
-	envAct := TemporalEnvAction(pc.GetModule().Cfg.ActCfg, model.Bindings)
+	envAct := TemporalEnvAction(mod.Cfg.ActCfg, model.Bindings)
 	preconds := make([]*LabeledFormula, 0, len(model.Invars)+len(model.Asms))
 	preconds = append(preconds, model.Invars...)
 	preconds = append(preconds, model.Asms...)
-	goal2 := TripleToGoal(pcAstCfg(pc), loc, "consecution", envAct, preconds, model.Invars)
+	goal2 := TripleToGoalWithModule(mod, pcAstCfg(pc), loc, "consecution", envAct, preconds, model.Invars)
 
 	// Python: return [goal1, goal2] + decls[1:]
 	// Note: Python has a bug here: decls[1:] instead of decls (which was already decls[1:])

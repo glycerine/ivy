@@ -5,13 +5,13 @@ package goivy
 // an interactive UI.
 //
 // The `target` argument is interface{} to mirror Python's gui_art polymorphism:
-// callers pass either an *art.AnalysisGraph (from the ShowCounterexample /
-// DisplayCex paths) or a *check.MatchHandler (from the trace failure path).
+// callers pass either an *AnalysisGraph (from the ShowCounterexample /
+// DisplayCex paths) or a *Trace (from the trace failure path).
 // target stays interface{} because the Python entry point accepts both shapes,
 // and the hook implementation type-switches on the concrete value.
 //
-// The `isCti` argument carries the failing-conjecture clauses captured by
-// check.MatchHandler.IsCti, or nil for non-CTI counterexamples.
+// The `isCti` argument carries the failing-conjecture clauses captured by the
+// trace failure path, or nil for non-CTI counterexamples.
 //
 // The hook is responsible for any blocking UI loop and may call os.Exit if
 // it wishes to mirror Python's `exit(1)` at the end of gui_art

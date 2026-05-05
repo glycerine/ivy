@@ -105,29 +105,39 @@ func TestCopyFieldAction_ActionUpdate(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestMakeFieldUpdateFunc_NonRelationalSort(t *testing.T) {
-	// If the field doesn't have a binary relation sort, should return NullUpdate
+	// Python raises IvyError when the field is not a binary relation.
 	fldSym := NewConst("fld", TopS)
 	obj := NewConst("obj", TopS)
 	ctx := testCtx()
 
-	u := makeFieldUpdateFunc(fldSym, obj, func(v *LogicVariable) Expr {
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("expected panic for non-binary field")
+		}
+		if !strings.Contains(fmt.Sprint(r), "field fld must be a binary relation") {
+			t.Fatalf("unexpected panic: %v", r)
+		}
+	}()
+	_ = makeFieldUpdateFunc(fldSym, obj, func(v *LogicVariable) Expr {
 		return v
 	}, ctx)
-
-	if len(u.Modified) != 0 {
-		t.Errorf("Non-relational field should return null update, got modified=%v", u.Modified)
-	}
 }
 
 func TestMakeFieldUpdateFunc_NilField(t *testing.T) {
 	ctx := testCtx()
-	u := makeFieldUpdateFunc(nil, nil, func(v *LogicVariable) Expr {
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("expected panic for nil field")
+		}
+		if !strings.Contains(fmt.Sprint(r), "field <nil> must be a binary relation") {
+			t.Fatalf("unexpected panic: %v", r)
+		}
+	}()
+	_ = makeFieldUpdateFunc(nil, nil, func(v *LogicVariable) Expr {
 		return v
 	}, ctx)
-
-	if len(u.Modified) != 0 {
-		t.Errorf("nil field should return null update")
-	}
 }
 
 // ---------------------------------------------------------------------------

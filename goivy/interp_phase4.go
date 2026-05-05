@@ -207,8 +207,9 @@ func DecomposeAction(checkPrecond bool, cfg *IvyUtilsConfig, state2, state1 *Int
 		upd = NullUpdate()
 	}
 
-	// Use decomposition: try each decomposition path
-	comps := DecomposeWithState(act, state1.Clauses.ToFormula(), state2.Clauses.ToFormula(), false)
+	// Use decomposition: try each decomposition path. Python passes the full
+	// state value triples, not just the visible formulas.
+	comps := DecomposeWithUpdate(ctx, act, stateValueToUpdate(state1.Value()), stateValueToUpdate(state2.Value()), false)
 	bg := state1.Domain.BackgroundTheory(state1.InScope)
 
 	for _, comp := range comps {
@@ -224,7 +225,7 @@ func DecomposeAction(checkPrecond bool, cfg *IvyUtilsConfig, state2, state1 *Int
 		}
 
 		// Build a history from pre-state
-		h := NewHistory(cfg, PureStateClauses(FormulaToClauses(comp.Pre, nil)))
+		h := NewHistory(cfg, comp.Pre)
 
 		// Forward-step through each update
 		for _, upd := range upds {
@@ -233,7 +234,7 @@ func DecomposeAction(checkPrecond bool, cfg *IvyUtilsConfig, state2, state1 *Int
 
 		// Assume the post-state
 		if comp.Post != nil {
-			h = h.Assume(FormulaToClauses(comp.Post, nil))
+			h = h.Assume(comp.Post.TR)
 		}
 
 		// Check satisfiability

@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -56,6 +58,31 @@ func TestArtNewState(t *testing.T) {
 	}
 	if s.Clauses == nil {
 		t.Error("clauses should not be nil")
+	}
+}
+
+func TestArtNewStateAddsEmptyAnnotationLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_interp, ivy_module as im, ivy_logic_utils as lut
+
+mod = im.Module()
+state = mod.new_state(lut.true_clauses())
+print(json.dumps(type(state.clauses.annot).__name__))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python module.new_state annotation oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want string
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python module.new_state annotation oracle %q: %v", out, err)
+	}
+
+	state := NewState(New(), TrueClauses(nil))
+	if got := TypeName(state.Clauses.Annot); got != want {
+		t.Fatalf("NewState annotation differs from Python\nwant: %q\ngot:  %q", want, got)
 	}
 }
 
@@ -973,6 +1000,51 @@ func TestArtUnreachableNilClauses(t *testing.T) {
 	ag.Add(s, nil)
 	if ag.Unreachable(s) {
 		t.Error("nil clauses should not be unreachable")
+	}
+}
+
+func TestArtUnreachableUsesModuleOrderBackgroundTheoryLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_ast as ia
+from ivy import ivy_interp
+from ivy import ivy_logic as il
+from ivy import ivy_logic_utils as lu
+from ivy import ivy_module as im
+
+mod = im.Module()
+mod.labeled_axioms.append(ia.LabeledFormula(ia.Atom('ax'), il.Or()))
+mod.update_theory()
+state = mod.new_state(lu.true_clauses())
+false_state = ivy_interp.State(mod, lu.false_clauses())
+print(json.dumps({"order": bool(mod.order(state, false_state))}, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python module.order unreachable oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		Order bool `json:"order"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python module.order unreachable oracle %q: %v", out, err)
+	}
+	if !want.Order {
+		t.Fatal("python module.order oracle no longer covers true by false under inconsistent background theory")
+	}
+
+	mod := New()
+	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom("ax"), False))
+	mod.UpdateTheory()
+	ag := NewAnalysisGraph(mod)
+	s := NewState(mod, TrueClauses(nil))
+	ag.Add(s, nil)
+
+	if !ag.Unreachable(s) {
+		t.Fatal("Unreachable ignored module background theory; Python module.order covers the state by false")
+	}
+	if s.Clauses == nil || !s.Clauses.IsFalse() {
+		t.Fatalf("Unreachable should collapse the state to false clauses, got %v", s.Clauses)
 	}
 }
 

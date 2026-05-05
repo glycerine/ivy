@@ -434,39 +434,16 @@ func (a *LogicAssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 		return NullUpdate()
 	}
 
-	// Handle hierarchical case: if the symbol has children in the hierarchy
-	if ctx.Domain != nil && ctx.Domain.Hierarchy != nil {
-		if children, ok := ctx.Domain.Hierarchy.Get2(sym.Name); ok && children.Len() > 0 {
-			xtracer.Trace("actions.AssignAction.action_update branch=hierarchy")
-			// Decompose into sub-assignments for each child
-			var updates []*Update
-			axioms := ctx.BackgroundTheory()
-			for childName := range children.All() {
-				childSym := NewConst(childName, TopS)
-				childLHS := MustApply(childSym, nodeArgs(lhs)...)
-				childRHS := rhs // simplified: same RHS for each child
-				childAssign := NewAssignAction(childLHS, childRHS)
-				childUpdate := childAssign.ActionUpdate(ctx)
-				updates = append(updates, childUpdate)
-			}
-			if len(updates) == 0 {
-				return NullUpdate()
-			}
-			result := updates[0]
-			for _, u := range updates[1:] {
-				result = ComposeUpdates(result, axioms, u)
-			}
-			return result
-		}
-	}
+	// Python compares lhs.rep (a Const) directly against domain.hierarchy.
+	// Normal hierarchy entries are keyed by strings from add_to_hierarchy, so
+	// compiled AssignAction values do not enter Python's stale hierarchy branch.
 
 	// Partial application extension
 	// Python: xtra = len(lhs.rep.sort.dom) - len(lhs.args)
 	dom := SortDomain(sym.CSort)
 	xtra := len(dom) - len(nodeArgs(lhs))
 	if xtra < 0 {
-		// too many parameters
-		return NullUpdate()
+		panic(fmt.Sprintf("too many parameters in assignment to %s", sym.Name))
 	}
 	if xtra > 0 {
 		// Extend lhs and rhs with fresh placeholder variables
@@ -502,9 +479,15 @@ func (a *LogicAssignAction) ActionUpdate(ctx *UpdateContext) *Update {
 	rhsVars := UsedVariablesAST(rhs)
 	for k := range rhsVars {
 		if _, found := lhsVars[k]; !found {
-			// multiply assigned
-			return NullUpdate()
+			panic(fmt.Sprintf("multiply assigned: %s", sym.Name))
 		}
+	}
+
+	if err := TypeCheck(ctx.Domain, rhs); err != nil {
+		panic(err.Error())
+	}
+	if IsIndividual(lhs) != IsIndividual(rhs) {
+		panic(fmt.Sprintf("sort mismatch in assignment to %s", sym.Name))
 	}
 
 	// Handle destructor assignments
@@ -1040,12 +1023,11 @@ func (a *ReturnAction) IntUpdate(ctx *UpdateContext) *Update {
 func makeFieldUpdateFunc(field, obj Expr, rhsFunc func(v *LogicVariable) Expr, ctx *UpdateContext) *Update {
 	sym, ok := field.(*Const)
 	if sym == nil || !ok {
-		return NullUpdate()
+		panic(fmt.Sprintf("field %v must be a binary relation", field))
 	}
 	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok || !IsRelationalSort(sym.CSort) || len(fs.Domain()) != 2 {
-		// "field must be a binary relation"
-		return NullUpdate()
+		panic(fmt.Sprintf("field %s must be a binary relation", sym.Name))
 	}
 	v, _ := NewVariable("X", fs.Domain()[1])
 	// Build f(l, v) as Apply
@@ -1171,6 +1153,9 @@ func IntUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *LogicAssertAction:
+		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
+		return intUpdateFromActionUpdate(a, ctx)
+	case *LogicSubgoalAction:
 		xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 		return intUpdateFromActionUpdate(a, ctx)
 	case *LogicRequiresAction:

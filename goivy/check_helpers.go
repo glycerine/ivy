@@ -293,10 +293,10 @@ func (h *MatchHandler) IsSkolem(sym *Const) bool {
 // Implements actions.AnnotationHandler.
 func (h *MatchHandler) Handle(action ActionsAction, env map[NodeKey]Expr) {
 	// Python: if hasattr(action,'lineno'):
-	lineno := action.GetLineno()
-	if lineno.Line <= 0 {
+	if !action.HasLineno() {
 		return
 	}
+	lineno := action.GetLineno()
 
 	if !h.Started {
 		// Show initial values for vocab symbols not in env
@@ -338,7 +338,7 @@ func (h *MatchHandler) Handle(action ActionsAction, env map[NodeKey]Expr) {
 		}
 	}
 	// Python: print('{}{}'.format(action.lineno, action))
-	line := fmt.Sprintf("%d%v", lineno.Line, action)
+	line := fmt.Sprintf("%s%v", lineno, action)
 	h.Lines = append(h.Lines, line)
 	fmt.Println(line)
 }

@@ -588,6 +588,9 @@ func UsedSymbolsClauses(clauses *Clauses) *InsMap[NodeKey, Expr] {
 }
 
 func ClausesUsingSymbols(syms *InsMap[NodeKey, Expr], clauses *Clauses) *Clauses {
+	if clauses == nil || syms == nil || syms.Len() == 0 {
+		return NewClauses(nil, nil, nil)
+	}
 	var fmlas []Expr
 	for _, f := range clauses.Fmlas {
 		if usesSymbolsAST(syms, f) {

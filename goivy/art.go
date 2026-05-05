@@ -39,6 +39,9 @@ type State struct {
 
 // NewState creates a new state with the given domain and clauses.
 func NewState(domain *Module, clauses *Clauses) *State {
+	if clauses != nil && clauses.Annot == nil {
+		clauses = NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
+	}
 	return &State{
 		ID:      -1,
 		Domain:  domain,
@@ -516,11 +519,11 @@ func (ag *AnalysisGraph) IsCovered(node *State) bool {
 	return false
 }
 
-// Unreachable checks whether a node is unreachable by testing if its
-// clauses are unsatisfiable. If UNSAT, the node's clauses are replaced
-// with false and the method returns true.
+// Unreachable checks whether a node is covered by false under the module
+// ordering relation. If so, the node's clauses are replaced with false and
+// the method returns true.
 func (ag *AnalysisGraph) Unreachable(node *State) bool {
-	if node.Clauses == nil {
+	if node == nil || node.Clauses == nil || node.Domain == nil {
 		return false
 	}
 	// Already false is trivially unreachable.
@@ -528,20 +531,14 @@ func (ag *AnalysisGraph) Unreachable(node *State) bool {
 		return true
 	}
 
-	fmla := node.Clauses.ToFormula()
-	solver := NewSolver(node.Domain, nil)
-	t := solver.NewTranslator()
-	defer t.Close()
-
-	result, err := t.IsSat(fmla)
-	if err != nil {
-		log.Printf("art.Unreachable: z3bridge.IsSat error: %v; returning false", err)
-		return false
-	}
-	if result == Unsat {
+	covering := NewState(node.Domain, FalseClauses(nil))
+	ok, _ := ModuleOrder(ArtToInterpState(node), ArtToInterpState(covering))
+	if ok {
+		fmt.Printf("Unreachable: %d\n", node.ID)
 		node.Clauses = FalseClauses(node.Clauses.Annot)
 		return true
 	}
+	fmt.Println("Unreachability check failed")
 	return false
 }
 

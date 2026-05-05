@@ -127,17 +127,24 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 			fmt.Println("annotation error: IfAction should have IteAnnotation")
 			return
 		}
+		isSome := matchAnnotationIfConditionIsSome(ifAct)
 		rncond := envGetExpr(env, ite.Cond)
 		cond := handler.Eval(rncond)
 		if cond {
 			thenAction := extractActionFromNode(ifAct.ThenBody)
 			if thenAction != nil {
+				if isSome {
+					thenAction = matchAnnotationWrapSomeBranch(thenAction)
+				}
 				matchAnnotationRecur(thenAction, ite.ThenB, env, handler, -1, mod)
 			}
 		} else {
 			if ifAct.ElseBody != nil {
 				elseAction := extractActionFromNode(ifAct.ElseBody)
 				if elseAction != nil {
+					if isSome {
+						elseAction = matchAnnotationWrapSomeBranch(elseAction)
+					}
 					matchAnnotationRecur(elseAction, ite.ElseB, env, handler, -1, mod)
 				}
 			}
@@ -182,11 +189,11 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 				// Handle EnvAction without label
 				if envAct, ok := action.(*LogicEnvAction); ok {
 					if envAct.GetLabel() == "" && branchAction != nil {
-						callAct := &LogicEnvAction{}
 						label := "unknown"
 						if labeled, ok := branchAction.(interface{ GetLabel() string }); ok && labeled.GetLabel() != "" {
 							label = labeled.GetLabel()
 						}
+						callAct := matchAnnotationEnvCallAction(envAct, branchAction)
 						callAct.Label = "call " + label
 						handler.Handle(callAct, env)
 					}
@@ -260,6 +267,14 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		return
 	}
 
+	if failed, ok := action.(interface{ FailedAction() ActionsAction }); ok {
+		if inner := failed.FailedAction(); inner != nil {
+			matchAnnotationRecur(inner, annot, env, handler, -1, mod)
+		}
+		handler.Fail()
+		return
+	}
+
 	// Default: handle the action directly
 	handler.Handle(action, env)
 }
@@ -308,6 +323,34 @@ func envGetExpr(env map[NodeKey]Expr, cond Expr) Expr {
 	return cond
 }
 
+func matchAnnotationIfConditionIsSome(ifAct *LogicIfAction) bool {
+	if _, ok := ifAct.Cond.(*SomeCondition); ok {
+		return true
+	}
+	switch ifAct.AstCond.(type) {
+	case *Some, *SomeMin, *SomeMax:
+		return true
+	default:
+		return false
+	}
+}
+
+func matchAnnotationWrapSomeBranch(action ActionsAction) ActionsAction {
+	var emptyAnd Expr
+	emptyAnd, err := NewAnd()
+	if err != nil {
+		emptyAnd = True
+	}
+	return NewSequence(NewAssumeAction(emptyAnd), action)
+}
+
+func matchAnnotationEnvCallAction(envAct *LogicEnvAction, branchAction ActionsAction) *LogicEnvAction {
+	if envAct.ActCfg != nil {
+		return NewEnvActionOn(envAct.ActCfg, branchAction)
+	}
+	return &LogicEnvAction{LogicChoiceAction: LogicChoiceAction{Branches: []Expr{branchAction}}}
+}
+
 // extractActionFromNode tries to extract an Action from a lg.Expr.
 func extractActionFromNode(n interface{}) ActionsAction {
 	if n == nil {
@@ -348,10 +391,15 @@ func extractActionFromNode(n interface{}) ActionsAction {
 //	        rank = decreases.args[0]
 //	        aux = Symbol('$rank', rank.sort)
 //	        assumes.append(AssumeAction(Equals(aux, rank)))
+//	        assumes[-1].lineno = decreases.lineno
 //	        ltsym = Symbol('<', LogicRelationSort([rank.sort, rank.sort]))
 //	        exit_asserts.append(AssertAction(ltsym(rank, aux)))
+//	        exit_asserts[-1].lineno = decreases.lineno
 //	        entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
+//	        entry_asserts[-1].lineno = decreases.lineno
 //	    havocs = [HavocAction(sym) for sym in modset]
+//	    for h in havocs:
+//	        h.lineno = self.lineno
 //	    res = LogicSequence(*(
 //	        asserts + havocs + assumes +
 //	        [IfAction(self.args[0],
@@ -450,7 +498,9 @@ func expandWhile(w *LogicWhileAction, mod *Module) ActionsAction {
 		// assumes.append(AssumeAction(Equals(aux, rank)))
 		eqFmla := &Eq{T1: aux, T2: rank}
 		assumeEq := NewAssumeAction(eqFmla)
-		assumeEq.SetLineno(w.GetLineno())
+		if decreasesRanking.HasLineno() {
+			assumeEq.SetLineno(decreasesRanking.GetLineno())
+		}
 		assumes = append(assumes, assumeEq)
 
 		// ltsym = Symbol('<', LogicRelationSort([rank.sort, rank.sort]))
@@ -460,14 +510,18 @@ func expandWhile(w *LogicWhileAction, mod *Module) ActionsAction {
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
 		ltApp := MustApply(ltSym, rank, aux)
 		exitAssert := NewAssertAction(ltApp)
-		exitAssert.SetLineno(w.GetLineno())
+		if decreasesRanking.HasLineno() {
+			exitAssert.SetLineno(decreasesRanking.GetLineno())
+		}
 		exitAsserts = append(exitAsserts, exitAssert)
 
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
 		zeroSym := NewConst("0", rankSort)
 		ltZero := MustApply(ltSym, rank, zeroSym)
 		entryAssert := NewAssertAction(&LogicNot{Body: ltZero})
-		entryAssert.SetLineno(w.GetLineno())
+		if decreasesRanking.HasLineno() {
+			entryAssert.SetLineno(decreasesRanking.GetLineno())
+		}
 		entryAsserts = append(entryAsserts, entryAssert)
 	}
 

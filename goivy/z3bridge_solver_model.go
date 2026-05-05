@@ -220,9 +220,8 @@ func (s *Solver) GetSmallModelWithCond(
 						}
 						continue
 					}
-					if s.opts.Incremental {
-						z3solver.Pop()
-					}
+					// Python breaks before popping here, so the diagnostic
+					// model remains constrained by the failing final condition.
 					break // stop checking
 				} else {
 					overallResult = Unsat
@@ -438,6 +437,16 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	ignore func(*Const) bool,
 	numerals bool,
 ) (*Clauses, error) {
+	res, _, err := s.ClausesModelToClausesWithModelAndHerbrand(clauses, model, ignore, numerals)
+	return res, err
+}
+
+func (s *Solver) ClausesModelToClausesWithModelAndHerbrand(
+	clauses *Clauses,
+	model *ModelResult,
+	ignore func(*Const) bool,
+	numerals bool,
+) (*Clauses, *HerbrandModel, error) {
 	if ignore == nil {
 		ignore = func(*Const) bool { return false }
 	}
@@ -458,7 +467,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 		h = s.ModelIfNone(clauses, nil, nil)
 	}
 	if h == nil {
-		return nil, nil // unsat
+		return nil, nil, nil // unsat
 	}
 
 	// Extract model facts
@@ -487,7 +496,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	}
 
 	res = SubstituteConstantsClauses(res, subs)
-	return res, nil
+	return res, h, nil
 }
 
 // FilterRedundantFacts removes redundant negative formulas from clauses,

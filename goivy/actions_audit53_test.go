@@ -3,6 +3,8 @@ package goivy
 // Tests for fixes #10–#16 from §5.3 (BEHAVIORAL_DIFFERENCE items).
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -351,7 +353,7 @@ func TestAssignAction_PartialApplication(t *testing.T) {
 }
 
 func TestAssignAction_VariableCheck(t *testing.T) {
-	// f(X) := g(Y) where Y is not in LHS — should return null update
+	// f(X) := g(Y) where Y is not in LHS — Python raises IvyError.
 	sortS := actionsMkSort("S")
 	fSort := LogicRelationSort([]Sort{sortS})
 	fSym := NewConst("f", fSort)
@@ -369,12 +371,16 @@ func TestAssignAction_VariableCheck(t *testing.T) {
 	rhs, _ := NewApply(gSym, yVar)
 	a := NewAssignAction(lhs, rhs)
 	ctx := testCtx()
-	u := a.ActionUpdate(ctx)
-
-	// Should return null update (multiply assigned)
-	if len(u.Modified) != 0 {
-		t.Errorf("Variable check should reject: RHS var not in LHS, got modified=%v", u.Modified)
-	}
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("expected panic for RHS variable not bound by LHS")
+		}
+		if !strings.Contains(fmt.Sprint(r), "multiply assigned: f") {
+			t.Fatalf("unexpected panic: %v", r)
+		}
+	}()
+	_ = a.ActionUpdate(ctx)
 }
 
 // ---------------------------------------------------------------------------

@@ -24,9 +24,9 @@ type CheckGuiArtHook = GuiArtHook
 // behavior but with the data side-effects faithfully ported.
 //
 // `target` is interface{} to mirror Python's polymorphism: it accepts a
-// *art.AnalysisGraph (from ShowCounterexample) or a *MatchHandler (from the
-// trace failure path). `isCti` carries the failing-conjecture clauses from
-// MatchHandler.IsCti, or nil for non-CTI counterexamples.
+// *AnalysisGraph (from ShowCounterexample) or a *Trace (from the trace
+// failure path). `isCti` carries the failing-conjecture clauses from the trace
+// failure path, or nil for non-CTI counterexamples.
 func GuiArt(mod *Module, target interface{}, isCti *Clauses) error {
 	// Resolve the target to an AnalysisGraph for the data-setup branch.
 	// (The hook itself receives the original target unchanged.)
@@ -37,7 +37,7 @@ func GuiArt(mod *Module, target interface{}, isCti *Clauses) error {
 	case nil:
 		otherArt = NewAnalysisGraph(mod)
 	default:
-		// *MatchHandler or other handler types — leave otherArt nil; the
+		// *Trace or other handler types: leave otherArt nil; the
 		// "art" UI branch below will create a fresh graph just like Python.
 		_ = v
 	}

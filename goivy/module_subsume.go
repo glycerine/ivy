@@ -352,9 +352,6 @@ func DebugClausesList(cl []*Clauses) {
 // Unlike OrClausesTyped, this does NOT filter false branches (preserving
 // disjunct indices) and uses an empty used-names set with prefix __to0.
 func TaggedOrClauses(prefix string, args ...*Clauses) *Clauses {
-	if len(args) == 0 {
-		return TrueClauses(nil)
-	}
 	// Python: or_clauses_int(UniqueRenamer('__to0',dict()),args)
 	rn := NewUniqueRenamer("__to0", nil)
 	res, vs, processedArgs := orClausesIntWithVs(rn, args)

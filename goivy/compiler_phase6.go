@@ -2322,11 +2322,7 @@ func CheckProperties(mod *Module) error {
 				var err error
 				subgoals, err = prover.AdmitProposition(prop, pfNode)
 				if err != nil {
-					// On proof error, treat as unproved (match Python: errors propagate but we log)
-					pp("check_properties: proof error for %s: %v", labeledFormulaName(prop), err)
-					xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (proof error)", propLabel)
-					mod.LabeledProps = append(mod.LabeledProps, prop)
-					continue
+					return err
 				}
 			}
 			xtracer.Trace("compiler.CheckProperties.classify label=%s subgoals=%d", propLabel, len(subgoals))
@@ -2413,14 +2409,14 @@ func CheckProperties(mod *Module) error {
 					// Python: prover.admit_proposition(nprop, ivy_ast.ComposeTactics())
 					if prover != nil {
 						if _, err := prover.AdmitProposition(nprop, mod.Cfg.AstCfg.NewComposeTactics(nil)); err != nil {
-							pp("check_properties: admit error for %s: %v", labeledFormulaName(nprop), err)
+							return err
 						}
 					}
 				} else {
 					// Python: prover.admit_proposition(prop, ivy_ast.ComposeTactics())
 					if prover != nil {
 						if _, err := prover.AdmitProposition(prop, mod.Cfg.AstCfg.NewComposeTactics(nil)); err != nil {
-							pp("check_properties: admit error for %s: %v", labeledFormulaName(prop), err)
+							return err
 						}
 					}
 				}

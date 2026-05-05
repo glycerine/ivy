@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 )
@@ -773,6 +774,102 @@ func TestStripSortFromModule(t *testing.T) {
 		if s == "mysort" {
 			t.Error("sort should be removed from sort order")
 		}
+	}
+}
+
+const isolateImportWrapperSource = `#lang ivy1.6
+import action ping
+
+action run = { call ping }
+export run
+`
+
+func TestCreateIsolateImportWrapperMetadataMatchesPython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import io
+import json
+from ivy import ivy_compiler as ic, ivy_isolate as iso, ivy_module as im
+
+iso.create_imports.set('true')
+src = `+pythonTripleQuote(isolateImportWrapperSource)+`
+with im.Module():
+    decls = ic.read_module(io.StringIO(src))
+    ic.ivy_compile(decls, im.module, create_isolate=False)
+    im.module.attributes['ping.private'] = 'yes'
+    iso.create_isolate(None, im.module)
+    print(json.dumps({
+        "imports": [imp.imported() for imp in im.module.imports],
+        "actions": sorted(im.module.actions.keys()),
+        "imp_private": im.module.attributes.get('imp__ping.private'),
+        "ping_type": type(im.module.actions['ping']).__name__,
+        "imp_type": type(im.module.actions['imp__ping']).__name__,
+        "ping_line": im.module.actions['ping'].lineno.line,
+        "imp_line": im.module.actions['imp__ping'].lineno.line,
+    }, sort_keys=True))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python import-wrapper oracle failed: %v\n%s", err, out)
+	}
+	var want struct {
+		Imports    []string `json:"imports"`
+		Actions    []string `json:"actions"`
+		ImpPrivate string   `json:"imp_private"`
+		PingType   string   `json:"ping_type"`
+		ImpType    string   `json:"imp_type"`
+		PingLine   int      `json:"ping_line"`
+		ImpLine    int      `json:"imp_line"`
+	}
+	if err := json.Unmarshal(out, &want); err != nil {
+		t.Fatalf("decode python import-wrapper oracle %q: %v", out, err)
+	}
+	if len(want.Imports) != 1 || want.Imports[0] != "imp__ping" || want.ImpPrivate != "yes" || want.PingLine == 0 || want.ImpLine == 0 {
+		t.Fatalf("python import-wrapper oracle sanity check failed: %+v", want)
+	}
+
+	result, err := Parse(isolateImportWrapperSource, Version{1, 6})
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	mod := New()
+	mod.Cfg = NewConfig()
+	mod.Cfg.IsolateCfg.CreateImports = true
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
+		t.Fatalf("IvyCompile: %v", err)
+	}
+	mod.Attributes["ping.private"] = "yes"
+	if err := CreateIsolate("", mod); err != nil {
+		t.Fatalf("CreateIsolate: %v", err)
+	}
+
+	var imports []string
+	for _, imp := range mod.Imports {
+		if id, ok := imp.(*ImportDef); ok {
+			imports = append(imports, labelName(id.Imported))
+		}
+	}
+	if strings.Join(imports, ",") != strings.Join(want.Imports, ",") {
+		t.Fatalf("wrapper imports differ from Python\nwant: %#v\ngot:  %#v", want.Imports, imports)
+	}
+	if got := mod.Attributes["imp__ping.private"]; got != want.ImpPrivate {
+		t.Fatalf("wrapper private attribute differs from Python\nwant: %q\ngot:  %q", want.ImpPrivate, got)
+	}
+	ping, ok := mod.Actions.Get2("ping")
+	if !ok {
+		t.Fatal("missing rewritten ping action")
+	}
+	imp, ok := mod.Actions.Get2("imp__ping")
+	if !ok {
+		t.Fatal("missing imp__ping stub action")
+	}
+	if _, ok := ping.(*LogicCallAction); !ok || want.PingType != "CallAction" {
+		t.Fatalf("ping action type differs from Python\nwant: %s\ngot:  %T", want.PingType, ping)
+	}
+	if _, ok := imp.(*LogicSequence); !ok || want.ImpType != "Sequence" {
+		t.Fatalf("imp__ping action type differs from Python\nwant: %s\ngot:  %T", want.ImpType, imp)
+	}
+	if ping.GetLineno().Line != want.PingLine || imp.GetLineno().Line != want.ImpLine {
+		t.Fatalf("wrapper line numbers differ from Python\nwant ping/imp: %d/%d\ngot ping/imp:  %d/%d", want.PingLine, want.ImpLine, ping.GetLineno().Line, imp.GetLineno().Line)
 	}
 }
 

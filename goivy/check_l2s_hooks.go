@@ -12,10 +12,10 @@ import (
 )
 
 // TraceHookFn is the function type stored in LabeledFormula.TraceHook and
-// propagated to Module.TraceHook by L2S tactics. It is invoked by the trace
-// formatter in check.go after constructing a MatchHandler from the failing
-// checker. Mirrors Python's goal.trace_hook closure (ivy_l2s.py:1311-1313).
-type TraceHookFn func(handler *MatchHandler, fcs []Checker)
+// propagated to Module.TraceHook by L2S tactics. It is invoked after the
+// failing annotation has been replayed into an ivy_trace.Trace-equivalent
+// object. Mirrors Python's goal.trace_hook closure (ivy_l2s.py:1311-1313).
+type TraceHookFn func(trace *Trace, fcs []Checker) *Trace
 
 // TemporalAndL2S returns true for symbol names that are temporal/l2s
 // auxiliary symbols (to be hidden in traces).
@@ -42,8 +42,9 @@ func L2sGToGlobally(expr Expr) Expr {
 	return DenormalizeTemporal(res)
 }
 
-// markLoopStart scans MatchHandler's Eqs for l2s_saved = true and sets
-// LoopStart. Mirrors Python ivy_l2s.py:113-122 trace_hook.
+// markLoopStart scans trace states for l2s_saved = true and marks the
+// preceding state as the fairness loop start. Mirrors Python ivy_l2s.py:113-122
+// trace_hook.
 //
 //	def trace_hook(tr,fcs):
 //	    for idx,state in enumerate(tr.states):
@@ -54,70 +55,69 @@ func L2sGToGlobally(expr Expr) Expr {
 //	                return tr
 //	    print("failed to find loop start!")
 //	    return tr
-func markLoopStart(handler *MatchHandler) {
-	if handler == nil {
-		return
+func markLoopStart(trace *Trace) *Trace {
+	if trace == nil {
+		return trace
 	}
-	savedKey := Key(NewConst("l2s_saved", Boolean))
-	eqs, ok := handler.Eqs[savedKey]
-	if !ok {
-		fmt.Println("failed to find loop start!")
-		return
-	}
-	for _, eq := range eqs {
-		if e, ok := eq.(*Eq); ok {
-			if IsTrue(e.T2) {
-				handler.LoopStart = 0
-				return
+	for idx, state := range trace.TraceStates {
+		if state == nil || state.State == nil || state.State.Clauses == nil {
+			continue
+		}
+		for _, fmla := range state.State.Clauses.Fmlas {
+			if e, ok := fmla.(*Eq); ok {
+				if traceLHSRepName(e.T1) == "l2s_saved" && IsTrue(e.T2) {
+					markIdx := idx
+					if markIdx > 0 {
+						markIdx--
+					}
+					trace.TraceStates[markIdx].LoopStart = true
+					return trace
+				}
 			}
 		}
 	}
 	fmt.Println("failed to find loop start!")
+	return trace
 }
 
-// applyRenamingToHandler applies subs to the MatchHandler's Lines.
-// subs maps {fresh-const-name → original-binder-key}; we rewrite
-// occurrences in each line. Mirrors Python ivy_l2s.py:1349-1350 renaming_hook:
+// applyRenamingToTrace installs a structural trace renaming.
+// subs maps {fresh-const-name → original-binder-key}. Mirrors Python
+// ivy_l2s.py:1513-1515 renaming_hook:
 //
 //	def renaming_hook(subs,tr,fcs):
 //	    return tr.rename(dict((x,y) for (y,x) in subs.items()))
-func applyRenamingToHandler(handler *MatchHandler, subs map[string]string) {
-	if handler == nil || len(subs) == 0 {
-		return
+func applyRenamingToTrace(trace *Trace, subs map[string]string) *Trace {
+	if trace == nil || len(subs) == 0 {
+		return trace
 	}
 	rsubs := make(map[string]string, len(subs))
 	for k, v := range subs {
 		rsubs[k] = v
 	}
-	for i, line := range handler.Lines {
-		out := line
-		for fresh, orig := range rsubs {
-			out = strings.ReplaceAll(out, fresh, orig)
-		}
-		handler.Lines[i] = out
-	}
+	trace.Rename(rsubs)
+	return trace
 }
 
-// applyAutoDiagnosticsToHandler dispatches to the auto-failure diagnostic
+// applyAutoDiagnosticsToTrace dispatches to the auto-failure diagnostic
 // printer based on which checker failed. Mirrors Python ivy_l2s.py:1528-1702
 // auto_hook.
 //
 // rsubs maps nonce const name → original NamedBinder (inverse of SharedStep11 subs).
 // fullSubs maps binder.Sexp() → nonce Const (the SharedStep11 subs map).
 // Both are needed by extractJusticePredMap to navigate l2s_progress_invar formulas.
-func applyAutoDiagnosticsToHandler(
-	handler *MatchHandler,
+func applyAutoDiagnosticsToTrace(
+	trace *Trace,
 	fcs []Checker,
 	tasks map[string]map[string]*Eq,
 	triggers map[string]map[string]*Eq,
 	rsubs map[string]*LogicNamedBinder,
 	fullSubs map[string]Expr,
-) {
-	if handler == nil {
-		return
+) *Trace {
+	if trace == nil {
+		return trace
 	}
 	// Python ivy_l2s.py:1529: tr.pp = ls2_g_to_globally
-	handler.PP = L2sGToGlobally
+	trace.PP = L2sGToGlobally
 
 	// Python: failed_fc = [fc for fc in fcs if fc.failed()][0]
 	var failedFC Checker
@@ -128,11 +128,11 @@ func applyAutoDiagnosticsToHandler(
 		}
 	}
 	if failedFC == nil {
-		return
+		return trace
 	}
 	lf := failedFC.GetLF()
 	if lf == nil {
-		return
+		return trace
 	}
 
 	// Python ivy_l2s.py:1541-1552: extract justice_pred_map from progress_invar
@@ -140,7 +140,8 @@ func applyAutoDiagnosticsToHandler(
 	justicePredMap := extractJusticePredMap(fcs, rsubs, fullSubs)
 
 	name := lfName(lf)
-	diagnoseAutoFailure(name, tasks, triggers, lf, handler, justicePredMap)
+	diagnoseAutoFailure(name, tasks, triggers, lf, trace, justicePredMap)
+	return trace
 }
 
 // extractJusticePredMap builds a map from task suffix to justice predicate
@@ -224,25 +225,17 @@ func extractJusticePredMap(fcs []Checker,
 	return result
 }
 
-// evalSkolemInHandler evaluates a Skolem symbol (@name) by looking it up
-// in the handler's Eqs map. Returns the RHS value if found, else nil.
-// Mirrors Python tr.eval_in_state(state, sk) for the post-state.
-func evalSkolemInHandler(handler *MatchHandler, sk *Const) Expr {
-	if handler == nil || handler.Eqs == nil {
+// evalSkolemInTrace evaluates a Skolem symbol (@name) in the trace post-state.
+// Mirrors Python tr.eval_in_state(post_state, sk).
+func evalSkolemInTrace(trace *Trace, sk *Const) Expr {
+	if trace == nil || len(trace.TraceStates) == 0 {
 		return nil
 	}
-	key := Key(sk)
-	eqs, ok := handler.Eqs[key]
-	if !ok || len(eqs) == 0 {
+	postState := trace.TraceStates[len(trace.TraceStates)-1]
+	if postState == nil || postState.State == nil {
 		return nil
 	}
-	// Each eq is an equality; extract the RHS.
-	for _, eq := range eqs {
-		if e, ok := eq.(*Eq); ok {
-			return e.T2
-		}
-	}
-	return nil
+	return EvalInState(postState.State, sk)
 }
 
 // predLHSArgs extracts the LHS arguments from a predicate Eq definition.
@@ -302,21 +295,32 @@ func exprNameSort(e Expr) (string, Sort) {
 	}
 }
 
-// evalSkolems evaluates all Skolem symbols in the handler, returning the
-// values. Returns nil if any value is missing.
+// evalSkolems evaluates all Skolem symbols in the trace post-state, returning
+// the values. Returns nil if any value is missing.
 // Python: vals = [tr.eval_in_state(post_state, sk) for sk in sks]
 //
 //	if None not in vals: ...
-func evalSkolems(handler *MatchHandler, sks []*Const) []Expr {
+func evalSkolems(trace *Trace, sks []*Const) []Expr {
 	vals := make([]Expr, len(sks))
 	for i, sk := range sks {
-		val := evalSkolemInHandler(handler, sk)
+		val := evalSkolemInTrace(trace, sk)
 		if val == nil {
 			return nil // "None in vals"
 		}
 		vals[i] = val
 	}
 	return vals
+}
+
+func traceStateFmlas(trace *Trace, idx int) []Expr {
+	if trace == nil || idx < 0 || idx >= len(trace.TraceStates) {
+		return nil
+	}
+	ts := trace.TraceStates[idx]
+	if ts == nil || ts.State == nil || ts.State.Clauses == nil {
+		return nil
+	}
+	return ts.State.Clauses.Fmlas
 }
 
 // applyPredToVals builds pred.rep(*vals) — applies the predicate function
@@ -387,7 +391,7 @@ func diagnoseAutoFailure(
 	name string,
 	tasks, triggers map[string]map[string]*Eq,
 	lf *LabeledFormula,
-	handler *MatchHandler,
+	trace *Trace,
 	justicePredMap map[string]*Const,
 ) {
 	switch {
@@ -406,15 +410,15 @@ func diagnoseAutoFailure(
 		}
 		vs := predLHSArgs(wc)
 		sks := makeSkolems(vs)
-		vals := evalSkolems(handler, sks)
+		vals := evalSkolems(trace, sks)
 		if vals != nil {
 			rep := predLHSRep(wc)
 			pred := applyPredToVals(rep, vals)
 			fmt.Printf("Note: %s is true in the post-state of the action, but not in the pre-state,\n", pred)
 			fmt.Printf("and its argument(s) are not visited during the action execution.\n\n")
 		}
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1571-1587
@@ -432,7 +436,7 @@ func diagnoseAutoFailure(
 		}
 		vs := predLHSArgs(wn)
 		sks := makeSkolems(vs)
-		vals := evalSkolems(handler, sks)
+		vals := evalSkolems(trace, sks)
 		if vals != nil {
 			wnRep := predLHSRep(wn)
 			wcRep := predLHSRep(wc)
@@ -440,8 +444,8 @@ func diagnoseAutoFailure(
 			pred2 := applyPredToVals(wcRep, vals)
 			fmt.Printf("Note: the start condition occurs during the action and %s is true in the post-state of the action, but %s is not true.\n", pred1, pred2)
 		}
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1589-1601
@@ -458,14 +462,14 @@ func diagnoseAutoFailure(
 		}
 		vs := predLHSArgs(wn)
 		sks := makeSkolems(vs)
-		vals := evalSkolems(handler, sks)
+		vals := evalSkolems(trace, sks)
 		if vals != nil {
 			rep := predLHSRep(wn)
 			pred := applyPredToVals(rep, vals)
 			fmt.Printf("Note: work_invar%s is true and %s changes from false to true.\n\n", sfx, pred)
 		}
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1603-1615
@@ -482,14 +486,14 @@ func diagnoseAutoFailure(
 		}
 		vs := predLHSArgs(wn)
 		sks := makeSkolems(vs)
-		vals := evalSkolems(handler, sks)
+		vals := evalSkolems(trace, sks)
 		if vals != nil {
 			rep := predLHSRep(wn)
 			pred := applyPredToVals(rep, vals)
 			fmt.Printf("Note: work_invar%s is true and %s changes from false to true.\n\n", sfx, pred)
 		}
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1617-1673
@@ -546,61 +550,51 @@ func diagnoseAutoFailure(
 
 		// --- Build helpful_map from pre-state (Python: tr.states[0].clauses.fmlas) ---
 		// Python ivy_l2s.py:1627-1632
-		// In Go: pre-state equalities in handler.Eqs are keyed by the bare symbol name.
-		// handler.Eqs is populated from the combined 2-state clauses model, which includes
-		// both pre-state atoms (bare names) and post-state atoms ("new_" prefix).
 		wh := task["work_helpful"]
 		helpfulMap := make(map[termsKey]bool)
 		if wasHelpfulNonce != "" {
-			for _, eqs := range handler.Eqs {
-				for _, eqExpr := range eqs {
-					eq, ok := eqExpr.(*Eq)
-					if !ok {
-						continue
-					}
-					app, ok := eq.T1.(*Apply)
-					if !ok || applyFuncName(app) != wasHelpfulNonce {
-						continue
-					}
-					k := makeTermsKey(app.Terms)
-					helpfulMap[k] = IsTrue(eq.T2)
-					if wh != nil {
-						rep := predLHSRep(wh)
-						fmt.Printf("%s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
-					}
+			for _, eqExpr := range traceStateFmlas(trace, 0) {
+				eq, ok := eqExpr.(*Eq)
+				if !ok {
+					continue
+				}
+				app, ok := eq.T1.(*Apply)
+				if !ok || applyFuncName(app) != wasHelpfulNonce {
+					continue
+				}
+				k := makeTermsKey(app.Terms)
+				helpfulMap[k] = IsTrue(eq.T2)
+				if wh != nil {
+					rep := predLHSRep(wh)
+					fmt.Printf("%s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
 				}
 			}
 		}
 
 		// --- Build happened_maps for both states ---
 		// Python ivy_l2s.py:1637-1644: for idx in range(2) over tr.states[idx]
-		// In Go: tr.states[0] = bare name, tr.states[1] = "new_" + name (actions.ActionNewName)
 		wp := task["work_progress"]
 		happenedMaps := [2]map[termsKey]bool{
 			make(map[termsKey]bool),
 			make(map[termsKey]bool),
 		}
 		if triggerNonce != "" {
-			triggerNames := [2]string{triggerNonce, ActionNewName(triggerNonce)}
 			for idx := 0; idx < 2; idx++ {
-				tname := triggerNames[idx]
 				fmt.Println()
-				for _, eqs := range handler.Eqs {
-					for _, eqExpr := range eqs {
-						eq, ok := eqExpr.(*Eq)
-						if !ok {
-							continue
-						}
-						app, ok := eq.T1.(*Apply)
-						if !ok || applyFuncName(app) != tname {
-							continue
-						}
-						k := makeTermsKey(app.Terms)
-						happenedMaps[idx][k] = IsTrue(eq.T2)
-						if wp != nil {
-							rep := predLHSRep(wp)
-							fmt.Printf("~happened %s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
-						}
+				for _, eqExpr := range traceStateFmlas(trace, idx) {
+					eq, ok := eqExpr.(*Eq)
+					if !ok {
+						continue
+					}
+					app, ok := eq.T1.(*Apply)
+					if !ok || applyFuncName(app) != triggerNonce {
+						continue
+					}
+					k := makeTermsKey(app.Terms)
+					happenedMaps[idx][k] = IsTrue(eq.T2)
+					if wp != nil {
+						rep := predLHSRep(wp)
+						fmt.Printf("~happened %s = %s\n", applyPredToVals(rep, app.Terms), eq.T2)
 					}
 				}
 			}
@@ -611,14 +605,13 @@ func diagnoseAutoFailure(
 		justiceMap := make(map[termsKey]bool)
 		if jp, ok := justicePredMap[sfx]; ok && jp != nil {
 			fmt.Println()
-			jpKey := Key(jp)
-			for _, eqExpr := range handler.Eqs[jpKey] {
+			for _, eqExpr := range traceStateFmlas(trace, 0) {
 				eq, ok := eqExpr.(*Eq)
 				if !ok {
 					continue
 				}
 				app, ok := eq.T1.(*Apply)
-				if !ok {
+				if !ok || applyFuncName(app) != jp.Name {
 					continue
 				}
 				k := makeTermsKey(app.Terms)
@@ -679,7 +672,7 @@ func diagnoseAutoFailure(
 		if wn != nil {
 			vs := predLHSArgs(wn)
 			sks := makeSkolems(vs)
-			vals := evalSkolems(handler, sks)
+			vals := evalSkolems(trace, sks)
 			if vals != nil {
 				rep := predLHSRep(wn)
 				pred := applyPredToVals(rep, vals)
@@ -702,7 +695,7 @@ func diagnoseAutoFailure(
 		if wp != nil && wh != nil {
 			vs := predLHSArgs(wp)
 			sks := makeSkolems(vs)
-			vals := evalSkolems(handler, sks)
+			vals := evalSkolems(trace, sks)
 			if vals != nil {
 				whRep := predLHSRep(wh)
 				wpRep := predLHSRep(wp)
@@ -711,8 +704,8 @@ func diagnoseAutoFailure(
 				fmt.Printf("Note: work_invar%s is true and %s changes from true to false, but %s does not occur during the action.\n\n", sfx, pred1, pred2)
 			}
 		}
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1692-1695
@@ -733,8 +726,8 @@ func diagnoseAutoFailure(
 		}
 		fmt.Printf("The ranking(s) %s have become empty, but termination has not occurred.\n",
 			strings.Join(rankNames, " and "))
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 
 	// Python ivy_l2s.py:1697-1700
@@ -752,8 +745,8 @@ func diagnoseAutoFailure(
 		}
 		fmt.Printf("The helpful set(s)  %s have become empty, but termination has not occurred\n",
 			strings.Join(rankNames, " and "))
-		if handler != nil {
-			handler.HiddenSymbols = TemporalAndL2S
+		if trace != nil {
+			trace.HiddenSymbols = TemporalAndL2S
 		}
 	}
 }

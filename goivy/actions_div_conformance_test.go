@@ -38,7 +38,7 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 	sgFmla := NewConst("subgoal_inv", Boolean)
 
 	cond := NewConst("cond", Boolean)
-	target := NewConst("x", TopS)
+	target := NewConst("x", Boolean)
 	body := NewAssignAction(target, True)
 
 	// Put a SubgoalAction directly in invariants (it implements lg.Expr via Action)
@@ -90,7 +90,7 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 // Go BUG: havocs are created without setting lineno.
 func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
 	cond := NewConst("cond", Boolean)
-	target := NewConst("x", TopS)
+	target := NewConst("x", Boolean)
 	body := NewAssignAction(target, True)
 
 	wa := NewWhileAction(cond, body)
