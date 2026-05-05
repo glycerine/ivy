@@ -1101,7 +1101,7 @@ func loadBMCFixture(t *testing.T, method string) *Module {
 	mod.Cfg = NewConfig()
 	mod.Cfg.Isolate = "this"
 	err := SourceFile(
-		"../test_vectors/bmc_minimal.ivy",
+		"test_vectors/bmc_minimal.ivy",
 		mod, mod.Sig,
 		map[string]interface{}{"create_isolate": false},
 	)

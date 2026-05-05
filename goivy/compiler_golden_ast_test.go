@@ -20,12 +20,12 @@ import (
 // testdataDir returns the absolute path to the testdata/ directory.
 func testdataDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "testdata")
+	return filepath.Join(filepath.Dir(file), "testdata")
 }
 
 func compilerPythonTestHelperDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "pytesthelper")
+	return filepath.Join(filepath.Dir(file), "pytesthelper")
 }
 
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
@@ -70,7 +70,7 @@ func compilerParsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 
 	// Run the Python dumper from the ivy root directory (where the ivy package is)
 	_, thisFile, _, _ := runtime.Caller(0)
-	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..") // , "..")
+	ivyRoot := filepath.Dir(thisFile)
 
 	ivyHomeDir := os.Getenv("IVY_HOME")
 	if ivyHomeDir != "" {
@@ -102,7 +102,7 @@ func compilerIvyCheck(t *testing.T, args []string, ivyFile string) (r io.ReadClo
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
-	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	ivyRoot := filepath.Dir(thisFile)
 
 	ivyHomeDir := os.Getenv("IVY_HOME")
 	if ivyHomeDir != "" {
@@ -134,7 +134,7 @@ func compilerGoivyCheckXtrace(t *testing.T, args []string, ivyFile string) (r io
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
-	goivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	goivyRoot := filepath.Dir(thisFile)
 
 	alwaysPrintf("build goivy_check_xtrace so we know it is up to date.")
 	cmd := exec.Command("make", "tr")

@@ -10,7 +10,7 @@ import (
 
 func ivyLogicVectorsPath() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "test_vectors", "sexp_vectors.sexp")
+	return filepath.Join(filepath.Dir(file), "test_vectors", "sexp_vectors.sexp")
 }
 
 func ivyLogicLoadVectors(t *testing.T) map[string]string {

@@ -256,7 +256,7 @@ func testRepoRoot(t *testing.T) string {
 	if err != nil {
 		t.Fatalf("get working directory: %v", err)
 	}
-	root, err := filepath.Abs(filepath.Join(wd, "..", ".."))
+	root, err := filepath.Abs(filepath.Join(wd, ".."))
 	if err != nil {
 		t.Fatalf("resolve repo root: %v", err)
 	}

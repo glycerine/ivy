@@ -35,7 +35,7 @@ var (
 // pythonScriptPath returns the path to ivy_expr_shape.py.
 func pythonScriptPath() string {
 	_, thisFile, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(thisFile), "..", "pytesthelper", "ivy_expr_shape.py")
+	return filepath.Join(filepath.Dir(thisFile), "pytesthelper", "ivy_expr_shape.py")
 }
 
 // pyivyDir returns the path to the Python Ivy source tree.

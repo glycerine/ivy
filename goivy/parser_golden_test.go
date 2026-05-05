@@ -22,13 +22,13 @@ import (
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
 func examplesDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "..", "ivy-lang-examples")
+	return filepath.Join(filepath.Dir(file), "..", "ivy-lang-examples")
 }
 
 // pythonTestHelperDir returns the path to the Python helper scripts.
 func pythonTestHelperDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "pytesthelper")
+	return filepath.Join(filepath.Dir(file), "pytesthelper")
 }
 
 // pythonDumper returns the path to the Python AST dump script.
@@ -64,7 +64,7 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 	}
 
 	_, thisFile, _, _ := runtime.Caller(0)
-	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	ivyRoot := filepath.Dir(thisFile)
 
 	ivyHomeDir := os.Getenv("IVY_HOME")
 	if ivyHomeDir != "" {
@@ -840,7 +840,7 @@ const showLast30Lines = 300
 func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
-	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	ivyRoot := filepath.Dir(thisFile)
 
 	ivyHomeDir := os.Getenv("IVY_HOME")
 	if ivyHomeDir != "" {
@@ -915,7 +915,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
-	goivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+	goivyRoot := filepath.Dir(thisFile)
 	// cmd/goivy_check dir
 	goivyCheckCmdDir := filepath.Join(goivyRoot, "cmd", "goivy_check")
 

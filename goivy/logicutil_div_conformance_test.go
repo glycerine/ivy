@@ -18,7 +18,7 @@ import (
 
 func divPyScript() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "..", "pytesthelper", "div_conformance.py")
+	return filepath.Join(filepath.Dir(file), "pytesthelper", "div_conformance.py")
 }
 
 func runPyDiv(t *testing.T, name string) map[string]string {

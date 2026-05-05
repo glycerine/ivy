@@ -236,7 +236,7 @@ func TestFragmentFragmentSexpCrossLanguage(t *testing.T) {
 	goSexps := buildAllFragmentSexps(t)
 
 	_, thisFile, _, _ := runtime.Caller(0)
-	pyScript := filepath.Join(filepath.Dir(thisFile), "..", "pytesthelper", "emit_fragment_sexp.py")
+	pyScript := filepath.Join(filepath.Dir(thisFile), "pytesthelper", "emit_fragment_sexp.py")
 
 	cmd := exec.Command("python3", pyScript)
 	out, err := cmd.CombinedOutput()
