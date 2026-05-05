@@ -384,7 +384,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		}
 
 	case *CrashAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicCrashAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=CrashAction")
 		// B2-R5: Delegate to CompileCrashAction which compiles args with SortifyWithInference
 		result, err := c.CompileCrashAction(node)
 		if err != nil {
@@ -398,7 +398,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return act, nil
 
 	case *ThunkAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicThunkAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=ThunkAction")
 		// Thunk action: compile the body
 		// Python: ThunkAction uses thing() dispatch via .compile()
 		if n.Body != nil {
@@ -430,7 +430,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return NewSequence(), nil
 
 	case *LocalAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicLocalAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=LocalAction")
 		// LocalAction from LowerVarStatements: Elems = [varDecls..., body]
 		// Matches the same logic as Atom("local",...) case above.
 		if len(n.Elems) >= 2 {
@@ -529,7 +529,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return nil, fmt.Errorf("subgoal needs a formula")
 
 	case *CallAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicCallAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=CallAction")
 		// Python: compile_call — ExprContext + looks up action in top_context.actions
 		if len(n.Elems) >= 1 {
 			return c.CompileCall(n.Elems[0], n.Elems[1:])
@@ -537,12 +537,12 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return nil, fmt.Errorf("call needs a target")
 
 	case *IfAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicIfAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		// Python: compile_if_action — handles Some variant + ExprContext for plain if
 		return c.CompileIf(n.Cond, n.Then, n.Else)
 
 	case *WhileAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicWhileAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=WhileAction")
 		// Python: compile_while_action — ExprContext + invariants
 		if len(n.Elems) >= 2 {
 			var invNodes []Node
@@ -554,7 +554,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return nil, fmt.Errorf("while needs condition and body")
 
 	case *DebugAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicDebugAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=DebugAction")
 		// Python: compile_debug_action
 		result, err := c.CompileDebugAction(node)
 		if err != nil {
@@ -566,7 +566,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		return NewSequence(), nil
 
 	case *NativeAction:
-		xtracer.Trace("compiler.CompileNode return case=default type= LogicNativeAction")
+		xtracer.Trace("compiler.CompileNode return case=default type=NativeAction")
 		// Python: compile_native_action
 		act := NewNativeAction(nil)
 		act.SetLineno(node.GetLineno())

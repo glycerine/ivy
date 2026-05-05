@@ -1,6 +1,9 @@
 package goivy
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 // TypeName returns the concrete Go type name for v, stripped of pointer and
 // package prefixes.
@@ -12,7 +15,11 @@ func TypeName(v interface{}) string {
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
-	return t.Name()
+	nm := t.Name()
+	if strings.HasPrefix(nm, "Logic") {
+		return nm[5:]
+	}
+	return nm
 }
 
 // ShortTypeName is an alias for TypeName kept for callers that

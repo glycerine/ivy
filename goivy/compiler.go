@@ -233,34 +233,34 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 	switch n := node.(type) {
 	// --- Formula operators ---
 	case *And:
-		xtracer.Trace("compiler.CompileNode return case= LogicAnd")
+		xtracer.Trace("compiler.CompileNode return case=And")
 		return c.compileAnd(n)
 	case *Or:
-		xtracer.Trace("compiler.CompileNode return case= LogicOr")
+		xtracer.Trace("compiler.CompileNode return case=Or")
 		return c.compileOr(n)
 	case *Not:
-		xtracer.Trace("compiler.CompileNode return case= LogicNot")
+		xtracer.Trace("compiler.CompileNode return case=Not")
 		return c.compileNot(n)
 	case *Implies:
 		xtracer.Trace("compiler.CompileNode return case=Implies")
 		return c.compileImplies(n)
 	case *Iff:
-		xtracer.Trace("compiler.CompileNode return case= LogicIff")
+		xtracer.Trace("compiler.CompileNode return case=Iff")
 		return c.compileIff(n)
 	case *Ite:
 		xtracer.Trace("compiler.CompileNode return case=Ite")
 		return c.compileIte(n)
 	case *Definition:
-		xtracer.Trace("compiler.CompileNode return case= LogicDefinition")
+		xtracer.Trace("compiler.CompileNode return case=Definition")
 		return c.compileDefinition(n)
 	case *Globally:
-		xtracer.Trace("compiler.CompileNode return case= LogicGlobally")
+		xtracer.Trace("compiler.CompileNode return case=Globally")
 		return c.compileGlobally(n)
 	case *Eventually:
-		xtracer.Trace("compiler.CompileNode return case= LogicEventually")
+		xtracer.Trace("compiler.CompileNode return case=Eventually")
 		return c.compileEventually(n)
 	case *WhenOperator:
-		xtracer.Trace("compiler.CompileNode return case= LogicWhenOperator")
+		xtracer.Trace("compiler.CompileNode return case=WhenOperator")
 		return c.compileWhenOperator(n)
 
 	// --- Quantifiers ---
@@ -268,7 +268,7 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 		xtracer.Trace("compiler.CompileNode return case=Forall")
 		return c.CompileQuantifier(n)
 	case *Exists:
-		xtracer.Trace("compiler.CompileNode return case= LogicExists")
+		xtracer.Trace("compiler.CompileNode return case=Exists")
 		return c.CompileQuantifier(n)
 
 	// --- Terms ---
@@ -279,10 +279,10 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 		xtracer.Trace("compiler.CompileNode return case=App")
 		return c.compileAppNode(n)
 	case *Variable:
-		xtracer.Trace("compiler.CompileNode return case= LogicVariable")
+		xtracer.Trace("compiler.CompileNode return case=Variable")
 		return c.CompileVariable(n)
 	case *Old:
-		xtracer.Trace("compiler.CompileNode return case= LogicOld")
+		xtracer.Trace("compiler.CompileNode return case=Old")
 		return c.compileOld(n)
 	case *MethodCall:
 		xtracer.Trace("compiler.CompileNode return case=MethodCall")
@@ -295,7 +295,7 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 
 	// --- Named binder ---
 	case *NamedBinder:
-		xtracer.Trace("compiler.CompileNode return case= LogicNamedBinder")
+		xtracer.Trace("compiler.CompileNode return case=NamedBinder")
 		return c.compileNamedBinder(n)
 
 	// --- Labeled formula ---
@@ -318,12 +318,12 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 
 	// --- NativeExpr ---
 	case *NativeExpr:
-		xtracer.Trace("compiler.CompileNode return case= LogicNativeExpr")
+		xtracer.Trace("compiler.CompileNode return case=NativeExpr")
 		return c.compileNativeExpr(n)
 
 	// --- Trigger ---
 	case *Trigger:
-		xtracer.Trace("compiler.CompileNode return case= LogicTrigger")
+		xtracer.Trace("compiler.CompileNode return case=Trigger")
 		return c.compileTrigger(n)
 
 	// --- CompiledNode: already-compiled expression wrapper ---
@@ -358,7 +358,7 @@ func (c *Compiler) compileNodeCore(node Node, emitEnter bool) (Expr, error) {
 	// Python: PatternBasedUpdate.cmpl walks defines/dependencies/patterns and
 	// returns a PatternBasedUpdate with compiled symbol/pattern fields.
 	case *PatternBasedUpdate:
-		xtracer.Trace("compiler.CompileNode return case= LogicPatternBasedUpdate")
+		xtracer.Trace("compiler.CompileNode return case=PatternBasedUpdate")
 		return c.compilePatternBasedUpdate(n)
 
 	// --- Default: Python's AST.cmpl = other_thing ---
