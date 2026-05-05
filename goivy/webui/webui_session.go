@@ -108,15 +108,11 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		mod.Cfg = s.Cfg
 	}
 	mod.Sig = sig
-	goivy.
 
-		// Wire proof checker factory and register all tactics before compilation
-		// so phase6 attach_proofs can create ProofCheckers. Matches check.Start().
-		WireAdmitDefinitionFactory(mod)
-	goivy.
-		RegisterFactories(mod.Cfg, goivy.TacticNewConfig())
-	goivy.
-		RegisterTactics(mod.Cfg.ProofCfg, mod)
+	// Register all tactics before compilation so phase6 attach_proofs can
+	// create ProofCheckers. Matches check.Start().
+	mod.Cfg.ProofCfg = goivy.TacticNewConfig()
+	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	compileErr := goivy.IvyCompile(decls, mod, true)
 	if compileErr != nil {

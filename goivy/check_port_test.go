@@ -476,7 +476,7 @@ func TestRegisterTacticsWiring(t *testing.T) {
 	mod := New()
 	mod.Cfg = NewConfig()
 	proofCfg := TacticNewConfig()
-	RegisterFactories(mod.Cfg, proofCfg)
+	mod.Cfg.ProofCfg = proofCfg
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	expected := []string{
@@ -528,7 +528,7 @@ func TestMCVMTTacticClosureUsesProofCheckerModule(t *testing.T) {
 		origMod.Actions.Set(fmt.Sprintf("orig_action_%d", i), seq)
 	}
 
-	RegisterFactories(origMod.Cfg, TacticNewConfig())
+	origMod.Cfg.ProofCfg = TacticNewConfig()
 	RegisterTactics(origMod.Cfg.ProofCfg, origMod)
 
 	// isoMod: the isolate-processed module (simulates post-CreateIsolate

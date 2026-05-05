@@ -285,7 +285,7 @@ func UniteAnnot(annot Annotation) []AnnotBranch {
 			}
 			result[i] = AnnotBranch{
 				Cond: cond,
-				Ann:  &RenameAnnotation{Arg: b.Ann, Map: a.Map},
+				Ann:  newRenameAnnotation(b.Ann, a.Map),
 			}
 		}
 		return result

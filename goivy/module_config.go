@@ -28,12 +28,6 @@ type Config struct {
 	// look for the include/ directory here:
 	IncludePathStdlib string
 
-	// module; more internal specific
-	NewProofCheckerFn func(mod *Module, axioms, definitions []*LabeledFormula, schemata *InsMap[string, *LabeledFormula]) ProofCheckerInterface
-
-	// GoalConcFn extracts the conclusion of a goal.
-	// Set by proof.RegisterFactories.
-	GoalConcFn    func(g *LabeledFormula) Expr
 	CurrentModule *Module
 
 	// more for external clients like check/ sub package.
@@ -112,12 +106,6 @@ type Config struct {
 	// Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
 	// Moved from compiler.OptMutax.
 	OptMutax bool `json:"mutax"`
-
-	// AdmitDefinitionFactory creates an AdmitDefinitionFn for a given module.
-	// Set by packages that can import both compiler and proof (e.g. check).
-	// If nil, AdmitDefinition is skipped during compilation.
-	// Moved from compiler.AdmitDefinitionFactory.
-	AdmitDefinitionFactory func(mod *Module) func(defn *LabeledFormula, proof Node) error `json:"-"`
 
 	// GlobalIncluded tracks already-included module names to prevent
 	// double-includes within a compilation session.

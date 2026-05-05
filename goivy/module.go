@@ -121,10 +121,6 @@ type Module struct {
 	// Python's schema.get_instance(...).compile_with_sort_inference() path.
 	CompileWithSortInferenceFn func(node Node) (Node, error)
 
-	// AdmitDefinitionFn is injected by the driver to call proof.ProofChecker.AdmitDefinition
-	// without creating a compiler→proof import cycle. Python: prover.admit_definition(d, pmap[d.id])
-	AdmitDefinitionFn func(defn *LabeledFormula, proof Node) error
-
 	// Signature (captured at module creation time)
 	Sig *Sig
 
@@ -541,7 +537,6 @@ func (m *Module) Copy() *Module {
 	c.CompCfg = m.CompCfg
 	c.CompileActionBodyFn = m.CompileActionBodyFn
 	c.CompileWithSortInferenceFn = m.CompileWithSortInferenceFn
-	c.AdmitDefinitionFn = m.AdmitDefinitionFn
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory
 	c.z3SharedCtx = m.z3SharedCtx

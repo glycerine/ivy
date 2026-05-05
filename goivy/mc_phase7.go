@@ -155,7 +155,7 @@ func MCUniteAnnot(annot Annotation) []AnnotPair {
 				Annot: EmptyAnnotation{}.Rename(a.Map),
 			}
 			_ = pair.Annot // the renamed inner annotation
-			result[i].Annot = &RenameAnnotation{Arg: pair.Annot, Map: a.Map}
+			result[i].Annot = newRenameAnnotation(pair.Annot, a.Map)
 		}
 		return result
 	case *IteAnnotation:

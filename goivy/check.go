@@ -15,24 +15,6 @@ import (
 const checkCheckPrecondFalse = false
 const checkCheckPrecondTrue = true
 
-// WireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
-// compiler.CheckDefinitions can call proof.ProofChecker.AdmitDefinition
-// without a direct import cycle.
-// Python: prover.admit_definition(d, pmap[d.id])
-func WireAdmitDefinitionFactory(mod *Module) {
-	if mod.Cfg == nil {
-		return
-	}
-	mod.Cfg.AdmitDefinitionFactory = func(m *Module) func(defn *LabeledFormula, pf Node) error {
-		return func(defn *LabeledFormula, pf Node) error {
-			typedSchemata := ModuleSchemataToAst(m.Schemata)
-			prover := NewProofChecker(m.Cfg.ProofCfg, m, m.LabeledAxioms, nil, typedSchemata)
-			_, err := prover.AdmitDefinition(defn, pf)
-			return err
-		}
-	}
-}
-
 // --- Checker interface and implementations ---
 
 // Checker is the interface for verification condition checkers.
@@ -557,14 +539,10 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 				actionExprs = append(actionExprs, a)
 			}
 			action := NewSequence(actionExprs...)
-			if clauses.Annot != nil {
-				MatchAnnotation(action, clauses.Annot, handler, mod)
-			}
+			MatchAnnotation(action, clauses.Annot, handler, mod)
 		} else {
 			// Python: action, annot = thing
-			if thing.Annot != nil {
-				MatchAnnotation(thing.Action, thing.Annot, handler, mod)
-			}
+			MatchAnnotation(thing.Action, thing.Annot, handler, mod)
 		}
 		handler.End()
 
@@ -1189,8 +1167,7 @@ func deprecated_dup_start_9828(args []string) error {
 
 	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry
 	mod.Cfg.SomeBounded = false
-	WireAdmitDefinitionFactory(mod)
-	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+	mod.Cfg.ProofCfg = TacticNewConfig()
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	if mod.Cfg.OptIvyStats {
@@ -1277,8 +1254,7 @@ func Start(args []string, cfg *Config) error {
 
 	mod := New()
 	mod.Cfg = cfg
-	WireAdmitDefinitionFactory(mod)
-	RegisterFactories(mod.Cfg, TacticNewConfig())
+	mod.Cfg.ProofCfg = TacticNewConfig()
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	if mod.Cfg.OptIvyStats {

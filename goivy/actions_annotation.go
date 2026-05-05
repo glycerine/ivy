@@ -53,7 +53,7 @@ func (e EmptyAnnotation) Rename(m map[NodeKey]Expr) Annotation {
 	if len(m) == 0 {
 		return e
 	}
-	return &RenameAnnotation{Arg: e, Map: m}
+	return newRenameAnnotation(e, m)
 }
 func (e EmptyAnnotation) Ite(cond Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: e, ElseB: other}
@@ -85,7 +85,7 @@ func (c *ConjAnnotation) Rename(m map[NodeKey]Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
-	return &RenameAnnotation{Arg: c, Map: m}
+	return newRenameAnnotation(c, m)
 }
 func (c *ConjAnnotation) Ite(cond Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: c, ElseB: other}
@@ -122,7 +122,7 @@ func (c *ComposeAnnotation) Rename(m map[NodeKey]Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
-	return &RenameAnnotation{Arg: c, Map: m}
+	return newRenameAnnotation(c, m)
 }
 func (c *ComposeAnnotation) Ite(cond Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: c, ElseB: other}
@@ -137,6 +137,14 @@ func (c *ComposeAnnotation) Ite(cond Expr, other Annotation) Annotation {
 type RenameAnnotation struct {
 	Arg Annotation
 	Map map[NodeKey]Expr
+}
+
+func newRenameAnnotation(arg Annotation, m map[NodeKey]Expr) *RenameAnnotation {
+	copied := make(map[NodeKey]Expr, len(m))
+	for k, v := range m {
+		copied[k] = v
+	}
+	return &RenameAnnotation{Arg: arg, Map: copied}
 }
 
 func (RenameAnnotation) annotationMarker() {}
@@ -158,7 +166,7 @@ func (r *RenameAnnotation) Rename(m map[NodeKey]Expr) Annotation {
 	if len(m) == 0 {
 		return r
 	}
-	return &RenameAnnotation{Arg: r, Map: m}
+	return newRenameAnnotation(r, m)
 }
 func (r *RenameAnnotation) Ite(cond Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: r, ElseB: other}
@@ -191,7 +199,7 @@ func (i *IteAnnotation) Rename(m map[NodeKey]Expr) Annotation {
 	if len(m) == 0 {
 		return i
 	}
-	return &RenameAnnotation{Arg: i, Map: m}
+	return newRenameAnnotation(i, m)
 }
 func (i *IteAnnotation) Ite(cond Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: i, ElseB: other}

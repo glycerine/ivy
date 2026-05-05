@@ -37,12 +37,8 @@ conjecture flag(X)
 	}
 	mod := goivy.New()
 	mod.Sig = goivy.NewSig()
-	goivy.
-		WireAdmitDefinitionFactory(mod)
-	goivy.
-		RegisterFactories(mod.Cfg, goivy.TacticNewConfig())
-	goivy.
-		RegisterTactics(mod.Cfg.ProofCfg, mod)
+	mod.Cfg.ProofCfg = goivy.TacticNewConfig()
+	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
 	err = goivy.IvyCompile(result.Decls, mod, true)
 	if err != nil {
 		t.Fatalf("compile error: %v", err)

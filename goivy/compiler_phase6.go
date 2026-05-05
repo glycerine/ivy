@@ -18,9 +18,6 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// ProofCheckerInterface, NewProofCheckerFn, and GoalConcFn are now defined
-// in the module package to break the compiler ↔ proof import cycle.
-
 // sigSortValues extracts the sort values from a Sig's Sorts map.
 func sigSortValues(sig *Sig) []Sort {
 	vals := make([]Sort, 0, sig.Sorts.Len())
@@ -2228,25 +2225,8 @@ func applyAssertProofActionWithProof(mod *Module, a *AssertAction, kindName stri
 }
 
 // goalConcExpr extracts the conclusion expression from a LabeledFormula.
-// Duplicates proof.GoalConc logic to avoid circular import.
 func goalConcExpr(modCfg *Config, g *LabeledFormula) Expr {
-	if modCfg != nil && modCfg.GoalConcFn != nil {
-		return modCfg.GoalConcFn(g)
-	}
-	// Inline fallback: check SchemaBody, then formula
-	if sb, ok := g.Formula.(*SchemaBody); ok {
-		conc := sb.Conc()
-		if conc != nil {
-			if ln, ok := conc.(Expr); ok {
-				return ln
-			}
-		}
-		return nil
-	}
-	if ln, ok := g.Formula.(Expr); ok {
-		return ln
-	}
-	return nil
+	return GoalConcExpr(g)
 }
 
 // mapTheoremToProperty converts a slice of LabeledFormula via TheoremToProperty.
@@ -2318,16 +2298,13 @@ func CheckProperties(mod *Module) error {
 	}
 
 	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
-	var prover ProofCheckerInterface
-	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
-		schemataTyped := NewInsMap[string, *LabeledFormula]()
-		for k, v := range mod.Schemata.All() {
-			if lf, ok := v.(*LabeledFormula); ok {
-				schemataTyped.Set(k, lf)
-			}
-		}
-		prover = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, mod.Definitions, schemataTyped)
+	var proofCfg *ProofConfig
+	var astCfg *AstConfig
+	if mod.Cfg != nil {
+		proofCfg = mod.Cfg.ProofCfg
+		astCfg = mod.Cfg.AstCfg
 	}
+	prover := NewProofChecker(proofCfg, mod, mod.LabeledAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata), astCfg)
 
 	for _, prop := range props {
 		propLabel := ReprNode(prop.Label)

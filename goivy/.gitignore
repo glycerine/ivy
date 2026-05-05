@@ -15,7 +15,11 @@ GPATH
 GRTAGS
 .gtags.files
 ivy.vmt
-check/goivy_mc.log
 goivy_mc.log
 ivy_mc.log
 y.output
+log.rfn
+log.rfn.pref
+log.golden.2hr
+log.golden.2hr.prev
+

@@ -56,11 +56,6 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	}
 	xtracer.Trace("compiler.IvyCompile ENTER decls=%d", len(decls))
 
-	// Wire AdmitDefinitionFn if the factory is registered on config.
-	if mod.AdmitDefinitionFn == nil && mod.Cfg != nil && mod.Cfg.AdmitDefinitionFactory != nil {
-		mod.AdmitDefinitionFn = mod.Cfg.AdmitDefinitionFactory(mod)
-	}
-
 	// Python line 2193: check_instantiations(mod, decls)
 	if err := CheckInstantiations(mod, decls); err != nil {
 		return fmt.Errorf("check instantiations: %w", err)
@@ -1657,16 +1652,13 @@ func CheckDefinitions(mod *Module) error {
 	// Create ONE shared ProofChecker before the SCC loop, matching Python.
 	// Python creates this unconditionally; the normalize_goal calls in __init__
 	// create LabeledFormulas that advance the LF counter.
-	var defProver ProofCheckerInterface
-	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
-		schemataTyped := NewInsMap[string, *LabeledFormula]()
-		for k, v := range mod.Schemata.All() {
-			if lf, ok := v.(*LabeledFormula); ok {
-				schemataTyped.Set(k, lf)
-			}
-		}
-		defProver = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, nil, schemataTyped)
+	var proofCfg *ProofConfig
+	var astCfg *AstConfig
+	if mod.Cfg != nil {
+		proofCfg = mod.Cfg.ProofCfg
+		astCfg = mod.Cfg.AstCfg
 	}
+	defProver := NewProofChecker(proofCfg, mod, mod.LabeledAxioms, nil, ModuleSchemataToAst(mod.Schemata), astCfg)
 	for _, scc := range sccs {
 		if len(scc) > 1 {
 			return &IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
@@ -1679,15 +1671,8 @@ func CheckDefinitions(mod *Module) error {
 				return NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
 			}
 			// Python: prover.admit_definition(d, pmap[d.id])
-			if defProver != nil {
-				if _, err := defProver.AdmitDefinition(d, proof); err != nil {
-					return err
-				}
-			} else if mod.AdmitDefinitionFn != nil {
-				// Fallback to old factory pattern if prover not available
-				if err := mod.AdmitDefinitionFn(d, proof); err != nil {
-					return err
-				}
+			if _, err := defProver.AdmitDefinition(d, proof); err != nil {
+				return err
 			}
 		}
 	}
