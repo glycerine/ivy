@@ -110,6 +110,22 @@ func TestNodeRelname_Variable(t *testing.T) {
 	}
 }
 
+func TestIsMixinImplementConcreteAfterUniPackageMerge(t *testing.T) {
+	cfg := NewAstConfig()
+	mixer := cfg.NewAtom("index.impl.next")
+	mixee := cfg.NewAtom("index.next")
+
+	if !isMixinImplement(cfg.NewMixinImplementDef(mixer, mixee)) {
+		t.Fatal("MixinImplementDef should be classified as an implementation mixin")
+	}
+	if isMixinImplement(cfg.NewMixinBeforeDef(mixer, mixee)) {
+		t.Fatal("MixinBeforeDef should not be classified as an implementation mixin")
+	}
+	if isMixinImplement(cfg.NewMixinAfterDef(mixer, mixee)) {
+		t.Fatal("MixinAfterDef should not be classified as an implementation mixin")
+	}
+}
+
 // B3: StripIsolate clears mod.Params for version <= 1.6
 func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 	m := mkModuleWithSig()
