@@ -11,6 +11,9 @@ func TypeName(v interface{}) string {
 	if v == nil || isNil(v) {
 		return "nil"
 	}
+	if _, ok := v.(*LogicVariable); ok {
+		return "Var"
+	}
 	t := reflect.TypeOf(v)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()

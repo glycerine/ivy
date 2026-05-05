@@ -13,7 +13,7 @@ func TestTypeNameConcreteVariableNamesAfterUniPackageMerge(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
 	}
-	if got := TypeName(logicVar); got != "Variable" {
-		t.Fatalf("TypeName(Variable) = %q, want Variable", got)
+	if got := TypeName(logicVar); got != "Var" {
+		t.Fatalf("TypeName(LogicVariable) = %q, want Var", got)
 	}
 }
