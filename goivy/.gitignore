@@ -22,4 +22,6 @@ log.rfn
 log.rfn.prev
 log.golden.2hr
 log.golden.2hr.prev
-
+webui/node_modules/
+webui/coverage/
+webui/.vitest/

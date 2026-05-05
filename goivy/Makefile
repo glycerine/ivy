@@ -126,10 +126,16 @@ dylib_test: z3ivy
 test:
 	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
+test-js:
+	cd webui && npm test
+
+test-js-watch:
+	cd webui && npm run test:watch
+
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web:
+test-web: test-js
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 
 unimerge-audit:
