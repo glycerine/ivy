@@ -711,6 +711,14 @@ func TestLabelFromAction(t *testing.T) {
 	}
 }
 
+func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
+	act := actions.NewAssumeAction(lg.True)
+	act.SetLabel("call ext")
+	if got := LabelFromAction(act); got != "call ext" {
+		t.Fatalf("LabelFromAction() = %q, want %q", got, "call ext")
+	}
+}
+
 // --- SafetyResult tests ---
 
 func TestSafetyResult(t *testing.T) {

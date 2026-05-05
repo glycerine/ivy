@@ -319,6 +319,9 @@ func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 			if e.Args[0] == nil {
 				panic("art.Add: ActionApp arg[0] must be a State, got nil")
 			}
+			if state.Pred == nil {
+				state.Pred = e.Args[0]
+			}
 			var action actions.Action
 			var label string
 			switch rep := e.Rep.(type) {
@@ -806,7 +809,22 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 				axioms = bgTheory
 			}
 		}
-		var actionNode lg.Expr = lg.True
+		var actionNode lg.Expr
+		if state.Prov != nil {
+			if aa, ok := state.Prov.(*ActionApp); ok {
+				switch rep := aa.Rep.(type) {
+				case actions.Action:
+					actionNode = rep
+				case lg.Expr:
+					actionNode = rep
+				case string:
+					actionNode = lg.NewConst(rep, lg.ActionS)
+				}
+			}
+		}
+		if actionNode == nil && state.Action != nil {
+			actionNode = state.Action
+		}
 		h = h.ForwardStep(axioms, state.Update, actionNode)
 	}
 
@@ -1475,6 +1493,11 @@ func (s *AnalysisSubgraph) String() string {
 // If the action has Labels set, returns the first one; otherwise returns
 // a truncated string representation.
 func LabelFromAction(action actions.Action) string {
+	if ab, ok := action.(interface{ GetLabel() string }); ok {
+		if label := ab.GetLabel(); label != "" {
+			return label
+		}
+	}
 	if ab, ok := action.(interface{ GetLabels() []string }); ok {
 		labels := ab.GetLabels()
 		if len(labels) > 0 {

@@ -219,6 +219,14 @@ func TestLabelFromAction(t *testing.T) {
 	}
 }
 
+func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
+	action := actions.NewAssumeAction(lg.True)
+	action.SetLabel("call ext")
+	if got := LabelFromAction(action, nil); got != "call ext\n" {
+		t.Fatalf("LabelFromAction() = %q, want %q", got, "call ext\n")
+	}
+}
+
 // --- EvalInState ---
 
 func TestEvalInState(t *testing.T) {

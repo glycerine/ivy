@@ -9,6 +9,17 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 )
 
+func init() {
+	module.AnnotIteFunc = func(annot interface{}, cond lg.Expr, other interface{}) interface{} {
+		a0, ok0 := annot.(Annotation)
+		a1, ok1 := other.(Annotation)
+		if !ok0 || !ok1 {
+			return nil
+		}
+		return a0.Ite(cond, a1)
+	}
+}
+
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops
 // OpsConfig. Retained for callers that need explicit per-config registration.
 func RegisterAnnotConj(coCfg *module.OpsConfig) {

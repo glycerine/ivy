@@ -112,6 +112,11 @@ func (tb *TraceBase) lastArtState() *art.State {
 
 // LabelFromAction returns a label string for the given action.
 func LabelFromAction(action actions.Action, renaming map[string]string) string {
+	if labeler, ok := action.(interface{ GetLabel() string }); ok {
+		if label := labeler.GetLabel(); label != "" {
+			return label + "\n"
+		}
+	}
 	if labeler, ok := action.(interface{ GetLabels() []string }); ok {
 		labels := labeler.GetLabels()
 		if len(labels) > 0 {
@@ -519,27 +524,11 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 	if mod == nil {
 		return nil
 	}
-	var branches []lg.Expr
-	if actName != "" {
-		if a, ok := mod.Actions.Get2(actName); ok {
-			if act, ok2 := a.(actions.Action); ok2 {
-				branches = append(branches, act)
-			}
-		}
-	} else {
-		// All public actions
-		for name := range mod.PublicActions.All() {
-			if a, ok := mod.Actions.Get2(name); ok {
-				if act, ok2 := a.(actions.Action); ok2 {
-					branches = append(branches, act)
-				}
-			}
-		}
-	}
-	if len(branches) == 0 {
+	env := actions.BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, actName, "")
+	if env == nil || len(env.ActionArgs()) == 0 {
 		return nil
 	}
-	return actions.NewEnvActionOn(mod.Cfg.ActCfg, branches...)
+	return env
 }
 
 // CheckFinalCond checks a final condition against an analysis graph state.
@@ -578,7 +567,24 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 			clauses = module.AndClausesTyped(clauses, bgTheory)
 		}
 	}
-	return CheckVC(ag.Domain, clauses, nil, finalCond, relsToMin, shrink)
+	// Python resolves string action names here, then wraps the path in Sequence.
+	var actionExprs []lg.Expr
+	for _, a := range history.Actions {
+		if a == nil {
+			continue
+		}
+		if sym, ok := a.(*lg.Const); ok {
+			if act, exists := ag.Domain.Actions.Get2(sym.Name); exists {
+				if actAction, ok := act.(actions.Action); ok {
+					actionExprs = append(actionExprs, actAction)
+					continue
+				}
+			}
+		}
+		actionExprs = append(actionExprs, a)
+	}
+	action := actions.NewSequence(actionExprs...)
+	return CheckVC(ag.Domain, clauses, action, finalCond, relsToMin, shrink)
 }
 
 // CheckVC checks a verification condition.
@@ -619,21 +625,133 @@ func CheckVC(mod *module.Module, clauses *module.Clauses, action actions.Action,
 		return nil
 	}
 
-	// SAT — counterexample found. Build a minimal trace.
-	ag := art.NewAnalysisGraph(nil)
-	preState := art.NewState(nil, clauses)
-	ag.Add(preState, nil)
-	postState := art.NewState(nil, finalCond)
-	ag.Add(postState, nil)
+	// SAT — counterexample found. Reconstruct the displayed ARG by replaying the
+	// action annotation, matching Python check_vc:
+	//   handler = Trace(mclauses, model, vocab)
+	//   act.match_annotation(action, clauses.annot, handler)
+	//   handler.end()
+	ag := buildAnnotatedTraceGraph(mod, clauses, finalCond, action, model, slv)
 
 	tb := &TraceBase{
 		AnalysisGraph: ag,
-		TraceStates: []*TraceState{
-			{State: preState},
-			{State: postState},
-		},
+	}
+	for _, state := range ag.States {
+		tb.TraceStates = append(tb.TraceStates, &TraceState{State: state})
 	}
 	return tb
+}
+
+type annotatedTraceGraphHandler struct {
+	ag          *art.AnalysisGraph
+	model       *z3bridge.HerbrandModel
+	preClauses  *module.Clauses
+	postClauses *module.Clauses
+	lastAction  actions.Action
+	inSubtrace  bool
+	returned    bool
+}
+
+func buildAnnotatedTraceGraph(mod *module.Module, clauses *module.Clauses, finalCond *module.Clauses, action actions.Action, model *z3bridge.ModelResult, slv *z3bridge.Solver) *art.AnalysisGraph {
+	handler := &annotatedTraceGraphHandler{
+		ag:          art.NewAnalysisGraph(mod),
+		preClauses:  clauses,
+		postClauses: finalCond,
+	}
+	if model != nil && slv != nil {
+		vocabMap := module.UsedSymbolsClauses(clauses)
+		if finalCond != nil {
+			for k, v := range module.UsedSymbolsClauses(finalCond).All() {
+				vocabMap.Set(k, v)
+			}
+		}
+		vocab := make([]*lg.Const, 0, vocabMap.Len())
+		for _, sym := range vocabMap.All() {
+			if c, ok := sym.(*lg.Const); ok {
+				vocab = append(vocab, c)
+			}
+		}
+		handler.model = z3bridge.NewHerbrandModel(slv, model.Solver, model.Model, vocab)
+	}
+
+	if action != nil {
+		if annot, ok := clauses.Annot.(actions.Annotation); ok && annot != nil {
+			actions.MatchAnnotation(action, annot, handler, mod)
+		}
+	}
+	handler.End()
+	if len(handler.ag.Transitions) == 0 && action != nil {
+		handler.ag = art.NewAnalysisGraph(mod)
+		handler.lastAction = nil
+		handler.returned = false
+		handler.inSubtrace = false
+		handler.addState(nil)
+		handler.lastAction = action
+		handler.addState(nil)
+	}
+	return handler.ag
+}
+
+func (h *annotatedTraceGraphHandler) Eval(cond lg.Expr) bool {
+	if h.model == nil {
+		return true
+	}
+	truth := h.model.EvalToConstant(cond)
+	if truth != nil && truth.Equal(lg.False) {
+		return false
+	}
+	if truth != nil && truth.Equal(lg.True) {
+		return true
+	}
+	panic(fmt.Sprintf("unexpected truth value: %v", truth))
+}
+
+func (h *annotatedTraceGraphHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+	if h.inSubtrace {
+		return
+	}
+	if isCallOrEnv(h.lastAction) && !h.returned {
+		h.inSubtrace = true
+		return
+	}
+	h.addState(env)
+	h.lastAction = action
+	h.returned = false
+}
+
+func (h *annotatedTraceGraphHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+	if h.inSubtrace {
+		h.inSubtrace = false
+		h.returned = true
+		return
+	}
+}
+
+func (h *annotatedTraceGraphHandler) Fail() {
+	h.lastAction = actions.NewFailAction(h.lastAction)
+}
+
+func (h *annotatedTraceGraphHandler) End() {
+	h.addState(nil)
+}
+
+func (h *annotatedTraceGraphHandler) addState(env map[lg.NodeKey]lg.Expr) {
+	var clauses *module.Clauses
+	if len(h.ag.States) == 0 {
+		clauses = h.preClauses
+	} else if h.postClauses != nil {
+		clauses = h.postClauses
+	}
+	if clauses == nil {
+		clauses = module.TrueClauses(nil)
+	}
+	state := art.NewState(h.ag.Domain, clauses)
+	if h.lastAction != nil && len(h.ag.States) > 0 {
+		h.ag.Add(state, art.NewActionApp(h.lastAction, h.ag.States[len(h.ag.States)-1]))
+		h.lastAction = nil
+		h.returned = false
+		return
+	}
+	h.ag.Add(state, nil)
 }
 
 // collectUninterpSorts collects all uninterpreted sorts from a formula.

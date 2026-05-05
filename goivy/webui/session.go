@@ -47,11 +47,11 @@ type Session struct {
 	FileContent    string // file content (when uploaded via browser)
 	toggles        *Toggles
 	ProofStack     *ProofStack
-	ProofMgr       *proof.ProofManager     // live proof state (goals + reachability graph)
-	CompiledModule *module.Module          // populated by full compiler pipeline
-	CompiledSig    *il.Sig                 // populated by full compiler pipeline
-	AG             *art.AnalysisGraph      // persistent analysis graph for interactive verification
-	AGUI           *AnalysisGraphUI       // ARG navigation UI (delegates to AG)
+	ProofMgr       *proof.ProofManager // live proof state (goals + reachability graph)
+	CompiledModule *module.Module      // populated by full compiler pipeline
+	CompiledSig    *il.Sig             // populated by full compiler pipeline
+	AG             *art.AnalysisGraph  // persistent analysis graph for interactive verification
+	AGUI           *AnalysisGraphUI    // ARG navigation UI (delegates to AG)
 }
 
 // NewSession creates a new verification session with the given id.
@@ -119,6 +119,12 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// and CreateIsolate — matching Python's ivy_compile exactly.
 	sig := il.NewSig()
 	mod := module.New()
+	if s.Cfg != nil {
+		if s.Cfg.ExtAction == "" {
+			s.Cfg.ExtAction = CompileKwargs["ext"]
+		}
+		mod.Cfg = s.Cfg
+	}
 	mod.Sig = sig
 
 	// Wire proof checker factory and register all tactics before compilation
@@ -994,7 +1000,7 @@ func (s *Session) SaveState() []byte {
 
 // CheckResult holds the result of a verification check.
 type CheckResult struct {
-	Result           string   `json:"result"`                      // "pass", "fail", "error"
+	Result           string   `json:"result"` // "pass", "fail", "error"
 	Message          string   `json:"message"`
 	Z3Contacted      bool     `json:"z3_contacted"`                // true if Z3 was actually called
 	FailedConjecture string   `json:"failed_conjecture,omitempty"` // formula text if fail
@@ -1088,7 +1094,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			if sortErr != nil {
 				return &CheckResult{
-					Z3Contacted:     true,
+					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (sort inference error): %v", sortErr),
 					FailedConjecture: displayFormula,
@@ -1125,7 +1131,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				// Z3 error — cannot determine inductiveness. Report as failure
 				// rather than silently declaring the conjecture inductive.
 				return &CheckResult{
-					Z3Contacted:     true,
+					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
 					FailedConjecture: formula,
@@ -1135,11 +1141,11 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			if cexTrace != nil {
 				// Counterexample found — conjecture is not inductive.
-				// Replace the session AG with the check AG so the
-				// frontend shows the CTI pre/post states with the
-				// labelled transition. Matches Python: self.g = ag.
-				s.AG = ag
-				s.AGUI.AG = ag
+				// Python assigns the reconstructed counterexample trace:
+				//   res = ivy_trace.check_final_cond(...)
+				//   self.g = res
+				s.AG = cexTrace.AnalysisGraph
+				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
 
 				// Collect used relations matching Python show_used_relations:
@@ -1158,7 +1164,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 					}
 				}
 				return &CheckResult{
-					Z3Contacted:     true,
+					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          "The following conjecture is not relatively inductive:",
 					FailedConjecture: formula,
@@ -1306,8 +1312,8 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
 			}
 			if cexTrace != nil {
-				s.AG = ag
-				s.AGUI.AG = ag
+				s.AG = cexTrace.AnalysisGraph
+				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
 				return &CheckResult{
 					Z3Contacted:      true,
@@ -1392,8 +1398,8 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
 			}
 			if cexTrace != nil {
-				s.AG = ag
-				s.AGUI.AG = ag
+				s.AG = cexTrace.AnalysisGraph
+				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
 				return &CheckResult{
 					Z3Contacted:      true,

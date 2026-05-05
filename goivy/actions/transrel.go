@@ -576,13 +576,12 @@ func MyAnnotOp(annots ...interface{}) interface{} {
 	if x == nil || y == nil {
 		return nil
 	}
-	type composer interface {
-		Compose(other interface{}) interface{}
+	xa, ok1 := x.(Annotation)
+	ya, ok2 := y.(Annotation)
+	if !ok1 || !ok2 {
+		return nil
 	}
-	if xc, ok := x.(composer); ok {
-		return xc.Compose(y)
-	}
-	return nil
+	return xa.Compose(ya)
 }
 
 // -----------------------------------------------------------------------

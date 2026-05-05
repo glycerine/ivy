@@ -30,6 +30,12 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if !strings.Contains(cr.FailedConjecture, "link") {
 		t.Fatalf("failed conjecture %q does not mention expected relation link", cr.FailedConjecture)
 	}
+	if s.AG == nil || len(s.AG.Transitions) == 0 {
+		t.Fatalf("induction failure did not populate ARG transitions")
+	}
+	if got := s.AG.Transitions[0].Label; got != "call ext" {
+		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
+	}
 
 	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{"target": "state_1"})
 	if err != nil {

@@ -9,9 +9,9 @@ import (
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/xtracer"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	"github.com/glycerine/ivy/goivy/module"
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // AnnotationHandler is called by MatchAnnotation to process actions during trace reconstruction.
@@ -148,8 +148,15 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 		return
 	}
 
-	// Handle ChoiceAction
+	// Handle ChoiceAction. EnvAction subclasses ChoiceAction in Python;
+	// in Go it embeds ChoiceAction, so handle both concrete types here.
+	var branches []lg.Expr
 	if choice, ok := action.(*ChoiceAction); ok {
+		branches = choice.Branches
+	} else if envAct, ok := action.(*EnvAction); ok {
+		branches = envAct.Branches
+	}
+	if branches != nil {
 		ite, ok := annot.(*IteAnnotation)
 		if !ok {
 			fmt.Println("annotation error: ChoiceAction should have IteAnnotation")
@@ -158,28 +165,32 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 
 		// Handle EnvAction with label
 		if envAct, ok := action.(*EnvAction); ok {
-			if len(envAct.Labels) > 0 {
+			if envAct.GetLabel() != "" {
 				handler.Handle(envAct, env)
 			}
 		}
 
 		annots := UniteAnnot(ite)
-		if len(annots) != len(choice.Branches) {
-			fmt.Printf("annotation error: %d annots but %d branches\n", len(annots), len(choice.Branches))
+		if len(annots) != len(branches) {
+			fmt.Printf("annotation error: %d annots but %d branches\n", len(annots), len(branches))
 			return
 		}
 
 		// Walk branches in reverse order, pick the first whose condition is true
-		for i := len(choice.Branches) - 1; i >= 0; i-- {
+		for i := len(branches) - 1; i >= 0; i-- {
 			rncond := envGetExpr(env, annots[i].Cond)
 			if handler.Eval(rncond) {
-				branchAction := extractActionFromNode(choice.Branches[i])
+				branchAction := extractActionFromNode(branches[i])
 
 				// Handle EnvAction without label
 				if envAct, ok := action.(*EnvAction); ok {
-					if len(envAct.Labels) == 0 && branchAction != nil {
+					if envAct.GetLabel() == "" && branchAction != nil {
 						callAct := &EnvAction{}
-						callAct.Labels = []string{"call"}
+						label := "unknown"
+						if labeled, ok := branchAction.(interface{ GetLabel() string }); ok && labeled.GetLabel() != "" {
+							label = labeled.GetLabel()
+						}
+						callAct.Label = "call " + label
 						handler.Handle(callAct, env)
 					}
 				}
@@ -323,35 +334,35 @@ func extractActionFromNode(n interface{}) Action {
 //
 // This is a faithful port of Python ivy_actions.py WhileAction.expand():
 //
-//   def expand(self, domain, pvars):
-//       modset, pre, post = self.args[1].int_update(domain, pvars)
-//       if isinstance(self.args[-1], Ranking):
-//           asserts = self.args[2:-1]
-//           decreases = self.args[-1]
-//       else:
-//           asserts = self.args[2:]
-//           decreases = None
-//       assumes = [a.assert_to_assume([AssertAction]) for a in asserts
-//                  if not isinstance(a, SubgoalAction)]
-//       asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
-//       entry_asserts = []
-//       exit_asserts = []
-//       if decreases is not None:
-//           rank = decreases.args[0]
-//           aux = Symbol('$rank', rank.sort)
-//           assumes.append(AssumeAction(Equals(aux, rank)))
-//           ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
-//           exit_asserts.append(AssertAction(ltsym(rank, aux)))
-//           entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
-//       havocs = [HavocAction(sym) for sym in modset]
-//       res = Sequence(*(
-//           asserts + havocs + assumes +
-//           [IfAction(self.args[0],
-//               Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
-//               Sequence())]))
-//       if decreases is not None:
-//           res = LocalAction(aux, res)
-//       return res
+//	def expand(self, domain, pvars):
+//	    modset, pre, post = self.args[1].int_update(domain, pvars)
+//	    if isinstance(self.args[-1], Ranking):
+//	        asserts = self.args[2:-1]
+//	        decreases = self.args[-1]
+//	    else:
+//	        asserts = self.args[2:]
+//	        decreases = None
+//	    assumes = [a.assert_to_assume([AssertAction]) for a in asserts
+//	               if not isinstance(a, SubgoalAction)]
+//	    asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
+//	    entry_asserts = []
+//	    exit_asserts = []
+//	    if decreases is not None:
+//	        rank = decreases.args[0]
+//	        aux = Symbol('$rank', rank.sort)
+//	        assumes.append(AssumeAction(Equals(aux, rank)))
+//	        ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
+//	        exit_asserts.append(AssertAction(ltsym(rank, aux)))
+//	        entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
+//	    havocs = [HavocAction(sym) for sym in modset]
+//	    res = Sequence(*(
+//	        asserts + havocs + assumes +
+//	        [IfAction(self.args[0],
+//	            Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
+//	            Sequence())]))
+//	    if decreases is not None:
+//	        res = LocalAction(aux, res)
+//	    return res
 func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
@@ -543,12 +554,14 @@ type RankingWrapper struct {
 	Ranking *Ranking
 }
 
-func (rw *RankingWrapper) NodeSort() lg.Sort   { return lg.Boolean }
+func (rw *RankingWrapper) NodeSort() lg.Sort    { return lg.Boolean }
 func (rw *RankingWrapper) Children() []lg.Expr  { return nil }
-func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
+func (rw *RankingWrapper) String() string       { return rw.Ranking.String() }
 func (rw *RankingWrapper) Equal(n lg.Expr) bool { return false }
-func (rw *RankingWrapper) Sexp() lg.NodeKey       { return lg.NodeKey("(RankingWrapper ranking:" + rw.Ranking.String() + ")") }
-func (rw *RankingWrapper) Args() []ast.Node      { return nil }
+func (rw *RankingWrapper) Sexp() lg.NodeKey {
+	return lg.NodeKey("(RankingWrapper ranking:" + rw.Ranking.String() + ")")
+}
+func (rw *RankingWrapper) Args() []ast.Node               { return nil }
 func (rw *RankingWrapper) Clone(args []ast.Node) ast.Node { return rw }
 
 // Note: ConcatActions, AppendToAction, HasCode are defined in helpers.go
