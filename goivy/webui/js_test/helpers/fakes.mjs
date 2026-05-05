@@ -48,7 +48,13 @@ export function makeWritableHandle({
     name,
     writes,
     async getFile() {
-      return new File([diskContent], name, { type: 'text/plain' });
+      return {
+        name,
+        type: 'text/plain',
+        async text() {
+          return diskContent;
+        },
+      };
     },
     async createWritable() {
       if (failCreate) throw failCreate;
