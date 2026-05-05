@@ -2693,4 +2693,4 @@ OK
  (goivy-venv) jaten@aorus ~/ivy/goivy (master) $
 ~~~ 
 
-about to collapse most into one package.
+atg after collapse of most into one package.
