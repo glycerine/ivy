@@ -24,37 +24,37 @@ SHELL := /bin/bash
 
 golden: # parse with python ivy_check and goivy_check_xtrace. full xtrace output is written now to the files: out.go.xtrace; out.py.xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestOrdLive &> ../log.red
+	go test -v -timeout=0 -count=1 -run TestOrdLive &> log.red
 
 golden-2hr: # takes 2 hours to check all isolates.
 	if [ -f log.golden.2hr ]; then mv log.golden.2hr log.golden.2hr.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run Test2hrOrdLive &> ../log.golden.2hr
+	go test -v -timeout=0 -count=1 -run Test2hrOrdLive &> log.golden.2hr
 
 rfn: # TestRfnAbsIso start 3 hours in on golden-2hr. start with it. do we go faster?
 	if [ -f log.rfn ]; then mv log.rfn log.rfn.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestRfnAbsIso &> ../log.rfn
+	go test -v -timeout=0 -count=1 -run TestRfnAbsIso &> log.rfn
 
 syslive: # parser/golden_test.go:489 TestSysLiveIso
 	if [ -f log.syslive ]; then mv log.syslive log.syslive.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestSysLiveIso &> ../log.syslive
+	go test -v -timeout=0 -count=1 -run TestSysLiveIso &> log.syslive
 
 this: # parser/golden_test.go:496 TestThisIso
 	if [ -f log.this ]; then mv log.this log.this.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestThisIso &> ../log.this
+	go test -v -timeout=0 -count=1 -run TestThisIso &> log.this
 
 golden-v: # to see all productions not just last 10
-	cd parser && go test -v -run TestVerboseOrdLive &> ../log.all.til.div
+	go test -v -run TestVerboseOrdLive &> log.all.til.div
 
 golden-nonstop: # to see all productions and not stop at first diff.
-	cd parser && go test -v -run TestVerboseNonstopOrdLive &> ../log.nonstop
+	go test -v -run TestVerboseNonstopOrdLive &> log.nonstop
 
 tlb:
 	if [ -f log.tlb ]; then mv log.tlb log.tlb.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestIvyTlbModel &> ../log.tlb
+	go test -v -timeout=0 -count=1 -run TestIvyTlbModel &> log.tlb
 
 tilelink: # an ivy v1.1 .ivy file: ivy/ivy-lang-examples/examples/tilelink/tilelink1.ivy
 	if [ -f log.tilelink ]; then mv log.tilelink log.tilelink.prev; fi
-	cd parser && go test -v -timeout=0 -count=1 -run TestIvy_1dot1_tilelink1_model &> ../log.tilelink
+	go test -v -timeout=0 -count=1 -run TestIvy_1dot1_tilelink1_model &> log.tilelink
 
 ord: # xtraced 
 	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
@@ -172,7 +172,7 @@ pprof-full:  # Full profile with CPU/mem profiling
 vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
-	-cd parser && go test -v -run TestOrdLive &> ../log.red
+	-go test -v -run TestOrdLive &> log.red
 	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
 	-goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	-diff py.ord.out log.gox > diffs

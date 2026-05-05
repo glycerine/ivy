@@ -434,7 +434,6 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 
 	dir = filepath.Dir(filename)
 	dir = filepath.Dir(dir)
-	dir = filepath.Dir(dir)
 	return
 }
 
