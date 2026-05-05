@@ -786,7 +786,7 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *History {
 				return nil
 			},
 		}
-		xtracer.Trace("interp.InterpState.Update calling GetUpdate type=%s", ActionTypeName(state.Action))
+		xtracer.Trace("interp.State.Update calling GetUpdate type=%s", ActionTypeName(state.Action))
 		state.Update = GetUpdate(state.Action, ctx)
 	}
 

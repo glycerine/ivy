@@ -167,7 +167,7 @@ func (s *InterpState) Update() *Update {
 		return nil
 	}
 
-	xtracer.Trace("interp.InterpState.Update calling GetUpdate type=%s", ActionTypeName(action))
+	xtracer.Trace("interp.State.Update calling GetUpdate type=%s", ActionTypeName(action))
 
 	ctx := &UpdateContext{
 		Domain:          s.Domain,
