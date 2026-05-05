@@ -1034,9 +1034,19 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
 
     summarized_actions = set()
     for actname,action in mod.actions.items():
-        if __debug__: xtracer.trace("isolate.classify_loop actname=%s type=%s" % (actname, type(action).__name__))
+        if __debug__: xtracer.trace("isolate.classify_loop HASH canon= actname=%s type=%s" % (actname, type(action).__name__))
         ver = vstartswith_eq_some(actname,verified,mod)
         pre = startswith_eq_some(actname,present,mod)
+        if __debug__: 
+            mapped_actname = implementation_map.get(actname,actname)
+            parent,child = iu.parent_child_name(mapped_actname)
+            current_vprivates = globals().get('vprivates',set())
+            xtracer.trace("isolate.classify_decision HASH canon= actname=%s mapped=%s parent=%s pre=%s ver=%s delegate=%s act_present=%s mapped_present=%s parent_present=%s act_verified=%s mapped_verified=%s parent_verified=%s act_private=%s mapped_private=%s parent_private=%s act_vprivate=%s mapped_vprivate=%s parent_vprivate=%s" %
+                                    (actname, mapped_actname, parent, pre, ver, actname in delegates,
+                                     actname in present, mapped_actname in present, parent in present,
+                                     actname in verified, mapped_actname in verified, parent in verified,
+                                     actname in mod.privates, mapped_actname in mod.privates, parent in mod.privates,
+                                     actname in current_vprivates, mapped_actname in current_vprivates, parent in current_vprivates))
         if pre: 
             if not ver or actname in delegates:
                 ext_kinds = [ia.AssertAction,ia.EnsuresAction,ia.RequiresAction] 

@@ -516,9 +516,22 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions.All() {
-		xtracer.Trace("isolate.classify_loop actname=%s type=%s", actname, ActionTypeName(act))
+		xtracer.Trace("isolate.classify_loop HASH canon= actname=%s type=%s", actname, ActionTypeName(act))
 		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
 		pre := StartsWithEqSome(actname, present, mod, implementationMap)
+		mappedActname := actname
+		if mapped, ok := implementationMap[actname]; ok {
+			mappedActname = mapped
+		}
+		if xtracer.Enabled {
+			parent := mod.Cfg.IuCfg.ParentChildName(mappedActname)[0]
+			xtracer.Trace("isolate.classify_decision HASH canon= actname=%s mapped=%s parent=%s pre=%v ver=%v delegate=%v act_present=%v mapped_present=%v parent_present=%v act_verified=%v mapped_verified=%v parent_verified=%v act_private=%v mapped_private=%v parent_private=%v act_vprivate=%v mapped_vprivate=%v parent_vprivate=%v",
+				actname, mappedActname, parent, pre, ver, delegates[actname],
+				present[actname], present[mappedActname], present[parent],
+				verified[actname], verified[mappedActname], verified[parent],
+				mod.Privates[actname], mod.Privates[mappedActname], mod.Privates[parent],
+				mod.VPrivates[actname], mod.VPrivates[mappedActname], mod.VPrivates[parent])
+		}
 
 		if pre {
 			var extAction, intAction ActionsAction
