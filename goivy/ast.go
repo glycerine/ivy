@@ -1027,7 +1027,7 @@ type ChoiceAction struct {
 func (cfg *AstConfig) NewChoiceAction(branches ...Node) *ChoiceAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
 	ca := &ChoiceAction{Branches: branches, UniqueID: id}
 	ca.Cfg = cfg
 	return ca
@@ -1041,7 +1041,7 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 	}
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
 	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: id}
 }
 func (c *ChoiceAction) String() string { return "choice" }
@@ -1062,7 +1062,7 @@ type EnvAction struct {
 func (cfg *AstConfig) NewEnvAction(branches ...Node) *EnvAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
 	ea := &EnvAction{Branches: branches, UniqueID: id}
 	ea.Cfg = cfg
 	return ea
@@ -1076,7 +1076,7 @@ func (a *EnvAction) Clone(args []Node) Node {
 	}
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
-	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller= LogicEnvAction", id, cfg.IuCfg.ChoiceActionCtr)
+	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
 	return &EnvAction{Base: a.Base, Branches: args, UniqueID: id}
 }
 func (a *EnvAction) String() string { return "env" }

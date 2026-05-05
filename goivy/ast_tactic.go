@@ -487,7 +487,7 @@ func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
 			// Python adds the NamedBinder object to the set, but it never matches
 			// any string lookup (it's inert). Skipping xtrace on both sides.
 			//if xtracer.Enabled {
-			//	xtracer.Trace("vocab.add src=App name=%v val_type= LogicNamedBinder", v.Name)
+			//	xtracer.Trace("vocab.add src=App name=%v val_type=NamedBinder", v.Name)
 			//}
 		default:
 			panicf("unhandled type=%T/val=%v", val, val)

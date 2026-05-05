@@ -342,8 +342,8 @@ func (a *LogicAssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 // Implements Python's selective assertion checking via check_unprovable and checked_assert.
 // Python: action_update (ivy_actions.py:343-362)
 func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
-	xtracer.Trace("actions.LogicAssertAction.action_update ENTER")
-	defer xtracer.Trace("actions.LogicAssertAction.action_update EXIT")
+	xtracer.Trace("actions.AssertAction.action_update ENTER")
+	defer xtracer.Trace("actions.AssertAction.action_update EXIT")
 	fmla := a.Formula
 	unprovable := a.Unprovable
 

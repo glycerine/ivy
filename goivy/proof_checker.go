@@ -285,9 +285,9 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 		return res, err
 
 	case *ProofTactic:
-		xtracer.Trace("proof.ApplyProof dispatch name= LogicProofTactic")
+		xtracer.Trace("proof.ApplyProof dispatch name=ProofTactic")
 		res, err := pc.proofTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType= LogicProofTactic ngoals=%d err=%v", len(res), err)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=%v", len(res), err)
 		return res, err
 
 	case *TacticTactic:

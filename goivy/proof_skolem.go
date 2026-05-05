@@ -113,7 +113,7 @@ func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const
 
 		switch f := fmla.(type) {
 		case *LogicNot:
-			xtracer.Trace("proof.SkolemizeFmla branch type= LogicNot pos=%v", pos)
+			xtracer.Trace("proof.SkolemizeFmla branch type=Not pos=%v", pos)
 			return &LogicNot{Body: recExpr(rec, f.Body, !pos)}
 		case *LogicImplies:
 			xtracer.Trace("proof.SkolemizeFmla branch type=Implies pos=%v", pos)
@@ -122,14 +122,14 @@ func SkolemizeFmla(fmla Node, pos bool, renamer *UniqueRenamer, skfuns *[]*Const
 				T2: recExpr(rec, f.T2, pos),
 			}
 		case *LogicAnd:
-			xtracer.Trace("proof.SkolemizeFmla branch type= LogicAnd pos=%v nterms=%d", pos, len(f.Terms))
+			xtracer.Trace("proof.SkolemizeFmla branch type=And pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)
 			}
 			return &LogicAnd{Terms: terms}
 		case *LogicOr:
-			xtracer.Trace("proof.SkolemizeFmla branch type= LogicOr pos=%v nterms=%d", pos, len(f.Terms))
+			xtracer.Trace("proof.SkolemizeFmla branch type=Or pos=%v nterms=%d", pos, len(f.Terms))
 			terms := make([]Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = recExpr(rec, t, pos)

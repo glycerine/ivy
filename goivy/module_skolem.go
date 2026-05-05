@@ -276,14 +276,14 @@ func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla 
 		}
 
 		if _, ok := expr.(*LogicNot); ok {
-			xtracer.Trace("ilu.witnessAst branch type= LogicNot pos=%v", pos)
+			xtracer.Trace("ilu.witnessAst branch type=Not pos=%v", pos)
 			args := NodeArgs(expr)
 			newArg, err := WitnessAst(!pos, vs, witnesses, args[0])
 			if err != nil {
 				return nil, err
 			}
 			result := CloneNode(expr, []Expr{witnessExpr(newArg, args[0])})
-			xtracer.Trace("ilu.witnessAst EXIT type= LogicNot HASH canon=%v", result.Canon())
+			xtracer.Trace("ilu.witnessAst EXIT type=Not HASH canon=%v", result.Canon())
 			return result, nil
 		}
 
