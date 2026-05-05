@@ -1,0 +1,16 @@
+{
+  "name": "ivy-webui-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:webui:js": "cd goivy/webui && ../../node_modules/.bin/vitest run",
+    "test:webui:js:watch": "cd goivy/webui && ../../node_modules/.bin/vitest --watch",
+    "test:webui:browser": "cd goivy/webui && ../../node_modules/.bin/playwright test",
+    "test:webui:browser:headed": "cd goivy/webui && ../../node_modules/.bin/playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.5"
+  }
+}
