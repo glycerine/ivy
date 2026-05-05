@@ -38,7 +38,7 @@ const AssertLocEnabled = false
 // This matches Python's assert_to_assume(kinds) which checks type(self) in kinds.
 //
 // Corresponds to Python's Action.assert_to_assume(kinds).
-func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
+func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) ActionsAction {
 	if action == nil {
 		return nil
 	}
@@ -102,18 +102,18 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 
 // assertToAssumeChildren recursively transforms children of an action.
 // Python: Action.assert_to_assume ALWAYS clones via self.clone(args).
-func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
+func assertToAssumeChildren(action ActionsAction, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) ActionsAction {
 	args := action.Args()
 	newArgs := make([]ast.Node, len(args))
 	for i, arg := range args {
-		if child, ok := arg.(Action); ok {
+		if child, ok := arg.(ActionsAction); ok {
 			newArgs[i] = AssertToAssume(child, kinds, iuCfg...)
 		} else {
 			newArgs[i] = arg // LF, formulas pass through unchanged
 		}
 	}
 	// Python ALWAYS clones — no "changed" optimization.
-	res := action.Clone(newArgs).(Action)
+	res := action.Clone(newArgs).(ActionsAction)
 	CopyFormalsTo(action, res)
 	return res
 }
@@ -123,7 +123,7 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 // AssignAction and HavocAction walk destructor chains.
 // CrashAction walks module hierarchy.
 // All other types (including SetAction and Sequence) return nil.
-func ModifiesSingle(action Action, cfg ...*ActionsConfig) []*lg.Const {
+func ModifiesSingle(action ActionsAction, cfg ...*ActionsConfig) []*lg.Const {
 	if action == nil {
 		return nil
 	}
@@ -141,7 +141,7 @@ func ModifiesSingle(action Action, cfg ...*ActionsConfig) []*lg.Const {
 
 // Modifies returns the list of symbols modified by an action, recursing
 // into children. Uses the given ActionsConfig for destructor lookups (may be nil).
-func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Const {
+func Modifies(action ActionsAction, cfg ...*ActionsConfig) []*lg.Const {
 	var acfg *ActionsConfig
 	if len(cfg) > 0 {
 		acfg = cfg[0]
@@ -151,7 +151,7 @@ func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Const {
 	return result
 }
 
-func modifiesRec(action Action, result *[]*lg.Const, cfg *ActionsConfig) {
+func modifiesRec(action ActionsAction, result *[]*lg.Const, cfg *ActionsConfig) {
 	if action == nil {
 		return
 	}
@@ -309,7 +309,7 @@ func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result
 
 // References returns the set of non-action symbols referenced by an action.
 // Corresponds to Python's Action.references() + get_references().
-func References(action Action, destructorSorts map[string]lg.Sort) *iu.InsMap[lg.NodeKey, lg.Expr] {
+func References(action ActionsAction, destructorSorts map[string]lg.Sort) *iu.InsMap[lg.NodeKey, lg.Expr] {
 	result := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	referencesRec(action, result, destructorSorts)
 	return result
@@ -320,7 +320,7 @@ func References(action Action, destructorSorts map[string]lg.Sort) *iu.InsMap[lg
 //   - AssignAction: only RHS + assign_refs(LHS)
 //   - HavocAction: only assign_refs(target)
 //   - Base Action: all non-Action args
-func referencesRec(action Action, result *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
+func referencesRec(action ActionsAction, result *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
 	if action == nil {
 		return
 	}
@@ -365,7 +365,7 @@ func referencesRec(action Action, result *iu.InsMap[lg.NodeKey, lg.Expr], destru
 		//       if not isinstance(a, Action):
 		//           refs.update(symbols_ast(a))
 		for _, arg := range action.ActionArgs() {
-			if _, isAct := arg.(Action); !isAct && arg != nil {
+			if _, isAct := arg.(ActionsAction); !isAct && arg != nil {
 				if xtracer.Enabled {
 					if ifAct, ok := action.(*IfAction); ok && arg == ifAct.Cond {
 						if sc, ok := ifAct.Cond.(*SomeCondition); ok {
@@ -381,7 +381,7 @@ func referencesRec(action Action, result *iu.InsMap[lg.NodeKey, lg.Expr], destru
 	}
 	// Python get_references (ivy_actions.py:302-306): recurse into Action children
 	for _, arg := range action.ActionArgs() {
-		if child, ok := arg.(Action); ok {
+		if child, ok := arg.(ActionsAction); ok {
 			referencesRec(child, result, destructorSorts)
 		}
 	}
@@ -500,7 +500,7 @@ func collectSymbols(node lg.Expr, result *iu.InsMap[lg.NodeKey, lg.Expr]) {
 // PrefixCalls renames call targets by prepending a prefix.
 // Used during isolate composition.
 // Corresponds to Python's Action.prefix_calls(pref) when pref is a string.
-func PrefixCalls(action Action, prefix string) Action {
+func PrefixCalls(action ActionsAction, prefix string) ActionsAction {
 	if action == nil || prefix == "" {
 		return action
 	}
@@ -512,7 +512,7 @@ func PrefixCalls(action Action, prefix string) Action {
 // PrefixCallsFunc renames call targets using a callable renamer.
 // The renamer receives the current callee name and returns the new name.
 // Python: Action.prefix_calls(pref) when pref is callable.
-func PrefixCallsFunc(action Action, renamer func(string) string) Action {
+func PrefixCallsFunc(action ActionsAction, renamer func(string) string) ActionsAction {
 	if action == nil || renamer == nil {
 		return action
 	}
@@ -547,13 +547,13 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
-			if child, ok := arg.(Action); ok {
+			if child, ok := arg.(ActionsAction); ok {
 				newArgs[i] = PrefixCallsFunc(child, renamer)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		res := action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(ActionsAction)
 		CopyFormalsTo(action, res)
 		return res
 	}
@@ -561,7 +561,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 
 // DropInvariants strips loop invariants from while loops.
 // Corresponds to Python's Action.drop_invariants().
-func DropInvariants(action Action) Action {
+func DropInvariants(action ActionsAction) ActionsAction {
 	if action == nil {
 		return nil
 	}
@@ -580,13 +580,13 @@ func DropInvariants(action Action) Action {
 		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
-			if child, ok := arg.(Action); ok {
+			if child, ok := arg.(ActionsAction); ok {
 				newArgs[i] = DropInvariants(child)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		res := action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(ActionsAction)
 		CopyFormalsTo(action, res)
 		return res
 	}
@@ -600,7 +600,7 @@ type CardFunc func(s lg.Sort) int
 // UnrollLoops converts while loops to bounded if-then-else chains.
 // The card function determines the iteration bound from the loop's index sort.
 // Corresponds to Python's Action.unroll_loops(card) and WhileAction.unroll(card,body).
-func UnrollLoops(action Action, card CardFunc) Action {
+func UnrollLoops(action ActionsAction, card CardFunc) ActionsAction {
 	if action == nil {
 		return nil
 	}
@@ -608,7 +608,7 @@ func UnrollLoops(action Action, card CardFunc) Action {
 	case *WhileAction:
 		// Python: WhileAction.unroll_loops first recurses into body,
 		// then calls self.unroll(card, body)
-		bodyAct, _ := a.Body.(Action)
+		bodyAct, _ := a.Body.(ActionsAction)
 		if bodyAct != nil {
 			bodyAct = UnrollLoops(bodyAct, card)
 		}
@@ -618,13 +618,13 @@ func UnrollLoops(action Action, card CardFunc) Action {
 		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
-			if child, ok := arg.(Action); ok {
+			if child, ok := arg.(ActionsAction); ok {
 				newArgs[i] = UnrollLoops(child, card)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		res := action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(ActionsAction)
 		CopyFormalsTo(action, res)
 		return res
 	}
@@ -633,7 +633,7 @@ func UnrollLoops(action Action, card CardFunc) Action {
 // unrollWhile implements Python's WhileAction.unroll(card, body).
 // Examines the condition to determine an index sort, computes cardinality,
 // and builds the unrolled if-then-else chain.
-func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
+func unrollWhile(a *WhileAction, card CardFunc, body ActionsAction) ActionsAction {
 	cond := a.Cond
 	// Peel through And to find the comparison (Python lines 1027-1028)
 	for {
@@ -695,7 +695,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 
 // GetReferencesInto accumulates non-action symbol references from an
 // action into the given set. Corresponds to Python's get_references().
-func GetReferencesInto(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
+func GetReferencesInto(action ActionsAction, syms *iu.InsMap[lg.NodeKey, lg.Expr], destructorSorts map[string]lg.Sort) {
 	referencesRec(action, syms, destructorSorts)
 }
 
@@ -704,7 +704,7 @@ func GetReferencesInto(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], dest
 // syms is the set of referenced symbols; names is a set of names
 // referenced by proofs that should also be kept.
 // Corresponds to Python's Action.erase_unrefed(refs, names).
-func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map[string]bool, destructorSorts map[string]lg.Sort) Action {
+func EraseUnrefed(action ActionsAction, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map[string]bool, destructorSorts map[string]lg.Sort) ActionsAction {
 	if action == nil {
 		return nil
 	}
@@ -741,7 +741,7 @@ func EraseUnrefed(action Action, syms *iu.InsMap[lg.NodeKey, lg.Expr], names map
 		args := action.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
-			if child, ok := arg.(Action); ok {
+			if child, ok := arg.(ActionsAction); ok {
 				newArgs[i] = EraseUnrefed(child, syms, names, destructorSorts)
 			} else {
 				newArgs[i] = arg
@@ -807,7 +807,7 @@ func rootSymbol(node lg.Expr, destructorSorts map[string]lg.Sort) (*lg.Const, bo
 //
 // so the offending pipeline stage and constructor are immediately
 // identifiable from the panic stack.
-func AssertEveryActionHasLoc(action Action, where string) {
+func AssertEveryActionHasLoc(action ActionsAction, where string) {
 	if !AssertLocEnabled || action == nil {
 		return
 	}
@@ -815,7 +815,7 @@ func AssertEveryActionHasLoc(action Action, where string) {
 	assertEveryActionHasLocRec(action, action, where, &path)
 }
 
-func assertEveryActionHasLocRec(root Action, action Action, where string, path *[]string) {
+func assertEveryActionHasLocRec(root ActionsAction, action ActionsAction, where string, path *[]string) {
 	if action == nil {
 		return
 	}

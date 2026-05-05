@@ -77,7 +77,7 @@ func FormatModule(mod *module.Module) string {
 
 	// Initializers
 	for _, na := range mod.Initializers {
-		if act, ok := na.Action.(actions.Action); ok {
+		if act, ok := na.Action.(actions.ActionsAction); ok {
 			s := fmt.Sprintf("after init {%s}", act.String())
 			b.WriteString(s)
 			b.WriteByte('\n')
@@ -88,7 +88,7 @@ func FormatModule(mod *module.Module) string {
 	actionNames := sortedActionNames(mod)
 	for _, name := range actionNames {
 		actIface := mod.Actions.Get(name)
-		if act, ok := actIface.(actions.Action); ok {
+		if act, ok := actIface.(actions.ActionsAction); ok {
 			b.WriteString(actions.ActionDefToStr(name, act))
 			b.WriteByte('\n')
 		}

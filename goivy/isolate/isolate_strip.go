@@ -64,15 +64,15 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 // StripActionFull removes isolate parameters from an action recursively,
 // with full strip_binding, is_init, and init_params support.
 // Corresponds to Python strip_action (ivy_isolate.py lines 242-289).
-func StripActionFull(action actions.Action, stripMap StripMap, mod *module.Module,
-	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.Action {
+func StripActionFull(action actions.ActionsAction, stripMap StripMap, mod *module.Module,
+	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.ActionsAction {
 	// Python: strip_action always recurses and clones, even with empty strip_map/binding.
 	// No early return — the clone calls produce LF.clone PRESERVE and action __init__ traces.
 	return stripActionFullRec(action, stripMap, mod, binding, isInit, initParams)
 }
 
-func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Module,
-	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.Action {
+func stripActionFullRec(action actions.ActionsAction, stripMap StripMap, mod *module.Module,
+	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.ActionsAction {
 	switch a := action.(type) {
 	case *actions.CallAction:
 		// Python lines 243-248: Strip call action arguments.
@@ -124,9 +124,9 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		oldArgs := action.ActionArgs()
 		newActionArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
-			if act, ok := arg.(actions.Action); ok {
+			if act, ok := arg.(actions.ActionsAction); ok {
 				newActionArgs[i] = stripActionFullRec(act, stripMap, mod, localBinding, isInit, initParams)
-			} else if w, ok := arg.(actions.Action); ok {
+			} else if w, ok := arg.(actions.ActionsAction); ok {
 				newActionArgs[i] = stripActionFullRec(w, stripMap, mod, localBinding, isInit, initParams)
 			} else {
 				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, localBinding)
@@ -137,9 +137,9 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 	case *actions.Sequence:
 		newChildren := make([]lg.Expr, len(a.Elems))
 		for i, child := range a.Elems {
-			if act, ok := child.(actions.Action); ok {
+			if act, ok := child.(actions.ActionsAction); ok {
 				newChildren[i] = stripActionFullRec(act, stripMap, mod, binding, isInit, initParams)
-			} else if w, ok := child.(actions.Action); ok {
+			} else if w, ok := child.(actions.ActionsAction); ok {
 				newChildren[i] = stripActionFullRec(w, stripMap, mod, binding, isInit, initParams)
 			} else {
 				newChildren[i] = stripNodeFull(child, stripMap, mod, binding)
@@ -173,7 +173,7 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		for i, arg := range nodeArgs {
 			newNodeArgs[i] = stripArgNode(arg, stripMap, mod, binding, isInit, initParams)
 		}
-		return action.(ast.Node).Clone(newNodeArgs).(actions.Action)
+		return action.(ast.Node).Clone(newNodeArgs).(actions.ActionsAction)
 	}
 }
 
@@ -186,7 +186,7 @@ func stripArgNode(node ast.Node, stripMap StripMap, mod *module.Module,
 		return nil
 	}
 	// If it's an action, delegate to action stripping.
-	if act, ok := node.(actions.Action); ok {
+	if act, ok := node.(actions.ActionsAction); ok {
 		return stripActionFullRec(act, stripMap, mod, binding, isInit, initParams).(ast.Node)
 	}
 	// If it's a LabeledFormula, recurse into children and clone.
@@ -252,7 +252,7 @@ func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding 
 // parameters from the callee arguments. For other actions, it recursively
 // processes child nodes. Constants and variables that appear in the
 // strip binding are replaced with the corresponding isolate parameter symbols.
-func StripAction(action actions.Action, stripMap StripMap, mod *module.Module) actions.Action {
+func StripAction(action actions.ActionsAction, stripMap StripMap, mod *module.Module) actions.ActionsAction {
 	if len(stripMap) == 0 {
 		return action
 	}
@@ -260,7 +260,7 @@ func StripAction(action actions.Action, stripMap StripMap, mod *module.Module) a
 }
 
 // stripActionRec recursively strips isolate parameters from an action.
-func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module) actions.Action {
+func stripActionRec(action actions.ActionsAction, stripMap StripMap, mod *module.Module) actions.ActionsAction {
 	switch a := action.(type) {
 	case *actions.CallAction:
 		// For call actions, strip parameters from the callee.
@@ -284,9 +284,9 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 	case *actions.Sequence:
 		newChildren := make([]lg.Expr, len(a.Elems))
 		for i, child := range a.Elems {
-			if act, ok := child.(actions.Action); ok {
+			if act, ok := child.(actions.ActionsAction); ok {
 				newChildren[i] = stripActionRec(act, stripMap, mod)
-			} else if w, ok := child.(actions.Action); ok {
+			} else if w, ok := child.(actions.ActionsAction); ok {
 				newChildren[i] = stripActionRec(w, stripMap, mod)
 			} else {
 				newChildren[i] = stripNode(child, stripMap, mod)
@@ -298,9 +298,9 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 		oldArgs := action.ActionArgs()
 		newArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
-			if act, ok := arg.(actions.Action); ok {
+			if act, ok := arg.(actions.ActionsAction); ok {
 				newArgs[i] = stripActionRec(act, stripMap, mod)
-			} else if w, ok := arg.(actions.Action); ok {
+			} else if w, ok := arg.(actions.ActionsAction); ok {
 				newArgs[i] = stripActionRec(w, stripMap, mod)
 			} else {
 				newArgs[i] = stripNode(arg, stripMap, mod)
@@ -533,8 +533,8 @@ type isolateParamProvider interface {
 // strip propagation, and extra_strip.
 //
 // Corresponds to Python strip_isolate (lines 341-456).
-func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
-	implMixins *iu.InsMap[string, []MixinDef], allAfterInits map[string]bool,
+func StripIsolateParams(mod *module.Module, isolate IsolateDefIface,
+	implMixins *iu.InsMap[string, []IsolateMixinIface], allAfterInits map[string]bool,
 	extraStrip map[string][]string) error {
 
 	isoCfg := mod.Cfg.IsolateCfg

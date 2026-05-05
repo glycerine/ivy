@@ -7,33 +7,33 @@ import (
 
 // Match implements unification with a push/pop stack for backtracking.
 // This is used for schema matching in axiom expansion.
-type Match struct {
+type MCMatch struct {
 	stack [][]string        // stack of lists of keys added at each level
 	Map   map[string]string // current variable->value mapping
 }
 
 // NewMatch creates a new empty Match.
-func NewMatch() *Match {
-	return &Match{
+func NewMatch() *MCMatch {
+	return &MCMatch{
 		stack: [][]string{{}},
 		Map:   make(map[string]string),
 	}
 }
 
 // Add adds a binding x -> y to the match and records it on the stack.
-func (m *Match) Add(x, y string) {
+func (m *MCMatch) Add(x, y string) {
 	m.Map[x] = y
 	m.stack[len(m.stack)-1] = append(m.stack[len(m.stack)-1], x)
 }
 
 // Push creates a new backtracking point.
-func (m *Match) Push() {
+func (m *MCMatch) Push() {
 	m.stack = append(m.stack, []string{})
 }
 
 // Pop reverts to the previous backtracking point, removing all bindings
 // added since the last Push.
-func (m *Match) Pop() {
+func (m *MCMatch) Pop() {
 	if len(m.stack) == 0 {
 		return
 	}
@@ -47,7 +47,7 @@ func (m *Match) Pop() {
 // Unify attempts to unify x with y. If x is not yet bound, it is bound to y.
 // If x is already bound, it succeeds only if the existing binding equals y.
 // If x ends with "_finite" and y is not a finite sort name, it fails.
-func (m *Match) Unify(x, y string) bool {
+func (m *MCMatch) Unify(x, y string) bool {
 	if existing, ok := m.Map[x]; ok {
 		return existing == y
 	}
@@ -61,7 +61,7 @@ func (m *Match) Unify(x, y string) bool {
 }
 
 // UnifyLists attempts to unify two lists element-wise.
-func (m *Match) UnifyLists(xl, yl []string) bool {
+func (m *MCMatch) UnifyLists(xl, yl []string) bool {
 	if len(xl) != len(yl) {
 		return false
 	}
@@ -74,7 +74,7 @@ func (m *Match) UnifyLists(xl, yl []string) bool {
 }
 
 // Copy returns a shallow copy of the current match map.
-func (m *Match) Copy() map[string]string {
+func (m *MCMatch) Copy() map[string]string {
 	cp := make(map[string]string, len(m.Map))
 	for k, v := range m.Map {
 		cp[k] = v
@@ -108,8 +108,7 @@ func MatchSchemaPrems(
 	prems []string,
 	sortConstants map[string][]string,
 	funs []string,
-	match *Match,
-	boundSorts map[string]bool,
+	match *MCMatch, boundSorts map[string]bool,
 	callback func(map[string]string),
 ) {
 	if len(prems) == 0 {
@@ -138,7 +137,7 @@ func MatchSchemaPrems(
 
 // ApplyMatch applies a match map to a template string, replacing
 // occurrences of match keys with their values.
-func ApplyMatch(match map[string]string, template string) string {
+func MCApplyMatch(match map[string]string, template string) string {
 	result := template
 	for k, v := range match {
 		result = strings.ReplaceAll(result, k, v)

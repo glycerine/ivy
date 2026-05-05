@@ -39,9 +39,9 @@ func verifyActionPreservation(t *testing.T, mod *module.Module, actName string) 
 	if !ok {
 		t.Fatalf("action %q not found", actName)
 	}
-	action, ok := actionIface.(actions.Action)
+	action, ok := actionIface.(actions.ActionsAction)
 	if !ok {
-		t.Fatalf("action %q is not actions.Action, got %T", actName, actionIface)
+		t.Fatalf("action %q is not actions.ActionsAction, got %T", actName, actionIface)
 	}
 
 	ag := art.NewAnalysisGraph(mod)

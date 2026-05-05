@@ -40,8 +40,8 @@ type State struct {
 	Unders     []*State        // under-approximations (for exact states)
 	Value      *actions.Update // assigned during BMC
 	Universe   interface{}     // assigned during BMC
-	Action     actions.Action
-	ActionName string // name of the action (matches interp.State.ActionName)
+	Action     actions.ActionsAction
+	ActionName string // name of the action (matches interp.InterpState.ActionName)
 	ArgNode    *State // reference to a state in another graph (for copy_path)
 }
 
@@ -100,7 +100,7 @@ func (s *State) String() string {
 // -----------------------------------------------------------------------
 
 // Provenance records how a state was derived (its provenance).
-// Named to avoid confusion with lg.Expr, ast.Node, and interp.State.Expr.
+// Named to avoid confusion with lg.Expr, ast.Node, and interp.InterpState.Expr.
 type Provenance interface {
 	provenanceMarker()
 }
@@ -108,7 +108,7 @@ type Provenance interface {
 // ActionApp records that a state was derived by applying an action to a
 // predecessor state.
 type ActionApp struct {
-	Rep      interface{} // either an actions.Action or a string (action name)
+	Rep      interface{} // either an actions.ActionsAction or a string (action name)
 	Args     []*State
 	Subgraph *AnalysisGraph // cached decomposition subgraph
 }
@@ -233,7 +233,7 @@ func (ac *AC) NewState(clauses *module.Clauses, exact bool, prov Provenance) *St
 // Transition records a graph edge: prestate --(action/label)--> poststate.
 type Transition struct {
 	Pre   *State
-	Op    actions.Action // may be nil for joins
+	Op    actions.ActionsAction // may be nil for joins
 	Label string
 	Post  *State
 }
@@ -322,10 +322,10 @@ func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 			if state.Pred == nil {
 				state.Pred = e.Args[0]
 			}
-			var action actions.Action
+			var action actions.ActionsAction
 			var label string
 			switch rep := e.Rep.(type) {
-			case actions.Action:
+			case actions.ActionsAction:
 				action = rep
 				label = LabelFromAction(rep)
 			case string:
@@ -334,7 +334,7 @@ func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 				if !ok {
 					panic(fmt.Sprintf("art.Add: action %q not found in actions", rep))
 				}
-				if act, ok2 := a.(actions.Action); ok2 {
+				if act, ok2 := a.(actions.ActionsAction); ok2 {
 					action = act
 				}
 			}
@@ -373,7 +373,7 @@ func (ag *AnalysisGraph) LastState() *State {
 // Execute executes an action on a prestate (defaulting to the last state),
 // computes the post-state, and adds it to the graph.
 // Returns an error if the action's precondition fails (when checkPrecond is true).
-func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) (*State, error) {
+func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.ActionsAction, prestate *State, abstractor Abstractor, label string) (*State, error) {
 	xtracer.Trace("art.Execute ENTER")
 	if prestate == nil {
 		prestate = ag.LastState()
@@ -400,7 +400,7 @@ func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate 
 	if !ok {
 		return nil, fmt.Errorf("art.ExecuteAction: action %q not found", name)
 	}
-	action, ok := a.(actions.Action)
+	action, ok := a.(actions.ActionsAction)
 	if !ok {
 		return nil, fmt.Errorf("art.ExecuteAction: %q is not an Action", name)
 	}
@@ -416,7 +416,7 @@ func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate 
 //
 // When checkPrecond is true the action's precondition is checked; if it is
 // violated an error wrapping interp.IvyActionFailedError is returned.
-func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.Action, preState *State, abstractor Abstractor) (*State, error) {
+func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.ActionsAction, preState *State, abstractor Abstractor) (*State, error) {
 	xtracer.Trace("art.PostState ENTER opName=%s", actions.ActionTypeName(op))
 	xtracer.Trace("art.PostState calling GetUpdate type=%s", actions.ActionTypeName(op))
 	interpPre := ArtToInterpState(preState)
@@ -630,7 +630,7 @@ func (ag *AnalysisGraph) Recalculate(checkPrecond bool, t Transition, abstractor
 	} else {
 		if t.Label != "" {
 			if a, ok := ag.Actions.Get2(t.Label); ok {
-				if act, ok2 := a.(actions.Action); ok2 {
+				if act, ok2 := a.(actions.ActionsAction); ok2 {
 					ps, err = ag.PostState(checkPrecond, act, t.Pre, abstractor)
 					if err != nil {
 						return nil, err
@@ -785,16 +785,16 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 			Instantiator:    state.Domain.Instantiator,
 			CheckUnprovable: state.Domain.Cfg.OnlyCheckUnprovable,
 			CheckedAssert:   state.Domain.Cfg.CheckLineno,
-			GetAction: func(name string) actions.Action {
+			GetAction: func(name string) actions.ActionsAction {
 				if v, ok := state.Domain.Actions.Get2(name); ok {
-					if act, ok := v.(actions.Action); ok {
+					if act, ok := v.(actions.ActionsAction); ok {
 						return act
 					}
 				}
 				return nil
 			},
 		}
-		xtracer.Trace("interp.State.Update calling GetUpdate type=%s", actions.ActionTypeName(state.Action))
+		xtracer.Trace("interp.InterpState.Update calling GetUpdate type=%s", actions.ActionTypeName(state.Action))
 		state.Update = actions.GetUpdate(state.Action, ctx)
 	}
 
@@ -813,7 +813,7 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *actions.History {
 		if state.Prov != nil {
 			if aa, ok := state.Prov.(*ActionApp); ok {
 				switch rep := aa.Rep.(type) {
-				case actions.Action:
+				case actions.ActionsAction:
 					actionNode = rep
 				case lg.Expr:
 					actionNode = rep
@@ -933,7 +933,7 @@ func (ag *AnalysisGraph) CheckSafety(checkPrecond bool, state *State) *SafetyRes
 			switch rep := aa.Rep.(type) {
 			case string:
 				actionName = rep
-			case actions.Action:
+			case actions.ActionsAction:
 				actionName = rep.Name()
 			}
 			if actionName != "" && len(aa.Args) > 0 {
@@ -1053,11 +1053,11 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 		return nil
 	}
 	var actionName string
-	var action actions.Action
+	var action actions.ActionsAction
 	switch rep := aa.Rep.(type) {
 	case string:
 		actionName = rep
-	case actions.Action:
+	case actions.ActionsAction:
 		action = rep
 		actionName = rep.Name()
 	}
@@ -1068,7 +1068,7 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	interpState := ArtToInterpState(state)
 	interpPre := ArtToInterpState(aa.Args[0])
 
-	var resultState *interp.State
+	var resultState *interp.InterpState
 	var err error
 	if action != nil {
 		resultState, err = interp.DecomposeAction(true, ag.Domain.Cfg.IuCfg, interpState, interpPre, action)
@@ -1086,8 +1086,8 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	otherArt := NewAnalysisGraph(ag.Domain)
 
 	// Walk the chain of states from resultState back to the root,
-	// converting each interp.State to an art.State and adding to the sub-graph.
-	var interpStates []*interp.State
+	// converting each interp.InterpState to an art.State and adding to the sub-graph.
+	var interpStates []*interp.InterpState
 	for cur := resultState; cur != nil; cur = cur.Pred() {
 		interpStates = append(interpStates, cur)
 	}
@@ -1127,16 +1127,16 @@ func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 			continue
 		}
 		prestate := aa.Args[0]
-		var action actions.Action
+		var action actions.ActionsAction
 		var label string
 		switch rep := aa.Rep.(type) {
-		case actions.Action:
+		case actions.ActionsAction:
 			action = rep
 			label = LabelFromAction(rep)
 		case string:
 			label = rep
 			if a, ok := ag.Actions.Get2(rep); ok {
-				if act, ok2 := a.(actions.Action); ok2 {
+				if act, ok2 := a.(actions.ActionsAction); ok2 {
 					action = act
 				}
 			}
@@ -1492,7 +1492,7 @@ func (s *AnalysisSubgraph) String() string {
 // LabelFromAction returns a label string for the given action.
 // If the action has Labels set, returns the first one; otherwise returns
 // a truncated string representation.
-func LabelFromAction(action actions.Action) string {
+func LabelFromAction(action actions.ActionsAction) string {
 	if ab, ok := action.(interface{ GetLabel() string }); ok {
 		if label := ab.GetLabel(); label != "" {
 			return label
@@ -1594,10 +1594,10 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 				Instantiator:    mod.Instantiator,
 				CheckUnprovable: mod.Cfg.OnlyCheckUnprovable,
 				CheckedAssert:   mod.Cfg.CheckLineno,
-				GetAction: func(name string) actions.Action {
+				GetAction: func(name string) actions.ActionsAction {
 					if mod != nil {
 						if a, ok := mod.Actions.Get2(name); ok {
-							if act, ok2 := a.(actions.Action); ok2 {
+							if act, ok2 := a.(actions.ActionsAction); ok2 {
 								return act
 							}
 						}
@@ -1678,17 +1678,17 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------
-// State type adapters: art.State <-> interp.State
+// State type adapters: art.State <-> interp.InterpState
 // -----------------------------------------------------------------------
 
-// ArtToInterpState converts an art.State to an interp.State for calling
+// ArtToInterpState converts an art.State to an interp.InterpState for calling
 // interp functions. Uses memoization to preserve pointer identity and
-// converts art.State.Prov (art.Provenance) to interp.State.Expr (ast.Node).
-func ArtToInterpState(s *State) *interp.State {
-	return artToInterpMemo(s, make(map[*State]*interp.State))
+// converts art.State.Prov (art.Provenance) to interp.InterpState.Expr (ast.Node).
+func ArtToInterpState(s *State) *interp.InterpState {
+	return artToInterpMemo(s, make(map[*State]*interp.InterpState))
 }
 
-func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
+func artToInterpMemo(s *State, memo map[*State]*interp.InterpState) *interp.InterpState {
 	if s == nil {
 		return nil
 	}
@@ -1696,7 +1696,7 @@ func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
 		return is
 	}
 	sv := interp.NewStateValue(nil, s.Clauses, module.FalseClauses(nil))
-	is := interp.NewState(s.Domain, sv, nil, s.Label)
+	is := interp.NewInterpState(s.Domain, sv, nil, s.Label)
 	memo[s] = is // memo before recursing to break cycles
 	is.InScope = s.InScope
 	is.Action = s.Action
@@ -1712,14 +1712,14 @@ func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
 			is.JoinOf = append(is.JoinOf, artToInterpMemo(jo, memo))
 		}
 	}
-	// Convert art.State.Prov (art.Provenance) → interp.State.Expr (ast.Node)
+	// Convert art.State.Prov (art.Provenance) → interp.InterpState.Expr (ast.Node)
 	is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, memo)
 	return is
 }
 
 // provenanceToInterpExpr converts an art.Provenance to an ast.Node
-// suitable for interp.State.Expr.
-func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*State]*interp.State) ast.Node {
+// suitable for interp.InterpState.Expr.
+func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*State]*interp.InterpState) ast.Node {
 	if prov == nil {
 		return nil
 	}
@@ -1748,14 +1748,14 @@ func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*St
 	return nil
 }
 
-// InterpToArtState converts an interp.State back to an art.State.
+// InterpToArtState converts an interp.InterpState back to an art.State.
 // Uses memoization to preserve pointer identity and converts
-// interp.State.Expr (ast.Node) to art.State.Prov (art.Provenance).
-func InterpToArtState(is *interp.State) *State {
-	return interpToArtMemo(is, make(map[*interp.State]*State))
+// interp.InterpState.Expr (ast.Node) to art.State.Prov (art.Provenance).
+func InterpToArtState(is *interp.InterpState) *State {
+	return interpToArtMemo(is, make(map[*interp.InterpState]*State))
 }
 
-func interpToArtMemo(is *interp.State, memo map[*interp.State]*State) *State {
+func interpToArtMemo(is *interp.InterpState, memo map[*interp.InterpState]*State) *State {
 	if is == nil {
 		return nil
 	}
@@ -1779,7 +1779,7 @@ func interpToArtMemo(is *interp.State, memo map[*interp.State]*State) *State {
 			s.JoinOf = append(s.JoinOf, interpToArtMemo(jo, memo))
 		}
 	}
-	// Convert interp.State.Expr (ast.Node) → art.State.Prov (art.Provenance)
+	// Convert interp.InterpState.Expr (ast.Node) → art.State.Prov (art.Provenance)
 	s.Prov = interpExprToProvenance(is.Expr, memo)
 	return s
 }
@@ -1791,7 +1791,7 @@ func interpToArtMemo(is *interp.State, memo map[*interp.State]*State) *State {
 //
 //	interp ActionApp (ast.Atom, 1 stateNode arg) → *art.ActionApp
 //	interp StateJoin (ast.Or, stateNode args)     → *art.StateJoin
-func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Provenance {
+func interpExprToProvenance(expr ast.Node, memo map[*interp.InterpState]*State) Provenance {
 	if expr == nil {
 		return nil
 	}
@@ -1806,7 +1806,7 @@ func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Proven
 		}
 		return &ActionApp{Rep: rep, Args: args}
 	}
-	if interp.IsStateJoin(expr) {
+	if interp.IsInterpStateJoin(expr) {
 		or := expr.(*ast.AstOr)
 		var args []*State
 		for _, term := range or.Terms {

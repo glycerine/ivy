@@ -205,7 +205,7 @@ func TestSubstituteCaptureError(t *testing.T) {
 	if err == nil {
 		t.Error("expected CaptureError")
 	}
-	var ce *CaptureError
+	var ce *LogicUtilCaptureError
 	if !errors.As(err, &ce) {
 		t.Errorf("expected CaptureError, got %T: %v", err, err)
 	}

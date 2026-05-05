@@ -302,7 +302,7 @@ func TestGenerateProgram(t *testing.T) {
 	syms := []SymbolDef{
 		{Name: "r", Sort: lg.Boolean},
 	}
-	actMap := map[string]actions.Action{
+	actMap := map[string]actions.ActionsAction{
 		"act1": actions.NewAssignAction(
 			lg.NewConst("x", lg.Boolean),
 			lg.NewConst("y", lg.Boolean),
@@ -328,7 +328,7 @@ func TestGenerateProgram(t *testing.T) {
 
 func TestGenerateProgramNoExports(t *testing.T) {
 	g := NewGenerator()
-	err := g.GenerateProgram(nil, map[string]actions.Action{}, nil, "test")
+	err := g.GenerateProgram(nil, map[string]actions.ActionsAction{}, nil, "test")
 	if err != nil {
 		t.Fatal(err)
 	}

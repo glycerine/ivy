@@ -68,7 +68,7 @@ func l2sAutoInvariants(
 			if !ok || f == nil {
 				continue
 			}
-			// H9 / Python ivy_l2s.py:210-212: strip ONLY one outer ForAll,
+			// H9 / Python ivy_l2s.py:210-212: strip ONLY one outer CheckForAll,
 			// not all levels (DropUniversals would over-strip nested
 			// quantifiers, producing ill-formed results).
 			var tmp lg.Expr = f

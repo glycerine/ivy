@@ -190,8 +190,8 @@ func TestUnrollLoops_FormalsPreserved(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	fp := result.(Action).GetFormalParams()
-	fr := result.(Action).GetFormalReturns()
+	fp := result.(ActionsAction).GetFormalParams()
+	fr := result.(ActionsAction).GetFormalReturns()
 	if len(fp) != 1 || fp[0].Name != "p" {
 		t.Errorf("formal params not preserved: %v", fp)
 	}
@@ -316,7 +316,7 @@ func TestUnrollLoops_ZeroCard(t *testing.T) {
 
 // --- helpers ---
 
-func countIfNesting(act Action) int {
+func countIfNesting(act ActionsAction) int {
 	ifAct, ok := act.(*IfAction)
 	if !ok {
 		return 0
@@ -324,25 +324,25 @@ func countIfNesting(act Action) int {
 	count := 1
 	if seq, ok := ifAct.ThenBody.(*Sequence); ok {
 		for _, e := range seq.Elems {
-			if child, ok := e.(Action); ok {
+			if child, ok := e.(ActionsAction); ok {
 				n := countIfNesting(child)
 				if n > 0 {
 					count += n
 				}
 			}
 		}
-	} else if child, ok := ifAct.ThenBody.(Action); ok {
+	} else if child, ok := ifAct.ThenBody.(ActionsAction); ok {
 		count += countIfNesting(child)
 	}
 	return count
 }
 
-func containsWhile(act Action) bool {
+func containsWhile(act ActionsAction) bool {
 	if _, ok := act.(*WhileAction); ok {
 		return true
 	}
 	for _, arg := range act.ActionArgs() {
-		if child, ok := arg.(Action); ok {
+		if child, ok := arg.(ActionsAction); ok {
 			if containsWhile(child) {
 				return true
 			}

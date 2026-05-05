@@ -12,7 +12,7 @@ type recordingAnnotationHandler struct {
 
 func (h *recordingAnnotationHandler) Eval(cond lg.Expr) bool { return true }
 
-func (h *recordingAnnotationHandler) Handle(action Action, env map[lg.NodeKey]lg.Expr) {
+func (h *recordingAnnotationHandler) Handle(action ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	label := ""
 	if labeled, ok := action.(interface{ GetLabel() string }); ok {
 		label = labeled.GetLabel()
@@ -20,8 +20,8 @@ func (h *recordingAnnotationHandler) Handle(action Action, env map[lg.NodeKey]lg
 	h.labels = append(h.labels, label)
 }
 
-func (h *recordingAnnotationHandler) DoReturn(action Action, env map[lg.NodeKey]lg.Expr) {}
-func (h *recordingAnnotationHandler) Fail()                                              {}
+func (h *recordingAnnotationHandler) DoReturn(action ActionsAction, env map[lg.NodeKey]lg.Expr) {}
+func (h *recordingAnnotationHandler) Fail()                                                     {}
 
 func TestMatchAnnotationEnvActionUsesChosenBranchLabel(t *testing.T) {
 	branch := NewSequence(NewAssumeAction(lg.True), NewReturnAction())

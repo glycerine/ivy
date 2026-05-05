@@ -154,7 +154,7 @@ func (s SomeString) Canon() iu.Canonical {
 // fmlaPair is a (formula, source) pair used throughout the checker.
 type fmlaPair struct {
 	fmla   lg.Expr
-	source ast.Node // *ast.LabeledFormula or actions.Action
+	source ast.Node // *ast.LabeledFormula or actions.ActionsAction
 	lineno int
 }
 
@@ -269,7 +269,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 			sSigma := c.getStratNodeWith(eqExprKey(eq.T1), stratEntry{sym: lg.NewConst("=", sort), isSort: true, eqExpr: eq.T1})
 			for i, r := range reses {
 				if r.node != nil {
-					uf.Unify(r.node, sSigma)
+					uf.UFUnify(r.node, sSigma)
 				}
 				for _, v := range sortedUFNodes(reses[i].uvs) {
 					c.arcs = append(c.arcs, arc{from: v, to: sSigma, fmla: fmla, lineno: lineno, argIdx: -1})
@@ -291,7 +291,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 	if il.IsIte(fmla) {
 		if len(reses) >= 3 {
 			if reses[1].node != nil && reses[2].node != nil {
-				uf.Unify(reses[1].node, reses[2].node)
+				uf.UFUnify(reses[1].node, reses[2].node)
 			}
 			var resultNode *uf.UFNode
 			if reses[1].node != nil {
@@ -322,7 +322,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 				for i, r := range reses {
 					anode := c.getStratNodeWith(appKey(rep, i), stratEntry{sym: rep, idx: i})
 					if r.node != nil {
-						uf.Unify(anode, r.node)
+						uf.UFUnify(anode, r.node)
 					}
 					for _, v := range sortedUFNodes(reses[i].uvs) {
 						c.arcs = append(c.arcs, arc{from: v, to: anode, fmla: fmla, lineno: lineno, argIdx: i, hasIdx: true})
@@ -381,7 +381,7 @@ func (c *checker) isArithmeticLiteral(app lg.Expr, pos int, nodes []*uf.UFNode, 
 	if il.IsStrictInequalitySymbol(rep.Name, pol) {
 		otherIdx := 1 - pos
 		if otherIdx >= 0 && otherIdx < len(nodes) && nodes[otherIdx] != nil {
-			uf.Unify(nodes[0], nodes[1])
+			uf.UFUnify(nodes[0], nodes[1])
 			return true
 		}
 	}
@@ -511,7 +511,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 // varMapAdd adds or unifies a macro variable mapping.
 func (c *checker) varMapAdd(wid varID, vn *uf.UFNode) {
 	if existing, ok := c.macroVarMap[wid]; ok {
-		uf.Unify(existing, vn)
+		uf.UFUnify(existing, vn)
 	} else {
 		c.macroVarMap[wid] = vn
 	}
@@ -826,8 +826,8 @@ func CheckFEU(
 		// Dump arcs count and simplified form
 		xtracer.Trace("fragment HASH canon= arcs (%d):", len(c.arcs))
 		for i, a := range c.arcs {
-			fromRoot := uf.Find(a.from).ID
-			toRoot := uf.Find(a.to).ID
+			fromRoot := uf.UFFind(a.from).ID
+			toRoot := uf.UFFind(a.to).ID
 			xtracer.Trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
 				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.argIdx) // a.lineno,
 		}
@@ -851,7 +851,7 @@ func (c *checker) findCycle() []arc {
 	type nodeID = int64
 	adj := make(map[nodeID][]arc)
 	for _, a := range c.arcs {
-		fromID := uf.Find(a.from).ID
+		fromID := uf.UFFind(a.from).ID
 		adj[fromID] = append(adj[fromID], a)
 	}
 
@@ -869,7 +869,7 @@ func (c *checker) findCycle() []arc {
 		}
 		stack[node] = true
 		for _, a := range adj[node] {
-			toID := uf.Find(a.to).ID
+			toID := uf.UFFind(a.to).ID
 			if dfs(toID) {
 				path = append(path, a)
 				return true
@@ -881,17 +881,17 @@ func (c *checker) findCycle() []arc {
 	}
 
 	for _, a := range c.arcs {
-		fromID := uf.Find(a.from).ID
+		fromID := uf.UFFind(a.from).ID
 		if dfs(fromID) {
 			if len(path) == 0 {
 				return nil
 			}
 			// Extract actual cycle
-			endID := uf.Find(path[0].to).ID
+			endID := uf.UFFind(path[0].to).ID
 			var cycle []arc
 			for _, pa := range path {
 				cycle = append(cycle, pa)
-				if uf.Find(pa.from).ID == endID {
+				if uf.UFFind(pa.from).ID == endID {
 					// Reverse
 					for i, j := 0, len(cycle)-1; i < j; i, j = i+1, j-1 {
 						cycle[i], cycle[j] = cycle[j], cycle[i]
@@ -1074,7 +1074,7 @@ func defToConstraint(d *il.Definition) lg.Expr {
 //
 // We are a helper for GetAssumesAndAsserts(). We are only called in
 // two places, both above in GetAssumesAndAsserts().
-func makeFmlaPairsFromAction(action actions.Action, m *module.Module, precondsOnly bool) []fmlaPair {
+func makeFmlaPairsFromAction(action actions.ActionsAction, m *module.Module, precondsOnly bool) []fmlaPair {
 
 	// Compute the action's transition relation
 	ctx := &actions.UpdateContext{Domain: m, ActCfg: m.Cfg.ActCfg, Instantiator: m.Instantiator}

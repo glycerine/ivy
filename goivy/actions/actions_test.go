@@ -383,7 +383,7 @@ func TestHasCode(t *testing.T) {
 }
 
 func TestCallSet(t *testing.T) {
-	env := map[string]Action{
+	env := map[string]ActionsAction{
 		"a": NewCallActionOn(NewActionsConfig(), mkConst("b")),
 		"b": NewCallActionOn(NewActionsConfig(), mkConst("c")),
 		"c": NewSequence(),
@@ -401,7 +401,7 @@ func TestPrefixAction(t *testing.T) {
 	body.SetLineno(ast.Location{Line: 5})
 
 	stmt := NewAssumeAction(mkConst("pre"))
-	result := PrefixAction(body, []Action{stmt})
+	result := PrefixAction(body, []ActionsAction{stmt})
 
 	if _, ok := result.(*Sequence); !ok {
 		t.Error("PrefixAction should return a Sequence")
@@ -420,7 +420,7 @@ func TestPostfixAction(t *testing.T) {
 	}
 
 	stmt := NewAssumeAction(mkConst("post"))
-	result = PostfixAction(body, []Action{stmt})
+	result = PostfixAction(body, []ActionsAction{stmt})
 	if _, ok := result.(*Sequence); !ok {
 		t.Error("PostfixAction should return a Sequence")
 	}
@@ -548,7 +548,7 @@ func FuzzActionClone(f *testing.F) {
 			return
 		}
 		c := mkConst(argName)
-		var a Action
+		var a ActionsAction
 		switch actionType {
 		case "assume":
 			a = NewAssumeAction(c)

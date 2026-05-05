@@ -38,8 +38,8 @@ import (
 // Symbol renaming helpers (new/old vocabulary)
 // -----------------------------------------------------------------------
 
-// New returns the "new" version of a symbol name (post-state vocabulary).
-func New(name string) string {
+// ActionNewName returns the "new" version of a symbol name (post-state vocabulary).
+func ActionNewName(name string) string {
 	return "new_" + name
 }
 
@@ -221,7 +221,7 @@ func StatePrecond(u *Update) *module.Clauses {
 
 // FrameDef returns a frame-condition formula asserting that sym is
 // unchanged across a transition. The op argument selects the vocabulary:
-// pass New to produce  new_sym = sym  (action style), or Old to produce
+// pass ActionNewName to produce  new_sym = sym  (action style), or Old to produce
 // sym = old_sym  (state style).
 //
 // The resulting formula is an equality between the renamed symbol and
@@ -242,14 +242,14 @@ func FrameDef(sym string, op func(string) string) lg.Expr {
 	return eq
 }
 
-// isNewFunc detects whether op is the New function (vs Old) by probing
+// isNewFunc detects whether op is the ActionNewName function (vs Old) by probing
 // with a sentinel value.
 func isNewFunc(op func(string) string) bool {
 	return IsNew(op("_probe_"))
 }
 
 // Frame returns the conjunction of frame conditions for each symbol in
-// the modified list, using the given vocabulary function (New or Old).
+// the modified list, using the given vocabulary function (ActionNewName or Old).
 func Frame(modified []string, op func(string) string) lg.Expr {
 	if len(modified) == 0 {
 		return lg.True
@@ -721,12 +721,12 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	map2 := make(map[lg.NodeKey]*lg.Const)
 
 	for _, v := range updated1 {
-		map2[lg.Key(v)] = lg.NewConst(New(v.Name), v.CSort)
+		map2[lg.Key(v)] = lg.NewConst(ActionNewName(v.Name), v.CSort)
 	}
 	for _, mv := range mid {
 		mvfName := rn.Rename(mv.Name)
 		mvf := lg.NewConst(mvfName, mv.CSort)
-		map1[lg.Key(lg.NewConst(New(mv.Name), mv.CSort))] = mvf
+		map1[lg.Key(lg.NewConst(ActionNewName(mv.Name), mv.CSort))] = mvf
 		map2[lg.Key(mv)] = mvf
 	}
 
@@ -753,7 +753,7 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	}
 
 	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
-	pre1 = module.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewConst, axioms))
+	pre1 = module.AndClausesTyped(pre1, DiffFrameConstUpdate(u1, u2, NewActionConst, axioms))
 
 	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2), annot_op=my_annot_op)
 	// (my_annot_op at ivy_transrel.py:447 is the same compose lambda.)
@@ -832,7 +832,7 @@ func formulaUsesSyms(node lg.Expr, syms map[string]bool) bool {
 // other, then takes the disjunction of transition relations and
 // preconditions.
 func JoinAction(u1, u2 *Update, axioms *module.Clauses) *Update {
-	return joinUpdate(u1, u2, NewConst, axioms)
+	return joinUpdate(u1, u2, NewActionConst, axioms)
 }
 
 // JoinState computes the join of two state-style updates.
@@ -877,7 +877,7 @@ func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Cla
 // If cond is true, the first update applies; otherwise the second.
 // Frame conditions are added for symbols modified asymmetrically.
 func IteAction(cond lg.Expr, u1, u2 *Update, axioms *module.Clauses) *Update {
-	return iteUpdate(cond, u1, u2, NewConst, axioms)
+	return iteUpdate(cond, u1, u2, NewActionConst, axioms)
 }
 
 // IteState computes the conditional update for state-style updates.
@@ -964,7 +964,7 @@ func Hide(inputSyms []*lg.Const, u *Update) *Update {
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
 			if symNames[s.Name] {
-				nc := NewConst(s)
+				nc := NewActionConst(s)
 				syms = append(syms, nc)
 				symNames[nc.Name] = true
 			}
@@ -1118,7 +1118,7 @@ func StateToAction(u *Update) *Update {
 	// Python's Symbol-keyed substitution dict.
 	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range u.Modified {
-		renaming[lg.Key(s)] = NewConst(s)
+		renaming[lg.Key(s)] = NewActionConst(s)
 	}
 	for _, sym := range module.UsedSymbolsClauses(u.TR).All() {
 		if s, ok := sym.(*lg.Const); ok && IsOld(s.Name) {
@@ -1202,7 +1202,7 @@ func ForwardImageMap(preState *module.Clauses, axioms *module.Clauses, u *Update
 	// Rename new_x -> x for all updated symbols
 	renaming := make(map[lg.NodeKey]*lg.Const, len(updated))
 	for _, s := range updated {
-		newSym := lg.NewConst(New(s.Name), s.CSort)
+		newSym := lg.NewConst(ActionNewName(s.Name), s.CSort)
 		renaming[lg.Key(newSym)] = lg.NewConst(s.Name, s.CSort)
 	}
 	result := module.RenameClauses(quantified, renaming)
@@ -1289,7 +1289,7 @@ func ComposeStateAction(
 			preCls, postCls := ExtractPrePostModel(mod, cfg, preTest, model, au)
 			postUpdated := make([]*lg.Const, len(au))
 			for i, s := range au {
-				postUpdated[i] = NewConst(s)
+				postUpdated[i] = NewActionConst(s)
 			}
 			_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
 			preTestFmla := quantPreTest.ToOpenFormula()
@@ -1435,14 +1435,14 @@ func ReverseImage(postState *module.Clauses, axioms *module.Clauses, u *Update) 
 	// Python: post_clauses = rename_clauses(post_clauses, dict((x,new(x)) for x in updated))
 	renaming := make(map[lg.NodeKey]*lg.Const, len(updated))
 	for _, s := range updated {
-		renaming[lg.Key(s)] = NewConst(s)
+		renaming[lg.Key(s)] = NewActionConst(s)
 	}
 	postClauses = module.RenameClauses(postClauses, renaming)
 
 	// Python: post_updated = [new(s) for s in updated]
 	postUpdated := make([]*lg.Const, len(updated))
 	for i, s := range updated {
-		postUpdated[i] = NewConst(s)
+		postUpdated[i] = NewActionConst(s)
 	}
 
 	// Python: res = exist_quant(post_updated, conjoin(clauses, post_clauses))
@@ -1693,7 +1693,7 @@ func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
 		return ConstrainState(u, fmla)
 	}
 	// Build frame as Clauses with definitions
-	frameClauses := FrameConst(u.Modified, NewConst)
+	frameClauses := FrameConst(u.Modified, NewActionConst)
 
 	negFmla := negateFormula(fmla)
 	trNode := u.TRNode()
@@ -1733,7 +1733,7 @@ func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 	for _, sym := range inScope {
 		if !modSet[lg.Key(sym)] {
 			updated = append(updated, sym)
-			defs = append(defs, FrameDefConst(sym, NewConst))
+			defs = append(defs, FrameDefConst(sym, NewActionConst))
 		}
 	}
 	newTR := u.TR
@@ -1753,7 +1753,7 @@ func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 func AddPostAxioms(u *Update, axioms *module.Clauses) *Update {
 	renaming := make(map[lg.NodeKey]*lg.Const, len(u.Modified))
 	for _, sym := range u.Modified {
-		renaming[lg.Key(sym)] = NewConst(sym)
+		renaming[lg.Key(sym)] = NewActionConst(sym)
 	}
 	modNames := constNames(u.Modified)
 	postAx := module.ClausesUsingSymbolNames(modNames, axioms)
@@ -1834,8 +1834,8 @@ func SubstAction(u *Update, subst map[string]string) *Update {
 	// Also rename new_ versions of modified symbols
 	for _, s := range u.Modified {
 		if v, ok := subst[s.Name]; ok {
-			newSym := NewConst(s)
-			renaming[lg.Key(newSym)] = lg.NewConst(New(v), s.CSort)
+			newSym := NewActionConst(s)
+			renaming[lg.Key(newSym)] = lg.NewConst(ActionNewName(v), s.CSort)
 		}
 	}
 	newUpdated := make([]*lg.Const, len(u.Modified))
@@ -1902,10 +1902,10 @@ func constNames(syms []*lg.Const) map[string]bool {
 	return m
 }
 
-// NewConst returns a new Const with "new_" prefix, preserving sort.
+// NewActionConst returns a new Const with "new_" prefix, preserving sort.
 // Matches Python transrel.new(sym) = sym.prefix('new_').
-func NewConst(sym *lg.Const) *lg.Const {
-	return lg.NewConst(New(sym.Name), sym.CSort)
+func NewActionConst(sym *lg.Const) *lg.Const {
+	return lg.NewConst(ActionNewName(sym.Name), sym.CSort)
 }
 
 // OldConst returns a Const with "old_" prefix, preserving sort.
@@ -1949,7 +1949,7 @@ func DiffFrameConstUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *
 }
 
 // DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
-// op is NewConst or OldConst.
+// op is NewActionConst or OldConst.
 func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *module.Clauses {
 	// Python uses recstruct (name, sort) structural equality for set membership
 	// (recstruct_object.py __eq__/__hash__ compare _tup = (name, sort)).

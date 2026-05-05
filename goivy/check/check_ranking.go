@@ -32,9 +32,9 @@ import (
 
 // --- Formula helpers ---
 
-// ForAll wraps a body in a ForAll quantifier if there are variables.
+// CheckForAll wraps a body in a CheckForAll quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
+func CheckForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -45,9 +45,9 @@ func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	return fa
 }
 
-// Exists wraps a body in an Exists quantifier if there are variables.
+// CheckExists wraps a body in an CheckExists quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func Exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
+func CheckExists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -58,10 +58,10 @@ func Exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	return ex
 }
 
-// OldOf replaces function symbols in a formula with their "old" versions.
+// CheckOldOf replaces function symbols in a formula with their "old" versions.
 // For an application f(args), it returns old_f(args).
 // For compound formulas, it recurses into sub-formulas.
-func OldOf(fmla lg.Expr) lg.Expr {
+func CheckOldOf(fmla lg.Expr) lg.Expr {
 	if fmla == nil {
 		return nil
 	}
@@ -76,29 +76,29 @@ func OldOf(fmla lg.Expr) lg.Expr {
 	case *lg.Const:
 		return lg.NewConst(actions.Old(f.Name), f.CSort)
 	case *lg.Eq:
-		return &lg.Eq{T1: OldOf(f.T1), T2: OldOf(f.T2)}
+		return &lg.Eq{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
 	case *lg.Not:
-		return &lg.Not{Body: OldOf(f.Body)}
+		return &lg.Not{Body: CheckOldOf(f.Body)}
 	case *lg.And:
 		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
-			terms[i] = OldOf(t)
+			terms[i] = CheckOldOf(t)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
 		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
-			terms[i] = OldOf(t)
+			terms[i] = CheckOldOf(t)
 		}
 		return &lg.Or{Terms: terms}
 	case *lg.Implies:
-		return &lg.Implies{T1: OldOf(f.T1), T2: OldOf(f.T2)}
+		return &lg.Implies{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
 	case *lg.Iff:
-		return &lg.Iff{T1: OldOf(f.T1), T2: OldOf(f.T2)}
+		return &lg.Iff{T1: CheckOldOf(f.T1), T2: CheckOldOf(f.T2)}
 	case *lg.ForAll:
-		return &lg.ForAll{Variables: f.Variables, Body: OldOf(f.Body)}
+		return &lg.ForAll{Variables: f.Variables, Body: CheckOldOf(f.Body)}
 	case *lg.Exists:
-		return &lg.Exists{Variables: f.Variables, Body: OldOf(f.Body)}
+		return &lg.Exists{Variables: f.Variables, Body: CheckOldOf(f.Body)}
 	default:
 		return fmla
 	}
@@ -414,7 +414,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		if model.Init != nil {
 			xtracer.Trace("ranking.modPass clone init ENTER")
 			// Python: model.init = transform(model.init)
-			model.Init = transform(model.Init).(actions.Action)
+			model.Init = transform(model.Init).(actions.ActionsAction)
 			xtracer.Trace("ranking.modPass clone init EXIT")
 		}
 		// Python ivy_ranking.py:532: list_transform(prems, transform)
@@ -504,7 +504,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 9: Idle action (ranking-specific: no monitor, no fair cycle)
 	// ---------------------------------------------------------------
-	var idleParts []actions.Action
+	var idleParts []actions.ActionsAction
 	idleParts = append(idleParts, icfg.AssumeGAxioms...)
 	idleParts = append(idleParts, icfg.AssumeWhenAxioms...)
 	idleParts = append(idleParts, icfg.ResetW...)
@@ -527,7 +527,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// ---------------------------------------------------------------
 	// Step 10: Init action (ranking-specific: no monitor state vars)
 	// ---------------------------------------------------------------
-	var rankingInitActions []actions.Action
+	var rankingInitActions []actions.ActionsAction
 	rankingInitActions = append(rankingInitActions, icfg.AddConstsToD...)
 	rankingInitActions = append(rankingInitActions, icfg.ResetW...)
 	rankingInitActions = append(rankingInitActions, icfg.AssumeGAxioms...)
@@ -744,8 +744,8 @@ func IsTemporalAndL2S(name string) bool {
 
 // PropEvent describes the pre/post actions for a property event.
 type PropEvent struct {
-	PreActions  []actions.Action
-	PostActions []actions.Action
+	PreActions  []actions.ActionsAction
+	PostActions []actions.ActionsAction
 }
 
 // NewPropEvents creates the pre/post actions for a set of globally properties.
@@ -804,8 +804,8 @@ func NewPropEvents(gprops []*lg.NamedBinder, lineno ast.Location) *PropEvent {
 // --- Wait events ---
 
 // WaitEvent creates assignment actions for updating waiting predicates.
-func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) []actions.Action {
-	var result []actions.Action
+func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) []actions.ActionsAction {
+	var result []actions.ActionsAction
 	for _, wait := range waits {
 		vs := wait.Variables
 		body := wait.Body
@@ -823,20 +823,20 @@ func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) 
 
 // --- helper action constructors ---
 
-func newAssignAction(lhs, rhs lg.Expr, lineno ast.Location) actions.Action {
+func newAssignAction(lhs, rhs lg.Expr, lineno ast.Location) actions.ActionsAction {
 	act := actions.NewAssignAction(lhs, rhs)
 	act.SetLineno(lineno)
 	return act
 }
 
-func newHavocAction(target lg.Expr, lineno ast.Location) actions.Action {
+func newHavocAction(target lg.Expr, lineno ast.Location) actions.ActionsAction {
 	act := actions.NewHavocAction(target)
 	act.SetLineno(lineno)
 	return act
 }
 
-func makeAssumeForAll(vs []*lg.Variable, body lg.Expr, lineno ast.Location) actions.Action {
-	fmla := ForAll(vs, body)
+func makeAssumeForAll(vs []*lg.Variable, body lg.Expr, lineno ast.Location) actions.ActionsAction {
+	fmla := CheckForAll(vs, body)
 	act := actions.NewAssumeAction(fmla)
 	act.SetLineno(lineno)
 	return act

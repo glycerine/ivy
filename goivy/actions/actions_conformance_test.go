@@ -95,7 +95,7 @@ func TestNativeAction_ImpureFlag(t *testing.T) {
 func TestChoiceAction_Determinize(t *testing.T) {
 	// With determinize=true and exactly 2 branches, ChoiceAction should
 	// convert to IfAction behavior. We verify the config field exists.
-	cfg := module.NewActionsConfig()
+	cfg := module.NewModuleActionsConfig()
 	if cfg.Determinize {
 		t.Error("NewActionsConfig should default Determinize to false")
 	}
@@ -127,7 +127,7 @@ func TestSequence_Decompose(t *testing.T) {
 
 func TestChoiceAction_Decompose(t *testing.T) {
 	// Python: return [(pre, [a], post) for a in self.args]
-	cfg := module.NewActionsConfig()
+	cfg := module.NewModuleActionsConfig()
 	a1 := NewAssumeAction(mkConst("p"))
 	a2 := NewAssumeAction(mkConst("q"))
 	choice := NewChoiceActionOn(cfg, a1, a2)
@@ -230,8 +230,8 @@ func TestModifies_AssumeAction(t *testing.T) {
 
 func TestNew_Old_Prefixes(t *testing.T) {
 	// Python: new("x") = "new_x", old("x") = "old_x"
-	if New("x") != "new_x" {
-		t.Errorf("New(x) = %q", New("x"))
+	if ActionNewName("x") != "new_x" {
+		t.Errorf("ActionNewName(x) = %q", ActionNewName("x"))
 	}
 	if Old("x") != "old_x" {
 		t.Errorf("Old(x) = %q", Old("x"))
@@ -288,7 +288,7 @@ func TestTopBottomState(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestIfAction_Subactions_Boolean(t *testing.T) {
-	cfg := module.NewActionsConfig()
+	cfg := module.NewModuleActionsConfig()
 	cond := mkConst("c")
 	thenBody := NewAssumeAction(mkConst("p"))
 	elseBody := NewAssumeAction(mkConst("q"))

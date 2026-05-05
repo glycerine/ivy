@@ -41,7 +41,7 @@ type TraceBase struct {
 
 	cfg           *iu.IvyUtilsConfig
 	TraceStates   []*TraceState
-	LastAction    actions.Action
+	LastAction    actions.ActionsAction
 	Sub           *TraceBase
 	Returned      *TraceBase
 	HiddenSymbols func(string) bool
@@ -68,9 +68,9 @@ func (tb *TraceBase) Rename(m map[string]string) *TraceBase {
 	return tb
 }
 
-// IsSkolem reports whether a symbol name is a Skolem constant
+// TraceIsSkolem reports whether a symbol name is a Skolem constant
 // that should be hidden from trace display.
-func IsSkolem(name string) bool {
+func TraceIsSkolem(name string) bool {
 	if !actions.IsSkolem(name) {
 		return false
 	}
@@ -110,8 +110,8 @@ func (tb *TraceBase) lastArtState() *art.State {
 	return tb.States[len(tb.States)-1]
 }
 
-// LabelFromAction returns a label string for the given action.
-func LabelFromAction(action actions.Action, renaming map[string]string) string {
+// TraceLabelFromAction returns a label string for the given action.
+func TraceLabelFromAction(action actions.ActionsAction, renaming map[string]string) string {
 	if labeler, ok := action.(interface{ GetLabel() string }); ok {
 		if label := labeler.GetLabel(); label != "" {
 			return label + "\n"
@@ -124,13 +124,13 @@ func LabelFromAction(action actions.Action, renaming map[string]string) string {
 		}
 	}
 	s := action.String()
-	return Pretty(s, 4)
+	return TracePretty(s, 4)
 }
 
-// Pretty formats a string by splitting on semicolons and braces,
+// TracePretty formats a string by splitting on semicolons and braces,
 // then indenting based on brace nesting. Truncates to maxLines if > 0.
 // Corresponds to Python's pretty(s, max_lines) in ivy_utils.py.
-func Pretty(s string, maxLines int) string {
+func TracePretty(s string, maxLines int) string {
 	s = strings.ReplaceAll(s, ";", ";\n")
 	s = strings.ReplaceAll(s, "{", "{\n")
 	s = strings.ReplaceAll(s, "}", "\n}")
@@ -190,10 +190,10 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 		if state.Prov != nil {
 			aa, isAA := state.Prov.(*art.ActionApp)
 			if isAA {
-				action, _ := aa.Rep.(actions.Action)
+				action, _ := aa.Rep.(actions.ActionsAction)
 				if tb.Domain.Cfg.TraceDetailed && action != nil {
 					newlines := make([]string, 0)
-					label := LabelFromAction(action, renaming)
+					label := TraceLabelFromAction(action, renaming)
 					for _, line := range strings.Split(label, "\n") {
 						newlines = append(newlines, strings.Repeat("    ", indent)+line+"\n")
 					}
@@ -271,7 +271,7 @@ func (tb *TraceBase) String() string {
 }
 
 // Handle processes an action during trace construction.
-func (tb *TraceBase) Handle(action actions.Action, env map[string]string) {
+func (tb *TraceBase) Handle(action actions.ActionsAction, env map[string]string) {
 	if tb.Sub != nil {
 		tb.Sub.Handle(action, env)
 	} else if isCallOrEnv(tb.LastAction) && tb.Returned == nil {
@@ -284,7 +284,7 @@ func (tb *TraceBase) Handle(action actions.Action, env map[string]string) {
 }
 
 // DoReturn handles a return from a call during trace construction.
-func (tb *TraceBase) DoReturn(action actions.Action, env map[string]string) {
+func (tb *TraceBase) DoReturn(action actions.ActionsAction, env map[string]string) {
 	if tb.Sub != nil {
 		if tb.Sub.Sub != nil {
 			tb.Sub.DoReturn(action, env)
@@ -377,7 +377,7 @@ func (tb *TraceBase) FinalState() {
 	tb.AddTraceState(nil)
 }
 
-func isCallOrEnv(action actions.Action) bool {
+func isCallOrEnv(action actions.ActionsAction) bool {
 	if action == nil {
 		return false
 	}
@@ -388,7 +388,7 @@ func isCallOrEnv(action actions.Action) bool {
 	return false
 }
 
-func isCallAction(action actions.Action) bool {
+func isCallAction(action actions.ActionsAction) bool {
 	if action == nil {
 		return false
 	}
@@ -400,14 +400,14 @@ func isCallAction(action actions.Action) bool {
 type Trace struct {
 	*TraceBase
 	Clauses  *module.Clauses
-	Model    Model
+	Model    TraceModel
 	Vocab    []lg.Expr
 	TopLevel bool
 	Eqs      map[string][]lg.Expr // symbol name -> equations
 }
 
-// Model is the interface for a counterexample model.
-type Model interface {
+// TraceModel is the interface for a counterexample model.
+type TraceModel interface {
 	// EvalToConstant evaluates a formula to a constant in the model.
 	EvalToConstant(lg.Expr) lg.Expr
 	// Universes returns the universe (domain) for each sort.
@@ -415,7 +415,7 @@ type Model interface {
 }
 
 // NewTrace creates a Trace from clauses and a model.
-func NewTrace(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
+func NewTrace(cfg *iu.IvyUtilsConfig, clauses *module.Clauses, model TraceModel, vocab []lg.Expr, topLevel bool) *Trace {
 	mod := module.New()
 	t := &Trace{
 		TraceBase: NewTraceBase(cfg, mod),
@@ -520,7 +520,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*module.Clauses)
 
 // buildEnvAction creates an EnvAction wrapping all public actions from the module.
 // Matches Python ivy_actions.py env_action().
-func buildEnvAction(mod *module.Module, actName string) actions.Action {
+func buildEnvAction(mod *module.Module, actName string) actions.ActionsAction {
 	if mod == nil {
 		return nil
 	}
@@ -575,7 +575,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 		}
 		if sym, ok := a.(*lg.Const); ok {
 			if act, exists := ag.Domain.Actions.Get2(sym.Name); exists {
-				if actAction, ok := act.(actions.Action); ok {
+				if actAction, ok := act.(actions.ActionsAction); ok {
 					actionExprs = append(actionExprs, actAction)
 					continue
 				}
@@ -594,7 +594,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
 //   - Calls z3bridge.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
-func CheckVC(mod *module.Module, clauses *module.Clauses, action actions.Action,
+func CheckVC(mod *module.Module, clauses *module.Clauses, action actions.ActionsAction,
 	finalCond *module.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
@@ -646,12 +646,12 @@ type annotatedTraceGraphHandler struct {
 	model       *z3bridge.HerbrandModel
 	preClauses  *module.Clauses
 	postClauses *module.Clauses
-	lastAction  actions.Action
+	lastAction  actions.ActionsAction
 	inSubtrace  bool
 	returned    bool
 }
 
-func buildAnnotatedTraceGraph(mod *module.Module, clauses *module.Clauses, finalCond *module.Clauses, action actions.Action, model *z3bridge.ModelResult, slv *z3bridge.Solver) *art.AnalysisGraph {
+func buildAnnotatedTraceGraph(mod *module.Module, clauses *module.Clauses, finalCond *module.Clauses, action actions.ActionsAction, model *z3bridge.ModelResult, slv *z3bridge.Solver) *art.AnalysisGraph {
 	handler := &annotatedTraceGraphHandler{
 		ag:          art.NewAnalysisGraph(mod),
 		preClauses:  clauses,
@@ -705,7 +705,7 @@ func (h *annotatedTraceGraphHandler) Eval(cond lg.Expr) bool {
 	panic(fmt.Sprintf("unexpected truth value: %v", truth))
 }
 
-func (h *annotatedTraceGraphHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *annotatedTraceGraphHandler) Handle(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	if h.inSubtrace {
 		return
 	}
@@ -718,7 +718,7 @@ func (h *annotatedTraceGraphHandler) Handle(action actions.Action, env map[lg.No
 	h.returned = false
 }
 
-func (h *annotatedTraceGraphHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *annotatedTraceGraphHandler) DoReturn(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	if h.inSubtrace {
 		h.inSubtrace = false
 		h.returned = true
@@ -797,7 +797,7 @@ func addSortIfNew(out *[]lg.Sort, s lg.Sort) {
 // The VC is: pre ∧ TR ∧ ¬post, where TR is the action's transition relation.
 //
 // Python: ivy_trace.py:make_vc
-func MakeVC(action actions.Action, precond []*module.Clauses,
+func MakeVC(action actions.ActionsAction, precond []*module.Clauses,
 	postcond []*module.Clauses, checkAsserts bool) *module.Clauses {
 	// Collect precondition formulas
 	var preFmlas []lg.Expr

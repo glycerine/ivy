@@ -7,12 +7,12 @@ import (
 )
 
 // Find performs path-compressing find on a SortOrVar.
-func Find(x SortOrVar) SortOrVar {
+func TypeInferFind(x SortOrVar) SortOrVar {
 	sv, ok := x.(*SortVar)
 	if !ok || sv.Instance == nil {
 		return x
 	}
-	sv.Instance = Find(sv.Instance)
+	sv.Instance = TypeInferFind(sv.Instance)
 	return sv.Instance
 }
 
@@ -21,8 +21,8 @@ func OccursIn(s1, s2 SortOrVar) bool {
 	if s1 == nil || s2 == nil {
 		return false
 	}
-	s1 = Find(s1)
-	s2 = Find(s2)
+	s1 = TypeInferFind(s1)
+	s2 = TypeInferFind(s2)
 	if s1 == nil || s2 == nil {
 		return false
 	}
@@ -55,12 +55,12 @@ func OccursIn(s1, s2 SortOrVar) bool {
 }
 
 // Unify unifies two SortOrVar values.
-func Unify(s1, s2 SortOrVar) error {
+func TypeInferUnify(s1, s2 SortOrVar) error {
 	if s1 == nil || s2 == nil {
 		return nil
 	}
-	s1 = Find(s1)
-	s2 = Find(s2)
+	s1 = TypeInferFind(s1)
+	s2 = TypeInferFind(s2)
 	if s1 == nil || s2 == nil {
 		return nil
 	}
@@ -87,7 +87,7 @@ func Unify(s1, s2 SortOrVar) error {
 
 	// s2 is SortVar
 	if _, ok := s2.(*SortVar); ok {
-		return Unify(s2, s1)
+		return TypeInferUnify(s2, s1)
 	}
 
 	// Handle FunctionSortVar ↔ FunctionSortVar
@@ -95,7 +95,7 @@ func Unify(s1, s2 SortOrVar) error {
 	fsv2, isFSV2 := s2.(*FunctionSortVar)
 	if isFSV1 && isFSV2 && fsv1.Arity() == fsv2.Arity() {
 		for i := range fsv1.Sorts {
-			if err := Unify(fsv1.Sorts[i], fsv2.Sorts[i]); err != nil {
+			if err := TypeInferUnify(fsv1.Sorts[i], fsv2.Sorts[i]); err != nil {
 				return err
 			}
 		}
@@ -107,7 +107,7 @@ func Unify(s1, s2 SortOrVar) error {
 		if sw2, ok := s2.(*SortWrapper); ok {
 			if fs2, ok := sw2.Sort.(*logic.FunctionSort); ok && fs2 != nil && fsv1.Arity() == fs2.Arity() {
 				for i := range fsv1.Sorts {
-					if err := Unify(fsv1.Sorts[i], Wrap(fs2.Sorts[i])); err != nil {
+					if err := TypeInferUnify(fsv1.Sorts[i], Wrap(fs2.Sorts[i])); err != nil {
 						return err
 					}
 				}
@@ -119,7 +119,7 @@ func Unify(s1, s2 SortOrVar) error {
 		if sw1, ok := s1.(*SortWrapper); ok {
 			if fs1, ok := sw1.Sort.(*logic.FunctionSort); ok && fs1 != nil && fs1.Arity() == fsv2.Arity() {
 				for i := range fsv2.Sorts {
-					if err := Unify(Wrap(fs1.Sorts[i]), fsv2.Sorts[i]); err != nil {
+					if err := TypeInferUnify(Wrap(fs1.Sorts[i]), fsv2.Sorts[i]); err != nil {
 						return err
 					}
 				}
@@ -139,7 +139,7 @@ func Unify(s1, s2 SortOrVar) error {
 	fs2, isFS2 := sw2.Sort.(*logic.FunctionSort)
 	if isFS1 && isFS2 && fs1 != nil && fs2 != nil && fs1.Arity() == fs2.Arity() {
 		for i := range fs1.Sorts {
-			if err := Unify(Wrap(fs1.Sorts[i]), Wrap(fs2.Sorts[i])); err != nil {
+			if err := TypeInferUnify(Wrap(fs1.Sorts[i]), Wrap(fs2.Sorts[i])); err != nil {
 				return err
 			}
 		}
@@ -152,7 +152,7 @@ func Unify(s1, s2 SortOrVar) error {
 // ConvertFromSortVars converts sort variables to TopSort.
 // Mirrors Python type_inference.py convert_from_sortvars.
 func ConvertFromSortVars(s SortOrVar) logic.Sort {
-	s = Find(s)
+	s = TypeInferFind(s)
 	if _, ok := s.(*SortVar); ok {
 		return logic.NewTopSort()
 	}

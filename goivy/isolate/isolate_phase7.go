@@ -99,7 +99,7 @@ func StripNativesSlice(natives []interface{}, stripMap StripMap, mod *module.Mod
 // HasSideEffectRec checks if a named action has side effects on the
 // module signature. Follows through calls transitively using a memo set.
 // Corresponds to Python's has_side_effect_rec (ivy_isolate.py lines 458-477).
-func HasSideEffectRec(mod *module.Module, newActions *iu.InsMap[string, actions.Action], actname string, memo map[string]bool) bool {
+func HasSideEffectRec(mod *module.Module, newActions *iu.InsMap[string, actions.ActionsAction], actname string, memo map[string]bool) bool {
 	if memo[actname] {
 		return false
 	}
@@ -221,7 +221,7 @@ type SortOrder struct {
 
 // ConjToAssume converts a labeled conjecture into an AssumeAction.
 // Corresponds to Python's conj_to_assume (ivy_isolate.py lines 1517-1520).
-func ConjToAssume(c *ast.LabeledFormula) actions.Action {
+func ConjToAssume(c *ast.LabeledFormula) actions.ActionsAction {
 	fmla, ok := c.Formula.(lg.Expr)
 	if !ok {
 		return actions.NewSequence()
@@ -234,7 +234,7 @@ func ConjToAssume(c *ast.LabeledFormula) actions.Action {
 // FindSomeAssertion finds the first AssertAction reachable from the named
 // action by iterating sub-actions.
 // Corresponds to Python's find_some_assertion (ivy_isolate.py lines 1792-1796).
-func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
+func FindSomeAssertion(mod *module.Module, actname string) actions.ActionsAction {
 	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil
@@ -252,7 +252,7 @@ func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
 // FindSomeCall finds the first CallAction that calls the given callee
 // within the named action.
 // Corresponds to Python's find_some_call (ivy_isolate.py lines 1798-1802).
-func FindSomeCall(mod *module.Module, actname string, callee string) actions.Action {
+func FindSomeCall(mod *module.Module, actname string, callee string) actions.ActionsAction {
 	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil

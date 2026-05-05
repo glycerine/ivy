@@ -86,8 +86,8 @@ func TestTermsMGUPythonExample(t *testing.T) {
 	b := mkConst("b")
 
 	match, subs := TermsMGU(
-		[]Term{x, y, x, b, y},
-		[]Term{a, z, a, z, b},
+		[]ResolutionTerm{x, y, x, b, y},
+		[]ResolutionTerm{a, z, a, z, b},
 	)
 	if !match {
 		t.Fatal("expected match=true")
@@ -107,7 +107,7 @@ func TestTermsMGUPythonExample(t *testing.T) {
 // TestTermsMGULengthMismatch tests that different-length term lists fail.
 func TestTermsMGULengthMismatch(t *testing.T) {
 	a := mkConst("a")
-	match, _ := TermsMGU([]Term{a}, []Term{a, a})
+	match, _ := TermsMGU([]ResolutionTerm{a}, []ResolutionTerm{a, a})
 	if match {
 		t.Error("expected match=false for length mismatch")
 	}
@@ -128,7 +128,7 @@ func TestTermsMGUEmptyLists(t *testing.T) {
 func TestTermsMGUConstantMismatch(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	match, _ := TermsMGU([]Term{a}, []Term{b})
+	match, _ := TermsMGU([]ResolutionTerm{a}, []ResolutionTerm{b})
 	if match {
 		t.Error("expected match=false for constant mismatch")
 	}
@@ -138,7 +138,7 @@ func TestTermsMGUConstantMismatch(t *testing.T) {
 func TestTermsMGUSameConstants(t *testing.T) {
 	a1 := mkConst("a")
 	a2 := mkConst("a")
-	match, subs := TermsMGU([]Term{a1}, []Term{a2})
+	match, subs := TermsMGU([]ResolutionTerm{a1}, []ResolutionTerm{a2})
 	if !match {
 		t.Fatal("expected match=true")
 	}
@@ -151,7 +151,7 @@ func TestTermsMGUSameConstants(t *testing.T) {
 func TestTermsMGUVarToVar(t *testing.T) {
 	x := mkVar("X")
 	y := mkVar("Y")
-	match, subs := TermsMGU([]Term{x}, []Term{y})
+	match, subs := TermsMGU([]ResolutionTerm{x}, []ResolutionTerm{y})
 	if !match {
 		t.Fatal("expected match=true")
 	}
@@ -166,7 +166,7 @@ func TestTermsMGUVarToVar(t *testing.T) {
 // TestTermsMGUSameVar tests that the same variable on both sides unifies trivially.
 func TestTermsMGUSameVar(t *testing.T) {
 	x := mkVar("X")
-	match, subs := TermsMGU([]Term{x}, []Term{x})
+	match, subs := TermsMGU([]ResolutionTerm{x}, []ResolutionTerm{x})
 	if !match {
 		t.Fatal("expected match=true")
 	}
@@ -181,7 +181,7 @@ func TestTermsMGUSortMismatch(t *testing.T) {
 	s2 := &logic.UninterpretedSort{Name: "S2"}
 	c1 := logic.NewConst("a", s1)
 	c2 := logic.NewConst("a", s2)
-	match, _ := TermsMGU([]Term{c1}, []Term{c2})
+	match, _ := TermsMGU([]ResolutionTerm{c1}, []ResolutionTerm{c2})
 	if match {
 		t.Error("expected match=false for sort mismatch")
 	}
@@ -220,8 +220,8 @@ func TestTermsMGUEqBasic(t *testing.T) {
 	x := mkVar("X")
 
 	match, subs, eqs := TermsMGUEq(
-		[]Term{x, a},
-		[]Term{a, b},
+		[]ResolutionTerm{x, a},
+		[]ResolutionTerm{a, b},
 	)
 	if !match {
 		t.Fatal("expected match=true")
@@ -240,7 +240,7 @@ func TestTermsMGUEqBasic(t *testing.T) {
 // TestTermsMGUEqNoRemainder tests that matching constants produce no equalities.
 func TestTermsMGUEqNoRemainder(t *testing.T) {
 	a := mkConst("a")
-	match, _, eqs := TermsMGUEq([]Term{a}, []Term{a})
+	match, _, eqs := TermsMGUEq([]ResolutionTerm{a}, []ResolutionTerm{a})
 	if !match {
 		t.Fatal("expected match=true")
 	}
@@ -301,10 +301,10 @@ func TestAtomFromApply(t *testing.T) {
 func TestIsConstant(t *testing.T) {
 	c := mkConst("a")
 	v := mkVar("X")
-	if !IsConstant(c) {
+	if !ResolutionIsConstant(c) {
 		t.Error("expected true for Const")
 	}
-	if IsConstant(v) {
+	if ResolutionIsConstant(v) {
 		t.Error("expected false for Var")
 	}
 }
@@ -315,8 +315,8 @@ func TestTermsMGUTransitiveChain(t *testing.T) {
 	y := mkVar("Y")
 	a := mkConst("a")
 	match, subs := TermsMGU(
-		[]Term{x, y},
-		[]Term{y, a},
+		[]ResolutionTerm{x, y},
+		[]ResolutionTerm{y, a},
 	)
 	if !match {
 		t.Fatal("expected match=true")
@@ -342,7 +342,7 @@ func FuzzTermsMGU(f *testing.F) {
 		parts1 := strings.Split(s1, ",")
 		parts2 := strings.Split(s2, ",")
 
-		toTerm := func(s string) Term {
+		toTerm := func(s string) ResolutionTerm {
 			s = strings.TrimSpace(s)
 			if len(s) == 0 {
 				return mkConst("_empty")
@@ -357,8 +357,8 @@ func FuzzTermsMGU(f *testing.F) {
 			return mkConst(s)
 		}
 
-		terms1 := make([]Term, len(parts1))
-		terms2 := make([]Term, len(parts2))
+		terms1 := make([]ResolutionTerm, len(parts1))
+		terms2 := make([]ResolutionTerm, len(parts2))
 		for i, p := range parts1 {
 			terms1[i] = toTerm(p)
 		}

@@ -42,7 +42,7 @@ func TypeCheckList(domain *module.Module, items []interface{}) error {
 // i.e., state1 implies state2 in state style.
 // Returns true if state1 ⊆ state2.
 // Corresponds to Python's module_order.
-func ModuleOrder(state1, state2 *State) (bool, *actions.CounterExample) {
+func ModuleOrder(state1, state2 *InterpState) (bool, *actions.CounterExample) {
 	axioms := state1.Domain.BackgroundTheory(state1.InScope)
 	u1 := stateValueToUpdate(state1.Value())
 	u2 := stateValueToUpdate(state2.Value())
@@ -75,7 +75,7 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Const {
 // If so, returns an unsat core (a subset of state clauses that implies
 // the clause). Otherwise returns nil.
 // Corresponds to Python's get_core.
-func GetCore(state *State, clause lg.Expr) *module.Clauses {
+func GetCore(state *InterpState, clause lg.Expr) *module.Clauses {
 	// Python:
 	//   clauses1 = and_clauses(state_clauses, background_theory)
 	//   clauses2 = [[~lit] for lit in clause]
@@ -99,7 +99,7 @@ func GetCore(state *State, clause lg.Expr) *module.Clauses {
 // ReverseJoinConcreteClauses reverses a join operation by finding which
 // joined state is compatible with the given clauses.
 // Corresponds to Python's reverse_join_concrete_clauses.
-func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *module.Clauses) (*module.Clauses, *State, error) {
+func ReverseJoinConcreteClauses(state *InterpState, joinOf []*InterpState, clauses *module.Clauses) (*module.Clauses, *InterpState, error) {
 	if clauses == nil {
 		clauses = state.Clauses
 	}
@@ -132,7 +132,7 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *module.C
 // UnderapproximateState builds an under-approximation of reachable states
 // using model extraction from the state's clauses.
 // Corresponds to Python's underapproximate_state.
-func UnderapproximateState(state *State, implied *module.Clauses) {
+func UnderapproximateState(state *InterpState, implied *module.Clauses) {
 	// Python:
 	//   axioms = state.domain.background_theory(state.in_scope)
 	//   under = clauses_model_to_clauses(and_clauses(state.clauses, axioms), is_skolem, implied)
@@ -159,7 +159,7 @@ func UnderapproximateState(state *State, implied *module.Clauses) {
 // StatesStateExpr yields all State objects embedded in an expression tree.
 // This is an alias for StatesInExpr which was already implemented.
 // Corresponds to Python's states_state_expr.
-func StatesStateExpr(expr ast.Node) []*State {
+func StatesStateExpr(expr ast.Node) []*InterpState {
 	return StatesInExpr(expr)
 }
 
@@ -168,7 +168,7 @@ func StatesStateExpr(expr ast.Node) []*State {
 // DecomposeActionApp decomposes an action application into intermediate
 // states using BMC/History and action decomposition.
 // Corresponds to Python's decompose_action_app.
-func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*State, error) {
+func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *InterpState, expr ast.Node) (*InterpState, error) {
 	if !IsInterpActionApp(expr) {
 		return nil, nil
 	}
@@ -188,7 +188,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 // This is the same implementation as DecomposeActionApp after evaluating the
 // action and pre-state expression, but it also supports action provenance that
 // is not addressable by a module action name, such as env actions.
-func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *State, act actions.Action) (*State, error) {
+func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *InterpState, act actions.ActionsAction) (*InterpState, error) {
 	// Compute update
 	ctx := &actions.UpdateContext{
 		Domain:          state1.Domain,
@@ -197,10 +197,10 @@ func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *
 		Instantiator:    state1.Domain.Instantiator,
 		CheckUnprovable: state1.Domain.Cfg.OnlyCheckUnprovable,
 		CheckedAssert:   state1.Domain.Cfg.CheckLineno,
-		GetAction: func(name string) actions.Action {
+		GetAction: func(name string) actions.ActionsAction {
 			if state1.Domain != nil {
 				if a, ok := state1.Domain.Actions.Get2(name); ok {
-					if act, ok2 := a.(actions.Action); ok2 {
+					if act, ok2 := a.(actions.ActionsAction); ok2 {
 						return act
 					}
 				}
@@ -251,7 +251,7 @@ func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *
 
 		// Build per-step states from the satisfying path.
 		// Python ivy_interp.py:504-515
-		var states []*State
+		var states []*InterpState
 		for i, value := range bmcRes.Path {
 			state := NewStateFromClauses(state1.Domain, value.TR)
 			if i != 0 {
@@ -275,7 +275,7 @@ func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *
 
 // StateImpliesFormula checks if a state logically implies a formula.
 // Corresponds to Python's state_implies_formula.
-func StateImpliesFormula(state *State, fmla lg.Expr) bool {
+func StateImpliesFormula(state *InterpState, fmla lg.Expr) bool {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := module.AndClausesTyped(state.Clauses, axioms)
 	ok, _ := actions.ClausesImplyFormulaCex(state.Domain, combined, fmla)
@@ -289,7 +289,7 @@ func StateImpliesFormula(state *State, fmla lg.Expr) bool {
 // EvalAssertRhs evaluates the right-hand side of a state assertion.
 // If the RHS is not already an RME, wraps it in one.
 // Corresponds to Python's eval_assert_rhs.
-func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *module.Module) (*State, error) {
+func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *module.Module) (*InterpState, error) {
 	// Python:
 	//   if not isinstance(rhs, ivy_actions.RME):
 	//       rhs = ivy_actions.RME(And(), None, rhs)
@@ -331,7 +331,7 @@ func EvalStateOrder(checkPrecond bool, lhs, rhs ast.Node, mod *module.Module) (b
 	if err != nil {
 		return false, err
 	}
-	if IsStateJoin(rhs) {
+	if IsInterpStateJoin(rhs) {
 		or := rhs.(*ast.AstOr)
 		for _, r := range or.Terms {
 			rState, err := EvalState(checkPrecond, r, mod)
@@ -370,7 +370,7 @@ func EvalStateOrder(checkPrecond bool, lhs, rhs ast.Node, mod *module.Module) (b
 // satisfiable and raises `ActionFailed` if check=True and
 // the precondition is violated.
 // See also the file 'goivy/already_applied_plans/PRECOND_CHECK.md'.
-func CheckStateAssertion(checkPrecond bool, state *State, assertion *ast.LabeledFormula) bool {
+func CheckStateAssertion(checkPrecond bool, state *InterpState, assertion *ast.LabeledFormula) bool {
 	if state.Label == "" {
 		return true
 	}
@@ -400,7 +400,7 @@ func CheckStateAssertion(checkPrecond bool, state *State, assertion *ast.Labeled
 // and returns their conjunction. Returns nil if no assertions match
 // or all are trivially true.
 // Corresponds to Python's get_state_assertions.
-func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *module.Clauses {
+func GetStateAssertions(checkPrecond bool, state *InterpState, mod *module.Module) *module.Clauses {
 	if state.Label == "" {
 		return nil
 	}
@@ -441,7 +441,7 @@ type SortUniverse struct {
 // If the state has universe data (from model finding), generates
 // equality constraints for each sort.
 // Corresponds to Python's universe_constraint.
-func UniverseConstraint(state *State) *module.Clauses {
+func UniverseConstraint(state *InterpState) *module.Clauses {
 	if state.Universe == nil {
 		return module.TrueClauses(nil)
 	}

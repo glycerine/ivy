@@ -618,7 +618,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	}
 
 	// The result should be a LocalAction wrapping the local symbol and a Sequence.
-	act, _ := result.(actions.Action)
+	act, _ := result.(actions.ActionsAction)
 	if act == nil {
 		t.Fatal("Extract() result is not a wrapped action")
 	}
@@ -641,7 +641,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	}
 
 	// Check that the body is a Sequence with 2 children.
-	bodyAct, _ := localAct.Body.(actions.Action)
+	bodyAct, _ := localAct.Body.(actions.ActionsAction)
 	if bodyAct == nil {
 		t.Fatal("LocalAction body is not a wrapped action")
 	}

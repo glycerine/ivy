@@ -174,9 +174,9 @@ func TestExtractUnitResResults(t *testing.T) {
 	aAtom := resolution.NewAtom("a")
 	bAtom := resolution.NewAtom("b")
 
-	clauses := [][]*unitres.Literal{
-		{unitres.NewLiteral(0, aAtom)},                               // ~a
-		{unitres.NewLiteral(1, aAtom), unitres.NewLiteral(1, bAtom)}, // a ∨ b
+	clauses := [][]*unitres.UnitResLiteral{
+		{unitres.NewUnitResLiteral(0, aAtom)},                                      // ~a
+		{unitres.NewUnitResLiteral(1, aAtom), unitres.NewUnitResLiteral(1, bAtom)}, // a ∨ b
 	}
 
 	r := unitres.NewUnitRes(clauses)

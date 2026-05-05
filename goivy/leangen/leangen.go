@@ -263,7 +263,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 }
 
 // EmitAction emits the Lean representation of an action.
-func (g *Generator) EmitAction(a actions.Action) error {
+func (g *Generator) EmitAction(a actions.ActionsAction) error {
 	switch act := a.(type) {
 	case *actions.AssignAction:
 		g.Emit("    " + fmt.Sprint(act.LHS) + " ::= ")
@@ -275,7 +275,7 @@ func (g *Generator) EmitAction(a actions.Action) error {
 			if i > 0 {
 				g.Emit(";\n")
 			}
-			childAct, _ := child.(actions.Action)
+			childAct, _ := child.(actions.ActionsAction)
 			if childAct != nil {
 				if err := g.EmitAction(childAct); err != nil {
 					return err
@@ -290,14 +290,14 @@ func (g *Generator) EmitAction(a actions.Action) error {
 		if err := g.EmitExpr(act.Cond); err != nil {
 			return err
 		}
-		thenAct, _ := act.ThenBody.(actions.Action)
+		thenAct, _ := act.ThenBody.(actions.ActionsAction)
 		if thenAct != nil {
 			if err := g.EmitAction(thenAct); err != nil {
 				return err
 			}
 		}
 		if act.ElseBody != nil {
-			elseAct, _ := act.ElseBody.(actions.Action)
+			elseAct, _ := act.ElseBody.(actions.ActionsAction)
 			if elseAct != nil {
 				if err := g.EmitAction(elseAct); err != nil {
 					return err
@@ -317,7 +317,7 @@ func (g *Generator) EmitAction(a actions.Action) error {
 // action/export definitions.
 func (g *Generator) GenerateProgram(
 	symbols []SymbolDef,
-	actionMap map[string]actions.Action,
+	actionMap map[string]actions.ActionsAction,
 	publicActions []string,
 	moduleName string,
 ) error {

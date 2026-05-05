@@ -180,7 +180,7 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 
 // EnvAction creates the environment step action from a module's public actions.
 // It produces a nondeterministic choice among all public actions.
-func BMCEnvAction(mod *module.Module) actions.Action {
+func BMCEnvAction(mod *module.Module) actions.ActionsAction {
 	if mod == nil {
 		return actions.NewSequence()
 	}
@@ -190,7 +190,7 @@ func BMCEnvAction(mod *module.Module) actions.Action {
 		if !ok {
 			continue
 		}
-		action, ok := act.(actions.Action)
+		action, ok := act.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
@@ -223,14 +223,14 @@ func BuildConjecture(mod *module.Module) *module.Clauses {
 // While loops are converted to bounded if-then-else chains with
 // at most n iterations. Non-while actions pass through cloned.
 // Matches Python's action.unroll_loops(lambda x: n_unroll) from ivy_bmc.py.
-func UnrollAction(act actions.Action, n int) actions.Action {
+func UnrollAction(act actions.ActionsAction, n int) actions.ActionsAction {
 	if act == nil {
 		return nil
 	}
 	card := actions.CardFunc(func(s lg.Sort) int {
 		return n
 	})
-	var result actions.Action
+	var result actions.ActionsAction
 	func() {
 		defer func() {
 			if r := recover(); r != nil {
@@ -249,7 +249,7 @@ func UnrollAction(act actions.Action, n int) actions.Action {
 //
 // If the action implements the Updater interface, we compute its update
 // and return action_failure(update). Otherwise returns nil.
-func computeFailUpdate(action actions.Action, mod *module.Module) *actions.Update {
+func computeFailUpdate(action actions.ActionsAction, mod *module.Module) *actions.Update {
 	update := actions.GetUpdateForArt(action, mod, nil)
 	if update == nil {
 		return nil

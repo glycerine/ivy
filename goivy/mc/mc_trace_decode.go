@@ -50,7 +50,7 @@ func (h *AigerMatchHandler) Eval(cond lg.Expr) bool {
 }
 
 // Handle processes an action, extracting state from the AIGER simulation.
-func (h *AigerMatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *AigerMatchHandler) Handle(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	invEnv := make(map[string]string)
 	for k, v := range env {
 		if c, ok := v.(*lg.Const); ok {
@@ -76,7 +76,7 @@ func (h *AigerMatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.
 }
 
 // DoReturn handles a return action.
-func (h *AigerMatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {}
+func (h *AigerMatchHandler) DoReturn(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {}
 
 // Fail marks a failure point.
 func (h *AigerMatchHandler) Fail() {}
@@ -107,7 +107,7 @@ type AigerMatchHandler2 struct {
 	Mod      *module.Module
 
 	// Trace-building state (replicates TraceBase pattern)
-	LastAction  actions.Action
+	LastAction  actions.ActionsAction
 	Sub         *AigerMatchHandler2
 	Returned    *AigerMatchHandler2
 	IsFullTrace bool
@@ -159,7 +159,7 @@ func (h *AigerMatchHandler2) Clone() *AigerMatchHandler2 {
 
 // Handle processes an action during trace construction.
 // Replicates Python TraceBase.handle (ivy_trace.py:201-211).
-func (h *AigerMatchHandler2) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *AigerMatchHandler2) Handle(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	if h.Sub != nil {
 		h.Sub.Handle(action, env)
 		return
@@ -178,7 +178,7 @@ func (h *AigerMatchHandler2) Handle(action actions.Action, env map[lg.NodeKey]lg
 
 // DoReturn handles a return action. No-op for MC traces.
 // Python: ivy_mc.py:1551-1552
-func (h *AigerMatchHandler2) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *AigerMatchHandler2) DoReturn(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	if h.Sub != nil {
 		if h.Sub.Sub != nil {
 			h.Sub.DoReturn(action, env)
@@ -438,7 +438,7 @@ func AigerWitnessToIvyTrace2(
 	return handler, nil
 }
 
-func isCallOrEnvAction(action actions.Action) bool {
+func isCallOrEnvAction(action actions.ActionsAction) bool {
 	if action == nil {
 		return false
 	}
@@ -449,7 +449,7 @@ func isCallOrEnvAction(action actions.Action) bool {
 	return false
 }
 
-func isCallAction2(action actions.Action) bool {
+func isCallAction2(action actions.ActionsAction) bool {
 	if action == nil {
 		return false
 	}

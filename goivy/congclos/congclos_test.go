@@ -14,7 +14,7 @@ func mkConst(name string) *logic.Const {
 
 // TestNewCongClos tests that a fresh CongClos is empty.
 func TestNewCongClos(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	if cc == nil {
 		t.Fatal("expected non-nil CongClos")
 	}
@@ -26,7 +26,7 @@ func TestNewCongClos(t *testing.T) {
 
 // TestFindCreatesEntry tests that Find creates a node if not present.
 func TestFindCreatesEntry(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	v := mkConst("v")
 	rep := cc.Find(v)
 	if rep.String() != "v" {
@@ -36,7 +36,7 @@ func TestFindCreatesEntry(t *testing.T) {
 
 // TestFindByName tests looking up by name.
 func TestFindByName(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	rep := cc.FindByName("v")
 	if rep.String() != "v" {
 		t.Errorf("expected v, got %s", rep)
@@ -45,7 +45,7 @@ func TestFindByName(t *testing.T) {
 
 // TestUnionBasic tests basic union operation (from Python docstring).
 func TestUnionBasic(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	v := mkConst("v")
 	w := mkConst("w")
 	cc.Union(v, w)
@@ -57,7 +57,7 @@ func TestUnionBasic(t *testing.T) {
 
 // TestUnionMinimalRep tests that the lexicographically smaller name is representative.
 func TestUnionMinimalRep(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	z := mkConst("z")
 	cc.Union(z, a)
@@ -71,7 +71,7 @@ func TestUnionMinimalRep(t *testing.T) {
 
 // TestUnionTransitive tests transitivity: union(a,b), union(b,c) => find(c)==a.
 func TestUnionTransitive(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	b := mkConst("b")
 	c := mkConst("c")
@@ -84,7 +84,7 @@ func TestUnionTransitive(t *testing.T) {
 
 // TestUnionSameClass tests that union of already-unified terms is a no-op.
 func TestUnionSameClass(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	b := mkConst("b")
 	cc.Union(a, b)
@@ -96,7 +96,7 @@ func TestUnionSameClass(t *testing.T) {
 
 // TestTheory tests that Theory reports equalities.
 func TestTheory(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	v := mkConst("v")
 	w := mkConst("w")
 	cc.Union(v, w)
@@ -115,7 +115,7 @@ func TestTheory(t *testing.T) {
 
 // TestPushPop tests that push/pop correctly restores state.
 func TestPushPop(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	v := mkConst("v")
 	w := mkConst("w")
 	u := mkConst("u")
@@ -142,7 +142,7 @@ func TestPushPop(t *testing.T) {
 
 // TestMultiplePushPop tests nested push/pop.
 func TestMultiplePushPop(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	b := mkConst("b")
 	c := mkConst("c")
@@ -172,13 +172,13 @@ func TestMultiplePushPop(t *testing.T) {
 
 // TestPopEmpty tests that Pop on empty pushes is safe.
 func TestPopEmpty(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	cc.Pop() // should not panic
 }
 
 // TestFindByNameCreates tests that FindByName creates a constant.
 func TestFindByNameCreates(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	rep := cc.FindByName("newconst")
 	if rep.String() != "newconst" {
 		t.Errorf("expected newconst, got %s", rep)
@@ -187,7 +187,7 @@ func TestFindByNameCreates(t *testing.T) {
 
 // TestFindByNameExisting tests FindByName with an existing entry.
 func TestFindByNameExisting(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	b := mkConst("b")
 	cc.Union(a, b)
@@ -199,7 +199,7 @@ func TestFindByNameExisting(t *testing.T) {
 
 // TestTheoryEmpty tests that an empty CongClos has empty theory.
 func TestTheoryEmpty(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	theory := cc.Theory()
 	if len(theory) != 0 {
 		t.Errorf("expected 0, got %d", len(theory))
@@ -208,7 +208,7 @@ func TestTheoryEmpty(t *testing.T) {
 
 // TestUnionManyElements tests union with many elements.
 func TestUnionManyElements(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	consts := make([]*logic.Const, 10)
 	for i := range consts {
 		consts[i] = mkConst(fmt.Sprintf("c%d", i))
@@ -226,7 +226,7 @@ func TestUnionManyElements(t *testing.T) {
 
 // TestPushPopPreservesTab tests that tab entries persist after pop (only reps change).
 func TestPushPopPreservesTab(t *testing.T) {
-	cc := New()
+	cc := NewCongClos()
 	a := mkConst("a")
 	cc.Push()
 	cc.Find(a) // creates entry in tab
@@ -244,7 +244,7 @@ func FuzzCongClos(f *testing.F) {
 	f.Add("x,y;y,z;push;z,w;pop;?w", "")
 
 	f.Fuzz(func(t *testing.T, ops, _ string) {
-		cc := New()
+		cc := NewCongClos()
 		pushCount := 0
 		for _, op := range strings.Split(ops, ";") {
 			op = strings.TrimSpace(op)

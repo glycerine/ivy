@@ -69,7 +69,7 @@ func TestBottomStateValue(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestNewStateDefaults(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	if s.Domain == nil {
 		t.Fatal("expected non-nil Domain")
 	}
@@ -86,7 +86,7 @@ func TestNewStateDefaults(t *testing.T) {
 
 func TestNewStateWithDomain(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "label1")
+	s := NewInterpState(m, nil, nil, "label1")
 	if s.Domain != m {
 		t.Error("expected same domain")
 	}
@@ -97,7 +97,7 @@ func TestNewStateWithDomain(t *testing.T) {
 
 func TestStateValueRoundtrip(t *testing.T) {
 	sv := NewStateValue([]string{"a"}, module.TrueClauses(nil), module.FalseClauses(nil))
-	s := NewState(nil, sv, nil, "")
+	s := NewInterpState(nil, sv, nil, "")
 	got := s.Value()
 	if len(got.Moded) != 1 || got.Moded[0] != "a" {
 		t.Errorf("Moded roundtrip failed: %v", got.Moded)
@@ -105,7 +105,7 @@ func TestStateValueRoundtrip(t *testing.T) {
 }
 
 func TestSetValue(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	sv := NewStateValue([]string{"x"}, module.FalseClauses(nil), module.TrueClauses(nil))
 	s.SetValue(sv)
 	if !s.Clauses.IsFalse() {
@@ -117,18 +117,18 @@ func TestSetValue(t *testing.T) {
 }
 
 func TestStateIsBottom(t *testing.T) {
-	s := NewState(nil, BottomStateValue(), nil, "")
+	s := NewInterpState(nil, BottomStateValue(), nil, "")
 	if !s.IsBottom() {
 		t.Error("state with FalseClauses should be bottom")
 	}
-	s2 := NewState(nil, TopStateValue(), nil, "")
+	s2 := NewInterpState(nil, TopStateValue(), nil, "")
 	if s2.IsBottom() {
 		t.Error("state with TrueClauses should not be bottom")
 	}
 }
 
 func TestStateToFormula(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	f := s.ToFormula()
 	if f == nil {
 		t.Error("ToFormula should not return nil")
@@ -136,7 +136,7 @@ func TestStateToFormula(t *testing.T) {
 }
 
 func TestStateString(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	str := s.String()
 	if str == "" {
 		t.Error("String should not be empty")
@@ -144,7 +144,7 @@ func TestStateString(t *testing.T) {
 }
 
 func TestStateStringNilClauses(t *testing.T) {
-	s := &State{}
+	s := &InterpState{}
 	str := s.String()
 	if !strings.Contains(str, "nil") {
 		t.Errorf("String for nil clauses should mention nil, got %q", str)
@@ -152,14 +152,14 @@ func TestStateStringNilClauses(t *testing.T) {
 }
 
 func TestStatePredAndUpdate(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	if s.Pred() != nil {
 		t.Error("initial Pred should be nil")
 	}
 	if s.Update() != nil {
 		t.Error("initial Update should be nil")
 	}
-	pred := NewState(nil, nil, nil, "pred")
+	pred := NewInterpState(nil, nil, nil, "pred")
 	s.SetPred(pred)
 	if s.Pred() != pred {
 		t.Error("SetPred should set predecessor")
@@ -173,7 +173,7 @@ func TestStatePredAndUpdate(t *testing.T) {
 
 func TestStateConjs(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	if s.Conjs() != nil {
 		t.Error("initial Conjs should be nil")
 	}
@@ -187,12 +187,12 @@ func TestStateConjs(t *testing.T) {
 
 func TestStateUnders(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	if s.Unders() != nil {
 		t.Error("initial Unders should be nil")
 	}
-	under := NewState(m, nil, nil, "under1")
-	s.SetUnders([]*State{under})
+	under := NewInterpState(m, nil, nil, "under1")
+	s.SetUnders([]*InterpState{under})
 	got := s.Unders()
 	if len(got) != 1 {
 		t.Errorf("expected 1 under, got %d", len(got))
@@ -200,7 +200,7 @@ func TestStateUnders(t *testing.T) {
 }
 
 func TestStateAction(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	if s.Action != nil {
 		t.Error("initial Action should be nil")
 	}
@@ -210,7 +210,7 @@ func TestStateAction(t *testing.T) {
 }
 
 func TestStateJoinOf(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	if s.JoinOf != nil {
 		t.Error("initial JoinOf should be nil")
 	}
@@ -221,7 +221,7 @@ func TestStateJoinOf(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestWrapUnwrapState(t *testing.T) {
-	s := NewState(nil, nil, nil, "test")
+	s := NewInterpState(nil, nil, nil, "test")
 	wrapped := WrapState(s)
 	if wrapped == nil {
 		t.Fatal("WrapState returned nil")
@@ -240,7 +240,7 @@ func TestUnwrapStateNonState(t *testing.T) {
 }
 
 func TestStateNodeString(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	sn := &stateNode{state: s}
 	str := sn.String()
 	if str == "" {
@@ -335,11 +335,11 @@ func TestIsActionApp(t *testing.T) {
 
 func TestIsStateJoin(t *testing.T) {
 	or := testAstCfg.NewOr()
-	if !IsStateJoin(or) {
+	if !IsInterpStateJoin(or) {
 		t.Error("Or should be state join")
 	}
 	atom := testAstCfg.NewAtom("x")
-	if IsStateJoin(atom) {
+	if IsInterpStateJoin(atom) {
 		t.Error("Atom should not be state join")
 	}
 }
@@ -355,7 +355,7 @@ func TestActionApp(t *testing.T) {
 }
 
 func TestStateJoinFunc(t *testing.T) {
-	result := StateJoin(testAstCfg, testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
+	result := InterpStateJoin(testAstCfg, testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
 	if len(result.Terms) != 2 {
 		t.Errorf("expected 2 terms, got %d", len(result.Terms))
 	}
@@ -383,8 +383,8 @@ func TestStateEquation(t *testing.T) {
 }
 
 func TestStatesInExpr(t *testing.T) {
-	s1 := NewState(nil, nil, nil, "s1")
-	s2 := NewState(nil, nil, nil, "s2")
+	s1 := NewInterpState(nil, nil, nil, "s1")
+	s2 := NewInterpState(nil, nil, nil, "s2")
 	expr := testAstCfg.NewOr(WrapState(s1), WrapState(s2))
 	states := StatesInExpr(expr)
 	if len(states) != 2 {
@@ -427,7 +427,7 @@ func TestIvyActionFailedErrorDefaultMsg(t *testing.T) {
 
 func TestNewIvyActionFailedError(t *testing.T) {
 	m := module.New()
-	state := NewState(m, nil, nil, "")
+	state := NewInterpState(m, nil, nil, "")
 	seq := actions.NewSequence()
 	err := NewIvyActionFailedError(
 		testAstCfg.NewAtom("test"),
@@ -464,7 +464,7 @@ func TestUnsatCoreWithInterpolant(t *testing.T) {
 
 func TestConcretePostBasic(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	upd := actions.NullUpdate()
 	result, err := ConcretePost(true, upd, s, nil)
 	if err != nil {
@@ -479,7 +479,7 @@ func TestConcretePostBasic(t *testing.T) {
 }
 
 func TestConcretePostNilDomain(t *testing.T) {
-	s := &State{}
+	s := &InterpState{}
 	upd := actions.NullUpdate()
 	_, err := ConcretePost(true, upd, s, nil)
 	if err == nil {
@@ -489,8 +489,8 @@ func TestConcretePostNilDomain(t *testing.T) {
 
 func TestConcreteJoinBasic(t *testing.T) {
 	m := module.New()
-	s1 := NewState(m, nil, nil, "")
-	s2 := NewState(m, nil, nil, "")
+	s1 := NewInterpState(m, nil, nil, "")
+	s2 := NewInterpState(m, nil, nil, "")
 	result, err := ConcreteJoin(s1, s2)
 	if err != nil {
 		t.Fatalf("ConcreteJoin returned error: %v", err)
@@ -501,8 +501,8 @@ func TestConcreteJoinBasic(t *testing.T) {
 }
 
 func TestConcreteJoinNilDomain(t *testing.T) {
-	s1 := &State{}
-	s2 := NewState(nil, nil, nil, "")
+	s1 := &InterpState{}
+	s2 := NewInterpState(nil, nil, nil, "")
 	_, err := ConcreteJoin(s1, s2)
 	if err == nil {
 		t.Error("expected error for nil domain")
@@ -561,7 +561,7 @@ func TestEvalActionUnsupportedType(t *testing.T) {
 
 func TestEvalStateAtomWrappedState(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	wrapped := WrapState(s)
 	result, err := EvalStateAtom(wrapped, m)
 	if err != nil {
@@ -611,7 +611,7 @@ func TestEvalStateAtomSymbol(t *testing.T) {
 
 func TestJoinUnders(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	result := JoinUnders(s)
 	if result == nil {
 		t.Fatal("JoinUnders should not return nil")
@@ -620,7 +620,7 @@ func TestJoinUnders(t *testing.T) {
 
 func TestAddUnder(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	cls := module.TrueClauses(nil)
 	under := AddUnder(s, cls, nil, nil)
 	if under == nil {
@@ -633,8 +633,8 @@ func TestAddUnder(t *testing.T) {
 
 func TestAddUnderWithPred(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
-	pred := NewState(m, nil, nil, "pred")
+	s := NewInterpState(m, nil, nil, "")
+	pred := NewInterpState(m, nil, nil, "pred")
 	under := AddUnder(s, module.TrueClauses(nil), pred, "universe")
 	if under.Pred() != pred {
 		t.Error("under pred should be set")
@@ -645,7 +645,7 @@ func TestAddUnderWithPred(t *testing.T) {
 }
 
 func TestReachStateNoPred(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	result := ReachState(s, nil)
 	if result != nil {
 		t.Error("ReachState without pred should return nil")
@@ -653,7 +653,7 @@ func TestReachStateNoPred(t *testing.T) {
 }
 
 func TestReachStateFromPredNoPred(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	result, err := ReachStateFromPred(s, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -665,7 +665,7 @@ func TestReachStateFromPredNoPred(t *testing.T) {
 
 func TestUndecidedConjectures(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	// TrueClauses state implies TrueClauses conjecture, so it should
 	// be decided (not undecided). Use FalseClauses as conjecture to
 	// get an undecided one (True does not imply False).
@@ -679,7 +679,7 @@ func TestUndecidedConjectures(t *testing.T) {
 
 func TestFilterConjectures(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	conjs := []*module.Clauses{module.TrueClauses(nil)}
 	s.SetConjs(conjs)
 	lost := FilterConjectures(s, module.TrueClauses(nil))
@@ -690,7 +690,7 @@ func TestFilterConjectures(t *testing.T) {
 
 func TestCaseConjecture(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	// Smoke test for the rewritten CaseConjecture, which now delegates
 	// to actions.InterpolantCase (Python ivy_interp.py:325-337). With an
 	// empty state and TrueClauses input, the call should not panic.
@@ -700,7 +700,7 @@ func TestCaseConjecture(t *testing.T) {
 
 func TestDiagram(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	// TrueClauses is satisfiable, so Diagram should return non-nil.
 	result := Diagram(s, module.TrueClauses(nil), nil, nil, true, true)
 	if result == nil {
@@ -714,7 +714,7 @@ func TestDiagram(t *testing.T) {
 }
 
 func TestTopAlpha(t *testing.T) {
-	s := NewState(nil, BottomStateValue(), nil, "")
+	s := NewInterpState(nil, BottomStateValue(), nil, "")
 	if !s.IsBottom() {
 		t.Fatal("should start as bottom")
 	}
@@ -740,7 +740,7 @@ func TestFailExpr(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestNewHistoryFromState(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	h := NewHistoryFromState(nil, s)
 	if h == nil {
 		t.Fatal("NewHistoryFromState should not return nil")
@@ -748,7 +748,7 @@ func TestNewHistoryFromState(t *testing.T) {
 }
 
 func TestHistorySatisfy(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	h := NewHistoryFromState(nil, s)
 	// TrueClauses state with True history post is satisfiable,
 	// so we should get a non-nil result with a non-empty path.
@@ -849,7 +849,7 @@ func TestNewStateFromClausesWithAnnot(t *testing.T) {
 }
 
 func TestEvalStateActions(t *testing.T) {
-	pre := NewState(nil, nil, nil, "")
+	pre := NewInterpState(nil, nil, nil, "")
 	pre.Label = "startState"
 	expr := testAstCfg.NewAtom("act", testAstCfg.NewAtom("startState"))
 	result := EvalStateActions(expr, pre)
@@ -859,7 +859,7 @@ func TestEvalStateActions(t *testing.T) {
 }
 
 func TestEvalStateActionsNoMatch(t *testing.T) {
-	pre := NewState(nil, nil, nil, "")
+	pre := NewInterpState(nil, nil, nil, "")
 	pre.Label = "startState"
 	expr := testAstCfg.NewAtom("act", testAstCfg.NewAtom("otherState"))
 	result := EvalStateActions(expr, pre)
@@ -869,7 +869,7 @@ func TestEvalStateActionsNoMatch(t *testing.T) {
 }
 
 func TestEvalStateActionsJoin(t *testing.T) {
-	pre := NewState(nil, nil, nil, "")
+	pre := NewInterpState(nil, nil, nil, "")
 	pre.Label = "s"
 	expr := testAstCfg.NewOr(
 		testAstCfg.NewAtom("a1", testAstCfg.NewAtom("s")),
@@ -882,7 +882,7 @@ func TestEvalStateActionsJoin(t *testing.T) {
 }
 
 func TestReverseNoPred(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	_, err := Reverse(s, nil)
 	if err == nil {
 		t.Error("Reverse without pred should error")
@@ -890,7 +890,7 @@ func TestReverseNoPred(t *testing.T) {
 }
 
 func TestReverseUpdateConcreteClauses(t *testing.T) {
-	s := NewState(nil, nil, nil, "")
+	s := NewInterpState(nil, nil, nil, "")
 	_, err := ReverseUpdateConcreteClauses(s, nil)
 	if err == nil {
 		t.Error("should error without pred")
@@ -903,7 +903,7 @@ func TestReverseUpdateConcreteClauses(t *testing.T) {
 
 func TestApplyAction(t *testing.T) {
 	m := module.New()
-	s := NewState(m, nil, nil, "")
+	s := NewInterpState(m, nil, nil, "")
 	seq := actions.NewSequence()
 	result, err := ApplyAction(true, testAstCfg.NewAtom("test"), "test", seq, s)
 	if err != nil {
@@ -966,7 +966,7 @@ func FuzzStateValueCreation(f *testing.F) {
 		if sv == nil {
 			t.Fatal("NewStateValue returned nil")
 		}
-		s := NewState(nil, sv, nil, "")
+		s := NewInterpState(nil, sv, nil, "")
 		if s == nil {
 			t.Fatal("NewState returned nil")
 		}
@@ -1004,8 +1004,8 @@ func FuzzExpressionHelpers(f *testing.F) {
 		}
 
 		if useJoin {
-			join := StateJoin(testAstCfg, stateAtom)
-			if !IsStateJoin(join) {
+			join := InterpStateJoin(testAstCfg, stateAtom)
+			if !IsInterpStateJoin(join) {
 				t.Error("StateJoin should produce state join")
 			}
 		}

@@ -48,7 +48,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Cla
 				varNodes[i] = v
 			}
 			// sym(V0,...) <-> new_sym(V0,...)
-			newSym := NewConst(sym)
+			newSym := NewActionConst(sym)
 			oldApp, _ := lg.NewApply(sym, varNodes...)
 			newApp, _ := lg.NewApply(newSym, varNodes...)
 			// Iff(old, new) = And(Or(Not(old), new), Or(old, Not(new)))
@@ -61,7 +61,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Cla
 			fmlas = append(fmlas, fmla)
 		} else {
 			// sym = new_sym
-			newSym := NewConst(sym)
+			newSym := NewActionConst(sym)
 			fmlas = append(fmlas, &lg.Eq{T1: sym, T2: newSym})
 		}
 	}
@@ -77,26 +77,26 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Cla
 // unchanged. Uses a frame definition (new_sym = sym).
 // Corresponds to Python's symbol_frame_cond.
 func SymbolFrameCond(sym *lg.Const) *module.Clauses {
-	def := FrameDefConst(sym, NewConst)
+	def := FrameDefConst(sym, NewActionConst)
 	return module.NewClauses(nil, []*il.Definition{def}, nil)
 }
 
 // --- Join ---
 
 // Join computes the parallel join of two updates with an explicit
-// vocabulary operator (New or Old). This is the generic version;
+// vocabulary operator (ActionNewName or Old). This is the generic version;
 // JoinAction and JoinState are the specialized wrappers.
 // Corresponds to Python's join(s1, s2, op, axioms).
 func Join(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	return joinUpdate(u1, u2, op, axioms)
 }
 
-// --- Ite ---
+// --- ActionIte ---
 
-// Ite computes the conditional update with an explicit vocabulary operator.
+// ActionIte computes the conditional update with an explicit vocabulary operator.
 // This is the generic version; IteAction and IteState are the specialized wrappers.
 // Corresponds to Python's ite(cond, s1, s2, op, axioms).
-func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
+func ActionIte(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *module.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, op, axioms)
 }
 
@@ -118,13 +118,13 @@ func ClausesImplyFormulaCex(mod *module.Module, clauses *module.Clauses, fmla lg
 	return false, &CounterExample{Formula: cex.ToFormula()}
 }
 
-// --- Implies ---
+// --- ActionImplies ---
 
-// Implies checks whether update s1 implies (refines) update s2,
+// ActionImplies checks whether update s1 implies (refines) update s2,
 // using the given axioms and vocabulary operator (old for state, new for action).
 // Returns true if s1 implies s2, or a *CounterExample if not.
 // Corresponds to Python's implies(s1, s2, axioms, relations, op).
-func Implies(mod *module.Module, s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
+func ActionImplies(mod *module.Module, s1, s2 *Update, axioms *module.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
 	if s1.ModifiedAll && !s2.ModifiedAll {
 		return false, nil
 	}
@@ -160,7 +160,7 @@ func Implies(mod *module.Module, s1, s2 *Update, axioms *module.Clauses, op func
 // ImpliesState checks if s1 implies s2 in state style (using old vocabulary).
 // Corresponds to Python's implies_state(s1, s2, axioms, relations).
 func ImpliesState(mod *module.Module, s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
-	return Implies(mod, s1, s2, axioms, OldConst)
+	return ActionImplies(mod, s1, s2, axioms, OldConst)
 }
 
 // --- ImpliesAction ---
@@ -168,7 +168,7 @@ func ImpliesState(mod *module.Module, s1, s2 *Update, axioms *module.Clauses) (b
 // ImpliesAction checks if s1 implies s2 in action style (using new vocabulary).
 // Corresponds to Python's implies_action(s1, s2, axioms, relations).
 func ImpliesAction(mod *module.Module, s1, s2 *Update, axioms *module.Clauses) (bool, *CounterExample) {
-	return Implies(mod, s1, s2, axioms, NewConst)
+	return ActionImplies(mod, s1, s2, axioms, NewActionConst)
 }
 
 // --- Clausify ---
@@ -233,7 +233,7 @@ func ExtractPrePostModel(mod *module.Module, cfg *iu.IvyUtilsConfig, clauses *mo
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
-		renaming[sym.Name] = New(sym.Name)
+		renaming[sym.Name] = ActionNewName(sym.Name)
 	}
 
 	numerals := cfg.UseNumerals
@@ -268,7 +268,7 @@ func ExtractPrePostModel(mod *module.Module, cfg *iu.IvyUtilsConfig, clauses *mo
 	// Rename new_ back to base names
 	inverseMap := make(map[lg.NodeKey]*lg.Const, len(renaming))
 	for _, sym := range updated {
-		newSym := lg.NewConst(New(sym.Name), sym.CSort)
+		newSym := lg.NewConst(ActionNewName(sym.Name), sym.CSort)
 		inverseMap[lg.Key(newSym)] = lg.NewConst(sym.Name, sym.CSort)
 	}
 	postClauses = module.RenameClauses(postClauses, inverseMap)

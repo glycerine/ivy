@@ -146,7 +146,7 @@ func makeAnd(terms ...lg.Expr) lg.Expr {
 	return &lg.And{Terms: terms}
 }
 
-func setLineno(a actions.Action, loc ast.Location) actions.Action {
+func setLineno(a actions.ActionsAction, loc ast.Location) actions.ActionsAction {
 	a.SetLineno(loc)
 	return a
 }
@@ -574,7 +574,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			lu.ResetRtrDepth()
 			xtracer.Trace("l2s.modPass clone init ENTER")
 			// Python: model.init = transform(model.init)
-			model.Init = transform(model.Init).(actions.Action)
+			model.Init = transform(model.Init).(actions.ActionsAction)
 			xtracer.Trace("l2s.modPass clone init EXIT")
 		}
 		// M7: list_transform on property prems.
@@ -628,7 +628,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// ---------------------------------------------------------------
 
 	// reset_a: l2s_a(s)(X) := l2s_d(s)(X) for each uninterpreted sort
-	var resetA []actions.Action
+	var resetA []actions.ActionsAction
 	for _, s := range uninterpretedSorts {
 		v, _ := lg.NewVariable("X", s)
 		resetA = append(resetA,
@@ -716,7 +716,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 	}
 
-	var assertNoFairCycleAction actions.Action = setLineno(
+	var assertNoFairCycleAction actions.ActionsAction = setLineno(
 		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno) // "nowhere" file, no lineno
 	// Python ivy_l2s.py:991: assert_no_fair_cycle.lineno = goal.lineno
 	assertNoFairCycleAction.SetLineno(goal.GetLineno()) // actual lineno from here!
@@ -737,8 +737,8 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Step 5: Monitor state machine (l2s-specific)
 	// ---------------------------------------------------------------
 
-	monitorEdge := func(s1, s2 *lg.Const) []actions.Action {
-		return []actions.Action{
+	monitorEdge := func(s1, s2 *lg.Const) []actions.ActionsAction {
+		return []actions.ActionsAction{
 			setLineno(actions.NewAssumeAction(s1), lineno),
 			setLineno(actions.NewAssignAction(s1, lg.False), lineno),
 			setLineno(actions.NewAssignAction(s2, lg.True), lineno),
@@ -746,7 +746,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	}
 
 	// waiting -> frozen
-	var waitToFrozenParts []actions.Action
+	var waitToFrozenParts []actions.ActionsAction
 	waitToFrozenParts = append(waitToFrozenParts, monitorEdge(l2sWaitingSym, l2sFrozenSym)...)
 	for _, dw := range cfg.DoneWaiting {
 		waitToFrozenParts = append(waitToFrozenParts, setLineno(actions.NewAssumeAction(dw), lineno))
@@ -754,12 +754,12 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	waitToFrozenParts = append(waitToFrozenParts, resetA...)
 
 	// frozen -> saved
-	var frozenToSavedParts []actions.Action
+	var frozenToSavedParts []actions.ActionsAction
 	frozenToSavedParts = append(frozenToSavedParts, monitorEdge(l2sFrozenSym, l2sSavedSym)...)
 	frozenToSavedParts = append(frozenToSavedParts, cfg.SaveState...)
 	frozenToSavedParts = append(frozenToSavedParts, cfg.ResetW...)
 
-	changeMonitorState := []actions.Action{
+	changeMonitorState := []actions.ActionsAction{
 		setLineno(actions.NewChoiceActionOn(m.Cfg.ActCfg,
 			setLineno(actions.ConcatActions(waitToFrozenParts...), lineno),
 			setLineno(actions.ConcatActions(frozenToSavedParts...), lineno),
@@ -796,7 +796,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Step 9: Idle action (l2s-specific)
 	// ---------------------------------------------------------------
 
-	var idleParts []actions.Action
+	var idleParts []actions.ActionsAction
 	idleParts = append(idleParts, changeMonitorState...)
 	idleParts = append(idleParts, cfg.AssumeGAxioms...)
 	idleParts = append(idleParts, cfg.AddConstsToD...)
@@ -816,7 +816,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// Step 10: Init action (l2s-specific)
 	// ---------------------------------------------------------------
 
-	var l2sInitActions []actions.Action
+	var l2sInitActions []actions.ActionsAction
 	l2sInitActions = append(l2sInitActions,
 		setLineno(actions.NewAssignAction(l2sWaitingSym, lg.True), lineno),
 		setLineno(actions.NewAssignAction(l2sFrozenSym, lg.False), lineno),
@@ -943,7 +943,7 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	return nil
 }
 
-func transformAction(act actions.Action, transform func(ast.Node) ast.Node) actions.Action {
+func transformAction(act actions.ActionsAction, transform func(ast.Node) ast.Node) actions.ActionsAction {
 	if act == nil {
 		return nil
 	}
@@ -953,7 +953,7 @@ func transformAction(act actions.Action, transform func(ast.Node) ast.Node) acti
 	args := act.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
-		if sub, ok := a.(actions.Action); ok {
+		if sub, ok := a.(actions.ActionsAction); ok {
 			newArgs[i] = transformAction(sub, transform)
 		} else if a != nil {
 			newArgs[i] = transform(a).(lg.Expr)
@@ -1045,12 +1045,12 @@ func collectAllNamedBinders(model *temporal.NormalProgram) *iu.InsMap[string, []
 	return result
 }
 
-func collectActionNBs(act actions.Action, result *iu.InsMap[string, []*lg.NamedBinder]) {
+func collectActionNBs(act actions.ActionsAction, result *iu.InsMap[string, []*lg.NamedBinder]) {
 	if act == nil {
 		return
 	}
 	for _, a := range act.ActionArgs() {
-		if sub, ok := a.(actions.Action); ok {
+		if sub, ok := a.(actions.ActionsAction); ok {
 			collectActionNBs(sub, result)
 		} else if a != nil {
 			for _, b := range lu.NamedBindersAst(a) {

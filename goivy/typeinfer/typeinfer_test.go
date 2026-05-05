@@ -8,13 +8,13 @@ import (
 
 func TestFindBasic(t *testing.T) {
 	sv := NewSortVar()
-	result := Find(sv)
+	result := TypeInferFind(sv)
 	if result != sv {
 		t.Error("Find on unbound SortVar should return itself")
 	}
 
 	s := Wrap(logic.Boolean)
-	result = Find(s)
+	result = TypeInferFind(s)
 	if result != s {
 		t.Error("Find on concrete sort should return itself")
 	}
@@ -30,7 +30,7 @@ func TestFindPathCompression(t *testing.T) {
 	sv2.Instance = sv3
 	sv3.Instance = s
 
-	result := Find(sv1)
+	result := TypeInferFind(sv1)
 	if result != s {
 		t.Error("Find should resolve chain to Boolean")
 	}
@@ -42,17 +42,17 @@ func TestFindPathCompression(t *testing.T) {
 
 func TestUnifySameSorts(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	if err := Unify(Wrap(S), Wrap(S)); err != nil {
+	if err := TypeInferUnify(Wrap(S), Wrap(S)); err != nil {
 		t.Errorf("Same sorts should unify: %v", err)
 	}
 }
 
 func TestUnifyTopSort(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	if err := Unify(Wrap(logic.TopS), Wrap(S)); err != nil {
+	if err := TypeInferUnify(Wrap(logic.TopS), Wrap(S)); err != nil {
 		t.Errorf("TopSort should unify with anything: %v", err)
 	}
-	if err := Unify(Wrap(S), Wrap(logic.TopS)); err != nil {
+	if err := TypeInferUnify(Wrap(S), Wrap(logic.TopS)); err != nil {
 		t.Errorf("Anything should unify with TopSort: %v", err)
 	}
 }
@@ -60,10 +60,10 @@ func TestUnifyTopSort(t *testing.T) {
 func TestUnifySortVar(t *testing.T) {
 	sv := NewSortVar()
 	S := &logic.UninterpretedSort{Name: "S"}
-	if err := Unify(sv, Wrap(S)); err != nil {
+	if err := TypeInferUnify(sv, Wrap(S)); err != nil {
 		t.Fatalf("SortVar should unify: %v", err)
 	}
-	result := Find(sv)
+	result := TypeInferFind(sv)
 	if sw, ok := result.(*SortWrapper); !ok || sw.Sort.String() != "S" {
 		t.Error("SortVar should resolve to S after unification")
 	}
@@ -73,7 +73,7 @@ func TestUnifyFunctionSort(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	fs1, _ := logic.NewFunctionSort(S, S, logic.Boolean)
 	fs2, _ := logic.NewFunctionSort(S, S, logic.Boolean)
-	if err := Unify(Wrap(fs1), Wrap(fs2)); err != nil {
+	if err := TypeInferUnify(Wrap(fs1), Wrap(fs2)); err != nil {
 		t.Errorf("Same FunctionSorts should unify: %v", err)
 	}
 }
@@ -81,7 +81,7 @@ func TestUnifyFunctionSort(t *testing.T) {
 func TestUnifyIncompatible(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	T := &logic.UninterpretedSort{Name: "T"}
-	if err := Unify(Wrap(S), Wrap(T)); err == nil {
+	if err := TypeInferUnify(Wrap(S), Wrap(T)); err == nil {
 		t.Error("Different sorts should not unify")
 	}
 }
@@ -90,7 +90,7 @@ func TestUnifyFunctionSortArityMismatch(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	fs1, _ := logic.NewFunctionSort(S, logic.Boolean)
 	fs2, _ := logic.NewFunctionSort(S, S, logic.Boolean)
-	if err := Unify(Wrap(fs1), Wrap(fs2)); err == nil {
+	if err := TypeInferUnify(Wrap(fs1), Wrap(fs2)); err == nil {
 		t.Error("FunctionSorts with different arity should not unify")
 	}
 }
@@ -245,6 +245,6 @@ func FuzzUnify(f *testing.F) {
 			s2 = Wrap(&logic.UninterpretedSort{Name: "S"})
 		}
 		// Should not panic
-		_ = Unify(s1, s2)
+		_ = TypeInferUnify(s1, s2)
 	})
 }

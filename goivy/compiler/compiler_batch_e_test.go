@@ -599,7 +599,7 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 	}
 
 	// Check that the run action has $self in its formal params
-	act, ok := runAction.(actions.Action)
+	act, ok := runAction.(actions.ActionsAction)
 	if !ok {
 		t.Fatalf("run action should be an Action, got %T", runAction)
 	}
@@ -695,7 +695,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	}
 
 	// Result should be a LocalAction (or unwrapped from one)
-	act, _ := result.(actions.Action)
+	act, _ := result.(actions.ActionsAction)
 	if act == nil {
 		t.Fatalf("result should be an action, got: %T", result)
 	}
@@ -800,7 +800,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act, _ := result.(actions.Action)
+	act, _ := result.(actions.ActionsAction)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
@@ -858,7 +858,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act, _ := result.(actions.Action)
+	act, _ := result.(actions.ActionsAction)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
@@ -871,7 +871,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	}
 
 	seqExpr := args[1]
-	seqAct, _ := seqExpr.(actions.Action)
+	seqAct, _ := seqExpr.(actions.ActionsAction)
 	seq, ok := seqAct.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected Sequence in LocalAction body, got %T", seqAct)
@@ -885,7 +885,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 
 	// First element should be an AssignAction
 	if len(seqArgs) > 0 {
-		firstAct, _ := seqArgs[0].(actions.Action)
+		firstAct, _ := seqArgs[0].(actions.ActionsAction)
 		if _, ok := firstAct.(*actions.AssignAction); !ok {
 			t.Errorf("first Sequence element should be AssignAction, got %T", firstAct)
 		}
@@ -946,7 +946,7 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act, _ := result.(actions.Action)
+	act, _ := result.(actions.ActionsAction)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)

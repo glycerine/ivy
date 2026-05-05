@@ -100,7 +100,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	// All action counters (LocalActionCtr, CallActionCtr, ChoiceActionCtr)
 	// live on IuCfg and are shared between ast and actions packages,
 	// matching Python's single globals in ivy_actions.py.
-	actCfg := module.NewActionsConfig()
+	actCfg := module.NewModuleActionsConfig()
 	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
 		actCfg.IuCfg = mod.Cfg.AstCfg.IuCfg
 	}
@@ -187,7 +187,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	for name, action := range mod.Actions.All() {
 		TypeCheckAction(action, mod)
 		// Python lines 2216-2218: assertion checks
-		if act, ok := action.(actions.Action); ok {
+		if act, ok := action.(actions.ActionsAction); ok {
 			if act.GetLineno().Line == 0 {
 				pp("no lineno: %s", name)
 			}
@@ -841,7 +841,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		var mixer *ast.Atom
 		var mixee ast.Node
 
-		renameToFirstTransition := func(act actions.Action, body actions.Action) actions.Action {
+		renameToFirstTransition := func(act actions.ActionsAction, body actions.ActionsAction) actions.ActionsAction {
 			aparams := append([]*lg.Const{}, body.GetFormalParams()...)
 			aparams = append(aparams, body.GetFormalReturns()...)
 			canonical := append([]*lg.Const{}, params...)
@@ -1021,8 +1021,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		// Register before choices
 		if len(choices) > 0 {
 			choice := BalancedChoice(choices, as.Compiler.ActCfg)
-			if act, ok := choice.(actions.Action); ok {
-				if firstAct, ok := choices[0].(actions.Action); ok {
+			if act, ok := choice.(actions.ActionsAction); ok {
+				if firstAct, ok := choices[0].(actions.ActionsAction); ok {
 					act.SetLineno(firstAct.GetLineno())
 				}
 				act.SetFormalParams(params)
@@ -1044,12 +1044,12 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		if len(afters) > 0 {
 			var seqExprs []lg.Expr
 			for _, a := range afters {
-				if act, ok := a.(actions.Action); ok {
+				if act, ok := a.(actions.ActionsAction); ok {
 					seqExprs = append(seqExprs, act)
 				}
 			}
 			seqAct := actions.NewSequence(seqExprs...)
-			if firstAfter, ok := afters[0].(actions.Action); ok {
+			if firstAfter, ok := afters[0].(actions.ActionsAction); ok {
 				seqAct.SetLineno(firstAfter.GetLineno())
 			}
 			seqAct.SetFormalParams(params)
@@ -1548,8 +1548,8 @@ func CheckDefinitions(mod *module.Module) error {
 	if iu.VersionLE("1.7", mod.Cfg.IuCfg.GetStringVersion()) {
 		// Create ActionsConfig with module context so isDestructor() can
 		// check mod.DestructorSorts, matching Python's ivy_module.module.destructor_sorts.
-		interferenceActCfg := &module.ActionsConfig{
-			Context: module.NewActionContext(mod),
+		interferenceActCfg := &module.ModuleActionsConfig{
+			Context: module.NewModuleActionContext(mod),
 		}
 		// Dump all action keys in insertion order for comparison.
 		{
@@ -1565,7 +1565,7 @@ func CheckDefinitions(mod *module.Module) error {
 		//                 for s in sub.modifies(): side_effects[s] = sub
 		modified := make(map[lg.NodeKey]bool)
 		for _, actVal := range mod.Actions.All() {
-			if act, ok := actVal.(actions.Action); ok {
+			if act, ok := actVal.(actions.ActionsAction); ok {
 				for _, sub := range act.IterSubactions() {
 					mods := actions.Modifies(sub, interferenceActCfg)
 					for _, sym := range mods {
@@ -1579,7 +1579,7 @@ func CheckDefinitions(mod *module.Module) error {
 		//             mod_syms = set(); for sub in actval.iter_subactions(): mod_syms.update(sub.modifies())
 		//             if mod_syms: xtracer.trace(...)
 		for name, actVal := range mod.Actions.All() {
-			if act, ok := actVal.(actions.Action); ok {
+			if act, ok := actVal.(actions.ActionsAction); ok {
 				modSyms := make(map[lg.NodeKey]bool)
 				modNames := make(map[string]bool)
 				for _, sub := range act.IterSubactions() {

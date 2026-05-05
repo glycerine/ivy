@@ -307,9 +307,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// *Severity:* MEDIUM — Go is BETTER than Python, but produces different output/behavior
 
 	if len(mod.Initializers) > 0 {
-		var guarantees []actions.Action
+		var guarantees []actions.ActionsAction
 		for _, na := range mod.Initializers {
-			if act, ok := na.Action.(actions.Action); ok {
+			if act, ok := na.Action.(actions.ActionsAction); ok {
 				for _, sub := range act.IterSubactions() {
 					isAssert := actions.IsAssertLike(sub)
 					_, isRanking := sub.(*actions.Ranking)
@@ -323,7 +323,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 		// Python: if check_lineno is not None: guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
 		if mod.Cfg.CheckLineno != "" {
-			var filtered []actions.Action
+			var filtered []actions.ActionsAction
 			for _, sub := range guarantees {
 				if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
 					filtered = append(filtered, sub)
@@ -344,17 +344,17 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 					failState := art.NewState(mod, module.TrueClauses(actions.EmptyAnnotation{}))
 
-					var innerAction actions.Action
+					var innerAction actions.ActionsAction
 					if aa, ok := initState.Prov.(*art.ActionApp); ok {
 						switch rep := aa.Rep.(type) {
 						case string:
 							failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
 							if v, ok := mod.Actions.Get2(rep); ok {
-								if a, ok := v.(actions.Action); ok {
+								if a, ok := v.(actions.ActionsAction); ok {
 									innerAction = a
 								}
 							}
-						case actions.Action:
+						case actions.ActionsAction:
 							failState.Prov = art.NewActionApp("fail_"+rep.Name(), aa.Args...)
 							innerAction = rep
 						}
@@ -437,7 +437,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// Build call graph (always — used by assumptions and guarantees)
 	callgraph := make(map[string][]string)
 	for actname, action := range mod.Actions.All() {
-		if act, ok := action.(actions.Action); ok {
+		if act, ok := action.(actions.ActionsAction); ok {
 			for _, calledName := range act.IterCalls() {
 				callgraph[calledName] = append(callgraph[calledName], actname)
 			}
@@ -446,7 +446,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 	if actions.AssertLocEnabled {
 		for actname, action := range mod.Actions.All() {
-			if a, ok := action.(actions.Action); ok {
+			if a, ok := action.(actions.ActionsAction); ok {
 				actions.AssertEveryActionHasLoc(a, "check.isolate_check.print actname="+actname)
 			}
 		}
@@ -455,11 +455,11 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// Print assumptions (always — not gated on check or NoCheckGuarantees)
 	someAssumps := false
 	for actname, action := range mod.Actions.All() {
-		act, ok := action.(actions.Action)
+		act, ok := action.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
-		var assumptions []actions.Action
+		var assumptions []actions.ActionsAction
 		for _, sub := range act.IterSubactions() {
 			if _, isAssume := sub.(*actions.AssumeAction); isAssume {
 				if !IsUnprovableAssert(sub) {
@@ -502,13 +502,13 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	someGuarants := false
 	for actname, action := range mod.Actions.All() {
 		xtracer.Trace("check.guarantee_phase actname iter actname=%s", actname)
-		act, ok := action.(actions.Action)
+		act, ok := action.(actions.ActionsAction)
 		if !ok {
 			xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
 			continue
 		}
 		xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
-		var guarantees []actions.Action
+		var guarantees []actions.ActionsAction
 		subCount := 0
 		for _, sub := range act.IterSubactions() {
 			subCount++
@@ -521,7 +521,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 		xtracer.Trace("check.guarantee_phase post iter_subactions actname=%s subCount=%d guarantees=%d", actname, subCount, len(guarantees))
 		if mod.Cfg.CheckLineno != "" {
-			var filtered []actions.Action
+			var filtered []actions.ActionsAction
 			for _, sub := range guarantees {
 				if sub.GetLineno().FileLineKey() == mod.Cfg.CheckLineno {
 					filtered = append(filtered, sub)
@@ -531,7 +531,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			xtracer.Trace("check.guarantee_phase post check_lineno_filter actname=%s guarantees=%d", actname, len(guarantees))
 		}
 		{
-			var filtered []actions.Action
+			var filtered []actions.ActionsAction
 			for _, sub := range guarantees {
 				pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
 				xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
@@ -1271,7 +1271,9 @@ func AllAssertLinenos(mod *module.Module) ([]ast.Location, error) {
 	var result []ast.Location
 
 	for _, action := range mod.Actions.All() {
-		if act, ok := action.(interface{ IterSubactions() []actions.Action }); ok {
+		if act, ok := action.(interface {
+			IterSubactions() []actions.ActionsAction
+		}); ok {
 			for _, sub := range act.IterSubactions() {
 				isAssert := actions.IsAssertLike(sub)
 				_, isRanking := sub.(*actions.Ranking)

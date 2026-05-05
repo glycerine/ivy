@@ -49,7 +49,7 @@ func functionsToInterpreted(functions *iu.InsMap[string, lg.Sort]) map[string]bo
 // through its update. If clauses is nil, the state's own clauses are used.
 //
 // Corresponds to Python's reverse() in ivy_interp.py.
-func Reverse(state *State, clauses *module.Clauses) (*module.Clauses, error) {
+func Reverse(state *InterpState, clauses *module.Clauses) (*module.Clauses, error) {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil, fmt.Errorf("Reverse: cannot reverse state without predecessor and update")
 	}
@@ -67,7 +67,7 @@ func Reverse(state *State, clauses *module.Clauses) (*module.Clauses, error) {
 // returns the reverse image conjoined with axioms.
 //
 // Corresponds to Python's reverse_update_concrete_clauses() in ivy_interp.py.
-func ReverseUpdateConcreteClauses(state *State, clauses *module.Clauses) (*module.Clauses, error) {
+func ReverseUpdateConcreteClauses(state *InterpState, clauses *module.Clauses) (*module.Clauses, error) {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil, fmt.Errorf("ReverseUpdateConcreteClauses: no predecessor or update")
 	}
@@ -96,7 +96,7 @@ func ReverseUpdateConcreteClauses(state *State, clauses *module.Clauses) (*modul
 
 // JoinUnders computes the join (disjunction) of all under-approximation
 // states. Returns TrueClauses if there are no under-approximations.
-func JoinUnders(state *State) *module.Clauses {
+func JoinUnders(state *InterpState) *module.Clauses {
 	unders := state.Unders()
 	if len(unders) == 0 {
 		return module.TrueClauses(nil)
@@ -109,7 +109,7 @@ func JoinUnders(state *State) *module.Clauses {
 }
 
 // AddUnder adds an under-approximation state to the target state.
-func AddUnder(state *State, clauses *module.Clauses, pred *State, universe interface{}) *State {
+func AddUnder(state *InterpState, clauses *module.Clauses, pred *InterpState, universe interface{}) *InterpState {
 	s := NewStateFromClauses(state.Domain, clauses)
 	if pred != nil {
 		s.SetPred(pred)
@@ -128,7 +128,7 @@ func AddUnder(state *State, clauses *module.Clauses, pred *State, universe inter
 // under-approximation and returns it. Otherwise returns nil.
 //
 // Corresponds to Python's reach_state() in ivy_interp.py.
-func ReachState(state *State, clauses *module.Clauses) *State {
+func ReachState(state *InterpState, clauses *module.Clauses) *InterpState {
 	if state.Pred() == nil || state.Update() == nil {
 		return nil
 	}
@@ -163,7 +163,7 @@ func ReachState(state *State, clauses *module.Clauses) *State {
 // and returns the reachable state. If not reachable, returns nil.
 //
 // Corresponds to Python's reach_state_from_pred() in ivy_interp.py.
-func ReachStateFromPred(state *State, clauses *module.Clauses) (*State, error) {
+func ReachStateFromPred(state *InterpState, clauses *module.Clauses) (*InterpState, error) {
 	post := ReachState(state, clauses)
 	if post != nil {
 		return post, nil
@@ -193,7 +193,7 @@ func ReachStateFromPred(state *State, clauses *module.Clauses) (*State, error) {
 // implied by the state's clauses and background theory.
 //
 // Corresponds to Python's undecided_conjectures() in ivy_interp.py.
-func UndecidedConjectures(state *State) []*module.Clauses {
+func UndecidedConjectures(state *InterpState) []*module.Clauses {
 	conjs := state.Conjs()
 	if len(conjs) == 0 {
 		return nil
@@ -219,7 +219,7 @@ func UndecidedConjectures(state *State) []*module.Clauses {
 // implied by the model (kept) and those not implied (lost).
 //
 // Corresponds to Python's filter_conjectures() in ivy_interp.py.
-func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
+func FilterConjectures(state *InterpState, model *module.Clauses) []*module.Clauses {
 	conjs := state.Conjs()
 	if len(conjs) == 0 {
 		return nil
@@ -260,7 +260,7 @@ func FilterConjectures(state *State, model *module.Clauses) []*module.Clauses {
 //	        core,interp = ri
 //	        state.conjs.append(interp)
 //	    return ri
-func CaseConjecture(state *State, clauses *module.Clauses) *actions.InterpolantResult {
+func CaseConjecture(state *InterpState, clauses *module.Clauses) *actions.InterpolantResult {
 	pre := JoinUnders(state)
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	interpreted := functionsToInterpreted(state.Domain.Functions)
@@ -279,7 +279,7 @@ func CaseConjecture(state *State, clauses *module.Clauses) *actions.InterpolantR
 // given state, or nil if the clauses are unsatisfiable.
 //
 // Corresponds to Python's diagram() in ivy_interp.py.
-func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, extraAxioms *module.Clauses, weaken, upwardClose bool) *module.Clauses {
+func Diagram(state *InterpState, clauses *module.Clauses, implied *module.Clauses, extraAxioms *module.Clauses, weaken, upwardClose bool) *module.Clauses {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	if extraAxioms != nil {
 		axioms = module.AndClausesTyped(axioms, extraAxioms)
@@ -303,13 +303,13 @@ func Diagram(state *State, clauses *module.Clauses, implied *module.Clauses, ext
 // ---------------------------------------------------------------------------
 
 // NewHistory creates a History from a state's value.
-func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *State) *actions.History {
+func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *InterpState) *actions.History {
 	return actions.NewHistory(cfg, actions.PureState(state.ToFormula()))
 }
 
 // HistoryForwardStep advances a history by one step through the
 // state's update.
-func HistoryForwardStep(history *actions.History, state *State) *actions.History {
+func HistoryForwardStep(history *actions.History, state *InterpState) *actions.History {
 	var actionNode lg.Expr
 	if state.Expr != nil && IsInterpActionApp(state.Expr) {
 		atom := state.Expr.(*ast.Atom)
@@ -328,7 +328,7 @@ func HistoryForwardStep(history *actions.History, state *State) *actions.History
 // and path) if satisfiable, or nil if unsatisfiable.
 //
 // Corresponds to Python's history_satisfy() in ivy_interp.py (lines 593-598).
-func HistorySatisfy(history *actions.History, state *State) *actions.SatisfyResult {
+func HistorySatisfy(history *actions.History, state *InterpState) *actions.SatisfyResult {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	return history.Satisfy(axioms)
 }
@@ -339,14 +339,14 @@ func HistorySatisfy(history *actions.History, state *State) *actions.SatisfyResu
 
 // ModuleNewState creates a new State from clauses, adding an empty
 // annotation if none is present. Mirrors module_new_state.
-func ModuleNewState(mod *module.Module, clauses *module.Clauses) *State {
+func ModuleNewState(mod *module.Module, clauses *module.Clauses) *InterpState {
 	return NewStateFromClauses(mod, clauses)
 }
 
 // ModuleNewStateWithValue creates a State from a full value triple.
 // Mirrors module_new_state_with_value.
-func ModuleNewStateWithValue(mod *module.Module, value *StateValue) *State {
-	return NewState(mod, value, nil, "")
+func ModuleNewStateWithValue(mod *module.Module, value *StateValue) *InterpState {
+	return NewInterpState(mod, value, nil, "")
 }
 
 // ModuleTypeCheck type-checks the module's axioms and concept spaces.
@@ -497,10 +497,10 @@ func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *module.Cl
 
 // EvalStateFacts evaluates an expression tree, skipping state symbols
 // (returning nil for them). Mirrors eval_state_facts.
-func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
-	if IsStateJoin(expr) {
+func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*InterpState, error) {
+	if IsInterpStateJoin(expr) {
 		or := expr.(*ast.AstOr)
-		var result *State
+		var result *InterpState
 		for _, term := range or.Terms {
 			s, err := EvalStateFacts(checkPrecond, term, mod)
 			if err != nil {
@@ -543,8 +543,8 @@ func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*Stat
 
 // EvalStateActions extracts action applications from an expression
 // that reference the given predecessor state. Mirrors eval_state_actions.
-func EvalStateActions(expr ast.Node, pre *State) []*ast.Atom {
-	if IsStateJoin(expr) {
+func EvalStateActions(expr ast.Node, pre *InterpState) []*ast.Atom {
+	if IsInterpStateJoin(expr) {
 		or := expr.(*ast.AstOr)
 		var result []*ast.Atom
 		for _, term := range or.Terms {
@@ -565,7 +565,7 @@ func EvalStateActions(expr ast.Node, pre *State) []*ast.Atom {
 }
 
 // TopAlpha resets a state's clauses to TrueClauses.
-func TopAlpha(state *State) {
+func TopAlpha(state *InterpState) {
 	state.Clauses = module.TrueClauses(nil)
 }
 
@@ -576,6 +576,6 @@ func FailExpr(cfg *ast.AstConfig, expr *ast.Atom) *ast.Atom {
 
 // Ensure unused imports don't cause errors.
 var _ = fmt.Sprintf
-var _ actions.Action
+var _ actions.ActionsAction
 var _ *module.Module
 var _ *actions.Update

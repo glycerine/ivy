@@ -107,7 +107,7 @@ func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
 	expanded := wa.Expand(ctx)
 
 	// Find HavocActions in the expanded result
-	havocs := collectActionType(expanded, func(a Action) bool {
+	havocs := collectActionType(expanded, func(a ActionsAction) bool {
 		_, ok := a.(*HavocAction)
 		return ok
 	})
@@ -145,8 +145,8 @@ func TestWhileExpandRankingChecksUseDecreasesLineno(t *testing.T) {
 	}
 	expanded := wa.Expand(ctx)
 
-	var rankingActions []Action
-	walkActions(expanded, func(a Action) {
+	var rankingActions []ActionsAction
+	walkActions(expanded, func(a ActionsAction) {
 		switch act := a.(type) {
 		case *AssumeAction:
 			if eq, ok := act.Formula.(*lg.Eq); ok {
@@ -305,9 +305,9 @@ func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 
 // --- helpers ---
 
-func countActionType(act Action, pred func(Action) bool) int {
+func countActionType(act ActionsAction, pred func(ActionsAction) bool) int {
 	count := 0
-	walkActions(act, func(a Action) {
+	walkActions(act, func(a ActionsAction) {
 		if pred(a) {
 			count++
 		}
@@ -315,9 +315,9 @@ func countActionType(act Action, pred func(Action) bool) int {
 	return count
 }
 
-func collectActionType(act Action, pred func(Action) bool) []Action {
-	var result []Action
-	walkActions(act, func(a Action) {
+func collectActionType(act ActionsAction, pred func(ActionsAction) bool) []ActionsAction {
+	var result []ActionsAction
+	walkActions(act, func(a ActionsAction) {
 		if pred(a) {
 			result = append(result, a)
 		}
@@ -325,7 +325,7 @@ func collectActionType(act Action, pred func(Action) bool) []Action {
 	return result
 }
 
-func walkActions(act Action, fn func(Action)) {
+func walkActions(act ActionsAction, fn func(ActionsAction)) {
 	if act == nil {
 		return
 	}
@@ -333,18 +333,18 @@ func walkActions(act Action, fn func(Action)) {
 	switch a := act.(type) {
 	case *Sequence:
 		for _, sub := range a.ActionArgs() {
-			if sa, ok := sub.(Action); ok {
+			if sa, ok := sub.(ActionsAction); ok {
 				walkActions(sa, fn)
 			}
 		}
 	case *IfAction:
 		for _, sub := range a.ActionArgs() {
-			if sa, ok := sub.(Action); ok {
+			if sa, ok := sub.(ActionsAction); ok {
 				walkActions(sa, fn)
 			}
 		}
 	case *LocalAction:
-		if body, ok := a.Body.(Action); ok {
+		if body, ok := a.Body.(ActionsAction); ok {
 			walkActions(body, fn)
 		}
 	}

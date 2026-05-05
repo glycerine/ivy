@@ -119,7 +119,7 @@ func TestVarAction_IsNotAction(t *testing.T) {
 
 	// Type-assert to Action should fail
 	var iface interface{} = va
-	if _, ok := iface.(Action); ok {
+	if _, ok := iface.(ActionsAction); ok {
 		t.Error("VarAction should NOT implement Action interface")
 	}
 }

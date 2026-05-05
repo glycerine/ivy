@@ -1397,13 +1397,13 @@ func (m *MixinAfterDef) String() string {
 	return fmt.Sprint(m.MixerNode) + " after " + fmt.Sprint(m.MixeeNode)
 }
 
-// Mixer returns the mixer action name (implements isolate.MixinDef).
+// Mixer returns the mixer action name (implements module.MixinDef).
 func (m *MixinAfterDef) Mixer() string { return nodeRelname(m.MixerNode) }
 
-// Mixee returns the mixee (target) action name (implements isolate.MixinDef).
+// Mixee returns the mixee (target) action name (implements module.MixinDef).
 func (m *MixinAfterDef) Mixee() string { return nodeRelname(m.MixeeNode) }
 
-// IsAfter returns true — this is an after-mixin (implements isolate.MixinDef).
+// IsAfter returns true — this is an after-mixin (implements module.MixinDef).
 func (m *MixinAfterDef) IsAfter() bool { return true }
 
 // nodeRelname extracts a relname string from an AST node.

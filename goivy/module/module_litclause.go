@@ -83,7 +83,7 @@ func formulaToLitLiteral(f lg.Expr) *il.Literal {
 func formulaToClauseLits(f lg.Expr) []*il.Literal {
 	f = lu.ExpandAbbrevs(f)
 	f = lu.DeMorgan(f)
-	if lu.IsTrue(f) {
+	if lu.LogicUtilIsTrue(f) {
 		return []*il.Literal{il.NewLiteral(1, f)}
 	}
 	if or, ok := f.(*lg.Or); ok {

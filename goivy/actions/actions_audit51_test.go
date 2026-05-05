@@ -350,7 +350,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	if len(seqResult.Elems) != 1 {
 		t.Fatalf("Expected 1 child, got %d", len(seqResult.Elems))
 	}
-	inner, _ := seqResult.Elems[0].(Action)
+	inner, _ := seqResult.Elems[0].(ActionsAction)
 	if inner == nil {
 		t.Fatal("inner action should not be nil")
 	}

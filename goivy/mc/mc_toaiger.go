@@ -17,11 +17,11 @@ import (
 // ToAigerResult holds the result of converting a module to an AIGER circuit.
 type ToAigerResult struct {
 	Aiger    *Encoder
-	Decoder  map[string]lg.Expr // abstract prop -> original expression
-	Annot    interface{}        // annotation for trace reconstruction
-	Consts   map[string]bool    // set of constant symbols used in sort_constants
-	Action   actions.Action     // the composed action
-	StVarSet map[string]bool    // set of original state variable names
+	Decoder  map[string]lg.Expr    // abstract prop -> original expression
+	Annot    interface{}           // annotation for trace reconstruction
+	Consts   map[string]bool       // set of constant symbols used in sort_constants
+	Action   actions.ActionsAction // the composed action
+	StVarSet map[string]bool       // set of original state variable names
 }
 
 // ToAiger converts an Ivy module to an AIGER circuit for model checking.
@@ -48,7 +48,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		if !ok {
 			continue
 		}
-		if a, ok := act.(actions.Action); ok {
+		if a, ok := act.(actions.ActionsAction); ok {
 			extActs = append(extActs, addLabelToAction(a, name))
 		}
 	}
@@ -60,7 +60,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Python: init = add_err_flag(Sequence(*([a for n,a in mod.initializers]+[AssignAction(init_var,And())])), erf, errconds)
 	var initParts []lg.Expr
 	for _, ni := range mod.Initializers {
-		if a, ok := ni.Action.(actions.Action); ok {
+		if a, ok := ni.Action.(actions.ActionsAction); ok {
 			initParts = append(initParts, a)
 		}
 	}
@@ -153,7 +153,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Python: rn = dict((tr.new(sym), tr.new(sym).prefix('__')) for sym in defsyms)
 	rn := make(map[lg.NodeKey]*lg.Const)
 	for name, sym := range defSymsByName {
-		newName := actions.New(name)
+		newName := actions.ActionNewName(name)
 		prefixed := "__" + newName
 		newSym := lg.NewConst(newName, sym.CSort)
 		rn[lg.Key(newSym)] = lg.NewConst(prefixed, sym.CSort)
@@ -360,7 +360,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		if origExpr != nil && isImmutableExpr(origExpr) && !isExprDefined(origExpr) {
 			propAbs.NewStVars = append(propAbs.NewStVars, v)
 			addDefs = append(addDefs, il.NewDefinition(
-				lg.NewConst(actions.New(v.Name), v.CSort),
+				lg.NewConst(actions.ActionNewName(v.Name), v.CSort),
 				v,
 			))
 		}
@@ -369,7 +369,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		if isImmutableExpr(sym) && !isExprDefined(sym) {
 			propAbs.NewStVars = append(propAbs.NewStVars, sym)
 			addDefs = append(addDefs, il.NewDefinition(
-				lg.NewConst(actions.New(sym.Name), sym.CSort),
+				lg.NewConst(actions.ActionNewName(sym.Name), sym.CSort),
 				sym,
 			))
 		}
@@ -387,7 +387,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Create next-state symbols for atoms in the invariant
 	rnInv := make(map[lg.NodeKey]*lg.Const, len(stVars))
 	for _, sv := range stVars {
-		rnInv[lg.Key(sv)] = lg.NewConst(actions.New(sv.Name), sv.CSort)
+		rnInv[lg.Key(sv)] = lg.NewConst(actions.ActionNewName(sv.Name), sv.CSort)
 	}
 	propAbs.MkPropAbs(module.RenameAST(invariant, rnInv))
 
@@ -412,7 +412,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	//         stvars_fix_map.update((v,curval(v)) for v in stvars if v != init_var)
 	fixRn := make(map[lg.NodeKey]*lg.Const)
 	for _, v := range stVars {
-		newV := lg.NewConst(actions.New(v.Name), v.CSort)
+		newV := lg.NewConst(actions.ActionNewName(v.Name), v.CSort)
 		fixRn[lg.Key(newV)] = lg.NewConst("nondet"+v.Name, v.CSort)
 	}
 	for _, v := range stVars {
@@ -426,7 +426,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Python: new_defs = trans.defs + [il.Definition(sym_inst(tr.new(v)),sym_inst(fix(v))) for v in stvars]
 	var extraDefs []*il.Definition
 	for _, v := range stVars {
-		newV := lg.NewConst(actions.New(v.Name), v.CSort)
+		newV := lg.NewConst(actions.ActionNewName(v.Name), v.CSort)
 		fixV := lg.NewConst("nondet"+v.Name, v.CSort)
 		extraDefs = append(extraDefs, il.NewDefinition(newV, fixV))
 	}
@@ -449,7 +449,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	finalDefs = append(finalDefs, trans.Defs...)
 	fixCnst := lg.NewConst("nondet__cnst", lg.Boolean)
 	finalDefs = append(finalDefs, il.NewDefinition(
-		lg.NewConst(actions.New("__cnst"), lg.Boolean),
+		lg.NewConst(actions.ActionNewName("__cnst"), lg.Boolean),
 		fixCnst,
 	))
 	// fix(cnst_var) = or(cnst_var, not(and(trans.fmlas)))
@@ -604,7 +604,7 @@ func constNames(syms []*lg.Const) []string {
 // Python: ivy_mc.py:1048-1054
 func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
 	for actname, act := range mod.Actions.All() {
-		if a, ok := act.(actions.Action); ok {
+		if a, ok := act.(actions.ActionsAction); ok {
 			newAction := AddErrFlag(a, erf, errConds, mod.Instantiator)
 			newAction.SetFormalParams(a.GetFormalParams())
 			newAction.SetFormalReturns(a.GetFormalReturns())
@@ -618,7 +618,7 @@ func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Expr) {
 // Assume actions become assume(or(erf, formula)).
 //
 // Python: ivy_mc.py:1020-1046
-func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, instantiator func([]lg.Expr) *module.Clauses) actions.Action {
+func AddErrFlag(action actions.ActionsAction, erf *lg.Const, errConds *[]lg.Expr, instantiator func([]lg.Expr) *module.Clauses) actions.ActionsAction {
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		// Python: errcond = ilu.dual_formula(il.drop_universals(action.formula))
@@ -647,7 +647,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
-			if ca, ok := child.(actions.Action); ok {
+			if ca, ok := child.(actions.ActionsAction); ok {
 				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
@@ -659,7 +659,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
-			if ca, ok := child.(actions.Action); ok {
+			if ca, ok := child.(actions.ActionsAction); ok {
 				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
@@ -671,7 +671,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
-			if ca, ok := child.(actions.Action); ok {
+			if ca, ok := child.(actions.ActionsAction); ok {
 				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
@@ -683,7 +683,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
-			if ca, ok := child.(actions.Action); ok {
+			if ca, ok := child.(actions.ActionsAction); ok {
 				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = child
@@ -696,7 +696,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
-			if ca, ok := args[i].(actions.Action); ok {
+			if ca, ok := args[i].(actions.ActionsAction); ok {
 				newArgs[i] = AddErrFlag(ca, erf, errConds, instantiator)
 			} else {
 				newArgs[i] = args[i]
@@ -713,7 +713,7 @@ func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Expr, insta
 		copy(newArgs, args)
 		// Last arg is the body
 		last := args[len(args)-1]
-		if ca, ok := last.(actions.Action); ok {
+		if ca, ok := last.(actions.ActionsAction); ok {
 			newArgs[len(newArgs)-1] = AddErrFlag(ca, erf, errConds, instantiator)
 		}
 		return a.ActionClone(newArgs)
@@ -751,7 +751,7 @@ func sortedPublicActions(mod *module.Module) []string {
 }
 
 // addLabelToAction wraps an action with a label.
-func addLabelToAction(a actions.Action, label string) actions.Action {
+func addLabelToAction(a actions.ActionsAction, label string) actions.ActionsAction {
 	type labelSetter interface {
 		SetLabels([]string)
 	}
@@ -761,11 +761,11 @@ func addLabelToAction(a actions.Action, label string) actions.Action {
 	return a
 }
 
-// actionNodeWrapper wraps an actions.Action as a lg.Expr so it can be used
+// actionNodeWrapper wraps an actions.ActionsAction as a lg.Expr so it can be used
 // in Args() slices. This is needed because the action types use []lg.Expr for children.
 type actionNodeWrapper struct {
 	ast.Base
-	action actions.Action
+	action actions.ActionsAction
 }
 
 func (w *actionNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }

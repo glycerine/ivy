@@ -32,12 +32,12 @@ type InstrumentationConfig struct {
 	Postconds          []*ast.LabeledFormula // nil for l2s
 
 	// Common building blocks (populated by BuildCommonBlocks or caller)
-	AddConstsToD     []actions.Action
-	ResetW           []actions.Action
-	AssumeGAxioms    []actions.Action
-	AssumeWhenAxioms []actions.Action
-	AssumeWAxioms    []actions.Action
-	AssumeInitAxioms []actions.Action
+	AddConstsToD     []actions.ActionsAction
+	ResetW           []actions.ActionsAction
+	AssumeGAxioms    []actions.ActionsAction
+	AssumeWhenAxioms []actions.ActionsAction
+	AssumeWAxioms    []actions.ActionsAction
+	AssumeInitAxioms []actions.ActionsAction
 
 	// Collected state (populated by shared steps)
 	L2sGs             map[lg.NodeKey]L2sGTriple
@@ -45,7 +45,7 @@ type InstrumentationConfig struct {
 	NamedBindersConjs map[string][]VarBodyPair
 	ToWait            []VarBodyPair
 	ToSave            []VarBodyPair
-	SaveState         []actions.Action
+	SaveState         []actions.ActionsAction
 	DoneWaiting       []lg.Expr
 	NotLf             lg.Expr
 
@@ -498,8 +498,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	lineno := cfg.Lineno
 
-	propEventsFunc := func(gprops map[lg.NodeKey]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
-		var pre, post []actions.Action
+	propEventsFunc := func(gprops map[lg.NodeKey]*lg.NamedBinder) ([]actions.ActionsAction, []actions.ActionsAction) {
+		var pre, post []actions.ActionsAction
 		sortedProps := sortNamedBinderMap(gprops)
 		for _, gprop := range sortedProps {
 			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
@@ -542,8 +542,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	// Python ivy_l2s.py:1070-1085: when_events.
 	// when.body is a Cond(condition, value); decompose T1=cond, T2=val.
-	whenEventsFunc := func(whens map[lg.NodeKey]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
-		var pre, post []actions.Action
+	whenEventsFunc := func(whens map[lg.NodeKey]*lg.NamedBinder) ([]actions.ActionsAction, []actions.ActionsAction) {
+		var pre, post []actions.ActionsAction
 		sortedWhens := sortNamedBinderMap(whens)
 		for _, when := range sortedWhens {
 			condVal, ok := when.Body.(*lg.Cond)
@@ -582,8 +582,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		return pre, post
 	}
 
-	waitEventsFunc := func(waits map[lg.NodeKey]*lg.NamedBinder) []actions.Action {
-		var res []actions.Action
+	waitEventsFunc := func(waits map[lg.NodeKey]*lg.NamedBinder) []actions.ActionsAction {
+		var res []actions.ActionsAction
 		sortedWaits := sortNamedBinderMap(waits)
 		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
 		for wi, wait := range sortedWaits {
@@ -603,8 +603,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		return res
 	}
 
-	var instrStmt func(stmt actions.Action) actions.Action
-	instrStmt = func(stmt actions.Action) actions.Action {
+	var instrStmt func(stmt actions.ActionsAction) actions.ActionsAction
+	instrStmt = func(stmt actions.ActionsAction) actions.ActionsAction {
 		// H7 / Python ivy_l2s.py:1127-1131: if a CallAction's returns
 		// include any monitored symbol (in symprops, symwhens, or symwaits),
 		// split the call so the assignment is a separate statement.
@@ -652,7 +652,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, a := range args {
-			if sub, ok := a.(actions.Action); ok {
+			if sub, ok := a.(actions.ActionsAction); ok {
 				newArgs[i] = instrStmt(sub)
 			} else {
 				newArgs[i] = a
@@ -744,7 +744,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 			continue
 		}
 		// Python ivy_l2s.py:1228-1231: add l2s_d for all non-finite-sort inputs.
-		var addParamsToD []actions.Action
+		var addParamsToD []actions.ActionsAction
 		for _, p := range b.Action.Inputs {
 			if p.CSort != nil && !cfg.FiniteSorts[lg.SortName(p.CSort)] {
 				addParamsToD = append(addParamsToD,
@@ -752,7 +752,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 			}
 		}
 
-		var stmtParts []actions.Action
+		var stmtParts []actions.ActionsAction
 		stmtParts = append(stmtParts, addParamsToD...)
 		stmtParts = append(stmtParts, cfg.AssumeGAxioms...)
 		stmtParts = append(stmtParts, cfg.AssumeWhenAxioms...)
@@ -876,8 +876,8 @@ func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals
 }
 
 // BuildAddConstsToD builds the addConstsToD action list.
-func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno ast.Location) []actions.Action {
-	var addConstsToD []actions.Action
+func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno ast.Location) []actions.ActionsAction {
+	var addConstsToD []actions.ActionsAction
 	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			for _, sym := range insertionOrderSymbols(mod) {

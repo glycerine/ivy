@@ -183,7 +183,7 @@ type AnnotPair struct {
 // MatchHandler is a handler for match_annotation that prints action/env
 // information. It implements the actions.AnnotationHandler interface.
 // Corresponds to Python's MatchHandler class (ivy_mc.py lines 933-943).
-type MatchHandler struct {
+type MCMatchHandler struct {
 	// Clauses is the satisfying assignment context.
 	Clauses *module.Clauses
 	// Model is the satisfying model.
@@ -196,7 +196,7 @@ type MatchHandler struct {
 // Checks for trivially true/false conditions first, then evaluates
 // against the model if available.
 // Corresponds to Python's MatchHandler.eval (ivy_mc.py lines 934-940).
-func (h *MatchHandler) Eval(cond lg.Expr) bool {
+func (h *MCMatchHandler) Eval(cond lg.Expr) bool {
 	if cond == nil {
 		return false
 	}
@@ -215,7 +215,7 @@ func (h *MatchHandler) Eval(cond lg.Expr) bool {
 
 // Handle processes an action with its environment mapping.
 // Corresponds to Python's MatchHandler.handle (ivy_mc.py lines 941-943).
-func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *MCMatchHandler) Handle(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	fmt.Printf("%v%v\n", action.GetLineno(), action)
 	if len(env) > 0 {
 		fmt.Printf("env: {")
@@ -232,19 +232,19 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 }
 
 // DoReturn processes a return action.
-func (h *MatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *MCMatchHandler) DoReturn(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	// No-op in the base handler.
 }
 
 // Fail marks a failure point.
-func (h *MatchHandler) Fail() {
+func (h *MCMatchHandler) Fail() {
 	// No-op in the base handler.
 }
 
 // MatchAnnotationMC is a convenience wrapper that calls actions.MatchAnnotation
 // with a MatchHandler.
 // Corresponds to Python's match_annotation (ivy_mc.py lines 946-1015).
-func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler *MatchHandler, mod *module.Module) {
+func MatchAnnotationMC(action actions.ActionsAction, annot actions.Annotation, handler *MCMatchHandler, mod *module.Module) {
 	actions.MatchAnnotation(action, annot, handler, mod)
 }
 
@@ -252,7 +252,7 @@ func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler 
 // number matches the checked_assert parameter, or checked_assert is empty).
 // Corresponds to Python's checked (ivy_mc.py lines 1017-1018).
 // Uses module.Cfg.CheckLineno (was mc.CheckedAssert, from Python ia.checked_assert).
-func Checked(action actions.Action, mod *module.Module) bool {
+func Checked(action actions.ActionsAction, mod *module.Module) bool {
 	checkedAssert := mod.Cfg.CheckLineno
 	if checkedAssert == "" {
 		return true
@@ -286,7 +286,7 @@ func NewIvyMCTrace(stvals []lg.Expr, mod *module.Module) *IvyMCTrace {
 
 // AddState adds a new state to the trace, produced by the given action.
 // Corresponds to Python's IvyMCTrace.add_state (ivy_mc.py lines 1441-1443).
-func (t *IvyMCTrace) AddState(stvals []lg.Expr, action actions.Action) {
+func (t *IvyMCTrace) AddState(stvals []lg.Expr, action actions.ActionsAction) {
 	cls := &module.Clauses{Fmlas: stvals}
 	newState := art.NewState(t.Domain, cls)
 	newState.Label = "ext"

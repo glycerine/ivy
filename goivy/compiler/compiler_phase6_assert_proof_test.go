@@ -63,7 +63,7 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 		t.Fatalf("ApplyAssertProofsWithProver failed: %v", err)
 	}
 
-	result, ok := mod.Actions.Get("test_act").(actions.Action)
+	result, ok := mod.Actions.Get("test_act").(actions.ActionsAction)
 	if !ok {
 		t.Fatalf("expected Action, got %T", mod.Actions.Get("test_act"))
 	}
@@ -79,14 +79,14 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 
 	// First two should be SubgoalAction
 	for i := 0; i < 2; i++ {
-		sub, _ := args[i].(actions.Action)
+		sub, _ := args[i].(actions.ActionsAction)
 		if _, ok := sub.(*actions.SubgoalAction); !ok {
 			t.Errorf("arg[%d]: expected SubgoalAction, got %T", i, sub)
 		}
 	}
 
 	// Last should be AssumeAction
-	last, _ := args[2].(actions.Action)
+	last, _ := args[2].(actions.ActionsAction)
 	if _, ok := last.(*actions.AssumeAction); !ok {
 		t.Errorf("arg[2]: expected AssumeAction, got %T", last)
 	}
@@ -107,7 +107,7 @@ func TestApplyAssertProofsWithProver_NoProof(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions.Get("test_act").(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.ActionsAction)
 	if _, ok := result.(*actions.AssertAction); !ok {
 		t.Fatalf("expected AssertAction unchanged, got %T", result)
 	}
@@ -130,7 +130,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions.Get("test_act").(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.ActionsAction)
 	ra, ok := result.(*actions.AssertAction)
 	if !ok {
 		t.Fatalf("expected AssertAction, got %T", result)
@@ -168,7 +168,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions.Get("test_act").(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.ActionsAction)
 	rw, ok := result.(*actions.WhileAction)
 	if !ok {
 		t.Fatalf("expected WhileAction, got %T", result)
@@ -213,7 +213,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions.Get("test_act").(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.ActionsAction)
 	rSeq, ok := result.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected Sequence, got %T", result)
@@ -225,18 +225,18 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 	}
 
 	// First child: LocalAction whose body should now be a Sequence (proof was expanded)
-	firstAct, _ := args[0].(actions.Action)
+	firstAct, _ := args[0].(actions.ActionsAction)
 	la, ok := firstAct.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("arg[0]: expected LocalAction, got %T", firstAct)
 	}
-	bodyAct, _ := la.Body.(actions.Action)
+	bodyAct, _ := la.Body.(actions.ActionsAction)
 	if _, ok := bodyAct.(*actions.Sequence); !ok {
 		t.Errorf("LocalAction body: expected Sequence (expanded proof), got %T", bodyAct)
 	}
 
 	// Second child: AssertAction should be unchanged (no proof)
-	secondAct, _ := args[1].(actions.Action)
+	secondAct, _ := args[1].(actions.ActionsAction)
 	if _, ok := secondAct.(*actions.AssertAction); !ok {
 		t.Errorf("arg[1]: expected AssertAction, got %T", secondAct)
 	}

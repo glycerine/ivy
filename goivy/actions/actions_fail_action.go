@@ -16,6 +16,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -23,13 +24,13 @@ import (
 // via action_failure. Mechanical port of Python's fail_action class
 // (ivy_interp.py:378-404).
 type FailAction struct {
-	ActionBase
-	Inner Action
+	module.ActionBase
+	Inner ActionsAction
 }
 
 // NewFailAction creates a FailAction wrapping the given action.
 // Python: fail_action(action) — see ivy_interp.py:379-382.
-func NewFailAction(inner Action) *FailAction {
+func NewFailAction(inner ActionsAction) *FailAction {
 	fa := &FailAction{Inner: inner}
 	if inner != nil {
 		fa.ActionBase.SetLineno(inner.GetLineno())
@@ -59,7 +60,7 @@ func (fa *FailAction) ActionArgs() []lg.Expr {
 	return fa.Inner.ActionArgs()
 }
 
-func (fa *FailAction) ActionClone(args []lg.Expr) Action {
+func (fa *FailAction) ActionClone(args []lg.Expr) ActionsAction {
 	if fa.Inner == nil {
 		return &FailAction{ActionBase: fa.ActionBase}
 	}
@@ -76,13 +77,13 @@ func (fa *FailAction) IterCalls() []string {
 	return fa.Inner.IterCalls()
 }
 
-func (fa *FailAction) IterSubactions() []Action { return []Action{fa} }
+func (fa *FailAction) IterSubactions() []ActionsAction { return []ActionsAction{fa} }
 
-func (fa *FailAction) Decompose() [][]Action { return [][]Action{{fa}} }
+func (fa *FailAction) Decompose() [][]ActionsAction { return [][]ActionsAction{{fa}} }
 
 // FailedAction returns the wrapped inner action. Mechanical port of
 // Python fail_action.failed_action (ivy_interp.py:403-404).
-func (fa *FailAction) FailedAction() Action { return fa.Inner }
+func (fa *FailAction) FailedAction() ActionsAction { return fa.Inner }
 
 // --- ast.Node + lg.Expr interface methods ---
 

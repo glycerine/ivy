@@ -246,17 +246,17 @@ func IsGroundEqualityLit(atom logic.Expr) bool {
 // --- Formula / literal conversion ---
 
 // EqLit creates an equality literal (positive).
-func EqLit(x, y logic.Expr) logic.Expr {
+func LogicUtilEqLit(x, y logic.Expr) logic.Expr {
 	return &logic.Eq{T1: x, T2: y}
 }
 
 // NeqLit creates a disequality literal.
-func NeqLit(x, y logic.Expr) logic.Expr {
+func LogicUtilNeqLit(x, y logic.Expr) logic.Expr {
 	return &logic.Not{Body: &logic.Eq{T1: x, T2: y}}
 }
 
 // EqAtom creates an equality atom.
-func EqAtom(x, y logic.Expr) *logic.Eq {
+func LogicUtilEqAtom(x, y logic.Expr) *logic.Eq {
 	return &logic.Eq{T1: x, T2: y}
 }
 
@@ -448,7 +448,7 @@ func CloseEPR(fmla logic.Expr) logic.Expr {
 // ResortSort remaps a sort through a substitution.
 // The subs map is keyed by SortKey (Sexp-based structural identity),
 // matching Python's structural equality on Sort objects.
-func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
+func LogicUtilResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 	// Direct substitution
 	key := logic.SortKey(s)
 	if mapped, ok := subs[key]; ok {
@@ -459,7 +459,7 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 	if fs, ok := s.(*logic.FunctionSort); ok {
 		allSorts := make([]logic.Sort, len(fs.Sorts))
 		for i, sub := range fs.Sorts {
-			allSorts[i] = ResortSort(sub, subs)
+			allSorts[i] = LogicUtilResortSort(sub, subs)
 		}
 		result, err := logic.NewFunctionSort(allSorts...)
 		if err != nil {
@@ -472,8 +472,8 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 
 // ResortSymbol returns a new Symbol with its sort remapped through subs.
 // Matches Python ivy_logic_utils.py resort_symbol (lines 412-413).
-func ResortSymbol(sym *logic.Const, subs map[logic.NodeKey]logic.Sort) *logic.Const {
-	newSort := ResortSort(sym.CSort, subs)
+func LogicUtilResortSymbol(sym *logic.Const, subs map[logic.NodeKey]logic.Sort) *logic.Const {
+	newSort := LogicUtilResortSort(sym.CSort, subs)
 	if newSort == sym.CSort {
 		return sym
 	}
@@ -484,14 +484,14 @@ func ResortSymbol(sym *logic.Const, subs map[logic.NodeKey]logic.Sort) *logic.Co
 func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 	switch t := ast.(type) {
 	case *logic.Variable:
-		newSort := ResortSort(t.VSort, subs)
+		newSort := LogicUtilResortSort(t.VSort, subs)
 		if newSort != t.VSort {
 			v, _ := logic.NewVariable(t.Name, newSort)
 			return v
 		}
 		return t
 	case *logic.Const:
-		return ResortSymbol(t, subs)
+		return LogicUtilResortSymbol(t, subs)
 	case *logic.Apply:
 		// Python: resort_symbol(ast.rep)(*args) — must resort the Func too
 		newFunc := ResortAst(t.Func, subs)
@@ -816,7 +816,7 @@ func usedVariablesInOrderMulti(asts []logic.Expr) []*logic.Variable {
 // NormalizeFreeVariables normalizes free variables: renames them V0, V1, ...
 // in the order they appear.
 // Returns (old_vars, new_vars, normalized_ast).
-func NormalizeFreeVariables(ast logic.Expr) ([]*logic.Variable, []*logic.Variable, logic.Expr) {
+func LogicUtilNormalizeFreeVariables(ast logic.Expr) ([]*logic.Variable, []*logic.Variable, logic.Expr) {
 	subs := make(map[string]logic.Expr)
 	var vs []*logic.Variable
 	var nvs []*logic.Variable
@@ -970,7 +970,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 	case *logic.Globally:
 		xtracer.Trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s", t.Body.Canon())
 		body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
-		vs, nvs, body := NormalizeFreeVariables(body)
+		vs, nvs, body := LogicUtilNormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
 		result := applyNamedBinder(nb, varsToNodes(vs))
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", iu.ShortTypeName(result), result.Canon())
@@ -990,7 +990,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		xtracer.Trace("ilu.replaceTemporalsRec WHEN_T2 HASH canon=%s", t.T2.Canon())
 		cond := replaceTemporalsRec(t.T2, g, when).(logic.Expr)
 		body := &logic.Cond{CSort: val.NodeSort(), T1: cond, T2: val}
-		vs, nvs, nbody := NormalizeFreeVariables(body)
+		vs, nvs, nbody := LogicUtilNormalizeFreeVariables(body)
 		nb := when(t.Name, nvs, nbody)
 		result := applyNamedBinder(nb, varsToNodes(vs))
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s", iu.ShortTypeName(result), result.Canon())
@@ -1215,13 +1215,13 @@ func ExpandNamedBindersAst(ast logic.Expr, fun func(*logic.NamedBinder) logic.Ex
 // --- DenormalizeTemporal ---
 
 // IsTrue returns true if the node is the logical true constant (empty And).
-func IsTrue(n logic.Expr) bool {
+func LogicUtilIsTrue(n logic.Expr) bool {
 	a, ok := n.(*logic.And)
 	return ok && len(a.Terms) == 0
 }
 
 // IsFalse returns true if the node is the logical false constant (empty Or).
-func IsFalse(n logic.Expr) bool {
+func LogicUtilIsFalse(n logic.Expr) bool {
 	o, ok := n.(*logic.Or)
 	return ok && len(o.Terms) == 0
 }
@@ -1255,10 +1255,10 @@ func DenormalizeTemporal(ast logic.Expr) logic.Expr {
 			if glob, ok := lhs.(*logic.Globally); ok {
 				if inner, ok := glob.Body.(*logic.Not); ok {
 					ev := &logic.Eventually{Environ: glob.Environ, Body: inner.Body}
-					if IsTrue(rhs) {
+					if LogicUtilIsTrue(rhs) {
 						return cloneNode(ast, []logic.Expr{ev, &logic.Or{}})
 					}
-					if IsFalse(rhs) {
+					if LogicUtilIsFalse(rhs) {
 						return cloneNode(ast, []logic.Expr{ev, &logic.And{}})
 					}
 				}
@@ -1308,18 +1308,18 @@ func IsVacEqualityLit(lit logic.Expr) bool {
 // A positive literal that is And() (true), or a Not(Or()) (not false).
 func IsTrueLit(lit logic.Expr) bool {
 	if neg, ok := lit.(*logic.Not); ok {
-		return IsFalse(neg.Body)
+		return LogicUtilIsFalse(neg.Body)
 	}
-	return IsTrue(lit)
+	return LogicUtilIsTrue(lit)
 }
 
 // IsFalseLit returns true if the literal evaluates to false.
 // A positive literal that is Or() (false), or a Not(And()) (not true).
 func IsFalseLit(lit logic.Expr) bool {
 	if neg, ok := lit.(*logic.Not); ok {
-		return IsTrue(neg.Body)
+		return LogicUtilIsTrue(neg.Body)
 	}
-	return IsFalse(lit)
+	return LogicUtilIsFalse(lit)
 }
 
 // IsTautLit returns true if the literal is a tautology (always true).
@@ -1494,7 +1494,7 @@ func isAtomNode(n logic.Expr) bool {
 func FormulaToClause(tc *TseitinContext, f logic.Expr) []logic.Expr {
 	f = ExpandAbbrevs(f)
 	f = DeMorgan(f)
-	if IsTrue(f) {
+	if LogicUtilIsTrue(f) {
 		return []logic.Expr{f}
 	}
 	if or, ok := f.(*logic.Or); ok {

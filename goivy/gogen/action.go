@@ -28,7 +28,7 @@ func NewActionEmitter(gen *Generator, w *CodeWriter) *ActionEmitter {
 
 // EmitAction emits Go code for a single action. It dispatches on the
 // concrete action type.
-func (e *ActionEmitter) EmitAction(act actions.Action) {
+func (e *ActionEmitter) EmitAction(act actions.ActionsAction) {
 	if act == nil {
 		e.w.Line("// nil action")
 		return
@@ -507,11 +507,11 @@ func sortDefaultValue(s lg.Sort) string {
 }
 
 // unwrapToAction converts an lg.Expr to an Action via type assertion.
-func unwrapToAction(n lg.Expr) actions.Action {
+func unwrapToAction(n lg.Expr) actions.ActionsAction {
 	if n == nil {
 		return nil
 	}
-	act, _ := n.(actions.Action)
+	act, _ := n.(actions.ActionsAction)
 	return act
 }
 

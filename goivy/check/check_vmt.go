@@ -30,7 +30,7 @@ func checkedLF(lf *ast.LabeledFormula, checkLineno string) bool {
 }
 
 // checkedAction returns true if the action should be checked.
-func checkedAction(a actions.Action, checkLineno string) bool {
+func checkedAction(a actions.ActionsAction, checkLineno string) bool {
 	loc := a.GetLineno()
 	if checkLineno == "" {
 		return true
@@ -40,7 +40,7 @@ func checkedAction(a actions.Action, checkLineno string) bool {
 
 // actionToTR converts an action to a transition relation triple
 // (stateVars, trans, error). Corresponds to Python's action_to_tr.
-func actionToTR(m *module.Module, action actions.Action, method string) ([]string, lg.Expr, lg.Expr, error) {
+func actionToTR(m *module.Module, action actions.ActionsAction, method string) ([]string, lg.Expr, lg.Expr, error) {
 	// Get background theory
 	bgt := m.BackgroundTheory(nil)
 
@@ -88,7 +88,7 @@ func actionToTR(m *module.Module, action actions.Action, method string) ([]strin
 	if len(defsyms) > 0 {
 		rn := make(map[string]string)
 		for sym := range defsyms {
-			newSym := actions.New(sym)
+			newSym := actions.ActionNewName(sym)
 			rn[newSym] = "__" + newSym
 		}
 		transNode = renameNode(transNode, rn)
@@ -108,7 +108,7 @@ func actionToTR(m *module.Module, action actions.Action, method string) ([]strin
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
 // Corresponds to Python's add_err_flag.
-func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr, checkLineno string, verbose bool) actions.Action {
+func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, checkLineno string, verbose bool) actions.ActionsAction {
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		if checkedAction(action, checkLineno) {
@@ -217,7 +217,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr, checkLi
 // Corresponds to Python's add_err_flag_mod.
 func addErrFlagMod(m *module.Module, erf lg.Expr, errconds *[]lg.Expr) {
 	for actname, actIface := range m.Actions.All() {
-		action, ok := actIface.(actions.Action)
+		action, ok := actIface.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
@@ -309,7 +309,7 @@ func ufToArrASTRec(m *module.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 
 // encodeAssign encodes a parameterized assignment to use array operations.
 // Returns (newLHS, newRHS). Corresponds to Python's encode_assign.
-func encodeAssign(m *module.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.Expr) (lg.Expr, lg.Expr, error) {
+func encodeAssign(m *module.Module, sig *il.Sig, asgn actions.ActionsAction, lhs, rhs lg.Expr) (lg.Expr, lg.Expr, error) {
 	sym := il.GetAppRep(lhs)
 	if sym == nil {
 		return lhs, rhs, nil
@@ -357,7 +357,7 @@ func encodeAssign(m *module.Module, sig *il.Sig, asgn actions.Action, lhs, rhs l
 }
 
 // encodeAssignRecur recursively builds the array update expression.
-func encodeAssignRecur(m *module.Module, sig *il.Sig, asgn actions.Action,
+func encodeAssignRecur(m *module.Module, sig *il.Sig, asgn actions.ActionsAction,
 	lhsArgs []lg.Expr, ssorts []lg.Sort, i int, val lg.Expr, arhs lg.Expr) (lg.Expr, error) {
 
 	if i == len(lhsArgs) {
@@ -406,7 +406,7 @@ func encodeAssignRecur(m *module.Module, sig *il.Sig, asgn actions.Action,
 
 // ufToArrayAction converts uninterpreted functions to array operations in an action.
 // Corresponds to Python's uf_to_array_action.
-func ufToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actions.Action {
+func ufToArrayAction(m *module.Module, sig *il.Sig, action actions.ActionsAction) actions.ActionsAction {
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
@@ -435,7 +435,7 @@ func ufToArrayAction(m *module.Module, sig *il.Sig, action actions.Action) actio
 
 // hasAssert returns true if the action contains any AssertAction.
 // Corresponds to Python's has_assert.
-func hasAssert(action actions.Action) bool {
+func hasAssert(action actions.ActionsAction) bool {
 	for _, sub := range action.IterSubactions() {
 		if actions.IsAssertLike(sub) {
 			return true
@@ -464,7 +464,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 
 	hasErf := false
 	for _, act := range m.Actions.All() {
-		if a, ok := act.(actions.Action); ok {
+		if a, ok := act.(actions.ActionsAction); ok {
 			if hasAssert(a) {
 				hasErf = true
 				break
@@ -487,7 +487,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 	}()
 	type namedAction struct {
 		Name   string
-		Action actions.Action
+		Action actions.ActionsAction
 	}
 	var actionList []namedAction
 	for _, name := range publicNames {
@@ -495,7 +495,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 		if !ok {
 			continue
 		}
-		a, ok := act.(actions.Action)
+		a, ok := act.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
@@ -519,7 +519,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 
 	// Check that initializers don't have assertions (not supported)
 	for _, init := range m.Initializers {
-		if a, ok := init.Action.(actions.Action); ok {
+		if a, ok := init.Action.(actions.ActionsAction); ok {
 			if hasAssert(a) {
 				return fmt.Errorf("VMT cannot handle assertions in initializers")
 			}
@@ -529,7 +529,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 	// Build a single initializer action
 	var initParts []lg.Expr
 	for _, init := range m.Initializers {
-		if a, ok := init.Action.(actions.Action); ok {
+		if a, ok := init.Action.(actions.ActionsAction); ok {
 			initParts = append(initParts, a)
 		}
 	}
@@ -719,11 +719,11 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 // -----------------------------------------------------------------------
 
 // toAction extracts an Action from a lg.Expr.
-func toAction(n lg.Expr) (actions.Action, bool) {
-	if act, ok := n.(actions.Action); ok {
+func toAction(n lg.Expr) (actions.ActionsAction, bool) {
+	if act, ok := n.(actions.ActionsAction); ok {
 		return act, true
 	}
-	if w, ok := n.(actions.Action); ok {
+	if w, ok := n.(actions.ActionsAction); ok {
 		return w, true
 	}
 	return nil, false
@@ -731,7 +731,7 @@ func toAction(n lg.Expr) (actions.Action, bool) {
 
 // addLabel wraps an action with a label. In Python this is action.add_label(x),
 // which sets action.label (singular), distinct from action.labels (plural).
-func addLabel(a actions.Action, name string) actions.Action {
+func addLabel(a actions.ActionsAction, name string) actions.ActionsAction {
 	if ab, ok := a.(interface{ SetLabel(string) }); ok {
 		ab.SetLabel(name)
 	}
@@ -763,7 +763,7 @@ func backgroundTheory(m *module.Module) lg.Expr {
 // computeUpdate computes the transition relation update for an action.
 // This is a simplified version; the full implementation would call
 // action.update(module, None) which does full symbolic execution.
-func computeUpdate(m *module.Module, action actions.Action) *actions.Update {
+func computeUpdate(m *module.Module, action actions.ActionsAction) *actions.Update {
 	// For now, return a trivial update. The full implementation requires
 	// the complete action semantics compiler.
 	return actions.NullUpdate()

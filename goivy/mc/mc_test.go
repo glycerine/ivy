@@ -998,7 +998,7 @@ func TestStrMap(t *testing.T) {
 
 func TestApplyMatch(t *testing.T) {
 	m := map[string]string{"X": "int", "Y": "bool"}
-	result := ApplyMatch(m, "forall X. f(Y)")
+	result := MCApplyMatch(m, "forall X. f(Y)")
 	if result != "forall int. f(bool)" {
 		t.Errorf("unexpected result: %s", result)
 	}

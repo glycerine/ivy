@@ -51,7 +51,7 @@ type ExprContext struct {
 	Code      []lg.Expr // accumulated action nodes (wrapped)
 	LocalSyms []*lg.Const
 	Lineno    *ast.Location
-	ActCfg    *module.ActionsConfig // for creating LocalAction in Extract()
+	ActCfg    *module.ModuleActionsConfig // for creating LocalAction in Extract()
 }
 
 // CompileInlineCode produces a single action from the accumulated code.
@@ -77,7 +77,7 @@ func (ec *ExprContext) Extract() lg.Expr {
 	xtracer.Trace("compiler.ExprContext.Extract ENTER")
 	// Set lineno on all code items (Python lines 117-118)
 	for _, c := range ec.Code {
-		if act, _ := c.(actions.Action); act != nil && ec.Lineno != nil {
+		if act, _ := c.(actions.ActionsAction); act != nil && ec.Lineno != nil {
 			act.SetLineno(*ec.Lineno)
 		}
 	}
@@ -140,7 +140,7 @@ type Compiler struct {
 	// ActCfg holds the per-session ActionsConfig, threaded from module.
 	// Used for creating compiled actions (LocalAction, etc.) with proper
 	// counter state. Matches Python's single global local_action_ctr.
-	ActCfg *module.ActionsConfig
+	ActCfg *module.ModuleActionsConfig
 }
 
 // SigCheck emits a Merkle-chained HASH trace of the current Sig + Module state.
@@ -191,7 +191,7 @@ func New(sig *il.Sig, mod *module.Module) *Compiler {
 	// Ensure ActCfg is always set (IvyCompile seeds it from AstConfig;
 	// standalone tests get a fresh one).
 	if c.ActCfg == nil {
-		c.ActCfg = module.NewActionsConfig()
+		c.ActCfg = module.NewModuleActionsConfig()
 	}
 	return c
 }
@@ -336,7 +336,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 		return nil, fmt.Errorf("CompiledNode does not contain lg.Expr: %T", n.Node)
 
 	// --- Action AST nodes (from LALR parser) ---
-	// Route through CompileActionBody which produces actions.Action.
+	// Route through CompileActionBody which produces actions.ActionsAction.
 	// Only types with explicit .cmpl in Python are listed here;
 	// SetAction, HavocAction use other_thing (default).
 	// InstantiateDecl is not routed from CompileNode but IS handled
@@ -488,7 +488,7 @@ func (c *Compiler) compileUpdatePattern(up *ast.AstUpdatePattern) (*actions.Upda
 	}
 
 	// Compile the pattern action
-	var patternAction actions.Action
+	var patternAction actions.ActionsAction
 	if up.Action != nil {
 		compiled, err := c.CompileActionBody(up.Action)
 		if err != nil {

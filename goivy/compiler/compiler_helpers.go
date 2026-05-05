@@ -371,7 +371,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		astTerms[i] = a
 	}
 	callAction.AstCallee = c.Module.Cfg.AstCfg.NewAtom(rep, astTerms...)
-	var call actions.Action = callAction
+	var call actions.ActionsAction = callAction
 	call.SetLineno(self.GetLineno())
 
 	// Handle variant dispatch for method calls

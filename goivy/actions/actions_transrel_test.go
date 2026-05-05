@@ -13,11 +13,11 @@ import (
 // -----------------------------------------------------------------------
 
 func TestNew(t *testing.T) {
-	if got := New("x"); got != "new_x" {
-		t.Errorf("New(x) = %q, want %q", got, "new_x")
+	if got := ActionNewName("x"); got != "new_x" {
+		t.Errorf("ActionNewName(x) = %q, want %q", got, "new_x")
 	}
-	if got := New("foo_bar"); got != "new_foo_bar" {
-		t.Errorf("New(foo_bar) = %q, want %q", got, "new_foo_bar")
+	if got := ActionNewName("foo_bar"); got != "new_foo_bar" {
+		t.Errorf("ActionNewName(foo_bar) = %q, want %q", got, "new_foo_bar")
 	}
 }
 
@@ -128,8 +128,8 @@ func TestIsGlobalSkolem(t *testing.T) {
 func TestNewOldRoundTrip(t *testing.T) {
 	names := []string{"x", "foo", "bar_baz", ""}
 	for _, n := range names {
-		if got := NewOf(New(n)); got != n {
-			t.Errorf("NewOf(New(%q)) = %q, want %q", n, got, n)
+		if got := NewOf(ActionNewName(n)); got != n {
+			t.Errorf("NewOf(ActionNewName(%q)) = %q, want %q", n, got, n)
 		}
 		if got := OldOf(Old(n)); got != n {
 			t.Errorf("OldOf(Old(%q)) = %q, want %q", n, got, n)
@@ -235,7 +235,7 @@ func TestUpdateString(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestFrameDefNew(t *testing.T) {
-	node := FrameDef("x", New)
+	node := FrameDef("x", ActionNewName)
 	eq, ok := node.(*lg.Eq)
 	if !ok {
 		t.Fatalf("FrameDef should return *Eq, got %T", node)
@@ -279,18 +279,18 @@ func TestFrameDefOld(t *testing.T) {
 }
 
 func TestFrameEmpty(t *testing.T) {
-	node := Frame(nil, New)
+	node := Frame(nil, ActionNewName)
 	if !node.Equal(lg.True) {
 		t.Errorf("Frame(nil) should be True, got %s", node)
 	}
-	node = Frame([]string{}, New)
+	node = Frame([]string{}, ActionNewName)
 	if !node.Equal(lg.True) {
 		t.Errorf("Frame([]) should be True, got %s", node)
 	}
 }
 
 func TestFrameMultiple(t *testing.T) {
-	node := Frame([]string{"x", "y"}, New)
+	node := Frame([]string{"x", "y"}, ActionNewName)
 	and, ok := node.(*lg.And)
 	if !ok {
 		t.Fatalf("Frame should return *And, got %T", node)
@@ -344,17 +344,17 @@ func TestListDiff(t *testing.T) {
 
 func TestDiffFrame(t *testing.T) {
 	// nil inputs => True
-	node := DiffFrame(nil, []string{"x"}, New)
+	node := DiffFrame(nil, []string{"x"}, ActionNewName)
 	if !node.Equal(lg.True) {
 		t.Errorf("DiffFrame(nil,...) should be True, got %s", node)
 	}
 	// No difference => True
-	node = DiffFrame([]string{"x"}, []string{"x"}, New)
+	node = DiffFrame([]string{"x"}, []string{"x"}, ActionNewName)
 	if !node.Equal(lg.True) {
 		t.Errorf("DiffFrame same sets should be True, got %s", node)
 	}
 	// Has difference
-	node = DiffFrame([]string{"x"}, []string{"x", "y"}, New)
+	node = DiffFrame([]string{"x"}, []string{"x", "y"}, ActionNewName)
 	eq, ok := node.(*lg.Eq)
 	if !ok {
 		t.Fatalf("DiffFrame with one diff should return Eq, got %T", node)
@@ -556,8 +556,8 @@ func TestHistoryForwardStep(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestNewEmptyString(t *testing.T) {
-	if got := New(""); got != "new_" {
-		t.Errorf("New('') = %q, want %q", got, "new_")
+	if got := ActionNewName(""); got != "new_" {
+		t.Errorf("ActionNewName('') = %q, want %q", got, "new_")
 	}
 	if !IsNew("new_") {
 		t.Error("IsNew('new_') should be true")
@@ -648,13 +648,13 @@ func FuzzNewIsNewRoundTrip(f *testing.F) {
 	f.Add("__Abc")
 	f.Add("foo__bar")
 	f.Fuzz(func(t *testing.T, name string) {
-		newName := New(name)
+		newName := ActionNewName(name)
 		if !IsNew(newName) {
-			t.Errorf("IsNew(New(%q)) should be true", name)
+			t.Errorf("IsNew(ActionNewName(%q)) should be true", name)
 		}
 		recovered := NewOf(newName)
 		if recovered != name {
-			t.Errorf("NewOf(New(%q)) = %q, want %q", name, recovered, name)
+			t.Errorf("NewOf(ActionNewName(%q)) = %q, want %q", name, recovered, name)
 		}
 	})
 }

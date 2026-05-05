@@ -19,7 +19,7 @@ func testVar(name string, s lg.Sort) *lg.Variable {
 	return v
 }
 
-func emitActionToString(act actions.Action) string {
+func emitActionToString(act actions.ActionsAction) string {
 	w := NewCodeWriter()
 	e := NewActionEmitter(nil, w)
 	e.EmitAction(act)

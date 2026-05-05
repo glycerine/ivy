@@ -303,7 +303,7 @@ func TestRegression_Bug9_ActionInterface(t *testing.T) {
 	r := actions.NewRanking(lg.True)
 
 	// Compile-time check: Ranking implements Action.
-	var _ actions.Action = r
+	var _ actions.ActionsAction = r
 
 	if r.Name() != "decreases" {
 		t.Errorf("Ranking.Name() = %q, want 'decreases'", r.Name())

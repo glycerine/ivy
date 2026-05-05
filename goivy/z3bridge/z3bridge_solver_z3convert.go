@@ -405,7 +405,7 @@ func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *Model, sym *lg.Const)
 // SortOrder implements an ordering on Z3 expressions for model construction.
 // It uses a Z3 order relation and a model to compare values.
 // Corresponds to Python's SortOrder class.
-type SortOrder struct {
+type Z3SortOrder struct {
 	Vs    []Expr     // Z3 variables for the order relation
 	Order Expr       // Z3 expression representing the order (e.g., less-than)
 	Model *Model     // Z3 model for evaluation
@@ -413,8 +413,8 @@ type SortOrder struct {
 }
 
 // NewSortOrder creates a new SortOrder.
-func NewSortOrder(vs []Expr, order Expr, model *Model, ctx *Z3Context) *SortOrder {
-	return &SortOrder{
+func NewZ3SortOrder(vs []Expr, order Expr, model *Model, ctx *Z3Context) *Z3SortOrder {
+	return &Z3SortOrder{
 		Vs:    vs,
 		Order: order,
 		Model: model,
@@ -425,7 +425,7 @@ func NewSortOrder(vs []Expr, order Expr, model *Model, ctx *Z3Context) *SortOrde
 // Compare returns -1 if x < y according to the order, +1 otherwise.
 // This implements a comparison function suitable for sorting.
 // Corresponds to Python's SortOrder.__call__.
-func (so *SortOrder) Compare(x, y Expr) int {
+func (so *Z3SortOrder) Compare(x, y Expr) int {
 	xtracer.Trace("ivy_solver.py:856 SortOrder.compare() ENTER")
 	if len(so.Vs) < 2 {
 		return 0

@@ -13,16 +13,16 @@ import (
 )
 
 // thingAction compiles an AST node through Thing (matching Python's .compile() = thing())
-// and converts the lg.Expr result to actions.Action. This is needed because Python's
+// and converts the lg.Expr result to actions.ActionsAction. This is needed because Python's
 // duck typing lets .compile() return action objects directly, while Go's Thing returns
 // lg.Expr. Used wherever Python calls a.compile() on action nodes (if/while/local branches).
-func (c *Compiler) thingAction(node ast.Node) (actions.Action, error) {
+func (c *Compiler) thingAction(node ast.Node) (actions.ActionsAction, error) {
 	result, err := c.Thing(node)
 	if err != nil {
 		return nil, err
 	}
 	switch v := result.(type) {
-	case actions.Action:
+	case actions.ActionsAction:
 		if v.GetLineno() == (ast.Location{}) {
 			v.SetLineno(node.GetLineno())
 		}
@@ -40,7 +40,7 @@ func (c *Compiler) thingAction(node ast.Node) (actions.Action, error) {
 
 // CompileAction compiles an action definition AST node into a compiled Action.
 // This corresponds to Python's compile_action_def.
-func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
+func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_action_def ENTER")
 	// Forward declaration (action with no body) — return empty sequence.
 	// Python: compile_action_def handles this by creating Sequence() for empty bodies.
@@ -175,10 +175,10 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		return fallback, sortErr
 	}
 
-	// Convert lg.Expr to actions.Action (same pattern as CompileActionBody's Sequence case)
-	var body actions.Action
+	// Convert lg.Expr to actions.ActionsAction (same pattern as CompileActionBody's Sequence case)
+	var body actions.ActionsAction
 	switch v := sortResult.(type) {
-	case actions.Action:
+	case actions.ActionsAction:
 		body = v
 	case *lg.And:
 		seq := actions.NewSequence(v.Terms...)
@@ -225,7 +225,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 // represented as AST nodes. This method dispatches to the appropriate
 // action compilation based on the AST node type name (matching Python's
 // monkey-patching approach where .cmpl methods were assigned to action classes).
-func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileActionBody(node ast.Node) (actions.ActionsAction, error) {
 	if node == nil {
 		return actions.NewSequence(), nil
 	}
@@ -371,7 +371,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			if err != nil {
 				return nil, err
 			}
-			if act, ok := result.(actions.Action); ok {
+			if act, ok := result.(actions.ActionsAction); ok {
 				return act, nil
 			}
 			return actions.NewSequence(), nil
@@ -395,7 +395,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if err != nil {
 			return nil, err
 		}
-		if act, ok := result.(actions.Action); ok {
+		if act, ok := result.(actions.ActionsAction); ok {
 			return act, nil
 		}
 		act := actions.NewCrashAction(nil)
@@ -565,7 +565,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if err != nil {
 			return nil, err
 		}
-		if act, ok := result.(actions.Action); ok {
+		if act, ok := result.(actions.ActionsAction); ok {
 			return act, nil
 		}
 		return actions.NewSequence(), nil
@@ -595,7 +595,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			}
 			return seq, nil
 		}
-		if act, ok := result.(actions.Action); ok {
+		if act, ok := result.(actions.ActionsAction); ok {
 			seq := actions.NewSequence(act)
 			seq.SetLineno(node.GetLineno())
 			return seq, nil
@@ -619,7 +619,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	if act, ok := compiled.(actions.Action); ok {
+	if act, ok := compiled.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	res := actions.NewAssumeAction(compiled)
@@ -628,7 +628,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 }
 
 // CompileAssign compiles an assignment from two AST nodes (lhs := rhs).
-func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assign ENTER")
 	code := make([]lg.Expr, 0)
 	localSyms := make([]*lg.Const, 0)
@@ -756,14 +756,14 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 }
 
 // wrapAssignCode wraps compiled assignment code into the appropriate action.
-func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *ast.Location) (actions.Action, error) {
+func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *ast.Location) (actions.ActionsAction, error) {
 	if len(exprCtx.Code) == 1 {
-		if act, ok := exprCtx.Code[0].(actions.Action); ok {
+		if act, ok := exprCtx.Code[0].(actions.ActionsAction); ok {
 			return act, nil
 		}
 	}
 
-	setLoc := func(a actions.Action) {
+	setLoc := func(a actions.ActionsAction) {
 		if loc != nil {
 			a.SetLineno(*loc)
 		}
@@ -803,7 +803,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 
 // CompileCall compiles a call action from callee and return AST nodes.
 // Python: compile_call (ivy_compiler.py lines 574-608)
-func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_call ENTER")
 	// R1: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
@@ -875,7 +875,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			}
 			// Python: res = ctx.extract()
 			extracted := ctx.Extract()
-			if act, ok := extracted.(actions.Action); ok {
+			if act, ok := extracted.(actions.ActionsAction); ok {
 				return act, nil
 			}
 			return actions.NewSequence(), nil
@@ -977,7 +977,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	// Python: ctx.code.append(res); res = ctx.extract()
 	ctx.Code = append(ctx.Code, call)
 	extracted := ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return call, nil
@@ -1000,7 +1000,7 @@ func ensureSortAnnotation(n ast.Node, cfg *ast.AstConfig) {
 
 // CompileLocal compiles a local variable declaration from AST nodes.
 // Python: compile_local (ivy_compiler.py:471-518)
-func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_local ENTER")
 	sigCopy := c.Sig.Copy()
 
@@ -1140,14 +1140,14 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 			// Set lineno on all code items
 			for _, codeItem := range exprCtx.Code {
-				if act, ok := codeItem.(actions.Action); ok {
+				if act, ok := codeItem.(actions.ActionsAction); ok {
 					act.SetLineno(assignAction.GetLineno())
 				}
 			}
 
 			// Python: extract pattern (lines 628-632)
 			if len(exprCtx.Code) == 1 {
-				if act, ok := exprCtx.Code[0].(actions.Action); ok {
+				if act, ok := exprCtx.Code[0].(actions.ActionsAction); ok {
 					return act, nil
 				}
 			}
@@ -1198,10 +1198,10 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		}
 	}
 
-	// Convert lg.Expr to actions.Action
-	var compiledBody actions.Action
+	// Convert lg.Expr to actions.ActionsAction
+	var compiledBody actions.ActionsAction
 	switch v := compiledResult.(type) {
-	case actions.Action:
+	case actions.ActionsAction:
 		compiledBody = v
 	case *lg.And:
 		seq := actions.NewSequence(v.Terms...)
@@ -1227,7 +1227,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 // CompileIf compiles an if/else action from AST nodes.
 // Python: compile_if_action (ivy_compiler.py:611-632)
-func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_if_action ENTER")
 	// NEW: Check if condition is an existential (Some/SomeMin/SomeMax)
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
@@ -1279,7 +1279,7 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 	// Python: ctx.code.append(self.clone([cond]+rest)); res = ctx.extract()
 	ctx.Code = append(ctx.Code, res)
 	extracted := ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1287,7 +1287,7 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 
 // compileIfSome compiles an existential-if (Some/SomeMin/SomeMax condition).
 // Python: compile_if_action when isinstance(self.args[0], ivy_ast.Some)
-func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode ast.Node, kind string, thenNode, elseNode, condNode ast.Node) (actions.Action, error) {
+func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode ast.Node, kind string, thenNode, elseNode, condNode ast.Node) (actions.ActionsAction, error) {
 	// 1. Copy sig
 	// Python: sig = ivy_logic.sig.copy(); with sig:
 	sigCopy := c.Sig.Copy()
@@ -1373,7 +1373,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 
 // CompileWhile compiles a while loop from AST nodes.
 // Python: compile_while_action (ivy_compiler.py:636-650)
-func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_while_action ENTER")
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	//             res = compile_if_action(self.clone(self.args[:2]))
@@ -1548,7 +1548,7 @@ func (c *Compiler) compileAssertLikeFormula(node ast.Node, errLabel string) (*as
 
 // CompileAssertFormula compiles an assert from a formula AST node.
 // Python: compile_assert_action (ivy_compiler.py:781-797)
-func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
 	r, err := c.compileAssertLikeFormula(node, "Assert")
 	if err != nil {
@@ -1561,7 +1561,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	// Python: ctx.code.append(asrt); res = ctx.extract()
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1569,7 +1569,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 
 // CompileRequiresFormula compiles a require (precondition) from a formula AST node.
 // Python: RequiresAction inherits compile_assert_action; self.clone() preserves type.
-func (c *Compiler) CompileRequiresFormula(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileRequiresFormula(node ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
 	r, err := c.compileAssertLikeFormula(node, "Requires")
 	if err != nil {
@@ -1581,7 +1581,7 @@ func (c *Compiler) CompileRequiresFormula(node ast.Node) (actions.Action, error)
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1589,7 +1589,7 @@ func (c *Compiler) CompileRequiresFormula(node ast.Node) (actions.Action, error)
 
 // CompileEnsuresFormula compiles an ensure (postcondition) from a formula AST node.
 // Python: EnsuresAction inherits compile_assert_action; self.clone() preserves type.
-func (c *Compiler) CompileEnsuresFormula(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileEnsuresFormula(node ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
 	r, err := c.compileAssertLikeFormula(node, "Ensures")
 	if err != nil {
@@ -1601,7 +1601,7 @@ func (c *Compiler) CompileEnsuresFormula(node ast.Node) (actions.Action, error) 
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1609,7 +1609,7 @@ func (c *Compiler) CompileEnsuresFormula(node ast.Node) (actions.Action, error) 
 
 // CompileSubgoalFormula compiles a subgoal assertion from a formula AST node.
 // Python: SubgoalAction inherits compile_assert_action; self.clone() preserves type+kind.
-func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
 	r, err := c.compileAssertLikeFormula(node, "Subgoal")
 	if err != nil {
@@ -1621,7 +1621,7 @@ func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.Action, error) 
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1629,7 +1629,7 @@ func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.Action, error) 
 
 // CompileAssumeFormula compiles an assume from a formula AST node.
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
-func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
+func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.ActionsAction, error) {
 	// sadly this will false alarm:
 	//xtracer.Trace("compiler.compile_assume_action ENTER")
 	// Since python uses the exact same code for both, (ivy_compiler.py:804-805);
@@ -1645,7 +1645,7 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
-	if act, ok := extracted.(actions.Action); ok {
+	if act, ok := extracted.(actions.ActionsAction); ok {
 		return act, nil
 	}
 	return res, nil

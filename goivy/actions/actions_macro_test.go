@@ -346,7 +346,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	ctx := &UpdateContext{
 		Domain: mod,
 		PVars:  nil,
-		CompileActionBody: func(node ast.Node) (Action, error) {
+		CompileActionBody: func(node ast.Node) (ActionsAction, error) {
 			compileCalled = true
 			// The rewritten node should be "assume y"
 			atom, ok := node.(*ast.Atom)
@@ -650,7 +650,7 @@ func TestUpdateContextCompileActionBodyField(t *testing.T) {
 
 	// Set it and verify it works
 	called := false
-	ctx.CompileActionBody = func(node ast.Node) (Action, error) {
+	ctx.CompileActionBody = func(node ast.Node) (ActionsAction, error) {
 		called = true
 		return NewSequence(), nil
 	}
@@ -692,7 +692,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	ctx := &UpdateContext{
 		Domain: mod,
 		PVars:  nil,
-		CompileActionBody: func(node ast.Node) (Action, error) {
+		CompileActionBody: func(node ast.Node) (ActionsAction, error) {
 			// Verify the rewritten AST is "assume p"
 			atom, ok := node.(*ast.Atom)
 			if !ok {

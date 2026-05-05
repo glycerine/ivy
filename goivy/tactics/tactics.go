@@ -157,7 +157,7 @@ func (tc *TacticsContext) RefutedGoal(goal *proof.ProofGoal) bool {
 
 // ForwardImage computes the forward image of clauses through an action.
 // Corresponds to Python's forward_image(pre_fact, action).
-func (tc *TacticsContext) ForwardImage(preFact *module.Clauses, action actions.Action) *module.Clauses {
+func (tc *TacticsContext) ForwardImage(preFact *module.Clauses, action actions.ActionsAction) *module.Clauses {
 	if preFact == nil || action == nil {
 		return preFact
 	}
@@ -172,7 +172,7 @@ func (tc *TacticsContext) ForwardImage(preFact *module.Clauses, action actions.A
 // BackwardImage computes the backward image (reverse image / weakest precondition)
 // of clauses through an action.
 // Corresponds to Python's backward_image(post_fact, action).
-func (tc *TacticsContext) BackwardImage(postFact *module.Clauses, action actions.Action) *module.Clauses {
+func (tc *TacticsContext) BackwardImage(postFact *module.Clauses, action actions.ActionsAction) *module.Clauses {
 	if postFact == nil || action == nil {
 		return postFact
 	}
@@ -343,7 +343,7 @@ func ArgAddFacts(node *art.State, facts ...*module.Clauses) {
 }
 
 // ArgGetPredAction returns the predecessor and action for a node.
-func ArgGetPredAction(node *art.State) (*art.State, actions.Action) {
+func ArgGetPredAction(node *art.State) (*art.State, actions.ActionsAction) {
 	if node == nil {
 		return nil, nil
 	}
@@ -367,13 +367,13 @@ func ArgGetConjuncts(node *art.State) []lg.Expr {
 //	    result = ChoiceAction(*exported_actions)
 //	    result.label = ' + '.join(exported_action_names)
 //	    return result
-func GetBigAction(ag *art.AnalysisGraph) actions.Action {
+func GetBigAction(ag *art.AnalysisGraph) actions.ActionsAction {
 	var names []string
 	var branches []lg.Expr
 	for _, e := range ag.Exports {
 		name := e.Exported()
 		if act, ok := ag.Actions.Get2(name); ok {
-			if a, ok := act.(actions.Action); ok {
+			if a, ok := act.(actions.ActionsAction); ok {
 				names = append(names, name)
 				branches = append(branches, a)
 			}
@@ -634,7 +634,7 @@ func (t *PushDiagram) Apply(goal *proof.ProofGoal) (bool, error) {
 // ExecuteAction executes an action at a node.
 type ExecuteAction struct {
 	TC         *TacticsContext
-	Action     actions.Action
+	Action     actions.ActionsAction
 	Abstractor art.Abstractor
 }
 
@@ -691,7 +691,7 @@ func (tc *TacticsContext) GetSafetyProperty() *module.Clauses {
 //	    if abstractor is None:
 //	        node.clauses = true_clauses()
 //	    return node
-func (tc *TacticsContext) ArgAddActionNode(pre *art.State, action actions.Action, abstractor art.Abstractor) *art.State {
+func (tc *TacticsContext) ArgAddActionNode(pre *art.State, action actions.ActionsAction, abstractor art.Abstractor) *art.State {
 	if tc.AG == nil {
 		return nil
 	}

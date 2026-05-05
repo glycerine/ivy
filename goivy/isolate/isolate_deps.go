@@ -18,7 +18,7 @@ import (
 //
 // This walks the action tree, collecting CallAction callee names and
 // symbols modified by assignment/havoc/set actions.
-func GetCallsMods(action actions.Action) (calls []string, mods []string) {
+func GetCallsMods(action actions.ActionsAction) (calls []string, mods []string) {
 	callSet := make(map[string]bool)
 	modSet := make(map[string]bool)
 
@@ -81,7 +81,7 @@ func GetCallsModsRec(
 	summarizedActions map[string]bool,
 	actname string,
 	calls, mods map[string]map[string]bool,
-	loops ...map[string][]actions.Action,
+	loops ...map[string][]actions.ActionsAction,
 ) {
 	GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, nil, nil, loops...)
 }
@@ -97,7 +97,7 @@ func GetCallsModsRecFull(
 	calls, mods map[string]map[string]bool,
 	mixins map[string]map[string]bool,
 	interfSyms map[string]bool,
-	loops ...map[string][]actions.Action,
+	loops ...map[string][]actions.ActionsAction,
 ) {
 	if _, done := calls[actname]; done {
 		return
@@ -121,7 +121,7 @@ func GetCallsModsRecFull(
 	}
 
 	// Optional loop tracking
-	var loopMap map[string][]actions.Action
+	var loopMap map[string][]actions.ActionsAction
 	if len(loops) > 0 && loops[0] != nil {
 		loopMap = loops[0]
 	}
@@ -219,7 +219,7 @@ func GetCallsModsRecFull(
 // HasSideEffect checks if an action modifies any state symbol in the module
 // signature, or contains assert actions or impure native actions.
 // The check follows through calls recursively.
-func HasSideEffect(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.Action]) bool {
+func HasSideEffect(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.ActionsAction]) bool {
 	return HasSideEffectRec(mod, actionMap, actname, make(map[string]bool))
 }
 
@@ -257,7 +257,7 @@ func HasSideEffect(mod *module.Module, actname string, actionMap *iu.InsMap[stri
 //   - allAfterInits: all initializer action names
 //
 // Corresponds to Python check_interference (lines 577-641).
-func CheckInterference(mod *module.Module, newActions *iu.InsMap[string, actions.Action],
+func CheckInterference(mod *module.Module, newActions *iu.InsMap[string, actions.ActionsAction],
 	summarizedActions map[string]bool) error {
 	return CheckInterferenceFull(mod, newActions, summarizedActions,
 		nil, false, nil, nil, nil)
@@ -265,7 +265,7 @@ func CheckInterference(mod *module.Module, newActions *iu.InsMap[string, actions
 
 // CheckInterferenceFull is the full-featured version of CheckInterference.
 // Python: check_interference (lines 577-641).
-func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, actions.Action],
+func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, actions.ActionsAction],
 	summarizedActions map[string]bool,
 	implMixins *iu.InsMap[string, []module.MixinDef],
 	checkTerm bool,
@@ -312,7 +312,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
 	mixinDeps := make(map[string]map[string]bool)
-	loops := make(map[string][]actions.Action)
+	loops := make(map[string][]actions.ActionsAction)
 	locmods := make(map[string]map[string]bool) // Python line 582
 	// Sort summarizedActions keys to get deterministic iteration order matching Python
 	sortedSummarized := sortedKeys(summarizedActions)
@@ -515,7 +515,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 }
 
 // collectActionSymbolNames collects all symbol names referenced by an action.
-func collectActionSymbolNames(action actions.Action, names map[string]bool) {
+func collectActionSymbolNames(action actions.ActionsAction, names map[string]bool) {
 	for _, arg := range action.ActionArgs() {
 		collectNodeSymNames(arg, names)
 	}
@@ -528,7 +528,7 @@ func collectNodeSymNames(node lg.Expr, names map[string]bool) {
 	if c, ok := node.(*lg.Const); ok {
 		names[c.Name] = true
 	}
-	if act, ok := node.(actions.Action); ok {
+	if act, ok := node.(actions.ActionsAction); ok {
 		collectActionSymbolNames(act, names)
 		return
 	}

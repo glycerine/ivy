@@ -510,9 +510,9 @@ func diagnoseAutoFailure(
 		// --- Extract nonce predicate names from invar formula ---
 		// Python ivy_l2s.py:1621-1636
 		// lf.Formula = Implies(And(l2s_saved, eventually_start, exists, not_all_was_done,
-		//   ForAll(progress_args, Implies(nad, Not(waiting_for_progress)))), ...)
+		//   CheckForAll(progress_args, Implies(nad, Not(waiting_for_progress)))), ...)
 		// For l2s_auto5 (only tactic that calls applyAutoDiagnosticsToHandler):
-		//   Terms[4] = ForAll(progress_args, Implies(nad, Not(waiting)))
+		//   Terms[4] = CheckForAll(progress_args, Implies(nad, Not(waiting)))
 		//   body.args[0] = nad = Apply(l2s_s_i, ...) → Func.(*lg.Const).Name = was_helpful_pred_nonce
 		//   body.args[1].args[0] = Apply(l2s_w_j, ...) → Func.(*lg.Const).Name = trigger_happened_pred_nonce
 		var wasHelpfulNonce, triggerNonce string
@@ -520,7 +520,7 @@ func diagnoseAutoFailure(
 			if ant, ok := impl.T1.(*lg.And); ok && len(ant.Terms) >= 5 {
 				allHH := ant.Terms[4]
 				if fa, ok := allHH.(*lg.ForAll); ok {
-					// ForAll case (l2s_auto5): body = Implies(nad, Not(waiting_for_progress))
+					// CheckForAll case (l2s_auto5): body = Implies(nad, Not(waiting_for_progress))
 					if bodyImpl, ok := fa.Body.(*lg.Implies); ok {
 						// was_helpful_pred_nonce = body.args[0].rep
 						if app, ok := bodyImpl.T1.(*lg.Apply); ok {
@@ -579,14 +579,14 @@ func diagnoseAutoFailure(
 
 		// --- Build happened_maps for both states ---
 		// Python ivy_l2s.py:1637-1644: for idx in range(2) over tr.states[idx]
-		// In Go: tr.states[0] = bare name, tr.states[1] = "new_" + name (actions.New)
+		// In Go: tr.states[0] = bare name, tr.states[1] = "new_" + name (actions.ActionNewName)
 		wp := task["work_progress"]
 		happenedMaps := [2]map[termsKey]bool{
 			make(map[termsKey]bool),
 			make(map[termsKey]bool),
 		}
 		if triggerNonce != "" {
-			triggerNames := [2]string{triggerNonce, actions.New(triggerNonce)}
+			triggerNames := [2]string{triggerNonce, actions.ActionNewName(triggerNonce)}
 			for idx := 0; idx < 2; idx++ {
 				tname := triggerNames[idx]
 				fmt.Println()

@@ -19,7 +19,7 @@ import (
 
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
-func ConcatActions(actions ...Action) *Sequence {
+func ConcatActions(actions ...ActionsAction) *Sequence {
 	var all []lg.Expr
 	for _, a := range actions {
 		if seq, ok := a.(*Sequence); ok {
@@ -33,7 +33,7 @@ func ConcatActions(actions ...Action) *Sequence {
 
 // HasCode returns true if the action contains any non-Sequence subaction,
 // indicating it has actual executable content.
-func HasCode(action Action) bool {
+func HasCode(action ActionsAction) bool {
 	for _, a := range action.IterSubactions() {
 		if _, isSeq := a.(*Sequence); !isSeq {
 			return true
@@ -43,7 +43,7 @@ func HasCode(action Action) bool {
 }
 
 // CallSetRec recursively collects all action names reachable from actionName.
-func CallSetRec(actionName string, env map[string]Action, res map[string]bool) {
+func CallSetRec(actionName string, env map[string]ActionsAction, res map[string]bool) {
 	if res[actionName] {
 		return
 	}
@@ -56,7 +56,7 @@ func CallSetRec(actionName string, env map[string]Action, res map[string]bool) {
 }
 
 // CallSet returns a sorted list of all action names reachable from actionName.
-func CallSet(actionName string, env map[string]Action) []string {
+func CallSet(actionName string, env map[string]ActionsAction) []string {
 	res := make(map[string]bool)
 	CallSetRec(actionName, env, res)
 	names := make([]string, 0, len(res))
@@ -69,7 +69,7 @@ func CallSet(actionName string, env map[string]Action) []string {
 }
 
 // PrefixAction adds a list of statements at the beginning of an action.
-func PrefixAction(action Action, stmts []Action) Action {
+func PrefixAction(action ActionsAction, stmts []ActionsAction) ActionsAction {
 	// Python prefix_action has NO empty check — always wraps in Sequence.
 	// Do NOT add `if len(stmts) == 0 { return action }` here.
 	nodes := make([]lg.Expr, 0, len(stmts)+1)
@@ -86,7 +86,7 @@ func PrefixAction(action Action, stmts []Action) Action {
 }
 
 // PostfixAction adds a list of statements at the end of an action.
-func PostfixAction(action Action, stmts []Action) Action {
+func PostfixAction(action ActionsAction, stmts []ActionsAction) ActionsAction {
 	if len(stmts) == 0 {
 		return action
 	}
@@ -117,7 +117,7 @@ func ParamsToStr(params []*lg.Const) string {
 }
 
 // ActionDefToStr formats an action definition for display.
-func ActionDefToStr(name string, action Action) string {
+func ActionDefToStr(name string, action ActionsAction) string {
 	res := "action " + name
 	if fp := action.GetFormalParams(); len(fp) > 0 {
 		res += ParamsToStr(fp)
@@ -140,7 +140,7 @@ func ActionDefToStr(name string, action Action) string {
 // Matches Python ivy_actions.py:1338-1367 apply_mixin:
 // validates param/return counts and sorts, substitutes action1's formals
 // to match action2's, then concatenates.
-func ApplyMixin(action1, action2 Action, isAfter bool) Action {
+func ApplyMixin(action1, action2 ActionsAction, isAfter bool) ActionsAction {
 	xtracer.Trace("actions.apply_mixin ENTER")
 	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
 	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
@@ -202,13 +202,13 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.
 // Delegates to module.SubstituteConstantsAST.
-func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	return module.SubstituteConstantsAST(action, subs).(Action)
+func SubstituteConstantsAction(action ActionsAction, subs map[lg.NodeKey]lg.Expr) ActionsAction {
+	return module.SubstituteConstantsAST(action, subs).(ActionsAction)
 }
 
 // AppendToAction appends action2 at the end of action1, preserving
 // action1's formals and labels.
-func AppendToAction(action1, action2 Action) Action {
+func AppendToAction(action1, action2 ActionsAction) ActionsAction {
 	res := ConcatActions(action1, action2)
 	res.SetLineno(action1.GetLineno())
 	if fp := action1.GetFormalParams(); fp != nil {
@@ -228,7 +228,7 @@ func AppendToAction(action1, action2 Action) Action {
 // CopyFormalsTo copies formal parameters, returns, and labels
 // from src to dst, provided src is an Action. This is a convenience
 // wrapper around ActionBase.CopyFormalsTo.
-func CopyFormalsTo(src, dst Action) {
+func CopyFormalsTo(src, dst ActionsAction) {
 	// Python: if not isinstance(res, EnvAction): copy params/returns
 	if _, isEnvAction := dst.(*EnvAction); !isEnvAction {
 		if fp := src.GetFormalParams(); fp != nil {

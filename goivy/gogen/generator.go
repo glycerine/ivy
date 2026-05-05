@@ -246,9 +246,9 @@ func (g *Generator) emitInit(w *CodeWriter) {
 
 	if g.Module != nil {
 		for _, init := range g.Module.Initializers {
-			act, ok := init.Action.(actions.Action)
+			act, ok := init.Action.(actions.ActionsAction)
 			if !ok {
-				w.Linef("// skipped initializer %q: not an actions.Action", init.Name)
+				w.Linef("// skipped initializer %q: not an actions.ActionsAction", init.Name)
 				continue
 			}
 			w.Linef("// initializer: %s", init.Name)

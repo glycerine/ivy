@@ -15,7 +15,7 @@ func boolConst(name string) *lg.Const {
 	return lg.NewConst(name, lg.Boolean)
 }
 
-func makeActionTerm(inputs, outputs []*lg.Const, labels []string, stmt actions.Action) *ActionTerm {
+func makeActionTerm(inputs, outputs []*lg.Const, labels []string, stmt actions.ActionsAction) *ActionTerm {
 	return &ActionTerm{
 		Inputs:  inputs,
 		Outputs: outputs,
@@ -232,7 +232,7 @@ func TestPropEvent_Eventually(t *testing.T) {
 	notBody, _ := lg.NewNot(body)
 	ev, _ := lg.NewEventually(nil, notBody)
 	loc := ast.Location{Line: 42}
-	event := PropEvent(ev, loc)
+	event := TemporalPropEvent(ev, loc)
 	if _, ok := event.(*actions.AssertAction); !ok {
 		t.Error("PropEvent for Eventually should produce AssertAction")
 	}
@@ -245,7 +245,7 @@ func TestPropEvent_Globally(t *testing.T) {
 	body := boolConst("psi")
 	g, _ := lg.NewGlobally(nil, body)
 	loc := ast.Location{Line: 10}
-	event := PropEvent(g, loc)
+	event := TemporalPropEvent(g, loc)
 	if _, ok := event.(*actions.AssumeAction); !ok {
 		t.Error("PropEvent for Globally should produce AssumeAction")
 	}
@@ -301,13 +301,13 @@ func TestHasTemporalOperator(t *testing.T) {
 func TestIsGprop(t *testing.T) {
 	body := boolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
-	if !IsGprop(g) {
+	if !TemporalIsGprop(g) {
 		t.Error("G(non-temporal) should be Gprop")
 	}
 
 	inner, _ := lg.NewGlobally(nil, body)
 	outer, _ := lg.NewGlobally(nil, inner)
-	if IsGprop(outer) {
+	if TemporalIsGprop(outer) {
 		t.Error("G(G(x)) should not be Gprop (inner is temporal)")
 	}
 }
@@ -375,7 +375,7 @@ func TestPrefixActionTerm(t *testing.T) {
 	body := actions.NewSequence()
 	at := makeActionTerm(nil, nil, nil, body)
 	prefix := actions.NewAssumeAction(lg.True)
-	result := PrefixActionTerm(at, []actions.Action{prefix})
+	result := PrefixActionTerm(at, []actions.ActionsAction{prefix})
 	if result.Stmt == at.Stmt {
 		t.Error("PrefixActionTerm should create a new statement")
 	}

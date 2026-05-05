@@ -260,7 +260,7 @@ func CheckProperties(mod *module.Module) error {
 // Matches Python ivy_check.py check_conjectures (lines 104-117):
 //   - Calls itp.undecided_conjectures(state) to find failing ones
 //   - Reports error if any fail
-func CheckConjectures(cfg *module.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
+func CheckConjectures(cfg *module.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.InterpState) error {
 	failed := interp.UndecidedConjectures(state)
 	if len(failed) > 0 {
 		if cfg.Diagnose {
@@ -565,7 +565,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 				// Python: mod.actions[a] if isinstance(a, str) else a
 				if sym, ok := a.(*lg.Const); ok {
 					if act, exists := mod.Actions.Get2(sym.Name); exists {
-						if actAction, ok := act.(actions.Action); ok {
+						if actAction, ok := act.(actions.ActionsAction); ok {
 							actionExprs = append(actionExprs, actAction)
 							continue
 						}
@@ -584,7 +584,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		} else {
 			// Python: action, annot = thing
 			type annotPair struct {
-				Action actions.Action
+				Action actions.ActionsAction
 				Annot  actions.Annotation
 			}
 			if pair, ok := thing.(*annotPair); ok {
@@ -1197,7 +1197,7 @@ func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
 	// Register all ivy_tactics.py proof tactics.
 	tactics.RegisterProofTactics(proofCfg)
 	// Register temporal and l2s tactics — Python does this at import time.
-	temporal.RegisterTactics(proofCfg)
+	temporal.RegisterTemporalTactics(proofCfg)
 	RegisterL2STactics(proofCfg)
 }
 

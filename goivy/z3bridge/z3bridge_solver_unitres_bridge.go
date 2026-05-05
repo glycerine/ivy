@@ -14,8 +14,8 @@ import (
 // ivyLitToUnitResLit converts an ivylogic.Literal to a unitres.Literal.
 // Records the original *lg.Const in symMap so the reverse conversion
 // can reconstruct the full AST.
-func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Const) *unitres.Literal {
-	var atom *resolution.Atom
+func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Const) *unitres.UnitResLiteral {
+	var atom *resolution.ResolutionAtom
 	switch a := lit.Atom.(type) {
 	case *lg.Apply:
 		atom = resolution.AtomFromApply(a)
@@ -40,12 +40,12 @@ func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Const) *unitres.L
 	if atom == nil {
 		atom = resolution.NewAtom(lit.Atom.String())
 	}
-	return unitres.NewLiteral(lit.Polarity, atom)
+	return unitres.NewUnitResLiteral(lit.Polarity, atom)
 }
 
 // unitResLitToIvyLit converts a unitres.Literal back to an ivylogic.Literal.
 // Uses symMap to reconstruct the *lg.Const for non-equality atoms.
-func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Const) *il.Literal {
+func unitResLitToIvyLit(lit *unitres.UnitResLiteral, symMap map[string]*lg.Const) *il.Literal {
 	var atom lg.Expr
 	if lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		atom = &lg.Eq{T1: lit.Atom.Args[0], T2: lit.Atom.Args[1]}
@@ -70,11 +70,11 @@ func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Const) *il.L
 // ivyLitsToUnitResClauses converts a CNF clause set from ivylogic
 // literal lists to unitres literal lists, building a symbol map for
 // reverse conversion.
-func ivyLitsToUnitResClauses(cnf [][]*il.Literal) ([][]*unitres.Literal, map[string]*lg.Const) {
+func ivyLitsToUnitResClauses(cnf [][]*il.Literal) ([][]*unitres.UnitResLiteral, map[string]*lg.Const) {
 	symMap := make(map[string]*lg.Const)
-	result := make([][]*unitres.Literal, len(cnf))
+	result := make([][]*unitres.UnitResLiteral, len(cnf))
 	for i, clause := range cnf {
-		urClause := make([]*unitres.Literal, len(clause))
+		urClause := make([]*unitres.UnitResLiteral, len(clause))
 		for j, lit := range clause {
 			urClause[j] = ivyLitToUnitResLit(lit, symMap)
 		}

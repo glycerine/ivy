@@ -34,7 +34,7 @@ import (
 // preserves this — there must be no `state.Clauses.ToFormula()` /
 // `axioms.ToFormula()` calls here, since those would emit spurious
 // `ops.ToOpenFormula` traces with no Python counterpart.
-func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr ast.Node) (*State, error) {
+func ConcretePost(checkPrecond bool, update *actions.Update, state *InterpState, expr ast.Node) (*InterpState, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
 	}
@@ -64,7 +64,7 @@ func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr 
 		cons.TR,
 		cons.Pre,
 	)
-	res := NewState(state.Domain, postValue, expr, "")
+	res := NewInterpState(state.Domain, postValue, expr, "")
 	res.SetPred(state)
 	res.SetUpdate(update)
 	return res, nil
@@ -75,7 +75,7 @@ func ConcretePost(checkPrecond bool, update *actions.Update, state *State, expr 
 // The resulting state's JoinOf field records the source states.
 //
 // Corresponds to Python's concrete_join() in ivy_interp.py.
-func ConcreteJoin(s1, s2 *State) (*State, error) {
+func ConcreteJoin(s1, s2 *InterpState) (*InterpState, error) {
 	if s1.Domain == nil || s2.Domain == nil {
 		return nil, fmt.Errorf("ConcreteJoin: state has nil domain")
 	}
@@ -90,13 +90,13 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 	joinedClauses := joinedUpdate.TR
 	joinedPrecond := joinedUpdate.Pre
 
-	joinExpr := StateJoin(s1.AstCfg(), WrapState(s1), WrapState(s2))
-	res := NewState(s1.Domain, &StateValue{
+	joinExpr := InterpStateJoin(s1.AstCfg(), WrapState(s1), WrapState(s2))
+	res := NewInterpState(s1.Domain, &StateValue{
 		Moded:   actions.ModifiedNames(joinedUpdate),
 		Clauses: joinedClauses,
 		Precond: joinedPrecond,
 	}, joinExpr, "")
-	res.JoinOf = []*State{s1, s2}
+	res.JoinOf = []*InterpState{s1, s2}
 	return res, nil
 }
 
@@ -108,14 +108,14 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 // an Action, it is returned directly.
 //
 // In Python: eval_action in ivy_interp.py.
-func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
+func EvalAction(expr interface{}, mod *module.Module) (actions.ActionsAction, error) {
 	// If it's already an Action, return it.
 	// Note: Python ivy_interp.py:441-442 has a parallel `isinstance(expr,
 	// fail_action)` branch that is dead code (fail_action IS an Action so
-	// the previous isinstance check fires first). Go's actions.Action type
+	// the previous isinstance check fires first). Go's actions.ActionsAction type
 	// assertion catches *actions.FailAction the same way, so we omit the
 	// dead branch.
-	if a, ok := expr.(actions.Action); ok {
+	if a, ok := expr.(actions.ActionsAction); ok {
 		return a, nil
 	}
 	// If it's a string, look it up in the module.
@@ -140,7 +140,7 @@ func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 // Corresponds to Python's ivy_interp.py apply_action which calls
 // action.update(domain, in_scope) to compute the transition relation,
 // then compose_state_action to get the post-state.
-func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action actions.Action, state *State) (*State, error) {
+func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action actions.ActionsAction, state *InterpState) (*InterpState, error) {
 	xtracer.Trace("interp.ApplyAction ENTER actionName=%s", actions.ActionTypeName(action))
 	// Compute the action's transition relation update.
 	// Python: upd = action.update(state.domain, state.in_scope)
@@ -151,10 +151,10 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 		Instantiator:    state.Domain.Instantiator,
 		CheckUnprovable: state.Domain.Cfg.OnlyCheckUnprovable,
 		CheckedAssert:   state.Domain.Cfg.CheckLineno,
-		GetAction: func(name string) actions.Action {
+		GetAction: func(name string) actions.ActionsAction {
 			if state.Domain != nil {
 				if a, ok := state.Domain.Actions.Get2(name); ok {
-					if act, ok2 := a.(actions.Action); ok2 {
+					if act, ok2 := a.(actions.ActionsAction); ok2 {
 						return act
 					}
 				}
@@ -196,21 +196,21 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 // If it is an AST true/false, the corresponding state is created.
 // If it is a state symbol, it is looked up.
 // If it is an RME, a state is created from the requires/modifies/ensures.
-func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
+func EvalStateAtom(expr ast.Node, mod *module.Module) (*InterpState, error) {
 	// Check if wrapped state.
 	if s := UnwrapState(expr); s != nil {
 		return s, nil
 	}
 	// Check true.
 	if ast.IsTrue(expr) {
-		return NewState(mod, &StateValue{
+		return NewInterpState(mod, &StateValue{
 			Clauses: module.TrueClauses(nil),
 			Precond: module.FalseClauses(nil),
 		}, nil, ""), nil
 	}
 	// Check false.
 	if ast.IsFalse(expr) {
-		return NewState(mod, &StateValue{
+		return NewInterpState(mod, &StateValue{
 			Clauses: module.FalseClauses(nil),
 			Precond: module.FalseClauses(nil),
 		}, nil, ""), nil
@@ -229,7 +229,7 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 		}
 		// Check if the action provides a state (e.g. via a StateAction wrapper).
 		type stateProvider interface {
-			GetState() *State
+			GetState() *InterpState
 		}
 		if sp, ok := res.(stateProvider); ok {
 			return sp.GetState(), nil
@@ -244,8 +244,8 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 // If the expression is a state join (Or), the sub-states are joined.
 // If it is an action application, the action is applied to the sub-state.
 // Otherwise, it is evaluated as an atom.
-func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
-	if IsStateJoin(expr) {
+func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*InterpState, error) {
+	if IsInterpStateJoin(expr) {
 		or := expr.(*ast.AstOr)
 		if len(or.Terms) == 0 {
 			return nil, fmt.Errorf("EvalState: empty state join")
@@ -282,7 +282,7 @@ func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, er
 }
 
 // InterpBottomState creates a state representing the empty set of states.
-func InterpBottomState(domain *module.Module) *State {
+func InterpBottomState(domain *module.Module) *InterpState {
 	var acfg *ast.AstConfig
 	if domain != nil && domain.Cfg != nil {
 		acfg = domain.Cfg.AstCfg
@@ -290,24 +290,24 @@ func InterpBottomState(domain *module.Module) *State {
 	if acfg == nil {
 		acfg = ast.NewAstConfig()
 	}
-	return NewState(domain, BottomStateValue(), StateJoin(acfg), "")
+	return NewInterpState(domain, BottomStateValue(), InterpStateJoin(acfg), "")
 }
 
 // NewStateFromClauses creates a state from clauses, mirroring
 // module_new_state in Python.
-func NewStateFromClauses(mod *module.Module, clauses *module.Clauses) *State {
+func NewStateFromClauses(mod *module.Module, clauses *module.Clauses) *InterpState {
 	if clauses.Annot == nil {
 		clauses = module.NewClauses(clauses.Fmlas, clauses.Defs, actions.EmptyAnnotation{})
 	}
-	return NewState(mod, &StateValue{
+	return NewInterpState(mod, &StateValue{
 		Clauses: clauses,
 		Precond: module.FalseClauses(nil),
 	}, nil, "")
 }
 
 // NewStateWithValue creates a state from a full StateValue triple.
-func NewStateWithValue(mod *module.Module, value *StateValue) *State {
-	return NewState(mod, value, nil, "")
+func NewStateWithValue(mod *module.Module, value *StateValue) *InterpState {
+	return NewInterpState(mod, value, nil, "")
 }
 
 // isNodeFalse checks if a logic node is the False constant.

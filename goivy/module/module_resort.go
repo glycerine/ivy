@@ -76,7 +76,7 @@ func ResortSig(sig *il.Sig, subs map[lg.NodeKey]*SortRefinement) {
 	// Resort sort entries
 	newSorts := iu.NewInsMap[string, lg.Sort]()
 	for _, sort := range sig.Sorts.All() {
-		newSort := lu.ResortSort(sort, ss)
+		newSort := lu.LogicUtilResortSort(sort, ss)
 		newName := il.SortName(newSort)
 		newSorts.Set(newName, newSort)
 	}
@@ -100,9 +100,9 @@ func resortSymbolSort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 		dom := fs.Domain()
 		newDom := make([]lg.Sort, len(dom))
 		for i, d := range dom {
-			newDom[i] = lu.ResortSort(d, subs)
+			newDom[i] = lu.LogicUtilResortSort(d, subs)
 		}
-		rng := lu.ResortSort(fs.Range(), subs)
+		rng := lu.LogicUtilResortSort(fs.Range(), subs)
 		all := make([]lg.Sort, len(newDom)+1)
 		copy(all, newDom)
 		all[len(newDom)] = rng
@@ -112,7 +112,7 @@ func resortSymbolSort(s lg.Sort, subs map[lg.NodeKey]lg.Sort) lg.Sort {
 		}
 		return nfs
 	}
-	return lu.ResortSort(s, subs)
+	return lu.LogicUtilResortSort(s, subs)
 }
 
 // ResortMapSymbolSort remaps sorts in a map of sort entries.

@@ -210,7 +210,7 @@ func TestIsAssertLike_CallAction(t *testing.T) {
 // HasAssertions should match all assert subclasses
 func TestHasAssertions_WithRequiresAction(t *testing.T) {
 	// Python isinstance(action, ia.AssertAction) matches RequiresAction
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewRequiresAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
@@ -219,7 +219,7 @@ func TestHasAssertions_WithRequiresAction(t *testing.T) {
 }
 
 func TestHasAssertions_WithEnsuresAction(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewEnsuresAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
@@ -228,7 +228,7 @@ func TestHasAssertions_WithEnsuresAction(t *testing.T) {
 }
 
 func TestHasAssertions_WithSubgoalAction(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewSubgoalAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
@@ -237,7 +237,7 @@ func TestHasAssertions_WithSubgoalAction(t *testing.T) {
 }
 
 func TestHasAssertions_WithPlainAssertAction(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewAssertAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
@@ -246,7 +246,7 @@ func TestHasAssertions_WithPlainAssertAction(t *testing.T) {
 }
 
 func TestHasAssertions_NoAssert(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(),
 	})
 	if HasAssertions(m, "foo") {
@@ -262,7 +262,7 @@ func TestHasAssertions_MissingAction(t *testing.T) {
 }
 
 func TestHasRequires_MatchesRequiresOnly(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewRequiresAction(lg.True)),
 	})
 	if !HasRequires(m, "foo") {
@@ -271,7 +271,7 @@ func TestHasRequires_MatchesRequiresOnly(t *testing.T) {
 }
 
 func TestHasRequires_DoesNotMatchAssertAction(t *testing.T) {
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(actions.NewAssertAction(lg.True)),
 	})
 	if HasRequires(m, "foo") {
@@ -285,7 +285,7 @@ func TestHasSideEffect_WithEnsuresAction(t *testing.T) {
 	act := actions.NewSequence(actions.NewEnsuresAction(lg.True))
 	m := mkModuleWithSig()
 	m.Actions.Set("foo", act)
-	actionMap := iu.NewInsMap[string, actions.Action]()
+	actionMap := iu.NewInsMap[string, actions.ActionsAction]()
 	actionMap.Set("foo", act)
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("EnsuresAction should be detected as side effect via IsAssertLike")
@@ -523,14 +523,14 @@ func TestGetCallsModsRec_DetectsLoops(t *testing.T) {
 	// WhileAction without ranking
 	wa := actions.NewWhileAction(cond, body)
 
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(wa),
 	})
 
 	summarized := map[string]bool{"foo": true}
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
-	loops := make(map[string][]actions.Action)
+	loops := make(map[string][]actions.ActionsAction)
 
 	GetCallsModsRec(m, summarized, "foo", calls, mods, loops)
 
@@ -546,14 +546,14 @@ func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 	rw := &actions.RankingWrapper{Ranking: actions.NewRanking(rankRel)}
 	wa := actions.NewWhileAction(cond, body, rw)
 
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(wa),
 	})
 
 	summarized := map[string]bool{"foo": true}
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
-	loops := make(map[string][]actions.Action)
+	loops := make(map[string][]actions.ActionsAction)
 
 	GetCallsModsRec(m, summarized, "foo", calls, mods, loops)
 
@@ -571,7 +571,7 @@ func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 	m.Actions.Set("bar", actions.NewSequence(wa))
 
 	summarized := map[string]bool{"bar": true}
-	newActions := iu.NewInsMap[string, actions.Action]()
+	newActions := iu.NewInsMap[string, actions.ActionsAction]()
 	newActions.Set("bar", actions.NewSequence(wa))
 
 	m.Cfg.IsolateCfg.DoCheckInterference = true
@@ -592,7 +592,7 @@ func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 	m.Actions.Set("bar", actions.NewSequence(wa))
 
 	summarized := map[string]bool{"bar": true}
-	newActions := iu.NewInsMap[string, actions.Action]()
+	newActions := iu.NewInsMap[string, actions.ActionsAction]()
 	newActions.Set("bar", actions.NewSequence(wa))
 
 	m.Cfg.IsolateCfg.DoCheckInterference = true
@@ -923,7 +923,7 @@ func TestCheckIsolateCompleteness_PropertyDedup(t *testing.T) {
 
 func TestGetCallsModsRec_BackwardCompat(t *testing.T) {
 	// GetCallsModsRec should work without the optional loops param
-	m := mkModuleWithActions(map[string]actions.Action{
+	m := mkModuleWithActions(map[string]actions.ActionsAction{
 		"foo": actions.NewSequence(),
 	})
 	summarized := map[string]bool{"foo": true}

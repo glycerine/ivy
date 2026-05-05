@@ -292,7 +292,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	xtracer.Trace("check.CreateIsolate before_label_public n_public=%d", mod.PublicActions.Len())
 	for name := range mod.PublicActions.All() {
 		if act, ok := mod.Actions.Get2(name); ok {
-			if a, ok := act.(actions.Action); ok {
+			if a, ok := act.(actions.ActionsAction); ok {
 				// Python: action.label = name (singular, distinct from labels plural)
 				type singleLabeler interface {
 					SetLabel(string)
@@ -420,7 +420,7 @@ func getModCone(mod *module.Module) map[string]bool {
 		changed = false
 		for name := range cone {
 			if act, ok := mod.Actions.Get2(name); ok {
-				if a, ok := act.(actions.Action); ok {
+				if a, ok := act.(actions.ActionsAction); ok {
 					for _, callee := range a.IterCalls() {
 						if !cone[callee] {
 							cone[callee] = true
@@ -642,13 +642,13 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 		extname := "ext:" + name
 
 		// Get the action (prefer ext: variant)
-		var action actions.Action
+		var action actions.ActionsAction
 		if act, ok := mod.Actions.Get2(extname); ok {
-			if a, ok := act.(actions.Action); ok {
+			if a, ok := act.(actions.ActionsAction); ok {
 				action = a
 			}
 		} else if act, ok := mod.Actions.Get2(name); ok {
-			if a, ok := act.(actions.Action); ok {
+			if a, ok := act.(actions.ActionsAction); ok {
 				action = a
 			}
 		}
@@ -706,7 +706,7 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 // LoopAction creates a version of the action where formal parameters are
 // substituted with fresh variables. This is used for initializers.
 // Corresponds to Python loop_action (lines 1477-1481).
-func LoopAction(action actions.Action, mod *module.Module) actions.Action {
+func LoopAction(action actions.ActionsAction, mod *module.Module) actions.ActionsAction {
 	subst := make(map[lg.NodeKey]lg.Expr)
 	for _, p := range action.GetFormalParams() {
 		v, err := lg.NewVariable("Y"+p.Name, p.CSort)
@@ -727,7 +727,7 @@ func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 // components to be assumed as invariants.
 //
 // Corresponds to Python apply_present_conjectures (lines 1533-1555).
-func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []BracketEntry {
+func ApplyPresentConjectures(isol IsolateDefIface, mod *module.Module) []BracketEntry {
 	if !mod.Cfg.IsolateCfg.AssumeInvariants {
 		return nil
 	}
@@ -783,11 +783,11 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	}
 	var brackets []BracketEntry
 	for actname := range myExports {
-		var assumes []actions.Action
+		var assumes []actions.ActionsAction
 		for _, c := range filteredConjs {
 			assumes = append(assumes, conjToAssume(c))
 		}
-		var postAssumes []actions.Action
+		var postAssumes []actions.ActionsAction
 		for _, c := range filteredPostConjs {
 			postAssumes = append(postAssumes, conjToAssume(c))
 		}
@@ -795,7 +795,7 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	}
 
 	// Also add post-conjectures for actions that have conj_actions
-	posts := make(map[string][]actions.Action)
+	posts := make(map[string][]actions.ActionsAction)
 	for _, conj := range filteredConjs {
 		labelName := lfLabelName(conj)
 		if labelName != "" {
@@ -835,18 +835,18 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 // BracketEntry describes before/after assume actions to wrap around an action.
 type BracketEntry struct {
 	ActName string
-	Before  []actions.Action
-	After   []actions.Action
+	Before  []actions.ActionsAction
+	After   []actions.ActionsAction
 }
 
 // BracketAction wraps an action with before/after sequences.
 // Corresponds to Python bracket_action (lines 1529-1531).
-func BracketAction(mod *module.Module, actname string, before, after []actions.Action) {
+func BracketAction(mod *module.Module, actname string, before, after []actions.ActionsAction) {
 	bracketActionInt(mod, actname, before, after)
 	bracketActionInt(mod, "ext:"+actname, before, after)
 }
 
-func bracketActionInt(mod *module.Module, actname string, before, after []actions.Action) {
+func bracketActionInt(mod *module.Module, actname string, before, after []actions.ActionsAction) {
 	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return
@@ -875,7 +875,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 //	    res = ia.AssumeAction(c.formula)
 //	    res.lineno = c.lineno
 //	    return res
-func conjToAssume(c *ast.LabeledFormula) actions.Action {
+func conjToAssume(c *ast.LabeledFormula) actions.ActionsAction {
 	fmla, ok := c.Formula.(lg.Expr)
 	if !ok {
 		return actions.NewSequence()

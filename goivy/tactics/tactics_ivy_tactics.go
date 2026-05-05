@@ -49,7 +49,7 @@ func VcToGoal(cfg *ast.AstConfig, loc ast.Location, name string, vc *module.Clau
 //
 //	vc = tr.make_vc(action, precond, postcond)
 //	return vc_to_goal(lineno, name, vc, action)
-func TripleToGoal(cfg *ast.AstConfig, loc ast.Location, name string, action actions.Action,
+func TripleToGoal(cfg *ast.AstConfig, loc ast.Location, name string, action actions.ActionsAction,
 	precond []*ast.LabeledFormula, postcond []*ast.LabeledFormula) *ast.LabeledFormula {
 	// Convert labeled formulas to clauses for MakeVC
 	var preClauses []*module.Clauses

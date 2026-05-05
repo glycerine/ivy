@@ -8,11 +8,11 @@ import (
 )
 
 // CaptureError is raised when a substitution would create variable capture.
-type CaptureError struct {
+type LogicUtilCaptureError struct {
 	Variables []*logic.Variable
 }
 
-func (e *CaptureError) Error() string {
+func (e *LogicUtilCaptureError) Error() string {
 	return fmt.Sprintf("variable capture: %v", e.Variables)
 }
 
@@ -386,7 +386,7 @@ func substituteBinder(
 	}
 	for _, v := range variables {
 		if _, captured := forbidden[logic.Key(v)]; captured {
-			return nil, &CaptureError{Variables: []*logic.Variable{v}}
+			return nil, &LogicUtilCaptureError{Variables: []*logic.Variable{v}}
 		}
 	}
 
@@ -418,7 +418,7 @@ func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.E
 	}
 	for _, v := range nb.Variables {
 		if _, captured := forbidden[logic.Key(v)]; captured {
-			return nil, &CaptureError{Variables: []*logic.Variable{v}}
+			return nil, &LogicUtilCaptureError{Variables: []*logic.Variable{v}}
 		}
 	}
 

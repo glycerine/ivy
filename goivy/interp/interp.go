@@ -66,7 +66,7 @@ func BottomStateValue() *StateValue {
 // State is an abstract state in the symbolic interpreter.
 //
 // Python equivalent: class State in ivy_interp.py.
-type State struct {
+type InterpState struct {
 	InScope map[string]bool // symbols in scope (matches Python State.in_scope)
 	Domain  *module.Module  // the module this state belongs to
 
@@ -81,26 +81,26 @@ type State struct {
 
 	// Cached analysis results.
 	CachedUpdate *actions.Update // cached update for this state's action
-	CachedPred   *State          // cached predecessor state
+	CachedPred   *InterpState    // cached predecessor state
 
 	// Additional fields set during evaluation.
-	Action     actions.Action // action that produced this state
-	ActionName string         // name of the action
-	JoinOf     []*State       // states this was joined from
-	Universe   interface{}    // universe constraint data
+	Action     actions.ActionsAction // action that produced this state
+	ActionName string                // name of the action
+	JoinOf     []*InterpState        // states this was joined from
+	Universe   interface{}           // universe constraint data
 }
 
 // NewState constructs a State from a domain and optional value.
 // If value is nil, TopStateValue is used. If domain is nil, a fresh
 // empty module is created.
-func NewState(domain *module.Module, value *StateValue, expr ast.Node, label string) *State {
+func NewInterpState(domain *module.Module, value *StateValue, expr ast.Node, label string) *InterpState {
 	if value == nil {
 		value = TopStateValue()
 	}
 	if domain == nil {
 		domain = module.New()
 	}
-	return &State{
+	return &InterpState{
 		InScope: make(map[string]bool),
 		Domain:  domain,
 		Moded:   value.Moded,
@@ -112,7 +112,7 @@ func NewState(domain *module.Module, value *StateValue, expr ast.Node, label str
 }
 
 // AstCfg returns the AstConfig from the state's domain module.
-func (s *State) AstCfg() *ast.AstConfig {
+func (s *InterpState) AstCfg() *ast.AstConfig {
 	if s.Domain != nil && s.Domain.Cfg != nil && s.Domain.Cfg.AstCfg != nil {
 		return s.Domain.Cfg.AstCfg
 	}
@@ -120,7 +120,7 @@ func (s *State) AstCfg() *ast.AstConfig {
 }
 
 // Value returns the state value triple.
-func (s *State) Value() *StateValue {
+func (s *InterpState) Value() *StateValue {
 	return &StateValue{
 		Moded:   s.Moded,
 		Clauses: s.Clauses,
@@ -129,7 +129,7 @@ func (s *State) Value() *StateValue {
 }
 
 // SetValue sets the state value triple.
-func (s *State) SetValue(v *StateValue) {
+func (s *InterpState) SetValue(v *StateValue) {
 	s.Moded = v.Moded
 	s.Clauses = v.Clauses
 	s.Precond = v.Precond
@@ -142,7 +142,7 @@ func (s *State) SetValue(v *StateValue) {
 //	@property
 //	def update(self):
 //	    if self.cached_update is None and self.expr is not None and is_action_app(self.expr):
-//	        xtracer.trace("interp.State.Update calling GetUpdate type=%s"
+//	        xtracer.trace("interp.InterpState.Update calling GetUpdate type=%s"
 //	                      % type(eval_action(self.expr.rep)).__name__)
 //	        self.cached_update = eval_action(self.expr.rep).update(self.domain, self.in_scope)
 //	    return self.cached_update
@@ -151,17 +151,17 @@ func (s *State) SetValue(v *StateValue) {
 // string-only in Go. We use s.Action when set (this is how the
 // failState path passes a FailAction object through), and otherwise
 // fall back to looking up s.Expr.Rep as an action name in the module.
-func (s *State) Update() *actions.Update {
+func (s *InterpState) Update() *actions.Update {
 	if s.CachedUpdate != nil {
 		return s.CachedUpdate
 	}
-	var action actions.Action
+	var action actions.ActionsAction
 	if s.Action != nil {
 		action = s.Action
 	} else if s.Expr != nil && IsInterpActionApp(s.Expr) {
 		if atom, ok := s.Expr.(*ast.Atom); ok && s.Domain != nil {
 			if a, found := s.Domain.FindAction(atom.Rep); found {
-				if act, ok := a.(actions.Action); ok {
+				if act, ok := a.(actions.ActionsAction); ok {
 					action = act
 				}
 			}
@@ -171,7 +171,7 @@ func (s *State) Update() *actions.Update {
 		return nil
 	}
 
-	xtracer.Trace("interp.State.Update calling GetUpdate type=%s", actions.ActionTypeName(action))
+	xtracer.Trace("interp.InterpState.Update calling GetUpdate type=%s", actions.ActionTypeName(action))
 
 	ctx := &actions.UpdateContext{
 		Domain:          s.Domain,
@@ -180,9 +180,9 @@ func (s *State) Update() *actions.Update {
 		Instantiator:    s.Domain.Instantiator,
 		CheckUnprovable: s.Domain.Cfg.OnlyCheckUnprovable,
 		CheckedAssert:   s.Domain.Cfg.CheckLineno,
-		GetAction: func(name string) actions.Action {
+		GetAction: func(name string) actions.ActionsAction {
 			if v, ok := s.Domain.Actions.Get2(name); ok {
-				if act, ok := v.(actions.Action); ok {
+				if act, ok := v.(actions.ActionsAction); ok {
 					return act
 				}
 			}
@@ -194,12 +194,12 @@ func (s *State) Update() *actions.Update {
 }
 
 // SetUpdate sets the cached update.
-func (s *State) SetUpdate(u *actions.Update) {
+func (s *InterpState) SetUpdate(u *actions.Update) {
 	s.CachedUpdate = u
 }
 
 // Pred returns the cached predecessor state.
-func (s *State) Pred() *State {
+func (s *InterpState) Pred() *InterpState {
 	if s.CachedPred == nil && s.Expr != nil && IsInterpActionApp(s.Expr) {
 		atom := s.Expr.(*ast.Atom)
 		if len(atom.Terms) > 0 {
@@ -212,17 +212,17 @@ func (s *State) Pred() *State {
 }
 
 // SetPred sets the cached predecessor state.
-func (s *State) SetPred(pred *State) {
+func (s *InterpState) SetPred(pred *InterpState) {
 	s.CachedPred = pred
 }
 
 // IsBottom returns true if the state's clauses are False (no reachable states).
-func (s *State) IsBottom() bool {
+func (s *InterpState) IsBottom() bool {
 	return s.Clauses != nil && s.Clauses.IsFalse()
 }
 
 // ToFormula converts the state's clauses to a closed formula.
-func (s *State) ToFormula() lg.Expr {
+func (s *InterpState) ToFormula() lg.Expr {
 	if s.Clauses == nil {
 		return lg.True
 	}
@@ -230,7 +230,7 @@ func (s *State) ToFormula() lg.Expr {
 }
 
 // String returns a human-readable representation.
-func (s *State) String() string {
+func (s *InterpState) String() string {
 	if s.Clauses == nil {
 		return "State(<nil clauses>)"
 	}
@@ -239,24 +239,24 @@ func (s *State) String() string {
 
 // Conjs returns the conjectures stored on the domain module.
 // In Python, conjectures are global via the module.
-func (s *State) Conjs() []*module.Clauses {
+func (s *InterpState) Conjs() []*module.Clauses {
 	conjs, _ := s.Domain.Attributes["__interp_conjs"].([]*module.Clauses)
 	return conjs
 }
 
 // SetConjs sets the conjectures on the domain module.
-func (s *State) SetConjs(conjs []*module.Clauses) {
+func (s *InterpState) SetConjs(conjs []*module.Clauses) {
 	s.Domain.Attributes["__interp_conjs"] = conjs
 }
 
 // Unders returns the under-approximations stored on the domain module.
-func (s *State) Unders() []*State {
-	unders, _ := s.Domain.Attributes["__interp_unders"].([]*State)
+func (s *InterpState) Unders() []*InterpState {
+	unders, _ := s.Domain.Attributes["__interp_unders"].([]*InterpState)
 	return unders
 }
 
 // SetUnders sets the under-approximations on the domain module.
-func (s *State) SetUnders(unders []*State) {
+func (s *InterpState) SetUnders(unders []*InterpState) {
 	s.Domain.Attributes["__interp_unders"] = unders
 }
 
@@ -266,7 +266,7 @@ func (s *State) SetUnders(unders []*State) {
 
 type stateNode struct {
 	ast.Base
-	state *State
+	state *InterpState
 }
 
 func (sn *stateNode) Args() []ast.Node               { return nil }
@@ -279,12 +279,12 @@ func (sn *stateNode) String() string {
 }
 
 // WrapState wraps a State as an ast.Node for use in expression trees.
-func WrapState(s *State) ast.Node {
+func WrapState(s *InterpState) ast.Node {
 	return &stateNode{state: s}
 }
 
 // UnwrapState extracts a *State from an ast.Node, or nil.
-func UnwrapState(n ast.Node) *State {
+func UnwrapState(n ast.Node) *InterpState {
 	if sn, ok := n.(*stateNode); ok {
 		return sn.state
 	}
@@ -380,7 +380,7 @@ func IsInterpActionApp(expr ast.Node) bool {
 }
 
 // IsStateJoin returns true if expr is an Or, representing a join of states.
-func IsStateJoin(expr ast.Node) bool {
+func IsInterpStateJoin(expr ast.Node) bool {
 	_, ok := expr.(*ast.AstOr)
 	return ok
 }
@@ -391,7 +391,7 @@ func InterpActionApp(cfg *ast.AstConfig, actionName string, arg ast.Node) *ast.A
 }
 
 // StateJoin constructs a state-join expression (disjunction).
-func StateJoin(cfg *ast.AstConfig, args ...ast.Node) *ast.AstOr {
+func InterpStateJoin(cfg *ast.AstConfig, args ...ast.Node) *ast.AstOr {
 	return cfg.NewOr(args...)
 }
 
@@ -408,8 +408,8 @@ func StateEquation(cfg *ast.AstConfig, lhs, rhs ast.Node) *ast.AstDefinition {
 }
 
 // StatesInExpr yields all States embedded in an expression tree.
-func StatesInExpr(expr ast.Node) []*State {
-	var result []*State
+func StatesInExpr(expr ast.Node) []*InterpState {
+	var result []*InterpState
 	if s := UnwrapState(expr); s != nil {
 		result = append(result, s)
 		return result
@@ -426,13 +426,13 @@ func StatesInExpr(expr ast.Node) []*State {
 
 // IvyActionFailedError is returned when an action's precondition fails.
 type IvyActionFailedError struct {
-	Ast        ast.Node       // AST node where the failure occurred
-	ActionName string         // name of the failed action
-	Action     actions.Action // the action
-	State      *State         // the state in which the action failed
-	ErrorState *State         // the error state
-	Conc       interface{}    // concrete trace info (trans tuple)
-	Msg        string         // human-readable message
+	Ast        ast.Node              // AST node where the failure occurred
+	ActionName string                // name of the failed action
+	Action     actions.ActionsAction // the action
+	State      *InterpState          // the state in which the action failed
+	ErrorState *InterpState          // the error state
+	Conc       interface{}           // concrete trace info (trans tuple)
+	Msg        string                // human-readable message
 }
 
 func (e *IvyActionFailedError) Error() string {
@@ -447,12 +447,11 @@ func (e *IvyActionFailedError) Error() string {
 func NewIvyActionFailedError(
 	astNode ast.Node,
 	actionName string,
-	action actions.Action,
-	state *State,
-	failClauses *module.Clauses,
+	action actions.ActionsAction,
+	state *InterpState, failClauses *module.Clauses,
 	trans interface{},
 ) *IvyActionFailedError {
-	errState := NewState(state.Domain, &StateValue{
+	errState := NewInterpState(state.Domain, &StateValue{
 		Clauses: failClauses,
 		Precond: module.FalseClauses(nil),
 	}, nil, "")

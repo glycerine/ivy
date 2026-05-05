@@ -39,13 +39,13 @@ type UpdateContext struct {
 
 	// GetAction resolves an action name to its Action. This is set by
 	// the caller (typically from module.Actions or an ActionContext).
-	GetAction func(name string) Action
+	GetAction func(name string) ActionsAction
 
 	// CompileActionBody compiles an AST node as an action body.
 	// This callback avoids a circular import between actions and compiler.
 	// Set by callers that have access to the compiler.
 	// Used by InstantiateAction to compile macro expansions at runtime.
-	CompileActionBody func(node ast.Node) (Action, error)
+	CompileActionBody func(node ast.Node) (ActionsAction, error)
 
 	// CompileWithSortInference compiles an AST formula with sort inference.
 	// Used by action-level schema instantiation, matching Python's
@@ -176,7 +176,7 @@ func isFalse(n lg.Expr) bool {
 // -----------------------------------------------------------------------
 
 func newSym(sym *lg.Const) *lg.Const {
-	return lg.NewConst(New(sym.Name), sym.CSort)
+	return lg.NewConst(ActionNewName(sym.Name), sym.CSort)
 }
 
 // constName extracts the name from a node that is a Const or the Func of an Apply.
@@ -278,7 +278,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 	drhs := module.SubstituteAstByName(rhs, rn)
 
 	// If there are equality conditions, build ITE
-	// Python: Ite(And(*eqs), drhs, n(*dlhs.args))
+	// Python: ActionIte(And(*eqs), drhs, n(*dlhs.args))
 	if len(eqs) > 0 {
 		eqConj, _ := lg.NewAnd(eqs...) // match Python And(*eqs) exactly
 		// old value: n applied to placeholders
@@ -782,7 +782,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *Update {
 		nondet = skSym
 	}
 
-	// If eqs: nondet = Ite(And(*eqs), nondet, n(*dlhs.args))
+	// If eqs: nondet = ActionIte(And(*eqs), nondet, n(*dlhs.args))
 	if len(eqs) > 0 {
 		var guard lg.Expr
 		if len(eqs) == 1 {
@@ -1176,7 +1176,7 @@ func ActionTypeName(a interface{}) string {
 // IntUpdate is the intermediate update computation that applies domain
 // update axioms on top of the atomic action_update.
 // Corresponds to Python Action.int_update().
-func IntUpdate(action Action, ctx *UpdateContext) *Update {
+func IntUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 	// Dispatch to type-specific int_update methods.
 	// Types with their own IntUpdate method have their own traces.
 	// Types using intUpdateFromActionUpdate use the base Action.int_update
@@ -1264,7 +1264,7 @@ type actionUpdater interface {
 func intUpdateFromActionUpdate(action actionUpdater, ctx *UpdateContext) *Update {
 	update := action.ActionUpdate(ctx)
 	// Apply update axioms from the domain
-	update = applyUpdateAxioms(update, action.(Action), ctx)
+	update = applyUpdateAxioms(update, action.(ActionsAction), ctx)
 	return update
 }
 
@@ -1274,7 +1274,7 @@ type updateAxiomProvider = Updater
 
 // applyUpdateAxioms applies domain.updates to the given update.
 // In Python, this iterates over domain.updates calling get_update_axioms.
-func applyUpdateAxioms(update *Update, action Action, ctx *UpdateContext) *Update {
+func applyUpdateAxioms(update *Update, action ActionsAction, ctx *UpdateContext) *Update {
 	// Trace unconditionally, matching Python Action.int_update line 209
 	// which always emits the trace even when len(domain.updates) == 0.
 	if xtracer.Enabled {
@@ -1388,8 +1388,8 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *Update {
 }
 
 // unwrapToAction extracts an Action from a Node.
-func unwrapToAction(n lg.Expr) Action {
-	act, _ := n.(Action)
+func unwrapToAction(n lg.Expr) ActionsAction {
+	act, _ := n.(ActionsAction)
 	return act
 }
 
@@ -1525,7 +1525,7 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *Update {
 	if thenAct == nil {
 		thenAct = NewSequence()
 	}
-	var elseAct Action
+	var elseAct ActionsAction
 	if elseBranch != nil {
 		elseAct = unwrapToAction(elseBranch)
 	}
@@ -1614,7 +1614,7 @@ func (a *WhileAction) IntUpdate(ctx *UpdateContext) *Update {
 // Unroll determines the iteration bound from the loop condition's index sort
 // and unrolls the loop into nested IfActions.
 // Python: WhileAction.unroll (ivy_actions.py:1025-1046)
-func (a *WhileAction) Unroll(card func(lg.Sort) int, body Action) (Action, error) {
+func (a *WhileAction) Unroll(card func(lg.Sort) int, body ActionsAction) (ActionsAction, error) {
 	cond := a.Cond
 	// Unwrap nested And to find comparison
 	for {
@@ -1674,7 +1674,7 @@ func (a *WhileAction) Unroll(card func(lg.Sort) int, body Action) (Action, error
 // Expand converts the while loop into an equivalent sequence of
 // assert invariants, havoc modified, assume invariants, if cond then body.
 // This is the standard Floyd-Hoare approach to while loops.
-func (a *WhileAction) Expand(ctx *UpdateContext) Action {
+func (a *WhileAction) Expand(ctx *UpdateContext) ActionsAction {
 	// First, compute the modify set from the body
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
@@ -1685,9 +1685,9 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// Separate invariants from ranking
 	var invariants []lg.Expr
-	var ranking Action
+	var ranking ActionsAction
 	for _, inv := range a.Invariants {
-		if r, ok := inv.(Action); ok {
+		if r, ok := inv.(ActionsAction); ok {
 			if r.Name() == "decreases" {
 				ranking = r
 				continue
@@ -1698,7 +1698,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// Build assert invariants
 	// Python ivy_actions.py:1070: asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
-	var asserts []Action
+	var asserts []ActionsAction
 	for _, inv := range invariants {
 		if _, isAssume := inv.(*AssumeAction); isAssume {
 			continue
@@ -1708,7 +1708,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// Build assume invariants (assert→assume conversion)
 	// Python ivy_actions.py:1069: assumes = [... for a in asserts if not isinstance(a, SubgoalAction)]
-	var assumes []Action
+	var assumes []ActionsAction
 	for _, inv := range invariants {
 		if _, isSG := inv.(*SubgoalAction); isSG {
 			continue
@@ -1718,7 +1718,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// Build havocs for modified symbols
 	// Python ivy_actions.py:1083-1085: for h in havocs: h.lineno = self.lineno
-	var havocs []Action
+	var havocs []ActionsAction
 	for _, sym := range modset {
 		h := NewHavocAction(sym)
 		if a.HasLineno() {
@@ -1728,7 +1728,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	}
 
 	// Handle ranking function if present
-	var entryAsserts, exitAsserts []Action
+	var entryAsserts, exitAsserts []ActionsAction
 	var rankLocal *lg.Const
 	if ranking != nil {
 		rankArgs := ranking.ActionArgs()
@@ -1910,7 +1910,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 	}
 
 	// Resolve the callee
-	var calleeAction Action
+	var calleeAction ActionsAction
 	if ctx.GetAction != nil {
 		calleeAction = ctx.GetAction(calleeName)
 	}
@@ -1918,7 +1918,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 		// Try from domain.Actions
 		if ctx.Domain != nil && ctx.Domain.Actions != nil {
 			if v, ok := ctx.Domain.Actions.Get2(calleeName); ok {
-				act, isAct := v.(Action)
+				act, isAct := v.(ActionsAction)
 				if !isAct {
 					// Python (ivy_actions.py:1350): v = state_to_action(v.value)
 					//   for non-Action context entries (state-style updates with .value).
@@ -1946,7 +1946,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *Update {
 // applyActuals inlines the callee with actual parameters.
 // Corresponds to Python CallAction.apply_actuals.
 // Includes capture avoidance via distinct_obj_renaming.
-func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *Update {
+func (a *CallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Update {
 	formalParams := callee.GetFormalParams()
 	formalReturns := callee.GetFormalReturns()
 	actualParams := nodeArgs(a.Callee)
@@ -2204,7 +2204,7 @@ func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 // 3. Hide formal parameters and returns
 //
 // This corresponds to Python Action.update(domain, pvars).
-func GetUpdate(action Action, ctx *UpdateContext) *Update {
+func GetUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 	// FailAction overrides Python's Action.update (ivy_interp.py:385-389),
 	// so it does NOT emit the base "actions.GetUpdate ENTER type=fail_action"
 	// trace. Match that by delegating to fa.Update directly here, before
@@ -2221,7 +2221,7 @@ func GetUpdate(action Action, ctx *UpdateContext) *Update {
 
 // hideFormals hides formal parameters and returns from the update.
 // Matches Python Action.hide_formals (ivy_actions.py:220-228).
-func hideFormals(action Action, update *Update) *Update {
+func hideFormals(action ActionsAction, update *Update) *Update {
 	var toHide []*lg.Const
 	if fp := action.GetFormalParams(); len(fp) > 0 {
 		toHide = append(toHide, fp...)
@@ -2241,16 +2241,16 @@ func hideFormals(action Action, update *Update) *Update {
 
 // GetUpdateForArt implements the Updater interface expected by art/art.go.
 // It adapts the module-level GetUpdate function to the (domain, inScope) signature.
-func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bool) *Update {
+func GetUpdateForArt(action ActionsAction, domain *module.Module, inScope map[string]bool) *Update {
 	ctx := &UpdateContext{
 		Domain:       domain,
 		PVars:        inScope,
 		ActCfg:       domain.Cfg.ActCfg,
 		Instantiator: domain.Instantiator,
-		GetAction: func(name string) Action {
+		GetAction: func(name string) ActionsAction {
 			if domain != nil && domain.Actions != nil {
 				if v, ok := domain.Actions.Get2(name); ok {
-					if act, ok := v.(Action); ok {
+					if act, ok := v.(ActionsAction); ok {
 						return act
 					}
 				}

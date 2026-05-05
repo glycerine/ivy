@@ -18,18 +18,18 @@ import (
 // ---------- Literal type ----------
 
 // Literal is a polarity (0=negative, 1=positive) paired with an Atom.
-type Literal struct {
+type UnitResLiteral struct {
 	Polarity int
-	Atom     *resolution.Atom
+	Atom     *resolution.ResolutionAtom
 }
 
 // NewLiteral creates a Literal.
-func NewLiteral(polarity int, atom *resolution.Atom) *Literal {
-	return &Literal{Polarity: polarity, Atom: atom}
+func NewUnitResLiteral(polarity int, atom *resolution.ResolutionAtom) *UnitResLiteral {
+	return &UnitResLiteral{Polarity: polarity, Atom: atom}
 }
 
 // String renders the literal. Negative literals are prefixed with "~".
-func (l *Literal) String() string {
+func (l *UnitResLiteral) String() string {
 	prefix := ""
 	if l.Polarity == 0 {
 		prefix = "~"
@@ -45,12 +45,12 @@ func (l *Literal) String() string {
 }
 
 // Invert returns the negation of this literal.
-func (l *Literal) Invert() *Literal {
-	return &Literal{Polarity: 1 - l.Polarity, Atom: l.Atom}
+func (l *UnitResLiteral) Invert() *UnitResLiteral {
+	return &UnitResLiteral{Polarity: 1 - l.Polarity, Atom: l.Atom}
 }
 
 // LitEqual returns true if two literals are syntactically equal.
-func LitEqual(a, b *Literal) bool {
+func LitEqual(a, b *UnitResLiteral) bool {
 	if a.Polarity != b.Polarity {
 		return false
 	}
@@ -58,7 +58,7 @@ func LitEqual(a, b *Literal) bool {
 }
 
 // AtomEqual returns true if two atoms are syntactically equal.
-func AtomEqual(a, b *resolution.Atom) bool {
+func AtomEqual(a, b *resolution.ResolutionAtom) bool {
 	if a.RelName != b.RelName || len(a.Args) != len(b.Args) {
 		return false
 	}
@@ -97,17 +97,17 @@ func isConst(n logic.Expr) bool {
 }
 
 // isEqualityLit returns true if the literal is a positive equality.
-func isEqualityLit(lit *Literal) bool {
+func isEqualityLit(lit *UnitResLiteral) bool {
 	return lit.Polarity == 1 && lit.Atom.RelName == "="
 }
 
 // isDisequalityLit returns true if the literal is a negative equality.
-func isDisequalityLit(lit *Literal) bool {
+func isDisequalityLit(lit *UnitResLiteral) bool {
 	return lit.Polarity == 0 && lit.Atom.RelName == "="
 }
 
 // isTautEqualityLit returns true if the literal is x=x (positive).
-func isTautEqualityLit(lit *Literal) bool {
+func isTautEqualityLit(lit *UnitResLiteral) bool {
 	if lit.Polarity != 1 || lit.Atom.RelName != "=" {
 		return false
 	}
@@ -118,7 +118,7 @@ func isTautEqualityLit(lit *Literal) bool {
 }
 
 // isTrueLit returns true if the literal is trivially true.
-func isTrueLit(lit *Literal) bool {
+func isTrueLit(lit *UnitResLiteral) bool {
 	// A literal with atom = And() (empty And = True) and polarity 1
 	if lit.Polarity == 1 && len(lit.Atom.Args) == 1 {
 		if a, ok := lit.Atom.Args[0].(*logic.And); ok && len(a.Terms) == 0 {
@@ -129,12 +129,12 @@ func isTrueLit(lit *Literal) bool {
 }
 
 // isTautLit returns true if the literal is tautological.
-func isTautLit(lit *Literal) bool {
+func isTautLit(lit *UnitResLiteral) bool {
 	return isTrueLit(lit) || isTautEqualityLit(lit)
 }
 
 // isVacEqualityLit returns true if the literal is ~(x=x).
-func isVacEqualityLit(lit *Literal) bool {
+func isVacEqualityLit(lit *UnitResLiteral) bool {
 	if lit.Polarity != 0 || lit.Atom.RelName != "=" {
 		return false
 	}
@@ -145,12 +145,12 @@ func isVacEqualityLit(lit *Literal) bool {
 }
 
 // isVacLit returns true if the literal is vacuously false.
-func isVacLit(lit *Literal) bool {
+func isVacLit(lit *UnitResLiteral) bool {
 	return isVacEqualityLit(lit)
 }
 
 // isGroundLit returns true if the literal contains no variables.
-func isGroundLit(lit *Literal) bool {
+func isGroundLit(lit *UnitResLiteral) bool {
 	for _, t := range lit.Atom.Args {
 		if isVar(t) {
 			return false
@@ -160,7 +160,7 @@ func isGroundLit(lit *Literal) bool {
 }
 
 // isGroundClause returns true if all literals in the clause are ground.
-func isGroundClause(cl []*Literal) bool {
+func isGroundClause(cl []*UnitResLiteral) bool {
 	for _, lit := range cl {
 		if !isGroundLit(lit) {
 			return false
@@ -170,16 +170,16 @@ func isGroundClause(cl []*Literal) bool {
 }
 
 // isGroundEqualityLit returns true for a positive ground equality.
-func isGroundEqualityLit(lit *Literal) bool {
+func isGroundEqualityLit(lit *UnitResLiteral) bool {
 	return isEqualityLit(lit) && isGroundLit(lit)
 }
 
 // swapArgsLit swaps the two args of a binary literal.
-func swapArgsLit(lit *Literal) *Literal {
+func swapArgsLit(lit *UnitResLiteral) *UnitResLiteral {
 	if len(lit.Atom.Args) != 2 {
 		return lit
 	}
-	return &Literal{
+	return &UnitResLiteral{
 		Polarity: lit.Polarity,
 		Atom:     resolution.NewAtom(lit.Atom.RelName, lit.Atom.Args[1], lit.Atom.Args[0]),
 	}
@@ -189,7 +189,7 @@ func swapArgsLit(lit *Literal) *Literal {
 
 // LitConsing provides hash-consed literal ids.
 type LitConsing struct {
-	literals []*Literal
+	literals []*UnitResLiteral
 	litHash  map[litKey]int
 }
 
@@ -199,7 +199,7 @@ type litKey struct {
 	argsKey  string // concatenation of rep(arg) separated by \x00
 }
 
-func makeLitKey(lit *Literal) litKey {
+func makeLitKey(lit *UnitResLiteral) litKey {
 	parts := make([]string, len(lit.Atom.Args))
 	for i, a := range lit.Atom.Args {
 		parts[i] = rep(a)
@@ -217,7 +217,7 @@ func NewLitConsing() *LitConsing {
 }
 
 // LitID returns a unique id for a literal (hash-consing).
-func (lc *LitConsing) LitID(lit *Literal) int {
+func (lc *LitConsing) LitID(lit *UnitResLiteral) int {
 	key := makeLitKey(lit)
 	if id, ok := lc.litHash[key]; ok {
 		return id
@@ -232,7 +232,7 @@ func (lc *LitConsing) LitID(lit *Literal) int {
 
 // CanonizeLiteral renames variables to canonical constants __v0, __v1, ...
 // Returns the canonized literal and the substitution mapping old var names to new constants.
-func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Const) {
+func CanonizeLiteral(lit *UnitResLiteral) (*UnitResLiteral, map[string]*logic.Const) {
 	subs := make(map[string]*logic.Const)
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
@@ -246,11 +246,11 @@ func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Const) {
 			terms[i] = t
 		}
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...)), subs
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...)), subs
 }
 
 // CanonizeLiteralVars renames variables to canonical variables V0, V1, ...
-func CanonizeLiteralVars(lit *Literal) *Literal {
+func CanonizeLiteralVars(lit *UnitResLiteral) *UnitResLiteral {
 	subs := make(map[string]logic.Expr)
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
@@ -265,11 +265,11 @@ func CanonizeLiteralVars(lit *Literal) *Literal {
 			terms[i] = t
 		}
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
 
 // CanonizeLiteralUnique renames variables to canonical variables W0, W1, ...
-func CanonizeLiteralUnique(lit *Literal) *Literal {
+func CanonizeLiteralUnique(lit *UnitResLiteral) *UnitResLiteral {
 	subs := make(map[string]logic.Expr)
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
@@ -284,14 +284,14 @@ func CanonizeLiteralUnique(lit *Literal) *Literal {
 			terms[i] = t
 		}
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
 
 // ---------- Substitution helpers ----------
 
 // SubstituteLit applies a variable substitution to a literal.
 // subs maps variable names to replacement terms.
-func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
+func SubstituteLit(lit *UnitResLiteral, subs resolution.Env) *UnitResLiteral {
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
@@ -302,11 +302,11 @@ func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
 		}
 		terms[i] = t
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
 
 // SubstituteConstantsLit substitutes constants by name in a literal.
-func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Expr) *Literal {
+func SubstituteConstantsLit(lit *UnitResLiteral, subs map[string]logic.Expr) *UnitResLiteral {
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isConst(t) {
@@ -317,12 +317,12 @@ func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Expr) *Literal {
 		}
 		terms[i] = t
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
 
 // SubstituteConstantsClause substitutes constants in each literal of a clause.
-func SubstituteConstantsClause(cl []*Literal, subs map[string]logic.Expr) []*Literal {
-	result := make([]*Literal, len(cl))
+func SubstituteConstantsClause(cl []*UnitResLiteral, subs map[string]logic.Expr) []*UnitResLiteral {
+	result := make([]*UnitResLiteral, len(cl))
 	for i, lit := range cl {
 		result[i] = SubstituteConstantsLit(lit, subs)
 	}
@@ -371,7 +371,7 @@ func (n *IndexNode) getOrCreate(key string) *IndexNode {
 }
 
 // indexLookup navigates the index to the leaf for the given literal.
-func indexLookup(idx *Index, lit *Literal) *IndexNode {
+func indexLookup(idx *Index, lit *UnitResLiteral) *IndexNode {
 	polMap := idx[lit.Polarity]
 	rn := lit.Atom.RelName
 	node, ok := polMap[rn]
@@ -482,7 +482,7 @@ func (ur *UnitRes) findUnifyingRec(node *IndexNode, terms []logic.Expr, idx int)
 }
 
 // FindSubsumed finds index nodes whose literals are subsumed by lit.
-func (ur *UnitRes) FindSubsumed(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindSubsumed(idx *Index, lit *UnitResLiteral) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
@@ -492,7 +492,7 @@ func (ur *UnitRes) FindSubsumed(idx *Index, lit *Literal) []*IndexNode {
 }
 
 // FindSubsuming finds index nodes whose literals subsume lit.
-func (ur *UnitRes) FindSubsuming(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindSubsuming(idx *Index, lit *UnitResLiteral) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
@@ -502,7 +502,7 @@ func (ur *UnitRes) FindSubsuming(idx *Index, lit *Literal) []*IndexNode {
 }
 
 // FindUnifying finds index nodes whose literals unify with lit.
-func (ur *UnitRes) FindUnifying(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindUnifying(idx *Index, lit *UnitResLiteral) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
@@ -515,7 +515,7 @@ func (ur *UnitRes) FindUnifying(idx *Index, lit *Literal) []*IndexNode {
 
 // litRep returns the literal with its arguments replaced by their
 // representatives in the equational theory.
-func (ur *UnitRes) litRep(lit *Literal) *Literal {
+func (ur *UnitRes) litRep(lit *UnitResLiteral) *UnitResLiteral {
 	if ur.EquationalTheory == nil {
 		return lit
 	}
@@ -527,7 +527,7 @@ func (ur *UnitRes) litRep(lit *Literal) *Literal {
 			terms[i] = ur.EquationalTheory.Find(a)
 		}
 	}
-	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
+	return NewUnitResLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
 }
 
 // ---------- Subsumption ----------
@@ -550,7 +550,7 @@ func termSubsume(term1, term2 logic.Expr, env map[string]logic.Expr) bool {
 }
 
 // litSubsume tries to make lit1 subsume lit2 (env only operates on lit1 variables).
-func litSubsume(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
+func litSubsume(lit1, lit2 *UnitResLiteral, env map[string]logic.Expr) bool {
 	if lit1.Polarity != lit2.Polarity || lit1.Atom.RelName != lit2.Atom.RelName ||
 		len(lit1.Atom.Args) != len(lit2.Atom.Args) {
 		return false
@@ -564,7 +564,7 @@ func litSubsume(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
 }
 
 // atomSubsume checks if atom at1 subsumes at2 (at1 is more general).
-func atomSubsume(at1, at2 *resolution.Atom) bool {
+func atomSubsume(at1, at2 *resolution.ResolutionAtom) bool {
 	env := make(map[string]logic.Expr)
 	if at1.RelName != at2.RelName || len(at1.Args) != len(at2.Args) {
 		return false
@@ -578,16 +578,16 @@ func atomSubsume(at1, at2 *resolution.Atom) bool {
 }
 
 // litSubsumeModEq checks subsumption modulo the equational theory.
-func (ur *UnitRes) litSubsumeModEq(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
+func (ur *UnitRes) litSubsumeModEq(lit1, lit2 *UnitResLiteral, env map[string]logic.Expr) bool {
 	return litSubsume(ur.litRep(lit1), ur.litRep(lit2), env)
 }
 
 // ---------- Simplify / Tautology ----------
 
 // rewriteClause substitutes variable v with term t in each literal of a clause.
-func rewriteClause(cl []*Literal, v logic.Expr, t logic.Expr) []*Literal {
+func rewriteClause(cl []*UnitResLiteral, v logic.Expr, t logic.Expr) []*UnitResLiteral {
 	subs := resolution.Env{rep(v): t}
-	result := make([]*Literal, len(cl))
+	result := make([]*UnitResLiteral, len(cl))
 	for i, lit := range cl {
 		result[i] = SubstituteLit(lit, subs)
 	}
@@ -596,7 +596,7 @@ func rewriteClause(cl []*Literal, v logic.Expr, t logic.Expr) []*Literal {
 
 // SimplifyClause simplifies a clause by rewriting equalities and removing
 // vacuous/tautological literals.
-func SimplifyClause(cl []*Literal) []*Literal {
+func UnitResSimplifyClause(cl []*UnitResLiteral) []*UnitResLiteral {
 	for _, lit := range cl {
 		if lit.Polarity == 0 && lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 			for i := 0; i < 2; i++ {
@@ -609,14 +609,14 @@ func SimplifyClause(cl []*Literal) []*Literal {
 	}
 	if anyTaut(cl) {
 		// Return a single tautological literal.
-		return []*Literal{NewLiteral(1, resolution.NewAtom("=",
+		return []*UnitResLiteral{NewUnitResLiteral(1, resolution.NewAtom("=",
 			logic.NewConst("__true", logic.TopS),
 			logic.NewConst("__true", logic.TopS)))}
 	}
 	return removeDuplicatesAndVac(cl)
 }
 
-func anyTaut(cl []*Literal) bool {
+func anyTaut(cl []*UnitResLiteral) bool {
 	for _, lit := range cl {
 		if isTautLit(lit) {
 			return true
@@ -625,8 +625,8 @@ func anyTaut(cl []*Literal) bool {
 	return false
 }
 
-func removeDuplicatesAndVac(cl []*Literal) []*Literal {
-	var result []*Literal
+func removeDuplicatesAndVac(cl []*UnitResLiteral) []*UnitResLiteral {
+	var result []*UnitResLiteral
 	for _, lit := range cl {
 		if isVacLit(lit) {
 			continue
@@ -646,7 +646,7 @@ func removeDuplicatesAndVac(cl []*Literal) []*Literal {
 }
 
 // IsTautology returns true if the clause is tautological.
-func IsTautology(cl []*Literal) bool {
+func UnitResIsTautology(cl []*UnitResLiteral) bool {
 	for _, lit := range cl {
 		if isTautLit(lit) {
 			return true
@@ -668,7 +668,7 @@ func isSkolemName(name string) bool {
 }
 
 // keepAtom returns false if the atom or any of its arguments is Skolem.
-func keepAtom(atom *resolution.Atom) bool {
+func keepAtom(atom *resolution.ResolutionAtom) bool {
 	if isSkolemName(atom.RelName) {
 		return false
 	}
@@ -681,7 +681,7 @@ func keepAtom(atom *resolution.Atom) bool {
 }
 
 // keepLit returns keepAtom(lit.Atom).
-func keepLit(lit *Literal) bool {
+func keepLit(lit *UnitResLiteral) bool {
 	return keepAtom(lit.Atom)
 }
 
@@ -689,10 +689,10 @@ func keepLit(lit *Literal) bool {
 
 // UnitRes performs unit resolution with an equational theory.
 type UnitRes struct {
-	Clauses      [][]*Literal // multi-literal clauses
+	Clauses      [][]*UnitResLiteral // multi-literal clauses
 	index        *Index
-	UnitQueue    []*Literal // unit literals (propagated + pending)
-	Subsumed     []int      // indices of subsumed clauses
+	UnitQueue    []*UnitResLiteral // unit literals (propagated + pending)
+	Subsumed     []int             // indices of subsumed clauses
 	Unsat        bool
 	UsedUnits    int // number of units already propagated
 	Stack        []stackFrame
@@ -700,7 +700,7 @@ type UnitRes struct {
 	unitQueueGen []int // generation per unit
 	unitIDs      map[int]bool
 
-	DetectedSpecializations []*resolution.Atom
+	DetectedSpecializations []*resolution.ResolutionAtom
 
 	EquationalTheory *congclos.CongClos
 	unitTermIndex    map[string][]int // maps term rep -> unit queue indices
@@ -722,11 +722,11 @@ type stackFrame struct {
 }
 
 // NewUnitRes creates a UnitRes and adds all initial clauses.
-func NewUnitRes(clauses [][]*Literal) *UnitRes {
+func NewUnitRes(clauses [][]*UnitResLiteral) *UnitRes {
 	ur := &UnitRes{
 		index:             NewIndex(),
 		unitIDs:           make(map[int]bool),
-		EquationalTheory:  congclos.New(),
+		EquationalTheory:  congclos.NewCongClos(),
 		unitTermIndex:     make(map[string][]int),
 		litConsing:        NewLitConsing(),
 		NewSpecialization: true, // Python default
@@ -776,7 +776,7 @@ func (ur *UnitRes) Pop() {
 
 // ---------- Internal methods ----------
 
-func (ur *UnitRes) unitSubsumedBasic(lit *Literal) bool {
+func (ur *UnitRes) unitSubsumedBasic(lit *UnitResLiteral) bool {
 	subsuming := ur.FindSubsuming(ur.index, lit)
 	for _, node := range subsuming {
 		for _, litIdx := range node.Units {
@@ -789,7 +789,7 @@ func (ur *UnitRes) unitSubsumedBasic(lit *Literal) bool {
 	return false
 }
 
-func (ur *UnitRes) unitSubsumed(lit *Literal) bool {
+func (ur *UnitRes) unitSubsumed(lit *UnitResLiteral) bool {
 	if ur.unitSubsumedBasic(lit) {
 		return true
 	}
@@ -799,7 +799,7 @@ func (ur *UnitRes) unitSubsumed(lit *Literal) bool {
 	return false
 }
 
-func (ur *UnitRes) addClauseBasic(cl []*Literal, gen int) {
+func (ur *UnitRes) addClauseBasic(cl []*UnitResLiteral, gen int) {
 	n := len(cl)
 	if n == 0 {
 		ur.Unsat = true
@@ -830,7 +830,7 @@ func (ur *UnitRes) addClauseBasic(cl []*Literal, gen int) {
 }
 
 // AddClause adds a clause and applies hyper binary resolution with transitivity.
-func (ur *UnitRes) AddClause(cl []*Literal, gen int) {
+func (ur *UnitRes) AddClause(cl []*UnitResLiteral, gen int) {
 	ur.addClauseBasic(cl, gen)
 	// hyper binary resolution with transitivity axiom
 	if len(cl) == 2 && isGroundClause(cl) {
@@ -841,7 +841,7 @@ func (ur *UnitRes) AddClause(cl []*Literal, gen int) {
 					subs := map[string]logic.Expr{rep(lhs.Atom.Args[j]): lhs.Atom.Args[1-j]}
 					newRHS := SubstituteConstantsLit(rhs, subs)
 					if !LitEqual(rhs, newRHS) {
-						newCl := []*Literal{lhs, newRHS}
+						newCl := []*UnitResLiteral{lhs, newRHS}
 						if ur.Verbose {
 							fmt.Printf("applied transitivity: %v\n", cl)
 						}
@@ -853,7 +853,7 @@ func (ur *UnitRes) AddClause(cl []*Literal, gen int) {
 	}
 }
 
-func (ur *UnitRes) getWatching(lit *Literal) *IndexNode {
+func (ur *UnitRes) getWatching(lit *UnitResLiteral) *IndexNode {
 	return indexLookup(ur.index, lit)
 }
 
@@ -921,7 +921,7 @@ func removeInt(s []int, val int) []int {
 	return s
 }
 
-func (ur *UnitRes) updateEquationalTheory(lit *Literal) {
+func (ur *UnitRes) updateEquationalTheory(lit *UnitResLiteral) {
 	if lit.Polarity == 1 && lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		t0, t1 := lit.Atom.Args[0], lit.Atom.Args[1]
 		if isConst(t0) && isConst(t1) {
@@ -933,7 +933,7 @@ func (ur *UnitRes) updateEquationalTheory(lit *Literal) {
 	}
 }
 
-func (ur *UnitRes) unitSubsumedByUsed(lit *Literal) bool {
+func (ur *UnitRes) unitSubsumedByUsed(lit *UnitResLiteral) bool {
 	subsuming := ur.FindSubsuming(ur.index, lit)
 	for _, node := range subsuming {
 		for _, litIdx := range node.Units {
@@ -948,12 +948,12 @@ func (ur *UnitRes) unitSubsumedByUsed(lit *Literal) bool {
 	return false
 }
 
-func (ur *UnitRes) subsumedByUsedLit(a1, a2 interface{}, clause []*Literal) bool {
+func (ur *UnitRes) subsumedByUsedLit(a1, a2 interface{}, clause []*UnitResLiteral) bool {
 	for _, lit := range clause {
 		if ur.unitSubsumedByUsed(lit) {
 			return true
 		}
-		inv := &Literal{Polarity: 1 - lit.Polarity, Atom: lit.Atom}
+		inv := &UnitResLiteral{Polarity: 1 - lit.Polarity, Atom: lit.Atom}
 		if ur.unitSubsumedByUsed(inv) {
 			return true
 		}
@@ -961,7 +961,7 @@ func (ur *UnitRes) subsumedByUsedLit(a1, a2 interface{}, clause []*Literal) bool
 	return false
 }
 
-func (ur *UnitRes) allowEqs(lit *Literal, eqs []*resolution.Atom, isUnit bool, other interface{}) bool {
+func (ur *UnitRes) allowEqs(lit *UnitResLiteral, eqs []*resolution.ResolutionAtom, isUnit bool, other interface{}) bool {
 	if lit.Atom.RelName == "=" {
 		return len(eqs) == 0
 	}
@@ -982,7 +982,7 @@ func (ur *UnitRes) allowEqs(lit *Literal, eqs []*resolution.Atom, isUnit bool, o
 }
 
 // PropagateEquality propagates a positive ground equality literal.
-func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
+func (ur *UnitRes) PropagateEquality(lit *UnitResLiteral, gen int) {
 	lit = ur.litRep(lit)
 	if isTautLit(lit) {
 		return
@@ -996,7 +996,7 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 		subs := map[string]logic.Expr{rep(t0): t1}
 		lit3 := SubstituteConstantsLit(lit2, subs)
 		if !LitEqual(lit2, lit3) {
-			newCl := []*Literal{lit3}
+			newCl := []*UnitResLiteral{lit3}
 			if ur.Verbose {
 				fmt.Printf("rewrite! %s,%s -> %v\n", lit, lit2, newCl)
 			}
@@ -1021,23 +1021,23 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 }
 
 // PropagateLit performs unit resolution using a single literal.
-func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Expr) {
+func (ur *UnitRes) PropagateLit(lit *UnitResLiteral, gen int, specs map[string]logic.Expr) {
 	if ur.EquationalTheory != nil && isGroundEqualityLit(lit) {
 		ur.PropagateEquality(lit, gen)
 		return
 	}
 
 	// For equality literals, also consider the symmetric version
-	lits := []*Literal{lit}
+	lits := []*UnitResLiteral{lit}
 	if lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
-		lits = append(lits, NewLiteral(lit.Polarity,
+		lits = append(lits, NewUnitResLiteral(lit.Polarity,
 			resolution.NewAtom("=", lit.Atom.Args[1], lit.Atom.Args[0])))
 	}
 
 	for _, lit := range lits {
 		keep := keepLit(lit)
 		// Find clauses that might resolve with the negation of lit
-		negLit := &Literal{Polarity: 1 - lit.Polarity, Atom: lit.Atom}
+		negLit := &UnitResLiteral{Polarity: 1 - lit.Polarity, Atom: lit.Atom}
 		indices := ur.FindUnifying(ur.index, negLit) // snapshot
 		lit = ur.litRep(CanonizeLiteralUnique(lit))
 
@@ -1069,20 +1069,20 @@ func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Ex
 						ur.deindex(i)
 						ur.Subsumed = append(ur.Subsumed, i)
 					}
-					var newCl []*Literal
+					var newCl []*UnitResLiteral
 					for k, lit1 := range cl {
 						if k != j {
 							newCl = append(newCl, SubstituteLit(lit1, subs))
 						}
 					}
 					for _, eq := range eqs {
-						newCl = append(newCl, NewLiteral(0, eq))
+						newCl = append(newCl, NewUnitResLiteral(0, eq))
 					}
 					if !ur.NewSpecialization && specs != nil {
 						newCl = SubstituteConstantsClause(newCl, specs)
 					}
-					newCl = SimplifyClause(newCl)
-					if !IsTautology(newCl) && !ur.subsumedByUsedLit(lit, cl, newCl) {
+					newCl = UnitResSimplifyClause(newCl)
+					if !UnitResIsTautology(newCl) && !ur.subsumedByUsedLit(lit, cl, newCl) {
 						if ur.Verbose {
 							fmt.Printf("%s,%v -> %v\n", lit, cl, newCl)
 						}
@@ -1119,7 +1119,7 @@ func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Ex
 	}
 }
 
-func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDiseqs bool) {
+func (ur *UnitRes) resolveUnits(lit *UnitResLiteral, units []int, gen int, allowUnitDiseqs bool) {
 	unitsCopy := copyInts(units)
 	for _, litIdx := range unitsCopy {
 		if litIdx >= len(ur.UnitQueue) {
@@ -1129,9 +1129,9 @@ func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDis
 		match, _, eqs := resolution.MGUEq(lit.Atom, lit2.Atom)
 		if match && (ur.allowEqs(lit, eqs, true, nil) ||
 			(allowUnitDiseqs && len(eqs) == 1 && keepAtom(eqs[0]))) {
-			var newCl []*Literal
+			var newCl []*UnitResLiteral
 			for _, eq := range eqs {
-				newCl = append(newCl, NewLiteral(0, eq))
+				newCl = append(newCl, NewUnitResLiteral(0, eq))
 			}
 			if !ur.subsumedByUsedLit(lit, lit2, newCl) {
 				if ur.Verbose {
@@ -1165,7 +1165,7 @@ func (ur *UnitRes) Propagate(specs map[string]logic.Expr) {
 }
 
 // UsedUnitLiterals returns the unit literals that have been propagated.
-func (ur *UnitRes) UsedUnitLiterals() []*Literal {
+func (ur *UnitRes) UsedUnitLiterals() []*UnitResLiteral {
 	if ur.UsedUnits > len(ur.UnitQueue) {
 		return ur.UnitQueue
 	}

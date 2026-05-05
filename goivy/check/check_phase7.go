@@ -12,9 +12,9 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 )
 
-// GuiArtHook is an alias for module.GuiArtHook so check-package callers can
+// CheckGuiArtHook is an alias for module.GuiArtHook so check-package callers can
 // declare hooks without importing module by name.
-type GuiArtHook = module.GuiArtHook
+type CheckGuiArtHook = module.GuiArtHook
 
 // GuiArt launches the GUI for an analysis graph. Corresponds to Python's
 // gui_art (ivy_check.py:86-102).
@@ -92,7 +92,7 @@ func GuiArt(mod *module.Module, target interface{}, isCti *module.Clauses) error
 	if isCti != nil {
 		fmt.Println("CTI clauses:", isCti)
 	}
-	fmt.Println("GUI mode not available in CLI; register a check.GuiArtHook or use --trace")
+	fmt.Println("GUI mode not available in CLI; register a check.CheckGuiArtHook or use --trace")
 	return nil
 }
 

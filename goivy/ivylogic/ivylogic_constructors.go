@@ -259,7 +259,7 @@ func alphaRenameRec(nmap map[string]string, fmla lg.Expr, vmap map[lg.NodeKey]lg
 		}
 		for _, nv := range newVars {
 			if forbidden[lg.Key(nv)] {
-				return nil, &lu.CaptureError{Variables: []*lg.Variable{nv}}
+				return nil, &lu.LogicUtilCaptureError{Variables: []*lg.Variable{nv}}
 			}
 		}
 

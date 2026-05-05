@@ -82,9 +82,9 @@ func TestIsSkolem(t *testing.T) {
 		{"a__b", true},
 	}
 	for _, tt := range tests {
-		got := IsSkolem(tt.name)
+		got := TraceIsSkolem(tt.name)
 		if got != tt.expect {
-			t.Errorf("IsSkolem(%q) = %v, want %v", tt.name, got, tt.expect)
+			t.Errorf("TraceIsSkolem(%q) = %v, want %v", tt.name, got, tt.expect)
 		}
 	}
 }
@@ -184,7 +184,7 @@ func TestTraceBaseEndWithSub(t *testing.T) {
 func TestPretty(t *testing.T) {
 	// Test truncation: maxLines=3 means lines[0:2] + "..."
 	s := "line1\nline2\nline3\nline4\nline5\nline6"
-	result := Pretty(s, 3)
+	result := TracePretty(s, 3)
 	lines := strings.Split(result, "\n")
 	if len(lines) != 3 { // 2 original + "..."
 		t.Errorf("expected 3 lines (2 + ...), got %d: %q", len(lines), result)
@@ -197,7 +197,7 @@ func TestPretty(t *testing.T) {
 func TestPrettyFormatting(t *testing.T) {
 	// Test brace indentation: "a { b; c }" should be reformatted
 	s := "a { b; c }"
-	result := Pretty(s, 0)
+	result := TracePretty(s, 0)
 	if !strings.Contains(result, "    b") {
 		t.Errorf("expected indented content inside braces, got %q", result)
 	}
@@ -205,7 +205,7 @@ func TestPrettyFormatting(t *testing.T) {
 
 func TestPrettyShort(t *testing.T) {
 	s := "line1\nline2"
-	result := Pretty(s, 5)
+	result := TracePretty(s, 5)
 	if result != s {
 		t.Errorf("short string should be unchanged, got %q", result)
 	}
@@ -213,17 +213,17 @@ func TestPrettyShort(t *testing.T) {
 
 func TestLabelFromAction(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
-	label := LabelFromAction(action, nil)
+	label := TraceLabelFromAction(action, nil)
 	if label == "" {
-		t.Error("LabelFromAction should return non-empty string")
+		t.Error("TraceLabelFromAction should return non-empty string")
 	}
 }
 
 func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
 	action.SetLabel("call ext")
-	if got := LabelFromAction(action, nil); got != "call ext\n" {
-		t.Fatalf("LabelFromAction() = %q, want %q", got, "call ext\n")
+	if got := TraceLabelFromAction(action, nil); got != "call ext\n" {
+		t.Fatalf("TraceLabelFromAction() = %q, want %q", got, "call ext\n")
 	}
 }
 

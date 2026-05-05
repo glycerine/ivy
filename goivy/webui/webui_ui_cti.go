@@ -352,7 +352,7 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses
 
 	// Python: if 'initialize' in im.module.actions: ...
 	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {
-		if act, ok2 := initAct.(actions.Action); ok2 {
+		if act, ok2 := initAct.(actions.ActionsAction); ok2 {
 			var err error
 			post, err = ag.Execute(true, act, post, nil, "initialize")
 			if err != nil {
@@ -415,7 +415,7 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 	axioms := ui.Mod.BackgroundTheory(nil)
 
 	// Python: uc = universe_constraint(self.g.states[0])
-	interpState := &interp.State{Universe: ui.AG.States[0].Universe}
+	interpState := &interp.InterpState{Universe: ui.AG.States[0].Universe}
 	uc := interp.UniverseConstraint(interpState)
 	axiomsUc := module.AndClausesTyped(axioms, uc)
 
@@ -437,7 +437,7 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 		return "", fmt.Errorf("no model found (UNSAT)")
 	}
 
-	isSkolemConst := func(c *lg.Const) bool { return trace.IsSkolem(c.Name) }
+	isSkolemConst := func(c *lg.Const) bool { return trace.TraceIsSkolem(c.Name) }
 	diag, err := ui.Solver.ClausesModelToDiagram(rev, isSkolemConst, axioms)
 	if err != nil {
 		return "", fmt.Errorf("clauses_model_to_diagram failed: %w", err)

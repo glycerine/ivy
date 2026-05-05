@@ -313,7 +313,7 @@ func TestUnrollAction_FormalsPreserved(t *testing.T) {
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	act := result.(actions.Action)
+	act := result.(actions.ActionsAction)
 	fp := act.GetFormalParams()
 	fr := act.GetFormalReturns()
 	if len(fp) != 1 || fp[0].Name != "p" {
@@ -350,12 +350,12 @@ func TestCheckIsolateWithUnroll_WhileAction(t *testing.T) {
 	}
 }
 
-func containsWhileAction(act actions.Action) bool {
+func containsWhileAction(act actions.ActionsAction) bool {
 	if _, ok := act.(*actions.WhileAction); ok {
 		return true
 	}
 	for _, arg := range act.ActionArgs() {
-		if child, ok := arg.(actions.Action); ok {
+		if child, ok := arg.(actions.ActionsAction); ok {
 			if containsWhileAction(child) {
 				return true
 			}

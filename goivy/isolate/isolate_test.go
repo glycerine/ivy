@@ -27,7 +27,7 @@ func mkModule() *module.Module {
 	return m
 }
 
-func mkModuleWithActions(acts map[string]actions.Action) *module.Module {
+func mkModuleWithActions(acts map[string]actions.ActionsAction) *module.Module {
 	m := mkModule()
 	for name, act := range acts {
 		m.Actions.Set(name, act)
@@ -74,7 +74,7 @@ func TestNewComponentInfo(t *testing.T) {
 
 func TestLookupAction(t *testing.T) {
 	seq := actions.NewSequence()
-	m := mkModuleWithActions(map[string]actions.Action{"foo": seq})
+	m := mkModuleWithActions(map[string]actions.ActionsAction{"foo": seq})
 
 	act, err := LookupAction(m, "foo")
 	if err != nil {
@@ -468,7 +468,7 @@ func TestHasSideEffectNoEffect(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
 	seq := actions.NewSequence()
-	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
+	actionMap := actionsInsMap(map[string]actions.ActionsAction{"foo": seq})
 
 	if HasSideEffect(m, "foo", actionMap) {
 		t.Error("empty sequence should have no side effect")
@@ -480,7 +480,7 @@ func TestHasSideEffectWithAssert(t *testing.T) {
 	m.Sig = il.NewSig()
 	assertAct := actions.NewAssertAction(mkConst("p"))
 	seq := actions.NewSequence(assertAct)
-	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
+	actionMap := actionsInsMap(map[string]actions.ActionsAction{"foo": seq})
 
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("action with assert should have side effect")
@@ -494,7 +494,7 @@ func TestHasSideEffectWithSigModification(t *testing.T) {
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	seq := actions.NewSequence(assign)
-	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
+	actionMap := actionsInsMap(map[string]actions.ActionsAction{"foo": seq})
 
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("assignment to sig symbol should have side effect")
@@ -512,7 +512,7 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	call := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("bar"))
 	fooSeq := actions.NewSequence(call)
 
-	actionMap := actionsInsMap(map[string]actions.Action{
+	actionMap := actionsInsMap(map[string]actions.ActionsAction{
 		"foo": fooSeq,
 		"bar": barSeq,
 	})
@@ -523,8 +523,8 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 }
 
 // actionsInsMap converts a map to an InsMap for test compatibility.
-func actionsInsMap(m map[string]actions.Action) *iu.InsMap[string, actions.Action] {
-	im := iu.NewInsMap[string, actions.Action]()
+func actionsInsMap(m map[string]actions.ActionsAction) *iu.InsMap[string, actions.ActionsAction] {
+	im := iu.NewInsMap[string, actions.ActionsAction]()
 	for k, v := range m {
 		im.Set(k, v)
 	}
@@ -742,7 +742,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	}
 
 	strippedIface := m.Actions.Get("server.do")
-	stripped, ok := strippedIface.(actions.Action)
+	stripped, ok := strippedIface.(actions.ActionsAction)
 	if !ok {
 		t.Fatal("action should still be an Action after stripping")
 	}

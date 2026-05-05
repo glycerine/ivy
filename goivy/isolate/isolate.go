@@ -66,7 +66,7 @@ func (r IsolateRole) String() string {
 type ComponentInfo struct {
 	Name    string
 	Role    IsolateRole
-	Actions map[string]actions.Action
+	Actions map[string]actions.ActionsAction
 	Axioms  []*ast.LabeledFormula
 }
 
@@ -75,13 +75,13 @@ func NewComponentInfo(name string, role IsolateRole) *ComponentInfo {
 	return &ComponentInfo{
 		Name:    name,
 		Role:    role,
-		Actions: make(map[string]actions.Action),
+		Actions: make(map[string]actions.ActionsAction),
 	}
 }
 
 // LookupAction finds an action by name in the module.
 // Returns an error if the action is not found.
-func LookupAction(mod *module.Module, name string) (actions.Action, error) {
+func LookupAction(mod *module.Module, name string) (actions.ActionsAction, error) {
 	act, ok := mod.Actions.Get2(name)
 	if !ok {
 		return nil, fmt.Errorf("action %s undefined", name)
@@ -95,7 +95,7 @@ func LookupAction(mod *module.Module, name string) (actions.Action, error) {
 // mod.mixins[actname] creates the key. These auto-vivified entries
 // accumulate across multiple create_isolate calls and must be
 // visible in subsequent mod.Mixins.All() iterations.
-func mixinsAutoVivify(mod *module.Module, actname string) []MixinDef {
+func mixinsAutoVivify(mod *module.Module, actname string) []IsolateMixinIface {
 	v, ok := mod.Mixins.Get2(actname)
 	if !ok {
 		mod.Mixins.Set(actname, nil)
@@ -107,7 +107,7 @@ func mixinsAutoVivify(mod *module.Module, actname string) []MixinDef {
 // AddMixins applies before/after mixins to an action.
 // The useMixin predicate controls which mixins are applied (by mixer name).
 // If useMixin is nil, all mixins are applied.
-func AddMixins(mod *module.Module, actname string, action actions.Action, useMixin func(string) bool) actions.Action {
+func AddMixins(mod *module.Module, actname string, action actions.ActionsAction, useMixin func(string) bool) actions.ActionsAction {
 	isoCfg := mod.Cfg.IsolateCfg
 	res := action
 	if isoCfg.CreateImports {
@@ -138,13 +138,13 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 	return res
 }
 
-// MixinDef is an alias for module.MixinDef, kept for convenience within
+// IsolateMixinIface is an alias for module.MixinDef, kept for convenience within
 // the isolate package.
-type MixinDef = module.MixinDef
+type IsolateMixinIface = module.MixinDef
 
 // SummarizeAction creates an abstract version of an action: just formals,
 // no body. In "check" mode, in/out parameters are havoced.
-func SummarizeAction(action actions.Action, isoCfg ...*module.IsolateConfig) actions.Action {
+func SummarizeAction(action actions.ActionsAction, isoCfg ...*module.IsolateConfig) actions.ActionsAction {
 	res := actions.NewSequence()
 	res.SetLineno(action.GetLineno())
 	res.SetFormalParams(action.GetFormalParams())
@@ -185,7 +185,7 @@ func SummarizeAction(action actions.Action, isoCfg ...*module.IsolateConfig) act
 
 // EmptyClone creates an empty action (Sequence) preserving the original's
 // location and formal parameters/returns.
-func EmptyClone(action actions.Action) actions.Action {
+func EmptyClone(action actions.ActionsAction) actions.ActionsAction {
 	res := actions.NewSequence()
 	res.SetLineno(action.GetLineno())
 	actions.CopyFormalsTo(action, res)
@@ -344,10 +344,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.IsolateInfo = &module.IsolateInfo{}
 
 	// Process implementation mixins
-	implMixins := iu.NewInsMap[string, []MixinDef]()
+	implMixins := iu.NewInsMap[string, []IsolateMixinIface]()
 	for actname, ms := range mod.Mixins.All() {
-		var implements []MixinDef
-		var beforeAfter []MixinDef
+		var implements []IsolateMixinIface
+		var beforeAfter []IsolateMixinIface
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implements = append(implements, m)
@@ -406,13 +406,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Mixin classification predicates
 	afterMixins := func(m interface{}) bool {
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			return mi.IsAfter()
 		}
 		return false
 	}
 	beforeMixins := func(m interface{}) bool {
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			return !mi.IsAfter()
 		}
 		return false
@@ -429,7 +429,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// ext_assumes: for verified external actions, assume asserts in before mixins
 	extAssumes := func(m interface{}) map[string]bool {
 		kinds := makeKindSet("require")
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			if beforeMixins(m) && !delegatedToVerified(mi.Mixer()) {
 				kinds["assert"] = true
 			}
@@ -440,7 +440,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// int_assumes: for unverified internal actions, assume asserts in after mixins
 	intAssumes := func(m interface{}) map[string]bool {
 		kinds := make(map[string]bool)
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			if !VStartsWithEqSome(mi.Mixer(), verified, mod, implementationMap) {
 				kinds["ensure"] = true
 			}
@@ -454,7 +454,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// ext_assumes_no_ver: for unverified external, everything is assumed
 	extAssumesNoVer := func(m interface{}) map[string]bool {
 		kinds := makeKindSet("ensure", "require")
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			if !delegatedToVerified(mi.Mixer()) {
 				kinds["assert"] = true
 			}
@@ -465,7 +465,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// int_sum_assumes: for internal summarized actions
 	intSumAssumes := func(m interface{}) map[string]bool {
 		kinds := make(map[string]bool)
-		if mi, ok := m.(MixinDef); ok {
+		if mi, ok := m.(IsolateMixinIface); ok {
 			if !VStartsWithEqSome(mi.Mixer(), verified, mod, implementationMap) {
 				kinds["ensure"] = true
 			}
@@ -480,7 +480,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	noMixins := func(m interface{}) map[string]bool { return nil }
 
 	// mod_mixin: identity
-	identityModMixin := func(mixin interface{}, m actions.Action) actions.Action { return m }
+	identityModMixin := func(mixin interface{}, m actions.ActionsAction) actions.ActionsAction { return m }
 
 	// Python: prefix_call_ext(name) = 'ext:'+name if startswith_some(name,verified,mod) else name
 	// Only prefix calls whose targets are in the verified set.
@@ -492,9 +492,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// ext_mod_mixin: prefix calls for unverified mixins
-	extModMixin := func(ea func(interface{}) map[string]bool) func(interface{}, actions.Action) actions.Action {
-		return func(mixin interface{}, m actions.Action) actions.Action {
-			if mi, ok := mixin.(MixinDef); ok {
+	extModMixin := func(ea func(interface{}) map[string]bool) func(interface{}, actions.ActionsAction) actions.ActionsAction {
+		return func(mixin interface{}, m actions.ActionsAction) actions.ActionsAction {
+			if mi, ok := mixin.(IsolateMixinIface); ok {
 				if StartsWithSome(mi.Mixer(), verified, mod, implementationMap) && ea(mixin) == nil {
 					return m
 				}
@@ -517,7 +517,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
-	newActions := iu.NewInsMap[string, actions.Action]()
+	newActions := iu.NewInsMap[string, actions.ActionsAction]()
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions.All() {
@@ -526,7 +526,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		pre := StartsWithEqSome(actname, present, mod, implementationMap)
 
 		if pre {
-			var extAction, intAction actions.Action
+			var extAction, intAction actions.ActionsAction
 			if !ver || delegates[actname] {
 				// Not verified or delegated: convert all assertions in the action
 				extKinds := makeKindSet("assert", "ensure", "require")
@@ -585,7 +585,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Python: for mixin in mod.mixins[actname] — auto-vivifies
 		if mixins := mixinsAutoVivify(mod, actname); len(mixins) > 0 {
 			for _, mx := range mixins {
-				if mi, ok := mx.(MixinDef); ok {
+				if mi, ok := mx.(IsolateMixinIface); ok {
 					if useMixin(mi.Mixer()) {
 						mixerAct, _ := LookupAction(mod, mi.Mixer())
 						mod.IsolateInfo.Monitors = append(mod.IsolateInfo.Monitors,
@@ -607,7 +607,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if action == nil {
 			return
 		}
-		var act actions.Action
+		var act actions.ActionsAction
 		if !ver || delegates[actname] {
 			act = actions.AssertToAssume(action, makeKindSet("assert", "require"))
 			act = actions.PrefixCalls(act, "ext:")
@@ -617,7 +617,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Apply before mixins
 		// Python: for mixin in mod.mixins[actname] — auto-vivifies
 		for _, mx := range mixinsAutoVivify(mod, actname) {
-			mi, ok := mx.(MixinDef)
+			mi, ok := mx.(IsolateMixinIface)
 			if !ok {
 				continue
 			}
@@ -668,7 +668,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				// Python: mod.mixins[c] — auto-vivifies
 				if mixins := mixinsAutoVivify(mod, c); len(mixins) > 0 {
 					for _, mx := range mixins {
-						if mi, ok := mx.(MixinDef); ok {
+						if mi, ok := mx.(IsolateMixinIface); ok {
 							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {
 								hasMixinPresent = true
 								break
@@ -820,7 +820,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Convert properties not being verified to axioms ---
 
 	exactPresent := make(map[string]bool)
-	if idef, ok := iso.(IsolateDefInterface); ok {
+	if idef, ok := iso.(IsolateDefIface); ok {
 		for _, p := range idef.PresentNames() {
 			exactPresent[p] = true
 		}
@@ -943,7 +943,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		xtracer.Trace("isolate.cone_root actname=%s", name)
 	}
 	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
-	filteredActions := iu.NewInsMap[string, actions.Action]()
+	filteredActions := iu.NewInsMap[string, actions.ActionsAction]()
 	for name, act := range newActions.All() {
 		if cone[name] {
 			xtracer.Trace("isolate.cone_survived actname=%s type=%s", name, actions.ActionTypeName(act))
@@ -1776,7 +1776,7 @@ func addSortDeps(s lg.Sort, allSorts map[string]bool, addDeps func(string)) {
 
 // afterMixinsFunc is a named version of afterMixins for use as a parameter.
 var afterMixinsFunc = func(m interface{}) map[string]bool {
-	if mi, ok := m.(MixinDef); ok {
+	if mi, ok := m.(IsolateMixinIface); ok {
 		if mi.IsAfter() {
 			return makeKindSet("assert", "require", "ensure")
 		}
@@ -1793,11 +1793,11 @@ func formulaToClauses(fmla lg.Expr) *module.Clauses {
 }
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
-func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []MixinDef],
+func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins *iu.InsMap[string, []IsolateMixinIface],
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
-	_, isIDI := iso.(IsolateDefInterface)
+	_, isIDI := iso.(IsolateDefIface)
 	xtracer.Trace("strip.stripIsolateWrapper isIsolateDefInterface=%v", isIDI)
-	if idef, ok := iso.(IsolateDefInterface); ok {
+	if idef, ok := iso.(IsolateDefIface); ok {
 		err := StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "isolate.stripIsolateWrapper ERROR err=%v\n", err)

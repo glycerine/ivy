@@ -30,23 +30,23 @@ func unintSort(name string) lg.Sort {
 	return &lg.UninterpretedSort{Name: name}
 }
 
-// --- ForAll / Exists ---
+// --- CheckForAll / CheckExists ---
 
 func TestForAllEmpty(t *testing.T) {
 	body := lg.True
-	result := ForAll(nil, body)
+	result := CheckForAll(nil, body)
 	if result != body {
-		t.Error("ForAll with nil vars should return body unchanged")
+		t.Error("CheckForAll with nil vars should return body unchanged")
 	}
 }
 
 func TestForAllWithVars(t *testing.T) {
 	v := boolVar("X")
 	body := lg.True
-	result := ForAll([]*lg.Variable{v}, body)
+	result := CheckForAll([]*lg.Variable{v}, body)
 	fa, ok := result.(*lg.ForAll)
 	if !ok {
-		t.Fatalf("expected ForAll, got %T", result)
+		t.Fatalf("expected CheckForAll, got %T", result)
 	}
 	if len(fa.Variables) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(fa.Variables))
@@ -55,30 +55,30 @@ func TestForAllWithVars(t *testing.T) {
 
 func TestExistsEmpty(t *testing.T) {
 	body := lg.True
-	result := Exists(nil, body)
+	result := CheckExists(nil, body)
 	if result != body {
-		t.Error("Exists with nil vars should return body unchanged")
+		t.Error("CheckExists with nil vars should return body unchanged")
 	}
 }
 
 func TestExistsWithVars(t *testing.T) {
 	v := boolVar("X")
 	body := lg.True
-	result := Exists([]*lg.Variable{v}, body)
+	result := CheckExists([]*lg.Variable{v}, body)
 	ex, ok := result.(*lg.Exists)
 	if !ok {
-		t.Fatalf("expected Exists, got %T", result)
+		t.Fatalf("expected CheckExists, got %T", result)
 	}
 	if len(ex.Variables) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(ex.Variables))
 	}
 }
 
-// --- OldOf ---
+// --- CheckOldOf ---
 
 func TestOldOfConst(t *testing.T) {
 	c := boolConst("foo")
-	result := OldOf(c)
+	result := CheckOldOf(c)
 	rc, ok := result.(*lg.Const)
 	if !ok {
 		t.Fatalf("expected Const, got %T", result)
@@ -91,7 +91,7 @@ func TestOldOfConst(t *testing.T) {
 func TestOldOfNot(t *testing.T) {
 	c := boolConst("bar")
 	n := &lg.Not{Body: c}
-	result := OldOf(n)
+	result := CheckOldOf(n)
 	not, ok := result.(*lg.Not)
 	if !ok {
 		t.Fatalf("expected Not, got %T", result)
@@ -109,7 +109,7 @@ func TestOldOfAnd(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
 	and := &lg.And{Terms: []lg.Expr{a, b}}
-	result := OldOf(and)
+	result := CheckOldOf(and)
 	ra, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -123,7 +123,7 @@ func TestOldOfOr(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
 	or := &lg.Or{Terms: []lg.Expr{a, b}}
-	result := OldOf(or)
+	result := CheckOldOf(or)
 	_, ok := result.(*lg.Or)
 	if !ok {
 		t.Fatalf("expected Or, got %T", result)
@@ -134,7 +134,7 @@ func TestOldOfImplies(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
 	imp := &lg.Implies{T1: a, T2: b}
-	result := OldOf(imp)
+	result := CheckOldOf(imp)
 	ri, ok := result.(*lg.Implies)
 	if !ok {
 		t.Fatalf("expected Implies, got %T", result)
@@ -148,10 +148,10 @@ func TestOldOfForAll(t *testing.T) {
 	v := boolVar("X")
 	body := boolConst("P")
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: body}
-	result := OldOf(fa)
+	result := CheckOldOf(fa)
 	rfa, ok := result.(*lg.ForAll)
 	if !ok {
-		t.Fatalf("expected ForAll, got %T", result)
+		t.Fatalf("expected CheckForAll, got %T", result)
 	}
 	if rfa.Body.(*lg.Const).Name != "old_P" {
 		t.Error("body not renamed")
@@ -159,9 +159,9 @@ func TestOldOfForAll(t *testing.T) {
 }
 
 func TestOldOfNil(t *testing.T) {
-	result := OldOf(nil)
+	result := CheckOldOf(nil)
 	if result != nil {
-		t.Error("OldOf(nil) should return nil")
+		t.Error("CheckOldOf(nil) should return nil")
 	}
 }
 
@@ -169,7 +169,7 @@ func TestOldOfEq(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
 	eq := &lg.Eq{T1: a, T2: b}
-	result := OldOf(eq)
+	result := CheckOldOf(eq)
 	req, ok := result.(*lg.Eq)
 	if !ok {
 		t.Fatalf("expected Eq, got %T", result)
@@ -183,7 +183,7 @@ func TestOldOfIff(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
 	iff := &lg.Iff{T1: a, T2: b}
-	result := OldOf(iff)
+	result := CheckOldOf(iff)
 	_, ok := result.(*lg.Iff)
 	if !ok {
 		t.Fatalf("expected Iff, got %T", result)
@@ -194,10 +194,10 @@ func TestOldOfExists(t *testing.T) {
 	v := boolVar("X")
 	body := boolConst("P")
 	ex := &lg.Exists{Variables: []*lg.Variable{v}, Body: body}
-	result := OldOf(ex)
+	result := CheckOldOf(ex)
 	rex, ok := result.(*lg.Exists)
 	if !ok {
-		t.Fatalf("expected Exists, got %T", result)
+		t.Fatalf("expected CheckExists, got %T", result)
 	}
 	if rex.Body.(*lg.Const).Name != "old_P" {
 		t.Error("body not renamed")
@@ -809,9 +809,9 @@ func FuzzOldOf(f *testing.F) {
 	f.Add("")
 	f.Fuzz(func(t *testing.T, name string) {
 		c := lg.NewConst(name, lg.Boolean)
-		result := OldOf(c)
+		result := CheckOldOf(c)
 		if result == nil {
-			t.Error("OldOf should not return nil")
+			t.Error("CheckOldOf should not return nil")
 		}
 		rc, ok := result.(*lg.Const)
 		if !ok {

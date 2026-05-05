@@ -15,19 +15,18 @@ import (
 	"strings"
 )
 
-// Action is defined in module/action.go. This type alias allows existing code
-// in this package to use 'Action' without the module prefix.
-type Action = module.Action
-
-// ActionBase is defined in module/action.go.
-type ActionBase = module.ActionBase
+// ActionsAction is the package-local/exported alias for module.Action.
+// The renamed alias avoids a flat-package collision during the uni-package merge.
+type ActionsAction = module.Action
 
 // Package-local forwarding for unexported helpers.
-func toAction(n lg.Expr) (Action, bool)          { return module.ToAction(n) }
-func defaultIterCalls(args []lg.Expr) []string   { return module.DefaultIterCalls(args) }
-func defaultIterSubactions(self Action) []Action { return module.DefaultIterSubactions(self) }
-func nodeSliceStr(nodes []lg.Expr) string        { return module.NodeSliceStr(nodes) }
-func copyNodes(nodes []lg.Expr) []lg.Expr        { return module.CopyNodes(nodes) }
+func toAction(n lg.Expr) (ActionsAction, bool) { return module.ToAction(n) }
+func defaultIterCalls(args []lg.Expr) []string { return module.DefaultIterCalls(args) }
+func defaultIterSubactions(self ActionsAction) []ActionsAction {
+	return module.DefaultIterSubactions(self)
+}
+func nodeSliceStr(nodes []lg.Expr) string { return module.NodeSliceStr(nodes) }
+func copyNodes(nodes []lg.Expr) []lg.Expr { return module.CopyNodes(nodes) }
 
 // --- Schema ---
 
@@ -118,7 +117,7 @@ func (s *Schema) Instantiate(params []lg.Expr) {
 
 // Sequence represents a sequence of actions executed in order.
 type Sequence struct {
-	ActionBase
+	module.ActionBase
 	Elems []lg.Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
@@ -128,7 +127,7 @@ func NewSequence(args ...lg.Expr) *Sequence {
 
 func (s *Sequence) Name() string          { return "sequence" }
 func (s *Sequence) ActionArgs() []lg.Expr { return s.Elems }
-func (s *Sequence) ActionClone(args []lg.Expr) Action {
+func (s *Sequence) ActionClone(args []lg.Expr) ActionsAction {
 	r := &Sequence{ActionBase: s.ActionBase, Elems: copyNodes(args)}
 	return r
 }
@@ -139,14 +138,14 @@ func (s *Sequence) String() string {
 	}
 	return "{" + strings.Join(parts, "; ") + "}"
 }
-func (s *Sequence) IterCalls() []string      { return defaultIterCalls(s.Elems) }
-func (s *Sequence) IterSubactions() []Action { return defaultIterSubactions(s) }
+func (s *Sequence) IterCalls() []string             { return defaultIterCalls(s.Elems) }
+func (s *Sequence) IterSubactions() []ActionsAction { return defaultIterSubactions(s) }
 
 // --- AssumeAction ---
 
 // AssumeAction assumes a formula holds.
 type AssumeAction struct {
-	ActionBase
+	module.ActionBase
 	Formula lg.Expr
 	LF      *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
 	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
@@ -168,20 +167,20 @@ func (a *AssumeAction) SetLF(lf *ast.LabeledFormula) { a.LF = lf }
 
 func (a *AssumeAction) Name() string          { return "assume" }
 func (a *AssumeAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Formula} }
-func (a *AssumeAction) ActionClone(args []lg.Expr) Action {
+func (a *AssumeAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
 }
 func (a *AssumeAction) String() string {
 	return "assume " + fmt.Sprint(a.Formula)
 }
-func (a *AssumeAction) IterCalls() []string      { return nil }
-func (a *AssumeAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *AssumeAction) IterCalls() []string             { return nil }
+func (a *AssumeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- AssertAction ---
 
 // AssertAction asserts a formula (can fail verification).
 type AssertAction struct {
-	ActionBase
+	module.ActionBase
 	Formula lg.Expr
 	LF      *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
 	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
@@ -210,7 +209,7 @@ func (a *AssertAction) ActionArgs() []lg.Expr {
 	}
 	return []lg.Expr{a.Formula}
 }
-func (a *AssertAction) ActionClone(args []lg.Expr) Action {
+func (a *AssertAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -220,8 +219,8 @@ func (a *AssertAction) ActionClone(args []lg.Expr) Action {
 func (a *AssertAction) String() string {
 	return "assert " + fmt.Sprint(a.Formula)
 }
-func (a *AssertAction) IterCalls() []string      { return nil }
-func (a *AssertAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *AssertAction) IterCalls() []string             { return nil }
+func (a *AssertAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- RequiresAction ---
 
@@ -237,8 +236,8 @@ func NewRequiresAction(fmla lg.Expr) *RequiresAction {
 
 // Python: RequiresAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *RequiresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
-func (a *RequiresAction) ActionClone(args []lg.Expr) Action {
+func (a *RequiresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *RequiresAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -260,8 +259,8 @@ func NewEnsuresAction(fmla lg.Expr) *EnsuresAction {
 
 // Python: EnsuresAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *EnsuresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
-func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
+func (a *EnsuresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *EnsuresAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -273,7 +272,7 @@ func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
 // subclasses (RequiresAction, EnsuresAction, SubgoalAction).
 // This mirrors Python's isinstance(action, ia.AssertAction) which matches
 // all subclasses due to inheritance.
-func IsAssertLike(action Action) bool {
+func IsAssertLike(action ActionsAction) bool {
 	switch action.(type) {
 	case *AssertAction, *RequiresAction, *EnsuresAction, *SubgoalAction:
 		return true
@@ -285,7 +284,7 @@ func IsAssertLike(action Action) bool {
 
 // AssignAction represents lhs := rhs assignment.
 type AssignAction struct {
-	ActionBase
+	module.ActionBase
 	LHS lg.Expr
 	RHS lg.Expr
 
@@ -301,7 +300,7 @@ func NewAssignAction(lhs, rhs lg.Expr) *AssignAction {
 
 func (a *AssignAction) Name() string          { return "assign" }
 func (a *AssignAction) ActionArgs() []lg.Expr { return []lg.Expr{a.LHS, a.RHS} }
-func (a *AssignAction) ActionClone(args []lg.Expr) Action {
+func (a *AssignAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &AssignAction{
 		ActionBase: a.ActionBase,
 		LHS:        args[0],
@@ -313,14 +312,14 @@ func (a *AssignAction) ActionClone(args []lg.Expr) Action {
 func (a *AssignAction) String() string {
 	return fmt.Sprint(a.LHS) + " := " + fmt.Sprint(a.RHS)
 }
-func (a *AssignAction) IterCalls() []string      { return nil }
-func (a *AssignAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *AssignAction) IterCalls() []string             { return nil }
+func (a *AssignAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- HavocAction ---
 
 // HavocAction represents nondeterministic assignment.
 type HavocAction struct {
-	ActionBase
+	module.ActionBase
 	Target lg.Expr
 
 	// original AST node for tree-walking (matches Python's self.args[0])
@@ -333,20 +332,20 @@ func NewHavocAction(target lg.Expr) *HavocAction {
 
 func (a *HavocAction) Name() string          { return "havoc" }
 func (a *HavocAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Target} }
-func (a *HavocAction) ActionClone(args []lg.Expr) Action {
+func (a *HavocAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &HavocAction{ActionBase: a.ActionBase, Target: args[0], AstTarget: a.AstTarget}
 }
 func (a *HavocAction) String() string {
 	return fmt.Sprint(a.Target) + " := *"
 }
-func (a *HavocAction) IterCalls() []string      { return nil }
-func (a *HavocAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *HavocAction) IterCalls() []string             { return nil }
+func (a *HavocAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- SetAction ---
 
 // SetAction represents a set operation on a relation.
 type SetAction struct {
-	ActionBase
+	module.ActionBase
 	Lit lg.Expr // a literal (polarity + atom)
 }
 
@@ -356,20 +355,20 @@ func NewSetAction(lit lg.Expr) *SetAction {
 
 func (a *SetAction) Name() string          { return "set" }
 func (a *SetAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Lit} }
-func (a *SetAction) ActionClone(args []lg.Expr) Action {
+func (a *SetAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &SetAction{ActionBase: a.ActionBase, Lit: args[0]}
 }
 func (a *SetAction) String() string {
 	return "set " + fmt.Sprint(a.Lit)
 }
-func (a *SetAction) IterCalls() []string      { return nil }
-func (a *SetAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *SetAction) IterCalls() []string             { return nil }
+func (a *SetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- IfAction ---
 
 // IfAction represents if/else branching.
 type IfAction struct {
-	ActionBase
+	module.ActionBase
 	Cond     lg.Expr  // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
 	AstCond  ast.Node // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
 	ThenBody lg.Expr  // Action
@@ -391,7 +390,7 @@ func (a *IfAction) ActionArgs() []lg.Expr {
 	}
 	return []lg.Expr{a.Cond, a.ThenBody}
 }
-func (a *IfAction) ActionClone(args []lg.Expr) Action {
+func (a *IfAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, ThenBody: args[1]}
 	if len(args) >= 3 {
 		r.ElseBody = args[2]
@@ -405,8 +404,8 @@ func (a *IfAction) String() string {
 	}
 	return res
 }
-func (a *IfAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *IfAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *IfAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // SomeCondition wraps an ast.Some/SomeMin/SomeMax as lg.Expr so it can be
 // stored in IfAction.Cond. Matches Python where IfAction.args[0] can directly
@@ -496,7 +495,7 @@ func someCondFromAST(node ast.Node) *SomeCondition {
 
 // Subactions decomposes the if into (ifPart, elsePart).
 // Python: IfAction.subactions()
-func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart Action, elsePart Action) {
+func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
 	if some, ok := a.Cond.(*SomeCondition); ok {
 		return a.subactionsSome(some, actCfg)
 	}
@@ -514,7 +513,7 @@ func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart Action, elsePart Ac
 
 // subactionsSome handles the Some/SomeMinMax case of Subactions.
 // Python: IfAction.subactions() when isinstance(self.args[0], ivy_ast.Some)
-func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (ifPart Action, elsePart Action) {
+func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (ifPart ActionsAction, elsePart ActionsAction) {
 	ps := some.Params
 	fmla := some.Fmla
 
@@ -626,7 +625,7 @@ func (a *IfAction) GetCond() lg.Expr {
 
 // WhileAction represents a while loop with an invariant.
 type WhileAction struct {
-	ActionBase
+	module.ActionBase
 	Cond       lg.Expr   // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
 	AstCond    ast.Node  // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
 	Body       lg.Expr   // Action
@@ -643,7 +642,7 @@ func (a *WhileAction) ActionArgs() []lg.Expr {
 	args = append(args, a.Invariants...)
 	return args
 }
-func (a *WhileAction) ActionClone(args []lg.Expr) Action {
+func (a *WhileAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, Body: args[1]}
 	if len(args) > 2 {
 		r.Invariants = copyNodes(args[2:])
@@ -658,14 +657,14 @@ func (a *WhileAction) String() string {
 	res += "{" + fmt.Sprint(a.Body) + "}"
 	return res
 }
-func (a *WhileAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *WhileAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *WhileAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *WhileAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- ChoiceAction ---
 
 // ChoiceAction represents nondeterministic choice between branches.
 type ChoiceAction struct {
-	ActionBase
+	module.ActionBase
 	Branches []lg.Expr // each is an Action
 	UniqueID int64
 }
@@ -684,7 +683,7 @@ func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
 
 func (a *ChoiceAction) Name() string          { return "choice" }
 func (a *ChoiceAction) ActionArgs() []lg.Expr { return a.Branches }
-func (a *ChoiceAction) ActionClone(args []lg.Expr) Action {
+func (a *ChoiceAction) ActionClone(args []lg.Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewChoiceActionOn(a.ActCfg, args...)
 		r.ActionBase = a.ActionBase
@@ -703,14 +702,14 @@ func (a *ChoiceAction) String() string {
 	}
 	return strings.Join(parts, "")
 }
-func (a *ChoiceAction) IterCalls() []string      { return defaultIterCalls(a.Branches) }
-func (a *ChoiceAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *ChoiceAction) IterCalls() []string             { return defaultIterCalls(a.Branches) }
+func (a *ChoiceAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CallAction ---
 
 // CallAction represents an action call (inlines a named action).
 type CallAction struct {
-	ActionBase
+	module.ActionBase
 	Callee        lg.Expr   // the called action (compiled lg.Expr for runtime)
 	AstCallee     *ast.Atom // preserved AST atom for sexp output (matches Python)
 	ActualReturns []lg.Expr // output parameters
@@ -732,7 +731,7 @@ func (a *CallAction) ActionArgs() []lg.Expr {
 	args = append(args, a.ActualReturns...)
 	return args
 }
-func (a *CallAction) ActionClone(args []lg.Expr) Action {
+func (a *CallAction) ActionClone(args []lg.Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewCallActionOn(a.ActCfg, args[0], args[1:]...)
 		r.ActionBase = a.ActionBase
@@ -767,7 +766,7 @@ func (a *CallAction) CalleeName() string {
 func (a *CallAction) IterCalls() []string {
 	return []string{a.CalleeName()}
 }
-func (a *CallAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *CallAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // calleeFromAtom reconstructs a compiled lg.Expr callee from an ast.Atom.
 // This is the inverse of the compiler's pattern:
@@ -790,7 +789,7 @@ func calleeFromAtom(atom *ast.Atom) lg.Expr {
 // SplitReturns decomposes a call with returns into a call with temp
 // returns followed by assignments from temps to actual returns.
 // Python: CallAction.split_returns()
-func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
+func (a *CallAction) SplitReturns(actCfg *ActionsConfig) ActionsAction {
 	// Python has no early return — always runs rename+split logic.
 	// Collect used symbol names for unique naming
 	usedMap := module.UsedSymbolsAST(a.Callee)
@@ -854,7 +853,7 @@ func renameExpr(e lg.Expr, rn *iu.UniqueRenamer) lg.Expr {
 
 // LocalAction introduces local variables hidden from the outside.
 type LocalAction struct {
-	ActionBase
+	module.ActionBase
 	Locals   []lg.Expr // all but last are local declarations
 	Body     lg.Expr   // last arg is the body action
 	UniqueID int64
@@ -893,7 +892,7 @@ func (a *LocalAction) ActionArgs() []lg.Expr {
 	}
 	return args
 }
-func (a *LocalAction) ActionClone(args []lg.Expr) Action {
+func (a *LocalAction) ActionClone(args []lg.Expr) ActionsAction {
 	if a.ActCfg == nil {
 		panic("actions: LocalAction.ActionClone called with nil ActCfg — was not created via cfg.NewLocalAction()")
 	}
@@ -908,14 +907,14 @@ func (a *LocalAction) String() string {
 	}
 	return "local " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LocalAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *LocalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *LocalAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LocalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- LetAction ---
 
 // LetAction binds symbols in an action.
 type LetAction struct {
-	ActionBase
+	module.ActionBase
 	Bindings []lg.Expr // all but last are binding definitions
 	Body     lg.Expr   // last arg is the body
 }
@@ -939,7 +938,7 @@ func (a *LetAction) ActionArgs() []lg.Expr {
 	}
 	return args
 }
-func (a *LetAction) ActionClone(args []lg.Expr) Action {
+func (a *LetAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &LetAction{ActionBase: a.ActionBase}
 	if len(args) > 0 {
 		r.Bindings = copyNodes(args[:len(args)-1])
@@ -954,14 +953,14 @@ func (a *LetAction) String() string {
 	}
 	return "let " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LetAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *LetAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *LetAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *LetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- BindOldsAction ---
 
 // BindOldsAction binds old values of symbols.
 type BindOldsAction struct {
-	ActionBase
+	module.ActionBase
 	Inner lg.Expr // the wrapped action
 }
 
@@ -971,20 +970,20 @@ func NewBindOldsAction(inner lg.Expr) *BindOldsAction {
 
 func (a *BindOldsAction) Name() string          { return "bindolds" }
 func (a *BindOldsAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Inner} }
-func (a *BindOldsAction) ActionClone(args []lg.Expr) Action {
+func (a *BindOldsAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &BindOldsAction{ActionBase: a.ActionBase, Inner: args[0]}
 }
 func (a *BindOldsAction) String() string {
 	return "bindolds {" + fmt.Sprint(a.Inner) + "}"
 }
-func (a *BindOldsAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *BindOldsAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *BindOldsAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *BindOldsAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- NativeAction ---
 
 // NativeAction represents native code escape.
 type NativeAction struct {
-	ActionBase
+	module.ActionBase
 	Code   lg.Expr
 	Params []lg.Expr
 	Impure bool
@@ -1000,7 +999,7 @@ func (a *NativeAction) ActionArgs() []lg.Expr {
 	args = append(args, a.Params...)
 	return args
 }
-func (a *NativeAction) ActionClone(args []lg.Expr) Action {
+func (a *NativeAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &NativeAction{ActionBase: a.ActionBase, Impure: a.Impure, Code: args[0]}
 	if len(args) > 1 {
 		r.Params = copyNodes(args[1:])
@@ -1010,14 +1009,14 @@ func (a *NativeAction) ActionClone(args []lg.Expr) Action {
 func (a *NativeAction) String() string {
 	return "native <<<...>>>"
 }
-func (a *NativeAction) IterCalls() []string      { return nil }
-func (a *NativeAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *NativeAction) IterCalls() []string             { return nil }
+func (a *NativeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CrashAction ---
 
 // CrashAction represents a crash/failure action.
 type CrashAction struct {
-	ActionBase
+	module.ActionBase
 	Target lg.Expr
 }
 
@@ -1027,20 +1026,20 @@ func NewCrashAction(target lg.Expr) *CrashAction {
 
 func (a *CrashAction) Name() string          { return "crash" }
 func (a *CrashAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Target} }
-func (a *CrashAction) ActionClone(args []lg.Expr) Action {
+func (a *CrashAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &CrashAction{ActionBase: a.ActionBase, Target: args[0]}
 }
 func (a *CrashAction) String() string {
 	return "crash " + fmt.Sprint(a.Target)
 }
-func (a *CrashAction) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *CrashAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *CrashAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *CrashAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- ThunkAction ---
 
 // ThunkAction represents a deferred (thunked) action.
 type ThunkAction struct {
-	ActionBase
+	module.ActionBase
 	Elems []lg.Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
@@ -1050,7 +1049,7 @@ func NewThunkAction(args ...lg.Expr) *ThunkAction {
 
 func (a *ThunkAction) Name() string          { return "thunk" }
 func (a *ThunkAction) ActionArgs() []lg.Expr { return a.Elems }
-func (a *ThunkAction) ActionClone(args []lg.Expr) Action {
+func (a *ThunkAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &ThunkAction{ActionBase: a.ActionBase, Elems: copyNodes(args)}
 }
 func (a *ThunkAction) String() string {
@@ -1066,8 +1065,8 @@ func (a *ThunkAction) String() string {
 	}
 	return "thunk " + nodeSliceStr(a.Elems)
 }
-func (a *ThunkAction) IterCalls() []string      { return defaultIterCalls(a.Elems) }
-func (a *ThunkAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *ThunkAction) IterCalls() []string             { return defaultIterCalls(a.Elems) }
+func (a *ThunkAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- EnvAction ---
 
@@ -1090,7 +1089,7 @@ func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
 }
 
 func (a *EnvAction) Name() string { return "env" }
-func (a *EnvAction) ActionClone(args []lg.Expr) Action {
+func (a *EnvAction) ActionClone(args []lg.Expr) ActionsAction {
 	if a.ActCfg != nil {
 		r := NewEnvActionOn(a.ActCfg, args...)
 		r.ActionBase = a.ActionBase
@@ -1139,37 +1138,37 @@ func (a *EnvAction) String() string {
 
 // ReturnAction is a marker for the final state of an action in a counterexample.
 type ReturnAction struct {
-	ActionBase
+	module.ActionBase
 }
 
 func NewReturnAction() *ReturnAction { return &ReturnAction{} }
 
 func (a *ReturnAction) Name() string          { return "return" }
 func (a *ReturnAction) ActionArgs() []lg.Expr { return nil }
-func (a *ReturnAction) ActionClone(args []lg.Expr) Action {
+func (a *ReturnAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &ReturnAction{ActionBase: a.ActionBase}
 }
-func (a *ReturnAction) String() string           { return "return" }
-func (a *ReturnAction) IterCalls() []string      { return nil }
-func (a *ReturnAction) IterSubactions() []Action { return []Action{a} }
+func (a *ReturnAction) String() string                  { return "return" }
+func (a *ReturnAction) IterCalls() []string             { return nil }
+func (a *ReturnAction) IterSubactions() []ActionsAction { return []ActionsAction{a} }
 
 // --- IgnoreAction ---
 
 // IgnoreAction is a no-op marker.
 type IgnoreAction struct {
-	ActionBase
+	module.ActionBase
 }
 
 func NewIgnoreAction() *IgnoreAction { return &IgnoreAction{} }
 
 func (a *IgnoreAction) Name() string          { return "ignore" }
 func (a *IgnoreAction) ActionArgs() []lg.Expr { return nil }
-func (a *IgnoreAction) ActionClone(args []lg.Expr) Action {
+func (a *IgnoreAction) ActionClone(args []lg.Expr) ActionsAction {
 	return &IgnoreAction{ActionBase: a.ActionBase}
 }
-func (a *IgnoreAction) String() string           { return "ignore" }
-func (a *IgnoreAction) IterCalls() []string      { return nil }
-func (a *IgnoreAction) IterSubactions() []Action { return []Action{a} }
+func (a *IgnoreAction) String() string                  { return "ignore" }
+func (a *IgnoreAction) IterCalls() []string             { return nil }
+func (a *IgnoreAction) IterSubactions() []ActionsAction { return []ActionsAction{a} }
 
 // --- RME ---
 
@@ -1201,15 +1200,15 @@ func (r *RME) String() string {
 // --- ActionContext types are defined in module/config.go ---
 
 // Type aliases for types moved to module/ package.
-type IActionContext = module.IActionContext
-type ActionsConfig = module.ActionsConfig
-type ActionContext = module.ActionContext
+type IActionContext = module.ModuleIActionContext
+type ActionsConfig = module.ModuleActionsConfig
+type ActionContext = module.ModuleActionContext
 
 // Forwarding constructors for types moved to module/.
-var NewActionsConfig = module.NewActionsConfig
-var NewActionContext = module.NewActionContext
-var NewActionContextOn = module.NewActionContextOn
-var RunWithActionContext = module.RunWithActionContext
+var NewActionsConfig = module.NewModuleActionsConfig
+var NewActionContext = module.NewModuleActionContext
+var NewActionContextOn = module.NewModuleActionContextOn
+var RunWithActionContext = module.RunWithModuleActionContext
 
 // Actions implement lg.Expr directly — no wrapper types needed.
 
@@ -1263,7 +1262,7 @@ type InternalDefine struct {
 
 // IterInternalDefines collects internally defined symbols.
 // Python: Action.iter_internal_defines()
-func IterInternalDefines(action Action) []InternalDefine {
+func IterInternalDefines(action ActionsAction) []InternalDefine {
 	if action == nil {
 		return nil
 	}
@@ -1273,7 +1272,7 @@ func IterInternalDefines(action Action) []InternalDefine {
 	}
 	var result []InternalDefine
 	for _, arg := range action.ActionArgs() {
-		if child, ok := arg.(Action); ok {
+		if child, ok := arg.(ActionsAction); ok {
 			result = append(result, IterInternalDefines(child)...)
 		}
 	}
@@ -1303,7 +1302,7 @@ func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
 
 // GetTypeNames collects type names used in LocalAction declarations.
 // Python: Action.get_type_names(names)
-func GetTypeNames(action Action, names map[string]bool) {
+func GetTypeNames(action ActionsAction, names map[string]bool) {
 	if action == nil {
 		return
 	}
@@ -1354,47 +1353,47 @@ func collectTypeNamesFromDecl(decl lg.Expr, names map[string]bool) {
 // -----------------------------------------------------------------------
 
 // atomicDecompose is the default: action is indivisible, returns [[self]].
-func atomicDecompose(a Action) [][]Action { return [][]Action{{a}} }
+func atomicDecompose(a ActionsAction) [][]ActionsAction { return [][]ActionsAction{{a}} }
 
-func (a *AssumeAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *AssertAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *RequiresAction) Decompose() [][]Action { return atomicDecompose(a) }
-func (a *EnsuresAction) Decompose() [][]Action  { return atomicDecompose(a) }
-func (a *AssignAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *HavocAction) Decompose() [][]Action    { return atomicDecompose(a) }
-func (a *SetAction) Decompose() [][]Action      { return atomicDecompose(a) }
-func (a *CallAction) Decompose() [][]Action     { return atomicDecompose(a) }
-func (a *LocalAction) Decompose() [][]Action    { return atomicDecompose(a) }
-func (a *LetAction) Decompose() [][]Action      { return atomicDecompose(a) }
-func (a *BindOldsAction) Decompose() [][]Action { return atomicDecompose(a) }
-func (a *NativeAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *CrashAction) Decompose() [][]Action    { return atomicDecompose(a) }
-func (a *ThunkAction) Decompose() [][]Action    { return atomicDecompose(a) }
-func (a *ReturnAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *IgnoreAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *AssumeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *AssertAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *RequiresAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
+func (a *EnsuresAction) Decompose() [][]ActionsAction  { return atomicDecompose(a) }
+func (a *AssignAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *HavocAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *SetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
+func (a *CallAction) Decompose() [][]ActionsAction     { return atomicDecompose(a) }
+func (a *LocalAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *LetAction) Decompose() [][]ActionsAction      { return atomicDecompose(a) }
+func (a *BindOldsAction) Decompose() [][]ActionsAction { return atomicDecompose(a) }
+func (a *NativeAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *CrashAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *ThunkAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
+func (a *ReturnAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
+func (a *IgnoreAction) Decompose() [][]ActionsAction   { return atomicDecompose(a) }
 
 // Sequence: returns all sub-actions in one path.
 // Python: return [(pre, self.args, post)]
-func (s *Sequence) Decompose() [][]Action {
-	var acts []Action
+func (s *Sequence) Decompose() [][]ActionsAction {
+	var acts []ActionsAction
 	for _, arg := range s.Elems {
-		if a, ok := arg.(Action); ok {
+		if a, ok := arg.(ActionsAction); ok {
 			acts = append(acts, a)
 		}
 	}
 	if len(acts) == 0 {
 		return atomicDecompose(s)
 	}
-	return [][]Action{acts}
+	return [][]ActionsAction{acts}
 }
 
 // ChoiceAction: each branch is a separate decomposition path.
 // Python: return [(pre, [a], post) for a in self.args]
-func (a *ChoiceAction) Decompose() [][]Action {
-	var paths [][]Action
+func (a *ChoiceAction) Decompose() [][]ActionsAction {
+	var paths [][]ActionsAction
 	for _, branch := range a.Branches {
-		if act, ok := branch.(Action); ok {
-			paths = append(paths, []Action{act})
+		if act, ok := branch.(ActionsAction); ok {
+			paths = append(paths, []ActionsAction{act})
 		}
 	}
 	if len(paths) == 0 {
@@ -1405,14 +1404,14 @@ func (a *ChoiceAction) Decompose() [][]Action {
 
 // IfAction: each branch is a separate decomposition path.
 // Python: return [(pre, [a], post) for a in self.subactions()]
-func (a *IfAction) Decompose() [][]Action {
-	var paths [][]Action
-	if thenAct, ok := a.ThenBody.(Action); ok {
-		paths = append(paths, []Action{thenAct})
+func (a *IfAction) Decompose() [][]ActionsAction {
+	var paths [][]ActionsAction
+	if thenAct, ok := a.ThenBody.(ActionsAction); ok {
+		paths = append(paths, []ActionsAction{thenAct})
 	}
 	if a.ElseBody != nil {
-		if elseAct, ok := a.ElseBody.(Action); ok {
-			paths = append(paths, []Action{elseAct})
+		if elseAct, ok := a.ElseBody.(ActionsAction); ok {
+			paths = append(paths, []ActionsAction{elseAct})
 		}
 	}
 	if len(paths) == 0 {
@@ -1423,18 +1422,18 @@ func (a *IfAction) Decompose() [][]Action {
 
 // WhileAction: expand and then decompose.
 // Python: return self.expand(module, []).decompose(pre, post, fail)
-func (a *WhileAction) Decompose() [][]Action {
+func (a *WhileAction) Decompose() [][]ActionsAction {
 	// Python: return self.expand(ivy_module.module, []).decompose(pre, post, fail)
 	// Without a global context, we can't expand. Callers should use
 	// DecomposeWithState or provide a module explicitly.
-	if bodyAct, ok := a.Body.(Action); ok {
-		return [][]Action{{bodyAct}}
+	if bodyAct, ok := a.Body.(ActionsAction); ok {
+		return [][]ActionsAction{{bodyAct}}
 	}
 	return atomicDecompose(a)
 }
 
 // DecomposeWithModule expands the while loop using the given module and decomposes.
-func (a *WhileAction) DecomposeWithModule(m *module.Module) [][]Action {
+func (a *WhileAction) DecomposeWithModule(m *module.Module) [][]ActionsAction {
 	if m == nil {
 		return a.Decompose()
 	}
@@ -1454,20 +1453,20 @@ func (a *WhileAction) DecomposeWithModule(m *module.Module) [][]Action {
 // DecompTriple is a single decomposition path with pre/post state.
 // Matches Python's (pre, [action_list], post) return value.
 type DecompTriple struct {
-	Pre     lg.Expr  // pre-state clauses
-	Actions []Action // actions in this path
-	Post    lg.Expr  // post-state clauses
+	Pre     lg.Expr         // pre-state clauses
+	Actions []ActionsAction // actions in this path
+	Post    lg.Expr         // post-state clauses
 }
 
 // DecomposeWithState decomposes an action with state threading.
 // This is the Python-compatible version: decompose(self, pre, post, fail=False).
-func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
+func DecomposeWithState(a ActionsAction, pre, post lg.Expr, fail bool) []DecompTriple {
 	switch act := a.(type) {
 	case *Sequence:
 		// Python: return [(pre, self.args, post)]
-		var acts []Action
+		var acts []ActionsAction
 		for _, arg := range act.Elems {
-			if sub, ok := arg.(Action); ok {
+			if sub, ok := arg.(ActionsAction); ok {
 				acts = append(acts, sub)
 			}
 		}
@@ -1477,8 +1476,8 @@ func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
 		// Python: each branch is (pre, [branch], post)
 		var result []DecompTriple
 		for _, branch := range act.Branches {
-			if sub, ok := branch.(Action); ok {
-				result = append(result, DecompTriple{Pre: pre, Actions: []Action{sub}, Post: post})
+			if sub, ok := branch.(ActionsAction); ok {
+				result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{sub}, Post: post})
 			}
 		}
 		return result
@@ -1486,12 +1485,12 @@ func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
 	case *IfAction:
 		// Python: each branch is (pre, [branch], post)
 		var result []DecompTriple
-		if then, ok := act.ThenBody.(Action); ok {
-			result = append(result, DecompTriple{Pre: pre, Actions: []Action{then}, Post: post})
+		if then, ok := act.ThenBody.(ActionsAction); ok {
+			result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{then}, Post: post})
 		}
 		if act.ElseBody != nil {
-			if els, ok := act.ElseBody.(Action); ok {
-				result = append(result, DecompTriple{Pre: pre, Actions: []Action{els}, Post: post})
+			if els, ok := act.ElseBody.(ActionsAction); ok {
+				result = append(result, DecompTriple{Pre: pre, Actions: []ActionsAction{els}, Post: post})
 			}
 		}
 		return result
@@ -1500,23 +1499,23 @@ func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
 		// Python: hide symbols from pre/post, then recurse on body
 		// For now, recurse on body without state hiding (requires HideState infrastructure)
 		if act.Body != nil {
-			if bodyAct, ok := act.Body.(Action); ok {
+			if bodyAct, ok := act.Body.(ActionsAction); ok {
 				return DecomposeWithState(bodyAct, pre, post, fail)
 			}
 		}
-		return []DecompTriple{{Pre: pre, Actions: []Action{act}, Post: post}}
+		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
 
 	case *WhileAction:
 		// Python: expand then decompose
 		// Simplified: treat body as a single step
-		if body, ok := act.Body.(Action); ok {
-			return []DecompTriple{{Pre: pre, Actions: []Action{body}, Post: post}}
+		if body, ok := act.Body.(ActionsAction); ok {
+			return []DecompTriple{{Pre: pre, Actions: []ActionsAction{body}, Post: post}}
 		}
-		return []DecompTriple{{Pre: pre, Actions: []Action{act}, Post: post}}
+		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{act}, Post: post}}
 
 	default:
 		// Atomic: return [(pre, [self], post)]
-		return []DecompTriple{{Pre: pre, Actions: []Action{a}, Post: post}}
+		return []DecompTriple{{Pre: pre, Actions: []ActionsAction{a}, Post: post}}
 	}
 }
 
@@ -1538,8 +1537,8 @@ func NewSubgoalAction(fmla lg.Expr) *SubgoalAction {
 
 // Python: SubgoalAction inherits name() from AssertAction → returns "assert".
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
-func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
-func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
+func (a *SubgoalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *SubgoalAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &SubgoalAction{
 		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable},
 		SubgoalKind:  a.SubgoalKind,
@@ -1565,7 +1564,7 @@ type VarAction struct {
 
 // AssignFieldAction assigns to a destructor field.
 type AssignFieldAction struct {
-	ActionBase
+	module.ActionBase
 	Field lg.Expr // destructor/field
 	Obj   lg.Expr // object
 	Value lg.Expr // new value
@@ -1577,7 +1576,7 @@ func NewAssignFieldAction(field, obj, value lg.Expr) *AssignFieldAction {
 
 func (a *AssignFieldAction) Name() string          { return "assign_field" }
 func (a *AssignFieldAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Field, a.Obj, a.Value} }
-func (a *AssignFieldAction) ActionClone(args []lg.Expr) Action {
+func (a *AssignFieldAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &AssignFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -1593,14 +1592,14 @@ func (a *AssignFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *AssignFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s", a.Obj, a.Field, a.Value)
 }
-func (a *AssignFieldAction) IterCalls() []string      { return nil }
-func (a *AssignFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *AssignFieldAction) IterCalls() []string             { return nil }
+func (a *AssignFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- NullFieldAction ---
 
 // NullFieldAction sets a destructor field to null/default.
 type NullFieldAction struct {
-	ActionBase
+	module.ActionBase
 	Field lg.Expr
 	Obj   lg.Expr
 }
@@ -1611,7 +1610,7 @@ func NewNullFieldAction(field, obj lg.Expr) *NullFieldAction {
 
 func (a *NullFieldAction) Name() string          { return "null_field" }
 func (a *NullFieldAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Field, a.Obj} }
-func (a *NullFieldAction) ActionClone(args []lg.Expr) Action {
+func (a *NullFieldAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &NullFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -1624,8 +1623,8 @@ func (a *NullFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *NullFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := null", a.Obj, a.Field)
 }
-func (a *NullFieldAction) IterCalls() []string      { return nil }
-func (a *NullFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *NullFieldAction) IterCalls() []string             { return nil }
+func (a *NullFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- CopyFieldAction ---
 
@@ -1633,7 +1632,7 @@ func (a *NullFieldAction) IterSubactions() []Action { return defaultIterSubactio
 // Python: CopyFieldAction has 4 args: (l, lf, r, rf) where lf is destination
 // field and rf is source field.
 type CopyFieldAction struct {
-	ActionBase
+	module.ActionBase
 	Dst      lg.Expr // destination object (l)
 	Field    lg.Expr // destination field (lf)
 	Src      lg.Expr // source object (r)
@@ -1650,7 +1649,7 @@ func (a *CopyFieldAction) Name() string { return "copy_field" }
 func (a *CopyFieldAction) ActionArgs() []lg.Expr {
 	return []lg.Expr{a.Dst, a.Field, a.Src, a.SrcField}
 }
-func (a *CopyFieldAction) ActionClone(args []lg.Expr) Action {
+func (a *CopyFieldAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &CopyFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Dst = args[0]
@@ -1669,15 +1668,15 @@ func (a *CopyFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *CopyFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s.%s", a.Dst, a.Field, a.Src, a.SrcField)
 }
-func (a *CopyFieldAction) IterCalls() []string      { return nil }
-func (a *CopyFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *CopyFieldAction) IterCalls() []string             { return nil }
+func (a *CopyFieldAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // --- Ranking ---
 
 // Ranking represents a ranking function for liveness proofs.
 // In Python, Ranking extends Action.
 type Ranking struct {
-	ActionBase
+	module.ActionBase
 	Relation lg.Expr // the ranking relation
 	RArgs    []lg.Expr
 }
@@ -1695,13 +1694,13 @@ func (r *Ranking) String() string {
 }
 
 func (r *Ranking) Name() string { return "decreases" }
-func (r *Ranking) ActionClone(args []lg.Expr) Action {
+func (r *Ranking) ActionClone(args []lg.Expr) ActionsAction {
 	return &Ranking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args}
 }
-func (r *Ranking) ActionArgs() []lg.Expr    { return r.RArgs }
-func (r *Ranking) IterCalls() []string      { return nil }
-func (r *Ranking) IterSubactions() []Action { return defaultIterSubactions(r) }
-func (r *Ranking) Decompose() [][]Action    { return [][]Action{{r}} }
+func (r *Ranking) ActionArgs() []lg.Expr           { return r.RArgs }
+func (r *Ranking) IterCalls() []string             { return nil }
+func (r *Ranking) IterSubactions() []ActionsAction { return defaultIterSubactions(r) }
+func (r *Ranking) Decompose() [][]ActionsAction    { return [][]ActionsAction{{r}} }
 
 // --- SymExContext ---
 
@@ -1751,10 +1750,10 @@ func RunWithSymExContext(cfg *ActionsConfig, params []lg.Expr, fn func()) {
 //
 // Corresponds to Python ivy_actions.py UpdatePattern.
 type UpdatePattern struct {
-	Placeholders []lg.Expr // placeholder constants for pattern matching
-	Pattern      Action    // the action pattern to match against
-	Precond      lg.Expr   // precondition formula
-	TransRel     lg.Expr   // transition relation formula
+	Placeholders []lg.Expr     // placeholder constants for pattern matching
+	Pattern      ActionsAction // the action pattern to match against
+	Precond      lg.Expr       // precondition formula
+	TransRel     lg.Expr       // transition relation formula
 
 	// Legacy fields for simpler patterns (kept for backward compatibility)
 	Lhs  lg.Expr
@@ -1765,7 +1764,7 @@ type UpdatePattern struct {
 // Match checks if the given action matches this pattern.
 // If it matches, returns (precond_clauses, transrel_clauses), else returns nil, nil.
 // Corresponds to Python UpdatePattern.match (ivy_actions.py:122-130).
-func (p *UpdatePattern) Match(action Action) (*module.Clauses, *module.Clauses) {
+func (p *UpdatePattern) Match(action ActionsAction) (*module.Clauses, *module.Clauses) {
 	if p.Pattern == nil {
 		return nil, nil
 	}
@@ -1793,7 +1792,7 @@ func (p *UpdatePattern) Match(action Action) (*module.Clauses, *module.Clauses) 
 
 // actionMatch checks if action matches pattern, populating subst with
 // placeholder bindings. Corresponds to Python Action.match.
-func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
+func actionMatch(action, pattern ActionsAction, placeholders []lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
 	// Types must match
 	if action.Name() != pattern.Name() {
 		return false
@@ -1841,8 +1840,8 @@ func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[lg.Nod
 
 	// Both must be same type and structure
 	// Check if actions
-	if wa, ok := actual.(Action); ok {
-		if wp, ok := pattern.(Action); ok {
+	if wa, ok := actual.(ActionsAction); ok {
+		if wp, ok := pattern.(ActionsAction); ok {
 			return actionMatch(wa, wp, placeholders, subst)
 		}
 		return false
@@ -1900,7 +1899,7 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 //
 // Corresponds to Python ivy_actions.py PatternBasedUpdate.
 type PatternBasedUpdate struct {
-	ActionBase
+	module.ActionBase
 	Defines      []*lg.Const        // symbols defined by this update
 	Dependencies []*lg.Const        // symbols this update depends on
 	Patterns     *UpdatePatternList // patterns for matching
@@ -1912,7 +1911,7 @@ func NewPatternBasedUpdate(defines, deps []*lg.Const, patterns *UpdatePatternLis
 
 func (a *PatternBasedUpdate) Name() string          { return "pattern_update" }
 func (a *PatternBasedUpdate) ActionArgs() []lg.Expr { return nil }
-func (a *PatternBasedUpdate) ActionClone(args []lg.Expr) Action {
+func (a *PatternBasedUpdate) ActionClone(args []lg.Expr) ActionsAction {
 	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
 func (a *PatternBasedUpdate) String() string {
@@ -1922,14 +1921,14 @@ func (a *PatternBasedUpdate) String() string {
 	}
 	return fmt.Sprintf("pattern_update(%d patterns)", nPatterns)
 }
-func (a *PatternBasedUpdate) IterCalls() []string      { return nil }
-func (a *PatternBasedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *PatternBasedUpdate) IterCalls() []string             { return nil }
+func (a *PatternBasedUpdate) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency is in the updated set.
 // If so, adds all defines to updated and finds a matching pattern.
 // Returns (updated, transrel_clauses, precond_clauses).
 // Corresponds to Python PatternBasedUpdate.get_update_axioms.
-func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses) {
+func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action ActionsAction) ([]*lg.Const, *module.Clauses, *module.Clauses) {
 	// Check if any dependency is in the updated set
 	depSet := make(map[string]bool)
 	for _, d := range a.Dependencies {
@@ -1991,7 +1990,7 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action)
 // Python: NamedUpdate(sym, fmla) at ivy_actions.py:178-186, constructed by
 // IvyDomainSetup.named at ivy_compiler.py:1237.
 type NamedUpdate struct {
-	ActionBase
+	module.ActionBase
 	UpdateName string    // sym.Name (cached for convenience)
 	Sym        *lg.Const // the named symbol with its FuncConstSort (Python: self.sym)
 	Body       lg.Expr   // the existential formula `cond` (Python: fmla)
@@ -2003,7 +2002,7 @@ func NewNamedUpdate(sym *lg.Const, body lg.Expr) *NamedUpdate {
 
 func (a *NamedUpdate) Name() string          { return "named_update" }
 func (a *NamedUpdate) ActionArgs() []lg.Expr { return []lg.Expr{a.Body} }
-func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
+func (a *NamedUpdate) ActionClone(args []lg.Expr) ActionsAction {
 	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName, Sym: a.Sym}
 	if len(args) >= 1 {
 		r.Body = args[0]
@@ -2013,13 +2012,13 @@ func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
 func (a *NamedUpdate) String() string {
 	return fmt.Sprintf("update[%s](%s)", a.UpdateName, a.Body)
 }
-func (a *NamedUpdate) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
-func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
+func (a *NamedUpdate) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
+func (a *NamedUpdate) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
 // updated set. If so, adds the symbol to updated. Returns (updated, nil, nil).
 // Corresponds to Python NamedUpdate.get_update_axioms (ivy_actions.py:182-186).
-func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses) {
+func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action ActionsAction) ([]*lg.Const, *module.Clauses, *module.Clauses) {
 	if a.Sym == nil {
 		// Python: would AttributeError on self.sym. Faithful port panics.
 		panic("NamedUpdate.GetUpdateAxioms: Sym is nil")
@@ -2052,7 +2051,7 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg
 // Corresponds to the Python protocol where domain.updates[] objects have
 // get_update_axioms(updated, action).
 type Updater interface {
-	GetUpdateAxioms(updated []*lg.Const, action Action) ([]*lg.Const, *module.Clauses, *module.Clauses)
+	GetUpdateAxioms(updated []*lg.Const, action ActionsAction) ([]*lg.Const, *module.Clauses, *module.Clauses)
 }
 
 // --- EnvAction constructor ---
@@ -2060,7 +2059,7 @@ type Updater interface {
 // BuildEnvAction constructs an environment (external) action for the given action name.
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
-func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, Action], actName string, label string) *EnvAction {
+func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], actionsMap *iu.InsMap[string, ActionsAction], actName string, label string) *EnvAction {
 	xtracer.Trace("actions.env_action ENTER")
 	var actNames []string
 	if actName == "" {
@@ -2122,7 +2121,7 @@ func BuildEnvAction(cfg *ActionsConfig, publicActions *iu.InsMap[string, bool], 
 // object (not looked up by name). This matches Python's env_action(actname, label)
 // when actname is an action object rather than a string.
 // Corresponds to Python's env_action (ivy_actions.py:1817-1845) with non-string actname.
-func BuildEnvActionFromAction(cfg *ActionsConfig, action Action, label string) *EnvAction {
+func BuildEnvActionFromAction(cfg *ActionsConfig, action ActionsAction, label string) *EnvAction {
 	xtracer.Trace("actions.env_action ENTER")
 	xtracer.Trace("actions.env_action post actNames")
 
@@ -2164,11 +2163,11 @@ func BuildEnvActionFromAction(cfg *ActionsConfig, action Action, label string) *
 // --- Decompose implementations ---
 
 // SubgoalAction inherits Decompose from AssertAction.
-func (a *AssignFieldAction) Decompose() [][]Action  { return [][]Action{{a}} }
-func (a *NullFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
-func (a *CopyFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
-func (a *PatternBasedUpdate) Decompose() [][]Action { return [][]Action{{a}} }
-func (a *NamedUpdate) Decompose() [][]Action        { return [][]Action{{a}} }
+func (a *AssignFieldAction) Decompose() [][]ActionsAction  { return [][]ActionsAction{{a}} }
+func (a *NullFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
+func (a *CopyFieldAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
+func (a *PatternBasedUpdate) Decompose() [][]ActionsAction { return [][]ActionsAction{{a}} }
+func (a *NamedUpdate) Decompose() [][]ActionsAction        { return [][]ActionsAction{{a}} }
 
 // --- TypeCheckAction ---
 
@@ -2176,7 +2175,7 @@ func (a *NamedUpdate) Decompose() [][]Action        { return [][]Action{{a}} }
 // Returns an error if the action has type inconsistencies.
 // This is a simplified version; the full implementation would walk the action
 // tree and verify all expressions are well-typed.
-func TypeCheckAction(action Action) error {
+func TypeCheckAction(action ActionsAction) error {
 	for _, sub := range action.IterSubactions() {
 		if err := typeCheckSingleAction(sub); err != nil {
 			return err
@@ -2185,7 +2184,7 @@ func TypeCheckAction(action Action) error {
 	return nil
 }
 
-func typeCheckSingleAction(action Action) error {
+func typeCheckSingleAction(action ActionsAction) error {
 	switch a := action.(type) {
 	case *AssignAction:
 		// Check that LHS and RHS sorts match
@@ -2219,7 +2218,7 @@ func typeCheckSingleAction(action Action) error {
 // then falls back to domain.schemata for schema instantiation. The cmpl()
 // method returns self (the compile step is identity in current Python).
 type InstantiateAction struct {
-	ActionBase
+	module.ActionBase
 	Inst    lg.Expr  // The instantiation atom (name + args), compiled
 	AstInst ast.Node // Raw AST callatom for macro expansion (preserved through compilation)
 }
@@ -2230,7 +2229,7 @@ func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
 
 func (a *InstantiateAction) Name() string          { return "instantiate" }
 func (a *InstantiateAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Inst} }
-func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
+func (a *InstantiateAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &InstantiateAction{ActionBase: a.ActionBase, AstInst: a.AstInst}
 	if len(args) >= 1 {
 		r.Inst = args[0]
@@ -2240,9 +2239,9 @@ func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
 func (a *InstantiateAction) String() string {
 	return "instantiate " + fmt.Sprint(a.Inst)
 }
-func (a *InstantiateAction) IterCalls() []string      { return nil }
-func (a *InstantiateAction) IterSubactions() []Action { return []Action{a} }
-func (a *InstantiateAction) Decompose() [][]Action    { return [][]Action{{a}} }
+func (a *InstantiateAction) IterCalls() []string             { return nil }
+func (a *InstantiateAction) IterSubactions() []ActionsAction { return []ActionsAction{a} }
+func (a *InstantiateAction) Decompose() [][]ActionsAction    { return [][]ActionsAction{{a}} }
 
 // IntUpdate computes the update for an instantiation action.
 // Python: InstantiateAction.int_update checks macros first, then schemata.
@@ -2265,12 +2264,12 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 			compileFn := ctx.CompileActionBody
 			if compileFn == nil && ctx.Domain.CompileActionBodyFn != nil {
 				moduleFn := ctx.Domain.CompileActionBodyFn
-				compileFn = func(node ast.Node) (Action, error) {
+				compileFn = func(node ast.Node) (ActionsAction, error) {
 					result, err := moduleFn(node)
 					if err != nil {
 						return nil, err
 					}
-					if act, ok := result.(Action); ok {
+					if act, ok := result.(ActionsAction); ok {
 						return act, nil
 					}
 					return nil, fmt.Errorf("CompileActionBodyFn returned non-Action type %T", result)

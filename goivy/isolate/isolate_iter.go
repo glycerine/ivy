@@ -60,9 +60,9 @@ func VStartsWithEqSome(name string, prefixes map[string]bool, mod *module.Module
 // IterIsolate: iterate over isolate components
 // -----------------------------------------------------------------------
 
-// IsolateDefInterface is an alias for module.IsolateDefInterface, kept for
+// IsolateDefIface is an alias for module.IsolateDefInterface, kept for
 // convenience within the isolate package.
-type IsolateDefInterface = module.IsolateDefInterface
+type IsolateDefIface = module.IsolateDefInterface
 
 // IterIsolate iterates over all components of an isolate, applying fun
 // to each component name. If verified is true, verified components are
@@ -73,7 +73,7 @@ type IsolateDefInterface = module.IsolateDefInterface
 // are redundant entries.
 //
 // Corresponds to Python ivy_isolate.py iter_isolate().
-func IterIsolate(mod *module.Module, iso IsolateDefInterface, fun func(string), verified, present bool) {
+func IterIsolate(mod *module.Module, iso IsolateDefIface, fun func(string), verified, present bool) {
 	suff := "impl"
 	if iso.IsExtract() {
 		suff = "spec"
@@ -138,7 +138,7 @@ func hasAttribute(mod *module.Module, name string) bool {
 
 // GetIsolateActions returns the set of action names present in an isolate.
 // Corresponds to Python get_isolate_actions().
-func GetIsolateActions(mod *module.Module, iso IsolateDefInterface) map[string]bool {
+func GetIsolateActions(mod *module.Module, iso IsolateDefIface) map[string]bool {
 	result := make(map[string]bool)
 	IterIsolate(mod, iso, func(name string) {
 		if _, ok := mod.Actions.Get2(name); ok {
@@ -151,7 +151,7 @@ func GetIsolateActions(mod *module.Module, iso IsolateDefInterface) map[string]b
 // GetIsolateLFs returns labeled formulas from the isolate that match
 // names in the given lfs slice. Respects verified/present flags.
 // Corresponds to Python get_isolate_lfs().
-func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*ast.LabeledFormula, verified, present bool) []*ast.LabeledFormula {
+func GetIsolateLFs(mod *module.Module, iso IsolateDefIface, lfs []*ast.LabeledFormula, verified, present bool) []*ast.LabeledFormula {
 	// Build map from label name to labeled formula.
 	// Python uses lf.label.rep (the Atom's rep string), so we use the Atom's Rep.
 	lfMap := make(map[string]*ast.LabeledFormula)
@@ -195,13 +195,13 @@ func isExplicitOnly(lf *ast.LabeledFormula) bool {
 
 // GetIsolateConjs returns conjectures present in an isolate.
 // Corresponds to Python get_isolate_conjs().
-func GetIsolateConjs(mod *module.Module, iso IsolateDefInterface, verified, present bool) []*ast.LabeledFormula {
+func GetIsolateConjs(mod *module.Module, iso IsolateDefIface, verified, present bool) []*ast.LabeledFormula {
 	return GetIsolateLFs(mod, iso, mod.LabeledConjs, verified, present)
 }
 
 // GetIsolatePostConjs returns conjectures that appear before the first
 // verified conjecture. Corresponds to Python get_isolate_post_conjs().
-func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*ast.LabeledFormula {
+func GetIsolatePostConjs(mod *module.Module, iso IsolateDefIface) []*ast.LabeledFormula {
 	verConjs := GetIsolateConjs(mod, iso, true, false)
 	verSet := make(map[string]bool)
 	for _, lf := range verConjs {
@@ -223,7 +223,7 @@ func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*ast.Lab
 // An action is exported if it's in the module's exports and present in the
 // isolate, or if it calls an action outside the isolate.
 // Corresponds to Python get_isolate_exports().
-func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso IsolateDefInterface) map[string]bool {
+func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso IsolateDefIface) map[string]bool {
 	isoActions := GetIsolateActions(mod, iso)
 	modExports := make(map[string]bool)
 	for _, exp := range mod.Exports {
@@ -558,7 +558,7 @@ func (e IsolateError) Error() string {
 // SetPrivates sets mod.Privates based on the isolate definition.
 // Components with "private" attributes are marked as private.
 // Corresponds to Python set_privates().
-func SetPrivates(mod *module.Module, iso IsolateDefInterface) {
+func SetPrivates(mod *module.Module, iso IsolateDefIface) {
 	if mod.Privates == nil {
 		mod.Privates = make(map[string]bool)
 	}

@@ -37,7 +37,7 @@ func PrettyLabel(label interface{}) string {
 // Uses the full Location (with filename) from Base.Loc, matching
 // Python's pretty_lineno which calls str(ast.lineno) where lineno
 // is a LocationTuple that includes filename.
-func PrettyLineno(lf *ast.LabeledFormula) string {
+func CheckPrettyLineno(lf *ast.LabeledFormula) string {
 	if lf == nil {
 		return "(internal) "
 	}
@@ -53,7 +53,7 @@ func PrettyLF(lf *ast.LabeledFormula, indent int) string {
 	if lf == nil {
 		return strings.Repeat(" ", indent) + "(nil)"
 	}
-	return strings.Repeat(" ", indent) + PrettyLineno(lf) + PrettyLabel(lf.Label)
+	return strings.Repeat(" ", indent) + CheckPrettyLineno(lf) + PrettyLabel(lf.Label)
 }
 
 // PrettyActionLineno formats an action's location for display.
@@ -62,7 +62,7 @@ func PrettyLF(lf *ast.LabeledFormula, indent int) string {
 // Returns "(internal) " when the action has no Location set.
 // Uses Location.String() so the Reference chain (set during module
 // instantiation by LinenoAddRef) is followed correctly.
-func PrettyActionLineno(a actions.Action) string {
+func PrettyActionLineno(a actions.ActionsAction) string {
 	if a == nil {
 		return "(internal) "
 	}
@@ -77,16 +77,16 @@ func PrettyActionLineno(a actions.Action) string {
 
 // FindAssertions finds all assert actions reachable from the given action name.
 // If actionName is empty, searches all actions in the module.
-func FindAssertions(actionName string, mod *module.Module) []actions.Action {
-	var result []actions.Action
+func FindAssertions(actionName string, mod *module.Module) []actions.ActionsAction {
+	var result []actions.ActionsAction
 
 	// Determine which actions to search
 	var actionNames []string
 	if actionName != "" {
 		// Use call_set to find reachable actions
-		actionMap := make(map[string]actions.Action)
+		actionMap := make(map[string]actions.ActionsAction)
 		for name, act := range mod.Actions.All() {
-			if a, ok := act.(actions.Action); ok {
+			if a, ok := act.(actions.ActionsAction); ok {
 				actionMap[name] = a
 			}
 		}
@@ -105,7 +105,7 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 		if !ok {
 			continue
 		}
-		act, ok := action.(actions.Action)
+		act, ok := action.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
@@ -298,7 +298,7 @@ func (h *MatchHandler) IsSkolem(sym *lg.Const) bool {
 // Handle processes an action in the trace.
 // Corresponds to Python's MatchHandler.handle (lines 338-353).
 // Implements actions.AnnotationHandler.
-func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+func (h *MatchHandler) Handle(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {
 	// Python: if hasattr(action,'lineno'):
 	lineno := action.GetLineno()
 	if lineno.Line <= 0 {
@@ -352,7 +352,7 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 
 // DoReturn handles a return from an action. No-op in Python.
 // Implements actions.AnnotationHandler.
-func (h *MatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {}
+func (h *MatchHandler) DoReturn(action actions.ActionsAction, env map[lg.NodeKey]lg.Expr) {}
 
 // End finalizes the trace output.
 // Corresponds to Python's MatchHandler.end (lines 358-361).
@@ -378,7 +378,7 @@ func (h *MatchHandler) String() string {
 func BuildCallGraph(mod *module.Module) map[string][]string {
 	callgraph := make(map[string][]string)
 	for actname, action := range mod.Actions.All() {
-		act, ok := action.(actions.Action)
+		act, ok := action.(actions.ActionsAction)
 		if !ok {
 			continue
 		}

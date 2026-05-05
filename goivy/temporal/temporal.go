@@ -32,7 +32,7 @@ type ActionTerm struct {
 	Inputs  []*lg.Const
 	Outputs []*lg.Const
 	Labels  []string
-	Stmt    actions.Action
+	Stmt    actions.ActionsAction
 	// ast.Node support (matches Python ia.AST base: lineno, config)
 	Loc    ast.Location
 	HasLoc bool
@@ -54,7 +54,7 @@ func (at *ActionTerm) String() string {
 
 // CloneStmt creates a copy of the ActionTerm with a new statement but preserving
 // all other attributes. Used by callers that build a new Stmt manually.
-func (at *ActionTerm) CloneStmt(stmt actions.Action) *ActionTerm {
+func (at *ActionTerm) CloneStmt(stmt actions.ActionsAction) *ActionTerm {
 	return &ActionTerm{
 		Inputs:  at.Inputs,
 		Outputs: at.Outputs,
@@ -81,7 +81,7 @@ func (at *ActionTerm) Clone(args []ast.Node) ast.Node {
 		Inputs:  at.Inputs,
 		Outputs: at.Outputs,
 		Labels:  at.Labels,
-		Stmt:    args[0].(actions.Action),
+		Stmt:    args[0].(actions.ActionsAction),
 		Loc:     at.Loc,
 		HasLoc:  at.HasLoc,
 		Cfg:     at.Cfg,
@@ -206,7 +206,7 @@ func stringSliceCanon(ss []string) string {
 type NormalProgram struct {
 	ast.Base  // Python: extends ia.AST — provides GetLineno/SetLineno
 	Bindings  []*ActionTermBinding
-	Init      actions.Action
+	Init      actions.ActionsAction
 	Invars    []*ast.LabeledFormula
 	Asms      []*ast.LabeledFormula
 	Calls     []string
@@ -246,8 +246,8 @@ func (np *NormalProgram) Clone(args []ast.Node) ast.Node {
 }
 
 // BindingMap returns a map from binding names to their underlying actions.
-func (np *NormalProgram) BindingMap() map[string]actions.Action {
-	m := make(map[string]actions.Action, len(np.Bindings))
+func (np *NormalProgram) BindingMap() map[string]actions.ActionsAction {
+	m := make(map[string]actions.ActionsAction, len(np.Bindings))
 	for _, b := range np.Bindings {
 		m[b.Name] = b.Action.Stmt
 	}
@@ -370,9 +370,9 @@ func (np *NormalProgram) String() string {
 	return b.String()
 }
 
-// OldActionToNew converts an actions.Action (the "old" representation)
+// OldActionToNew converts an actions.ActionsAction (the "old" representation)
 // to an ActionTerm (the "new" representation) by extracting formals and labels.
-func OldActionToNew(act actions.Action) *ActionTerm {
+func OldActionToNew(act actions.ActionsAction) *ActionTerm {
 	return &ActionTerm{
 		Inputs:  act.GetFormalParams(),
 		Outputs: act.GetFormalReturns(),
@@ -382,7 +382,7 @@ func OldActionToNew(act actions.Action) *ActionTerm {
 }
 
 // getLabels extracts labels from an action if available.
-func getLabels(act actions.Action) []string {
+func getLabels(act actions.ActionsAction) []string {
 	if ab, ok := act.(interface{ GetLabels() []string }); ok {
 		return ab.GetLabels()
 	}
@@ -411,7 +411,7 @@ func getLabels(act actions.Action) []string {
 }
 
 // NewActionToOld converts an ActionTerm back to its underlying action.
-func NewActionToOld(act *ActionTerm) actions.Action {
+func NewActionToOld(act *ActionTerm) actions.ActionsAction {
 	return act.Stmt
 }
 
@@ -420,7 +420,7 @@ func NewActionToOld(act *ActionTerm) actions.Action {
 func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	var bindings []*ActionTermBinding
 	for name, actIface := range mod.Actions.All() {
-		if act, ok := actIface.(actions.Action); ok {
+		if act, ok := actIface.(actions.ActionsAction); ok {
 			bindings = append(bindings, &ActionTermBinding{
 				Name:   name,
 				Action: OldActionToNew(act),
@@ -435,11 +435,11 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	// Build init from initializers
 	var initNodes []lg.Expr
 	for _, na := range mod.Initializers {
-		if act, ok := na.Action.(actions.Action); ok {
+		if act, ok := na.Action.(actions.ActionsAction); ok {
 			initNodes = append(initNodes, act)
 		}
 	}
-	var init actions.Action
+	var init actions.ActionsAction
 	if len(initNodes) > 0 {
 		init = actions.NewSequence(initNodes...)
 	} else {
@@ -493,7 +493,7 @@ type TemporalModels = ast.AstTemporalModels
 // PropEvent computes the event action for a temporal property.
 // For G phi (Globally) formulas, the event is "assume phi".
 // For F ~phi (Eventually with negation) formulas, the event is "assert phi".
-func PropEvent(gprop lg.Expr, lineno ast.Location) actions.Action {
+func TemporalPropEvent(gprop lg.Expr, lineno ast.Location) actions.ActionsAction {
 	switch g := gprop.(type) {
 	case *lg.Eventually:
 		// Formula of the form F ~phi translates to "assert phi"
@@ -521,7 +521,7 @@ func PropEvent(gprop lg.Expr, lineno ast.Location) actions.Action {
 
 // PrefixActionTerm creates a new ActionTerm with statements prepended
 // before the original body statement.
-func PrefixActionTerm(at *ActionTerm, stmts []actions.Action) *ActionTerm {
+func PrefixActionTerm(at *ActionTerm, stmts []actions.ActionsAction) *ActionTerm {
 	newStmt := actions.PrefixAction(at.Stmt, stmts)
 	return at.CloneStmt(newStmt)
 }
@@ -563,7 +563,7 @@ func HasTemporalOperator(n lg.Expr) bool {
 
 // IsGprop returns true if the formula is Globally(phi) where phi
 // has no temporal operators.
-func IsGprop(n lg.Expr) bool {
+func TemporalIsGprop(n lg.Expr) bool {
 	g, ok := n.(*lg.Globally)
 	if !ok {
 		return false
@@ -668,7 +668,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
-					if IsGprop(f) {
+					if TemporalIsGprop(f) {
 						gprops = append(gprops, f)
 						gpropLines = append(gpropLines, ax.GetLineno())
 					}
@@ -702,13 +702,13 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	}
 
 	// instrStmt instruments a statement with property events
-	var instrStmt func(stmt actions.Action, labels []string) actions.Action
-	instrStmt = func(stmt actions.Action, labels []string) actions.Action {
+	var instrStmt func(stmt actions.ActionsAction, labels []string) actions.ActionsAction
+	instrStmt = func(stmt actions.ActionsAction, labels []string) actions.ActionsAction {
 		// Recur on sub-statements
 		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, a := range args {
-			if sub, ok := a.(actions.Action); ok {
+			if sub, ok := a.(actions.ActionsAction); ok {
 				newArgs[i] = instrStmt(sub, labels)
 			} else {
 				newArgs[i] = a
@@ -761,10 +761,10 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 		}
 
 		// Add property events
-		var events []actions.Action
+		var events []actions.ActionsAction
 		for key, prop := range eventProps {
 			loc := propLines[key]
-			events = append(events, PropEvent(prop, loc))
+			events = append(events, TemporalPropEvent(prop, loc))
 		}
 
 		res = actions.PostfixAction(res, events)
@@ -854,6 +854,6 @@ func symbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 
 // RegisterTactics registers the invariance tactic on the given proof config.
 // Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *module.ProofConfig) {
+func RegisterTemporalTactics(proofCfg *module.ProofConfig) {
 	proofCfg.RegisterTactic("invariance", InvarianceTactic)
 }

@@ -583,7 +583,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 // actionRepr produces a stable string for an action — Python uses
 // repr(action) which is class-and-id based; we use Go's type-name for the
 // rare case where the same big-action is constructed twice.
-func actionRepr(a actions.Action) string {
+func actionRepr(a actions.ActionsAction) string {
 	if a == nil {
 		return "<nil action>"
 	}

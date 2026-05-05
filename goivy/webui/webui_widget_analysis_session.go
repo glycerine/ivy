@@ -591,7 +591,7 @@ type ConceptStateViewWidget struct {
 	Result *LatexWidget
 }
 
-// interp_State is a placeholder alias for the Go interp.State type. We
+// interp_State is a placeholder alias for the Go interp.InterpState type. We
 // can't import interp here (it would create an import cycle), so the
 // caller is responsible for setting State as an opaque value.
 type interp_State = any
@@ -1478,5 +1478,5 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 // (See virtualDispatch type defined above.)
 
 // Sentinel use to keep ivylogic imported even when not directly referenced
-// (interp.State / il.* may be added in subsequent iterations).
+// (interp.InterpState / il.* may be added in subsequent iterations).
 var _ = (*il.Sig)(nil)

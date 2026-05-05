@@ -38,7 +38,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		// Unify env sort var with the variable's declared sort (if concrete).
 		if !logic.IsTopSort(n.VSort) {
 			ts := ConvertToSortVars(n.VSort)
-			if err := Unify(s, ts); err != nil {
+			if err := TypeInferUnify(s, ts); err != nil {
 				return nil, err
 			}
 		}
@@ -66,7 +66,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 			env[n.Name] = s
 		}
 		ts := ConvertToSortVars(n.CSort)
-		if err := Unify(s, ts); err != nil {
+		if err := TypeInferUnify(s, ts); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -101,7 +101,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		copy(allSorts, termSorts)
 		allSorts[len(termSorts)] = resultSort
 		fsv := NewFunctionSortVar(allSorts...)
-		if err := Unify(funcRes.Sort, fsv); err != nil {
+		if err := TypeInferUnify(funcRes.Sort, fsv); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -132,7 +132,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r1.Sort, r2.Sort); err != nil {
+		if err := TypeInferUnify(r1.Sort, r2.Sort); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -163,10 +163,10 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
-		if err := Unify(rThen.Sort, rElse.Sort); err != nil {
+		if err := TypeInferUnify(rThen.Sort, rElse.Sort); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -193,7 +193,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -214,7 +214,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 			if err != nil {
 				return nil, err
 			}
-			if err := Unify(res.Sort, Wrap(logic.Boolean)); err != nil {
+			if err := TypeInferUnify(res.Sort, Wrap(logic.Boolean)); err != nil {
 				return nil, err
 			}
 			results[i] = res
@@ -241,7 +241,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 			if err != nil {
 				return nil, err
 			}
-			if err := Unify(res.Sort, Wrap(logic.Boolean)); err != nil {
+			if err := TypeInferUnify(res.Sort, Wrap(logic.Boolean)); err != nil {
 				return nil, err
 			}
 			results[i] = res
@@ -270,10 +270,10 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r1.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r1.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
-		if err := Unify(r2.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r2.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -300,10 +300,10 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r1.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r1.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
-		if err := Unify(r2.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r2.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -326,7 +326,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -345,7 +345,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(r.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(r.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -368,7 +368,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -395,7 +395,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(rCond.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		return &InferResult{
@@ -428,7 +428,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		// Also unify with the variable's declared sort if it's not TopSort.
 		for i, v := range n.Variables {
 			if !logic.IsTopSort(v.VSort) {
-				if err := Unify(boundSortVars[i], Wrap(v.VSort)); err != nil {
+				if err := TypeInferUnify(boundSortVars[i], Wrap(v.VSort)); err != nil {
 					return nil, err
 				}
 			}
@@ -437,7 +437,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(bodyRes.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(bodyRes.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		// Capture the original variables and their inferred sort vars.
@@ -473,7 +473,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		for i, v := range n.Variables {
 			if !logic.IsTopSort(v.VSort) {
-				if err := Unify(boundSortVars[i], Wrap(v.VSort)); err != nil {
+				if err := TypeInferUnify(boundSortVars[i], Wrap(v.VSort)); err != nil {
 					return nil, err
 				}
 			}
@@ -482,7 +482,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := Unify(bodyRes.Sort, Wrap(logic.Boolean)); err != nil {
+		if err := TypeInferUnify(bodyRes.Sort, Wrap(logic.Boolean)); err != nil {
 			return nil, err
 		}
 		origVars := n.Variables
@@ -613,7 +613,7 @@ func ConcretizeSorts(t logic.Expr, s logic.Sort) (logic.Expr, error) {
 		return nil, err
 	}
 	if s != nil {
-		if err := Unify(res.Sort, Wrap(s)); err != nil {
+		if err := TypeInferUnify(res.Sort, Wrap(s)); err != nil {
 			return nil, err
 		}
 	}
@@ -646,7 +646,7 @@ func ConcretizeTerms(terms []logic.Expr, sorts []logic.Sort) ([]logic.Expr, erro
 	if sorts != nil {
 		for i, sort := range sorts {
 			if i < len(results) && sort != nil {
-				if err := Unify(results[i].Sort, Wrap(sort)); err != nil {
+				if err := TypeInferUnify(results[i].Sort, Wrap(sort)); err != nil {
 					return nil, err
 				}
 			}

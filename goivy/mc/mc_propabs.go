@@ -73,7 +73,7 @@ func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 		pa.NewStVars = append(pa.NewStVars, prevAbs)
 		// Python: res = tr.new(pva) — reuses pva's name with new_ prefix,
 		// does NOT consume a fresh counter value.
-		res := lg.NewConst(actions.New(prevAbs.Name), prevAbs.CSort)
+		res := lg.NewConst(actions.ActionNewName(prevAbs.Name), prevAbs.CSort)
 		pa.Map.Set(key, res)
 		pa.OrigExprs.Set(key, expr)
 		return res

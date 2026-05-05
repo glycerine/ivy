@@ -255,7 +255,7 @@ func TestPrettyLinenoPositive(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, nil)
 	lf.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
-	result := PrettyLineno(lf)
+	result := CheckPrettyLineno(lf)
 	// Python: return str(ast.lineno) — LocationTuple with filename and line.
 	if result != "test.ivy: line 42: " {
 		t.Errorf("expected 'test.ivy: line 42: ', got '%s'", result)
@@ -265,14 +265,14 @@ func TestPrettyLinenoPositive(t *testing.T) {
 func TestPrettyLinenoZero(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, nil)
-	result := PrettyLineno(lf)
+	result := CheckPrettyLineno(lf)
 	if result != "(internal) " {
 		t.Errorf("expected '(internal) ', got '%s'", result)
 	}
 }
 
 func TestPrettyLinenoNil(t *testing.T) {
-	result := PrettyLineno(nil)
+	result := CheckPrettyLineno(nil)
 	if result != "(internal) " {
 		t.Errorf("expected '(internal) ', got '%s'", result)
 	}

@@ -43,11 +43,11 @@ func traceSymSet(label string, syms *iu.InsMap[lg.NodeKey, lg.Expr]) {
 func AddMixinsExt(
 	mod *module.Module,
 	actname string,
-	action2 actions.Action,
+	action2 actions.ActionsAction,
 	assertToAssume func(interface{}) map[string]bool,
 	useMixin func(string) bool,
-	modMixin func(interface{}, actions.Action) actions.Action,
-) actions.Action {
+	modMixin func(interface{}, actions.ActionsAction) actions.ActionsAction,
+) actions.ActionsAction {
 	res := action2
 	if mod.Cfg.IsolateCfg.CreateImports {
 		res = actions.DropInvariants(res)
@@ -179,7 +179,7 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 }
 
 func setPrivatesPrefer(mod *module.Module, iso interface{}, preferred string) {
-	idef, ok := iso.(IsolateDefInterface)
+	idef, ok := iso.(IsolateDefIface)
 	if !ok {
 		return
 	}
@@ -238,7 +238,7 @@ func getPrivateFromAttributes(mod *module.Module, name string, suff string) stri
 // definition. This is the full version matching Python get_isolate_info
 // (lines 809-837).
 func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraWith []string) (verified, present map[string]bool) {
-	idef, ok := iso.(IsolateDefInterface)
+	idef, ok := iso.(IsolateDefIface)
 	if !ok {
 		return make(map[string]bool), make(map[string]bool)
 	}
@@ -613,7 +613,7 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 	verified, _ := GetIsolateInfoFull(mod, iso, "impl", nil)
 
 	// For version > 1.6: mark verified names from other isolates as private
-	idef, _ := iso.(IsolateDefInterface)
+	idef, _ := iso.(IsolateDefIface)
 	for _, otherIso := range mod.Isolates {
 		if interface{}(otherIso) == iso {
 			continue
@@ -668,8 +668,8 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 
 // AddExternPrecond adds preconditions from call arguments to the
 // preconds list. Corresponds to Python add_extern_precond (lines 876-884).
-func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.Expr, preconds *[]lg.Expr) {
-	calleeAct, ok := callee.(actions.Action)
+func AddExternPrecond(mod *module.Module, callee actions.ActionsAction, callArgs []lg.Expr, preconds *[]lg.Expr) {
+	calleeAct, ok := callee.(actions.ActionsAction)
 	if !ok {
 		return
 	}
@@ -713,7 +713,7 @@ func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
 
 // getCone recursively adds action_name and its transitive callees to cone.
 // Matches Python's get_cone (ivy_isolate.py:1462-1475).
-func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
+func GetCone(actionsMap *iu.InsMap[string, actions.ActionsAction], actionName string, cone map[string]bool) {
 	if cone[actionName] {
 		return
 	}
@@ -743,7 +743,7 @@ func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, c
 // GetModConeFull returns the cone of action names reachable from roots.
 // Actions referenced by natives and initializers are also included.
 // Matches Python get_mod_cone (ivy_isolate.py:1482-1494).
-func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action],
+func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.ActionsAction],
 	roots *iu.InsMap[string, bool], afterInits []string) map[string]bool {
 
 	cone := make(map[string]bool)
@@ -798,7 +798,7 @@ func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Ac
 // HasSideEffectFull checks if an action has side effects on the module
 // signature. Follows through calls transitively.
 // Corresponds to Python has_side_effect (lines 458-479).
-func HasSideEffectFull(mod *module.Module, newActions *iu.InsMap[string, actions.Action], actname string) bool {
+func HasSideEffectFull(mod *module.Module, newActions *iu.InsMap[string, actions.ActionsAction], actname string) bool {
 	return HasSideEffect(mod, actname, newActions)
 }
 
@@ -806,10 +806,10 @@ func HasSideEffectFull(mod *module.Module, newActions *iu.InsMap[string, actions
 // Utility: IsolateDefNode interface for the actual isolate AST node
 // -----------------------------------------------------------------------
 
-// IsolateDefNode extends IsolateDefInterface with additional methods
+// IsolateDefNode extends IsolateDefIface with additional methods
 // needed by isolate_component.
 type IsolateDefNode interface {
-	IsolateDefInterface
+	IsolateDefIface
 	// Params returns the isolate parameters.
 	Params() []*lg.Const
 	// WithArgs returns the number of with-clause arguments.
@@ -943,19 +943,19 @@ func NewCallouts() Callouts {
 // Corresponds to Python get_callouts_action (lines 527-548).
 func GetCalloutsAction(
 	mod *module.Module,
-	newActions *iu.InsMap[string, actions.Action],
+	newActions *iu.InsMap[string, actions.ActionsAction],
 	summarizedActions map[string]bool,
 	callouts map[string]Callouts,
-	action actions.Action,
+	action actions.ActionsAction,
 	acallouts *Callouts,
 	head, tail bool,
 ) {
 	switch a := action.(type) {
 	case *actions.Sequence:
 		for idx, child := range a.Elems {
-			subAct, _ := child.(actions.Action)
+			subAct, _ := child.(actions.ActionsAction)
 			if subAct == nil {
-				if act, ok := child.(actions.Action); ok {
+				if act, ok := child.(actions.ActionsAction); ok {
 					subAct = act
 				}
 			}
@@ -1007,9 +1007,9 @@ func GetCalloutsAction(
 	default:
 		// For other action types, recurse into sub-actions
 		for _, arg := range action.ActionArgs() {
-			if subAct, ok := arg.(actions.Action); ok {
+			if subAct, ok := arg.(actions.ActionsAction); ok {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts, head, tail)
-			} else if w, ok := arg.(actions.Action); ok {
+			} else if w, ok := arg.(actions.ActionsAction); ok {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, w, acallouts, head, tail)
 			}
 		}
@@ -1020,7 +1020,7 @@ func GetCalloutsAction(
 // Corresponds to Python get_callouts (lines 551-557).
 func GetCallouts(
 	mod *module.Module,
-	newActions *iu.InsMap[string, actions.Action],
+	newActions *iu.InsMap[string, actions.ActionsAction],
 	summarizedActions map[string]bool,
 	actname string,
 	callouts map[string]Callouts,
@@ -1074,7 +1074,7 @@ func GetLocMods(mod *module.Module, actname string) []string {
 // properties, inits, conjectures, definitions, and actions that reference
 // any of the given symbol names.
 // Corresponds to Python find_references (lines 565-573).
-func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.InsMap[string, actions.Action]) map[int]bool {
+func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.InsMap[string, actions.ActionsAction]) map[int]bool {
 	refs := make(map[int]bool)
 
 	// Check labeled formulas
@@ -1120,7 +1120,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 
 // collectActionSymNames collects all constant symbol names referenced by an action.
 // Returns a name-only set for use in FindReferences.
-func collectActionSymNames(act actions.Action) map[string]bool {
+func collectActionSymNames(act actions.ActionsAction) map[string]bool {
 	exprs := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	for _, arg := range act.ActionArgs() {
 		collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
@@ -1150,7 +1150,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 // HideActionParams wraps an action in a LocalAction that hides its
 // formal parameters and returns.
 // Corresponds to Python hide_action_params (lines 1438-1441).
-func HideActionParams(action actions.Action, mod *module.Module) actions.Action {
+func HideActionParams(action actions.ActionsAction, mod *module.Module) actions.ActionsAction {
 	params := action.GetFormalParams()
 	returns := action.GetFormalReturns()
 

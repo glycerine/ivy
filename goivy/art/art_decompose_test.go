@@ -10,18 +10,18 @@ import (
 )
 
 // ---------------------------------------------------------------------------
-// helpers for building interp.State chains in tests
+// helpers for building interp.InterpState chains in tests
 // ---------------------------------------------------------------------------
 
-func interpState(mod *module.Module) *interp.State {
+func interpState(mod *module.Module) *interp.InterpState {
 	sv := interp.NewStateValue(nil, module.TrueClauses(nil), module.FalseClauses(nil))
-	return interp.NewState(mod, sv, nil, "")
+	return interp.NewInterpState(mod, sv, nil, "")
 }
 
 // interpChain builds a chain of n interp.States where each non-root state
 // has .Expr set to an ActionApp pointing at its predecessor, and .CachedPred
 // set explicitly. Returns the deepest (last) state.
-func interpChain(mod *module.Module, n int) *interp.State {
+func interpChain(mod *module.Module, n int) *interp.InterpState {
 	if n <= 0 {
 		return nil
 	}
@@ -59,7 +59,7 @@ func collectArtChain(s *State) []*State {
 // InterpToArtState: Prov preservation
 // ---------------------------------------------------------------------------
 
-// TestInterpToArtStatePreservesProv verifies that interp.State.Expr (ast.Node)
+// TestInterpToArtStatePreservesProv verifies that interp.InterpState.Expr (ast.Node)
 // is converted to art.State.Prov (art.Provenance) by InterpToArtState.
 func TestInterpToArtStatePreservesProv(t *testing.T) {
 	mod := testModule()
@@ -72,7 +72,7 @@ func TestInterpToArtStatePreservesProv(t *testing.T) {
 
 	artChild := InterpToArtState(child)
 	if artChild.Prov == nil {
-		t.Fatal("art.State.Prov should not be nil when interp.State.Expr was set")
+		t.Fatal("art.State.Prov should not be nil when interp.InterpState.Expr was set")
 	}
 	aa, ok := artChild.Prov.(*ActionApp)
 	if !ok {
@@ -118,7 +118,7 @@ func TestInterpToArtStateNilExprGivesNilProv(t *testing.T) {
 }
 
 // TestInterpToArtStateChainAllNonRootHaveProv verifies that converting
-// a multi-step interp.State chain populates Prov on every non-root state.
+// a multi-step interp.InterpState chain populates Prov on every non-root state.
 func TestInterpToArtStateChainAllNonRootHaveProv(t *testing.T) {
 	mod := testModule()
 	deepest := interpChain(mod, 5)
@@ -144,7 +144,7 @@ func TestInterpToArtStateChainAllNonRootHaveProv(t *testing.T) {
 	}
 }
 
-// TestInterpToArtStateMemoIdentity verifies the same interp.State pointer
+// TestInterpToArtStateMemoIdentity verifies the same interp.InterpState pointer
 // always maps to the same art.State pointer.
 func TestInterpToArtStateMemoIdentity(t *testing.T) {
 	mod := testModule()
@@ -158,7 +158,7 @@ func TestInterpToArtStateMemoIdentity(t *testing.T) {
 	child2.Expr = interp.InterpActionApp(cfg, "a2", interp.WrapState(shared))
 	child2.SetPred(shared)
 
-	memo := make(map[*interp.State]*State)
+	memo := make(map[*interp.InterpState]*State)
 	art1 := interpToArtMemo(child1, memo)
 	art2 := interpToArtMemo(child2, memo)
 
@@ -166,7 +166,7 @@ func TestInterpToArtStateMemoIdentity(t *testing.T) {
 	pred1 := art1.Prov.(*ActionApp).Args[0]
 	pred2 := art2.Prov.(*ActionApp).Args[0]
 	if pred1 != pred2 {
-		t.Error("memo should ensure shared interp.State maps to same art.State")
+		t.Error("memo should ensure shared interp.InterpState maps to same art.State")
 	}
 }
 
@@ -199,7 +199,7 @@ func TestInterpToArtStateJoinProv(t *testing.T) {
 	s2 := interpState(mod)
 	joined := interpState(mod)
 	joined.Expr = cfg.NewOr(interp.WrapState(s1), interp.WrapState(s2))
-	joined.JoinOf = []*interp.State{s1, s2}
+	joined.JoinOf = []*interp.InterpState{s1, s2}
 
 	artJoined := InterpToArtState(joined)
 	if artJoined.Prov == nil {
@@ -219,7 +219,7 @@ func TestInterpToArtStateJoinProv(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 // TestArtToInterpStatePreservesExpr verifies art.State.Prov is converted
-// to interp.State.Expr.
+// to interp.InterpState.Expr.
 func TestArtToInterpStatePreservesExpr(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)
@@ -230,7 +230,7 @@ func TestArtToInterpStatePreservesExpr(t *testing.T) {
 
 	interpPost := ArtToInterpState(post)
 	if interpPost.Expr == nil {
-		t.Fatal("interp.State.Expr should not be nil when art.State.Prov was set")
+		t.Fatal("interp.InterpState.Expr should not be nil when art.State.Prov was set")
 	}
 	if !interp.IsInterpActionApp(interpPost.Expr) {
 		t.Errorf("expected ActionApp ast.Node, got %T", interpPost.Expr)
@@ -379,7 +379,7 @@ func TestDecomposeStateCachesSubgraph(t *testing.T) {
 // Fuzz tests
 // ---------------------------------------------------------------------------
 
-// FuzzInterpToArtChainProv builds interp.State chains of varying length
+// FuzzInterpToArtChainProv builds interp.InterpState chains of varying length
 // and asserts every non-root converted art.State has non-nil Prov.
 func FuzzInterpToArtChainProv(f *testing.F) {
 	f.Add(uint8(1))

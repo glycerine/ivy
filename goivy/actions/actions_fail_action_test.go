@@ -81,7 +81,7 @@ func TestFailActionUpdate(t *testing.T) {
 		PVars:        map[string]bool{},
 		ActCfg:       m.Cfg.ActCfg,
 		Instantiator: m.Instantiator,
-		GetAction:    func(string) Action { return nil },
+		GetAction:    func(string) ActionsAction { return nil },
 	}
 	upd := fa.Update(ctx)
 	if upd == nil {
@@ -102,7 +102,7 @@ func TestFailActionIntUpdate(t *testing.T) {
 		PVars:        map[string]bool{},
 		ActCfg:       m.Cfg.ActCfg,
 		Instantiator: m.Instantiator,
-		GetAction:    func(string) Action { return nil },
+		GetAction:    func(string) ActionsAction { return nil },
 	}
 	upd := fa.IntUpdate(ctx)
 	if upd == nil {
@@ -136,7 +136,7 @@ func TestGetUpdateBypassesFailEnter(t *testing.T) {
 		PVars:        map[string]bool{},
 		ActCfg:       m.Cfg.ActCfg,
 		Instantiator: m.Instantiator,
-		GetAction:    func(string) Action { return nil },
+		GetAction:    func(string) ActionsAction { return nil },
 	}
 	upd := GetUpdate(fa, ctx)
 	if upd == nil {

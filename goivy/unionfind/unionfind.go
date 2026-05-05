@@ -28,7 +28,7 @@ func NewUFNode() *UFNode {
 
 // Find returns the representative (root) of the set containing x.
 // Uses path compression for efficiency.
-func Find(x *UFNode) *UFNode {
+func UFFind(x *UFNode) *UFNode {
 	if x == nil {
 		return nil
 	}
@@ -48,12 +48,12 @@ func Find(x *UFNode) *UFNode {
 
 // Unify merges the sets containing x and y.
 // Uses union by rank.
-func Unify(x, y *UFNode) {
+func UFUnify(x, y *UFNode) {
 	if x == nil || y == nil {
 		return
 	}
-	x = Find(x)
-	y = Find(y)
+	x = UFFind(x)
+	y = UFFind(y)
 	// No early return when x == y — Python's unify() doesn't check,
 	// causing a rank increment when both are already in the same set.
 	// We must match Python's behavior for identical union-find trees.

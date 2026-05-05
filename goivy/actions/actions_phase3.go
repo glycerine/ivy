@@ -415,7 +415,7 @@ func Sign(polarity bool, atom lg.Expr) lg.Expr {
 // The field f must be a binary relation. r is applied to variable v to produce the RHS.
 // Returns the transition relation update.
 // Corresponds to Python's make_field_update.
-func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *module.Module, pvars map[string]bool) *Update {
+func MakeFieldUpdate(self ActionsAction, l lg.Expr, f *lg.Const, r lg.Expr, domain *module.Module, pvars map[string]bool) *Update {
 	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
 	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
 	fs, ok := f.CSort.(*lg.FunctionSort)
@@ -482,7 +482,7 @@ func GetDeterminize(cfg *ActionsConfig) bool {
 
 // BracketAction formats an action with braces if it's not already a Sequence.
 // Corresponds to Python's bracket_action.
-func BracketAction(action Action, depth int) string {
+func BracketAction(action ActionsAction, depth int) string {
 	if _, isSeq := action.(*Sequence); isSeq {
 		return MyStr(action, depth)
 	}
@@ -494,7 +494,7 @@ func BracketAction(action Action, depth int) string {
 // DebugAction is a debug statement action. It is a no-op for semantics.
 // Corresponds to Python's DebugAction class.
 type DebugAction struct {
-	ActionBase
+	module.ActionBase
 	DebugExpr lg.Expr   // debug expression (first arg)
 	WithExprs []lg.Expr // additional "with" expressions
 }
@@ -510,7 +510,7 @@ func (a *DebugAction) ActionArgs() []lg.Expr {
 	args = append(args, a.WithExprs...)
 	return args
 }
-func (a *DebugAction) ActionClone(args []lg.Expr) Action {
+func (a *DebugAction) ActionClone(args []lg.Expr) ActionsAction {
 	r := &DebugAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.DebugExpr = args[0]
@@ -531,9 +531,9 @@ func (a *DebugAction) String() string {
 	}
 	return res
 }
-func (a *DebugAction) IterCalls() []string      { return nil }
-func (a *DebugAction) IterSubactions() []Action { return defaultIterSubactions(a) }
-func (a *DebugAction) Decompose() [][]Action    { return atomicDecompose(a) }
+func (a *DebugAction) IterCalls() []string             { return nil }
+func (a *DebugAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+func (a *DebugAction) Decompose() [][]ActionsAction    { return atomicDecompose(a) }
 
 // --- Entry ---
 
@@ -568,7 +568,7 @@ func NewTypeCheckContext(domain *module.Module) *TypeCheckContext {
 
 // Get resolves an action name, returning a null action with preserved formals.
 // Corresponds to Python's TypeCheckConext.get.
-func (tc *TypeCheckContext) Get(x string) Action {
+func (tc *TypeCheckContext) Get(x string) ActionsAction {
 	if tc.Domain == nil {
 		return nil
 	}
@@ -576,7 +576,7 @@ func (tc *TypeCheckContext) Get(x string) Action {
 	if !ok {
 		return nil
 	}
-	act, ok := actI.(Action)
+	act, ok := actI.(ActionsAction)
 	if !ok {
 		return nil
 	}
@@ -589,7 +589,7 @@ func (tc *TypeCheckContext) Get(x string) Action {
 
 // TypeCheckActionFull performs type checking on an action within a domain.
 // Corresponds to Python's type_check_action.
-func TypeCheckActionFull(action Action, domain *module.Module, pvars map[string]bool) {
+func TypeCheckActionFull(action ActionsAction, domain *module.Module, pvars map[string]bool) {
 	// In Python, this function is a no-op (early return).
 	// It was intended to use TypeCheckContext to run int_update
 	// but is currently disabled in the Python source.

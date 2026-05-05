@@ -702,8 +702,8 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	newBody := module.SubstituteConstantsExpr(body, subs)
 
 	// Wrap body as action with formal params/returns
-	var bodyAct actions.Action
-	if act, ok := newBody.(actions.Action); ok {
+	var bodyAct actions.ActionsAction
+	if act, ok := newBody.(actions.ActionsAction); ok {
 		bodyAct = act
 	} else {
 		bodyAct = actions.NewSequence(newBody)
@@ -1886,7 +1886,7 @@ func CheckIsAction(mod *module.Module, name string) error {
 // BalancedChoice builds a balanced binary tree of ChoiceAction from a
 // flat list of branches.
 // Corresponds to Python's BalancedChoice(choices) (ivy_compiler.py:1533-1537).
-func BalancedChoice(items []interface{}, actCfg *module.ActionsConfig) interface{} {
+func BalancedChoice(items []interface{}, actCfg *module.ModuleActionsConfig) interface{} {
 	xtracer.Trace("compiler.BalancedChoice ENTER")
 	if len(items) == 0 {
 		return actions.NewSequence()
@@ -1977,14 +1977,14 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 	//           with ivy_logic.WithSymbols(self.args[0:-1]):      # P21
 	//               return self.clone(list(map(recur,self.args))) # P22
 	//       return self.clone(list(map(recur,self.args)))         # P23
-	var recur func(actions.Action) actions.Action
-	recur = func(act actions.Action) actions.Action {
+	var recur func(actions.ActionsAction) actions.ActionsAction
+	recur = func(act actions.ActionsAction) actions.ActionsAction {
 		// P1: def recur(self):
 		if act == nil {
 			return nil
 		}
 		// P2-P3: if not isinstance(self, Action): return self
-		// Go: implicit — all args to recur are actions.Action by type signature.
+		// Go: implicit — all args to recur are actions.ActionsAction by type signature.
 
 		// P4: if isinstance(self, AssertAction):
 		// Python isinstance catches all subclasses: AssertAction, RequiresAction,
@@ -2055,8 +2055,8 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					// P14: r = recur(a)
 					// Python recur returns identity for non-Actions (P2-P3).
 					// Go: only call recur on Action args; keep others unchanged.
-					var r actions.Action
-					if subAct, ok := inv.(actions.Action); ok {
+					var r actions.ActionsAction
+					if subAct, ok := inv.(actions.ActionsAction); ok {
 						r = recur(subAct)
 					}
 					if r == nil {
@@ -2075,7 +2075,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 				// Cond is a formula (not Action), so recur returns it unchanged (P2-P3).
 				newCond := w.Cond
 				newBody := w.Body
-				if bodyAct, ok := w.Body.(actions.Action); ok {
+				if bodyAct, ok := w.Body.(actions.ActionsAction); ok {
 					newBody = recur(bodyAct)
 				}
 				res := actions.NewWhileAction(newCond, newBody, newInvars...)
@@ -2100,7 +2100,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			allArgs := la.ActionArgs()
 			newArgs := make([]lg.Expr, len(allArgs))
 			for i, arg := range allArgs {
-				if subAct, ok := arg.(actions.Action); ok {
+				if subAct, ok := arg.(actions.ActionsAction); ok {
 					newArgs[i] = recur(subAct)
 				} else {
 					newArgs[i] = arg
@@ -2114,13 +2114,13 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		args := act.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
-			if subAct, ok := arg.(actions.Action); ok {
+			if subAct, ok := arg.(actions.ActionsAction); ok {
 				newArgs[i] = recur(subAct)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		return act.Clone(newArgs).(actions.Action)
+		return act.Clone(newArgs).(actions.ActionsAction)
 	}
 
 	// Python: for actname in list(mod.actions.keys()):
@@ -2128,7 +2128,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 	for actname, actVal := range mod.Actions.All() {
 		xtracer.Trace("compiler.apply_assert_proofs action[%d]=%s", actionIdx, actname)
 		actionIdx++
-		act, ok := actVal.(actions.Action)
+		act, ok := actVal.(actions.ActionsAction)
 		if !ok {
 			continue
 		}
@@ -2161,7 +2161,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 // for callers (e.g. l2s) that have a proof object separate from the action.
 //
 // Mirrors Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:2192-2209).
-func ApplyAssertProofWith(mod *module.Module, a *actions.AssertAction, pf ast.Node, prover module.ProofCheckerInterface) actions.Action {
+func ApplyAssertProofWith(mod *module.Module, a *actions.AssertAction, pf ast.Node, prover module.ProofCheckerInterface) actions.ActionsAction {
 	if a == nil {
 		return nil
 	}
@@ -2170,7 +2170,7 @@ func ApplyAssertProofWith(mod *module.Module, a *actions.AssertAction, pf ast.No
 
 // Python: sga.kind = type(self) — preserves the originating action type.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
-func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.Action {
+func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.ActionsAction {
 	// a.Proof is typed lg.Expr; pass it through as ast.Node (lg.Expr embeds ast.Node).
 	var pf ast.Node
 	if a.Proof != nil {
@@ -2182,7 +2182,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindNam
 // applyAssertProofActionWithProof is the shared implementation for both
 // applyAssertProofAction (proof read from a.Proof) and ApplyAssertProofWith
 // (proof passed in explicitly as an ast.Node, which may not be an lg.Expr).
-func applyAssertProofActionWithProof(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface, pf ast.Node) actions.Action {
+func applyAssertProofActionWithProof(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface, pf ast.Node) actions.ActionsAction {
 	if prover == nil {
 		assm := actions.NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
@@ -2644,7 +2644,7 @@ func AddLabelsToProof(proof ast.Node, labels []string) ast.Node {
 
 // AddActionLabel adds a label string to an action.
 // Corresponds to Python's action.label = ... assignments.
-func AddActionLabel(action actions.Action, label string) {
+func AddActionLabel(action actions.ActionsAction, label string) {
 	if action == nil {
 		return
 	}
@@ -2828,7 +2828,7 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	// All comparisons use compiled Symbol objects with structural equality.
 	modified := make(map[lg.NodeKey]bool)
 	for _, actVal := range mod.Actions.All() {
-		if act, ok := actVal.(actions.Action); ok {
+		if act, ok := actVal.(actions.ActionsAction); ok {
 			for _, sub := range act.IterSubactions() {
 				for _, sym := range actions.Modifies(sub) {
 					modified[lg.Key(sym)] = true

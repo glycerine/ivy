@@ -343,7 +343,7 @@ func TestCompileAssertLikeFormula_FactoryPreservesType(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		compile  func(ast.Node) (actions.Action, error)
+		compile  func(ast.Node) (actions.ActionsAction, error)
 		wantType string
 	}{
 		{"Assert", c.CompileAssertFormula, "*actions.AssertAction"},

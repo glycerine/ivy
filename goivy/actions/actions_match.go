@@ -23,9 +23,9 @@ type AnnotationHandler interface {
 	Eval(cond lg.Expr) bool
 	// Handle processes an action with the given environment mapping.
 	// env maps lg.NodeKey → lg.Expr using structural identity.
-	Handle(action Action, env map[lg.NodeKey]lg.Expr)
+	Handle(action ActionsAction, env map[lg.NodeKey]lg.Expr)
 	// DoReturn processes a return action.
-	DoReturn(action Action, env map[lg.NodeKey]lg.Expr)
+	DoReturn(action ActionsAction, env map[lg.NodeKey]lg.Expr)
 	// Fail marks a failure point in the trace.
 	Fail()
 }
@@ -35,7 +35,7 @@ type AnnotationHandler interface {
 // Corresponds to Python's match_annotation.
 // The mod parameter provides the module for resolving callee actions in CallAction.
 // If mod is nil, CallAction will not be inlined.
-func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler, mod *module.Module) {
+func MatchAnnotation(action ActionsAction, annot Annotation, handler AnnotationHandler, mod *module.Module) {
 	defer func() {
 		if r := recover(); r != nil {
 			if _, ok := r.(*AnnotationError); ok {
@@ -50,7 +50,7 @@ func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler,
 
 // matchAnnotationRecur is the recursive core of MatchAnnotation.
 // pos is the position within a Sequence (-1 means use full length).
-func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg.Expr, handler AnnotationHandler, pos int, mod *module.Module) {
+func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[lg.NodeKey]lg.Expr, handler AnnotationHandler, pos int, mod *module.Module) {
 	// Handle RenameAnnotation: update env and recurse
 	// Python: for x,y in annot.map.items():
 	//             if x in env: save[x] = env[x]
@@ -214,7 +214,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 		if mod != nil {
 			calleeName := callAct.CalleeName()
 			if calleeIface, ok := mod.Actions.Get2(calleeName); ok {
-				if callee, ok := calleeIface.(Action); ok {
+				if callee, ok := calleeIface.(ActionsAction); ok {
 					// Build: Sequence(IgnoreAction(), callee, ReturnAction())
 					seq := NewSequence(
 						&IgnoreAction{},
@@ -312,16 +312,16 @@ func envGetExpr(env map[lg.NodeKey]lg.Expr, cond lg.Expr) lg.Expr {
 }
 
 // extractActionFromNode tries to extract an Action from a lg.Expr.
-func extractActionFromNode(n interface{}) Action {
+func extractActionFromNode(n interface{}) ActionsAction {
 	if n == nil {
 		return nil
 	}
-	if act, ok := n.(Action); ok {
+	if act, ok := n.(ActionsAction); ok {
 		return act
 	}
 	// Try wrapper types (e.g. TacticNodeWrapper)
 	type wrapper interface {
-		GetAction() Action
+		GetAction() ActionsAction
 	}
 	if w, ok := n.(wrapper); ok {
 		return w.GetAction()
@@ -363,7 +363,7 @@ func extractActionFromNode(n interface{}) Action {
 //	    if decreases is not None:
 //	        res = LocalAction(aux, res)
 //	    return res
-func expandWhile(w *WhileAction, mod *module.Module) Action {
+func expandWhile(w *WhileAction, mod *module.Module) ActionsAction {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
 	var modset []*lg.Const
@@ -377,10 +377,10 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 				Instantiator:    mod.Instantiator,
 				CheckUnprovable: mod.Cfg.OnlyCheckUnprovable,
 				CheckedAssert:   mod.Cfg.CheckLineno,
-				GetAction: func(name string) Action {
+				GetAction: func(name string) ActionsAction {
 					if mod.Actions != nil {
 						if v, ok := mod.Actions.Get2(name); ok {
-							if act, ok := v.(Action); ok {
+							if act, ok := v.(ActionsAction); ok {
 								return act
 							}
 						}
@@ -399,7 +399,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 2: Separate invariants from ranking.
 	// In Python: self.args[2:] are invariants, last may be Ranking.
 	// In Go: WhileAction.Invariants are the invariant actions.
-	var asserts []Action // invariant assertions
+	var asserts []ActionsAction // invariant assertions
 	var decreasesRanking *Ranking
 
 	for _, inv := range w.Invariants {
@@ -419,7 +419,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Python: assumes = [a.assert_to_assume([AssertAction]) for a in asserts
 	//                    if not isinstance(a, SubgoalAction)]
 	assertKinds := map[string]bool{"assert": true}
-	var assumes []Action
+	var assumes []ActionsAction
 	for _, a := range asserts {
 		if _, isSub := a.(*SubgoalAction); isSub {
 			continue
@@ -428,7 +428,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	}
 
 	// Filter asserts: remove any that became AssumeActions
-	var filteredAsserts []Action
+	var filteredAsserts []ActionsAction
 	for _, a := range asserts {
 		if _, isAssume := a.(*AssumeAction); isAssume {
 			continue
@@ -438,8 +438,8 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	asserts = filteredAsserts
 
 	// Step 4: Handle ranking/decreases.
-	var entryAsserts []Action
-	var exitAsserts []Action
+	var entryAsserts []ActionsAction
+	var exitAsserts []ActionsAction
 	var auxVar lg.Expr // for LocalAction wrapper
 
 	if decreasesRanking != nil && len(decreasesRanking.RArgs) > 0 {
@@ -475,7 +475,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	}
 
 	// Step 5: Build havocs for modified symbols.
-	var havocs []Action
+	var havocs []ActionsAction
 	if mod != nil {
 		for _, modSym := range modset {
 			if sym, ok := mod.Sig.Symbols.Get2(modSym.Name); ok {
@@ -536,7 +536,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 
 	outerSeq := NewSequence(outerParts...)
 	outerSeq.SetLineno(w.GetLineno())
-	var res Action = outerSeq
+	var res ActionsAction = outerSeq
 
 	// Step 7: Wrap in LocalAction if decreases ranking was used.
 	// Python: if decreases is not None: res = LocalAction(aux, res)
