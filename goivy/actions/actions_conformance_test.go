@@ -69,7 +69,7 @@ func TestIsGlobalSkolem_Conformance(t *testing.T) {
 func TestNativeAction_ImpureFlag(t *testing.T) {
 	// Verify the Impure field exists and can be set.
 	// The actual parsing happens in compiler/phase6.go (tested separately).
-	code := mkConst("some_code")
+	code := actionsMkConst("some_code")
 	a := NewNativeAction(code)
 	if a.Impure {
 		t.Error("NewNativeAction should default Impure to false")
@@ -112,8 +112,8 @@ func TestChoiceAction_Determinize(t *testing.T) {
 
 func TestSequence_Decompose(t *testing.T) {
 	// Python: return [(pre, self.args, post)]
-	a1 := NewAssumeAction(mkConst("p"))
-	a2 := NewAssertAction(mkConst("q"))
+	a1 := NewAssumeAction(actionsMkConst("p"))
+	a2 := NewAssertAction(actionsMkConst("q"))
 	seq := NewSequence(a1, a2)
 
 	paths := seq.Decompose()
@@ -128,8 +128,8 @@ func TestSequence_Decompose(t *testing.T) {
 func TestChoiceAction_Decompose(t *testing.T) {
 	// Python: return [(pre, [a], post) for a in self.args]
 	cfg := module.NewModuleActionsConfig()
-	a1 := NewAssumeAction(mkConst("p"))
-	a2 := NewAssumeAction(mkConst("q"))
+	a1 := NewAssumeAction(actionsMkConst("p"))
+	a2 := NewAssumeAction(actionsMkConst("q"))
 	choice := NewChoiceActionOn(cfg, a1, a2)
 
 	paths := choice.Decompose()
@@ -145,9 +145,9 @@ func TestChoiceAction_Decompose(t *testing.T) {
 
 func TestIfAction_Decompose(t *testing.T) {
 	// Python: return [(pre, [a], post) for a in self.subactions()]
-	cond := mkConst("c")
-	thenBody := NewAssumeAction(mkConst("p"))
-	elseBody := NewAssumeAction(mkConst("q"))
+	cond := actionsMkConst("c")
+	thenBody := NewAssumeAction(actionsMkConst("p"))
+	elseBody := NewAssumeAction(actionsMkConst("q"))
 	ifAct := NewIfAction(cond, thenBody, elseBody)
 
 	paths := ifAct.Decompose()
@@ -157,8 +157,8 @@ func TestIfAction_Decompose(t *testing.T) {
 }
 
 func TestIfAction_Decompose_NoElse(t *testing.T) {
-	cond := mkConst("c")
-	thenBody := NewAssumeAction(mkConst("p"))
+	cond := actionsMkConst("c")
+	thenBody := NewAssumeAction(actionsMkConst("p"))
 	ifAct := NewIfAction(cond, thenBody)
 
 	paths := ifAct.Decompose()
@@ -174,8 +174,8 @@ func TestIfAction_Decompose_NoElse(t *testing.T) {
 
 func TestModifies_AssignAction(t *testing.T) {
 	// Python: AssignAction.modifies() returns [self.args[0].rep]
-	lhs := mkConst("x")
-	rhs := mkConst("y")
+	lhs := actionsMkConst("x")
+	rhs := actionsMkConst("y")
 	a := NewAssignAction(lhs, rhs)
 
 	mods := Modifies(a)
@@ -189,7 +189,7 @@ func TestModifies_AssignAction(t *testing.T) {
 
 func TestModifies_HavocAction(t *testing.T) {
 	// Python: HavocAction.modifies() returns [self.args[0].rep]
-	target := mkConst("x")
+	target := actionsMkConst("x")
 	a := NewHavocAction(target)
 
 	mods := Modifies(a)
@@ -205,8 +205,8 @@ func TestModifies_Sequence(t *testing.T) {
 	// Python: Sequence inherits Action.modifies() which returns [].
 	// Modifies does NOT recurse into children for compound actions.
 	// Callers that need all modified symbols iterate subactions themselves.
-	a1 := NewAssignAction(mkConst("x"), mkConst("1"))
-	a2 := NewAssignAction(mkConst("y"), mkConst("2"))
+	a1 := NewAssignAction(actionsMkConst("x"), actionsMkConst("1"))
+	a2 := NewAssignAction(actionsMkConst("y"), actionsMkConst("2"))
 	seq := NewSequence(a1, a2)
 
 	mods := Modifies(seq)
@@ -217,7 +217,7 @@ func TestModifies_Sequence(t *testing.T) {
 
 func TestModifies_AssumeAction(t *testing.T) {
 	// AssumeAction modifies nothing
-	a := NewAssumeAction(mkConst("p"))
+	a := NewAssumeAction(actionsMkConst("p"))
 	mods := Modifies(a)
 	if len(mods) != 0 {
 		t.Errorf("Modifies(AssumeAction) returned %d, want 0", len(mods))
@@ -289,9 +289,9 @@ func TestTopBottomState(t *testing.T) {
 
 func TestIfAction_Subactions_Boolean(t *testing.T) {
 	cfg := module.NewModuleActionsConfig()
-	cond := mkConst("c")
-	thenBody := NewAssumeAction(mkConst("p"))
-	elseBody := NewAssumeAction(mkConst("q"))
+	cond := actionsMkConst("c")
+	thenBody := NewAssumeAction(actionsMkConst("p"))
+	elseBody := NewAssumeAction(actionsMkConst("q"))
 	ifAct := NewIfAction(cond, thenBody, elseBody)
 
 	ifPart, elsePart := ifAct.Subactions(cfg)
@@ -317,9 +317,9 @@ func TestIfAction_Subactions_Boolean(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestDecomposeWithState_Atomic(t *testing.T) {
-	a := NewAssumeAction(mkConst("p"))
-	pre := mkConst("pre")
-	post := mkConst("post")
+	a := NewAssumeAction(actionsMkConst("p"))
+	pre := actionsMkConst("pre")
+	post := actionsMkConst("post")
 
 	triples := DecomposeWithState(a, pre, post, false)
 	if len(triples) != 1 {
@@ -331,11 +331,11 @@ func TestDecomposeWithState_Atomic(t *testing.T) {
 }
 
 func TestDecomposeWithState_Sequence(t *testing.T) {
-	a1 := NewAssumeAction(mkConst("p"))
-	a2 := NewAssertAction(mkConst("q"))
+	a1 := NewAssumeAction(actionsMkConst("p"))
+	a2 := NewAssertAction(actionsMkConst("q"))
 	seq := NewSequence(a1, a2)
 
-	triples := DecomposeWithState(seq, mkConst("pre"), mkConst("post"), false)
+	triples := DecomposeWithState(seq, actionsMkConst("pre"), actionsMkConst("post"), false)
 	if len(triples) != 1 {
 		t.Fatalf("DecomposeWithState(Sequence) returned %d, want 1", len(triples))
 	}

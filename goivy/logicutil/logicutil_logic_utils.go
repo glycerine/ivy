@@ -282,7 +282,7 @@ func RelInst(rel *logic.Const) logic.Expr {
 	dom := fs.Domain()
 	vars := make([]logic.Expr, len(dom))
 	for i, s := range dom {
-		v, _ := logic.NewVariable(varName(i), s)
+		v, _ := logic.NewVariable(logicutilVarName(i), s)
 		vars[i] = v
 	}
 	app, err := logic.NewApply(rel, vars...)
@@ -307,7 +307,7 @@ func FunEqInst(f *logic.Const) logic.Expr {
 	rng := fs.Range()
 	vars := make([]logic.Expr, len(dom))
 	for i, s := range dom {
-		v, _ := logic.NewVariable(varName(i), s)
+		v, _ := logic.NewVariable(logicutilVarName(i), s)
 		vars[i] = v
 	}
 	y, _ := logic.NewVariable("Y", rng)
@@ -515,7 +515,7 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 
 // --- helpers ---
 
-func varName(idx int) string {
+func logicutilVarName(idx int) string {
 	return fmt.Sprintf("V%d", idx)
 }
 
@@ -972,7 +972,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		body := replaceTemporalsRec(t.Body, g, when).(logic.Expr)
 		vs, nvs, body := LogicUtilNormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
-		result := applyNamedBinder(nb, varsToNodes(vs))
+		result := applyNamedBinder(nb, logicutilVarsToNodes(vs))
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 
@@ -992,7 +992,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		body := &logic.Cond{CSort: val.NodeSort(), T1: cond, T2: val}
 		vs, nvs, nbody := LogicUtilNormalizeFreeVariables(body)
 		nb := when(t.Name, nvs, nbody)
-		result := applyNamedBinder(nb, varsToNodes(vs))
+		result := applyNamedBinder(nb, logicutilVarsToNodes(vs))
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
 	}
@@ -1015,7 +1015,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 			// Python line 325: recurse body AFTER terms (terms already done above)
 			xtracer.Trace("ilu.replaceTemporalsRec L2S_INIT_BODY HASH canon=%s", nb.Body.Canon())
 			body := replaceTemporalsRec(nb.Body, g, when).(logic.Expr)
-			newArgs := nodesToExprs(newChildren)
+			newArgs := logicutilNodesToExprs(newChildren)
 			if notBody, ok := body.(*logic.Not); ok {
 				// Python line 327: lg.Not(lg.Apply(ast.func.clone([body.body]), *args))
 				clonedNB := nb.Clone([]ast.Node{notBody.Body}).(logic.Expr)
@@ -1033,7 +1033,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 		// Python line 334: general Apply — recurse func AFTER terms
 		xtracer.Trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s", iu.ShortTypeName(t.Func), t.Func.Canon())
 		newFunc := replaceTemporalsRec(t.Func, g, when).(logic.Expr)
-		newArgs := nodesToExprs(newChildren)
+		newArgs := logicutilNodesToExprs(newChildren)
 		result := logic.MustApply(newFunc, newArgs...)
 		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", iu.ShortTypeName(result), result.Canon())
 		return result
@@ -1066,7 +1066,7 @@ func replaceTemporalsRec(n ast.Node, g GloballyBinderFunc, when WhenBinderFunc) 
 }
 
 // nodesToExprs converts a slice of ast.Node to a slice of logic.Expr.
-func nodesToExprs(nodes []ast.Node) []logic.Expr {
+func logicutilNodesToExprs(nodes []ast.Node) []logic.Expr {
 	exprs := make([]logic.Expr, len(nodes))
 	for i, n := range nodes {
 		exprs[i] = n.(logic.Expr)
@@ -1074,7 +1074,7 @@ func nodesToExprs(nodes []ast.Node) []logic.Expr {
 	return exprs
 }
 
-func varsToNodes(vars []*logic.Variable) []logic.Expr {
+func logicutilVarsToNodes(vars []*logic.Variable) []logic.Expr {
 	nodes := make([]logic.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
@@ -1426,7 +1426,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Expr) logic.Expr {
 		fn := logic.NewConst(fname, fnSort)
 		var res logic.Expr
 		if len(vs) > 0 {
-			res = logic.MustApply(fn, varsToNodes(vs)...)
+			res = logic.MustApply(fn, logicutilVarsToNodes(vs)...)
 		} else {
 			res = fn
 		}

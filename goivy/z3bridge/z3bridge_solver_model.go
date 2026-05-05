@@ -20,7 +20,7 @@ type ModelResult struct {
 }
 
 // Eval evaluates a Z3 expression in the model with completion.
-func (mr *ModelResult) Eval(e Expr) (Expr, bool) {
+func (mr *ModelResult) Eval(e Z3Expr) (Z3Expr, bool) {
 	return mr.Model.Eval(e, true)
 }
 
@@ -72,8 +72,8 @@ func (s *Solver) GetModelClauses(clauses *module.Clauses) (*ModelResult, error) 
 
 // ModelValues evaluates a list of expressions in a model.
 // Returns a map from expression string to its model value.
-func (s *Solver) ModelValues(model *Model, syms []*lg.Const) (map[string]Expr, error) {
-	result := make(map[string]Expr, len(syms))
+func (s *Solver) ModelValues(model *Model, syms []*lg.Const) (map[string]Z3Expr, error) {
+	result := make(map[string]Z3Expr, len(syms))
 	for _, sym := range syms {
 		zSym, err := s.tr.Translate(sym)
 		if err != nil {
@@ -111,8 +111,7 @@ type FinalCond interface {
 // Corresponds to Python's get_small_model.
 func (s *Solver) GetSmallModel(
 	clauses *module.Clauses,
-	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Const,
+	sortsToMinimize []lg.Sort, relationsToMinimize []*lg.Const,
 ) (*ModelResult, error) {
 	return s.GetSmallModelWithCond(clauses, sortsToMinimize, relationsToMinimize, nil, true)
 }
@@ -129,8 +128,7 @@ func (s *Solver) GetSmallModel(
 // the current model (or nil if UNSAT).
 func (s *Solver) GetSmallModelWithCond(
 	clauses *module.Clauses,
-	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Const,
+	sortsToMinimize []lg.Sort, relationsToMinimize []*lg.Const,
 	finalCond []FinalCond,
 	shrink bool,
 ) (*ModelResult, error) {
@@ -324,16 +322,16 @@ func (s *Solver) EvalFormula(model *Model, fmla lg.Expr) (bool, error) {
 
 // CubeToZ3 converts a list of literals (a cube) to a Z3 conjunction.
 // Corresponds to Python's cube_to_z3.
-func (s *Solver) CubeToZ3(cube []*il.Literal) (Expr, error) {
+func (s *Solver) CubeToZ3(cube []*il.Literal) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:774 cube_to_z3() ENTER nlits=%d", len(cube))
 	if len(cube) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
-	exprs := make([]Expr, len(cube))
+	exprs := make([]Z3Expr, len(cube))
 	for i, lit := range cube {
 		zlit, err := s.LiteralToZ3(lit)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		exprs[i] = zlit
 	}
@@ -344,11 +342,11 @@ func (s *Solver) CubeToZ3(cube []*il.Literal) (Expr, error) {
 }
 
 // LiteralToZ3 converts a single literal to a Z3 expression.
-func (s *Solver) LiteralToZ3(lit *il.Literal) (Expr, error) {
+func (s *Solver) LiteralToZ3(lit *il.Literal) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%v", lit.Polarity)
 	zAtom, err := s.tr.Translate(lit.Atom)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 	if lit.Polarity == 0 {
 		return s.tr.Ctx.Not(zAtom), nil
@@ -360,7 +358,7 @@ func (s *Solver) LiteralToZ3(lit *il.Literal) (Expr, error) {
 // Keeps a reference to the Z3 expression to preserve the AST ID from GC.
 // Corresponds to Python's memo[fid] = (f, res) in check_cube.
 type CubeMemoEntry struct {
-	Expr   Expr // prevent GC so AST ID stays valid
+	Expr   Z3Expr // prevent GC so AST ID stays valid
 	Result bool
 }
 
@@ -548,7 +546,7 @@ func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Cl
 	// Create activation literals and gated negatives.
 	// Python: alits = [z3.Const("__c%s" % n, z3.BoolSort()) for n,c in enumerate(neg_fmlas)]
 	//         cc = [z3.Or(z3.Not(a), z3.Not(formula_to_z3(c))) for a,c in zip(alits,neg_fmlas)]
-	alits := make([]Expr, len(negFmlas))
+	alits := make([]Z3Expr, len(negFmlas))
 	for i, nf := range negFmlas {
 		alit := ctx.Const(fmt.Sprintf("__c%d", i), ctx.BoolSort())
 		alits[i] = alit
@@ -564,13 +562,13 @@ func (s *Solver) FilterRedundantFacts(clauses *module.Clauses, axioms *module.Cl
 	// Python: if decide(s2, [alit]) == z3.sat: keep.append(fmla)
 	var keep []lg.Expr
 	for i, fmla := range negFmlas {
-		if z3solver.CheckAssumptions([]Expr{alits[i]}) == Sat {
+		if z3solver.CheckAssumptions([]Z3Expr{alits[i]}) == Sat {
 			keep = append(keep, fmla)
 		}
 	}
 
 	allFmlas := append(posFmlas, keep...)
-	defs := make([]*il.Definition, len(clauses.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
 	return module.NewClauses(allFmlas, defs, clauses.Annot), nil
 }

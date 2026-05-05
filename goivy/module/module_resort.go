@@ -77,7 +77,7 @@ func ResortSig(sig *il.Sig, subs map[lg.NodeKey]*SortRefinement) {
 	newSorts := iu.NewInsMap[string, lg.Sort]()
 	for _, sort := range sig.Sorts.All() {
 		newSort := lu.LogicUtilResortSort(sort, ss)
-		newName := il.SortName(newSort)
+		newName := il.IvySortName(newSort)
 		newSorts.Set(newName, newSort)
 	}
 	sig.Sorts = newSorts
@@ -164,7 +164,7 @@ func ResortAliasesMap(amap map[string]string, subs map[lg.NodeKey]*SortRefinemen
 		result[k] = v
 	}
 	for _, sr := range subs {
-		result[il.SortName(sr.Old)] = il.SortName(sr.New)
+		result[il.IvySortName(sr.Old)] = il.IvySortName(sr.New)
 	}
 	return result
 }

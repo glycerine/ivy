@@ -22,8 +22,8 @@ import (
 type HerbrandModel struct {
 	solver    *Z3Solver
 	model     *Model
-	constants map[string][]Expr  // sort name → universe elements
-	sortMap   map[string]lg.Sort // sort name → sort
+	constants map[string][]Z3Expr // sort name → universe elements
+	sortMap   map[string]lg.Sort  // sort name → sort
 	tr        *Translator
 	sig       *il.Sig
 }
@@ -36,7 +36,7 @@ func NewHerbrandModel(s *Solver, z3solver *Z3Solver, model *Model, vocab []*lg.C
 	h := &HerbrandModel{
 		solver:    z3solver,
 		model:     model,
-		constants: make(map[string][]Expr),
+		constants: make(map[string][]Z3Expr),
 		sortMap:   make(map[string]lg.Sort),
 		tr:        s.tr,
 		sig:       s.sig,
@@ -76,7 +76,7 @@ func (h *HerbrandModel) Sorts() []lg.Sort {
 
 // SortUniverse returns the Ivy-level universe for a sort.
 func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Const {
-	name := il.SortName(sort)
+	name := il.IvySortName(sort)
 	elems, ok := h.constants[name]
 	if !ok {
 		return nil
@@ -97,7 +97,7 @@ func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Const {
 // translates to Z3, then sorts using substitute + model.eval. This works
 // for user-defined `<` on uninterpreted sorts, not just Z3 built-in Lt.
 func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Const {
-	name := il.SortName(sort)
+	name := il.IvySortName(sort)
 	elems, ok := h.constants[name]
 	if !ok {
 		return nil
@@ -129,7 +129,7 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Const {
 // with substitute + model.eval, supporting user-defined orderings on
 // uninterpreted sorts.
 // HerbrandModel is in ivy_solver.py:835-914.
-func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []Expr) (sorted []Expr, ok bool) {
+func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []Z3Expr) (sorted []Z3Expr, ok bool) {
 	xtracer.Trace("ivy_solver.py:851 HerbrandModel.sorted_sort_universe() top. solver/herbrand.go:132") // not seen in make golden.
 
 	// Python's approach: (ivy_solver.py:850 in sorted_sort_universe()):
@@ -175,8 +175,8 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []Expr) (sorted []Exp
 	ctx := h.tr.Ctx
 
 	// Comparator function: substitute X->a, Y->b in order_atom, evaluate in model
-	lessFunc := func(a, b Expr) bool {
-		fact := SubstituteZ3(ctx, orderZ3, [][2]Expr{{z3X, a}, {z3Y, b}})
+	lessFunc := func(a, b Z3Expr) bool {
+		fact := SubstituteZ3(ctx, orderZ3, [][2]Z3Expr{{z3X, a}, {z3Y, b}})
 		val, evalOk := h.model.Eval(fact, true)
 		if !evalOk {
 			return false
@@ -185,7 +185,7 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []Expr) (sorted []Exp
 	}
 
 	// Insertion sort (matching Python's sorted() with cmp_to_key)
-	sorted = make([]Expr, len(elems))
+	sorted = make([]Z3Expr, len(elems))
 	copy(sorted, elems)
 	for i := 1; i < len(sorted); i++ {
 		for j := i; j > 0; j-- {
@@ -200,7 +200,7 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []Expr) (sorted []Exp
 }
 
 // SortUniverseZ3 returns the Z3-level universe for a sort name.
-func (h *HerbrandModel) SortUniverseZ3(sortName string) []Expr {
+func (h *HerbrandModel) SortUniverseZ3(sortName string) []Z3Expr {
 	return h.constants[sortName]
 }
 
@@ -264,7 +264,7 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 	}
 
 	// Get ranges for each variable
-	ranges := make([][]Expr, len(vs))
+	ranges := make([][]Z3Expr, len(vs))
 	for i, v := range vs {
 		ranges[i] = h.variableRange(v)
 	}
@@ -279,7 +279,7 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 	}
 
 	// Translate variables to Z3
-	zVs := make([]Expr, len(vs))
+	zVs := make([]Z3Expr, len(vs))
 	for i, v := range vs {
 		zv, err := h.tr.Translate(v)
 		if err != nil {
@@ -290,8 +290,8 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 
 	// Enumerate all assignments
 	var rows [][]*lg.Const
-	h.enumerateAssignments(ranges, 0, make([]Expr, len(vs)),
-		func(assignment []Expr) {
+	h.enumerateAssignments(ranges, 0, make([]Z3Expr, len(vs)),
+		func(assignment []Z3Expr) {
 			// Substitute assignment into the formula
 			fact := h.tr.Ctx.Substitute(zfmla, zVs, assignment)
 			val, ok := h.model.Eval(fact, true)
@@ -308,7 +308,7 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 }
 
 // enumerateAssignments generates the Cartesian product of ranges.
-func (h *HerbrandModel) enumerateAssignments(ranges [][]Expr, depth int, current []Expr, f func([]Expr)) {
+func (h *HerbrandModel) enumerateAssignments(ranges [][]Z3Expr, depth int, current []Z3Expr, f func([]Z3Expr)) {
 	if depth == len(ranges) {
 		f(current)
 		return
@@ -320,13 +320,13 @@ func (h *HerbrandModel) enumerateAssignments(ranges [][]Expr, depth int, current
 }
 
 // variableRange returns the Z3 universe for a variable's sort.
-func (h *HerbrandModel) variableRange(v *lg.Variable) []Expr {
+func (h *HerbrandModel) variableRange(v *lg.Variable) []Z3Expr {
 	sort := v.VSort
-	sortName := il.SortName(sort)
+	sortName := il.IvySortName(sort)
 
 	// Enumerated sort: use the enumeration values
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
-		var result []Expr
+		var result []Z3Expr
 		for _, name := range es.Extension {
 			c := lg.NewConst(name, sort)
 			zc, err := h.tr.Translate(c)
@@ -341,7 +341,7 @@ func (h *HerbrandModel) variableRange(v *lg.Variable) []Expr {
 
 	// Boolean sort
 	if lg.SortEqual(sort, lg.Boolean) {
-		return []Expr{
+		return []Z3Expr{
 			h.tr.Ctx.BoolVal(false),
 			h.tr.Ctx.BoolVal(true),
 		}
@@ -429,9 +429,9 @@ func (h *HerbrandModel) mineInterpretedConstants(model *Model, vocab []*lg.Const
 	}
 
 	// Initialize sort_values for each interpreted sort
-	sortValues := make(map[string]map[string]Expr)
+	sortValues := make(map[string]map[string]Z3Expr)
 	for name := range interpSorts {
-		sortValues[name] = make(map[string]Expr)
+		sortValues[name] = make(map[string]Z3Expr)
 	}
 
 	// For each symbol in vocab, if its range sort is interpreted,
@@ -442,7 +442,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *Model, vocab []*lg.Const
 	//         sort_values[sort].update(collect_model_values(sort, model, s))
 	for _, sym := range vocab {
 		rng := il.SortRange(sym.CSort)
-		rngName := il.SortName(rng)
+		rngName := il.IvySortName(rng)
 		if _, isInterp := sortValues[rngName]; !isInterp {
 			continue // range sort is not interpreted, skip
 		}
@@ -484,7 +484,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *Model, vocab []*lg.Const
 		if len(vals) == 0 {
 			continue
 		}
-		var evaluated []Expr
+		var evaluated []Z3Expr
 		for _, v := range vals {
 			// Re-evaluate each collected numeral in the model
 			ev, ok := model.Eval(v, true)
@@ -504,7 +504,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *Model, vocab []*lg.Const
 // constantFromZ3 converts a Z3 value back to an Ivy constant (as *lg.Const).
 // Used by SortUniverse, Check, getModelConstant where callers need .Name/.CSort.
 // Corresponds to Python's constant_from_z3.
-func constantFromZ3(sort lg.Sort, z3val Expr) *lg.Const {
+func constantFromZ3(sort lg.Sort, z3val Z3Expr) *lg.Const {
 	xtracer.Trace("ivy_solver.py:997 constant_from_z3() ENTER sort=%v", sort)
 	s := z3val.String()
 	if s == "true" {
@@ -520,7 +520,7 @@ func constantFromZ3(sort lg.Sort, z3val Expr) *lg.Const {
 // returning lg.True/lg.False for boolean values (matching Python's
 // constant_from_z3 which returns ivy_logic.And()/ivy_logic.Or()).
 // Used by EvalToConstant where callers compare with truth.Equal(lg.True).
-func constantFromZ3Expr(sort lg.Sort, z3val Expr) lg.Expr {
+func constantFromZ3Expr(sort lg.Sort, z3val Z3Expr) lg.Expr {
 	s := z3val.String()
 	if s == "true" {
 		return lg.True // &And{} — matches Python's ivy_logic.And()
@@ -753,7 +753,7 @@ func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Expr {
 func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 	result := make(map[string][]lg.Expr)
 	for _, sort := range h.Sorts() {
-		sortName := il.SortName(sort)
+		sortName := il.IvySortName(sort)
 		if numerals {
 			if !il.IsInterpretedSort(h.sig, sort) {
 				elems := h.SortedSortUniverse(sort)
@@ -800,7 +800,7 @@ func SortCard(sort lg.Sort, sig *il.Sig) int {
 		}
 	}
 	if sig != nil {
-		sortName := il.SortName(sort)
+		sortName := il.IvySortName(sort)
 		if itp, ok := sig.Interp[sortName]; ok {
 			// Check if interpretation is a RangeSort with numeric bounds.
 			// Python: itp = ivy_logic.sig.interp.get(sort.name,None)
@@ -828,9 +828,9 @@ func SortCard(sort lg.Sort, sig *il.Sig) int {
 
 // EnumeratedRange returns Z3 expressions for all elements of an enumerated sort.
 // Corresponds to Python's enumerated_range.
-func (s *Solver) EnumeratedRange(sort *lg.EnumeratedSort) ([]Expr, error) {
+func (s *Solver) EnumeratedRange(sort *lg.EnumeratedSort) ([]Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:903 enumerated_range() ENTER")
-	var result []Expr
+	var result []Z3Expr
 	for _, name := range sort.Extension {
 		c := lg.NewConst(name, sort)
 		zc, err := s.tr.Translate(c)
@@ -1066,7 +1066,7 @@ func (s *Solver) clausesCaseLegacy(clauses *module.Clauses) (*module.Clauses, er
 		}
 	}
 
-	defs := make([]*il.Definition, len(clauses.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
 	return module.NewClauses(newFmlas, defs, clauses.Annot), nil
 }

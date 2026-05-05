@@ -404,7 +404,9 @@ func collectDecls(files []fileInfo) ([]declaration, []declaration, error) {
 		for _, decl := range f.Decls {
 			switch d := decl.(type) {
 			case *ast.FuncDecl:
-				if d.Recv == nil && d.Name.Name != "_" {
+				// Multiple init functions are legal in one Go package, so they
+				// are not flattening blockers.
+				if d.Recv == nil && d.Name.Name != "_" && d.Name.Name != "init" {
 					*target = append(*target, declaration{Name: d.Name.Name, Kind: "func", File: file})
 				}
 			case *ast.GenDecl:

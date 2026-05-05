@@ -47,7 +47,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 	slv.Assert(z3expr)
 	// Assert P(-1) = false
 	negOne := ctx.IntVal(-1)
-	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Z3Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.Not(pDecl.Apply(negOne)))
 	res := slv.Check()
 	if res == Unsat {
@@ -85,9 +85,9 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 	slv.Assert(z3expr)
 	// P(x) = (x == -1)
 	xConst := ctx.Const("X:mynat", ctx.IntSort())
-	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Z3Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.ForAll(
-		[]Expr{xConst},
+		[]Z3Expr{xConst},
 		ctx.Eq(pDecl.Apply(xConst), ctx.Eq(xConst, ctx.IntVal(-1))),
 	))
 	res := slv.Check()
@@ -122,7 +122,7 @@ func TestQuantConstraints_RangeSort(t *testing.T) {
 	ctx := s.Context()
 	slv := ctx.NewZ3Solver()
 	slv.Assert(z3expr)
-	pDecl := ctx.Function("P", []Sort{ctx.IntSort()}, ctx.BoolSort())
+	pDecl := ctx.Function("P", []Z3Sort{ctx.IntSort()}, ctx.BoolSort())
 	slv.Assert(ctx.Not(pDecl.Apply(ctx.IntVal(1)))) // P(1) = false
 	res := slv.Check()
 	if res == Unsat {
@@ -205,7 +205,7 @@ func TestGebin_ZeroIsTrue(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []Expr{a, b}
+	bits := []Z3Expr{a, b}
 
 	result := Gebin(ctx, bits, 0)
 	if !result.IsTrue() {
@@ -218,7 +218,7 @@ func TestGebin_OverflowIsFalse(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []Expr{a, b} // 2 bits can represent 0-3
+	bits := []Z3Expr{a, b} // 2 bits can represent 0-3
 
 	result := Gebin(ctx, bits, 4) // 4 >= 2^2, impossible
 	if !result.IsFalse() {
@@ -233,7 +233,7 @@ func TestGebin_TwoBitsGeTwo(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []Expr{a, b}
+	bits := []Z3Expr{a, b}
 
 	result := Gebin(ctx, bits, 2)
 	// bits >= 2 with 2 bits MSB first means: a must be true
@@ -252,7 +252,7 @@ func TestGebin_TwoBitsGeOne(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
-	bits := []Expr{a, b}
+	bits := []Z3Expr{a, b}
 
 	result := Gebin(ctx, bits, 1)
 	expected := ctx.Or(a, b)
@@ -273,7 +273,7 @@ func TestGebin_ThreeBitsGeFive(t *testing.T) {
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	c := ctx.Const("c", ctx.BoolSort())
-	bits := []Expr{a, b, c}
+	bits := []Z3Expr{a, b, c}
 
 	result := Gebin(ctx, bits, 5)
 	expected := ctx.And(a, ctx.Or(b, c))
@@ -422,9 +422,9 @@ func TestClauseModelSimp_EarlyReturn(t *testing.T) {
 	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
-	p := boolConst("p")
-	q := boolConst("q")
-	r := boolConst("r")
+	p := z3BoolConst("p")
+	q := z3BoolConst("q")
+	r := z3BoolConst("r")
 
 	// Create a model where p=true, q=false, r=false
 	slv := ctx.NewZ3Solver()
@@ -461,7 +461,7 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 	s := NewSolver(nil, nil)
 	ctx := s.Context()
 
-	p := boolConst("p")
+	p := z3BoolConst("p")
 
 	// Model where p=false
 	slv := ctx.NewZ3Solver()
@@ -471,7 +471,7 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 	model := slv.Model()
 
 	// Use a non-ground literal (variable) so it's always kept
-	xVar := boolVar("X")
+	xVar := z3BoolVar("X")
 	clause := &lg.Or{Terms: []lg.Expr{p, xVar}}
 
 	result := s.clauseModelSimp(model, clause)
@@ -657,7 +657,7 @@ func (r *testReporter) End(result bool, doc string) bool {
 
 func TestCheckSequenceWithReporter(t *testing.T) {
 	s := NewSolver(nil, nil)
-	p := boolConst("p")
+	p := z3BoolConst("p")
 
 	seq := []AssumeAssert{
 		NewAssume(module.FormulaToClauses(p, nil), "assume_p"),
@@ -687,7 +687,7 @@ func TestCheckSequenceWithReporter(t *testing.T) {
 
 func TestCheckSequenceWithReporter_Abort(t *testing.T) {
 	s := NewSolver(nil, nil)
-	p := boolConst("p")
+	p := z3BoolConst("p")
 
 	seq := []AssumeAssert{
 		// Assert p with no assumptions — should fail

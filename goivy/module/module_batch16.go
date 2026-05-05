@@ -123,10 +123,10 @@ func UsedVariableNamesAst(ast lg.Expr) []string {
 // VariablesDistinctAst renames variables in ast1 so they don't occur in ast2.
 // Corresponds to Python's variables_distinct_ast
 // (ivy_logic_utils.py:1210-1214).
-func VariablesDistinctAst(ast1, ast2 lg.Expr) lg.Expr {
+func ModuleVariablesDistinctAst(ast1, ast2 lg.Expr) lg.Expr {
 	vars1 := lu.UsedVariables(ast1)
 	vars2 := lu.UsedVariables(ast2)
-	renaming := DistinctVariableRenaming(vars1, vars2)
+	renaming := ModuleDistinctVariableRenaming(vars1, vars2)
 	if len(renaming) == 0 {
 		return ast1
 	}
@@ -137,7 +137,7 @@ func VariablesDistinctAst(ast1, ast2 lg.Expr) lg.Expr {
 // new variables, ensuring variables from vars1 don't clash with vars2.
 // Corresponds to Python's distinct_variable_renaming
 // (ivy_logic_utils.py, Batch 1.7).
-func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
+func ModuleDistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
 	// Collect all used names from vars2
 	used := make(map[string]bool)
 	for _, v := range vars2 {
@@ -183,7 +183,7 @@ func RenameVariablesDistinctAsts(vars []*lg.Variable, asts []lg.Expr) []*lg.Vari
 	for _, v := range vars {
 		vars1[lg.Key(v)] = v
 	}
-	renaming := DistinctVariableRenaming(vars1, allUsed)
+	renaming := ModuleDistinctVariableRenaming(vars1, allUsed)
 	result := make([]*lg.Variable, len(vars))
 	for i, v := range vars {
 		if r, ok := renaming[v.Name]; ok {
@@ -213,7 +213,7 @@ func VariablesDistinctListAst(astList []lg.Expr, ast2 lg.Expr) []lg.Expr {
 		}
 	}
 	vars2 := lu.UsedVariables(ast2)
-	renaming := DistinctVariableRenaming(allVars, vars2)
+	renaming := ModuleDistinctVariableRenaming(allVars, vars2)
 	if len(renaming) == 0 {
 		return astList
 	}

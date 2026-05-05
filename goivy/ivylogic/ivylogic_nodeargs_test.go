@@ -24,7 +24,7 @@ func TestNodeArgsApplyExcludesFunc(t *testing.T) {
 	args := NodeArgs(app)
 
 	if len(args) != 2 {
-		t.Fatalf("NodeArgs(Apply(f, [x, y])): expected 2 args, got %d", len(args))
+		t.Fatalf("NodeArgs(IvyApply(f, [x, y])): expected 2 args, got %d", len(args))
 	}
 	if args[0] != x {
 		t.Errorf("NodeArgs(Apply)[0] should be x, got %v", args[0])
@@ -47,7 +47,7 @@ func TestNodeArgsApplyNoTerms(t *testing.T) {
 	args := NodeArgs(app)
 
 	if len(args) != 0 {
-		t.Fatalf("NodeArgs(Apply(f, [])): expected 0 args, got %d", len(args))
+		t.Fatalf("NodeArgs(IvyApply(f, [])): expected 0 args, got %d", len(args))
 	}
 }
 

@@ -387,7 +387,7 @@ func usedSymbolExprs(node lg.Expr) *iu.InsMap[lg.NodeKey, lg.Expr] {
 
 // usedSymbolNames returns a list of plain symbol names (no sort info)
 // from the given expression. Used by FindReferences and other name-based lookups.
-func usedSymbolNames(node lg.Expr) []string {
+func isolateUsedSymbolNames(node lg.Expr) []string {
 	exprs := usedSymbolExprs(node)
 	result := make([]string, 0, exprs.Len())
 	seen := make(map[string]bool)
@@ -466,7 +466,7 @@ func normalizeSymbolKeys(label string, syms *iu.InsMap[lg.NodeKey, lg.Expr], use
 	return result
 }
 
-func copyStringSet(s map[string]bool) map[string]bool {
+func isolateCopyStringSet(s map[string]bool) map[string]bool {
 	c := make(map[string]bool, len(s))
 	for k, v := range s {
 		c[k] = v
@@ -690,7 +690,7 @@ func AddExternPrecond(mod *module.Module, callee actions.ActionsAction, callArgs
 		*preconds = (*preconds)[:0]
 	}
 	// Python line 936 runs unconditionally: preconds.append(And(*conjs))
-	*preconds = append(*preconds, makeAnd(conjs...))
+	*preconds = append(*preconds, isolateMakeAnd(conjs...))
 }
 
 func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
@@ -1093,7 +1093,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 		if !ok {
 			continue
 		}
-		fSyms := usedSymbolNames(fmla)
+		fSyms := isolateUsedSymbolNames(fmla)
 		for _, s := range fSyms {
 			if syms[s] {
 				refs[lf.Lineno()] = true

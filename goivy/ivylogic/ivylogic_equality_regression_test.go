@@ -64,10 +64,10 @@ func TestGetSortRefinement_ReturnType(t *testing.T) {
 	_ = result
 }
 
-// --- §1.3 Regression: ivylogic.IsTrue/IsFalse delegate to lg.IsTrue/lg.IsFalse ---
+// --- §1.3 Regression: ivylogic.IvyIsTrue/IsFalse delegate to lg.IsTrue/lg.IsFalse ---
 
-// TestIsTrueIsFalse_NonSingleton verifies that ivylogic.IsTrue and
-// ivylogic.IsFalse handle non-singleton empty And/Or nodes.
+// TestIsTrueIsFalse_NonSingleton verifies that ivylogic.IvyIsTrue and
+// ivylogic.IvyIsFalse handle non-singleton empty And/Or nodes.
 //
 // Bug: code used n == lg.True (pointer comparison) which would miss
 // freshly constructed &And{} / &Or{} nodes.
@@ -75,26 +75,26 @@ func TestIsTrueIsFalse_NonSingleton(t *testing.T) {
 	freshTrue := &lg.And{} // different pointer than lg.True
 	freshFalse := &lg.Or{} // different pointer than lg.False
 
-	if !IsTrue(freshTrue) {
-		t.Error("ivylogic.IsTrue must recognize non-singleton &And{}")
+	if !IvyIsTrue(freshTrue) {
+		t.Error("ivylogic.IvyIsTrue must recognize non-singleton &And{}")
 	}
-	if !IsFalse(freshFalse) {
-		t.Error("ivylogic.IsFalse must recognize non-singleton &Or{}")
+	if !IvyIsFalse(freshFalse) {
+		t.Error("ivylogic.IvyIsFalse must recognize non-singleton &Or{}")
 	}
 
 	// Singletons should also work.
-	if !IsTrue(lg.True) {
-		t.Error("ivylogic.IsTrue must recognize lg.True singleton")
+	if !IvyIsTrue(lg.True) {
+		t.Error("ivylogic.IvyIsTrue must recognize lg.True singleton")
 	}
-	if !IsFalse(lg.False) {
-		t.Error("ivylogic.IsFalse must recognize lg.False singleton")
+	if !IvyIsFalse(lg.False) {
+		t.Error("ivylogic.IvyIsFalse must recognize lg.False singleton")
 	}
 
 	// Cross-check: True is not False, False is not True.
-	if IsTrue(lg.False) {
+	if IvyIsTrue(lg.False) {
 		t.Error("IsTrue must reject False")
 	}
-	if IsFalse(lg.True) {
+	if IvyIsFalse(lg.True) {
 		t.Error("IsFalse must reject True")
 	}
 }

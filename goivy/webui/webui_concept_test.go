@@ -171,7 +171,7 @@ func TestCDConceptSorts(t *testing.T) {
 	T := mkSort("T")
 	X := mkVar("X", S)
 	Y := mkVar("Y", T)
-	eq := mustEq(X, Y)
+	eq := webuiMustEq(X, Y)
 	c := MustCDConcept("mixed", []*logic.Variable{X, Y}, eq)
 	sorts := c.Sorts()
 	if len(sorts) != 2 {
@@ -185,7 +185,7 @@ func TestCDConceptSorts(t *testing.T) {
 func TestCDConceptSort(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	eq := mustEq(X, X)
+	eq := webuiMustEq(X, X)
 	c := MustCDConcept("self", []*logic.Variable{X}, eq)
 	if c.Sort().String() != "S" {
 		t.Errorf("expected sort S, got %s", c.Sort())
@@ -215,7 +215,7 @@ func TestCDConceptCall(t *testing.T) {
 func TestCDConceptCallWrongArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	eq := mustEq(X, X)
+	eq := webuiMustEq(X, X)
 	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 
 	a := mkConst("a", S)
@@ -229,7 +229,7 @@ func TestCDConceptCallWrongArity(t *testing.T) {
 func TestCDConceptCallNoArgs(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	eq := mustEq(X, X)
+	eq := webuiMustEq(X, X)
 	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 
 	_, err := c.Call()
@@ -241,7 +241,7 @@ func TestCDConceptCallNoArgs(t *testing.T) {
 func TestCDConceptString(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	eq := mustEq(X, X)
+	eq := webuiMustEq(X, X)
 	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 	s := c.String()
 	if !strings.Contains(s, "Concept") {
@@ -252,7 +252,7 @@ func TestCDConceptString(t *testing.T) {
 func TestCDConceptFormulaStr(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	eq := mustEq(X, X)
+	eq := webuiMustEq(X, X)
 	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 	s := c.FormulaStr()
 	if s == "" {
@@ -366,7 +366,7 @@ func TestCDConceptDictBasic(t *testing.T) {
 
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 
 	if d.Len() != 1 {
@@ -424,7 +424,7 @@ func TestCDConceptDictCopy(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -466,7 +466,7 @@ func TestCDConceptDictForEachConcept(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -1453,7 +1453,7 @@ func FuzzCDConceptCall(f *testing.F) {
 		if arity == 0 {
 			formula = logic.True
 		} else {
-			formula = mustEq(vars[0], vars[0])
+			formula = webuiMustEq(vars[0], vars[0])
 		}
 		c, err := NewCDConcept(name, vars, formula)
 		if err != nil {

@@ -144,7 +144,7 @@ type Lexer struct {
 }
 
 // New creates a new Lexer for the given input and language version.
-func New(input string, version Version) *Lexer {
+func NewLexer(input string, version Version) *Lexer {
 	l := &Lexer{
 		input:    input,
 		pos:      0,
@@ -546,7 +546,7 @@ func (l *Lexer) scanNativeQuote(line, col int) Token {
 
 // Tokenize returns all tokens from the input.
 func Tokenize(input string, version Version) []Token {
-	l := New(input, version)
+	l := NewLexer(input, version)
 	var tokens []Token
 	for {
 		tok := l.NextToken()

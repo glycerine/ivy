@@ -52,8 +52,8 @@ func mkBinaryRelSort(dom1, dom2 lg.Sort) lg.Sort {
 
 func TestAssignFieldAction_ActionUpdate(t *testing.T) {
 	// field(obj, X) := (X = val)
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
 	fldSym := lg.NewConst("fld", fldSort)
 	obj := lg.NewConst("obj", sortT)
@@ -73,8 +73,8 @@ func TestAssignFieldAction_ActionUpdate(t *testing.T) {
 }
 
 func TestNullFieldAction_ActionUpdate(t *testing.T) {
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
 	fldSym := lg.NewConst("fld", fldSort)
 	obj := lg.NewConst("obj", sortT)
@@ -89,8 +89,8 @@ func TestNullFieldAction_ActionUpdate(t *testing.T) {
 }
 
 func TestCopyFieldAction_ActionUpdate(t *testing.T) {
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
 	fldSym := lg.NewConst("fld", fldSort)
 	dst := lg.NewConst("dst", sortT)
@@ -455,7 +455,7 @@ func TestGetTypeNames_NoLocals(t *testing.T) {
 }
 
 func TestGetTypeNames_WithLocal(t *testing.T) {
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	localDecl := lg.NewConst("v", sortT)
 	body := NewSequence()
 	local := NewLocalActionOn(NewActionsConfig(), "test", localDecl, body)

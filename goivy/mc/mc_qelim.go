@@ -129,7 +129,7 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, s
 	}
 
 	// Generate all combinations (cartesian product)
-	combos := cartesianProduct(constSets)
+	combos := mcCartesianProduct(constSets)
 
 	// Build substitution maps and instantiate
 	var insts []lg.Expr
@@ -212,12 +212,12 @@ func (q *Qelim) Apply(transFmlas, transDefs []lg.Expr, invariant lg.Expr, indhyp
 // --- Helper functions ---
 
 // cartesianProduct computes the cartesian product of multiple slices.
-func cartesianProduct(sets [][]*lg.Const) [][]*lg.Const {
+func mcCartesianProduct(sets [][]*lg.Const) [][]*lg.Const {
 	if len(sets) == 0 {
 		return [][]*lg.Const{{}}
 	}
 	first := sets[0]
-	rest := cartesianProduct(sets[1:])
+	rest := mcCartesianProduct(sets[1:])
 	var result [][]*lg.Const
 	for _, v := range first {
 		for _, r := range rest {

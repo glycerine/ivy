@@ -320,7 +320,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 
 	var witnesses []*logic.Const
 	for _, c := range constants {
-		if logic.SortEqual(c.CSort, cSort) || isTopSort(c.CSort) || isTopSort(cSort) {
+		if logic.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) || webuiIsTopSort(cSort) {
 			// Check if f implies x=c using Z3.
 			eq, eqErr := logic.NewEq(x, c)
 			if eqErr != nil {
@@ -349,7 +349,7 @@ func z3Implies(fmla1, fmla2 logic.Expr) (bool, error) {
 	return slv.Implies(fmla1, fmla2)
 }
 
-func isTopSort(s logic.Sort) bool {
+func webuiIsTopSort(s logic.Sort) bool {
 	_, ok := s.(*logic.TopSort)
 	return ok
 }
@@ -389,7 +389,7 @@ func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.C
 	c := logic.NewConst(freshName, cSort)
 
 	// Add equality concept and split.
-	X := mustVar("X", c.CSort)
+	X := webuiMustVar("X", c.CSort)
 	eq, _ := logic.NewEq(X, c)
 	eqName := "=" + c.Name
 	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*logic.Variable{X}, eq))

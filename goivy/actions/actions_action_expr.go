@@ -30,7 +30,7 @@ func actionArgsToNodes(args []lg.Expr) []ast.Node {
 	return nodes
 }
 
-func nodesToExprs(args []ast.Node) []lg.Expr {
+func actionsNodesToExprs(args []ast.Node) []lg.Expr {
 	exprs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		exprs[i] = a.(lg.Expr)
@@ -38,7 +38,7 @@ func nodesToExprs(args []ast.Node) []lg.Expr {
 	return exprs
 }
 
-func exprSexp(e lg.Expr) string {
+func actionsExprSexp(e lg.Expr) string {
 	if e == nil {
 		return "nil"
 	}
@@ -48,7 +48,7 @@ func exprSexp(e lg.Expr) string {
 func sliceSexp(s []lg.Expr) string {
 	parts := make([]string, len(s))
 	for i, c := range s {
-		parts[i] = exprSexp(c)
+		parts[i] = actionsExprSexp(c)
 	}
 	return "[" + strings.Join(parts, " ") + "]"
 }
@@ -59,7 +59,7 @@ func sliceSexp(s []lg.Expr) string {
 
 func (a *Sequence) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *Sequence) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *Sequence) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *Sequence) NodeSort() lg.Sort            { return lg.ActionS }
@@ -239,7 +239,7 @@ func (a *EnsuresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *AssignAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *AssignAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 
 /* regresses our golden matching from 155259 -> 149446, commenting out.
@@ -282,7 +282,7 @@ func (a *AssignAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 //func (a *HavocAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 //func (a *HavocAction) Clone(args []ast.Node) ast.Node {
-//	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+//	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 //}
 
 func (a *HavocAction) Args() []ast.Node {
@@ -316,7 +316,7 @@ func (a *HavocAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *SetAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *SetAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *SetAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *SetAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -377,7 +377,7 @@ func (a *IfAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *IfAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *IfAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *IfAction) Sexp() lg.NodeKey {
-	return lg.NodeKey(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)", a.CanonFields(), exprSexp(a.Cond), exprSexp(a.ThenBody), exprSexp(a.ElseBody)))
+	return lg.NodeKey(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)", a.CanonFields(), actionsExprSexp(a.Cond), actionsExprSexp(a.ThenBody), actionsExprSexp(a.ElseBody)))
 }
 func (a *IfAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
@@ -437,7 +437,7 @@ func (a *WhileAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *ChoiceAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *ChoiceAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *ChoiceAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *ChoiceAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -524,7 +524,7 @@ func (a *CallAction) Sexp() lg.NodeKey {
 		// compile_call which creates ivy_ast.Atom(name, compiled_args).
 		returnsSexp := make([]string, len(a.ActualReturns))
 		for i, r := range a.ActualReturns {
-			returnsSexp[i] = exprSexp(r)
+			returnsSexp[i] = actionsExprSexp(r)
 		}
 		elems := string(a.AstCallee.Canon())
 		for _, rs := range returnsSexp {
@@ -542,7 +542,7 @@ func (a *CallAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *LocalAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *LocalAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *LocalAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *LocalAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -559,7 +559,7 @@ func (a *LocalAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *LetAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *LetAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *LetAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *LetAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -576,7 +576,7 @@ func (a *LetAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *BindOldsAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *BindOldsAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *BindOldsAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *BindOldsAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -593,7 +593,7 @@ func (a *BindOldsAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *NativeAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *NativeAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *NativeAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *NativeAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -610,7 +610,7 @@ func (a *NativeAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *CrashAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *CrashAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *CrashAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *CrashAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -627,7 +627,7 @@ func (a *CrashAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *ThunkAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *ThunkAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *ThunkAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *ThunkAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -644,7 +644,7 @@ func (a *ThunkAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *EnvAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *EnvAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *EnvAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *EnvAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -661,7 +661,7 @@ func (a *EnvAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *ReturnAction) Args() []ast.Node { return nil }
 func (a *ReturnAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *ReturnAction) Children() []lg.Expr          { return nil }
 func (a *ReturnAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -676,7 +676,7 @@ func (a *ReturnAction) Canon() iu.Canonical          { return iu.Canonical(a.Sex
 
 func (a *IgnoreAction) Args() []ast.Node { return nil }
 func (a *IgnoreAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *IgnoreAction) Children() []lg.Expr          { return nil }
 func (a *IgnoreAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -735,7 +735,7 @@ func (a *SubgoalAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *AssignFieldAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *AssignFieldAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *AssignFieldAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *AssignFieldAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -752,7 +752,7 @@ func (a *AssignFieldAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp())
 
 func (a *NullFieldAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *NullFieldAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *NullFieldAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *NullFieldAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -769,7 +769,7 @@ func (a *NullFieldAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *CopyFieldAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *CopyFieldAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *CopyFieldAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *CopyFieldAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -786,7 +786,7 @@ func (a *CopyFieldAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *Ranking) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *Ranking) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *Ranking) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *Ranking) NodeSort() lg.Sort            { return lg.ActionS }
@@ -803,7 +803,7 @@ func (a *Ranking) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *PatternBasedUpdate) Args() []ast.Node { return nil }
 func (a *PatternBasedUpdate) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *PatternBasedUpdate) Children() []lg.Expr          { return nil }
 func (a *PatternBasedUpdate) NodeSort() lg.Sort            { return lg.ActionS }
@@ -818,7 +818,7 @@ func (a *PatternBasedUpdate) Canon() iu.Canonical          { return iu.Canonical
 
 func (a *NamedUpdate) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *NamedUpdate) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *NamedUpdate) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *NamedUpdate) NodeSort() lg.Sort            { return lg.ActionS }
@@ -837,7 +837,7 @@ func (a *NamedUpdate) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
 func (a *InstantiateAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *InstantiateAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *InstantiateAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *InstantiateAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -854,7 +854,7 @@ func (a *InstantiateAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp())
 
 func (a *DebugAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
 func (a *DebugAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	return a.ActionClone(actionsNodesToExprs(args)).(ast.Node)
 }
 func (a *DebugAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *DebugAction) NodeSort() lg.Sort            { return lg.ActionS }

@@ -366,7 +366,7 @@ func (t *TacticTactic) Clone(args []Node) Node {
 }
 func (t *TacticTactic) String() string { return "tactic " + fmt.Sprint(t.TName) }
 func (t *TacticTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(tacticTactic%v tName:%v body:%v proof:%v labels:%v)", t.Base.canonFields(), nodeCanon(t.TName), nodeCanon(t.Body), nodeCanon(t.Proof), stringSliceCanon(t.Labels)))
+	return iu.Canonical(fmt.Sprintf("(tacticTactic%v tName:%v body:%v proof:%v labels:%v)", t.Base.canonFields(), nodeCanon(t.TName), nodeCanon(t.Body), nodeCanon(t.Proof), astStringSliceCanon(t.Labels)))
 }
 
 // TacticDeclsList returns the tactic declarations (from TacticWith body).

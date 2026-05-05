@@ -19,11 +19,11 @@ func (e *LogicUtilCaptureError) Error() string {
 // UsedVariables returns all variables used in the given term (both free and bound).
 func UsedVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
 	result := make(map[logic.NodeKey]logic.Expr)
-	usedVariablesRec(t, result)
+	logicutilUsedVariablesRec(t, result)
 	return result
 }
 
-func usedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
+func logicutilUsedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		result[logic.Key(n)] = n
@@ -31,25 +31,25 @@ func usedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 		for _, v := range n.Variables {
 			result[logic.Key(v)] = v
 		}
-		usedVariablesRec(n.Body, result)
+		logicutilUsedVariablesRec(n.Body, result)
 	case *logic.Exists:
 		for _, v := range n.Variables {
 			result[logic.Key(v)] = v
 		}
-		usedVariablesRec(n.Body, result)
+		logicutilUsedVariablesRec(n.Body, result)
 	case *logic.Lambda:
 		for _, v := range n.Variables {
 			result[logic.Key(v)] = v
 		}
-		usedVariablesRec(n.Body, result)
+		logicutilUsedVariablesRec(n.Body, result)
 	case *logic.NamedBinder:
 		for _, v := range n.Variables {
 			result[logic.Key(v)] = v
 		}
-		usedVariablesRec(n.Body, result)
+		logicutilUsedVariablesRec(n.Body, result)
 	default:
 		for _, c := range t.Children() {
-			usedVariablesRec(c, result)
+			logicutilUsedVariablesRec(c, result)
 		}
 	}
 }
@@ -126,25 +126,25 @@ func freeVariablesByNameRec(t logic.Expr, result map[string]struct{}, bound map[
 			result[n.Name] = struct{}{}
 		}
 	case *logic.ForAll:
-		newBound := copyStringSet(bound)
+		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
 	case *logic.Exists:
-		newBound := copyStringSet(bound)
+		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
 	case *logic.Lambda:
-		newBound := copyStringSet(bound)
+		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		freeVariablesByNameRec(n.Body, result, newBound)
 	case *logic.NamedBinder:
-		newBound := copyStringSet(bound)
+		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
 		}
@@ -757,7 +757,7 @@ func copyVarSet(s map[logic.NodeKey]logic.Expr) map[logic.NodeKey]logic.Expr {
 	return r
 }
 
-func copyStringSet(s map[string]struct{}) map[string]struct{} {
+func logicutilCopyStringSet(s map[string]struct{}) map[string]struct{} {
 	r := make(map[string]struct{}, len(s))
 	for k, v := range s {
 		r[k] = v

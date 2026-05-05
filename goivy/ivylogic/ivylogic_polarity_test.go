@@ -35,11 +35,11 @@ func makePofX(t *testing.T) (pOfX lg.Expr, x *lg.Variable) {
 //	    pos = not pos       # mutates pos before recursive call
 //	argres = all([symbols_over_universals_rec(a, syms, pos, univs) ...])
 //
-// The formula: Not(ForAll(X, p(X)))
+// The formula: Not(IvyForAll(X, p(X)))
 //
 // Starting at pos=true:
 //   - We hit Not, so pos flips to false.
-//   - We recurse into ForAll(X, p(X)) with pos=false.
+//   - We recurse into IvyForAll(X, p(X)) with pos=false.
 //   - Since pos(false) != isinstance(ForAll)(true), the quantifier
 //     is NOT treated as universal (it's existential after skolemization).
 //   - So X should NOT be added to univs.
@@ -61,7 +61,7 @@ func TestPolarityFlipThroughNot_SymbolsOverUniversals(t *testing.T) {
 	// p should NOT be in the result — X is existential (Not flips ForAll → Exists)
 	for _, s := range syms {
 		if s.Name == "p" {
-			t.Errorf("SymbolsOverUniversals incorrectly reports 'p' as over universals in Not(ForAll(X, p(X))). "+
+			t.Errorf("SymbolsOverUniversals incorrectly reports 'p' as over universals in Not(IvyForAll(X, p(X))). "+
 				"Not should flip polarity, making ForAll existential. Got symbols: %v", syms)
 		}
 	}
@@ -70,11 +70,11 @@ func TestPolarityFlipThroughNot_SymbolsOverUniversals(t *testing.T) {
 // TestPolarityFlipThroughNot_UniversalVariables tests that Not
 // correctly flips polarity in universalVariablesRec.
 //
-// The formula: Not(ForAll(X, p(X)))
+// The formula: Not(IvyForAll(X, p(X)))
 //
 // Starting at pos=true:
 //   - We hit Not, so pos flips to false.
-//   - We recurse into ForAll(X, p(X)) with pos=false.
+//   - We recurse into IvyForAll(X, p(X)) with pos=false.
 //   - Since pos(false) != isinstance(ForAll)(true), X is NOT universal.
 //   - So X should NOT appear in UniversalVariables.
 //
@@ -90,10 +90,10 @@ func TestPolarityFlipThroughNot_UniversalVariables(t *testing.T) {
 	notForallXpX := &lg.Not{Body: forallXpX}
 
 	univars := UniversalVariables([]lg.Expr{notForallXpX})
-	// X should NOT be universal — Not(ForAll(X, ...)) is Exists(X, ...)
+	// X should NOT be universal — Not(IvyForAll(X, ...)) is IvyExists(X, ...)
 	for _, v := range univars {
 		if v.Name == "X" {
-			t.Errorf("UniversalVariables incorrectly reports X as universal in Not(ForAll(X, p(X))). "+
+			t.Errorf("UniversalVariables incorrectly reports X as universal in Not(IvyForAll(X, p(X))). "+
 				"Not should flip polarity, making ForAll existential. Got vars: %v", univars)
 		}
 	}
@@ -102,7 +102,7 @@ func TestPolarityFlipThroughNot_UniversalVariables(t *testing.T) {
 // TestPolarityDoubleNegation_UniversalVariables tests that double
 // negation restores the original polarity.
 //
-// Not(Not(ForAll(X, p(X)))) — double negation, X should be universal again.
+// Not(Not(IvyForAll(X, p(X)))) — double negation, X should be universal again.
 func TestPolarityDoubleNegation_UniversalVariables(t *testing.T) {
 	pOfX, x := makePofX(t)
 
@@ -120,17 +120,17 @@ func TestPolarityDoubleNegation_UniversalVariables(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Errorf("UniversalVariables should report X as universal in Not(Not(ForAll(X, p(X)))). "+
+		t.Errorf("UniversalVariables should report X as universal in Not(Not(IvyForAll(X, p(X)))). "+
 			"Double negation restores polarity. Got vars: %v", univars)
 	}
 }
 
 // TestPolarityFlip_ExistsUnderNot_IsUniversal tests that
-// Not(Exists(X, p(X))) makes X universal.
+// Not(IvyExists(X, p(X))) makes X universal.
 //
 // pos flips to false via Not. Then we check: pos(false) == isForAll(false).
 // false == false is true, so we DO add vars to univs.
-// X SHOULD be universal in Not(Exists(X, p(X))).
+// X SHOULD be universal in Not(IvyExists(X, p(X))).
 func TestPolarityFlip_ExistsUnderNot_IsUniversal(t *testing.T) {
 	pOfX, x := makePofX(t)
 
@@ -148,7 +148,7 @@ func TestPolarityFlip_ExistsUnderNot_IsUniversal(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Errorf("UniversalVariables should report X as universal in Not(Exists(X, p(X))). "+
+		t.Errorf("UniversalVariables should report X as universal in Not(IvyExists(X, p(X))). "+
 			"Not flips polarity: Exists becomes universal. Got vars: %v", univars)
 	}
 }

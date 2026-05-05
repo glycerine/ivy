@@ -8,7 +8,7 @@ import "reflect"
 //
 // Maps Go's logic.Variable → "Var" to match Python lg.Var's class
 // name (logic.py:117 defines `class Var`; Go uses the more
-// descriptive Go-idiomatic "Variable"). ast.Variable stays
+// descriptive Go-idiomatic "Variable"). ast.AstVariable stays
 // "Variable" (corresponds to Python ivy_ast.py:385 `class Variable`).
 func TypeName(v interface{}) string {
 	if v == nil || isNil(v) {
@@ -27,7 +27,7 @@ func TypeName(v interface{}) string {
 
 // isLogicPkg reports whether the given Go package path refers to
 // ~/ivy/goivy/logic (which contains the logic.Variable that maps
-// to Python's lg.Var). ast.Variable lives in a different package
+// to Python's lg.Var). ast.AstVariable lives in a different package
 // and should not be remapped.
 func isLogicPkg(pkgPath string) bool {
 	return pkgPath == "github.com/glycerine/ivy/goivy/logic"

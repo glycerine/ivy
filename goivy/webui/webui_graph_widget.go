@@ -304,7 +304,7 @@ func (w *GraphWidget) Splatter(nodeID string) {
 					if seen[c.Name] {
 						continue
 					}
-					if logic.SortEqual(c.CSort, cSort) || isTopSort(c.CSort) {
+					if logic.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) {
 						constants = append(constants, c)
 						seen[c.Name] = true
 					}
@@ -316,7 +316,7 @@ func (w *GraphWidget) Splatter(nodeID string) {
 			splatterName := nodeID + ".splatter"
 			var eqNames []string
 			for _, c := range constants {
-				X := mustVar("X", c.CSort)
+				X := webuiMustVar("X", c.CSort)
 				eq, _ := logic.NewEq(X, c)
 				eqName := "=" + c.Name
 				s.Domain.Concepts.SetConcept(eqName,

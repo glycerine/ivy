@@ -173,8 +173,8 @@ func TestSubgoalAction_HasKind(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestCopyFieldAction_FourArgs(t *testing.T) {
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
 	dstField := lg.NewConst("fld", fldSort)
 	srcField := lg.NewConst("sfld", fldSort)
@@ -202,8 +202,8 @@ func TestCopyFieldAction_FourArgs(t *testing.T) {
 }
 
 func TestCopyFieldAction_DifferentSourceField(t *testing.T) {
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
 	dstField := lg.NewConst("fld_a", fldSort)
 	srcField := lg.NewConst("fld_b", fldSort)
@@ -226,7 +226,7 @@ func TestCopyFieldAction_DifferentSourceField(t *testing.T) {
 
 func TestWhileAction_Unroll(t *testing.T) {
 	// Create a simple while loop: while x < bound
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
@@ -258,7 +258,7 @@ func TestWhileAction_Unroll(t *testing.T) {
 }
 
 func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
@@ -277,7 +277,7 @@ func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
 
 func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 	// while !(x = bound)
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
 	eq := &lg.Eq{T1: xSym, T2: boundSym}
@@ -304,7 +304,7 @@ func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 
 func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 	// Test that IntUpdate checks for UnrollContext
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
@@ -334,7 +334,7 @@ func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 func TestAssignAction_PartialApplication(t *testing.T) {
 	// f : S -> S -> Bool, assign f(a) := g(a)
 	// This is a partial application; xtra = 1 (needs 2 args, has 1)
-	sortS := mkSort("S")
+	sortS := actionsMkSort("S")
 	fSort := il.RelationSort([]lg.Sort{sortS, sortS})
 	fSym := lg.NewConst("f", fSort)
 	gSym := lg.NewConst("g", fSort)
@@ -355,7 +355,7 @@ func TestAssignAction_PartialApplication(t *testing.T) {
 
 func TestAssignAction_VariableCheck(t *testing.T) {
 	// f(X) := g(Y) where Y is not in LHS — should return null update
-	sortS := mkSort("S")
+	sortS := actionsMkSort("S")
 	fSort := il.RelationSort([]lg.Sort{sortS})
 	fSym := lg.NewConst("f", fSort)
 	gSym := lg.NewConst("g", fSort)

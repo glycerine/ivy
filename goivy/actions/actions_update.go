@@ -91,7 +91,7 @@ func makeUpdate(modified []*lg.Const, tr lg.Expr, pre lg.Expr, annot interface{}
 
 // makeUpdateDefs creates a transrel.Update with definitions in the TR.
 // This matches Python's pattern of Clauses([], [Definition(...)], annot).
-func makeUpdateDefs(modified []*lg.Const, defs []*il.Definition, annot interface{}) *Update {
+func makeUpdateDefs(modified []*lg.Const, defs []*il.IvyDefinition, annot interface{}) *Update {
 	return &Update{
 		Modified: modified,
 		TR:       module.NewClauses(nil, defs, annot),
@@ -123,10 +123,10 @@ func equivAST(a, b lg.Expr) lg.Expr {
 func conjoin(nodes ...lg.Expr) lg.Expr {
 	var terms []lg.Expr
 	for _, n := range nodes {
-		if isTrue(n) {
+		if actionsUpdateIsTrue(n) {
 			continue
 		}
-		if isFalse(n) {
+		if actionsUpdateIsFalse(n) {
 			return lg.False
 		}
 		terms = append(terms, n)
@@ -145,10 +145,10 @@ func conjoin(nodes ...lg.Expr) lg.Expr {
 func disjoin(nodes ...lg.Expr) lg.Expr {
 	var terms []lg.Expr
 	for _, n := range nodes {
-		if isFalse(n) {
+		if actionsUpdateIsFalse(n) {
 			continue
 		}
-		if isTrue(n) {
+		if actionsUpdateIsTrue(n) {
 			return lg.True
 		}
 		terms = append(terms, n)
@@ -163,11 +163,11 @@ func disjoin(nodes ...lg.Expr) lg.Expr {
 	return or
 }
 
-func isTrue(n lg.Expr) bool {
+func actionsUpdateIsTrue(n lg.Expr) bool {
 	return lg.IsTrue(n)
 }
 
-func isFalse(n lg.Expr) bool {
+func actionsUpdateIsFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 
@@ -256,7 +256,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 	phs := module.SymPlaceholders(sym)
 
 	// Build new_n applied to placeholders
-	phNodes := varsToNodes(phs)
+	phNodes := actionsVarsToNodes(phs)
 	dlhs := applyToNodes(newN, phNodes)
 
 	// Build equality conditions for non-variable args
@@ -292,15 +292,15 @@ func mkAssignClauses(lhs, rhs lg.Expr) *Update {
 
 	// Python: Clauses([], [Definition(dlhs, drhs)], EmptyAnnotation())
 	// Store as a Definition in Clauses.Defs, matching Python exactly.
-	defn := il.NewDefinition(dlhs, drhs)
+	defn := il.NewIvyDefinition(dlhs, drhs)
 	return &Update{
 		Modified: []*lg.Const{sym},
-		TR:       module.NewClauses(nil, []*il.Definition{defn}, EmptyAnnotation{}),
+		TR:       module.NewClauses(nil, []*il.IvyDefinition{defn}, EmptyAnnotation{}),
 		Pre:      module.FalseClauses(EmptyAnnotation{}),
 	}
 }
 
-func varsToNodes(vars []*lg.Variable) []lg.Expr {
+func actionsVarsToNodes(vars []*lg.Variable) []lg.Expr {
 	nodes := make([]lg.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
@@ -575,7 +575,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 		// Python: nondet = mut_n.suffix("_nd").skolem()
 		skSym := lg.NewConst(mutN.Name+"_nd", mutN.CSort)
 		phs := module.SymPlaceholders(mutN)
-		phNodes := varsToNodes(phs)
+		phNodes := actionsVarsToNodes(phs)
 		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
 		var skApplied lg.Expr
 		if len(phNodes) > 0 {
@@ -604,7 +604,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 
 	// vs = sym_placeholders(n)
 	vs := module.SymPlaceholders(n)
-	vsNodes := varsToNodes(vs)
+	vsNodes := actionsVarsToNodes(vs)
 
 	// dlhs = n(*([lval] + vs[1:]))
 	dlhsArgs := make([]lg.Expr, len(vsNodes))
@@ -656,7 +656,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 			for _, destr := range destrs {
 				if destr.Name != n.Name {
 					destrPhs := module.SymPlaceholders(destr)
-					destrPhNodes := varsToNodes(destrPhs)
+					destrPhNodes := actionsVarsToNodes(destrPhs)
 					// a1 = [lval] + phs[1:]
 					a1 := make([]lg.Expr, len(destrPhNodes))
 					a1[0] = lval
@@ -715,7 +715,7 @@ func isVariant(domain *module.Module, lhsSort, rhsSort lg.Sort) bool {
 	if domain.Variants == nil {
 		return false
 	}
-	lhsName := il.SortName(lhsSort)
+	lhsName := il.IvySortName(lhsSort)
 	variants, ok := domain.Variants[lhsName]
 	if !ok {
 		return false
@@ -742,7 +742,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *Update {
 
 	// dlhs = new_n(*sym_placeholders(n))
 	phs := module.SymPlaceholders(sym)
-	phNodes := varsToNodes(phs)
+	phNodes := actionsVarsToNodes(phs)
 	dlhs := applyToNodes(newN, phNodes)
 	vs := phs // dlhs.args are the placeholders
 
@@ -832,7 +832,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *Update {
 	}
 
 	// Return as update with definition: Definition(dlhs, nondet)
-	defn := il.NewDefinition(dlhs, nondet)
+	defn := il.NewIvyDefinition(dlhs, nondet)
 	defs := []*lg.Definition{defn}
 
 	// Combine: formulas go in TR, definition goes in defs
@@ -880,7 +880,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	}
 
 	var tr lg.Expr
-	vsNodes := varsToNodes(vs)
+	vsNodes := actionsVarsToNodes(vs)
 
 	if il.IsBoolean(sym) || il.IsRelationalSort(sym.CSort) {
 		// Relation: at non-havocked indices, old and new agree
@@ -965,7 +965,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *Update {
 
 	newN := newSym(relSym)
 	vs := module.SymPlaceholders(relSym)
-	vsNodes := varsToNodes(vs)
+	vsNodes := actionsVarsToNodes(vs)
 
 	// Build equality conditions for non-variable args
 	// Python: eqs = [Atom(equals,[v,a]) for (v,a) in zip(vs,args) if not isinstance(a,Variable)]
@@ -1972,10 +1972,10 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Upd
 	// Collect names used in actual parameters and returns
 	vocabNames := make(map[string]bool)
 	for _, ap := range actualParams {
-		collectSymbolNames(ap, vocabNames)
+		actionsCollectSymbolNames(ap, vocabNames)
 	}
 	for _, ar := range actualReturns {
-		collectSymbolNames(ar, vocabNames)
+		actionsCollectSymbolNames(ar, vocabNames)
 	}
 
 	// Build renaming: formal → fresh name
@@ -2117,7 +2117,7 @@ func unusedNameWithBase(base string, used map[string]bool) string {
 }
 
 // collectSymbolNames collects all symbol/constant names from a logic node.
-func collectSymbolNames(node lg.Expr, names map[string]bool) {
+func actionsCollectSymbolNames(node lg.Expr, names map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -2126,15 +2126,15 @@ func collectSymbolNames(node lg.Expr, names map[string]bool) {
 		names[n.Name] = true
 	case *lg.Apply:
 		if n.Func != nil {
-			collectSymbolNames(n.Func, names)
+			actionsCollectSymbolNames(n.Func, names)
 		}
 		for _, t := range n.Terms {
-			collectSymbolNames(t, names)
+			actionsCollectSymbolNames(t, names)
 		}
 		return
 	}
 	for _, c := range node.Children() {
-		collectSymbolNames(c, names)
+		actionsCollectSymbolNames(c, names)
 	}
 }
 

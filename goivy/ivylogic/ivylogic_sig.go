@@ -187,7 +187,7 @@ func (s *Sig) Contains(sortOrSymbol interface{}) bool {
 		return s.ContainsSymbol(sym.Name, sym.CSort)
 	}
 	if sort, ok := sortOrSymbol.(lg.Sort); ok {
-		name := SortName(sort)
+		name := IvySortName(sort)
 		existing, found := s.Sorts.Get2(name)
 		if !found {
 			return false
@@ -312,7 +312,7 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 func SortListNames(sorts []lg.Sort) []string {
 	names := make([]string, len(sorts))
 	for i, s := range sorts {
-		names[i] = SortName(s)
+		names[i] = IvySortName(s)
 	}
 	return names
 }
@@ -334,7 +334,7 @@ func (s *Sig) Canon() iu.Canonical {
 	sort.Strings(sortNames)
 	symParts := make([]string, 0, s.Symbols.Len())
 	for name, entry := range s.Symbols.All() {
-		symParts = append(symParts, name+":"+SortName(entry.Sort))
+		symParts = append(symParts, name+":"+IvySortName(entry.Sort))
 	}
 	sort.Strings(symParts)
 	return iu.Canonical(fmt.Sprintf("(sig sorts:[%s] symbols:[%s])",
@@ -346,7 +346,7 @@ func (s *Sig) Canon() iu.Canonical {
 // Silently overwrites on redefinition, matching Python ivy_logic.py:333-336
 // where IvyError is created but never raised.
 func (s *Sig) AddSort(sort lg.Sort) error {
-	name := SortName(sort)
+	name := IvySortName(sort)
 	s.Sorts.Set(name, sort)
 	return nil
 }
@@ -361,7 +361,7 @@ func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Const, error) {
 		return lg.NewConst(name, entry.Sort), nil
 	}
 	if name == "=" {
-		return Equals, nil
+		return IvyEquals, nil
 	}
 	if _, isSorted := s.Sorts.Get2(name); isSorted {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf("type %s used where a function or individual symbol is expected", name)}
@@ -430,7 +430,7 @@ func (ws *WithSorts) Enter() {
 	xtracer.Trace("ivylogic.WithSorts.Enter nSorts=%d", len(ws.sorts))
 	//pp("adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
 	for _, s := range ws.sorts {
-		name := SortName(s)
+		name := IvySortName(s)
 		if existing, ok := ws.sig.Sorts.Get2(name); ok {
 			ws.saved = append(ws.saved, savedSort{name, existing})
 		}
@@ -441,7 +441,7 @@ func (ws *WithSorts) Enter() {
 // Exit restores the original sorts.
 func (ws *WithSorts) Exit() {
 	for _, s := range ws.sorts {
-		name := SortName(s)
+		name := IvySortName(s)
 		ws.sig.Sorts.Delkey(name)
 	}
 	for _, s := range ws.saved {

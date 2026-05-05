@@ -176,7 +176,7 @@ func TestUpdateTheoryWithDefinition(t *testing.T) {
 	fSort, _ := lg.NewFunctionSort(xSort, xSort)
 	fSym := lg.NewConst("f", fSort)
 	lhs, _ := lg.NewApply(fSym, x)
-	def := il.NewDefinition(lhs, x)
+	def := il.NewIvyDefinition(lhs, x)
 
 	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def},

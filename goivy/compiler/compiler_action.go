@@ -70,7 +70,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.ActionsAction, er
 		for i, p := range origParams {
 			//vv("origParam p = %T", p)
 			switch n := p.(type) {
-			case *ast.Variable:
+			case *ast.AstVariable:
 				pf := n.ToConst("prm:")
 				subst[n.Rep] = pf
 				pformals[i] = pf

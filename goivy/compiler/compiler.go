@@ -23,7 +23,7 @@ import (
 // typeName is a shim to iu.TypeName, preserving the package-local helper
 // name used by existing call sites. iu.TypeName maps Go's "Variable" to
 // Python's "Var" so trace output aligns across languages.
-func typeName(v interface{}) string {
+func compilerTypeName(v interface{}) string {
 	return iu.TypeName(v)
 }
 
@@ -165,7 +165,7 @@ func (c *Compiler) SigCheck(label string) {
 }
 
 // New creates a new Compiler with the given signature and module.
-func New(sig *il.Sig, mod *module.Module) *Compiler {
+func NewCompiler(sig *il.Sig, mod *module.Module) *Compiler {
 	c := &Compiler{
 		Sig:    sig,
 		Module: mod,
@@ -198,7 +198,7 @@ func New(sig *il.Sig, mod *module.Module) *Compiler {
 
 // NewFromModule creates a Compiler using the module's own signature.
 func NewFromModule(mod *module.Module) *Compiler {
-	return New(mod.Sig, mod)
+	return NewCompiler(mod.Sig, mod)
 }
 
 // --- Main dispatch ---
@@ -228,7 +228,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
 	if emitEnter {
-		xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", typeName(node)))
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", compilerTypeName(node)))
 	}
 	switch n := node.(type) {
 	// --- Formula operators ---
@@ -278,7 +278,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	case *ast.App:
 		xtracer.Trace("compiler.CompileNode return case=App")
 		return c.compileAppNode(n)
-	case *ast.Variable:
+	case *ast.AstVariable:
 		xtracer.Trace("compiler.CompileNode return case=Variable")
 		return c.CompileVariable(n)
 	case *ast.AstOld:
@@ -364,7 +364,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	// --- Default: Python's AST.cmpl = other_thing ---
 	// Handles all other unrecognized AST types.
 	default:
-		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%s", typeName(node)))
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%s", compilerTypeName(node)))
 		return c.OtherThing(node)
 	}
 }
@@ -390,7 +390,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 		var sort lg.Sort = lg.TopS
 		if n.Sort != nil {
-			sortName := extractSortRep(n.Sort)
+			sortName := compilerExtractSortRep(n.Sort)
 			if sortName != "" {
 				if s, ok2 := c.Sig.Sorts.Get2(sortName); ok2 {
 					sort = s
@@ -415,7 +415,7 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.AstPatternBasedUpdate) (lg.E
 	var defines []*lg.Const
 	if sl, ok := n.Dfns.(*ast.AstSymbolList); ok {
 		for _, elem := range sl.Elems {
-			name := nodeRepStr(elem)
+			name := compilerNodeRepStr(elem)
 			if name == "" {
 				continue
 			}
@@ -428,7 +428,7 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.AstPatternBasedUpdate) (lg.E
 	var deps []*lg.Const
 	if sl, ok := n.Deps.(*ast.AstSymbolList); ok {
 		for _, elem := range sl.Elems {
-			name := nodeRepStr(elem)
+			name := compilerNodeRepStr(elem)
 			if name == "" {
 				continue
 			}
@@ -536,7 +536,7 @@ func (c *Compiler) lookupOrCreateConst(name string) *lg.Const {
 
 // nodeRepStr extracts a string representation (name) from an AST node,
 // handling Atom, App, and Symbol types.
-func nodeRepStr(n ast.Node) string {
+func compilerNodeRepStr(n ast.Node) string {
 	switch v := n.(type) {
 	case *ast.Atom:
 		return v.Rep
@@ -668,7 +668,7 @@ func (c *Compiler) compileDefinition(n *ast.AstDefinition) (lg.Expr, error) {
 	if err != nil || len(args) < 2 {
 		return nil, err
 	}
-	return il.NewDefinition(args[0], args[1]), nil
+	return il.NewIvyDefinition(args[0], args[1]), nil
 }
 
 func (c *Compiler) compileGlobally(n *ast.AstGlobally) (lg.Expr, error) {
@@ -777,7 +777,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 		// Go handles "=" with an early return above, so that guard is already satisfied.
 		if il.IsNumeral(sym) {
 			if n.ASort != nil {
-				sortName := extractSortRep(n.ASort)
+				sortName := compilerExtractSortRep(n.ASort)
 				if sortName != "S" {
 					s, err := c.CmplSort(sortName)
 					if err == nil {
@@ -852,7 +852,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 }
 
 // CompileVariable compiles a Variable AST node to a logic.Variable.
-func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
+func (c *Compiler) CompileVariable(n *ast.AstVariable) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_variable ENTER")
 	sort, err := c.variableSort(n)
 	if err != nil {
@@ -873,7 +873,7 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 }
 
 // variableSort resolves the sort of a variable AST node.
-func (c *Compiler) variableSort(v *ast.Variable) (lg.Sort, error) {
+func (c *Compiler) variableSort(v *ast.AstVariable) (lg.Sort, error) {
 	if v.VSort == "" {
 		return lg.TopS, nil
 	}
@@ -953,12 +953,12 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 
 	// Look for the method as a child of the sort
 	iuCfg := c.Module.Cfg.IuCfg
-	destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
+	destrName := iuCfg.ComposeNames(il.IvySortName(sort), childName)
 	if c.TopCtx != nil {
 		if _, inSig := c.Sig.Symbols.Get2(destrName); !inSig {
 			if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
 				// Try sibling of the sort
-				pc := iuCfg.ParentChildName(il.SortName(sort))
+				pc := iuCfg.ParentChildName(il.IvySortName(sort))
 				destrName = iuCfg.ComposeNames(pc[0], childName)
 			}
 		}
@@ -1131,7 +1131,7 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	// Compile bound variables
 	vars := make([]*lg.Variable, len(bounds))
 	for i, b := range bounds {
-		v, ok := b.(*ast.Variable)
+		v, ok := b.(*ast.AstVariable)
 		if !ok {
 			return nil, lg.NewIvyError(node, fmt.Sprintf(
 				"quantifier bound %d is not a variable: %T", i, b))
@@ -1167,9 +1167,9 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	}
 
 	if isForall {
-		return il.ForAll(vars, compiled), nil
+		return il.IvyForAll(vars, compiled), nil
 	}
-	return il.Exists(vars, compiled), nil
+	return il.IvyExists(vars, compiled), nil
 }
 
 // --- Sort inference ---
@@ -1264,7 +1264,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
 	// Determine the range sort
 	var rng lg.Sort
 	if sortNode != nil {
-		sortName := extractSortRep(sortNode)
+		sortName := compilerExtractSortRep(sortNode)
 		if sortName != "" {
 			var err error
 			rng, err = c.CmplSort(sortName)
@@ -1369,7 +1369,7 @@ func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Exp
 	subst := make(map[string]string)
 	if lhsAtom != nil {
 		for _, p := range lhsAtom.Terms {
-			if v, isVar := p.(*ast.Variable); isVar {
+			if v, isVar := p.(*ast.AstVariable); isVar {
 				if v.VSort != "" { // wrong: && v.VSort != "S" {
 					subst[v.Rep] = v.VSort
 				}
@@ -1381,11 +1381,11 @@ func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Exp
 
 	// Apply variable sort substitutions to RHS if needed
 	rhs := df.Rhs
-	xtracer.Trace("compiler.CompileDefnImpl rhs type=%s", typeName(rhs))
+	xtracer.Trace("compiler.CompileDefnImpl rhs type=%s", compilerTypeName(rhs))
 	//pp("isSchema=%v lhs=%v", isSchema, df.Lhs)
 	if len(subst) > 0 {
 		rhs = ast.SetVariableSorts(rhs, subst)
-		xtracer.Trace("compiler.CompileDefnImpl rhs after subst type=%s", typeName(rhs))
+		xtracer.Trace("compiler.CompileDefnImpl rhs after subst type=%s", compilerTypeName(rhs))
 		//pp("subst=%v", subst)
 	}
 
@@ -1443,16 +1443,16 @@ func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Exp
 			someArgs = fmla
 		}
 
-		result := il.NewDefinition(defLhs, someArgs)
+		result := il.NewIvyDefinition(defLhs, someArgs)
 		if isSchema {
-			return il.NewDefinitionSchema(defLhs, someArgs), nil
+			return il.NewIvyDefinitionSchema(defLhs, someArgs), nil
 		}
 		return result, nil
 	}
 
 	// Standard definition: compile as equality lhs = rhs, then apply sort inference
 	cfg := c.Module.Cfg.AstCfg
-	xtracer.Trace("compiler.CompileDefnImpl standard branch rhs type=%s", typeName(rhs))
+	xtracer.Trace("compiler.CompileDefnImpl standard branch rhs type=%s", compilerTypeName(rhs))
 	//pp("isSchema=%v lhs=%v rhs=%v", isSchema, df.Lhs, rhs)
 	eqAtom := cfg.NewAtom("=", df.Lhs, rhs)
 	xtracer.Trace("compiler.CompileDefnImpl eqAtom nTerms=%d", len(eqAtom.Terms))
@@ -1461,7 +1461,7 @@ func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Exp
 		if tt == nil {
 			xtracer.Trace("compiler.CompileDefnImpl eqAtom.Terms[%d] = nil", ti)
 		} else {
-			xtracer.Trace("compiler.CompileDefnImpl eqAtom.Terms[%d] type=%s", ti, typeName(tt))
+			xtracer.Trace("compiler.CompileDefnImpl eqAtom.Terms[%d] type=%s", ti, compilerTypeName(tt))
 			//pp("val=%v", tt)
 		}
 	}
@@ -1476,15 +1476,15 @@ func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Exp
 	// Extract lhs and rhs from the compiled equality
 	if eq, ok := compiled.(*lg.Eq); ok {
 		if isSchema {
-			return il.NewDefinitionSchema(eq.T1, eq.T2), nil
+			return il.NewIvyDefinitionSchema(eq.T1, eq.T2), nil
 		}
-		return il.NewDefinition(eq.T1, eq.T2), nil
+		return il.NewIvyDefinition(eq.T1, eq.T2), nil
 	}
 	// If sort inference returned the equality as-is, wrap in Definition
 	if isSchema {
-		return il.NewDefinitionSchema(compiled, compiled), nil
+		return il.NewIvyDefinitionSchema(compiled, compiled), nil
 	}
-	return il.NewDefinition(compiled, compiled), nil
+	return il.NewIvyDefinition(compiled, compiled), nil
 }
 
 // --- Tactic/proof compilation ---
@@ -1611,7 +1611,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 	//           OtherThing ENTER, [child compilation], OtherThing return, Thing return.
 	// Python other_thing: self.clone([a.compile() for a in self.args])
 	default:
-		tn := typeName(node)
+		tn := compilerTypeName(node)
 		xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", tn))
 		xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", tn))
 		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%s", tn))
@@ -1634,7 +1634,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 }
 
 // extractSortRep extracts a string sort name from an AST sort node.
-func extractSortRep(n ast.Node) string {
+func compilerExtractSortRep(n ast.Node) string {
 	if n == nil {
 		return ""
 	}

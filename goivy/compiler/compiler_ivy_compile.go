@@ -185,7 +185,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 
 	// Python lines 2213-2218: type check each action
 	for name, action := range mod.Actions.All() {
-		TypeCheckAction(action, mod)
+		CompilerTypeCheckAction(action, mod)
 		// Python lines 2216-2218: assertion checks
 		if act, ok := action.(actions.ActionsAction); ok {
 			if act.GetLineno().Line == 0 {
@@ -321,7 +321,7 @@ func addGlobalObjectsToIsolates(mod *module.Module) {
 
 // TypeCheckAction type-checks a single action.
 // Corresponds to Python's type_check_action(action, mod) (ivy_compiler.py:2213-2218).
-func TypeCheckAction(action interface{}, mod *module.Module) {
+func CompilerTypeCheckAction(action interface{}, mod *module.Module) {
 	// Type checking validates that all symbols used in the action have
 	// consistent sorts. For now, this is a no-op placeholder that will
 	// be filled in when the full type checker is ported.
@@ -358,7 +358,7 @@ func processAttributes(decl ast.Node, mod *module.Module) {
 		commonVal = cp.GetCommon()
 	}
 	for _, attrNode := range attrs {
-		attribute := extractSortRep(attrNode)
+		attribute := compilerExtractSortRep(attrNode)
 		if attribute == "" {
 			continue
 		}
@@ -738,7 +738,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				if lf, ok := arg.(*ast.LabeledFormula); ok {
 					if def, ok := lf.Formula.(*ast.AstDefinition); ok {
-						key := extractSortRep(def.Lhs)
+						key := compilerExtractSortRep(def.Lhs)
 						if key != "" {
 							mod.Predicates[key] = def.Rhs
 						}
@@ -1258,7 +1258,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 		}
 
 		// fmla = Exists([Y], And(*eqs))
-		fmla := il.Exists([]*lg.Variable{yVar}, il.NormalizedAnd(eqs...))
+		fmla := il.IvyExists([]*lg.Variable{yVar}, il.NormalizedAnd(eqs...))
 
 		// name = Atom(compose_names(sortname, 'constr'), [])
 		schemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(sortname, "constr"))
@@ -1457,7 +1457,7 @@ func CheckDefinitions(mod *module.Module) error {
 
 	for _, prop := range props {
 		if logicDef, ok := prop.Formula.(*lg.Definition); ok {
-			defKey := definesKey(logicDef)
+			defKey := compilerDefinesKey(logicDef)
 			if !withProofs[prop.ID] {
 				// Check if any used symbols are stale
 				hasStale := false
@@ -1603,7 +1603,7 @@ func CheckDefinitions(mod *module.Module) error {
 		interferenceDefMap := make(map[lg.NodeKey]interface{})
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				interferenceDefMap[definesKey(def)] = def.Rhs
+				interferenceDefMap[compilerDefinesKey(def)] = def.Rhs
 			}
 		}
 		// Check axioms: no side-effected symbol may appear in axiom deps
@@ -1629,7 +1629,7 @@ func CheckDefinitions(mod *module.Module) error {
 		// Check definitions: LHS must not be modified
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				key := definesKey(def)
+				key := compilerDefinesKey(def)
 				if modified[key] {
 					xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
 					return lg.NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", key))
@@ -1645,7 +1645,7 @@ func CheckDefinitions(mod *module.Module) error {
 	dmap := make(map[lg.NodeKey]*ast.LabeledFormula)
 	for _, d := range mod.Definitions {
 		if logicDef, ok := d.Formula.(*lg.Definition); ok {
-			defKey := definesKey(logicDef)
+			defKey := compilerDefinesKey(logicDef)
 			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
 				for _, sym := range il.UsedSymbolsAst(rhs).All() {
@@ -1719,7 +1719,7 @@ func labelName(label ast.Node) string {
 // equality (name + sort). Uses lg.Key() / Sexp() for structural equivalence.
 // Use this for maps that compare definition symbols against each other
 // (defs, stale, arcs, dmap).
-func definesKey(d *lg.Definition) lg.NodeKey {
+func compilerDefinesKey(d *lg.Definition) lg.NodeKey {
 	return lg.Key(d.Defines())
 }
 
@@ -1858,7 +1858,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	match := make(map[lg.NodeKey]lg.Expr)
 
 	for _, sort := range vocab.Sorts {
-		name := il.SortName(sort)
+		name := il.IvySortName(sort)
 		if _, exists := sig.Sorts.Get2(name); exists {
 			// Name collision — generate unique name
 			usedNames := make(map[string]struct{}, sig.Sorts.Len())

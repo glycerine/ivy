@@ -118,7 +118,7 @@ func TestExecuteEmptyGraphReturnsNil(t *testing.T) {
 // TestAddInitialStateCheckFalse verifies AddInitialState uses check=false
 // (matching Python's EvalContext(check=False)).
 func TestAddInitialStateCheckFalse(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	ag := NewAnalysisGraph(mod)
 	s := ag.AddInitialState(nil, nil)
 	if s == nil {

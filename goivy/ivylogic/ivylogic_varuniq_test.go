@@ -12,7 +12,7 @@ import (
 // traversal order, same binder save/restore logic.
 
 func TestVariableUniqifierExactNames(t *testing.T) {
-	// ForAll([X:S], Exists([Y:S], Eq(X, Y)))
+	// IvyForAll([X:S], IvyExists([Y:S], Eq(X, Y)))
 	// First call: X → "X", Y → "Y" (both first-time, unused)
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, _ := lg.NewVariable("X", S)
@@ -91,7 +91,7 @@ func TestVariableUniqifierMultipleFormulas(t *testing.T) {
 }
 
 func TestVariableUniqifierBinderShadowing(t *testing.T) {
-	// ForAll([X], And(X, ForAll([X], X)))
+	// IvyForAll([X], And(X, IvyForAll([X], X)))
 	// Outer X → "X" (first time)
 	// Inner X → "X_a" (second unique name for X)
 	// The outer body reference to X should use "X", not "X_a"
@@ -174,7 +174,7 @@ func TestVariableUniqifierFreeVariables(t *testing.T) {
 }
 
 func TestVariableUniqifierApplyPreservesFunc(t *testing.T) {
-	// Apply(f, [X, Y]) — f should be preserved, X and Y get uniquified
+	// IvyApply(f, [X, Y]) — f should be preserved, X and Y get uniquified
 	S := &lg.UninterpretedSort{Name: "S"}
 	fs, _ := lg.NewFunctionSort(S, S, lg.Boolean)
 	f := lg.NewConst("f", fs)
@@ -276,7 +276,7 @@ func TestAlphaAvoidMapEmptyVsRenamesShadowedBound(t *testing.T) {
 	// has no early return for empty vs — it always collects free variables
 	// and renames clashing bound variables.
 	//
-	// Formula: And(M, ForAll([M:S], Eq(M, M)))
+	// Formula: And(M, IvyForAll([M:S], Eq(M, M)))
 	//   - M is FREE in the first And term
 	//   - M is BOUND in the ForAll
 	// After AlphaAvoidMap with empty vs, the bound M must become M_a.
@@ -331,7 +331,7 @@ func TestAlphaAvoidMapNonEmptyVsAlsoRenamesShadowed(t *testing.T) {
 	// When vs is non-empty AND the formula has free-vs-bound shadowing,
 	// both the vs names and free variable names must be reserved.
 	//
-	// Formula: And(M, ForAll([M:S], Eq(M, M)))
+	// Formula: And(M, IvyForAll([M:S], Eq(M, M)))
 	// vs contains a variable named "Q"
 	// Both "Q" and "M" (free) should be reserved. Bound M → M_a.
 	S := &lg.UninterpretedSort{Name: "S"}

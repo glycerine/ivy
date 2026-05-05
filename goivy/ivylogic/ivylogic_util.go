@@ -93,9 +93,9 @@ func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 			return &lg.Cond{CSort: args[1].NodeSort(), T1: args[0], T2: args[1]}
 		}
 		return t
-	case *Definition:
+	case *IvyDefinition:
 		if len(args) == 2 {
-			return &Definition{Lhs: args[0], Rhs: args[1]}
+			return &IvyDefinition{Lhs: args[0], Rhs: args[1]}
 		}
 		return t
 	case *Some:
@@ -228,7 +228,7 @@ func NodeArgs(n lg.Expr) []lg.Expr {
 		return []lg.Expr{t.T1, t.T2}
 	case *lg.Cond:
 		return []lg.Expr{t.T1, t.T2}
-	case *Definition:
+	case *IvyDefinition:
 		return []lg.Expr{t.Lhs, t.Rhs}
 	case *Literal:
 		return []lg.Expr{t.Atom}
@@ -237,7 +237,7 @@ func NodeArgs(n lg.Expr) []lg.Expr {
 }
 
 // ForAll creates a ForAll node, or returns the body if vars is empty.
-func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
+func IvyForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -245,7 +245,7 @@ func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 }
 
 // Exists creates an Exists node, or returns the body if vars is empty.
-func Exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
+func IvyExists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -640,8 +640,8 @@ func typeTag(n lg.Expr) string {
 		return "WhenOperator"
 	case *lg.Cond:
 		return "Cond"
-	case *Definition:
-		return "Definition"
+	case *IvyDefinition:
+		return "IvyDefinition"
 	case *Literal:
 		return "Literal"
 	case *Some:

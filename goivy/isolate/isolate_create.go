@@ -233,8 +233,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			if id, ok := imp.(importDef); ok {
 				args := id.Args()
 				if len(args) >= 2 {
-					impname := nodeRelname(args[0])
-					scope := nodeRelname(args[1])
+					impname := isolateNodeRelname(args[0])
+					scope := isolateNodeRelname(args[1])
 					if scope == "" {
 						if _, ok := mod.Actions.Get2(impname); !ok {
 							return fmt.Errorf("undefined action: %s", impname)
@@ -386,7 +386,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
 			for _, b := range brackets {
 				xtracer.Trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d", b.ActName, len(b.Before), len(b.After))
-				BracketAction(mod, b.ActName, b.Before, b.After)
+				IsolateBracketAction(mod, b.ActName, b.Before, b.After)
 			}
 		}
 	}
@@ -541,20 +541,20 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 // mixins correctly, and checks for multiple implementations.
 //
 // Corresponds to Python get_mixin_order (lines 1411-1433).
-// arc represents a directed edge in mixin ordering.
-type arc struct{ from, to string }
+// isolateArc represents a directed edge in mixin ordering.
+type isolateArc struct{ from, to string }
 
 func GetMixinOrder(iso string, mod *module.Module) error {
-	// Build arc list from mod.MixOrd
-	var arcs []arc
+	// Build isolateArc list from mod.MixOrd
+	var arcs []isolateArc
 	for _, rdf := range mod.MixOrd {
 		type relNamer interface{ Args() []ast.Node }
 		if rn, ok := rdf.(relNamer); ok {
 			args := rn.Args()
 			if len(args) >= 2 {
-				from := nodeRelname(args[0])
-				to := nodeRelname(args[1])
-				arcs = append(arcs, arc{from, to})
+				from := isolateNodeRelname(args[0])
+				to := isolateNodeRelname(args[1])
+				arcs = append(arcs, isolateArc{from, to})
 			}
 		}
 	}
@@ -841,7 +841,7 @@ type BracketEntry struct {
 
 // BracketAction wraps an action with before/after sequences.
 // Corresponds to Python bracket_action (lines 1529-1531).
-func BracketAction(mod *module.Module, actname string, before, after []actions.ActionsAction) {
+func IsolateBracketAction(mod *module.Module, actname string, before, after []actions.ActionsAction) {
 	bracketActionInt(mod, actname, before, after)
 	bracketActionInt(mod, "ext:"+actname, before, after)
 }
@@ -901,7 +901,7 @@ func SetUpImplementationMap(mod *module.Module) map[string]string {
 }
 
 // topologicalSortStrings performs a topological sort of string nodes using arcs.
-func topologicalSortStrings(nodes []string, arcs []arc) []string {
+func topologicalSortStrings(nodes []string, arcs []isolateArc) []string {
 	// Build adjacency and in-degree
 	adj := make(map[string][]string)
 	inDegree := make(map[string]int)

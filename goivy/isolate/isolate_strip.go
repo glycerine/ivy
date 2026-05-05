@@ -552,7 +552,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefIface,
 		ipl := pp.Params()
 		hasVar := false
 		for _, p := range ipl {
-			if _, isVar := p.(*ast.Variable); isVar {
+			if _, isVar := p.(*ast.AstVariable); isVar {
 				hasVar = true
 				break
 			}
@@ -560,7 +560,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefIface,
 		if hasVar {
 			subst := make(map[string]lg.Expr)
 			for _, p := range ipl {
-				if v, isVar := p.(*ast.Variable); isVar {
+				if v, isVar := p.(*ast.AstVariable); isVar {
 					var sort lg.Sort
 					if mod.Sig != nil {
 						if s, ok := mod.Sig.Sorts.Get2(v.VSort); ok {

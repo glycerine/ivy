@@ -62,7 +62,7 @@ func compileNativeType(nt *ast.NativeType, mod *module.Module) *ast.NativeType {
 	newElems[0] = nt.Elems[0] // keep args[0] unchanged
 	for i := 1; i < len(nt.Elems); i++ {
 		elem := nt.Elems[i]
-		name := extractSortRep(elem)
+		name := compilerExtractSortRep(elem)
 		if name != "" {
 			resolved := ResolveAlias(name, mod)
 			if resolved != name {
@@ -161,8 +161,8 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		sort := base.NodeSort()
 		// Look for the method as a child of the sort
 		iuCfg := c.Module.Cfg.IuCfg
-		destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
-		xtracer.Trace("compiler.compile_field_reference_rec destrName=%s baseSort=%s", destrName, il.SortName(sort))
+		destrName := iuCfg.ComposeNames(il.IvySortName(sort), childName)
+		xtracer.Trace("compiler.compile_field_reference_rec destrName=%s baseSort=%s", destrName, il.IvySortName(sort))
 		if c.TopCtx != nil {
 			_, inSig := c.Sig.Symbols.Get2(destrName)
 			_, inAct := c.TopCtx.Actions[destrName]
@@ -170,7 +170,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 			if !inSig {
 				if !inAct {
 					// Try sibling of the sort
-					sortPC := iuCfg.ParentChildName(il.SortName(sort))
+					sortPC := iuCfg.ParentChildName(il.IvySortName(sort))
 					destrName = iuCfg.ComposeNames(sortPC[0], childName)
 					xtracer.Trace("compiler.compile_field_reference_rec sibling_fallback destrName=%s", destrName)
 				}
@@ -380,15 +380,15 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	if methodcall && actInfo.KeyPos < len(args) {
 		keyArg := args[actInfo.KeyPos]
 		keySort := keyArg.NodeSort()
-		keySortName := il.SortName(keySort)
+		keySortName := il.IvySortName(keySort)
 		if variants, ok := c.Module.Variants[keySortName]; ok {
 			iuCfg2 := c.Module.Cfg.IuCfg
 			pcRep := iuCfg2.ParentChildName(rep)
 			methodName := pcRep[1]
 			for _, vsort := range variants {
-				vactName := iuCfg2.ComposeNames(il.SortName(vsort), methodName)
+				vactName := iuCfg2.ComposeNames(il.IvySortName(vsort), methodName)
 				if _, ok := c.TopCtx.Actions[vactName]; !ok {
-					pcVsort := iuCfg2.ParentChildName(il.SortName(vsort))
+					pcVsort := iuCfg2.ParentChildName(il.IvySortName(vsort))
 					parent := pcVsort[0]
 					vactName = iuCfg2.ComposeNames(parent, methodName)
 					if _, ok := c.TopCtx.Actions[vactName]; !ok || vactName == rep {
@@ -397,7 +397,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				}
 				// Create variant dispatch: if Some(tmpsym, isa_test) then call variant else original
 				// Python: call = IfAction(ivy_ast.Some(tmpsym, isa_expr), new_call, call)
-				tmpSym := lg.NewConst("self:"+il.SortName(vsort), vsort)
+				tmpSym := lg.NewConst("self:"+il.IvySortName(vsort), vsort)
 				tmpArgs := make([]lg.Expr, len(args))
 				copy(tmpArgs, args)
 				tmpArgs[actInfo.KeyPos] = tmpSym
@@ -419,7 +419,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				isaSym := lg.NewConst("*>", isaSort)
 				isaApp, _ := lg.NewApply(isaSym, keyArg, tmpSym)
 				// Python: ivy_ast.Some(tmpsym, isa_expr)
-				someCond := il.Exists([]*lg.Variable{
+				someCond := il.IvyExists([]*lg.Variable{
 					{Name: tmpSym.Name, VSort: vsort},
 				}, isaApp)
 				ifAction := actions.NewIfAction(someCond,

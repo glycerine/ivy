@@ -6,11 +6,11 @@ import (
 )
 
 // DefinitionToConstraint converts a logic.Definition to its constraint form.
-// This is the Go port of Python ivy_logic.py Definition.to_constraint (line 236-249).
+// This is the Go port of Python ivy_logic.py IvyDefinition.to_constraint (line 236-249).
 //
 // The conversion rules are:
 //   - If RHS is Some with if_value: complex conditional constraint
-//   - If RHS is Some without if_value: ForAll(x, Implies(phi, substitute(phi, {x: lhs})))
+//   - If RHS is Some without if_value: IvyForAll(x, Implies(phi, substitute(phi, {x: lhs})))
 //   - If LHS is Apply (function definition): Eq(lhs, rhs)
 //   - Otherwise (propositional): Iff(lhs, rhs)
 func DefinitionToConstraint(d *lg.Definition) lg.Expr {
@@ -45,8 +45,8 @@ func someToConstraint(lhs lg.Expr, some *Some) lg.Expr {
 		// Complex case: some X. phi in ifval else elseval
 		//
 		// Python:
-		//   And(Implies(phi, Exists([x], And(phi, Eq(lhs, ifval)))),
-		//       Or(Exists([x], phi), Eq(lhs, elseval)))
+		//   And(Implies(phi, IvyExists([x], And(phi, Eq(lhs, ifval)))),
+		//       Or(IvyExists([x], phi), Eq(lhs, elseval)))
 		ifVal := some.IfVal
 		elseVal := some.ElseVal
 
@@ -66,7 +66,7 @@ func someToConstraint(lhs lg.Expr, some *Some) lg.Expr {
 	// Simple case: some X. phi (no if/else)
 	//
 	// Python:
-	//   ForAll([x], Implies(phi, substitute(phi, {x: lhs})))
+	//   IvyForAll([x], Implies(phi, substitute(phi, {x: lhs})))
 	subs := map[lg.NodeKey]lg.Expr{lg.Key(x): lhs}
 	substPhi, err := lu.Substitute(phi, subs)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 
 // --- Sig tests ---
 
-func TestNewSig(t *testing.T) {
+func TestIvyLogicNewSig(t *testing.T) {
 	s := NewSig()
 	if s == nil {
 		t.Fatal("NewSig returned nil")
@@ -22,7 +22,7 @@ func TestNewSig(t *testing.T) {
 	}
 }
 
-func TestSigAddSort(t *testing.T) {
+func TestIvyLogicSigAddSort(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	if err := s.AddSort(sort); err != nil {
@@ -37,7 +37,7 @@ func TestSigAddSort(t *testing.T) {
 	}
 }
 
-func TestSigAddSortDuplicate(t *testing.T) {
+func TestIvyLogicSigAddSortDuplicate(t *testing.T) {
 	// AddSort silently allows redefinition, matching Python ivy_logic.py:333-336.
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
@@ -48,7 +48,7 @@ func TestSigAddSortDuplicate(t *testing.T) {
 	}
 }
 
-func TestSigAddSymbol(t *testing.T) {
+func TestIvyLogicSigAddSymbol(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	sym, err := s.AddSymbol("x", sort)
@@ -60,7 +60,7 @@ func TestSigAddSymbol(t *testing.T) {
 	}
 }
 
-func TestSigAddSymbolDuplicate(t *testing.T) {
+func TestIvyLogicSigAddSymbolDuplicate(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSymbol("x", sort)
@@ -70,7 +70,7 @@ func TestSigAddSymbolDuplicate(t *testing.T) {
 	}
 }
 
-func TestSigFindSymbol(t *testing.T) {
+func TestIvyLogicSigFindSymbol(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSymbol("x", sort)
@@ -83,7 +83,7 @@ func TestSigFindSymbol(t *testing.T) {
 	}
 }
 
-func TestSigFindSymbolUnknown(t *testing.T) {
+func TestIvyLogicSigFindSymbolUnknown(t *testing.T) {
 	s := NewSig()
 	_, err := s.FindSymbol("nonexistent", false)
 	if err == nil {
@@ -91,7 +91,7 @@ func TestSigFindSymbolUnknown(t *testing.T) {
 	}
 }
 
-func TestSigFindSymbolEquals(t *testing.T) {
+func TestIvyLogicSigFindSymbolEquals(t *testing.T) {
 	s := NewSig()
 	sym, err := s.FindSymbol("=", false)
 	if err != nil {
@@ -102,7 +102,7 @@ func TestSigFindSymbolEquals(t *testing.T) {
 	}
 }
 
-func TestSigFindSortUnsorted(t *testing.T) {
+func TestIvyLogicSigFindSortUnsorted(t *testing.T) {
 	s := NewSig()
 	sort, err := s.FindSort("anything", true)
 	if err != nil {
@@ -113,7 +113,7 @@ func TestSigFindSortUnsorted(t *testing.T) {
 	}
 }
 
-func TestSigCopy(t *testing.T) {
+func TestIvyLogicSigCopy(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSort(sort)
@@ -134,7 +134,7 @@ func TestSigCopy(t *testing.T) {
 	}
 }
 
-func TestSigRemoveSymbol(t *testing.T) {
+func TestIvyLogicSigRemoveSymbol(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSymbol("x", sort)
@@ -145,7 +145,7 @@ func TestSigRemoveSymbol(t *testing.T) {
 	}
 }
 
-func TestSigAllSymbols(t *testing.T) {
+func TestIvyLogicSigAllSymbols(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSymbol("x", sort)
@@ -156,7 +156,7 @@ func TestSigAllSymbols(t *testing.T) {
 	}
 }
 
-func TestSigString(t *testing.T) {
+func TestIvyLogicSigString(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSort(sort)
@@ -169,7 +169,7 @@ func TestSigString(t *testing.T) {
 
 // --- WithSymbols/WithSorts tests ---
 
-func TestWithSymbols(t *testing.T) {
+func TestIvyLogicWithSymbols(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	sym := lg.NewConst("temp", sort)
@@ -193,7 +193,7 @@ func TestWithSymbols(t *testing.T) {
 	}
 }
 
-func TestWithSorts(t *testing.T) {
+func TestIvyLogicWithSorts(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "temp_sort"}
 
@@ -218,7 +218,7 @@ func TestWithSorts(t *testing.T) {
 
 // --- Type predicate tests ---
 
-func TestIsVariable(t *testing.T) {
+func TestIvyLogicIsVariable(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	if !IsVariable(v) {
 		t.Error("expected IsVariable=true")
@@ -229,14 +229,14 @@ func TestIsVariable(t *testing.T) {
 	}
 }
 
-func TestIsConstant(t *testing.T) {
+func TestIvyLogicIsConstant(t *testing.T) {
 	c := lg.NewConst("x", lg.TopS)
 	if !IsConstant(c) {
 		t.Error("expected IsConstant=true")
 	}
 }
 
-func TestIsApp(t *testing.T) {
+func TestIvyLogicIsApp(t *testing.T) {
 	c := lg.NewConst("f", lg.TopS)
 	if !IsApp(c) {
 		t.Error("Const should be IsApp")
@@ -247,7 +247,7 @@ func TestIsApp(t *testing.T) {
 	}
 }
 
-func TestIsQuantifier(t *testing.T) {
+func TestIvyLogicIsQuantifier(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: &lg.And{}}
 	if !IsQuantifier(fa) {
@@ -265,7 +265,7 @@ func TestIsQuantifier(t *testing.T) {
 	}
 }
 
-func TestIsBinder(t *testing.T) {
+func TestIvyLogicIsBinder(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: &lg.And{}}
 	if !IsBinder(fa) {
@@ -277,7 +277,7 @@ func TestIsBinder(t *testing.T) {
 	}
 }
 
-func TestIsTemporal(t *testing.T) {
+func TestIvyLogicIsTemporal(t *testing.T) {
 	body := &lg.And{}
 	g := &lg.Globally{Body: body}
 	if !IsTemporal(g) {
@@ -289,20 +289,20 @@ func TestIsTemporal(t *testing.T) {
 	}
 }
 
-func TestHasTemporal(t *testing.T) {
+func TestIvyLogicHasTemporal(t *testing.T) {
 	body := &lg.And{}
 	g := &lg.Globally{Body: body}
 	imp := &lg.Implies{T1: body, T2: g}
-	if !HasTemporal(imp) {
+	if !IvyHasTemporal(imp) {
 		t.Error("Implies with Globally child should have temporal")
 	}
 	noTemp := &lg.And{Terms: []lg.Expr{body}}
-	if HasTemporal(noTemp) {
+	if IvyHasTemporal(noTemp) {
 		t.Error("plain And should not have temporal")
 	}
 }
 
-func TestIsNumeralName(t *testing.T) {
+func TestIvyLogicIsNumeralName(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -322,21 +322,21 @@ func TestIsNumeralName(t *testing.T) {
 	}
 }
 
-func TestIsTrueFalse(t *testing.T) {
-	if !IsTrue(&lg.And{}) {
+func TestIvyLogicIsTrueFalse(t *testing.T) {
+	if !IvyIsTrue(&lg.And{}) {
 		t.Error("empty And should be true")
 	}
-	if IsTrue(&lg.And{Terms: []lg.Expr{&lg.And{}}}) {
+	if IvyIsTrue(&lg.And{Terms: []lg.Expr{&lg.And{}}}) {
 		t.Error("non-empty And should not be true")
 	}
-	if !IsFalse(&lg.Or{}) {
+	if !IvyIsFalse(&lg.Or{}) {
 		t.Error("empty Or should be false")
 	}
 }
 
 // --- Formula classification tests ---
 
-func TestIsQF(t *testing.T) {
+func TestIvyLogicIsQF(t *testing.T) {
 	c := lg.NewConst("p", lg.Boolean)
 	if !IsQF(c) {
 		t.Error("constant should be QF")
@@ -348,7 +348,7 @@ func TestIsQF(t *testing.T) {
 	}
 }
 
-func TestIsPrenexUniversal(t *testing.T) {
+func TestIvyLogicIsPrenexUniversal(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	c := lg.NewConst("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
@@ -364,7 +364,7 @@ func TestIsPrenexUniversal(t *testing.T) {
 	}
 }
 
-func TestIsPrenexExistential(t *testing.T) {
+func TestIvyLogicIsPrenexExistential(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	c := lg.NewConst("p", lg.Boolean)
 	ex := &lg.Exists{Variables: []*lg.Variable{v}, Body: c}
@@ -373,17 +373,17 @@ func TestIsPrenexExistential(t *testing.T) {
 	}
 }
 
-func TestDropUniversals(t *testing.T) {
+func TestIvyLogicDropUniversals(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	c := lg.NewConst("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
-	result := DropUniversals(fa)
+	result := IvyDropUniversals(fa)
 	if !result.Equal(c) {
 		t.Errorf("expected p, got %v", result)
 	}
 }
 
-func TestSubterms(t *testing.T) {
+func TestIvyLogicSubterms(t *testing.T) {
 	c1 := lg.NewConst("a", lg.Boolean)
 	c2 := lg.NewConst("b", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{c1, c2}}
@@ -395,7 +395,7 @@ func TestSubterms(t *testing.T) {
 
 // --- Simplification tests ---
 
-func TestSimpAnd(t *testing.T) {
+func TestIvyLogicSimpAnd(t *testing.T) {
 	tr := &lg.And{} // true
 	fa := &lg.Or{}  // false
 	p := lg.NewConst("p", lg.Boolean)
@@ -406,15 +406,15 @@ func TestSimpAnd(t *testing.T) {
 	if !SimpAnd(p, tr).Equal(p) {
 		t.Error("p & true = p")
 	}
-	if !IsFalse(SimpAnd(fa, p)) {
+	if !IvyIsFalse(SimpAnd(fa, p)) {
 		t.Error("false & p = false")
 	}
-	if !IsFalse(SimpAnd(p, fa)) {
+	if !IvyIsFalse(SimpAnd(p, fa)) {
 		t.Error("p & false = false")
 	}
 }
 
-func TestSimpOr(t *testing.T) {
+func TestIvyLogicSimpOr(t *testing.T) {
 	tr := &lg.And{}
 	fa := &lg.Or{}
 	p := lg.NewConst("p", lg.Boolean)
@@ -425,12 +425,12 @@ func TestSimpOr(t *testing.T) {
 	if !SimpOr(p, fa).Equal(p) {
 		t.Error("p | false = p")
 	}
-	if !IsTrue(SimpOr(tr, p)) {
+	if !IvyIsTrue(SimpOr(tr, p)) {
 		t.Error("true | p = true")
 	}
 }
 
-func TestSimpNot(t *testing.T) {
+func TestIvyLogicSimpNot(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	tr := &lg.And{}
 
@@ -441,14 +441,14 @@ func TestSimpNot(t *testing.T) {
 	}
 
 	// Not(true) = false
-	if !IsFalse(SimpNot(tr)) {
+	if !IvyIsFalse(SimpNot(tr)) {
 		t.Error("~true = false")
 	}
 }
 
 // --- Formula type tests ---
 
-func TestSome(t *testing.T) {
+func TestIvyLogicSome(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fmla := &lg.And{}
 	s := NewSome([]lg.Expr{v}, fmla)
@@ -461,7 +461,7 @@ func TestSome(t *testing.T) {
 	}
 }
 
-func TestSomeWithElse(t *testing.T) {
+func TestIvyLogicSomeWithElse(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fmla := &lg.And{}
 	ifVal := lg.NewConst("a", lg.TopS)
@@ -473,22 +473,22 @@ func TestSomeWithElse(t *testing.T) {
 	}
 }
 
-func TestDefinition(t *testing.T) {
+func TestIvyLogicDefinition(t *testing.T) {
 	lhs := lg.NewConst("f", lg.Boolean)
 	rhs := &lg.And{}
-	d := NewDefinition(lhs, rhs)
+	d := NewIvyDefinition(lhs, rhs)
 	if !lg.SortEqual(d.NodeSort(), lg.Boolean) {
-		t.Error("Definition should have Boolean sort")
+		t.Error("IvyDefinition should have Boolean sort")
 	}
 	if d.Defines() != lhs {
 		t.Error("Defines should return LHS const")
 	}
 }
 
-func TestLet(t *testing.T) {
+func TestIvyLogicLet(t *testing.T) {
 	lhs := lg.NewConst("f", lg.Boolean)
 	rhs := &lg.And{}
-	def := NewDefinition(lhs, rhs)
+	def := NewIvyDefinition(lhs, rhs)
 	body := &lg.And{}
 	l := NewLet([]lg.Expr{def}, body)
 	if !lg.SortEqual(l.NodeSort(), lg.Boolean) {
@@ -500,7 +500,7 @@ func TestLet(t *testing.T) {
 	}
 }
 
-func TestLiteral(t *testing.T) {
+func TestIvyLogicLiteral(t *testing.T) {
 	atom := lg.NewConst("p", lg.Boolean)
 	pos := NewLiteral(1, atom)
 	neg := NewLiteral(0, atom)
@@ -518,7 +518,7 @@ func TestLiteral(t *testing.T) {
 
 // --- Polymorphic symbols tests ---
 
-func TestPolymorphicSymbolLookup(t *testing.T) {
+func TestIvyLogicPolymorphicSymbolLookup(t *testing.T) {
 	names := []string{"+", "-", "*", "/", "<", "<=", ">", ">=", "*>"}
 	for _, name := range names {
 		c, ok := FindPolymorphicSymbol(name, iu.NewIvyUtilsConfig())
@@ -531,7 +531,7 @@ func TestPolymorphicSymbolLookup(t *testing.T) {
 	}
 }
 
-func TestPolymorphicSymbolBfe(t *testing.T) {
+func TestIvyLogicPolymorphicSymbolBfe(t *testing.T) {
 	c, ok := FindPolymorphicSymbol("bfe[3]", iu.NewIvyUtilsConfig())
 	if !ok {
 		t.Error("expected to find bfe[3]")
@@ -541,7 +541,7 @@ func TestPolymorphicSymbolBfe(t *testing.T) {
 	}
 }
 
-func TestSymbolIsPolymorphic(t *testing.T) {
+func TestIvyLogicSymbolIsPolymorphic(t *testing.T) {
 	if !SymbolIsPolymorphic("+") {
 		t.Error("+ should be polymorphic")
 	}
@@ -550,7 +550,7 @@ func TestSymbolIsPolymorphic(t *testing.T) {
 	}
 }
 
-func TestIsInequalitySymbol(t *testing.T) {
+func TestIvyLogicIsInequalitySymbol(t *testing.T) {
 	if !IsInequalitySymbol("<") {
 		t.Error("< is an inequality symbol")
 	}
@@ -561,7 +561,7 @@ func TestIsInequalitySymbol(t *testing.T) {
 
 // --- Sort helper tests ---
 
-func TestRelationSort(t *testing.T) {
+func TestIvyLogicRelationSort(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "t"}
 	rs := RelationSort([]lg.Sort{sort, sort})
 	if !IsRelationalSort(rs) {
@@ -573,7 +573,7 @@ func TestRelationSort(t *testing.T) {
 	}
 }
 
-func TestFuncConstSort(t *testing.T) {
+func TestIvyLogicFuncConstSort(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "t"}
 	// Single sort: return as-is
 	s := FuncConstSort(sort)
@@ -587,7 +587,7 @@ func TestFuncConstSort(t *testing.T) {
 	}
 }
 
-func TestSortDomainRange(t *testing.T) {
+func TestIvyLogicSortDomainRange(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "t"}
 	fs, _ := lg.NewFunctionSort(sort, sort, lg.Boolean)
 	dom := SortDomain(fs)
@@ -609,7 +609,7 @@ func TestSortDomainRange(t *testing.T) {
 
 // --- Utility tests ---
 
-func TestCloneNode(t *testing.T) {
+func TestIvyLogicCloneNode(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{p}}
@@ -623,7 +623,7 @@ func TestCloneNode(t *testing.T) {
 	}
 }
 
-func TestCloneBinder(t *testing.T) {
+func TestIvyLogicCloneBinder(t *testing.T) {
 	v1, _ := lg.NewVariable("X", lg.TopS)
 	v2, _ := lg.NewVariable("Y", lg.TopS)
 	body := &lg.And{}
@@ -638,7 +638,7 @@ func TestCloneBinder(t *testing.T) {
 	}
 }
 
-func TestNodeArgs(t *testing.T) {
+func TestIvyLogicNodeArgs(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{p, q}}
@@ -648,27 +648,27 @@ func TestNodeArgs(t *testing.T) {
 	}
 }
 
-func TestForAllExists(t *testing.T) {
+func TestIvyLogicForAllExists(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	body := &lg.And{}
 
 	// Non-empty vars: returns ForAll/Exists
-	fa := ForAll([]*lg.Variable{v}, body)
+	fa := IvyForAll([]*lg.Variable{v}, body)
 	if _, ok := fa.(*lg.ForAll); !ok {
 		t.Error("expected ForAll")
 	}
-	ex := Exists([]*lg.Variable{v}, body)
+	ex := IvyExists([]*lg.Variable{v}, body)
 	if _, ok := ex.(*lg.Exists); !ok {
 		t.Error("expected Exists")
 	}
 
 	// Empty vars: returns body
-	if ForAll(nil, body) != body {
+	if IvyForAll(nil, body) != body {
 		t.Error("ForAll with no vars should return body")
 	}
 }
 
-func TestCloseFormula(t *testing.T) {
+func TestIvyLogicCloseFormula(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	// Formula with free variable
 	eq := &lg.Eq{T1: v, T2: v}
@@ -685,7 +685,7 @@ func TestCloseFormula(t *testing.T) {
 	}
 }
 
-func TestVariableUniqifier(t *testing.T) {
+func TestIvyLogicVariableUniqifier(t *testing.T) {
 	v1, _ := lg.NewVariable("X", lg.TopS)
 	v2, _ := lg.NewVariable("Y", lg.TopS)
 	body := &lg.Eq{T1: v1, T2: v2}
@@ -708,7 +708,7 @@ func TestVariableUniqifier(t *testing.T) {
 	}
 }
 
-func TestNormalizeOps(t *testing.T) {
+func TestIvyLogicNormalizeOps(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 	r := lg.NewConst("r", lg.Boolean)
@@ -724,7 +724,7 @@ func TestNormalizeOps(t *testing.T) {
 	}
 }
 
-func TestASTMatch(t *testing.T) {
+func TestIvyLogicASTMatch(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 
@@ -748,7 +748,7 @@ func TestASTMatch(t *testing.T) {
 	}
 }
 
-func TestLabelTemporal(t *testing.T) {
+func TestIvyLogicLabelTemporal(t *testing.T) {
 	body := &lg.And{}
 	g := &lg.Globally{Body: body}
 	labeled := LabelTemporal(g, "L1")
@@ -761,7 +761,7 @@ func TestLabelTemporal(t *testing.T) {
 	}
 }
 
-func TestPartialFunction(t *testing.T) {
+func TestIvyLogicPartialFunction(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "t"}
 	relSort, _ := lg.NewFunctionSort(sort, sort, lg.Boolean)
 	rel := lg.NewConst("r", relSort)
@@ -771,7 +771,7 @@ func TestPartialFunction(t *testing.T) {
 	}
 }
 
-func TestExtensionality(t *testing.T) {
+func TestIvyLogicExtensionality(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "s"}
 	dSort, _ := lg.NewFunctionSort(sort, sort)
 	destr := lg.NewConst("d", dSort)
@@ -781,9 +781,9 @@ func TestExtensionality(t *testing.T) {
 	}
 }
 
-func TestExtensionalityEmpty(t *testing.T) {
+func TestIvyLogicExtensionalityEmpty(t *testing.T) {
 	result := Extensionality(nil)
-	if !IsFalse(result) {
+	if !IvyIsFalse(result) {
 		t.Error("empty extensionality should be false")
 	}
 }

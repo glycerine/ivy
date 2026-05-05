@@ -9,7 +9,7 @@ import (
 	"github.com/glycerine/ivy/goivy/lexer"
 )
 
-var ver17 = lexer.Version{1, 7}
+var lalrVer17 = lexer.Version{1, 7}
 
 // parsePython parses with the real Python Ivy parser via PythonOracle.
 // Returns the canonical AST shape string.
@@ -40,16 +40,16 @@ func astShape(n ast.Node) string {
 			return fmt.Sprintf("Atom(%s)", t.Rep)
 		}
 		return fmt.Sprintf("Symbol(%s)", t.Rep)
-	case *ast.Variable:
+	case *ast.AstVariable:
 		return fmt.Sprintf("Var(%s)", t.Rep)
 	case *ast.Atom:
 		if len(t.Terms) == 0 {
 			return fmt.Sprintf("Atom(%s)", t.Rep)
 		}
-		args := shapeList(t.Terms)
+		args := lalrShapeList(t.Terms)
 		return fmt.Sprintf("Atom(%s,[%s])", t.Rep, args)
 	case *ast.App:
-		args := shapeList(t.Terms)
+		args := lalrShapeList(t.Terms)
 		return fmt.Sprintf("App(%v,[%s])", t.Rep, args)
 	case *ast.AstAnd:
 		if len(t.Terms) == 0 {
@@ -58,13 +58,13 @@ func astShape(n ast.Node) string {
 		// Flatten nested And for comparison (both parsers are correct,
 		// they just differ in representation: binary tree vs n-ary).
 		flat := flattenAnd(t)
-		return fmt.Sprintf("And(%s)", shapeList(flat))
+		return fmt.Sprintf("And(%s)", lalrShapeList(flat))
 	case *ast.AstOr:
 		if len(t.Terms) == 0 {
 			return "False"
 		}
 		flat := flattenOr(t)
-		return fmt.Sprintf("Or(%s)", shapeList(flat))
+		return fmt.Sprintf("Or(%s)", lalrShapeList(flat))
 	case *ast.AstNot:
 		return fmt.Sprintf("Not(%s)", astShape(t.Body))
 	case *ast.AstImplies:
@@ -74,9 +74,9 @@ func astShape(n ast.Node) string {
 	case *ast.AstIte:
 		return fmt.Sprintf("Ite(%s,%s,%s)", astShape(t.Cond), astShape(t.Then), astShape(t.Else))
 	case *ast.AstForall:
-		return fmt.Sprintf("Forall([%s],%s)", shapeList(t.Bounds), astShape(t.Body))
+		return fmt.Sprintf("Forall([%s],%s)", lalrShapeList(t.Bounds), astShape(t.Body))
 	case *ast.AstExists:
-		return fmt.Sprintf("Exists([%s],%s)", shapeList(t.Bounds), astShape(t.Body))
+		return fmt.Sprintf("Exists([%s],%s)", lalrShapeList(t.Bounds), astShape(t.Body))
 	case *ast.AstGlobally:
 		return fmt.Sprintf("Globally(%s)", astShape(t.Body))
 	case *ast.AstEventually:
@@ -90,7 +90,7 @@ func astShape(n ast.Node) string {
 	case *ast.MethodCall:
 		return fmt.Sprintf("MethodCall(%s,%s)", astShape(t.Obj), astShape(t.Method))
 	case *ast.AstIsa:
-		return fmt.Sprintf("Isa(%s)", shapeList(t.Terms))
+		return fmt.Sprintf("Isa(%s)", lalrShapeList(t.Terms))
 	case *ast.AstNamedBinder:
 		return fmt.Sprintf("NamedBinder(%s,%s)", t.Name, astShape(t.Body))
 	case *ast.Dot:
@@ -99,28 +99,28 @@ func astShape(n ast.Node) string {
 	case *ast.LabeledFormula:
 		return fmt.Sprintf("LabeledFormula(%s,%s)", astShape(t.Label), astShape(t.Formula))
 	case *ast.AstSequence:
-		return fmt.Sprintf("Sequence(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("Sequence(%s)", lalrShapeList(t.Args()))
 	case *ast.AstAssertAction:
-		return fmt.Sprintf("AssertAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("AssertAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstAssumeAction:
-		return fmt.Sprintf("AssumeAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("AssumeAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstAssignAction:
-		return fmt.Sprintf("AssignAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("AssignAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstCallAction:
-		return fmt.Sprintf("CallAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("CallAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstIfAction:
-		return fmt.Sprintf("IfAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("IfAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstWhileAction:
-		return fmt.Sprintf("WhileAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("WhileAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstLocalAction:
-		return fmt.Sprintf("LocalAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("LocalAction(%s)", lalrShapeList(t.Args()))
 	case *ast.AstNativeAction:
-		return fmt.Sprintf("NativeAction(%s)", shapeList(t.Args()))
+		return fmt.Sprintf("NativeAction(%s)", lalrShapeList(t.Args()))
 	default:
 		// Generic fallback using Args() if available
 		args := n.Args()
 		if len(args) > 0 {
-			return fmt.Sprintf("%T(%s)", n, shapeList(args))
+			return fmt.Sprintf("%T(%s)", n, lalrShapeList(args))
 		}
 		return fmt.Sprintf("?(%T)", n)
 	}
@@ -152,7 +152,7 @@ func flattenOr(n *ast.AstOr) []ast.Node {
 	return result
 }
 
-func shapeList(nodes []ast.Node) string {
+func lalrShapeList(nodes []ast.Node) string {
 	parts := make([]string, len(nodes))
 	for i, n := range nodes {
 		parts[i] = astShape(n)
@@ -191,7 +191,7 @@ func crossValidate(t *testing.T, input string, version lexer.Version) {
 // === Basic LALR parsing tests ===
 
 func TestLALR_Symbol(t *testing.T) {
-	n, err := ParseLogicV17("foo", ver17)
+	n, err := ParseLogicV17("foo", lalrVer17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -201,7 +201,7 @@ func TestLALR_Symbol(t *testing.T) {
 }
 
 func TestLALR_Variable(t *testing.T) {
-	n, err := ParseLogicV17("X", ver17)
+	n, err := ParseLogicV17("X", lalrVer17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -211,7 +211,7 @@ func TestLALR_Variable(t *testing.T) {
 }
 
 func TestLALR_True(t *testing.T) {
-	n, err := ParseLogicV17("true", ver17)
+	n, err := ParseLogicV17("true", lalrVer17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -221,7 +221,7 @@ func TestLALR_True(t *testing.T) {
 }
 
 func TestLALR_False(t *testing.T) {
-	n, err := ParseLogicV17("false", ver17)
+	n, err := ParseLogicV17("false", lalrVer17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -246,7 +246,7 @@ func TestCrossValidation_V17_BasicFormulas(t *testing.T) {
 		"~(a & b)", "~~p",
 	}
 	for _, f := range formulas {
-		crossValidate(t, f, ver17)
+		crossValidate(t, f, lalrVer17)
 	}
 }
 
@@ -289,7 +289,7 @@ func TestCrossValidation_V17_Precedence(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.desc, func(t *testing.T) {
-			crossValidate(t, tc.input, ver17)
+			crossValidate(t, tc.input, lalrVer17)
 		})
 	}
 }
@@ -312,7 +312,7 @@ func TestCrossValidation_V17_Complex(t *testing.T) {
 		"a * (b + c) = a * b + a * c",
 	}
 	for _, f := range formulas {
-		crossValidate(t, f, ver17)
+		crossValidate(t, f, lalrVer17)
 	}
 }
 
@@ -325,16 +325,16 @@ func TestGenerated_BinaryOperatorPairs(t *testing.T) {
 		sym     string
 		version lexer.Version
 	}{
-		{"&", ver17}, {"|", ver17}, {"->", ver17}, {"<->", ver17},
-		{"=", ver17}, {"<", ver17}, {"<=", ver17}, {">", ver17}, {">=", ver17},
-		{"+", ver17}, {"-", ver17}, {"*", ver17}, {"/", ver17},
+		{"&", lalrVer17}, {"|", lalrVer17}, {"->", lalrVer17}, {"<->", lalrVer17},
+		{"=", lalrVer17}, {"<", lalrVer17}, {"<=", lalrVer17}, {">", lalrVer17}, {">=", lalrVer17},
+		{"+", lalrVer17}, {"-", lalrVer17}, {"*", lalrVer17}, {"/", lalrVer17},
 	}
 
 	for _, op1 := range ops {
 		for _, op2 := range ops {
 			input := fmt.Sprintf("a %s b %s c", op1.sym, op2.sym)
 			t.Run(input, func(t *testing.T) {
-				crossValidate(t, input, ver17)
+				crossValidate(t, input, lalrVer17)
 			})
 		}
 	}
@@ -345,11 +345,11 @@ func TestGenerated_UnaryPrefixCombinations(t *testing.T) {
 	binOps := []string{"&", "|", "->", "=", "<", "+", "*"}
 	for _, op := range binOps {
 		// ~a OP b
-		crossValidate(t, fmt.Sprintf("~a %s b", op), ver17)
+		crossValidate(t, fmt.Sprintf("~a %s b", op), lalrVer17)
 		// a OP ~b
-		crossValidate(t, fmt.Sprintf("a %s ~b", op), ver17)
+		crossValidate(t, fmt.Sprintf("a %s ~b", op), lalrVer17)
 		// ~~a OP b
-		crossValidate(t, fmt.Sprintf("~~a %s b", op), ver17)
+		crossValidate(t, fmt.Sprintf("~~a %s b", op), lalrVer17)
 	}
 }
 
@@ -359,11 +359,11 @@ func TestGenerated_QuantifierScoping(t *testing.T) {
 	for _, op := range ops {
 		input := fmt.Sprintf("forall X. p(X) %s q(X)", op)
 		t.Run("forall+"+op, func(t *testing.T) {
-			crossValidate(t, input, ver17)
+			crossValidate(t, input, lalrVer17)
 		})
 		input2 := fmt.Sprintf("exists X. p(X) %s q(X)", op)
 		t.Run("exists+"+op, func(t *testing.T) {
-			crossValidate(t, input2, ver17)
+			crossValidate(t, input2, lalrVer17)
 		})
 	}
 }
@@ -374,7 +374,7 @@ func TestGenerated_TripleOperatorChains(t *testing.T) {
 	for _, op := range ops {
 		input := fmt.Sprintf("a %s b %s c %s d", op, op, op)
 		t.Run(op+"+"+op+"+"+op, func(t *testing.T) {
-			crossValidate(t, input, ver17)
+			crossValidate(t, input, lalrVer17)
 		})
 	}
 }
@@ -395,7 +395,7 @@ func TestGenerated_ParenthesizedVariants(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
-			crossValidate(t, c, ver17)
+			crossValidate(t, c, lalrVer17)
 		})
 	}
 }
@@ -413,7 +413,7 @@ func TestGenerated_FunctionApplications(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
-			crossValidate(t, c, ver17)
+			crossValidate(t, c, lalrVer17)
 		})
 	}
 }
@@ -457,7 +457,7 @@ func TestCrossValidation_V17_MorePrecedence(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.desc, func(t *testing.T) {
-			crossValidate(t, tc.input, ver17)
+			crossValidate(t, tc.input, lalrVer17)
 		})
 	}
 }
@@ -482,7 +482,7 @@ func TestCrossValidation_V17_CompoundExpressions(t *testing.T) {
 	}
 	for _, f := range formulas {
 		t.Run(f, func(t *testing.T) {
-			crossValidate(t, f, ver17)
+			crossValidate(t, f, lalrVer17)
 		})
 	}
 }
@@ -495,7 +495,7 @@ func TestCrossValidation_V17_AllOperatorTriples(t *testing.T) {
 			for _, op3 := range ops {
 				input := fmt.Sprintf("a %s b %s c %s d", op1, op2, op3)
 				t.Run(input, func(t *testing.T) {
-					crossValidate(t, input, ver17)
+					crossValidate(t, input, lalrVer17)
 				})
 			}
 		}
@@ -540,69 +540,69 @@ func crossValidateAction(t *testing.T, input string, version lexer.Version) {
 }
 
 func TestActionCrossValidation_SimpleAssume(t *testing.T) {
-	crossValidateAction(t, "{ assume p }", ver17)
+	crossValidateAction(t, "{ assume p }", lalrVer17)
 }
 
 func TestActionCrossValidation_SimpleAssert(t *testing.T) {
-	crossValidateAction(t, "{ assert p }", ver17)
+	crossValidateAction(t, "{ assert p }", lalrVer17)
 }
 
 func TestActionCrossValidation_Assignment(t *testing.T) {
-	crossValidateAction(t, "{ x := y }", ver17)
+	crossValidateAction(t, "{ x := y }", lalrVer17)
 }
 
 func TestActionCrossValidation_Havoc(t *testing.T) {
-	crossValidateAction(t, "{ x := * }", ver17)
+	crossValidateAction(t, "{ x := * }", lalrVer17)
 }
 
 func TestActionCrossValidation_IfThen(t *testing.T) {
-	crossValidateAction(t, "{ if c { x := y } }", ver17)
+	crossValidateAction(t, "{ if c { x := y } }", lalrVer17)
 }
 
 func TestActionCrossValidation_IfThenElse(t *testing.T) {
-	crossValidateAction(t, "{ if c { x := y } else { z := w } }", ver17)
+	crossValidateAction(t, "{ if c { x := y } else { z := w } }", lalrVer17)
 }
 
 func TestActionCrossValidation_Sequence(t *testing.T) {
-	crossValidateAction(t, "{ x := y; assume p }", ver17)
+	crossValidateAction(t, "{ x := y; assume p }", lalrVer17)
 }
 
 func TestActionCrossValidation_Nested(t *testing.T) {
-	crossValidateAction(t, "{ if c { x := y } else { z := w }; assume p }", ver17)
+	crossValidateAction(t, "{ if c { x := y } else { z := w }; assume p }", lalrVer17)
 }
 
 func TestActionCrossValidation_Var(t *testing.T) {
-	crossValidateAction(t, "{ var v : bool }", ver17)
+	crossValidateAction(t, "{ var v : bool }", lalrVer17)
 }
 
 func TestActionCrossValidation_VarInit(t *testing.T) {
-	crossValidateAction(t, "{ var v := x }", ver17)
+	crossValidateAction(t, "{ var v := x }", lalrVer17)
 }
 
 func TestActionCrossValidation_While(t *testing.T) {
-	crossValidateAction(t, "{ while c { x := y } }", ver17)
+	crossValidateAction(t, "{ while c { x := y } }", lalrVer17)
 }
 
 func TestActionCrossValidation_Require(t *testing.T) {
-	crossValidateAction(t, "{ require p }", ver17)
+	crossValidateAction(t, "{ require p }", lalrVer17)
 }
 
 func TestActionCrossValidation_Ensure(t *testing.T) {
-	crossValidateAction(t, "{ ensure p }", ver17)
+	crossValidateAction(t, "{ ensure p }", lalrVer17)
 }
 
 func TestActionCrossValidation_EmptySequence(t *testing.T) {
-	crossValidateAction(t, "{ }", ver17)
+	crossValidateAction(t, "{ }", lalrVer17)
 }
 
 func TestActionCrossValidation_BareCall(t *testing.T) {
-	crossValidateAction(t, "{ f(x) }", ver17)
+	crossValidateAction(t, "{ f(x) }", lalrVer17)
 }
 
 // TestActionCrossValidation_ScenarioBasic tests scenario parsing in the LALR grammar.
 func TestActionCrossValidation_ScenarioBasic(t *testing.T) {
 	input := `scenario { -> s0; s0 -> s1 : before a { assume p } }`
-	lalrResult, lalrErr := ParseLogicV17(input, ver17)
+	lalrResult, lalrErr := ParseLogicV17(input, lalrVer17)
 	if lalrErr != nil {
 		t.Fatalf("LALR parse error: %v", lalrErr)
 	}
@@ -617,7 +617,7 @@ func TestActionCrossValidation_ScenarioBasic(t *testing.T) {
 
 func TestActionCrossValidation_ScenarioMultiTransitions(t *testing.T) {
 	input := `scenario { -> s0; s0 -> s1 : before a { x := y } s1 -> s0 : after b { z := w } }`
-	lalrResult, lalrErr := ParseLogicV17(input, ver17)
+	lalrResult, lalrErr := ParseLogicV17(input, lalrVer17)
 	if lalrErr != nil {
 		t.Fatalf("LALR parse error: %v", lalrErr)
 	}

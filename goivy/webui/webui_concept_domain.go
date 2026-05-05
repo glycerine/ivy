@@ -1169,64 +1169,64 @@ func GetStandardCombiners() *CDCombinerDict {
 	T := logic.NewTopSort()
 	boolSort := logic.Boolean
 
-	unaryRelation := mustFuncSort(T, boolSort)
-	binaryRelation := mustFuncSort(T, T, boolSort)
+	unaryRelation := webuiMustFuncSort(T, boolSort)
+	binaryRelation := webuiMustFuncSort(T, T, boolSort)
 
-	X := mustVar("X", T)
-	Y := mustVar("Y", T)
-	Z := mustVar("Z", T)
-	U := mustVar("U", unaryRelation)
-	U1 := mustVar("U1", unaryRelation)
-	U2 := mustVar("U2", unaryRelation)
-	B := mustVar("B", binaryRelation)
+	X := webuiMustVar("X", T)
+	Y := webuiMustVar("Y", T)
+	Z := webuiMustVar("Z", T)
+	U := webuiMustVar("U", unaryRelation)
+	U1 := webuiMustVar("U1", unaryRelation)
+	U2 := webuiMustVar("U2", unaryRelation)
+	B := webuiMustVar("B", binaryRelation)
 
 	result := NewCDCombinerDict()
 
 	// none: ~Exists X. U(X)
 	result.SetCombiner("none", MustCDConceptCombiner(
 		[]*logic.Variable{U},
-		mustNot(mustExists([]*logic.Variable{X}, mustApplyVar(U, X))),
+		mustNot(webuiMustExists([]*logic.Variable{X}, mustApplyVar(U, X))),
 	))
 	// at_least_one: Exists X. U(X)
 	result.SetCombiner("at_least_one", MustCDConceptCombiner(
 		[]*logic.Variable{U},
-		mustExists([]*logic.Variable{X}, mustApplyVar(U, X)),
+		webuiMustExists([]*logic.Variable{X}, mustApplyVar(U, X)),
 	))
 	// at_most_one: ForAll X,Y. U(X) & U(Y) => X=Y
 	result.SetCombiner("at_most_one", MustCDConceptCombiner(
 		[]*logic.Variable{U},
-		mustForAll([]*logic.Variable{X, Y},
+		webuiMustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U, X), mustApplyVar(U, Y)),
-				mustEq(X, Y),
+				webuiMustEq(X, Y),
 			),
 		),
 	))
 	// node_necessarily: ForAll X. U1(X) => U2(X)
 	result.SetCombiner("node_necessarily", MustCDConceptCombiner(
 		[]*logic.Variable{U1, U2},
-		mustForAll([]*logic.Variable{X},
+		webuiMustForAll([]*logic.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustApplyVar(U2, X)),
 		),
 	))
 	// node_necessarily_not: ForAll X. U1(X) => ~U2(X)
 	result.SetCombiner("node_necessarily_not", MustCDConceptCombiner(
 		[]*logic.Variable{U1, U2},
-		mustForAll([]*logic.Variable{X},
+		webuiMustForAll([]*logic.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustNot(mustApplyVar(U2, X))),
 		),
 	))
 	// mutually_exclusive: ForAll X,Y. ~(U1(X) & U2(Y))
 	result.SetCombiner("mutually_exclusive", MustCDConceptCombiner(
 		[]*logic.Variable{U1, U2},
-		mustForAll([]*logic.Variable{X, Y},
+		webuiMustForAll([]*logic.Variable{X, Y},
 			mustNot(mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y))),
 		),
 	))
 	// all_to_all: ForAll X,Y. U1(X) & U2(Y) => B(X,Y)
 	result.SetCombiner("all_to_all", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{X, Y},
+		webuiMustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustApplyVar(B, X, Y),
@@ -1236,7 +1236,7 @@ func GetStandardCombiners() *CDCombinerDict {
 	// none_to_none: ForAll X,Y. U1(X) & U2(Y) => ~B(X,Y)
 	result.SetCombiner("none_to_none", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{X, Y},
+		webuiMustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustNot(mustApplyVar(B, X, Y)),
@@ -1246,10 +1246,10 @@ func GetStandardCombiners() *CDCombinerDict {
 	// total: ForAll X. U1(X) => Exists Y. U2(Y) & B(X,Y)
 	result.SetCombiner("total", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{X},
+		webuiMustForAll([]*logic.Variable{X},
 			mustImplies(
 				mustApplyVar(U1, X),
-				mustExists([]*logic.Variable{Y},
+				webuiMustExists([]*logic.Variable{Y},
 					mustAnd(mustApplyVar(U2, Y), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1258,7 +1258,7 @@ func GetStandardCombiners() *CDCombinerDict {
 	// functional: ForAll X,Y,Z. U1(X) & U2(Y) & U2(Z) & B(X,Y) & B(X,Z) => Y=Z
 	result.SetCombiner("functional", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{X, Y, Z},
+		webuiMustForAll([]*logic.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1267,17 +1267,17 @@ func GetStandardCombiners() *CDCombinerDict {
 					mustApplyVar(B, X, Y),
 					mustApplyVar(B, X, Z),
 				),
-				mustEq(Y, Z),
+				webuiMustEq(Y, Z),
 			),
 		),
 	))
 	// surjective: ForAll Y. U2(Y) => Exists X. U1(X) & B(X,Y)
 	result.SetCombiner("surjective", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{Y},
+		webuiMustForAll([]*logic.Variable{Y},
 			mustImplies(
 				mustApplyVar(U2, Y),
-				mustExists([]*logic.Variable{X},
+				webuiMustExists([]*logic.Variable{X},
 					mustAnd(mustApplyVar(U1, X), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1286,7 +1286,7 @@ func GetStandardCombiners() *CDCombinerDict {
 	// injective: ForAll X,Y,Z. U1(X) & U1(Y) & U2(Z) & B(X,Z) & B(Y,Z) => X=Y
 	result.SetCombiner("injective", MustCDConceptCombiner(
 		[]*logic.Variable{B, U1, U2},
-		mustForAll([]*logic.Variable{X, Y, Z},
+		webuiMustForAll([]*logic.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1295,7 +1295,7 @@ func GetStandardCombiners() *CDCombinerDict {
 					mustApplyVar(B, X, Z),
 					mustApplyVar(B, Y, Z),
 				),
-				mustEq(X, Y),
+				webuiMustEq(X, Y),
 			),
 		),
 	))
@@ -1335,7 +1335,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 	sort.Strings(sortNames)
 	for _, name := range sortNames {
 		s := sorts[name]
-		X := mustVar("X", s)
+		X := webuiMustVar("X", s)
 		eq, _ := logic.NewEq(X, X)
 		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 		concepts.AppendToList("nodes", name)
@@ -1343,8 +1343,8 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 
 	// Add equality concept.
 	T := logic.NewTopSort()
-	XT := mustVar("X", T)
-	YT := mustVar("Y", T)
+	XT := webuiMustVar("X", T)
+	YT := webuiMustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
 	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
@@ -1358,7 +1358,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 		c := symbols[sname]
 		if logic.FirstOrderSort(c.CSort) {
 			// First-order constant → unary equality concept.
-			X := mustVar("X", c.CSort)
+			X := webuiMustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := "=" + c.Name
 			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
@@ -1366,22 +1366,22 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 			switch fs.Arity() {
 			case 1:
 				// Unary relation → node_label (e.g., "semaphore")
-				X := mustVar("X", fs.Domain()[0])
+				X := webuiMustVar("X", fs.Domain()[0])
 				app, _ := logic.NewApply(c, X)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 				concepts.AppendToList("node_labels", c.Name)
 			case 2:
 				// Binary relation → edge (e.g., "link")
-				X := mustVar("X", fs.Domain()[0])
-				Y := mustVar("Y", fs.Domain()[1])
+				X := webuiMustVar("X", fs.Domain()[0])
+				Y := webuiMustVar("Y", fs.Domain()[1])
 				app, _ := logic.NewApply(c, X, Y)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 				concepts.AppendToList("edges", c.Name)
 			case 3:
 				// Ternary relation
-				X := mustVar("X", fs.Domain()[0])
-				Y := mustVar("Y", fs.Domain()[1])
-				Z := mustVar("Z", fs.Domain()[2])
+				X := webuiMustVar("X", fs.Domain()[0])
+				Y := webuiMustVar("Y", fs.Domain()[1])
+				Z := webuiMustVar("Z", fs.Domain()[2])
 				app, _ := logic.NewApply(c, X, Y, Z)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 			}
@@ -1401,8 +1401,8 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 	// Add equality concept.
 	T := logic.NewTopSort()
-	XT := mustVar("X", T)
-	YT := mustVar("Y", T)
+	XT := webuiMustVar("X", T)
+	YT := webuiMustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
 	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
@@ -1438,7 +1438,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 	for _, sname := range constNames {
 		c := constByName[sname]
 		if logic.FirstOrderSort(c.CSort) {
-			X := mustVar("X", c.CSort)
+			X := webuiMustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := fmt.Sprintf("%s:%s", c.Name, c.CSort)
 			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
@@ -1446,18 +1446,18 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
-				X := mustVar("X", fs.Domain()[0])
+				X := webuiMustVar("X", fs.Domain()[0])
 				app, _ := logic.NewApply(c, X)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 			case 2:
-				X := mustVar("X", fs.Domain()[0])
-				Y := mustVar("Y", fs.Domain()[1])
+				X := webuiMustVar("X", fs.Domain()[0])
+				Y := webuiMustVar("Y", fs.Domain()[1])
 				app, _ := logic.NewApply(c, X, Y)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 			case 3:
-				X := mustVar("X", fs.Domain()[0])
-				Y := mustVar("Y", fs.Domain()[1])
-				Z := mustVar("Z", fs.Domain()[2])
+				X := webuiMustVar("X", fs.Domain()[0])
+				Y := webuiMustVar("Y", fs.Domain()[1])
+				Z := webuiMustVar("Z", fs.Domain()[2])
 				app, _ := logic.NewApply(c, X, Y, Z)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 			}
@@ -1493,8 +1493,8 @@ func GetStructureConceptDomain(
 
 	// Add equality concept.
 	T := logic.NewTopSort()
-	XT := mustVar("X", T)
-	YT := mustVar("Y", T)
+	XT := webuiMustVar("X", T)
+	YT := webuiMustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
 	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
@@ -1510,7 +1510,7 @@ func GetStructureConceptDomain(
 	sort.Slice(elements, func(i, j int) bool { return elements[i].Name < elements[j].Name })
 
 	for _, uc := range elements {
-		X := mustVar("X", uc.CSort)
+		X := webuiMustVar("X", uc.CSort)
 		name := UniverseElementToConceptName(uc)
 		eq, _ := logic.NewEq(X, uc)
 		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
@@ -1549,7 +1549,7 @@ func GetStructureConceptDomain(
 		c := allSymbols[sname]
 
 		if logic.FirstOrderSort(c.CSort) {
-			X := mustVar("X", c.CSort)
+			X := webuiMustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := "=" + c.Name
 			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
@@ -1558,18 +1558,18 @@ func GetStructureConceptDomain(
 				// Relation
 				switch fs.Arity() {
 				case 1:
-					X := mustVar("X", fs.Domain()[0])
+					X := webuiMustVar("X", fs.Domain()[0])
 					app, _ := logic.NewApply(c, X)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 				case 2:
-					X := mustVar("X", fs.Domain()[0])
-					Y := mustVar("Y", fs.Domain()[1])
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
 					app, _ := logic.NewApply(c, X, Y)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 				case 3:
-					X := mustVar("X", fs.Domain()[0])
-					Y := mustVar("Y", fs.Domain()[1])
-					Z := mustVar("Z", fs.Domain()[2])
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
+					Z := webuiMustVar("Z", fs.Domain()[2])
 					app, _ := logic.NewApply(c, X, Y, Z)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 				}
@@ -1577,15 +1577,15 @@ func GetStructureConceptDomain(
 				// Function
 				switch fs.Arity() {
 				case 1:
-					X := mustVar("X", fs.Domain()[0])
-					Y := mustVar("Y", fs.Range())
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Range())
 					app, _ := logic.NewApply(c, X)
 					eq, _ := logic.NewEq(app, Y)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, eq))
 				case 2:
-					X := mustVar("X", fs.Domain()[0])
-					Y := mustVar("Y", fs.Domain()[1])
-					Z := mustVar("Z", fs.Range())
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
+					Z := webuiMustVar("Z", fs.Range())
 					app, _ := logic.NewApply(c, X, Y)
 					eq, _ := logic.NewEq(app, Z)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, eq))
@@ -1761,7 +1761,7 @@ func GetStructureRenaming(
 // Logic construction helpers (must* panic on error -- only for known-good formulas)
 // ---------------------------------------------------------------------------
 
-func mustVar(name string, s logic.Sort) *logic.Variable {
+func webuiMustVar(name string, s logic.Sort) *logic.Variable {
 	v, err := logic.NewVariable(name, s)
 	if err != nil {
 		panic(err)
@@ -1769,7 +1769,7 @@ func mustVar(name string, s logic.Sort) *logic.Variable {
 	return v
 }
 
-func mustFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
+func webuiMustFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
 	fs, err := logic.NewFunctionSort(sorts...)
 	if err != nil {
 		panic(err)
@@ -1800,7 +1800,7 @@ func mustOr(terms ...logic.Expr) logic.Expr {
 	return n
 }
 
-func mustEq(t1, t2 logic.Expr) logic.Expr {
+func webuiMustEq(t1, t2 logic.Expr) logic.Expr {
 	n, _ := logic.NewEq(t1, t2)
 	return n
 }
@@ -1810,12 +1810,12 @@ func mustImplies(t1, t2 logic.Expr) logic.Expr {
 	return n
 }
 
-func mustForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
+func webuiMustForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	n, _ := logic.NewForAll(vars, body)
 	return n
 }
 
-func mustExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
+func webuiMustExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	n, _ := logic.NewExists(vars, body)
 	return n
 }

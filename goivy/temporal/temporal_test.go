@@ -11,7 +11,7 @@ import (
 )
 
 // helpers for tests
-func boolConst(name string) *lg.Const {
+func temporalBoolConst(name string) *lg.Const {
 	return lg.NewConst(name, lg.Boolean)
 }
 
@@ -39,7 +39,7 @@ func TestActionTermString_NoParams(t *testing.T) {
 }
 
 func TestActionTermString_WithInputs(t *testing.T) {
-	x := boolConst("x")
+	x := temporalBoolConst("x")
 	stmt := actions.NewSequence()
 	at := makeActionTerm([]*lg.Const{x}, nil, nil, stmt)
 	s := at.String()
@@ -49,7 +49,7 @@ func TestActionTermString_WithInputs(t *testing.T) {
 }
 
 func TestActionTermString_WithOutputs(t *testing.T) {
-	y := boolConst("y")
+	y := temporalBoolConst("y")
 	stmt := actions.NewSequence()
 	at := makeActionTerm(nil, []*lg.Const{y}, nil, stmt)
 	s := at.String()
@@ -167,8 +167,8 @@ func TestNormalProgramFormulas(t *testing.T) {
 
 func TestOldActionToNewRoundTrip(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
-	act.SetFormalParams([]*lg.Const{boolConst("p")})
-	act.SetFormalReturns([]*lg.Const{boolConst("r")})
+	act.SetFormalParams([]*lg.Const{temporalBoolConst("p")})
+	act.SetFormalReturns([]*lg.Const{temporalBoolConst("r")})
 	at := OldActionToNew(act)
 	if len(at.Inputs) != 1 {
 		t.Errorf("expected 1 input, got %d", len(at.Inputs))
@@ -228,7 +228,7 @@ func TestEnvAction_Basic(t *testing.T) {
 // --- PropEvent ---
 
 func TestPropEvent_Eventually(t *testing.T) {
-	body := boolConst("phi")
+	body := temporalBoolConst("phi")
 	notBody, _ := lg.NewNot(body)
 	ev, _ := lg.NewEventually(nil, notBody)
 	loc := ast.Location{Line: 42}
@@ -242,7 +242,7 @@ func TestPropEvent_Eventually(t *testing.T) {
 }
 
 func TestPropEvent_Globally(t *testing.T) {
-	body := boolConst("psi")
+	body := temporalBoolConst("psi")
 	g, _ := lg.NewGlobally(nil, body)
 	loc := ast.Location{Line: 10}
 	event := TemporalPropEvent(g, loc)
@@ -254,7 +254,7 @@ func TestPropEvent_Globally(t *testing.T) {
 // --- IsGloballyFormula / IsEventuallyFormula / IsTemporalFormula ---
 
 func TestIsGloballyFormula(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	if !IsGloballyFormula(g) {
 		t.Error("should be true for Globally")
@@ -265,7 +265,7 @@ func TestIsGloballyFormula(t *testing.T) {
 }
 
 func TestIsEventuallyFormula(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	e, _ := lg.NewEventually(nil, body)
 	if !IsEventuallyFormula(e) {
 		t.Error("should be true for Eventually")
@@ -273,7 +273,7 @@ func TestIsEventuallyFormula(t *testing.T) {
 }
 
 func TestIsTemporalFormula(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	e, _ := lg.NewEventually(nil, body)
 	if !IsTemporalFormula(g) {
@@ -288,7 +288,7 @@ func TestIsTemporalFormula(t *testing.T) {
 }
 
 func TestHasTemporalOperator(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	if !HasTemporalOperator(g) {
 		t.Error("Globally should have temporal operator")
@@ -299,7 +299,7 @@ func TestHasTemporalOperator(t *testing.T) {
 }
 
 func TestIsGprop(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	if !TemporalIsGprop(g) {
 		t.Error("G(non-temporal) should be Gprop")
@@ -315,7 +315,7 @@ func TestIsGprop(t *testing.T) {
 // --- GetEnviron / EnvironStr ---
 
 func TestGetEnviron(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	if GetEnviron(g) != nil {
 		t.Error("nil environ should return nil")
@@ -330,7 +330,7 @@ func TestGetEnviron(t *testing.T) {
 }
 
 func TestEnvironStr(t *testing.T) {
-	body := boolConst("x")
+	body := temporalBoolConst("x")
 	g, _ := lg.NewGlobally(nil, body)
 	if EnvironStr(g) != "" {
 		t.Error("nil environ should give empty string")

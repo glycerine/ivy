@@ -57,7 +57,7 @@ func rankingInvariants(
 			if f == nil {
 				continue
 			}
-			tmp := il.DropUniversals(f)
+			tmp := il.IvyDropUniversals(f)
 			eq, ok := tmp.(*lg.Eq)
 			if !ok {
 				continue

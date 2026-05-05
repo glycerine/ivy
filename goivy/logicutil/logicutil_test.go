@@ -7,7 +7,7 @@ import (
 	"github.com/glycerine/ivy/goivy/logic"
 )
 
-func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
+func logicutilMustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
 	t.Helper()
 	fs, err := logic.NewFunctionSort(sorts...)
 	if err != nil {
@@ -296,7 +296,7 @@ func TestSubstituteApply(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
-	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
+	leq := logic.NewConst("leq", logicutilMustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	subs := map[logic.NodeKey]logic.Expr{logic.Key(X): Y}
@@ -425,7 +425,7 @@ func TestNNB_Constant(t *testing.T) {
 // TestNNB_ConstantWithFuncSort: Const with FunctionSort is still returned unchanged.
 func TestNNB_ConstantWithFuncSort(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, S, logic.Boolean)
+	fs := logicutilMustFS(t, S, logic.Boolean)
 	c := logic.NewConst("f", fs)
 	result := NormalizeNamedBinders(c, nil)
 	if result != c {
@@ -549,7 +549,7 @@ func TestNNB_NamesNil(t *testing.T) {
 // TestNNB_ApplyResult: Apply node result is structurally correct (branch 3).
 func TestNNB_ApplyResult(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, S, logic.Boolean)
+	fs := logicutilMustFS(t, S, logic.Boolean)
 	f := logic.NewConst("f", fs)
 	X, _ := logic.NewVariable("X", S)
 	app := logic.MustApply(f, X)
@@ -574,7 +574,7 @@ func TestNNB_ApplyResult(t *testing.T) {
 // TestNNB_ApplyMultipleTerms: Apply with multiple terms all get recursed (branch 3).
 func TestNNB_ApplyMultipleTerms(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, S, S, logic.Boolean)
+	fs := logicutilMustFS(t, S, S, logic.Boolean)
 	f := logic.NewConst("f", fs)
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
@@ -599,7 +599,7 @@ func TestNNB_ApplyMultipleTerms(t *testing.T) {
 // TestNNB_NestedApplyInFormula: Apply inside And (branch 4 → branch 3).
 func TestNNB_NestedApplyInFormula(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, S, logic.Boolean)
+	fs := logicutilMustFS(t, S, logic.Boolean)
 	f := logic.NewConst("f", fs)
 	X, _ := logic.NewVariable("X", S)
 	app := logic.MustApply(f, X)
@@ -801,7 +801,7 @@ func TestNNB_Eq(t *testing.T) {
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
 
-	result := NormalizeNamedBinders(mustEq(t, X, Y), nil)
+	result := NormalizeNamedBinders(logicutilMustEq(t, X, Y), nil)
 	rEq := result.(*logic.Eq)
 	if rEq.T1.(*logic.Variable).Name != "X" {
 		t.Errorf("expected X in Eq.T1, got %s", rEq.T1)
@@ -811,7 +811,7 @@ func TestNNB_Eq(t *testing.T) {
 	}
 }
 
-func mustEq(t *testing.T, a, b logic.Expr) *logic.Eq {
+func logicutilMustEq(t *testing.T, a, b logic.Expr) *logic.Eq {
 	t.Helper()
 	e, err := logic.NewEq(a, b)
 	if err != nil {

@@ -318,7 +318,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, m *module.Module) (lg.Expr, *mo
 	//                 fmlas.append(eq_atom(destr(*a1), destr(*a2)))
 	mutSort := mut.NodeSort()
 	if mutSort != nil && m.SortDestructors != nil {
-		sortName := il.SortName(mutSort)
+		sortName := il.IvySortName(mutSort)
 		if destrs, ok := m.SortDestructors[sortName]; ok {
 			for _, destr := range destrs {
 				if destr.Name == nSym.Name {

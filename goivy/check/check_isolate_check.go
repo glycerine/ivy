@@ -774,7 +774,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) erro
 						// Python: df = lg.drop_universals(prem.formula)
 						//         mod.updates.append(act.DerivedUpdate(df))
 						if fmla, ok := premLF.Formula.(lg.Expr); ok {
-							df := il.DropUniversals(fmla)
+							df := il.IvyDropUniversals(fmla)
 							// Python DerivedUpdate(df) stores df and uses df.args[0] as symbol.
 							// Go NewDerivedUpdate(sym, defn) takes both. Extract sym from df.
 							var sym lg.Expr

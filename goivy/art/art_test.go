@@ -11,11 +11,11 @@ import (
 
 // --- helpers ---
 
-func testModule() *module.Module {
+func artTestModule() *module.Module {
 	return module.New()
 }
 
-func testClauses() *module.Clauses {
+func artTestClauses() *module.Clauses {
 	return module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 }
 
@@ -24,11 +24,11 @@ func falseClauses() *module.Clauses {
 }
 
 func testState(mod *module.Module) *State {
-	return NewState(mod, testClauses())
+	return NewState(mod, artTestClauses())
 }
 
 func testGraph() *AnalysisGraph {
-	return NewAnalysisGraph(testModule())
+	return NewAnalysisGraph(artTestModule())
 }
 
 // registerAction registers a no-op action in the graph's action map.
@@ -50,9 +50,9 @@ func addStates(ag *AnalysisGraph, n int) []*State {
 
 // --- State tests ---
 
-func TestNewState(t *testing.T) {
-	mod := testModule()
-	s := NewState(mod, testClauses())
+func TestArtNewState(t *testing.T) {
+	mod := artTestModule()
+	s := NewState(mod, artTestClauses())
 	if s.ID != -1 {
 		t.Errorf("expected ID -1, got %d", s.ID)
 	}
@@ -64,21 +64,21 @@ func TestNewState(t *testing.T) {
 	}
 }
 
-func TestStateIsBottom(t *testing.T) {
-	mod := testModule()
+func TestArtStateIsBottom(t *testing.T) {
+	mod := artTestModule()
 	s := NewState(mod, falseClauses())
 	if !s.IsBottom() {
 		t.Error("expected state to be bottom")
 	}
-	s2 := NewState(mod, testClauses())
+	s2 := NewState(mod, artTestClauses())
 	if s2.IsBottom() {
 		t.Error("expected state to not be bottom")
 	}
 }
 
-func TestStateCopy(t *testing.T) {
-	mod := testModule()
-	s := NewState(mod, testClauses())
+func TestArtStateCopy(t *testing.T) {
+	mod := artTestModule()
+	s := NewState(mod, artTestClauses())
 	s.ID = 42
 	s.Label = "test"
 	cp := s.Copy()
@@ -91,7 +91,7 @@ func TestStateCopy(t *testing.T) {
 	}
 }
 
-func TestStateString(t *testing.T) {
+func TestArtStateString(t *testing.T) {
 	s := &State{ID: 7}
 	str := s.String()
 	if str != "State(7)" {
@@ -99,7 +99,7 @@ func TestStateString(t *testing.T) {
 	}
 }
 
-func TestStateNilClauses(t *testing.T) {
+func TestArtStateNilClauses(t *testing.T) {
 	s := &State{ID: 0}
 	if s.IsBottom() {
 		t.Error("nil clauses should not be bottom")
@@ -108,7 +108,7 @@ func TestStateNilClauses(t *testing.T) {
 
 // --- Expression tests ---
 
-func TestActionAppExpr(t *testing.T) {
+func TestArtActionAppExpr(t *testing.T) {
 	s := &State{ID: 0}
 	expr := NewActionApp("myaction", s)
 	if !IsActionApp(expr) {
@@ -126,7 +126,7 @@ func TestActionAppExpr(t *testing.T) {
 	}
 }
 
-func TestStateJoinExpr(t *testing.T) {
+func TestArtStateJoinExpr(t *testing.T) {
 	s1 := &State{ID: 0}
 	s2 := &State{ID: 1}
 	expr := NewStateJoin(s1, s2)
@@ -141,13 +141,13 @@ func TestStateJoinExpr(t *testing.T) {
 	}
 }
 
-func TestIsActionAppNil(t *testing.T) {
+func TestArtIsActionAppNil(t *testing.T) {
 	if IsActionApp(nil) {
 		t.Error("nil should not be ActionApp")
 	}
 }
 
-func TestIsStateJoinNil(t *testing.T) {
+func TestArtIsStateJoinNil(t *testing.T) {
 	if IsStateJoin(nil) {
 		t.Error("nil should not be StateJoin")
 	}
@@ -155,9 +155,9 @@ func TestIsStateJoinNil(t *testing.T) {
 
 // --- Counterexample tests ---
 
-func TestCounterexample(t *testing.T) {
+func TestArtCounterexample(t *testing.T) {
 	cex := &Counterexample{
-		Clauses: testClauses(),
+		Clauses: artTestClauses(),
 		State:   &State{ID: 3},
 		Msg:     "assertion failure",
 	}
@@ -170,7 +170,7 @@ func TestCounterexample(t *testing.T) {
 	}
 }
 
-func TestCounterexampleNilState(t *testing.T) {
+func TestArtCounterexampleNilState(t *testing.T) {
 	cex := &Counterexample{Msg: "test"}
 	if cex.IsFailed() {
 		t.Error("IsFailed should return false regardless")
@@ -179,7 +179,7 @@ func TestCounterexampleNilState(t *testing.T) {
 
 // --- AC tests ---
 
-func TestACCreation(t *testing.T) {
+func TestArtACCreation(t *testing.T) {
 	ag := testGraph()
 	ac := NewAC(ag, false)
 	if ac.NoAdd {
@@ -190,7 +190,7 @@ func TestACCreation(t *testing.T) {
 	}
 }
 
-func TestACGet(t *testing.T) {
+func TestArtACGet(t *testing.T) {
 	ag := testGraph()
 	ag.Actions.Set("foo", actions.NewAssumeAction(lg.True))
 	ac := NewAC(ag, false)
@@ -202,10 +202,10 @@ func TestACGet(t *testing.T) {
 	}
 }
 
-func TestACNewState(t *testing.T) {
+func TestArtACNewState(t *testing.T) {
 	ag := testGraph()
 	ac := NewAC(ag, false)
-	s := ac.NewState(testClauses(), false, nil)
+	s := ac.NewState(artTestClauses(), false, nil)
 	if s == nil {
 		t.Fatal("state should not be nil")
 	}
@@ -214,10 +214,10 @@ func TestACNewState(t *testing.T) {
 	}
 }
 
-func TestACNewStateNoAdd(t *testing.T) {
+func TestArtACNewStateNoAdd(t *testing.T) {
 	ag := testGraph()
 	ac := NewAC(ag, true)
-	s := ac.NewState(testClauses(), false, nil)
+	s := ac.NewState(artTestClauses(), false, nil)
 	if s == nil {
 		t.Fatal("state should not be nil")
 	}
@@ -226,10 +226,10 @@ func TestACNewStateNoAdd(t *testing.T) {
 	}
 }
 
-func TestACNewStateExact(t *testing.T) {
+func TestArtACNewStateExact(t *testing.T) {
 	ag := testGraph()
 	ac := NewAC(ag, true)
-	s := ac.NewState(testClauses(), true, nil)
+	s := ac.NewState(artTestClauses(), true, nil)
 	if len(s.Unders) != 1 {
 		t.Error("exact state should have 1 under-approximation")
 	}
@@ -237,7 +237,7 @@ func TestACNewStateExact(t *testing.T) {
 
 // --- AnalysisGraph tests ---
 
-func TestNewAnalysisGraph(t *testing.T) {
+func TestArtNewAnalysisGraph(t *testing.T) {
 	ag := testGraph()
 	if ag.Domain == nil {
 		t.Error("domain should not be nil")
@@ -247,14 +247,14 @@ func TestNewAnalysisGraph(t *testing.T) {
 	}
 }
 
-func TestNewAnalysisGraphNilModule(t *testing.T) {
+func TestArtNewAnalysisGraphNilModule(t *testing.T) {
 	ag := NewAnalysisGraph(nil, nil)
 	if ag.Domain == nil {
 		t.Error("nil module should result in a fresh module")
 	}
 }
 
-func TestAnalysisGraphAdd(t *testing.T) {
+func TestArtAnalysisGraphAdd(t *testing.T) {
 	ag := testGraph()
 	s := testState(ag.Domain)
 	ag.Add(s, nil)
@@ -266,7 +266,7 @@ func TestAnalysisGraphAdd(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphAddMultiple(t *testing.T) {
+func TestArtAnalysisGraphAddMultiple(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 5)
 	for i, s := range states {
@@ -279,7 +279,7 @@ func TestAnalysisGraphAddMultiple(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphLastState(t *testing.T) {
+func TestArtAnalysisGraphLastState(t *testing.T) {
 	ag := testGraph()
 	if ag.LastState() != nil {
 		t.Error("empty graph should return nil")
@@ -290,7 +290,7 @@ func TestAnalysisGraphLastState(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphAddWithActionApp(t *testing.T) {
+func TestArtAnalysisGraphAddWithActionApp(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	pre := testState(ag.Domain)
@@ -308,7 +308,7 @@ func TestAnalysisGraphAddWithActionApp(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphAddWithJoin(t *testing.T) {
+func TestArtAnalysisGraphAddWithJoin(t *testing.T) {
 	ag := testGraph()
 	s1 := testState(ag.Domain)
 	ag.Add(s1, nil)
@@ -328,7 +328,7 @@ func TestAnalysisGraphAddWithJoin(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCover(t *testing.T) {
+func TestArtAnalysisGraphCover(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 2)
 	ok := ag.Cover(states[0], states[1])
@@ -340,7 +340,7 @@ func TestAnalysisGraphCover(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphIsCovered(t *testing.T) {
+func TestArtAnalysisGraphIsCovered(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 3)
 	if ag.IsCovered(states[0]) {
@@ -355,7 +355,7 @@ func TestAnalysisGraphIsCovered(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphUnreachable(t *testing.T) {
+func TestArtAnalysisGraphUnreachable(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 1)
 	if ag.Unreachable(states[0]) {
@@ -363,7 +363,7 @@ func TestAnalysisGraphUnreachable(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphTransitionTo(t *testing.T) {
+func TestArtAnalysisGraphTransitionTo(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	pre := testState(ag.Domain)
@@ -384,7 +384,7 @@ func TestAnalysisGraphTransitionTo(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphJoin(t *testing.T) {
+func TestArtAnalysisGraphJoin(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 2)
 	joined := ag.Join(states[0], states[1], nil)
@@ -396,7 +396,7 @@ func TestAnalysisGraphJoin(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphJoinDefaultState2(t *testing.T) {
+func TestArtAnalysisGraphJoinDefaultState2(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 2)
 	joined := ag.Join(states[0], nil, nil)
@@ -406,7 +406,7 @@ func TestAnalysisGraphJoinDefaultState2(t *testing.T) {
 	// state2 should default to last state = states[1]
 }
 
-func TestAnalysisGraphRemoveMarkedStates(t *testing.T) {
+func TestArtAnalysisGraphRemoveMarkedStates(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 4)
 	states[1].ID = -1
@@ -422,7 +422,7 @@ func TestAnalysisGraphRemoveMarkedStates(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphReplaceState(t *testing.T) {
+func TestArtAnalysisGraphReplaceState(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 2)
 	states[0].Label = "original"
@@ -438,7 +438,7 @@ func TestAnalysisGraphReplaceState(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphUncoveredStates(t *testing.T) {
+func TestArtAnalysisGraphUncoveredStates(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 3)
 	uncov := ag.UncoveredStates()
@@ -452,7 +452,7 @@ func TestAnalysisGraphUncoveredStates(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphUncoveredWithJoin(t *testing.T) {
+func TestArtAnalysisGraphUncoveredWithJoin(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 2)
 	s3 := testState(ag.Domain)
@@ -468,7 +468,7 @@ func TestAnalysisGraphUncoveredWithJoin(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphContext(t *testing.T) {
+func TestArtAnalysisGraphContext(t *testing.T) {
 	ag := testGraph()
 	ctx := ag.Context()
 	if ctx == nil {
@@ -479,14 +479,14 @@ func TestAnalysisGraphContext(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphExecuteAction(t *testing.T) {
+func TestArtAnalysisGraphExecuteAction(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	ag.Actions.Set("test_action", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
-	post, err := ag.ExecuteAction(checkPrecondTrue, "test_action", pre, nil)
+	post, err := ag.ExecuteAction(artCheckPrecondTrue, "test_action", pre, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -498,21 +498,21 @@ func TestAnalysisGraphExecuteAction(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphExecuteActionNotFound(t *testing.T) {
+func TestArtAnalysisGraphExecuteActionNotFound(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
-	_, err := ag.ExecuteAction(checkPrecondTrue, "nonexistent", pre, nil)
+	_, err := ag.ExecuteAction(artCheckPrecondTrue, "nonexistent", pre, nil)
 	if err == nil {
 		t.Error("should return error for unknown action")
 	}
 }
 
-func TestAnalysisGraphPostState(t *testing.T) {
+func TestArtAnalysisGraphPostState(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	pre := testState(ag.Domain)
-	post, err := ag.PostState(checkPrecondFalse, act, pre, nil)
+	post, err := ag.PostState(artCheckPrecondFalse, act, pre, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -524,13 +524,13 @@ func TestAnalysisGraphPostState(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphPostStateWithAbstractor(t *testing.T) {
+func TestArtAnalysisGraphPostStateWithAbstractor(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	pre := testState(ag.Domain)
 	called := false
 	abs := AbstractorFunc(func(s *State) { called = true })
-	_, err := ag.PostState(checkPrecondFalse, act, pre, abs)
+	_, err := ag.PostState(artCheckPrecondFalse, act, pre, abs)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -539,7 +539,7 @@ func TestAnalysisGraphPostStateWithAbstractor(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCopyPath(t *testing.T) {
+func TestArtAnalysisGraphCopyPath(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
@@ -559,7 +559,7 @@ func TestAnalysisGraphCopyPath(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCopyPathBounded(t *testing.T) {
+func TestArtAnalysisGraphCopyPathBounded(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
@@ -581,7 +581,7 @@ func TestAnalysisGraphCopyPathBounded(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphBMC(t *testing.T) {
+func TestArtAnalysisGraphBMC(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
 
@@ -600,7 +600,7 @@ func TestAnalysisGraphBMC(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCheckSafety(t *testing.T) {
+func TestArtAnalysisGraphCheckSafety(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
 	res := ag.CheckSafety(true, ag.States[0])
@@ -609,7 +609,7 @@ func TestAnalysisGraphCheckSafety(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCheckBoundedSafety(t *testing.T) {
+func TestArtAnalysisGraphCheckBoundedSafety(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
 	res := ag.CheckBoundedSafety(ag.States[0], nil)
@@ -618,7 +618,7 @@ func TestAnalysisGraphCheckBoundedSafety(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphCallAction(t *testing.T) {
+func TestArtAnalysisGraphCallAction(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
@@ -632,7 +632,7 @@ func TestAnalysisGraphCallAction(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphDecomposeState(t *testing.T) {
+func TestArtAnalysisGraphDecomposeState(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
 	sub := ag.DecomposeState(ag.States[0])
@@ -641,7 +641,7 @@ func TestAnalysisGraphDecomposeState(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphFixedpointCandidate(t *testing.T) {
+func TestArtAnalysisGraphFixedpointCandidate(t *testing.T) {
 	ag := testGraph()
 	states := addStates(ag, 3)
 	states[0].Label = "A"
@@ -657,7 +657,7 @@ func TestAnalysisGraphFixedpointCandidate(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphGetHistory(t *testing.T) {
+func TestArtAnalysisGraphGetHistory(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
 	h := ag.GetHistory(ag.States[0], nil)
@@ -666,7 +666,7 @@ func TestAnalysisGraphGetHistory(t *testing.T) {
 	}
 }
 
-func TestAnalysisGraphRecalculate(t *testing.T) {
+func TestArtAnalysisGraphRecalculate(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	ag.Actions.Set("myact", act)
@@ -676,7 +676,7 @@ func TestAnalysisGraphRecalculate(t *testing.T) {
 	ag.Add(post, NewActionApp("myact", pre))
 
 	tr := ag.Transitions[0]
-	result, err := ag.Recalculate(checkPrecondFalse, tr, nil)
+	result, err := ag.Recalculate(artCheckPrecondFalse, tr, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -687,7 +687,7 @@ func TestAnalysisGraphRecalculate(t *testing.T) {
 
 // --- AnalysisSubgraph tests ---
 
-func TestAnalysisSubgraph(t *testing.T) {
+func TestArtAnalysisSubgraph(t *testing.T) {
 	ag := testGraph()
 	sub := NewAnalysisSubgraph("myop", ag)
 	if sub.Op != "myop" {
@@ -703,7 +703,7 @@ func TestAnalysisSubgraph(t *testing.T) {
 
 // --- LabelFromAction tests ---
 
-func TestLabelFromAction(t *testing.T) {
+func TestArtLabelFromAction(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
 	label := LabelFromAction(act)
 	if label == "" {
@@ -711,7 +711,7 @@ func TestLabelFromAction(t *testing.T) {
 	}
 }
 
-func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
+func TestArtLabelFromActionUsesSingularActionLabel(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
 	act.SetLabel("call ext")
 	if got := LabelFromAction(act); got != "call ext" {
@@ -721,7 +721,7 @@ func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
 
 // --- SafetyResult tests ---
 
-func TestSafetyResult(t *testing.T) {
+func TestArtSafetyResult(t *testing.T) {
 	r := &SafetyResult{Safe: true}
 	if !r.Safe {
 		t.Error("should be safe")
@@ -737,7 +737,7 @@ func TestSafetyResult(t *testing.T) {
 
 // --- Transition tests ---
 
-func TestTransition(t *testing.T) {
+func TestArtTransition(t *testing.T) {
 	pre := &State{ID: 0}
 	post := &State{ID: 1}
 	act := actions.NewAssumeAction(lg.True)
@@ -752,7 +752,7 @@ func TestTransition(t *testing.T) {
 
 // --- CoveringPair tests ---
 
-func TestCoveringPair(t *testing.T) {
+func TestArtCoveringPair(t *testing.T) {
 	s1 := &State{ID: 0}
 	s2 := &State{ID: 1}
 	cp := CoveringPair{Covered: s1, Covering: s2}
@@ -763,7 +763,7 @@ func TestCoveringPair(t *testing.T) {
 
 // --- Integration-style tests ---
 
-func TestGraphBuildAndCover(t *testing.T) {
+func TestArtGraphBuildAndCover(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "step1")
 	registerAction(ag, "step2")
@@ -795,7 +795,7 @@ func TestGraphBuildAndCover(t *testing.T) {
 	}
 }
 
-func TestGraphRemoveMarkedWithTransitions(t *testing.T) {
+func TestArtGraphRemoveMarkedWithTransitions(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	registerAction(ag, "act2")
@@ -820,7 +820,7 @@ func TestGraphRemoveMarkedWithTransitions(t *testing.T) {
 	}
 }
 
-func TestGraphExecuteAndTraverse(t *testing.T) {
+func TestArtGraphExecuteAndTraverse(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	ag.Actions.Set("step", act)
@@ -829,7 +829,7 @@ func TestGraphExecuteAndTraverse(t *testing.T) {
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 
-	s1, err := ag.ExecuteAction(checkPrecondTrue, "step", s0, nil)
+	s1, err := ag.ExecuteAction(artCheckPrecondTrue, "step", s0, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -916,7 +916,7 @@ func FuzzAnalysisGraphCoverUncover(f *testing.F) {
 
 // --- Z3-backed method tests ---
 
-func TestCoverWithZ3Implication(t *testing.T) {
+func TestArtCoverWithZ3Implication(t *testing.T) {
 	ag := testGraph()
 
 	// State with True clauses should be covered by another True-clauses state
@@ -930,7 +930,7 @@ func TestCoverWithZ3Implication(t *testing.T) {
 	}
 }
 
-func TestCoverFalseImpliesAnything(t *testing.T) {
+func TestArtCoverFalseImpliesAnything(t *testing.T) {
 	ag := testGraph()
 
 	// False => anything should be true.
@@ -943,7 +943,7 @@ func TestCoverFalseImpliesAnything(t *testing.T) {
 	}
 }
 
-func TestCoverNilClausesFails(t *testing.T) {
+func TestArtCoverNilClausesFails(t *testing.T) {
 	ag := testGraph()
 	s1 := &State{ID: -1, Domain: ag.Domain}
 	ag.Add(s1, nil)
@@ -954,7 +954,7 @@ func TestCoverNilClausesFails(t *testing.T) {
 	}
 }
 
-func TestUnreachableFalseState(t *testing.T) {
+func TestArtUnreachableFalseState(t *testing.T) {
 	ag := testGraph()
 	s := NewState(ag.Domain, falseClauses())
 	ag.Add(s, nil)
@@ -963,7 +963,7 @@ func TestUnreachableFalseState(t *testing.T) {
 	}
 }
 
-func TestUnreachableTrueState(t *testing.T) {
+func TestArtUnreachableTrueState(t *testing.T) {
 	ag := testGraph()
 	s := testState(ag.Domain)
 	ag.Add(s, nil)
@@ -972,7 +972,7 @@ func TestUnreachableTrueState(t *testing.T) {
 	}
 }
 
-func TestUnreachableNilClauses(t *testing.T) {
+func TestArtUnreachableNilClauses(t *testing.T) {
 	ag := testGraph()
 	s := &State{ID: -1, Domain: ag.Domain}
 	ag.Add(s, nil)
@@ -981,7 +981,7 @@ func TestUnreachableNilClauses(t *testing.T) {
 	}
 }
 
-func TestJoinStatesDisjunction(t *testing.T) {
+func TestArtJoinStatesDisjunction(t *testing.T) {
 	ag := testGraph()
 	s1 := testState(ag.Domain)
 	ag.Add(s1, nil)
@@ -1001,7 +1001,7 @@ func TestJoinStatesDisjunction(t *testing.T) {
 	}
 }
 
-func TestCheckSafetyNoAssertions(t *testing.T) {
+func TestArtCheckSafetyNoAssertions(t *testing.T) {
 	ag := testGraph()
 	s := testState(ag.Domain)
 	ag.Add(s, nil)
@@ -1011,7 +1011,7 @@ func TestCheckSafetyNoAssertions(t *testing.T) {
 	}
 }
 
-func TestCheckSafetySatisfiedAssertion(t *testing.T) {
+func TestArtCheckSafetySatisfiedAssertion(t *testing.T) {
 	ag := testGraph()
 	// Add an assertion that is True.
 	acfg := ast.NewAstConfig()
@@ -1024,7 +1024,7 @@ func TestCheckSafetySatisfiedAssertion(t *testing.T) {
 	}
 }
 
-func TestGetHistoryWithPredecessor(t *testing.T) {
+func TestArtGetHistoryWithPredecessor(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
@@ -1039,7 +1039,7 @@ func TestGetHistoryWithPredecessor(t *testing.T) {
 	}
 }
 
-func TestGetHistoryBounded(t *testing.T) {
+func TestArtGetHistoryBounded(t *testing.T) {
 	ag := testGraph()
 	registerAction(ag, "act")
 	s0 := testState(ag.Domain)

@@ -100,7 +100,7 @@ func FuzzMyEq(f *testing.F) {
 	f.Fuzz(func(t *testing.T, isXTrue, isYTrue, isYFalse bool) {
 		runOnZ3Thread2(t, func(t *testing.T) {
 			ctx := NewZ3Context()
-			var x, y Expr
+			var x, y Z3Expr
 			if isXTrue {
 				x = ctx.BoolVal(true)
 			} else {
@@ -151,7 +151,7 @@ func FuzzGebin(f *testing.F) {
 		runOnZ3Thread2(t, func(t *testing.T) {
 			ctx := NewZ3Context()
 
-			bits := make([]Expr, nbits)
+			bits := make([]Z3Expr, nbits)
 			for i := 0; i < nbits; i++ {
 				bits[i] = ctx.Const(string(rune('a'+i)), ctx.BoolSort())
 			}

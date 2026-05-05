@@ -26,8 +26,8 @@ import (
 	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-const checkPrecondFalse = false
-const checkPrecondTrue = true
+const checkCheckPrecondFalse = false
+const checkCheckPrecondTrue = true
 
 // WireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
 // compiler.CheckDefinitions can call proof.ProofChecker.AdmitDefinition

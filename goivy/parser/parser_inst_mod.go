@@ -89,13 +89,13 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 		// Python: subst = dict((x.rep,y.rep) for x,y in zip(fparams,aparams) if not isinstance(y,Variable))
 		// Python: vsubst = dict((x.rep,y) for x,y in zip(fparams,aparams) if isinstance(y,Variable))
 		subst := make(map[string]string)
-		vsubst := make(map[string]*ast.Variable)
+		vsubst := make(map[string]*ast.AstVariable)
 		for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
 			formalName := nodeRep(formalParams[i])
 			if formalName == "" {
 				continue
 			}
-			if v, ok := actualArgs[i].(*ast.Variable); ok {
+			if v, ok := actualArgs[i].(*ast.AstVariable); ok {
 				vsubst[formalName] = v
 			} else {
 				subst[formalName] = nodeRep(actualArgs[i])
@@ -147,7 +147,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 // at ivy_parser.py:135-201 EXACTLY.
 // The module parameter is the ivyAccum that was parsed for the module body,
 // matching Python where module is the Ivy class instance stored in Definition.Rhs.
-func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string, lineno ...ast.Location) {
+func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.AstVariable, modname string, lineno ...ast.Location) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
@@ -363,7 +363,7 @@ func substAtomVars(pref *ast.Atom, renaming map[string]ast.Node) *ast.Atom {
 
 // buildVVSubst creates the variable-variable substitution map.
 // Python: vvsubst = dict((x, map1[y.rep]) for x, y in dvsubst.items())
-func buildVVSubst(dvsubst map[string]*ast.Variable, map1 map[string]ast.Node) map[string]ast.Node {
+func buildVVSubst(dvsubst map[string]*ast.AstVariable, map1 map[string]ast.Node) map[string]ast.Node {
 	vvsubst := make(map[string]ast.Node, len(dvsubst))
 	for x, y := range dvsubst {
 		if renamed, ok := map1[y.Rep]; ok {
@@ -515,7 +515,7 @@ func nodeRep(n ast.Node) string {
 		return x.Rep
 	case *ast.Symbol:
 		return x.Rep
-	case *ast.Variable:
+	case *ast.AstVariable:
 		return x.Rep
 	case *ast.App:
 		if x.Rep != nil {

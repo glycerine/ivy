@@ -250,8 +250,8 @@ func ComposeAtomsGeneric(pr, atom Node) Node {
 	if atom == nil {
 		return pr
 	}
-	prRep := nodeRepStr(pr)
-	atomRep := nodeRepStr(atom)
+	prRep := astNodeRepStr(pr)
+	atomRep := astNodeRepStr(atom)
 	prArgs := pr.Args()
 	atomArgs := atom.Args()
 
@@ -289,7 +289,7 @@ func ComposeAtomsGeneric(pr, atom Node) Node {
 }
 
 // nodeRepStr extracts the rep string from an Atom or App.
-func nodeRepStr(n Node) string {
+func astNodeRepStr(n Node) string {
 	switch x := n.(type) {
 	case *Atom:
 		return x.Rep
@@ -329,7 +329,7 @@ type AstRewritable interface {
 // Python: duck-typed objects with rewrite_name and rewrite_atom methods.
 //
 // RewriteAtom returns Node (not *Atom) so rewriters can substitute with any
-// node type — Atom, App, Variable, NamedBinder — matching Python's
+// node type — Atom, App, AstVariable, NamedBinder — matching Python's
 // rewrite_atom which returns subst[atom.rep], an unconstrained type.
 type AstRewriter interface {
 	RewriteName(name string) string
@@ -355,7 +355,7 @@ func (r *AstRewriteSubstConstants) RewriteName(name string) string {
 func (r *AstRewriteSubstConstants) RewriteAtom(atom *Atom, always bool) Node {
 	// Python (ivy_ast.py:1633-1635):
 	//   return subst[atom.rep] if not atom.args and atom.rep in subst else atom
-	// The replacement can be any Node type — Atom, App, Variable, etc.
+	// The replacement can be any Node type — Atom, App, AstVariable, etc.
 	if len(atom.Terms) == 0 {
 		if repl, ok := r.Subst[atom.Rep]; ok {
 			return repl
@@ -571,8 +571,8 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	}
 
 	switch n := x.(type) {
-	case *Variable:
-		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
+	case *AstVariable:
+		// Python: AstVariable → resort(rewrite_sort(rewrite, x.sort))
 		// RewriteSort already applies PrefixStr internally via RewriteAtom.
 		newSort := RewriteSort(rewrite, n.VSort, n.Cfg)
 		return n.Resort(newSort)
@@ -597,7 +597,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if !BaseNameDiffers(n.Rep, newRep) {
 			rewritten := rewrite.RewriteAtom(tmpAtom, false)
 			// RewriteAtom may return a non-Atom Node (e.g., a substitution value
-			// from instantiate_macro that's an App, Variable, etc.). Return it
+			// from instantiate_macro that's an App, AstVariable, etc.). Return it
 			// directly when it's not an Atom — there's no way to coerce an App
 			// back into a Symbol.
 			if a, ok := rewritten.(*Atom); ok {
@@ -685,7 +685,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		appAtom.ASort = newApp.ASort
 		rewritten := rewrite.RewriteAtom(appAtom, false)
 		// RewriteAtom may return a non-Atom Node (e.g., a substitution value
-		// from instantiate_macro that's an App, Variable, NamedBinder, etc.).
+		// from instantiate_macro that's an App, AstVariable, NamedBinder, etc.).
 		// In that case return it directly.
 		rAtom, isAtom := rewritten.(*Atom)
 		if !isAtom {
@@ -880,7 +880,7 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 		return nil
 	}
 	switch n := node.(type) {
-	case *Variable:
+	case *AstVariable:
 		if repl, ok := subs[n.Rep]; ok {
 			return repl
 		}
@@ -998,22 +998,22 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 	return res
 }
 
-// --- Variable distinct renaming ---
+// --- AstVariable distinct renaming ---
 
-// UsedVariablesAst collects all Variable nodes in an AST.
-// Python: used_variables_ast(ast) — returns a set of Variable objects.
-func UsedVariablesAst(node Node) []*Variable {
-	var result []*Variable
+// UsedVariablesAst collects all AstVariable nodes in an AST.
+// Python: used_variables_ast(ast) — returns a set of AstVariable objects.
+func UsedVariablesAst(node Node) []*AstVariable {
+	var result []*AstVariable
 	seen := make(map[string]bool)
 	usedVariablesRec(node, &result, seen)
 	return result
 }
 
-func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
+func usedVariablesRec(node Node, result *[]*AstVariable, seen map[string]bool) {
 	if node == nil {
 		return
 	}
-	if v, ok := node.(*Variable); ok {
+	if v, ok := node.(*AstVariable); ok {
 		if !seen[v.Rep] {
 			seen[v.Rep] = true
 			*result = append(*result, v)
@@ -1031,10 +1031,10 @@ func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
 // Python: distinct_variable_renaming(vars1, vars2)
 // IMPORTANT: Maps ALL vars1 variables, not just clashing ones.
 // Python uses UniqueRenamer which always returns a mapping for every var in vars1,
-// preserving the original Variable's sort. This is load-bearing: inst_mod's
+// preserving the original AstVariable's sort. This is load-bearing: inst_mod's
 // buildVVSubst uses map1[y.Rep] to carry sort annotations from the prefix
 // to the substitution map.
-func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
+func DistinctVariableRenaming(vars1, vars2 []*AstVariable) map[string]Node {
 	used := make(map[string]bool)
 	for _, v := range vars2 {
 		used[v.Rep] = true
@@ -1048,7 +1048,7 @@ func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
 			}
 		}
 		used[newName] = true
-		nv := &Variable{Rep: newName, VSort: v.VSort}
+		nv := &AstVariable{Rep: newName, VSort: v.VSort}
 		nv.Cfg = v.Cfg
 		result[v.Rep] = nv
 	}

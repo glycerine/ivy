@@ -249,7 +249,7 @@ func isNoneAST(n ast.Node) bool {
 
 // defargNameSort extracts the name and sort-top-ness from a defarg parameter
 // node. The grammar's defnlhs produces an *ast.Atom whose Terms are either
-// *ast.App (from lparam: SYMBOLx:atype) or *ast.Variable (from var).
+// *ast.App (from lparam: SYMBOLx:atype) or *ast.AstVariable (from var).
 // Returns (name, sortName, isTopSort).
 func defargNameSort(n ast.Node) (string, string, bool) {
 	switch a := n.(type) {
@@ -260,7 +260,7 @@ func defargNameSort(n ast.Node) (string, string, bool) {
 		}
 		sn := fmt.Sprint(a.ASort)
 		return name, sn, false
-	case *ast.Variable:
+	case *ast.AstVariable:
 		if a.VSort == "" || a.VSort == "S" {
 			return a.Rep, a.VSort, true
 		}
@@ -556,7 +556,7 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 		if cutExpr == nil {
 			return nil, &ProofError{Msg: "property tactic: cut formula is not a logic expression"}
 		}
-		fmla := il.DropUniversals(cutExpr)
+		fmla := il.IvyDropUniversals(cutExpr)
 
 		// Python: if not il.is_exists(fmla) or len(fmla.variables) != 1:
 		if !il.IsExists(fmla) || len(il.BinderVars(fmla)) != 1 {

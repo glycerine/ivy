@@ -11,11 +11,11 @@ import (
 // an empty ComposeTactics proof is added to the axioms list.
 func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 	// Create a simple proposition: labeled formula "p" with formula True
-	label := testAstCfg.NewAtom("p")
-	prop := testAstCfg.NewLabeledFormula(label, lg.True)
+	label := proofTestAstCfg.NewAtom("p")
+	prop := proofTestAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	subgoals, err := pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil))
+	subgoals, err := pc.AdmitProposition(prop, proofTestAstCfg.NewComposeTactics(nil))
 	if err != nil {
 		t.Fatalf("AdmitProposition with ComposeTactics failed: %v", err)
 	}
@@ -38,8 +38,8 @@ func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 	lhs := lg.NewConst("f", s)
 	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := testAstCfg.NewAtom("mydef")
-	prop := testAstCfg.NewLabeledFormula(label, def)
+	label := proofTestAstCfg.NewAtom("mydef")
+	prop := proofTestAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, nil)
@@ -56,8 +56,8 @@ func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 
 // TestAdmitPropositionNilProof tests that a nil proof raises NoMatch.
 func TestAdmitPropositionNilProof(t *testing.T) {
-	label := testAstCfg.NewAtom("q")
-	prop := testAstCfg.NewLabeledFormula(label, lg.True)
+	label := proofTestAstCfg.NewAtom("q")
+	prop := proofTestAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	_, err := pc.AdmitProposition(prop, nil)
@@ -75,8 +75,8 @@ func TestAdmitDefinitionRedefinition(t *testing.T) {
 	lhs := lg.NewConst("f", s)
 	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := testAstCfg.NewAtom("mydef")
-	prop := testAstCfg.NewLabeledFormula(label, def)
+	label := proofTestAstCfg.NewAtom("mydef")
+	prop := proofTestAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	// First admission succeeds
@@ -96,12 +96,12 @@ func TestAdmitDefinitionRedefinition(t *testing.T) {
 
 // TestGetSubgoals tests that GetSubgoals returns subgoals without admitting.
 func TestGetSubgoals(t *testing.T) {
-	label := testAstCfg.NewAtom("p")
-	prop := testAstCfg.NewLabeledFormula(label, lg.True)
+	label := proofTestAstCfg.NewAtom("p")
+	prop := proofTestAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	axiomsBefore := len(pc.Axioms)
-	subgoals, err := pc.GetSubgoals(prop, testAstCfg.NewComposeTactics(nil))
+	subgoals, err := pc.GetSubgoals(prop, proofTestAstCfg.NewComposeTactics(nil))
 	if err != nil {
 		t.Fatalf("GetSubgoals failed: %v", err)
 	}
@@ -123,8 +123,8 @@ func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 	lhs := lg.NewConst("f", s)
 	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := testAstCfg.NewAtom("mydef")
-	defLF := testAstCfg.NewLabeledFormula(label, def)
+	label := proofTestAstCfg.NewAtom("mydef")
+	defLF := proofTestAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, []*ast.LabeledFormula{defLF}, nil)
 
@@ -144,14 +144,14 @@ func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 // AdmitProposition should accept optional pre-computed subgoals parameter.
 // Python: ivy_proof.py:98 — def admit_proposition(self, prop, proof=None, subgoals=None)
 func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
-	label := testAstCfg.NewAtom("p")
-	prop := testAstCfg.NewLabeledFormula(label, lg.True)
+	label := proofTestAstCfg.NewAtom("p")
+	prop := proofTestAstCfg.NewLabeledFormula(label, lg.True)
 
-	label2 := testAstCfg.NewAtom("sg1")
-	sg1 := testAstCfg.NewLabeledFormula(label2, lg.True)
+	label2 := proofTestAstCfg.NewAtom("sg1")
+	sg1 := proofTestAstCfg.NewLabeledFormula(label2, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	subgoals, err := pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil), sg1)
+	subgoals, err := pc.AdmitProposition(prop, proofTestAstCfg.NewComposeTactics(nil), sg1)
 	if err != nil {
 		t.Fatalf("AdmitProposition with existing subgoals failed: %v", err)
 	}
@@ -164,17 +164,17 @@ func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
 
 // TestGetSubgoalsRejectsDefinition tests BUG 5:
 // GetSubgoals must reject definitions with an assertion error.
-// Python: ivy_proof.py:129 — assert not isinstance(prop.formula, il.Definition)
+// Python: ivy_proof.py:129 — assert not isinstance(prop.formula, il.IvyDefinition)
 func TestGetSubgoalsRejectsDefinition(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
 	lhs := lg.NewConst("f", s)
 	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := testAstCfg.NewAtom("mydef")
-	prop := testAstCfg.NewLabeledFormula(label, def)
+	label := proofTestAstCfg.NewAtom("mydef")
+	prop := proofTestAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	_, err := pc.GetSubgoals(prop, testAstCfg.NewComposeTactics(nil))
+	_, err := pc.GetSubgoals(prop, proofTestAstCfg.NewComposeTactics(nil))
 	if err == nil {
 		t.Fatal("expected error when GetSubgoals is called with a Definition")
 	}
@@ -191,19 +191,19 @@ func mapKeys(m map[string]*ast.LabeledFormula) []string {
 
 // TestSetLastAxiomAndSetSchema tests the interface helper methods.
 func TestSetLastAxiomAndSetSchema(t *testing.T) {
-	label := testAstCfg.NewAtom("p")
-	prop := testAstCfg.NewLabeledFormula(label, lg.True)
+	label := proofTestAstCfg.NewAtom("p")
+	prop := proofTestAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	// Admit a prop first
-	pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil))
+	pc.AdmitProposition(prop, proofTestAstCfg.NewComposeTactics(nil))
 	if len(pc.Axioms) == 0 {
 		t.Fatal("should have at least one axiom")
 	}
 
 	// SetLastAxiom
-	label2 := testAstCfg.NewAtom("q")
-	prop2 := testAstCfg.NewLabeledFormula(label2, lg.True)
+	label2 := proofTestAstCfg.NewAtom("q")
+	prop2 := proofTestAstCfg.NewLabeledFormula(label2, lg.True)
 	pc.SetLastAxiom(prop2)
 	last := pc.Axioms[len(pc.Axioms)-1]
 	if last.LabelName() != "q" {

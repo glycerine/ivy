@@ -131,7 +131,7 @@ func makeVarID(v *lg.Variable) varID {
 }
 
 type macroDef struct {
-	def *il.Definition
+	def *il.IvyDefinition
 	lf  *ast.LabeledFormula
 }
 
@@ -408,7 +408,7 @@ func (c *checker) flatInterp() map[string]interface{} {
 func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair) {
 	// Build macro_map
 	for _, pair := range macros {
-		if def, ok := pair.fmla.(*il.Definition); ok {
+		if def, ok := pair.fmla.(*il.IvyDefinition); ok {
 			defining := def.Defines()
 			if defining != nil {
 				if cst, ok := defining.(*lg.Const); ok {
@@ -829,7 +829,7 @@ func CheckFEU(
 			fromRoot := uf.UFFind(a.from).ID
 			toRoot := uf.UFFind(a.to).ID
 			xtracer.Trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
-				i, a.from.ID, fromRoot, a.to.ID, toRoot, exprSexp(a.fmla), a.argIdx) // a.lineno,
+				i, a.from.ID, fromRoot, a.to.ID, toRoot, fragmentExprSexp(a.fmla), a.argIdx) // a.lineno,
 		}
 
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
@@ -940,11 +940,11 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 
 	// Definitions: non-recursive become macros, recursive become axioms
 	for _, ldf := range m.Definitions {
-		def, isDef := ldf.Formula.(*il.Definition)
+		def, isDef := ldf.Formula.(*il.IvyDefinition)
 		if !isDef {
 			continue
 		}
-		if _, isSchema := ldf.Formula.(*il.DefinitionSchema); isSchema {
+		if _, isSchema := ldf.Formula.(*il.IvyDefinitionSchema); isSchema {
 			continue
 		}
 
@@ -966,7 +966,7 @@ func GetAssumesAndAsserts(m *module.Module, precondsOnly bool) (assumes, asserts
 			macros = append(macros, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno()})
 		} else {
 			// Convert to constraint
-			constraint := defToConstraint(def)
+			constraint := fragmentDefToConstraint(def)
 			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, lineno: ldf.Lineno()})
 		}
 	}
@@ -1056,7 +1056,7 @@ func CheckFragment(m *module.Module, precondsOnly bool) error {
 // --- helpers ---
 
 // defToConstraint converts a Definition to a constraint formula.
-func defToConstraint(d *il.Definition) lg.Expr {
+func fragmentDefToConstraint(d *il.IvyDefinition) lg.Expr {
 	lhs := d.Lhs
 	rhs := d.Rhs
 	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {

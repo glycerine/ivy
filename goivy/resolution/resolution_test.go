@@ -10,15 +10,15 @@ import (
 )
 
 // helper to make a variable with TopSort (Python variables have no case restriction in ivy_logic)
-func mkVar(name string) *logic.Variable {
+func resolutionMkVar(name string) *logic.Variable {
 	v, err := logic.NewVariable(name, logic.TopS)
 	if err != nil {
-		panic(fmt.Sprintf("mkVar(%q): %v", name, err))
+		panic(fmt.Sprintf("resolutionMkVar(%q): %v", name, err))
 	}
 	return v
 }
 
-func mkConst(name string) *logic.Const {
+func resolutionMkConst(name string) *logic.Const {
 	return logic.NewConst(name, logic.TopS)
 }
 
@@ -32,9 +32,9 @@ func envString(env Env) string {
 }
 
 // TestEnvFindConstant tests that EnvFind returns a constant unchanged.
-func TestEnvFindConstant(t *testing.T) {
+func TestResolutionEnvFindConstant(t *testing.T) {
 	env := make(Env)
-	c := mkConst("a")
+	c := resolutionMkConst("a")
 	result := EnvFind(env, c)
 	if result != c {
 		t.Errorf("expected constant a, got %v", result)
@@ -42,9 +42,9 @@ func TestEnvFindConstant(t *testing.T) {
 }
 
 // TestEnvFindUnmappedVar tests that an unmapped variable returns itself.
-func TestEnvFindUnmappedVar(t *testing.T) {
+func TestResolutionEnvFindUnmappedVar(t *testing.T) {
 	env := make(Env)
-	x := mkVar("X")
+	x := resolutionMkVar("X")
 	result := EnvFind(env, x)
 	if result != x {
 		t.Errorf("expected var X, got %v", result)
@@ -52,10 +52,10 @@ func TestEnvFindUnmappedVar(t *testing.T) {
 }
 
 // TestEnvFindSingleStep tests one-step variable resolution.
-func TestEnvFindSingleStep(t *testing.T) {
+func TestResolutionEnvFindSingleStep(t *testing.T) {
 	env := make(Env)
-	x := mkVar("X")
-	a := mkConst("a")
+	x := resolutionMkVar("X")
+	a := resolutionMkConst("a")
 	env["X"] = a
 	result := EnvFind(env, x)
 	if result != a {
@@ -64,11 +64,11 @@ func TestEnvFindSingleStep(t *testing.T) {
 }
 
 // TestEnvFindChain tests multi-step variable chain resolution.
-func TestEnvFindChain(t *testing.T) {
+func TestResolutionEnvFindChain(t *testing.T) {
 	env := make(Env)
-	x := mkVar("X")
-	y := mkVar("Y")
-	a := mkConst("a")
+	x := resolutionMkVar("X")
+	y := resolutionMkVar("Y")
+	a := resolutionMkConst("a")
 	env["X"] = y
 	env["Y"] = a
 	result := EnvFind(env, x)
@@ -78,12 +78,12 @@ func TestEnvFindChain(t *testing.T) {
 }
 
 // TestTermsMGUPythonExample mirrors the Python test_terms_mgu.
-func TestTermsMGUPythonExample(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
-	z := mkVar("Z")
-	a := mkConst("a")
-	b := mkConst("b")
+func TestResolutionTermsMGUPythonExample(t *testing.T) {
+	x := resolutionMkVar("X")
+	y := resolutionMkVar("Y")
+	z := resolutionMkVar("Z")
+	a := resolutionMkConst("a")
+	b := resolutionMkConst("b")
 
 	match, subs := TermsMGU(
 		[]ResolutionTerm{x, y, x, b, y},
@@ -105,8 +105,8 @@ func TestTermsMGUPythonExample(t *testing.T) {
 }
 
 // TestTermsMGULengthMismatch tests that different-length term lists fail.
-func TestTermsMGULengthMismatch(t *testing.T) {
-	a := mkConst("a")
+func TestResolutionTermsMGULengthMismatch(t *testing.T) {
+	a := resolutionMkConst("a")
 	match, _ := TermsMGU([]ResolutionTerm{a}, []ResolutionTerm{a, a})
 	if match {
 		t.Error("expected match=false for length mismatch")
@@ -114,7 +114,7 @@ func TestTermsMGULengthMismatch(t *testing.T) {
 }
 
 // TestTermsMGUEmptyLists tests that empty term lists unify successfully.
-func TestTermsMGUEmptyLists(t *testing.T) {
+func TestResolutionTermsMGUEmptyLists(t *testing.T) {
 	match, subs := TermsMGU(nil, nil)
 	if !match {
 		t.Fatal("expected match=true for empty lists")
@@ -125,9 +125,9 @@ func TestTermsMGUEmptyLists(t *testing.T) {
 }
 
 // TestTermsMGUConstantMismatch tests that mismatched constants fail.
-func TestTermsMGUConstantMismatch(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestResolutionTermsMGUConstantMismatch(t *testing.T) {
+	a := resolutionMkConst("a")
+	b := resolutionMkConst("b")
 	match, _ := TermsMGU([]ResolutionTerm{a}, []ResolutionTerm{b})
 	if match {
 		t.Error("expected match=false for constant mismatch")
@@ -135,9 +135,9 @@ func TestTermsMGUConstantMismatch(t *testing.T) {
 }
 
 // TestTermsMGUSameConstants tests that identical constants unify with empty subs.
-func TestTermsMGUSameConstants(t *testing.T) {
-	a1 := mkConst("a")
-	a2 := mkConst("a")
+func TestResolutionTermsMGUSameConstants(t *testing.T) {
+	a1 := resolutionMkConst("a")
+	a2 := resolutionMkConst("a")
 	match, subs := TermsMGU([]ResolutionTerm{a1}, []ResolutionTerm{a2})
 	if !match {
 		t.Fatal("expected match=true")
@@ -148,9 +148,9 @@ func TestTermsMGUSameConstants(t *testing.T) {
 }
 
 // TestTermsMGUVarToVar tests that two different variables unify.
-func TestTermsMGUVarToVar(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
+func TestResolutionTermsMGUVarToVar(t *testing.T) {
+	x := resolutionMkVar("X")
+	y := resolutionMkVar("Y")
 	match, subs := TermsMGU([]ResolutionTerm{x}, []ResolutionTerm{y})
 	if !match {
 		t.Fatal("expected match=true")
@@ -164,8 +164,8 @@ func TestTermsMGUVarToVar(t *testing.T) {
 }
 
 // TestTermsMGUSameVar tests that the same variable on both sides unifies trivially.
-func TestTermsMGUSameVar(t *testing.T) {
-	x := mkVar("X")
+func TestResolutionTermsMGUSameVar(t *testing.T) {
+	x := resolutionMkVar("X")
 	match, subs := TermsMGU([]ResolutionTerm{x}, []ResolutionTerm{x})
 	if !match {
 		t.Fatal("expected match=true")
@@ -176,7 +176,7 @@ func TestTermsMGUSameVar(t *testing.T) {
 }
 
 // TestTermsMGUSortMismatch tests that terms with different sorts fail.
-func TestTermsMGUSortMismatch(t *testing.T) {
+func TestResolutionTermsMGUSortMismatch(t *testing.T) {
 	s1 := &logic.UninterpretedSort{Name: "S1"}
 	s2 := &logic.UninterpretedSort{Name: "S2"}
 	c1 := logic.NewConst("a", s1)
@@ -188,9 +188,9 @@ func TestTermsMGUSortMismatch(t *testing.T) {
 }
 
 // TestMGUSameRelation tests atom unification with same relation name.
-func TestMGUSameRelation(t *testing.T) {
-	x := mkVar("X")
-	a := mkConst("a")
+func TestResolutionMGUSameRelation(t *testing.T) {
+	x := resolutionMkVar("X")
+	a := resolutionMkConst("a")
 	atom1 := NewAtom("r", x)
 	atom2 := NewAtom("r", a)
 	match, subs := MGU(atom1, atom2)
@@ -203,8 +203,8 @@ func TestMGUSameRelation(t *testing.T) {
 }
 
 // TestMGUDifferentRelation tests that atoms with different names fail.
-func TestMGUDifferentRelation(t *testing.T) {
-	a := mkConst("a")
+func TestResolutionMGUDifferentRelation(t *testing.T) {
+	a := resolutionMkConst("a")
 	atom1 := NewAtom("r", a)
 	atom2 := NewAtom("s", a)
 	match, _ := MGU(atom1, atom2)
@@ -214,10 +214,10 @@ func TestMGUDifferentRelation(t *testing.T) {
 }
 
 // TestTermsMGUEqBasic tests MGU with equality remainder.
-func TestTermsMGUEqBasic(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	x := mkVar("X")
+func TestResolutionTermsMGUEqBasic(t *testing.T) {
+	a := resolutionMkConst("a")
+	b := resolutionMkConst("b")
+	x := resolutionMkVar("X")
 
 	match, subs, eqs := TermsMGUEq(
 		[]ResolutionTerm{x, a},
@@ -238,8 +238,8 @@ func TestTermsMGUEqBasic(t *testing.T) {
 }
 
 // TestTermsMGUEqNoRemainder tests that matching constants produce no equalities.
-func TestTermsMGUEqNoRemainder(t *testing.T) {
-	a := mkConst("a")
+func TestResolutionTermsMGUEqNoRemainder(t *testing.T) {
+	a := resolutionMkConst("a")
 	match, _, eqs := TermsMGUEq([]ResolutionTerm{a}, []ResolutionTerm{a})
 	if !match {
 		t.Fatal("expected match=true")
@@ -250,8 +250,8 @@ func TestTermsMGUEqNoRemainder(t *testing.T) {
 }
 
 // TestMGUEqDifferentRelation tests MGUEq fails on different relation names.
-func TestMGUEqDifferentRelation(t *testing.T) {
-	a := mkConst("a")
+func TestResolutionMGUEqDifferentRelation(t *testing.T) {
+	a := resolutionMkConst("a")
 	atom1 := NewAtom("r", a)
 	atom2 := NewAtom("s", a)
 	match, _, _ := MGUEq(atom1, atom2)
@@ -261,11 +261,11 @@ func TestMGUEqDifferentRelation(t *testing.T) {
 }
 
 // TestMGUEqMultipleEqualities tests collecting multiple equalities.
-func TestMGUEqMultipleEqualities(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
-	d := mkConst("d")
+func TestResolutionMGUEqMultipleEqualities(t *testing.T) {
+	a := resolutionMkConst("a")
+	b := resolutionMkConst("b")
+	c := resolutionMkConst("c")
+	d := resolutionMkConst("d")
 	atom1 := NewAtom("r", a, c)
 	atom2 := NewAtom("r", b, d)
 	match, _, eqs := MGUEq(atom1, atom2)
@@ -278,9 +278,9 @@ func TestMGUEqMultipleEqualities(t *testing.T) {
 }
 
 // TestAtomFromApply tests extracting an Atom from an Apply node.
-func TestAtomFromApply(t *testing.T) {
+func TestResolutionAtomFromApply(t *testing.T) {
 	rel := logic.NewConst("r", logic.TopS)
-	a := mkConst("a")
+	a := resolutionMkConst("a")
 	app, err := logic.NewApply(rel, a)
 	if err != nil {
 		t.Fatal(err)
@@ -298,9 +298,9 @@ func TestAtomFromApply(t *testing.T) {
 }
 
 // TestIsConstant tests the IsConstant predicate.
-func TestIsConstant(t *testing.T) {
-	c := mkConst("a")
-	v := mkVar("X")
+func TestResolutionIsConstant(t *testing.T) {
+	c := resolutionMkConst("a")
+	v := resolutionMkVar("X")
 	if !ResolutionIsConstant(c) {
 		t.Error("expected true for Const")
 	}
@@ -310,10 +310,10 @@ func TestIsConstant(t *testing.T) {
 }
 
 // TestTermsMGUTransitiveChain tests a chain of variable bindings: X->Y->a.
-func TestTermsMGUTransitiveChain(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
-	a := mkConst("a")
+func TestResolutionTermsMGUTransitiveChain(t *testing.T) {
+	x := resolutionMkVar("X")
+	y := resolutionMkVar("Y")
+	a := resolutionMkConst("a")
 	match, subs := TermsMGU(
 		[]ResolutionTerm{x, y},
 		[]ResolutionTerm{y, a},
@@ -345,16 +345,16 @@ func FuzzTermsMGU(f *testing.F) {
 		toTerm := func(s string) ResolutionTerm {
 			s = strings.TrimSpace(s)
 			if len(s) == 0 {
-				return mkConst("_empty")
+				return resolutionMkConst("_empty")
 			}
 			if s[0] >= 'A' && s[0] <= 'Z' {
 				v, err := logic.NewVariable(s, logic.TopS)
 				if err != nil {
-					return mkConst(s)
+					return resolutionMkConst(s)
 				}
 				return v
 			}
-			return mkConst(s)
+			return resolutionMkConst(s)
 		}
 
 		terms1 := make([]ResolutionTerm, len(parts1))

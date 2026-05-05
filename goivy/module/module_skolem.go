@@ -169,7 +169,7 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 					for j, w := range mvs {
 						args[j] = w
 					}
-					subs[v.Name] = il.Apply(skSym, args)
+					subs[v.Name] = il.IvyApply(skSym, args)
 				} else {
 					subs[v.Name] = skSym
 				}

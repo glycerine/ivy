@@ -12,11 +12,11 @@ import (
 
 // --- helpers ---
 
-func testModule() *module.Module {
+func traceTestModule() *module.Module {
 	return module.New()
 }
 
-func testClauses(fmlas ...lg.Expr) *module.Clauses {
+func traceTestClauses(fmlas ...lg.Expr) *module.Clauses {
 	if len(fmlas) == 0 {
 		fmlas = []lg.Expr{lg.True}
 	}
@@ -32,7 +32,7 @@ func makeEq(name string, val string) lg.Expr {
 
 // --- TraceBase tests ---
 
-func TestNewTraceBase(t *testing.T) {
+func TestTraceNewTraceBase(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	if tb == nil {
 		t.Fatal("NewTraceBase returned nil")
@@ -48,15 +48,15 @@ func TestNewTraceBase(t *testing.T) {
 	}
 }
 
-func TestNewTraceBaseWithModule(t *testing.T) {
-	mod := testModule()
+func TestTraceNewTraceBaseWithModule(t *testing.T) {
+	mod := traceTestModule()
 	tb := NewTraceBase(nil, mod)
 	if tb.Domain != mod {
 		t.Error("domain should match provided module")
 	}
 }
 
-func TestTraceBaseRename(t *testing.T) {
+func TestTraceTraceBaseRename(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	m := map[string]string{"old_x": "x", "old_y": "y"}
 	result := tb.Rename(m)
@@ -68,7 +68,7 @@ func TestTraceBaseRename(t *testing.T) {
 	}
 }
 
-func TestIsSkolem(t *testing.T) {
+func TestTraceIsSkolem(t *testing.T) {
 	tests := []struct {
 		name   string
 		expect bool
@@ -89,7 +89,7 @@ func TestIsSkolem(t *testing.T) {
 	}
 }
 
-func TestAddTraceState(t *testing.T) {
+func TestTraceAddTraceState(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.AddTraceState(nil)
 	if len(tb.TraceStates) != 1 {
@@ -100,7 +100,7 @@ func TestAddTraceState(t *testing.T) {
 	}
 }
 
-func TestAddTraceStateWithAction(t *testing.T) {
+func TestTraceAddTraceStateWithAction(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.AddTraceState(nil) // first state
 	tb.LastAction = actions.NewAssumeAction(lg.True)
@@ -113,7 +113,7 @@ func TestAddTraceStateWithAction(t *testing.T) {
 	}
 }
 
-func TestTraceBaseString(t *testing.T) {
+func TestTraceTraceBaseString(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	s := tb.String()
 	// Empty trace should produce empty string
@@ -122,7 +122,7 @@ func TestTraceBaseString(t *testing.T) {
 	}
 }
 
-func TestTraceBaseClone(t *testing.T) {
+func TestTraceTraceBaseClone(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.AddTraceState(nil)
 	clone := tb.Clone()
@@ -134,7 +134,7 @@ func TestTraceBaseClone(t *testing.T) {
 	}
 }
 
-func TestTraceBaseHandle(t *testing.T) {
+func TestTraceTraceBaseHandle(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	action := actions.NewAssumeAction(lg.True)
 	env := map[string]string{}
@@ -144,7 +144,7 @@ func TestTraceBaseHandle(t *testing.T) {
 	}
 }
 
-func TestTraceBaseFail(t *testing.T) {
+func TestTraceTraceBaseFail(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	origAction := actions.NewAssertAction(lg.True)
 	tb.LastAction = origAction
@@ -158,7 +158,7 @@ func TestTraceBaseFail(t *testing.T) {
 	}
 }
 
-func TestTraceBaseEnd(t *testing.T) {
+func TestTraceTraceBaseEnd(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.End()
 	// Should have added a final state
@@ -167,7 +167,7 @@ func TestTraceBaseEnd(t *testing.T) {
 	}
 }
 
-func TestTraceBaseEndWithSub(t *testing.T) {
+func TestTraceTraceBaseEndWithSub(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.Sub = NewTraceBase(nil, nil)
 	tb.End()
@@ -181,7 +181,7 @@ func TestTraceBaseEndWithSub(t *testing.T) {
 
 // --- Pretty / label helpers ---
 
-func TestPretty(t *testing.T) {
+func TestTracePretty(t *testing.T) {
 	// Test truncation: maxLines=3 means lines[0:2] + "..."
 	s := "line1\nline2\nline3\nline4\nline5\nline6"
 	result := TracePretty(s, 3)
@@ -194,7 +194,7 @@ func TestPretty(t *testing.T) {
 	}
 }
 
-func TestPrettyFormatting(t *testing.T) {
+func TestTracePrettyFormatting(t *testing.T) {
 	// Test brace indentation: "a { b; c }" should be reformatted
 	s := "a { b; c }"
 	result := TracePretty(s, 0)
@@ -203,7 +203,7 @@ func TestPrettyFormatting(t *testing.T) {
 	}
 }
 
-func TestPrettyShort(t *testing.T) {
+func TestTracePrettyShort(t *testing.T) {
 	s := "line1\nline2"
 	result := TracePretty(s, 5)
 	if result != s {
@@ -211,7 +211,7 @@ func TestPrettyShort(t *testing.T) {
 	}
 }
 
-func TestLabelFromAction(t *testing.T) {
+func TestTraceLabelFromAction(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
 	label := TraceLabelFromAction(action, nil)
 	if label == "" {
@@ -219,7 +219,7 @@ func TestLabelFromAction(t *testing.T) {
 	}
 }
 
-func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
+func TestTraceLabelFromActionUsesSingularActionLabel(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
 	action.SetLabel("call ext")
 	if got := TraceLabelFromAction(action, nil); got != "call ext\n" {
@@ -229,7 +229,7 @@ func TestLabelFromActionUsesSingularActionLabel(t *testing.T) {
 
 // --- EvalInState ---
 
-func TestEvalInState(t *testing.T) {
+func TestTraceEvalInState(t *testing.T) {
 	param := lg.NewConst("X", lg.Boolean)
 	val := lg.NewConst("true_val", lg.Boolean)
 	eq, _ := lg.NewEq(param, val)
@@ -244,7 +244,7 @@ func TestEvalInState(t *testing.T) {
 	}
 }
 
-func TestEvalInStateNotFound(t *testing.T) {
+func TestTraceEvalInStateNotFound(t *testing.T) {
 	clauses := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	state := art.NewState(nil, clauses)
 	param := lg.NewConst("missing", lg.Boolean)
@@ -254,7 +254,7 @@ func TestEvalInStateNotFound(t *testing.T) {
 	}
 }
 
-func TestEvalInStateNilClauses(t *testing.T) {
+func TestTraceEvalInStateNilClauses(t *testing.T) {
 	state := art.NewState(nil, nil)
 	param := lg.NewConst("X", lg.Boolean)
 	result := EvalInState(state, param)
@@ -265,14 +265,14 @@ func TestEvalInStateNilClauses(t *testing.T) {
 
 // --- ValueToStr ---
 
-func TestValueToStrNil(t *testing.T) {
+func TestTraceValueToStrNil(t *testing.T) {
 	s := ValueToStr(nil, nil)
 	if s != "..." {
 		t.Errorf("expected '...', got %q", s)
 	}
 }
 
-func TestValueToStrConst(t *testing.T) {
+func TestTraceValueToStrConst(t *testing.T) {
 	c := lg.NewConst("my_value", lg.Boolean)
 	s := ValueToStr(c, nil)
 	if s != "my_value" {
@@ -280,7 +280,7 @@ func TestValueToStrConst(t *testing.T) {
 	}
 }
 
-func TestValueToStrNode(t *testing.T) {
+func TestTraceValueToStrNode(t *testing.T) {
 	n := lg.True
 	s := ValueToStr(n, nil)
 	if s == "" {
@@ -290,8 +290,8 @@ func TestValueToStrNode(t *testing.T) {
 
 // --- Trace (model-based) ---
 
-func TestNewTrace(t *testing.T) {
-	clauses := testClauses()
+func TestTraceNewTrace(t *testing.T) {
+	clauses := traceTestClauses()
 	tr := NewTrace(nil, clauses, nil, nil, true)
 	if tr == nil {
 		t.Fatal("NewTrace returned nil")
@@ -304,7 +304,7 @@ func TestNewTrace(t *testing.T) {
 	}
 }
 
-func TestNewTraceNilClauses(t *testing.T) {
+func TestTraceNewTraceNilClauses(t *testing.T) {
 	tr := NewTrace(nil, nil, nil, nil, false)
 	if tr == nil {
 		t.Fatal("NewTrace returned nil")
@@ -316,8 +316,8 @@ func TestNewTraceNilClauses(t *testing.T) {
 
 // --- MakeCheckArt ---
 
-func TestMakeCheckArt(t *testing.T) {
-	mod := testModule()
+func TestTraceMakeCheckArt(t *testing.T) {
+	mod := traceTestModule()
 	ag, pre, _, err := MakeCheckArt(mod, "test_action", nil)
 	if err != nil {
 		t.Fatalf("MakeCheckArt error: %v", err)
@@ -333,9 +333,9 @@ func TestMakeCheckArt(t *testing.T) {
 	}
 }
 
-func TestMakeCheckArtWithPrecond(t *testing.T) {
-	mod := testModule()
-	precond := []*module.Clauses{testClauses(), testClauses()}
+func TestTraceMakeCheckArtWithPrecond(t *testing.T) {
+	mod := traceTestModule()
+	precond := []*module.Clauses{traceTestClauses(), traceTestClauses()}
 	ag, pre, _, err := MakeCheckArt(mod, "test", precond)
 	if err != nil {
 		t.Fatalf("MakeCheckArt error: %v", err)
@@ -347,17 +347,17 @@ func TestMakeCheckArtWithPrecond(t *testing.T) {
 
 // --- CheckFinalCond ---
 
-func TestCheckFinalCondNilPost(t *testing.T) {
+func TestTraceCheckFinalCondNilPost(t *testing.T) {
 	ag := art.NewAnalysisGraph(nil, nil)
-	result := CheckFinalCond(ag, nil, testClauses(), nil, false)
+	result := CheckFinalCond(ag, nil, traceTestClauses(), nil, false)
 	if result != nil {
 		t.Error("CheckFinalCond with nil post should return nil")
 	}
 }
 
-func TestCheckFinalCondNilFinalCond(t *testing.T) {
+func TestTraceCheckFinalCondNilFinalCond(t *testing.T) {
 	ag := art.NewAnalysisGraph(nil, nil)
-	state := art.NewState(nil, testClauses())
+	state := art.NewState(nil, traceTestClauses())
 	result := CheckFinalCond(ag, state, nil, nil, false)
 	if result != nil {
 		t.Error("CheckFinalCond with nil final cond should return nil")
@@ -366,14 +366,14 @@ func TestCheckFinalCondNilFinalCond(t *testing.T) {
 
 // --- CheckVC ---
 
-func TestCheckVCNilClauses(t *testing.T) {
+func TestTraceCheckVCNilClauses(t *testing.T) {
 	result := CheckVC(nil, nil, nil, nil, nil, false)
 	if result != nil {
 		t.Error("CheckVC with nil clauses should return nil")
 	}
 }
 
-func TestCheckVCNoAnnot(t *testing.T) {
+func TestTraceCheckVCNoAnnot(t *testing.T) {
 	clauses := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	// Annot is nil
 	result := CheckVC(nil, clauses, nil, nil, nil, false)
@@ -384,10 +384,10 @@ func TestCheckVCNoAnnot(t *testing.T) {
 
 // --- MakeVC ---
 
-func TestMakeVC(t *testing.T) {
+func TestTraceMakeVC(t *testing.T) {
 	action := actions.NewAssumeAction(lg.True)
-	pre := []*module.Clauses{testClauses()}
-	post := []*module.Clauses{testClauses()}
+	pre := []*module.Clauses{traceTestClauses()}
+	post := []*module.Clauses{traceTestClauses()}
 	vc := MakeVC(action, pre, post, true)
 	if vc == nil {
 		t.Fatal("MakeVC returned nil")
@@ -396,7 +396,7 @@ func TestMakeVC(t *testing.T) {
 
 // --- ToLines ---
 
-func TestToLinesEmpty(t *testing.T) {
+func TestTraceToLinesEmpty(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	var lines []string
 	hash := make(map[string]string)
@@ -406,7 +406,7 @@ func TestToLinesEmpty(t *testing.T) {
 	}
 }
 
-func TestToLinesWithState(t *testing.T) {
+func TestTraceToLinesWithState(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	eq := makeEq("X", "val1")
 	tb.AddTraceState([]lg.Expr{eq})
@@ -419,7 +419,7 @@ func TestToLinesWithState(t *testing.T) {
 	}
 }
 
-func TestToLinesHidden(t *testing.T) {
+func TestTraceToLinesHidden(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	eq := makeEq("hidden_sym", "val")
 	tb.AddTraceState([]lg.Expr{eq})
@@ -434,7 +434,7 @@ func TestToLinesHidden(t *testing.T) {
 	}
 }
 
-func TestToLinesLoopStart(t *testing.T) {
+func TestTraceToLinesLoopStart(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	tb.AddTraceState(nil)
 	tb.TraceStates[0].LoopStart = true
@@ -449,7 +449,7 @@ func TestToLinesLoopStart(t *testing.T) {
 
 // --- isCallOrEnv / isCallAction ---
 
-func TestIsCallOrEnv(t *testing.T) {
+func TestTraceIsCallOrEnv(t *testing.T) {
 	if isCallOrEnv(nil) {
 		t.Error("nil should not be call or env")
 	}
@@ -459,7 +459,7 @@ func TestIsCallOrEnv(t *testing.T) {
 	}
 }
 
-func TestIsCallAction(t *testing.T) {
+func TestTraceIsCallAction(t *testing.T) {
 	if isCallAction(nil) {
 		t.Error("nil should not be call action")
 	}

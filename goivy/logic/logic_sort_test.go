@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestUninterpretedSort(t *testing.T) {
+func TestLogicUninterpretedSort(t *testing.T) {
 	s1 := &UninterpretedSort{Name: "S"}
 	s2 := &UninterpretedSort{Name: "S"}
 	s3 := &UninterpretedSort{Name: "T"}
@@ -24,7 +24,7 @@ func TestUninterpretedSort(t *testing.T) {
 	}
 }
 
-func TestBooleanSort(t *testing.T) {
+func TestLogicBooleanSort(t *testing.T) {
 	b := Boolean
 	if b.String() != "Boolean" {
 		t.Errorf("String() = %q, want %q", b.String(), "Boolean")
@@ -35,7 +35,7 @@ func TestBooleanSort(t *testing.T) {
 	}
 }
 
-func TestFunctionSortBasic(t *testing.T) {
+func TestLogicFunctionSortBasic(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	fs, err := NewFunctionSort(S, S, Boolean)
 	if err != nil {
@@ -56,7 +56,7 @@ func TestFunctionSortBasic(t *testing.T) {
 	}
 }
 
-func TestFunctionSortZeroArgs(t *testing.T) {
+func TestLogicFunctionSortZeroArgs(t *testing.T) {
 	_, err := NewFunctionSort()
 	if err == nil {
 		t.Error("Expected error for zero args")
@@ -67,7 +67,7 @@ func TestFunctionSortZeroArgs(t *testing.T) {
 	}
 }
 
-func TestFunctionSortHigherOrder(t *testing.T) {
+func TestLogicFunctionSortHigherOrder(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	inner, _ := NewFunctionSort(S, Boolean)
 	_, err := NewFunctionSort(inner, Boolean)
@@ -76,7 +76,7 @@ func TestFunctionSortHigherOrder(t *testing.T) {
 	}
 }
 
-func TestFunctionSortEquality(t *testing.T) {
+func TestLogicFunctionSortEquality(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	fs1, _ := NewFunctionSort(S, S, Boolean)
 	fs2, _ := NewFunctionSort(S, S, Boolean)
@@ -91,7 +91,7 @@ func TestFunctionSortEquality(t *testing.T) {
 	}
 }
 
-func TestEnumeratedSort(t *testing.T) {
+func TestLogicEnumeratedSort(t *testing.T) {
 	es := &EnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
 	if es.Card() != 3 {
 		t.Errorf("Card() = %d, want 3", es.Card())
@@ -105,7 +105,7 @@ func TestEnumeratedSort(t *testing.T) {
 	}
 }
 
-func TestRangeSort(t *testing.T) {
+func TestLogicRangeSort(t *testing.T) {
 	rs := &RangeSort{Name: "idx", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
 	if rs.String() != "{0 .. 10}" {
 		t.Errorf("String() = %q, want %q", rs.String(), "{0 .. 10}")
@@ -116,7 +116,7 @@ func TestRangeSort(t *testing.T) {
 	}
 }
 
-func TestTopSort(t *testing.T) {
+func TestLogicTopSort(t *testing.T) {
 	ts := TopS.(*TopSort)
 	if ts.String() != "TopSort" {
 		t.Errorf("String() = %q, want %q", ts.String(), "TopSort")
@@ -134,7 +134,7 @@ func TestTopSort(t *testing.T) {
 	}
 }
 
-func TestFirstOrderSort(t *testing.T) {
+func TestLogicFirstOrderSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	fs, _ := NewFunctionSort(S, Boolean)
 
@@ -152,7 +152,7 @@ func TestFirstOrderSort(t *testing.T) {
 	}
 }
 
-func TestContainsTopSort(t *testing.T) {
+func TestLogicContainsTopSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", TopS)
 	Z, _ := NewVariable("Z", S)
@@ -165,13 +165,13 @@ func TestContainsTopSort(t *testing.T) {
 	}
 
 	// f: TopS * TopS -> Boolean
-	f := NewConst("f", mustFuncSort(t, TopS, TopS, Boolean))
+	f := NewConst("f", logicMustFuncSort(t, TopS, TopS, Boolean))
 	if !ContainsTopSort(f) {
 		t.Error("Symbol with TopSort in sort should contain TopSort")
 	}
 
 	// g: S * S -> Boolean
-	g := NewConst("g", mustFuncSort(t, S, S, Boolean))
+	g := NewConst("g", logicMustFuncSort(t, S, S, Boolean))
 	if ContainsTopSort(g) {
 		t.Error("Symbol without TopSort should not contain TopSort")
 	}
@@ -183,7 +183,7 @@ func TestContainsTopSort(t *testing.T) {
 	}
 }
 
-func TestIsBooleanOrTop(t *testing.T) {
+func TestLogicIsBooleanOrTop(t *testing.T) {
 	if !IsBooleanOrTop(Boolean) {
 		t.Error("Boolean should be BooleanOrTop")
 	}
@@ -243,7 +243,7 @@ func FuzzNewFunctionSort(f *testing.F) {
 	})
 }
 
-// dup of mustFuncSort
+// dup of logicMustFuncSort
 // func mustFS(t *testing.T, sorts ...Sort) *FunctionSort {
 // 	t.Helper()
 // 	fs, err := NewFunctionSort(sorts...)

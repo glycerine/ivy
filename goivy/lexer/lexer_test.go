@@ -296,7 +296,7 @@ func TestLineColumn(t *testing.T) {
 // --- Peek ---
 
 func TestPeek(t *testing.T) {
-	l := New("x y", v17)
+	l := NewLexer("x y", v17)
 	p := l.Peek()
 	assertToken(t, []Token{p}, 0, SYMBOL, "x")
 	// Peek again should return same token
@@ -401,7 +401,7 @@ func FuzzLexer(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, data []byte) {
 		input := string(data)
-		l := New(input, Version{1, 7})
+		l := NewLexer(input, Version{1, 7})
 		for i := 0; i < 10000; i++ {
 			tok := l.NextToken()
 			if tok.Type == EOF || tok.Type == ERROR {
@@ -444,7 +444,7 @@ func FuzzLexerAllVersions(f *testing.F) {
 		}
 
 		input := string(data)
-		l := New(input, Version{major, minor})
+		l := NewLexer(input, Version{major, minor})
 		for i := 0; i < 10000; i++ {
 			tok := l.NextToken()
 			if tok.Type == EOF || tok.Type == ERROR {

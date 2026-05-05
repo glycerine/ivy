@@ -7,17 +7,17 @@ import (
 	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
-// Reuses mkSort, mkConst, mkLF, testAstCfg, mkPC from proof_test.go and
+// Reuses proofMkSort, proofMkConst, mkLF, proofTestAstCfg, mkPC from proof_test.go and
 // tactics_assume_test.go.
 
 // --- WrapImplies direct tests ---
 
 func TestWrapImplies_LgExpr_ProducesLgImplies(t *testing.T) {
-	s := mkSort("S")
-	cond := mkConst("c", s)
-	body := mkConst("p", s)
+	s := proofMkSort("S")
+	cond := proofMkConst("c", s)
+	body := proofMkConst("p", s)
 
-	out := WrapImplies(testAstCfg, cond, body)
+	out := WrapImplies(proofTestAstCfg, cond, body)
 
 	imp, ok := out.(*lg.Implies)
 	if !ok {
@@ -32,13 +32,13 @@ func TestWrapImplies_LgExpr_ProducesLgImplies(t *testing.T) {
 }
 
 func TestWrapImplies_TemporalModels_ProducesAstImplies(t *testing.T) {
-	s := mkSort("S")
-	cond := mkConst("c", s)
-	inner := mkConst("phi", s)
-	model := testAstCfg.NewAtom("M")
-	tm := testAstCfg.NewTemporalModels(model, inner)
+	s := proofMkSort("S")
+	cond := proofMkConst("c", s)
+	inner := proofMkConst("phi", s)
+	model := proofTestAstCfg.NewAtom("M")
+	tm := proofTestAstCfg.NewTemporalModels(model, inner)
 
-	out := WrapImplies(testAstCfg, cond, tm)
+	out := WrapImplies(proofTestAstCfg, cond, tm)
 
 	imp, ok := out.(*ast.AstImplies)
 	if !ok {
@@ -51,12 +51,12 @@ func TestWrapImplies_TemporalModels_ProducesAstImplies(t *testing.T) {
 }
 
 func TestWrapImplies_SchemaBody_ProducesAstImplies(t *testing.T) {
-	s := mkSort("S")
-	cond := mkConst("c", s)
-	conc := mkConst("conc", s)
-	sb := testAstCfg.NewSchemaBody(conc)
+	s := proofMkSort("S")
+	cond := proofMkConst("c", s)
+	conc := proofMkConst("conc", s)
+	sb := proofTestAstCfg.NewSchemaBody(conc)
 
-	out := WrapImplies(testAstCfg, cond, sb)
+	out := WrapImplies(proofTestAstCfg, cond, sb)
 
 	imp, ok := out.(*ast.AstImplies)
 	if !ok {
@@ -73,14 +73,14 @@ func TestWrapImplies_SchemaBody_ProducesAstImplies(t *testing.T) {
 // mkIfTactic builds an IfTactic proof with the given lg.Expr condition and
 // no Then/Else branches (so the tactic returns the two wrapped subgoals).
 func mkIfTactic(cond lg.Expr) *ast.IfTactic {
-	return testAstCfg.NewIfTactic(cond, nil, nil)
+	return proofTestAstCfg.NewIfTactic(cond, nil, nil)
 }
 
 func TestIfTactic_LgExprGoal_WrapsWithLgImplies(t *testing.T) {
-	s := mkSort("S")
-	body := mkConst("p", s)
-	cond := mkConst("c", s)
-	goal := mkLF(testAstCfg.NewAtom("g"), body)
+	s := proofMkSort("S")
+	body := proofMkConst("p", s)
+	cond := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), body)
 
 	pc := mkPC()
 	result, err := pc.ifTactic([]*ast.LabeledFormula{goal}, mkIfTactic(cond))
@@ -110,12 +110,12 @@ func TestIfTactic_LgExprGoal_WrapsWithLgImplies(t *testing.T) {
 }
 
 func TestIfTactic_TemporalModelsGoal_WrapsWholeWithoutDescent(t *testing.T) {
-	s := mkSort("S")
-	inner := mkConst("phi", s)
-	model := testAstCfg.NewAtom("M")
-	tm := testAstCfg.NewTemporalModels(model, inner)
-	cond := mkConst("c", s)
-	goal := mkLF(testAstCfg.NewAtom("g"), tm)
+	s := proofMkSort("S")
+	inner := proofMkConst("phi", s)
+	model := proofTestAstCfg.NewAtom("M")
+	tm := proofTestAstCfg.NewTemporalModels(model, inner)
+	cond := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), tm)
 
 	pc := mkPC()
 	result, err := pc.ifTactic([]*ast.LabeledFormula{goal}, mkIfTactic(cond))
@@ -137,11 +137,11 @@ func TestIfTactic_TemporalModelsGoal_WrapsWholeWithoutDescent(t *testing.T) {
 }
 
 func TestIfTactic_SchemaBodyGoal_WrapsWholeWithoutDescent(t *testing.T) {
-	s := mkSort("S")
-	conc := mkConst("conc", s)
-	sb := testAstCfg.NewSchemaBody(conc)
-	cond := mkConst("c", s)
-	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+	s := proofMkSort("S")
+	conc := proofMkConst("conc", s)
+	sb := proofTestAstCfg.NewSchemaBody(conc)
+	cond := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
 	pc := mkPC()
 	result, err := pc.ifTactic([]*ast.LabeledFormula{goal}, mkIfTactic(cond))

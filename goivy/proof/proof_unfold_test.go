@@ -12,8 +12,8 @@ var _ = ast.NewAstConfig // ensure import
 // --- ExprListOrLambdaUnion tests ---
 
 func TestExprListOrLambdaUnion_PopSingle(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 	u := &ExprListOrLambdaUnion{Items: []lg.Expr{c}}
 
 	// Pop from single-item list returns the item
@@ -29,10 +29,10 @@ func TestExprListOrLambdaUnion_PopSingle(t *testing.T) {
 }
 
 func TestExprListOrLambdaUnion_PopMultiple(t *testing.T) {
-	s := mkSort("S")
-	a := mkConst("a", s)
-	b := mkConst("b", s)
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	a := proofMkConst("a", s)
+	b := proofMkConst("b", s)
+	c := proofMkConst("c", s)
 	u := &ExprListOrLambdaUnion{Items: []lg.Expr{a, b, c}}
 
 	// First pop → a
@@ -72,14 +72,14 @@ func mkDefnLF(name string, param *lg.Variable, f *lg.Const, rhs lg.Expr) *ast.La
 	app := lg.MustApply(f, param)
 	eq := &lg.Eq{T1: app, T2: rhs}
 	body := &lg.ForAll{Variables: []*lg.Variable{param}, Body: eq}
-	return mkLF(testAstCfg.NewAtom(name), body)
+	return mkLF(proofTestAstCfg.NewAtom(name), body)
 }
 
 func TestMatchFromDefn_Simple(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
 	defn := mkDefnLF("def_f", x, f, x) // forall X. f(X) = X (identity)
 
@@ -101,10 +101,10 @@ func TestMatchFromDefn_Simple(t *testing.T) {
 }
 
 func TestMatchFromDefn_NotADefinition(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 	// Not an equation — just a constant
-	defn := mkLF(testAstCfg.NewAtom("bad"), c)
+	defn := mkLF(proofTestAstCfg.NewAtom("bad"), c)
 
 	_, err := MatchFromDefn(defn)
 	if err == nil {
@@ -115,10 +115,10 @@ func TestMatchFromDefn_NotADefinition(t *testing.T) {
 // --- MatchFromDefns tests ---
 
 func TestMatchFromDefns_Single(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
 	defn := mkDefnLF("def_f", x, f, x)
 
@@ -138,13 +138,13 @@ func TestMatchFromDefns_Single(t *testing.T) {
 }
 
 func TestMatchFromDefns_Multiple(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
-	c1 := mkConst("c1", s)
-	c2 := mkConst("c2", s)
+	c1 := proofMkConst("c1", s)
+	c2 := proofMkConst("c2", s)
 
 	// Two definitions for f with different RHS
 	defn1 := mkDefnLF("def_f1", x, f, c1) // forall X. f(X) = c1
@@ -170,11 +170,11 @@ func TestMatchFromDefns_Empty(t *testing.T) {
 }
 
 func TestMatchFromDefns_DifferentLHS(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	g := mkConst("g", fs)
+	f := proofMkConst("f", fs)
+	g := proofMkConst("g", fs)
 
 	defn1 := mkDefnLF("def_f", x, f, x)
 	defn2 := mkDefnLF("def_g", x, g, x)
@@ -188,10 +188,10 @@ func TestMatchFromDefns_DifferentLHS(t *testing.T) {
 // --- unfoldRhsVars tests ---
 
 func TestUnfoldRhsVars(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	c1 := mkConst("c1", s)
-	c2 := mkConst("c2", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	c1 := proofMkConst("c1", s)
+	c2 := proofMkConst("c2", s)
 
 	// Lambdas whose bodies contain free constants c1, c2
 	lam1, _ := lg.NewLambda([]*lg.Variable{x}, c1) // Lambda(X, c1) — c1 is free
@@ -215,11 +215,11 @@ func TestUnfoldRhsVars(t *testing.T) {
 // --- UnfoldFmla tests ---
 
 func TestUnfoldFmla_SingleOccurrence(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	c := mkConst("c", s)
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s)
 
 	// Definition: forall X. f(X) = c (constant function)
 	defn := mkDefnLF("def_f", x, f, c)
@@ -241,13 +241,13 @@ func TestUnfoldFmla_SingleOccurrence(t *testing.T) {
 
 func TestUnfoldFmla_MultipleOccurrences_DestructivePop(t *testing.T) {
 	// This is the KEY BUG-11 test: multiple occurrences get different lambdas.
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	c1 := mkConst("c1", s)
-	c2 := mkConst("c2", s)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	c1 := proofMkConst("c1", s)
+	c2 := proofMkConst("c2", s)
+	a := proofMkConst("a", s)
 
 	// Two definitions for f with different RHS (simulating renamed versions)
 	defn1 := mkDefnLF("def_f1", x, f, c1) // forall X. f(X) = c1
@@ -282,12 +282,12 @@ func TestUnfoldFmla_MultipleOccurrences_DestructivePop(t *testing.T) {
 }
 
 func TestUnfoldFmla_NoMatch(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	g := mkConst("g", fs)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	g := proofMkConst("g", fs)
+	a := proofMkConst("a", s)
 
 	// Definition for f
 	defn := mkDefnLF("def_f", x, f, x)
@@ -309,11 +309,11 @@ func TestUnfoldFmla_NoMatch(t *testing.T) {
 }
 
 func TestUnfoldFmla_NestedOccurrence(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	a := proofMkConst("a", s)
 
 	// Definition: forall X. f(X) = X (identity)
 	defn := mkDefnLF("def_f", x, f, x)
@@ -338,20 +338,20 @@ func TestUnfoldFmla_NestedOccurrence(t *testing.T) {
 // --- UnfoldGoal tests ---
 
 func TestUnfoldGoal_Simple(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	a := proofMkConst("a", s)
 
 	// Definition: forall X. f(X) = X
 	defn := mkDefnLF("def_f", x, f, x)
 
 	// Goal with conclusion f(a)
 	app := lg.MustApply(f, a)
-	goal := mkLF(testAstCfg.NewAtom("g"), app)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), app)
 
-	result := UnfoldGoal(testAstCfg, goal, [][]*ast.LabeledFormula{{defn}})
+	result := UnfoldGoal(proofTestAstCfg, goal, [][]*ast.LabeledFormula{{defn}})
 
 	conc := GoalConc(result)
 	if rc, ok := conc.(*lg.Const); ok {
@@ -366,12 +366,12 @@ func TestUnfoldGoal_Simple(t *testing.T) {
 // --- applyUnfoldRec tests ---
 
 func TestApplyUnfoldRec_UnderQuantifier(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	c := mkConst("c", s)
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s)
 
 	// Lambda for f: f(X) = c
 	lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
@@ -398,17 +398,17 @@ func TestApplyUnfoldRec_UnderQuantifier(t *testing.T) {
 // ==========================================================================
 
 func TestMatchFromDefn_DuplicateParams(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s, s) // S x S -> S
-	f := mkConst("f", fs)
-	c := mkConst("c", s)
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s)
 
 	// Build: forall X. f(X, X) = c — X appears twice as arg to f
 	app := lg.MustApply(f, x, x)
 	eq := &lg.Eq{T1: app, T2: c}
 	body := &lg.ForAll{Variables: []*lg.Variable{x}, Body: eq}
-	defn := mkLF(testAstCfg.NewAtom("def"), body)
+	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	_, err := MatchFromDefn(defn)
 	if err == nil {
@@ -417,18 +417,18 @@ func TestMatchFromDefn_DuplicateParams(t *testing.T) {
 }
 
 func TestMatchFromDefn_DistinctParams(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 	fs, _ := lg.NewFunctionSort(s, s, s) // S x S -> S
-	f := mkConst("f", fs)
-	c := mkConst("c", s)
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s)
 
 	// Build: forall X, Y. f(X, Y) = c — distinct params, should succeed
 	app := lg.MustApply(f, x, y)
 	eq := &lg.Eq{T1: app, T2: c}
 	body := &lg.ForAll{Variables: []*lg.Variable{x, y}, Body: eq}
-	defn := mkLF(testAstCfg.NewAtom("def"), body)
+	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	match, err := MatchFromDefn(defn)
 	if err != nil {
@@ -448,16 +448,16 @@ func TestMatchFromDefn_DistinctParams(t *testing.T) {
 }
 
 func TestMatchFromDefn_DuplicateParams_Iff(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s, lg.Boolean) // S x S -> Bool
-	p := mkConst("p", fs)
+	p := proofMkConst("p", fs)
 
 	// Build: forall X. p(X, X) <-> true — duplicate params via Iff
 	app := lg.MustApply(p, x, x)
 	iff := &lg.Iff{T1: app, T2: lg.True}
 	body := &lg.ForAll{Variables: []*lg.Variable{x}, Body: iff}
-	defn := mkLF(testAstCfg.NewAtom("def"), body)
+	defn := mkLF(proofTestAstCfg.NewAtom("def"), body)
 
 	_, err := MatchFromDefn(defn)
 	if err == nil {
@@ -466,9 +466,9 @@ func TestMatchFromDefn_DuplicateParams_Iff(t *testing.T) {
 }
 
 func TestDistinctVars(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	if !distinctVars([]*lg.Variable{x, y}) {
 		t.Error("X, Y should be distinct")
@@ -489,9 +489,9 @@ func TestDistinctVars(t *testing.T) {
 // ==========================================================================
 
 func TestBetaReduce_CaptureDetected(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	// Lambda(X, forall Y. X = Y)
 	eq := &lg.Eq{T1: x, T2: y}
@@ -529,9 +529,9 @@ func TestBetaReduce_CaptureDetected(t *testing.T) {
 }
 
 func TestBetaReduce_NoCaptureSucceeds(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	c := proofMkConst("c", s)
 
 	// Lambda(X, X) applied to c — identity, no capture possible
 	lam := &lg.Lambda{Variables: []*lg.Variable{x}, Body: x}
@@ -547,11 +547,11 @@ func TestBetaReduce_NoCaptureSucceeds(t *testing.T) {
 }
 
 func TestApplyMatch_CaptureNotCorrupted(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
 	// match: {f: Lambda(X, forall Y. X = Y)}
 	eq := &lg.Eq{T1: x, T2: y}
@@ -577,11 +577,11 @@ func TestApplyMatch_CaptureNotCorrupted(t *testing.T) {
 // ==========================================================================
 
 func TestApplyMatchAltRec_LambdaApplyError_NotNil(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
 	// match: {f: Lambda(X, forall Y. X = Y)}
 	eq := &lg.Eq{T1: x, T2: y}
@@ -606,11 +606,11 @@ func TestApplyMatchAltRec_LambdaApplyError_NotNil(t *testing.T) {
 // ==========================================================================
 
 func TestApplyUnfoldRec_CaptureReturnsOriginal(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
+	f := proofMkConst("f", fs)
 
 	// Lambda whose body has bound Y: Lambda(X, forall Y. X = Y)
 	eq := &lg.Eq{T1: x, T2: y}
@@ -634,12 +634,12 @@ func TestApplyUnfoldRec_CaptureReturnsOriginal(t *testing.T) {
 // ==========================================================================
 
 func TestApplyUnfoldGoal_FiltersConstantDeclPremise(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	c := mkConst("c", s)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s)
+	a := proofMkConst("a", s)
 
 	// Lambda: f(X) = c
 	lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
@@ -647,12 +647,12 @@ func TestApplyUnfoldGoal_FiltersConstantDeclPremise(t *testing.T) {
 	freeVars := unfoldRhsVars(union)
 
 	// Goal with ConstantDecl(f) premise + conclusion f(a)
-	cd := testAstCfg.NewConstantDecl(f)
+	cd := proofTestAstCfg.NewConstantDecl(f)
 	app := lg.MustApply(f, a)
-	sb := testAstCfg.NewSchemaBody(cd, app)
-	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+	sb := proofTestAstCfg.NewSchemaBody(cd, app)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
-	result := applyUnfoldGoal(testAstCfg, lg.Key(f), union, freeVars, goal)
+	result := applyUnfoldGoal(proofTestAstCfg, lg.Key(f), union, freeVars, goal)
 
 	// The ConstantDecl(f) premise should be FILTERED OUT
 	// (Python: transformed to lambda-typed, then filtered by is_lambda check)
@@ -680,13 +680,13 @@ func TestApplyUnfoldGoal_FiltersConstantDeclPremise(t *testing.T) {
 }
 
 func TestApplyUnfoldGoal_KeepsNonMatchingConstantDecl(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	g := mkConst("g", fs)
-	c := mkConst("c", s)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	g := proofMkConst("g", fs)
+	c := proofMkConst("c", s)
+	a := proofMkConst("a", s)
 
 	// Lambda: f(X) = c
 	lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
@@ -694,12 +694,12 @@ func TestApplyUnfoldGoal_KeepsNonMatchingConstantDecl(t *testing.T) {
 	freeVars := unfoldRhsVars(union)
 
 	// Goal with ConstantDecl(g) premise (NOT the unfold key f) + conclusion f(a)
-	cd := testAstCfg.NewConstantDecl(g)
+	cd := proofTestAstCfg.NewConstantDecl(g)
 	app := lg.MustApply(f, a)
-	sb := testAstCfg.NewSchemaBody(cd, app)
-	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+	sb := proofTestAstCfg.NewSchemaBody(cd, app)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
-	result := applyUnfoldGoal(testAstCfg, lg.Key(f), union, freeVars, goal)
+	result := applyUnfoldGoal(proofTestAstCfg, lg.Key(f), union, freeVars, goal)
 
 	// ConstantDecl(g) should be KEPT (different symbol from unfold key)
 	prems := GoalPrems(result)
@@ -724,11 +724,11 @@ func TestApplyUnfoldGoal_KeepsNonMatchingConstantDecl(t *testing.T) {
 // ==========================================================================
 
 func TestApplyUnfoldRec_NonLambdaPopAppliesArgs(t *testing.T) {
-	s := mkSort("S")
+	s := proofMkSort("S")
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	g := mkConst("g", fs)
-	a := mkConst("a", s)
+	f := proofMkConst("f", fs)
+	g := proofMkConst("g", fs)
+	a := proofMkConst("a", s)
 
 	// Union contains a non-lambda Const (g) instead of a Lambda.
 	// Python: Symbol.__call__(*args) creates Apply(g, args).
@@ -757,17 +757,17 @@ func TestApplyUnfoldRec_NonLambdaPopAppliesArgs(t *testing.T) {
 }
 
 func TestApplyUnfoldRec_NonLambdaPopSortMismatch(t *testing.T) {
-	s := mkSort("S")
+	s := proofMkSort("S")
 	fs, _ := lg.NewFunctionSort(s, s)
-	f := mkConst("f", fs)
-	c := mkConst("c", s) // sort S, NOT a function sort
+	f := proofMkConst("f", fs)
+	c := proofMkConst("c", s) // sort S, NOT a function sort
 
 	// Union contains a non-lambda, non-function-sort Const.
 	// NewApply would fail (sort mismatch), so the fallback returns c itself.
 	union := &ExprListOrLambdaUnion{Items: []lg.Expr{c}}
 
 	// Formula: f(a)
-	a := mkConst("a", s)
+	a := proofMkConst("a", s)
 	fmla := lg.MustApply(f, a)
 	result := applyUnfoldRec(lg.Key(f), union, fmla)
 

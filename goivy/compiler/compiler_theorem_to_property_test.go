@@ -185,7 +185,7 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 	for name, entry := range mod.Sig.Symbols.All() {
 		if name != "f" {
 			// This is the renamed symbol; its sort should NOT be "t"
-			sortName := il.SortName(entry.Sort)
+			sortName := il.IvySortName(entry.Sort)
 			if sortName == "t" {
 				t.Errorf("renamed symbol %q should have renamed sort, got %q", name, sortName)
 			}
@@ -368,7 +368,7 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 		t.Fatalf("expected 1 premise, got %d", len(prems))
 	}
 	if s, ok := prems[0].(lg.Sort); ok {
-		name := il.SortName(s)
+		name := il.IvySortName(s)
 		if name != "t__0" {
 			t.Errorf("expected renamed sort 't__0', got %q", name)
 		}

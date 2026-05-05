@@ -603,7 +603,7 @@ func (m *Module) FindAction(name string) (Action, bool) {
 
 // IsVariant returns true if rsort is a variant of lsort.
 func (m *Module) IsVariant(lsort, rsort lg.Sort) bool {
-	lname := il.SortName(lsort)
+	lname := il.IvySortName(lsort)
 	variants, ok := m.Variants[lname]
 	if !ok {
 		return false
@@ -619,7 +619,7 @@ func (m *Module) IsVariant(lsort, rsort lg.Sort) bool {
 // VariantIndex returns the index of variant rsort within lsort's variants.
 // Returns -1 if not found.
 func (m *Module) VariantIndex(lsort, rsort lg.Sort) int {
-	lname := il.SortName(lsort)
+	lname := il.IvySortName(lsort)
 	variants, ok := m.Variants[lname]
 	if !ok {
 		return -1
@@ -642,7 +642,7 @@ func (m *Module) SortCard(sort lg.Sort) int {
 	if il.IsFunctionSort(sort) {
 		return -1
 	}
-	name := il.SortName(sort)
+	name := il.IvySortName(sort)
 	attr := m.Cfg.IuCfg.ComposeNames(name, "cardinality")
 	if val, ok := m.Attributes[attr]; ok {
 		// Python: int(self.attributes[attr].rep)
@@ -697,9 +697,9 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 			if fs, ok := destr.CSort.(*lg.FunctionSort); ok {
 				dom := fs.Domain()
 				for _, d := range dom[1:] {
-					deps = append(deps, il.SortName(d))
+					deps = append(deps, il.IvySortName(d))
 				}
-				deps = append(deps, il.SortName(fs.Range()))
+				deps = append(deps, il.IvySortName(fs.Range()))
 			}
 		}
 		return deps
@@ -731,7 +731,7 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 		if vs, ok := m.Variants[sortName]; ok {
 			deps := make([]string, len(vs))
 			for i, v := range vs {
-				deps[i] = il.SortName(v)
+				deps[i] = il.IvySortName(v)
 			}
 			return deps
 		}

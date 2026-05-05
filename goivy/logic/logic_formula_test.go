@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestEqValid(t *testing.T) {
+func TestLogicEqValid(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
@@ -23,7 +23,7 @@ func TestEqValid(t *testing.T) {
 	}
 }
 
-func TestEqDifferentSorts(t *testing.T) {
+func TestLogicEqDifferentSorts(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	T := &UninterpretedSort{Name: "T"}
 	X, _ := NewVariable("X", S)
@@ -38,9 +38,9 @@ func TestEqDifferentSorts(t *testing.T) {
 	}
 }
 
-func TestEqHigherOrder(t *testing.T) {
+func TestLogicEqHigherOrder(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	fs := mustFuncSort(t, S, Boolean)
+	fs := logicMustFuncSort(t, S, Boolean)
 	X, _ := NewVariable("X", fs)
 	Y, _ := NewVariable("Y", fs)
 	_, err := NewEq(X, Y)
@@ -49,7 +49,7 @@ func TestEqHigherOrder(t *testing.T) {
 	}
 }
 
-func TestEqTopSort(t *testing.T) {
+func TestLogicEqTopSort(t *testing.T) {
 	X, _ := NewVariable("X", TopS)
 	S := &UninterpretedSort{Name: "S"}
 	Y, _ := NewVariable("Y", S)
@@ -59,7 +59,7 @@ func TestEqTopSort(t *testing.T) {
 	}
 }
 
-func TestNotString(t *testing.T) {
+func TestLogicNotString(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
@@ -79,7 +79,7 @@ func TestNotString(t *testing.T) {
 	}
 }
 
-func TestNotBadSort(t *testing.T) {
+func TestLogicNotBadSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	_, err := NewNot(X) // X is sort S, not Boolean
@@ -88,11 +88,11 @@ func TestNotBadSort(t *testing.T) {
 	}
 }
 
-func TestAndOr(t *testing.T) {
+func TestLogicAndOr(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", logicMustFuncSort(t, S, S, Boolean))
 	app1, _ := NewApply(leq, X, Y)
 	app2, _ := NewApply(leq, Y, X)
 
@@ -115,7 +115,7 @@ func TestAndOr(t *testing.T) {
 	}
 }
 
-func TestAndBadSort(t *testing.T) {
+func TestLogicAndBadSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S) // S, not Boolean
 	_, err := NewAnd(X)
@@ -124,7 +124,7 @@ func TestAndBadSort(t *testing.T) {
 	}
 }
 
-func TestTrueFalse(t *testing.T) {
+func TestLogicTrueFalse(t *testing.T) {
 	// True is empty And → Python ugly → "true". False is empty Or → "false".
 	if True.String() != "true" {
 		t.Errorf("True = %q, want %q", True.String(), "true")
@@ -134,11 +134,11 @@ func TestTrueFalse(t *testing.T) {
 	}
 }
 
-func TestImpliesIff(t *testing.T) {
+func TestLogicImpliesIff(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", logicMustFuncSort(t, S, S, Boolean))
 	a, _ := NewApply(leq, X, Y)
 	b, _ := NewApply(leq, Y, X)
 
@@ -161,12 +161,12 @@ func TestImpliesIff(t *testing.T) {
 	}
 }
 
-func TestForAll(t *testing.T) {
+func TestLogicForAll(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	Z, _ := NewVariable("Z", S)
-	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", logicMustFuncSort(t, S, S, Boolean))
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYZ, _ := NewApply(leq, Y, Z)
 	leqXZ, _ := NewApply(leq, X, Z)
@@ -183,14 +183,14 @@ func TestForAll(t *testing.T) {
 	}
 }
 
-func TestForAllEmpty(t *testing.T) {
+func TestLogicForAllEmpty(t *testing.T) {
 	_, err := NewForAll([]*Variable{}, True)
 	if err == nil {
 		t.Error("Expected error for empty variables")
 	}
 }
 
-func TestForAllBadBody(t *testing.T) {
+func TestLogicForAllBadBody(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	_, err := NewForAll([]*Variable{X}, X) // body is sort S
@@ -199,7 +199,7 @@ func TestForAllBadBody(t *testing.T) {
 	}
 }
 
-func TestExists(t *testing.T) {
+func TestLogicExists(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
@@ -210,7 +210,7 @@ func TestExists(t *testing.T) {
 	t.Log("Exists:", ex.String())
 }
 
-func TestLambda(t *testing.T) {
+func TestLogicLambda(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
@@ -221,7 +221,7 @@ func TestLambda(t *testing.T) {
 	t.Log("Lambda:", lam.String())
 }
 
-func TestIte(t *testing.T) {
+func TestLogicIte(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
@@ -239,7 +239,7 @@ func TestIte(t *testing.T) {
 	}
 }
 
-func TestIteBadCond(t *testing.T) {
+func TestLogicIteBadCond(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	_, err := NewIte(X, X, X) // cond is S, not Boolean
@@ -248,7 +248,7 @@ func TestIteBadCond(t *testing.T) {
 	}
 }
 
-func TestGloballyEventually(t *testing.T) {
+func TestLogicGloballyEventually(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
@@ -274,7 +274,7 @@ func TestGloballyEventually(t *testing.T) {
 	}
 }
 
-func TestWhenOperator(t *testing.T) {
+func TestLogicWhenOperator(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	cond, _ := NewEq(X, X)
@@ -292,7 +292,7 @@ func TestWhenOperator(t *testing.T) {
 	}
 }
 
-func TestCond(t *testing.T) {
+func TestLogicCond(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	cond, _ := NewEq(X, X)
@@ -306,12 +306,12 @@ func TestCond(t *testing.T) {
 	}
 }
 
-func TestNamedBinder(t *testing.T) {
+func TestLogicNamedBinder(t *testing.T) {
 	X, _ := NewVariable("X", TopS)
 	Y, _ := NewVariable("Y", TopS)
 	Z, _ := NewVariable("Z", TopS)
 
-	f := NewConst("f", mustFuncSort(t, TopS, TopS, Boolean))
+	f := NewConst("f", logicMustFuncSort(t, TopS, TopS, Boolean))
 	fXY, _ := NewApply(f, X, Y)
 	fXZ, _ := NewApply(f, X, Z)
 	andTerm, _ := NewAnd(fXY, fXZ)
@@ -335,7 +335,7 @@ func TestNamedBinder(t *testing.T) {
 	}
 }
 
-func TestNamedBinderNoVars(t *testing.T) {
+func TestLogicNamedBinderNoVars(t *testing.T) {
 	X, _ := NewVariable("X", TopS)
 	S := &UninterpretedSort{Name: "S"}
 	Z, _ := NewVariable("Z", S)
@@ -348,7 +348,7 @@ func TestNamedBinderNoVars(t *testing.T) {
 	t.Log("NamedBinder sort:", b.NodeSort().String())
 }
 
-func TestNamedBinderCall(t *testing.T) {
+func TestLogicNamedBinderCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
@@ -364,7 +364,7 @@ func TestNamedBinderCall(t *testing.T) {
 	}
 }
 
-func TestFormulaChildren(t *testing.T) {
+func TestLogicFormulaChildren(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
@@ -377,7 +377,7 @@ func TestFormulaChildren(t *testing.T) {
 	}
 }
 
-func TestFormulaEquality(t *testing.T) {
+func TestLogicFormulaEquality(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
@@ -402,11 +402,11 @@ func Y_() *Variable {
 }
 
 // Python __main__ antisymmetric example
-func TestAntisymmetric(t *testing.T) {
+func TestLogicAntisymmetric(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", logicMustFuncSort(t, S, S, Boolean))
 
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYX, _ := NewApply(leq, Y, X)
@@ -458,7 +458,7 @@ func FuzzAndConstruction(f *testing.F) {
 //
 // Python output:  forall T. T:lclock <= _T
 // Wrong Go output (vars-first): forall T:lclock. T <= _T
-func TestDropAnnotationsQuantifierOrder(t *testing.T) {
+func TestLogicDropAnnotationsQuantifierOrder(t *testing.T) {
 	lclock := &UninterpretedSort{Name: "lclock"}
 
 	// Sub-test 1: ForAll with polymorphic <=
@@ -468,7 +468,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("ForAll_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		body, err := NewApply(le, T, U)
 		if err != nil {
@@ -489,7 +489,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("Exists_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		body, err := NewApply(le, T, U)
 		if err != nil {
@@ -510,7 +510,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("Lambda_polymorphic_le", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		body, err := NewApply(le, T, U)
 		if err != nil {
@@ -533,7 +533,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("ForAll_nonpolymorphic_func", func(t *testing.T) {
 		S := &UninterpretedSort{Name: "S"}
 		X, _ := NewVariable("X", S)
-		fSort := mustFuncSort(t, S, Boolean)
+		fSort := logicMustFuncSort(t, S, Boolean)
 		f := NewConst("f", fSort)
 		body, err := NewApply(f, X)
 		if err != nil {
@@ -560,7 +560,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("ForAll_multi_vars_mixed", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		leApp, err := NewApply(le, T, U)
 		if err != nil {
@@ -586,7 +586,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("NamedBinder_vars_before_body", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		body, err := NewApply(le, T, U)
 		if err != nil {
@@ -610,7 +610,7 @@ func TestDropAnnotationsQuantifierOrder(t *testing.T) {
 	t.Run("ForAll_nested", func(t *testing.T) {
 		T, _ := NewVariable("T", lclock)
 		U, _ := NewVariable("U", lclock)
-		leSort := mustFuncSort(t, lclock, lclock, Boolean)
+		leSort := logicMustFuncSort(t, lclock, lclock, Boolean)
 		le := NewConst("<=", leSort)
 		innerBody, err := NewApply(le, U, T)
 		if err != nil {

@@ -123,14 +123,14 @@ func ToTableLookup(trans *module.Clauses, invariant lg.Expr) (*module.Clauses, l
 	}
 
 	// Build new defs including the freshly introduced arg definitions
-	allDefs := make([]*il.Definition, 0, len(defs)+len(newDefs))
+	allDefs := make([]*il.IvyDefinition, 0, len(defs)+len(newDefs))
 	for _, d := range defs {
-		if def, ok := d.(*il.Definition); ok {
+		if def, ok := d.(*il.IvyDefinition); ok {
 			allDefs = append(allDefs, def)
 		}
 	}
 	for _, d := range newDefs {
-		if def, ok := d.(*il.Definition); ok {
+		if def, ok := d.(*il.IvyDefinition); ok {
 			allDefs = append(allDefs, def)
 		}
 	}
@@ -143,8 +143,8 @@ func ToTableLookup(trans *module.Clauses, invariant lg.Expr) (*module.Clauses, l
 		// invariant becomes: implies(and(new_def_constraints...), invariant)
 		var constraints []lg.Expr
 		for _, d := range newDefs {
-			if def, ok := d.(*il.Definition); ok {
-				constraints = append(constraints, defToConstraint(def))
+			if def, ok := d.(*il.IvyDefinition); ok {
+				constraints = append(constraints, mcDefToConstraint(def))
 			}
 		}
 		if len(constraints) > 0 {
@@ -192,7 +192,7 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Const, argSym func(lg.Sort) *lg.C
 		} else {
 			sym := argSym(x.NodeSort())
 			argSyms[i] = sym
-			*newDefs = append(*newDefs, il.NewDefinition(sym, recur(x)))
+			*newDefs = append(*newDefs, il.NewIvyDefinition(sym, recur(x)))
 		}
 	}
 
@@ -246,7 +246,7 @@ func cartesianProductNodes(sets [][]lg.Expr) [][]lg.Expr {
 }
 
 // defToConstraint converts a definition to a constraint formula.
-func defToConstraint(def *il.Definition) lg.Expr {
+func mcDefToConstraint(def *il.IvyDefinition) lg.Expr {
 	result := il.DefinitionToConstraint(def)
 	if xtracer.Enabled {
 		lhsSort := def.Lhs.NodeSort()

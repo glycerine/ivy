@@ -499,7 +499,7 @@ func TestSkolemizeFormula(t *testing.T) {
 }
 
 func TestConjoin(t *testing.T) {
-	if !isTrue(conjoin(lg.True, lg.True)) {
+	if !actionsUpdateIsTrue(conjoin(lg.True, lg.True)) {
 		t.Error("conjoin(true, true) should be true")
 	}
 	p := lg.NewConst("p", lg.Boolean)
@@ -507,13 +507,13 @@ func TestConjoin(t *testing.T) {
 	if result != p {
 		t.Errorf("conjoin(true, p) should be p, got %s", result)
 	}
-	if !isFalse(conjoin(lg.False, p)) {
+	if !actionsUpdateIsFalse(conjoin(lg.False, p)) {
 		t.Error("conjoin(false, p) should be false")
 	}
 }
 
 func TestDisjoin(t *testing.T) {
-	if !isFalse(disjoin(lg.False, lg.False)) {
+	if !actionsUpdateIsFalse(disjoin(lg.False, lg.False)) {
 		t.Error("disjoin(false, false) should be false")
 	}
 	p := lg.NewConst("p", lg.Boolean)
@@ -521,7 +521,7 @@ func TestDisjoin(t *testing.T) {
 	if result != p {
 		t.Errorf("disjoin(false, p) should be p, got %s", result)
 	}
-	if !isTrue(disjoin(lg.True, p)) {
+	if !actionsUpdateIsTrue(disjoin(lg.True, p)) {
 		t.Error("disjoin(true, p) should be true")
 	}
 }

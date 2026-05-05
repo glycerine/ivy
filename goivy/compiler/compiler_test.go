@@ -15,7 +15,7 @@ func newTestCompiler() *Compiler {
 	sig := il.NewSig()
 	mod := module.New()
 	mod.Sig = sig
-	return New(sig, mod)
+	return NewCompiler(sig, mod)
 }
 
 // TestCompileTrueFalse checks that "true" and "false" atoms compile correctly.
@@ -28,7 +28,7 @@ func TestCompileTrueFalse(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile true: %v", err)
 	}
-	if !il.IsTrue(result) {
+	if !il.IvyIsTrue(result) {
 		t.Errorf("expected true (empty And), got %T: %s", result, result)
 	}
 
@@ -37,7 +37,7 @@ func TestCompileTrueFalse(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile false: %v", err)
 	}
-	if !il.IsFalse(result) {
+	if !il.IvyIsFalse(result) {
 		t.Errorf("expected false (empty Or), got %T: %s", result, result)
 	}
 }
@@ -102,7 +102,7 @@ func TestCompileNot(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Not, got %T", result)
 	}
-	if !il.IsTrue(not.Body) {
+	if !il.IvyIsTrue(not.Body) {
 		t.Errorf("expected true body, got %s", not.Body)
 	}
 }
@@ -124,10 +124,10 @@ func TestCompileImplies(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Implies, got %T", result)
 	}
-	if !il.IsTrue(imp.T1) {
+	if !il.IvyIsTrue(imp.T1) {
 		t.Errorf("expected true lhs")
 	}
-	if !il.IsFalse(imp.T2) {
+	if !il.IvyIsFalse(imp.T2) {
 		t.Errorf("expected false rhs")
 	}
 }
@@ -315,7 +315,7 @@ func TestCompileGlobally(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Globally, got %T", result)
 	}
-	if !il.IsTrue(glob.Body) {
+	if !il.IvyIsTrue(glob.Body) {
 		t.Errorf("expected true body")
 	}
 }
@@ -336,7 +336,7 @@ func TestCompileEventually(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Eventually, got %T", result)
 	}
-	if !il.IsTrue(ev.Body) {
+	if !il.IvyIsTrue(ev.Body) {
 		t.Errorf("expected true body")
 	}
 }
@@ -567,14 +567,14 @@ func TestCompileIte(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *lg.Ite, got %T", result)
 	}
-	if !il.IsTrue(iteNode.Cond) {
+	if !il.IvyIsTrue(iteNode.Cond) {
 		t.Errorf("expected true condition")
 	}
 }
 
 // TestNewCompiler checks that New creates a valid Compiler.
 func TestNewCompiler(t *testing.T) {
-	c := New(nil, nil)
+	c := NewCompiler(nil, nil)
 	if c.Sig == nil {
 		t.Error("Sig should not be nil")
 	}
@@ -604,7 +604,7 @@ func TestCompileEmptyAnd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile empty and: %v", err)
 	}
-	if !il.IsTrue(result) {
+	if !il.IvyIsTrue(result) {
 		t.Errorf("expected true, got %s", result)
 	}
 }
@@ -618,7 +618,7 @@ func TestCompileEmptyOr(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile empty or: %v", err)
 	}
-	if !il.IsFalse(result) {
+	if !il.IvyIsFalse(result) {
 		t.Errorf("expected false, got %s", result)
 	}
 }
@@ -830,7 +830,7 @@ export a
 		sig := il.NewSig()
 		mod := module.New()
 		mod.Sig = sig
-		cmplr := New(sig, mod)
+		cmplr := NewCompiler(sig, mod)
 		di := NewDomainSetup(cmplr)
 		for _, d := range result.Decls {
 			_ = di.ProcessDecl(d)

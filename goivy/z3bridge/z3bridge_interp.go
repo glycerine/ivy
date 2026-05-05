@@ -17,8 +17,8 @@ import (
 // MkInterpolant marks a formula for interpolation.
 // The expression must have Boolean sort.
 // Corresponds to Python's z3.Interpolant(a) and C's Z3_mk_interpolant.
-func (ctx *Z3Context) MkInterpolant(e Expr) Expr {
-	var r Expr
+func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
+	var r Z3Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_interpolant(ctx.c, e.c))
 	})
@@ -48,8 +48,8 @@ func NewInterpolationZ3Context() *Z3Context {
 // MkInterpolant. Returns the interpolant expressions if UNSAT, or an error
 // if SAT/unknown.
 // Corresponds to Python's z3.tree_interpolant / Z3_compute_interpolant.
-func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
-	var result []Expr
+func (ctx *Z3Context) ComputeInterpolant(pattern Z3Expr) ([]Z3Expr, error) {
+	var result []Z3Expr
 	var resErr error
 
 	ctx.do(func() {
@@ -72,7 +72,7 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 			// UNSAT — extract interpolants from the ast_vector
 			C.Z3_ast_vector_inc_ref(ctx.c, interp)
 			n := int(C.Z3_ast_vector_size(ctx.c, interp))
-			result = make([]Expr, n)
+			result = make([]Z3Expr, n)
 			for i := 0; i < n; i++ {
 				ast := C.Z3_ast_vector_get(ctx.c, interp, C.uint(i))
 				result[i] = ctx.newExpr(ast)

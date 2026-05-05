@@ -34,7 +34,7 @@ func negLit(relname string, args ...logic.Expr) *UnitResLiteral {
 
 // ---------- LitConsing tests ----------
 
-func TestLitIDBasic(t *testing.T) {
+func TestUnitResLitIDBasic(t *testing.T) {
 	lc := NewLitConsing()
 	l1 := posLit("p", v("V"))
 	l2 := posLit("q", c("x"))
@@ -55,7 +55,7 @@ func TestLitIDBasic(t *testing.T) {
 	}
 }
 
-func TestLitIDDifferentPolarity(t *testing.T) {
+func TestUnitResLitIDDifferentPolarity(t *testing.T) {
 	lc := NewLitConsing()
 	l1 := posLit("p", c("a"))
 	l2 := negLit("p", c("a"))
@@ -68,7 +68,7 @@ func TestLitIDDifferentPolarity(t *testing.T) {
 	}
 }
 
-func TestLitIDDifferentArgs(t *testing.T) {
+func TestUnitResLitIDDifferentArgs(t *testing.T) {
 	lc := NewLitConsing()
 	l1 := posLit("p", c("a"), c("b"))
 	l2 := posLit("p", c("b"), c("a"))
@@ -83,7 +83,7 @@ func TestLitIDDifferentArgs(t *testing.T) {
 
 // ---------- Canonize tests ----------
 
-func TestCanonizeLiteral(t *testing.T) {
+func TestUnitResCanonizeLiteral(t *testing.T) {
 	lit := posLit("p", c("t"), v("X"), v("Y"))
 	canon, subs := CanonizeLiteral(lit)
 
@@ -94,22 +94,22 @@ func TestCanonizeLiteral(t *testing.T) {
 		t.Error("relname should be preserved")
 	}
 	// First arg is constant "t", should be unchanged
-	if rep(canon.Atom.Args[0]) != "t" {
-		t.Errorf("constant arg should be unchanged, got %s", rep(canon.Atom.Args[0]))
+	if unitresRep(canon.Atom.Args[0]) != "t" {
+		t.Errorf("constant arg should be unchanged, got %s", unitresRep(canon.Atom.Args[0]))
 	}
 	// Args 1 and 2 should be __v1 and __v2
-	if rep(canon.Atom.Args[1]) != "__v1" {
-		t.Errorf("expected __v1, got %s", rep(canon.Atom.Args[1]))
+	if unitresRep(canon.Atom.Args[1]) != "__v1" {
+		t.Errorf("expected __v1, got %s", unitresRep(canon.Atom.Args[1]))
 	}
-	if rep(canon.Atom.Args[2]) != "__v2" {
-		t.Errorf("expected __v2, got %s", rep(canon.Atom.Args[2]))
+	if unitresRep(canon.Atom.Args[2]) != "__v2" {
+		t.Errorf("expected __v2, got %s", unitresRep(canon.Atom.Args[2]))
 	}
 	if len(subs) != 2 {
 		t.Errorf("expected 2 substitutions, got %d", len(subs))
 	}
 }
 
-func TestCanonizeLiteralRepeatedVars(t *testing.T) {
+func TestUnitResCanonizeLiteralRepeatedVars(t *testing.T) {
 	lit := negLit("p", c("t"), v("X"), v("X"))
 	canon, _ := CanonizeLiteral(lit)
 
@@ -117,42 +117,42 @@ func TestCanonizeLiteralRepeatedVars(t *testing.T) {
 		t.Error("negative polarity should be preserved")
 	}
 	// Both X occurrences should map to the same canonical constant
-	if rep(canon.Atom.Args[1]) != rep(canon.Atom.Args[2]) {
+	if unitresRep(canon.Atom.Args[1]) != unitresRep(canon.Atom.Args[2]) {
 		t.Errorf("repeated variables should canonize to same constant: %s vs %s",
-			rep(canon.Atom.Args[1]), rep(canon.Atom.Args[2]))
+			unitresRep(canon.Atom.Args[1]), unitresRep(canon.Atom.Args[2]))
 	}
 }
 
-func TestCanonizeLiteralVars(t *testing.T) {
+func TestUnitResCanonizeLiteralVars(t *testing.T) {
 	lit := posLit("p", c("t"), v("X"), v("Y"))
 	canon := CanonizeLiteralVars(lit)
 
 	if !isVar(canon.Atom.Args[1]) {
 		t.Error("canonized var should remain a Var")
 	}
-	if rep(canon.Atom.Args[1]) != "V1" {
-		t.Errorf("expected V1, got %s", rep(canon.Atom.Args[1]))
+	if unitresRep(canon.Atom.Args[1]) != "V1" {
+		t.Errorf("expected V1, got %s", unitresRep(canon.Atom.Args[1]))
 	}
-	if rep(canon.Atom.Args[2]) != "V2" {
-		t.Errorf("expected V2, got %s", rep(canon.Atom.Args[2]))
+	if unitresRep(canon.Atom.Args[2]) != "V2" {
+		t.Errorf("expected V2, got %s", unitresRep(canon.Atom.Args[2]))
 	}
 }
 
-func TestCanonizeLiteralUnique(t *testing.T) {
+func TestUnitResCanonizeLiteralUnique(t *testing.T) {
 	lit := posLit("p", v("X"), v("Y"))
 	canon := CanonizeLiteralUnique(lit)
 
-	if rep(canon.Atom.Args[0]) != "W0" {
-		t.Errorf("expected W0, got %s", rep(canon.Atom.Args[0]))
+	if unitresRep(canon.Atom.Args[0]) != "W0" {
+		t.Errorf("expected W0, got %s", unitresRep(canon.Atom.Args[0]))
 	}
-	if rep(canon.Atom.Args[1]) != "W1" {
-		t.Errorf("expected W1, got %s", rep(canon.Atom.Args[1]))
+	if unitresRep(canon.Atom.Args[1]) != "W1" {
+		t.Errorf("expected W1, got %s", unitresRep(canon.Atom.Args[1]))
 	}
 }
 
 // ---------- LitEqual / AtomEqual tests ----------
 
-func TestLitEqual(t *testing.T) {
+func TestUnitResLitEqual(t *testing.T) {
 	l1 := posLit("p", c("a"), c("b"))
 	l2 := posLit("p", c("a"), c("b"))
 	l3 := negLit("p", c("a"), c("b"))
@@ -165,7 +165,7 @@ func TestLitEqual(t *testing.T) {
 	}
 }
 
-func TestAtomEqual(t *testing.T) {
+func TestUnitResAtomEqual(t *testing.T) {
 	a1 := resolution.NewAtom("p", c("a"))
 	a2 := resolution.NewAtom("p", c("a"))
 	a3 := resolution.NewAtom("q", c("a"))
@@ -180,35 +180,35 @@ func TestAtomEqual(t *testing.T) {
 
 // ---------- Substitution tests ----------
 
-func TestSubstituteLit(t *testing.T) {
+func TestUnitResSubstituteLit(t *testing.T) {
 	lit := posLit("p", v("X"), c("b"))
 	subs := resolution.Env{"X": c("a")}
 	result := SubstituteLit(lit, subs)
 
-	if rep(result.Atom.Args[0]) != "a" {
-		t.Errorf("variable X should be substituted to 'a', got %s", rep(result.Atom.Args[0]))
+	if unitresRep(result.Atom.Args[0]) != "a" {
+		t.Errorf("variable X should be substituted to 'a', got %s", unitresRep(result.Atom.Args[0]))
 	}
-	if rep(result.Atom.Args[1]) != "b" {
-		t.Errorf("constant 'b' should be unchanged, got %s", rep(result.Atom.Args[1]))
+	if unitresRep(result.Atom.Args[1]) != "b" {
+		t.Errorf("constant 'b' should be unchanged, got %s", unitresRep(result.Atom.Args[1]))
 	}
 }
 
-func TestSubstituteConstantsLit(t *testing.T) {
+func TestUnitResSubstituteConstantsLit(t *testing.T) {
 	lit := posLit("p", c("a"), c("b"))
 	subs := map[string]logic.Expr{"a": c("c")}
 	result := SubstituteConstantsLit(lit, subs)
 
-	if rep(result.Atom.Args[0]) != "c" {
-		t.Errorf("constant 'a' should be substituted to 'c', got %s", rep(result.Atom.Args[0]))
+	if unitresRep(result.Atom.Args[0]) != "c" {
+		t.Errorf("constant 'a' should be substituted to 'c', got %s", unitresRep(result.Atom.Args[0]))
 	}
-	if rep(result.Atom.Args[1]) != "b" {
-		t.Errorf("constant 'b' should be unchanged, got %s", rep(result.Atom.Args[1]))
+	if unitresRep(result.Atom.Args[1]) != "b" {
+		t.Errorf("constant 'b' should be unchanged, got %s", unitresRep(result.Atom.Args[1]))
 	}
 }
 
 // ---------- Tautology / simplification tests ----------
 
-func TestIsTautEqualityLit(t *testing.T) {
+func TestUnitResIsTautEqualityLit(t *testing.T) {
 	lit := posLit("=", c("a"), c("a"))
 	if !isTautEqualityLit(lit) {
 		t.Error("a=a should be tautological")
@@ -219,7 +219,7 @@ func TestIsTautEqualityLit(t *testing.T) {
 	}
 }
 
-func TestIsTautology(t *testing.T) {
+func TestUnitResIsTautology(t *testing.T) {
 	// p(a) | ~p(a) is tautological
 	cl := []*UnitResLiteral{
 		posLit("p", c("a")),
@@ -239,7 +239,7 @@ func TestIsTautology(t *testing.T) {
 	}
 }
 
-func TestSimplifyClauseRemovesDuplicates(t *testing.T) {
+func TestUnitResSimplifyClauseRemovesDuplicates(t *testing.T) {
 	cl := []*UnitResLiteral{
 		posLit("p", c("a")),
 		posLit("p", c("a")),
@@ -251,7 +251,7 @@ func TestSimplifyClauseRemovesDuplicates(t *testing.T) {
 	}
 }
 
-func TestSimplifyClauseVacLit(t *testing.T) {
+func TestUnitResSimplifyClauseVacLit(t *testing.T) {
 	// ~(a=a) is vacuous, should be removed
 	cl := []*UnitResLiteral{
 		negLit("=", c("a"), c("a")),
@@ -265,7 +265,7 @@ func TestSimplifyClauseVacLit(t *testing.T) {
 
 // ---------- Ground/equality predicate tests ----------
 
-func TestIsGroundLit(t *testing.T) {
+func TestUnitResIsGroundLit(t *testing.T) {
 	if !isGroundLit(posLit("p", c("a"))) {
 		t.Error("p(a) should be ground")
 	}
@@ -274,7 +274,7 @@ func TestIsGroundLit(t *testing.T) {
 	}
 }
 
-func TestIsGroundClause(t *testing.T) {
+func TestUnitResIsGroundClause(t *testing.T) {
 	cl := []*UnitResLiteral{posLit("p", c("a")), posLit("q", c("b"))}
 	if !isGroundClause(cl) {
 		t.Error("all ground clause should be ground")
@@ -285,7 +285,7 @@ func TestIsGroundClause(t *testing.T) {
 	}
 }
 
-func TestIsEqualityDisequalityLit(t *testing.T) {
+func TestUnitResIsEqualityDisequalityLit(t *testing.T) {
 	eq := posLit("=", c("a"), c("b"))
 	neq := negLit("=", c("a"), c("b"))
 	p := posLit("p", c("a"))
@@ -306,17 +306,17 @@ func TestIsEqualityDisequalityLit(t *testing.T) {
 
 // ---------- SwapArgs test ----------
 
-func TestSwapArgsLit(t *testing.T) {
+func TestUnitResSwapArgsLit(t *testing.T) {
 	lit := posLit("=", c("a"), c("b"))
 	swapped := swapArgsLit(lit)
-	if rep(swapped.Atom.Args[0]) != "b" || rep(swapped.Atom.Args[1]) != "a" {
+	if unitresRep(swapped.Atom.Args[0]) != "b" || unitresRep(swapped.Atom.Args[1]) != "a" {
 		t.Error("swapped args should be b, a")
 	}
 }
 
 // ---------- Index tests ----------
 
-func TestIndexLookupCreatesPath(t *testing.T) {
+func TestUnitResIndexLookupCreatesPath(t *testing.T) {
 	idx := NewIndex()
 	lit := posLit("p", c("a"), c("b"))
 	node := indexLookup(idx, lit)
@@ -325,7 +325,7 @@ func TestIndexLookupCreatesPath(t *testing.T) {
 	}
 }
 
-func TestFindSubsuming(t *testing.T) {
+func TestUnitResFindSubsuming(t *testing.T) {
 	idx := NewIndex()
 	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index a literal with variable: p(V)
@@ -341,7 +341,7 @@ func TestFindSubsuming(t *testing.T) {
 	}
 }
 
-func TestFindSubsumed(t *testing.T) {
+func TestUnitResFindSubsumed(t *testing.T) {
 	idx := NewIndex()
 	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index p(a)
@@ -357,7 +357,7 @@ func TestFindSubsumed(t *testing.T) {
 	}
 }
 
-func TestFindUnifying(t *testing.T) {
+func TestUnitResFindUnifying(t *testing.T) {
 	idx := NewIndex()
 	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	lit := posLit("p", c("a"))
@@ -374,12 +374,12 @@ func TestFindUnifying(t *testing.T) {
 
 // ---------- Subsumption tests ----------
 
-func TestTermSubsume(t *testing.T) {
+func TestUnitResTermSubsume(t *testing.T) {
 	env := make(map[string]logic.Expr)
 	if !termSubsume(v("X"), c("a"), env) {
 		t.Error("variable should subsume constant")
 	}
-	if env["X"] == nil || rep(env["X"]) != "a" {
+	if env["X"] == nil || unitresRep(env["X"]) != "a" {
 		t.Error("env should map X to a")
 	}
 
@@ -389,7 +389,7 @@ func TestTermSubsume(t *testing.T) {
 	}
 }
 
-func TestLitSubsume(t *testing.T) {
+func TestUnitResLitSubsume(t *testing.T) {
 	l1 := posLit("p", v("X"))
 	l2 := posLit("p", c("a"))
 	if !litSubsume(l1, l2, make(map[string]logic.Expr)) {
@@ -402,7 +402,7 @@ func TestLitSubsume(t *testing.T) {
 	}
 }
 
-func TestAtomSubsume(t *testing.T) {
+func TestUnitResAtomSubsume(t *testing.T) {
 	a1 := resolution.NewAtom("p", v("X"), v("Y"))
 	a2 := resolution.NewAtom("p", c("a"), c("b"))
 	if !atomSubsume(a1, a2) {
@@ -421,14 +421,14 @@ func TestAtomSubsume(t *testing.T) {
 
 // ---------- UnitRes basic tests ----------
 
-func TestUnitResEmptyClause(t *testing.T) {
+func TestUnitResUnitResEmptyClause(t *testing.T) {
 	ur := NewUnitRes([][]*UnitResLiteral{{}})
 	if !ur.Unsat {
 		t.Error("empty clause should make UnitRes unsat")
 	}
 }
 
-func TestUnitResUnitClause(t *testing.T) {
+func TestUnitResUnitResUnitClause(t *testing.T) {
 	// Single unit clause [p(a)]
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
@@ -441,7 +441,7 @@ func TestUnitResUnitClause(t *testing.T) {
 	}
 }
 
-func TestUnitResDuplicateUnit(t *testing.T) {
+func TestUnitResUnitResDuplicateUnit(t *testing.T) {
 	// Two identical unit clauses should be deduplicated by subsumption
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
@@ -452,7 +452,7 @@ func TestUnitResDuplicateUnit(t *testing.T) {
 	}
 }
 
-func TestUnitResMultiClause(t *testing.T) {
+func TestUnitResUnitResMultiClause(t *testing.T) {
 	// Multi-literal clause [a(), b()]
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("a"), posLit("b")},
@@ -465,7 +465,7 @@ func TestUnitResMultiClause(t *testing.T) {
 	}
 }
 
-func TestUnitResPropagation(t *testing.T) {
+func TestUnitResUnitResPropagation(t *testing.T) {
 	// [~a()] and [a(), b()] should propagate to derive b()
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{negLit("a")},
@@ -486,7 +486,7 @@ func TestUnitResPropagation(t *testing.T) {
 	}
 }
 
-func TestUnitResPropagationChain(t *testing.T) {
+func TestUnitResUnitResPropagationChain(t *testing.T) {
 	// [~a()], [a(), ~b()], [b(), c()] should derive ~b() then c()
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{negLit("a")},
@@ -513,7 +513,7 @@ func TestUnitResPropagationChain(t *testing.T) {
 	}
 }
 
-func TestUnitResUnsat(t *testing.T) {
+func TestUnitResUnitResUnsat(t *testing.T) {
 	// [p()] and [~p()] should derive unsat via empty clause
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p")},
@@ -528,7 +528,7 @@ func TestUnitResUnsat(t *testing.T) {
 
 // ---------- Push/Pop tests ----------
 
-func TestPushPop(t *testing.T) {
+func TestUnitResPushPop(t *testing.T) {
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
 	})
@@ -557,7 +557,7 @@ func TestPushPop(t *testing.T) {
 
 // ---------- keepAtom / keepLit tests ----------
 
-func TestKeepAtom(t *testing.T) {
+func TestUnitResKeepAtom(t *testing.T) {
 	a1 := resolution.NewAtom("p", c("a"))
 	if !keepAtom(a1) {
 		t.Error("p(a) should be kept")
@@ -576,7 +576,7 @@ func TestKeepAtom(t *testing.T) {
 
 // ---------- Invert test ----------
 
-func TestInvert(t *testing.T) {
+func TestUnitResInvert(t *testing.T) {
 	l := posLit("p", c("a"))
 	inv := l.Invert()
 	if inv.Polarity != 0 {
@@ -590,7 +590,7 @@ func TestInvert(t *testing.T) {
 
 // ---------- String test ----------
 
-func TestLiteralString(t *testing.T) {
+func TestUnitResLiteralString(t *testing.T) {
 	pos := posLit("p", c("a"), c("b"))
 	if pos.String() != "p(a, b)" {
 		t.Errorf("unexpected string: %s", pos.String())
@@ -607,7 +607,7 @@ func TestLiteralString(t *testing.T) {
 
 // ---------- Propagation with variables test ----------
 
-func TestUnitResPropagateWithVariables(t *testing.T) {
+func TestUnitResUnitResPropagateWithVariables(t *testing.T) {
 	// p(a) and [~p(X), q(X)] should derive q(a) (via unification X=a)
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
@@ -632,7 +632,7 @@ func TestUnitResPropagateWithVariables(t *testing.T) {
 
 // ---------- Multiple propagation steps ----------
 
-func TestUnitResMultiplePropagation(t *testing.T) {
+func TestUnitResUnitResMultiplePropagation(t *testing.T) {
 	// p(a), ~p(X)|q(X), ~q(X)|r(X) => derive q(a), r(a)
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
@@ -661,7 +661,7 @@ func TestUnitResMultiplePropagation(t *testing.T) {
 
 // ---------- Tautological clause is not added ----------
 
-func TestTautologicalClauseNotAdded(t *testing.T) {
+func TestUnitResTautologicalClauseNotAdded(t *testing.T) {
 	// a=a is tautological, should not be added as a unit
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("=", c("a"), c("a"))},
@@ -673,7 +673,7 @@ func TestTautologicalClauseNotAdded(t *testing.T) {
 
 // ---------- Ground match helper test ----------
 
-func TestGroundMatchNoTheory(t *testing.T) {
+func TestUnitResGroundMatchNoTheory(t *testing.T) {
 	// With nil equational theory, should return exact match
 	ur := &UnitRes{} // nil EquationalTheory
 	children := map[string]*IndexNode{
@@ -688,7 +688,7 @@ func TestGroundMatchNoTheory(t *testing.T) {
 
 // ---------- IsSkolemName test ----------
 
-func TestIsSkolemName(t *testing.T) {
+func TestUnitResIsSkolemName(t *testing.T) {
 	if !isSkolemName("__sk0") {
 		t.Error("__sk0 should be skolem")
 	}
@@ -702,7 +702,7 @@ func TestIsSkolemName(t *testing.T) {
 
 // ---------- SubstituteConstantsClause ----------
 
-func TestSubstituteConstantsClause(t *testing.T) {
+func TestUnitResSubstituteConstantsClause(t *testing.T) {
 	cl := []*UnitResLiteral{
 		posLit("p", c("a"), c("b")),
 		negLit("q", c("a")),
@@ -710,11 +710,11 @@ func TestSubstituteConstantsClause(t *testing.T) {
 	subs := map[string]logic.Expr{"a": c("c")}
 	result := SubstituteConstantsClause(cl, subs)
 
-	if rep(result[0].Atom.Args[0]) != "c" {
-		t.Errorf("expected c, got %s", rep(result[0].Atom.Args[0]))
+	if unitresRep(result[0].Atom.Args[0]) != "c" {
+		t.Errorf("expected c, got %s", unitresRep(result[0].Atom.Args[0]))
 	}
-	if rep(result[1].Atom.Args[0]) != "c" {
-		t.Errorf("expected c, got %s", rep(result[1].Atom.Args[0]))
+	if unitresRep(result[1].Atom.Args[0]) != "c" {
+		t.Errorf("expected c, got %s", unitresRep(result[1].Atom.Args[0]))
 	}
 }
 
@@ -748,7 +748,7 @@ func FuzzLitConsing(f *testing.F) {
 
 // ---------- Empty UnitRes ----------
 
-func TestNewUnitResEmpty(t *testing.T) {
+func TestUnitResNewUnitResEmpty(t *testing.T) {
 	ur := NewUnitRes(nil)
 	if ur.Unsat {
 		t.Error("empty clause set should not be unsat")
@@ -760,7 +760,7 @@ func TestNewUnitResEmpty(t *testing.T) {
 
 // ---------- Used units ----------
 
-func TestUsedUnitLiterals(t *testing.T) {
+func TestUnitResUsedUnitLiterals(t *testing.T) {
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
 		{posLit("q", c("b"))},
@@ -774,7 +774,7 @@ func TestUsedUnitLiterals(t *testing.T) {
 
 // ---------- Verbose flag test (just ensure no panic) ----------
 
-func TestVerboseFlagNoPanic(t *testing.T) {
+func TestUnitResVerboseFlagNoPanic(t *testing.T) {
 	ur := NewUnitRes([][]*UnitResLiteral{
 		{posLit("p", c("a"))},
 		{negLit("p", v("X")), posLit("q", v("X"))},
@@ -786,7 +786,7 @@ func TestVerboseFlagNoPanic(t *testing.T) {
 
 // ---------- Transitivity test ----------
 
-func TestTransitivityApplication(t *testing.T) {
+func TestUnitResTransitivityApplication(t *testing.T) {
 	// Binary ground clause: [~(a=b), c=d]
 	// After transitivity, we may get additional clauses
 	ur := NewUnitRes([][]*UnitResLiteral{
@@ -800,7 +800,7 @@ func TestTransitivityApplication(t *testing.T) {
 
 // ---------- NewLiteral / Invert round trip ----------
 
-func TestLiteralInvertRoundTrip(t *testing.T) {
+func TestUnitResLiteralInvertRoundTrip(t *testing.T) {
 	for _, pol := range []int{0, 1} {
 		l := NewUnitResLiteral(pol, resolution.NewAtom("p", c("a")))
 		inv := l.Invert()
@@ -813,7 +813,7 @@ func TestLiteralInvertRoundTrip(t *testing.T) {
 
 // ---------- Index with multiple relations ----------
 
-func TestIndexMultipleRelations(t *testing.T) {
+func TestUnitResIndexMultipleRelations(t *testing.T) {
 	idx := NewIndex()
 	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	l1 := posLit("p", c("a"))
@@ -856,7 +856,7 @@ func BenchmarkPropagation(b *testing.B) {
 	}
 }
 
-func TestFindSubsumingNoMatch(t *testing.T) {
+func TestUnitResFindSubsumingNoMatch(t *testing.T) {
 	idx := NewIndex()
 	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index p(a)
@@ -876,7 +876,7 @@ func TestFindSubsumingNoMatch(t *testing.T) {
 	}
 }
 
-func TestSimplifyClauseRewrite(t *testing.T) {
+func TestUnitResSimplifyClauseRewrite(t *testing.T) {
 	// ~(X=a) | p(X) should be simplified by rewriting X to a -> p(a)
 	cl := []*UnitResLiteral{
 		negLit("=", v("X"), c("a")),
@@ -895,7 +895,7 @@ func TestSimplifyClauseRewrite(t *testing.T) {
 	}
 }
 
-func TestLitRepWithoutTheory(t *testing.T) {
+func TestUnitResLitRepWithoutTheory(t *testing.T) {
 	ur := &UnitRes{} // nil EquationalTheory
 	lit := posLit("p", c("a"))
 	result := ur.litRep(lit)
@@ -904,7 +904,7 @@ func TestLitRepWithoutTheory(t *testing.T) {
 	}
 }
 
-func TestFindTermWithoutTheory(t *testing.T) {
+func TestUnitResFindTermWithoutTheory(t *testing.T) {
 	ur := &UnitRes{} // nil EquationalTheory
 	term := c("a")
 	result := ur.findTerm(term)

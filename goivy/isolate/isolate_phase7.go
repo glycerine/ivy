@@ -178,7 +178,7 @@ func FollowDefinitionsRec(sym string, defs map[string]lg.Expr, allSyms map[strin
 	allSyms[sym] = true
 	if rhs, ok := defs[sym]; ok && !memo[sym] {
 		memo[sym] = true
-		for _, s := range usedSymbolNames(rhs) {
+		for _, s := range isolateUsedSymbolNames(rhs) {
 			FollowDefinitionsRec(s, defs, allSyms, memo)
 		}
 	}
@@ -189,7 +189,7 @@ func FollowDefinitionsRec(sym string, defs map[string]lg.Expr, allSyms map[strin
 // it collects the sort's destructors.
 // Corresponds to Python's collect_relevant_destructors (ivy_isolate.py lines 870-873).
 func CollectRelevantDestructors(mod *module.Module, syms map[string]bool) map[string]bool {
-	result := copyStringSet(syms)
+	result := isolateCopyStringSet(syms)
 	memo := make(map[string]bool)
 	for sym := range syms {
 		// Look up the symbol in the signature to get its sort.
@@ -203,7 +203,7 @@ func CollectRelevantDestructors(mod *module.Module, syms map[string]bool) map[st
 		// If the sort has a range (i.e., is a FunctionSort), collect
 		// destructors for the range sort.
 		if fs, ok := entry.Sort.(*lg.FunctionSort); ok {
-			rngName := sortToName(fs.Range())
+			rngName := isolateSortToName(fs.Range())
 			if rngName != "" {
 				CollectSortDestructors(mod, rngName, result, memo)
 			}

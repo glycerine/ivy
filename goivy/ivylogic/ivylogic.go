@@ -9,7 +9,7 @@ import (
 )
 
 // SortName extracts the name from a sort.
-func SortName(s lg.Sort) string {
+func IvySortName(s lg.Sort) string {
 	switch t := s.(type) {
 	case *lg.UninterpretedSort:
 		return t.Name
@@ -199,12 +199,12 @@ func IsTemporal(n lg.Expr) bool {
 }
 
 // HasTemporal returns true if the formula contains a temporal operator.
-func HasTemporal(n lg.Expr) bool {
+func IvyHasTemporal(n lg.Expr) bool {
 	if IsTemporal(n) {
 		return true
 	}
 	for _, c := range n.Children() {
-		if HasTemporal(c) {
+		if IvyHasTemporal(c) {
 			return true
 		}
 	}
@@ -258,7 +258,7 @@ func IsFunctionSort(s lg.Sort) bool {
 }
 
 // IsTopSort returns true if the sort is a TopSort.
-func IsTopSort(s lg.Sort) bool {
+func IvyIsTopSort(s lg.Sort) bool {
 	_, ok := s.(*lg.TopSort)
 	return ok
 }
@@ -310,12 +310,12 @@ func IsConcretetlySorted(n lg.Expr) bool {
 }
 
 // IsTrue returns true if the node is logical true (empty And).
-func IsTrue(n lg.Expr) bool {
+func IvyIsTrue(n lg.Expr) bool {
 	return lg.IsTrue(n)
 }
 
 // IsFalse returns true if the node is logical false (empty Or).
-func IsFalse(n lg.Expr) bool {
+func IvyIsFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 
@@ -326,16 +326,16 @@ func IsGprop(n lg.Expr) bool {
 	if !ok {
 		return false
 	}
-	return !HasTemporal(g.Body)
+	return !IvyHasTemporal(g.Body)
 }
 
-// --- Equals symbol ---
+// --- IvyEquals symbol ---
 
-// Equals is the built-in equality symbol.
-var Equals = lg.NewConst("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
+// IvyEquals is the built-in equality symbol.
+var IvyEquals = lg.NewConst("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
 
 // IsEquals returns true if the constant is the equality symbol.
-func IsEquals(c *lg.Const) bool {
+func IvyIsEquals(c *lg.Const) bool {
 	return c.Name == "="
 }
 
@@ -442,7 +442,7 @@ func IsEnumerated(term lg.Expr) bool {
 // the interpretation. Corresponds to Python's is_canonical_sort (ivy_logic.py:1451-1455).
 func IsCanonicalSort(sig *Sig, sort lg.Sort) bool {
 	if _, ok := sort.(*lg.UninterpretedSort); ok {
-		interp, exists := sig.Interp[SortName(sort)]
+		interp, exists := sig.Interp[IvySortName(sort)]
 		if !exists {
 			return true
 		}
@@ -457,7 +457,7 @@ func IsCanonicalSort(sig *Sig, sort lg.Sort) bool {
 // (ivy_logic.py:1457-1462).
 func CanonizeSort(sig *Sig, sort lg.Sort) lg.Sort {
 	if _, ok := sort.(*lg.UninterpretedSort); ok {
-		interp, exists := sig.Interp[SortName(sort)]
+		interp, exists := sig.Interp[IvySortName(sort)]
 		if exists {
 			if uiSort, ok := interp.(*lg.UninterpretedSort); ok {
 				return CanonizeSort(sig, uiSort)

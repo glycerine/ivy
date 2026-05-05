@@ -21,8 +21,8 @@ import (
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-const checkPrecondFalse = false
-const checkPrecondTrue = true
+const artCheckPrecondFalse = false
+const artCheckPrecondTrue = true
 
 // State represents a reachability analysis state. In the Python code this is
 // provided by ivy_interp.State; since the interp package is being created
@@ -1270,7 +1270,7 @@ func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *Stat
 
 		// Check if the equation's RHS is already covered
 		rhs := equation.Rhs
-		ok, _ := interp.EvalStateOrder(checkPrecondTrue, rhs, interp.WrapState(interpFpc), ag.Domain)
+		ok, _ := interp.EvalStateOrder(artCheckPrecondTrue, rhs, interp.WrapState(interpFpc), ag.Domain)
 		if !ok {
 			result = append(result, equation)
 		}
@@ -1610,7 +1610,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 				upd = actions.NullUpdate()
 			}
 			actionAppNode := interp.InterpActionApp(interpState.AstCfg(), "init", interp.WrapState(interpState))
-			s2interp, err := interp.ConcretePost(checkPrecondFalse, upd, interpState, actionAppNode)
+			s2interp, err := interp.ConcretePost(artCheckPrecondFalse, upd, interpState, actionAppNode)
 
 			if err != nil {
 				log.Printf("art.AddInitialState: ApplyAction error: %v", err)
@@ -1660,7 +1660,7 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 			if p == nil {
 				continue
 			}
-			is, err := interp.EvalStateFacts(checkPrecondTrue, p, ag.Domain)
+			is, err := interp.EvalStateFacts(artCheckPrecondTrue, p, ag.Domain)
 			if err != nil || is == nil {
 				continue
 			}

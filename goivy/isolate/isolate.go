@@ -28,7 +28,7 @@ import (
 
 // typeName returns the struct name without package prefix.
 // e.g. *ast.ProofTactic → "ProofTactic". Matches Python's type(x).__name__.
-func typeName(v interface{}) string {
+func isolateTypeName(v interface{}) string {
 	t := reflect.TypeOf(v)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
@@ -202,7 +202,7 @@ func CanonAct(name string) string {
 
 // nodeRelname extracts the relname from an AST node.
 // Matches Python's node.relname attribute access.
-func nodeRelname(n ast.Node) string {
+func isolateNodeRelname(n ast.Node) string {
 	type relnamer interface{ Relname() string }
 	if r, ok := n.(relnamer); ok {
 		return r.Relname()
@@ -748,7 +748,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	if versionLE(isoCfg.IvyVersion, "1.6") {
 		for _, c := range mod.LabeledConjs {
-			if keepAx(nodeToExpr(c.Label)) {
+			if keepAx(isolateNodeToExpr(c.Label)) {
 				newConjs = append(newConjs, c)
 			}
 		}
@@ -772,7 +772,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Filter inits
 	var newInits []*ast.LabeledFormula
 	for _, c := range mod.LabeledInits {
-		if keepAx(nodeToExpr(c.Label)) {
+		if keepAx(isolateNodeToExpr(c.Label)) {
 			newInits = append(newInits, c)
 		}
 	}
@@ -800,7 +800,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var droppedAxioms []*ast.LabeledFormula
 	var keptAxioms []*ast.LabeledFormula
 	for _, a := range mod.LabeledAxioms {
-		if keepAx(nodeToExpr(a.Label)) {
+		if keepAx(isolateNodeToExpr(a.Label)) {
 			keptAxioms = append(keptAxioms, a)
 		} else {
 			droppedAxioms = append(droppedAxioms, a)
@@ -811,7 +811,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Filter properties
 	var keptProps []*ast.LabeledFormula
 	for _, a := range mod.LabeledProps {
-		if keepAx(nodeToExpr(a.Label)) {
+		if keepAx(isolateNodeToExpr(a.Label)) {
 			keptProps = append(keptProps, a)
 		}
 	}
@@ -892,7 +892,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var newNatives []ast.Node
 	for _, nat := range mod.Natives {
 		if lf, ok := nat.(*ast.LabeledFormula); ok {
-			if keepAx(nodeToExpr(lf.Label)) {
+			if keepAx(isolateNodeToExpr(lf.Label)) {
 				newNatives = append(newNatives, nat)
 			}
 		} else {
@@ -1079,7 +1079,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if pe.Proof != nil {
 			before := allNames.Len()
 			if xtracer.Enabled {
-				xtracer.Trace("isolate.proof type=%s", typeName(pe.Proof))
+				xtracer.Trace("isolate.proof type=%s", isolateTypeName(pe.Proof))
 			}
 			ast.VocabNode(pe.Proof, allNames)
 			if xtracer.Enabled {
@@ -1135,7 +1135,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// add any new destructor names back as Const entries in allSyms.
 	if isoCfg.KeepDestructors {
 		namesBefore := allSymsNameSet(allSyms)
-		namesAfter := copyStringSet(namesBefore)
+		namesAfter := isolateCopyStringSet(namesBefore)
 		for _, sym := range allSyms.All() {
 			collectRelevantDestructorsForSym(mod, sym, namesAfter, make(map[string]bool))
 		}
@@ -1244,7 +1244,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				dname := definedSymbolName(expr)
 				if dname != "" && symSetContainsName(allSyms, dname) {
 					// Check if the definition's label is not kept (i.e., dropped)
-					if !keepAx(nodeToExpr(c.Label)) {
+					if !keepAx(isolateNodeToExpr(c.Label)) {
 						return fmt.Errorf("definition of %s is referenced, but not present in extract", dname)
 					}
 				}
@@ -1281,7 +1281,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if defConst != nil {
 			_, inAllSyms = allSyms.Get2(actions.ConstSymKey(defConst))
 		}
-		if (keepAx(nodeToExpr(c.Label)) || exactPresent[defName]) && inAllSyms {
+		if (keepAx(isolateNodeToExpr(c.Label)) || exactPresent[defName]) && inAllSyms {
 			filteredDefs = append(filteredDefs, c)
 		}
 	}
@@ -1328,7 +1328,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if defConst != nil {
 					_, inAllSyms = allSyms.Get2(actions.ConstSymKey(defConst))
 				}
-				if keepAx(nodeToExpr(lf.Label)) && inAllSyms {
+				if keepAx(isolateNodeToExpr(lf.Label)) && inAllSyms {
 					filteredNatDefs = append(filteredNatDefs, lf)
 				}
 			}
@@ -1485,7 +1485,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Collect relevant destructors
 	if isoCfg.KeepDestructors {
 		namesBefore2 := allSymsNameSet(allSyms2)
-		namesAfter2 := copyStringSet(namesBefore2)
+		namesAfter2 := isolateCopyStringSet(namesBefore2)
 		for _, sym := range allSyms2.All() {
 			collectRelevantDestructorsForSym(mod, sym, namesAfter2, make(map[string]bool))
 		}
@@ -1576,7 +1576,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			sort.Strings(cp)
 			xtracer.Trace("isolate.presentAfterInits=%s", strings.Join(cp, ","))
 		}
-		xtracer.Trace("isolate.allAfterInits=%s", strings.Join(sortedKeys(allAfterInits), ","))
+		xtracer.Trace("isolate.allAfterInits=%s", strings.Join(isolateSortedKeys(allAfterInits), ","))
 		for actname, mixins := range implMixins.All() {
 			mixerNames := make([]string, 0)
 			for _, m := range mixins {
@@ -1631,7 +1631,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if idef, ok := iso.(IsolateDefNode); ok {
 			for _, p := range idef.Params() {
 				if p.CSort != nil {
-					sname := sortToName(p.CSort)
+					sname := isolateSortToName(p.CSort)
 					addDeps(sname)
 				}
 			}
@@ -1662,7 +1662,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 		for name, s := range mod.DestructorSorts {
-			sname := sortToName(s)
+			sname := isolateSortToName(s)
 			if !allSorts[sname] {
 				delete(mod.DestructorSorts, name)
 			}
@@ -1703,7 +1703,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
-	initAnd := makeAnd(initFmlas...) // makeAnd with no args returns empty And = true
+	initAnd := isolateMakeAnd(initFmlas...) // makeAnd with no args returns empty And = true
 	mod.InitCond = formulaToClauses(initAnd)
 
 	return nil
@@ -1712,7 +1712,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 // nodeToExpr safely converts an ast.Node to lg.Expr, returning nil if the node is nil.
 // Handles both compiled expressions (lg.Expr) and uncompiled AST nodes (*ast.Atom).
-func nodeToExpr(n ast.Node) lg.Expr {
+func isolateNodeToExpr(n ast.Node) lg.Expr {
 	if n == nil {
 		return nil
 	}
@@ -1730,7 +1730,7 @@ func nodeToExpr(n ast.Node) lg.Expr {
 // cloneLF creates a shallow copy of a LabeledFormula.
 
 // makeAnd creates an And node, ignoring sort errors.
-func makeAnd(terms ...lg.Expr) lg.Expr {
+func isolateMakeAnd(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return &lg.And{Terms: nil} // empty conjunction = true
 	}
@@ -1767,7 +1767,7 @@ func addSortDeps(s lg.Sort, allSorts map[string]bool, addDeps func(string)) {
 		}
 		addSortDeps(fs.Range(), allSorts, addDeps)
 	} else {
-		name := sortToName(s)
+		name := isolateSortToName(s)
 		if name != "" {
 			addDeps(name)
 		}

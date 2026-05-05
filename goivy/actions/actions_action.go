@@ -20,13 +20,13 @@ import (
 type ActionsAction = module.Action
 
 // Package-local forwarding for unexported helpers.
-func toAction(n lg.Expr) (ActionsAction, bool) { return module.ToAction(n) }
-func defaultIterCalls(args []lg.Expr) []string { return module.DefaultIterCalls(args) }
+func actionsToAction(n lg.Expr) (ActionsAction, bool) { return module.ToAction(n) }
+func defaultIterCalls(args []lg.Expr) []string        { return module.DefaultIterCalls(args) }
 func defaultIterSubactions(self ActionsAction) []ActionsAction {
 	return module.DefaultIterSubactions(self)
 }
-func nodeSliceStr(nodes []lg.Expr) string { return module.NodeSliceStr(nodes) }
-func copyNodes(nodes []lg.Expr) []lg.Expr { return module.CopyNodes(nodes) }
+func actionsNodeSliceStr(nodes []lg.Expr) string { return module.NodeSliceStr(nodes) }
+func copyNodes(nodes []lg.Expr) []lg.Expr        { return module.CopyNodes(nodes) }
 
 // --- Schema ---
 
@@ -440,12 +440,12 @@ func (s *SomeCondition) Sexp() lg.NodeKey {
 		paramParts[i] = string(p.Sexp())
 	}
 	params := "[" + strings.Join(paramParts, " ") + "]"
-	fmla := exprSexp(s.Fmla)
+	fmla := actionsExprSexp(s.Fmla)
 	switch s.Kind {
 	case "some_min":
-		return lg.NodeKey(fmt.Sprintf("(someMin params:%s fmla:%s index:%s)", params, fmla, exprSexp(s.Index)))
+		return lg.NodeKey(fmt.Sprintf("(someMin params:%s fmla:%s index:%s)", params, fmla, actionsExprSexp(s.Index)))
 	case "some_max":
-		return lg.NodeKey(fmt.Sprintf("(someMax params:%s fmla:%s index:%s)", params, fmla, exprSexp(s.Index)))
+		return lg.NodeKey(fmt.Sprintf("(someMax params:%s fmla:%s index:%s)", params, fmla, actionsExprSexp(s.Index)))
 	default:
 		return lg.NodeKey(fmt.Sprintf("(some params:%s fmla:%s)", params, fmla))
 	}
@@ -1063,7 +1063,7 @@ func (a *ThunkAction) String() string {
 		}
 		return res
 	}
-	return "thunk " + nodeSliceStr(a.Elems)
+	return "thunk " + actionsNodeSliceStr(a.Elems)
 }
 func (a *ThunkAction) IterCalls() []string             { return defaultIterCalls(a.Elems) }
 func (a *ThunkAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
@@ -1325,7 +1325,7 @@ func collectTypeNamesFromDecl(decl lg.Expr, names map[string]bool) {
 	case *lg.Const:
 		// Leaf constant — its sort name is a type name
 		if d.CSort != nil {
-			sname := il.SortName(d.CSort)
+			sname := il.IvySortName(d.CSort)
 			if sname != "" {
 				names[sname] = true
 			}

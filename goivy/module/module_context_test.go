@@ -58,11 +58,11 @@ func TestRelevantDefinitionsReachable(t *testing.T) {
 	// f(X) = g(X)
 	fApp, _ := lg.NewApply(fSym, x)
 	gApp, _ := lg.NewApply(gSym, x)
-	def1 := il.NewDefinition(fApp, gApp)
+	def1 := il.NewIvyDefinition(fApp, gApp)
 
 	// g(X) = X
 	gApp2, _ := lg.NewApply(gSym, x)
-	def2 := il.NewDefinition(gApp2, x)
+	def2 := il.NewIvyDefinition(gApp2, x)
 
 	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def1},
@@ -91,7 +91,7 @@ func TestRelevantDefinitionsUnreachable(t *testing.T) {
 	fSym := lg.NewConst("f", fSort)
 	x, _ := lg.NewVariable("X", tSort)
 	fApp, _ := lg.NewApply(fSym, x)
-	def := il.NewDefinition(fApp, x)
+	def := il.NewIvyDefinition(fApp, x)
 
 	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def},

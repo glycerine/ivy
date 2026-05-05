@@ -78,11 +78,11 @@ func RelevantDefinitions(m *Module, syms map[string]bool) []*ast.LabeledFormula 
 	defMap := make(map[string][]string)
 	defSymMap := make(map[string]bool)
 	for _, ldf := range m.Definitions {
-		if def, ok := ldf.Formula.(*il.Definition); ok {
+		if def, ok := ldf.Formula.(*il.IvyDefinition); ok {
 			defName := def.Defines().String()
 			defSymMap[defName] = true
 			// Collect symbols used in the RHS.
-			rhsSyms := collectSymbolNames(def.Rhs)
+			rhsSyms := moduleCollectSymbolNames(def.Rhs)
 			defMap[defName] = rhsSyms
 		}
 	}
@@ -112,7 +112,7 @@ func RelevantDefinitions(m *Module, syms map[string]bool) []*ast.LabeledFormula 
 	// Filter definitions to those whose defining symbol is reachable.
 	var result []*ast.LabeledFormula
 	for _, ldf := range m.Definitions {
-		if def, ok := ldf.Formula.(*il.Definition); ok {
+		if def, ok := ldf.Formula.(*il.IvyDefinition); ok {
 			defName := def.Defines().String()
 			if reachable[defName] {
 				result = append(result, ldf)
@@ -137,7 +137,7 @@ func (m *Module) SortDependencyGraph() map[string][]string {
 }
 
 // collectSymbolNames returns the names of all constant symbols in a node.
-func collectSymbolNames(node lg.Expr) []string {
+func moduleCollectSymbolNames(node lg.Expr) []string {
 	var names []string
 	collectSymbolNamesRec(node, &names, make(map[string]bool))
 	return names

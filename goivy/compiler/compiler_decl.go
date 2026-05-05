@@ -251,17 +251,17 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 // collectASTVariables recursively collects free Variable nodes from an AST tree.
 // Variables bound by quantifiers (ForAll, Exists, Some, NamedBinder) are excluded.
 // Corresponds to Python's variables_ast (ivy_logic_utils.py:461-473).
-func collectASTVariables(node ast.Node) []*ast.Variable {
+func collectASTVariables(node ast.Node) []*ast.AstVariable {
 	if node == nil {
 		return nil
 	}
-	if v, ok := node.(*ast.Variable); ok {
-		return []*ast.Variable{v}
+	if v, ok := node.(*ast.AstVariable); ok {
+		return []*ast.AstVariable{v}
 	}
 	// Handle binder nodes: exclude bound variables from results
 	bounds, bodyArgs := astBinderInfo(node)
 	if bounds != nil {
-		var result []*ast.Variable
+		var result []*ast.AstVariable
 		for _, arg := range bodyArgs {
 			for _, v := range collectASTVariables(arg) {
 				if !bounds[v.Rep] {
@@ -272,7 +272,7 @@ func collectASTVariables(node ast.Node) []*ast.Variable {
 		return result
 	}
 	// Non-binder: recurse into all args
-	var result []*ast.Variable
+	var result []*ast.AstVariable
 	for _, arg := range node.Args() {
 		result = append(result, collectASTVariables(arg)...)
 	}
@@ -306,7 +306,7 @@ func astBinderInfo(node ast.Node) (bounds map[string]bool, bodyArgs []ast.Node) 
 func astBoundNames(nodes []ast.Node) map[string]bool {
 	names := make(map[string]bool)
 	for _, n := range nodes {
-		if v, ok := n.(*ast.Variable); ok {
+		if v, ok := n.(*ast.AstVariable); ok {
 			names[v.Rep] = true
 		}
 	}
@@ -390,7 +390,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	var td *ast.TypeDef
 	if gtd, ok := node.(*ast.GhostTypeDef); ok {
 		td = &gtd.TypeDef
-		ghostName := extractSortRep(td.Name)
+		ghostName := compilerExtractSortRep(td.Name)
 		if ghostName != "" {
 			// Python: self.domain.ghost_sorts.add(typedef.name)
 			d.Compiler.Module.GhostSorts[ghostName] = true
@@ -424,7 +424,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	}
 
 	// Type definition
-	name := extractSortRep(td.Name)
+	name := compilerExtractSortRep(td.Name)
 	if name == "" {
 		return lg.NewIvyError(td, "type definition has no name")
 	}
@@ -493,7 +493,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 
 				// Get the field's sort
 				var fieldSort lg.Sort = lg.TopS
-				sn := extractSortRep(atom.ASort)
+				sn := compilerExtractSortRep(atom.ASort)
 				if sn != "" {
 					if s, err := d.Compiler.CmplSort(sn); err == nil {
 						fieldSort = s
@@ -609,7 +609,7 @@ func (d *DomainSetup) Relation(node ast.Node) error {
 
 	var domSorts []lg.Sort
 	for _, arg := range atom.Terms {
-		if v, ok := arg.(*ast.Variable); ok {
+		if v, ok := arg.(*ast.AstVariable); ok {
 			s, err := d.Compiler.variableSort(v)
 			if err != nil {
 				return err
@@ -701,7 +701,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 
 	// Remove the temporary symbol and re-add with inferred sort
 	d.Compiler.Sig.Symbols.Delkey(sym.Name)
-	if def, ok := compiled.(*il.Definition); ok {
+	if def, ok := compiled.(*il.IvyDefinition); ok {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*lg.Const); ok {
 			d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
@@ -712,7 +712,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	// Python's DerivedUpdate(df) uses defn.args[0].rep which has concrete sorts
 	// from compilation. The original `sym` still has TopFunctionSort.
 	derivedSym := sym // fallback
-	if def, ok := compiled.(*il.Definition); ok {
+	if def, ok := compiled.(*il.IvyDefinition); ok {
 		if cnst, ok := def.Defines().(*lg.Const); ok {
 			derivedSym = cnst
 		}
@@ -813,7 +813,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	}
 
 	// Add the defined symbol if not already in the signature
-	if def, ok := compiled.(*il.Definition); ok {
+	if def, ok := compiled.(*il.IvyDefinition); ok {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*lg.Const); ok {
 			if _, exists := d.Compiler.Sig.Symbols.Get2(cnst.Name); !exists {
@@ -941,8 +941,8 @@ func (d *DomainSetup) Variant(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	sortName := extractSortRep(vd.Name)     // subtype (args[0] in Python)
-	variantName := extractSortRep(vd.VSort) // supertype (args[1] in Python)
+	sortName := compilerExtractSortRep(vd.Name)     // subtype (args[0] in Python)
+	variantName := compilerExtractSortRep(vd.VSort) // supertype (args[1] in Python)
 	if sortName == "" || variantName == "" {
 		return nil
 	}
@@ -1013,7 +1013,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	interp := sig.Interp
 
 	// Python: lhs = resolve_alias(thing.formula.args[0].rep)
-	lhs := ResolveAlias(extractSortRep(impl.T1), mod)
+	lhs := ResolveAlias(compilerExtractSortRep(impl.T1), mod)
 	// Python: rhs = thing.formula.args[1]  (the AST node)
 	rhs := impl.T2
 
@@ -1067,7 +1067,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	case *ast.AstEnumeratedSort:
 		// rhsName stays empty; handled in BB5 below
 	default:
-		rhsName = extractSortRep(rhs)
+		rhsName = compilerExtractSortRep(rhs)
 	}
 	xtracer.Trace("compiler.DomainSetup.interpret branch=non-native rhsName=%s", rhsName)
 
@@ -1252,8 +1252,8 @@ func (d *DomainSetup) Native(node ast.Node) error {
 func (d *DomainSetup) Alias(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.alias ENTER")
 	if def, ok := node.(*ast.AstDefinition); ok {
-		aliasName := extractSortRep(def.Lhs)
-		targetName := extractSortRep(def.Rhs)
+		aliasName := compilerExtractSortRep(def.Lhs)
+		targetName := compilerExtractSortRep(def.Rhs)
 		if aliasName != "" && targetName != "" {
 			resolved := ResolveAlias(targetName, d.Compiler.Module)
 			d.Compiler.Module.Aliases[aliasName] = resolved
@@ -1466,7 +1466,7 @@ func (d *DomainSetup) Named(node ast.Node) error {
 	if !ok {
 		return lg.NewIvyError(node, "named declaration without preceding property")
 	}
-	cond := il.DropUniversals(lastFormula)
+	cond := il.IvyDropUniversals(lastFormula)
 	if !il.IsExists(cond) {
 		return lg.NewIvyError(node, "property is not existential")
 	}
@@ -1590,8 +1590,8 @@ func (d *DomainSetup) Destructor(node ast.Node) error {
 		return lg.NewIvyError(node, "A destructor must have at least one parameter")
 	}
 	mod.DestructorSorts[sym.Name] = dom[0]
-	mod.SortDestructors[il.SortName(dom[0])] = append(
-		mod.SortDestructors[il.SortName(dom[0])], sym)
+	mod.SortDestructors[il.IvySortName(dom[0])] = append(
+		mod.SortDestructors[il.IvySortName(dom[0])], sym)
 	return nil
 }
 
@@ -1606,7 +1606,7 @@ func (d *DomainSetup) Constructor(node ast.Node) error {
 	}
 	rng := il.SortRange(sym.CSort)
 	mod.ConstructorSorts[sym.Name] = rng
-	sortName := il.SortName(rng)
+	sortName := il.IvySortName(rng)
 	mod.SortConstructors[sortName] = append(mod.SortConstructors[sortName], sym)
 	return nil
 }
@@ -1734,8 +1734,8 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	impd := extractSortRep(def.Lhs)
-	impr := extractSortRep(def.Rhs)
+	impd := compilerExtractSortRep(def.Lhs)
+	impr := compilerExtractSortRep(def.Rhs)
 	// Validate both sorts exist
 	if _, ok := sig.Sorts.Get2(impd); !ok {
 		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impd))

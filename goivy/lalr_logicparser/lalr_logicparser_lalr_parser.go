@@ -57,7 +57,7 @@ func newLalr17LexAdapter(input string, version lexer.Version, cfg *ast.AstConfig
 		cfg = ast.NewAstConfig()
 	}
 	return &lalr17LexAdapter{
-		lex: lexer.New(input, version),
+		lex: lexer.NewLexer(input, version),
 		cfg: cfg,
 	}
 }

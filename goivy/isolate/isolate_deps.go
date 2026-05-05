@@ -295,7 +295,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	}
 	xtracer.Trace("isolate.CheckInterferenceFull ENTER n_summarized=%d n_interfSyms=%d n_afterInits=%d",
 		len(summarizedActions), interfSymsLen, len(afterInits))
-	xtracer.Trace("isolate.CheckInterferenceFull summarized=%s", strings.Join(sortedKeys(summarizedActions), ","))
+	xtracer.Trace("isolate.CheckInterferenceFull summarized=%s", strings.Join(isolateSortedKeys(summarizedActions), ","))
 	// Trace interfSyms using PrettyFmla representation to match Python's str(x)
 	{
 		var symStrs []string
@@ -315,7 +315,7 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 	loops := make(map[string][]actions.ActionsAction)
 	locmods := make(map[string]map[string]bool) // Python line 582
 	// Sort summarizedActions keys to get deterministic iteration order matching Python
-	sortedSummarized := sortedKeys(summarizedActions)
+	sortedSummarized := isolateSortedKeys(summarizedActions)
 	for _, actname := range sortedSummarized {
 		GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, mixinDeps, interfSyms, loops)
 		// Python line 586: locmods[actname] = get_loc_mods(mod, actname)
@@ -324,9 +324,9 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 			locmods[actname][s] = true
 		}
 		xtracer.Trace("isolate.GetCallsModsRecFull actname=%s calls=%s mods=%s",
-			actname, strings.Join(sortedKeys(calls[actname]), ","), strings.Join(sortedKeys(mods[actname]), ","))
+			actname, strings.Join(isolateSortedKeys(calls[actname]), ","), strings.Join(isolateSortedKeys(mods[actname]), ","))
 		xtracer.Trace("isolate.GetLocMods actname=%s locmods=%s",
-			actname, strings.Join(sortedKeys(locmods[actname]), ","))
+			actname, strings.Join(isolateSortedKeys(locmods[actname]), ","))
 	}
 
 	// Python line 587: compute callouts for all actions
@@ -710,7 +710,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 
 		// Filter destructor sorts.
 		for name, s := range mod.DestructorSorts {
-			sName := sortToName(s)
+			sName := isolateSortToName(s)
 			if !allSorts[sName] {
 				delete(mod.DestructorSorts, name)
 			}
@@ -740,7 +740,7 @@ func addSortName(s lg.Sort, set map[string]bool) {
 }
 
 // sortToName extracts the name from a sort.
-func sortToName(s lg.Sort) string {
+func isolateSortToName(s lg.Sort) string {
 	switch t := s.(type) {
 	case *lg.UninterpretedSort:
 		return t.Name
@@ -843,7 +843,7 @@ func TransitiveCallees(actionName string, graph map[string][]string) map[string]
 }
 
 // sortedKeys returns sorted keys from a map[string]bool.
-func sortedKeys(m map[string]bool) []string {
+func isolateSortedKeys(m map[string]bool) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)

@@ -108,14 +108,14 @@ func applyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	return lg.MustApply(nb, args...)
 }
 
-func mustApply(f lg.Expr, args ...lg.Expr) lg.Expr {
+func checkMustApply(f lg.Expr, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return f
 	}
 	return lg.MustApply(f, args...)
 }
 
-func varsToNodes(vs []*lg.Variable) []lg.Expr {
+func checkVarsToNodes(vs []*lg.Variable) []lg.Expr {
 	nodes := make([]lg.Expr, len(vs))
 	for i, v := range vs {
 		nodes[i] = v
@@ -139,7 +139,7 @@ func exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 
 func strPtr(s string) *string { return &s }
 
-func makeAnd(terms ...lg.Expr) lg.Expr {
+func checkMakeAnd(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return lg.True
 	}
@@ -252,7 +252,7 @@ func l2sNodeToString(n ast.Node) string {
 }
 
 // pyBool formats a Go bool as Python's True/False, for trace parity.
-func pyBool(b bool) string {
+func checkPyBool(b bool) string {
 	if b {
 		return "True"
 	}
@@ -311,7 +311,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// TemporalModels. Mirrors Python ivy_l2s.py:117-118.
 	conc := proof.GoalConc(goal)
 	tm, isTM := conc.(*ast.AstTemporalModels)
-	xtracer.Trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)", iu.TypeName(conc), pyBool(isTM))
+	xtracer.Trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)", iu.TypeName(conc), checkPyBool(isTM))
 	if !isTM {
 		return nil, fmt.Errorf("check/l2s: [2]proof goal is not temporal")
 	}
@@ -366,7 +366,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	for idx, ax := range pc.GetAxioms() {
 		_, isGlobally := ax.Formula.(*lg.Globally)
 		xtracer.Trace("l2s.l2sTacticInt axiomMeta[%d] explicit=%s temporal=%s isGlobally=%s formulaType=%s",
-			idx, pyBool(ax.Explicit), pyBool(ax.IsTemporal()), pyBool(isGlobally), iu.TypeName(ax.Formula))
+			idx, checkPyBool(ax.Explicit), checkPyBool(ax.IsTemporal()), checkPyBool(isGlobally), iu.TypeName(ax.Formula))
 	}
 
 	// Add assumed globally properties to model assumptions
@@ -394,7 +394,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// If there are temporal premises, wrap: prems -> fmla
 	xtracer.Trace("l2s.l2sTacticInt temporalPrems count=%d", len(temporalPrems))
 	if len(temporalPrems) > 0 {
-		premConj := makeAnd(temporalPrems...)
+		premConj := checkMakeAnd(temporalPrems...)
 		fmla = &lg.Implies{T1: premConj, T2: fmla}
 	}
 
@@ -632,7 +632,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	for _, s := range uninterpretedSorts {
 		v, _ := lg.NewVariable("X", s)
 		resetA = append(resetA,
-			setLineno(actions.NewAssignAction(mustApply(L2SA(s), v), mustApply(L2SD(s), v)), lineno))
+			setLineno(actions.NewAssignAction(checkMustApply(L2SA(s), v), checkMustApply(L2SD(s), v)), lineno))
 	}
 
 	// add_consts_to_d
@@ -666,13 +666,13 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			isRelation = true
 		}
 		if isRelation {
-			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
+			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), checkVarsToNodes(vb.Vars)...)
 			iff := &lg.Iff{T1: savedApp, T2: vb.Body}
 			if len(vb.Vars) > 0 {
 				var aConjs []lg.Expr
 				for _, v := range vb.Vars {
 					if !finiteSorts[v.VSort.String()] {
-						aConjs = append(aConjs, mustApply(L2SA(v.VSort), v))
+						aConjs = append(aConjs, checkMustApply(L2SA(v.VSort), v))
 					}
 				}
 				fairCycle = append(fairCycle,
@@ -696,19 +696,19 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 			}
 		}
 		if isUninterp {
-			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
+			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), checkVarsToNodes(vb.Vars)...)
 			eq := &lg.Eq{T1: savedApp, T2: vb.Body}
 			var aConjs []lg.Expr
 			for _, v := range vb.Vars {
 				if !finiteSorts[v.VSort.String()] {
-					aConjs = append(aConjs, mustApply(L2SA(v.VSort), v))
+					aConjs = append(aConjs, checkMustApply(L2SA(v.VSort), v))
 				}
 			}
 			if !finiteSorts[bodySort.String()] {
 				aConjs = append(aConjs,
 					&lg.Or{Terms: []lg.Expr{
-						mustApply(L2SA(bodySort), savedApp),
-						mustApply(L2SA(bodySort), vb.Body),
+						checkMustApply(L2SA(bodySort), savedApp),
+						checkMustApply(L2SA(bodySort), vb.Body),
 					}})
 			}
 			fairCycle = append(fairCycle,
@@ -717,7 +717,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	}
 
 	var assertNoFairCycleAction actions.ActionsAction = setLineno(
-		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno) // "nowhere" file, no lineno
+		actions.NewAssertAction(&lg.Not{Body: checkMakeAnd(fairCycle...)}), lineno) // "nowhere" file, no lineno
 	// Python ivy_l2s.py:991: assert_no_fair_cycle.lineno = goal.lineno
 	assertNoFairCycleAction.SetLineno(goal.GetLineno()) // actual lineno from here!
 
@@ -925,7 +925,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 // --- Internal helpers ---
 
 // findTemporalModels looks through the goal formula for a TemporalModels node.
-func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
+func checkFindTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	if goal == nil || goal.Formula == nil {
 		return nil
 	}
@@ -1065,7 +1065,7 @@ func applyL2sInit(vs []*lg.Variable, t lg.Expr, label string) lg.Expr {
 	if not, ok := t.(*lg.Not); ok {
 		return &lg.Not{Body: applyL2sInit(vs, not.Body, label)}
 	}
-	return applyNB(l2sInit(vs, t, label), varsToNodes(vs)...)
+	return applyNB(l2sInit(vs, t, label), checkVarsToNodes(vs)...)
 }
 
 // --- Public utility functions ---
@@ -1105,7 +1105,7 @@ func Desugar(expr lg.Expr, proofLabel string) (lg.Expr, error) {
 			vs := lu.VariablesAstList(nb.Body)
 			return &lg.And{Terms: []lg.Expr{
 				l2sSaved,
-				&lg.Not{Body: applyNB(l2sW(vs, nb.Body, proofLabel), varsToNodes(vs)...)},
+				&lg.Not{Body: applyNB(l2sW(vs, nb.Body, proofLabel), checkVarsToNodes(vs)...)},
 			}}, nil
 		}
 	}
@@ -1147,7 +1147,7 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 		return &lg.Iff{T1: applyWasRec(t.T1, proofLabel), T2: applyWasRec(t.T2, proofLabel)}
 	}
 	vs := lu.VariablesAstList(expr)
-	return applyNB(l2sS(vs, expr, proofLabel), varsToNodes(vs)...)
+	return applyNB(l2sS(vs, expr, proofLabel), checkVarsToNodes(vs)...)
 }
 
 // --- Registration ---

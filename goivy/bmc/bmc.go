@@ -18,8 +18,8 @@ import (
 	"github.com/glycerine/ivy/goivy/trace"
 )
 
-const checkPrecondTrue = true
-const checkPrecondFalse = false
+const bmcCheckPrecondTrue = true
+const bmcCheckPrecondFalse = false
 
 // BMCResult holds the outcome of a BMC check.
 type BMCResult struct {
@@ -137,7 +137,7 @@ func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 		}
 
 		// Execute one step.
-		stepPost, err := ag.Execute(checkPrecondFalse, stepAction, nil, nil, "")
+		stepPost, err := ag.Execute(bmcCheckPrecondFalse, stepAction, nil, nil, "")
 		if err != nil {
 			return &BMCResult{
 				Found:   false,

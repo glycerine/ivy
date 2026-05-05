@@ -1045,7 +1045,7 @@ func TestDefToConstraintBooleanSort(t *testing.T) {
 	p := lg.NewConst("p", lg.Boolean)
 	q := lg.NewConst("q", lg.Boolean)
 	def := lg.NewDefinition(p, q)
-	result := defToConstraint(def)
+	result := mcDefToConstraint(def)
 	if _, ok := result.(*lg.Iff); !ok {
 		t.Errorf("Boolean-sorted def should produce Iff, got %T", result)
 	}
@@ -1056,7 +1056,7 @@ func TestDefToConstraintIndividualSort(t *testing.T) {
 	x := lg.NewConst("x", s)
 	y := lg.NewConst("y", s)
 	def := lg.NewDefinition(x, y)
-	result := defToConstraint(def)
+	result := mcDefToConstraint(def)
 	if _, ok := result.(*lg.Eq); !ok {
 		t.Errorf("individual-sorted def should produce Eq, got %T", result)
 	}

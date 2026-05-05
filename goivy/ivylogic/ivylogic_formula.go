@@ -120,17 +120,17 @@ func (s *Some) CloneBinder(vs []lg.Expr, body lg.Expr) *Some {
 	return result
 }
 
-// Definition is now in the logic package. Re-exported here for backward compatibility.
-type Definition = lg.Definition
+// IvyDefinition is now in the logic package. Re-exported here for backward compatibility.
+type IvyDefinition = lg.Definition
 
-func NewDefinition(lhs, rhs lg.Expr) *Definition {
+func NewIvyDefinition(lhs, rhs lg.Expr) *IvyDefinition {
 	return lg.NewDefinition(lhs, rhs)
 }
 
-// DefinitionSchema is a parametrized definition.
-type DefinitionSchema = lg.DefinitionSchema
+// IvyDefinitionSchema is a parametrized definition.
+type IvyDefinitionSchema = lg.DefinitionSchema
 
-func NewDefinitionSchema(lhs, rhs lg.Expr) *DefinitionSchema {
+func NewIvyDefinitionSchema(lhs, rhs lg.Expr) *IvyDefinitionSchema {
 	return lg.NewDefinitionSchema(lhs, rhs)
 }
 
@@ -182,7 +182,7 @@ func (l *Let) Equal(n lg.Expr) bool {
 }
 
 // Literal represents a positive or negative atomic formula.
-// Literals are not formulas — use Not(Atom(...)) for a negated formula.
+// Literals are not formulas — use Not(IvyAtom(...)) for a negated formula.
 type Literal struct {
 	ast.Base
 	Polarity int // 1 = positive, 0 = negative

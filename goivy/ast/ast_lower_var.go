@@ -119,8 +119,8 @@ func PrefixNode(n Node, s string) Node {
 		res.Base = a.Base
 		res.ASort = a.ASort
 		return res
-	case *Variable:
-		res := &Variable{Rep: s + a.Rep, VSort: a.VSort}
+	case *AstVariable:
+		res := &AstVariable{Rep: s + a.Rep, VSort: a.VSort}
 		res.Base = a.Base
 		return res
 	case *Symbol:

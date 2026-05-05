@@ -383,7 +383,7 @@ func ExpandMacro(term lg.Expr) lg.Expr {
 // relation is a partial function for each variant, and that variants
 // are mutually exclusive.
 // Corresponds to Python's exclusivity.
-func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
+func IvyExclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
 	pto := func(s lg.Sort) *lg.Const {
 		return lg.NewConst("*>", RelationSort([]lg.Sort{sort, s}))
 	}
@@ -438,7 +438,7 @@ func Variables(sorts []lg.Sort) []*lg.Variable {
 // NaryRepr returns a string representation of an n-ary operation
 // with the given operator and arguments.
 // Corresponds to Python's nary_repr.
-func NaryRepr(op string, args []lg.Expr) string {
+func IvyNaryRepr(op string, args []lg.Expr) string {
 	parts := make([]string, len(args))
 	for i, a := range args {
 		parts[i] = a.String()

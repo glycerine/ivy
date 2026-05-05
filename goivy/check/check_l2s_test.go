@@ -154,10 +154,10 @@ func TestApplyNB_WithArgs(t *testing.T) {
 	}
 }
 
-// --- varsToNodes ---
+// --- checkVarsToNodes ---
 
 func TestVarsToNodes_Empty(t *testing.T) {
-	result := varsToNodes(nil)
+	result := checkVarsToNodes(nil)
 	if len(result) != 0 {
 		t.Errorf("expected empty, got %d", len(result))
 	}
@@ -167,7 +167,7 @@ func TestVarsToNodes(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
 	x := l2sVar("X", s)
 	y := l2sVar("Y", s)
-	result := varsToNodes([]*lg.Variable{x, y})
+	result := checkVarsToNodes([]*lg.Variable{x, y})
 	if len(result) != 2 {
 		t.Fatalf("expected 2, got %d", len(result))
 	}
@@ -218,10 +218,10 @@ func TestL2sExists_WithVars(t *testing.T) {
 	}
 }
 
-// --- makeAnd ---
+// --- checkMakeAnd ---
 
 func TestMakeAnd_Zero(t *testing.T) {
-	result := makeAnd()
+	result := checkMakeAnd()
 	if result != lg.True {
 		t.Error("expected lg.True for zero terms")
 	}
@@ -229,7 +229,7 @@ func TestMakeAnd_Zero(t *testing.T) {
 
 func TestMakeAnd_One(t *testing.T) {
 	c := lg.NewConst("a", lg.Boolean)
-	result := makeAnd(c)
+	result := checkMakeAnd(c)
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
@@ -242,7 +242,7 @@ func TestMakeAnd_One(t *testing.T) {
 func TestMakeAnd_Multi(t *testing.T) {
 	a := lg.NewConst("a", lg.Boolean)
 	b := lg.NewConst("b", lg.Boolean)
-	result := makeAnd(a, b)
+	result := checkMakeAnd(a, b)
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected *lg.And, got %T", result)
@@ -289,10 +289,10 @@ func TestDedupeVarBodyPairs_Empty(t *testing.T) {
 	}
 }
 
-// --- findTemporalModels ---
+// --- checkFindTemporalModels ---
 
 func TestFindTemporalModels_Nil(t *testing.T) {
-	if findTemporalModels(nil) != nil {
+	if checkFindTemporalModels(nil) != nil {
 		t.Error("expected nil for nil goal")
 	}
 }
@@ -300,7 +300,7 @@ func TestFindTemporalModels_Nil(t *testing.T) {
 func TestFindTemporalModels_DirectTM(t *testing.T) {
 	tm := &ast.AstTemporalModels{Fmla: lg.True}
 	lf := l2sTestCfg.NewLabeledFormula(lg.NewConst("g", lg.Boolean), tm)
-	result := findTemporalModels(lf)
+	result := checkFindTemporalModels(lf)
 	if result != tm {
 		t.Error("expected the TemporalModels back")
 	}
@@ -311,7 +311,7 @@ func TestFindTemporalModels_SchemaTM(t *testing.T) {
 	prem := lg.NewConst("p", lg.Boolean)
 	sb := l2sTestCfg.NewSchemaBody(prem, tm)
 	lf := l2sTestCfg.NewLabeledFormula(lg.NewConst("g", lg.Boolean), sb)
-	result := findTemporalModels(lf)
+	result := checkFindTemporalModels(lf)
 	if result != tm {
 		t.Error("expected TemporalModels from SchemaBody conclusion")
 	}
@@ -319,7 +319,7 @@ func TestFindTemporalModels_SchemaTM(t *testing.T) {
 
 func TestFindTemporalModels_NoTM(t *testing.T) {
 	lf := l2sTestCfg.NewLabeledFormula(lg.NewConst("g", lg.Boolean), lg.True)
-	if findTemporalModels(lf) != nil {
+	if checkFindTemporalModels(lf) != nil {
 		t.Error("expected nil when no TemporalModels")
 	}
 }
@@ -357,11 +357,11 @@ func TestIsL2SSymbol_False(t *testing.T) {
 }
 
 func TestPyBool(t *testing.T) {
-	if pyBool(true) != "True" {
-		t.Errorf("expected True, got %s", pyBool(true))
+	if checkPyBool(true) != "True" {
+		t.Errorf("expected True, got %s", checkPyBool(true))
 	}
-	if pyBool(false) != "False" {
-		t.Errorf("expected False, got %s", pyBool(false))
+	if checkPyBool(false) != "False" {
+		t.Errorf("expected False, got %s", checkPyBool(false))
 	}
 }
 
@@ -659,7 +659,7 @@ func FuzzMakeAnd_L2S(f *testing.F) {
 		for i := range terms {
 			terms[i] = lg.True
 		}
-		result := makeAnd(terms...)
+		result := checkMakeAnd(terms...)
 		switch {
 		case n == 0:
 			if result != lg.True {

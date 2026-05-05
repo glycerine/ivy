@@ -76,7 +76,7 @@ type ProgressiveDomain struct {
 	z3solver       *z3bridge.Z3Solver
 	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
 	inhabitedCubes map[string]bool                // Z3 expr ID -> inhabited
-	z3Cubes        []z3bridge.Expr                // prevent GC of Z3 cubes
+	z3Cubes        []z3bridge.Z3Expr              // prevent GC of Z3 cubes
 	memo           map[string]webui.CSMemoEntry
 	inferred       [][]lg.Expr
 	unsat          bool
@@ -549,8 +549,8 @@ type RelAlg2 struct {
 	Parent     *ProgressiveDomain
 	Numbering  map[string]int
 	NextNumber int
-	PrimCache  map[string][]z3bridge.Expr
-	PrimList   []z3bridge.Expr // prevent GC
+	PrimCache  map[string][]z3bridge.Z3Expr
+	PrimList   []z3bridge.Z3Expr // prevent GC
 	NewSym     map[string]*lg.Const
 	Hm         *solver.HerbrandModel
 }
@@ -570,14 +570,14 @@ func NewRelAlg2(
 		Parent:     parent,
 		Numbering:  make(map[string]int),
 		NextNumber: 0,
-		PrimCache:  make(map[string][]z3bridge.Expr),
+		PrimCache:  make(map[string][]z3bridge.Z3Expr),
 		NewSym:     newSym,
 	}
 }
 
 // IsSat checks if a formula is satisfiable in the temp solver.
 // Corresponds to Python's is_sat.
-func (ra *RelAlg2) IsSat(f z3bridge.Expr) bool {
+func (ra *RelAlg2) IsSat(f z3bridge.Z3Expr) bool {
 	ra.TempSolver.Push()
 	defer ra.TempSolver.Pop()
 	ra.TempSolver.Assert(f)
@@ -588,7 +588,7 @@ func (ra *RelAlg2) IsSat(f z3bridge.Expr) bool {
 // Prim evaluates a primitive literal.
 // Returns a list of Z3 cube expressions.
 // Corresponds to Python's RelAlg2.prim.
-func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Expr {
+func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 	z3lit, err := ra.Slvr.LiteralToZ3(lit)
 	if err != nil {
 		return nil
@@ -598,7 +598,7 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Expr {
 		return cached
 	}
 
-	var cubes []z3bridge.Expr
+	var cubes []z3bridge.Z3Expr
 
 	// Rename literal and get ground instances from Herbrand model
 	renamedLit := renameLit(lit, ra.NewSym)
@@ -606,7 +606,7 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Expr {
 		vs, rows := ra.Hm.Check(renamedLit)
 		ctx := ra.Slvr.Context()
 		for _, row := range rows {
-			eqs := make([]z3bridge.Expr, 0, len(vs))
+			eqs := make([]z3bridge.Z3Expr, 0, len(vs))
 			for j, v := range vs {
 				origTerms := getAtomArgs(lit.Atom)
 				if j < len(origTerms) {
@@ -641,16 +641,16 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Expr {
 
 // Top returns a list with a single true cube.
 // Corresponds to Python's RelAlg2.top.
-func (ra *RelAlg2) Top() []z3bridge.Expr {
+func (ra *RelAlg2) Top() []z3bridge.Z3Expr {
 	ctx := ra.Slvr.Context()
-	return []z3bridge.Expr{ctx.BoolVal(true)}
+	return []z3bridge.Z3Expr{ctx.BoolVal(true)}
 }
 
 // Prod computes the product of two cube lists.
 // Corresponds to Python's RelAlg2.prod.
-func (ra *RelAlg2) Prod(x, y []z3bridge.Expr) []z3bridge.Expr {
+func (ra *RelAlg2) Prod(x, y []z3bridge.Z3Expr) []z3bridge.Z3Expr {
 	ctx := ra.Slvr.Context()
-	var cubes []z3bridge.Expr
+	var cubes []z3bridge.Z3Expr
 	for _, xr := range x {
 		for _, yr := range y {
 			combined := ctx.And(xr, yr)
@@ -664,10 +664,10 @@ func (ra *RelAlg2) Prod(x, y []z3bridge.Expr) []z3bridge.Expr {
 
 // Subst applies a substitution to a cube list.
 // Corresponds to Python's RelAlg2.subst.
-func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Expr) []z3bridge.Expr {
+func (ra *RelAlg2) Subst(tab []z3bridge.Z3Expr, subst map[string]lg.Expr) []z3bridge.Z3Expr {
 	// Build Z3-level substitution
 	ctx := ra.Slvr.Context()
-	var fromExprs, toExprs []z3bridge.Expr
+	var fromExprs, toExprs []z3bridge.Z3Expr
 	for name, node := range subst {
 		c := lg.NewConst(name, node.NodeSort())
 		zFrom, err1 := ra.Slvr.FormulaToZ3(c)
@@ -680,7 +680,7 @@ func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Expr) []z3brid
 	if len(fromExprs) == 0 {
 		return tab
 	}
-	result := make([]z3bridge.Expr, len(tab))
+	result := make([]z3bridge.Z3Expr, len(tab))
 	for i, expr := range tab {
 		result[i] = ctx.Substitute(expr, fromExprs, toExprs)
 	}
@@ -689,7 +689,7 @@ func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Expr) []z3brid
 
 // Empty returns true if the cube list is empty.
 // Corresponds to Python's RelAlg2.empty.
-func (ra *RelAlg2) Empty(tab []z3bridge.Expr) bool {
+func (ra *RelAlg2) Empty(tab []z3bridge.Z3Expr) bool {
 	return len(tab) == 0
 }
 
@@ -716,7 +716,7 @@ func NewRelAlg3(
 
 // Prim evaluates a primitive literal using HerbrandModel.Check.
 // Corresponds to Python's RelAlg3.prim.
-func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Expr {
+func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 	if ra.Parent.log {
 		fmt.Printf("prim: %s\n", lit)
 	}
@@ -730,13 +730,13 @@ func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Expr {
 	}
 
 	renamedLit := renameLit(lit, ra.NewSym)
-	var cubes []z3bridge.Expr
+	var cubes []z3bridge.Z3Expr
 
 	if ra.Hm != nil {
 		vs, rows := ra.Hm.Check(renamedLit)
 		ctx := ra.Slvr.Context()
 		for _, row := range rows {
-			eqs := make([]z3bridge.Expr, 0, len(vs))
+			eqs := make([]z3bridge.Z3Expr, 0, len(vs))
 			for j, v := range vs {
 				zv, err1 := ra.Slvr.FormulaToZ3(v)
 				zc, err2 := ra.Slvr.FormulaToZ3(row[j])

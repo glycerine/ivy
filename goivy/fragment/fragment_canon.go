@@ -36,7 +36,7 @@ func ufNodeSetSexp(m map[*uf.UFNode]bool) string {
 	return "[" + strings.Join(parts, " ") + "]"
 }
 
-func exprSexp(e ast.Node) string {
+func fragmentExprSexp(e ast.Node) string {
 	if e == nil {
 		return "nil"
 	}
@@ -86,7 +86,7 @@ func (a *arc) Sexp() lg.NodeKey {
 	// TODO remove?
 	lineno = 0
 	return lg.NodeKey(fmt.Sprintf("(arc from:%s to:%s fmla:%s lineno:%d argIdx:%d hasIdx:%v)",
-		ufNodeSexp(a.from), ufNodeSexp(a.to), exprSexp(a.fmla),
+		ufNodeSexp(a.from), ufNodeSexp(a.to), fragmentExprSexp(a.fmla),
 		lineno, a.argIdx, a.hasIdx))
 }
 
@@ -129,7 +129,7 @@ func (r *mapFmlaRes) Canon() iu.Canonical { return iu.Canonical(r.Sexp()) }
 
 func (s *skolemEntry) Sexp() lg.NodeKey {
 	return lg.NodeKey(fmt.Sprintf("(skolemEntry fmla:%s ast:%s)",
-		exprSexp(s.fmla), exprSexp(s.ast)))
+		fragmentExprSexp(s.fmla), fragmentExprSexp(s.ast)))
 }
 
 func (s *skolemEntry) Canon() iu.Canonical { return iu.Canonical(s.Sexp()) }
@@ -149,7 +149,7 @@ func (f *fmlaPair) Sexp() lg.NodeKey {
 	// it in all ways. So for now we just report lineno of 0 on both sides.
 	lineno = 0
 	return lg.NodeKey(fmt.Sprintf("(fmlaPair fmla:%s source:%s lineno:%d)",
-		exprSexp(f.fmla), sourceStr, lineno))
+		fragmentExprSexp(f.fmla), sourceStr, lineno))
 }
 
 func (f *fmlaPair) Canon() iu.Canonical { return iu.Canonical(f.Sexp()) }

@@ -20,7 +20,7 @@ import (
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-const checkPrecondTrue = true
+const traceCheckPrecondTrue = true
 
 // Subgraph holds a pointer to a nested trace for call/return tracking.
 type Subgraph struct {
@@ -502,7 +502,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*module.Clauses)
 	var postState *art.State
 	if envAction != nil {
 		var err error
-		postState, err = ag.Execute(checkPrecondTrue, envAction, preState, nil, "")
+		postState, err = ag.Execute(traceCheckPrecondTrue, envAction, preState, nil, "")
 		if err != nil {
 			return nil, nil, nil, fmt.Errorf("MakeCheckArt: Execute failed: %w", err)
 		}

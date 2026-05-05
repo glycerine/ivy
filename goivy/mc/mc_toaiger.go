@@ -104,7 +104,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Python: invariant = il.And(*[il.drop_universals(lf.formula) for lf in conjs])
 	var invTerms []lg.Expr
 	for _, lf := range conjs {
-		invTerms = append(invTerms, il.DropUniversals(lf.Formula.(lg.Expr)))
+		invTerms = append(invTerms, il.IvyDropUniversals(lf.Formula.(lg.Expr)))
 	}
 	var invariant lg.Expr = &lg.And{Terms: invTerms}
 
@@ -235,7 +235,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// ===== PROPOSITIONAL ABSTRACTION PIPELINE =====
 
 	// Step 4a: Convert non-finite definitions to constraints
-	var newDefs []*il.Definition
+	var newDefs []*il.IvyDefinition
 	var newFmlas []lg.Expr
 	for _, df := range trans.Defs {
 		defSym := df.Defines()
@@ -247,7 +247,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 			}
 		}
 		// Convert to constraint
-		newFmlas = append(newFmlas, defToConstraint(df))
+		newFmlas = append(newFmlas, mcDefToConstraint(df))
 	}
 	transFmlas2 := append(newFmlas, trans.Fmlas...)
 	trans = module.NewClauses(transFmlas2, newDefs, trans.Annot)
@@ -255,11 +255,11 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 4b: Eliminate ITEs over non-finite sorts
 	var iteCnsts []lg.Expr
 	mcIteCtr := &mod.Cfg.McIteCtr
-	elimDefs := make([]*il.Definition, len(trans.Defs))
+	elimDefs := make([]*il.IvyDefinition, len(trans.Defs))
 	for i, df := range trans.Defs {
 		newLhs := ElimIte(df.Lhs, &iteCnsts, mcIteCtr)
 		newRhs := ElimIte(df.Rhs, &iteCnsts, mcIteCtr)
-		elimDefs[i] = il.NewDefinition(newLhs, newRhs)
+		elimDefs[i] = il.NewIvyDefinition(newLhs, newRhs)
 	}
 	elimFmlas := make([]lg.Expr, len(trans.Fmlas))
 	for i, f := range trans.Fmlas {
@@ -299,12 +299,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	xtracer.Trace("mc.ToAiger postQelim nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 4d: Instantiate axioms using pattern matching
-	stVarNameList := constNames(stVars)
+	stVarNameList := mcConstNames(stVars)
 	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs, mod.Cfg.IuCfg)
 	if len(axs) > 0 {
 		axConj := &lg.And{Terms: axs}
 		axVar := lg.NewConst("__axioms", lg.Boolean)
-		axDef := il.NewDefinition(axVar, axConj)
+		axDef := il.NewIvyDefinition(axVar, axConj)
 		invariant = &lg.Implies{T1: axVar, T2: invariant}
 		allFmlas := append(trans.Fmlas, axVar)
 		allDefs := append(trans.Defs, axDef)
@@ -354,12 +354,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		return false
 	}
 
-	var addDefs []*il.Definition
+	var addDefs []*il.IvyDefinition
 	for exprKey, v := range propAbs.Map.All() {
 		origExpr, _ := propAbs.OrigExprs.Get2(exprKey)
 		if origExpr != nil && isImmutableExpr(origExpr) && !isExprDefined(origExpr) {
 			propAbs.NewStVars = append(propAbs.NewStVars, v)
-			addDefs = append(addDefs, il.NewDefinition(
+			addDefs = append(addDefs, il.NewIvyDefinition(
 				lg.NewConst(actions.ActionNewName(v.Name), v.CSort),
 				v,
 			))
@@ -368,7 +368,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, sym := range propAbs.FiniteSyms {
 		if isImmutableExpr(sym) && !isExprDefined(sym) {
 			propAbs.NewStVars = append(propAbs.NewStVars, sym)
-			addDefs = append(addDefs, il.NewDefinition(
+			addDefs = append(addDefs, il.NewIvyDefinition(
 				lg.NewConst(actions.ActionNewName(sym.Name), sym.CSort),
 				sym,
 			))
@@ -423,12 +423,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans = module.RenameClauses(trans, fixRn)
 
 	// Add next-state definitions and curval definitions
-	// Python: new_defs = trans.defs + [il.Definition(sym_inst(tr.new(v)),sym_inst(fix(v))) for v in stvars]
-	var extraDefs []*il.Definition
+	// Python: new_defs = trans.defs + [il.IvyDefinition(sym_inst(tr.new(v)),sym_inst(fix(v))) for v in stvars]
+	var extraDefs []*il.IvyDefinition
 	for _, v := range stVars {
 		newV := lg.NewConst(actions.ActionNewName(v.Name), v.CSort)
 		fixV := lg.NewConst("nondet"+v.Name, v.CSort)
-		extraDefs = append(extraDefs, il.NewDefinition(newV, fixV))
+		extraDefs = append(extraDefs, il.NewIvyDefinition(newV, fixV))
 	}
 	for _, v := range stVars {
 		if v.Name == "__init" {
@@ -436,7 +436,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		}
 		curvalV := lg.NewConst("curval"+v.Name, v.CSort)
 		initChoice := lg.NewConst("initchoice"+v.Name, v.CSort)
-		extraDefs = append(extraDefs, il.NewDefinition(curvalV,
+		extraDefs = append(extraDefs, il.NewIvyDefinition(curvalV,
 			&lg.Ite{Cond: initVar, Then: v, Else: initChoice}))
 	}
 	allDefs3 := append(trans.Defs, extraDefs...)
@@ -445,10 +445,10 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 6: Turn transition constraint into a definition
 	cnstVar := lg.NewConst("__cnst", lg.Boolean)
-	var finalDefs []*il.Definition
+	var finalDefs []*il.IvyDefinition
 	finalDefs = append(finalDefs, trans.Defs...)
 	fixCnst := lg.NewConst("nondet__cnst", lg.Boolean)
-	finalDefs = append(finalDefs, il.NewDefinition(
+	finalDefs = append(finalDefs, il.NewIvyDefinition(
 		lg.NewConst(actions.ActionNewName("__cnst"), lg.Boolean),
 		fixCnst,
 	))
@@ -460,7 +460,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		fmlaConj := &lg.And{Terms: trans.Fmlas}
 		cnstBody = &lg.Or{Terms: []lg.Expr{cnstVar, &lg.Not{Body: fmlaConj}}}
 	}
-	finalDefs = append(finalDefs, il.NewDefinition(fixCnst, cnstBody))
+	finalDefs = append(finalDefs, il.NewIvyDefinition(fixCnst, cnstBody))
 	stVars = append(stVars, lg.NewConst("__cnst", lg.Boolean))
 	trans = module.NewClauses(nil, finalDefs, trans.Annot)
 
@@ -513,7 +513,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Add invariant fail definition
 	invarFail := lg.NewConst("invar__fail", lg.Boolean)
-	combDefs = append(combDefs, il.NewDefinition(invarFail, &lg.Not{Body: invariant}))
+	combDefs = append(combDefs, il.NewIvyDefinition(invarFail, &lg.Not{Body: invariant}))
 
 	if err := aiger.DefList(combDefs); err != nil {
 		return nil, fmt.Errorf("deflist failed: %w", err)
@@ -590,7 +590,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 }
 
 // constNames extracts string names from a slice of typed Const symbols.
-func constNames(syms []*lg.Const) []string {
+func mcConstNames(syms []*lg.Const) []string {
 	names := make([]string, len(syms))
 	for i, s := range syms {
 		names[i] = s.Name
@@ -622,14 +622,14 @@ func AddErrFlag(action actions.ActionsAction, erf *lg.Const, errConds *[]lg.Expr
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		// Python: errcond = ilu.dual_formula(il.drop_universals(action.formula))
-		errCond := module.DualFormula(il.DropUniversals(a.Formula), nil, instantiator)
+		errCond := module.DualFormula(il.IvyDropUniversals(a.Formula), nil, instantiator)
 		*errConds = append(*errConds, errCond)
 		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
 
 	case *actions.RequiresAction:
 		// Require is a kind of assert
-		errCond := &lg.Not{Body: il.DropUniversals(a.Formula)}
+		errCond := &lg.Not{Body: il.IvyDropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)
 		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
@@ -783,8 +783,8 @@ func (w *actionNodeWrapper) Sexp() lg.NodeKey {
 func (w *actionNodeWrapper) Args() []ast.Node               { return nil }
 func (w *actionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
 
-// defsToNodes converts a slice of *il.Definition to []lg.Expr.
-func defsToNodes(defs []*il.Definition) []lg.Expr {
+// defsToNodes converts a slice of *il.IvyDefinition to []lg.Expr.
+func defsToNodes(defs []*il.IvyDefinition) []lg.Expr {
 	nodes := make([]lg.Expr, len(defs))
 	for i, d := range defs {
 		nodes[i] = d
@@ -792,11 +792,11 @@ func defsToNodes(defs []*il.Definition) []lg.Expr {
 	return nodes
 }
 
-// nodesToDefs converts a slice of lg.Expr back to []*il.Definition.
-func nodesToDefs(nodes []lg.Expr) []*il.Definition {
-	var defs []*il.Definition
+// nodesToDefs converts a slice of lg.Expr back to []*il.IvyDefinition.
+func nodesToDefs(nodes []lg.Expr) []*il.IvyDefinition {
+	var defs []*il.IvyDefinition
 	for _, n := range nodes {
-		if d, ok := n.(*il.Definition); ok {
+		if d, ok := n.(*il.IvyDefinition); ok {
 			defs = append(defs, d)
 		}
 	}

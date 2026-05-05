@@ -820,7 +820,7 @@ func compileExprVocabLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Module
 	if mod == nil {
 		mod = module.New()
 	}
-	c := compiler.New(sig, mod)
+	c := compiler.NewCompiler(sig, mod)
 	compiled, err := c.ThingLF(lf)
 	if err != nil {
 		return nil, err

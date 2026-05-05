@@ -9,7 +9,7 @@ import (
 )
 
 // helper: make a sort
-func mkSort(name string) lg.Sort {
+func actionsMkSort(name string) lg.Sort {
 	return &lg.UninterpretedSort{Name: name}
 }
 
@@ -29,7 +29,7 @@ func TestSequenceBasic(t *testing.T) {
 }
 
 func TestAssumeAction(t *testing.T) {
-	fmla := mkConst("p")
+	fmla := actionsMkConst("p")
 	a := NewAssumeAction(fmla)
 	if a.Name() != "assume" {
 		t.Errorf("Name() = %q", a.Name())
@@ -44,7 +44,7 @@ func TestAssumeAction(t *testing.T) {
 }
 
 func TestAssertAction(t *testing.T) {
-	fmla := mkConst("q")
+	fmla := actionsMkConst("q")
 	a := NewAssertAction(fmla)
 	if a.Name() != "assert" {
 		t.Errorf("Name() = %q", a.Name())
@@ -55,22 +55,22 @@ func TestAssertAction(t *testing.T) {
 }
 
 func TestRequiresAction(t *testing.T) {
-	a := NewRequiresAction(mkConst("r"))
+	a := NewRequiresAction(actionsMkConst("r"))
 	if a.Name() != "assert" { // Python: RequiresAction inherits name() → "assert"
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
 func TestEnsuresAction(t *testing.T) {
-	a := NewEnsuresAction(mkConst("e"))
+	a := NewEnsuresAction(actionsMkConst("e"))
 	if a.Name() != "assert" { // Python: EnsuresAction inherits name() → "assert"
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
 func TestAssignAction(t *testing.T) {
-	lhs := mkConst("x")
-	rhs := mkConst("y")
+	lhs := actionsMkConst("x")
+	rhs := actionsMkConst("y")
 	a := NewAssignAction(lhs, rhs)
 	if a.Name() != "assign" {
 		t.Errorf("Name() = %q", a.Name())
@@ -84,7 +84,7 @@ func TestAssignAction(t *testing.T) {
 }
 
 func TestHavocAction(t *testing.T) {
-	a := NewHavocAction(mkConst("x"))
+	a := NewHavocAction(actionsMkConst("x"))
 	if a.Name() != "havoc" {
 		t.Errorf("Name() = %q", a.Name())
 	}
@@ -94,14 +94,14 @@ func TestHavocAction(t *testing.T) {
 }
 
 func TestSetAction(t *testing.T) {
-	a := NewSetAction(mkConst("lit"))
+	a := NewSetAction(actionsMkConst("lit"))
 	if a.Name() != "set" {
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
 func TestIfAction(t *testing.T) {
-	cond := mkConst("c")
+	cond := actionsMkConst("c")
 	thenB := NewSequence()
 	a := NewIfAction(cond, thenB)
 	if a.Name() != "if" {
@@ -123,7 +123,7 @@ func TestIfAction(t *testing.T) {
 }
 
 func TestWhileAction(t *testing.T) {
-	cond := mkConst("c")
+	cond := actionsMkConst("c")
 	body := NewSequence()
 	a := NewWhileAction(cond, body)
 	if a.Name() != "while" {
@@ -144,7 +144,7 @@ func TestChoiceAction(t *testing.T) {
 }
 
 func TestCallAction(t *testing.T) {
-	callee := mkConst("myaction")
+	callee := actionsMkConst("myaction")
 	a := NewCallActionOn(NewActionsConfig(), callee)
 	if a.Name() != "call" {
 		t.Errorf("Name() = %q", a.Name())
@@ -157,7 +157,7 @@ func TestCallAction(t *testing.T) {
 
 func TestLocalAction(t *testing.T) {
 	body := NewSequence()
-	local := mkConst("v")
+	local := actionsMkConst("v")
 	actCfg := NewActionsConfig()
 	a := NewLocalActionOn(actCfg, "test", local, body)
 	if a.Name() != "local" {
@@ -170,7 +170,7 @@ func TestLocalAction(t *testing.T) {
 
 func TestLetAction(t *testing.T) {
 	body := NewSequence()
-	binding := mkConst("b")
+	binding := actionsMkConst("b")
 	a := NewLetAction(binding, body)
 	if a.Name() != "let" {
 		t.Errorf("Name() = %q", a.Name())
@@ -186,7 +186,7 @@ func TestBindOldsAction(t *testing.T) {
 }
 
 func TestNativeAction(t *testing.T) {
-	code := mkConst("code_blob")
+	code := actionsMkConst("code_blob")
 	a := NewNativeAction(code)
 	if a.Name() != "native" {
 		t.Errorf("Name() = %q", a.Name())
@@ -194,14 +194,14 @@ func TestNativeAction(t *testing.T) {
 }
 
 func TestCrashAction(t *testing.T) {
-	a := NewCrashAction(mkConst("target"))
+	a := NewCrashAction(actionsMkConst("target"))
 	if a.Name() != "crash" {
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
 func TestThunkAction(t *testing.T) {
-	a := NewThunkAction(mkConst("a"), mkConst("b"))
+	a := NewThunkAction(actionsMkConst("a"), actionsMkConst("b"))
 	if a.Name() != "thunk" {
 		t.Errorf("Name() = %q", a.Name())
 	}
@@ -241,10 +241,10 @@ func TestIgnoreAction(t *testing.T) {
 // --- Clone ---
 
 func TestClonePreservesFormals(t *testing.T) {
-	fmla := mkConst("p")
+	fmla := actionsMkConst("p")
 	a := NewAssumeAction(fmla)
-	params := []*lg.Const{mkConst("x"), mkConst("y")}
-	returns := []*lg.Const{mkConst("r")}
+	params := []*lg.Const{actionsMkConst("x"), actionsMkConst("y")}
+	returns := []*lg.Const{actionsMkConst("r")}
 	a.SetFormalParams(params)
 	a.SetFormalReturns(returns)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
@@ -256,12 +256,12 @@ func TestClonePreservesFormals(t *testing.T) {
 }
 
 func TestSequenceClone(t *testing.T) {
-	c1 := mkConst("a")
-	c2 := mkConst("b")
+	c1 := actionsMkConst("a")
+	c2 := actionsMkConst("b")
 	s := NewSequence(c1, c2)
 	s.SetLineno(ast.Location{Line: 10})
 
-	cloned := s.ActionClone([]lg.Expr{mkConst("x")})
+	cloned := s.ActionClone([]lg.Expr{actionsMkConst("x")})
 	if len(cloned.ActionArgs()) != 1 {
 		t.Errorf("Cloned args len = %d, want 1", len(cloned.ActionArgs()))
 	}
@@ -270,7 +270,7 @@ func TestSequenceClone(t *testing.T) {
 // --- IterCalls / IterSubactions ---
 
 func TestIterCallsNested(t *testing.T) {
-	call := NewCallActionOn(NewActionsConfig(), mkConst("foo"))
+	call := NewCallActionOn(NewActionsConfig(), actionsMkConst("foo"))
 	seq := NewSequence(call)
 	calls := seq.IterCalls()
 	if len(calls) != 1 || calls[0] != "foo" {
@@ -279,7 +279,7 @@ func TestIterCallsNested(t *testing.T) {
 }
 
 func TestIterSubactions(t *testing.T) {
-	inner := NewAssumeAction(mkConst("p"))
+	inner := NewAssumeAction(actionsMkConst("p"))
 	seq := NewSequence(inner)
 	subs := seq.IterSubactions()
 	// Should include seq itself + the assume
@@ -295,7 +295,7 @@ func TestFormalParams(t *testing.T) {
 	if a.GetFormalParams() != nil {
 		t.Error("Initial formal params should be nil")
 	}
-	params := []*lg.Const{mkConst("x")}
+	params := []*lg.Const{actionsMkConst("x")}
 	a.SetFormalParams(params)
 	got := a.GetFormalParams()
 	if len(got) != 1 || got[0].Name != "x" {
@@ -319,8 +319,8 @@ func TestLineno(t *testing.T) {
 
 func TestCopyFormalsTo(t *testing.T) {
 	src := NewSequence()
-	src.SetFormalParams([]*lg.Const{mkConst("a")})
-	src.SetFormalReturns([]*lg.Const{mkConst("b")})
+	src.SetFormalParams([]*lg.Const{actionsMkConst("a")})
+	src.SetFormalReturns([]*lg.Const{actionsMkConst("b")})
 
 	dst := NewSequence()
 	src.CopyFormalsTo(dst)
@@ -336,7 +336,7 @@ func TestCopyFormalsTo(t *testing.T) {
 // --- Schema ---
 
 func TestSchema(t *testing.T) {
-	s := NewSchema(mkConst("defn"))
+	s := NewSchema(actionsMkConst("defn"))
 	if !strings.Contains(s.String(), "defn") {
 		t.Errorf("Schema.String() = %q", s.String())
 	}
@@ -345,7 +345,7 @@ func TestSchema(t *testing.T) {
 // --- RME ---
 
 func TestRME(t *testing.T) {
-	r := NewRME(mkConst("pre"), []string{"x", "y"}, mkConst("post"))
+	r := NewRME(actionsMkConst("pre"), []string{"x", "y"}, actionsMkConst("post"))
 	s := r.String()
 	if !strings.Contains(s, "requires") || !strings.Contains(s, "modifies") || !strings.Contains(s, "ensures") {
 		t.Errorf("RME.String() = %q", s)
@@ -355,15 +355,15 @@ func TestRME(t *testing.T) {
 // --- Helpers ---
 
 func TestConcatActions(t *testing.T) {
-	a1 := NewAssumeAction(mkConst("p"))
-	a2 := NewAssertAction(mkConst("q"))
+	a1 := NewAssumeAction(actionsMkConst("p"))
+	a2 := NewAssertAction(actionsMkConst("q"))
 	seq := ConcatActions(a1, a2)
 	if len(seq.Elems) != 2 {
 		t.Errorf("ConcatActions len = %d, want 2", len(seq.Elems))
 	}
 
 	// Flattening: concat with an existing sequence.
-	a3 := NewAssumeAction(mkConst("r"))
+	a3 := NewAssumeAction(actionsMkConst("r"))
 	seq2 := ConcatActions(seq, a3)
 	if len(seq2.Elems) != 3 {
 		t.Errorf("ConcatActions (flatten) len = %d, want 3", len(seq2.Elems))
@@ -376,7 +376,7 @@ func TestHasCode(t *testing.T) {
 		t.Error("Empty sequence should have no code")
 	}
 
-	withCode := NewSequence(NewAssumeAction(mkConst("p")))
+	withCode := NewSequence(NewAssumeAction(actionsMkConst("p")))
 	if !HasCode(withCode) {
 		t.Error("Sequence with assume should have code")
 	}
@@ -384,8 +384,8 @@ func TestHasCode(t *testing.T) {
 
 func TestCallSet(t *testing.T) {
 	env := map[string]ActionsAction{
-		"a": NewCallActionOn(NewActionsConfig(), mkConst("b")),
-		"b": NewCallActionOn(NewActionsConfig(), mkConst("c")),
+		"a": NewCallActionOn(NewActionsConfig(), actionsMkConst("b")),
+		"b": NewCallActionOn(NewActionsConfig(), actionsMkConst("c")),
 		"c": NewSequence(),
 	}
 	result := CallSet("a", env)
@@ -397,10 +397,10 @@ func TestCallSet(t *testing.T) {
 
 func TestPrefixAction(t *testing.T) {
 	body := NewSequence()
-	body.SetFormalParams([]*lg.Const{mkConst("p")})
+	body.SetFormalParams([]*lg.Const{actionsMkConst("p")})
 	body.SetLineno(ast.Location{Line: 5})
 
-	stmt := NewAssumeAction(mkConst("pre"))
+	stmt := NewAssumeAction(actionsMkConst("pre"))
 	result := PrefixAction(body, []ActionsAction{stmt})
 
 	if _, ok := result.(*Sequence); !ok {
@@ -419,7 +419,7 @@ func TestPostfixAction(t *testing.T) {
 		t.Error("PostfixAction with no stmts should return original")
 	}
 
-	stmt := NewAssumeAction(mkConst("post"))
+	stmt := NewAssumeAction(actionsMkConst("post"))
 	result = PostfixAction(body, []ActionsAction{stmt})
 	if _, ok := result.(*Sequence); !ok {
 		t.Error("PostfixAction should return a Sequence")
@@ -428,7 +428,7 @@ func TestPostfixAction(t *testing.T) {
 
 func TestParamsToStr(t *testing.T) {
 	params := []*lg.Const{
-		lg.NewConst("fml:x", mkSort("S")),
+		lg.NewConst("fml:x", actionsMkSort("S")),
 		lg.NewConst("y", lg.Boolean),
 	}
 	s := ParamsToStr(params)
@@ -454,13 +454,13 @@ func TestActionDefToStr(t *testing.T) {
 }
 
 func TestApplyMixin(t *testing.T) {
-	a1 := NewAssumeAction(mkConst("pre"))
+	a1 := NewAssumeAction(actionsMkConst("pre"))
 	a1.SetLineno(ast.Location{Line: 1})
-	a1.SetFormalParams([]*lg.Const{mkConst("p")})
+	a1.SetFormalParams([]*lg.Const{actionsMkConst("p")})
 	a1.SetFormalReturns(nil)
 
 	a2 := NewSequence()
-	a2.SetFormalParams([]*lg.Const{mkConst("p")})
+	a2.SetFormalParams([]*lg.Const{actionsMkConst("p")})
 	a2.SetFormalReturns(nil)
 
 	// After mixin: a1 appended after a2
@@ -547,7 +547,7 @@ func FuzzActionClone(f *testing.F) {
 		if argName == "" {
 			return
 		}
-		c := mkConst(argName)
+		c := actionsMkConst(argName)
 		var a ActionsAction
 		switch actionType {
 		case "assume":
@@ -555,7 +555,7 @@ func FuzzActionClone(f *testing.F) {
 		case "assert":
 			a = NewAssertAction(c)
 		case "assign":
-			a = NewAssignAction(c, mkConst("rhs"))
+			a = NewAssignAction(c, actionsMkConst("rhs"))
 		case "havoc":
 			a = NewHavocAction(c)
 		case "sequence":
@@ -571,8 +571,8 @@ func FuzzActionClone(f *testing.F) {
 		}
 
 		// Set some formals.
-		a.SetFormalParams([]*lg.Const{mkConst("fp")})
-		a.SetFormalReturns([]*lg.Const{mkConst("fr")})
+		a.SetFormalParams([]*lg.Const{actionsMkConst("fp")})
+		a.SetFormalReturns([]*lg.Const{actionsMkConst("fr")})
 		a.SetLineno(ast.Location{Filename: "fuzz.ivy", Line: 1})
 
 		// Clone should not panic.

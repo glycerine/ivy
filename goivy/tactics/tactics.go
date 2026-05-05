@@ -20,8 +20,8 @@ import (
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-const checkPrecondTrue = true
-const checkPrecondFalse = false
+const tacticsCheckPrecondTrue = true
+const tacticsCheckPrecondFalse = false
 
 // Tactic is the interface for proof refinement tactics.
 type Tactic interface {
@@ -648,7 +648,7 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 	if !ok || goalNode == nil {
 		return false, nil
 	}
-	_, err := t.TC.AG.Execute(checkPrecondTrue, t.Action, goalNode, t.Abstractor, "")
+	_, err := t.TC.AG.Execute(tacticsCheckPrecondTrue, t.Action, goalNode, t.Abstractor, "")
 	if err != nil {
 		return false, fmt.Errorf("ExecuteAction: %w", err)
 	}
@@ -705,7 +705,7 @@ func (tc *TacticsContext) ArgAddActionNode(pre *art.State, action actions.Action
 			}
 		}
 	}
-	node, err := tc.AG.Execute(checkPrecondTrue, action, pre, abstractor, label)
+	node, err := tc.AG.Execute(tacticsCheckPrecondTrue, action, pre, abstractor, label)
 	if err != nil || node == nil {
 		return nil
 	}

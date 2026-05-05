@@ -146,7 +146,7 @@ func TestWhileExpandRankingChecksUseDecreasesLineno(t *testing.T) {
 	expanded := wa.Expand(ctx)
 
 	var rankingActions []ActionsAction
-	walkActions(expanded, func(a ActionsAction) {
+	actionsWalkActions(expanded, func(a ActionsAction) {
 		switch act := a.(type) {
 		case *AssumeAction:
 			if eq, ok := act.Formula.(*lg.Eq); ok {
@@ -307,7 +307,7 @@ func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 
 func countActionType(act ActionsAction, pred func(ActionsAction) bool) int {
 	count := 0
-	walkActions(act, func(a ActionsAction) {
+	actionsWalkActions(act, func(a ActionsAction) {
 		if pred(a) {
 			count++
 		}
@@ -317,7 +317,7 @@ func countActionType(act ActionsAction, pred func(ActionsAction) bool) int {
 
 func collectActionType(act ActionsAction, pred func(ActionsAction) bool) []ActionsAction {
 	var result []ActionsAction
-	walkActions(act, func(a ActionsAction) {
+	actionsWalkActions(act, func(a ActionsAction) {
 		if pred(a) {
 			result = append(result, a)
 		}
@@ -325,7 +325,7 @@ func collectActionType(act ActionsAction, pred func(ActionsAction) bool) []Actio
 	return result
 }
 
-func walkActions(act ActionsAction, fn func(ActionsAction)) {
+func actionsWalkActions(act ActionsAction, fn func(ActionsAction)) {
 	if act == nil {
 		return
 	}
@@ -334,18 +334,18 @@ func walkActions(act ActionsAction, fn func(ActionsAction)) {
 	case *Sequence:
 		for _, sub := range a.ActionArgs() {
 			if sa, ok := sub.(ActionsAction); ok {
-				walkActions(sa, fn)
+				actionsWalkActions(sa, fn)
 			}
 		}
 	case *IfAction:
 		for _, sub := range a.ActionArgs() {
 			if sa, ok := sub.(ActionsAction); ok {
-				walkActions(sa, fn)
+				actionsWalkActions(sa, fn)
 			}
 		}
 	case *LocalAction:
 		if body, ok := a.Body.(ActionsAction); ok {
-			walkActions(body, fn)
+			actionsWalkActions(body, fn)
 		}
 	}
 }

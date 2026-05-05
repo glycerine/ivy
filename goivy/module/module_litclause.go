@@ -102,7 +102,7 @@ func formulaToClauseLits(f lg.Expr) []*il.Literal {
 func FormulaToClausesAux(f lg.Expr) [][]*il.Literal {
 	f = DropUniversals(f)
 	f = lu.DeMorgan(f)
-	if il.IsFalse(f) {
+	if il.IvyIsFalse(f) {
 		return [][]*il.Literal{{}} // empty clause = false
 	}
 	if _, isAnd := f.(*lg.And); !isAnd {
@@ -227,7 +227,7 @@ func TrimClauses(cls *Clauses) *Clauses {
 	seeds = append(seeds, cls.Fmlas...)
 	for _, d := range cls.Defs {
 		rep := il.GetAppRep(d.Lhs)
-		if rep != nil && !isSkolem(rep) {
+		if rep != nil && !moduleIsSkolem(rep) {
 			seeds = append(seeds, d.Rhs)
 		}
 	}
@@ -247,10 +247,10 @@ func TrimClauses(cls *Clauses) *Clauses {
 			}
 		}
 	}
-	var newDefs []*il.Definition
+	var newDefs []*il.IvyDefinition
 	for _, d := range cls.Defs {
 		rep := il.GetAppRep(d.Lhs)
-		if rep != nil && (!isSkolem(rep) || usedSyms[rep.Name]) {
+		if rep != nil && (!moduleIsSkolem(rep) || usedSyms[rep.Name]) {
 			newDefs = append(newDefs, d)
 		}
 	}
@@ -417,5 +417,5 @@ func clauseEqual(c1, c2 []*il.Literal) bool {
 // Corresponds to Python's bool_const (ivy_logic_utils.py:1388-1389).
 func BoolConst(name string) lg.Expr {
 	sym := lg.NewConst(name, il.RelationSort(nil))
-	return il.Atom(sym, nil)
+	return il.IvyAtom(sym, nil)
 }

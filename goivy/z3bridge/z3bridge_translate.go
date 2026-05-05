@@ -90,7 +90,7 @@ func (t *Translator) LookupNative(name string, sort lg.Sort, kind string) any {
 	// Convert NativeFunc (named type in solver package) to the anonymous
 	// function type that z3bridge low-level code can type-assert against.
 	if nf, ok := result.(NativeFunc); ok {
-		return func(args ...Expr) Expr {
+		return func(args ...Z3Expr) Z3Expr {
 			return nf(args...)
 		}
 	}
@@ -107,14 +107,14 @@ func (t *Translator) SolverName(name string, sort lg.Sort) string {
 // quantConstraints generates Z3 constraints for quantifier-bound variables
 // based on their sort (nat non-negativity, range sort bounds).
 // Matches Python quant_constraints (ivy_solver.py:557-568).
-func (t *Translator) quantConstraints(vars []*lg.Variable, z3Vars []Expr) []Expr {
+func (t *Translator) quantConstraints(vars []*lg.Variable, z3Vars []Z3Expr) []Z3Expr {
 	xtracer.Trace("ivy_solver.py:545 quant_constraints() ENTER nvars=%d", len(vars))
 	if t.s == nil || t.s.sig == nil {
 		return nil
 	}
-	var cnstrs []Expr
+	var cnstrs []Z3Expr
 	for i, v := range vars {
-		sortName := il.SortName(v.VSort)
+		sortName := il.IvySortName(v.VSort)
 		itp, ok := t.s.sig.Interp[sortName]
 		if !ok {
 			continue
@@ -139,7 +139,7 @@ func (t *Translator) quantConstraints(vars []*lg.Variable, z3Vars []Expr) []Expr
 
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
 // Matches Python's forall (ivy_solver.py:572-577).
-func (t *Translator) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
+func (t *Translator) forall(vars []*lg.Variable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
 	xtracer.Trace("ivy_solver.py:560 forall() ENTER nvars=%d", len(vars))
 	cnstrs := t.quantConstraints(vars, z3Vars)
 	if len(cnstrs) > 0 {
@@ -150,7 +150,7 @@ func (t *Translator) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Exp
 
 // exists wraps a Z3 body in Exists with quant constraints (nat/range bounds).
 // Matches Python's exists (ivy_solver.py:579-584).
-func (t *Translator) exists(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
+func (t *Translator) exists(vars []*lg.Variable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
 	xtracer.Trace("ivy_solver.py:567 exists() ENTER nvars=%d", len(vars))
 	cnstrs := t.quantConstraints(vars, z3Vars)
 	if len(cnstrs) > 0 {
@@ -161,14 +161,14 @@ func (t *Translator) exists(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Exp
 
 // Eq is for custom equality (e.g., MyEq with True/False optimization).
 // Corresponds to Python's my_eq (ivy_solver.py:88-95).
-func (t *Translator) Eq(x, y Expr) Expr {
+func (t *Translator) Eq(x, y Z3Expr) Z3Expr {
 	return MyEq(t.Ctx, x, y)
 }
 
 // EnumEq is for custom enumerated sort equality (binary encoding).
 // Returns non-nil Expr to override default equality; nil to use default.
 // Corresponds to Python's encode_equality dispatch in atom_to_z3 (ivy_solver.py:484).
-func (t *Translator) EnumEq(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (*Expr, error) {
+func (t *Translator) EnumEq(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (*Z3Expr, error) {
 	if !t.s.opts.UseZ3Enums {
 		result, err := t.s.EncodeEqualityZ3(t1, t2, sort)
 		if err != nil {
@@ -187,12 +187,12 @@ func (t *Translator) EnumEq(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (*Expr, err
 // Z3 object creation. It CANNOT delegate to t.s.NumeralToZ3() because
 // that uses s.tr.Ctx (the solver's default Z3Context), which is wrong
 // when this translator operates in an interpolation context.
-func (t *Translator) Numeral(name string, sort lg.Sort) (*Expr, error) {
-	xtracer.Trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%s:%s", name, il.SortName(sort))
-	sortName := il.SortName(sort)
+func (t *Translator) Numeral(name string, sort lg.Sort) (*Z3Expr, error) {
+	xtracer.Trace("ivy_solver.py:417 numeral_to_z3() ENTER num=%s:%s", name, il.IvySortName(sort))
+	sortName := il.IvySortName(sort)
 
 	nativeResult := t.LookupNative(sortName, sort, "sort")
-	z3sort, isSort := nativeResult.(Sort)
+	z3sort, isSort := nativeResult.(Z3Sort)
 	if !isSort {
 		xtracer.Trace("TranslateSort_call callsite=numeral_to_z3 HASH canon=%s", sort.Sexp())
 		translated, err := t.TranslateSort(sort)
@@ -218,7 +218,7 @@ func (t *Translator) Numeral(name string, sort lg.Sort) (*Expr, error) {
 		return nil, fmt.Errorf("cannot parse numeral %q: %w", cleanName, err)
 	}
 
-	var val Expr
+	var val Z3Expr
 	switch z3sort.Kind() {
 	case SortInt:
 		val = t.Ctx.IntVal(intVal)
@@ -277,7 +277,7 @@ func (t *Translator) Clear() {
 
 // SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
 // Corresponds to Python's sort_from_z3() (ivy_solver.py:905).
-func (t *Translator) SortFromZ3(z3sort Sort) (lg.Sort, bool) {
+func (t *Translator) SortFromZ3(z3sort Z3Sort) (lg.Sort, bool) {
 	ivySort, ok := t.cache.sortsInv[z3sort.GetId()]
 	return ivySort, ok
 }
@@ -319,7 +319,7 @@ func (t *Translator) dumpSortsCanon() (r string) {
 // as Python's polymorphic dispatch. This also avoids
 // a circular import issue that would need two more interfaces
 // to circumvent.
-func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
+func (t *Translator) TranslateSort(s lg.Sort) (Z3Sort, error) {
 	switch st := s.(type) {
 	case *lg.BooleanSort:
 		// Python z3.BoolSort() has no custom trace
@@ -339,7 +339,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		// Python: s = lookup_native(us, sorts, "sort")
 
 		if result := t.LookupNative(st.Name, s, "sort"); result != nil {
-			if zs, ok := result.(Sort); ok {
+			if zs, ok := result.(Z3Sort); ok {
 				xtracer.Trace("ivy_solver.py:273 uninterpretedsort() not-None from lookup_native")
 				t.cache.sorts[key] = zs
 				t.cache.sortsInv[zs.GetId()] = s
@@ -366,7 +366,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		// should call (*Translator).functionSort directly. Reaching this
 		// branch means a caller wrongly handed a FunctionSort to a code
 		// path that expects a single sort; surface that as an error.
-		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
+		return Z3Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *lg.EnumeratedSort:
 		// Python: enumeratedsort(es) at ivy_solver.py:280
@@ -395,7 +395,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 		return t.Ctx.IntSort(), nil
 
 	default:
-		return Sort{}, fmt.Errorf("unsupported sort type: %T", s)
+		return Z3Sort{}, fmt.Errorf("unsupported sort type: %T", s)
 	}
 }
 
@@ -404,7 +404,7 @@ func (t *Translator) TranslateSort(s lg.Sort) (Sort, error) {
 // TranslateNoHash translates without emitting the top-level HASH trace.
 // Matches Python's formula_to_z3_int/formula_to_z3_closed which do not
 // emit HASH — only formula_to_z3 does.
-func (t *Translator) TranslateNoHash(n lg.Expr) (Expr, error) {
+func (t *Translator) TranslateNoHash(n lg.Expr) (Z3Expr, error) {
 	t.translateDepth++
 	defer func() { t.translateDepth-- }()
 	return t.Formula_to_z3_int(n, "term_to_z3_closed")
@@ -415,14 +415,14 @@ func (t *Translator) TranslateNoHash(n lg.Expr) (Expr, error) {
 // Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
 // This is a thin wrapper around Translator.Formula_to_z3_int(),
 // which does more diagnostic logging (of the caller).
-func (t *Translator) Translate(n lg.Expr) (Expr, error) {
+func (t *Translator) Translate(n lg.Expr) (Z3Expr, error) {
 	return t.Formula_to_z3_int(n, "")
 }
 
 // Formula_to_z3_int converts an Ivy logic node to a Z3 expression.
 // Corresponds to Python formula_to_z3_int (ivy_solver.py:637).
 // Dispatches Boolean-sorted Apply nodes to atomToZ3 (Python atom_to_z3).
-func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
+func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Z3Expr, error) {
 	//xtracer.Trace("ivy_solver.py:651 formula_to_z3_int() ENTER type=%v\ncaller=%v", iu.ShortTypeName(n), caller)
 	if xtracer.Enabled && t.translateDepth == 0 {
 		canon := iu.Canonical(n.Sexp())
@@ -448,7 +448,7 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 		if lg.IsFalse(def.Rhs) {
 			body, err := t.Formula_to_z3_int(def.Lhs, "term_to_z3_int:is_false")
 			if err != nil {
-				return Expr{}, err
+				return Z3Expr{}, err
 			}
 			return t.Ctx.Not(body), nil
 		}
@@ -496,7 +496,7 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 			// Wasted recursive args translation matching Python's line 664.
 			for _, arg := range app.Terms {
 				if _, err := t.Formula_to_z3_int(arg, "term_to_z3_int:fmla.args"); err != nil {
-					return Expr{}, err
+					return Z3Expr{}, err
 				}
 			}
 			// Real translation via term_to_z3 (Python's line 698).
@@ -514,7 +514,7 @@ func (t *Translator) Formula_to_z3_int(n lg.Expr, caller string) (Expr, error) {
 // builds z3.Const(solver_name(atom.rep), sig) when sig is not a list (i.e.,
 // the sort is non-FunctionSort like BooleanSort), then caches it in
 // z3_predicates.
-func (t *Translator) boolConstToZ3(c *lg.Const) (Expr, error) {
+func (t *Translator) boolConstToZ3(c *lg.Const) (Z3Expr, error) {
 	predKey := lg.NodeKey(c.Name + ":" + string(c.CSort.Sexp()))
 
 	// Diagnostic atom_to_z3 ENTER trace, same as Apply path.
@@ -537,11 +537,11 @@ func (t *Translator) boolConstToZ3(c *lg.Const) (Expr, error) {
 	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation HASH canon=%s", c.Sexp())
 	z3sort, err := t.TranslateSort(c.CSort)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 	z3name := t.z3Name(c.Name, c.CSort)
 	constExpr := t.Ctx.Const(z3name, z3sort)
-	constFn := func(args ...Expr) Expr {
+	constFn := func(args ...Z3Expr) Z3Expr {
 		return constExpr
 	}
 	t.cache.z3_predicates[predKey] = constFn
@@ -552,7 +552,7 @@ func (t *Translator) boolConstToZ3(c *lg.Const) (Expr, error) {
 // types except Boolean-sorted Apply (which is routed to atomToZ3 by
 // Translate). No XTRACE, no Merkle hash, no depth tracking — those are
 // done by the caller (Translate or TermToZ3).
-func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
+func (t *Translator) translateCore(n lg.Expr, caller string) (Z3Expr, error) {
 	switch node := n.(type) {
 	case *lg.Variable:
 		// Python: sksym = term.rep + ':' + term.sort.name
@@ -583,22 +583,22 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 
 			// Python: fun = z3_functions.get(term.rep) — check cache first.
 			if cachedNative, ok := t.cache.nativeFuncs[key]; ok {
-				args := make([]Expr, len(node.Terms))
+				args := make([]Z3Expr, len(node.Terms))
 				for i, term := range node.Terms {
 					a, err := t.TermToZ3(term)
 					if err != nil {
-						return Expr{}, err
+						return Z3Expr{}, err
 					}
 					args[i] = a
 				}
 				return cachedNative(args...), nil
 			}
 			if cachedFD, ok := t.cache.z3_functions[key]; ok {
-				args := make([]Expr, len(node.Terms))
+				args := make([]Z3Expr, len(node.Terms))
 				for i, term := range node.Terms {
 					a, err := t.TermToZ3(term)
 					if err != nil {
-						return Expr{}, err
+						return Z3Expr{}, err
 					}
 					args[i] = a
 				}
@@ -607,13 +607,13 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 
 			// Cache miss: try lookup_native (Python lines 500-508)
 			if result := t.LookupNative(c.Name, c.CSort, "function"); result != nil {
-				if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
+				if nativeFn, ok := result.(func(args ...Z3Expr) Z3Expr); ok {
 					t.cache.nativeFuncs[key] = nativeFn
-					args := make([]Expr, len(node.Terms))
+					args := make([]Z3Expr, len(node.Terms))
 					for i, term := range node.Terms {
 						a, err := t.TermToZ3(term)
 						if err != nil {
-							return Expr{}, err
+							return Z3Expr{}, err
 						}
 						args[i] = a
 					}
@@ -625,13 +625,13 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		// Python: fun = z3.Function(sn, *sig); args = [term_to_z3(arg) for arg in term.args]
 		fd, err := t.getFuncDecl(node.Func)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, term := range node.Terms {
 			a, err := t.TermToZ3(term)
 			if err != nil {
-				return Expr{}, err
+				return Z3Expr{}, err
 			}
 			args[i] = a
 		}
@@ -640,12 +640,12 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 	case *lg.Eq:
 		// Eq is now routed through atomToZ3 by Formula_to_z3_int() (matching Python's
 		// is_atom dispatch). This case should be unreachable.
-		return Expr{}, fmt.Errorf("translateCore: unexpected Eq (should be routed through atomToZ3 by Translate)")
+		return Z3Expr{}, fmt.Errorf("translateCore: unexpected Eq (should be routed through atomToZ3 by Translate)")
 
 	case *lg.Not:
 		b, err := t.Formula_to_z3_int(node.Body, "lg.Not Body/args[0]")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		return t.Ctx.Not(b), nil
 
@@ -653,11 +653,11 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		if len(node.Terms) == 0 {
 			return t.Ctx.BoolVal(true), nil
 		}
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, term := range node.Terms {
 			a, err := t.Formula_to_z3_int(term, fmt.Sprintf("lg.And args[i=%v]", i))
 			if err != nil {
-				return Expr{}, err
+				return Z3Expr{}, err
 			}
 			args[i] = a
 		}
@@ -667,11 +667,11 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		if len(node.Terms) == 0 {
 			return t.Ctx.BoolVal(false), nil
 		}
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, term := range node.Terms {
 			a, err := t.Formula_to_z3_int(term, fmt.Sprintf("lg.Or args[i=%v]", i))
 			if err != nil {
-				return Expr{}, err
+				return Z3Expr{}, err
 			}
 			args[i] = a
 		}
@@ -680,22 +680,22 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 	case *lg.Implies:
 		t1, err := t.Formula_to_z3_int(node.T1, "lg.Implies args[0]")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		t2, err := t.Formula_to_z3_int(node.T2, "lg.Implies args[1]")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		return t.Ctx.Implies(t1, t2), nil
 
 	case *lg.Iff:
 		t1, err := t.Formula_to_z3_int(node.T1, "lg.Iff args[0]")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		t2, err := t.Formula_to_z3_int(node.T2, "lg.Iff args[1]")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		// Python uses my_eq for Iff (formula_to_z3_int line 620)
 		//if t.EqFunc != nil {
@@ -707,15 +707,15 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 	case *lg.Ite:
 		c, err := t.Formula_to_z3_int(node.Cond, "lg.Ite node.Cond")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		th, err := t.Formula_to_z3_int(node.Then, "lg.Ite node.Then")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		el, err := t.Formula_to_z3_int(node.Else, "lg.Ite node.Else")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		return t.Ctx.Ite(c, th, el), nil
 
@@ -729,11 +729,11 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		}
 		t1, err := t.Formula_to_z3_int(node.Lhs, "lg.Definition Lhs")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		t2, err := t.Formula_to_z3_int(node.Rhs, "lg.Definition Rhs")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		return t.Eq(t1, t2), nil
 		//return t.Ctx.Eq(t1, t2), nil
@@ -745,7 +745,7 @@ func (t *Translator) translateCore(n lg.Expr, caller string) (Expr, error) {
 		return t.translateQuantifier(false, node.Variables, node.Body)
 
 	default:
-		return Expr{}, fmt.Errorf("unsupported node type for Z3 translation: %T", n)
+		return Z3Expr{}, fmt.Errorf("unsupported node type for Z3 translation: %T", n)
 	}
 }
 
@@ -753,7 +753,7 @@ const eqCanonPredKey = lg.NodeKey("=:eq")
 
 // atomToZ3 translates a Boolean-sorted Apply (atom) to Z3.
 // Corresponds to Python atom_to_z3 (ivy_solver.py:516).
-func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
+func (t *Translator) atomToZ3(app *lg.Apply) (Z3Expr, error) {
 	c, ok := app.Func.(*lg.Const)
 	if !ok {
 		// Fallback for non-Const func (rare)
@@ -808,7 +808,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 
 	// Python line 521: rel = lookup_native(atom.relname, relations, "relation")
 	if result := t.LookupNative(c.Name, c.CSort, "relation"); result != nil {
-		if nativeFn, ok := result.(func(args ...Expr) Expr); ok {
+		if nativeFn, ok := result.(func(args ...Z3Expr) Z3Expr); ok {
 			t.cache.z3_predicates[predKey] = nativeFn
 			return t.applyZ3Func(nativeFn, app.Terms) // in atomToZ3 here.
 		}
@@ -827,7 +827,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 		xtracer.Trace("ivy_solver.py:513 get_polymacs() ENTER op=%s", c.Name)
 		predFn, err := t.polymacPred(c.Name, c.CSort)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		t.cache.z3_predicates[predKey] = predFn
 		return t.applyZ3Func(predFn, app.Terms)
@@ -837,7 +837,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// Go's makeFuncDecl would create an uninterpreted function instead.
 	// Use Ctx.Eq (or EqFunc) for "=" to match Python/Z3 semantics.
 	if c.Name == "=" {
-		eqFn := func(args ...Expr) Expr {
+		eqFn := func(args ...Z3Expr) Z3Expr {
 			return t.Eq(args[0], args[1])
 			//return t.Ctx.Eq(args[0], args[1])
 		}
@@ -860,7 +860,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	// 236451).
 	fs, ok := c.CSort.(*lg.FunctionSort)
 	if !ok {
-		return Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
+		return Z3Expr{}, fmt.Errorf("atomToZ3: expected FunctionSort for %s, got %T", c.Name, c.CSort)
 	}
 	// Python: sig = atom.rep.sort.to_z3() (ivy_solver.py:572). This dispatches
 	// to functionsort via the monkey-patched FunctionSort.to_z3, so Python emits
@@ -868,7 +868,7 @@ func (t *Translator) atomToZ3(app *lg.Apply) (Expr, error) {
 	xtracer.Trace("TranslateSort_call callsite=atom_to_z3_relation HASH canon=%s", c.Sexp())
 	sig, err := t.functionSort(fs) // emits "ivy_solver.py:279 functionsort() ENTER"
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 	zDomain := sig[:len(sig)-1]
 	zRange := sig[len(sig)-1]
@@ -902,7 +902,7 @@ func (t *Translator) usePolymorphicMacros() bool {
 // polymacPred returns a Z3-level predicate for a polymorphic macro operator.
 // Matches Python polymacs dict (ivy_solver.py:519-523).
 // Uses t.Ctx.Eq (plain Z3 equality, not MyEq) to match Python's x == y.
-func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Expr) Expr, error) {
+func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Z3Expr) Z3Expr, error) {
 	fs, ok := sort.(*lg.FunctionSort)
 	if !ok {
 		return nil, fmt.Errorf("polymacPred: expected FunctionSort for %s, got %T", name, sort)
@@ -910,19 +910,19 @@ func (t *Translator) polymacPred(name string, sort lg.Sort) (func(args ...Expr) 
 	switch name {
 	case "<=":
 		// Python: lambda s,x,y: z3.Or(x == y, lt_pred(s)(x,y))
-		return func(args ...Expr) Expr {
+		return func(args ...Z3Expr) Z3Expr {
 			ltFd := t.ltPred(fs)
 			return t.Ctx.Or(t.Ctx.Eq(args[0], args[1]), ltFd.Apply(args...))
 		}, nil
 	case ">":
 		// Python: lambda s,x,y: lt_pred(s)(y,x)
-		return func(args ...Expr) Expr {
+		return func(args ...Z3Expr) Z3Expr {
 			ltFd := t.ltPred(fs)
 			return ltFd.Apply(args[1], args[0])
 		}, nil
 	case ">=":
 		// Python: lambda s,x,y: z3.Or(x == y, lt_pred(s)(y,x))
-		return func(args ...Expr) Expr {
+		return func(args ...Z3Expr) Z3Expr {
 			ltFd := t.ltPred(fs)
 			return t.Ctx.Or(t.Ctx.Eq(args[0], args[1]), ltFd.Apply(args[1], args[0]))
 		}, nil
@@ -967,23 +967,23 @@ func (t *Translator) ltPred(fs *lg.FunctionSort) FuncDecl {
 //	atom.rep = Symbol('=', RelationSort([x.sort for x in self.args]))
 //	atom.args = [t1, t2]
 //	atom.relname = equals (ivy_logic.py:1145-1147)
-func (t *Translator) eqToAtomZ3(eq *lg.Eq) (Expr, error) {
+func (t *Translator) eqToAtomZ3(eq *lg.Eq) (Z3Expr, error) {
 	s1, s2 := eq.T1.NodeSort(), eq.T2.NodeSort()
 	repSort, err := lg.NewFunctionSort(s1, s2, lg.Boolean)
 	if err != nil {
-		return Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
+		return Z3Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
 	}
 	eqConst := lg.NewConst("=", repSort)
 	pseudoApp, err := lg.NewApply(eqConst, eq.T1, eq.T2)
 	if err != nil {
-		return Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
+		return Z3Expr{}, fmt.Errorf("eqToAtomZ3: %w", err)
 	}
 	return t.atomToZ3(pseudoApp)
 }
 
 // applyZ3Func translates args via TermToZ3 and applies the predicate function.
 // Corresponds to Python apply_z3_func (ivy_solver.py:403).
-func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []lg.Expr) (Expr, error) {
+func (t *Translator) applyZ3Func(pred func(args ...Z3Expr) Z3Expr, terms []lg.Expr) (Z3Expr, error) {
 	//xtracer.Trace("ivy_solver.py:404 apply_z3_func() ENTER nargs=%d", len(args))
 
 	// the original python is very polymorphic:
@@ -1050,11 +1050,11 @@ func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []lg.Expr) 
 	//     }
 	// }
 
-	args := make([]Expr, len(terms))
+	args := make([]Z3Expr, len(terms))
 	for i, term := range terms {
 		a, err := t.TermToZ3(term)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		args[i] = a
 	}
@@ -1063,7 +1063,7 @@ func (t *Translator) applyZ3Func(pred func(args ...Expr) Expr, terms []lg.Expr) 
 
 // TermToZ3 translates a term to Z3.
 // Corresponds to Python term_to_z3 (ivy_solver.py:444).
-func (t *Translator) TermToZ3(term lg.Expr) (Expr, error) {
+func (t *Translator) TermToZ3(term lg.Expr) (Z3Expr, error) {
 	//xtracer.Trace("ivy_solver.py:445 term_to_z3() ENTER type=%s name=%s",
 	//	iu.ShortTypeName(term), termName(term))
 
@@ -1080,15 +1080,15 @@ func (t *Translator) TermToZ3(term lg.Expr) (Expr, error) {
 	if ite, ok := term.(*lg.Ite); ok {
 		cond, err := t.Formula_to_z3_int(ite.Cond, "term_to_z3:ivy_logic.Ite")
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		th, err := t.TermToZ3(ite.Then)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		el, err := t.TermToZ3(ite.Else)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		return t.Ctx.Ite(cond, th, el), nil
 	}
@@ -1117,7 +1117,7 @@ func termName(n lg.Expr) string {
 
 // translateVariable translates an Ivy variable to a Z3 const named "name:sortName".
 // Corresponds to Python term_to_z3 variable case (ivy_solver.py:418-433).
-func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
+func (t *Translator) translateVariable(v *lg.Variable) (Z3Expr, error) {
 	sort := v.VSort
 	sortName := sortDisplayName(sort)
 	sksym := v.Name + ":" + sortName
@@ -1130,9 +1130,9 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 	}
 
 	// Python line 454: sig = lookup_native(term.sort, sorts, "sort") if sorted else S
-	var zs *Sort
+	var zs *Z3Sort
 	if result := t.LookupNative(sortName, sort, "sort"); result != nil {
-		if zsVal, ok := result.(Sort); ok {
+		if zsVal, ok := result.(Z3Sort); ok {
 			zs = &zsVal
 			// Cache the sort so TranslateSort finds it later via cache
 			sortKey := lg.NodeKey(sortDisplayName(sort)) // Python: z3_sorts key is sort name
@@ -1148,7 +1148,7 @@ func (t *Translator) translateVariable(v *lg.Variable) (Expr, error) {
 		xtracer.Trace("TranslateSort_call callsite=term_to_z3_variable HASH canon=%s", v.Sexp())
 		zsVal, err := t.TranslateSort(sort)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		zs = &zsVal
 	}
@@ -1178,15 +1178,15 @@ func sortDisplayName(sort lg.Sort) string {
 
 // TranslateVar translates a Variable to a Z3 const without emitting a
 // HASH trace. Matches Python's term_to_z3(v).
-func (t *Translator) TranslateVar(v *lg.Variable) (Expr, error) {
+func (t *Translator) TranslateVar(v *lg.Variable) (Z3Expr, error) {
 	return t.translateVariable(v)
 }
 
-func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error) {
+func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Z3Expr, error) {
 	//xtracer.Trace("ivy_solver.py:287 symbol_to_z3() ENTER name=%s sort=%s", name, sort)
 	// Check for numeral with special handling (range sort clamping).
 	// Python term_to_z3 lines 439-440: if term.is_numeral(): res = numeral_to_z3(term.rep)
-	if isNumeralName(name) {
+	if z3bridgeIsNumeralName(name) {
 		if result, err := t.Numeral(name, sort); result != nil {
 			return *result, err
 		}
@@ -1197,7 +1197,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		if _, interped := t.s.sig.Interp[es.Name]; interped {
 			xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
 			if !EnableInterpretedEnums {
-				return Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
+				return Z3Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
 			}
 			ordinal := -1
 			for i, eName := range es.Extension {
@@ -1207,7 +1207,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 				}
 			}
 			if ordinal < 0 {
-				return Expr{}, fmt.Errorf("enum constant %q not found in sort %q extension", name, es.Name)
+				return Z3Expr{}, fmt.Errorf("enum constant %q not found in sort %q extension", name, es.Name)
 			}
 			return t.enumeratedToNumeralZ3(ordinal, es)
 		}
@@ -1247,7 +1247,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		zs, err := t.TranslateSort(sort)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		z3name := t.z3Name(name, sort)
 		c := t.Ctx.Const(z3name, zs)
@@ -1270,7 +1270,7 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		key := lg.NodeKey(name + ":" + string(fs.Range().Sexp()))
 		if cached, ok := t.cache.consts[key]; ok {
@@ -1295,23 +1295,23 @@ func (t *Translator) translateVarOrConst(name string, sort lg.Sort) (Expr, error
 		// before s.sort.to_z3(), which dispatches to functionsort. Mirror order.
 		xtracer.Trace("TranslateSort_call callsite=symbol_to_z3_func HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
 		if _, err := t.functionSort(fs); err != nil { // emits functionsort() ENTER
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		z3name := t.z3Name(name, sort)
 		return t.Ctx.Const(z3name, zs), nil
 	}
 
-	return Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
+	return Z3Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
 }
 
 // enumeratedToNumeralZ3 converts an enum ordinal to a Z3 expression in the
 // sort that the enum is interpreted as. Called when EnableInterpretedEnums
 // is true and the enum sort has a numeric interpretation in sig.Interp.
-func (t *Translator) enumeratedToNumeralZ3(ordinal int, es *lg.EnumeratedSort) (Expr, error) {
+func (t *Translator) enumeratedToNumeralZ3(ordinal int, es *lg.EnumeratedSort) (Z3Expr, error) {
 	itp := t.s.sig.Interp[es.Name]
 	switch v := itp.(type) {
 	case string:
@@ -1323,19 +1323,19 @@ func (t *Translator) enumeratedToNumeralZ3(ordinal int, es *lg.EnumeratedSort) (
 				widthStr := v[3 : len(v)-1]
 				width, err := strconv.Atoi(widthStr)
 				if err != nil {
-					return Expr{}, fmt.Errorf("bad bv width in interpretation of %q: %v", es.Name, err)
+					return Z3Expr{}, fmt.Errorf("bad bv width in interpretation of %q: %v", es.Name, err)
 				}
 				if ordinal >= (1 << width) {
-					return Expr{}, fmt.Errorf("enum ordinal %d exceeds bv[%d] capacity", ordinal, width)
+					return Z3Expr{}, fmt.Errorf("enum ordinal %d exceeds bv[%d] capacity", ordinal, width)
 				}
 				return t.Ctx.BvVal(int64(ordinal), width), nil
 			}
-			return Expr{}, fmt.Errorf("cannot interpret enum %q as native sort %q", es.Name, v)
+			return Z3Expr{}, fmt.Errorf("cannot interpret enum %q as native sort %q", es.Name, v)
 		}
 	case *lg.RangeSort:
 		return t.Ctx.IntVal(int64(ordinal)), nil
 	default:
-		return Expr{}, fmt.Errorf("cannot interpret enum %q: unsupported interpretation type %T", es.Name, itp)
+		return Z3Expr{}, fmt.Errorf("cannot interpret enum %q: unsupported interpretation type %T", es.Name, itp)
 	}
 }
 
@@ -1368,11 +1368,11 @@ func (t *Translator) getFuncDecl(fn lg.Expr) (FuncDecl, error) {
 // (e.g. makeFuncDecl). Callers that need to mirror Python's uncached
 // callsites (e.g. lt_pred) must call this helper directly so the trace
 // fires every time.
-func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
+func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Z3Sort, error) {
 	xtracer.Trace("ivy_solver.py:279 functionsort() ENTER")
 
 	domain := fs.Domain()
-	sig := make([]Sort, 0, len(domain)+1)
+	sig := make([]Z3Sort, 0, len(domain)+1)
 	for _, d := range domain {
 		xtracer.Trace("TranslateSort_call callsite=functionsort_dom HASH canon=%s", d.Sexp())
 		zs, err := t.TranslateSort(d)
@@ -1387,7 +1387,7 @@ func (t *Translator) functionSort(fs *lg.FunctionSort) ([]Sort, error) {
 	//   else:                  return [s.to_z3() for s in fs.dom] + [fs.rng.to_z3()]
 	// Note: Python short-circuits the rng.to_z3() call when relational,
 	// so no extra trace fires for the Boolean range. We mirror that.
-	var rng Sort
+	var rng Z3Sort
 	if il.IsRelationalSort(fs) {
 		rng = t.Ctx.BoolSort()
 	} else {
@@ -1439,7 +1439,7 @@ func (t *Translator) makeFuncDecl(name string, fs *lg.FunctionSort) (FuncDecl, e
 	return fd, nil
 }
 
-func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable, body lg.Expr) (Expr, error) {
+func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable, body lg.Expr) (Z3Expr, error) {
 	if len(variables) == 0 {
 		return t.Formula_to_z3_int(body, "translateQuantifier() no variables")
 	}
@@ -1457,18 +1457,18 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 	// translating an atom.
 	zBody, err := t.Formula_to_z3_int(body, "translateQuantifier() len(variables) > 0")
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 
 	// Now translate the bound variables. Each translateVariable call should
 	// be a cache hit (since the body already translated and cached them).
 	// translateVariable already calls TranslateSort internally on cache miss
 	// (matching Python's term_to_z3 variable case at line 494).
-	bound := make([]Expr, len(variables))
+	bound := make([]Z3Expr, len(variables))
 	for i, v := range variables {
 		z3Var, err := t.translateVariable(v)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 		key := lg.NodeKey(v.Name + ":" + string(v.VSort.Sexp()))
 		bound[i] = z3Var
@@ -1480,7 +1480,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*lg.Variable
 	// constraints or passing to Z3, which would otherwise panic with a
 	// type error.
 	if zBody.ExprSort().Kind() != SortBool {
-		return Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
+		return Z3Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
 	}
 
 	// Delegate to forall/exists which call quantConstraints.
@@ -1615,6 +1615,6 @@ func ParseArraySortName(name string) (dom, rng string, ok bool) {
 
 // isNumeralName returns true if name starts with a digit.
 // Matches Python's ivy_logic.is_numeral check for symbol names.
-func isNumeralName(s string) bool {
+func z3bridgeIsNumeralName(s string) bool {
 	return len(s) > 0 && s[0] >= '0' && s[0] <= '9'
 }

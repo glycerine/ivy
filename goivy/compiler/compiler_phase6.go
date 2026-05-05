@@ -48,9 +48,9 @@ func sigSortValues(sig *il.Sig) []lg.Sort {
 // Thing compiles an AST node via CompileNode.
 // Corresponds to Python's thing(self) (ivy_compiler.py:50-52).
 func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", typeName(node)))
+	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", compilerTypeName(node)))
 	result, err := c.CompileNode(node)
-	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%s", typeName(node)))
+	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%s", compilerTypeName(node)))
 	return result, err
 }
 
@@ -81,7 +81,7 @@ func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) 
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
 func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%s", typeName(node)))
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%s", compilerTypeName(node)))
 	// Python's other_thing (ivy_compiler.py:59-66):
 	//   if hasattr(self,'sort_infer_root'):
 	//       with top_sort_as_default():
@@ -106,27 +106,27 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 		cloned := node.Clone(compiledNodes)
 		if expr, ok := cloned.(lg.Expr); ok {
 			result, err := c.SortInfer(expr)
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 			return result, err
 		}
 		// Fallback: sort-infer on combined compiled args
 		if len(compiled) == 0 {
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 			return lg.True, nil
 		}
 		if len(compiled) == 1 {
 			result, err := c.SortInfer(compiled[0])
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 			return result, err
 		}
 		combined := &lg.And{Terms: compiled}
 		result, err := c.SortInfer(combined)
-		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
 		return result, err
 	}
 	// Default: compile each child and clone
 	result, err := c.compileGeneric(node)
-	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=False", typeName(node)))
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=False", compilerTypeName(node)))
 	return result, err
 }
 
@@ -317,7 +317,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	rhsName := extractSortRep(args[1])
+	rhsName := compilerExtractSortRep(args[1])
 	if rhsName == "" {
 		return nil, lg.NewIvyError(node, "isa: cannot determine sort name")
 	}
@@ -346,7 +346,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	return il.Exists([]*lg.Variable{v}, ptoApp), nil
+	return il.IvyExists([]*lg.Variable{v}, ptoApp), nil
 }
 
 // Cquant returns the appropriate quantifier constructor for the given
@@ -354,9 +354,9 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's cquant(q) (ivy_compiler.py:393-394).
 func Cquant(node ast.Node) func([]*lg.Variable, lg.Expr) lg.Expr {
 	if _, ok := node.(*ast.AstForall); ok {
-		return il.ForAll
+		return il.IvyForAll
 	}
-	return il.Exists
+	return il.IvyExists
 }
 
 // CompileUpdatePattern compiles an update pattern, which internally
@@ -645,7 +645,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Step 4: find subsort
 	// Python: subtypename = self.args[0].relname
 	//         subsort = ivy_logic.find_sort(subtypename)
-	subtypename := extractSortRep(args[0])
+	subtypename := compilerExtractSortRep(args[0])
 	subsort, err := c.Sig.FindSort(subtypename, false)
 	if err != nil {
 		return actions.NewSequence(), nil
@@ -724,7 +724,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	savedSig2 := c.Sig
 	c.Sig = sigCopy2
 
-	actionName := extractSortRep(args[1])
+	actionName := compilerExtractSortRep(args[1])
 	lsym, err := c.AddSymbol("loc:"+actionName, subsort, c.Sig)
 	if err != nil {
 		c.Sig = savedSig2
@@ -856,7 +856,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 //	    res = arg.clone(list(map(sortify_with_inference,arg.args)))  # handles action names
 //	    return res.rename(resolve_alias(res.rep))
 func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
-	if _, ok := node.(*ast.Variable); ok {
+	if _, ok := node.(*ast.AstVariable); ok {
 		return c.SortifyWithInference(node)
 	}
 	// Check if atom name is in sig.symbols
@@ -1036,7 +1036,7 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 	// directly as an AST node. We build the result as lg.Expr without going through CompileNode.
 	vars := make([]lg.Expr, len(atom.Terms))
 	for i, a := range atom.Terms {
-		if v, ok := a.(*ast.Variable); ok {
+		if v, ok := a.(*ast.AstVariable); ok {
 			sortName := v.VSort
 			resolved := ResolveAlias(sortName, c.Module)
 			sort, err := c.Sig.FindSort(resolved, false)
@@ -1218,7 +1218,7 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		return c.Module.Cfg.AstCfg.NewCompiledNode(compiled), nil
 	case *ast.TypeDef:
 		// Python: sig.sorts[t.name] = t — adds to schema sig, not global
-		name := extractSortRep(n.Name)
+		name := compilerExtractSortRep(n.Name)
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
 			schemaSig.Sorts.Set(name, sort)
@@ -1257,7 +1257,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_schema_conc(self, sig) (ivy_compiler.py:889-894).
 func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileSchemaConc ENTER")
-	//pp("concType=%s outerSigSorts=%v schemaSigSorts=%v", typeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
+	//pp("concType=%s outerSigSorts=%v schemaSigSorts=%v", compilerTypeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
 	if xtracer.Enabled {
 		c.SigCheck("SchemaConc.entry")
 	}
@@ -2319,7 +2319,7 @@ func CheckProperties(mod *module.Module) error {
 		body := fa.Body
 		subs := map[string]lg.Expr{v.Name: name}
 		body = lu.SubstituteByName(body, subs)
-		body = il.DropUniversals(body)
+		body = il.IvyDropUniversals(body)
 		acfg := mod.Cfg.AstCfg
 		newProp := acfg.NewLabeledFormula(prop.Label, body)
 		newProp.SetLineno(prop.GetLineno())

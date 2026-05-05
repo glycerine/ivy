@@ -113,7 +113,7 @@ func TempindFmla(fmla lg.Expr, cond lg.Expr, params []lg.Expr, vs []*lg.Variable
 		}
 		// Python: return lg.ForAll(uvs, res) if uvs else res
 		if len(uvs) > 0 {
-			return il.ForAll(uvs, res)
+			return il.IvyForAll(uvs, res)
 		}
 		return res
 	}
@@ -130,7 +130,7 @@ func TempindFmla(fmla lg.Expr, cond lg.Expr, params []lg.Expr, vs []*lg.Variable
 		// Python: gbly = fmla.clone([body])
 		gbly := gb.Clone([]ast.Node{body}).(lg.Expr)
 		// Python: whencond = lg.Not(lg.ForAll(vs, fmla.body))
-		forallBody := il.ForAll(vs, gb.Body)
+		forallBody := il.IvyForAll(vs, gb.Body)
 		whencond, _ := lg.NewNot(forallBody)
 		// Python: return lg.ForAll(vs+params, lg.Or(gbly, lg.WhenOperator("next", body, whencond)))
 		whenOp, _ := lg.NewWhenOperator("next", body, whencond)
@@ -142,13 +142,13 @@ func TempindFmla(fmla lg.Expr, cond lg.Expr, params []lg.Expr, vs []*lg.Variable
 				allVs = append(allVs, v)
 			}
 		}
-		return il.ForAll(allVs, orExpr)
+		return il.IvyForAll(allVs, orExpr)
 	}
 
 	// Default: wrap in ForAll if vs is non-empty
 	// Python: return lg.ForAll(vs, fmla) if vs else fmla
 	if len(vs) > 0 {
-		return il.ForAll(vs, fmla)
+		return il.IvyForAll(vs, fmla)
 	}
 	return fmla
 }
@@ -311,7 +311,7 @@ func TempcaseFmla(fmla lg.Expr, cond lg.Expr, vs []lg.Expr, proofNode ast.Node) 
 				varList = append(varList, vv)
 			}
 		}
-		return il.ForAll(varList, cloned), nil
+		return il.IvyForAll(varList, cloned), nil
 	}
 
 	// Default: return formula unchanged

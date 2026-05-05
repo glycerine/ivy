@@ -233,9 +233,9 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 				tail := make([]*lg.Variable, len(src))
 				copy(tail, src)
 				if isE {
-					res = il.Exists(tail, res)
+					res = il.IvyExists(tail, res)
 				} else {
-					res = il.ForAll(tail, res)
+					res = il.IvyForAll(tail, res)
 				}
 			}
 			outer = outer[:len(outer)-len(vars)]
@@ -257,16 +257,16 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 			innerExpr, _ := tm.Args()[0].(lg.Expr)
 			var quantBody lg.Expr
 			if pos {
-				quantBody = il.Exists(univs, innerExpr)
+				quantBody = il.IvyExists(univs, innerExpr)
 			} else {
-				quantBody = il.ForAll(univs, innerExpr)
+				quantBody = il.IvyForAll(univs, innerExpr)
 			}
 			body = tm.Clone([]ast.Node{quantBody})
 		} else if expr, ok := body.(lg.Expr); ok {
 			if pos {
-				body = il.Exists(univs, expr)
+				body = il.IvyExists(univs, expr)
 			} else {
-				body = il.ForAll(univs, expr)
+				body = il.IvyForAll(univs, expr)
 			}
 		}
 	}
@@ -353,7 +353,7 @@ func keysFromRenamer(rn *iu.UniqueRenamer) []string {
 // uniquifyVar creates a new variable with a unique name using a VariableUniqifier.
 func uniquifyVar(vu *il.VariableUniqifier, v *lg.Variable) *lg.Variable {
 	// Use the uniqifier to generate a fresh name
-	fmla := il.ForAll([]*lg.Variable{v}, v)
+	fmla := il.IvyForAll([]*lg.Variable{v}, v)
 	result := vu.Uniquify(fmla)
 	if fa, ok := result.(*lg.ForAll); ok && len(fa.Variables) > 0 {
 		return fa.Variables[0]

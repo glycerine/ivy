@@ -49,7 +49,7 @@ func IsUninterpretedSort(sig *Sig, s lg.Sort) bool {
 	if !IsUISort(s) {
 		return false
 	}
-	name := SortName(s)
+	name := IvySortName(s)
 	_, hasInterp := sig.Interp[name]
 	return !hasInterp
 }
@@ -80,7 +80,7 @@ func IsInterpretedSymbol(sig *Sig, s lg.Expr) bool {
 // SortInterp returns the interpretation for a sort in the given signature,
 // or nil if none exists.
 func SortInterp(sig *Sig, s lg.Sort) interface{} {
-	name := SortName(s)
+	name := IvySortName(s)
 	interp, ok := sig.Interp[name]
 	if !ok {
 		return nil
@@ -90,7 +90,7 @@ func SortInterp(sig *Sig, s lg.Sort) interface{} {
 
 // ImplementType sets the interpretation of sort1 to sort2 in the signature.
 func ImplementType(sig *Sig, sort1 lg.Sort, sort2 interface{}) {
-	sig.Interp[SortName(sort1)] = sort2
+	sig.Interp[IvySortName(sort1)] = sort2
 }
 
 // BindSymbols provides enter/exit scoping for a set of symbols in a
@@ -233,7 +233,7 @@ func (sd *SortAsDefault) Exit() {
 // interpreted domain (e.g. int or nat). Corresponds to Python's
 // has_infinite_interpretation.
 func HasInfiniteInterpretation(sig *Sig, s lg.Sort) bool {
-	name := SortName(s)
+	name := IvySortName(s)
 	interp, ok := sig.Interp[name]
 	if !ok {
 		return false

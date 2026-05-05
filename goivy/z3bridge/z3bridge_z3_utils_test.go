@@ -9,7 +9,7 @@ import (
 
 // --- helpers ---
 
-func mustVar(t *testing.T, name string, sort logic.Sort) *logic.Variable {
+func z3MustVar(t *testing.T, name string, sort logic.Sort) *logic.Variable {
 	t.Helper()
 	v, err := logic.NewVariable(name, sort)
 	if err != nil {
@@ -18,7 +18,7 @@ func mustVar(t *testing.T, name string, sort logic.Sort) *logic.Variable {
 	return v
 }
 
-func mustApply(t *testing.T, fn logic.Expr, terms ...logic.Expr) *logic.Apply {
+func z3MustApply(t *testing.T, fn logic.Expr, terms ...logic.Expr) *logic.Apply {
 	t.Helper()
 	app, err := logic.NewApply(fn, terms...)
 	if err != nil {
@@ -27,7 +27,7 @@ func mustApply(t *testing.T, fn logic.Expr, terms ...logic.Expr) *logic.Apply {
 	return app
 }
 
-func mustForAll(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.ForAll {
+func z3MustForAll(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.ForAll {
 	t.Helper()
 	fa, err := logic.NewForAll(vars, body)
 	if err != nil {
@@ -36,7 +36,7 @@ func mustForAll(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.Fo
 	return fa
 }
 
-func mustExists(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.Exists {
+func z3MustExists(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.Exists {
 	t.Helper()
 	ex, err := logic.NewExists(vars, body)
 	if err != nil {
@@ -45,7 +45,7 @@ func mustExists(t *testing.T, vars []*logic.Variable, body logic.Expr) *logic.Ex
 	return ex
 }
 
-func mustEq(t *testing.T, t1, t2 logic.Expr) *logic.Eq {
+func z3MustEq(t *testing.T, t1, t2 logic.Expr) *logic.Eq {
 	t.Helper()
 	eq, err := logic.NewEq(t1, t2)
 	if err != nil {
@@ -65,7 +65,7 @@ func mustIte(t *testing.T, cond, then_, else_ logic.Expr) *logic.Ite {
 
 // --- Group 1: Sort Translation ---
 
-func TestToZ3BooleanSort(t *testing.T) {
+func TestZ3BridgeToZ3BooleanSort(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -73,7 +73,7 @@ func TestToZ3BooleanSort(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	zs, ok := result.(Sort)
+	zs, ok := result.(Z3Sort)
 	if !ok {
 		t.Fatalf("expected Sort, got %T", result)
 	}
@@ -82,7 +82,7 @@ func TestToZ3BooleanSort(t *testing.T) {
 	}
 }
 
-func TestToZ3UninterpretedSort(t *testing.T) {
+func TestZ3BridgeToZ3UninterpretedSort(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -91,7 +91,7 @@ func TestToZ3UninterpretedSort(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	zs, ok := result.(Sort)
+	zs, ok := result.(Z3Sort)
 	if !ok {
 		t.Fatalf("expected Sort, got %T", result)
 	}
@@ -100,7 +100,7 @@ func TestToZ3UninterpretedSort(t *testing.T) {
 	}
 }
 
-func TestToZ3UninterpretedSortCache(t *testing.T) {
+func TestZ3BridgeToZ3UninterpretedSortCache(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -114,19 +114,19 @@ func TestToZ3UninterpretedSortCache(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Both should be the exact same Sort (from cache)
-	s1 := r1.(Sort)
-	s2 := r2.(Sort)
+	s1 := r1.(Z3Sort)
+	s2 := r2.(Z3Sort)
 	if s1.GetId() != s2.GetId() {
 		t.Error("expected same Z3 sort from cache")
 	}
 }
 
-func TestToZ3FunctionSortError(t *testing.T) {
+func TestZ3BridgeToZ3FunctionSortError(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, s)
+	fs := z3MustFS(t, s, s)
 	_, err := u.ToZ3(fs)
 	if err == nil {
 		t.Fatal("expected error for FunctionSort")
@@ -138,12 +138,12 @@ func TestToZ3FunctionSortError(t *testing.T) {
 
 // --- Group 2: Term Translation ---
 
-func TestToZ3Variable(t *testing.T) {
+func TestZ3BridgeToZ3Variable(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	v := mustVar(t, "X", s)
+	v := z3MustVar(t, "X", s)
 	result, err := u.ToZ3Expr(v)
 	if err != nil {
 		t.Fatal(err)
@@ -155,7 +155,7 @@ func TestToZ3Variable(t *testing.T) {
 	}
 }
 
-func TestToZ3Const(t *testing.T) {
+func TestZ3BridgeToZ3Const(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -171,7 +171,7 @@ func TestToZ3Const(t *testing.T) {
 	}
 }
 
-func TestToZ3ConstBoolSort(t *testing.T) {
+func TestZ3BridgeToZ3ConstBoolSort(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -186,12 +186,12 @@ func TestToZ3ConstBoolSort(t *testing.T) {
 	}
 }
 
-func TestToZ3ConstNullaryFunc(t *testing.T) {
+func TestZ3BridgeToZ3ConstNullaryFunc(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s) // arity 0: FunctionSort(S) → range is S
+	fs := z3MustFS(t, s) // arity 0: FunctionSort(S) → range is S
 	c := logic.NewConst("c", fs)
 	result, err := u.ToZ3Expr(c)
 	if err != nil {
@@ -204,12 +204,12 @@ func TestToZ3ConstNullaryFunc(t *testing.T) {
 	}
 }
 
-func TestToZ3ConstHigherOrder(t *testing.T) {
+func TestZ3BridgeToZ3ConstHigherOrder(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, s, logic.Boolean) // S * S -> Boolean
+	fs := z3MustFS(t, s, s, logic.Boolean) // S * S -> Boolean
 	c := logic.NewConst("leq", fs)
 	result, err := u.ToZ3(c)
 	if err != nil {
@@ -221,12 +221,12 @@ func TestToZ3ConstHigherOrder(t *testing.T) {
 	}
 }
 
-func TestToZ3VariableHigherOrderError(t *testing.T) {
+func TestZ3BridgeToZ3VariableHigherOrderError(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, s)
+	fs := z3MustFS(t, s, s)
 	// Construct Variable with FunctionSort directly (NewVariable would reject)
 	v := &logic.Variable{Name: "F", VSort: fs}
 	_, err := u.ToZ3(v)
@@ -240,7 +240,7 @@ func TestToZ3VariableHigherOrderError(t *testing.T) {
 
 // --- Group 3: Apply Translation ---
 
-func TestToZ3ApplyNullary(t *testing.T) {
+func TestZ3BridgeToZ3ApplyNullary(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -256,16 +256,16 @@ func TestToZ3ApplyNullary(t *testing.T) {
 	}
 }
 
-func TestToZ3ApplyWithArgs(t *testing.T) {
+func TestZ3BridgeToZ3ApplyWithArgs(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, s, logic.Boolean) // S * S -> Bool
+	fs := z3MustFS(t, s, s, logic.Boolean) // S * S -> Bool
 	leq := logic.NewConst("leq", fs)
 	x := logic.NewConst("x", s)
 	y := logic.NewConst("y", s)
-	app := mustApply(t, leq, x, y)
+	app := z3MustApply(t, leq, x, y)
 
 	result, err := u.ToZ3Expr(app)
 	if err != nil {
@@ -280,14 +280,14 @@ func TestToZ3ApplyWithArgs(t *testing.T) {
 
 // --- Group 4: Formula Translation ---
 
-func TestToZ3Eq(t *testing.T) {
+func TestZ3BridgeToZ3Eq(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
 	x := logic.NewConst("x", s)
 	y := logic.NewConst("y", s)
-	eq := mustEq(t, x, y)
+	eq := z3MustEq(t, x, y)
 	result, err := u.ToZ3Expr(eq)
 	if err != nil {
 		t.Fatal(err)
@@ -297,7 +297,7 @@ func TestToZ3Eq(t *testing.T) {
 	}
 }
 
-func TestToZ3Not(t *testing.T) {
+func TestZ3BridgeToZ3Not(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -313,7 +313,7 @@ func TestToZ3Not(t *testing.T) {
 	}
 }
 
-func TestToZ3And(t *testing.T) {
+func TestZ3BridgeToZ3And(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -330,7 +330,7 @@ func TestToZ3And(t *testing.T) {
 	}
 }
 
-func TestToZ3Or(t *testing.T) {
+func TestZ3BridgeToZ3Or(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -347,7 +347,7 @@ func TestToZ3Or(t *testing.T) {
 	}
 }
 
-func TestToZ3AndEmpty(t *testing.T) {
+func TestZ3BridgeToZ3AndEmpty(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -363,7 +363,7 @@ func TestToZ3AndEmpty(t *testing.T) {
 	}
 }
 
-func TestToZ3OrEmpty(t *testing.T) {
+func TestZ3BridgeToZ3OrEmpty(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -379,7 +379,7 @@ func TestToZ3OrEmpty(t *testing.T) {
 	}
 }
 
-func TestToZ3Implies(t *testing.T) {
+func TestZ3BridgeToZ3Implies(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -396,7 +396,7 @@ func TestToZ3Implies(t *testing.T) {
 	}
 }
 
-func TestToZ3Iff(t *testing.T) {
+func TestZ3BridgeToZ3Iff(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -415,7 +415,7 @@ func TestToZ3Iff(t *testing.T) {
 	}
 }
 
-func TestToZ3Ite(t *testing.T) {
+func TestZ3BridgeToZ3Ite(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -436,16 +436,16 @@ func TestToZ3Ite(t *testing.T) {
 
 // --- Group 5: Quantifier Translation ---
 
-func TestToZ3ForAll(t *testing.T) {
+func TestZ3BridgeToZ3ForAll(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, logic.Boolean)
+	fs := z3MustFS(t, s, logic.Boolean)
 	p := logic.NewConst("P", fs)
-	x := mustVar(t, "X", s)
-	body := mustApply(t, p, x) // P(X)
-	fa := mustForAll(t, []*logic.Variable{x}, body)
+	x := z3MustVar(t, "X", s)
+	body := z3MustApply(t, p, x) // P(X)
+	fa := z3MustForAll(t, []*logic.Variable{x}, body)
 
 	result, err := u.ToZ3Expr(fa)
 	if err != nil {
@@ -459,16 +459,16 @@ func TestToZ3ForAll(t *testing.T) {
 	}
 }
 
-func TestToZ3Exists(t *testing.T) {
+func TestZ3BridgeToZ3Exists(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	s := &logic.UninterpretedSort{Name: "S"}
-	fs := mustFS(t, s, logic.Boolean)
+	fs := z3MustFS(t, s, logic.Boolean)
 	p := logic.NewConst("P", fs)
-	x := mustVar(t, "X", s)
-	body := mustApply(t, p, x)
-	ex := mustExists(t, []*logic.Variable{x}, body)
+	x := z3MustVar(t, "X", s)
+	body := z3MustApply(t, p, x)
+	ex := z3MustExists(t, []*logic.Variable{x}, body)
 
 	result, err := u.ToZ3Expr(ex)
 	if err != nil {
@@ -479,7 +479,7 @@ func TestToZ3Exists(t *testing.T) {
 	}
 }
 
-func TestToZ3ForAllEmpty(t *testing.T) {
+func TestZ3BridgeToZ3ForAllEmpty(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -496,7 +496,7 @@ func TestToZ3ForAllEmpty(t *testing.T) {
 	}
 }
 
-func TestToZ3ExistsEmpty(t *testing.T) {
+func TestZ3BridgeToZ3ExistsEmpty(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -513,7 +513,7 @@ func TestToZ3ExistsEmpty(t *testing.T) {
 
 // --- Group 6: Caching ---
 
-func TestToZ3CacheHit(t *testing.T) {
+func TestZ3BridgeToZ3CacheHit(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -535,13 +535,13 @@ func TestToZ3CacheHit(t *testing.T) {
 	}
 
 	// Both should be same Expr
-	e1, e2 := r1.(Expr), r2.(Expr)
+	e1, e2 := r1.(Z3Expr), r2.(Z3Expr)
 	if e1.String() != e2.String() {
 		t.Errorf("cached result differs: %q vs %q", e1.String(), e2.String())
 	}
 }
 
-func TestToZ3ClearResetsCache(t *testing.T) {
+func TestZ3BridgeToZ3ClearResetsCache(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -571,7 +571,7 @@ func TestToZ3ClearResetsCache(t *testing.T) {
 
 // --- Group 7: Z3Implies ---
 
-func TestZ3UtilsImpliesValid(t *testing.T) {
+func TestZ3BridgeZ3UtilsImpliesValid(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -588,7 +588,7 @@ func TestZ3UtilsImpliesValid(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsImpliesInvalid(t *testing.T) {
+func TestZ3BridgeZ3UtilsImpliesInvalid(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -604,7 +604,7 @@ func TestZ3UtilsImpliesInvalid(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsImpliesCache(t *testing.T) {
+func TestZ3BridgeZ3UtilsImpliesCache(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -632,7 +632,7 @@ func TestZ3UtilsImpliesCache(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsImpliesTautology(t *testing.T) {
+func TestZ3BridgeZ3UtilsImpliesTautology(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -650,7 +650,7 @@ func TestZ3UtilsImpliesTautology(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsImpliesTimeout(t *testing.T) {
+func TestZ3BridgeZ3UtilsImpliesTimeout(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -669,7 +669,7 @@ func TestZ3UtilsImpliesTimeout(t *testing.T) {
 
 // --- Group 8: Z3ImpliesBatch ---
 
-func TestZ3UtilsBatchValid(t *testing.T) {
+func TestZ3BridgeZ3UtilsBatchValid(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -692,7 +692,7 @@ func TestZ3UtilsBatchValid(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsBatchInvalid(t *testing.T) {
+func TestZ3BridgeZ3UtilsBatchInvalid(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -708,7 +708,7 @@ func TestZ3UtilsBatchInvalid(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsBatchMixed(t *testing.T) {
+func TestZ3BridgeZ3UtilsBatchMixed(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -732,7 +732,7 @@ func TestZ3UtilsBatchMixed(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsBatchEmpty(t *testing.T) {
+func TestZ3BridgeZ3UtilsBatchEmpty(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -746,7 +746,7 @@ func TestZ3UtilsBatchEmpty(t *testing.T) {
 	}
 }
 
-func TestZ3UtilsBatchCacheHit(t *testing.T) {
+func TestZ3BridgeZ3UtilsBatchCacheHit(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -787,21 +787,20 @@ func TestZ3UtilsBatchCacheHit(t *testing.T) {
 //	BinRel = FunctionSort(S, S, Boolean)
 //	leq = Const('leq', BinRel)
 func buildTransitivityFixtures(t *testing.T) (
-	leqXY, leqYZ, leqXZ logic.Expr,
-	X, Y, Z *logic.Variable,
+	leqXY, leqYZ, leqXZ logic.Expr, X, Y, Z *logic.Variable,
 	leq *logic.Const,
 	S *logic.UninterpretedSort,
 ) {
 	t.Helper()
 	S = &logic.UninterpretedSort{Name: "S"}
-	X = mustVar(t, "X", S)
-	Y = mustVar(t, "Y", S)
-	Z = mustVar(t, "Z", S)
-	binRel := mustFS(t, S, S, logic.Boolean) // S * S -> Boolean
+	X = z3MustVar(t, "X", S)
+	Y = z3MustVar(t, "Y", S)
+	Z = z3MustVar(t, "Z", S)
+	binRel := z3MustFS(t, S, S, logic.Boolean) // S * S -> Boolean
 	leq = logic.NewConst("leq", binRel)
-	leqXY = mustApply(t, leq, X, Y)
-	leqYZ = mustApply(t, leq, Y, Z)
-	leqXZ = mustApply(t, leq, X, Z)
+	leqXY = z3MustApply(t, leq, X, Y)
+	leqYZ = z3MustApply(t, leq, Y, Z)
+	leqXZ = z3MustApply(t, leq, X, Z)
 	return
 }
 
@@ -814,7 +813,7 @@ func buildTransitivityFixtures(t *testing.T) (
 //	z3_implies(transitive1, transitive2) == True
 //	z3_implies(transitive2, transitive3) == True
 //	z3_implies(transitive3, transitive1) == True
-func TestZ3UtilsTransitivityEquivalences(t *testing.T) {
+func TestZ3BridgeZ3UtilsTransitivityEquivalences(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -824,18 +823,18 @@ func TestZ3UtilsTransitivityEquivalences(t *testing.T) {
 	// transitive1: ForAll(X,Y,Z, Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z)))
 	andPremise := &logic.And{Terms: []logic.Expr{leqXY, leqYZ}}
 	imp := &logic.Implies{T1: andPremise, T2: leqXZ}
-	transitive1 := mustForAll(t, vars, imp)
+	transitive1 := z3MustForAll(t, vars, imp)
 
 	// transitive2: ForAll(X,Y,Z, Or(Not(leq(X,Y)), Not(leq(Y,Z)), leq(X,Z)))
 	notXY := &logic.Not{Body: leqXY}
 	notYZ := &logic.Not{Body: leqYZ}
 	orBody := &logic.Or{Terms: []logic.Expr{notXY, notYZ, leqXZ}}
-	transitive2 := mustForAll(t, vars, orBody)
+	transitive2 := z3MustForAll(t, vars, orBody)
 
 	// transitive3: Not(Exists(X,Y,Z, And(leq(X,Y), leq(Y,Z), Not(leq(X,Z)))))
 	notXZ := &logic.Not{Body: leqXZ}
 	andInner := &logic.And{Terms: []logic.Expr{leqXY, leqYZ, notXZ}}
-	existsInner := mustExists(t, vars, andInner)
+	existsInner := z3MustExists(t, vars, andInner)
 	transitive3 := &logic.Not{Body: existsInner}
 
 	// t1 => t2
@@ -869,7 +868,7 @@ func TestZ3UtilsTransitivityEquivalences(t *testing.T) {
 // TestZ3UtilsTransitivityNotAntisymmetric ports Python __main__ line 187:
 //
 //	z3_implies(transitive3, antisymmetric) == False
-func TestZ3UtilsTransitivityNotAntisymmetric(t *testing.T) {
+func TestZ3BridgeZ3UtilsTransitivityNotAntisymmetric(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -879,18 +878,18 @@ func TestZ3UtilsTransitivityNotAntisymmetric(t *testing.T) {
 	// transitive3
 	notXZ := &logic.Not{Body: leqXZ}
 	andInner := &logic.And{Terms: []logic.Expr{leqXY, leqYZ, notXZ}}
-	existsInner := mustExists(t, vars, andInner)
+	existsInner := z3MustExists(t, vars, andInner)
 	transitive3 := &logic.Not{Body: existsInner}
 
 	// antisymmetric: ForAll(X,Y, Implies(And(leq(X,Y), leq(Y,X), true), Eq(Y,X)))
-	binRel := mustFS(t, S, S, logic.Boolean)
+	binRel := z3MustFS(t, S, S, logic.Boolean)
 	leq := logic.NewConst("leq", binRel)
-	leqYX := mustApply(t, leq, Y, X)
+	leqYX := z3MustApply(t, leq, Y, X)
 	trueVal := &logic.And{Terms: []logic.Expr{}} // logic.True
 	andBody := &logic.And{Terms: []logic.Expr{leqXY, leqYX, trueVal}}
-	eqYX := mustEq(t, Y, X)
+	eqYX := z3MustEq(t, Y, X)
 	impBody := &logic.Implies{T1: andBody, T2: eqYX}
-	antisymmetric := mustForAll(t, []*logic.Variable{X, Y}, impBody)
+	antisymmetric := z3MustForAll(t, []*logic.Variable{X, Y}, impBody)
 
 	r, err := u.Z3Implies(transitive3, antisymmetric, false)
 	if err != nil {
@@ -904,7 +903,7 @@ func TestZ3UtilsTransitivityNotAntisymmetric(t *testing.T) {
 // TestZ3UtilsIffEquivalence ports Python __main__ line 190:
 //
 //	z3_implies(true, Iff(transitive1, transitive2)) == True
-func TestZ3UtilsIffEquivalence(t *testing.T) {
+func TestZ3BridgeZ3UtilsIffEquivalence(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -914,13 +913,13 @@ func TestZ3UtilsIffEquivalence(t *testing.T) {
 	// transitive1
 	andPremise := &logic.And{Terms: []logic.Expr{leqXY, leqYZ}}
 	imp := &logic.Implies{T1: andPremise, T2: leqXZ}
-	transitive1 := mustForAll(t, vars, imp)
+	transitive1 := z3MustForAll(t, vars, imp)
 
 	// transitive2
 	notXY := &logic.Not{Body: leqXY}
 	notYZ := &logic.Not{Body: leqYZ}
 	orBody := &logic.Or{Terms: []logic.Expr{notXY, notYZ, leqXZ}}
-	transitive2 := mustForAll(t, vars, orBody)
+	transitive2 := z3MustForAll(t, vars, orBody)
 
 	trueVal := &logic.And{Terms: []logic.Expr{}}
 	iff := &logic.Iff{T1: transitive1, T2: transitive2}
@@ -939,7 +938,7 @@ func TestZ3UtilsIffEquivalence(t *testing.T) {
 //	b ⊨ Eq(Ite(b, x, y), x)           → true
 //	¬b ⊨ Eq(Ite(b, x, y), y)          → true
 //	¬Eq(x,y) ⊨ Iff(Eq(Ite(b,x,y),x), b) → true
-func TestZ3UtilsIteImplications(t *testing.T) {
+func TestZ3BridgeZ3UtilsIteImplications(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
@@ -950,7 +949,7 @@ func TestZ3UtilsIteImplications(t *testing.T) {
 	ite := mustIte(t, b, x, y) // Ite(b, x, y)
 
 	// Test 1: b ⊨ Eq(Ite(b, x, y), x)
-	eqIteX := mustEq(t, ite, x)
+	eqIteX := z3MustEq(t, ite, x)
 	r, err := u.Z3Implies(b, eqIteX, false)
 	if err != nil {
 		t.Fatal(err)
@@ -961,7 +960,7 @@ func TestZ3UtilsIteImplications(t *testing.T) {
 
 	// Test 2: ¬b ⊨ Eq(Ite(b, x, y), y)
 	notB := &logic.Not{Body: b}
-	eqIteY := mustEq(t, ite, y)
+	eqIteY := z3MustEq(t, ite, y)
 	r, err = u.Z3Implies(notB, eqIteY, false)
 	if err != nil {
 		t.Fatal(err)
@@ -971,7 +970,7 @@ func TestZ3UtilsIteImplications(t *testing.T) {
 	}
 
 	// Test 3: ¬Eq(x,y) ⊨ Iff(Eq(Ite(b,x,y),x), b)
-	eqXY := mustEq(t, x, y)
+	eqXY := z3MustEq(t, x, y)
 	notEqXY := &logic.Not{Body: eqXY}
 	iffEqB := &logic.Iff{T1: eqIteX, T2: b}
 	r, err = u.Z3Implies(notEqXY, iffEqB, false)
@@ -985,19 +984,19 @@ func TestZ3UtilsIteImplications(t *testing.T) {
 
 // --- Group 10: Free Variable Sharing ---
 
-func TestZ3UtilsFreeVarsShared(t *testing.T) {
+func TestZ3BridgeZ3UtilsFreeVarsShared(t *testing.T) {
 	u := NewZ3Utils()
 	defer u.Close()
 
 	S := &logic.UninterpretedSort{Name: "S"}
-	X := mustVar(t, "X", S)
-	fs := mustFS(t, S, logic.Boolean)
+	X := z3MustVar(t, "X", S)
+	fs := z3MustFS(t, S, logic.Boolean)
 	r := logic.NewConst("r", fs)
 
 	// premise: r(X)
-	premiseApp := mustApply(t, r, X)
+	premiseApp := z3MustApply(t, r, X)
 	// formula: r(X) — same X should be shared
-	formulaApp := mustApply(t, r, X)
+	formulaApp := z3MustApply(t, r, X)
 
 	result, err := u.Z3Implies(premiseApp, formulaApp, false)
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/glycerine/ivy/goivy/temporal"
 )
 
-var testAstCfg = ast.NewAstConfig()
+var tacticsTestAstCfg = ast.NewAstConfig()
 
 // testPC creates a minimal ProofChecker with a module.Config for testing.
 func testPC() *proof.ProofChecker {
@@ -18,14 +18,14 @@ func testPC() *proof.ProofChecker {
 	mod.Cfg = module.NewConfig()
 	return &proof.ProofChecker{
 		Cfg:    module.TacticNewConfig(),
-		AstCfg: testAstCfg,
+		AstCfg: tacticsTestAstCfg,
 		Mod:    mod,
 	}
 }
 
 // ---------- helpers ----------
 
-func mustVar(name string) *lg.Variable {
+func tacticsMustVar(name string) *lg.Variable {
 	v, err := lg.NewVariable(name, lg.Boolean)
 	if err != nil {
 		panic(err)
@@ -34,14 +34,14 @@ func mustVar(name string) *lg.Variable {
 }
 
 func makeSimpleGoal(name string, fmla lg.Expr) *ast.LabeledFormula {
-	label := testAstCfg.NewAtom(name)
-	return proof.MakeGoal(testAstCfg, ast.Location{}, label, nil, fmla)
+	label := tacticsTestAstCfg.NewAtom(name)
+	return proof.MakeGoal(tacticsTestAstCfg, ast.Location{}, label, nil, fmla)
 }
 
 func makeTemporalGoal(name string, model ast.Node, fmla ast.Node) *ast.LabeledFormula {
-	tm := testAstCfg.NewTemporalModels(model, fmla)
-	label := testAstCfg.NewAtom(name)
-	lf := testAstCfg.NewLabeledFormula(label, tm)
+	tm := tacticsTestAstCfg.NewTemporalModels(model, fmla)
+	label := tacticsTestAstCfg.NewAtom(name)
+	lf := tacticsTestAstCfg.NewLabeledFormula(label, tm)
 	lf.Temporal = ast.BoolPtr(true)
 	return lf
 }
@@ -51,10 +51,10 @@ func makeTemporalGoal(name string, model ast.Node, fmla ast.Node) *ast.LabeledFo
 func TestSorry(t *testing.T) {
 	pc := testPC()
 	pc.Mod.Cfg.UsedSorry = false
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}
@@ -69,12 +69,12 @@ func TestSorry(t *testing.T) {
 func TestSorryPreservesRest(t *testing.T) {
 	pc := testPC()
 	pc.Mod.Cfg.UsedSorry = false
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	g1 := makeSimpleGoal("g1", x)
 	g2 := makeSimpleGoal("g2", x)
 	g3 := makeSimpleGoal("g3", x)
 
-	result, err := Sorry(pc, []*ast.LabeledFormula{g1, g2, g3}, testAstCfg.NewNoneAST())
+	result, err := Sorry(pc, []*ast.LabeledFormula{g1, g2, g3}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}
@@ -84,7 +84,7 @@ func TestSorryPreservesRest(t *testing.T) {
 }
 
 func TestSorryEmpty(t *testing.T) {
-	result, err := Sorry(nil, nil, testAstCfg.NewNoneAST())
+	result, err := Sorry(nil, nil, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}
@@ -96,10 +96,10 @@ func TestSorryEmpty(t *testing.T) {
 // ---------- Skolemize / Skolemizenp ----------
 
 func TestSkolemize(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Skolemize(nil, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Skolemize(nil, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Skolemize returned error: %v", err)
 	}
@@ -109,10 +109,10 @@ func TestSkolemize(t *testing.T) {
 }
 
 func TestSkolemizenp(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Skolemizenp(nil, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Skolemizenp(nil, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Skolemizenp returned error: %v", err)
 	}
@@ -122,7 +122,7 @@ func TestSkolemizenp(t *testing.T) {
 }
 
 func TestSkolemizeEmpty(t *testing.T) {
-	_, err := Skolemize(nil, nil, testAstCfg.NewNoneAST())
+	_, err := Skolemize(nil, nil, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected error for empty decls")
 	}
@@ -131,7 +131,7 @@ func TestSkolemizeEmpty(t *testing.T) {
 // ---------- TempindFmla ----------
 
 func TestTempindFmlaDefault(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	result := TempindFmla(x, nil, nil, nil)
 	if result != x {
 		t.Errorf("Expected identity when no vs, got %v", result)
@@ -139,7 +139,7 @@ func TestTempindFmlaDefault(t *testing.T) {
 }
 
 func TestTempindFmlaWithVs(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	vs := []*lg.Variable{x}
 	result := TempindFmla(x, nil, nil, vs)
 	fa, ok := result.(*lg.ForAll)
@@ -152,8 +152,8 @@ func TestTempindFmlaWithVs(t *testing.T) {
 }
 
 func TestTempindFmlaForAll(t *testing.T) {
-	x := mustVar("X")
-	y := mustVar("Y")
+	x := tacticsMustVar("X")
+	y := tacticsMustVar("Y")
 	fa, _ := lg.NewForAll([]*lg.Variable{y}, x)
 	result := TempindFmla(fa, nil, nil, []*lg.Variable{x})
 	resultFa, ok := result.(*lg.ForAll)
@@ -166,7 +166,7 @@ func TestTempindFmlaForAll(t *testing.T) {
 }
 
 func TestTempindFmlaGlobally(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	gb, _ := lg.NewGlobally(nil, x)
 	vs := []*lg.Variable{x}
 	result := TempindFmla(gb, nil, nil, vs)
@@ -195,8 +195,8 @@ func TestTempindFmlaGlobally(t *testing.T) {
 // ---------- TempcaseFmla ----------
 
 func TestTempcaseFmlaDefault(t *testing.T) {
-	x := mustVar("X")
-	result, err := TempcaseFmla(x, nil, nil, testAstCfg.NewNoneAST())
+	x := tacticsMustVar("X")
+	result, err := TempcaseFmla(x, nil, nil, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("TempcaseFmla returned error: %v", err)
 	}
@@ -206,20 +206,20 @@ func TestTempcaseFmlaDefault(t *testing.T) {
 }
 
 func TestTempcaseFmlaCapture(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	fa, _ := lg.NewForAll([]*lg.Variable{x}, x)
 	vs := []lg.Expr{x}
-	_, err := TempcaseFmla(fa, nil, vs, testAstCfg.NewNoneAST())
+	_, err := TempcaseFmla(fa, nil, vs, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected variable capture error")
 	}
 }
 
 func TestTempcaseFmlaGlobally(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	gb, _ := lg.NewGlobally(nil, x)
 	vs := []lg.Expr{x}
-	result, err := TempcaseFmla(gb, x, vs, testAstCfg.NewNoneAST())
+	result, err := TempcaseFmla(gb, x, vs, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("TempcaseFmla returned error: %v", err)
 	}
@@ -235,28 +235,28 @@ func TestTempcaseFmlaGlobally(t *testing.T) {
 // ---------- Vcgen ----------
 
 func TestVcgenNonTemporalError(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	_, err := Vcgen(nil, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	_, err := Vcgen(nil, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected error for non-temporal goal")
 	}
 }
 
 func TestVcgenNonTrueError(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	np := &temporal.NormalProgram{}
 	goal := makeTemporalGoal("g", np, x)
 
-	_, err := Vcgen(nil, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	_, err := Vcgen(nil, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected error for non-true temporal formula")
 	}
 }
 
 func TestVcgenEmpty(t *testing.T) {
-	_, err := Vcgen(nil, nil, testAstCfg.NewNoneAST())
+	_, err := Vcgen(nil, nil, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected error for empty decls")
 	}
@@ -265,10 +265,10 @@ func TestVcgenEmpty(t *testing.T) {
 // ---------- Tempind ----------
 
 func TestTempindNonTemporalError(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	tt := testAstCfg.NewTacticTactic(testAstCfg.NewAtom("tempind"), testAstCfg.NewNoneAST(), nil)
+	tt := tacticsTestAstCfg.NewTacticTactic(tacticsTestAstCfg.NewAtom("tempind"), tacticsTestAstCfg.NewNoneAST(), nil)
 	_, err := Tempind(nil, []*ast.LabeledFormula{goal}, tt)
 	if err == nil {
 		t.Error("Expected error for non-temporal goal")
@@ -276,12 +276,12 @@ func TestTempindNonTemporalError(t *testing.T) {
 }
 
 func TestTempindWithTemporal(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	gb, _ := lg.NewGlobally(nil, x)
 	np := &temporal.NormalProgram{}
 	goal := makeTemporalGoal("g", np, gb)
 
-	tt := testAstCfg.NewTacticTactic(testAstCfg.NewAtom("tempind"), testAstCfg.NewNoneAST(), nil)
+	tt := tacticsTestAstCfg.NewTacticTactic(tacticsTestAstCfg.NewAtom("tempind"), tacticsTestAstCfg.NewNoneAST(), nil)
 	result, err := Tempind(nil, []*ast.LabeledFormula{goal}, tt)
 	if err != nil {
 		t.Fatalf("Tempind returned error: %v", err)
@@ -308,9 +308,9 @@ func TestRegisterProofTactics(t *testing.T) {
 // ---------- VcToGoal ----------
 
 func TestVcToGoal(t *testing.T) {
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	cls := module.NewClauses([]lg.Expr{x}, nil, nil)
-	goal := VcToGoal(testAstCfg, ast.Location{}, "test", cls, nil)
+	goal := VcToGoal(tacticsTestAstCfg, ast.Location{}, "test", cls, nil)
 	if goal == nil {
 		t.Fatal("VcToGoal returned nil")
 	}
@@ -359,10 +359,10 @@ func TestPcAstCfg_CheckerWithAstCfg(t *testing.T) {
 func TestSorryWithProofChecker(t *testing.T) {
 	pc := testPC()
 	pc.Mod.Cfg.UsedSorry = false
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}
@@ -376,10 +376,10 @@ func TestSorryWithProofChecker(t *testing.T) {
 
 func TestSkolemizeWithProofChecker(t *testing.T) {
 	pc := testPC()
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Skolemize(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Skolemize(pc, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Skolemize returned error: %v", err)
 	}
@@ -390,10 +390,10 @@ func TestSkolemizeWithProofChecker(t *testing.T) {
 
 func TestSkolemizenp_WithProofChecker(t *testing.T) {
 	pc := testPC()
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Skolemizenp(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	result, err := Skolemizenp(pc, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err != nil {
 		t.Fatalf("Skolemizenp returned error: %v", err)
 	}
@@ -404,12 +404,12 @@ func TestSkolemizenp_WithProofChecker(t *testing.T) {
 
 func TestTempindWithProofChecker(t *testing.T) {
 	pc := testPC()
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	gb, _ := lg.NewGlobally(nil, x)
 	np := &temporal.NormalProgram{}
 	goal := makeTemporalGoal("g", np, gb)
 
-	tt := testAstCfg.NewTacticTactic(testAstCfg.NewAtom("tempind"), testAstCfg.NewNoneAST(), nil)
+	tt := tacticsTestAstCfg.NewTacticTactic(tacticsTestAstCfg.NewAtom("tempind"), tacticsTestAstCfg.NewNoneAST(), nil)
 	result, err := Tempind(pc, []*ast.LabeledFormula{goal}, tt)
 	if err != nil {
 		t.Fatalf("Tempind returned error: %v", err)
@@ -421,11 +421,11 @@ func TestTempindWithProofChecker(t *testing.T) {
 
 func TestVcgenWithProofChecker(t *testing.T) {
 	pc := testPC()
-	x := mustVar("X")
+	x := tacticsMustVar("X")
 	goal := makeSimpleGoal("g", x)
 
 	// Vcgen requires a temporal goal; non-temporal should error even with a real checker.
-	_, err := Vcgen(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	_, err := Vcgen(pc, []*ast.LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	if err == nil {
 		t.Error("Expected error for non-temporal goal")
 	}

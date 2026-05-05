@@ -579,7 +579,7 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 // Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
 func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	xtracer.Trace("proof.GetSubgoals ENTER propLabel=%s", prop.LabelName())
-	// Python: assert not isinstance(prop.formula, il.Definition) — checked BEFORE normalize
+	// Python: assert not isinstance(prop.formula, il.IvyDefinition) — checked BEFORE normalize
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
 		xtracer.Trace("proof.GetSubgoals EXIT err=isDefinition")
 		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}

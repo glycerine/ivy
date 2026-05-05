@@ -1275,7 +1275,7 @@ lalr17default:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line grammar_v17.y:471
 		{
-			if v, ok := lalr17Dollar[1].node.(*ast.Variable); ok {
+			if v, ok := lalr17Dollar[1].node.(*ast.AstVariable); ok {
 				v.VSort = lalr17AtypeToString(lalr17Dollar[3].node)
 			}
 			lalr17VAL.node = lalr17Dollar[1].node

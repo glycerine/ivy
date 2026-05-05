@@ -38,7 +38,7 @@ func (m *Module) BackgroundTheory(inScope map[string]bool) *Clauses {
 func (m *Module) UpdateTheory() {
 	theory := m.GetAxioms()
 
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 
 	// Axioms of derived relations from definitions.
 	for _, ldf := range m.Definitions {
@@ -47,11 +47,11 @@ func (m *Module) UpdateTheory() {
 		// Extract Definition — handle both *Definition and *DefinitionSchema.
 		// In Go, *DefinitionSchema embeds Definition but doesn't satisfy
 		// the *Definition type assertion. Python isinstance() handles both.
-		var def *il.Definition
+		var def *il.IvyDefinition
 		var isSchema bool
-		if d, ok := fmla.(*il.Definition); ok {
+		if d, ok := fmla.(*il.IvyDefinition); ok {
 			def = d
-		} else if ds, ok := fmla.(*il.DefinitionSchema); ok {
+		} else if ds, ok := fmla.(*il.IvyDefinitionSchema); ok {
 			def = &ds.Definition
 			isSchema = true
 		} else {
@@ -61,7 +61,7 @@ func (m *Module) UpdateTheory() {
 		// Python: cnst = ldf.formula.to_constraint()
 		// Called unconditionally for ALL definitions to match Python trace output.
 		// The result is unused here but the call produces an xtracer trace.
-		defToConstraint(def)
+		moduleDefToConstraint(def)
 
 		// Check that all LHS args are variables.
 		lhsArgs := getLhsArgs(def)
@@ -76,11 +76,11 @@ func (m *Module) UpdateTheory() {
 
 		// If RHS is a Some, convert to constraint and add as axiom.
 		if _, isSome := def.Rhs.(*il.Some); isSome {
-			ax := defToConstraint(def)
+			ax := moduleDefToConstraint(def)
 			if len(lhsArgs) > 0 {
 				vars := nodesToVars(lhsArgs)
 				if len(vars) > 0 {
-					ax = il.ForAll(vars, ax)
+					ax = il.IvyForAll(vars, ax)
 				}
 			}
 			theory = append(theory, ax)
@@ -190,10 +190,10 @@ func (m *Module) TheoryContext() func() {
 	nonEPR := make(map[lg.NodeKey]nonEPREntry)
 	for _, ldf := range m.Definitions {
 		// Extract Definition — handle both *Definition and *DefinitionSchema.
-		var def *il.Definition
-		if d, ok := ldf.Formula.(*il.Definition); ok {
+		var def *il.IvyDefinition
+		if d, ok := ldf.Formula.(*il.IvyDefinition); ok {
 			def = d
-		} else if ds, ok := ldf.Formula.(*il.DefinitionSchema); ok {
+		} else if ds, ok := ldf.Formula.(*il.IvyDefinitionSchema); ok {
 			def = &ds.Definition
 		} else {
 			continue
@@ -201,7 +201,7 @@ func (m *Module) TheoryContext() func() {
 
 		// Python: cnst = ldf.formula.to_constraint()
 		// Called for ALL definitions (result used only for non-EPR).
-		cnst := defToConstraint(def)
+		cnst := moduleDefToConstraint(def)
 
 		lhsArgs := getLhsArgs(def)
 		if allVariables(lhsArgs) {
@@ -267,7 +267,7 @@ func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *Clauses {
 func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 	var newEntries []nonEPREntry
 	for _, entry := range tc.NonEPR {
-		def, isDef := entry.ldf.Formula.(*il.Definition)
+		def, isDef := entry.ldf.Formula.(*il.IvyDefinition)
 		if !isDef {
 			continue
 		}
@@ -294,7 +294,7 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 	}
 	// Extend the map with new entries.
 	for _, ne := range newEntries {
-		def, isDef := ne.ldf.Formula.(*il.Definition)
+		def, isDef := ne.ldf.Formula.(*il.IvyDefinition)
 		if !isDef {
 			continue
 		}
@@ -341,7 +341,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 		}
 
 		// Build substitution: non-variable params → term args
-		def, isDef := entry.ldf.Formula.(*il.Definition)
+		def, isDef := entry.ldf.Formula.(*il.IvyDefinition)
 		if !isDef {
 			continue
 		}
@@ -420,7 +420,7 @@ func (m *Module) VariantAxioms() []lg.Expr {
 		// is also in sig.Sorts.
 		anyInSig := false
 		for _, v := range sortVariants {
-			vname := il.SortName(v)
+			vname := il.IvySortName(v)
 			if _, ok := m.Sig.Sorts.Get2(vname); ok {
 				anyInSig = true
 				break
@@ -530,7 +530,7 @@ func DropLabel(lf interface{}) lg.Expr {
 
 // getLhsArgs returns the arguments of a definition's LHS.
 // If LHS is an Apply, returns its Terms. Otherwise returns nil.
-func getLhsArgs(def *il.Definition) []lg.Expr {
+func getLhsArgs(def *il.IvyDefinition) []lg.Expr {
 	if app, ok := def.Lhs.(*lg.Apply); ok {
 		return app.Terms
 	}

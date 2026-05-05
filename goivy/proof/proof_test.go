@@ -20,23 +20,23 @@ var (
 
 // --- helpers ---
 
-func mkSort(name string) *lg.UninterpretedSort {
+func proofMkSort(name string) *lg.UninterpretedSort {
 	return &lg.UninterpretedSort{Name: name}
 }
 
-func mkVar(name string, s lg.Sort) *lg.Variable {
+func proofMkVar(name string, s lg.Sort) *lg.Variable {
 	v, _ := lg.NewVariable(name, s)
 	return v
 }
 
-func mkConst(name string, s lg.Sort) *lg.Const {
+func proofMkConst(name string, s lg.Sort) *lg.Const {
 	return lg.NewConst(name, s)
 }
 
-var testAstCfg = ast.NewAstConfig()
+var proofTestAstCfg = ast.NewAstConfig()
 
 func mkLF(label, formula ast.Node) *ast.LabeledFormula {
-	return testAstCfg.NewLabeledFormula(label, formula)
+	return proofTestAstCfg.NewLabeledFormula(label, formula)
 }
 
 // --- Error type tests ---
@@ -69,8 +69,8 @@ func TestErrorsWithNode(t *testing.T) {
 // --- MatchProblem tests ---
 
 func TestMatchProblemString(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	mp := NewMatchProblem(x, x, x, map[lg.NodeKey]lg.Expr{lg.Key(x): lg.True}, nil)
 	str := mp.String()
 	if len(str) == 0 {
@@ -81,15 +81,15 @@ func TestMatchProblemString(t *testing.T) {
 // --- FuncSorts tests ---
 
 func TestFuncSorts(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("f", s)
+	s := proofMkSort("S")
+	c := proofMkConst("f", s)
 	sorts := FuncSorts(c)
 	if len(sorts) != 1 || !sorts[0].Equal(s) {
 		t.Errorf("expected [S], got %v", sorts)
 	}
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	c2 := mkConst("p", fs)
+	c2 := proofMkConst("p", fs)
 	sorts2 := FuncSorts(c2)
 	if len(sorts2) != 2 {
 		t.Errorf("expected 2 sorts, got %d", len(sorts2))
@@ -102,11 +102,11 @@ func TestFuncSorts(t *testing.T) {
 // --- FuncsMatch tests ---
 
 func TestFuncsMatch(t *testing.T) {
-	s := mkSort("S")
+	s := proofMkSort("S")
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	c1 := mkConst("p", fs)
-	c2 := mkConst("p", fs)
-	c3 := mkConst("q", fs)
+	c1 := proofMkConst("p", fs)
+	c2 := proofMkConst("p", fs)
+	c3 := proofMkConst("q", fs)
 
 	if !FuncsMatch(c1, c2, nil) {
 		t.Error("same constants should match")
@@ -116,9 +116,9 @@ func TestFuncsMatch(t *testing.T) {
 	}
 
 	// With free sorts
-	s2 := mkSort("T")
+	s2 := proofMkSort("T")
 	fs2, _ := lg.NewFunctionSort(s2, lg.Boolean)
-	c4 := mkConst("p", fs2)
+	c4 := proofMkConst("p", fs2)
 	freesyms := map[lg.NodeKey]lg.Expr{lg.Key(s): lg.True}
 	if !FuncsMatch(c1, c4, freesyms) {
 		t.Error("should match when sort is free")
@@ -128,9 +128,9 @@ func TestFuncsMatch(t *testing.T) {
 // --- HeadsMatch tests ---
 
 func TestHeadsMatch(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	// Variables should match variables
 	if !HeadsMatch(x, y, nil) {
@@ -147,8 +147,8 @@ func TestHeadsMatch(t *testing.T) {
 // --- MatchSort tests ---
 
 func TestMatchSort(t *testing.T) {
-	s1 := mkSort("S")
-	s2 := mkSort("T")
+	s1 := proofMkSort("S")
+	s2 := proofMkSort("T")
 
 	// Free sort: should produce mapping
 	free := map[lg.NodeKey]lg.Expr{lg.Key(s1): lg.True}
@@ -190,10 +190,10 @@ func TestMergeMatchesNil(t *testing.T) {
 }
 
 func TestMergeMatchesConflict(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
-	z := mkVar("Z", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
+	z := proofMkVar("Z", s)
 
 	m1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
 	m2 := map[lg.NodeKey]lg.Expr{lg.Key(x): z}
@@ -204,10 +204,10 @@ func TestMergeMatchesConflict(t *testing.T) {
 }
 
 func TestMergeMatchesConsistent(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
-	z := mkVar("Z", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
+	z := proofMkVar("Z", s)
 
 	m1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
 	m2 := map[lg.NodeKey]lg.Expr{lg.Key(z): y}
@@ -220,9 +220,9 @@ func TestMergeMatchesConsistent(t *testing.T) {
 // --- EquivAlpha tests ---
 
 func TestEquivAlpha(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	if !EquivAlpha(x, x) {
 		t.Error("same term should be equiv")
@@ -233,9 +233,9 @@ func TestEquivAlpha(t *testing.T) {
 }
 
 func TestEquivAlphaLambda(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	lam1, _ := lg.NewLambda([]*lg.Variable{x}, x)
 	lam2, _ := lg.NewLambda([]*lg.Variable{y}, y)
@@ -247,9 +247,9 @@ func TestEquivAlphaLambda(t *testing.T) {
 // --- Match tests ---
 
 func TestMatchVariable(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	// Variable pat vs variable inst with same type: heads_match returns true
 	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
@@ -263,11 +263,11 @@ func TestMatchVariable(t *testing.T) {
 }
 
 func TestMatchApp(t *testing.T) {
-	s := mkSort("S")
+	s := proofMkSort("S")
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := mkConst("p", fs)
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	p := proofMkConst("p", fs)
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	pat, _ := lg.NewApply(p, x)
 	inst, _ := lg.NewApply(p, y)
@@ -283,11 +283,11 @@ func TestMatchApp(t *testing.T) {
 }
 
 func TestMatchFail(t *testing.T) {
-	s := mkSort("S")
+	s := proofMkSort("S")
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := mkConst("p", fs)
-	q := mkConst("q", fs)
-	c := mkConst("c", s)
+	p := proofMkConst("p", fs)
+	q := proofMkConst("q", fs)
+	c := proofMkConst("c", s)
 
 	pat := lg.MustApply(p, c)
 	inst := lg.MustApply(q, c)
@@ -301,9 +301,9 @@ func TestMatchFail(t *testing.T) {
 // --- FOMatch tests ---
 
 func TestFOMatchVariable(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	c := proofMkConst("c", s)
 
 	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
 	constants := map[lg.NodeKey]lg.Expr{}
@@ -317,9 +317,9 @@ func TestFOMatchVariable(t *testing.T) {
 }
 
 func TestFOMatchNoMatch(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	// Y is not a constant, so X should not match Y
 	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
@@ -336,9 +336,9 @@ func TestFOMatchNoMatch(t *testing.T) {
 // --- MatchQuants tests ---
 
 func TestMatchQuants(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	body1 := &lg.And{Terms: []lg.Expr{x}}
 	body2 := &lg.And{Terms: []lg.Expr{y}}
@@ -354,9 +354,9 @@ func TestMatchQuants(t *testing.T) {
 }
 
 func TestMatchQuantsDiffType(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: x}
 	ex := &lg.Exists{Variables: []*lg.Variable{y}, Body: y}
@@ -370,9 +370,9 @@ func TestMatchQuantsDiffType(t *testing.T) {
 // --- AddSymbols / RemoveSymbols tests ---
 
 func TestAddSymbols(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	y := mkVar("Y", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s)
 
 	set := map[lg.NodeKey]lg.Expr{}
 	as := NewAddSymbols(set, []lg.Expr{x, y})
@@ -386,8 +386,8 @@ func TestAddSymbols(t *testing.T) {
 }
 
 func TestRemoveSymbols(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 
 	set := map[lg.NodeKey]lg.Expr{lg.Key(x): lg.True}
 	rs := NewRemoveSymbols(set, []lg.Expr{x})
@@ -403,11 +403,11 @@ func TestRemoveSymbols(t *testing.T) {
 // --- Goal operation tests ---
 
 func TestGoalConcSimple(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Wrap logic node in adapter
-	lf := mkLF(testAstCfg.NewAtom("test"), c)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), c)
 	conc := GoalConc(lf)
 	if conc == nil {
 		t.Fatal("expected non-nil conclusion")
@@ -415,9 +415,9 @@ func TestGoalConcSimple(t *testing.T) {
 }
 
 func TestGoalPremsEmpty(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	lf := mkLF(testAstCfg.NewAtom("test"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), c)
 	prems := GoalPrems(lf)
 	if len(prems) != 0 {
 		t.Error("expected no premises for simple formula")
@@ -425,12 +425,12 @@ func TestGoalPremsEmpty(t *testing.T) {
 }
 
 func TestGoalPremsWithSchema(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	prem := mkLF(testAstCfg.NewAtom("p"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	prem := mkLF(proofTestAstCfg.NewAtom("p"), c)
 
-	sb := testAstCfg.NewSchemaBody(prem, c)
-	goal := mkLF(testAstCfg.NewAtom("g"), sb)
+	sb := proofTestAstCfg.NewSchemaBody(prem, c)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
 	prems := GoalPrems(goal)
 	if len(prems) != 1 {
@@ -439,11 +439,11 @@ func TestGoalPremsWithSchema(t *testing.T) {
 }
 
 func TestCloneGoal(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	lf := mkLF(testAstCfg.NewAtom("test"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), c)
 
-	clone := CloneGoal(testAstCfg, lf, nil, c)
+	clone := CloneGoal(proofTestAstCfg, lf, nil, c)
 	if clone == nil {
 		t.Fatal("expected non-nil clone")
 	}
@@ -453,22 +453,22 @@ func TestCloneGoal(t *testing.T) {
 }
 
 func TestNormalizeGoal(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	lf := mkLF(testAstCfg.NewAtom("test"), c)
-	norm := NormalizeGoal(testAstCfg, lf)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), c)
+	norm := NormalizeGoal(proofTestAstCfg, lf)
 	if norm == nil {
 		t.Fatal("expected non-nil normalized goal")
 	}
 }
 
 func TestGoalVocab(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 
 	// Create a formula with a variable
 	body := &lg.And{Terms: []lg.Expr{x}}
-	lf := mkLF(testAstCfg.NewAtom("test"), body)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), body)
 	vocab := GoalVocab(lf)
 	if vocab == nil {
 		t.Fatal("expected non-nil vocab")
@@ -476,10 +476,10 @@ func TestGoalVocab(t *testing.T) {
 }
 
 func TestGoalFree(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	body := &lg.And{Terms: []lg.Expr{x}}
-	lf := mkLF(testAstCfg.NewAtom("test"), body)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), body)
 	free := GoalFree(lf)
 	if len(free) == 0 {
 		t.Error("expected free variables")
@@ -487,25 +487,25 @@ func TestGoalFree(t *testing.T) {
 }
 
 func TestTrivialGoal(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	lf := mkLF(testAstCfg.NewAtom("test"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	lf := mkLF(proofTestAstCfg.NewAtom("test"), c)
 	if TrivialGoal(lf) {
 		t.Error("simple goal should not be trivial")
 	}
 }
 
 func TestCheckConcsMatch(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	g1 := mkLF(testAstCfg.NewAtom("g1"), c)
-	g2 := mkLF(testAstCfg.NewAtom("g2"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	g1 := mkLF(proofTestAstCfg.NewAtom("g1"), c)
+	g2 := mkLF(proofTestAstCfg.NewAtom("g2"), c)
 	if err := CheckConcsMatch(g1, g2); err != nil {
 		t.Errorf("same conclusions should match: %v", err)
 	}
 
-	d := mkConst("d", s)
-	g3 := mkLF(testAstCfg.NewAtom("g3"), d)
+	d := proofMkConst("d", s)
+	g3 := mkLF(proofTestAstCfg.NewAtom("g3"), d)
 	if err := CheckConcsMatch(g1, g3); err == nil {
 		t.Error("different conclusions should not match")
 	}
@@ -514,9 +514,9 @@ func TestCheckConcsMatch(t *testing.T) {
 // --- ProofChecker tests ---
 
 func TestNewProofChecker(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	ax := mkLF(proofTestAstCfg.NewAtom("ax1"), c)
 	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{ax}, nil, nil)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
@@ -525,9 +525,9 @@ func TestNewProofChecker(t *testing.T) {
 
 func TestProofCheckerAdmitAxiom(t *testing.T) {
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	s := mkSort("S")
-	c := mkConst("c", s)
-	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	ax := mkLF(proofTestAstCfg.NewAtom("ax1"), c)
 	pc.AdmitAxiom(ax)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
@@ -535,12 +535,12 @@ func TestProofCheckerAdmitAxiom(t *testing.T) {
 }
 
 func TestProofCheckerLookupSchema(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
-	ax := mkLF(testAstCfg.NewAtom("myax"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	ax := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{ax}, nil, nil)
 
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
 	schema, err := pc.LookupSchema("myax", goal, nil, false)
 	if err != nil {
 		t.Fatalf("expected to find schema: %v", err)
@@ -552,9 +552,9 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 
 func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
 	pc := NewProofChecker(nil, nil, nil, nil, nil)
-	s := mkSort("S")
-	c := mkConst("c", s)
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
 	_, err := pc.LookupSchema("nonexistent", goal, nil, false)
 	if err == nil {
 		t.Error("expected error for missing schema")
@@ -583,13 +583,13 @@ func TestRegisterTactic(t *testing.T) {
 // --- Skolemize tests ---
 
 func TestSkolemizeFmlaSimple(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	c := proofMkConst("c", s)
 
 	// ForAll X. p(X) in positive position -> skolemize X
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := mkConst("p", fs)
+	p := proofMkConst("p", fs)
 	body := lg.MustApply(p, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
@@ -611,11 +611,11 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 }
 
 func TestSkolemizeFmlaExists(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := mkConst("p", fs)
+	p := proofMkConst("p", fs)
 	body := lg.MustApply(p, x)
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 
@@ -633,16 +633,16 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 }
 
 func TestSkolemizeGoalBasic(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := mkConst("p", fs)
+	p := proofMkConst("p", fs)
 	body := lg.MustApply(p, x)
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
-	goal := mkLF(testAstCfg.NewAtom("test"), fmla)
-	result := SkolemizeGoal(testAstCfg, goal, true)
+	goal := mkLF(proofTestAstCfg.NewAtom("test"), fmla)
+	result := SkolemizeGoal(proofTestAstCfg, goal, true)
 	if result == nil {
 		t.Fatal("expected non-nil skolemized goal")
 	}
@@ -651,8 +651,8 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 // --- ApplyMatch tests ---
 
 func TestApplyMatchIdentity(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 	result := ApplyMatch(nil, x)
 	if !result.Equal(x) {
 		t.Error("empty match should return same term")
@@ -660,9 +660,9 @@ func TestApplyMatchIdentity(t *testing.T) {
 }
 
 func TestApplyMatchSubstitution(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	c := proofMkConst("c", s)
 
 	match := map[lg.NodeKey]lg.Expr{lg.Key(x): c}
 	result := ApplyMatch(match, x)
@@ -672,10 +672,10 @@ func TestApplyMatchSubstitution(t *testing.T) {
 }
 
 func TestApplyMatchFunc(t *testing.T) {
-	s := mkSort("S")
-	s2 := mkSort("T")
+	s := proofMkSort("S")
+	s2 := proofMkSort("T")
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
-	c := mkConst("f", fs)
+	c := proofMkConst("f", fs)
 
 	match := map[lg.NodeKey]lg.Expr{lg.Key(s): s2}
 	result := ApplyMatchFunc(match, c)
@@ -688,19 +688,19 @@ func TestApplyMatchFunc(t *testing.T) {
 // --- ComposeMatches tests ---
 
 func TestComposeMatches(t *testing.T) {
-	s := mkSort("S")
-	s2 := mkSort("T")
-	x := mkVar("X", s)
-	y := mkVar("Y", s2)
+	s := proofMkSort("S")
+	s2 := proofMkSort("T")
+	x := proofMkVar("X", s)
+	y := proofMkVar("Y", s2)
 
 	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
 	mat1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
-	mat2 := map[lg.NodeKey]lg.Expr{lg.Key(y): mkConst("c", s2)}
+	mat2 := map[lg.NodeKey]lg.Expr{lg.Key(y): proofMkConst("c", s2)}
 	result := ComposeMatches(free, mat1, mat2, nil)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if !result[lg.Key(x)].Equal(mkConst("c", s2)) {
+	if !result[lg.Key(x)].Equal(proofMkConst("c", s2)) {
 		t.Error("composition should map X to c")
 	}
 }
@@ -715,8 +715,8 @@ func TestComposeMatchesNil(t *testing.T) {
 // --- ExtractTerms tests ---
 
 func TestExtractTerms(t *testing.T) {
-	s := mkSort("S")
-	x := mkVar("X", s)
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
 
 	// inst = X, terms = [X] -> lambda V0. V0
 	// X is a variable that appears as a term; after extraction the body is V0
@@ -736,8 +736,8 @@ func TestExtractTerms(t *testing.T) {
 }
 
 func TestExtractTermsEmpty(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 	lam := ExtractTerms(c, nil, nil)
 	if lam != nil {
 		t.Error("expected nil for empty terms")
@@ -747,8 +747,8 @@ func TestExtractTermsEmpty(t *testing.T) {
 // --- ApplyMatchFreesyms tests ---
 
 func TestApplyMatchFreesyms(t *testing.T) {
-	s := mkSort("S")
-	s2 := mkSort("T")
+	s := proofMkSort("S")
+	s2 := proofMkSort("T")
 
 	free := map[lg.NodeKey]lg.Expr{lg.Key(s): s, lg.Key(s2): s2}
 	match := map[lg.NodeKey]lg.Expr{lg.Key(s): s2}
@@ -769,16 +769,16 @@ func FuzzMergeMatches(f *testing.F) {
 	f.Add(0, 0, 0, 0, false)
 
 	f.Fuzz(func(t *testing.T, a, b, c, d int, conflict bool) {
-		s := mkSort("S")
+		s := proofMkSort("S")
 		vars := make([]*lg.Variable, 4)
 		names := []string{"A", "B", "C", "D"}
 		for i, n := range names {
-			vars[i] = mkVar(n, s)
+			vars[i] = proofMkVar(n, s)
 		}
 
 		consts := []*lg.Const{
-			mkConst("c0", s), mkConst("c1", s),
-			mkConst("c2", s), mkConst("c3", s),
+			proofMkConst("c0", s), proofMkConst("c1", s),
+			proofMkConst("c2", s), proofMkConst("c3", s),
 		}
 
 		m1 := map[lg.NodeKey]lg.Expr{
@@ -817,9 +817,9 @@ func FuzzMatch(f *testing.F) {
 	f.Add(true, true)
 
 	f.Fuzz(func(t *testing.T, patFree, addExtra bool) {
-		s := mkSort("S")
-		x := mkVar("X", s)
-		y := mkVar("Y", s)
+		s := proofMkSort("S")
+		x := proofMkVar("X", s)
+		y := proofMkVar("Y", s)
 
 		free := map[lg.NodeKey]lg.Expr{}
 		if patFree {

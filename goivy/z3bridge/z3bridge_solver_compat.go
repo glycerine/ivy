@@ -81,7 +81,7 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Const) (retErr error) {
 
 	// Create dummy Z3 args and invoke
 	ctx := s.tr.Ctx
-	args := make([]Expr, fs.Arity())
+	args := make([]Z3Expr, fs.Arity())
 	for i, d := range fs.Domain() {
 		xtracer.Trace("TranslateSort_call callsite=check_native_compat_dom HASH canon=%s", d.Sexp())
 		zs, err := s.tr.TranslateSort(d)
@@ -130,7 +130,7 @@ func CheckNativeCompatSymStatic(sig *il.Sig, sym *lg.Const) error {
 
 func checkSortCompat(sig *il.Sig, s lg.Sort) error {
 	// Check that the sort either has no interpretation or a compatible one
-	name := il.SortName(s)
+	name := il.IvySortName(s)
 	interp, ok := sig.Interp[name]
 	if !ok {
 		return nil // no interpretation = OK
@@ -381,14 +381,14 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *module.Clauses) map
 		usedConsts := module.ConstantsClauses(clauses)
 		for _, c := range usedConsts {
 			if il.IsNumeral(c) {
-				sortName := il.SortName(il.SortRange(c.CSort))
+				sortName := il.IvySortName(il.SortRange(c.CSort))
 				numBySort[sortName] = append(numBySort[sortName], c)
 			}
 		}
 	}
 
 	for _, sort := range model.Sorts() {
-		sortName := il.SortName(sort)
+		sortName := il.IvySortName(sort)
 
 		// Skip interpreted sorts
 		if il.IsInterpretedSort(model.sig, sort) {
@@ -448,7 +448,7 @@ func (s *Solver) MineInterpretedConstants(vocab []*lg.Const) map[string][]*lg.Co
 	xtracer.Trace("ivy_solver.py:891 mine_interpreted_constants() ENTER")
 	result := make(map[string][]*lg.Const)
 	for _, c := range vocab {
-		sortName := il.SortName(il.SortRange(c.CSort))
+		sortName := il.IvySortName(il.SortRange(c.CSort))
 		if !il.IsInterpretedSort(s.sig, c.CSort) {
 			continue
 		}

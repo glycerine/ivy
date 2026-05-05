@@ -387,11 +387,11 @@ func createObject(cfg *ast.AstConfig, top *ivyAccum, name *ast.Atom, objectargs 
 	}
 
 	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
-	vsubst := make(map[string]*ast.Variable)
+	vsubst := make(map[string]*ast.AstVariable)
 	for i, pr := range objectargs {
 		if i < len(prefargs) {
 			prName := nodeRep(pr)
-			if v, ok := prefargs[i].(*ast.Variable); ok {
+			if v, ok := prefargs[i].(*ast.AstVariable); ok {
 				vsubst[prName] = v
 			}
 		}
@@ -3648,7 +3648,7 @@ parser17default:
 			// Python: if hasattr(p[1],"sort"): raise IvyError("multiple sort annotations")
 			// Python: p[1].sort = p[3]; p[0] = p[1]
 			switch n := parser17Dollar[1].node.(type) {
-			case *ast.Variable:
+			case *ast.AstVariable:
 				if n.VSort != "" {
 					parser17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
 				}

@@ -12,7 +12,7 @@ import (
 // Symbol renaming tests
 // -----------------------------------------------------------------------
 
-func TestNew(t *testing.T) {
+func TestActionsNew(t *testing.T) {
 	if got := ActionNewName("x"); got != "new_x" {
 		t.Errorf("ActionNewName(x) = %q, want %q", got, "new_x")
 	}
@@ -21,7 +21,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestIsNew(t *testing.T) {
+func TestActionsIsNew(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -41,7 +41,7 @@ func TestIsNew(t *testing.T) {
 	}
 }
 
-func TestNewOf(t *testing.T) {
+func TestActionsNewOf(t *testing.T) {
 	if got := NewOf("new_x"); got != "x" {
 		t.Errorf("NewOf(new_x) = %q, want %q", got, "x")
 	}
@@ -53,13 +53,13 @@ func TestNewOf(t *testing.T) {
 	}
 }
 
-func TestOld(t *testing.T) {
+func TestActionsOld(t *testing.T) {
 	if got := Old("x"); got != "old_x" {
 		t.Errorf("Old(x) = %q, want %q", got, "old_x")
 	}
 }
 
-func TestIsOld(t *testing.T) {
+func TestActionsIsOld(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -77,7 +77,7 @@ func TestIsOld(t *testing.T) {
 	}
 }
 
-func TestOldOf(t *testing.T) {
+func TestActionsOldOf(t *testing.T) {
 	if got := OldOf("old_x"); got != "x" {
 		t.Errorf("OldOf(old_x) = %q, want %q", got, "x")
 	}
@@ -86,7 +86,7 @@ func TestOldOf(t *testing.T) {
 	}
 }
 
-func TestIsSkolem(t *testing.T) {
+func TestActionsIsSkolem(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -105,7 +105,7 @@ func TestIsSkolem(t *testing.T) {
 	}
 }
 
-func TestIsGlobalSkolem(t *testing.T) {
+func TestActionsIsGlobalSkolem(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -125,7 +125,7 @@ func TestIsGlobalSkolem(t *testing.T) {
 	}
 }
 
-func TestNewOldRoundTrip(t *testing.T) {
+func TestActionsNewOldRoundTrip(t *testing.T) {
 	names := []string{"x", "foo", "bar_baz", ""}
 	for _, n := range names {
 		if got := NewOf(ActionNewName(n)); got != n {
@@ -141,7 +141,7 @@ func TestNewOldRoundTrip(t *testing.T) {
 // Update constructor tests
 // -----------------------------------------------------------------------
 
-func TestNullUpdateTransrel(t *testing.T) {
+func TestActionsNullUpdateTransrel(t *testing.T) {
 	u := NullUpdate()
 	if u.Modified == nil {
 		t.Error("NullUpdate Modified should be non-nil empty slice")
@@ -157,7 +157,7 @@ func TestNullUpdateTransrel(t *testing.T) {
 	}
 }
 
-func TestPureState(t *testing.T) {
+func TestActionsPureState(t *testing.T) {
 	formula := lg.True
 	u := PureState(formula)
 	if u.Modified != nil {
@@ -171,7 +171,7 @@ func TestPureState(t *testing.T) {
 	}
 }
 
-func TestIsPureState(t *testing.T) {
+func TestActionsIsPureState(t *testing.T) {
 	pure := PureState(lg.True)
 	if !IsPureState(pure) {
 		t.Error("IsPureState should return true for PureState")
@@ -182,7 +182,7 @@ func TestIsPureState(t *testing.T) {
 	}
 }
 
-func TestTopState(t *testing.T) {
+func TestActionsTopState(t *testing.T) {
 	u := TopState()
 	if !IsPureState(u) {
 		t.Error("TopState should be a pure state")
@@ -192,7 +192,7 @@ func TestTopState(t *testing.T) {
 	}
 }
 
-func TestBottomState(t *testing.T) {
+func TestActionsBottomState(t *testing.T) {
 	u := BottomState()
 	if !IsPureState(u) {
 		t.Error("BottomState should be a pure state")
@@ -202,21 +202,21 @@ func TestBottomState(t *testing.T) {
 	}
 }
 
-func TestStatePostcond(t *testing.T) {
+func TestActionsStatePostcond(t *testing.T) {
 	u := PureState(lg.True)
 	if !StatePostcond(u).IsTrue() {
 		t.Error("StatePostcond should return TR")
 	}
 }
 
-func TestStatePrecond(t *testing.T) {
+func TestActionsStatePrecond(t *testing.T) {
 	u := NullUpdate()
 	if !StatePrecond(u).IsFalse() {
 		t.Error("StatePrecond should return Pre")
 	}
 }
 
-func TestUpdateString(t *testing.T) {
+func TestActionsUpdateString(t *testing.T) {
 	u := NullUpdate()
 	s := u.String()
 	if s == "" {
@@ -234,7 +234,7 @@ func TestUpdateString(t *testing.T) {
 // Frame condition tests
 // -----------------------------------------------------------------------
 
-func TestFrameDefNew(t *testing.T) {
+func TestActionsFrameDefNew(t *testing.T) {
 	node := FrameDef("x", ActionNewName)
 	eq, ok := node.(*lg.Eq)
 	if !ok {
@@ -256,7 +256,7 @@ func TestFrameDefNew(t *testing.T) {
 	}
 }
 
-func TestFrameDefOld(t *testing.T) {
+func TestActionsFrameDefOld(t *testing.T) {
 	node := FrameDef("x", Old)
 	eq, ok := node.(*lg.Eq)
 	if !ok {
@@ -278,7 +278,7 @@ func TestFrameDefOld(t *testing.T) {
 	}
 }
 
-func TestFrameEmpty(t *testing.T) {
+func TestActionsFrameEmpty(t *testing.T) {
 	node := Frame(nil, ActionNewName)
 	if !node.Equal(lg.True) {
 		t.Errorf("Frame(nil) should be True, got %s", node)
@@ -289,7 +289,7 @@ func TestFrameEmpty(t *testing.T) {
 	}
 }
 
-func TestFrameMultiple(t *testing.T) {
+func TestActionsFrameMultiple(t *testing.T) {
 	node := Frame([]string{"x", "y"}, ActionNewName)
 	and, ok := node.(*lg.And)
 	if !ok {
@@ -304,7 +304,7 @@ func TestFrameMultiple(t *testing.T) {
 // Set operation tests
 // -----------------------------------------------------------------------
 
-func TestUpdatedJoin(t *testing.T) {
+func TestActionsUpdatedJoin(t *testing.T) {
 	// Both nil => nil
 	if UpdatedJoin(nil, nil) != nil {
 		t.Error("UpdatedJoin(nil, nil) should be nil")
@@ -329,7 +329,7 @@ func TestUpdatedJoin(t *testing.T) {
 	}
 }
 
-func TestListDiff(t *testing.T) {
+func TestActionsListDiff(t *testing.T) {
 	result := ActionListDiff([]string{"a", "b"}, []string{"b", "c", "d"})
 	if len(result) != 2 {
 		t.Errorf("ListDiff len = %d, want 2", len(result))
@@ -342,7 +342,7 @@ func TestListDiff(t *testing.T) {
 	}
 }
 
-func TestDiffFrame(t *testing.T) {
+func TestActionsDiffFrame(t *testing.T) {
 	// nil inputs => True
 	node := DiffFrame(nil, []string{"x"}, ActionNewName)
 	if !node.Equal(lg.True) {
@@ -366,7 +366,7 @@ func TestDiffFrame(t *testing.T) {
 // Composition stub tests (verify they don't panic and return valid updates)
 // -----------------------------------------------------------------------
 
-func TestComposeUpdatesStub(t *testing.T) {
+func TestActionsComposeUpdatesStub(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"y"}, lg.True, lg.False)
 	result := ComposeUpdates(u1, module.TrueClauses(nil), u2)
@@ -378,7 +378,7 @@ func TestComposeUpdatesStub(t *testing.T) {
 	}
 }
 
-func TestJoinActionStub(t *testing.T) {
+func TestActionsJoinActionStub(t *testing.T) {
 	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
 	u2 := mkTestUpdate([]string{"x", "y"}, lg.True, lg.False)
 	result := JoinAction(u1, u2, module.TrueClauses(nil))
@@ -387,7 +387,7 @@ func TestJoinActionStub(t *testing.T) {
 	}
 }
 
-func TestIteActionStub(t *testing.T) {
+func TestActionsIteActionStub(t *testing.T) {
 	u1 := NullUpdate()
 	u2 := NullUpdate()
 	result := IteAction(lg.True, u1, u2, module.TrueClauses(nil))
@@ -396,7 +396,7 @@ func TestIteActionStub(t *testing.T) {
 	}
 }
 
-func TestHideStub(t *testing.T) {
+func TestActionsHideStub(t *testing.T) {
 	u := mkTestUpdate([]string{"x", "y", "z"}, lg.True, lg.False)
 	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
@@ -412,7 +412,7 @@ func TestHideStub(t *testing.T) {
 	}
 }
 
-func TestHideNilModified(t *testing.T) {
+func TestActionsHideNilModified(t *testing.T) {
 	u := PureState(lg.True)
 	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
@@ -424,7 +424,7 @@ func TestHideNilModified(t *testing.T) {
 	}
 }
 
-func TestStateToActionStub(t *testing.T) {
+func TestActionsStateToActionStub(t *testing.T) {
 	u := NullUpdate()
 	result := StateToAction(u)
 	if result == nil {
@@ -432,7 +432,7 @@ func TestStateToActionStub(t *testing.T) {
 	}
 }
 
-func TestActionToStateStub(t *testing.T) {
+func TestActionsActionToStateStub(t *testing.T) {
 	u := NullUpdate()
 	result := ActionToState(u)
 	if result == nil {
@@ -440,7 +440,7 @@ func TestActionToStateStub(t *testing.T) {
 	}
 }
 
-func TestForwardImageStub(t *testing.T) {
+func TestActionsForwardImageStub(t *testing.T) {
 	u := NullUpdate()
 	result := ForwardImage(module.TrueClauses(nil), module.TrueClauses(nil), u)
 	if result == nil {
@@ -452,7 +452,7 @@ func TestForwardImageStub(t *testing.T) {
 // Error/auxiliary type tests
 // -----------------------------------------------------------------------
 
-func TestCounterExample(t *testing.T) {
+func TestActionsCounterExample(t *testing.T) {
 	ce := &CounterExample{Formula: lg.True}
 	if ce.Bool() {
 		t.Error("CounterExample.Bool() should return false")
@@ -463,7 +463,7 @@ func TestCounterExample(t *testing.T) {
 	}
 }
 
-func TestCounterExampleNil(t *testing.T) {
+func TestActionsCounterExampleNil(t *testing.T) {
 	ce := &CounterExample{Formula: nil}
 	s := ce.String()
 	if s == "" {
@@ -471,7 +471,7 @@ func TestCounterExampleNil(t *testing.T) {
 	}
 }
 
-func TestActionFailed(t *testing.T) {
+func TestActionsActionFailed(t *testing.T) {
 	af := &ActionFailed{Formula: lg.True, Trace: nil}
 	msg := af.Error()
 	if msg == "" {
@@ -479,7 +479,7 @@ func TestActionFailed(t *testing.T) {
 	}
 }
 
-func TestActionFailedWithTrace(t *testing.T) {
+func TestActionsActionFailedWithTrace(t *testing.T) {
 	af := &ActionFailed{
 		Formula: lg.True,
 		Trace:   []lg.Expr{lg.True, lg.False},
@@ -493,7 +493,7 @@ func TestActionFailedWithTrace(t *testing.T) {
 // History tests
 // -----------------------------------------------------------------------
 
-func TestNewHistory(t *testing.T) {
+func TestActionsNewHistory(t *testing.T) {
 	state := PureStateClauses(module.TrueClauses(nil))
 	cfg := iu.NewIvyUtilsConfig()
 	h := NewHistory(cfg, state)
@@ -508,7 +508,7 @@ func TestNewHistory(t *testing.T) {
 	}
 }
 
-func TestNewHistoryPanicsForNonPure(t *testing.T) {
+func TestActionsNewHistoryPanicsForNonPure(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("NewHistory should panic for non-pure state")
@@ -518,7 +518,7 @@ func TestNewHistoryPanicsForNonPure(t *testing.T) {
 	NewHistory(cfg, NullUpdate())
 }
 
-func TestHistoryAssume(t *testing.T) {
+func TestActionsHistoryAssume(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
 	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	h2 := h.Assume(module.TrueClauses(nil))
@@ -531,7 +531,7 @@ func TestHistoryAssume(t *testing.T) {
 	}
 }
 
-func TestHistoryForwardStep(t *testing.T) {
+func TestActionsHistoryForwardStep(t *testing.T) {
 	cfg := iu.NewIvyUtilsConfig()
 	h := NewHistory(cfg, PureStateClauses(module.TrueClauses(nil)))
 	u := NullUpdate()
@@ -555,7 +555,7 @@ func TestHistoryForwardStep(t *testing.T) {
 // Edge case tests
 // -----------------------------------------------------------------------
 
-func TestNewEmptyString(t *testing.T) {
+func TestActionsNewEmptyString(t *testing.T) {
 	if got := ActionNewName(""); got != "new_" {
 		t.Errorf("ActionNewName('') = %q, want %q", got, "new_")
 	}
@@ -567,7 +567,7 @@ func TestNewEmptyString(t *testing.T) {
 	}
 }
 
-func TestOldEmptyString(t *testing.T) {
+func TestActionsOldEmptyString(t *testing.T) {
 	if got := Old(""); got != "old_" {
 		t.Errorf("Old('') = %q, want %q", got, "old_")
 	}
@@ -579,7 +579,7 @@ func TestOldEmptyString(t *testing.T) {
 	}
 }
 
-func TestIsGlobalSkolemEdgeCases(t *testing.T) {
+func TestActionsIsGlobalSkolemEdgeCases(t *testing.T) {
 	// Exactly 3 chars, 3rd is uppercase
 	if !IsGlobalSkolem("__A") {
 		t.Error("IsGlobalSkolem('__A') should be true")
@@ -594,7 +594,7 @@ func TestIsGlobalSkolemEdgeCases(t *testing.T) {
 	}
 }
 
-func TestUpdatedJoinPreservesOrder(t *testing.T) {
+func TestActionsUpdatedJoinPreservesOrder(t *testing.T) {
 	result := UpdatedJoin([]string{"b", "a"}, []string{"c"})
 	if len(result) != 3 {
 		t.Fatalf("len = %d, want 3", len(result))
@@ -605,7 +605,7 @@ func TestUpdatedJoinPreservesOrder(t *testing.T) {
 	}
 }
 
-func TestUpdatedJoinEmpty(t *testing.T) {
+func TestActionsUpdatedJoinEmpty(t *testing.T) {
 	result := UpdatedJoin([]string{}, []string{})
 	if result == nil {
 		t.Error("UpdatedJoin of two empty slices should not be nil")
@@ -615,21 +615,21 @@ func TestUpdatedJoinEmpty(t *testing.T) {
 	}
 }
 
-func TestListDiffEmpty(t *testing.T) {
+func TestActionsListDiffEmpty(t *testing.T) {
 	result := ActionListDiff([]string{}, []string{})
 	if len(result) != 0 {
 		t.Errorf("ListDiff of empty should be empty, got %v", result)
 	}
 }
 
-func TestListDiffNoOverlap(t *testing.T) {
+func TestActionsListDiffNoOverlap(t *testing.T) {
 	result := ActionListDiff([]string{"a"}, []string{"b", "c"})
 	if len(result) != 2 {
 		t.Errorf("ListDiff len = %d, want 2", len(result))
 	}
 }
 
-func TestListDiffFullOverlap(t *testing.T) {
+func TestActionsListDiffFullOverlap(t *testing.T) {
 	result := ActionListDiff([]string{"a", "b"}, []string{"a", "b"})
 	if len(result) != 0 {
 		t.Errorf("ListDiff full overlap should be empty, got %v", result)

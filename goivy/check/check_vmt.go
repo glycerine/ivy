@@ -91,8 +91,8 @@ func actionToTR(m *module.Module, action actions.ActionsAction, method string) (
 			newSym := actions.ActionNewName(sym)
 			rn[newSym] = "__" + newSym
 		}
-		transNode = renameNode(transNode, rn)
-		errNodeFmla = renameNode(errNodeFmla, rn)
+		transNode = checkRenameNode(transNode, rn)
+		errNodeFmla = checkRenameNode(errNodeFmla, rn)
 
 		var filtered []*lg.Const
 		for _, sv := range stvars {
@@ -117,7 +117,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 				fmt.Printf("%d:%s Model checking guarantee\n", loc.Line, loc.Filename)
 			}
 			// errcond = dual of the formula (negate after dropping universals)
-			errcond := dualFormula(il.DropUniversals(a.Formula))
+			errcond := dualFormula(il.IvyDropUniversals(a.Formula))
 			// res = erf := erf | errcond
 			orNode := &lg.Or{Terms: []lg.Expr{erf, errcond}}
 			res := actions.NewAssignAction(erf, orNode)
@@ -140,7 +140,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 	case *actions.Sequence:
 		newArgs := make([]lg.Expr, len(a.Elems))
 		for i, child := range a.Elems {
-			if childAct, ok := toAction(child); ok {
+			if childAct, ok := checkToAction(child); ok {
 				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
@@ -151,7 +151,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 	case *actions.ChoiceAction:
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
-			if childAct, ok := toAction(child); ok {
+			if childAct, ok := checkToAction(child); ok {
 				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
@@ -162,7 +162,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 	case *actions.EnvAction:
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
-			if childAct, ok := toAction(child); ok {
+			if childAct, ok := checkToAction(child); ok {
 				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
@@ -174,7 +174,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
-			if childAct, ok := toAction(child); ok {
+			if childAct, ok := checkToAction(child); ok {
 				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
@@ -188,7 +188,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
-			if childAct, ok := toAction(args[i]); ok {
+			if childAct, ok := checkToAction(args[i]); ok {
 				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = args[i]
@@ -203,7 +203,7 @@ func addErrFlag(action actions.ActionsAction, erf lg.Expr, errconds *[]lg.Expr, 
 		copy(newArgs, args)
 		if len(newArgs) > 0 {
 			lastIdx := len(newArgs) - 1
-			if childAct, ok := toAction(newArgs[lastIdx]); ok {
+			if childAct, ok := checkToAction(newArgs[lastIdx]); ok {
 				newArgs[lastIdx] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			}
 		}
@@ -244,10 +244,10 @@ func createArraySort(sig *il.Sig, fsort *lg.FunctionSort) (string, []lg.Sort) {
 
 func createArraySortRec(sig *il.Sig, dom []lg.Sort, i int, rng lg.Sort) (string, []lg.Sort) {
 	if i == len(dom) {
-		return il.SortName(rng), []lg.Sort{rng}
+		return il.IvySortName(rng), []lg.Sort{rng}
 	}
 	sname, ssorts := createArraySortRec(sig, dom, i+1, rng)
-	name := "arr[" + il.SortName(dom[i]) + "][" + sname + "]"
+	name := "arr[" + il.IvySortName(dom[i]) + "][" + sname + "]"
 	if _, ok := sig.Sorts.Get2(name); !ok {
 		asort := &lg.UninterpretedSort{Name: name}
 		sig.Sorts.Set(name, asort)
@@ -410,7 +410,7 @@ func ufToArrayAction(m *module.Module, sig *il.Sig, action actions.ActionsAction
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
-		if childAct, ok := toAction(arg); ok {
+		if childAct, ok := checkToAction(arg); ok {
 			newArgs[i] = ufToArrayAction(m, sig, childAct)
 		} else {
 			newArgs[i] = ufToArrAST(m, sig, arg)
@@ -719,7 +719,7 @@ func VMTCheckIsolate(method string, m *module.Module) error {
 // -----------------------------------------------------------------------
 
 // toAction extracts an Action from a lg.Expr.
-func toAction(n lg.Expr) (actions.ActionsAction, bool) {
+func checkToAction(n lg.Expr) (actions.ActionsAction, bool) {
 	if act, ok := n.(actions.ActionsAction); ok {
 		return act, true
 	}
@@ -783,7 +783,7 @@ func extractDefSymNames(bgt lg.Expr) map[string]bool {
 }
 
 // renameNode renames constants in a node according to the name map.
-func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
+func checkRenameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
@@ -852,7 +852,7 @@ func labelString(label lg.Expr) string {
 }
 
 // sortedKeys returns the sorted keys of a map[string]bool.
-func sortedKeys(m map[string]bool) []string {
+func checkSortedKeys(m map[string]bool) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)

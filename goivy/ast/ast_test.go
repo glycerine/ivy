@@ -7,7 +7,7 @@ import (
 
 // --- Core type tests ---
 
-func TestSymbol(t *testing.T) {
+func TestAstSymbol(t *testing.T) {
 	cfg := NewAstConfig()
 	s := cfg.NewSymbol("foo", nil)
 	if s.String() != "foo" {
@@ -22,7 +22,7 @@ func TestSymbol(t *testing.T) {
 	}
 }
 
-func TestAtom(t *testing.T) {
+func TestAstAtom(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewSymbol("x", nil)
 	y := cfg.NewSymbol("y", nil)
@@ -44,7 +44,7 @@ func TestAtom(t *testing.T) {
 	}
 }
 
-func TestAtomPrefix(t *testing.T) {
+func TestAstAtomPrefix(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAtom("foo", cfg.NewSymbol("x", nil))
 	p := a.Prefix("bar.")
@@ -53,7 +53,7 @@ func TestAtomPrefix(t *testing.T) {
 	}
 }
 
-func TestAtomSuffix(t *testing.T) {
+func TestAstAtomSuffix(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAtom("foo")
 	s := a.Suffix("_v2")
@@ -62,7 +62,7 @@ func TestAtomSuffix(t *testing.T) {
 	}
 }
 
-func TestApp(t *testing.T) {
+func TestAstApp(t *testing.T) {
 	cfg := NewAstConfig()
 	f := cfg.NewSymbol("f", nil)
 	x := cfg.NewSymbol("x", nil)
@@ -78,7 +78,7 @@ func TestApp(t *testing.T) {
 	}
 }
 
-func TestVariable(t *testing.T) {
+func TestAstVariable(t *testing.T) {
 	cfg := NewAstConfig()
 	v := cfg.NewVariable("X", "t")
 	if v.String() != "X:t" {
@@ -87,7 +87,7 @@ func TestVariable(t *testing.T) {
 	// Clone returns self
 	c := v.Clone(nil)
 	if c != v {
-		t.Error("Variable.Clone should return self")
+		t.Error("AstVariable.Clone should return self")
 	}
 	// Resort
 	v2 := v.Resort("u")
@@ -96,7 +96,7 @@ func TestVariable(t *testing.T) {
 	}
 }
 
-func TestOld(t *testing.T) {
+func TestAstOld(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewSymbol("x", nil)
 	o := cfg.NewOld(x)
@@ -105,7 +105,7 @@ func TestOld(t *testing.T) {
 	}
 }
 
-func TestThis(t *testing.T) {
+func TestAstThis(t *testing.T) {
 	th := &This{}
 	if th.String() != "this" {
 		t.Errorf("got %q", th.String())
@@ -115,7 +115,7 @@ func TestThis(t *testing.T) {
 	}
 }
 
-func TestLiteral(t *testing.T) {
+func TestAstLiteral(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAtom("p", cfg.NewSymbol("x", nil))
 	pos := cfg.NewLiteral(1, a)
@@ -132,7 +132,7 @@ func TestLiteral(t *testing.T) {
 	}
 }
 
-func TestDot(t *testing.T) {
+func TestAstDot(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewSymbol("a", nil)
 	b := cfg.NewSymbol("b", nil)
@@ -142,7 +142,7 @@ func TestDot(t *testing.T) {
 	}
 }
 
-func TestBracket(t *testing.T) {
+func TestAstBracket(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewSymbol("a", nil)
 	i := cfg.NewSymbol("i", nil)
@@ -152,7 +152,7 @@ func TestBracket(t *testing.T) {
 	}
 }
 
-func TestTuple(t *testing.T) {
+func TestAstTuple(t *testing.T) {
 	cfg := NewAstConfig()
 	tup := cfg.NewTuple(cfg.NewSymbol("a", nil), cfg.NewSymbol("b", nil))
 	if tup.String() != "(a,b)" {
@@ -162,29 +162,29 @@ func TestTuple(t *testing.T) {
 
 // --- Formula tests ---
 
-func TestAndTrue(t *testing.T) {
+func TestAstAndTrue(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAnd()
 	if a.String() != "true" {
 		t.Errorf("got %q, want %q", a.String(), "true")
 	}
-	if !IsTrue(a) {
+	if !AstIsTrue(a) {
 		t.Error("empty And should be true")
 	}
 }
 
-func TestOrFalse(t *testing.T) {
+func TestAstOrFalse(t *testing.T) {
 	cfg := NewAstConfig()
 	o := cfg.NewOr()
 	if o.String() != "false" {
 		t.Errorf("got %q, want %q", o.String(), "false")
 	}
-	if !IsFalse(o) {
+	if !AstIsFalse(o) {
 		t.Error("empty Or should be false")
 	}
 }
 
-func TestAndMulti(t *testing.T) {
+func TestAstAndMulti(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAnd(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if a.String() != "(p & q)" {
@@ -192,7 +192,7 @@ func TestAndMulti(t *testing.T) {
 	}
 }
 
-func TestOrMulti(t *testing.T) {
+func TestAstOrMulti(t *testing.T) {
 	cfg := NewAstConfig()
 	o := cfg.NewOr(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if o.String() != "(p | q)" {
@@ -200,7 +200,7 @@ func TestOrMulti(t *testing.T) {
 	}
 }
 
-func TestNot(t *testing.T) {
+func TestAstNot(t *testing.T) {
 	cfg := NewAstConfig()
 	n := cfg.NewNot(cfg.NewSymbol("p", nil))
 	if n.String() != "~p" {
@@ -208,7 +208,7 @@ func TestNot(t *testing.T) {
 	}
 }
 
-func TestNotEquals(t *testing.T) {
+func TestAstNotEquals(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewSymbol("x", nil)
 	y := cfg.NewSymbol("y", nil)
@@ -219,7 +219,7 @@ func TestNotEquals(t *testing.T) {
 	}
 }
 
-func TestImplies(t *testing.T) {
+func TestAstImplies(t *testing.T) {
 	cfg := NewAstConfig()
 	i := cfg.NewImplies(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if i.String() != "p -> q" {
@@ -227,7 +227,7 @@ func TestImplies(t *testing.T) {
 	}
 }
 
-func TestIff(t *testing.T) {
+func TestAstIff(t *testing.T) {
 	cfg := NewAstConfig()
 	f := cfg.NewIff(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if f.String() != "p <-> q" {
@@ -235,7 +235,7 @@ func TestIff(t *testing.T) {
 	}
 }
 
-func TestIte(t *testing.T) {
+func TestAstIte(t *testing.T) {
 	cfg := NewAstConfig()
 	i := cfg.NewIte(cfg.NewSymbol("c", nil), cfg.NewSymbol("t", nil), cfg.NewSymbol("e", nil))
 	if i.String() != "(t if c else e)" {
@@ -243,7 +243,7 @@ func TestIte(t *testing.T) {
 	}
 }
 
-func TestForall(t *testing.T) {
+func TestAstForall(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -253,7 +253,7 @@ func TestForall(t *testing.T) {
 	}
 }
 
-func TestExists(t *testing.T) {
+func TestAstExists(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -263,7 +263,7 @@ func TestExists(t *testing.T) {
 	}
 }
 
-func TestGlobally(t *testing.T) {
+func TestAstGlobally(t *testing.T) {
 	cfg := NewAstConfig()
 	g := cfg.NewGlobally(cfg.NewSymbol("p", nil))
 	if g.String() != "(globally p)" {
@@ -271,7 +271,7 @@ func TestGlobally(t *testing.T) {
 	}
 }
 
-func TestEventually(t *testing.T) {
+func TestAstEventually(t *testing.T) {
 	cfg := NewAstConfig()
 	e := cfg.NewEventually(cfg.NewSymbol("p", nil))
 	if e.String() != "(eventually p)" {
@@ -279,7 +279,7 @@ func TestEventually(t *testing.T) {
 	}
 }
 
-func TestHasTemporal(t *testing.T) {
+func TestAstHasTemporal(t *testing.T) {
 	cfg := NewAstConfig()
 	if HasTemporal(cfg.NewSymbol("p", nil)) {
 		t.Error("plain symbol should not be temporal")
@@ -292,7 +292,7 @@ func TestHasTemporal(t *testing.T) {
 	}
 }
 
-func TestLet(t *testing.T) {
+func TestAstLet(t *testing.T) {
 	cfg := NewAstConfig()
 	def := cfg.NewDefinition(cfg.NewAtom("p"), cfg.NewSymbol("true", nil))
 	body := cfg.NewSymbol("q", nil)
@@ -302,7 +302,7 @@ func TestLet(t *testing.T) {
 	}
 }
 
-func TestDefinition(t *testing.T) {
+func TestAstDefinition(t *testing.T) {
 	cfg := NewAstConfig()
 	d := cfg.NewDefinition(cfg.NewAtom("f", cfg.NewSymbol("x", nil)), cfg.NewSymbol("y", nil))
 	if d.String() != "f(x) = y" {
@@ -310,7 +310,7 @@ func TestDefinition(t *testing.T) {
 	}
 }
 
-func TestNamedBinder(t *testing.T) {
+func TestAstNamedBinder(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -320,7 +320,7 @@ func TestNamedBinder(t *testing.T) {
 	}
 }
 
-func TestWhenOperator(t *testing.T) {
+func TestAstWhenOperator(t *testing.T) {
 	cfg := NewAstConfig()
 	w := cfg.NewWhenOperator("fire", cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if w.String() != "(p firewhennext q)" {
@@ -330,7 +330,7 @@ func TestWhenOperator(t *testing.T) {
 
 // --- Sort tests ---
 
-func TestConstantSort(t *testing.T) {
+func TestAstConstantSort(t *testing.T) {
 	cfg := NewAstConfig()
 	cs := cfg.NewConstantSort()
 	if cs.String() != "uninterpreted" {
@@ -338,7 +338,7 @@ func TestConstantSort(t *testing.T) {
 	}
 }
 
-func TestEnumeratedSort(t *testing.T) {
+func TestAstEnumeratedSort(t *testing.T) {
 	cfg := NewAstConfig()
 	es := cfg.NewEnumeratedSort(cfg.NewSymbol("a", nil), cfg.NewSymbol("b", nil), cfg.NewSymbol("c", nil))
 	if es.String() != "{a,b,c}" {
@@ -350,7 +350,7 @@ func TestEnumeratedSort(t *testing.T) {
 	}
 }
 
-func TestFunctionSortAST(t *testing.T) {
+func TestAstFunctionSortAST(t *testing.T) {
 	cfg := NewAstConfig()
 	dom := []Node{cfg.NewSymbol("S", nil), cfg.NewSymbol("S", nil)}
 	rng := cfg.NewSymbol("bool", nil)
@@ -360,7 +360,7 @@ func TestFunctionSortAST(t *testing.T) {
 	}
 }
 
-func TestRelationSortAST(t *testing.T) {
+func TestAstRelationSortAST(t *testing.T) {
 	cfg := NewAstConfig()
 	rs := cfg.NewRelationSort([]Node{cfg.NewSymbol("S", nil), cfg.NewSymbol("S", nil)})
 	if rs.String() != "S * S" {
@@ -368,7 +368,7 @@ func TestRelationSortAST(t *testing.T) {
 	}
 }
 
-func TestStructSortAST(t *testing.T) {
+func TestAstStructSortAST(t *testing.T) {
 	cfg := NewAstConfig()
 	ss := cfg.NewStructSort(cfg.NewAtom("x"), cfg.NewAtom("y"))
 	if !strings.HasPrefix(ss.String(), "struct {") {
@@ -376,7 +376,7 @@ func TestStructSortAST(t *testing.T) {
 	}
 }
 
-func TestRange(t *testing.T) {
+func TestAstRange(t *testing.T) {
 	cfg := NewAstConfig()
 	r := cfg.NewRange(cfg.NewSymbol("0", nil), cfg.NewSymbol("10", nil))
 	if r.String() != "{0..10}" {
@@ -386,7 +386,7 @@ func TestRange(t *testing.T) {
 
 // --- Declaration tests ---
 
-func TestLabeledFormula(t *testing.T) {
+func TestAstLabeledFormula(t *testing.T) {
 	cfg := NewAstConfig()
 	label := cfg.NewAtom("my_axiom")
 	fmla := cfg.NewImplies(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
@@ -404,7 +404,7 @@ func TestLabeledFormula(t *testing.T) {
 	}
 }
 
-func TestTypeDef(t *testing.T) {
+func TestAstTypeDef(t *testing.T) {
 	cfg := NewAstConfig()
 	td := cfg.NewTypeDef(cfg.NewSymbol("color", nil), cfg.NewEnumeratedSort(cfg.NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil)))
 	if !strings.Contains(td.String(), "color") {
@@ -416,7 +416,7 @@ func TestTypeDef(t *testing.T) {
 	}
 }
 
-func TestActionDef(t *testing.T) {
+func TestAstActionDef(t *testing.T) {
 	cfg := NewAstConfig()
 	name := cfg.NewAtom("my_action")
 	body := cfg.NewSymbol("skip", nil)
@@ -427,7 +427,7 @@ func TestActionDef(t *testing.T) {
 	}
 }
 
-func TestVariantDef(t *testing.T) {
+func TestAstVariantDef(t *testing.T) {
 	cfg := NewAstConfig()
 	vd := cfg.NewVariantDef(cfg.NewSymbol("cons", nil), cfg.NewSymbol("list", nil))
 	if vd.String() != "cons of list" {
@@ -435,7 +435,7 @@ func TestVariantDef(t *testing.T) {
 	}
 }
 
-func TestAttributeDef(t *testing.T) {
+func TestAstAttributeDef(t *testing.T) {
 	cfg := NewAstConfig()
 	ad := cfg.NewAttributeDef(cfg.NewAtom("weight"), cfg.NewSymbol("10", nil))
 	if ad.String() != "attribute weight = 10" {
@@ -443,7 +443,7 @@ func TestAttributeDef(t *testing.T) {
 	}
 }
 
-func TestInstantiation(t *testing.T) {
+func TestAstInstantiation(t *testing.T) {
 	cfg := NewAstConfig()
 	inst := cfg.NewInstantiation(cfg.NewSymbol("mymod", nil), cfg.NewSymbol("int", nil))
 	if inst.String() != "mymod : int" {
@@ -453,7 +453,7 @@ func TestInstantiation(t *testing.T) {
 
 // --- Clone tests ---
 
-func TestAndClone(t *testing.T) {
+func TestAstAndClone(t *testing.T) {
 	cfg := NewAstConfig()
 	a := cfg.NewAnd(cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	c := a.Clone([]Node{cfg.NewSymbol("r", nil)})
@@ -466,7 +466,7 @@ func TestAndClone(t *testing.T) {
 	}
 }
 
-func TestForallClone(t *testing.T) {
+func TestAstForallClone(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -481,7 +481,7 @@ func TestForallClone(t *testing.T) {
 
 // --- Location tests ---
 
-func TestLocation(t *testing.T) {
+func TestAstLocation(t *testing.T) {
 	loc := Location{Filename: "test.ivy", Line: 42}
 	if loc.String() != "test.ivy: line 42: " {
 		t.Errorf("got %q", loc.String())
@@ -492,7 +492,7 @@ func TestLocation(t *testing.T) {
 	}
 }
 
-func TestSetLineno(t *testing.T) {
+func TestAstSetLineno(t *testing.T) {
 	cfg := NewAstConfig()
 	s := cfg.NewSymbol("x", nil)
 	loc := Location{Filename: "test.ivy", Line: 10}
@@ -504,14 +504,14 @@ func TestSetLineno(t *testing.T) {
 
 // --- Tactic tests ---
 
-func TestNullTactic(t *testing.T) {
+func TestAstNullTactic(t *testing.T) {
 	nt := &NullTactic{}
 	if nt.String() != "{}" {
 		t.Errorf("got %q", nt.String())
 	}
 }
 
-func TestComposeTactics(t *testing.T) {
+func TestAstComposeTactics(t *testing.T) {
 	ct := &ComposeTactics{Tactics: []Node{
 		&ShowGoalsTactic{},
 		&NullTactic{},
@@ -521,7 +521,7 @@ func TestComposeTactics(t *testing.T) {
 	}
 }
 
-func TestSchemaInstantiation(t *testing.T) {
+func TestAstSchemaInstantiation(t *testing.T) {
 	cfg := NewAstConfig()
 	si := &SchemaInstantiation{
 		SchemaName: cfg.NewSymbol("my_schema", nil),
@@ -534,7 +534,7 @@ func TestSchemaInstantiation(t *testing.T) {
 
 // --- Some tests ---
 
-func TestSome(t *testing.T) {
+func TestAstSome(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -544,7 +544,7 @@ func TestSome(t *testing.T) {
 	}
 }
 
-func TestSomeExpr(t *testing.T) {
+func TestAstSomeExpr(t *testing.T) {
 	cfg := NewAstConfig()
 	x := cfg.NewVariable("X", "t")
 	body := cfg.NewAtom("p", x)
@@ -561,7 +561,7 @@ var _ Node = (*NoneAST)(nil)
 var _ Node = (*Symbol)(nil)
 var _ Node = (*Atom)(nil)
 var _ Node = (*App)(nil)
-var _ Node = (*Variable)(nil)
+var _ Node = (*AstVariable)(nil)
 var _ Node = (*AstOld)(nil)
 var _ Node = (*This)(nil)
 var _ Node = (*MethodCall)(nil)
@@ -738,7 +738,7 @@ func buildRandomASTNode(data []byte) (Node, []byte) {
 		sym, rest := buildRandomASTNode(data)
 		arg, rest := buildRandomASTNode(rest)
 		return cfg.NewApp(sym, arg), rest
-	case 4: // Variable
+	case 4: // AstVariable
 		name, rest := extractStr(data)
 		sortSym := "t"
 		return cfg.NewVariable(name, sortSym), rest
@@ -806,8 +806,8 @@ func FuzzASTClone(f *testing.F) {
 		cloneStr := clone.String()
 
 		// For most node types, clone with same args should produce same string
-		// Variable.Clone returns self, so we skip that check
-		if _, isVar := node.(*Variable); !isVar {
+		// AstVariable.Clone returns self, so we skip that check
+		if _, isVar := node.(*AstVariable); !isVar {
 			if origStr != cloneStr {
 				// This is OK for some types where Clone may differ,
 				// but we at least verify no panic
@@ -868,7 +868,7 @@ func FuzzASTString(f *testing.F) {
 // Bug was: the Symbol case in AstRewrite only called RewriteName (substitution)
 // but not RewriteAtom (prefix transformation), so "this" stayed as "this"
 // instead of becoming the prefix name.
-func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
+func TestAstAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 	cfg := NewAstConfig()
 	// Simulate: module mymod = { type this; alias t = this }
 	// instantiated as: instance idx : mymod
@@ -920,7 +920,7 @@ func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 // These tests cover all Defines() methods to prevent regressions,
 // especially after struct field nodes changed from *Atom to *App.
 
-func TestStructSort_Defines_AtomFields(t *testing.T) {
+func TestAstStructSort_Defines_AtomFields(t *testing.T) {
 	cfg := NewAstConfig()
 	// StructSort with *Atom fields (legacy representation)
 	ss := cfg.NewStructSort(cfg.NewAtom("x"), cfg.NewAtom("y"))
@@ -930,7 +930,7 @@ func TestStructSort_Defines_AtomFields(t *testing.T) {
 	}
 }
 
-func TestStructSort_Defines_AppFields(t *testing.T) {
+func TestAstStructSort_Defines_AppFields(t *testing.T) {
 	cfg := NewAstConfig()
 	// StructSort with *App fields (current representation matching Python)
 	// Simulates: struct { is_end : bool, val : t }
@@ -945,7 +945,7 @@ func TestStructSort_Defines_AppFields(t *testing.T) {
 	}
 }
 
-func TestStructSort_Defines_MixedFields(t *testing.T) {
+func TestAstStructSort_Defines_MixedFields(t *testing.T) {
 	cfg := NewAstConfig()
 	// Mix of *Atom and *App fields
 	ss := cfg.NewStructSort(cfg.NewAtom("a"), cfg.NewApp(cfg.NewSymbol("b", nil)))
@@ -955,7 +955,7 @@ func TestStructSort_Defines_MixedFields(t *testing.T) {
 	}
 }
 
-func TestStructSort_Defines_Empty(t *testing.T) {
+func TestAstStructSort_Defines_Empty(t *testing.T) {
 	cfg := NewAstConfig()
 	ss := cfg.NewStructSort()
 	defs := ss.Defines()
@@ -964,7 +964,7 @@ func TestStructSort_Defines_Empty(t *testing.T) {
 	}
 }
 
-func TestConstantSort_Defines(t *testing.T) {
+func TestAstConstantSort_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	cs := cfg.NewConstantSort()
 	if defs := cs.Defines(); defs != nil {
@@ -972,14 +972,14 @@ func TestConstantSort_Defines(t *testing.T) {
 	}
 }
 
-func TestUninterpretedSortAST_Defines(t *testing.T) {
+func TestAstUninterpretedSortAST_Defines(t *testing.T) {
 	us := &UninterpretedSortAST{}
 	if defs := us.Defines(); defs != nil {
 		t.Errorf("UninterpretedSortAST.Defines(): got %v, want nil", defs)
 	}
 }
 
-func TestEnumeratedSort_Defines(t *testing.T) {
+func TestAstEnumeratedSort_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	es := cfg.NewEnumeratedSort(cfg.NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil))
 	defs := es.Defines()
@@ -988,7 +988,7 @@ func TestEnumeratedSort_Defines(t *testing.T) {
 	}
 }
 
-func TestFunctionSort_Defines(t *testing.T) {
+func TestAstFunctionSort_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	fs := cfg.NewFunctionSort([]Node{cfg.NewSymbol("S", nil)}, cfg.NewSymbol("T", nil))
 	if defs := fs.Defines(); defs != nil {
@@ -996,7 +996,7 @@ func TestFunctionSort_Defines(t *testing.T) {
 	}
 }
 
-func TestRelationSort_Defines(t *testing.T) {
+func TestAstRelationSort_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	rs := cfg.NewRelationSort([]Node{cfg.NewSymbol("S", nil)})
 	if defs := rs.Defines(); defs != nil {
@@ -1004,7 +1004,7 @@ func TestRelationSort_Defines(t *testing.T) {
 	}
 }
 
-func TestTypeDef_Defines_WithStructSort(t *testing.T) {
+func TestAstTypeDef_Defines_WithStructSort(t *testing.T) {
 	cfg := NewAstConfig()
 	// type t = struct { is_end : bool, val : range.t }
 	// TypeDef.Defines() should return [t, is_end, val]
@@ -1020,7 +1020,7 @@ func TestTypeDef_Defines_WithStructSort(t *testing.T) {
 	}
 }
 
-func TestTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
+func TestAstTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
 	cfg := NewAstConfig()
 	// type color = {red, green, blue}
 	es := cfg.NewEnumeratedSort(cfg.NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil))
@@ -1031,7 +1031,7 @@ func TestTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
 	}
 }
 
-func TestTypeDef_Defines_WithConstantSort(t *testing.T) {
+func TestAstTypeDef_Defines_WithConstantSort(t *testing.T) {
 	cfg := NewAstConfig()
 	// type foo (uninterpreted — no sub-defines)
 	td := cfg.NewTypeDef(cfg.NewSymbol("foo", nil), cfg.NewConstantSort())
@@ -1041,7 +1041,7 @@ func TestTypeDef_Defines_WithConstantSort(t *testing.T) {
 	}
 }
 
-func TestTypeDef_Defines_AtomName(t *testing.T) {
+func TestAstTypeDef_Defines_AtomName(t *testing.T) {
 	cfg := NewAstConfig()
 	// TypeDef where Name is *Atom instead of *Symbol
 	td := cfg.NewTypeDef(cfg.NewAtom("mytype"), cfg.NewConstantSort())
@@ -1051,7 +1051,7 @@ func TestTypeDef_Defines_AtomName(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
+func TestAstDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
 	cfg := NewAstConfig()
 	// TypeDecl (which uses DeclBase.Defines) containing TypeDef with StructSort App fields.
 	// This is the exact scenario that broke when struct fields changed from *Atom to *App.
@@ -1068,7 +1068,7 @@ func TestDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_WithAtomArg(t *testing.T) {
+func TestAstDeclBase_Defines_WithAtomArg(t *testing.T) {
 	cfg := NewAstConfig()
 	// DeclBase with a plain Atom arg (e.g. ObjectDecl)
 	decl := cfg.NewObjectDecl(cfg.NewAtom("myobj"))
@@ -1078,7 +1078,7 @@ func TestDeclBase_Defines_WithAtomArg(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_WithAppArg(t *testing.T) {
+func TestAstDeclBase_Defines_WithAppArg(t *testing.T) {
 	cfg := NewAstConfig()
 	// DeclBase with an App arg (e.g. ConstantDecl with App)
 	app := cfg.NewApp(cfg.NewSymbol("myconst", nil))
@@ -1089,7 +1089,7 @@ func TestDeclBase_Defines_WithAppArg(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_WithDefinitionArg(t *testing.T) {
+func TestAstDeclBase_Defines_WithDefinitionArg(t *testing.T) {
 	cfg := NewAstConfig()
 	// DeclBase with a Definition arg (e.g. ModuleDecl)
 	defn := cfg.NewDefinition(cfg.NewAtom("mymod"), cfg.NewAtom("body"))
@@ -1100,7 +1100,7 @@ func TestDeclBase_Defines_WithDefinitionArg(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_WithLabeledFormulaArg(t *testing.T) {
+func TestAstDeclBase_Defines_WithLabeledFormulaArg(t *testing.T) {
 	cfg := NewAstConfig()
 	// DeclBase with a LabeledFormula arg (e.g. AxiomDecl)
 	lf := cfg.NewLabeledFormula(cfg.NewAtom("ax1"), cfg.NewSymbol("true", nil))
@@ -1111,7 +1111,7 @@ func TestDeclBase_Defines_WithLabeledFormulaArg(t *testing.T) {
 	}
 }
 
-func TestDeclBase_Defines_Empty(t *testing.T) {
+func TestAstDeclBase_Defines_Empty(t *testing.T) {
 	decl := &DeclBase{}
 	defs := decl.Defines()
 	if len(defs) != 0 {
@@ -1119,7 +1119,7 @@ func TestDeclBase_Defines_Empty(t *testing.T) {
 	}
 }
 
-func TestDefinition_Defines(t *testing.T) {
+func TestAstDefinition_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	// Definition with Symbol LHS
 	d1 := cfg.NewDefinition(cfg.NewSymbol("foo", nil), cfg.NewSymbol("bar", nil))
@@ -1133,7 +1133,7 @@ func TestDefinition_Defines(t *testing.T) {
 	}
 }
 
-func TestActionDef_Defines(t *testing.T) {
+func TestAstActionDef_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	ad := cfg.NewActionDef(cfg.NewAtom("my_action"), cfg.NewSymbol("skip", nil), nil, nil)
 	if ad.Defines() != "my_action" {
@@ -1141,7 +1141,7 @@ func TestActionDef_Defines(t *testing.T) {
 	}
 }
 
-func TestDerivedDecl_Defines(t *testing.T) {
+func TestAstDerivedDecl_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	// DerivedDecl with LabeledFormula containing a Definition
 	defn := cfg.NewDefinition(cfg.NewAtom("derived_fn"), cfg.NewSymbol("body", nil))
@@ -1153,7 +1153,7 @@ func TestDerivedDecl_Defines(t *testing.T) {
 	}
 }
 
-func TestDerivedDecl_Defines_Empty(t *testing.T) {
+func TestAstDerivedDecl_Defines_Empty(t *testing.T) {
 	// DerivedDecl with no formula
 	dd := &DerivedDecl{DeclBase: DeclBase{}}
 	defs := dd.Defines()
@@ -1162,7 +1162,7 @@ func TestDerivedDecl_Defines_Empty(t *testing.T) {
 	}
 }
 
-func TestIsolateDecl_Defines(t *testing.T) {
+func TestAstIsolateDecl_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	idef := &IsolateDef{Elems: []Node{cfg.NewAtom("myiso")}}
 	decl := &IsolateDecl{DeclBase: DeclBase{DeclArgs: []Node{idef}}}
@@ -1172,7 +1172,7 @@ func TestIsolateDecl_Defines(t *testing.T) {
 	}
 }
 
-func TestIsolateObjectDecl_Defines(t *testing.T) {
+func TestAstIsolateObjectDecl_Defines(t *testing.T) {
 	decl := &IsolateObjectDecl{}
 	defs := decl.Defines()
 	if defs != nil {
@@ -1180,7 +1180,7 @@ func TestIsolateObjectDecl_Defines(t *testing.T) {
 	}
 }
 
-func TestSchema_Defines(t *testing.T) {
+func TestAstSchema_Defines(t *testing.T) {
 	cfg := NewAstConfig()
 	defn := cfg.NewDefinition(cfg.NewAtom("my_schema"), cfg.NewSymbol("body", nil))
 	s := cfg.NewSchema(defn)
@@ -1194,7 +1194,7 @@ func TestSchema_Defines(t *testing.T) {
 	}
 }
 
-func TestInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
+func TestAstInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
 	cfg := NewAstConfig()
 	// interpret t -> {0..max}
 	// The Range lo/hi are *App nodes. InterpretDecl.Defines() must extract "max"
@@ -1212,7 +1212,7 @@ func TestInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
 	}
 }
 
-func TestInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
+func TestAstInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
 	cfg := NewAstConfig()
 	// Same test but with *Atom range args (legacy)
 	lo := cfg.NewAtom("0")
@@ -1227,7 +1227,7 @@ func TestInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
 	}
 }
 
-func TestInterpretDecl_Defines_AllNumeric(t *testing.T) {
+func TestAstInterpretDecl_Defines_AllNumeric(t *testing.T) {
 	cfg := NewAstConfig()
 	// interpret t -> {0..10} — no non-numeric args, only label defined
 	lo := cfg.NewApp(cfg.NewSymbol("0", nil))
@@ -1242,7 +1242,7 @@ func TestInterpretDecl_Defines_AllNumeric(t *testing.T) {
 	}
 }
 
-func TestDefinition_Defines_AppLhs(t *testing.T) {
+func TestAstDefinition_Defines_AppLhs(t *testing.T) {
 	cfg := NewAstConfig()
 	// Definition with App LHS (via nodeRep generalization)
 	d := cfg.NewDefinition(cfg.NewApp(cfg.NewSymbol("appfn", nil)), cfg.NewSymbol("body", nil))
@@ -1251,7 +1251,7 @@ func TestDefinition_Defines_AppLhs(t *testing.T) {
 	}
 }
 
-func TestActionDef_Defines_AppName(t *testing.T) {
+func TestAstActionDef_Defines_AppName(t *testing.T) {
 	cfg := NewAstConfig()
 	// ActionDef with App name (via nodeRep generalization)
 	ad := cfg.NewActionDef(cfg.NewApp(cfg.NewSymbol("my_act", nil)), cfg.NewSymbol("skip", nil), nil, nil)
@@ -1260,7 +1260,7 @@ func TestActionDef_Defines_AppName(t *testing.T) {
 	}
 }
 
-func TestIsolateDecl_Defines_AppElem(t *testing.T) {
+func TestAstIsolateDecl_Defines_AppElem(t *testing.T) {
 	cfg := NewAstConfig()
 	// IsolateDecl with App element (via nodeRep generalization)
 	idef := &IsolateDef{Elems: []Node{cfg.NewApp(cfg.NewSymbol("myiso", nil))}}

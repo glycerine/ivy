@@ -24,7 +24,7 @@ const (
 )
 
 // Kind returns the kind of this sort.
-func (s Sort) Kind() SortKind {
+func (s Z3Sort) Kind() SortKind {
 	var k SortKind
 	s.ctx.do(func() {
 		k = SortKind(C.Z3_get_sort_kind(s.ctx.c, s.c))
@@ -34,7 +34,7 @@ func (s Sort) Kind() SortKind {
 }
 
 // Equal returns true if two sorts are the same.
-func (s Sort) Equal(other Sort) bool {
+func (s Z3Sort) Equal(other Z3Sort) bool {
 	var r bool
 	s.ctx.do(func() {
 		r = bool(C.Z3_is_eq_sort(s.ctx.c, s.c, other.c))
@@ -63,7 +63,7 @@ const (
 )
 
 // IsApp returns true if the expression is a function application (including constants).
-func (e Expr) IsApp() bool {
+func (e Z3Expr) IsApp() bool {
 	var r bool
 	e.ctx.do(func() {
 		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_APP_AST
@@ -73,7 +73,7 @@ func (e Expr) IsApp() bool {
 }
 
 // IsQuantifier returns true if the expression is a quantifier.
-func (e Expr) IsQuantifier() bool {
+func (e Z3Expr) IsQuantifier() bool {
 	var r bool
 	e.ctx.do(func() {
 		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_QUANTIFIER_AST
@@ -83,7 +83,7 @@ func (e Expr) IsQuantifier() bool {
 }
 
 // IsVar returns true if the expression is a bound variable.
-func (e Expr) IsVar() bool {
+func (e Z3Expr) IsVar() bool {
 	var r bool
 	e.ctx.do(func() {
 		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_VAR_AST
@@ -96,7 +96,7 @@ func (e Expr) IsVar() bool {
 // IDs are only valid while the expression is alive; keep a reference
 // to prevent GC from invalidating the ID.
 // Corresponds to Python's get_id() which calls Z3_get_ast_id.
-func (e Expr) GetId() uint {
+func (e Z3Expr) GetId() uint {
 	var id uint
 	e.ctx.do(func() {
 		id = uint(C.Z3_get_ast_id(e.ctx.c, e.c))
@@ -106,7 +106,7 @@ func (e Expr) GetId() uint {
 }
 
 // IsNumeral returns true if the expression is a numeral.
-func (e Expr) IsNumeral() bool {
+func (e Z3Expr) IsNumeral() bool {
 	var r bool
 	e.ctx.do(func() {
 		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_NUMERAL_AST
@@ -117,7 +117,7 @@ func (e Expr) IsNumeral() bool {
 
 // VarIndex returns the de Bruijn index of a bound variable.
 // Only valid if IsVar() is true.
-func (e Expr) VarIndex() int {
+func (e Z3Expr) VarIndex() int {
 	var idx int
 	e.ctx.do(func() {
 		idx = int(C.Z3_get_index_value(e.ctx.c, e.c))
@@ -128,7 +128,7 @@ func (e Expr) VarIndex() int {
 
 // NumArgs returns the number of arguments of a function application.
 // Only valid if IsApp() is true.
-func (e Expr) NumArgs() int {
+func (e Z3Expr) NumArgs() int {
 	var n int
 	e.ctx.do(func() {
 		app := C.Z3_to_app(e.ctx.c, e.c)
@@ -140,8 +140,8 @@ func (e Expr) NumArgs() int {
 
 // Arg returns the i-th argument of a function application.
 // Only valid if IsApp() is true.
-func (e Expr) Arg(i int) Expr {
-	var r Expr
+func (e Z3Expr) Arg(i int) Z3Expr {
+	var r Z3Expr
 	e.ctx.do(func() {
 		app := C.Z3_to_app(e.ctx.c, e.c)
 		r = e.ctx.newExpr(C.Z3_get_app_arg(e.ctx.c, app, C.uint(i)))
@@ -152,7 +152,7 @@ func (e Expr) Arg(i int) Expr {
 
 // Decl returns the function declaration of a function application.
 // Only valid if IsApp() is true.
-func (e Expr) Decl() FuncDecl {
+func (e Z3Expr) Decl() FuncDecl {
 	var fd FuncDecl
 	e.ctx.do(func() {
 		app := C.Z3_to_app(e.ctx.c, e.c)
@@ -163,8 +163,8 @@ func (e Expr) Decl() FuncDecl {
 }
 
 // ExprSort returns the sort of an expression.
-func (e Expr) ExprSort() Sort {
-	var s Sort
+func (e Z3Expr) ExprSort() Z3Sort {
+	var s Z3Sort
 	e.ctx.do(func() {
 		s = e.ctx.newSort(C.Z3_get_sort(e.ctx.c, e.c))
 	})
@@ -196,8 +196,8 @@ func (fd FuncDecl) Arity() int {
 }
 
 // DomainSort returns the i-th domain sort.
-func (fd FuncDecl) DomainSort(i int) Sort {
-	var s Sort
+func (fd FuncDecl) DomainSort(i int) Z3Sort {
+	var s Z3Sort
 	fd.ctx.do(func() {
 		s = fd.ctx.newSort(C.Z3_get_domain(fd.ctx.c, fd.c, C.uint(i)))
 	})
@@ -206,8 +206,8 @@ func (fd FuncDecl) DomainSort(i int) Sort {
 }
 
 // RangeSort returns the range (return) sort.
-func (fd FuncDecl) RangeSort() Sort {
-	var s Sort
+func (fd FuncDecl) RangeSort() Z3Sort {
+	var s Z3Sort
 	fd.ctx.do(func() {
 		s = fd.ctx.newSort(C.Z3_get_range(fd.ctx.c, fd.c))
 	})
@@ -229,7 +229,7 @@ func (fd FuncDecl) Kind() DeclKind {
 
 // IsForAll returns true if the quantifier is universal.
 // Only valid if IsQuantifier() is true.
-func (e Expr) IsForAll() bool {
+func (e Z3Expr) IsForAll() bool {
 	var r bool
 	e.ctx.do(func() {
 		r = bool(C.Z3_is_quantifier_forall(e.ctx.c, e.c))
@@ -240,7 +240,7 @@ func (e Expr) IsForAll() bool {
 
 // QuantNumVars returns the number of bound variables.
 // Only valid if IsQuantifier() is true.
-func (e Expr) QuantNumVars() int {
+func (e Z3Expr) QuantNumVars() int {
 	var n int
 	e.ctx.do(func() {
 		n = int(C.Z3_get_quantifier_num_bound(e.ctx.c, e.c))
@@ -251,7 +251,7 @@ func (e Expr) QuantNumVars() int {
 
 // QuantVarName returns the name of the i-th bound variable.
 // Only valid if IsQuantifier() is true.
-func (e Expr) QuantVarName(i int) string {
+func (e Z3Expr) QuantVarName(i int) string {
 	var name string
 	e.ctx.do(func() {
 		sym := C.Z3_get_quantifier_bound_name(e.ctx.c, e.c, C.uint(i))
@@ -263,8 +263,8 @@ func (e Expr) QuantVarName(i int) string {
 
 // QuantVarSort returns the sort of the i-th bound variable.
 // Only valid if IsQuantifier() is true.
-func (e Expr) QuantVarSort(i int) Sort {
-	var s Sort
+func (e Z3Expr) QuantVarSort(i int) Z3Sort {
+	var s Z3Sort
 	e.ctx.do(func() {
 		s = e.ctx.newSort(C.Z3_get_quantifier_bound_sort(e.ctx.c, e.c, C.uint(i)))
 	})
@@ -274,8 +274,8 @@ func (e Expr) QuantVarSort(i int) Sort {
 
 // QuantBody returns the body of a quantifier.
 // Only valid if IsQuantifier() is true.
-func (e Expr) QuantBody() Expr {
-	var r Expr
+func (e Z3Expr) QuantBody() Z3Expr {
+	var r Z3Expr
 	e.ctx.do(func() {
 		r = e.ctx.newExpr(C.Z3_get_quantifier_body(e.ctx.c, e.c))
 	})
@@ -284,7 +284,7 @@ func (e Expr) QuantBody() Expr {
 }
 
 // IsAppOf returns true if e is an application of a decl with the given kind.
-func (e Expr) IsAppOf(kind DeclKind) bool {
+func (e Z3Expr) IsAppOf(kind DeclKind) bool {
 	if !e.IsApp() {
 		return false
 	}

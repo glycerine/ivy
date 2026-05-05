@@ -6,7 +6,7 @@ import (
 	"github.com/glycerine/ivy/goivy/logic"
 )
 
-func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
+func z3MustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
 	t.Helper()
 	fs, err := logic.NewFunctionSort(sorts...)
 	if err != nil {
@@ -17,14 +17,14 @@ func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
 
 // --- Low-level Z3 wrapper tests ---
 
-func TestContextCreateDestroy(t *testing.T) {
+func TestZ3BridgeContextCreateDestroy(t *testing.T) {
 	ctx := NewZ3Context()
 	if ctx == nil {
 		t.Fatal("context should not be nil")
 	}
 }
 
-func TestBoolOps(t *testing.T) {
+func TestZ3BridgeBoolOps(t *testing.T) {
 	ctx := NewZ3Context()
 	a := ctx.BoolVal(true)
 	b := ctx.BoolVal(false)
@@ -35,7 +35,7 @@ func TestBoolOps(t *testing.T) {
 	_ = ctx.Iff(a, b)
 }
 
-func TestConstAndEq(t *testing.T) {
+func TestZ3BridgeConstAndEq(t *testing.T) {
 	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
@@ -44,18 +44,18 @@ func TestConstAndEq(t *testing.T) {
 	_ = eq.String()
 }
 
-func TestFuncDeclApply(t *testing.T) {
+func TestZ3BridgeFuncDeclApply(t *testing.T) {
 	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	bs := ctx.BoolSort()
-	f := ctx.Function("leq", []Sort{s, s}, bs)
+	f := ctx.Function("leq", []Z3Sort{s, s}, bs)
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
 	result := f.Apply(x, y)
 	t.Log("f(x,y):", result.String())
 }
 
-func TestSolverSat(t *testing.T) {
+func TestZ3BridgeSolverSat(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
@@ -66,7 +66,7 @@ func TestSolverSat(t *testing.T) {
 	}
 }
 
-func TestSolverUnsat(t *testing.T) {
+func TestZ3BridgeSolverUnsat(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
@@ -78,12 +78,12 @@ func TestSolverUnsat(t *testing.T) {
 	}
 }
 
-func TestForAllQuantifier(t *testing.T) {
+func TestZ3BridgeForAllQuantifier(t *testing.T) {
 	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	eq := ctx.Eq(x, x)
-	fa := ctx.ForAll([]Expr{x}, eq)
+	fa := ctx.ForAll([]Z3Expr{x}, eq)
 	t.Log("ForAll:", fa.String())
 
 	solver := ctx.NewZ3Solver()
@@ -93,13 +93,13 @@ func TestForAllQuantifier(t *testing.T) {
 	}
 }
 
-func TestExistsQuantifier(t *testing.T) {
+func TestZ3BridgeExistsQuantifier(t *testing.T) {
 	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
 	eq := ctx.Eq(x, y)
-	ex := ctx.Exists([]Expr{x}, eq)
+	ex := ctx.Exists([]Z3Expr{x}, eq)
 	t.Log("Exists:", ex.String())
 
 	solver := ctx.NewZ3Solver()
@@ -109,7 +109,7 @@ func TestExistsQuantifier(t *testing.T) {
 	}
 }
 
-func TestPushPop(t *testing.T) {
+func TestZ3BridgePushPop(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
@@ -132,7 +132,7 @@ func TestPushPop(t *testing.T) {
 	}
 }
 
-func TestModel(t *testing.T) {
+func TestZ3BridgeModel(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
@@ -157,7 +157,7 @@ func TestModel(t *testing.T) {
 
 // --- Translation tests ---
 
-func TestTranslateSorts(t *testing.T) {
+func TestZ3BridgeTranslateSorts(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 
@@ -173,7 +173,7 @@ func TestTranslateSorts(t *testing.T) {
 	}
 }
 
-func TestTranslateVar(t *testing.T) {
+func TestZ3BridgeTranslateVar(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
@@ -186,7 +186,7 @@ func TestTranslateVar(t *testing.T) {
 	t.Log("X:", zx.String())
 }
 
-func TestTranslateEq(t *testing.T) {
+func TestZ3BridgeTranslateEq(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
@@ -201,13 +201,13 @@ func TestTranslateEq(t *testing.T) {
 	t.Log("Eq:", zeq.String())
 }
 
-func TestTranslateApply(t *testing.T) {
+func TestZ3BridgeTranslateApply(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
-	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
+	leq := logic.NewConst("leq", z3MustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	zapp, err := tr.Translate(app)
@@ -217,7 +217,7 @@ func TestTranslateApply(t *testing.T) {
 	t.Log("leq(X,Y):", zapp.String())
 }
 
-func TestTranslateForAll(t *testing.T) {
+func TestZ3BridgeTranslateForAll(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
@@ -235,12 +235,12 @@ func TestTranslateForAll(t *testing.T) {
 }
 
 // Reproduce Python z3_utils.py __main__ examples
-func TestTransitiveImplication(t *testing.T) {
+func TestZ3BridgeTransitiveImplication(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
 	Z, _ := logic.NewVariable("Z", S)
-	BinRel := mustFS(t, S, S, logic.Boolean)
+	BinRel := z3MustFS(t, S, S, logic.Boolean)
 	leq := logic.NewConst("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
@@ -299,12 +299,12 @@ func TestTransitiveImplication(t *testing.T) {
 	}
 }
 
-func TestAntisymmetricNotImplied(t *testing.T) {
+func TestZ3BridgeAntisymmetricNotImplied(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
 	Z, _ := logic.NewVariable("Z", S)
-	BinRel := mustFS(t, S, S, logic.Boolean)
+	BinRel := z3MustFS(t, S, S, logic.Boolean)
 	leq := logic.NewConst("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
@@ -336,7 +336,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 	}
 }
 
-func TestIteImplication(t *testing.T) {
+func TestZ3BridgeIteImplication(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	x := logic.NewConst("x", S)
 	y := logic.NewConst("y", S)
@@ -371,7 +371,7 @@ func TestIteImplication(t *testing.T) {
 	}
 }
 
-func TestTranslateTrue(t *testing.T) {
+func TestZ3BridgeTranslateTrue(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	zt, err := tr.Translate(logic.True)
@@ -381,7 +381,7 @@ func TestTranslateTrue(t *testing.T) {
 	t.Log("True:", zt.String())
 }
 
-func TestTranslateFalse(t *testing.T) {
+func TestZ3BridgeTranslateFalse(t *testing.T) {
 	tr := NewSolver(nil, nil).NewTranslator()
 	defer tr.Close()
 	zf, err := tr.Translate(logic.False)
@@ -393,7 +393,7 @@ func TestTranslateFalse(t *testing.T) {
 
 // --- IC3/PDR extension tests ---
 
-func TestCheckAssumptions(t *testing.T) {
+func TestZ3BridgeCheckAssumptions(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
@@ -402,33 +402,33 @@ func TestCheckAssumptions(t *testing.T) {
 	solver := ctx.NewZ3Solver()
 
 	// SAT case: no background assertions, assumptions are compatible
-	res := solver.CheckAssumptions([]Expr{a, b})
+	res := solver.CheckAssumptions([]Z3Expr{a, b})
 	if res != Sat {
 		t.Errorf("expected Sat, got %v", res)
 	}
 
 	// UNSAT case: assumptions contradict each other
 	notA := ctx.Not(a)
-	res = solver.CheckAssumptions([]Expr{a, notA})
+	res = solver.CheckAssumptions([]Z3Expr{a, notA})
 	if res != Unsat {
 		t.Errorf("expected Unsat, got %v", res)
 	}
 
 	// SAT with background assertion: solver.Assert(a), assume b
 	solver.Assert(a)
-	res = solver.CheckAssumptions([]Expr{b})
+	res = solver.CheckAssumptions([]Z3Expr{b})
 	if res != Sat {
 		t.Errorf("expected Sat with background + assumption, got %v", res)
 	}
 
 	// UNSAT: solver has a, assume not(a)
-	res = solver.CheckAssumptions([]Expr{notA})
+	res = solver.CheckAssumptions([]Z3Expr{notA})
 	if res != Unsat {
 		t.Errorf("expected Unsat with contradictory assumption, got %v", res)
 	}
 }
 
-func TestUnsatCore(t *testing.T) {
+func TestZ3BridgeUnsatCore(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
@@ -440,7 +440,7 @@ func TestUnsatCore(t *testing.T) {
 	solver.Assert(ctx.Implies(a, ctx.Not(b)))
 
 	// Assumptions: a, b, c — core should contain a and b (c is irrelevant)
-	res := solver.CheckAssumptions([]Expr{a, b, c})
+	res := solver.CheckAssumptions([]Z3Expr{a, b, c})
 	if res != Unsat {
 		t.Fatal("expected Unsat")
 	}
@@ -451,7 +451,7 @@ func TestUnsatCore(t *testing.T) {
 	}
 
 	// The core should be a subset of {a, b, c}
-	assumptions := []Expr{a, b, c}
+	assumptions := []Z3Expr{a, b, c}
 	for _, ce := range core {
 		found := false
 		for _, ae := range assumptions {
@@ -475,7 +475,7 @@ func TestUnsatCore(t *testing.T) {
 	t.Logf("unsat core has %d elements (out of 3 assumptions)", len(core))
 }
 
-func TestSolverForLogic(t *testing.T) {
+func TestZ3BridgeSolverForLogic(t *testing.T) {
 	ctx := NewZ3Context()
 	solver := NewZ3SolverForLogic(ctx, "QF_LIA")
 	if solver == nil {
@@ -494,7 +494,7 @@ func TestSolverForLogic(t *testing.T) {
 	}
 }
 
-func TestExprEqual(t *testing.T) {
+func TestZ3BridgeExprEqual(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
@@ -517,7 +517,7 @@ func TestExprEqual(t *testing.T) {
 	}
 }
 
-func TestIsTrueIsFalse(t *testing.T) {
+func TestZ3BridgeIsTrueIsFalse(t *testing.T) {
 	ctx := NewZ3Context()
 	trueExpr := ctx.BoolVal(true)
 	falseExpr := ctx.BoolVal(false)
@@ -546,7 +546,7 @@ func TestIsTrueIsFalse(t *testing.T) {
 	}
 }
 
-func TestSubstitute(t *testing.T) {
+func TestZ3BridgeSubstitute(t *testing.T) {
 	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
@@ -555,7 +555,7 @@ func TestSubstitute(t *testing.T) {
 
 	// Create (a AND b), substitute a->c, expect (c AND b)
 	expr := ctx.And(a, b)
-	result := ctx.Substitute(expr, []Expr{a}, []Expr{c})
+	result := ctx.Substitute(expr, []Z3Expr{a}, []Z3Expr{c})
 
 	expected := ctx.And(c, b)
 
@@ -568,7 +568,7 @@ func TestSubstitute(t *testing.T) {
 	}
 }
 
-func TestIsSat(t *testing.T) {
+func TestZ3BridgeIsSat(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	eq, _ := logic.NewEq(X, X)
@@ -584,7 +584,7 @@ func TestIsSat(t *testing.T) {
 	}
 }
 
-func TestIsUnsat(t *testing.T) {
+func TestZ3BridgeIsUnsat(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)

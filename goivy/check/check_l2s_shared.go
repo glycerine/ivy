@@ -136,7 +136,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		if name == "first" {
 			res := l2sWhen("next", vs, t, cfg.ProofLabel)
 			cfg.L2sWhensSet[res.Sexp()] = res
-			return l2sInit(vs, applyNB(res, varsToNodes(vs)...), cfg.ProofLabel)
+			return l2sInit(vs, applyNB(res, checkVarsToNodes(vs)...), cfg.ProofLabel)
 		}
 		res := l2sWhen(name, vs, t, cfg.ProofLabel)
 		cfg.L2sWhensSet[res.Sexp()] = res
@@ -231,7 +231,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 							vs := module.SymPlaceholders(lg.NewConst(symName, entry.Sort))
 							var expr lg.Expr
 							if len(vs) > 0 {
-								expr = mustApply(lg.NewConst(symName, entry.Sort), varsToNodes(vs)...)
+								expr = checkMustApply(lg.NewConst(symName, entry.Sort), checkVarsToNodes(vs)...)
 							} else {
 								expr = lg.NewConst(symName, entry.Sort)
 							}
@@ -303,14 +303,14 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	cfg.SaveState = nil
 	for i, vb := range cfg.ToSave {
 		xtracer.Trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
-		lhs := applyNB(l2sS(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
+		lhs := applyNB(l2sS(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		cfg.SaveState = append(cfg.SaveState, setLineno(actions.NewAssignAction(lhs, vb.Body), cfg.Lineno))
 	}
 
 	// done_waiting formulas
 	cfg.DoneWaiting = nil
 	for i, vb := range cfg.ToWait {
-		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
+		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
 		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &lg.Not{Body: inner}))
 	}
@@ -319,11 +319,11 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	cfg.ResetW = nil
 	for i, vb := range cfg.ToWait {
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
-		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
+		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		var conjuncts []lg.Expr
 		for _, v := range vb.Vars {
 			if !cfg.FiniteSorts[lg.SortName(v.VSort)] {
-				conjuncts = append(conjuncts, mustApply(L2SD(v.VSort), v))
+				conjuncts = append(conjuncts, checkMustApply(L2SD(v.VSort), v))
 			}
 		}
 		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
@@ -335,7 +335,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(lg.Expr)
 		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
 		conjuncts = append(conjuncts, negGlob)
-		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), cfg.Lineno))
+		cfg.ResetW = append(cfg.ResetW, setLineno(actions.NewAssignAction(lhs, checkMakeAnd(conjuncts...)), cfg.Lineno))
 	}
 	xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d", len(cfg.SaveState), len(cfg.DoneWaiting), len(cfg.ResetW))
 }
@@ -363,7 +363,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	cfg.AssumeGAxioms = nil
 	for _, triple := range toG {
 		inner := &lg.Implies{
-			T1: applyNB(l2sG(triple.Vars, triple.Body, triple.Environ), varsToNodes(triple.Vars)...),
+			T1: applyNB(l2sG(triple.Vars, triple.Body, triple.Environ), checkVarsToNodes(triple.Vars)...),
 			T2: triple.Body,
 		}
 		cfg.AssumeGAxioms = append(cfg.AssumeGAxioms,
@@ -383,7 +383,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 		}
 		inner := forall(when.Variables, &lg.Implies{
 			T1: cond.T1,
-			T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: cond.T2},
+			T2: &lg.Eq{T1: applyNB(when, checkVarsToNodes(when.Variables)...), T2: cond.T2},
 		})
 		cfg.AssumeWhenAxioms = append(cfg.AssumeWhenAxioms,
 			setLineno(actions.NewAssumeAction(inner), cfg.Lineno))
@@ -401,7 +401,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	// assume_w_axioms
 	cfg.AssumeWAxioms = nil
 	for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
-		wApp := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
+		wApp := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		inner := forall(vb.Vars, &lg.Not{Body: &lg.And{Terms: []lg.Expr{vb.Body, wApp}}})
 		cfg.AssumeWAxioms = append(cfg.AssumeWAxioms,
 			setLineno(actions.NewAssumeAction(inner), cfg.Lineno))
@@ -505,12 +505,12 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
 			pre = append(pre,
 				setLineno(actions.NewAssignAction(
-					applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...),
-					applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
+					applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...),
+					applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 				), lineno))
 			pre = append(pre,
 				setLineno(actions.NewHavocAction(
-					applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
+					applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 				), lineno))
 		}
 		for _, gprop := range sortedProps {
@@ -518,22 +518,22 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			pre = append(pre,
 				setLineno(actions.NewAssumeAction(forall(vs,
 					&lg.Implies{
-						T1: applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...),
-						T2: applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
+						T1: applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...),
+						T2: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 					})), lineno))
 			pre = append(pre,
 				setLineno(actions.NewAssumeAction(forall(vs,
 					&lg.Implies{
 						T1: &lg.And{Terms: []lg.Expr{
-							&lg.Not{Body: applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...)},
+							&lg.Not{Body: applyNB(oldL2sG(vs, t, env), checkVarsToNodes(vs)...)},
 							t,
 						}},
-						T2: &lg.Not{Body: applyNB(l2sG(vs, t, env), varsToNodes(vs)...)},
+						T2: &lg.Not{Body: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...)},
 					})), lineno))
 			post = append(post,
 				setLineno(actions.NewAssumeAction(forall(vs,
 					&lg.Implies{
-						T1: applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
+						T1: applyNB(l2sG(vs, t, env), checkVarsToNodes(vs)...),
 						T2: t,
 					})), lineno))
 		}
@@ -553,17 +553,17 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			vs := when.Variables
 			cond := condVal.T1
 			if when.Name == "l2s_whennext" {
-				oldcond := applyNB(l2sOld(vs, cond, cfg.ProofLabel), varsToNodes(vs)...)
+				oldcond := applyNB(l2sOld(vs, cond, cfg.ProofLabel), checkVarsToNodes(vs)...)
 				pre = append(pre, setLineno(actions.NewAssignAction(oldcond, cond), lineno))
 				post = append(post, setLineno(actions.NewIfAction(
 					oldcond,
-					actions.NewHavocAction(applyNB(when, varsToNodes(vs)...)),
+					actions.NewHavocAction(applyNB(when, checkVarsToNodes(vs)...)),
 				), lineno))
 			}
 			if when.Name == "l2s_whenprev" {
 				post = append(post, setLineno(actions.NewIfAction(
 					cond,
-					actions.NewHavocAction(applyNB(when, varsToNodes(vs)...)),
+					actions.NewHavocAction(applyNB(when, checkVarsToNodes(vs)...)),
 				), lineno))
 			}
 		}
@@ -576,7 +576,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				setLineno(actions.NewAssumeAction(forall(when.Variables,
 					&lg.Implies{
 						T1: condVal.T1,
-						T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: condVal.T2},
+						T2: &lg.Eq{T1: applyNB(when, checkVarsToNodes(when.Variables)...), T2: condVal.T2},
 					})), lineno))
 		}
 		return pre, post
@@ -589,7 +589,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		for wi, wait := range sortedWaits {
 			xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
 			vs, t := wait.Variables, wait.Body
-			waitApp := applyNB(wait, varsToNodes(vs)...)
+			waitApp := applyNB(wait, checkVarsToNodes(vs)...)
 			rhs := &lg.And{Terms: []lg.Expr{
 				waitApp,
 				&lg.Not{Body: t},
@@ -635,7 +635,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 					_, inSWa := symwaits[k]
 					if xtracer.Enabled {
 						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s",
-							ri, iu.ShortTypeName(r), symName, pyBool(inSP), pyBool(inSWh), pyBool(inSWa))
+							ri, iu.ShortTypeName(r), symName, checkPyBool(inSP), checkPyBool(inSWh), checkPyBool(inSWa))
 					}
 					if k != "" && (inSP || inSWh || inSWa) {
 						monitored = true
@@ -748,7 +748,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 		for _, p := range b.Action.Inputs {
 			if p.CSort != nil && !cfg.FiniteSorts[lg.SortName(p.CSort)] {
 				addParamsToD = append(addParamsToD,
-					setLineno(actions.NewAssignAction(mustApply(L2SD(p.CSort), p), lg.True), cfg.Lineno))
+					setLineno(actions.NewAssignAction(checkMustApply(L2SD(p.CSort), p), lg.True), cfg.Lineno))
 			}
 		}
 
@@ -883,7 +883,7 @@ func BuildAddConstsToD(mod *module.Module, uninterpretedSorts []lg.Sort, lineno 
 			for _, sym := range insertionOrderSymbols(mod) {
 				if sym.CSort != nil && lg.SortEqual(sym.CSort, s) {
 					addConstsToD = append(addConstsToD,
-						setLineno(actions.NewAssignAction(mustApply(L2SD(s), sym), lg.True), lineno))
+						setLineno(actions.NewAssignAction(checkMustApply(L2SD(s), sym), lg.True), lineno))
 				}
 			}
 		}
@@ -973,7 +973,7 @@ func BuildDefnDeps(mod *module.Module, goalPrems ...ast.Node) map[lg.NodeKey][]l
 	}
 	for di, e := range allDefnExprs {
 		// Python ivy_l2s.py:181: fml = ilg.drop_universals(defn.formula)
-		e = il.DropUniversals(e)
+		e = il.IvyDropUniversals(e)
 		xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
 		addEq(e)
 	}
@@ -1019,7 +1019,7 @@ func BuildDependenciesFunc(defnDeps map[lg.NodeKey][]lg.NodeKey) func(map[lg.Nod
 
 // FindTemporalModels looks through the goal formula for a TemporalModels node.
 func FindTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
-	return findTemporalModels(goal)
+	return checkFindTemporalModels(goal)
 }
 
 // ExtractNormalProgram extracts a NormalProgram from a module.

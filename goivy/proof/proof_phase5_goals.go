@@ -253,7 +253,7 @@ func CheckSchemaCapture(schema, goal *ast.LabeledFormula) error {
 	}
 	gSortSet := make(map[string]bool)
 	for _, s := range gvocab.Sorts {
-		gSortSet[il.SortName(s)] = true
+		gSortSet[il.IvySortName(s)] = true
 	}
 	for _, sym := range fvocab {
 		name := fmt.Sprint(sym)
@@ -464,11 +464,11 @@ func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, c
 		if lf, ok := x.(*ast.LabeledFormula); ok && GoalIsProperty(lf) && lf.IsDefinition {
 			if fExpr, ok := lf.Formula.(lg.Expr); ok {
 				// Python: sym = il.drop_universals(x.formula).args[0].rep
-				df := il.DropUniversals(fExpr)
+				df := il.IvyDropUniversals(fExpr)
 				dfArgs := df.Args()
 				if len(dfArgs) > 0 {
 					if argExpr, ok := dfArgs[0].(lg.Expr); ok {
-						sym := il.NodeRep(argExpr)
+						sym := il.IvyNodeRep(argExpr)
 						if sym != nil {
 							if _, used := usedSyms[lg.Key(sym)]; !used {
 								continue
@@ -822,7 +822,7 @@ func GoalApplyToPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName stri
 // CloseUnmatched universally quantifies unmatched free variables in the conclusion.
 // Corresponds to Python's close_unmatched (ivy_proof.py:1835).
 //
-// Python wraps the conclusion directly in il.ForAll — for a TemporalModels
+// Python wraps the conclusion directly in il.IvyForAll — for a TemporalModels
 // conc, the ForAll ends up wrapping the TemporalModels. Go's Expr type
 // system requires the ForAll body to be lg.Expr, so when rawConc is not
 // lg.Expr-convertible we leave it unwrapped (no known test exercises this
@@ -861,11 +861,11 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 			}
 		}
 	}
-	// Python: for v in reversed(conc_vars): conc = il.ForAll([v], conc)
+	// Python: for v in reversed(conc_vars): conc = il.IvyForAll([v], conc)
 	// Wrap directly without apply_to_conc, matching Python's trace output.
 	newConc := concExpr
 	for i := len(toClose) - 1; i >= 0; i-- {
-		newConc = il.ForAll([]*lg.Variable{toClose[i]}, newConc)
+		newConc = il.IvyForAll([]*lg.Variable{toClose[i]}, newConc)
 	}
 	var finalConc ast.Node = newConc
 	// If original rawConc was TemporalModels and we added wrappers, the
@@ -880,7 +880,7 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 			if inner, ok := tm.Fmla.(lg.Expr); ok {
 				wrapped := inner
 				for i := len(toClose) - 1; i >= 0; i-- {
-					wrapped = il.ForAll([]*lg.Variable{toClose[i]}, wrapped)
+					wrapped = il.IvyForAll([]*lg.Variable{toClose[i]}, wrapped)
 				}
 				finalConc = tm.Clone([]ast.Node{wrapped})
 			}

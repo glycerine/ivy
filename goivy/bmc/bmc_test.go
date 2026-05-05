@@ -13,12 +13,12 @@ import (
 
 // --- helpers ---
 
-func testModule() *module.Module {
+func bmcTestModule() *module.Module {
 	return module.New()
 }
 
 func testModuleWithConj() *module.Module {
-	mod := testModule()
+	mod := bmcTestModule()
 	// Use a tautology (X = X) as the conjecture — always true.
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, _ := lg.NewVariable("X", S)
@@ -40,7 +40,7 @@ func testModuleWithAction() *module.Module {
 // --- Config tests ---
 
 func TestDefaultConfig(t *testing.T) {
-	mod := testModule()
+	mod := bmcTestModule()
 	cfg := DefaultConfig(mod, 5)
 	if cfg.NSteps != 5 {
 		t.Errorf("expected NSteps=5, got %d", cfg.NSteps)
@@ -57,7 +57,7 @@ func TestConfigLog(t *testing.T) {
 	var msgs []string
 	cfg := &BMCConfig{
 		NSteps: 1,
-		Module: testModule(),
+		Module: bmcTestModule(),
 		Logger: func(s string) { msgs = append(msgs, s) },
 	}
 	cfg.log("test %d", 42)
@@ -70,7 +70,7 @@ func TestConfigLog(t *testing.T) {
 }
 
 func TestConfigLogNil(t *testing.T) {
-	cfg := &BMCConfig{NSteps: 1, Module: testModule()}
+	cfg := &BMCConfig{NSteps: 1, Module: bmcTestModule()}
 	// Should not panic with nil logger.
 	cfg.log("this is fine")
 }
@@ -148,7 +148,7 @@ func TestEnvActionNilModule(t *testing.T) {
 }
 
 func TestEnvActionEmpty(t *testing.T) {
-	mod := testModule()
+	mod := bmcTestModule()
 	act := BMCEnvAction(mod)
 	if act == nil {
 		t.Fatal("EnvAction should not return nil for empty module")
@@ -176,7 +176,7 @@ func TestBuildConjectureNilModule(t *testing.T) {
 }
 
 func TestBuildConjectureEmpty(t *testing.T) {
-	mod := testModule()
+	mod := bmcTestModule()
 	conj := BuildConjecture(mod)
 	if !conj.IsTrue() {
 		t.Error("empty module should produce true clauses")

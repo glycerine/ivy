@@ -69,7 +69,7 @@ func TypeInferUnify(s1, s2 SortOrVar) error {
 	if sortOrVarEqual(s1, s2) {
 		return nil
 	}
-	if isTopSort(s1) || isTopSort(s2) {
+	if typeinferIsTopSort(s1) || typeinferIsTopSort(s2) {
 		return nil
 	}
 
@@ -289,7 +289,7 @@ func sortOrVarEqual(a, b SortOrVar) bool {
 	return false
 }
 
-func isTopSort(s SortOrVar) bool {
+func typeinferIsTopSort(s SortOrVar) bool {
 	if sw, ok := s.(*SortWrapper); ok {
 		if sortIsNil(sw.Sort) {
 			return false

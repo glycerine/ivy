@@ -9,14 +9,14 @@ import (
 	tv "github.com/glycerine/ivy/goivy/test_vectors"
 )
 
-func vectorsPath() string {
+func ivyLogicVectorsPath() string {
 	_, file, _, _ := runtime.Caller(0)
 	return filepath.Join(filepath.Dir(file), "..", "test_vectors", "sexp_vectors.sexp")
 }
 
-func loadVectors(t *testing.T) map[string]string {
+func ivyLogicLoadVectors(t *testing.T) map[string]string {
 	t.Helper()
-	vecs, err := tv.LoadVectors(vectorsPath())
+	vecs, err := tv.LoadVectors(ivyLogicVectorsPath())
 	if err != nil {
 		t.Fatalf("Failed to load vectors: %v", err)
 	}
@@ -27,7 +27,7 @@ func loadVectors(t *testing.T) map[string]string {
 	return m
 }
 
-func checkSexp(t *testing.T, vecs map[string]string, id string, got string) {
+func ivyLogicCheckSexp(t *testing.T, vecs map[string]string, id string, got string) {
 	t.Helper()
 	expected, ok := vecs[id]
 	if !ok {
@@ -57,39 +57,39 @@ func setup(t *testing.T) (*lg.UninterpretedSort, *lg.Variable, *lg.Variable, *lg
 }
 
 func TestSexpSome(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := ivyLogicLoadVectors(t)
 	_, X, _, eq := setup(t)
 
 	some := NewSome([]lg.Expr{X}, eq)
-	checkSexp(t, vecs, "some_basic", string(some.Sexp()))
+	ivyLogicCheckSexp(t, vecs, "some_basic", string(some.Sexp()))
 }
 
 func TestSexpSomeWithElse(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := ivyLogicLoadVectors(t)
 	_, X, Y, eq := setup(t)
 
 	some := NewSomeWithElse([]lg.Expr{X}, eq, X, Y)
-	checkSexp(t, vecs, "some_with_else", string(some.Sexp()))
+	ivyLogicCheckSexp(t, vecs, "some_with_else", string(some.Sexp()))
 }
 
 func TestSexpLet(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := ivyLogicLoadVectors(t)
 	_, X, Y, _ := setup(t)
 
 	def := lg.NewDefinition(X, Y)
 	let := NewLet([]lg.Expr{def}, X)
-	checkSexp(t, vecs, "let", string(let.Sexp()))
+	ivyLogicCheckSexp(t, vecs, "let", string(let.Sexp()))
 }
 
 func TestSexpLiteral(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := ivyLogicLoadVectors(t)
 	_, _, _, eq := setup(t)
 
 	litPos := NewLiteral(1, eq)
-	checkSexp(t, vecs, "literal_pos", string(litPos.Sexp()))
+	ivyLogicCheckSexp(t, vecs, "literal_pos", string(litPos.Sexp()))
 
 	litNeg := NewLiteral(0, eq)
-	checkSexp(t, vecs, "literal_neg", string(litNeg.Sexp()))
+	ivyLogicCheckSexp(t, vecs, "literal_neg", string(litNeg.Sexp()))
 }
 
 func TestCanonEqualsSexpIvylogic(t *testing.T) {

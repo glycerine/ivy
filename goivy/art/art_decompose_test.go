@@ -62,7 +62,7 @@ func collectArtChain(s *State) []*State {
 // TestInterpToArtStatePreservesProv verifies that interp.InterpState.Expr (ast.Node)
 // is converted to art.State.Prov (art.Provenance) by InterpToArtState.
 func TestInterpToArtStatePreservesProv(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	cfg := ast.NewAstConfig()
 
 	root := interpState(mod)
@@ -89,7 +89,7 @@ func TestInterpToArtStatePreservesProv(t *testing.T) {
 // TestInterpToArtStateActionAppRep verifies the ActionApp Rep field carries
 // the action name from the interp expression.
 func TestInterpToArtStateActionAppRep(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	cfg := ast.NewAstConfig()
 
 	root := interpState(mod)
@@ -107,7 +107,7 @@ func TestInterpToArtStateActionAppRep(t *testing.T) {
 // TestInterpToArtStateNilExprGivesNilProv verifies root states with Expr==nil
 // produce Prov==nil.
 func TestInterpToArtStateNilExprGivesNilProv(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	root := interpState(mod)
 	// root.Expr is nil by default
 
@@ -120,7 +120,7 @@ func TestInterpToArtStateNilExprGivesNilProv(t *testing.T) {
 // TestInterpToArtStateChainAllNonRootHaveProv verifies that converting
 // a multi-step interp.InterpState chain populates Prov on every non-root state.
 func TestInterpToArtStateChainAllNonRootHaveProv(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	deepest := interpChain(mod, 5)
 
 	artDeepest := InterpToArtState(deepest)
@@ -147,7 +147,7 @@ func TestInterpToArtStateChainAllNonRootHaveProv(t *testing.T) {
 // TestInterpToArtStateMemoIdentity verifies the same interp.InterpState pointer
 // always maps to the same art.State pointer.
 func TestInterpToArtStateMemoIdentity(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	cfg := ast.NewAstConfig()
 
 	shared := interpState(mod)
@@ -172,7 +172,7 @@ func TestInterpToArtStateMemoIdentity(t *testing.T) {
 
 // TestInterpToArtStateActionName verifies ActionName is copied.
 func TestInterpToArtStateActionName(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	is := interpState(mod)
 	is.ActionName = "test_action"
 
@@ -189,7 +189,7 @@ func TestInterpToArtStateActionName(t *testing.T) {
 // TestInterpToArtStateJoinProv verifies an interp Or expression becomes
 // an *art.StateJoin provenance.
 func TestInterpToArtStateJoinProv(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	cfg := ast.NewAstConfig()
 	if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
 		cfg = mod.Cfg.AstCfg
@@ -239,7 +239,7 @@ func TestArtToInterpStatePreservesExpr(t *testing.T) {
 
 // TestArtToInterpStateNilProv verifies nil Prov produces nil Expr.
 func TestArtToInterpStateNilProv(t *testing.T) {
-	s := testState(testModule())
+	s := testState(artTestModule())
 	is := ArtToInterpState(s)
 	if is.Expr != nil {
 		t.Errorf("nil Prov should produce nil Expr, got %T", is.Expr)
@@ -319,7 +319,7 @@ func TestRoundTripChain(t *testing.T) {
 // TestConstructTransitionsFromProvenance verifies that
 // ConstructTransitionsFromExpressions uses Prov to build transitions.
 func TestConstructTransitionsFromProvenance(t *testing.T) {
-	mod := testModule()
+	mod := artTestModule()
 	// Build an interp chain and convert to art — Prov should be set
 	deepest := interpChain(mod, 3)
 	artDeepest := InterpToArtState(deepest)
@@ -389,7 +389,7 @@ func FuzzInterpToArtChainProv(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, chainLen uint8) {
 		n := int(chainLen)%15 + 1
-		mod := testModule()
+		mod := artTestModule()
 		deepest := interpChain(mod, n)
 		artDeepest := InterpToArtState(deepest)
 		chain := collectArtChain(artDeepest)
@@ -419,7 +419,7 @@ func FuzzRoundTripChainProv(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, chainLen uint8) {
 		n := int(chainLen)%10 + 2
-		mod := testModule()
+		mod := artTestModule()
 
 		// Build art chain
 		root := testState(mod)

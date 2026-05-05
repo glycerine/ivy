@@ -52,7 +52,7 @@ func CloneNormal(clauses *module.Clauses, iuCfg *iu.IvyUtilsConfig) *module.Clau
 		}
 		newFmlas = append(newFmlas, nf)
 	}
-	newDefs := make([]*il.Definition, len(clauses.Defs))
+	newDefs := make([]*il.IvyDefinition, len(clauses.Defs))
 	copy(newDefs, clauses.Defs)
 	return module.NewClauses(newFmlas, newDefs, clauses.Annot)
 }
@@ -146,10 +146,10 @@ func UncomposeAnnot(annot actions.Annotation) []actions.Annotation {
 // For RenameAnnotations wrapping an IteAnnotation, the rename map is applied
 // to the conditions.
 // Corresponds to Python's unite_annot (ivy_mc.py lines 924-931).
-func UniteAnnot(annot actions.Annotation) []AnnotPair {
+func MCUniteAnnot(annot actions.Annotation) []AnnotPair {
 	switch a := annot.(type) {
 	case *actions.RenameAnnotation:
-		inner := UniteAnnot(a.Arg)
+		inner := MCUniteAnnot(a.Arg)
 		result := make([]AnnotPair, len(inner))
 		for i, pair := range inner {
 			cond := pair.Cond
@@ -166,7 +166,7 @@ func UniteAnnot(annot actions.Annotation) []AnnotPair {
 		}
 		return result
 	case *actions.IteAnnotation:
-		res := UniteAnnot(a.ElseB)
+		res := MCUniteAnnot(a.ElseB)
 		res = append(res, AnnotPair{Cond: a.Cond, Annot: a.ThenB})
 		return res
 	default:

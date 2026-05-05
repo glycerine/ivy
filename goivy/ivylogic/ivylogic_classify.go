@@ -77,16 +77,16 @@ func IsEA(n lg.Expr) bool {
 }
 
 // DropUniversals strips leading universal quantifiers and handles negation.
-func DropUniversals(n lg.Expr) lg.Expr {
+func IvyDropUniversals(n lg.Expr) lg.Expr {
 	if fa, ok := n.(*lg.ForAll); ok {
-		return DropUniversals(fa.Body)
+		return IvyDropUniversals(fa.Body)
 	}
 	if neg, ok := n.(*lg.Not); ok {
 		notBody := DropExistentials(neg.Body)
 		return &lg.Not{Body: notBody}
 	}
 	if and, ok := n.(*lg.And); ok && len(and.Terms) == 1 {
-		return DropUniversals(and.Terms[0])
+		return IvyDropUniversals(and.Terms[0])
 	}
 	return n
 }
@@ -97,7 +97,7 @@ func DropExistentials(n lg.Expr) lg.Expr {
 		return DropExistentials(ex.Body)
 	}
 	if neg, ok := n.(*lg.Not); ok {
-		notBody := DropUniversals(neg.Body)
+		notBody := IvyDropUniversals(neg.Body)
 		return &lg.Not{Body: notBody}
 	}
 	return n
@@ -124,8 +124,8 @@ const (
 	LogicFO  = "fo"
 )
 
-// Logics is the list of supported logic names.
-var Logics = []string{LogicEPR, LogicQF, LogicFO}
+// IvyLogics is the list of supported logic names.
+var IvyLogics = []string{LogicEPR, LogicQF, LogicFO}
 
 // DecidableLogics is the set of decidable logics.
 var DecidableLogics = []string{LogicEPR, LogicQF}
@@ -137,16 +137,16 @@ var DefaultLogics = []string{LogicEPR}
 
 // SimpAnd simplifies And(x, y) with constant folding.
 func SimpAnd(x, y lg.Expr) lg.Expr {
-	if IsTrue(x) {
+	if IvyIsTrue(x) {
 		return y
 	}
-	if IsFalse(x) {
+	if IvyIsFalse(x) {
 		return x
 	}
-	if IsTrue(y) {
+	if IvyIsTrue(y) {
 		return x
 	}
-	if IsFalse(y) {
+	if IvyIsFalse(y) {
 		return y
 	}
 	return &lg.And{Terms: []lg.Expr{x, y}}
@@ -154,16 +154,16 @@ func SimpAnd(x, y lg.Expr) lg.Expr {
 
 // SimpOr simplifies Or(x, y) with constant folding.
 func SimpOr(x, y lg.Expr) lg.Expr {
-	if IsFalse(x) {
+	if IvyIsFalse(x) {
 		return y
 	}
-	if IsTrue(x) {
+	if IvyIsTrue(x) {
 		return x
 	}
-	if IsFalse(y) {
+	if IvyIsFalse(y) {
 		return x
 	}
-	if IsTrue(y) {
+	if IvyIsTrue(y) {
 		return y
 	}
 	return &lg.Or{Terms: []lg.Expr{x, y}}
@@ -174,10 +174,10 @@ func SimpNot(x lg.Expr) lg.Expr {
 	if neg, ok := x.(*lg.Not); ok {
 		return neg.Body
 	}
-	if IsTrue(x) {
+	if IvyIsTrue(x) {
 		return &lg.Or{} // false
 	}
-	if IsFalse(x) {
+	if IvyIsFalse(x) {
 		return &lg.And{} // true
 	}
 	return &lg.Not{Body: x}
@@ -188,22 +188,22 @@ func SimpIte(i, t, e lg.Expr) lg.Expr {
 	if t.Equal(e) {
 		return t
 	}
-	if IsTrue(i) {
+	if IvyIsTrue(i) {
 		return t
 	}
-	if IsFalse(i) {
+	if IvyIsFalse(i) {
 		return e
 	}
-	if IsTrue(t) {
+	if IvyIsTrue(t) {
 		return SimpOr(i, e)
 	}
-	if IsFalse(t) {
+	if IvyIsFalse(t) {
 		return SimpAnd(SimpNot(i), e)
 	}
-	if IsTrue(e) {
+	if IvyIsTrue(e) {
 		return SimpOr(SimpNot(i), t)
 	}
-	if IsFalse(e) {
+	if IvyIsFalse(e) {
 		return SimpAnd(i, t)
 	}
 	return &lg.Ite{ISort: t.NodeSort(), Cond: i, Then: t, Else: e}

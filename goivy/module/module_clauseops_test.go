@@ -11,11 +11,11 @@ import (
 
 // --- helpers ---
 
-func mkConst(name string) *lg.Const {
+func moduleMkConst(name string) *lg.Const {
 	return lg.NewConst(name, lg.Boolean)
 }
 
-func mkVar(name string) *lg.Variable {
+func moduleMkVar(name string) *lg.Variable {
 	v, _ := lg.NewVariable(name, &lg.UninterpretedSort{Name: "S"})
 	return v
 }
@@ -37,7 +37,7 @@ func mkFuncConst(name string, arity int) *lg.Const {
 
 // --- Clauses tests ---
 
-func TestNewClausesEmpty(t *testing.T) {
+func TestModuleClauseOpsNewClausesEmpty(t *testing.T) {
 	c := NewClauses(nil, nil, nil)
 	if !c.IsTrue() {
 		t.Error("empty clauses should be true")
@@ -47,9 +47,9 @@ func TestNewClausesEmpty(t *testing.T) {
 	}
 }
 
-func TestNewClausesFlattensAnd(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsNewClausesFlattensAnd(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	inner := &lg.And{Terms: []lg.Expr{a, b}}
 	c := NewClauses([]lg.Expr{inner}, nil, nil)
 	if len(c.Fmlas) != 2 {
@@ -57,37 +57,37 @@ func TestNewClausesFlattensAnd(t *testing.T) {
 	}
 }
 
-func TestClausesIsFalse(t *testing.T) {
+func TestModuleClauseOpsClausesIsFalse(t *testing.T) {
 	c := NewClauses([]lg.Expr{lg.False}, nil, nil)
 	if !c.IsFalse() {
 		t.Error("expected IsFalse")
 	}
 }
 
-func TestClausesIsTrue(t *testing.T) {
+func TestModuleClauseOpsClausesIsTrue(t *testing.T) {
 	c := NewClauses([]lg.Expr{lg.True}, nil, nil)
 	if !c.IsTrue() {
 		t.Error("expected IsTrue")
 	}
 }
 
-func TestClausesCopy(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsClausesCopy(t *testing.T) {
+	a := moduleMkConst("a")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	cp := c.Copy()
 	if !c.Equal(cp) {
 		t.Error("copy should be equal")
 	}
 	// Mutation of copy should not affect original
-	cp.Fmlas = append(cp.Fmlas, mkConst("b"))
+	cp.Fmlas = append(cp.Fmlas, moduleMkConst("b"))
 	if len(c.Fmlas) == len(cp.Fmlas) {
 		t.Error("original should not be affected by copy mutation")
 	}
 }
 
-func TestClausesToOpenFormula(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsClausesToOpenFormula(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	f := c.ToOpenFormula()
 	and, ok := f.(*lg.And)
@@ -99,11 +99,11 @@ func TestClausesToOpenFormula(t *testing.T) {
 	}
 }
 
-func TestClausesToOpenFormulaWithDefs(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	def := il.NewDefinition(a, b)
-	c := NewClauses([]lg.Expr{a}, []*il.Definition{def}, nil)
+func TestModuleClauseOpsClausesToOpenFormulaWithDefs(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
+	def := il.NewIvyDefinition(a, b)
+	c := NewClauses([]lg.Expr{a}, []*il.IvyDefinition{def}, nil)
 	f := c.ToOpenFormula()
 	and, ok := f.(*lg.And)
 	if !ok {
@@ -115,8 +115,8 @@ func TestClausesToOpenFormulaWithDefs(t *testing.T) {
 	}
 }
 
-func TestClausesString(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsClausesString(t *testing.T) {
+	a := moduleMkConst("a")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	s := c.String()
 	if !strings.Contains(s, "Clauses") {
@@ -127,11 +127,11 @@ func TestClausesString(t *testing.T) {
 	}
 }
 
-func TestClausesDefIdx(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	def := il.NewDefinition(a, b)
-	c := NewClauses(nil, []*il.Definition{def}, nil)
+func TestModuleClauseOpsClausesDefIdx(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
+	def := il.NewIvyDefinition(a, b)
+	c := NewClauses(nil, []*il.IvyDefinition{def}, nil)
 	idx, ok := c.DefIdx[lg.Key(a)]
 	if !ok {
 		t.Fatalf("DefIdx should contain key %q", lg.Key(a))
@@ -141,30 +141,30 @@ func TestClausesDefIdx(t *testing.T) {
 	}
 }
 
-func TestClausesEqual(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsClausesEqual(t *testing.T) {
+	a := moduleMkConst("a")
 	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := NewClauses([]lg.Expr{a}, nil, nil)
 	if !c1.Equal(c2) {
 		t.Error("equal clauses should be equal")
 	}
-	b := mkConst("b")
+	b := moduleMkConst("b")
 	c3 := NewClauses([]lg.Expr{b}, nil, nil)
 	if c1.Equal(c3) {
 		t.Error("different clauses should not be equal")
 	}
 }
 
-func TestClausesIsUniversalFirstOrder(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsClausesIsUniversalFirstOrder(t *testing.T) {
+	a := moduleMkConst("a")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	if !c.IsUniversalFirstOrder() {
 		t.Error("expected universal first order")
 	}
 
 	// With defs, should not be universal first order
-	def := il.NewDefinition(a, mkConst("b"))
-	c2 := NewClauses([]lg.Expr{a}, []*il.Definition{def}, nil)
+	def := il.NewIvyDefinition(a, moduleMkConst("b"))
+	c2 := NewClauses([]lg.Expr{a}, []*il.IvyDefinition{def}, nil)
 	if c2.IsUniversalFirstOrder() {
 		t.Error("clauses with defs should not be universal first order")
 	}
@@ -179,7 +179,7 @@ func TestClausesIsUniversalFirstOrder(t *testing.T) {
 
 // --- Constructor tests ---
 
-func TestTrueClauses(t *testing.T) {
+func TestModuleClauseOpsTrueClauses(t *testing.T) {
 	c := TrueClauses(nil)
 	if !c.IsTrue() {
 		t.Error("TrueClauses should be true")
@@ -189,15 +189,15 @@ func TestTrueClauses(t *testing.T) {
 	}
 }
 
-func TestFalseClauses(t *testing.T) {
+func TestModuleClauseOpsFalseClauses(t *testing.T) {
 	c := FalseClauses(nil)
 	if !c.IsFalse() {
 		t.Error("FalseClauses should be false")
 	}
 }
 
-func TestFormulaToClauses(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsFormulaToClauses(t *testing.T) {
+	a := moduleMkConst("a")
 	c := FormulaToClauses(a, nil)
 	if len(c.Fmlas) != 1 {
 		t.Errorf("expected 1 formula, got %d", len(c.Fmlas))
@@ -207,8 +207,8 @@ func TestFormulaToClauses(t *testing.T) {
 	}
 }
 
-func TestFormulaToClausesUnwrapsSingleton(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsFormulaToClausesUnwrapsSingleton(t *testing.T) {
+	a := moduleMkConst("a")
 	wrapped := &lg.And{Terms: []lg.Expr{a}}
 	c := FormulaToClauses(wrapped, nil)
 	if len(c.Fmlas) != 1 {
@@ -219,7 +219,7 @@ func TestFormulaToClausesUnwrapsSingleton(t *testing.T) {
 	}
 }
 
-func TestFormulaToClausesStripsForAll(t *testing.T) {
+func TestModuleClauseOpsFormulaToClausesStripsForAll(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
 	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
@@ -235,9 +235,9 @@ func TestFormulaToClausesStripsForAll(t *testing.T) {
 
 // --- And/Or tests ---
 
-func TestAndClausesTyped(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsAndClausesTyped(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := NewClauses([]lg.Expr{b}, nil, nil)
 	result := AndClausesTyped(c1, c2)
@@ -246,15 +246,15 @@ func TestAndClausesTyped(t *testing.T) {
 	}
 }
 
-func TestAndClausesEmpty(t *testing.T) {
+func TestModuleClauseOpsAndClausesEmpty(t *testing.T) {
 	result := AndClausesTyped()
 	if !result.IsTrue() {
 		t.Error("empty conjunction should be true")
 	}
 }
 
-func TestAndClausesWithFalse(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsAndClausesWithFalse(t *testing.T) {
+	a := moduleMkConst("a")
 	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := FalseClauses(nil)
 	result := AndClausesTyped(c1, c2)
@@ -263,9 +263,9 @@ func TestAndClausesWithFalse(t *testing.T) {
 	}
 }
 
-func TestOrClausesTyped(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsOrClausesTyped(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := NewClauses([]lg.Expr{b}, nil, nil)
 	result := OrClausesTyped(c1, c2)
@@ -283,8 +283,8 @@ func TestOrClausesTyped(t *testing.T) {
 	}
 }
 
-func TestOrClausesSingleNonFalse(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsOrClausesSingleNonFalse(t *testing.T) {
+	a := moduleMkConst("a")
 	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := FalseClauses(nil)
 	result := OrClausesTyped(c1, c2)
@@ -294,7 +294,7 @@ func TestOrClausesSingleNonFalse(t *testing.T) {
 	}
 }
 
-func TestOrClausesAllFalse(t *testing.T) {
+func TestModuleClauseOpsOrClausesAllFalse(t *testing.T) {
 	result := OrClausesTyped(FalseClauses(nil), FalseClauses(nil))
 	if !result.IsFalse() {
 		t.Error("or of all false should be false")
@@ -303,10 +303,10 @@ func TestOrClausesAllFalse(t *testing.T) {
 
 // --- IteClauses tests ---
 
-func TestIteClauses(t *testing.T) {
-	cond := mkConst("cond")
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsIteClauses(t *testing.T) {
+	cond := moduleMkConst("cond")
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	thenCls := NewClauses([]lg.Expr{a}, nil, nil)
 	elseCls := NewClauses([]lg.Expr{b}, nil, nil)
 	result := IteClauses(cond, thenCls, elseCls)
@@ -318,8 +318,8 @@ func TestIteClauses(t *testing.T) {
 	}
 }
 
-func TestIteClausesBothFalse(t *testing.T) {
-	cond := mkConst("cond")
+func TestModuleClauseOpsIteClausesBothFalse(t *testing.T) {
+	cond := moduleMkConst("cond")
 	result := IteClauses(cond, FalseClauses(nil), FalseClauses(nil))
 	if !result.IsFalse() {
 		t.Error("ite with both false should be false")
@@ -328,8 +328,8 @@ func TestIteClausesBothFalse(t *testing.T) {
 
 // --- NegateClauses tests ---
 
-func TestNegateClauses(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsNegateClauses(t *testing.T) {
+	a := moduleMkConst("a")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	neg := NegateClauses(c)
 	if neg.IsFalse() && !c.IsFalse() {
@@ -344,9 +344,9 @@ func TestNegateClauses(t *testing.T) {
 
 // --- ConditionClauses tests ---
 
-func TestConditionClauses(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsConditionClauses(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	result := ConditionClauses(c, b)
 	if len(result.Fmlas) != 1 {
@@ -372,9 +372,9 @@ func TestConditionClauses(t *testing.T) {
 
 // --- ClausesUsingSymbols tests ---
 
-func TestClausesUsingSymbols(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsClausesUsingSymbols(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	syms := iu.NewInsMap[lg.NodeKey, lg.Expr]()
 	syms.Set(lg.Key(a), a)
@@ -389,9 +389,9 @@ func TestClausesUsingSymbols(t *testing.T) {
 
 // --- AST utility tests ---
 
-func TestSymbolsAST(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsSymbolsAST(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a, b}}
 	syms := SymbolsAST(fmla)
 	if len(syms) != 2 {
@@ -399,9 +399,9 @@ func TestSymbolsAST(t *testing.T) {
 	}
 }
 
-func TestUsedSymbolsAST(t *testing.T) {
+func TestModuleClauseOpsUsedSymbolsAST(t *testing.T) {
 	f := mkFuncConst("f", 1)
-	x := mkVar("X")
+	x := moduleMkVar("X")
 	app := lg.MustApply(f, x)
 	syms := UsedSymbolsAST(app)
 	if _, ok := syms.Get2(lg.Key(f)); !ok {
@@ -409,9 +409,9 @@ func TestUsedSymbolsAST(t *testing.T) {
 	}
 }
 
-func TestVariablesAST(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
+func TestModuleClauseOpsVariablesAST(t *testing.T) {
+	x := moduleMkVar("X")
+	y := moduleMkVar("Y")
 	fmla := &lg.And{Terms: []lg.Expr{x, y}}
 	vars := VariablesAST(fmla)
 	if len(vars) != 2 {
@@ -419,7 +419,7 @@ func TestVariablesAST(t *testing.T) {
 	}
 }
 
-func TestVariablesASTSkipsBound(t *testing.T) {
+func TestModuleClauseOpsVariablesASTSkipsBound(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
 	body := &lg.And{Terms: []lg.Expr{x, y}}
@@ -431,8 +431,8 @@ func TestVariablesASTSkipsBound(t *testing.T) {
 	}
 }
 
-func TestUsedVariablesAST(t *testing.T) {
-	x := mkVar("X")
+func TestModuleClauseOpsUsedVariablesAST(t *testing.T) {
+	x := moduleMkVar("X")
 	fmla := &lg.And{Terms: []lg.Expr{x}}
 	vars := UsedVariablesAST(fmla)
 	if len(vars) != 1 {
@@ -440,9 +440,9 @@ func TestUsedVariablesAST(t *testing.T) {
 	}
 }
 
-func TestSubstituteConstantsAST(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsSubstituteConstantsAST(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a}}
 	result := SubstituteConstantsAST(fmla, map[lg.NodeKey]lg.Expr{lg.Key(a): b})
 	and, ok := result.(*lg.And)
@@ -454,9 +454,9 @@ func TestSubstituteConstantsAST(t *testing.T) {
 	}
 }
 
-func TestRenameAST(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsRenameAST(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a}}
 	result := RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(a): b})
 	and, ok := result.(*lg.And)
@@ -468,8 +468,8 @@ func TestRenameAST(t *testing.T) {
 	}
 }
 
-func TestNegate(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsNegate(t *testing.T) {
+	a := moduleMkConst("a")
 	notA := Negate(a)
 	not, ok := notA.(*lg.Not)
 	if !ok {
@@ -486,25 +486,25 @@ func TestNegate(t *testing.T) {
 	}
 }
 
-func TestIsTrue(t *testing.T) {
-	if !IsTrue(lg.True) {
+func TestModuleClauseOpsIsTrue(t *testing.T) {
+	if !ModuleIsTrue(lg.True) {
 		t.Error("True should be true")
 	}
-	if IsTrue(lg.False) {
+	if ModuleIsTrue(lg.False) {
 		t.Error("False should not be true")
 	}
 }
 
-func TestIsFalse(t *testing.T) {
-	if !IsFalse(lg.False) {
+func TestModuleClauseOpsIsFalse(t *testing.T) {
+	if !ModuleIsFalse(lg.False) {
 		t.Error("False should be false")
 	}
-	if IsFalse(lg.True) {
+	if ModuleIsFalse(lg.True) {
 		t.Error("True should not be false")
 	}
 }
 
-func TestSymPlaceholders(t *testing.T) {
+func TestModuleClauseOpsSymPlaceholders(t *testing.T) {
 	f := mkFuncConst("f", 2)
 	phs := SymPlaceholders(f)
 	if len(phs) != 2 {
@@ -515,15 +515,15 @@ func TestSymPlaceholders(t *testing.T) {
 	}
 }
 
-func TestSymPlaceholdersNoArgs(t *testing.T) {
-	c := mkConst("c")
+func TestModuleClauseOpsSymPlaceholdersNoArgs(t *testing.T) {
+	c := moduleMkConst("c")
 	phs := SymPlaceholders(c)
 	if len(phs) != 0 {
 		t.Errorf("expected 0 placeholders, got %d", len(phs))
 	}
 }
 
-func TestSymInst(t *testing.T) {
+func TestModuleClauseOpsSymInst(t *testing.T) {
 	f := mkFuncConst("f", 1)
 	inst := SymInst(f)
 	app, ok := inst.(*lg.Apply)
@@ -538,17 +538,17 @@ func TestSymInst(t *testing.T) {
 	}
 }
 
-func TestSymInstNoArgs(t *testing.T) {
-	c := mkConst("c")
+func TestModuleClauseOpsSymInstNoArgs(t *testing.T) {
+	c := moduleMkConst("c")
 	inst := SymInst(c)
 	if !inst.Equal(c) {
 		t.Error("0-arity sym inst should return the symbol itself")
 	}
 }
 
-func TestEqAtom(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
+func TestModuleClauseOpsEqAtom(t *testing.T) {
+	x := moduleMkVar("X")
+	y := moduleMkVar("Y")
 	eq := EqAtom(x, y)
 	e, ok := eq.(*lg.Eq)
 	if !ok {
@@ -559,9 +559,9 @@ func TestEqAtom(t *testing.T) {
 	}
 }
 
-func TestEqLit(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
+func TestModuleClauseOpsEqLit(t *testing.T) {
+	x := moduleMkVar("X")
+	y := moduleMkVar("Y")
 	lit := EqLit(x, y)
 	if lit.Polarity != 1 {
 		t.Error("EqLit should have positive polarity")
@@ -575,10 +575,10 @@ func TestEqLit(t *testing.T) {
 	}
 }
 
-func TestCollectAndList(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
+func TestModuleClauseOpsCollectAndList(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
+	c := moduleMkConst("c")
 	nested := &lg.And{Terms: []lg.Expr{a, &lg.And{Terms: []lg.Expr{b, c}}}}
 	result := CollectAndList([]lg.Expr{nested})
 	if len(result) != 3 {
@@ -586,10 +586,10 @@ func TestCollectAndList(t *testing.T) {
 	}
 }
 
-func TestCollectOr(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
+func TestModuleClauseOpsCollectOr(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
+	c := moduleMkConst("c")
 	nested := &lg.Or{Terms: []lg.Expr{a, &lg.Or{Terms: []lg.Expr{b, c}}}}
 	result := CollectOr(nested)
 	if len(result) != 3 {
@@ -597,7 +597,7 @@ func TestCollectOr(t *testing.T) {
 	}
 }
 
-func TestDropUniversals(t *testing.T) {
+func TestModuleClauseOpsDropUniversals(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
 	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
@@ -610,7 +610,7 @@ func TestDropUniversals(t *testing.T) {
 	}
 }
 
-func TestDropUniversalsNested(t *testing.T) {
+func TestModuleClauseOpsDropUniversalsNested(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
 	body := &lg.And{Terms: []lg.Expr{x, y}}
@@ -623,18 +623,18 @@ func TestDropUniversalsNested(t *testing.T) {
 	}
 }
 
-func TestIsGroundAST(t *testing.T) {
-	a := mkConst("a")
+func TestModuleClauseOpsIsGroundAST(t *testing.T) {
+	a := moduleMkConst("a")
 	if !IsGroundAST(a) {
 		t.Error("constant should be ground")
 	}
-	x := mkVar("X")
+	x := moduleMkVar("X")
 	if IsGroundAST(x) {
 		t.Error("variable should not be ground")
 	}
 }
 
-func TestNormalizeFreeVariables(t *testing.T) {
+func TestModuleClauseOpsNormalizeFreeVariables(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
 	fmla := &lg.And{Terms: []lg.Expr{x, y}}
@@ -662,9 +662,9 @@ func TestNormalizeFreeVariables(t *testing.T) {
 
 // --- Rename/Substitute on Clauses tests ---
 
-func TestRenameClauses(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsRenameClauses(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	result := RenameClauses(c, map[lg.NodeKey]*lg.Const{lg.Key(a): b})
 	if len(result.Fmlas) != 1 {
@@ -675,9 +675,9 @@ func TestRenameClauses(t *testing.T) {
 	}
 }
 
-func TestSubstituteConstantsClauses(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsSubstituteConstantsClauses(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
 	result := SubstituteConstantsClauses(c, map[lg.NodeKey]lg.Expr{lg.Key(a): b})
 	if len(result.Fmlas) != 1 {
@@ -688,9 +688,9 @@ func TestSubstituteConstantsClauses(t *testing.T) {
 	}
 }
 
-func TestClausesSymbols(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
+func TestModuleClauseOpsClausesSymbols(t *testing.T) {
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
 	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	syms := c.Symbols()
 	if syms.Len() != 2 {
@@ -698,8 +698,8 @@ func TestClausesSymbols(t *testing.T) {
 	}
 }
 
-func TestClausesToFormula(t *testing.T) {
-	x := mkVar("X")
+func TestModuleClauseOpsClausesToFormula(t *testing.T) {
+	x := moduleMkVar("X")
 	c := NewClauses([]lg.Expr{x}, nil, nil)
 	f := c.ToFormula()
 	// ToFormula uses CloseEPR which distributes through And.
@@ -730,7 +730,7 @@ func FuzzCollectAndList(f *testing.F) {
 		numConsts := abs(n1)%5 + 1
 		consts := make([]lg.Expr, 0, numConsts)
 		for i := 0; i < numConsts; i++ {
-			consts = append(consts, mkConst("c"+strings.Repeat("x", i)))
+			consts = append(consts, moduleMkConst("c"+strings.Repeat("x", i)))
 		}
 
 		// Build a nested And
@@ -738,7 +738,7 @@ func FuzzCollectAndList(f *testing.F) {
 		numExtra := abs(n2)%3 + 1
 		outerTerms := []lg.Expr{inner}
 		for i := 0; i < numExtra; i++ {
-			outerTerms = append(outerTerms, mkConst("d"+strings.Repeat("y", i)))
+			outerTerms = append(outerTerms, moduleMkConst("d"+strings.Repeat("y", i)))
 		}
 		outer := &lg.And{Terms: outerTerms}
 
@@ -767,7 +767,7 @@ func FuzzAndOrClauses(f *testing.F) {
 			numFmlas := abs(n2)%3 + 1
 			fmlas := make([]lg.Expr, numFmlas)
 			for j := 0; j < numFmlas; j++ {
-				fmlas[j] = mkConst("f" + strings.Repeat("z", (i+j)%5))
+				fmlas[j] = moduleMkConst("f" + strings.Repeat("z", (i+j)%5))
 			}
 			args[i] = NewClauses(fmlas, nil, nil)
 		}

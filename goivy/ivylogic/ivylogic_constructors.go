@@ -15,8 +15,8 @@ import (
 // If rel is the equals symbol, creates an Eq node.
 // If no args, returns the symbol itself.
 // Corresponds to Python's Atom (ivy_logic.py:298).
-func Atom(rel *lg.Const, args []lg.Expr) lg.Expr {
-	if rel.Equal(Equals) && len(args) == 2 {
+func IvyAtom(rel *lg.Const, args []lg.Expr) lg.Expr {
+	if rel.Equal(IvyEquals) && len(args) == 2 {
 		return &lg.Eq{T1: args[0], T2: args[1]}
 	}
 	if len(args) == 0 {
@@ -33,15 +33,15 @@ func Constant(sym *lg.Const) lg.Expr {
 }
 
 // NewEqualsNode creates an Eq node from two terms.
-// Corresponds to Python's Equals function (ivy_logic.py:1138).
-// (Named NewEqualsNode to avoid clash with the Equals variable.)
+// Corresponds to Python's IvyEquals function (ivy_logic.py:1138).
+// (Named NewEqualsNode to avoid clash with the IvyEquals variable.)
 func NewEqualsNode(x, y lg.Expr) *lg.Eq {
 	return &lg.Eq{T1: x, T2: y}
 }
 
 // Apply creates a function application from a symbol and arguments.
 // Corresponds to Python's apply (ivy_logic.py:859).
-func Apply(sym *lg.Const, args []lg.Expr) lg.Expr {
+func IvyApply(sym *lg.Const, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return sym
 	}
@@ -79,14 +79,14 @@ func BinderArgs(term lg.Expr) []lg.Expr {
 
 // EqLit creates a positive equality literal.
 // Corresponds to Python's _eq_lit (ivy_logic.py:748).
-func EqLit(x, y lg.Expr) *Literal {
-	return NewLiteral(1, Atom(Equals, []lg.Expr{x, y}))
+func IvyEqLit(x, y lg.Expr) *Literal {
+	return NewLiteral(1, IvyAtom(IvyEquals, []lg.Expr{x, y}))
 }
 
 // NeqLit creates a negative equality literal.
 // Corresponds to Python's _neq_lit (ivy_logic.py:750).
 func NeqLit(x, y lg.Expr) *Literal {
-	return NewLiteral(0, Atom(Equals, []lg.Expr{x, y}))
+	return NewLiteral(0, IvyAtom(IvyEquals, []lg.Expr{x, y}))
 }
 
 // --- Display helpers (Batch 1.2) ---

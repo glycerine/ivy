@@ -382,6 +382,6 @@ func TestArrayForAllSelect(t *testing.T) {
 	x := ctx.Const("x", ctx.IntSort())
 	body := ctx.Eq(ctx.Select(a, x), ctx.IntVal(5))
 	// Negate forall to check validity: NOT(forall x: a[x]==5) should be unsat
-	slv.Assert(ctx.Not(ctx.ForAll([]Expr{x}, body)))
+	slv.Assert(ctx.Not(ctx.ForAll([]Z3Expr{x}, body)))
 	assertUnsat(t, slv, "K(Int,5) satisfies forall x: a[x]==5")
 }

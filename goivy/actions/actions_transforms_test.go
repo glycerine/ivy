@@ -8,7 +8,7 @@ import (
 )
 
 func mkWhileActionForTest(sortName string) *WhileAction {
-	sortT := mkSort(sortName)
+	sortT := actionsMkSort(sortName)
 	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
@@ -122,7 +122,7 @@ func TestUnrollLoops_NestedWhile(t *testing.T) {
 }
 
 func TestUnrollLoops_NotEqCondition(t *testing.T) {
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
 	eq := &lg.Eq{T1: xSym, T2: boundSym}
@@ -141,7 +141,7 @@ func TestUnrollLoops_NotEqCondition(t *testing.T) {
 }
 
 func TestUnrollLoops_AndCondition(t *testing.T) {
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
 	xSym := lg.NewConst("x", sortT)
 	boundSym := lg.NewConst("bound", sortT)
@@ -181,8 +181,8 @@ func TestUnrollLoops_UnknownCondition(t *testing.T) {
 
 func TestUnrollLoops_FormalsPreserved(t *testing.T) {
 	wa := mkWhileActionForTest("T")
-	params := []*lg.Const{mkConst("p")}
-	returns := []*lg.Const{mkConst("r")}
+	params := []*lg.Const{actionsMkConst("p")}
+	returns := []*lg.Const{actionsMkConst("r")}
 	wa.SetFormalParams(params)
 	wa.SetFormalReturns(returns)
 

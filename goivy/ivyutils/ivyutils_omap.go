@@ -41,7 +41,7 @@ import (
 // during a for-range Omap.all() iteration.
 //
 // For repeated full range all
-// scans, we cache the okv pointers in contiguous
+// scans, we cache the ivyutilsOKV pointers in contiguous
 // memory to maximize L1 cache hits and
 // minimize pointer chasing in the underlying
 // red-black tree.
@@ -62,13 +62,13 @@ type Omap[K cmp.Ordered, V any] struct {
 	// cache the first range all, and use
 	// ordercache if we range all again without
 	// intervening upsert or deletes.
-	ordercache   []*okv[K, V]
+	ordercache   []*ivyutilsOKV[K, V]
 	cacheversion int64
 }
 
-// cached returns the raw internal okv slice
+// cached returns the raw internal ivyutilsOKV slice
 // for very fast iteration in a for-range loop.
-func (s *Omap[K, V]) Cached() []*okv[K, V] {
+func (s *Omap[K, V]) Cached() []*ivyutilsOKV[K, V] {
 	n := s.tree.Len()
 	nc := len(s.ordercache)
 	vers := atomic.LoadInt64(&s.version)
@@ -79,7 +79,7 @@ func (s *Omap[K, V]) Cached() []*okv[K, V] {
 	s.ordercache = nil
 	s.cacheversion = vers
 	for it := s.tree.Min(); !it.Limit(); it = it.Next() {
-		kv := it.Item().(*okv[K, V])
+		kv := it.Item().(*ivyutilsOKV[K, V])
 		s.ordercache = append(s.ordercache, kv)
 	}
 	return s.ordercache
@@ -89,16 +89,16 @@ func (s *Omap[K, V]) Cached() []*okv[K, V] {
 func NewOmap[K cmp.Ordered, V any]() *Omap[K, V] {
 	return &Omap[K, V]{
 		tree: rb.NewTree(func(a, b rb.Item) int {
-			ak := a.(*okv[K, V]).key
-			bk := b.(*okv[K, V]).key
+			ak := a.(*ivyutilsOKV[K, V]).key
+			bk := b.(*ivyutilsOKV[K, V]).key
 			return cmp.Compare(ak, bk)
 		}),
 	}
 }
 
-// okv holds an ordered key and its value together.
-// the red-black tree stores pointers to okv.
-type okv[K cmp.Ordered, V any] struct {
+// ivyutilsOKV holds an ordered key and its value together.
+// the red-black tree stores pointers to ivyutilsOKV.
+type ivyutilsOKV[K cmp.Ordered, V any] struct {
 	key K
 	val V
 }
@@ -115,7 +115,7 @@ func (s *Omap[K, V]) String() (r string) {
 	i := 0
 	extra := ""
 	for !it.Limit() {
-		kv := it.Item().(*okv[K, V])
+		kv := it.Item().(*ivyutilsOKV[K, V])
 		if i == 1 {
 			extra = ", "
 		}
@@ -145,7 +145,7 @@ func (s *Omap[K, V]) Delkey(key K) (found bool, next rb.Iterator) {
 	}
 
 	//vv("deleting id='%v' -> it.Item() = '%v'", id, it.Item())
-	query := &okv[K, V]{key: key}
+	query := &ivyutilsOKV[K, V]{key: key}
 	var it rb.Iterator
 	it, found = s.tree.FindGE_isEqual(query)
 	if found {
@@ -168,7 +168,7 @@ func (s *Omap[K, V]) DeleteWithIter(it rb.Iterator) (found bool, next rb.Iterato
 		return
 	}
 
-	kv, ok := it.Item().(*okv[K, V])
+	kv, ok := it.Item().(*ivyutilsOKV[K, V])
 	if !ok {
 		// bad it
 		next = s.tree.Limit()
@@ -210,10 +210,10 @@ func (s *Omap[K, V]) Set(key K, val V) (newlyAdded bool) {
 	s.ordercache = nil
 	s.cacheversion = 0
 
-	query := &okv[K, V]{key: key, val: val}
+	query := &ivyutilsOKV[K, V]{key: key, val: val}
 	it, found := s.tree.FindGE_isEqual(query)
 	if found {
-		prev := it.Item().(*okv[K, V])
+		prev := it.Item().(*ivyutilsOKV[K, V])
 		//vv("id already in tree, just update in place: key='%v'; prev='%#v'", keyprev)
 		prev.val = val
 		return
@@ -260,9 +260,9 @@ func (s *Omap[K, V]) All() iter.Seq2[K, V] {
 						return
 					}
 					// still have some left
-					var kv *okv[K, V]
+					var kv *ivyutilsOKV[K, V]
 					for !nextit.Limit() {
-						kv = nextit.Item().(*okv[K, V])
+						kv = nextit.Item().(*ivyutilsOKV[K, V])
 						// pre-advance, allows deletion of it.
 						nextit = nextit.Next()
 						if !yield(kv.key, kv.val) {
@@ -286,7 +286,7 @@ func (s *Omap[K, V]) All() iter.Seq2[K, V] {
 		it := s.tree.Min()
 		for !it.Limit() {
 
-			kv := it.Item().(*okv[K, V])
+			kv := it.Item().(*ivyutilsOKV[K, V])
 			// advance before yeilding so user
 			// can delete at it if desired, and
 			// we will keep on going
@@ -311,31 +311,31 @@ func (s *Omap[K, V]) All() iter.Seq2[K, V] {
 	return seq2
 }
 
-// Allokv returns the okv(s) not the val. This
+// Allokv returns the ivyutilsOKV(s) not the val. This
 // allows highly efficient val updates in place, but
 // is mildly vulnerable to mis-use: the user must not
-// change the other okv.id field. Otherwise the
+// change the other ivyutilsOKV.id field. Otherwise the
 // red-black tree will be borked.
 //
 // Hence this function is for performance oriented users who
-// can guarantee their code will leave okv.id (and okv.it,
-// and most probably okv.key too) alone. You can
+// can guarantee their code will leave ivyutilsOKV.id (and ivyutilsOKV.it,
+// and most probably ivyutilsOKV.key too) alone. You can
 // read these, but don't write. If you
-// need to change the okv.id/key, you must delkey or
+// need to change the ivyutilsOKV.id/key, you must delkey or
 // deleteWithIter to remove the old key from the tree first;
 // then add in the new key. This allows the tree
 // to properly rebalance itself.
 //
-// The tree does not care about okv.val, so the user
-// can update that at will. The okv.it, like the okv.id/key
+// The tree does not care about ivyutilsOKV.val, so the user
+// can update that at will. The ivyutilsOKV.it, like the ivyutilsOKV.id/key
 // should be considered const/not be altered by user code.
 // It is the iterator that points into the red-back
 // tree, and so allows efficient start of iteration in the
 // middle and/or delete in O(1) rather than O(log n) from
 // the middle of the tree.
-func (s *Omap[K, V]) Allokv() iter.Seq2[K, *okv[K, V]] {
+func (s *Omap[K, V]) Allokv() iter.Seq2[K, *ivyutilsOKV[K, V]] {
 
-	seq2 := func(yield func(K, *okv[K, V]) bool) {
+	seq2 := func(yield func(K, *ivyutilsOKV[K, V]) bool) {
 
 		//vv("start of all iteration.")
 		n := s.tree.Len()
@@ -365,9 +365,9 @@ func (s *Omap[K, V]) Allokv() iter.Seq2[K, *okv[K, V]] {
 						return
 					}
 					// still have some left
-					var kv *okv[K, V]
+					var kv *ivyutilsOKV[K, V]
 					for !nextit.Limit() {
-						kv = nextit.Item().(*okv[K, V])
+						kv = nextit.Item().(*ivyutilsOKV[K, V])
 						// pre-advance, allows deletion of it.
 						nextit = nextit.Next()
 						if !yield(kv.key, kv) {
@@ -391,7 +391,7 @@ func (s *Omap[K, V]) Allokv() iter.Seq2[K, *okv[K, V]] {
 		it := s.tree.Min()
 		for !it.Limit() {
 
-			kv := it.Item().(*okv[K, V])
+			kv := it.Item().(*ivyutilsOKV[K, V])
 			// advance before yeilding so user
 			// can delete at it if desired, and
 			// we will keep on going
@@ -423,10 +423,10 @@ func (s *Omap[K, V]) Get2(key K) (val V, found bool) {
 		return
 	}
 	var it rb.Iterator
-	query := &okv[K, V]{key: key}
+	query := &ivyutilsOKV[K, V]{key: key}
 	it, found = s.tree.FindGE_isEqual(query)
 	if found {
-		prev := it.Item().(*okv[K, V])
+		prev := it.Item().(*ivyutilsOKV[K, V])
 		val = prev.val
 		return
 	}
@@ -438,34 +438,34 @@ func (s *Omap[K, V]) Get(key K) (val V) {
 	if isNil(key) {
 		return
 	}
-	query := &okv[K, V]{key: key}
+	query := &ivyutilsOKV[K, V]{key: key}
 	it, found := s.tree.FindGE_isEqual(query)
 	if found {
-		val = it.Item().(*okv[K, V]).val
+		val = it.Item().(*ivyutilsOKV[K, V]).val
 	}
 	return
 }
 
-// getokv returns the okv[K,V] struct corresponding to key in
+// getokv returns the ivyutilsOKV[K,V] struct corresponding to key in
 // O(log n) time per query. If the key is
 // found, the kv.it will point to it in the Omap tree,
 // which can be used to walk the
 // tree in sorted order forwards or
-// back from that point. The okv is what the
+// back from that point. The ivyutilsOKV is what the
 // tree stores, so this provides for
-// for fast updates of okv.val if required. Note
-// the okv.id and should not be changed, as that
+// for fast updates of ivyutilsOKV.val if required. Note
+// the ivyutilsOKV.id and should not be changed, as that
 // would invalidate the tree without notifying
 // it of the need to rebalance.
-func (s *Omap[K, V]) Getokv(key K) (kv *okv[K, V], found bool) {
+func (s *Omap[K, V]) Getokv(key K) (kv *ivyutilsOKV[K, V], found bool) {
 	if isNil(key) {
 		return
 	}
-	query := &okv[K, V]{key: key}
+	query := &ivyutilsOKV[K, V]{key: key}
 	var it rb.Iterator
 	it, found = s.tree.FindGE_isEqual(query)
 	if found {
-		kv = it.Item().(*okv[K, V])
+		kv = it.Item().(*ivyutilsOKV[K, V])
 	}
 	return
 }

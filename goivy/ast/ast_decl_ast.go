@@ -428,8 +428,8 @@ func prefixNodes(nodes []Node, s string) []Node {
 			result[i] = a.Prefix(s)
 		case *App:
 			result[i] = a.Prefix(s)
-		case *Variable:
-			// Python: Variable.prefix creates an App with prefixed rep, preserving sort
+		case *AstVariable:
+			// Python: AstVariable.prefix creates an App with prefixed rep, preserving sort
 			repSym := &Symbol{Rep: s + a.Rep}
 			repSym.Cfg = a.Cfg
 			app := &App{Rep: repSym}
@@ -454,7 +454,7 @@ func NodeRep(n Node) string {
 		return a.Rep
 	case *App:
 		return a.Relname()
-	case *Variable:
+	case *AstVariable:
 		return a.Rep
 	case *Symbol:
 		return a.Rep
@@ -1012,7 +1012,7 @@ func (s *AstSchema) GetInstance(params []Node, compiler SchemaCompiler, clauseCo
 			formalName = f.Rep
 		case *Symbol:
 			formalName = f.Rep
-		case *Variable:
+		case *AstVariable:
 			formalName = f.Rep
 		default:
 			formalName = fmt.Sprint(formal)
@@ -1023,7 +1023,7 @@ func (s *AstSchema) GetInstance(params []Node, compiler SchemaCompiler, clauseCo
 			actualName = a.Rep
 		case *Symbol:
 			actualName = a.Rep
-		case *Variable:
+		case *AstVariable:
 			actualName = a.Rep
 		default:
 			actualName = fmt.Sprint(params[i])

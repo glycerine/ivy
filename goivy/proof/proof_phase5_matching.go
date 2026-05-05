@@ -58,7 +58,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 	if mod == nil {
 		mod = module.New()
 	}
-	c := compiler.New(sig, mod)
+	c := compiler.NewCompiler(sig, mod)
 	compiled, err := c.Thing(expr)
 	if err != nil {
 		// Fallback: try simple symbol lookup
@@ -128,7 +128,7 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 	if mod == nil {
 		mod = module.New()
 	}
-	c := compiler.New(sig, mod)
+	c := compiler.NewCompiler(sig, mod)
 	compiled, err := c.Thing(expr)
 	if err != nil {
 		compiled = compileSimple(expr, vocab)
@@ -156,7 +156,7 @@ func CompileExprVocabExtLF(lf *ast.LabeledFormula, vocab *Vocab, mod *module.Mod
 	if mod == nil {
 		mod = module.New()
 	}
-	c := compiler.New(sig, mod)
+	c := compiler.NewCompiler(sig, mod)
 	compiled, err := c.ThingLF(lf)
 	if err != nil {
 		return nil
@@ -296,8 +296,8 @@ func TransformDefnSchema(cfg *ast.AstConfig, schema, decl *ast.LabeledFormula) *
 		return schema
 	}
 	// Check if both are definitions
-	sDef, sIsDef := sConc.(*il.Definition)
-	dDef, dIsDef := dConc.(*il.Definition)
+	sDef, sIsDef := sConc.(*il.IvyDefinition)
+	dDef, dIsDef := dConc.(*il.IvyDefinition)
 	if !sIsDef || !dIsDef {
 		return schema
 	}
@@ -319,7 +319,7 @@ func TransformDefnSchema(cfg *ast.AstConfig, schema, decl *ast.LabeledFormula) *
 }
 
 // defLhsArgs returns the arguments of a definition's LHS.
-func defLhsArgs(def *il.Definition) []lg.Expr {
+func defLhsArgs(def *il.IvyDefinition) []lg.Expr {
 	if app, ok := def.Lhs.(*lg.Apply); ok {
 		return app.Terms
 	}

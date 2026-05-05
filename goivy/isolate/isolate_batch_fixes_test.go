@@ -93,27 +93,27 @@ func TestIsExplicitOnly_False(t *testing.T) {
 func TestNodeRelname_Atom(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	a := cfg.NewAtom("myaction")
-	got := nodeRelname(a)
+	got := isolateNodeRelname(a)
 	if got != "myaction" {
-		t.Errorf("nodeRelname(Atom) = %q, want %q", got, "myaction")
+		t.Errorf("isolateNodeRelname(Atom) = %q, want %q", got, "myaction")
 	}
 }
 
 func TestNodeRelname_Symbol(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	s := cfg.NewSymbol("mysymbol", nil)
-	got := nodeRelname(s)
+	got := isolateNodeRelname(s)
 	if got != "mysymbol" {
-		t.Errorf("nodeRelname(Symbol) = %q, want %q", got, "mysymbol")
+		t.Errorf("isolateNodeRelname(Symbol) = %q, want %q", got, "mysymbol")
 	}
 }
 
 func TestNodeRelname_Variable(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	v := cfg.NewVariable("X", "")
-	got := nodeRelname(v)
+	got := isolateNodeRelname(v)
 	if got != "X" {
-		t.Errorf("nodeRelname(Variable) = %q, want %q", got, "X")
+		t.Errorf("isolateNodeRelname(Variable) = %q, want %q", got, "X")
 	}
 }
 
@@ -298,7 +298,7 @@ func TestHasSideEffect_WithEnsuresAction(t *testing.T) {
 
 func TestGetStripBinding_BasicApply(t *testing.T) {
 	m := mkModuleWithSig()
-	sort1 := mkSort("T")
+	sort1 := isolateMkSort("T")
 	m.Sig.Symbols.Set("f", &il.SymbolEntry{Name: "f", Sort: sort1})
 
 	// Create strip map: f has 1 strip param "s"
@@ -350,7 +350,7 @@ func TestGetStripBinding_NoMatch(t *testing.T) {
 
 func TestGetStripBinding_Conflict(t *testing.T) {
 	m := mkModuleWithSig()
-	sort1 := mkSort("T")
+	sort1 := isolateMkSort("T")
 
 	stripMap := StripMap{"f": {"s1"}, "g": {"s2"}}
 
@@ -383,7 +383,7 @@ func TestGetStripBinding_Conflict(t *testing.T) {
 
 func TestStripActionFull_BindingSubstitution(t *testing.T) {
 	m := mkModuleWithSig()
-	sort1 := mkSort("T")
+	sort1 := isolateMkSort("T")
 
 	// Create binding: variable X -> "param_s"
 	xVar, _ := lg.NewVariable("X", sort1)
@@ -411,7 +411,7 @@ func TestStripActionFull_BindingSubstitution(t *testing.T) {
 
 func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	m := mkModuleWithSig()
-	sort1 := mkSort("T")
+	sort1 := isolateMkSort("T")
 
 	fnSort, err := lg.NewFunctionSort(sort1, lg.Boolean)
 	if err != nil {
@@ -446,7 +446,7 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 
 func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 	m := mkModuleWithSig()
-	sortT := mkSort("T")
+	sortT := isolateMkSort("T")
 
 	// Create function sort: T -> Boolean
 	fnSort, _ := lg.NewFunctionSort(sortT, lg.Boolean)

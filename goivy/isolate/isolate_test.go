@@ -14,11 +14,11 @@ import (
 
 // --- helpers ---
 
-func mkConst(name string) *lg.Const {
+func isolateMkConst(name string) *lg.Const {
 	return lg.NewConst(name, lg.Boolean)
 }
 
-func mkSort(name string) lg.Sort {
+func isolateMkSort(name string) lg.Sort {
 	return &lg.UninterpretedSort{Name: name}
 }
 
@@ -100,9 +100,9 @@ func TestLookupActionNotFound(t *testing.T) {
 
 func TestSummarizeActionBasic(t *testing.T) {
 	// An action with formals and a body.
-	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
-	body.SetFormalParams([]*lg.Const{mkConst("x")})
-	body.SetFormalReturns([]*lg.Const{mkConst("r")})
+	body := actions.NewSequence(actions.NewAssumeAction(isolateMkConst("p")))
+	body.SetFormalParams([]*lg.Const{isolateMkConst("x")})
+	body.SetFormalReturns([]*lg.Const{isolateMkConst("r")})
 
 	summarized := SummarizeAction(body)
 
@@ -127,7 +127,7 @@ func TestSummarizeActionBasic(t *testing.T) {
 
 func TestSummarizeActionWithInOutParams(t *testing.T) {
 	body := actions.NewSequence()
-	p := mkConst("x")
+	p := isolateMkConst("x")
 	body.SetFormalParams([]*lg.Const{p})
 	body.SetFormalReturns([]*lg.Const{p}) // same param is both in and out
 
@@ -147,7 +147,7 @@ func TestSummarizeActionWithInOutParams(t *testing.T) {
 
 func TestSummarizeActionNonCheckMode(t *testing.T) {
 	body := actions.NewSequence()
-	p := mkConst("x")
+	p := isolateMkConst("x")
 	body.SetFormalParams([]*lg.Const{p})
 	body.SetFormalReturns([]*lg.Const{p})
 
@@ -168,8 +168,8 @@ func TestSummarizeActionNonCheckMode(t *testing.T) {
 // --- EmptyClone ---
 
 func TestEmptyClone(t *testing.T) {
-	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
-	body.SetFormalParams([]*lg.Const{mkConst("x")})
+	body := actions.NewSequence(actions.NewAssumeAction(isolateMkConst("p")))
+	body.SetFormalParams([]*lg.Const{isolateMkConst("x")})
 
 	clone := EmptyClone(body)
 	seq, ok := clone.(*actions.Sequence)
@@ -427,8 +427,8 @@ func TestIsolateComponentFound(t *testing.T) {
 
 func TestGetCallsMods(t *testing.T) {
 	// An action that calls "bar" and assigns to "x".
-	call := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("bar"))
-	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
+	call := actions.NewCallActionOn(actions.NewActionsConfig(), isolateMkConst("bar"))
+	assign := actions.NewAssignAction(isolateMkConst("x"), isolateMkConst("val"))
 	seq := actions.NewSequence(call, assign)
 
 	calls, mods := GetCallsMods(seq)
@@ -442,7 +442,7 @@ func TestGetCallsMods(t *testing.T) {
 }
 
 func TestGetCallsModsHavoc(t *testing.T) {
-	havoc := actions.NewHavocAction(mkConst("y"))
+	havoc := actions.NewHavocAction(isolateMkConst("y"))
 	seq := actions.NewSequence(havoc)
 
 	_, mods := GetCallsMods(seq)
@@ -478,7 +478,7 @@ func TestHasSideEffectNoEffect(t *testing.T) {
 func TestHasSideEffectWithAssert(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	assertAct := actions.NewAssertAction(mkConst("p"))
+	assertAct := actions.NewAssertAction(isolateMkConst("p"))
 	seq := actions.NewSequence(assertAct)
 	actionMap := actionsInsMap(map[string]actions.ActionsAction{"foo": seq})
 
@@ -492,7 +492,7 @@ func TestHasSideEffectWithSigModification(t *testing.T) {
 	m.Sig = il.NewSig()
 	m.Sig.Symbols.Set("x", &il.SymbolEntry{Name: "x", Sort: lg.Boolean})
 
-	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
+	assign := actions.NewAssignAction(isolateMkConst("x"), isolateMkConst("val"))
 	seq := actions.NewSequence(assign)
 	actionMap := actionsInsMap(map[string]actions.ActionsAction{"foo": seq})
 
@@ -506,10 +506,10 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	m.Sig = il.NewSig()
 	m.Sig.Symbols.Set("x", &il.SymbolEntry{Name: "x", Sort: lg.Boolean})
 
-	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
+	assign := actions.NewAssignAction(isolateMkConst("x"), isolateMkConst("val"))
 	barSeq := actions.NewSequence(assign)
 
-	call := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("bar"))
+	call := actions.NewCallActionOn(actions.NewActionsConfig(), isolateMkConst("bar"))
 	fooSeq := actions.NewSequence(call)
 
 	actionMap := actionsInsMap(map[string]actions.ActionsAction{
@@ -535,8 +535,8 @@ func actionsInsMap(m map[string]actions.ActionsAction) *iu.InsMap[string, action
 
 func TestActionCallGraph(t *testing.T) {
 	m := mkModule()
-	call1 := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("b"))
-	call2 := actions.NewCallActionOn(actions.NewActionsConfig(), mkConst("c"))
+	call1 := actions.NewCallActionOn(actions.NewActionsConfig(), isolateMkConst("b"))
+	call2 := actions.NewCallActionOn(actions.NewActionsConfig(), isolateMkConst("c"))
 	m.Actions.Set("a", actions.NewSequence(call1, call2))
 	m.Actions.Set("b", actions.NewSequence())
 	m.Actions.Set("c", actions.NewSequence())
@@ -589,7 +589,7 @@ func TestTransitiveCalleesWithCycle(t *testing.T) {
 
 func TestCollectSortDestructors(t *testing.T) {
 	m := mkModule()
-	destrSort, _ := lg.NewFunctionSort(mkSort("MySort"), lg.Boolean)
+	destrSort, _ := lg.NewFunctionSort(isolateMkSort("MySort"), lg.Boolean)
 	destr := lg.NewConst("get_field", destrSort)
 	m.SortDestructors["MySort"] = []*lg.Const{destr}
 
@@ -603,9 +603,9 @@ func TestCollectSortDestructors(t *testing.T) {
 
 func TestCollectSortDestructorsWithVariants(t *testing.T) {
 	m := mkModule()
-	m.Variants["Base"] = []lg.Sort{mkSort("Variant1")}
+	m.Variants["Base"] = []lg.Sort{isolateMkSort("Variant1")}
 
-	destrSort, _ := lg.NewFunctionSort(mkSort("Variant1"), lg.Boolean)
+	destrSort, _ := lg.NewFunctionSort(isolateMkSort("Variant1"), lg.Boolean)
 	destr := lg.NewConst("v1_field", destrSort)
 	m.SortDestructors["Variant1"] = []*lg.Const{destr}
 
@@ -621,9 +621,9 @@ func TestCollectSortDestructorsWithVariants(t *testing.T) {
 
 func TestStripSort(t *testing.T) {
 	// Function sort: A * B -> C, strip 1 param.
-	sortA := mkSort("A")
-	sortB := mkSort("B")
-	sortC := mkSort("C")
+	sortA := isolateMkSort("A")
+	sortB := isolateMkSort("B")
+	sortC := isolateMkSort("C")
 	fs, err := lg.NewFunctionSort(sortA, sortB, sortC)
 	if err != nil {
 		t.Fatal(err)
@@ -641,7 +641,7 @@ func TestStripSort(t *testing.T) {
 
 func TestStripSortAllDomain(t *testing.T) {
 	// Function sort: A -> B, strip 1 param.
-	fs, err := lg.NewFunctionSort(mkSort("A"), mkSort("B"))
+	fs, err := lg.NewFunctionSort(isolateMkSort("A"), isolateMkSort("B"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -654,7 +654,7 @@ func TestStripSortAllDomain(t *testing.T) {
 }
 
 func TestStripSortZero(t *testing.T) {
-	fs, _ := lg.NewFunctionSort(mkSort("A"), mkSort("B"))
+	fs, _ := lg.NewFunctionSort(isolateMkSort("A"), isolateMkSort("B"))
 	result := StripSort(fs, 0)
 	if result != fs {
 		t.Error("strip 0 should return original")
@@ -662,7 +662,7 @@ func TestStripSortZero(t *testing.T) {
 }
 
 func TestStripSortNonFunction(t *testing.T) {
-	s := mkSort("X")
+	s := isolateMkSort("X")
 	result := StripSort(s, 1)
 	if result != s {
 		t.Error("stripping non-function sort should return original")
@@ -707,7 +707,7 @@ func TestStripMapLookupGlobalParam(t *testing.T) {
 func TestStripMapLookupSort(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Sorts.Set("mysort", mkSort("mysort"))
+	m.Sig.Sorts.Set("mysort", isolateMkSort("mysort"))
 
 	sm := StripMap{"mysort": {"p"}}
 	result := StripMapLookup("mysort", sm, m)
@@ -731,8 +731,8 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	m.Sig = il.NewSig()
 
 	act := actions.NewSequence()
-	act.SetFormalParams([]*lg.Const{mkConst("s"), mkConst("x")})
-	act.SetFormalReturns([]*lg.Const{mkConst("r")})
+	act.SetFormalParams([]*lg.Const{isolateMkConst("s"), isolateMkConst("x")})
+	act.SetFormalReturns([]*lg.Const{isolateMkConst("r")})
 	m.Actions.Set("server.do", act)
 
 	sm := StripMap{"server": {"s"}}
@@ -757,10 +757,10 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 func TestStripSortFromModule(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
-	m.Sig.Sorts.Set("mysort", mkSort("mysort"))
+	m.Sig.Sorts.Set("mysort", isolateMkSort("mysort"))
 	m.SortOrder = []string{"bool", "mysort", "int"}
-	m.SortDestructors["mysort"] = []*lg.Const{mkConst("d")}
-	m.DestructorSorts["mysort"] = mkSort("mysort")
+	m.SortDestructors["mysort"] = []*lg.Const{isolateMkConst("d")}
+	m.DestructorSorts["mysort"] = isolateMkSort("mysort")
 
 	err := StripSortFromModule(m, "mysort")
 	if err != nil {

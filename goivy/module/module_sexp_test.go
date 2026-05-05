@@ -9,14 +9,14 @@ import (
 	tv "github.com/glycerine/ivy/goivy/test_vectors"
 )
 
-func vectorsPath() string {
+func moduleVectorsPath() string {
 	_, file, _, _ := runtime.Caller(0)
 	return filepath.Join(filepath.Dir(file), "..", "test_vectors", "sexp_vectors.sexp")
 }
 
-func loadVectors(t *testing.T) map[string]string {
+func moduleLoadVectors(t *testing.T) map[string]string {
 	t.Helper()
-	vecs, err := tv.LoadVectors(vectorsPath())
+	vecs, err := tv.LoadVectors(moduleVectorsPath())
 	if err != nil {
 		t.Fatalf("Failed to load vectors: %v", err)
 	}
@@ -27,7 +27,7 @@ func loadVectors(t *testing.T) map[string]string {
 	return m
 }
 
-func checkSexp(t *testing.T, vecs map[string]string, id string, got string) {
+func moduleCheckSexp(t *testing.T, vecs map[string]string, id string, got string) {
 	t.Helper()
 	expected, ok := vecs[id]
 	if !ok {
@@ -39,7 +39,7 @@ func checkSexp(t *testing.T, vecs map[string]string, id string, got string) {
 }
 
 func TestSexpClausesBasic(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := moduleLoadVectors(t)
 
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, err := lg.NewVariable("X", S)
@@ -60,15 +60,15 @@ func TestSexpClausesBasic(t *testing.T) {
 		Fmlas: []lg.Expr{eq},
 		Defs:  []*lg.Definition{def},
 	}
-	checkSexp(t, vecs, "clauses_basic", string(cl.Canon()))
+	moduleCheckSexp(t, vecs, "clauses_basic", string(cl.Canon()))
 }
 
 func TestSexpClausesEmpty(t *testing.T) {
-	vecs := loadVectors(t)
+	vecs := moduleLoadVectors(t)
 
 	cl := &Clauses{
 		Fmlas: []lg.Expr{},
 		Defs:  []*lg.Definition{},
 	}
-	checkSexp(t, vecs, "clauses_empty", string(cl.Canon()))
+	moduleCheckSexp(t, vecs, "clauses_empty", string(cl.Canon()))
 }

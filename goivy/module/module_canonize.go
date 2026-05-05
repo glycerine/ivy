@@ -174,10 +174,10 @@ func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 		newBody := resortASTRec(t.Body, rn)
 		return &lg.NamedBinder{Name: t.Name, Variables: newVars, Environ: t.Environ, Body: newBody}
 
-	case *il.Definition:
+	case *il.IvyDefinition:
 		newLhs := resortASTRec(t.Lhs, rn)
 		newRhs := resortASTRec(t.Rhs, rn)
-		return il.NewDefinition(newLhs, newRhs)
+		return il.NewIvyDefinition(newLhs, newRhs)
 	}
 
 	// For other node types, recurse into children.
@@ -328,7 +328,7 @@ func resortAliases(aliases map[string]string, rn map[lg.NodeKey]*SortRefinement)
 		result[k] = v
 	}
 	for _, sr := range rn {
-		result[il.SortName(sr.Old)] = il.SortName(sr.New)
+		result[il.IvySortName(sr.Old)] = il.IvySortName(sr.New)
 	}
 	return result
 }
@@ -353,10 +353,10 @@ func ResortClauses(cls *Clauses, rn map[lg.NodeKey]*SortRefinement) *Clauses {
 	for i, f := range cls.Fmlas {
 		newFmlas[i] = ResortAST(f, rn)
 	}
-	newDefs := make([]*il.Definition, len(cls.Defs))
+	newDefs := make([]*il.IvyDefinition, len(cls.Defs))
 	for i, d := range cls.Defs {
 		nd := ResortAST(d, rn)
-		if def, ok := nd.(*il.Definition); ok {
+		if def, ok := nd.(*il.IvyDefinition); ok {
 			newDefs[i] = def
 		} else {
 			newDefs[i] = d

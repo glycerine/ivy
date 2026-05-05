@@ -117,7 +117,7 @@ type parser17LexAdapter struct {
 
 func newParser17LexAdapter(input string, version lexer.Version) *parser17LexAdapter {
 	return &parser17LexAdapter{
-		lex:      lexer.New(input, version),
+		lex:      lexer.NewLexer(input, version),
 		included: make(map[string]bool),
 	}
 }

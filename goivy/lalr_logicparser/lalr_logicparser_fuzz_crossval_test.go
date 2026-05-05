@@ -226,7 +226,7 @@ func TestRandomCrossValidation_V17(t *testing.T) {
 			pyShape = pyResults[i].shape
 		}
 
-		lalr, lalrErr := ParseLogic(formula, ver17)
+		lalr, lalrErr := ParseLogic(formula, lalrVer17)
 
 		if pyErr != nil && lalrErr != nil {
 			bothFail++
@@ -289,7 +289,7 @@ func TestRandomCrossValidation_V17_MultiSeed(t *testing.T) {
 				pyShape = pyResults[i].shape
 			}
 
-			lalr, lalrErr := ParseLogic(formula, ver17)
+			lalr, lalrErr := ParseLogic(formula, lalrVer17)
 
 			if pyErr != nil || lalrErr != nil {
 				if pyErr != nil && lalrErr != nil {
@@ -360,7 +360,7 @@ func FuzzCrossValidation_V17(f *testing.F) {
 		}
 
 		pyShape, pyErr := parsePythonFull(t, input)
-		lalr, lalrErr := ParseLogic(input, ver17)
+		lalr, lalrErr := ParseLogic(input, lalrVer17)
 
 		if pyErr != nil && lalrErr != nil {
 			return // both fail, fine
@@ -449,7 +449,7 @@ func TestRandomCrossValidation_V17_DeepNesting(t *testing.T) {
 			name := fmt.Sprintf("%s_depth%d", tc.name, d)
 			t.Run(name, func(t *testing.T) {
 				formula := tc.gen(d)
-				crossValidate(t, formula, ver17)
+				crossValidate(t, formula, lalrVer17)
 			})
 		}
 	}

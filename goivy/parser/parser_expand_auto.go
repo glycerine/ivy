@@ -167,7 +167,7 @@ func nodeSort(n ast.Node) string {
 		if x.Sort != nil {
 			return fmt.Sprint(x.Sort)
 		}
-	case *ast.Variable:
+	case *ast.AstVariable:
 		return x.VSort
 	case *ast.Atom:
 		if x.ASort != nil {

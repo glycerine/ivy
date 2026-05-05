@@ -286,9 +286,9 @@ func TestVersionLE(t *testing.T) {
 		{"1.7.2", "1.7.1", false},
 	}
 	for _, tc := range cases {
-		got := VersionLE(tc.a, tc.b)
+		got := TheoryVersionLE(tc.a, tc.b)
 		if got != tc.want {
-			t.Errorf("VersionLE(%q, %q) = %v, want %v", tc.a, tc.b, got, tc.want)
+			t.Errorf("TheoryVersionLE(%q, %q) = %v, want %v", tc.a, tc.b, got, tc.want)
 		}
 	}
 }

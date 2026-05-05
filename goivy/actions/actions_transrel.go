@@ -325,7 +325,7 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Expr {
 // -----------------------------------------------------------------------
 
 // usedSymbolNames returns all constant symbol names referenced in a formula.
-func usedSymbolNames(node lg.Expr) map[string]bool {
+func actionsUsedSymbolNames(node lg.Expr) map[string]bool {
 	syms := module.UsedSymbolsAST(node)
 	result := make(map[string]bool, syms.Len())
 	for _, c := range syms.All() {
@@ -336,7 +336,7 @@ func usedSymbolNames(node lg.Expr) map[string]bool {
 
 // usedSymbolNameSlice returns all constant symbol names as a string slice.
 func usedSymbolNameSlice(node lg.Expr) []string {
-	m := usedSymbolNames(node)
+	m := actionsUsedSymbolNames(node)
 	result := make([]string, 0, len(m))
 	for k := range m {
 		result = append(result, k)
@@ -462,7 +462,7 @@ func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	// Matches Python: dict.fromkeys(symbols_clauses(node1)).
 	used1 := module.UsedSymbolsExprOrdered(node1)
 	// Build name-string set for renamer from node2
-	used2 := usedSymbolNames(node2)
+	used2 := actionsUsedSymbolNames(node2)
 	used2Slice := nameSetToSlice(used2)
 	rn := iu.NewUniqueRenamer("", used2Slice)
 	// Iterate symbols in insertion order, building structural rename map.
@@ -522,14 +522,14 @@ func usedSymbolNamesClauses(c *module.Clauses) map[string]bool {
 	}
 	result := make(map[string]bool)
 	for _, f := range c.Fmlas {
-		for k, v := range usedSymbolNames(f) {
+		for k, v := range actionsUsedSymbolNames(f) {
 			if v {
 				result[k] = true
 			}
 		}
 	}
 	for _, d := range c.Defs {
-		for k, v := range usedSymbolNames(d) {
+		for k, v := range actionsUsedSymbolNames(d) {
 			if v {
 				result[k] = true
 			}
@@ -699,7 +699,7 @@ func ComposeUpdates(u1 *Update, axioms *module.Clauses, u2 *Update) *Update {
 	}
 
 	// Python: mid_ax = clauses_using_symbols(mid, axioms)
-	midSymNames := constNames(mid)
+	midSymNames := actionsConstNames(mid)
 	midAx := module.ClausesUsingSymbolNames(midSymNames, axioms)
 
 	// Python: used = used_symbols_clauses(and_clauses(clauses1, clauses2))
@@ -813,7 +813,7 @@ func filterAxiomsBySyms(syms []string, axioms lg.Expr) lg.Expr {
 
 // formulaUsesSyms checks if a formula references any symbol in the set.
 func formulaUsesSyms(node lg.Expr, syms map[string]bool) bool {
-	used := usedSymbolNames(node)
+	used := actionsUsedSymbolNames(node)
 	for s := range used {
 		if syms[s] {
 			return true
@@ -1187,7 +1187,7 @@ func ForwardImageMap(preState *module.Clauses, axioms *module.Clauses, u *Update
 	updated := u.Modified
 
 	// Filter axioms that reference updated symbols
-	updatedNames := constNames(updated)
+	updatedNames := actionsConstNames(updated)
 	preAx := module.ClausesUsingSymbolNames(updatedNames, axioms)
 
 	// Conjoin pre-state with relevant axioms
@@ -1316,7 +1316,7 @@ func ComposeStateAction(
 	// is dead code that rebinds a local but is never read by the subsequent
 	// forward_image call (which is invoked with the original `action` tuple).
 	if !suAll {
-		ssu := constNames(su)
+		ssu := actionsConstNames(su)
 		rn := make(map[lg.NodeKey]*lg.Const)
 		for _, x := range au {
 			if !ssu[x.Name] {
@@ -1347,10 +1347,10 @@ func RenameExprByName(node lg.Expr, rn map[string]string) lg.Expr {
 	if node == nil || len(rn) == 0 {
 		return node
 	}
-	return renameNode(node, rn)
+	return actionsRenameNode(node, rn)
 }
 
-func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
+func actionsRenameNode(node lg.Expr, rn map[string]string) lg.Expr {
 	if node == nil {
 		return nil
 	}
@@ -1361,49 +1361,49 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 		}
 		return node
 	case *lg.Apply:
-		newFunc := renameNode(n.Func, rn)
+		newFunc := actionsRenameNode(n.Func, rn)
 		newTerms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
-			newTerms[i] = renameNode(t, rn)
+			newTerms[i] = actionsRenameNode(t, rn)
 		}
 		return lg.MustApply(newFunc, newTerms...)
 	case *lg.And:
 		newTerms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
-			newTerms[i] = renameNode(t, rn)
+			newTerms[i] = actionsRenameNode(t, rn)
 		}
 		return &lg.And{Terms: newTerms}
 	case *lg.Or:
 		newTerms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
-			newTerms[i] = renameNode(t, rn)
+			newTerms[i] = actionsRenameNode(t, rn)
 		}
 		return &lg.Or{Terms: newTerms}
 	case *lg.Not:
-		newBody := renameNode(n.Body, rn)
+		newBody := actionsRenameNode(n.Body, rn)
 		return &lg.Not{Body: newBody}
 	case *lg.Implies:
-		newT1 := renameNode(n.T1, rn)
-		newT2 := renameNode(n.T2, rn)
+		newT1 := actionsRenameNode(n.T1, rn)
+		newT2 := actionsRenameNode(n.T2, rn)
 		return &lg.Implies{T1: newT1, T2: newT2}
 	case *lg.Eq:
-		newT1 := renameNode(n.T1, rn)
-		newT2 := renameNode(n.T2, rn)
+		newT1 := actionsRenameNode(n.T1, rn)
+		newT2 := actionsRenameNode(n.T2, rn)
 		return &lg.Eq{T1: newT1, T2: newT2}
 	case *lg.ForAll:
-		newBody := renameNode(n.Body, rn)
+		newBody := actionsRenameNode(n.Body, rn)
 		vars := make([]*lg.Variable, len(n.Variables))
 		copy(vars, n.Variables)
 		return &lg.ForAll{Variables: vars, Body: newBody}
 	case *lg.Exists:
-		newBody := renameNode(n.Body, rn)
+		newBody := actionsRenameNode(n.Body, rn)
 		vars := make([]*lg.Variable, len(n.Variables))
 		copy(vars, n.Variables)
 		return &lg.Exists{Variables: vars, Body: newBody}
 	case *lg.Ite:
-		newCond := renameNode(n.Cond, rn)
-		newThen := renameNode(n.Then, rn)
-		newElse := renameNode(n.Else, rn)
+		newCond := actionsRenameNode(n.Cond, rn)
+		newThen := actionsRenameNode(n.Then, rn)
+		newElse := actionsRenameNode(n.Else, rn)
 		return &lg.Ite{ISort: n.ISort, Cond: newCond, Then: newThen, Else: newElse}
 	}
 	return node
@@ -1426,7 +1426,7 @@ func ReverseImage(postState *module.Clauses, axioms *module.Clauses, u *Update) 
 	updated := u.Modified
 
 	// Python: post_ax = clauses_using_symbols(updated, axioms)
-	updatedNames := constNames(updated)
+	updatedNames := actionsConstNames(updated)
 	postAx := module.ClausesUsingSymbolNames(updatedNames, axioms)
 
 	// Python: post_clauses = conjoin(post_state, post_ax)
@@ -1712,7 +1712,7 @@ func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
 // FrameConst returns a Clauses with frame definitions for all given symbols.
 // Matches Python's frame(updated, op) = Clauses([], [frame_def(sym, op) for sym in updated]).
 func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *module.Clauses {
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, sym := range updated {
 		defs = append(defs, FrameDefConst(sym, op))
 	}
@@ -1729,7 +1729,7 @@ func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 	modSet := constKeys(u.Modified)
 	updated := make([]*lg.Const, len(u.Modified))
 	copy(updated, u.Modified)
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, sym := range inScope {
 		if !modSet[lg.Key(sym)] {
 			updated = append(updated, sym)
@@ -1755,7 +1755,7 @@ func AddPostAxioms(u *Update, axioms *module.Clauses) *Update {
 	for _, sym := range u.Modified {
 		renaming[lg.Key(sym)] = NewActionConst(sym)
 	}
-	modNames := constNames(u.Modified)
+	modNames := actionsConstNames(u.Modified)
 	postAx := module.ClausesUsingSymbolNames(modNames, axioms)
 	renamedAx := module.RenameClauses(postAx, renaming)
 	newTR := module.AndClausesTyped(u.TR, renamedAx)
@@ -1771,7 +1771,7 @@ func AddPostAxioms(u *Update, axioms *module.Clauses) *Update {
 // BindOldsClauses binds "old" symbols to their current values by
 // stripping the "old_" prefix. Corresponds to Python's bind_olds_clauses.
 func BindOldsClauses(node lg.Expr) lg.Expr {
-	used := usedSymbolNames(node)
+	used := actionsUsedSymbolNames(node)
 	nameMap := make(map[string]string)
 	for s := range used {
 		if IsOld(s) {
@@ -1894,7 +1894,7 @@ func constKeys(syms []*lg.Const) map[lg.NodeKey]bool {
 }
 
 // constNames returns a set of symbol names for name-based filtering.
-func constNames(syms []*lg.Const) map[string]bool {
+func actionsConstNames(syms []*lg.Const) map[string]bool {
 	m := make(map[string]bool, len(syms))
 	for _, s := range syms {
 		m[s.Name] = true
@@ -1965,7 +1965,7 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 			defnd[lg.Key(d.Defines())] = true
 		}
 	}
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, sym := range updated2 {
 		if !u1Set[lg.Key(sym)] && !defnd[lg.Key(sym)] {
 			defs = append(defs, FrameDefConst(sym, op))
@@ -1983,11 +1983,11 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 }
 
 // FrameDefConst creates a frame definition for a symbol (preserving sort).
-func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
+func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.IvyDefinition {
 	opSym := op(sym)
 	lhs := module.SymInst(opSym)
 	rhs := module.SymInst(sym)
-	def := il.NewDefinition(lhs, rhs)
+	def := il.NewIvyDefinition(lhs, rhs)
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.FrameDefConst HASH canon= sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
 	}

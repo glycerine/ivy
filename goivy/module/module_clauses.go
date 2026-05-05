@@ -17,10 +17,10 @@ import (
 // Fmlas stores conjuncts as formulas (not literal clauses).
 // Clausal form (Tseitin encoding) can be computed lazily if needed.
 type Clauses struct {
-	Fmlas  []lg.Expr          // conjuncts (formulas)
-	Defs   []*il.Definition   // definitions
-	DefIdx map[lg.NodeKey]int // definition index: definesKey() -> index in Defs
-	Annot  interface{}        // annotation (for trace reconstruction)
+	Fmlas  []lg.Expr           // conjuncts (formulas)
+	Defs   []*il.IvyDefinition // definitions
+	DefIdx map[lg.NodeKey]int  // definition index: moduleDefinesKey() -> index in Defs
+	Annot  interface{}         // annotation (for trace reconstruction)
 }
 
 // NewClauses constructs a Clauses value. Each formula is first normalized
@@ -28,7 +28,7 @@ type Clauses struct {
 // coerce_clause_to_formula), then flattened: any top-level And is expanded
 // into its conjuncts (collect_and_list).
 // Definitions are indexed by their defining symbol name.
-func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clauses {
+func NewClauses(fmlas []lg.Expr, defs []*il.IvyDefinition, annot interface{}) *Clauses {
 	coerced := make([]lg.Expr, len(fmlas))
 	for i, f := range fmlas {
 		coerced[i] = dropUniversals(f)
@@ -36,7 +36,7 @@ func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clau
 	flat := collectAndList(coerced)
 	idx := make(map[lg.NodeKey]int, len(defs))
 	for i, d := range defs {
-		key := definesKey(d)
+		key := moduleDefinesKey(d)
 		idx[key] = i
 	}
 	return &Clauses{
@@ -50,14 +50,14 @@ func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clau
 // definesKey returns a structural identity key for the symbol defined by
 // a Definition. Uses Sexp() to include both name and sort, matching
 // Python's structural equality on Symbol objects used as defidx keys.
-func definesKey(d *il.Definition) lg.NodeKey {
+func moduleDefinesKey(d *il.IvyDefinition) lg.NodeKey {
 	return lg.Key(d.Defines())
 }
 
 // IsFalse returns true if any formula is the logical False constant (empty Or).
 func (c *Clauses) IsFalse() bool {
 	for _, f := range c.Fmlas {
-		if il.IsFalse(f) {
+		if il.IvyIsFalse(f) {
 			return true
 		}
 	}
@@ -68,7 +68,7 @@ func (c *Clauses) IsFalse() bool {
 // or there are no formulas.
 func (c *Clauses) IsTrue() bool {
 	for _, f := range c.Fmlas {
-		if !il.IsTrue(f) {
+		if !il.IvyIsTrue(f) {
 			return false
 		}
 	}
@@ -79,7 +79,7 @@ func (c *Clauses) IsTrue() bool {
 func (c *Clauses) Copy() *Clauses {
 	fmlas := make([]lg.Expr, len(c.Fmlas))
 	copy(fmlas, c.Fmlas)
-	defs := make([]*il.Definition, len(c.Defs))
+	defs := make([]*il.IvyDefinition, len(c.Defs))
 	copy(defs, c.Defs)
 	idx := make(map[lg.NodeKey]int, len(c.DefIdx))
 	for k, v := range c.DefIdx {
@@ -103,7 +103,7 @@ func (c *Clauses) ToOpenFormula() lg.Expr {
 	}
 	conjuncts := make([]lg.Expr, 0, len(c.Defs)+len(c.Fmlas))
 	for _, d := range c.Defs {
-		conjuncts = append(conjuncts, defToConstraint(d))
+		conjuncts = append(conjuncts, moduleDefToConstraint(d))
 	}
 	conjuncts = append(conjuncts, c.Fmlas...)
 	return &lg.And{Terms: conjuncts}
@@ -216,10 +216,10 @@ func (c *Clauses) Apply(fn func(lg.Expr) lg.Expr) *Clauses {
 	for i, f := range c.Fmlas {
 		fmlas[i] = fn(f)
 	}
-	defs := make([]*il.Definition, len(c.Defs))
+	defs := make([]*il.IvyDefinition, len(c.Defs))
 	for i, d := range c.Defs {
 		result := fn(d)
-		if nd, ok := result.(*il.Definition); ok {
+		if nd, ok := result.(*il.IvyDefinition); ok {
 			defs[i] = nd
 		} else {
 			// If fn returns something that's not a Definition, wrap it.
@@ -256,13 +256,13 @@ func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 
 // defToConstraint converts a Definition to a constraint formula.
 // Delegates to the faithful port in ivylogic/constraint.go.
-func defToConstraint(d *il.Definition) lg.Expr {
+func moduleDefToConstraint(d *il.IvyDefinition) lg.Expr {
 	result := il.DefinitionToConstraint(d)
 	if xtracer.Enabled {
 		lhsSort := d.Lhs.NodeSort()
 		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v", lhsSort, iu.ShortTypeName(result))
 		if lhsSort == nil {
-			vv("defToConstraint() lhsSort was nil! stack=\n%v\n", stack())
+			vv("moduleDefToConstraint() lhsSort was nil! stack=\n%v\n", stack())
 		}
 	}
 	return result
@@ -332,7 +332,7 @@ func unwrapSingleton(f lg.Expr) lg.Expr {
 // isSkolem returns true if the constant name contains "__" (Skolem convention).
 // Python: Symbol.is_skolem = lambda self: self.contains('__')
 // where contains = lambda self, s: (s in self.name)
-func isSkolem(c *lg.Const) bool {
+func moduleIsSkolem(c *lg.Const) bool {
 	return strings.Contains(c.Name, "__")
 }
 
@@ -356,13 +356,13 @@ func Negate(f lg.Expr) lg.Expr {
 }
 
 // IsTrue returns true if the node is logical True (empty And).
-func IsTrue(n lg.Expr) bool {
-	return il.IsTrue(n)
+func ModuleIsTrue(n lg.Expr) bool {
+	return il.IvyIsTrue(n)
 }
 
 // IsFalse returns true if the node is logical False (empty Or).
-func IsFalse(n lg.Expr) bool {
-	return il.IsFalse(n)
+func ModuleIsFalse(n lg.Expr) bool {
+	return il.IvyIsFalse(n)
 }
 
 // SymPlaceholders returns placeholder variables V0, V1, ... for each

@@ -109,24 +109,24 @@ func reprNode(n Node) string {
 // All three are needed; they operate on different types and answer
 // different questions:
 //
-//  1. ivylogic.SortName(s logic.Sort) string      [ivylogic/ivylogic.go:11]
+//  1. ivylogic.IvySortName(s logic.Sort) string      [ivylogic/ivylogic.go:11]
 //     Input:  a compiled logic.Sort (e.g. *UninterpretedSort, *FunctionSort).
 //     Returns: the name of that compiled sort ("bool", "int", "node -> data").
 //     Used:   53 call sites across compiler/, module/, solver/, actions/.
 //
-//  2. extractSortRep(n ast.Node) string           [compiler/compiler.go:1435]
+//  2. astExtractSortRep(n ast.Node) string           [compiler/compiler.go:1435]
 //     Input:  an AST node that IS a sort reference (e.g. an Atom whose Rep
 //     ;       is the sort name, or a Symbol whose Rep is the sort name).
 //     Returns: the node's Rep — the name the node represents.
-//     Example: extractSortRep(Atom{Rep:"int"}) → "int"
+//     Example: astExtractSortRep(Atom{Rep:"int"}) → "int"
 //     Used:   20+ call sites in compiler/decl.go, compiler/compiler.go,
 //     ;       compiler/phase6.go, compiler/helpers.go.
 //
 //  3. GetFormalSortAnnotation(n ast.Node) string    [ast/ast.go — this function]
-//     Input:  an AST node that HAS a sort annotation (e.g. a Variable with
+//     Input:  an AST node that HAS a sort annotation (e.g. a AstVariable with
 //     VSort "int", or an App with ASort pointing to a sort node).
 //     Returns: the sort annotation on the node — what type the node is declared as.
-//     Example: GetFormalSortAnnotation(Variable{Rep:"x", VSort:"int"}) → "int"
+//     Example: GetFormalSortAnnotation(AstVariable{Rep:"x", VSort:"int"}) → "int"
 //     Used:   in compiler/helpers.go CompileInlineCall to get the sort of formal
 //     parameters and return values from ActionInfo.FormalAST/FormalRetAST,
 //     matching Python's p.sort access in ivy_compiler.py compile_inline_call.
@@ -134,7 +134,7 @@ func reprNode(n Node) string {
 // The 8 AST types that carry sort annotations (and return non-empty from this function):
 //
 //	ast/ast.go:
-//	  Variable     (line 373)  — VSort string        e.g. "tar_clock"
+//	  AstVariable     (line 373)  — VSort string        e.g. "tar_clock"
 //	  Atom         (line 218)  — ASort Node          e.g. a Symbol node for the sort
 //	  App          (line 286)  — ASort Node          e.g. a sort annotation on func application
 //	  Symbol       (line 197)  — Sort  Node          e.g. a sort annotation on an identifier
@@ -151,7 +151,7 @@ func GetFormalSortAnnotation(n Node) string {
 		return ""
 	}
 	switch v := n.(type) {
-	case *Variable:
+	case *AstVariable:
 		return v.VSort
 	case *Atom:
 		if v.ASort != nil {
@@ -232,7 +232,7 @@ func nodeCanon(n Node) iu.Canonical {
 }
 
 // sortCanon returns the canonical form of a sort Node.
-// In Python, sorts on Atom/App/Variable are plain strings, so node_canon
+// In Python, sorts on Atom/App/AstVariable are plain strings, so node_canon
 // returns just the bare string. In Go, sorts are wrapped in *Symbol.
 // This extracts the bare string to match Python.
 func sortCanon(n Node) iu.Canonical {
@@ -274,7 +274,7 @@ func boolPtrCanon(b *bool) string {
 }
 
 // stringSliceCanon returns canonical form for []string.
-func stringSliceCanon(ss []string) string {
+func astStringSliceCanon(ss []string) string {
 	if len(ss) == 0 {
 		return "[]"
 	}
@@ -375,7 +375,7 @@ func (a *Atom) Relname() string { return a.Rep }
 
 // Repr returns a sort-qualified string, using Repr() on children when available.
 // Matches Python ast.Atom.__repr__ which calls str() on args — and for
-// ast.Variable, str() falls to __repr__ which includes sort qualifiers.
+// ast.AstVariable, str() falls to __repr__ which includes sort qualifiers.
 func (a *Atom) Repr() string {
 	if IsEquals(a.Rep) && len(a.Terms) == 2 {
 		return reprNode(a.Terms[0]) + " = " + reprNode(a.Terms[1])
@@ -513,32 +513,32 @@ func (a *App) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(app%v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, SliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
-// Variable represents a sorted variable in the AST.
-type Variable struct {
+// AstVariable represents a sorted variable in the AST.
+type AstVariable struct {
 	Base
 	Rep   string
 	VSort string // the sort
 }
 
-func (cfg *AstConfig) NewVariable(rep string, sort string) *Variable {
-	v := &Variable{Rep: rep, VSort: sort}
+func (cfg *AstConfig) NewVariable(rep string, sort string) *AstVariable {
+	v := &AstVariable{Rep: rep, VSort: sort}
 	v.Cfg = cfg
 	return v
 }
 
-func (v *Variable) Args() []Node           { return nil }
-func (v *Variable) Clone(args []Node) Node { return v }
-func (v *Variable) String() string {
+func (v *AstVariable) Args() []Node           { return nil }
+func (v *AstVariable) Clone(args []Node) Node { return v }
+func (v *AstVariable) String() string {
 	if v.VSort != "" {
 		return v.Rep + ":" + v.VSort
 	}
 	return v.Rep
 }
-func (v *Variable) Relname() string { return v.Rep }
+func (v *AstVariable) Relname() string { return v.Rep }
 
 // ToConst creates an App with the given prefix prepended to the variable name,
-// copying the sort. Matches Python ivy_ast.py Variable.to_const() which returns App.
-func (v *Variable) ToConst(prefix string) *App {
+// copying the sort. Matches Python ivy_ast.py AstVariable.to_const() which returns App.
+func (v *AstVariable) ToConst(prefix string) *App {
 	a := &App{Rep: &Symbol{Rep: prefix + v.Rep}}
 	a.Cfg = v.Cfg
 	a.ASort = &Symbol{Rep: v.VSort}
@@ -574,14 +574,14 @@ func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
 	return
 }
 
-// Resort creates a new Variable with a different sort.
-// Matches Python Variable.resort (ivy_ast.py:402-408) which calls lineno_add_ref.
-func (v *Variable) Resort(sort string) *Variable {
-	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
+// Resort creates a new AstVariable with a different sort.
+// Matches Python AstVariable.resort (ivy_ast.py:402-408) which calls lineno_add_ref.
+func (v *AstVariable) Resort(sort string) *AstVariable {
+	nv := &AstVariable{Base: v.Base, Rep: v.Rep, VSort: sort}
 	nv.SetLineno(safeLinenoAddRef(v, v.GetLineno()))
 	return nv
 }
-func (v *Variable) Canon() iu.Canonical {
+func (v *AstVariable) Canon() iu.Canonical {
 	var vsort string
 	switch v.VSort {
 	case "":
@@ -1764,9 +1764,9 @@ func (a *App) Equal(other Node) bool {
 	return true
 }
 
-// Equal returns true if other is a *Variable with the same Rep.
-func (v *Variable) Equal(other Node) bool {
-	o, ok := other.(*Variable)
+// Equal returns true if other is a *AstVariable with the same Rep.
+func (v *AstVariable) Equal(other Node) bool {
+	o, ok := other.(*AstVariable)
 	return ok && v.Rep == o.Rep
 }
 
@@ -1785,7 +1785,7 @@ func (l *AstLiteral) Equal(other Node) bool {
 // --- AppToAtom / AppsToAtoms ---
 
 // AppToAtom converts an App to an Atom, preserving attributes.
-// Does not convert Old, Some, SomeMin, SomeMax, Variable, or Ite nodes.
+// Does not convert Old, Some, SomeMin, SomeMax, AstVariable, or Ite nodes.
 // Matches Python ivy_ast.py:1496-1506 app_to_atom.
 func AppToAtom(app Node) Node {
 	a, ok := app.(*App)
@@ -1794,7 +1794,7 @@ func AppToAtom(app Node) Node {
 	}
 	// Don't convert special types that inherit from App in Python
 	switch app.(type) {
-	case *Variable:
+	case *AstVariable:
 		return app
 	}
 	res := &Atom{Rep: fmt.Sprint(a.Rep), Terms: a.Terms}
@@ -1851,7 +1851,7 @@ func CopyLineno(src, dst Node) {
 }
 
 // IsTrue checks if an AST node represents true (empty And).
-func IsTrue(n Node) bool {
+func AstIsTrue(n Node) bool {
 	if a, ok := n.(*AstAnd); ok {
 		return len(a.Terms) == 0
 	}
@@ -1859,7 +1859,7 @@ func IsTrue(n Node) bool {
 }
 
 // IsFalse checks if an AST node represents false (empty Or).
-func IsFalse(n Node) bool {
+func AstIsFalse(n Node) bool {
 	if o, ok := n.(*AstOr); ok {
 		return len(o.Terms) == 0
 	}
@@ -1915,10 +1915,10 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 	if node == nil {
 		return nil
 	}
-	if v, ok := node.(*Variable); ok {
+	if v, ok := node.(*AstVariable); ok {
 		if sortNode, found := subs[v.Rep]; found {
 			if v.VSort == "" || v.VSort == "S" {
-				return &Variable{Base: v.Base, Rep: v.Rep, VSort: sortNode}
+				return &AstVariable{Base: v.Base, Rep: v.Rep, VSort: sortNode}
 			}
 		}
 		return v
@@ -1928,7 +1928,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 	case *AstForall:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
-			if v, ok := b.(*Variable); ok {
+			if v, ok := b.(*AstVariable); ok {
 				delete(newSubs, v.Rep)
 			}
 		}
@@ -1941,7 +1941,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 	case *AstExists:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
-			if v, ok := b.(*Variable); ok {
+			if v, ok := b.(*AstVariable); ok {
 				delete(newSubs, v.Rep)
 			}
 		}
@@ -1954,7 +1954,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 	case *AstNamedBinder:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
-			if v, ok := b.(*Variable); ok {
+			if v, ok := b.(*AstVariable); ok {
 				delete(newSubs, v.Rep)
 			}
 		}
@@ -1985,7 +1985,7 @@ func copySubst(m map[string]string) map[string]string {
 	return r
 }
 
-func extractSortRep(n Node) string {
+func astExtractSortRep(n Node) string {
 	if s, ok := n.(*Symbol); ok {
 		return s.Rep
 	}

@@ -60,28 +60,28 @@ func variablesASTRec(node lg.Expr, result map[lg.NodeKey]lg.Expr, bound map[stri
 		result[lg.Key(t)] = t
 		return
 	case *lg.ForAll:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		variablesASTRec(t.Body, result, newBound)
 		return
 	case *lg.Exists:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		variablesASTRec(t.Body, result, newBound)
 		return
 	case *lg.Lambda:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		variablesASTRec(t.Body, result, newBound)
 		return
 	case *lg.NamedBinder:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
@@ -93,7 +93,7 @@ func variablesASTRec(node lg.Expr, result map[lg.NodeKey]lg.Expr, bound map[stri
 	}
 }
 
-func copyStringSet(s map[string]struct{}) map[string]struct{} {
+func moduleCopyStringSet(s map[string]struct{}) map[string]struct{} {
 	r := make(map[string]struct{}, len(s))
 	for k := range s {
 		r[k] = struct{}{}
@@ -171,10 +171,10 @@ func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 			newTerms[i] = renameASTRec(arg, subs)
 		}
 		return lg.TryApply(newFunc, newTerms...)
-	case *il.Definition:
+	case *il.IvyDefinition:
 		lhs := renameASTRec(t.Lhs, subs)
 		rhs := renameASTRec(t.Rhs, subs)
-		return il.NewDefinition(lhs, rhs)
+		return il.NewIvyDefinition(lhs, rhs)
 	}
 
 	children := node.Children()
@@ -209,7 +209,7 @@ func collectConstsByName(node lg.Expr, nameSubs map[string]string, out map[lg.No
 		for _, arg := range t.Terms {
 			collectConstsByName(arg, nameSubs, out)
 		}
-	case *il.Definition:
+	case *il.IvyDefinition:
 		collectConstsByName(t.Lhs, nameSubs, out)
 		collectConstsByName(t.Rhs, nameSubs, out)
 	default:
@@ -336,28 +336,28 @@ func collectFreeVarsOrdered(node lg.Expr, bound map[string]struct{}, seen map[st
 		}
 		return
 	case *lg.ForAll:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		collectFreeVarsOrdered(t.Body, newBound, seen, result)
 		return
 	case *lg.Exists:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		collectFreeVarsOrdered(t.Body, newBound, seen, result)
 		return
 	case *lg.Lambda:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}
 		collectFreeVarsOrdered(t.Body, newBound, seen, result)
 		return
 	case *lg.NamedBinder:
-		newBound := copyStringSet(bound)
+		newBound := moduleCopyStringSet(bound)
 		for _, v := range t.Variables {
 			newBound[v.Name] = struct{}{}
 		}

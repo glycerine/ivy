@@ -265,7 +265,7 @@ conjecture c = red | c = green | c = blue
 	if mod.InitCond != nil {
 		for i, fmla := range mod.InitCond.Fmlas {
 			sort := fmla.NodeSort()
-			sortName := il.SortName(sort)
+			sortName := il.IvySortName(sort)
 			if sortName != "bool" {
 				t.Errorf("InitCond.Fmlas[%d] has sort %q (%T = %v), want bool",
 					i, sortName, fmla, fmla)

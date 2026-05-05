@@ -16,8 +16,8 @@ import (
 
 func TestIvyLitToUnitResLitApply(t *testing.T) {
 	// p(a) — positive literal with Apply atom
-	p := relConst("p", unintSort("S"))
-	a := lg.NewConst("a", unintSort("S"))
+	p := relConst("p", z3UnintSort("S"))
+	a := lg.NewConst("a", z3UnintSort("S"))
 	applyAtom := lg.MustApply(p, a)
 	lit := il.NewLiteral(1, applyAtom)
 
@@ -40,7 +40,7 @@ func TestIvyLitToUnitResLitApply(t *testing.T) {
 
 func TestIvyLitToUnitResLitEquality(t *testing.T) {
 	// a = b — equality literal
-	s := unintSort("S")
+	s := z3UnintSort("S")
 	a := lg.NewConst("a", s)
 	b := lg.NewConst("b", s)
 	eqAtom := &lg.Eq{T1: a, T2: b}
@@ -59,7 +59,7 @@ func TestIvyLitToUnitResLitEquality(t *testing.T) {
 
 func TestIvyLitToUnitResLitNullary(t *testing.T) {
 	// p — nullary boolean symbol
-	p := boolConst("p")
+	p := z3BoolConst("p")
 	lit := il.NewLiteral(0, p) // ~p
 
 	symMap := make(map[string]*lg.Const)
@@ -86,22 +86,22 @@ func TestRoundTripLitConversion(t *testing.T) {
 		{
 			name: "positive nullary",
 			makeLit: func() *il.Literal {
-				return il.NewLiteral(1, boolConst("q"))
+				return il.NewLiteral(1, z3BoolConst("q"))
 			},
 			checkStr: "q",
 		},
 		{
 			name: "negative nullary",
 			makeLit: func() *il.Literal {
-				return il.NewLiteral(0, boolConst("q"))
+				return il.NewLiteral(0, z3BoolConst("q"))
 			},
 			checkStr: "~q",
 		},
 		{
 			name: "positive apply",
 			makeLit: func() *il.Literal {
-				p := relConst("r", unintSort("T"))
-				x := lg.NewConst("x", unintSort("T"))
+				p := relConst("r", z3UnintSort("T"))
+				x := lg.NewConst("x", z3UnintSort("T"))
 				return il.NewLiteral(1, lg.MustApply(p, x))
 			},
 			checkStr: "r(x)",
@@ -109,7 +109,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 		{
 			name: "equality",
 			makeLit: func() *il.Literal {
-				s := unintSort("U")
+				s := z3UnintSort("U")
 				return il.NewLiteral(1, &lg.Eq{T1: lg.NewConst("a", s), T2: lg.NewConst("b", s)})
 			},
 			// String() now follows Python pretty_fmla → nary_ugly("=", ...).
@@ -141,8 +141,8 @@ func TestRoundTripLitConversion(t *testing.T) {
 // ---------------------------------------------------------------
 
 func TestIvyLitsToUnitResClauses(t *testing.T) {
-	p := boolConst("p")
-	q := boolConst("q")
+	p := z3BoolConst("p")
+	q := z3BoolConst("q")
 
 	cnf := [][]*il.Literal{
 		{il.NewLiteral(1, p), il.NewLiteral(0, q)}, // p ∨ ¬q
@@ -183,8 +183,8 @@ func TestExtractUnitResResults(t *testing.T) {
 	r.Propagate(nil)
 
 	symMap := map[string]*lg.Const{
-		"a": boolConst("a"),
-		"b": boolConst("b"),
+		"a": z3BoolConst("a"),
+		"b": z3BoolConst("b"),
 	}
 
 	result := extractUnitResResults(r, symMap)
@@ -221,7 +221,7 @@ func TestExtractUnitResResults(t *testing.T) {
 
 func TestClausesCaseUNSAT(t *testing.T) {
 	s := NewSolver(nil, nil)
-	p := boolConst("p")
+	p := z3BoolConst("p")
 	// p AND NOT p — UNSAT
 	fmlas := []lg.Expr{p, &lg.Not{Body: p}}
 	clauses := module.NewClauses(fmlas, nil, nil)
@@ -242,8 +242,8 @@ func TestClausesCaseUNSAT(t *testing.T) {
 
 func TestClausesCaseAllUnits(t *testing.T) {
 	s := NewSolver(nil, nil)
-	p := boolConst("p")
-	q := boolConst("q")
+	p := z3BoolConst("p")
+	q := z3BoolConst("q")
 	// p, q — already unit clauses
 	fmlas := []lg.Expr{p, q}
 	clauses := module.NewClauses(fmlas, nil, nil)
@@ -268,9 +268,9 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 	// UnitRes on {~a, b, c}: all units already, no change
 	// But this verifies the pipeline works end-to-end.
 	s := NewSolver(nil, nil)
-	a := boolConst("a")
-	b := boolConst("b")
-	c := boolConst("c")
+	a := z3BoolConst("a")
+	b := z3BoolConst("b")
+	c := z3BoolConst("c")
 	notA := &lg.Not{Body: a}
 	aOrB := &lg.Or{Terms: []lg.Expr{a, b}}
 	notBOrC := &lg.Or{Terms: []lg.Expr{&lg.Not{Body: b}, c}}
@@ -294,8 +294,8 @@ func TestClausesCaseWithUnitPropagation(t *testing.T) {
 func TestClausesCaseSingleClause(t *testing.T) {
 	// Single disjunction: a ∨ b
 	s := NewSolver(nil, nil)
-	a := boolConst("a")
-	b := boolConst("b")
+	a := z3BoolConst("a")
+	b := z3BoolConst("b")
 	aOrB := &lg.Or{Terms: []lg.Expr{a, b}}
 
 	clauses := module.NewClauses([]lg.Expr{aOrB}, nil, nil)

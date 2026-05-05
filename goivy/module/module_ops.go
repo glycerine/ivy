@@ -88,7 +88,7 @@ func AndClauses(args ...interface{}) interface{} {
 
 	// Concatenate formulas and definitions
 	var fmlas []lg.Expr
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, c := range clauses {
 		fmlas = append(fmlas, c.Fmlas...)
 		defs = append(defs, c.Defs...)
@@ -156,7 +156,7 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 	}
 
 	var fmlas []lg.Expr
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, c := range args {
 		fmlas = append(fmlas, c.Fmlas...)
 		defs = append(defs, c.Defs...)
@@ -333,17 +333,17 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 	}
 
 	// Merge definitions (InsMap preserves insertion order, matching Python 3.7+ dict)
-	defIdx := iu.NewInsMap[lg.NodeKey, *il.Definition]()
+	defIdx := iu.NewInsMap[lg.NodeKey, *il.IvyDefinition]()
 	for i, cls := range args {
 		for _, d := range cls.Defs {
-			key := definesKey(d)
+			key := moduleDefinesKey(d)
 			if existing, ok := defIdx.Get2(key); !ok {
 				defIdx.Set(key, d)
 			} else {
 				// Merge: use bare Ite to select between definitions.
 				// Python or_clauses_int uses bare Ite (not simp_ite).
 				// Only ite_clauses_int uses simp_ite.
-				merged := il.NewDefinition(
+				merged := il.NewIvyDefinition(
 					d.Lhs,
 					&lg.Ite{ISort: d.Rhs.NodeSort(), Cond: vs[i], Then: d.Rhs, Else: existing.Rhs},
 				)
@@ -352,7 +352,7 @@ func orClausesIntWithVs(rn *iu.UniqueRenamer, args []*Clauses) (*Clauses, []lg.E
 		}
 	}
 
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range defIdx.All() {
 		defs = append(defs, d)
 	}
@@ -410,17 +410,17 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 	}
 
 	// Merge definitions (InsMap preserves insertion order, matching Python 3.7+ dict)
-	defIdx := iu.NewInsMap[lg.NodeKey, *il.Definition]()
+	defIdx := iu.NewInsMap[lg.NodeKey, *il.IvyDefinition]()
 	for _, d := range args[0].Defs {
-		key := definesKey(d)
+		key := moduleDefinesKey(d)
 		defIdx.Set(key, d)
 	}
 	for _, d := range args[1].Defs {
-		key := definesKey(d)
+		key := moduleDefinesKey(d)
 		if existing, ok := defIdx.Get2(key); !ok {
 			defIdx.Set(key, d)
 		} else {
-			merged := il.NewDefinition(
+			merged := il.NewIvyDefinition(
 				d.Lhs,
 				il.SimpIte(v, existing.Rhs, d.Rhs),
 			)
@@ -428,12 +428,12 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 		}
 	}
 
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range defIdx.All() {
 		defs = append(defs, d)
 	}
 	// Add definition: v = cond
-	defs = append(defs, il.NewDefinition(v, cond))
+	defs = append(defs, il.NewIvyDefinition(v, cond))
 
 	// Compute annotation matching Python: annot = None if a0 is None or a1 is None else a0.ite(v,a1)
 	var annot interface{}
@@ -547,7 +547,7 @@ func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clause
 			fmlas = append(fmlas, f)
 		}
 	}
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
 		if usesSymbolNameAST(symNames, d) {
 			defs = append(defs, d)
@@ -626,7 +626,7 @@ func ClausesUsingSymbols(syms *iu.InsMap[lg.NodeKey, lg.Expr], clauses *Clauses)
 			fmlas = append(fmlas, f)
 		}
 	}
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
 		if usesSymbolsAST(syms, d) {
 			defs = append(defs, d)
@@ -683,13 +683,13 @@ func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clau
 			fmlas = append(fmlas, nf)
 		}
 	}
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
 		nd, err := substituteNodesRec(d, subs)
 		if err != nil {
 			defs = append(defs, d)
 		} else {
-			if def, ok := nd.(*il.Definition); ok {
+			if def, ok := nd.(*il.IvyDefinition); ok {
 				defs = append(defs, def)
 			} else {
 				defs = append(defs, d)
@@ -700,9 +700,9 @@ func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clau
 }
 
 // substituteNodesRec is a thin wrapper around logicutil.Substitute that also
-// handles il.Definition nodes.
+// handles il.IvyDefinition nodes.
 func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error) {
-	if d, ok := n.(*il.Definition); ok {
+	if d, ok := n.(*il.IvyDefinition); ok {
 		lhs, err1 := substituteNodesRec(d.Lhs, subs)
 		rhs, err2 := substituteNodesRec(d.Rhs, subs)
 		if err1 != nil {
@@ -711,7 +711,7 @@ func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error)
 		if err2 != nil {
 			return nil, err2
 		}
-		return il.NewDefinition(lhs, rhs), nil
+		return il.NewIvyDefinition(lhs, rhs), nil
 	}
 	// Check direct replacement
 	if r, ok := subs[lg.Key(n)]; ok {
@@ -846,7 +846,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	defined := iu.NewInsMap[lg.NodeKey, *lg.Const]()
 	for _, a := range args {
 		for _, d := range a.Defs {
-			key := definesKey(d)
+			key := moduleDefinesKey(d)
 			if c, ok := d.Defines().(*lg.Const); ok {
 				defined.Set(key, c)
 			} else {
@@ -871,7 +871,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	var toRename []*lg.Const
 	for _, key := range captured {
 		sym, _ := defined.Get2(key)
-		if sym != nil && isSkolem(sym) {
+		if sym != nil && moduleIsSkolem(sym) {
 			toRename = append(toRename, sym)
 		} else {
 			dead = append(dead, key)
@@ -937,7 +937,7 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 	// Python: for sym in dead: if sym in clauses.defidx: fmlas.append(...)
 	for _, key := range dead {
 		if idx, ok := clauses.DefIdx[key]; ok {
-			fmlas = append(fmlas, defToConstraint(clauses.Defs[idx]))
+			fmlas = append(fmlas, moduleDefToConstraint(clauses.Defs[idx]))
 		}
 	}
 	// Build deadSet for filtering remaining defs
@@ -945,9 +945,9 @@ func elimDefinitions(clauses *Clauses, dead []lg.NodeKey) *Clauses {
 	for _, key := range dead {
 		deadSet[key] = true
 	}
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
-		key := definesKey(d)
+		key := moduleDefinesKey(d)
 		if !deadSet[key] {
 			defs = append(defs, d)
 		}
@@ -1047,10 +1047,10 @@ func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Expr) *Clauses
 	for i, f := range clauses.Fmlas {
 		fmlas[i] = SubstituteAstByName(f, subs)
 	}
-	defs := make([]*il.Definition, len(clauses.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses.Defs))
 	for i, d := range clauses.Defs {
 		replaced := SubstituteAstByName(d, subs)
-		if rd, ok := replaced.(*il.Definition); ok {
+		if rd, ok := replaced.(*il.IvyDefinition); ok {
 			defs[i] = rd
 		} else {
 			defs[i] = d
@@ -1469,7 +1469,7 @@ func simplifyFormula(f lg.Expr) lg.Expr {
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
 			// Remove True conjuncts
-			if isTrue(s) {
+			if moduleOpsIsTrue(s) {
 				continue
 			}
 			terms = append(terms, s)
@@ -1487,11 +1487,11 @@ func simplifyFormula(f lg.Expr) lg.Expr {
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
 			// If any disjunct is True, whole Or is True
-			if isTrue(s) {
+			if moduleOpsIsTrue(s) {
 				return &lg.And{Terms: nil} // true
 			}
 			// Remove False disjuncts
-			if isFalse(s) {
+			if moduleOpsIsFalse(s) {
 				continue
 			}
 			terms = append(terms, s)
@@ -1510,10 +1510,10 @@ func simplifyFormula(f lg.Expr) lg.Expr {
 		if n2, ok := inner.(*lg.Not); ok {
 			return n2.Body
 		}
-		if isTrue(inner) {
+		if moduleOpsIsTrue(inner) {
 			return &lg.Or{Terms: nil} // false = Not(true)
 		}
-		if isFalse(inner) {
+		if moduleOpsIsFalse(inner) {
 			return &lg.And{Terms: nil} // true = Not(false)
 		}
 		return &lg.Not{Body: inner}
@@ -1525,11 +1525,11 @@ func simplifyFormula(f lg.Expr) lg.Expr {
 
 // isTautologyFormula checks if a formula is tautologically true.
 func isTautologyFormula(f lg.Expr) bool {
-	return isTrue(f)
+	return moduleOpsIsTrue(f)
 }
 
 // isTrue checks if a formula is the constant true (empty And).
-func isTrue(f lg.Expr) bool {
+func moduleOpsIsTrue(f lg.Expr) bool {
 	if a, ok := f.(*lg.And); ok && len(a.Terms) == 0 {
 		return true
 	}
@@ -1537,7 +1537,7 @@ func isTrue(f lg.Expr) bool {
 }
 
 // isFalse checks if a formula is the constant false (empty Or).
-func isFalse(f lg.Expr) bool {
+func moduleOpsIsFalse(f lg.Expr) bool {
 	if o, ok := f.(*lg.Or); ok && len(o.Terms) == 0 {
 		return true
 	}

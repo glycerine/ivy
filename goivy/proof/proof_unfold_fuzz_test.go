@@ -29,10 +29,10 @@ func FuzzExprListPop(f *testing.F) {
 		nItems = nItems % 20 // cap at 20 items
 		nPops = nPops % 50   // cap at 50 pops
 
-		s := mkSort("S")
+		s := proofMkSort("S")
 		items := make([]lg.Expr, nItems)
 		for i := range items {
-			items[i] = mkConst("c"+string(rune('0'+i%10)), s)
+			items[i] = proofMkConst("c"+string(rune('0'+i%10)), s)
 		}
 		u := &ExprListOrLambdaUnion{Items: items}
 
@@ -75,7 +75,7 @@ func FuzzMatchFromDefn(f *testing.F) {
 		}
 		arity = arity % 6 // cap arity
 
-		s := mkSort("S")
+		s := proofMkSort("S")
 
 		// Build function sort: S x S x ... -> S
 		sortArgs := make([]lg.Sort, arity+1)
@@ -87,19 +87,19 @@ func FuzzMatchFromDefn(f *testing.F) {
 			// Zero arity or invalid sort: skip
 			return
 		}
-		fn := mkConst("f", fs)
+		fn := proofMkConst("f", fs)
 
 		// Build parameters
 		params := make([]*lg.Variable, arity)
 		paramExprs := make([]lg.Expr, arity)
 		for i := range params {
-			params[i] = mkVar("X"+string(rune('0'+i)), s)
+			params[i] = proofMkVar("X"+string(rune('0'+i)), s)
 			paramExprs[i] = params[i]
 		}
 
 		// Build: f(X0, X1, ...) = c  or  f(X0, X1, ...) <-> true
 		app := lg.MustApply(fn, paramExprs...)
-		c := mkConst("c", s)
+		c := proofMkConst("c", s)
 
 		var body lg.Expr
 		if useIff {
@@ -108,7 +108,7 @@ func FuzzMatchFromDefn(f *testing.F) {
 			body = &lg.Eq{T1: app, T2: c}
 		}
 		fmla := &lg.ForAll{Variables: params, Body: body}
-		defn := mkLF(testAstCfg.NewAtom("def"), fmla)
+		defn := mkLF(proofTestAstCfg.NewAtom("def"), fmla)
 
 		match, merr := MatchFromDefn(defn)
 		if merr != nil {
@@ -151,14 +151,14 @@ func FuzzMatchFromDefns(f *testing.F) {
 			return
 		}
 
-		s := mkSort("S")
-		x := mkVar("X", s)
+		s := proofMkSort("S")
+		x := proofMkVar("X", s)
 		fs, _ := lg.NewFunctionSort(s, s)
-		fn := mkConst("f", fs)
+		fn := proofMkConst("f", fs)
 
 		defns := make([]*ast.LabeledFormula, nDefns)
 		for i := range defns {
-			rhs := mkConst("c"+string(rune('0'+i%10)), s)
+			rhs := proofMkConst("c"+string(rune('0'+i%10)), s)
 			defns[i] = mkDefnLF("def"+string(rune('0'+i%10)), x, fn, rhs)
 		}
 
@@ -195,17 +195,17 @@ func FuzzUnfoldFmla(f *testing.F) {
 		nOccurrences = (nOccurrences % 5) + 1 // 1..5
 		nDefns = (nDefns % 5) + 1             // 1..5
 
-		s := mkSort("S")
-		x := mkVar("X", s)
+		s := proofMkSort("S")
+		x := proofMkVar("X", s)
 		fs, _ := lg.NewFunctionSort(s, s)
-		fn := mkConst("f", fs)
-		a := mkConst("a", s)
+		fn := proofMkConst("f", fs)
+		a := proofMkConst("a", s)
 
 		// Build nDefns definitions: forall X. f(X) = c_i
 		defns := make([]*ast.LabeledFormula, nDefns)
 		rhsConsts := make([]*lg.Const, nDefns)
 		for i := range defns {
-			rhsConsts[i] = mkConst("r"+string(rune('A'+i%26)), s)
+			rhsConsts[i] = proofMkConst("r"+string(rune('A'+i%26)), s)
 			defns[i] = mkDefnLF("d"+string(rune('0'+i%10)), x, fn, rhsConsts[i])
 		}
 
@@ -276,12 +276,12 @@ func FuzzApplyUnfoldRec(f *testing.F) {
 		}
 		wrapKind = wrapKind % 3
 
-		s := mkSort("S")
-		x := mkVar("X", s)
+		s := proofMkSort("S")
+		x := proofMkVar("X", s)
 		fs, _ := lg.NewFunctionSort(s, s)
-		fn := mkConst("f", fs)
-		a := mkConst("a", s)
-		c := mkConst("c", s)
+		fn := proofMkConst("f", fs)
+		a := proofMkConst("a", s)
+		c := proofMkConst("c", s)
 
 		lam, _ := lg.NewLambda([]*lg.Variable{x}, c)
 		union := &ExprListOrLambdaUnion{Items: []lg.Expr{lam}}

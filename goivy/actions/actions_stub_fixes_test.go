@@ -43,7 +43,7 @@ func mkTestModule() *module.Module {
 
 func TestIsDestructor_ReturnsTrueForKnownDestructor(t *testing.T) {
 	mod := mkTestModule()
-	sortT := mkSort("T")
+	sortT := actionsMkSort("T")
 	mod.DestructorSorts["field1"] = sortT
 
 	cfg := NewActionsConfig()
@@ -320,8 +320,8 @@ func TestSetAction_ActionUpdate_MultipleArgs(t *testing.T) {
 func TestMkVariantAssignClauses_BasicVariant(t *testing.T) {
 	// Setup: sort "msg" has variant "req_sort"
 	mod := mkTestModule()
-	sortMsg := mkSort("msg")
-	sortReq := mkSort("req_sort")
+	sortMsg := actionsMkSort("msg")
+	sortReq := actionsMkSort("req_sort")
 	mod.Variants["msg"] = []lg.Sort{sortReq}
 
 	// lhs: symbol "m" of sort msg; rhs: symbol "r" of sort req_sort
@@ -354,9 +354,9 @@ func TestMkVariantAssignClauses_BasicVariant(t *testing.T) {
 func TestMkVariantAssignClauses_MultipleVariants(t *testing.T) {
 	// Setup: sort "msg" has variants "req_sort" and "resp_sort"
 	mod := mkTestModule()
-	sortMsg := mkSort("msg")
-	sortReq := mkSort("req_sort")
-	sortResp := mkSort("resp_sort")
+	sortMsg := actionsMkSort("msg")
+	sortReq := actionsMkSort("req_sort")
+	sortResp := actionsMkSort("resp_sort")
 	mod.Variants["msg"] = []lg.Sort{sortReq, sortResp}
 
 	mSym := lg.NewConst("m", sortMsg)
@@ -398,8 +398,8 @@ func TestMkVariantAssignClauses_NilSym(t *testing.T) {
 func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 	// Setup: sort "T" with destructor "fld" : T -> S
 	mod := mkTestModule()
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkFuncSort([]lg.Sort{sortT}, sortS)
 	fldSym := lg.NewConst("fld", fldSort)
 
@@ -437,8 +437,8 @@ func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 	// Setup: sort "T" with destructors "fld1" and "fld2"
 	mod := mkTestModule()
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fld1Sort := mkFuncSort([]lg.Sort{sortT}, sortS)
 	fld2Sort := mkFuncSort([]lg.Sort{sortT}, sortS)
 	fld1Sym := lg.NewConst("fld1", fld1Sort)
@@ -481,8 +481,8 @@ func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 func TestDestructorAssignUpdate_FullPath(t *testing.T) {
 	// Integration test: AssignAction.destructorAssignUpdate
 	mod := mkTestModule()
-	sortT := mkSort("T")
-	sortS := mkSort("S")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
 	fldSort := mkFuncSort([]lg.Sort{sortT}, sortS)
 	fldSym := lg.NewConst("fld", fldSort)
 

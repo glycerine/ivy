@@ -11,15 +11,15 @@ import (
 // TestOrClausesIntBareIte verifies that orClausesInt produces bare Ite (not
 // SimpIte-simplified) in definition merging, matching Python's or_clauses_int.
 func TestOrClausesIntBareIte(t *testing.T) {
-	sym := mkConst("x")
+	sym := moduleMkConst("x")
 	rhs1 := &lg.And{} // true
-	rhs2 := mkConst("y")
+	rhs2 := moduleMkConst("y")
 
-	def1 := il.NewDefinition(sym, rhs1)
-	def2 := il.NewDefinition(sym, rhs2)
+	def1 := il.NewIvyDefinition(sym, rhs1)
+	def2 := il.NewIvyDefinition(sym, rhs2)
 
-	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
-	cls2 := NewClauses(nil, []*il.Definition{def2}, nil)
+	cls1 := NewClauses(nil, []*il.IvyDefinition{def1}, nil)
+	cls2 := NewClauses(nil, []*il.IvyDefinition{def2}, nil)
 
 	// Use OrClausesTyped which goes through orClausesInt
 	result := OrClausesTyped(cls1, cls2)
@@ -46,12 +46,12 @@ func TestOrClausesIntBareIte(t *testing.T) {
 func TestElimDeadDefinitionsSkolemRename(t *testing.T) {
 	// Create a skolem symbol (starts with __)
 	skolem := lg.NewConst("__sk", lg.Boolean)
-	nonSkolem := mkConst("p")
+	nonSkolem := moduleMkConst("p")
 
 	// cls1 has a definition for __sk, cls2 does not → __sk is captured
-	def1 := il.NewDefinition(skolem, mkConst("a"))
-	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
-	cls2 := NewClauses([]lg.Expr{mkConst("b")}, nil, nil)
+	def1 := il.NewIvyDefinition(skolem, moduleMkConst("a"))
+	cls1 := NewClauses(nil, []*il.IvyDefinition{def1}, nil)
+	cls2 := NewClauses([]lg.Expr{moduleMkConst("b")}, nil, nil)
 
 	rn := newTestRenamer()
 	result := elimDeadDefinitions(rn, []*Clauses{cls1, cls2})
@@ -79,9 +79,9 @@ func TestElimDeadDefinitionsSkolemRename(t *testing.T) {
 // TestElimDeadDefinitionsNonSkolemElim verifies that non-skolem captured
 // definitions are eliminated (converted to constraints), matching Python.
 func TestElimDeadDefinitionsNonSkolemElim(t *testing.T) {
-	sym := mkConst("p")
-	def1 := il.NewDefinition(sym, mkConst("a"))
-	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
+	sym := moduleMkConst("p")
+	def1 := il.NewIvyDefinition(sym, moduleMkConst("a"))
+	cls1 := NewClauses(nil, []*il.IvyDefinition{def1}, nil)
 	cls2 := NewClauses(nil, nil, nil)
 
 	rn := newTestRenamer()
@@ -99,7 +99,7 @@ func TestElimDeadDefinitionsNonSkolemElim(t *testing.T) {
 // TestOrClausesOneFalse verifies that OrClausesTyped with one false branch
 // returns the non-false branch (no Tseitin encoding).
 func TestOrClausesOneFalse(t *testing.T) {
-	fmla := mkConst("p")
+	fmla := moduleMkConst("p")
 	nonFalse := NewClauses([]lg.Expr{fmla}, nil, nil)
 	falseCls := FalseClauses(nil)
 
@@ -116,8 +116,8 @@ func TestOrClausesOneFalse(t *testing.T) {
 
 // TestOrClausesBothNonFalse verifies Tseitin encoding with 2 non-false branches.
 func TestOrClausesBothNonFalse(t *testing.T) {
-	cls1 := NewClauses([]lg.Expr{mkConst("p")}, nil, nil)
-	cls2 := NewClauses([]lg.Expr{mkConst("q")}, nil, nil)
+	cls1 := NewClauses([]lg.Expr{moduleMkConst("p")}, nil, nil)
+	cls2 := NewClauses([]lg.Expr{moduleMkConst("q")}, nil, nil)
 
 	result := OrClausesTyped(cls1, cls2)
 
@@ -139,16 +139,16 @@ func TestOrClausesBothNonFalse(t *testing.T) {
 
 // TestIteClausesSimpIte verifies that IteClauses uses simp_ite for def merging.
 func TestIteClausesSimpIte(t *testing.T) {
-	sym := mkConst("x")
+	sym := moduleMkConst("x")
 	rhs1 := &lg.And{} // true
-	rhs2 := mkConst("y")
+	rhs2 := moduleMkConst("y")
 
-	def1 := il.NewDefinition(sym, rhs1)
-	def2 := il.NewDefinition(sym, rhs2)
+	def1 := il.NewIvyDefinition(sym, rhs1)
+	def2 := il.NewIvyDefinition(sym, rhs2)
 
-	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
-	cls2 := NewClauses(nil, []*il.Definition{def2}, nil)
-	cond := mkConst("c")
+	cls1 := NewClauses(nil, []*il.IvyDefinition{def1}, nil)
+	cls2 := NewClauses(nil, []*il.IvyDefinition{def2}, nil)
+	cond := moduleMkConst("c")
 
 	result := IteClauses(cond, cls1, cls2)
 
@@ -190,9 +190,9 @@ func TestNewClausesDropUniversals(t *testing.T) {
 
 // TestNewClausesCollectAndList verifies nested And flattening.
 func TestNewClausesCollectAndList(t *testing.T) {
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
+	a := moduleMkConst("a")
+	b := moduleMkConst("b")
+	c := moduleMkConst("c")
 
 	// And(a, And(b, c))
 	inner := &lg.And{Terms: []lg.Expr{b, c}}
@@ -211,7 +211,7 @@ func TestNewClausesCollectAndList(t *testing.T) {
 // TestNewClausesDropUniversalsNot verifies Not(Exists(...)) handling.
 func TestNewClausesDropUniversalsNot(t *testing.T) {
 	v, _ := lg.NewVariable("V", lg.Boolean)
-	body := mkConst("p")
+	body := moduleMkConst("p")
 	// Not(Exists(V, p)) → should strip Exists under Not
 	fmla := &lg.Not{Body: &lg.Exists{Variables: []*lg.Variable{v}, Body: body}}
 
@@ -248,9 +248,9 @@ func TestIteClausesIntAnnotation(t *testing.T) {
 		return "combined"
 	}
 
-	cls1 := NewClauses([]lg.Expr{mkConst("p")}, nil, "annot1")
-	cls2 := NewClauses([]lg.Expr{mkConst("q")}, nil, "annot2")
-	cond := mkConst("c")
+	cls1 := NewClauses([]lg.Expr{moduleMkConst("p")}, nil, "annot1")
+	cls2 := NewClauses([]lg.Expr{moduleMkConst("q")}, nil, "annot2")
+	cond := moduleMkConst("c")
 
 	result := IteClauses(cond, cls1, cls2)
 
@@ -259,7 +259,7 @@ func TestIteClausesIntAnnotation(t *testing.T) {
 	}
 
 	// With one nil annotation, result should be nil
-	cls3 := NewClauses([]lg.Expr{mkConst("r")}, nil, nil)
+	cls3 := NewClauses([]lg.Expr{moduleMkConst("r")}, nil, nil)
 	result2 := IteClauses(cond, cls1, cls3)
 	if result2.Annot != nil {
 		t.Errorf("expected nil annotation when one arg annot is nil, got %v", result2.Annot)
@@ -275,8 +275,8 @@ func TestElimDeadDefinitionsPerArgRename(t *testing.T) {
 
 	// cls1 defines __sk; cls2 does NOT define __sk but references it in a formula.
 	// This makes __sk "captured" (defined in some but not all args).
-	def1 := il.NewDefinition(skolem, mkConst("a"))
-	cls1 := NewClauses(nil, []*il.Definition{def1}, nil)
+	def1 := il.NewIvyDefinition(skolem, moduleMkConst("a"))
+	cls1 := NewClauses(nil, []*il.IvyDefinition{def1}, nil)
 	cls2 := NewClauses([]lg.Expr{skolem}, nil, nil) // references __sk in fmla
 
 	rn := newTestRenamer()
@@ -311,8 +311,8 @@ func TestElimDeadDefinitionsPerArgRename(t *testing.T) {
 // TestToFormulaCloseEPR verifies that ToFormula distributes ForAll through And,
 // matching Python's close_epr behavior.
 func TestToFormulaCloseEPR(t *testing.T) {
-	x := mkVar("X")
-	y := mkVar("Y")
+	x := moduleMkVar("X")
+	y := moduleMkVar("Y")
 	// Two formulas with different free variables
 	cls := NewClauses([]lg.Expr{x, y}, nil, nil)
 	f := cls.ToFormula()
@@ -335,9 +335,9 @@ func TestToFormulaCloseEPR(t *testing.T) {
 // TestNegateClausesPanic verifies that NegateClauses panics on non-universal-first-order input.
 func TestNegateClausesPanic(t *testing.T) {
 	// Create clauses with a definition (not universal first order)
-	sym := mkConst("p")
-	def := il.NewDefinition(sym, mkConst("a"))
-	cls := NewClauses(nil, []*il.Definition{def}, nil)
+	sym := moduleMkConst("p")
+	def := il.NewIvyDefinition(sym, moduleMkConst("a"))
+	cls := NewClauses(nil, []*il.IvyDefinition{def}, nil)
 
 	defer func() {
 		r := recover()
@@ -350,7 +350,7 @@ func TestNegateClausesPanic(t *testing.T) {
 
 // TestDualClausesCustomSkolemizer verifies that a custom skolemizer is applied.
 func TestDualClausesCustomSkolemizer(t *testing.T) {
-	x := mkVar("X")
+	x := moduleMkVar("X")
 	cls := NewClauses([]lg.Expr{x}, nil, nil)
 
 	customPrefix := "@test_"
@@ -376,7 +376,7 @@ func TestDualClausesCustomSkolemizer(t *testing.T) {
 // TestDualFormulaInstantiator verifies that DualFormula conjoins definition
 // instances from the instantiator, matching Python's dual_formula.
 func TestDualFormulaInstantiator(t *testing.T) {
-	p := mkConst("p")
+	p := moduleMkConst("p")
 
 	// With nil instantiator: just negate
 	result1 := DualFormula(p, nil, nil)
@@ -386,7 +386,7 @@ func TestDualFormulaInstantiator(t *testing.T) {
 
 	// With non-nil instantiator: should conjoin instances
 	instantiator := func(gts []lg.Expr) *Clauses {
-		return NewClauses([]lg.Expr{mkConst("inst")}, nil, nil)
+		return NewClauses([]lg.Expr{moduleMkConst("inst")}, nil, nil)
 	}
 	result2 := DualFormula(p, nil, instantiator)
 	and, ok := result2.(*lg.And)
@@ -417,7 +417,7 @@ func TestSkolemizeFormulaInstantiator(t *testing.T) {
 
 	// With non-nil instantiator: should conjoin instances
 	instantiator := func(gts []lg.Expr) *Clauses {
-		return NewClauses([]lg.Expr{mkConst("inst")}, nil, nil)
+		return NewClauses([]lg.Expr{moduleMkConst("inst")}, nil, nil)
 	}
 	result2 := SkolemizeFormula(ex, nil, instantiator)
 	and, ok := result2.(*lg.And)
@@ -432,8 +432,8 @@ func TestSkolemizeFormulaInstantiator(t *testing.T) {
 // TestTaggedOrClausesPrefix verifies that TaggedOrClauses uses __to0 prefix
 // and does NOT filter false branches, matching Python's tagged_or_clauses.
 func TestTaggedOrClausesPrefix(t *testing.T) {
-	cls1 := NewClauses([]lg.Expr{mkConst("p")}, nil, nil)
-	cls2 := NewClauses([]lg.Expr{mkConst("q")}, nil, nil)
+	cls1 := NewClauses([]lg.Expr{moduleMkConst("p")}, nil, nil)
+	cls2 := NewClauses([]lg.Expr{moduleMkConst("q")}, nil, nil)
 
 	result := TaggedOrClauses("tag", cls1, cls2)
 
@@ -464,8 +464,8 @@ func TestTaggedOrClausesPrefix(t *testing.T) {
 // TestTaggedOrClausesNoFalseFilter verifies that false branches are NOT filtered.
 func TestTaggedOrClausesNoFalseFilter(t *testing.T) {
 	cls1 := FalseClauses(nil)
-	cls2 := NewClauses([]lg.Expr{mkConst("p")}, nil, nil)
-	cls3 := NewClauses([]lg.Expr{mkConst("q")}, nil, nil)
+	cls2 := NewClauses([]lg.Expr{moduleMkConst("p")}, nil, nil)
+	cls3 := NewClauses([]lg.Expr{moduleMkConst("q")}, nil, nil)
 
 	result := TaggedOrClauses("tag", cls1, cls2, cls3)
 
@@ -489,8 +489,8 @@ func TestExistsQuantClausesMapSimple(t *testing.T) {
 	c := lg.NewConst("c", lg.Boolean)
 
 	// Definition: a = c
-	def := il.NewDefinition(a, c)
-	cls := NewClauses([]lg.Expr{mkConst("p")}, []*il.Definition{def}, nil)
+	def := il.NewIvyDefinition(a, c)
+	cls := NewClauses([]lg.Expr{moduleMkConst("p")}, []*il.IvyDefinition{def}, nil)
 
 	syms := []*lg.Const{a}
 	map1, resultCls := ExistsQuantClausesMap(syms, cls)

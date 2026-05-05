@@ -39,12 +39,12 @@ type Z3SessionCache struct {
 
 	// Translation caches — same names/semantics as the old per-Translator
 	// fields they replace.
-	sorts         map[lg.NodeKey]Sort
+	sorts         map[lg.NodeKey]Z3Sort
 	sortsInv      map[uint]lg.Sort
-	consts        map[lg.NodeKey]Expr
+	consts        map[lg.NodeKey]Z3Expr
 	z3_functions  map[lg.NodeKey]FuncDecl
-	z3_predicates map[lg.NodeKey]func(args ...Expr) Expr
-	nativeFuncs   map[lg.NodeKey]func(args ...Expr) Expr
+	z3_predicates map[lg.NodeKey]func(args ...Z3Expr) Z3Expr
+	nativeFuncs   map[lg.NodeKey]func(args ...Z3Expr) Z3Expr
 }
 
 // NewZ3SessionCache builds a fresh cache with its own Z3 context and empty
@@ -82,13 +82,13 @@ func (c *Z3SessionCache) Clear() {
 // The equality predicate is re-installed because Python's clear() also
 // re-installs it (z3_predicates = {ivy_logic.equals: my_eq} on line 253).
 func (c *Z3SessionCache) resetMaps() {
-	c.sorts = make(map[lg.NodeKey]Sort)
+	c.sorts = make(map[lg.NodeKey]Z3Sort)
 	c.sortsInv = make(map[uint]lg.Sort)
-	c.consts = make(map[lg.NodeKey]Expr)
+	c.consts = make(map[lg.NodeKey]Z3Expr)
 	c.z3_functions = make(map[lg.NodeKey]FuncDecl)
-	c.z3_predicates = make(map[lg.NodeKey]func(args ...Expr) Expr)
-	c.nativeFuncs = make(map[lg.NodeKey]func(args ...Expr) Expr)
-	c.z3_predicates[eqCanonPredKey] = func(args ...Expr) Expr {
+	c.z3_predicates = make(map[lg.NodeKey]func(args ...Z3Expr) Z3Expr)
+	c.nativeFuncs = make(map[lg.NodeKey]func(args ...Z3Expr) Z3Expr)
+	c.z3_predicates[eqCanonPredKey] = func(args ...Z3Expr) Z3Expr {
 		return MyEq(c.Ctx, args[0], args[1])
 	}
 }

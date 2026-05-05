@@ -137,7 +137,7 @@ func buildAllFragmentSexps(t *testing.T) map[string]string {
 
 // --- Test A: Canon() == Canonical(Sexp()) ---
 
-func TestCanonEqualsSexp(t *testing.T) {
+func TestFragmentCanonEqualsSexp(t *testing.T) {
 	f := makeTestFixtures(t)
 
 	tests := []struct {
@@ -168,7 +168,7 @@ func TestCanonEqualsSexp(t *testing.T) {
 
 // --- Test B: Sexp() is deterministic ---
 
-func TestSexpDeterministic(t *testing.T) {
+func TestFragmentSexpDeterministic(t *testing.T) {
 	f := makeTestFixtures(t)
 
 	objects := []struct {
@@ -204,7 +204,7 @@ func TestSexpDeterministic(t *testing.T) {
 
 // --- Test C: Expected string values ---
 
-func TestSexpExpectedStrings(t *testing.T) {
+func TestFragmentSexpExpectedStrings(t *testing.T) {
 	sexps := buildAllFragmentSexps(t)
 
 	// Spot-check a few simple ones against hardcoded expectations.
@@ -232,7 +232,7 @@ func TestSexpExpectedStrings(t *testing.T) {
 
 // --- Test D: Cross-language comparison ---
 
-func TestFragmentSexpCrossLanguage(t *testing.T) {
+func TestFragmentFragmentSexpCrossLanguage(t *testing.T) {
 	if _, err := exec.LookPath("python3"); err != nil {
 		t.Skip("python3 not available")
 	}
@@ -313,7 +313,7 @@ func randomConst(rng *rand.Rand) *lg.Const {
 }
 
 // randomExpr generates a random Expr (variable, const, or eq).
-func randomExpr(rng *rand.Rand) lg.Expr {
+func fragmentRandomExpr(rng *rand.Rand) lg.Expr {
 	switch rng.Intn(4) {
 	case 0:
 		return randomVariable(rng)
@@ -374,7 +374,7 @@ func randomFragmentStruct(seed uint64) sexpable {
 		return &arc{
 			from:   randomUFNode(rng),
 			to:     randomUFNode(rng),
-			fmla:   randomExpr(rng),
+			fmla:   fragmentRandomExpr(rng),
 			lineno: rng.Intn(1000),
 			argIdx: rng.Intn(10) - 1,
 			hasIdx: rng.Intn(2) == 0,
@@ -391,12 +391,12 @@ func randomFragmentStruct(seed uint64) sexpable {
 		return r
 	case 5: // skolemEntry
 		return &skolemEntry{
-			fmla: randomExpr(rng),
-			ast:  randomExpr(rng),
+			fmla: fragmentRandomExpr(rng),
+			ast:  fragmentRandomExpr(rng),
 		}
 	default: // fmlaPair
 		fp := &fmlaPair{
-			fmla:   randomExpr(rng),
+			fmla:   fragmentRandomExpr(rng),
 			lineno: rng.Intn(500),
 		}
 		if rng.Intn(2) == 0 {

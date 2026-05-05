@@ -16,7 +16,7 @@ import (
 //   - NamedBinder(0 vars).rep -> self
 //
 // Returns nil for non-app nodes.
-func NodeRep(n lg.Expr) lg.Expr {
+func IvyNodeRep(n lg.Expr) lg.Expr {
 	switch t := n.(type) {
 	case *lg.Apply:
 		return t.Func
@@ -45,7 +45,7 @@ func SymbolsIluAst(node lg.Expr) iter.Seq[lg.Expr] {
 
 func symbolsIluAstRec(node lg.Expr, yield func(lg.Expr) bool) bool {
 	if IsApp(node) {
-		rep := NodeRep(node)
+		rep := IvyNodeRep(node)
 		if IsBinder(rep) {
 			if !symbolsIluAstRec(BinderBody(rep), yield) {
 				return false

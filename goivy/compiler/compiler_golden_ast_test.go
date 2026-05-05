@@ -27,25 +27,25 @@ func testdataDir() string {
 	return filepath.Join(filepath.Dir(file), "..", "testdata")
 }
 
-func pythonTestHelperDir() string {
+func compilerPythonTestHelperDir() string {
 	_, file, _, _ := runtime.Caller(0)
 	return filepath.Join(filepath.Dir(file), "..", "pytesthelper")
 }
 
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
-func examplesDir() string {
+func compilerExamplesDir() string {
 	_, file, _, _ := runtime.Caller(0)
 	return filepath.Join(filepath.Dir(file), "..", "ivy-lang-examples")
 }
 
 // pythonDumper returns the path to the Python AST dump script.
-func pythonDumper() string {
-	return filepath.Join(pythonTestHelperDir(), "ivy_ast_dump.py")
+func compilerPythonDumper() string {
+	return filepath.Join(compilerPythonTestHelperDir(), "ivy_ast_dump.py")
 }
 
 // pythonAvailable checks if python3 and the dumper script are available.
-func pythonAvailable() bool {
-	dumper := pythonDumper()
+func compilerPythonAvailable() bool {
+	dumper := compilerPythonDumper()
 	if _, err := os.Stat(dumper); err != nil {
 		return false
 	}
@@ -54,9 +54,9 @@ func pythonAvailable() bool {
 }
 
 // parsePythonAST runs the Python AST dumper on a file and returns the output lines.
-func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
+func compilerParsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 	t.Helper()
-	dumper := pythonDumper()
+	dumper := compilerPythonDumper()
 	// Detect version from the file
 	data, err := os.ReadFile(ivyFile)
 	if err != nil {
@@ -102,7 +102,7 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 
 // ivy_check calls ivy_check.
 // streams output back on r, a pipe.
-func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+func compilerIvyCheck(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -134,7 +134,7 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 	return pr, nil
 }
 
-func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+func compilerGoivyCheckXtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -203,14 +203,14 @@ func parseGoAST(t *testing.T, ivyFile string) ([]string, error) {
 	for i, d := range result.Decls {
 		typeName := fmt.Sprintf("%T", d)
 		typeName = typeName[strings.LastIndex(typeName, ".")+1:]
-		name := goDeclName(d)
+		name := compilerGoDeclName(d)
 		lines = append(lines, fmt.Sprintf("[%d] %s %s", i, typeName, name))
 	}
 	return lines, nil
 }
 
 // goDeclName extracts a stable name from a Go AST declaration.
-func goDeclName(d ast.Node) string {
+func compilerGoDeclName(d ast.Node) string {
 	switch n := d.(type) {
 	case *ast.TypeDecl:
 		if len(n.Args()) > 0 {
@@ -325,10 +325,10 @@ func goDeclName(d ast.Node) string {
 // TestGoldenAST walks ivy-lang-examples/ and compares Python vs Go AST output
 // for every .ivy file. Only the declaration count and types are compared
 // (not the internal details like auto-generated label names).
-func TestGoldenAST(t *testing.T) {
+func TestCompilerGoldenAST(t *testing.T) {
 	t.Skip("skip TestGoldenAST because takes 2+ minutes to run ")
 
-	if !pythonAvailable() {
+	if !compilerPythonAvailable() {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
@@ -370,7 +370,7 @@ func TestGoldenAST(t *testing.T) {
 		755, 756, 757}
 	_ = pyIvyNoError
 
-	dir := examplesDir()
+	dir := compilerExamplesDir()
 	if _, err := os.Stat(dir); err != nil {
 		t.Skipf("ivy-lang-examples/ not found at %s", dir)
 	}
@@ -458,7 +458,7 @@ func TestGoldenAST(t *testing.T) {
 		}
 
 		// Get Python AST
-		pyLines, pyErr := parsePythonAST(t, path)
+		pyLines, pyErr := compilerParsePythonAST(t, path)
 		if pyErr != nil {
 			fmt.Printf("%v had Python error: %v", path, pyErr)
 			skipCount++
@@ -514,8 +514,8 @@ func TestGoldenAST(t *testing.T) {
 		// Compare each declaration's type (the word after [N])
 		typeMismatch := false
 		for i := 0; i < len(pyLines) && i < len(goLines); i++ {
-			pyType := extractDeclType(pyLines[i])
-			goType := extractDeclType(goLines[i])
+			pyType := compilerExtractDeclType(pyLines[i])
+			goType := compilerExtractDeclType(goLines[i])
 			if pyType != goType {
 				if !typeMismatch {
 					diffCount++
@@ -534,7 +534,7 @@ func TestGoldenAST(t *testing.T) {
 }
 
 // extractDeclType extracts the declaration type from a line like "[0] TypeDecl client"
-func extractDeclType(line string) string {
+func compilerExtractDeclType(line string) string {
 	// Skip "[N] "
 	idx := strings.Index(line, "] ")
 	if idx < 0 {
@@ -553,7 +553,7 @@ func extractDeclType(line string) string {
 // file the same as python Ivy?
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
-func TestOrdLive(t *testing.T) {
+func TestCompilerOrdLive(t *testing.T) {
 	t.Skip("compiler/TestOrdLive off for now: TODO restore it")
 	return
 
@@ -567,7 +567,7 @@ func TestOrdLive(t *testing.T) {
 	args := []string{"isolate=cf_live"}
 
 	// Get Python AST
-	ivyPipe, pyErr := ivy_check(t, args, path)
+	ivyPipe, pyErr := compilerIvyCheck(t, args, path)
 	if pyErr != nil {
 		t.Fatalf("%v had Python error: %v", path, pyErr)
 		panic(pyErr)
@@ -581,7 +581,7 @@ func TestOrdLive(t *testing.T) {
 
 	// Get Go AST, + parse xtrace
 
-	goivyPipe, goErr := goivy_check_xtrace(t, args, path)
+	goivyPipe, goErr := compilerGoivyCheckXtrace(t, args, path)
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
 		return

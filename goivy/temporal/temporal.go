@@ -96,7 +96,7 @@ func (at *ActionTerm) Canon() iu.Canonical {
 	}
 	return iu.Canonical(fmt.Sprintf("(actionTerm%s inputs:%s outputs:%s labels:%s stmt:%s)",
 		lf, constSliceCanon(at.Inputs), constSliceCanon(at.Outputs),
-		stringSliceCanon(at.Labels), at.Stmt.Canon()))
+		temporalStringSliceCanon(at.Labels), at.Stmt.Canon()))
 }
 
 // ActionTermBinding binds an action term to a name.
@@ -171,7 +171,7 @@ func constSliceCanon(cs []*lg.Const) string {
 }
 
 // stringSliceCanon returns canonical form for []string.
-func stringSliceCanon(ss []string) string {
+func temporalStringSliceCanon(ss []string) string {
 	if len(ss) == 0 {
 		return "[]"
 	}
@@ -296,7 +296,7 @@ func (np *NormalProgram) Canon() iu.Canonical {
 		init,
 		lfSliceCanon(np.Invars),
 		lfSliceCanon(np.Asms),
-		stringSliceCanon(np.Calls),
+		temporalStringSliceCanon(np.Calls),
 		postcondsHashCanon(np.Postconds),
 	))
 }
@@ -624,7 +624,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 	goal := goals[0]
 
 	// Find the TemporalModels conclusion
-	tm := findTemporalModels(goal)
+	tm := temporalFindTemporalModels(goal)
 	if tm == nil {
 		return nil, fmt.Errorf("temporal/temporal: invariance: [4]proof goal is not temporal")
 	}
@@ -808,7 +808,7 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 }
 
 // findTemporalModels looks for a TemporalModels in the goal.
-func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
+func temporalFindTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	if goal == nil || goal.Formula == nil {
 		return nil
 	}
@@ -828,11 +828,11 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 // symbolsAst collects symbols from a logic node (wrapper for package access).
 func symbolsAst(n lg.Expr) []*lg.Const {
 	var result []*lg.Const
-	symbolsAstRec(n, &result, make(map[lg.NodeKey]bool))
+	temporalSymbolsAstRec(n, &result, make(map[lg.NodeKey]bool))
 	return result
 }
 
-func symbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
+func temporalSymbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 	if c, ok := n.(*lg.Const); ok {
 		if !seen[lg.Key(c)] {
 			seen[lg.Key(c)] = true
@@ -848,7 +848,7 @@ func symbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 		}
 	}
 	for _, child := range n.Children() {
-		symbolsAstRec(child, result, seen)
+		temporalSymbolsAstRec(child, result, seen)
 	}
 }
 

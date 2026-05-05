@@ -20,7 +20,7 @@ import (
 type Z3Utils struct {
 	Ctx           *Z3Context                // own context, independent from Translator
 	toZ3Cache     map[logic.NodeKey]any     // Python _to_z3_cache (Sort, Expr, or FuncDecl)
-	uninterpSorts map[logic.NodeKey]Sort    // Python _z3_uninterpreted_sorts
+	uninterpSorts map[logic.NodeKey]Z3Sort  // Python _z3_uninterpreted_sorts
 	ImpliesCache  map[[2]logic.NodeKey]bool // Python _implies_cache
 }
 
@@ -29,7 +29,7 @@ func NewZ3Utils() *Z3Utils {
 	return &Z3Utils{
 		Ctx:           NewZ3Context(),
 		toZ3Cache:     make(map[logic.NodeKey]any),
-		uninterpSorts: make(map[logic.NodeKey]Sort),
+		uninterpSorts: make(map[logic.NodeKey]Z3Sort),
 		ImpliesCache:  make(map[[2]logic.NodeKey]bool),
 	}
 }
@@ -43,7 +43,7 @@ func (u *Z3Utils) Close() error {
 // globals in Python z3_utils.py.
 func (u *Z3Utils) Clear() {
 	u.toZ3Cache = make(map[logic.NodeKey]any)
-	u.uninterpSorts = make(map[logic.NodeKey]Sort)
+	u.uninterpSorts = make(map[logic.NodeKey]Z3Sort)
 	u.ImpliesCache = make(map[[2]logic.NodeKey]bool)
 }
 
@@ -68,27 +68,27 @@ func (u *Z3Utils) ToZ3(x logic.Expr) (any, error) {
 
 // ToZ3Expr is a convenience wrapper that calls ToZ3 and type-asserts to Expr.
 // Used for formulas and terms that produce Z3 expressions.
-func (u *Z3Utils) ToZ3Expr(x logic.Expr) (Expr, error) {
+func (u *Z3Utils) ToZ3Expr(x logic.Expr) (Z3Expr, error) {
 	result, err := u.ToZ3(x)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
-	ze, ok := result.(Expr)
+	ze, ok := result.(Z3Expr)
 	if !ok {
-		return Expr{}, fmt.Errorf("z3_utils.ToZ3Expr: expected Expr for %T, got %T", x, result)
+		return Z3Expr{}, fmt.Errorf("z3_utils.ToZ3Expr: expected Expr for %T, got %T", x, result)
 	}
 	return ze, nil
 }
 
 // toZ3Sort calls ToZ3 on a sort and type-asserts to Sort.
-func (u *Z3Utils) toZ3Sort(s logic.Sort) (Sort, error) {
+func (u *Z3Utils) toZ3Sort(s logic.Sort) (Z3Sort, error) {
 	result, err := u.ToZ3(s)
 	if err != nil {
-		return Sort{}, err
+		return Z3Sort{}, err
 	}
-	zs, ok := result.(Sort)
+	zs, ok := result.(Z3Sort)
 	if !ok {
-		return Sort{}, fmt.Errorf("z3_utils.toZ3Sort: expected Sort for %T, got %T", s, result)
+		return Z3Sort{}, fmt.Errorf("z3_utils.toZ3Sort: expected Sort for %T, got %T", s, result)
 	}
 	return zs, nil
 }
@@ -110,7 +110,7 @@ func (u *Z3Utils) toZ3Internal(x logic.Expr) (any, error) {
 			return u.Ctx.BoolVal(true), nil
 		}
 		// Python line 90: _z3_operators[And] → z3.And
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, t := range node.Terms {
 			a, err := u.ToZ3Expr(t)
 			if err != nil {
@@ -126,7 +126,7 @@ func (u *Z3Utils) toZ3Internal(x logic.Expr) (any, error) {
 			return u.Ctx.BoolVal(false), nil
 		}
 		// Python line 90: _z3_operators[Or] → z3.Or
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, t := range node.Terms {
 			a, err := u.ToZ3Expr(t)
 			if err != nil {
@@ -168,7 +168,7 @@ func (u *Z3Utils) toZ3Internal(x logic.Expr) (any, error) {
 		if err != nil {
 			return nil, err
 		}
-		args := make([]Expr, len(node.Terms))
+		args := make([]Z3Expr, len(node.Terms))
 		for i, t := range node.Terms {
 			a, err := u.ToZ3Expr(t)
 			if err != nil {
@@ -252,7 +252,7 @@ func (u *Z3Utils) toZ3Internal(x logic.Expr) (any, error) {
 			return u.ToZ3Expr(node.Body)
 		}
 		// Python lines 97-100: z3.ForAll([to_z3(v) for v in x.variables], to_z3(x.body))
-		bound := make([]Expr, len(node.Variables))
+		bound := make([]Z3Expr, len(node.Variables))
 		for i, v := range node.Variables {
 			b, err := u.ToZ3Expr(v)
 			if err != nil {
@@ -270,7 +270,7 @@ func (u *Z3Utils) toZ3Internal(x logic.Expr) (any, error) {
 		if len(node.Variables) == 0 {
 			return u.ToZ3Expr(node.Body)
 		}
-		bound := make([]Expr, len(node.Variables))
+		bound := make([]Z3Expr, len(node.Variables))
 		for i, v := range node.Variables {
 			b, err := u.ToZ3Expr(v)
 			if err != nil {
@@ -327,7 +327,7 @@ func (u *Z3Utils) toZ3VarOrConst(name string, sort logic.Sort, isConst bool) (an
 
 	// Python line 79-81: z3.Function(x.name, *(to_z3(s) for s in x.sort))
 	// x.sort iterates over all sorts (domain + range)
-	zSorts := make([]Sort, len(fs.Sorts))
+	zSorts := make([]Z3Sort, len(fs.Sorts))
 	for i, s := range fs.Sorts {
 		zs, err := u.toZ3Sort(s)
 		if err != nil {

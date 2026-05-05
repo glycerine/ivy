@@ -22,22 +22,22 @@ func mkPC(schemas ...*ast.LabeledFormula) *ProofChecker {
 
 // mkAssumeTactic creates an AssumeTactic for "instantiate <name>".
 func mkAssumeTactic(name string) *ast.AssumeTactic {
-	at := testAstCfg.NewAssumeTactic(testAstCfg.NewAtom(name), nil)
-	at.TLabel = testAstCfg.NewNoneAST()
+	at := proofTestAstCfg.NewAssumeTactic(proofTestAstCfg.NewAtom(name), nil)
+	at.TLabel = proofTestAstCfg.NewNoneAST()
 	return at
 }
 
 // --- Test 1: Basic instantiate adds premise ---
 
 func TestAssumeTactic_BasicInstantiate(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Goal: [goal] c
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
 
 	// Schema: [myax] c (an axiom to instantiate)
-	schema := mkLF(testAstCfg.NewAtom("myax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	pc := mkPC(schema)
 
 	proof := mkAssumeTactic("myax")
@@ -67,18 +67,18 @@ func TestAssumeTactic_BasicInstantiate(t *testing.T) {
 // --- Test 2: Preserves TemporalModels conclusion ---
 
 func TestAssumeTactic_PreservesTemporalModels(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Create a TemporalModels conclusion
-	np := testAstCfg.NewNoneAST() // dummy model node (avoids temporal import cycle)
-	tm := testAstCfg.NewTemporalModels(np, lg.True)
+	np := proofTestAstCfg.NewNoneAST() // dummy model node (avoids temporal import cycle)
+	tm := proofTestAstCfg.NewTemporalModels(np, lg.True)
 
 	// Goal: [goal] TemporalModels(np, true)
-	goal := mkLF(testAstCfg.NewAtom("goal"), tm)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), tm)
 
 	// Schema: [myax] c
-	schema := mkLF(testAstCfg.NewAtom("myax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	pc := mkPC(schema)
 
 	proof := mkAssumeTactic("myax")
@@ -100,16 +100,16 @@ func TestAssumeTactic_PreservesTemporalModels(t *testing.T) {
 // --- Test 3: Works with existing SchemaBody premises ---
 
 func TestAssumeTactic_WithSchemaBody(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Goal already has a premise (SchemaBody)
-	existingPrem := mkLF(testAstCfg.NewAtom("existing"), c)
-	sb := testAstCfg.NewSchemaBody(existingPrem, c)
-	goal := mkLF(testAstCfg.NewAtom("goal"), sb)
+	existingPrem := mkLF(proofTestAstCfg.NewAtom("existing"), c)
+	sb := proofTestAstCfg.NewSchemaBody(existingPrem, c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), sb)
 
 	// Schema: [newax] c
-	schema := mkLF(testAstCfg.NewAtom("newax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("newax"), c)
 	pc := mkPC(schema)
 
 	proof := mkAssumeTactic("newax")
@@ -126,13 +126,13 @@ func TestAssumeTactic_WithSchemaBody(t *testing.T) {
 // --- Test 4: RemoveExplicit clears explicit flag ---
 
 func TestAssumeTactic_RemoveExplicit(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
 
 	// Schema with explicit=true
-	schema := mkLF(testAstCfg.NewAtom("myax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	schema.Explicit = true
 	pc := mkPC(schema)
 
@@ -154,13 +154,13 @@ func TestAssumeTactic_RemoveExplicit(t *testing.T) {
 // --- Test 5: Premise from goal (AssumeTactic, not global) ---
 
 func TestAssumeTactic_PremiseFromGoal(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Goal has "myax" as an existing premise
-	premInGoal := mkLF(testAstCfg.NewAtom("myax"), c)
-	sb := testAstCfg.NewSchemaBody(premInGoal, c)
-	goal := mkLF(testAstCfg.NewAtom("goal"), sb)
+	premInGoal := mkLF(proofTestAstCfg.NewAtom("myax"), c)
+	sb := proofTestAstCfg.NewSchemaBody(premInGoal, c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), sb)
 
 	pc := mkPC() // no global schemas
 
@@ -181,21 +181,21 @@ func TestAssumeTactic_PremiseFromGoal(t *testing.T) {
 // --- Test 6: Clash error for AssumeTactic ---
 
 func TestAssumeTactic_ClashError(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Goal has "myax" as a premise
-	premInGoal := mkLF(testAstCfg.NewAtom("myax"), c)
-	sb := testAstCfg.NewSchemaBody(premInGoal, c)
-	goal := mkLF(testAstCfg.NewAtom("goal"), sb)
+	premInGoal := mkLF(proofTestAstCfg.NewAtom("myax"), c)
+	sb := proofTestAstCfg.NewSchemaBody(premInGoal, c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), sb)
 
 	// Schema also named "myax" in global context
-	schema := mkLF(testAstCfg.NewAtom("myax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	pc := mkPC(schema)
 
 	// Use explicit label "myax" to force clash
-	proof := testAstCfg.NewAssumeTactic(testAstCfg.NewAtom("myax"), nil)
-	proof.TLabel = testAstCfg.NewAtom("myax") // explicit label, not NoneAST
+	proof := proofTestAstCfg.NewAssumeTactic(proofTestAstCfg.NewAtom("myax"), nil)
+	proof.TLabel = proofTestAstCfg.NewAtom("myax") // explicit label, not NoneAST
 
 	// isGlobal=false → should error on clash
 	_, err := pc.assumeTactic([]*ast.LabeledFormula{goal}, proof, false)
@@ -210,16 +210,16 @@ func TestAssumeTactic_ClashError(t *testing.T) {
 // --- Test 7: AssumeGlobalTactic renames on clash ---
 
 func TestAssumeTactic_GlobalRename(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
 	// Goal has "myax" as a premise
-	premInGoal := mkLF(testAstCfg.NewAtom("myax"), c)
-	sb := testAstCfg.NewSchemaBody(premInGoal, c)
-	goal := mkLF(testAstCfg.NewAtom("goal"), sb)
+	premInGoal := mkLF(proofTestAstCfg.NewAtom("myax"), c)
+	sb := proofTestAstCfg.NewSchemaBody(premInGoal, c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), sb)
 
 	// Schema also named "myax" in global context
-	schema := mkLF(testAstCfg.NewAtom("myax"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
 	pc := mkPC(schema)
 
 	proof := mkAssumeTactic("myax")
@@ -237,15 +237,15 @@ func TestAssumeTactic_GlobalRename(t *testing.T) {
 // --- Test 8: NoneAST label preserves schema label ---
 
 func TestAssumeTactic_NoneASTLabel(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
-	schema := mkLF(testAstCfg.NewAtom("origname"), c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("origname"), c)
 	pc := mkPC(schema)
 
-	proof := testAstCfg.NewAssumeTactic(testAstCfg.NewAtom("origname"), nil)
-	proof.TLabel = testAstCfg.NewNoneAST() // NoneAST → keep schema label
+	proof := proofTestAstCfg.NewAssumeTactic(proofTestAstCfg.NewAtom("origname"), nil)
+	proof.TLabel = proofTestAstCfg.NewNoneAST() // NoneAST → keep schema label
 
 	result, err := pc.assumeTactic([]*ast.LabeledFormula{goal}, proof, false)
 	if err != nil {
@@ -264,15 +264,15 @@ func TestAssumeTactic_NoneASTLabel(t *testing.T) {
 // --- Test 9: Explicit label replaces schema label ---
 
 func TestAssumeTactic_ExplicitLabel(t *testing.T) {
-	s := mkSort("S")
-	c := mkConst("c", s)
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
 
-	goal := mkLF(testAstCfg.NewAtom("goal"), c)
-	schema := mkLF(testAstCfg.NewAtom("origname"), c)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("origname"), c)
 	pc := mkPC(schema)
 
-	proof := testAstCfg.NewAssumeTactic(testAstCfg.NewAtom("origname"), nil)
-	proof.TLabel = testAstCfg.NewAtom("newlabel") // explicit label
+	proof := proofTestAstCfg.NewAssumeTactic(proofTestAstCfg.NewAtom("origname"), nil)
+	proof.TLabel = proofTestAstCfg.NewAtom("newlabel") // explicit label
 
 	result, err := pc.assumeTactic([]*ast.LabeledFormula{goal}, proof, false)
 	if err != nil {
@@ -291,28 +291,28 @@ func TestAssumeTactic_ExplicitLabel(t *testing.T) {
 // This is the exact pattern that triggered the original bug.
 
 func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T) {
-	s := mkSort("T")
-	v := mkVar("X", s)
+	s := proofMkSort("T")
+	v := proofMkVar("X", s)
 
 	// Create a temporal formula: ForAll X. (globally true)
 	globally := &lg.Globally{Body: lg.True}
 	inner := &lg.ForAll{Variables: []*lg.Variable{v}, Body: globally}
 
 	// Wrap in TemporalModels
-	np := testAstCfg.NewNoneAST() // dummy model node (avoids temporal import cycle)
-	tm := testAstCfg.NewTemporalModels(np, inner)
+	np := proofTestAstCfg.NewNoneAST() // dummy model node (avoids temporal import cycle)
+	tm := proofTestAstCfg.NewTemporalModels(np, inner)
 
 	// Goal: [prop] TemporalModels(np, forall X. globally true)
-	goal := mkLF(testAstCfg.NewAtom("prop"), tm)
+	goal := mkLF(proofTestAstCfg.NewAtom("prop"), tm)
 
 	// Schema (axiom to instantiate): [fair_ax] (globally true)
-	fairAx := mkLF(testAstCfg.NewAtom("fair_ax"), globally)
+	fairAx := mkLF(proofTestAstCfg.NewAtom("fair_ax"), globally)
 
 	// Create proof checker with the axiom
 	pc := mkPC(fairAx)
 
 	// Step 1: Skolemize
-	skolemized := SkolemizeGoal(testAstCfg, goal, true)
+	skolemized := SkolemizeGoal(proofTestAstCfg, goal, true)
 	if _, ok := GoalConc(skolemized).(*ast.AstTemporalModels); !ok {
 		t.Fatalf("after skolemize: expected TemporalModels conclusion, got %T", GoalConc(skolemized))
 	}
@@ -366,14 +366,14 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 // which broke for `instantiate ... with P=_P` when _P is a skolem Const.
 // See plan: /Users/jaten/.claude/plans/the-latest-divergence-of-synchronous-creek.md
 func TestIsWitVar_BoundVariableKey(t *testing.T) {
-	procSort := mkSort("proc")
-	p := mkVar("P", procSort)
-	underP := mkConst("_P", procSort)
+	procSort := proofMkSort("proc")
+	p := proofMkVar("P", procSort)
+	underP := proofMkConst("_P", procSort)
 
 	// Schema conc: forall P:proc. true  (stand-in for the axiom body)
 	body := lg.True
 	fa, _ := lg.NewForAll([]*lg.Variable{p}, body)
-	schema := mkLF(testAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
+	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob.FreeSyms excludes P (bound), matching Python goal_vocab semantics.
 	prob := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{}, nil)
@@ -387,7 +387,7 @@ func TestIsWitVar_BoundVariableKey(t *testing.T) {
 	}
 
 	// Sanity: a symbol-LHS key that IS in prob.FreeSyms must NOT be a witness.
-	sym := mkConst("f", procSort)
+	sym := proofMkConst("f", procSort)
 	probFS := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{lg.Key(sym): sym}, nil)
 	probFS.SchemaLF = schema
 	if isWitVar(lg.Key(sym), underP, probFS) {
@@ -404,21 +404,21 @@ func TestIsWitVar_BoundVariableKey(t *testing.T) {
 // ord_live.ivy that caused the neg_prop_init divergence at log.golden.2hr
 // index 2411549.
 func TestIsWitVar_DropsForAllViaWitnessAst(t *testing.T) {
-	procSort := mkSort("proc")
-	p := mkVar("P", procSort)
-	underP := mkConst("_P", procSort)
+	procSort := proofMkSort("proc")
+	p := proofMkVar("P", procSort)
+	underP := proofMkConst("_P", procSort)
 
 	// Build `rd_fair(P) & wr_fair(P)` body.
 	boolFs, _ := lg.NewFunctionSort(procSort, lg.Boolean)
-	rdFair := mkConst("rd_fair", boolFs)
-	wrFair := mkConst("wr_fair", boolFs)
+	rdFair := proofMkConst("rd_fair", boolFs)
+	wrFair := proofMkConst("wr_fair", boolFs)
 	rdFairP, _ := lg.NewApply(rdFair, p)
 	wrFairP, _ := lg.NewApply(wrFair, p)
 	body := &lg.And{Terms: []lg.Expr{rdFairP, wrFairP}}
 
 	// Schema conc: forall P:proc. (rd_fair(P) & wr_fair(P))
 	fa, _ := lg.NewForAll([]*lg.Variable{p}, body)
-	schema := mkLF(testAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
+	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob with P excluded from FreeSyms (bound variable semantics).
 	prob := NewMatchProblem(nil, fa, fa, map[lg.NodeKey]lg.Expr{}, nil)

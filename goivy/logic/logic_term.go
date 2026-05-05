@@ -56,7 +56,7 @@ func (v *Variable) Children() []Expr { return nil }
 // drop_annotations(False, set()).ugly(0).
 func (v *Variable) String() string { return PrettyFmla(v) }
 
-// Repr returns a sort-qualified string, matching Python ast.Variable.__repr__
+// Repr returns a sort-qualified string, matching Python ast.AstVariable.__repr__
 // which always includes ':sort'. String() matches Python logic.Var.__str__
 // which returns just the name.
 func (v *Variable) Repr() string {
@@ -264,7 +264,7 @@ func (a *Apply) String() string { return PrettyFmla(a) }
 
 // Repr returns the sort-qualified representation, using Repr() on children.
 // Matches Python ast.Atom.__repr__ which calls str() on args (which for
-// ast.Variable invokes __repr__ including sort qualifiers).
+// ast.AstVariable invokes __repr__ including sort qualifiers).
 func (a *Apply) Repr() string {
 	if len(a.Terms) == 0 {
 		return ReprExpr(a.Func)

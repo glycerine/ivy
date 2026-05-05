@@ -407,13 +407,13 @@ func TestNaryRepr(t *testing.T) {
 	q := lg.NewConst("q", lg.Boolean)
 
 	// Single arg
-	s1 := NaryRepr("&", []lg.Expr{p})
+	s1 := IvyNaryRepr("&", []lg.Expr{p})
 	if s1 != "p" {
 		t.Errorf("single arg: expected p, got %s", s1)
 	}
 
 	// Multiple args
-	s2 := NaryRepr("&", []lg.Expr{p, q})
+	s2 := IvyNaryRepr("&", []lg.Expr{p, q})
 	if s2 != "(p & q)" {
 		t.Errorf("two args: expected (p & q), got %s", s2)
 	}
@@ -445,7 +445,7 @@ func TestExclusivity(t *testing.T) {
 	v1 := &lg.UninterpretedSort{Name: "cat"}
 	v2 := &lg.UninterpretedSort{Name: "dog"}
 
-	result := Exclusivity(sort, []lg.Sort{v1, v2})
+	result := IvyExclusivity(sort, []lg.Sort{v1, v2})
 	if _, ok := result.(*lg.And); !ok {
 		t.Errorf("expected And, got %T", result)
 	}

@@ -57,7 +57,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Cla
 				&lg.Or{Terms: []lg.Expr{oldApp, &lg.Not{Body: newApp}}},
 			}}
 			// ForAll V0,...: iff
-			fmla := il.ForAll(vars, iff)
+			fmla := il.IvyForAll(vars, iff)
 			fmlas = append(fmlas, fmla)
 		} else {
 			// sym = new_sym
@@ -78,7 +78,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *module.Cla
 // Corresponds to Python's symbol_frame_cond.
 func SymbolFrameCond(sym *lg.Const) *module.Clauses {
 	def := FrameDefConst(sym, NewActionConst)
-	return module.NewClauses(nil, []*il.Definition{def}, nil)
+	return module.NewClauses(nil, []*il.IvyDefinition{def}, nil)
 }
 
 // --- Join ---

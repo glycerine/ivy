@@ -214,7 +214,7 @@ func (s *Solver) wireNativeLookup() {
 		if s.sig == nil {
 			return nil
 		}
-		sortName := il.SortName(v.VSort)
+		sortName := il.IvySortName(v.VSort)
 		itp, ok := s.sig.Interp[sortName]
 		if !ok {
 			return nil
@@ -302,7 +302,7 @@ func (s *Solver) SetSig(sig *il.Sig) {
 // This is a raw translate (no HASH, no closing, no type constraints).
 // Used by tests and external callers (vmt, alpha).
 // For the full Python formula_to_z3 equivalent, use formulaToZ3 (private).
-func (s *Solver) FormulaToZ3(fmla lg.Expr) (Expr, error) {
+func (s *Solver) FormulaToZ3(fmla lg.Expr) (Z3Expr, error) {
 	return s.tr.Translate(fmla)
 }
 
@@ -311,14 +311,14 @@ func (s *Solver) FormulaToZ3(fmla lg.Expr) (Expr, error) {
 // After translating formulas and definitions, it also appends type_constraints
 // for nat sorts (non-negativity) and range sorts (bounds), matching Python's
 // clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
-func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
+func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Z3Expr, error) {
 	if clauses == nil {
 		xtracer.Trace("solver.ClausesToZ3 ENTER nil")
 		return s.tr.Ctx.BoolVal(true), nil
 	}
 	xtracer.Trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 
-	var exprs []Expr
+	var exprs []Z3Expr
 
 	// Match Python clauses_to_z3: a `for` loop emits the per-fmla sort traces,
 	// THEN a separate list comprehension calls conj_to_z3 on each formula.
@@ -331,7 +331,7 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	for _, f := range clauses.Fmlas {
 		zf, err := s.conjToZ3(f)
 		if err != nil {
-			return Expr{}, fmt.Errorf("translating formula: %w", err)
+			return Z3Expr{}, fmt.Errorf("translating formula: %w", err)
 		}
 		exprs = append(exprs, zf)
 	}
@@ -347,7 +347,7 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 				}
 			}
 			xtracer.Trace("clauses_to_z3: Z3 error on def[%d]: %v defines=%s", di, err, defName)
-			return Expr{}, fmt.Errorf("translating definition: %w", err)
+			return Z3Expr{}, fmt.Errorf("translating definition: %w", err)
 		}
 		exprs = append(exprs, zd)
 	}
@@ -377,7 +377,7 @@ func (s *Solver) ClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	})
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
-		return Expr{}, tcErr
+		return Z3Expr{}, tcErr
 	}
 	exprs = append(exprs, tcs...)
 
@@ -422,7 +422,7 @@ func (s *Solver) natConstraintForSymbol(sym lg.Expr) []lg.Expr {
 	if rng == nil {
 		return nil
 	}
-	interp, ok := s.sig.Interp[il.SortName(rng)]
+	interp, ok := s.sig.Interp[il.IvySortName(rng)]
 	if !ok {
 		return nil
 	}
@@ -459,7 +459,7 @@ func (s *Solver) rangeConstraintsForSymbol(sym lg.Expr) []lg.Expr {
 	if rng == nil {
 		return nil
 	}
-	interp, ok := s.sig.Interp[il.SortName(rng)]
+	interp, ok := s.sig.Interp[il.IvySortName(rng)]
 	if !ok {
 		return nil
 	}
@@ -495,10 +495,10 @@ func (s *Solver) rangeConstraintsForSymbol(sym lg.Expr) []lg.Expr {
 // typeConstraints generates type constraints for nat and range sorts,
 // translating each to Z3 via formulaToZ3Closed.
 // Matches Python type_constraints (ivy_solver.py:603-631).
-func (s *Solver) typeConstraints(syms []lg.Expr) ([]Expr, error) {
+func (s *Solver) typeConstraints(syms []lg.Expr) ([]Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(syms))
 
-	var res []Expr
+	var res []Z3Expr
 
 	// Pass 1: nat sort constraints (Python lines 605-615)
 	for _, sym := range syms {
@@ -535,7 +535,7 @@ func (s *Solver) typeConstraints(syms []lg.Expr) ([]Expr, error) {
 //
 // Call chain: formulaToZ3 → formulaToZ3Closed → Translate (no HASH)
 // Only this function emits the HASH trace, matching Python.
-func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
+func (s *Solver) formulaToZ3(fmla lg.Expr) (x Z3Expr, err error) {
 	defer func() {
 		r := recover()
 		if r != nil {
@@ -555,7 +555,7 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	z3Fmla, err := s.formulaToZ3Closed(fmla)
 	if err != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%v", err, iu.ShortTypeName(fmla))
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
@@ -571,10 +571,10 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, iu.ShortTypeName(fmla))
-		return Expr{}, tcErr
+		return Z3Expr{}, tcErr
 	}
 	if len(tcs) > 0 {
-		all := make([]Expr, 0, len(tcs)+1)
+		all := make([]Z3Expr, 0, len(tcs)+1)
 		all = append(all, z3Fmla)
 		all = append(all, tcs...)
 		return s.tr.Ctx.And(all...), nil
@@ -587,11 +587,11 @@ func (s *Solver) formulaToZ3(fmla lg.Expr) (x Expr, err error) {
 //
 // For Definition: wraps in raw z3.ForAll (no quant constraints).
 // For others: wraps via forall() helper (with quant constraints).
-func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (Expr, error) {
+func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%v HASH canon=%v", iu.ShortTypeName(fmla), fmla.Sexp())
 	z3Formula, err := s.tr.TranslateNoHash(fmla)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 
 	freeVars := lu.FreeVariablesList(fmla)
@@ -604,11 +604,11 @@ func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (Expr, error) {
 		return freeVars[i].Name < freeVars[j].Name
 	})
 
-	z3Vars := make([]Expr, len(freeVars))
+	z3Vars := make([]Z3Expr, len(freeVars))
 	for i, v := range freeVars {
 		z3Vars[i], err = s.tr.TranslateVar(v)
 		if err != nil {
-			return Expr{}, err
+			return Z3Expr{}, err
 		}
 	}
 
@@ -625,15 +625,15 @@ func (s *Solver) formulaToZ3Closed(fmla lg.Expr) (Expr, error) {
 // Matches Python's conj_to_z3 (ivy_solver.py:546-549).
 // For And: recursively translates each conjunct.
 // Otherwise: delegates to formulaToZ3Closed.
-func (s *Solver) conjToZ3(fmla lg.Expr) (Expr, error) {
+func (s *Solver) conjToZ3(fmla lg.Expr) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%v", iu.ShortTypeName(fmla))
 	if and, ok := fmla.(*lg.And); ok {
-		z3Args := make([]Expr, len(and.Terms))
+		z3Args := make([]Z3Expr, len(and.Terms))
 		for i, t := range and.Terms {
 			var err error
 			z3Args[i], err = s.conjToZ3(t)
 			if err != nil {
-				return Expr{}, err
+				return Z3Expr{}, err
 			}
 		}
 		return s.tr.Ctx.And(z3Args...), nil
@@ -643,19 +643,19 @@ func (s *Solver) conjToZ3(fmla lg.Expr) (Expr, error) {
 
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
 // Delegates to the solver's translator. Used by formulaToZ3Closed.
-func (s *Solver) forall(vars []*lg.Variable, z3Vars []Expr, z3Body Expr) Expr {
+func (s *Solver) forall(vars []*lg.Variable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
 	return s.tr.forall(vars, z3Vars, z3Body)
 }
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
 // Corresponds to Python's not_clauses_to_z3.
-func (s *Solver) NotClausesToZ3(clauses *module.Clauses) (Expr, error) {
+func (s *Solver) NotClausesToZ3(clauses *module.Clauses) (Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:1102 not_clauses_to_z3() ENTER")
 	// Separate Skolem definitions from other definitions
-	var skolemDefs, otherDefs []*il.Definition
+	var skolemDefs, otherDefs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
 		sym := d.Defines()
-		if c, ok := sym.(*lg.Const); ok && isSkolem(c.Name) {
+		if c, ok := sym.(*lg.Const); ok && z3bridgeIsSkolem(c.Name) {
 			skolemDefs = append(skolemDefs, d)
 		} else {
 			otherDefs = append(otherDefs, d)
@@ -666,20 +666,20 @@ func (s *Solver) NotClausesToZ3(clauses *module.Clauses) (Expr, error) {
 	skolemClauses := module.NewClauses(nil, skolemDefs, nil)
 	zSkolem, err := s.ClausesToZ3(skolemClauses)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 
 	// Full clauses are negated
 	zAll, err := s.ClausesToZ3(clauses)
 	if err != nil {
-		return Expr{}, err
+		return Z3Expr{}, err
 	}
 
 	_ = otherDefs
 	return s.tr.Ctx.And(zSkolem, s.tr.Ctx.Not(zAll)), nil
 }
 
-func isSkolem(name string) bool {
+func z3bridgeIsSkolem(name string) bool {
 	return strings.Contains(name, "__")
 }
 
@@ -797,7 +797,7 @@ func (s *Solver) UnsatCore(
 	z3solver := s.newZ3Solver()
 
 	// Create activation literals
-	alits := make([]Expr, len(fmlas))
+	alits := make([]Z3Expr, len(fmlas))
 	for i := range fmlas {
 		name := fmt.Sprintf("__c%d", i)
 		alits[i] = s.tr.Ctx.Const(name, s.tr.Ctx.BoolSort())
@@ -878,7 +878,7 @@ func (s *Solver) UnsatCore(
 		resFmlas = minimizeCore(z3solver, resFmlas, alits, fmlas, unlikely)
 	}
 
-	defs := make([]*il.Definition, len(clauses1.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses1.Defs))
 	copy(defs, clauses1.Defs)
 	return module.NewClauses(resFmlas, defs, nil), nil
 }
@@ -888,13 +888,10 @@ func (s *Solver) UnsatCore(
 // Python: ivy_core.py minimize_core / biased_core
 func minimizeCore(
 	z3solver *Z3Solver,
-	resFmlas []lg.Expr,
-	alits []Expr,
-	allFmlas []lg.Expr,
-	unlikely func(lg.Expr) bool,
+	resFmlas []lg.Expr, alits []Z3Expr, allFmlas []lg.Expr, unlikely func(lg.Expr) bool,
 ) []lg.Expr {
 	// Build index from formula key to activation literal
-	fmlaToAlit := make(map[string]Expr)
+	fmlaToAlit := make(map[string]Z3Expr)
 	for i, f := range allFmlas {
 		fmlaToAlit[fmt.Sprint(f)] = alits[i]
 	}
@@ -905,7 +902,7 @@ func minimizeCore(
 	}
 
 	// Get activation literals for core formulas
-	coreAlits := make([]Expr, len(resFmlas))
+	coreAlits := make([]Z3Expr, len(resFmlas))
 	for i, f := range resFmlas {
 		key := fmt.Sprint(f)
 		if a, ok := fmlaToAlit[key]; ok {
@@ -951,8 +948,8 @@ func minimizeCore(
 }
 
 // collectAssumptions builds the list of activation literals for included formulas.
-func collectAssumptions(alits []Expr, included []bool) []Expr {
-	var result []Expr
+func collectAssumptions(alits []Z3Expr, included []bool) []Z3Expr {
+	var result []Z3Expr
 	for i, a := range alits {
 		if included[i] && a.String() != "" {
 			result = append(result, a)

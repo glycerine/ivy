@@ -477,7 +477,7 @@ func UniverseConstraint(state *InterpState) *module.Clauses {
 		for _, v := range values {
 			disjuncts = append(disjuncts, &lg.Eq{T1: x, T2: v})
 		}
-		fmla := il.ForAll([]*lg.Variable{x}, &lg.Or{Terms: disjuncts})
+		fmla := il.IvyForAll([]*lg.Variable{x}, &lg.Or{Terms: disjuncts})
 		fmlas = append(fmlas, fmla)
 	}
 	if len(fmlas) == 0 {

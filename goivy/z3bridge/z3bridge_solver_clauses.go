@@ -71,8 +71,7 @@ func Z3FormulaToClauses(fmla lg.Expr) *module.Clauses {
 // Corresponds to Python's bound_quantifiers_clauses.
 func (s *Solver) BoundQuantifiersClauses(
 	clauses *module.Clauses,
-	reps map[string][]lg.Expr,
-	uninterpretedSorts map[string]bool,
+	reps map[string][]lg.Expr, uninterpretedSorts map[string]bool,
 ) *module.Clauses {
 	xtracer.Trace("ivy_solver.py:1541 bound_quantifiers_clauses() ENTER")
 	bq := func(fmla lg.Expr) lg.Expr {
@@ -82,7 +81,7 @@ func (s *Solver) BoundQuantifiersClauses(
 		}
 		var constraints []lg.Expr
 		for _, v := range vars {
-			sortName := il.SortName(v.VSort)
+			sortName := il.IvySortName(v.VSort)
 			if uninterpretedSorts != nil && !uninterpretedSorts[sortName] {
 				continue
 			}
@@ -107,7 +106,7 @@ func (s *Solver) BoundQuantifiersClauses(
 	for i, f := range clauses.Fmlas {
 		newFmlas[i] = bq(f)
 	}
-	defs := make([]*il.Definition, len(clauses.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
 	return module.NewClauses(newFmlas, defs, clauses.Annot)
 }
@@ -131,7 +130,7 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *module.Clauses) (*module.Claus
 			unique = append(unique, f)
 		}
 	}
-	defs := make([]*il.Definition, len(clauses.Defs))
+	defs := make([]*il.IvyDefinition, len(clauses.Defs))
 	copy(defs, clauses.Defs)
 	return module.NewClauses(unique, defs, clauses.Annot), nil
 }
@@ -203,7 +202,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 				if existing, ok := reps[lg.Key(mc)]; ok {
 					// Prefer non-skolem reps
 					if existSym, ok2 := existing.(*lg.Const); ok2 {
-						if isSkolem(existSym.Name) && !isSkolem(c.Name) {
+						if z3bridgeIsSkolem(existSym.Name) && !z3bridgeIsSkolem(c.Name) {
 							reps[lg.Key(mc)] = c
 						}
 					}
@@ -232,7 +231,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			syms := module.UsedSymbolsAST(f)
 			hasSkolemDef := false
 			for _, c := range syms.All() {
-				if isSkolem(lg.ExprName(c)) {
+				if z3bridgeIsSkolem(lg.ExprName(c)) {
 					if _, inIdx := clauses.DefIdx[lg.Key(c)]; inIdx {
 						hasSkolemDef = true
 						break
@@ -265,7 +264,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 		}
 		repTerms := make(map[string][]lg.Expr)
 		for _, sort := range h.Sorts() {
-			sortName := il.SortName(sort)
+			sortName := il.IvySortName(sort)
 			for _, c := range h.SortUniverse(sort) {
 				if rep, ok := reps[lg.Key(c)]; ok {
 					repTerms[sortName] = append(repTerms[sortName], rep)
@@ -360,7 +359,7 @@ func (s *Solver) SolverAdd(z3solver *Z3Solver, fmla lg.Expr) error {
 // If assumptions are provided, uses assumption-based checking.
 // Returns an error if the result is unknown.
 // Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
-func Decide(z3solver *Z3Solver, assumptions ...Expr) (Z3CheckResult, error) {
+func Decide(z3solver *Z3Solver, assumptions ...Z3Expr) (Z3CheckResult, error) {
 	xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
 	var result Z3CheckResult
 	if len(assumptions) > 0 {

@@ -8,12 +8,12 @@ import (
 	"github.com/glycerine/ivy/goivy/logic"
 )
 
-func mkConst(name string) *logic.Const {
+func congclosMkConst(name string) *logic.Const {
 	return logic.NewConst(name, logic.TopS)
 }
 
 // TestNewCongClos tests that a fresh CongClos is empty.
-func TestNewCongClos(t *testing.T) {
+func TestCongClosNewCongClos(t *testing.T) {
 	cc := NewCongClos()
 	if cc == nil {
 		t.Fatal("expected non-nil CongClos")
@@ -25,9 +25,9 @@ func TestNewCongClos(t *testing.T) {
 }
 
 // TestFindCreatesEntry tests that Find creates a node if not present.
-func TestFindCreatesEntry(t *testing.T) {
+func TestCongClosFindCreatesEntry(t *testing.T) {
 	cc := NewCongClos()
-	v := mkConst("v")
+	v := congclosMkConst("v")
 	rep := cc.Find(v)
 	if rep.String() != "v" {
 		t.Errorf("expected v, got %s", rep)
@@ -35,7 +35,7 @@ func TestFindCreatesEntry(t *testing.T) {
 }
 
 // TestFindByName tests looking up by name.
-func TestFindByName(t *testing.T) {
+func TestCongClosFindByName(t *testing.T) {
 	cc := NewCongClos()
 	rep := cc.FindByName("v")
 	if rep.String() != "v" {
@@ -44,10 +44,10 @@ func TestFindByName(t *testing.T) {
 }
 
 // TestUnionBasic tests basic union operation (from Python docstring).
-func TestUnionBasic(t *testing.T) {
+func TestCongClosUnionBasic(t *testing.T) {
 	cc := NewCongClos()
-	v := mkConst("v")
-	w := mkConst("w")
+	v := congclosMkConst("v")
+	w := congclosMkConst("w")
 	cc.Union(v, w)
 	rep := cc.Find(w)
 	if rep.String() != "v" {
@@ -56,10 +56,10 @@ func TestUnionBasic(t *testing.T) {
 }
 
 // TestUnionMinimalRep tests that the lexicographically smaller name is representative.
-func TestUnionMinimalRep(t *testing.T) {
+func TestCongClosUnionMinimalRep(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
-	z := mkConst("z")
+	a := congclosMkConst("a")
+	z := congclosMkConst("z")
 	cc.Union(z, a)
 	if cc.Find(z).String() != "a" {
 		t.Errorf("expected a as rep of z, got %s", cc.Find(z))
@@ -70,11 +70,11 @@ func TestUnionMinimalRep(t *testing.T) {
 }
 
 // TestUnionTransitive tests transitivity: union(a,b), union(b,c) => find(c)==a.
-func TestUnionTransitive(t *testing.T) {
+func TestCongClosUnionTransitive(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
+	a := congclosMkConst("a")
+	b := congclosMkConst("b")
+	c := congclosMkConst("c")
 	cc.Union(a, b)
 	cc.Union(b, c)
 	if cc.Find(c).String() != "a" {
@@ -83,10 +83,10 @@ func TestUnionTransitive(t *testing.T) {
 }
 
 // TestUnionSameClass tests that union of already-unified terms is a no-op.
-func TestUnionSameClass(t *testing.T) {
+func TestCongClosUnionSameClass(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
-	b := mkConst("b")
+	a := congclosMkConst("a")
+	b := congclosMkConst("b")
 	cc.Union(a, b)
 	cc.Union(a, b) // second time, should be no-op
 	if cc.Find(b).String() != "a" {
@@ -95,10 +95,10 @@ func TestUnionSameClass(t *testing.T) {
 }
 
 // TestTheory tests that Theory reports equalities.
-func TestTheory(t *testing.T) {
+func TestCongClosTheory(t *testing.T) {
 	cc := NewCongClos()
-	v := mkConst("v")
-	w := mkConst("w")
+	v := congclosMkConst("v")
+	w := congclosMkConst("w")
 	cc.Union(v, w)
 	theory := cc.Theory()
 	if len(theory) != 1 {
@@ -114,11 +114,11 @@ func TestTheory(t *testing.T) {
 }
 
 // TestPushPop tests that push/pop correctly restores state.
-func TestPushPop(t *testing.T) {
+func TestCongClosPushPop(t *testing.T) {
 	cc := NewCongClos()
-	v := mkConst("v")
-	w := mkConst("w")
-	u := mkConst("u")
+	v := congclosMkConst("v")
+	w := congclosMkConst("w")
+	u := congclosMkConst("u")
 
 	cc.Union(v, w)
 	cc.Push()
@@ -141,11 +141,11 @@ func TestPushPop(t *testing.T) {
 }
 
 // TestMultiplePushPop tests nested push/pop.
-func TestMultiplePushPop(t *testing.T) {
+func TestCongClosMultiplePushPop(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
-	b := mkConst("b")
-	c := mkConst("c")
+	a := congclosMkConst("a")
+	b := congclosMkConst("b")
+	c := congclosMkConst("c")
 
 	cc.Push()
 	cc.Union(a, b)
@@ -171,13 +171,13 @@ func TestMultiplePushPop(t *testing.T) {
 }
 
 // TestPopEmpty tests that Pop on empty pushes is safe.
-func TestPopEmpty(t *testing.T) {
+func TestCongClosPopEmpty(t *testing.T) {
 	cc := NewCongClos()
 	cc.Pop() // should not panic
 }
 
 // TestFindByNameCreates tests that FindByName creates a constant.
-func TestFindByNameCreates(t *testing.T) {
+func TestCongClosFindByNameCreates(t *testing.T) {
 	cc := NewCongClos()
 	rep := cc.FindByName("newconst")
 	if rep.String() != "newconst" {
@@ -186,10 +186,10 @@ func TestFindByNameCreates(t *testing.T) {
 }
 
 // TestFindByNameExisting tests FindByName with an existing entry.
-func TestFindByNameExisting(t *testing.T) {
+func TestCongClosFindByNameExisting(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
-	b := mkConst("b")
+	a := congclosMkConst("a")
+	b := congclosMkConst("b")
 	cc.Union(a, b)
 	rep := cc.FindByName("b")
 	if rep.String() != "a" {
@@ -198,7 +198,7 @@ func TestFindByNameExisting(t *testing.T) {
 }
 
 // TestTheoryEmpty tests that an empty CongClos has empty theory.
-func TestTheoryEmpty(t *testing.T) {
+func TestCongClosTheoryEmpty(t *testing.T) {
 	cc := NewCongClos()
 	theory := cc.Theory()
 	if len(theory) != 0 {
@@ -207,11 +207,11 @@ func TestTheoryEmpty(t *testing.T) {
 }
 
 // TestUnionManyElements tests union with many elements.
-func TestUnionManyElements(t *testing.T) {
+func TestCongClosUnionManyElements(t *testing.T) {
 	cc := NewCongClos()
 	consts := make([]*logic.Const, 10)
 	for i := range consts {
-		consts[i] = mkConst(fmt.Sprintf("c%d", i))
+		consts[i] = congclosMkConst(fmt.Sprintf("c%d", i))
 	}
 	for i := 1; i < len(consts); i++ {
 		cc.Union(consts[0], consts[i])
@@ -225,9 +225,9 @@ func TestUnionManyElements(t *testing.T) {
 }
 
 // TestPushPopPreservesTab tests that tab entries persist after pop (only reps change).
-func TestPushPopPreservesTab(t *testing.T) {
+func TestCongClosPushPopPreservesTab(t *testing.T) {
 	cc := NewCongClos()
-	a := mkConst("a")
+	a := congclosMkConst("a")
 	cc.Push()
 	cc.Find(a) // creates entry in tab
 	cc.Pop()
@@ -273,7 +273,7 @@ func FuzzCongClos(f *testing.F) {
 			parts := strings.SplitN(op, ",", 2)
 			if len(parts) == 2 && len(parts[0]) > 0 && len(parts[1]) > 0 &&
 				len(parts[0]) < 20 && len(parts[1]) < 20 {
-				cc.Union(mkConst(parts[0]), mkConst(parts[1]))
+				cc.Union(congclosMkConst(parts[0]), congclosMkConst(parts[1]))
 			}
 		}
 		// Pop remaining

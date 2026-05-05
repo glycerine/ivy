@@ -181,7 +181,7 @@ var TheorySchemas17 = map[string]string{
 // Theories returns the appropriate schema map for the given version string.
 // If version >= "1.7", it returns TheorySchemas17; otherwise TheorySchemas16.
 func Theories(version string) map[string]string {
-	if VersionLE("1.7", version) {
+	if TheoryVersionLE("1.7", version) {
 		return TheorySchemas17
 	}
 	return TheorySchemas16
@@ -192,7 +192,7 @@ func Theories(version string) map[string]string {
 // The sort parameter allows passing a *logic.RangeSort directly.
 // The version string determines which schema set to use.
 func GetTheorySchemata(name string, sort lg.Sort, version string) string {
-	if !VersionLE("1.6", version) {
+	if !TheoryVersionLE("1.6", version) {
 		return ""
 	}
 	schemas := Theories(version)
@@ -253,7 +253,7 @@ func HasIntegerInterp(sort lg.Sort, interp map[string]interface{}) bool {
 
 // VersionLE returns true if version a <= version b, comparing
 // dot-separated numeric components left to right.
-func VersionLE(a, b string) bool {
+func TheoryVersionLE(a, b string) bool {
 	pa := strings.Split(a, ".")
 	pb := strings.Split(b, ".")
 	maxLen := len(pa)

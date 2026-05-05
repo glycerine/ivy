@@ -82,17 +82,17 @@ func TestNodeRep_Apply(t *testing.T) {
 	f := testConst("f")
 	a := testConst("a")
 	app := testApply(f, a)
-	rep := NodeRep(app)
+	rep := IvyNodeRep(app)
 	if rep != f {
-		t.Errorf("NodeRep(Apply) should return Func, got %v", rep)
+		t.Errorf("IvyNodeRep(Apply) should return Func, got %v", rep)
 	}
 }
 
 func TestNodeRep_Const(t *testing.T) {
 	c := testConst("c")
-	rep := NodeRep(c)
+	rep := IvyNodeRep(c)
 	if rep != c {
-		t.Errorf("NodeRep(Const) should return self, got %v", rep)
+		t.Errorf("IvyNodeRep(Const) should return self, got %v", rep)
 	}
 }
 
@@ -102,9 +102,9 @@ func TestNodeRep_NamedBinder0Vars(t *testing.T) {
 		Variables: nil,
 		Body:      testConst("body"),
 	}
-	rep := NodeRep(nb)
+	rep := IvyNodeRep(nb)
 	if rep != nb {
-		t.Errorf("NodeRep(NamedBinder with 0 vars) should return self, got %v", rep)
+		t.Errorf("IvyNodeRep(NamedBinder with 0 vars) should return self, got %v", rep)
 	}
 }
 
@@ -115,17 +115,17 @@ func TestNodeRep_NamedBinderWithVars(t *testing.T) {
 		Variables: []*lg.Variable{v},
 		Body:      testConst("body"),
 	}
-	rep := NodeRep(nb)
+	rep := IvyNodeRep(nb)
 	if rep != nil {
-		t.Errorf("NodeRep(NamedBinder with vars) should return nil, got %v", rep)
+		t.Errorf("IvyNodeRep(NamedBinder with vars) should return nil, got %v", rep)
 	}
 }
 
 func TestNodeRep_Variable(t *testing.T) {
 	v := testVar("X")
-	rep := NodeRep(v)
+	rep := IvyNodeRep(v)
 	if rep != nil {
-		t.Errorf("NodeRep(Variable) should return nil, got %v", rep)
+		t.Errorf("IvyNodeRep(Variable) should return nil, got %v", rep)
 	}
 }
 
@@ -194,7 +194,7 @@ func TestSymbolsIluAst_BinderFunc(t *testing.T) {
 }
 
 func TestSymbolsIluAst_ForAllFormula(t *testing.T) {
-	// ForAll([v], f(a) & g(b))
+	// IvyForAll([v], f(a) & g(b))
 	// ForAll is not an app, so no rep yielded.
 	// NodeArgs(ForAll) = [body] = [And(f(a), g(b))]
 	// And is not an app → recurse into And's args: f(a), g(b)
@@ -220,7 +220,7 @@ func TestSymbolsIluAst_ForAllFormula(t *testing.T) {
 }
 
 func TestSymbolsIluAst_NestedBinders(t *testing.T) {
-	// ForAll([v], Apply{Func: Lambda{vars:[w], body: f(c)}, Terms: [a]})
+	// IvyForAll([v], Apply{Func: Lambda{vars:[w], body: f(c)}, Terms: [a]})
 	// ForAll args = [body] where body = Apply{Lambda, [a]}
 	// Apply is an app. rep = Lambda. IsBinder(Lambda) → true.
 	// Recurse into Lambda.Body = f(c): yield f, c.
@@ -355,7 +355,7 @@ func TestSymbolsIluAst_Ite(t *testing.T) {
 }
 
 func TestSymbolsIluAst_ExistsFormula(t *testing.T) {
-	// Exists([v], f(a)) → recurse into body f(a), yield f, a
+	// IvyExists([v], f(a)) → recurse into body f(a), yield f, a
 	f := testConst("f")
 	a := testConst("a")
 	v := testVar("X")

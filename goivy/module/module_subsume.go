@@ -120,7 +120,7 @@ func CommuteLit(lit *il.Literal) *il.Literal {
 	if len(args) == 2 {
 		rep := il.GetAppRep(lit.Atom)
 		if rep != nil {
-			return il.NewLiteral(lit.Polarity, il.Atom(rep, []lg.Expr{args[1], args[0]}))
+			return il.NewLiteral(lit.Polarity, il.IvyAtom(rep, []lg.Expr{args[1], args[0]}))
 		}
 	}
 	return lit
@@ -136,7 +136,7 @@ func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Expr) bool {
 	lit := cl1[0]
 	rest := cl1[1:]
 	for i, lit2 := range cl2 {
-		envCopy := copyEnv(env)
+		envCopy := moduleCopyEnv(env)
 		if LitSubsume(lit, lit2, env) {
 			// Remove lit2 from cl2
 			remaining := make([]*il.Literal, 0, len(cl2)-1)
@@ -155,7 +155,7 @@ func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Expr) bool {
 			rep.Name == "=" && rep2.Name == "=" {
 			args2 := il.NodeArgs(lit2.Atom)
 			if len(args2) == 2 {
-				envCopy2 := copyEnv(env)
+				envCopy2 := moduleCopyEnv(env)
 				if LitSubsume(lit, CommuteLit(lit2), env) {
 					remaining := make([]*il.Literal, 0, len(cl2)-1)
 					remaining = append(remaining, cl2[:i]...)
@@ -171,7 +171,7 @@ func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Expr) bool {
 	return false
 }
 
-func copyEnv(env map[string]lg.Expr) map[string]lg.Expr {
+func moduleCopyEnv(env map[string]lg.Expr) map[string]lg.Expr {
 	c := make(map[string]lg.Expr, len(env))
 	for k, v := range env {
 		c[k] = v
@@ -310,11 +310,11 @@ func ElimDefinitions(clauses *Clauses, dead []*lg.Const) *Clauses {
 	for _, sym := range dead {
 		deadSet[lg.Key(sym)] = true
 		if idx, ok := clauses.DefIdx[lg.Key(sym)]; ok && idx < len(clauses.Defs) {
-			fmlas = append(fmlas, defToConstraint(clauses.Defs[idx]))
+			fmlas = append(fmlas, moduleDefToConstraint(clauses.Defs[idx]))
 		}
 	}
 
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, d := range clauses.Defs {
 		rep := il.GetAppRep(d.Lhs)
 		if rep == nil || !deadSet[lg.Key(rep)] {
@@ -426,7 +426,7 @@ func ExistsQuantClausesMap(syms []*lg.Const, clauses *Clauses) (map[lg.NodeKey]*
 	map1 := make(map[lg.NodeKey]*lg.Const)
 	map2 := make(map[lg.NodeKey][]lg.Expr)
 
-	var defs []*il.Definition
+	var defs []*il.IvyDefinition
 	for _, df := range clauses.Defs {
 		if !EqcmUpd(df.Lhs, df.Rhs, symset, map2) {
 			if !EqcmUpd(df.Rhs, df.Lhs, symset, map2) {

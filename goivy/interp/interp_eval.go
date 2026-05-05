@@ -202,14 +202,14 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*InterpState, error) {
 		return s, nil
 	}
 	// Check true.
-	if ast.IsTrue(expr) {
+	if ast.AstIsTrue(expr) {
 		return NewInterpState(mod, &StateValue{
 			Clauses: module.TrueClauses(nil),
 			Precond: module.FalseClauses(nil),
 		}, nil, ""), nil
 	}
 	// Check false.
-	if ast.IsFalse(expr) {
+	if ast.AstIsFalse(expr) {
 		return NewInterpState(mod, &StateValue{
 			Clauses: module.FalseClauses(nil),
 			Precond: module.FalseClauses(nil),

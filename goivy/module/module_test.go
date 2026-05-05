@@ -31,7 +31,7 @@ func (d *dummyAction) GetAstConfig() *ast.AstConfig      { return nil }
 func (d *dummyAction) Sexp() lg.NodeKey                  { return "(dummyAction)" }
 func (d *dummyAction) Canon() iu.Canonical               { return iu.Canonical(d.Sexp()) }
 
-func TestNew(t *testing.T) {
+func TestModuleNew(t *testing.T) {
 	m := New()
 	if m == nil {
 		t.Fatal("New returned nil")
@@ -44,7 +44,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestClear(t *testing.T) {
+func TestModuleClear(t *testing.T) {
 	m := New()
 	m.Actions.Set("test", &dummyAction{Tag: "dummy"})
 	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, nil))
@@ -57,7 +57,7 @@ func TestClear(t *testing.T) {
 	}
 }
 
-func TestCopy(t *testing.T) {
+func TestModuleCopy(t *testing.T) {
 	m := New()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
@@ -92,7 +92,7 @@ func TestCopy(t *testing.T) {
 	}
 }
 
-func TestAddToHierarchy(t *testing.T) {
+func TestModuleAddToHierarchy(t *testing.T) {
 	m := New()
 	m.AddToHierarchy("protocol")
 	thisMap, ok := m.Hierarchy.Get2("this")
@@ -101,7 +101,7 @@ func TestAddToHierarchy(t *testing.T) {
 	}
 }
 
-func TestAddToHierarchyDotted(t *testing.T) {
+func TestModuleAddToHierarchyDotted(t *testing.T) {
 	m := New()
 	m.AddToHierarchy("net.protocol")
 	thisMap2, ok2 := m.Hierarchy.Get2("this")
@@ -114,7 +114,7 @@ func TestAddToHierarchyDotted(t *testing.T) {
 	}
 }
 
-func TestAddObject(t *testing.T) {
+func TestModuleAddObject(t *testing.T) {
 	m := New()
 	m.AddObject("myobj")
 	if _, ok := m.Hierarchy.Get2("myobj"); !ok {
@@ -122,7 +122,7 @@ func TestAddObject(t *testing.T) {
 	}
 }
 
-func TestFindAction(t *testing.T) {
+func TestModuleFindAction(t *testing.T) {
 	m := New()
 	m.Actions.Set("send", &dummyAction{Tag: "action_impl"})
 	a, ok := m.FindAction("send")
@@ -139,7 +139,7 @@ func TestFindAction(t *testing.T) {
 	}
 }
 
-func TestIsVariant(t *testing.T) {
+func TestModuleIsVariant(t *testing.T) {
 	m := New()
 	lsort := &lg.UninterpretedSort{Name: "msg"}
 	rsort := &lg.UninterpretedSort{Name: "req"}
@@ -153,7 +153,7 @@ func TestIsVariant(t *testing.T) {
 	}
 }
 
-func TestVariantIndex(t *testing.T) {
+func TestModuleVariantIndex(t *testing.T) {
 	m := New()
 	s1 := &lg.UninterpretedSort{Name: "a"}
 	s2 := &lg.UninterpretedSort{Name: "b"}
@@ -171,7 +171,7 @@ func TestVariantIndex(t *testing.T) {
 	}
 }
 
-func TestSortCard(t *testing.T) {
+func TestModuleSortCard(t *testing.T) {
 	m := New()
 	// Enumerated sort should return card
 	es := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
@@ -192,7 +192,7 @@ func TestSortCard(t *testing.T) {
 	}
 }
 
-func TestSortDependencies(t *testing.T) {
+func TestModuleSortDependencies(t *testing.T) {
 	m := New()
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	uSort := &lg.UninterpretedSort{Name: "u"}
@@ -206,7 +206,7 @@ func TestSortDependencies(t *testing.T) {
 	}
 }
 
-func TestSortDependenciesVariants(t *testing.T) {
+func TestModuleSortDependenciesVariants(t *testing.T) {
 	m := New()
 	v1 := &lg.UninterpretedSort{Name: "v1"}
 	v2 := &lg.UninterpretedSort{Name: "v2"}
@@ -218,7 +218,7 @@ func TestSortDependenciesVariants(t *testing.T) {
 	}
 }
 
-func TestModuleString(t *testing.T) {
+func TestModuleModuleString(t *testing.T) {
 	m := New()
 	s := m.String()
 	if len(s) == 0 {
@@ -226,7 +226,7 @@ func TestModuleString(t *testing.T) {
 	}
 }
 
-func TestNewWithSig(t *testing.T) {
+func TestModuleNewWithSig(t *testing.T) {
 	sig := il.NewSig()
 	sig.AddSort(&lg.UninterpretedSort{Name: "custom"})
 	m := NewWithSig(sig)
@@ -235,7 +235,7 @@ func TestNewWithSig(t *testing.T) {
 	}
 }
 
-func TestLabeledFormula(t *testing.T) {
+func TestModuleLabeledFormula(t *testing.T) {
 	acfg := ast.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, &lg.And{})
 	lf.Temporal = ast.BoolPtr(true)
@@ -248,7 +248,7 @@ func TestLabeledFormula(t *testing.T) {
 	}
 }
 
-func TestIsolateInfo(t *testing.T) {
+func TestModuleIsolateInfo(t *testing.T) {
 	info := &IsolateInfo{}
 	info.Implementations = append(info.Implementations, MixinTriple{
 		Mixer: "a", Mixee: "b",
