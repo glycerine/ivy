@@ -149,9 +149,22 @@ func TestAPIAction(t *testing.T) {
 	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
-	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":"check_conjectures"}`)
+	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":"get_conjectures"}`)
 	if w.Code != 200 {
 		t.Errorf("status = %d\nbody: %s", w.Code, w.Body.String())
+	}
+}
+
+func TestAPIActionUnknownFails(t *testing.T) {
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	id := createSession(t, srv)
+	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":"definitely_not_a_real_action"}`)
+	if w.Code == 200 {
+		t.Fatalf("expected unknown action to fail, body: %s", w.Body.String())
+	}
+	if !strings.Contains(w.Body.String(), "unknown action") {
+		t.Fatalf("unknown action response = %q, want message containing unknown action", w.Body.String())
 	}
 }
 
@@ -186,6 +199,38 @@ func TestAPIConcept(t *testing.T) {
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/concept", "")
 	if w.Code != 200 {
 		t.Errorf("status = %d", w.Code)
+	}
+}
+
+type conceptNodeBackend struct {
+	Backend
+	nodeID string
+}
+
+func (b *conceptNodeBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *conceptNodeBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
+	b.nodeID = nodeID
+	return canonicalJSON(map[string]string{"node": nodeID})
+}
+
+func TestAPIConceptPassesSelectedARGNode(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &conceptNodeBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+	w := doReq(t, srv, "GET", "/api/session/"+id+"/concept?node=state_1", "")
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	m := jsonBody(t, w)
+	if got := m["node"]; got != "state_1" {
+		t.Fatalf("concept node route = %v, want state_1", got)
+	}
+	if be.nodeID != "state_1" {
+		t.Fatalf("backend saw nodeID %q, want state_1", be.nodeID)
 	}
 }
 
@@ -254,6 +299,34 @@ func TestAPICheck(t *testing.T) {
 	// Result should be a string indicating the check status
 	if _, ok := m["result"].(string); !ok {
 		t.Errorf("result should be a string, got: %T", m["result"])
+	}
+}
+
+type checkDefaultModeBackend struct {
+	Backend
+	mode string
+}
+
+func (b *checkDefaultModeBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *checkDefaultModeBackend) Check(sessionID, mode string) ([]byte, error) {
+	b.mode = mode
+	return canonicalJSON(map[string]string{"result": mode})
+}
+
+func TestAPICheckDefaultsToPDR(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &checkDefaultModeBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+	w := doReq(t, srv, "POST", "/api/session/"+id+"/check", "")
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if be.mode != "pdr" {
+		t.Fatalf("default check mode = %q, want pdr", be.mode)
 	}
 }
 

@@ -269,7 +269,7 @@ func (b *PyBackend) GetARG(sessionID string) ([]byte, error) {
 	return b.get("/session/" + sessionID + "/arg")
 }
 
-func (b *PyBackend) GetConcept(sessionID string) ([]byte, error) {
+func (b *PyBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
 	return b.get("/session/" + sessionID + "/concept")
 }
 

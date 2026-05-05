@@ -158,10 +158,10 @@ func (c *ConformBackend) GetARG(sessionID string) ([]byte, error) {
 	)
 }
 
-func (c *ConformBackend) GetConcept(sessionID string) ([]byte, error) {
+func (c *ConformBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
 	return c.conform("GetConcept",
-		func() ([]byte, error) { return c.goBE.GetConcept(sessionID) },
-		func() ([]byte, error) { return c.pyBE.GetConcept(c.pySessionID(sessionID)) },
+		func() ([]byte, error) { return c.goBE.GetConcept(sessionID, nodeID) },
+		func() ([]byte, error) { return c.pyBE.GetConcept(c.pySessionID(sessionID), nodeID) },
 	)
 }
 

@@ -28,13 +28,35 @@ async function createSession(request) {
 
 async function loadExampleIntoCurrentSession(page) {
   const ivyContent = `#lang ivy1.7
+
 type client
 type server
+
 relation link(X:client, Y:server)
 relation semaphore(X:server)
-after init { semaphore(W) := true; link(X,Y) := false }
-action connect(x:client,y:server) = { require semaphore(y); link(x,y) := true; semaphore(y) := false }
+
+after init {
+    link(X,Y) := false;
+    semaphore(Y) := true
+}
+
+action connect(x:client, y:server) = {
+    require semaphore(y);
+    link(x,y) := true;
+    semaphore(y) := false
+}
+
+action disconnect(x:client, y:server) = {
+    require link(x,y);
+    link(x,y) := false;
+    semaphore(y) := true
+}
+
 export connect
+export disconnect
+
+conjecture link(X,Y) -> ~semaphore(Y)
+conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 `;
 
   return page.evaluate(async (content) => {
@@ -132,6 +154,7 @@ test('mode select can change to abstract', async ({ page }) => {
 
   const mode = page.locator('#mode-select');
   await expect(mode).toBeVisible();
+  await expect(mode).toHaveValue('pdr');
   await mode.selectOption('abstract');
   await expect(mode).toHaveValue('abstract');
 });
@@ -154,6 +177,269 @@ test('undo button path does not kill the page', async ({ page }) => {
 
   await page.locator('#btn-undo').click();
   await expect(page).toHaveTitle(/ivy/i);
+});
+
+test('shared action runner reports backend errors', async ({ page }) => {
+  await openIvy(page);
+
+  const result = await page.evaluate(async () => {
+    return window.ivyApp.runAction('definitely_not_a_real_action');
+  });
+  expect(result.ok).toBe(false);
+  await expect(page.locator('#statusbar')).toContainText('Action failed');
+  await expect(page.locator('#statusbar')).toHaveClass(/error/);
+});
+
+test('dialog primitives accept integer and list selections', async ({ page }) => {
+  await openIvy(page);
+
+  const intPromise = page.evaluate(async () => {
+    return window.ivyApp.integerDialog('Bound', 'choose bound', 1, { min: 1, max: 9 });
+  });
+  await page.locator('[data-ivy-dialog-int]').fill('4');
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(intPromise).resolves.toBe(4);
+
+  const listPromise = page.evaluate(async () => {
+    return window.ivyApp.listboxDialog('Pick', 'choose one', ['alpha', 'beta']);
+  });
+  await page.locator('[data-ivy-dialog-list]').selectOption('beta');
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(listPromise).resolves.toBe('beta');
+});
+
+test('Go-supplied concept menu descriptor renders and dispatches', async ({ page }) => {
+  await openIvy(page);
+
+  const menuRoot = page.locator('[data-dynamic-menu-region="concept"]');
+  await expect(menuRoot).toBeVisible();
+  await menuRoot.locator('.panel-menu', { hasText: 'Action' }).click();
+  await menuRoot.locator('[data-menu-action="undo"]').click();
+
+  await expect(page.locator('#statusbar')).toContainText('Done: undo');
+});
+
+test('clicking ARG nodes reloads concept graph for the selected state', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    const app = window.ivyApp;
+    app.api.getConceptGraph = async (nodeId) => ({
+      selected_node: nodeId,
+      state_label: nodeId === 'state_0' ? '0' : '1',
+      elements: [
+        {
+          group: 'nodes',
+          data: {
+            id: 'concept-node',
+            obj: 'concept-' + nodeId,
+            label: 'concept ' + nodeId,
+            short_info: nodeId,
+            long_info: nodeId,
+            shape: 'octagon',
+            width: 120,
+            height: 60,
+          },
+          classes: 'node_unknown',
+        },
+      ],
+    });
+    app.argGraph.update([
+      {
+        group: 'nodes',
+        data: {
+          id: 'arg-state-0',
+          obj: 'state_0',
+          label: '0',
+          short_info: 'state 0',
+          long_info: 'state 0',
+          shape: 'ellipse',
+          width: 60,
+          height: 50,
+        },
+        classes: 'state',
+      },
+      {
+        group: 'nodes',
+        data: {
+          id: 'arg-state-1',
+          obj: 'state_1',
+          label: '1',
+          short_info: 'state 1',
+          long_info: 'state 1',
+          shape: 'ellipse',
+          width: 60,
+          height: 50,
+        },
+        classes: 'state',
+      },
+    ]);
+  });
+
+  await page.evaluate(() => {
+    const node = window.ivyApp.argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_0');
+    node.emit('tap', { target: node });
+  });
+  await page.waitForFunction(() => {
+    const nodes = window.ivyApp.conceptGraph.cy.nodes();
+    return nodes.length > 0 && nodes[0].data('label') === 'concept state_0';
+  });
+  await expect(page.locator('#state-label')).toContainText('State: 0');
+
+  await page.evaluate(() => {
+    const node = window.ivyApp.argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_1');
+    node.emit('tap', { target: node });
+  });
+  await page.waitForFunction(() => {
+    const nodes = window.ivyApp.conceptGraph.cy.nodes();
+    return nodes.length > 0 && nodes[0].data('label') === 'concept state_1';
+  });
+  await expect(page.locator('#state-label')).toContainText('State: 1');
+});
+
+test('backend relation toggle controls concept edge rendering and survives refresh', async ({ page }) => {
+  await openIvy(page);
+  const loaded = await loadExampleIntoCurrentSession(page);
+  await page.evaluate((concept) => {
+    window.ivyApp.populateStateCheckboxes(concept);
+  }, loaded.concept);
+
+  expect(await page.evaluate(() => window.ivyApp.conceptGraph.cy.edges().length)).toBe(0);
+
+  const linkRow = page.locator('#state-checkbox-body tr', { hasText: 'link' });
+  await expect(linkRow).toBeVisible();
+  await linkRow.locator('input[type="checkbox"]').nth(1).check();
+
+  await page.waitForFunction(() => {
+    return window.ivyApp.conceptGraph.cy.edges().toArray().some((e) => e.data('obj') === 'link');
+  });
+
+  await page.evaluate(async () => {
+    const concept = await window.ivyApp.api.getConceptGraph();
+    window.ivyApp.conceptGraph.update(concept.elements, concept.positions);
+    window.ivyApp.populateStateCheckboxes(concept);
+  });
+
+  await expect(page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1)).toBeChecked();
+  expect(await page.evaluate(() => window.ivyApp.conceptGraph.cy.edges().toArray().filter((e) => e.data('obj') === 'link').length)).toBeGreaterThan(0);
+});
+
+test('constraint facts render below the graph and toggle through backend action', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window._factActions = [];
+    window.ivyApp.api.executeAction = async (action, args) => {
+      window._factActions.push({ action, args });
+      return { status: 'ok' };
+    };
+    window.ivyApp.populateStateCheckboxes({
+      relations: [],
+      facts: [
+        { index: 0, text: 'link(a,b)', selected: true },
+        { index: 1, text: 'semaphore(b)', selected: true },
+      ],
+      toggles: { edges: {}, labels: {} },
+    });
+  });
+
+  await expect(page.locator('[data-constraint-fact="0"]')).toBeVisible();
+  await expect(page.locator('[data-constraint-fact="0"]')).toHaveText('link(a,b)');
+  await page.locator('[data-constraint-fact="0"]').click();
+  await expect(page.locator('[data-constraint-fact="0"]')).toHaveClass(/inactive/);
+  expect(await page.evaluate(() => window._factActions)).toEqual([
+    { action: 'set_fact_selection', args: { index: 0, selected: false } },
+  ]);
+});
+
+test('View Source edge action loads source text and highlights the backend line', async ({ page }) => {
+  await openIvy(page);
+
+  const result = await page.evaluate(async () => {
+    window.ivyApp.api.argNodeAction = async () => {
+      window.ivyApp._testArgNodeActionResult = {
+        status: 'ok',
+        file: 'sample.ivy',
+        lineno: 2,
+        source: 'line1\naction go = {}\nline3\n',
+      };
+      return window.ivyApp._testArgNodeActionResult;
+    };
+    const originalScroll = window.ivyApp.scrollEditorToLine.bind(window.ivyApp);
+    window.ivyApp.scrollEditorToLine = (lineno) => {
+      window.ivyApp._testScrollLine = lineno;
+      return originalScroll(lineno);
+    };
+    const originalSetEditor = window.ivyApp.setEditorContent.bind(window.ivyApp);
+    window.ivyApp.setEditorContent = (source) => {
+      window.ivyApp._testSetEditorSource = source;
+      return originalSetEditor(source);
+    };
+    await window.ivyApp.executeArgEdgeAction({ source_obj: 'state_0', target_obj: 'state_1' }, 'view_source');
+    return {
+      value: window.ivyApp.cmEditor.getValue(),
+      highlightedLine: window.ivyApp._highlightedEditorLine,
+      scrollLine: window.ivyApp._testScrollLine,
+      setEditorSource: window.ivyApp._testSetEditorSource,
+      apiResult: window.ivyApp._testArgNodeActionResult,
+      status: document.getElementById('statusbar').textContent,
+      details: document.getElementById('info-content').textContent,
+    };
+  });
+
+  expect(result.value).toBe('line1\naction go = {}\nline3\n');
+  expect(result.setEditorSource).toBe('line1\naction go = {}\nline3\n');
+  expect(result.apiResult.lineno).toBe(2);
+  expect(result.status).toContain('Done: view_source');
+  expect(result.scrollLine).toBe(2);
+  expect(result.highlightedLine).toBe(2);
+  expect(result.details).toContain('sample.ivy line 2');
+});
+
+test('sheet graph instances are owned independently when switching tabs', async ({ page }) => {
+  await openIvy(page);
+
+  const result = await page.evaluate(() => {
+    const app = window.ivyApp;
+    const mainElement = {
+      group: 'nodes',
+      data: { id: 'main-node', obj: 'main', label: 'main' },
+    };
+    const secondElement = {
+      group: 'nodes',
+      data: { id: 'second-node', obj: 'second', label: 'second' },
+    };
+    const updatedMainElement = {
+      group: 'nodes',
+      data: { id: 'main-node-2', obj: 'main2', label: 'main2' },
+    };
+
+    app.argGraph.update([mainElement]);
+    const sheetId = app.addSheet('Sheet 2');
+    const firstGraph = app.sheets && app.sheets['sheet-1'] && app.sheets['sheet-1'].argGraph;
+    const secondGraph = app.sheets && app.sheets[sheetId] && app.sheets[sheetId].argGraph;
+    const activeAfterAdd = app.argGraph;
+
+    if (app.argGraph) {
+      app.argGraph.update([secondElement]);
+    }
+    app.switchSheet('sheet-1');
+    if (app.argGraph) {
+      app.argGraph.update([updatedMainElement]);
+    }
+
+    return {
+      distinct: !!firstGraph && !!secondGraph && firstGraph !== secondGraph && activeAfterAdd === secondGraph,
+      activeSheet: app.activeSheetId || '',
+      firstLabels: firstGraph ? firstGraph.cy.nodes().map((n) => n.data('label')) : [],
+      secondLabels: secondGraph ? secondGraph.cy.nodes().map((n) => n.data('label')) : [],
+    };
+  });
+
+  expect(result.distinct).toBe(true);
+  expect(result.activeSheet).toBe('sheet-1');
+  expect(result.firstLabels).toEqual(['main2']);
+  expect(result.secondLabels).toEqual(['second']);
 });
 
 test('Cytoscape is loaded', async ({ page }) => {

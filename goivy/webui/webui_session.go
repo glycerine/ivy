@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
@@ -239,6 +242,93 @@ func (s *Session) syncARGToGraph() {
 	s.Graph = ArtToGraphState(s.AG)
 }
 
+func parseARGStateNodeID(nodeID string) (int, bool, error) {
+	if nodeID == "" {
+		return 0, false, nil
+	}
+	raw := strings.TrimSpace(nodeID)
+	for _, prefix := range []string{"state_", "n"} {
+		if strings.HasPrefix(raw, prefix) {
+			raw = strings.TrimPrefix(raw, prefix)
+			break
+		}
+	}
+	idx, err := strconv.Atoi(raw)
+	if err != nil {
+		return 0, true, fmt.Errorf("invalid ARG node id %q", nodeID)
+	}
+	return idx, true, nil
+}
+
+func (s *Session) selectConceptARGNode(nodeID string) (selectedNode, stateLabel string, err error) {
+	idx, ok, err := parseARGStateNodeID(nodeID)
+	if err != nil || !ok {
+		return "", "", err
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.AGUI == nil {
+		return "", "", fmt.Errorf("analysis graph UI is not initialized")
+	}
+	state, err := s.AGUI.stateByID(idx)
+	if err != nil {
+		return "", "", err
+	}
+
+	if s.AGUI.CurrentConceptGraph == nil ||
+		s.AGUI.CurrentConceptGraph.G() == nil ||
+		s.AGUI.CurrentConceptGraph.G().ParentState != state {
+		s.AGUI.ViewState(idx, "", false)
+	}
+	if s.ConceptSess != nil {
+		if state.Clauses != nil {
+			s.ConceptSess.State = state.Clauses.ToFormula()
+		} else {
+			s.ConceptSess.State = goivy.True
+		}
+		s.ConceptSess.GoalConstraints = nil
+		s.ConceptSess.Cache = make(map[string]bool)
+		s.ConceptSess.Recompute(nil)
+		s.syncAbstractValue()
+	}
+	return fmt.Sprintf("state_%d", idx), s.AGUI.StateLabel(idx), nil
+}
+
+func (s *Session) ensureConceptGraphWidgetLocked() *GraphWidget {
+	if s.AGUI == nil {
+		return nil
+	}
+	if s.AGUI.CurrentConceptGraph != nil {
+		return s.AGUI.CurrentConceptGraph
+	}
+	sorts := s.AGUI.conceptSortNames()
+	gs := StandardGraph(sorts, nil)
+	w := NewGraphWidget(gs)
+	w.Parent = s.AGUI
+	s.AGUI.CurrentConceptGraph = w
+	return w
+}
+
+func (s *Session) ensureConceptChecksLocked() *DisplayCheckboxes {
+	w := s.ensureConceptGraphWidgetLocked()
+	if w == nil || w.G() == nil {
+		return NewDisplayCheckboxes()
+	}
+	checks := w.G().Checks
+	if s.SimpleSess != nil && s.SimpleSess.Domain != nil {
+		for _, rel := range s.SimpleSess.Domain.RelationIDs() {
+			checks.EnsureEdge(rel)
+			checks.EnsureNodeLabel(rel)
+		}
+		for _, label := range s.SimpleSess.Domain.DefaultLabelIDs() {
+			checks.SetNodeLabelCheckbox(label, NodeLabelNecessarily, true)
+		}
+	}
+	s.toggles = checks.Snapshot()
+	return checks
+}
+
 // syncProofStack converts the live proof.ProofGoalStack (s.ProofMgr)
 // into the lightweight webui.ProofStack for frontend rendering.
 func (s *Session) syncProofStack() {
@@ -311,10 +401,20 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	switch actionName {
 	// --- Concept graph operations (ConceptInteractiveSession) ---
 	case "undo":
+		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil && s.AGUI.CurrentConceptGraph.GraphStack.CanUndo() {
+			s.AGUI.CurrentConceptGraph.Undo()
+			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
+			break
+		}
 		if s.ConceptSess != nil {
 			err = s.ConceptSess.Undo()
 		}
 	case "redo":
+		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil && s.AGUI.CurrentConceptGraph.GraphStack.CanRedo() {
+			s.AGUI.CurrentConceptGraph.Redo()
+			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
+			break
+		}
 		if s.ConceptSess != nil {
 			err = s.ConceptSess.Redo()
 		}
@@ -325,10 +425,42 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			s.syncAbstractValue()
 		}
 	case "gather":
-		if s.ConceptSess != nil {
-			// Gather facts from the current concept graph state
-			_ = s.ConceptSess.GetFacts(nil)
+		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil {
+			s.AGUI.CurrentConceptGraph.Gather()
+			result["facts"] = s.AGUI.CurrentConceptGraph.GetActiveFacts()
+		} else if s.ConceptSess != nil {
+			facts := s.ConceptSess.GetFacts(nil)
+			s.ConceptSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
+			strs := make([]string, 0, len(facts))
+			for _, fact := range facts {
+				strs = append(strs, fact.String())
+			}
+			result["facts"] = strs
 		}
+	case "set_fact_selection":
+		idx, ok := actionIntArg(args, "index")
+		if !ok {
+			err = fmt.Errorf("set_fact_selection: missing integer index")
+			break
+		}
+		selected, ok := actionBoolArg(args, "selected")
+		if !ok {
+			err = fmt.Errorf("set_fact_selection: missing boolean selected")
+			break
+		}
+		w := s.ensureConceptGraphWidgetLocked()
+		if w == nil {
+			err = fmt.Errorf("set_fact_selection: no concept graph")
+			break
+		}
+		err = w.SetFactSelected(idx, selected)
+	case "get_active_facts":
+		w := s.ensureConceptGraphWidgetLocked()
+		if w == nil {
+			result["facts"] = []string{}
+			break
+		}
+		result["facts"] = w.GetActiveFacts()
 	case "backtrack":
 		if s.ConceptSess != nil {
 			err = s.ConceptSess.Undo() // backtrack = undo all to checkpoint
@@ -693,10 +825,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				}
 			}
 		}
-		// Unknown actions are accepted but logged — allows forward compatibility.
-		s.emit(Event{Type: "status", Data: map[string]string{
-			"message": "Action '" + actionName + "' accepted (not yet wired to engine)",
-		}})
+		err = fmt.Errorf("unknown action: %s", actionName)
 	}
 
 	status := "ok"
@@ -705,6 +834,31 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	}
 	s.emit(Event{Type: "action_completed", Data: map[string]interface{}{"action": actionName, "status": status}})
 	return result, err
+}
+
+func actionIntArg(args map[string]interface{}, key string) (int, bool) {
+	if args == nil {
+		return 0, false
+	}
+	switch v := args[key].(type) {
+	case int:
+		return v, true
+	case float64:
+		return int(v), float64(int(v)) == v
+	case json.Number:
+		i, err := v.Int64()
+		return int(i), err == nil
+	default:
+		return 0, false
+	}
+}
+
+func actionBoolArg(args map[string]interface{}, key string) (bool, bool) {
+	if args == nil {
+		return false, false
+	}
+	v, ok := args[key].(bool)
+	return v, ok
 }
 
 // WebUIProofStack holds proof goal state for rendering.
@@ -870,11 +1024,20 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			if vsErr == nil {
 				result["file"] = filename
 				result["lineno"] = lineno
+				if source, srcErr := s.sourceText(filename); srcErr == nil {
+					result["source"] = source
+				}
 			} else {
 				result["file"] = s.FilePath
+				if source, srcErr := s.sourceText(s.FilePath); srcErr == nil {
+					result["source"] = source
+				}
 			}
 		} else {
 			result["file"] = s.FilePath
+			if source, srcErr := s.sourceText(s.FilePath); srcErr == nil {
+				result["source"] = source
+			}
 		}
 	default:
 		err = fmt.Errorf("unknown ARG action: %s", action)
@@ -885,6 +1048,23 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	}
 	s.emit(Event{Type: "action_completed", Data: map[string]string{"action": action}})
 	return result, nil
+}
+
+func (s *Session) sourceText(filename string) (string, error) {
+	if s.FileContent != "" {
+		if filename == "" || filename == s.FilePath || filepath.Base(filename) == filepath.Base(s.FilePath) {
+			return s.FileContent, nil
+		}
+	}
+	if filename != "" {
+		if by, err := os.ReadFile(filename); err == nil {
+			return string(by), nil
+		}
+	}
+	if s.FileContent != "" {
+		return s.FileContent, nil
+	}
+	return "", fmt.Errorf("no source text available")
 }
 
 // ProofGoalAction executes an action on a proof goal node.
@@ -1410,9 +1590,7 @@ func (s *Session) syncAbstractValue() {
 		return
 	}
 	av := s.ConceptSess.abstractValueMap()
-	if s.SimpleSess.AbstractValue == nil {
-		s.SimpleSess.AbstractValue = make(map[string]bool)
-	}
+	s.SimpleSess.AbstractValue = make(map[string]bool, len(av))
 	for k, v := range av {
 		s.SimpleSess.AbstractValue[k] = v
 	}
@@ -1420,16 +1598,15 @@ func (s *Session) syncAbstractValue() {
 
 // Toggles stores edge/label visibility checkbox state.
 type Toggles struct {
-	Edges map[string]map[string]bool `json:"edges"` // edge_name → {display_class → checked}
+	Edges  map[string]map[string]bool `json:"edges"`  // edge_name → {display_class → checked}
+	Labels map[string]map[string]bool `json:"labels"` // label_name → {display_class → checked}
 }
 
 // GetToggles returns the current toggle state.
 func (s *Session) GetToggles() *Toggles {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.toggles == nil {
-		s.toggles = &Toggles{Edges: make(map[string]map[string]bool)}
-	}
+	s.toggles = s.ensureConceptChecksLocked().Snapshot()
 	return s.toggles
 }
 
@@ -1437,13 +1614,9 @@ func (s *Session) GetToggles() *Toggles {
 func (s *Session) SetToggle(edge, displayClass string, value bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.toggles == nil {
-		s.toggles = &Toggles{Edges: make(map[string]map[string]bool)}
-	}
-	if s.toggles.Edges[edge] == nil {
-		s.toggles.Edges[edge] = make(map[string]bool)
-	}
-	s.toggles.Edges[edge][displayClass] = value
+	checks := s.ensureConceptChecksLocked()
+	checks.SetCheckboxClass(edge, displayClass, value)
+	s.toggles = checks.Snapshot()
 }
 
 // runUPDR runs the tactics-based UPDR algorithm on the session's compiled

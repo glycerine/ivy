@@ -1,5 +1,10 @@
 package webui
 
+import (
+	"strconv"
+	"strings"
+)
+
 // Concept represents a single concept in the concept domain.
 // A concept is a quantifier-free formula with first-order free variables.
 type Concept struct {
@@ -44,6 +49,28 @@ func (d *ConceptDomain) RelationIDs() []string {
 	var ids []string
 	ids = append(ids, d.Edges...)
 	ids = append(ids, d.NodeLabels...)
+	return ids
+}
+
+// DefaultLabelIDs returns node-label concepts that Python shows by default.
+// Python treats numeral singleton labels specially; in the simplified web
+// Concept model we recognize the common textual shape "X = <numeral>".
+func (d *ConceptDomain) DefaultLabelIDs() []string {
+	var ids []string
+	for _, name := range d.NodeLabels {
+		c := d.Concepts[name]
+		if c == nil || len(c.Variables) != 1 {
+			continue
+		}
+		parts := strings.Split(c.Formula, "=")
+		if len(parts) != 2 {
+			continue
+		}
+		rhs := strings.TrimSpace(parts[1])
+		if _, err := strconv.Atoi(rhs); err == nil {
+			ids = append(ids, name)
+		}
+	}
 	return ids
 }
 

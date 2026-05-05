@@ -88,6 +88,14 @@ class IvyAPI {
     }
 
     /**
+     * Get browser menu descriptors supplied by the Go UI model.
+     * @returns {Promise<object>} menu descriptors keyed by graph region
+     */
+    async getMenus() {
+        return this._request('/api/session/' + this.sessionId + '/menus');
+    }
+
+    /**
      * Get the concept graph for the currently selected ARG node.
      * @param {string} [nodeId] - Optional ARG node ID to view
      * @returns {Promise<object>} concept graph data (Cytoscape elements JSON)

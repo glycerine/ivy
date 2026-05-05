@@ -177,6 +177,25 @@ html, body {
     box-sizing: border-box;
 }
 
+.dialog-input {
+    width: 100%;
+    font-size: 13px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.dialog-listbox {
+    min-height: 80px;
+}
+
+.dialog-error {
+    color: #ff9b9b;
+}
+
 .dialog-buttons {
     margin-top: 12px;
     text-align: right;
@@ -339,6 +358,9 @@ html, body {
 }
 #editor-panel .CodeMirror-focused .CodeMirror-selected {
     background: #264f78;
+}
+#editor-panel .CodeMirror .ivy-source-highlight {
+    background: #3a3320;
 }
 #editor-panel .CodeMirror-matchingbracket {
     color: #ffcc00 !important;
@@ -632,6 +654,17 @@ html, body {
     color: #fff;
 }
 
+.dynamic-menu-root {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-content a.disabled {
+    color: #777;
+    pointer-events: none;
+}
+
 .dropdown-sep {
     height: 1px;
     background-color: #555;
@@ -850,6 +883,32 @@ html, body {
     flex: 1;
     white-space: pre-wrap;
     word-break: break-word;
+}
+
+.constraint-facts-title {
+    color: #c8c8c8;
+    margin-bottom: 2px;
+}
+
+.constraint-fact {
+    display: block;
+    width: 100%;
+    padding: 1px 0;
+    border: 0;
+    background: transparent;
+    color: #d4d4d4;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.constraint-fact.inactive {
+    color: #777;
+}
+
+.constraint-fact:focus-visible {
+    outline: 1px solid #007acc;
+    outline-offset: 1px;
 }
 
 /* --- Context Menu --- */

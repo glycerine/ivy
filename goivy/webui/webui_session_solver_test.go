@@ -4,6 +4,7 @@ package webui
 
 import (
 	goivy "github.com/glycerine/ivy/goivy"
+	"strings"
 	"testing"
 )
 
@@ -333,10 +334,13 @@ func TestSolverActionExecute(t *testing.T) {
 func TestSolverActionExecuteNotFound(t *testing.T) {
 	s := loadTestSession(t)
 	drainEvents(s)
-	// "nonexistent" is not in module.Actions — should fall through to default.
+	// "nonexistent" is not in module.Actions and should be reported.
 	_, err := s.ExecuteAction("nonexistent", nil)
-	if err != nil {
-		t.Errorf("unknown action should not error, got: %v", err)
+	if err == nil {
+		t.Fatal("unknown action should fail")
+	}
+	if !strings.Contains(err.Error(), "unknown action") {
+		t.Fatalf("unknown action error = %v", err)
 	}
 }
 
@@ -344,10 +348,13 @@ func TestSolverActionExecuteNoModule(t *testing.T) {
 	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
-	// Without a compiled module, action falls through to default.
+	// Without a compiled module, module actions cannot be resolved.
 	_, err := s.ExecuteAction("connect", nil)
-	if err != nil {
-		t.Errorf("action without module should not error, got: %v", err)
+	if err == nil {
+		t.Fatal("action without module should fail")
+	}
+	if !strings.Contains(err.Error(), "unknown action") {
+		t.Fatalf("no-module action error = %v", err)
 	}
 }
 

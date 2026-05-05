@@ -93,6 +93,43 @@ func TestSetFactsExpr(t *testing.T) {
 	}
 }
 
+func TestGraphWidgetActiveFactsDefaultAndSelection(t *testing.T) {
+	S := mkSort("node")
+	g := NewGraph([]string{"node"}, nil)
+	sess := NewConceptInteractiveSession(
+		NewCDConceptDomain(nil, nil, nil), nil, nil, nil, nil, nil, nil, nil, false,
+	)
+	g.InteractiveSess = sess
+
+	eq1 := mkEq(mkConst("a", S), mkConst("b", S))
+	eq2 := mkEq(mkConst("c", S), mkConst("d", S))
+	g.SetFactsExpr([]goivy.Expr{eq1, eq2})
+
+	w := NewGraphWidget(NewGraphStack(g))
+	facts := w.ConstraintFacts()
+	if len(facts) != 2 {
+		t.Fatalf("expected 2 constraint facts, got %d: %#v", len(facts), facts)
+	}
+	if !facts[0].Selected || !facts[1].Selected {
+		t.Fatalf("newly rendered constraint facts should default selected: %#v", facts)
+	}
+	if got := w.GetActiveFacts(); len(got) != 2 {
+		t.Fatalf("expected both facts active by default, got %d: %v", len(got), got)
+	}
+
+	if err := w.SetFactSelected(0, false); err != nil {
+		t.Fatalf("SetFactSelected: %v", err)
+	}
+	if got := w.GetActiveFacts(); len(got) != 1 || got[0] != eq2.String() {
+		t.Fatalf("expected only second fact active after deselecting first, got %v", got)
+	}
+
+	facts = w.ConstraintFacts()
+	if facts[0].Selected || !facts[1].Selected {
+		t.Fatalf("constraint selection did not round-trip: %#v", facts)
+	}
+}
+
 func TestSetFactsExpr_Replaces(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)

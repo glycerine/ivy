@@ -14,6 +14,8 @@ class IvyApp {
         this.controls = new IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
+        this.sheets = {};
+        this.activeSheetId = 'sheet-1';
         this.selectedArgNode = null;
         // Edge visibility state, matching Python's edge_display_checkboxes.
         // Keys: edgeName, values: {all_to_all: bool, edge_unknown: bool, none_to_none: bool, transitive: bool}
@@ -70,6 +72,7 @@ class IvyApp {
         // Create Cytoscape graph instances
         this.argGraph = new IvyGraph('arg-graph', ARG_STYLE);
         this.conceptGraph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+        this.registerSheet('sheet-1', this.argGraph, this.conceptGraph);
 
         // Health check: verify graphs initialized correctly.
         this.argGraph.healthCheck();
@@ -78,15 +81,9 @@ class IvyApp {
         // Hook concept graph updates to auto-apply edge visibility.
         // Matches Python: edges are hidden by default, shown only when
         // the corresponding checkbox (+/?/-) in the state panel is checked.
-        var self = this;
-        var origUpdate = this.conceptGraph.update.bind(this.conceptGraph);
-        this.conceptGraph.update = function(elements, positions) {
-            origUpdate(elements, positions);
-            self._applyEdgeVisibility();
-        };
-
         // Wire up all event handlers
         this.setupEventHandlers();
+        await this.loadMenuDescriptors();
         this.setupTabs();
         this.setupResizer();
         this.setupResizer2();
@@ -123,6 +120,7 @@ class IvyApp {
             });
             // Sync edits back to persisted content and update dirty marker.
             this.cmEditor.on('change', function () {
+                if (!self.cmEditor || typeof self.cmEditor.getValue !== 'function') return;
                 self._persistedFileContent = self.cmEditor.getValue();
                 self._updateEditorLabel();
             });
@@ -181,7 +179,7 @@ class IvyApp {
         var editorLabel = document.getElementById('model-editor-label');
         if (!editorLabel) return;
         var name = this._persistedFileName || '';
-        var current = this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        var current = (this.cmEditor && typeof this.cmEditor.getValue === 'function') ? this.cmEditor.getValue() : (this._persistedFileContent || '');
         var dirty = current !== (this._savedFileContent || '');
         if (!name) {
             editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + '(unsaved file)';
@@ -422,14 +420,124 @@ class IvyApp {
     scrollEditorToLine(lineno) {
         if (this.cmEditor) {
             var line = lineno - 1;
+            if (this._highlightedEditorLineHandle != null) {
+                this.cmEditor.removeLineClass(this._highlightedEditorLineHandle, 'background', 'ivy-source-highlight');
+            }
             this.cmEditor.setCursor(line, 0);
             this.cmEditor.setSelection(
                 {line: line, ch: 0},
                 {line: line, ch: this.cmEditor.getLine(line).length}
             );
+            this._highlightedEditorLineHandle = this.cmEditor.addLineClass(line, 'background', 'ivy-source-highlight');
+            this._highlightedEditorLine = lineno;
             this.cmEditor.scrollIntoView({line: line, ch: 0}, 50);
             this.cmEditor.focus();
         }
+    }
+
+    currentSheet() {
+        return this.sheets ? this.sheets[this.activeSheetId] : null;
+    }
+
+    registerSheet(sheetId, argGraph, conceptGraph) {
+        this.installConceptGraphVisibilityHook(conceptGraph);
+        this.sheets[sheetId] = {
+            id: sheetId,
+            argGraph: argGraph,
+            conceptGraph: conceptGraph,
+            selectedArgNode: null,
+        };
+    }
+
+    installConceptGraphVisibilityHook(conceptGraph) {
+        if (!conceptGraph || conceptGraph._ivyVisibilityHooked) return;
+        var self = this;
+        var origUpdate = conceptGraph.update.bind(conceptGraph);
+        conceptGraph.update = function(elements, positions) {
+            origUpdate(elements, positions);
+            self._applyEdgeVisibility(conceptGraph);
+        };
+        conceptGraph._ivyVisibilityHooked = true;
+    }
+
+    attachGraphEventHandlers(argGraph, conceptGraph) {
+        var self = this;
+        if (argGraph && argGraph.containerId) {
+            var argEl = document.getElementById(argGraph.containerId);
+            if (argEl && !argEl._ivyContextSuppressed) {
+                argEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                argEl._ivyContextSuppressed = true;
+            }
+        }
+        if (conceptGraph && conceptGraph.containerId) {
+            var conceptEl = document.getElementById(conceptGraph.containerId);
+            if (conceptEl && !conceptEl._ivyContextSuppressed) {
+                conceptEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                conceptEl._ivyContextSuppressed = true;
+            }
+        }
+
+        argGraph.onNodeClick(function (nodeData) {
+            self.onArgNodeClick(nodeData);
+        });
+        argGraph.onNodeRightClick(function (nodeData, pos) {
+            self.onArgNodeRightClick(nodeData, pos);
+        });
+        argGraph.onEdgeClick(function (edgeData) {
+            self.controls.showInfo(edgeData.short_info, edgeData.long_info);
+        });
+        argGraph.onEdgeRightClick(function (edgeData, pos) {
+            self.onArgEdgeRightClick(edgeData, pos);
+        });
+        argGraph.onBackgroundClick(function () {
+            self.controls.clearInfo();
+            self.controls.hideContextMenu();
+        });
+
+        conceptGraph.onNodeRightClick(function (nodeData, pos) {
+            self.onConceptNodeRightClick(nodeData, pos);
+        });
+        conceptGraph.onNodeClick(function (nodeData, evt) {
+            try {
+                var node = evt.target;
+                var name = nodeData.obj || nodeData.id;
+                if (node.hasClass('selected_node')) {
+                    node.removeClass('selected_node');
+                    node.unselect();
+                    self.controls.setStatus('Deselected: ' + name);
+                    self.controls.clearInfo();
+                } else {
+                    node.addClass('selected_node');
+                    self.selectedConceptNode = name;
+                    self.controls.setStatus('Selected: ' + name);
+                    self.controls.showInfo(nodeData.short_info, nodeData.long_info);
+                }
+            } catch (e) {
+                console.error('concept node click error:', e);
+            }
+        });
+        conceptGraph.onEdgeClick(function (edgeData, evt) {
+            var edge = evt.target;
+            var name = edgeData.obj || edgeData.label || edgeData.id;
+            if (edge.hasClass('selected_edge')) {
+                edge.removeClass('selected_edge');
+                edge.unselect();
+                edge.removeStyle('line-color target-arrow-color source-arrow-color width');
+                self.controls.setStatus('Deselected: ' + name);
+                self.controls.clearInfo();
+            } else {
+                edge.addClass('selected_edge');
+                self.controls.setStatus('Selected: ' + name);
+                self.controls.showInfo(edgeData.short_info, edgeData.long_info);
+            }
+        });
+        conceptGraph.onEdgeRightClick(function (edgeData, pos) {
+            self.onConceptEdgeRightClick(edgeData, pos);
+        });
+        conceptGraph.onBackgroundClick(function () {
+            self.controls.clearInfo();
+            self.controls.hideContextMenu();
+        });
     }
 
     /**
@@ -585,99 +693,7 @@ class IvyApp {
             }
         });
 
-        // --- Prevent browser context menu on graph containers ---
-        document.getElementById('arg-graph').addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-        });
-        document.getElementById('concept-graph').addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-        });
-
-        // --- ARG Graph Events ---
-
-        // ARG node left-click: view state in concept graph
-        this.argGraph.onNodeClick(function (nodeData) {
-            self.onArgNodeClick(nodeData);
-        });
-
-        // ARG node right-click: context menu
-        this.argGraph.onNodeRightClick(function (nodeData, pos) {
-            self.onArgNodeRightClick(nodeData, pos);
-        });
-
-        // ARG edge click: show info
-        this.argGraph.onEdgeClick(function (edgeData) {
-            self.controls.showInfo(edgeData.short_info, edgeData.long_info);
-        });
-
-        // ARG edge right-click: context menu (matches Python ivy_ui.py get_edge_actions)
-        this.argGraph.onEdgeRightClick(function (edgeData, pos) {
-            self.onArgEdgeRightClick(edgeData, pos);
-        });
-
-        // ARG background click: clear info
-        this.argGraph.onBackgroundClick(function () {
-            self.controls.clearInfo();
-            self.controls.hideContextMenu();
-        });
-
-        // --- Concept Graph Events ---
-
-        // Concept node right-click: context menu (split, empty, remove, materialize)
-        this.conceptGraph.onNodeRightClick(function (nodeData, pos) {
-            self.onConceptNodeRightClick(nodeData, pos);
-        });
-
-        // Concept node left-click: toggle selection independently per node.
-        // Matches Python Tk: click selects (fills interior gray), click again deselects (white).
-        this.conceptGraph.onNodeClick(function (nodeData, evt) {
-            try {
-                var node = evt.target;
-                var name = nodeData.obj || nodeData.id;
-                if (node.hasClass('selected_node')) {
-                    node.removeClass('selected_node');
-                    node.unselect(); // clear Cytoscape's built-in :selected state
-                    self.controls.setStatus('Deselected: ' + name);
-                    self.controls.clearInfo();
-                } else {
-                    node.addClass('selected_node');
-                    self.selectedConceptNode = name;
-                    self.controls.setStatus('Selected: ' + name);
-                    self.controls.showInfo(nodeData.short_info, nodeData.long_info);
-                }
-            } catch (e) {
-                console.error('concept node click error:', e);
-            }
-        });
-
-        // Concept edge left-click: toggle selection (matches Python Tk behavior).
-        this.conceptGraph.onEdgeClick(function (edgeData, evt) {
-            var edge = evt.target;
-            var name = edgeData.obj || edgeData.label || edgeData.id;
-            if (edge.hasClass('selected_edge')) {
-                edge.removeClass('selected_edge');
-                edge.unselect();
-                // Remove inline styles so class-based styles work on next select
-                edge.removeStyle('line-color target-arrow-color source-arrow-color width');
-                self.controls.setStatus('Deselected: ' + name);
-                self.controls.clearInfo();
-            } else {
-                edge.addClass('selected_edge');
-                self.controls.setStatus('Selected: ' + name);
-                self.controls.showInfo(edgeData.short_info, edgeData.long_info);
-            }
-        });
-
-        // Concept edge right-click: context menu (remove, materialize +/-)
-        this.conceptGraph.onEdgeRightClick(function (edgeData, pos) {
-            self.onConceptEdgeRightClick(edgeData, pos);
-        });
-
-        // Concept background click: clear
-        this.conceptGraph.onBackgroundClick(function () {
-            self.controls.clearInfo();
-            self.controls.hideContextMenu();
-        });
+        this.attachGraphEventHandlers(this.argGraph, this.conceptGraph);
     }
 
     /**
@@ -894,6 +910,12 @@ class IvyApp {
         var sheet = document.getElementById(sheetId);
         if (tab) tab.classList.add('active');
         if (sheet) sheet.classList.add('active');
+        if (this.sheets && this.sheets[sheetId]) {
+            this.activeSheetId = sheetId;
+            this.argGraph = this.sheets[sheetId].argGraph;
+            this.conceptGraph = this.sheets[sheetId].conceptGraph;
+            this.selectedArgNode = this.sheets[sheetId].selectedArgNode;
+        }
         // Resize graphs in the newly visible sheet
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
@@ -932,9 +954,11 @@ class IvyApp {
         newSheet.classList.remove('active');
         // Clear graph containers (they'll be initialized fresh)
         var graphs = newSheet.querySelectorAll('.graph-container');
+        var graphIds = [];
         for (var i = 0; i < graphs.length; i++) {
             graphs[i].innerHTML = '';
             graphs[i].id = graphs[i].id + '-' + this._sheetCounter;
+            graphIds.push(graphs[i].id);
         }
         // Clear info panel
         var info = newSheet.querySelector('#info-content');
@@ -947,6 +971,13 @@ class IvyApp {
         // Insert before the tutorial container
         var sheetArea = document.getElementById('sheet-area');
         sheetArea.appendChild(newSheet);
+
+        var argGraph = new IvyGraph(graphIds[0], ARG_STYLE);
+        var conceptGraph = new IvyGraph(graphIds[1], CONCEPT_STYLE);
+        argGraph.healthCheck();
+        conceptGraph.healthCheck();
+        this.registerSheet(sheetId, argGraph, conceptGraph);
+        this.attachGraphEventHandlers(argGraph, conceptGraph);
 
         // Switch to the new sheet
         this.switchSheet(sheetId);
@@ -968,6 +999,9 @@ class IvyApp {
 
         if (tab) tab.remove();
         if (sheet) sheet.remove();
+        if (this.sheets) {
+            delete this.sheets[sheetId];
+        }
 
         // If the closed tab was active, switch to Sheet 1
         if (wasActive) {
@@ -1175,6 +1209,7 @@ class IvyApp {
         var tbody = document.getElementById('state-checkbox-body');
         if (!tbody) return;
         tbody.innerHTML = '';
+        this._hydrateBackendToggleState(conceptData);
 
         // Use the relations list from the server (edges + node_labels).
         // This matches Python's Graph.relation_ids.
@@ -1193,6 +1228,7 @@ class IvyApp {
                 var cb1 = document.createElement('input');
                 cb1.type = 'checkbox';
                 cb1.title = 'Show definite edges (' + name + ')';
+                cb1.checked = self._toggleChecked(name, 'all_to_all');
                 cb1.addEventListener('change', function() {
                     self.onEdgeToggle(name, 'all_to_all', cb1.checked);
                 });
@@ -1204,6 +1240,7 @@ class IvyApp {
                 var cb2 = document.createElement('input');
                 cb2.type = 'checkbox';
                 cb2.title = 'Show unknown edges (' + name + ')';
+                cb2.checked = self._toggleChecked(name, 'edge_unknown');
                 cb2.addEventListener('change', function() {
                     self.onEdgeToggle(name, 'edge_unknown', cb2.checked);
                 });
@@ -1215,6 +1252,7 @@ class IvyApp {
                 var cb3 = document.createElement('input');
                 cb3.type = 'checkbox';
                 cb3.title = 'Show absent edges (' + name + ')';
+                cb3.checked = self._toggleChecked(name, 'none_to_none');
                 cb3.addEventListener('change', function() {
                     self.onEdgeToggle(name, 'none_to_none', cb3.checked);
                 });
@@ -1226,6 +1264,7 @@ class IvyApp {
                 var cb4 = document.createElement('input');
                 cb4.type = 'checkbox';
                 cb4.title = 'Transitive reduction (' + name + ')';
+                cb4.checked = self._toggleChecked(name, 'transitive');
                 cb4.addEventListener('change', function() {
                     self.onEdgeToggle(name, 'transitive', cb4.checked);
                 });
@@ -1249,6 +1288,10 @@ class IvyApp {
             })(names[i]);
         }
 
+        this._applyEdgeVisibility();
+        this._applyNodeLabels();
+        this.populateConstraintFacts(conceptData);
+
         // If no edges found, show a placeholder
         if (names.length === 0 && conceptData) {
             var tr = document.createElement('tr');
@@ -1262,10 +1305,102 @@ class IvyApp {
         }
     }
 
+    populateConstraintFacts(conceptData) {
+        var info = document.getElementById('info-content');
+        if (!info) return;
+        var facts = (conceptData && Array.isArray(conceptData.facts)) ? conceptData.facts : [];
+        info.innerHTML = '';
+        if (facts.length === 0) {
+            info.textContent = 'Select a node or edge to see details';
+            return;
+        }
+
+        var title = document.createElement('div');
+        title.className = 'constraint-facts-title';
+        title.textContent = 'Constraints:';
+        info.appendChild(title);
+
+        var self = this;
+        facts.forEach(function(fact, offset) {
+            var index = typeof fact.index === 'number' ? fact.index : offset;
+            var row = document.createElement('button');
+            row.type = 'button';
+            row.className = 'constraint-fact';
+            row.setAttribute('data-constraint-fact', String(index));
+            row.setAttribute('aria-pressed', fact.selected ? 'true' : 'false');
+            row.textContent = fact.text || '';
+            if (!fact.selected) {
+                row.classList.add('inactive');
+            }
+            row.addEventListener('click', async function() {
+                var selected = row.classList.contains('inactive');
+                row.classList.toggle('inactive', !selected);
+                row.setAttribute('aria-pressed', selected ? 'true' : 'false');
+                try {
+                    await self.api.executeAction('set_fact_selection', {
+                        index: index,
+                        selected: selected,
+                    });
+                } catch (e) {
+                    row.classList.toggle('inactive', selected);
+                    row.setAttribute('aria-pressed', selected ? 'false' : 'true');
+                    self.controls.setStatus('Fact selection failed: ' + e.message, 'error');
+                }
+            });
+            info.appendChild(row);
+        });
+    }
+
+    _hydrateBackendToggleState(conceptData) {
+        this._edgeVisibility = {};
+        this._labelVisibility = {};
+        var toggles = (conceptData && conceptData.toggles) || {};
+        var edges = toggles.edges || {};
+        var labels = toggles.labels || {};
+        for (var edge in edges) {
+            if (edges.hasOwnProperty(edge)) {
+                this._edgeVisibility[edge] = Object.assign({
+                    all_to_all: false,
+                    edge_unknown: false,
+                    none_to_none: false,
+                    transitive: false,
+                }, edges[edge]);
+            }
+        }
+        for (var label in labels) {
+            if (labels.hasOwnProperty(label)) {
+                this._labelVisibility[label] = Object.assign({
+                    node_necessarily: false,
+                    node_maybe: false,
+                    node_necessarily_not: false,
+                }, labels[label]);
+            }
+        }
+    }
+
+    _toggleChecked(name, displayClass) {
+        var base = name.split('(')[0];
+        var vis = this._edgeVisibility[name] || this._edgeVisibility[base];
+        if (vis && Object.prototype.hasOwnProperty.call(vis, displayClass)) {
+            return !!vis[displayClass];
+        }
+        var labelKeyMap = {
+            all_to_all: 'node_necessarily',
+            edge_unknown: 'node_maybe',
+            none_to_none: 'node_necessarily_not',
+        };
+        var labelKey = labelKeyMap[displayClass];
+        var labelVis = this._labelVisibility[name] || this._labelVisibility[base];
+        if (labelKey && labelVis && Object.prototype.hasOwnProperty.call(labelVis, labelKey)) {
+            return !!labelVis[labelKey];
+        }
+        return false;
+    }
+
     /**
      * Handle edge visibility toggle change.
      */
-    onEdgeToggle(edgeName, displayClass, checked) {
+    async onEdgeToggle(edgeName, displayClass, checked) {
         // Track visibility state client-side (matches Python edge/node_label display_checkboxes)
         // Python maps checkbox columns to keys:
         //   For edges:  + → all_to_all, ? → edge_unknown, - → none_to_none, T → transitive
@@ -1296,13 +1431,16 @@ class IvyApp {
         this._applyNodeLabels();
 
         // Also inform server for persistence
-        this.api.setToggles({
-            edge: edgeName,
-            display_class: displayClass,
-            value: checked
-        }).catch(function(e) {
+        try {
+            await this.api.setToggles({
+                edge: edgeName,
+                display_class: displayClass,
+                value: checked
+            });
+            await this.refreshConceptGraph();
+        } catch (e) {
             console.error('Toggle error:', e);
-        });
+        }
     }
 
     /**
@@ -1311,10 +1449,11 @@ class IvyApp {
      * Matches Python cy_render.py line 346:
      *   if widget.edge_display_checkboxes[edge][classes[0]].value is False: skip
      */
-    _applyEdgeVisibility() {
-        if (!this.conceptGraph || !this.conceptGraph.cy) return;
+    _applyEdgeVisibility(conceptGraph) {
+        var graph = conceptGraph || this.conceptGraph;
+        if (!graph || !graph.cy) return;
         var self = this;
-        this.conceptGraph.cy.edges().forEach(function(edge) {
+        graph.cy.edges().forEach(function(edge) {
             // Try multiple keys to match: the edge obj, label, and
             // formatted versions like "link(X,Y)" that checkboxes use.
             var obj = edge.data('obj') || '';
@@ -1485,6 +1624,10 @@ class IvyApp {
      */
     async onArgNodeClick(nodeData) {
         this.selectedArgNode = nodeData.id;
+        var sheet = this.currentSheet();
+        if (sheet) {
+            sheet.selectedArgNode = nodeData.id;
+        }
         this.argGraph.highlightNode(nodeData.id);
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
         this.updateStateLabel(nodeData.label || nodeData.id);
@@ -1643,13 +1786,9 @@ class IvyApp {
                 var sheetId = this.addSheet(label);
                 // Populate the new sheet's ARG with the decomposed sub-graph
                 if (result.sub_arg && result.sub_arg.elements) {
-                    var sheet = document.getElementById(sheetId);
-                    if (sheet) {
-                        var argContainer = sheet.querySelector('.graph-container');
-                        if (argContainer) {
-                            var subGraph = new IvyGraph(argContainer.id, ARG_STYLE);
-                            subGraph.update(result.sub_arg.elements);
-                        }
+                    var sheetState = this.sheets && this.sheets[sheetId];
+                    if (sheetState && sheetState.argGraph) {
+                        sheetState.argGraph.update(result.sub_arg.elements);
                     }
                 }
             }
@@ -2002,10 +2141,9 @@ class IvyApp {
     async onEdgeToggleChange(edgeName, className, checked) {
         try {
             var toggles = {
-                type: 'edge',
                 edge: edgeName,
-                class: className,
-                visible: checked,
+                display_class: className,
+                value: checked,
             };
             await this.api.setToggles(toggles);
             await this.refreshConceptGraph();
@@ -2020,10 +2158,9 @@ class IvyApp {
     async onLabelToggleChange(labelName, className, checked) {
         try {
             var toggles = {
-                type: 'label',
                 label: labelName,
-                class: className,
-                visible: checked,
+                display_class: className,
+                value: checked,
             };
             await this.api.setToggles(toggles);
             await this.refreshConceptGraph();
@@ -2661,11 +2798,13 @@ class IvyApp {
      * Refresh the concept graph from the server.
      */
     async refreshConceptGraph() {
-        if (!this.selectedArgNode) return;
         try {
             var result = await this.api.getConceptGraph(this.selectedArgNode);
             if (result && result.elements) {
                 this.conceptGraph.update(result.elements, result.positions);
+            }
+            if (result) {
+                this.populateStateCheckboxes(result);
             }
         } catch (e) {
             console.error('Concept graph refresh error:', e);
@@ -2761,7 +2900,11 @@ class IvyApp {
 
             case 'action_completed':
                 if (event.data && event.data.action) {
-                    this.controls.setStatus('Done: ' + event.data.action, 'success');
+                    if (event.data.status && event.data.status !== 'ok') {
+                        this.controls.setStatus('Action failed: ' + event.data.status, 'error');
+                    } else {
+                        this.controls.setStatus('Done: ' + event.data.action, 'success');
+                    }
                 }
                 break;
 
@@ -2842,6 +2985,136 @@ class IvyApp {
         });
     }
 
+    async loadMenuDescriptors() {
+        try {
+            var menus = await this.api.getMenus();
+            this.renderMenuRegion('arg', menus.arg || []);
+            this.renderMenuRegion('concept', menus.concept || []);
+        } catch (e) {
+            this.controls.setStatus('Menu load failed: ' + e.message, 'error');
+        }
+    }
+
+    renderMenuRegion(region, menus) {
+        var panel = region === 'arg' ? document.getElementById('arg-panel') : document.getElementById('concept-panel');
+        if (!panel) return;
+        var header = panel.querySelector('.panel-header');
+        if (!header) return;
+        var old = header.querySelector('[data-dynamic-menu-region="' + region + '"]');
+        if (old) old.remove();
+
+        var root = document.createElement('div');
+        root.className = 'dynamic-menu-root';
+        root.setAttribute('data-dynamic-menu-region', region);
+        header.appendChild(root);
+
+        for (var i = 0; i < menus.length; i++) {
+            this.renderMenuDescriptor(root, region, menus[i], i);
+        }
+    }
+
+    renderMenuDescriptor(root, region, menu, index) {
+        var self = this;
+        var dropdown = document.createElement('div');
+        dropdown.className = 'dropdown';
+
+        var contentId = 'dynamic-' + region + '-' + index + '-' + (menu.label || 'menu').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        var label = document.createElement('span');
+        label.className = 'panel-menu';
+        label.textContent = menu.label || 'Menu';
+        label.setAttribute('data-dropdown', contentId);
+        label.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var wasOpen = dropdown.classList.contains('open');
+            self.closeAllDropdowns();
+            if (!wasOpen) dropdown.classList.add('open');
+        });
+        dropdown.appendChild(label);
+
+        var content = document.createElement('div');
+        content.id = contentId;
+        content.className = 'dropdown-content';
+        dropdown.appendChild(content);
+
+        var items = menu.items || [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.type === 'separator') {
+                var sep = document.createElement('div');
+                sep.className = 'dropdown-sep';
+                content.appendChild(sep);
+                continue;
+            }
+            var link = document.createElement('a');
+            link.href = '#';
+            link.textContent = item.label || item.action || '';
+            link.setAttribute('data-menu-action', item.action || '');
+            link.setAttribute('data-menu-dispatch', item.dispatch || '');
+            if (item.enabled === false) {
+                link.classList.add('disabled');
+                link.setAttribute('aria-disabled', 'true');
+            }
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var actionItem = this.__ivyMenuItem;
+                self.closeAllDropdowns();
+                self.dispatchMenuDescriptorAction(region, actionItem);
+            });
+            link.__ivyMenuItem = item;
+            content.appendChild(link);
+        }
+
+        root.appendChild(dropdown);
+    }
+
+    dispatchMenuDescriptorAction(region, item) {
+        if (!item || item.enabled === false) return Promise.resolve({ ok: false, error: 'disabled action' });
+        if (item.dispatch === 'action') {
+            return this.runAction(item.action, {}, {
+                runningMessage: 'Running: ' + item.action + '...',
+                successMessage: 'Done: ' + item.action,
+            });
+        }
+        return this.runAction(item.action, {});
+    }
+
+    /**
+     * Shared browser action runner, matching Python's run_context shape:
+     * show progress, surface backend errors, and return a structured outcome.
+     */
+    async runAction(actionName, args, options) {
+        var opts = options || {};
+        var runningMessage = opts.runningMessage || ('Running: ' + actionName + '...');
+        var successMessage = opts.successMessage || ('Done: ' + actionName);
+        var failurePrefix = opts.failurePrefix || 'Action failed';
+        if (opts.showLoading !== false) {
+            this.controls.showLoading(runningMessage);
+        }
+        document.body.classList.add('ivy-busy');
+        this.controls.setStatus(runningMessage, 'info');
+        try {
+            var result = await this.api.executeAction(actionName, args || {});
+            if (opts.successStatus !== false) {
+                this.controls.setStatus(successMessage, 'success');
+            }
+            return { ok: true, result: result };
+        } catch (e) {
+            var message = failurePrefix + ': ' + e.message;
+            this.controls.setStatus(message, 'error');
+            if (opts.showDialog) {
+                this.showTextDialog('ivyweb', failurePrefix, e.message);
+            }
+            return { ok: false, error: e.message };
+        } finally {
+            document.body.classList.remove('ivy-busy');
+            if (opts.showLoading !== false) {
+                this.controls.hideLoading();
+            }
+        }
+    }
+
     // ================================================================
     // Verification Operations (Invariant menu)
     // Matches Python ivy_ui_cti.py
@@ -2883,41 +3156,280 @@ class IvyApp {
         }
     }
 
-    /**
-     * Show a text dialog (matches Python ivy_ui_util.py text_dialog).
-     * Displays a title, message, and editable text area with an OK button.
-     * @param {string} title - Dialog title (e.g., "ivyweb")
-     * @param {string} message - Message text above the text area
-     * @param {string} text - Content for the text area (editable, selectable)
-     */
-    showTextDialog(title, message, text) {
-        var overlay = document.getElementById('text-dialog-overlay');
-        document.getElementById('text-dialog-title').textContent = title || 'ivyweb';
-        document.getElementById('text-dialog-message').textContent = message || '';
-        var textarea = document.getElementById('text-dialog-text');
-        textarea.value = text || '';
+    _createDialog(title, message) {
+        var overlay = document.createElement('div');
+        overlay.className = 'dialog-overlay';
+        overlay.setAttribute('data-ivy-dialog', 'true');
         overlay.style.display = 'flex';
 
-        // Select all text for easy copying
-        textarea.focus();
-        textarea.select();
+        var box = document.createElement('div');
+        box.className = 'dialog-box';
+        overlay.appendChild(box);
 
-        // OK button closes the dialog
-        var okBtn = document.getElementById('text-dialog-ok');
-        var handler = function () {
-            overlay.style.display = 'none';
-            okBtn.removeEventListener('click', handler);
-        };
-        okBtn.addEventListener('click', handler);
+        var titleEl = document.createElement('div');
+        titleEl.className = 'dialog-title';
+        titleEl.textContent = title || 'ivyweb';
+        box.appendChild(titleEl);
 
-        // Also close on Escape key
-        var escHandler = function (e) {
+        var messageEl = document.createElement('div');
+        messageEl.className = 'dialog-message';
+        messageEl.textContent = message || '';
+        box.appendChild(messageEl);
+
+        var body = document.createElement('div');
+        body.className = 'dialog-body';
+        box.appendChild(body);
+
+        var error = document.createElement('div');
+        error.className = 'dialog-message dialog-error';
+        error.setAttribute('data-ivy-dialog-error', 'true');
+        error.style.display = 'none';
+        box.appendChild(error);
+
+        var buttons = document.createElement('div');
+        buttons.className = 'dialog-buttons';
+        box.appendChild(buttons);
+
+        document.body.appendChild(overlay);
+        return { overlay: overlay, body: body, buttons: buttons, error: error };
+    }
+
+    _setDialogError(dialog, message) {
+        dialog.error.textContent = message || '';
+        dialog.error.style.display = message ? 'block' : 'none';
+    }
+
+    _addDialogButton(dialog, label, callback, extraClass) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'dialog-btn' + (extraClass ? ' ' + extraClass : '');
+        btn.textContent = label || 'OK';
+        btn.setAttribute('data-ivy-dialog-button', 'true');
+        btn.addEventListener('click', callback);
+        dialog.buttons.appendChild(btn);
+        return btn;
+    }
+
+    _finishDialog(dialog, cleanup, resolve, value) {
+        if (cleanup) cleanup();
+        dialog.overlay.remove();
+        resolve(value);
+    }
+
+    _installDialogEscape(dialog, finish) {
+        var handler = function (e) {
             if (e.key === 'Escape') {
-                overlay.style.display = 'none';
-                document.removeEventListener('keydown', escHandler);
+                finish();
             }
         };
-        document.addEventListener('keydown', escHandler);
+        document.addEventListener('keydown', handler);
+        return function () {
+            document.removeEventListener('keydown', handler);
+        };
+    }
+
+    okDialog(title, message) {
+        var self = this;
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, true);
+            });
+            self._addDialogButton(dialog, 'OK', function () {
+                self._finishDialog(dialog, cleanup, resolve, true);
+            });
+        });
+    }
+
+    okCancelDialog(title, message) {
+        var self = this;
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, false);
+            });
+            self._addDialogButton(dialog, 'Cancel', function () {
+                self._finishDialog(dialog, cleanup, resolve, false);
+            });
+            self._addDialogButton(dialog, 'OK', function () {
+                self._finishDialog(dialog, cleanup, resolve, true);
+            });
+        });
+    }
+
+    textDialog(title, message, text, options) {
+        var self = this;
+        var opts = options || {};
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var textarea = document.createElement('textarea');
+            textarea.className = 'dialog-text';
+            textarea.rows = opts.rows || 4;
+            textarea.cols = opts.cols || 80;
+            textarea.value = text || '';
+            textarea.readOnly = !!opts.readOnly;
+            textarea.setAttribute('data-ivy-dialog-text', 'true');
+            dialog.body.appendChild(textarea);
+
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, null);
+            });
+            if (opts.cancel) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, null);
+                });
+            }
+            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                self._finishDialog(dialog, cleanup, resolve, textarea.value);
+            });
+            textarea.focus();
+            textarea.select();
+        });
+    }
+
+    /**
+     * Backward-compatible display-only text dialog.
+     */
+    showTextDialog(title, message, text) {
+        this.textDialog(title, message, text, { readOnly: false, okLabel: 'OK' });
+    }
+
+    entryDialog(title, message, initialValue, options) {
+        var self = this;
+        var opts = options || {};
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'dialog-input';
+            input.value = initialValue || '';
+            input.setAttribute('data-ivy-dialog-entry', 'true');
+            dialog.body.appendChild(input);
+
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, null);
+            });
+            if (opts.cancel !== false) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, null);
+                });
+            }
+            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                self._finishDialog(dialog, cleanup, resolve, input.value);
+            });
+            input.focus();
+            input.select();
+        });
+    }
+
+    integerDialog(title, message, initialValue, options) {
+        var self = this;
+        var opts = options || {};
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'dialog-input';
+            input.value = String(initialValue == null ? '' : initialValue);
+            if (opts.min != null) input.min = String(opts.min);
+            if (opts.max != null) input.max = String(opts.max);
+            input.setAttribute('data-ivy-dialog-int', 'true');
+            dialog.body.appendChild(input);
+
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, null);
+            });
+            if (opts.cancel !== false) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, null);
+                });
+            }
+            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                var raw = input.value.trim();
+                var value = Number(raw);
+                if (raw === '' || !Number.isInteger(value)) {
+                    self._setDialogError(dialog, 'Enter an integer.');
+                    return;
+                }
+                if (opts.min != null && value < opts.min) {
+                    self._setDialogError(dialog, 'Enter a value at least ' + opts.min + '.');
+                    return;
+                }
+                if (opts.max != null && value > opts.max) {
+                    self._setDialogError(dialog, 'Enter a value at most ' + opts.max + '.');
+                    return;
+                }
+                self._finishDialog(dialog, cleanup, resolve, value);
+            });
+            input.focus();
+            input.select();
+        });
+    }
+
+    listboxDialog(title, message, items, options) {
+        var self = this;
+        var opts = options || {};
+        var entries = (items || []).map(function (item) {
+            if (typeof item === 'object' && item !== null) {
+                return { label: item.label || String(item.value), value: item.value };
+            }
+            return { label: String(item), value: item };
+        });
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var select = document.createElement('select');
+            select.className = 'dialog-input dialog-listbox';
+            select.size = opts.size || Math.min(Math.max(entries.length, 2), 12);
+            select.multiple = !!opts.multiple;
+            select.setAttribute('data-ivy-dialog-list', 'true');
+            entries.forEach(function (entry, index) {
+                var opt = document.createElement('option');
+                opt.value = String(entry.value);
+                opt.setAttribute('data-ivy-dialog-index', String(index));
+                opt.textContent = entry.label;
+                select.appendChild(opt);
+            });
+            dialog.body.appendChild(select);
+
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, opts.multiple ? [] : null);
+            });
+            if (opts.cancel !== false) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, opts.multiple ? [] : null);
+                });
+            }
+            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                if (opts.multiple) {
+                    var selected = Array.from(select.selectedOptions).map(function (opt) {
+                        return entries[Number(opt.getAttribute('data-ivy-dialog-index'))].value;
+                    });
+                    self._finishDialog(dialog, cleanup, resolve, selected);
+                    return;
+                }
+                var selectedOption = select.selectedOptions[0];
+                var idx = selectedOption ? Number(selectedOption.getAttribute('data-ivy-dialog-index')) : -1;
+                self._finishDialog(dialog, cleanup, resolve, idx >= 0 ? entries[idx].value : null);
+            });
+            select.focus();
+        });
+    }
+
+    buttonListDialog(title, message, buttons) {
+        var self = this;
+        var entries = buttons || [];
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog(title, message);
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, null);
+            });
+            entries.forEach(function (entry) {
+                var label = entry.label || String(entry.value);
+                self._addDialogButton(dialog, label, function () {
+                    self._finishDialog(dialog, cleanup, resolve, entry.value);
+                }, entry.danger ? 'dialog-btn-danger' : '');
+            });
+        });
     }
 
     /**

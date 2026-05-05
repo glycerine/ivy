@@ -333,18 +333,47 @@ func (ui *AnalysisGraphUI) ViewState(nodeID int, clauses string, reset bool) *Gr
 	ui.mu.Lock()
 	defer ui.mu.Unlock()
 
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return nil
+	}
+	if clauses == "" && state.Clauses != nil {
+		clauses = state.Clauses.String()
+	}
+
 	if ui.CurrentConceptGraph != nil {
 		// Reuse existing concept graph.
-		ui.CurrentConceptGraph.SetParentState(nil, clauses, reset)
+		ui.CurrentConceptGraph.SetParentState(state, clauses, reset)
 		return ui.CurrentConceptGraph
 	}
 
 	// Create new concept graph widget.
-	sorts := []string{"node"} // default; real implementation reads from ARG state
-	gs := StandardGraph(sorts, nil)
+	sorts := ui.conceptSortNames()
+	gs := StandardGraph(sorts, state)
 	w := NewGraphWidget(gs)
+	w.Parent = ui
+	if clauses != "" {
+		w.G().SetState(clauses, true, false, reset)
+	}
 	ui.CurrentConceptGraph = w
 	return w
+}
+
+func (ui *AnalysisGraphUI) conceptSortNames() []string {
+	if ui.Mod == nil || ui.Mod.Sig == nil {
+		return []string{"node"}
+	}
+	var sorts []string
+	for name := range ui.Mod.Sig.Sorts.All() {
+		if name != "bool" {
+			sorts = append(sorts, name)
+		}
+	}
+	sort.Strings(sorts)
+	if len(sorts) == 0 {
+		return []string{"node"}
+	}
+	return sorts
 }
 
 // MarkNode sets the marked ARG node (Python: AnalysisGraphUI.mark_node).

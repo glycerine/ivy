@@ -20,15 +20,25 @@ type MenuDef struct {
 
 // MenuItem describes a single item inside a menu.
 type MenuItem struct {
-	Type   string `json:"type"`
-	Label  string `json:"label"`
-	Action string `json:"action"`
+	Type     string `json:"type"`
+	Label    string `json:"label"`
+	Action   string `json:"action"`
+	Dispatch string `json:"dispatch"`
+	Dialog   string `json:"dialog,omitempty"`
+	Enabled  bool   `json:"enabled"`
 }
 
 // ActionEntry describes a context-menu action (label + callback key).
 type ActionEntry struct {
 	Label  string `json:"label"`
 	Action string `json:"action"` // identifier sent to server
+}
+
+// FactSelection is the browser-facing state for one constraint/fact line.
+type FactSelection struct {
+	Index    int    `json:"index"`
+	Text     string `json:"text"`
+	Selected bool   `json:"selected"`
 }
 
 // GraphWidget manages concept-graph interactions (Python: class GraphWidget).
@@ -48,6 +58,11 @@ type GraphWidget struct {
 
 	// FactElems maps fact formulas to the graph elements they reference.
 	FactElems map[string][][]string
+
+	// Constraint selection mirrors tk_graph_ui.selected_constraints. It is
+	// keyed by the current printed constraint list and defaults new lists to on.
+	SelectedConstraints []bool
+	constraintFactTexts []string
 
 	// StructureRenaming maps original names to display names.
 	StructureRenaming map[string]string
@@ -506,11 +521,103 @@ func (w *GraphWidget) HighlightSelectedFacts() {
 	if w.FactElems == nil {
 		return
 	}
-	// Stub: iterate over active facts and select their elements.
+	for _, fact := range w.GetActiveFacts() {
+		for _, elem := range w.FactElems[fact] {
+			switch len(elem) {
+			case 1:
+				w.SelectNode(elem[0], true)
+			case 3:
+				w.SelectEdge(strings.Join(elem, "|"), true)
+			}
+		}
+	}
 }
 
 // GetActiveFacts returns the currently active constraint facts.
 func (w *GraphWidget) GetActiveFacts() []string {
-	// Stub: returns the current set of active facts.
+	exprs := w.GetActiveFactExprs()
+	facts := make([]string, 0, len(exprs))
+	for _, expr := range exprs {
+		facts = append(facts, expr.String())
+	}
+	return facts
+}
+
+// GetActiveFactExprs returns the selected constraint expressions.
+func (w *GraphWidget) GetActiveFactExprs() []goivy.Expr {
+	exprs := w.constraintExprs()
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	texts := w.syncConstraintSelectionLocked(exprs)
+	active := make([]goivy.Expr, 0, len(exprs))
+	for i, expr := range exprs {
+		if i < len(texts) && i < len(w.SelectedConstraints) && w.SelectedConstraints[i] {
+			active = append(active, expr)
+		}
+	}
+	return active
+}
+
+// ConstraintFacts returns the current constraints with selection state.
+func (w *GraphWidget) ConstraintFacts() []FactSelection {
+	exprs := w.constraintExprs()
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	texts := w.syncConstraintSelectionLocked(exprs)
+	facts := make([]FactSelection, 0, len(texts))
+	for i, text := range texts {
+		selected := i < len(w.SelectedConstraints) && w.SelectedConstraints[i]
+		facts = append(facts, FactSelection{Index: i, Text: text, Selected: selected})
+	}
+	return facts
+}
+
+// SetFactSelected toggles one rendered constraint fact.
+func (w *GraphWidget) SetFactSelected(index int, selected bool) error {
+	exprs := w.constraintExprs()
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	w.syncConstraintSelectionLocked(exprs)
+	if index < 0 || index >= len(w.SelectedConstraints) {
+		return fmt.Errorf("fact index %d out of range", index)
+	}
+	w.SelectedConstraints[index] = selected
 	return nil
+}
+
+func (w *GraphWidget) constraintExprs() []goivy.Expr {
+	g := w.G()
+	if g == nil || g.InteractiveSess == nil {
+		return nil
+	}
+	g.mu.RLock()
+	defer g.mu.RUnlock()
+	return append([]goivy.Expr{}, g.InteractiveSess.SupposeConstraints...)
+}
+
+func (w *GraphWidget) syncConstraintSelectionLocked(exprs []goivy.Expr) []string {
+	texts := make([]string, len(exprs))
+	for i, expr := range exprs {
+		texts[i] = expr.String()
+	}
+	if !sameStringSlice(texts, w.constraintFactTexts) {
+		w.constraintFactTexts = append([]string{}, texts...)
+		w.SelectedConstraints = make([]bool, len(texts))
+		for i := range w.SelectedConstraints {
+			w.SelectedConstraints[i] = true
+		}
+	}
+	return texts
+}
+
+func sameStringSlice(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }

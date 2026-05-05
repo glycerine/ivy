@@ -162,16 +162,37 @@ func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
 	return
 }
 
-func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
+func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
 			return nil
 		}
+		var selectedNode string
+		var stateLabel string
+		if nodeID != "" {
+			selectedNode, stateLabel, err = sess.selectConceptARGNode(nodeID)
+			if err != nil {
+				return nil
+			}
+		}
+
+		var checks *Toggles
+		var facts []FactSelection
+		var displayChecks *DisplayCheckboxes
+		sess.mu.Lock()
+		widget := sess.ensureConceptGraphWidgetLocked()
+		displayChecks = sess.ensureConceptChecksLocked()
+		checks = displayChecks.Snapshot()
+		sess.toggles = checks
+		if widget != nil {
+			facts = widget.ConstraintFacts()
+		}
+		sess.mu.Unlock()
 
 		// Render concept graph with octagon nodes, edges, and per-sort colors.
-		cy := RenderConceptGraph(sess.SimpleSess, nil)
+		cy := RenderConceptGraph(sess.SimpleSess, displayChecks)
 		if cy.Elements == nil {
 			cy.Elements = []WebUICyElement{}
 		}
@@ -246,10 +267,14 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 			"abstract_value": abstractValue,
 			"edges":          edges,
 			"elements":       cy.Elements,
+			"facts":          facts,
 			"label_sorts":    labelSorts,
 			"node_labels":    nodeLabels,
 			"nodes":          nodes,
 			"relations":      relations,
+			"selected_node":  selectedNode,
+			"state_label":    stateLabel,
+			"toggles":        checks,
 		})
 		return nil
 	})

@@ -684,6 +684,36 @@ func TestBuildMenuBar(t *testing.T) {
 	}
 }
 
+func TestBrowserMenuDescriptors(t *testing.T) {
+	menus := BuildBrowserMenuDescriptors()
+	if len(menus.Arg) == 0 {
+		t.Fatal("missing ARG menu descriptors")
+	}
+	if len(menus.Concept) == 0 {
+		t.Fatal("missing concept menu descriptors")
+	}
+	var foundUndo bool
+	for _, menu := range menus.Concept {
+		if menu.Label != "Action" {
+			continue
+		}
+		for _, item := range menu.Items {
+			if item.Action == "undo" {
+				foundUndo = true
+				if item.Dispatch != "action" {
+					t.Fatalf("undo dispatch = %q, want action", item.Dispatch)
+				}
+				if !item.Enabled {
+					t.Fatal("undo descriptor should be enabled")
+				}
+			}
+		}
+	}
+	if !foundUndo {
+		t.Fatal("concept Action menu missing undo descriptor")
+	}
+}
+
 // --- Show tests ---
 
 func TestShowVerificationEmptyPath(t *testing.T) {

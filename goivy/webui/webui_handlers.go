@@ -128,7 +128,22 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sessionID st
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	data, err := s.backend.GetConcept(sessionID)
+	nodeID := r.URL.Query().Get("node")
+	data, err := s.backend.GetConcept(sessionID, nodeID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
+}
+
+// apiMenus handles GET /api/session/{id}/menus.
+func (s *Server) apiMenus(w http.ResponseWriter, r *http.Request, sessionID string) {
+	if r.Method != http.MethodGet {
+		writeErr(w, http.StatusMethodNotAllowed, "GET required")
+		return
+	}
+	data, err := canonicalJSON(BuildBrowserMenuDescriptors())
 	if err != nil {
 		writeBackendErr(w, err)
 		return
@@ -254,13 +269,30 @@ func (s *Server) apiToggles(w http.ResponseWriter, r *http.Request, sessionID st
 	var req struct {
 		Edge         string `json:"edge"`
 		DisplayClass string `json:"display_class"`
-		Value        bool   `json:"value"`
+		Class        string `json:"class"`
+		Label        string `json:"label"`
+		Value        *bool  `json:"value"`
+		Visible      *bool  `json:"visible"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	data, err := s.backend.SetToggle(sessionID, req.Edge, req.DisplayClass, req.Value)
+	name := req.Edge
+	if name == "" {
+		name = req.Label
+	}
+	displayClass := req.DisplayClass
+	if displayClass == "" {
+		displayClass = req.Class
+	}
+	value := false
+	if req.Value != nil {
+		value = *req.Value
+	} else if req.Visible != nil {
+		value = *req.Visible
+	}
+	data, err := s.backend.SetToggle(sessionID, name, displayClass, value)
 	if err != nil {
 		writeBackendErr(w, err)
 		return
@@ -405,7 +437,7 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		// Default to the current mode if no body
-		req.Mode = "induction"
+		req.Mode = "pdr"
 	}
 	data, err := s.backend.Check(sessionID, req.Mode)
 	if err != nil {

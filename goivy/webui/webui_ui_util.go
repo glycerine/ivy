@@ -145,9 +145,46 @@ type MenuBarDef struct {
 	Menus []MenuDef `json:"menus"`
 }
 
+// BrowserMenuDescriptors is the browser-facing menu payload. The underlying
+// menu contents still come from the Python-shaped Go UI structs.
+type BrowserMenuDescriptors struct {
+	Arg     []MenuDef `json:"arg"`
+	Concept []MenuDef `json:"concept"`
+}
+
 // BuildMenuBar constructs a MenuBarDef from a list of menu definitions.
 func BuildMenuBar(menus []MenuDef) *MenuBarDef {
 	return &MenuBarDef{Menus: menus}
+}
+
+// BuildBrowserMenuDescriptors returns the current browser menu descriptors.
+func BuildBrowserMenuDescriptors() *BrowserMenuDescriptors {
+	return &BrowserMenuDescriptors{
+		Arg:     BrowserizeMenuDefs(NewAnalysisGraphUI().Menus(), "action"),
+		Concept: BrowserizeMenuDefs(NewGraphWidget(nil).Menus(), "action"),
+	}
+}
+
+// BrowserizeMenuDefs annotates toolkit-independent menu specs with browser
+// dispatch metadata and enabled state.
+func BrowserizeMenuDefs(menus []MenuDef, dispatch string) []MenuDef {
+	result := make([]MenuDef, len(menus))
+	for i, menu := range menus {
+		result[i] = MenuDef{
+			Type:  menu.Type,
+			Label: menu.Label,
+			Items: make([]MenuItem, len(menu.Items)),
+		}
+		for j, item := range menu.Items {
+			next := item
+			if next.Dispatch == "" && next.Type != "separator" {
+				next.Dispatch = dispatch
+			}
+			next.Enabled = next.Type != "separator" && next.Action != ""
+			result[i].Items[j] = next
+		}
+	}
+	return result
 }
 
 // RunContext is a context manager analog for handling errors during

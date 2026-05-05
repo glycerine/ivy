@@ -153,6 +153,60 @@ func (dc *DisplayCheckboxes) SetNodeLabelCheckbox(labelName, checkboxName string
 	}
 }
 
+func edgeDisplayIndex(className string) int {
+	for i, name := range EdgeDisplayCheckboxes {
+		if name == className {
+			return i
+		}
+	}
+	return -1
+}
+
+func bareRelationName(name string) string {
+	if i := strings.Index(name, "("); i >= 0 {
+		return name[:i]
+	}
+	return name
+}
+
+// SetCheckboxClass sets a display checkbox by class name. It mirrors
+// Python Graph.set_checkbox by updating both edge and node-label maps
+// for the shared +/?/- columns.
+func (dc *DisplayCheckboxes) SetCheckboxClass(name, className string, val bool) {
+	name = bareRelationName(name)
+	idx := edgeDisplayIndex(className)
+	if idx < 0 {
+		return
+	}
+	dc.SetEdgeCheckbox(name, className, val)
+	if idx < len(NodeLabelDisplayCheckboxes) {
+		dc.SetNodeLabelCheckbox(name, NodeLabelDisplayCheckboxes[idx], val)
+	}
+}
+
+// Snapshot returns a JSON-ready copy of checkbox state.
+func (dc *DisplayCheckboxes) Snapshot() *Toggles {
+	dc.mu.RLock()
+	defer dc.mu.RUnlock()
+	out := &Toggles{
+		Edges:  make(map[string]map[string]bool, len(dc.EdgeDisplayCheckboxes)),
+		Labels: make(map[string]map[string]bool, len(dc.NodeLabelDisplayCheckboxes)),
+	}
+	for name, boxes := range dc.EdgeDisplayCheckboxes {
+		out.Edges[name] = make(map[string]bool, len(boxes))
+		for className, opt := range boxes {
+			out.Edges[name][className] = opt.Val
+		}
+	}
+	for name, boxes := range dc.NodeLabelDisplayCheckboxes {
+		out.Labels[name] = make(map[string]bool, len(boxes))
+		for className, opt := range boxes {
+			out.Labels[name][className] = opt.Val
+		}
+	}
+	return out
+}
+
 // Graph is the central concept graph model (Python: class Graph).
 // It manages the concept domain, checkbox display state, and graph operations.
 type Graph struct {
@@ -345,12 +399,18 @@ func (g *Graph) Recompute() {
 // idx maps: 0=all_to_all/node_necessarily, 1=edge_unknown/node_maybe,
 // 2=none_to_none/node_necessarily_not, 3=transitive (edges only).
 func (g *Graph) SetCheckbox(obj string, idx int, val bool) {
+	obj = bareRelationName(obj)
 	if idx < len(EdgeDisplayCheckboxes) {
 		g.Checks.SetEdgeCheckbox(obj, EdgeDisplayCheckboxes[idx], val)
 	}
 	if idx < len(NodeLabelDisplayCheckboxes) {
 		g.Checks.SetNodeLabelCheckbox(obj, NodeLabelDisplayCheckboxes[idx], val)
 	}
+}
+
+// SetCheckboxClass sets a checkbox by display class name.
+func (g *Graph) SetCheckboxClass(obj, className string, val bool) {
+	g.Checks.SetCheckboxClass(obj, className, val)
 }
 
 // GetCheckbox gets a checkbox value by concept name and index.
@@ -577,11 +637,12 @@ func (g *Graph) SetFactsExpr(facts []goivy.Expr) {
 
 // GetFacts gathers definite facts from the current abstract value (Python: Graph.get_facts).
 func (g *Graph) GetFacts(definite bool) []string {
-	g.mu.RLock()
-	defer g.mu.RUnlock()
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
 		proj := func(a, b, c string) bool { return true }
 		facts := g.InteractiveSess.GetFacts(proj)
+		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
 		result := make([]string, 0, len(facts))
 		for _, f := range facts {
 			result = append(result, f.String())
@@ -684,6 +745,11 @@ func NewGraphStack(g *Graph) *GraphStack {
 // CanUndo returns whether undo is available.
 func (gs *GraphStack) CanUndo() bool {
 	return len(gs.UndoStack) > 0
+}
+
+// CanRedo returns whether redo is available.
+func (gs *GraphStack) CanRedo() bool {
+	return len(gs.RedoStack) > 0
 }
 
 // Undo rolls back to the most recent checkpoint.

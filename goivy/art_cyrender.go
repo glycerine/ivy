@@ -200,6 +200,12 @@ func NewAnalysisGraphState() *AnalysisGraphState {
 	return &AnalysisGraphState{}
 }
 
+func displayARGEdgeLabel(label string) string {
+	label = strings.ReplaceAll(label, "-[", "{")
+	label = strings.ReplaceAll(label, "]-", "}")
+	return label
+}
+
 // RenderARG converts an AnalysisGraphState into Cytoscape elements.
 func RenderARG(ag *AnalysisGraphState) *CyElements {
 	g := NewCyElements()
@@ -230,14 +236,15 @@ func RenderARG(ag *AnalysisGraphState) *CyElements {
 		if tr.IsJoin {
 			cls = "transition_join"
 		}
+		label := displayARGEdgeLabel(tr.Label)
 		g.AddEdge(
 			fmt.Sprintf("tr_%d_%d", tr.SourceID, tr.TargetID),
 			fmt.Sprintf("state_%d", tr.SourceID),
 			fmt.Sprintf("state_%d", tr.TargetID),
-			tr.Label,
+			label,
 			[]string{cls},
-			tr.Label,
-			tr.Label,
+			label,
+			label,
 		)
 	}
 

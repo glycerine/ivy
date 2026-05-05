@@ -148,8 +148,8 @@ func TestConformConcept(t *testing.T) {
 	goBE.Load(goSID, "test.ivy", []byte(ivySample))
 	pyBE.Load(pySID, "test.ivy", []byte(ivySample))
 
-	goConcept, goErr := goBE.GetConcept(goSID)
-	pyConcept, pyErr := pyBE.GetConcept(pySID)
+	goConcept, goErr := goBE.GetConcept(goSID, "")
+	pyConcept, pyErr := pyBE.GetConcept(pySID, "")
 
 	if goErr != nil {
 		t.Fatalf("Go Concept error: %v", goErr)

@@ -123,9 +123,17 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 					nKey := fmt.Sprintf("node_label|node_necessarily|%s|%s", sortName, labelName)
 					nnKey := fmt.Sprintf("node_label|node_necessarily_not|%s|%s", sortName, labelName)
 					if cs.AbstractValue[nKey] {
+						if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelNecessarily) {
+							continue
+						}
 						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], labelName)
 					} else if cs.AbstractValue[nnKey] {
+						if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelNecessarilyNot) {
+							continue
+						}
 						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], "~"+labelName)
+					} else if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelMaybe) {
+						continue
 					}
 				}
 			}

@@ -55,3 +55,65 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 		t.Fatal("sub_arg elements empty")
 	}
 }
+
+func TestArgViewSourceReturnsLoadedSourceAndLine(t *testing.T) {
+	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read example: %v", err)
+	}
+
+	s := NewSession(goivy.NewConfig(), "test-view-source")
+	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message: %s", cr.Result, cr.Message)
+	}
+
+	result, err := s.ArgNodeAction("state_0", "view_source", map[string]interface{}{"target": "state_1"})
+	if err != nil {
+		t.Fatalf("ArgNodeAction view_source: %v", err)
+	}
+	if got := result["source"]; got != string(content) {
+		t.Fatalf("source mismatch: got %T %q", got, got)
+	}
+	if file, _ := result["file"].(string); file == "" {
+		t.Fatalf("file missing: %#v", result)
+	}
+}
+
+func TestArgViewSourceLocatedActionReturnsLine(t *testing.T) {
+	const source = "line1\naction go = {\n}\n"
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	act := goivy.NewAssumeAction(goivy.True)
+	act.SetLineno(goivy.Location{Filename: "sample.ivy", Line: 2})
+	ag.Add(pre, nil)
+	ag.Add(post, goivy.NewActionApp(act, pre))
+
+	s := NewSession(goivy.NewConfig(), "test-view-source-located")
+	s.FilePath = "sample.ivy"
+	s.FileContent = source
+	s.AG = ag
+	s.AGUI = NewAnalysisGraphUI()
+	s.AGUI.AG = ag
+	s.AGUI.Mod = mod
+
+	result, err := s.ArgNodeAction("state_0", "view_source", map[string]interface{}{"target": "state_1"})
+	if err != nil {
+		t.Fatalf("ArgNodeAction view_source: %v", err)
+	}
+	if got := result["source"]; got != source {
+		t.Fatalf("source mismatch: got %T %q", got, got)
+	}
+	if got := result["file"]; got != "sample.ivy" {
+		t.Fatalf("file = %#v, want sample.ivy", got)
+	}
+	if got := result["lineno"]; got != 2 {
+		t.Fatalf("lineno = %#v, want 2", got)
+	}
+}

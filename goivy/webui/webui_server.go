@@ -162,6 +162,8 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.apiAction(w, r, sid)
 	case "arg":
 		s.apiARG(w, r, sid)
+	case "menus":
+		s.apiMenus(w, r, sid)
 	case "concept":
 		s.apiConcept(w, r, sid)
 	case "concept/split":

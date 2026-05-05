@@ -23,7 +23,7 @@ type Backend interface {
 	LoadPath(sessionID, path string) ([]byte, error)
 	Action(sessionID, action string, args map[string]interface{}) ([]byte, error)
 	GetARG(sessionID string) ([]byte, error)
-	GetConcept(sessionID string) ([]byte, error)
+	GetConcept(sessionID, nodeID string) ([]byte, error)
 	ConceptSplit(sessionID, concept, splitBy string) ([]byte, error)
 	ConceptEmpty(sessionID, concept string) ([]byte, error)
 	ConceptRemove(sessionID, concept string) ([]byte, error)

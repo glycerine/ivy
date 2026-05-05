@@ -188,6 +188,26 @@ func TestRenderARGTransitions(t *testing.T) {
 	}
 }
 
+func TestRenderARGTransitionLabelUnescapesBraceMarkers(t *testing.T) {
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
+			{ID: 0, Label: "0"},
+			{ID: 1, Label: "1"},
+		},
+		Transitions: []WebUIARGTransition{
+			{SourceID: 0, TargetID: 1, Label: "choice -[assume p]-"},
+		},
+	}
+	g := RenderWebUIARG(ag)
+	edge := g.Elements[2]
+	if got := edge.Data["label"]; got != "choice {assume p}" {
+		t.Fatalf("edge label = %q, want %q", got, "choice {assume p}")
+	}
+	if got := edge.Data["short_info"]; got != "choice {assume p}" {
+		t.Fatalf("edge short_info = %q, want %q", got, "choice {assume p}")
+	}
+}
+
 func TestRenderARGJoinEdge(t *testing.T) {
 	ag := &WebUIAnalysisGraphState{
 		States: []WebUIARGNode{
