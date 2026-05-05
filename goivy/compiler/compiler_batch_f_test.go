@@ -1003,4 +1003,3 @@ func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
 		t.Errorf("error should mention symbol being assigned, got: %s", err.Error())
 	}
 }
-

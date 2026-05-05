@@ -23,8 +23,8 @@ type ConceptCombiner struct {
 // ConceptDomain holds all concepts and combiners for a session.
 // Mirrors Python's ConceptDomain with categorization lists.
 type ConceptDomain struct {
-	Concepts   map[string]*Concept  `json:"concepts"`
-	Combiners  []*ConceptCombiner   `json:"combiners"`
+	Concepts  map[string]*Concept `json:"concepts"`
+	Combiners []*ConceptCombiner  `json:"combiners"`
 	// Categorization lists (matching Python concept.py):
 	Nodes      []string `json:"nodes"`       // sort concepts (one per sort)
 	Edges      []string `json:"edges"`       // binary relation concepts (arity 2)

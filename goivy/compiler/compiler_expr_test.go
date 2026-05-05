@@ -413,7 +413,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 	if len(lowered) != 1 {
 		t.Fatalf("expected 1 lowered node, got %d", len(lowered))
 	}
-	la, ok := lowered[0].(*ast.LocalAction)
+	la, ok := lowered[0].(*ast.AstLocalAction)
 	if !ok {
 		t.Fatalf("expected *ast.LocalAction, got %T", lowered[0])
 	}
@@ -426,7 +426,7 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 	body := la.Elems[len(la.Elems)-1]
 
 	// The first local decl should be an AssignAction
-	if _, ok := localDecls[0].(*ast.AssignAction); !ok {
+	if _, ok := localDecls[0].(*ast.AstAssignAction); !ok {
 		t.Fatalf("expected localDecls[0] to be *ast.AssignAction, got %T", localDecls[0])
 	}
 

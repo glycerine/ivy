@@ -16,7 +16,7 @@ import (
 )
 
 // Config holds per-session ACL state (ignore/assume lists).
-type Config struct {
+type ACLConfig struct {
 	mu           sync.RWMutex
 	ignores      map[string]bool
 	ignoresRegex *regexp.Regexp
@@ -25,8 +25,8 @@ type Config struct {
 }
 
 // NewConfig creates a new ACL Config with empty ignore/assume lists.
-func NewConfig() *Config {
-	return &Config{
+func NewACLConfig() *ACLConfig {
+	return &ACLConfig{
 		ignores: make(map[string]bool),
 		assumes: make(map[string]bool),
 	}
@@ -34,7 +34,7 @@ func NewConfig() *Config {
 
 // RegisterIgnores sets the list of theorem names to skip.
 // Names starting with "regex(" are compiled as regular expressions.
-func (cfg *Config) RegisterIgnores(ignList []string) error {
+func (cfg *ACLConfig) RegisterIgnores(ignList []string) error {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 
@@ -67,7 +67,7 @@ func (cfg *Config) RegisterIgnores(ignList []string) error {
 }
 
 // RegisterAssumes sets the list of theorem names to assume without proof.
-func (cfg *Config) RegisterAssumes(assList []string) error {
+func (cfg *ACLConfig) RegisterAssumes(assList []string) error {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 
@@ -100,7 +100,7 @@ func (cfg *Config) RegisterAssumes(assList []string) error {
 }
 
 // Register sets both ignore and assume lists.
-func (cfg *Config) Register(ignList, assList []string) error {
+func (cfg *ACLConfig) Register(ignList, assList []string) error {
 	if err := cfg.RegisterIgnores(ignList); err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (cfg *Config) Register(ignList, assList []string) error {
 }
 
 // IsIgnored returns true if the named theorem should be skipped.
-func (cfg *Config) IsIgnored(name string) bool {
+func (cfg *ACLConfig) IsIgnored(name string) bool {
 	cfg.mu.RLock()
 	defer cfg.mu.RUnlock()
 
@@ -122,7 +122,7 @@ func (cfg *Config) IsIgnored(name string) bool {
 }
 
 // IsAssumed returns true if the named theorem should be assumed.
-func (cfg *Config) IsAssumed(name string) bool {
+func (cfg *ACLConfig) IsAssumed(name string) bool {
 	cfg.mu.RLock()
 	defer cfg.mu.RUnlock()
 
@@ -136,17 +136,17 @@ func (cfg *Config) IsAssumed(name string) bool {
 }
 
 // ShouldSkip returns true if the named theorem should be skipped (alias for IsIgnored).
-func (cfg *Config) ShouldSkip(name string) bool {
+func (cfg *ACLConfig) ShouldSkip(name string) bool {
 	return cfg.IsIgnored(name)
 }
 
 // ShouldAssume returns true if the named theorem should be assumed (alias for IsAssumed).
-func (cfg *Config) ShouldAssume(name string) bool {
+func (cfg *ACLConfig) ShouldAssume(name string) bool {
 	return cfg.IsAssumed(name)
 }
 
 // GetIgnoresList returns the current set of ignored names.
-func (cfg *Config) GetIgnoresList() map[string]bool {
+func (cfg *ACLConfig) GetIgnoresList() map[string]bool {
 	cfg.mu.RLock()
 	defer cfg.mu.RUnlock()
 	result := make(map[string]bool, len(cfg.ignores))
@@ -157,7 +157,7 @@ func (cfg *Config) GetIgnoresList() map[string]bool {
 }
 
 // GetAssumesList returns the current set of assumed names.
-func (cfg *Config) GetAssumesList() map[string]bool {
+func (cfg *ACLConfig) GetAssumesList() map[string]bool {
 	cfg.mu.RLock()
 	defer cfg.mu.RUnlock()
 	result := make(map[string]bool, len(cfg.assumes))
@@ -170,7 +170,7 @@ func (cfg *Config) GetAssumesList() map[string]bool {
 // RegisterFromFile loads ACL rules from a YAML file.
 // The file should have optional keys "ignores" and "assumes", each a list of
 // strings. Matches Python ivy_acl.register_from_file (ivy_acl.py:55-71).
-func RegisterFromFile(path string) (*Config, error) {
+func RegisterFromFile(path string) (*ACLConfig, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("acl: reading %s: %w", path, err)
@@ -184,7 +184,7 @@ func RegisterFromFile(path string) (*Config, error) {
 			return nil, fmt.Errorf("acl: parsing %s: %w", path, err)
 		}
 	}
-	cfg := NewConfig()
+	cfg := NewACLConfig()
 	if err := cfg.Register(doc.Ignores, doc.Assumes); err != nil {
 		return nil, fmt.Errorf("acl: %s: %w", path, err)
 	}
@@ -192,7 +192,7 @@ func RegisterFromFile(path string) (*Config, error) {
 }
 
 // Clear resets all ACL state.
-func (cfg *Config) Clear() {
+func (cfg *ACLConfig) Clear() {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 	cfg.ignores = make(map[string]bool)

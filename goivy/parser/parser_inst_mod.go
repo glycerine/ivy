@@ -30,7 +30,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 	var others []ast.Node
 
 	for _, instantiation := range insts {
-		inst, ok := instantiation.(*ast.Instantiation)
+		inst, ok := instantiation.(*ast.AstInstantiation)
 		if !ok {
 			others = append(others, instantiation)
 			continue
@@ -68,7 +68,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 		var formalParams []ast.Node
 		var moduleBody ast.Node
 		for _, arg := range defn.Args() {
-			if d, ok := arg.(*ast.Definition); ok {
+			if d, ok := arg.(*ast.AstDefinition); ok {
 				if lhs, ok := d.Lhs.(*ast.Atom); ok {
 					formalParams = lhs.Terms
 				}
@@ -106,7 +106,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 		var modAccum *ivyAccum
 		if ma, ok := moduleBody.(*ivyAccum); ok {
 			modAccum = ma
-		} else if seq, ok := moduleBody.(*ast.Sequence); ok {
+		} else if seq, ok := moduleBody.(*ast.AstSequence); ok {
 			// Backward compat: old-style Sequence bodies (before B2 migration)
 			modAccum = &ivyAccum{decls: seq.Stmts}
 		} else {

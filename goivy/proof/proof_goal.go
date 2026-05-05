@@ -55,7 +55,7 @@ func GoalConcExpr(g *ast.LabeledFormula) lg.Expr {
 // Mirrors Python pattern at ivy_proof.py:580 (`conc_fmla = conc.fmla if
 // isinstance(conc,ia.TemporalModels) else conc`).
 func ConcAsExpr(c ast.Node) lg.Expr {
-	if tm, ok := c.(*ast.TemporalModels); ok {
+	if tm, ok := c.(*ast.AstTemporalModels); ok {
 		if e, ok := tm.Fmla.(lg.Expr); ok {
 			return e
 		}
@@ -84,7 +84,7 @@ func ApplyToConc(conc ast.Node, fn func(lg.Expr) lg.Expr) ast.Node {
 		return conc
 	}
 	xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", iu.TypeName(conc), conc.Canon())
-	if tm, ok := conc.(*ast.TemporalModels); ok {
+	if tm, ok := conc.(*ast.AstTemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
 			result := tm.Clone([]ast.Node{fn(innerExpr)})
 			xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%v", result.Canon())
@@ -116,7 +116,7 @@ func normalizeOpsConc(conc ast.Node) ast.Node {
 	if conc == nil {
 		return conc
 	}
-	if tm, ok := conc.(*ast.TemporalModels); ok {
+	if tm, ok := conc.(*ast.AstTemporalModels); ok {
 		if inner, ok := tm.Fmla.(lg.Expr); ok {
 			return tm.Clone([]ast.Node{il.NormalizeOps(inner)})
 		}
@@ -659,7 +659,7 @@ func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.Label
 
 	// Python: lhs = lf.formula.args[0]
 	// The formula is an *ast.Definition with Lhs and Rhs.
-	defFormula, ok := innerLF.Formula.(*ast.Definition)
+	defFormula, ok := innerLF.Formula.(*ast.AstDefinition)
 	if !ok {
 		return goal, nil
 	}

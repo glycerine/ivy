@@ -336,7 +336,6 @@ func isSkolem(c *lg.Const) bool {
 	return strings.Contains(c.Name, "__")
 }
 
-
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
 func usesSymbolsAST(syms *iu.InsMap[lg.NodeKey, lg.Expr], node lg.Expr) bool {
 	used := il.UsedSymbolsAst(node)

@@ -417,7 +417,7 @@ func TestAigerGateGeneration(t *testing.T) {
 
 func TestEncoderNewEncoder(t *testing.T) {
 	sort3 := &lg.EnumeratedSort{Name: "s3", Extension: []string{"a", "b", "c", "d", "e", "f", "g", "h"}} // 8 vals → 3 bits
-	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}                      // 4 vals → 2 bits
+	sort2 := &lg.EnumeratedSort{Name: "s2", Extension: []string{"a", "b", "c", "d"}}                     // 4 vals → 2 bits
 	xSym := lg.NewConst("x", sort3)
 	sSym := lg.NewConst("s", sort2)
 	oSym := lg.NewConst("o", lg.Boolean)
@@ -698,7 +698,7 @@ func TestCeilLog2(t *testing.T) {
 		{256, 8},
 	}
 	for _, c := range cases {
-		got := CeilLog2(c.n)
+		got := MCCeilLog2(c.n)
 		if got != c.expect {
 			t.Errorf("CeilLog2(%d) = %d, want %d", c.n, got, c.expect)
 		}
@@ -1381,7 +1381,7 @@ func FuzzCeilLog2(f *testing.F) {
 		if n < 0 {
 			return
 		}
-		bits := CeilLog2(n)
+		bits := MCCeilLog2(n)
 		if bits < 0 {
 			t.Errorf("CeilLog2(%d) = %d, should be non-negative", n, bits)
 		}
@@ -1561,11 +1561,11 @@ func TestAigerNotlConstants(t *testing.T) {
 }
 
 func TestCeilLog2Large(t *testing.T) {
-	if CeilLog2(1024) != 10 {
-		t.Errorf("CeilLog2(1024) = %d, want 10", CeilLog2(1024))
+	if MCCeilLog2(1024) != 10 {
+		t.Errorf("CeilLog2(1024) = %d, want 10", MCCeilLog2(1024))
 	}
-	if CeilLog2(1025) != 11 {
-		t.Errorf("CeilLog2(1025) = %d, want 11", CeilLog2(1025))
+	if MCCeilLog2(1025) != 11 {
+		t.Errorf("CeilLog2(1025) = %d, want 11", MCCeilLog2(1025))
 	}
 }
 

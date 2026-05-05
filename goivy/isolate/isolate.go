@@ -1682,7 +1682,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Python lines 1369-1371: Also check definitions for NativeExpr.
 		for _, dfn := range mod.Definitions {
 			if dfn.Formula != nil {
-				if _, isNative := dfn.Formula.(*ast.NativeExpr); isNative {
+				if _, isNative := dfn.Formula.(*ast.AstNativeExpr); isNative {
 					return fmt.Errorf("trusted code used in untrusted isolate (in definition)")
 				}
 			}

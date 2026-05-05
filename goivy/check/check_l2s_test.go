@@ -298,7 +298,7 @@ func TestFindTemporalModels_Nil(t *testing.T) {
 }
 
 func TestFindTemporalModels_DirectTM(t *testing.T) {
-	tm := &ast.TemporalModels{Fmla: lg.True}
+	tm := &ast.AstTemporalModels{Fmla: lg.True}
 	lf := l2sTestCfg.NewLabeledFormula(lg.NewConst("g", lg.Boolean), tm)
 	result := findTemporalModels(lf)
 	if result != tm {
@@ -307,7 +307,7 @@ func TestFindTemporalModels_DirectTM(t *testing.T) {
 }
 
 func TestFindTemporalModels_SchemaTM(t *testing.T) {
-	tm := &ast.TemporalModels{Fmla: lg.True}
+	tm := &ast.AstTemporalModels{Fmla: lg.True}
 	prem := lg.NewConst("p", lg.Boolean)
 	sb := l2sTestCfg.NewSchemaBody(prem, tm)
 	lf := l2sTestCfg.NewLabeledFormula(lg.NewConst("g", lg.Boolean), sb)

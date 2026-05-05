@@ -1,6 +1,6 @@
 // Ported to Go from concept_alpha.py.
 //
-// Alpha implements the alpha abstraction for concept domains:
+// WebUIAlpha implements the alpha abstraction for concept domains:
 // given a concept domain and a state formula, it determines for each
 // concept fact whether it is necessarily true in the state.
 package webui
@@ -12,7 +12,7 @@ import (
 	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
-// Alpha computes the alpha abstraction of a concept domain against a state formula.
+// WebUIAlpha computes the alpha abstraction of a concept domain against a state formula.
 //
 // For each fact (tag, formula) produced by domain.GetFacts(projection),
 // it checks whether the state formula implies the fact formula using Z3.
@@ -21,7 +21,7 @@ import (
 // The cache maps TagString(tag) -> bool and is updated in-place.
 //
 // Returns a list of (Tag, bool) pairs.
-func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
+func WebUIAlpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
 	facts := domain.GetFacts(projection)
 
 	if cache == nil {
@@ -46,7 +46,7 @@ func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, pro
 		func() {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Printf("Alpha: Z3 panic for tag %v: %v\n", fact.Tag, r)
+					fmt.Printf("WebUIAlpha: Z3 panic for tag %v: %v\n", fact.Tag, r)
 				}
 			}()
 			if fact.Formula == nil || state == nil {
@@ -78,9 +78,9 @@ func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, pro
 	return result
 }
 
-// AlphaNoSolver computes alpha abstraction without Z3, using only the cache.
+// WebUIAlphaNoSolver computes alpha abstraction without Z3, using only the cache.
 // Facts not in the cache default to false.
-func AlphaNoSolver(domain *CDConceptDomain, cache map[string]bool, projection func(string, string) bool) []TagValue {
+func WebUIAlphaNoSolver(domain *CDConceptDomain, cache map[string]bool, projection func(string, string) bool) []TagValue {
 	facts := domain.GetFacts(projection)
 	var result []TagValue
 	for _, fact := range facts {

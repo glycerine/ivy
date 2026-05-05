@@ -1018,7 +1018,7 @@ func BuildDependenciesFunc(defnDeps map[lg.NodeKey][]lg.NodeKey) func(map[lg.Nod
 }
 
 // FindTemporalModels looks through the goal formula for a TemporalModels node.
-func FindTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
+func FindTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	return findTemporalModels(goal)
 }
 

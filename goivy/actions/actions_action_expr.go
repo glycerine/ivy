@@ -348,7 +348,7 @@ func (a *IfAction) Clone(args []ast.Node) ast.Node {
 	var astCond ast.Node
 
 	switch args[0].(type) {
-	case *ast.Some, *ast.SomeMin, *ast.SomeMax:
+	case *ast.AstSome, *ast.AstSomeMin, *ast.AstSomeMax:
 		astCond = args[0]
 		cond = someCondFromAST(args[0])
 	default:
@@ -403,7 +403,7 @@ func (a *WhileAction) Clone(args []ast.Node) ast.Node {
 	var astCond ast.Node
 
 	switch args[0].(type) {
-	case *ast.Some, *ast.SomeMin, *ast.SomeMax:
+	case *ast.AstSome, *ast.AstSomeMin, *ast.AstSomeMax:
 		astCond = args[0]
 		cond = someCondFromAST(args[0])
 	default:

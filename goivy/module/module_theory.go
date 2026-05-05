@@ -129,7 +129,7 @@ func (m *Module) GetAxioms() []lg.Expr {
 	// Here we iterate over schemata and collect any instances if they
 	// implement an interface that provides them.
 	for _, sch := range m.Schemata.All() {
-		if astSchema, ok := sch.(*ast.Schema); ok {
+		if astSchema, ok := sch.(*ast.AstSchema); ok {
 			for _, inst := range astSchema.Instances {
 				if expr, ok := inst.(lg.Expr); ok {
 					res = append(res, expr)

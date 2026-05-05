@@ -391,7 +391,7 @@ func (p *csParser) parseAtom() (*CSAtom, error) {
 	return &CSAtom{RelName: name.val, Args: args}, nil
 }
 
-// parseTerms parses: terms = '' | term (',' term)*
+// parseTerms parses: terms = ” | term (',' term)*
 func (p *csParser) parseTerms() ([]CSTerm, error) {
 	if p.peek().typ == csTokRParen {
 		return nil, nil

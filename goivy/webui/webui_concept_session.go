@@ -14,7 +14,7 @@ type ConceptSession struct {
 
 // undoEntry stores the state needed to undo one operation.
 type undoEntry struct {
-	Domain           *ConceptDomain
+	Domain            *ConceptDomain
 	SupposeContraints []string // formula strings
 }
 
@@ -189,10 +189,11 @@ func (cs *ConceptSession) RelationNames() []string {
 
 // Splatter splits a concept node into sub-nodes, one per constant of its sort.
 // Matches Python's ivy_graph.py Graph.splatter:
-//   1. Collects constants of the node's sort
-//   2. Creates a concept "(node+const)" for each constant: X = const & node_formula
-//   3. Replaces the original node in Domain.Nodes with the new sub-nodes
-//   4. Recomputes
+//  1. Collects constants of the node's sort
+//  2. Creates a concept "(node+const)" for each constant: X = const & node_formula
+//  3. Replaces the original node in Domain.Nodes with the new sub-nodes
+//  4. Recomputes
+//
 // If constants is nil, the caller should provide the available constants.
 func (cs *ConceptSession) Splatter(concept string, constants []string) error {
 	c, ok := cs.Domain.Concepts[concept]
@@ -242,7 +243,7 @@ func (cs *ConceptSession) Splatter(concept string, constants []string) error {
 // Recompute recomputes the abstract value from the domain.
 // Full implementation requires a CDConceptDomain and a state formula,
 // which are managed by the analysis session. When those are available,
-// this calls Alpha(cdDomain, stateFormula, cache, projection) and
+// this calls WebUIAlpha(cdDomain, stateFormula, cache, projection) and
 // updates AbstractValue. Without a state formula, it resets the cache.
 func (cs *ConceptSession) Recompute() {
 	// Without an analysis session providing the state formula and

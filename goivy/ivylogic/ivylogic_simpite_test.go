@@ -160,4 +160,3 @@ func TestSimpIte_NoSimplification(t *testing.T) {
 		t.Errorf("expected else=%v, got %v", y, ite.Else)
 	}
 }
-

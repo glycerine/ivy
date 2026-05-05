@@ -51,7 +51,7 @@ type autoKey struct {
 // It operates on the ivyAccum in-place, matching Python's mutation of ivy.decls.
 func expandAutoInstances(ivy *ivyAccum) {
 	xtracer.Trace("parser.expand_autoinstances ENTER")
-	autos := make(map[autoKey][]*ast.Instantiation)
+	autos := make(map[autoKey][]*ast.AstInstantiation)
 	trefs := make(map[string]bool)
 	decls := ivy.decls
 	xtracer.Trace("parser.expand_auto ENTER decls=%d", len(decls))
@@ -65,7 +65,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 			// Python: for inst in decl.args:
 			//             if len(inst.args) == 2:
 			for _, arg := range aid.Args() {
-				inst, ok := arg.(*ast.Instantiation)
+				inst, ok := arg.(*ast.AstInstantiation)
 				if !ok || inst == nil {
 					continue
 				}
@@ -222,7 +222,7 @@ func getTypeNamesFromDecl(decl ast.Node, names *TypeNames) {
 		args := d.Args()
 		if len(args) > 0 {
 			mysym := args[0]
-			if defn, ok := mysym.(*ast.Definition); ok {
+			if defn, ok := mysym.(*ast.AstDefinition); ok {
 				if defnArgs := defn.Args(); len(defnArgs) > 0 {
 					mysym = defnArgs[0]
 				}
@@ -237,7 +237,7 @@ func getTypeNamesFromDecl(decl ast.Node, names *TypeNames) {
 		//             for s in t.args: tterm_type_names(s, names)
 		for _, arg := range d.Args() {
 			if td, ok := arg.(*ast.TypeDef); ok && td.Value != nil {
-				if ss, ok := td.Value.(*ast.StructSort); ok {
+				if ss, ok := td.Value.(*ast.AstStructSort); ok {
 					for _, s := range ss.Args() {
 						ttermTypeNames(s, names)
 					}
@@ -290,7 +290,7 @@ func getTypeNamesFromAction(action ast.Node, names *TypeNames) {
 	// Walk action tree looking for LocalAction nodes.
 	// Python's iter_subactions yields self and all nested sub-actions.
 	walkActions(action, func(a ast.Node) {
-		if la, ok := a.(*ast.LocalAction); ok {
+		if la, ok := a.(*ast.AstLocalAction); ok {
 			// Python: for c in a.args[:-1] — all args except the last (the body)
 			elems := la.Elems
 			if len(elems) > 1 {

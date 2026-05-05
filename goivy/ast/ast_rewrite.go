@@ -526,8 +526,8 @@ func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 // Go has no inheritance, so we enumerate all tactic struct types.
 func isTacticType(x Node) bool {
 	switch x.(type) {
-	case *Tactic, *TacticTactic, *TacticWith, *TacticLets,
-		*ComposeTactics, *ProofTactic, *SchemaInstantiation,
+	case *AstTactic, *TacticTactic, *TacticWith, *TacticLets,
+		*ComposeTactics, *AstProofTactic, *SchemaInstantiation,
 		*AssumeTactic, *AssumeGlobalTactic, *UnfoldTactic,
 		*ForgetTactic, *ShowGoalsTactic, *DeferGoalTactic,
 		*NullTactic, *LetTactic, *WitnessTactic, *SpoilTactic,
@@ -652,7 +652,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 
 		// Check if Rep is a NamedBinder
-		if nb, ok := n.Rep.(*NamedBinder); ok {
+		if nb, ok := n.Rep.(*AstNamedBinder); ok {
 			newRep := AstRewrite(nb, rewrite)
 			newArgs := AstRewriteSlice(n.Terms, rewrite)
 			newApp := &App{Rep: newRep, Terms: newArgs}
@@ -701,30 +701,30 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 		return newApp
 
-	case *Literal:
+	case *AstLiteral:
 		// Python: isinstance(x, Literal)
 		newAtom := AstRewrite(n.Atom, rewrite)
-		lit := &Literal{Polarity: n.Polarity, Atom: newAtom}
+		lit := &AstLiteral{Polarity: n.Polarity, Atom: newAtom}
 		lit.Cfg = n.Cfg
 		return lit
 
-	case *Forall:
+	case *AstForall:
 		// Python: isinstance(x, Quantifier) — Forall is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &Forall{Base: n.Base, Bounds: newBounds, Body: newBody}
+		return &AstForall{Base: n.Base, Bounds: newBounds, Body: newBody}
 
-	case *Exists:
+	case *AstExists:
 		// Python: isinstance(x, Quantifier) — Exists is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &Exists{Base: n.Base, Bounds: newBounds, Body: newBody}
+		return &AstExists{Base: n.Base, Bounds: newBounds, Body: newBody}
 
-	case *NamedBinder:
+	case *AstNamedBinder:
 		// Python: isinstance(x, NamedBinder)
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return &NamedBinder{Base: n.Base, Name: n.Name, Bounds: newBounds, Body: newBody}
+		return &AstNamedBinder{Base: n.Base, Name: n.Name, Bounds: newBounds, Body: newBody}
 
 	case *LabeledFormula:
 		// Python: isinstance(x, LabeledFormula)

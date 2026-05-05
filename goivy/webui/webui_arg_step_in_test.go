@@ -48,7 +48,7 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if !ok {
 		t.Fatalf("sub_arg missing or wrong type: %#v", result["sub_arg"])
 	}
-	elements, ok := subARG["elements"].([]CyElement)
+	elements, ok := subARG["elements"].([]WebUICyElement)
 	if !ok {
 		t.Fatalf("sub_arg elements missing or wrong type: %#v", subARG["elements"])
 	}

@@ -619,8 +619,6 @@ func UsedSymbolsClauses(clauses *Clauses) *iu.InsMap[lg.NodeKey, lg.Expr] {
 	return result
 }
 
-
-
 func ClausesUsingSymbols(syms *iu.InsMap[lg.NodeKey, lg.Expr], clauses *Clauses) *Clauses {
 	var fmlas []lg.Expr
 	for _, f := range clauses.Fmlas {

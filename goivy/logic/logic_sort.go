@@ -31,9 +31,9 @@ type UninterpretedSort struct {
 	Name string
 }
 
-func (s *UninterpretedSort) String() string  { return s.Name }
-func (s *UninterpretedSort) IsFinite() bool  { return false }
-func (s *UninterpretedSort) sortSeal()       {}
+func (s *UninterpretedSort) String() string { return s.Name }
+func (s *UninterpretedSort) IsFinite() bool { return false }
+func (s *UninterpretedSort) sortSeal()      {}
 
 // --- BooleanSort ---
 
@@ -42,7 +42,7 @@ type BooleanSort struct{ ast.Base }
 var Boolean Sort = &BooleanSort{}
 
 func (s *BooleanSort) String() string { return "Boolean" }
-func (s *BooleanSort) IsFinite() bool  { return true }
+func (s *BooleanSort) IsFinite() bool { return true }
 func (s *BooleanSort) sortSeal()      {}
 
 // --- FunctionSort ---
@@ -172,8 +172,8 @@ func NewTopSort() *TopSort {
 
 func (s *TopSort) IsSortVariable() bool { return s.Name != "TopSort" }
 
-func (s *TopSort) String() string  { return s.Name }
-func (s *TopSort) IsFinite() bool  { return false }
+func (s *TopSort) String() string { return s.Name }
+func (s *TopSort) IsFinite() bool { return false }
 
 func (s *TopSort) sortSeal() {}
 

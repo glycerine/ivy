@@ -4,13 +4,13 @@
 //
 // The Python file declares two classes:
 //   - CyGraphWidget (lines 26-115)        — IPython DOMWidget for cytoscape
-//   - CyElements   (lines 118-222)        — graph element accumulator
+//   - WebUICyElements   (lines 118-222)        — graph element accumulator
 //
-// The CyElements class in widget_cy_graph.py is a verbatim duplicate of
+// The WebUICyElements class in widget_cy_graph.py is a verbatim duplicate of
 // the canonical class in cy_elements.py, which is already ported to Go as
 // art.CyElements (see art/cyrender.go). Re-porting it here would create a
 // namespace collision with no benefit, so this file ports only the
-// CyGraphWidget class. Calls that use CyElements use art.CyElements.
+// CyGraphWidget class. Calls that use WebUICyElements use art.CyElements.
 
 package webui
 
@@ -68,9 +68,9 @@ func NewCyGraphWidget() *CyGraphWidget {
 
 func (*CyGraphWidget) widget() {}
 
-// CyElements is the property getter for self._cy_elements.
+// WebUICyElements is the property getter for self._cy_elements.
 // Mirrors Python: cy_elements = property(lambda self: self._cy_elements).
-func (w *CyGraphWidget) CyElements() *art.CyElements {
+func (w *CyGraphWidget) WebUICyElements() *art.CyElements {
 	return w.cyElements
 }
 
@@ -79,14 +79,14 @@ func (w *CyGraphWidget) CyElements() *art.CyElements {
 //
 //	@cy_elements.setter
 //	def cy_elements(self, value):
-//	    assert type(value) is CyElements
+//	    assert type(value) is WebUICyElements
 //	    elements = value.elements
 //	    value.elements = None       # prevents future use of this graph
 //	    if self._cy_elements != elements:
 //	        self.selected = []      # clear selection
 //	        self._cy_elements = elements
 //
-// In Go we cannot null out the source CyElements' Elements slice the way
+// In Go we cannot null out the source WebUICyElements' Elements slice the way
 // Python does (would mutate a foreign value), but we still clear the
 // selection on assignment as the Python code does.
 func (w *CyGraphWidget) SetCyElements(value *art.CyElements) {
@@ -236,7 +236,7 @@ func (w *CyGraphWidget) traitFromJSON(x any) any {
 }
 
 // asString returns a stable string representation of x. Used for object
-// identity keys and for converting CyElement data values to strings.
+// identity keys and for converting WebUICyElement data values to strings.
 func asString(x any) string {
 	if x == nil {
 		return ""

@@ -3,8 +3,8 @@ package ivylogic
 import (
 	"strings"
 
-	lg "github.com/glycerine/ivy/goivy/logic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Standard polymorphic type variables.

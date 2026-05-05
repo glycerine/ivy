@@ -700,7 +700,7 @@ func TestHistorySatisfyNilPostReturnsNil(t *testing.T) {
 func TestComposeMaps(t *testing.T) {
 	m1 := Renaming{"a": "b", "c": "d"}
 	m2 := Renaming{"b": "e"}
-	result := ComposeMaps(m1, m2)
+	result := ActionComposeMaps(m1, m2)
 	// a -> b -> e
 	if result["a"] != "e" {
 		t.Errorf("ComposeMaps a -> %s, want e", result["a"])
@@ -718,7 +718,7 @@ func TestComposeMaps(t *testing.T) {
 func TestComposeMapEmpty(t *testing.T) {
 	m1 := Renaming{"a": "b"}
 	m2 := Renaming{}
-	result := ComposeMaps(m1, m2)
+	result := ActionComposeMaps(m1, m2)
 	if result["a"] != "b" {
 		t.Errorf("ComposeMaps with empty m2: a -> %s, want b", result["a"])
 	}
@@ -726,7 +726,7 @@ func TestComposeMapEmpty(t *testing.T) {
 
 func TestInverseMap(t *testing.T) {
 	m := Renaming{"a": "b", "c": "d"}
-	inv := InverseMap(m)
+	inv := ActionInverseMap(m)
 	if inv["b"] != "a" {
 		t.Errorf("InverseMap b -> %s, want a", inv["b"])
 	}

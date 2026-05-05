@@ -289,7 +289,7 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 		xtracer.Trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d err=%v", len(res), err)
 		return res, err
 
-	case *ast.ProofTactic:
+	case *ast.AstProofTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=ProofTactic")
 		res, err := pc.proofTactic(goals, p)
 		xtracer.Trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=%v", len(res), err)
@@ -374,7 +374,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 	}
 	// Schema matching does not apply to *ast.TemporalModels goals.
 	// Mirror Python ivy_proof.py:429 which raises NoMatch in this case.
-	if _, isTM := goalConc.(*ast.TemporalModels); isTM {
+	if _, isTM := goalConc.(*ast.AstTemporalModels); isTM {
 		xtracer.Trace("proof.MatchSchema EXIT err=temporalModels")
 		return nil, &NoMatch{Msg: "schema matching does not apply to temporal-models goals"}
 	}
@@ -680,7 +680,7 @@ func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.For
 
 // proofTactic applies a proof to a specific labeled goal.
 // Corresponds to Python's proof_tactic.
-func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.ProofTactic) ([]*ast.LabeledFormula, error) {
+func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.AstProofTactic) ([]*ast.LabeledFormula, error) {
 	labelStr := nodeToString(proof.TLabel)
 	xtracer.Trace("proof.proofTactic ENTER label=%s ndecls=%d", labelStr, len(decls))
 	for idx, decl := range decls {

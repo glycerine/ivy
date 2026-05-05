@@ -35,17 +35,18 @@ import (
 // condition is a compiled Some node.
 //
 // Python:
-//   if isinstance(self.args[0], ivy_ast.Some):
-//       sig = ivy_logic.sig.copy()
-//       with sig:
-//           ls = self.args[0].params()
-//           fmla = self.args[0].fmla()
-//           cls = [compile_const(v, sig) for v in ls]
-//           sfmla = sortify_with_inference(fmla)
-//           sargs = cls + [sfmla]
-//           args = [self.args[0].clone(sargs), self.args[1].compile()]
-//       args += [a.compile() for a in self.args[2:]]
-//       return self.clone(args)
+//
+//	if isinstance(self.args[0], ivy_ast.Some):
+//	    sig = ivy_logic.sig.copy()
+//	    with sig:
+//	        ls = self.args[0].params()
+//	        fmla = self.args[0].fmla()
+//	        cls = [compile_const(v, sig) for v in ls]
+//	        sfmla = sortify_with_inference(fmla)
+//	        sargs = cls + [sfmla]
+//	        args = [self.args[0].clone(sargs), self.args[1].compile()]
+//	    args += [a.compile() for a in self.args[2:]]
+//	    return self.clone(args)
 func TestCompileIfAction_SomeCondition(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -221,9 +222,10 @@ func TestCompileIfAction_SomeWithElse(t *testing.T) {
 // into the outer scope.
 //
 // Python:
-//   sig = ivy_logic.sig.copy()
-//   with sig:
-//       cls = [compile_const(v, sig) for v in ls]
+//
+//	sig = ivy_logic.sig.copy()
+//	with sig:
+//	    cls = [compile_const(v, sig) for v in ls]
 func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -337,10 +339,11 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 // plus invariants.
 //
 // Python:
-//   if isinstance(self.args[0], ivy_ast.Some):
-//       res = compile_if_action(self.clone(self.args[:2]))
-//       invars = list(map(sortify_with_inference, self.args[2:]))
-//       return res.clone(res.args + invars)
+//
+//	if isinstance(self.args[0], ivy_ast.Some):
+//	    res = compile_if_action(self.clone(self.args[:2]))
+//	    invars = list(map(sortify_with_inference, self.args[2:]))
+//	    return res.clone(res.args + invars)
 func TestCompileWhile_SomeCondition(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -438,14 +441,15 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 
 // thunkNodeWith5Args creates a wrapper AST node that provides 5 args to
 // CompileThunkAction (matching Python's ThunkAction which has args[0..4]):
-//   args[0] = label (subtypename)
-//   args[1] = action name
-//   args[2] = sort
-//   args[3] = body
-//   args[4] = continuation
+//
+//	args[0] = label (subtypename)
+//	args[1] = action name
+//	args[2] = sort
+//	args[3] = body
+//	args[4] = continuation
 type thunkWith5Args struct {
 	ast.Base
-	inner       *ast.ThunkAction
+	inner        *ast.AstThunkAction
 	continuation ast.Node
 }
 
@@ -478,8 +482,9 @@ func (t *thunkWith5Args) String() string {
 // registers a "<subtypename>.run" action on the module.
 //
 // Python:
-//   subtyperun = iu.compose_names(subtypename, 'run')
-//   im.module.actions[subtyperun] = body
+//
+//	subtyperun = iu.compose_names(subtypename, 'run')
+//	im.module.actions[subtyperun] = body
 func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -514,11 +519,12 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 // created for captured fml:/loc: variables.
 //
 // Python:
-//   for sym in syms:
-//       dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
-//       dsym = Symbol(compose_names(subtypename, sym.name[4:]), dsort)
-//       module.destructor_sorts[dsym.name] = subsort
-//       module.sort_destructors[subsort.name].append(dsym)
+//
+//	for sym in syms:
+//	    dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+//	    dsym = Symbol(compose_names(subtypename, sym.name[4:]), dsort)
+//	    module.destructor_sorts[dsym.name] = subsort
+//	    module.sort_destructors[subsort.name].append(dsym)
 func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -561,8 +567,9 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 // into the body's formal_params.
 //
 // Python:
-//   selfparam = ivy_logic.Const('$self', subsort)
-//   body.formal_params.insert(len(body.formal_params), selfparam)
+//
+//	selfparam = ivy_logic.Const('$self', subsort)
+//	body.formal_params.insert(len(body.formal_params), selfparam)
 func TestCompileThunkAction_SelfParam(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -613,8 +620,9 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 // in the body are substituted with destructor applications.
 //
 // Python:
-//   subs[sym] = dsym(selfparam)
-//   new_body = lu.substitute_constants_ast(body, subs)
+//
+//	subs[sym] = dsym(selfparam)
+//	new_body = lu.substitute_constants_ast(body, subs)
 func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -659,9 +667,10 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 // LocalAction wrapping destructor assignments + continuation.
 //
 // Python:
-//   lsym = add_symbol('loc:' + self.args[1].relname, subsort)
-//   asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
-//   res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+//
+//	lsym = add_symbol('loc:' + self.args[1].relname, subsort)
+//	asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
+//	res = LocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -708,7 +717,8 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 // captured symbol's domain, with the captured symbol's range.
 //
 // Python:
-//   dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+//
+//	dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
 func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -768,7 +778,8 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 // created for the thunk result has the subsort type.
 //
 // Python:
-//   lsym = add_symbol('loc:' + self.args[1].relname, subsort)
+//
+//	lsym = add_symbol('loc:' + self.args[1].relname, subsort)
 func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -821,8 +832,9 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 // contains assignment actions for each captured destructor.
 //
 // Python:
-//   asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
-//   res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+//
+//	asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
+//	res = LocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()

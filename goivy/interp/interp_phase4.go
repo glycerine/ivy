@@ -169,7 +169,7 @@ func StatesStateExpr(expr ast.Node) []*State {
 // states using BMC/History and action decomposition.
 // Corresponds to Python's decompose_action_app.
 func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*State, error) {
-	if !IsActionApp(expr) {
+	if !IsInterpActionApp(expr) {
 		return nil, nil
 	}
 	atom := expr.(*ast.Atom)
@@ -255,7 +255,7 @@ func DecomposeAction(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2, state1 *
 		for i, value := range bmcRes.Path {
 			state := NewStateFromClauses(state1.Domain, value.TR)
 			if i != 0 {
-				state.Expr = ActionApp(state1.AstCfg(), comp.Actions[i-1].Name(), WrapState(states[len(states)-1]))
+				state.Expr = InterpActionApp(state1.AstCfg(), comp.Actions[i-1].Name(), WrapState(states[len(states)-1]))
 				state.SetUpdate(upds[i-1])
 				state.SetPred(states[len(states)-1])
 			}
@@ -332,7 +332,7 @@ func EvalStateOrder(checkPrecond bool, lhs, rhs ast.Node, mod *module.Module) (b
 		return false, err
 	}
 	if IsStateJoin(rhs) {
-		or := rhs.(*ast.Or)
+		or := rhs.(*ast.AstOr)
 		for _, r := range or.Terms {
 			rState, err := EvalState(checkPrecond, r, mod)
 			if err != nil {

@@ -42,27 +42,27 @@ func (s *Solver) ClausesImplyList(clauses1 *module.Clauses, clauses2List []*modu
 // ConditionClauses wraps each formula in clauses with an implication from fmla.
 // Returns new Clauses where each formula is (Not(fmla) OR formula).
 // This is a convenience wrapper around module.ConditionClauses.
-func ConditionClauses(clauses *module.Clauses, fmla lg.Expr) *module.Clauses {
+func Z3ConditionClauses(clauses *module.Clauses, fmla lg.Expr) *module.Clauses {
 	return module.ConditionClauses(clauses, fmla)
 }
 
-// TrueClauses returns a trivially true clause set.
-func TrueClauses() *module.Clauses {
+// Z3TrueClauses returns a trivially true clause set.
+func Z3TrueClauses() *module.Clauses {
 	return module.TrueClauses(nil)
 }
 
 // FalseClauses returns a trivially false clause set.
-func FalseClauses() *module.Clauses {
+func Z3FalseClauses() *module.Clauses {
 	return module.FalseClauses(nil)
 }
 
 // AndClauses computes the conjunction of multiple clause sets.
-func AndClauses(args ...*module.Clauses) *module.Clauses {
+func Z3AndClauses(args ...*module.Clauses) *module.Clauses {
 	return module.AndClausesTyped(args...)
 }
 
 // FormulaToClauses wraps a formula as a Clauses set.
-func FormulaToClauses(fmla lg.Expr) *module.Clauses {
+func Z3FormulaToClauses(fmla lg.Expr) *module.Clauses {
 	return module.FormulaToClauses(fmla, nil)
 }
 
@@ -360,9 +360,9 @@ func (s *Solver) SolverAdd(z3solver *Z3Solver, fmla lg.Expr) error {
 // If assumptions are provided, uses assumption-based checking.
 // Returns an error if the result is unknown.
 // Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
-func Decide(z3solver *Z3Solver, assumptions ...Expr) (CheckResult, error) {
+func Decide(z3solver *Z3Solver, assumptions ...Expr) (Z3CheckResult, error) {
 	xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-	var result CheckResult
+	var result Z3CheckResult
 	if len(assumptions) > 0 {
 		result = z3solver.CheckAssumptions(assumptions)
 	} else {

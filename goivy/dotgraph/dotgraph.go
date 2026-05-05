@@ -15,15 +15,15 @@ import (
 
 // Graph represents a DOT graph.
 type Graph struct {
-	Name       string
-	Directed   bool
-	Strict     bool
-	Nodes      []*Node
-	Edges      []*Edge
+	Name      string
+	Directed  bool
+	Strict    bool
+	Nodes     []*Node
+	Edges     []*Edge
 	Subgraphs []*Graph
-	Attrs      map[string]string
-	NodeAttrs  map[string]string
-	EdgeAttrs  map[string]string
+	Attrs     map[string]string
+	NodeAttrs map[string]string
+	EdgeAttrs map[string]string
 }
 
 // Node represents a node in the graph.

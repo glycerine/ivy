@@ -1,6 +1,6 @@
 //go:build ignore
 
-// patch_parser.go patches the goyacc-generated grammar_v17.go to always
+// patch_parser.go patches the goyacc-generated parser_grammar_v17.go to always
 // read the lookahead token before performing default reductions. This
 // ensures trace ordering matches Python PLY's behavior, where the parser
 // always reads the next token before deciding to reduce.
@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	data, err := os.ReadFile("grammar_v17.go")
+	data, err := os.ReadFile("parser_grammar_v17.go")
 	if err != nil {
 		panic(err)
 	}
@@ -20,37 +20,37 @@ func main() {
 
 	// The goyacc default reduction section looks like:
 	//
-	//   v17default:
+	//   parser17default:
 	//       /* default state action */
-	//       v17n = int(v17Def[v17state])
-	//       if v17n == -2 {
-	//           if v17rcvr.char < 0 {
-	//               v17rcvr.char, v17token = v17lex1(v17lex, &v17rcvr.lval)
+	//       parser17n = int(parser17Def[parser17state])
+	//       if parser17n == -2 {
+	//           if parser17rcvr.char < 0 {
+	//               parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
 	//           }
 	//
 	// We patch it to always read the lookahead BEFORE checking the default action:
 	//
-	//   v17default:
+	//   parser17default:
 	//       /* default state action */
-	//       v17n = int(v17Def[v17state])
+	//       parser17n = int(parser17Def[parser17state])
 	//       // Always read lookahead before reducing, to match PLY trace order.
-	//       if v17rcvr.char < 0 {
-	//           v17rcvr.char, v17token = v17lex1(v17lex, &v17rcvr.lval)
+	//       if parser17rcvr.char < 0 {
+	//           parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
 	//       }
-	//       if v17n == -2 {
+	//       if parser17n == -2 {
 
-	old := `v17n = int(v17Def[v17state])
-	if v17n == -2 {
-		if v17rcvr.char < 0 {
-			v17rcvr.char, v17token = v17lex1(v17lex, &v17rcvr.lval)
+	old := `parser17n = int(parser17Def[parser17state])
+	if parser17n == -2 {
+		if parser17rcvr.char < 0 {
+			parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
 		}`
 
-	new := `v17n = int(v17Def[v17state])
+	new := `parser17n = int(parser17Def[parser17state])
 	// Always read lookahead before reducing, to match PLY trace order.
-	if v17rcvr.char < 0 {
-		v17rcvr.char, v17token = v17lex1(v17lex, &v17rcvr.lval)
+	if parser17rcvr.char < 0 {
+		parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
 	}
-	if v17n == -2 {`
+	if parser17n == -2 {`
 
 	if !strings.Contains(src, old) {
 		// Already patched or format changed
@@ -58,7 +58,7 @@ func main() {
 	}
 
 	src = strings.Replace(src, old, new, 1)
-	err = os.WriteFile("grammar_v17.go", []byte(src), 0644)
+	err = os.WriteFile("parser_grammar_v17.go", []byte(src), 0644)
 	if err != nil {
 		panic(err)
 	}

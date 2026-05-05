@@ -132,7 +132,7 @@ func TestTypeRangeDesugaring(t *testing.T) {
 	rangeSort := cfg.NewRange(cfg.NewAtom("0"), cfg.NewAtom("5"))
 
 	// Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
-	_, isRange := (ast.Node)(rangeSort).(*ast.Range)
+	_, isRange := (ast.Node)(rangeSort).(*ast.AstRange)
 	if !isRange {
 		t.Fatal("expected Range type assertion to succeed")
 	}

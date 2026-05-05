@@ -36,19 +36,19 @@
 //
 // Format:
 //
-//   Top-level (returned by CanonZ3Assertions):
-//     "(asserts <expr1> <expr2> ... <exprN>)"
+//	Top-level (returned by CanonZ3Assertions):
+//	  "(asserts <expr1> <expr2> ... <exprN>)"
 //
-//   Expressions:
-//     (n <numeral_string>)             — numeric literal
-//     (v <bound_var_name>)             — bound variable, looked up by name
-//     (c <name> <sort>)                — 0-ary application (constant)
-//     (a <name> <arg1> <arg2> ...)     — n-ary application
-//     (forall ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
-//     (exists ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
+//	Expressions:
+//	  (n <numeral_string>)             — numeric literal
+//	  (v <bound_var_name>)             — bound variable, looked up by name
+//	  (c <name> <sort>)                — 0-ary application (constant)
+//	  (a <name> <arg1> <arg2> ...)     — n-ary application
+//	  (forall ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
+//	  (exists ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
 //
-//   Sorts:
-//     <sort_name>                       — bare symbol from Z3_get_sort_name
+//	Sorts:
+//	  <sort_name>                       — bare symbol from Z3_get_sort_name
 //
 // The Python mirror lives in pyivy/ivy/ivy/ivy_solver.py
 // (_canon_z3_assertions, _canon_z3_expr, _canon_z3_sort) and produces

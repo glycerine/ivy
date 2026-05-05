@@ -13,20 +13,20 @@ import (
 
 // MatchProblem describes a schema-instantiation matching problem.
 type MatchProblem struct {
-	Schema      lg.Expr          // the schema being instantiated (as logic node)
-	SchemaLF    *ast.LabeledFormula // the schema as a LabeledFormula (may be nil)
-	Pat         lg.Expr          // pattern to match (conclusion of schema)
-	Inst        lg.Expr          // instance to match against (conclusion of goal)
+	Schema      lg.Expr                // the schema being instantiated (as logic node)
+	SchemaLF    *ast.LabeledFormula    // the schema as a LabeledFormula (may be nil)
+	Pat         lg.Expr                // pattern to match (conclusion of schema)
+	Inst        lg.Expr                // instance to match against (conclusion of goal)
 	FreeSyms    map[lg.NodeKey]lg.Expr // free symbols in the schema
 	Constants   map[lg.NodeKey]lg.Expr // constants (free variables of the goal)
-	PremMatches []lg.Expr        // premise match patterns (for Tuple matching)
+	PremMatches []lg.Expr              // premise match patterns (for Tuple matching)
 	RevMap      map[lg.NodeKey]lg.Expr // reverse mapping for nonce symbols
 	// TuplePats and TupleInsts are set by AddPremMatch when premise
 	// matching creates combined premise+conclusion patterns.
 	// nil means no tuple matching; non-nil activates per-element matching.
 	// Python: when add_prem_match creates ia.Tuple patterns.
-	TuplePats   []lg.Expr
-	TupleInsts  []lg.Expr
+	TuplePats  []lg.Expr
+	TupleInsts []lg.Expr
 }
 
 // NewMatchProblem creates a MatchProblem.

@@ -133,7 +133,7 @@ func GoalIsTemporal(x *ast.LabeledFormula) bool {
 	if conc == nil {
 		return false
 	}
-	if _, ok := conc.(*ast.TemporalModels); ok {
+	if _, ok := conc.(*ast.AstTemporalModels); ok {
 		return true
 	}
 	if nb, ok := conc.(*lg.NamedBinder); ok {
@@ -296,7 +296,7 @@ func CheckRenaming(goal *ast.LabeledFormula, renaming ast.Node) error {
 	fwd := make(map[string]string)
 	rev := make(map[string]string)
 	for _, arg := range renaming.Args() {
-		defn, ok := arg.(*ast.Definition)
+		defn, ok := arg.(*ast.AstDefinition)
 		if !ok {
 			continue
 		}
@@ -767,7 +767,7 @@ func UnfoldGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, defns [][]*ast.Lab
 func UnfoldFmla(fmla ast.Node, defns [][]*ast.LabeledFormula) ast.Node {
 	// TemporalModels — recurse into the wrapped inner formula and rewrap,
 	// mirroring Python's generic apply_match_alt_rec recursion.
-	if tm, ok := fmla.(*ast.TemporalModels); ok {
+	if tm, ok := fmla.(*ast.AstTemporalModels); ok {
 		innerExpr, ok := tm.Fmla.(lg.Expr)
 		if !ok {
 			return tm
@@ -873,10 +873,10 @@ func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.N
 	// wrappers inside the TemporalModels. To stay close to prior Go
 	// behavior for TemporalModels, only swap to raw newConc if conc was
 	// already a plain lg.Expr.
-	if _, isTM := rawConc.(*ast.TemporalModels); isTM && len(toClose) > 0 {
+	if _, isTM := rawConc.(*ast.AstTemporalModels); isTM && len(toClose) > 0 {
 		// Preserve prior behavior — wrap inside TM. Python semantics differ
 		// here, but no current test hits this branch with toClose > 0.
-		if tm, ok := rawConc.(*ast.TemporalModels); ok {
+		if tm, ok := rawConc.(*ast.AstTemporalModels); ok {
 			if inner, ok := tm.Fmla.(lg.Expr); ok {
 				wrapped := inner
 				for i := len(toClose) - 1; i >= 0; i-- {
@@ -901,7 +901,7 @@ func DropSuppliedPrems(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, pro
 	gprems := GoalPremsByName(goal)
 	pmap := make(map[string]string)
 	for _, m := range proofMatch {
-		defn, ok := m.(*ast.Definition)
+		defn, ok := m.(*ast.AstDefinition)
 		if !ok {
 			continue
 		}

@@ -21,13 +21,13 @@ func nextIteCtr(ctr *int64) int64 {
 //
 // Python: ivy_mc.py:881-914
 type Qelim struct {
-	Syms           map[string]lg.Expr      // cached quantifier -> result mapping
-	SymsCtr        int                     // counter for fresh symbols
-	Fmlas          []lg.Expr               // accumulated constraints
+	Syms           map[string]lg.Expr              // cached quantifier -> result mapping
+	SymsCtr        int                             // counter for fresh symbols
+	Fmlas          []lg.Expr                       // accumulated constraints
 	SortConstants  *iu.InsMap[string, []*lg.Const] // sort -> constants for invariant
 	SortConstants2 *iu.InsMap[string, []*lg.Const] // sort -> constants for transition
-	IuCfg          *iu.IvyUtilsConfig      // for IsMacro/ExpandMacro
-	FullQI         bool                    // Python: fullqi parameter (default false)
+	IuCfg          *iu.IvyUtilsConfig              // for IsMacro/ExpandMacro
+	FullQI         bool                            // Python: fullqi parameter (default false)
 }
 
 // NewQelim creates a new quantifier elimination context.
@@ -244,4 +244,3 @@ func ElimIteKey(sortName string, iteCtr *int64) string {
 	ctr := nextIteCtr(iteCtr)
 	return fmt.Sprintf("__ite[%d]:%s", ctr, sortName)
 }
-

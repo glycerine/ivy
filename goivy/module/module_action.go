@@ -57,11 +57,11 @@ type ActionBase struct {
 // Currently returns "" because Python's line numbers are wrong.
 func (b *ActionBase) CanonFields() string { return "" }
 
-func (b *ActionBase) GetLineno() ast.Location      { return b.Loc }
-func (b *ActionBase) SetLineno(l ast.Location)      { b.Loc = l; b.HasLoc = true }
-func (b *ActionBase) HasLineno() bool               { return b.HasLoc }
-func (b *ActionBase) GetFormalParams() []*lg.Const  { return b.FormalParams }
-func (b *ActionBase) GetFormalReturns() []*lg.Const { return b.FormalReturns }
+func (b *ActionBase) GetLineno() ast.Location        { return b.Loc }
+func (b *ActionBase) SetLineno(l ast.Location)       { b.Loc = l; b.HasLoc = true }
+func (b *ActionBase) HasLineno() bool                { return b.HasLoc }
+func (b *ActionBase) GetFormalParams() []*lg.Const   { return b.FormalParams }
+func (b *ActionBase) GetFormalReturns() []*lg.Const  { return b.FormalReturns }
 func (b *ActionBase) SetFormalParams(p []*lg.Const)  { b.FormalParams = p }
 func (b *ActionBase) SetFormalReturns(p []*lg.Const) { b.FormalReturns = p }
 
@@ -79,9 +79,9 @@ func (b *ActionBase) CopyFormalsTo(dst Action) {
 }
 
 func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
-func (b *ActionBase) GetLabels() []string        { return b.Labels }
-func (b *ActionBase) SetLabel(label string)      { b.Label = label }
-func (b *ActionBase) GetLabel() string           { return b.Label }
+func (b *ActionBase) GetLabels() []string       { return b.Labels }
+func (b *ActionBase) SetLabel(label string)     { b.Label = label }
+func (b *ActionBase) GetLabel() string          { return b.Label }
 
 // -----------------------------------------------------------------------
 // Action/lg.Expr bridging helpers

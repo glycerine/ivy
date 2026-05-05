@@ -28,7 +28,6 @@ type AnalysisSessionI interface {
 	TryConjecture(name string)
 }
 
-
 // ExtensionCallback is a function registered with an extension point.
 // It receives a context and returns a list of action tuples.
 type ExtensionCallback func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error)
@@ -180,7 +179,6 @@ func registerDefaultExtensions(cfg *ExtConfig) {
 		return result, nil
 	})
 }
-
 
 // --- Front-end operation types (Python: FrontEndOperation hierarchy) ---
 //

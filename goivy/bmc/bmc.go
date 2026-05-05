@@ -34,7 +34,7 @@ type BMCResult struct {
 }
 
 // Config holds the configuration for a BMC run.
-type Config struct {
+type BMCConfig struct {
 	// NSteps is the number of BMC steps (bound).
 	NSteps int
 	// NUnroll is the loop unroll count (nil for no unrolling).
@@ -46,14 +46,14 @@ type Config struct {
 }
 
 // DefaultConfig returns a Config with sensible defaults.
-func DefaultConfig(mod *module.Module, nSteps int) *Config {
-	return &Config{
+func DefaultConfig(mod *module.Module, nSteps int) *BMCConfig {
+	return &BMCConfig{
 		NSteps: nSteps,
 		Module: mod,
 	}
 }
 
-func (c *Config) log(format string, args ...interface{}) {
+func (c *BMCConfig) log(format string, args ...interface{}) {
 	if c.Logger != nil {
 		c.Logger(fmt.Sprintf(format, args...))
 	}
@@ -70,7 +70,7 @@ func (c *Config) log(format string, args ...interface{}) {
 //   - nUnroll: optional loop unrolling count (nil to skip)
 //
 // This corresponds to ivy_bmc.check_isolate.
-func CheckIsolate(cfg *Config) *BMCResult {
+func BMCCheckIsolate(cfg *BMCConfig) *BMCResult {
 	if cfg == nil {
 		return &BMCResult{Message: "nil config"}
 	}
@@ -96,7 +96,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	}()
 
 	// Build the step action (env action / nondeterministic choice).
-	stepAction := EnvAction(mod)
+	stepAction := BMCEnvAction(mod)
 
 	// Build the conjecture condition.
 	conj := BuildConjecture(mod)
@@ -180,7 +180,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 
 // EnvAction creates the environment step action from a module's public actions.
 // It produces a nondeterministic choice among all public actions.
-func EnvAction(mod *module.Module) actions.Action {
+func BMCEnvAction(mod *module.Module) actions.Action {
 	if mod == nil {
 		return actions.NewSequence()
 	}

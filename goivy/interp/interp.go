@@ -32,7 +32,7 @@ import (
 // StateValue holds the moded symbols, clauses (transition relation /
 // assertion), and precondition for a state.
 type StateValue struct {
-	Moded   []string    // modified symbols (nil = all)
+	Moded   []string        // modified symbols (nil = all)
 	Clauses *module.Clauses // clauses / assertions
 	Precond *module.Clauses // precondition (negative: action fails when sat)
 }
@@ -71,7 +71,7 @@ type State struct {
 	Domain  *module.Module  // the module this state belongs to
 
 	// The value triple.
-	Moded   []string    // modified symbols
+	Moded   []string        // modified symbols
 	Clauses *module.Clauses // main clauses
 	Precond *module.Clauses // precondition (negative)
 
@@ -81,7 +81,7 @@ type State struct {
 
 	// Cached analysis results.
 	CachedUpdate *actions.Update // cached update for this state's action
-	CachedPred   *State     // cached predecessor state
+	CachedPred   *State          // cached predecessor state
 
 	// Additional fields set during evaluation.
 	Action     actions.Action // action that produced this state
@@ -158,7 +158,7 @@ func (s *State) Update() *actions.Update {
 	var action actions.Action
 	if s.Action != nil {
 		action = s.Action
-	} else if s.Expr != nil && IsActionApp(s.Expr) {
+	} else if s.Expr != nil && IsInterpActionApp(s.Expr) {
 		if atom, ok := s.Expr.(*ast.Atom); ok && s.Domain != nil {
 			if a, found := s.Domain.FindAction(atom.Rep); found {
 				if act, ok := a.(actions.Action); ok {
@@ -200,7 +200,7 @@ func (s *State) SetUpdate(u *actions.Update) {
 
 // Pred returns the cached predecessor state.
 func (s *State) Pred() *State {
-	if s.CachedPred == nil && s.Expr != nil && IsActionApp(s.Expr) {
+	if s.CachedPred == nil && s.Expr != nil && IsInterpActionApp(s.Expr) {
 		atom := s.Expr.(*ast.Atom)
 		if len(atom.Terms) > 0 {
 			if pred, ok := atom.Terms[0].(*stateNode); ok {
@@ -372,26 +372,26 @@ func CurrentContext() *EvalContext {
 // Expression helpers
 // ---------------------------------------------------------------------------
 
-// IsActionApp returns true if expr is an Atom with exactly one argument,
+// IsInterpActionApp returns true if expr is an Atom with exactly one argument,
 // representing an action applied to a predecessor state.
-func IsActionApp(expr ast.Node) bool {
+func IsInterpActionApp(expr ast.Node) bool {
 	a, ok := expr.(*ast.Atom)
 	return ok && len(a.Terms) == 1
 }
 
 // IsStateJoin returns true if expr is an Or, representing a join of states.
 func IsStateJoin(expr ast.Node) bool {
-	_, ok := expr.(*ast.Or)
+	_, ok := expr.(*ast.AstOr)
 	return ok
 }
 
-// ActionApp constructs an action-application expression: action(arg).
-func ActionApp(cfg *ast.AstConfig, actionName string, arg ast.Node) *ast.Atom {
+// InterpActionApp constructs an action-application expression: action(arg).
+func InterpActionApp(cfg *ast.AstConfig, actionName string, arg ast.Node) *ast.Atom {
 	return cfg.NewAtom(actionName, arg)
 }
 
 // StateJoin constructs a state-join expression (disjunction).
-func StateJoin(cfg *ast.AstConfig, args ...ast.Node) *ast.Or {
+func StateJoin(cfg *ast.AstConfig, args ...ast.Node) *ast.AstOr {
 	return cfg.NewOr(args...)
 }
 
@@ -403,7 +403,7 @@ func IsStateSymbol(expr ast.Node) bool {
 }
 
 // StateEquation constructs a state equation: lhs = rhs.
-func StateEquation(cfg *ast.AstConfig, lhs, rhs ast.Node) *ast.Definition {
+func StateEquation(cfg *ast.AstConfig, lhs, rhs ast.Node) *ast.AstDefinition {
 	return cfg.NewDefinition(lhs, rhs)
 }
 

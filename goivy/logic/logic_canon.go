@@ -11,15 +11,15 @@ import (
 
 func (s *UninterpretedSort) Canon() iu.Canonical { return iu.Canonical(s.Sexp()) }
 func (s *BooleanSort) Canon() iu.Canonical       { return iu.Canonical(s.Sexp()) }
-func (s *FunctionSort) Canon() iu.Canonical       { return iu.Canonical(s.Sexp()) }
-func (s *EnumeratedSort) Canon() iu.Canonical     { return iu.Canonical(s.Sexp()) }
-func (s *RangeSort) Canon() iu.Canonical          { return iu.Canonical(s.Sexp()) }
-func (s *TopSort) Canon() iu.Canonical            { return iu.Canonical(s.Sexp()) }
+func (s *FunctionSort) Canon() iu.Canonical      { return iu.Canonical(s.Sexp()) }
+func (s *EnumeratedSort) Canon() iu.Canonical    { return iu.Canonical(s.Sexp()) }
+func (s *RangeSort) Canon() iu.Canonical         { return iu.Canonical(s.Sexp()) }
+func (s *TopSort) Canon() iu.Canonical           { return iu.Canonical(s.Sexp()) }
 
 // --- Term types ---
 
 func (v *Variable) Canon() iu.Canonical { return iu.Canonical(v.Sexp()) }
-func (c *Const) Canon() iu.Canonical   { return iu.Canonical(c.Sexp()) }
+func (c *Const) Canon() iu.Canonical    { return iu.Canonical(c.Sexp()) }
 func (a *Apply) Canon() iu.Canonical    { return iu.Canonical(a.Sexp()) }
 
 // --- Formula types ---
@@ -42,7 +42,7 @@ func (nb *NamedBinder) Canon() iu.Canonical { return iu.Canonical(nb.Sexp()) }
 
 // --- Definition types ---
 
-func (d *Definition) Canon() iu.Canonical       { return iu.Canonical(d.Sexp()) }
+func (d *Definition) Canon() iu.Canonical        { return iu.Canonical(d.Sexp()) }
 func (ds *DefinitionSchema) Canon() iu.Canonical { return iu.Canonical(ds.Sexp()) }
 
 // --- NativeExpr ---

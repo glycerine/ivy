@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
+	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // TestOrClausesIntBareIte verifies that orClausesInt produces bare Ite (not
@@ -515,4 +515,3 @@ func TestExistsQuantClausesMapSimple(t *testing.T) {
 func newTestRenamer() *iu.UniqueRenamer {
 	return iu.NewUniqueRenamer("__test", nil)
 }
-

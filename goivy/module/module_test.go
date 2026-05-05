@@ -15,21 +15,21 @@ type dummyAction struct {
 	Tag string
 }
 
-func (d *dummyAction) String() string                       { return d.Tag }
-func (d *dummyAction) ActionClone(args []lg.Expr) Action    { return d }
-func (d *dummyAction) ActionArgs() []lg.Expr                { return nil }
-func (d *dummyAction) IterCalls() []string                  { return nil }
-func (d *dummyAction) IterSubactions() []Action             { return []Action{d} }
-func (d *dummyAction) Name() string                         { return "dummy" }
-func (d *dummyAction) Decompose() [][]Action                { return nil }
-func (d *dummyAction) Args() []ast.Node                     { return nil }
-func (d *dummyAction) Clone(args []ast.Node) ast.Node       { return d }
-func (d *dummyAction) Children() []lg.Expr                  { return nil }
-func (d *dummyAction) NodeSort() lg.Sort                    { return lg.ActionS }
-func (d *dummyAction) Equal(other lg.Expr) bool             { return false }
-func (d *dummyAction) GetAstConfig() *ast.AstConfig         { return nil }
-func (d *dummyAction) Sexp() lg.NodeKey                     { return "(dummyAction)" }
-func (d *dummyAction) Canon() iu.Canonical                  { return iu.Canonical(d.Sexp()) }
+func (d *dummyAction) String() string                    { return d.Tag }
+func (d *dummyAction) ActionClone(args []lg.Expr) Action { return d }
+func (d *dummyAction) ActionArgs() []lg.Expr             { return nil }
+func (d *dummyAction) IterCalls() []string               { return nil }
+func (d *dummyAction) IterSubactions() []Action          { return []Action{d} }
+func (d *dummyAction) Name() string                      { return "dummy" }
+func (d *dummyAction) Decompose() [][]Action             { return nil }
+func (d *dummyAction) Args() []ast.Node                  { return nil }
+func (d *dummyAction) Clone(args []ast.Node) ast.Node    { return d }
+func (d *dummyAction) Children() []lg.Expr               { return nil }
+func (d *dummyAction) NodeSort() lg.Sort                 { return lg.ActionS }
+func (d *dummyAction) Equal(other lg.Expr) bool          { return false }
+func (d *dummyAction) GetAstConfig() *ast.AstConfig      { return nil }
+func (d *dummyAction) Sexp() lg.NodeKey                  { return "(dummyAction)" }
+func (d *dummyAction) Canon() iu.Canonical               { return iu.Canonical(d.Sexp()) }
 
 func TestNew(t *testing.T) {
 	m := New()

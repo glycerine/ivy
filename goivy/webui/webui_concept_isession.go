@@ -187,7 +187,7 @@ func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bo
 	if projection == nil {
 		projection = func(string, string) bool { return true }
 	}
-	s.AbstractValue = Alpha(s.Domain, s.ToFormula(), s.Cache, projection)
+	s.AbstractValue = WebUIAlpha(s.Domain, s.ToFormula(), s.Cache, projection)
 	if s.Widget != nil {
 		s.Widget.Render()
 	}

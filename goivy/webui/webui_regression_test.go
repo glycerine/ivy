@@ -163,13 +163,13 @@ func TestRegression_RelationListShowsParams(t *testing.T) {
 
 // --- Regression 3: State graph must have initial state node (the "0" circle) ---
 // After loading a file, the ARG (analysis graph) should have at least one state.
-// The concept view's "elements" (CyElements) should include at least one node.
+// The concept view's "elements" (WebUICyElements) should include at least one node.
 
 func TestRegression_StateGraphHasInitialNode(t *testing.T) {
 	srv, id := loadClientServer(t)
 	concept := getConceptJSON(t, srv, id)
 
-	// Extract "elements" from concept JSON — these are the CyElements
+	// Extract "elements" from concept JSON — these are the WebUICyElements
 	// that the graph renderer displays.
 	elemsRaw, ok := concept["elements"]
 	if !ok {

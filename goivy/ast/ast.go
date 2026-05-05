@@ -168,7 +168,7 @@ func GetFormalSortAnnotation(n Node) string {
 			return fmt.Sprint(v.Sort)
 		}
 		return ""
-	case *ThunkAction:
+	case *AstThunkAction:
 		if v.Sort != nil {
 			return fmt.Sprint(v.Sort)
 		}
@@ -178,12 +178,12 @@ func GetFormalSortAnnotation(n Node) string {
 			return fmt.Sprint(v.VSort)
 		}
 		return ""
-	case *NativeExpr:
+	case *AstNativeExpr:
 		if v.ASort != nil {
 			return fmt.Sprint(v.ASort)
 		}
 		return ""
-	case *Instantiation:
+	case *AstInstantiation:
 		if v.Sort != nil {
 			return fmt.Sprint(v.Sort)
 		}
@@ -595,21 +595,21 @@ func (v *Variable) Canon() iu.Canonical {
 }
 
 // Old wraps a term with the temporal "old" operator.
-type Old struct {
+type AstOld struct {
 	Base
 	Term Node
 }
 
-func (cfg *AstConfig) NewOld(term Node) *Old {
-	o := &Old{Term: term}
+func (cfg *AstConfig) NewOld(term Node) *AstOld {
+	o := &AstOld{Term: term}
 	o.Cfg = cfg
 	return o
 }
 
-func (o *Old) Args() []Node           { return []Node{o.Term} }
-func (o *Old) Clone(args []Node) Node { return &Old{Base: o.Base, Term: args[0]} }
-func (o *Old) String() string         { return "old " + fmt.Sprint(o.Term) }
-func (o *Old) Canon() iu.Canonical {
+func (o *AstOld) Args() []Node           { return []Node{o.Term} }
+func (o *AstOld) Clone(args []Node) Node { return &AstOld{Base: o.Base, Term: args[0]} }
+func (o *AstOld) String() string         { return "old " + fmt.Sprint(o.Term) }
+func (o *AstOld) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(old%v term:%v)", o.Base.canonFields(), nodeCanon(o.Term)))
 }
 
@@ -657,32 +657,32 @@ func (cfg *AstConfig) NewMethodCall(obj, method Node) *MethodCall {
 }
 
 // Literal is a positive or negative atomic formula.
-type Literal struct {
+type AstLiteral struct {
 	Base
 	Polarity int // 1 = positive, 0 = negative
 	Atom     Node
 }
 
-func (cfg *AstConfig) NewLiteral(polarity int, atom Node) *Literal {
-	l := &Literal{Polarity: polarity, Atom: atom}
+func (cfg *AstConfig) NewLiteral(polarity int, atom Node) *AstLiteral {
+	l := &AstLiteral{Polarity: polarity, Atom: atom}
 	l.Cfg = cfg
 	return l
 }
 
-func (l *Literal) Args() []Node { return []Node{l.Atom} }
-func (l *Literal) Clone(args []Node) Node {
-	return &Literal{Base: l.Base, Polarity: l.Polarity, Atom: args[0]}
+func (l *AstLiteral) Args() []Node { return []Node{l.Atom} }
+func (l *AstLiteral) Clone(args []Node) Node {
+	return &AstLiteral{Base: l.Base, Polarity: l.Polarity, Atom: args[0]}
 }
-func (l *Literal) String() string {
+func (l *AstLiteral) String() string {
 	if l.Polarity == 0 {
 		return "~" + fmt.Sprint(l.Atom)
 	}
 	return fmt.Sprint(l.Atom)
 }
-func (l *Literal) Invert() *Literal {
-	return &Literal{Base: l.Base, Polarity: 1 - l.Polarity, Atom: l.Atom}
+func (l *AstLiteral) Invert() *AstLiteral {
+	return &AstLiteral{Base: l.Base, Polarity: 1 - l.Polarity, Atom: l.Atom}
 }
-func (l *Literal) Canon() iu.Canonical {
+func (l *AstLiteral) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(literal%v polarity:%d atom:%v)", l.Base.canonFields(), l.Polarity, nodeCanon(l.Atom)))
 }
 
@@ -756,99 +756,99 @@ func (t *Tuple) Canon() iu.Canonical {
 }
 
 // Some represents "some X. phi" existential choice.
-type Some struct {
+type AstSome struct {
 	Base
 	Params []Node // bound variables (all but last)
 	Fmla   Node   // formula (last arg)
 }
 
-func (cfg *AstConfig) NewSome(params []Node, fmla Node) *Some {
-	s := &Some{Params: params, Fmla: fmla}
+func (cfg *AstConfig) NewSome(params []Node, fmla Node) *AstSome {
+	s := &AstSome{Params: params, Fmla: fmla}
 	s.Cfg = cfg
 	return s
 }
 
-func (s *Some) Args() []Node {
+func (s *AstSome) Args() []Node {
 	return append(append([]Node{}, s.Params...), s.Fmla)
 }
-func (s *Some) Clone(args []Node) Node {
-	return &Some{Base: s.Base, Params: args[:len(args)-1], Fmla: args[len(args)-1]}
+func (s *AstSome) Clone(args []Node) Node {
+	return &AstSome{Base: s.Base, Params: args[:len(args)-1], Fmla: args[len(args)-1]}
 }
-func (s *Some) String() string {
+func (s *AstSome) String() string {
 	parts := make([]string, len(s.Params))
 	for i, p := range s.Params {
 		parts[i] = fmt.Sprint(p)
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla)
 }
-func (s *Some) Canon() iu.Canonical {
+func (s *AstSome) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(some%v params:%v fmla:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla)))
 }
 
 // SomeMin represents "some X. phi minimizing idx".
-type SomeMin struct {
+type AstSomeMin struct {
 	Base
 	Params []Node
 	Fmla   Node
 	Index  Node
 }
 
-func (s *SomeMin) Args() []Node {
+func (s *AstSomeMin) Args() []Node {
 	args := append([]Node{}, s.Params...)
 	args = append(args, s.Fmla, s.Index)
 	return args
 }
-func (s *SomeMin) Clone(args []Node) Node {
+func (s *AstSomeMin) Clone(args []Node) Node {
 	n := len(args)
-	return &SomeMin{Base: s.Base, Params: args[:n-2], Fmla: args[n-2], Index: args[n-1]}
+	return &AstSomeMin{Base: s.Base, Params: args[:n-2], Fmla: args[n-2], Index: args[n-1]}
 }
-func (s *SomeMin) String() string {
+func (s *AstSomeMin) String() string {
 	parts := make([]string, len(s.Params))
 	for i, p := range s.Params {
 		parts[i] = fmt.Sprint(p)
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " minimizing " + fmt.Sprint(s.Index)
 }
-func (s *SomeMin) Canon() iu.Canonical {
+func (s *AstSomeMin) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someMin%v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
-func (cfg *AstConfig) NewSomeMin(params []Node, fmla, index Node) *SomeMin {
-	s := &SomeMin{Params: params, Fmla: fmla, Index: index}
+func (cfg *AstConfig) NewSomeMin(params []Node, fmla, index Node) *AstSomeMin {
+	s := &AstSomeMin{Params: params, Fmla: fmla, Index: index}
 	s.Cfg = cfg
 	return s
 }
 
 // SomeMax represents "some X. phi maximizing idx".
-type SomeMax struct {
+type AstSomeMax struct {
 	Base
 	Params []Node
 	Fmla   Node
 	Index  Node
 }
 
-func (s *SomeMax) Args() []Node {
+func (s *AstSomeMax) Args() []Node {
 	args := append([]Node{}, s.Params...)
 	args = append(args, s.Fmla, s.Index)
 	return args
 }
-func (s *SomeMax) Clone(args []Node) Node {
+func (s *AstSomeMax) Clone(args []Node) Node {
 	n := len(args)
-	return &SomeMax{Base: s.Base, Params: args[:n-2], Fmla: args[n-2], Index: args[n-1]}
+	return &AstSomeMax{Base: s.Base, Params: args[:n-2], Fmla: args[n-2], Index: args[n-1]}
 }
-func (s *SomeMax) String() string {
+func (s *AstSomeMax) String() string {
 	parts := make([]string, len(s.Params))
 	for i, p := range s.Params {
 		parts[i] = fmt.Sprint(p)
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " maximizing " + fmt.Sprint(s.Index)
 }
-func (s *SomeMax) Canon() iu.Canonical {
+func (s *AstSomeMax) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someMax%v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
-func (cfg *AstConfig) NewSomeMax(params []Node, fmla, index Node) *SomeMax {
-	s := &SomeMax{Params: params, Fmla: fmla, Index: index}
+func (cfg *AstConfig) NewSomeMax(params []Node, fmla, index Node) *AstSomeMax {
+	s := &AstSomeMax{Params: params, Fmla: fmla, Index: index}
 	s.Cfg = cfg
 	return s
 }
@@ -944,7 +944,7 @@ func (cfg *AstConfig) NewDebugItem(name, value Node) *DebugItem {
 // ThunkAction represents "thunk [label] name(args) : type := body".
 // Python: ThunkAction(Action) from ivy_actions.py
 // args = [label, action_atom, type, body]
-type ThunkAction struct {
+type AstThunkAction struct {
 	Base
 	Label        Node // the label (Atom)
 	Action       Node // the action name with args (Atom)
@@ -953,34 +953,34 @@ type ThunkAction struct {
 	Continuation Node // optional: set by lower_var_stmts when appending scoped continuation
 }
 
-func (cfg *AstConfig) NewThunkAction(label, action, sort, body Node) *ThunkAction {
-	t := &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
+func (cfg *AstConfig) NewThunkAction(label, action, sort, body Node) *AstThunkAction {
+	t := &AstThunkAction{Label: label, Action: action, Sort: sort, Body: body}
 	t.Cfg = cfg
 	return t
 }
 
-func (t *ThunkAction) Args() []Node {
+func (t *AstThunkAction) Args() []Node {
 	args := []Node{t.Label, t.Action, t.Sort, t.Body}
 	if t.Continuation != nil {
 		args = append(args, t.Continuation)
 	}
 	return args
 }
-func (t *ThunkAction) Clone(args []Node) Node {
-	c := &ThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
+func (t *AstThunkAction) Clone(args []Node) Node {
+	c := &AstThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
 	if len(args) > 4 {
 		c.Continuation = args[4]
 	}
 	return c
 }
-func (t *ThunkAction) String() string {
+func (t *AstThunkAction) String() string {
 	s := "thunk [" + fmt.Sprint(t.Label) + "] " + fmt.Sprint(t.Action) + " : " + fmt.Sprint(t.Sort) + " := " + fmt.Sprint(t.Body)
 	if t.Continuation != nil {
 		s += " ; " + fmt.Sprint(t.Continuation)
 	}
 	return s
 }
-func (t *ThunkAction) Canon() iu.Canonical {
+func (t *AstThunkAction) Canon() iu.Canonical {
 	cont := "nil"
 	if t.Continuation != nil {
 		cont = string(t.Continuation.Canon())
@@ -991,49 +991,51 @@ func (t *ThunkAction) Canon() iu.Canonical {
 // TemporalModels represents M |= phi.
 // CrashAction represents "action name = *" (havoc/crash).
 // Python: CrashAction(Action) from ivy_actions.py
-type CrashAction struct {
+type AstCrashAction struct {
 	Base
 	DeclArgs []Node
 }
 
-func (cfg *AstConfig) NewCrashAction(args ...Node) *CrashAction {
-	c := &CrashAction{DeclArgs: args}
+func (cfg *AstConfig) NewCrashAction(args ...Node) *AstCrashAction {
+	c := &AstCrashAction{DeclArgs: args}
 	c.Cfg = cfg
 	return c
 }
 
-func (c *CrashAction) Args() []Node           { return c.DeclArgs }
-func (c *CrashAction) Clone(args []Node) Node { return &CrashAction{Base: c.Base, DeclArgs: args} }
-func (c *CrashAction) String() string {
+func (c *AstCrashAction) Args() []Node { return c.DeclArgs }
+func (c *AstCrashAction) Clone(args []Node) Node {
+	return &AstCrashAction{Base: c.Base, DeclArgs: args}
+}
+func (c *AstCrashAction) String() string {
 	if len(c.DeclArgs) > 0 {
 		return "crash " + fmt.Sprint(c.DeclArgs[0])
 	}
 	return "crash"
 }
-func (c *CrashAction) Canon() iu.Canonical {
+func (c *AstCrashAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(crashAction%v declArgs:%v)", c.Base.canonFields(), SliceCanon(c.DeclArgs)))
 }
 
 // ChoiceAction represents "if * { ... } else { ... }" non-deterministic choice.
 // Python: class ChoiceAction(Action) from ivy_actions.py:805.
 // Each instance gets a unique_id for determinization.
-type ChoiceAction struct {
+type AstChoiceAction struct {
 	Base
 	Branches []Node
 	UniqueID int64
 }
 
-func (cfg *AstConfig) NewChoiceAction(branches ...Node) *ChoiceAction {
+func (cfg *AstConfig) NewChoiceAction(branches ...Node) *AstChoiceAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
 	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
-	ca := &ChoiceAction{Branches: branches, UniqueID: id}
+	ca := &AstChoiceAction{Branches: branches, UniqueID: id}
 	ca.Cfg = cfg
 	return ca
 }
 
-func (c *ChoiceAction) Args() []Node { return c.Branches }
-func (c *ChoiceAction) Clone(args []Node) Node {
+func (c *AstChoiceAction) Args() []Node { return c.Branches }
+func (c *AstChoiceAction) Clone(args []Node) Node {
 	cfg := c.Cfg
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
@@ -1041,10 +1043,10 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
 	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=ChoiceAction", id, cfg.IuCfg.ChoiceActionCtr)
-	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: id}
+	return &AstChoiceAction{Base: c.Base, Branches: args, UniqueID: id}
 }
-func (c *ChoiceAction) String() string { return "choice" }
-func (c *ChoiceAction) Canon() iu.Canonical {
+func (c *AstChoiceAction) String() string { return "choice" }
+func (c *AstChoiceAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(choiceAction%v branches:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Branches), c.UniqueID))
 }
 
@@ -1052,23 +1054,23 @@ func (c *ChoiceAction) Canon() iu.Canonical {
 // Python: class EnvAction(ChoiceAction) from ivy_actions.py:864.
 // Compiler-created: ivy_isolate.py:1735 during isolate extraction (all Ivy versions).
 // Like ChoiceAction but hides child formal params/returns.
-type EnvAction struct {
+type AstEnvAction struct {
 	Base
 	Branches []Node
 	UniqueID int64
 }
 
-func (cfg *AstConfig) NewEnvAction(branches ...Node) *EnvAction {
+func (cfg *AstConfig) NewEnvAction(branches ...Node) *AstEnvAction {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
 	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
-	ea := &EnvAction{Branches: branches, UniqueID: id}
+	ea := &AstEnvAction{Branches: branches, UniqueID: id}
 	ea.Cfg = cfg
 	return ea
 }
 
-func (a *EnvAction) Args() []Node { return a.Branches }
-func (a *EnvAction) Clone(args []Node) Node {
+func (a *AstEnvAction) Args() []Node { return a.Branches }
+func (a *AstEnvAction) Clone(args []Node) Node {
 	cfg := a.Cfg
 	if cfg == nil {
 		panic("ast: Clone called on EnvAction with nil AstConfig")
@@ -1076,171 +1078,175 @@ func (a *EnvAction) Clone(args []Node) Node {
 	id := cfg.IuCfg.ChoiceActionCtr
 	cfg.IuCfg.ChoiceActionCtr++
 	xtracer.Trace("ChoiceAction.__init__ uniqueID=%d counter=%d caller=EnvAction", id, cfg.IuCfg.ChoiceActionCtr)
-	return &EnvAction{Base: a.Base, Branches: args, UniqueID: id}
+	return &AstEnvAction{Base: a.Base, Branches: args, UniqueID: id}
 }
-func (a *EnvAction) String() string { return "env" }
-func (a *EnvAction) Canon() iu.Canonical {
+func (a *AstEnvAction) String() string { return "env" }
+func (a *AstEnvAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(envAction%v branches:%v uniqueID:%d)", a.Base.canonFields(), SliceCanon(a.Branches), a.UniqueID))
 }
 
 // LetAction represents "let x = y, ... { body }".
 // Python: class LetAction(Action) from ivy_actions.py:1081.
 // Args are all-but-last = bindings, last = body.
-type LetAction struct {
+type AstLetAction struct {
 	Base
 	Bindings []Node // equation bindings (Atom("=", lhs, rhs) nodes)
 	Body     Node   // the body action (last arg)
 }
 
-func (cfg *AstConfig) NewLetAction(args ...Node) *LetAction {
-	var l *LetAction
+func (cfg *AstConfig) NewLetAction(args ...Node) *AstLetAction {
+	var l *AstLetAction
 	if len(args) == 0 {
-		l = &LetAction{}
+		l = &AstLetAction{}
 	} else {
-		l = &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+		l = &AstLetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
 	}
 	l.Cfg = cfg
 	return l
 }
 
-func (l *LetAction) Args() []Node {
+func (l *AstLetAction) Args() []Node {
 	if l.Body == nil {
 		return l.Bindings
 	}
 	return append(append([]Node{}, l.Bindings...), l.Body)
 }
-func (l *LetAction) Clone(args []Node) Node {
+func (l *AstLetAction) Clone(args []Node) Node {
 	if len(args) == 0 {
-		return &LetAction{Base: l.Base}
+		return &AstLetAction{Base: l.Base}
 	}
-	return &LetAction{Base: l.Base, Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+	return &AstLetAction{Base: l.Base, Bindings: args[:len(args)-1], Body: args[len(args)-1]}
 }
-func (l *LetAction) String() string { return "let" }
-func (l *LetAction) Canon() iu.Canonical {
+func (l *AstLetAction) String() string { return "let" }
+func (l *AstLetAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(letAction%v bindings:%v body:%v)", l.Base.canonFields(), SliceCanon(l.Bindings), nodeCanon(l.Body)))
 }
 
 // Ranking wraps a formula for DECREASES clauses.
 // Python: class Ranking(Action) from ivy_actions.py:953.
-type Ranking struct {
+type AstRanking struct {
 	Base
 	Fmla Node
 }
 
-func (cfg *AstConfig) NewRanking(fmla Node) *Ranking {
-	r := &Ranking{Fmla: fmla}
+func (cfg *AstConfig) NewRanking(fmla Node) *AstRanking {
+	r := &AstRanking{Fmla: fmla}
 	r.Cfg = cfg
 	return r
 }
 
-func (r *Ranking) Args() []Node           { return []Node{r.Fmla} }
-func (r *Ranking) Clone(args []Node) Node { return &Ranking{Base: r.Base, Fmla: args[0]} }
-func (r *Ranking) String() string         { return "decreases" }
-func (r *Ranking) Canon() iu.Canonical {
+func (r *AstRanking) Args() []Node           { return []Node{r.Fmla} }
+func (r *AstRanking) Clone(args []Node) Node { return &AstRanking{Base: r.Base, Fmla: args[0]} }
+func (r *AstRanking) String() string         { return "decreases" }
+func (r *AstRanking) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(ranking%v fmla:%v)", r.Base.canonFields(), nodeCanon(r.Fmla)))
 }
 
 // AssertAction asserts a formula (can fail verification).
 // Python: class AssertAction(Action) from ivy_actions.py:332.
-type AssertAction struct {
+type AstAssertAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewAssertAction(args ...Node) *AssertAction {
-	a := &AssertAction{Elems: args}
+func (cfg *AstConfig) NewAssertAction(args ...Node) *AstAssertAction {
+	a := &AstAssertAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *AssertAction) Args() []Node           { return a.Elems }
-func (a *AssertAction) Clone(args []Node) Node { return &AssertAction{Base: a.Base, Elems: args} }
-func (a *AssertAction) String() string         { return "assert" }
-func (a *AssertAction) Canon() iu.Canonical {
+func (a *AstAssertAction) Args() []Node           { return a.Elems }
+func (a *AstAssertAction) Clone(args []Node) Node { return &AstAssertAction{Base: a.Base, Elems: args} }
+func (a *AstAssertAction) String() string         { return "assert" }
+func (a *AstAssertAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assertAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // AssumeAction assumes a formula holds.
 // Python: class AssumeAction(Action) from ivy_actions.py:309.
-type AssumeAction struct {
+type AstAssumeAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewAssumeAction(args ...Node) *AssumeAction {
-	a := &AssumeAction{Elems: args}
+func (cfg *AstConfig) NewAssumeAction(args ...Node) *AstAssumeAction {
+	a := &AstAssumeAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *AssumeAction) Args() []Node           { return a.Elems }
-func (a *AssumeAction) Clone(args []Node) Node { return &AssumeAction{Base: a.Base, Elems: args} }
-func (a *AssumeAction) String() string         { return "assume" }
-func (a *AssumeAction) Canon() iu.Canonical {
+func (a *AstAssumeAction) Args() []Node           { return a.Elems }
+func (a *AstAssumeAction) Clone(args []Node) Node { return &AstAssumeAction{Base: a.Base, Elems: args} }
+func (a *AstAssumeAction) String() string         { return "assume" }
+func (a *AstAssumeAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assumeAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // EnsuresAction is like assert but for postconditions.
 // Python: class EnsuresAction(Action) from ivy_actions.py.
-type EnsuresAction struct {
+type AstEnsuresAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewEnsuresAction(args ...Node) *EnsuresAction {
-	a := &EnsuresAction{Elems: args}
+func (cfg *AstConfig) NewEnsuresAction(args ...Node) *AstEnsuresAction {
+	a := &AstEnsuresAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *EnsuresAction) Args() []Node           { return a.Elems }
-func (a *EnsuresAction) Clone(args []Node) Node { return &EnsuresAction{Base: a.Base, Elems: args} }
-func (a *EnsuresAction) String() string         { return "ensures" }
-func (a *EnsuresAction) Canon() iu.Canonical {
+func (a *AstEnsuresAction) Args() []Node { return a.Elems }
+func (a *AstEnsuresAction) Clone(args []Node) Node {
+	return &AstEnsuresAction{Base: a.Base, Elems: args}
+}
+func (a *AstEnsuresAction) String() string { return "ensures" }
+func (a *AstEnsuresAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(ensuresAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // RequiresAction is like assert but for preconditions.
 // Python: class RequiresAction(Action) from ivy_actions.py.
-type RequiresAction struct {
+type AstRequiresAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewRequiresAction(args ...Node) *RequiresAction {
-	a := &RequiresAction{Elems: args}
+func (cfg *AstConfig) NewRequiresAction(args ...Node) *AstRequiresAction {
+	a := &AstRequiresAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *RequiresAction) Args() []Node           { return a.Elems }
-func (a *RequiresAction) Clone(args []Node) Node { return &RequiresAction{Base: a.Base, Elems: args} }
-func (a *RequiresAction) String() string         { return "requires" }
-func (a *RequiresAction) Canon() iu.Canonical {
+func (a *AstRequiresAction) Args() []Node { return a.Elems }
+func (a *AstRequiresAction) Clone(args []Node) Node {
+	return &AstRequiresAction{Base: a.Base, Elems: args}
+}
+func (a *AstRequiresAction) String() string { return "requires" }
+func (a *AstRequiresAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(requiresAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // SubgoalAction represents a proof subgoal assertion.
 // Python: class SubgoalAction(AssertAction) from ivy_actions.py:394.
 // Has a custom clone that preserves the Kind field (mirrors Python's self.kind).
-type SubgoalAction struct {
+type AstSubgoalAction struct {
 	Base
 	Elems []Node
 	Kind  string // preserved across clone, mirrors Python's self.kind
 }
 
-func (cfg *AstConfig) NewSubgoalAction(args ...Node) *SubgoalAction {
-	a := &SubgoalAction{Elems: args}
+func (cfg *AstConfig) NewSubgoalAction(args ...Node) *AstSubgoalAction {
+	a := &AstSubgoalAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *SubgoalAction) Args() []Node { return a.Elems }
-func (a *SubgoalAction) Clone(args []Node) Node {
-	return &SubgoalAction{Base: a.Base, Elems: args, Kind: a.Kind}
+func (a *AstSubgoalAction) Args() []Node { return a.Elems }
+func (a *AstSubgoalAction) Clone(args []Node) Node {
+	return &AstSubgoalAction{Base: a.Base, Elems: args, Kind: a.Kind}
 }
-func (a *SubgoalAction) String() string { return "subgoal" }
-func (a *SubgoalAction) Canon() iu.Canonical {
+func (a *AstSubgoalAction) String() string { return "subgoal" }
+func (a *AstSubgoalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(subgoalAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
@@ -1248,23 +1254,23 @@ func (a *SubgoalAction) Canon() iu.Canonical {
 // Python: class AssignFieldAction(Action) from ivy_actions.py:710.
 // Parser-created: Ivy version <= 1.2 only (p_action_field_assign_term).
 // Has sort_infer_root = True in Python.
-type AssignFieldAction struct {
+type AstAssignFieldAction struct {
 	Base
 	Elems []Node // [obj, field_name, value] — 3 args
 }
 
-func (cfg *AstConfig) NewAssignFieldAction(args ...Node) *AssignFieldAction {
-	a := &AssignFieldAction{Elems: args}
+func (cfg *AstConfig) NewAssignFieldAction(args ...Node) *AstAssignFieldAction {
+	a := &AstAssignFieldAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *AssignFieldAction) Args() []Node { return a.Elems }
-func (a *AssignFieldAction) Clone(args []Node) Node {
-	return &AssignFieldAction{Base: a.Base, Elems: args}
+func (a *AstAssignFieldAction) Args() []Node { return a.Elems }
+func (a *AstAssignFieldAction) Clone(args []Node) Node {
+	return &AstAssignFieldAction{Base: a.Base, Elems: args}
 }
-func (a *AssignFieldAction) String() string { return "assign_field" }
-func (a *AssignFieldAction) Canon() iu.Canonical {
+func (a *AstAssignFieldAction) String() string { return "assign_field" }
+func (a *AstAssignFieldAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assignFieldAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
@@ -1272,21 +1278,23 @@ func (a *AssignFieldAction) Canon() iu.Canonical {
 // Python: class NullFieldAction(Action) from ivy_actions.py:723.
 // Parser-created: Ivy version <= 1.2 only (p_action_field_assign_null, p_action_field_assign_false).
 // Has sort_infer_root = True in Python.
-type NullFieldAction struct {
+type AstNullFieldAction struct {
 	Base
 	Elems []Node // [obj, field_name] — 2 args
 }
 
-func (cfg *AstConfig) NewNullFieldAction(args ...Node) *NullFieldAction {
-	a := &NullFieldAction{Elems: args}
+func (cfg *AstConfig) NewNullFieldAction(args ...Node) *AstNullFieldAction {
+	a := &AstNullFieldAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *NullFieldAction) Args() []Node           { return a.Elems }
-func (a *NullFieldAction) Clone(args []Node) Node { return &NullFieldAction{Base: a.Base, Elems: args} }
-func (a *NullFieldAction) String() string         { return "null_field" }
-func (a *NullFieldAction) Canon() iu.Canonical {
+func (a *AstNullFieldAction) Args() []Node { return a.Elems }
+func (a *AstNullFieldAction) Clone(args []Node) Node {
+	return &AstNullFieldAction{Base: a.Base, Elems: args}
+}
+func (a *AstNullFieldAction) String() string { return "null_field" }
+func (a *AstNullFieldAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(nullFieldAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
@@ -1294,254 +1302,258 @@ func (a *NullFieldAction) Canon() iu.Canonical {
 // Python: class CopyFieldAction(Action) from ivy_actions.py:736.
 // Parser-created: Ivy version <= 1.2 only (p_action_field_assign_field).
 // Has sort_infer_root = True in Python.
-type CopyFieldAction struct {
+type AstCopyFieldAction struct {
 	Base
 	Elems []Node // [dst_obj, dst_field, src_obj, src_field] — 4 args
 }
 
-func (cfg *AstConfig) NewCopyFieldAction(args ...Node) *CopyFieldAction {
-	a := &CopyFieldAction{Elems: args}
+func (cfg *AstConfig) NewCopyFieldAction(args ...Node) *AstCopyFieldAction {
+	a := &AstCopyFieldAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *CopyFieldAction) Args() []Node           { return a.Elems }
-func (a *CopyFieldAction) Clone(args []Node) Node { return &CopyFieldAction{Base: a.Base, Elems: args} }
-func (a *CopyFieldAction) String() string         { return "assign_field" } // Python CopyFieldAction.name() returns "assign_field"
-func (a *CopyFieldAction) Canon() iu.Canonical {
+func (a *AstCopyFieldAction) Args() []Node { return a.Elems }
+func (a *AstCopyFieldAction) Clone(args []Node) Node {
+	return &AstCopyFieldAction{Base: a.Base, Elems: args}
+}
+func (a *AstCopyFieldAction) String() string { return "assign_field" } // Python CopyFieldAction.name() returns "assign_field"
+func (a *AstCopyFieldAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(copyFieldAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // BindOldsAction binds old values before executing an inner action body.
 // Python: class BindOldsAction(Action) from ivy_actions.py:1231.
 // Compiler-created: ivy_actions.py:1309 in CallAction.int_update() (all Ivy versions).
-type BindOldsAction struct {
+type AstBindOldsAction struct {
 	Base
 	Elems []Node // [inner_action] — 1 arg
 }
 
-func (cfg *AstConfig) NewBindOldsAction(args ...Node) *BindOldsAction {
-	a := &BindOldsAction{Elems: args}
+func (cfg *AstConfig) NewBindOldsAction(args ...Node) *AstBindOldsAction {
+	a := &AstBindOldsAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
 
-func (a *BindOldsAction) Args() []Node           { return a.Elems }
-func (a *BindOldsAction) Clone(args []Node) Node { return &BindOldsAction{Base: a.Base, Elems: args} }
-func (a *BindOldsAction) String() string         { return "bindolds" }
-func (a *BindOldsAction) Canon() iu.Canonical {
+func (a *AstBindOldsAction) Args() []Node { return a.Elems }
+func (a *AstBindOldsAction) Clone(args []Node) Node {
+	return &AstBindOldsAction{Base: a.Base, Elems: args}
+}
+func (a *AstBindOldsAction) String() string { return "bindolds" }
+func (a *AstBindOldsAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(bindOldsAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // AssignAction represents "lhs := rhs".
 // Python: class AssignAction(Action) from ivy_actions.py:469.
-type AssignAction struct {
+type AstAssignAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewAssignAction(args ...Node) *AssignAction {
-	a := &AssignAction{Elems: args}
+func (cfg *AstConfig) NewAssignAction(args ...Node) *AstAssignAction {
+	a := &AstAssignAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *AssignAction) Args() []Node           { return a.Elems }
-func (a *AssignAction) Clone(args []Node) Node { return &AssignAction{Base: a.Base, Elems: args} }
-func (a *AssignAction) String() string         { return "assign" }
-func (a *AssignAction) Canon() iu.Canonical {
+func (a *AstAssignAction) Args() []Node           { return a.Elems }
+func (a *AstAssignAction) Clone(args []Node) Node { return &AstAssignAction{Base: a.Base, Elems: args} }
+func (a *AstAssignAction) String() string         { return "assign" }
+func (a *AstAssignAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assignAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // HavocAction represents "x := *" (nondeterministic assignment).
 // Python: class HavocAction(Action) from ivy_actions.py.
-type HavocAction struct {
+type AstHavocAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewHavocAction(args ...Node) *HavocAction {
-	a := &HavocAction{Elems: args}
+func (cfg *AstConfig) NewHavocAction(args ...Node) *AstHavocAction {
+	a := &AstHavocAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *HavocAction) Args() []Node           { return a.Elems }
-func (a *HavocAction) Clone(args []Node) Node { return &HavocAction{Base: a.Base, Elems: args} }
-func (a *HavocAction) String() string         { return "havoc" }
-func (a *HavocAction) Canon() iu.Canonical {
+func (a *AstHavocAction) Args() []Node           { return a.Elems }
+func (a *AstHavocAction) Clone(args []Node) Node { return &AstHavocAction{Base: a.Base, Elems: args} }
+func (a *AstHavocAction) String() string         { return "havoc" }
+func (a *AstHavocAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(havocAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // VarAction represents local variable declarations.
 // Python: class VarAction(Action) from ivy_actions.py.
-type VarAction struct {
+type AstVarAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewVarAction(args ...Node) *VarAction {
-	a := &VarAction{Elems: args}
+func (cfg *AstConfig) NewVarAction(args ...Node) *AstVarAction {
+	a := &AstVarAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *VarAction) Args() []Node { return a.Elems }
-func (a *VarAction) Clone(args []Node) Node {
-	return &VarAction{Base: a.Base, Elems: args}
+func (a *AstVarAction) Args() []Node { return a.Elems }
+func (a *AstVarAction) Clone(args []Node) Node {
+	return &AstVarAction{Base: a.Base, Elems: args}
 }
-func (a *VarAction) String() string { return "var" }
-func (a *VarAction) Canon() iu.Canonical {
+func (a *AstVarAction) String() string { return "var" }
+func (a *AstVarAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(varAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // SetAction represents "set" commands.
 // Python: class SetAction(Action) from ivy_actions.py.
-type SetAction struct {
+type AstSetAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewSetAction(args ...Node) *SetAction {
-	a := &SetAction{Elems: args}
+func (cfg *AstConfig) NewSetAction(args ...Node) *AstSetAction {
+	a := &AstSetAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *SetAction) Args() []Node { return a.Elems }
-func (a *SetAction) Clone(args []Node) Node {
-	return &SetAction{Base: a.Base, Elems: args}
+func (a *AstSetAction) Args() []Node { return a.Elems }
+func (a *AstSetAction) Clone(args []Node) Node {
+	return &AstSetAction{Base: a.Base, Elems: args}
 }
-func (a *SetAction) String() string { return "set" }
-func (a *SetAction) Canon() iu.Canonical {
+func (a *AstSetAction) String() string { return "set" }
+func (a *AstSetAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(setAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // InstantiateAction represents "instantiate" commands.
 // Python: class InstantiateAction(Action) from ivy_actions.py.
-type InstantiateAction struct {
+type AstInstantiateAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewInstantiateAction(args ...Node) *InstantiateAction {
-	a := &InstantiateAction{Elems: args}
+func (cfg *AstConfig) NewInstantiateAction(args ...Node) *AstInstantiateAction {
+	a := &AstInstantiateAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *InstantiateAction) Args() []Node { return a.Elems }
-func (a *InstantiateAction) Clone(args []Node) Node {
-	return &InstantiateAction{Base: a.Base, Elems: args}
+func (a *AstInstantiateAction) Args() []Node { return a.Elems }
+func (a *AstInstantiateAction) Clone(args []Node) Node {
+	return &AstInstantiateAction{Base: a.Base, Elems: args}
 }
-func (a *InstantiateAction) String() string { return "instantiate" }
-func (a *InstantiateAction) Canon() iu.Canonical {
+func (a *AstInstantiateAction) String() string { return "instantiate" }
+func (a *AstInstantiateAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(instantiateAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // DebugAction represents "debug" commands.
 // Python: class DebugAction(Action) from ivy_actions.py.
-type DebugAction struct {
+type AstDebugAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewDebugAction(args ...Node) *DebugAction {
-	a := &DebugAction{Elems: args}
+func (cfg *AstConfig) NewDebugAction(args ...Node) *AstDebugAction {
+	a := &AstDebugAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *DebugAction) Args() []Node           { return a.Elems }
-func (a *DebugAction) Clone(args []Node) Node { return &DebugAction{Base: a.Base, Elems: args} }
-func (a *DebugAction) String() string         { return "debug" }
-func (a *DebugAction) Canon() iu.Canonical {
+func (a *AstDebugAction) Args() []Node           { return a.Elems }
+func (a *AstDebugAction) Clone(args []Node) Node { return &AstDebugAction{Base: a.Base, Elems: args} }
+func (a *AstDebugAction) String() string         { return "debug" }
+func (a *AstDebugAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(debugAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // NativeAction represents native code blocks.
 // Python: class NativeAction(Action) from ivy_actions.py.
-type NativeAction struct {
+type AstNativeAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewNativeAction(args ...Node) *NativeAction {
-	a := &NativeAction{Elems: args}
+func (cfg *AstConfig) NewNativeAction(args ...Node) *AstNativeAction {
+	a := &AstNativeAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *NativeAction) Args() []Node           { return a.Elems }
-func (a *NativeAction) Clone(args []Node) Node { return &NativeAction{Base: a.Base, Elems: args} }
-func (a *NativeAction) String() string         { return "native" }
-func (a *NativeAction) Canon() iu.Canonical {
+func (a *AstNativeAction) Args() []Node           { return a.Elems }
+func (a *AstNativeAction) Clone(args []Node) Node { return &AstNativeAction{Base: a.Base, Elems: args} }
+func (a *AstNativeAction) String() string         { return "native" }
+func (a *AstNativeAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(nativeAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // WhileAction represents while loops.
 // Python: class WhileAction(Action) from ivy_actions.py.
-type WhileAction struct {
+type AstWhileAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewWhileAction(args ...Node) *WhileAction {
-	a := &WhileAction{Elems: args}
+func (cfg *AstConfig) NewWhileAction(args ...Node) *AstWhileAction {
+	a := &AstWhileAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *WhileAction) Args() []Node           { return a.Elems }
-func (a *WhileAction) Clone(args []Node) Node { return &WhileAction{Base: a.Base, Elems: args} }
-func (a *WhileAction) String() string         { return "while" }
-func (a *WhileAction) Canon() iu.Canonical {
+func (a *AstWhileAction) Args() []Node           { return a.Elems }
+func (a *AstWhileAction) Clone(args []Node) Node { return &AstWhileAction{Base: a.Base, Elems: args} }
+func (a *AstWhileAction) String() string         { return "while" }
+func (a *AstWhileAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(whileAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // IfAction represents if-then-else.
 // Python: class IfAction(Action) from ivy_actions.py.
-type IfAction struct {
+type AstIfAction struct {
 	Base
 	Cond Node
 	Then Node
 	Else Node
 }
 
-func (cfg *AstConfig) NewIfAction(cond, then, els Node) *IfAction {
-	a := &IfAction{Cond: cond, Then: then, Else: els}
+func (cfg *AstConfig) NewIfAction(cond, then, els Node) *AstIfAction {
+	a := &AstIfAction{Cond: cond, Then: then, Else: els}
 	a.Cfg = cfg
 	return a
 }
-func (a *IfAction) Args() []Node {
+func (a *AstIfAction) Args() []Node {
 	if a.Else != nil {
 		return []Node{a.Cond, a.Then, a.Else}
 	}
 	return []Node{a.Cond, a.Then}
 }
-func (a *IfAction) Clone(args []Node) Node {
+func (a *AstIfAction) Clone(args []Node) Node {
 	var els Node
 	if len(args) > 2 {
 		els = args[2]
 	}
-	return &IfAction{Base: a.Base, Cond: args[0], Then: args[1], Else: els}
+	return &AstIfAction{Base: a.Base, Cond: args[0], Then: args[1], Else: els}
 }
-func (a *IfAction) String() string { return "if" }
-func (a *IfAction) Canon() iu.Canonical {
+func (a *AstIfAction) String() string { return "if" }
+func (a *AstIfAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)",
 		a.Base.canonFields(), nodeCanon(a.Cond), nodeCanon(a.Then), nodeCanon(a.Else)))
 }
 
 // LocalAction represents local scoping of actions.
 // Python: class LocalAction(Action) from ivy_actions.py.
-type LocalAction struct {
+type AstLocalAction struct {
 	Base
 	Elems    []Node
 	UniqueID int64
 }
 
-func (cfg *AstConfig) NewLocalAction(caller string, args ...Node) *LocalAction {
+func (cfg *AstConfig) NewLocalAction(caller string, args ...Node) *AstLocalAction {
 	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
-	la := &LocalAction{Elems: args, UniqueID: id}
+	la := &AstLocalAction{Elems: args, UniqueID: id}
 	la.Cfg = cfg
 	xtracer.Trace("LocalAction.__init__ uniqueID=%d caller=%s", id, caller)
 	return la
 }
-func (a *LocalAction) Args() []Node { return a.Elems }
-func (a *LocalAction) Clone(args []Node) Node {
+func (a *AstLocalAction) Args() []Node { return a.Elems }
+func (a *AstLocalAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
 	cfg := a.Cfg
 	if cfg == nil {
@@ -1551,53 +1563,53 @@ func (a *LocalAction) Clone(args []Node) Node {
 	la.Base = a.Base
 	return la
 }
-func (a *LocalAction) String() string { return "local" }
-func (a *LocalAction) Canon() iu.Canonical {
+func (a *AstLocalAction) String() string { return "local" }
+func (a *AstLocalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(localAction%v elems:%v uniqueID:%d)",
 		a.Base.canonFields(), SliceCanon(a.Elems), a.UniqueID))
 }
 
 // SomeAssignAction represents "if some x. P { body }".
 // Python: SomeMinEqualAction or similar from ivy_actions.py.
-type SomeAssignAction struct {
+type AstSomeAssignAction struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewSomeAssignAction(args ...Node) *SomeAssignAction {
-	a := &SomeAssignAction{Elems: args}
+func (cfg *AstConfig) NewSomeAssignAction(args ...Node) *AstSomeAssignAction {
+	a := &AstSomeAssignAction{Elems: args}
 	a.Cfg = cfg
 	return a
 }
-func (a *SomeAssignAction) Args() []Node { return a.Elems }
-func (a *SomeAssignAction) Clone(args []Node) Node {
-	return &SomeAssignAction{Base: a.Base, Elems: args}
+func (a *AstSomeAssignAction) Args() []Node { return a.Elems }
+func (a *AstSomeAssignAction) Clone(args []Node) Node {
+	return &AstSomeAssignAction{Base: a.Base, Elems: args}
 }
-func (a *SomeAssignAction) String() string { return "some_assign" }
-func (a *SomeAssignAction) Canon() iu.Canonical {
+func (a *AstSomeAssignAction) String() string { return "some_assign" }
+func (a *AstSomeAssignAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someAssignAction%v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // CallAction inlines a named state or action.
 // Python: class CallAction(Action) from ivy_actions.py:1182.
 // args[0] is the callee atom; args[1:] are actual returns.
-type CallAction struct {
+type AstCallAction struct {
 	Base
 	Elems    []Node
 	UniqueID int64
 }
 
-func (cfg *AstConfig) NewCallAction(args ...Node) *CallAction {
+func (cfg *AstConfig) NewCallAction(args ...Node) *AstCallAction {
 	id := cfg.IuCfg.CallActionCtr
 	cfg.IuCfg.CallActionCtr++
-	ca := &CallAction{Elems: args, UniqueID: id}
+	ca := &AstCallAction{Elems: args, UniqueID: id}
 	ca.Cfg = cfg
 	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr) //seen
 	return ca
 }
 
-func (c *CallAction) Args() []Node { return c.Elems }
-func (c *CallAction) Clone(args []Node) Node {
+func (c *AstCallAction) Args() []Node { return c.Elems }
+func (c *AstCallAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
 	cfg := c.Cfg
 	if cfg == nil {
@@ -1607,7 +1619,7 @@ func (c *CallAction) Clone(args []Node) Node {
 	ca.Base = c.Base
 	return ca
 }
-func (c *CallAction) String() string {
+func (c *AstCallAction) String() string {
 	if len(c.Elems) == 0 {
 		return "call"
 	}
@@ -1621,7 +1633,7 @@ func (c *CallAction) String() string {
 	}
 	return "call " + strings.Join(returns, ",") + " := " + fmt.Sprint(c.Elems[0])
 }
-func (c *CallAction) Canon() iu.Canonical {
+func (c *AstCallAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(callAction%v elems:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Elems), c.UniqueID))
 }
 
@@ -1638,20 +1650,20 @@ func (c *CallAction) Canon() iu.Canonical {
 // original Python grammar, which is important because downstream code
 // (e.g. int_update, compose_updates) uses isinstance(x, Sequence) type
 // checks that distinguish action sequences from logical conjunctions.
-type Sequence struct {
+type AstSequence struct {
 	Base
 	Stmts []Node
 }
 
-func (cfg *AstConfig) NewSequence(stmts ...Node) *Sequence {
-	s := &Sequence{Stmts: stmts}
+func (cfg *AstConfig) NewSequence(stmts ...Node) *AstSequence {
+	s := &AstSequence{Stmts: stmts}
 	s.Cfg = cfg
 	return s
 }
 
-func (s *Sequence) Args() []Node           { return s.Stmts }
-func (s *Sequence) Clone(args []Node) Node { return &Sequence{Base: s.Base, Stmts: args} }
-func (s *Sequence) String() string {
+func (s *AstSequence) Args() []Node           { return s.Stmts }
+func (s *AstSequence) Clone(args []Node) Node { return &AstSequence{Base: s.Base, Stmts: args} }
+func (s *AstSequence) String() string {
 	if len(s.Stmts) == 0 {
 		return "{}"
 	}
@@ -1661,7 +1673,7 @@ func (s *Sequence) String() string {
 	}
 	return "{" + joinSemi(parts) + "}"
 }
-func (s *Sequence) Canon() iu.Canonical {
+func (s *AstSequence) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(sequence%v stmts:%v)", s.Base.canonFields(), SliceCanon(s.Stmts)))
 }
 
@@ -1677,25 +1689,25 @@ func joinSemi(parts []string) string {
 	return result
 }
 
-type TemporalModels struct {
+type AstTemporalModels struct {
 	Base
 	Model Node
 	Fmla  Node
 }
 
-func (t *TemporalModels) Args() []Node { return []Node{t.Fmla} }
-func (t *TemporalModels) Clone(args []Node) Node {
-	return &TemporalModels{Base: t.Base, Model: t.Model, Fmla: args[0]}
+func (t *AstTemporalModels) Args() []Node { return []Node{t.Fmla} }
+func (t *AstTemporalModels) Clone(args []Node) Node {
+	return &AstTemporalModels{Base: t.Base, Model: t.Model, Fmla: args[0]}
 }
-func (t *TemporalModels) String() string {
+func (t *AstTemporalModels) String() string {
 	return fmt.Sprint(t.Model) + " |= " + fmt.Sprint(t.Fmla)
 }
-func (t *TemporalModels) Canon() iu.Canonical {
+func (t *AstTemporalModels) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(temporalModels%v model:%v fmla:%v)", t.Base.canonFields(), nodeCanon(t.Model), nodeCanon(t.Fmla)))
 }
 
-func (cfg *AstConfig) NewTemporalModels(model, fmla Node) *TemporalModels {
-	t := &TemporalModels{Model: model, Fmla: fmla}
+func (cfg *AstConfig) NewTemporalModels(model, fmla Node) *AstTemporalModels {
+	t := &AstTemporalModels{Model: model, Fmla: fmla}
 	t.Cfg = cfg
 	return t
 }
@@ -1759,8 +1771,8 @@ func (v *Variable) Equal(other Node) bool {
 }
 
 // Equal returns true if other is a *Literal with the same Polarity and Atom.
-func (l *Literal) Equal(other Node) bool {
-	o, ok := other.(*Literal)
+func (l *AstLiteral) Equal(other Node) bool {
+	o, ok := other.(*AstLiteral)
 	if !ok || l.Polarity != o.Polarity {
 		return false
 	}
@@ -1804,7 +1816,7 @@ func AppsToAtoms(apps []Node) []Node {
 // --- Predefined constants ---
 
 // Equals is the predefined equality symbol.
-var Equals = &Symbol{Rep: "=", Sort: &RelationSort{Dom: []Node{nil, nil}}}
+var Equals = &Symbol{Rep: "=", Sort: &AstRelationSort{Dom: []Node{nil, nil}}}
 
 // IsEquals checks if a name is the equality symbol.
 func IsEquals(name string) bool {
@@ -1840,7 +1852,7 @@ func CopyLineno(src, dst Node) {
 
 // IsTrue checks if an AST node represents true (empty And).
 func IsTrue(n Node) bool {
-	if a, ok := n.(*And); ok {
+	if a, ok := n.(*AstAnd); ok {
 		return len(a.Terms) == 0
 	}
 	return false
@@ -1848,7 +1860,7 @@ func IsTrue(n Node) bool {
 
 // IsFalse checks if an AST node represents false (empty Or).
 func IsFalse(n Node) bool {
-	if o, ok := n.(*Or); ok {
+	if o, ok := n.(*AstOr); ok {
 		return len(o.Terms) == 0
 	}
 	return false
@@ -1860,7 +1872,7 @@ func HasTemporal(f Node) bool {
 		return false
 	}
 	switch f.(type) {
-	case *Globally, *Eventually, *WhenOperator:
+	case *AstGlobally, *AstEventually, *AstWhenOperator:
 		return true
 	}
 	for _, arg := range f.Args() {
@@ -1913,7 +1925,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 	}
 	// For quantifiers and named binders, remove bound variables from subs
 	switch n := node.(type) {
-	case *Forall:
+	case *AstForall:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
 			if v, ok := b.(*Variable); ok {
@@ -1926,7 +1938,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 			newArgs[i] = SetVariableSorts(a, newSubs)
 		}
 		return n.Clone(newArgs)
-	case *Exists:
+	case *AstExists:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
 			if v, ok := b.(*Variable); ok {
@@ -1939,7 +1951,7 @@ func SetVariableSorts(node Node, subs map[string]string) Node {
 			newArgs[i] = SetVariableSorts(a, newSubs)
 		}
 		return n.Clone(newArgs)
-	case *NamedBinder:
+	case *AstNamedBinder:
 		newSubs := copySubst(subs)
 		for _, b := range n.Bounds {
 			if v, ok := b.(*Variable); ok {

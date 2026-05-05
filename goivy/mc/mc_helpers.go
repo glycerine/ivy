@@ -12,7 +12,7 @@ import (
 // CeilLog2 returns the ceiling of log2(n), i.e., the minimum number
 // of bits needed to represent n distinct values.
 // CeilLog2(0) = 0, CeilLog2(1) = 0, CeilLog2(2) = 1, CeilLog2(3) = 2, etc.
-func CeilLog2(n int) int {
+func MCCeilLog2(n int) int {
 	bits, vals := 0, 1
 	for vals < n {
 		bits++
@@ -27,13 +27,13 @@ func GetEncodingBits(sort lg.Sort, interp map[string]interface{}) (int, error) {
 	th := thy.GetSortTheory(sort, interp)
 	switch t := th.(type) {
 	case *lg.EnumeratedSort:
-		return CeilLog2(len(t.Extension)), nil
+		return MCCeilLog2(len(t.Extension)), nil
 	case *lg.RangeSort:
 		ub, err := strconv.Atoi(t.UbString())
 		if err != nil {
 			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.UbString())
 		}
-		return CeilLog2(ub + 1), nil
+		return MCCeilLog2(ub + 1), nil
 	case *lg.BooleanSort:
 		return 1, nil
 	case *thy.Theory:
@@ -52,13 +52,13 @@ func GetEncodingBits(sort lg.Sort, interp map[string]interface{}) (int, error) {
 func GetEncodingBitsSimple(sort lg.Sort) (int, error) {
 	switch t := sort.(type) {
 	case *lg.EnumeratedSort:
-		return CeilLog2(len(t.Extension)), nil
+		return MCCeilLog2(len(t.Extension)), nil
 	case *lg.RangeSort:
 		ub, err := strconv.Atoi(t.UbString())
 		if err != nil {
 			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.UbString())
 		}
-		return CeilLog2(ub + 1), nil
+		return MCCeilLog2(ub + 1), nil
 	case *lg.BooleanSort:
 		return 1, nil
 	default:

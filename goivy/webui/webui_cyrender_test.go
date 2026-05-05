@@ -8,10 +8,10 @@ import (
 	"testing"
 )
 
-// --- CyElements tests ---
+// --- WebUICyElements tests ---
 
 func TestNewCyElements(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	if g == nil {
 		t.Fatal("nil")
 	}
@@ -21,7 +21,7 @@ func TestNewCyElements(t *testing.T) {
 }
 
 func TestAddNode(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("n1", "Node 1", []string{"state"}, "info", "longinfo", nil, "ellipse")
 	if len(g.Elements) != 1 {
 		t.Fatalf("len = %d", len(g.Elements))
@@ -39,7 +39,7 @@ func TestAddNode(t *testing.T) {
 }
 
 func TestAddEdge(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("a", "A", nil, "", "", nil, "ellipse")
 	g.AddNode("b", "B", nil, "", "", nil, "ellipse")
 	g.AddEdge("e1", "a", "b", "edge1", []string{"all_to_all"}, "info", "info")
@@ -59,7 +59,7 @@ func TestAddEdge(t *testing.T) {
 }
 
 func TestAddMultipleClasses(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("x", "X", []string{"state", "bottom_state"}, "", "", nil, "ellipse")
 	if g.Elements[0].Classes != "state bottom_state" {
 		t.Errorf("classes = %q", g.Elements[0].Classes)
@@ -67,7 +67,7 @@ func TestAddMultipleClasses(t *testing.T) {
 }
 
 func TestCyElementsJSON(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("n", "N", []string{"state"}, "si", "li", nil, "ellipse")
 	g.AddNode("m", "M", []string{"state"}, "si", "li", nil, "ellipse")
 	g.AddEdge("e", "n", "m", "E", []string{"cover"}, "si", "li")
@@ -90,7 +90,7 @@ func TestCyElementsJSON(t *testing.T) {
 }
 
 func TestCyElementsJSONNodeFields(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("n", "Label", []string{"exactly_one"}, "short", "long", nil, "octagon")
 
 	data, err := json.Marshal(g)
@@ -106,7 +106,7 @@ func TestCyElementsJSONNodeFields(t *testing.T) {
 }
 
 func TestCyElementsJSONEdgeFields(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("a", "A", nil, "", "", nil, "ellipse")
 	g.AddNode("b", "B", nil, "", "", nil, "ellipse")
 	g.AddEdge("rel", "a", "b", "R", []string{"none_to_none"}, "si", "li")
@@ -124,14 +124,14 @@ func TestCyElementsJSONEdgeFields(t *testing.T) {
 }
 
 func TestNodeWidthHeuristic(t *testing.T) {
-	g := NewCyElements()
+	g := NewWebUICyElements()
 	g.AddNode("short", "Hi", nil, "", "", nil, "ellipse")
 	w := g.Elements[0].Data["width"].(int)
 	if w < 50 {
 		t.Errorf("width = %d, want >= 50", w)
 	}
 
-	g2 := NewCyElements()
+	g2 := NewWebUICyElements()
 	g2.AddNode("long", "A very long label indeed", nil, "", "", nil, "ellipse")
 	w2 := g2.Elements[0].Data["width"].(int)
 	if w2 <= 50 {
@@ -139,23 +139,23 @@ func TestNodeWidthHeuristic(t *testing.T) {
 	}
 }
 
-// --- RenderARG tests ---
+// --- RenderWebUIARG tests ---
 
 func TestRenderARGEmpty(t *testing.T) {
-	g := RenderARG(nil)
+	g := RenderWebUIARG(nil)
 	if len(g.Elements) != 0 {
 		t.Errorf("len = %d", len(g.Elements))
 	}
 }
 
 func TestRenderARGNodes(t *testing.T) {
-	ag := &AnalysisGraphState{
-		States: []ARGNode{
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
 			{ID: 0, Label: "0", IsBottom: false, Info: "state 0"},
 			{ID: 1, Label: "1", IsBottom: true, Info: "state 1"},
 		},
 	}
-	g := RenderARG(ag)
+	g := RenderWebUIARG(ag)
 	if len(g.Elements) != 2 {
 		t.Fatalf("len = %d", len(g.Elements))
 	}
@@ -168,16 +168,16 @@ func TestRenderARGNodes(t *testing.T) {
 }
 
 func TestRenderARGTransitions(t *testing.T) {
-	ag := &AnalysisGraphState{
-		States: []ARGNode{
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
 			{ID: 0, Label: "0"},
 			{ID: 1, Label: "1"},
 		},
-		Transitions: []ARGTransition{
+		Transitions: []WebUIARGTransition{
 			{SourceID: 0, TargetID: 1, Label: "act", IsJoin: false},
 		},
 	}
-	g := RenderARG(ag)
+	g := RenderWebUIARG(ag)
 	// 2 nodes + 1 edge
 	if len(g.Elements) != 3 {
 		t.Fatalf("len = %d", len(g.Elements))
@@ -189,16 +189,16 @@ func TestRenderARGTransitions(t *testing.T) {
 }
 
 func TestRenderARGJoinEdge(t *testing.T) {
-	ag := &AnalysisGraphState{
-		States: []ARGNode{
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
 			{ID: 0, Label: "0"},
 			{ID: 1, Label: "1"},
 		},
-		Transitions: []ARGTransition{
+		Transitions: []WebUIARGTransition{
 			{SourceID: 0, TargetID: 1, Label: "join", IsJoin: true},
 		},
 	}
-	g := RenderARG(ag)
+	g := RenderWebUIARG(ag)
 	edge := g.Elements[2]
 	if edge.Classes != "transition_join" {
 		t.Errorf("edge classes = %q", edge.Classes)
@@ -206,16 +206,16 @@ func TestRenderARGJoinEdge(t *testing.T) {
 }
 
 func TestRenderARGCovering(t *testing.T) {
-	ag := &AnalysisGraphState{
-		States: []ARGNode{
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
 			{ID: 0, Label: "0"},
 			{ID: 1, Label: "1"},
 		},
-		Covering: []ARGCover{
+		Covering: []WebUIARGCover{
 			{CoveredID: 0, CoveringID: 1},
 		},
 	}
-	g := RenderARG(ag)
+	g := RenderWebUIARG(ag)
 	// 2 nodes + 1 cover edge
 	if len(g.Elements) != 3 {
 		t.Fatalf("len = %d", len(g.Elements))
@@ -227,19 +227,19 @@ func TestRenderARGCovering(t *testing.T) {
 }
 
 func TestRenderARGFullJSON(t *testing.T) {
-	ag := &AnalysisGraphState{
-		States: []ARGNode{
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
 			{ID: 0, Label: "init"},
 			{ID: 1, Label: "step", IsBottom: true},
 		},
-		Transitions: []ARGTransition{
+		Transitions: []WebUIARGTransition{
 			{SourceID: 0, TargetID: 1, Label: "act"},
 		},
-		Covering: []ARGCover{
+		Covering: []WebUIARGCover{
 			{CoveredID: 1, CoveringID: 0},
 		},
 	}
-	g := RenderARG(ag)
+	g := RenderWebUIARG(ag)
 	data, err := json.Marshal(g)
 	if err != nil {
 		t.Fatal(err)
@@ -265,8 +265,8 @@ func TestRenderProofStackNil(t *testing.T) {
 }
 
 func TestRenderProofStackGoals(t *testing.T) {
-	stack := &ProofStack{
-		Goals: []ProofGoal{
+	stack := &WebUIProofStack{
+		Goals: []WebUIProofGoal{
 			{ID: 0, Label: "g0", Refuted: false, Info: "goal 0", ParentID: -1},
 			{ID: 1, Label: "g1", Refuted: true, Info: "goal 1", ParentID: 0},
 		},
@@ -496,7 +496,7 @@ func FuzzCyElementsJSON(f *testing.F) {
 	f.Add("a b c", "line1\nline2", "exactly_one at_least_one", "octagon")
 
 	f.Fuzz(func(t *testing.T, obj, label, classes, shape string) {
-		g := NewCyElements()
+		g := NewWebUICyElements()
 		g.AddNode(obj, label, strings.Fields(classes), "si", "li", nil, shape)
 
 		data, err := json.Marshal(g)

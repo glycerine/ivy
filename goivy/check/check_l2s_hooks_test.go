@@ -24,7 +24,7 @@ func TestTemporalAndL2S(t *testing.T) {
 		{"_old_l2s_g", true}, // _old_l2s prefix matches first
 		{"foo", false},
 		{"", false},
-		{"l2s", true},    // "l2s" prefix, not "l2s_g"
+		{"l2s", true},     // "l2s" prefix, not "l2s_g"
 		{"l2", false},     // too short
 		{"l2s_", true},    // "l2s_" but not "l2s_g"
 		{"l2s_ga", false}, // starts with "l2s_g"

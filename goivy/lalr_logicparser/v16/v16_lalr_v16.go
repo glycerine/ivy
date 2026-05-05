@@ -13,128 +13,128 @@ func ParseV16(input string, version lexer.Version, cfg ...*ast.AstConfig) (ast.N
 	if len(cfg) > 0 {
 		c = cfg[0]
 	}
-	lex := newV16LexAdapter(input, version, c)
-	v16Parse(lex)
+	lex := newLalr16LexAdapter(input, version, c)
+	lalr16Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR v1.6 parse error: %s", lex.err)
 	}
 	return lex.result, nil
 }
 
-type v16LexAdapter struct {
+type lalr16LexAdapter struct {
 	lex    *lexer.Lexer
 	cfg    *ast.AstConfig
 	result ast.Node
 	err    string
 }
 
-func newV16LexAdapter(input string, version lexer.Version, cfg *ast.AstConfig) *v16LexAdapter {
+func newLalr16LexAdapter(input string, version lexer.Version, cfg *ast.AstConfig) *lalr16LexAdapter {
 	if cfg == nil {
 		cfg = ast.NewAstConfig()
 	}
-	return &v16LexAdapter{
+	return &lalr16LexAdapter{
 		lex: lexer.New(input, version),
 		cfg: cfg,
 	}
 }
 
-func (l *v16LexAdapter) Lex(lval *v16SymType) int {
+func (l *lalr16LexAdapter) Lex(lval *lalr16SymType) int {
 	tok := l.lex.NextToken()
 	switch tok.Type {
 	case lexer.EOF:
 		return 0
 	case lexer.SYMBOL:
 		lval.str = tok.Value
-		return TOK_PRESYMBOL
+		return LALR16_TOK_PRESYMBOL
 	case lexer.VARIABLE:
 		lval.str = tok.Value
-		return TOK_VARIABLE
+		return LALR16_TOK_VARIABLE
 	case lexer.LPAREN:
-		return TOK_LPAREN
+		return LALR16_TOK_LPAREN
 	case lexer.RPAREN:
-		return TOK_RPAREN
+		return LALR16_TOK_RPAREN
 	case lexer.LB:
-		return TOK_LB
+		return LALR16_TOK_LB
 	case lexer.RB:
-		return TOK_RB
+		return LALR16_TOK_RB
 	case lexer.LCB:
-		return TOK_LCB
+		return LALR16_TOK_LCB
 	case lexer.RCB:
-		return TOK_RCB
+		return LALR16_TOK_RCB
 	case lexer.COMMA:
-		return TOK_COMMA
+		return LALR16_TOK_COMMA
 	case lexer.SEMI:
-		return TOK_SEMI
+		return LALR16_TOK_SEMI
 	case lexer.COLON:
-		return TOK_COLON
+		return LALR16_TOK_COLON
 	case lexer.DOT:
-		return TOK_DOT
+		return LALR16_TOK_DOT
 	case lexer.PLUS:
-		return TOK_PLUS
+		return LALR16_TOK_PLUS
 	case lexer.MINUS:
-		return TOK_MINUS
+		return LALR16_TOK_MINUS
 	case lexer.TIMES:
-		return TOK_TIMES
+		return LALR16_TOK_TIMES
 	case lexer.DIV:
-		return TOK_DIV
+		return LALR16_TOK_DIV
 	case lexer.EQ:
-		return TOK_EQ
+		return LALR16_TOK_EQ
 	case lexer.TILDAEQ:
-		return TOK_TILDAEQ
+		return LALR16_TOK_TILDAEQ
 	case lexer.TILDA:
-		return TOK_TILDA
+		return LALR16_TOK_TILDA
 	case lexer.LE:
-		return TOK_LE
+		return LALR16_TOK_LE
 	case lexer.LT:
-		return TOK_LT
+		return LALR16_TOK_LT
 	case lexer.GE:
-		return TOK_GE
+		return LALR16_TOK_GE
 	case lexer.GT:
-		return TOK_GT
+		return LALR16_TOK_GT
 	case lexer.AND:
-		return TOK_AND
+		return LALR16_TOK_AND
 	case lexer.OR:
-		return TOK_OR
+		return LALR16_TOK_OR
 	case lexer.ARROW:
-		return TOK_ARROW
+		return LALR16_TOK_ARROW
 	case lexer.IFF:
-		return TOK_IFF
+		return LALR16_TOK_IFF
 	case lexer.PTO:
-		return TOK_PTO
+		return LALR16_TOK_PTO
 	case lexer.DOLLAR:
-		return TOK_DOLLAR
+		return LALR16_TOK_DOLLAR
 	case lexer.FORALL:
-		return TOK_FORALL
+		return LALR16_TOK_FORALL
 	case lexer.EXISTS:
-		return TOK_EXISTS
+		return LALR16_TOK_EXISTS
 	case lexer.TRUE:
-		return TOK_TRUE
+		return LALR16_TOK_TRUE
 	case lexer.FALSE:
-		return TOK_FALSE
+		return LALR16_TOK_FALSE
 	case lexer.OLD:
-		return TOK_OLD
+		return LALR16_TOK_OLD
 	case lexer.THIS:
-		return TOK_THIS
+		return LALR16_TOK_THIS
 	case lexer.IF:
-		return TOK_IF
+		return LALR16_TOK_IF
 	case lexer.ELSE:
-		return TOK_ELSE
+		return LALR16_TOK_ELSE
 	case lexer.GLOBALLY:
-		return TOK_GLOBALLY
+		return LALR16_TOK_GLOBALLY
 	case lexer.EVENTUALLY:
-		return TOK_EVENTUALLY
+		return LALR16_TOK_EVENTUALLY
 	case lexer.WHENNEXT:
-		return TOK_WHENNEXT
+		return LALR16_TOK_WHENNEXT
 	case lexer.WHENPREV:
-		return TOK_WHENPREV
+		return LALR16_TOK_WHENPREV
 	case lexer.WHENFIRST:
-		return TOK_WHENFIRST
+		return LALR16_TOK_WHENFIRST
 	case lexer.WHENLAST:
-		return TOK_WHENLAST
+		return LALR16_TOK_WHENLAST
 	default:
 		lval.str = tok.Value
-		return TOK_PRESYMBOL
+		return LALR16_TOK_PRESYMBOL
 	}
 }
 
-func (l *v16LexAdapter) Error(s string) { l.err = s }
+func (l *lalr16LexAdapter) Error(s string) { l.err = s }

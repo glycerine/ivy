@@ -12,7 +12,7 @@ import (
 )
 
 // CeilLog2 returns the ceiling of log base 2 of n.
-func CeilLog2(n int) int {
+func Z3CeilLog2(n int) int {
 	xtracer.Trace("ivy_solver.py:1714 ceillog2() ENTER n=%d", n)
 	if n <= 1 {
 		return 0
@@ -168,7 +168,7 @@ func (s *Solver) EncodeEqualityZ3(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (Expr
 	xtracer.Trace("ivy_solver.py:1773 encode_equality() ENTER nterms=%d", 2)
 	ctx := s.tr.Ctx
 	n := sort.Card()
-	bits := CeilLog2(n)
+	bits := Z3CeilLog2(n)
 
 	eterms1, err := s.EncodeTermZ3(t1, bits, sort)
 	if err != nil {

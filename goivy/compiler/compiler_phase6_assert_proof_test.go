@@ -29,13 +29,13 @@ func (m *mockProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
 }
 func (m *mockProofChecker) GetModule() *module.Module        { return nil }
 func (m *mockProofChecker) GetAstCfg() *ast.AstConfig        { return nil }
-func (m *mockProofChecker) GetAxioms() []*ast.LabeledFormula  { return nil }
+func (m *mockProofChecker) GetAxioms() []*ast.LabeledFormula { return nil }
 
 // newTestModule creates a minimal module with a CompilerConfig for testing.
 func newTestModule(verifying bool) *module.Module {
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	cc := &CompilerConfig{OptionVerifying: verifying}
+	cc := &module.CompilerConfig{OptionVerifying: verifying}
 	mod.CompCfg = cc
 	return mod
 }

@@ -55,15 +55,15 @@ func (mc *ABCModelChecker) Scrape(alltext string) bool {
 }
 
 // CheckResult holds the result of a model checking run.
-type CheckResult struct {
-	Proved       bool                 // true if property holds
-	Trace        *WitnessTrace        // raw witness (non-nil if counterexample found)
-	DecodedTrace *AigerMatchHandler2  // decoded Ivy trace (non-nil if counterexample decoded)
-	Error        error                // non-nil if model checker failed
+type MCCheckResult struct {
+	Proved       bool                // true if property holds
+	Trace        *WitnessTrace       // raw witness (non-nil if counterexample found)
+	DecodedTrace *AigerMatchHandler2 // decoded Ivy trace (non-nil if counterexample decoded)
+	Error        error               // non-nil if model checker failed
 }
 
 // RunABC runs ABC on the given AIGER string and returns the result.
-func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult, error) {
+func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*MCCheckResult, error) {
 	if mc == nil {
 		mc = &ABCModelChecker{}
 	}
@@ -107,7 +107,7 @@ func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult,
 	p.Stdout = &stdout
 
 	if err := p.Run(); err != nil {
-		return &CheckResult{Error: fmt.Errorf("model checker failed: %w", err)}, nil
+		return &MCCheckResult{Error: fmt.Errorf("model checker failed: %w", err)}, nil
 	}
 
 	alltext := stdout.String()
@@ -116,16 +116,16 @@ func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult,
 	}
 
 	if mc.Scrape(alltext) {
-		return &CheckResult{Proved: true}, nil
+		return &MCCheckResult{Proved: true}, nil
 	}
 
 	// Parse witness
 	trace, err := ParseWitnessFile(outName)
 	if err != nil {
-		return &CheckResult{Error: fmt.Errorf("failed to parse witness: %w", err)}, nil
+		return &MCCheckResult{Error: fmt.Errorf("failed to parse witness: %w", err)}, nil
 	}
 
-	return &CheckResult{Trace: trace}, nil
+	return &MCCheckResult{Trace: trace}, nil
 }
 
 // CheckIsolate is the main entry point for model checking an isolate.
@@ -133,7 +133,7 @@ func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult,
 // counterexample decodes the witness into an Ivy trace.
 //
 // Python: ivy_mc.py:1716-1802 check_isolate
-func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
+func MCCheckIsolate(mod *module.Module, method string) (*MCCheckResult, error) {
 	if method == "" {
 		method = "mc"
 	}
@@ -230,15 +230,15 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 
 	if checker.Scrape(alltext) {
 		xtracer.Trace("mc.CheckIsolate EXIT proved=true err=<nil>")
-		return &CheckResult{Proved: true}, nil
+		return &MCCheckResult{Proved: true}, nil
 	}
 
 	// Counterexample found — decode the witness into an Ivy trace
 	xtracer.Trace("mc.CheckIsolate EXIT proved=false err=<nil>")
 	decodedTrace, err := AigerWitnessToIvyTrace2(result, outName, mod)
 	if err != nil {
-		return &CheckResult{Error: fmt.Errorf("trace decode failed: %w", err)}, nil
+		return &MCCheckResult{Error: fmt.Errorf("trace decode failed: %w", err)}, nil
 	}
 
-	return &CheckResult{DecodedTrace: decodedTrace}, nil
+	return &MCCheckResult{DecodedTrace: decodedTrace}, nil
 }

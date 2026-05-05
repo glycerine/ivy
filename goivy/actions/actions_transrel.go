@@ -293,7 +293,7 @@ func UpdatedJoin(u1, u2 []string) []string {
 }
 
 // ListDiff returns elements in b that are not in a.
-func ListDiff(a, b []string) []string {
+func ActionListDiff(a, b []string) []string {
 	set := make(map[string]bool, len(a))
 	for _, s := range a {
 		set[s] = true
@@ -313,7 +313,7 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Expr {
 	if u1 == nil || u2 == nil {
 		return lg.True
 	}
-	diff := ListDiff(u1, u2)
+	diff := ActionListDiff(u1, u2)
 	if len(diff) == 0 {
 		return lg.True
 	}
@@ -2200,7 +2200,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 		}
 
 		// Map this formula into the past using inverse map
-		clauses = module.RenameClausesByName(clauses, InverseMap(renaming))
+		clauses = module.RenameClausesByName(clauses, ActionInverseMap(renaming))
 
 		// Remove tautology equalities
 		clauses = RemoveTautEqsClauses(clauses)
@@ -2209,7 +2209,7 @@ func (h *History) SatisfyWithCond(axioms *module.Clauses, getModelClauses func(*
 
 		// Update the inverse map by composing with the next renaming (in reverse order)
 		if idx < len(mapsReversed) {
-			renaming = ComposeMaps(mapsReversed[idx], renaming)
+			renaming = ActionComposeMaps(mapsReversed[idx], renaming)
 			idx++
 		} else {
 			break
@@ -2245,7 +2245,7 @@ func reverseRenamings(maps []Renaming) []Renaming {
 
 // ComposeMaps composes two renamings: first applies m1, then m2.
 // Corresponds to Python's compose_maps.
-func ComposeMaps(m1, m2 Renaming) Renaming {
+func ActionComposeMaps(m1, m2 Renaming) Renaming {
 	result := make(Renaming, len(m1)+len(m2))
 	// Start with m2
 	for k, v := range m2 {
@@ -2263,7 +2263,7 @@ func ComposeMaps(m1, m2 Renaming) Renaming {
 }
 
 // InverseMap returns the inverse of a renaming.
-func InverseMap(m Renaming) Renaming {
+func ActionInverseMap(m Renaming) Renaming {
 	result := make(Renaming, len(m))
 	for k, v := range m {
 		result[v] = k

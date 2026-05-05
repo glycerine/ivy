@@ -489,5 +489,3 @@ func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 	}
 	return nil
 }
-
-

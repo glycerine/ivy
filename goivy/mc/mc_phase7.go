@@ -126,7 +126,6 @@ func termOrd(x, y lg.Expr) int {
 	return 0
 }
 
-
 // UncomposeAnnot decomposes a ComposeAnnotation into a flat slice of
 // its right-hand components.
 // Corresponds to Python's uncompose_annot (ivy_mc.py lines 917-922).

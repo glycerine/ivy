@@ -12,26 +12,26 @@ import (
 // Existing webui code continues to compile via these aliases.
 // -----------------------------------------------------------------------
 
-type NodeAction = art.NodeAction
-type CyElements = art.CyElements
-type CyElement = art.CyElement
-type AnalysisGraphState = art.AnalysisGraphState
-type ARGNode = art.ARGNode
-type ARGTransition = art.ARGTransition
-type ARGCover = art.ARGCover
+type WebUINodeAction = art.NodeAction
+type WebUICyElements = art.CyElements
+type WebUICyElement = art.CyElement
+type WebUIAnalysisGraphState = art.AnalysisGraphState
+type WebUIARGNode = art.ARGNode
+type WebUIARGTransition = art.ARGTransition
+type WebUIARGCover = art.ARGCover
 
 // Forwarding functions — delegate to art package.
 
-var NewCyElements = art.NewCyElements
-var NewAnalysisGraphState = art.NewAnalysisGraphState
-var RenderARG = art.RenderARG
+var NewWebUICyElements = art.NewCyElements
+var NewWebUIAnalysisGraphState = art.NewAnalysisGraphState
+var RenderWebUIARG = art.RenderARG
 
 // -----------------------------------------------------------------------
 // Proof goal rendering — stays in webui (only used by webui).
 // -----------------------------------------------------------------------
 
-// ProofGoal is a lightweight proof goal for rendering.
-type ProofGoal struct {
+// WebUIProofGoal is a lightweight proof goal for rendering.
+type WebUIProofGoal struct {
 	ID       int
 	Label    string
 	Refuted  bool
@@ -39,13 +39,13 @@ type ProofGoal struct {
 	ParentID int // -1 if no parent
 }
 
-// ProofStack holds goals for rendering.
-type ProofStack struct {
-	Goals []ProofGoal
+// WebUIProofStack holds goals for rendering.
+type WebUIProofStack struct {
+	Goals []WebUIProofGoal
 }
 
-// RenderProofStack converts a ProofStack into Cytoscape elements.
-func RenderProofStack(stack *ProofStack) *CyElements {
+// RenderProofStack converts a WebUIProofStack into Cytoscape elements.
+func RenderProofStack(stack *WebUIProofStack) *WebUICyElements {
 	g := art.NewCyElements()
 	if stack == nil {
 		return g
@@ -94,7 +94,7 @@ func RenderProofStack(stack *ProofStack) *CyElements {
 //   - Unary relations (Domain.NodeLabels) become label text inside sort nodes
 //
 // If checks is nil all edges are shown.
-func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElements {
+func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyElements {
 	g := art.NewCyElements()
 	if cs == nil || cs.Domain == nil {
 		return g

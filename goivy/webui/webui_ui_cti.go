@@ -68,11 +68,11 @@ func NewCTIAnalysisGraphUI(mod *module.Module) *CTIAnalysisGraphUI {
 		solver = z3bridge.NewSolver(mod, nil)
 	}
 	return &CTIAnalysisGraphUI{
-		AnalysisGraphUI: NewAnalysisGraphUI(),
-		Mod:             mod,
-		Solver:          solver,
+		AnalysisGraphUI:     NewAnalysisGraphUI(),
+		Mod:                 mod,
+		Solver:              solver,
 		RelationsToMinimize: "relations to minimize",
-		CurrentBound:       -1,
+		CurrentBound:        -1,
 	}
 }
 
@@ -361,7 +361,7 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses
 		}
 	}
 
-	stepAction := bmc.EnvAction(ui.Mod)
+	stepAction := bmc.BMCEnvAction(ui.Mod)
 
 	for n := 0; n <= bound; n++ {
 		res := trace.CheckFinalCond(ag, post, clauses, nil, true)
@@ -890,7 +890,7 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 	ag.Add(art.NewState(mod, ag.InitCond), nil)
 	post := ag.States[0]
 
-	stepAction := bmc.EnvAction(mod)
+	stepAction := bmc.BMCEnvAction(mod)
 	for n := 0; n < nSteps; n++ {
 		if stepAction == nil {
 			break
@@ -973,7 +973,7 @@ func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *module.Cl
 	ag.Add(preState, nil)
 
 	// Python: action = ia.env_action(None); post = ag.execute(action, pre)
-	stepAction := bmc.EnvAction(mod)
+	stepAction := bmc.BMCEnvAction(mod)
 	if stepAction == nil {
 		return false, "no actions available"
 	}

@@ -15,15 +15,15 @@ import (
 // Python: ivy_mc.py Encoder class — inputs/latches/outputs are [Symbol],
 // encoding maps Symbol → [Symbol].
 type Encoder struct {
-	Inputs            []*lg.Const                  // original multi-bit input symbols
-	Latches           []*lg.Const                  // original multi-bit latch symbols
-	Outputs           []*lg.Const                  // original multi-bit output symbols
-	Encoding          map[lg.NodeKey][]string      // lg.Key(sym) -> list of sub-bit names
-	Sub               *Aiger                       // underlying AIGER circuit
-	Ops               map[string]ArithOp           // arithmetic operations
-	IsConstructor     func(*lg.Const) bool         // checks if symbol is a constructor
-	ConstructorIndexFn func(*lg.Const) (int, int)  // returns (index, total) for constructor
-	Interp            map[string]interface{}       // sort interpretations for DecodeVal
+	Inputs             []*lg.Const                // original multi-bit input symbols
+	Latches            []*lg.Const                // original multi-bit latch symbols
+	Outputs            []*lg.Const                // original multi-bit output symbols
+	Encoding           map[lg.NodeKey][]string    // lg.Key(sym) -> list of sub-bit names
+	Sub                *Aiger                     // underlying AIGER circuit
+	Ops                map[string]ArithOp         // arithmetic operations
+	IsConstructor      func(*lg.Const) bool       // checks if symbol is a constructor
+	ConstructorIndexFn func(*lg.Const) (int, int) // returns (index, total) for constructor
+	Interp             map[string]interface{}     // sort interpretations for DecodeVal
 }
 
 // ArithOp is a function type for multi-bit arithmetic operations.

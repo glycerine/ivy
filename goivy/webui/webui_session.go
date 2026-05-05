@@ -37,21 +37,21 @@ type Event struct {
 type Session struct {
 	Cfg *module.Config
 
-	ID             string
-	Graph          *AnalysisGraphState        // ARG state
-	ConceptSess    *ConceptInteractiveSession // concept graph state (uses Z3 via Alpha)
-	SimpleSess     *ConceptSession            // legacy simple session (for API compat)
-	Events         chan Event                 // buffered SSE channel
-	mu             sync.Mutex
-	FilePath       string // last loaded file path
-	FileContent    string // file content (when uploaded via browser)
-	toggles        *Toggles
-	ProofStack     *ProofStack
-	ProofMgr       *proof.ProofManager // live proof state (goals + reachability graph)
-	CompiledModule *module.Module      // populated by full compiler pipeline
-	CompiledSig    *il.Sig             // populated by full compiler pipeline
-	AG             *art.AnalysisGraph  // persistent analysis graph for interactive verification
-	AGUI           *AnalysisGraphUI    // ARG navigation UI (delegates to AG)
+	ID              string
+	Graph           *WebUIAnalysisGraphState   // ARG state
+	ConceptSess     *ConceptInteractiveSession // concept graph state (uses Z3 via WebUIAlpha)
+	SimpleSess      *ConceptSession            // legacy simple session (for API compat)
+	Events          chan Event                 // buffered SSE channel
+	mu              sync.Mutex
+	FilePath        string // last loaded file path
+	FileContent     string // file content (when uploaded via browser)
+	toggles         *Toggles
+	WebUIProofStack *WebUIProofStack
+	ProofMgr        *proof.ProofManager // live proof state (goals + reachability graph)
+	CompiledModule  *module.Module      // populated by full compiler pipeline
+	CompiledSig     *il.Sig             // populated by full compiler pipeline
+	AG              *art.AnalysisGraph  // persistent analysis graph for interactive verification
+	AGUI            *AnalysisGraphUI    // ARG navigation UI (delegates to AG)
 }
 
 // NewSession creates a new verification session with the given id.
@@ -60,7 +60,7 @@ func NewSession(cfg *module.Config, id string) *Session {
 		Cfg:        cfg,
 		ID:         id,
 		Events:     make(chan Event, 64),
-		Graph:      NewAnalysisGraphState(),
+		Graph:      NewWebUIAnalysisGraphState(),
 		SimpleSess: NewConceptSession(),
 	}
 }
@@ -250,7 +250,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 }
 
 // syncARGToGraph converts the persistent AnalysisGraph (s.AG) into the
-// lightweight AnalysisGraphState (s.Graph) for frontend rendering.
+// lightweight WebUIAnalysisGraphState (s.Graph) for frontend rendering.
 func (s *Session) syncARGToGraph() {
 	if s.AG == nil {
 		return
@@ -262,10 +262,10 @@ func (s *Session) syncARGToGraph() {
 // into the lightweight webui.ProofStack for frontend rendering.
 func (s *Session) syncProofStack() {
 	if s.ProofMgr == nil || s.ProofMgr.Goals == nil {
-		s.ProofStack = &ProofStack{}
+		s.WebUIProofStack = &WebUIProofStack{}
 		return
 	}
-	ps := &ProofStack{}
+	ps := &WebUIProofStack{}
 	for _, g := range s.ProofMgr.Goals.Stack {
 		parentID := -1
 		if g.Parent != nil {
@@ -276,7 +276,7 @@ func (s *Session) syncProofStack() {
 		if g.Formula != nil {
 			info = logic.PrettyFmla(g.Formula)
 		}
-		ps.Goals = append(ps.Goals, ProofGoal{
+		ps.Goals = append(ps.Goals, WebUIProofGoal{
 			ID:       g.ID,
 			Label:    label,
 			Refuted:  false,
@@ -284,7 +284,7 @@ func (s *Session) syncProofStack() {
 			ParentID: parentID,
 		})
 	}
-	s.ProofStack = ps
+	s.WebUIProofStack = ps
 }
 
 func sortNames(m map[string]logic.Sort) []string {
@@ -726,11 +726,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	return result, err
 }
 
-// ProofStack holds proof goal state for rendering.
+// WebUIProofStack holds proof goal state for rendering.
 // Stub: will be wired to the proof/ package.
-func (s *Session) ProofStackData() *ProofStack {
+func (s *Session) ProofStackData() *WebUIProofStack {
 	s.syncProofStack()
-	return s.ProofStack
+	return s.WebUIProofStack
 }
 
 // AddProjection adds a projection concept to the domain.
@@ -785,7 +785,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				err = extErr
 			} else {
 				result["extension"] = label
-				cy := RenderARG(s.Graph)
+				cy := RenderWebUIARG(s.Graph)
 				result["arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
 		}
@@ -852,7 +852,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		} else if s.AGUI != nil {
 			s.AGUI.RecalculateAll()
 		}
-		cy := RenderARG(s.Graph)
+		cy := RenderWebUIARG(s.Graph)
 		result["arg"] = map[string]interface{}{"elements": cy.Elements}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculated at " + nodeID}})
 	case "decompose", "decompose_edge":
@@ -870,7 +870,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				err = decompErr
 			} else if subGraph != nil {
 				result["decomposed"] = true
-				cy := RenderARG(subGraph)
+				cy := RenderWebUIARG(subGraph)
 				result["sub_arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
 		}
@@ -999,7 +999,7 @@ func (s *Session) SaveState() []byte {
 }
 
 // CheckResult holds the result of a verification check.
-type CheckResult struct {
+type WebUICheckResult struct {
 	Result           string   `json:"result"` // "pass", "fail", "error"
 	Message          string   `json:"message"`
 	Z3Contacted      bool     `json:"z3_contacted"`                // true if Z3 was actually called
@@ -1009,9 +1009,9 @@ type CheckResult struct {
 }
 
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
-func (s *Session) RunCheck(mode string) *CheckResult {
+func (s *Session) RunCheck(mode string) *WebUICheckResult {
 	if s.CompiledModule == nil {
-		return &CheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
+		return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
 	}
 
 	switch mode {
@@ -1032,7 +1032,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		//   4. If SAT → conjecture not inductive, show it
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
-			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
+			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check"}
 		}
 
 		// Convert conjectures to Clauses, matching Python module.conjs property:
@@ -1050,7 +1050,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
 		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
-			return &CheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
+			return &WebUICheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
 		}
 
 		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
@@ -1093,7 +1093,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}
 
 			if sortErr != nil {
-				return &CheckResult{
+				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (sort inference error): %v", sortErr),
@@ -1130,7 +1130,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if z3err != nil {
 				// Z3 error — cannot determine inductiveness. Report as failure
 				// rather than silently declaring the conjecture inductive.
-				return &CheckResult{
+				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
@@ -1163,7 +1163,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 						}
 					}
 				}
-				return &CheckResult{
+				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          "The following conjecture is not relatively inductive:",
@@ -1188,7 +1188,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				lines = append(lines, logic.PrettyFmla(openFmla))
 			}
 		}
-		return &CheckResult{
+		return &WebUICheckResult{
 			Z3Contacted: true,
 			Result:      "pass",
 			Message:     "Inductive invariant found:\n" + strings.Join(lines, "\n"),
@@ -1199,7 +1199,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		// Matches Python ivy_ui_cti.py bmc_conjecture / ivy_bmc.py check_isolate.
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
-			return &CheckResult{Result: "pass", Message: "No conjectures to check (BMC)"}
+			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check (BMC)"}
 		}
 		nSteps := 10
 		bmcCfg := bmc.DefaultConfig(s.CompiledModule, nSteps)
@@ -1211,10 +1211,10 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 					bmcErr = fmt.Errorf("BMC panic: %v", r)
 				}
 			}()
-			bmcResult = bmc.CheckIsolate(bmcCfg)
+			bmcResult = bmc.BMCCheckIsolate(bmcCfg)
 		}()
 		if bmcErr != nil {
-			return &CheckResult{Z3Contacted: true, Result: "error", Message: bmcErr.Error()}
+			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: bmcErr.Error()}
 		}
 		if bmcResult.Found {
 			if bmcResult.Trace != nil {
@@ -1222,13 +1222,13 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				s.AGUI.AG = s.AG
 				s.syncARGToGraph()
 			}
-			return &CheckResult{
+			return &WebUICheckResult{
 				Z3Contacted: true,
 				Result:      "fail",
 				Message:     bmcResult.Message,
 			}
 		}
-		return &CheckResult{
+		return &WebUICheckResult{
 			Z3Contacted: true,
 			Result:      "pass",
 			Message:     bmcResult.Message,
@@ -1241,24 +1241,24 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			s.syncAbstractValue()
 		}
 		if s.CompiledModule == nil {
-			return &CheckResult{Result: "error", Message: "PDR: no compiled module"}
+			return &WebUICheckResult{Result: "error", Message: "PDR: no compiled module"}
 		}
 		valid, pdrErr := s.runUPDR()
 		if pdrErr != nil {
-			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
+			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("PDR error: %v", pdrErr)}
 		}
 		if valid {
 			numFrames := 0
 			if s.AG != nil {
 				numFrames = len(s.AG.States)
 			}
-			return &CheckResult{
+			return &WebUICheckResult{
 				Z3Contacted: true,
 				Result:      "pass",
 				Message:     fmt.Sprintf("Invariant found (%d frames)", numFrames),
 			}
 		}
-		return &CheckResult{Z3Contacted: true, Result: "fail", Message: "Counterexample found"}
+		return &WebUICheckResult{Z3Contacted: true, Result: "fail", Message: "Counterexample found"}
 
 	case "concrete":
 		// Concrete checking: checks conjectures hold in the initial state.
@@ -1267,7 +1267,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		// conjecture via CheckFinalCond against the post-state.
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
-			return &CheckResult{Result: "pass", Message: "No conjectures to check (concrete)"}
+			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check (concrete)"}
 		}
 		var conjClauses []*module.Clauses
 		for _, lc := range conjs {
@@ -1277,7 +1277,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
-			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("concrete: %v", err)}
+			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("concrete: %v", err)}
 		}
 		for i, lc := range conjs {
 			if lc.Formula == nil || i >= len(conjClauses) {
@@ -1309,13 +1309,13 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 			if z3err != nil {
-				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
+				return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
 			}
 			if cexTrace != nil {
 				s.AG = cexTrace.AnalysisGraph
 				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
-				return &CheckResult{
+				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          "Conjecture does not hold concretely:",
@@ -1324,7 +1324,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				}
 			}
 		}
-		return &CheckResult{
+		return &WebUICheckResult{
 			Z3Contacted: true,
 			Result:      "pass",
 			Message:     "All conjectures hold concretely.",
@@ -1347,13 +1347,13 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				s.syncAbstractValue()
 			}()
 			if abstractErr != nil {
-				return &CheckResult{Z3Contacted: true, Result: "error", Message: abstractErr.Error()}
+				return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: abstractErr.Error()}
 			}
 		}
 		// After alpha abstraction, check conjectures via the same path as concrete.
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
-			return &CheckResult{Z3Contacted: true, Result: "pass", Message: "Abstract check completed, no conjectures to verify."}
+			return &WebUICheckResult{Z3Contacted: true, Result: "pass", Message: "Abstract check completed, no conjectures to verify."}
 		}
 		var conjClauses []*module.Clauses
 		for _, lc := range conjs {
@@ -1363,7 +1363,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
-			return &CheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("abstract: %v", err)}
+			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("abstract: %v", err)}
 		}
 		for i, lc := range conjs {
 			if lc.Formula == nil || i >= len(conjClauses) {
@@ -1395,13 +1395,13 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 			if z3err != nil {
-				return &CheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
+				return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
 			}
 			if cexTrace != nil {
 				s.AG = cexTrace.AnalysisGraph
 				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
-				return &CheckResult{
+				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
 					Message:          "Conjecture does not hold after abstraction:",
@@ -1410,19 +1410,19 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 				}
 			}
 		}
-		return &CheckResult{
+		return &WebUICheckResult{
 			Z3Contacted: true,
 			Result:      "pass",
 			Message:     "All conjectures hold after abstract check via Z3 alpha abstraction.",
 		}
 
 	default:
-		return &CheckResult{Result: "error", Message: "Unknown mode: " + mode}
+		return &WebUICheckResult{Result: "error", Message: "Unknown mode: " + mode}
 	}
 }
 
 // syncAbstractValue propagates the ConceptInteractiveSession's abstract value
-// (computed by Z3 via Alpha) to the SimpleSess so the concept graph renderer
+// (computed by Z3 via WebUIAlpha) to the SimpleSess so the concept graph renderer
 // can display cardinality classes (exactly_one, at_least_one, etc.) and edge info.
 func (s *Session) syncAbstractValue() {
 	if s.ConceptSess == nil || s.SimpleSess == nil {

@@ -299,9 +299,9 @@ func CheckTemporals(mod *module.Module) error {
 	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 	// Use the ACL config loaded by CheckModule and stored on the module.
-	var aclCfg *acl.Config
+	var aclCfg *acl.ACLConfig
 	if mod.AclCfg != nil {
-		aclCfg, _ = mod.AclCfg.(*acl.Config)
+		aclCfg, _ = mod.AclCfg.(*acl.ACLConfig)
 	}
 
 	for _, prop := range mod.LabeledProps {
@@ -974,7 +974,7 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 // properties, and conjectures. Properties matched by the ACL's ignore list
 // are removed; those matched by the assume list are admitted as axioms.
 // Corresponds to Python's preprocess_assumed_ignored_properties.
-func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) {
+func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.ACLConfig) {
 	if mod == nil {
 		return
 	}
@@ -1082,7 +1082,7 @@ func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Nod
 	xtracer.Trace("check.MCTactic postTacticChain nGoals=%d", len(goals))
 	// Python: check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
 	mcMethod := func(m *module.Module) error {
-		res, mcErr := mc.CheckIsolate(m, "mc")
+		res, mcErr := mc.MCCheckIsolate(m, "mc")
 		if mcErr != nil {
 			return mcErr
 		}
@@ -1130,14 +1130,14 @@ func applyTemporalTacticChain(prover interface{}, goals []*ast.LabeledFormula, p
 	// Check for TemporalModels via the formula directly, since
 	// GoalConc returns lg.Expr and TemporalModels is ast.Node.
 	// This matches the pattern in CheckSubgoals.
-	var tm *ast.TemporalModels
+	var tm *ast.AstTemporalModels
 	var isTM bool
 	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 		if c := sb.Conc(); c != nil {
-			tm, isTM = c.(*ast.TemporalModels)
+			tm, isTM = c.(*ast.AstTemporalModels)
 		}
 	} else if goal.Formula != nil {
-		tm, isTM = goal.Formula.(*ast.TemporalModels)
+		tm, isTM = goal.Formula.(*ast.AstTemporalModels)
 	}
 	if !isTM {
 		return goals, nil

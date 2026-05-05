@@ -185,7 +185,7 @@ func TestGoalVocabBound_TemporalModels(t *testing.T) {
 	s := mkSort("S")
 	x := mkVar("X", s)
 	body := &lg.ForAll{Variables: []*lg.Variable{x}, Body: lg.True}
-	tm := &ast.TemporalModels{Fmla: body}
+	tm := &ast.AstTemporalModels{Fmla: body}
 	goal := mkLF(testAstCfg.NewAtom("g"), tm)
 
 	v := GoalVocabBound(goal)
@@ -225,7 +225,7 @@ func TestConcAsExpr_Expr(t *testing.T) {
 func TestConcAsExpr_TemporalModels(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	tm := &ast.TemporalModels{Fmla: c}
+	tm := &ast.AstTemporalModels{Fmla: c}
 	result := ConcAsExpr(tm)
 	if result != c {
 		t.Error("expected inner Const from TemporalModels")
@@ -243,7 +243,7 @@ func TestConcAsExpr_NonExpr(t *testing.T) {
 func TestGoalConcUnwrap(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	tm := &ast.TemporalModels{Fmla: c}
+	tm := &ast.AstTemporalModels{Fmla: c}
 	goal := mkLF(testAstCfg.NewAtom("g"), tm)
 	result := GoalConcUnwrap(goal)
 	if result != c {
@@ -264,10 +264,10 @@ func TestApplyToConc_PlainExpr(t *testing.T) {
 
 func TestApplyToConc_TemporalModels(t *testing.T) {
 	c := mkConst("c", mkSort("S"))
-	tm := &ast.TemporalModels{Fmla: c}
+	tm := &ast.AstTemporalModels{Fmla: c}
 	negate := func(e lg.Expr) lg.Expr { return &lg.Not{Body: e} }
 	result := ApplyToConc(tm, negate)
-	rtm, ok := result.(*ast.TemporalModels)
+	rtm, ok := result.(*ast.AstTemporalModels)
 	if !ok {
 		t.Fatalf("expected *ast.TemporalModels, got %T", result)
 	}
@@ -343,7 +343,7 @@ func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
 	prem := mkLF(testAstCfg.NewAtom("prem"), c)
 
 	// Verify precondition
-	if _, ok := GoalConc(goal).(*ast.TemporalModels); !ok {
+	if _, ok := GoalConc(goal).(*ast.AstTemporalModels); !ok {
 		t.Fatalf("precondition: expected TemporalModels conclusion, got %T", GoalConc(goal))
 	}
 
@@ -351,7 +351,7 @@ func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
 
 	// The conclusion must still be TemporalModels
 	conc := GoalConc(result)
-	if _, ok := conc.(*ast.TemporalModels); !ok {
+	if _, ok := conc.(*ast.AstTemporalModels); !ok {
 		t.Fatalf("GoalAddPrem lost TemporalModels conclusion, got %T", conc)
 	}
 	// Should have 2 premises now: ConstantDecl + prem

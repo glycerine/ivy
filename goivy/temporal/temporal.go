@@ -466,7 +466,7 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 
 // EnvAction creates an environment action from a list of action bindings.
 // This represents the environment nondeterministically calling one of the actions.
-func EnvAction(cfg *actions.ActionsConfig, bindings []*ActionTermBinding) *actions.EnvAction {
+func TemporalEnvAction(cfg *actions.ActionsConfig, bindings []*ActionTermBinding) *actions.EnvAction {
 	var branches []lg.Expr
 	for _, b := range bindings {
 		name := b.Name
@@ -488,7 +488,7 @@ func EnvAction(cfg *actions.ActionsConfig, bindings []*ActionTermBinding) *actio
 
 // TemporalModels represents M |= phi, a temporal proof goal.
 // It wraps the ast.TemporalModels type for convenience.
-type TemporalModels = ast.TemporalModels
+type TemporalModels = ast.AstTemporalModels
 
 // PropEvent computes the event action for a temporal property.
 // For G phi (Globally) formulas, the event is "assume phi".
@@ -808,16 +808,16 @@ func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormu
 }
 
 // findTemporalModels looks for a TemporalModels in the goal.
-func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
+func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	if goal == nil || goal.Formula == nil {
 		return nil
 	}
-	if tm, ok := goal.Formula.(*ast.TemporalModels); ok {
+	if tm, ok := goal.Formula.(*ast.AstTemporalModels); ok {
 		return tm
 	}
 	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 		if c := sb.Conc(); c != nil {
-			if tm, ok := c.(*ast.TemporalModels); ok {
+			if tm, ok := c.(*ast.AstTemporalModels); ok {
 				return tm
 			}
 		}

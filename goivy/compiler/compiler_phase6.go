@@ -144,17 +144,17 @@ func isSortInferRoot(node ast.Node) bool {
 	// Check AST-level action types (from parser).
 	// These correspond to Python classes with sort_infer_root = True.
 	switch node.(type) {
-	case *ast.AssignAction:
+	case *ast.AstAssignAction:
 		return true
-	case *ast.SetAction:
+	case *ast.AstSetAction:
 		return true
-	case *ast.HavocAction:
+	case *ast.AstHavocAction:
 		return true
-	case *ast.AssumeAction:
+	case *ast.AstAssumeAction:
 		return true
-	case *ast.AssertAction:
+	case *ast.AstAssertAction:
 		return true
-	case *ast.CrashAction:
+	case *ast.AstCrashAction:
 		return false // CrashAction does NOT have sort_infer_root in Python
 	}
 	// Check if it's a CompiledNode wrapping a compiled actions type
@@ -353,7 +353,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 // quantifier AST node.
 // Corresponds to Python's cquant(q) (ivy_compiler.py:393-394).
 func Cquant(node ast.Node) func([]*lg.Variable, lg.Expr) lg.Expr {
-	if _, ok := node.(*ast.Forall); ok {
+	if _, ok := node.(*ast.AstForall); ok {
 		return il.ForAll
 	}
 	return il.Exists
@@ -1277,13 +1277,13 @@ func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (l
 		ws.Exit()
 	}()
 
-	if df, ok := conc.(*ast.Definition); ok {
+	if df, ok := conc.(*ast.AstDefinition); ok {
 		xtracer.Trace("compiler.CompileSchemaConc Definition branch")
 		//pp("sigSorts=%v", c.Sig.SortNames())
 		return c.CompileDefn(df)
 	}
 	// Handle TemporalModels case
-	if tm, ok := conc.(*ast.TemporalModels); ok {
+	if tm, ok := conc.(*ast.AstTemporalModels); ok {
 		compiled, err := c.SortifyWithInference(tm.Fmla)
 		if err != nil {
 			return nil, err
@@ -1498,7 +1498,7 @@ func (c *Compiler) CompileFunctionTactic(node ast.Node) (ast.Node, error) {
 //	def compile_proof_tactic(self):
 //	    return self.clone([self.label,self.proof.compile()])
 func (c *Compiler) CompileProofTactic(node ast.Node) (ast.Node, error) {
-	pt, ok := node.(*ast.ProofTactic)
+	pt, ok := node.(*ast.AstProofTactic)
 	if !ok {
 		return node, nil
 	}
@@ -2485,27 +2485,18 @@ func isSchemaBody(n lg.Expr) bool {
 	return false
 }
 
-// CompilerConfig is an alias for module.CompilerConfig.
-// Kept here for backward compatibility within the compiler package.
-type CompilerConfig = module.CompilerConfig
-
-// NewCompilerConfig creates a new CompilerConfig.
-func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
-	return module.NewCompilerConfig(modCfg)
-}
-
 // SetVerifying sets the verifying flag on the module's CompilerConfig.
 func SetVerifying(mod *module.Module, v bool) {
 	module.SetVerifyingOnMod(mod, v)
 }
 
 // GetVerifying returns the option_verifying flag from the given CompilerConfig.
-func GetVerifying(cc ...*CompilerConfig) bool {
+func GetVerifying(cc ...*module.CompilerConfig) bool {
 	return module.GetVerifyingFromCfg(cc...)
 }
 
 // getModCompCfg extracts the CompilerConfig from a module, or returns nil.
-func getModCompCfg(mod *module.Module) *CompilerConfig {
+func getModCompCfg(mod *module.Module) *module.CompilerConfig {
 	return module.GetModCompCfg(mod)
 }
 

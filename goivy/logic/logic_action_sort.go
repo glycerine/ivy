@@ -13,15 +13,15 @@ var ActionS Sort = &actionSort{}
 
 type actionSort struct{}
 
-func (s *actionSort) sortSeal()                       {}
-func (s *actionSort) NodeSort() Sort                  { return s }
-func (s *actionSort) Children() []Expr                { return nil }
-func (s *actionSort) Equal(n Expr) bool               { _, ok := n.(*actionSort); return ok }
-func (s *actionSort) Sexp() NodeKey                   { return "(ActionSort)" }
-func (s *actionSort) Args() []ast.Node                { return nil }
-func (s *actionSort) Clone([]ast.Node) ast.Node       { return s }
-func (s *actionSort) GetLineno() ast.Location          { return ast.Location{} }
-func (s *actionSort) SetLineno(ast.Location)           {}
-func (s *actionSort) String() string                   { return "ActionSort" }
-func (s *actionSort) Canon() iu.Canonical              { return "ActionSort" }
-func (s *actionSort) GetAstConfig() *ast.AstConfig     { return nil }
+func (s *actionSort) sortSeal()                    {}
+func (s *actionSort) NodeSort() Sort               { return s }
+func (s *actionSort) Children() []Expr             { return nil }
+func (s *actionSort) Equal(n Expr) bool            { _, ok := n.(*actionSort); return ok }
+func (s *actionSort) Sexp() NodeKey                { return "(ActionSort)" }
+func (s *actionSort) Args() []ast.Node             { return nil }
+func (s *actionSort) Clone([]ast.Node) ast.Node    { return s }
+func (s *actionSort) GetLineno() ast.Location      { return ast.Location{} }
+func (s *actionSort) SetLineno(ast.Location)       {}
+func (s *actionSort) String() string               { return "ActionSort" }
+func (s *actionSort) Canon() iu.Canonical          { return "ActionSort" }
+func (s *actionSort) GetAstConfig() *ast.AstConfig { return nil }

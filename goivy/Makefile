@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform clean z3ivy z3-build tr trt vs golden setup this
+.PHONY: all build test test-conform unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -131,6 +131,12 @@ dylib_test-web: z3ivy
 test-web:
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 
+unimerge-audit:
+	go run ./cmd/unimerge_audit -details -max 120
+
+unimerge-audit-strict:
+	go run ./cmd/unimerge_audit -strict
+
 # Run conformance tests (requires Python Ivy + Z3 sidecar).
 test-conform: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./webui/ -run TestConform -v -count=1 -timeout 120s
@@ -172,4 +178,3 @@ vs:
 
 setup: # install abc and aigtoaig binaries that we shell out to.
 	cd ../pyivy && ./onetime.sh
-

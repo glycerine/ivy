@@ -5,16 +5,18 @@
 // in the concept graph model for interactive proof visualization.
 //
 // Grammar (from PLY):
-//   expr  : lit | '(' prod ')' | '(' sum ')'
-//   term  : SYMBOL
-//   terms : /* empty */ | term | terms ',' term
-//   atom  : SYMBOL '(' terms ')'
-//   lit   : atom | '~' atom
-//   prod  : expr '*' expr | prod '*' expr
-//   sum   : expr '+' expr | sum '+' expr
+//
+//	expr  : lit | '(' prod ')' | '(' sum ')'
+//	term  : SYMBOL
+//	terms : /* empty */ | term | terms ',' term
+//	atom  : SYMBOL '(' terms ')'
+//	lit   : atom | '~' atom
+//	prod  : expr '*' expr | prod '*' expr
+//	sum   : expr '+' expr | sum '+' expr
 //
 // SYMBOL: [a-zA-Z_=][_a-zA-Z0-9]*
-//   If SYMBOL starts with uppercase → Variable, else Constant.
+//
+//	If SYMBOL starts with uppercase → Variable, else Constant.
 package conceptspace
 
 import (

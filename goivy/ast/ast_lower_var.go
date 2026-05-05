@@ -26,7 +26,7 @@ func LowerVarStatements(stmts []Node) []Node {
 	xtracer.Trace("parser.lower_var_stmts ENTER in=%d canons=[%s]", len(stmts), lvsCanons(stmts))
 	for idx, stmt := range stmts {
 		// VarAction case: matches Python isinstance(stmt, VarAction)
-		if v, ok := stmt.(*VarAction); ok {
+		if v, ok := stmt.(*AstVarAction); ok {
 			if len(v.Elems) < 1 {
 				continue
 			}
@@ -76,7 +76,7 @@ func LowerVarStatements(stmts []Node) []Node {
 		}
 
 		// ThunkAction case: matches Python isinstance(stmt, ThunkAction)
-		if t, ok := stmt.(*ThunkAction); ok {
+		if t, ok := stmt.(*AstThunkAction); ok {
 			// Python: name = stmt.args[1].rep
 			name := NodeRep(t.Action)
 			lname := "loc:" + name
@@ -88,7 +88,7 @@ func LowerVarStatements(stmts []Node) []Node {
 			}
 
 			// Python: return stmts[:idx] + [stmt.clone(stmt.args + [Sequence(*lines)])]
-			seq := &Sequence{Stmts: lines}
+			seq := &AstSequence{Stmts: lines}
 			seq.Cfg = t.Cfg
 			newArgs := append(t.Args(), seq)
 			result := append(stmts[:idx:idx], t.Clone(newArgs))

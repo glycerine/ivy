@@ -24,12 +24,12 @@ import (
 var lalrLabelCounter int
 
 // acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
-func acfg(lex v17Lexer) *ast.AstConfig {
-	return lex.(*v17LexAdapter).cfg
+func lalr17Acfg(lex lalr17Lexer) *ast.AstConfig {
+	return lex.(*lalr17LexAdapter).cfg
 }
 
 // atypeToString extracts the string sort name from an atype Node.
-func atypeToString(n ast.Node) string {
+func lalr17AtypeToString(n ast.Node) string {
 	switch v := n.(type) {
 	case *ast.Symbol:
 		return v.Rep
@@ -50,39 +50,39 @@ func atypeToString(n ast.Node) string {
 }
 
 // Terminal tokens.
-%token <str>  TOK_SYMBOL TOK_VARIABLE TOK_PRESYMBOL
-%token        TOK_LPAREN TOK_RPAREN TOK_LB TOK_RB TOK_LCB TOK_RCB
-%token        TOK_COMMA TOK_SEMI TOK_COLON TOK_DOT
-%token        TOK_PLUS TOK_MINUS TOK_TIMES TOK_DIV
-%token        TOK_EQ TOK_TILDAEQ TOK_TILDA TOK_LE TOK_LT TOK_GE TOK_GT
-%token        TOK_AND TOK_OR TOK_ARROW TOK_IFF
-%token        TOK_PTO TOK_DOLLAR
-%token        TOK_FORALL TOK_EXISTS
-%token        TOK_TRUE TOK_FALSE
-%token        TOK_OLD TOK_THIS TOK_ISA
-%token        TOK_IF TOK_ELSE
-%token        TOK_GLOBALLY TOK_EVENTUALLY
-%token        TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
+%token <str>  LALR17_TOK_SYMBOL LALR17_TOK_VARIABLE LALR17_TOK_PRESYMBOL
+%token        LALR17_TOK_LPAREN LALR17_TOK_RPAREN LALR17_TOK_LB LALR17_TOK_RB LALR17_TOK_LCB LALR17_TOK_RCB
+%token        LALR17_TOK_COMMA LALR17_TOK_SEMI LALR17_TOK_COLON LALR17_TOK_DOT
+%token        LALR17_TOK_PLUS LALR17_TOK_MINUS LALR17_TOK_TIMES LALR17_TOK_DIV
+%token        LALR17_TOK_EQ LALR17_TOK_TILDAEQ LALR17_TOK_TILDA LALR17_TOK_LE LALR17_TOK_LT LALR17_TOK_GE LALR17_TOK_GT
+%token        LALR17_TOK_AND LALR17_TOK_OR LALR17_TOK_ARROW LALR17_TOK_IFF
+%token        LALR17_TOK_PTO LALR17_TOK_DOLLAR
+%token        LALR17_TOK_FORALL LALR17_TOK_EXISTS
+%token        LALR17_TOK_TRUE LALR17_TOK_FALSE
+%token        LALR17_TOK_OLD LALR17_TOK_THIS LALR17_TOK_ISA
+%token        LALR17_TOK_IF LALR17_TOK_ELSE
+%token        LALR17_TOK_GLOBALLY LALR17_TOK_EVENTUALLY
+%token        LALR17_TOK_WHENNEXT LALR17_TOK_WHENPREV LALR17_TOK_WHENFIRST LALR17_TOK_WHENLAST
 // Action tokens
-%token        TOK_ASSUME TOK_ASSERT TOK_REQUIRE TOK_ENSURE
-%token        TOK_ASSIGN
-%token        TOK_VAR TOK_LOCAL TOK_LET TOK_CALL
-%token        TOK_WHILE TOK_FOR TOK_IN TOK_INVARIANT TOK_DECREASES
-%token        TOK_RETURNS
-%token        TOK_SOME TOK_MINIMIZING TOK_MAXIMIZING
-%token        TOK_DEBUG TOK_THUNK TOK_UNPROVABLE TOK_PROOF
-%token        TOK_INSTANTIATE
-%token <str>  TOK_LABEL
-%token        TOK_CARET TOK_METHOD TOK_NULL TOK_SET
-%token        TOK_WITH
+%token        LALR17_TOK_ASSUME LALR17_TOK_ASSERT LALR17_TOK_REQUIRE LALR17_TOK_ENSURE
+%token        LALR17_TOK_ASSIGN
+%token        LALR17_TOK_VAR LALR17_TOK_LOCAL LALR17_TOK_LET LALR17_TOK_CALL
+%token        LALR17_TOK_WHILE LALR17_TOK_FOR LALR17_TOK_IN LALR17_TOK_INVARIANT LALR17_TOK_DECREASES
+%token        LALR17_TOK_RETURNS
+%token        LALR17_TOK_SOME LALR17_TOK_MINIMIZING LALR17_TOK_MAXIMIZING
+%token        LALR17_TOK_DEBUG LALR17_TOK_THUNK LALR17_TOK_UNPROVABLE LALR17_TOK_PROOF
+%token        LALR17_TOK_INSTANTIATE
+%token <str>  LALR17_TOK_LABEL
+%token        LALR17_TOK_CARET LALR17_TOK_METHOD LALR17_TOK_NULL LALR17_TOK_SET
+%token        LALR17_TOK_WITH
 // Scenario tokens
-%token        TOK_SCENARIO TOK_BEFORE TOK_AFTER
+%token        LALR17_TOK_SCENARIO LALR17_TOK_BEFORE LALR17_TOK_AFTER
 // Proof/tactic tokens
-%token        TOK_TACTIC TOK_DEFINITION TOK_TRIGGER
-%token        TOK_SHOWGOALS TOK_DEFERGOAL TOK_SPOIL
-%token        TOK_UNFOLD TOK_FORGET
-%token        TOK_PROPERTY TOK_FUNCTION TOK_THEOREM
-%token        TOK_APPLY
+%token        LALR17_TOK_TACTIC LALR17_TOK_DEFINITION LALR17_TOK_TRIGGER
+%token        LALR17_TOK_SHOWGOALS LALR17_TOK_DEFERGOAL LALR17_TOK_SPOIL
+%token        LALR17_TOK_UNFOLD LALR17_TOK_FORGET
+%token        LALR17_TOK_PROPERTY LALR17_TOK_FUNCTION LALR17_TOK_THEOREM
+%token        LALR17_TOK_APPLY
 
 // Nonterminal types — formula/term
 %type <node>  top term fmla appelem var simplevar atype
@@ -104,23 +104,23 @@ func atypeToString(n ast.Node) string {
 %type <node>  pflet
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
-%left         TOK_SEMI
-%left         TOK_GLOBALLY TOK_EVENTUALLY
-%left         TOK_ARROW TOK_IFF
-%left         TOK_OR
-%left         TOK_AND
-%left         TOK_TILDA
-%left         TOK_EQ TOK_LE TOK_LT TOK_GE TOK_GT TOK_PTO TOK_ISA
-%left         TOK_TILDAEQ
-%left         TOK_IF
-%left         TOK_ELSE
-%left         TOK_COLON
-%left         TOK_PLUS TOK_MINUS
-%left         TOK_TIMES TOK_DIV
-%left         TOK_DOLLAR
-%left         TOK_OLD
-%left         TOK_DOT
-%right        TOK_ASSIGN
+%left         LALR17_TOK_SEMI
+%left         LALR17_TOK_GLOBALLY LALR17_TOK_EVENTUALLY
+%left         LALR17_TOK_ARROW LALR17_TOK_IFF
+%left         LALR17_TOK_OR
+%left         LALR17_TOK_AND
+%left         LALR17_TOK_TILDA
+%left         LALR17_TOK_EQ LALR17_TOK_LE LALR17_TOK_LT LALR17_TOK_GE LALR17_TOK_GT LALR17_TOK_PTO LALR17_TOK_ISA
+%left         LALR17_TOK_TILDAEQ
+%left         LALR17_TOK_IF
+%left         LALR17_TOK_ELSE
+%left         LALR17_TOK_COLON
+%left         LALR17_TOK_PLUS LALR17_TOK_MINUS
+%left         LALR17_TOK_TIMES LALR17_TOK_DIV
+%left         LALR17_TOK_DOLLAR
+%left         LALR17_TOK_OLD
+%left         LALR17_TOK_DOT
+%right        LALR17_TOK_ASSIGN
 
 %start        top
 
@@ -129,32 +129,32 @@ func atypeToString(n ast.Node) string {
 top:
     fmla
     {
-        v17lex.(*v17LexAdapter).result = $1
+        lalr17lex.(*lalr17LexAdapter).result = $1
     }
     | sequence
     {
-        v17lex.(*v17LexAdapter).result = $1
+        lalr17lex.(*lalr17LexAdapter).result = $1
     }
     | scenario
     {
-        v17lex.(*v17LexAdapter).result = $1
+        lalr17lex.(*lalr17LexAdapter).result = $1
     }
     // Proof/tactic entry: tactic SYMBOL opttacticwith optproofgroup
-    | TOK_TACTIC atype opttacticwith optproofgroup
+    | LALR17_TOK_TACTIC atype opttacticwith optproofgroup
     {
-        v17lex.(*v17LexAdapter).result = acfg(v17lex).NewTacticTactic($2, $3, $4)
+        lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewTacticTactic($2, $3, $4)
     }
     // Proof entry: proof [label] { proofseq }
-    | TOK_PROOF TOK_LABEL proofgroup
+    | LALR17_TOK_PROOF LALR17_TOK_LABEL proofgroup
     {
-        v17lex.(*v17LexAdapter).result = acfg(v17lex).NewProofTactic(acfg(v17lex).NewAtom($2), $3)
+        lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom($2), $3)
     }
     ;
 
 // --- SYMBOL handling ---
 
 SYMBOLx:
-    TOK_PRESYMBOL
+    LALR17_TOK_PRESYMBOL
     {
         $$ = $1
     }
@@ -165,11 +165,11 @@ SYMsubscr:
     {
         $$ = $1
     }
-    | TOK_THIS
+    | LALR17_TOK_THIS
     {
         $$ = "this"
     }
-    | SYMsubscr TOK_DOT SYMBOLx
+    | SYMsubscr LALR17_TOK_DOT SYMBOLx
     {
         $$ = $1 + "." + $3
     }
@@ -180,21 +180,21 @@ SYMsubscr:
 atype:
     SYMBOLx
     {
-        $$ = acfg(v17lex).NewSymbol($1, nil)
+        $$ = lalr17Acfg(lalr17lex).NewSymbol($1, nil)
     }
-    | atype TOK_DOT SYMBOLx
+    | atype LALR17_TOK_DOT SYMBOLx
     {
         if _, ok := $1.(*ast.This); ok {
-            $$ = acfg(v17lex).NewSymbol($3, nil)
+            $$ = lalr17Acfg(lalr17lex).NewSymbol($3, nil)
         } else if sym, ok := $1.(*ast.Symbol); ok {
-            $$ = acfg(v17lex).NewSymbol(sym.Rep + "." + $3, nil)
+            $$ = lalr17Acfg(lalr17lex).NewSymbol(sym.Rep + "." + $3, nil)
         } else {
-            $$ = acfg(v17lex).NewSymbol($3, nil)
+            $$ = lalr17Acfg(lalr17lex).NewSymbol($3, nil)
         }
     }
-    | TOK_THIS
+    | LALR17_TOK_THIS
     {
-        $$ = acfg(v17lex).NewThis()
+        $$ = lalr17Acfg(lalr17lex).NewThis()
     }
     ;
 
@@ -206,37 +206,37 @@ appelem:
     SYMBOLx
     {
         // Python: App(p[1]) — appelem produces App, not Atom.
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1, nil))
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol($1, nil))
     }
-    | SYMBOLx TOK_LPAREN terms TOK_RPAREN
+    | SYMBOLx LALR17_TOK_LPAREN terms LALR17_TOK_RPAREN
     {
         // Python: App(p[1], p[3])
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1, nil), $3...)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol($1, nil), $3...)
     }
     ;
 
 // --- Variables ---
 
 var:
-    TOK_VARIABLE
+    LALR17_TOK_VARIABLE
     {
-        $$ = acfg(v17lex).NewVariable($1, "")
+        $$ = lalr17Acfg(lalr17lex).NewVariable($1, "")
     }
-    | TOK_VARIABLE TOK_COLON atype
+    | LALR17_TOK_VARIABLE LALR17_TOK_COLON atype
     {
-        v := acfg(v17lex).NewVariable($1, atypeToString($3))
+        v := lalr17Acfg(lalr17lex).NewVariable($1, lalr17AtypeToString($3))
         $$ = v
     }
     ;
 
 simplevar:
-    TOK_VARIABLE
+    LALR17_TOK_VARIABLE
     {
-        $$ = acfg(v17lex).NewVariable($1, "S")
+        $$ = lalr17Acfg(lalr17lex).NewVariable($1, "S")
     }
-    | TOK_VARIABLE TOK_COLON SYMBOLx
+    | LALR17_TOK_VARIABLE LALR17_TOK_COLON SYMBOLx
     {
-        $$ = acfg(v17lex).NewVariable($1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewVariable($1, $3)
     }
     ;
 
@@ -245,7 +245,7 @@ vars:
     {
         $$ = []ast.Node{$1}
     }
-    | vars TOK_COMMA var
+    | vars LALR17_TOK_COMMA var
     {
         $$ = append($1, $3)
     }
@@ -256,7 +256,7 @@ simplevars:
     {
         $$ = []ast.Node{$1}
     }
-    | simplevars TOK_COMMA simplevar
+    | simplevars LALR17_TOK_COMMA simplevar
     {
         $$ = append($1, $3)
     }
@@ -273,7 +273,7 @@ terms:
     {
         $$ = []ast.Node{$1}
     }
-    | terms TOK_COMMA term
+    | terms LALR17_TOK_COMMA term
     {
         $$ = append($1, $3)
     }
@@ -290,11 +290,11 @@ term:
     {
         $$ = $1
     }
-    | TOK_OLD appelem
+    | LALR17_TOK_OLD appelem
     {
-        $$ = acfg(v17lex).NewOld($2)
+        $$ = lalr17Acfg(lalr17lex).NewOld($2)
     }
-    | term TOK_DOT appelem
+    | term LALR17_TOK_DOT appelem
     {
         switch lhs := $1.(type) {
         case *ast.Atom:
@@ -303,192 +303,192 @@ term:
             newTerms := make([]ast.Node, 0, len(lhs.Terms)+len(rhs.Terms))
             newTerms = append(newTerms, lhs.Terms...)
             newTerms = append(newTerms, rhs.Terms...)
-            $$ = acfg(v17lex).NewAtom(newRep, newTerms...)
-        case *ast.Old:
+            $$ = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
+        case *ast.AstOld:
             if inner, ok := lhs.Term.(*ast.Atom); ok {
                 rhs := $3.(*ast.Atom)
                 newRep := inner.Rep + "." + rhs.Rep
                 newTerms := make([]ast.Node, 0, len(inner.Terms)+len(rhs.Terms))
                 newTerms = append(newTerms, inner.Terms...)
                 newTerms = append(newTerms, rhs.Terms...)
-                lhs.Term = acfg(v17lex).NewAtom(newRep, newTerms...)
+                lhs.Term = lalr17Acfg(lalr17lex).NewAtom(newRep, newTerms...)
                 $$ = lhs
             } else {
-                $$ = acfg(v17lex).NewMethodCall($1, $3)
+                $$ = lalr17Acfg(lalr17lex).NewMethodCall($1, $3)
             }
         default:
-            $$ = acfg(v17lex).NewMethodCall($1, $3)
+            $$ = lalr17Acfg(lalr17lex).NewMethodCall($1, $3)
         }
     }
-    | TOK_LPAREN term TOK_RPAREN
+    | LALR17_TOK_LPAREN term LALR17_TOK_RPAREN
     {
         $$ = $2
     }
     // --- Arithmetic (App, not Atom — matches Python's App for term-level ops) ---
-    | term TOK_PLUS term
+    | term LALR17_TOK_PLUS term
     {
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("+", nil), $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("+", nil), $1, $3)
     }
-    | term TOK_MINUS term
+    | term LALR17_TOK_MINUS term
     {
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("-", nil), $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("-", nil), $1, $3)
     }
-    | term TOK_TIMES term
+    | term LALR17_TOK_TIMES term
     {
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*", nil), $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("*", nil), $1, $3)
     }
-    | term TOK_DIV term
+    | term LALR17_TOK_DIV term
     {
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("/", nil), $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("/", nil), $1, $3)
     }
     // --- If/else ---
-    | term TOK_IF fmla TOK_ELSE term
+    | term LALR17_TOK_IF fmla LALR17_TOK_ELSE term
     {
-        $$ = acfg(v17lex).NewIte($3, $1, $5)
+        $$ = lalr17Acfg(lalr17lex).NewIte($3, $1, $5)
     }
     // --- Comparison (v1.7+: term-level) ---
-    | term TOK_EQ term
+    | term LALR17_TOK_EQ term
     {
-        $$ = acfg(v17lex).NewAtom("=", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("=", $1, $3)
     }
-    | term TOK_LE term
+    | term LALR17_TOK_LE term
     {
-        $$ = acfg(v17lex).NewAtom("<=", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("<=", $1, $3)
     }
-    | term TOK_LT term
+    | term LALR17_TOK_LT term
     {
-        $$ = acfg(v17lex).NewAtom("<", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("<", $1, $3)
     }
-    | term TOK_GE term
+    | term LALR17_TOK_GE term
     {
-        $$ = acfg(v17lex).NewAtom(">=", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom(">=", $1, $3)
     }
-    | term TOK_GT term
+    | term LALR17_TOK_GT term
     {
-        $$ = acfg(v17lex).NewAtom(">", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom(">", $1, $3)
     }
-    | term TOK_PTO term
+    | term LALR17_TOK_PTO term
     {
-        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*>", nil), $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("*>", nil), $1, $3)
     }
-    | term TOK_TILDAEQ term
+    | term LALR17_TOK_TILDAEQ term
     {
-        $$ = acfg(v17lex).NewNot(acfg(v17lex).NewAtom("=", $1, $3))
+        $$ = lalr17Acfg(lalr17lex).NewNot(lalr17Acfg(lalr17lex).NewAtom("=", $1, $3))
     }
     // --- Boolean ---
-    | TOK_TRUE
+    | LALR17_TOK_TRUE
     {
-        $$ = acfg(v17lex).NewAnd()
+        $$ = lalr17Acfg(lalr17lex).NewAnd()
     }
-    | TOK_FALSE
+    | LALR17_TOK_FALSE
     {
-        $$ = acfg(v17lex).NewOr()
+        $$ = lalr17Acfg(lalr17lex).NewOr()
     }
-    | TOK_TILDA term
+    | LALR17_TOK_TILDA term
     {
-        $$ = acfg(v17lex).NewNot($2)
+        $$ = lalr17Acfg(lalr17lex).NewNot($2)
     }
-    | term TOK_AND term
+    | term LALR17_TOK_AND term
     {
         // Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = And(p[1], p[3])
         // This flattens left-associative chains and absorbs true (And{}) identity.
-        if a, ok := $1.(*ast.And); ok {
+        if a, ok := $1.(*ast.AstAnd); ok {
             a.Terms = append(a.Terms, $3)
             $$ = a
         } else {
-            $$ = acfg(v17lex).NewAnd($1, $3)
+            $$ = lalr17Acfg(lalr17lex).NewAnd($1, $3)
         }
     }
-    | term TOK_OR term
+    | term LALR17_TOK_OR term
     {
         // Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
         //         else: p[0] = Or(p[1], p[3])
-        if o, ok := $1.(*ast.Or); ok {
+        if o, ok := $1.(*ast.AstOr); ok {
             o.Terms = append(o.Terms, $3)
             $$ = o
         } else {
-            $$ = acfg(v17lex).NewOr($1, $3)
+            $$ = lalr17Acfg(lalr17lex).NewOr($1, $3)
         }
     }
-    | term TOK_ARROW term
+    | term LALR17_TOK_ARROW term
     {
-        $$ = acfg(v17lex).NewImplies($1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewImplies($1, $3)
     }
-    | term TOK_IFF term
+    | term LALR17_TOK_IFF term
     {
-        $$ = acfg(v17lex).NewIff($1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewIff($1, $3)
     }
     // --- Quantifiers ---
-    | TOK_FORALL simplevars TOK_DOT term    %prec TOK_SEMI
+    | LALR17_TOK_FORALL simplevars LALR17_TOK_DOT term    %prec LALR17_TOK_SEMI
     {
-        $$ = acfg(v17lex).NewForall($2, $4)
+        $$ = lalr17Acfg(lalr17lex).NewForall($2, $4)
     }
-    | TOK_EXISTS simplevars TOK_DOT term    %prec TOK_SEMI
+    | LALR17_TOK_EXISTS simplevars LALR17_TOK_DOT term    %prec LALR17_TOK_SEMI
     {
-        $$ = acfg(v17lex).NewExists($2, $4)
+        $$ = lalr17Acfg(lalr17lex).NewExists($2, $4)
     }
-    | TOK_FORALL TOK_LPAREN vars TOK_RPAREN term
+    | LALR17_TOK_FORALL LALR17_TOK_LPAREN vars LALR17_TOK_RPAREN term
     {
-        $$ = acfg(v17lex).NewForall($3, $5)
+        $$ = lalr17Acfg(lalr17lex).NewForall($3, $5)
     }
-    | TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term
+    | LALR17_TOK_EXISTS LALR17_TOK_LPAREN vars LALR17_TOK_RPAREN term
     {
-        $$ = acfg(v17lex).NewExists($3, $5)
+        $$ = lalr17Acfg(lalr17lex).NewExists($3, $5)
     }
     // --- Temporal ---
-    | TOK_GLOBALLY term
+    | LALR17_TOK_GLOBALLY term
     {
-        $$ = acfg(v17lex).NewGlobally($2)
+        $$ = lalr17Acfg(lalr17lex).NewGlobally($2)
     }
-    | TOK_EVENTUALLY term
+    | LALR17_TOK_EVENTUALLY term
     {
-        $$ = acfg(v17lex).NewEventually($2)
+        $$ = lalr17Acfg(lalr17lex).NewEventually($2)
     }
-    | term TOK_WHENNEXT term
+    | term LALR17_TOK_WHENNEXT term
     {
-        $$ = acfg(v17lex).NewWhenOperator("next", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewWhenOperator("next", $1, $3)
     }
-    | term TOK_WHENPREV term
+    | term LALR17_TOK_WHENPREV term
     {
-        $$ = acfg(v17lex).NewWhenOperator("prev", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewWhenOperator("prev", $1, $3)
     }
-    | term TOK_WHENFIRST term
+    | term LALR17_TOK_WHENFIRST term
     {
-        $$ = acfg(v17lex).NewWhenOperator("first", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewWhenOperator("first", $1, $3)
     }
-    | term TOK_WHENLAST term
+    | term LALR17_TOK_WHENLAST term
     {
-        $$ = acfg(v17lex).NewWhenOperator("last", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewWhenOperator("last", $1, $3)
     }
     // --- ISA ---
-    | term TOK_ISA atype
+    | term LALR17_TOK_ISA atype
     {
-        $$ = acfg(v17lex).NewIsa($1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewIsa($1, $3)
     }
     // --- Sort annotation ---
-    | term TOK_COLON atype
+    | term LALR17_TOK_COLON atype
     {
         if v, ok := $1.(*ast.Variable); ok {
-            v.VSort = atypeToString($3)
+            v.VSort = lalr17AtypeToString($3)
         }
         $$ = $1
     }
     // --- Named binders ---
-    | TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN
+    | LALR17_TOK_LPAREN LALR17_TOK_DOLLAR SYMBOLx simplevars LALR17_TOK_DOT fmla LALR17_TOK_RPAREN LALR17_TOK_LPAREN terms LALR17_TOK_RPAREN
     {
-        binder := acfg(v17lex).NewNamedBinder($3, $4, $6)
-        //binder.SetLineno(getLineno(v17lex))
-        $$ = acfg(v17lex).NewApp(binder, $9...)
-        //$$.(*ast.App).SetLineno(getLineno(v17lex))
+        binder := lalr17Acfg(lalr17lex).NewNamedBinder($3, $4, $6)
+        //binder.SetLineno(getLineno(lalr17lex))
+        $$ = lalr17Acfg(lalr17lex).NewApp(binder, $9...)
+        //$$.(*ast.App).SetLineno(getLineno(lalr17lex))
     }
-    | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
+    | LALR17_TOK_DOLLAR SYMBOLx LALR17_TOK_DOT fmla     %prec LALR17_TOK_SEMI
     {
-        $$ = acfg(v17lex).NewNamedBinder($2, nil, $4)
+        $$ = lalr17Acfg(lalr17lex).NewNamedBinder($2, nil, $4)
     }
-    | TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla   %prec TOK_SEMI
+    | LALR17_TOK_DOLLAR SYMBOLx LALR17_TOK_DOLLAR fmla   %prec LALR17_TOK_SEMI
     {
-        $$ = acfg(v17lex).NewNamedBinder($2, nil, $4)
+        $$ = lalr17Acfg(lalr17lex).NewNamedBinder($2, nil, $4)
     }
     ;
 
@@ -509,7 +509,7 @@ fmla:
 labeledfmla:
     fmla
     {
-        $$ = acfg(v17lex).NewLabeledFormula(nil, $1)
+        $$ = lalr17Acfg(lalr17lex).NewLabeledFormula(nil, $1)
     }
     ;
 
@@ -522,19 +522,19 @@ labeledfmla:
 tterm:
     SYMBOLx
     {
-        a := acfg(v17lex).NewAtom($1)
+        a := lalr17Acfg(lalr17lex).NewAtom($1)
         $$ = a
     }
-    | SYMBOLx TOK_COLON atype
+    | SYMBOLx LALR17_TOK_COLON atype
     {
-        a := acfg(v17lex).NewAtom($1)
+        a := lalr17Acfg(lalr17lex).NewAtom($1)
         a.ASort = $3
         $$ = a
     }
-    | TOK_CARET SYMBOLx TOK_COLON atype
+    | LALR17_TOK_CARET SYMBOLx LALR17_TOK_COLON atype
     {
         // Ghost parameter: ^name : type
-        a := acfg(v17lex).NewAtom($2)
+        a := lalr17Acfg(lalr17lex).NewAtom($2)
         a.ASort = $4
         $$ = a
     }
@@ -545,7 +545,7 @@ tterms:
     {
         $$ = []ast.Node{$1}
     }
-    | tterms TOK_COMMA tterm
+    | tterms LALR17_TOK_COMMA tterm
     {
         $$ = append($1, $3)
     }
@@ -554,15 +554,15 @@ tterms:
 // --- lparam / lparams: local params for local/let/optargs ---
 
 lparam:
-    SYMBOLx TOK_COLON atype
+    SYMBOLx LALR17_TOK_COLON atype
     {
-        a := acfg(v17lex).NewAtom($1)
+        a := lalr17Acfg(lalr17lex).NewAtom($1)
         a.ASort = $3
         $$ = a
     }
-    | TOK_CARET SYMBOLx TOK_COLON atype
+    | LALR17_TOK_CARET SYMBOLx LALR17_TOK_COLON atype
     {
-        a := acfg(v17lex).NewAtom($2)
+        a := lalr17Acfg(lalr17lex).NewAtom($2)
         a.ASort = $4
         $$ = a
     }
@@ -573,7 +573,7 @@ lparams:
     {
         $$ = []ast.Node{$1}
     }
-    | lparams TOK_COMMA lparam
+    | lparams LALR17_TOK_COMMA lparam
     {
         $$ = append($1, $3)
     }
@@ -582,17 +582,17 @@ lparams:
 // --- sequence: { action; action; ... } ---
 
 sequence:
-    TOK_LCB TOK_RCB
+    LALR17_TOK_LCB LALR17_TOK_RCB
     {
-        $$ = acfg(v17lex).NewAnd()
+        $$ = lalr17Acfg(lalr17lex).NewAnd()
     }
-    | TOK_LCB actseq TOK_RCB
+    | LALR17_TOK_LCB actseq LALR17_TOK_RCB
     {
-        $$ = lalrMakeSequence(acfg(v17lex), $2)
+        $$ = lalr17MakeSequence(lalr17Acfg(lalr17lex), $2)
     }
-    | TOK_LCB actseq TOK_SEMI TOK_RCB
+    | LALR17_TOK_LCB actseq LALR17_TOK_SEMI LALR17_TOK_RCB
     {
-        $$ = lalrMakeSequence(acfg(v17lex), $2)
+        $$ = lalr17MakeSequence(lalr17Acfg(lalr17lex), $2)
     }
     ;
 
@@ -601,7 +601,7 @@ actseq:
     {
         $$ = []ast.Node{$1}
     }
-    | actseq TOK_SEMI action
+    | actseq LALR17_TOK_SEMI action
     {
         $$ = append($1, $3)
     }
@@ -626,53 +626,53 @@ action:
 // --- Simple actions (from Python ivy_parser.py:2374-2478) ---
 
 simpleact:
-    TOK_ASSUME labeledfmla
+    LALR17_TOK_ASSUME labeledfmla
     {
-        $$ = acfg(v17lex).NewAtom("assume", $2)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("assume", $2)
     }
-    | TOK_ASSERT labeledfmla
+    | LALR17_TOK_ASSERT labeledfmla
     {
-        $$ = acfg(v17lex).NewAtom("assert", $2)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("assert", $2)
     }
-    | TOK_REQUIRE labeledfmla
+    | LALR17_TOK_REQUIRE labeledfmla
     {
-        $$ = acfg(v17lex).NewAtom("require", $2)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("require", $2)
     }
-    | TOK_ENSURE labeledfmla
+    | LALR17_TOK_ENSURE labeledfmla
     {
-        $$ = acfg(v17lex).NewAtom("ensure", $2)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("ensure", $2)
     }
-    | term TOK_ASSIGN fmla
+    | term LALR17_TOK_ASSIGN fmla
     {
-        $$ = acfg(v17lex).NewAtom(":=", $1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom(":=", $1, $3)
     }
-    | term TOK_ASSIGN TOK_TIMES
+    | term LALR17_TOK_ASSIGN LALR17_TOK_TIMES
     {
-        $$ = acfg(v17lex).NewAtom("havoc", $1)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("havoc", $1)
     }
-    | TOK_VAR tterm
+    | LALR17_TOK_VAR tterm
     {
-        $$ = acfg(v17lex).NewVarAction($2)
+        $$ = lalr17Acfg(lalr17lex).NewVarAction($2)
     }
-    | TOK_VAR tterm TOK_ASSIGN fmla
+    | LALR17_TOK_VAR tterm LALR17_TOK_ASSIGN fmla
     {
-        $$ = acfg(v17lex).NewVarAction($2, $4)
+        $$ = lalr17Acfg(lalr17lex).NewVarAction($2, $4)
     }
-    | TOK_CALL term
+    | LALR17_TOK_CALL term
     {
         // Simple call: call f(x)
         $$ = $2
     }
-    | TOK_INSTANTIATE term
+    | LALR17_TOK_INSTANTIATE term
     {
-        $$ = acfg(v17lex).NewAtom("instantiate", $2)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("instantiate", $2)
     }
-    | TOK_UNPROVABLE simpleact
+    | LALR17_TOK_UNPROVABLE simpleact
     {
         // When check_unprovable is False (default), unprovable statements are no-ops
-        $$ = acfg(v17lex).NewAnd()
+        $$ = lalr17Acfg(lalr17lex).NewAnd()
     }
-    | term     %prec TOK_SEMI
+    | term     %prec LALR17_TOK_SEMI
     {
         // Bare expression (procedure call)
         $$ = $1
@@ -686,39 +686,39 @@ complexact:
     {
         $$ = $1
     }
-    | TOK_IF fmla sequence
+    | LALR17_TOK_IF fmla sequence
     {
-        $$ = acfg(v17lex).NewIte($2, $3, acfg(v17lex).NewAnd())
+        $$ = lalr17Acfg(lalr17lex).NewIte($2, $3, lalr17Acfg(lalr17lex).NewAnd())
     }
-    | TOK_IF fmla sequence TOK_ELSE action
+    | LALR17_TOK_IF fmla sequence LALR17_TOK_ELSE action
     {
-        $$ = acfg(v17lex).NewIte($2, $3, $5)
+        $$ = lalr17Acfg(lalr17lex).NewIte($2, $3, $5)
     }
-    | TOK_IF TOK_TIMES sequence TOK_ELSE action
+    | LALR17_TOK_IF LALR17_TOK_TIMES sequence LALR17_TOK_ELSE action
     {
         // ChoiceAction: if * { ... } else { ... }
-        $$ = acfg(v17lex).NewIte(acfg(v17lex).NewSymbol("*", nil), $3, $5)
+        $$ = lalr17Acfg(lalr17lex).NewIte(lalr17Acfg(lalr17lex).NewSymbol("*", nil), $3, $5)
     }
-    | TOK_WHILE fmla sequence
+    | LALR17_TOK_WHILE fmla sequence
     {
-        $$ = acfg(v17lex).NewAtom("while", $2, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("while", $2, $3)
     }
-    | TOK_WHILE fmla TOK_INVARIANT fmla sequence
+    | LALR17_TOK_WHILE fmla LALR17_TOK_INVARIANT fmla sequence
     {
-        $$ = acfg(v17lex).NewAtom("while", $2, $5)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("while", $2, $5)
     }
-    | TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla sequence
+    | LALR17_TOK_FOR tterm LALR17_TOK_COMMA tterm LALR17_TOK_IN fmla sequence
     {
-        $$ = acfg(v17lex).NewAtom("for", $2, $4, $6, $7)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("for", $2, $4, $6, $7)
     }
-    | TOK_LOCAL lparams sequence
+    | LALR17_TOK_LOCAL lparams sequence
     {
         args := append($2, $3)
-        $$ = acfg(v17lex).NewAtom("local", args...)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("local", args...)
     }
-    | TOK_LET fmla sequence
+    | LALR17_TOK_LET fmla sequence
     {
-        $$ = acfg(v17lex).NewAtom("let", $2, $3)
+        $$ = lalr17Acfg(lalr17lex).NewAtom("let", $2, $3)
     }
     ;
 
@@ -727,29 +727,29 @@ complexact:
 // ============================================================
 
 scenario:
-    TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
+    LALR17_TOK_SCENARIO LALR17_TOK_LCB sceninit LALR17_TOK_SEMI scentranss LALR17_TOK_RCB
     {
         elems := append([]ast.Node{$3}, $5...)
-        sdef := acfg(v17lex).NewScenarioDef(elems)
-        $$ = acfg(v17lex).NewScenarioDecl(sdef)
+        sdef := lalr17Acfg(lalr17lex).NewScenarioDef(elems)
+        $$ = lalr17Acfg(lalr17lex).NewScenarioDecl(sdef)
     }
     ;
 
 sceninit:
-    TOK_ARROW places
+    LALR17_TOK_ARROW places
     {
-        $$ = acfg(v17lex).NewPlaceList($2)
+        $$ = lalr17Acfg(lalr17lex).NewPlaceList($2)
     }
     ;
 
 places:
-    TOK_PRESYMBOL
+    LALR17_TOK_PRESYMBOL
     {
-        $$ = []ast.Node{acfg(v17lex).NewAtom($1)}
+        $$ = []ast.Node{lalr17Acfg(lalr17lex).NewAtom($1)}
     }
-    | places TOK_COMMA TOK_PRESYMBOL
+    | places LALR17_TOK_COMMA LALR17_TOK_PRESYMBOL
     {
-        $$ = append($1, acfg(v17lex).NewAtom($3))
+        $$ = append($1, lalr17Acfg(lalr17lex).NewAtom($3))
     }
     ;
 
@@ -765,34 +765,34 @@ scentranss:
     ;
 
 scentrans:
-    places TOK_ARROW places TOK_COLON scenariomixin
+    places LALR17_TOK_ARROW places LALR17_TOK_COLON scenariomixin
     {
-        $$ = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList($1), acfg(v17lex).NewPlaceList($3), $5)
+        $$ = lalr17Acfg(lalr17lex).NewScenarioTransition(lalr17Acfg(lalr17lex).NewPlaceList($1), lalr17Acfg(lalr17lex).NewPlaceList($3), $5)
     }
-    | places TOK_COLON scenariomixin
+    | places LALR17_TOK_COLON scenariomixin
     {
-        $$ = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList($1), acfg(v17lex).NewPlaceList(nil), $3)
+        $$ = lalr17Acfg(lalr17lex).NewScenarioTransition(lalr17Acfg(lalr17lex).NewPlaceList($1), lalr17Acfg(lalr17lex).NewPlaceList(nil), $3)
     }
     ;
 
 scenariomixin:
-    TOK_BEFORE atype sequence
+    LALR17_TOK_BEFORE atype sequence
     {
-        atom := acfg(v17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
-        mixer := acfg(v17lex).NewAtom(mixerName)
-        adef := acfg(v17lex).NewActionDef(atom, $3, nil, nil)
-        $$ = acfg(v17lex).NewScenarioBeforeMixin(mixer, adef)
+        mixer := lalr17Acfg(lalr17lex).NewAtom(mixerName)
+        adef := lalr17Acfg(lalr17lex).NewActionDef(atom, $3, nil, nil)
+        $$ = lalr17Acfg(lalr17lex).NewScenarioBeforeMixin(mixer, adef)
     }
-    | TOK_AFTER atype sequence
+    | LALR17_TOK_AFTER atype sequence
     {
-        atom := acfg(v17lex).NewAtom($2.(*ast.Symbol).Rep)
+        atom := lalr17Acfg(lalr17lex).NewAtom($2.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
-        mixer := acfg(v17lex).NewAtom(mixerName)
-        adef := acfg(v17lex).NewActionDef(atom, $3, nil, nil)
-        $$ = acfg(v17lex).NewScenarioAfterMixin(mixer, adef)
+        mixer := lalr17Acfg(lalr17lex).NewAtom(mixerName)
+        adef := lalr17Acfg(lalr17lex).NewActionDef(atom, $3, nil, nil)
+        $$ = lalr17Acfg(lalr17lex).NewScenarioAfterMixin(mixer, adef)
     }
     ;
 
@@ -804,9 +804,9 @@ scenariomixin:
 
 // pflet : var EQ fmla
 pflet:
-    var TOK_EQ fmla
+    var LALR17_TOK_EQ fmla
     {
-        $$ = acfg(v17lex).NewDefinition($1, $3)
+        $$ = lalr17Acfg(lalr17lex).NewDefinition($1, $3)
     }
     ;
 
@@ -816,7 +816,7 @@ pflets:
     {
         $$ = []ast.Node{$1}
     }
-    | pflets TOK_COMMA pflet
+    | pflets LALR17_TOK_COMMA pflet
     {
         $$ = append($1, $3)
     }
@@ -824,17 +824,17 @@ pflets:
 
 // tacticwithelem : INVARIANT labeledfmla | DEFINITION atype EQ fmla | TRIGGER atype WITH terms
 tacticwithelem:
-    TOK_INVARIANT labeledfmla
+    LALR17_TOK_INVARIANT labeledfmla
     {
         $$ = $2
     }
-    | TOK_DEFINITION atype TOK_EQ fmla
+    | LALR17_TOK_DEFINITION atype LALR17_TOK_EQ fmla
     {
-        $$ = acfg(v17lex).NewDefinition($2, $4)
+        $$ = lalr17Acfg(lalr17lex).NewDefinition($2, $4)
     }
-    | TOK_TRIGGER atype TOK_WITH terms
+    | LALR17_TOK_TRIGGER atype LALR17_TOK_WITH terms
     {
-        $$ = acfg(v17lex).NewTrigger(nil, append([]ast.Node{$2}, $4...)...)
+        $$ = lalr17Acfg(lalr17lex).NewTrigger(nil, append([]ast.Node{$2}, $4...)...)
     }
     ;
 
@@ -854,11 +854,11 @@ tacticwithlist:
 tacticwithlistchoice:
     tacticwithlist
     {
-        $$ = acfg(v17lex).NewTacticWith($1)
+        $$ = lalr17Acfg(lalr17lex).NewTacticWith($1)
     }
     | pflets
     {
-        $$ = acfg(v17lex).NewTacticLets($1)
+        $$ = lalr17Acfg(lalr17lex).NewTacticLets($1)
     }
     ;
 
@@ -866,27 +866,27 @@ tacticwithlistchoice:
 opttacticwith:
     /* empty */
     {
-        $$ = acfg(v17lex).NewTacticWith(nil)
+        $$ = lalr17Acfg(lalr17lex).NewTacticWith(nil)
     }
-    | TOK_WITH tacticwithlistchoice
+    | LALR17_TOK_WITH tacticwithlistchoice
     {
         $$ = $2
     }
-    | TOK_WITH TOK_LCB tacticwithlist TOK_RCB
+    | LALR17_TOK_WITH LALR17_TOK_LCB tacticwithlist LALR17_TOK_RCB
     {
-        $$ = acfg(v17lex).NewTacticWith($3)
+        $$ = lalr17Acfg(lalr17lex).NewTacticWith($3)
     }
     ;
 
 // proofgroup : LCB proofseq RCB | LCB RCB
 proofgroup:
-    TOK_LCB proofseq TOK_RCB
+    LALR17_TOK_LCB proofseq LALR17_TOK_RCB
     {
         $$ = $2
     }
-    | TOK_LCB TOK_RCB
+    | LALR17_TOK_LCB LALR17_TOK_RCB
     {
-        $$ = acfg(v17lex).NewNullTactic()
+        $$ = lalr17Acfg(lalr17lex).NewNullTactic()
     }
     ;
 
@@ -894,7 +894,7 @@ proofgroup:
 optproofgroup:
     /* empty */
     {
-        $$ = acfg(v17lex).NewNoneAST()
+        $$ = lalr17Acfg(lalr17lex).NewNoneAST()
     }
     | proofgroup
     {
@@ -908,87 +908,87 @@ proofseq:
     {
         $$ = $1
     }
-    | proofseq TOK_SEMI proofstep
+    | proofseq LALR17_TOK_SEMI proofstep
     {
-        $$ = acfg(v17lex).NewComposeTactics([]ast.Node{$1, $3})
+        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]ast.Node{$1, $3})
     }
     | proofseq proofstep
     {
-        $$ = acfg(v17lex).NewComposeTactics([]ast.Node{$1, $2})
+        $$ = lalr17Acfg(lalr17lex).NewComposeTactics([]ast.Node{$1, $2})
     }
     ;
 
 // proofstep — all the various proof step forms
 proofstep:
     // proofstep : APPLY atype
-    TOK_APPLY atype
+    LALR17_TOK_APPLY atype
     {
-        $$ = acfg(v17lex).NewSchemaInstantiation($2, acfg(v17lex).NewNoneAST())
+        $$ = lalr17Acfg(lalr17lex).NewSchemaInstantiation($2, lalr17Acfg(lalr17lex).NewNoneAST())
     }
     // proofstep : ASSUME atype
-    | TOK_ASSUME atype
+    | LALR17_TOK_ASSUME atype
     {
-        $$ = acfg(v17lex).NewAssumeTactic($2, acfg(v17lex).NewNoneAST())
+        $$ = lalr17Acfg(lalr17lex).NewAssumeTactic($2, lalr17Acfg(lalr17lex).NewNoneAST())
     }
     // proofstep : SHOWGOALS
-    | TOK_SHOWGOALS
+    | LALR17_TOK_SHOWGOALS
     {
-        $$ = acfg(v17lex).NewShowGoalsTactic()
+        $$ = lalr17Acfg(lalr17lex).NewShowGoalsTactic()
     }
     // proofstep : DEFERGOAL
-    | TOK_DEFERGOAL
+    | LALR17_TOK_DEFERGOAL
     {
-        $$ = acfg(v17lex).NewDeferGoalTactic()
+        $$ = lalr17Acfg(lalr17lex).NewDeferGoalTactic()
     }
     // proofstep : SPOIL atype
-    | TOK_SPOIL atype
+    | LALR17_TOK_SPOIL atype
     {
-        $$ = acfg(v17lex).NewSpoilTactic($2)
+        $$ = lalr17Acfg(lalr17lex).NewSpoilTactic($2)
     }
     // proofstep : TACTIC SYMBOL opttacticwith optproofgroup
-    | TOK_TACTIC atype opttacticwith optproofgroup
+    | LALR17_TOK_TACTIC atype opttacticwith optproofgroup
     {
-        $$ = acfg(v17lex).NewTacticTactic($2, $3, $4)
+        $$ = lalr17Acfg(lalr17lex).NewTacticTactic($2, $3, $4)
     }
     // proofstep : PROPERTY labeledfmla optproofgroup
-    | TOK_PROPERTY labeledfmla optproofgroup
+    | LALR17_TOK_PROPERTY labeledfmla optproofgroup
     {
-        $$ = acfg(v17lex).NewPropertyTactic($2, acfg(v17lex).NewNoneAST(), $3)
+        $$ = lalr17Acfg(lalr17lex).NewPropertyTactic($2, lalr17Acfg(lalr17lex).NewNoneAST(), $3)
     }
     // proofstep : FUNCTION atype
-    | TOK_FUNCTION atype
+    | LALR17_TOK_FUNCTION atype
     {
-        $$ = acfg(v17lex).NewFunctionTactic([]ast.Node{$2})
+        $$ = lalr17Acfg(lalr17lex).NewFunctionTactic([]ast.Node{$2})
     }
     // proofstep : PROOF LABEL proofgroup
-    | TOK_PROOF TOK_LABEL proofgroup
+    | LALR17_TOK_PROOF LALR17_TOK_LABEL proofgroup
     {
-        $$ = acfg(v17lex).NewProofTactic(acfg(v17lex).NewAtom($2), $3)
+        $$ = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom($2), $3)
     }
     // proofstep : LET pflets
-    | TOK_LET pflets
+    | LALR17_TOK_LET pflets
     {
-        $$ = acfg(v17lex).NewLetTactic($2)
+        $$ = lalr17Acfg(lalr17lex).NewLetTactic($2)
     }
     // proofstep : INSTANTIATE WITH pflets (witness tactic)
-    | TOK_INSTANTIATE TOK_WITH pflets
+    | LALR17_TOK_INSTANTIATE LALR17_TOK_WITH pflets
     {
-        $$ = acfg(v17lex).NewWitnessTactic($3)
+        $$ = lalr17Acfg(lalr17lex).NewWitnessTactic($3)
     }
     // proofstep : IF fmla proofgroup ELSE proofgroup
-    | TOK_IF fmla proofgroup TOK_ELSE proofgroup
+    | LALR17_TOK_IF fmla proofgroup LALR17_TOK_ELSE proofgroup
     {
-        $$ = acfg(v17lex).NewIfTactic($2, $3, $5)
+        $$ = lalr17Acfg(lalr17lex).NewIfTactic($2, $3, $5)
     }
     // proofstep : UNFOLD WITH atype (simplified)
-    | TOK_UNFOLD TOK_WITH atype
+    | LALR17_TOK_UNFOLD LALR17_TOK_WITH atype
     {
-        $$ = acfg(v17lex).NewUnfoldTactic(acfg(v17lex).NewNoneAST(), []ast.Node{$3})
+        $$ = lalr17Acfg(lalr17lex).NewUnfoldTactic(lalr17Acfg(lalr17lex).NewNoneAST(), []ast.Node{$3})
     }
     // proofstep : FORGET atype
-    | TOK_FORGET atype
+    | LALR17_TOK_FORGET atype
     {
-        $$ = acfg(v17lex).NewForgetTactic([]ast.Node{$2})
+        $$ = lalr17Acfg(lalr17lex).NewForgetTactic([]ast.Node{$2})
     }
     // proofstep : proofgroup (nested braces)
     | proofgroup
@@ -1000,7 +1000,7 @@ proofstep:
 %%
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
-func lalrMakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
+func lalr17MakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
 	// Lower var declarations into nested local scopes, matching Python/HW parser.
 	stmts = ast.LowerVarStatements(stmts)
 	if len(stmts) == 0 {

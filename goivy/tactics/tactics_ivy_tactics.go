@@ -237,7 +237,7 @@ func ApplyTempind(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledFormu
 	fmlaNode := goal.Formula
 
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
-	tm, isTM := fmlaNode.(*ast.TemporalModels)
+	tm, isTM := fmlaNode.(*ast.AstTemporalModels)
 	if !goal.IsTemporal() && !isTM {
 		return nil, fmt.Errorf("tactics/ivy_tactics: [3]proof goal is not temporal")
 	}
@@ -332,7 +332,7 @@ func ApplyTempcase(mod *module.Module, cfg *ast.AstConfig, goal *ast.LabeledForm
 	fmlaNode := goal.Formula
 
 	var newFmla ast.Node
-	if tm, ok := fmlaNode.(*ast.TemporalModels); ok {
+	if tm, ok := fmlaNode.(*ast.AstTemporalModels); ok {
 		innerFmla, ok := tm.Fmla.(lg.Expr)
 		if !ok {
 			return nil, fmt.Errorf("TemporalModels.Fmla is not lg.Expr: %T", tm.Fmla)
@@ -376,7 +376,7 @@ func Vcgen(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNo
 
 	// Python: if not isinstance(conc, ivy_ast.TemporalModels) or not lg.is_true(conc.fmla):
 	//            raise iu.IvyError(self, 'vcgen tactic applies only to safety properties')
-	tm, ok := conc.(*ast.TemporalModels)
+	tm, ok := conc.(*ast.AstTemporalModels)
 	if !ok {
 		return nil, fmt.Errorf("vcgen tactic applies only to safety properties")
 	}
@@ -398,7 +398,7 @@ func Vcgen(pc module.ProofCheckerInterface, decls []*ast.LabeledFormula, proofNo
 
 	// Python: goal2 = triple_to_goal(proof.lineno, 'consecution', tm.env_action(model.bindings),
 	//                                precond=model.invars+model.asms, postcond=model.invars)
-	envAct := temporal.EnvAction(pc.GetModule().Cfg.ActCfg, model.Bindings)
+	envAct := temporal.TemporalEnvAction(pc.GetModule().Cfg.ActCfg, model.Bindings)
 	preconds := make([]*ast.LabeledFormula, 0, len(model.Invars)+len(model.Asms))
 	preconds = append(preconds, model.Invars...)
 	preconds = append(preconds, model.Asms...)

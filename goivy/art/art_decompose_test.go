@@ -35,7 +35,7 @@ func interpChain(mod *module.Module, n int) *interp.State {
 	for i := 1; i < n; i++ {
 		s := interpState(mod)
 		s.Label = ""
-		s.Expr = interp.ActionApp(cfg, "step", interp.WrapState(prev))
+		s.Expr = interp.InterpActionApp(cfg, "step", interp.WrapState(prev))
 		s.SetPred(prev)
 		prev = s
 	}
@@ -67,7 +67,7 @@ func TestInterpToArtStatePreservesProv(t *testing.T) {
 
 	root := interpState(mod)
 	child := interpState(mod)
-	child.Expr = interp.ActionApp(cfg, "myact", interp.WrapState(root))
+	child.Expr = interp.InterpActionApp(cfg, "myact", interp.WrapState(root))
 	child.SetPred(root)
 
 	artChild := InterpToArtState(child)
@@ -94,7 +94,7 @@ func TestInterpToArtStateActionAppRep(t *testing.T) {
 
 	root := interpState(mod)
 	child := interpState(mod)
-	child.Expr = interp.ActionApp(cfg, "fire_missile", interp.WrapState(root))
+	child.Expr = interp.InterpActionApp(cfg, "fire_missile", interp.WrapState(root))
 	child.SetPred(root)
 
 	artChild := InterpToArtState(child)
@@ -152,10 +152,10 @@ func TestInterpToArtStateMemoIdentity(t *testing.T) {
 
 	shared := interpState(mod)
 	child1 := interpState(mod)
-	child1.Expr = interp.ActionApp(cfg, "a1", interp.WrapState(shared))
+	child1.Expr = interp.InterpActionApp(cfg, "a1", interp.WrapState(shared))
 	child1.SetPred(shared)
 	child2 := interpState(mod)
-	child2.Expr = interp.ActionApp(cfg, "a2", interp.WrapState(shared))
+	child2.Expr = interp.InterpActionApp(cfg, "a2", interp.WrapState(shared))
 	child2.SetPred(shared)
 
 	memo := make(map[*interp.State]*State)
@@ -232,7 +232,7 @@ func TestArtToInterpStatePreservesExpr(t *testing.T) {
 	if interpPost.Expr == nil {
 		t.Fatal("interp.State.Expr should not be nil when art.State.Prov was set")
 	}
-	if !interp.IsActionApp(interpPost.Expr) {
+	if !interp.IsInterpActionApp(interpPost.Expr) {
 		t.Errorf("expected ActionApp ast.Node, got %T", interpPost.Expr)
 	}
 }

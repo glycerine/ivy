@@ -320,15 +320,15 @@ func TestDefaultContextCheckIsTrue(t *testing.T) {
 
 func TestIsActionApp(t *testing.T) {
 	atom1 := testAstCfg.NewAtom("act", testAstCfg.NewAtom("state"))
-	if !IsActionApp(atom1) {
+	if !IsInterpActionApp(atom1) {
 		t.Error("Atom with 1 arg should be action app")
 	}
 	atom0 := testAstCfg.NewAtom("state")
-	if IsActionApp(atom0) {
+	if IsInterpActionApp(atom0) {
 		t.Error("Atom with 0 args should not be action app")
 	}
 	or := testAstCfg.NewOr()
-	if IsActionApp(or) {
+	if IsInterpActionApp(or) {
 		t.Error("Or should not be action app")
 	}
 }
@@ -345,7 +345,7 @@ func TestIsStateJoin(t *testing.T) {
 }
 
 func TestActionApp(t *testing.T) {
-	result := ActionApp(testAstCfg, "doAction", testAstCfg.NewAtom("s"))
+	result := InterpActionApp(testAstCfg, "doAction", testAstCfg.NewAtom("s"))
 	if result.Rep != "doAction" {
 		t.Errorf("expected rep 'doAction', got %q", result.Rep)
 	}
@@ -820,9 +820,9 @@ func TestGetPropertyContext(t *testing.T) {
 }
 
 func TestBottomState(t *testing.T) {
-	s := BottomState(nil)
+	s := InterpBottomState(nil)
 	if !s.IsBottom() {
-		t.Error("BottomState should be bottom")
+		t.Error("InterpBottomState should be bottom")
 	}
 }
 
@@ -987,16 +987,16 @@ func FuzzExpressionHelpers(f *testing.F) {
 	f.Add("act_with_underscore", "s1", true)
 
 	f.Fuzz(func(t *testing.T, actionName string, stateName string, useJoin bool) {
-		// Test IsActionApp / IsStateSymbol / ActionApp.
+		// Test IsInterpActionApp / IsStateSymbol / InterpActionApp.
 		stateAtom := testAstCfg.NewAtom(stateName)
 		if !IsStateSymbol(stateAtom) {
 			t.Error("Atom with 0 args should be state symbol")
 		}
 
 		if actionName != "" {
-			app := ActionApp(testAstCfg, actionName, stateAtom)
-			if !IsActionApp(app) {
-				t.Error("ActionApp result should be action app")
+			app := InterpActionApp(testAstCfg, actionName, stateAtom)
+			if !IsInterpActionApp(app) {
+				t.Error("InterpActionApp result should be action app")
 			}
 			if app.Rep != actionName {
 				t.Errorf("Rep mismatch: %q vs %q", app.Rep, actionName)

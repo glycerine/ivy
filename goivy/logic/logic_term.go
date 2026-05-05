@@ -86,7 +86,7 @@ type Const struct {
 	ast.Base
 	Name  string
 	CSort Sort
-	sexp NodeKey
+	sexp  NodeKey
 }
 
 func NewConst(name string, sort Sort) *Const {

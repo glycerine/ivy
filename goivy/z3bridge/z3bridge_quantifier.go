@@ -1420,15 +1420,15 @@ func (ctx *Z3Context) Exists(bound []Expr, body Expr) Expr {
 // --- Solver ---
 
 // CheckResult represents the result of a satisfiability check.
-type CheckResult int
+type Z3CheckResult int
 
 const (
-	Sat     CheckResult = 1
-	Unsat   CheckResult = -1
-	Unknown CheckResult = 0
+	Sat     Z3CheckResult = 1
+	Unsat   Z3CheckResult = -1
+	Unknown Z3CheckResult = 0
 )
 
-func (r CheckResult) String() string {
+func (r Z3CheckResult) String() string {
 	switch r {
 	case Sat:
 		return "sat"
@@ -1470,11 +1470,11 @@ func (s *Z3Solver) Assert(e Expr) {
 }
 
 // Check checks satisfiability.
-func (s *Z3Solver) Check() CheckResult {
-	var r CheckResult
+func (s *Z3Solver) Check() Z3CheckResult {
+	var r Z3CheckResult
 	s.ctx.do(func() {
 		res := C.Z3_solver_check(s.ctx.c, s.c)
-		r = CheckResult(res)
+		r = Z3CheckResult(res)
 	})
 	runtime.KeepAlive(s)
 	s.TraceCheck(r)
@@ -1606,19 +1606,19 @@ func (m *Model) String() string {
 
 // CheckAssumptions checks satisfiability under a set of assumptions.
 // The assumptions are temporary — they are not added to the solver's assertion stack.
-func (s *Z3Solver) CheckAssumptions(assumptions []Expr) CheckResult {
+func (s *Z3Solver) CheckAssumptions(assumptions []Expr) Z3CheckResult {
 	cassumptions := make([]C.Z3_ast, len(assumptions))
 	for i, a := range assumptions {
 		cassumptions[i] = a.c
 	}
-	var r CheckResult
+	var r Z3CheckResult
 	s.ctx.do(func() {
 		var cap *C.Z3_ast
 		if len(cassumptions) > 0 {
 			cap = &cassumptions[0]
 		}
 		res := C.Z3_solver_check_assumptions(s.ctx.c, s.c, C.uint(len(cassumptions)), cap)
-		r = CheckResult(res)
+		r = Z3CheckResult(res)
 	})
 	runtime.KeepAlive(s)
 	runtime.KeepAlive(assumptions)

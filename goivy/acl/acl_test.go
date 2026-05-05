@@ -97,7 +97,7 @@ func TestRegisterFromFile_MissingFile(t *testing.T) {
 }
 
 func TestRegexAnchoredToStart(t *testing.T) {
-	cfg := NewConfig()
+	cfg := NewACLConfig()
 	if err := cfg.RegisterIgnores([]string{"regex(foo.*)"}); err != nil {
 		t.Fatal(err)
 	}

@@ -235,7 +235,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	// not as a statement sequence. Removed from switch — falls to default case
 	// which routes through Thing → CompileNode → compileAnd (conjunction).
 
-	case *ast.AssignAction:
+	case *ast.AstAssignAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Assignment from LALR parser: (assignAction elems:[lhs, rhs])
 		// Route to the same path as Atom{":="} from the hand-rolled parser.
@@ -388,7 +388,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			}
 		}
 
-	case *ast.CrashAction:
+	case *ast.AstCrashAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=CrashAction")
 		// B2-R5: Delegate to CompileCrashAction which compiles args with SortifyWithInference
 		result, err := c.CompileCrashAction(node)
@@ -402,7 +402,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		act.SetLineno(node.GetLineno())
 		return act, nil
 
-	case *ast.ThunkAction:
+	case *ast.AstThunkAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=ThunkAction")
 		// Thunk action: compile the body
 		// Python: ThunkAction uses thing() dispatch via .compile()
@@ -415,7 +415,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return actions.NewSequence(), nil
 
-	case *ast.Ite:
+	case *ast.AstIte:
 		// B2-R2: Delegate to CompileIf which uses ExprContext + SortifyWithInference + Extract
 		return c.CompileIf(n.Cond, n.Then, n.Else)
 
@@ -424,7 +424,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		// Python: InstantiateAction(callatom) — cmpl() returns self, preserving raw AST
 		// The parser wraps the callatom in Instantiation nodes inside InstantiateDecl.
 		if len(n.DeclArgs) >= 1 {
-			if inst, ok := n.DeclArgs[0].(*ast.Instantiation); ok {
+			if inst, ok := n.DeclArgs[0].(*ast.AstInstantiation); ok {
 				// inst.Sort is the callatom (the expression being instantiated)
 				iact := actions.NewInstantiateAction(nil)
 				iact.AstInst = inst.Sort
@@ -434,7 +434,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return actions.NewSequence(), nil
 
-	case *ast.LocalAction:
+	case *ast.AstLocalAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=LocalAction")
 		// LocalAction from LowerVarStatements: Elems = [varDecls..., body]
 		// Matches the same logic as Atom("local",...) case above.
@@ -445,7 +445,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("LocalAction needs variables and body")
 
-	case *ast.AssertAction:
+	case *ast.AstAssertAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: compile_assert_action — args[0] is the formula, args[1] is optional proof
 		if len(n.Elems) >= 1 {
@@ -465,7 +465,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("assert needs a formula")
 
-	case *ast.AssumeAction:
+	case *ast.AstAssumeAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: compile_assert_action (same handler for both assert and assume)
 		if len(n.Elems) >= 1 {
@@ -473,7 +473,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("assume needs a formula")
 
-	case *ast.RequiresAction:
+	case *ast.AstRequiresAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: RequiresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
@@ -493,7 +493,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("require needs a formula")
 
-	case *ast.EnsuresAction:
+	case *ast.AstEnsuresAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: EnsuresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
@@ -513,7 +513,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("ensure needs a formula")
 
-	case *ast.SubgoalAction:
+	case *ast.AstSubgoalAction:
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: SubgoalAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
@@ -533,7 +533,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("subgoal needs a formula")
 
-	case *ast.CallAction:
+	case *ast.AstCallAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=CallAction")
 		// Python: compile_call — ExprContext + looks up action in top_context.actions
 		if len(n.Elems) >= 1 {
@@ -541,12 +541,12 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("call needs a target")
 
-	case *ast.IfAction:
+	case *ast.AstIfAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		// Python: compile_if_action — handles Some variant + ExprContext for plain if
 		return c.CompileIf(n.Cond, n.Then, n.Else)
 
-	case *ast.WhileAction:
+	case *ast.AstWhileAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=WhileAction")
 		// Python: compile_while_action — ExprContext + invariants
 		if len(n.Elems) >= 2 {
@@ -558,7 +558,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("while needs condition and body")
 
-	case *ast.DebugAction:
+	case *ast.AstDebugAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=DebugAction")
 		// Python: compile_debug_action
 		result, err := c.CompileDebugAction(node)
@@ -570,14 +570,14 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return actions.NewSequence(), nil
 
-	case *ast.NativeAction:
+	case *ast.AstNativeAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=NativeAction")
 		// Python: compile_native_action
 		act := actions.NewNativeAction(nil)
 		act.SetLineno(node.GetLineno())
 		return act, nil
 
-	case *ast.Sequence:
+	case *ast.AstSequence:
 		// Python: Sequence has no .cmpl, uses other_thing (default):
 		//   thing() → CompileNode (default) → OtherThing → compileGeneric
 		//   compileGeneric: self.clone([a.compile() for a in self.args])
@@ -1008,7 +1008,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	// LowerVarStatements creates: LocalAction(AssignAction(lsym, rhs), body)
 	// Python checks isinstance(ls[0], AssignAction), NOT whether body is ":=".
 	if len(localDecls) == 1 {
-		if assignAction, ok := localDecls[0].(*ast.AssignAction); ok && len(assignAction.Elems) >= 2 {
+		if assignAction, ok := localDecls[0].(*ast.AstAssignAction); ok && len(assignAction.Elems) >= 2 {
 			lhsNode := assignAction.Elems[0] // variable declaration (Atom or App)
 			rhsNode := assignAction.Elems[1] // initial value
 
@@ -1106,7 +1106,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			// compileGeneric unwraps single-child Sequences (compiler.go:426),
 			// but Python's clone preserves them. Re-wrap if the AST body was
 			// a Sequence but compiledBody is not.
-			if _, wasSeq := body.(*ast.Sequence); wasSeq {
+			if _, wasSeq := body.(*ast.AstSequence); wasSeq {
 				if _, isSeq := compiledBody.(*actions.Sequence); !isSeq {
 					if _, isAnd := compiledBody.(*lg.And); !isAnd {
 						compiledBody = actions.NewSequence(compiledBody)
@@ -1188,7 +1188,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 	// compileGeneric unwraps single-child Sequences (compiler.go:426),
 	// but Python's clone preserves them. Re-wrap if needed.
-	if _, wasSeq := body.(*ast.Sequence); wasSeq {
+	if _, wasSeq := body.(*ast.AstSequence); wasSeq {
 		if _, isSeq := compiledResult.(*actions.Sequence); !isSeq {
 			if _, isAnd := compiledResult.(*lg.And); !isAnd {
 				wrap := actions.NewSequence(compiledResult)
@@ -1232,11 +1232,11 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 	// NEW: Check if condition is an existential (Some/SomeMin/SomeMax)
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	switch cond := condNode.(type) {
-	case *ast.Some:
+	case *ast.AstSome:
 		return c.compileIfSome(cond.Params, cond.Fmla, nil, "some", thenNode, elseNode, condNode)
-	case *ast.SomeMin:
+	case *ast.AstSomeMin:
 		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", thenNode, elseNode, condNode)
-	case *ast.SomeMax:
+	case *ast.AstSomeMax:
 		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", thenNode, elseNode, condNode)
 	}
 
@@ -1380,7 +1380,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	//             invars = list(map(sortify_with_inference, self.args[2:]))
 	//             return res.clone(res.args + invars)
 	switch cond := condNode.(type) {
-	case *ast.Some:
+	case *ast.AstSome:
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, nil, "some", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some condition: %w", err)
@@ -1402,7 +1402,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 			return whileAct, nil
 		}
 		return res, nil
-	case *ast.SomeMin:
+	case *ast.AstSomeMin:
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_min condition: %w", err)
@@ -1423,7 +1423,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 			return whileAct, nil
 		}
 		return res, nil
-	case *ast.SomeMax:
+	case *ast.AstSomeMax:
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_max condition: %w", err)

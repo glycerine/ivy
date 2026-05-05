@@ -54,5 +54,5 @@ func ToTermV(s string, version lexer.Version) (ast.Node, error) {
 // The lalr_logicparser package has version-specific grammars (v1.2, v1.6, v1.7+)
 // matching Python's ivy_logic_parser.py.
 func parseString(input string, version lexer.Version) (ast.Node, error) {
-	return lalr_logicparser.Parse(input, version)
+	return lalr_logicparser.ParseLogic(input, version)
 }

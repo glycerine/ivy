@@ -152,10 +152,10 @@ func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
-		cy := RenderARG(sess.Graph)
+		cy := RenderWebUIARG(sess.Graph)
 		// Ensure empty elements is [] not null to match Python.
 		if cy.Elements == nil {
-			cy.Elements = []CyElement{}
+			cy.Elements = []WebUICyElement{}
 		}
 		by, err = canonicalJSON(cy)
 		return nil
@@ -174,7 +174,7 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 		// Render concept graph with octagon nodes, edges, and per-sort colors.
 		cy := RenderConceptGraph(sess.SimpleSess, nil)
 		if cy.Elements == nil {
-			cy.Elements = []CyElement{}
+			cy.Elements = []WebUICyElement{}
 		}
 
 		// Gather metadata for the state checkbox panel and JS rendering.

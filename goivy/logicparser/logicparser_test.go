@@ -24,21 +24,21 @@ func nodeShape(n ast.Node) string {
 		return fmt.Sprintf("Atom(%s,[%s])", t.Rep, shapeList(t.Terms))
 	case *ast.App:
 		return fmt.Sprintf("App(%v,[%s])", t.Rep, shapeList(t.Terms))
-	case *ast.And:
+	case *ast.AstAnd:
 		if len(t.Terms) == 0 {
 			return "True"
 		}
 		return fmt.Sprintf("And(%s)", shapeList(t.Terms))
-	case *ast.Or:
+	case *ast.AstOr:
 		if len(t.Terms) == 0 {
 			return "False"
 		}
 		return fmt.Sprintf("Or(%s)", shapeList(t.Terms))
-	case *ast.Not:
+	case *ast.AstNot:
 		return fmt.Sprintf("Not(%s)", nodeShape(t.Body))
-	case *ast.Implies:
+	case *ast.AstImplies:
 		return fmt.Sprintf("Implies(%s,%s)", nodeShape(t.T1), nodeShape(t.T2))
-	case *ast.Iff:
+	case *ast.AstIff:
 		return fmt.Sprintf("Iff(%s,%s)", nodeShape(t.T1), nodeShape(t.T2))
 	default:
 		return fmt.Sprintf("?(%T)", n)
@@ -121,8 +121,8 @@ func TestLogicParser_V17_Unchanged(t *testing.T) {
 		expected string
 	}{
 		{"a -> b -> c", "Implies(Implies(App(a,[]),App(b,[])),App(c,[]))"}, // left-assoc in v1.7
-		{"a & b -> c", "Implies(And(App(a,[]),App(b,[])),App(c,[]))"},    // AND tighter than ARROW in v1.7
-		{"a = b = c", "Atom(=,[Atom(=,[App(a,[]),App(b,[])]),App(c,[])])"},  // chained OK in v1.7
+		{"a & b -> c", "Implies(And(App(a,[]),App(b,[])),App(c,[]))"},      // AND tighter than ARROW in v1.7
+		{"a = b = c", "Atom(=,[Atom(=,[App(a,[]),App(b,[])]),App(c,[])])"}, // chained OK in v1.7
 	}
 	for _, tc := range cases {
 		t.Run(tc.input, func(t *testing.T) {

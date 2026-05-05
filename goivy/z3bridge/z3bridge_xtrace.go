@@ -55,7 +55,7 @@ func NormalizeZ3VarNames(sexpr string) string {
 
 // TraceCheck emits Z3 solver state and check result via xtracer.
 // Called automatically from Solver.Check() when xtracer is enabled.
-func (s *Z3Solver) TraceCheck(result CheckResult) {
+func (s *Z3Solver) TraceCheck(result Z3CheckResult) {
 	if !xtracer.Enabled {
 		return
 	}

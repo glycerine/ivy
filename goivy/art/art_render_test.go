@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/module"
 	lg "github.com/glycerine/ivy/goivy/logic"
+	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------

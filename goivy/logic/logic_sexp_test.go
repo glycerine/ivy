@@ -412,8 +412,8 @@ func TestCanonEqualsSexp(t *testing.T) {
 	fs := mustFuncSort(t, S, Boolean)
 
 	type testCase struct {
-		name string
-		sexp string
+		name  string
+		sexp  string
 		canon string
 	}
 

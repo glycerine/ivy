@@ -145,9 +145,9 @@ func (s *Solver) Close() error {
 // Corresponds to Python ivy_solver.clear() (ivy_solver.py:249).
 //
 // Python calls clear() in two places:
-//   1. ivy_solver.py:257 — at module import time (startup), once
-//   2. ivy_module.py:102 — inside Module.__enter__(), every time a module
-//      context is entered
+//  1. ivy_solver.py:257 — at module import time (startup), once
+//  2. ivy_module.py:102 — inside Module.__enter__(), every time a module
+//     context is entered
 //
 // What clear() does is reset 4 module-level global dicts — z3_sorts,
 // z3_predicates, z3_constants, z3_functions — which are translation caches

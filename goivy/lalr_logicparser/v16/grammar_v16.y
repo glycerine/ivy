@@ -14,7 +14,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 )
 
-func atypeToString(n ast.Node) string {
+func lalr16AtypeToString(n ast.Node) string {
 	switch v := n.(type) {
 	case *ast.Symbol:
 		return v.Rep
@@ -25,8 +25,8 @@ func atypeToString(n ast.Node) string {
 	}
 }
 
-func acfg(lex v16Lexer) *ast.AstConfig {
-	return lex.(*v16LexAdapter).cfg
+func lalr16Acfg(lex lalr16Lexer) *ast.AstConfig {
+	return lex.(*lalr16LexAdapter).cfg
 }
 
 %}
@@ -37,40 +37,40 @@ func acfg(lex v16Lexer) *ast.AstConfig {
 	str      string
 }
 
-%token <str>  TOK_SYMBOL TOK_VARIABLE TOK_PRESYMBOL
-%token        TOK_LPAREN TOK_RPAREN TOK_LB TOK_RB TOK_LCB TOK_RCB
-%token        TOK_COMMA TOK_SEMI TOK_COLON TOK_DOT
-%token        TOK_PLUS TOK_MINUS TOK_TIMES TOK_DIV
-%token        TOK_EQ TOK_TILDAEQ TOK_TILDA TOK_LE TOK_LT TOK_GE TOK_GT
-%token        TOK_AND TOK_OR TOK_ARROW TOK_IFF
-%token        TOK_PTO TOK_DOLLAR
-%token        TOK_FORALL TOK_EXISTS
-%token        TOK_TRUE TOK_FALSE
-%token        TOK_OLD TOK_THIS TOK_ISA
-%token        TOK_IF TOK_ELSE
-%token        TOK_GLOBALLY TOK_EVENTUALLY
-%token        TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
+%token <str>  LALR16_TOK_SYMBOL LALR16_TOK_VARIABLE LALR16_TOK_PRESYMBOL
+%token        LALR16_TOK_LPAREN LALR16_TOK_RPAREN LALR16_TOK_LB LALR16_TOK_RB LALR16_TOK_LCB LALR16_TOK_RCB
+%token        LALR16_TOK_COMMA LALR16_TOK_SEMI LALR16_TOK_COLON LALR16_TOK_DOT
+%token        LALR16_TOK_PLUS LALR16_TOK_MINUS LALR16_TOK_TIMES LALR16_TOK_DIV
+%token        LALR16_TOK_EQ LALR16_TOK_TILDAEQ LALR16_TOK_TILDA LALR16_TOK_LE LALR16_TOK_LT LALR16_TOK_GE LALR16_TOK_GT
+%token        LALR16_TOK_AND LALR16_TOK_OR LALR16_TOK_ARROW LALR16_TOK_IFF
+%token        LALR16_TOK_PTO LALR16_TOK_DOLLAR
+%token        LALR16_TOK_FORALL LALR16_TOK_EXISTS
+%token        LALR16_TOK_TRUE LALR16_TOK_FALSE
+%token        LALR16_TOK_OLD LALR16_TOK_THIS LALR16_TOK_ISA
+%token        LALR16_TOK_IF LALR16_TOK_ELSE
+%token        LALR16_TOK_GLOBALLY LALR16_TOK_EVENTUALLY
+%token        LALR16_TOK_WHENNEXT LALR16_TOK_WHENPREV LALR16_TOK_WHENFIRST LALR16_TOK_WHENLAST
 
 %type <node>  top fmla term aterm var simplevar atype
 %type <nodes> terms vars simplevars
 %type <str>   relop SYMBOLx
 
 // Precedence for v1.3–v1.6 (from Python ivy_parser.py):
-%left         TOK_SEMI
-%left         TOK_GLOBALLY TOK_EVENTUALLY TOK_WHENFIRST TOK_WHENLAST TOK_WHENNEXT TOK_WHENPREV
-%left         TOK_IF
-%left         TOK_ELSE
-%left         TOK_OR
-%left         TOK_AND
-%left         TOK_TILDA
-%left         TOK_EQ TOK_LE TOK_LT TOK_GE TOK_GT TOK_PTO
-%left         TOK_TILDAEQ
-%left         TOK_COLON
-%left         TOK_PLUS
-%left         TOK_MINUS
-%left         TOK_TIMES
-%left         TOK_DIV
-%left         TOK_DOLLAR
+%left         LALR16_TOK_SEMI
+%left         LALR16_TOK_GLOBALLY LALR16_TOK_EVENTUALLY LALR16_TOK_WHENFIRST LALR16_TOK_WHENLAST LALR16_TOK_WHENNEXT LALR16_TOK_WHENPREV
+%left         LALR16_TOK_IF
+%left         LALR16_TOK_ELSE
+%left         LALR16_TOK_OR
+%left         LALR16_TOK_AND
+%left         LALR16_TOK_TILDA
+%left         LALR16_TOK_EQ LALR16_TOK_LE LALR16_TOK_LT LALR16_TOK_GE LALR16_TOK_GT LALR16_TOK_PTO
+%left         LALR16_TOK_TILDAEQ
+%left         LALR16_TOK_COLON
+%left         LALR16_TOK_PLUS
+%left         LALR16_TOK_MINUS
+%left         LALR16_TOK_TIMES
+%left         LALR16_TOK_DIV
+%left         LALR16_TOK_DOLLAR
 
 %start        top
 
@@ -79,12 +79,12 @@ func acfg(lex v16Lexer) *ast.AstConfig {
 top:
     fmla
     {
-        v16lex.(*v16LexAdapter).result = $1
+        lalr16lex.(*lalr16LexAdapter).result = $1
     }
     ;
 
 SYMBOLx:
-    TOK_PRESYMBOL
+    LALR16_TOK_PRESYMBOL
     {
         $$ = $1
     }
@@ -93,21 +93,21 @@ SYMBOLx:
 atype:
     SYMBOLx
     {
-        $$ = acfg(v16lex).NewSymbol($1, nil)
+        $$ = lalr16Acfg(lalr16lex).NewSymbol($1, nil)
     }
-    | atype TOK_DOT SYMBOLx
+    | atype LALR16_TOK_DOT SYMBOLx
     {
         if _, ok := $1.(*ast.This); ok {
-            $$ = acfg(v16lex).NewSymbol($3, nil)
+            $$ = lalr16Acfg(lalr16lex).NewSymbol($3, nil)
         } else if sym, ok := $1.(*ast.Symbol); ok {
-            $$ = acfg(v16lex).NewSymbol(sym.Rep + "." + $3, nil)
+            $$ = lalr16Acfg(lalr16lex).NewSymbol(sym.Rep + "." + $3, nil)
         } else {
-            $$ = acfg(v16lex).NewSymbol($3, nil)
+            $$ = lalr16Acfg(lalr16lex).NewSymbol($3, nil)
         }
     }
-    | TOK_THIS
+    | LALR16_TOK_THIS
     {
-        $$ = acfg(v16lex).NewThis()
+        $$ = lalr16Acfg(lalr16lex).NewThis()
     }
     ;
 
@@ -116,46 +116,46 @@ atype:
 aterm:
     SYMBOLx
     {
-        $$ = acfg(v16lex).NewAtom($1)
+        $$ = lalr16Acfg(lalr16lex).NewAtom($1)
     }
-    | aterm TOK_LPAREN terms TOK_RPAREN
+    | aterm LALR16_TOK_LPAREN terms LALR16_TOK_RPAREN
     {
         a := $1.(*ast.Atom)
         a.Terms = append(a.Terms, $3...)
         $$ = a
     }
-    | aterm TOK_DOT SYMBOLx
+    | aterm LALR16_TOK_DOT SYMBOLx
     {
         lhs := $1.(*ast.Atom)
-        $$ = acfg(v16lex).NewAtom(lhs.Rep + "." + $3, lhs.Terms...)
+        $$ = lalr16Acfg(lalr16lex).NewAtom(lhs.Rep + "." + $3, lhs.Terms...)
     }
     ;
 
 var:
-    TOK_VARIABLE
-    { $$ = acfg(v16lex).NewVariable($1, "S") }
-    | TOK_VARIABLE TOK_COLON atype
-    { $$ = acfg(v16lex).NewVariable($1, atypeToString($3)) }
+    LALR16_TOK_VARIABLE
+    { $$ = lalr16Acfg(lalr16lex).NewVariable($1, "S") }
+    | LALR16_TOK_VARIABLE LALR16_TOK_COLON atype
+    { $$ = lalr16Acfg(lalr16lex).NewVariable($1, lalr16AtypeToString($3)) }
     ;
 
 simplevar:
-    TOK_VARIABLE
-    { $$ = acfg(v16lex).NewVariable($1, "S") }
-    | TOK_VARIABLE TOK_COLON SYMBOLx
-    { $$ = acfg(v16lex).NewVariable($1, $3) }
+    LALR16_TOK_VARIABLE
+    { $$ = lalr16Acfg(lalr16lex).NewVariable($1, "S") }
+    | LALR16_TOK_VARIABLE LALR16_TOK_COLON SYMBOLx
+    { $$ = lalr16Acfg(lalr16lex).NewVariable($1, $3) }
     ;
 
 vars:
     var
     { $$ = []ast.Node{$1} }
-    | vars TOK_COMMA var
+    | vars LALR16_TOK_COMMA var
     { $$ = append($1, $3) }
     ;
 
 simplevars:
     simplevar
     { $$ = []ast.Node{$1} }
-    | simplevars TOK_COMMA simplevar
+    | simplevars LALR16_TOK_COMMA simplevar
     { $$ = append($1, $3) }
     ;
 
@@ -164,7 +164,7 @@ terms:
     { $$ = nil }
     | term
     { $$ = []ast.Node{$1} }
-    | terms TOK_COMMA term
+    | terms LALR16_TOK_COMMA term
     { $$ = append($1, $3) }
     ;
 
@@ -175,29 +175,29 @@ term:
     { $$ = $1 }
     | var
     { $$ = $1 }
-    | TOK_OLD aterm
-    { $$ = acfg(v16lex).NewOld($2) }
-    | TOK_LPAREN term TOK_RPAREN
+    | LALR16_TOK_OLD aterm
+    { $$ = lalr16Acfg(lalr16lex).NewOld($2) }
+    | LALR16_TOK_LPAREN term LALR16_TOK_RPAREN
     { $$ = $2 }
-    | term TOK_PLUS term
-    { $$ = acfg(v16lex).NewAtom("+", $1, $3) }
-    | term TOK_MINUS term
-    { $$ = acfg(v16lex).NewAtom("-", $1, $3) }
-    | term TOK_TIMES term
-    { $$ = acfg(v16lex).NewAtom("*", $1, $3) }
-    | term TOK_DIV term
-    { $$ = acfg(v16lex).NewAtom("/", $1, $3) }
-    | term TOK_IF fmla TOK_ELSE term
-    { $$ = acfg(v16lex).NewIte($3, $1, $5) }
+    | term LALR16_TOK_PLUS term
+    { $$ = lalr16Acfg(lalr16lex).NewAtom("+", $1, $3) }
+    | term LALR16_TOK_MINUS term
+    { $$ = lalr16Acfg(lalr16lex).NewAtom("-", $1, $3) }
+    | term LALR16_TOK_TIMES term
+    { $$ = lalr16Acfg(lalr16lex).NewAtom("*", $1, $3) }
+    | term LALR16_TOK_DIV term
+    { $$ = lalr16Acfg(lalr16lex).NewAtom("/", $1, $3) }
+    | term LALR16_TOK_IF fmla LALR16_TOK_ELSE term
+    { $$ = lalr16Acfg(lalr16lex).NewIte($3, $1, $5) }
     ;
 
 relop:
-    TOK_EQ  { $$ = "=" }
-    | TOK_LE  { $$ = "<=" }
-    | TOK_LT  { $$ = "<" }
-    | TOK_GE  { $$ = ">=" }
-    | TOK_GT  { $$ = ">" }
-    | TOK_PTO { $$ = "*>" }
+    LALR16_TOK_EQ  { $$ = "=" }
+    | LALR16_TOK_LE  { $$ = "<=" }
+    | LALR16_TOK_LT  { $$ = "<" }
+    | LALR16_TOK_GE  { $$ = ">=" }
+    | LALR16_TOK_GT  { $$ = ">" }
+    | LALR16_TOK_PTO { $$ = "*>" }
     ;
 
 // --- fmla: in v1.6, formulas are a separate category ---
@@ -210,36 +210,36 @@ fmla:
     }
     | term relop term
     {
-        $$ = acfg(v16lex).NewAtom($2, $1, $3)
+        $$ = lalr16Acfg(lalr16lex).NewAtom($2, $1, $3)
     }
-    | term TOK_TILDAEQ term
+    | term LALR16_TOK_TILDAEQ term
     {
-        $$ = acfg(v16lex).NewNot(acfg(v16lex).NewAtom("=", $1, $3))
+        $$ = lalr16Acfg(lalr16lex).NewNot(lalr16Acfg(lalr16lex).NewAtom("=", $1, $3))
     }
-    | TOK_LPAREN fmla TOK_RPAREN
+    | LALR16_TOK_LPAREN fmla LALR16_TOK_RPAREN
     { $$ = $2 }
-    | TOK_TRUE
-    { $$ = acfg(v16lex).NewAnd() }
-    | TOK_FALSE
-    { $$ = acfg(v16lex).NewOr() }
-    | TOK_TILDA fmla
-    { $$ = acfg(v16lex).NewNot($2) }
-    | fmla TOK_AND fmla
-    { $$ = acfg(v16lex).NewAnd($1, $3) }
-    | fmla TOK_OR fmla
-    { $$ = acfg(v16lex).NewOr($1, $3) }
-    | fmla TOK_ARROW fmla
-    { $$ = acfg(v16lex).NewImplies($1, $3) }
-    | fmla TOK_IFF fmla
-    { $$ = acfg(v16lex).NewIff($1, $3) }
-    | TOK_FORALL simplevars TOK_DOT fmla
-    { $$ = acfg(v16lex).NewForall($2, $4) }
-    | TOK_EXISTS simplevars TOK_DOT fmla
-    { $$ = acfg(v16lex).NewExists($2, $4) }
-    | TOK_GLOBALLY fmla
-    { $$ = acfg(v16lex).NewGlobally($2) }
-    | TOK_EVENTUALLY fmla
-    { $$ = acfg(v16lex).NewEventually($2) }
+    | LALR16_TOK_TRUE
+    { $$ = lalr16Acfg(lalr16lex).NewAnd() }
+    | LALR16_TOK_FALSE
+    { $$ = lalr16Acfg(lalr16lex).NewOr() }
+    | LALR16_TOK_TILDA fmla
+    { $$ = lalr16Acfg(lalr16lex).NewNot($2) }
+    | fmla LALR16_TOK_AND fmla
+    { $$ = lalr16Acfg(lalr16lex).NewAnd($1, $3) }
+    | fmla LALR16_TOK_OR fmla
+    { $$ = lalr16Acfg(lalr16lex).NewOr($1, $3) }
+    | fmla LALR16_TOK_ARROW fmla
+    { $$ = lalr16Acfg(lalr16lex).NewImplies($1, $3) }
+    | fmla LALR16_TOK_IFF fmla
+    { $$ = lalr16Acfg(lalr16lex).NewIff($1, $3) }
+    | LALR16_TOK_FORALL simplevars LALR16_TOK_DOT fmla
+    { $$ = lalr16Acfg(lalr16lex).NewForall($2, $4) }
+    | LALR16_TOK_EXISTS simplevars LALR16_TOK_DOT fmla
+    { $$ = lalr16Acfg(lalr16lex).NewExists($2, $4) }
+    | LALR16_TOK_GLOBALLY fmla
+    { $$ = lalr16Acfg(lalr16lex).NewGlobally($2) }
+    | LALR16_TOK_EVENTUALLY fmla
+    { $$ = lalr16Acfg(lalr16lex).NewEventually($2) }
     ;
 
 %%

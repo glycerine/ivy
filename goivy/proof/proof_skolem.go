@@ -111,7 +111,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 		// Mirror Python ivy_proof.py:1443-1444:
 		//   if isinstance(fmla,ia.TemporalModels):
 		//       return fmla.clone([rec(fmla.args[0],pos)])
-		if tm, ok := fmla.(*ast.TemporalModels); ok {
+		if tm, ok := fmla.(*ast.AstTemporalModels); ok {
 			xtracer.Trace("proof.SkolemizeFmla branch type=TemporalModels pos=%v", pos)
 			return tm.Clone([]ast.Node{rec(tm.Args()[0], pos)})
 		}
@@ -253,7 +253,7 @@ func SkolemizeFmla(fmla ast.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[
 	//       body = quant(univs,body)
 	if len(univs) > 0 {
 		xtracer.Trace("proof.SkolemizeFmla univsWrap pos=%v nunivs=%d", pos, len(univs))
-		if tm, ok := body.(*ast.TemporalModels); ok {
+		if tm, ok := body.(*ast.AstTemporalModels); ok {
 			innerExpr, _ := tm.Args()[0].(lg.Expr)
 			var quantBody lg.Expr
 			if pos {

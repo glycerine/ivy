@@ -686,13 +686,13 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func(*module.Module) erro
 
 		// Check for TemporalModels via the formula directly, since
 		// GoalConc returns lg.Expr and TemporalModels is ast.Node.
-		var tm *ast.TemporalModels
+		var tm *ast.AstTemporalModels
 		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 			if c := sb.Conc(); c != nil {
-				tm, _ = c.(*ast.TemporalModels)
+				tm, _ = c.(*ast.AstTemporalModels)
 			}
 		} else if goal.Formula != nil {
-			tm, _ = goal.Formula.(*ast.TemporalModels)
+			tm, _ = goal.Formula.(*ast.AstTemporalModels)
 		}
 
 		if tm != nil {
@@ -997,7 +997,7 @@ func CheckModule(mod *module.Module) error {
 	// Python: if opt_unchecked_properties.get() != None:
 	//             ivy_acl.register_from_file(opt_unchecked_properties.get())
 	// Load ACL rules ONCE before the isolate loop (matching Python line 982-983).
-	var aclCfg *acl.Config
+	var aclCfg *acl.ACLConfig
 	if mod.Cfg.OptUncheckedProps != "" {
 		var err error
 		aclCfg, err = acl.RegisterFromFile(mod.Cfg.OptUncheckedProps)
@@ -1063,7 +1063,7 @@ func CheckModule(mod *module.Module) error {
 		switch {
 		case methodName == "mc":
 			mcMethod := func(m *module.Module) error {
-				res, err := mc.CheckIsolate(m, "mc")
+				res, err := mc.MCCheckIsolate(m, "mc")
 				if err != nil {
 					return err
 				}
@@ -1092,7 +1092,7 @@ func CheckModule(mod *module.Module) error {
 				return err
 			}
 			bmcMethod := func(m *module.Module) error {
-				cfg := &bmc.Config{
+				cfg := &bmc.BMCConfig{
 					NSteps: nSteps,
 					Module: m,
 				}
@@ -1100,7 +1100,7 @@ func CheckModule(mod *module.Module) error {
 					nu := nUnroll
 					cfg.NUnroll = &nu
 				}
-				res := bmc.CheckIsolate(cfg)
+				res := bmc.BMCCheckIsolate(cfg)
 				if res != nil && res.Found {
 					return fmt.Errorf("%s", res.Message)
 				}

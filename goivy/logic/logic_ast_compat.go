@@ -8,10 +8,10 @@ import "github.com/glycerine/ivy/goivy/ast"
 // --- Sort types ---
 
 func (s *UninterpretedSort) Args() []ast.Node          { return nil }
-func (s *UninterpretedSort) Clone([]ast.Node) ast.Node  { return s }
+func (s *UninterpretedSort) Clone([]ast.Node) ast.Node { return s }
 
 func (s *BooleanSort) Args() []ast.Node          { return nil }
-func (s *BooleanSort) Clone([]ast.Node) ast.Node  { return s }
+func (s *BooleanSort) Clone([]ast.Node) ast.Node { return s }
 
 func (s *FunctionSort) Args() []ast.Node {
 	r := make([]ast.Node, len(s.Sorts))
@@ -29,21 +29,21 @@ func (s *FunctionSort) Clone(args []ast.Node) ast.Node {
 }
 
 func (s *EnumeratedSort) Args() []ast.Node          { return nil }
-func (s *EnumeratedSort) Clone([]ast.Node) ast.Node  { return s }
+func (s *EnumeratedSort) Clone([]ast.Node) ast.Node { return s }
 
 func (s *TopSort) Args() []ast.Node          { return nil }
-func (s *TopSort) Clone([]ast.Node) ast.Node  { return s }
+func (s *TopSort) Clone([]ast.Node) ast.Node { return s }
 
 func (s *RangeSort) Args() []ast.Node          { return nil }
-func (s *RangeSort) Clone([]ast.Node) ast.Node  { return s }
+func (s *RangeSort) Clone([]ast.Node) ast.Node { return s }
 
 // --- Term types ---
 
 func (v *Variable) Args() []ast.Node          { return nil }
-func (v *Variable) Clone([]ast.Node) ast.Node  { return v }
+func (v *Variable) Clone([]ast.Node) ast.Node { return v }
 
 func (c *Const) Args() []ast.Node          { return nil }
-func (c *Const) Clone([]ast.Node) ast.Node  { return c }
+func (c *Const) Clone([]ast.Node) ast.Node { return c }
 
 func (a *Apply) Args() []ast.Node {
 	r := make([]ast.Node, len(a.Terms))

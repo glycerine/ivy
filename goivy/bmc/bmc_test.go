@@ -55,7 +55,7 @@ func TestDefaultConfig(t *testing.T) {
 
 func TestConfigLog(t *testing.T) {
 	var msgs []string
-	cfg := &Config{
+	cfg := &BMCConfig{
 		NSteps: 1,
 		Module: testModule(),
 		Logger: func(s string) { msgs = append(msgs, s) },
@@ -70,7 +70,7 @@ func TestConfigLog(t *testing.T) {
 }
 
 func TestConfigLogNil(t *testing.T) {
-	cfg := &Config{NSteps: 1, Module: testModule()}
+	cfg := &BMCConfig{NSteps: 1, Module: testModule()}
 	// Should not panic with nil logger.
 	cfg.log("this is fine")
 }
@@ -78,7 +78,7 @@ func TestConfigLogNil(t *testing.T) {
 // --- CheckIsolate tests ---
 
 func TestCheckIsolateNilConfig(t *testing.T) {
-	result := CheckIsolate(nil)
+	result := BMCCheckIsolate(nil)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -88,8 +88,8 @@ func TestCheckIsolateNilConfig(t *testing.T) {
 }
 
 func TestCheckIsolateNilModule(t *testing.T) {
-	cfg := &Config{NSteps: 1}
-	result := CheckIsolate(cfg)
+	cfg := &BMCConfig{NSteps: 1}
+	result := BMCCheckIsolate(cfg)
 	if result.Found {
 		t.Error("should not find counterexample with nil module")
 	}
@@ -101,7 +101,7 @@ func TestCheckIsolateNilModule(t *testing.T) {
 func TestCheckIsolateZeroSteps(t *testing.T) {
 	mod := testModuleWithConj()
 	cfg := DefaultConfig(mod, 0)
-	result := CheckIsolate(cfg)
+	result := BMCCheckIsolate(cfg)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -114,12 +114,12 @@ func TestCheckIsolateZeroSteps(t *testing.T) {
 func TestCheckIsolateWithUnroll(t *testing.T) {
 	mod := testModuleWithAction()
 	n := 2
-	cfg := &Config{
+	cfg := &BMCConfig{
 		NSteps:  1,
 		NUnroll: &n,
 		Module:  mod,
 	}
-	result := CheckIsolate(cfg)
+	result := BMCCheckIsolate(cfg)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -132,7 +132,7 @@ func TestCheckIsolateWithUnroll(t *testing.T) {
 func TestCheckIsolateMultipleSteps(t *testing.T) {
 	mod := testModuleWithAction()
 	cfg := DefaultConfig(mod, 3)
-	result := CheckIsolate(cfg)
+	result := BMCCheckIsolate(cfg)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -141,7 +141,7 @@ func TestCheckIsolateMultipleSteps(t *testing.T) {
 // --- EnvAction tests ---
 
 func TestEnvActionNilModule(t *testing.T) {
-	act := EnvAction(nil)
+	act := BMCEnvAction(nil)
 	if act == nil {
 		t.Fatal("EnvAction should not return nil")
 	}
@@ -149,7 +149,7 @@ func TestEnvActionNilModule(t *testing.T) {
 
 func TestEnvActionEmpty(t *testing.T) {
 	mod := testModule()
-	act := EnvAction(mod)
+	act := BMCEnvAction(mod)
 	if act == nil {
 		t.Fatal("EnvAction should not return nil for empty module")
 	}
@@ -157,7 +157,7 @@ func TestEnvActionEmpty(t *testing.T) {
 
 func TestEnvActionWithActions(t *testing.T) {
 	mod := testModuleWithAction()
-	act := EnvAction(mod)
+	act := BMCEnvAction(mod)
 	if act == nil {
 		t.Fatal("EnvAction should not return nil")
 	}
@@ -331,12 +331,12 @@ func TestCheckIsolateWithUnroll_WhileAction(t *testing.T) {
 	mod.PublicActions.Set("step", true)
 
 	n := 2
-	cfg := &Config{
+	cfg := &BMCConfig{
 		NSteps:  1,
 		NUnroll: &n,
 		Module:  mod,
 	}
-	result := CheckIsolate(cfg)
+	result := BMCCheckIsolate(cfg)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -401,7 +401,7 @@ func TestBMCInitializerRespected(t *testing.T) {
 	}
 
 	cfg := DefaultConfig(mod, 0)
-	result := CheckIsolate(cfg)
+	result := BMCCheckIsolate(cfg)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}

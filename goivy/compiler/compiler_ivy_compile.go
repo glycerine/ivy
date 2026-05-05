@@ -153,12 +153,12 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 
 	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
 	if mod.Macros == nil {
-		mod.Macros = make(map[string]*ast.Definition)
+		mod.Macros = make(map[string]*ast.AstDefinition)
 	}
 	for _, decl := range decls {
 		if md, ok := decl.(*ast.MacroDecl); ok {
 			for _, arg := range md.DeclArgs {
-				if defn, ok := arg.(*ast.Definition); ok {
+				if defn, ok := arg.(*ast.AstDefinition); ok {
 					mod.Macros[defn.Defines()] = defn
 				}
 			}
@@ -489,7 +489,7 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 			xtracer.Trace("compiler.ConjSetup.theorem ENTER")
 			// Python: theorem(self, sch): self.last_fact = None
 			cs.lastFact = nil
-		case *ast.ProofDecl:
+		case *ast.AstProofDecl:
 			xtracer.Trace("compiler.ConjSetup.proof ENTER")
 			// Python: proof(self, pf):
 			//   if self.last_fact is None or isinstance(pf, ivy_ast.LabeledFormula): return
@@ -737,7 +737,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			//   self.mod.predicates[a.args[0].relname] = a.args[1]
 			for _, arg := range n.DeclArgs {
 				if lf, ok := arg.(*ast.LabeledFormula); ok {
-					if def, ok := lf.Formula.(*ast.Definition); ok {
+					if def, ok := lf.Formula.(*ast.AstDefinition); ok {
 						key := extractSortRep(def.Lhs)
 						if key != "" {
 							mod.Predicates[key] = def.Rhs

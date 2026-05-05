@@ -8,7 +8,7 @@ import (
 // Match implements unification with a push/pop stack for backtracking.
 // This is used for schema matching in axiom expansion.
 type Match struct {
-	stack [][]string       // stack of lists of keys added at each level
+	stack [][]string        // stack of lists of keys added at each level
 	Map   map[string]string // current variable->value mapping
 }
 

@@ -10,10 +10,10 @@ import (
 // Some represents "some X:t. phi" — an indefinite description.
 type Some struct {
 	ast.Base
-	Params []lg.Expr // bound variables
-	Fmla   lg.Expr   // formula/constraint
-	IfVal  lg.Expr   // optional: value if exists (may be nil)
-	ElseVal lg.Expr  // optional: value if not exists (may be nil)
+	Params  []lg.Expr // bound variables
+	Fmla    lg.Expr   // formula/constraint
+	IfVal   lg.Expr   // optional: value if exists (may be nil)
+	ElseVal lg.Expr   // optional: value if not exists (may be nil)
 }
 
 func NewSome(params []lg.Expr, fmla lg.Expr) *Some {

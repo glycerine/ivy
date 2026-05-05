@@ -70,8 +70,8 @@ type OkCancelDialogRequest struct {
 
 // ButtonsDialogRequest represents a request to show a dialog with custom buttons.
 type ButtonsDialogRequest struct {
-	Message string           `json:"message"`
-	Buttons []ButtonOption   `json:"buttons"`
+	Message string         `json:"message"`
+	Buttons []ButtonOption `json:"buttons"`
 }
 
 // ButtonOption is a labeled button in a dialog.
@@ -82,10 +82,10 @@ type ButtonOption struct {
 
 // IntDialogRequest represents a request for integer input.
 type IntDialogRequest struct {
-	Message  string `json:"message"`
-	MinVal   *int   `json:"min_val,omitempty"`
-	MaxVal   *int   `json:"max_val,omitempty"`
-	InitVal  *int   `json:"init_val,omitempty"`
+	Message string `json:"message"`
+	MinVal  *int   `json:"min_val,omitempty"`
+	MaxVal  *int   `json:"max_val,omitempty"`
+	InitVal *int   `json:"init_val,omitempty"`
 }
 
 // ConvertToInt parses and validates an integer string with optional bounds.
@@ -108,10 +108,10 @@ func ConvertToInt(s string, minVal, maxVal *int) (int, error) {
 // FileBrowserState represents the state of a source file browser
 // (Python: class FileBrowser, adapted for web).
 type FileBrowserState struct {
-	Filename    string   `json:"filename"`
-	Content     string   `json:"content"`
-	HighlightLine int    `json:"highlight_line"`
-	Lines       []string `json:"-"`
+	Filename      string   `json:"filename"`
+	Content       string   `json:"content"`
+	HighlightLine int      `json:"highlight_line"`
+	Lines         []string `json:"-"`
 }
 
 // NewFileBrowserState creates a new file browser state.

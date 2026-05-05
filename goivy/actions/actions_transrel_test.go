@@ -330,7 +330,7 @@ func TestUpdatedJoin(t *testing.T) {
 }
 
 func TestListDiff(t *testing.T) {
-	result := ListDiff([]string{"a", "b"}, []string{"b", "c", "d"})
+	result := ActionListDiff([]string{"a", "b"}, []string{"b", "c", "d"})
 	if len(result) != 2 {
 		t.Errorf("ListDiff len = %d, want 2", len(result))
 	}
@@ -616,21 +616,21 @@ func TestUpdatedJoinEmpty(t *testing.T) {
 }
 
 func TestListDiffEmpty(t *testing.T) {
-	result := ListDiff([]string{}, []string{})
+	result := ActionListDiff([]string{}, []string{})
 	if len(result) != 0 {
 		t.Errorf("ListDiff of empty should be empty, got %v", result)
 	}
 }
 
 func TestListDiffNoOverlap(t *testing.T) {
-	result := ListDiff([]string{"a"}, []string{"b", "c"})
+	result := ActionListDiff([]string{"a"}, []string{"b", "c"})
 	if len(result) != 2 {
 		t.Errorf("ListDiff len = %d, want 2", len(result))
 	}
 }
 
 func TestListDiffFullOverlap(t *testing.T) {
-	result := ListDiff([]string{"a", "b"}, []string{"a", "b"})
+	result := ActionListDiff([]string{"a", "b"}, []string{"a", "b"})
 	if len(result) != 0 {
 		t.Errorf("ListDiff full overlap should be empty, got %v", result)
 	}

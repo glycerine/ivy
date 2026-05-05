@@ -938,7 +938,7 @@ func (ag *AnalysisGraph) CheckSafety(checkPrecond bool, state *State) *SafetyRes
 			}
 			if actionName != "" && len(aa.Args) > 0 {
 				interpPre := ArtToInterpState(aa.Args[0])
-				exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
+				exprNode := interp.InterpActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
 				_, err := interp.EvalState(checkPrecond, exprNode, ag.Domain)
 				if err != nil {
 					if afe, ok := err.(*interp.IvyActionFailedError); ok {
@@ -1073,7 +1073,7 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	if action != nil {
 		resultState, err = interp.DecomposeAction(true, ag.Domain.Cfg.IuCfg, interpState, interpPre, action)
 	} else {
-		exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
+		exprNode := interp.InterpActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
 		resultState, err = interp.DecomposeActionApp(true, ag.Domain.Cfg.IuCfg, interpState, exprNode)
 	}
 	if err != nil || resultState == nil {
@@ -1161,11 +1161,11 @@ func (ag *AnalysisGraph) MakeConcreteTrace(state *State, conc interface{}) {
 // If the state has a label, returns predicate-based equations.
 // Otherwise returns equations for each public action applied to the state.
 // Python ivy_art.py:134-137.
-func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
+func (ag *AnalysisGraph) StateActions(state *State) []*ast.AstDefinition {
 	if state.Label != "" {
 		// Labeled state: use predicates
 		interpState := ArtToInterpState(state)
-		var result []*ast.Definition
+		var result []*ast.AstDefinition
 		for post, e := range ag.Predicates {
 			if e == nil {
 				continue
@@ -1180,14 +1180,14 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 		return result
 	}
 	// Unlabeled state: apply each public action
-	var result []*ast.Definition
+	var result []*ast.AstDefinition
 	for actionName := range ag.Actions.All() {
 		if !ag.PublicActions.Get(actionName) {
 			continue
 		}
 		interpState := ArtToInterpState(state)
 		acfg := ag.Domain.Cfg.AstCfg
-		app := interp.ActionApp(acfg, actionName, interp.WrapState(interpState))
+		app := interp.InterpActionApp(acfg, actionName, interp.WrapState(interpState))
 		result = append(result, acfg.NewDefinition(nil, app))
 	}
 	return result
@@ -1198,7 +1198,7 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 //
 // Note: python UI path uses false for checkPrecond here (for
 // when we get to that point in the porting).
-func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *ast.Definition, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *ast.AstDefinition, abstractor Abstractor) *State {
 	ac := ag.Context()
 	_ = ac
 	rhs := equation.Rhs
@@ -1251,10 +1251,10 @@ func (ag *AnalysisGraph) RecalculateState(checkPrecond bool, state *State, abstr
 // StateExtensions yields state equations for extending the given state
 // that are not yet covered by the fixpoint candidate.
 // Python ivy_art.py:434-440.
-func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *State) *State) []*ast.Definition {
+func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *State) *State) []*ast.AstDefinition {
 	sas := ag.StateActions(state)
 	fpc := ag.FixedpointCandidate(joinFn)
-	var result []*ast.Definition
+	var result []*ast.AstDefinition
 	for _, equation := range sas {
 		// Get the label from the LHS
 		label := ""
@@ -1609,7 +1609,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *module.Clauses, abstractor Abstract
 			if upd == nil {
 				upd = actions.NullUpdate()
 			}
-			actionAppNode := interp.ActionApp(interpState.AstCfg(), "init", interp.WrapState(interpState))
+			actionAppNode := interp.InterpActionApp(interpState.AstCfg(), "init", interp.WrapState(interpState))
 			s2interp, err := interp.ConcretePost(checkPrecondFalse, upd, interpState, actionAppNode)
 
 			if err != nil {
@@ -1732,7 +1732,7 @@ func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*St
 		if len(p.Args) > 0 {
 			interpPred := artToInterpMemo(p.Args[0], memo)
 			actionName := fmt.Sprintf("%v", p.Rep)
-			return interp.ActionApp(cfg, actionName, interp.WrapState(interpPred))
+			return interp.InterpActionApp(cfg, actionName, interp.WrapState(interpPred))
 		}
 	case *StateJoin:
 		var terms []ast.Node
@@ -1795,7 +1795,7 @@ func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Proven
 	if expr == nil {
 		return nil
 	}
-	if interp.IsActionApp(expr) {
+	if interp.IsInterpActionApp(expr) {
 		atom := expr.(*ast.Atom)
 		var rep interface{} = atom.Rep
 		var args []*State
@@ -1807,7 +1807,7 @@ func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Proven
 		return &ActionApp{Rep: rep, Args: args}
 	}
 	if interp.IsStateJoin(expr) {
-		or := expr.(*ast.Or)
+		or := expr.(*ast.AstOr)
 		var args []*State
 		for _, term := range or.Terms {
 			if is := interp.UnwrapState(term); is != nil {

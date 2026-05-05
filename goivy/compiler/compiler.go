@@ -232,42 +232,42 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	}
 	switch n := node.(type) {
 	// --- Formula operators ---
-	case *ast.And:
+	case *ast.AstAnd:
 		xtracer.Trace("compiler.CompileNode return case=And")
 		return c.compileAnd(n)
-	case *ast.Or:
+	case *ast.AstOr:
 		xtracer.Trace("compiler.CompileNode return case=Or")
 		return c.compileOr(n)
-	case *ast.Not:
+	case *ast.AstNot:
 		xtracer.Trace("compiler.CompileNode return case=Not")
 		return c.compileNot(n)
-	case *ast.Implies:
+	case *ast.AstImplies:
 		xtracer.Trace("compiler.CompileNode return case=Implies")
 		return c.compileImplies(n)
-	case *ast.Iff:
+	case *ast.AstIff:
 		xtracer.Trace("compiler.CompileNode return case=Iff")
 		return c.compileIff(n)
-	case *ast.Ite:
+	case *ast.AstIte:
 		xtracer.Trace("compiler.CompileNode return case=Ite")
 		return c.compileIte(n)
-	case *ast.Definition:
+	case *ast.AstDefinition:
 		xtracer.Trace("compiler.CompileNode return case=Definition")
 		return c.compileDefinition(n)
-	case *ast.Globally:
+	case *ast.AstGlobally:
 		xtracer.Trace("compiler.CompileNode return case=Globally")
 		return c.compileGlobally(n)
-	case *ast.Eventually:
+	case *ast.AstEventually:
 		xtracer.Trace("compiler.CompileNode return case=Eventually")
 		return c.compileEventually(n)
-	case *ast.WhenOperator:
+	case *ast.AstWhenOperator:
 		xtracer.Trace("compiler.CompileNode return case=WhenOperator")
 		return c.compileWhenOperator(n)
 
 	// --- Quantifiers ---
-	case *ast.Forall:
+	case *ast.AstForall:
 		xtracer.Trace("compiler.CompileNode return case=Forall")
 		return c.CompileQuantifier(n)
-	case *ast.Exists:
+	case *ast.AstExists:
 		xtracer.Trace("compiler.CompileNode return case=Exists")
 		return c.CompileQuantifier(n)
 
@@ -281,7 +281,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	case *ast.Variable:
 		xtracer.Trace("compiler.CompileNode return case=Variable")
 		return c.CompileVariable(n)
-	case *ast.Old:
+	case *ast.AstOld:
 		xtracer.Trace("compiler.CompileNode return case=Old")
 		return c.compileOld(n)
 	case *ast.MethodCall:
@@ -294,7 +294,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 		return c.compileSymbol(n)
 
 	// --- Named binder ---
-	case *ast.NamedBinder:
+	case *ast.AstNamedBinder:
 		xtracer.Trace("compiler.CompileNode return case=NamedBinder")
 		return c.compileNamedBinder(n)
 
@@ -317,12 +317,12 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 		return fmla, nil
 
 	// --- NativeExpr ---
-	case *ast.NativeExpr:
+	case *ast.AstNativeExpr:
 		xtracer.Trace("compiler.CompileNode return case=NativeExpr")
 		return c.compileNativeExpr(n)
 
 	// --- Trigger ---
-	case *ast.Trigger:
+	case *ast.AstTrigger:
 		xtracer.Trace("compiler.CompileNode return case=Trigger")
 		return c.compileTrigger(n)
 
@@ -342,12 +342,12 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	// InstantiateDecl is not routed from CompileNode but IS handled
 	// in CompileActionBody when reached from other callers.
 	// Each handler inside CompileActionBody emits its own trace.
-	case *ast.AssignAction, *ast.AssumeAction, *ast.AssertAction,
-		*ast.RequiresAction, *ast.EnsuresAction, *ast.SubgoalAction,
-		*ast.CrashAction, *ast.ThunkAction,
-		*ast.LocalAction,
-		*ast.CallAction, *ast.IfAction, *ast.WhileAction,
-		*ast.DebugAction, *ast.NativeAction:
+	case *ast.AstAssignAction, *ast.AstAssumeAction, *ast.AstAssertAction,
+		*ast.AstRequiresAction, *ast.AstEnsuresAction, *ast.AstSubgoalAction,
+		*ast.AstCrashAction, *ast.AstThunkAction,
+		*ast.AstLocalAction,
+		*ast.AstCallAction, *ast.AstIfAction, *ast.AstWhileAction,
+		*ast.AstDebugAction, *ast.AstNativeAction:
 		act, err := c.CompileActionBody(node)
 		if err != nil {
 			return nil, err
@@ -357,7 +357,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	// --- PatternBasedUpdate ---
 	// Python: PatternBasedUpdate.cmpl walks defines/dependencies/patterns and
 	// returns a PatternBasedUpdate with compiled symbol/pattern fields.
-	case *ast.PatternBasedUpdate:
+	case *ast.AstPatternBasedUpdate:
 		xtracer.Trace("compiler.CompileNode return case=PatternBasedUpdate")
 		return c.compilePatternBasedUpdate(n)
 
@@ -410,10 +410,10 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 // produce []*lg.Const (looking up sorts in the signature), and compiles
 // each UpdatePattern child.
 // Corresponds to Python PatternBasedUpdate.cmpl (default compile → clone children).
-func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr, error) {
+func (c *Compiler) compilePatternBasedUpdate(n *ast.AstPatternBasedUpdate) (lg.Expr, error) {
 	// Compile defines (SymbolList → []*lg.Const)
 	var defines []*lg.Const
-	if sl, ok := n.Dfns.(*ast.SymbolList); ok {
+	if sl, ok := n.Dfns.(*ast.AstSymbolList); ok {
 		for _, elem := range sl.Elems {
 			name := nodeRepStr(elem)
 			if name == "" {
@@ -426,7 +426,7 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr
 
 	// Compile dependencies (SymbolList → []*lg.Const)
 	var deps []*lg.Const
-	if sl, ok := n.Deps.(*ast.SymbolList); ok {
+	if sl, ok := n.Deps.(*ast.AstSymbolList); ok {
 		for _, elem := range sl.Elems {
 			name := nodeRepStr(elem)
 			if name == "" {
@@ -439,9 +439,9 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr
 
 	// Compile patterns (UpdatePatternList → *actions.UpdatePatternList)
 	patList := actions.NewUpdatePatternList()
-	if upl, ok := n.Patterns.(*ast.UpdatePatternList); ok {
+	if upl, ok := n.Patterns.(*ast.AstUpdatePatternList); ok {
 		for _, elem := range upl.Elems {
-			up, ok := elem.(*ast.UpdatePattern)
+			up, ok := elem.(*ast.AstUpdatePattern)
 			if !ok {
 				continue
 			}
@@ -468,7 +468,7 @@ func (c *Compiler) compilePatternBasedUpdate(n *ast.PatternBasedUpdate) (lg.Expr
 // The placeholder symbols compiled below are temporary; they must NOT pollute
 // the global signature for the rest of compilation. We follow the same
 // sigCopy / restore pattern as compileDefnImpl (compiler.go:1313-1315).
-func (c *Compiler) compileUpdatePattern(up *ast.UpdatePattern) (*actions.UpdatePattern, error) {
+func (c *Compiler) compileUpdatePattern(up *ast.AstUpdatePattern) (*actions.UpdatePattern, error) {
 	sigCopy := c.Sig.Copy()
 	savedSig := c.Sig
 	c.Sig = sigCopy
@@ -608,7 +608,7 @@ func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
 	return result, nil
 }
 
-func (c *Compiler) compileAnd(n *ast.And) (lg.Expr, error) {
+func (c *Compiler) compileAnd(n *ast.AstAnd) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileAnd ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil {
@@ -617,7 +617,7 @@ func (c *Compiler) compileAnd(n *ast.And) (lg.Expr, error) {
 	return &lg.And{Terms: args}, nil
 }
 
-func (c *Compiler) compileOr(n *ast.Or) (lg.Expr, error) {
+func (c *Compiler) compileOr(n *ast.AstOr) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileOr ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil {
@@ -626,7 +626,7 @@ func (c *Compiler) compileOr(n *ast.Or) (lg.Expr, error) {
 	return &lg.Or{Terms: args}, nil
 }
 
-func (c *Compiler) compileNot(n *ast.Not) (lg.Expr, error) {
+func (c *Compiler) compileNot(n *ast.AstNot) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileNot ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
@@ -635,7 +635,7 @@ func (c *Compiler) compileNot(n *ast.Not) (lg.Expr, error) {
 	return &lg.Not{Body: args[0]}, nil
 }
 
-func (c *Compiler) compileImplies(n *ast.Implies) (lg.Expr, error) {
+func (c *Compiler) compileImplies(n *ast.AstImplies) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileImplies ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
@@ -644,7 +644,7 @@ func (c *Compiler) compileImplies(n *ast.Implies) (lg.Expr, error) {
 	return &lg.Implies{T1: args[0], T2: args[1]}, nil
 }
 
-func (c *Compiler) compileIff(n *ast.Iff) (lg.Expr, error) {
+func (c *Compiler) compileIff(n *ast.AstIff) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileIff ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
@@ -653,7 +653,7 @@ func (c *Compiler) compileIff(n *ast.Iff) (lg.Expr, error) {
 	return &lg.Iff{T1: args[0], T2: args[1]}, nil
 }
 
-func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
+func (c *Compiler) compileIte(n *ast.AstIte) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileIte ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 3 {
@@ -662,7 +662,7 @@ func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
 	return &lg.Ite{ISort: args[1].NodeSort(), Cond: args[0], Then: args[1], Else: args[2]}, nil
 }
 
-func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
+func (c *Compiler) compileDefinition(n *ast.AstDefinition) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefinition ENTER\n  (via CompileNode op_pairs path, NOT compile_defn)")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
@@ -671,7 +671,7 @@ func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
 	return il.NewDefinition(args[0], args[1]), nil
 }
 
-func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Expr, error) {
+func (c *Compiler) compileGlobally(n *ast.AstGlobally) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileGlobally ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
@@ -681,7 +681,7 @@ func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Expr, error) {
 	return &lg.Globally{Environ: &empty, Body: args[0]}, nil
 }
 
-func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Expr, error) {
+func (c *Compiler) compileEventually(n *ast.AstEventually) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileEventually ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
@@ -691,7 +691,7 @@ func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Expr, error) {
 	return &lg.Eventually{Environ: &empty, Body: args[0]}, nil
 }
 
-func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Expr, error) {
+func (c *Compiler) compileWhenOperator(n *ast.AstWhenOperator) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileWhenOperator ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
@@ -892,7 +892,7 @@ func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 }
 
 // compileOld compiles the Old operator: compile the inner term with old=true.
-func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
+func (c *Compiler) compileOld(n *ast.AstOld) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileOld ENTER")
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*ast.Atom); ok {
@@ -992,7 +992,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 }
 
 // compileNamedBinder compiles an AST NamedBinder.
-func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
+func (c *Compiler) compileNamedBinder(n *ast.AstNamedBinder) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileNamedBinder ENTER")
 	vars := make([]*lg.Variable, len(n.Bounds))
 	for i, b := range n.Bounds {
@@ -1065,7 +1065,7 @@ func (c *Compiler) CompileLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error
 }
 
 // compileNativeExpr compiles a NativeExpr: compile args, preserve structure.
-func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
+func (c *Compiler) compileNativeExpr(n *ast.AstNativeExpr) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileNativeExpr ENTER")
 	// NativeExpr compilation: compile children, result has TopSort.
 	args := n.Args()
@@ -1083,7 +1083,7 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 }
 
 // compileTrigger compiles a trigger hint.
-func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Expr, error) {
+func (c *Compiler) compileTrigger(n *ast.AstTrigger) (lg.Expr, error) {
 	args := n.Args()
 	if len(args) < 2 {
 		return c.Thing(args[0])
@@ -1116,11 +1116,11 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	var isForall bool
 
 	switch n := node.(type) {
-	case *ast.Forall:
+	case *ast.AstForall:
 		bounds = n.Bounds
 		body = n.Body
 		isForall = true
-	case *ast.Exists:
+	case *ast.AstExists:
 		bounds = n.Bounds
 		body = n.Body
 		isForall = false
@@ -1334,20 +1334,20 @@ func (c *Compiler) findSymbol(name string) (*lg.Const, error) {
 
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
-func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
+func (c *Compiler) CompileDefn(df *ast.AstDefinition) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefn ENTER")
 	//pp("(CompileDefn -> compileDefnImpl isSchema=false) [go side]")
 	return c.compileDefnImpl(df, false)
 }
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
-func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) {
+func (c *Compiler) CompileDefnSchema(df *ast.AstDefinitionSchema) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefnSchema ENTER")
 	//pp("(CompileDefnSchema -> compileDefnImpl isSchema=true) [go side]")
-	return c.compileDefnImpl(&df.Definition, true)
+	return c.compileDefnImpl(&df.AstDefinition, true)
 }
 
-func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, error) {
+func (c *Compiler) compileDefnImpl(df *ast.AstDefinition, isSchema bool) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefnImpl ENTER")
 	if xtracer.Enabled {
 		c.SigCheck("CompileDefnImpl.entry")
@@ -1597,13 +1597,13 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 		// Python: compile_tactic_tactic returns self.clone(self.args)
 		return n.Clone(n.Args()), nil
 
-	case *ast.ProofTactic:
+	case *ast.AstProofTactic:
 		// Python: compile_proof_tactic compiles label and proof
 		proof, err := c.CompileTactic(n.Proof)
 		if err != nil {
 			proof = n.Proof
 		}
-		return &ast.ProofTactic{Base: n.Base, TLabel: n.TLabel, Proof: proof}, nil
+		return &ast.AstProofTactic{Base: n.Base, TLabel: n.TLabel, Proof: proof}, nil
 
 	// --- Types WITHOUT compile overrides in Python ---
 	// These go through thing() -> cmpl() = other_thing() in Python.

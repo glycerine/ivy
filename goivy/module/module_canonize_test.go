@@ -16,27 +16,27 @@ type stubAction struct {
 	formula lg.Expr
 }
 
-func (s *stubAction) ActionClone(args []lg.Expr) Action   { return s }
-func (s *stubAction) ActionArgs() []lg.Expr                { return []lg.Expr{s.formula} }
-func (s *stubAction) IterCalls() []string                  { return nil }
-func (s *stubAction) IterSubactions() []Action             { return nil }
-func (s *stubAction) GetFormalParams() []*lg.Const        { return nil }
-func (s *stubAction) GetFormalReturns() []*lg.Const       { return nil }
-func (s *stubAction) SetFormalParams([]*lg.Const)         {}
-func (s *stubAction) SetFormalReturns([]*lg.Const)        {}
-func (s *stubAction) Name() string                         { return s.name }
-func (s *stubAction) Decompose() [][]Action                { return nil }
-func (s *stubAction) Args() []ast.Node                     { return nil }
-func (s *stubAction) Clone(args []ast.Node) ast.Node       { return s }
-func (s *stubAction) GetLineno() ast.Location               { return ast.Location{} }
-func (s *stubAction) SetLineno(ast.Location)               {}
-func (s *stubAction) HasLineno() bool                       { return false }
-func (s *stubAction) String() string                       { return s.name }
-func (s *stubAction) Canon() iu.Canonical                  { return iu.Canonical(s.Sexp()) }
-func (s *stubAction) GetAstConfig() *ast.AstConfig         { return nil }
-func (s *stubAction) NodeSort() lg.Sort                    { return lg.ActionS }
-func (s *stubAction) Children() []lg.Expr                  { return nil }
-func (s *stubAction) Equal(other lg.Expr) bool             { return s.Sexp() == other.Sexp() }
+func (s *stubAction) ActionClone(args []lg.Expr) Action { return s }
+func (s *stubAction) ActionArgs() []lg.Expr             { return []lg.Expr{s.formula} }
+func (s *stubAction) IterCalls() []string               { return nil }
+func (s *stubAction) IterSubactions() []Action          { return nil }
+func (s *stubAction) GetFormalParams() []*lg.Const      { return nil }
+func (s *stubAction) GetFormalReturns() []*lg.Const     { return nil }
+func (s *stubAction) SetFormalParams([]*lg.Const)       {}
+func (s *stubAction) SetFormalReturns([]*lg.Const)      {}
+func (s *stubAction) Name() string                      { return s.name }
+func (s *stubAction) Decompose() [][]Action             { return nil }
+func (s *stubAction) Args() []ast.Node                  { return nil }
+func (s *stubAction) Clone(args []ast.Node) ast.Node    { return s }
+func (s *stubAction) GetLineno() ast.Location           { return ast.Location{} }
+func (s *stubAction) SetLineno(ast.Location)            {}
+func (s *stubAction) HasLineno() bool                   { return false }
+func (s *stubAction) String() string                    { return s.name }
+func (s *stubAction) Canon() iu.Canonical               { return iu.Canonical(s.Sexp()) }
+func (s *stubAction) GetAstConfig() *ast.AstConfig      { return nil }
+func (s *stubAction) NodeSort() lg.Sort                 { return lg.ActionS }
+func (s *stubAction) Children() []lg.Expr               { return nil }
+func (s *stubAction) Equal(other lg.Expr) bool          { return s.Sexp() == other.Sexp() }
 func (s *stubAction) Sexp() lg.NodeKey {
 	return lg.NodeKey(fmt.Sprintf("(%s formula:%s)", s.name, string(s.formula.Sexp())))
 }

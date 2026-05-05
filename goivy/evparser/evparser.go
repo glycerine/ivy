@@ -128,11 +128,11 @@ type ArgList struct {
 	Args []Value
 }
 
-func (a *ArgList) Text() string    { return "args" }
-func (a *ArgList) String() string  { return a.Text() }
-func (a *ArgList) Subs() []Value   { return a.Args }
+func (a *ArgList) Text() string                                 { return "args" }
+func (a *ArgList) String() string                               { return a.Text() }
+func (a *ArgList) Subs() []Value                                { return a.Args }
 func (a *ArgList) Match(v Value, binding map[string]Value) bool { return false }
-func (a *ArgList) Map(fn func(string) Value) Value { return a }
+func (a *ArgList) Map(fn func(string) Value) Value              { return a }
 
 // Symbol represents a simple name value.
 type Symbol struct {
@@ -186,8 +186,8 @@ func (a *App) Text() string {
 	return res
 }
 
-func (a *App) String() string  { return a.Text() }
-func (a *App) Subs() []Value   { return a.Args }
+func (a *App) String() string { return a.Text() }
+func (a *App) Subs() []Value  { return a.Args }
 
 func (a *App) Match(v Value, binding map[string]Value) bool {
 	if sym, ok := v.(*Symbol); ok && sym.Name == "*" {
@@ -220,8 +220,8 @@ type ListValue struct {
 	Items []Value
 }
 
-func (l *ListValue) Text() string   { return l.String() }
-func (l *ListValue) Subs() []Value  { return l.Items }
+func (l *ListValue) Text() string  { return l.String() }
+func (l *ListValue) Subs() []Value { return l.Items }
 
 func (l *ListValue) String() string {
 	parts := make([]string, len(l.Items))
@@ -263,11 +263,11 @@ type DictEntry struct {
 	Value Value
 }
 
-func (d *DictEntry) Text() string   { return d.Key + ":" + d.Value.String() }
-func (d *DictEntry) String() string { return d.Text() }
-func (d *DictEntry) Subs() []Value  { return d.Value.Subs() }
+func (d *DictEntry) Text() string                                 { return d.Key + ":" + d.Value.String() }
+func (d *DictEntry) String() string                               { return d.Text() }
+func (d *DictEntry) Subs() []Value                                { return d.Value.Subs() }
 func (d *DictEntry) Match(v Value, binding map[string]Value) bool { return false }
-func (d *DictEntry) Map(fn func(string) Value) Value { return d }
+func (d *DictEntry) Map(fn func(string) Value) Value              { return d }
 
 // DictValue represents a dictionary {key:value, ...}.
 type DictValue struct {
@@ -279,7 +279,7 @@ func NewDictValue() *DictValue {
 	return &DictValue{Entries: make(map[string]Value)}
 }
 
-func (d *DictValue) Text() string   { return d.String() }
+func (d *DictValue) Text() string { return d.String() }
 func (d *DictValue) Subs() []Value {
 	result := make([]Value, len(d.Order))
 	for i, k := range d.Order {

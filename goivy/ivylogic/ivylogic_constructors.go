@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	lg "github.com/glycerine/ivy/goivy/logic"
 	lu "github.com/glycerine/ivy/goivy/logicutil"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // --- Constructors (Batch 1.2) ---
@@ -334,4 +334,3 @@ func normalizedAndBin(first lg.Expr, rest []lg.Expr) lg.Expr {
 	}
 	return normalizedAndBin(&lg.And{Terms: []lg.Expr{first, rest[0]}}, rest[1:])
 }
-

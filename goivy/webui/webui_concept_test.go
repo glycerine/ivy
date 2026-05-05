@@ -1028,7 +1028,7 @@ func TestCISAddCustomNodeLabel(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Alpha Tests
+// WebUIAlpha Tests
 // ---------------------------------------------------------------------------
 
 func TestAlphaNoSolver(t *testing.T) {
@@ -1036,7 +1036,7 @@ func TestAlphaNoSolver(t *testing.T) {
 	cache := map[string]bool{
 		"node_info|none|both": true,
 	}
-	result := AlphaNoSolver(cd, cache, func(string, string) bool { return true })
+	result := WebUIAlphaNoSolver(cd, cache, func(string, string) bool { return true })
 	if len(result) == 0 {
 		t.Error("expected some results")
 	}
@@ -1054,7 +1054,7 @@ func TestAlphaNoSolver(t *testing.T) {
 
 func TestAlphaNoSolverEmptyCache(t *testing.T) {
 	cd, _ := testDomainSetup()
-	result := AlphaNoSolver(cd, nil, func(string, string) bool { return true })
+	result := WebUIAlphaNoSolver(cd, nil, func(string, string) bool { return true })
 	if len(result) == 0 {
 		t.Error("expected some results")
 	}

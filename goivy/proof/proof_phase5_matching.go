@@ -482,7 +482,7 @@ func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFo
 	var newMatch []ast.Node
 
 	for _, m := range proofMatch {
-		defn, ok := m.(*ast.Definition)
+		defn, ok := m.(*ast.AstDefinition)
 		if !ok {
 			newMatch = append(newMatch, m)
 			continue
@@ -650,7 +650,7 @@ func ParameterizeSchema(cfg *ast.AstConfig, sorts []lg.Sort, schema *ast.Labeled
 // If allowWitness is true, extends leftGoal's vocab with used variables
 // from the left goal's conclusion.
 // Corresponds to Python's compile_match_list.
-func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool, mod *module.Module) []*ast.Definition {
+func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool, mod *module.Module) []*ast.AstDefinition {
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
 	if allowWitness {
@@ -666,9 +666,9 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 			}
 		}
 	}
-	result := make([]*ast.Definition, 0, len(proofMatch))
+	result := make([]*ast.AstDefinition, 0, len(proofMatch))
 	for _, m := range proofMatch {
-		defn, ok := m.(*ast.Definition)
+		defn, ok := m.(*ast.AstDefinition)
 		if !ok {
 			continue
 		}
@@ -1290,7 +1290,7 @@ func RenameGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, renaming ast.Node)
 	// Build rename map: old name → new name
 	rmap := make(map[string]string)
 	for _, arg := range renaming.Args() {
-		defn, ok := arg.(*ast.Definition)
+		defn, ok := arg.(*ast.AstDefinition)
 		if !ok {
 			continue
 		}
@@ -1504,7 +1504,7 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 	var newConc ast.Node
 	if concExpr, ok := rawConc.(lg.Expr); ok {
 		newConc = ApplyMatchAlt(match, concExpr, env)
-	} else if tm, ok := rawConc.(*ast.TemporalModels); ok {
+	} else if tm, ok := rawConc.(*ast.AstTemporalModels); ok {
 		// Python walks TemporalModels as a generic node via apply_match_alt_rec's
 		// fmla.clone(args) branch. Emulate that here by recursing into the inner
 		// formula (no apply_to_conc trace).
@@ -1589,7 +1589,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, 
 	var newConc ast.Node
 	if concExpr, ok := rawConc.(lg.Expr); ok {
 		newConc = ApplyMatch(match, concExpr)
-	} else if tm, ok := rawConc.(*ast.TemporalModels); ok {
+	} else if tm, ok := rawConc.(*ast.AstTemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(lg.Expr); ok {
 			newConc = tm.Clone([]ast.Node{ApplyMatch(match, innerExpr)})
 		} else {

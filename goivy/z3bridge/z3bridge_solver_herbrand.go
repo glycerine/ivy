@@ -893,7 +893,7 @@ func (s *Solver) ClausesCase(clauses *module.Clauses) (*module.Clauses, error) {
 
 	if z3solver.Check() == Unsat {
 		// Python returns [[]] (false clauses) on UNSAT, not None.
-		return FalseClauses(), nil
+		return Z3FalseClauses(), nil
 	}
 
 	model := z3solver.Model()

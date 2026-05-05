@@ -170,7 +170,7 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 				return err
 			}
 		}
-	case *ast.ProofDecl:
+	case *ast.AstProofDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Proof(arg); err != nil {
 				return err
@@ -285,17 +285,17 @@ func collectASTVariables(node ast.Node) []*ast.Variable {
 // Corresponds to Python's binder_vars and binder_args (ivy_logic.py:640-649).
 func astBinderInfo(node ast.Node) (bounds map[string]bool, bodyArgs []ast.Node) {
 	switch n := node.(type) {
-	case *ast.Forall:
+	case *ast.AstForall:
 		bounds = astBoundNames(n.Bounds)
 		return bounds, []ast.Node{n.Body}
-	case *ast.Exists:
+	case *ast.AstExists:
 		bounds = astBoundNames(n.Bounds)
 		return bounds, []ast.Node{n.Body}
-	case *ast.Some:
+	case *ast.AstSome:
 		bounds = astBoundNames(n.Params)
 		// Python: binder_args for Some returns args[1:] (the formula, not the params)
 		return bounds, []ast.Node{n.Fmla}
-	case *ast.NamedBinder:
+	case *ast.AstNamedBinder:
 		bounds = astBoundNames(n.Bounds)
 		return bounds, []ast.Node{n.Body}
 	}
@@ -316,7 +316,7 @@ func astBoundNames(nodes []ast.Node) map[string]bool {
 // addDefinitionChecks validates that a definition's LHS has no duplicate
 // variables and that all RHS variables appear on the LHS.
 // Corresponds to Python's add_definition checks (ivy_compiler.py:1143-1152).
-func addDefinitionChecks(defNode *ast.Definition) error {
+func addDefinitionChecks(defNode *ast.AstDefinition) error {
 	lhsVars := collectASTVariables(defNode.Lhs)
 	seen := make(map[string]bool)
 	for _, v := range lhsVars {
@@ -362,12 +362,12 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 // as "occurs free on right-hand side of definition" rather than the
 // compile-side "unknown symbol" error. Callers do the validation early,
 // before invoking CompileDefn.
-func (d *DomainSetup) AddDefinition(ldf *ast.LabeledFormula, astDefNode *ast.Definition) error {
+func (d *DomainSetup) AddDefinition(ldf *ast.LabeledFormula, astDefNode *ast.AstDefinition) error {
 	// Python (ivy_compiler.py:1318):
 	//   defs = self.domain.native_definitions
 	//          if isinstance(ldf.formula.args[1], ivy_ast.NativeExpr)
 	//          else self.domain.labeled_props
-	if _, isNative := astDefNode.Rhs.(*ast.NativeExpr); isNative {
+	if _, isNative := astDefNode.Rhs.(*ast.AstNativeExpr); isNative {
 		d.Compiler.Module.NativeDefinitions = append(
 			d.Compiler.Module.NativeDefinitions, ldf)
 	} else {
@@ -430,13 +430,13 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	}
 
 	switch v := td.Value.(type) {
-	case *ast.ConstantSort, *ast.UninterpretedSortAST:
+	case *ast.AstConstantSort, *ast.UninterpretedSortAST:
 		sort := &lg.UninterpretedSort{Name: name}
 		xtracer.Trace("compiler.DomainSetup.type sort=UninterpretedSort name=%s ext=[]", name)
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
-	case *ast.EnumeratedSort:
+	case *ast.AstEnumeratedSort:
 		ext := v.Extension()
 		sort := &lg.EnumeratedSort{Name: name, Extension: ext}
 		xtracer.Trace("compiler.DomainSetup.type sort=EnumeratedSort name=%s ext=%v", name, matchPythonStringSlice(ext))
@@ -463,14 +463,14 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		if td.Finite {
 			mod.FiniteSorts[name] = true
 		}
-	case *ast.Range:
+	case *ast.AstRange:
 		lo := lg.NumeralBound{Value: fmt.Sprint(v.Lo)}
 		hi := lg.NumeralBound{Value: fmt.Sprint(v.Hi)}
 		sort := &lg.RangeSort{Name: name, Lb: lo, Ub: hi}
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
-	case *ast.StructSort:
+	case *ast.AstStructSort:
 		// Add the sort and its destructors
 		// Corresponds to Python ivy_compiler.py:1225-1239
 		sort := &lg.UninterpretedSort{Name: name}
@@ -658,12 +658,12 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	}
 	df := lf.Formula
 	// Check for DefinitionSchema first (embeds Definition)
-	var defNode *ast.Definition
+	var defNode *ast.AstDefinition
 	var isSchema bool
-	if ds, ok := df.(*ast.DefinitionSchema); ok {
-		defNode = &ds.Definition
+	if ds, ok := df.(*ast.AstDefinitionSchema); ok {
+		defNode = &ds.AstDefinition
 		isSchema = true
-	} else if dn, ok := df.(*ast.Definition); ok {
+	} else if dn, ok := df.(*ast.AstDefinition); ok {
 		defNode = dn
 	} else {
 		return nil
@@ -755,12 +755,12 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	}
 	df := lf.Formula
 	// Check for DefinitionSchema first
-	var defNode *ast.Definition
+	var defNode *ast.AstDefinition
 	var isSchemaD bool
-	if ds, ok := df.(*ast.DefinitionSchema); ok {
-		defNode = &ds.Definition
+	if ds, ok := df.(*ast.AstDefinitionSchema); ok {
+		defNode = &ds.AstDefinition
 		isSchemaD = true
-	} else if dn, ok := df.(*ast.Definition); ok {
+	} else if dn, ok := df.(*ast.AstDefinition); ok {
 		defNode = dn
 	} else {
 		return nil
@@ -841,7 +841,7 @@ func (d *DomainSetup) Action(node ast.Node) error {
 	// Python: for action in a.args[1].iter_subactions():
 	//             if isinstance(action, ThunkAction): ...
 	return iterASTSubactions(actDef.Body, func(sub ast.Node) error {
-		thunk, ok := sub.(*ast.ThunkAction)
+		thunk, ok := sub.(*ast.AstThunkAction)
 		if !ok {
 			return nil
 		}
@@ -1004,7 +1004,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	impl, ok := lf.Formula.(*ast.Implies)
+	impl, ok := lf.Formula.(*ast.AstImplies)
 	if !ok {
 		return nil
 	}
@@ -1062,9 +1062,9 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	// In Go, we keep rhs as ast.Node and extract the string name when needed.
 	var rhsName string
 	switch rhs.(type) {
-	case *ast.Range:
+	case *ast.AstRange:
 		// rhsName stays empty; handled in BB4 below
-	case *ast.EnumeratedSort:
+	case *ast.AstEnumeratedSort:
 		// rhsName stays empty; handled in BB5 below
 	default:
 		rhsName = extractSortRep(rhs)
@@ -1093,7 +1093,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 
 	// BB4: Range interpretation
 	// Python: if isinstance(rhs, ivy_ast.Range):
-	if rng, ok := rhs.(*ast.Range); ok {
+	if rng, ok := rhs.(*ast.AstRange); ok {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=range")
 		// Python: if lhs not in sig.sorts: raise IvyError(...)
 		if _, exists := sig.Sorts.Get2(lhs); !exists {
@@ -1120,7 +1120,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 
 	// BB5: Enumerated sort interpretation
 	// Python: if isinstance(rhs, ivy_ast.EnumeratedSort):
-	if enumSort, ok := rhs.(*ast.EnumeratedSort); ok {
+	if enumSort, ok := rhs.(*ast.AstEnumeratedSort); ok {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=enum")
 		// Python: if lhs not in self.domain.sig.sorts: raise IvyError(...)
 		if _, exists := sig.Sorts.Get2(lhs); !exists {
@@ -1251,7 +1251,7 @@ func (d *DomainSetup) Native(node ast.Node) error {
 // Alias processes an alias declaration.
 func (d *DomainSetup) Alias(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.alias ENTER")
-	if def, ok := node.(*ast.Definition); ok {
+	if def, ok := node.(*ast.AstDefinition); ok {
 		aliasName := extractSortRep(def.Lhs)
 		targetName := extractSortRep(def.Rhs)
 		if aliasName != "" && targetName != "" {
@@ -1325,8 +1325,8 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 	// Handle *ast.Schema directly (e.g. from theory compilation).
 	// Python: schema(self, sch) accesses sch.defn.args[1] and compiles
 	// it if it's a SchemaBody. We must do the same — not just store raw.
-	if schema, ok := node.(*ast.Schema); ok {
-		defn := schema.Defn.(*ast.Definition)
+	if schema, ok := node.(*ast.AstSchema); ok {
+		defn := schema.Defn.(*ast.AstDefinition)
 		// Check if RHS is SchemaBody — if so, compile it
 		// Python: if isinstance(sch.defn.args[1], ivy_ast.SchemaBody):
 		//   ldf = ivy_ast.LabeledFormula(label, sch.defn.args[1].compile())
@@ -1358,7 +1358,7 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.instantiate ENTER")
 	// Instantiation applies a schema. Extract the prefix and inst name,
 	// look up the schema, and apply it.
-	inst, ok := node.(*ast.Instantiation)
+	inst, ok := node.(*ast.AstInstantiation)
 	if !ok {
 		return nil
 	}
@@ -1386,7 +1386,7 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 
 	// Python applies top-level schema instantiations immediately:
 	// self.domain.schemata[inst.relname].instantiate(inst.args)
-	sch, ok := schema.(*ast.Schema)
+	sch, ok := schema.(*ast.AstSchema)
 	if !ok {
 		return lg.NewIvyError(inst, fmt.Sprintf("%s is not an instantiable schema", instName))
 	}
@@ -1519,7 +1519,7 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 		return nil
 	}
 
-	df, ok := lf.Formula.(*ast.Definition)
+	df, ok := lf.Formula.(*ast.AstDefinition)
 	if !ok {
 		return nil
 	}
@@ -1556,7 +1556,7 @@ func (d *DomainSetup) Parameter(node ast.Node) error {
 	sig := d.Compiler.Sig
 	var sym *lg.Const
 	var dflt ast.Node // raw AST node, matching Python
-	if def, ok := node.(*ast.Definition); ok {
+	if def, ok := node.(*ast.AstDefinition); ok {
 		var err error
 		sym, err = d.Compiler.CompileConst(def.Lhs, sig)
 		if err != nil {
@@ -1730,7 +1730,7 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	def, ok := lf.Formula.(*ast.Definition)
+	def, ok := lf.Formula.(*ast.AstDefinition)
 	if !ok {
 		return nil
 	}

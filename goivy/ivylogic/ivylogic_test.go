@@ -396,8 +396,8 @@ func TestSubterms(t *testing.T) {
 // --- Simplification tests ---
 
 func TestSimpAnd(t *testing.T) {
-	tr := &lg.And{}          // true
-	fa := &lg.Or{}           // false
+	tr := &lg.And{} // true
+	fa := &lg.Or{}  // false
 	p := lg.NewConst("p", lg.Boolean)
 
 	if !SimpAnd(tr, p).Equal(p) {

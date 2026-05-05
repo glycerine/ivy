@@ -262,7 +262,7 @@ func (d *DeclBase) Defines() []string {
 		// Fall back to extracting the rep/relname from specific arg types.
 		// This matches Python's polymorphic defines() dispatch in ivy_ast.py.
 		switch a := arg.(type) {
-		case *Definition:
+		case *AstDefinition:
 			// Python: Definition.defines() returns self.args[0].rep
 			if n := a.Defines(); n != "" {
 				names = append(names, n)
@@ -852,20 +852,20 @@ func (d *ConjectureDecl) Clone(args []Node) Node {
 func (d *ConjectureDecl) String() string { return "conjecture" }
 
 // ProofDecl declares a proof.
-type ProofDecl struct {
+type AstProofDecl struct {
 	DeclBase
 }
 
-func (cfg *AstConfig) NewProofDecl(args ...Node) *ProofDecl {
-	d := &ProofDecl{DeclBase: DeclBase{DeclArgs: args}}
+func (cfg *AstConfig) NewProofDecl(args ...Node) *AstProofDecl {
+	d := &AstProofDecl{DeclBase: DeclBase{DeclArgs: args}}
 	d.Cfg = cfg
 	return d
 }
 
-func (d *ProofDecl) Clone(args []Node) Node {
-	return &ProofDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
+func (d *AstProofDecl) Clone(args []Node) Node {
+	return &AstProofDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
-func (d *ProofDecl) String() string { return "proof" }
+func (d *AstProofDecl) String() string { return "proof" }
 
 // NamedDecl declares a named entity.
 type NamedDecl struct {
@@ -935,28 +935,28 @@ func (s *SchemaBody) Conc() Node {
 
 // Schema wraps a Definition for schema declarations.
 // Matches Python's Schema(AST) from ivy_actions.py.
-type Schema struct {
+type AstSchema struct {
 	Base
 	Defn      Node   // the Definition
 	Fresh     []Node // fresh variables
 	Instances []Node // instantiation records
 }
 
-func (cfg *AstConfig) NewSchema(defn Node) *Schema {
-	d := &Schema{Defn: defn}
+func (cfg *AstConfig) NewSchema(defn Node) *AstSchema {
+	d := &AstSchema{Defn: defn}
 	d.Cfg = cfg
 	return d
 }
 
-func (s *Schema) Args() []Node { return []Node{s.Defn} }
-func (s *Schema) Clone(args []Node) Node {
-	ns := &Schema{Base: s.Base, Fresh: s.Fresh, Instances: s.Instances}
+func (s *AstSchema) Args() []Node { return []Node{s.Defn} }
+func (s *AstSchema) Clone(args []Node) Node {
+	ns := &AstSchema{Base: s.Base, Fresh: s.Fresh, Instances: s.Instances}
 	if len(args) > 0 {
 		ns.Defn = args[0]
 	}
 	return ns
 }
-func (s *Schema) String() string {
+func (s *AstSchema) String() string {
 	res := fmt.Sprintf("%v", s.Defn)
 	if len(s.Fresh) > 0 {
 		res += " fresh "
@@ -969,8 +969,8 @@ func (s *Schema) String() string {
 	}
 	return res
 }
-func (s *Schema) Defines() string {
-	if d, ok := s.Defn.(*Definition); ok {
+func (s *AstSchema) Defines() string {
+	if d, ok := s.Defn.(*AstDefinition); ok {
 		return d.Defines()
 	}
 	return ""
@@ -990,8 +990,8 @@ type SchemaClauseConverter interface {
 
 // GetInstance creates an instance of this schema with the given parameters.
 // Python: Schema.get_instance(self, params, to_clauses=True)
-func (s *Schema) GetInstance(params []Node, compiler SchemaCompiler, clauseConverter SchemaClauseConverter, toClauses bool) (Node, error) {
-	defn, ok := s.Defn.(*Definition)
+func (s *AstSchema) GetInstance(params []Node, compiler SchemaCompiler, clauseConverter SchemaClauseConverter, toClauses bool) (Node, error) {
+	defn, ok := s.Defn.(*AstDefinition)
 	if !ok {
 		return nil, fmt.Errorf("schema defn is not a Definition")
 	}
@@ -1048,7 +1048,7 @@ func (s *Schema) GetInstance(params []Node, compiler SchemaCompiler, clauseConve
 
 // Instantiate adds an instance to this schema's instance list.
 // Python: Schema.instantiate(self, params)
-func (s *Schema) Instantiate(params []Node, compiler SchemaCompiler) {
+func (s *AstSchema) Instantiate(params []Node, compiler SchemaCompiler) {
 	inst, err := s.GetInstance(params, compiler, nil, false)
 	if err == nil {
 		s.Instances = append(s.Instances, inst)
@@ -1094,7 +1094,7 @@ func (d *DerivedDecl) Defines() []string {
 	var names []string
 	for _, arg := range d.DeclArgs {
 		if lf, ok := arg.(*LabeledFormula); ok && lf.Formula != nil {
-			if defn, ok := lf.Formula.(*Definition); ok {
+			if defn, ok := lf.Formula.(*AstDefinition); ok {
 				if n := defn.Defines(); n != "" {
 					names = append(names, n)
 				}
@@ -1284,8 +1284,8 @@ func (d *InterpretDecl) Defines() []string {
 			// Python: for arg in rhs.args: if not arg.rep.isdigit(): ...
 			// Use nodeRep to handle both *Atom and *App nodes.
 			if lf.Formula != nil {
-				if imp, ok := lf.Formula.(*Implies); ok {
-					if rng, ok := imp.T2.(*Range); ok {
+				if imp, ok := lf.Formula.(*AstImplies); ok {
+					if rng, ok := imp.T2.(*AstRange); ok {
 						for _, arg := range rng.Args() {
 							repStr := NodeRep(arg)
 							if repStr == "" {
@@ -1493,6 +1493,7 @@ func (i *IsolateDef) Present() []Node {
 	}
 	return nil
 }
+
 // Params returns the isolate parameters (terms of the name atom).
 // Python: def params(self): return self.args[0].args
 func (i *IsolateDef) Params() []Node {
@@ -1815,20 +1816,20 @@ func (n *NativeType) Clone(args []Node) Node { return &NativeType{Base: n.Base, 
 func (n *NativeType) String() string         { return "<<<...>>>" }
 
 // NativeExpr wraps a native expression.
-type NativeExpr struct {
+type AstNativeExpr struct {
 	Base
 	Elems []Node
 	ASort Node
 }
 
-func (n *NativeExpr) Args() []Node { return n.Elems }
-func (n *NativeExpr) Clone(args []Node) Node {
-	return &NativeExpr{Base: n.Base, Elems: args, ASort: n.ASort}
+func (n *AstNativeExpr) Args() []Node { return n.Elems }
+func (n *AstNativeExpr) Clone(args []Node) Node {
+	return &AstNativeExpr{Base: n.Base, Elems: args, ASort: n.ASort}
 }
-func (n *NativeExpr) String() string { return "<<<...>>>" }
+func (n *AstNativeExpr) String() string { return "<<<...>>>" }
 
-func (cfg *AstConfig) NewNativeExpr(elems []Node) *NativeExpr {
-	n := &NativeExpr{Elems: elems}
+func (cfg *AstConfig) NewNativeExpr(elems []Node) *AstNativeExpr {
+	n := &AstNativeExpr{Elems: elems}
 	n.Cfg = cfg
 	return n
 }
@@ -1919,23 +1920,23 @@ func (d *AttributeDecl) String() string { return "attribute" }
 // --- Instantiation ---
 
 // Instantiation represents "name : sort" instantiation.
-type Instantiation struct {
+type AstInstantiation struct {
 	Base
 	Name Node // may be nil
 	Sort Node
 }
 
-func (cfg *AstConfig) NewInstantiation(name, sort Node) *Instantiation {
-	d := &Instantiation{Name: name, Sort: sort}
+func (cfg *AstConfig) NewInstantiation(name, sort Node) *AstInstantiation {
+	d := &AstInstantiation{Name: name, Sort: sort}
 	d.Cfg = cfg
 	return d
 }
 
-func (i *Instantiation) Args() []Node { return []Node{i.Name, i.Sort} }
-func (i *Instantiation) Clone(args []Node) Node {
-	return &Instantiation{Base: i.Base, Name: args[0], Sort: args[1]}
+func (i *AstInstantiation) Args() []Node { return []Node{i.Name, i.Sort} }
+func (i *AstInstantiation) Clone(args []Node) Node {
+	return &AstInstantiation{Base: i.Base, Name: args[0], Sort: args[1]}
 }
-func (i *Instantiation) String() string {
+func (i *AstInstantiation) String() string {
 	if i.Name != nil {
 		return fmt.Sprint(i.Name) + " : " + fmt.Sprint(i.Sort)
 	}
@@ -1998,14 +1999,14 @@ func (s *StateDef) Clone(args []Node) Node {
 func (s *StateDef) String() string { return s.Name + " = " + fmt.Sprint(s.State) }
 
 // Renaming holds rename mappings.
-type Renaming struct {
+type AstRenaming struct {
 	Base
 	Elems []Node
 }
 
-func (r *Renaming) Args() []Node           { return r.Elems }
-func (r *Renaming) Clone(args []Node) Node { return &Renaming{Base: r.Base, Elems: args} }
-func (r *Renaming) String() string {
+func (r *AstRenaming) Args() []Node           { return r.Elems }
+func (r *AstRenaming) Clone(args []Node) Node { return &AstRenaming{Base: r.Base, Elems: args} }
+func (r *AstRenaming) String() string {
 	parts := make([]string, len(r.Elems))
 	for i, e := range r.Elems {
 		parts[i] = fmt.Sprint(e)
@@ -2327,30 +2328,30 @@ func (d *SubclassDecl) String() string { return "subclass" }
 
 // PatternBasedUpdate represents an update declaration.
 // Python: PatternBasedUpdate(SymbolList(*dfns), SymbolList(*deps), UpdatePatternList(*patterns))
-type PatternBasedUpdate struct {
+type AstPatternBasedUpdate struct {
 	Base
 	Dfns     Node // SymbolList of defined symbols
 	Deps     Node // SymbolList of dependency symbols
 	Patterns Node // UpdatePatternList of patterns
 }
 
-func (cfg *AstConfig) NewPatternBasedUpdate(dfns, deps, patterns Node) *PatternBasedUpdate {
-	d := &PatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
+func (cfg *AstConfig) NewPatternBasedUpdate(dfns, deps, patterns Node) *AstPatternBasedUpdate {
+	d := &AstPatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
 	d.Cfg = cfg
 	return d
 }
 
-func (p *PatternBasedUpdate) Args() []Node { return []Node{p.Dfns, p.Deps, p.Patterns} }
-func (p *PatternBasedUpdate) Clone(args []Node) Node {
-	return &PatternBasedUpdate{Base: p.Base, Dfns: args[0], Deps: args[1], Patterns: args[2]}
+func (p *AstPatternBasedUpdate) Args() []Node { return []Node{p.Dfns, p.Deps, p.Patterns} }
+func (p *AstPatternBasedUpdate) Clone(args []Node) Node {
+	return &AstPatternBasedUpdate{Base: p.Base, Dfns: args[0], Deps: args[1], Patterns: args[2]}
 }
-func (p *PatternBasedUpdate) String() string {
+func (p *AstPatternBasedUpdate) String() string {
 	return "update " + fmt.Sprint(p.Dfns) + " from " + fmt.Sprint(p.Deps)
 }
 
 // UpdatePattern represents a single update pattern.
 // Python: UpdatePattern(ConstantDecl(*params), action, requires, ensures)
-type UpdatePattern struct {
+type AstUpdatePattern struct {
 	Base
 	Params   Node // ConstantDecl of params
 	Action   Node // the action body
@@ -2358,52 +2359,52 @@ type UpdatePattern struct {
 	Ensures  Node // ensures formula
 }
 
-func (cfg *AstConfig) NewUpdatePattern(params, action, requires, ensures Node) *UpdatePattern {
-	d := &UpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
+func (cfg *AstConfig) NewUpdatePattern(params, action, requires, ensures Node) *AstUpdatePattern {
+	d := &AstUpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
 	d.Cfg = cfg
 	return d
 }
 
-func (u *UpdatePattern) Args() []Node { return []Node{u.Params, u.Action, u.Requires, u.Ensures} }
-func (u *UpdatePattern) Clone(args []Node) Node {
-	return &UpdatePattern{Base: u.Base, Params: args[0], Action: args[1], Requires: args[2], Ensures: args[3]}
+func (u *AstUpdatePattern) Args() []Node { return []Node{u.Params, u.Action, u.Requires, u.Ensures} }
+func (u *AstUpdatePattern) Clone(args []Node) Node {
+	return &AstUpdatePattern{Base: u.Base, Params: args[0], Action: args[1], Requires: args[2], Ensures: args[3]}
 }
-func (u *UpdatePattern) String() string { return "params ... in ... -> ..." }
+func (u *AstUpdatePattern) String() string { return "params ... in ... -> ..." }
 
 // UpdatePatternList holds a list of update patterns.
-type UpdatePatternList struct {
+type AstUpdatePatternList struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewUpdatePatternList(elems ...Node) *UpdatePatternList {
-	d := &UpdatePatternList{Elems: elems}
+func (cfg *AstConfig) NewUpdatePatternList(elems ...Node) *AstUpdatePatternList {
+	d := &AstUpdatePatternList{Elems: elems}
 	d.Cfg = cfg
 	return d
 }
 
-func (u *UpdatePatternList) Args() []Node { return u.Elems }
-func (u *UpdatePatternList) Clone(args []Node) Node {
-	return &UpdatePatternList{Base: u.Base, Elems: args}
+func (u *AstUpdatePatternList) Args() []Node { return u.Elems }
+func (u *AstUpdatePatternList) Clone(args []Node) Node {
+	return &AstUpdatePatternList{Base: u.Base, Elems: args}
 }
-func (u *UpdatePatternList) String() string { return "updatepatterns" }
+func (u *AstUpdatePatternList) String() string { return "updatepatterns" }
 
 // SymbolList holds a list of symbol names.
 // Python: SymbolList(*names) where names are strings.
-type SymbolList struct {
+type AstSymbolList struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewSymbolList(elems ...Node) *SymbolList {
-	d := &SymbolList{Elems: elems}
+func (cfg *AstConfig) NewSymbolList(elems ...Node) *AstSymbolList {
+	d := &AstSymbolList{Elems: elems}
 	d.Cfg = cfg
 	return d
 }
 
-func (s *SymbolList) Args() []Node           { return s.Elems }
-func (s *SymbolList) Clone(args []Node) Node { return &SymbolList{Base: s.Base, Elems: args} }
-func (s *SymbolList) String() string {
+func (s *AstSymbolList) Args() []Node           { return s.Elems }
+func (s *AstSymbolList) Clone(args []Node) Node { return &AstSymbolList{Base: s.Base, Elems: args} }
+func (s *AstSymbolList) String() string {
 	parts := make([]string, len(s.Elems))
 	for i, e := range s.Elems {
 		parts[i] = fmt.Sprint(e)
@@ -2413,58 +2414,58 @@ func (s *SymbolList) String() string {
 
 // RME represents requires/modifies/ensures state expressions.
 // Python: RME(requires, modifies, ensures)
-type RME struct {
+type AstRME struct {
 	Base
 	RequiresFmla Node   // requires formula
 	ModifiesList []Node // modifies list (nil = *, empty = {})
 	EnsuresFmla  Node   // ensures formula
 }
 
-func (cfg *AstConfig) NewRME(requires Node, modifies []Node, ensures Node) *RME {
-	d := &RME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
+func (cfg *AstConfig) NewRME(requires Node, modifies []Node, ensures Node) *AstRME {
+	d := &AstRME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
 	d.Cfg = cfg
 	return d
 }
 
-func (r *RME) Args() []Node { return []Node{r.RequiresFmla, r.EnsuresFmla} }
-func (r *RME) Clone(args []Node) Node {
-	return &RME{Base: r.Base, RequiresFmla: args[0], ModifiesList: r.ModifiesList, EnsuresFmla: args[1]}
+func (r *AstRME) Args() []Node { return []Node{r.RequiresFmla, r.EnsuresFmla} }
+func (r *AstRME) Clone(args []Node) Node {
+	return &AstRME{Base: r.Base, RequiresFmla: args[0], ModifiesList: r.ModifiesList, EnsuresFmla: args[1]}
 }
-func (r *RME) String() string { return "{requires ... modifies ... ensures ...}" }
+func (r *AstRME) String() string { return "{requires ... modifies ... ensures ...}" }
 
 // NamedSpace wraps a literal in a concept space expression.
 // Python: NamedSpace(Literal(polarity, atom))
-type NamedSpace struct {
+type AstNamedSpace struct {
 	Base
 	Lit Node // a Literal
 }
 
-func (cfg *AstConfig) NewNamedSpace(lit Node) *NamedSpace {
-	d := &NamedSpace{Lit: lit}
+func (cfg *AstConfig) NewNamedSpace(lit Node) *AstNamedSpace {
+	d := &AstNamedSpace{Lit: lit}
 	d.Cfg = cfg
 	return d
 }
 
-func (n *NamedSpace) Args() []Node           { return []Node{n.Lit} }
-func (n *NamedSpace) Clone(args []Node) Node { return &NamedSpace{Base: n.Base, Lit: args[0]} }
-func (n *NamedSpace) String() string         { return fmt.Sprint(n.Lit) }
+func (n *AstNamedSpace) Args() []Node           { return []Node{n.Lit} }
+func (n *AstNamedSpace) Clone(args []Node) Node { return &AstNamedSpace{Base: n.Base, Lit: args[0]} }
+func (n *AstNamedSpace) String() string         { return fmt.Sprint(n.Lit) }
 
 // ProductSpace represents a product of concept space expressions.
 // Python: ProductSpace([expr1, expr2, ...])
-type ProductSpace struct {
+type AstProductSpace struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewProductSpace(elems ...Node) *ProductSpace {
-	d := &ProductSpace{Elems: elems}
+func (cfg *AstConfig) NewProductSpace(elems ...Node) *AstProductSpace {
+	d := &AstProductSpace{Elems: elems}
 	d.Cfg = cfg
 	return d
 }
 
-func (p *ProductSpace) Args() []Node           { return p.Elems }
-func (p *ProductSpace) Clone(args []Node) Node { return &ProductSpace{Base: p.Base, Elems: args} }
-func (p *ProductSpace) String() string {
+func (p *AstProductSpace) Args() []Node           { return p.Elems }
+func (p *AstProductSpace) Clone(args []Node) Node { return &AstProductSpace{Base: p.Base, Elems: args} }
+func (p *AstProductSpace) String() string {
 	parts := make([]string, len(p.Elems))
 	for i, e := range p.Elems {
 		parts[i] = fmt.Sprint(e)
@@ -2474,20 +2475,20 @@ func (p *ProductSpace) String() string {
 
 // SumSpace represents a sum of concept space expressions.
 // Python: SumSpace([expr1, expr2, ...])
-type SumSpace struct {
+type AstSumSpace struct {
 	Base
 	Elems []Node
 }
 
-func (cfg *AstConfig) NewSumSpace(elems ...Node) *SumSpace {
-	d := &SumSpace{Elems: elems}
+func (cfg *AstConfig) NewSumSpace(elems ...Node) *AstSumSpace {
+	d := &AstSumSpace{Elems: elems}
 	d.Cfg = cfg
 	return d
 }
 
-func (s *SumSpace) Args() []Node           { return s.Elems }
-func (s *SumSpace) Clone(args []Node) Node { return &SumSpace{Base: s.Base, Elems: args} }
-func (s *SumSpace) String() string {
+func (s *AstSumSpace) Args() []Node           { return s.Elems }
+func (s *AstSumSpace) Clone(args []Node) Node { return &AstSumSpace{Base: s.Base, Elems: args} }
+func (s *AstSumSpace) String() string {
 	parts := make([]string, len(s.Elems))
 	for i, e := range s.Elems {
 		parts[i] = fmt.Sprint(e)
@@ -2551,7 +2552,7 @@ func DeclName(decl Node) string {
 		return "schema"
 	case *InstantiateDecl:
 		return "instantiate"
-	case *ProofDecl:
+	case *AstProofDecl:
 		return "proof"
 	case *NamedDecl:
 		return "named"

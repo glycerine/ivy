@@ -93,7 +93,7 @@ func TestArtToGraphState(t *testing.T) {
 	s, _ := loadARGTestSession(t)
 	gs := ArtToGraphState(s.AG)
 	if gs == nil {
-		t.Fatal("expected non-nil AnalysisGraphState")
+		t.Fatal("expected non-nil WebUIAnalysisGraphState")
 	}
 	if len(gs.States) != len(s.AG.States) {
 		t.Errorf("state count mismatch: got %d, want %d", len(gs.States), len(s.AG.States))

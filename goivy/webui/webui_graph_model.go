@@ -14,10 +14,10 @@ import (
 
 // Edge display class constants (Python: _edge_display_classes).
 const (
-	EdgeDisplayAllToAll    = "all_to_all"    // "+"
-	EdgeDisplayUnknown     = "edge_unknown"  // "?"
-	EdgeDisplayNoneToNone  = "none_to_none"  // "-"
-	EdgeDisplayTransitive  = "transitive"    // "≤"
+	EdgeDisplayAllToAll   = "all_to_all"   // "+"
+	EdgeDisplayUnknown    = "edge_unknown" // "?"
+	EdgeDisplayNoneToNone = "none_to_none" // "-"
+	EdgeDisplayTransitive = "transitive"   // "≤"
 )
 
 // Node label display kind constants (Python: _node_label_display_checkboxes).
@@ -185,7 +185,7 @@ type Graph struct {
 	Concrete string
 
 	// CyElems is the last computed Cytoscape element set.
-	CyElems *CyElements
+	CyElems *WebUICyElements
 
 	// Attributes are string tags on this graph (e.g. "backtrack_point").
 	Attributes []string
@@ -216,7 +216,7 @@ func (g *Graph) Reset() {
 	g.NewRelations = nil
 	// Initialize one node concept per sort.
 	for _, s := range g.Sorts {
-		name := "X:"+s+".X:"+s+"=X:"+s
+		name := "X:" + s + ".X:" + s + "=X:" + s
 		g.ConceptSess.Domain.Concepts[name] = &Concept{
 			Name:      name,
 			Variables: []string{"X"},

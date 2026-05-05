@@ -15,7 +15,7 @@ import (
 	"github.com/glycerine/ivy/goivy/ast"
 )
 
-func atypeToString(n ast.Node) string {
+func lalr12AtypeToString(n ast.Node) string {
 	switch v := n.(type) {
 	case *ast.Symbol:
 		return v.Rep
@@ -26,8 +26,8 @@ func atypeToString(n ast.Node) string {
 	}
 }
 
-func acfg(lex v12Lexer) *ast.AstConfig {
-	return lex.(*v12LexAdapter).cfg
+func lalr12Acfg(lex lalr12Lexer) *ast.AstConfig {
+	return lex.(*lalr12LexAdapter).cfg
 }
 
 %}
@@ -38,19 +38,19 @@ func acfg(lex v12Lexer) *ast.AstConfig {
 	str      string
 }
 
-%token <str>  TOK_SYMBOL TOK_VARIABLE TOK_PRESYMBOL
-%token        TOK_LPAREN TOK_RPAREN TOK_LB TOK_RB TOK_LCB TOK_RCB
-%token        TOK_COMMA TOK_SEMI TOK_COLON TOK_DOT
-%token        TOK_PLUS TOK_MINUS TOK_TIMES TOK_DIV
-%token        TOK_EQ TOK_TILDAEQ TOK_TILDA TOK_LE TOK_LT TOK_GE TOK_GT
-%token        TOK_AND TOK_OR TOK_ARROW TOK_IFF
-%token        TOK_PTO TOK_DOLLAR
-%token        TOK_FORALL TOK_EXISTS
-%token        TOK_TRUE TOK_FALSE
-%token        TOK_OLD TOK_THIS TOK_ISA
-%token        TOK_IF TOK_ELSE
-%token        TOK_GLOBALLY TOK_EVENTUALLY
-%token        TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
+%token <str>  LALR12_TOK_SYMBOL LALR12_TOK_VARIABLE LALR12_TOK_PRESYMBOL
+%token        LALR12_TOK_LPAREN LALR12_TOK_RPAREN LALR12_TOK_LB LALR12_TOK_RB LALR12_TOK_LCB LALR12_TOK_RCB
+%token        LALR12_TOK_COMMA LALR12_TOK_SEMI LALR12_TOK_COLON LALR12_TOK_DOT
+%token        LALR12_TOK_PLUS LALR12_TOK_MINUS LALR12_TOK_TIMES LALR12_TOK_DIV
+%token        LALR12_TOK_EQ LALR12_TOK_TILDAEQ LALR12_TOK_TILDA LALR12_TOK_LE LALR12_TOK_LT LALR12_TOK_GE LALR12_TOK_GT
+%token        LALR12_TOK_AND LALR12_TOK_OR LALR12_TOK_ARROW LALR12_TOK_IFF
+%token        LALR12_TOK_PTO LALR12_TOK_DOLLAR
+%token        LALR12_TOK_FORALL LALR12_TOK_EXISTS
+%token        LALR12_TOK_TRUE LALR12_TOK_FALSE
+%token        LALR12_TOK_OLD LALR12_TOK_THIS LALR12_TOK_ISA
+%token        LALR12_TOK_IF LALR12_TOK_ELSE
+%token        LALR12_TOK_GLOBALLY LALR12_TOK_EVENTUALLY
+%token        LALR12_TOK_WHENNEXT LALR12_TOK_WHENPREV LALR12_TOK_WHENFIRST LALR12_TOK_WHENLAST
 
 %type <node>  top fmla term aterm var simplevar atype
 %type <nodes> terms vars simplevars
@@ -58,18 +58,18 @@ func acfg(lex v12Lexer) *ast.AstConfig {
 
 // Precedence for v1.2 and earlier (from Python ivy_parser.py):
 // NOTE: TILDA is BELOW comparison operators here!
-%left         TOK_SEMI
-%left         TOK_IF
-%left         TOK_ELSE
-%left         TOK_OR
-%left         TOK_AND
-%left         TOK_PLUS
-%left         TOK_TIMES
-%left         TOK_DIV
-%left         TOK_TILDA
-%left         TOK_EQ TOK_LE TOK_LT TOK_GE TOK_GT
-%left         TOK_TILDAEQ
-%left         TOK_COLON
+%left         LALR12_TOK_SEMI
+%left         LALR12_TOK_IF
+%left         LALR12_TOK_ELSE
+%left         LALR12_TOK_OR
+%left         LALR12_TOK_AND
+%left         LALR12_TOK_PLUS
+%left         LALR12_TOK_TIMES
+%left         LALR12_TOK_DIV
+%left         LALR12_TOK_TILDA
+%left         LALR12_TOK_EQ LALR12_TOK_LE LALR12_TOK_LT LALR12_TOK_GE LALR12_TOK_GT
+%left         LALR12_TOK_TILDAEQ
+%left         LALR12_TOK_COLON
 
 %start        top
 
@@ -78,63 +78,63 @@ func acfg(lex v12Lexer) *ast.AstConfig {
 top:
     fmla
     {
-        v12lex.(*v12LexAdapter).result = $1
+        lalr12lex.(*lalr12LexAdapter).result = $1
     }
     ;
 
 SYMBOLx:
-    TOK_PRESYMBOL
+    LALR12_TOK_PRESYMBOL
     { $$ = $1 }
     ;
 
 atype:
     SYMBOLx
-    { $$ = acfg(v12lex).NewSymbol($1, nil) }
+    { $$ = lalr12Acfg(lalr12lex).NewSymbol($1, nil) }
     ;
 
 // --- aterm: v1.2 uses COLON for composition ---
 
 aterm:
     SYMBOLx
-    { $$ = acfg(v12lex).NewAtom($1) }
-    | aterm TOK_LPAREN terms TOK_RPAREN
+    { $$ = lalr12Acfg(lalr12lex).NewAtom($1) }
+    | aterm LALR12_TOK_LPAREN terms LALR12_TOK_RPAREN
     {
         a := $1.(*ast.Atom)
         a.Terms = append(a.Terms, $3...)
         $$ = a
     }
-    | aterm TOK_COLON SYMBOLx
+    | aterm LALR12_TOK_COLON SYMBOLx
     {
         lhs := $1.(*ast.Atom)
-        $$ = acfg(v12lex).NewAtom(lhs.Rep + ":" + $3, lhs.Terms...)
+        $$ = lalr12Acfg(lalr12lex).NewAtom(lhs.Rep + ":" + $3, lhs.Terms...)
     }
     ;
 
 var:
-    TOK_VARIABLE
-    { $$ = acfg(v12lex).NewVariable($1, "S") }
-    | TOK_VARIABLE TOK_COLON atype
-    { $$ = acfg(v12lex).NewVariable($1, atypeToString($3)) }
+    LALR12_TOK_VARIABLE
+    { $$ = lalr12Acfg(lalr12lex).NewVariable($1, "S") }
+    | LALR12_TOK_VARIABLE LALR12_TOK_COLON atype
+    { $$ = lalr12Acfg(lalr12lex).NewVariable($1, lalr12AtypeToString($3)) }
     ;
 
 simplevar:
-    TOK_VARIABLE
-    { $$ = acfg(v12lex).NewVariable($1, "S") }
-    | TOK_VARIABLE TOK_COLON SYMBOLx
-    { $$ = acfg(v12lex).NewVariable($1, $3) }
+    LALR12_TOK_VARIABLE
+    { $$ = lalr12Acfg(lalr12lex).NewVariable($1, "S") }
+    | LALR12_TOK_VARIABLE LALR12_TOK_COLON SYMBOLx
+    { $$ = lalr12Acfg(lalr12lex).NewVariable($1, $3) }
     ;
 
 vars:
     var
     { $$ = []ast.Node{$1} }
-    | vars TOK_COMMA var
+    | vars LALR12_TOK_COMMA var
     { $$ = append($1, $3) }
     ;
 
 simplevars:
     simplevar
     { $$ = []ast.Node{$1} }
-    | simplevars TOK_COMMA simplevar
+    | simplevars LALR12_TOK_COMMA simplevar
     { $$ = append($1, $3) }
     ;
 
@@ -143,7 +143,7 @@ terms:
     { $$ = nil }
     | term
     { $$ = []ast.Node{$1} }
-    | terms TOK_COMMA term
+    | terms LALR12_TOK_COMMA term
     { $$ = append($1, $3) }
     ;
 
@@ -154,18 +154,18 @@ term:
     { $$ = $1 }
     | var
     { $$ = $1 }
-    | TOK_OLD aterm
-    { $$ = acfg(v12lex).NewOld($2) }
-    | TOK_LPAREN term TOK_RPAREN
+    | LALR12_TOK_OLD aterm
+    { $$ = lalr12Acfg(lalr12lex).NewOld($2) }
+    | LALR12_TOK_LPAREN term LALR12_TOK_RPAREN
     { $$ = $2 }
     ;
 
 relop:
-    TOK_EQ  { $$ = "=" }
-    | TOK_LE  { $$ = "<=" }
-    | TOK_LT  { $$ = "<" }
-    | TOK_GE  { $$ = ">=" }
-    | TOK_GT  { $$ = ">" }
+    LALR12_TOK_EQ  { $$ = "=" }
+    | LALR12_TOK_LE  { $$ = "<=" }
+    | LALR12_TOK_LT  { $$ = "<" }
+    | LALR12_TOK_GE  { $$ = ">=" }
+    | LALR12_TOK_GT  { $$ = ">" }
     ;
 
 // --- fmla: v1.2 formulas (no ARROW, no temporal) ---
@@ -174,27 +174,27 @@ fmla:
     term
     { $$ = $1 }
     | term relop term
-    { $$ = acfg(v12lex).NewAtom($2, $1, $3) }
-    | term TOK_TILDAEQ term
-    { $$ = acfg(v12lex).NewNot(acfg(v12lex).NewAtom("=", $1, $3)) }
-    | TOK_LPAREN fmla TOK_RPAREN
+    { $$ = lalr12Acfg(lalr12lex).NewAtom($2, $1, $3) }
+    | term LALR12_TOK_TILDAEQ term
+    { $$ = lalr12Acfg(lalr12lex).NewNot(lalr12Acfg(lalr12lex).NewAtom("=", $1, $3)) }
+    | LALR12_TOK_LPAREN fmla LALR12_TOK_RPAREN
     { $$ = $2 }
-    | TOK_TRUE
-    { $$ = acfg(v12lex).NewAnd() }
-    | TOK_FALSE
-    { $$ = acfg(v12lex).NewOr() }
-    | TOK_TILDA fmla
-    { $$ = acfg(v12lex).NewNot($2) }
-    | fmla TOK_AND fmla
-    { $$ = acfg(v12lex).NewAnd($1, $3) }
-    | fmla TOK_OR fmla
-    { $$ = acfg(v12lex).NewOr($1, $3) }
-    | fmla TOK_IFF fmla
-    { $$ = acfg(v12lex).NewIff($1, $3) }
-    | TOK_FORALL simplevars TOK_DOT fmla
-    { $$ = acfg(v12lex).NewForall($2, $4) }
-    | TOK_EXISTS simplevars TOK_DOT fmla
-    { $$ = acfg(v12lex).NewExists($2, $4) }
+    | LALR12_TOK_TRUE
+    { $$ = lalr12Acfg(lalr12lex).NewAnd() }
+    | LALR12_TOK_FALSE
+    { $$ = lalr12Acfg(lalr12lex).NewOr() }
+    | LALR12_TOK_TILDA fmla
+    { $$ = lalr12Acfg(lalr12lex).NewNot($2) }
+    | fmla LALR12_TOK_AND fmla
+    { $$ = lalr12Acfg(lalr12lex).NewAnd($1, $3) }
+    | fmla LALR12_TOK_OR fmla
+    { $$ = lalr12Acfg(lalr12lex).NewOr($1, $3) }
+    | fmla LALR12_TOK_IFF fmla
+    { $$ = lalr12Acfg(lalr12lex).NewIff($1, $3) }
+    | LALR12_TOK_FORALL simplevars LALR12_TOK_DOT fmla
+    { $$ = lalr12Acfg(lalr12lex).NewForall($2, $4) }
+    | LALR12_TOK_EXISTS simplevars LALR12_TOK_DOT fmla
+    { $$ = lalr12Acfg(lalr12lex).NewExists($2, $4) }
     ;
 
 %%

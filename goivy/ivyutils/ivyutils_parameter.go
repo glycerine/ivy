@@ -5,7 +5,6 @@ import (
 	"sync"
 )
 
-
 // NewParameterRegistry creates a new empty ParameterRegistry.
 func NewParameterRegistry() *ParameterRegistry {
 	return &ParameterRegistry{

@@ -104,7 +104,7 @@ type Module struct {
 	AbstractionPredicates []interface{}
 
 	Logics []string
-	Macros map[string]*ast.Definition // macro name → definition
+	Macros map[string]*ast.AstDefinition // macro name → definition
 
 	// SigMerkle is the rolling Merkle hash for compiler conformance auditing.
 	// Matches Python's module-level sig_merkle in ivy_compiler.py.
@@ -387,7 +387,7 @@ func (m *Module) Clear() {
 	// but clear is also used to initialize... hmm... add nil check?
 	// python does not actually have macros on its module.
 	//if m.Macros == nil {
-	m.Macros = make(map[string]*ast.Definition)
+	m.Macros = make(map[string]*ast.AstDefinition)
 	//}
 }
 
@@ -518,7 +518,7 @@ func (m *Module) Copy() *Module {
 		c.VPrivates = copyMapBool(m.VPrivates)
 	}
 	// Macros: map[string]*ast.Definition
-	c.Macros = make(map[string]*ast.Definition, len(m.Macros))
+	c.Macros = make(map[string]*ast.AstDefinition, len(m.Macros))
 	for k, v := range m.Macros {
 		c.Macros[k] = v
 	}

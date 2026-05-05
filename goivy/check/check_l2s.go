@@ -310,7 +310,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 	// regardless of whether the goal's Formula is a SchemaBody or a direct
 	// TemporalModels. Mirrors Python ivy_l2s.py:117-118.
 	conc := proof.GoalConc(goal)
-	tm, isTM := conc.(*ast.TemporalModels)
+	tm, isTM := conc.(*ast.AstTemporalModels)
 	xtracer.Trace("l2s.l2sTacticInt goalConc result type=%s (isTemporalModels=%s)", iu.TypeName(conc), pyBool(isTM))
 	if !isTM {
 		return nil, fmt.Errorf("check/l2s: [2]proof goal is not temporal")
@@ -867,7 +867,7 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 		}
 		// Add conclusion inner formula (conc.fmla)
 		if goalConc := proof.GoalConc(result[0]); goalConc != nil {
-			if tm, ok := goalConc.(*ast.TemporalModels); ok {
+			if tm, ok := goalConc.(*ast.AstTemporalModels); ok {
 				if f, ok := tm.Fmla.(lg.Expr); ok {
 					concFmlas = append(concFmlas, f)
 				}
@@ -925,18 +925,18 @@ func l2sTacticInt(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, 
 // --- Internal helpers ---
 
 // findTemporalModels looks through the goal formula for a TemporalModels node.
-func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
+func findTemporalModels(goal *ast.LabeledFormula) *ast.AstTemporalModels {
 	if goal == nil || goal.Formula == nil {
 		return nil
 	}
 	// Check the formula directly
-	if tm, ok := goal.Formula.(*ast.TemporalModels); ok {
+	if tm, ok := goal.Formula.(*ast.AstTemporalModels); ok {
 		return tm
 	}
 	// Check if it's a SchemaBody and the conclusion is TemporalModels
 	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 		conc := sb.Conc()
-		if tm, ok := conc.(*ast.TemporalModels); ok {
+		if tm, ok := conc.(*ast.AstTemporalModels); ok {
 			return tm
 		}
 	}

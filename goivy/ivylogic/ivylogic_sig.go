@@ -32,7 +32,7 @@ func (u *UnionSort) String() string {
 // sorts, symbols (constants/functions/relations), constructors, and
 // interpretations.
 type Sig struct {
-	IuCfg              *iu.IvyUtilsConfig     // per-session config for version flags
+	IuCfg              *iu.IvyUtilsConfig // per-session config for version flags
 	Sorts              *iu.InsMap[string, lg.Sort]
 	Symbols            *iu.InsMap[string, *SymbolEntry]
 	Constructors       map[string]bool

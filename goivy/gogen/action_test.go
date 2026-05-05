@@ -209,7 +209,7 @@ func TestEmitHavoc(t *testing.T) {
 
 func TestEmitChoice_Single(t *testing.T) {
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig(),body)
+	act := actions.NewChoiceActionOn(actions.NewActionsConfig(), body)
 	out := emitActionToString(act)
 	// Single branch should not use switch.
 	if strings.Contains(out, "switch") {
@@ -223,7 +223,7 @@ func TestEmitChoice_Single(t *testing.T) {
 func TestEmitChoice_Multiple(t *testing.T) {
 	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	b2 := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig(),b1, b2)
+	act := actions.NewChoiceActionOn(actions.NewActionsConfig(), b1, b2)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "switch rand.Intn(2)") {
 		t.Errorf("expected switch with rand, got: %s", out)
@@ -234,7 +234,7 @@ func TestEmitChoice_Multiple(t *testing.T) {
 }
 
 func TestEmitChoice_Empty(t *testing.T) {
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig(),)
+	act := actions.NewChoiceActionOn(actions.NewActionsConfig())
 	out := emitActionToString(act)
 	if !strings.Contains(out, "empty choice") {
 		t.Errorf("expected empty choice comment, got: %s", out)

@@ -311,7 +311,7 @@ func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *State) *actions.History 
 // state's update.
 func HistoryForwardStep(history *actions.History, state *State) *actions.History {
 	var actionNode lg.Expr
-	if state.Expr != nil && IsActionApp(state.Expr) {
+	if state.Expr != nil && IsInterpActionApp(state.Expr) {
 		atom := state.Expr.(*ast.Atom)
 		actionNode = lg.NewConst(atom.Rep, lg.Boolean)
 	}
@@ -499,7 +499,7 @@ func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *module.Cl
 // (returning nil for them). Mirrors eval_state_facts.
 func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
 	if IsStateJoin(expr) {
-		or := expr.(*ast.Or)
+		or := expr.(*ast.AstOr)
 		var result *State
 		for _, term := range or.Terms {
 			s, err := EvalStateFacts(checkPrecond, term, mod)
@@ -520,7 +520,7 @@ func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*Stat
 		}
 		return result, nil
 	}
-	if IsActionApp(expr) {
+	if IsInterpActionApp(expr) {
 		atom := expr.(*ast.Atom)
 		act, err := EvalAction(atom.Rep, mod)
 		if err != nil {
@@ -545,19 +545,19 @@ func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*Stat
 // that reference the given predecessor state. Mirrors eval_state_actions.
 func EvalStateActions(expr ast.Node, pre *State) []*ast.Atom {
 	if IsStateJoin(expr) {
-		or := expr.(*ast.Or)
+		or := expr.(*ast.AstOr)
 		var result []*ast.Atom
 		for _, term := range or.Terms {
 			result = append(result, EvalStateActions(term, pre)...)
 		}
 		return result
 	}
-	if IsActionApp(expr) {
+	if IsInterpActionApp(expr) {
 		atom := expr.(*ast.Atom)
 		if IsStateSymbol(atom.Terms[0]) {
 			inner := atom.Terms[0].(*ast.Atom)
 			if inner.Rep == pre.Label {
-				return []*ast.Atom{ActionApp(pre.AstCfg(), atom.Rep, WrapState(pre))}
+				return []*ast.Atom{InterpActionApp(pre.AstCfg(), atom.Rep, WrapState(pre))}
 			}
 		}
 	}
@@ -571,7 +571,7 @@ func TopAlpha(state *State) {
 
 // FailExpr constructs a fail expression from an action application.
 func FailExpr(cfg *ast.AstConfig, expr *ast.Atom) *ast.Atom {
-	return ActionApp(cfg, "fail_"+expr.Rep, expr.Terms[0])
+	return InterpActionApp(cfg, "fail_"+expr.Rep, expr.Terms[0])
 }
 
 // Ensure unused imports don't cause errors.

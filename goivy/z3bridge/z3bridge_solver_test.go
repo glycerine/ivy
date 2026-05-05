@@ -825,21 +825,21 @@ func TestRemoveDuplicatesClauses(t *testing.T) {
 // --- Test: Convenience wrappers ---
 
 func TestTrueClauses(t *testing.T) {
-	tc := TrueClauses()
+	tc := Z3TrueClauses()
 	if len(tc.Fmlas) != 0 {
 		t.Fatal("TrueClauses should have no formulas")
 	}
 }
 
 func TestFalseClauses(t *testing.T) {
-	fc := FalseClauses()
+	fc := Z3FalseClauses()
 	if !fc.IsFalse() {
 		t.Fatal("FalseClauses should be false")
 	}
 }
 
 func TestAndClausesEmpty(t *testing.T) {
-	result := AndClauses()
+	result := Z3AndClauses()
 	if result == nil {
 		t.Fatal("AndClauses() should not return nil")
 	}
@@ -847,7 +847,7 @@ func TestAndClausesEmpty(t *testing.T) {
 
 func TestFormulaToClauses(t *testing.T) {
 	p := boolConst("p")
-	result := FormulaToClauses(p)
+	result := Z3FormulaToClauses(p)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
@@ -857,7 +857,7 @@ func TestConditionClauses(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
 	clauses := module.NewClauses([]lg.Expr{q}, nil, nil)
-	result := ConditionClauses(clauses, p)
+	result := Z3ConditionClauses(clauses, p)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
@@ -2525,9 +2525,10 @@ func TestTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
 // TestTranslateLeGtGeUninterpretedSort verifies that <=, >, >= on
 // uninterpreted sorts are expanded via polymorphic macros into
 // combinations of < and =, matching Python's polymacs dict.
-//   <= -> Or(x == y, lt(x, y))
-//   >  -> lt(y, x)
-//   >= -> Or(x == y, lt(y, x))
+//
+//	<= -> Or(x == y, lt(x, y))
+//	>  -> lt(y, x)
+//	>= -> Or(x == y, lt(y, x))
 func TestTranslateLeGtGeUninterpretedSort(t *testing.T) {
 	lclock := unintSort("lclock")
 	sig := il.NewSig()

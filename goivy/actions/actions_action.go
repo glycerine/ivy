@@ -472,19 +472,19 @@ func (s *SomeCondition) String() string {
 // Some/SomeMin/SomeMax node whose children are already compiled lg.Expr.
 func someCondFromAST(node ast.Node) *SomeCondition {
 	switch s := node.(type) {
-	case *ast.Some:
+	case *ast.AstSome:
 		params := make([]*lg.Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*lg.Const)
 		}
 		return &SomeCondition{Params: params, Fmla: s.Fmla.(lg.Expr), Kind: "some"}
-	case *ast.SomeMin:
+	case *ast.AstSomeMin:
 		params := make([]*lg.Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*lg.Const)
 		}
 		return &SomeCondition{Params: params, Fmla: s.Fmla.(lg.Expr), Kind: "some_min", Index: s.Index.(lg.Expr)}
-	case *ast.SomeMax:
+	case *ast.AstSomeMax:
 		params := make([]*lg.Const, len(s.Params))
 		for i, p := range s.Params {
 			params[i] = p.(*lg.Const)
@@ -2330,7 +2330,7 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 		xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=false", instName)
 	}
 	if schemaOk {
-		if sch, ok := schema.(*ast.Schema); ok {
+		if sch, ok := schema.(*ast.AstSchema); ok {
 			compileFn := ctx.CompileWithSortInference
 			if compileFn == nil && ctx.Domain.CompileWithSortInferenceFn != nil {
 				compileFn = ctx.Domain.CompileWithSortInferenceFn
@@ -2408,7 +2408,7 @@ func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 //	subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
 //	psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams) if ...)
 //	return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
-func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.Node {
+func instantiateMacro(astInst ast.Node, macros map[string]*ast.AstDefinition) ast.Node {
 	// Python (ivy_actions.py:783-784): if inst.relname in defns
 	//   would AttributeError on .relname / .args if inst is not Atom-like.
 	var name string

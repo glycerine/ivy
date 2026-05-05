@@ -61,7 +61,7 @@ type AnalysisGraphUI struct {
 	mu sync.Mutex
 
 	// G is the analysis graph (ARG) lightweight rendering state.
-	G *AnalysisGraphState
+	G *WebUIAnalysisGraphState
 
 	// AG is the real analysis graph (Python: self.g).
 	AG *art.AnalysisGraph
@@ -98,7 +98,7 @@ type AnalysisGraphUI struct {
 // NewAnalysisGraphUI creates a new AnalysisGraphUI.
 func NewAnalysisGraphUI() *AnalysisGraphUI {
 	return &AnalysisGraphUI{
-		G:                NewAnalysisGraphState(),
+		G:                NewWebUIAnalysisGraphState(),
 		Mode:             DefaultMode,
 		Radios:           map[string]string{"mode": string(DefaultMode)},
 		RememberedGraphs: make(map[string]*Graph),
@@ -196,15 +196,15 @@ func (ui *AnalysisGraphUI) sync() {
 	}
 }
 
-// ArtToGraphState converts an art.AnalysisGraph to a lightweight AnalysisGraphState.
-func ArtToGraphState(ag *art.AnalysisGraph) *AnalysisGraphState {
-	gs := NewAnalysisGraphState()
+// ArtToGraphState converts an art.AnalysisGraph to a lightweight WebUIAnalysisGraphState.
+func ArtToGraphState(ag *art.AnalysisGraph) *WebUIAnalysisGraphState {
+	gs := NewWebUIAnalysisGraphState()
 	for _, st := range ag.States {
 		label := st.Label
 		if label == "" {
 			label = fmt.Sprintf("%d", st.ID)
 		}
-		gs.States = append(gs.States, ARGNode{
+		gs.States = append(gs.States, WebUIARGNode{
 			ID:       st.ID,
 			Label:    label,
 			IsBottom: st.IsBottom(),
@@ -212,14 +212,14 @@ func ArtToGraphState(ag *art.AnalysisGraph) *AnalysisGraphState {
 		})
 	}
 	for _, t := range ag.Transitions {
-		gs.Transitions = append(gs.Transitions, ARGTransition{
+		gs.Transitions = append(gs.Transitions, WebUIARGTransition{
 			SourceID: t.Pre.ID,
 			TargetID: t.Post.ID,
 			Label:    t.Label,
 		})
 	}
 	for _, c := range ag.Covering {
-		gs.Covering = append(gs.Covering, ARGCover{
+		gs.Covering = append(gs.Covering, WebUIARGCover{
 			CoveredID:  c.Covered.ID,
 			CoveringID: c.Covering.ID,
 		})
@@ -229,7 +229,7 @@ func ArtToGraphState(ag *art.AnalysisGraph) *AnalysisGraphState {
 
 // defEquationLabel extracts a display label from a state equation (ast.Definition).
 // Python: state_equation_label(a) — reads a.args[0] (action name) and a.args[1].rep.
-func defEquationLabel(eq *ast.Definition) string {
+func defEquationLabel(eq *ast.AstDefinition) string {
 	var actionName string
 	if eq != nil && eq.Lhs != nil {
 		if atom, ok := eq.Lhs.(*ast.Atom); ok {
@@ -249,7 +249,7 @@ func defEquationLabel(eq *ast.Definition) string {
 // (Python: AnalysisGraphUI.start).
 func (ui *AnalysisGraphUI) Start() {
 	if len(ui.G.States) == 0 {
-		ui.G.States = append(ui.G.States, ARGNode{
+		ui.G.States = append(ui.G.States, WebUIARGNode{
 			ID:    0,
 			Label: "0",
 		})
@@ -473,7 +473,7 @@ func (ui *AnalysisGraphUI) RecalculateEdge(srcID, tgtID int) {
 
 // DecomposeEdge decomposes a transition into sub-actions
 // (Python: AnalysisGraphUI.decompose_edge).
-func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*AnalysisGraphState, error) {
+func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*WebUIAnalysisGraphState, error) {
 	t, err := ui.transitionByEndpoints(srcID, tgtID)
 	if err != nil {
 		return nil, err
@@ -661,7 +661,7 @@ func (ui *AnalysisGraphUI) RememberedGraphNames() []string {
 
 // BMC performs bounded model checking from initial to a state
 // (Python: AnalysisGraphUI.bmc).
-func (ui *AnalysisGraphUI) BMC(nodeID int, errCond string, bound int) (*AnalysisGraphState, error) {
+func (ui *AnalysisGraphUI) BMC(nodeID int, errCond string, bound int) (*WebUIAnalysisGraphState, error) {
 	state, err := ui.stateByID(nodeID)
 	if err != nil {
 		return nil, err

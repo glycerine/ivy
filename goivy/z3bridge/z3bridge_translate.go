@@ -1567,7 +1567,7 @@ func parseBfeParams(name string) (int, int, bool) {
 }
 
 // IsSat checks if the formula is satisfiable.
-func (t *Translator) IsSat(f lg.Expr) (CheckResult, error) {
+func (t *Translator) IsSat(f lg.Expr) (Z3CheckResult, error) {
 	zf, err := t.Formula_to_z3_int(f, "IsSat")
 	if err != nil {
 		return Unknown, err

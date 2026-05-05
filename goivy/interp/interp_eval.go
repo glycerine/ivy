@@ -169,7 +169,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 		upd = actions.NullUpdate()
 	}
 
-	res, err := ConcretePost(checkPrecond, upd, state, ActionApp(state.AstCfg(), actionName, WrapState(state)))
+	res, err := ConcretePost(checkPrecond, upd, state, InterpActionApp(state.AstCfg(), actionName, WrapState(state)))
 	if err != nil {
 		// Check if it's an ActionFailed error.
 		if af, ok := err.(*actions.ActionFailed); ok {
@@ -246,7 +246,7 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 // Otherwise, it is evaluated as an atom.
 func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
 	if IsStateJoin(expr) {
-		or := expr.(*ast.Or)
+		or := expr.(*ast.AstOr)
 		if len(or.Terms) == 0 {
 			return nil, fmt.Errorf("EvalState: empty state join")
 		}
@@ -266,7 +266,7 @@ func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, er
 		}
 		return result, nil
 	}
-	if IsActionApp(expr) {
+	if IsInterpActionApp(expr) {
 		atom := expr.(*ast.Atom)
 		act, err := EvalAction(atom.Rep, mod)
 		if err != nil {
@@ -281,8 +281,8 @@ func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, er
 	return EvalStateAtom(expr, mod)
 }
 
-// BottomState creates a state representing the empty set of states.
-func BottomState(domain *module.Module) *State {
+// InterpBottomState creates a state representing the empty set of states.
+func InterpBottomState(domain *module.Module) *State {
 	var acfg *ast.AstConfig
 	if domain != nil && domain.Cfg != nil {
 		acfg = domain.Cfg.AstCfg

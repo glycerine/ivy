@@ -92,7 +92,7 @@ func TestAssumeTactic_PreservesTemporalModels(t *testing.T) {
 
 	// The conclusion must still be *ast.TemporalModels
 	conc := GoalConc(result[0])
-	if _, ok := conc.(*ast.TemporalModels); !ok {
+	if _, ok := conc.(*ast.AstTemporalModels); !ok {
 		t.Fatalf("expected conclusion to be *ast.TemporalModels, got %T", conc)
 	}
 }
@@ -313,7 +313,7 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 
 	// Step 1: Skolemize
 	skolemized := SkolemizeGoal(testAstCfg, goal, true)
-	if _, ok := GoalConc(skolemized).(*ast.TemporalModels); !ok {
+	if _, ok := GoalConc(skolemized).(*ast.AstTemporalModels); !ok {
 		t.Fatalf("after skolemize: expected TemporalModels conclusion, got %T", GoalConc(skolemized))
 	}
 
@@ -352,7 +352,7 @@ func TestAssumeTactic_ComposedWithSkolemizePreservesTemporalModels(t *testing.T)
 
 	// The conclusion must STILL be TemporalModels
 	concFinal := GoalConc(result[0])
-	if _, ok := concFinal.(*ast.TemporalModels); !ok {
+	if _, ok := concFinal.(*ast.AstTemporalModels); !ok {
 		t.Fatalf("REGRESSION: after skolemize+instantiate, conclusion is %T, not *ast.TemporalModels", concFinal)
 	}
 }

@@ -216,7 +216,7 @@ func TestEnvAction_Basic(t *testing.T) {
 	at := makeActionTerm(nil, nil, nil, stmt)
 	b1 := &ActionTermBinding{Name: "ext:foo", Action: at}
 	b2 := &ActionTermBinding{Name: "bar", Action: at}
-	env := EnvAction(actions.NewActionsConfig(), []*ActionTermBinding{b1, b2})
+	env := TemporalEnvAction(actions.NewActionsConfig(), []*ActionTermBinding{b1, b2})
 	if env == nil {
 		t.Fatal("EnvAction should not be nil")
 	}

@@ -28,7 +28,7 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmla1 := &lg.ForAll{Variables: []*lg.Variable{origX}, Body: origX}
-	c.varUniq.Uniquify(fmla1) // X -> X (first pass, no rename needed)
+	c.varUniq.Uniquify(fmla1)         // X -> X (first pass, no rename needed)
 	res2 := c.varUniq.Uniquify(fmla1) // X -> X_a (name collision with first pass)
 
 	// Extract the uniquified variable X_a from the result.
