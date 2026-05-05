@@ -958,14 +958,7 @@ func lfLabelName(lf *LabeledFormula) string {
 }
 
 // isMixinImplement checks if a mixin is an implement-type mixin.
-// We check using type assertion on the underlying AST node.
 func isMixinImplement(m interface{}) bool {
-	type implementer interface {
-		IsImplement() bool
-	}
-	if impl, ok := m.(implementer); ok {
-		return impl.IsImplement()
-	}
-	// Fallback: check type name or other indicators
-	return fmt.Sprintf("%T", m) == "*ast.MixinImplementDef"
+	_, ok := m.(*MixinImplementDef)
+	return ok
 }
