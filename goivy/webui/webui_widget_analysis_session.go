@@ -30,17 +30,9 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"iter"
 	"sort"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/art"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/proof"
-	"github.com/glycerine/ivy/goivy/tactics"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // -----------------------------------------------------------------------
@@ -576,7 +568,7 @@ type ConceptStateViewWidget struct {
 	CurrentStep int
 
 	// Python: self.arg_node (the ARG node currently being viewed)
-	ArgNode *art.State
+	ArgNode *goivy.State
 
 	// Python: self.state (an ivy_interp.State)
 	State *interp_State
@@ -660,7 +652,7 @@ func (c *ConceptStateViewWidget) Render() {
 //	def gather_facts(self, button=None):
 //	    facts = self.get_active_facts()
 //	    ...
-func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) []lg.Expr {
+func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) []goivy.Expr {
 	return c.GetActiveFacts()
 }
 
@@ -674,11 +666,11 @@ func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) []lg.Expr {
 //
 // Returns the list of formula expressions that the user has selected
 // (via checkboxes) as active in the concept graph.
-func (c *ConceptStateViewWidget) GetActiveFacts() []lg.Expr {
+func (c *ConceptStateViewWidget) GetActiveFacts() []goivy.Expr {
 	if c.ConceptSession == nil {
 		return nil
 	}
-	var out []lg.Expr
+	var out []goivy.Expr
 	for _, node := range c.ConceptSession.NodeNames() {
 		out = append(out, c.ConceptSession.GetNodeFacts(node)...)
 	}
@@ -701,11 +693,11 @@ type TransitionViewWidget struct {
 	Session *AnalysisSession
 
 	// Python: self.pre, self.post (states being transitioned)
-	Pre  *art.State
-	Post *art.State
+	Pre  *goivy.State
+	Post *goivy.State
 
 	// Python: self.conjectures (the user's accumulated conjecture list)
-	Conjectures []lg.Expr
+	Conjectures []goivy.Expr
 
 	// Python: self.result
 	Result *LatexWidget
@@ -774,7 +766,7 @@ func (t *TransitionViewWidget) ShowResult(result string) {
 //	    self.pre = pre
 //	    self.post = post
 //	    ...
-func (t *TransitionViewWidget) SetStates(pre, post *art.State) {
+func (t *TransitionViewWidget) SetStates(pre, post *goivy.State) {
 	t.Pre = pre
 	t.Post = post
 }
@@ -809,7 +801,7 @@ func (t *TransitionViewWidget) Render() {
 }
 
 // GatherFacts mirrors Python lines 699-748 (TransitionViewWidget.gather_facts).
-func (t *TransitionViewWidget) GatherFacts(button *ButtonWidget) []lg.Expr {
+func (t *TransitionViewWidget) GatherFacts(button *ButtonWidget) []goivy.Expr {
 	return t.GetActiveFacts()
 }
 
@@ -824,16 +816,16 @@ func (t *TransitionViewWidget) ApplyStructureRenaming(s string) string {
 //
 //	def fact_to_label(self, fact):
 //	    return str(fact)
-func (t *TransitionViewWidget) FactToLabel(fact lg.Expr) string {
+func (t *TransitionViewWidget) FactToLabel(fact goivy.Expr) string {
 	return fmt.Sprintf("%v", fact)
 }
 
 // GetActiveFacts mirrors Python lines 757-768.
-func (t *TransitionViewWidget) GetActiveFacts() []lg.Expr {
+func (t *TransitionViewWidget) GetActiveFacts() []goivy.Expr {
 	if t.ConceptSession == nil {
 		return nil
 	}
-	var out []lg.Expr
+	var out []goivy.Expr
 	for _, node := range t.ConceptSession.NodeNames() {
 		out = append(out, t.ConceptSession.GetNodeFacts(node)...)
 	}
@@ -845,13 +837,13 @@ func (t *TransitionViewWidget) GetActiveFacts() []lg.Expr {
 //	def new_ag(self):
 //	    new_ag = ivy_art.AnalysisGraph(...)
 //	    return new_ag
-func (t *TransitionViewWidget) NewAg() *art.AnalysisGraph {
+func (t *TransitionViewWidget) NewAg() *goivy.AnalysisGraph {
 	if t.Session == nil {
 		return nil
 	}
 	// Python builds a fresh AG from the current module; the Go side has
 	// art.NewAnalysisGraph for the equivalent.
-	return art.NewAnalysisGraph(nil)
+	return goivy.NewAnalysisGraph(nil)
 }
 
 // CheckInductiveness mirrors Python lines 776-860 (TransitionViewWidget.check_inductiveness).
@@ -870,7 +862,7 @@ func (t *TransitionViewWidget) CheckInductiveness(button *ButtonWidget) bool {
 	}
 	// Run BMC for each conjecture; if any is reachable, not inductive.
 	for _, conj := range t.Conjectures {
-		neg := &lg.Not{Body: conj}
+		neg := &goivy.Not{Body: conj}
 		if len(ag.States) == 0 {
 			continue
 		}
@@ -890,20 +882,20 @@ func (t *TransitionViewWidget) CheckInductiveness(button *ButtonWidget) bool {
 //	    facts = self.get_active_facts()
 //	    ...
 //	    return conjecture
-func (t *TransitionViewWidget) GetSelectedConjecture() lg.Expr {
+func (t *TransitionViewWidget) GetSelectedConjecture() goivy.Expr {
 	facts := t.GetActiveFacts()
 	if len(facts) == 0 {
-		return lg.True
+		return goivy.True
 	}
 	if len(facts) == 1 {
 		return facts[0]
 	}
-	and, _ := lg.NewAnd(facts...)
+	and, _ := goivy.NewAnd(facts...)
 	return and
 }
 
 // BmcConjecture mirrors Python lines 912-970 (TransitionViewWidget.bmc_conjecture).
-func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture lg.Expr, verbose bool, addToCrg bool) bool {
+func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture goivy.Expr, verbose bool, addToCrg bool) bool {
 	if conjecture == nil {
 		conjecture = t.GetSelectedConjecture()
 	}
@@ -911,7 +903,7 @@ func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture lg
 	if ag == nil || len(ag.States) == 0 {
 		return false
 	}
-	neg := &lg.Not{Body: conjecture}
+	neg := &goivy.Not{Body: conjecture}
 	res := ag.BMC(ag.States[0], neg, nil, nil)
 	if res != nil {
 		t.ShowResult("Counterexample found.")
@@ -922,7 +914,7 @@ func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture lg
 }
 
 // MinimizeConjecture mirrors Python lines 971-1013.
-func (t *TransitionViewWidget) MinimizeConjecture(button *ButtonWidget) lg.Expr {
+func (t *TransitionViewWidget) MinimizeConjecture(button *ButtonWidget) goivy.Expr {
 	conj := t.GetSelectedConjecture()
 	// The full Python implementation greedily drops literals while
 	// maintaining inductiveness; the structural port preserves this
@@ -983,7 +975,7 @@ func (t *TransitionViewWidget) IsInductive(button *ButtonWidget) bool {
 	if ag == nil || len(ag.States) == 0 {
 		return false
 	}
-	neg := &lg.Not{Body: conj}
+	neg := &goivy.Not{Body: conj}
 	return ag.BMC(ag.States[0], neg, nil, nil) == nil
 }
 
@@ -1031,9 +1023,9 @@ func (t *TransitionViewWidget) Weaken(button *ButtonWidget) iter.Seq[FrontEndOpe
 			return
 		}
 		// Remove selected conjectures from t.Conjectures.
-		removed := make(map[lg.Expr]bool, len(op.Selection))
+		removed := make(map[goivy.Expr]bool, len(op.Selection))
 		for _, sel := range op.Selection {
-			if e, ok := sel.(lg.Expr); ok {
+			if e, ok := sel.(goivy.Expr); ok {
 				removed[e] = true
 			}
 		}
@@ -1056,7 +1048,7 @@ func (t *TransitionViewWidget) Weaken(button *ButtonWidget) iter.Seq[FrontEndOpe
 //
 // Returns the list of (node) and (edge, source, target) tuples that
 // appear in the given clauses formula.
-func (t *TransitionViewWidget) GetRelevantElements(a map[string]any, clauses *module.Clauses) [][]string {
+func (t *TransitionViewWidget) GetRelevantElements(a map[string]any, clauses *goivy.Clauses) [][]string {
 	if a == nil || clauses == nil {
 		return nil
 	}
@@ -1099,7 +1091,7 @@ type AnalysisSessionWidget struct {
 	Transition *TransitionViewWidget
 
 	// Tactics context for the running session.
-	TC *tactics.TacticsContext
+	TC *goivy.TacticsContext
 }
 
 // NewAnalysisSessionWidget mirrors Python lines 1271-1399 (AnalysisSessionWidget.__init__).
@@ -1221,7 +1213,7 @@ func (a *AnalysisSessionWidget) Step() {
 //	    """Update the concept widget to view this ARG node."""
 //	    self.concept.arg_node = arg_node
 //	    ...
-func (a *AnalysisSessionWidget) ArgNodeClick(argNode *art.State) {
+func (a *AnalysisSessionWidget) ArgNodeClick(argNode *goivy.State) {
 	if a.Concept != nil {
 		a.Concept.ArgNode = argNode
 	}
@@ -1233,7 +1225,7 @@ func (a *AnalysisSessionWidget) ArgNodeClick(argNode *art.State) {
 //	def crg_node_click(self, crg_node):
 //	    """Update the transition widget."""
 //	    ...
-func (a *AnalysisSessionWidget) CrgNodeClick(crgNode *art.State) {
+func (a *AnalysisSessionWidget) CrgNodeClick(crgNode *goivy.State) {
 	if a.Transition != nil {
 		a.Transition.SetStates(crgNode, nil)
 	}
@@ -1245,11 +1237,11 @@ func (a *AnalysisSessionWidget) CrgNodeClick(crgNode *art.State) {
 //	def proof_node_click(self, goal):
 //	    """Update widgets to focus on the given proof goal."""
 //	    ...
-func (a *AnalysisSessionWidget) ProofNodeClick(goal *proof.ProofGoal) {
+func (a *AnalysisSessionWidget) ProofNodeClick(goal *goivy.ProofGoal) {
 	if goal == nil {
 		return
 	}
-	if node, ok := goal.Node.(*art.State); ok {
+	if node, ok := goal.Node.(*goivy.State); ok {
 		a.ArgNodeClick(node)
 	}
 }
@@ -1269,9 +1261,8 @@ func (a *AnalysisSessionWidget) ConceptNewGoal(button *ButtonWidget) {
 	if a.Concept.ArgNode == nil {
 		return
 	}
-	goal := tactics.GoalAtArgNode(
-		module.NewClauses(facts, nil, nil).ToFormula(),
-		a.Concept.ArgNode)
+	goal := goivy.GoalAtArgNode(goivy.
+		NewClauses(facts, nil, nil).ToFormula(), a.Concept.ArgNode)
 	a.TC.PushGoal(goal)
 }
 
@@ -1285,8 +1276,8 @@ func (a *AnalysisSessionWidget) ConceptCheck(button *ButtonWidget) {
 		return
 	}
 	facts := a.Concept.GetActiveFacts()
-	clauses := module.NewClauses(facts, nil, nil)
-	slv := z3bridge.NewSolver(nil, nil)
+	clauses := goivy.NewClauses(facts, nil, nil)
+	slv := goivy.NewSolver(nil, nil)
 	sat, err := slv.ClausesSat(clauses)
 	if err != nil {
 		a.Concept.Result.Text = fmt.Sprintf("error: %v", err)
@@ -1394,15 +1385,14 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 	}
 	node := a.TC.AG.States[id]
 	facts := a.Concept.GetActiveFacts()
-	goal := tactics.GoalAtArgNode(
-		module.NewClauses(facts, nil, nil).ToFormula(),
-		node)
+	goal := goivy.GoalAtArgNode(goivy.
+		NewClauses(facts, nil, nil).ToFormula(), node)
 
 	// Python: preds, action = ta.arg_get_preds_action(goal.node)
 	//         assert action != 'join'
 	//         assert len(preds) == 1
 	//         pred = preds[0]
-	pred, act := tactics.ArgGetPredAction(node)
+	pred, act := goivy.ArgGetPredAction(node)
 	if act == nil {
 		return // would have been: assert action != 'join'
 	}
@@ -1420,16 +1410,16 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 	//             ),
 	//             axioms
 	//         )
-	update := actions.GetUpdateForArt(act, a.TC.Mod, nil)
+	update := goivy.GetUpdateForArt(act, a.TC.Mod, nil)
 	if update == nil {
 		return
 	}
-	fwd := actions.ForwardImage(pred.Clauses, axioms, update)
-	theory := module.AndClausesTyped(fwd, axioms)
+	fwd := goivy.ForwardImage(pred.Clauses, axioms, update)
+	theory := goivy.AndClausesTyped(fwd, axioms)
 
 	// Python: goal_clauses = goal.formula
 	//         assert len(goal_clauses.defs) == 0
-	goalClauses := module.FormulaToClauses(goal.Formula, nil)
+	goalClauses := goivy.FormulaToClauses(goal.Formula, nil)
 	if len(goalClauses.Defs) != 0 {
 		return // would have been: assert len(goal_clauses.defs) == 0
 	}
@@ -1438,8 +1428,8 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 	//         s.add(clauses_to_z3(theory))
 	//         s.add(clauses_to_z3(goal_clauses))
 	//         is_sat = s.check()
-	combined := module.AndClausesTyped(theory, goalClauses)
-	slv := z3bridge.NewSolver(nil, nil)
+	combined := goivy.AndClausesTyped(theory, goalClauses)
+	slv := goivy.NewSolver(nil, nil)
 	isSat, err := slv.ClausesSat(combined)
 	if err != nil {
 		return
@@ -1458,11 +1448,12 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 		//     goal_clauses, theory, goal_clauses, None)
 		// THIS IS THE TARGET CALL: widget_analysis_session.py:1644
 		x = true
-		y = actions.InterpFromUnsatCore(goalClauses, theory, goalClauses, nil)
+		y = goivy.InterpFromUnsatCore(goalClauses, theory, goalClauses, nil)
 	}
+	goivy.
 
-	// Python: t.custom_refine_or_reverse(goal, x, y, False)
-	tactics.CustomRefineOrReverse(a.TC, goal, x, y, false)
+		// Python: t.custom_refine_or_reverse(goal, x, y, False)
+		CustomRefineOrReverse(a.TC, goal, x, y, false)
 }
 
 // -----------------------------------------------------------------------
@@ -1479,4 +1470,4 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 
 // Sentinel use to keep ivylogic imported even when not directly referenced
 // (interp.InterpState / il.* may be added in subsequent iterations).
-var _ = (*il.Sig)(nil)
+var _ = (*goivy.Sig)(nil)

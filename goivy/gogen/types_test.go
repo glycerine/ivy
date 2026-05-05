@@ -1,52 +1,50 @@
 package gogen
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 func TestGoType_BooleanSort(t *testing.T) {
-	s := &lg.BooleanSort{}
+	s := &goivy.BooleanSort{}
 	if got := GoType(s); got != "bool" {
 		t.Errorf("GoType(BooleanSort) = %q, want %q", got, "bool")
 	}
 }
 
 func TestGoType_EnumeratedSort(t *testing.T) {
-	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	if got := GoType(s); got != "Color" {
 		t.Errorf("GoType(EnumeratedSort) = %q, want %q", got, "Color")
 	}
 }
 
 func TestGoType_EnumeratedSort_Empty(t *testing.T) {
-	s := &lg.EnumeratedSort{Name: "", Extension: nil}
+	s := &goivy.EnumeratedSort{Name: "", Extension: nil}
 	if got := GoType(s); got != "Enum" {
 		t.Errorf("GoType(EnumeratedSort{empty}) = %q, want %q", got, "Enum")
 	}
 }
 
 func TestGoType_RangeSort(t *testing.T) {
-	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
+	s := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "10"}}
 	if got := GoType(s); got != "int" {
 		t.Errorf("GoType(RangeSort) = %q, want %q", got, "int")
 	}
 }
 
 func TestGoType_UninterpretedSort(t *testing.T) {
-	s := &lg.UninterpretedSort{Name: "node"}
+	s := &goivy.UninterpretedSort{Name: "node"}
 	if got := GoType(s); got != "int" {
 		t.Errorf("GoType(UninterpretedSort) = %q, want %q", got, "int")
 	}
 }
 
 func TestGoType_FunctionSort_Unary(t *testing.T) {
-	dom := &lg.UninterpretedSort{Name: "node"}
-	rng := &lg.BooleanSort{}
-	fs, err := lg.NewFunctionSort(dom, rng)
+	dom := &goivy.UninterpretedSort{Name: "node"}
+	rng := &goivy.BooleanSort{}
+	fs, err := goivy.NewFunctionSort(dom, rng)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,9 +55,9 @@ func TestGoType_FunctionSort_Unary(t *testing.T) {
 }
 
 func TestGoType_FunctionSort_Binary_SameTypes(t *testing.T) {
-	dom := &lg.UninterpretedSort{Name: "node"}
-	rng := &lg.BooleanSort{}
-	fs, err := lg.NewFunctionSort(dom, dom, rng)
+	dom := &goivy.UninterpretedSort{Name: "node"}
+	rng := &goivy.BooleanSort{}
+	fs, err := goivy.NewFunctionSort(dom, dom, rng)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,14 +68,14 @@ func TestGoType_FunctionSort_Binary_SameTypes(t *testing.T) {
 }
 
 func TestGoType_TopSort(t *testing.T) {
-	s := &lg.TopSort{Name: "T"}
+	s := &goivy.TopSort{Name: "T"}
 	if got := GoType(s); got != "interface{}" {
 		t.Errorf("GoType(TopSort) = %q, want %q", got, "interface{}")
 	}
 }
 
 func TestStateFieldType_Bool(t *testing.T) {
-	s := &lg.BooleanSort{}
+	s := &goivy.BooleanSort{}
 	got := StateFieldType("flag", s)
 	if got != "bool" {
 		t.Errorf("StateFieldType bool = %q, want %q", got, "bool")
@@ -85,9 +83,9 @@ func TestStateFieldType_Bool(t *testing.T) {
 }
 
 func TestStateFieldType_UnaryRelation(t *testing.T) {
-	dom := &lg.UninterpretedSort{Name: "node"}
-	rng := &lg.BooleanSort{}
-	fs, _ := lg.NewFunctionSort(dom, rng)
+	dom := &goivy.UninterpretedSort{Name: "node"}
+	rng := &goivy.BooleanSort{}
+	fs, _ := goivy.NewFunctionSort(dom, rng)
 	got := StateFieldType("visited", fs)
 	if got != "map[int]bool" {
 		t.Errorf("StateFieldType unary rel = %q, want %q", got, "map[int]bool")
@@ -95,9 +93,9 @@ func TestStateFieldType_UnaryRelation(t *testing.T) {
 }
 
 func TestStateFieldType_UnaryFunction(t *testing.T) {
-	dom := &lg.UninterpretedSort{Name: "node"}
-	rng := &lg.UninterpretedSort{Name: "value"}
-	fs, _ := lg.NewFunctionSort(dom, rng)
+	dom := &goivy.UninterpretedSort{Name: "node"}
+	rng := &goivy.UninterpretedSort{Name: "value"}
+	fs, _ := goivy.NewFunctionSort(dom, rng)
 	got := StateFieldType("data", fs)
 	if got != "map[int]int" {
 		t.Errorf("StateFieldType unary func = %q, want %q", got, "map[int]int")
@@ -105,9 +103,9 @@ func TestStateFieldType_UnaryFunction(t *testing.T) {
 }
 
 func TestStateFieldType_BinaryRelation(t *testing.T) {
-	dom := &lg.UninterpretedSort{Name: "node"}
-	rng := &lg.BooleanSort{}
-	fs, _ := lg.NewFunctionSort(dom, dom, rng)
+	dom := &goivy.UninterpretedSort{Name: "node"}
+	rng := &goivy.BooleanSort{}
+	fs, _ := goivy.NewFunctionSort(dom, dom, rng)
 	got := StateFieldType("edge", fs)
 	if got != "map[[2]int]bool" {
 		t.Errorf("StateFieldType binary rel = %q, want %q", got, "map[[2]int]bool")
@@ -116,13 +114,13 @@ func TestStateFieldType_BinaryRelation(t *testing.T) {
 
 func TestGoZeroValue(t *testing.T) {
 	tests := []struct {
-		sort lg.Sort
+		sort goivy.Sort
 		want string
 	}{
-		{&lg.BooleanSort{}, "false"},
-		{&lg.EnumeratedSort{Name: "color"}, "0"},
-		{&lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}, "0"},
-		{&lg.UninterpretedSort{Name: "node"}, "0"},
+		{&goivy.BooleanSort{}, "false"},
+		{&goivy.EnumeratedSort{Name: "color"}, "0"},
+		{&goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "0"}}, "0"},
+		{&goivy.UninterpretedSort{Name: "node"}, "0"},
 	}
 	for _, tt := range tests {
 		got := GoZeroValue(tt.sort)
@@ -133,21 +131,21 @@ func TestGoZeroValue(t *testing.T) {
 }
 
 func TestGoZeroValue_FunctionSort(t *testing.T) {
-	fs, _ := lg.NewFunctionSort(&lg.UninterpretedSort{Name: "n"}, &lg.BooleanSort{})
+	fs, _ := goivy.NewFunctionSort(&goivy.UninterpretedSort{Name: "n"}, &goivy.BooleanSort{})
 	if got := GoZeroValue(fs); got != "nil" {
 		t.Errorf("GoZeroValue(FunctionSort) = %q, want %q", got, "nil")
 	}
 }
 
 func TestGoSortValues_Boolean(t *testing.T) {
-	vals := GoSortValues(&lg.BooleanSort{})
+	vals := GoSortValues(&goivy.BooleanSort{})
 	if len(vals) != 2 || vals[0] != "false" || vals[1] != "true" {
 		t.Errorf("GoSortValues(Boolean) = %v, want [false true]", vals)
 	}
 }
 
 func TestGoSortValues_Enumerated(t *testing.T) {
-	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	vals := GoSortValues(s)
 	if len(vals) != 3 {
 		t.Fatalf("GoSortValues(color) len = %d, want 3", len(vals))
@@ -158,7 +156,7 @@ func TestGoSortValues_Enumerated(t *testing.T) {
 }
 
 func TestGoSortValues_Range_Nil(t *testing.T) {
-	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "5"}}
+	s := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "5"}}
 	vals := GoSortValues(s)
 	if vals != nil {
 		t.Errorf("GoSortValues(RangeSort) = %v, want nil", vals)
@@ -166,7 +164,7 @@ func TestGoSortValues_Range_Nil(t *testing.T) {
 }
 
 func TestGoSortValues_Uninterpreted_Nil(t *testing.T) {
-	s := &lg.UninterpretedSort{Name: "node"}
+	s := &goivy.UninterpretedSort{Name: "node"}
 	vals := GoSortValues(s)
 	if vals != nil {
 		t.Errorf("GoSortValues(UninterpretedSort) = %v, want nil", vals)
@@ -175,7 +173,7 @@ func TestGoSortValues_Uninterpreted_Nil(t *testing.T) {
 
 func TestEmitEnumDecl(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	EmitEnumDecl(w, s)
 	out := w.String()
 
@@ -198,7 +196,7 @@ func TestEmitEnumDecl(t *testing.T) {
 
 func TestEmitEnumDecl_Empty(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.EnumeratedSort{Name: "empty", Extension: nil}
+	s := &goivy.EnumeratedSort{Name: "empty", Extension: nil}
 	EmitEnumDecl(w, s)
 	out := w.String()
 	if !strings.Contains(out, "type Empty int") {
@@ -212,7 +210,7 @@ func TestEmitEnumDecl_Empty(t *testing.T) {
 
 func TestEmitRangeHelpers(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
+	s := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "10"}}
 	EmitRangeHelpers(w, s)
 	out := w.String()
 	if !strings.Contains(out, "const IdxLo = 0") {
@@ -224,8 +222,8 @@ func TestEmitRangeHelpers(t *testing.T) {
 }
 
 func TestEmitSortDecls_WithModule(t *testing.T) {
-	mod := module.New()
-	colorSort := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	mod := goivy.New()
+	colorSort := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	mod.SortOrder = []string{"color"}
 	mod.Sig.Sorts.Set("color", colorSort)
 

@@ -9,9 +9,8 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"testing"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // TestNewAnalysisSessionWidget verifies that constructing the top-level
@@ -105,10 +104,10 @@ func TestWeakenInteraction(t *testing.T) {
 	asw := NewAnalysisSessionWidget()
 	tw := asw.Transition
 
-	c1 := lg.NewConst("conj1", lg.Boolean)
-	c2 := lg.NewConst("conj2", lg.Boolean)
-	c3 := lg.NewConst("conj3", lg.Boolean)
-	tw.Conjectures = []lg.Expr{c1, c2, c3}
+	c1 := goivy.NewConst("conj1", goivy.Boolean)
+	c2 := goivy.NewConst("conj2", goivy.Boolean)
+	c3 := goivy.NewConst("conj3", goivy.Boolean)
+	tw.Conjectures = []goivy.Expr{c1, c2, c3}
 
 	var seen []FrontEndOperation
 	for op := range tw.Weaken(nil) {
@@ -137,9 +136,9 @@ func TestWeakenCancel(t *testing.T) {
 	asw := NewAnalysisSessionWidget()
 	tw := asw.Transition
 
-	c1 := lg.NewConst("conj1", lg.Boolean)
-	c2 := lg.NewConst("conj2", lg.Boolean)
-	tw.Conjectures = []lg.Expr{c1, c2}
+	c1 := goivy.NewConst("conj1", goivy.Boolean)
+	c2 := goivy.NewConst("conj2", goivy.Boolean)
+	tw.Conjectures = []goivy.Expr{c1, c2}
 
 	for op := range tw.Weaken(nil) {
 		if usm, ok := op.(*UserSelectMultiple); ok {
@@ -164,7 +163,7 @@ func TestStrengthenAddsConjecture(t *testing.T) {
 	if got := len(tw.Conjectures); got != before+1 {
 		t.Errorf("len(Conjectures) = %d, want %d", got, before+1)
 	}
-	if tw.Conjectures[before] != lg.True {
+	if tw.Conjectures[before] != goivy.True {
 		t.Errorf("added conjecture = %v, want lg.True", tw.Conjectures[before])
 	}
 }

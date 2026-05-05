@@ -2,20 +2,16 @@ package gogen
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // Generator is the top-level Go code generator. It coordinates type
 // emission, expression translation, and action code generation.
 type Generator struct {
 	// Module is the Ivy module being compiled.
-	Module *module.Module
+	Module *goivy.Module
 
 	// ExprEmitter handles formula/expression translation.
 	Expr *ExprEmitter
@@ -28,7 +24,7 @@ type Generator struct {
 }
 
 // NewGenerator creates a new Go code generator for the given module.
-func NewGenerator(mod *module.Module, pkgName string) *Generator {
+func NewGenerator(mod *goivy.Module, pkgName string) *Generator {
 	return &Generator{
 		Module:      mod,
 		Expr:        NewExprEmitter(),
@@ -131,7 +127,7 @@ func (g *Generator) emitQuantifierHelpers(w *CodeWriter) {
 		if !ok {
 			continue
 		}
-		if _, ok := s.(*lg.EnumeratedSort); !ok {
+		if _, ok := s.(*goivy.EnumeratedSort); !ok {
 			continue
 		}
 		if !hasAny {
@@ -246,7 +242,7 @@ func (g *Generator) emitInit(w *CodeWriter) {
 
 	if g.Module != nil {
 		for _, init := range g.Module.Initializers {
-			act, ok := init.Action.(actions.ActionsAction)
+			act, ok := init.Action.(goivy.ActionsAction)
 			if !ok {
 				w.Linef("// skipped initializer %q: not an actions.ActionsAction", init.Name)
 				continue
@@ -295,7 +291,7 @@ func (g *Generator) EmitStateStruct(name string) {
 }
 
 // formatFormalParams formats formal parameters as a Go parameter list.
-func formatFormalParams(params []*lg.Const) string {
+func formatFormalParams(params []*goivy.Const) string {
 	if len(params) == 0 {
 		return ""
 	}
@@ -309,7 +305,7 @@ func formatFormalParams(params []*lg.Const) string {
 }
 
 // formatFormalReturns formats formal return parameters.
-func formatFormalReturns(params []*lg.Const) string {
+func formatFormalReturns(params []*goivy.Const) string {
 	if len(params) == 0 {
 		return ""
 	}
@@ -324,7 +320,7 @@ func formatFormalReturns(params []*lg.Const) string {
 }
 
 // sortedKeysInsMap returns sorted keys from an InsMap[string, lg.Sort].
-func sortedKeysInsMap(m *iu.InsMap[string, lg.Sort]) []string {
+func sortedKeysInsMap(m *goivy.InsMap[string, goivy.Sort]) []string {
 	keys := make([]string, 0, m.Len())
 	for k := range m.All() {
 		keys = append(keys, k)
@@ -334,7 +330,7 @@ func sortedKeysInsMap(m *iu.InsMap[string, lg.Sort]) []string {
 }
 
 // sortedKeysAction returns sorted action names from a module.
-func sortedKeysAction(m *module.Module) []string {
+func sortedKeysAction(m *goivy.Module) []string {
 	keys := make([]string, 0, m.Actions.Len())
 	for k := range m.Actions.All() {
 		keys = append(keys, k)
@@ -356,7 +352,7 @@ func EmitRangeValuesHelper(w *CodeWriter) {
 }
 
 // GoTypeForNode returns the Go type string for an arbitrary logic Node's sort.
-func GoTypeForNode(n lg.Expr) string {
+func GoTypeForNode(n goivy.Expr) string {
 	if n == nil {
 		return "interface{}"
 	}

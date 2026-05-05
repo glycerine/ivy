@@ -3,14 +3,8 @@
 package end2end
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // verifyInitInvariant checks that the module's initialization establishes
@@ -18,14 +12,14 @@ import (
 // Matches Python: ag = AnalysisGraph(initializer=lambda x:None);
 //
 //	check_conjs_in_state(mod, ag, ag.states[0])
-func verifyInitInvariant(t *testing.T, mod *module.Module) bool {
+func verifyInitInvariant(t *testing.T, mod *goivy.Module) bool {
 	t.Helper()
-	ag := art.NewAnalysisGraph(mod)
-	ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Initialize(goivy.AbstractorFunc(func(s *goivy.State) {})) // no-op abstractor
 	if len(ag.States) == 0 {
 		t.Fatal("no initial state created")
 	}
-	return check.CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
+	return goivy.CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
 }
 
 // verifyActionPreservation checks that executing an action from a state
@@ -33,22 +27,22 @@ func verifyInitInvariant(t *testing.T, mod *module.Module) bool {
 // Matches Python: ag = AnalysisGraph(); pre.clauses = get_conjs(mod);
 //
 //	post = ag.execute(action, pre); check_conjs_in_state(mod, ag, post)
-func verifyActionPreservation(t *testing.T, mod *module.Module, actName string) bool {
+func verifyActionPreservation(t *testing.T, mod *goivy.Module, actName string) bool {
 	t.Helper()
 	actionIface, ok := mod.Actions.Get2(actName)
 	if !ok {
 		t.Fatalf("action %q not found", actName)
 	}
-	action, ok := actionIface.(actions.ActionsAction)
+	action, ok := actionIface.(goivy.ActionsAction)
 	if !ok {
 		t.Fatalf("action %q is not actions.ActionsAction, got %T", actName, actionIface)
 	}
 
-	ag := art.NewAnalysisGraph(mod)
+	ag := goivy.NewAnalysisGraph(mod)
 
 	// Build pre-state from conjectures (matching Python get_conjs)
-	conjs := check.GetConjs(mod)
-	pre := art.NewState(mod, conjs)
+	conjs := goivy.GetConjs(mod)
+	pre := goivy.NewState(mod, conjs)
 	ag.Add(pre, nil)
 
 	// Execute action (Python uses EvalContext(check=False) here)
@@ -60,7 +54,7 @@ func verifyActionPreservation(t *testing.T, mod *module.Module, actName string) 
 		t.Fatalf("action %q execution returned nil", actName)
 	}
 
-	return check.CheckConjsInStateWithAG(mod, ag, post, 8, nil)
+	return goivy.CheckConjsInStateWithAG(mod, ag, post, 8, nil)
 }
 
 // --- Category B tests ---
@@ -141,12 +135,12 @@ func TestVerify_EnumExhaustive(t *testing.T) {
 // TestVerify_Z3SolverBasic does a bare-bones solver check to make sure
 // Z3 is working in the test environment.
 func TestVerify_Z3SolverBasic(t *testing.T) {
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := goivy.NewSolver(nil, nil)
 	if slv == nil {
 		t.Fatal("z3bridge.NewSolver() returned nil")
 	}
 	// Check that True is satisfiable
-	sat, err := slv.IsSat(logic.True)
+	sat, err := slv.IsSat(goivy.True)
 	if err != nil {
 		t.Fatalf("IsSat error: %v", err)
 	}
@@ -154,7 +148,7 @@ func TestVerify_Z3SolverBasic(t *testing.T) {
 		t.Error("True should be satisfiable")
 	}
 	// Check that False is unsatisfiable
-	sat2, err2 := slv.IsSat(logic.False)
+	sat2, err2 := slv.IsSat(goivy.False)
 	if err2 != nil {
 		t.Fatalf("IsSat(False) error: %v", err2)
 	}

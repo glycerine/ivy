@@ -1,0 +1,1639 @@
+// phase5_matching.go implements Phase 5 Batch 5.2 (Match Compilation) and
+// Batch 5.3 (Match Application) functions from the Ivy port.
+// These correspond to Python ivy_proof.py matching/compilation functions.
+package goivy
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
+)
+
+// === Batch 5.2: Match Compilation ===
+
+// CompileExprVocab compiles an expression using a goal's vocabulary.
+// Pushes vocab symbols/sorts onto the signature, compiles the expression,
+// and performs sort inference with the vocab's variables.
+// Corresponds to Python's compile_expr_vocab.
+func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
+	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%s", TypeName(expr))
+	if expr == nil {
+		xtracer.Trace("proof.CompileExprVocab EXIT exprNil")
+		return nil
+	}
+
+	// Get the module's sig (or create a fresh one)
+	sig := getSigFrom(mod)
+
+	// Push vocab symbols onto sig
+	ws := NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+
+	// Push vocab sorts onto sig
+	wso := NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	// Check if the expression is a sort reference
+	if atom, ok := expr.(*Atom); ok {
+		if s, exists := sig.Sorts.Get2(atom.Rep); exists {
+			return sortToNode(s)
+		}
+	}
+
+	// Python: with il.top_sort_as_default():
+	tsDefault := TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
+
+	if mod == nil {
+		mod = New()
+	}
+	c := NewCompiler(sig, mod)
+	compiled, err := c.Thing(expr)
+	if err != nil {
+		// Fallback: try simple symbol lookup
+		compiled = compileSimple(expr, vocab)
+		if compiled == nil {
+			xtracer.Trace("proof.CompileExprVocab EXIT err=compileFailed err=%v", err)
+			return nil
+		}
+	}
+
+	// Sort inference: infer sorts on [compiled] + vocab.variables
+	terms := make([]Expr, 0, 1+len(vocab.Variables))
+	terms = append(terms, compiled)
+	for _, v := range vocab.Variables {
+		terms = append(terms, v)
+	}
+	inferred, err := SortInferList(terms, nil, nil)
+	if err != nil {
+		// On sort-infer failure, dump the vocab so we can see which
+		// variables were available for unification. This helps diagnose
+		// cases where Go and Python disagree about vocab contents.
+		vocabStrs := make([]string, 0, len(vocab.Variables))
+		for _, v := range vocab.Variables {
+			vocabStrs = append(vocabStrs, fmt.Sprintf("%s:%s", v.Name, v.VSort))
+		}
+		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v vocabVars=[%s] HASH canon=%v",
+			err, strings.Join(vocabStrs, ","), compiled.Canon())
+		return compiled // return without sort inference on error
+	}
+	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", inferred[0].Canon())
+	return inferred[0]
+}
+
+// CompileExprVocabExt compiles an expression using a vocabulary without
+// full type inference. Returns the compiled expression directly.
+// Corresponds to Python's compile_expr_vocab_ext.
+func CompileExprVocabExt(expr Node, vocab *Vocab, mod *Module) Expr {
+	if expr == nil {
+		return nil
+	}
+
+	// Get the module's sig (or create a fresh one)
+	sig := getSigFrom(mod)
+
+	// Push vocab symbols onto sig
+	ws := NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+
+	// Push vocab sorts onto sig
+	wso := NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	// Check if the expression is a sort reference
+	if atom, ok := expr.(*Atom); ok {
+		if s, exists := sig.Sorts.Get2(atom.Rep); exists {
+			return sortToNode(s)
+		}
+	}
+
+	// Python: with il.top_sort_as_default():
+	tsDefault := TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
+
+	if mod == nil {
+		mod = New()
+	}
+	c := NewCompiler(sig, mod)
+	compiled, err := c.Thing(expr)
+	if err != nil {
+		compiled = compileSimple(expr, vocab)
+	}
+	return compiled
+}
+
+// CompileExprVocabExtLF compiles a LabeledFormula using a vocabulary without
+// full type inference. Returns the compiled LabeledFormula directly.
+// Corresponds to Python's compile_expr_vocab_ext when called with a LabeledFormula.
+func CompileExprVocabExtLF(lf *LabeledFormula, vocab *Vocab, mod *Module) *LabeledFormula {
+	if lf == nil {
+		return nil
+	}
+	sig := getSigFrom(mod)
+	ws := NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+	wso := NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+	tsDefault := TopSortAsDefault(sig)
+	tsDefault.Enter()
+	defer tsDefault.Exit()
+	if mod == nil {
+		mod = New()
+	}
+	c := NewCompiler(sig, mod)
+	compiled, err := c.ThingLF(lf)
+	if err != nil {
+		return nil
+	}
+	return compiled
+}
+
+// LabelTemporalNode labels temporal operators in an ast.Node tree.
+// Matches Python's label_temporal for non-lg.Expr types (e.g., LabeledFormula,
+// Atom). For lg.Expr nodes, delegates to il.LabelTemporal. For other nodes,
+// recursively processes children and clones.
+func LabelTemporalNode(node Node, label string) Node {
+	if node == nil {
+		return nil
+	}
+	if expr, ok := node.(Expr); ok {
+		return LabelTemporal(expr, label).(Node)
+	}
+	// Non-expr (LabeledFormula, Atom, etc.): recursively process children, clone.
+	// Python: args = [label_temporal(x, label) for x in fmla.args]; return fmla.clone(args)
+	args := node.Args()
+	processed := make([]Node, len(args))
+	for i, a := range args {
+		processed[i] = LabelTemporalNode(a, label)
+	}
+	return node.Clone(processed)
+}
+
+// getSigFrom returns the module's Sig. Panics if mod or module.Sig is nil —
+// a nil here means the caller failed to thread the module through,
+// which is always a bug (Python uses a single global Sig).
+func getSigFrom(mod *Module) *Sig {
+	if mod == nil {
+		panic("getSigFrom: mod is nil — module must be threaded through to proof matching")
+	}
+	if mod.Sig == nil {
+		panic("getSigFrom: module.Sig is nil — module must have a Sig before proof matching")
+	}
+	return mod.Sig
+}
+
+// compileSimple is a fallback compiler that resolves atoms using vocab directly.
+func compileSimple(expr Node, vocab *Vocab) Expr {
+	if n, ok := expr.(Expr); ok {
+		return n
+	}
+	if atom, ok := expr.(*Atom); ok {
+		for _, sym := range vocab.Symbols {
+			if sym.Name == atom.Rep {
+				return sym
+			}
+		}
+		for _, v := range vocab.Variables {
+			if v.Name == atom.Rep {
+				return v
+			}
+		}
+		return NewConst(atom.Rep, TopS)
+	}
+	return nil
+}
+
+// sortToNode wraps a Sort as a Node.
+// In Go, lg.Sort implements lg.Expr, so we can return it directly.
+func sortToNode(s Sort) Expr {
+	return s
+}
+
+// RemoveVarsMatch removes variable bindings from a match to avoid capture.
+// Keeps sort matches unchanged, renames free variables in constant/symbol
+// match values to avoid clashing with fmla, and drops variable matches.
+// The origKeys parameter maps NodeKey → original keyed node, so we can
+// determine the type of each key (sort, constant, or variable).
+// Corresponds to Python's remove_vars_match.
+func RemoveVarsMatch(mat map[NodeKey]Expr, fmla Expr, origKeys map[NodeKey]Expr) map[NodeKey]Expr {
+	result := make(map[NodeKey]Expr)
+
+	// Step 1: keep sort matches (key is a sort)
+	// Step 2: collect constant/symbol pairs for renaming
+	type symPair struct {
+		key NodeKey
+		val Expr
+	}
+	var symPairs []symPair
+
+	for k, v := range mat {
+		origNode := origKeys[k]
+		if origNode == nil {
+			// Fallback: skip unknown entries
+			continue
+		}
+		if _, isSort := origNode.(Sort); isSort {
+			// Sort match → keep directly
+			result[k] = v
+		} else if IsConstant(origNode) {
+			// Symbol/constant match → collect for renaming
+			symPairs = append(symPairs, symPair{key: k, val: v})
+		}
+		// Variable matches are dropped
+	}
+
+	// Step 3: rename free vars in constant match values to avoid clash with fmla
+	if len(symPairs) > 0 {
+		vals := make([]Expr, len(symPairs))
+		for i, sp := range symPairs {
+			vals[i] = sp.val
+		}
+		renamed := RenameVarsNoClash(vals, []Expr{fmla})
+		for i, sp := range symPairs {
+			result[sp.key] = renamed[i]
+		}
+	}
+
+	return result
+}
+
+// ShowMatch prints a match for debugging.
+// Corresponds to Python's show_match.
+func ShowMatch(m map[NodeKey]Expr) string {
+	if m == nil {
+		return "no match"
+	}
+	result := "match {\n"
+	for k, v := range m {
+		result += fmt.Sprintf("  %s |-> %s\n", k, v)
+	}
+	result += "}"
+	return result
+}
+
+// TransformDefnSchema transforms a schema to match a definition's parameter structure.
+// Corresponds to Python's transform_defn_schema.
+func TransformDefnSchema(cfg *AstConfig, schema, decl *LabeledFormula) *LabeledFormula {
+	sConc := GoalConc(schema)
+	dConc := GoalConc(decl)
+	if sConc == nil || dConc == nil {
+		return schema
+	}
+	// Check if both are definitions
+	sDef, sIsDef := sConc.(*IvyDefinition)
+	dDef, dIsDef := dConc.(*IvyDefinition)
+	if !sIsDef || !dIsDef {
+		return schema
+	}
+	sArgs := defLhsArgs(sDef)
+	dArgs := defLhsArgs(dDef)
+	if len(dArgs) > len(sArgs) {
+		// Need to parameterize schema with extra sorts
+		extraSorts := make([]Sort, len(dArgs)-len(sArgs))
+		for i := range extraSorts {
+			if i < len(dArgs) {
+				extraSorts[i] = dArgs[i].NodeSort()
+			} else {
+				extraSorts[i] = TopS
+			}
+		}
+		schema = ParameterizeSchema(cfg, extraSorts, schema)
+	}
+	return schema
+}
+
+// defLhsArgs returns the arguments of a definition's LHS.
+func defLhsArgs(def *IvyDefinition) []Expr {
+	if app, ok := def.Lhs.(*Apply); ok {
+		return app.Terms
+	}
+	return nil
+}
+
+// TransformDefnMatch transforms a problem of matching definitions to a problem
+// of matching the right-hand sides. Requires prob.Inst is a definition.
+// Corresponds to Python's transform_defn_match.
+func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
+	conc, concIsDef := prob.Pat.(*Definition)
+	decl, declIsDef := prob.Inst.(*Definition)
+	if !concIsDef || !declIsDef {
+		return prob
+	}
+
+	declsym := decl.Defines()
+	concsym := conc.Defines()
+
+	// Get args from LHS
+	declargs := defArgs(decl.Lhs)
+	concargs := defArgs(conc.Lhs)
+	if len(declargs) < len(concargs) {
+		return nil
+	}
+
+	declrhs := decl.Rhs
+	concrhs := conc.Rhs
+
+	// Build vmap: concarg.name → declarg.resort(concarg.sort)
+	vmap := make(map[string]Expr, len(concargs))
+	for i, x := range concargs {
+		if i >= len(declargs) {
+			break
+		}
+		y := declargs[i]
+		// resort y to x's sort
+		resorted := resortNode(y, x.NodeSort())
+		if v, ok := x.(*Variable); ok {
+			vmap[v.Name] = resorted
+		} else if s, ok := x.(*Const); ok {
+			vmap[s.Name] = resorted
+		}
+	}
+	concrhs = SubstituteByName(concrhs, vmap)
+
+	// Build dmatch: concsym → declsym, plus sort matching
+	dmatch := make(map[NodeKey]Expr)
+	dmatch[Key(concsym)] = declsym
+
+	concSorts := funcSortsNode(concsym)
+	declSorts := funcSortsNode(declsym)
+	for i := 0; i < len(concSorts) && i < len(declSorts); i++ {
+		x := concSorts[i]
+		y := declSorts[i]
+		xKey := Key(x)
+		if _, isFree := prob.FreeSyms[xKey]; isFree {
+			if existing, exists := dmatch[xKey]; exists {
+				if !existing.Equal(y) {
+					fmt.Printf("lhs sorts didn't match: %v, %v\n", x, y)
+					return nil
+				}
+			}
+			dmatch[xKey] = y
+		} else {
+			if !x.Equal(y) {
+				fmt.Printf("lhs sorts didn't match: %v, %v\n", x, y)
+				return nil
+			}
+		}
+	}
+
+	concrhs = ApplyMatch(dmatch, concrhs)
+	freesyms := ApplyMatchFreesyms(dmatch, prob.FreeSyms)
+
+	// Remove concargs from freesyms
+	for _, arg := range concargs {
+		delete(freesyms, Key(arg))
+	}
+
+	// Remove declargs from constants
+	constants := make(map[NodeKey]Expr, len(prob.Constants))
+	for k, v := range prob.Constants {
+		constants[k] = v
+	}
+	for _, arg := range declargs {
+		delete(constants, Key(arg))
+	}
+
+	// Build vvmap and apply to schema
+	vvmap := make(map[NodeKey]Expr, len(concargs))
+	for i, x := range concargs {
+		if i >= len(declargs) {
+			break
+		}
+		y := declargs[i]
+		resorted := resortNode(y, x.NodeSort())
+		vvmap[Key(x)] = resorted
+	}
+
+	schema := prob.SchemaLF
+	schema = ApplyMatchGoalNode(cfg, vvmap, schema)
+	schema = ApplyMatchGoalNode(cfg, dmatch, schema)
+
+	return &MatchProblem{
+		Schema:    prob.Schema,
+		SchemaLF:  schema,
+		Pat:       concrhs,
+		Inst:      declrhs,
+		FreeSyms:  freesyms,
+		Constants: constants,
+	}
+}
+
+// defArgs extracts the arguments from a definition LHS.
+// If the LHS is an Apply (function application), returns the Terms.
+// Otherwise returns nil.
+func defArgs(lhs Expr) []Expr {
+	if app, ok := lhs.(*Apply); ok {
+		return app.Terms
+	}
+	return nil
+}
+
+// resortNode creates a copy of the node with a different sort.
+func resortNode(n Expr, s Sort) Expr {
+	switch v := n.(type) {
+	case *Variable:
+		nv, _ := NewVariable(v.Name, s)
+		return nv
+	case *Const:
+		return NewConst(v.Name, s)
+	default:
+		return n
+	}
+}
+
+// funcSortsNode returns the domain and range sorts of a node's sort.
+func funcSortsNode(n Expr) []Sort {
+	if s, ok := n.(*Const); ok {
+		return FuncSorts(s)
+	}
+	return []Sort{n.NodeSort()}
+}
+
+// AddPremMatch processes premise matches in a SchemaInstantiation.
+// For each match where LHS is a premise name in the schema and RHS is a
+// schema name, looks up the RHS schema and creates combined Tuple
+// patterns for matching.
+//
+// Python: ivy_proof.py:835-855
+func AddPremMatch(proofMatch []Node, prob *MatchProblem, goal *LabeledFormula, checker *ProofChecker) ([]Node, *MatchProblem) {
+	if prob.SchemaLF == nil {
+		return proofMatch, prob
+	}
+	sprems := GoalPremsByName(prob.SchemaLF)
+
+	var pats []Expr
+	var insts []Expr
+	var newMatch []Node
+
+	for _, m := range proofMatch {
+		defn, ok := m.(*AstDefinition)
+		if !ok {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		lAtom, lIsAtom := defn.Lhs.(*Atom)
+		if !lIsAtom || len(lAtom.Terms) > 0 {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		sprem, exists := sprems[lAtom.Relname()]
+		if !exists {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		rAtom, rIsAtom := defn.Rhs.(*Atom)
+		if !rIsAtom || len(rAtom.Terms) > 0 {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		// Look up the RHS as a schema — Python: context.lookup_schema(rhs.rep, goal, rhs)
+		gprem, err := checker.LookupSchema(rAtom.Relname(), goal, rAtom, false)
+		if err != nil {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		// Premise pattern matching needs lg.Expr; reject TemporalModels premises
+		// (schemata don't apply to temporal-models goals — Python ivy_proof.py:429).
+		premConc := GoalConcExpr(sprem)
+		gpremConc := GoalConcExpr(gprem)
+		if premConc != nil && gpremConc != nil {
+			pats = append(pats, premConc)
+			insts = append(insts, gpremConc)
+		} else {
+			newMatch = append(newMatch, m)
+		}
+	}
+
+	if len(pats) > 0 {
+		// Combine premise patterns with main pattern/instance
+		// Python: pat = ia.Tuple(*(pats + [prob.pat]))
+		//         inst = ia.Tuple(*(insts + [prob.inst]))
+		allPats := make([]Expr, 0, len(pats)+1)
+		allPats = append(allPats, pats...)
+		allPats = append(allPats, prob.Pat)
+
+		allInsts := make([]Expr, 0, len(insts)+1)
+		allInsts = append(allInsts, insts...)
+		allInsts = append(allInsts, prob.Inst)
+
+		prob = &MatchProblem{
+			Schema:      prob.Schema,
+			SchemaLF:    prob.SchemaLF,
+			Pat:         prob.Pat,
+			Inst:        prob.Inst,
+			FreeSyms:    prob.FreeSyms,
+			Constants:   prob.Constants,
+			PremMatches: pats,
+			RevMap:      prob.RevMap,
+			TuplePats:   allPats,
+			TupleInsts:  allInsts,
+		}
+	}
+
+	return newMatch, prob
+}
+
+// ParameterizeSchema adds initial parameters to all free symbols in a schema.
+// Takes a list of sorts and an ast.LabeledFormula (SchemaBody).
+// For each ConstantDecl premise, extends the symbol's sort with the given sorts
+// and wraps the match value in a Lambda.
+// Corresponds to Python's parameterize_schema.
+// Schemata never have *ast.TemporalModels conclusions (Python ivy_proof.py:429
+// rejects them via NoMatch). We use GoalConcExpr to enforce this.
+func ParameterizeSchema(cfg *AstConfig, sorts []Sort, schema *LabeledFormula) *LabeledFormula {
+	conc := GoalConcExpr(schema)
+	if conc == nil {
+		return schema
+	}
+	vars := MakeDistinctVars(sorts, conc)
+
+	match := make(map[NodeKey]Expr)
+	var prems []Node
+	for _, prem := range GoalPrems(schema) {
+		cd, ok := prem.(*ConstantDecl)
+		if !ok {
+			prems = append(prems, prem)
+			continue
+		}
+		// Get the symbol from the ConstantDecl's first arg
+		if len(cd.DeclArgs) == 0 {
+			prems = append(prems, prem)
+			continue
+		}
+		sym := extractSymbol(cd.DeclArgs[0])
+		if sym == nil {
+			prems = append(prems, prem)
+			continue
+		}
+
+		// Get domain and range of the symbol's sort
+		var dom []Sort
+		var rng Sort
+		if fs, ok := sym.CSort.(*FunctionSort); ok {
+			dom = fs.Domain()
+			rng = fs.Range()
+		} else {
+			rng = sym.CSort
+		}
+
+		// Create variables X0, X1, ... for existing domain sorts
+		vs2 := make([]*Variable, len(dom))
+		for i, y := range dom {
+			vs2[i], _ = NewVariable(fmt.Sprintf("X%d", i), y)
+		}
+
+		// Build new sort: FuncConstSort(sorts... + dom... + [rng])
+		allSorts := make([]Sort, 0, len(sorts)+len(dom)+1)
+		allSorts = append(allSorts, sorts...)
+		allSorts = append(allSorts, dom...)
+		allSorts = append(allSorts, rng)
+		newSort := FuncConstSort(allSorts...)
+
+		// Create new symbol with extended sort
+		sym2 := NewConst(sym.Name, newSort)
+
+		// Build match[sym] = Lambda(vs2, sym2(*(vars + vs2)))
+		// Construct the application args: vars... + vs2...
+		appArgs := make([]Expr, 0, len(vars)+len(vs2))
+		for _, v := range vars {
+			appArgs = append(appArgs, v)
+		}
+		for _, v := range vs2 {
+			appArgs = append(appArgs, v)
+		}
+
+		var body Expr
+		if len(appArgs) > 0 {
+			app, err := NewApply(sym2, appArgs...)
+			if err != nil {
+				body = sym2
+			} else {
+				body = app
+			}
+		} else {
+			body = sym2
+		}
+
+		lam, err := NewLambda(vs2, body)
+		if err == nil {
+			match[Key(sym)] = lam
+		}
+
+		// Replace premise with ConstantDecl(sym2)
+		prems = append(prems, cfg.NewConstantDecl(sym2))
+	}
+
+	// Apply match to conclusion
+	newConc := ApplyMatch(match, conc)
+	return CloneGoal(cfg, schema, prems, newConc)
+}
+
+// CompileMatchList compiles a list of proof matches using goal vocabularies.
+// LHS of each match Definition is compiled using leftGoal's vocab;
+// RHS is compiled using rightGoal's vocab.
+// If allowWitness is true, extends leftGoal's vocab with used variables
+// from the left goal's conclusion.
+// Corresponds to Python's compile_match_list.
+func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, allowWitness bool, mod *Module) []*AstDefinition {
+	leftVocab := GoalVocab(leftGoal)
+	rightVocab := GoalVocab(rightGoal)
+	if allowWitness {
+		// Extend leftVocab.Variables with used variables from left goal's conclusion.
+		// Unwraps *ast.TemporalModels to scan the inner formula.
+		conc := ConcAsExpr(GoalConc(leftGoal))
+		if conc != nil {
+			usedVars := UsedVariables(conc)
+			for _, v := range usedVars {
+				if vv, ok := v.(*Variable); ok {
+					leftVocab.Variables = append(leftVocab.Variables, vv)
+				}
+			}
+		}
+	}
+	result := make([]*AstDefinition, 0, len(proofMatch))
+	for _, m := range proofMatch {
+		defn, ok := m.(*AstDefinition)
+		if !ok {
+			continue
+		}
+		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
+		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
+		result = append(result, mod.Cfg.AstCfg.NewDefinition(x, y))
+	}
+	return result
+}
+
+// extractSymbol extracts a *lg.Const from an ast.Node.
+func extractSymbol(n Node) *Const {
+	if n == nil {
+		return nil
+	}
+	n = unwrapCompiledNode(n)
+	if s, ok := n.(*Const); ok {
+		return s
+	}
+	// Check if the node has a name that could be a symbol (e.g., ast.Atom)
+	if atom, ok := n.(*Atom); ok {
+		return NewConst(atom.Rep, TopS)
+	}
+	return nil
+}
+
+// CompileOneMatch compiles a single match between two expressions.
+// Corresponds to Python's compile_one_match (ivy_proof.py:905-924).
+//
+// Three branches:
+//  1. Variable LHS → fo_match
+//  2. Non-UninterpretedSort RHS → compute vmatch (sort-variable matches),
+//     apply vmatch to lhs, run match, compose
+//  3. UninterpretedSort RHS → match_sort
+func CompileOneMatch(lhs, rhs Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
+	if _, isVar := lhs.(*Variable); isVar {
+		return FOMatch(lhs, rhs, freesyms, constants)
+	}
+	if _, isUS := rhs.(*UninterpretedSort); !isUS {
+		// Branch 2: Non-UninterpretedSort RHS
+		// Build rhsvs: name → variable, for free variables in rhs
+		rhsVarList := FreeVariablesList(rhs)
+		rhsvs := make(map[string]*Variable, len(rhsVarList))
+		for _, v := range rhsVarList {
+			rhsvs[v.Name] = v
+		}
+		// Build vmatches: for each lhs free var whose sort is free and name appears in rhs,
+		// map lhs-var-sort → rhs-var-sort
+		lhsVarList := FreeVariablesList(lhs)
+		vmatchList := make([]map[NodeKey]Expr, 0, len(lhsVarList))
+		for _, v := range lhsVarList {
+			rhsV, inRhs := rhsvs[v.Name]
+			if !inRhs {
+				continue
+			}
+			if freesyms[Key(v.VSort)] == nil {
+				continue
+			}
+			// {v.sort: rhsvs[v.name].sort}
+			entry := map[NodeKey]Expr{Key(v.VSort): rhsV.VSort}
+			vmatchList = append(vmatchList, entry)
+		}
+		vmatch := MergeMatches(vmatchList...)
+		if vmatch == nil {
+			return nil
+		}
+		updatedLhs := ApplyMatchAlt(vmatch, lhs, nil)
+		newFreesyms := ApplyMatchFreesyms(vmatch, freesyms)
+		somatch := Match(updatedLhs, rhs, newFreesyms, constants)
+		if somatch == nil {
+			return nil
+		}
+		somatch = ComposeMatches(freesyms, vmatch, somatch, vmatch)
+		return MergeMatches(vmatch, somatch)
+	}
+	// Branch 3: UninterpretedSort RHS → match_sort
+	lhsSort, ok := lhs.(Sort)
+	if !ok {
+		return nil
+	}
+	rhsSort := rhs.(Sort) // safe: checked isUS above
+	return MatchSort(lhsSort, rhsSort, freesyms)
+}
+
+// CompileMatchFull compiles all matches from a proof.
+// Compiles the match list, then compiles each individual match against
+// the problem's freesyms and constants, and merges all results.
+// Corresponds to Python's compile_match.
+//
+// Returns *iu.InsMap to preserve Python dict's insertion-order iteration
+// (CPython 3.7+). Callers that need to match Python's xtrace emission
+// order iterate via result.All(); lookup-only callers can Get2(k).
+func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormula, allowWitness bool, mod *Module) *InsMap[NodeKey, Expr] {
+	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelForTrace(), allowWitness)
+	schema := prob.SchemaLF
+	if schema == nil {
+		xtracer.Trace("proof.CompileMatchFull EXIT schemaLFNil")
+		return nil
+	}
+	freesyms := copyNodeMap(prob.FreeSyms)
+	if allowWitness {
+		// Unwrap *ast.TemporalModels to scan the inner formula. In practice
+		// schemata don't have TemporalModels conclusions, but unwrapping is safe.
+		conc := ConcAsExpr(GoalConc(schema))
+		if conc != nil {
+			for k, v := range UsedVariables(conc) {
+				freesyms[k] = v
+			}
+		}
+	}
+	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness, mod)
+	// Python's compile_match:
+	//   matches = [compile_one_match(m.lhs(),m.rhs(),...) for m in matches]
+	//   res = merge_matches(*matches)
+	// merge_matches preserves insertion order of proofMatch entries; mirror
+	// that using InsMap so iteration later matches Python's dict order.
+	matches := make([]*InsMap[NodeKey, Expr], 0, len(compiledMatches))
+	for _, m := range compiledMatches {
+		lhs := unwrapLogicNode(m.Lhs)
+		rhs := unwrapLogicNode(m.Rhs)
+		if lhs == nil || rhs == nil {
+			continue
+		}
+		oneMatch := CompileOneMatch(lhs, rhs, freesyms, prob.Constants)
+		if oneMatch == nil {
+			// Propagate failure (matches Python merge_matches nil-propagation).
+			matches = append(matches, nil)
+			continue
+		}
+		// Convert oneMatch (plain map) → InsMap. For a Var LHS, oneMatch
+		// has one entry {Key(lhs): rhs}; otherwise (sort match) it may
+		// have multiple. Insert lhsKey first, then the rest in map order.
+		ins := NewInsMap[NodeKey, Expr]()
+		lhsKey := Key(lhs)
+		if v, ok := oneMatch[lhsKey]; ok {
+			ins.Set(lhsKey, v)
+		}
+		for k, v := range oneMatch {
+			if k == lhsKey {
+				continue
+			}
+			ins.Set(k, v)
+		}
+		matches = append(matches, ins)
+	}
+	result := MergeMatchesIns(matches...)
+	n := 0
+	if result != nil {
+		n = result.Len()
+	}
+	xtracer.Trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d", len(matches), n)
+	return result
+}
+
+// MergeMatchesIns is the InsMap-preserving variant of MergeMatches.
+// Python's merge_matches iterates matches[0] then matches[1:], adding
+// only new keys — equivalent to a left-biased insertion-order merge.
+// Returns nil if any input is nil (Python: `any(m is None for m in matches)`)
+// or a conflict is detected.
+func MergeMatchesIns(matches ...*InsMap[NodeKey, Expr]) *InsMap[NodeKey, Expr] {
+	res := NewInsMap[NodeKey, Expr]()
+	if len(matches) == 0 {
+		return res
+	}
+	for _, m := range matches {
+		if m == nil {
+			return nil
+		}
+	}
+	for k, v := range matches[0].All() {
+		res.Set(k, v)
+	}
+	for _, m := range matches[1:] {
+		for k, v := range m.All() {
+			if prev, ok := res.Get2(k); ok {
+				// Python: if not equiv_alpha(lmda,res[sym]): return None
+				if !EquivAlpha(v, prev) {
+					return nil
+				}
+				continue
+			}
+			res.Set(k, v)
+		}
+	}
+	return res
+}
+
+// unwrapLogicNode extracts a lg.Expr from an ast.Node.
+func unwrapLogicNode(n Node) Expr {
+	if n == nil {
+		return nil
+	}
+	if ln, ok := n.(Expr); ok {
+		return ln
+	}
+	return nil
+}
+
+// insMapToMap flattens an InsMap into a plain Go map for passing to
+// downstream functions that don't care about iteration order (i.e.,
+// they only do lookups). Callers that DO care about order iterate the
+// InsMap directly via .All() at the observation point.
+func insMapToMap(ins *InsMap[NodeKey, Expr]) map[NodeKey]Expr {
+	if ins == nil {
+		return nil
+	}
+	m := make(map[NodeKey]Expr, ins.Len())
+	for k, v := range ins.All() {
+		m[k] = v
+	}
+	return m
+}
+
+// copyNodeMap copies a map[lg.NodeKey]lg.Expr.
+func copyNodeMap(m map[NodeKey]Expr) map[NodeKey]Expr {
+	result := make(map[NodeKey]Expr, len(m))
+	for k, v := range m {
+		result[k] = v
+	}
+	return result
+}
+
+// MatchRhsVars gets symbols occurring free on the right-hand side of a match.
+// Corresponds to Python's match_rhs_vars.
+func MatchRhsVars(match map[NodeKey]Expr) map[NodeKey]Expr {
+	result := make(map[NodeKey]Expr)
+	for _, v := range match {
+		if v == nil {
+			continue
+		}
+		for k, sym := range FmlaVocab(v) {
+			result[k] = sym
+		}
+	}
+	return result
+}
+
+// === Batch 5.3: Match Application ===
+
+// ApplyMatchMatch composes two matches. Applying the result should have the
+// same effect as applying orig_match first, then match.
+// Corresponds to Python's apply_match_match.
+func ApplyMatchMatch(match, origMatch map[NodeKey]Expr, applyFn func(map[NodeKey]Expr, Expr) Expr) map[NodeKey]Expr {
+	result := make(map[NodeKey]Expr, len(origMatch)+len(match))
+	for k, v := range origMatch {
+		result[k] = applyFn(match, v)
+	}
+	for k, v := range match {
+		if _, exists := result[k]; !exists {
+			result[k] = v
+		}
+	}
+	return result
+}
+
+// RenameProblem renames symbols in a matching problem.
+// Corresponds to Python's rename_problem.
+func RenameProblem(cfg *AstConfig, match map[NodeKey]Expr, prob *MatchProblem) {
+	if prob.SchemaLF != nil {
+		prob.SchemaLF = ApplyMatchGoalNode(cfg, match, prob.SchemaLF)
+	}
+	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
+	newFreeSyms := make(map[NodeKey]Expr, len(prob.FreeSyms))
+	for k, sym := range prob.FreeSyms {
+		if replacement, ok := match[k]; ok {
+			newFreeSyms[Key(replacement)] = replacement
+		} else {
+			newFreeSyms[k] = sym
+		}
+	}
+	prob.FreeSyms = newFreeSyms
+	for k, v := range match {
+		prob.RevMap[Key(v)] = prob.FreeSyms[k]
+	}
+}
+
+// AvoidCaptureProblem renames symbols to avoid capture when applying a match.
+// Corresponds to Python's avoid_capture_problem.
+func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]Expr) {
+	mrv := MatchRhsVars(match)
+	matchNames := make(map[string]bool)
+	for _, v := range mrv {
+		if c, ok := v.(*Const); ok {
+			matchNames[c.Name] = true
+		}
+		if v2, ok := v.(*Variable); ok {
+			matchNames[v2.Name] = true
+		}
+	}
+	var used []string
+	for name := range matchNames {
+		used = append(used, name)
+	}
+	for k := range prob.FreeSyms {
+		used = append(used, fmt.Sprint(k))
+	}
+	rn := NewUniqueRenamer("", used)
+	cmatch := make(map[NodeKey]Expr)
+	for k, sym := range prob.FreeSyms {
+		if c, ok := sym.(*Const); ok {
+			if matchNames[c.Name] {
+				if _, inMatch := match[k]; !inMatch {
+					newName := rn.Rename(c.Name)
+					cmatch[k] = NewConst(newName, c.CSort)
+				}
+			}
+		}
+	}
+	if len(cmatch) > 0 {
+		RenameProblem(cfg, cmatch, prob)
+	}
+}
+
+// RaiseCapture raises a CaptureError for a captured symbol.
+// Corresponds to Python's raise_capture.
+func RaiseCapture(v Expr) error {
+	return &CaptureError{Msg: fmt.Sprintf("symbol %s is captured in substitution", v)}
+}
+
+// MatchGet looks up a symbol in a match, checking for capture.
+// Corresponds to Python's match_get.
+func MatchGet(match map[NodeKey]Expr, sym Expr, env map[NodeKey]bool, defaultVal Expr) (Expr, error) {
+	k := Key(sym)
+	val, ok := match[k]
+	if !ok {
+		return defaultVal, nil
+	}
+	// Check for capture
+	vocab := UsedSymbolsAST(val)
+	for vk := range vocab.All() {
+		if env[vk] {
+			return nil, RaiseCapture(sym)
+		}
+	}
+	return val, nil
+}
+
+// ApplyMatchAlt applies a match to a formula with capture checking.
+// Corresponds to Python's apply_match_alt (ivy_proof.py:1125-1138).
+//
+// Python first calls alpha_avoid to rename bound variables that would clash
+// with free variables introduced by the substitution, then recurses.
+func ApplyMatchAlt(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) Expr {
+	// Python's apply_match_alt has no early return for empty match.
+	if fmla == nil {
+		xtracer.Trace("proof.ApplyMatchAlt ENTER fmlaNil nmatch=%d", len(match))
+		return fmla
+	}
+	xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s", len(match), TypeName(fmla))
+	// Alpha-rename bound vars in fmla to avoid capture by match RHS free vars.
+	// Python: freevars = list(match_rhs_vars(match)); fmla = il.alpha_avoid(fmla, freevars)
+	freeVars := MatchRhsVars(match)
+	fmla = AlphaAvoidMap(fmla, freeVars)
+	if env == nil {
+		env = make(map[NodeKey]bool)
+	}
+	result := applyMatchAltRec(match, fmla, env)
+	if result != nil {
+		xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", result.Canon())
+	} else {
+		xtracer.Trace("proof.ApplyMatchAlt EXIT resultNil")
+	}
+	return result
+}
+
+// applyMatchAltRec recursively applies a match with capture checking.
+// Corresponds to Python's apply_match_alt_rec (ivy_proof.py:1148-1166).
+//
+// Key differences from apply_match_rec:
+//   - Uses match_get (MatchGet) for variable/app lookups to detect capture
+//   - Binder cases add their variables to env before recursing into the body
+//     (Python: `with il.BindSymbols(env, fmla.variables):`)
+//   - After the binder body is processed, the variables are removed from env
+func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) Expr {
+	if fmla == nil {
+		return nil
+	}
+
+	switch t := fmla.(type) {
+	case *Apply:
+		// First recurse into arguments (with current env, not extended)
+		newTerms := make([]Expr, len(t.Terms))
+		for i, arg := range t.Terms {
+			newTerms[i] = applyMatchAltRec(match, arg, env)
+		}
+		// Check if function is in match — use MatchGet for capture detection
+		if c, ok := t.Func.(*Const); ok {
+			k := Key(c)
+			if _, exists := match[k]; exists {
+				replacement, err := MatchGet(match, c, env, c)
+				if err != nil {
+					// Capture detected — skip substitution for this symbol
+					return fmla
+				}
+				if lam, ok := replacement.(*Lambda); ok {
+					result, lerr := LambdaApply(lam, newTerms)
+					if lerr != nil {
+						return fmla // capture — return original
+					}
+					return result
+				}
+				if newC, ok := replacement.(*Const); ok {
+					if len(newTerms) > 0 {
+						app, _ := NewApply(newC, newTerms...)
+						return app
+					}
+					return newC
+				}
+				return replacement
+			}
+			// Apply sort mapping to function symbol, then match_get
+			newC := ApplyMatchFunc(match, c)
+			replacement, err := MatchGet(match, newC, env, newC)
+			if err != nil {
+				// Capture detected — skip substitution for this symbol
+				return fmla
+			}
+			if newRC, ok := replacement.(*Const); ok {
+				if len(newTerms) > 0 {
+					app, _ := NewApply(newRC, newTerms...)
+					return app
+				}
+				return newRC
+			}
+			// replacement is a lambda
+			if lam, ok := replacement.(*Lambda); ok {
+				result, lerr := LambdaApply(lam, newTerms)
+				if lerr != nil {
+					return fmla // capture — return original
+				}
+				return result
+			}
+		}
+		newFunc := applyMatchAltRec(match, t.Func, env)
+		app, _ := NewApply(newFunc, newTerms...)
+		return app
+
+	case *Variable:
+		k := Key(t)
+		if _, exists := match[k]; exists {
+			// match_get checks for capture via env
+			replacement, err := MatchGet(match, t, env, t)
+			if err != nil {
+				// Capture detected — skip substitution
+				return fmla
+			}
+			return replacement
+		}
+		// Apply sort match, then try match_get again
+		newSort := ApplyMatchSort(match, t.VSort)
+		newVar := t
+		if newSort != t.VSort {
+			v, _ := NewVariable(t.Name, newSort)
+			newVar = v
+		}
+		// match_get with default = newVar (capture-safe)
+		replacement, err := MatchGet(match, newVar, env, newVar)
+		if err != nil {
+			// Capture detected — return updated variable without further substitution
+			return newVar
+		}
+		return replacement
+
+	case *Const:
+		k := Key(t)
+		if replacement, exists := match[k]; exists {
+			return replacement
+		}
+		return fmla
+
+	case *ForAll:
+		// Python: with il.BindSymbols(env, fmla.variables):
+		//   fmla = fmla.clone_binder([apply_match_alt_rec(match, v, env) for v in fmla.variables], args[0])
+		// Add bound variables to env before recursing into vars and body
+		for _, v := range t.Variables {
+			env[Key(v)] = true
+		}
+		newVars := make([]*Variable, len(t.Variables))
+		for i, v := range t.Variables {
+			newV := applyMatchAltRec(match, v, env)
+			if nv, ok := newV.(*Variable); ok {
+				newVars[i] = nv
+			} else {
+				newVars[i] = v
+			}
+		}
+		newBody := applyMatchAltRec(match, t.Body, env)
+		// Remove bound variables from env (restore)
+		for _, v := range t.Variables {
+			delete(env, Key(v))
+		}
+		return &ForAll{Variables: newVars, Body: newBody}
+
+	case *Exists:
+		for _, v := range t.Variables {
+			env[Key(v)] = true
+		}
+		newVars := make([]*Variable, len(t.Variables))
+		for i, v := range t.Variables {
+			newV := applyMatchAltRec(match, v, env)
+			if nv, ok := newV.(*Variable); ok {
+				newVars[i] = nv
+			} else {
+				newVars[i] = v
+			}
+		}
+		newBody := applyMatchAltRec(match, t.Body, env)
+		for _, v := range t.Variables {
+			delete(env, Key(v))
+		}
+		return &Exists{Variables: newVars, Body: newBody}
+
+	case *Lambda:
+		for _, v := range t.Variables {
+			env[Key(v)] = true
+		}
+		newVars := make([]*Variable, len(t.Variables))
+		for i, v := range t.Variables {
+			newV := applyMatchAltRec(match, v, env)
+			if nv, ok := newV.(*Variable); ok {
+				newVars[i] = nv
+			} else {
+				newVars[i] = v
+			}
+		}
+		newBody := applyMatchAltRec(match, t.Body, env)
+		for _, v := range t.Variables {
+			delete(env, Key(v))
+		}
+		return &Lambda{Variables: newVars, Body: newBody}
+	}
+
+	// Generic: recurse into children — Python always clones even with empty children.
+	children := fmla.Children()
+	newChildren := make([]Expr, len(children))
+	for i, c := range children {
+		newChildren[i] = applyMatchAltRec(match, c, env)
+	}
+	return CloneNode(fmla, newChildren)
+}
+
+// ApplyFun applies a lambda function with capture error handling.
+// Corresponds to Python's apply_fun.
+func ApplyFun(fun Expr, args []Expr) (Expr, error) {
+	if lam, ok := fun.(*Lambda); ok {
+		return LambdaApply(lam, args)
+	}
+	if c, ok := fun.(*Const); ok {
+		app, err := NewApply(c, args...)
+		return app, err
+	}
+	return nil, fmt.Errorf("apply_fun: not a function: %v", fun)
+}
+
+// ApplyMatchFuncAlt applies a match to a function symbol with lambda handling.
+// Corresponds to Python's apply_match_func_alt.
+func ApplyMatchFuncAlt(match map[NodeKey]Expr, fun Expr, env map[NodeKey]bool) Expr {
+	if lam, ok := fun.(*Lambda); ok {
+		return ApplyMatchAlt(match, lam, env)
+	}
+	k := Key(fun)
+	if replacement, exists := match[k]; exists {
+		return replacement
+	}
+	if c, ok := fun.(*Const); ok {
+		newC := ApplyMatchFunc(match, c)
+		k2 := Key(newC)
+		if replacement, exists := match[k2]; exists {
+			return replacement
+		}
+		return newC
+	}
+	return fun
+}
+
+// ApplyMatchSort applies a match to a sort, returning the matched sort or original.
+// Corresponds to Python's apply_match_sort.
+func ApplyMatchSort(match map[NodeKey]Expr, sort Sort) Sort {
+	if sort == nil {
+		return nil
+	}
+	// Check if sort itself is in match (as a node)
+	// Sorts are not directly lg.Expr, so we look for named sorts
+	if us, ok := sort.(*UninterpretedSort); ok {
+		sym := NewConst(us.Name, TopS)
+		k := Key(sym)
+		if replacement, exists := match[k]; exists {
+			if newSort, ok := replacement.(Sort); ok {
+				return newSort
+			}
+		}
+	}
+	return sort
+}
+
+// ApplyMatchFreesymsAlt applies a match to free symbols and filters out matched ones.
+// Corresponds to Python's apply_match_freesyms_alt.
+func ApplyMatchFreesymsAlt(match map[NodeKey]Expr, freesyms map[NodeKey]Expr) map[NodeKey]Expr {
+	result := make(map[NodeKey]Expr)
+	for _, sym := range freesyms {
+		newSym := ApplyMatchSym(match, sym)
+		newK := Key(newSym)
+		if _, inMatch := match[newK]; !inMatch {
+			result[newK] = newSym
+		}
+	}
+	return result
+}
+
+// RenameGoal renames symbols in a goal based on a renaming specification.
+// Corresponds to Python's rename_goal.
+func RenameGoal(cfg *AstConfig, goal *LabeledFormula, renaming Node) (*LabeledFormula, error) {
+	if len(renaming.Args()) == 0 {
+		return goal, nil
+	}
+	if err := CheckRenaming(goal, renaming); err != nil {
+		return nil, err
+	}
+	// Build rename map: old name → new name
+	rmap := make(map[string]string)
+	for _, arg := range renaming.Args() {
+		defn, ok := arg.(*AstDefinition)
+		if !ok {
+			continue
+		}
+		if lAtom, ok := defn.Lhs.(*Atom); ok {
+			if rAtom, ok := defn.Rhs.(*Atom); ok {
+				rmap[lAtom.Rep] = rAtom.Rep
+			}
+		}
+	}
+
+	// Recursive goal renaming
+	var recGoal func(*LabeledFormula) (*LabeledFormula, error)
+	recGoal = func(g *LabeledFormula) (*LabeledFormula, error) {
+		if g == nil {
+			return nil, nil
+		}
+		// Recurse into premises
+		prems := GoalPrems(g)
+		newPrems := make([]Node, len(prems))
+		for i, p := range prems {
+			if lf, ok := p.(*LabeledFormula); ok {
+				renamed, err := recGoal(lf)
+				if err != nil {
+					return nil, err
+				}
+				newPrems[i] = renamed
+			} else {
+				newPrems[i] = p
+			}
+		}
+		g = CloneGoal(cfg, g, newPrems, GoalConc(g))
+
+		// Build match from goal_defns: for each defined symbol whose name
+		// is in rmap, create old→new mapping
+		defns := GoalDefns(g)
+		match := make(map[NodeKey]Expr)
+		for k, node := range defns {
+			name := nodeNameStr(node)
+			if name == "" {
+				continue
+			}
+			newName, ok := rmap[name]
+			if !ok {
+				continue
+			}
+			// x.rename(lambda n: rmap[x.name]) — create new node with renamed name
+			renamed := renameNode(node, newName)
+			match[k] = renamed
+		}
+		// apply_match_sym to each value
+		applied := make(map[NodeKey]Expr, len(match))
+		for k, v := range match {
+			applied[k] = ApplyMatchSym(match, v)
+		}
+		match = applied
+
+		// Check alpha capture
+		if err := CheckAlphaCapture(g, match); err != nil {
+			return nil, err
+		}
+
+		// Apply match to goal
+		g = ApplyMatchGoalNode(cfg, match, g)
+
+		// Alpha-rename the conclusion. ApplyToConc unwraps *ast.TemporalModels
+		// so the rename runs on the inner formula and the wrapper is preserved.
+		conc := GoalConc(g)
+		if conc != nil {
+			var renameErr error
+			newConc := ApplyToConc(conc, func(c Expr) Expr {
+				renamed, err := AlphaRename(rmap, c)
+				if err != nil {
+					renameErr = err
+					return c
+				}
+				return renamed
+			})
+			if renameErr == nil {
+				g = CloneGoal(cfg, g, GoalPrems(g), newConc)
+			}
+		}
+
+		// Rename the goal's own label
+		goalName := g.LabelName()
+		if newName, ok := rmap[goalName]; ok {
+			g = g.Rename(newName)
+		}
+
+		return g, nil
+	}
+
+	return recGoal(goal)
+}
+
+// nodeNameStr extracts the name from a logic node (Symbol or Variable).
+func nodeNameStr(n Expr) string {
+	switch t := n.(type) {
+	case *Const:
+		return t.Name
+	case *Variable:
+		return t.Name
+	default:
+		return ""
+	}
+}
+
+// renameNode creates a copy of a logic node with a new name.
+func renameNode(n Expr, newName string) Expr {
+	switch t := n.(type) {
+	case *Const:
+		return NewConst(newName, t.CSort)
+	case *Variable:
+		v, _ := NewVariable(newName, t.VSort)
+		return v
+	default:
+		return n
+	}
+}
+
+// MakeDistinctVars creates fresh variables with distinct names from given ASTs.
+// Corresponds to Python's make_distinct_vars.
+func MakeDistinctVars(sorts []Sort, asts ...Expr) []*Variable {
+	vars := make([]*Variable, len(sorts))
+	for i, sort := range sorts {
+		v, _ := NewVariable(fmt.Sprintf("V%d", i), sort)
+		vars[i] = v
+	}
+	return RenameVariablesDistinctAsts(vars, asts)
+}
+
+// ApplyMatchGoalNode applies a match to a goal.
+// Corresponds to Python's apply_match_goal with apply_match_alt.
+func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula) *LabeledFormula {
+	xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	// Python's apply_match_goal has no early return for empty match — it always
+	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
+	prems := GoalPrems(goal)
+	var newPrems []Node
+	for _, p := range prems {
+		pu := unwrapCompiledNode(p)
+		if lf, ok := pu.(*LabeledFormula); ok {
+			newPrems = append(newPrems, ApplyMatchGoalNode(cfg, match, lf))
+		} else if s, ok := pu.(Sort); ok {
+			// Apply sort renaming: match[sort] → newSort
+			key := Key(s)
+			if rep, found := match[key]; found {
+				if rs, ok := rep.(Sort); ok {
+					newPrems = append(newPrems, rs)
+					continue
+				}
+			}
+			newPrems = append(newPrems, p)
+		} else if cd, ok := pu.(*ConstantDecl); ok {
+			// Apply symbol renaming via ApplyMatchFunc
+			args := cd.Args()
+			if len(args) > 0 {
+				if sym, ok := unwrapCompiledNode(args[0]).(*Const); ok {
+					newSym := ApplyMatchFunc(match, sym)
+					symKey := Key(newSym)
+					if rep, found := match[symKey]; found {
+						if repNode, ok := rep.(Node); ok {
+							newPrems = append(newPrems, cd.Clone([]Node{repNode}))
+						} else {
+							newPrems = append(newPrems, cd.Clone([]Node{newSym}))
+						}
+					} else {
+						newPrems = append(newPrems, cd.Clone([]Node{newSym}))
+					}
+				} else {
+					newPrems = append(newPrems, p)
+				}
+			} else {
+				newPrems = append(newPrems, p)
+			}
+		} else {
+			newPrems = append(newPrems, p)
+		}
+	}
+	// Filter out lambda-typed ConstantDecl premises.
+	// Python: prems = [p for p in prems if not is_lambda(p)]
+	// where is_lambda(p) = isinstance(p, ia.ConstantDecl) and isinstance(p.args[0], il.Lambda)
+	if newPrems != nil {
+		filtered := newPrems[:0]
+		for _, p := range newPrems {
+			if cd, ok := p.(*ConstantDecl); ok {
+				args := cd.Args()
+				if len(args) > 0 {
+					if _, isLam := unwrapCompiledNode(args[0]).(*Lambda); isLam {
+						continue // filter out lambda-typed ConstantDecl
+					}
+				}
+			}
+			filtered = append(filtered, p)
+		}
+		newPrems = filtered
+	}
+	// Build env from goal_defns: symbols defined in the goal's premises that
+	// are NOT already in match. These should be treated as bound when checking
+	// for capture in the conclusion.
+	// Python: bound = [s for s in goal_defns(x) if s not in match]
+	//         with il.BindSymbols(env, bound): ... apply_match(match, conc, env)
+	env := make(map[NodeKey]bool)
+	for k := range GoalDefns(goal) {
+		if _, inMatch := match[k]; !inMatch {
+			env[k] = true
+		}
+	}
+	// Python: fmla = apply_match(match, fmla, env) — direct call, no
+	// apply_to_conc wrapper (ivy_proof.py:1176-1177).
+	rawConc := GoalConc(goal)
+	var newConc Node
+	if concExpr, ok := rawConc.(Expr); ok {
+		newConc = ApplyMatchAlt(match, concExpr, env)
+	} else if tm, ok := rawConc.(*AstTemporalModels); ok {
+		// Python walks TemporalModels as a generic node via apply_match_alt_rec's
+		// fmla.clone(args) branch. Emulate that here by recursing into the inner
+		// formula (no apply_to_conc trace).
+		if innerExpr, ok := tm.Fmla.(Expr); ok {
+			newConc = tm.Clone([]Node{ApplyMatchAlt(match, innerExpr, env)})
+		} else {
+			newConc = tm
+		}
+	} else {
+		newConc = rawConc
+	}
+	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	return result
+}
+
+// ApplyMatchGoalNodeNonAlt applies a match to a goal using the non-alt
+// (non-capture-checking) apply function. Used for fomatch applications.
+// Corresponds to Python's apply_match_goal called with apply_match.
+func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula) *LabeledFormula {
+	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	// Python's apply_match_goal has no early return for empty match — it always
+	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
+	prems := GoalPrems(goal)
+	var newPrems []Node
+	for _, p := range prems {
+		pu := unwrapCompiledNode(p)
+		if lf, ok := pu.(*LabeledFormula); ok {
+			newPrems = append(newPrems, ApplyMatchGoalNodeNonAlt(cfg, match, lf))
+		} else if s, ok := pu.(Sort); ok {
+			key := Key(s)
+			if rep, found := match[key]; found {
+				if rs, ok := rep.(Sort); ok {
+					newPrems = append(newPrems, rs)
+					continue
+				}
+			}
+			newPrems = append(newPrems, p)
+		} else if cd, ok := pu.(*ConstantDecl); ok {
+			args := cd.Args()
+			if len(args) > 0 {
+				if sym, ok := unwrapCompiledNode(args[0]).(*Const); ok {
+					newSym := ApplyMatchFunc(match, sym)
+					symKey := Key(newSym)
+					if rep, found := match[symKey]; found {
+						if repNode, ok := rep.(Node); ok {
+							newPrems = append(newPrems, cd.Clone([]Node{repNode}))
+						} else {
+							newPrems = append(newPrems, cd.Clone([]Node{newSym}))
+						}
+					} else {
+						newPrems = append(newPrems, cd.Clone([]Node{newSym}))
+					}
+				} else {
+					newPrems = append(newPrems, p)
+				}
+			} else {
+				newPrems = append(newPrems, p)
+			}
+		} else {
+			newPrems = append(newPrems, p)
+		}
+	}
+	// Filter out lambda-typed ConstantDecl premises.
+	if newPrems != nil {
+		filtered := newPrems[:0]
+		for _, p := range newPrems {
+			if cd, ok := p.(*ConstantDecl); ok {
+				args := cd.Args()
+				if len(args) > 0 {
+					if _, isLam := unwrapCompiledNode(args[0]).(*Lambda); isLam {
+						continue
+					}
+				}
+			}
+			filtered = append(filtered, p)
+		}
+		newPrems = filtered
+	}
+	// Python: fmla = apply_match(match, fmla, env) — direct call (non-alt variant).
+	rawConc := GoalConc(goal)
+	var newConc Node
+	if concExpr, ok := rawConc.(Expr); ok {
+		newConc = ApplyMatch(match, concExpr)
+	} else if tm, ok := rawConc.(*AstTemporalModels); ok {
+		if innerExpr, ok := tm.Fmla.(Expr); ok {
+			newConc = tm.Clone([]Node{ApplyMatch(match, innerExpr)})
+		} else {
+			newConc = tm
+		}
+	} else {
+		newConc = rawConc
+	}
+	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
+	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=%v", result.Canon())
+	return result
+}
+
+// CompileWitnessList compiles witness terms for existential instantiation.
+// Corresponds to Python's compile_witness_list (ivy_proof.py:1719).
+//
+// Python extends vocab.variables with used_variables(goal_conc(goal)) so
+// that bound variables in the conc are visible when compiling witness
+// expressions. Without this, witness terms like `P = _P` where P is a
+// bound var of the goal can't resolve P's sort, leaving P as TopSort.
+func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
+	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelForTrace())
+	vocab := GoalVocab(goal)
+	// Python: the_goal_vocab.variables.extend(list(logic_util.used_variables(goal_conc(goal))))
+	if concExpr := ConcAsExpr(GoalConc(goal)); concExpr != nil {
+		existing := make(map[NodeKey]bool, len(vocab.Variables))
+		for _, v := range vocab.Variables {
+			existing[Key(v)] = true
+		}
+		for _, v := range UsedVariables(concExpr) {
+			if vv, ok := v.(*Variable); ok && !existing[Key(vv)] {
+				vocab.Variables = append(vocab.Variables, vv)
+				existing[Key(vv)] = true
+			}
+		}
+	}
+	var result []Expr
+	for i, arg := range proof.Args() {
+		compiled := CompileExprVocab(arg, vocab, mod)
+		if compiled != nil {
+			xtracer.Trace("proof.CompileWitnessList arg=%d HASH canon=%v", i, compiled.Canon())
+			result = append(result, compiled)
+		} else {
+			xtracer.Trace("proof.CompileWitnessList arg=%d compiledNil", i)
+		}
+	}
+	xtracer.Trace("proof.CompileWitnessList EXIT nresult=%d", len(result))
+	return result
+}
+
+// Ensure unused imports don't cause errors.
+var _ = EqualModAlpha
+var _ = NewUniqueRenamer
+var _ Node

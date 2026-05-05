@@ -5,11 +5,10 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // Edge display class constants (Python: _edge_display_classes).
@@ -538,7 +537,7 @@ func (g *Graph) AddConstraints(constraints []string, recompute bool) {
 }
 
 // AddConstraintsExpr appends logic.Expr constraints to the interactive session.
-func (g *Graph) AddConstraintsExpr(constraints []logic.Expr, recompute bool) {
+func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
@@ -568,11 +567,11 @@ func (g *Graph) SetFacts(facts []string) {
 }
 
 // SetFactsExpr replaces suppose constraints with the given logic.Expr slice.
-func (g *Graph) SetFactsExpr(facts []logic.Expr) {
+func (g *Graph) SetFactsExpr(facts []goivy.Expr) {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
-		g.InteractiveSess.SupposeConstraints = append([]logic.Expr{}, facts...)
+		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
 	}
 }
 

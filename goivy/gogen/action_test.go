@@ -1,25 +1,23 @@
 package gogen
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Helper to create a simple lg.Const node.
-func testConst(name string, s lg.Sort) *lg.Const {
-	return lg.NewConst(name, s)
+func testConst(name string, s goivy.Sort) *goivy.Const {
+	return goivy.NewConst(name, s)
 }
 
 // Helper to create a simple lg.Variable node.
-func testVar(name string, s lg.Sort) *lg.Variable {
-	v, _ := lg.NewVariable(name, s)
+func testVar(name string, s goivy.Sort) *goivy.Variable {
+	v, _ := goivy.NewVariable(name, s)
 	return v
 }
 
-func emitActionToString(act actions.ActionsAction) string {
+func emitActionToString(act goivy.ActionsAction) string {
 	w := NewCodeWriter()
 	e := NewActionEmitter(nil, w)
 	e.EmitAction(act)
@@ -29,9 +27,9 @@ func emitActionToString(act actions.ActionsAction) string {
 // --- AssignAction tests ---
 
 func TestEmitAssign_Simple(t *testing.T) {
-	lhs := testConst("x", lg.Boolean)
-	rhs := testConst("y", lg.Boolean)
-	act := actions.NewAssignAction(lhs, rhs)
+	lhs := testConst("x", goivy.Boolean)
+	rhs := testConst("y", goivy.Boolean)
+	act := goivy.NewAssignAction(lhs, rhs)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment, got: %s", out)
@@ -39,9 +37,9 @@ func TestEmitAssign_Simple(t *testing.T) {
 }
 
 func TestEmitAssign_DottedName(t *testing.T) {
-	lhs := testConst("node.link", lg.Boolean)
-	rhs := testConst("true_val", lg.Boolean)
-	act := actions.NewAssignAction(lhs, rhs)
+	lhs := testConst("node.link", goivy.Boolean)
+	rhs := testConst("true_val", goivy.Boolean)
+	act := goivy.NewAssignAction(lhs, rhs)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "node_link") {
 		t.Errorf("expected dotted name converted, got: %s", out)
@@ -51,7 +49,7 @@ func TestEmitAssign_DottedName(t *testing.T) {
 // --- Sequence tests ---
 
 func TestEmitSequence_Empty(t *testing.T) {
-	act := actions.NewSequence()
+	act := goivy.NewSequence()
 	out := emitActionToString(act)
 	// Empty sequence should produce no output.
 	if strings.TrimSpace(out) != "" {
@@ -60,15 +58,15 @@ func TestEmitSequence_Empty(t *testing.T) {
 }
 
 func TestEmitSequence_Multiple(t *testing.T) {
-	a1 := actions.NewAssignAction(
-		testConst("x", lg.Boolean),
-		testConst("y", lg.Boolean),
+	a1 := goivy.NewAssignAction(
+		testConst("x", goivy.Boolean),
+		testConst("y", goivy.Boolean),
 	)
-	a2 := actions.NewAssignAction(
-		testConst("a", lg.Boolean),
-		testConst("b", lg.Boolean),
+	a2 := goivy.NewAssignAction(
+		testConst("a", goivy.Boolean),
+		testConst("b", goivy.Boolean),
 	)
-	seq := actions.NewSequence(a1, a2)
+	seq := goivy.NewSequence(a1, a2)
 	out := emitActionToString(seq)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("missing first assignment: %s", out)
@@ -81,12 +79,12 @@ func TestEmitSequence_Multiple(t *testing.T) {
 // --- IfAction tests ---
 
 func TestEmitIf_NoElse(t *testing.T) {
-	cond := testConst("c", lg.Boolean)
-	body := actions.NewAssignAction(
-		testConst("x", lg.Boolean),
-		testConst("y", lg.Boolean),
+	cond := testConst("c", goivy.Boolean)
+	body := goivy.NewAssignAction(
+		testConst("x", goivy.Boolean),
+		testConst("y", goivy.Boolean),
 	)
-	act := actions.NewIfAction(cond, body)
+	act := goivy.NewIfAction(cond, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
@@ -97,10 +95,10 @@ func TestEmitIf_NoElse(t *testing.T) {
 }
 
 func TestEmitIf_WithElse(t *testing.T) {
-	cond := testConst("c", lg.Boolean)
-	thenBody := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	elseBody := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	act := actions.NewIfAction(cond, thenBody, elseBody)
+	cond := testConst("c", goivy.Boolean)
+	thenBody := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	elseBody := goivy.NewAssignAction(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
+	act := goivy.NewIfAction(cond, thenBody, elseBody)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
@@ -113,9 +111,9 @@ func TestEmitIf_WithElse(t *testing.T) {
 // --- WhileAction tests ---
 
 func TestEmitWhile_Simple(t *testing.T) {
-	cond := testConst("running", lg.Boolean)
-	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewWhileAction(cond, body)
+	cond := testConst("running", goivy.Boolean)
+	body := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	act := goivy.NewWhileAction(cond, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "for running {") {
 		t.Errorf("expected for loop, got: %s", out)
@@ -123,10 +121,10 @@ func TestEmitWhile_Simple(t *testing.T) {
 }
 
 func TestEmitWhile_WithInvariant(t *testing.T) {
-	cond := testConst("running", lg.Boolean)
-	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	inv := testConst("safe", lg.Boolean)
-	act := actions.NewWhileAction(cond, body, inv)
+	cond := testConst("running", goivy.Boolean)
+	body := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	inv := testConst("safe", goivy.Boolean)
+	act := goivy.NewWhileAction(cond, body, inv)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "invariant 0 violated") {
 		t.Errorf("expected invariant check, got: %s", out)
@@ -136,8 +134,8 @@ func TestEmitWhile_WithInvariant(t *testing.T) {
 // --- CallAction tests ---
 
 func TestEmitCall(t *testing.T) {
-	callee := testConst("send", lg.Boolean)
-	act := actions.NewCallActionOn(actions.NewActionsConfig(), callee)
+	callee := testConst("send", goivy.Boolean)
+	act := goivy.NewCallActionOn(goivy.NewActionsConfig(), callee)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "s.Send()") {
 		t.Errorf("expected method call, got: %s", out)
@@ -147,8 +145,8 @@ func TestEmitCall(t *testing.T) {
 // --- AssertAction tests ---
 
 func TestEmitAssert(t *testing.T) {
-	cond := testConst("valid", lg.Boolean)
-	act := actions.NewAssertAction(cond)
+	cond := testConst("valid", goivy.Boolean)
+	act := goivy.NewAssertAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "if !(valid) {") {
 		t.Errorf("expected assert check, got: %s", out)
@@ -161,8 +159,8 @@ func TestEmitAssert(t *testing.T) {
 // --- RequiresAction tests ---
 
 func TestEmitRequire(t *testing.T) {
-	cond := testConst("precond", lg.Boolean)
-	act := actions.NewRequiresAction(cond)
+	cond := testConst("precond", goivy.Boolean)
+	act := goivy.NewRequiresAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "precondition failed") {
 		t.Errorf("expected precondition panic, got: %s", out)
@@ -172,8 +170,8 @@ func TestEmitRequire(t *testing.T) {
 // --- EnsuresAction tests ---
 
 func TestEmitEnsure(t *testing.T) {
-	cond := testConst("postcond", lg.Boolean)
-	act := actions.NewEnsuresAction(cond)
+	cond := testConst("postcond", goivy.Boolean)
+	act := goivy.NewEnsuresAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "postcondition failed") {
 		t.Errorf("expected postcondition panic, got: %s", out)
@@ -183,8 +181,8 @@ func TestEmitEnsure(t *testing.T) {
 // --- AssumeAction tests ---
 
 func TestEmitAssume(t *testing.T) {
-	cond := testConst("premise", lg.Boolean)
-	act := actions.NewAssumeAction(cond)
+	cond := testConst("premise", goivy.Boolean)
+	act := goivy.NewAssumeAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "// assume:") {
 		t.Errorf("expected assume comment, got: %s", out)
@@ -194,8 +192,8 @@ func TestEmitAssume(t *testing.T) {
 // --- HavocAction tests ---
 
 func TestEmitHavoc(t *testing.T) {
-	target := testConst("x", lg.Boolean)
-	act := actions.NewHavocAction(target)
+	target := testConst("x", goivy.Boolean)
+	act := goivy.NewHavocAction(target)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "havoc") {
 		t.Errorf("expected havoc comment, got: %s", out)
@@ -208,8 +206,8 @@ func TestEmitHavoc(t *testing.T) {
 // --- ChoiceAction tests ---
 
 func TestEmitChoice_Single(t *testing.T) {
-	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig(), body)
+	body := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	act := goivy.NewChoiceActionOn(goivy.NewActionsConfig(), body)
 	out := emitActionToString(act)
 	// Single branch should not use switch.
 	if strings.Contains(out, "switch") {
@@ -221,9 +219,9 @@ func TestEmitChoice_Single(t *testing.T) {
 }
 
 func TestEmitChoice_Multiple(t *testing.T) {
-	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	b2 := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig(), b1, b2)
+	b1 := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	b2 := goivy.NewAssignAction(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
+	act := goivy.NewChoiceActionOn(goivy.NewActionsConfig(), b1, b2)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "switch rand.Intn(2)") {
 		t.Errorf("expected switch with rand, got: %s", out)
@@ -234,7 +232,7 @@ func TestEmitChoice_Multiple(t *testing.T) {
 }
 
 func TestEmitChoice_Empty(t *testing.T) {
-	act := actions.NewChoiceActionOn(actions.NewActionsConfig())
+	act := goivy.NewChoiceActionOn(goivy.NewActionsConfig())
 	out := emitActionToString(act)
 	if !strings.Contains(out, "empty choice") {
 		t.Errorf("expected empty choice comment, got: %s", out)
@@ -244,12 +242,12 @@ func TestEmitChoice_Empty(t *testing.T) {
 // --- LocalAction tests ---
 
 func TestEmitLocal(t *testing.T) {
-	local := testConst("tmp", lg.Boolean)
-	body := actions.NewAssignAction(
-		testConst("tmp", lg.Boolean),
-		testConst("x", lg.Boolean),
+	local := testConst("tmp", goivy.Boolean)
+	body := goivy.NewAssignAction(
+		testConst("tmp", goivy.Boolean),
+		testConst("x", goivy.Boolean),
 	)
-	act := actions.NewLocalActionOn(actions.NewActionsConfig(), "test", local, body)
+	act := goivy.NewLocalActionOn(goivy.NewActionsConfig(), "test", local, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "var tmp bool") {
 		t.Errorf("expected local var declaration, got: %s", out)
@@ -259,9 +257,9 @@ func TestEmitLocal(t *testing.T) {
 // --- LetAction tests ---
 
 func TestEmitLet(t *testing.T) {
-	binding := testConst("val", lg.Boolean)
-	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("val", lg.Boolean))
-	act := actions.NewLetAction(binding, body)
+	binding := testConst("val", goivy.Boolean)
+	body := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("val", goivy.Boolean))
+	act := goivy.NewLetAction(binding, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "val := val") {
 		t.Errorf("expected let binding, got: %s", out)
@@ -271,8 +269,8 @@ func TestEmitLet(t *testing.T) {
 // --- NativeAction tests ---
 
 func TestEmitNative(t *testing.T) {
-	code := testConst("some_native_code", lg.Boolean)
-	act := actions.NewNativeAction(code)
+	code := testConst("some_native_code", goivy.Boolean)
+	act := goivy.NewNativeAction(code)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "// native:") {
 		t.Errorf("expected native comment, got: %s", out)
@@ -282,8 +280,8 @@ func TestEmitNative(t *testing.T) {
 // --- CrashAction tests ---
 
 func TestEmitCrash(t *testing.T) {
-	target := testConst("node", lg.Boolean)
-	act := actions.NewCrashAction(target)
+	target := testConst("node", goivy.Boolean)
+	act := goivy.NewCrashAction(target)
 	out := emitActionToString(act)
 	if !strings.Contains(out, `panic("crash")`) {
 		t.Errorf("expected crash panic, got: %s", out)
@@ -293,8 +291,8 @@ func TestEmitCrash(t *testing.T) {
 // --- SetAction tests ---
 
 func TestEmitSet(t *testing.T) {
-	lit := testConst("link", lg.Boolean)
-	act := actions.NewSetAction(lit)
+	lit := testConst("link", goivy.Boolean)
+	act := goivy.NewSetAction(lit)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "// set:") {
 		t.Errorf("expected set comment, got: %s", out)
@@ -304,8 +302,8 @@ func TestEmitSet(t *testing.T) {
 // --- EnvAction tests ---
 
 func TestEmitEnv(t *testing.T) {
-	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewEnvActionOn(actions.NewActionsConfig(), b1)
+	b1 := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	act := goivy.NewEnvActionOn(goivy.NewActionsConfig(), b1)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment from env, got: %s", out)
@@ -315,8 +313,8 @@ func TestEmitEnv(t *testing.T) {
 // --- BindOldsAction tests ---
 
 func TestEmitBindOlds(t *testing.T) {
-	inner := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewBindOldsAction(inner)
+	inner := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	act := goivy.NewBindOldsAction(inner)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected inner action emitted, got: %s", out)
@@ -326,7 +324,7 @@ func TestEmitBindOlds(t *testing.T) {
 // --- ReturnAction tests ---
 
 func TestEmitReturn(t *testing.T) {
-	act := actions.NewReturnAction()
+	act := goivy.NewReturnAction()
 	out := emitActionToString(act)
 	if !strings.Contains(out, "return") {
 		t.Errorf("expected return, got: %s", out)
@@ -336,7 +334,7 @@ func TestEmitReturn(t *testing.T) {
 // --- IgnoreAction tests ---
 
 func TestEmitIgnore(t *testing.T) {
-	act := actions.NewIgnoreAction()
+	act := goivy.NewIgnoreAction()
 	out := emitActionToString(act)
 	if strings.TrimSpace(out) != "" {
 		t.Errorf("expected no output for ignore, got: %q", out)
@@ -355,7 +353,7 @@ func TestEmitNilAction(t *testing.T) {
 // --- ExprToGo tests ---
 
 func TestExprToGo_Const(t *testing.T) {
-	c := testConst("myVar", lg.Boolean)
+	c := testConst("myVar", goivy.Boolean)
 	got := ExprToGo(c)
 	if got != "myVar" {
 		t.Errorf("expected myVar, got: %s", got)
@@ -363,7 +361,7 @@ func TestExprToGo_Const(t *testing.T) {
 }
 
 func TestExprToGo_Eq(t *testing.T) {
-	eq, _ := lg.NewEq(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
+	eq, _ := goivy.NewEq(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
 	got := ExprToGo(eq)
 	if !strings.Contains(got, "==") {
 		t.Errorf("expected ==, got: %s", got)
@@ -371,7 +369,7 @@ func TestExprToGo_Eq(t *testing.T) {
 }
 
 func TestExprToGo_Not(t *testing.T) {
-	not, _ := lg.NewNot(testConst("a", lg.Boolean))
+	not, _ := goivy.NewNot(testConst("a", goivy.Boolean))
 	got := ExprToGo(not)
 	if !strings.Contains(got, "!(") {
 		t.Errorf("expected negation, got: %s", got)
@@ -379,7 +377,7 @@ func TestExprToGo_Not(t *testing.T) {
 }
 
 func TestExprToGo_And(t *testing.T) {
-	and, _ := lg.NewAnd(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
+	and, _ := goivy.NewAnd(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
 	got := ExprToGo(and)
 	if !strings.Contains(got, "&&") {
 		t.Errorf("expected &&, got: %s", got)
@@ -387,7 +385,7 @@ func TestExprToGo_And(t *testing.T) {
 }
 
 func TestExprToGo_Or(t *testing.T) {
-	or, _ := lg.NewOr(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
+	or, _ := goivy.NewOr(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
 	got := ExprToGo(or)
 	if !strings.Contains(got, "||") {
 		t.Errorf("expected ||, got: %s", got)
@@ -395,7 +393,7 @@ func TestExprToGo_Or(t *testing.T) {
 }
 
 func TestExprToGo_Implies(t *testing.T) {
-	imp, _ := lg.NewImplies(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
+	imp, _ := goivy.NewImplies(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
 	got := ExprToGo(imp)
 	if !strings.Contains(got, "||") {
 		t.Errorf("expected implication encoding, got: %s", got)
@@ -442,7 +440,7 @@ func TestGoExportedIdentifier(t *testing.T) {
 // --- goTypeForSort tests ---
 
 func TestGoTypeForSort_Bool(t *testing.T) {
-	got := goTypeForSort(lg.Boolean)
+	got := goTypeForSort(goivy.Boolean)
 	if got != "bool" {
 		t.Errorf("expected bool, got: %s", got)
 	}

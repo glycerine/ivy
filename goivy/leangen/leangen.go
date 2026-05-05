@@ -8,11 +8,9 @@ package leangen
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // Preamble is the standard Lean file header.
@@ -56,13 +54,13 @@ func (g *Generator) EmitEOL() {
 }
 
 // SortToString converts a logic sort to its Lean representation.
-func SortToString(s lg.Sort) (string, error) {
+func SortToString(s goivy.Sort) (string, error) {
 	switch st := s.(type) {
-	case *lg.UninterpretedSort:
+	case *goivy.UninterpretedSort:
 		return `(sort.ui "` + st.Name + `")`, nil
-	case *lg.BooleanSort:
+	case *goivy.BooleanSort:
 		return "sort.bool", nil
-	case *lg.FunctionSort:
+	case *goivy.FunctionSort:
 		domain := st.Domain()
 		parts := make([]string, len(domain))
 		for i, d := range domain {
@@ -84,7 +82,7 @@ func SortToString(s lg.Sort) (string, error) {
 }
 
 // EmitSymbolDef emits a Lean definition for a symbol constant.
-func (g *Generator) EmitSymbolDef(name string, s lg.Sort) error {
+func (g *Generator) EmitSymbolDef(name string, s goivy.Sort) error {
 	ss, err := SortToString(s)
 	if err != nil {
 		return err
@@ -95,9 +93,9 @@ func (g *Generator) EmitSymbolDef(name string, s lg.Sort) error {
 }
 
 // EmitExpr emits the Lean representation of a logic node (formula/term).
-func (g *Generator) EmitExpr(f lg.Expr) error {
+func (g *Generator) EmitExpr(f goivy.Expr) error {
 	switch n := f.(type) {
-	case *lg.Variable:
+	case *goivy.Variable:
 		ss, err := SortToString(n.VSort)
 		if err != nil {
 			return err
@@ -105,11 +103,11 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(`("` + n.Name + `",` + ss + ")")
 		return nil
 
-	case *lg.Const:
+	case *goivy.Const:
 		g.Emit(n.Name)
 		return nil
 
-	case *lg.Apply:
+	case *goivy.Apply:
 		g.Emit(n.Func.String() + "(")
 		for i, t := range n.Terms {
 			if i > 0 {
@@ -122,7 +120,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Eq:
+	case *goivy.Eq:
 		g.Emit("(fmla.eq ")
 		if err := g.EmitExpr(n.T1); err != nil {
 			return err
@@ -134,7 +132,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Iff:
+	case *goivy.Iff:
 		g.Emit("(fmla.eq ")
 		if err := g.EmitExpr(n.T1); err != nil {
 			return err
@@ -146,9 +144,9 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Ite:
+	case *goivy.Ite:
 		g.Emit("(ite_fmla ")
-		for _, term := range []lg.Expr{n.Cond, n.Then, n.Else} {
+		for _, term := range []goivy.Expr{n.Cond, n.Then, n.Else} {
 			g.Emit(" ")
 			if err := g.EmitExpr(term); err != nil {
 				return err
@@ -157,11 +155,11 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Not:
+	case *goivy.Not:
 		g.Emit("\u00ac") // NOT sign
 		return g.EmitExpr(n.Body)
 
-	case *lg.And:
+	case *goivy.And:
 		if len(n.Terms) == 0 {
 			g.Emit("ltrue")
 			return nil
@@ -178,7 +176,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Or:
+	case *goivy.Or:
 		if len(n.Terms) == 0 {
 			g.Emit("lfalse")
 			return nil
@@ -195,7 +193,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.Implies:
+	case *goivy.Implies:
 		g.Emit("(")
 		if err := g.EmitExpr(n.T1); err != nil {
 			return err
@@ -207,7 +205,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(")")
 		return nil
 
-	case *lg.ForAll:
+	case *goivy.ForAll:
 		g.Emit("\u00ac") // NOT
 		for _, v := range n.Variables {
 			g.Emit("(fmla.proj ")
@@ -225,7 +223,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		}
 		return nil
 
-	case *lg.Exists:
+	case *goivy.Exists:
 		for _, v := range n.Variables {
 			g.Emit("(fmla.proj ")
 			if err := g.EmitExpr(v); err != nil {
@@ -241,7 +239,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		}
 		return nil
 
-	case *lg.Lambda:
+	case *goivy.Lambda:
 		for _, v := range n.Variables {
 			g.Emit("(fmla.lambda ")
 			if err := g.EmitExpr(v); err != nil {
@@ -263,19 +261,19 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 }
 
 // EmitAction emits the Lean representation of an action.
-func (g *Generator) EmitAction(a actions.ActionsAction) error {
+func (g *Generator) EmitAction(a goivy.ActionsAction) error {
 	switch act := a.(type) {
-	case *actions.AssignAction:
+	case *goivy.AssignAction:
 		g.Emit("    " + fmt.Sprint(act.LHS) + " ::= ")
 		return g.EmitExpr(act.RHS)
 
-	case *actions.Sequence:
+	case *goivy.Sequence:
 		g.Emit("(")
 		for i, child := range act.Elems {
 			if i > 0 {
 				g.Emit(";\n")
 			}
-			childAct, _ := child.(actions.ActionsAction)
+			childAct, _ := child.(goivy.ActionsAction)
 			if childAct != nil {
 				if err := g.EmitAction(childAct); err != nil {
 					return err
@@ -285,19 +283,19 @@ func (g *Generator) EmitAction(a actions.ActionsAction) error {
 		g.Emit(")")
 		return nil
 
-	case *actions.IfAction:
+	case *goivy.IfAction:
 		g.Emit("(PL.pterm.ite ")
 		if err := g.EmitExpr(act.Cond); err != nil {
 			return err
 		}
-		thenAct, _ := act.ThenBody.(actions.ActionsAction)
+		thenAct, _ := act.ThenBody.(goivy.ActionsAction)
 		if thenAct != nil {
 			if err := g.EmitAction(thenAct); err != nil {
 				return err
 			}
 		}
 		if act.ElseBody != nil {
-			elseAct, _ := act.ElseBody.(actions.ActionsAction)
+			elseAct, _ := act.ElseBody.(goivy.ActionsAction)
 			if elseAct != nil {
 				if err := g.EmitAction(elseAct); err != nil {
 					return err
@@ -317,7 +315,7 @@ func (g *Generator) EmitAction(a actions.ActionsAction) error {
 // action/export definitions.
 func (g *Generator) GenerateProgram(
 	symbols []SymbolDef,
-	actionMap map[string]actions.ActionsAction,
+	actionMap map[string]goivy.ActionsAction,
 	publicActions []string,
 	moduleName string,
 ) error {
@@ -377,5 +375,5 @@ func (g *Generator) GenerateProgram(
 // SymbolDef holds a symbol name and its sort for program generation.
 type SymbolDef struct {
 	Name string
-	Sort lg.Sort
+	Sort goivy.Sort
 }

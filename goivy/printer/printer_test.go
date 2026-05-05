@@ -1,17 +1,13 @@
 package printer
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/ast"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
-func boolConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func boolConst(name string) *goivy.Const {
+	return goivy.NewConst(name, goivy.Boolean)
 }
 
 // --- LabeledFmlasToStr tests ---
@@ -24,9 +20,9 @@ func TestLabeledFmlasToStr_Empty(t *testing.T) {
 }
 
 func TestLabeledFmlasToStr_NoLabel(t *testing.T) {
-	acfg := ast.NewAstConfig()
-	lf := acfg.NewLabeledFormula(nil, lg.True)
-	result := LabeledFmlasToStr("axiom", []*ast.LabeledFormula{lf})
+	acfg := goivy.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, goivy.True)
+	result := LabeledFmlasToStr("axiom", []*goivy.LabeledFormula{lf})
 	if !strings.HasPrefix(result, "axiom ") {
 		t.Errorf("expected prefix 'axiom ', got %q", result)
 	}
@@ -37,9 +33,9 @@ func TestLabeledFmlasToStr_NoLabel(t *testing.T) {
 
 func TestLabeledFmlasToStr_WithLabel(t *testing.T) {
 	label := boolConst("inv1")
-	acfg := ast.NewAstConfig()
-	lf := acfg.NewLabeledFormula(label, lg.True)
-	result := LabeledFmlasToStr("conjecture", []*ast.LabeledFormula{lf})
+	acfg := goivy.NewAstConfig()
+	lf := acfg.NewLabeledFormula(label, goivy.True)
+	result := LabeledFmlasToStr("conjecture", []*goivy.LabeledFormula{lf})
 	if !strings.Contains(result, "[") || !strings.Contains(result, "]") {
 		t.Errorf("expected brackets around label, got %q", result)
 	}
@@ -49,10 +45,10 @@ func TestLabeledFmlasToStr_WithLabel(t *testing.T) {
 }
 
 func TestLabeledFmlasToStr_Multiple(t *testing.T) {
-	acfg := ast.NewAstConfig()
-	lf1 := acfg.NewLabeledFormula(nil, lg.True)
-	lf2 := acfg.NewLabeledFormula(nil, lg.False)
-	result := LabeledFmlasToStr("property", []*ast.LabeledFormula{lf1, lf2})
+	acfg := goivy.NewAstConfig()
+	lf1 := acfg.NewLabeledFormula(nil, goivy.True)
+	lf2 := acfg.NewLabeledFormula(nil, goivy.False)
+	result := LabeledFmlasToStr("property", []*goivy.LabeledFormula{lf1, lf2})
 	count := strings.Count(result, "property")
 	if count != 2 {
 		t.Errorf("expected 2 occurrences of 'property', got %d", count)
@@ -62,7 +58,7 @@ func TestLabeledFmlasToStr_Multiple(t *testing.T) {
 // --- FormatModule tests ---
 
 func TestFormatModule_Empty(t *testing.T) {
-	mod := module.New()
+	mod := goivy.New()
 	result := FormatModule(mod)
 	// Should not panic and should produce some output (at least the sig)
 	if result == "" {
@@ -71,10 +67,10 @@ func TestFormatModule_Empty(t *testing.T) {
 }
 
 func TestFormatModule_WithAxioms(t *testing.T) {
-	mod := module.New()
-	acfg := ast.NewAstConfig()
-	lf := acfg.NewLabeledFormula(nil, lg.True)
-	mod.LabeledAxioms = []*ast.LabeledFormula{lf}
+	mod := goivy.New()
+	acfg := goivy.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, goivy.True)
+	mod.LabeledAxioms = []*goivy.LabeledFormula{lf}
 	result := FormatModule(mod)
 	if !strings.Contains(result, "axiom") {
 		t.Errorf("expected 'axiom' in output, got %q", result)
@@ -82,11 +78,11 @@ func TestFormatModule_WithAxioms(t *testing.T) {
 }
 
 func TestFormatModule_WithConjectures(t *testing.T) {
-	mod := module.New()
+	mod := goivy.New()
 	label := boolConst("inv1")
-	acfg := ast.NewAstConfig()
-	lf := acfg.NewLabeledFormula(label, lg.True)
-	mod.LabeledConjs = []*ast.LabeledFormula{lf}
+	acfg := goivy.NewAstConfig()
+	lf := acfg.NewLabeledFormula(label, goivy.True)
+	mod.LabeledConjs = []*goivy.LabeledFormula{lf}
 	result := FormatModule(mod)
 	if !strings.Contains(result, "conjecture") {
 		t.Errorf("expected 'conjecture' in output, got %q", result)
@@ -94,8 +90,8 @@ func TestFormatModule_WithConjectures(t *testing.T) {
 }
 
 func TestFormatModule_WithActions(t *testing.T) {
-	mod := module.New()
-	act := actions.NewSequence()
+	mod := goivy.New()
+	act := goivy.NewSequence()
 	mod.Actions.Set("myaction", act)
 	result := FormatModule(mod)
 	if !strings.Contains(result, "myaction") {
@@ -104,7 +100,7 @@ func TestFormatModule_WithActions(t *testing.T) {
 }
 
 func TestFormatModule_WithExports(t *testing.T) {
-	mod := module.New()
+	mod := goivy.New()
 	mod.PublicActions.Set("ext:foo", true)
 	result := FormatModule(mod)
 	if !strings.Contains(result, "export ext:foo") {
@@ -113,9 +109,9 @@ func TestFormatModule_WithExports(t *testing.T) {
 }
 
 func TestFormatModule_WithInitializers(t *testing.T) {
-	mod := module.New()
-	act := actions.NewAssumeAction(lg.True)
-	mod.Initializers = []module.NamedAction{{Name: "init", Action: act}}
+	mod := goivy.New()
+	act := goivy.NewAssumeAction(goivy.True)
+	mod.Initializers = []goivy.NamedAction{{Name: "init", Action: act}}
 	result := FormatModule(mod)
 	if !strings.Contains(result, "after init") {
 		t.Errorf("expected 'after init' in output, got %q", result)
@@ -123,10 +119,10 @@ func TestFormatModule_WithInitializers(t *testing.T) {
 }
 
 func TestFormatModule_Deterministic(t *testing.T) {
-	mod := module.New()
-	mod.Actions.Set("alpha", actions.NewSequence())
-	mod.Actions.Set("beta", actions.NewSequence())
-	mod.Actions.Set("gamma", actions.NewSequence())
+	mod := goivy.New()
+	mod.Actions.Set("alpha", goivy.NewSequence())
+	mod.Actions.Set("beta", goivy.NewSequence())
+	mod.Actions.Set("gamma", goivy.NewSequence())
 	r1 := FormatModule(mod)
 	r2 := FormatModule(mod)
 	if r1 != r2 {
@@ -173,14 +169,14 @@ func FuzzLabeledFmlasToStr(f *testing.F) {
 	f.Add("property", "")
 	f.Add("conjecture", "myProp")
 	f.Fuzz(func(t *testing.T, kwd, labelName string) {
-		var label ast.Node
+		var label goivy.Node
 		if labelName != "" {
-			label = lg.NewConst(labelName, lg.Boolean)
+			label = goivy.NewConst(labelName, goivy.Boolean)
 		}
-		acfg := ast.NewAstConfig()
-		lf := acfg.NewLabeledFormula(label, lg.True)
+		acfg := goivy.NewAstConfig()
+		lf := acfg.NewLabeledFormula(label, goivy.True)
 		// Should not panic
-		result := LabeledFmlasToStr(kwd, []*ast.LabeledFormula{lf})
+		result := LabeledFmlasToStr(kwd, []*goivy.LabeledFormula{lf})
 		if !strings.Contains(result, kwd) {
 			t.Errorf("result should contain keyword %q", kwd)
 		}

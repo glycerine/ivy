@@ -1,0 +1,471 @@
+package goivy
+
+import (
+	"cmp"
+	"fmt"
+	"iter"
+	"sync/atomic"
+
+	rb "github.com/glycerine/rbtree"
+)
+
+// Omap is a deterministic map. It is very
+// similar to dmap, but works for any
+// cmp.Comparable key. Compared to a dmap,
+// an Omap uses less memory (as it does not
+// maintain an internal builtin Go map),
+// but has slightly slower (asymptodic time)
+// operations. On an Omap, get/set/delete are O(log n)
+// per the underlying red-black tree, instead of O(1)
+// provided by a dmap.
+//
+// O(log n) is still very fast in practice for
+// all but the largest of dictionaries, so
+// this may make little to no difference in
+// your use case. deleteAll remains O(1).
+//
+// The rest is almost verbatim from dmap docs;
+// compare to dmap.go.
+//
+// Unlike Go's builtin map, a Omap can be
+// range iterated in a repeatable order,
+// This is critical for simulation testing
+// to give reproducible test runs.
+//
+// However, like the built-in map, Omap does no
+// internal locking, and is not goroutine safe.
+// The user must provide external sync.Mutex or otherwise
+// coordinate access if a Omap is shared
+// across goroutines. This allows Omap to
+// also provide for deletion or value update (not key)
+// during a for-range Omap.all() iteration.
+//
+// For repeated full range all
+// scans, we cache the ivyutilsOKV pointers in contiguous
+// memory to maximize L1 cache hits and
+// minimize pointer chasing in the underlying
+// red-black tree.
+//
+// Thus Omap aims to be almost as fast, or
+// faster, than the built in Go map, for common
+// use patterns, while providing deterministic,
+// repeatable iteration order, at just twice the memory.
+//
+// The quick benchmarks in Omap_test show that for
+// repeated full range scans, an Omap can be
+// up to 20x faster than the builtin Go map.
+type Omap[K cmp.Ordered, V any] struct {
+	version int64
+
+	tree *rb.Tree
+
+	// cache the first range all, and use
+	// ordercache if we range all again without
+	// intervening upsert or deletes.
+	ordercache   []*ivyutilsOKV[K, V]
+	cacheversion int64
+}
+
+// cached returns the raw internal ivyutilsOKV slice
+// for very fast iteration in a for-range loop.
+func (s *Omap[K, V]) Cached() []*ivyutilsOKV[K, V] {
+	n := s.tree.Len()
+	nc := len(s.ordercache)
+	vers := atomic.LoadInt64(&s.version)
+	if nc == n && s.cacheversion == vers {
+		return s.ordercache
+	}
+	// refill ordercache
+	s.ordercache = nil
+	s.cacheversion = vers
+	for it := s.tree.Min(); !it.Limit(); it = it.Next() {
+		kv := it.Item().(*ivyutilsOKV[K, V])
+		s.ordercache = append(s.ordercache, kv)
+	}
+	return s.ordercache
+}
+
+// newOmap makes a new Omap.
+func NewOmap[K cmp.Ordered, V any]() *Omap[K, V] {
+	return &Omap[K, V]{
+		tree: rb.NewTree(func(a, b rb.Item) int {
+			ak := a.(*ivyutilsOKV[K, V]).key
+			bk := b.(*ivyutilsOKV[K, V]).key
+			return cmp.Compare(ak, bk)
+		}),
+	}
+}
+
+// ivyutilsOKV holds an ordered key and its value together.
+// the red-black tree stores pointers to ivyutilsOKV.
+type ivyutilsOKV[K cmp.Ordered, V any] struct {
+	key K
+	val V
+}
+
+// Len returns the number of keys stored in the Omap.
+func (s *Omap[K, V]) Len() int {
+	return s.tree.Len()
+}
+
+func (s *Omap[K, V]) String() (r string) {
+	vers := atomic.LoadInt64(&s.version)
+	r = fmt.Sprintf("Omap{ version:%v {", vers)
+	it := s.tree.Min()
+	i := 0
+	extra := ""
+	for !it.Limit() {
+		kv := it.Item().(*ivyutilsOKV[K, V])
+		if i == 1 {
+			extra = ", "
+		}
+		r += fmt.Sprintf("%v%v:%v", extra, kv.key, kv.val)
+		it = it.Next()
+		i++
+	}
+	r += "}}"
+	return
+}
+
+// Delkey deletes a key from the Omap, if present.
+// This is an O(log n) time operation.
+//
+// If found returns true, next has the
+// iterator following the deleted key.
+//
+// If found returns false, next is s.tree.Limit(),
+// which can be used to terminate an iteration.
+//
+// Using next provides "advance and delete behind"
+// semantics.
+func (s *Omap[K, V]) Delkey(key K) (found bool, next rb.Iterator) {
+	if isNil(key) {
+		next = s.tree.Limit()
+		return
+	}
+
+	//vv("deleting id='%v' -> it.Item() = '%v'", id, it.Item())
+	query := &ivyutilsOKV[K, V]{key: key}
+	var it rb.Iterator
+	it, found = s.tree.FindGE_isEqual(query)
+	if found {
+		atomic.AddInt64(&s.version, 1)
+		s.ordercache = nil
+		s.cacheversion = 0
+		next = it.Next()
+		s.tree.DeleteWithIterator(it)
+	} else {
+		next = it // Limit
+	}
+	return
+}
+
+func (s *Omap[K, V]) DeleteWithIter(it rb.Iterator) (found bool, next rb.Iterator) {
+	if it.Limit() {
+		// return Limit, this one is
+		// at hand, and any will do.
+		next = it
+		return
+	}
+
+	kv, ok := it.Item().(*ivyutilsOKV[K, V])
+	if !ok {
+		// bad it
+		next = s.tree.Limit()
+		return
+	}
+
+	// verify in tree first.
+	//vv("deleteWithIter before changes: '%v'", s)
+	it, found = s.tree.FindGE_isEqual(kv)
+	if found {
+		atomic.AddInt64(&s.version, 1)
+		s.ordercache = nil
+		s.cacheversion = 0
+		next = it.Next()
+		s.tree.DeleteWithIterator(it)
+	} else {
+		next = it // Limit
+	}
+	//vv("deleteWithIter after changes: '%v'", s)
+	return
+}
+
+// deleteAll clears the tree in O(1) time.
+func (s *Omap[K, V]) DeleteAll() {
+	atomic.AddInt64(&s.version, 1)
+	s.ordercache = nil
+	s.cacheversion = 0
+	s.tree.DeleteAll()
+}
+
+// set is an upsert. It does an insert if the key is
+// not already present returning newlyAdded true;
+// otherwise it updates the current key's value in place.
+func (s *Omap[K, V]) Set(key K, val V) (newlyAdded bool) {
+	if isNil(key) {
+		return
+	}
+	atomic.AddInt64(&s.version, 1)
+	s.ordercache = nil
+	s.cacheversion = 0
+
+	query := &ivyutilsOKV[K, V]{key: key, val: val}
+	it, found := s.tree.FindGE_isEqual(query)
+	if found {
+		prev := it.Item().(*ivyutilsOKV[K, V])
+		//vv("id already in tree, just update in place: key='%v'; prev='%#v'", keyprev)
+		prev.val = val
+		return
+	}
+	newlyAdded = true
+	_, it = s.tree.InsertGetIt(query)
+
+	return
+}
+
+// All starts an iteration over all elements in
+// the Omap. To allow the user to delete in
+// the middle of iteration, there is no locking
+// internally.
+func (s *Omap[K, V]) All() iter.Seq2[K, V] {
+
+	seq2 := func(yield func(K, V) bool) {
+
+		//vv("start of all iteration.")
+		n := s.tree.Len()
+		nc := len(s.ordercache)
+
+		// detect deletes in the middle of using s.ordercache.
+		vers := atomic.LoadInt64(&s.version)
+
+		if nc == n && s.cacheversion == vers {
+			// s.ordercache is usable.
+			nextit := s.tree.Min()
+			for i, kv := range s.ordercache {
+				nextit = nextit.Next() // in case of slow path below
+				if !yield(kv.key, kv.val) {
+					return
+				}
+				vers2 := atomic.LoadInt64(&s.version)
+				if vers2 == vers {
+					continue
+				} else {
+					// delete in middle of iteration.
+					// abandon oc, down shift to
+					// slow/safe path using nextit.
+					n2 := s.tree.Len()
+					if i >= n2-1 {
+						// we were on the last anyway. done.
+						return
+					}
+					// still have some left
+					var kv *ivyutilsOKV[K, V]
+					for !nextit.Limit() {
+						kv = nextit.Item().(*ivyutilsOKV[K, V])
+						// pre-advance, allows deletion of it.
+						nextit = nextit.Next()
+						if !yield(kv.key, kv.val) {
+							return
+						}
+						//vv("back from yield 2nd")
+					}
+					return // essential, cannot resume 1st loop.
+				} // end if else vers2 != vers
+			} // end for i over s.ordercache
+			return
+		} // end if ordercache hit
+
+		// cache miss. cannot read from
+		// s.ordercache, but we will try to fill
+		// it on this pass. only do full fills
+		// for simplicity.
+		s.ordercache = nil
+		s.cacheversion = vers
+		cachegood := true // invalidate if delete in middle of all.
+		it := s.tree.Min()
+		for !it.Limit() {
+
+			kv := it.Item().(*ivyutilsOKV[K, V])
+			// advance before yeilding so user
+			// can delete at it if desired, and
+			// we will keep on going
+			it = it.Next()
+
+			if cachegood {
+				s.ordercache = append(s.ordercache, kv)
+			}
+			if !yield(kv.key, kv.val) {
+				return
+			}
+			// check for delete/change in middle.
+			vers2 := atomic.LoadInt64(&s.version)
+			if vers2 != vers {
+				cachegood = false
+				s.ordercache = nil
+				s.cacheversion = 0
+			}
+
+		} // end for it != lim
+	} // end seq2 definition
+	return seq2
+}
+
+// Allokv returns the ivyutilsOKV(s) not the val. This
+// allows highly efficient val updates in place, but
+// is mildly vulnerable to mis-use: the user must not
+// change the other ivyutilsOKV.id field. Otherwise the
+// red-black tree will be borked.
+//
+// Hence this function is for performance oriented users who
+// can guarantee their code will leave ivyutilsOKV.id (and ivyutilsOKV.it,
+// and most probably ivyutilsOKV.key too) alone. You can
+// read these, but don't write. If you
+// need to change the ivyutilsOKV.id/key, you must delkey or
+// deleteWithIter to remove the old key from the tree first;
+// then add in the new key. This allows the tree
+// to properly rebalance itself.
+//
+// The tree does not care about ivyutilsOKV.val, so the user
+// can update that at will. The ivyutilsOKV.it, like the ivyutilsOKV.id/key
+// should be considered const/not be altered by user code.
+// It is the iterator that points into the red-back
+// tree, and so allows efficient start of iteration in the
+// middle and/or delete in O(1) rather than O(log n) from
+// the middle of the tree.
+func (s *Omap[K, V]) Allokv() iter.Seq2[K, *ivyutilsOKV[K, V]] {
+
+	seq2 := func(yield func(K, *ivyutilsOKV[K, V]) bool) {
+
+		//vv("start of all iteration.")
+		n := s.tree.Len()
+		nc := len(s.ordercache)
+
+		// detect deletes in the middle of using s.ordercache.
+		vers := atomic.LoadInt64(&s.version)
+
+		if nc == n && s.cacheversion == vers {
+			// s.ordercache is usable.
+			nextit := s.tree.Min()
+			for i, kv := range s.ordercache {
+				nextit = nextit.Next()
+				if !yield(kv.key, kv) {
+					return
+				}
+				vers2 := atomic.LoadInt64(&s.version)
+				if vers2 == vers {
+					continue
+				} else {
+					// delete in middle of iteration.
+					// abandon oc, down shift to
+					// slow/safe path using nextit.
+					n2 := s.tree.Len()
+					if i >= n2-1 {
+						// we were on the last anyway. done.
+						return
+					}
+					// still have some left
+					var kv *ivyutilsOKV[K, V]
+					for !nextit.Limit() {
+						kv = nextit.Item().(*ivyutilsOKV[K, V])
+						// pre-advance, allows deletion of it.
+						nextit = nextit.Next()
+						if !yield(kv.key, kv) {
+							return
+						}
+						//vv("back from yield 2nd")
+					}
+					return // essential, cannot resume 1st loop.
+				} // end if else vers2 != vers
+			} // end for i over s.ordercache
+			return
+		} // end if ordercache hit
+
+		// cache miss. cannot read from
+		// s.ordercache, but we will try to fill
+		// it on this pass. only do full fills
+		// for simplicity.
+		s.ordercache = nil
+		s.cacheversion = vers
+		cachegood := true // invalidate if delete in middle of all.
+		it := s.tree.Min()
+		for !it.Limit() {
+
+			kv := it.Item().(*ivyutilsOKV[K, V])
+			// advance before yeilding so user
+			// can delete at it if desired, and
+			// we will keep on going
+			it = it.Next()
+
+			if cachegood {
+				s.ordercache = append(s.ordercache, kv)
+			}
+			if !yield(kv.key, kv) {
+				return
+			}
+			// check for delete/change in middle.
+			vers2 := atomic.LoadInt64(&s.version)
+			if vers2 != vers {
+				cachegood = false
+				s.ordercache = nil
+			}
+
+		} // end for it != lim
+	} // end seq2 definition
+	return seq2
+}
+
+// get2 returns the val corresponding to key in
+// O(log n) time per query. found will be
+// false iff the key was not present.
+func (s *Omap[K, V]) Get2(key K) (val V, found bool) {
+	if isNil(key) {
+		return
+	}
+	var it rb.Iterator
+	query := &ivyutilsOKV[K, V]{key: key}
+	it, found = s.tree.FindGE_isEqual(query)
+	if found {
+		prev := it.Item().(*ivyutilsOKV[K, V])
+		val = prev.val
+		return
+	}
+	return
+}
+
+// get does get2 but without the found flag.
+func (s *Omap[K, V]) Get(key K) (val V) {
+	if isNil(key) {
+		return
+	}
+	query := &ivyutilsOKV[K, V]{key: key}
+	it, found := s.tree.FindGE_isEqual(query)
+	if found {
+		val = it.Item().(*ivyutilsOKV[K, V]).val
+	}
+	return
+}
+
+// getokv returns the ivyutilsOKV[K,V] struct corresponding to key in
+// O(log n) time per query. If the key is
+// found, the kv.it will point to it in the Omap tree,
+// which can be used to walk the
+// tree in sorted order forwards or
+// back from that point. The ivyutilsOKV is what the
+// tree stores, so this provides for
+// for fast updates of ivyutilsOKV.val if required. Note
+// the ivyutilsOKV.id and should not be changed, as that
+// would invalidate the tree without notifying
+// it of the need to rebalance.
+func (s *Omap[K, V]) Getokv(key K) (kv *ivyutilsOKV[K, V], found bool) {
+	if isNil(key) {
+		return
+	}
+	query := &ivyutilsOKV[K, V]{key: key}
+	var it rb.Iterator
+	it, found = s.tree.FindGE_isEqual(query)
+	if found {
+		kv = it.Item().(*ivyutilsOKV[K, V])
+	}
+	return
+}

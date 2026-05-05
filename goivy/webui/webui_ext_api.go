@@ -7,11 +7,8 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // AnalysisSessionI is the interface needed by extension point callbacks
@@ -127,7 +124,7 @@ type ExtConfig struct {
 	ArgNodeActions  *ExtensionPoint
 	GoalNodeActions *ExtensionPoint
 	AnalysisSession AnalysisSessionI
-	AG              *art.AnalysisGraph
+	AG              *goivy.AnalysisGraph
 }
 
 // NewExtConfig creates a new ExtConfig with default extensions registered.
@@ -519,7 +516,7 @@ func (cfg *ExtConfig) RegisterArgRemoveFacts() {
 			return fmt.Errorf("remove facts: invalid node ID %d", nodeID)
 		}
 		node := cfg.AG.States[nodeID]
-		selectedFacts, ok := args[1].([]logic.Expr)
+		selectedFacts, ok := args[1].([]goivy.Expr)
 		if !ok {
 			return fmt.Errorf("remove facts: expected []logic.Expr, got %T", args[1])
 		}
@@ -528,13 +525,13 @@ func (cfg *ExtConfig) RegisterArgRemoveFacts() {
 			for _, f := range selectedFacts {
 				removeSet[f.String()] = true
 			}
-			var remaining []logic.Expr
+			var remaining []goivy.Expr
 			for _, f := range node.Clauses.Fmlas {
 				if !removeSet[f.String()] {
 					remaining = append(remaining, f)
 				}
 			}
-			node.Clauses = module.NewClauses(remaining, node.Clauses.Defs, nil)
+			node.Clauses = goivy.NewClauses(remaining, node.Clauses.Defs, nil)
 		}
 		return nil
 	})

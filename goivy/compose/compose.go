@@ -13,23 +13,21 @@ package compose
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // RankingDef holds the definitions for a single ranking function (work item).
 type RankingDef struct {
 	Suffix       string
-	WorkCreated  lg.Expr
-	WorkNeeded   lg.Expr
-	WorkProgress lg.Expr
-	WorkInvar    lg.Expr
-	WorkHelpful  lg.Expr
-	WorkStart    lg.Expr // optional trigger
-	WorkWitness  lg.Expr // optional witness
+	WorkCreated  goivy.Expr
+	WorkNeeded   goivy.Expr
+	WorkProgress goivy.Expr
+	WorkInvar    goivy.Expr
+	WorkHelpful  goivy.Expr
+	WorkStart    goivy.Expr // optional trigger
+	WorkWitness  goivy.Expr // optional witness
 }
 
 // RequiredFields are the fields that must be defined for a valid ranking.
@@ -54,20 +52,20 @@ func ValidateRankingDef(rd *RankingDef) error {
 
 // CreateRankingDefn creates a ranking function definition from work item predicates.
 // The ranking function encodes: work is needed but not yet created (not done).
-func CreateRankingDefn(rd *RankingDef) lg.Expr {
+func CreateRankingDefn(rd *RankingDef) goivy.Expr {
 	if rd.WorkCreated == nil || rd.WorkNeeded == nil {
 		return nil
 	}
-	return &lg.And{Terms: []lg.Expr{
+	return &goivy.And{Terms: []goivy.Expr{
 		rd.WorkNeeded,
-		&lg.Not{Body: rd.WorkCreated},
+		&goivy.Not{Body: rd.WorkCreated},
 	}}
 }
 
 // ProofGoalInterface is the interface for proof goals passed to the tactic.
 type ProofGoalInterface interface {
-	GetConclusion() lg.Expr
-	GetPremises() []lg.Expr
+	GetConclusion() goivy.Expr
+	GetPremises() []goivy.Expr
 }
 
 // TacticProof is the interface for proof objects passed to the tactic.
@@ -87,11 +85,11 @@ type TacticProof interface {
 // 5. Creates ranking functions from work items
 // 6. Generates subgoals for each work item
 // 7. Adds invariant strengthening from work_helpful
-func ComposeTactic(m *module.Module, goals []interface{}, proof interface{}) error {
+func ComposeTactic(m *goivy.Module, goals []interface{}, proof interface{}) error {
 	return composeTacticInt(m, goals, proof, "ranking")
 }
 
-func composeTacticInt(m *module.Module, goals []interface{}, proof interface{}, tacticName string) error {
+func composeTacticInt(m *goivy.Module, goals []interface{}, proof interface{}, tacticName string) error {
 	if len(goals) == 0 {
 		return fmt.Errorf("compose: no proof goals")
 	}
@@ -124,7 +122,7 @@ func composeTacticInt(m *module.Module, goals []interface{}, proof interface{}, 
 		if rd.WorkStart == nil {
 			// Default: work_start = ~(body of the globally property)
 			// This triggers the work when the globally property might be violated
-			rd.WorkStart = lg.True // placeholder
+			rd.WorkStart = goivy.True // placeholder
 		}
 	}
 
@@ -155,7 +153,7 @@ func collectTaskDef(decl interface{}, tasks map[string]*RankingDef) {
 	// work_created_sfx, work_needed_sfx, etc.
 	type definer interface {
 		GetName() string
-		GetFormula() lg.Expr
+		GetFormula() goivy.Expr
 	}
 	d, ok := decl.(definer)
 	if !ok {

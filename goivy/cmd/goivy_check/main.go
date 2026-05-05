@@ -37,13 +37,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 var ProgramName string = "goivy_check"
@@ -104,7 +102,7 @@ func main() {
 
 	// Build Config from parsed parameters.
 	// Corresponds to Python's Parameter objects accessed via .get() throughout ivy_check.
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	cfg.IncludePathStdlib = cmdCfg.IncludePathStdlib
 
 	if err := applyParams(cfg, params); err != nil {
@@ -114,13 +112,13 @@ func main() {
 
 	// Delegate to check.StartWithConfig which implements Python's
 	// ivy_check.main() -> start() -> check_module() pipeline.
-	os.Exit(check.MainWithConfig(args, cfg))
+	os.Exit(goivy.MainWithConfig(args, cfg))
 }
 
 // applyParams maps CLI key=value pairs to Config struct fields.
 // This mirrors how Python's Parameter objects are set via ivy_init.read_params()
 // and then accessed in ivy_check.py via diagnose.get(), coverage.get(), etc.
-func applyParams(cfg *module.Config, params map[string]string) error {
+func applyParams(cfg *goivy.Config, params map[string]string) error {
 	for key, val := range params {
 		switch key {
 		case "diagnose":

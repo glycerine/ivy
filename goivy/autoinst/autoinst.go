@@ -7,13 +7,7 @@ package autoinst
 
 import (
 	"fmt"
-
-	"github.com/glycerine/ivy/goivy/ast"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
+	goivy "github.com/glycerine/ivy/goivy"
 )
 
 // --- Match class ---
@@ -21,14 +15,14 @@ import (
 // Match is a backtrackable unification-style matching context.
 // Corresponds to Python's Match class.
 type Match struct {
-	stack [][]lg.Expr            // stack of frames, each listing keys added
+	stack [][]goivy.Expr         // stack of frames, each listing keys added
 	m     map[string]interface{} // current mapping (sort or symbol)
 }
 
 // NewMatch creates a new Match context.
 func NewMatch() *Match {
 	return &Match{
-		stack: [][]lg.Expr{nil},
+		stack: [][]goivy.Expr{nil},
 		m:     make(map[string]interface{}),
 	}
 }
@@ -38,7 +32,7 @@ func (m *Match) Add(key string, val interface{}) {
 	m.m[key] = val
 	frame := len(m.stack) - 1
 	// Track key for rollback (using a nil node as marker)
-	m.stack[frame] = append(m.stack[frame], lg.NewConst(key, lg.TopS))
+	m.stack[frame] = append(m.stack[frame], goivy.NewConst(key, goivy.TopS))
 }
 
 // Push creates a new backtracking frame.
@@ -51,7 +45,7 @@ func (m *Match) Pop() {
 	frame := m.stack[len(m.stack)-1]
 	m.stack = m.stack[:len(m.stack)-1]
 	for _, marker := range frame {
-		if c, ok := marker.(*lg.Const); ok {
+		if c, ok := marker.(*goivy.Const); ok {
 			delete(m.m, c.Name)
 		}
 	}
@@ -97,74 +91,74 @@ func (m *Match) CopyMap() map[string]interface{} {
 
 // ApplyMatch applies a match mapping to a formula by substituting matched symbols.
 // Corresponds to Python's apply_match.
-func ApplyMatch(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
+func ApplyMatch(matchMap map[string]interface{}, fmla goivy.Expr) goivy.Expr {
 	return applyMatchRec(matchMap, fmla)
 }
 
-func applyMatchRec(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
-	if v, ok := fmla.(*lg.Variable); ok {
+func applyMatchRec(matchMap map[string]interface{}, fmla goivy.Expr) goivy.Expr {
+	if v, ok := fmla.(*goivy.Variable); ok {
 		// Check if the variable's sort should be remapped
 		sortStr := v.VSort.String()
 		if newSort, exists := matchMap[sortStr]; exists {
-			if s, ok := newSort.(lg.Sort); ok {
-				nv, _ := lg.NewVariable(v.Name, s)
+			if s, ok := newSort.(goivy.Sort); ok {
+				nv, _ := goivy.NewVariable(v.Name, s)
 				return nv
 			}
 		}
 		return v
 	}
 
-	if c, ok := fmla.(*lg.Const); ok {
+	if c, ok := fmla.(*goivy.Const); ok {
 		// Check if the constant is in the match
 		if replacement, exists := matchMap[c.Name]; exists {
-			if rc, ok := replacement.(*lg.Const); ok {
+			if rc, ok := replacement.(*goivy.Const); ok {
 				return rc
 			}
 		}
 		return c
 	}
 
-	if il.IsBinder(fmla) {
-		vars := il.BinderVars(fmla)
-		body := il.BinderBody(fmla)
-		newVars := make([]*lg.Variable, len(vars))
+	if goivy.IsBinder(fmla) {
+		vars := goivy.BinderVars(fmla)
+		body := goivy.BinderBody(fmla)
+		newVars := make([]*goivy.Variable, len(vars))
 		for i, v := range vars {
 			nv := applyMatchRec(matchMap, v)
-			if rv, ok := nv.(*lg.Variable); ok {
+			if rv, ok := nv.(*goivy.Variable); ok {
 				newVars[i] = rv
 			} else {
 				newVars[i] = v
 			}
 		}
 		newBody := applyMatchRec(matchMap, body)
-		return il.CloneBinder(fmla, newVars, newBody)
+		return goivy.CloneBinder(fmla, newVars, newBody)
 	}
 
-	args := il.NodeArgs(fmla)
-	newArgs := make([]lg.Expr, len(args))
+	args := goivy.NodeArgs(fmla)
+	newArgs := make([]goivy.Expr, len(args))
 	for i, arg := range args {
 		newArgs[i] = applyMatchRec(matchMap, arg)
 	}
 
 	// Check if this is an application with a matched function
-	if app, ok := fmla.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Const); ok {
+	if app, ok := fmla.(*goivy.Apply); ok {
+		if c, ok := app.Func.(*goivy.Const); ok {
 			if replacement, exists := matchMap[c.Name]; exists {
-				if rc, ok := replacement.(*lg.Const); ok {
-					return lg.MustApply(rc, newArgs...)
+				if rc, ok := replacement.(*goivy.Const); ok {
+					return goivy.MustApply(rc, newArgs...)
 				}
 			}
 		}
 	}
 
-	return il.CloneNode(fmla, newArgs)
+	return goivy.CloneNode(fmla, newArgs)
 }
 
 // --- Normalization ---
 
 // TermOrd provides a total ordering on terms for canonical forms.
 // Corresponds to Python's term_ord (ivy_mc.py lines 815-828).
-func TermOrd(x, y lg.Expr) int {
+func TermOrd(x, y goivy.Expr) int {
 	xs, ys := fmt.Sprintf("%T", x), fmt.Sprintf("%T", y)
 	if xs < ys {
 		return -1
@@ -173,8 +167,8 @@ func TermOrd(x, y lg.Expr) int {
 		return 1
 	}
 	// For Apply nodes, compare function names.
-	if ax, ok := x.(*lg.Apply); ok {
-		if ay, ok := y.(*lg.Apply); ok {
+	if ax, ok := x.(*goivy.Apply); ok {
+		if ay, ok := y.(*goivy.Apply); ok {
 			xn := fmt.Sprintf("%v", ax.Func)
 			yn := fmt.Sprintf("%v", ay.Func)
 			if xn < yn {
@@ -186,8 +180,8 @@ func TermOrd(x, y lg.Expr) int {
 		}
 	}
 	// Compare arg counts.
-	xargs := il.NodeArgs(x)
-	yargs := il.NodeArgs(y)
+	xargs := goivy.NodeArgs(x)
+	yargs := goivy.NodeArgs(y)
 	if len(xargs) < len(yargs) {
 		return -1
 	}
@@ -205,45 +199,45 @@ func TermOrd(x, y lg.Expr) int {
 }
 
 // Normalize normalizes a formula by ordering equalities and simplifying x=x to true.
-func Normalize(expr lg.Expr, iuCfg *iu.IvyUtilsConfig) lg.Expr {
-	if il.IsMacro(expr, iuCfg) {
-		return Normalize(il.ExpandMacro(expr), iuCfg)
+func Normalize(expr goivy.Expr, iuCfg *goivy.IvyUtilsConfig) goivy.Expr {
+	if goivy.IsMacro(expr, iuCfg) {
+		return Normalize(goivy.ExpandMacro(expr), iuCfg)
 	}
-	args := il.NodeArgs(expr)
-	newArgs := make([]lg.Expr, len(args))
+	args := goivy.NodeArgs(expr)
+	newArgs := make([]goivy.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = Normalize(a, iuCfg)
 	}
 	return cloneNormal(expr, newArgs)
 }
 
-func cloneNormal(expr lg.Expr, args []lg.Expr) lg.Expr {
-	if _, ok := expr.(*lg.Eq); ok && len(args) == 2 {
+func cloneNormal(expr goivy.Expr, args []goivy.Expr) goivy.Expr {
+	if _, ok := expr.(*goivy.Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
-			return &lg.And{} // true
+			return &goivy.And{} // true
 		}
 		if TermOrd(x, y) == 1 {
 			x, y = y, x
 		}
-		return &lg.Eq{T1: x, T2: y}
+		return &goivy.Eq{T1: x, T2: y}
 	}
-	return il.CloneNode(expr, args)
+	return goivy.CloneNode(expr, args)
 }
 
 // --- Pattern matching for trigger instantiation ---
 
 // PatternMatch checks if a pattern matches an expression, filling in variable bindings.
-func PatternMatch(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
-	if v, ok := pat.(*lg.Variable); ok {
+func PatternMatch(pat, expr goivy.Expr, mp map[string]goivy.Expr) bool {
+	if v, ok := pat.(*goivy.Variable); ok {
 		if existing, found := mp[v.Name]; found {
 			return expr.Equal(existing)
 		}
 		mp[v.Name] = expr
 		return true
 	}
-	if app, ok := pat.(*lg.Apply); ok {
-		eapp, ok := expr.(*lg.Apply)
+	if app, ok := pat.(*goivy.Apply); ok {
+		eapp, ok := expr.(*goivy.Apply)
 		if !ok {
 			return false
 		}
@@ -260,16 +254,16 @@ func PatternMatch(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 		}
 		return true
 	}
-	if il.IsQuantifier(pat) {
+	if goivy.IsQuantifier(pat) {
 		return false
 	}
 	if fmt.Sprintf("%T", pat) != fmt.Sprintf("%T", expr) {
 		return false
 	}
-	if eq, ok := expr.(*lg.Eq); ok {
-		peq := pat.(*lg.Eq)
+	if eq, ok := expr.(*goivy.Eq); ok {
+		peq := pat.(*goivy.Eq)
 		// Try both orderings
-		save := make(map[string]lg.Expr)
+		save := make(map[string]goivy.Expr)
 		for k, v := range mp {
 			save[k] = v
 		}
@@ -285,8 +279,8 @@ func PatternMatch(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 		}
 		return PatternMatch(peq.T1, eq.T2, mp) && PatternMatch(peq.T2, eq.T1, mp)
 	}
-	patArgs := il.NodeArgs(pat)
-	exprArgs := il.NodeArgs(expr)
+	patArgs := goivy.NodeArgs(pat)
+	exprArgs := goivy.NodeArgs(expr)
 	if len(patArgs) != len(exprArgs) {
 		return false
 	}
@@ -299,19 +293,19 @@ func PatternMatch(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 }
 
 // TriggerMatches finds all matches of a trigger pattern against a set of formulas.
-func TriggerMatches(fmlas []lg.Expr, trig lg.Expr) []map[string]lg.Expr {
-	var results []map[string]lg.Expr
+func TriggerMatches(fmlas []goivy.Expr, trig goivy.Expr) []map[string]goivy.Expr {
+	var results []map[string]goivy.Expr
 	for _, f := range fmlas {
 		triggerMatchRec(f, trig, &results)
 	}
 	return results
 }
 
-func triggerMatchRec(expr, trig lg.Expr, results *[]map[string]lg.Expr) {
-	for _, child := range il.NodeArgs(expr) {
+func triggerMatchRec(expr, trig goivy.Expr, results *[]map[string]goivy.Expr) {
+	for _, child := range goivy.NodeArgs(expr) {
 		triggerMatchRec(child, trig, results)
 	}
-	mp := make(map[string]lg.Expr)
+	mp := make(map[string]goivy.Expr)
 	if PatternMatch(trig, expr, mp) {
 		*results = append(*results, mp)
 	}
@@ -321,27 +315,27 @@ func triggerMatchRec(expr, trig lg.Expr, results *[]map[string]lg.Expr) {
 
 // TriggerAxiom pairs triggers with an axiom formula.
 type TriggerAxiom struct {
-	Triggers []lg.Expr
-	Axiom    *ast.LabeledFormula
+	Triggers []goivy.Expr
+	Axiom    *goivy.LabeledFormula
 }
 
 // InstResult pairs an axiom with its instantiated formula.
 type InstResult struct {
-	Axiom   *ast.LabeledFormula
-	Formula lg.Expr
+	Axiom   *goivy.LabeledFormula
+	Formula goivy.Expr
 }
 
 // InstantiateAxioms performs pattern-based eager instantiation of axioms.
 // Returns a list of (axiom, instantiated formula) pairs.
 // Corresponds to Python's instantiate_axioms.
-func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxiom) []InstResult {
+func InstantiateAxioms(m *goivy.Module, fmlas []goivy.Expr, triggers []TriggerAxiom) []InstResult {
 	// Collect all symbols used in formulas
-	symbolSet := make(map[string]*lg.Const)
+	symbolSet := make(map[string]*goivy.Const)
 	for _, f := range fmlas {
 		//for _, sym := range il.SymbolsAst(f) { // I suspect this porting choice is buggy.
-		for _, expr := range il.UsedSymbolsAst(f).All() {
+		for _, expr := range goivy.UsedSymbolsAst(f).All() {
 			switch sym := expr.(type) {
-			case *lg.Const:
+			case *goivy.Const:
 				symbolSet[sym.Name] = sym
 			default:
 				panic(fmt.Sprintf("what should I do for type %T here?", expr))
@@ -350,10 +344,10 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 	}
 
 	// Categorize into sort constants and function symbols
-	sortConstants := make(map[string][]*lg.Const) // sort name → constants of that sort
-	var funs []*lg.Const
+	sortConstants := make(map[string][]*goivy.Const) // sort name → constants of that sort
+	var funs []*goivy.Const
 	for _, sym := range symbolSet {
-		if il.IsFunctionSort(sym.CSort) {
+		if goivy.IsFunctionSort(sym.CSort) {
 			funs = append(funs, sym)
 		} else {
 			sortName := sym.CSort.String()
@@ -369,7 +363,7 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 	var results []InstResult
 
 	for _, ta := range triggers {
-		trigMatches := make([][]map[string]lg.Expr, len(ta.Triggers))
+		trigMatches := make([][]map[string]goivy.Expr, len(ta.Triggers))
 		for i, trig := range ta.Triggers {
 			trigMatches[i] = TriggerMatches(fmlas, trig)
 		}
@@ -379,13 +373,13 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 
 		for _, mp := range merged {
 			// Apply match to axiom formula
-			subs := make(map[lg.NodeKey]lg.Expr)
+			subs := make(map[goivy.NodeKey]goivy.Expr)
 			for k, v := range mp {
 				// Create a variable with this name to use as key
-				vKey, _ := lg.NewVariable(k, v.NodeSort())
-				subs[lg.Key(vKey)] = v
+				vKey, _ := goivy.NewVariable(k, v.NodeSort())
+				subs[goivy.Key(vKey)] = v
 			}
-			inst, err := lu.Substitute(ta.Axiom.Formula.(lg.Expr), subs)
+			inst, err := goivy.Substitute(ta.Axiom.Formula.(goivy.Expr), subs)
 			if err != nil {
 				continue
 			}
@@ -405,18 +399,18 @@ func InstantiateAxioms(m *module.Module, fmlas []lg.Expr, triggers []TriggerAxio
 
 // MergeMatchLists computes the Cartesian product of match lists,
 // merging compatible matches.
-func MergeMatchLists(matchLists [][]map[string]lg.Expr) []map[string]lg.Expr {
+func MergeMatchLists(matchLists [][]map[string]goivy.Expr) []map[string]goivy.Expr {
 	if len(matchLists) == 0 {
-		return []map[string]lg.Expr{{}}
+		return []map[string]goivy.Expr{{}}
 	}
-	var results []map[string]lg.Expr
-	mergeMatchListsRec(matchLists, 0, make(map[string]lg.Expr), &results)
+	var results []map[string]goivy.Expr
+	mergeMatchListsRec(matchLists, 0, make(map[string]goivy.Expr), &results)
 	return results
 }
 
-func mergeMatchListsRec(matchLists [][]map[string]lg.Expr, idx int, current map[string]lg.Expr, results *[]map[string]lg.Expr) {
+func mergeMatchListsRec(matchLists [][]map[string]goivy.Expr, idx int, current map[string]goivy.Expr, results *[]map[string]goivy.Expr) {
 	if idx == len(matchLists) {
-		cp := make(map[string]lg.Expr, len(current))
+		cp := make(map[string]goivy.Expr, len(current))
 		for k, v := range current {
 			cp[k] = v
 		}
@@ -424,7 +418,7 @@ func mergeMatchListsRec(matchLists [][]map[string]lg.Expr, idx int, current map[
 		return
 	}
 	for _, mp := range matchLists[idx] {
-		merged := make(map[string]lg.Expr, len(current))
+		merged := make(map[string]goivy.Expr, len(current))
 		for k, v := range current {
 			merged[k] = v
 		}

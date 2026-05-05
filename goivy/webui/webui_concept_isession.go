@@ -8,22 +8,18 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
-
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // ConceptInteractiveSession is the full interactive concept-graph session
 // with domain, state, axioms, constraints, undo stack, and alpha cache.
 type ConceptInteractiveSession struct {
 	Domain             *CDConceptDomain
-	State              logic.Expr
-	Axioms             logic.Expr
-	GoalConstraints    []logic.Expr
-	SupposeConstraints []logic.Expr
+	State              goivy.Expr
+	Axioms             goivy.Expr
+	GoalConstraints    []goivy.Expr
+	SupposeConstraints []goivy.Expr
 	UndoStack          []*cisUndoEntry
 	RedoStack          []*cisUndoEntry
 	Cache              map[string]bool // tag-string -> bool
@@ -36,7 +32,7 @@ type ConceptInteractiveSession struct {
 // cisUndoEntry stores state for one undo level.
 type cisUndoEntry struct {
 	Domain             *CDConceptDomain
-	SupposeConstraints []logic.Expr
+	SupposeConstraints []goivy.Expr
 }
 
 // CISWidget is an interface for rendering widgets that display the concept graph.
@@ -50,20 +46,20 @@ type CISWidget interface {
 // If recompute is true, alpha abstraction is run immediately.
 func NewConceptInteractiveSession(
 	domain *CDConceptDomain,
-	state logic.Expr,
-	axioms logic.Expr,
-	goalConstraints []logic.Expr,
-	supposeConstraints []logic.Expr,
+	state goivy.Expr,
+	axioms goivy.Expr,
+	goalConstraints []goivy.Expr,
+	supposeConstraints []goivy.Expr,
 	widget CISWidget,
 	analysisSession map[string]*CDConceptDomain,
 	cache map[string]bool,
 	recompute bool,
 ) *ConceptInteractiveSession {
 	if goalConstraints == nil {
-		goalConstraints = []logic.Expr{}
+		goalConstraints = []goivy.Expr{}
 	}
 	if supposeConstraints == nil {
-		supposeConstraints = []logic.Expr{}
+		supposeConstraints = []goivy.Expr{}
 	}
 	if analysisSession == nil {
 		analysisSession = make(map[string]*CDConceptDomain)
@@ -73,8 +69,8 @@ func NewConceptInteractiveSession(
 		Domain:             domain,
 		State:              state,
 		Axioms:             axioms,
-		GoalConstraints:    append([]logic.Expr{}, goalConstraints...),
-		SupposeConstraints: append([]logic.Expr{}, supposeConstraints...),
+		GoalConstraints:    append([]goivy.Expr{}, goalConstraints...),
+		SupposeConstraints: append([]goivy.Expr{}, supposeConstraints...),
 		Widget:             widget,
 		AnalysisSession:    analysisSession,
 		Cache:              cache,
@@ -102,8 +98,8 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 		s.Domain.Copy(),
 		s.State,
 		s.Axioms,
-		append([]logic.Expr{}, s.GoalConstraints...),
-		append([]logic.Expr{}, s.SupposeConstraints...),
+		append([]goivy.Expr{}, s.GoalConstraints...),
+		append([]goivy.Expr{}, s.SupposeConstraints...),
 		s.Widget,
 		s.AnalysisSession,
 		cacheCopy,
@@ -112,13 +108,13 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 	for _, u := range s.UndoStack {
 		result.UndoStack = append(result.UndoStack, &cisUndoEntry{
 			Domain:             u.Domain.Copy(),
-			SupposeConstraints: append([]logic.Expr{}, u.SupposeConstraints...),
+			SupposeConstraints: append([]goivy.Expr{}, u.SupposeConstraints...),
 		})
 	}
 	for _, u := range s.RedoStack {
 		result.RedoStack = append(result.RedoStack, &cisUndoEntry{
 			Domain:             u.Domain.Copy(),
-			SupposeConstraints: append([]logic.Expr{}, u.SupposeConstraints...),
+			SupposeConstraints: append([]goivy.Expr{}, u.SupposeConstraints...),
 		})
 	}
 	return result
@@ -126,8 +122,8 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 
 // ToFormula combines state, axioms, goal constraints, and suppose constraints
 // into a single formula.
-func (s *ConceptInteractiveSession) ToFormula() logic.Expr {
-	terms := make([]logic.Expr, 0, 2+len(s.GoalConstraints)+len(s.SupposeConstraints))
+func (s *ConceptInteractiveSession) ToFormula() goivy.Expr {
+	terms := make([]goivy.Expr, 0, 2+len(s.GoalConstraints)+len(s.SupposeConstraints))
 	if s.State != nil {
 		terms = append(terms, s.State)
 	}
@@ -137,9 +133,9 @@ func (s *ConceptInteractiveSession) ToFormula() logic.Expr {
 	terms = append(terms, s.GoalConstraints...)
 	terms = append(terms, s.SupposeConstraints...)
 	if len(terms) == 0 {
-		return logic.True
+		return goivy.True
 	}
-	result, _ := logic.NewAnd(terms...)
+	result, _ := goivy.NewAnd(terms...)
 	return result
 }
 
@@ -150,14 +146,14 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	// Collect from formula
 	formula := s.ToFormula()
 	if formula != nil {
-		for _, c := range il.UsedSymbolsAst(formula).All() {
-			used[logic.ExprName(c)] = true
+		for _, c := range goivy.UsedSymbolsAst(formula).All() {
+			used[goivy.ExprName(c)] = true
 		}
 	}
 	// Collect from concept formulas
 	s.Domain.Concepts.ForEachConcept(func(_ string, c *CDConcept) {
-		for _, uc := range il.UsedSymbolsAst(c.Formula).All() {
-			used[logic.ExprName(uc)] = true
+		for _, uc := range goivy.UsedSymbolsAst(c.Formula).All() {
+			used[goivy.ExprName(uc)] = true
 		}
 	})
 	// Collect from extra
@@ -198,7 +194,7 @@ func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bo
 func (s *ConceptInteractiveSession) Push() {
 	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]goivy.Expr{}, s.SupposeConstraints...),
 	})
 	s.RedoStack = nil // new action clears redo
 }
@@ -212,12 +208,12 @@ func (s *ConceptInteractiveSession) Pop() error {
 	// Save current state to redo stack
 	s.RedoStack = append(s.RedoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]goivy.Expr{}, s.SupposeConstraints...),
 	})
 	entry := s.UndoStack[len(s.UndoStack)-1]
 	s.UndoStack = s.UndoStack[:len(s.UndoStack)-1]
 	s.Domain = entry.Domain.Copy()
-	s.SupposeConstraints = append([]logic.Expr{}, entry.SupposeConstraints...)
+	s.SupposeConstraints = append([]goivy.Expr{}, entry.SupposeConstraints...)
 	return nil
 }
 
@@ -238,12 +234,12 @@ func (s *ConceptInteractiveSession) Redo() error {
 	// Save current state to undo stack (without clearing redo)
 	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]goivy.Expr{}, s.SupposeConstraints...),
 	})
 	entry := s.RedoStack[len(s.RedoStack)-1]
 	s.RedoStack = s.RedoStack[:len(s.RedoStack)-1]
 	s.Domain = entry.Domain.Copy()
-	s.SupposeConstraints = append([]logic.Expr{}, entry.SupposeConstraints...)
+	s.SupposeConstraints = append([]goivy.Expr{}, entry.SupposeConstraints...)
 	s.Recompute(nil)
 	return nil
 }
@@ -271,10 +267,10 @@ func (s *ConceptInteractiveSession) supposeEmpty(concept string) {
 	if c == nil {
 		return
 	}
-	fv := logicutil.FreeVariablesList(c.Formula)
-	notF, _ := logic.NewNot(c.Formula)
+	fv := goivy.FreeVariablesList(c.Formula)
+	notF, _ := goivy.NewNot(c.Formula)
 	if len(fv) > 0 {
-		forall, _ := logic.NewForAll(fv, notF)
+		forall, _ := goivy.NewForAll(fv, notF)
 		s.SupposeConstraints = append(s.SupposeConstraints, forall)
 	} else {
 		s.SupposeConstraints = append(s.SupposeConstraints, notF)
@@ -290,39 +286,39 @@ func (s *ConceptInteractiveSession) SupposeEmpty(concept string) {
 
 // GetWitnesses returns constants that are witnesses for a unary concept.
 // A witness c satisfies: concept(x) implies x=c.
-func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Const {
+func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*goivy.Const {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
 		return nil
 	}
 	cSort := concept.Variables[0].VSort
-	if _, ok := cSort.(*logic.TopSort); ok {
+	if _, ok := cSort.(*goivy.TopSort); ok {
 		return nil
 	}
 
 	// Special case for unit sort.
 	if cSort.String() == "unit" {
-		return []*logic.Const{logic.NewConst("0", cSort)}
+		return []*goivy.Const{goivy.NewConst("0", cSort)}
 	}
 
-	var constants []*logic.Const
-	for _, sym := range il.UsedSymbolsAst(concept.Formula).All() {
-		if c, ok := sym.(*logic.Const); ok {
+	var constants []*goivy.Const
+	for _, sym := range goivy.UsedSymbolsAst(concept.Formula).All() {
+		if c, ok := sym.(*goivy.Const); ok {
 			constants = append(constants, c)
 		}
 	}
 	freshName := s.FreshConstName(nil)
-	x := logic.NewConst(freshName, cSort)
+	x := goivy.NewConst(freshName, cSort)
 	f, err := concept.Call(x)
 	if err != nil {
 		return nil
 	}
 
-	var witnesses []*logic.Const
+	var witnesses []*goivy.Const
 	for _, c := range constants {
-		if logic.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) || webuiIsTopSort(cSort) {
+		if goivy.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) || webuiIsTopSort(cSort) {
 			// Check if f implies x=c using Z3.
-			eq, eqErr := logic.NewEq(x, c)
+			eq, eqErr := goivy.NewEq(x, c)
 			if eqErr != nil {
 				continue
 			}
@@ -344,19 +340,19 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 //	slvr.add(fmla1)
 //	slvr.add(Not(fmla2))
 //	return not is_sat(slvr)
-func z3Implies(fmla1, fmla2 logic.Expr) (bool, error) {
-	slv := z3bridge.NewSolver(nil, nil)
+func z3Implies(fmla1, fmla2 goivy.Expr) (bool, error) {
+	slv := goivy.NewSolver(nil, nil)
 	return slv.Implies(fmla1, fmla2)
 }
 
-func webuiIsTopSort(s logic.Sort) bool {
-	_, ok := s.(*logic.TopSort)
+func webuiIsTopSort(s goivy.Sort) bool {
+	_, ok := s.(*goivy.TopSort)
 	return ok
 }
 
 // Suppose adds a formula to the suppose constraints (no push).
-func (s *ConceptInteractiveSession) Suppose(fmla logic.Expr) {
-	if logicutil.IsTautologyEquality(fmla) {
+func (s *ConceptInteractiveSession) Suppose(fmla goivy.Expr) {
+	if goivy.IsTautologyEquality(fmla) {
 		return
 	}
 	s.SupposeConstraints = append(s.SupposeConstraints, fmla)
@@ -364,13 +360,13 @@ func (s *ConceptInteractiveSession) Suppose(fmla logic.Expr) {
 
 // materializeNode creates a concrete witness for a concept (internal).
 // Returns the witness constant.
-func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.Const {
+func (s *ConceptInteractiveSession) materializeNode(conceptName string) *goivy.Const {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
 		return nil
 	}
 	cSort := concept.Variables[0].VSort
-	if _, ok := cSort.(*logic.TopSort); ok {
+	if _, ok := cSort.(*goivy.TopSort); ok {
 		return nil
 	}
 
@@ -386,13 +382,13 @@ func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.C
 
 	// No witness found, create a fresh constant.
 	freshName := s.FreshConstName(nil)
-	c := logic.NewConst(freshName, cSort)
+	c := goivy.NewConst(freshName, cSort)
 
 	// Add equality concept and split.
 	X := webuiMustVar("X", c.CSort)
-	eq, _ := logic.NewEq(X, c)
+	eq, _ := goivy.NewEq(X, c)
 	eqName := "=" + c.Name
-	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*logic.Variable{X}, eq))
+	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*goivy.Variable{X}, eq))
 	s.Domain.Split(conceptName, eqName)
 
 	f, err := concept.Call(c)
@@ -411,7 +407,7 @@ func (s *ConceptInteractiveSession) MaterializeNode(conceptName string) {
 
 // materializeEdge creates concrete witnesses for source and target nodes
 // and supposes the edge (internal).
-func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*logic.Const, *logic.Const) {
+func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*goivy.Const, *goivy.Const) {
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
 		return nil, nil
@@ -420,7 +416,7 @@ func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string,
 	if sourceC == nil {
 		return nil, nil
 	}
-	var targetC *logic.Const
+	var targetC *goivy.Const
 	if source == target {
 		targetC = sourceC
 	} else {
@@ -436,7 +432,7 @@ func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string,
 	if polarity {
 		s.Suppose(f)
 	} else {
-		notF, _ := logic.NewNot(f)
+		notF, _ := goivy.NewNot(f)
 		s.Suppose(notF)
 	}
 	return sourceC, targetC
@@ -450,13 +446,13 @@ func (s *ConceptInteractiveSession) MaterializeEdge(edge, source, target string,
 }
 
 // normalizeFacts normalizes a list of formulas by removing tautological equalities.
-func normalizeFacts(facts []logic.Expr) []logic.Expr {
+func normalizeFacts(facts []goivy.Expr) []goivy.Expr {
 	if len(facts) == 0 {
 		return facts
 	}
-	var result []logic.Expr
+	var result []goivy.Expr
 	for _, f := range facts {
-		if !logicutil.IsTautologyEquality(f) {
+		if !goivy.IsTautologyEquality(f) {
 			result = append(result, f)
 		}
 	}
@@ -464,9 +460,9 @@ func normalizeFacts(facts []logic.Expr) []logic.Expr {
 }
 
 // GetNodeFacts returns facts for a node concept used by gather.
-func (s *ConceptInteractiveSession) GetNodeFacts(node string) []logic.Expr {
+func (s *ConceptInteractiveSession) GetNodeFacts(node string) []goivy.Expr {
 	av := s.abstractValueMap()
-	var facts []logic.Expr
+	var facts []goivy.Expr
 
 	if av[TagString(Tag{"node_info", "at_least_one", node})] {
 		for _, c := range s.GetWitnesses(node) {
@@ -493,7 +489,7 @@ func (s *ConceptInteractiveSession) GetNodeFacts(node string) []logic.Expr {
 					if nlConcept != nil {
 						nf, err := nlConcept.Call(c)
 						if err == nil {
-							notF, _ := logic.NewNot(nf)
+							notF, _ := goivy.NewNot(nf)
 							facts = append(facts, notF)
 						}
 					}
@@ -526,8 +522,8 @@ func (s *ConceptInteractiveSession) abstractValueMap() map[string]bool {
 }
 
 // getEdgeFact returns facts for a specific edge/source/target with given polarity.
-func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) []logic.Expr {
-	var facts []logic.Expr
+func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) []goivy.Expr {
+	var facts []goivy.Expr
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
 		return nil
@@ -543,7 +539,7 @@ func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, pol
 			if polarity {
 				facts = append(facts, f)
 			} else {
-				notF, _ := logic.NewNot(f)
+				notF, _ := goivy.NewNot(f)
 				facts = append(facts, notF)
 			}
 		}
@@ -553,7 +549,7 @@ func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, pol
 
 // GetEdgeFacts returns facts for an edge used by gather.
 // If filterPolarity is nil, returns both positive and negative facts.
-func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) []logic.Expr {
+func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) []goivy.Expr {
 	av := s.abstractValueMap()
 	x := strings.Join([]string{edge, source, target}, "|")
 
@@ -581,8 +577,8 @@ func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, fi
 }
 
 // GetFacts returns all gathered facts.
-func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) []logic.Expr {
-	var facts []logic.Expr
+func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) []goivy.Expr {
+	var facts []goivy.Expr
 
 	for _, node := range s.Domain.Concepts.GetList("nodes") {
 		facts = append(facts, s.GetNodeFacts(node)...)
@@ -630,11 +626,11 @@ func (s *ConceptInteractiveSession) LoadDomain(name string) error {
 }
 
 // ReplaceDomain replaces the domain and suppose constraints.
-func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []logic.Expr) {
+func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []goivy.Expr) {
 	s.Push()
 	s.Domain = newDomain.Copy()
 	if newSupposeConstraints != nil {
-		s.SupposeConstraints = append([]logic.Expr{}, newSupposeConstraints...)
+		s.SupposeConstraints = append([]goivy.Expr{}, newSupposeConstraints...)
 	} else {
 		s.SupposeConstraints = nil
 	}
@@ -662,16 +658,16 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 			continue
 		}
 		for _, v := range tConcept.Variables {
-			if logic.SortEqual(v.VSort, w.CSort) {
+			if goivy.SortEqual(v.VSort, w.CSort) {
 				// Create a projected binary concept.
-				var variables []*logic.Variable
+				var variables []*goivy.Variable
 				for _, x := range tConcept.Variables {
 					if x != v {
 						variables = append(variables, x)
 					}
 				}
-				subs := map[logic.NodeKey]logic.Expr{logic.Key(v): w}
-				formula, err := logicutil.Substitute(tConcept.Formula, subs)
+				subs := map[goivy.NodeKey]goivy.Expr{goivy.Key(v): w}
+				formula, err := goivy.Substitute(tConcept.Formula, subs)
 				if err != nil {
 					continue
 				}
@@ -711,7 +707,7 @@ func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) {
 }
 
 // Reset restores the concept domain to its initial state.
-func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols map[string]*logic.Const) {
+func (s *ConceptInteractiveSession) Reset(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) {
 	s.Push()
 	s.Domain = GetInitialConceptDomain(sorts, symbols)
 	s.Cache = make(map[string]bool)
@@ -719,7 +715,7 @@ func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols m
 }
 
 // Diagram switches to the diagram concept domain.
-func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Const, state logic.Expr) {
+func (s *ConceptInteractiveSession) Diagram(sorts map[string]goivy.Sort, symbols []*goivy.Const, state goivy.Expr) {
 	s.Push()
 	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
 	s.Cache = make(map[string]bool)

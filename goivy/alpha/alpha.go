@@ -9,14 +9,9 @@ package alpha
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/webui"
-	"github.com/glycerine/ivy/goivy/z3bridge"
-	solver "github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // --- Domain interface for Alpha ---
@@ -25,8 +20,8 @@ import (
 // In Python this is state.domain with concept_spaces and background_theory.
 type AlphaDomain struct {
 	ConceptSpaces    []ConceptSpaceEntry
-	BackgroundTheory func(inScope map[string]bool) *module.Clauses
-	AbstrPreds       []*module.Clauses
+	BackgroundTheory func(inScope map[string]bool) *goivy.Clauses
+	AbstrPreds       []*goivy.Clauses
 }
 
 // ConceptSpaceEntry pairs an atom with a concept space expression.
@@ -39,7 +34,7 @@ type ConceptSpaceEntry struct {
 // AlphaState represents the state to abstract.
 // In Python this is the state argument to alpha() and predicate_alpha().
 type AlphaState struct {
-	Clauses    *module.Clauses
+	Clauses    *goivy.Clauses
 	Domain     *AlphaDomain
 	InScope    map[string]bool
 	TestBottom bool // Whether to UNSAT-check concrete state before abstraction. Python: test_bottom.
@@ -52,11 +47,11 @@ type AlphaState struct {
 // Corresponds to Python's alpha(state).
 func Alpha(state *AlphaState) {
 	d := NewProgressiveDomain(state.Domain.ConceptSpaces, false, state.TestBottom, state.Log)
-	var bgTheory *module.Clauses
+	var bgTheory *goivy.Clauses
 	if state.Domain.BackgroundTheory != nil {
 		bgTheory = state.Domain.BackgroundTheory(state.InScope)
 	} else {
-		bgTheory = module.TrueClauses(nil)
+		bgTheory = goivy.TrueClauses(nil)
 	}
 	state.Clauses = d.Post(state.Clauses, bgTheory, nil, nil)
 }
@@ -72,15 +67,15 @@ type ProgressiveDomain struct {
 	verbose        bool
 	testBottom     bool // from AlphaState.TestBottom
 	log            bool // from AlphaState.Log
-	slvr           *solver.Solver
-	z3solver       *z3bridge.Z3Solver
-	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
-	inhabitedCubes map[string]bool                // Z3 expr ID -> inhabited
-	z3Cubes        []z3bridge.Z3Expr              // prevent GC of Z3 cubes
+	slvr           *goivy.Solver
+	z3solver       *goivy.Z3Solver
+	cubeMemo       map[uint]*goivy.CubeMemoEntry // Z3 AST ID -> cached result
+	inhabitedCubes map[string]bool               // Z3 expr ID -> inhabited
+	z3Cubes        []goivy.Z3Expr                // prevent GC of Z3 cubes
 	memo           map[string]webui.CSMemoEntry
-	inferred       [][]lg.Expr
+	inferred       [][]goivy.Expr
 	unsat          bool
-	newSym         map[string]*lg.Const
+	newSym         map[string]*goivy.Const
 }
 
 // NewProgressiveDomain creates a new ProgressiveDomain.
@@ -102,7 +97,7 @@ func (pd *ProgressiveDomain) AddConceptSpace(atom *webui.CSAtom, space webui.CSN
 
 // cubeID computes a string identifier for a cube (list of literals).
 // Corresponds to Python's cube_id.
-func (pd *ProgressiveDomain) cubeID(cube []*il.Literal) (string, error) {
+func (pd *ProgressiveDomain) cubeID(cube []*goivy.Literal) (string, error) {
 	z3cube, err := pd.slvr.CubeToZ3(cube)
 	if err != nil {
 		return "", err
@@ -113,7 +108,7 @@ func (pd *ProgressiveDomain) cubeID(cube []*il.Literal) (string, error) {
 
 // inhabitedCube marks a cube as inhabited.
 // Corresponds to Python's inhabited_cube.
-func (pd *ProgressiveDomain) inhabitedCube(cube []*il.Literal, truth bool) {
+func (pd *ProgressiveDomain) inhabitedCube(cube []*goivy.Literal, truth bool) {
 	cube = canonizeClause(cube)
 	id, err := pd.cubeID(cube)
 	if err != nil {
@@ -129,8 +124,8 @@ func (pd *ProgressiveDomain) inhabitedCube(cube []*il.Literal, truth bool) {
 
 // inhabitedLit marks a single literal as inhabited.
 // Corresponds to Python's inhabited_lit.
-func (pd *ProgressiveDomain) inhabitedLit(lit *il.Literal) {
-	pd.inhabitedCube([]*il.Literal{lit}, true)
+func (pd *ProgressiveDomain) inhabitedLit(lit *goivy.Literal) {
+	pd.inhabitedCube([]*goivy.Literal{lit}, true)
 }
 
 // modelCheck performs model checking on the current solver state.
@@ -143,7 +138,7 @@ func (pd *ProgressiveDomain) modelCheck() {
 
 // unfoldDefs adds definition instances for a cube to the solver.
 // Corresponds to Python's unfold_defs.
-func (pd *ProgressiveDomain) unfoldDefs(cube []*il.Literal) {
+func (pd *ProgressiveDomain) unfoldDefs(cube []*goivy.Literal) {
 	// In Python: definition_instances(cube_to_formula(cube))
 	// This is a placeholder; full implementation would compute definition
 	// instances and add them to the solver.
@@ -153,7 +148,7 @@ func (pd *ProgressiveDomain) unfoldDefs(cube []*il.Literal) {
 // testCube tests whether a cube is consistent with the solver state.
 // Returns true if the cube is satisfiable (inhabited).
 // Corresponds to Python's test_cube.
-func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
+func (pd *ProgressiveDomain) testCube(cube []*goivy.Literal) bool {
 	canonCube := canonizeClause(cube)
 	if pd.log {
 		strs := make([]string, len(canonCube))
@@ -189,9 +184,9 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 
 	// Collect used variables and create Skolem substitution
 	vs := usedVariablesClause(renamedCube)
-	subs := make(map[lg.NodeKey]lg.Expr, len(vs))
+	subs := make(map[goivy.NodeKey]goivy.Expr, len(vs))
 	for _, v := range vs {
-		subs[lg.Key(v)] = varToSkolem("__c", v)
+		subs[goivy.Key(v)] = varToSkolem("__c", v)
 	}
 	scube := substituteClause(renamedCube, subs)
 
@@ -210,7 +205,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 		}
 	} else {
 		// Cube is unsat - infer negation
-		negated := make([]lg.Expr, len(cube))
+		negated := make([]goivy.Expr, len(cube))
 		for i, lit := range cube {
 			negated[i] = negateLiteral(lit)
 		}
@@ -230,14 +225,14 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 // postInit initializes the solver state for a post computation.
 // Corresponds to Python's post_init.
 func (pd *ProgressiveDomain) postInit(
-	theory, backgroundTheory *module.Clauses,
-	newSym map[string]*lg.Const,
+	theory, backgroundTheory *goivy.Clauses,
+	newSym map[string]*goivy.Const,
 	toKeep []string,
 ) {
 	pd.newSym = newSym
-	pd.slvr = solver.NewSolver(nil, nil)
+	pd.slvr = goivy.NewSolver(nil, nil)
 	pd.z3solver = pd.slvr.NewZ3Solver()
-	pd.cubeMemo = make(map[uint]*solver.CubeMemoEntry)
+	pd.cubeMemo = make(map[uint]*goivy.CubeMemoEntry)
 	pd.inhabitedCubes = make(map[string]bool)
 	pd.z3Cubes = nil
 	pd.memo = make(map[string]webui.CSMemoEntry)
@@ -247,7 +242,7 @@ func (pd *ProgressiveDomain) postInit(
 		fmt.Printf("background: %s\n", backgroundTheory)
 	}
 
-	combined := module.AndClausesTyped(theory, backgroundTheory)
+	combined := goivy.AndClausesTyped(theory, backgroundTheory)
 	if err := pd.slvr.AddClauses(pd.z3solver, combined); err != nil {
 		pd.unsat = true
 		return
@@ -255,7 +250,7 @@ func (pd *ProgressiveDomain) postInit(
 
 	if pd.testBottom {
 		result := pd.z3solver.Check()
-		pd.unsat = (result == z3bridge.Unsat)
+		pd.unsat = (result == goivy.Unsat)
 	} else {
 		pd.unsat = false
 	}
@@ -269,9 +264,9 @@ func (pd *ProgressiveDomain) postInit(
 // postStep performs one step of concept space enumeration.
 // Returns the inferred clauses.
 // Corresponds to Python's post_step.
-func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *module.Clauses {
+func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *goivy.Clauses {
 	if pd.unsat {
-		return module.FalseClauses(nil)
+		return goivy.FalseClauses(nil)
 	}
 	pd.inferred = nil
 
@@ -307,15 +302,15 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *module
 	pd.inferred = nil
 
 	// Convert inferred to Clauses
-	fmlas := make([]lg.Expr, len(res))
+	fmlas := make([]goivy.Expr, len(res))
 	for i, clause := range res {
 		if len(clause) == 1 {
 			fmlas[i] = clause[0]
 		} else {
-			fmlas[i] = &lg.Or{Terms: clause}
+			fmlas[i] = &goivy.Or{Terms: clause}
 		}
 	}
-	return module.NewClauses(fmlas, nil, nil)
+	return goivy.NewClauses(fmlas, nil, nil)
 }
 
 // postQuit cleans up after a post computation.
@@ -334,10 +329,10 @@ func (pd *ProgressiveDomain) postQuit() {
 // background theory, new symbol map, and symbols to keep.
 // Corresponds to Python's post.
 func (pd *ProgressiveDomain) Post(
-	theory, backgroundTheory *module.Clauses,
-	newSym map[string]*lg.Const,
+	theory, backgroundTheory *goivy.Clauses,
+	newSym map[string]*goivy.Const,
 	toKeep []string,
-) *module.Clauses {
+) *goivy.Clauses {
 	pd.postInit(theory, backgroundTheory, newSym, toKeep)
 	res := pd.postStep(pd.conceptSpaces)
 	pd.postQuit()
@@ -350,16 +345,16 @@ func (pd *ProgressiveDomain) Post(
 // Returns a list of (index1, index2) pairs where both positions hold
 // the same variable.
 // Corresponds to Python's var_corr.
-func VarCorr(terms1, terms2 []lg.Expr) [][2]int {
+func VarCorr(terms1, terms2 []goivy.Expr) [][2]int {
 	d := make(map[string]int)
 	for i, t := range terms2 {
-		if v, ok := t.(*lg.Variable); ok {
+		if v, ok := t.(*goivy.Variable); ok {
 			d[v.Name] = i
 		}
 	}
 	var result [][2]int
 	for j, t := range terms1 {
-		if v, ok := t.(*lg.Variable); ok {
+		if v, ok := t.(*goivy.Variable); ok {
 			if idx, exists := d[v.Name]; exists {
 				result = append(result, [2]int{j, idx})
 			}
@@ -380,8 +375,8 @@ func firstSeen(memo map[string]bool, elem string) bool {
 
 // cutRow extracts elements at the given column indices.
 // Corresponds to Python's cut_row.
-func cutRow(row []lg.Expr, goodCols []int) []lg.Expr {
-	result := make([]lg.Expr, len(goodCols))
+func cutRow(row []goivy.Expr, goodCols []int) []goivy.Expr {
+	result := make([]goivy.Expr, len(goodCols))
 	for i, col := range goodCols {
 		result[i] = row[col]
 	}
@@ -391,8 +386,8 @@ func cutRow(row []lg.Expr, goodCols []int) []lg.Expr {
 // RelTable represents a relational table: a tuple of (variables, rows).
 // Corresponds to Python's (v, rows) tuples.
 type RelTable struct {
-	Vars []lg.Expr
-	Rows [][]lg.Expr
+	Vars []goivy.Expr
+	Rows [][]goivy.Expr
 }
 
 // compactTable removes redundant columns from a relation table.
@@ -401,12 +396,12 @@ func compactTable(tab *RelTable) *RelTable {
 	memo := make(map[string]bool)
 	var goodCols []int
 	for i, t := range tab.Vars {
-		if v, ok := t.(*lg.Variable); ok && firstSeen(memo, v.Name) {
+		if v, ok := t.(*goivy.Variable); ok && firstSeen(memo, v.Name) {
 			goodCols = append(goodCols, i)
 		}
 	}
 	newVars := cutRow(tab.Vars, goodCols)
-	newRows := make([][]lg.Expr, len(tab.Rows))
+	newRows := make([][]goivy.Expr, len(tab.Rows))
 	for i, row := range tab.Rows {
 		newRows[i] = cutRow(row, goodCols)
 	}
@@ -418,15 +413,15 @@ func compactTable(tab *RelTable) *RelTable {
 // RelAlg1 implements relational algebra using model instances.
 // Corresponds to Python's RelAlg1 class.
 type RelAlg1 struct {
-	Slvr   *solver.Solver
-	Z3Slvr *z3bridge.Solver
-	Model  *solver.HerbrandModel
+	Slvr   *goivy.Solver
+	Z3Slvr *goivy.Solver
+	Model  *goivy.HerbrandModel
 	Parent *ProgressiveDomain
 }
 
 // NewRelAlg1 creates a new RelAlg1.
 // Corresponds to Python's RelAlg1.__init__.
-func NewRelAlg1(slvr *solver.Solver, z3slvr *z3bridge.Solver, parent *ProgressiveDomain) *RelAlg1 {
+func NewRelAlg1(slvr *goivy.Solver, z3slvr *goivy.Solver, parent *ProgressiveDomain) *RelAlg1 {
 	return &RelAlg1{
 		Slvr:   slvr,
 		Z3Slvr: z3slvr,
@@ -437,21 +432,21 @@ func NewRelAlg1(slvr *solver.Solver, z3slvr *z3bridge.Solver, parent *Progressiv
 // Prim evaluates a primitive literal against the model.
 // Returns a RelTable of matching instances.
 // Corresponds to Python's RelAlg1.prim.
-func (ra *RelAlg1) Prim(lit *il.Literal) *RelTable {
+func (ra *RelAlg1) Prim(lit *goivy.Literal) *RelTable {
 	// Get model instances
-	app, ok := lit.Atom.(*lg.Apply)
+	app, ok := lit.Atom.(*goivy.Apply)
 	if !ok {
 		return &RelTable{}
 	}
 
 	// Check the literal against the model
-	posLit := il.NewLiteral(lit.Polarity, lit.Atom)
+	posLit := goivy.NewLiteral(lit.Polarity, lit.Atom)
 	_, rows := ra.Model.Check(posLit)
 
 	// Build result table
-	resultRows := make([][]lg.Expr, len(rows))
+	resultRows := make([][]goivy.Expr, len(rows))
 	for i, row := range rows {
-		resultRow := make([]lg.Expr, len(row))
+		resultRow := make([]goivy.Expr, len(row))
 		for j, c := range row {
 			resultRow[j] = c
 		}
@@ -470,7 +465,7 @@ func (ra *RelAlg1) Prim(lit *il.Literal) *RelTable {
 // Corresponds to Python's RelAlg1.prod.
 func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 	corr := VarCorr(x.Vars, y.Vars)
-	var rows [][]lg.Expr
+	var rows [][]goivy.Expr
 	if len(corr) > 0 {
 		xc, yc := corr[0][0], corr[0][1]
 		index := make(map[string][]int) // variable rep -> row indices in y
@@ -487,7 +482,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 			for _, yi := range index[key] {
 				yr := y.Rows[yi]
 				if allMatch(xr, yr, corr) {
-					combined := make([]lg.Expr, 0, len(xr)+len(yr))
+					combined := make([]goivy.Expr, 0, len(xr)+len(yr))
 					combined = append(combined, xr...)
 					combined = append(combined, yr...)
 					rows = append(rows, combined)
@@ -499,7 +494,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 		for _, xr := range x.Rows {
 			for _, yr := range y.Rows {
 				if allMatch(xr, yr, corr) {
-					combined := make([]lg.Expr, 0, len(xr)+len(yr))
+					combined := make([]goivy.Expr, 0, len(xr)+len(yr))
 					combined = append(combined, xr...)
 					combined = append(combined, yr...)
 					rows = append(rows, combined)
@@ -507,7 +502,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 			}
 		}
 	}
-	combinedVars := make([]lg.Expr, 0, len(x.Vars)+len(y.Vars))
+	combinedVars := make([]goivy.Expr, 0, len(x.Vars)+len(y.Vars))
 	combinedVars = append(combinedVars, x.Vars...)
 	combinedVars = append(combinedVars, y.Vars...)
 	return compactTable(&RelTable{Vars: combinedVars, Rows: rows})
@@ -515,10 +510,10 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 
 // Subst applies a substitution to a table's variable names.
 // Corresponds to Python's RelAlg1.subst.
-func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]lg.Expr) *RelTable {
-	newVars := make([]lg.Expr, len(tab.Vars))
+func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]goivy.Expr) *RelTable {
+	newVars := make([]goivy.Expr, len(tab.Vars))
 	for i, v := range tab.Vars {
-		if vv, ok := v.(*lg.Variable); ok {
+		if vv, ok := v.(*goivy.Variable); ok {
 			if repl, exists := subst[vv.Name]; exists {
 				newVars[i] = repl
 			} else {
@@ -542,25 +537,25 @@ func (ra *RelAlg1) Empty(tab *RelTable) bool {
 // RelAlg2 implements relational algebra using Z3 cubes.
 // Corresponds to Python's RelAlg2 class.
 type RelAlg2 struct {
-	Slvr       *solver.Solver
-	Z3Slvr     *z3bridge.Z3Solver
-	TempSolver *z3bridge.Z3Solver
-	Model      *solver.HerbrandModel
+	Slvr       *goivy.Solver
+	Z3Slvr     *goivy.Z3Solver
+	TempSolver *goivy.Z3Solver
+	Model      *goivy.HerbrandModel
 	Parent     *ProgressiveDomain
 	Numbering  map[string]int
 	NextNumber int
-	PrimCache  map[string][]z3bridge.Z3Expr
-	PrimList   []z3bridge.Z3Expr // prevent GC
-	NewSym     map[string]*lg.Const
-	Hm         *solver.HerbrandModel
+	PrimCache  map[string][]goivy.Z3Expr
+	PrimList   []goivy.Z3Expr // prevent GC
+	NewSym     map[string]*goivy.Const
+	Hm         *goivy.HerbrandModel
 }
 
 // NewRelAlg2 creates a new RelAlg2.
 // Corresponds to Python's RelAlg2.__init__.
 func NewRelAlg2(
-	slvr *solver.Solver,
-	z3slvr *z3bridge.Z3Solver,
-	newSym map[string]*lg.Const,
+	slvr *goivy.Solver,
+	z3slvr *goivy.Z3Solver,
+	newSym map[string]*goivy.Const,
 	parent *ProgressiveDomain,
 ) *RelAlg2 {
 	return &RelAlg2{
@@ -570,25 +565,25 @@ func NewRelAlg2(
 		Parent:     parent,
 		Numbering:  make(map[string]int),
 		NextNumber: 0,
-		PrimCache:  make(map[string][]z3bridge.Z3Expr),
+		PrimCache:  make(map[string][]goivy.Z3Expr),
 		NewSym:     newSym,
 	}
 }
 
 // IsSat checks if a formula is satisfiable in the temp solver.
 // Corresponds to Python's is_sat.
-func (ra *RelAlg2) IsSat(f z3bridge.Z3Expr) bool {
+func (ra *RelAlg2) IsSat(f goivy.Z3Expr) bool {
 	ra.TempSolver.Push()
 	defer ra.TempSolver.Pop()
 	ra.TempSolver.Assert(f)
 	result := ra.TempSolver.Check()
-	return result != z3bridge.Unsat
+	return result != goivy.Unsat
 }
 
 // Prim evaluates a primitive literal.
 // Returns a list of Z3 cube expressions.
 // Corresponds to Python's RelAlg2.prim.
-func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Z3Expr {
+func (ra *RelAlg2) Prim(lit *goivy.Literal) []goivy.Z3Expr {
 	z3lit, err := ra.Slvr.LiteralToZ3(lit)
 	if err != nil {
 		return nil
@@ -598,7 +593,7 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 		return cached
 	}
 
-	var cubes []z3bridge.Z3Expr
+	var cubes []goivy.Z3Expr
 
 	// Rename literal and get ground instances from Herbrand model
 	renamedLit := renameLit(lit, ra.NewSym)
@@ -606,7 +601,7 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 		vs, rows := ra.Hm.Check(renamedLit)
 		ctx := ra.Slvr.Context()
 		for _, row := range rows {
-			eqs := make([]z3bridge.Z3Expr, 0, len(vs))
+			eqs := make([]goivy.Z3Expr, 0, len(vs))
 			for j, v := range vs {
 				origTerms := getAtomArgs(lit.Atom)
 				if j < len(origTerms) {
@@ -641,16 +636,16 @@ func (ra *RelAlg2) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 
 // Top returns a list with a single true cube.
 // Corresponds to Python's RelAlg2.top.
-func (ra *RelAlg2) Top() []z3bridge.Z3Expr {
+func (ra *RelAlg2) Top() []goivy.Z3Expr {
 	ctx := ra.Slvr.Context()
-	return []z3bridge.Z3Expr{ctx.BoolVal(true)}
+	return []goivy.Z3Expr{ctx.BoolVal(true)}
 }
 
 // Prod computes the product of two cube lists.
 // Corresponds to Python's RelAlg2.prod.
-func (ra *RelAlg2) Prod(x, y []z3bridge.Z3Expr) []z3bridge.Z3Expr {
+func (ra *RelAlg2) Prod(x, y []goivy.Z3Expr) []goivy.Z3Expr {
 	ctx := ra.Slvr.Context()
-	var cubes []z3bridge.Z3Expr
+	var cubes []goivy.Z3Expr
 	for _, xr := range x {
 		for _, yr := range y {
 			combined := ctx.And(xr, yr)
@@ -664,12 +659,12 @@ func (ra *RelAlg2) Prod(x, y []z3bridge.Z3Expr) []z3bridge.Z3Expr {
 
 // Subst applies a substitution to a cube list.
 // Corresponds to Python's RelAlg2.subst.
-func (ra *RelAlg2) Subst(tab []z3bridge.Z3Expr, subst map[string]lg.Expr) []z3bridge.Z3Expr {
+func (ra *RelAlg2) Subst(tab []goivy.Z3Expr, subst map[string]goivy.Expr) []goivy.Z3Expr {
 	// Build Z3-level substitution
 	ctx := ra.Slvr.Context()
-	var fromExprs, toExprs []z3bridge.Z3Expr
+	var fromExprs, toExprs []goivy.Z3Expr
 	for name, node := range subst {
-		c := lg.NewConst(name, node.NodeSort())
+		c := goivy.NewConst(name, node.NodeSort())
 		zFrom, err1 := ra.Slvr.FormulaToZ3(c)
 		zTo, err2 := ra.Slvr.FormulaToZ3(node)
 		if err1 == nil && err2 == nil {
@@ -680,7 +675,7 @@ func (ra *RelAlg2) Subst(tab []z3bridge.Z3Expr, subst map[string]lg.Expr) []z3br
 	if len(fromExprs) == 0 {
 		return tab
 	}
-	result := make([]z3bridge.Z3Expr, len(tab))
+	result := make([]goivy.Z3Expr, len(tab))
 	for i, expr := range tab {
 		result[i] = ctx.Substitute(expr, fromExprs, toExprs)
 	}
@@ -689,7 +684,7 @@ func (ra *RelAlg2) Subst(tab []z3bridge.Z3Expr, subst map[string]lg.Expr) []z3br
 
 // Empty returns true if the cube list is empty.
 // Corresponds to Python's RelAlg2.empty.
-func (ra *RelAlg2) Empty(tab []z3bridge.Z3Expr) bool {
+func (ra *RelAlg2) Empty(tab []goivy.Z3Expr) bool {
 	return len(tab) == 0
 }
 
@@ -704,9 +699,9 @@ type RelAlg3 struct {
 
 // NewRelAlg3 creates a new RelAlg3.
 func NewRelAlg3(
-	slvr *solver.Solver,
-	z3slvr *z3bridge.Z3Solver,
-	newSym map[string]*lg.Const,
+	slvr *goivy.Solver,
+	z3slvr *goivy.Z3Solver,
+	newSym map[string]*goivy.Const,
 	parent *ProgressiveDomain,
 ) *RelAlg3 {
 	return &RelAlg3{
@@ -716,7 +711,7 @@ func NewRelAlg3(
 
 // Prim evaluates a primitive literal using HerbrandModel.Check.
 // Corresponds to Python's RelAlg3.prim.
-func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Z3Expr {
+func (ra *RelAlg3) Prim(lit *goivy.Literal) []goivy.Z3Expr {
 	if ra.Parent.log {
 		fmt.Printf("prim: %s\n", lit)
 	}
@@ -730,13 +725,13 @@ func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 	}
 
 	renamedLit := renameLit(lit, ra.NewSym)
-	var cubes []z3bridge.Z3Expr
+	var cubes []goivy.Z3Expr
 
 	if ra.Hm != nil {
 		vs, rows := ra.Hm.Check(renamedLit)
 		ctx := ra.Slvr.Context()
 		for _, row := range rows {
-			eqs := make([]z3bridge.Z3Expr, 0, len(vs))
+			eqs := make([]goivy.Z3Expr, 0, len(vs))
 			for j, v := range vs {
 				zv, err1 := ra.Slvr.FormulaToZ3(v)
 				zc, err2 := ra.Slvr.FormulaToZ3(row[j])
@@ -768,25 +763,25 @@ func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Z3Expr {
 // Corresponds to Python's predicate_alpha.
 func PredicateAlpha(state *AlphaState) {
 	fmt.Println("running predicate alpha")
-	slvr := solver.NewSolver(nil, nil)
+	slvr := goivy.NewSolver(nil, nil)
 	z3slvr := slvr.NewZ3Solver()
 
-	var bgTheory *module.Clauses
+	var bgTheory *goivy.Clauses
 	if state.Domain.BackgroundTheory != nil {
 		bgTheory = state.Domain.BackgroundTheory(nil)
 	} else {
-		bgTheory = module.TrueClauses(nil)
+		bgTheory = goivy.TrueClauses(nil)
 	}
 
-	combined := module.AndClausesTyped(state.Clauses, bgTheory)
+	combined := goivy.AndClausesTyped(state.Clauses, bgTheory)
 	if err := slvr.AddClauses(z3slvr, combined); err != nil {
 		return
 	}
 
-	res := module.TrueClauses(nil)
+	res := goivy.TrueClauses(nil)
 	for _, pred := range state.Domain.AbstrPreds {
 		z3slvr.Push()
-		dual := module.NegateClauses(pred)
+		dual := goivy.NegateClauses(pred)
 		if err := slvr.AddClauses(z3slvr, dual); err != nil {
 			z3slvr.Pop()
 			continue
@@ -795,8 +790,8 @@ func PredicateAlpha(state *AlphaState) {
 		if state.Log {
 			fmt.Printf("predicate: %s result %v\n", pred, cr)
 		}
-		if cr == z3bridge.Unsat {
-			res = module.AndClausesTyped(res, pred)
+		if cr == goivy.Unsat {
+			res = goivy.AndClausesTyped(res, pred)
 		}
 		z3slvr.Pop()
 	}
@@ -807,13 +802,13 @@ func PredicateAlpha(state *AlphaState) {
 
 // canonizeClause sorts and deduplicates literals in a clause.
 // Corresponds to Python's canonize_clause.
-func canonizeClause(cube []*il.Literal) []*il.Literal {
+func canonizeClause(cube []*goivy.Literal) []*goivy.Literal {
 	if len(cube) == 0 {
 		return cube
 	}
 	// Deduplicate by string representation
 	seen := make(map[string]bool)
-	var result []*il.Literal
+	var result []*goivy.Literal
 	for _, lit := range cube {
 		key := lit.String()
 		if !seen[key] {
@@ -826,11 +821,11 @@ func canonizeClause(cube []*il.Literal) []*il.Literal {
 
 // renameClause renames symbols in a clause using the newSym map.
 // Corresponds to Python's rename_clause.
-func renameClause(cube []*il.Literal, newSym map[string]*lg.Const) []*il.Literal {
+func renameClause(cube []*goivy.Literal, newSym map[string]*goivy.Const) []*goivy.Literal {
 	if len(newSym) == 0 {
 		return cube
 	}
-	result := make([]*il.Literal, len(cube))
+	result := make([]*goivy.Literal, len(cube))
 	for i, lit := range cube {
 		result[i] = renameLit(lit, newSym)
 	}
@@ -839,36 +834,36 @@ func renameClause(cube []*il.Literal, newSym map[string]*lg.Const) []*il.Literal
 
 // renameLit renames symbols in a literal using the newSym map.
 // Corresponds to Python's rename_lit.
-func renameLit(lit *il.Literal, newSym map[string]*lg.Const) *il.Literal {
+func renameLit(lit *goivy.Literal, newSym map[string]*goivy.Const) *goivy.Literal {
 	if len(newSym) == 0 {
 		return lit
 	}
 	newAtom := renameNode(lit.Atom, newSym)
-	return il.NewLiteral(lit.Polarity, newAtom)
+	return goivy.NewLiteral(lit.Polarity, newAtom)
 }
 
 // renameNode renames constant symbols in a node using the newSym map.
-func renameNode(node lg.Expr, newSym map[string]*lg.Const) lg.Expr {
+func renameNode(node goivy.Expr, newSym map[string]*goivy.Const) goivy.Expr {
 	if len(newSym) == 0 {
 		return node
 	}
 	switch t := node.(type) {
-	case *lg.Const:
+	case *goivy.Const:
 		if repl, ok := newSym[t.Name]; ok {
 			return repl
 		}
 		return t
-	case *lg.Apply:
+	case *goivy.Apply:
 		newFunc := renameNode(t.Func, newSym)
-		newArgs := make([]lg.Expr, len(t.Terms))
+		newArgs := make([]goivy.Expr, len(t.Terms))
 		for i, arg := range t.Terms {
 			newArgs[i] = renameNode(arg, newSym)
 		}
-		return lg.MustApply(newFunc, newArgs...)
-	case *lg.Eq:
-		return &lg.Eq{T1: renameNode(t.T1, newSym), T2: renameNode(t.T2, newSym)}
-	case *lg.Not:
-		return &lg.Not{Body: renameNode(t.Body, newSym)}
+		return goivy.MustApply(newFunc, newArgs...)
+	case *goivy.Eq:
+		return &goivy.Eq{T1: renameNode(t.T1, newSym), T2: renameNode(t.T2, newSym)}
+	case *goivy.Not:
+		return &goivy.Not{Body: renameNode(t.Body, newSym)}
 	default:
 		return node
 	}
@@ -876,11 +871,11 @@ func renameNode(node lg.Expr, newSym map[string]*lg.Const) lg.Expr {
 
 // usedVariablesClause collects all variables used in a clause.
 // Corresponds to Python's used_variables_clause.
-func usedVariablesClause(cube []*il.Literal) []*lg.Variable {
+func usedVariablesClause(cube []*goivy.Literal) []*goivy.Variable {
 	seen := make(map[string]bool)
-	var result []*lg.Variable
+	var result []*goivy.Variable
 	for _, lit := range cube {
-		fvs := lu.FreeVariablesList(lit.Atom)
+		fvs := goivy.FreeVariablesList(lit.Atom)
 		for _, v := range fvs {
 			if !seen[v.Name] {
 				seen[v.Name] = true
@@ -893,23 +888,23 @@ func usedVariablesClause(cube []*il.Literal) []*lg.Variable {
 
 // varToSkolem creates a Skolem constant for a variable.
 // Corresponds to Python's var_to_skolem.
-func varToSkolem(prefix string, v *lg.Variable) *lg.Const {
-	return lg.NewConst(prefix+v.Name, v.VSort)
+func varToSkolem(prefix string, v *goivy.Variable) *goivy.Const {
+	return goivy.NewConst(prefix+v.Name, v.VSort)
 }
 
 // substituteClause applies a substitution to all literals in a clause.
 // Corresponds to Python's substitute_clause.
-func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Expr) []*il.Literal {
+func substituteClause(cube []*goivy.Literal, subs map[goivy.NodeKey]goivy.Expr) []*goivy.Literal {
 	if len(subs) == 0 {
 		return cube
 	}
-	result := make([]*il.Literal, len(cube))
+	result := make([]*goivy.Literal, len(cube))
 	for i, lit := range cube {
-		newAtom, err := lu.Substitute(lit.Atom, subs)
+		newAtom, err := goivy.Substitute(lit.Atom, subs)
 		if err != nil {
 			result[i] = lit
 		} else {
-			result[i] = il.NewLiteral(lit.Polarity, newAtom)
+			result[i] = goivy.NewLiteral(lit.Polarity, newAtom)
 		}
 	}
 	return result
@@ -917,22 +912,22 @@ func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Expr) []*il.Lit
 
 // negateLiteral returns the formula representing the negation of a literal.
 // Corresponds to Python's ~lit.
-func negateLiteral(lit *il.Literal) lg.Expr {
+func negateLiteral(lit *goivy.Literal) goivy.Expr {
 	if lit.Polarity == 0 {
 		return lit.Atom // double negation
 	}
-	return &lg.Not{Body: lit.Atom}
+	return &goivy.Not{Body: lit.Atom}
 }
 
 // nodeSlice converts []lg.Expr to a new copy.
-func nodeSlice(nodes []lg.Expr) []lg.Expr {
-	result := make([]lg.Expr, len(nodes))
+func nodeSlice(nodes []goivy.Expr) []goivy.Expr {
+	result := make([]goivy.Expr, len(nodes))
 	copy(result, nodes)
 	return result
 }
 
 // allMatch checks that all correlated positions match between two rows.
-func allMatch(xr, yr []lg.Expr, corr [][2]int) bool {
+func allMatch(xr, yr []goivy.Expr, corr [][2]int) bool {
 	for _, pair := range corr {
 		if !xr[pair[0]].Equal(yr[pair[1]]) {
 			return false
@@ -942,12 +937,12 @@ func allMatch(xr, yr []lg.Expr, corr [][2]int) bool {
 }
 
 // getAtomArgs extracts the argument list from an atom node.
-func getAtomArgs(atom lg.Expr) []lg.Expr {
+func getAtomArgs(atom goivy.Expr) []goivy.Expr {
 	switch t := atom.(type) {
-	case *lg.Apply:
+	case *goivy.Apply:
 		return t.Terms
-	case *lg.Eq:
-		return []lg.Expr{t.T1, t.T2}
+	case *goivy.Eq:
+		return []goivy.Expr{t.T1, t.T2}
 	default:
 		return nil
 	}
@@ -955,43 +950,43 @@ func getAtomArgs(atom lg.Expr) []lg.Expr {
 
 // csLitsToILLits converts concept-space literals to ivylogic literals.
 // This bridges the webui.CSLiteral type to il.Literal.
-func csLitsToILLits(csLits []*webui.CSLiteral) []*il.Literal {
-	result := make([]*il.Literal, len(csLits))
+func csLitsToILLits(csLits []*webui.CSLiteral) []*goivy.Literal {
+	result := make([]*goivy.Literal, len(csLits))
 	for i, csl := range csLits {
 		atom := csAtomToNode(csl.Atom)
-		result[i] = il.NewLiteral(csl.Polarity, atom)
+		result[i] = goivy.NewLiteral(csl.Polarity, atom)
 	}
 	return result
 }
 
 // csAtomToNode converts a concept-space atom to an Ivy logic node.
-func csAtomToNode(atom *webui.CSAtom) lg.Expr {
+func csAtomToNode(atom *webui.CSAtom) goivy.Expr {
 	if atom.RelName == "=" && len(atom.Args) == 2 {
-		return &lg.Eq{
+		return &goivy.Eq{
 			T1: csTermToNode(atom.Args[0]),
 			T2: csTermToNode(atom.Args[1]),
 		}
 	}
 	if len(atom.Args) == 0 {
-		return lg.NewConst(atom.RelName, lg.Boolean)
+		return goivy.NewConst(atom.RelName, goivy.Boolean)
 	}
-	args := make([]lg.Expr, len(atom.Args))
-	sorts := make([]lg.Sort, len(atom.Args)+1)
+	args := make([]goivy.Expr, len(atom.Args))
+	sorts := make([]goivy.Sort, len(atom.Args)+1)
 	for i, a := range atom.Args {
 		args[i] = csTermToNode(a)
 		sorts[i] = args[i].NodeSort()
 	}
-	sorts[len(atom.Args)] = lg.Boolean
-	funcSort, _ := lg.NewFunctionSort(sorts...)
-	fn := lg.NewConst(atom.RelName, funcSort)
-	return lg.MustApply(fn, args...)
+	sorts[len(atom.Args)] = goivy.Boolean
+	funcSort, _ := goivy.NewFunctionSort(sorts...)
+	fn := goivy.NewConst(atom.RelName, funcSort)
+	return goivy.MustApply(fn, args...)
 }
 
 // csTermToNode converts a concept-space term to an Ivy logic node.
-func csTermToNode(t webui.CSTerm) lg.Expr {
+func csTermToNode(t webui.CSTerm) goivy.Expr {
 	if t.IsVariable {
-		v, _ := lg.NewVariable(t.Name, &lg.TopSort{Name: "alpha"})
+		v, _ := goivy.NewVariable(t.Name, &goivy.TopSort{Name: "alpha"})
 		return v
 	}
-	return lg.NewConst(t.Name, &lg.TopSort{Name: "alpha"})
+	return goivy.NewConst(t.Name, &goivy.TopSort{Name: "alpha"})
 }

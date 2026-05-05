@@ -1,15 +1,13 @@
 package leangen
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 func TestSortToStringBool(t *testing.T) {
-	got, err := SortToString(lg.Boolean)
+	got, err := SortToString(goivy.Boolean)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,7 +17,7 @@ func TestSortToStringBool(t *testing.T) {
 }
 
 func TestSortToStringUninterpreted(t *testing.T) {
-	s := &lg.UninterpretedSort{Name: "node"}
+	s := &goivy.UninterpretedSort{Name: "node"}
 	got, err := SortToString(s)
 	if err != nil {
 		t.Fatal(err)
@@ -30,10 +28,10 @@ func TestSortToStringUninterpreted(t *testing.T) {
 }
 
 func TestSortToStringFunction(t *testing.T) {
-	fs, err := lg.NewFunctionSort(
-		&lg.UninterpretedSort{Name: "a"},
-		&lg.UninterpretedSort{Name: "b"},
-		lg.Boolean,
+	fs, err := goivy.NewFunctionSort(
+		&goivy.UninterpretedSort{Name: "a"},
+		&goivy.UninterpretedSort{Name: "b"}, goivy.
+			Boolean,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -51,7 +49,7 @@ func TestSortToStringFunction(t *testing.T) {
 }
 
 func TestSortToStringEnumerated(t *testing.T) {
-	s := &lg.EnumeratedSort{Name: "e", Extension: []string{"a", "b"}}
+	s := &goivy.EnumeratedSort{Name: "e", Extension: []string{"a", "b"}}
 	_, err := SortToString(s)
 	if err == nil {
 		t.Error("expected error for enumerated sort")
@@ -60,7 +58,7 @@ func TestSortToStringEnumerated(t *testing.T) {
 
 func TestEmitSymbolDef(t *testing.T) {
 	g := NewGenerator()
-	err := g.EmitSymbolDef("myrel", lg.Boolean)
+	err := g.EmitSymbolDef("myrel", goivy.Boolean)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +73,7 @@ func TestEmitSymbolDef(t *testing.T) {
 
 func TestEmitExprConst(t *testing.T) {
 	g := NewGenerator()
-	c := lg.NewConst("foo", lg.Boolean)
+	c := goivy.NewConst("foo", goivy.Boolean)
 	err := g.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -87,7 +85,7 @@ func TestEmitExprConst(t *testing.T) {
 
 func TestEmitExprVar(t *testing.T) {
 	g := NewGenerator()
-	v, _ := lg.NewVariable("X", lg.Boolean)
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
 	err := g.EmitExpr(v)
 	if err != nil {
 		t.Fatal(err)
@@ -100,8 +98,8 @@ func TestEmitExprVar(t *testing.T) {
 
 func TestEmitExprNot(t *testing.T) {
 	g := NewGenerator()
-	c := lg.NewConst("p", lg.Boolean)
-	n, _ := lg.NewNot(c)
+	c := goivy.NewConst("p", goivy.Boolean)
+	n, _ := goivy.NewNot(c)
 	err := g.EmitExpr(n)
 	if err != nil {
 		t.Fatal(err)
@@ -114,7 +112,7 @@ func TestEmitExprNot(t *testing.T) {
 
 func TestEmitExprAndEmpty(t *testing.T) {
 	g := NewGenerator()
-	a, _ := lg.NewAnd()
+	a, _ := goivy.NewAnd()
 	err := g.EmitExpr(a)
 	if err != nil {
 		t.Fatal(err)
@@ -126,7 +124,7 @@ func TestEmitExprAndEmpty(t *testing.T) {
 
 func TestEmitExprOrEmpty(t *testing.T) {
 	g := NewGenerator()
-	o, _ := lg.NewOr()
+	o, _ := goivy.NewOr()
 	err := g.EmitExpr(o)
 	if err != nil {
 		t.Fatal(err)
@@ -138,9 +136,9 @@ func TestEmitExprOrEmpty(t *testing.T) {
 
 func TestEmitExprAnd(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewConst("p", lg.Boolean)
-	c2 := lg.NewConst("q", lg.Boolean)
-	a, _ := lg.NewAnd(c1, c2)
+	c1 := goivy.NewConst("p", goivy.Boolean)
+	c2 := goivy.NewConst("q", goivy.Boolean)
+	a, _ := goivy.NewAnd(c1, c2)
 	err := g.EmitExpr(a)
 	if err != nil {
 		t.Fatal(err)
@@ -153,9 +151,9 @@ func TestEmitExprAnd(t *testing.T) {
 
 func TestEmitExprOr(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewConst("p", lg.Boolean)
-	c2 := lg.NewConst("q", lg.Boolean)
-	o, _ := lg.NewOr(c1, c2)
+	c1 := goivy.NewConst("p", goivy.Boolean)
+	c2 := goivy.NewConst("q", goivy.Boolean)
+	o, _ := goivy.NewOr(c1, c2)
 	err := g.EmitExpr(o)
 	if err != nil {
 		t.Fatal(err)
@@ -168,9 +166,9 @@ func TestEmitExprOr(t *testing.T) {
 
 func TestEmitExprImplies(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewConst("p", lg.Boolean)
-	c2 := lg.NewConst("q", lg.Boolean)
-	imp, _ := lg.NewImplies(c1, c2)
+	c1 := goivy.NewConst("p", goivy.Boolean)
+	c2 := goivy.NewConst("q", goivy.Boolean)
+	imp, _ := goivy.NewImplies(c1, c2)
 	err := g.EmitExpr(imp)
 	if err != nil {
 		t.Fatal(err)
@@ -183,9 +181,9 @@ func TestEmitExprImplies(t *testing.T) {
 
 func TestEmitExprEq(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewConst("a", lg.Boolean)
-	c2 := lg.NewConst("b", lg.Boolean)
-	eq, _ := lg.NewEq(c1, c2)
+	c1 := goivy.NewConst("a", goivy.Boolean)
+	c2 := goivy.NewConst("b", goivy.Boolean)
+	eq, _ := goivy.NewEq(c1, c2)
 	err := g.EmitExpr(eq)
 	if err != nil {
 		t.Fatal(err)
@@ -198,9 +196,9 @@ func TestEmitExprEq(t *testing.T) {
 
 func TestEmitExprForAll(t *testing.T) {
 	g := NewGenerator()
-	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewConst("p", lg.Boolean)
-	fa, _ := lg.NewForAll([]*lg.Variable{v}, body)
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
+	body := goivy.NewConst("p", goivy.Boolean)
+	fa, _ := goivy.NewForAll([]*goivy.Variable{v}, body)
 	err := g.EmitExpr(fa)
 	if err != nil {
 		t.Fatal(err)
@@ -217,9 +215,9 @@ func TestEmitExprForAll(t *testing.T) {
 
 func TestEmitExprExists(t *testing.T) {
 	g := NewGenerator()
-	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewConst("p", lg.Boolean)
-	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
+	body := goivy.NewConst("p", goivy.Boolean)
+	ex, _ := goivy.NewExists([]*goivy.Variable{v}, body)
 	err := g.EmitExpr(ex)
 	if err != nil {
 		t.Fatal(err)
@@ -232,9 +230,9 @@ func TestEmitExprExists(t *testing.T) {
 
 func TestEmitExprLambda(t *testing.T) {
 	g := NewGenerator()
-	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewConst("p", lg.Boolean)
-	lam, _ := lg.NewLambda([]*lg.Variable{v}, body)
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
+	body := goivy.NewConst("p", goivy.Boolean)
+	lam, _ := goivy.NewLambda([]*goivy.Variable{v}, body)
 	err := g.EmitExpr(lam)
 	if err != nil {
 		t.Fatal(err)
@@ -247,10 +245,10 @@ func TestEmitExprLambda(t *testing.T) {
 
 func TestEmitExprIte(t *testing.T) {
 	g := NewGenerator()
-	cond := lg.NewConst("c", lg.Boolean)
-	then := lg.NewConst("t", lg.Boolean)
-	els := lg.NewConst("e", lg.Boolean)
-	ite, _ := lg.NewIte(cond, then, els)
+	cond := goivy.NewConst("c", goivy.Boolean)
+	then := goivy.NewConst("t", goivy.Boolean)
+	els := goivy.NewConst("e", goivy.Boolean)
+	ite, _ := goivy.NewIte(cond, then, els)
 	err := g.EmitExpr(ite)
 	if err != nil {
 		t.Fatal(err)
@@ -263,9 +261,9 @@ func TestEmitExprIte(t *testing.T) {
 
 func TestEmitActionAssign(t *testing.T) {
 	g := NewGenerator()
-	lhs := lg.NewConst("x", lg.Boolean)
-	rhs := lg.NewConst("y", lg.Boolean)
-	a := actions.NewAssignAction(lhs, rhs)
+	lhs := goivy.NewConst("x", goivy.Boolean)
+	rhs := goivy.NewConst("y", goivy.Boolean)
+	a := goivy.NewAssignAction(lhs, rhs)
 	err := g.EmitAction(a)
 	if err != nil {
 		t.Fatal(err)
@@ -278,12 +276,12 @@ func TestEmitActionAssign(t *testing.T) {
 
 func TestEmitActionIf(t *testing.T) {
 	g := NewGenerator()
-	cond := lg.NewConst("c", lg.Boolean)
-	thenAct := actions.NewAssignAction(
-		lg.NewConst("x", lg.Boolean),
-		lg.NewConst("y", lg.Boolean),
+	cond := goivy.NewConst("c", goivy.Boolean)
+	thenAct := goivy.NewAssignAction(goivy.
+		NewConst("x", goivy.Boolean), goivy.
+		NewConst("y", goivy.Boolean),
 	)
-	ifAct := actions.NewIfAction(cond, thenAct)
+	ifAct := goivy.NewIfAction(cond, thenAct)
 	err := g.EmitAction(ifAct)
 	if err != nil {
 		t.Fatal(err)
@@ -300,12 +298,12 @@ func TestEmitActionIf(t *testing.T) {
 func TestGenerateProgram(t *testing.T) {
 	g := NewGenerator()
 	syms := []SymbolDef{
-		{Name: "r", Sort: lg.Boolean},
+		{Name: "r", Sort: goivy.Boolean},
 	}
-	actMap := map[string]actions.ActionsAction{
-		"act1": actions.NewAssignAction(
-			lg.NewConst("x", lg.Boolean),
-			lg.NewConst("y", lg.Boolean),
+	actMap := map[string]goivy.ActionsAction{
+		"act1": goivy.NewAssignAction(goivy.
+			NewConst("x", goivy.Boolean), goivy.
+			NewConst("y", goivy.Boolean),
 		),
 	}
 	exports := []string{"act1"}
@@ -328,7 +326,7 @@ func TestGenerateProgram(t *testing.T) {
 
 func TestGenerateProgramNoExports(t *testing.T) {
 	g := NewGenerator()
-	err := g.GenerateProgram(nil, map[string]actions.ActionsAction{}, nil, "test")
+	err := g.GenerateProgram(nil, map[string]goivy.ActionsAction{}, nil, "test")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -340,9 +338,9 @@ func TestGenerateProgramNoExports(t *testing.T) {
 
 func TestEmitExprIff(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewConst("a", lg.Boolean)
-	c2 := lg.NewConst("b", lg.Boolean)
-	iff, _ := lg.NewIff(c1, c2)
+	c1 := goivy.NewConst("a", goivy.Boolean)
+	c2 := goivy.NewConst("b", goivy.Boolean)
+	iff, _ := goivy.NewIff(c1, c2)
 	err := g.EmitExpr(iff)
 	if err != nil {
 		t.Fatal(err)
@@ -360,7 +358,7 @@ func FuzzSortToString(f *testing.F) {
 	f.Add(`with"quotes`)
 
 	f.Fuzz(func(t *testing.T, name string) {
-		s := &lg.UninterpretedSort{Name: name}
+		s := &goivy.UninterpretedSort{Name: name}
 		got, err := SortToString(s)
 		if err != nil {
 			t.Skip()

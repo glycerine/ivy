@@ -1,22 +1,18 @@
 package gogen
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // newTestModule builds a simple module for testing.
-func newTestModule() *module.Module {
-	mod := module.New()
-	mod.Sig = il.NewSig()
+func newTestModule() *goivy.Module {
+	mod := goivy.New()
+	mod.Sig = goivy.NewSig()
 
 	// Add an enumerated sort: Color = {red, green, blue}
-	colorSort := &lg.EnumeratedSort{
+	colorSort := &goivy.EnumeratedSort{
 		Name:      "color",
 		Extension: []string{"red", "green", "blue"},
 	}
@@ -24,11 +20,11 @@ func newTestModule() *module.Module {
 	mod.SortOrder = append(mod.SortOrder, "color")
 
 	// Add a boolean relation: link(int, int) -> bool
-	linkSort, _ := lg.NewFunctionSort(lg.Boolean, lg.Boolean, lg.Boolean)
+	linkSort, _ := goivy.NewFunctionSort(goivy.Boolean, goivy.Boolean, goivy.Boolean)
 	mod.Relations.Set("link", linkSort)
 
 	// Add a function: data -> color (using bool as domain placeholder)
-	dataSort, _ := lg.NewFunctionSort(lg.Boolean, colorSort)
+	dataSort, _ := goivy.NewFunctionSort(goivy.Boolean, colorSort)
 	mod.Functions.Set("data", dataSort)
 
 	return mod
@@ -174,9 +170,9 @@ func TestGenerator_WithAction(t *testing.T) {
 	mod := newTestModule()
 
 	// Add a simple action.
-	assignAct := actions.NewAssignAction(
-		testConst("x", lg.Boolean),
-		testConst("y", lg.Boolean),
+	assignAct := goivy.NewAssignAction(
+		testConst("x", goivy.Boolean),
+		testConst("y", goivy.Boolean),
 	)
 	mod.Actions.Set("send", assignAct)
 
@@ -196,11 +192,11 @@ func TestGenerator_WithAction(t *testing.T) {
 func TestGenerator_WithInitializer(t *testing.T) {
 	mod := newTestModule()
 
-	initAct := actions.NewAssignAction(
-		testConst("x", lg.Boolean),
-		testConst("false", lg.Boolean),
+	initAct := goivy.NewAssignAction(
+		testConst("x", goivy.Boolean),
+		testConst("false", goivy.Boolean),
 	)
-	mod.Initializers = append(mod.Initializers, module.NamedAction{
+	mod.Initializers = append(mod.Initializers, goivy.NamedAction{
 		Name:   "init_x",
 		Action: initAct,
 	})
@@ -216,7 +212,7 @@ func TestGenerator_WithInitializer(t *testing.T) {
 }
 
 func TestGenerator_EmptyModule(t *testing.T) {
-	mod := module.New()
+	mod := goivy.New()
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()
 	if err != nil {
@@ -243,8 +239,8 @@ func TestGenerator_NilModule(t *testing.T) {
 
 func TestGenerator_MultipleActions(t *testing.T) {
 	mod := newTestModule()
-	a1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	a2 := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
+	a1 := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	a2 := goivy.NewAssignAction(testConst("a", goivy.Boolean), testConst("b", goivy.Boolean))
 	mod.Actions.Set("alpha", a1)
 	mod.Actions.Set("beta", a2)
 
@@ -266,10 +262,10 @@ func TestGenerator_MultipleActions(t *testing.T) {
 
 func TestGenerator_ActionWithParams(t *testing.T) {
 	mod := newTestModule()
-	act := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act.FormalParams = []*lg.Const{
-		lg.NewConst("src", lg.Boolean),
-		lg.NewConst("dst", lg.Boolean),
+	act := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	act.FormalParams = []*goivy.Const{goivy.
+		NewConst("src", goivy.Boolean), goivy.
+		NewConst("dst", goivy.Boolean),
 	}
 	mod.Actions.Set("send", act)
 
@@ -288,9 +284,9 @@ func TestGenerator_ActionWithParams(t *testing.T) {
 
 func TestGenerator_SequenceInAction(t *testing.T) {
 	mod := newTestModule()
-	a1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	a2 := actions.NewAssertAction(testConst("valid", lg.Boolean))
-	seq := actions.NewSequence(a1, a2)
+	a1 := goivy.NewAssignAction(testConst("x", goivy.Boolean), testConst("y", goivy.Boolean))
+	a2 := goivy.NewAssertAction(testConst("valid", goivy.Boolean))
+	seq := goivy.NewSequence(a1, a2)
 	mod.Actions.Set("do_stuff", seq)
 
 	gen := NewGenerator(mod, "main")
@@ -328,7 +324,7 @@ func TestFormatFormalParams_Empty(t *testing.T) {
 }
 
 func TestFormatFormalParams_One(t *testing.T) {
-	params := []*lg.Const{lg.NewConst("x", lg.Boolean)}
+	params := []*goivy.Const{goivy.NewConst("x", goivy.Boolean)}
 	got := formatFormalParams(params)
 	if got != "x bool" {
 		t.Errorf("expected 'x bool', got: %s", got)
@@ -336,9 +332,9 @@ func TestFormatFormalParams_One(t *testing.T) {
 }
 
 func TestFormatFormalParams_Multiple(t *testing.T) {
-	params := []*lg.Const{
-		lg.NewConst("x", lg.Boolean),
-		lg.NewConst("y", lg.Boolean),
+	params := []*goivy.Const{goivy.
+		NewConst("x", goivy.Boolean), goivy.
+		NewConst("y", goivy.Boolean),
 	}
 	got := formatFormalParams(params)
 	if got != "x bool, y bool" {
@@ -354,7 +350,7 @@ func TestFormatFormalReturns_Empty(t *testing.T) {
 }
 
 func TestFormatFormalReturns_Single(t *testing.T) {
-	params := []*lg.Const{lg.NewConst("r", lg.Boolean)}
+	params := []*goivy.Const{goivy.NewConst("r", goivy.Boolean)}
 	got := formatFormalReturns(params)
 	if got != "bool" {
 		t.Errorf("expected 'bool', got: %s", got)
@@ -364,7 +360,7 @@ func TestFormatFormalReturns_Single(t *testing.T) {
 // --- StateFieldType ---
 
 func TestStateFieldType_BoolRelation(t *testing.T) {
-	got := StateFieldType("active", lg.Boolean)
+	got := StateFieldType("active", goivy.Boolean)
 	if got != "bool" {
 		t.Errorf("expected bool, got: %s", got)
 	}

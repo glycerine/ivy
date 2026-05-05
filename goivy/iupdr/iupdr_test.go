@@ -7,13 +7,10 @@
 package iupdr
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
 
-	"github.com/glycerine/ivy/goivy/art"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/webui"
 )
 
@@ -21,10 +18,10 @@ import (
 // auxiliary literal slice and the widget tree, mirroring Python __init__.
 func TestUserSelectCoreCreate(t *testing.T) {
 	// Build a tiny Clauses set with two formula constraints.
-	a := lg.NewConst("a", lg.Boolean)
-	b := lg.NewConst("b", lg.Boolean)
-	theory := module.TrueClauses(nil)
-	constrains := []lg.Expr{a, b}
+	a := goivy.NewConst("a", goivy.Boolean)
+	b := goivy.NewConst("b", goivy.Boolean)
+	theory := goivy.TrueClauses(nil)
+	constrains := []goivy.Expr{a, b}
 
 	u := NewUserSelectCore(theory, constrains, "Test", "Pick literals")
 
@@ -65,8 +62,8 @@ func TestUserSelectCoreCreate(t *testing.T) {
 //
 // In Go, this is conveyed as Cancelled = true.
 func TestUserSelectCoreOnCloseCancel(t *testing.T) {
-	a := lg.NewConst("a", lg.Boolean)
-	u := NewUserSelectCore(module.TrueClauses(nil), []lg.Expr{a}, "T", "p")
+	a := goivy.NewConst("a", goivy.Boolean)
+	u := NewUserSelectCore(goivy.TrueClauses(nil), []goivy.Expr{a}, "T", "p")
 	u.OnClose("Cancel")
 	if !u.Cancelled {
 		t.Error("OnClose('Cancel') should set Cancelled = true")
@@ -79,9 +76,9 @@ func TestUserSelectCoreOnCloseCancel(t *testing.T) {
 // TestUserSelectCoreOnCloseOK mirrors Python lines 70-74: with button=='OK',
 // the result is (selected_constraints, check_result).
 func TestUserSelectCoreOnCloseOK(t *testing.T) {
-	a := lg.NewConst("a", lg.Boolean)
-	b := lg.NewConst("b", lg.Boolean)
-	u := NewUserSelectCore(module.TrueClauses(nil), []lg.Expr{a, b}, "T", "p")
+	a := goivy.NewConst("a", goivy.Boolean)
+	b := goivy.NewConst("b", goivy.Boolean)
+	u := NewUserSelectCore(goivy.TrueClauses(nil), []goivy.Expr{a, b}, "T", "p")
 	// Simulate the user selecting the second option (index 1).
 	u.Select.Value = []any{1}
 
@@ -104,14 +101,14 @@ func TestUserSelectCoreOnCloseOK(t *testing.T) {
 // In Go, the first yielded op should be a *webui.ShowModal carrying the
 // error text, after which the iterator stops.
 func TestInteractiveUpdrInitialFrameError(t *testing.T) {
-	mod := module.New()
-	ag := art.NewAnalysisGraph(mod)
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
 
 	// Add two states to violate the "exactly one frame" precondition.
-	ag.Add(art.NewState(mod, module.TrueClauses(nil)), nil)
-	ag.Add(art.NewState(mod, module.TrueClauses(nil)), nil)
+	ag.Add(goivy.NewState(mod, goivy.TrueClauses(nil)), nil)
+	ag.Add(goivy.NewState(mod, goivy.TrueClauses(nil)), nil)
 
-	tc := tactics.NewTacticsContext(ag, mod)
+	tc := goivy.NewTacticsContext(ag, mod)
 
 	var ops []webui.FrontEndOperation
 	for op := range InteractiveUpdr(tc) {

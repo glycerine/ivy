@@ -3,15 +3,14 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // loadTestSession creates a session loaded with ivySample (from backend_conform_test.go).
 func loadTestSession(t *testing.T) *Session {
 	t.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-solver")
 	if err := s.LoadFileContent("test.ivy", []byte(ivySample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
@@ -69,7 +68,7 @@ func TestSolverPDRStep(t *testing.T) {
 }
 
 func TestSolverPDRStepNoModule(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
 	_, err := s.ExecuteAction("pdr_step", nil)
@@ -93,7 +92,7 @@ func TestSolverConcrete(t *testing.T) {
 }
 
 func TestSolverConcreteNoModule(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
 	_, err := s.ExecuteAction("concrete", nil)
@@ -123,7 +122,7 @@ func TestSolverReverse(t *testing.T) {
 }
 
 func TestSolverReverseNoModule(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
 	_, err := s.ExecuteAction("reverse", nil)
@@ -229,7 +228,7 @@ func TestSolverSaveAbstraction(t *testing.T) {
 }
 
 func TestSolverSaveAbstractionNoModule(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
 	_, err := s.ExecuteAction("save_abstraction", nil)
@@ -342,7 +341,7 @@ func TestSolverActionExecuteNotFound(t *testing.T) {
 }
 
 func TestSolverActionExecuteNoModule(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")
 	drainEvents(s)
 	// Without a compiled module, action falls through to default.

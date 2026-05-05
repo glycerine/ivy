@@ -3,16 +3,14 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // loadARGTestSession creates a session with ivySample loaded and an initial state.
 func loadARGTestSession(t *testing.T) (*Session, *AnalysisGraphUI) {
 	t.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-arg")
 	if err := s.LoadFileContent("test.ivy", []byte(ivySample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
@@ -28,10 +26,10 @@ func loadARGTestSession(t *testing.T) (*Session, *AnalysisGraphUI) {
 
 // makeMinimalAGUI builds an AnalysisGraphUI backed by a fresh AnalysisGraph
 // with one initial state. No module/solver needed.
-func makeMinimalAGUI(t *testing.T, mod *module.Module) *AnalysisGraphUI {
+func makeMinimalAGUI(t *testing.T, mod *goivy.Module) *AnalysisGraphUI {
 	t.Helper()
 	ui := NewAnalysisGraphUI()
-	ui.AG = art.NewAnalysisGraph(mod)
+	ui.AG = goivy.NewAnalysisGraph(mod)
 	ui.Mod = mod
 	ui.AG.AddInitialState(nil, nil)
 	return ui

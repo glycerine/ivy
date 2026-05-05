@@ -3,12 +3,12 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"math/rand"
 	"net/http/httptest"
 	"testing"
 	"time"
 
-	"github.com/glycerine/ivy/goivy/module"
 	"github.com/go-rod/rod"
 )
 
@@ -25,7 +25,7 @@ func setupBrowserB(b *testing.B) *rod.Browser {
 // startTestServerB creates an httptest.Server for benchmarks.
 func startTestServerB(b *testing.B) *httptest.Server {
 	b.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")
 	ts := httptest.NewServer(srv)
 	b.Cleanup(ts.Close)

@@ -18,12 +18,11 @@ package dotgraph
 import (
 	"encoding/json"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"math"
 	"os/exec"
 	"sort"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/art"
 )
 
 // -----------------------------------------------------------------------
@@ -297,7 +296,7 @@ type DotLayoutOptions struct {
 // widths, heights, and spline data from a dot based layout.
 //
 // Returns the same CyElements pointer for chaining.
-func DotLayout(cyElements *art.CyElements, opts DotLayoutOptions) *art.CyElements {
+func DotLayout(cyElements *goivy.CyElements, opts DotLayoutOptions) *goivy.CyElements {
 	if cyElements == nil {
 		return nil
 	}
@@ -310,7 +309,7 @@ func DotLayout(cyElements *art.CyElements, opts DotLayoutOptions) *art.CyElement
 	g.Attrs["forcelabels"] = "true"
 
 	// Index nodes by id.
-	nodesByID := make(map[string]*art.CyElement, len(elements))
+	nodesByID := make(map[string]*goivy.CyElement, len(elements))
 	for i := range elements {
 		if elements[i].Group == "nodes" {
 			id, _ := elements[i].Data["id"].(string)
@@ -527,7 +526,7 @@ func DotLayout(cyElements *art.CyElements, opts DotLayoutOptions) *art.CyElement
 				continue
 			}
 			pos := toPosition(n.Pos, yOrigin)
-			e.Position = &art.CyPosition{X: pos.X, Y: pos.Y}
+			e.Position = &goivy.CyPosition{X: pos.X, Y: pos.Y}
 			if w, err := parseFloat(n.Width); err == nil {
 				e.Data["width"] = 72 * w
 			}
@@ -588,7 +587,7 @@ func DotLayout(cyElements *art.CyElements, opts DotLayoutOptions) *art.CyElement
 	if opts.SubgraphBoxes {
 		for _, sg := range dotOut.Subgraphs {
 			coords := toCoordList(sg.BB, yOrigin)
-			cyElements.Elements = append(cyElements.Elements, art.CyElement{
+			cyElements.Elements = append(cyElements.Elements, goivy.CyElement{
 				Group:   "nodes",
 				Classes: "subgraphs",
 				Data: map[string]any{
@@ -620,18 +619,18 @@ func pointsToMaps(pts []PosXY) []map[string]float64 {
 // elementEdgePair is a (src,dst) pair of CyElement pointers used to express
 // topological-sort constraints between transitive edges.
 type elementEdgePair struct {
-	src, dst *art.CyElement
+	src, dst *goivy.CyElement
 }
 
 // topologicalSortElements is a tiny shim around Python's topological_sort:
 // it sorts the elements so that for each (src,dst) pair in `order`, src
 // appears before dst. Non-node elements and unconstrained nodes preserve
 // their original relative order. This mirrors ivy_utils.topological_sort.
-func topologicalSortElements(elements []art.CyElement, order []elementEdgePair) []art.CyElement {
+func topologicalSortElements(elements []goivy.CyElement, order []elementEdgePair) []goivy.CyElement {
 	if len(order) == 0 {
 		return elements
 	}
-	idIdx := make(map[*art.CyElement]int, len(elements))
+	idIdx := make(map[*goivy.CyElement]int, len(elements))
 	for i := range elements {
 		idIdx[&elements[i]] = i
 	}
@@ -663,7 +662,7 @@ func topologicalSortElements(elements []art.CyElement, order []elementEdgePair) 
 	for i := range elements {
 		visit(i)
 	}
-	sorted := make([]art.CyElement, 0, len(elements))
+	sorted := make([]goivy.CyElement, 0, len(elements))
 	for _, i := range out {
 		sorted = append(sorted, elements[i])
 	}

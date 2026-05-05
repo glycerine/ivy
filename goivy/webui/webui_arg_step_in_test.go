@@ -1,12 +1,11 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
@@ -16,7 +15,7 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 		t.Fatalf("read example: %v", err)
 	}
 
-	s := NewSession(module.NewConfig(), "test-step-in")
+	s := NewSession(goivy.NewConfig(), "test-step-in")
 	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
 	}

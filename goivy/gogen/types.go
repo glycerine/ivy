@@ -2,28 +2,26 @@ package gogen
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // GoType maps an Ivy sort to its Go type string.
-func GoType(s lg.Sort) string {
+func GoType(s goivy.Sort) string {
 	switch st := s.(type) {
-	case *lg.BooleanSort:
+	case *goivy.BooleanSort:
 		return "bool"
-	case *lg.EnumeratedSort:
+	case *goivy.EnumeratedSort:
 		name := st.Name
 		if name == "" {
 			name = "Enum"
 		}
 		return goExportedName(name)
-	case *lg.RangeSort:
+	case *goivy.RangeSort:
 		return "int"
-	case *lg.UninterpretedSort:
+	case *goivy.UninterpretedSort:
 		return "int"
-	case *lg.FunctionSort:
+	case *goivy.FunctionSort:
 		dom := st.Domain()
 		rng := st.Range()
 		if len(dom) == 0 {
@@ -52,7 +50,7 @@ func GoType(s lg.Sort) string {
 		}
 		// Mixed types: use a struct key type (represented as string for now).
 		return fmt.Sprintf("map[%sKey]%s", goExportedName(keyParts[0]), GoType(rng))
-	case *lg.TopSort:
+	case *goivy.TopSort:
 		return "interface{}"
 	default:
 		return "interface{}"
@@ -67,8 +65,8 @@ func GoType(s lg.Sort) string {
 // Binary relation (K1,K2 -> bool) -> map[[2]K]bool (or nested)
 // Function (K -> V) -> map[K]V
 // Individual / constant -> value type
-func StateFieldType(name string, s lg.Sort) string {
-	fs, ok := s.(*lg.FunctionSort)
+func StateFieldType(name string, s goivy.Sort) string {
+	fs, ok := s.(*goivy.FunctionSort)
 	if !ok {
 		// Non-function sort: individual/constant value.
 		return GoType(s)
@@ -78,7 +76,7 @@ func StateFieldType(name string, s lg.Sort) string {
 	if len(dom) == 0 {
 		return GoType(rng)
 	}
-	_, isBool := rng.(*lg.BooleanSort)
+	_, isBool := rng.(*goivy.BooleanSort)
 	if len(dom) == 1 {
 		if isBool {
 			return fmt.Sprintf("map[%s]bool", GoType(dom[0]))
@@ -109,17 +107,17 @@ func StateFieldType(name string, s lg.Sort) string {
 }
 
 // GoZeroValue returns the default zero value string for a Go type derived from an Ivy sort.
-func GoZeroValue(s lg.Sort) string {
+func GoZeroValue(s goivy.Sort) string {
 	switch s.(type) {
-	case *lg.BooleanSort:
+	case *goivy.BooleanSort:
 		return "false"
-	case *lg.EnumeratedSort:
+	case *goivy.EnumeratedSort:
 		return "0"
-	case *lg.RangeSort:
+	case *goivy.RangeSort:
 		return "0"
-	case *lg.UninterpretedSort:
+	case *goivy.UninterpretedSort:
 		return "0"
-	case *lg.FunctionSort:
+	case *goivy.FunctionSort:
 		return "nil"
 	default:
 		return "nil"
@@ -128,20 +126,20 @@ func GoZeroValue(s lg.Sort) string {
 
 // GoSortValues returns all values for finite sorts, suitable for
 // quantifier iteration loops. Returns nil for infinite/unknown sorts.
-func GoSortValues(s lg.Sort) []string {
+func GoSortValues(s goivy.Sort) []string {
 	switch st := s.(type) {
-	case *lg.BooleanSort:
+	case *goivy.BooleanSort:
 		return []string{"false", "true"}
-	case *lg.EnumeratedSort:
+	case *goivy.EnumeratedSort:
 		vals := make([]string, len(st.Extension))
 		for i, ext := range st.Extension {
 			vals[i] = goExportedName(ext)
 		}
 		return vals
-	case *lg.RangeSort:
+	case *goivy.RangeSort:
 		// Range values are generated at runtime via a loop, not enumerated here.
 		return nil
-	case *lg.UninterpretedSort:
+	case *goivy.UninterpretedSort:
 		// Uninterpreted sorts have a finite domain at runtime, but values
 		// are not known at code-gen time.
 		return nil
@@ -151,7 +149,7 @@ func GoSortValues(s lg.Sort) []string {
 }
 
 // EmitSortDecls emits all Go type declarations for the sorts in a module.
-func EmitSortDecls(w *CodeWriter, mod *module.Module) {
+func EmitSortDecls(w *CodeWriter, mod *goivy.Module) {
 	if mod.Sig == nil {
 		return
 	}
@@ -161,7 +159,7 @@ func EmitSortDecls(w *CodeWriter, mod *module.Module) {
 		if !ok {
 			continue
 		}
-		if es, ok := s.(*lg.EnumeratedSort); ok {
+		if es, ok := s.(*goivy.EnumeratedSort); ok {
 			EmitEnumDecl(w, es)
 			w.BlankLine()
 		}
@@ -177,7 +175,7 @@ func EmitSortDecls(w *CodeWriter, mod *module.Module) {
 //	    Blue
 //	)
 //	var allColor = [...]Color{Red, Green, Blue}
-func EmitEnumDecl(w *CodeWriter, sort *lg.EnumeratedSort) {
+func EmitEnumDecl(w *CodeWriter, sort *goivy.EnumeratedSort) {
 	typeName := goExportedName(sort.Name)
 	if typeName == "" {
 		typeName = "Enum"
@@ -207,7 +205,7 @@ func EmitEnumDecl(w *CodeWriter, sort *lg.EnumeratedSort) {
 
 // EmitRangeHelpers emits helper constants/variables for a RangeSort,
 // including lo/hi bounds and an iteration slice.
-func EmitRangeHelpers(w *CodeWriter, sort *lg.RangeSort) {
+func EmitRangeHelpers(w *CodeWriter, sort *goivy.RangeSort) {
 	name := goExportedName(sort.Name)
 	if name == "" {
 		name = "Range"

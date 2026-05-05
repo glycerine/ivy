@@ -3,15 +3,15 @@
 //line cs_grammar.y:14
 package conceptspace
 
-import __yyfmt__ "fmt"
+import (
+	__yyfmt__ "fmt"
+	goivy "github.com/glycerine/ivy/goivy"
+)
 
 //line cs_grammar.y:14
 
 import (
 	"unicode"
-
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 //line cs_grammar.y:24
@@ -19,10 +19,10 @@ type csSymType struct {
 	yys    int
 	space  Space
 	spaces []Space
-	lit    *il.Literal
-	atom   lg.Expr
-	term   lg.Expr
-	terms  []lg.Expr
+	lit    *goivy.Literal
+	atom   goivy.Expr
+	term   goivy.Expr
+	terms  []goivy.Expr
 	str    string
 }
 
@@ -488,10 +488,10 @@ csdefault:
 		{
 			name := csDollar[1].str
 			if len(name) > 0 && unicode.IsUpper(rune(name[0])) {
-				v, _ := lg.NewVariable(name, lg.TopS)
+				v, _ := goivy.NewVariable(name, goivy.TopS)
 				csVAL.term = v
 			} else {
-				csVAL.term = lg.NewConst(name, lg.TopS)
+				csVAL.term = goivy.NewConst(name, goivy.TopS)
 			}
 		}
 	case 6:
@@ -504,7 +504,7 @@ csdefault:
 		csDollar = csS[cspt-1 : cspt+1]
 //line cs_grammar.y:90
 		{
-			csVAL.terms = []lg.Expr{csDollar[1].term}
+			csVAL.terms = []goivy.Expr{csDollar[1].term}
 		}
 	case 8:
 		csDollar = csS[cspt-3 : cspt+1]
@@ -516,20 +516,20 @@ csdefault:
 		csDollar = csS[cspt-4 : cspt+1]
 //line cs_grammar.y:101
 		{
-			sym := lg.NewConst(csDollar[1].str, lg.TopS)
-			csVAL.atom = lg.MustApply(sym, csDollar[3].terms...)
+			sym := goivy.NewConst(csDollar[1].str, goivy.TopS)
+			csVAL.atom = goivy.MustApply(sym, csDollar[3].terms...)
 		}
 	case 10:
 		csDollar = csS[cspt-1 : cspt+1]
 //line cs_grammar.y:109
 		{
-			csVAL.lit = il.NewLiteral(1, csDollar[1].atom)
+			csVAL.lit = goivy.NewLiteral(1, csDollar[1].atom)
 		}
 	case 11:
 		csDollar = csS[cspt-2 : cspt+1]
 //line cs_grammar.y:113
 		{
-			csVAL.lit = il.NewLiteral(0, csDollar[2].atom)
+			csVAL.lit = goivy.NewLiteral(0, csDollar[2].atom)
 		}
 	case 12:
 		csDollar = csS[cspt-3 : cspt+1]

@@ -6,20 +6,13 @@ package end2end
 import (
 	"bytes"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/compiler"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/lexer"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/parser"
 )
 
 // pythonIvyCheck runs the Python Ivy checker on the given .ivy file.
@@ -69,26 +62,26 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 		}
 	}()
 
-	version := lexer.Version{1, 7}
-	result, err := parser.Parse(src, version)
+	version := goivy.Version{1, 7}
+	result, err := goivy.Parse(src, version)
 	if err != nil {
 		t.Logf("Go parse error: %v", err)
 		return false, false
 	}
-	mod := module.New()
-	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(result.Decls, mod, true)
+	mod := goivy.New()
+	mod.Sig = goivy.NewSig()
+	err = goivy.IvyCompile(result.Decls, mod, true)
 	if err != nil {
 		t.Logf("Go compile error: %v", err)
 		return false, false
 	}
 
-	ag := art.NewAnalysisGraph(mod)
-	ag.Initialize(art.AbstractorFunc(func(s *art.State) {}))
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Initialize(goivy.AbstractorFunc(func(s *goivy.State) {}))
 	if len(ag.States) == 0 {
 		return false, true
 	}
-	return check.CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil), true
+	return goivy.CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil), true
 }
 
 // relInfo tracks a generated relation's name, arity, and sort names.

@@ -2,20 +2,15 @@ package autoinst
 
 import (
 	"fmt"
-
-	"github.com/glycerine/ivy/goivy/ast"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	lu "github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
+	goivy "github.com/glycerine/ivy/goivy"
 )
 
 // ExpandSchemata expands axiom schemata into axioms by matching schema
 // premises against the sort constants and functions.
 //
 // Python: ivy_auto_inst.py:100-200 (uses match_schema_prems generator)
-func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
-	var result []*ast.LabeledFormula
+func ExpandSchemata(m *goivy.Module, sortConstants map[string][]*goivy.Const, funs map[string]bool) []*goivy.LabeledFormula {
+	var result []*goivy.LabeledFormula
 
 	if m.Schemata == nil {
 		return result
@@ -52,7 +47,7 @@ func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs
 		// Collect bound sorts
 		boundSorts := make(map[string]bool)
 		for _, prem := range prems {
-			if us, ok := prem.(*lg.UninterpretedSort); ok {
+			if us, ok := prem.(*goivy.UninterpretedSort); ok {
 				boundSorts[us.Name] = true
 			}
 		}
@@ -60,18 +55,18 @@ func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs
 		// Match premises and instantiate conclusion
 		MatchSchemaPrems(prems, sortConstants, funs, match, boundSorts, func(mp map[string]interface{}) {
 			// Build substitution map
-			subs := make(map[string]lg.Expr)
+			subs := make(map[string]goivy.Expr)
 			for k, v := range mp {
 				switch val := v.(type) {
-				case *lg.Const:
+				case *goivy.Const:
 					subs[k] = val
-				case lg.Expr:
+				case goivy.Expr:
 					subs[k] = val
 				case string:
-					subs[k] = lg.NewConst(val, nil)
+					subs[k] = goivy.NewConst(val, nil)
 				}
 			}
-			inst := lu.SubstituteByName(conc, subs)
+			inst := goivy.SubstituteByName(conc, subs)
 			result = append(result, m.Cfg.AstCfg.NewLabeledFormula(nil, inst))
 		})
 	}
@@ -84,8 +79,8 @@ func ExpandSchemata(m *module.Module, sortConstants map[string][]*lg.Const, funs
 //
 // Python: ivy_auto_inst.py match_schema_prems generator
 func MatchSchemaPrems(
-	prems []lg.Expr,
-	sortConstants map[string][]*lg.Const,
+	prems []goivy.Expr,
+	sortConstants map[string][]*goivy.Const,
 	funs map[string]bool,
 	match *Match,
 	boundSorts map[string]bool,
@@ -101,7 +96,7 @@ func MatchSchemaPrems(
 	remainingPrems := prems[:len(prems)-1]
 
 	switch p := prem.(type) {
-	case *lg.UninterpretedSort:
+	case *goivy.UninterpretedSort:
 		// Match to known sorts
 		for sortName := range sortConstants {
 			match.Push()
@@ -111,7 +106,7 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *lg.Variable:
+	case *goivy.Variable:
 		// Match to constants of the appropriate sort
 		sortKey := p.VSort.String()
 		// Match Python defaultdict auto-vivification
@@ -127,12 +122,12 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *lg.Const:
-		if il.IsFunctionSort(p.CSort) {
+	case *goivy.Const:
+		if goivy.IsFunctionSort(p.CSort) {
 			// Match to function symbols
 			for funName := range funs {
 				match.Push()
-				if match.Unify(p.Name, lg.NewConst(funName, p.CSort)) {
+				if match.Unify(p.Name, goivy.NewConst(funName, p.CSort)) {
 					MatchSchemaPrems(remainingPrems, sortConstants, funs, match, boundSorts, callback)
 				}
 				match.Pop()
@@ -164,14 +159,14 @@ func MatchSchemaPrems(
 }
 
 // extractSchemaNode tries to get a lg.Expr from a schema interface{}.
-func extractSchemaNode(lf interface{}) (lg.Expr, bool) {
+func extractSchemaNode(lf interface{}) (goivy.Expr, bool) {
 	switch t := lf.(type) {
-	case *ast.LabeledFormula:
-		if n, ok := t.Formula.(lg.Expr); ok {
+	case *goivy.LabeledFormula:
+		if n, ok := t.Formula.(goivy.Expr); ok {
 			return n, true
 		}
 		return nil, false
-	case lg.Expr:
+	case goivy.Expr:
 		return t, true
 	}
 	return nil, false
@@ -180,20 +175,20 @@ func extractSchemaNode(lf interface{}) (lg.Expr, bool) {
 // GetTrigger finds a trigger expression in a formula that covers all bound variables.
 //
 // Python: ivy_mc.py:674-684, also used in ivy_auto_inst.py
-func GetTrigger(expr lg.Expr, vars []*lg.Variable) lg.Expr {
-	if il.IsQuantifier(expr) || il.IsVariable(expr) {
+func GetTrigger(expr goivy.Expr, vars []*goivy.Variable) goivy.Expr {
+	if goivy.IsQuantifier(expr) || goivy.IsVariable(expr) {
 		return nil
 	}
 
-	for _, child := range il.NodeArgs(expr) {
+	for _, child := range goivy.NodeArgs(expr) {
 		r := GetTrigger(child, vars)
 		if r != nil {
 			return r
 		}
 	}
 
-	if il.IsApp(expr) || isEqNode(expr) {
-		exprVars := lu.FreeVariablesList(expr)
+	if goivy.IsApp(expr) || isEqNode(expr) {
+		exprVars := goivy.FreeVariablesList(expr)
 		if containsAllVars(exprVars, vars) {
 			return expr
 		}
@@ -201,12 +196,12 @@ func GetTrigger(expr lg.Expr, vars []*lg.Variable) lg.Expr {
 	return nil
 }
 
-func isEqNode(n lg.Expr) bool {
-	_, ok := n.(*lg.Eq)
+func isEqNode(n goivy.Expr) bool {
+	_, ok := n.(*goivy.Eq)
 	return ok
 }
 
-func containsAllVars(have []*lg.Variable, need []*lg.Variable) bool {
+func containsAllVars(have []*goivy.Variable, need []*goivy.Variable) bool {
 	haveSet := make(map[string]bool, len(have))
 	for _, v := range have {
 		haveSet[v.Name] = true

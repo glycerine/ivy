@@ -2,9 +2,8 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/art"
 )
 
 // -----------------------------------------------------------------------
@@ -12,19 +11,19 @@ import (
 // Existing webui code continues to compile via these aliases.
 // -----------------------------------------------------------------------
 
-type WebUINodeAction = art.NodeAction
-type WebUICyElements = art.CyElements
-type WebUICyElement = art.CyElement
-type WebUIAnalysisGraphState = art.AnalysisGraphState
-type WebUIARGNode = art.ARGNode
-type WebUIARGTransition = art.ARGTransition
-type WebUIARGCover = art.ARGCover
+type WebUINodeAction = goivy.NodeAction
+type WebUICyElements = goivy.CyElements
+type WebUICyElement = goivy.CyElement
+type WebUIAnalysisGraphState = goivy.AnalysisGraphState
+type WebUIARGNode = goivy.ARGNode
+type WebUIARGTransition = goivy.ARGTransition
+type WebUIARGCover = goivy.ARGCover
 
 // Forwarding functions — delegate to art package.
 
-var NewWebUICyElements = art.NewCyElements
-var NewWebUIAnalysisGraphState = art.NewAnalysisGraphState
-var RenderWebUIARG = art.RenderARG
+var NewWebUICyElements = goivy.NewCyElements
+var NewWebUIAnalysisGraphState = goivy.NewAnalysisGraphState
+var RenderWebUIARG = goivy.RenderARG
 
 // -----------------------------------------------------------------------
 // Proof goal rendering — stays in webui (only used by webui).
@@ -46,7 +45,7 @@ type WebUIProofStack struct {
 
 // RenderProofStack converts a WebUIProofStack into Cytoscape elements.
 func RenderProofStack(stack *WebUIProofStack) *WebUICyElements {
-	g := art.NewCyElements()
+	g := goivy.NewCyElements()
 	if stack == nil {
 		return g
 	}
@@ -95,7 +94,7 @@ func RenderProofStack(stack *WebUIProofStack) *WebUICyElements {
 //
 // If checks is nil all edges are shown.
 func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyElements {
-	g := art.NewCyElements()
+	g := goivy.NewCyElements()
 	if cs == nil || cs.Domain == nil {
 		return g
 	}
@@ -104,7 +103,7 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 	// (matches Python tk_graph_ui.py choose_colors).
 	sortColorMap := make(map[string]string)
 	for i, sortName := range cs.Domain.Nodes {
-		sortColorMap[sortName] = art.SortColors[(i+1)%len(art.SortColors)]
+		sortColorMap[sortName] = goivy.SortColors[(i+1)%len(goivy.SortColors)]
 	}
 
 	// Build node label lines: for each sort node, collect applicable unary relations.

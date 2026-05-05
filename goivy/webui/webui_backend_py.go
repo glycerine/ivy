@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"io"
 	"log"
 	"net"
@@ -15,13 +16,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/pytesthelper"
 )
 
 // PyBackend communicates with a Python Ivy sidecar HTTP server.
 type PyBackend struct {
-	cfg     *module.Config
+	cfg     *goivy.Config
 	cmd     *exec.Cmd
 	baseURL string
 	client  *http.Client
@@ -67,7 +67,7 @@ func pyIvyPython() string {
 // source ~/pyivy/venv/bin/activate
 // cd ~/pyivy/ivy
 // pip install -e .
-func NewPyBackend(cfg *module.Config) (*PyBackend, error) {
+func NewPyBackend(cfg *goivy.Config) (*PyBackend, error) {
 	// Find a free port.
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -213,7 +213,7 @@ func (b *PyBackend) get(path string) ([]byte, error) {
 	return respBody, nil
 }
 
-func (b *PyBackend) NewSession(cfg *module.Config) ([]byte, error) {
+func (b *PyBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
 	return b.post("/session/new", nil)
 }
 

@@ -1,15 +1,14 @@
 package gogen
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
 	"unicode/utf8"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
-func makeVar(name string, s lg.Sort) *lg.Variable {
-	v, err := lg.NewVariable(name, s)
+func makeVar(name string, s goivy.Sort) *goivy.Variable {
+	v, err := goivy.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
@@ -18,7 +17,7 @@ func makeVar(name string, s lg.Sort) *lg.Variable {
 
 func TestEmitExpr_Var(t *testing.T) {
 	e := NewExprEmitter()
-	v := makeVar("X", &lg.BooleanSort{})
+	v := makeVar("X", &goivy.BooleanSort{})
 	got, err := e.EmitExpr(v)
 	if err != nil {
 		t.Fatal(err)
@@ -30,7 +29,7 @@ func TestEmitExpr_Var(t *testing.T) {
 
 func TestEmitExpr_Const(t *testing.T) {
 	e := NewExprEmitter()
-	c := lg.NewConst("red", &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}})
+	c := goivy.NewConst("red", &goivy.EnumeratedSort{Name: "color", Extension: []string{"red"}})
 	got, err := e.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -42,9 +41,9 @@ func TestEmitExpr_Const(t *testing.T) {
 
 func TestEmitExpr_Eq(t *testing.T) {
 	e := NewExprEmitter()
-	v1 := makeVar("X", &lg.UninterpretedSort{Name: "node"})
-	v2 := makeVar("Y", &lg.UninterpretedSort{Name: "node"})
-	eq, err := lg.NewEq(v1, v2)
+	v1 := makeVar("X", &goivy.UninterpretedSort{Name: "node"})
+	v2 := makeVar("Y", &goivy.UninterpretedSort{Name: "node"})
+	eq, err := goivy.NewEq(v1, v2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -59,8 +58,8 @@ func TestEmitExpr_Eq(t *testing.T) {
 
 func TestEmitExpr_Not(t *testing.T) {
 	e := NewExprEmitter()
-	v := makeVar("X", &lg.BooleanSort{})
-	not, err := lg.NewNot(v)
+	v := makeVar("X", &goivy.BooleanSort{})
+	not, err := goivy.NewNot(v)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +74,7 @@ func TestEmitExpr_Not(t *testing.T) {
 
 func TestEmitExpr_And_Empty(t *testing.T) {
 	e := NewExprEmitter()
-	and := &lg.And{}
+	and := &goivy.And{}
 	got, err := e.EmitExpr(and)
 	if err != nil {
 		t.Fatal(err)
@@ -87,9 +86,9 @@ func TestEmitExpr_And_Empty(t *testing.T) {
 
 func TestEmitExpr_And(t *testing.T) {
 	e := NewExprEmitter()
-	a := makeVar("A", &lg.BooleanSort{})
-	b := makeVar("B", &lg.BooleanSort{})
-	and, err := lg.NewAnd(a, b)
+	a := makeVar("A", &goivy.BooleanSort{})
+	b := makeVar("B", &goivy.BooleanSort{})
+	and, err := goivy.NewAnd(a, b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,7 +103,7 @@ func TestEmitExpr_And(t *testing.T) {
 
 func TestEmitExpr_Or_Empty(t *testing.T) {
 	e := NewExprEmitter()
-	or := &lg.Or{}
+	or := &goivy.Or{}
 	got, err := e.EmitExpr(or)
 	if err != nil {
 		t.Fatal(err)
@@ -116,9 +115,9 @@ func TestEmitExpr_Or_Empty(t *testing.T) {
 
 func TestEmitExpr_Or(t *testing.T) {
 	e := NewExprEmitter()
-	a := makeVar("A", &lg.BooleanSort{})
-	b := makeVar("B", &lg.BooleanSort{})
-	or, err := lg.NewOr(a, b)
+	a := makeVar("A", &goivy.BooleanSort{})
+	b := makeVar("B", &goivy.BooleanSort{})
+	or, err := goivy.NewOr(a, b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -133,9 +132,9 @@ func TestEmitExpr_Or(t *testing.T) {
 
 func TestEmitExpr_Implies(t *testing.T) {
 	e := NewExprEmitter()
-	a := makeVar("A", &lg.BooleanSort{})
-	b := makeVar("B", &lg.BooleanSort{})
-	imp, err := lg.NewImplies(a, b)
+	a := makeVar("A", &goivy.BooleanSort{})
+	b := makeVar("B", &goivy.BooleanSort{})
+	imp, err := goivy.NewImplies(a, b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,9 +149,9 @@ func TestEmitExpr_Implies(t *testing.T) {
 
 func TestEmitExpr_Iff(t *testing.T) {
 	e := NewExprEmitter()
-	a := makeVar("A", &lg.BooleanSort{})
-	b := makeVar("B", &lg.BooleanSort{})
-	iff, err := lg.NewIff(a, b)
+	a := makeVar("A", &goivy.BooleanSort{})
+	b := makeVar("B", &goivy.BooleanSort{})
+	iff, err := goivy.NewIff(a, b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -167,10 +166,10 @@ func TestEmitExpr_Iff(t *testing.T) {
 
 func TestEmitExpr_Ite_Bool(t *testing.T) {
 	e := NewExprEmitter()
-	cond := makeVar("C", &lg.BooleanSort{})
-	then := makeVar("A", &lg.BooleanSort{})
-	els := makeVar("B", &lg.BooleanSort{})
-	ite, err := lg.NewIte(cond, then, els)
+	cond := makeVar("C", &goivy.BooleanSort{})
+	then := makeVar("A", &goivy.BooleanSort{})
+	els := makeVar("B", &goivy.BooleanSort{})
+	ite, err := goivy.NewIte(cond, then, els)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -185,11 +184,11 @@ func TestEmitExpr_Ite_Bool(t *testing.T) {
 
 func TestEmitExpr_Ite_Int(t *testing.T) {
 	e := NewExprEmitter()
-	cond := makeVar("C", &lg.BooleanSort{})
-	intSort := &lg.UninterpretedSort{Name: "val"}
+	cond := makeVar("C", &goivy.BooleanSort{})
+	intSort := &goivy.UninterpretedSort{Name: "val"}
 	then := makeVar("A", intSort)
 	els := makeVar("B", intSort)
-	ite, err := lg.NewIte(cond, then, els)
+	ite, err := goivy.NewIte(cond, then, els)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -204,11 +203,11 @@ func TestEmitExpr_Ite_Int(t *testing.T) {
 
 func TestEmitExpr_Apply_SingleArg(t *testing.T) {
 	e := NewExprEmitter()
-	nodeSort := &lg.UninterpretedSort{Name: "node"}
-	fs, _ := lg.NewFunctionSort(nodeSort, &lg.BooleanSort{})
-	fn := lg.NewConst("visited", fs)
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
+	fs, _ := goivy.NewFunctionSort(nodeSort, &goivy.BooleanSort{})
+	fn := goivy.NewConst("visited", fs)
 	arg := makeVar("N", nodeSort)
-	app, err := lg.NewApply(fn, arg)
+	app, err := goivy.NewApply(fn, arg)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -223,12 +222,12 @@ func TestEmitExpr_Apply_SingleArg(t *testing.T) {
 
 func TestEmitExpr_Apply_MultiArg(t *testing.T) {
 	e := NewExprEmitter()
-	nodeSort := &lg.UninterpretedSort{Name: "node"}
-	fs, _ := lg.NewFunctionSort(nodeSort, nodeSort, &lg.BooleanSort{})
-	fn := lg.NewConst("edge", fs)
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
+	fs, _ := goivy.NewFunctionSort(nodeSort, nodeSort, &goivy.BooleanSort{})
+	fn := goivy.NewConst("edge", fs)
 	a := makeVar("A", nodeSort)
 	b := makeVar("B", nodeSort)
-	app, err := lg.NewApply(fn, a, b)
+	app, err := goivy.NewApply(fn, a, b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -243,10 +242,10 @@ func TestEmitExpr_Apply_MultiArg(t *testing.T) {
 
 func TestEmitExpr_ForAll(t *testing.T) {
 	e := NewExprEmitter()
-	colorSort := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	colorSort := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	v := makeVar("C", colorSort)
-	body := makeVar("X", &lg.BooleanSort{})
-	fa, err := lg.NewForAll([]*lg.Variable{v}, body)
+	body := makeVar("X", &goivy.BooleanSort{})
+	fa, err := goivy.NewForAll([]*goivy.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -268,10 +267,10 @@ func TestEmitExpr_ForAll(t *testing.T) {
 
 func TestEmitExpr_Exists(t *testing.T) {
 	e := NewExprEmitter()
-	nodeSort := &lg.UninterpretedSort{Name: "node"}
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
 	v := makeVar("N", nodeSort)
-	body := makeVar("X", &lg.BooleanSort{})
-	ex, err := lg.NewExists([]*lg.Variable{v}, body)
+	body := makeVar("X", &goivy.BooleanSort{})
+	ex, err := goivy.NewExists([]*goivy.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -286,11 +285,11 @@ func TestEmitExpr_Exists(t *testing.T) {
 
 func TestEmitExpr_ForAll_MultiVar(t *testing.T) {
 	e := NewExprEmitter()
-	nodeSort := &lg.UninterpretedSort{Name: "node"}
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
 	v1 := makeVar("X", nodeSort)
 	v2 := makeVar("Y", nodeSort)
-	body := makeVar("Z", &lg.BooleanSort{})
-	fa, err := lg.NewForAll([]*lg.Variable{v1, v2}, body)
+	body := makeVar("Z", &goivy.BooleanSort{})
+	fa, err := goivy.NewForAll([]*goivy.Variable{v1, v2}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -314,10 +313,10 @@ func TestEmitExpr_Nil(t *testing.T) {
 
 func TestEmitExpr_Lambda(t *testing.T) {
 	e := NewExprEmitter()
-	nodeSort := &lg.UninterpretedSort{Name: "node"}
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
 	v := makeVar("X", nodeSort)
-	body := makeVar("Y", &lg.BooleanSort{})
-	lam, err := lg.NewLambda([]*lg.Variable{v}, body)
+	body := makeVar("Y", &goivy.BooleanSort{})
+	lam, err := goivy.NewLambda([]*goivy.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -332,7 +331,7 @@ func TestEmitExpr_Lambda(t *testing.T) {
 
 func TestEmitForAllHelper(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	EmitForAllHelper(w, s)
 	out := w.String()
 	if !strings.Contains(out, "func forAll_Color(f func(Color) bool) bool") {
@@ -348,7 +347,7 @@ func TestEmitForAllHelper(t *testing.T) {
 
 func TestEmitExistsHelper(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}}
+	s := &goivy.EnumeratedSort{Name: "color", Extension: []string{"red"}}
 	EmitExistsHelper(w, s)
 	out := w.String()
 	if !strings.Contains(out, "func exists_Color(f func(Color) bool) bool") {
@@ -437,13 +436,13 @@ func TestCodeWriter_DedentFloor(t *testing.T) {
 
 func TestSortHelperName(t *testing.T) {
 	tests := []struct {
-		sort lg.Sort
+		sort goivy.Sort
 		want string
 	}{
-		{&lg.BooleanSort{}, "Bool"},
-		{&lg.EnumeratedSort{Name: "color"}, "Color"},
-		{&lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}, "Idx"},
-		{&lg.UninterpretedSort{Name: "node"}, "Node"},
+		{&goivy.BooleanSort{}, "Bool"},
+		{&goivy.EnumeratedSort{Name: "color"}, "Color"},
+		{&goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "0"}}, "Idx"},
+		{&goivy.UninterpretedSort{Name: "node"}, "Node"},
 	}
 	for _, tt := range tests {
 		got := sortHelperName(tt.sort)
@@ -455,12 +454,12 @@ func TestSortHelperName(t *testing.T) {
 
 func TestAllValsExpr(t *testing.T) {
 	tests := []struct {
-		sort lg.Sort
+		sort goivy.Sort
 		want string
 	}{
-		{&lg.BooleanSort{}, "[2]bool{false, true}"},
-		{&lg.EnumeratedSort{Name: "color"}, "allColor"},
-		{&lg.UninterpretedSort{Name: "node"}, "allNode"},
+		{&goivy.BooleanSort{}, "[2]bool{false, true}"},
+		{&goivy.EnumeratedSort{Name: "color"}, "allColor"},
+		{&goivy.UninterpretedSort{Name: "node"}, "allNode"},
 	}
 	for _, tt := range tests {
 		got := allValsExpr(tt.sort)

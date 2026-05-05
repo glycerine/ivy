@@ -4,104 +4,103 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-func mkSort(name string) *logic.UninterpretedSort {
-	return &logic.UninterpretedSort{Name: name}
+func mkSort(name string) *goivy.UninterpretedSort {
+	return &goivy.UninterpretedSort{Name: name}
 }
 
-func mkVar(name string, s logic.Sort) *logic.Variable {
-	v, err := logic.NewVariable(name, s)
+func mkVar(name string, s goivy.Sort) *goivy.Variable {
+	v, err := goivy.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func mkConst(name string, s logic.Sort) *logic.Const {
-	return logic.NewConst(name, s)
+func mkConst(name string, s goivy.Sort) *goivy.Const {
+	return goivy.NewConst(name, s)
 }
 
-func mkFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
-	fs, err := logic.NewFunctionSort(sorts...)
+func mkFuncSort(sorts ...goivy.Sort) *goivy.FunctionSort {
+	fs, err := goivy.NewFunctionSort(sorts...)
 	if err != nil {
 		panic(err)
 	}
 	return fs
 }
 
-func mkApply(fn logic.Expr, args ...logic.Expr) logic.Expr {
-	a, err := logic.NewApply(fn, args...)
+func mkApply(fn goivy.Expr, args ...goivy.Expr) goivy.Expr {
+	a, err := goivy.NewApply(fn, args...)
 	if err != nil {
 		panic(err)
 	}
 	return a
 }
 
-func mkEq(t1, t2 logic.Expr) logic.Expr {
-	e, err := logic.NewEq(t1, t2)
+func mkEq(t1, t2 goivy.Expr) goivy.Expr {
+	e, err := goivy.NewEq(t1, t2)
 	if err != nil {
 		panic(err)
 	}
 	return e
 }
 
-func mkNot(body logic.Expr) logic.Expr {
-	n, _ := logic.NewNot(body)
+func mkNot(body goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewNot(body)
 	return n
 }
 
-func mkAnd(terms ...logic.Expr) logic.Expr {
-	a, _ := logic.NewAnd(terms...)
+func mkAnd(terms ...goivy.Expr) goivy.Expr {
+	a, _ := goivy.NewAnd(terms...)
 	return a
 }
 
-func mkOr(terms ...logic.Expr) logic.Expr {
-	o, _ := logic.NewOr(terms...)
+func mkOr(terms ...goivy.Expr) goivy.Expr {
+	o, _ := goivy.NewOr(terms...)
 	return o
 }
 
-func mkForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
-	f, _ := logic.NewForAll(vars, body)
+func mkForAll(vars []*goivy.Variable, body goivy.Expr) goivy.Expr {
+	f, _ := goivy.NewForAll(vars, body)
 	return f
 }
 
-func mkExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
-	e, _ := logic.NewExists(vars, body)
+func mkExists(vars []*goivy.Variable, body goivy.Expr) goivy.Expr {
+	e, _ := goivy.NewExists(vars, body)
 	return e
 }
 
-func mkImplies(t1, t2 logic.Expr) logic.Expr {
-	i, _ := logic.NewImplies(t1, t2)
+func mkImplies(t1, t2 goivy.Expr) goivy.Expr {
+	i, _ := goivy.NewImplies(t1, t2)
 	return i
 }
 
 // sortedConcept domain for tests.
-func testDomainSetup() (*CDConceptDomain, *logic.UninterpretedSort) {
+func testDomainSetup() (*CDConceptDomain, *goivy.UninterpretedSort) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
 
-	unaryRel := mkFuncSort(S, logic.Boolean)
-	binaryRel := mkFuncSort(S, S, logic.Boolean)
+	unaryRel := mkFuncSort(S, goivy.Boolean)
+	binaryRel := mkFuncSort(S, S, goivy.Boolean)
 
 	p := mkConst("p", unaryRel)
 	q := mkConst("q", unaryRel)
 	r := mkConst("r", binaryRel)
 
-	cBoth := MustCDConcept("both", []*logic.Variable{X}, mkAnd(mkApply(p, X), mkApply(q, X)))
-	cOnlyP := MustCDConcept("onlyp", []*logic.Variable{X}, mkAnd(mkApply(p, X), mkNot(mkApply(q, X))))
-	cOnlyQ := MustCDConcept("onlyq", []*logic.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkApply(q, X)))
-	cNone := MustCDConcept("none", []*logic.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkNot(mkApply(q, X))))
-	cR := MustCDConcept("r", []*logic.Variable{X, Y}, mkApply(r, X, Y))
+	cBoth := MustCDConcept("both", []*goivy.Variable{X}, mkAnd(mkApply(p, X), mkApply(q, X)))
+	cOnlyP := MustCDConcept("onlyp", []*goivy.Variable{X}, mkAnd(mkApply(p, X), mkNot(mkApply(q, X))))
+	cOnlyQ := MustCDConcept("onlyq", []*goivy.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkApply(q, X)))
+	cNone := MustCDConcept("none", []*goivy.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkNot(mkApply(q, X))))
+	cR := MustCDConcept("r", []*goivy.Variable{X, Y}, mkApply(r, X, Y))
 
 	concepts := NewCDConceptDict()
 	concepts.SetConcept("both", cBoth)
@@ -124,9 +123,9 @@ func testDomainSetup() (*CDConceptDomain, *logic.UninterpretedSort) {
 func TestCDConceptCreation(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
 
-	c, err := NewCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
+	c, err := NewCDConcept("test", []*goivy.Variable{X}, mkApply(p, X))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -147,9 +146,9 @@ func TestCDConceptCreationEmpty(t *testing.T) {
 
 func TestCDConceptCreationHigherOrder(t *testing.T) {
 	S := mkSort("S")
-	fs := mkFuncSort(S, logic.Boolean)
+	fs := mkFuncSort(S, goivy.Boolean)
 	V := mkVar("V", fs)
-	_, err := NewCDConcept("bad", []*logic.Variable{V}, V)
+	_, err := NewCDConcept("bad", []*goivy.Variable{V}, V)
 	if err == nil {
 		t.Error("expected error for higher-order variable")
 	}
@@ -159,8 +158,8 @@ func TestCDConceptArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
-	eq, _ := logic.NewEq(X, Y)
-	c := MustCDConcept("eq", []*logic.Variable{X, Y}, eq)
+	eq, _ := goivy.NewEq(X, Y)
+	c := MustCDConcept("eq", []*goivy.Variable{X, Y}, eq)
 	if c.Arity() != 2 {
 		t.Errorf("expected arity 2, got %d", c.Arity())
 	}
@@ -172,7 +171,7 @@ func TestCDConceptSorts(t *testing.T) {
 	X := mkVar("X", S)
 	Y := mkVar("Y", T)
 	eq := webuiMustEq(X, Y)
-	c := MustCDConcept("mixed", []*logic.Variable{X, Y}, eq)
+	c := MustCDConcept("mixed", []*goivy.Variable{X, Y}, eq)
 	sorts := c.Sorts()
 	if len(sorts) != 2 {
 		t.Fatalf("expected 2 sorts, got %d", len(sorts))
@@ -186,7 +185,7 @@ func TestCDConceptSort(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := webuiMustEq(X, X)
-	c := MustCDConcept("self", []*logic.Variable{X}, eq)
+	c := MustCDConcept("self", []*goivy.Variable{X}, eq)
 	if c.Sort().String() != "S" {
 		t.Errorf("expected sort S, got %s", c.Sort())
 	}
@@ -195,8 +194,8 @@ func TestCDConceptSort(t *testing.T) {
 func TestCDConceptCall(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
+	c := MustCDConcept("test", []*goivy.Variable{X}, mkApply(p, X))
 
 	a := mkConst("a", S)
 	result, err := c.Call(a)
@@ -216,7 +215,7 @@ func TestCDConceptCallWrongArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := webuiMustEq(X, X)
-	c := MustCDConcept("test", []*logic.Variable{X}, eq)
+	c := MustCDConcept("test", []*goivy.Variable{X}, eq)
 
 	a := mkConst("a", S)
 	b := mkConst("b", S)
@@ -230,7 +229,7 @@ func TestCDConceptCallNoArgs(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := webuiMustEq(X, X)
-	c := MustCDConcept("test", []*logic.Variable{X}, eq)
+	c := MustCDConcept("test", []*goivy.Variable{X}, eq)
 
 	_, err := c.Call()
 	if err == nil {
@@ -242,7 +241,7 @@ func TestCDConceptString(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := webuiMustEq(X, X)
-	c := MustCDConcept("test", []*logic.Variable{X}, eq)
+	c := MustCDConcept("test", []*goivy.Variable{X}, eq)
 	s := c.String()
 	if !strings.Contains(s, "Concept") {
 		t.Errorf("expected 'Concept' in string, got %q", s)
@@ -253,7 +252,7 @@ func TestCDConceptFormulaStr(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := webuiMustEq(X, X)
-	c := MustCDConcept("test", []*logic.Variable{X}, eq)
+	c := MustCDConcept("test", []*goivy.Variable{X}, eq)
 	s := c.FormulaStr()
 	if s == "" {
 		t.Error("expected non-empty formula string")
@@ -268,11 +267,11 @@ func TestCDConceptCombinerCall(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 
-	unaryRel := mkFuncSort(S, logic.Boolean)
+	unaryRel := mkFuncSort(S, goivy.Boolean)
 	p := mkConst("p", unaryRel)
 
 	// Concept: p(X)
-	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
+	c := MustCDConcept("test", []*goivy.Variable{X}, mkApply(p, X))
 
 	// Combiner: "none" = ~Exists X. U(X)
 	combiners := GetStandardCombiners()
@@ -318,8 +317,8 @@ func TestCDConceptCombinerArities(t *testing.T) {
 func TestCDConceptCombinerCallWrongArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
+	c := MustCDConcept("test", []*goivy.Variable{X}, mkApply(p, X))
 
 	combiners := GetStandardCombiners()
 	ata := combiners.GetCombiner("all_to_all")
@@ -343,9 +342,9 @@ func TestCDConceptCombinerCallConceptArityMismatch(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
 	// Binary concept when combiner expects unary
-	cBin := MustCDConcept("bin", []*logic.Variable{X, Y}, mkApply(p, X))
+	cBin := MustCDConcept("bin", []*goivy.Variable{X, Y}, mkApply(p, X))
 	combiners := GetStandardCombiners()
 	none := combiners.GetCombiner("none")
 	_, err := none.Call(cBin)
@@ -366,7 +365,7 @@ func TestCDConceptDictBasic(t *testing.T) {
 
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
+	c := MustCDConcept("test", []*goivy.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 
 	if d.Len() != 1 {
@@ -424,7 +423,7 @@ func TestCDConceptDictCopy(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
+	c := MustCDConcept("test", []*goivy.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -466,7 +465,7 @@ func TestCDConceptDictForEachConcept(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Variable{X}, webuiMustEq(X, X))
+	c := MustCDConcept("test", []*goivy.Variable{X}, webuiMustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -523,8 +522,8 @@ func TestCDConceptDomainSplit(t *testing.T) {
 
 	// Create a unary concept to split by.
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	splitter := MustCDConcept("splitter", []*logic.Variable{X}, mkApply(p, X))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
+	splitter := MustCDConcept("splitter", []*goivy.Variable{X}, mkApply(p, X))
 	cd.Concepts.SetConcept("splitter", splitter)
 
 	origLen := cd.Concepts.Len()
@@ -659,12 +658,12 @@ func TestGetStandardCombinations(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestGetInitialConceptDomain(t *testing.T) {
-	sorts := map[string]logic.Sort{
+	sorts := map[string]goivy.Sort{
 		"node": mkSort("node"),
 	}
-	unaryRel := mkFuncSort(mkSort("node"), logic.Boolean)
-	binaryRel := mkFuncSort(mkSort("node"), mkSort("node"), logic.Boolean)
-	symbols := map[string]*logic.Const{
+	unaryRel := mkFuncSort(mkSort("node"), goivy.Boolean)
+	binaryRel := mkFuncSort(mkSort("node"), mkSort("node"), goivy.Boolean)
+	symbols := map[string]*goivy.Const{
 		"link": mkConst("link", binaryRel),
 		"flag": mkConst("flag", unaryRel),
 	}
@@ -704,8 +703,7 @@ func TestGetInitialConceptDomainEmpty(t *testing.T) {
 func TestCISCreation(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	if sess == nil {
 		t.Fatal("expected non-nil session")
@@ -718,8 +716,7 @@ func TestCISCreation(t *testing.T) {
 func TestCISPushPop(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	origLen := sess.Domain.Concepts.Len()
 	sess.Push()
@@ -741,8 +738,7 @@ func TestCISPushPop(t *testing.T) {
 func TestCISPopEmpty(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	err := sess.Pop()
 	if err == nil {
@@ -753,8 +749,7 @@ func TestCISPopEmpty(t *testing.T) {
 func TestCISUndo(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	origLen := sess.Domain.Concepts.Len()
 	sess.Push()
@@ -771,13 +766,12 @@ func TestCISUndo(t *testing.T) {
 func TestCISSplit(t *testing.T) {
 	cd, S := testDomainSetup()
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	splitter := MustCDConcept("splitter", []*logic.Variable{X}, mkApply(p, X))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
+	splitter := MustCDConcept("splitter", []*goivy.Variable{X}, mkApply(p, X))
 	cd.Concepts.SetConcept("splitter", splitter)
 
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	sess.Split("both", "splitter")
 	if sess.Domain.Concepts.Has("both") {
@@ -799,8 +793,7 @@ func TestCISSplit(t *testing.T) {
 func TestCISSupposeEmpty(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	origConstraints := len(sess.SupposeConstraints)
 	sess.SupposeEmpty("both")
@@ -812,8 +805,7 @@ func TestCISSupposeEmpty(t *testing.T) {
 func TestCISRemoveConcepts(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	sess.RemoveConcepts("both", "none")
 	if sess.Domain.Concepts.Has("both") || sess.Domain.Concepts.Has("none") {
@@ -824,8 +816,7 @@ func TestCISRemoveConcepts(t *testing.T) {
 func TestCISToFormula(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	f := sess.ToFormula()
 	if f == nil {
@@ -836,8 +827,7 @@ func TestCISToFormula(t *testing.T) {
 func TestCISFreshConstName(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	name := sess.FreshConstName(nil)
 	if name == "" {
@@ -852,8 +842,7 @@ func TestCISFreshConstName(t *testing.T) {
 func TestCISClone(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	clone := sess.Clone(false)
 	if clone == nil {
@@ -867,8 +856,7 @@ func TestCISClone(t *testing.T) {
 func TestCISSaveDomain(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	sess.SaveDomain("test")
 	if _, ok := sess.AnalysisSession["test"]; !ok {
@@ -879,8 +867,7 @@ func TestCISSaveDomain(t *testing.T) {
 func TestCISLoadDomain(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	sess.SaveDomain("test")
 	sess.Domain.Concepts.Delete("both")
@@ -896,8 +883,7 @@ func TestCISLoadDomain(t *testing.T) {
 func TestCISLoadDomainNotFound(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	err := sess.LoadDomain("nonexistent")
 	if err == nil {
@@ -908,8 +894,7 @@ func TestCISLoadDomainNotFound(t *testing.T) {
 func TestCISReplaceDomain(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	newDomain := cd.Copy()
 	newDomain.Concepts.Delete("both")
@@ -922,8 +907,7 @@ func TestCISReplaceDomain(t *testing.T) {
 func TestCISMaterializeNode(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	// Materialize should push and recompute without error.
 	sess.MaterializeNode("both")
@@ -935,8 +919,7 @@ func TestCISMaterializeNode(t *testing.T) {
 func TestCISMaterializeEdge(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	sess.MaterializeEdge("r", "both", "none", true)
 	if len(sess.UndoStack) != 1 {
@@ -947,8 +930,7 @@ func TestCISMaterializeEdge(t *testing.T) {
 func TestCISSuppose(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	S := mkSort("S")
 	a := mkConst("a", S)
@@ -963,8 +945,7 @@ func TestCISSuppose(t *testing.T) {
 func TestCISSupposeTautology(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	S := mkSort("S")
 	a := mkConst("a", S)
@@ -978,13 +959,12 @@ func TestCISSupposeTautology(t *testing.T) {
 func TestCISAddEdge(t *testing.T) {
 	cd, S := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
 	eq := mkEq(X, Y)
-	c := MustCDConcept("newEdge", []*logic.Variable{X, Y}, eq)
+	c := MustCDConcept("newEdge", []*goivy.Variable{X, Y}, eq)
 	sess.AddEdge("newEdge", c)
 	if !sess.Domain.Concepts.Has("newEdge") {
 		t.Error("expected 'newEdge' to exist")
@@ -1004,8 +984,7 @@ func TestCISAddEdge(t *testing.T) {
 func TestCISAddCustomEdge(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	origCombinations := len(sess.Domain.Combinations)
 	sess.AddCustomEdge("r", "both", "none")
@@ -1017,8 +996,7 @@ func TestCISAddCustomEdge(t *testing.T) {
 func TestCISAddCustomNodeLabel(t *testing.T) {
 	cd, _ := testDomainSetup()
 	sess := NewConceptInteractiveSession(
-		cd, logic.True, logic.True,
-		nil, nil, nil, nil, nil, false,
+		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	origCombinations := len(sess.Domain.Combinations)
 	sess.AddCustomNodeLabel("both", "someLabel")
@@ -1302,10 +1280,10 @@ func TestCSLiteralNegate(t *testing.T) {
 
 func TestGetStructureConceptDomain(t *testing.T) {
 	S := mkSort("S")
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*goivy.Const{
 		"S": {mkConst("s0", S), mkConst("s1", S)},
 	}
-	cd := GetStructureConceptDomain(logic.True, universe, nil)
+	cd := GetStructureConceptDomain(goivy.True, universe, nil)
 	if cd == nil {
 		t.Fatal("expected non-nil concept domain")
 	}
@@ -1319,7 +1297,7 @@ func TestGetStructureConceptAbstractValue(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*goivy.Const{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0), mkEq(s1, s1))
@@ -1357,8 +1335,8 @@ func TestUniverseElementToConceptNameAlreadyContainsSort(t *testing.T) {
 
 func TestGetDiagramConceptDomain(t *testing.T) {
 	S := mkSort("S")
-	c := mkConst("foo", mkFuncSort(S, logic.Boolean))
-	cd := GetDiagramConceptDomain(nil, []*logic.Const{c}, nil)
+	c := mkConst("foo", mkFuncSort(S, goivy.Boolean))
+	cd := GetDiagramConceptDomain(nil, []*goivy.Const{c}, nil)
 	if cd == nil {
 		t.Fatal("expected non-nil concept domain")
 	}
@@ -1375,7 +1353,7 @@ func TestGetStructureRenaming(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*goivy.Const{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0))
@@ -1445,13 +1423,13 @@ func FuzzCDConceptCall(f *testing.F) {
 		if arity > len(varNames) {
 			return
 		}
-		vars := make([]*logic.Variable, arity)
+		vars := make([]*goivy.Variable, arity)
 		for i := 0; i < arity; i++ {
 			vars[i] = mkVar(varNames[i], S)
 		}
-		var formula logic.Expr
+		var formula goivy.Expr
 		if arity == 0 {
-			formula = logic.True
+			formula = goivy.True
 		} else {
 			formula = webuiMustEq(vars[0], vars[0])
 		}
@@ -1460,7 +1438,7 @@ func FuzzCDConceptCall(f *testing.F) {
 			return
 		}
 		// Try calling with right number of args.
-		args := make([]logic.Expr, arity)
+		args := make([]goivy.Expr, arity)
 		for i := 0; i < arity; i++ {
 			args[i] = mkConst(fmt.Sprintf("c%d", i), S)
 		}
@@ -1480,8 +1458,8 @@ func TestCDConceptCallBinary(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
-	r := mkConst("r", mkFuncSort(S, S, logic.Boolean))
-	c := MustCDConcept("rel", []*logic.Variable{X, Y}, mkApply(r, X, Y))
+	r := mkConst("r", mkFuncSort(S, S, goivy.Boolean))
+	c := MustCDConcept("rel", []*goivy.Variable{X, Y}, mkApply(r, X, Y))
 
 	a := mkConst("a", S)
 	b := mkConst("b", S)

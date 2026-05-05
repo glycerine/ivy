@@ -22,16 +22,10 @@ package iupdr
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"iter"
 
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/art"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/proof"
-	"github.com/glycerine/ivy/goivy/tactics"
 	"github.com/glycerine/ivy/goivy/webui"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // -----------------------------------------------------------------------
@@ -67,8 +61,8 @@ type UserSelectCore struct {
 	*webui.ShowModal
 
 	// Input fields (set by generator before yield)
-	Theory     *module.Clauses
-	Constrains []lg.Expr // Python: self.constrains
+	Theory     *goivy.Clauses
+	Constrains []goivy.Expr // Python: self.constrains
 	Prompt     string
 
 	// Auxiliary state from Python __init__ (lines 35-61). The aux
@@ -81,8 +75,8 @@ type UserSelectCore struct {
 	//   ]
 	//   for a, c in zip(self.alits, self.constrains):
 	//       self.s.add(z3.Or(z3.Not(a), ivy_solver.formula_to_z3(c)))
-	S     *z3bridge.Solver // Python: self.s
-	Alits []*lg.Const      // Python: self.alits
+	S     *goivy.Solver  // Python: self.s
+	Alits []*goivy.Const // Python: self.alits
 
 	// Widget data carriers — preserved for parity with the Python
 	// __init__ that builds Latex/SelectMultiple/Button widgets.
@@ -92,7 +86,7 @@ type UserSelectCore struct {
 	CheckButton *webui.ButtonWidget
 
 	// Response fields (set by consumer before next yield)
-	SelectedConstraints []lg.Expr
+	SelectedConstraints []goivy.Expr
 	UserIsSat           bool
 	Cancelled           bool
 }
@@ -125,19 +119,19 @@ type UserSelectCore struct {
 //	        self.check_button,
 //	        self.result,
 //	    ])
-func NewUserSelectCore(theory *module.Clauses, constrains []lg.Expr, title, prompt string) *UserSelectCore {
+func NewUserSelectCore(theory *goivy.Clauses, constrains []goivy.Expr, title, prompt string) *UserSelectCore {
 	u := &UserSelectCore{
 		Theory:     theory,
-		Constrains: append([]lg.Expr(nil), constrains...),
+		Constrains: append([]goivy.Expr(nil), constrains...),
 		Prompt:     prompt,
 	}
 	// Python: self.s = z3.Solver(); self.s.add(clauses_to_z3(self.theory))
-	u.S = z3bridge.NewSolver(nil, nil)
+	u.S = goivy.NewSolver(nil, nil)
 
 	// Python: alits = [z3.Const('__core_aux{}', BoolSort()) for n, c in enumerate(constrains)]
-	u.Alits = make([]*lg.Const, len(u.Constrains))
+	u.Alits = make([]*goivy.Const, len(u.Constrains))
 	for n := range u.Constrains {
-		u.Alits[n] = lg.NewConst(fmt.Sprintf("__core_aux%d", n), lg.Boolean)
+		u.Alits[n] = goivy.NewConst(fmt.Sprintf("__core_aux%d", n), goivy.Boolean)
 	}
 
 	// Python: options = OrderedDict((str(c), n) for n, c in enumerate(constrains))
@@ -247,7 +241,7 @@ func (u *UserSelectCore) checkResult() bool {
 	// the Python check([assumptions]) call, since each constraint is
 	// guarded by an assumption literal in the Python __init__ and the
 	// assumption forces the constraint when set.
-	combined := module.AndClausesTyped(u.Theory, module.NewClauses(sel, nil, nil))
+	combined := goivy.AndClausesTyped(u.Theory, goivy.NewClauses(sel, nil, nil))
 	sat, _ := u.S.ClausesSat(combined)
 	return sat
 }
@@ -256,11 +250,11 @@ func (u *UserSelectCore) checkResult() bool {
 // SelectMultipleWidget value. Mirrors:
 //
 //	[self.constrains[i] for i in self.select.value]
-func selectedClauses(u *UserSelectCore) []lg.Expr {
+func selectedClauses(u *UserSelectCore) []goivy.Expr {
 	if u.Select == nil || len(u.Select.Value) == 0 {
 		return nil
 	}
-	out := make([]lg.Expr, 0, len(u.Select.Value))
+	out := make([]goivy.Expr, 0, len(u.Select.Value))
 	for _, v := range u.Select.Value {
 		idx, ok := v.(int)
 		if !ok {
@@ -352,7 +346,7 @@ func selectedClauses(u *UserSelectCore) []lg.Expr {
 //	            facts_to_check = (set(ta.arg_get_conjuncts(frames[i-1])) -
 //	                              set(ta.arg_get_conjuncts(frames[i])))
 //	            t.recalculate_facts(frames[i], list(facts_to_check))
-func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperation] {
+func InteractiveUpdr(tc *goivy.TacticsContext) iter.Seq[webui.FrontEndOperation] {
 	return func(yield func(webui.FrontEndOperation) bool) {
 		// Python: frames = ta._ivy_ag.states
 		frames := tc.AG.States
@@ -371,10 +365,10 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 		}
 
 		// Python: bad_states = negate_clauses(ta.get_safety_property())
-		badStates := module.NegateClauses(tc.GetSafetyProperty())
+		badStates := goivy.NegateClauses(tc.GetSafetyProperty())
 
 		// Python: action = ta.get_big_action()
-		bigAction := tactics.GetBigAction(tc.AG)
+		bigAction := goivy.GetBigAction(tc.AG)
 
 		// Python: ta._ivy_ag.actions[repr(action)] = action
 		// (registers the choice action so it can be referenced by name)
@@ -393,7 +387,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 			//                 ta.step(msg="Inductive invariant found at frame {}", i=i)
 			frames = tc.AG.States
 			for i := 0; i < len(frames)-1; i++ {
-				if tactics.CheckCoverFn(tc, frames[i+1], frames[i]) {
+				if goivy.CheckCoverFn(tc, frames[i+1], frames[i]) {
 					// Python step() is a logging call; we omit the
 					// dictionary build since Go has no central logger
 					// equivalent for tactic steps.
@@ -408,12 +402,13 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 			}
 
 			// Python: ta.push_goal(ta.goal_at_arg_node(bad_states, last_frame))
-			tc.PushGoal(tactics.GoalAtArgNode(badStates.ToFormula(), lastFrame))
+			tc.PushGoal(goivy.GoalAtArgNode(badStates.ToFormula(), lastFrame))
 
 			// Python: t.recalculate_facts(last_frame,
 			//                             ta.arg_get_conjuncts(ta.arg_get_pred(last_frame)))
-			predConjs := exprsToClausesList(tactics.ArgGetConjuncts(tactics.ArgGetPred(lastFrame)))
-			tactics.RecalculateFactsFn(tc, lastFrame, predConjs)
+			predConjs := exprsToClausesList(goivy.ArgGetConjuncts(goivy.ArgGetPred(lastFrame)))
+			goivy.
+				RecalculateFactsFn(tc, lastFrame, predConjs)
 
 			// Inner loop — Python: while True:
 			for {
@@ -425,13 +420,13 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				}
 
 				// Python: if t.remove_if_refuted(current_goal): continue
-				if tactics.RemoveIfRefutedFn(tc, currentGoal) {
+				if goivy.RemoveIfRefutedFn(tc, currentGoal) {
 					continue
 				}
 
 				// Python: if current_goal.node == init_frame:
 				//             print("No Invariant!")
-				if cn, ok := currentGoal.Node.(*art.State); ok && cn == initFrame {
+				if cn, ok := currentGoal.Node.(*goivy.State); ok && cn == initFrame {
 					fmt.Println("No Invariant!")
 				}
 
@@ -440,7 +435,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				//         for c in simplify_clauses(dg.formula).conjuncts():
 				//             options[str(c)] = c
 				dg := tc.GetDiagram(currentGoal, false)
-				dgClauses := module.SimplifyClauses(module.FormulaToClauses(dg.Formula, nil))
+				dgClauses := goivy.SimplifyClauses(goivy.FormulaToClauses(dg.Formula, nil))
 				options := webui.NewOrderedMap()
 				for _, c := range dgClauses.Fmlas {
 					options.Set(fmt.Sprintf("%v", c), c)
@@ -462,13 +457,12 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				// Python: ug = ta.goal_at_arg_node(
 				//             Clauses(list(user_selection)), current_goal.node)
 				//         ta.push_goal(ug); ta.step(...)
-				curNode, ok := currentGoal.Node.(*art.State)
+				curNode, ok := currentGoal.Node.(*goivy.State)
 				if !ok {
 					return
 				}
-				ug := tactics.GoalAtArgNode(
-					module.NewClauses(userSelection, nil, nil).ToFormula(),
-					curNode)
+				ug := goivy.GoalAtArgNode(goivy.
+					NewClauses(userSelection, nil, nil).ToFormula(), curNode)
 				tc.PushGoal(ug)
 
 				// Python: goal = ta.top_goal()
@@ -476,11 +470,11 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				//         assert action != 'join'; assert len(preds) == 1
 				//         pred = preds[0]
 				goal := tc.TopGoal()
-				goalNode, ok := goal.Node.(*art.State)
+				goalNode, ok := goal.Node.(*goivy.State)
 				if !ok {
 					return
 				}
-				pred, act := tactics.ArgGetPredAction(goalNode)
+				pred, act := goivy.ArgGetPredAction(goalNode)
 				if act == nil {
 					panic("interactive_updr: action is 'join'")
 				}
@@ -495,16 +489,16 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				//             ivy_transrel.forward_image(pred.clauses, axioms,
 				//                 action.update(ta._ivy_interp, None)),
 				//             axioms)
-				update := actions.GetUpdateForArt(act, tc.Mod, nil)
+				update := goivy.GetUpdateForArt(act, tc.Mod, nil)
 				if update == nil {
 					return
 				}
-				fwd := actions.ForwardImage(pred.Clauses, axioms, update)
-				theory := module.AndClausesTyped(fwd, axioms)
+				fwd := goivy.ForwardImage(pred.Clauses, axioms, update)
+				theory := goivy.AndClausesTyped(fwd, axioms)
 
 				// Python: goal_clauses = simplify_clauses(goal.formula)
 				//         assert len(goal_clauses.defs) == 0
-				goalClauses := module.SimplifyClauses(module.FormulaToClauses(goal.Formula, nil))
+				goalClauses := goivy.SimplifyClauses(goivy.FormulaToClauses(goal.Formula, nil))
 				if len(goalClauses.Defs) != 0 {
 					panic("interactive_updr: goal_clauses has defs")
 				}
@@ -513,8 +507,8 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				//         s.add(clauses_to_z3(theory))
 				//         s.add(clauses_to_z3(goal_clauses))
 				//         is_sat = s.check()
-				combined := module.AndClausesTyped(theory, goalClauses)
-				slv := z3bridge.NewSolver(nil, nil)
+				combined := goivy.AndClausesTyped(theory, goalClauses)
+				slv := goivy.NewSolver(nil, nil)
 				isSat, err := slv.ClausesSat(combined)
 				if err != nil {
 					return
@@ -525,9 +519,9 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 				if isSat {
 					// Python: bi = ta.backward_image(goal.formula, action)
 					//         x, y = False, ta.goal_at_arg_node(bi, pred)
-					biClauses := tc.BackwardImage(module.FormulaToClauses(goal.Formula, nil), act)
+					biClauses := tc.BackwardImage(goivy.FormulaToClauses(goal.Formula, nil), act)
 					x = false
-					y = tactics.GoalAtArgNode(biClauses.ToFormula(), pred)
+					y = goivy.GoalAtArgNode(biClauses.ToFormula(), pred)
 				} else {
 					// Python: user_selection, user_is_sat = yield UserSelectCore(
 					//             theory=theory,
@@ -548,16 +542,17 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 						panic("interactive_updr: user selected SAT core")
 					}
 					// Python: core = Clauses(user_selection)
-					core := module.NewClauses(op2.SelectedConstraints, nil, nil)
+					core := goivy.NewClauses(op2.SelectedConstraints, nil, nil)
 					// Python: x, y = True, ivy_transrel.interp_from_unsat_core(
 					//             goal_clauses, theory, core, None)
 					// THIS IS THE TARGET CALL: iupdr.py:193
 					x = true
-					y = actions.InterpFromUnsatCore(goalClauses, theory, core, nil)
+					y = goivy.InterpFromUnsatCore(goalClauses, theory, core, nil)
 				}
+				goivy.
 
-				// Python: t.custom_refine_or_reverse(goal, x, y, False)
-				tactics.CustomRefineOrReverse(tc, goal, x, y, false)
+					// Python: t.custom_refine_or_reverse(goal, x, y, False)
+					CustomRefineOrReverse(tc, goal, x, y, false)
 			}
 
 			// Python: # propagate phase
@@ -567,10 +562,11 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 			//             t.recalculate_facts(frames[i], list(facts_to_check))
 			frames = tc.AG.States
 			for i := 1; i < len(frames); i++ {
-				prev := tactics.ArgGetConjuncts(frames[i-1])
-				cur := tactics.ArgGetConjuncts(frames[i])
+				prev := goivy.ArgGetConjuncts(frames[i-1])
+				cur := goivy.ArgGetConjuncts(frames[i])
 				diff := exprsToClausesList(setDifference(prev, cur))
-				tactics.RecalculateFactsFn(tc, frames[i], diff)
+				goivy.
+					RecalculateFactsFn(tc, frames[i], diff)
 			}
 		}
 	}
@@ -583,7 +579,7 @@ func InteractiveUpdr(tc *tactics.TacticsContext) iter.Seq[webui.FrontEndOperatio
 // actionRepr produces a stable string for an action — Python uses
 // repr(action) which is class-and-id based; we use Go's type-name for the
 // rare case where the same big-action is constructed twice.
-func actionRepr(a actions.ActionsAction) string {
+func actionRepr(a goivy.ActionsAction) string {
 	if a == nil {
 		return "<nil action>"
 	}
@@ -594,13 +590,13 @@ func actionRepr(a actions.ActionsAction) string {
 // single-formula Clauses, mirroring Python's implicit handling where
 // arg_get_conjuncts returns a list of formulas that can be passed to
 // implied_facts directly.
-func exprsToClausesList(es []lg.Expr) []*module.Clauses {
+func exprsToClausesList(es []goivy.Expr) []*goivy.Clauses {
 	if len(es) == 0 {
 		return nil
 	}
-	out := make([]*module.Clauses, 0, len(es))
+	out := make([]*goivy.Clauses, 0, len(es))
 	for _, e := range es {
-		out = append(out, module.NewClauses([]lg.Expr{e}, nil, nil))
+		out = append(out, goivy.NewClauses([]goivy.Expr{e}, nil, nil))
 	}
 	return out
 }
@@ -621,14 +617,14 @@ func orderedMapValuesAny(m *webui.OrderedMap) []any {
 // exprsFromAny converts the consumer-supplied response slice to []lg.Expr.
 // The consumer may put either lg.Expr values or any-typed wrappers in the
 // Selection field.
-func exprsFromAny(in any) []lg.Expr {
+func exprsFromAny(in any) []goivy.Expr {
 	switch v := in.(type) {
-	case []lg.Expr:
+	case []goivy.Expr:
 		return v
 	case []any:
-		out := make([]lg.Expr, 0, len(v))
+		out := make([]goivy.Expr, 0, len(v))
 		for _, x := range v {
-			if e, ok := x.(lg.Expr); ok {
+			if e, ok := x.(goivy.Expr); ok {
 				out = append(out, e)
 			}
 		}
@@ -641,12 +637,12 @@ func exprsFromAny(in any) []lg.Expr {
 // `set(prev) - set(cur)` for sets of formula expressions. Membership uses
 // pointer-identity, mirroring Python's default object hashing for
 // non-hashable formula instances (Python uses id(x)).
-func setDifference(prev, cur []lg.Expr) []lg.Expr {
-	curSet := make(map[lg.Expr]bool, len(cur))
+func setDifference(prev, cur []goivy.Expr) []goivy.Expr {
+	curSet := make(map[goivy.Expr]bool, len(cur))
 	for _, c := range cur {
 		curSet[c] = true
 	}
-	out := make([]lg.Expr, 0, len(prev))
+	out := make([]goivy.Expr, 0, len(prev))
 	for _, p := range prev {
 		if !curSet[p] {
 			out = append(out, p)
@@ -656,4 +652,4 @@ func setDifference(prev, cur []lg.Expr) []lg.Expr {
 }
 
 // Sentinel use to keep proof imported even if not directly referenced.
-var _ = (*proof.ProofGoal)(nil)
+var _ = (*goivy.ProofGoal)(nil)

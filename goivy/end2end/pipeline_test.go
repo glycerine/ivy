@@ -6,17 +6,11 @@
 package end2end
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/compiler"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/lexer"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/parser"
 )
 
 // dataDir returns the path to the data directory.
@@ -26,17 +20,17 @@ func dataDir() string {
 }
 
 // compileIvySource parses and compiles an Ivy source string into a module.
-func compileIvySource(t *testing.T, src string) *module.Module {
+func compileIvySource(t *testing.T, src string) *goivy.Module {
 	t.Helper()
-	version := lexer.Version{1, 7}
+	version := goivy.Version{1, 7}
 	// Try LALR parser first, fall back to hand-rolled for debugging
-	result, err := parser.Parse(src, version)
+	result, err := goivy.Parse(src, version)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := module.New()
-	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(result.Decls, mod, true)
+	mod := goivy.New()
+	mod.Sig = goivy.NewSig()
+	err = goivy.IvyCompile(result.Decls, mod, true)
 	if err != nil {
 		t.Fatalf("compile error: %v", err)
 	}
@@ -44,7 +38,7 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 }
 
 // compileIvyFile parses and compiles an Ivy file into a module.
-func compileIvyFile(t *testing.T, filename string) *module.Module {
+func compileIvyFile(t *testing.T, filename string) *goivy.Module {
 	t.Helper()
 	data, err := os.ReadFile(filepath.Join(dataDir(), filename))
 	if err != nil {
@@ -95,11 +89,11 @@ conjecture r(X) | ~r(X)
 	if err != nil {
 		t.Fatalf("symbol 'r' not found: %v", err)
 	}
-	fs, ok := entry.CSort.(*logic.FunctionSort)
+	fs, ok := entry.CSort.(*goivy.FunctionSort)
 	if !ok {
 		t.Fatalf("r sort should be FunctionSort, got %T", entry.CSort)
 	}
-	if !logic.SortEqual(fs.Range(), logic.Boolean) {
+	if !goivy.SortEqual(fs.Range(), goivy.Boolean) {
 		t.Errorf("r range should be Boolean, got %s", fs.Range())
 	}
 
@@ -120,7 +114,7 @@ func TestParseCompile_EnumTypes(t *testing.T) {
 	if !ok {
 		t.Fatal("sort 'color' not found")
 	}
-	es, ok := sort.(*logic.EnumeratedSort)
+	es, ok := sort.(*goivy.EnumeratedSort)
 	if !ok {
 		t.Fatalf("expected EnumeratedSort for color, got %T", sort)
 	}
@@ -156,26 +150,26 @@ func TestParseCompile_ClientServer(t *testing.T) {
 			t.Errorf("relation '%s' not found: %v", relName, err)
 			continue
 		}
-		fs, ok := entry.CSort.(*logic.FunctionSort)
+		fs, ok := entry.CSort.(*goivy.FunctionSort)
 		if !ok {
 			t.Errorf("%s sort should be FunctionSort, got %T", relName, entry.CSort)
 			continue
 		}
-		if !logic.SortEqual(fs.Range(), logic.Boolean) {
+		if !goivy.SortEqual(fs.Range(), goivy.Boolean) {
 			t.Errorf("%s range should be Boolean, got %s", relName, fs.Range())
 		}
 	}
 
 	// Check link arity = 2 (client, server)
 	linkEntry, _ := mod.Sig.FindSymbol("link", false)
-	linkFS := linkEntry.CSort.(*logic.FunctionSort)
+	linkFS := linkEntry.CSort.(*goivy.FunctionSort)
 	if linkFS.Arity() != 2 {
 		t.Errorf("link arity should be 2, got %d", linkFS.Arity())
 	}
 
 	// Check semaphore arity = 1 (server)
 	semEntry, _ := mod.Sig.FindSymbol("semaphore", false)
-	semFS := semEntry.CSort.(*logic.FunctionSort)
+	semFS := semEntry.CSort.(*goivy.FunctionSort)
 	if semFS.Arity() != 1 {
 		t.Errorf("semaphore arity should be 1, got %d", semFS.Arity())
 	}
@@ -265,7 +259,7 @@ conjecture c = red | c = green | c = blue
 	if mod.InitCond != nil {
 		for i, fmla := range mod.InitCond.Fmlas {
 			sort := fmla.NodeSort()
-			sortName := il.IvySortName(sort)
+			sortName := goivy.IvySortName(sort)
 			if sortName != "bool" {
 				t.Errorf("InitCond.Fmlas[%d] has sort %q (%T = %v), want bool",
 					i, sortName, fmla, fmla)

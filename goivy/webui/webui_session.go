@@ -3,28 +3,10 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/bmc"
-	"github.com/glycerine/ivy/goivy/check"
-	"github.com/glycerine/ivy/goivy/compiler"
-	"github.com/glycerine/ivy/goivy/interp"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/lexer"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicparser"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/parser"
-	"github.com/glycerine/ivy/goivy/proof"
-	"github.com/glycerine/ivy/goivy/tactics"
-	"github.com/glycerine/ivy/goivy/trace"
-	"github.com/glycerine/ivy/goivy/typeinfer"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -35,7 +17,7 @@ type Event struct {
 
 // Session holds the state for one interactive verification session.
 type Session struct {
-	Cfg *module.Config
+	Cfg *goivy.Config
 
 	ID              string
 	Graph           *WebUIAnalysisGraphState   // ARG state
@@ -47,15 +29,15 @@ type Session struct {
 	FileContent     string // file content (when uploaded via browser)
 	toggles         *Toggles
 	WebUIProofStack *WebUIProofStack
-	ProofMgr        *proof.ProofManager // live proof state (goals + reachability graph)
-	CompiledModule  *module.Module      // populated by full compiler pipeline
-	CompiledSig     *il.Sig             // populated by full compiler pipeline
-	AG              *art.AnalysisGraph  // persistent analysis graph for interactive verification
-	AGUI            *AnalysisGraphUI    // ARG navigation UI (delegates to AG)
+	ProofMgr        *goivy.ProofManager  // live proof state (goals + reachability graph)
+	CompiledModule  *goivy.Module        // populated by full compiler pipeline
+	CompiledSig     *goivy.Sig           // populated by full compiler pipeline
+	AG              *goivy.AnalysisGraph // persistent analysis graph for interactive verification
+	AGUI            *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
 }
 
 // NewSession creates a new verification session with the given id.
-func NewSession(cfg *module.Config, id string) *Session {
+func NewSession(cfg *goivy.Config, id string) *Session {
 	return &Session{
 		Cfg:        cfg,
 		ID:         id,
@@ -98,14 +80,14 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// ======================================================================
 
 	// Step 1: Parse the Ivy file.
-	version := lexer.Version{1, 7}
+	version := goivy.Version{1, 7}
 	src := string(content)
 	if strings.HasPrefix(src, "#lang ivy") {
 		if idx := strings.Index(src, "\n"); idx >= 0 {
 			src = src[idx+1:]
 		}
 	}
-	parseResult, parseErr := parser.Parse(src, version)
+	parseResult, parseErr := goivy.Parse(src, version)
 	if parseErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "parse", "error": parseErr.Error(),
@@ -117,8 +99,8 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Step 2: Full three-pass compilation via IvyCompile.
 	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
 	// and CreateIsolate — matching Python's ivy_compile exactly.
-	sig := il.NewSig()
-	mod := module.New()
+	sig := goivy.NewSig()
+	mod := goivy.New()
 	if s.Cfg != nil {
 		if s.Cfg.ExtAction == "" {
 			s.Cfg.ExtAction = CompileKwargs["ext"]
@@ -126,14 +108,17 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		mod.Cfg = s.Cfg
 	}
 	mod.Sig = sig
+	goivy.
 
-	// Wire proof checker factory and register all tactics before compilation
-	// so phase6 attach_proofs can create ProofCheckers. Matches check.Start().
-	check.WireAdmitDefinitionFactory(mod)
-	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
-	check.RegisterTactics(mod.Cfg.ProofCfg, mod)
+		// Wire proof checker factory and register all tactics before compilation
+		// so phase6 attach_proofs can create ProofCheckers. Matches check.Start().
+		WireAdmitDefinitionFactory(mod)
+	goivy.
+		RegisterFactories(mod.Cfg, goivy.TacticNewConfig())
+	goivy.
+		RegisterTactics(mod.Cfg.ProofCfg, mod)
 
-	compileErr := compiler.IvyCompile(decls, mod, true)
+	compileErr := goivy.IvyCompile(decls, mod, true)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),
@@ -142,22 +127,22 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	}
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
-	sortMap := make(map[string]logic.Sort)
+	sortMap := make(map[string]goivy.Sort)
 	for name, sort := range sig.Sorts.All() {
 		sortMap[name] = sort
 	}
-	symbolMap := make(map[string]*logic.Const)
+	symbolMap := make(map[string]*goivy.Const)
 	var relations []RelationInfo
 	var actionNames []string
 	for name, entry := range sig.Symbols.All() {
 		if entry == nil || entry.Sort == nil {
 			continue
 		}
-		if c, ok := entry.Sort.(logic.Sort); ok {
-			symbolMap[name] = logic.NewConst(name, c)
+		if c, ok := entry.Sort.(goivy.Sort); ok {
+			symbolMap[name] = goivy.NewConst(name, c)
 		}
 		// Collect relation info for the simple session
-		if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
+		if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
 			ri := RelationInfo{Name: name}
 			dom := fs.Domain()
 			for i, d := range dom {
@@ -217,11 +202,11 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Python: AnalysisState.__init__ creates self.goal_stack = ProofGoalStack()
 	// then push_goal is called for each conjecture during interactive verification.
 	// Here we pre-populate with the module's conjectures as initial proof goals.
-	s.ProofMgr = proof.NewProofManager()
+	s.ProofMgr = goivy.NewProofManager()
 	for _, conj := range mod.LabeledConjs {
 		if conj.Formula != nil {
-			if fmla, ok := conj.Formula.(logic.Expr); ok {
-				s.ProofMgr.Goals.Push(&proof.ProofGoal{Formula: fmla})
+			if fmla, ok := conj.Formula.(goivy.Expr); ok {
+				s.ProofMgr.Goals.Push(&goivy.ProofGoal{Formula: fmla})
 			}
 		}
 	}
@@ -229,7 +214,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 
 	// Step 7: Build the persistent AnalysisGraph.
 	// Matches Python: self.g = AnalysisGraph() in ivy_compiler.ivy_new().
-	s.AG = art.NewAnalysisGraph(s.CompiledModule)
+	s.AG = goivy.NewAnalysisGraph(s.CompiledModule)
 	s.AGUI = NewAnalysisGraphUI()
 	s.AGUI.AG = s.AG
 	s.AGUI.Mod = s.CompiledModule
@@ -274,7 +259,7 @@ func (s *Session) syncProofStack() {
 		label := fmt.Sprintf("goal_%d", g.ID)
 		info := ""
 		if g.Formula != nil {
-			info = logic.PrettyFmla(g.Formula)
+			info = goivy.PrettyFmla(g.Formula)
 		}
 		ps.Goals = append(ps.Goals, WebUIProofGoal{
 			ID:       g.ID,
@@ -287,7 +272,7 @@ func (s *Session) syncProofStack() {
 	s.WebUIProofStack = ps
 }
 
-func sortNames(m map[string]logic.Sort) []string {
+func sortNames(m map[string]goivy.Sort) []string {
 	var names []string
 	for k := range m {
 		names = append(names, k)
@@ -418,8 +403,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		axioms := s.CompiledModule.BackgroundTheory(state.InScope)
-		concrClauses := module.AndClausesTyped(state.Clauses, axioms)
-		solver := z3bridge.NewSolver(s.CompiledModule, nil)
+		concrClauses := goivy.AndClausesTyped(state.Clauses, axioms)
+		solver := goivy.NewSolver(s.CompiledModule, nil)
 		defer solver.Close()
 		mr, solverErr := solver.GetModelClauses(concrClauses)
 		if solverErr != nil {
@@ -468,12 +453,12 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		axioms := s.CompiledModule.BackgroundTheory(state.InScope)
-		preClauses := actions.ReverseImage(state.Clauses, axioms, state.Update)
+		preClauses := goivy.ReverseImage(state.Clauses, axioms, state.Update)
 		if preClauses == nil {
 			err = fmt.Errorf("reverse: reverse image returned nil")
 			break
 		}
-		preStr := logic.PrettyFmla(preClauses.ToFormula())
+		preStr := goivy.PrettyFmla(preClauses.ToFormula())
 		result["pre_state"] = preStr
 		s.emit(Event{Type: "reverse_result", Data: map[string]string{"pre_state": preStr}})
 
@@ -497,16 +482,16 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			err = fmt.Errorf("reach: no state available")
 			break
 		}
-		interpState := art.ArtToInterpState(state)
-		reached := interp.ReachState(interpState, nil)
+		interpState := goivy.ArtToInterpState(state)
+		reached := goivy.ReachState(interpState, nil)
 		if reached == nil {
 			result["reachable"] = false
 			s.emit(Event{Type: "reach_result", Data: map[string]string{"reachable": "false"}})
 		} else {
 			result["reachable"] = true
-			artReached := art.InterpToArtState(reached)
+			artReached := goivy.InterpToArtState(reached)
 			if artReached.Clauses != nil {
-				result["reached_state"] = logic.PrettyFmla(artReached.Clauses.ToFormula())
+				result["reached_state"] = goivy.PrettyFmla(artReached.Clauses.ToFormula())
 			}
 			state.Unders = append(state.Unders, artReached)
 			s.syncARGToGraph()
@@ -531,14 +516,14 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				toRemove[int(fi)] = true
 			}
 		}
-		var kept []*ast.LabeledFormula
+		var kept []*goivy.LabeledFormula
 		var removed []string
 		for i, lc := range s.CompiledModule.LabeledConjs {
 			if toRemove[i] {
 				formula := ""
 				if lc.Formula != nil {
-					if fExpr, ok := lc.Formula.(logic.Expr); ok {
-						formula = logic.PrettyFmla(module.DropUniversals(fExpr))
+					if fExpr, ok := lc.Formula.(goivy.Expr); ok {
+						formula = goivy.PrettyFmla(goivy.DropUniversals(fExpr))
 					}
 				}
 				removed = append(removed, formula)
@@ -573,8 +558,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				}
 				formula := ""
 				if lc.Formula != nil {
-					if fExpr, ok := lc.Formula.(logic.Expr); ok {
-						formula = logic.PrettyFmla(module.DropUniversals(fExpr))
+					if fExpr, ok := lc.Formula.(goivy.Expr); ok {
+						formula = goivy.PrettyFmla(goivy.DropUniversals(fExpr))
 					} else {
 						formula = fmt.Sprint(lc.Formula)
 					}
@@ -620,7 +605,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		// Parse a user-entered formula string and add as a concept relation.
 		// Matches Python ivy_graph.py string_to_concept() + ivy_graph_ui.py add_concept_from_string().
 		if formula, ok := args["formula"].(string); ok && formula != "" {
-			_, parseErr := logicparser.ToFormula(formula)
+			_, parseErr := goivy.ToFormula(formula)
 			if parseErr != nil {
 				err = fmt.Errorf("add_relation: parse error: %w", parseErr)
 				break
@@ -659,7 +644,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 						continue
 					}
 					// A constant is a symbol with no domain args whose range matches the sort
-					if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
+					if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
 						if len(fs.Domain()) == 0 && fs.Range().String() == targetSort {
 							constants = append(constants, symName)
 						}
@@ -702,7 +687,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 						s.syncARGToGraph()
 						result["post_state_id"] = poststate.ID
 						if poststate.Clauses != nil {
-							result["post_state"] = logic.PrettyFmla(poststate.Clauses.ToFormula())
+							result["post_state"] = goivy.PrettyFmla(poststate.Clauses.ToFormula())
 						}
 						s.emit(Event{Type: "action_executed", Data: map[string]interface{}{
 							"action": resolvedName, "post_id": poststate.ID,
@@ -919,7 +904,7 @@ func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}
 	}
 
 	// Find the goal by ID.
-	var goal *proof.ProofGoal
+	var goal *goivy.ProofGoal
 	if s.ProofMgr != nil {
 		id := -1
 		fmt.Sscanf(goalID, "goal_%d", &id)
@@ -937,7 +922,7 @@ func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}
 	switch action {
 	case "view":
 		if goal != nil && goal.Formula != nil {
-			result["info"] = logic.PrettyFmla(goal.Formula)
+			result["info"] = goivy.PrettyFmla(goal.Formula)
 			result["id"] = goal.ID
 			if goal.Parent != nil {
 				result["parent_id"] = goal.Parent.ID
@@ -963,7 +948,7 @@ func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}
 
 	case "push":
 		if goal != nil {
-			sub := &proof.ProofGoal{Formula: goal.Formula}
+			sub := &goivy.ProofGoal{Formula: goal.Formula}
 			s.ProofMgr.Goals.Push(sub)
 			s.syncProofStack()
 			s.emit(Event{Type: "proof_updated", Data: nil})
@@ -1039,16 +1024,16 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula.
 		// Sort inference is now done at compile time (SortInfer → ConcretizeSorts),
 		// matching Python's sortify_with_inference in LabeledFormula.cmpl.
-		var conjClauses []*module.Clauses
+		var conjClauses []*goivy.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
-		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
 		}
@@ -1065,7 +1050,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 
 			// Get display text: Python uses str(il.drop_universals(conj.to_formula()))
 			// str() calls pretty_fmla which does drop_annotations then ugly(0).
-			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
+			displayFormula := goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
@@ -1075,15 +1060,15 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			// Python: clauses = dual_clauses(conj, witness)
 			//   witness = lambda v: lg.Const('@' + v.name, v.sort)
 			// DualClauses replaces universals with Skolem constants, then negates.
-			witness := func(v *logic.Variable) logic.Expr {
-				return module.VarToSkolem("@", v)
+			witness := func(v *goivy.Variable) goivy.Expr {
+				return goivy.VarToSkolem("@", v)
 			}
-			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
+			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 
 			// Concretize sorts in the final condition for Z3.
 			var sortErr error
 			for fi, f := range finalCond.Fmlas {
-				cf, cerr := typeinfer.ConcretizeSorts(f, nil)
+				cf, cerr := goivy.ConcretizeSorts(f, nil)
 				if cerr == nil {
 					finalCond.Fmlas[fi] = cf
 				} else {
@@ -1106,7 +1091,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 
 			// check_final_cond: uses the post-state + axioms + negated conjecture
 			// If SAT → counterexample found → conjecture is not inductive
-			var cexTrace *trace.TraceBase
+			var cexTrace *goivy.TraceBase
 			var z3err error
 			func() {
 				defer func() {
@@ -1124,7 +1109,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				}()
 				// Check: post_state_with_TR & ~conjecture satisfiable?
 				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
-				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
+				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 
 			if z3err != nil {
@@ -1156,8 +1141,8 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 						if entry == nil || entry.Sort == nil {
 							continue
 						}
-						if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
-							if logic.SortEqual(fs.Range(), logic.Boolean) {
+						if fs, ok := entry.Sort.(*goivy.FunctionSort); ok {
+							if goivy.SortEqual(fs.Range(), goivy.Boolean) {
 								usedRels = append(usedRels, symName)
 							}
 						}
@@ -1185,7 +1170,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				// ToOpenFormula returns And(*fmlas) — matching Python's to_let path.
 				// PrettyFmla on And(fmla) produces "(fmla_str)" via nary_paren.
 				openFmla := conjClauses[i].ToOpenFormula()
-				lines = append(lines, logic.PrettyFmla(openFmla))
+				lines = append(lines, goivy.PrettyFmla(openFmla))
 			}
 		}
 		return &WebUICheckResult{
@@ -1202,8 +1187,8 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check (BMC)"}
 		}
 		nSteps := 10
-		bmcCfg := bmc.DefaultConfig(s.CompiledModule, nSteps)
-		var bmcResult *bmc.BMCResult
+		bmcCfg := goivy.DefaultConfig(s.CompiledModule, nSteps)
+		var bmcResult *goivy.BMCResult
 		var bmcErr error
 		func() {
 			defer func() {
@@ -1211,7 +1196,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 					bmcErr = fmt.Errorf("BMC panic: %v", r)
 				}
 			}()
-			bmcResult = bmc.BMCCheckIsolate(bmcCfg)
+			bmcResult = goivy.BMCCheckIsolate(bmcCfg)
 		}()
 		if bmcErr != nil {
 			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: bmcErr.Error()}
@@ -1269,13 +1254,13 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 		if len(conjs) == 0 {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check (concrete)"}
 		}
-		var conjClauses []*module.Clauses
+		var conjClauses []*goivy.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
-		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("concrete: %v", err)}
 		}
@@ -1284,21 +1269,21 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				continue
 			}
 			conj := conjClauses[i]
-			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
+			displayFormula := goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			witness := func(v *logic.Variable) logic.Expr {
-				return module.VarToSkolem("@", v)
+			witness := func(v *goivy.Variable) goivy.Expr {
+				return goivy.VarToSkolem("@", v)
 			}
-			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
+			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 			for fi, f := range finalCond.Fmlas {
-				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
+				if cf, cerr := goivy.ConcretizeSorts(f, nil); cerr == nil {
 					finalCond.Fmlas[fi] = cf
 				}
 			}
-			var cexTrace *trace.TraceBase
+			var cexTrace *goivy.TraceBase
 			var z3err error
 			func() {
 				defer func() {
@@ -1306,7 +1291,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 						z3err = fmt.Errorf("Z3 error: %v", r)
 					}
 				}()
-				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
+				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 			if z3err != nil {
 				return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
@@ -1355,13 +1340,13 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 		if len(conjs) == 0 {
 			return &WebUICheckResult{Z3Contacted: true, Result: "pass", Message: "Abstract check completed, no conjectures to verify."}
 		}
-		var conjClauses []*module.Clauses
+		var conjClauses []*goivy.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				conjClauses = append(conjClauses, module.FormulaToClauses(lc.Formula.(logic.Expr), nil))
+				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
-		ag, _, postState, err := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, _, postState, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: fmt.Sprintf("abstract: %v", err)}
 		}
@@ -1370,21 +1355,21 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				continue
 			}
 			conj := conjClauses[i]
-			displayFormula := logic.PrettyFmla(module.DropUniversals(conj.ToFormula()))
+			displayFormula := goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			witness := func(v *logic.Variable) logic.Expr {
-				return module.VarToSkolem("@", v)
+			witness := func(v *goivy.Variable) goivy.Expr {
+				return goivy.VarToSkolem("@", v)
 			}
-			finalCond := module.DualClauses(conj, witness, s.CompiledModule.Instantiator)
+			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
 			for fi, f := range finalCond.Fmlas {
-				if cf, cerr := typeinfer.ConcretizeSorts(f, nil); cerr == nil {
+				if cf, cerr := goivy.ConcretizeSorts(f, nil); cerr == nil {
 					finalCond.Fmlas[fi] = cf
 				}
 			}
-			var cexTrace *trace.TraceBase
+			var cexTrace *goivy.TraceBase
 			var z3err error
 			func() {
 				defer func() {
@@ -1392,7 +1377,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 						z3err = fmt.Errorf("Z3 error: %v", r)
 					}
 				}()
-				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
+				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 			if z3err != nil {
 				return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: z3err.Error()}
@@ -1475,7 +1460,7 @@ func (s *Session) runUPDR() (bool, error) {
 	}
 
 	if s.AG == nil {
-		s.AG = art.NewAnalysisGraph(mod)
+		s.AG = goivy.NewAnalysisGraph(mod)
 	}
 	if len(s.AG.States) == 0 {
 		s.AG.AddInitialState(mod.InitCond, nil)
@@ -1484,28 +1469,28 @@ func (s *Session) runUPDR() (bool, error) {
 		return false, fmt.Errorf("runUPDR: could not establish initial state")
 	}
 
-	tc := tactics.NewTacticsContext(s.AG, mod)
+	tc := goivy.NewTacticsContext(s.AG, mod)
 
 	// Build bad states from negated conjectures
-	var conjFmlas []logic.Expr
+	var conjFmlas []goivy.Expr
 	for _, lc := range mod.LabeledConjs {
 		if lc.Formula != nil {
-			conjFmlas = append(conjFmlas, lc.Formula.(logic.Expr))
+			conjFmlas = append(conjFmlas, lc.Formula.(goivy.Expr))
 		}
 	}
 	if len(conjFmlas) == 0 {
 		return true, nil // no conjectures = trivially safe
 	}
-	safetyProp := module.NewClauses(conjFmlas, nil, nil)
-	badClauses := module.NegateClauses(safetyProp)
+	safetyProp := goivy.NewClauses(conjFmlas, nil, nil)
+	badClauses := goivy.NegateClauses(safetyProp)
 	badFormula := badClauses.ToFormula()
 
-	goal := &proof.ProofGoal{
+	goal := &goivy.ProofGoal{
 		Formula: badFormula,
 		Node:    s.AG.States[0],
 	}
 
-	u := &tactics.UPDR{TC: tc, MaxFrames: 100}
+	u := &goivy.UPDR{TC: tc, MaxFrames: 100}
 	return u.Apply(goal)
 }
 

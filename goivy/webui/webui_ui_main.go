@@ -5,14 +5,9 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicparser"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // VerificationMode represents a verification approach.
@@ -64,17 +59,17 @@ type AnalysisGraphUI struct {
 	G *WebUIAnalysisGraphState
 
 	// AG is the real analysis graph (Python: self.g).
-	AG *art.AnalysisGraph
+	AG *goivy.AnalysisGraph
 
 	// Mod is the compiled module providing axioms, sig, actions.
-	Mod *module.Module
+	Mod *goivy.Module
 
 	// SyncCallback is called after AG mutations to update G for the frontend.
 	SyncCallback func()
 
 	// AlphaFn returns the current abstractor based on mode.
 	// Set by the caller (e.g., session wiring) to avoid circular import with alpha.
-	AlphaFn func() art.Abstractor
+	AlphaFn func() goivy.Abstractor
 
 	// CurrentConceptGraph is the currently displayed concept graph widget.
 	CurrentConceptGraph *GraphWidget
@@ -157,7 +152,7 @@ func (ui *AnalysisGraphUI) GetMode() VerificationMode {
 }
 
 // getAlpha returns the current abstractor. Returns nil if no AlphaFn is set.
-func (ui *AnalysisGraphUI) getAlpha() art.Abstractor {
+func (ui *AnalysisGraphUI) getAlpha() goivy.Abstractor {
 	if ui.AlphaFn != nil {
 		return ui.AlphaFn()
 	}
@@ -165,7 +160,7 @@ func (ui *AnalysisGraphUI) getAlpha() art.Abstractor {
 }
 
 // stateByID returns the art.State for the given nodeID with bounds checking.
-func (ui *AnalysisGraphUI) stateByID(nodeID int) (*art.State, error) {
+func (ui *AnalysisGraphUI) stateByID(nodeID int) (*goivy.State, error) {
 	if ui.AG == nil {
 		return nil, fmt.Errorf("no analysis graph")
 	}
@@ -176,7 +171,7 @@ func (ui *AnalysisGraphUI) stateByID(nodeID int) (*art.State, error) {
 }
 
 // transitionByEndpoints finds the transition matching srcID→tgtID.
-func (ui *AnalysisGraphUI) transitionByEndpoints(srcID, tgtID int) (*art.Transition, error) {
+func (ui *AnalysisGraphUI) transitionByEndpoints(srcID, tgtID int) (*goivy.Transition, error) {
 	if ui.AG == nil {
 		return nil, fmt.Errorf("no analysis graph")
 	}
@@ -197,7 +192,7 @@ func (ui *AnalysisGraphUI) sync() {
 }
 
 // ArtToGraphState converts an art.AnalysisGraph to a lightweight WebUIAnalysisGraphState.
-func ArtToGraphState(ag *art.AnalysisGraph) *WebUIAnalysisGraphState {
+func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 	gs := NewWebUIAnalysisGraphState()
 	for _, st := range ag.States {
 		label := st.Label
@@ -229,16 +224,16 @@ func ArtToGraphState(ag *art.AnalysisGraph) *WebUIAnalysisGraphState {
 
 // defEquationLabel extracts a display label from a state equation (ast.Definition).
 // Python: state_equation_label(a) — reads a.args[0] (action name) and a.args[1].rep.
-func defEquationLabel(eq *ast.AstDefinition) string {
+func defEquationLabel(eq *goivy.AstDefinition) string {
 	var actionName string
 	if eq != nil && eq.Lhs != nil {
-		if atom, ok := eq.Lhs.(*ast.Atom); ok {
+		if atom, ok := eq.Lhs.(*goivy.Atom); ok {
 			actionName = atom.Rep
 		}
 	}
 	var transLabel string
 	if eq != nil && eq.Rhs != nil {
-		if atom, ok := eq.Rhs.(*ast.Atom); ok {
+		if atom, ok := eq.Rhs.(*goivy.Atom); ok {
 			transLabel = atom.Rep
 		}
 	}
@@ -478,7 +473,7 @@ func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*WebUIAnalysisGraphS
 	if err != nil {
 		return nil, err
 	}
-	var subArt *art.AnalysisGraph
+	var subArt *goivy.AnalysisGraph
 	func() {
 		defer func() {
 			if recover() != nil {
@@ -496,17 +491,17 @@ func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*WebUIAnalysisGraphS
 	return ArtToGraphState(subArt), nil
 }
 
-func (ui *AnalysisGraphUI) fallbackStepInGraph(t *art.Transition) *art.AnalysisGraph {
+func (ui *AnalysisGraphUI) fallbackStepInGraph(t *goivy.Transition) *goivy.AnalysisGraph {
 	if ui == nil || ui.AG == nil || t == nil || t.Pre == nil || t.Post == nil || t.Op == nil {
 		return nil
 	}
-	subArt := art.NewAnalysisGraph(ui.AG.Domain)
-	pre := art.NewState(ui.AG.Domain, t.Pre.Clauses)
+	subArt := goivy.NewAnalysisGraph(ui.AG.Domain)
+	pre := goivy.NewState(ui.AG.Domain, t.Pre.Clauses)
 	pre.Label = t.Pre.Label
-	post := art.NewState(ui.AG.Domain, t.Post.Clauses)
+	post := goivy.NewState(ui.AG.Domain, t.Post.Clauses)
 	post.Label = t.Post.Label
 	subArt.Add(pre, nil)
-	subArt.Add(post, art.NewActionApp(t.Op, pre))
+	subArt.Add(post, goivy.NewActionApp(t.Op, pre))
 	return subArt
 }
 
@@ -597,16 +592,16 @@ func (ui *AnalysisGraphUI) TryConjecture(nodeID int, conjecture string) error {
 	if conjecture == "" {
 		return fmt.Errorf("no conjecture specified")
 	}
-	fmla, parseErr := logicparser.ToFormula(conjecture)
+	fmla, parseErr := goivy.ToFormula(conjecture)
 	if parseErr != nil {
 		return fmt.Errorf("parse conjecture: %w", parseErr)
 	}
-	fExpr, ok := fmla.(logic.Expr)
+	fExpr, ok := fmla.(goivy.Expr)
 	if !ok {
 		return fmt.Errorf("conjecture is not a logic expression")
 	}
-	conj := module.FormulaToClauses(fExpr, nil)
-	dual := module.DualClauses(conj, nil, nil)
+	conj := goivy.FormulaToClauses(fExpr, nil)
+	dual := goivy.DualClauses(conj, nil, nil)
 
 	mode := ui.GetMode()
 	if mode == ModeInduction || mode == ModeBounded {
@@ -666,11 +661,11 @@ func (ui *AnalysisGraphUI) BMC(nodeID int, errCond string, bound int) (*WebUIAna
 	if err != nil {
 		return nil, err
 	}
-	fmla, parseErr := logicparser.ToFormula(errCond)
+	fmla, parseErr := goivy.ToFormula(errCond)
 	if parseErr != nil {
 		return nil, fmt.Errorf("parse error condition: %w", parseErr)
 	}
-	fExpr, ok := fmla.(logic.Expr)
+	fExpr, ok := fmla.(goivy.Expr)
 	if !ok {
 		return nil, fmt.Errorf("error condition is not a logic expression")
 	}
@@ -701,7 +696,7 @@ func StateEquationLabel(actionName, transLabel string) string {
 // IvyUI is the top-level UI class (Python: class IvyUI).
 type IvyUI struct {
 	mu  sync.Mutex
-	Mod *module.Module
+	Mod *goivy.Module
 }
 
 // NewIvyUI creates a new top-level IvyUI.
@@ -723,21 +718,21 @@ func (ui *IvyUI) TryProperty(propText string) error {
 	if ui.Mod == nil {
 		return fmt.Errorf("no module loaded")
 	}
-	fmla, parseErr := logicparser.ToFormula(propText)
+	fmla, parseErr := goivy.ToFormula(propText)
 	if parseErr != nil {
 		return fmt.Errorf("parse property: %w", parseErr)
 	}
-	fExpr, ok := fmla.(logic.Expr)
+	fExpr, ok := fmla.(goivy.Expr)
 	if !ok {
 		return fmt.Errorf("property is not a logic expression")
 	}
-	conj := module.FormulaToClauses(fExpr, nil)
-	dual := module.DualClauses(conj, nil, nil)
+	conj := goivy.FormulaToClauses(fExpr, nil)
+	dual := goivy.DualClauses(conj, nil, nil)
 
-	topAlpha := art.AbstractorFunc(func(s *art.State) {
-		s.Clauses = module.TrueClauses(nil)
+	topAlpha := goivy.AbstractorFunc(func(s *goivy.State) {
+		s.Clauses = goivy.TrueClauses(nil)
 	})
-	ag := art.NewAnalysisGraph(ui.Mod)
+	ag := goivy.NewAnalysisGraph(ui.Mod)
 	ag.AddInitialState(nil, topAlpha)
 	if len(ag.States) == 0 {
 		return fmt.Errorf("failed to create initial state")

@@ -2,6 +2,7 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"runtime"
 	"sort"
 	"strings"
@@ -9,14 +10,12 @@ import (
 	"sync/atomic"
 
 	"github.com/glycerine/idem"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // GoBackend is the native Go implementation of Backend.
 // It wraps the existing Session-based logic.
 type GoBackend struct {
-	cfg      *module.Config
+	cfg      *goivy.Config
 	sessions map[string]*Session
 
 	// can probably delete mu, it is overkill now that we do().
@@ -39,7 +38,7 @@ type GoBackend struct {
 }
 
 // NewGoBackend creates a GoBackend.
-func NewGoBackend(cfg *module.Config) *GoBackend {
+func NewGoBackend(cfg *goivy.Config) *GoBackend {
 	b := &GoBackend{
 		cfg:      cfg,
 		sessions: make(map[string]*Session),
@@ -71,7 +70,7 @@ func (b *GoBackend) getSession(id string) (sess *Session, err error) {
 	return
 }
 
-func (gbe *GoBackend) NewSession(cfg *module.Config) (by []byte, err error) {
+func (gbe *GoBackend) NewSession(cfg *goivy.Config) (by []byte, err error) {
 	// note well this pattern: if the closure
 	// returns a non-nil error, this shuts down
 	// the sameSingleThread. Currently we do
@@ -370,17 +369,17 @@ func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
 		}
 		sess.SimpleSess.Reset()
 		if sess.CompiledSig != nil {
-			sortMap := make(map[string]lg.Sort)
+			sortMap := make(map[string]goivy.Sort)
 			for name, sort := range sess.CompiledSig.Sorts.All() {
 				if name != "bool" {
 					sortMap[name] = sort
 				}
 			}
-			symbolMap := make(map[string]*lg.Const)
+			symbolMap := make(map[string]*goivy.Const)
 			for name, entry := range sess.CompiledSig.Symbols.All() {
 				if entry != nil && entry.Sort != nil {
-					if c, ok := entry.Sort.(lg.Sort); ok {
-						symbolMap[name] = lg.NewConst(name, c)
+					if c, ok := entry.Sort.(goivy.Sort); ok {
+						symbolMap[name] = goivy.NewConst(name, c)
 					}
 				}
 			}

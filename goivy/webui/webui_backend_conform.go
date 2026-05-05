@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"log"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ConformBackend sends every request to both a Go and Python backend,
@@ -97,7 +96,7 @@ func firstDiffPos(a, b []byte) int {
 	return n // differ in length
 }
 
-func (c *ConformBackend) NewSession(cfg *module.Config) ([]byte, error) {
+func (c *ConformBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
 	// NewSession is special: both backends create sessions independently,
 	// but session IDs will differ. We map Go ID → Python ID.
 	goData, goErr := c.goBE.NewSession(cfg)

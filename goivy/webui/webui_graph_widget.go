@@ -5,13 +5,10 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/art"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/logic"
 )
 
 // MenuDef describes a top-level menu in the UI.
@@ -297,14 +294,14 @@ func (w *GraphWidget) Splatter(nodeID string) {
 		cSort := concept.Variables[0].VSort
 
 		seen := make(map[string]bool)
-		var constants []*logic.Const
+		var constants []*goivy.Const
 		for _, sc := range s.SupposeConstraints {
-			for _, sym := range il.UsedSymbolsAst(sc).All() {
-				if c, ok := sym.(*logic.Const); ok {
+			for _, sym := range goivy.UsedSymbolsAst(sc).All() {
+				if c, ok := sym.(*goivy.Const); ok {
 					if seen[c.Name] {
 						continue
 					}
-					if logic.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) {
+					if goivy.SortEqual(c.CSort, cSort) || webuiIsTopSort(c.CSort) {
 						constants = append(constants, c)
 						seen[c.Name] = true
 					}
@@ -317,10 +314,10 @@ func (w *GraphWidget) Splatter(nodeID string) {
 			var eqNames []string
 			for _, c := range constants {
 				X := webuiMustVar("X", c.CSort)
-				eq, _ := logic.NewEq(X, c)
+				eq, _ := goivy.NewEq(X, c)
 				eqName := "=" + c.Name
 				s.Domain.Concepts.SetConcept(eqName,
-					MustCDConcept(eqName, []*logic.Variable{X}, eq))
+					MustCDConcept(eqName, []*goivy.Variable{X}, eq))
 				eqNames = append(eqNames, eqName)
 			}
 			s.Domain.Concepts.SetSet(splatterName, NewCDConceptSet(eqNames...))
@@ -358,7 +355,7 @@ func (w *GraphWidget) Recalculate() {
 	g := w.G()
 	if g.ParentState != nil {
 		if agui, ok := w.Parent.(*AnalysisGraphUI); ok && agui != nil && agui.AG != nil {
-			if ps, ok := g.ParentState.(*art.State); ok && ps.Clauses != nil {
+			if ps, ok := g.ParentState.(*goivy.State); ok && ps.Clauses != nil {
 				clauses := ps.Clauses.ToFormula()
 				if g.InteractiveSess != nil {
 					g.InteractiveSess.State = clauses

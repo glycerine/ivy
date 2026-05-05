@@ -7,9 +7,7 @@ package webui
 
 import (
 	"fmt"
-
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/z3bridge"
+	goivy "github.com/glycerine/ivy/goivy"
 )
 
 // WebUIAlpha computes the alpha abstraction of a concept domain against a state formula.
@@ -21,14 +19,14 @@ import (
 // The cache maps TagString(tag) -> bool and is updated in-place.
 //
 // Returns a list of (Tag, bool) pairs.
-func WebUIAlpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
+func WebUIAlpha(domain *CDConceptDomain, state goivy.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
 	facts := domain.GetFacts(projection)
 
 	if cache == nil {
 		cache = make(map[string]bool)
 	}
 
-	slv := z3bridge.NewSolver(nil, nil)
+	slv := goivy.NewSolver(nil, nil)
 	var result []TagValue
 
 	for _, fact := range facts {
@@ -53,14 +51,14 @@ func WebUIAlpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool
 				return
 			}
 			// Skip formulas that still contain TopSort — Z3 will panic.
-			if logic.ContainsTopSort(fact.Formula) {
+			if goivy.ContainsTopSort(fact.Formula) {
 				return
 			}
-			notF, err := logic.NewNot(fact.Formula)
+			notF, err := goivy.NewNot(fact.Formula)
 			if err != nil {
 				return
 			}
-			conj, err2 := logic.NewAnd(state, notF)
+			conj, err2 := goivy.NewAnd(state, notF)
 			if err2 != nil {
 				return
 			}

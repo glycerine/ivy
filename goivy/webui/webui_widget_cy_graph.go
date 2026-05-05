@@ -16,8 +16,7 @@ package webui
 
 import (
 	"fmt"
-
-	"github.com/glycerine/ivy/goivy/art"
+	goivy "github.com/glycerine/ivy/goivy"
 )
 
 // CyGraphWidget mirrors widget_cy_graph.py:CyGraphWidget. In Python this
@@ -30,11 +29,11 @@ type CyGraphWidget struct {
 
 	// Synced traits — these mirror Python's _cy_elements, cy_style,
 	// cy_layout, selected, info_area attributes.
-	cyElements *art.CyElements // Python: _cy_elements
-	CyStyle    []CyStyleEntry  // Python: cy_style (defined in cystyles.go)
-	CyLayout   any             // Python: cy_layout (any layout config)
-	Selected   []CyTuple       // Python: selected (see _ele_to_tuple)
-	InfoArea   any             // Python: info_area
+	cyElements *goivy.CyElements // Python: _cy_elements
+	CyStyle    []CyStyleEntry    // Python: cy_style (defined in cystyles.go)
+	CyLayout   any               // Python: cy_layout (any layout config)
+	Selected   []CyTuple         // Python: selected (see _ele_to_tuple)
+	InfoArea   any               // Python: info_area
 
 	// Local fields set in __init__
 	BackgroundColor string
@@ -70,7 +69,7 @@ func (*CyGraphWidget) widget() {}
 
 // WebUICyElements is the property getter for self._cy_elements.
 // Mirrors Python: cy_elements = property(lambda self: self._cy_elements).
-func (w *CyGraphWidget) WebUICyElements() *art.CyElements {
+func (w *CyGraphWidget) WebUICyElements() *goivy.CyElements {
 	return w.cyElements
 }
 
@@ -89,7 +88,7 @@ func (w *CyGraphWidget) WebUICyElements() *art.CyElements {
 // In Go we cannot null out the source WebUICyElements' Elements slice the way
 // Python does (would mutate a foreign value), but we still clear the
 // selection on assignment as the Python code does.
-func (w *CyGraphWidget) SetCyElements(value *art.CyElements) {
+func (w *CyGraphWidget) SetCyElements(value *goivy.CyElements) {
 	if value == nil {
 		return
 	}
@@ -102,7 +101,7 @@ func (w *CyGraphWidget) SetCyElements(value *art.CyElements) {
 // eleToTuple mirrors Python CyGraphWidget._ele_to_tuple at lines 63-67.
 // For node elements returns (obj,); for edges returns
 // (obj, source_obj, target_obj).
-func (w *CyGraphWidget) eleToTuple(ele art.CyElement) CyTuple {
+func (w *CyGraphWidget) eleToTuple(ele goivy.CyElement) CyTuple {
 	if ele.Group == "nodes" {
 		return CyTuple{Obj: asString(ele.Data["obj"])}
 	}

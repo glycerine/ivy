@@ -4,11 +4,10 @@ package webui
 
 import (
 	"encoding/json"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 const clientServerIvy = `#lang ivy1.7
@@ -47,7 +46,7 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 // via LoadFileContent, and returns the session ID and server.
 func loadClientServer(t *testing.T) (*Server, string) {
 	t.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 

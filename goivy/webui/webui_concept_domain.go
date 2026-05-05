@@ -15,14 +15,9 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
-
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	"github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/typeinfer"
 )
 
 // ---------------------------------------------------------------------------
@@ -52,28 +47,28 @@ func (e *ArityError) Error() string {
 // It represents a unary, binary, or higher-arity concept in the concept graph.
 type CDConcept struct {
 	Name      string
-	Variables []*logic.Variable
-	Formula   logic.Expr
+	Variables []*goivy.Variable
+	Formula   goivy.Expr
 }
 
 // NewCDConcept creates a new concept, validating that all variables are
 // first-order. Returns an error if validation fails.
-func NewCDConcept(name string, variables []*logic.Variable, formula logic.Expr) (*CDConcept, error) {
+func NewCDConcept(name string, variables []*goivy.Variable, formula goivy.Expr) (*CDConcept, error) {
 	if name == "" {
-		return nil, &logic.IvyError{Msg: "Concept name is empty"}
+		return nil, &goivy.IvyError{Msg: "Concept name is empty"}
 	}
-	vars := make([]*logic.Variable, len(variables))
+	vars := make([]*goivy.Variable, len(variables))
 	copy(vars, variables)
 	for _, v := range vars {
-		if !logic.FirstOrderSort(v.VSort) {
-			return nil, &logic.IvyError{Msg: fmt.Sprintf("Concept variables must be first-order: %v", v)}
+		if !goivy.FirstOrderSort(v.VSort) {
+			return nil, &goivy.IvyError{Msg: fmt.Sprintf("Concept variables must be first-order: %v", v)}
 		}
 	}
 	return &CDConcept{Name: name, Variables: vars, Formula: formula}, nil
 }
 
 // MustCDConcept is like NewCDConcept but panics on error.
-func MustCDConcept(name string, variables []*logic.Variable, formula logic.Expr) *CDConcept {
+func MustCDConcept(name string, variables []*goivy.Variable, formula goivy.Expr) *CDConcept {
 	c, err := NewCDConcept(name, variables, formula)
 	if err != nil {
 		panic(err)
@@ -85,8 +80,8 @@ func MustCDConcept(name string, variables []*logic.Variable, formula logic.Expr)
 func (c *CDConcept) Arity() int { return len(c.Variables) }
 
 // Sorts returns the sort of each variable.
-func (c *CDConcept) Sorts() []logic.Sort {
-	s := make([]logic.Sort, len(c.Variables))
+func (c *CDConcept) Sorts() []goivy.Sort {
+	s := make([]goivy.Sort, len(c.Variables))
 	for i, v := range c.Variables {
 		s[i] = v.VSort
 	}
@@ -94,7 +89,7 @@ func (c *CDConcept) Sorts() []logic.Sort {
 }
 
 // Sort returns the sort of the first variable.
-func (c *CDConcept) Sort() logic.Sort {
+func (c *CDConcept) Sort() goivy.Sort {
 	if len(c.Variables) == 0 {
 		return nil
 	}
@@ -103,21 +98,21 @@ func (c *CDConcept) Sort() logic.Sort {
 
 // Call substitutes the variables with the given terms, returning a formula.
 // This corresponds to Python's Concept.__call__.
-func (c *CDConcept) Call(terms ...logic.Expr) (logic.Expr, error) {
+func (c *CDConcept) Call(terms ...goivy.Expr) (goivy.Expr, error) {
 	if len(terms) != c.Arity() {
 		return nil, &ArityError{Expected: c.Arity(), Got: len(terms)}
 	}
-	subs := make(map[logic.NodeKey]logic.Expr)
+	subs := make(map[goivy.NodeKey]goivy.Expr)
 	for i, v := range c.Variables {
 		t := terms[i]
 		// Concretize sorts to match the variable's sort.
-		ct, err := typeinfer.ConcretizeSorts(t, v.VSort)
+		ct, err := goivy.ConcretizeSorts(t, v.VSort)
 		if err != nil {
 			ct = t // fallback: use as-is
 		}
-		subs[logic.Key(v)] = ct
+		subs[goivy.Key(v)] = ct
 	}
-	return logicutil.Substitute(c.Formula, subs)
+	return goivy.Substitute(c.Formula, subs)
 }
 
 // String returns a human-readable representation.
@@ -353,26 +348,26 @@ func (d *CDConceptDict) Reorder(keys []string) *CDConceptDict {
 // (relational, i.e. having Boolean range). The quantifier structure
 // should be AE for checks to stay in EPR.
 type CDConceptCombiner struct {
-	Variables []*logic.Variable
-	Formula   logic.Expr
+	Variables []*goivy.Variable
+	Formula   goivy.Expr
 }
 
 // NewCDConceptCombiner creates a combiner, validating that all variables
 // are relational (FunctionSort with Boolean range).
-func NewCDConceptCombiner(variables []*logic.Variable, formula logic.Expr) (*CDConceptCombiner, error) {
-	vars := make([]*logic.Variable, len(variables))
+func NewCDConceptCombiner(variables []*goivy.Variable, formula goivy.Expr) (*CDConceptCombiner, error) {
+	vars := make([]*goivy.Variable, len(variables))
 	copy(vars, variables)
 	for _, v := range vars {
-		fs, ok := v.VSort.(*logic.FunctionSort)
-		if !ok || !logic.SortEqual(fs.Range(), logic.Boolean) {
-			return nil, &logic.IvyError{Msg: fmt.Sprintf("ConceptCombiner variables must be relational: %v (sort: %s)", v, v.VSort)}
+		fs, ok := v.VSort.(*goivy.FunctionSort)
+		if !ok || !goivy.SortEqual(fs.Range(), goivy.Boolean) {
+			return nil, &goivy.IvyError{Msg: fmt.Sprintf("ConceptCombiner variables must be relational: %v (sort: %s)", v, v.VSort)}
 		}
 	}
 	return &CDConceptCombiner{Variables: vars, Formula: formula}, nil
 }
 
 // MustCDConceptCombiner is like NewCDConceptCombiner but panics on error.
-func MustCDConceptCombiner(variables []*logic.Variable, formula logic.Expr) *CDConceptCombiner {
+func MustCDConceptCombiner(variables []*goivy.Variable, formula goivy.Expr) *CDConceptCombiner {
 	cc, err := NewCDConceptCombiner(variables, formula)
 	if err != nil {
 		panic(err)
@@ -387,7 +382,7 @@ func (cc *CDConceptCombiner) Arity() int { return len(cc.Variables) }
 func (cc *CDConceptCombiner) Arities() []int {
 	a := make([]int, len(cc.Variables))
 	for i, v := range cc.Variables {
-		if fs, ok := v.VSort.(*logic.FunctionSort); ok {
+		if fs, ok := v.VSort.(*goivy.FunctionSort); ok {
 			a[i] = len(fs.Domain())
 		}
 	}
@@ -397,7 +392,7 @@ func (cc *CDConceptCombiner) Arities() []int {
 // Call instantiates the combiner with the given concepts.
 // This corresponds to Python's ConceptCombiner.__call__, which uses
 // substitute_apply.
-func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (logic.Expr, error) {
+func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (goivy.Expr, error) {
 	if len(concepts) != cc.Arity() {
 		return nil, &ArityError{Expected: cc.Arity(), Got: len(concepts)}
 	}
@@ -417,12 +412,12 @@ func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (logic.Expr, error) {
 	result := substituteApplyNode(cc.Formula, cc.Variables, concepts)
 	// Concretize sorts — replaces TopSort with inferred concrete sorts.
 	// If this fails, the formula still has TopSort and cannot be sent to Z3.
-	cr, err := typeinfer.ConcretizeSorts(result, nil)
+	cr, err := goivy.ConcretizeSorts(result, nil)
 	if err != nil {
 		return nil, fmt.Errorf("concretize failed: %w", err)
 	}
 	// Verify no TopSort remains — Z3 panics on sort mismatches.
-	if logic.ContainsTopSort(cr) {
+	if goivy.ContainsTopSort(cr) {
 		return nil, fmt.Errorf("formula still contains TopSort after concretization")
 	}
 	return cr, nil
@@ -439,7 +434,7 @@ func (cc *CDConceptCombiner) String() string {
 
 // substituteApplyNode replaces applications of combiner variables with
 // concept formula applications. This corresponds to Python's substitute_apply.
-func substituteApplyNode(node logic.Expr, variables []*logic.Variable, concepts []*CDConcept) logic.Expr {
+func substituteApplyNode(node goivy.Expr, variables []*goivy.Variable, concepts []*CDConcept) goivy.Expr {
 	// Build a mapping from variable name -> concept (by_name matching like Python).
 	varMap := make(map[string]*CDConcept)
 	for i, v := range variables {
@@ -448,14 +443,14 @@ func substituteApplyNode(node logic.Expr, variables []*logic.Variable, concepts 
 	return substApplyRec(node, varMap)
 }
 
-func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
+func substApplyRec(node goivy.Expr, varMap map[string]*CDConcept) goivy.Expr {
 	switch n := node.(type) {
-	case *logic.Apply:
+	case *goivy.Apply:
 		// Check if function is a variable that should be replaced.
-		if v, ok := n.Func.(*logic.Variable); ok {
+		if v, ok := n.Func.(*goivy.Variable); ok {
 			if concept, found := varMap[v.Name]; found {
 				// Replace V(args...) with concept.formula[concept.vars -> args]
-				args := make([]logic.Expr, len(n.Terms))
+				args := make([]goivy.Expr, len(n.Terms))
 				for i, t := range n.Terms {
 					args[i] = substApplyRec(t, varMap)
 				}
@@ -468,66 +463,66 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 		}
 		// Recurse on function and terms.
 		newFunc := substApplyRec(n.Func, varMap)
-		newTerms := make([]logic.Expr, len(n.Terms))
+		newTerms := make([]goivy.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			newTerms[i] = substApplyRec(t, varMap)
 		}
-		result, err := logic.NewApply(newFunc, newTerms...)
+		result, err := goivy.NewApply(newFunc, newTerms...)
 		if err != nil {
 			return node
 		}
 		return result
 
-	case *logic.Eq:
+	case *goivy.Eq:
 		t1 := substApplyRec(n.T1, varMap)
 		t2 := substApplyRec(n.T2, varMap)
-		result, err := logic.NewEq(t1, t2)
+		result, err := goivy.NewEq(t1, t2)
 		if err != nil {
 			return node
 		}
 		return result
 
-	case *logic.Not:
+	case *goivy.Not:
 		b := substApplyRec(n.Body, varMap)
-		result, _ := logic.NewNot(b)
+		result, _ := goivy.NewNot(b)
 		return result
 
-	case *logic.And:
+	case *goivy.And:
 		terms := substApplySlice(n.Terms, varMap)
-		result, _ := logic.NewAnd(terms...)
+		result, _ := goivy.NewAnd(terms...)
 		return result
 
-	case *logic.Or:
+	case *goivy.Or:
 		terms := substApplySlice(n.Terms, varMap)
-		result, _ := logic.NewOr(terms...)
+		result, _ := goivy.NewOr(terms...)
 		return result
 
-	case *logic.Implies:
+	case *goivy.Implies:
 		t1 := substApplyRec(n.T1, varMap)
 		t2 := substApplyRec(n.T2, varMap)
 		if t1 == n.T1 && t2 == n.T2 {
 			return node
 		}
-		result, _ := logic.NewImplies(t1, t2)
+		result, _ := goivy.NewImplies(t1, t2)
 		return result
 
-	case *logic.ForAll:
+	case *goivy.ForAll:
 		b := substApplyRec(n.Body, varMap)
 		if b == n.Body {
 			return node
 		}
-		result, _ := logic.NewForAll(n.Variables, b)
+		result, _ := goivy.NewForAll(n.Variables, b)
 		return result
 
-	case *logic.Exists:
+	case *goivy.Exists:
 		b := substApplyRec(n.Body, varMap)
 		if b == n.Body {
 			return node
 		}
-		result, _ := logic.NewExists(n.Variables, b)
+		result, _ := goivy.NewExists(n.Variables, b)
 		return result
 
-	case *logic.Variable:
+	case *goivy.Variable:
 		// A bare variable (not applied) that's in the map:
 		// This means U used as a standalone, treat as U() but concepts
 		// don't support 0-arity this way. Return as-is.
@@ -538,8 +533,8 @@ func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 	}
 }
 
-func substApplySlice(terms []logic.Expr, varMap map[string]*CDConcept) []logic.Expr {
-	newTerms := make([]logic.Expr, len(terms))
+func substApplySlice(terms []goivy.Expr, varMap map[string]*CDConcept) []goivy.Expr {
+	newTerms := make([]goivy.Expr, len(terms))
 	for i, t := range terms {
 		newTerms[i] = substApplyRec(t, varMap)
 	}
@@ -703,7 +698,7 @@ func TagFromString(s string) Tag {
 // Fact is a (Tag, formula) pair.
 type Fact struct {
 	Tag     Tag
-	Formula logic.Expr
+	Formula goivy.Expr
 }
 
 // TagValue is a (Tag, bool) pair used by alpha abstraction results.
@@ -922,7 +917,7 @@ func (d *CDConceptDomain) Split(concept, splitBy string) {
 				continue
 			}
 			newName := fmt.Sprintf("(%s+%s)", concept, n)
-			andF, _ := logic.NewAnd(c1.Formula, f)
+			andF, _ := goivy.NewAnd(c1.Formula, f)
 			newConcepts = append(newConcepts, MustCDConcept(newName, variables, andF))
 			newNames = append(newNames, newName)
 		}
@@ -936,9 +931,9 @@ func (d *CDConceptDomain) Split(concept, splitBy string) {
 		if err != nil {
 			return
 		}
-		negF, _ := logic.NewNot(posF)
-		posAnd, _ := logic.NewAnd(c1.Formula, posF)
-		negAnd, _ := logic.NewAnd(c1.Formula, negF)
+		negF, _ := goivy.NewNot(posF)
+		posAnd, _ := goivy.NewAnd(c1.Formula, posF)
+		negAnd, _ := goivy.NewAnd(c1.Formula, negF)
 
 		posName := fmt.Sprintf("(%s+%s)", concept, splitBy)
 		negName := fmt.Sprintf("(%s-%s)", concept, splitBy)
@@ -1019,8 +1014,8 @@ func (d *CDConceptDomain) Output() {
 // ---------------------------------------------------------------------------
 
 // nodesToSlice converts a []*logic.Variable to []logic.Expr.
-func nodesToSlice(vars []*logic.Variable) []logic.Expr {
-	nodes := make([]logic.Expr, len(vars))
+func nodesToSlice(vars []*goivy.Variable) []goivy.Expr {
+	nodes := make([]goivy.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
 	}
@@ -1166,8 +1161,8 @@ func cartesianProduct(slices [][]string) [][]string {
 
 // GetStandardCombiners returns the standard set of concept combiners.
 func GetStandardCombiners() *CDCombinerDict {
-	T := logic.NewTopSort()
-	boolSort := logic.Boolean
+	T := goivy.NewTopSort()
+	boolSort := goivy.Boolean
 
 	unaryRelation := webuiMustFuncSort(T, boolSort)
 	binaryRelation := webuiMustFuncSort(T, T, boolSort)
@@ -1184,18 +1179,18 @@ func GetStandardCombiners() *CDCombinerDict {
 
 	// none: ~Exists X. U(X)
 	result.SetCombiner("none", MustCDConceptCombiner(
-		[]*logic.Variable{U},
-		mustNot(webuiMustExists([]*logic.Variable{X}, mustApplyVar(U, X))),
+		[]*goivy.Variable{U},
+		mustNot(webuiMustExists([]*goivy.Variable{X}, mustApplyVar(U, X))),
 	))
 	// at_least_one: Exists X. U(X)
 	result.SetCombiner("at_least_one", MustCDConceptCombiner(
-		[]*logic.Variable{U},
-		webuiMustExists([]*logic.Variable{X}, mustApplyVar(U, X)),
+		[]*goivy.Variable{U},
+		webuiMustExists([]*goivy.Variable{X}, mustApplyVar(U, X)),
 	))
 	// at_most_one: ForAll X,Y. U(X) & U(Y) => X=Y
 	result.SetCombiner("at_most_one", MustCDConceptCombiner(
-		[]*logic.Variable{U},
-		webuiMustForAll([]*logic.Variable{X, Y},
+		[]*goivy.Variable{U},
+		webuiMustForAll([]*goivy.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U, X), mustApplyVar(U, Y)),
 				webuiMustEq(X, Y),
@@ -1204,29 +1199,29 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// node_necessarily: ForAll X. U1(X) => U2(X)
 	result.SetCombiner("node_necessarily", MustCDConceptCombiner(
-		[]*logic.Variable{U1, U2},
-		webuiMustForAll([]*logic.Variable{X},
+		[]*goivy.Variable{U1, U2},
+		webuiMustForAll([]*goivy.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustApplyVar(U2, X)),
 		),
 	))
 	// node_necessarily_not: ForAll X. U1(X) => ~U2(X)
 	result.SetCombiner("node_necessarily_not", MustCDConceptCombiner(
-		[]*logic.Variable{U1, U2},
-		webuiMustForAll([]*logic.Variable{X},
+		[]*goivy.Variable{U1, U2},
+		webuiMustForAll([]*goivy.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustNot(mustApplyVar(U2, X))),
 		),
 	))
 	// mutually_exclusive: ForAll X,Y. ~(U1(X) & U2(Y))
 	result.SetCombiner("mutually_exclusive", MustCDConceptCombiner(
-		[]*logic.Variable{U1, U2},
-		webuiMustForAll([]*logic.Variable{X, Y},
+		[]*goivy.Variable{U1, U2},
+		webuiMustForAll([]*goivy.Variable{X, Y},
 			mustNot(mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y))),
 		),
 	))
 	// all_to_all: ForAll X,Y. U1(X) & U2(Y) => B(X,Y)
 	result.SetCombiner("all_to_all", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{X, Y},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustApplyVar(B, X, Y),
@@ -1235,8 +1230,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// none_to_none: ForAll X,Y. U1(X) & U2(Y) => ~B(X,Y)
 	result.SetCombiner("none_to_none", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{X, Y},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustNot(mustApplyVar(B, X, Y)),
@@ -1245,11 +1240,11 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// total: ForAll X. U1(X) => Exists Y. U2(Y) & B(X,Y)
 	result.SetCombiner("total", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{X},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{X},
 			mustImplies(
 				mustApplyVar(U1, X),
-				webuiMustExists([]*logic.Variable{Y},
+				webuiMustExists([]*goivy.Variable{Y},
 					mustAnd(mustApplyVar(U2, Y), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1257,8 +1252,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// functional: ForAll X,Y,Z. U1(X) & U2(Y) & U2(Z) & B(X,Y) & B(X,Z) => Y=Z
 	result.SetCombiner("functional", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{X, Y, Z},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1273,11 +1268,11 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// surjective: ForAll Y. U2(Y) => Exists X. U1(X) & B(X,Y)
 	result.SetCombiner("surjective", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{Y},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{Y},
 			mustImplies(
 				mustApplyVar(U2, Y),
-				webuiMustExists([]*logic.Variable{X},
+				webuiMustExists([]*goivy.Variable{X},
 					mustAnd(mustApplyVar(U1, X), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1285,8 +1280,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// injective: ForAll X,Y,Z. U1(X) & U1(Y) & U2(Z) & B(X,Z) & B(Y,Z) => X=Y
 	result.SetCombiner("injective", MustCDConceptCombiner(
-		[]*logic.Variable{B, U1, U2},
-		webuiMustForAll([]*logic.Variable{X, Y, Z},
+		[]*goivy.Variable{B, U1, U2},
+		webuiMustForAll([]*goivy.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1318,7 +1313,7 @@ func GetStandardCombinations() []Combination {
 }
 
 // GetInitialConceptDomain creates a concept domain from a signature.
-func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*logic.Const) *CDConceptDomain {
+func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1336,17 +1331,17 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 	for _, name := range sortNames {
 		s := sorts[name]
 		X := webuiMustVar("X", s)
-		eq, _ := logic.NewEq(X, X)
-		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
+		eq, _ := goivy.NewEq(X, X)
+		concepts.SetConcept(name, MustCDConcept(name, []*goivy.Variable{X}, eq))
 		concepts.AppendToList("nodes", name)
 	}
 
 	// Add equality concept.
-	T := logic.NewTopSort()
+	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
+	eqXY, _ := goivy.NewEq(XT, YT)
+	concepts.SetConcept("=", MustCDConcept("=", []*goivy.Variable{XT, YT}, eqXY))
 
 	// Add concepts from symbols.
 	symNames := make([]string, 0, len(symbols))
@@ -1356,34 +1351,34 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 	sort.Strings(symNames)
 	for _, sname := range symNames {
 		c := symbols[sname]
-		if logic.FirstOrderSort(c.CSort) {
+		if goivy.FirstOrderSort(c.CSort) {
 			// First-order constant → unary equality concept.
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := logic.NewEq(X, c)
+			eq, _ := goivy.NewEq(X, c)
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
-		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
+			concepts.SetConcept(name, MustCDConcept(name, []*goivy.Variable{X}, eq))
+		} else if fs, ok := c.CSort.(*goivy.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				// Unary relation → node_label (e.g., "semaphore")
 				X := webuiMustVar("X", fs.Domain()[0])
-				app, _ := logic.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
+				app, _ := goivy.NewApply(c, X)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X}, app))
 				concepts.AppendToList("node_labels", c.Name)
 			case 2:
 				// Binary relation → edge (e.g., "link")
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
-				app, _ := logic.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
+				app, _ := goivy.NewApply(c, X, Y)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y}, app))
 				concepts.AppendToList("edges", c.Name)
 			case 3:
 				// Ternary relation
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
 				Z := webuiMustVar("Z", fs.Domain()[2])
-				app, _ := logic.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
+				app, _ := goivy.NewApply(c, X, Y, Z)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y, Z}, app))
 			}
 		}
 	}
@@ -1392,7 +1387,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 }
 
 // GetDiagramConceptDomain creates a concept domain from a signature and diagram.
-func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const, diagram logic.Expr) *CDConceptDomain {
+func GetDiagramConceptDomain(sorts map[string]goivy.Sort, symbols []*goivy.Const, diagram goivy.Expr) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1400,23 +1395,23 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 	concepts.SetList("edges", nil)
 
 	// Add equality concept.
-	T := logic.NewTopSort()
+	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
+	eqXY, _ := goivy.NewEq(XT, YT)
+	concepts.SetConcept("=", MustCDConcept("=", []*goivy.Variable{XT, YT}, eqXY))
 
 	// Merge signature symbols with diagram constants.
 	// Uses NodeKey for structural identity, matching Python's frozenset union
 	// of Const objects with structural equality.
-	allConsts := make(map[logic.NodeKey]*logic.Const)
+	allConsts := make(map[goivy.NodeKey]*goivy.Const)
 	for _, c := range symbols {
-		allConsts[logic.Key(c)] = c
+		allConsts[goivy.Key(c)] = c
 	}
 	if diagram != nil {
-		for _, sym := range il.UsedSymbolsAst(diagram).All() {
-			if c, ok := sym.(*logic.Const); ok {
-				k := logic.Key(c)
+		for _, sym := range goivy.UsedSymbolsAst(diagram).All() {
+			if c, ok := sym.(*goivy.Const); ok {
+				k := goivy.Key(c)
 				if _, exists := allConsts[k]; !exists {
 					allConsts[k] = c
 				}
@@ -1426,7 +1421,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 	// Sort by name for deterministic output.
 	constNames := make([]string, 0, len(allConsts))
-	constByName := make(map[string]*logic.Const, len(allConsts))
+	constByName := make(map[string]*goivy.Const, len(allConsts))
 	for _, c := range allConsts {
 		if _, exists := constByName[c.Name]; !exists {
 			constNames = append(constNames, c.Name)
@@ -1437,29 +1432,29 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 	for _, sname := range constNames {
 		c := constByName[sname]
-		if logic.FirstOrderSort(c.CSort) {
+		if goivy.FirstOrderSort(c.CSort) {
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := logic.NewEq(X, c)
+			eq, _ := goivy.NewEq(X, c)
 			name := fmt.Sprintf("%s:%s", c.Name, c.CSort)
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
+			concepts.SetConcept(name, MustCDConcept(name, []*goivy.Variable{X}, eq))
 			concepts.AppendToList("nodes", name)
-		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
+		} else if fs, ok := c.CSort.(*goivy.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				X := webuiMustVar("X", fs.Domain()[0])
-				app, _ := logic.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
+				app, _ := goivy.NewApply(c, X)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X}, app))
 			case 2:
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
-				app, _ := logic.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
+				app, _ := goivy.NewApply(c, X, Y)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y}, app))
 			case 3:
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
 				Z := webuiMustVar("Z", fs.Domain()[2])
-				app, _ := logic.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
+				app, _ := goivy.NewApply(c, X, Y, Z)
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y, Z}, app))
 			}
 		}
 	}
@@ -1469,7 +1464,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 // UniverseElementToConceptName converts a universe element constant to its
 // concept name.
-func UniverseElementToConceptName(uc *logic.Const) string {
+func UniverseElementToConceptName(uc *goivy.Const) string {
 	name := uc.Name
 	sortStr := uc.CSort.String()
 	if !strings.Contains(name, sortStr) {
@@ -1482,9 +1477,9 @@ func UniverseElementToConceptName(uc *logic.Const) string {
 // state is a formula, universe maps sort names to element constants,
 // sig provides additional symbol information.
 func GetStructureConceptDomain(
-	stateFormula logic.Expr,
-	universe map[string][]*logic.Const,
-	sigSymbols map[string]*logic.Const,
+	stateFormula goivy.Expr,
+	universe map[string][]*goivy.Const,
+	sigSymbols map[string]*goivy.Const,
 ) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
@@ -1492,14 +1487,14 @@ func GetStructureConceptDomain(
 	concepts.SetList("node_labels", nil)
 
 	// Add equality concept.
-	T := logic.NewTopSort()
+	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
+	eqXY, _ := goivy.NewEq(XT, YT)
+	concepts.SetConcept("=", MustCDConcept("=", []*goivy.Variable{XT, YT}, eqXY))
 
 	// Add nodes for universe elements.
-	var elements []*logic.Const
+	var elements []*goivy.Const
 	elementSet := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1512,30 +1507,30 @@ func GetStructureConceptDomain(
 	for _, uc := range elements {
 		X := webuiMustVar("X", uc.CSort)
 		name := UniverseElementToConceptName(uc)
-		eq, _ := logic.NewEq(X, uc)
-		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
+		eq, _ := goivy.NewEq(X, uc)
+		concepts.SetConcept(name, MustCDConcept(name, []*goivy.Variable{X}, eq))
 		concepts.AppendToList("nodes", name)
 	}
 
 	// Collect all symbols from state formula and signature.
 	// Uses NodeKey for structural identity, matching Python's frozenset
 	// union/difference of Const objects with structural equality.
-	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
+	allSymbolsByKey := make(map[goivy.NodeKey]*goivy.Const)
 	if stateFormula != nil {
-		for _, sym := range il.UsedSymbolsAst(stateFormula).All() {
-			if c, ok := sym.(*logic.Const); ok && !elementSet[c.Name] {
-				allSymbolsByKey[logic.Key(c)] = c
+		for _, sym := range goivy.UsedSymbolsAst(stateFormula).All() {
+			if c, ok := sym.(*goivy.Const); ok && !elementSet[c.Name] {
+				allSymbolsByKey[goivy.Key(c)] = c
 			}
 		}
 	}
 	for _, c := range sigSymbols {
 		if !elementSet[c.Name] {
-			allSymbolsByKey[logic.Key(c)] = c
+			allSymbolsByKey[goivy.Key(c)] = c
 		}
 	}
 
 	// Build name-sorted list for deterministic iteration.
-	allSymbols := make(map[string]*logic.Const, len(allSymbolsByKey))
+	allSymbols := make(map[string]*goivy.Const, len(allSymbolsByKey))
 	for _, c := range allSymbolsByKey {
 		allSymbols[c.Name] = c
 	}
@@ -1548,30 +1543,30 @@ func GetStructureConceptDomain(
 	for _, sname := range symNames {
 		c := allSymbols[sname]
 
-		if logic.FirstOrderSort(c.CSort) {
+		if goivy.FirstOrderSort(c.CSort) {
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := logic.NewEq(X, c)
+			eq, _ := goivy.NewEq(X, c)
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
-		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
-			if logic.SortEqual(fs.Range(), logic.Boolean) {
+			concepts.SetConcept(name, MustCDConcept(name, []*goivy.Variable{X}, eq))
+		} else if fs, ok := c.CSort.(*goivy.FunctionSort); ok {
+			if goivy.SortEqual(fs.Range(), goivy.Boolean) {
 				// Relation
 				switch fs.Arity() {
 				case 1:
 					X := webuiMustVar("X", fs.Domain()[0])
-					app, _ := logic.NewApply(c, X)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
+					app, _ := goivy.NewApply(c, X)
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X}, app))
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
-					app, _ := logic.NewApply(c, X, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
+					app, _ := goivy.NewApply(c, X, Y)
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y}, app))
 				case 3:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
 					Z := webuiMustVar("Z", fs.Domain()[2])
-					app, _ := logic.NewApply(c, X, Y, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
+					app, _ := goivy.NewApply(c, X, Y, Z)
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y, Z}, app))
 				}
 			} else {
 				// Function
@@ -1579,16 +1574,16 @@ func GetStructureConceptDomain(
 				case 1:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Range())
-					app, _ := logic.NewApply(c, X)
-					eq, _ := logic.NewEq(app, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, eq))
+					app, _ := goivy.NewApply(c, X)
+					eq, _ := goivy.NewEq(app, Y)
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y}, eq))
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
 					Z := webuiMustVar("Z", fs.Range())
-					app, _ := logic.NewApply(c, X, Y)
-					eq, _ := logic.NewEq(app, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, eq))
+					app, _ := goivy.NewApply(c, X, Y)
+					eq, _ := goivy.NewEq(app, Z)
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.Variable{X, Y, Z}, eq))
 				}
 			}
 		}
@@ -1601,16 +1596,16 @@ func GetStructureConceptDomain(
 // (a state with a universe), using direct analysis of the state formula
 // rather than Z3.
 func GetStructureConceptAbstractValue(
-	stateFormula logic.Expr,
-	universe map[string][]*logic.Const,
+	stateFormula goivy.Expr,
+	universe map[string][]*goivy.Const,
 ) map[string]bool {
 	result := make(map[string]bool)
 
 	// Map element constants to their concept names.
 	// Uses NodeKey for structural identity, matching Python's dict
 	// with Const keys using structural equality.
-	nodes := make(map[logic.NodeKey]string) // Key(const) -> concept name
-	var elements []*logic.Const
+	nodes := make(map[goivy.NodeKey]string) // Key(const) -> concept name
+	var elements []*goivy.Const
 	for _, ucs := range universe {
 		elements = append(elements, ucs...)
 	}
@@ -1618,50 +1613,50 @@ func GetStructureConceptAbstractValue(
 
 	for _, uc := range elements {
 		name := UniverseElementToConceptName(uc)
-		nodes[logic.Key(uc)] = name
+		nodes[goivy.Key(uc)] = name
 		result[TagString(Tag{"node_info", "none", name})] = false
 		result[TagString(Tag{"node_info", "at_least_one", name})] = true
 		result[TagString(Tag{"node_info", "at_most_one", name})] = true
 	}
 
 	// Analyze state formula literals.
-	andNode, ok := stateFormula.(*logic.And)
+	andNode, ok := stateFormula.(*goivy.And)
 	if !ok {
 		return result
 	}
 	for _, lit := range andNode.Terms {
-		if _, ok := lit.(*logic.ForAll); ok {
+		if _, ok := lit.(*goivy.ForAll); ok {
 			continue // universe constraint
 		}
 
 		polarity := true
 		innerLit := lit
-		if notNode, ok := lit.(*logic.Not); ok {
+		if notNode, ok := lit.(*goivy.Not); ok {
 			polarity = false
 			innerLit = notNode.Body
 		}
 
 		switch l := innerLit.(type) {
-		case *logic.Apply:
-			if fs, ok := l.Func.(*logic.Const); ok {
-				fSort, ok2 := fs.CSort.(*logic.FunctionSort)
+		case *goivy.Apply:
+			if fs, ok := l.Func.(*goivy.Const); ok {
+				fSort, ok2 := fs.CSort.(*goivy.FunctionSort)
 				if !ok2 {
 					continue
 				}
 				if fSort.Arity() == 1 {
-					if t0, ok := l.Terms[0].(*logic.Const); ok {
-						if nodeName, ok := nodes[logic.Key(t0)]; ok {
+					if t0, ok := l.Terms[0].(*goivy.Const); ok {
+						if nodeName, ok := nodes[goivy.Key(t0)]; ok {
 							labelName := fs.Name
 							result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
 							result[TagString(Tag{"node_label", "node_necessarily_not", nodeName, labelName})] = !polarity
 						}
 					}
 				} else if fSort.Arity() == 2 {
-					t0, ok0 := l.Terms[0].(*logic.Const)
-					t1, ok1 := l.Terms[1].(*logic.Const)
+					t0, ok0 := l.Terms[0].(*goivy.Const)
+					t1, ok1 := l.Terms[1].(*goivy.Const)
 					if ok0 && ok1 {
-						sn, sok := nodes[logic.Key(t0)]
-						tn, tok := nodes[logic.Key(t1)]
+						sn, sok := nodes[goivy.Key(t0)]
+						tn, tok := nodes[goivy.Key(t1)]
 						if sok && tok {
 							edgeName := fs.Name
 							result[TagString(Tag{"edge_info", "all_to_all", edgeName, sn, tn})] = polarity
@@ -1670,9 +1665,9 @@ func GetStructureConceptAbstractValue(
 					}
 				}
 			}
-		case *logic.Eq:
+		case *goivy.Eq:
 			// Handle equality literals for functions.
-			if _, ok := l.T1.(*logic.Const); ok {
+			if _, ok := l.T1.(*goivy.Const); ok {
 				// Simple constant equality -- skip for now
 			}
 		}
@@ -1684,11 +1679,11 @@ func GetStructureConceptAbstractValue(
 // GetStructureRenaming generates prettier names for universe constants
 // based on topological sort of order relations.
 func GetStructureRenaming(
-	stateFormula logic.Expr,
-	universe map[string][]*logic.Const,
+	stateFormula goivy.Expr,
+	universe map[string][]*goivy.Const,
 	orderRelations map[string]bool,
 ) map[string]string {
-	var elements []*logic.Const
+	var elements []*goivy.Const
 	seen := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1700,32 +1695,32 @@ func GetStructureRenaming(
 	}
 
 	// Extract order from state formula.
-	var order [][2]*logic.Const
-	if andNode, ok := stateFormula.(*logic.And); ok {
+	var order [][2]*goivy.Const
+	if andNode, ok := stateFormula.(*goivy.And); ok {
 		for _, lit := range andNode.Terms {
-			if app, ok := lit.(*logic.Apply); ok {
-				fc, ok2 := app.Func.(*logic.Const)
+			if app, ok := lit.(*goivy.Apply); ok {
+				fc, ok2 := app.Func.(*goivy.Const)
 				if !ok2 {
 					continue
 				}
-				fs, ok3 := fc.CSort.(*logic.FunctionSort)
+				fs, ok3 := fc.CSort.(*goivy.FunctionSort)
 				if !ok3 || fs.Arity() != 2 {
 					continue
 				}
-				if !logic.SortEqual(fs.Domain()[0], fs.Domain()[1]) {
+				if !goivy.SortEqual(fs.Domain()[0], fs.Domain()[1]) {
 					continue
 				}
-				if !logic.SortEqual(fs.Range(), logic.Boolean) {
+				if !goivy.SortEqual(fs.Range(), goivy.Boolean) {
 					continue
 				}
 				if !orderRelations[fc.Name] {
 					continue
 				}
 				if len(app.Terms) == 2 {
-					t0, ok0 := app.Terms[0].(*logic.Const)
-					t1, ok1 := app.Terms[1].(*logic.Const)
+					t0, ok0 := app.Terms[0].(*goivy.Const)
+					t1, ok1 := app.Terms[1].(*goivy.Const)
 					if ok0 && ok1 {
-						order = append(order, [2]*logic.Const{t0, t1})
+						order = append(order, [2]*goivy.Const{t0, t1})
 					}
 				}
 			}
@@ -1733,8 +1728,8 @@ func GetStructureRenaming(
 	}
 
 	// Topological sort using the order relations.
-	var orderPairs [][2]*logic.Const
-	nameSet := make(map[string]*logic.Const)
+	var orderPairs [][2]*goivy.Const
+	nameSet := make(map[string]*goivy.Const)
 	for _, elem := range elements {
 		nameSet[elem.Name] = elem
 	}
@@ -1742,10 +1737,10 @@ func GetStructureRenaming(
 		e0, ok0 := nameSet[pair[0].Name]
 		e1, ok1 := nameSet[pair[1].Name]
 		if ok0 && ok1 {
-			orderPairs = append(orderPairs, [2]*logic.Const{e0, e1})
+			orderPairs = append(orderPairs, [2]*goivy.Const{e0, e1})
 		}
 	}
-	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Const) string { return elem.Name })
+	sorted := goivy.TopologicalSort(elements, orderPairs, func(elem *goivy.Const) string { return elem.Name })
 
 	result := make(map[string]string)
 	count := make(map[string]int)
@@ -1761,23 +1756,23 @@ func GetStructureRenaming(
 // Logic construction helpers (must* panic on error -- only for known-good formulas)
 // ---------------------------------------------------------------------------
 
-func webuiMustVar(name string, s logic.Sort) *logic.Variable {
-	v, err := logic.NewVariable(name, s)
+func webuiMustVar(name string, s goivy.Sort) *goivy.Variable {
+	v, err := goivy.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func webuiMustFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
-	fs, err := logic.NewFunctionSort(sorts...)
+func webuiMustFuncSort(sorts ...goivy.Sort) *goivy.FunctionSort {
+	fs, err := goivy.NewFunctionSort(sorts...)
 	if err != nil {
 		panic(err)
 	}
 	return fs
 }
 
-func mustApplyVar(v *logic.Variable, args ...logic.Expr) logic.Expr {
+func mustApplyVar(v *goivy.Variable, args ...goivy.Expr) goivy.Expr {
 	n, err := v.Call(args...)
 	if err != nil {
 		panic(err)
@@ -1785,37 +1780,37 @@ func mustApplyVar(v *logic.Variable, args ...logic.Expr) logic.Expr {
 	return n
 }
 
-func mustNot(body logic.Expr) logic.Expr {
-	n, _ := logic.NewNot(body)
+func mustNot(body goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewNot(body)
 	return n
 }
 
-func mustAnd(terms ...logic.Expr) logic.Expr {
-	n, _ := logic.NewAnd(terms...)
+func mustAnd(terms ...goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewAnd(terms...)
 	return n
 }
 
-func mustOr(terms ...logic.Expr) logic.Expr {
-	n, _ := logic.NewOr(terms...)
+func mustOr(terms ...goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewOr(terms...)
 	return n
 }
 
-func webuiMustEq(t1, t2 logic.Expr) logic.Expr {
-	n, _ := logic.NewEq(t1, t2)
+func webuiMustEq(t1, t2 goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewEq(t1, t2)
 	return n
 }
 
-func mustImplies(t1, t2 logic.Expr) logic.Expr {
-	n, _ := logic.NewImplies(t1, t2)
+func mustImplies(t1, t2 goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewImplies(t1, t2)
 	return n
 }
 
-func webuiMustForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
-	n, _ := logic.NewForAll(vars, body)
+func webuiMustForAll(vars []*goivy.Variable, body goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewForAll(vars, body)
 	return n
 }
 
-func webuiMustExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
-	n, _ := logic.NewExists(vars, body)
+func webuiMustExists(vars []*goivy.Variable, body goivy.Expr) goivy.Expr {
+	n, _ := goivy.NewExists(vars, body)
 	return n
 }

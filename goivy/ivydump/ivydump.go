@@ -8,16 +8,14 @@ package ivydump
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"io"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/art"
-	lg "github.com/glycerine/ivy/goivy/logic"
 )
 
 // DumpToIvy writes an analysis graph as Ivy source to the writer.
 // Corresponds to Python's ivy_dump_file().
-func DumpToIvy(w io.Writer, ag *art.AnalysisGraph) error {
+func DumpToIvy(w io.Writer, ag *goivy.AnalysisGraph) error {
 	fmt.Fprintln(w, "#lang ivy1.7")
 	fmt.Fprintln(w)
 
@@ -76,7 +74,7 @@ func DumpToIvy(w io.Writer, ag *art.AnalysisGraph) error {
 }
 
 // DumpFormulaToIvy converts a formula to Ivy syntax string.
-func DumpFormulaToIvy(fmla lg.Expr) string {
+func DumpFormulaToIvy(fmla goivy.Expr) string {
 	if fmla == nil {
 		return "true"
 	}

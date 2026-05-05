@@ -6,21 +6,10 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/bmc"
-	"github.com/glycerine/ivy/goivy/interp"
-	il "github.com/glycerine/ivy/goivy/ivylogic"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/logicutil"
-	"github.com/glycerine/ivy/goivy/module"
-	"github.com/glycerine/ivy/goivy/trace"
-	"github.com/glycerine/ivy/goivy/z3bridge"
 )
 
 // CTIAnalysisGraphUI extends AnalysisGraphUI with CTI-specific operations
@@ -31,13 +20,13 @@ type CTIAnalysisGraphUI struct {
 	mu2 sync.Mutex
 
 	// Mod is the compiled module providing axioms, sig, actions.
-	Mod *module.Module
+	Mod *goivy.Module
 
 	// Solver is the Z3 solver instance for this session.
-	Solver *z3bridge.Solver
+	Solver *goivy.Solver
 
 	// AG is the stored analysis graph from the last CheckInductiveness.
-	AG *art.AnalysisGraph
+	AG *goivy.AnalysisGraph
 
 	// TransitiveRelations tracks detected transitive relation names.
 	TransitiveRelations []string
@@ -49,23 +38,23 @@ type CTIAnalysisGraphUI struct {
 	RelationsToMinimize string
 
 	// Conjectures is the current list of conjectures (Python: self.conjectures = im.module.conjs).
-	Conjectures []*module.Clauses
+	Conjectures []*goivy.Clauses
 
 	// HaveCTI indicates whether a counterexample to induction exists.
 	HaveCTI bool
 
 	// CurrentConjecture is the conjecture currently being checked.
-	CurrentConjecture *module.Clauses
+	CurrentConjecture *goivy.Clauses
 
 	// CurrentBound is the last BMC bound used.
 	CurrentBound int
 }
 
 // NewCTIAnalysisGraphUI creates a new CTI-variant UI.
-func NewCTIAnalysisGraphUI(mod *module.Module) *CTIAnalysisGraphUI {
-	var solver *z3bridge.Solver
+func NewCTIAnalysisGraphUI(mod *goivy.Module) *CTIAnalysisGraphUI {
+	var solver *goivy.Solver
 	if mod != nil {
-		solver = z3bridge.NewSolver(mod, nil)
+		solver = goivy.NewSolver(mod, nil)
 	}
 	return &CTIAnalysisGraphUI{
 		AnalysisGraphUI:     NewAnalysisGraphUI(),
@@ -103,7 +92,7 @@ func (ui *CTIAnalysisGraphUI) CTIMenus() []MenuDef {
 
 // StartCTI initializes the CTI UI, detecting transitive relations
 // (Python: AnalysisGraphUI.start in ivy_ui_cti.py).
-func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []*module.Clauses) {
+func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []*goivy.Clauses) {
 	ui.AnalysisGraphUI.Start()
 	ui.TransitiveRelations = nil
 	ui.TransitiveRelationConcepts = nil
@@ -131,41 +120,41 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 	}
 
 	for _, c := range ui.Mod.Sig.AllSymbols() {
-		fs, ok := c.CSort.(*lg.FunctionSort)
+		fs, ok := c.CSort.(*goivy.FunctionSort)
 		if !ok || fs.Arity() != 2 {
 			continue
 		}
-		if !lg.SortEqual(fs.Domain()[0], fs.Domain()[1]) {
+		if !goivy.SortEqual(fs.Domain()[0], fs.Domain()[1]) {
 			continue
 		}
-		if !lg.SortEqual(fs.Range(), lg.Boolean) {
+		if !goivy.SortEqual(fs.Range(), goivy.Boolean) {
 			continue
 		}
 
 		domSort := fs.Domain()[0]
-		xv, _ := lg.NewVariable("X", domSort)
-		yv, _ := lg.NewVariable("Y", domSort)
-		zv, _ := lg.NewVariable("Z", domSort)
+		xv, _ := goivy.NewVariable("X", domSort)
+		yv, _ := goivy.NewVariable("Y", domSort)
+		zv, _ := goivy.NewVariable("Z", domSort)
 
-		cxy := lg.MustApply(c, xv, yv)
-		cyz := lg.MustApply(c, yv, zv)
-		cxz := lg.MustApply(c, xv, zv)
-		cxx := lg.MustApply(c, xv, xv)
-		cyy := lg.MustApply(c, yv, yv)
+		cxy := goivy.MustApply(c, xv, yv)
+		cyz := goivy.MustApply(c, yv, zv)
+		cxz := goivy.MustApply(c, xv, zv)
+		cxx := goivy.MustApply(c, xv, xv)
+		cyy := goivy.MustApply(c, yv, yv)
 
-		notCxy, _ := lg.NewNot(cxy)
-		notCyz, _ := lg.NewNot(cyz)
-		notCyy, _ := lg.NewNot(cyy)
+		notCxy, _ := goivy.NewNot(cxy)
+		notCyz, _ := goivy.NewNot(cyz)
+		notCyy, _ := goivy.NewNot(cyy)
 
 		// transitive = ForAll([X,Y,Z], Or(Not(c(X,Y)), Not(c(Y,Z)), c(X,Z)))
-		transOr, _ := lg.NewOr(notCxy, notCyz, cxz)
-		transitive, _ := lg.NewForAll([]*lg.Variable{xv, yv, zv}, transOr)
+		transOr, _ := goivy.NewOr(notCxy, notCyz, cxz)
+		transitive, _ := goivy.NewForAll([]*goivy.Variable{xv, yv, zv}, transOr)
 
 		// defined_symmetry = ForAll([X,Y], Or(c(X,X), Not(c(Y,Y))))
-		symOr, _ := lg.NewOr(cxx, notCyy)
-		definedSym, _ := lg.NewForAll([]*lg.Variable{xv, yv}, symOr)
+		symOr, _ := goivy.NewOr(cxx, notCyy)
+		definedSym, _ := goivy.NewForAll([]*goivy.Variable{xv, yv}, symOr)
 
-		t := module.NewClauses([]lg.Expr{transitive, definedSym}, nil, nil)
+		t := goivy.NewClauses([]goivy.Expr{transitive, definedSym}, nil, nil)
 		implied, err := ui.Solver.ClausesImply(axioms, t)
 		if err != nil || !implied {
 			continue
@@ -191,15 +180,15 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 
 // ctiWitness returns a Skolem witness function that creates '@'-prefixed constants.
 // (Python: def witness(v): c = lg.Const('@'+v.name, v.sort))
-func ctiWitness(usedNames map[string]bool) module.Skolemizer {
-	return func(v *lg.Variable) lg.Expr {
+func ctiWitness(usedNames map[string]bool) goivy.Skolemizer {
+	return func(v *goivy.Variable) goivy.Expr {
 		name := "@" + v.Name
 		if usedNames != nil {
 			if _, exists := usedNames[name]; exists {
 				panic(fmt.Sprintf("witness name collision: %s", name))
 			}
 		}
-		return lg.NewConst(name, v.VSort)
+		return goivy.NewConst(name, v.VSort)
 	}
 }
 
@@ -237,11 +226,11 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 		}
 		var relNames []string
 		for _, sym := range ui.Mod.Sig.AllSymbols() {
-			fs, ok := sym.CSort.(*lg.FunctionSort)
+			fs, ok := sym.CSort.(*goivy.FunctionSort)
 			if !ok {
 				continue
 			}
-			if !lg.SortEqual(fs.Range(), lg.Boolean) {
+			if !goivy.SortEqual(fs.Range(), goivy.Boolean) {
 				continue
 			}
 			if transSet[sym.Name] {
@@ -254,7 +243,7 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 	}
 
 	// Python: ag, succeed, fail = ivy_trace.make_check_art(precond=self.conjectures)
-	ag, succeed, fail, err := trace.MakeCheckArt(ui.Mod, "", ui.Conjectures)
+	ag, succeed, fail, err := goivy.MakeCheckArt(ui.Mod, "", ui.Conjectures)
 	if err != nil {
 		return true, fmt.Sprintf("CheckInductiveness: make_check_art failed: %v", err)
 	}
@@ -264,7 +253,7 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 
 	// Python: to_test = [None] + list(self.conjectures)
 	type testEntry struct {
-		conj *module.Clauses // nil = safety check
+		conj *goivy.Clauses // nil = safety check
 	}
 	toTest := make([]testEntry, 0, len(ui.Conjectures)+1)
 	toTest = append(toTest, testEntry{nil})
@@ -279,19 +268,19 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 	}
 
 	for _, entry := range toTest {
-		var clauses *module.Clauses
-		var post *art.State
+		var clauses *goivy.Clauses
+		var post *goivy.State
 
 		if entry.conj == nil {
-			clauses = module.TrueClauses(nil)
+			clauses = goivy.TrueClauses(nil)
 			post = fail
 		} else {
-			clauses = module.DualClauses(entry.conj, witness, nil)
+			clauses = goivy.DualClauses(entry.conj, witness, nil)
 			post = succeed
 		}
-		clauses.Annot = actions.EmptyAnnotation{}
+		clauses.Annot = goivy.EmptyAnnotation{}
 
-		res := trace.CheckFinalCond(ag, post, clauses, relsToMin, true)
+		res := goivy.CheckFinalCond(ag, post, clauses, relsToMin, true)
 		if res != nil {
 			ui.CurrentConjecture = entry.conj
 			ui.AG = res.AnalysisGraph
@@ -304,7 +293,7 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 			if entry.conj == nil {
 				return false, "An assertion failed. A failing state is displayed."
 			}
-			fmla := module.DropUniversals(entry.conj.ToFormula())
+			fmla := goivy.DropUniversals(entry.conj.ToFormula())
 			return false, fmt.Sprintf("The following conjecture is not relatively inductive:\n%v", fmla)
 		}
 	}
@@ -319,7 +308,7 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 
 // BoundedCheck performs bounded model checking for a conjecture
 // (Python: AnalysisGraphUI.bmc_conjecture).
-func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses) (bool, string) {
+func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *goivy.Clauses) (bool, string) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
@@ -334,7 +323,7 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses
 	if conj == nil && len(ui.Conjectures) > 0 {
 		conj = ui.Conjectures[0]
 		for _, c := range ui.Conjectures[1:] {
-			conj = module.AndClausesTyped(conj, c)
+			conj = goivy.AndClausesTyped(conj, c)
 		}
 	}
 	if conj == nil {
@@ -343,16 +332,16 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses
 
 	usedNames := ui.collectUsedNames()
 	witness := ctiWitness(usedNames)
-	clauses := module.DualClauses(conj, witness, nil)
+	clauses := goivy.DualClauses(conj, witness, nil)
 
 	// Python: ag = self.new_ag()
-	ag := art.NewAnalysisGraph(ui.Mod)
-	ag.Add(art.NewState(ui.Mod, ag.InitCond), nil)
+	ag := goivy.NewAnalysisGraph(ui.Mod)
+	ag.Add(goivy.NewState(ui.Mod, ag.InitCond), nil)
 	post := ag.States[0]
 
 	// Python: if 'initialize' in im.module.actions: ...
 	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {
-		if act, ok2 := initAct.(actions.ActionsAction); ok2 {
+		if act, ok2 := initAct.(goivy.ActionsAction); ok2 {
 			var err error
 			post, err = ag.Execute(true, act, post, nil, "initialize")
 			if err != nil {
@@ -361,10 +350,10 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *module.Clauses
 		}
 	}
 
-	stepAction := bmc.BMCEnvAction(ui.Mod)
+	stepAction := goivy.BMCEnvAction(ui.Mod)
 
 	for n := 0; n <= bound; n++ {
-		res := trace.CheckFinalCond(ag, post, clauses, nil, true)
+		res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
 		if res != nil {
 			fmla := conj.ToFormula()
 			return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla)
@@ -404,26 +393,26 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 	}
 
 	// Python: post = dual_clauses(conj) if conj else true_clauses()
-	var post *module.Clauses
+	var post *goivy.Clauses
 	if ui.CurrentConjecture != nil {
-		post = module.DualClauses(ui.CurrentConjecture, nil, nil)
+		post = goivy.DualClauses(ui.CurrentConjecture, nil, nil)
 	} else {
-		post = module.TrueClauses(nil)
+		post = goivy.TrueClauses(nil)
 	}
 
 	pre := ui.AG.States[0].Clauses
 	axioms := ui.Mod.BackgroundTheory(nil)
 
 	// Python: uc = universe_constraint(self.g.states[0])
-	interpState := &interp.InterpState{Universe: ui.AG.States[0].Universe}
-	uc := interp.UniverseConstraint(interpState)
-	axiomsUc := module.AndClausesTyped(axioms, uc)
+	interpState := &goivy.InterpState{Universe: ui.AG.States[0].Universe}
+	uc := goivy.UniverseConstraint(interpState)
+	axiomsUc := goivy.AndClausesTyped(axioms, uc)
 
 	// Python: rev = reverse_image(post, axioms, self.g.states[1].update)
-	rev := actions.ReverseImage(post, axioms, ui.AG.States[1].Value)
+	rev := goivy.ReverseImage(post, axioms, ui.AG.States[1].Value)
 
 	// Python: clauses = and_clauses(and_clauses(pre, rev), axioms_uc)
-	combined := module.AndClausesTyped(module.AndClausesTyped(pre, rev), axiomsUc)
+	combined := goivy.AndClausesTyped(goivy.AndClausesTyped(pre, rev), axiomsUc)
 
 	if ui.Solver == nil {
 		return "", fmt.Errorf("no solver available")
@@ -437,7 +426,7 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 		return "", fmt.Errorf("no model found (UNSAT)")
 	}
 
-	isSkolemConst := func(c *lg.Const) bool { return trace.TraceIsSkolem(c.Name) }
+	isSkolemConst := func(c *goivy.Const) bool { return goivy.TraceIsSkolem(c.Name) }
 	diag, err := ui.Solver.ClausesModelToDiagram(rev, isSkolemConst, axioms)
 	if err != nil {
 		return "", fmt.Errorf("clauses_model_to_diagram failed: %w", err)
@@ -453,7 +442,7 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 
 // Weaken removes conjectures from the current set
 // (Python: AnalysisGraphUI.weaken).
-func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]*module.Clauses, error) {
+func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]*goivy.Clauses, error) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
@@ -462,7 +451,7 @@ func (ui *CTIAnalysisGraphUI) Weaken(indices []int) ([]*module.Clauses, error) {
 	}
 
 	sort.Sort(sort.Reverse(sort.IntSlice(indices)))
-	var removed []*module.Clauses
+	var removed []*goivy.Clauses
 	for _, idx := range indices {
 		if idx < 0 || idx >= len(ui.Conjectures) {
 			continue
@@ -485,7 +474,7 @@ func (ui *CTIAnalysisGraphUI) SaveConjectures() string {
 	if len(ui.Conjectures) > 0 {
 		sb.WriteString("# conjectures\n\n")
 		for _, conj := range ui.Conjectures {
-			fmla := module.DropUniversals(conj.ToFormula())
+			fmla := goivy.DropUniversals(conj.ToFormula())
 			sb.WriteString(fmt.Sprintf("invariant %v\n", fmla))
 		}
 	}
@@ -494,13 +483,13 @@ func (ui *CTIAnalysisGraphUI) SaveConjectures() string {
 
 // ShowUsedRelations enables display of relations used in given clauses
 // (Python: AnalysisGraphUI.show_used_relations).
-func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauses *module.Clauses, both bool) {
+func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauses *goivy.Clauses, both bool) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 	ui.showUsedRelationsUnlocked(clauses, both)
 }
 
-func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *module.Clauses, both bool) {
+func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, both bool) {
 	if ui.CurrentConceptGraph == nil || clauses == nil {
 		return
 	}
@@ -508,11 +497,11 @@ func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *module.Clauses,
 
 	// Python: used = set(il.normalize_symbol(s) for s in lu.used_constants(clauses.to_formula()))
 	fmla := clauses.ToFormula()
-	usedSyms := module.UsedSymbolsAST(fmla)
+	usedSyms := goivy.UsedSymbolsAST(fmla)
 	usedNames := make(map[string]bool)
 	if usedSyms != nil {
 		for _, sym := range usedSyms.All() {
-			if cnst, ok := sym.(*lg.Const); ok {
+			if cnst, ok := sym.(*goivy.Const); ok {
 				usedNames[cnst.Name] = true
 			}
 		}
@@ -539,17 +528,17 @@ func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *module.Clauses,
 
 	// Python: handle arity-3 applications
 	needUpdateRelations := false
-	for _, app := range module.AppsClauses(clauses) {
-		applyExpr, ok := app.(*lg.Apply)
+	for _, app := range goivy.AppsClauses(clauses) {
+		applyExpr, ok := app.(*goivy.Apply)
 		if !ok || len(applyExpr.Terms) != 3 {
 			continue
 		}
-		if !il.IsNumeral(applyExpr.Terms[0]) {
+		if !goivy.IsNumeral(applyExpr.Terms[0]) {
 			continue
 		}
-		xv, _ := lg.NewVariable("X", applyExpr.Terms[1].NodeSort())
-		yv, _ := lg.NewVariable("Y", applyExpr.Terms[2].NodeSort())
-		newFmla := lg.MustApply(applyExpr.Func, applyExpr.Terms[0], xv, yv)
+		xv, _ := goivy.NewVariable("X", applyExpr.Terms[1].NodeSort())
+		yv, _ := goivy.NewVariable("Y", applyExpr.Terms[2].NodeSort())
+		newFmla := goivy.MustApply(applyExpr.Func, applyExpr.Terms[0], xv, yv)
 		newConcept := FormulaToConceptl(newFmla)
 		simpleConcept := &Concept{Name: newConcept.Name, Arity: newConcept.Arity()}
 		g.NewRelation(simpleConcept)
@@ -618,7 +607,7 @@ type CTIConceptGraphWidget struct {
 	CISess *ConceptInteractiveSession
 
 	// ActiveFactExprs stores gathered fact expressions for GetSelectedConjecture.
-	ActiveFactExprs []lg.Expr
+	ActiveFactExprs []goivy.Expr
 }
 
 // NewCTIConceptGraphWidget creates a new CTI concept graph widget.
@@ -655,7 +644,7 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 	}
 
 	type factEntry struct {
-		formula lg.Expr
+		formula goivy.Expr
 	}
 
 	var facts []factEntry
@@ -733,7 +722,7 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 	}
 
 	// Extract formulas and set on graph.
-	w.ActiveFactExprs = make([]lg.Expr, len(filtered))
+	w.ActiveFactExprs = make([]goivy.Expr, len(filtered))
 	factStrs := make([]string, len(filtered))
 	for i, fe := range filtered {
 		w.ActiveFactExprs[i] = fe.formula
@@ -746,12 +735,12 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 
 // shouldFilterFact returns true for facts that should be filtered out.
 // Python: (type(f) is Not and type(f.body) is Eq and f.body.t1 >= f.body.t2)
-func shouldFilterFact(f lg.Expr) bool {
-	notExpr, ok := f.(*lg.Not)
+func shouldFilterFact(f goivy.Expr) bool {
+	notExpr, ok := f.(*goivy.Not)
 	if !ok {
 		return false
 	}
-	eq, ok := notExpr.Body.(*lg.Eq)
+	eq, ok := notExpr.Body.(*goivy.Eq)
 	if !ok {
 		return false
 	}
@@ -760,7 +749,7 @@ func shouldFilterFact(f lg.Expr) bool {
 
 // Strengthen adds a new conjecture from selected facts
 // (Python: ConceptGraphUI.strengthen).
-func (w *CTIConceptGraphWidget) Strengthen() (*module.Clauses, error) {
+func (w *CTIConceptGraphWidget) Strengthen() (*goivy.Clauses, error) {
 	conj := w.GetSelectedConjecture()
 	if conj == nil {
 		return nil, fmt.Errorf("no facts selected")
@@ -774,7 +763,7 @@ func (w *CTIConceptGraphWidget) Strengthen() (*module.Clauses, error) {
 
 // GetSelectedConjecture returns a positive universal conjecture from selected facts
 // (Python: ConceptGraphUI.get_selected_conjecture).
-func (w *CTIConceptGraphWidget) GetSelectedConjecture() *module.Clauses {
+func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 	facts := w.ActiveFactExprs
 	if len(facts) == 0 {
 		return nil
@@ -782,24 +771,24 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *module.Clauses {
 
 	// Python: assert len(free_variables(*facts)) == 0
 	for _, f := range facts {
-		fv := logicutil.FreeVariables(f)
+		fv := goivy.FreeVariables(f)
 		if fv != nil && fv.Len() > 0 {
 			return nil
 		}
 	}
 
 	// Python: collect constants, substitute numerals of uninterpreted sorts
-	rn := iu.NewVariableGenerator()
-	subs := make(map[lg.NodeKey]lg.Expr)
+	rn := goivy.NewVariableGenerator()
+	subs := make(map[goivy.NodeKey]goivy.Expr)
 
-	var allConsts []*lg.Const
+	var allConsts []*goivy.Const
 	for _, f := range facts {
-		syms := module.UsedSymbolsAST(f)
+		syms := goivy.UsedSymbolsAST(f)
 		if syms == nil {
 			continue
 		}
 		for _, sym := range syms.All() {
-			if c, ok := sym.(*lg.Const); ok {
+			if c, ok := sym.(*goivy.Const); ok {
 				allConsts = append(allConsts, c)
 			}
 		}
@@ -816,47 +805,47 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *module.Clauses {
 			continue
 		}
 		seen[c.Name] = true
-		if il.IsNumeralName(c.Name) && w.ParentCTI != nil && w.ParentCTI.Mod != nil {
-			if il.IsUninterpretedSort(w.ParentCTI.Mod.Sig, c.CSort) {
+		if goivy.IsNumeralName(c.Name) && w.ParentCTI != nil && w.ParentCTI.Mod != nil {
+			if goivy.IsUninterpretedSort(w.ParentCTI.Mod.Sig, c.CSort) {
 				varName := rn.Generate(fmt.Sprintf("%v", c.CSort))
-				v, _ := lg.NewVariable(varName, c.CSort)
-				subs[lg.Key(c)] = v
+				v, _ := goivy.NewVariable(varName, c.CSort)
+				subs[goivy.Key(c)] = v
 			}
 		}
 	}
 
 	// Python: literals = [negate(substitute(f, subs)) for f in facts]
-	var literals []lg.Expr
+	var literals []goivy.Expr
 	for _, f := range facts {
-		substituted, err := logicutil.Substitute(f, subs)
+		substituted, err := goivy.Substitute(f, subs)
 		if err != nil {
 			substituted = f
 		}
-		negated := module.Negate(substituted)
+		negated := goivy.Negate(substituted)
 		literals = append(literals, negated)
 	}
 
 	// Python: result = Clauses([Or(*literals)])
-	var orExpr lg.Expr
+	var orExpr goivy.Expr
 	if len(literals) == 1 {
 		orExpr = literals[0]
 	} else {
-		orExpr, _ = lg.NewOr(literals...)
+		orExpr, _ = goivy.NewOr(literals...)
 	}
 
-	result := module.NewClauses([]lg.Expr{orExpr}, nil, nil)
-	result = module.SimplifyClauses(result)
+	result := goivy.NewClauses([]goivy.Expr{orExpr}, nil, nil)
+	result = goivy.SimplifyClauses(result)
 
 	// Python: convert Or to Not(And(negate(each_lit)))
 	if len(result.Fmlas) == 1 {
-		if orNode, ok := result.Fmlas[0].(*lg.Or); ok {
-			var innerLits []lg.Expr
+		if orNode, ok := result.Fmlas[0].(*goivy.Or); ok {
+			var innerLits []goivy.Expr
 			for _, lit := range orNode.Terms {
-				innerLits = append(innerLits, module.Negate(lit))
+				innerLits = append(innerLits, goivy.Negate(lit))
 			}
-			andExpr, _ := lg.NewAnd(innerLits...)
-			notExpr, _ := lg.NewNot(andExpr)
-			result = module.NewClauses([]lg.Expr{notExpr}, nil, nil)
+			andExpr, _ := goivy.NewAnd(innerLits...)
+			notExpr, _ := goivy.NewNot(andExpr)
+			result = goivy.NewClauses([]goivy.Expr{notExpr}, nil, nil)
 		}
 	}
 
@@ -865,7 +854,7 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *module.Clauses {
 
 // MinimizeConjecture minimizes the active conjecture using unsat cores
 // (Python: ConceptGraphUI.minimize_conjecture).
-func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, error) {
+func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*goivy.Clauses, error) {
 	if w.ParentCTI == nil || w.ParentCTI.Mod == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
@@ -886,11 +875,11 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 	}
 
 	// Python: ag = self.parent.new_ag(); execute env_action n_steps times
-	ag := art.NewAnalysisGraph(mod)
-	ag.Add(art.NewState(mod, ag.InitCond), nil)
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(goivy.NewState(mod, ag.InitCond), nil)
 	post := ag.States[0]
 
-	stepAction := bmc.BMCEnvAction(mod)
+	stepAction := goivy.BMCEnvAction(mod)
 	for n := 0; n < nSteps; n++ {
 		if stepAction == nil {
 			break
@@ -903,14 +892,14 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 	}
 
 	axioms := mod.BackgroundTheory(nil)
-	postClauses := module.AndClausesTyped(post.Clauses, axioms)
+	postClauses := goivy.AndClausesTyped(post.Clauses, axioms)
 
 	facts := w.ActiveFactExprs
 	if len(facts) == 0 {
 		return nil, fmt.Errorf("no facts to minimize")
 	}
 
-	factsClauses := module.NewClauses(facts, nil, nil)
+	factsClauses := goivy.NewClauses(facts, nil, nil)
 
 	if w.ParentCTI.Solver == nil {
 		return nil, fmt.Errorf("no solver available")
@@ -921,7 +910,7 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 		return nil, fmt.Errorf("unsat_core failed: %w", err)
 	}
 	if core == nil {
-		core = module.NewClauses(nil, nil, nil)
+		core = goivy.NewClauses(nil, nil, nil)
 	}
 
 	// Python: core_formulas = frozenset(core.fmlas)
@@ -931,7 +920,7 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 	}
 
 	// Python: self.set_facts([fact for fact in facts if fact in core_formulas])
-	var filteredFacts []lg.Expr
+	var filteredFacts []goivy.Expr
 	var filteredStrs []string
 	for _, f := range facts {
 		key := fmt.Sprintf("%v", f)
@@ -954,7 +943,7 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*module.Clauses, 
 
 // checkInductionHelper is the shared implementation for IsSufficient and IsInductive.
 // (Python: is_sufficient and is_inductive share the same structure)
-func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *module.Clauses) (bool, string) {
+func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *goivy.Clauses) (bool, string) {
 	if w.ParentCTI == nil || w.ParentCTI.Mod == nil {
 		return false, "no module loaded"
 	}
@@ -964,16 +953,16 @@ func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *module.Cl
 	// Python: pre.clauses = and_clauses(conj, *self.parent.conjectures)
 	pre := conj
 	for _, c := range w.ParentCTI.Conjectures {
-		pre = module.AndClausesTyped(pre, c)
+		pre = goivy.AndClausesTyped(pre, c)
 	}
-	pre.Annot = actions.EmptyAnnotation{}
+	pre.Annot = goivy.EmptyAnnotation{}
 
-	preState := art.NewState(mod, pre)
-	ag := art.NewAnalysisGraph(mod)
+	preState := goivy.NewState(mod, pre)
+	ag := goivy.NewAnalysisGraph(mod)
 	ag.Add(preState, nil)
 
 	// Python: action = ia.env_action(None); post = ag.execute(action, pre)
-	stepAction := bmc.BMCEnvAction(mod)
+	stepAction := goivy.BMCEnvAction(mod)
 	if stepAction == nil {
 		return false, "no actions available"
 	}
@@ -981,17 +970,17 @@ func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *module.Cl
 	if err != nil {
 		return false, fmt.Sprintf("execute failed: %v", err)
 	}
-	trueCl := module.TrueClauses(nil)
-	trueCl.Annot = actions.EmptyAnnotation{}
+	trueCl := goivy.TrueClauses(nil)
+	trueCl.Annot = goivy.EmptyAnnotation{}
 	post.Clauses = trueCl
 
 	// Python: clauses = dual_clauses(target_conj, witness)
 	usedNames := w.ParentCTI.collectUsedNames()
 	witness := ctiWitness(usedNames)
-	clauses := module.DualClauses(targetConj, witness, nil)
-	clauses.Annot = actions.EmptyAnnotation{}
+	clauses := goivy.DualClauses(targetConj, witness, nil)
+	clauses.Annot = goivy.EmptyAnnotation{}
 
-	res := trace.CheckFinalCond(ag, post, clauses, nil, true)
+	res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
 
 	conjStr := fmt.Sprintf("%v", conj.ToFormula())
 	targetStr := fmt.Sprintf("%v", targetConj.ToFormula())
@@ -1028,8 +1017,8 @@ func (w *CTIConceptGraphWidget) IsInductive() (bool, string) {
 
 // FormulaToConceptl creates a CDConcept from a formula.
 // (Python: concept_from_formula in ivy_graph.py:23-28)
-func FormulaToConceptl(fmla lg.Expr) *CDConcept {
-	vs := logicutil.UsedVariablesAsts([]lg.Expr{fmla})
+func FormulaToConceptl(fmla goivy.Expr) *CDConcept {
+	vs := goivy.UsedVariablesAsts([]goivy.Expr{fmla})
 	sort.Slice(vs, func(i, j int) bool {
 		return fmt.Sprintf("%v", vs[i]) < fmt.Sprintf("%v", vs[j])
 	})

@@ -3,11 +3,9 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- CTI struct tests ---
@@ -36,9 +34,9 @@ func TestCTIAnalysisGraphUIFields(t *testing.T) {
 
 func TestCTIConjecturesTypeClauses(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2}
 
 	if len(ui.Conjectures) != 2 {
 		t.Fatalf("expected 2 conjectures, got %d", len(ui.Conjectures))
@@ -62,7 +60,7 @@ func TestAutodetectTransitiveNilModule(t *testing.T) {
 }
 
 func TestAutodetectTransitiveEmptySig(t *testing.T) {
-	mod := module.New()
+	mod := goivy.New()
 	ui := NewCTIAnalysisGraphUI(mod)
 	ui.AutodetectTransitive()
 	if len(ui.TransitiveRelations) != 0 {
@@ -152,10 +150,10 @@ func TestDiagramNoCtI(t *testing.T) {
 
 func TestWeakenMultipleIndices(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2, c3}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	c3 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2, c3}
 
 	removed, err := ui.Weaken([]int{0, 2})
 	if err != nil {
@@ -177,8 +175,8 @@ func TestWeakenMultipleIndices(t *testing.T) {
 
 func TestWeakenOutOfBounds(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1}
 
 	removed, err := ui.Weaken([]int{5})
 	if err != nil {
@@ -194,8 +192,8 @@ func TestWeakenOutOfBounds(t *testing.T) {
 
 func TestWeakenClearsHaveCTI(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1}
 	ui.HaveCTI = true
 
 	ui.Weaken([]int{0})
@@ -220,9 +218,9 @@ func TestSaveConjecturesEmpty(t *testing.T) {
 
 func TestSaveConjecturesMultiple(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2}
 	result := ui.SaveConjectures()
 	count := strings.Count(result, "invariant")
 	if count != 2 {
@@ -275,10 +273,10 @@ func TestGetSelectedConjectureBasic(t *testing.T) {
 	w := NewCTIConceptGraphWidget(gs, ui)
 
 	// Set up simple ground facts (no free variables).
-	a := lg.NewConst("a", mkSort("S"))
-	b := lg.NewConst("b", mkSort("S"))
-	eq, _ := lg.NewEq(a, b)
-	w.ActiveFactExprs = []lg.Expr{eq}
+	a := goivy.NewConst("a", mkSort("S"))
+	b := goivy.NewConst("b", mkSort("S"))
+	eq, _ := goivy.NewEq(a, b)
+	w.ActiveFactExprs = []goivy.Expr{eq}
 
 	conj := w.GetSelectedConjecture()
 	if conj == nil {
@@ -296,9 +294,9 @@ func TestGetSelectedConjectureWithFreeVarsReturnsNil(t *testing.T) {
 
 	// A fact with free variables should be rejected.
 	x := mkVar("X", mkSort("S"))
-	a := lg.NewConst("a", mkSort("S"))
-	eq, _ := lg.NewEq(x, a)
-	w.ActiveFactExprs = []lg.Expr{eq}
+	a := goivy.NewConst("a", mkSort("S"))
+	eq, _ := goivy.NewEq(x, a)
+	w.ActiveFactExprs = []goivy.Expr{eq}
 
 	conj := w.GetSelectedConjecture()
 	if conj != nil {
@@ -325,10 +323,10 @@ func TestCTIStrengthenAddsConjecture(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
 
-	a := lg.NewConst("a", mkSort("S"))
-	b := lg.NewConst("b", mkSort("S"))
-	eq, _ := lg.NewEq(a, b)
-	w.ActiveFactExprs = []lg.Expr{eq}
+	a := goivy.NewConst("a", mkSort("S"))
+	b := goivy.NewConst("b", mkSort("S"))
+	eq, _ := goivy.NewEq(a, b)
+	w.ActiveFactExprs = []goivy.Expr{eq}
 
 	before := len(ui.Conjectures)
 	conj, err := w.Strengthen()
@@ -381,10 +379,10 @@ func TestIsSufficientNoTarget(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
 
-	a := lg.NewConst("a", mkSort("S"))
-	b := lg.NewConst("b", mkSort("S"))
-	eq, _ := lg.NewEq(a, b)
-	w.ActiveFactExprs = []lg.Expr{eq}
+	a := goivy.NewConst("a", mkSort("S"))
+	b := goivy.NewConst("b", mkSort("S"))
+	eq, _ := goivy.NewEq(a, b)
+	w.ActiveFactExprs = []goivy.Expr{eq}
 
 	ok, msg := w.IsSufficient()
 	if ok {
@@ -418,7 +416,7 @@ func TestFormulaToConceptlBasic(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
-	r := mkConst("r", mkFuncSort(S, S, lg.Boolean))
+	r := mkConst("r", mkFuncSort(S, S, goivy.Boolean))
 	fmla := mkApply(r, X, Y)
 
 	concept := FormulaToConceptl(fmla)
@@ -439,7 +437,7 @@ func TestFormulaToConceptlBasic(t *testing.T) {
 func TestFormulaToConceptlUnary(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
-	p := mkConst("p", mkFuncSort(S, lg.Boolean))
+	p := mkConst("p", mkFuncSort(S, goivy.Boolean))
 	fmla := mkApply(p, X)
 
 	concept := FormulaToConceptl(fmla)
@@ -452,7 +450,7 @@ func TestFormulaToConceptlUnary(t *testing.T) {
 }
 
 func TestFormulaToConceptlGround(t *testing.T) {
-	concept := FormulaToConceptl(lg.True)
+	concept := FormulaToConceptl(goivy.True)
 	if concept == nil {
 		t.Fatal("expected non-nil concept")
 	}
@@ -464,12 +462,12 @@ func TestFormulaToConceptlGround(t *testing.T) {
 // --- shouldFilterFact tests ---
 
 func TestShouldFilterFactNotEqOrdered(t *testing.T) {
-	a := lg.NewConst("a", mkSort("S"))
-	b := lg.NewConst("b", mkSort("S"))
+	a := goivy.NewConst("a", mkSort("S"))
+	b := goivy.NewConst("b", mkSort("S"))
 
 	// Not(a = b): should filter if "a" >= "b"
-	eq, _ := lg.NewEq(a, b)
-	notEq, _ := lg.NewNot(eq)
+	eq, _ := goivy.NewEq(a, b)
+	notEq, _ := goivy.NewNot(eq)
 
 	result := shouldFilterFact(notEq)
 	// "a" < "b", so a >= b is false, should NOT filter
@@ -478,8 +476,8 @@ func TestShouldFilterFactNotEqOrdered(t *testing.T) {
 	}
 
 	// Not(b = a): "b" >= "a" is true, should filter
-	eq2, _ := lg.NewEq(b, a)
-	notEq2, _ := lg.NewNot(eq2)
+	eq2, _ := goivy.NewEq(b, a)
+	notEq2, _ := goivy.NewNot(eq2)
 	result2 := shouldFilterFact(notEq2)
 	if !result2 {
 		t.Error("should filter Not(b=a) since 'b' >= 'a'")
@@ -487,9 +485,9 @@ func TestShouldFilterFactNotEqOrdered(t *testing.T) {
 }
 
 func TestShouldFilterFactPositive(t *testing.T) {
-	a := lg.NewConst("a", mkSort("S"))
-	b := lg.NewConst("b", mkSort("S"))
-	eq, _ := lg.NewEq(a, b)
+	a := goivy.NewConst("a", mkSort("S"))
+	b := goivy.NewConst("b", mkSort("S"))
+	eq, _ := goivy.NewEq(a, b)
 
 	if shouldFilterFact(eq) {
 		t.Error("should not filter positive equalities")
@@ -497,7 +495,7 @@ func TestShouldFilterFactPositive(t *testing.T) {
 }
 
 func TestShouldFilterFactTrue(t *testing.T) {
-	if shouldFilterFact(lg.True) {
+	if shouldFilterFact(goivy.True) {
 		t.Error("should not filter True")
 	}
 }
@@ -509,7 +507,7 @@ func TestCtiWitness(t *testing.T) {
 	v := mkVar("V", mkSort("S"))
 	result := witness(v)
 
-	c, ok := result.(*lg.Const)
+	c, ok := result.(*goivy.Const)
 	if !ok {
 		t.Fatal("witness should return a Const")
 	}
@@ -535,10 +533,10 @@ func TestCtiWitnessWithUsedNames(t *testing.T) {
 
 func TestWeakenThenSave(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2, c3}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	c3 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2, c3}
 
 	ui.Weaken([]int{1})
 	result := ui.SaveConjectures()

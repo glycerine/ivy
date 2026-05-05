@@ -4,13 +4,11 @@ package webui
 
 import (
 	"encoding/json"
+	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	lg "github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // --- AnalysisGraphUI tests ---
@@ -405,10 +403,10 @@ func TestCTIMenus(t *testing.T) {
 
 func TestCTIWeaken(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	c3 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2, c3}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	c3 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2, c3}
 	removed, err := ui.Weaken([]int{1})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -431,9 +429,9 @@ func TestCTIWeakenEmpty(t *testing.T) {
 
 func TestCTISaveConjectures(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	c1 := module.NewClauses([]lg.Expr{lg.True}, nil, nil)
-	c2 := module.NewClauses([]lg.Expr{lg.False}, nil, nil)
-	ui.Conjectures = []*module.Clauses{c1, c2}
+	c1 := goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)
+	c2 := goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	ui.Conjectures = []*goivy.Clauses{c1, c2}
 	result := ui.SaveConjectures()
 	if !strings.Contains(result, "invariant") {
 		t.Error("save should contain 'invariant'")
@@ -689,7 +687,7 @@ func TestBuildMenuBar(t *testing.T) {
 // --- Show tests ---
 
 func TestShowVerificationEmptyPath(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	_, err := ShowVerification(cfg, "")
 	if err == nil {
 		t.Error("expected error for empty path")
@@ -697,7 +695,7 @@ func TestShowVerificationEmptyPath(t *testing.T) {
 }
 
 func TestShowVerificationNonexistentFile(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	_, err := ShowVerification(cfg, "nonexistent_file_9999.ivy")
 	if err == nil {
 		t.Fatal("expected error for nonexistent file")
@@ -713,7 +711,7 @@ func TestShowVerificationInvalidContent(t *testing.T) {
 	if err := os.WriteFile(path, []byte("@@@ not valid ivy @@@"), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	_, err := ShowVerification(cfg, path)
 	if err == nil {
 		t.Error("expected error for invalid ivy content")
@@ -730,7 +728,7 @@ func TestShowVerificationSuccess(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	sess, err := ShowVerification(cfg, path)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -769,7 +767,7 @@ func TestShowVerificationFromTestVectors(t *testing.T) {
 	if _, err := os.Stat(path); err != nil {
 		t.Skipf("test vector not available: %v", err)
 	}
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	sess, err := ShowVerification(cfg, path)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -789,7 +787,7 @@ func TestShowVerificationNoHeader(t *testing.T) {
 	if err := os.WriteFile(path, []byte(src), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	sess, err := ShowVerification(cfg, path)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -806,7 +804,7 @@ func TestCheckModuleAndShowComponents(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	sess, err := ShowVerification(cfg, path)
 	if err != nil {
 		t.Fatalf("ShowVerification: %v", err)
@@ -822,7 +820,7 @@ func TestCheckModuleAndShowComponents(t *testing.T) {
 }
 
 func TestLaunchUI(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	_, err := LaunchUI(cfg, nil, ":0")
 	if err == nil {
 		t.Error("expected error for nil session")
@@ -842,7 +840,7 @@ func TestLaunchUI(t *testing.T) {
 
 func loadProofTestSession(t *testing.T) *Session {
 	t.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-proof")
 	if err := s.LoadFileContent("test.ivy", []byte(ivySample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
@@ -963,7 +961,7 @@ func TestProofGoalActionPushPop(t *testing.T) {
 }
 
 func TestEmptyModuleEmptyProofStack(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-empty")
 	src := "type t\nrelation r(X:t)\nafter init { r(X) := false }\n"
 	if err := s.LoadFileContent("empty.ivy", []byte(src)); err != nil {
@@ -994,7 +992,7 @@ func TestProofGoalParentRelationships(t *testing.T) {
 }
 
 func TestGetProofNonEmptyJSON(t *testing.T) {
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	be := NewGoBackend(cfg)
 	defer be.Close()
 

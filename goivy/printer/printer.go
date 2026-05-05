@@ -6,19 +6,15 @@ package printer
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
-
-	"github.com/glycerine/ivy/goivy/actions"
-	"github.com/glycerine/ivy/goivy/ast"
-	iu "github.com/glycerine/ivy/goivy/ivyutils"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // LabeledFmlasToStr formats a slice of labeled formulas with a keyword prefix.
 // Each formula is printed on its own line with the keyword, optional label in
 // brackets, and the formula body.
-func LabeledFmlasToStr(kwd string, lfmlas []*ast.LabeledFormula) string {
+func LabeledFmlasToStr(kwd string, lfmlas []*goivy.LabeledFormula) string {
 	var b strings.Builder
 	for _, f := range lfmlas {
 		b.WriteString(kwd)
@@ -35,7 +31,7 @@ func LabeledFmlasToStr(kwd string, lfmlas []*ast.LabeledFormula) string {
 // FormatModule formats an Ivy module's declarations and actions as a string.
 // It prints schemata, axioms, properties, init, conjectures, definitions,
 // interpretations, initializers, actions, and exports.
-func FormatModule(mod *module.Module) string {
+func FormatModule(mod *goivy.Module) string {
 	var b strings.Builder
 
 	// Signature
@@ -53,7 +49,7 @@ func FormatModule(mod *module.Module) string {
 	// Labeled formula sections
 	type section struct {
 		kwd  string
-		list []*ast.LabeledFormula
+		list []*goivy.LabeledFormula
 	}
 	sections := []section{
 		{"axiom", mod.LabeledAxioms},
@@ -77,7 +73,7 @@ func FormatModule(mod *module.Module) string {
 
 	// Initializers
 	for _, na := range mod.Initializers {
-		if act, ok := na.Action.(actions.ActionsAction); ok {
+		if act, ok := na.Action.(goivy.ActionsAction); ok {
 			s := fmt.Sprintf("after init {%s}", act.String())
 			b.WriteString(s)
 			b.WriteByte('\n')
@@ -88,8 +84,8 @@ func FormatModule(mod *module.Module) string {
 	actionNames := sortedActionNames(mod)
 	for _, name := range actionNames {
 		actIface := mod.Actions.Get(name)
-		if act, ok := actIface.(actions.ActionsAction); ok {
-			b.WriteString(actions.ActionDefToStr(name, act))
+		if act, ok := actIface.(goivy.ActionsAction); ok {
+			b.WriteString(goivy.ActionDefToStr(name, act))
 			b.WriteByte('\n')
 		}
 	}
@@ -105,7 +101,7 @@ func FormatModule(mod *module.Module) string {
 
 // PrintModule prints the module to stdout. This mirrors the Python function
 // print_module which calls print() on each section.
-func PrintModule(mod *module.Module) {
+func PrintModule(mod *goivy.Module) {
 	fmt.Print(FormatModule(mod))
 }
 
@@ -121,7 +117,7 @@ func sortedKeys(m map[string]interface{}) []string {
 	return keys
 }
 
-func sortedKeysNode(m map[string]ast.Node) []string {
+func sortedKeysNode(m map[string]goivy.Node) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)
@@ -130,7 +126,7 @@ func sortedKeysNode(m map[string]ast.Node) []string {
 	return keys
 }
 
-func sortedInsMapKeys(m *iu.InsMap[string, ast.Node]) []string {
+func sortedInsMapKeys(m *goivy.InsMap[string, goivy.Node]) []string {
 	if m == nil {
 		return nil
 	}
@@ -143,7 +139,7 @@ func sortedInsMapKeys(m *iu.InsMap[string, ast.Node]) []string {
 }
 
 // sortedInterpKeys returns sorted interpretation type names from a module.
-func sortedInterpKeys(mod *module.Module) []string {
+func sortedInterpKeys(mod *goivy.Module) []string {
 	keys := make([]string, 0, len(mod.Interps))
 	for k := range mod.Interps {
 		keys = append(keys, k)
@@ -153,7 +149,7 @@ func sortedInterpKeys(mod *module.Module) []string {
 }
 
 // sortedActionNames returns sorted action names from a module.
-func sortedActionNames(mod *module.Module) []string {
+func sortedActionNames(mod *goivy.Module) []string {
 	keys := make([]string, 0, mod.Actions.Len())
 	for k := range mod.Actions.All() {
 		keys = append(keys, k)
@@ -163,7 +159,7 @@ func sortedActionNames(mod *module.Module) []string {
 }
 
 // sortedPublicActions returns sorted public action names from a module.
-func sortedPublicActions(mod *module.Module) []string {
+func sortedPublicActions(mod *goivy.Module) []string {
 	keys := make([]string, 0, mod.PublicActions.Len())
 	for k := range mod.PublicActions.All() {
 		keys = append(keys, k)

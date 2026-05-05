@@ -3,12 +3,9 @@
 package webui
 
 import (
+	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/art"
-	"github.com/glycerine/ivy/goivy/logic"
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -21,11 +18,11 @@ func TestGetFacts_InteractiveSession(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nodeC := MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X))
+	nodeC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nodeC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
-	linkC := MustCDConcept("link", []*logic.Variable{X, Y}, mkEq(X, Y))
+	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
 	domain.Concepts.SetConcept("link", linkC)
 	domain.Concepts.SetSet("edges", NewCDConceptSet("link"))
 
@@ -77,7 +74,7 @@ func TestSetFactsExpr(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -89,7 +86,7 @@ func TestSetFactsExpr(t *testing.T) {
 	eq1 := mkEq(mkConst("a", S), mkConst("b", S))
 	eq2 := mkEq(mkConst("c", S), mkConst("d", S))
 
-	g.SetFactsExpr([]logic.Expr{eq1, eq2})
+	g.SetFactsExpr([]goivy.Expr{eq1, eq2})
 
 	if len(sess.SupposeConstraints) != 2 {
 		t.Errorf("expected 2 suppose constraints, got %d", len(sess.SupposeConstraints))
@@ -100,18 +97,18 @@ func TestSetFactsExpr_Replaces(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
 	)
-	sess.SupposeConstraints = []logic.Expr{mkEq(mkConst("old", S), mkConst("old", S))}
+	sess.SupposeConstraints = []goivy.Expr{mkEq(mkConst("old", S), mkConst("old", S))}
 
 	g := NewGraph([]string{"node"}, nil)
 	g.InteractiveSess = sess
 
 	eq1 := mkEq(mkConst("new1", S), mkConst("new2", S))
-	g.SetFactsExpr([]logic.Expr{eq1})
+	g.SetFactsExpr([]goivy.Expr{eq1})
 
 	if len(sess.SupposeConstraints) != 1 {
 		t.Errorf("expected 1 suppose constraint after replace, got %d", len(sess.SupposeConstraints))
@@ -125,7 +122,7 @@ func TestAddConstraintsExpr(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -137,13 +134,13 @@ func TestAddConstraintsExpr(t *testing.T) {
 	eq1 := mkEq(mkConst("a", S), mkConst("b", S))
 	eq2 := mkEq(mkConst("c", S), mkConst("d", S))
 
-	g.AddConstraintsExpr([]logic.Expr{eq1, eq2}, false)
+	g.AddConstraintsExpr([]goivy.Expr{eq1, eq2}, false)
 	if len(sess.SupposeConstraints) != 2 {
 		t.Errorf("expected 2, got %d", len(sess.SupposeConstraints))
 	}
 
 	eq3 := mkEq(mkConst("e", S), mkConst("f", S))
-	g.AddConstraintsExpr([]logic.Expr{eq3}, false)
+	g.AddConstraintsExpr([]goivy.Expr{eq3}, false)
 	if len(sess.SupposeConstraints) != 3 {
 		t.Errorf("expected 3 after append, got %d", len(sess.SupposeConstraints))
 	}
@@ -153,7 +150,7 @@ func TestAddConstraintsExpr_FiltersTautology(t *testing.T) {
 	S := mkSort("node")
 	X := mkVar("X", S)
 	domain := NewCDConceptDomain(nil, nil, nil)
-	domain.Concepts.SetConcept("n", MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X)))
+	domain.Concepts.SetConcept("n", MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X)))
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
@@ -164,7 +161,7 @@ func TestAddConstraintsExpr_FiltersTautology(t *testing.T) {
 
 	// X = X is a tautology equality — Suppose should filter it
 	tautology := mkEq(X, X)
-	g.AddConstraintsExpr([]logic.Expr{tautology}, false)
+	g.AddConstraintsExpr([]goivy.Expr{tautology}, false)
 	if len(sess.SupposeConstraints) != 0 {
 		t.Errorf("expected tautology to be filtered, got %d constraints", len(sess.SupposeConstraints))
 	}
@@ -180,9 +177,9 @@ func TestMaterializeEdge_Interactive(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	n1C := MustCDConcept("n1", []*logic.Variable{X}, mkEq(X, mkConst("c1", S)))
-	n2C := MustCDConcept("n2", []*logic.Variable{X}, mkEq(X, mkConst("c2", S)))
-	linkC := MustCDConcept("link", []*logic.Variable{X, Y}, mkEq(X, Y))
+	n1C := MustCDConcept("n1", []*goivy.Variable{X}, mkEq(X, mkConst("c1", S)))
+	n2C := MustCDConcept("n2", []*goivy.Variable{X}, mkEq(X, mkConst("c2", S)))
+	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
 
 	domain.Concepts.SetConcept("n1", n1C)
 	domain.Concepts.SetConcept("n2", n2C)
@@ -230,8 +227,8 @@ func TestMaterializeEdge_NegativePolarity(t *testing.T) {
 	Y := mkVar("Y", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	n1C := MustCDConcept("n1", []*logic.Variable{X}, mkEq(X, mkConst("c1", S)))
-	linkC := MustCDConcept("link", []*logic.Variable{X, Y}, mkEq(X, Y))
+	n1C := MustCDConcept("n1", []*goivy.Variable{X}, mkEq(X, mkConst("c1", S)))
+	linkC := MustCDConcept("link", []*goivy.Variable{X, Y}, mkEq(X, Y))
 
 	domain.Concepts.SetConcept("n1", n1C)
 	domain.Concepts.SetConcept("link", linkC)
@@ -330,7 +327,7 @@ func TestSplatter_Interactive(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
@@ -340,7 +337,7 @@ func TestSplatter_Interactive(t *testing.T) {
 
 	a := mkConst("a", S)
 	b := mkConst("b", S)
-	sess.SupposeConstraints = []logic.Expr{
+	sess.SupposeConstraints = []goivy.Expr{
 		mkEq(X, a),
 		mkEq(X, b),
 	}
@@ -366,7 +363,7 @@ func TestSplatter_NoConstants(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 	domain.Concepts.SetSet("nodes", NewCDConceptSet("n"))
 
@@ -393,7 +390,7 @@ func TestSplatter_NonexistentConcept(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 
 	sess := NewConceptInteractiveSession(
@@ -427,15 +424,15 @@ func TestRecalculate_WithParentState(t *testing.T) {
 	X := mkVar("X", S)
 
 	domain := NewCDConceptDomain(nil, nil, nil)
-	nC := MustCDConcept("n", []*logic.Variable{X}, mkEq(X, X))
+	nC := MustCDConcept("n", []*goivy.Variable{X}, mkEq(X, X))
 	domain.Concepts.SetConcept("n", nC)
 
 	sess := NewConceptInteractiveSession(
 		domain, nil, nil, nil, nil, nil, nil, nil, false,
 	)
 
-	state := &art.State{
-		Clauses: module.NewClauses([]logic.Expr{mkEq(X, X)}, nil, nil),
+	state := &goivy.State{
+		Clauses: goivy.NewClauses([]goivy.Expr{mkEq(X, X)}, nil, nil),
 	}
 
 	g := NewGraph([]string{"node"}, state)
@@ -444,7 +441,7 @@ func TestRecalculate_WithParentState(t *testing.T) {
 	w := NewGraphWidget(gs)
 
 	agui := &AnalysisGraphUI{
-		AG: art.NewAnalysisGraph(nil),
+		AG: goivy.NewAnalysisGraph(nil),
 	}
 	w.Parent = agui
 
@@ -458,11 +455,11 @@ func TestRecalculate_WithParentState(t *testing.T) {
 
 func testExtConfigWithAG(nStates int) *ExtConfig {
 	cfg := NewExtConfig()
-	ag := art.NewAnalysisGraph(nil)
+	ag := goivy.NewAnalysisGraph(nil)
 	for i := 0; i < nStates; i++ {
-		s := &art.State{
+		s := &goivy.State{
 			ID:      i,
-			Clauses: module.NewClauses(nil, nil, nil),
+			Clauses: goivy.NewClauses(nil, nil, nil),
 		}
 		if i > 0 {
 			s.Pred = ag.States[i-1]
@@ -563,23 +560,23 @@ func TestRegisterArgRemoveFacts(t *testing.T) {
 	f3 := mkEq(mkConst("e", S), mkConst("f", S))
 
 	cfg := NewExtConfig()
-	ag := art.NewAnalysisGraph(nil)
-	state := &art.State{
+	ag := goivy.NewAnalysisGraph(nil)
+	state := &goivy.State{
 		ID:      0,
-		Clauses: module.NewClauses([]logic.Expr{f1, f2, f3}, nil, nil),
+		Clauses: goivy.NewClauses([]goivy.Expr{f1, f2, f3}, nil, nil),
 	}
 	ag.States = append(ag.States, state)
 	cfg.AG = ag
 	cfg.RegisterArgRemoveFacts()
 
-	actions, errs := cfg.ArgNodeActions.Invoke(nil, 0, []logic.Expr{f2})
+	actions, errs := cfg.ArgNodeActions.Invoke(nil, 0, []goivy.Expr{f2})
 	if len(errs) > 0 {
 		t.Fatalf("unexpected errors: %v", errs)
 	}
 
 	for _, a := range actions {
 		if a.Label == "remove facts" {
-			err := a.Callback(0, []logic.Expr{f2})
+			err := a.Callback(0, []goivy.Expr{f2})
 			if err != nil {
 				t.Fatalf("remove facts callback failed: %v", err)
 			}

@@ -5,6 +5,7 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -16,8 +17,6 @@ import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ---------- shared browser singleton ----------
@@ -63,7 +62,7 @@ func TestMain(m *testing.M) {
 // startTestServer creates an httptest.Server backed by a webui.Server.
 func startTestServer(t *testing.T) *httptest.Server {
 	t.Helper()
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")
 	ts := httptest.NewServer(srv)
 	t.Cleanup(ts.Close)

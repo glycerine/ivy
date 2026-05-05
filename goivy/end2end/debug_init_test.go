@@ -2,11 +2,8 @@ package end2end
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"testing"
-
-	"github.com/glycerine/ivy/goivy/ast"
-	"github.com/glycerine/ivy/goivy/lexer"
-	"github.com/glycerine/ivy/goivy/parser"
 )
 
 func TestDebugClientServerInit(t *testing.T) {
@@ -58,8 +55,8 @@ action step(x:t) = {
 
 export step
 `
-	version := lexer.Version{1, 7}
-	result, err := parser.Parse(src, version)
+	version := goivy.Version{1, 7}
+	result, err := goivy.Parse(src, version)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -67,7 +64,7 @@ export step
 	fmt.Printf("Parsed %d declarations:\n", len(decls))
 	for i, d := range decls {
 		fmt.Printf("  [%d] %T: %s\n", i, d, d)
-		if id, ok := d.(*ast.InitDecl); ok {
+		if id, ok := d.(*goivy.InitDecl); ok {
 			fmt.Printf("      InitDecl with %d args\n", len(id.DeclArgs))
 			for j, arg := range id.DeclArgs {
 				fmt.Printf("        arg[%d]: %T = %s\n", j, arg, arg)

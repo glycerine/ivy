@@ -13,12 +13,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
 
-	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/webui"
 )
 
@@ -33,7 +33,7 @@ func main() {
 		log.Fatal("-py and -conform are mutually exclusive")
 	}
 
-	cfg := module.NewConfig()
+	cfg := goivy.NewConfig()
 
 	var backend webui.Backend
 	switch {

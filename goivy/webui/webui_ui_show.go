@@ -5,15 +5,14 @@ package webui
 
 import (
 	"fmt"
+	goivy "github.com/glycerine/ivy/goivy"
 	"os"
-
-	"github.com/glycerine/ivy/goivy/module"
 )
 
 // ShowVerification is the main entry point for showing verification results.
 // It initializes the module, creates the isolate, and launches the UI.
 // (Python: check_module in ivy_show.py).
-func ShowVerification(cfg *module.Config, filePath string) (*Session, error) {
+func ShowVerification(cfg *goivy.Config, filePath string) (*Session, error) {
 	if filePath == "" {
 		return nil, fmt.Errorf("empty file path")
 	}
@@ -47,7 +46,7 @@ func ShowVerification(cfg *module.Config, filePath string) (*Session, error) {
 // ivyweb uses NewServer() directly... but also
 // does not use a Session, which it might want to,
 // so keep around.
-func LaunchUI(cfg *module.Config, sess *Session, addr string) (*Server, error) {
+func LaunchUI(cfg *goivy.Config, sess *Session, addr string) (*Server, error) {
 	if sess == nil {
 		return nil, fmt.Errorf("nil session")
 	}
@@ -72,7 +71,7 @@ var CompileKwargs = map[string]string{
 // CheckModuleAndShow loads an Ivy file, checks the module, and
 // shows the result in the UI.
 // (Python: main() in ivy_show.py).
-func CheckModuleAndShow(cfg *module.Config, filePath string, addr string) error {
+func CheckModuleAndShow(cfg *goivy.Config, filePath string, addr string) error {
 	sess, err := ShowVerification(cfg, filePath)
 	if err != nil {
 		return err
