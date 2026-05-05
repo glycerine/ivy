@@ -2,7 +2,6 @@ package goivy
 
 import (
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -229,16 +228,12 @@ func TestFragmentSexpExpectedStrings(t *testing.T) {
 // --- Test D: Cross-language comparison ---
 
 func TestFragmentFragmentSexpCrossLanguage(t *testing.T) {
-	if _, err := exec.LookPath("python3"); err != nil {
-		t.Skip("python3 not available")
-	}
-
 	goSexps := buildAllFragmentSexps(t)
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	pyScript := filepath.Join(filepath.Dir(thisFile), "pytesthelper", "emit_fragment_sexp.py")
 
-	cmd := exec.Command("python3", pyScript)
+	cmd := pythonIvyCommandForTest(t, pyScript)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("Python subprocess failed: %v\nOutput: %s", err, out)

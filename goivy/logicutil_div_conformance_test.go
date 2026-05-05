@@ -9,7 +9,6 @@ package goivy_test
 import (
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -24,7 +23,7 @@ func divPyScript() string {
 func runPyDiv(t *testing.T, name string) map[string]string {
 	t.Helper()
 	script := divPyScript()
-	cmd := exec.Command("python3", script, name)
+	cmd := externalPythonIvyCommandForTest(t, script, name)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("Python %s failed: %v\nOutput: %s", name, err, out)

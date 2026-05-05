@@ -2,7 +2,6 @@ package goivy_test
 
 import (
 	goivy "github.com/glycerine/ivy/goivy"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -127,16 +126,11 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 }
 
 func TestSexpCrossLanguage(t *testing.T) {
-	// Check if python3 is available
-	if _, err := exec.LookPath("python3"); err != nil {
-		t.Skip("python3 not available")
-	}
-
 	goSexps := buildAllGoSexps(t)
 
 	// Run Python subprocess
 	pyScript := filepath.Join(testVectorsDir(), "emit_sexp.py")
-	cmd := exec.Command("python3", pyScript)
+	cmd := externalPythonIvyCommandForTest(t, pyScript)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("Python subprocess failed: %v\nOutput: %s", err, out)
