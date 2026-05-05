@@ -34,7 +34,7 @@ func initSharedBrowser() {
 		sharedBrowserErr = "no Chrome/Chromium found on system"
 		return
 	}
-	u, err := launcher.New().Headless(true).Launch()
+	u, err := launcher.New().Bin(path).Headless(true).Launch()
 	if err != nil {
 		sharedBrowserErr = fmt.Sprintf("failed to launch browser: %v", err)
 		return
