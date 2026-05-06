@@ -11,7 +11,8 @@ feature must use.
 Phase 0 is successful when:
 
 - unauthenticated users see a login screen
-- authenticated users see only accounts and projects they can access
+- authenticated users see only billing accounts, teams, and projects they can
+  access
 - the workspace shell is rendered only after login and project selection
 - all API calls are project scoped
 - the server rejects cross-project and unauthenticated API access
@@ -39,8 +40,8 @@ Use these as baseline guidance while implementing:
 - Do not add `window.ivyApp`, `window.__ivyVueBridge`, or diagnostics that
   expose an app/service container.
 - Do not add anonymous Ivy backend sessions.
-- Do not allow a client-provided account id or project id to grant access by
-  itself.
+- Do not allow a client-provided account id, team id, or project id to grant
+  access by itself.
 - Do not let frontend stores call the backend directly.
 - Copying static files is allowed.
 - Copying narrow backend-interface facts is allowed:
@@ -64,8 +65,8 @@ For local password auth:
 
 - store password hashes only
 - use Argon2id from day one
-- persist users, credentials, accounts, project grants, and sessions in
-  PostgreSQL
+- persist users, credentials, billing accounts, teams, project grants, and
+  sessions in PostgreSQL
 - no plaintext passwords outside tests or local seed config
 
 ### Persistence Backend
@@ -78,25 +79,26 @@ PostgreSQL implementation.
 Use one PostgreSQL application database by default:
 
 1. `ivyvue` is the application database.
-2. control-plane tables store identity, accounts, projects, grants, sessions,
-   and storage metadata.
+2. control-plane tables store identity, billing accounts, teams, projects,
+   grants, sessions, and storage metadata.
 3. project-owned tables include `project_id`.
 4. PostgreSQL row-level security protects project-owned rows.
 
-Do not make the storage isolation unit a login user. Users can belong to many
-accounts, accounts can own many projects, and projects can be shared with many
-users. The project is the unit of application authorization.
+Do not make the storage isolation unit a login user or a billing account. A
+billing account can pay for many standalone users, many teams, and many
+projects. The project is the unit of application data isolation.
 
-Use the GitHub-like ownership model:
+Use a billing-account collaboration model:
 
 - a `User` is a human login identity
-- an `Account` is an owner namespace
-- an account has kind `personal` or `team`
-- every user gets a personal account
-- team accounts have members
-- projects belong to accounts
-- projects can grant `read`, `write`, or `admin` access to users and team
-  accounts
+- an `Account` is the billing and payment responsibility
+- an account can pay for standalone users
+- an account can pay for multiple teams
+- a `Team` is a collaboration group inside an account
+- users can be standalone account users, team members, or both
+- projects belong to a billing account
+- projects can grant `read`, `write`, or `admin` access to users, teams, or all
+  active users in the billing account
 - project data is scoped by `project_id` and protected by RLS
 
 Implementation choices:
@@ -146,8 +148,10 @@ The PostgreSQL database stores:
 - users
 - password credentials
 - auth sessions
-- accounts
-- account memberships
+- billing accounts
+- account users and billing/admin roles
+- teams
+- team memberships
 - projects
 - project access grants
 - project storage-location metadata
@@ -183,11 +187,13 @@ schema_name: project_data
 ```
 
 This lets us add dedicated project databases later for large customers or
-stronger isolation without changing the account/project authorization model.
+stronger isolation without changing the billing/account/team/project
+authorization model.
 
 For production, prefer a narrow runtime database role that cannot create
 schemas, create roles, disable RLS, or own project data tables. Use a separate
-migration/admin path for schema changes and account bootstrap.
+migration/admin path for schema changes, billing-account bootstrap, user
+invites, team management, and project grants.
 
 ### Administrative Setup
 
@@ -228,12 +234,16 @@ The Go admin command should use `database/sql` too. It should provide:
 ivywebvue-admin migrate
 ivywebvue-admin seed-dev
 ivywebvue-admin create-user
-ivywebvue-admin create-personal-account
-ivywebvue-admin create-team-account
+ivywebvue-admin create-account
+ivywebvue-admin add-account-user
+ivywebvue-admin create-team
+ivywebvue-admin add-team-user
 ivywebvue-admin create-project
 ivywebvue-admin grant-project
 ivywebvue-admin revoke-project
 ivywebvue-admin list-users
+ivywebvue-admin list-accounts
+ivywebvue-admin list-teams
 ivywebvue-admin list-projects
 ```
 
@@ -242,13 +252,14 @@ Argon2id parameters stay in one implementation.
 
 ### Database Schema
 
-Phase 0 owns the schema needed for auth, account/project ownership, project
-access, and mapping project-scoped web sessions to underlying Ivy backend
-sessions.
+Phase 0 owns the schema needed for auth, billing accounts, account users,
+teams, team memberships, project access, and mapping project-scoped web
+sessions to underlying Ivy backend sessions.
 
 Use PostgreSQL schemas to keep intent clear:
 
-- `control` for users, accounts, projects, grants, sessions, and migrations
+- `control` for users, accounts, teams, projects, grants, sessions, and
+  migrations
 - `project_data` for project-owned Ivy data tables protected by RLS
 - `app_private` for helper functions that should not be called directly by the
   runtime app role
@@ -275,15 +286,33 @@ control.password_credentials
 control.accounts
   id
   slug
-  kind
   display_name
-  personal_user_id
+  billing_email
+  billing_status
   disabled_at
   created_at
   updated_at
 
-control.account_memberships
+control.account_users
   account_id
+  user_id
+  role
+  seat_state
+  disabled_at
+  created_at
+  updated_at
+
+control.teams
+  id
+  account_id
+  slug
+  display_name
+  disabled_at
+  created_at
+  updated_at
+
+control.team_memberships
+  team_id
   user_id
   role
   disabled_at
@@ -292,9 +321,10 @@ control.account_memberships
 
 control.projects
   id
-  owner_account_id
+  account_id
   slug
   display_name
+  created_by_user_id
   disabled_at
   created_at
   updated_at
@@ -361,11 +391,14 @@ by `ivywebvue-admin seed-dev` so password hashing goes through Go. It creates:
 ```text
 email: dev@local
 password: dev-password
-personal account: dev
+billing account: dev
+account user role: owner
+team: dev/core
+team role: owner
 project: dev/client-server
 project storage: shared_postgres in project_data
-account role: owner
-project role: admin
+project grant: dev@local admin
+project grant: dev/core admin
 ```
 
 Keep PostgreSQL roles separate from web application accounts.
@@ -399,7 +432,7 @@ Use a CSRF token for state-changing same-origin API requests:
 - server rejects missing or mismatched CSRF tokens
 - keep `SameSite=Lax` as defense in depth, not the only defense
 
-### Account And Project Model
+### Account, Team, And Project Model
 
 Define project-scoped identity data from day one:
 
@@ -413,22 +446,37 @@ User
 Account
   id
   slug
-  kind
   displayName
-  personalUserId
+  billingEmail
+  billingStatus
   disabledAt
 
-AccountMembership
+AccountUser
   accountId
+  userId
+  role
+  seatState
+  disabledAt
+
+Team
+  id
+  accountId
+  slug
+  displayName
+  disabledAt
+
+TeamMembership
+  teamId
   userId
   role
   disabledAt
 
 Project
   id
-  ownerAccountId
+  accountId
   slug
   displayName
+  createdByUserId
   disabledAt
 
 ProjectStorageLocation
@@ -468,7 +516,23 @@ Account roles for Phase 0:
 
 - `owner`
 - `admin`
+- `billing_admin`
 - `member`
+
+Account roles describe billing-account administration and seat management.
+`owner` and `admin` can manage account users, teams, projects, and billing.
+`billing_admin` can manage billing but does not receive project access by
+default. `member` is a paid/covered user with no project access unless granted
+directly, through a team, or through an account-wide project grant.
+
+Team roles for Phase 0:
+
+- `owner`
+- `admin`
+- `member`
+
+Team roles describe team administration. Team membership does not grant project
+access unless the team has a project grant.
 
 Project roles for Phase 0:
 
@@ -478,16 +542,20 @@ Project roles for Phase 0:
 
 Access rules:
 
-1. A user always has `admin` access to projects owned by their personal account.
-2. A team account `owner` or `admin` has `admin` access to projects owned by
-   that team account.
-3. A team account `member` has only the project access granted directly to the
-   user or inherited through the team account.
-4. Direct user grants override nothing; effective access is the highest role
-   found across ownership, account membership, and project grants.
-5. `read` can view/load project state.
-6. `write` can change models, workspace state, and run mutating Ivy actions.
-7. `admin` can manage project settings and grants.
+1. A project belongs to exactly one billing account.
+2. Account `owner` and `admin` users have `admin` access to projects in that
+   account.
+3. Account `billing_admin` users have billing access only and no project access
+   by default.
+4. Account `member` users have no project access by default.
+5. A direct user project grant contributes that role.
+6. A team project grant contributes that role to active members of the team.
+7. An account project grant contributes that role to active account users.
+8. Effective project access is the highest role found across account admin
+   status, direct user grants, team grants, and account-wide grants.
+9. `read` can view/load project state.
+10. `write` can change models, workspace state, and run mutating Ivy actions.
+11. `admin` can manage project settings and grants.
 
 ## Project-Scoped API Shape
 
@@ -500,6 +568,8 @@ POST /auth/login
 POST /auth/logout
 
 GET  /api/accounts
+GET  /api/accounts/{accountID}/users
+GET  /api/accounts/{accountID}/teams
 GET  /api/projects
 GET  /api/accounts/{accountID}/projects
 
@@ -519,7 +589,7 @@ Server checks on every project route:
 1. valid auth session cookie
 2. active user
 3. active project
-4. active owner account
+4. active billing account
 5. effective project role satisfies the route requirement
 6. workspace session belongs to the same project and user unless role permits
    broader access
@@ -699,10 +769,13 @@ Seeded dev identity:
 ```text
 email: dev@local
 password: dev-password
-personal account: dev
+billing account: dev
+account user role: owner
+team: dev/core
+team role: owner
 project: dev/client-server
-account role: owner
-project role: admin
+project grant: dev@local admin
+project grant: dev/core admin
 ```
 
 This must be clearly marked as development-only and easy to disable.
@@ -732,7 +805,7 @@ Render by auth state:
 The initial workspace shell should be real, not a landing page:
 
 - top menubar placeholder
-- account/project/user indicator
+- account/team/project/user indicator
 - logout control
 - four visible pane headers:
   - `ARG (Abstract Reachability Graph)`
@@ -756,8 +829,12 @@ Create only the stores needed for Phase 0:
   - authenticated/loading/error state
 - `accountStore`
   - accounts visible to the user
-  - account memberships
+  - account user roles
   - active account id
+- `teamStore`
+  - teams visible to the user
+  - team memberships
+  - active team id when useful for filtering
 - `projectStore`
   - projects visible to the user
   - active project id
@@ -787,6 +864,9 @@ Create:
   - `login`
   - `logout`
   - `listAccounts`
+- `teamApi.ts`
+  - `listAccountTeams`
+  - `listAccountUsers`
 - `projectApi.ts`
   - `listProjects`
   - `listAccountProjects`
