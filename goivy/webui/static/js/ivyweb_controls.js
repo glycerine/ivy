@@ -203,6 +203,11 @@ class IvyControls {
      *   or { header: string } for a section header
      */
     showContextMenu(x, y, actions) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showContextMenu === 'function') {
+            window.__ivyVueBridge.showContextMenu(x, y, actions || []);
+            this._contextMenuVisible = true;
+            return;
+        }
         var menu = document.getElementById('context-menu');
         menu.innerHTML = '';
         menu.style.display = 'block';
@@ -268,6 +273,11 @@ class IvyControls {
      * Hide the context menu.
      */
     hideContextMenu() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.hideContextMenu === 'function') {
+            window.__ivyVueBridge.hideContextMenu();
+            this._contextMenuVisible = false;
+            return;
+        }
         var menu = document.getElementById('context-menu');
         menu.style.display = 'none';
         menu.innerHTML = '';

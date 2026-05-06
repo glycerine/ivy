@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
+import { useContextMenuStore } from './stores/contextMenuStore.js';
 import { useDetailsStore } from './stores/detailsStore.js';
 import { useEditorStore } from './stores/editorStore.js';
 import { useSessionStore } from './stores/sessionStore.js';
@@ -11,10 +12,17 @@ const pinia = createPinia();
 app.use(pinia);
 
 const editorStore = useEditorStore(pinia);
+const contextMenuStore = useContextMenuStore(pinia);
 const detailsStore = useDetailsStore(pinia);
 const sessionStore = useSessionStore(pinia);
 const stateRelationsStore = useStateRelationsStore(pinia);
 window.__ivyVueBridge = {
+  showContextMenu(x, y, actions) {
+    contextMenuStore.show(x, y, actions);
+  },
+  hideContextMenu() {
+    contextMenuStore.hide();
+  },
   updateEditor(snapshot) {
     editorStore.applyLegacySnapshot(snapshot);
   },
