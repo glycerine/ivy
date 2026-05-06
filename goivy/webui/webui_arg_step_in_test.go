@@ -556,6 +556,18 @@ func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing
 	}
 }
 
+func TestConceptDiagramRoutesThroughCTIUI(t *testing.T) {
+	be := NewGoBackend(goivy.NewConfig())
+	s := NewSession(goivy.NewConfig(), "test-cti-diagram")
+	s.CTIUI = NewCTIAnalysisGraphUI(nil)
+	be.sessions[s.ID] = s
+
+	_, err := be.ConceptDiagram(s.ID)
+	if err == nil || !strings.Contains(err.Error(), "no module loaded") {
+		t.Fatalf("ConceptDiagram error = %v, want CTI Diagram no-module error", err)
+	}
+}
+
 func TestArgViewSourceReturnsLoadedSourceAndLine(t *testing.T) {
 	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
 	content, err := os.ReadFile(path)
