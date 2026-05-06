@@ -175,6 +175,7 @@ class IvyApp {
         var displaySessionId = sessionId || '';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSessionId === 'function') {
             window.__ivyVueBridge.setSessionId(displaySessionId);
+            return;
         }
         var sessionEl = document.getElementById('session-id');
         if (sessionEl) {
@@ -325,6 +326,7 @@ class IvyApp {
         var label = 'Re-open last file ' + (this._lastClosedFileName || 'file');
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateReopenLastFileButton === 'function') {
             window.__ivyVueBridge.updateReopenLastFileButton(visible, label);
+            return;
         }
         if (!btn) return;
         if (visible) {
@@ -4730,7 +4732,6 @@ class IvyApp {
         if (opts.showLoading !== false) {
             this.controls.showLoading(runningMessage);
         }
-        document.body.classList.add('ivy-busy');
         this.controls.setStatus(runningMessage, 'info');
         try {
             var result = await this.api.executeAction(actionName, args || {});
@@ -4746,7 +4747,6 @@ class IvyApp {
             }
             return { ok: false, error: e.message };
         } finally {
-            document.body.classList.remove('ivy-busy');
             if (opts.showLoading !== false) {
                 this.controls.hideLoading();
             }

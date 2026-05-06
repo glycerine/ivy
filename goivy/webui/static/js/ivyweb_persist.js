@@ -566,6 +566,7 @@ var IvyPersist = {
     setFileName: function (fileName, filePath) {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setLoadedFile === 'function') {
             window.__ivyVueBridge.setLoadedFile(fileName || '', filePath || '');
+            return;
         }
         var el = document.getElementById('loaded-file');
         if (el) {

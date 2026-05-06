@@ -708,6 +708,10 @@ html, body {
     flex: 1;
 }
 
+.concept-sheet-panel {
+    flex: 1;
+}
+
 #state-panel {
     flex: 0 0 220px;
     min-width: 180px;

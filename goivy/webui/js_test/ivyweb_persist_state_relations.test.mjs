@@ -69,4 +69,17 @@ describe('IvyPersist state relation snapshots', () => {
       },
     });
   });
+
+  it('routes loaded-file display updates through Vue when the bridge is present', () => {
+    const IvyPersist = loadIvyPersist();
+    document.body.innerHTML = '<span id="loaded-file">old</span>';
+    window.__ivyVueBridge = {
+      setLoadedFile: vi.fn(),
+    };
+
+    IvyPersist.setFileName('client.ivy', '/tmp/client.ivy');
+
+    expect(window.__ivyVueBridge.setLoadedFile).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
+    expect(document.getElementById('loaded-file').textContent).toBe('old');
+  });
 });
