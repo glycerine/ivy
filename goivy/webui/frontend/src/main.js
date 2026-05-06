@@ -15,6 +15,7 @@ import { useRecentFilesStore } from './stores/recentFilesStore.js';
 import { useSessionStore } from './stores/sessionStore.js';
 import { useSheetStore } from './stores/sheetStore.js';
 import { useStateRelationsStore } from './stores/stateRelationsStore.js';
+import { useToastStore } from './stores/toastStore.js';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -33,6 +34,7 @@ const graphStore = useGraphStore(pinia);
 const recentFilesStore = useRecentFilesStore(pinia);
 const eventTraceStore = useEventTraceStore(pinia);
 const layoutStore = useLayoutStore(pinia);
+const toastStore = useToastStore(pinia);
 
 function syncContextMenuElement(visible, x = 0, y = 0) {
   const menu = document.getElementById('context-menu');
@@ -74,6 +76,9 @@ window.__ivyVueBridge = {
   tabClicksHandled() {
     return true;
   },
+  fileInputHandlersHandled() {
+    return true;
+  },
   updateDetails(details) {
     detailsStore.setDetails(details);
   },
@@ -89,6 +94,15 @@ window.__ivyVueBridge = {
   updateStateRelations(rows, onToggle) {
     stateRelationsStore.setRows(rows, onToggle);
   },
+  getStateRelationToggles() {
+    return stateRelationsStore.toggleSnapshot;
+  },
+  setStateRelationToggles(toggles) {
+    stateRelationsStore.applyToggleSnapshot(toggles || {});
+  },
+  buildStateRelationVisibility() {
+    return stateRelationsStore.visibilitySnapshot;
+  },
   clearStateRelations() {
     stateRelationsStore.clear();
   },
@@ -97,6 +111,9 @@ window.__ivyVueBridge = {
   },
   updateStatus(message, level = '') {
     sessionStore.setStatus(message, level);
+  },
+  setSessionId(sessionId) {
+    sessionStore.setSessionId(sessionId);
   },
   setMode(mode) {
     sessionStore.setMode(mode);
@@ -112,6 +129,9 @@ window.__ivyVueBridge = {
   },
   hideLoading() {
     sessionStore.hideLoading();
+  },
+  showToast(message, level, options) {
+    return toastStore.show(message, level, options || {});
   },
   setSaveAsNoticeVisible(visible) {
     sessionStore.setSaveAsNoticeVisible(visible);
@@ -147,7 +167,9 @@ window.__ivyVueBridge = {
     const sheet = document.getElementById(sheetId);
     if (sheet && sheet.__ivyVueRenderedSheet) {
       render(null, sheet);
+      return true;
     }
+    return false;
   },
   activateSheetTab(sheetId) {
     sheetStore.activateTab(sheetId);
@@ -210,6 +232,21 @@ window.__ivyVueBridge = {
   },
   isTutorialVisible() {
     return layoutStore.tutorialVisible;
+  },
+  setArgPanelWidth(width) {
+    layoutStore.setArgPanelWidth(width);
+  },
+  setStatePanelWidth(width) {
+    layoutStore.setStatePanelWidth(width);
+  },
+  setDetailsHeight(height) {
+    layoutStore.setDetailsHeight(height);
+  },
+  setEditorWidth(width) {
+    layoutStore.setEditorWidth(width);
+  },
+  setTutorialHeight(height) {
+    layoutStore.setTutorialHeight(height);
   },
   tutorialUrlBarHandled() {
     return true;

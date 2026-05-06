@@ -2,7 +2,7 @@
   <div id="sheet-area">
     <TabBar />
 
-    <div id="sheet-1" class="sheet-content active">
+    <div id="sheet-1" class="sheet-content" :class="{ active: sheetStore.activeSheetId === 'sheet-1' }">
       <div class="sheet-columns">
         <div class="sheet-left">
           <div class="sheet-main">
@@ -29,4 +29,7 @@ import DetailsPane from './DetailsPane.vue';
 import EventTraceSheetHost from './EventTraceSheetHost.vue';
 import StateRelationsPane from './StateRelationsPane.vue';
 import TabBar from './TabBar.vue';
+import { useSheetStore } from '../../stores/sheetStore.js';
+
+const sheetStore = useSheetStore();
 </script>

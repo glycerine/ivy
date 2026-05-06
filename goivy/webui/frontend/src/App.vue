@@ -4,6 +4,7 @@ import Menubar from './components/Menubar.vue';
 import WorkspaceShell from './components/WorkspaceShell.vue';
 import DialogHost from './components/DialogHost.vue';
 import StatusBar from './components/StatusBar.vue';
+import ToastHost from './components/ToastHost.vue';
 
 onMounted(async () => {
   await nextTick();
@@ -17,5 +18,6 @@ onMounted(async () => {
   <Menubar />
   <WorkspaceShell />
   <DialogHost />
+  <ToastHost />
   <StatusBar />
 </template>

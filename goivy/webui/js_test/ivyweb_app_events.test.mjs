@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
 import { FakeAPI, FakeControls, FakeGraph, makePersist } from './helpers/fakes.mjs';
 
@@ -24,6 +24,10 @@ function makeEventApp() {
   app.setupTabs();
   return app;
 }
+
+afterEach(() => {
+  delete window.__ivyVueBridge;
+});
 
 describe('IvyApp event trace viewer', () => {
   it('opens an event sheet with lazy child expansion and selectable rows', () => {
@@ -245,5 +249,31 @@ describe('IvyApp event trace viewer', () => {
 
     expect(document.querySelector('.sheet-tab[data-sheet="events-1"]').textContent).toContain('New Trace');
     expect(document.querySelector('#events-1 [data-event-address="0"]').textContent).toContain('new(a)');
+  });
+
+  it('lets Vue remove event sheet DOM when the sheet store owns event rendering', () => {
+    window.__ivyVueBridge = {
+      upsertSheetTab: vi.fn(),
+      upsertEventTraceSheet: vi.fn(),
+      activateSheetTab: vi.fn(),
+      setActiveGraphSheet: vi.fn(),
+      removeRenderedSheet: vi.fn(() => false),
+      removeSheetTab: vi.fn(),
+    };
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: [],
+    });
+    document.getElementById('sheet-area').insertAdjacentHTML(
+      'beforeend',
+      '<div id="events-1" class="sheet-content event-sheet active"></div>',
+    );
+
+    app.removeSheet('events-1');
+
+    expect(window.__ivyVueBridge.removeSheetTab).toHaveBeenCalledWith('events-1');
+    expect(document.getElementById('events-1')).not.toBeNull();
   });
 });

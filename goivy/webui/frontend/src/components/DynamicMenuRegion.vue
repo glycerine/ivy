@@ -16,11 +16,6 @@ const menus = computed(() => menuStore.menusFor(props.region));
 
 function closeStaticDropdowns() {
   dropdownStore.closeAll();
-  document.querySelectorAll('.dropdown.open').forEach((dropdown) => {
-    if (!dropdown.closest('[data-dynamic-menu-region]')) {
-      dropdown.classList.remove('open');
-    }
-  });
 }
 
 function toggleMenu(index) {

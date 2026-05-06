@@ -6,6 +6,7 @@ export const SESSION_MODES = ['induction', 'pdr', 'concrete', 'abstract', 'bound
 export const useSessionStore = defineStore('session', {
   state: () => ({
     sessionId: '',
+    sessionDisplay: '',
     mode: 'pdr',
     loadedFileDisplay: '',
     loadedFileTitle: '',
@@ -21,6 +22,10 @@ export const useSessionStore = defineStore('session', {
     setStatus(message, level = '') {
       this.status = message;
       this.statusLevel = level;
+    },
+    setSessionId(sessionId = '') {
+      this.sessionId = String(sessionId || '');
+      this.sessionDisplay = this.sessionId ? `Session: ${this.sessionId}` : '';
     },
     setMode(mode) {
       const next = String(mode || '');

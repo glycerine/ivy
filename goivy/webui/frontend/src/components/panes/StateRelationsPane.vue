@@ -1,7 +1,9 @@
 <script setup>
 import { useStateRelationsStore } from '../../stores/stateRelationsStore.js';
+import { useLayoutStore } from '../../stores/layoutStore.js';
 
 const stateRelationsStore = useStateRelationsStore();
+const layoutStore = useLayoutStore();
 
 const columns = [
   { key: 'all_to_all', label: '+', title: (name) => `Show definite edges (${name})` },
@@ -12,7 +14,7 @@ const columns = [
 </script>
 
 <template>
-  <div id="state-panel" class="panel">
+  <div id="state-panel" class="panel" :style="layoutStore.statePanelStyle">
     <div class="panel-header">
       <strong class="column-title">State/relations</strong>
       <div class="panel-header-actions">
@@ -35,6 +37,8 @@ const columns = [
             <td v-for="column in columns" :key="column.key">
               <input
                 type="checkbox"
+                :name="row.name"
+                :value="column.key"
                 :title="column.title(row.name)"
                 :checked="row.checked[column.key]"
                 @change="stateRelationsStore.toggle(row.name, column.key, $event.target.checked)"

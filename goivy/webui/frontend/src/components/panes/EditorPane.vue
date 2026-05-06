@@ -1,8 +1,10 @@
 <script setup>
 import { useEditorStore } from '../../stores/editorStore.js';
+import { useLayoutStore } from '../../stores/layoutStore.js';
 import { callApp, runCommand } from '../legacyCommand.js';
 
 const editorStore = useEditorStore();
+const layoutStore = useLayoutStore();
 
 function setKeymap(keymap) {
   editorStore.setKeymap(keymap);
@@ -11,7 +13,7 @@ function setKeymap(keymap) {
 </script>
 
 <template>
-  <div id="editor-panel">
+  <div id="editor-panel" :style="layoutStore.editorPanelStyle">
     <div class="panel-header">
       <div class="editor-title-row">
         <strong class="column-title">Editing:</strong>

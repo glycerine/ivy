@@ -1,5 +1,5 @@
 <template>
-  <div id="arg-panel" class="panel">
+  <div id="arg-panel" class="panel" :style="layoutStore.argPanelStyle">
     <div class="panel-header">
       <strong class="column-title">ARG (Abstract Reachability Graph)</strong>
       <div class="panel-header-actions">
@@ -26,6 +26,8 @@
 import DynamicMenuRegion from '../DynamicMenuRegion.vue';
 import { callApp, runMenuCommand, toggleDropdownCommand } from '../legacyCommand.js';
 import { useDropdownStore } from '../../stores/dropdownStore.js';
+import { useLayoutStore } from '../../stores/layoutStore.js';
 
 const dropdownStore = useDropdownStore();
+const layoutStore = useLayoutStore();
 </script>

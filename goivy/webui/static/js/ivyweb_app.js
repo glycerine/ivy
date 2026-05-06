@@ -67,11 +67,7 @@ class IvyApp {
         // Show the persisted session ID (from URL hash), not the server session ID.
         // These can differ because the server ID increments on restart while
         // the persisted ID is stable across reloads.
-        var displaySessionId = IvyPersist.getSessionIdFromURL() || this.api.sessionId;
-        var sessionEl = document.getElementById('session-id');
-        if (sessionEl) {
-            sessionEl.textContent = 'Session: ' + displaySessionId;
-        }
+        this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
 
         // Create Cytoscape graph instances
         this.argGraph = new IvyGraph('arg-graph', ARG_STYLE);
@@ -175,6 +171,26 @@ class IvyApp {
 
     // --- Editor helpers (CodeMirror) ---
 
+    updateSessionDisplay(sessionId) {
+        var displaySessionId = sessionId || '';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSessionId === 'function') {
+            window.__ivyVueBridge.setSessionId(displaySessionId);
+        }
+        var sessionEl = document.getElementById('session-id');
+        if (sessionEl) {
+            sessionEl.textContent = displaySessionId ? 'Session: ' + displaySessionId : '';
+        }
+    }
+
+    _setVueLayoutSize(method, value) {
+        var bridge = window.__ivyVueBridge;
+        if (bridge && typeof bridge[method] === 'function') {
+            bridge[method](value);
+            return true;
+        }
+        return false;
+    }
+
     setEditorContent(content) {
         this._persistedFileContent = content;
         this._savedFileContent = content;
@@ -185,8 +201,6 @@ class IvyApp {
     }
 
     _updateEditorLabel() {
-        var editorLabel = document.getElementById('model-editor-label');
-        if (!editorLabel) return;
         var name = this._persistedFilePath || this._persistedFileName || '';
         var current = (this.cmEditor && typeof this.cmEditor.getValue === 'function') ? this.cmEditor.getValue() : (this._persistedFileContent || '');
         var saved = this._savedFileContent || '';
@@ -204,8 +218,6 @@ class IvyApp {
         } else {
             labelText = name + ' [saved]';
         }
-        editorLabel.textContent = labelText;
-        editorLabel.title = 'Editing: ' + labelText;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEditor === 'function') {
             window.__ivyVueBridge.updateEditor({
                 path: name,
@@ -213,7 +225,13 @@ class IvyApp {
                 savedContent: saved,
                 saveInProgress: this._saveInProgress,
             });
+            this._updateReopenLastFileButton();
+            return;
         }
+        var editorLabel = document.getElementById('model-editor-label');
+        if (!editorLabel) return;
+        editorLabel.textContent = labelText;
+        editorLabel.title = 'Editing: ' + labelText;
         this._updateReopenLastFileButton();
     }
 
@@ -775,15 +793,18 @@ class IvyApp {
         var vueHandlesStaticCommands = window.__ivyVueBridge &&
             typeof window.__ivyVueBridge.staticCommandHandlersHandled === 'function' &&
             window.__ivyVueBridge.staticCommandHandlersHandled();
+        var vueHandlesFileInputs = window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.fileInputHandlersHandled === 'function' &&
+            window.__ivyVueBridge.fileInputHandlersHandled();
 
-        if (fileInput) fileInput.addEventListener('change', function () {
+        if (!vueHandlesFileInputs && fileInput) fileInput.addEventListener('change', function () {
             if (fileInput.files && fileInput.files.length > 0) {
                 self.loadFile(fileInput.files[0]);
                 fileInput.value = ''; // reset for re-selection of same file
             }
         });
 
-        if (eventFileInput) {
+        if (!vueHandlesFileInputs && eventFileInput) {
             eventFileInput.addEventListener('change', function () {
                 if (eventFileInput.files && eventFileInput.files.length > 0) {
                     self.loadEventTraceFile(eventFileInput.files[0]);
@@ -792,7 +813,7 @@ class IvyApp {
             });
         }
 
-        if (analysisStateFileInput) {
+        if (!vueHandlesFileInputs && analysisStateFileInput) {
             analysisStateFileInput.addEventListener('change', async function () {
                 if (analysisStateFileInput.files && analysisStateFileInput.files.length > 0) {
                     try {
@@ -1015,7 +1036,9 @@ class IvyApp {
             var newWidth = startWidth + dx;
             var containerWidth = activeContainer ? activeContainer.offsetWidth : 800;
             newWidth = Math.max(150, Math.min(newWidth, containerWidth - 200));
-            activePanel.style.flex = '0 0 ' + newWidth + 'px';
+            if (!(activePanel.id === 'arg-panel' && self._setVueLayoutSize('setArgPanelWidth', newWidth))) {
+                activePanel.style.flex = '0 0 ' + newWidth + 'px';
+            }
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
         });
@@ -1070,7 +1093,9 @@ class IvyApp {
             var newWidth = startWidth + dx;
             var maxW = topRow ? topRow.offsetWidth - 300 : 800;
             newWidth = Math.max(200, Math.min(newWidth, maxW));
-            rightSection.style.flex = '0 0 ' + newWidth + 'px';
+            if (!self._setVueLayoutSize('setStatePanelWidth', newWidth)) {
+                rightSection.style.flex = '0 0 ' + newWidth + 'px';
+            }
             self.argGraph.resize();
             self.conceptGraph.resize();
         });
@@ -1126,7 +1151,9 @@ class IvyApp {
             var dividerWidth = divider3.offsetWidth || 4;
             var maxW = Math.max(minEditorWidth, topRow.offsetWidth - dividerWidth - minSheetAreaWidth);
             newWidth = Math.max(minEditorWidth, Math.min(newWidth, maxW));
-            editorPanel.style.flex = '0 0 ' + newWidth + 'px';
+            if (!self._setVueLayoutSize('setEditorWidth', newWidth)) {
+                editorPanel.style.flex = '0 0 ' + newWidth + 'px';
+            }
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
             self._refreshEditorLayout();
@@ -1229,8 +1256,14 @@ class IvyApp {
      * Switch to a sheet by ID.
      */
     switchSheet(sheetId) {
+        var bridge = window.__ivyVueBridge;
+        var vueTabs = bridge && typeof bridge.activateSheetTab === 'function';
+        if (vueTabs) {
+            bridge.activateSheetTab(sheetId);
+        }
+
         // Deactivate all tabs and sheets
-        var tabs = document.querySelectorAll('.sheet-tab');
+        var tabs = vueTabs ? [] : document.querySelectorAll('.sheet-tab');
         var sheets = document.querySelectorAll('.sheet-content');
         for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
         for (var i = 0; i < sheets.length; i++) sheets[i].classList.remove('active');
@@ -1250,11 +1283,8 @@ class IvyApp {
         // Resize graphs in the newly visible sheet
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.activateSheetTab === 'function') {
-            window.__ivyVueBridge.activateSheetTab(sheetId);
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setActiveGraphSheet === 'function') {
-            window.__ivyVueBridge.setActiveGraphSheet(sheetId);
+        if (bridge && typeof bridge.setActiveGraphSheet === 'function') {
+            bridge.setActiveGraphSheet(sheetId);
         }
     }
 
@@ -1867,17 +1897,21 @@ class IvyApp {
         var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
         var wasActive = this.activeSheetId === sheetId || (tab && tab.classList.contains('active'));
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var bridge = window.__ivyVueBridge;
+        var vueTabs = bridge && typeof bridge.removeSheetTab === 'function';
+        var vueOwnsSheetDom = vueTabs && sheetState && sheetState.type === 'events';
 
-        if (tab) tab.remove();
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.removeRenderedSheet === 'function') {
-            window.__ivyVueBridge.removeRenderedSheet(sheetId);
+        if (tab && !vueTabs) tab.remove();
+        if (bridge && typeof bridge.removeRenderedSheet === 'function') {
+            bridge.removeRenderedSheet(sheetId);
         }
-        if (sheet) sheet.remove();
+        if (sheet && !vueOwnsSheetDom) sheet.remove();
         if (this.sheets) {
             delete this.sheets[sheetId];
         }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.removeSheetTab === 'function') {
-            window.__ivyVueBridge.removeSheetTab(sheetId);
+        if (vueTabs) {
+            bridge.removeSheetTab(sheetId);
         }
 
         // If the closed tab was active, switch to Sheet 1
@@ -1986,7 +2020,9 @@ class IvyApp {
             var newHeight = startHeight + dy;
             var maxH = outerContainer ? outerContainer.offsetHeight - 100 : 600;
             newHeight = Math.max(80, Math.min(newHeight, maxH));
-            tutorial.style.flex = '0 0 ' + newHeight + 'px';
+            if (!self._setVueLayoutSize('setTutorialHeight', newHeight)) {
+                tutorial.style.flex = '0 0 ' + newHeight + 'px';
+            }
             self.argGraph.resize();
             self.conceptGraph.resize();
         });
@@ -2048,8 +2084,10 @@ class IvyApp {
             if (activeSheetMain) {
                 activeSheetMain.style.minHeight = minMainHeight + 'px';
             }
-            activePanel.style.flex = '0 0 ' + newHeight + 'px';
-            activePanel.style.height = newHeight + 'px';
+            if (!(activePanel.id === 'info-panel' && self._setVueLayoutSize('setDetailsHeight', newHeight))) {
+                activePanel.style.flex = '0 0 ' + newHeight + 'px';
+                activePanel.style.height = newHeight + 'px';
+            }
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
         });
@@ -2215,8 +2253,6 @@ class IvyApp {
         // Store concept data for node label rendering
         this._lastConceptData = conceptData;
         var tbody = document.getElementById('state-checkbox-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
         this._hydrateBackendToggleState(conceptData);
 
         // Use the relations list from the server (edges + node_labels).
@@ -2228,6 +2264,7 @@ class IvyApp {
         var self = this;
 
         var appendLegacyRows = function () {
+            if (!tbody) return;
             tbody.innerHTML = '';
             for (var i = 0; i < names.length; i++) {
                 (function(name) {
@@ -2237,6 +2274,8 @@ class IvyApp {
                     var td1 = document.createElement('td');
                     var cb1 = document.createElement('input');
                     cb1.type = 'checkbox';
+                    cb1.name = name;
+                    cb1.value = 'all_to_all';
                     cb1.title = 'Show definite edges (' + name + ')';
                     cb1.checked = self._toggleChecked(name, 'all_to_all');
                     cb1.addEventListener('change', function() {
@@ -2249,6 +2288,8 @@ class IvyApp {
                     var td2 = document.createElement('td');
                     var cb2 = document.createElement('input');
                     cb2.type = 'checkbox';
+                    cb2.name = name;
+                    cb2.value = 'edge_unknown';
                     cb2.title = 'Show unknown edges (' + name + ')';
                     cb2.checked = self._toggleChecked(name, 'edge_unknown');
                     cb2.addEventListener('change', function() {
@@ -2261,6 +2302,8 @@ class IvyApp {
                     var td3 = document.createElement('td');
                     var cb3 = document.createElement('input');
                     cb3.type = 'checkbox';
+                    cb3.name = name;
+                    cb3.value = 'none_to_none';
                     cb3.title = 'Show absent edges (' + name + ')';
                     cb3.checked = self._toggleChecked(name, 'none_to_none');
                     cb3.addEventListener('change', function() {
@@ -2273,6 +2316,8 @@ class IvyApp {
                     var td4 = document.createElement('td');
                     var cb4 = document.createElement('input');
                     cb4.type = 'checkbox';
+                    cb4.name = name;
+                    cb4.value = 'transitive';
                     cb4.title = 'Transitive reduction (' + name + ')';
                     cb4.checked = self._toggleChecked(name, 'transitive');
                     cb4.addEventListener('change', function() {
@@ -2338,6 +2383,7 @@ class IvyApp {
             return;
         }
 
+        if (!tbody) return;
         appendLegacyRows();
 
         this._applyEdgeVisibility();
@@ -2346,8 +2392,6 @@ class IvyApp {
     }
 
     populateConstraintFacts(conceptData) {
-        var info = document.getElementById('info-content');
-        if (!info) return;
         var facts = (conceptData && Array.isArray(conceptData.facts)) ? conceptData.facts : [];
         var self = this;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateConstraintFacts === 'function') {
@@ -2359,6 +2403,8 @@ class IvyApp {
             });
             return;
         }
+        var info = document.getElementById('info-content');
+        if (!info) return;
         info.innerHTML = '';
         if (facts.length === 0) {
             info.textContent = 'Select a node or edge to see details';
@@ -2654,12 +2700,13 @@ class IvyApp {
      * Update the state label to show which ARG node is selected.
      */
     updateStateLabel(nodeId) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateLabel === 'function') {
+            window.__ivyVueBridge.updateStateLabel(nodeId);
+            return;
+        }
         var label = document.getElementById('state-label');
         if (label) {
             label.textContent = 'State: ' + (nodeId != null ? nodeId : '—');
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateLabel === 'function') {
-            window.__ivyVueBridge.updateStateLabel(nodeId);
         }
     }
 
@@ -3997,10 +4044,7 @@ class IvyApp {
         // Create a fresh server session
         try {
             await this.api.createSession();
-            var sessionEl = document.getElementById('session-id');
-            if (sessionEl) {
-                sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);
-            }
+            this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
             IvyPersist.setSessionIdInURL(this.api.sessionId);
 
             // Reconnect SSE
@@ -4029,10 +4073,11 @@ class IvyApp {
         this.setEditorContent('');
         IvyPersist.setFileName('');
         this._updateReopenLastFileButton();
-        var tbody = document.getElementById('state-checkbox-body');
-        if (tbody) tbody.innerHTML = '';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearStateRelations === 'function') {
             window.__ivyVueBridge.clearStateRelations();
+        } else {
+            var tbody = document.getElementById('state-checkbox-body');
+            if (tbody) tbody.innerHTML = '';
         }
 
         this.controls.setStatus('New model — load an .ivy file to begin', 'success');
@@ -4044,15 +4089,16 @@ class IvyApp {
      * Shows truncated path context when file names collide.
      */
     populateRecentFiles() {
-        var container = document.getElementById('file-recent-list');
-        if (!container) return;
-        if (!(window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function')) {
+        var vueRecentFiles = window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function';
+        var container = vueRecentFiles ? null : document.getElementById('file-recent-list');
+        if (!vueRecentFiles && !container) return;
+        if (!vueRecentFiles) {
             container.innerHTML = '';
         }
 
         var sessions = IvyPersist.listSessions();
         if (sessions.length === 0) {
-            if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function') {
+            if (vueRecentFiles) {
                 window.__ivyVueBridge.updateRecentFiles([], null);
                 return;
             }
@@ -4090,7 +4136,7 @@ class IvyApp {
 
         // Show up to 10 recent files
         var self = this;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function') {
+        if (vueRecentFiles) {
             var items = [];
             for (var m = 0; m < unique.length && m < 10; m++) {
                 var session = unique[m];
@@ -4169,10 +4215,7 @@ class IvyApp {
                 this._persistedFileName || state.fileName,
                 this._persistedFilePath || state.filePath || state.fileName
             );
-            var sessionEl = document.getElementById('session-id');
-            if (sessionEl) {
-                sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);
-            }
+            this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
             this.controls.setStatus('Loaded: ' + state.fileName, 'success');
         } else {
             this.controls.setStatus('Restore failed', 'error');
@@ -4535,12 +4578,13 @@ class IvyApp {
      * Close all open dropdown menus.
      */
     closeAllDropdowns() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.closeDropdownMenus === 'function') {
+            window.__ivyVueBridge.closeDropdownMenus();
+            return;
+        }
         var all = document.querySelectorAll('.dropdown.open');
         for (var j = 0; j < all.length; j++) {
             all[j].classList.remove('open');
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.closeDropdownMenus === 'function') {
-            window.__ivyVueBridge.closeDropdownMenus();
         }
     }
 
@@ -5483,22 +5527,15 @@ class IvyApp {
      */
     _showToast(message, level, options) {
         options = options || {};
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showToast === 'function') {
+            return window.__ivyVueBridge.showToast(message, level, options);
+        }
         var toast = document.createElement('div');
-        toast.className = 'ivy-toast ivy-toast-' + (level || 'info');
+        toast.className = 'ivy-toast ivy-toast-floating ivy-toast-' + (level || 'info');
         if (options.className) {
             toast.className += ' ' + options.className;
         }
         toast.textContent = message;
-        toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;' +
-            'padding:12px 20px;border-radius:6px;max-width:400px;cursor:pointer;' +
-            'font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
-        if (level === 'error') {
-            toast.style.background = '#d32f2f';
-            toast.style.color = '#fff';
-        } else {
-            toast.style.background = '#333';
-            toast.style.color = '#fff';
-        }
         toast.onclick = function () { toast.remove(); };
         document.body.appendChild(toast);
         if (!options.persistent) {

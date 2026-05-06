@@ -11,12 +11,23 @@ describe('layoutStore', () => {
     const layout = useLayoutStore();
 
     layout.setTutorialVisible(false);
+    layout.setArgPanelWidth(100);
+    layout.setStatePanelWidth(100);
     layout.setDetailsHeight(40);
     layout.setEditorWidth(100);
+    layout.setTutorialHeight(40);
 
     expect(layout.tutorialVisible).toBe(false);
-    expect(layout.detailsHeight).toBe(80);
+    expect(layout.argPanelWidth).toBe(150);
+    expect(layout.statePanelWidth).toBe(200);
+    expect(layout.detailsHeight).toBe(72);
     expect(layout.editorWidth).toBe(200);
+    expect(layout.tutorialHeight).toBe(80);
+    expect(layout.argPanelStyle).toEqual({ flex: '0 0 150px' });
+    expect(layout.statePanelStyle).toEqual({ flex: '0 0 200px' });
+    expect(layout.detailsPanelStyle).toEqual({ flex: '0 0 72px', height: '72px' });
+    expect(layout.editorPanelStyle).toEqual({ flex: '0 0 200px' });
+    expect(layout.tutorialPanelStyle).toEqual({ display: 'none', flex: '0 0 80px' });
   });
 
   it('keeps tutorial navigation history in Pinia', () => {

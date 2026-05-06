@@ -16,9 +16,11 @@ describe('StatusBar', () => {
     });
 
     session.setStatus('Check FAILED - counterexample found', 'error');
+    session.setSessionId('s1');
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.text()).toBe('Check FAILED - counterexample found');
+    expect(wrapper.find('.status-message').text()).toBe('Check FAILED - counterexample found');
+    expect(wrapper.find('#session-id').text()).toBe('Session: s1');
     expect(wrapper.classes()).toContain('error');
   });
 });

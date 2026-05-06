@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
 import { FakeAPI, FakeControls, FakeGraph } from './helpers/fakes.mjs';
 
@@ -35,6 +35,10 @@ beforeEach(() => {
   ].join('');
 });
 
+afterEach(() => {
+  delete window.__ivyVueBridge;
+});
+
 describe('IvyApp layout resizers', () => {
   it('widens the editor pane when divider3 is dragged left', () => {
     const IvyApp = loadApp();
@@ -66,5 +70,32 @@ describe('IvyApp layout resizers', () => {
 
     expect(document.body.style.cursor).toBe('');
     expect(document.body.style.userSelect).toBe('');
+  });
+
+  it('routes editor pane width changes through the Vue layout bridge when present', () => {
+    const IvyApp = loadApp();
+    const app = new IvyApp();
+    app.argGraph = { resize: vi.fn() };
+    app.conceptGraph = { resize: vi.fn() };
+    app._refreshEditorLayout = vi.fn();
+    window.__ivyVueBridge = {
+      setEditorWidth: vi.fn(),
+    };
+
+    const topRow = document.getElementById('top-row');
+    const sheetArea = document.getElementById('sheet-area');
+    const divider3 = document.getElementById('divider3');
+    const editorPanel = document.getElementById('editor-panel');
+    setOffsetWidth(topRow, 1200);
+    setOffsetWidth(divider3, 4);
+    setOffsetWidth(sheetArea, 756);
+    setOffsetWidth(editorPanel, 440);
+
+    app.setupResizer3();
+    divider3.dispatchEvent(mouse('mousedown', 760));
+    document.dispatchEvent(mouse('mousemove', 620));
+
+    expect(window.__ivyVueBridge.setEditorWidth).toHaveBeenCalledWith(580);
+    expect(editorPanel.style.flex).toBe('');
   });
 });

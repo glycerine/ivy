@@ -36,6 +36,10 @@ describe('sessionStore', () => {
     expect(session.loadedFileDisplay).toBe('/models/client.ivy');
     expect(session.loadedFileTitle).toBe('/models/client.ivy');
 
+    session.setSessionId('session-7');
+    expect(session.sessionId).toBe('session-7');
+    expect(session.sessionDisplay).toBe('Session: session-7');
+
     session.showLoading('Checking...');
     expect(session.loading).toBe(true);
     expect(session.loadingMessage).toBe('Checking...');

@@ -1,18 +1,15 @@
 <script setup>
 import { useRecentFilesStore } from '../stores/recentFilesStore.js';
+import { useDropdownStore } from '../stores/dropdownStore.js';
 
 const recentFilesStore = useRecentFilesStore();
+const dropdownStore = useDropdownStore();
 
-function closeDropdowns() {
-  document.querySelectorAll('.dropdown.open').forEach((dropdown) => dropdown.classList.remove('open'));
-}
-
-function choose(item, event) {
-  const link = event.currentTarget;
-  link.classList.add('menu-flash');
-  setTimeout(() => {
-    link.classList.remove('menu-flash');
-    closeDropdowns();
+function choose(item) {
+  recentFilesStore.flash(item.id);
+  window.setTimeout(() => {
+    recentFilesStore.clearFlash();
+    dropdownStore.closeAll();
     recentFilesStore.load(item);
   }, 50);
 }
@@ -31,7 +28,8 @@ function choose(item, event) {
       :key="item.id"
       href="#"
       :title="item.title || ''"
-      @click.stop.prevent="choose(item, $event)"
+      :class="{ 'menu-flash': recentFilesStore.flashingId === String(item.id) }"
+      @click.stop.prevent="choose(item)"
     >
       {{ item.label }}
     </a>

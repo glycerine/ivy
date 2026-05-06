@@ -457,6 +457,9 @@ var IvyPersist = {
     },
 
     _getToggles: function () {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getStateRelationToggles === 'function') {
+            return window.__ivyVueBridge.getStateRelationToggles() || {};
+        }
         var toggles = {};
         var table = document.getElementById('state-checkbox-body');
         if (!table) return toggles;
@@ -471,6 +474,10 @@ var IvyPersist = {
     },
 
     _setToggles: function (toggles) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setStateRelationToggles === 'function') {
+            window.__ivyVueBridge.setStateRelationToggles(toggles || {});
+            return;
+        }
         var table = document.getElementById('state-checkbox-body');
         if (!table) return;
         var inputs = table.querySelectorAll('input[type="radio"], input[type="checkbox"]');
@@ -493,6 +500,9 @@ var IvyPersist = {
      * Matches Python: set_checkbox sets BOTH edge_display_checkboxes and node_label_display_checkboxes.
      */
     _buildVisibilityFromCheckboxes: function () {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.buildStateRelationVisibility === 'function') {
+            return window.__ivyVueBridge.buildStateRelationVisibility() || { edges: {}, labels: {} };
+        }
         var edges = {};
         var labels = {};
         var tbody = document.getElementById('state-checkbox-body');

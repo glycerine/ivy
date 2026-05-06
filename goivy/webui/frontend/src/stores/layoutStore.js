@@ -31,12 +31,31 @@ export const useLayoutStore = defineStore('layout', {
     tutorialHistory: [DEFAULT_TUTORIAL_URL],
     tutorialHistoryIndex: 0,
     tutorialFrameKey: 0,
-    detailsHeight: 160,
-    editorWidth: 520,
+    argPanelWidth: null,
+    statePanelWidth: null,
+    detailsHeight: null,
+    editorWidth: null,
+    tutorialHeight: null,
   }),
   getters: {
     canGoBack: (state) => state.tutorialHistoryIndex > 0,
     canGoForward: (state) => state.tutorialHistoryIndex < state.tutorialHistory.length - 1,
+    argPanelStyle: (state) => (
+      state.argPanelWidth ? { flex: `0 0 ${state.argPanelWidth}px` } : {}
+    ),
+    statePanelStyle: (state) => (
+      state.statePanelWidth ? { flex: `0 0 ${state.statePanelWidth}px` } : {}
+    ),
+    detailsPanelStyle: (state) => (
+      state.detailsHeight ? { flex: `0 0 ${state.detailsHeight}px`, height: `${state.detailsHeight}px` } : {}
+    ),
+    editorPanelStyle: (state) => (
+      state.editorWidth ? { flex: `0 0 ${state.editorWidth}px` } : {}
+    ),
+    tutorialPanelStyle: (state) => ({
+      display: state.tutorialVisible ? '' : 'none',
+      ...(state.tutorialHeight ? { flex: `0 0 ${state.tutorialHeight}px` } : {}),
+    }),
   },
   actions: {
     setTutorialVisible(visible) {
@@ -94,11 +113,20 @@ export const useLayoutStore = defineStore('layout', {
       this.tutorialInput = url;
       this.tutorialUrl = url;
     },
+    setArgPanelWidth(width) {
+      this.argPanelWidth = Math.max(150, Number(width) || 150);
+    },
+    setStatePanelWidth(width) {
+      this.statePanelWidth = Math.max(200, Number(width) || 200);
+    },
     setDetailsHeight(height) {
-      this.detailsHeight = Math.max(80, Number(height) || 80);
+      this.detailsHeight = Math.max(72, Number(height) || 72);
     },
     setEditorWidth(width) {
       this.editorWidth = Math.max(200, Number(width) || 200);
+    },
+    setTutorialHeight(height) {
+      this.tutorialHeight = Math.max(80, Number(height) || 80);
     },
   },
 });

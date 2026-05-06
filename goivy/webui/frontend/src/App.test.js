@@ -23,6 +23,7 @@ describe('Vue app shell', () => {
     expect(wrapper.text()).toContain('State/relations');
     expect(wrapper.text()).toContain('Editing:');
     expect(document.getElementById('model-editor')).not.toBeNull();
+    expect(document.getElementById('sheet-1').classList.contains('active')).toBe(true);
     expect(window.startIvyApp).toHaveBeenCalledTimes(1);
 
     wrapper.unmount();

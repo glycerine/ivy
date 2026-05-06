@@ -1,5 +1,5 @@
 <template>
-  <div id="tutorial-container" :style="{ display: layoutStore.tutorialVisible ? '' : 'none' }">
+  <div id="tutorial-container" :style="layoutStore.tutorialPanelStyle">
     <div class="panel-header tutorial-url-bar">
       <button id="tutorial-back" class="tutorial-nav-btn" title="Back" :disabled="!layoutStore.canGoBack" @click="runCommand($event, () => layoutStore.goTutorialBack())">&#9664;</button>
       <button id="tutorial-fwd" class="tutorial-nav-btn" title="Forward" :disabled="!layoutStore.canGoForward" @click="runCommand($event, () => layoutStore.goTutorialForward())">&#9654;</button>

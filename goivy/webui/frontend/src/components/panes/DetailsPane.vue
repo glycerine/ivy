@@ -1,11 +1,13 @@
 <script setup>
 import { useDetailsStore } from '../../stores/detailsStore.js';
+import { useLayoutStore } from '../../stores/layoutStore.js';
 
 const detailsStore = useDetailsStore();
+const layoutStore = useLayoutStore();
 </script>
 
 <template>
-  <div id="info-panel" class="info-panel">
+  <div id="info-panel" class="info-panel" :style="layoutStore.detailsPanelStyle">
     <div id="info-header" class="info-header" title="Drag to resize Details">Details</div>
     <div id="info-content">
       <template v-if="detailsStore.facts.length > 0">
