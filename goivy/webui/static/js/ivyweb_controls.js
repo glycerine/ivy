@@ -305,6 +305,9 @@ class IvyControls {
         }
 
         content.textContent = lines.join('\n');
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateDetails === 'function') {
+            window.__ivyVueBridge.updateDetails({ shortInfo: shortInfo, longInfo: longInfo });
+        }
     }
 
     /**
@@ -312,6 +315,9 @@ class IvyControls {
      */
     clearInfo() {
         document.getElementById('info-content').textContent = 'Select a node or edge to see details';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearDetails === 'function') {
+            window.__ivyVueBridge.clearDetails();
+        }
     }
 
     /**
@@ -329,6 +335,9 @@ class IvyControls {
             bar.classList.add('success');
         } else if (level === 'warning') {
             bar.classList.add('warning');
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStatus === 'function') {
+            window.__ivyVueBridge.updateStatus(msg, level || '');
         }
     }
 

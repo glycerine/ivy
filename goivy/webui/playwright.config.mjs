@@ -8,6 +8,9 @@ export default defineConfig({
   reporter: [['list']],
   webServer: {
     command: 'go run ../cmd/ivyweb -addr 127.0.0.1:18089',
+    env: {
+      GOCACHE: '/private/tmp/goivy-webui-playwright-gocache',
+    },
     url: 'http://127.0.0.1:18089',
     reuseExistingServer: false,
     timeout: 120_000,

@@ -185,7 +185,8 @@ class IvyApp {
         if (!editorLabel) return;
         var name = this._persistedFilePath || this._persistedFileName || '';
         var current = (this.cmEditor && typeof this.cmEditor.getValue === 'function') ? this.cmEditor.getValue() : (this._persistedFileContent || '');
-        var dirty = current !== (this._savedFileContent || '');
+        var saved = this._savedFileContent || '';
+        var dirty = current !== saved;
         var labelText;
         if (!name) {
             labelText = '(unsaved file)' + (this._saveInProgress ? ' [saving...]' : '');
@@ -201,6 +202,14 @@ class IvyApp {
         }
         editorLabel.textContent = labelText;
         editorLabel.title = 'Editing: ' + labelText;
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEditor === 'function') {
+            window.__ivyVueBridge.updateEditor({
+                path: name,
+                content: current,
+                savedContent: saved,
+                saveInProgress: this._saveInProgress,
+            });
+        }
         this._updateReopenLastFileButton();
     }
 
@@ -3949,19 +3958,31 @@ class IvyApp {
 
     addCheckResultViewActions(result) {
         if (!result || !result.trace_arg) return;
-        var info = document.getElementById('info-content');
-        if (!info) return;
-        var button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn small';
-        button.setAttribute('data-check-view-trace', 'true');
-        button.textContent = 'View error trace';
         var self = this;
-        button.addEventListener('click', function () {
+        var openTrace = function () {
             self.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id);
-        });
-        info.appendChild(document.createElement('br'));
-        info.appendChild(button);
+        };
+
+        var appendLegacyButton = function () {
+            if (document.querySelector('[data-check-view-trace]')) return;
+            var info = document.getElementById('info-content');
+            if (!info) return;
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn small';
+            button.setAttribute('data-check-view-trace', 'true');
+            button.textContent = 'View error trace';
+            button.addEventListener('click', openTrace);
+            info.appendChild(document.createElement('br'));
+            info.appendChild(button);
+        };
+
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setCheckTraceAction === 'function') {
+            window.__ivyVueBridge.setCheckTraceAction(openTrace);
+            setTimeout(appendLegacyButton, 0);
+            return;
+        }
+        appendLegacyButton();
     }
 
     /**
@@ -5087,9 +5108,20 @@ class IvyApp {
 }
 
 // ================================================================
-// Initialize on DOM ready
+// Initialize on DOM ready unless a framework shell owns boot timing.
 // ================================================================
-document.addEventListener('DOMContentLoaded', function () {
+function startIvyApp() {
+    if (window.ivyApp) {
+        return window.ivyApp;
+    }
     window.ivyApp = new IvyApp();
     window.ivyApp.init();
-});
+    return window.ivyApp;
+}
+
+window.IvyApp = IvyApp;
+window.startIvyApp = startIvyApp;
+
+if (!window.__IVY_VUE_OWNS_BOOT__) {
+    document.addEventListener('DOMContentLoaded', startIvyApp);
+}

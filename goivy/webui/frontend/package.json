@@ -1,0 +1,9 @@
+{
+  "name": "ivy-webui-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "../../../node_modules/.bin/vite build --config vite.config.mjs",
+    "test": "../../../node_modules/.bin/vitest run --config vitest.config.mjs"
+  }
+}
