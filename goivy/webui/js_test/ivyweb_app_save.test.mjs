@@ -69,7 +69,7 @@ describe('IvyApp Save and Save As', () => {
     expect(app.controls.lastStatus).toEqual({ message: 'Saved: client.ivy', kind: 'success' });
   });
 
-  it('shows immediate non-modal feedback while a dirty save is in progress', async () => {
+  it('shows immediate editor-label feedback and a sheen while a dirty save is in progress', async () => {
     const { IvyApp } = loadAppWithPersist();
     const closeGate = deferred();
     const writes = [];
@@ -114,14 +114,6 @@ describe('IvyApp Save and Save As', () => {
       width: 320,
       height: 480,
     }));
-    document.querySelector('#editor-panel .panel-header').getBoundingClientRect = vi.fn(() => ({
-      left: 640,
-      top: 120,
-      right: 960,
-      bottom: 168,
-      width: 320,
-      height: 48,
-    }));
     const editorText = document.querySelector('#editor-panel .CodeMirror');
     editorText.getBoundingClientRect = vi.fn(() => ({
       left: 640,
@@ -135,13 +127,9 @@ describe('IvyApp Save and Save As', () => {
 
     const savePromise = app.save();
 
-    expect(app.controls.lastStatus).toEqual({ message: 'Saving...', kind: undefined });
-    const progress = document.querySelector('.ivy-save-progress');
-    expect(progress).not.toBeNull();
-    expect(progress.textContent).toBe('Saving...');
-    expect(progress.style.left).toBe('648px');
-    expect(progress.style.right).toBe('auto');
-    expect(progress.style.top).toBe('176px');
+    expect(document.getElementById('model-editor-label').textContent).toBe('client.ivy [saving...]');
+    expect(document.getElementById('model-editor-label').textContent).not.toContain('**');
+    expect(document.querySelector('.ivy-save-progress')).toBeNull();
     const sheen = document.querySelector('.ivy-save-editor-sheen');
     expect(sheen).not.toBeNull();
     expect(sheen.style.left).toBe('640px');
@@ -156,8 +144,8 @@ describe('IvyApp Save and Save As', () => {
 
     expect(saved).toBe(true);
     expect(writes).toEqual(['new model']);
-    expect(document.querySelector('.ivy-save-progress')).toBeNull();
     expect(document.querySelector('.ivy-save-editor-sheen')).toBeNull();
+    expect(document.getElementById('model-editor-label').textContent).toBe('client.ivy [saved]');
     expect(app.controls.lastStatus).toEqual({ message: 'Saved: client.ivy', kind: 'success' });
   });
 

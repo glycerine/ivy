@@ -34,7 +34,7 @@ class IvyApp {
         this._lastClosedFileName = '';
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
-        this._saveProgressToast = null;
+        this._saveInProgress = false;
         this._saveProgressSheen = null;
         this.currentBound = 10;
     }
@@ -188,7 +188,12 @@ class IvyApp {
         var dirty = current !== (this._savedFileContent || '');
         var labelText;
         if (!name) {
-            labelText = (dirty ? '** ' : '') + '(unsaved file)';
+            labelText = '(unsaved file)' + (this._saveInProgress ? ' [saving...]' : '');
+            if (dirty && !this._saveInProgress) {
+                labelText = '** ' + labelText;
+            }
+        } else if (this._saveInProgress) {
+            labelText = name + ' [saving...]';
         } else if (dirty) {
             labelText = '** ' + name;
         } else {
@@ -223,30 +228,11 @@ class IvyApp {
     }
 
     _showSaveProgress(message) {
-        this.controls.setStatus(message || 'Saving...');
-        this._hideSaveProgress(this._saveProgressToast);
+        this._hideSaveProgress();
+        this._saveInProgress = true;
+        this._updateEditorLabel();
         this._saveProgressSheen = this._showSaveEditorSheen();
-        var toast = this._showToast(message || 'Saving...', 'info', {
-            persistent: true,
-            className: 'ivy-save-progress',
-        });
-        this._positionSaveProgressToast(toast);
-        this._saveProgressToast = toast;
-        return toast;
-    }
-
-    _positionSaveProgressToast(toast) {
-        var editorPanel = document.getElementById('editor-panel');
-        if (!toast || !editorPanel || typeof editorPanel.getBoundingClientRect !== 'function') return;
-        var rect = editorPanel.getBoundingClientRect();
-        var header = editorPanel.querySelector('.panel-header');
-        var headerRect = header && typeof header.getBoundingClientRect === 'function'
-            ? header.getBoundingClientRect()
-            : null;
-        var gap = 8;
-        toast.style.right = 'auto';
-        toast.style.left = Math.round(rect.left + gap) + 'px';
-        toast.style.top = Math.round((headerRect ? headerRect.bottom : rect.top) + gap) + 'px';
+        return true;
     }
 
     _editorTextElement() {
@@ -279,17 +265,14 @@ class IvyApp {
         return sheen;
     }
 
-    _hideSaveProgress(toast) {
-        var target = toast || this._saveProgressToast;
-        if (target && target.parentNode) {
-            target.parentNode.removeChild(target);
+    _hideSaveProgress() {
+        if (this._saveProgressSheen && this._saveProgressSheen.parentNode) {
+            this._saveProgressSheen.parentNode.removeChild(this._saveProgressSheen);
         }
-        if (!toast || this._saveProgressToast === toast) {
-            if (this._saveProgressSheen && this._saveProgressSheen.parentNode) {
-                this._saveProgressSheen.parentNode.removeChild(this._saveProgressSheen);
-            }
-            this._saveProgressSheen = null;
-            this._saveProgressToast = null;
+        this._saveProgressSheen = null;
+        if (this._saveInProgress) {
+            this._saveInProgress = false;
+            this._updateEditorLabel();
         }
     }
 
@@ -3274,7 +3257,7 @@ class IvyApp {
                 return true;
             } else {
                 if (saveProgress && window.showSaveFilePicker) {
-                    this._hideSaveProgress(saveProgress);
+                    this._hideSaveProgress();
                     saveProgress = null;
                 }
                 if (!dirty) {
@@ -3291,7 +3274,7 @@ class IvyApp {
             return false;
         } finally {
             if (saveProgress) {
-                this._hideSaveProgress(saveProgress);
+                this._hideSaveProgress();
             }
         }
     }
@@ -3367,7 +3350,7 @@ class IvyApp {
             return false;
         } finally {
             if (saveProgress) {
-                this._hideSaveProgress(saveProgress);
+                this._hideSaveProgress();
             }
         }
     }
