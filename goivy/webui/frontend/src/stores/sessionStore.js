@@ -7,6 +7,8 @@ export const useSessionStore = defineStore('session', {
   state: () => ({
     sessionId: '',
     mode: 'pdr',
+    loadedFileDisplay: '',
+    loadedFileTitle: '',
     status: 'Ready',
     statusLevel: '',
     loading: false,
@@ -23,6 +25,11 @@ export const useSessionStore = defineStore('session', {
     setMode(mode) {
       const next = String(mode || '');
       this.mode = SESSION_MODES.includes(next) ? next : 'pdr';
+    },
+    setLoadedFile(fileName = '', filePath = '') {
+      const display = filePath || fileName || '';
+      this.loadedFileDisplay = display;
+      this.loadedFileTitle = display;
     },
     showLoading(message = 'Loading...') {
       this.loading = true;

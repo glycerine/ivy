@@ -26,6 +26,16 @@ describe('sessionStore', () => {
   it('tracks loading overlay state', () => {
     const session = useSessionStore();
 
+    session.setMode('abstract');
+    expect(session.mode).toBe('abstract');
+
+    session.setMode('not-a-mode');
+    expect(session.mode).toBe('pdr');
+
+    session.setLoadedFile('client.ivy', '/models/client.ivy');
+    expect(session.loadedFileDisplay).toBe('/models/client.ivy');
+    expect(session.loadedFileTitle).toBe('/models/client.ivy');
+
     session.showLoading('Checking...');
     expect(session.loading).toBe(true);
     expect(session.loadingMessage).toBe('Checking...');

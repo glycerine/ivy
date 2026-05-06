@@ -3,6 +3,11 @@ import { useEditorStore } from '../../stores/editorStore.js';
 import { callApp, runCommand } from '../legacyCommand.js';
 
 const editorStore = useEditorStore();
+
+function setKeymap(keymap) {
+  editorStore.setKeymap(keymap);
+  callApp('setEditorKeymap', keymap);
+}
 </script>
 
 <template>
@@ -14,11 +19,18 @@ const editorStore = useEditorStore();
       </div>
       <div class="panel-header-actions">
         <button id="file-close-current" class="editor-close-btn" title="Close current file" @click="runCommand($event, () => callApp('closeCurrentFile'))">x</button>
-        <button id="file-reopen-last" class="reopen-last-btn" style="display:none;" @click="runCommand($event, () => callApp('reopenLastFile'))"></button>
+        <button
+          id="file-reopen-last"
+          class="reopen-last-btn"
+          :style="{ display: editorStore.reopenLastVisible ? '' : 'none' }"
+          @click="runCommand($event, () => callApp('reopenLastFile'))"
+        >
+          {{ editorStore.reopenLastLabel }}
+        </button>
         <span class="keymap-radios">
-          <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
-          <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>
-          <label><input type="radio" name="keymap" value="vim"> Vim</label>
+          <label><input type="radio" name="keymap" value="sublime" :checked="editorStore.keymap === 'sublime'" @change="setKeymap('sublime')"> Sublime</label>
+          <label><input type="radio" name="keymap" value="emacs" :checked="editorStore.keymap === 'emacs'" @change="setKeymap('emacs')"> Emacs-ish</label>
+          <label><input type="radio" name="keymap" value="vim" :checked="editorStore.keymap === 'vim'" @change="setKeymap('vim')"> Vim</label>
           <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
         </span>
       </div>

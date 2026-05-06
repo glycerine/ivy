@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
 import { FakeAPI, FakeControls, FakeGraph, makePersist } from './helpers/fakes.mjs';
 
@@ -53,6 +53,10 @@ function makeStateApp() {
   return app;
 }
 
+afterEach(() => {
+  window.__ivyVueBridge = undefined;
+});
+
 describe('IvyApp analysis state save/load', () => {
   it('captures root graphs, event sheets, mode, file content, and visibility state', () => {
     const app = makeStateApp();
@@ -72,6 +76,20 @@ describe('IvyApp analysis state save/load', () => {
     expect(state.sheets[0].arg.elements[0].data.obj).toBe('state_0');
     expect(state.sheets[1].type).toBe('events');
     expect(state.sheets[1].events[0].text).toBe('root(a)');
+  });
+
+  it('uses the Vue bridge as the source of truth for mode', () => {
+    window.__ivyVueBridge = {
+      getMode: vi.fn(() => 'abstract'),
+      setMode: vi.fn(),
+    };
+    const app = makeStateApp();
+
+    expect(app.buildAnalysisState().mode).toBe('abstract');
+
+    app.setMode('bounded');
+    expect(window.__ivyVueBridge.setMode).toHaveBeenCalledWith('bounded');
+    expect(document.getElementById('mode-select').value).toBe('bounded');
   });
 
   it('restores a saved visual analysis state into sheets and graph instances', async () => {

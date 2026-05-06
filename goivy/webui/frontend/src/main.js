@@ -56,6 +56,24 @@ window.__ivyVueBridge = {
   updateEditor(snapshot) {
     editorStore.applyLegacySnapshot(snapshot);
   },
+  setEditorKeymap(keymap) {
+    editorStore.setKeymap(keymap);
+  },
+  getEditorKeymap() {
+    return editorStore.keymap;
+  },
+  editorKeymapHandled() {
+    return true;
+  },
+  updateReopenLastFileButton(visible, label) {
+    editorStore.setReopenLastFileButton(visible, label);
+  },
+  staticCommandHandlersHandled() {
+    return true;
+  },
+  tabClicksHandled() {
+    return true;
+  },
   updateDetails(details) {
     detailsStore.setDetails(details);
   },
@@ -85,6 +103,9 @@ window.__ivyVueBridge = {
   },
   getMode() {
     return sessionStore.mode;
+  },
+  setLoadedFile(fileName, filePath) {
+    sessionStore.setLoadedFile(fileName, filePath);
   },
   showLoading(message) {
     sessionStore.showLoading(message);

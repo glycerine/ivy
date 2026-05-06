@@ -35,7 +35,7 @@
       <button id="btn-undo" class="menu-btn" @click="runCommand($event, () => callApp('doUndo'))">Undo</button>
       <button id="btn-reset-domain" class="menu-btn" @click="runCommand($event, () => callApp('resetDomain'))">Reset Domain</button>
       <button id="btn-diagram-domain" class="menu-btn" @click="runCommand($event, () => callApp('diagramDomain'))">Diagram Domain</button>
-      <span id="loaded-file" class="loaded-file"></span>
+      <span id="loaded-file" class="loaded-file" :title="sessionStore.loadedFileTitle">{{ sessionStore.loadedFileDisplay }}</span>
     </div>
     <div class="menu-group menu-right">
       <button id="btn-toggle-tutorial" class="menu-btn" @click="runCommand($event, () => callApp('toggleTutorial'))">{{ layoutStore.tutorialVisible ? 'Hide Tutorial' : 'Show Tutorial' }}</button>

@@ -1,5 +1,6 @@
 <script setup>
 import { useSheetStore } from '../../stores/sheetStore.js';
+import { callApp, runCommand } from '../legacyCommand.js';
 
 const sheetStore = useSheetStore();
 </script>
@@ -12,12 +13,14 @@ const sheetStore = useSheetStore();
       class="sheet-tab"
       :class="{ active: sheetStore.activeSheetId === tab.id }"
       :data-sheet="tab.id"
+      @click="runCommand($event, () => callApp('switchSheet', tab.id))"
     >
       <span>{{ tab.label }}</span>
       <span
         v-if="tab.closable"
         class="tab-close"
         title="Close tab"
+        @click="runCommand($event, () => callApp('removeSheet', tab.id))"
       >&times;</span>
     </button>
   </div>

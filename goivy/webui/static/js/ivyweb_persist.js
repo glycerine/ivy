@@ -355,8 +355,7 @@ var IvyPersist = {
 
             // Restore mode
             if (state.mode) {
-                var sel = document.getElementById('mode-select');
-                if (sel) sel.value = state.mode;
+                IvyPersist._setMode(state.mode);
             }
 
             // Restore selected concept nodes
@@ -432,8 +431,19 @@ var IvyPersist = {
     },
 
     _getMode: function () {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getMode === 'function') {
+            return window.__ivyVueBridge.getMode() || 'pdr';
+        }
         var sel = document.getElementById('mode-select');
-        return sel ? sel.value : 'concrete';
+        return sel ? sel.value : 'pdr';
+    },
+
+    _setMode: function (mode) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setMode === 'function') {
+            window.__ivyVueBridge.setMode(mode);
+        }
+        var sel = document.getElementById('mode-select');
+        if (sel && mode) sel.value = mode;
     },
 
     _getSelectedConceptNodes: function (app) {
@@ -544,6 +554,9 @@ var IvyPersist = {
      * @param {string} filePath
      */
     setFileName: function (fileName, filePath) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setLoadedFile === 'function') {
+            window.__ivyVueBridge.setLoadedFile(fileName || '', filePath || '');
+        }
         var el = document.getElementById('loaded-file');
         if (el) {
             var display = filePath || fileName || '';

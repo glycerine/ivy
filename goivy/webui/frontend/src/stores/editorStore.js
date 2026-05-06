@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 
+export const EDITOR_KEYMAPS = ['sublime', 'emacs', 'vim'];
+
 export const useEditorStore = defineStore('editor', {
   state: () => ({
     path: '',
@@ -8,6 +10,8 @@ export const useEditorStore = defineStore('editor', {
     saveState: 'idle',
     hasFile: false,
     keymap: 'sublime',
+    reopenLastVisible: false,
+    reopenLastLabel: '',
   }),
   getters: {
     dirty: (state) => state.content !== state.savedContent,
@@ -46,6 +50,14 @@ export const useEditorStore = defineStore('editor', {
     },
     markSaveFailed() {
       this.saveState = 'idle';
+    },
+    setKeymap(keymap) {
+      const next = String(keymap || '');
+      this.keymap = EDITOR_KEYMAPS.includes(next) ? next : 'sublime';
+    },
+    setReopenLastFileButton(visible, label = '') {
+      this.reopenLastVisible = Boolean(visible);
+      this.reopenLastLabel = this.reopenLastVisible ? String(label || 'Re-open last file') : '';
     },
     applyLegacySnapshot({
       path = '',

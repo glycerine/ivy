@@ -299,7 +299,6 @@ class IvyControls {
      * @param {string|Array<string>} longInfo - Detailed info (string or array of lines)
      */
     showInfo(shortInfo, longInfo) {
-        var content = document.getElementById('info-content');
         var lines = [];
 
         if (shortInfo) {
@@ -314,20 +313,24 @@ class IvyControls {
             }
         }
 
-        content.textContent = lines.join('\n');
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateDetails === 'function') {
             window.__ivyVueBridge.updateDetails({ shortInfo: shortInfo, longInfo: longInfo });
+            return;
         }
+        var content = document.getElementById('info-content');
+        if (content) content.textContent = lines.join('\n');
     }
 
     /**
      * Clear the info panel to its default state.
      */
     clearInfo() {
-        document.getElementById('info-content').textContent = 'Select a node or edge to see details';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearDetails === 'function') {
             window.__ivyVueBridge.clearDetails();
+            return;
         }
+        var content = document.getElementById('info-content');
+        if (content) content.textContent = 'Select a node or edge to see details';
     }
 
     /**
@@ -336,7 +339,12 @@ class IvyControls {
      * @param {string} [level] - 'normal', 'error', or 'success'
      */
     setStatus(msg, level) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStatus === 'function') {
+            window.__ivyVueBridge.updateStatus(msg, level || '');
+            return;
+        }
         var bar = document.getElementById('statusbar');
+        if (!bar) return;
         bar.textContent = msg;
         bar.className = '';
         if (level === 'error') {
@@ -346,9 +354,6 @@ class IvyControls {
         } else if (level === 'warning') {
             bar.classList.add('warning');
         }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStatus === 'function') {
-            window.__ivyVueBridge.updateStatus(msg, level || '');
-        }
     }
 
     /**
@@ -356,22 +361,26 @@ class IvyControls {
      * @param {string} [message] - Loading message
      */
     showLoading(message) {
-        var overlay = document.getElementById('loading-overlay');
-        var msgEl = document.getElementById('loading-message');
-        msgEl.textContent = message || 'Loading...';
-        overlay.style.display = 'flex';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showLoading === 'function') {
             window.__ivyVueBridge.showLoading(message || 'Loading...');
+            return;
         }
+        var overlay = document.getElementById('loading-overlay');
+        var msgEl = document.getElementById('loading-message');
+        if (!overlay || !msgEl) return;
+        msgEl.textContent = message || 'Loading...';
+        overlay.style.display = 'flex';
     }
 
     /**
      * Hide the loading overlay.
      */
     hideLoading() {
-        document.getElementById('loading-overlay').style.display = 'none';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.hideLoading === 'function') {
             window.__ivyVueBridge.hideLoading();
+            return;
         }
+        var overlay = document.getElementById('loading-overlay');
+        if (overlay) overlay.style.display = 'none';
     }
 }

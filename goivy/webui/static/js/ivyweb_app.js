@@ -112,7 +112,7 @@ class IvyApp {
         if (modelEditor) {
             this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
-                keyMap: 'sublime',
+                keyMap: this.getEditorKeymap(),
                 tabSize: 4,
                 indentUnit: 4,
                 lineWrapping: false,
@@ -129,12 +129,16 @@ class IvyApp {
                 self._persistedFileContent = self.cmEditor.getValue();
                 self._updateEditorLabel();
             });
-            // Keymap radio button switching.
-            var radios = document.querySelectorAll('input[name="keymap"]');
-            for (var i = 0; i < radios.length; i++) {
-                radios[i].addEventListener('change', function () {
-                    self.cmEditor.setOption('keyMap', this.value);
-                });
+            // Keymap radio button switching fallback for non-Vue test harnesses.
+            if (!(window.__ivyVueBridge &&
+                typeof window.__ivyVueBridge.editorKeymapHandled === 'function' &&
+                window.__ivyVueBridge.editorKeymapHandled())) {
+                var radios = document.querySelectorAll('input[name="keymap"]');
+                for (var i = 0; i < radios.length; i++) {
+                    radios[i].addEventListener('change', function () {
+                        self.setEditorKeymap(this.value);
+                    });
+                }
             }
         }
 
@@ -298,10 +302,15 @@ class IvyApp {
 
     _updateReopenLastFileButton() {
         var btn = document.getElementById('file-reopen-last');
-        if (!btn) return;
         var noCurrentFile = !this._fileHandle && !this._persistedFileName;
-        if (noCurrentFile && (this._lastClosedFileHandle || this._lastClosedSessionId)) {
-            btn.textContent = 'Re-open last file ' + (this._lastClosedFileName || 'file');
+        var visible = !!(noCurrentFile && (this._lastClosedFileHandle || this._lastClosedSessionId));
+        var label = 'Re-open last file ' + (this._lastClosedFileName || 'file');
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateReopenLastFileButton === 'function') {
+            window.__ivyVueBridge.updateReopenLastFileButton(visible, label);
+        }
+        if (!btn) return;
+        if (visible) {
+            btn.textContent = label;
             btn.style.display = '';
         } else {
             btn.style.display = 'none';
@@ -763,66 +772,29 @@ class IvyApp {
         var fileInput = document.getElementById('file-input');
         var eventFileInput = document.getElementById('event-file-input');
         var analysisStateFileInput = document.getElementById('analysis-state-file-input');
+        var vueHandlesStaticCommands = window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.staticCommandHandlersHandled === 'function' &&
+            window.__ivyVueBridge.staticCommandHandlersHandled();
 
-        // File > Load...
-        // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
-        // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
-        document.getElementById('file-load').addEventListener('click', function (e) {
-            e.preventDefault();
-            self.flashAndClose(this, async function () {
-                await self.chooseAndLoadModelFile();
-            });
-        });
-        fileInput.addEventListener('change', function () {
-            if (fileInput.files.length > 0) {
+        if (fileInput) fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files.length > 0) {
                 self.loadFile(fileInput.files[0]);
                 fileInput.value = ''; // reset for re-selection of same file
             }
         });
 
-        var eventTraceOpen = document.getElementById('file-open-event-trace');
-        if (eventTraceOpen && eventFileInput) {
-            eventTraceOpen.addEventListener('click', function (e) {
-                e.preventDefault();
-                self.flashAndClose(this, async function () {
-                    await self.chooseAndLoadEventTraceFile();
-                });
-            });
+        if (eventFileInput) {
             eventFileInput.addEventListener('change', function () {
-                if (eventFileInput.files.length > 0) {
+                if (eventFileInput.files && eventFileInput.files.length > 0) {
                     self.loadEventTraceFile(eventFileInput.files[0]);
                     eventFileInput.value = '';
                 }
             });
         }
 
-        // File > Save as... (uses File System Access API to write to a chosen path)
-        document.getElementById('file-save-as').addEventListener('click', function (e) {
-            e.preventDefault();
-            self.flashAndClose(this, function () { self.saveAs(); });
-        });
-
-        // File > Download current model (browser download)
-        document.getElementById('file-download').addEventListener('click', function (e) {
-            e.preventDefault();
-            self.flashAndClose(this, function () { self.downloadModel(); });
-        });
-
-        var saveAnalysis = document.getElementById('file-save-analysis-state');
-        if (saveAnalysis) {
-            saveAnalysis.addEventListener('click', function (e) {
-                e.preventDefault();
-                self.flashAndClose(this, function () { self.saveAnalysisState(); });
-            });
-        }
-        var loadAnalysis = document.getElementById('file-load-analysis-state');
-        if (loadAnalysis && analysisStateFileInput) {
-            loadAnalysis.addEventListener('click', function (e) {
-                e.preventDefault();
-                self.flashAndClose(this, function () { self.chooseAndLoadAnalysisStateFile(); });
-            });
+        if (analysisStateFileInput) {
             analysisStateFileInput.addEventListener('change', async function () {
-                if (analysisStateFileInput.files.length > 0) {
+                if (analysisStateFileInput.files && analysisStateFileInput.files.length > 0) {
                     try {
                         await self.loadAnalysisStateFile(analysisStateFileInput.files[0]);
                     } catch (ex) {
@@ -833,95 +805,149 @@ class IvyApp {
             });
         }
 
-        // File > New Model
-        document.getElementById('file-new').addEventListener('click', function (e) {
-            e.preventDefault();
-            self.flashAndClose(this, function () { self.newModel(); });
-        });
-
-        var closeCurrent = document.getElementById('file-close-current');
-        if (closeCurrent) {
-            closeCurrent.addEventListener('click', function (e) {
+        if (!vueHandlesStaticCommands) {
+            // File > Load...
+            // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
+            // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
+            var loadModel = document.getElementById('file-load');
+            if (loadModel) loadModel.addEventListener('click', function (e) {
                 e.preventDefault();
-                self.closeCurrentFile();
+                self.flashAndClose(this, async function () {
+                    await self.chooseAndLoadModelFile();
+                });
             });
-        }
-        var reopenLast = document.getElementById('file-reopen-last');
-        if (reopenLast) {
-            reopenLast.addEventListener('click', function (e) {
+
+            var eventTraceOpen = document.getElementById('file-open-event-trace');
+            if (eventTraceOpen && eventFileInput) {
+                eventTraceOpen.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.flashAndClose(this, async function () {
+                        await self.chooseAndLoadEventTraceFile();
+                    });
+                });
+            }
+
+            // File > Save as... (uses File System Access API to write to a chosen path)
+            var saveAs = document.getElementById('file-save-as');
+            if (saveAs) saveAs.addEventListener('click', function (e) {
                 e.preventDefault();
-                self.reopenLastFile();
+                self.flashAndClose(this, function () { self.saveAs(); });
             });
+
+            // File > Download current model (browser download)
+            var download = document.getElementById('file-download');
+            if (download) download.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, function () { self.downloadModel(); });
+            });
+
+            var saveAnalysis = document.getElementById('file-save-analysis-state');
+            if (saveAnalysis) {
+                saveAnalysis.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.flashAndClose(this, function () { self.saveAnalysisState(); });
+                });
+            }
+            var loadAnalysis = document.getElementById('file-load-analysis-state');
+            if (loadAnalysis && analysisStateFileInput) {
+                loadAnalysis.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.flashAndClose(this, function () { self.chooseAndLoadAnalysisStateFile(); });
+                });
+            }
+
+            // File > New Model
+            var newModel = document.getElementById('file-new');
+            if (newModel) newModel.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, function () { self.newModel(); });
+            });
+
+            var closeCurrent = document.getElementById('file-close-current');
+            if (closeCurrent) {
+                closeCurrent.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.closeCurrentFile();
+                });
+            }
+            var reopenLast = document.getElementById('file-reopen-last');
+            if (reopenLast) {
+                reopenLast.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.reopenLastFile();
+                });
+            }
+
+            // File > Save Invariant
+            var saveInvariant = document.getElementById('file-save-invariant');
+            if (saveInvariant) saveInvariant.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, function () { self.saveInvariant(); });
+            });
+
+            // --- Check ---
+            document.getElementById('btn-check').addEventListener('click', function () {
+                self.runCheck();
+            });
+
+            // --- Show reachable states ---
+            document.getElementById('btn-show-reachable').addEventListener('click', function () {
+                self.showReachableStates();
+            });
+
+            // --- Undo ---
+            document.getElementById('btn-undo').addEventListener('click', function () {
+                self.doUndo();
+            });
+
+            // --- Reset Domain ---
+            document.getElementById('btn-reset-domain').addEventListener('click', function () {
+                self.resetDomain();
+            });
+
+            // --- Diagram Domain ---
+            document.getElementById('btn-diagram-domain').addEventListener('click', function () {
+                self.diagramDomain();
+            });
+
+            // --- Toggle Tutorial ---
+            document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
+                self.toggleTutorial();
+            });
+
+            // --- Dropdown Menus (panel header) ---
+            this.setupDropdownMenus();
+
+            // --- ARG Panel Menu Items (File, Invariant) ---
+            this.bindMenuAction('arg-save-abs', function () { self.saveAbstraction(); });
+            this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
+            this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
+            this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
+            this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
+            this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
+
+            // --- Concept Panel Menu Items (Conjecture, View) ---
+            this.bindMenuAction('conj-undo', function () { self.doUndo(); });
+            this.bindMenuAction('conj-redo', function () { self.doRedo(); });
+            this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
+            this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
+            this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
+            this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
+            this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
+            this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
+            this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
+            this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
+            this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
+            this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
+            this.bindMenuAction('conj-reach', function () { self.reachStep(); });
+            this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
+            this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
+            this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
+            this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
+            this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
+            this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
+            this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
         }
-
-        // File > Save Invariant
-        document.getElementById('file-save-invariant').addEventListener('click', function (e) {
-            e.preventDefault();
-            self.flashAndClose(this, function () { self.saveInvariant(); });
-        });
-
-        // --- Check ---
-        document.getElementById('btn-check').addEventListener('click', function () {
-            self.runCheck();
-        });
-
-        // --- Show reachable states ---
-        document.getElementById('btn-show-reachable').addEventListener('click', function () {
-            self.showReachableStates();
-        });
-
-        // --- Undo ---
-        document.getElementById('btn-undo').addEventListener('click', function () {
-            self.doUndo();
-        });
-
-        // --- Reset Domain ---
-        document.getElementById('btn-reset-domain').addEventListener('click', function () {
-            self.resetDomain();
-        });
-
-        // --- Diagram Domain ---
-        document.getElementById('btn-diagram-domain').addEventListener('click', function () {
-            self.diagramDomain();
-        });
-
-        // --- Toggle Tutorial ---
-        document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
-            self.toggleTutorial();
-        });
-
-        // --- Dropdown Menus (panel header) ---
-        this.setupDropdownMenus();
-
-        // --- ARG Panel Menu Items (File, Invariant) ---
-        this.bindMenuAction('arg-save-abs', function () { self.saveAbstraction(); });
-        this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
-        this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
-        this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
-        this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
-        this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
-
-        // --- Concept Panel Menu Items (Conjecture, View) ---
-        this.bindMenuAction('conj-undo', function () { self.doUndo(); });
-        this.bindMenuAction('conj-redo', function () { self.doRedo(); });
-        this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
-        this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
-        this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
-        this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
-        this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
-        this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
-        this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
-        this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
-        this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
-        this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
-        this.bindMenuAction('conj-reach', function () { self.reachStep(); });
-        this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
-        this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
-        this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
-        this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
-        this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
-        this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
-        this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
 
         // --- Click anywhere to dismiss context menu and dropdowns ---
         document.addEventListener('click', function (e) {
@@ -1143,6 +1169,11 @@ class IvyApp {
         this._sheetCounter = 1;
         var tabBar = document.getElementById('tab-bar');
         if (!tabBar) return;
+        if (window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.tabClicksHandled === 'function' &&
+            window.__ivyVueBridge.tabClicksHandled()) {
+            return;
+        }
         tabBar.addEventListener('click', function (e) {
             // Close button clicked?
             if (e.target.classList.contains('tab-close')) {
@@ -3628,6 +3659,27 @@ class IvyApp {
         return json ? json.elements : null;
     }
 
+    getEditorKeymap() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getEditorKeymap === 'function') {
+            return window.__ivyVueBridge.getEditorKeymap() || 'sublime';
+        }
+        var checked = document.querySelector('input[name="keymap"]:checked');
+        return checked ? checked.value : 'sublime';
+    }
+
+    setEditorKeymap(keymap) {
+        var allowed = { sublime: true, emacs: true, vim: true };
+        var next = allowed[keymap] ? keymap : 'sublime';
+        if (this.cmEditor && typeof this.cmEditor.setOption === 'function') {
+            this.cmEditor.setOption('keyMap', next);
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEditorKeymap === 'function') {
+            window.__ivyVueBridge.setEditorKeymap(next);
+        }
+        var radio = document.querySelector('input[name="keymap"][value="' + next + '"]');
+        if (radio) radio.checked = true;
+    }
+
     tabLabelForSheet(sheetId) {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSheetTabLabel === 'function') {
             var bridgeLabel = window.__ivyVueBridge.getSheetTabLabel(sheetId);
@@ -3636,6 +3688,22 @@ class IvyApp {
         var tab = this.sheetTab(sheetId);
         var label = tab ? tab.querySelector('span') : null;
         return label ? label.textContent : sheetId;
+    }
+
+    getMode() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getMode === 'function') {
+            return window.__ivyVueBridge.getMode() || 'pdr';
+        }
+        var modeEl = document.getElementById('mode-select');
+        return modeEl ? modeEl.value : 'pdr';
+    }
+
+    setMode(mode) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setMode === 'function') {
+            window.__ivyVueBridge.setMode(mode);
+        }
+        var modeEl = document.getElementById('mode-select');
+        if (modeEl && mode) modeEl.value = mode;
     }
 
     buildAnalysisState() {
@@ -3670,7 +3738,6 @@ class IvyApp {
                 });
             }
         }
-        var modeEl = document.getElementById('mode-select');
         return {
             analysis_state_format: 'ivyweb-json',
             analysis_state_version: 1,
@@ -3678,7 +3745,7 @@ class IvyApp {
             fileName: this._persistedFileName || '',
             filePath: this._persistedFilePath || this._persistedFileName || '',
             fileContent: this._editorContent ? this._editorContent() : (this._persistedFileContent || ''),
-            mode: modeEl ? modeEl.value : 'pdr',
+            mode: this.getMode(),
             activeSheetId: this.activeSheetId || 'sheet-1',
             selectedArgNode: this.selectedArgNode || null,
             edgeVisibility: this._edgeVisibility || {},
@@ -3742,8 +3809,7 @@ class IvyApp {
         if (this.setEditorContent) {
             this.setEditorContent(this._persistedFileContent);
         }
-        var modeEl = document.getElementById('mode-select');
-        if (modeEl && state.mode) modeEl.value = state.mode;
+        if (state.mode) this.setMode(state.mode);
         if (this.api && this.api.reloadContent && this._persistedFileContent) {
             await this.api.reloadContent(this._persistedFileContent, this._persistedFileName || 'restored.ivy');
         }
@@ -4117,7 +4183,7 @@ class IvyApp {
      * Run a verification check in the currently selected mode.
      */
     async runCheck() {
-        var mode = document.getElementById('mode-select').value;
+        var mode = this.getMode();
         this.controls.showLoading('Running ' + mode + ' check...');
         this.controls.setStatus('Recompiling editor content...');
         try {
