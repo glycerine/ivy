@@ -1,5 +1,7 @@
 # Vue Test Migration Plan
 
+Execution status: completed on May 6, 2026. The old `goivy/webui/js_test` harness has been retired, and `test:webui:js` is now a compatibility alias for the Vue/Vitest suite.
+
 ## Purpose
 
 The Vue 3 runtime switch-over is in place, and the production UI now has Vue components, Pinia stores, and extracted services. The remaining test smell is that a meaningful slice of behavior is still tested through the old `IvyApp` browser-script harness in `goivy/webui/js_test`.

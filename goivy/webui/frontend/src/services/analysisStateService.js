@@ -145,3 +145,116 @@ export function removeAnalysisStateExtraSheets(app) {
     }
   }
 }
+
+export async function saveAnalysisState(app, {
+  win = globalThis.window,
+} = {}) {
+  try {
+    const state = app.buildAnalysisState();
+    const text = `${JSON.stringify(state, null, 2)}\n`;
+    const suggestedName = (app._persistedFileName || 'ivy_analysis').replace(/\.ivy$/, '') + '.ivyweb.json';
+    if (win && win.showSaveFilePicker) {
+      const handle = await win.showSaveFilePicker({
+        suggestedName,
+        types: [{ description: 'IvyWeb analysis state', accept: { 'application/json': ['.json'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(text);
+      await writable.close();
+      app.controls.setStatus(`Analysis state saved: ${handle.name}`, 'success');
+    } else {
+      app.downloadTextFile(suggestedName, text, 'application/json');
+      app.controls.setStatus(`Analysis state downloaded: ${suggestedName}`, 'success');
+    }
+    return state;
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      app.controls.setStatus('Save analysis state cancelled');
+    } else {
+      app.controls.setStatus(`Save analysis state failed: ${err.message}`, 'error');
+    }
+    return null;
+  }
+}
+
+export async function loadAnalysisStateFile(app, file) {
+  if (!file) return false;
+  if (typeof file.size === 'number' && file.size > app.analysisStateLimits().maxFileBytes) {
+    throw new Error('analysis state file too large');
+  }
+  const text = await app.readFileText(file);
+  return app.loadAnalysisStateObject(JSON.parse(text));
+}
+
+export async function loadAnalysisStateObject(app, state, persist) {
+  app.validateAnalysisStateObject(state);
+  if (!state || state.analysis_state_format !== 'ivyweb-json') {
+    throw new Error('unsupported analysis state format');
+  }
+  app._persistedFileName = state.fileName || '';
+  app._persistedFilePath = state.filePath || state.fileName || '';
+  app._persistedFileContent = state.fileContent || '';
+  app._savedFileContent = app._persistedFileContent;
+  app._edgeVisibility = state.edgeVisibility || {};
+  app._labelVisibility = state.labelVisibility || {};
+  app.selectedArgNode = state.selectedArgNode || null;
+
+  if (app.setEditorContent) {
+    app.setEditorContent(app._persistedFileContent);
+  }
+  if (state.mode) app.setMode(state.mode);
+  if (app.api && app.api.reloadContent && app._persistedFileContent) {
+    await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy');
+  }
+
+  app.removeAnalysisStateExtraSheets();
+  const sheets = state.sheets || [];
+  for (const sheet of sheets) {
+    if (sheet.type === 'events') {
+      app.openEventTraceSheet(sheet.label || 'Events', {
+        sheet_id: sheet.id,
+        events: sheet.events || [],
+        patterns: sheet.patterns || [],
+        selected_address: sheet.selectedEventAddress || null,
+      }, sheet.id);
+      app.setVisualOnlySheet(sheet.id, true);
+      continue;
+    }
+    if (sheet.id === 'sheet-1') {
+      if (sheet.arg && sheet.arg.elements && app.argGraph) {
+        app.argGraph.update(sheet.arg.elements, sheet.arg.positions || undefined);
+      }
+      if (sheet.concept && sheet.concept.elements && app.conceptGraph) {
+        app.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+      }
+      if (app.sheets && app.sheets['sheet-1']) {
+        app.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
+        app.sheets['sheet-1'].visualOnly = true;
+      }
+    } else if (sheet.arg && sheet.arg.elements) {
+      app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
+      const opened = app.sheets && app.sheets[sheet.id];
+      if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
+        opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+      }
+      if (opened) {
+        opened.selectedArgNode = sheet.selectedArgNode || null;
+        opened.visualOnly = true;
+      }
+    }
+  }
+
+  if (state.toggles && persist && persist._setToggles) {
+    persist._setToggles(state.toggles);
+  }
+  if (state.activeSheetId && app.sheetExists(state.activeSheetId)) {
+    app.switchSheet(state.activeSheetId);
+  } else {
+    app.switchSheet('sheet-1');
+  }
+  if (persist && persist.setFileName) {
+    persist.setFileName(app._persistedFileName, app._persistedFilePath);
+  }
+  app.controls.setStatus(`Visual analysis state loaded: ${app._persistedFileName || 'state'}`, 'warning');
+  return true;
+}

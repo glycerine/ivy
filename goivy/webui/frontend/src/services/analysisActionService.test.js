@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { executeAndRefresh, refreshConceptGraph, runAction } from './analysisActionService.js';
+import {
+  executeAndRefresh,
+  exportConjecture,
+  refreshConceptGraph,
+  rememberGraph,
+  runAction,
+} from './analysisActionService.js';
 
 describe('analysisActionService', () => {
   it('runs backend actions with loading and structured results', async () => {
@@ -61,5 +67,46 @@ describe('analysisActionService', () => {
     expect(app.api.executeAction).toHaveBeenCalledWith('redo', {});
     expect(app.refreshConceptGraph).toHaveBeenCalled();
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('Redo complete', 'success');
+  });
+
+  it('prompts for a graph name before remembering', async () => {
+    const app = {
+      activeSheetId: 'sheet-1',
+      entryDialog: vi.fn(async () => 'goal-a'),
+      api: {
+        executeAction: vi.fn(async () => ({ status: 'ok' })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await rememberGraph(app);
+
+    expect(app.entryDialog).toHaveBeenCalledWith('Remember graph', 'Enter a name for this goal:', '', { okLabel: 'Remember' });
+    expect(app.api.executeAction).toHaveBeenCalledWith('remember', { name: 'goal-a', sheet_id: 'sheet-1' });
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Graph remembered', 'success');
+  });
+
+  it('requests DOT export for the active sheet', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      downloadTextFile: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({
+          content: 'digraph concept_graph {\n}\n',
+          filename: 'concept_graph.dot',
+        })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await exportConjecture(app, { win: {}, doc: document });
+
+    expect(app.api.executeAction).toHaveBeenCalledWith('export', { sheet_id: 'sheet-2' });
+    expect(app.downloadTextFile).toHaveBeenCalledWith('concept_graph.dot', 'digraph concept_graph {\n}\n', 'text/vnd.graphviz');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Graph exported', 'success');
   });
 });

@@ -56,6 +56,41 @@ describe('legacyPersist', () => {
     ]);
   });
 
+  it('round-trips recent session metadata through localStorage with the URL session id', () => {
+    window.history.replaceState(null, '', '/#stable-session');
+    const persist = createIvyPersist(window);
+
+    persist.save(makeApp({
+      api: { sessionId: 'server-session' },
+      _persistedFilePath: '/tmp/ivy/client.ivy',
+      _persistedFileContent: 'ivy content',
+      selectedArgNode: 'node0',
+      _edgeVisibility: { link: { all_to_all: true } },
+      _labelVisibility: { semaphore: { node_maybe: true } },
+      argGraph: null,
+      conceptGraph: null,
+    }));
+
+    const state = persist.load();
+    expect(state).toMatchObject({
+      sessionId: 'stable-session',
+      fileName: 'client.ivy',
+      filePath: '/tmp/ivy/client.ivy',
+      fileContent: 'ivy content',
+      selectedArgNode: 'node0',
+    });
+    expect(window.localStorage.getItem('ivy_last_session')).toBe('stable-session');
+    expect(JSON.parse(window.localStorage.getItem('ivy_sessions'))).toEqual(['stable-session']);
+    expect(persist.listSessions()).toEqual([
+      {
+        id: 'stable-session',
+        fileName: 'client.ivy',
+        filePath: '/tmp/ivy/client.ivy',
+        timestamp: state.timestamp,
+      },
+    ]);
+  });
+
   it('routes restored mode, relation toggles, and loaded file into the Vue bridge', () => {
     window.__ivyVueBridge = {
       setMode: vi.fn(),
@@ -82,4 +117,3 @@ describe('legacyPersist', () => {
     expect(persist.truncatePath('/very/long/parent/client.ivy', 12)).toBe('...ng/parent');
   });
 });
-

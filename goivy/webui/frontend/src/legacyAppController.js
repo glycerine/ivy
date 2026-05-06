@@ -85,11 +85,18 @@ import {
 } from './services/sheetService.js';
 import {
     activeEventSheet as activeEventSheetViaService,
+    addEventPattern as addEventPatternViaService,
+    applyEventPatternResult as applyEventPatternResultViaService,
+    clearEventPatterns as clearEventPatternsViaService,
     filterEventTrace as filterEventTraceViaService,
     findEventTrace as findEventTraceViaService,
+    loadEventPatterns as loadEventPatternsViaService,
     loadEventTraceFile as loadEventTraceFileViaService,
     lookupEventTrace as lookupEventTraceViaService,
     readFileText as readFileTextViaService,
+    removeSelectedEventPattern as removeSelectedEventPatternViaService,
+    renderEventPatternList as renderEventPatternListViaService,
+    saveEventPatterns as saveEventPatternsViaService,
     selectEventTraceRow as selectEventTraceRowViaService,
     selectedEventPattern as selectedEventPatternViaService,
     toggleEventTraceNode as toggleEventTraceNodeViaService,
@@ -100,12 +107,16 @@ import {
     autoCheckUsedRelations,
     boundedCheck as boundedCheckViaService,
     checkInduction as checkInductionViaService,
+    ctiConceptAction as ctiConceptActionViaService,
     runCheck as runCheckViaService,
     showCheckResult as showCheckResultViaService,
+    weakenInvariant as weakenInvariantViaService,
 } from './services/checkService.js';
 import {
     executeAndRefresh,
+    exportConjecture as exportConjectureViaService,
     refreshConceptGraph as refreshConceptGraphViaService,
+    rememberGraph as rememberGraphViaService,
     runAction as runActionViaService,
 } from './services/analysisActionService.js';
 import {
@@ -116,7 +127,10 @@ import {
 import {
     analysisStateLimits as analysisStateLimitsViaService,
     buildAnalysisState as buildAnalysisStateViaService,
+    loadAnalysisStateFile as loadAnalysisStateFileViaService,
+    loadAnalysisStateObject as loadAnalysisStateObjectViaService,
     removeAnalysisStateExtraSheets as removeAnalysisStateExtraSheetsViaService,
+    saveAnalysisState as saveAnalysisStateViaService,
     validateAnalysisStateEvents as validateAnalysisStateEventsViaService,
     validateAnalysisStateGraphPayload as validateAnalysisStateGraphPayloadViaService,
     validateAnalysisStateObject as validateAnalysisStateObjectViaService,
@@ -129,9 +143,11 @@ import {
 } from './services/argActionService.js';
 import {
     addProjection as addProjectionViaService,
+    addRelationFromString as addRelationFromStringViaService,
     executeConceptEdgeAction as executeConceptEdgeActionViaService,
     executeConceptNodeAction as executeConceptNodeActionViaService,
     materializeEdge as materializeEdgeViaService,
+    materializeEdgeFromSelected as materializeEdgeFromSelectedViaService,
     materializeNode as materializeNodeViaService,
     removeConcept as removeConceptViaService,
     selectConceptNode as selectConceptNodeViaService,
@@ -1735,6 +1751,7 @@ class IvyApp {
     }
 
     applyEventPatternResult(sheetId, result, fallbackPatterns) {
+        return applyEventPatternResultViaService(this, sheetId, result, fallbackPatterns);
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
         if (result && Array.isArray(result.patterns)) {
@@ -1750,6 +1767,7 @@ class IvyApp {
     }
 
     renderEventPatternList(sheetId) {
+        return renderEventPatternListViaService(this, sheetId);
         var sheet = document.getElementById(sheetId);
         var sheetState = this.sheets && this.sheets[sheetId];
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEventPatterns === 'function') {
@@ -1780,6 +1798,7 @@ class IvyApp {
     }
 
     async addEventPattern(sheetId, pattern) {
+        return addEventPatternViaService(this, sheetId, pattern);
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
         if (this.api && this.api.executeAction && !sheet.visualOnly) {
@@ -1792,6 +1811,7 @@ class IvyApp {
     }
 
     async removeSelectedEventPattern(sheetId) {
+        return removeSelectedEventPatternViaService(this, sheetId);
         var sheet = this.sheets && this.sheets[sheetId];
         var sheetEl = document.getElementById(sheetId);
         var select = sheetEl ? sheetEl.querySelector('.event-pattern-list') : null;
@@ -1812,6 +1832,7 @@ class IvyApp {
     }
 
     async clearEventPatterns(sheetId) {
+        return clearEventPatternsViaService(this, sheetId);
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
         if (this.api && this.api.executeAction && !sheet.visualOnly) {
@@ -1824,6 +1845,7 @@ class IvyApp {
     }
 
     async loadEventPatterns(sheetId, text) {
+        return loadEventPatternsViaService(this, sheetId, text);
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
         if (this.api && this.api.executeAction && !sheet.visualOnly) {
@@ -1837,6 +1859,7 @@ class IvyApp {
     }
 
     async saveEventPatterns(sheetId) {
+        return saveEventPatternsViaService(this, sheetId);
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return '';
         var content = (sheet.patterns || []).join('\n');
@@ -3313,6 +3336,7 @@ class IvyApp {
     }
 
     async materializeEdgeFromSelected(targetConceptId) {
+        return materializeEdgeFromSelectedViaService(this, targetConceptId);
         var sourceConceptId = this.selectedConceptNode;
         if (!sourceConceptId) {
             this.controls.setStatus('Select a source node first', 'warning');
@@ -3586,6 +3610,7 @@ class IvyApp {
     }
 
     async saveAnalysisState() {
+        return saveAnalysisStateViaService(this);
         try {
             var state = this.buildAnalysisState();
             var text = JSON.stringify(state, null, 2) + '\n';
@@ -3615,6 +3640,7 @@ class IvyApp {
     }
 
     async loadAnalysisStateFile(file) {
+        return loadAnalysisStateFileViaService(this, file);
         if (!file) return false;
         if (typeof file.size === 'number' && file.size > this.analysisStateLimits().maxFileBytes) {
             throw new Error('analysis state file too large');
@@ -3624,6 +3650,7 @@ class IvyApp {
     }
 
     async loadAnalysisStateObject(state) {
+        return loadAnalysisStateObjectViaService(this, state, legacyAppDeps.IvyPersist);
         this.validateAnalysisStateObject(state);
         if (!state || state.analysis_state_format !== 'ivyweb-json') {
             throw new Error('unsupported analysis state format');
@@ -4786,6 +4813,7 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py weaken().
      */
     async weakenInvariant() {
+        return weakenInvariantViaService(this);
         try {
             this.controls.setStatus('Choosing conjectures...');
             var choicesResult = await this.api.executeAction('get_conjectures', {});
@@ -4954,6 +4982,7 @@ class IvyApp {
     }
 
     async ctiConceptAction(actionName) {
+        return ctiConceptActionViaService(this, actionName);
         this.controls.setStatus('Running CTI action...');
         try {
             var result = await this.api.executeAction(actionName, { sheet_id: this.activeSheetId || 'sheet-1' });
@@ -5063,6 +5092,7 @@ class IvyApp {
      * Matches Python ivy_graph_ui.py remember().
      */
     async rememberGraph() {
+        return rememberGraphViaService(this);
         this.controls.setStatus('Remembering graph...');
         try {
             var name = await this.entryDialog('Remember graph', 'Enter a name for this goal:', '', { okLabel: 'Remember' });
@@ -5082,6 +5112,7 @@ class IvyApp {
      * Matches Python ivy_graph_ui.py export().
      */
     async exportConjecture() {
+        return exportConjectureViaService(this);
         this.controls.setStatus('Exporting conjecture...');
         try {
             var result = await this.api.executeAction('export', { sheet_id: this.activeSheetId || 'sheet-1' });
@@ -5122,6 +5153,7 @@ class IvyApp {
      * Matches Python ivy_graph_ui.py add_concept_from_string().
      */
     async addRelationFromString() {
+        return addRelationFromStringViaService(this);
         var input = await this.entryDialog(
             'Add relation',
             'Add a relation [example: p(X,a,Y)]:',

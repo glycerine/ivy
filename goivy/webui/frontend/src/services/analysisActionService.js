@@ -59,3 +59,65 @@ export async function executeAndRefresh(app, {
     return null;
   }
 }
+
+export async function rememberGraph(app) {
+  app.controls.setStatus('Remembering graph...');
+  try {
+    const name = await app.entryDialog('Remember graph', 'Enter a name for this goal:', '', { okLabel: 'Remember' });
+    if (name === null) {
+      app.controls.setStatus('Remember cancelled', 'warning');
+      return undefined;
+    }
+    const result = await app.api.executeAction('remember', { name, sheet_id: app.activeSheetId || 'sheet-1' });
+    app.controls.setStatus('Graph remembered', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Remember failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
+export async function exportConjecture(app, {
+  win = globalThis.window,
+  doc = globalThis.document,
+  urlApi = globalThis.URL,
+} = {}) {
+  app.controls.setStatus('Exporting conjecture...');
+  try {
+    const result = await app.api.executeAction('export', { sheet_id: app.activeSheetId || 'sheet-1' });
+    const content = (result && result.content) || '';
+    const filename = (result && result.filename) || 'concept_graph.dot';
+    const mimeType = (result && result.mime_type) || 'text/vnd.graphviz';
+    if (content) {
+      if (win && win.showSaveFilePicker) {
+        const handle = await win.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{
+            description: 'DOT files',
+            accept: { 'text/vnd.graphviz': ['.dot'] },
+          }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(content);
+        await writable.close();
+      } else if (typeof app.downloadTextFile === 'function') {
+        app.downloadTextFile(filename, content, mimeType);
+      } else {
+        const blob = new Blob([content], { type: mimeType });
+        const url = urlApi.createObjectURL(blob);
+        const a = doc.createElement('a');
+        a.href = url;
+        a.download = filename;
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        urlApi.revokeObjectURL(url);
+      }
+    }
+    app.controls.setStatus('Graph exported', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Export failed: ${err.message}`, 'error');
+    return null;
+  }
+}

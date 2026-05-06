@@ -131,6 +131,66 @@ export async function addProjection(app, name, concept) {
   }
 }
 
+export async function materializeEdgeFromSelected(app, targetConceptId) {
+  const sourceConceptId = app.selectedConceptNode;
+  if (!sourceConceptId) {
+    app.controls.setStatus('Select a source node first', 'warning');
+    return undefined;
+  }
+  const data = app._lastConceptData || {};
+  const edgeSorts = data.edge_sorts || {};
+  let relations = Object.keys(edgeSorts).filter((rel) => {
+    const sorts = edgeSorts[rel] || [];
+    return sorts.length >= 2 && sorts[0] === sourceConceptId && sorts[1] === targetConceptId;
+  });
+  if (relations.length === 0 && Array.isArray(data.edges)) {
+    relations = data.edges.slice();
+  }
+  if (relations.length === 0) {
+    app.controls.setStatus('No matching binary relations', 'warning');
+    return undefined;
+  }
+  const selected = await app.listboxDialog(
+    'Materialize edge',
+    'Materialize this relation from selected node:',
+    relations.map((rel) => ({ label: rel, value: rel })),
+    { cancel: true },
+  );
+  if (selected == null) {
+    app.controls.setStatus('Materialize edge cancelled', 'warning');
+    return undefined;
+  }
+  app.controls.setStatus(`Materializing edge ${selected}...`);
+  try {
+    const result = await app.api.materializeEdge(selected, sourceConceptId, targetConceptId, true);
+    await app.refreshConceptGraph();
+    app.controls.setStatus('Edge materialized (+)', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Materialize edge failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
+export async function addRelationFromString(app) {
+  const input = await app.entryDialog(
+    'Add relation',
+    'Add a relation [example: p(X,a,Y)]:',
+    '',
+    { okLabel: 'Add' },
+  );
+  if (!input) return undefined;
+  try {
+    const result = await app.api.executeAction('add_relation', { formula: input });
+    await app.refreshConceptGraph();
+    app.controls.setStatus('Relation added', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Add relation failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
 export function selectConceptNode(app, conceptId) {
   app.selectedConceptNode = conceptId;
   if (app.conceptGraph && app.conceptGraph.cy) {

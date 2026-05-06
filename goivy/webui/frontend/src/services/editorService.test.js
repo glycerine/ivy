@@ -120,4 +120,23 @@ describe('editorService', () => {
     expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'emacs');
     expect(bridge.setEditorKeymap).toHaveBeenCalledWith('emacs');
   });
+
+  it('falls back to keymap radios only when Vue does not own keymap state', () => {
+    document.body.innerHTML = [
+      '<label><input type="radio" name="keymap" value="sublime" checked></label>',
+      '<label><input type="radio" name="keymap" value="vim"></label>',
+    ].join('');
+    const app = {
+      cmEditor: {
+        setOption: vi.fn(),
+      },
+    };
+
+    expect(getEditorKeymap({ bridge: null, doc: document })).toBe('sublime');
+    expect(setEditorKeymap(app, 'vim', { bridge: null, doc: document })).toBe('vim');
+
+    expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'vim');
+    expect(document.querySelector('input[name="keymap"][value="sublime"]').checked).toBe(false);
+    expect(document.querySelector('input[name="keymap"][value="vim"]').checked).toBe(true);
+  });
 });

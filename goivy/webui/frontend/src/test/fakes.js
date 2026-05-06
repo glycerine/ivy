@@ -1,8 +1,9 @@
 import { vi } from 'vitest';
 
 export class FakeAPI {
-  constructor() {
+  constructor(overrides = {}) {
     this.sessionId = 's1';
+    Object.assign(this, overrides);
   }
 }
 
@@ -24,10 +25,11 @@ export class FakeControls {
 }
 
 export class FakeGraph {
-  constructor(containerId) {
+  constructor(containerId = 'graph') {
     this.containerId = containerId;
     this.update = vi.fn();
     this.resize = vi.fn();
+    this.fit = vi.fn();
     this.healthCheck = vi.fn();
     this.highlightNode = vi.fn();
     this.onNodeClick = vi.fn();
@@ -36,6 +38,25 @@ export class FakeGraph {
     this.onEdgeRightClick = vi.fn();
     this.onBackgroundClick = vi.fn();
   }
+}
+
+export function makeEditor(content = '') {
+  let value = content;
+  return {
+    getValue: vi.fn(() => value),
+    setValue: vi.fn((next) => {
+      value = next;
+    }),
+    refresh: vi.fn(),
+    setOption: vi.fn(),
+    removeLineClass: vi.fn(),
+    setCursor: vi.fn(),
+    setSelection: vi.fn(),
+    getLine: vi.fn(() => ''),
+    addLineClass: vi.fn(() => 'line-handle'),
+    scrollIntoView: vi.fn(),
+    focus: vi.fn(),
+  };
 }
 
 export function makePersist(overrides = {}) {
@@ -57,7 +78,7 @@ export function makeWritableHandle({
   failClose = null,
 } = {}) {
   const writes = [];
-  const handle = {
+  return {
     name,
     writes,
     async getFile() {
@@ -82,44 +103,23 @@ export function makeWritableHandle({
       };
     },
   };
-  return handle;
 }
 
-export function installSaveDom() {
-  document.body.innerHTML = [
-    '<div id="save-as-explain-notice" style="display: none"></div>',
-    '<div id="model-editor-label"></div>',
-    '<button id="file-reopen-last"></button>',
-    '<span id="loaded-file"></span>',
-    '<select id="mode-select"><option value="concrete" selected>concrete</option></select>',
-    '<tbody id="state-checkbox-body"></tbody>',
-    '<div id="file-recent-list"></div>',
-  ].join('');
-}
-
-export function makeEditor(content) {
-  let value = content;
-  return {
-    getValue: vi.fn(() => value),
-    setValue: vi.fn((next) => {
-      value = next;
-    }),
-  };
-}
-
-export function makeApp(IvyApp, {
+export function makeApp({
   fileName = 'model.ivy',
   filePath = fileName,
   savedContent = '',
   editorContent = savedContent,
   fileHandle = null,
+  api = new FakeAPI(),
 } = {}) {
-  const app = new IvyApp();
-  app._persistedFileName = fileName;
-  app._persistedFilePath = filePath;
-  app._persistedFileContent = savedContent;
-  app._savedFileContent = savedContent;
-  app._fileHandle = fileHandle;
-  app.cmEditor = makeEditor(editorContent);
-  return app;
+  return {
+    _persistedFileName: fileName,
+    _persistedFilePath: filePath,
+    _persistedFileContent: savedContent,
+    _savedFileContent: savedContent,
+    _fileHandle: fileHandle,
+    api,
+    cmEditor: makeEditor(editorContent),
+  };
 }

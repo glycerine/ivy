@@ -6,7 +6,7 @@ The frontend is a Vue 3 + Pinia application that is bundled by Vite and served b
 
 - Build bundle: `npm --prefix goivy/webui/frontend run build`
 - Vue/unit tests: `npm --prefix goivy/webui/frontend run test`
-- Legacy JS harness: `npm run test:webui:js`
+- Compatibility alias: `npm run test:webui:js` currently runs the Vue/unit suite
 - Browser tests: `npm run test:webui:browser`
 
 The Go server serves `goivy/webui/static/index.html` and the built files under `goivy/webui/static/dist`.
@@ -33,7 +33,9 @@ The Go server serves `goivy/webui/static/index.html` and the built files under `
 
 ## Compatibility Surface
 
-`legacyAppController.js` is being reduced to a compatibility facade while services take ownership of behavior. `window.ivyApp` still exists for older tests and explicit browser diagnostics, but Vue components should call services/commands instead of reaching for globals.
+`legacyAppController.js` is being reduced to a compatibility facade while services take ownership of behavior. `window.ivyApp` still exists for explicit browser diagnostics and compatibility tests under `frontend/src/legacy*.test.js`, but Vue components should call services/commands instead of reaching for globals.
+
+The old `goivy/webui/js_test` harness has been retired. New frontend tests should live beside the code they exercise under `goivy/webui/frontend/src`.
 
 Command names should be stable, dotted strings when they describe a domain action, for example `file.save`, `file.saveAs`, and `file.reopenLast`.
 

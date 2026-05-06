@@ -3,8 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const testDir = path.dirname(fileURLToPath(import.meta.url));
-const frontendSrcDir = path.resolve(testDir, '../frontend/src');
+const frontendSrcDir = path.dirname(fileURLToPath(import.meta.url));
 
 function methodBlocks(source) {
   const lines = source.split(/\n/);
@@ -44,8 +43,8 @@ function methodBlocks(source) {
   return blocks;
 }
 
-describe('bundled frontend self binding', () => {
-  it('binds self in methods before callbacks use it', () => {
+describe('legacy compatibility self binding', () => {
+  it('binds self in remaining compatibility methods before callbacks use it', () => {
     const files = [
       path.join(frontendSrcDir, 'legacyAppController.js'),
       path.join(frontendSrcDir, 'legacyPersist.js'),

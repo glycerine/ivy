@@ -14,6 +14,20 @@ describe('argActionService', () => {
     expect(args.conjecture).toBe('c1');
   });
 
+  it('prompts for missing remembered-goal choices', async () => {
+    const app = {
+      api: {
+        argNodeAction: vi.fn(async () => ({ choices: [{ label: 'goal-b', value: 'goal-b' }] })),
+      },
+      listboxDialog: vi.fn(async () => 'goal-b'),
+    };
+
+    const args = await prepareArgNodeActionArgs(app, { id: 'state_0' }, 'try_remembered', { sheet_id: 'sheet-1' }, 'sheet-1');
+
+    expect(args).toEqual({ sheet_id: 'sheet-1', goal: 'goal-b' });
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'try_remembered_choices', { sheet_id: 'sheet-1' });
+  });
+
   it('executes ARG node actions and refreshes returned graphs', async () => {
     const app = {
       activeSheetId: 'sheet-1',
@@ -51,6 +65,7 @@ describe('argActionService', () => {
 
     await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's1' }, 'view_source', 'sheet-1');
 
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('s0', 'view_source', { target: 's1', sheet_id: 'sheet-1' });
     expect(app.setEditorContent).toHaveBeenCalledWith('action a');
     expect(app.scrollEditorToLine).toHaveBeenCalledWith(7);
     expect(app.controls.showInfo).toHaveBeenCalledWith('Source: m.ivy line 7', '');

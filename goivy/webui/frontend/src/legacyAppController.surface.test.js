@@ -15,6 +15,10 @@ function publicControllerMethods() {
 }
 
 describe('legacyAppController compatibility surface', () => {
+  // This is a compatibility debt inventory, not the desired command surface.
+  // As service/store/component tests replace controller-oriented coverage, this
+  // list should shrink. Production Vue components should use services or the
+  // command registry instead of instantiating IvyApp.
   it('inventories the public methods still exposed by the compatibility controller', () => {
     expect(publicControllerMethods()).toEqual([
       'activeEventSheet',

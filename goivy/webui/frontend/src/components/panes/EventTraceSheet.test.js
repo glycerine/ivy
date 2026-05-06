@@ -64,4 +64,27 @@ describe('EventTraceSheet', () => {
     expect(window.ivyApp.toggleEventTraceNode).toHaveBeenCalledWith('events-1', '0');
     expect(traces.sheetById('events-1').selectedEventAddress).toBe('');
   });
+
+  it('selects rows and lazily expands children through Pinia without the app bridge', async () => {
+    const traces = useEventTraceStore();
+    traces.upsertSheet({
+      id: 'events-1',
+      events: [{ address: '0', text: 'root(a)', subs: [{ address: '0/0', text: 'child(a)' }] }],
+      patterns: [],
+    });
+
+    const wrapper = mount(EventTraceSheet, {
+      props: { sheetId: 'events-1' },
+      global: { plugins: [pinia] },
+    });
+
+    expect(wrapper.find('[data-event-address="0/0"]').exists()).toBe(false);
+
+    await wrapper.find('[data-event-toggle="0"]').trigger('click');
+    expect(wrapper.find('[data-event-address="0/0"]').text()).toContain('child(a)');
+
+    await wrapper.find('[data-event-address="0/0"]').trigger('click');
+    expect(traces.sheetById('events-1').selectedEventAddress).toBe('0/0');
+    expect(wrapper.find('[data-event-address="0/0"]').classes()).toContain('selected');
+  });
 });

@@ -179,3 +179,120 @@ export function selectedEventPattern(app, sheetId, {
   const select = sheet ? sheet.querySelector('.event-pattern-list') : null;
   return select && select.value ? select.value : '';
 }
+
+export function applyEventPatternResult(app, sheetId, result, fallbackPatterns, {
+  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
+} = {}) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  if (!sheet) return;
+  if (result && Array.isArray(result.patterns)) {
+    sheet.patterns = result.patterns.slice();
+  } else if (fallbackPatterns) {
+    sheet.patterns = fallbackPatterns.slice();
+  }
+  if (bridge && typeof bridge.updateEventPatterns === 'function') {
+    bridge.updateEventPatterns(sheetId, sheet.patterns || []);
+    return;
+  }
+  app.renderEventPatternList(sheetId);
+}
+
+export function renderEventPatternList(app, sheetId, {
+  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
+  doc = globalThis.document,
+} = {}) {
+  const sheetState = app.sheets && app.sheets[sheetId];
+  if (bridge && typeof bridge.updateEventPatterns === 'function') {
+    if (sheetState) bridge.updateEventPatterns(sheetId, sheetState.patterns || []);
+    return;
+  }
+  const sheet = doc.getElementById(sheetId);
+  const select = sheet ? sheet.querySelector('.event-pattern-list') : null;
+  if (!select || !sheetState) return;
+  select.innerHTML = '';
+  for (const pattern of sheetState.patterns || []) {
+    const option = doc.createElement('option');
+    option.value = pattern;
+    option.textContent = pattern;
+    select.appendChild(option);
+  }
+}
+
+export async function addEventPattern(app, sheetId, pattern) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  if (!sheet) return undefined;
+  if (app.api && app.api.executeAction && !sheet.visualOnly) {
+    const result = await app.api.executeAction('events_add_pattern', { sheet_id: sheetId, pattern });
+    app.applyEventPatternResult(sheetId, result);
+    return result;
+  }
+  sheet.patterns = (sheet.patterns || []).concat([pattern]);
+  app.renderEventPatternList(sheetId);
+  return sheet.patterns;
+}
+
+export async function removeSelectedEventPattern(app, sheetId, {
+  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
+  doc = globalThis.document,
+} = {}) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  const sheetEl = doc.getElementById(sheetId);
+  const select = sheetEl ? sheetEl.querySelector('.event-pattern-list') : null;
+  let idx = -1;
+  if (bridge && typeof bridge.getSelectedEventPatternIndex === 'function') {
+    idx = bridge.getSelectedEventPatternIndex(sheetId);
+  } else if (select) {
+    idx = select.selectedIndex;
+  }
+  if (!sheet || idx < 0) return undefined;
+  if (app.api && app.api.executeAction && !sheet.visualOnly) {
+    const result = await app.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
+    app.applyEventPatternResult(sheetId, result);
+    return result;
+  }
+  sheet.patterns.splice(idx, 1);
+  app.renderEventPatternList(sheetId);
+  return sheet.patterns;
+}
+
+export async function clearEventPatterns(app, sheetId) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  if (!sheet) return undefined;
+  if (app.api && app.api.executeAction && !sheet.visualOnly) {
+    const result = await app.api.executeAction('events_clear_patterns', { sheet_id: sheetId });
+    app.applyEventPatternResult(sheetId, result, []);
+    return result;
+  }
+  sheet.patterns = [];
+  app.renderEventPatternList(sheetId);
+  return sheet.patterns;
+}
+
+export async function loadEventPatterns(app, sheetId, text) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  if (!sheet) return undefined;
+  if (app.api && app.api.executeAction && !sheet.visualOnly) {
+    const result = await app.api.executeAction('events_load_patterns', { sheet_id: sheetId, patterns: text });
+    app.applyEventPatternResult(sheetId, result);
+    return result;
+  }
+  const patterns = String(text || '').split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  sheet.patterns = sheet.patterns.concat(patterns);
+  app.renderEventPatternList(sheetId);
+  return sheet.patterns;
+}
+
+export async function saveEventPatterns(app, sheetId) {
+  const sheet = app.sheets && app.sheets[sheetId];
+  if (!sheet) return '';
+  let content = (sheet.patterns || []).join('\n');
+  if (content !== '') content += '\n';
+  if (app.api && app.api.executeAction && !sheet.visualOnly) {
+    const result = await app.api.executeAction('events_save_patterns', { sheet_id: sheetId });
+    if (result && typeof result.content === 'string') {
+      content = result.content;
+    }
+  }
+  app.downloadTextFile('event_patterns.pats', content, 'text/plain');
+  return content;
+}

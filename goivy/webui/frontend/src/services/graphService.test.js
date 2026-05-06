@@ -3,6 +3,7 @@ import {
   currentSheet,
   graphElementsSnapshot,
   installGraphStoreHook,
+  refreshLayoutAfterVuePatch,
   refreshGraphsAndEditorLayout,
   registerSheet,
 } from './graphService.js';
@@ -63,5 +64,30 @@ describe('graphService', () => {
     expect(app.argGraph.resize).toHaveBeenCalled();
     expect(app.conceptGraph.resize).toHaveBeenCalled();
     expect(app._refreshEditorLayout).toHaveBeenCalled();
+  });
+
+  it('defers graph/editor layout refreshes until the Vue bridge reports settled layout', () => {
+    let settledCallback;
+    const bridge = {
+      afterLayoutSettled: vi.fn((callback) => {
+        settledCallback = callback;
+      }),
+    };
+    const win = {
+      setTimeout: vi.fn((callback) => callback()),
+    };
+    const app = {
+      _refreshGraphsAndEditorLayout: vi.fn(),
+    };
+
+    refreshLayoutAfterVuePatch(app, { bridge, win });
+
+    expect(bridge.afterLayoutSettled).toHaveBeenCalled();
+    expect(app._refreshGraphsAndEditorLayout).not.toHaveBeenCalled();
+
+    settledCallback();
+
+    expect(app._refreshGraphsAndEditorLayout).toHaveBeenCalledTimes(2);
+    expect(win.setTimeout).toHaveBeenCalledWith(expect.any(Function), 60);
   });
 });

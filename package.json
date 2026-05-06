@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "build:webui": "npm --prefix goivy/webui/frontend run build",
-    "test:webui:js": "cd goivy/webui && ../../node_modules/.bin/vitest run",
-    "test:webui:js:watch": "cd goivy/webui && ../../node_modules/.bin/vitest --watch",
+    "test:webui:js": "npm run test:webui:vue",
+    "test:webui:js:watch": "npm run test:webui:vue:watch",
     "test:webui:vue": "npm --prefix goivy/webui/frontend run test",
-    "test:webui:all": "npm run test:webui:js && npm run test:webui:vue",
+    "test:webui:vue:watch": "cd goivy/webui/frontend && ../../../node_modules/.bin/vitest --watch --config vitest.config.mjs",
+    "test:webui:all": "npm run test:webui:vue",
     "test:webui:browser": "cd goivy/webui && ../../node_modules/.bin/playwright test",
     "test:webui:browser:headed": "cd goivy/webui && ../../node_modules/.bin/playwright test --headed"
   },

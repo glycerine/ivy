@@ -1,24 +1,31 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
-import { FakeAPI, FakeControls, FakeGraph } from './helpers/fakes.mjs';
+import {
+  IvyApp,
+  configureLegacyAppDependencies,
+  resetLegacyAppDependencies,
+} from './legacyAppController.js';
+import { FakeAPI, FakeControls, FakeGraph } from './test/fakes.js';
 
-function loadApp() {
-  return loadIvyApp({
+function makeApp() {
+  resetLegacyAppDependencies();
+  configureLegacyAppDependencies({
     IvyAPI: FakeAPI,
     IvyControls: FakeControls,
     IvyGraph: FakeGraph,
   });
+  return new IvyApp();
 }
 
 afterEach(() => {
+  resetLegacyAppDependencies();
   delete window.__ivyVueBridge;
   document.body.innerHTML = '';
+  vi.useRealTimers();
 });
 
-describe('IvyApp toast rendering', () => {
+describe('legacyAppController compatibility behavior', () => {
   it('routes toast notifications through the Vue bridge when available', () => {
-    const IvyApp = loadApp();
-    const app = new IvyApp();
+    const app = makeApp();
     window.__ivyVueBridge = {
       showToast: vi.fn(() => 7),
     };
@@ -30,15 +37,15 @@ describe('IvyApp toast rendering', () => {
     expect(document.querySelector('.ivy-toast')).toBeNull();
   });
 
-  it('keeps a direct DOM fallback for no-bridge harnesses', () => {
-    const IvyApp = loadApp();
-    const app = new IvyApp();
+  it('keeps a direct DOM toast fallback for non-Vue compatibility harnesses', () => {
+    const app = makeApp();
 
-    app._showToast('Connection lost', 'error', { persistent: true });
+    app._showToast('Connection lost', 'error', { persistent: true, className: 'custom-toast' });
 
     const toast = document.querySelector('.ivy-toast');
     expect(toast.textContent).toBe('Connection lost');
     expect(toast.classList.contains('ivy-toast-floating')).toBe(true);
     expect(toast.classList.contains('ivy-toast-error')).toBe(true);
+    expect(toast.classList.contains('custom-toast')).toBe(true);
   });
 });

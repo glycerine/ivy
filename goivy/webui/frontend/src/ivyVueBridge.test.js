@@ -2,7 +2,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
 import { configureEngineFromRuntime, createIvyVueBridge, installIvyVueBridge, syncContextMenuElement } from './ivyVueBridge.js';
-import { useContextMenuStore, useEditorStore, useEngineStore, useSheetStore } from './stores/index.js';
+import {
+  useContextMenuStore,
+  useEditorStore,
+  useEngineStore,
+  useEventTraceStore,
+  useSheetStore,
+} from './stores/index.js';
 
 function makeBridge() {
   const app = createApp({ template: '<div />' });
@@ -86,6 +92,33 @@ describe('ivyVueBridge', () => {
     expect(editorStore.dirty).toBe(true);
     expect(sheetStore.activeSheetId).toBe('events-1');
     expect(bridge.getSheetTabLabel('events-1')).toBe('Trace');
+  });
+
+  it('keeps event trace sheets and patterns in Pinia through the bridge', () => {
+    const { pinia } = makeBridge();
+    const bridge = installIvyVueBridge({ pinia });
+    const eventTraceStore = useEventTraceStore(pinia);
+
+    bridge.upsertEventTraceSheet({
+      id: 'events-1',
+      label: 'Trace',
+      events: [{ text: 'root(a)', address: '0' }],
+      patterns: ['old'],
+    });
+    bridge.updateEventPatterns('events-1', ['old', 'new']);
+    bridge.setSelectedEventPatternIndex('events-1', 1);
+    bridge.selectEventTraceRow('events-1', '0');
+
+    expect(eventTraceStore.sheetById('events-1')).toMatchObject({
+      label: 'Trace',
+      patterns: ['old', 'new'],
+      selectedEventAddress: '0',
+    });
+    expect(bridge.getSelectedEventPattern('events-1')).toBe('new');
+
+    bridge.removeSheetTab('events-1');
+
+    expect(eventTraceStore.sheetById('events-1')).toBeNull();
   });
 
   it('can select a runtime-supplied engine before the legacy adapter is created', () => {

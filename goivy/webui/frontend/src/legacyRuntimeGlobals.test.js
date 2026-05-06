@@ -56,4 +56,13 @@ describe('legacyRuntimeGlobals', () => {
     expect(window.__ivyVueBridge.hideContextMenu).toHaveBeenCalled();
     expect(controls.isContextMenuVisible()).toBe(false);
   });
+
+  it('keeps old IvyControls toggle builders harmless when Vue owns relation rows', () => {
+    const controls = new IvyControlsShim({});
+
+    expect(() => controls.buildEdgeToggles(['link'], () => {})).not.toThrow();
+    expect(() => controls.buildLabelToggles(['semaphore'], () => {})).not.toThrow();
+    expect(controls.edgeToggles).toEqual({});
+    expect(controls.labelToggles).toEqual({});
+  });
 });

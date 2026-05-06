@@ -61,6 +61,7 @@ export const useDialogStore = defineStore('dialogs', {
     },
     cancelValue() {
       if (!this.active) return null;
+      if (this.active.type === 'okCancel') return false;
       return this.active.type === 'listbox' && this.active.options.multiple ? [] : null;
     },
     cancel() {

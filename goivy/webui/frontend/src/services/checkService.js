@@ -164,3 +164,48 @@ export async function boundedCheck(app) {
     app.controls.setStatus(`Bounded check failed: ${err.message}`, 'error');
   }
 }
+
+export async function weakenInvariant(app) {
+  try {
+    app.controls.setStatus('Choosing conjectures...');
+    const choicesResult = await app.api.executeAction('get_conjectures', {});
+    const conjectures = (choicesResult && choicesResult.conjectures) || [];
+    const choices = conjectures.map((conj, index) => {
+      const label = conj.label ? `[${conj.label}] ${conj.formula}` : conj.formula;
+      return { label: label || String(index), value: index };
+    });
+    const indices = await app.listboxDialog('Weaken', 'Choose conjectures to remove:', choices, {
+      multiple: true,
+      okLabel: 'Weaken',
+    });
+    if (!indices || indices.length === 0) {
+      app.controls.setStatus('Weaken cancelled');
+      return undefined;
+    }
+    app.controls.setStatus('Weakening invariant...');
+    const result = await app.api.executeAction('weaken', { indices });
+    await app.refreshConceptGraph();
+    app.controls.setStatus('Invariant weakened', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Weaken failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
+export async function ctiConceptAction(app, actionName) {
+  app.controls.setStatus('Running CTI action...');
+  try {
+    const result = await app.api.executeAction(actionName, { sheet_id: app.activeSheetId || 'sheet-1' });
+    if (result && result.concept) {
+      app.updateConceptGraph(result.concept);
+    } else {
+      await app.refreshConceptGraph();
+    }
+    app.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`CTI action failed: ${err.message}`, 'error');
+    return null;
+  }
+}

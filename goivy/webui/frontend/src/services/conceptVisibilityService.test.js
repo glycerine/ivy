@@ -33,6 +33,11 @@ describe('conceptVisibilityService', () => {
         },
       },
     ]);
+    expect(stateRelationRows(app, { relations: ['=@X', '=@Y', '=@Z'] }).map((row) => row.name)).toEqual([
+      '=@X',
+      '=@Y',
+      '=@Z',
+    ]);
   });
 
   it('routes relation rows through the Vue bridge', () => {
