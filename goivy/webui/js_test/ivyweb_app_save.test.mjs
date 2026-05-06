@@ -28,6 +28,16 @@ function abortError() {
   return err;
 }
 
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
 beforeEach(() => {
   installSaveDom();
   window.location.hash = '';
@@ -56,6 +66,54 @@ describe('IvyApp Save and Save As', () => {
     expect(handle.writes).toEqual(['new model']);
     expect(app._persistedFileContent).toBe('new model');
     expect(app._savedFileContent).toBe('new model');
+    expect(app.controls.lastStatus).toEqual({ message: 'Saved: client.ivy', kind: 'success' });
+  });
+
+  it('shows immediate non-modal feedback while a dirty save is in progress', async () => {
+    const { IvyApp } = loadAppWithPersist();
+    const closeGate = deferred();
+    const writes = [];
+    const handle = {
+      name: 'client.ivy',
+      async getFile() {
+        return {
+          name: 'client.ivy',
+          async text() {
+            return 'old model';
+          },
+        };
+      },
+      async createWritable() {
+        return {
+          async write(content) {
+            writes.push(content);
+          },
+          async close() {
+            await closeGate.promise;
+          },
+        };
+      },
+    };
+    const app = makeApp(IvyApp, {
+      fileName: 'client.ivy',
+      savedContent: 'old model',
+      editorContent: 'new model',
+      fileHandle: handle,
+    });
+
+    const savePromise = app.save();
+
+    expect(app.controls.lastStatus).toEqual({ message: 'Saving...', kind: undefined });
+    const progress = document.querySelector('.ivy-save-progress');
+    expect(progress).not.toBeNull();
+    expect(progress.textContent).toBe('Saving...');
+
+    closeGate.resolve();
+    const saved = await savePromise;
+
+    expect(saved).toBe(true);
+    expect(writes).toEqual(['new model']);
+    expect(document.querySelector('.ivy-save-progress')).toBeNull();
     expect(app.controls.lastStatus).toEqual({ message: 'Saved: client.ivy', kind: 'success' });
   });
 

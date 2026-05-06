@@ -34,6 +34,7 @@ class IvyApp {
         this._lastClosedFileName = '';
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
+        this._saveProgressToast = null;
         this.currentBound = 10;
     }
 
@@ -218,6 +219,27 @@ class IvyApp {
 
     _editorDirty() {
         return this._editorContent() !== (this._savedFileContent || '');
+    }
+
+    _showSaveProgress(message) {
+        this.controls.setStatus(message || 'Saving...');
+        this._hideSaveProgress(this._saveProgressToast);
+        var toast = this._showToast(message || 'Saving...', 'info', {
+            persistent: true,
+            className: 'ivy-save-progress',
+        });
+        this._saveProgressToast = toast;
+        return toast;
+    }
+
+    _hideSaveProgress(toast) {
+        var target = toast || this._saveProgressToast;
+        if (target && target.parentNode) {
+            target.parentNode.removeChild(target);
+        }
+        if (!toast || this._saveProgressToast === toast) {
+            this._saveProgressToast = null;
+        }
     }
 
     _rememberLastOpenFile() {
@@ -3174,9 +3196,10 @@ class IvyApp {
     async save() {
         var content = this._editorContent();
         var dirty = this._editorDirty();
-        await this._restoreFileHandleForCurrentFile();
-        if (this._fileHandle) {
-            try {
+        var saveProgress = dirty ? this._showSaveProgress('Saving...') : null;
+        try {
+            await this._restoreFileHandleForCurrentFile();
+            if (this._fileHandle) {
                 var writableAllowed = await this._ensureFileHandleWritable();
                 if (!writableAllowed) {
                     this.controls.setStatus('Save permission denied', 'error');
@@ -3198,19 +3221,27 @@ class IvyApp {
                 this._updateEditorLabel();
                 this.controls.setStatus('Saved: ' + this._persistedFileName, 'success');
                 return true;
-            } catch (e) {
-                this.controls.setStatus('Save failed: ' + e.message, 'error');
-                return false;
+            } else {
+                if (saveProgress && window.showSaveFilePicker) {
+                    this._hideSaveProgress(saveProgress);
+                    saveProgress = null;
+                }
+                if (!dirty) {
+                    this._updateEditorLabel();
+                    return true;
+                }
+                if (!window.showSaveFilePicker) {
+                    return this.downloadModelForUnsupportedSave(content);
+                }
+                return await this.saveAs({ explainMissingHandle: true });
             }
-        } else {
-            if (!dirty) {
-                this._updateEditorLabel();
-                return true;
+        } catch (e) {
+            this.controls.setStatus('Save failed: ' + e.message, 'error');
+            return false;
+        } finally {
+            if (saveProgress) {
+                this._hideSaveProgress(saveProgress);
             }
-            if (!window.showSaveFilePicker) {
-                return this.downloadModelForUnsupportedSave(content);
-            }
-            return await this.saveAs({ explainMissingHandle: true });
         }
     }
 
@@ -3237,6 +3268,7 @@ class IvyApp {
             this.controls.setStatus('No model loaded to save', 'error');
             return false;
         }
+        var saveProgress = null;
         try {
             if (!window.showSaveFilePicker) {
                 return this.downloadModelForUnsupportedSave(content);
@@ -3258,6 +3290,7 @@ class IvyApp {
                     this.hideSaveAsExplanationNotice();
                 }
             }
+            saveProgress = this._showSaveProgress('Saving...');
             var writable = await handle.createWritable();
             await writable.write(content);
             await writable.close();
@@ -3281,6 +3314,10 @@ class IvyApp {
                 this.controls.setStatus('Save as failed: ' + e.message, 'error');
             }
             return false;
+        } finally {
+            if (saveProgress) {
+                this._hideSaveProgress(saveProgress);
+            }
         }
     }
 
@@ -4976,9 +5013,13 @@ class IvyApp {
      * Show a non-modal toast notification. Auto-dismisses after 10s
      * or on click. Appends to document body so it floats over everything.
      */
-    _showToast(message, level) {
+    _showToast(message, level, options) {
+        options = options || {};
         var toast = document.createElement('div');
         toast.className = 'ivy-toast ivy-toast-' + (level || 'info');
+        if (options.className) {
+            toast.className += ' ' + options.className;
+        }
         toast.textContent = message;
         toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;' +
             'padding:12px 20px;border-radius:6px;max-width:400px;cursor:pointer;' +
@@ -4992,7 +5033,10 @@ class IvyApp {
         }
         toast.onclick = function () { toast.remove(); };
         document.body.appendChild(toast);
-        setTimeout(function () { toast.remove(); }, 10000);
+        if (!options.persistent) {
+            setTimeout(function () { toast.remove(); }, 10000);
+        }
+        return toast;
     }
 }
 
