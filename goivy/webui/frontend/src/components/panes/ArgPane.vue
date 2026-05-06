@@ -15,8 +15,13 @@
             <a href="#" id="arg-save-abs">Save Abstraction...</a>
           </div>
         </div>
+        <DynamicMenuRegion region="arg" />
       </div>
     </div>
     <div id="arg-graph" class="graph-container"></div>
   </div>
 </template>
+
+<script setup>
+import DynamicMenuRegion from '../DynamicMenuRegion.vue';
+</script>

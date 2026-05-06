@@ -7,9 +7,26 @@ export const useGraphStore = defineStore('graph', {
     argBySheet: {},
     conceptBySheet: {},
     selectedArgNode: null,
+    selectedArgNodeBySheet: {},
     toggles: {},
   }),
   actions: {
+    setActiveSheet(sheetId) {
+      if (!sheetId) return;
+      this.activeSheetId = String(sheetId);
+    },
+    applyGraphSnapshot(sheetId, kind, snapshot = {}) {
+      if (!sheetId || (kind !== 'arg' && kind !== 'concept')) return;
+      const target = kind === 'arg' ? 'argBySheet' : 'conceptBySheet';
+      this[target] = {
+        ...this[target],
+        [sheetId]: {
+          elements: Array.isArray(snapshot.elements) ? snapshot.elements : [],
+          positions: snapshot.positions || null,
+          updatedAt: snapshot.updatedAt || Date.now(),
+        },
+      };
+    },
     async refreshArg(sheetId = this.activeSheetId) {
       const data = await useEngineStore().engine.getArg({ sheetId });
       this.argBySheet = { ...this.argBySheet, [sheetId]: data };
@@ -24,8 +41,11 @@ export const useGraphStore = defineStore('graph', {
       this.toggles = await useEngineStore().engine.getToggles();
       return this.toggles;
     },
-    selectArgNode(nodeId) {
+    selectArgNode(nodeId, sheetId = this.activeSheetId) {
       this.selectedArgNode = nodeId;
+      if (sheetId) {
+        this.selectedArgNodeBySheet = { ...this.selectedArgNodeBySheet, [sheetId]: nodeId };
+      }
     },
   },
 });

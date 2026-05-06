@@ -360,6 +360,9 @@ class IvyControls {
         var msgEl = document.getElementById('loading-message');
         msgEl.textContent = message || 'Loading...';
         overlay.style.display = 'flex';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showLoading === 'function') {
+            window.__ivyVueBridge.showLoading(message || 'Loading...');
+        }
     }
 
     /**
@@ -367,5 +370,8 @@ class IvyControls {
      */
     hideLoading() {
         document.getElementById('loading-overlay').style.display = 'none';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.hideLoading === 'function') {
+            window.__ivyVueBridge.hideLoading();
+        }
     }
 }

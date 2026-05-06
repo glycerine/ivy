@@ -35,8 +35,13 @@
             <a href="#" id="view-add-relation">Add relation</a>
           </div>
         </div>
+        <DynamicMenuRegion region="concept" />
       </div>
     </div>
     <div id="concept-graph" class="graph-container"></div>
   </div>
 </template>
+
+<script setup>
+import DynamicMenuRegion from '../DynamicMenuRegion.vue';
+</script>

@@ -12,7 +12,7 @@
           <a href="#" id="file-load-analysis-state">Load Analysis State...</a>
           <a href="#" id="file-save-invariant">Save Invariant...</a>
           <div class="dropdown-sep"></div>
-          <div id="file-recent-list"></div>
+          <RecentFilesMenu />
           <div class="dropdown-sep"></div>
           <div style="height:4px"></div>
           <a href="#" id="file-new">New Model</a>
@@ -42,3 +42,7 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import RecentFilesMenu from './RecentFilesMenu.vue';
+</script>

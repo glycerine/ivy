@@ -7,6 +7,8 @@ export const useSessionStore = defineStore('session', {
     mode: 'pdr',
     status: 'Ready',
     statusLevel: '',
+    loading: false,
+    loadingMessage: 'Loading...',
     events: [],
     unsubscribeEvents: null,
   }),
@@ -14,6 +16,13 @@ export const useSessionStore = defineStore('session', {
     setStatus(message, level = '') {
       this.status = message;
       this.statusLevel = level;
+    },
+    showLoading(message = 'Loading...') {
+      this.loading = true;
+      this.loadingMessage = message || 'Loading...';
+    },
+    hideLoading() {
+      this.loading = false;
     },
     async createSession() {
       const engine = useEngineStore().engine;

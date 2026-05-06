@@ -406,6 +406,20 @@ class IvyApp {
     }
 
     showExternalChangeDialog() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'buttons',
+                title: 'File changed on disk',
+                message: 'The file "' + (this._persistedFileName || 'model') + '" has changed outside IvyWeb. Choose how to handle the current editor buffer.',
+                escapeValue: 'do-nothing',
+                buttons: [
+                    { label: 'Do nothing', value: 'do-nothing' },
+                    { label: 'Revert to on-disk version', value: 'reload' },
+                    { label: 'Merge disk version into edit buffer', value: 'merge' },
+                    { label: 'Overwrite on-disk with edited buffer', value: 'overwrite', danger: true },
+                ],
+            });
+        }
         var self = this;
         return new Promise(function (resolve) {
             var overlay = document.getElementById('external-change-dialog-overlay');
@@ -450,6 +464,19 @@ class IvyApp {
     }
 
     showDirtyCloseDialog() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'buttons',
+                title: 'File has changed',
+                message: 'File "' + (this._persistedFileName || 'model') + '" has changed. Save before closing?',
+                escapeValue: 'cancel',
+                buttons: [
+                    { label: 'Cancel the close', value: 'cancel' },
+                    { label: 'Save', value: 'save' },
+                    { label: 'Discard Edits', value: 'discard', danger: true },
+                ],
+            });
+        }
         var self = this;
         return new Promise(function (resolve) {
             var overlay = document.getElementById('dirty-close-dialog-overlay');
@@ -527,6 +554,8 @@ class IvyApp {
 
     registerSheet(sheetId, argGraph, conceptGraph) {
         this.installConceptGraphVisibilityHook(conceptGraph);
+        this.installGraphStoreHook(sheetId, 'arg', argGraph);
+        this.installGraphStoreHook(sheetId, 'concept', conceptGraph);
         this.sheets[sheetId] = {
             id: sheetId,
             type: 'analysis',
@@ -535,6 +564,22 @@ class IvyApp {
             selectedArgNode: null,
             visualOnly: false,
         };
+    }
+
+    installGraphStoreHook(sheetId, kind, graph) {
+        if (!graph || graph._ivyGraphStoreHooked) return;
+        var origUpdate = graph.update.bind(graph);
+        graph.update = function(elements, positions) {
+            var result = origUpdate(elements, positions);
+            if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateGraphSnapshot === 'function') {
+                window.__ivyVueBridge.updateGraphSnapshot(sheetId, kind, {
+                    elements: elements || [],
+                    positions: positions || null,
+                });
+            }
+            return result;
+        };
+        graph._ivyGraphStoreHooked = true;
     }
 
     isVisualOnlySheet(sheetId) {
@@ -1146,6 +1191,12 @@ class IvyApp {
         // Resize graphs in the newly visible sheet
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.activateSheetTab === 'function') {
+            window.__ivyVueBridge.activateSheetTab(sheetId);
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setActiveGraphSheet === 'function') {
+            window.__ivyVueBridge.setActiveGraphSheet(sheetId);
+        }
     }
 
     /**
@@ -1172,19 +1223,23 @@ class IvyApp {
         label = label || ('Sheet ' + this._sheetCounter);
 
         // Create tab button with close X (Sheet 1 never has X)
-        var tabBar = document.getElementById('tab-bar');
-        var tabBtn = document.createElement('button');
-        tabBtn.className = 'sheet-tab';
-        tabBtn.setAttribute('data-sheet', sheetId);
-        var labelSpan = document.createElement('span');
-        labelSpan.textContent = label;
-        tabBtn.appendChild(labelSpan);
-        var closeBtn = document.createElement('span');
-        closeBtn.className = 'tab-close';
-        closeBtn.textContent = '\u00D7'; // ×
-        closeBtn.title = 'Close tab';
-        tabBtn.appendChild(closeBtn);
-        tabBar.appendChild(tabBtn);
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertSheetTab === 'function') {
+            window.__ivyVueBridge.upsertSheetTab({ id: sheetId, label: label, closable: true, type: 'analysis' });
+        } else {
+            var tabBar = document.getElementById('tab-bar');
+            var tabBtn = document.createElement('button');
+            tabBtn.className = 'sheet-tab';
+            tabBtn.setAttribute('data-sheet', sheetId);
+            var labelSpan = document.createElement('span');
+            labelSpan.textContent = label;
+            tabBtn.appendChild(labelSpan);
+            var closeBtn = document.createElement('span');
+            closeBtn.className = 'tab-close';
+            closeBtn.textContent = '\u00D7'; // ×
+            closeBtn.title = 'Close tab';
+            tabBtn.appendChild(closeBtn);
+            tabBar.appendChild(tabBtn);
+        }
 
         // Create sheet content (clone structure from sheet-1)
         var template = document.getElementById('sheet-1');
@@ -1241,29 +1296,35 @@ class IvyApp {
         this._sheetCounter++;
         var sheetId = preferredSheetId || data.sheet_id || ('events-' + this._sheetCounter);
         this.assertValidSheetId(sheetId);
-        var tabBar = document.getElementById('tab-bar');
         var sheetArea = document.getElementById('sheet-area');
-        if (!tabBar || !sheetArea) return '';
+        if (!sheetArea) return '';
 
         var existingTab = this.sheetTab(sheetId);
         var existingSheet = document.getElementById(sheetId);
-        if (!existingTab) {
-            var tabBtn = document.createElement('button');
-            tabBtn.className = 'sheet-tab';
-            tabBtn.setAttribute('data-sheet', sheetId);
-            var labelSpan = document.createElement('span');
-            labelSpan.textContent = label || data.label || 'Events';
-            tabBtn.appendChild(labelSpan);
-            var closeBtn = document.createElement('span');
-            closeBtn.className = 'tab-close';
-            closeBtn.textContent = '\u00D7';
-            closeBtn.title = 'Close tab';
-            tabBtn.appendChild(closeBtn);
-            tabBar.appendChild(tabBtn);
+        var tabLabel = label || data.label || 'Events';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertSheetTab === 'function') {
+            window.__ivyVueBridge.upsertSheetTab({ id: sheetId, label: tabLabel, closable: true, type: 'events' });
         } else {
-            var existingLabel = existingTab.querySelector('span');
-            if (existingLabel) {
-                existingLabel.textContent = label || data.label || 'Events';
+            var tabBar = document.getElementById('tab-bar');
+            if (!tabBar) return '';
+            if (!existingTab) {
+                var tabBtn = document.createElement('button');
+                tabBtn.className = 'sheet-tab';
+                tabBtn.setAttribute('data-sheet', sheetId);
+                var labelSpan = document.createElement('span');
+                labelSpan.textContent = tabLabel;
+                tabBtn.appendChild(labelSpan);
+                var closeBtn = document.createElement('span');
+                closeBtn.className = 'tab-close';
+                closeBtn.textContent = '\u00D7';
+                closeBtn.title = 'Close tab';
+                tabBtn.appendChild(closeBtn);
+                tabBar.appendChild(tabBtn);
+            } else {
+                var existingLabel = existingTab.querySelector('span');
+                if (existingLabel) {
+                    existingLabel.textContent = tabLabel;
+                }
             }
         }
 
@@ -1693,12 +1754,15 @@ class IvyApp {
 
         var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
-        var wasActive = tab && tab.classList.contains('active');
+        var wasActive = this.activeSheetId === sheetId || (tab && tab.classList.contains('active'));
 
         if (tab) tab.remove();
         if (sheet) sheet.remove();
         if (this.sheets) {
             delete this.sheets[sheetId];
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.removeSheetTab === 'function') {
+            window.__ivyVueBridge.removeSheetTab(sheetId);
         }
 
         // If the closed tab was active, switch to Sheet 1
@@ -2475,6 +2539,9 @@ class IvyApp {
         this.selectedArgNode = nodeData.id;
         if (sheet) {
             sheet.selectedArgNode = nodeData.id;
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.selectArgNode === 'function') {
+            window.__ivyVueBridge.selectArgNode(sheetId, nodeData.id);
         }
         if (argGraph && typeof argGraph.highlightNode === 'function') {
             argGraph.highlightNode(nodeData.id);
@@ -3430,6 +3497,10 @@ class IvyApp {
     }
 
     tabLabelForSheet(sheetId) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSheetTabLabel === 'function') {
+            var bridgeLabel = window.__ivyVueBridge.getSheetTabLabel(sheetId);
+            if (bridgeLabel) return bridgeLabel;
+        }
         var tab = this.sheetTab(sheetId);
         var label = tab ? tab.querySelector('span') : null;
         return label ? label.textContent : sheetId;
@@ -3777,10 +3848,16 @@ class IvyApp {
     populateRecentFiles() {
         var container = document.getElementById('file-recent-list');
         if (!container) return;
-        container.innerHTML = '';
+        if (!(window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function')) {
+            container.innerHTML = '';
+        }
 
         var sessions = IvyPersist.listSessions();
         if (sessions.length === 0) {
+            if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function') {
+                window.__ivyVueBridge.updateRecentFiles([], null);
+                return;
+            }
             var empty = document.createElement('a');
             empty.href = '#';
             empty.textContent = '(no recent files)';
@@ -3815,6 +3892,25 @@ class IvyApp {
 
         // Show up to 10 recent files
         var self = this;
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function') {
+            var items = [];
+            for (var m = 0; m < unique.length && m < 10; m++) {
+                var session = unique[m];
+                var label = session.fileName;
+                if (baseNameCount[session.fileName] > 1 && session.filePath) {
+                    label = session.fileName + '  ' + IvyPersist.truncatePath(session.filePath, 15);
+                }
+                var title = '';
+                if (session.timestamp) {
+                    title = (session.filePath || session.fileName) + '\nLast used: ' + new Date(session.timestamp).toLocaleString();
+                }
+                items.push({ id: session.id, label: label, title: title });
+            }
+            window.__ivyVueBridge.updateRecentFiles(items, function (id) {
+                self.loadRecentSession(id);
+            });
+            return;
+        }
         for (var j = 0; j < unique.length && j < 10; j++) {
             (function (s) {
                 var displayName = s.fileName;
@@ -4245,6 +4341,9 @@ class IvyApp {
         for (var j = 0; j < all.length; j++) {
             all[j].classList.remove('open');
         }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.closeDropdownMenus === 'function') {
+            window.__ivyVueBridge.closeDropdownMenus();
+        }
     }
 
     /**
@@ -4285,6 +4384,13 @@ class IvyApp {
     }
 
     renderMenuRegion(region, menus) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateMenuRegion === 'function') {
+            var self = this;
+            window.__ivyVueBridge.updateMenuRegion(region, menus || [], function (item) {
+                return self.dispatchMenuDescriptorAction(region, item);
+            });
+            return;
+        }
         var panel = region === 'arg' ? document.getElementById('arg-panel') : document.getElementById('concept-panel');
         if (!panel) return;
         var header = panel.querySelector('.panel-header');
@@ -4519,6 +4625,9 @@ class IvyApp {
     }
 
     okDialog(title, message) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({ type: 'ok', title: title, message: message });
+        }
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -4532,6 +4641,9 @@ class IvyApp {
     }
 
     okCancelDialog(title, message) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({ type: 'okCancel', title: title, message: message });
+        }
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -4548,6 +4660,15 @@ class IvyApp {
     }
 
     textDialog(title, message, text, options) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'text',
+                title: title,
+                message: message,
+                text: text,
+                options: options || {},
+            });
+        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4585,6 +4706,15 @@ class IvyApp {
     }
 
     entryDialog(title, message, initialValue, options) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'entry',
+                title: title,
+                message: message,
+                initialValue: initialValue,
+                options: options || {},
+            });
+        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4613,6 +4743,15 @@ class IvyApp {
     }
 
     integerDialog(title, message, initialValue, options) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'integer',
+                title: title,
+                message: message,
+                initialValue: initialValue,
+                options: options || {},
+            });
+        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4657,6 +4796,15 @@ class IvyApp {
     }
 
     listboxDialog(title, message, items, options) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'listbox',
+                title: title,
+                message: message,
+                items: items || [],
+                options: options || {},
+            });
+        }
         var self = this;
         var opts = options || {};
         var entries = (items || []).map(function (item) {
@@ -4706,6 +4854,14 @@ class IvyApp {
     }
 
     buttonListDialog(title, message, buttons) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
+            return window.__ivyVueBridge.showDialog({
+                type: 'buttons',
+                title: title,
+                message: message,
+                buttons: buttons || [],
+            });
+        }
         var self = this;
         var entries = buttons || [];
         return new Promise(function (resolve) {

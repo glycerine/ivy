@@ -22,4 +22,15 @@ describe('sessionStore', () => {
     expect(session.sessionId).toBe('sid-1');
     expect(session.status).toBe('Ready');
   });
+
+  it('tracks loading overlay state', () => {
+    const session = useSessionStore();
+
+    session.showLoading('Checking...');
+    expect(session.loading).toBe(true);
+    expect(session.loadingMessage).toBe('Checking...');
+
+    session.hideLoading();
+    expect(session.loading).toBe(false);
+  });
 });
