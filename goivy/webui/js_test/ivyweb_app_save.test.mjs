@@ -100,7 +100,7 @@ describe('IvyApp Save and Save As', () => {
       editorContent: 'new model',
       fileHandle: handle,
     });
-    document.body.insertAdjacentHTML('beforeend', '<div id="editor-panel"></div>');
+    document.body.insertAdjacentHTML('beforeend', '<div id="editor-panel"><div class="panel-header"></div></div>');
     document.getElementById('editor-panel').getBoundingClientRect = vi.fn(() => ({
       left: 640,
       top: 120,
@@ -109,6 +109,14 @@ describe('IvyApp Save and Save As', () => {
       width: 320,
       height: 480,
     }));
+    document.querySelector('#editor-panel .panel-header').getBoundingClientRect = vi.fn(() => ({
+      left: 640,
+      top: 120,
+      right: 960,
+      bottom: 168,
+      width: 320,
+      height: 48,
+    }));
 
     const savePromise = app.save();
 
@@ -116,9 +124,9 @@ describe('IvyApp Save and Save As', () => {
     const progress = document.querySelector('.ivy-save-progress');
     expect(progress).not.toBeNull();
     expect(progress.textContent).toBe('Saving...');
-    expect(progress.style.left).toBe('640px');
+    expect(progress.style.left).toBe('648px');
     expect(progress.style.right).toBe('auto');
-    expect(parseFloat(progress.style.top)).toBeLessThan(120);
+    expect(progress.style.top).toBe('176px');
 
     closeGate.resolve();
     const saved = await savePromise;

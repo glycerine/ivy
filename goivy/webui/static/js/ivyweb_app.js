@@ -237,10 +237,14 @@ class IvyApp {
         var editorPanel = document.getElementById('editor-panel');
         if (!toast || !editorPanel || typeof editorPanel.getBoundingClientRect !== 'function') return;
         var rect = editorPanel.getBoundingClientRect();
+        var header = editorPanel.querySelector('.panel-header');
+        var headerRect = header && typeof header.getBoundingClientRect === 'function'
+            ? header.getBoundingClientRect()
+            : null;
         var gap = 8;
         toast.style.right = 'auto';
-        toast.style.left = Math.round(rect.left) + 'px';
-        toast.style.top = Math.round(rect.top - toast.offsetHeight - gap) + 'px';
+        toast.style.left = Math.round(rect.left + gap) + 'px';
+        toast.style.top = Math.round((headerRect ? headerRect.bottom : rect.top) + gap) + 'px';
     }
 
     _hideSaveProgress(toast) {
