@@ -12,23 +12,28 @@ afterEach(() => {
 
 describe('appServices', () => {
   it('starts the current runtime after Vue has produced its DOM', async () => {
-    const runtimeApp = { _unregisterCommands: vi.fn(), _refreshGraphsAndEditorLayout: vi.fn() };
+    const runtimeApp = { _refreshGraphsAndEditorLayout: vi.fn() };
     const startRuntime = vi.fn(() => runtimeApp);
-    const services = createAppServices({ startRuntime });
+    const stopRuntime = vi.fn();
+    const unregisterCommands = vi.fn();
+    const registerCommands = vi.fn(() => unregisterCommands);
+    const services = createAppServices({ startRuntime, stopRuntime, registerCommands });
 
     await expect(services.start()).resolves.toBe(runtimeApp);
     await expect(services.start()).resolves.toBe(runtimeApp);
 
     expect(startRuntime).toHaveBeenCalledTimes(1);
+    expect(registerCommands).toHaveBeenCalledWith(runtimeApp);
     services.refreshLayout();
     expect(runtimeApp._refreshGraphsAndEditorLayout).toHaveBeenCalledTimes(1);
 
     services.stop();
-    expect(runtimeApp._unregisterCommands).toHaveBeenCalledTimes(1);
+    expect(unregisterCommands).toHaveBeenCalledTimes(1);
+    expect(stopRuntime).toHaveBeenCalledWith(runtimeApp);
   });
 
   it('provides an installable singleton for the Vue shell', () => {
-    const services = createAppServices({ startRuntime: () => undefined });
+    const services = createAppServices({ startRuntime: () => undefined, registerCommands: null });
 
     expect(installAppServices(services)).toBe(services);
     expect(currentAppServices()).toBe(services);

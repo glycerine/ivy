@@ -51,9 +51,7 @@ describe('Vue production boundary', () => {
   });
 
   it('keeps production legacy browser globals inside the temporary allowlist', () => {
-    const allowed = new Set([
-      'legacyAppController.js',
-    ]);
+    const allowed = new Set([]);
     const legacyGlobal = /\b(?:window|globalThis\.window)\.(?:ivyApp|startIvyApp|IvyApp|IvyControls|IvyPersist|IvyGraph)\b/;
     const offenders = [];
     for (const file of productionSourceFiles()) {

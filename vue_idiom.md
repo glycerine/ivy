@@ -2,8 +2,7 @@
 
 ## Status
 
-Updated on May 6, 2026 after comparing the previous plan with the current
-`goivy/webui/frontend/src` tree.
+Updated on May 6, 2026 after executing the first cleanup slices from this plan.
 
 The Vue runtime switch-over is complete: the served web UI is a Vue 3 bundle,
 Pinia stores exist for user-visible state, and the old `goivy/webui/js_test`
@@ -11,8 +10,8 @@ harness has been retired in favor of Vue/Vitest tests.
 
 The Vue-idiomatic migration is not complete. The previous plan was treated as
 done too early. Its own Definition of Done was not satisfied because
-`goivy/webui/frontend/src/legacyAppController.js` still exists, is still large,
-and production startup still creates `window.ivyApp`.
+`goivy/webui/frontend/src/legacyAppController.js` still exists and is still
+large.
 
 This document is now the active cleanup plan. Its final implementation step is
 to delete `legacyAppController.js` after all behavior has moved into idiomatic
@@ -47,9 +46,23 @@ Completed baseline:
   event traces, state relations, session, engine, recent files, toasts,
   context menus, dropdowns, and menu descriptors.
 - The command registry exists in `services/commandRegistry.js`.
+- The command registry no longer falls back to `window.ivyApp` by default.
+- Explicit command registration exists in `services/*Commands.js` and is owned
+  by `services/appServices.js`, not by controller reflection during startup.
 - Components no longer import `legacyAppController.js` directly.
-- `components/legacyCommand.js` is a thin re-export over
-  `services/uiCommandService.js`.
+- Production components use `runUiCommand()` / `hasUiCommand()` rather than
+  `callApp()` / `hasAppMethod()`.
+- `components/legacyCommand.js` has been deleted.
+- Production boot no longer installs `window.IvyApp`, `window.startIvyApp`,
+  `window.IvyControls`, `window.IvyPersist`, or `window.IvyGraph`.
+- Production startup no longer creates `window.ivyApp`.
+- `legacyStartup.js`, `legacyAppRuntime.js`, `legacyScripts.js`,
+  `legacyRuntimeGlobals.js`, `legacyGraph.js`, and `legacyPersist.js` have been
+  deleted.
+- Canonical graph and persistence implementations live in
+  `services/graphRuntime.js` and `services/persistenceService.js`.
+- Playwright tests use `window.__ivyDiagnostics`, not `window.ivyApp`, for
+  transitional graph/editor/runtime probes.
 - Many service modules already exist:
   - `fileService.js`
   - `editorService.js`
@@ -73,18 +86,14 @@ Still not done:
 
 - `legacyAppController.js` is still about 5,000 lines and is still production
   runtime code.
-- `App.vue` still calls `startLegacyAppWhenReady()`.
-- `legacyStartup.js` still waits for `window.startIvyApp`.
-- `legacyAppRuntime.js` still installs `window.IvyApp` and
-  `window.startIvyApp`.
-- `startIvyApp()` still creates `window.ivyApp`.
-- `commandRegistry.js` still falls back to `window.ivyApp`.
-- `uiCommandService.js` still exposes `callApp()` and `hasAppMethod()`, which
-  keeps component intent tied to controller-style method names.
-- `resizeDrag.js` still refreshes layout through `window.ivyApp`.
-- `legacyRuntimeGlobals.js`, `legacyGraph.js`, and `legacyPersist.js` still
-  install or expose legacy browser-global compatibility.
-- Playwright tests still use `window.ivyApp` for many end-to-end probes.
+- `services/appServices.js` still imports `startIvyApp()` from
+  `legacyAppController.js`.
+- Most service modules still accept an `app` object shaped like the old
+  controller. They need explicit store/service dependencies instead.
+- `window.__ivyVueBridge` is still used as a transitional local dependency
+  shortcut in several services.
+- `window.__ivyDiagnostics` still exposes the runtime object to browser tests.
+  That should shrink to narrow diagnostics helpers.
 - `legacyAppController.surface.test.js` still inventories a large public
   controller API instead of proving the controller is gone.
 

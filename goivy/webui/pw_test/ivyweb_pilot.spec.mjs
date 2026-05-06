@@ -20,7 +20,7 @@ async function openIvy(page) {
   await page.goto('/');
   await expect(page).toHaveTitle(/ivy/i);
   await expect(page.locator('#menubar')).toBeVisible();
-  await page.waitForFunction(() => window.ivyApp && window.ivyApp.api);
+  await page.waitForFunction(() => window.__ivyDiagnostics && window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().api);
   return consoleErrors;
 }
 
@@ -66,7 +66,7 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 `;
 
   return page.evaluate(async (content) => {
-    const sid = window.ivyApp.api.sessionId;
+    const sid = window.__ivyDiagnostics.runtime().api.sessionId;
     const formData = new FormData();
     const blob = new Blob([content], { type: 'text/plain' });
     formData.append('file', blob, 'test.ivy');
@@ -77,8 +77,8 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
     const loadBody = await loadResponse.json();
     const conceptResponse = await fetch(`/api/session/${sid}/concept`);
     const concept = await conceptResponse.json();
-    if (window.ivyApp && window.ivyApp.conceptGraph) {
-      window.ivyApp.conceptGraph.update(concept.elements, concept.positions);
+    if (window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().conceptGraph) {
+      window.__ivyDiagnostics.runtime().conceptGraph.update(concept.elements, concept.positions);
     }
     return { loadBody, concept };
   }, ivyContent);
@@ -205,7 +205,7 @@ test('graph health check passes', async ({ page }) => {
 test('concept graph stays fitted after tutorial hide/show', async ({ page }) => {
   await openIvy(page);
   await loadExampleIntoCurrentSession(page);
-  await page.waitForFunction(() => window.ivyApp.conceptGraph.cy.nodes().length > 0);
+  await page.waitForFunction(() => window.__ivyDiagnostics.runtime().conceptGraph.cy.nodes().length > 0);
 
   await page.locator('#btn-toggle-tutorial').click();
   await expect(page.locator('#tutorial-container')).toBeHidden();
@@ -214,7 +214,7 @@ test('concept graph stays fitted after tutorial hide/show', async ({ page }) => 
   await page.waitForTimeout(180);
 
   const box = await page.evaluate(() => {
-    const cy = window.ivyApp.conceptGraph.cy;
+    const cy = window.__ivyDiagnostics.runtime().conceptGraph.cy;
     const nodes = cy.nodes().filter((node) => node.visible());
     const bounds = nodes.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
     return {
@@ -246,7 +246,7 @@ test('shared action runner reports backend errors', async ({ page }) => {
   await openIvy(page);
 
   const result = await page.evaluate(async () => {
-    return window.ivyApp.runAction('definitely_not_a_real_action');
+    return window.__ivyDiagnostics.runtime().runAction('definitely_not_a_real_action');
   });
   expect(result.ok).toBe(false);
   await expect(page.locator('#statusbar')).toContainText('Action failed');
@@ -257,14 +257,14 @@ test('dialog primitives accept integer and list selections', async ({ page }) =>
   await openIvy(page);
 
   const intPromise = page.evaluate(async () => {
-    return window.ivyApp.integerDialog('Bound', 'choose bound', 1, { min: 1, max: 9 });
+    return window.__ivyDiagnostics.runtime().integerDialog('Bound', 'choose bound', 1, { min: 1, max: 9 });
   });
   await page.locator('[data-ivy-dialog-int]').fill('4');
   await page.getByRole('button', { name: 'OK' }).click();
   await expect(intPromise).resolves.toBe(4);
 
   const listPromise = page.evaluate(async () => {
-    return window.ivyApp.listboxDialog('Pick', 'choose one', ['alpha', 'beta']);
+    return window.__ivyDiagnostics.runtime().listboxDialog('Pick', 'choose one', ['alpha', 'beta']);
   });
   await page.locator('[data-ivy-dialog-list]').selectOption('beta');
   await page.getByRole('button', { name: 'OK' }).click();
@@ -286,7 +286,7 @@ test('clicking ARG nodes reloads concept graph for the selected state', async ({
   await openIvy(page);
 
   await page.evaluate(() => {
-    const app = window.ivyApp;
+    const app = window.__ivyDiagnostics.runtime();
     app.api.getConceptGraph = async (nodeId) => ({
       selected_node: nodeId,
       state_label: nodeId === 'state_0' ? '0' : '1',
@@ -340,21 +340,21 @@ test('clicking ARG nodes reloads concept graph for the selected state', async ({
   });
 
   await page.evaluate(() => {
-    const node = window.ivyApp.argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_0');
+    const node = window.__ivyDiagnostics.runtime().argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_0');
     node.emit('tap', { target: node });
   });
   await page.waitForFunction(() => {
-    const nodes = window.ivyApp.conceptGraph.cy.nodes();
+    const nodes = window.__ivyDiagnostics.runtime().conceptGraph.cy.nodes();
     return nodes.length > 0 && nodes[0].data('label') === 'concept state_0';
   });
   await expect(page.locator('#state-label')).toContainText('State: 0');
 
   await page.evaluate(() => {
-    const node = window.ivyApp.argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_1');
+    const node = window.__ivyDiagnostics.runtime().argGraph.cy.nodes().toArray().find((n) => n.data('obj') === 'state_1');
     node.emit('tap', { target: node });
   });
   await page.waitForFunction(() => {
-    const nodes = window.ivyApp.conceptGraph.cy.nodes();
+    const nodes = window.__ivyDiagnostics.runtime().conceptGraph.cy.nodes();
     return nodes.length > 0 && nodes[0].data('label') === 'concept state_1';
   });
   await expect(page.locator('#state-label')).toContainText('State: 1');
@@ -364,27 +364,27 @@ test('backend relation toggle controls concept edge rendering and survives refre
   await openIvy(page);
   const loaded = await loadExampleIntoCurrentSession(page);
   await page.evaluate((concept) => {
-    window.ivyApp.populateStateCheckboxes(concept);
+    window.__ivyDiagnostics.runtime().populateStateCheckboxes(concept);
   }, loaded.concept);
 
-  expect(await page.evaluate(() => window.ivyApp.conceptGraph.cy.edges().length)).toBe(0);
+  expect(await page.evaluate(() => window.__ivyDiagnostics.runtime().conceptGraph.cy.edges().length)).toBe(0);
 
   const linkRow = page.locator('#state-checkbox-body tr', { hasText: 'link' });
   await expect(linkRow).toBeVisible();
   await linkRow.locator('input[type="checkbox"]').nth(1).check();
 
   await page.waitForFunction(() => {
-    return window.ivyApp.conceptGraph.cy.edges().toArray().some((e) => e.data('obj') === 'link');
+    return window.__ivyDiagnostics.runtime().conceptGraph.cy.edges().toArray().some((e) => e.data('obj') === 'link');
   });
 
   await page.evaluate(async () => {
-    const concept = await window.ivyApp.api.getConceptGraph();
-    window.ivyApp.conceptGraph.update(concept.elements, concept.positions);
-    window.ivyApp.populateStateCheckboxes(concept);
+    const concept = await window.__ivyDiagnostics.runtime().api.getConceptGraph();
+    window.__ivyDiagnostics.runtime().conceptGraph.update(concept.elements, concept.positions);
+    window.__ivyDiagnostics.runtime().populateStateCheckboxes(concept);
   });
 
   await expect(page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1)).toBeChecked();
-  expect(await page.evaluate(() => window.ivyApp.conceptGraph.cy.edges().toArray().filter((e) => e.data('obj') === 'link').length)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => window.__ivyDiagnostics.runtime().conceptGraph.cy.edges().toArray().filter((e) => e.data('obj') === 'link').length)).toBeGreaterThan(0);
 });
 
 test('constraint facts render below the graph and toggle through backend action', async ({ page }) => {
@@ -392,11 +392,11 @@ test('constraint facts render below the graph and toggle through backend action'
 
   await page.evaluate(() => {
     window._factActions = [];
-    window.ivyApp.api.executeAction = async (action, args) => {
+    window.__ivyDiagnostics.runtime().api.executeAction = async (action, args) => {
       window._factActions.push({ action, args });
       return { status: 'ok' };
     };
-    window.ivyApp.populateStateCheckboxes({
+    window.__ivyDiagnostics.runtime().populateStateCheckboxes({
       relations: [],
       facts: [
         { index: 0, text: 'link(a,b)', selected: true },
@@ -419,32 +419,32 @@ test('View Source edge action loads source text and highlights the backend line'
   await openIvy(page);
 
   const result = await page.evaluate(async () => {
-    window.ivyApp.api.argNodeAction = async () => {
-      window.ivyApp._testArgNodeActionResult = {
+    window.__ivyDiagnostics.runtime().api.argNodeAction = async () => {
+      window.__ivyDiagnostics.runtime()._testArgNodeActionResult = {
         status: 'ok',
         file: 'sample.ivy',
         lineno: 2,
         source: 'line1\naction go = {}\nline3\n',
       };
-      return window.ivyApp._testArgNodeActionResult;
+      return window.__ivyDiagnostics.runtime()._testArgNodeActionResult;
     };
-    const originalScroll = window.ivyApp.scrollEditorToLine.bind(window.ivyApp);
-    window.ivyApp.scrollEditorToLine = (lineno) => {
-      window.ivyApp._testScrollLine = lineno;
+    const originalScroll = window.__ivyDiagnostics.runtime().scrollEditorToLine.bind(window.__ivyDiagnostics.runtime());
+    window.__ivyDiagnostics.runtime().scrollEditorToLine = (lineno) => {
+      window.__ivyDiagnostics.runtime()._testScrollLine = lineno;
       return originalScroll(lineno);
     };
-    const originalSetEditor = window.ivyApp.setEditorContent.bind(window.ivyApp);
-    window.ivyApp.setEditorContent = (source) => {
-      window.ivyApp._testSetEditorSource = source;
+    const originalSetEditor = window.__ivyDiagnostics.runtime().setEditorContent.bind(window.__ivyDiagnostics.runtime());
+    window.__ivyDiagnostics.runtime().setEditorContent = (source) => {
+      window.__ivyDiagnostics.runtime()._testSetEditorSource = source;
       return originalSetEditor(source);
     };
-    await window.ivyApp.executeArgEdgeAction({ source_obj: 'state_0', target_obj: 'state_1' }, 'view_source');
+    await window.__ivyDiagnostics.runtime().executeArgEdgeAction({ source_obj: 'state_0', target_obj: 'state_1' }, 'view_source');
     return {
-      value: window.ivyApp.cmEditor.getValue(),
-      highlightedLine: window.ivyApp._highlightedEditorLine,
-      scrollLine: window.ivyApp._testScrollLine,
-      setEditorSource: window.ivyApp._testSetEditorSource,
-      apiResult: window.ivyApp._testArgNodeActionResult,
+      value: window.__ivyDiagnostics.runtime().cmEditor.getValue(),
+      highlightedLine: window.__ivyDiagnostics.runtime()._highlightedEditorLine,
+      scrollLine: window.__ivyDiagnostics.runtime()._testScrollLine,
+      setEditorSource: window.__ivyDiagnostics.runtime()._testSetEditorSource,
+      apiResult: window.__ivyDiagnostics.runtime()._testArgNodeActionResult,
       status: document.getElementById('statusbar').textContent,
       details: document.getElementById('info-content').textContent,
     };
@@ -463,7 +463,7 @@ test('sheet graph instances are owned independently when switching tabs', async 
   await openIvy(page);
 
   const result = await page.evaluate(() => {
-    const app = window.ivyApp;
+    const app = window.__ivyDiagnostics.runtime();
     const mainElement = {
       group: 'nodes',
       data: { id: 'main-node', obj: 'main', label: 'main' },
@@ -509,7 +509,7 @@ test('event trace sheets render through the Vue bridge', async ({ page }) => {
   await openIvy(page);
 
   await page.evaluate(() => {
-    window.ivyApp.openEventTraceSheet('Trace', {
+    window.__ivyDiagnostics.runtime().openEventTraceSheet('Trace', {
       sheet_id: 'events-1',
       events: [
         { text: 'root(a)', address: '0', subs: [{ text: 'child(a)', address: '0/0' }] },
@@ -534,7 +534,7 @@ test('Step in opens a backend-owned sheet whose node clicks load that sheet conc
   await openIvy(page);
 
   const result = await page.evaluate(async () => {
-    const app = window.ivyApp;
+    const app = window.__ivyDiagnostics.runtime();
     window._stepInCalls = { arg: [], concept: [] };
     app.api.argNodeAction = async (node, action, args) => {
       window._stepInCalls.arg.push({ node, action, args });
@@ -601,7 +601,7 @@ test('ARG node execute actions are rendered from backend descriptors and dispatc
   await openIvy(page);
 
   await page.evaluate(() => {
-    const app = window.ivyApp;
+    const app = window.__ivyDiagnostics.runtime();
     window._executeActionCalls = [];
     app.api.argNodeAction = async (node, action, args) => {
       window._executeActionCalls.push({ node, action, args });
@@ -646,7 +646,7 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
   await openIvy(page);
 
   await page.evaluate(() => {
-    window.ivyApp.showCheckResult({
+    window.__ivyDiagnostics.runtime().showCheckResult({
       result: 'fail',
       z3_contacted: true,
       message: 'The node is unsafe: View error trace?',
@@ -663,9 +663,9 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
   await expect(page.locator('[data-check-view-trace]')).toBeVisible();
   await page.locator('[data-check-view-trace]').click();
   const result = await page.evaluate(() => {
-    const sheet = window.ivyApp.sheets[window.ivyApp.activeSheetId];
+    const sheet = window.__ivyDiagnostics.runtime().sheets[window.__ivyDiagnostics.runtime().activeSheetId];
     return {
-      activeSheet: window.ivyApp.activeSheetId,
+      activeSheet: window.__ivyDiagnostics.runtime().activeSheetId,
       labels: sheet.argGraph.cy.nodes().map((n) => n.data('label')),
       edgeLabels: sheet.argGraph.cy.edges().map((e) => e.data('label')),
     };
@@ -680,7 +680,7 @@ test('Show Reachable opens a reachable-state ARG sheet', async ({ page }) => {
   await openIvy(page);
 
   await page.evaluate(() => {
-    window.ivyApp.api.executeAction = async (action, args) => {
+    window.__ivyDiagnostics.runtime().api.executeAction = async (action, args) => {
       window._showReachableCall = { action, args };
       return {
         status: 'ok',
@@ -696,10 +696,10 @@ test('Show Reachable opens a reachable-state ARG sheet', async ({ page }) => {
 
   await page.locator('#btn-show-reachable').click();
   const result = await page.evaluate(() => {
-    const sheet = window.ivyApp.sheets[window.ivyApp.activeSheetId];
+    const sheet = window.__ivyDiagnostics.runtime().sheets[window.__ivyDiagnostics.runtime().activeSheetId];
     return {
       call: window._showReachableCall,
-      activeSheet: window.ivyApp.activeSheetId,
+      activeSheet: window.__ivyDiagnostics.runtime().activeSheetId,
       labels: sheet.argGraph.cy.nodes().map((n) => n.data('label')),
       status: document.getElementById('statusbar').textContent,
     };
@@ -821,15 +821,15 @@ test('concept graph right-click menu path does not crash', async ({ page }) => {
   await loadExampleIntoCurrentSession(page);
 
   const nodeCount = await page.evaluate(() => {
-    if (window.ivyApp && window.ivyApp.conceptGraph && window.ivyApp.conceptGraph.cy) {
-      return window.ivyApp.conceptGraph.cy.nodes().length;
+    if (window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().conceptGraph && window.__ivyDiagnostics.runtime().conceptGraph.cy) {
+      return window.__ivyDiagnostics.runtime().conceptGraph.cy.nodes().length;
     }
     return 0;
   });
 
   if (nodeCount > 0) {
     const menuVisible = await page.evaluate(() => {
-      const cy = window.ivyApp.conceptGraph.cy;
+      const cy = window.__ivyDiagnostics.runtime().conceptGraph.cy;
       const node = cy.nodes()[0];
       const pos = node.renderedPosition();
       node.emit('cxttap', { renderedPosition: pos });
@@ -843,14 +843,19 @@ test('concept graph right-click menu path does not crash', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
-test('static JS globals are loaded', async ({ page }) => {
+test('Vue diagnostics bridge is loaded', async ({ page }) => {
   await openIvy(page);
 
   const globals = await page.evaluate(() => ({
-    api: typeof IvyAPI,
-    app: typeof IvyApp,
+    diagnostics: typeof window.__ivyDiagnostics,
+    runtime: typeof window.__ivyDiagnostics.runtime,
+    api: typeof window.__ivyDiagnostics.runtime().api,
   }));
-  expect([globals.api, globals.app]).toContain('function');
+  expect(globals).toEqual({
+    diagnostics: 'object',
+    runtime: 'function',
+    api: 'object',
+  });
 });
 
 test('Vue bundle owns the Ivy runtime script path', async ({ page }) => {

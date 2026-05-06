@@ -9,7 +9,6 @@
 import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './services/graphRuntime.js';
 import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './services/runtimeShims.js';
 import { createIvyPersist } from './services/persistenceService.js';
-import { registerLegacyControllerCommands } from './services/appCommands.js';
 import {
     connectSessionEvents,
     createLegacyApi,
@@ -5220,17 +5219,19 @@ class IvyApp {
 // ================================================================
 // Initialize on DOM ready unless a framework shell owns boot timing.
 // ================================================================
+let activeIvyApp = null;
+
 function startIvyApp() {
-    if (window.ivyApp) {
-        return window.ivyApp;
+    if (activeIvyApp) {
+        return activeIvyApp;
     }
-    window.ivyApp = new IvyApp();
-    var unregisterControllerCommands = registerLegacyControllerCommands(window.ivyApp);
-    window.ivyApp._unregisterCommands = function () {
-        unregisterControllerCommands();
-    };
-    window.ivyApp.init();
-    return window.ivyApp;
+    activeIvyApp = new IvyApp();
+    activeIvyApp.init();
+    return activeIvyApp;
 }
 
-export { IvyApp, configureLegacyAppDependencies, resetLegacyAppDependencies, startIvyApp };
+function stopIvyApp() {
+    activeIvyApp = null;
+}
+
+export { IvyApp, configureLegacyAppDependencies, resetLegacyAppDependencies, startIvyApp, stopIvyApp };
