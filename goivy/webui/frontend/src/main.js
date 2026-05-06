@@ -1,4 +1,4 @@
-import { createApp, h, render } from 'vue';
+import { createApp, h, nextTick, render } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import AnalysisSheetShell from './components/panes/AnalysisSheetShell.vue';
@@ -79,6 +79,12 @@ window.__ivyVueBridge = {
   },
   updateStatus(message, level = '') {
     sessionStore.setStatus(message, level);
+  },
+  setMode(mode) {
+    sessionStore.setMode(mode);
+  },
+  getMode() {
+    return sessionStore.mode;
   },
   showLoading(message) {
     sessionStore.showLoading(message);
@@ -183,6 +189,18 @@ window.__ivyVueBridge = {
   },
   isTutorialVisible() {
     return layoutStore.tutorialVisible;
+  },
+  tutorialUrlBarHandled() {
+    return true;
+  },
+  afterLayoutSettled(callback) {
+    if (typeof callback !== 'function') return;
+    nextTick(() => {
+      const raf = typeof window.requestAnimationFrame === 'function'
+        ? window.requestAnimationFrame.bind(window)
+        : (fn) => window.setTimeout(fn, 0);
+      raf(() => raf(callback));
+    });
   },
 };
 

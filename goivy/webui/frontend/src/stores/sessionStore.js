@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { useEngineStore } from './engineStore.js';
 
+export const SESSION_MODES = ['induction', 'pdr', 'concrete', 'abstract', 'bounded'];
+
 export const useSessionStore = defineStore('session', {
   state: () => ({
     sessionId: '',
@@ -17,6 +19,10 @@ export const useSessionStore = defineStore('session', {
     setStatus(message, level = '') {
       this.status = message;
       this.statusLevel = level;
+    },
+    setMode(mode) {
+      const next = String(mode || '');
+      this.mode = SESSION_MODES.includes(next) ? next : 'pdr';
     },
     showLoading(message = 'Loading...') {
       this.loading = true;

@@ -1872,9 +1872,7 @@ class IvyApp {
                 btn.classList.add('btn-flash');
                 setTimeout(function () { btn.classList.remove('btn-flash'); }, 1200);
             }
-            if (this.argGraph) this.argGraph.resize();
-            if (this.conceptGraph) this.conceptGraph.resize();
-            this._refreshEditorLayout();
+            this._refreshLayoutAfterVuePatch();
             return;
         }
 
@@ -1898,6 +1896,34 @@ class IvyApp {
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
         this._refreshEditorLayout();
+    }
+
+    _refreshGraphsAndEditorLayout() {
+        if (this.argGraph) this.argGraph.resize();
+        if (this.conceptGraph) this.conceptGraph.resize();
+        this._refreshEditorLayout();
+    }
+
+    _refreshLayoutAfterVuePatch() {
+        var self = this;
+        var refresh = function () {
+            self._refreshGraphsAndEditorLayout();
+        };
+        var bridge = window.__ivyVueBridge;
+        if (bridge && typeof bridge.afterLayoutSettled === 'function') {
+            bridge.afterLayoutSettled(function () {
+                refresh();
+                setTimeout(refresh, 60);
+            });
+            return;
+        }
+        if (typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(refresh);
+            });
+        } else {
+            setTimeout(refresh, 0);
+        }
     }
 
     setupResizerH() {
@@ -2030,6 +2056,11 @@ class IvyApp {
     }
 
     setupTutorialUrlBar() {
+        if (window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.tutorialUrlBarHandled === 'function' &&
+            window.__ivyVueBridge.tutorialUrlBarHandled()) {
+            return;
+        }
         var urlInput = document.getElementById('tutorial-url');
         var iframe = document.getElementById('tutorial-iframe');
         var backBtn = document.getElementById('tutorial-back');

@@ -1,14 +1,98 @@
 import { defineStore } from 'pinia';
 
+export const DEFAULT_TUTORIAL_URL = '/static/tutorial/kenmcmil.github.io/ivy/language.html';
+
+function normalizeTutorialUrl(rawUrl) {
+  const trimmed = String(rawUrl || '').trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('/')) return trimmed;
+  return `https://${trimmed}`;
+}
+
+function cleanTutorialFrameUrl(rawUrl) {
+  const value = String(rawUrl || '').trim();
+  if (!value || value === 'about:blank') return '';
+  try {
+    const parsed = new URL(value);
+    if (typeof window !== 'undefined' && parsed.origin === window.location.origin) {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return value;
+  } catch (e) {
+    return value;
+  }
+}
+
 export const useLayoutStore = defineStore('layout', {
   state: () => ({
     tutorialVisible: true,
+    tutorialUrl: DEFAULT_TUTORIAL_URL,
+    tutorialInput: DEFAULT_TUTORIAL_URL,
+    tutorialHistory: [DEFAULT_TUTORIAL_URL],
+    tutorialHistoryIndex: 0,
+    tutorialFrameKey: 0,
     detailsHeight: 160,
     editorWidth: 520,
   }),
+  getters: {
+    canGoBack: (state) => state.tutorialHistoryIndex > 0,
+    canGoForward: (state) => state.tutorialHistoryIndex < state.tutorialHistory.length - 1,
+  },
   actions: {
     setTutorialVisible(visible) {
       this.tutorialVisible = Boolean(visible);
+    },
+    setTutorialInput(value) {
+      this.tutorialInput = String(value || '');
+    },
+    navigateTutorial(rawUrl) {
+      const url = normalizeTutorialUrl(rawUrl);
+      if (!url) return;
+      if (this.tutorialHistoryIndex < this.tutorialHistory.length - 1) {
+        this.tutorialHistory = this.tutorialHistory.slice(0, this.tutorialHistoryIndex + 1);
+      }
+      if (this.tutorialHistory[this.tutorialHistoryIndex] !== url) {
+        this.tutorialHistory.push(url);
+        this.tutorialHistoryIndex = this.tutorialHistory.length - 1;
+      }
+      this.tutorialInput = url;
+      this.tutorialUrl = url;
+    },
+    goTutorialBack() {
+      if (!this.canGoBack) return;
+      this.tutorialHistoryIndex -= 1;
+      const url = this.tutorialHistory[this.tutorialHistoryIndex];
+      this.tutorialInput = url;
+      this.tutorialUrl = url;
+      this.tutorialFrameKey += 1;
+    },
+    goTutorialForward() {
+      if (!this.canGoForward) return;
+      this.tutorialHistoryIndex += 1;
+      const url = this.tutorialHistory[this.tutorialHistoryIndex];
+      this.tutorialInput = url;
+      this.tutorialUrl = url;
+      this.tutorialFrameKey += 1;
+    },
+    reloadTutorial() {
+      const url = this.tutorialHistory[this.tutorialHistoryIndex] || this.tutorialUrl;
+      if (!url) return;
+      this.tutorialInput = url;
+      this.tutorialUrl = url;
+      this.tutorialFrameKey += 1;
+    },
+    recordTutorialLoad(rawUrl) {
+      const url = cleanTutorialFrameUrl(rawUrl);
+      if (!url) return;
+      if (this.tutorialHistory[this.tutorialHistoryIndex] !== url) {
+        if (this.tutorialHistoryIndex < this.tutorialHistory.length - 1) {
+          this.tutorialHistory = this.tutorialHistory.slice(0, this.tutorialHistoryIndex + 1);
+        }
+        this.tutorialHistory.push(url);
+        this.tutorialHistoryIndex = this.tutorialHistory.length - 1;
+      }
+      this.tutorialInput = url;
+      this.tutorialUrl = url;
     },
     setDetailsHeight(height) {
       this.detailsHeight = Math.max(80, Number(height) || 80);

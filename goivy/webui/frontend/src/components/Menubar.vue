@@ -21,9 +21,9 @@
     </div>
     <div class="menu-group">
       <span class="menu-label">Mode</span>
-      <select id="mode-select">
+      <select id="mode-select" :value="sessionStore.mode" @change="sessionStore.setMode($event.target.value)">
         <option value="induction">Induction</option>
-        <option value="pdr" selected>PDR</option>
+        <option value="pdr">PDR</option>
         <option value="concrete">Concrete</option>
         <option value="abstract">Abstract</option>
         <option value="bounded">Bounded</option>
@@ -48,7 +48,9 @@ import RecentFilesMenu from './RecentFilesMenu.vue';
 import { callApp, runCommand, runMenuCommand, toggleDropdownCommand } from './legacyCommand.js';
 import { useDropdownStore } from '../stores/dropdownStore.js';
 import { useLayoutStore } from '../stores/layoutStore.js';
+import { useSessionStore } from '../stores/sessionStore.js';
 
 const layoutStore = useLayoutStore();
 const dropdownStore = useDropdownStore();
+const sessionStore = useSessionStore();
 </script>

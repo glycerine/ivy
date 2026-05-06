@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
 import {
   FakeAPI,
@@ -18,9 +18,15 @@ function loadApp() {
 
 beforeEach(() => {
   installSaveDom();
+  window.__ivyVueBridge = undefined;
   if (!document.getElementById('state-checkbox-body')) {
     document.body.insertAdjacentHTML('beforeend', '<table><tbody id="state-checkbox-body"></tbody></table>');
   }
+});
+
+afterEach(() => {
+  window.__ivyVueBridge = undefined;
+  vi.useRealTimers();
 });
 
 describe('IvyApp checkbox state', () => {
@@ -81,5 +87,44 @@ describe('IvyApp checkbox state', () => {
     expect(app.argGraph.resize).toHaveBeenCalled();
     expect(app.conceptGraph.resize).toHaveBeenCalled();
     expect(app.cmEditor.refresh).toHaveBeenCalled();
+  });
+
+  it('defers graph resize until Vue has settled the tutorial layout', () => {
+    vi.useFakeTimers();
+    const IvyApp = loadApp();
+    const app = makeApp(IvyApp);
+    document.body.insertAdjacentHTML('beforeend', [
+      '<div id="tutorial-container"></div>',
+      '<div id="divider-h"></div>',
+      '<button id="btn-toggle-tutorial">Hide Tutorial</button>',
+    ].join(''));
+    app.cmEditor.refresh = vi.fn();
+    app.argGraph = { resize: vi.fn() };
+    app.conceptGraph = { resize: vi.fn() };
+
+    let settledCallback;
+    window.__ivyVueBridge = {
+      setTutorialVisible: vi.fn(),
+      isTutorialVisible: vi.fn(() => true),
+      afterLayoutSettled: vi.fn((callback) => {
+        settledCallback = callback;
+      }),
+    };
+
+    app.toggleTutorial();
+
+    expect(window.__ivyVueBridge.setTutorialVisible).toHaveBeenCalledWith(false);
+    expect(window.__ivyVueBridge.afterLayoutSettled).toHaveBeenCalled();
+    expect(app.argGraph.resize).not.toHaveBeenCalled();
+    expect(app.conceptGraph.resize).not.toHaveBeenCalled();
+
+    settledCallback();
+    expect(app.argGraph.resize).toHaveBeenCalledTimes(1);
+    expect(app.conceptGraph.resize).toHaveBeenCalledTimes(1);
+    expect(app.cmEditor.refresh).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(60);
+    expect(app.argGraph.resize).toHaveBeenCalledTimes(2);
+    expect(app.conceptGraph.resize).toHaveBeenCalledTimes(2);
   });
 });

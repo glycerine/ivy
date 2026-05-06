@@ -172,6 +172,39 @@ test('graph health check passes', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
+test('concept graph stays fitted after tutorial hide/show', async ({ page }) => {
+  await openIvy(page);
+  await loadExampleIntoCurrentSession(page);
+  await page.waitForFunction(() => window.ivyApp.conceptGraph.cy.nodes().length > 0);
+
+  await page.locator('#btn-toggle-tutorial').click();
+  await expect(page.locator('#tutorial-container')).toBeHidden();
+  await page.locator('#btn-toggle-tutorial').click();
+  await expect(page.locator('#tutorial-container')).toBeVisible();
+  await page.waitForTimeout(180);
+
+  const box = await page.evaluate(() => {
+    const cy = window.ivyApp.conceptGraph.cy;
+    const nodes = cy.nodes().filter((node) => node.visible());
+    const bounds = nodes.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
+    return {
+      count: nodes.length,
+      width: cy.width(),
+      height: cy.height(),
+      x1: bounds.x1,
+      y1: bounds.y1,
+      x2: bounds.x2,
+      y2: bounds.y2,
+    };
+  });
+
+  expect(box.count).toBeGreaterThan(0);
+  expect(box.x1).toBeGreaterThanOrEqual(-4);
+  expect(box.y1).toBeGreaterThanOrEqual(-4);
+  expect(box.x2).toBeLessThanOrEqual(box.width + 4);
+  expect(box.y2).toBeLessThanOrEqual(box.height + 4);
+});
+
 test('undo button path does not kill the page', async ({ page }) => {
   await openIvy(page);
 
