@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import FileInputHost from './FileInputHost.vue';
+import { registerCommand, resetCommandRegistry } from '../services/commandRegistry.js';
 
 function makeFile(name) {
   return new File(['content'], name, { type: 'text/plain' });
@@ -11,13 +12,16 @@ describe('FileInputHost', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
-  it('routes hidden file input changes through the app bridge', async () => {
+  it('routes hidden file input changes through registered commands', async () => {
     const loadFile = vi.fn(async () => undefined);
     const loadEventTraceFile = vi.fn(async () => undefined);
     const loadAnalysisStateFile = vi.fn(async () => undefined);
-    window.ivyApp = { loadFile, loadEventTraceFile, loadAnalysisStateFile };
+    registerCommand('loadFile', loadFile);
+    registerCommand('loadEventTraceFile', loadEventTraceFile);
+    registerCommand('loadAnalysisStateFile', loadAnalysisStateFile);
 
     const wrapper = mount(FileInputHost);
 

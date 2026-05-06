@@ -9,16 +9,17 @@ describe('globalInteractions', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = {
-      doUndo: vi.fn(),
-    };
     saveCommand = vi.fn();
+    const undoCommand = vi.fn();
     registerCommand('file.save', saveCommand);
+    registerCommand('doUndo', undoCommand);
+    window._testUndoCommand = undoCommand;
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
     window.ivyApp = undefined;
+    delete window._testUndoCommand;
     resetCommandRegistry();
   });
 
@@ -70,7 +71,7 @@ describe('globalInteractions', () => {
     expect(saveEvent.defaultPrevented).toBe(true);
     expect(undoEvent.defaultPrevented).toBe(true);
     expect(saveCommand).toHaveBeenCalled();
-    expect(window.ivyApp.doUndo).toHaveBeenCalled();
+    expect(window._testUndoCommand).toHaveBeenCalled();
     cleanup();
   });
 });

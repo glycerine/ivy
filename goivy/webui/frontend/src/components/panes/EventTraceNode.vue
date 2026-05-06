@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
-import { callApp, hasAppMethod } from '../../services/uiCommandService.js';
+import { hasUiCommand, runUiCommand } from '../../services/uiCommandService.js';
 
 const props = defineProps({
   sheetId: {
@@ -23,8 +23,8 @@ const selected = computed(() => {
 });
 
 function selectRow() {
-  if (hasAppMethod('selectEventTraceRow')) {
-    callApp('selectEventTraceRow', props.sheetId, props.event.address);
+  if (hasUiCommand('selectEventTraceRow')) {
+    runUiCommand('selectEventTraceRow', props.sheetId, props.event.address);
     return;
   }
   eventTraceStore.selectEvent(props.sheetId, props.event.address);
@@ -33,8 +33,8 @@ function selectRow() {
 function toggle(event) {
   event.stopPropagation();
   if (!hasSubs.value) return;
-  if (hasAppMethod('toggleEventTraceNode')) {
-    callApp('toggleEventTraceNode', props.sheetId, props.event.address);
+  if (hasUiCommand('toggleEventTraceNode')) {
+    runUiCommand('toggleEventTraceNode', props.sheetId, props.event.address);
     return;
   }
   eventTraceStore.setExpanded(props.sheetId, props.event.address, !expanded.value);

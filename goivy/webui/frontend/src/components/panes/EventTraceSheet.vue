@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import EventTraceNode from './EventTraceNode.vue';
-import { callApp, hasAppMethod } from '../../services/uiCommandService.js';
+import { hasUiCommand, runUiCommand } from '../../services/uiCommandService.js';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
 
 const props = defineProps({
@@ -15,8 +15,8 @@ const eventTraceStore = useEventTraceStore();
 const sheet = computed(() => eventTraceStore.sheetById(props.sheetId));
 
 async function askEntry(title, message, okLabel, callback) {
-  if (!hasAppMethod('entryDialog')) return;
-  const pattern = await callApp('entryDialog', title, message, '', { okLabel });
+  if (!hasUiCommand('entryDialog')) return;
+  const pattern = await runUiCommand('entryDialog', title, message, '', { okLabel });
   if (pattern !== null && pattern !== '') {
     await callback(pattern);
   }
@@ -31,9 +31,9 @@ function selectedPatternIndex(event) {
 }
 
 async function loadPatterns() {
-  if (!hasAppMethod('textDialog')) return;
-  const text = await callApp('textDialog', 'Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
-  if (text !== null) await callApp('loadEventPatterns', props.sheetId, text);
+  if (!hasUiCommand('textDialog')) return;
+  const text = await runUiCommand('textDialog', 'Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
+  if (text !== null) await runUiCommand('loadEventPatterns', props.sheetId, text);
 }
 </script>
 
@@ -45,17 +45,17 @@ async function loadPatterns() {
         <button
           class="menu-btn event-filter-btn"
           type="button"
-          @click="askEntry('Filter events', 'Pattern:', 'Filter', (pattern) => callApp('filterEventTrace', pattern))"
+          @click="askEntry('Filter events', 'Pattern:', 'Filter', (pattern) => runUiCommand('filterEventTrace', pattern))"
         >Filter...</button>
         <button
           class="menu-btn event-find-fwd-btn"
           type="button"
-          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => callApp('findEventTrace', pattern, false))"
+          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => runUiCommand('findEventTrace', pattern, false))"
         >&gt;&gt;</button>
         <button
           class="menu-btn event-find-rev-btn"
           type="button"
-          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => callApp('findEventTrace', pattern, true))"
+          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => runUiCommand('findEventTrace', pattern, true))"
         >&lt;&lt;</button>
       </div>
       <div class="event-tree" :data-event-tree="sheetId">
@@ -84,19 +84,19 @@ async function loadPatterns() {
         >{{ pattern }}</option>
       </select>
       <div class="event-pattern-buttons">
-        <button class="menu-btn event-pattern-rev" type="button" @click="selectedPattern() && callApp('findEventTrace', selectedPattern(), true)">&lt;&lt;</button>
-        <button class="menu-btn event-pattern-fwd" type="button" @click="selectedPattern() && callApp('findEventTrace', selectedPattern(), false)">&gt;&gt;</button>
-        <button class="menu-btn event-pattern-add" type="button" @click="askEntry('Add pattern', 'Pattern:', 'Add', (pattern) => callApp('addEventPattern', sheetId, pattern))">+</button>
-        <button class="menu-btn event-pattern-remove" type="button" @click="callApp('removeSelectedEventPattern', sheetId)">-</button>
+        <button class="menu-btn event-pattern-rev" type="button" @click="selectedPattern() && runUiCommand('findEventTrace', selectedPattern(), true)">&lt;&lt;</button>
+        <button class="menu-btn event-pattern-fwd" type="button" @click="selectedPattern() && runUiCommand('findEventTrace', selectedPattern(), false)">&gt;&gt;</button>
+        <button class="menu-btn event-pattern-add" type="button" @click="askEntry('Add pattern', 'Pattern:', 'Add', (pattern) => runUiCommand('addEventPattern', sheetId, pattern))">+</button>
+        <button class="menu-btn event-pattern-remove" type="button" @click="runUiCommand('removeSelectedEventPattern', sheetId)">-</button>
       </div>
       <div class="event-pattern-buttons">
-        <button class="menu-btn event-pattern-save" type="button" @click="callApp('saveEventPatterns', sheetId)">Save</button>
+        <button class="menu-btn event-pattern-save" type="button" @click="runUiCommand('saveEventPatterns', sheetId)">Save</button>
         <button
           class="menu-btn event-pattern-load"
           type="button"
           @click="loadPatterns"
         >Load</button>
-        <button class="menu-btn event-pattern-clear" type="button" @click="callApp('clearEventPatterns', sheetId)">Clear</button>
+        <button class="menu-btn event-pattern-clear" type="button" @click="runUiCommand('clearEventPatterns', sheetId)">Clear</button>
       </div>
     </div>
   </div>

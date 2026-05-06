@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import TutorialPane from './TutorialPane.vue';
 import { DEFAULT_TUTORIAL_URL, useLayoutStore } from '../../stores/layoutStore.js';
+import { registerCommand, resetCommandRegistry } from '../../services/commandRegistry.js';
 
 describe('TutorialPane', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
   it('renders tutorial navigation from the layout store', async () => {
@@ -30,9 +32,9 @@ describe('TutorialPane', () => {
     expect(layout.tutorialUrl).toBe(DEFAULT_TUTORIAL_URL);
   });
 
-  it('routes the close button through the legacy app when available', async () => {
+  it('routes the close button through a registered command when available', async () => {
     const toggleTutorial = vi.fn();
-    window.ivyApp = { toggleTutorial };
+    registerCommand('toggleTutorial', toggleTutorial);
 
     const wrapper = mount(TutorialPane);
     await wrapper.find('#tutorial-close').trigger('click');

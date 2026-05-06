@@ -1,18 +1,8 @@
 import { nextTick } from 'vue';
-
-function legacyApp() {
-  return globalThis.window && globalThis.window.ivyApp;
-}
+import { currentAppServices } from './services/appServices.js';
 
 function refreshNow() {
-  const app = legacyApp();
-  if (!app) return;
-  if (typeof app._refreshGraphsAndEditorLayout === 'function') {
-    app._refreshGraphsAndEditorLayout();
-    return;
-  }
-  if (app.argGraph && typeof app.argGraph.resize === 'function') app.argGraph.resize();
-  if (app.conceptGraph && typeof app.conceptGraph.resize === 'function') app.conceptGraph.resize();
+  currentAppServices().refreshLayout();
 }
 
 export function scheduleLegacyLayoutRefresh() {

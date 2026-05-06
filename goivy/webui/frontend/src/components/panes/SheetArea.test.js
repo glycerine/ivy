@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import SheetArea from './SheetArea.vue';
 import { useLayoutStore } from '../../stores/layoutStore.js';
+import { installAppServices, resetAppServicesForTests } from '../../services/appServices.js';
 
 function setSize(el, { width, height } = {}) {
   if (width != null) {
@@ -23,16 +24,17 @@ function mouse(type, { x = 0, y = 0 } = {}) {
 }
 
 describe('SheetArea resizers', () => {
+  let refreshLayout;
+
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = {
-      _refreshGraphsAndEditorLayout: vi.fn(),
-    };
+    refreshLayout = vi.fn();
+    installAppServices({ refreshLayout });
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
-    window.ivyApp = undefined;
+    resetAppServicesForTests();
   });
 
   it('owns the ARG/concept divider through the layout store', async () => {
@@ -49,7 +51,7 @@ describe('SheetArea resizers', () => {
 
     expect(layout.argPanelWidth).toBe(380);
     expect(argPanel.style.flex).toBe('');
-    expect(window.ivyApp._refreshGraphsAndEditorLayout).toHaveBeenCalled();
+    expect(refreshLayout).toHaveBeenCalled();
   });
 
   it('owns the state/relation divider through the layout store', () => {

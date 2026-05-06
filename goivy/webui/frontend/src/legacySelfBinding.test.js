@@ -47,7 +47,7 @@ describe('legacy compatibility self binding', () => {
   it('binds self in remaining compatibility methods before callbacks use it', () => {
     const files = [
       path.join(frontendSrcDir, 'legacyAppController.js'),
-      path.join(frontendSrcDir, 'legacyPersist.js'),
+      path.join(frontendSrcDir, 'services/persistenceService.js'),
     ];
     const missingBindings = [];
 

@@ -9,7 +9,7 @@ import SessionOverlayHost from './components/SessionOverlayHost.vue';
 import StatusBar from './components/StatusBar.vue';
 import ToastHost from './components/ToastHost.vue';
 import { installGlobalInteractions } from './globalInteractions.js';
-import { startLegacyAppWhenReady } from './legacyStartup.js';
+import { currentAppServices } from './services/appServices.js';
 import { useContextMenuStore, useDropdownStore, useMenuDescriptorStore } from './stores/index.js';
 
 const contextMenuStore = useContextMenuStore();
@@ -23,7 +23,7 @@ onMounted(() => {
     dropdownStore,
     menuDescriptorStore,
   });
-  startLegacyAppWhenReady();
+  currentAppServices().start();
 });
 
 onUnmounted(() => {

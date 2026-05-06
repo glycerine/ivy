@@ -1,6 +1,6 @@
 const commands = new Map();
 
-let fallbackTargetGetter = () => globalThis.window && globalThis.window.ivyApp;
+let fallbackTargetGetter = null;
 
 function assertCommandName(name) {
   if (typeof name !== 'string' || name.trim() === '') {
@@ -19,12 +19,14 @@ function assertCommandFunction(fn) {
 export function configureCommandRegistry({ fallbackTarget } = {}) {
   if (typeof fallbackTarget === 'function') {
     fallbackTargetGetter = fallbackTarget;
+  } else if (fallbackTarget === null) {
+    fallbackTargetGetter = null;
   }
 }
 
 export function resetCommandRegistry() {
   commands.clear();
-  fallbackTargetGetter = () => globalThis.window && globalThis.window.ivyApp;
+  fallbackTargetGetter = null;
 }
 
 export function registerCommand(name, fn) {

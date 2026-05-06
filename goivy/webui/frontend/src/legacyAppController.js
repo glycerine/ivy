@@ -7,9 +7,9 @@
  */
 
 import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './services/graphRuntime.js';
-import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './legacyRuntimeGlobals.js';
+import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './services/runtimeShims.js';
 import { createIvyPersist } from './services/persistenceService.js';
-import { registerCommand, registerControllerCommands } from './services/commandRegistry.js';
+import { registerLegacyControllerCommands } from './services/appCommands.js';
 import {
     connectSessionEvents,
     createLegacyApi,
@@ -5225,21 +5225,9 @@ function startIvyApp() {
         return window.ivyApp;
     }
     window.ivyApp = new IvyApp();
-    var unregisterControllerCommands = registerControllerCommands(window.ivyApp);
-    var fileCommandUnregisters = [
-        registerCommand('file.load', window.ivyApp.chooseAndLoadModelFile.bind(window.ivyApp)),
-        registerCommand('file.save', window.ivyApp.save.bind(window.ivyApp)),
-        registerCommand('file.saveAs', window.ivyApp.saveAs.bind(window.ivyApp)),
-        registerCommand('file.download', window.ivyApp.downloadModel.bind(window.ivyApp)),
-        registerCommand('file.close', window.ivyApp.closeCurrentFile.bind(window.ivyApp)),
-        registerCommand('file.new', window.ivyApp.newModel.bind(window.ivyApp)),
-        registerCommand('file.reopenLast', window.ivyApp.reopenLastFile.bind(window.ivyApp)),
-    ];
+    var unregisterControllerCommands = registerLegacyControllerCommands(window.ivyApp);
     window.ivyApp._unregisterCommands = function () {
         unregisterControllerCommands();
-        for (var i = 0; i < fileCommandUnregisters.length; i++) {
-            fileCommandUnregisters[i]();
-        }
     };
     window.ivyApp.init();
     return window.ivyApp;

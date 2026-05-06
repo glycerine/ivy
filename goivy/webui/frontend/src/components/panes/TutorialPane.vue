@@ -27,7 +27,7 @@
 
 <script setup>
 import { useLayoutStore } from '../../stores/layoutStore.js';
-import { callApp, hasAppMethod, runCommand } from '../../services/uiCommandService.js';
+import { hasUiCommand, runCommand, runUiCommand } from '../../services/uiCommandService.js';
 
 const layoutStore = useLayoutStore();
 
@@ -37,8 +37,8 @@ function handleUrlKeydown(event) {
 }
 
 function closeTutorial() {
-  if (hasAppMethod('toggleTutorial')) {
-    callApp('toggleTutorial', true);
+  if (hasUiCommand('toggleTutorial')) {
+    runUiCommand('toggleTutorial', true);
     return;
   }
   layoutStore.setTutorialVisible(false);

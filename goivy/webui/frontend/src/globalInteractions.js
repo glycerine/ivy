@@ -1,4 +1,4 @@
-import { callApp } from './services/uiCommandService.js';
+import { runUiCommand } from './services/uiCommandService.js';
 
 export function installGlobalInteractions({
   doc = globalThis.document,
@@ -30,12 +30,12 @@ export function installGlobalInteractions({
     }
     if ((event.ctrlKey || event.metaKey) && key === 's') {
       event.preventDefault();
-      callApp('file.save');
+      runUiCommand('file.save');
       return;
     }
     if ((event.ctrlKey || event.metaKey) && key === 'z') {
       event.preventDefault();
-      callApp('doUndo');
+      runUiCommand('doUndo');
     }
   };
 

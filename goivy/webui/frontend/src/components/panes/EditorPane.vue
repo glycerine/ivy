@@ -1,14 +1,14 @@
 <script setup>
 import { useEditorStore } from '../../stores/editorStore.js';
 import { useLayoutStore } from '../../stores/layoutStore.js';
-import { callApp, runCommand } from '../../services/uiCommandService.js';
+import { runCommand, runUiCommand } from '../../services/uiCommandService.js';
 
 const editorStore = useEditorStore();
 const layoutStore = useLayoutStore();
 
 function setKeymap(keymap) {
   editorStore.setKeymap(keymap);
-  callApp('setEditorKeymap', keymap);
+  runUiCommand('setEditorKeymap', keymap);
 }
 </script>
 
@@ -20,12 +20,12 @@ function setKeymap(keymap) {
         <span id="model-editor-label" class="editor-path" :title="`Editing: ${editorStore.label}`">{{ editorStore.label }}</span>
       </div>
       <div class="panel-header-actions">
-        <button id="file-close-current" class="editor-close-btn" title="Close current file" @click="runCommand($event, () => callApp('file.close'))">x</button>
+        <button id="file-close-current" class="editor-close-btn" title="Close current file" @click="runCommand($event, () => runUiCommand('file.close'))">x</button>
         <button
           id="file-reopen-last"
           class="reopen-last-btn"
           v-show="editorStore.reopenLastVisible"
-          @click="runCommand($event, () => callApp('file.reopenLast'))"
+          @click="runCommand($event, () => runUiCommand('file.reopenLast'))"
         >
           {{ editorStore.reopenLastLabel }}
         </button>

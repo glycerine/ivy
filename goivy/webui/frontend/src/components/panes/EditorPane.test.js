@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import EditorPane from './EditorPane.vue';
 import { useEditorStore } from '../../stores/editorStore.js';
+import { registerCommand, resetCommandRegistry } from '../../services/commandRegistry.js';
 
 describe('EditorPane', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
   it('renders the save sheen from editor save state', () => {
@@ -24,7 +26,7 @@ describe('EditorPane', () => {
 
   it('updates the keymap store and CodeMirror bridge from radios', async () => {
     const setEditorKeymap = vi.fn();
-    window.ivyApp = { setEditorKeymap };
+    registerCommand('setEditorKeymap', setEditorKeymap);
     const editor = useEditorStore();
     const wrapper = mount(EditorPane);
 

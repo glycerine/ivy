@@ -3,17 +3,20 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import TabBar from './TabBar.vue';
 import { useSheetStore } from '../../stores/sheetStore.js';
+import { registerCommand, resetCommandRegistry } from '../../services/commandRegistry.js';
 
 describe('TabBar', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
-  it('routes tab activation and close clicks through the app bridge', async () => {
+  it('routes tab activation and close clicks through registered commands', async () => {
     const switchSheet = vi.fn();
     const removeSheet = vi.fn();
-    window.ivyApp = { switchSheet, removeSheet };
+    registerCommand('switchSheet', switchSheet);
+    registerCommand('removeSheet', removeSheet);
     const sheets = useSheetStore();
     sheets.upsertTab({ id: 'sheet-2', label: 'Trace', closable: true });
 

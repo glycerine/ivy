@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createIvyPersist } from './legacyPersist.js';
+import { createIvyPersist } from './persistenceService.js';
 
 afterEach(() => {
   localStorage.clear();
@@ -29,7 +29,7 @@ function makeApp(overrides = {}) {
   };
 }
 
-describe('legacyPersist', () => {
+describe('persistenceService', () => {
   it('saves and lists sessions through the Vue-bundled IvyPersist shim', () => {
     window.__ivyVueBridge = {
       getMode: vi.fn(() => 'bounded'),

@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import WorkspaceShell from './WorkspaceShell.vue';
 import { useLayoutStore } from '../stores/layoutStore.js';
+import { installAppServices, resetAppServicesForTests } from '../services/appServices.js';
 
 function setSize(el, { width, height } = {}) {
   if (width != null) {
@@ -23,16 +24,17 @@ function mouse(type, { x = 0, y = 0 } = {}) {
 }
 
 describe('WorkspaceShell resizers', () => {
+  let refreshLayout;
+
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = {
-      _refreshGraphsAndEditorLayout: vi.fn(),
-    };
+    refreshLayout = vi.fn();
+    installAppServices({ refreshLayout });
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
-    window.ivyApp = undefined;
+    resetAppServicesForTests();
   });
 
   it('owns the editor divider through the layout store', () => {
@@ -53,7 +55,7 @@ describe('WorkspaceShell resizers', () => {
     expect(sheetArea.style.flex).toBe('1 1 auto');
     expect(layout.editorWidth).toBe(580);
     expect(editorPanel.style.flex).toBe('');
-    expect(window.ivyApp._refreshGraphsAndEditorLayout).toHaveBeenCalled();
+    expect(refreshLayout).toHaveBeenCalled();
   });
 
   it('owns the tutorial divider through the layout store', () => {

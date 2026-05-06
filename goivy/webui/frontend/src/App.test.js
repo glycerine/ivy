@@ -2,13 +2,18 @@ import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia } from 'pinia';
 import App from './App.vue';
+import { installAppServices, resetAppServicesForTests } from './services/appServices.js';
 
 describe('Vue app shell', () => {
+  let startServices;
+
   beforeEach(() => {
-    window.startIvyApp = vi.fn();
+    resetAppServicesForTests();
+    startServices = vi.fn(async () => undefined);
+    installAppServices({ start: startServices });
   });
 
-  it('renders the four user-facing column headers and starts the legacy adapter', async () => {
+  it('renders the four user-facing column headers and starts app services', async () => {
     const wrapper = mount(App, {
       global: {
         plugins: [createPinia()],
@@ -24,7 +29,7 @@ describe('Vue app shell', () => {
     expect(wrapper.text()).toContain('Editing:');
     expect(document.getElementById('model-editor')).not.toBeNull();
     expect(document.getElementById('sheet-1').classList.contains('active')).toBe(true);
-    expect(window.startIvyApp).toHaveBeenCalledTimes(1);
+    expect(startServices).toHaveBeenCalledTimes(1);
 
     wrapper.unmount();
   });

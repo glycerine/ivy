@@ -11,6 +11,7 @@ import {
 } from './commandRegistry.js';
 
 afterEach(() => {
+  delete window.ivyApp;
   resetCommandRegistry();
 });
 
@@ -38,6 +39,16 @@ describe('commandRegistry', () => {
     expect(hasCommand('save')).toBe(true);
     expect(runCommand('save')).toBe('saved');
     expect(legacy.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not use window.ivyApp as an implicit production fallback', () => {
+    window.ivyApp = {
+      save: vi.fn(() => 'saved'),
+    };
+
+    expect(hasCommand('save')).toBe(false);
+    expect(runCommand('save')).toBeUndefined();
+    expect(window.ivyApp.save).not.toHaveBeenCalled();
   });
 
   it('registers controller methods and status updates as commands', () => {

@@ -1,11 +1,11 @@
 <script setup>
-import { callApp, setAppStatus } from '../services/uiCommandService.js';
+import { runUiCommand, setAppStatus } from '../services/uiCommandService.js';
 
 async function handleModelFileChange(event) {
   const input = event.target;
   const file = input.files && input.files[0];
   if (file) {
-    await callApp('loadFile', file);
+    await runUiCommand('loadFile', file);
   }
   input.value = '';
 }
@@ -14,7 +14,7 @@ async function handleEventTraceFileChange(event) {
   const input = event.target;
   const file = input.files && input.files[0];
   if (file) {
-    await callApp('loadEventTraceFile', file);
+    await runUiCommand('loadEventTraceFile', file);
   }
   input.value = '';
 }
@@ -24,7 +24,7 @@ async function handleAnalysisStateFileChange(event) {
   const file = input.files && input.files[0];
   if (file) {
     try {
-      await callApp('loadAnalysisStateFile', file);
+      await runUiCommand('loadAnalysisStateFile', file);
     } catch (ex) {
       setAppStatus(`Load analysis state failed: ${ex.message}`, 'error');
     }

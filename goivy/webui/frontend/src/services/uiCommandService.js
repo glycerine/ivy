@@ -9,15 +9,11 @@ export function runCommand(event, callback) {
   if (typeof callback === 'function') callback();
 }
 
-export function ivyApp() {
-  return globalThis.window && globalThis.window.ivyApp;
-}
-
-export function callApp(method, ...args) {
+export function runUiCommand(method, ...args) {
   return runRegisteredCommand(method, ...args);
 }
 
-export function hasAppMethod(method) {
+export function hasUiCommand(method) {
   return hasCommand(method);
 }
 

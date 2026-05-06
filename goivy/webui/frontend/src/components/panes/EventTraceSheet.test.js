@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import EventTraceSheet from './EventTraceSheet.vue';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
+import { registerCommand, resetCommandRegistry } from '../../services/commandRegistry.js';
 
 describe('EventTraceSheet', () => {
   let pinia;
@@ -11,10 +12,12 @@ describe('EventTraceSheet', () => {
     pinia = createPinia();
     setActivePinia(pinia);
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
   afterEach(() => {
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
   it('reflects the selected pattern index from Pinia in the listbox', async () => {
@@ -40,17 +43,17 @@ describe('EventTraceSheet', () => {
     expect(traces.selectedPattern('events-1')).toBe('root(a)');
   });
 
-  it('routes event row selection and expansion through the app bridge when present', async () => {
+  it('routes event row selection and expansion through registered commands when present', async () => {
     const traces = useEventTraceStore();
     traces.upsertSheet({
       id: 'events-1',
       events: [{ address: '0', text: 'root(a)', subs: [{ address: '0/0', text: 'child(a)' }] }],
       patterns: [],
     });
-    window.ivyApp = {
-      selectEventTraceRow: vi.fn(),
-      toggleEventTraceNode: vi.fn(),
-    };
+    const selectEventTraceRow = vi.fn();
+    const toggleEventTraceNode = vi.fn();
+    registerCommand('selectEventTraceRow', selectEventTraceRow);
+    registerCommand('toggleEventTraceNode', toggleEventTraceNode);
 
     const wrapper = mount(EventTraceSheet, {
       props: { sheetId: 'events-1' },
@@ -60,8 +63,8 @@ describe('EventTraceSheet', () => {
     await wrapper.find('[data-event-address="0"]').trigger('click');
     await wrapper.find('[data-event-toggle="0"]').trigger('click');
 
-    expect(window.ivyApp.selectEventTraceRow).toHaveBeenCalledWith('events-1', '0');
-    expect(window.ivyApp.toggleEventTraceNode).toHaveBeenCalledWith('events-1', '0');
+    expect(selectEventTraceRow).toHaveBeenCalledWith('events-1', '0');
+    expect(toggleEventTraceNode).toHaveBeenCalledWith('events-1', '0');
     expect(traces.sheetById('events-1').selectedEventAddress).toBe('');
   });
 

@@ -1,7 +1,5 @@
-import { IvyHttpClient } from './api/ivyHttpClient.js';
-import { HostedGoEngine, LegacyApiAdapter } from './engines/index.js';
-import { installLegacyGraphGlobals } from './legacyGraph.js';
-import { createIvyPersist } from './legacyPersist.js';
+import { IvyHttpClient } from '../api/ivyHttpClient.js';
+import { HostedGoEngine, LegacyApiAdapter } from '../engines/index.js';
 
 export class IvyAPIShim extends LegacyApiAdapter {
   constructor(baseURL = '') {
@@ -89,12 +87,4 @@ export class IvyControlsShim {
       bridge.hideLoading();
     }
   }
-}
-
-export function installLegacyRuntimeGlobals(win = globalThis.window) {
-  if (!win) return;
-  installLegacyGraphGlobals(win);
-  if (!win.IvyAPI) win.IvyAPI = IvyAPIShim;
-  if (!win.IvyControls) win.IvyControls = IvyControlsShim;
-  if (!win.IvyPersist) win.IvyPersist = createIvyPersist(win);
 }

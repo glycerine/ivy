@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ARG_STYLE, IvyGraph, installLegacyGraphGlobals } from './legacyGraph.js';
+import { ARG_STYLE, IvyGraph, installLegacyGraphGlobals } from './graphRuntime.js';
 
 function makeFakeCy() {
   const nodes = [];
@@ -60,7 +60,7 @@ afterEach(() => {
   delete window.PROOF_STYLE;
 });
 
-describe('legacyGraph', () => {
+describe('graphRuntime', () => {
   it('installs graph globals for the remaining legacy app script', () => {
     installLegacyGraphGlobals(window);
 
@@ -95,4 +95,3 @@ describe('legacyGraph', () => {
     expect(cy.fit).toHaveBeenCalledWith(undefined, 30);
   });
 });
-
