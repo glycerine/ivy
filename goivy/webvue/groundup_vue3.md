@@ -2,7 +2,7 @@
 
 ## Intent
 
-Build `goivy/webui2` as a fresh Vue 3 application. Treat `goivy/webui` as a
+Build `goivy/webvue` as a fresh Vue 3 application. Treat `goivy/webui` as a
 fixed reference implementation and behavior oracle, not as an architecture to
 continue.
 
@@ -12,7 +12,7 @@ web UI whose architecture is Vue-native from day one.
 ## Non-Negotiables
 
 - `goivy/webui/` is immutable reference material.
-- All new implementation work happens in `goivy/webui2/`.
+- All new implementation work happens in `goivy/webvue/`.
 - No `ivyRuntime`, `IvyApp`, app-controller, bridge-controller, or
   controller-shaped object.
 - No single object that owns editor, API, graphs, files, sheets, dialogs,
@@ -33,7 +33,7 @@ web UI whose architecture is Vue-native from day one.
 
 ## Definition Of Done
 
-`webui2` is complete when:
+`webvue` is complete when:
 
 - The app is served by Go and built with Vue 3.
 - The first screen is the real Ivy workspace, not a landing page.
@@ -283,7 +283,7 @@ Components should not contain backend endpoint knowledge.
 ## Directory Plan
 
 ```text
-goivy/webui2/
+goivy/webvue/
   frontend/
     package.json
     vite.config.mjs
@@ -357,17 +357,17 @@ rewrite it as a native service.
 
 ### Phase 0: Scaffold
 
-1. Create `webui2/frontend/package.json`, Vite build config, Vitest config.
-2. Create `webui2/static/index.html` loading `/static/dist/ivyweb2.js`.
+1. Create `webvue/frontend/package.json`, Vite build config, Vitest config.
+2. Create `webvue/static/index.html` loading `/static/dist/ivywebvue.js`.
 3. Copy static favicon/tutorial assets.
-4. Add a minimal Go serving path for webui2 or document the command that serves
+4. Add a minimal Go serving path for webvue or document the command that serves
    it during development.
 5. Build an empty Vue app that renders the workspace shell.
 
 Gate:
 
-- `npm --prefix goivy/webui2/frontend run build`
-- browser loads `webui2` shell with no console errors
+- `npm --prefix goivy/webvue/frontend run build`
+- browser loads `webvue` shell with no console errors
 
 ### Phase 1: Engine Boundary
 
@@ -538,7 +538,7 @@ Gate:
 
 ### Phase 10: Diagnostics And Tests
 
-1. Add `window.__ivyDiagnostics2` only for tests/dev.
+1. Add `window.__ivyWebvueDiagnostics` only for tests/dev.
 2. Expose narrow helpers:
    - `sessionId()`
    - `runCommand(name, ...args)`
@@ -637,4 +637,4 @@ Add these early and keep them green:
 - No service file over 700 lines without an explicit exception in this plan.
 - No component imports backend engine modules directly.
 
-These ratchets are how `webui2` avoids becoming another renamed controller.
+These ratchets are how `webvue` avoids becoming another renamed controller.
