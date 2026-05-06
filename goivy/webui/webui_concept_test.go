@@ -1293,6 +1293,33 @@ func TestGetStructureConceptDomain(t *testing.T) {
 	}
 }
 
+func TestGetStructureConceptDomainListsConcreteLabelsAndRelations(t *testing.T) {
+	S := mkSort("S")
+	s0 := mkConst("0", S)
+	rel := mkConst("r", mkFuncSort(S, S, goivy.Boolean))
+	witness := mkConst("@X", S)
+	universe := map[string][]*goivy.Const{"S": {s0}}
+	state := mkAnd(mkEq(witness, s0))
+
+	cd := GetStructureConceptDomain(state, universe, map[string]*goivy.Const{"r": rel})
+	labels := cd.Concepts.GetList("node_labels")
+	if !stringSliceContains(labels, "="+UniverseElementToConceptName(s0)) {
+		t.Fatalf("node_labels = %v, missing numeric concrete label", labels)
+	}
+	if !stringSliceContains(labels, "=@X") {
+		t.Fatalf("node_labels = %v, missing CTI witness constant", labels)
+	}
+	if !stringSliceContains(cd.Concepts.GetList("edges"), "r") {
+		t.Fatalf("edges = %v, missing binary relation r", cd.Concepts.GetList("edges"))
+	}
+
+	av := GetStructureConceptAbstractValue(state, universe)
+	nodeName := UniverseElementToConceptName(s0)
+	if !av["node_label|node_necessarily|"+nodeName+"|=@X"] {
+		t.Fatalf("abstract value did not attach @X to concrete node %q: %v", nodeName, av)
+	}
+}
+
 func TestGetStructureConceptAbstractValue(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)

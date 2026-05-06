@@ -133,11 +133,16 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 
 	nodes := orderedConceptNodes(cs, checks)
 
-	// Build a map of sort name -> color index for per-sort coloring
+	// Build a map of concrete node -> color for per-sort coloring
 	// (matches Python tk_graph_ui.py choose_colors).
 	sortColorMap := make(map[string]string)
-	for i, sortName := range nodes {
-		sortColorMap[sortName] = goivy.SortColors[(i+1)%len(goivy.SortColors)]
+	clusterColorMap := make(map[string]string)
+	for _, sortName := range nodes {
+		cluster := conceptCluster(cs.Domain.Concepts[sortName], sortName)
+		if _, ok := clusterColorMap[cluster]; !ok {
+			clusterColorMap[cluster] = goivy.SortColors[(len(clusterColorMap)+1)%len(goivy.SortColors)]
+		}
+		sortColorMap[sortName] = clusterColorMap[cluster]
 	}
 
 	// Build node label lines: for each sort node, collect applicable unary relations.
@@ -160,12 +165,12 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 						if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelNecessarily) {
 							continue
 						}
-						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], labelName)
+						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], conceptDisplayName(labelName))
 					} else if cs.AbstractValue[nnKey] {
 						if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelNecessarilyNot) {
 							continue
 						}
-						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], "~"+labelName)
+						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], "~"+conceptDisplayName(labelName))
 					} else if checks != nil && !checks.NodeLabelVisible(labelName, NodeLabelMaybe) {
 						continue
 					}
@@ -187,23 +192,23 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 			continue
 		}
 		cls := conceptNodeClass(cs, sortName)
-		labelParts := []string{sortName}
+		labelParts := []string{conceptNodeTopLabel(c, sortName)}
 		labelParts = append(labelParts, nodeLabelLines[sortName]...)
 		label := strings.Join(labelParts, "\n")
 		shortInfo := sortName
 		longInfo := c.Formula
 		g.AddNodeWithColor(sortName, label, []string{cls}, shortInfo, longInfo, nil, "octagon", sortColorMap[sortName])
 		g.Elements[len(g.Elements)-1].Data["cluster"] = conceptCluster(c, sortName)
+		g.Elements[len(g.Elements)-1].Data["display_label"] = conceptNodeTopLabel(c, sortName)
 	}
 
-	// Add binary relations as edges between sort nodes.
-	for _, edgeName := range cs.Domain.Edges {
+	// Add binary relations as edges between the concrete node tuples reported
+	// by abstraction. This matters for CTI structures where a sort is split
+	// into multiple witness nodes.
+	for _, tuple := range edgeTuples {
+		edgeName, sourceSortName, targetSortName := tuple[0], tuple[1], tuple[2]
 		c := cs.Domain.Concepts[edgeName]
 		if c == nil || len(c.Sorts) < 2 {
-			continue
-		}
-		sourceSortName, targetSortName := conceptEdgeEndpoints(cs, nodes, c)
-		if sourceSortName == "" || targetSortName == "" {
 			continue
 		}
 		if hiddenByTransitive[[3]string{edgeName, sourceSortName, targetSortName}] {
@@ -215,21 +220,12 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		if _, ok := g.NodeID[targetSortName]; !ok {
 			continue
 		}
-		edgeCls := "edge_unknown"
-		if cs.AbstractValue != nil {
-			noneKey := fmt.Sprintf("edge_info|none_to_none|%s|%s|%s", edgeName, sourceSortName, targetSortName)
-			allKey := fmt.Sprintf("edge_info|all_to_all|%s|%s|%s", edgeName, sourceSortName, targetSortName)
-			if cs.AbstractValue[noneKey] {
-				edgeCls = "none_to_none"
-			} else if cs.AbstractValue[allKey] {
-				edgeCls = "all_to_all"
-			}
-		}
+		edgeCls := conceptEdgeClassForTuple(cs, edgeName, sourceSortName, targetSortName)
 		if checks != nil && !checks.EdgeVisible(edgeName, edgeCls) {
 			continue
 		}
 		shortInfo := fmt.Sprintf("%s(%s, %s)", edgeName, sourceSortName, targetSortName)
-		g.AddEdge(edgeName, sourceSortName, targetSortName, edgeName, []string{edgeCls}, shortInfo, "")
+		g.AddEdge(edgeName, sourceSortName, targetSortName, conceptDisplayName(edgeName), []string{edgeCls}, shortInfo, "")
 	}
 
 	// Also add any explicit combiners.
@@ -293,6 +289,22 @@ func renderConceptGraphEdgeTuples(cs *ConceptSession, nodes []string) [][3]strin
 		seen[tuple] = true
 		tuples = append(tuples, tuple)
 	}
+	nodeSet := make(map[string]bool, len(nodes))
+	for _, node := range nodes {
+		nodeSet[node] = true
+	}
+	if cs.AbstractValue != nil {
+		for key := range cs.AbstractValue {
+			parts := strings.Split(key, "|")
+			if len(parts) != 5 || parts[0] != "edge_info" {
+				continue
+			}
+			if !nodeSet[parts[3]] || !nodeSet[parts[4]] {
+				continue
+			}
+			add(parts[2], parts[3], parts[4])
+		}
+	}
 	for _, edgeName := range cs.Domain.Edges {
 		c := cs.Domain.Concepts[edgeName]
 		if c == nil || len(c.Sorts) < 2 {
@@ -344,6 +356,23 @@ func conceptCluster(c *Concept, fallback string) string {
 	return fallback
 }
 
+func conceptNodeTopLabel(c *Concept, fallback string) string {
+	if c != nil && len(c.Sorts) > 0 && c.Sorts[0] != "" {
+		return c.Sorts[0]
+	}
+	return fallback
+}
+
+func conceptDisplayName(name string) string {
+	if strings.HasPrefix(name, "=") {
+		body := strings.TrimPrefix(name, "=")
+		if idx := strings.LastIndex(body, ":"); idx > 0 {
+			return "=" + body[:idx]
+		}
+	}
+	return name
+}
+
 // conceptNodeClass determines the CSS class for a concept node.
 func conceptNodeClass(cs *ConceptSession, name string) string {
 	av := cs.AbstractValue
@@ -376,6 +405,23 @@ func conceptEdgeClass(cs *ConceptSession, comb *ConceptCombiner) string {
 	}
 	key := func(kind string) string {
 		return fmt.Sprintf("edge_info|%s|%s|%s|%s", kind, comb.Label, comb.Source, comb.Target)
+	}
+	if av[key("none_to_none")] {
+		return "none_to_none"
+	}
+	if av[key("all_to_all")] {
+		return "all_to_all"
+	}
+	return "edge_unknown"
+}
+
+func conceptEdgeClassForTuple(cs *ConceptSession, edgeName, source, target string) string {
+	av := cs.AbstractValue
+	if av == nil {
+		return "edge_unknown"
+	}
+	key := func(kind string) string {
+		return fmt.Sprintf("edge_info|%s|%s|%s|%s", kind, edgeName, source, target)
 	}
 	if av[key("none_to_none")] {
 		return "none_to_none"

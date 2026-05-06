@@ -80,6 +80,20 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if len(s.SimpleSess.AbstractValue) == 0 {
 		t.Fatalf("concept graph abstract value was not recomputed for the CTI predecessor")
 	}
+	if got := countSimpleConceptNodesOfSort(s.SimpleSess, "client"); got < 2 {
+		t.Fatalf("CTI concept graph has %d client nodes, want at least 2 concrete witnesses", got)
+	}
+	if got := countSimpleConceptNodesOfSort(s.SimpleSess, "server"); got < 1 {
+		t.Fatalf("CTI concept graph has %d server nodes, want at least 1 concrete witness", got)
+	}
+	for _, want := range []string{"=@X", "=@Y", "=@Z", "link(X,Y)", "semaphore"} {
+		if !stringSliceContains(s.SimpleSess.RelationNames(), want) {
+			t.Fatalf("CTI relation rows = %v, missing %q", s.SimpleSess.RelationNames(), want)
+		}
+	}
+	if !hasConcreteAllToAllEdge(s.SimpleSess, "link") {
+		t.Fatalf("CTI concept graph did not expose a concrete all_to_all link edge; abstract value=%v", s.SimpleSess.AbstractValue)
+	}
 
 	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{"target": "state_1"})
 	if err != nil {
@@ -99,6 +113,41 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if len(elements) == 0 {
 		t.Fatal("sub_arg elements empty")
 	}
+}
+
+func countSimpleConceptNodesOfSort(cs *ConceptSession, sortName string) int {
+	if cs == nil || cs.Domain == nil {
+		return 0
+	}
+	count := 0
+	for _, node := range cs.Domain.Nodes {
+		c := cs.Domain.Concepts[node]
+		if c != nil && len(c.Sorts) > 0 && c.Sorts[0] == sortName {
+			count++
+		}
+	}
+	return count
+}
+
+func hasConcreteAllToAllEdge(cs *ConceptSession, edgeName string) bool {
+	if cs == nil || cs.Domain == nil {
+		return false
+	}
+	nodeSet := make(map[string]bool)
+	for _, node := range cs.Domain.Nodes {
+		nodeSet[node] = true
+	}
+	prefix := "edge_info|all_to_all|" + edgeName + "|"
+	for key, value := range cs.AbstractValue {
+		if !value || !strings.HasPrefix(key, prefix) {
+			continue
+		}
+		parts := strings.Split(key, "|")
+		if len(parts) == 5 && nodeSet[parts[3]] && nodeSet[parts[4]] {
+			return true
+		}
+	}
+	return false
 }
 
 func TestArgStepInRegistersIndependentAnalysisSheet(t *testing.T) {

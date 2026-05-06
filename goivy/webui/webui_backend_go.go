@@ -210,24 +210,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			nodes = append(nodes, d.Nodes...)
 			edges = append(edges, d.Edges...)
 			nodeLabels = append(nodeLabels, d.NodeLabels...)
-			for name, c := range d.Concepts {
-				if c != nil && c.Arity >= 1 {
-					isSort := false
-					for _, n := range d.Nodes {
-						if n == name {
-							isSort = true
-							break
-						}
-					}
-					if !isSort {
-						if len(c.Variables) > 0 {
-							relations = append(relations, name+"("+strings.Join(c.Variables, ",")+")")
-						} else {
-							relations = append(relations, name)
-						}
-					}
-				}
-			}
+			relations = append(relations, sess.SimpleSess.RelationNames()...)
 			for _, lbl := range d.NodeLabels {
 				c := d.Concepts[lbl]
 				if c != nil && len(c.Sorts) > 0 {

@@ -438,6 +438,43 @@ func TestRenderConceptGraphDoesNotReduceWhenTransitiveDisabled(t *testing.T) {
 	}
 }
 
+func TestRenderConceptGraphUsesConcreteEdgeTuples(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Nodes = []string{"0:client", "1:client", "0:server"}
+	cs.Domain.Concepts["0:client"] = &Concept{Name: "0:client", Formula: "X = 0:client", Sorts: []string{"client"}, Arity: 1}
+	cs.Domain.Concepts["1:client"] = &Concept{Name: "1:client", Formula: "X = 1:client", Sorts: []string{"client"}, Arity: 1}
+	cs.Domain.Concepts["0:server"] = &Concept{Name: "0:server", Formula: "X = 0:server", Sorts: []string{"server"}, Arity: 1}
+	cs.Domain.Edges = []string{"link"}
+	cs.Domain.Concepts["link"] = &Concept{Name: "link", Variables: []string{"X", "Y"}, Formula: "link(X,Y)", Sorts: []string{"client", "server"}, Arity: 2}
+	cs.AbstractValue = map[string]bool{
+		"edge_info|all_to_all|link|1:client|0:server": true,
+	}
+	checks := NewDisplayCheckboxes()
+	checks.SetEdgeCheckbox("link", EdgeDisplayAllToAll, true)
+
+	cy := RenderConceptGraph(cs, checks)
+	var pairs []string
+	var clientLabels []string
+	for _, el := range cy.Elements {
+		switch el.Group {
+		case "nodes":
+			if el.Data["cluster"] == "client" {
+				clientLabels = append(clientLabels, el.Data["label"].(string))
+			}
+		case "edges":
+			pairs = append(pairs, el.Data["source_obj"].(string)+"->"+el.Data["target_obj"].(string))
+		}
+	}
+	if strings.Join(pairs, ",") != "1:client->0:server" {
+		t.Fatalf("edge pairs = %v, want concrete CTI tuple", pairs)
+	}
+	for _, label := range clientLabels {
+		if label != "client" {
+			t.Fatalf("client node label = %q, want sort label without witness id", label)
+		}
+	}
+}
+
 func TestConceptShapeOctagon(t *testing.T) {
 	// Python ivy_graph.py get_shape always returns 'octagon'
 	if s := conceptShape("Node"); s != "octagon" {

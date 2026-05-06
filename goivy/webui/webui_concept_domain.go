@@ -1485,6 +1485,7 @@ func GetStructureConceptDomain(
 
 	concepts.SetList("nodes", nil)
 	concepts.SetList("node_labels", nil)
+	concepts.SetList("edges", nil)
 
 	// Add equality concept.
 	T := goivy.NewTopSort()
@@ -1510,6 +1511,10 @@ func GetStructureConceptDomain(
 		eq, _ := goivy.NewEq(X, uc)
 		concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
 		concepts.AppendToList("nodes", name)
+
+		labelName := "=" + name
+		concepts.SetConcept(labelName, MustCDConcept(labelName, []*goivy.LogicVariable{X}, eq))
+		concepts.AppendToList("node_labels", labelName)
 	}
 
 	// Collect all symbols from state formula and signature.
@@ -1548,6 +1553,7 @@ func GetStructureConceptDomain(
 			eq, _ := goivy.NewEq(X, c)
 			name := "=" + c.Name
 			concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+			concepts.AppendToList("node_labels", name)
 		} else if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
 			if goivy.SortEqual(fs.Range(), goivy.Boolean) {
 				// Relation
@@ -1556,11 +1562,13 @@ func GetStructureConceptDomain(
 					X := webuiMustVar("X", fs.Domain()[0])
 					app, _ := goivy.NewApply(c, X)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X}, app))
+					concepts.AppendToList("node_labels", c.Name)
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
 					app, _ := goivy.NewApply(c, X, Y)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app))
+					concepts.AppendToList("edges", c.Name)
 				case 3:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
@@ -1577,6 +1585,7 @@ func GetStructureConceptDomain(
 					app, _ := goivy.NewApply(c, X)
 					eq, _ := goivy.NewEq(app, Y)
 					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, eq))
+					concepts.AppendToList("edges", c.Name)
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
@@ -1617,6 +1626,8 @@ func GetStructureConceptAbstractValue(
 		result[TagString(Tag{"node_info", "none", name})] = false
 		result[TagString(Tag{"node_info", "at_least_one", name})] = true
 		result[TagString(Tag{"node_info", "at_most_one", name})] = true
+		result[TagString(Tag{"node_label", "node_necessarily", name, "=" + name})] = true
+		result[TagString(Tag{"node_label", "node_necessarily_not", name, "=" + name})] = false
 	}
 
 	// Analyze state formula literals.
@@ -1624,56 +1635,126 @@ func GetStructureConceptAbstractValue(
 	if !ok {
 		return result
 	}
+
+	// First learn aliases such as @X = 1:client. Relation facts in CTIs are
+	// often written with these witness constants instead of raw universe
+	// elements.
 	for _, lit := range andNode.Terms {
 		if _, ok := lit.(*goivy.ForAll); ok {
 			continue // universe constraint
 		}
-
-		polarity := true
-		innerLit := lit
-		if notNode, ok := lit.(*goivy.LogicNot); ok {
-			polarity = false
-			innerLit = notNode.Body
+		polarity, innerLit := structureLiteralPolarity(lit)
+		if l, ok := innerLit.(*goivy.Eq); ok {
+			markConstEqualityLabel(result, nodes, l.T1, l.T2, polarity)
+			markConstEqualityLabel(result, nodes, l.T2, l.T1, polarity)
 		}
+	}
+
+	for _, lit := range andNode.Terms {
+		if _, ok := lit.(*goivy.ForAll); ok {
+			continue // universe constraint
+		}
+		polarity, innerLit := structureLiteralPolarity(lit)
 
 		switch l := innerLit.(type) {
 		case *goivy.Apply:
-			if fs, ok := l.Func.(*goivy.Const); ok {
-				fSort, ok2 := fs.CSort.(*goivy.LogicFunctionSort)
-				if !ok2 {
-					continue
-				}
-				if fSort.Arity() == 1 {
-					if t0, ok := l.Terms[0].(*goivy.Const); ok {
-						if nodeName, ok := nodes[goivy.Key(t0)]; ok {
-							labelName := fs.Name
-							result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
-							result[TagString(Tag{"node_label", "node_necessarily_not", nodeName, labelName})] = !polarity
-						}
-					}
-				} else if fSort.Arity() == 2 {
-					t0, ok0 := l.Terms[0].(*goivy.Const)
-					t1, ok1 := l.Terms[1].(*goivy.Const)
-					if ok0 && ok1 {
-						sn, sok := nodes[goivy.Key(t0)]
-						tn, tok := nodes[goivy.Key(t1)]
-						if sok && tok {
-							edgeName := fs.Name
-							result[TagString(Tag{"edge_info", "all_to_all", edgeName, sn, tn})] = polarity
-							result[TagString(Tag{"edge_info", "none_to_none", edgeName, sn, tn})] = !polarity
-						}
-					}
-				}
-			}
+			markStructureApplyFact(result, nodes, l, polarity)
 		case *goivy.Eq:
-			// Handle equality literals for functions.
-			if _, ok := l.T1.(*goivy.Const); ok {
-				// Simple constant equality -- skip for now
-			}
+			markBooleanApplyEquality(result, nodes, l.T1, l.T2, polarity)
+			markBooleanApplyEquality(result, nodes, l.T2, l.T1, polarity)
 		}
 	}
 
 	return result
+}
+
+func structureLiteralPolarity(lit goivy.Expr) (bool, goivy.Expr) {
+	if notNode, ok := lit.(*goivy.LogicNot); ok {
+		return false, notNode.Body
+	}
+	return true, lit
+}
+
+func markConstEqualityLabel(result map[string]bool, nodes map[goivy.NodeKey]string, nodeTerm, labelTerm goivy.Expr, polarity bool) {
+	nodeConst, ok := nodeTerm.(*goivy.Const)
+	if !ok {
+		return
+	}
+	nodeName, ok := nodes[goivy.Key(nodeConst)]
+	if !ok {
+		return
+	}
+	labelConst, ok := labelTerm.(*goivy.Const)
+	if !ok {
+		return
+	}
+	if _, isUniverseElement := nodes[goivy.Key(labelConst)]; isUniverseElement {
+		return
+	}
+	labelName := "=" + labelConst.Name
+	result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
+	result[TagString(Tag{"node_label", "node_necessarily_not", nodeName, labelName})] = !polarity
+	if polarity {
+		nodes[goivy.Key(labelConst)] = nodeName
+	}
+}
+
+func markBooleanApplyEquality(result map[string]bool, nodes map[goivy.NodeKey]string, left, right goivy.Expr, polarity bool) bool {
+	app, ok := left.(*goivy.Apply)
+	if !ok {
+		return false
+	}
+	value, ok := structureBooleanValue(right)
+	if !ok {
+		return false
+	}
+	if !polarity {
+		value = !value
+	}
+	markStructureApplyFact(result, nodes, app, value)
+	return true
+}
+
+func structureBooleanValue(expr goivy.Expr) (bool, bool) {
+	if goivy.IsTrue(expr) {
+		return true, true
+	}
+	if goivy.IsFalse(expr) {
+		return false, true
+	}
+	return false, false
+}
+
+func markStructureApplyFact(result map[string]bool, nodes map[goivy.NodeKey]string, app *goivy.Apply, polarity bool) {
+	fs, ok := app.Func.(*goivy.Const)
+	if !ok {
+		return
+	}
+	fSort, ok := fs.CSort.(*goivy.LogicFunctionSort)
+	if !ok {
+		return
+	}
+	if fSort.Arity() == 1 {
+		if t0, ok := app.Terms[0].(*goivy.Const); ok {
+			if nodeName, ok := nodes[goivy.Key(t0)]; ok {
+				labelName := fs.Name
+				result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
+				result[TagString(Tag{"node_label", "node_necessarily_not", nodeName, labelName})] = !polarity
+			}
+		}
+	} else if fSort.Arity() == 2 {
+		t0, ok0 := app.Terms[0].(*goivy.Const)
+		t1, ok1 := app.Terms[1].(*goivy.Const)
+		if ok0 && ok1 {
+			sn, sok := nodes[goivy.Key(t0)]
+			tn, tok := nodes[goivy.Key(t1)]
+			if sok && tok {
+				edgeName := fs.Name
+				result[TagString(Tag{"edge_info", "all_to_all", edgeName, sn, tn})] = polarity
+				result[TagString(Tag{"edge_info", "none_to_none", edgeName, sn, tn})] = !polarity
+			}
+		}
+	}
 }
 
 // GetStructureRenaming generates prettier names for universe constants

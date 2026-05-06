@@ -46,9 +46,17 @@ func NewConceptDomain() *ConceptDomain {
 // RelationIDs returns the concept names that need checkboxes in the state pane.
 // Matches Python's Graph.relation_ids: edges + non-numeral node_labels.
 func (d *ConceptDomain) RelationIDs() []string {
+	defaultLabels := make(map[string]bool)
+	for _, id := range d.DefaultLabelIDs() {
+		defaultLabels[id] = true
+	}
 	var ids []string
 	ids = append(ids, d.Edges...)
-	ids = append(ids, d.NodeLabels...)
+	for _, id := range d.NodeLabels {
+		if !defaultLabels[id] {
+			ids = append(ids, id)
+		}
+	}
 	return ids
 }
 
@@ -67,6 +75,9 @@ func (d *ConceptDomain) DefaultLabelIDs() []string {
 			continue
 		}
 		rhs := strings.TrimSpace(parts[1])
+		if idx := strings.Index(rhs, ":"); idx >= 0 {
+			rhs = rhs[:idx]
+		}
 		if _, err := strconv.Atoi(rhs); err == nil {
 			ids = append(ids, name)
 		}

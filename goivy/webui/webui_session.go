@@ -659,6 +659,7 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 
 		if len(ag.States) > 0 {
 			s.setConceptSessionState(ag.States[0])
+			s.installStructureConceptGraph(ag.States[0])
 		}
 	}
 	if finalCond != nil {
@@ -688,6 +689,158 @@ func (s *Session) setConceptSessionState(state *goivy.State) {
 	s.ConceptSess.Cache = make(map[string]bool)
 	s.ConceptSess.Recompute(nil)
 	s.syncAbstractValue()
+}
+
+func (s *Session) installStructureConceptGraph(state *goivy.State) bool {
+	universe := structureUniverseConsts(state)
+	if len(universe) == 0 {
+		return false
+	}
+	stateFormula := goivy.True
+	if state != nil && state.Clauses != nil {
+		stateFormula = state.Clauses.ToFormula()
+	}
+	cd := GetStructureConceptDomain(stateFormula, universe, s.structureSignatureSymbols())
+	simple := NewConceptSession()
+	simple.Domain = simpleConceptDomainFromCD(cd)
+	simple.AbstractValue = GetStructureConceptAbstractValue(stateFormula, universe)
+	if simple.Domain == nil || len(simple.Domain.Nodes) == 0 {
+		return false
+	}
+	s.SimpleSess = simple
+	if w := s.ensureConceptGraphWidgetLocked(); w != nil && w.G() != nil {
+		w.G().ParentState = state
+	}
+	s.ensureConceptChecksLocked()
+	return true
+}
+
+func (s *Session) structureSignatureSymbols() map[string]*goivy.Const {
+	if s == nil || s.CompiledSig == nil {
+		return nil
+	}
+	symbols := make(map[string]*goivy.Const)
+	for name, entry := range s.CompiledSig.Symbols.All() {
+		if entry == nil || entry.Sort == nil {
+			continue
+		}
+		if sortVal, ok := entry.Sort.(goivy.Sort); ok {
+			symbols[name] = goivy.NewConst(name, sortVal)
+		}
+	}
+	return symbols
+}
+
+func structureUniverseConsts(state *goivy.State) map[string][]*goivy.Const {
+	result := make(map[string][]*goivy.Const)
+	if state == nil || state.Universe == nil {
+		return result
+	}
+	seen := make(map[string]bool)
+	addExpr := func(sortName string, expr goivy.Expr) {
+		c, ok := expr.(*goivy.Const)
+		if !ok || c == nil {
+			return
+		}
+		if sortName == "" && c.CSort != nil {
+			sortName = c.CSort.String()
+		}
+		if sortName == "" {
+			return
+		}
+		key := sortName + "\x00" + c.Name
+		if seen[key] {
+			return
+		}
+		seen[key] = true
+		result[sortName] = append(result[sortName], c)
+	}
+	addConst := func(sortName string, c *goivy.Const) {
+		if c == nil {
+			return
+		}
+		addExpr(sortName, c)
+	}
+	switch universe := state.Universe.(type) {
+	case map[string][]goivy.Expr:
+		for sortName, values := range universe {
+			for _, value := range values {
+				addExpr(sortName, value)
+			}
+		}
+	case map[string][]*goivy.Const:
+		for sortName, values := range universe {
+			for _, value := range values {
+				addConst(sortName, value)
+			}
+		}
+	case []goivy.SortUniverse:
+		for _, entry := range universe {
+			sortName := ""
+			if entry.Sort != nil {
+				sortName = entry.Sort.String()
+			}
+			for _, value := range entry.Values {
+				addExpr(sortName, value)
+			}
+		}
+	case map[goivy.Sort][]goivy.Expr:
+		for sortVal, values := range universe {
+			sortName := ""
+			if sortVal != nil {
+				sortName = sortVal.String()
+			}
+			for _, value := range values {
+				addExpr(sortName, value)
+			}
+		}
+	}
+	for sortName := range result {
+		sort.Slice(result[sortName], func(i, j int) bool {
+			return result[sortName][i].Name < result[sortName][j].Name
+		})
+	}
+	return result
+}
+
+func simpleConceptDomainFromCD(cd *CDConceptDomain) *ConceptDomain {
+	d := NewConceptDomain()
+	if cd == nil || cd.Concepts == nil {
+		return d
+	}
+	cd.Concepts.ForEachConcept(func(name string, c *CDConcept) {
+		if c == nil {
+			return
+		}
+		var vars []string
+		var sorts []string
+		for _, v := range c.Variables {
+			if v == nil {
+				continue
+			}
+			vars = append(vars, v.Name)
+			if v.VSort != nil {
+				sorts = append(sorts, v.VSort.String())
+			} else {
+				sorts = append(sorts, "")
+			}
+		}
+		formula := ""
+		if c.Formula != nil {
+			formula = c.Formula.String()
+		}
+		d.Concepts[name] = &Concept{
+			Name:      name,
+			Variables: vars,
+			Formula:   formula,
+			Sorts:     sorts,
+			Arity:     c.Arity(),
+		}
+	})
+	d.Nodes = append([]string{}, cd.Concepts.GetList("nodes")...)
+	d.Edges = append([]string{}, cd.Concepts.GetList("edges")...)
+	d.NodeLabels = append([]string{}, cd.Concepts.GetList("node_labels")...)
+	return d
 }
 
 func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) {

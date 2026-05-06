@@ -2137,10 +2137,12 @@ class IvyApp {
 
         var self = this;
         this.conceptGraph.cy.nodes().forEach(function (node) {
-            var sortName = node.data('obj') || '';
-            if (!sortName) return;
+            var nodeID = node.data('obj') || '';
+            if (!nodeID) return;
+            var sortName = node.data('cluster') || node.data('sort') || nodeID;
+            var topLabel = node.data('display_label') || sortName;
 
-            var labelParts = [sortName];
+            var labelParts = [topLabel];
 
             for (var i = 0; i < nodeLabels.length; i++) {
                 var labelName = nodeLabels[i];
@@ -2154,8 +2156,8 @@ class IvyApp {
                 // Step 2: Determine k from abstract_value (Z3 result).
                 // Python cy_render.py lines 132-137.
                 var k;
-                var necKey = 'node_label|node_necessarily|' + sortName + '|' + baseLabelName;
-                var necNotKey = 'node_label|node_necessarily_not|' + sortName + '|' + baseLabelName;
+                var necKey = 'node_label|node_necessarily|' + nodeID + '|' + baseLabelName;
+                var necNotKey = 'node_label|node_necessarily_not|' + nodeID + '|' + baseLabelName;
                 if (abstractValue[necKey]) {
                     k = 'node_necessarily';
                 } else if (abstractValue[necNotKey]) {
@@ -2171,10 +2173,11 @@ class IvyApp {
 
                 // Step 4: Display with prefix.
                 var prefix = labelPrefixes[k];
+                var displayLabelName = self._displayConceptName(baseLabelName);
                 if (prefix === '?') {
-                    labelParts.push(prefix + baseLabelName);
+                    labelParts.push(prefix + displayLabelName);
                 } else {
-                    labelParts.push(prefix + baseLabelName);
+                    labelParts.push(prefix + displayLabelName);
                 }
             }
 
@@ -2186,6 +2189,17 @@ class IvyApp {
                 node.data('height', h);
             }
         });
+    }
+
+    _displayConceptName(name) {
+        if (typeof name === 'string' && name.charAt(0) === '=') {
+            var body = name.slice(1);
+            var idx = body.lastIndexOf(':');
+            if (idx > 0) {
+                return '=' + body.slice(0, idx);
+            }
+        }
+        return name;
     }
 
     /**
