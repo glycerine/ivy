@@ -3643,7 +3643,6 @@ class IvyApp {
             }
             this.controls.setStatus('Running ' + mode + ' check...');
             var result = await this.api.runCheck(mode);
-            this.showCheckResult(result);
 
             // After check: refresh ARG to show counterexample states.
             var argData = await this.api.getARG();
@@ -3663,8 +3662,9 @@ class IvyApp {
             // Matches Python ivy_ui_cti.py show_used_relations():
             // checks "+" for any relation whose formula mentions constants from the CTI.
             if (result && result.used_relations) {
-                this._autoCheckUsedRelations(result.used_relations);
+                await this._autoCheckUsedRelations(result.used_relations);
             }
+            this.showCheckResult(result);
         } catch (e) {
             this.controls.setStatus('Check failed: ' + e.message, 'error');
             console.error('Check error:', e);
@@ -3678,7 +3678,7 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py show_used_relations → show_relation(rel, '+').
      * @param {Array<string>} relationNames - names of relations to auto-check
      */
-    _autoCheckUsedRelations(relationNames) {
+    async _autoCheckUsedRelations(relationNames) {
         if (!relationNames || relationNames.length === 0) return;
         var usedSet = {};
         for (var i = 0; i < relationNames.length; i++) {
@@ -3699,7 +3699,7 @@ class IvyApp {
                 if (inputs.length > 0 && !inputs[0].checked) {
                     inputs[0].checked = true;
                     // Trigger the toggle handler
-                    this.onEdgeToggle(name, 'all_to_all', true);
+                    await this.onEdgeToggle(name, 'all_to_all', true);
                 }
             }
         }
@@ -3724,6 +3724,11 @@ class IvyApp {
             var failDetails = result.message || 'Counterexample found.';
             if (result.failed_conjecture) {
                 failDetails += '\n\n' + result.failed_conjecture;
+            }
+            if (result.counterexample_details) {
+                failDetails += '\n\n' + result.counterexample_details;
+            } else if (result.counterexample_trace) {
+                failDetails += '\n\nCounterexample trace:\n' + result.counterexample_trace;
             }
             this.controls.setStatus('Check FAILED' + mode + z3note + ' - counterexample found', 'error');
             this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + failDetails);

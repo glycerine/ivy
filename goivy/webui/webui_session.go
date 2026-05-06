@@ -623,6 +623,129 @@ func relationNamesUsedByClauses(mod *goivy.Module, clauses *goivy.Clauses) []str
 	return rels
 }
 
+func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, finalCond, currentConj *goivy.Clauses) (traceText, details string) {
+	if cexTrace == nil {
+		return "", ""
+	}
+	ag := cexTrace.AnalysisGraph
+	if ag != nil {
+		s.AG = ag
+		if s.AGUI != nil {
+			s.AGUI.AG = ag
+			s.AGUI.G = ArtToGraphState(ag)
+			if len(ag.States) > 0 {
+				// Python's CTI path immediately views the predecessor state so the
+				// concept graph explains the bad transition, not the stale load state.
+				s.AGUI.ViewState(0, "", true)
+			}
+		}
+		s.syncARGToGraph()
+
+		if s.CTIUI != nil {
+			s.CTIUI.AG = ag
+			s.CTIUI.HaveCTI = true
+			s.CTIUI.CurrentConjecture = currentConj
+			if s.CTIUI.AnalysisGraphUI != nil {
+				s.CTIUI.AnalysisGraphUI.AG = ag
+				s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(ag)
+				if len(ag.States) > 0 {
+					s.CTIUI.ViewState(0, "", true)
+				}
+			}
+			if finalCond != nil {
+				s.CTIUI.ShowUsedRelations(finalCond, false)
+			}
+		}
+
+		if len(ag.States) > 0 {
+			s.setConceptSessionState(ag.States[0])
+		}
+	}
+	if finalCond != nil {
+		s.showUsedRelationsInRoot(finalCond, false)
+	}
+
+	traceText = strings.TrimSpace(cexTrace.String())
+	if traceText == "" {
+		traceText = counterexampleFallbackText(ag)
+	}
+	if traceText != "" {
+		details = "Counterexample trace:\n" + traceText
+	}
+	return traceText, details
+}
+
+func (s *Session) setConceptSessionState(state *goivy.State) {
+	if s.ConceptSess == nil || state == nil {
+		return
+	}
+	if state.Clauses != nil {
+		s.ConceptSess.State = state.Clauses.ToFormula()
+	} else {
+		s.ConceptSess.State = goivy.True
+	}
+	s.ConceptSess.GoalConstraints = nil
+	s.ConceptSess.Cache = make(map[string]bool)
+	s.ConceptSess.Recompute(nil)
+	s.syncAbstractValue()
+}
+
+func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) {
+	if clauses == nil || s.AGUI == nil {
+		return
+	}
+	w := s.ensureConceptGraphWidgetLocked()
+	if w == nil || w.G() == nil {
+		return
+	}
+	w.ClearEdges()
+	for _, rel := range relationNamesUsedByClauses(s.CompiledModule, clauses) {
+		boxes := "+"
+		if both {
+			boxes += "-"
+		}
+		w.ShowRelation(&Concept{Name: rel}, boxes, true, false)
+	}
+	w.Update()
+	s.toggles = w.G().Checks.Snapshot()
+}
+
+func counterexampleFallbackText(ag *goivy.AnalysisGraph) string {
+	if ag == nil {
+		return ""
+	}
+	var lines []string
+	for _, st := range ag.States {
+		if st == nil {
+			continue
+		}
+		lines = append(lines, fmt.Sprintf("state %d:", st.ID))
+		if st.Clauses == nil {
+			lines = append(lines, "  true")
+			continue
+		}
+		open := st.Clauses.ToOpenFormula()
+		if and, ok := open.(*goivy.LogicAnd); ok && len(and.Terms) > 0 {
+			for _, term := range and.Terms {
+				lines = append(lines, "  "+term.String())
+			}
+		} else {
+			lines = append(lines, "  "+open.String())
+		}
+	}
+	for _, tr := range ag.Transitions {
+		if tr.Pre == nil || tr.Post == nil {
+			continue
+		}
+		label := strings.TrimSpace(tr.Label)
+		if label == "" {
+			label = "transition"
+		}
+		lines = append(lines, fmt.Sprintf("%s: state %d -> state %d", label, tr.Pre.ID, tr.Post.ID))
+	}
+	return strings.Join(lines, "\n")
+}
+
 func (s *Session) saveInvariantContent() string {
 	current := ctiClausesFromModule(s.CompiledModule)
 	if s.CTIUI != nil && s.CTIUI.Conjectures != nil {
@@ -2148,12 +2271,14 @@ func eventSheetState(viewer *EventTraceViewer, sheet *EventSheet) map[string]int
 
 // CheckResult holds the result of a verification check.
 type WebUICheckResult struct {
-	Result           string   `json:"result"` // "pass", "fail", "error"
-	Message          string   `json:"message"`
-	Z3Contacted      bool     `json:"z3_contacted"`                // true if Z3 was actually called
-	FailedConjecture string   `json:"failed_conjecture,omitempty"` // formula text if fail
-	FailedLabel      string   `json:"failed_label,omitempty"`      // label if fail
-	UsedRelations    []string `json:"used_relations,omitempty"`    // relations to auto-check "+"
+	Result                string   `json:"result"` // "pass", "fail", "error"
+	Message               string   `json:"message"`
+	Z3Contacted           bool     `json:"z3_contacted"`                // true if Z3 was actually called
+	FailedConjecture      string   `json:"failed_conjecture,omitempty"` // formula text if fail
+	FailedLabel           string   `json:"failed_label,omitempty"`      // label if fail
+	UsedRelations         []string `json:"used_relations,omitempty"`    // relations to auto-check "+"
+	CounterexampleTrace   string   `json:"counterexample_trace,omitempty"`
+	CounterexampleDetails string   `json:"counterexample_details,omitempty"`
 }
 
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
@@ -2296,26 +2421,17 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 				// Python assigns the reconstructed counterexample trace:
 				//   res = ivy_trace.check_final_cond(...)
 				//   self.g = res
-				s.AG = cexTrace.AnalysisGraph
-				s.AGUI.AG = cexTrace.AnalysisGraph
-				s.syncARGToGraph()
-				if s.CTIUI != nil {
-					s.CTIUI.AG = cexTrace.AnalysisGraph
-					s.CTIUI.AnalysisGraphUI.AG = cexTrace.AnalysisGraph
-					s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(cexTrace.AnalysisGraph)
-					s.CTIUI.HaveCTI = true
-					if i < len(conjClauses) {
-						s.CTIUI.CurrentConjecture = conjClauses[i]
-					}
-					s.CTIUI.ShowUsedRelations(finalCond, false)
-				}
+				currentConj := conj
+				traceText, cexDetails := s.installCounterexampleFeedback(cexTrace, finalCond, currentConj)
 				return &WebUICheckResult{
-					Z3Contacted:      true,
-					Result:           "fail",
-					Message:          "The following conjecture is not relatively inductive:",
-					FailedConjecture: formula,
-					FailedLabel:      label,
-					UsedRelations:    relationNamesUsedByClauses(s.CompiledModule, finalCond),
+					Z3Contacted:           true,
+					Result:                "fail",
+					Message:               "The following conjecture is not relatively inductive:",
+					FailedConjecture:      formula,
+					FailedLabel:           label,
+					UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, finalCond),
+					CounterexampleTrace:   traceText,
+					CounterexampleDetails: cexDetails,
 				}
 			}
 		}

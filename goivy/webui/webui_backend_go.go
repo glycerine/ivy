@@ -569,6 +569,14 @@ func (gbe *GoBackend) Check(sessionID, mode string, options CheckOptions) (by []
 			cy := RenderAnalysisUIARG(sess.AGUI)
 			m["trace_arg"] = map[string]interface{}{"elements": cy.Elements}
 		}
+		if !gbe.cfg.WebUIConformCheck {
+			if cr.CounterexampleTrace != "" {
+				m["counterexample_trace"] = cr.CounterexampleTrace
+			}
+			if cr.CounterexampleDetails != "" {
+				m["counterexample_details"] = cr.CounterexampleDetails
+			}
+		}
 		by, err = canonicalJSON(m)
 		return nil
 	})

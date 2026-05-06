@@ -68,6 +68,18 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if got := s.AG.Transitions[0].Label; got != "call ext" {
 		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
 	}
+	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
+		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)
+	}
+	if s.AGUI == nil || s.AGUI.CurrentConceptGraph == nil {
+		t.Fatalf("induction failure did not install a current concept graph")
+	}
+	if s.AGUI.CurrentConceptGraph.G().ParentState != s.AG.States[0] {
+		t.Fatalf("concept graph parent state was not switched to the CTI predecessor")
+	}
+	if len(s.SimpleSess.AbstractValue) == 0 {
+		t.Fatalf("concept graph abstract value was not recomputed for the CTI predecessor")
+	}
 
 	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{"target": "state_1"})
 	if err != nil {
@@ -307,6 +319,9 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	elements, ok := trace["elements"].([]interface{})
 	if !ok || len(elements) == 0 {
 		t.Fatalf("trace_arg elements missing/empty: %#v", trace["elements"])
+	}
+	if details, _ := result["counterexample_details"].(string); details == "" || !strings.Contains(details, "Counterexample trace") {
+		t.Fatalf("counterexample_details missing from check JSON: %#v", result["counterexample_details"])
 	}
 }
 
@@ -562,6 +577,15 @@ func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing
 	}
 	if !stringSliceContains(cr.UsedRelations, "p") || !stringSliceContains(cr.UsedRelations, "q") {
 		t.Fatalf("used relations = %#v, want p and q", cr.UsedRelations)
+	}
+	toggles := s.GetToggles()
+	for _, rel := range []string{"p", "q"} {
+		if toggles.Edges[rel] == nil || !toggles.Edges[rel]["all_to_all"] {
+			t.Fatalf("used relation %q was not enabled in concept graph toggles: %#v", rel, toggles.Edges[rel])
+		}
+	}
+	if toggles.Edges["unused"] != nil && toggles.Edges["unused"]["all_to_all"] {
+		t.Fatalf("unused relation was enabled in concept graph toggles: %#v", toggles.Edges["unused"])
 	}
 }
 
