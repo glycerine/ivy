@@ -75,7 +75,7 @@ export function createIvyVueBridge({
       syncContextMenuElement(false, 0, 0, doc);
     },
     updateEditor(snapshot) {
-      editorStore.applyLegacySnapshot(snapshot);
+      editorStore.applyRuntimeSnapshot(snapshot);
     },
     initializeEditor(runtime) {
       return initializeCodeMirrorEditor({

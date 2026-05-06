@@ -23,16 +23,16 @@ describe('editorStore', () => {
     expect(editor.label).toBe('client_server_example.ivy [saved]');
   });
 
-  it('matches the legacy unsaved-file label rules', () => {
+  it('matches the runtime unsaved-file label rules', () => {
     const editor = useEditorStore();
 
-    editor.applyLegacySnapshot({ path: '', content: '', savedContent: '' });
+    editor.applyRuntimeSnapshot({ path: '', content: '', savedContent: '' });
     expect(editor.label).toBe('(unsaved file)');
 
-    editor.applyLegacySnapshot({ path: '', content: 'x', savedContent: '' });
+    editor.applyRuntimeSnapshot({ path: '', content: 'x', savedContent: '' });
     expect(editor.label).toBe('** (unsaved file)');
 
-    editor.applyLegacySnapshot({ path: '', content: 'x', savedContent: '', saveInProgress: true });
+    editor.applyRuntimeSnapshot({ path: '', content: 'x', savedContent: '', saveInProgress: true });
     expect(editor.label).toBe('(unsaved file) [saving...]');
   });
 

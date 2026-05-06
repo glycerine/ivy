@@ -59,7 +59,7 @@ export const useEditorStore = defineStore('editor', {
       this.reopenLastVisible = Boolean(visible);
       this.reopenLastLabel = this.reopenLastVisible ? String(label || 'Re-open last file') : '';
     },
-    applyLegacySnapshot({
+    applyRuntimeSnapshot({
       path = '',
       content = '',
       savedContent = '',
