@@ -41,6 +41,7 @@ class IvyApp {
      * Initialize the application: create session, build graphs, wire events.
      */
     async init() {
+        var self = this;
         this.controls.setStatus('Initializing...');
 
         // Check for a saved session BEFORE creating a new server session.
