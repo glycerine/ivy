@@ -90,6 +90,7 @@ class IvyApp {
         this.setupResizer2();
         this.setupResizer3();
         this.setupResizerH();
+        this.setupDetailsResizer();
         this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
 
@@ -1685,6 +1686,88 @@ class IvyApp {
                 self.conceptGraph.resize();
             }
         });
+    }
+
+    setupDetailsResizer() {
+        var sheetArea = document.getElementById('sheet-area');
+        if (!sheetArea) return;
+        var self = this;
+        var isDragging = false;
+        var startY = 0;
+        var startHeight = 0;
+        var activeHeader = null;
+        var activePanel = null;
+        var activeSheetLeft = null;
+        var activeSheetMain = null;
+
+        sheetArea.addEventListener('mousedown', function (e) {
+            var header = e.target.closest('.info-header, #info-header');
+            if (!header || !sheetArea.contains(header)) return;
+            var panel = header.closest('.info-panel') || header.parentElement;
+            var sheetLeft = panel ? panel.closest('.sheet-left') : null;
+            if (!panel || !sheetLeft) return;
+
+            isDragging = true;
+            startY = e.clientY;
+            startHeight = panel.offsetHeight;
+            activeHeader = header;
+            activePanel = panel;
+            activeSheetLeft = sheetLeft;
+            activeSheetMain = sheetLeft.querySelector('.sheet-main');
+            header.classList.add('active');
+            document.body.style.cursor = 'row-resize';
+            document.body.style.userSelect = 'none';
+            var graphs = sheetLeft.querySelectorAll('.graph-container');
+            for (var i = 0; i < graphs.length; i++) graphs[i].style.pointerEvents = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging || !activePanel || !activeSheetLeft) return;
+            var dy = startY - e.clientY;
+            var minDetailsHeight = 72;
+            var minMainHeight = self._detailsResizerMinimumMainHeight(activeSheetLeft);
+            var maxHeight = Math.max(minDetailsHeight, activeSheetLeft.offsetHeight - minMainHeight);
+            var newHeight = Math.max(minDetailsHeight, Math.min(startHeight + dy, maxHeight));
+            if (activeSheetMain) {
+                activeSheetMain.style.minHeight = minMainHeight + 'px';
+            }
+            activePanel.style.flex = '0 0 ' + newHeight + 'px';
+            activePanel.style.height = newHeight + 'px';
+            if (self.argGraph) self.argGraph.resize();
+            if (self.conceptGraph) self.conceptGraph.resize();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (!isDragging) return;
+            isDragging = false;
+            if (activeHeader) activeHeader.classList.remove('active');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            if (activeSheetLeft) {
+                var graphs = activeSheetLeft.querySelectorAll('.graph-container');
+                for (var i = 0; i < graphs.length; i++) graphs[i].style.pointerEvents = '';
+            }
+            if (self.argGraph) self.argGraph.resize();
+            if (self.conceptGraph) self.conceptGraph.resize();
+            activeHeader = null;
+            activePanel = null;
+            activeSheetLeft = null;
+            activeSheetMain = null;
+        });
+    }
+
+    _detailsResizerMinimumMainHeight(sheetLeft) {
+        var fallback = 44;
+        if (!sheetLeft) return fallback;
+        var sheetMain = sheetLeft.querySelector('.sheet-main');
+        if (!sheetMain) return fallback;
+        var headers = sheetMain.querySelectorAll('.panel-header');
+        var height = fallback;
+        for (var i = 0; i < headers.length; i++) {
+            height = Math.max(height, headers[i].offsetHeight || 0);
+        }
+        return height;
     }
 
     setupTutorialUrlBar() {

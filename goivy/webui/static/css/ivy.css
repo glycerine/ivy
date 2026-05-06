@@ -650,6 +650,7 @@ html, body {
 .sheet-main {
     display: flex;
     flex: 1;
+    min-height: 44px;
     overflow: hidden;
 }
 
@@ -980,17 +981,19 @@ html, body {
 }
 
 /* --- Info Panel --- */
-#info-panel {
-    height: 120px;
+#info-panel,
+.info-panel {
+    flex: 0 0 120px;
+    min-height: 72px;
     background-color: #252526;
     border-top: 1px solid #3c3c3c;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
     overflow: hidden;
 }
 
-#info-header {
+#info-header,
+.info-header {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -999,7 +1002,17 @@ html, body {
     padding: 4px 10px;
     background-color: #2d2d2d;
     border-bottom: 1px solid #3c3c3c;
+    cursor: row-resize;
     flex-shrink: 0;
+    user-select: none;
+}
+
+#info-header:hover,
+#info-header.active,
+.info-header:hover,
+.info-header.active {
+    background-color: #33353a;
+    color: #d0d0d0;
 }
 
 #info-content {
