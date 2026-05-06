@@ -121,4 +121,129 @@ describe('IvyApp event trace viewer', () => {
     });
     expect(document.querySelector('.sheet-tab[data-sheet="events-raw"]').textContent).toContain('trace.iev');
   });
+
+  it('keeps event pattern state backend-authoritative on add failure and success', async () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: ['old'],
+    });
+    app.api = {
+      executeAction: vi.fn(async () => {
+        throw new Error('syntax error');
+      }),
+    };
+
+    await expect(app.addEventPattern('events-1', 'call(')).rejects.toThrow('syntax error');
+    expect(app.sheets['events-1'].patterns).toEqual(['old']);
+    expect(document.querySelector('.event-pattern-list').textContent).toContain('old');
+
+    app.api.executeAction = vi.fn(async () => ({ patterns: ['old', 'call(a)'] }));
+    await app.addEventPattern('events-1', 'call(a)');
+    expect(app.sheets['events-1'].patterns).toEqual(['old', 'call(a)']);
+  });
+
+  it('keeps event pattern state unchanged when remove/load fail', async () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: ['first', 'second'],
+    });
+    const select = document.querySelector('.event-pattern-list');
+    select.selectedIndex = 1;
+    app.api = {
+      executeAction: vi.fn(async () => {
+        throw new Error('backend refused');
+      }),
+    };
+
+    await expect(app.removeSelectedEventPattern('events-1')).rejects.toThrow('backend refused');
+    expect(app.sheets['events-1'].patterns).toEqual(['first', 'second']);
+
+    await expect(app.loadEventPatterns('events-1', 'broken(')).rejects.toThrow('backend refused');
+    expect(app.sheets['events-1'].patterns).toEqual(['first', 'second']);
+  });
+
+  it('uses backend content when saving event patterns', async () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: ['local'],
+    });
+    app.api = {
+      executeAction: vi.fn(async () => ({ content: 'server\n' })),
+    };
+    app.downloadTextFile = vi.fn();
+
+    const content = await app.saveEventPatterns('events-1');
+
+    expect(content).toBe('server\n');
+    expect(app.downloadTextFile).toHaveBeenCalledWith('event_patterns.pats', 'server\n', 'text/plain');
+  });
+
+  it('surfaces backend event filter errors without opening a sheet', async () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: [],
+    });
+    app.api = {
+      executeAction: vi.fn(async () => {
+        throw new Error('syntax error');
+      }),
+    };
+
+    const result = await app.filterEventTrace('call(');
+
+    expect(result).toBeNull();
+    expect(app.controls.lastStatus).toEqual({ message: 'Filter failed: syntax error', kind: 'error' });
+    expect(document.querySelector('.sheet-tab[data-sheet="events-2"]')).toBeNull();
+  });
+
+  it('selects event rows whose addresses would be unsafe CSS selectors', () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [{ text: 'odd(a)', address: '0"]', subs: [] }],
+      patterns: [],
+    });
+
+    expect(() => app.selectEventTraceRow('events-1', '0"]')).not.toThrow();
+    const row = Array.from(document.querySelectorAll('.event-row')).find(
+      (el) => el.getAttribute('data-event-address') === '0"]',
+    );
+    expect(row.classList.contains('selected')).toBe(true);
+  });
+
+  it('rejects invalid event sheet ids before they reach selectors or HTML', () => {
+    const app = makeEventApp();
+
+    expect(() => app.openEventTraceSheet('Trace', {
+      sheet_id: 'events"bad',
+      events: [],
+      patterns: [],
+    })).toThrow(/invalid sheet id/);
+  });
+
+  it('updates an existing event tab label when replacing sheet data', () => {
+    const app = makeEventApp();
+    app.openEventTraceSheet('Old Trace', {
+      sheet_id: 'events-1',
+      events: [],
+      patterns: [],
+    });
+
+    app.openEventTraceSheet('New Trace', {
+      sheet_id: 'events-1',
+      events: [{ text: 'new(a)', address: '0' }],
+      patterns: [],
+    }, 'events-1');
+
+    expect(document.querySelector('.sheet-tab[data-sheet="events-1"]').textContent).toContain('New Trace');
+    expect(document.querySelector('#events-1 [data-event-address="0"]').textContent).toContain('new(a)');
+  });
 });

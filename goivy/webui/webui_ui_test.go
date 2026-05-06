@@ -544,6 +544,23 @@ func TestFilterEventsUsesPythonEventPatternSemantics(t *testing.T) {
 	}
 }
 
+func TestEventAppPatternRequiresActualApp(t *testing.T) {
+	evs := []*TraceEvent{
+		NewTraceEvent("call(a)"),
+		NewTraceEvent("call(f(b))"),
+	}
+
+	result := FilterEvents(evs, "call(*(b))")
+	if len(result) != 1 || result[0].Text != "call(f(b))" {
+		t.Fatalf("app wildcard pattern matched %v, want only call(f(b))", traceEventTexts(result))
+	}
+
+	result = FilterEvents(evs, "call(*)")
+	if len(result) != 2 {
+		t.Fatalf("symbol wildcard pattern matched %v, want both events", traceEventTexts(result))
+	}
+}
+
 func TestFindEvent(t *testing.T) {
 	evs := []*TraceEvent{
 		NewTraceEvent("first"),
@@ -617,6 +634,62 @@ func TestSessionEventTraceActions(t *testing.T) {
 	}
 }
 
+func TestSessionEventTraceActionsRejectMalformedPatterns(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "events")
+	s.EventViewer = NewEventTraceViewer()
+	sheetID := s.EventViewer.NewSheet([]*TraceEvent{
+		NewTraceEvent("call(a)"),
+	})
+
+	if _, err := s.ExecuteAction("events_filter", map[string]interface{}{
+		"sheet_id": sheetID,
+		"pattern":  "call(",
+	}); err == nil {
+		t.Fatalf("events_filter malformed pattern returned nil error")
+	}
+
+	if _, err := s.ExecuteAction("events_find", map[string]interface{}{
+		"sheet_id": sheetID,
+		"pattern":  "call(",
+	}); err == nil {
+		t.Fatalf("events_find malformed pattern returned nil error")
+	}
+}
+
+func TestSessionEventPatternListRejectsMalformedPatterns(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "events")
+	s.EventViewer = NewEventTraceViewer()
+
+	if _, err := s.ExecuteAction("events_add_pattern", map[string]interface{}{
+		"pattern": "call(",
+	}); err == nil {
+		t.Fatalf("events_add_pattern malformed pattern returned nil error")
+	}
+	if len(s.EventViewer.Patterns) != 0 {
+		t.Fatalf("malformed add changed patterns to %#v", s.EventViewer.Patterns)
+	}
+
+	if _, err := s.ExecuteAction("events_load_patterns", map[string]interface{}{
+		"patterns": "call(a)\ncall(\n",
+	}); err == nil {
+		t.Fatalf("events_load_patterns malformed pattern returned nil error")
+	}
+	if len(s.EventViewer.Patterns) != 0 {
+		t.Fatalf("malformed load changed patterns to %#v", s.EventViewer.Patterns)
+	}
+
+	result, err := s.ExecuteAction("events_add_pattern", map[string]interface{}{
+		"pattern": "call(a)",
+	})
+	if err != nil {
+		t.Fatalf("events_add_pattern valid pattern: %v", err)
+	}
+	patterns, ok := result["patterns"].([]string)
+	if !ok || len(patterns) != 1 || patterns[0] != "call(a)" {
+		t.Fatalf("patterns = %#v, want [call(a)]", result["patterns"])
+	}
+}
+
 func TestParseTraceEventsPreservesChildren(t *testing.T) {
 	evs, err := ParseTraceEvents("root(a){child(b); other(c)}; done")
 	if err != nil {
@@ -630,11 +703,21 @@ func TestParseTraceEventsPreservesChildren(t *testing.T) {
 	}
 }
 
+func TestTraceEventTextMustBeSingleEventForMatching(t *testing.T) {
+	if matchesPattern(NewTraceEvent("call(a) other(b)"), "call(a)") {
+		t.Fatalf("multi-event TraceEvent.Text matched as if only the first event existed")
+	}
+	if !matchesPattern(NewTraceEvent("call(a)"), "call(a)") {
+		t.Fatalf("single-event TraceEvent.Text did not match")
+	}
+}
+
 func TestSessionSaveStateIncludesAnalysisStateShape(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "save-state")
 	s.FilePath = "client.ivy"
 	s.FileContent = "ivy source"
 	s.EventViewer = NewEventTraceViewer()
+	s.EventViewer.AddPattern("root(a)")
 	s.EventViewer.NewSheet([]*TraceEvent{NewTraceEvent("root(a)")})
 	by := s.SaveState()
 	var state map[string]interface{}
@@ -647,16 +730,22 @@ func TestSessionSaveStateIncludesAnalysisStateShape(t *testing.T) {
 	if state["python_a2g_equivalent"] != false {
 		t.Fatalf("python_a2g_equivalent = %v, want false", state["python_a2g_equivalent"])
 	}
+	if state["fileName"] != "client.ivy" || state["filePath"] != "client.ivy" || state["fileContent"] != "ivy source" {
+		t.Fatalf("file fields = (%#v,%#v,%#v), want browser canonical names", state["fileName"], state["filePath"], state["fileContent"])
+	}
+	if _, ok := state["event_viewer"]; ok {
+		t.Fatalf("SaveState should embed event sheets in canonical sheets, not event_viewer: %#v", state["event_viewer"])
+	}
 	sheets, ok := state["sheets"].([]interface{})
-	if !ok || len(sheets) == 0 {
+	if !ok || len(sheets) != 2 {
 		t.Fatalf("sheets missing: %#v", state["sheets"])
 	}
-	eventViewer, ok := state["event_viewer"].(map[string]interface{})
-	if !ok {
-		t.Fatalf("event_viewer missing: %#v", state["event_viewer"])
+	eventSheet, ok := sheets[1].(map[string]interface{})
+	if !ok || eventSheet["type"] != "events" {
+		t.Fatalf("event sheet missing from canonical sheets: %#v", sheets)
 	}
-	if len(eventViewer["sheets"].([]interface{})) != 1 {
-		t.Fatalf("event viewer sheets = %#v", eventViewer["sheets"])
+	if got := eventSheet["patterns"].([]interface{}); len(got) != 1 || got[0] != "root(a)" {
+		t.Fatalf("event sheet patterns = %#v, want [root(a)]", eventSheet["patterns"])
 	}
 }
 

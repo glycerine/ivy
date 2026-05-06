@@ -292,6 +292,20 @@ func TestGetTransitiveReduction(t *testing.T) {
 	}
 }
 
+func TestGetTransitiveReductionDoesNotCreateCheckboxes(t *testing.T) {
+	dc := NewDisplayCheckboxes()
+	av := map[string]bool{
+		"edge_info|all_to_all|le|a|b": true,
+	}
+	hidden := GetTransitiveReduction(dc, av, [][3]string{{"le", "a", "b"}})
+	if len(hidden) != 0 {
+		t.Fatalf("hidden = %v, want none when transitive checkbox is absent", hidden)
+	}
+	if _, ok := dc.EdgeDisplayCheckboxes["le"]; ok {
+		t.Fatalf("GetTransitiveReduction created checkbox entries for le")
+	}
+}
+
 func TestGraphProjection(t *testing.T) {
 	g := NewGraph([]string{"s"}, nil)
 	// With no checkboxes enabled, projection should return false for edges.

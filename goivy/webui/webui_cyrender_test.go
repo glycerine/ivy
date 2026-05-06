@@ -4,6 +4,7 @@ package webui
 
 import (
 	"encoding/json"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -402,6 +403,38 @@ func TestRenderConceptGraphUsesTransitiveOrderingAndReduction(t *testing.T) {
 	}
 	if strings.Join(edgePairs, ",") != "A->B,B->C" {
 		t.Fatalf("edge pairs = %v, want only transitive reduction cover edges", edgePairs)
+	}
+}
+
+func TestRenderConceptGraphDoesNotReduceWhenTransitiveDisabled(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Nodes = []string{"C", "B", "A"}
+	for _, name := range []string{"A", "B", "C"} {
+		cs.Domain.Concepts[name] = &Concept{Name: name, Formula: name, Sorts: []string{name}, Arity: 1}
+	}
+	cs.Domain.Combiners = []*ConceptCombiner{
+		{Label: "le", Source: "A", Target: "B"},
+		{Label: "le", Source: "B", Target: "C"},
+		{Label: "le", Source: "A", Target: "C"},
+	}
+	cs.AbstractValue = map[string]bool{
+		"edge_info|all_to_all|le|A|B": true,
+		"edge_info|all_to_all|le|B|C": true,
+		"edge_info|all_to_all|le|A|C": true,
+	}
+	checks := NewDisplayCheckboxes()
+	checks.SetEdgeCheckbox("le", EdgeDisplayAllToAll, true)
+
+	cy := RenderConceptGraph(cs, checks)
+	var edgePairs []string
+	for _, el := range cy.Elements {
+		if el.Group == "edges" {
+			edgePairs = append(edgePairs, el.Data["source_obj"].(string)+"->"+el.Data["target_obj"].(string))
+		}
+	}
+	sort.Strings(edgePairs)
+	if strings.Join(edgePairs, ",") != "A->B,A->C,B->C" {
+		t.Fatalf("edge pairs = %v, want no transitive reduction when transitive is disabled", edgePairs)
 	}
 }
 

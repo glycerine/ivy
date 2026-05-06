@@ -23,7 +23,20 @@ export class FakeControls {
   }
 }
 
-export class FakeGraph {}
+export class FakeGraph {
+  constructor(containerId) {
+    this.containerId = containerId;
+    this.update = vi.fn();
+    this.resize = vi.fn();
+    this.healthCheck = vi.fn();
+    this.highlightNode = vi.fn();
+    this.onNodeClick = vi.fn();
+    this.onNodeRightClick = vi.fn();
+    this.onEdgeClick = vi.fn();
+    this.onEdgeRightClick = vi.fn();
+    this.onBackgroundClick = vi.fn();
+  }
+}
 
 export function makePersist(overrides = {}) {
   return {

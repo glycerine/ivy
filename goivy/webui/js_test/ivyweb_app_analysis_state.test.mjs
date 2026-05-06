@@ -9,6 +9,7 @@ function makeGraph(elements) {
     update(elementsArg, positionsArg) {
       this.updateCalls.push([elementsArg, positionsArg]);
     },
+    highlightNode: vi.fn(),
     resize: vi.fn(),
   };
   return {
@@ -114,5 +115,108 @@ describe('IvyApp analysis state save/load', () => {
     expect(app.selectedArgNode).toBe('state_1');
     expect(app.activeSheetId).toBe('events-1');
     expect(document.querySelector('#events-1 [data-event-address="0"]').textContent).toContain('root(a)');
+  });
+
+  it('marks restored analysis sheets visual-only and blocks backend graph actions', async () => {
+    const app = makeStateApp();
+    app.api = {
+      reloadContent: vi.fn(async () => ({ status: 'ok' })),
+      getConceptGraph: vi.fn(async () => ({ elements: [] })),
+    };
+    const state = {
+      analysis_state_format: 'ivyweb-json',
+      fileName: 'client.ivy',
+      filePath: '/tmp/client.ivy',
+      fileContent: 'ivy source',
+      activeSheetId: 'sheet-1',
+      sheets: [
+        {
+          id: 'sheet-1',
+          type: 'analysis',
+          label: 'Sheet 1',
+          selectedArgNode: 'state_1',
+          arg: { elements: [{ data: { id: 'n1', obj: 'state_1' } }] },
+          concept: { elements: [{ data: { id: 'c1', obj: 'server' } }] },
+        },
+      ],
+    };
+
+    await app.loadAnalysisStateObject(state);
+    await app.onArgNodeClick({ id: 'n1', obj: 'state_1', label: '1', short_info: 'state', long_info: 'saved' }, 'sheet-1');
+
+    expect(app.sheets['sheet-1'].visualOnly).toBe(true);
+    expect(app.api.getConceptGraph).not.toHaveBeenCalled();
+    expect(app.controls.lastStatus.kind).toBe('warning');
+    expect(app.controls.lastStatus.message).toContain('visual-only');
+  });
+
+  it('rejects oversized analysis state files before reading them', async () => {
+    const app = makeStateApp();
+    const file = {
+      size: 26 * 1024 * 1024,
+      text: vi.fn(async () => '{"analysis_state_format":"ivyweb-json"}'),
+    };
+
+    await expect(app.loadAnalysisStateFile(file)).rejects.toThrow(/too large/);
+    expect(file.text).not.toHaveBeenCalled();
+  });
+
+  it('validates analysis state before mutating existing sheets', async () => {
+    const app = makeStateApp();
+    app.api = { reloadContent: vi.fn(async () => ({ status: 'ok' })) };
+    const state = {
+      analysis_state_format: 'ivyweb-json',
+      fileName: 'client.ivy',
+      fileContent: 'ivy source',
+      sheets: [
+        { id: 'events-1', type: 'events', label: 'Trace', events: [], patterns: [] },
+        { id: 'bad"sheet', type: 'events', label: 'Bad', events: [], patterns: [] },
+      ],
+    };
+
+    await expect(app.loadAnalysisStateObject(state)).rejects.toThrow(/invalid sheet id/);
+    expect(document.getElementById('events-1')).toBeNull();
+    expect(app.api.reloadContent).not.toHaveBeenCalled();
+  });
+
+  it('rejects excessive sheets and invalid event addresses', async () => {
+    const app = makeStateApp();
+    const tooManySheets = {
+      analysis_state_format: 'ivyweb-json',
+      sheets: Array.from({ length: 101 }, (_, i) => ({
+        id: 'events-' + i,
+        type: 'events',
+        label: 'Trace',
+        events: [],
+        patterns: [],
+      })),
+    };
+    await expect(app.loadAnalysisStateObject(tooManySheets)).rejects.toThrow(/too many sheets/);
+
+    const badAddress = {
+      analysis_state_format: 'ivyweb-json',
+      sheets: [
+        {
+          id: 'events-1',
+          type: 'events',
+          label: 'Trace',
+          events: [{ text: 'root(a)', address: '0"]' }],
+          patterns: [],
+        },
+      ],
+    };
+    await expect(app.loadAnalysisStateObject(badAddress)).rejects.toThrow(/invalid event address/);
+  });
+
+  it('rejects duplicate preferred ARG sheet ids without duplicating DOM', () => {
+    const app = makeStateApp();
+
+    app.openARGSheet('First copy', { elements: [] }, 'sheet-2');
+    expect(() => app.openARGSheet('Duplicate copy', { elements: [] }, 'sheet-2')).toThrow(/duplicate sheet id/);
+
+    expect(document.querySelectorAll('#sheet-2')).toHaveLength(1);
+    expect(Array.from(document.querySelectorAll('.sheet-tab')).filter(
+      (tab) => tab.getAttribute('data-sheet') === 'sheet-2',
+    )).toHaveLength(1);
   });
 });

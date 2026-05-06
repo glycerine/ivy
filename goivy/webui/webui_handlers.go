@@ -419,7 +419,7 @@ func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sessionID strin
 		writeBackendErr(w, err)
 		return
 	}
-	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Disposition", "attachment; filename=ivy_session.json")
 	w.Write(data)
 }

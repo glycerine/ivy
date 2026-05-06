@@ -444,10 +444,29 @@ class IvyApp {
         this.installConceptGraphVisibilityHook(conceptGraph);
         this.sheets[sheetId] = {
             id: sheetId,
+            type: 'analysis',
             argGraph: argGraph,
             conceptGraph: conceptGraph,
             selectedArgNode: null,
+            visualOnly: false,
         };
+    }
+
+    isVisualOnlySheet(sheetId) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        return !!(sheet && sheet.visualOnly);
+    }
+
+    setVisualOnlySheet(sheetId, visualOnly) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (sheet) sheet.visualOnly = !!visualOnly;
+    }
+
+    visualOnlyMessage(kind) {
+        if (kind === 'events') {
+            return 'Restored event trace is visual-only; reload or rerun analysis before event backend actions';
+        }
+        return 'Restored analysis state is visual-only; reload or rerun analysis before graph actions';
     }
 
     installConceptGraphVisibilityHook(conceptGraph) {
@@ -968,6 +987,43 @@ class IvyApp {
         });
     }
 
+    isValidSheetId(sheetId) {
+        return /^[A-Za-z][A-Za-z0-9_-]*$/.test(String(sheetId || ''));
+    }
+
+    assertValidSheetId(sheetId) {
+        if (!this.isValidSheetId(sheetId)) {
+            throw new Error('invalid sheet id: ' + sheetId);
+        }
+        return sheetId;
+    }
+
+    sheetTab(sheetId) {
+        var tabs = document.querySelectorAll('.sheet-tab');
+        for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].getAttribute('data-sheet') === sheetId) {
+                return tabs[i];
+            }
+        }
+        return null;
+    }
+
+    sheetExists(sheetId) {
+        return !!((this.sheets && this.sheets[sheetId]) || document.getElementById(sheetId) || this.sheetTab(sheetId));
+    }
+
+    eventTraceRow(sheetId, address) {
+        var sheet = document.getElementById(sheetId);
+        if (!sheet) return null;
+        var rows = sheet.querySelectorAll('.event-row');
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].getAttribute('data-event-address') === address) {
+                return rows[i];
+            }
+        }
+        return null;
+    }
+
     /**
      * Switch to a sheet by ID.
      */
@@ -978,7 +1034,7 @@ class IvyApp {
         for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
         for (var i = 0; i < sheets.length; i++) sheets[i].classList.remove('active');
         // Activate the target
-        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
         if (tab) tab.classList.add('active');
         if (sheet) sheet.classList.add('active');
@@ -1004,6 +1060,14 @@ class IvyApp {
     addSheet(label, preferredSheetId) {
         this._sheetCounter++;
         var sheetId = preferredSheetId || ('sheet-' + this._sheetCounter);
+        while (!preferredSheetId && this.sheetExists(sheetId)) {
+            this._sheetCounter++;
+            sheetId = 'sheet-' + this._sheetCounter;
+        }
+        this.assertValidSheetId(sheetId);
+        if (preferredSheetId && this.sheetExists(sheetId)) {
+            throw new Error('duplicate sheet id: ' + sheetId);
+        }
         var match = /^sheet-(\d+)$/.exec(sheetId);
         if (match) {
             this._sheetCounter = Math.max(this._sheetCounter, parseInt(match[1], 10));
@@ -1079,11 +1143,12 @@ class IvyApp {
         this._sheetCounter = this._sheetCounter || 1;
         this._sheetCounter++;
         var sheetId = preferredSheetId || data.sheet_id || ('events-' + this._sheetCounter);
+        this.assertValidSheetId(sheetId);
         var tabBar = document.getElementById('tab-bar');
         var sheetArea = document.getElementById('sheet-area');
         if (!tabBar || !sheetArea) return '';
 
-        var existingTab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var existingTab = this.sheetTab(sheetId);
         var existingSheet = document.getElementById(sheetId);
         if (!existingTab) {
             var tabBtn = document.createElement('button');
@@ -1098,6 +1163,11 @@ class IvyApp {
             closeBtn.title = 'Close tab';
             tabBtn.appendChild(closeBtn);
             tabBar.appendChild(tabBtn);
+        } else {
+            var existingLabel = existingTab.querySelector('span');
+            if (existingLabel) {
+                existingLabel.textContent = label || data.label || 'Events';
+            }
         }
 
         var sheet = existingSheet;
@@ -1293,7 +1363,7 @@ class IvyApp {
     }
 
     toggleEventTraceNode(sheetId, address) {
-        var row = document.querySelector('#' + sheetId + ' [data-event-address="' + address + '"]');
+        var row = this.eventTraceRow(sheetId, address);
         var li = row ? row.closest('.event-tree-node') : null;
         var sheetState = this.sheets && this.sheets[sheetId];
         if (!li || !sheetState) return;
@@ -1334,8 +1404,8 @@ class IvyApp {
         var prefix = '';
         for (var i = 0; i < parts.length - 1; i++) {
             prefix = prefix === '' ? parts[i] : prefix + '/' + parts[i];
-            if (!document.querySelector('#' + sheetId + ' [data-event-address="' + prefix + '"]')) break;
-            if (!document.querySelector('#' + sheetId + ' [data-event-address="' + prefix + '/' + parts[i + 1] + '"]')) {
+            if (!this.eventTraceRow(sheetId, prefix)) break;
+            if (!this.eventTraceRow(sheetId, prefix + '/' + parts[i + 1])) {
                 this.toggleEventTraceNode(sheetId, prefix);
             }
         }
@@ -1348,7 +1418,7 @@ class IvyApp {
         if (!sheetState || !sheet) return;
         var rows = sheet.querySelectorAll('.event-row.selected');
         for (var i = 0; i < rows.length; i++) rows[i].classList.remove('selected');
-        var row = sheet.querySelector('[data-event-address="' + address + '"]');
+        var row = this.eventTraceRow(sheetId, address);
         if (row) {
             row.classList.add('selected');
             if (typeof row.scrollIntoView === 'function') {
@@ -1369,13 +1439,22 @@ class IvyApp {
             this.controls.setStatus('No event sheet selected', 'error');
             return null;
         }
-        var result = await this.api.executeAction('events_filter', {
-            sheet_id: sheet.id,
-            pattern: pattern,
-        });
-        var label = (result && result.label) || 'Filtered events';
-        this.openEventTraceSheet(label, result || {}, result && result.sheet_id);
-        return result;
+        if (sheet.visualOnly) {
+            this.controls.setStatus(this.visualOnlyMessage('events'), 'warning');
+            return null;
+        }
+        try {
+            var result = await this.api.executeAction('events_filter', {
+                sheet_id: sheet.id,
+                pattern: pattern,
+            });
+            var label = (result && result.label) || 'Filtered events';
+            this.openEventTraceSheet(label, result || {}, result && result.sheet_id);
+            return result;
+        } catch (e) {
+            this.controls.setStatus('Filter failed: ' + e.message, 'error');
+            return null;
+        }
     }
 
     async findEventTrace(pattern, reverse) {
@@ -1384,19 +1463,40 @@ class IvyApp {
             this.controls.setStatus('No event sheet selected', 'error');
             return null;
         }
+        if (sheet.visualOnly) {
+            this.controls.setStatus(this.visualOnlyMessage('events'), 'warning');
+            return null;
+        }
         var args = {
             sheet_id: sheet.id,
             pattern: pattern,
             reverse: !!reverse,
             anchor: sheet.selectedEventAddress || '',
         };
-        var result = await this.api.executeAction('events_find', args);
+        var result;
+        try {
+            result = await this.api.executeAction('events_find', args);
+        } catch (e) {
+            this.controls.setStatus('Find failed: ' + e.message, 'error');
+            return null;
+        }
         if (!result || !result.address) {
             this.controls.setStatus('Pattern not found', 'error');
             return result;
         }
         this.selectEventTraceRow(sheet.id, result.address);
         return result;
+    }
+
+    applyEventPatternResult(sheetId, result, fallbackPatterns) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (!sheet) return;
+        if (result && Array.isArray(result.patterns)) {
+            sheet.patterns = result.patterns.slice();
+        } else if (fallbackPatterns) {
+            sheet.patterns = fallbackPatterns.slice();
+        }
+        this.renderEventPatternList(sheetId);
     }
 
     renderEventPatternList(sheetId) {
@@ -1422,45 +1522,53 @@ class IvyApp {
     async addEventPattern(sheetId, pattern) {
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
-        sheet.patterns = sheet.patterns || [];
-        sheet.patterns.push(pattern);
-        this.renderEventPatternList(sheetId);
-        if (this.api && this.api.executeAction) {
-            await this.api.executeAction('events_add_pattern', { sheet_id: sheetId, pattern: pattern });
+        if (this.api && this.api.executeAction && !sheet.visualOnly) {
+            var result = await this.api.executeAction('events_add_pattern', { sheet_id: sheetId, pattern: pattern });
+            this.applyEventPatternResult(sheetId, result);
+            return;
         }
+        sheet.patterns = (sheet.patterns || []).concat([pattern]);
+        this.renderEventPatternList(sheetId);
     }
 
     async removeSelectedEventPattern(sheetId) {
         var sheet = this.sheets && this.sheets[sheetId];
-        var select = document.querySelector('#' + sheetId + ' .event-pattern-list');
+        var sheetEl = document.getElementById(sheetId);
+        var select = sheetEl ? sheetEl.querySelector('.event-pattern-list') : null;
         if (!sheet || !select || select.selectedIndex < 0) return;
         var idx = select.selectedIndex;
+        if (this.api && this.api.executeAction && !sheet.visualOnly) {
+            var result = await this.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
+            this.applyEventPatternResult(sheetId, result);
+            return;
+        }
         sheet.patterns.splice(idx, 1);
         this.renderEventPatternList(sheetId);
-        if (this.api && this.api.executeAction) {
-            await this.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
-        }
     }
 
     async clearEventPatterns(sheetId) {
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
+        if (this.api && this.api.executeAction && !sheet.visualOnly) {
+            var result = await this.api.executeAction('events_clear_patterns', { sheet_id: sheetId });
+            this.applyEventPatternResult(sheetId, result, []);
+            return;
+        }
         sheet.patterns = [];
         this.renderEventPatternList(sheetId);
-        if (this.api && this.api.executeAction) {
-            await this.api.executeAction('events_clear_patterns', { sheet_id: sheetId });
-        }
     }
 
     async loadEventPatterns(sheetId, text) {
         var sheet = this.sheets && this.sheets[sheetId];
         if (!sheet) return;
+        if (this.api && this.api.executeAction && !sheet.visualOnly) {
+            var result = await this.api.executeAction('events_load_patterns', { sheet_id: sheetId, patterns: text });
+            this.applyEventPatternResult(sheetId, result);
+            return;
+        }
         var patterns = String(text || '').split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean);
         sheet.patterns = sheet.patterns.concat(patterns);
         this.renderEventPatternList(sheetId);
-        if (this.api && this.api.executeAction) {
-            await this.api.executeAction('events_load_patterns', { sheet_id: sheetId, patterns: text });
-        }
     }
 
     async saveEventPatterns(sheetId) {
@@ -1468,8 +1576,11 @@ class IvyApp {
         if (!sheet) return '';
         var content = (sheet.patterns || []).join('\n');
         if (content !== '') content += '\n';
-        if (this.api && this.api.executeAction) {
-            await this.api.executeAction('events_save_patterns', { sheet_id: sheetId });
+        if (this.api && this.api.executeAction && !sheet.visualOnly) {
+            var result = await this.api.executeAction('events_save_patterns', { sheet_id: sheetId });
+            if (result && typeof result.content === 'string') {
+                content = result.content;
+            }
         }
         this.downloadTextFile('event_patterns.pats', content, 'text/plain');
         return content;
@@ -1483,7 +1594,7 @@ class IvyApp {
     removeSheet(sheetId) {
         if (sheetId === 'sheet-1') return; // never remove Sheet 1
 
-        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
         var wasActive = tab && tab.classList.contains('active');
 
@@ -2127,9 +2238,15 @@ class IvyApp {
         if (sheet) {
             sheet.selectedArgNode = nodeData.id;
         }
-        argGraph.highlightNode(nodeData.id);
+        if (argGraph && typeof argGraph.highlightNode === 'function') {
+            argGraph.highlightNode(nodeData.id);
+        }
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
         this.updateStateLabel(nodeData.label || nodeData.id);
+        if (sheet && sheet.visualOnly) {
+            this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return;
+        }
         this.controls.setStatus('Loading concept graph for state ' + (nodeData.label || nodeData.id) + '...');
 
         try {
@@ -2159,6 +2276,10 @@ class IvyApp {
         var self = this;
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
         var sheet = this.sheets && this.sheets[sheetId];
+        if (sheet && sheet.visualOnly) {
+            this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return;
+        }
         var actions = [
             { header: 'State ' + (nodeData.label || nodeData.id) },
             {
@@ -2229,6 +2350,10 @@ class IvyApp {
      */
     async executeArgNodeAction(nodeData, action, sheetId) {
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
+        if (this.isVisualOnlySheet(sheetId)) {
+            this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return null;
+        }
         var actionName = action.action || action.id || action[0] || action.name;
         this.controls.setStatus('Executing: ' + actionName + '...');
         try {
@@ -3046,8 +3171,9 @@ class IvyApp {
     }
 
     tabLabelForSheet(sheetId) {
-        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"] span');
-        return tab ? tab.textContent : sheetId;
+        var tab = this.sheetTab(sheetId);
+        var label = tab ? tab.querySelector('span') : null;
+        return label ? label.textContent : sheetId;
     }
 
     buildAnalysisState() {
@@ -3131,11 +3257,15 @@ class IvyApp {
 
     async loadAnalysisStateFile(file) {
         if (!file) return false;
+        if (typeof file.size === 'number' && file.size > this.analysisStateLimits().maxFileBytes) {
+            throw new Error('analysis state file too large');
+        }
         var text = await this.readFileText(file);
         return this.loadAnalysisStateObject(JSON.parse(text));
     }
 
     async loadAnalysisStateObject(state) {
+        this.validateAnalysisStateObject(state);
         if (!state || state.analysis_state_format !== 'ivyweb-json') {
             throw new Error('unsupported analysis state format');
         }
@@ -3167,6 +3297,7 @@ class IvyApp {
                     patterns: sheet.patterns || [],
                     selected_address: sheet.selectedEventAddress || null,
                 }, sheet.id);
+                this.setVisualOnlySheet(sheet.id, true);
                 continue;
             }
             if (sheet.id === 'sheet-1') {
@@ -3178,6 +3309,7 @@ class IvyApp {
                 }
                 if (this.sheets && this.sheets['sheet-1']) {
                     this.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
+                    this.sheets['sheet-1'].visualOnly = true;
                 }
             } else if (sheet.arg && sheet.arg.elements) {
                 this.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
@@ -3185,7 +3317,10 @@ class IvyApp {
                 if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
                     opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
                 }
-                if (opened) opened.selectedArgNode = sheet.selectedArgNode || null;
+                if (opened) {
+                    opened.selectedArgNode = sheet.selectedArgNode || null;
+                    opened.visualOnly = true;
+                }
             }
         }
 
@@ -3198,8 +3333,100 @@ class IvyApp {
             this.switchSheet('sheet-1');
         }
         IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
-        this.controls.setStatus('Analysis state loaded: ' + (this._persistedFileName || 'state'), 'success');
+        this.controls.setStatus('Visual analysis state loaded: ' + (this._persistedFileName || 'state'), 'warning');
         return true;
+    }
+
+    analysisStateLimits() {
+        return {
+            maxFileBytes: 25 * 1024 * 1024,
+            maxSheets: 100,
+            maxGraphElements: 50000,
+            maxEvents: 100000,
+            maxEventDepth: 200,
+        };
+    }
+
+    validateAnalysisStateObject(state) {
+        if (!state || state.analysis_state_format !== 'ivyweb-json') {
+            throw new Error('unsupported analysis state format');
+        }
+        var limits = this.analysisStateLimits();
+        var sheets = state.sheets || [];
+        if (!Array.isArray(sheets)) {
+            throw new Error('analysis state sheets must be an array');
+        }
+        if (sheets.length > limits.maxSheets) {
+            throw new Error('too many sheets in analysis state');
+        }
+        if (state.activeSheetId && !this.isValidSheetId(state.activeSheetId)) {
+            throw new Error('invalid active sheet id: ' + state.activeSheetId);
+        }
+        var seen = {};
+        for (var i = 0; i < sheets.length; i++) {
+            this.validateAnalysisStateSheet(sheets[i], seen, limits);
+        }
+    }
+
+    validateAnalysisStateSheet(sheet, seen, limits) {
+        if (!sheet || typeof sheet !== 'object') {
+            throw new Error('invalid sheet entry');
+        }
+        if (!this.isValidSheetId(sheet.id)) {
+            throw new Error('invalid sheet id: ' + sheet.id);
+        }
+        if (seen[sheet.id]) {
+            throw new Error('duplicate sheet id: ' + sheet.id);
+        }
+        seen[sheet.id] = true;
+        if (sheet.type !== 'analysis' && sheet.type !== 'events') {
+            throw new Error('invalid sheet type: ' + sheet.type);
+        }
+        if (sheet.type === 'events') {
+            if (sheet.events != null && !Array.isArray(sheet.events)) {
+                throw new Error('event sheet events must be an array');
+            }
+            if (sheet.patterns != null && !Array.isArray(sheet.patterns)) {
+                throw new Error('event sheet patterns must be an array');
+            }
+            var count = { events: 0 };
+            this.validateAnalysisStateEvents(sheet.events || [], 0, count, limits);
+            return;
+        }
+        this.validateAnalysisStateGraphPayload(sheet.arg, 'arg', limits);
+        this.validateAnalysisStateGraphPayload(sheet.concept, 'concept', limits);
+    }
+
+    validateAnalysisStateGraphPayload(graph, name, limits) {
+        if (!graph) return;
+        if (graph.elements != null && !Array.isArray(graph.elements)) {
+            throw new Error(name + ' graph elements must be an array');
+        }
+        if (graph.elements && graph.elements.length > limits.maxGraphElements) {
+            throw new Error(name + ' graph has too many elements');
+        }
+    }
+
+    validateAnalysisStateEvents(events, depth, count, limits) {
+        if (!Array.isArray(events)) {
+            throw new Error('event children must be an array');
+        }
+        if (depth > limits.maxEventDepth) {
+            throw new Error('event tree too deep');
+        }
+        for (var i = 0; i < events.length; i++) {
+            count.events++;
+            if (count.events > limits.maxEvents) {
+                throw new Error('too many events in analysis state');
+            }
+            var ev = events[i] || {};
+            if (ev.address != null && !/^\d+(\/\d+)*$/.test(String(ev.address))) {
+                throw new Error('invalid event address: ' + ev.address);
+            }
+            if (ev.subs != null) {
+                this.validateAnalysisStateEvents(ev.subs, depth + 1, count, limits);
+            }
+        }
     }
 
     removeAnalysisStateExtraSheets() {

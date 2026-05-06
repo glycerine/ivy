@@ -149,9 +149,18 @@ func LookupEvent(events []*TraceEvent, addr string) *TraceEvent {
 // FilterEvents filters events matching a pattern
 // (Python: EventTree.do_filter).
 func FilterEvents(events []*TraceEvent, pattern string) []*TraceEvent {
-	pats, err := parseEventPatterns(pattern)
+	result, err := FilterEventsE(events, pattern)
 	if err != nil {
 		return nil
+	}
+	return result
+}
+
+// FilterEventsE filters events matching a pattern and reports parse errors.
+func FilterEventsE(events []*TraceEvent, pattern string) ([]*TraceEvent, error) {
+	pats, err := parseEventPatterns(pattern)
+	if err != nil {
+		return nil, err
 	}
 	var result []*TraceEvent
 	for _, ev := range events {
@@ -161,7 +170,7 @@ func FilterEvents(events []*TraceEvent, pattern string) []*TraceEvent {
 		// Also search sub-events recursively.
 		result = append(result, filterEventsParsed(ev.Subs, pats)...)
 	}
-	return result
+	return result, nil
 }
 
 func filterEventsParsed(events []*TraceEvent, pats []*parsedEvent) []*TraceEvent {
@@ -194,9 +203,18 @@ func FindEvent(events []*TraceEvent, pattern string, reverse bool) (*TraceEvent,
 // The anchor traversal mirrors ivy_ev_parser.EventFwdGen/EventRevGen: the
 // selected anchor itself is skipped, then search proceeds forward or backward.
 func FindEventFrom(events []*TraceEvent, pattern string, reverse bool, anchor string) (*TraceEvent, string) {
-	pats, err := parseEventPatterns(pattern)
+	ev, addr, err := FindEventFromE(events, pattern, reverse, anchor)
 	if err != nil {
 		return nil, ""
+	}
+	return ev, addr
+}
+
+// FindEventFromE searches for an event matching pattern and reports parse errors.
+func FindEventFromE(events []*TraceEvent, pattern string, reverse bool, anchor string) (*TraceEvent, string, error) {
+	pats, err := parseEventPatterns(pattern)
+	if err != nil {
+		return nil, "", err
 	}
 	var flat []flatEntry
 	if reverse {
@@ -206,10 +224,10 @@ func FindEventFrom(events []*TraceEvent, pattern string, reverse bool, anchor st
 	}
 	for _, fe := range flat {
 		if matchesAnyEventPattern(fe.event, pats) {
-			return fe.event, fe.addr
+			return fe.event, fe.addr, nil
 		}
 	}
-	return nil, ""
+	return nil, "", nil
 }
 
 type parsedEvent struct {
@@ -323,6 +341,25 @@ func (e *parsedEvent) text() string {
 	return e.rep + "(" + eventValueListText(e.args) + ")"
 }
 
+func (e *parsedEvent) string() string {
+	if e == nil {
+		return ""
+	}
+	text := e.text()
+	if len(e.children) > 0 {
+		text += "{" + parsedEventsString(e.children) + "}"
+	}
+	return text
+}
+
+func parsedEventsString(events []*parsedEvent) string {
+	parts := make([]string, 0, len(events))
+	for _, ev := range events {
+		parts = append(parts, ev.string())
+	}
+	return strings.Join(parts, " ")
+}
+
 func eventValueListText(values []eventValue) string {
 	var parts []string
 	for _, value := range values {
@@ -363,8 +400,7 @@ func matchEventValue(actual eventValue, pat eventValue, binding map[string]strin
 	case eventApp:
 		a, ok := actual.(eventApp)
 		if !ok {
-			_, wildcard := actual.(eventSymbol)
-			return wildcard && p.rep == "*"
+			return false
 		}
 		if p.rep != "*" && a.rep != p.rep {
 			return false
@@ -579,6 +615,9 @@ func parseTraceEventText(s string) (*parsedEvent, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(pats) != 1 {
+		return nil, fmt.Errorf("expected single event, got %d", len(pats))
+	}
 	return pats[0], nil
 }
 
@@ -754,34 +793,6 @@ func (p *eventPatternParser) parseSymbol() (string, error) {
 	return p.input[start:p.pos], nil
 }
 
-func (p *eventPatternParser) skipBalanced(open, close byte) error {
-	if p.eof() || p.peek() != open {
-		return fmt.Errorf("expected %c", open)
-	}
-	depth := 0
-	for !p.eof() {
-		ch := p.peek()
-		p.pos++
-		switch ch {
-		case open:
-			depth++
-		case close:
-			depth--
-			if depth == 0 {
-				return nil
-			}
-		case '"':
-			for !p.eof() && p.peek() != '"' {
-				p.pos++
-			}
-			if !p.eof() {
-				p.pos++
-			}
-		}
-	}
-	return fmt.Errorf("unclosed %c", open)
-}
-
 func (p *eventPatternParser) skipSpaceAndSemis() {
 	for !p.eof() {
 		ch := p.peek()
@@ -847,7 +858,27 @@ func formatTraceIndented(sb *strings.Builder, events []*TraceEvent, indent int) 
 
 // AddPattern adds a search pattern to the saved list.
 func (v *EventTraceViewer) AddPattern(pattern string) {
-	v.Patterns = append(v.Patterns, pattern)
+	_ = v.AddPatternE(pattern)
+}
+
+// AddPatternE validates and adds a search pattern to the saved list.
+func (v *EventTraceViewer) AddPatternE(pattern string) error {
+	normalized, err := NormalizeEventPattern(pattern)
+	if err != nil {
+		return err
+	}
+	v.Patterns = append(v.Patterns, normalized)
+	return nil
+}
+
+// NormalizeEventPattern parses and formats an event pattern in Python's
+// Events.__str__ style.
+func NormalizeEventPattern(pattern string) (string, error) {
+	pats, err := parseEventPatterns(pattern)
+	if err != nil {
+		return "", err
+	}
+	return parsedEventsString(pats), nil
 }
 
 // RemovePattern removes a pattern by index.
@@ -866,19 +897,34 @@ func (v *EventTraceViewer) ClearPatterns() {
 
 // SavePatterns returns the patterns as a newline-separated string.
 func (v *EventTraceViewer) SavePatterns() string {
-	return strings.Join(v.Patterns, "\n")
+	if len(v.Patterns) == 0 {
+		return ""
+	}
+	return strings.Join(v.Patterns, "\n") + "\n"
 }
 
 // LoadPatterns loads patterns from a newline-separated string.
 func (v *EventTraceViewer) LoadPatterns(data string) {
+	_ = v.LoadPatternsE(data)
+}
+
+// LoadPatternsE validates and loads patterns from a newline-separated string.
+func (v *EventTraceViewer) LoadPatternsE(data string) error {
 	if data == "" {
-		return
+		return nil
 	}
 	lines := strings.Split(strings.TrimSpace(data), "\n")
+	var parsed []string
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line != "" {
-			v.Patterns = append(v.Patterns, line)
+			normalized, err := NormalizeEventPattern(line)
+			if err != nil {
+				return err
+			}
+			parsed = append(parsed, normalized)
 		}
 	}
+	v.Patterns = append(v.Patterns, parsed...)
+	return nil
 }

@@ -797,8 +797,7 @@ func GetTransitiveReduction(checks *DisplayCheckboxes, abstractValue map[string]
 	var filtered [][3]string
 	for _, e := range edgeTuples {
 		edge, src, tgt := e[0], e[1], e[2]
-		boxes := checks.EnsureEdge(edge)
-		if boxes[EdgeDisplayTransitive] != nil && boxes[EdgeDisplayTransitive].Val {
+		if checks.EdgeVisible(edge, EdgeDisplayTransitive) {
 			key := fmt.Sprintf("edge_info|all_to_all|%s|%s|%s", edge, src, tgt)
 			if abstractValue[key] {
 				filtered = append(filtered, e)

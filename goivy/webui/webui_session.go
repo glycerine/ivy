@@ -900,7 +900,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		pattern := actionStringArg(args, "pattern")
-		filtered := FilterEvents(sheet.Events, pattern)
+		filtered, parseErr := FilterEventsE(sheet.Events, pattern)
+		if parseErr != nil {
+			err = fmt.Errorf("events_filter: %w", parseErr)
+			break
+		}
 		newSheetID := viewer.NewSheet(filtered)
 		eventSheetResult(result, viewer, newSheetID)
 	case "events_find":
@@ -914,7 +918,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		pattern := actionStringArg(args, "pattern")
 		reverse, _ := actionBoolArg(args, "reverse")
 		anchor := actionStringArg(args, "anchor")
-		ev, addr := FindEventFrom(sheet.Events, pattern, reverse, anchor)
+		ev, addr, parseErr := FindEventFromE(sheet.Events, pattern, reverse, anchor)
+		if parseErr != nil {
+			err = fmt.Errorf("events_find: %w", parseErr)
+			break
+		}
 		if ev == nil {
 			result["found"] = false
 			result["message"] = "Pattern not found"
@@ -930,7 +938,10 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			err = fmt.Errorf("events_add_pattern: missing pattern")
 			break
 		}
-		viewer.AddPattern(pattern)
+		if parseErr := viewer.AddPatternE(pattern); parseErr != nil {
+			err = fmt.Errorf("events_add_pattern: %w", parseErr)
+			break
+		}
 		result["patterns"] = append([]string{}, viewer.Patterns...)
 	case "events_remove_pattern":
 		viewer := s.ensureEventViewerLocked()
@@ -947,7 +958,10 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		result["patterns"] = []string{}
 	case "events_load_patterns":
 		viewer := s.ensureEventViewerLocked()
-		viewer.LoadPatterns(actionStringArg(args, "patterns"))
+		if parseErr := viewer.LoadPatternsE(actionStringArg(args, "patterns")); parseErr != nil {
+			err = fmt.Errorf("events_load_patterns: %w", parseErr)
+			break
+		}
 		result["patterns"] = append([]string{}, viewer.Patterns...)
 	case "events_save_patterns":
 		viewer := s.ensureEventViewerLocked()
@@ -2038,16 +2052,36 @@ func (s *Session) SaveState() []byte {
 		}
 		sheets = append(sheets, s.analysisSheetStateLocked(sheetID, sheetID, s.SheetUIs[sheetID]))
 	}
+	if s.EventViewer != nil {
+		for _, sheetID := range s.EventViewer.SheetNames() {
+			if sheet := s.EventViewer.GetSheet(sheetID); sheet != nil {
+				sheets = append(sheets, eventSheetState(s.EventViewer, sheet))
+			}
+		}
+	}
+	fileName := ""
+	if s.FilePath != "" {
+		fileName = filepath.Base(s.FilePath)
+	}
+	mode := string(DefaultMode)
+	if s.AGUI != nil && s.AGUI.Mode != "" {
+		mode = string(s.AGUI.Mode)
+	}
 	data, _ := json.Marshal(map[string]interface{}{
 		"analysis_state_format":  "ivyweb-json",
 		"analysis_state_version": 1,
 		"python_a2g_equivalent":  false,
 		"session_id":             s.ID,
-		"file_path":              s.FilePath,
-		"file_content":           s.FileContent,
+		"fileName":               fileName,
+		"filePath":               s.FilePath,
+		"fileContent":            s.FileContent,
+		"mode":                   mode,
+		"activeSheetId":          rootSheetID,
+		"selectedArgNode":        nil,
+		"edgeVisibility":         map[string]interface{}{},
+		"labelVisibility":        map[string]interface{}{},
 		"toggles":                s.toggles,
 		"sheets":                 sheets,
-		"event_viewer":           eventViewerState(s.EventViewer),
 	})
 	return data
 }
@@ -2086,42 +2120,30 @@ func (s *Session) analysisSheetStateLocked(sheetID, label string, ui *AnalysisGr
 		}
 	}
 	return map[string]interface{}{
-		"id":    sheetID,
-		"type":  "analysis",
-		"label": label,
+		"id":              sheetID,
+		"type":            "analysis",
+		"label":           label,
+		"selectedArgNode": nil,
 		"arg": map[string]interface{}{
-			"elements": argElements,
+			"elements":  argElements,
+			"positions": nil,
 		},
 		"concept": map[string]interface{}{
-			"elements": conceptElements,
+			"elements":  conceptElements,
+			"positions": nil,
 		},
 	}
 }
 
-func eventViewerState(viewer *EventTraceViewer) map[string]interface{} {
-	result := map[string]interface{}{
-		"patterns": []string{},
-		"sheets":   []map[string]interface{}{},
+func eventSheetState(viewer *EventTraceViewer, sheet *EventSheet) map[string]interface{} {
+	return map[string]interface{}{
+		"id":                   sheet.Name,
+		"type":                 "events",
+		"label":                sheet.Label,
+		"events":               sheet.Events,
+		"patterns":             append([]string{}, viewer.Patterns...),
+		"selectedEventAddress": nil,
 	}
-	if viewer == nil {
-		return result
-	}
-	result["patterns"] = append([]string{}, viewer.Patterns...)
-	var sheets []map[string]interface{}
-	for _, name := range viewer.SheetNames() {
-		sheet := viewer.GetSheet(name)
-		if sheet == nil {
-			continue
-		}
-		sheets = append(sheets, map[string]interface{}{
-			"id":     sheet.Name,
-			"label":  sheet.Label,
-			"events": sheet.Events,
-		})
-	}
-	result["sheets"] = sheets
-	result["current_sheet"] = viewer.CurrentSheet
-	return result
 }
 
 // CheckResult holds the result of a verification check.

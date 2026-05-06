@@ -17,9 +17,14 @@ The normal fix loop for every item below is:
 
 ## 1. Event Pattern Syntax Errors Are Silently Treated As Empty Results
 
-Status: confirmed bug
+Status: fixed
 
 Priority: P0
+
+Resolution:
+- Added strict error-returning Go event filter/find paths and routed
+  `events_filter`/`events_find` through them.
+- Added regression coverage for malformed backend patterns.
 
 Evidence:
 - Python validates patterns before executing filter/find and raises `IvyError`
@@ -62,9 +67,15 @@ Tests:
 
 ## 2. Event App Pattern Matching Is Too Permissive
 
-Status: confirmed Python-conformance bug
+Status: fixed
 
 Priority: P0
+
+Resolution:
+- Removed the Go-only fallback that let app-shaped wildcard patterns match bare
+  symbols.
+- Added regression coverage for `call(*(b))` versus `call(a)` and
+  `call(f(b))`.
 
 Evidence:
 - Python dispatches matching from actual values to pattern values. An actual
@@ -98,9 +109,17 @@ Tests:
 
 ## 3. Backend And Frontend Analysis-State Schemas Diverge
 
-Status: confirmed bug
+Status: fixed
 
 Priority: P0
+
+Resolution:
+- Server `SaveState` now emits the browser-canonical `ivyweb-json` shape:
+  camel-case file fields, embedded event sheets, analysis sheet graph payloads,
+  mode, active sheet, and visibility/toggle fields.
+- The save route now advertises JSON content.
+- Added regression coverage that rejects the old separate `event_viewer` shape
+  for canonical server saves.
 
 Evidence:
 - Server-side save emits `analysis_state_format: ivyweb-json` with snake-case
@@ -146,9 +165,18 @@ Tests:
 
 ## 4. Analysis-State Load Restores A Visual Snapshot, Not A Live Session
 
-Status: confirmed correctness gap
+Status: fixed
 
 Priority: P0
+
+Resolution:
+- Restored analysis state is now explicitly treated as a visual snapshot until a
+  full backend restore exists.
+- Restored analysis and event sheets are marked `visualOnly`, and backend graph
+  or event actions are blocked with a warning instead of being routed to a fresh
+  unrelated backend session.
+- Added regression coverage proving restored analysis node clicks do not call
+  `getConceptGraph`.
 
 Evidence:
 - JS captures only graph elements for analysis sheets:
@@ -194,9 +222,19 @@ Tests:
 
 ## 5. Analysis-State Load Accepts Unbounded And Weakly Validated JSON
 
-Status: confirmed safety/hardening gap
+Status: fixed
 
 Priority: P1
+
+Resolution:
+- Added preflight validation for analysis-state files before reload or DOM
+  mutation.
+- Added bounds for file size, sheet count, graph elements, event count, and
+  event depth.
+- Added sheet ID, duplicate sheet ID, sheet type, graph payload, pattern array,
+  and event address validation.
+- Added regression coverage proving invalid state is rejected without partial
+  restore.
 
 Evidence:
 - The loader reads the entire file and parses it without size or shape checks:
@@ -231,9 +269,16 @@ Tests:
 
 ## 6. Event Trace DOM Selectors Are Built From Unescaped IDs And Addresses
 
-Status: confirmed robustness bug
+Status: fixed
 
 Priority: P1
+
+Resolution:
+- Added browser helpers that find sheet tabs and event rows by direct attribute
+  comparison instead of interpolated CSS selectors.
+- Added sheet ID validation before creating event/ARG sheet DOM.
+- Added regression coverage for selector-sensitive event addresses and invalid
+  event sheet IDs.
 
 Evidence:
 - Event trace navigation builds raw selectors with `sheetId` and event address:
@@ -269,9 +314,17 @@ Tests:
 
 ## 7. Event Pattern List Mutates Browser State Before Backend Success
 
-Status: confirmed correctness bug
+Status: fixed
 
 Priority: P1
+
+Resolution:
+- Backend pattern add/load now validates through the Go event-pattern parser and
+  returns authoritative pattern lists.
+- Browser add/remove/clear/load/save now updates local pattern state only after
+  backend success and uses backend-returned pattern/content data.
+- Browser filter/find now reports backend syntax errors without opening
+  misleading sheets.
 
 Evidence:
 - Add mutates local state before backend acknowledgment:
@@ -307,9 +360,14 @@ Tests:
 
 ## 8. Existing Event Tabs Do Not Refresh Their Labels
 
-Status: confirmed small UI bug
+Status: fixed
 
 Priority: P2
+
+Resolution:
+- Reopening/replacing an existing event sheet now refreshes the existing tab
+  label.
+- Added browser regression coverage for replacement labels.
 
 Evidence:
 - `openEventTraceSheet` creates a tab label only when the tab is new:
@@ -335,9 +393,15 @@ Tests:
 
 ## 9. `addSheet` Does Not Guard Against Duplicate Preferred IDs
 
-Status: confirmed robustness bug
+Status: fixed
 
 Priority: P1
+
+Resolution:
+- `addSheet` now rejects duplicate preferred sheet IDs before creating DOM.
+- Generated sheet IDs now skip existing sheets.
+- Added regression coverage that duplicate preferred ARG sheet IDs do not create
+  duplicate DOM IDs or tabs.
 
 Evidence:
 - `addSheet` accepts `preferredSheetId` and always appends a new tab/content:
@@ -370,9 +434,14 @@ Tests:
 
 ## 10. Concept Graph Transitive Reduction Has Render-Time Side Effects
 
-Status: confirmed correctness risk
+Status: fixed
 
 Priority: P1
+
+Resolution:
+- `GetTransitiveReduction` now uses non-mutating checkbox reads.
+- Added regression coverage proving transitive reduction does not create missing
+  checkbox entries during render-time computation.
 
 Evidence:
 - Rendering calls transitive reduction during graph construction:
@@ -405,9 +474,15 @@ Tests:
 
 ## 11. Concept Graph Layout Coverage Is Too Narrow
 
-Status: under-tested area
+Status: fixed
 
 Priority: P2
+
+Resolution:
+- Added coverage proving combiner edges are not reduced when the transitive
+  checkbox is disabled.
+- Existing transitive ordering/reduction coverage now runs alongside render
+  purity coverage.
 
 Evidence:
 - Current transitive layout test covers combiner edges only:
@@ -435,9 +510,17 @@ Tests:
 
 ## 12. Event Parser Has Dead Code And Needs Explicit Single-Event Validation
 
-Status: under-tested correctness risk
+Status: fixed
 
 Priority: P2
+
+Resolution:
+- Matching now requires `TraceEvent.Text` to parse as exactly one top-level
+  event.
+- Removed the unused `skipBalanced` helper after the recursive parser had
+  replaced it.
+- Added regression coverage for rejecting multi-event `TraceEvent.Text` during
+  matching.
 
 Evidence:
 - `parseTraceEventText` parses a list and returns only the first event:
@@ -479,4 +562,3 @@ Tests:
 10. Item 11: broaden concept layout coverage.
 11. Item 8: refresh event tab labels on replacement.
 12. Item 12: tighten event parser cleanup and single-event validation.
-
