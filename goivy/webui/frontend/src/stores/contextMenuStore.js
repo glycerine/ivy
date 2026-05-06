@@ -35,6 +35,10 @@ export const useContextMenuStore = defineStore('contextMenu', {
       });
       this.visible = true;
     },
+    setPosition(x, y) {
+      this.x = Number(x) || 0;
+      this.y = Number(y) || 0;
+    },
     hide() {
       this.visible = false;
       this.items = [];

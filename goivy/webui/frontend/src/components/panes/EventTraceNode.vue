@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
-import { ivyApp } from '../legacyCommand.js';
+import { callApp, hasAppMethod } from '../legacyCommand.js';
 
 const props = defineProps({
   sheetId: {
@@ -23,9 +23,8 @@ const selected = computed(() => {
 });
 
 function selectRow() {
-  const app = ivyApp();
-  if (app && typeof app.selectEventTraceRow === 'function') {
-    app.selectEventTraceRow(props.sheetId, props.event.address);
+  if (hasAppMethod('selectEventTraceRow')) {
+    callApp('selectEventTraceRow', props.sheetId, props.event.address);
     return;
   }
   eventTraceStore.selectEvent(props.sheetId, props.event.address);
@@ -34,9 +33,8 @@ function selectRow() {
 function toggle(event) {
   event.stopPropagation();
   if (!hasSubs.value) return;
-  const app = ivyApp();
-  if (app && typeof app.toggleEventTraceNode === 'function') {
-    app.toggleEventTraceNode(props.sheetId, props.event.address);
+  if (hasAppMethod('toggleEventTraceNode')) {
+    callApp('toggleEventTraceNode', props.sheetId, props.event.address);
     return;
   }
   eventTraceStore.setExpanded(props.sheetId, props.event.address, !expanded.value);

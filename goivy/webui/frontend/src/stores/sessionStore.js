@@ -49,7 +49,7 @@ export const useSessionStore = defineStore('session', {
     async createSession() {
       const engine = useEngineStore().engine;
       this.setStatus('Initializing...');
-      this.sessionId = await engine.createSession();
+      this.setSessionId(await engine.createSession());
       this.setStatus('Ready');
       return this.sessionId;
     },

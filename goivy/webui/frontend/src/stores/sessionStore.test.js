@@ -20,6 +20,7 @@ describe('sessionStore', () => {
 
     expect(fakeEngine.createSession).toHaveBeenCalled();
     expect(session.sessionId).toBe('sid-1');
+    expect(session.sessionDisplay).toBe('Session: sid-1');
     expect(session.status).toBe('Ready');
   });
 

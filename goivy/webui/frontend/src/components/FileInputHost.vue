@@ -1,5 +1,5 @@
 <script setup>
-import { callApp, ivyApp } from './legacyCommand.js';
+import { callApp, setAppStatus } from './legacyCommand.js';
 
 async function handleModelFileChange(event) {
   const input = event.target;
@@ -23,13 +23,10 @@ async function handleAnalysisStateFileChange(event) {
   const input = event.target;
   const file = input.files && input.files[0];
   if (file) {
-    const app = ivyApp();
     try {
       await callApp('loadAnalysisStateFile', file);
     } catch (ex) {
-      if (app && app.controls && typeof app.controls.setStatus === 'function') {
-        app.controls.setStatus(`Load analysis state failed: ${ex.message}`, 'error');
-      }
+      setAppStatus(`Load analysis state failed: ${ex.message}`, 'error');
     }
   }
   input.value = '';

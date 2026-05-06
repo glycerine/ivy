@@ -27,7 +27,7 @@
 
 <script setup>
 import { useLayoutStore } from '../../stores/layoutStore.js';
-import { ivyApp, runCommand } from '../legacyCommand.js';
+import { callApp, hasAppMethod, runCommand } from '../legacyCommand.js';
 
 const layoutStore = useLayoutStore();
 
@@ -37,9 +37,8 @@ function handleUrlKeydown(event) {
 }
 
 function closeTutorial() {
-  const app = ivyApp();
-  if (app && typeof app.toggleTutorial === 'function') {
-    app.toggleTutorial(true);
+  if (hasAppMethod('toggleTutorial')) {
+    callApp('toggleTutorial', true);
     return;
   }
   layoutStore.setTutorialVisible(false);

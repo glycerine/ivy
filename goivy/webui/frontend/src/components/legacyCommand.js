@@ -19,6 +19,20 @@ export function callApp(method, ...args) {
   return undefined;
 }
 
+export function hasAppMethod(method) {
+  const app = ivyApp();
+  return !!(app && typeof app[method] === 'function');
+}
+
+export function setAppStatus(message, level = '') {
+  const app = ivyApp();
+  if (app && app.controls && typeof app.controls.setStatus === 'function') {
+    app.controls.setStatus(message, level);
+    return true;
+  }
+  return false;
+}
+
 export function runMenuCommand(event, callback) {
   runCommand(event, () => {
     const app = ivyApp();

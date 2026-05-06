@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import EventTraceNode from './EventTraceNode.vue';
-import { callApp, ivyApp } from '../legacyCommand.js';
+import { callApp, hasAppMethod } from '../legacyCommand.js';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
 
 const props = defineProps({
@@ -15,9 +15,8 @@ const eventTraceStore = useEventTraceStore();
 const sheet = computed(() => eventTraceStore.sheetById(props.sheetId));
 
 async function askEntry(title, message, okLabel, callback) {
-  const app = ivyApp();
-  if (!app) return;
-  const pattern = await app.entryDialog(title, message, '', { okLabel });
+  if (!hasAppMethod('entryDialog')) return;
+  const pattern = await callApp('entryDialog', title, message, '', { okLabel });
   if (pattern !== null && pattern !== '') {
     await callback(pattern);
   }
@@ -32,10 +31,9 @@ function selectedPatternIndex(event) {
 }
 
 async function loadPatterns() {
-  const app = ivyApp();
-  if (!app) return;
-  const text = await app.textDialog('Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
-  if (text !== null) await app.loadEventPatterns(props.sheetId, text);
+  if (!hasAppMethod('textDialog')) return;
+  const text = await callApp('textDialog', 'Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
+  if (text !== null) await callApp('loadEventPatterns', props.sheetId, text);
 }
 </script>
 
