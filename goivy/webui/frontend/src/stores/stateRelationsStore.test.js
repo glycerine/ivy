@@ -21,7 +21,7 @@ describe('stateRelationsStore', () => {
     expect(onToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 
-  it('exports and applies legacy toggle snapshots without scraping the table DOM', () => {
+  it('exports and applies toggle snapshots without scraping the table DOM', () => {
     const stateRelations = useStateRelationsStore();
 
     stateRelations.setRows([

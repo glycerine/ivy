@@ -7,7 +7,7 @@ describe('detailsStore', () => {
     setActivePinia(createPinia());
   });
 
-  it('combines short and long details like the legacy controls', () => {
+  it('combines short and long details like the runtime controls', () => {
     const details = useDetailsStore();
 
     details.setDetails({ shortInfo: 'State 0', longInfo: ['x = 1', 'y = 2'] });
@@ -15,7 +15,7 @@ describe('detailsStore', () => {
     expect(details.text).toBe('State 0\nx = 1\ny = 2');
   });
 
-  it('clears legacy trace actions when new details arrive', () => {
+  it('clears stale trace actions when new details arrive', () => {
     const details = useDetailsStore();
     details.setTraceAction(() => {});
 

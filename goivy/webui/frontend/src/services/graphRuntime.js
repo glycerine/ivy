@@ -390,7 +390,7 @@ export class IvyGraph {
   }
 }
 
-export function installLegacyGraphGlobals(win = globalThis.window) {
+export function installGraphGlobalsForCompatibility(win = globalThis.window) {
   if (!win) return;
   if (!win.IvyGraph) win.IvyGraph = IvyGraph;
   if (!win.CONCEPT_STYLE) win.CONCEPT_STYLE = CONCEPT_STYLE;

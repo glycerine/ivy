@@ -33,7 +33,7 @@ describe('editorService', () => {
     expect(editorDirty(app)).toBe(true);
   });
 
-  it('syncs legacy editor state into the Vue bridge label model', () => {
+  it('syncs runtime editor state into the Vue bridge label model', () => {
     const app = appWithContent('saved');
     const bridge = {
       updateEditor: vi.fn(),

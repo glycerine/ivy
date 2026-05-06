@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ARG_STYLE, IvyGraph, installLegacyGraphGlobals } from './graphRuntime.js';
+import { ARG_STYLE, IvyGraph, installGraphGlobalsForCompatibility } from './graphRuntime.js';
 
 function makeFakeCy() {
   const nodes = [];
@@ -62,7 +62,7 @@ afterEach(() => {
 
 describe('graphRuntime', () => {
   it('installs graph globals for compatibility harnesses', () => {
-    installLegacyGraphGlobals(window);
+    installGraphGlobalsForCompatibility(window);
 
     expect(window.IvyGraph).toBe(IvyGraph);
     expect(window.ARG_STYLE).toBeTruthy();

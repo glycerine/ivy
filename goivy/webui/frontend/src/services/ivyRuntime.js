@@ -2227,467 +2227,42 @@ class IvyRuntime {
 
     populateStateCheckboxes(conceptData) {
         return populateStateCheckboxesViaService(this, conceptData);
-        // Store concept data for node label rendering
-        this._lastConceptData = conceptData;
-        var tbody = document.getElementById('state-checkbox-body');
-        this._hydrateBackendToggleState(conceptData);
-
-        // Use the relations list from the server (edges + node_labels).
-        // This matches Python's Graph.relation_ids.
-        var names = [];
-        if (conceptData && conceptData.relations) {
-            names = conceptData.relations.slice().sort();
-        }
-        var self = this;
-
-        var appendLegacyRows = function () {
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            for (var i = 0; i < names.length; i++) {
-                (function(name) {
-                    var tr = document.createElement('tr');
-
-                    // + checkbox (all_to_all)
-                    var td1 = document.createElement('td');
-                    var cb1 = document.createElement('input');
-                    cb1.type = 'checkbox';
-                    cb1.name = name;
-                    cb1.value = 'all_to_all';
-                    cb1.title = 'Show definite edges (' + name + ')';
-                    cb1.checked = self._toggleChecked(name, 'all_to_all');
-                    cb1.addEventListener('change', function() {
-                        self.onEdgeToggle(name, 'all_to_all', cb1.checked);
-                    });
-                    td1.appendChild(cb1);
-                    tr.appendChild(td1);
-
-                    // ? checkbox (unknown)
-                    var td2 = document.createElement('td');
-                    var cb2 = document.createElement('input');
-                    cb2.type = 'checkbox';
-                    cb2.name = name;
-                    cb2.value = 'edge_unknown';
-                    cb2.title = 'Show unknown edges (' + name + ')';
-                    cb2.checked = self._toggleChecked(name, 'edge_unknown');
-                    cb2.addEventListener('change', function() {
-                        self.onEdgeToggle(name, 'edge_unknown', cb2.checked);
-                    });
-                    td2.appendChild(cb2);
-                    tr.appendChild(td2);
-
-                    // - checkbox (none_to_none)
-                    var td3 = document.createElement('td');
-                    var cb3 = document.createElement('input');
-                    cb3.type = 'checkbox';
-                    cb3.name = name;
-                    cb3.value = 'none_to_none';
-                    cb3.title = 'Show absent edges (' + name + ')';
-                    cb3.checked = self._toggleChecked(name, 'none_to_none');
-                    cb3.addEventListener('change', function() {
-                        self.onEdgeToggle(name, 'none_to_none', cb3.checked);
-                    });
-                    td3.appendChild(cb3);
-                    tr.appendChild(td3);
-
-                    // T checkbox (transitive reduction)
-                    var td4 = document.createElement('td');
-                    var cb4 = document.createElement('input');
-                    cb4.type = 'checkbox';
-                    cb4.name = name;
-                    cb4.value = 'transitive';
-                    cb4.title = 'Transitive reduction (' + name + ')';
-                    cb4.checked = self._toggleChecked(name, 'transitive');
-                    cb4.addEventListener('change', function() {
-                        self.onEdgeToggle(name, 'transitive', cb4.checked);
-                    });
-                    td4.appendChild(cb4);
-                    tr.appendChild(td4);
-
-                    // Name column
-                    var td5 = document.createElement('td');
-                    td5.className = 'name-col';
-                    var a = document.createElement('a');
-                    a.textContent = name;
-                    a.href = '#';
-                    a.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        // Clicking the name could highlight related edges
-                    });
-                    td5.appendChild(a);
-                    tr.appendChild(td5);
-
-                    tbody.appendChild(tr);
-                })(names[i]);
-            }
-
-            // If no edges found, show a placeholder
-            if (names.length === 0 && conceptData) {
-                var tr = document.createElement('tr');
-                var td = document.createElement('td');
-                td.colSpan = 5;
-                td.style.color = '#666';
-                td.style.fontStyle = 'italic';
-                td.textContent = 'No relations loaded';
-                tr.appendChild(td);
-                tbody.appendChild(tr);
-            }
-        };
-
-        var vueRows = names.map(function (name) {
-            return {
-                name: name,
-                checked: {
-                    all_to_all: self._toggleChecked(name, 'all_to_all'),
-                    edge_unknown: self._toggleChecked(name, 'edge_unknown'),
-                    none_to_none: self._toggleChecked(name, 'none_to_none'),
-                    transitive: self._toggleChecked(name, 'transitive')
-                }
-            };
-        });
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateRelations === 'function') {
-            window.__ivyVueBridge.updateStateRelations(vueRows, function (name, displayClass, checked) {
-                self.onEdgeToggle(name, displayClass, checked);
-            });
-            this._applyEdgeVisibility();
-            this._applyNodeLabels();
-            this.populateConstraintFacts(conceptData);
-            return;
-        }
-
-        if (!tbody) return;
-        appendLegacyRows();
-
-        this._applyEdgeVisibility();
-        this._applyNodeLabels();
-        this.populateConstraintFacts(conceptData);
     }
 
     populateConstraintFacts(conceptData) {
         return populateConstraintFactsViaService(this, conceptData);
-        var facts = (conceptData && Array.isArray(conceptData.facts)) ? conceptData.facts : [];
-        var self = this;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateConstraintFacts === 'function') {
-            window.__ivyVueBridge.updateConstraintFacts(facts, async function (index, selected) {
-                await self.api.executeAction('set_fact_selection', {
-                    index: index,
-                    selected: selected,
-                });
-            });
-            return;
-        }
-        var info = document.getElementById('info-content');
-        if (!info) return;
-        info.innerHTML = '';
-        if (facts.length === 0) {
-            info.textContent = 'Select a node or edge to see details';
-            return;
-        }
-
-        var title = document.createElement('div');
-        title.className = 'constraint-facts-title';
-        title.textContent = 'Constraints:';
-        info.appendChild(title);
-
-        facts.forEach(function(fact, offset) {
-            var index = typeof fact.index === 'number' ? fact.index : offset;
-            var row = document.createElement('button');
-            row.type = 'button';
-            row.className = 'constraint-fact';
-            row.setAttribute('data-constraint-fact', String(index));
-            row.setAttribute('aria-pressed', fact.selected ? 'true' : 'false');
-            row.textContent = fact.text || '';
-            if (!fact.selected) {
-                row.classList.add('inactive');
-            }
-            row.addEventListener('click', async function() {
-                var selected = row.classList.contains('inactive');
-                row.classList.toggle('inactive', !selected);
-                row.setAttribute('aria-pressed', selected ? 'true' : 'false');
-                try {
-                    await self.api.executeAction('set_fact_selection', {
-                        index: index,
-                        selected: selected,
-                    });
-                } catch (e) {
-                    row.classList.toggle('inactive', selected);
-                    row.setAttribute('aria-pressed', selected ? 'false' : 'true');
-                    self.controls.setStatus('Fact selection failed: ' + e.message, 'error');
-                }
-            });
-            info.appendChild(row);
-        });
     }
 
     _hydrateBackendToggleState(conceptData) {
         return hydrateBackendToggleState(this, conceptData);
-        this._edgeVisibility = {};
-        this._labelVisibility = {};
-        var toggles = (conceptData && conceptData.toggles) || {};
-        var edges = toggles.edges || {};
-        var labels = toggles.labels || {};
-        for (var edge in edges) {
-            if (edges.hasOwnProperty(edge)) {
-                this._edgeVisibility[edge] = Object.assign({
-                    all_to_all: false,
-                    edge_unknown: false,
-                    none_to_none: false,
-                    transitive: false,
-                }, edges[edge]);
-            }
-        }
-        for (var label in labels) {
-            if (labels.hasOwnProperty(label)) {
-                this._labelVisibility[label] = Object.assign({
-                    node_necessarily: false,
-                    node_maybe: false,
-                    node_necessarily_not: false,
-                }, labels[label]);
-            }
-        }
     }
 
     _toggleChecked(name, displayClass) {
         return toggleChecked(this, name, displayClass);
-        var base = name.split('(')[0];
-        var vis = this._edgeVisibility[name] || this._edgeVisibility[base];
-        if (vis && Object.prototype.hasOwnProperty.call(vis, displayClass)) {
-            return !!vis[displayClass];
-        }
-        var labelKeyMap = {
-            all_to_all: 'node_necessarily',
-            edge_unknown: 'node_maybe',
-            none_to_none: 'node_necessarily_not',
-        };
-        var labelKey = labelKeyMap[displayClass];
-        var labelVis = this._labelVisibility[name] || this._labelVisibility[base];
-        if (labelKey && labelVis && Object.prototype.hasOwnProperty.call(labelVis, labelKey)) {
-            return !!labelVis[labelKey];
-        }
-        return false;
     }
 
-    /**
-     * Handle edge visibility toggle change.
-     */
     async onEdgeToggle(edgeName, displayClass, checked) {
         return onEdgeToggleViaService(this, edgeName, displayClass, checked);
-        // Track visibility state client-side (matches Python edge/node_label display_checkboxes)
-        // Python maps checkbox columns to keys:
-        //   For edges:  + → all_to_all, ? → edge_unknown, - → none_to_none, T → transitive
-        //   For labels: + → node_necessarily, ? → node_maybe, - → node_necessarily_not
-        if (!this._edgeVisibility[edgeName]) {
-            this._edgeVisibility[edgeName] = {
-                all_to_all: false, edge_unknown: false, none_to_none: false, transitive: false
-            };
-        }
-        this._edgeVisibility[edgeName][displayClass] = checked;
-
-        // Also track as a node label (Python does both: set_checkbox sets BOTH dicts).
-        // Store under the bare name (e.g. "semaphore") since _applyNodeLabels
-        // looks up by bare node_label names, not the parameterized relation
-        // names like "semaphore(X)" that the checkboxes display.
-        var labelKeyMap = { 'all_to_all': 'node_necessarily', 'edge_unknown': 'node_maybe', 'none_to_none': 'node_necessarily_not' };
-        var labelKey = labelKeyMap[displayClass];
-        if (labelKey) {
-            var bareName = edgeName.split('(')[0];
-            if (!this._labelVisibility[bareName]) {
-                this._labelVisibility[bareName] = { node_necessarily: false, node_maybe: false, node_necessarily_not: false };
-            }
-            this._labelVisibility[bareName][labelKey] = checked;
-        }
-
-        // Apply visibility to edges and node labels
-        this._applyEdgeVisibility();
-        this._applyNodeLabels();
-
-        // Also inform server for persistence
-        try {
-            await this.api.setToggles({
-                edge: edgeName,
-                display_class: displayClass,
-                value: checked
-            });
-            await this.refreshConceptGraph();
-        } catch (e) {
-            console.error('Toggle error:', e);
-        }
     }
 
-    /**
-     * Apply edge visibility based on checkbox state.
-     * An edge is shown if its display class checkbox is checked.
-     * Matches Python cy_render.py line 346:
-     *   if widget.edge_display_checkboxes[edge][classes[0]].value is False: skip
-     */
     _applyEdgeVisibility(conceptGraph) {
         return applyEdgeVisibility(this, conceptGraph);
-        var graph = conceptGraph || this.conceptGraph;
-        if (!graph || !graph.cy) return;
-        var self = this;
-        graph.cy.edges().forEach(function(edge) {
-            // Try multiple keys to match: the edge obj, label, and
-            // formatted versions like "link(X,Y)" that checkboxes use.
-            var obj = edge.data('obj') || '';
-            var label = edge.data('label') || '';
-            var vis = self._findEdgeVisibility(obj, label);
-            if (!vis) {
-                // No checkbox state → hide by default (matching Python)
-                edge.style('display', 'none');
-                return;
-            }
-            // Check if ANY of the edge's classes has its checkbox checked.
-            // Cytoscape classes() returns an array.
-            var classList = edge.classes();
-            var show = false;
-            for (var i = 0; i < classList.length; i++) {
-                if (vis[classList[i]]) {
-                    show = true;
-                    break;
-                }
-            }
-            edge.style('display', show ? 'element' : 'none');
-        });
     }
 
-    /**
-     * Find edge visibility entry. Checkboxes use display names like "link(X,Y)"
-     * while edge data uses bare names like "link". Try both.
-     */
     _findEdgeVisibility(obj, label) {
         return findEdgeVisibility(this, obj, label);
-        var ev = this._edgeVisibility;
-        // Direct match on obj or label
-        if (ev[obj]) return ev[obj];
-        if (ev[label]) return ev[label];
-        // Checkbox names may include params: "link(X,Y)" — try matching
-        // by prefix before the "("
-        for (var key in ev) {
-            if (ev.hasOwnProperty(key)) {
-                var base = key.split('(')[0];
-                if (base === obj || base === label) {
-                    return ev[key];
-                }
-            }
-        }
-        return null;
     }
 
-    /**
-     * Apply node label text based on checkbox state.
-     * Matches Python cy_render.py render_concept_graph lines 127-146:
-     *   For each sort node, check each node_label. If the label's checkbox
-     *   is checked, add the label text (with prefix) to the node's display.
-     *   Prefix: + → plain, ? → "?suffix", - → "¬prefix"
-     */
-    /**
-     * Apply node label text based on checkbox state and abstract value.
-     * Matches Python cy_render.py render_concept_graph lines 127-146 EXACTLY:
-     *
-     * For each sort node and each node_label:
-     *   1. Check if label's sort matches this node's sort (label_sorts map)
-     *   2. Determine k from abstract_value:
-     *      - if a['node_label|node_necessarily|node|label'] → k = 'node_necessarily'
-     *      - elif a['node_label|node_necessarily_not|node|label'] → k = 'node_necessarily_not'
-     *      - else → k = 'node_maybe'
-     *   3. Check if checkbox[label][k] is checked → if not, skip
-     *   4. Display with prefix: '' for +, '?' for ?, '¬' for -
-     */
     _applyNodeLabels() {
         return applyNodeLabels(this);
-        if (!this.conceptGraph || !this.conceptGraph.cy) return;
-        if (!this._lastConceptData) return;
-
-        var labelPrefixes = {
-            'node_necessarily': '',
-            'node_maybe': '?',
-            'node_necessarily_not': '\u00AC'
-        };
-
-        var nodeLabels = this._lastConceptData.node_labels || [];
-        var labelSorts = this._lastConceptData.label_sorts || {};
-        var abstractValue = this._lastConceptData.abstract_value || {};
-
-        var self = this;
-        this.conceptGraph.cy.nodes().forEach(function (node) {
-            var nodeID = node.data('obj') || '';
-            if (!nodeID) return;
-            var sortName = node.data('cluster') || node.data('sort') || nodeID;
-            var topLabel = node.data('display_label') || sortName;
-
-            var labelParts = [topLabel];
-
-            for (var i = 0; i < nodeLabels.length; i++) {
-                var labelName = nodeLabels[i];
-                var baseLabelName = labelName.split('(')[0];
-
-                // Step 1: Check if this label belongs to this sort node.
-                // Python: only adds label to nodes whose sort matches the label's sort.
-                var labelSort = labelSorts[labelName] || labelSorts[baseLabelName];
-                if (labelSort && labelSort !== sortName) continue;
-
-                // Step 2: Determine k from abstract_value (Z3 result).
-                // Python cy_render.py lines 132-137.
-                var k;
-                var necKey = 'node_label|node_necessarily|' + nodeID + '|' + baseLabelName;
-                var necNotKey = 'node_label|node_necessarily_not|' + nodeID + '|' + baseLabelName;
-                if (abstractValue[necKey]) {
-                    k = 'node_necessarily';
-                } else if (abstractValue[necNotKey]) {
-                    k = 'node_necessarily_not';
-                } else {
-                    k = 'node_maybe';
-                }
-
-                // Step 3: Check if the checkbox for this k is checked.
-                // Python: widget.node_label_display_checkboxes[label_name][k].value
-                var vis = self._labelVisibility[labelName] || self._labelVisibility[baseLabelName];
-                if (!vis || !vis[k]) continue;
-
-                // Step 4: Display with prefix.
-                var prefix = labelPrefixes[k];
-                var displayLabelName = self._displayConceptName(baseLabelName);
-                if (prefix === '?') {
-                    labelParts.push(prefix + displayLabelName);
-                } else {
-                    labelParts.push(prefix + displayLabelName);
-                }
-            }
-
-            var newLabel = labelParts.join('\n');
-            if (node.data('label') !== newLabel) {
-                node.data('label', newLabel);
-                var lines = labelParts.length;
-                var h = Math.max(50, 30 + lines * 20);
-                node.data('height', h);
-            }
-        });
     }
 
     _displayConceptName(name) {
         return displayConceptName(name);
-        if (typeof name === 'string' && name.charAt(0) === '=') {
-            var body = name.slice(1);
-            var idx = body.lastIndexOf(':');
-            if (idx > 0) {
-                return '=' + body.slice(0, idx);
-            }
-        }
-        return name;
     }
 
-    /**
-     * Update the state label to show which ARG node is selected.
-     */
     updateStateLabel(nodeId) {
         return updateStateLabelViaService(nodeId);
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateLabel === 'function') {
-            window.__ivyVueBridge.updateStateLabel(nodeId);
-            return;
-        }
-        var label = document.getElementById('state-label');
-        if (label) {
-            label.textContent = 'State: ' + (nodeId != null ? nodeId : '—');
-        }
     }
 
     /**
@@ -3978,31 +3553,6 @@ class IvyRuntime {
 
     addCheckResultViewActions(result) {
         return addCheckResultViewActionsViaService(this, result);
-        if (!result || !result.trace_arg) return;
-        var self = this;
-        var openTrace = function () {
-            self.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id);
-        };
-
-        var appendLegacyButton = function () {
-            if (document.querySelector('[data-check-view-trace]')) return;
-            var info = document.getElementById('info-content');
-            if (!info) return;
-            var button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'btn small';
-            button.setAttribute('data-check-view-trace', 'true');
-            button.textContent = 'View error trace';
-            button.addEventListener('click', openTrace);
-            info.appendChild(document.createElement('br'));
-            info.appendChild(button);
-        };
-
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setCheckTraceAction === 'function') {
-            window.__ivyVueBridge.setCheckTraceAction(openTrace);
-            return;
-        }
-        appendLegacyButton();
     }
 
     /**

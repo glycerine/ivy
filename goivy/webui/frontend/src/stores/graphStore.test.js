@@ -13,7 +13,7 @@ describe('graphStore', () => {
     vi.useRealTimers();
   });
 
-  it('accepts legacy graph snapshots by sheet and tracks selected ARG nodes', () => {
+  it('accepts graph snapshots by sheet and tracks selected ARG nodes', () => {
     const graphs = useGraphStore();
     const elements = [{ group: 'nodes', data: { id: 'state_0', label: '0' } }];
 

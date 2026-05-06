@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 describe('ivyVueBridge', () => {
-  it('keeps the context menu store and legacy menu element in sync', () => {
+  it('keeps the context menu store and compatibility menu element in sync', () => {
     document.body.innerHTML = '<div id="context-menu" style="display:none"></div>';
     const { bridge, pinia } = makeBridge();
     const contextMenuStore = useContextMenuStore(pinia);
@@ -59,7 +59,7 @@ describe('ivyVueBridge', () => {
     expect(document.getElementById('context-menu').style.display).toBe('none');
   });
 
-  it('renders and unmounts dynamic analysis sheet shells for the legacy graph controller', () => {
+  it('renders and unmounts dynamic analysis sheet shells for the runtime graph coordinator', () => {
     document.body.innerHTML = '<div id="sheet-area"></div>';
     const { bridge } = makeBridge();
 
@@ -150,7 +150,7 @@ describe('ivyVueBridge', () => {
     delete window.__IVY_ENGINE_KIND__;
   });
 
-  it('tolerates a missing legacy context menu element', () => {
+  it('tolerates a missing compatibility context menu element', () => {
     expect(() => syncContextMenuElement(true, 1, 2)).not.toThrow();
   });
 });
