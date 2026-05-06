@@ -4,10 +4,10 @@
       <div class="dropdown" :class="{ open: dropdownStore.isOpen('file-menu') }">
         <span class="panel-menu" data-dropdown="file-menu" @click="toggleDropdownCommand($event, dropdownStore, 'file-menu', () => callApp('populateRecentFiles'))">File</span>
         <div id="file-menu" class="dropdown-content">
-          <a href="#" id="file-load" :class="menuFlashClass('file-load')" @click="runMenuCommand($event, () => callApp('chooseAndLoadModelFile'))">Load...</a>
+          <a href="#" id="file-load" :class="menuFlashClass('file-load')" @click="runMenuCommand($event, () => callApp('file.load'))">Load...</a>
           <a href="#" id="file-open-event-trace" :class="menuFlashClass('file-open-event-trace')" @click="runMenuCommand($event, () => callApp('chooseAndLoadEventTraceFile'))">Open Event Trace...</a>
-          <a href="#" id="file-save-as" :class="menuFlashClass('file-save-as')" @click="runMenuCommand($event, () => callApp('saveAs'))">Save as...</a>
-          <a href="#" id="file-download" :class="menuFlashClass('file-download')" @click="runMenuCommand($event, () => callApp('downloadModel'))">Download current model</a>
+          <a href="#" id="file-save-as" :class="menuFlashClass('file-save-as')" @click="runMenuCommand($event, () => callApp('file.saveAs'))">Save as...</a>
+          <a href="#" id="file-download" :class="menuFlashClass('file-download')" @click="runMenuCommand($event, () => callApp('file.download'))">Download current model</a>
           <a href="#" id="file-save-analysis-state" :class="menuFlashClass('file-save-analysis-state')" @click="runMenuCommand($event, () => callApp('saveAnalysisState'))">Save Analysis State...</a>
           <a href="#" id="file-load-analysis-state" :class="menuFlashClass('file-load-analysis-state')" @click="runMenuCommand($event, () => callApp('chooseAndLoadAnalysisStateFile'))">Load Analysis State...</a>
           <a href="#" id="file-save-invariant" :class="menuFlashClass('file-save-invariant')" @click="runMenuCommand($event, () => callApp('saveInvariant'))">Save Invariant...</a>
@@ -15,7 +15,7 @@
           <RecentFilesMenu />
           <div class="dropdown-sep"></div>
           <div class="menu-spacer"></div>
-          <a href="#" id="file-new" :class="menuFlashClass('file-new')" @click="runMenuCommand($event, () => callApp('newModel'))">New Model</a>
+          <a href="#" id="file-new" :class="menuFlashClass('file-new')" @click="runMenuCommand($event, () => callApp('file.new'))">New Model</a>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
 
 <script setup>
 import RecentFilesMenu from './RecentFilesMenu.vue';
-import { callApp, runCommand, runMenuCommand, toggleDropdownCommand } from './legacyCommand.js';
+import { callApp, runCommand, runMenuCommand, toggleDropdownCommand } from '../services/uiCommandService.js';
 import { useDropdownStore } from '../stores/dropdownStore.js';
 import { useLayoutStore } from '../stores/layoutStore.js';
 import { useSessionStore } from '../stores/sessionStore.js';

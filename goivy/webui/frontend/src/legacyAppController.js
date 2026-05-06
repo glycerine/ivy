@@ -6,9 +6,148 @@
  * file loading, mode selection, and verification checks.
  */
 
-import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './legacyGraph.js';
+import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './services/graphRuntime.js';
 import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './legacyRuntimeGlobals.js';
-import { createIvyPersist } from './legacyPersist.js';
+import { createIvyPersist } from './services/persistenceService.js';
+import { registerCommand, registerControllerCommands } from './services/commandRegistry.js';
+import {
+    connectSessionEvents,
+    createLegacyApi,
+    createSession,
+    updateSessionDisplay as updateSessionDisplayViaService,
+} from './services/sessionService.js';
+import {
+    editorContent,
+    editorDirty,
+    editorTextElement,
+    getEditorKeymap as getEditorKeymapViaService,
+    refreshEditorLayout,
+    scrollEditorToLine as scrollEditorToLineViaService,
+    setEditorContent as setEditorContentViaService,
+    setEditorKeymap as setEditorKeymapViaService,
+    updateEditorLabel as updateEditorLabelViaService,
+} from './services/editorService.js';
+import { initializeLegacyCodeMirror } from './codeMirrorEditor.js';
+import {
+    chooseAndLoadModelFile as chooseAndLoadModelFileViaService,
+    closeCurrentFile as closeCurrentFileViaService,
+    confirmNoExternalChangeBeforeSave as confirmNoExternalChangeBeforeSaveViaService,
+    downloadModel as downloadModelViaService,
+    downloadModelForUnsupportedSave as downloadModelForUnsupportedSaveViaService,
+    downloadTextFile as downloadTextFileViaService,
+    ensureFileHandleWritable,
+    loadModelFile,
+    mergeDiskVersionIntoEditBuffer,
+    newModel as newModelViaService,
+    readFileHandleContent,
+    rememberLastOpenFile,
+    reopenLastFile as reopenLastFileViaService,
+    restoreFileHandleForCurrentFile,
+    saveModel,
+    saveModelAs,
+    updateReopenLastFileButton,
+} from './services/fileService.js';
+import {
+    loadRecentSession as loadRecentSessionViaService,
+    populateRecentFiles as populateRecentFilesViaService,
+} from './services/recentFileService.js';
+import {
+    currentSheet as currentSheetViaService,
+    graphElementsSnapshot as graphElementsSnapshotViaService,
+    installGraphStoreHook as installGraphStoreHookViaService,
+    refreshGraphsAndEditorLayout,
+    refreshLayoutAfterVuePatch,
+    registerSheet as registerSheetViaService,
+} from './services/graphService.js';
+import {
+    applyEdgeVisibility,
+    applyNodeLabels,
+    displayConceptName,
+    findEdgeVisibility,
+    hydrateBackendToggleState,
+    onEdgeToggle as onEdgeToggleViaService,
+    onEdgeToggleChange as onEdgeToggleChangeViaService,
+    onLabelToggleChange as onLabelToggleChangeViaService,
+    populateStateCheckboxes as populateStateCheckboxesViaService,
+    toggleChecked,
+    updateStateLabel as updateStateLabelViaService,
+} from './services/conceptVisibilityService.js';
+import { populateConstraintFacts as populateConstraintFactsViaService } from './services/detailsService.js';
+import {
+    assertValidSheetId as assertValidSheetIdViaService,
+    isValidSheetId as isValidSheetIdViaService,
+    isVisualOnlySheet as isVisualOnlySheetViaService,
+    setVisualOnlySheet as setVisualOnlySheetViaService,
+    sheetExists as sheetExistsViaService,
+    sheetTab as sheetTabViaService,
+    switchSheet as switchSheetViaService,
+    visualOnlyMessage as visualOnlyMessageViaService,
+} from './services/sheetService.js';
+import {
+    activeEventSheet as activeEventSheetViaService,
+    filterEventTrace as filterEventTraceViaService,
+    findEventTrace as findEventTraceViaService,
+    loadEventTraceFile as loadEventTraceFileViaService,
+    lookupEventTrace as lookupEventTraceViaService,
+    readFileText as readFileTextViaService,
+    selectEventTraceRow as selectEventTraceRowViaService,
+    selectedEventPattern as selectedEventPatternViaService,
+    toggleEventTraceNode as toggleEventTraceNodeViaService,
+    uncoverEventTraceAddress as uncoverEventTraceAddressViaService,
+} from './services/eventTraceService.js';
+import {
+    addCheckResultViewActions as addCheckResultViewActionsViaService,
+    autoCheckUsedRelations,
+    boundedCheck as boundedCheckViaService,
+    checkInduction as checkInductionViaService,
+    runCheck as runCheckViaService,
+    showCheckResult as showCheckResultViaService,
+} from './services/checkService.js';
+import {
+    executeAndRefresh,
+    refreshConceptGraph as refreshConceptGraphViaService,
+    runAction as runActionViaService,
+} from './services/analysisActionService.js';
+import {
+    closeAllDropdowns as closeAllDropdownsViaService,
+    dispatchMenuDescriptorAction as dispatchMenuDescriptorActionViaService,
+    flashAndClose as flashAndCloseViaService,
+} from './services/menuService.js';
+import {
+    analysisStateLimits as analysisStateLimitsViaService,
+    buildAnalysisState as buildAnalysisStateViaService,
+    removeAnalysisStateExtraSheets as removeAnalysisStateExtraSheetsViaService,
+    validateAnalysisStateEvents as validateAnalysisStateEventsViaService,
+    validateAnalysisStateGraphPayload as validateAnalysisStateGraphPayloadViaService,
+    validateAnalysisStateObject as validateAnalysisStateObjectViaService,
+    validateAnalysisStateSheet as validateAnalysisStateSheetViaService,
+} from './services/analysisStateService.js';
+import {
+    executeArgEdgeAction as executeArgEdgeActionViaService,
+    executeArgNodeAction as executeArgNodeActionViaService,
+    prepareArgNodeActionArgs as prepareArgNodeActionArgsViaService,
+} from './services/argActionService.js';
+import {
+    addProjection as addProjectionViaService,
+    executeConceptEdgeAction as executeConceptEdgeActionViaService,
+    executeConceptNodeAction as executeConceptNodeActionViaService,
+    materializeEdge as materializeEdgeViaService,
+    materializeNode as materializeNodeViaService,
+    removeConcept as removeConceptViaService,
+    selectConceptNode as selectConceptNodeViaService,
+    splatterNode as splatterNodeViaService,
+    splitConcept as splitConceptViaService,
+    supposeEmpty as supposeEmptyViaService,
+} from './services/conceptActionService.js';
+import {
+    buttonListDialog as buttonListDialogViaService,
+    entryDialog as entryDialogViaService,
+    integerDialog as integerDialogViaService,
+    listboxDialog as listboxDialogViaService,
+    okCancelDialog as okCancelDialogViaService,
+    okDialog as okDialogViaService,
+    textDialog as textDialogViaService,
+} from './services/dialogService.js';
 
 const defaultLegacyAppDependencies = {
     IvyAPI: DefaultIvyAPI,
@@ -63,15 +202,11 @@ class IvyApp {
     }
 
     createApi() {
-        var bridge = window.__ivyVueBridge;
-        if (bridge && typeof bridge.createLegacyApi === 'function') {
-            try {
-                return bridge.createLegacyApi();
-            } catch (e) {
-                console.warn('Vue engine bridge unavailable, falling back to IvyAPI:', e);
-            }
-        }
-        return new legacyAppDeps.IvyAPI();
+        return createLegacyApi({
+            fallbackApiFactory: function () {
+                return new legacyAppDeps.IvyAPI();
+            },
+        });
     }
 
     /**
@@ -87,10 +222,9 @@ class IvyApp {
 
         // Always need a server session for API calls.
         try {
-            await this.api.createSession();
+            await createSession(this.api, { controls: this.controls });
         } catch (e) {
-            this.controls.setStatus('Failed to create session: ' + e.message, 'error');
-            console.error('Session creation failed:', e);
+            // createSession has already reported the failure through controls.
         }
 
         // If restoring, keep the saved session's URL hash.
@@ -134,11 +268,10 @@ class IvyApp {
 
         // Connect to SSE for real-time updates
         if (this.api.sessionId) {
-            this.api.connectEvents(this.handleEvent.bind(this));
-            this.api.onConnectionLost = function () {
+            connectSessionEvents(this.api, this.handleEvent.bind(this), function () {
                 self.controls.setStatus('Server connection lost', 'error');
                 self._showToast('Connection to server lost. Check that the server is running and reload the page.', 'error');
-            };
+            });
         }
 
         // Initialize CodeMirror on the model editor textarea.
@@ -148,27 +281,11 @@ class IvyApp {
             this.cmEditor = window.__ivyVueBridge.initializeEditor(this);
         } else if (modelEditor) {
             var codeMirror = legacyAppDeps.CodeMirror || window.CodeMirror;
-            if (!codeMirror) {
-                throw new Error('CodeMirror is not available');
-            }
-            this.cmEditor = codeMirror.fromTextArea(modelEditor, {
-                lineNumbers: true,
-                keyMap: this.getEditorKeymap(),
-                tabSize: 4,
-                indentUnit: 4,
-                lineWrapping: false,
-                matchBrackets: true,
-                extraKeys: {
-                    'Ctrl-Z': 'undo',
-                    'Ctrl-Y': 'redo',
-                    'Ctrl-Shift-Z': 'redo',
-                }
-            });
-            // Sync edits back to persisted content and update dirty marker.
-            this.cmEditor.on('change', function () {
-                if (!self.cmEditor || typeof self.cmEditor.getValue !== 'function') return;
-                self._persistedFileContent = self.cmEditor.getValue();
-                self._updateEditorLabel();
+            this.cmEditor = initializeLegacyCodeMirror({
+                legacyApp: this,
+                editorStore: { keymap: this.getEditorKeymap() },
+                doc: document,
+                codeMirror: codeMirror,
             });
             // Keymap radio button switching fallback for non-Vue test harnesses.
             if (!(window.__ivyVueBridge &&
@@ -217,15 +334,7 @@ class IvyApp {
     // --- Editor helpers (CodeMirror) ---
 
     updateSessionDisplay(sessionId) {
-        var displaySessionId = sessionId || '';
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSessionId === 'function') {
-            window.__ivyVueBridge.setSessionId(displaySessionId);
-            return;
-        }
-        var sessionEl = document.getElementById('session-id');
-        if (sessionEl) {
-            sessionEl.textContent = displaySessionId ? 'Session: ' + displaySessionId : '';
-        }
+        updateSessionDisplayViaService(sessionId);
     }
 
     _setVueLayoutSize(method, value) {
@@ -238,70 +347,25 @@ class IvyApp {
     }
 
     setEditorContent(content) {
-        this._persistedFileContent = content;
-        this._savedFileContent = content;
-        if (this.cmEditor) {
-            this.cmEditor.setValue(content);
-        }
-        this._updateEditorLabel();
+        setEditorContentViaService(this, content);
     }
 
     _updateEditorLabel() {
-        var name = this._persistedFilePath || this._persistedFileName || '';
-        var current = (this.cmEditor && typeof this.cmEditor.getValue === 'function') ? this.cmEditor.getValue() : (this._persistedFileContent || '');
-        var saved = this._savedFileContent || '';
-        var dirty = current !== saved;
-        var labelText;
-        if (!name) {
-            labelText = '(unsaved file)' + (this._saveInProgress ? ' [saving...]' : '');
-            if (dirty && !this._saveInProgress) {
-                labelText = '** ' + labelText;
-            }
-        } else if (this._saveInProgress) {
-            labelText = name + ' [saving...]';
-        } else if (dirty) {
-            labelText = '** ' + name;
-        } else {
-            labelText = name + ' [saved]';
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEditor === 'function') {
-            window.__ivyVueBridge.updateEditor({
-                path: name,
-                content: current,
-                savedContent: saved,
-                saveInProgress: this._saveInProgress,
-            });
-            this._updateReopenLastFileButton();
-            return;
-        }
-        var editorLabel = document.getElementById('model-editor-label');
-        if (!editorLabel) return;
-        editorLabel.textContent = labelText;
-        editorLabel.title = 'Editing: ' + labelText;
-        this._updateReopenLastFileButton();
+        updateEditorLabelViaService(this, {
+            updateReopenLastFileButton: this._updateReopenLastFileButton.bind(this),
+        });
     }
 
     _refreshEditorLayout() {
-        var self = this;
-        var refresh = function () {
-            if (self.cmEditor && typeof self.cmEditor.refresh === 'function') {
-                self.cmEditor.refresh();
-            }
-        };
-
-        refresh();
-        if (window.requestAnimationFrame) {
-            window.requestAnimationFrame(refresh);
-        }
-        setTimeout(refresh, 0);
+        refreshEditorLayout(this);
     }
 
     _editorContent() {
-        return this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
+        return editorContent(this);
     }
 
     _editorDirty() {
-        return this._editorContent() !== (this._savedFileContent || '');
+        return editorDirty(this);
     }
 
     _showSaveProgress(message) {
@@ -313,15 +377,7 @@ class IvyApp {
     }
 
     _editorTextElement() {
-        if (this.cmEditor && typeof this.cmEditor.getWrapperElement === 'function') {
-            var wrapper = this.cmEditor.getWrapperElement();
-            if (wrapper) return wrapper;
-        }
-        var editorPanel = document.getElementById('editor-panel');
-        if (editorPanel) {
-            return editorPanel.querySelector('.CodeMirror') || editorPanel.querySelector('#model-editor');
-        }
-        return document.getElementById('model-editor');
+        return editorTextElement(this);
     }
 
     _showSaveEditorSheen() {
@@ -357,129 +413,35 @@ class IvyApp {
     }
 
     _rememberLastOpenFile() {
-        var name = this._persistedFileName || (this._fileHandle && this._fileHandle.name) || '';
-        if (!name) return;
-        this._lastClosedFileHandle = this._fileHandle;
-        this._lastClosedSessionId = legacyAppDeps.IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '';
-        this._lastClosedFileName = name || 'file';
+        rememberLastOpenFile(this, legacyAppDeps.IvyPersist);
     }
 
     _updateReopenLastFileButton() {
-        var btn = document.getElementById('file-reopen-last');
-        var noCurrentFile = !this._fileHandle && !this._persistedFileName;
-        var visible = !!(noCurrentFile && (this._lastClosedFileHandle || this._lastClosedSessionId));
-        var label = 'Re-open last file ' + (this._lastClosedFileName || 'file');
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateReopenLastFileButton === 'function') {
-            window.__ivyVueBridge.updateReopenLastFileButton(visible, label);
-            return;
-        }
-        if (!btn) return;
-        if (visible) {
-            btn.textContent = label;
-            btn.style.display = '';
-        } else {
-            btn.style.display = 'none';
-        }
+        updateReopenLastFileButton(this);
     }
 
     async reopenLastFile() {
-        if (!this._lastClosedFileHandle && !this._lastClosedSessionId) return;
-        try {
-            if (this._lastClosedFileHandle) {
-                var file = await this._lastClosedFileHandle.getFile();
-                this._fileHandle = this._lastClosedFileHandle;
-                await this.loadFile(file);
-            } else {
-                await this.loadRecentSession(this._lastClosedSessionId);
-            }
-            legacyAppDeps.IvyPersist.setFileName(
-                this._persistedFileName || this._lastClosedFileName,
-                this._persistedFilePath || this._persistedFileName || this._lastClosedFileName
-            );
-        } catch (e) {
-            this.controls.setStatus('Re-open failed: ' + e.message, 'error');
-        }
+        return reopenLastFileViaService(this, legacyAppDeps.IvyPersist);
     }
 
     async _ensureFileHandleWritable() {
-        if (!this._fileHandle) return false;
-        if (!this._fileHandle.queryPermission || !this._fileHandle.requestPermission) {
-            return true;
-        }
-        var opts = { mode: 'readwrite' };
-        var perm = await this._fileHandle.queryPermission(opts);
-        if (perm === 'granted') return true;
-        perm = await this._fileHandle.requestPermission(opts);
-        return perm === 'granted';
+        return ensureFileHandleWritable(this);
     }
 
     async _readFileHandleContent() {
-        if (!this._fileHandle) return null;
-        var file = await this._fileHandle.getFile();
-        return await file.text();
+        return readFileHandleContent(this);
     }
 
     async _restoreFileHandleForCurrentFile() {
-        if (this._fileHandle) return true;
-        if (!this._persistedFileName) return false;
-        var state = {
-            sessionId: legacyAppDeps.IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '',
-            fileName: this._persistedFileName,
-            filePath: this._persistedFilePath || this._persistedFileName,
-        };
-        var handle = await legacyAppDeps.IvyPersist.loadFileHandle(state);
-        if (!handle) return false;
-        this._fileHandle = handle;
-        await legacyAppDeps.IvyPersist.saveFileHandle(this);
-        return true;
+        return restoreFileHandleForCurrentFile(this, legacyAppDeps.IvyPersist);
     }
 
     async _confirmNoExternalChangeBeforeSave(content) {
-        if (!this._fileHandle) return 'ok';
-        var diskContent = await this._readFileHandleContent();
-        var lastSaved = this._savedFileContent || '';
-        if (diskContent === lastSaved || diskContent === content) {
-            return 'ok';
-        }
-        var choice = await this.showExternalChangeDialog();
-        if (choice === 'overwrite') {
-            return 'overwrite';
-        }
-        if (choice === 'reload') {
-            this.setEditorContent(diskContent);
-            this._persistedFileContent = diskContent;
-            this._savedFileContent = diskContent;
-            legacyAppDeps.IvyPersist.save(this);
-            this.controls.setStatus('Reverted to on-disk version: ' + (this._persistedFileName || 'model'), 'success');
-        } else if (choice === 'merge') {
-            var merged = this._mergeDiskVersionIntoEditBuffer(lastSaved, content, diskContent);
-            this._persistedFileContent = merged;
-            this._savedFileContent = diskContent;
-            if (this.cmEditor) {
-                this.cmEditor.setValue(merged);
-            }
-            this._updateEditorLabel();
-            legacyAppDeps.IvyPersist.save(this);
-            this.controls.setStatus('Merged disk changes into editor buffer; resolve conflict markers before saving', 'warning');
-        } else {
-            this.controls.setStatus('Save cancelled: file changed on disk', 'warning');
-        }
-        return 'skip';
+        return confirmNoExternalChangeBeforeSaveViaService(this, content, legacyAppDeps.IvyPersist);
     }
 
     _mergeDiskVersionIntoEditBuffer(baseContent, editorContent, diskContent) {
-        if (editorContent === baseContent) return diskContent;
-        if (diskContent === baseContent) return editorContent;
-        return [
-            '<<<<<<< EDIT BUFFER',
-            editorContent.replace(/\s*$/, ''),
-            '||||||| LAST SAVED',
-            baseContent.replace(/\s*$/, ''),
-            '=======',
-            diskContent.replace(/\s*$/, ''),
-            '>>>>>>> ON DISK',
-            ''
-        ].join('\n');
+        return mergeDiskVersionIntoEditBuffer(baseContent, editorContent, diskContent);
     }
 
     showExternalChangeDialog() {
@@ -616,72 +578,31 @@ class IvyApp {
     }
 
     scrollEditorToLine(lineno) {
-        if (this.cmEditor) {
-            var line = lineno - 1;
-            if (this._highlightedEditorLineHandle != null) {
-                this.cmEditor.removeLineClass(this._highlightedEditorLineHandle, 'background', 'ivy-source-highlight');
-            }
-            this.cmEditor.setCursor(line, 0);
-            this.cmEditor.setSelection(
-                {line: line, ch: 0},
-                {line: line, ch: this.cmEditor.getLine(line).length}
-            );
-            this._highlightedEditorLineHandle = this.cmEditor.addLineClass(line, 'background', 'ivy-source-highlight');
-            this._highlightedEditorLine = lineno;
-            this.cmEditor.scrollIntoView({line: line, ch: 0}, 50);
-            this.cmEditor.focus();
-        }
+        scrollEditorToLineViaService(this, lineno);
     }
 
     currentSheet() {
-        return this.sheets ? this.sheets[this.activeSheetId] : null;
+        return currentSheetViaService(this);
     }
 
     registerSheet(sheetId, argGraph, conceptGraph) {
-        this.installConceptGraphVisibilityHook(conceptGraph);
-        this.installGraphStoreHook(sheetId, 'arg', argGraph);
-        this.installGraphStoreHook(sheetId, 'concept', conceptGraph);
-        this.sheets[sheetId] = {
-            id: sheetId,
-            type: 'analysis',
-            argGraph: argGraph,
-            conceptGraph: conceptGraph,
-            selectedArgNode: null,
-            visualOnly: false,
-        };
+        registerSheetViaService(this, sheetId, argGraph, conceptGraph);
     }
 
     installGraphStoreHook(sheetId, kind, graph) {
-        if (!graph || graph._ivyGraphStoreHooked) return;
-        var origUpdate = graph.update.bind(graph);
-        graph.update = function(elements, positions) {
-            var result = origUpdate(elements, positions);
-            if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateGraphSnapshot === 'function') {
-                window.__ivyVueBridge.updateGraphSnapshot(sheetId, kind, {
-                    elements: elements || [],
-                    positions: positions || null,
-                });
-            }
-            return result;
-        };
-        graph._ivyGraphStoreHooked = true;
+        installGraphStoreHookViaService(sheetId, kind, graph);
     }
 
     isVisualOnlySheet(sheetId) {
-        var sheet = this.sheets && this.sheets[sheetId];
-        return !!(sheet && sheet.visualOnly);
+        return isVisualOnlySheetViaService(this, sheetId);
     }
 
     setVisualOnlySheet(sheetId, visualOnly) {
-        var sheet = this.sheets && this.sheets[sheetId];
-        if (sheet) sheet.visualOnly = !!visualOnly;
+        return setVisualOnlySheetViaService(this, sheetId, visualOnly);
     }
 
     visualOnlyMessage(kind) {
-        if (kind === 'events') {
-            return 'Restored event trace is visual-only; reload or rerun analysis before event backend actions';
-        }
-        return 'Restored analysis state is visual-only; reload or rerun analysis before graph actions';
+        return visualOnlyMessageViaService(kind);
     }
 
     installConceptGraphVisibilityHook(conceptGraph) {
@@ -784,25 +705,7 @@ class IvyApp {
     }
 
     async chooseAndLoadModelFile() {
-        var fileInput = document.getElementById('file-input');
-        if (window.showOpenFilePicker) {
-            try {
-                var handles = await window.showOpenFilePicker({
-                    types: [{ description: 'Ivy files', accept: { 'text/plain': ['.ivy'] } }],
-                    multiple: false,
-                });
-                var handle = handles[0];
-                var file = await handle.getFile();
-                this._fileHandle = handle;
-                await this.loadFile(file);
-            } catch (ex) {
-                if (ex.name !== 'AbortError') {
-                    this.controls.setStatus('Load failed: ' + ex.message, 'error');
-                }
-            }
-        } else if (fileInput) {
-            fileInput.click();
-        }
+        return chooseAndLoadModelFileViaService(this);
     }
 
     async chooseAndLoadEventTraceFile() {
@@ -1272,28 +1175,19 @@ class IvyApp {
     }
 
     isValidSheetId(sheetId) {
-        return /^[A-Za-z][A-Za-z0-9_-]*$/.test(String(sheetId || ''));
+        return isValidSheetIdViaService(sheetId);
     }
 
     assertValidSheetId(sheetId) {
-        if (!this.isValidSheetId(sheetId)) {
-            throw new Error('invalid sheet id: ' + sheetId);
-        }
-        return sheetId;
+        return assertValidSheetIdViaService(sheetId);
     }
 
     sheetTab(sheetId) {
-        var tabs = document.querySelectorAll('.sheet-tab');
-        for (var i = 0; i < tabs.length; i++) {
-            if (tabs[i].getAttribute('data-sheet') === sheetId) {
-                return tabs[i];
-            }
-        }
-        return null;
+        return sheetTabViaService(sheetId);
     }
 
     sheetExists(sheetId) {
-        return !!((this.sheets && this.sheets[sheetId]) || document.getElementById(sheetId) || this.sheetTab(sheetId));
+        return sheetExistsViaService(this, sheetId);
     }
 
     eventTraceRow(sheetId, address) {
@@ -1312,6 +1206,7 @@ class IvyApp {
      * Switch to a sheet by ID.
      */
     switchSheet(sheetId) {
+        return switchSheetViaService(this, sheetId);
         var bridge = window.__ivyVueBridge;
         var vueTabs = bridge && typeof bridge.activateSheetTab === 'function';
         if (vueTabs) {
@@ -1521,6 +1416,7 @@ class IvyApp {
     }
 
     async loadEventTraceFile(file) {
+        return loadEventTraceFileViaService(this, file);
         if (!file) return null;
         this.controls.setStatus('Loading event trace...');
         try {
@@ -1536,6 +1432,7 @@ class IvyApp {
     }
 
     readFileText(file) {
+        return readFileTextViaService(file);
         if (file && typeof file.text === 'function') {
             return file.text();
         }
@@ -1692,6 +1589,7 @@ class IvyApp {
     }
 
     toggleEventTraceNode(sheetId, address) {
+        return toggleEventTraceNodeViaService(this, sheetId, address);
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEventTraceExpanded === 'function') {
             var expanded = false;
             if (typeof window.__ivyVueBridge.isEventTraceExpanded === 'function') {
@@ -1723,6 +1621,7 @@ class IvyApp {
     }
 
     lookupEventTrace(events, address) {
+        return lookupEventTraceViaService(events, address);
         if (!address && address !== '0') return null;
         var parts = String(address).split('/');
         var current = null;
@@ -1737,6 +1636,7 @@ class IvyApp {
     }
 
     uncoverEventTraceAddress(sheetId, address) {
+        return uncoverEventTraceAddressViaService(this, sheetId, address);
         var parts = String(address || '').split('/');
         var prefix = '';
         for (var i = 0; i < parts.length - 1; i++) {
@@ -1749,6 +1649,7 @@ class IvyApp {
     }
 
     selectEventTraceRow(sheetId, address) {
+        return selectEventTraceRowViaService(this, sheetId, address);
         var sheetState = this.sheets && this.sheets[sheetId];
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.selectEventTraceRow === 'function') {
             if (sheetState) sheetState.selectedEventAddress = address;
@@ -1771,11 +1672,13 @@ class IvyApp {
     }
 
     activeEventSheet() {
+        return activeEventSheetViaService(this);
         var sheet = this.sheets && this.sheets[this.activeSheetId];
         return sheet && sheet.type === 'events' ? sheet : null;
     }
 
     async filterEventTrace(pattern) {
+        return filterEventTraceViaService(this, pattern);
         var sheet = this.activeEventSheet();
         if (!sheet) {
             this.controls.setStatus('No event sheet selected', 'error');
@@ -1800,6 +1703,7 @@ class IvyApp {
     }
 
     async findEventTrace(pattern, reverse) {
+        return findEventTraceViaService(this, pattern, reverse);
         var sheet = this.activeEventSheet();
         if (!sheet) {
             this.controls.setStatus('No event sheet selected', 'error');
@@ -1866,6 +1770,7 @@ class IvyApp {
     }
 
     selectedEventPattern(sheetId) {
+        return selectedEventPatternViaService(this, sheetId);
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSelectedEventPattern === 'function') {
             return window.__ivyVueBridge.getSelectedEventPattern(sheetId) || '';
         }
@@ -2033,31 +1938,11 @@ class IvyApp {
     }
 
     _refreshGraphsAndEditorLayout() {
-        if (this.argGraph) this.argGraph.resize();
-        if (this.conceptGraph) this.conceptGraph.resize();
-        this._refreshEditorLayout();
+        refreshGraphsAndEditorLayout(this);
     }
 
     _refreshLayoutAfterVuePatch() {
-        var self = this;
-        var refresh = function () {
-            self._refreshGraphsAndEditorLayout();
-        };
-        var bridge = window.__ivyVueBridge;
-        if (bridge && typeof bridge.afterLayoutSettled === 'function') {
-            bridge.afterLayoutSettled(function () {
-                refresh();
-                setTimeout(refresh, 60);
-            });
-            return;
-        }
-        if (typeof window.requestAnimationFrame === 'function') {
-            window.requestAnimationFrame(function () {
-                window.requestAnimationFrame(refresh);
-            });
-        } else {
-            setTimeout(refresh, 0);
-        }
+        refreshLayoutAfterVuePatch(this);
     }
 
     setupResizerH() {
@@ -2319,6 +2204,7 @@ class IvyApp {
     }
 
     populateStateCheckboxes(conceptData) {
+        return populateStateCheckboxesViaService(this, conceptData);
         // Store concept data for node label rendering
         this._lastConceptData = conceptData;
         var tbody = document.getElementById('state-checkbox-body');
@@ -2455,6 +2341,7 @@ class IvyApp {
     }
 
     populateConstraintFacts(conceptData) {
+        return populateConstraintFactsViaService(this, conceptData);
         var facts = (conceptData && Array.isArray(conceptData.facts)) ? conceptData.facts : [];
         var self = this;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateConstraintFacts === 'function') {
@@ -2510,6 +2397,7 @@ class IvyApp {
     }
 
     _hydrateBackendToggleState(conceptData) {
+        return hydrateBackendToggleState(this, conceptData);
         this._edgeVisibility = {};
         this._labelVisibility = {};
         var toggles = (conceptData && conceptData.toggles) || {};
@@ -2537,6 +2425,7 @@ class IvyApp {
     }
 
     _toggleChecked(name, displayClass) {
+        return toggleChecked(this, name, displayClass);
         var base = name.split('(')[0];
         var vis = this._edgeVisibility[name] || this._edgeVisibility[base];
         if (vis && Object.prototype.hasOwnProperty.call(vis, displayClass)) {
@@ -2559,6 +2448,7 @@ class IvyApp {
      * Handle edge visibility toggle change.
      */
     async onEdgeToggle(edgeName, displayClass, checked) {
+        return onEdgeToggleViaService(this, edgeName, displayClass, checked);
         // Track visibility state client-side (matches Python edge/node_label display_checkboxes)
         // Python maps checkbox columns to keys:
         //   For edges:  + → all_to_all, ? → edge_unknown, - → none_to_none, T → transitive
@@ -2608,6 +2498,7 @@ class IvyApp {
      *   if widget.edge_display_checkboxes[edge][classes[0]].value is False: skip
      */
     _applyEdgeVisibility(conceptGraph) {
+        return applyEdgeVisibility(this, conceptGraph);
         var graph = conceptGraph || this.conceptGraph;
         if (!graph || !graph.cy) return;
         var self = this;
@@ -2641,6 +2532,7 @@ class IvyApp {
      * while edge data uses bare names like "link". Try both.
      */
     _findEdgeVisibility(obj, label) {
+        return findEdgeVisibility(this, obj, label);
         var ev = this._edgeVisibility;
         // Direct match on obj or label
         if (ev[obj]) return ev[obj];
@@ -2679,6 +2571,7 @@ class IvyApp {
      *   4. Display with prefix: '' for +, '?' for ?, '¬' for -
      */
     _applyNodeLabels() {
+        return applyNodeLabels(this);
         if (!this.conceptGraph || !this.conceptGraph.cy) return;
         if (!this._lastConceptData) return;
 
@@ -2749,6 +2642,7 @@ class IvyApp {
     }
 
     _displayConceptName(name) {
+        return displayConceptName(name);
         if (typeof name === 'string' && name.charAt(0) === '=') {
             var body = name.slice(1);
             var idx = body.lastIndexOf(':');
@@ -2763,6 +2657,7 @@ class IvyApp {
      * Update the state label to show which ARG node is selected.
      */
     updateStateLabel(nodeId) {
+        return updateStateLabelViaService(nodeId);
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateLabel === 'function') {
             window.__ivyVueBridge.updateStateLabel(nodeId);
             return;
@@ -2932,6 +2827,7 @@ class IvyApp {
      * Execute an ARG node action via the API.
      */
     async executeArgNodeAction(nodeData, action, sheetId) {
+        return executeArgNodeActionViaService(this, nodeData, action, sheetId);
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
         if (this.isVisualOnlySheet(sheetId)) {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
@@ -2965,6 +2861,7 @@ class IvyApp {
     }
 
     async prepareArgNodeActionArgs(nodeData, actionName, args, sheetId) {
+        return prepareArgNodeActionArgsViaService(this, nodeData, actionName, args, sheetId);
         if (actionName === 'try_conjecture' && !args.conjecture) {
             var conjChoices = await this.api.argNodeAction(nodeData.obj || nodeData.id, 'try_conjecture_choices', { sheet_id: sheetId });
             var selectedConj = await this.listboxDialog(
@@ -3030,6 +2927,7 @@ class IvyApp {
      * Execute an ARG edge action via the API.
      */
     async executeArgEdgeAction(edgeData, actionName, sheetId) {
+        return executeArgEdgeActionViaService(this, edgeData, actionName, sheetId);
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
         this.controls.setStatus('Executing: ' + actionName + '...');
         try {
@@ -3231,6 +3129,7 @@ class IvyApp {
      * Execute a concept node action dispatched from the context menu.
      */
     async executeConceptNodeAction(nodeData, action) {
+        return executeConceptNodeActionViaService(this, nodeData, action);
         var actionID = action.action || action.id || action[0] || action.name || '';
         var actionName = actionID.toLowerCase();
         var actionArgs = action.args || {};
@@ -3276,6 +3175,7 @@ class IvyApp {
      * Execute a concept edge action dispatched from the context menu.
      */
     async executeConceptEdgeAction(edgeData, action) {
+        return executeConceptEdgeActionViaService(this, edgeData, action);
         var actionName = (action[0] || action.name || '').toLowerCase();
         var conceptId = edgeData.obj || edgeData.id;
 
@@ -3308,6 +3208,7 @@ class IvyApp {
     // ================================================================
 
     async splitConcept(concept, splitBy) {
+        return splitConceptViaService(this, concept, splitBy);
         this.controls.setStatus('Splitting ' + concept + ' by ' + splitBy + '...');
         try {
             await this.api.splitConcept(concept, splitBy);
@@ -3319,6 +3220,7 @@ class IvyApp {
     }
 
     async supposeEmpty(concept) {
+        return supposeEmptyViaService(this, concept);
         this.controls.setStatus('Supposing ' + concept + ' is empty...');
         try {
             await this.api.supposeEmpty(concept);
@@ -3330,6 +3232,7 @@ class IvyApp {
     }
 
     async removeConcept(concept) {
+        return removeConceptViaService(this, concept);
         this.controls.setStatus('Removing concept...');
         try {
             await this.api.removeConcept(concept);
@@ -3341,6 +3244,7 @@ class IvyApp {
     }
 
     async materializeNode(concept) {
+        return materializeNodeViaService(this, concept);
         this.controls.setStatus('Materializing node...');
         try {
             await this.api.materializeNode(concept);
@@ -3352,6 +3256,7 @@ class IvyApp {
     }
 
     async materializeEdge(edgeOrConcept, positive) {
+        return materializeEdgeViaService(this, edgeOrConcept, positive);
         var dir = positive ? '+' : '\u2013';
         var relation = edgeOrConcept;
         var source = '';
@@ -3372,6 +3277,7 @@ class IvyApp {
     }
 
     async addProjection(name, concept) {
+        return addProjectionViaService(this, name, concept);
         this.controls.setStatus('Adding projection ' + name + '...');
         try {
             await this.api.addProjection(name, concept);
@@ -3387,6 +3293,7 @@ class IvyApp {
      * Matches Python tk_graph_ui.py select action.
      */
     selectConceptNode(conceptId) {
+        return selectConceptNodeViaService(this, conceptId);
         this.selectedConceptNode = conceptId;
         // Toggle selected_node class (same visual as left-click)
         if (this.conceptGraph && this.conceptGraph.cy) {
@@ -3449,6 +3356,7 @@ class IvyApp {
      * Matches Python tk_graph_ui.py splatter action.
      */
     async splatterNode(conceptId) {
+        return splatterNodeViaService(this, conceptId);
         this.controls.setStatus('Splattering ' + conceptId + '...');
         try {
             await this.api.executeAction('splatter', { concept: conceptId });
@@ -3467,6 +3375,7 @@ class IvyApp {
      * Called when an edge visibility toggle checkbox changes.
      */
     async onEdgeToggleChange(edgeName, className, checked) {
+        return onEdgeToggleChangeViaService(this, edgeName, className, checked);
         try {
             var toggles = {
                 edge: edgeName,
@@ -3484,6 +3393,7 @@ class IvyApp {
      * Called when a label visibility toggle checkbox changes.
      */
     async onLabelToggleChange(labelName, className, checked) {
+        return onLabelToggleChangeViaService(this, labelName, className, checked);
         try {
             var toggles = {
                 label: labelName,
@@ -3505,53 +3415,7 @@ class IvyApp {
      * Load an .ivy file.
      */
     async loadFile(file) {
-        this.controls.showLoading('Loading ' + file.name + '...');
-        this.controls.setStatus('Loading file: ' + file.name + '...');
-        try {
-            // Read file content for persistence before uploading
-            var self = this;
-            var reader = new FileReader();
-            var contentPromise = new Promise(function (resolve) {
-                reader.onload = function () { resolve(reader.result); };
-                reader.readAsText(file);
-            });
-            var fileContent = await contentPromise;
-            self._persistedFileName = file.name;
-            self._persistedFilePath = file.path || file.webkitRelativePath || file.name;
-            self._persistedFileContent = fileContent;
-            if (self._fileHandle) {
-                await legacyAppDeps.IvyPersist.saveFileHandle(self);
-            }
-
-            // Populate the model editor with the file content (also marks clean via setEditorContent)
-            this.setEditorContent(fileContent);
-
-            var result = await this.api.loadFile(file);
-            // Refresh ARG
-            var argData = await this.api.getARG();
-            if (argData && argData.elements) {
-                this.argGraph.update(argData.elements, argData.positions);
-            }
-            // Refresh concept graph and populate state checkbox pane
-            var conceptData = await this.api.getConceptGraph();
-            if (conceptData && conceptData.elements) {
-                this.conceptGraph.update(conceptData.elements, conceptData.positions);
-            }
-            this._persistedConceptRelations = conceptData;
-            this.populateStateCheckboxes(conceptData);
-            // Update state label and file name display
-            this.updateStateLabel(0);
-            legacyAppDeps.IvyPersist.setFileName(file.name, this._persistedFilePath);
-            this.controls.setStatus('Loaded: ' + file.name, 'success');
-
-            // Auto-save after file load
-            legacyAppDeps.IvyPersist.save(this);
-        } catch (e) {
-            this.controls.setStatus('Load failed: ' + e.message, 'error');
-            console.error('File load error:', e);
-        } finally {
-            this.controls.hideLoading();
-        }
+        return loadModelFile(this, file, legacyAppDeps.IvyPersist);
     }
 
     /**
@@ -3605,31 +3469,11 @@ class IvyApp {
      * Download current model as a browser download.
      */
     async downloadModel() {
-        this.controls.setStatus('Downloading...');
-        try {
-            var content = this._editorContent();
-            if (!content) {
-                this.controls.setStatus('No model loaded to download', 'error');
-                return;
-            }
-            var filename = this._persistedFileName || 'model.ivy';
-            this.downloadTextFile(filename, content, 'text/plain');
-            this.controls.setStatus('Downloaded: ' + filename, 'success');
-        } catch (e) {
-            this.controls.setStatus('Download failed: ' + e.message, 'error');
-        }
+        return downloadModelViaService(this);
     }
 
     downloadTextFile(filename, content, mimeType) {
-        var blob = new Blob([content || ''], { type: mimeType || 'text/plain' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = filename || 'download.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        return downloadTextFileViaService(filename, content, mimeType);
     }
 
     /**
@@ -3638,162 +3482,30 @@ class IvyApp {
      * for subsequent saves.
      */
     async save() {
-        var content = this._editorContent();
-        var dirty = this._editorDirty();
-        var saveProgress = dirty ? this._showSaveProgress('Saving...') : null;
-        try {
-            await this._restoreFileHandleForCurrentFile();
-            if (this._fileHandle) {
-                var writableAllowed = await this._ensureFileHandleWritable();
-                if (!writableAllowed) {
-                    this.controls.setStatus('Save permission denied', 'error');
-                    return false;
-                }
-                var saveDecision = await this._confirmNoExternalChangeBeforeSave(content);
-                if (saveDecision === 'skip') {
-                    return false;
-                }
-                if (!dirty && saveDecision !== 'overwrite') {
-                    this._updateEditorLabel();
-                    return true;
-                }
-                var writable = await this._fileHandle.createWritable();
-                await writable.write(content);
-                await writable.close();
-                this._persistedFileContent = content;
-                this._savedFileContent = content;
-                this._updateEditorLabel();
-                this.controls.setStatus('Saved: ' + this._persistedFileName, 'success');
-                return true;
-            } else {
-                if (saveProgress && window.showSaveFilePicker) {
-                    this._hideSaveProgress();
-                    saveProgress = null;
-                }
-                if (!dirty) {
-                    this._updateEditorLabel();
-                    return true;
-                }
-                if (!window.showSaveFilePicker) {
-                    return this.downloadModelForUnsupportedSave(content);
-                }
-                return await this.saveAs({ explainMissingHandle: true });
-            }
-        } catch (e) {
-            this.controls.setStatus('Save failed: ' + e.message, 'error');
-            return false;
-        } finally {
-            if (saveProgress) {
-                this._hideSaveProgress();
-            }
-        }
+        return saveModel(this, legacyAppDeps.IvyPersist);
     }
 
     downloadModelForUnsupportedSave(content) {
-        var filename = this._persistedFileName || 'model.ivy';
-        try {
-            this.downloadTextFile(filename, content, 'text/plain');
-            this._persistedFileContent = content;
-            this._savedFileContent = content;
-            this._updateEditorLabel();
-            legacyAppDeps.IvyPersist.save(this);
-            this.controls.setStatus('Downloaded edited copy: ' + filename + '. In Firefox, choose the original file to overwrite.', 'success');
-            return true;
-        } catch (e) {
-            this.controls.setStatus('Download failed: ' + e.message, 'error');
-            return false;
-        }
+        return downloadModelForUnsupportedSaveViaService(this, content, legacyAppDeps.IvyPersist);
     }
 
     async saveAs(options) {
-        options = options || {};
-        var content = this._editorContent();
-        if (!content) {
-            this.controls.setStatus('No model loaded to save', 'error');
-            return false;
-        }
-        var saveProgress = null;
-        try {
-            if (!window.showSaveFilePicker) {
-                return this.downloadModelForUnsupportedSave(content);
-            }
-            if (options.explainMissingHandle) {
-                this.showSaveAsExplanationNotice();
-            }
-            var handle;
-            try {
-                handle = await window.showSaveFilePicker({
-                    suggestedName: this._persistedFileName || 'model.ivy',
-                    types: [{
-                        description: 'Ivy files',
-                        accept: { 'text/plain': ['.ivy'] },
-                    }],
-                });
-            } finally {
-                if (options.explainMissingHandle) {
-                    this.hideSaveAsExplanationNotice();
-                }
-            }
-            saveProgress = this._showSaveProgress('Saving...');
-            var writable = await handle.createWritable();
-            await writable.write(content);
-            await writable.close();
-
-            // Remember the handle and path for future saves
-            this._fileHandle = handle;
-            this._persistedFileName = handle.name;
-            this._persistedFilePath = handle.name;
-            this._persistedFileContent = content;
-            this._savedFileContent = content;
-            await legacyAppDeps.IvyPersist.saveFileHandle(this);
-            legacyAppDeps.IvyPersist.setFileName(handle.name, this._persistedFilePath);
-            this._updateEditorLabel();
-            this.controls.setStatus('Saved: ' + handle.name, 'success');
-            return true;
-        } catch (e) {
-            if (e.name === 'AbortError') {
-                // User cancelled the dialog
-                this.controls.setStatus('Save cancelled');
-            } else {
-                this.controls.setStatus('Save as failed: ' + e.message, 'error');
-            }
-            return false;
-        } finally {
-            if (saveProgress) {
-                this._hideSaveProgress();
-            }
-        }
+        return saveModelAs(this, legacyAppDeps.IvyPersist, { options: options || {} });
     }
 
     // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
     async saveSession() { return this.downloadModel(); }
 
     graphElementsSnapshot(graph) {
-        if (!graph || !graph.cy || typeof graph.cy.json !== 'function') return null;
-        var json = graph.cy.json();
-        return json ? json.elements : null;
+        return graphElementsSnapshotViaService(graph);
     }
 
     getEditorKeymap() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getEditorKeymap === 'function') {
-            return window.__ivyVueBridge.getEditorKeymap() || 'sublime';
-        }
-        var checked = document.querySelector('input[name="keymap"]:checked');
-        return checked ? checked.value : 'sublime';
+        return getEditorKeymapViaService();
     }
 
     setEditorKeymap(keymap) {
-        var allowed = { sublime: true, emacs: true, vim: true };
-        var next = allowed[keymap] ? keymap : 'sublime';
-        if (this.cmEditor && typeof this.cmEditor.setOption === 'function') {
-            this.cmEditor.setOption('keyMap', next);
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEditorKeymap === 'function') {
-            window.__ivyVueBridge.setEditorKeymap(next);
-            return;
-        }
-        var radio = document.querySelector('input[name="keymap"][value="' + next + '"]');
-        if (radio) radio.checked = true;
+        setEditorKeymapViaService(this, keymap);
     }
 
     tabLabelForSheet(sheetId) {
@@ -3824,6 +3536,7 @@ class IvyApp {
     }
 
     buildAnalysisState() {
+        return buildAnalysisStateViaService(this, legacyAppDeps.IvyPersist);
         var sheets = [];
         var ids = Object.keys(this.sheets || {});
         ids.sort(function (a, b) {
@@ -3983,6 +3696,7 @@ class IvyApp {
     }
 
     analysisStateLimits() {
+        return analysisStateLimitsViaService();
         return {
             maxFileBytes: 25 * 1024 * 1024,
             maxSheets: 100,
@@ -3993,6 +3707,7 @@ class IvyApp {
     }
 
     validateAnalysisStateObject(state) {
+        return validateAnalysisStateObjectViaService(this, state);
         if (!state || state.analysis_state_format !== 'ivyweb-json') {
             throw new Error('unsupported analysis state format');
         }
@@ -4014,6 +3729,7 @@ class IvyApp {
     }
 
     validateAnalysisStateSheet(sheet, seen, limits) {
+        return validateAnalysisStateSheetViaService(sheet, seen, limits, this.isValidSheetId.bind(this));
         if (!sheet || typeof sheet !== 'object') {
             throw new Error('invalid sheet entry');
         }
@@ -4043,6 +3759,7 @@ class IvyApp {
     }
 
     validateAnalysisStateGraphPayload(graph, name, limits) {
+        return validateAnalysisStateGraphPayloadViaService(graph, name, limits);
         if (!graph) return;
         if (graph.elements != null && !Array.isArray(graph.elements)) {
             throw new Error(name + ' graph elements must be an array');
@@ -4053,6 +3770,7 @@ class IvyApp {
     }
 
     validateAnalysisStateEvents(events, depth, count, limits) {
+        return validateAnalysisStateEventsViaService(events, depth, count, limits);
         if (!Array.isArray(events)) {
             throw new Error('event children must be an array');
         }
@@ -4075,6 +3793,7 @@ class IvyApp {
     }
 
     removeAnalysisStateExtraSheets() {
+        return removeAnalysisStateExtraSheetsViaService(this);
         var ids = Object.keys(this.sheets || {});
         for (var i = 0; i < ids.length; i++) {
             if (ids[i] !== 'sheet-1') {
@@ -4084,73 +3803,14 @@ class IvyApp {
     }
 
     async closeCurrentFile() {
-        if (this._editorDirty()) {
-            var choice = await this.showDirtyCloseDialog();
-            if (choice === 'cancel') {
-                this.controls.setStatus('Close cancelled');
-                return;
-            }
-            if (choice === 'save') {
-                var saved = await this.save();
-                if (!saved) {
-                    return;
-                }
-            }
-        }
-        await this.newModel({ skipSaveCurrent: true });
+        return closeCurrentFileViaService(this);
     }
 
     /**
      * Start a new model. Saves any existing state first, then clears everything.
      */
     async newModel(options) {
-        options = options || {};
-        // Save current state before clearing
-        if (!options.skipSaveCurrent && this._persistedFileContent) {
-            legacyAppDeps.IvyPersist.save(this);
-        }
-        this._rememberLastOpenFile();
-
-        // Create a fresh server session
-        try {
-            await this.api.createSession();
-            this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
-            legacyAppDeps.IvyPersist.setSessionIdInURL(this.api.sessionId);
-
-            // Reconnect SSE
-            if (this.api.sessionId) {
-                this.api.connectEvents(this.handleEvent.bind(this));
-            }
-        } catch (e) {
-            this.controls.setStatus('Failed to create session: ' + e.message, 'error');
-            return;
-        }
-
-        // Clear graphs
-        this.argGraph.cy.elements().remove();
-        this.conceptGraph.cy.elements().remove();
-
-        // Clear state
-        this._persistedFileName = '';
-        this._persistedFilePath = '';
-        this._persistedFileContent = '';
-        this._persistedConceptRelations = null;
-        this._fileHandle = null;
-        this._savedFileContent = null;
-        this.selectedArgNode = null;
-
-        // Clear UI
-        this.setEditorContent('');
-        legacyAppDeps.IvyPersist.setFileName('');
-        this._updateReopenLastFileButton();
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearStateRelations === 'function') {
-            window.__ivyVueBridge.clearStateRelations();
-        } else {
-            var tbody = document.getElementById('state-checkbox-body');
-            if (tbody) tbody.innerHTML = '';
-        }
-
-        this.controls.setStatus('New model — load an .ivy file to begin', 'success');
+        return newModelViaService(this, legacyAppDeps.IvyPersist, { options: options || {} });
     }
 
     /**
@@ -4159,143 +3819,21 @@ class IvyApp {
      * Shows truncated path context when file names collide.
      */
     populateRecentFiles() {
-        var vueRecentFiles = window.__ivyVueBridge && typeof window.__ivyVueBridge.updateRecentFiles === 'function';
-        var container = vueRecentFiles ? null : document.getElementById('file-recent-list');
-        if (!vueRecentFiles && !container) return;
-        if (!vueRecentFiles) {
-            container.innerHTML = '';
-        }
-
-        var sessions = legacyAppDeps.IvyPersist.listSessions();
-        if (sessions.length === 0) {
-            if (vueRecentFiles) {
-                window.__ivyVueBridge.updateRecentFiles([], null);
-                return;
-            }
-            var empty = document.createElement('a');
-            empty.href = '#';
-            empty.textContent = '(no recent files)';
-            empty.style.color = '#666';
-            empty.style.pointerEvents = 'none';
-            container.appendChild(empty);
-            return;
-        }
-
-        // Deduplicate: keep only the most recent entry per file path.
-        // sessions is newest-first, so the first occurrence of each path is the most recent.
-        var seen = {};
-        var unique = [];
-        for (var i = 0; i < sessions.length; i++) {
-            var sess = sessions[i];
-            if (!sess.fileName || sess.fileName === '(unnamed)') continue;
-            var dedupKey = sess.filePath || sess.fileName;
-            if (seen[dedupKey]) continue;
-            seen[dedupKey] = true;
-            unique.push(sess);
-        }
-        unique.sort(function (a, b) {
-            return (a.fileName || '').localeCompare(b.fileName || '');
-        });
-
-        // Check for duplicate basenames to decide if path context is needed.
-        var baseNameCount = {};
-        for (var k = 0; k < unique.length; k++) {
-            var bn = unique[k].fileName;
-            baseNameCount[bn] = (baseNameCount[bn] || 0) + 1;
-        }
-
-        // Show up to 10 recent files
-        var self = this;
-        if (vueRecentFiles) {
-            var items = [];
-            for (var m = 0; m < unique.length && m < 10; m++) {
-                var session = unique[m];
-                var label = session.fileName;
-                if (baseNameCount[session.fileName] > 1 && session.filePath) {
-                    label = session.fileName + '  ' + legacyAppDeps.IvyPersist.truncatePath(session.filePath, 15);
-                }
-                var title = '';
-                if (session.timestamp) {
-                    title = (session.filePath || session.fileName) + '\nLast used: ' + new Date(session.timestamp).toLocaleString();
-                }
-                items.push({ id: session.id, label: label, title: title });
-            }
-            window.__ivyVueBridge.updateRecentFiles(items, function (id) {
-                self.loadRecentSession(id);
-            });
-            return;
-        }
-        for (var j = 0; j < unique.length && j < 10; j++) {
-            (function (s) {
-                var displayName = s.fileName;
-                // If basename appears more than once, show path context
-                if (baseNameCount[s.fileName] > 1 && s.filePath) {
-                    displayName = s.fileName + '  ' + legacyAppDeps.IvyPersist.truncatePath(s.filePath, 15);
-                }
-                var link = document.createElement('a');
-                link.href = '#';
-                link.textContent = displayName;
-                if (s.timestamp) {
-                    var date = new Date(s.timestamp);
-                    link.title = (s.filePath || s.fileName) + '\nLast used: ' + date.toLocaleString();
-                }
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    self.flashAndClose(this, function () { self.loadRecentSession(s.id); });
-                });
-                container.appendChild(link);
-            })(unique[j]);
-        }
+        populateRecentFilesViaService(this, legacyAppDeps.IvyPersist);
     }
 
     /**
      * Load a recent session by its saved session ID.
      */
     async loadRecentSession(savedSessionId) {
-        // Save current state first
-        if (this._persistedFileContent) {
-            legacyAppDeps.IvyPersist.save(this);
-        }
-
-        var state = legacyAppDeps.IvyPersist.loadSession(savedSessionId);
-        if (!state || !state.fileContent) {
-            this.controls.setStatus('Could not load session: no saved data', 'error');
-            return;
-        }
-
-        // Create a fresh server session for this restore
-        try {
-            await this.api.createSession();
-        } catch (e) {
-            this.controls.setStatus('Failed to create session: ' + e.message, 'error');
-            return;
-        }
-
-        // Reconnect SSE
-        if (this.api.sessionId) {
-            this.api.connectEvents(this.handleEvent.bind(this));
-        }
-
-        var restored = await legacyAppDeps.IvyPersist.restore(this, state);
-        if (restored) {
-            // Keep the URL set by restore() (state.sessionId) — do NOT clobber it with
-            // api.sessionId, which resets to s1/s2/... on every server restart and would
-            // overwrite unrelated historical sessions stored under those same IDs.
-            legacyAppDeps.IvyPersist.setFileName(
-                this._persistedFileName || state.fileName,
-                this._persistedFilePath || state.filePath || state.fileName
-            );
-            this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
-            this.controls.setStatus('Loaded: ' + state.fileName, 'success');
-        } else {
-            this.controls.setStatus('Restore failed', 'error');
-        }
+        return loadRecentSessionViaService(this, legacyAppDeps.IvyPersist, savedSessionId);
     }
 
     /**
      * Run a verification check in the currently selected mode.
      */
     async runCheck() {
+        return runCheckViaService(this);
         var mode = this.getMode();
         this.controls.showLoading('Running ' + mode + ' check...');
         this.controls.setStatus('Recompiling editor content...');
@@ -4344,6 +3882,7 @@ class IvyApp {
      * @param {Array<string>} relationNames - names of relations to auto-check
      */
     async _autoCheckUsedRelations(relationNames) {
+        return autoCheckUsedRelations(this, relationNames);
         if (!relationNames || relationNames.length === 0) return;
         var usedSet = {};
         for (var i = 0; i < relationNames.length; i++) {
@@ -4374,6 +3913,7 @@ class IvyApp {
      * Display the result of a verification check.
      */
     showCheckResult(result) {
+        return showCheckResultViaService(this, result);
         if (!result) return;
 
         // The backend returns {status:"ok", result:"pass"/"fail"/"error", ...}.
@@ -4411,6 +3951,7 @@ class IvyApp {
     }
 
     addCheckResultViewActions(result) {
+        return addCheckResultViewActionsViaService(this, result);
         if (!result || !result.trace_arg) return;
         var self = this;
         var openTrace = function () {
@@ -4493,6 +4034,7 @@ class IvyApp {
      * Refresh the concept graph from the server.
      */
     async refreshConceptGraph() {
+        return refreshConceptGraphViaService(this);
         try {
             var result = await this.api.getConceptGraph(this.selectedArgNode);
             if (result && result.elements) {
@@ -4647,6 +4189,7 @@ class IvyApp {
      * Close all open dropdown menus.
      */
     closeAllDropdowns() {
+        return closeAllDropdownsViaService();
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.closeDropdownMenus === 'function') {
             window.__ivyVueBridge.closeDropdownMenus();
             return;
@@ -4661,6 +4204,7 @@ class IvyApp {
      * Flash a menu item (macOS Cocoa style invert) then close dropdowns and invoke callback.
      */
     flashAndClose(el, callback) {
+        return flashAndCloseViaService(this, el, callback);
         var self = this;
         var bridge = window.__ivyVueBridge;
         if (bridge && typeof bridge.flashMenuItem === 'function' && el && el.id) {
@@ -4786,6 +4330,7 @@ class IvyApp {
     }
 
     dispatchMenuDescriptorAction(region, item) {
+        return dispatchMenuDescriptorActionViaService(this, region, item);
         if (!item || item.enabled === false) return Promise.resolve({ ok: false, error: 'disabled action' });
         if (item.dispatch === 'action') {
             return this.runAction(item.action, {}, {
@@ -4801,6 +4346,7 @@ class IvyApp {
      * show progress, surface backend errors, and return a structured outcome.
      */
     async runAction(actionName, args, options) {
+        return runActionViaService(this, actionName, args, options);
         var opts = options || {};
         var runningMessage = opts.runningMessage || ('Running: ' + actionName + '...');
         var successMessage = opts.successMessage || ('Done: ' + actionName);
@@ -4839,6 +4385,7 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py check_inductiveness().
      */
     async checkInduction() {
+        return checkInductionViaService(this);
         this.controls.setStatus('Checking induction...');
         this.controls.showLoading('Checking inductiveness...');
         try {
@@ -4943,6 +4490,8 @@ class IvyApp {
     }
 
     okDialog(title, message) {
+        var bridgedOk = okDialogViaService(title, message);
+        if (bridgedOk !== undefined) return bridgedOk;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({ type: 'ok', title: title, message: message });
         }
@@ -4959,6 +4508,8 @@ class IvyApp {
     }
 
     okCancelDialog(title, message) {
+        var bridgedOkCancel = okCancelDialogViaService(title, message);
+        if (bridgedOkCancel !== undefined) return bridgedOkCancel;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({ type: 'okCancel', title: title, message: message });
         }
@@ -4978,6 +4529,8 @@ class IvyApp {
     }
 
     textDialog(title, message, text, options) {
+        var bridgedText = textDialogViaService(title, message, text, options);
+        if (bridgedText !== undefined) return bridgedText;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({
                 type: 'text',
@@ -5024,6 +4577,8 @@ class IvyApp {
     }
 
     entryDialog(title, message, initialValue, options) {
+        var bridgedEntry = entryDialogViaService(title, message, initialValue, options);
+        if (bridgedEntry !== undefined) return bridgedEntry;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({
                 type: 'entry',
@@ -5061,6 +4616,8 @@ class IvyApp {
     }
 
     integerDialog(title, message, initialValue, options) {
+        var bridgedInteger = integerDialogViaService(title, message, initialValue, options);
+        if (bridgedInteger !== undefined) return bridgedInteger;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({
                 type: 'integer',
@@ -5114,6 +4671,8 @@ class IvyApp {
     }
 
     listboxDialog(title, message, items, options) {
+        var bridgedListbox = listboxDialogViaService(title, message, items, options);
+        if (bridgedListbox !== undefined) return bridgedListbox;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({
                 type: 'listbox',
@@ -5172,6 +4731,8 @@ class IvyApp {
     }
 
     buttonListDialog(title, message, buttons) {
+        var bridgedButtons = buttonListDialogViaService(title, message, buttons);
+        if (bridgedButtons !== undefined) return bridgedButtons;
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
             return window.__ivyVueBridge.showDialog({
                 type: 'buttons',
@@ -5201,6 +4762,7 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py bounded_check().
      */
     async boundedCheck() {
+        return boundedCheckViaService(this);
         try {
             var bound = await this.integerDialog('Bounded check', 'Enter bound:', this.currentBound, {
                 min: 1,
@@ -5315,6 +4877,7 @@ class IvyApp {
      * Redo the last undone operation.
      */
     async doRedo() {
+        return executeAndRefresh(this, { action: 'redo', running: 'Redo...', success: 'Redo complete', failure: 'Redo failed' });
         this.controls.setStatus('Redo...');
         try {
             await this.api.executeAction('redo', {});
@@ -5330,6 +4893,7 @@ class IvyApp {
      * Matches Python ivy_graph_ui.py pdr_step().
      */
     async pdrStep() {
+        return executeAndRefresh(this, { action: 'pdr_step', running: 'PDR step...', success: 'PDR step complete', failure: 'PDR step failed' });
         this.controls.setStatus('PDR step...');
         try {
             var result = await this.api.executeAction('pdr_step', {});
@@ -5629,6 +5193,22 @@ function startIvyApp() {
         return window.ivyApp;
     }
     window.ivyApp = new IvyApp();
+    var unregisterControllerCommands = registerControllerCommands(window.ivyApp);
+    var fileCommandUnregisters = [
+        registerCommand('file.load', window.ivyApp.chooseAndLoadModelFile.bind(window.ivyApp)),
+        registerCommand('file.save', window.ivyApp.save.bind(window.ivyApp)),
+        registerCommand('file.saveAs', window.ivyApp.saveAs.bind(window.ivyApp)),
+        registerCommand('file.download', window.ivyApp.downloadModel.bind(window.ivyApp)),
+        registerCommand('file.close', window.ivyApp.closeCurrentFile.bind(window.ivyApp)),
+        registerCommand('file.new', window.ivyApp.newModel.bind(window.ivyApp)),
+        registerCommand('file.reopenLast', window.ivyApp.reopenLastFile.bind(window.ivyApp)),
+    ];
+    window.ivyApp._unregisterCommands = function () {
+        unregisterControllerCommands();
+        for (var i = 0; i < fileCommandUnregisters.length; i++) {
+            fileCommandUnregisters[i]();
+        }
+    };
     window.ivyApp.init();
     return window.ivyApp;
 }

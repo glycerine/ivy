@@ -1,6 +1,6 @@
 <script setup>
 import { useSheetStore } from '../../stores/sheetStore.js';
-import { callApp, runCommand } from '../legacyCommand.js';
+import { callApp, runCommand } from '../../services/uiCommandService.js';
 
 const sheetStore = useSheetStore();
 </script>

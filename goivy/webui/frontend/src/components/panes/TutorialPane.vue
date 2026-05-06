@@ -27,7 +27,7 @@
 
 <script setup>
 import { useLayoutStore } from '../../stores/layoutStore.js';
-import { callApp, hasAppMethod, runCommand } from '../legacyCommand.js';
+import { callApp, hasAppMethod, runCommand } from '../../services/uiCommandService.js';
 
 const layoutStore = useLayoutStore();
 

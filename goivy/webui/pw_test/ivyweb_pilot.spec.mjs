@@ -1,4 +1,10 @@
 import { expect, test } from '@playwright/test';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const webuiDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const componentDir = path.join(webuiDir, 'frontend', 'src', 'components');
 
 async function openIvy(page) {
   const consoleErrors = [];
@@ -84,6 +90,30 @@ test('page loads', async ({ page }) => {
   await expect(page.locator('#arg-panel')).toBeVisible();
   await expect(page.locator('#concept-panel')).toBeVisible();
   expect(consoleErrors).toEqual([]);
+});
+
+test('Vue components do not reach directly for window.ivyApp', async () => {
+  async function walk(dir) {
+    const out = [];
+    for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        out.push(...await walk(full));
+      } else if (entry.isFile() && entry.name.endsWith('.vue')) {
+        out.push(full);
+      }
+    }
+    return out;
+  }
+
+  const offenders = [];
+  for (const file of await walk(componentDir)) {
+    const text = await fs.readFile(file, 'utf8');
+    if (/\b(?:window|globalThis\.window)\.ivyApp\b/.test(text)) {
+      offenders.push(path.relative(webuiDir, file));
+    }
+  }
+  expect(offenders).toEqual([]);
 });
 
 test('title contains Ivy', async ({ page }) => {

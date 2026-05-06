@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import EventTraceNode from './EventTraceNode.vue';
-import { callApp, hasAppMethod } from '../legacyCommand.js';
+import { callApp, hasAppMethod } from '../../services/uiCommandService.js';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
 
 const props = defineProps({

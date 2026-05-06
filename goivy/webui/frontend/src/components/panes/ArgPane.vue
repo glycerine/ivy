@@ -24,7 +24,7 @@
 
 <script setup>
 import DynamicMenuRegion from '../DynamicMenuRegion.vue';
-import { callApp, runMenuCommand, toggleDropdownCommand } from '../legacyCommand.js';
+import { callApp, runMenuCommand, toggleDropdownCommand } from '../../services/uiCommandService.js';
 import { useDropdownStore } from '../../stores/dropdownStore.js';
 import { useLayoutStore } from '../../stores/layoutStore.js';
 

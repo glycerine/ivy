@@ -2,19 +2,24 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { installGlobalInteractions } from './globalInteractions.js';
 import { useContextMenuStore, useDropdownStore, useMenuDescriptorStore } from './stores/index.js';
+import { registerCommand, resetCommandRegistry } from './services/commandRegistry.js';
 
 describe('globalInteractions', () => {
+  let saveCommand;
+
   beforeEach(() => {
     setActivePinia(createPinia());
     window.ivyApp = {
-      save: vi.fn(),
       doUndo: vi.fn(),
     };
+    saveCommand = vi.fn();
+    registerCommand('file.save', saveCommand);
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
     window.ivyApp = undefined;
+    resetCommandRegistry();
   });
 
   it('closes Vue-owned menus on document click and Escape', () => {
@@ -64,7 +69,7 @@ describe('globalInteractions', () => {
 
     expect(saveEvent.defaultPrevented).toBe(true);
     expect(undoEvent.defaultPrevented).toBe(true);
-    expect(window.ivyApp.save).toHaveBeenCalled();
+    expect(saveCommand).toHaveBeenCalled();
     expect(window.ivyApp.doUndo).toHaveBeenCalled();
     cleanup();
   });

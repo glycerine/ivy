@@ -1,0 +1,147 @@
+export function analysisStateLimits() {
+  return {
+    maxFileBytes: 25 * 1024 * 1024,
+    maxSheets: 100,
+    maxGraphElements: 50000,
+    maxEvents: 100000,
+    maxEventDepth: 200,
+  };
+}
+
+export function buildAnalysisState(app, persist) {
+  const sheets = [];
+  const ids = Object.keys(app.sheets || {});
+  ids.sort((a, b) => {
+    if (a === 'sheet-1') return -1;
+    if (b === 'sheet-1') return 1;
+    return a.localeCompare(b);
+  });
+  for (const sheetId of ids) {
+    const sheet = app.sheets[sheetId];
+    if (!sheet) continue;
+    if (sheet.type === 'events') {
+      sheets.push({
+        id: sheetId,
+        type: 'events',
+        label: app.tabLabelForSheet(sheetId),
+        events: sheet.events || [],
+        patterns: sheet.patterns || [],
+        selectedEventAddress: sheet.selectedEventAddress || null,
+      });
+    } else {
+      sheets.push({
+        id: sheetId,
+        type: 'analysis',
+        label: app.tabLabelForSheet(sheetId),
+        selectedArgNode: sheet.selectedArgNode || null,
+        arg: { elements: app.graphElementsSnapshot(sheet.argGraph), positions: null },
+        concept: { elements: app.graphElementsSnapshot(sheet.conceptGraph), positions: null },
+      });
+    }
+  }
+  return {
+    analysis_state_format: 'ivyweb-json',
+    analysis_state_version: 1,
+    python_a2g_equivalent: false,
+    fileName: app._persistedFileName || '',
+    filePath: app._persistedFilePath || app._persistedFileName || '',
+    fileContent: app._editorContent ? app._editorContent() : (app._persistedFileContent || ''),
+    mode: app.getMode(),
+    activeSheetId: app.activeSheetId || 'sheet-1',
+    selectedArgNode: app.selectedArgNode || null,
+    edgeVisibility: app._edgeVisibility || {},
+    labelVisibility: app._labelVisibility || {},
+    toggles: persist && persist._getToggles ? persist._getToggles() : {},
+    sheets,
+  };
+}
+
+export function validateAnalysisStateEvents(events, depth, count, limits) {
+  if (!Array.isArray(events)) {
+    throw new Error('event children must be an array');
+  }
+  if (depth > limits.maxEventDepth) {
+    throw new Error('event tree too deep');
+  }
+  for (const ev of events) {
+    count.events += 1;
+    if (count.events > limits.maxEvents) {
+      throw new Error('too many events in analysis state');
+    }
+    const event = ev || {};
+    if (event.address != null && !/^\d+(\/\d+)*$/.test(String(event.address))) {
+      throw new Error(`invalid event address: ${event.address}`);
+    }
+    if (event.subs != null) {
+      validateAnalysisStateEvents(event.subs, depth + 1, count, limits);
+    }
+  }
+}
+
+export function validateAnalysisStateGraphPayload(graph, name, limits) {
+  if (!graph) return;
+  if (graph.elements != null && !Array.isArray(graph.elements)) {
+    throw new Error(`${name} graph elements must be an array`);
+  }
+  if (graph.elements && graph.elements.length > limits.maxGraphElements) {
+    throw new Error(`${name} graph has too many elements`);
+  }
+}
+
+export function validateAnalysisStateSheet(sheet, seen, limits, isValidSheetId) {
+  if (!sheet || typeof sheet !== 'object') {
+    throw new Error('invalid sheet entry');
+  }
+  if (!isValidSheetId(sheet.id)) {
+    throw new Error(`invalid sheet id: ${sheet.id}`);
+  }
+  if (seen[sheet.id]) {
+    throw new Error(`duplicate sheet id: ${sheet.id}`);
+  }
+  seen[sheet.id] = true;
+  if (sheet.type !== 'analysis' && sheet.type !== 'events') {
+    throw new Error(`invalid sheet type: ${sheet.type}`);
+  }
+  if (sheet.type === 'events') {
+    if (sheet.events != null && !Array.isArray(sheet.events)) {
+      throw new Error('event sheet events must be an array');
+    }
+    if (sheet.patterns != null && !Array.isArray(sheet.patterns)) {
+      throw new Error('event sheet patterns must be an array');
+    }
+    validateAnalysisStateEvents(sheet.events || [], 0, { events: 0 }, limits);
+    return;
+  }
+  validateAnalysisStateGraphPayload(sheet.arg, 'arg', limits);
+  validateAnalysisStateGraphPayload(sheet.concept, 'concept', limits);
+}
+
+export function validateAnalysisStateObject(app, state) {
+  if (!state || state.analysis_state_format !== 'ivyweb-json') {
+    throw new Error('unsupported analysis state format');
+  }
+  const limits = app.analysisStateLimits();
+  const sheets = state.sheets || [];
+  if (!Array.isArray(sheets)) {
+    throw new Error('analysis state sheets must be an array');
+  }
+  if (sheets.length > limits.maxSheets) {
+    throw new Error('too many sheets in analysis state');
+  }
+  if (state.activeSheetId && !app.isValidSheetId(state.activeSheetId)) {
+    throw new Error(`invalid active sheet id: ${state.activeSheetId}`);
+  }
+  const seen = {};
+  for (const sheet of sheets) {
+    validateAnalysisStateSheet(sheet, seen, limits, app.isValidSheetId.bind(app));
+  }
+}
+
+export function removeAnalysisStateExtraSheets(app) {
+  const ids = Object.keys(app.sheets || {});
+  for (const id of ids) {
+    if (id !== 'sheet-1') {
+      app.removeSheet(id);
+    }
+  }
+}

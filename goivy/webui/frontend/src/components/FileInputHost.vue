@@ -1,5 +1,5 @@
 <script setup>
-import { callApp, setAppStatus } from './legacyCommand.js';
+import { callApp, setAppStatus } from '../services/uiCommandService.js';
 
 async function handleModelFileChange(event) {
   const input = event.target;

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useEventTraceStore } from '../../stores/eventTraceStore.js';
-import { callApp, hasAppMethod } from '../legacyCommand.js';
+import { callApp, hasAppMethod } from '../../services/uiCommandService.js';
 
 const props = defineProps({
   sheetId: {
