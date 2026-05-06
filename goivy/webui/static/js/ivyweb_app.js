@@ -35,6 +35,7 @@ class IvyApp {
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
         this._saveProgressToast = null;
+        this._saveProgressSheen = null;
         this.currentBound = 10;
     }
 
@@ -224,6 +225,7 @@ class IvyApp {
     _showSaveProgress(message) {
         this.controls.setStatus(message || 'Saving...');
         this._hideSaveProgress(this._saveProgressToast);
+        this._saveProgressSheen = this._showSaveEditorSheen();
         var toast = this._showToast(message || 'Saving...', 'info', {
             persistent: true,
             className: 'ivy-save-progress',
@@ -247,12 +249,46 @@ class IvyApp {
         toast.style.top = Math.round((headerRect ? headerRect.bottom : rect.top) + gap) + 'px';
     }
 
+    _editorTextElement() {
+        if (this.cmEditor && typeof this.cmEditor.getWrapperElement === 'function') {
+            var wrapper = this.cmEditor.getWrapperElement();
+            if (wrapper) return wrapper;
+        }
+        var editorPanel = document.getElementById('editor-panel');
+        if (editorPanel) {
+            return editorPanel.querySelector('.CodeMirror') || editorPanel.querySelector('#model-editor');
+        }
+        return document.getElementById('model-editor');
+    }
+
+    _showSaveEditorSheen() {
+        var target = this._editorTextElement();
+        if (!target || typeof target.getBoundingClientRect !== 'function') return null;
+        var rect = target.getBoundingClientRect();
+        if (!rect || rect.width <= 0 || rect.height <= 0) return null;
+        var sheen = document.createElement('div');
+        sheen.className = 'ivy-save-editor-sheen';
+        sheen.setAttribute('aria-hidden', 'true');
+        sheen.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;' +
+            'background:rgba(128,128,128,0.2);';
+        sheen.style.left = Math.round(rect.left) + 'px';
+        sheen.style.top = Math.round(rect.top) + 'px';
+        sheen.style.width = Math.round(rect.width) + 'px';
+        sheen.style.height = Math.round(rect.height) + 'px';
+        document.body.appendChild(sheen);
+        return sheen;
+    }
+
     _hideSaveProgress(toast) {
         var target = toast || this._saveProgressToast;
         if (target && target.parentNode) {
             target.parentNode.removeChild(target);
         }
         if (!toast || this._saveProgressToast === toast) {
+            if (this._saveProgressSheen && this._saveProgressSheen.parentNode) {
+                this._saveProgressSheen.parentNode.removeChild(this._saveProgressSheen);
+            }
+            this._saveProgressSheen = null;
             this._saveProgressToast = null;
         }
     }

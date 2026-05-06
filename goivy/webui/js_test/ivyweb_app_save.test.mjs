@@ -100,7 +100,12 @@ describe('IvyApp Save and Save As', () => {
       editorContent: 'new model',
       fileHandle: handle,
     });
-    document.body.insertAdjacentHTML('beforeend', '<div id="editor-panel"><div class="panel-header"></div></div>');
+    document.body.insertAdjacentHTML('beforeend', [
+      '<div id="editor-panel">',
+      '  <div class="panel-header"></div>',
+      '  <div class="CodeMirror"></div>',
+      '</div>',
+    ].join(''));
     document.getElementById('editor-panel').getBoundingClientRect = vi.fn(() => ({
       left: 640,
       top: 120,
@@ -117,6 +122,16 @@ describe('IvyApp Save and Save As', () => {
       width: 320,
       height: 48,
     }));
+    const editorText = document.querySelector('#editor-panel .CodeMirror');
+    editorText.getBoundingClientRect = vi.fn(() => ({
+      left: 640,
+      top: 168,
+      right: 960,
+      bottom: 600,
+      width: 320,
+      height: 432,
+    }));
+    app.cmEditor.getWrapperElement = vi.fn(() => editorText);
 
     const savePromise = app.save();
 
@@ -127,6 +142,14 @@ describe('IvyApp Save and Save As', () => {
     expect(progress.style.left).toBe('648px');
     expect(progress.style.right).toBe('auto');
     expect(progress.style.top).toBe('176px');
+    const sheen = document.querySelector('.ivy-save-editor-sheen');
+    expect(sheen).not.toBeNull();
+    expect(sheen.style.left).toBe('640px');
+    expect(sheen.style.top).toBe('168px');
+    expect(sheen.style.width).toBe('320px');
+    expect(sheen.style.height).toBe('432px');
+    expect(sheen.style.pointerEvents).toBe('none');
+    expect(sheen.style.zIndex).toBe('9999');
 
     closeGate.resolve();
     const saved = await savePromise;
@@ -134,6 +157,7 @@ describe('IvyApp Save and Save As', () => {
     expect(saved).toBe(true);
     expect(writes).toEqual(['new model']);
     expect(document.querySelector('.ivy-save-progress')).toBeNull();
+    expect(document.querySelector('.ivy-save-editor-sheen')).toBeNull();
     expect(app.controls.lastStatus).toEqual({ message: 'Saved: client.ivy', kind: 'success' });
   });
 
