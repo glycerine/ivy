@@ -28,14 +28,14 @@ const statePanelStyle = computed(() => ({
           <div class="panel-header">
             <strong class="column-title">ARG (Abstract Reachability Graph)</strong>
           </div>
-          <div :id="`arg-graph-${counter}`" class="graph-container"></div>
+          <div :id="`arg-graph-${counter}`" class="graph-container" @contextmenu.prevent></div>
         </div>
         <div class="divider"></div>
         <div class="panel concept-sheet-panel">
           <div class="panel-header">
             <strong class="column-title">Concept graph</strong>
           </div>
-          <div :id="`concept-graph-${counter}`" class="graph-container"></div>
+          <div :id="`concept-graph-${counter}`" class="graph-container" @contextmenu.prevent></div>
         </div>
       </div>
 

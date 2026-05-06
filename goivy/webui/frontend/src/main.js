@@ -2,11 +2,21 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import { installIvyVueBridge } from './ivyVueBridge.js';
+import { loadLegacyIvyRuntime } from './legacyScripts.js';
 
-const app = createApp(App);
-const pinia = createPinia();
-app.use(pinia);
+async function bootstrap() {
+  await loadLegacyIvyRuntime();
 
-installIvyVueBridge({ app, pinia });
+  const app = createApp(App);
+  const pinia = createPinia();
+  app.use(pinia);
 
-app.mount('#ivy-vue-root');
+  installIvyVueBridge({ app, pinia });
+
+  app.mount('#ivy-vue-root');
+}
+
+bootstrap().catch((err) => {
+  window.__ivyInitError = err && err.message ? err.message : String(err);
+  console.error('Failed to boot Ivy Vue app:', err);
+});

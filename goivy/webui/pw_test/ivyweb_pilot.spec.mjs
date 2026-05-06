@@ -823,6 +823,25 @@ test('static JS globals are loaded', async ({ page }) => {
   expect([globals.api, globals.app]).toContain('function');
 });
 
+test('Vue bundle owns the Ivy runtime script path', async ({ page }) => {
+  await openIvy(page);
+
+  const legacyScripts = await page.evaluate(() => {
+    const documentScripts = Array.from(document.scripts)
+      .map((script) => script.src || '')
+      .filter((src) => src.includes('/static/js/ivyweb_'));
+    const resourceScripts = performance.getEntriesByType('resource')
+      .map((entry) => entry.name || '')
+      .filter((name) => name.includes('/static/js/ivyweb_'));
+    const dynamicMarkers = document.querySelectorAll('[data-ivy-legacy-script]').length;
+    return { documentScripts, resourceScripts, dynamicMarkers };
+  });
+
+  expect(legacyScripts.documentScripts).toEqual([]);
+  expect(legacyScripts.resourceScripts).toEqual([]);
+  expect(legacyScripts.dynamicMarkers).toBe(0);
+});
+
 test('panel resize path does not crash', async ({ page }) => {
   await openIvy(page);
 

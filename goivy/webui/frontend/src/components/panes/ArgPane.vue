@@ -18,7 +18,7 @@
         <DynamicMenuRegion region="arg" />
       </div>
     </div>
-    <div id="arg-graph" class="graph-container"></div>
+    <div id="arg-graph" class="graph-container" @contextmenu.prevent></div>
   </div>
 </template>
 

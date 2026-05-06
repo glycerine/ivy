@@ -97,11 +97,15 @@ class IvyApp {
         this.setupEventHandlers();
         await this.loadMenuDescriptors();
         this.setupTabs();
-        this.setupResizer();
-        this.setupResizer2();
-        this.setupResizer3();
-        this.setupResizerH();
-        this.setupDetailsResizer();
+        if (!(window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.layoutResizersHandled === 'function' &&
+            window.__ivyVueBridge.layoutResizersHandled())) {
+            this.setupResizer();
+            this.setupResizer2();
+            this.setupResizer3();
+            this.setupResizerH();
+            this.setupDetailsResizer();
+        }
         this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
 
@@ -117,7 +121,9 @@ class IvyApp {
         // Initialize CodeMirror on the model editor textarea.
         // Must happen BEFORE restore so setEditorContent() can call cmEditor.setValue().
         var modelEditor = document.getElementById('model-editor');
-        if (modelEditor) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.initializeEditor === 'function') {
+            this.cmEditor = window.__ivyVueBridge.initializeEditor(this);
+        } else if (modelEditor) {
             this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
                 keyMap: this.getEditorKeymap(),
@@ -667,18 +673,23 @@ class IvyApp {
     attachGraphEventHandlers(argGraph, conceptGraph, sheetId) {
         var self = this;
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
-        if (argGraph && argGraph.containerId) {
-            var argEl = document.getElementById(argGraph.containerId);
-            if (argEl && !argEl._ivyContextSuppressed) {
-                argEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-                argEl._ivyContextSuppressed = true;
+        var vueSuppressesNativeGraphMenu = window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.graphContextMenuSuppressionHandled === 'function' &&
+            window.__ivyVueBridge.graphContextMenuSuppressionHandled();
+        if (!vueSuppressesNativeGraphMenu) {
+            if (argGraph && argGraph.containerId) {
+                var argEl = document.getElementById(argGraph.containerId);
+                if (argEl && !argEl._ivyContextSuppressed) {
+                    argEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                    argEl._ivyContextSuppressed = true;
+                }
             }
-        }
-        if (conceptGraph && conceptGraph.containerId) {
-            var conceptEl = document.getElementById(conceptGraph.containerId);
-            if (conceptEl && !conceptEl._ivyContextSuppressed) {
-                conceptEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-                conceptEl._ivyContextSuppressed = true;
+            if (conceptGraph && conceptGraph.containerId) {
+                var conceptEl = document.getElementById(conceptGraph.containerId);
+                if (conceptEl && !conceptEl._ivyContextSuppressed) {
+                    conceptEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                    conceptEl._ivyContextSuppressed = true;
+                }
             }
         }
 
@@ -984,24 +995,28 @@ class IvyApp {
             this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
         }
 
-        // --- Click anywhere to dismiss context menu and dropdowns ---
-        document.addEventListener('click', function (e) {
-            self.controls.hideContextMenu();
-            if (!e.target.closest('.dropdown')) {
-                self.closeAllDropdowns();
-            }
-        });
+        if (!(window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.globalInteractionsHandled === 'function' &&
+            window.__ivyVueBridge.globalInteractionsHandled())) {
+            // --- Click anywhere to dismiss context menu and dropdowns ---
+            document.addEventListener('click', function (e) {
+                self.controls.hideContextMenu();
+                if (!e.target.closest('.dropdown')) {
+                    self.closeAllDropdowns();
+                }
+            });
 
-        // --- Escape key closes open dropdowns; Ctrl+S saves ---
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                self.closeAllDropdowns();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                self.save();
-            }
-        });
+            // --- Escape key closes open dropdowns; Ctrl+S saves ---
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    self.closeAllDropdowns();
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    self.save();
+                }
+            });
+        }
 
         this.attachGraphEventHandlers(this.argGraph, this.conceptGraph, 'sheet-1');
     }
@@ -2735,6 +2750,11 @@ class IvyApp {
      * Set up keyboard shortcuts.
      */
     setupKeyboardShortcuts() {
+        if (window.__ivyVueBridge &&
+            typeof window.__ivyVueBridge.globalInteractionsHandled === 'function' &&
+            window.__ivyVueBridge.globalInteractionsHandled()) {
+            return;
+        }
         var self = this;
         document.addEventListener('keydown', function (e) {
             // Ctrl+Z or Cmd+Z: Undo

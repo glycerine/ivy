@@ -1,5 +1,6 @@
 import { h, nextTick, render } from 'vue';
 import AnalysisSheetShell from './components/panes/AnalysisSheetShell.vue';
+import { initializeLegacyCodeMirror } from './codeMirrorEditor.js';
 import { LegacyApiAdapter } from './engines/index.js';
 import {
   useContextMenuStore,
@@ -76,6 +77,14 @@ export function createIvyVueBridge({
     updateEditor(snapshot) {
       editorStore.applyLegacySnapshot(snapshot);
     },
+    initializeEditor(legacyApp) {
+      return initializeLegacyCodeMirror({
+        legacyApp,
+        editorStore,
+        doc,
+        codeMirror: win.CodeMirror,
+      });
+    },
     setEditorKeymap(keymap) {
       editorStore.setKeymap(keymap);
     },
@@ -95,6 +104,15 @@ export function createIvyVueBridge({
       return true;
     },
     fileInputHandlersHandled() {
+      return true;
+    },
+    layoutResizersHandled() {
+      return true;
+    },
+    globalInteractionsHandled() {
+      return true;
+    },
+    graphContextMenuSuppressionHandled() {
       return true;
     },
     updateDetails(details) {

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import Menubar from './components/Menubar.vue';
 import WorkspaceShell from './components/WorkspaceShell.vue';
 import ContextMenuHost from './components/ContextMenuHost.vue';
@@ -8,9 +8,28 @@ import FileInputHost from './components/FileInputHost.vue';
 import SessionOverlayHost from './components/SessionOverlayHost.vue';
 import StatusBar from './components/StatusBar.vue';
 import ToastHost from './components/ToastHost.vue';
+import { installGlobalInteractions } from './globalInteractions.js';
 import { startLegacyAppWhenReady } from './legacyStartup.js';
+import { useContextMenuStore, useDropdownStore, useMenuDescriptorStore } from './stores/index.js';
 
-onMounted(() => startLegacyAppWhenReady());
+const contextMenuStore = useContextMenuStore();
+const dropdownStore = useDropdownStore();
+const menuDescriptorStore = useMenuDescriptorStore();
+let cleanupGlobalInteractions = null;
+
+onMounted(() => {
+  cleanupGlobalInteractions = installGlobalInteractions({
+    contextMenuStore,
+    dropdownStore,
+    menuDescriptorStore,
+  });
+  startLegacyAppWhenReady();
+});
+
+onUnmounted(() => {
+  if (cleanupGlobalInteractions) cleanupGlobalInteractions();
+  cleanupGlobalInteractions = null;
+});
 </script>
 
 <template>
