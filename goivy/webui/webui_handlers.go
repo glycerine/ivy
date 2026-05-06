@@ -432,13 +432,14 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 		return
 	}
 	var req struct {
-		Mode string `json:"mode"`
+		Mode  string `json:"mode"`
+		Bound int    `json:"bound,omitempty"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		// Default to the current mode if no body
 		req.Mode = "pdr"
 	}
-	data, err := s.backend.Check(sessionID, req.Mode)
+	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{Bound: req.Bound})
 	if err != nil {
 		writeBackendErr(w, err)
 		return

@@ -235,10 +235,10 @@ func (c *ConformBackend) SetToggle(sessionID, edge, displayClass string, value b
 	)
 }
 
-func (c *ConformBackend) Check(sessionID, mode string) ([]byte, error) {
+func (c *ConformBackend) Check(sessionID, mode string, options CheckOptions) ([]byte, error) {
 	return c.conform("Check:"+mode,
-		func() ([]byte, error) { return c.goBE.Check(sessionID, mode) },
-		func() ([]byte, error) { return c.pyBE.Check(c.pySessionID(sessionID), mode) },
+		func() ([]byte, error) { return c.goBE.Check(sessionID, mode, options) },
+		func() ([]byte, error) { return c.pyBE.Check(c.pySessionID(sessionID), mode, options) },
 	)
 }
 

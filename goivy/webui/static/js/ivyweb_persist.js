@@ -55,6 +55,7 @@ var IvyPersist = {
                 argElements: IvyPersist._getCyElements(app.argGraph),
                 conceptElements: IvyPersist._getCyElements(app.conceptGraph),
                 conceptRelations: app._persistedConceptRelations || null,
+                analysisState: app.buildAnalysisState ? app.buildAnalysisState() : null,
             };
             localStorage.setItem('ivy_sess_' + sid, JSON.stringify(state));
             localStorage.setItem('ivy_last_session', sid);
@@ -385,6 +386,13 @@ var IvyPersist = {
             // Restore selected ARG node
             if (state.selectedArgNode) {
                 app.selectedArgNode = state.selectedArgNode;
+            }
+
+            if (state.analysisState && app.loadAnalysisStateObject) {
+                state.analysisState.fileContent = restoredContent;
+                state.analysisState.fileName = app._persistedFileName || state.fileName || state.analysisState.fileName;
+                state.analysisState.filePath = app._persistedFilePath || state.filePath || state.analysisState.filePath;
+                await app.loadAnalysisStateObject(state.analysisState);
             }
 
             // Update file name display and URL — use the SAVED session ID

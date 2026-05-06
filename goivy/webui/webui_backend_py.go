@@ -323,8 +323,12 @@ func (b *PyBackend) SetToggle(sessionID, edge, displayClass string, value bool) 
 	})
 }
 
-func (b *PyBackend) Check(sessionID, mode string) ([]byte, error) {
-	return b.post("/session/"+sessionID+"/check", map[string]string{"mode": mode})
+func (b *PyBackend) Check(sessionID, mode string, options CheckOptions) ([]byte, error) {
+	body := map[string]interface{}{"mode": mode}
+	if options.Bound != 0 {
+		body["bound"] = options.Bound
+	}
+	return b.post("/session/"+sessionID+"/check", body)
 }
 
 func (b *PyBackend) GetProof(sessionID string) ([]byte, error) {

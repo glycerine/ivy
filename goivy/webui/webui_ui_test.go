@@ -512,13 +512,35 @@ func TestEventTraceViewerLookup(t *testing.T) {
 
 func TestFilterEvents(t *testing.T) {
 	evs := []*TraceEvent{
-		NewTraceEvent("hello world"),
-		NewTraceEvent("foo bar"),
+		NewTraceEvent("hello(world)"),
+		NewTraceEvent("foo(bar)"),
 	}
-	evs[0].AddSub(NewTraceEvent("nested hello"))
+	evs[0].AddSub(NewTraceEvent("hello(nested)"))
 	result := FilterEvents(evs, "hello")
 	if len(result) != 2 {
 		t.Errorf("expected 2 matching events, got %d", len(result))
+	}
+}
+
+func TestFilterEventsUsesPythonEventPatternSemantics(t *testing.T) {
+	evs := []*TraceEvent{
+		NewTraceEvent("execute_action(foo,foo)"),
+		NewTraceEvent("execute_action(foo,bar)"),
+		NewTraceEvent("preexecute_action(foo,foo)"),
+	}
+	result := FilterEvents(evs, "execute_action($x,$x)")
+	if len(result) != 1 || result[0].Text != "execute_action(foo,foo)" {
+		t.Fatalf("repeated variable pattern matched %v, want only execute_action(foo,foo)", traceEventTexts(result))
+	}
+
+	result = FilterEvents(evs, "execute")
+	if len(result) != 2 {
+		t.Fatalf("prefix pattern matched %v, want the two execute_action events", traceEventTexts(result))
+	}
+
+	result = FilterEvents(evs, "cute")
+	if len(result) != 0 {
+		t.Fatalf("substring pattern matched %v, want none", traceEventTexts(result))
 	}
 }
 
@@ -540,6 +562,110 @@ func TestFindEvent(t *testing.T) {
 	if ev == nil || ev.Text != "target" {
 		t.Error("FindEvent reverse failed")
 	}
+}
+
+func TestFindEventFromRespectsPythonAnchorTraversal(t *testing.T) {
+	evs := []*TraceEvent{
+		NewTraceEvent("a"),
+		NewTraceEvent("b"),
+		NewTraceEvent("c"),
+	}
+
+	ev, addr := FindEventFrom(evs, "*", false, "1")
+	if ev == nil || ev.Text != "c" || addr != "2" {
+		t.Fatalf("forward from anchor 1 = (%v,%q), want (c,2)", ev, addr)
+	}
+
+	ev, addr = FindEventFrom(evs, "*", true, "1")
+	if ev == nil || ev.Text != "a" || addr != "0" {
+		t.Fatalf("reverse from anchor 1 = (%v,%q), want (a,0)", ev, addr)
+	}
+}
+
+func TestSessionEventTraceActions(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "events")
+	s.EventViewer = NewEventTraceViewer()
+	sheetID := s.EventViewer.NewSheet([]*TraceEvent{
+		NewTraceEvent("call(a,a)"),
+		NewTraceEvent("call(a,b)"),
+		NewTraceEvent("done"),
+	})
+
+	filtered, err := s.ExecuteAction("events_filter", map[string]interface{}{
+		"sheet_id": sheetID,
+		"pattern":  "call($x,$x)",
+	})
+	if err != nil {
+		t.Fatalf("events_filter: %v", err)
+	}
+	events, ok := filtered["events"].([]*TraceEvent)
+	if !ok || len(events) != 1 || events[0].Text != "call(a,a)" {
+		t.Fatalf("filtered events = %#v, want only call(a,a)", filtered["events"])
+	}
+
+	found, err := s.ExecuteAction("events_find", map[string]interface{}{
+		"sheet_id": sheetID,
+		"pattern":  "*",
+		"reverse":  true,
+		"anchor":   "1",
+	})
+	if err != nil {
+		t.Fatalf("events_find: %v", err)
+	}
+	if found["address"] != "0" {
+		t.Fatalf("reverse find address = %v, want 0", found["address"])
+	}
+}
+
+func TestParseTraceEventsPreservesChildren(t *testing.T) {
+	evs, err := ParseTraceEvents("root(a){child(b); other(c)}; done")
+	if err != nil {
+		t.Fatalf("ParseTraceEvents: %v", err)
+	}
+	if len(evs) != 2 || evs[0].Text != "root(a)" || evs[1].Text != "done" {
+		t.Fatalf("events = %#v, want root(a) and done", traceEventTexts(evs))
+	}
+	if len(evs[0].Subs) != 2 || evs[0].Subs[0].Text != "child(b)" || evs[0].Subs[0].Address != "0/0" {
+		t.Fatalf("children = %#v", evs[0].Subs)
+	}
+}
+
+func TestSessionSaveStateIncludesAnalysisStateShape(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "save-state")
+	s.FilePath = "client.ivy"
+	s.FileContent = "ivy source"
+	s.EventViewer = NewEventTraceViewer()
+	s.EventViewer.NewSheet([]*TraceEvent{NewTraceEvent("root(a)")})
+	by := s.SaveState()
+	var state map[string]interface{}
+	if err := json.Unmarshal(by, &state); err != nil {
+		t.Fatalf("SaveState JSON: %v", err)
+	}
+	if state["analysis_state_format"] != "ivyweb-json" {
+		t.Fatalf("analysis_state_format = %v", state["analysis_state_format"])
+	}
+	if state["python_a2g_equivalent"] != false {
+		t.Fatalf("python_a2g_equivalent = %v, want false", state["python_a2g_equivalent"])
+	}
+	sheets, ok := state["sheets"].([]interface{})
+	if !ok || len(sheets) == 0 {
+		t.Fatalf("sheets missing: %#v", state["sheets"])
+	}
+	eventViewer, ok := state["event_viewer"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("event_viewer missing: %#v", state["event_viewer"])
+	}
+	if len(eventViewer["sheets"].([]interface{})) != 1 {
+		t.Fatalf("event viewer sheets = %#v", eventViewer["sheets"])
+	}
+}
+
+func traceEventTexts(evs []*TraceEvent) []string {
+	var texts []string
+	for _, ev := range evs {
+		texts = append(texts, ev.Text)
+	}
+	return texts
 }
 
 func TestFormatEvent(t *testing.T) {

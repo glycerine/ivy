@@ -360,7 +360,7 @@ func (b *checkDefaultModeBackend) NewSession(cfg *goivy.Config) ([]byte, error) 
 	return canonicalJSON(map[string]string{"session_id": "s1"})
 }
 
-func (b *checkDefaultModeBackend) Check(sessionID, mode string) ([]byte, error) {
+func (b *checkDefaultModeBackend) Check(sessionID, mode string, options CheckOptions) ([]byte, error) {
 	b.mode = mode
 	return canonicalJSON(map[string]string{"result": mode})
 }

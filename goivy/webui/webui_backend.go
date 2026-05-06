@@ -34,7 +34,7 @@ type Backend interface {
 	ConceptProjection(sessionID, name, concept string) ([]byte, error)
 	GetToggles(sessionID string) ([]byte, error)
 	SetToggle(sessionID, edge, displayClass string, value bool) ([]byte, error)
-	Check(sessionID, mode string) ([]byte, error)
+	Check(sessionID, mode string, options CheckOptions) ([]byte, error)
 	GetProof(sessionID string) ([]byte, error)
 	ArgAction(sessionID, node, action string, args map[string]interface{}) ([]byte, error)
 	ProofAction(sessionID, goal, action string) ([]byte, error)
@@ -50,6 +50,10 @@ type ConceptMaterializeRequest struct {
 	Source   string `json:"source,omitempty"`
 	Target   string `json:"target,omitempty"`
 	Positive bool   `json:"positive,omitempty"`
+}
+
+type CheckOptions struct {
+	Bound int `json:"bound,omitempty"`
 }
 
 // ErrSessionNotFound is returned when a session ID is not recognized.

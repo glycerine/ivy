@@ -37,7 +37,7 @@ describe('IvyApp source browsing', () => {
 
     await app.executeArgEdgeAction({ source_obj: 'state_0', target_obj: 'state_1' }, 'view_source');
 
-    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'view_source', { target: 'state_1' });
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'view_source', { target: 'state_1', sheet_id: 'sheet-1' });
     expect(app.setEditorContent).toHaveBeenCalledWith('line1\naction go = {}\n');
     expect(app.scrollEditorToLine).toHaveBeenCalledWith(2);
     expect(app.controls.lastInfo.shortInfo).toContain('sample.ivy');

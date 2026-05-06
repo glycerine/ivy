@@ -42,6 +42,7 @@ describe('IvyApp ARG choice-backed commands', () => {
       { sheet_id: 'sheet-1' },
       'sheet-1'
     );
+    await Promise.resolve();
     document.querySelector('[data-ivy-dialog-list]').value = 'other';
     await click('OK');
 
@@ -66,6 +67,7 @@ describe('IvyApp ARG choice-backed commands', () => {
       { sheet_id: 'sheet-1' },
       'sheet-1'
     );
+    await Promise.resolve();
     document.querySelector('[data-ivy-dialog-list]').value = 'goal-b';
     await click('OK');
 

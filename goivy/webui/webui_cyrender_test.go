@@ -361,6 +361,50 @@ func TestRenderConceptGraphEdgeVisibility(t *testing.T) {
 	}
 }
 
+func TestRenderConceptGraphUsesTransitiveOrderingAndReduction(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Nodes = []string{"C", "B", "A"}
+	for _, name := range []string{"A", "B", "C"} {
+		cs.Domain.Concepts[name] = &Concept{Name: name, Formula: name, Sorts: []string{name}, Arity: 1}
+	}
+	cs.Domain.Combiners = []*ConceptCombiner{
+		{Label: "le", Source: "A", Target: "B"},
+		{Label: "le", Source: "B", Target: "C"},
+		{Label: "le", Source: "A", Target: "C"},
+		{Label: "le", Source: "A", Target: "A"},
+	}
+	cs.AbstractValue = map[string]bool{
+		"edge_info|all_to_all|le|A|B": true,
+		"edge_info|all_to_all|le|B|C": true,
+		"edge_info|all_to_all|le|A|C": true,
+		"edge_info|all_to_all|le|A|A": true,
+	}
+	checks := NewDisplayCheckboxes()
+	checks.SetEdgeCheckbox("le", EdgeDisplayAllToAll, true)
+	checks.SetEdgeCheckbox("le", EdgeDisplayTransitive, true)
+
+	cy := RenderConceptGraph(cs, checks)
+	var nodeObjs []string
+	var edgePairs []string
+	for _, el := range cy.Elements {
+		switch el.Group {
+		case "nodes":
+			nodeObjs = append(nodeObjs, el.Data["obj"].(string))
+			if el.Data["cluster"] != el.Data["obj"] {
+				t.Fatalf("node %s cluster = %v, want same sort cluster", el.Data["obj"], el.Data["cluster"])
+			}
+		case "edges":
+			edgePairs = append(edgePairs, el.Data["source_obj"].(string)+"->"+el.Data["target_obj"].(string))
+		}
+	}
+	if strings.Join(nodeObjs, ",") != "A,B,C" {
+		t.Fatalf("node order = %v, want A,B,C", nodeObjs)
+	}
+	if strings.Join(edgePairs, ",") != "A->B,B->C" {
+		t.Fatalf("edge pairs = %v, want only transitive reduction cover edges", edgePairs)
+	}
+}
+
 func TestConceptShapeOctagon(t *testing.T) {
 	// Python ivy_graph.py get_shape always returns 'octagon'
 	if s := conceptShape("Node"); s != "octagon" {

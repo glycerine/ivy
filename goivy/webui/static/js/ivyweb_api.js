@@ -233,11 +233,12 @@ class IvyAPI {
      * @param {string} mode - Verification mode (concrete, abstract, bounded, induction, pdr)
      * @returns {Promise<object>} check result
      */
-    async runCheck(mode) {
+    async runCheck(mode, options) {
+        var body = Object.assign({ mode: mode }, options || {});
         return this._request('/api/session/' + this.sessionId + '/check', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mode: mode }),
+            body: JSON.stringify(body),
         });
     }
 

@@ -32,6 +32,15 @@ export bad
 conjecture p(X) -> ~q(X)
 `
 
+const saveInvariantSample = `#lang ivy1.7
+type node
+relation p(X:node)
+relation q(X:node)
+after init { p(X) := true; q(X) := true }
+conjecture p(X) -> q(X)
+conjecture q(X) -> q(X)
+`
+
 func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
 	content, err := os.ReadFile(path)
@@ -280,7 +289,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	if _, err := be.Load(session["session_id"], "client_server_example.ivy", content); err != nil {
 		t.Fatalf("Load: %v", err)
 	}
-	resultJSON, err := be.Check(session["session_id"], "induction")
+	resultJSON, err := be.Check(session["session_id"], "induction", CheckOptions{})
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}
@@ -565,6 +574,33 @@ func TestConceptDiagramRoutesThroughCTIUI(t *testing.T) {
 	_, err := be.ConceptDiagram(s.ID)
 	if err == nil || !strings.Contains(err.Error(), "no module loaded") {
 		t.Fatalf("ConceptDiagram error = %v, want CTI Diagram no-module error", err)
+	}
+}
+
+func TestSaveInvariantUsesPythonKeptDroppedSections(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-save-invariant")
+	if err := s.LoadFileContent("test.ivy", []byte(saveInvariantSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	_, err := s.ExecuteAction("weaken", map[string]interface{}{
+		"indices": []interface{}{float64(0)},
+	})
+	if err != nil {
+		t.Fatalf("weaken: %v", err)
+	}
+	result, err := s.ExecuteAction("save_invariant", nil)
+	if err != nil {
+		t.Fatalf("save_invariant: %v", err)
+	}
+	content, _ := result["content"].(string)
+	for _, want := range []string{
+		"# original conjectures kept",
+		"# original conjectures dropped",
+		"# invariant",
+	} {
+		if !strings.Contains(content, want) {
+			t.Fatalf("save invariant content missing %q:\n%s", want, content)
+		}
 	}
 }
 

@@ -34,6 +34,7 @@ class IvyApp {
         this._lastClosedFileName = '';
         // Content as last written to disk; used to detect unsaved changes.
         this._savedFileContent = null;
+        this.currentBound = 10;
     }
 
     /**
@@ -455,7 +456,9 @@ class IvyApp {
         var origUpdate = conceptGraph.update.bind(conceptGraph);
         conceptGraph.update = function(elements, positions) {
             origUpdate(elements, positions);
-            self._applyEdgeVisibility(conceptGraph);
+            if (conceptGraph.cy && typeof conceptGraph.cy.edges === 'function') {
+                self._applyEdgeVisibility(conceptGraph);
+            }
         };
         conceptGraph._ivyVisibilityHooked = true;
     }
@@ -549,6 +552,8 @@ class IvyApp {
 
         // --- File Menu ---
         var fileInput = document.getElementById('file-input');
+        var eventFileInput = document.getElementById('event-file-input');
+        var analysisStateFileInput = document.getElementById('analysis-state-file-input');
 
         // File > Load...
         // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
@@ -583,6 +588,37 @@ class IvyApp {
             }
         });
 
+        var eventTraceOpen = document.getElementById('file-open-event-trace');
+        if (eventTraceOpen && eventFileInput) {
+            eventTraceOpen.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, async function () {
+                    if (window.showOpenFilePicker) {
+                        try {
+                            var handles = await window.showOpenFilePicker({
+                                types: [{ description: 'Ivy event traces', accept: { 'text/plain': ['.iev', '.txt'] } }],
+                                multiple: false,
+                            });
+                            var file = await handles[0].getFile();
+                            await self.loadEventTraceFile(file);
+                        } catch (ex) {
+                            if (ex.name !== 'AbortError') {
+                                self.controls.setStatus('Event trace load failed: ' + ex.message, 'error');
+                            }
+                        }
+                    } else {
+                        eventFileInput.click();
+                    }
+                });
+            });
+            eventFileInput.addEventListener('change', function () {
+                if (eventFileInput.files.length > 0) {
+                    self.loadEventTraceFile(eventFileInput.files[0]);
+                    eventFileInput.value = '';
+                }
+            });
+        }
+
         // File > Save as... (uses File System Access API to write to a chosen path)
         document.getElementById('file-save-as').addEventListener('click', function (e) {
             e.preventDefault();
@@ -594,6 +630,31 @@ class IvyApp {
             e.preventDefault();
             self.flashAndClose(this, function () { self.downloadModel(); });
         });
+
+        var saveAnalysis = document.getElementById('file-save-analysis-state');
+        if (saveAnalysis) {
+            saveAnalysis.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, function () { self.saveAnalysisState(); });
+            });
+        }
+        var loadAnalysis = document.getElementById('file-load-analysis-state');
+        if (loadAnalysis && analysisStateFileInput) {
+            loadAnalysis.addEventListener('click', function (e) {
+                e.preventDefault();
+                self.flashAndClose(this, function () { analysisStateFileInput.click(); });
+            });
+            analysisStateFileInput.addEventListener('change', async function () {
+                if (analysisStateFileInput.files.length > 0) {
+                    try {
+                        await self.loadAnalysisStateFile(analysisStateFileInput.files[0]);
+                    } catch (ex) {
+                        self.controls.setStatus('Load analysis state failed: ' + ex.message, 'error');
+                    }
+                    analysisStateFileInput.value = '';
+                }
+            });
+        }
 
         // File > New Model
         document.getElementById('file-new').addEventListener('click', function (e) {
@@ -669,6 +730,11 @@ class IvyApp {
         this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
         this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
         this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
+        this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
+        this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
+        this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
+        this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
+        this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
         this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
         this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
         this.bindMenuAction('conj-reach', function () { self.reachStep(); });
@@ -918,9 +984,11 @@ class IvyApp {
         if (sheet) sheet.classList.add('active');
         if (this.sheets && this.sheets[sheetId]) {
             this.activeSheetId = sheetId;
-            this.argGraph = this.sheets[sheetId].argGraph;
-            this.conceptGraph = this.sheets[sheetId].conceptGraph;
-            this.selectedArgNode = this.sheets[sheetId].selectedArgNode;
+            if (this.sheets[sheetId].type !== 'events') {
+                this.argGraph = this.sheets[sheetId].argGraph;
+                this.conceptGraph = this.sheets[sheetId].conceptGraph;
+                this.selectedArgNode = this.sheets[sheetId].selectedArgNode;
+            }
         }
         // Resize graphs in the newly visible sheet
         if (this.argGraph) this.argGraph.resize();
@@ -1002,6 +1070,409 @@ class IvyApp {
             sheetState.argGraph.update(argData.elements, argData.positions);
         }
         return sheetId;
+    }
+
+    openEventTraceSheet(label, data, preferredSheetId) {
+        data = data || {};
+        var events = data.events || [];
+        var patterns = data.patterns || [];
+        this._sheetCounter = this._sheetCounter || 1;
+        this._sheetCounter++;
+        var sheetId = preferredSheetId || data.sheet_id || ('events-' + this._sheetCounter);
+        var tabBar = document.getElementById('tab-bar');
+        var sheetArea = document.getElementById('sheet-area');
+        if (!tabBar || !sheetArea) return '';
+
+        var existingTab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var existingSheet = document.getElementById(sheetId);
+        if (!existingTab) {
+            var tabBtn = document.createElement('button');
+            tabBtn.className = 'sheet-tab';
+            tabBtn.setAttribute('data-sheet', sheetId);
+            var labelSpan = document.createElement('span');
+            labelSpan.textContent = label || data.label || 'Events';
+            tabBtn.appendChild(labelSpan);
+            var closeBtn = document.createElement('span');
+            closeBtn.className = 'tab-close';
+            closeBtn.textContent = '\u00D7';
+            closeBtn.title = 'Close tab';
+            tabBtn.appendChild(closeBtn);
+            tabBar.appendChild(tabBtn);
+        }
+
+        var sheet = existingSheet;
+        if (!sheet) {
+            sheet = document.createElement('div');
+            sheet.id = sheetId;
+            sheet.className = 'sheet-content event-sheet';
+            sheetArea.appendChild(sheet);
+        }
+
+        this.sheets[sheetId] = {
+            id: sheetId,
+            type: 'events',
+            events: events,
+            patterns: patterns.slice(),
+            selectedEventAddress: data.selected_address || null,
+        };
+        this.renderEventTraceSheet(sheetId);
+        this.switchSheet(sheetId);
+        this.controls.setStatus('Opened: ' + (label || data.label || 'Events'));
+        return sheetId;
+    }
+
+    async loadEventTraceFile(file) {
+        if (!file) return null;
+        this.controls.setStatus('Loading event trace...');
+        try {
+            var text = await this.readFileText(file);
+            var result = await this.api.executeAction('events_parse', { content: text, filename: file.name || '' });
+            this.openEventTraceSheet(file.name || result.label || 'Event trace', result || {}, result && result.sheet_id);
+            this.controls.setStatus('Loaded event trace: ' + (file.name || 'trace'), 'success');
+            return result;
+        } catch (e) {
+            this.controls.setStatus('Event trace load failed: ' + e.message, 'error');
+            throw e;
+        }
+    }
+
+    readFileText(file) {
+        if (file && typeof file.text === 'function') {
+            return file.text();
+        }
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function () { resolve(String(reader.result || '')); };
+            reader.onerror = function () { reject(reader.error || new Error('failed to read file')); };
+            reader.readAsText(file);
+        });
+    }
+
+    renderEventTraceSheet(sheetId) {
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var sheet = document.getElementById(sheetId);
+        if (!sheetState || !sheet) return;
+        sheet.classList.add('event-sheet');
+        sheet.innerHTML = [
+            '<div class="event-viewer">',
+            '  <div class="event-tree-panel panel">',
+            '    <div class="panel-header">',
+            '      <span class="panel-title">Events</span>',
+            '      <button class="menu-btn event-filter-btn" type="button">Filter...</button>',
+            '      <button class="menu-btn event-find-fwd-btn" type="button">&gt;&gt;</button>',
+            '      <button class="menu-btn event-find-rev-btn" type="button">&lt;&lt;</button>',
+            '    </div>',
+            '    <div class="event-tree" data-event-tree="' + sheetId + '"></div>',
+            '  </div>',
+            '  <div class="event-pattern-panel panel">',
+            '    <div class="panel-header"><span class="panel-title">Patterns</span></div>',
+            '    <select class="event-pattern-list" size="8"></select>',
+            '    <div class="event-pattern-buttons">',
+            '      <button class="menu-btn event-pattern-rev" type="button">&lt;&lt;</button>',
+            '      <button class="menu-btn event-pattern-fwd" type="button">&gt;&gt;</button>',
+            '      <button class="menu-btn event-pattern-add" type="button">+</button>',
+            '      <button class="menu-btn event-pattern-remove" type="button">-</button>',
+            '    </div>',
+            '    <div class="event-pattern-buttons">',
+            '      <button class="menu-btn event-pattern-save" type="button">Save</button>',
+            '      <button class="menu-btn event-pattern-load" type="button">Load</button>',
+            '      <button class="menu-btn event-pattern-clear" type="button">Clear</button>',
+            '    </div>',
+            '  </div>',
+            '</div>',
+        ].join('');
+
+        var tree = sheet.querySelector('.event-tree');
+        this.renderEventTree(tree, sheetState.events || [], sheetId, '');
+        this.renderEventPatternList(sheetId);
+        this.attachEventTraceHandlers(sheetId);
+        if (sheetState.selectedEventAddress) {
+            this.selectEventTraceRow(sheetId, sheetState.selectedEventAddress);
+        }
+    }
+
+    renderEventTree(container, events, sheetId, prefix) {
+        if (!container) return;
+        container.innerHTML = '';
+        var list = document.createElement('ul');
+        list.className = 'event-tree-list';
+        for (var i = 0; i < (events || []).length; i++) {
+            list.appendChild(this.renderEventTreeNode(events[i], sheetId, prefix === '' ? String(i) : prefix + '/' + i));
+        }
+        container.appendChild(list);
+    }
+
+    renderEventTreeNode(ev, sheetId, fallbackAddress) {
+        ev = ev || {};
+        var address = ev.address || fallbackAddress;
+        ev.address = address;
+        var li = document.createElement('li');
+        li.className = 'event-tree-node';
+        li.setAttribute('data-event-node', address);
+
+        var row = document.createElement('div');
+        row.className = 'event-row';
+        row.setAttribute('data-event-address', address);
+
+        var hasSubs = ev.subs && ev.subs.length > 0;
+        var toggle = document.createElement('button');
+        toggle.className = 'event-toggle';
+        toggle.type = 'button';
+        toggle.textContent = hasSubs ? '+' : '';
+        toggle.disabled = !hasSubs;
+        if (hasSubs) toggle.setAttribute('data-event-toggle', address);
+        row.appendChild(toggle);
+
+        var text = document.createElement('span');
+        text.className = 'event-text';
+        text.textContent = ev.text || '';
+        row.appendChild(text);
+        li.appendChild(row);
+
+        row.addEventListener('click', this.selectEventTraceRow.bind(this, sheetId, address));
+        if (hasSubs) {
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                this.toggleEventTraceNode(sheetId, address);
+            }.bind(this));
+        }
+        return li;
+    }
+
+    attachEventTraceHandlers(sheetId) {
+        var sheet = document.getElementById(sheetId);
+        if (!sheet) return;
+        var self = this;
+        var filter = sheet.querySelector('.event-filter-btn');
+        if (filter) filter.addEventListener('click', async function () {
+            var pat = await self.entryDialog('Filter events', 'Pattern:', '', { okLabel: 'Filter' });
+            if (pat !== null) await self.filterEventTrace(pat);
+        });
+        var findFwd = sheet.querySelector('.event-find-fwd-btn');
+        if (findFwd) findFwd.addEventListener('click', async function () {
+            var pat = await self.entryDialog('Find event', 'Pattern:', '', { okLabel: 'Find' });
+            if (pat !== null) await self.findEventTrace(pat, false);
+        });
+        var findRev = sheet.querySelector('.event-find-rev-btn');
+        if (findRev) findRev.addEventListener('click', async function () {
+            var pat = await self.entryDialog('Find event', 'Pattern:', '', { okLabel: 'Find' });
+            if (pat !== null) await self.findEventTrace(pat, true);
+        });
+        var patRev = sheet.querySelector('.event-pattern-rev');
+        if (patRev) patRev.addEventListener('click', function () {
+            var pat = self.selectedEventPattern(sheetId);
+            if (pat) self.findEventTrace(pat, true);
+        });
+        var patFwd = sheet.querySelector('.event-pattern-fwd');
+        if (patFwd) patFwd.addEventListener('click', function () {
+            var pat = self.selectedEventPattern(sheetId);
+            if (pat) self.findEventTrace(pat, false);
+        });
+        var patAdd = sheet.querySelector('.event-pattern-add');
+        if (patAdd) patAdd.addEventListener('click', async function () {
+            var pat = await self.entryDialog('Add pattern', 'Pattern:', '', { okLabel: 'Add' });
+            if (pat !== null && pat !== '') await self.addEventPattern(sheetId, pat);
+        });
+        var patRemove = sheet.querySelector('.event-pattern-remove');
+        if (patRemove) patRemove.addEventListener('click', function () {
+            self.removeSelectedEventPattern(sheetId);
+        });
+        var patSave = sheet.querySelector('.event-pattern-save');
+        if (patSave) patSave.addEventListener('click', function () {
+            self.saveEventPatterns(sheetId);
+        });
+        var patLoad = sheet.querySelector('.event-pattern-load');
+        if (patLoad) patLoad.addEventListener('click', async function () {
+            var text = await self.textDialog('Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
+            if (text !== null) await self.loadEventPatterns(sheetId, text);
+        });
+        var patClear = sheet.querySelector('.event-pattern-clear');
+        if (patClear) patClear.addEventListener('click', function () {
+            self.clearEventPatterns(sheetId);
+        });
+    }
+
+    toggleEventTraceNode(sheetId, address) {
+        var row = document.querySelector('#' + sheetId + ' [data-event-address="' + address + '"]');
+        var li = row ? row.closest('.event-tree-node') : null;
+        var sheetState = this.sheets && this.sheets[sheetId];
+        if (!li || !sheetState) return;
+        var existing = li.querySelector(':scope > ul.event-tree-list');
+        var toggle = row.querySelector('.event-toggle');
+        if (existing) {
+            existing.remove();
+            if (toggle) toggle.textContent = '+';
+            return;
+        }
+        var ev = this.lookupEventTrace(sheetState.events, address);
+        if (!ev || !ev.subs || ev.subs.length === 0) return;
+        var list = document.createElement('ul');
+        list.className = 'event-tree-list';
+        for (var i = 0; i < ev.subs.length; i++) {
+            list.appendChild(this.renderEventTreeNode(ev.subs[i], sheetId, address + '/' + i));
+        }
+        li.appendChild(list);
+        if (toggle) toggle.textContent = '-';
+    }
+
+    lookupEventTrace(events, address) {
+        if (!address && address !== '0') return null;
+        var parts = String(address).split('/');
+        var current = null;
+        var list = events || [];
+        for (var i = 0; i < parts.length; i++) {
+            var idx = Number(parts[i]);
+            if (!Number.isInteger(idx) || idx < 0 || idx >= list.length) return null;
+            current = list[idx];
+            list = current.subs || [];
+        }
+        return current;
+    }
+
+    uncoverEventTraceAddress(sheetId, address) {
+        var parts = String(address || '').split('/');
+        var prefix = '';
+        for (var i = 0; i < parts.length - 1; i++) {
+            prefix = prefix === '' ? parts[i] : prefix + '/' + parts[i];
+            if (!document.querySelector('#' + sheetId + ' [data-event-address="' + prefix + '"]')) break;
+            if (!document.querySelector('#' + sheetId + ' [data-event-address="' + prefix + '/' + parts[i + 1] + '"]')) {
+                this.toggleEventTraceNode(sheetId, prefix);
+            }
+        }
+    }
+
+    selectEventTraceRow(sheetId, address) {
+        this.uncoverEventTraceAddress(sheetId, address);
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var sheet = document.getElementById(sheetId);
+        if (!sheetState || !sheet) return;
+        var rows = sheet.querySelectorAll('.event-row.selected');
+        for (var i = 0; i < rows.length; i++) rows[i].classList.remove('selected');
+        var row = sheet.querySelector('[data-event-address="' + address + '"]');
+        if (row) {
+            row.classList.add('selected');
+            if (typeof row.scrollIntoView === 'function') {
+                row.scrollIntoView({ block: 'nearest' });
+            }
+        }
+        sheetState.selectedEventAddress = address;
+    }
+
+    activeEventSheet() {
+        var sheet = this.sheets && this.sheets[this.activeSheetId];
+        return sheet && sheet.type === 'events' ? sheet : null;
+    }
+
+    async filterEventTrace(pattern) {
+        var sheet = this.activeEventSheet();
+        if (!sheet) {
+            this.controls.setStatus('No event sheet selected', 'error');
+            return null;
+        }
+        var result = await this.api.executeAction('events_filter', {
+            sheet_id: sheet.id,
+            pattern: pattern,
+        });
+        var label = (result && result.label) || 'Filtered events';
+        this.openEventTraceSheet(label, result || {}, result && result.sheet_id);
+        return result;
+    }
+
+    async findEventTrace(pattern, reverse) {
+        var sheet = this.activeEventSheet();
+        if (!sheet) {
+            this.controls.setStatus('No event sheet selected', 'error');
+            return null;
+        }
+        var args = {
+            sheet_id: sheet.id,
+            pattern: pattern,
+            reverse: !!reverse,
+            anchor: sheet.selectedEventAddress || '',
+        };
+        var result = await this.api.executeAction('events_find', args);
+        if (!result || !result.address) {
+            this.controls.setStatus('Pattern not found', 'error');
+            return result;
+        }
+        this.selectEventTraceRow(sheet.id, result.address);
+        return result;
+    }
+
+    renderEventPatternList(sheetId) {
+        var sheet = document.getElementById(sheetId);
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
+        if (!select || !sheetState) return;
+        select.innerHTML = '';
+        for (var i = 0; i < (sheetState.patterns || []).length; i++) {
+            var option = document.createElement('option');
+            option.value = sheetState.patterns[i];
+            option.textContent = sheetState.patterns[i];
+            select.appendChild(option);
+        }
+    }
+
+    selectedEventPattern(sheetId) {
+        var sheet = document.getElementById(sheetId);
+        var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
+        return select && select.value ? select.value : '';
+    }
+
+    async addEventPattern(sheetId, pattern) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (!sheet) return;
+        sheet.patterns = sheet.patterns || [];
+        sheet.patterns.push(pattern);
+        this.renderEventPatternList(sheetId);
+        if (this.api && this.api.executeAction) {
+            await this.api.executeAction('events_add_pattern', { sheet_id: sheetId, pattern: pattern });
+        }
+    }
+
+    async removeSelectedEventPattern(sheetId) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        var select = document.querySelector('#' + sheetId + ' .event-pattern-list');
+        if (!sheet || !select || select.selectedIndex < 0) return;
+        var idx = select.selectedIndex;
+        sheet.patterns.splice(idx, 1);
+        this.renderEventPatternList(sheetId);
+        if (this.api && this.api.executeAction) {
+            await this.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
+        }
+    }
+
+    async clearEventPatterns(sheetId) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (!sheet) return;
+        sheet.patterns = [];
+        this.renderEventPatternList(sheetId);
+        if (this.api && this.api.executeAction) {
+            await this.api.executeAction('events_clear_patterns', { sheet_id: sheetId });
+        }
+    }
+
+    async loadEventPatterns(sheetId, text) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (!sheet) return;
+        var patterns = String(text || '').split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean);
+        sheet.patterns = sheet.patterns.concat(patterns);
+        this.renderEventPatternList(sheetId);
+        if (this.api && this.api.executeAction) {
+            await this.api.executeAction('events_load_patterns', { sheet_id: sheetId, patterns: text });
+        }
+    }
+
+    async saveEventPatterns(sheetId) {
+        var sheet = this.sheets && this.sheets[sheetId];
+        if (!sheet) return '';
+        var content = (sheet.patterns || []).join('\n');
+        if (content !== '') content += '\n';
+        if (this.api && this.api.executeAction) {
+            await this.api.executeAction('events_save_patterns', { sheet_id: sheetId });
+        }
+        this.downloadTextFile('event_patterns.pats', content, 'text/plain');
+        return content;
     }
 
     /**
@@ -2387,47 +2858,8 @@ class IvyApp {
     async saveInvariant() {
         this.controls.setStatus('Saving invariant...');
         try {
-            var result = await this.api.executeAction('get_conjectures', {});
-            var conjectures = (result && result.conjectures) || [];
-
-            // If the server doesn't return conjectures yet, gather from
-            // the concept graph facts as a fallback.
-            if (conjectures.length === 0) {
-                var facts = await this.api.executeAction('gather', {});
-                conjectures = (facts && facts.conjectures) || [];
-            }
-
-            // Build Ivy-format output matching Python's _write_conj
-            var lines = ['# This file was generated by Ivy.\n'];
-            if (conjectures.length > 0) {
-                lines.push('# conjectures\n');
-                for (var i = 0; i < conjectures.length; i++) {
-                    var c = conjectures[i];
-                    if (c.label) {
-                        lines.push('invariant [' + c.label + '] ' + c.formula + '\n');
-                    } else {
-                        lines.push('invariant ' + c.formula + '\n');
-                    }
-                }
-            } else {
-                // No conjectures from server — export from the loaded file's
-                // invariant/conjecture declarations if available.
-                if (this._persistedFileContent) {
-                    var srcLines = this._persistedFileContent.split('\n');
-                    lines.push('# invariants from ' + (this._persistedFileName || 'model') + '\n');
-                    for (var j = 0; j < srcLines.length; j++) {
-                        var line = srcLines[j].trim();
-                        if (line.match(/^(invariant|conjecture)\b/)) {
-                            lines.push(line + '\n');
-                        }
-                    }
-                }
-                if (lines.length <= 2) {
-                    lines.push('# (no invariants found)\n');
-                }
-            }
-
-            var text = lines.join('');
+            var result = await this.api.executeAction('save_invariant', {});
+            var text = (result && result.content) || '';
             var suggestedName = (this._persistedFileName || 'model').replace(/\.ivy$/, '') + '_invariant.ivy';
 
             // Use File System Access API to let user choose save location
@@ -2489,6 +2921,18 @@ class IvyApp {
         } catch (e) {
             this.controls.setStatus('Download failed: ' + e.message, 'error');
         }
+    }
+
+    downloadTextFile(filename, content, mimeType) {
+        var blob = new Blob([content || ''], { type: mimeType || 'text/plain' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'download.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     /**
@@ -2594,6 +3038,178 @@ class IvyApp {
 
     // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
     async saveSession() { return this.downloadModel(); }
+
+    graphElementsSnapshot(graph) {
+        if (!graph || !graph.cy || typeof graph.cy.json !== 'function') return null;
+        var json = graph.cy.json();
+        return json ? json.elements : null;
+    }
+
+    tabLabelForSheet(sheetId) {
+        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"] span');
+        return tab ? tab.textContent : sheetId;
+    }
+
+    buildAnalysisState() {
+        var sheets = [];
+        var ids = Object.keys(this.sheets || {});
+        ids.sort(function (a, b) {
+            if (a === 'sheet-1') return -1;
+            if (b === 'sheet-1') return 1;
+            return a.localeCompare(b);
+        });
+        for (var i = 0; i < ids.length; i++) {
+            var sheetId = ids[i];
+            var sheet = this.sheets[sheetId];
+            if (!sheet) continue;
+            if (sheet.type === 'events') {
+                sheets.push({
+                    id: sheetId,
+                    type: 'events',
+                    label: this.tabLabelForSheet(sheetId),
+                    events: sheet.events || [],
+                    patterns: sheet.patterns || [],
+                    selectedEventAddress: sheet.selectedEventAddress || null,
+                });
+            } else {
+                sheets.push({
+                    id: sheetId,
+                    type: 'analysis',
+                    label: this.tabLabelForSheet(sheetId),
+                    selectedArgNode: sheet.selectedArgNode || null,
+                    arg: { elements: this.graphElementsSnapshot(sheet.argGraph), positions: null },
+                    concept: { elements: this.graphElementsSnapshot(sheet.conceptGraph), positions: null },
+                });
+            }
+        }
+        var modeEl = document.getElementById('mode-select');
+        return {
+            analysis_state_format: 'ivyweb-json',
+            analysis_state_version: 1,
+            python_a2g_equivalent: false,
+            fileName: this._persistedFileName || '',
+            filePath: this._persistedFilePath || this._persistedFileName || '',
+            fileContent: this._editorContent ? this._editorContent() : (this._persistedFileContent || ''),
+            mode: modeEl ? modeEl.value : 'pdr',
+            activeSheetId: this.activeSheetId || 'sheet-1',
+            selectedArgNode: this.selectedArgNode || null,
+            edgeVisibility: this._edgeVisibility || {},
+            labelVisibility: this._labelVisibility || {},
+            toggles: IvyPersist._getToggles ? IvyPersist._getToggles() : {},
+            sheets: sheets,
+        };
+    }
+
+    async saveAnalysisState() {
+        try {
+            var state = this.buildAnalysisState();
+            var text = JSON.stringify(state, null, 2) + '\n';
+            var suggestedName = (this._persistedFileName || 'ivy_analysis').replace(/\.ivy$/, '') + '.ivyweb.json';
+            if (window.showSaveFilePicker) {
+                var handle = await window.showSaveFilePicker({
+                    suggestedName: suggestedName,
+                    types: [{ description: 'IvyWeb analysis state', accept: { 'application/json': ['.json'] } }],
+                });
+                var writable = await handle.createWritable();
+                await writable.write(text);
+                await writable.close();
+                this.controls.setStatus('Analysis state saved: ' + handle.name, 'success');
+            } else {
+                this.downloadTextFile(suggestedName, text, 'application/json');
+                this.controls.setStatus('Analysis state downloaded: ' + suggestedName, 'success');
+            }
+            return state;
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                this.controls.setStatus('Save analysis state cancelled');
+            } else {
+                this.controls.setStatus('Save analysis state failed: ' + e.message, 'error');
+            }
+            return null;
+        }
+    }
+
+    async loadAnalysisStateFile(file) {
+        if (!file) return false;
+        var text = await this.readFileText(file);
+        return this.loadAnalysisStateObject(JSON.parse(text));
+    }
+
+    async loadAnalysisStateObject(state) {
+        if (!state || state.analysis_state_format !== 'ivyweb-json') {
+            throw new Error('unsupported analysis state format');
+        }
+        this._persistedFileName = state.fileName || '';
+        this._persistedFilePath = state.filePath || state.fileName || '';
+        this._persistedFileContent = state.fileContent || '';
+        this._savedFileContent = this._persistedFileContent;
+        this._edgeVisibility = state.edgeVisibility || {};
+        this._labelVisibility = state.labelVisibility || {};
+        this.selectedArgNode = state.selectedArgNode || null;
+
+        if (this.setEditorContent) {
+            this.setEditorContent(this._persistedFileContent);
+        }
+        var modeEl = document.getElementById('mode-select');
+        if (modeEl && state.mode) modeEl.value = state.mode;
+        if (this.api && this.api.reloadContent && this._persistedFileContent) {
+            await this.api.reloadContent(this._persistedFileContent, this._persistedFileName || 'restored.ivy');
+        }
+
+        this.removeAnalysisStateExtraSheets();
+        var sheets = state.sheets || [];
+        for (var i = 0; i < sheets.length; i++) {
+            var sheet = sheets[i];
+            if (sheet.type === 'events') {
+                this.openEventTraceSheet(sheet.label || 'Events', {
+                    sheet_id: sheet.id,
+                    events: sheet.events || [],
+                    patterns: sheet.patterns || [],
+                    selected_address: sheet.selectedEventAddress || null,
+                }, sheet.id);
+                continue;
+            }
+            if (sheet.id === 'sheet-1') {
+                if (sheet.arg && sheet.arg.elements && this.argGraph) {
+                    this.argGraph.update(sheet.arg.elements, sheet.arg.positions || undefined);
+                }
+                if (sheet.concept && sheet.concept.elements && this.conceptGraph) {
+                    this.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+                }
+                if (this.sheets && this.sheets['sheet-1']) {
+                    this.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
+                }
+            } else if (sheet.arg && sheet.arg.elements) {
+                this.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
+                var opened = this.sheets && this.sheets[sheet.id];
+                if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
+                    opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+                }
+                if (opened) opened.selectedArgNode = sheet.selectedArgNode || null;
+            }
+        }
+
+        if (state.toggles) {
+            IvyPersist._setToggles(state.toggles);
+        }
+        if (state.activeSheetId && document.getElementById(state.activeSheetId)) {
+            this.switchSheet(state.activeSheetId);
+        } else {
+            this.switchSheet('sheet-1');
+        }
+        IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
+        this.controls.setStatus('Analysis state loaded: ' + (this._persistedFileName || 'state'), 'success');
+        return true;
+    }
+
+    removeAnalysisStateExtraSheets() {
+        var ids = Object.keys(this.sheets || {});
+        for (var i = 0; i < ids.length; i++) {
+            if (ids[i] !== 'sheet-1') {
+                this.removeSheet(ids[i]);
+            }
+        }
+    }
 
     async closeCurrentFile() {
         if (this._editorDirty()) {
@@ -2953,8 +3569,12 @@ class IvyApp {
     async diagramDomain() {
         this.controls.setStatus('Switching to diagram domain...');
         try {
-            await this.api.diagramDomain();
-            await this.refreshConceptGraph();
+            var result = await this.api.diagramDomain();
+            if (result && result.concept) {
+                this.updateConceptGraph(result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
             this.controls.setStatus('Diagram domain active', 'success');
         } catch (e) {
             this.controls.setStatus('Diagram domain failed: ' + e.message, 'error');
@@ -3604,9 +4224,18 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py bounded_check().
      */
     async boundedCheck() {
-        this.controls.setStatus('Running bounded check...');
         try {
-            var result = await this.api.runCheck('bounded');
+            var bound = await this.integerDialog('Bounded check', 'Enter bound:', this.currentBound, {
+                min: 1,
+                okLabel: 'OK',
+            });
+            if (bound === null) {
+                this.controls.setStatus('Bounded check cancelled');
+                return;
+            }
+            this.currentBound = bound;
+            this.controls.setStatus('Running bounded check...');
+            var result = await this.api.runCheck('bounded', { bound: bound });
             this.controls.setStatus('Bounded check: ' + (result.result || 'done'), 'success');
         } catch (e) {
             this.controls.setStatus('Bounded check failed: ' + e.message, 'error');
@@ -3618,9 +4247,24 @@ class IvyApp {
      * Matches Python ivy_ui_cti.py weaken().
      */
     async weakenInvariant() {
-        this.controls.setStatus('Weakening invariant...');
         try {
-            var result = await this.api.executeAction('weaken', {});
+            this.controls.setStatus('Choosing conjectures...');
+            var choicesResult = await this.api.executeAction('get_conjectures', {});
+            var conjectures = (choicesResult && choicesResult.conjectures) || [];
+            var choices = conjectures.map(function (conj, index) {
+                var label = conj.label ? '[' + conj.label + '] ' + conj.formula : conj.formula;
+                return { label: label || String(index), value: index };
+            });
+            var indices = await this.listboxDialog('Weaken', 'Choose conjectures to remove:', choices, {
+                multiple: true,
+                okLabel: 'Weaken',
+            });
+            if (!indices || indices.length === 0) {
+                this.controls.setStatus('Weaken cancelled');
+                return;
+            }
+            this.controls.setStatus('Weakening invariant...');
+            var result = await this.api.executeAction('weaken', { indices: indices });
             await this.refreshConceptGraph();
             this.controls.setStatus('Invariant weakened', 'success');
         } catch (e) {
@@ -3765,6 +4409,21 @@ class IvyApp {
             this.controls.setStatus('Facts gathered', 'success');
         } catch (e) {
             this.controls.setStatus('Gather failed: ' + e.message, 'error');
+        }
+    }
+
+    async ctiConceptAction(actionName) {
+        this.controls.setStatus('Running CTI action...');
+        try {
+            var result = await this.api.executeAction(actionName, { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.updateConceptGraph(result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
+            this.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('CTI action failed: ' + e.message, 'error');
         }
     }
 

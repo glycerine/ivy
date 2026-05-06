@@ -33,15 +33,17 @@ type Session struct {
 	FileContent     string // file content (when uploaded via browser)
 	toggles         *Toggles
 	WebUIProofStack *WebUIProofStack
-	ProofMgr        *goivy.ProofManager  // live proof state (goals + reachability graph)
-	CompiledModule  *goivy.Module        // populated by full compiler pipeline
-	CompiledSig     *goivy.Sig           // populated by full compiler pipeline
+	ProofMgr        *goivy.ProofManager // live proof state (goals + reachability graph)
+	CompiledModule  *goivy.Module       // populated by full compiler pipeline
+	CompiledSig     *goivy.Sig          // populated by full compiler pipeline
+	OriginalConjs   []*goivy.LabeledFormula
 	AG              *goivy.AnalysisGraph // persistent analysis graph for interactive verification
 	AGUI            *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
 	CTIUI           *CTIAnalysisGraphUI  // CTI/invariant workflow UI
 	SheetUIs        map[string]*AnalysisGraphUI
 	sheetCounter    int
 	ReachableUI     *AnalysisGraphUI
+	EventViewer     *EventTraceViewer
 }
 
 const rootSheetID = "sheet-1"
@@ -56,6 +58,7 @@ func NewSession(cfg *goivy.Config, id string) *Session {
 		SimpleSess:   NewConceptSession(),
 		SheetUIs:     make(map[string]*AnalysisGraphUI),
 		sheetCounter: 1,
+		EventViewer:  NewEventTraceViewer(),
 	}
 }
 
@@ -205,6 +208,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Step 6: Store the compiled module for verification operations.
 	s.CompiledModule = mod
 	s.CompiledSig = sig
+	s.OriginalConjs = append([]*goivy.LabeledFormula{}, mod.LabeledConjs...)
 
 	// Step 6.5: Initialize ProofManager from module conjectures.
 	// Python: AnalysisState.__init__ creates self.goal_stack = ProofGoalStack()
@@ -326,6 +330,81 @@ func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *Ana
 		ui.G = ArtToGraphState(ui.AG)
 	}
 	return ui
+}
+
+func (s *Session) ensureEventViewerLocked() *EventTraceViewer {
+	if s.EventViewer == nil {
+		s.EventViewer = NewEventTraceViewer()
+	}
+	return s.EventViewer
+}
+
+func eventSheetResult(result map[string]interface{}, viewer *EventTraceViewer, sheetID string) {
+	sheet := viewer.GetSheet(sheetID)
+	if sheet == nil {
+		return
+	}
+	result["sheet_id"] = sheet.Name
+	result["label"] = sheet.Label
+	result["events"] = sheet.Events
+	result["patterns"] = append([]string{}, viewer.Patterns...)
+}
+
+func traceEventsFromActionArg(raw interface{}) ([]*TraceEvent, error) {
+	switch v := raw.(type) {
+	case []*TraceEvent:
+		return v, nil
+	case []TraceEvent:
+		events := make([]*TraceEvent, 0, len(v))
+		for i := range v {
+			ev := v[i]
+			events = append(events, &ev)
+		}
+		return events, nil
+	case []interface{}:
+		events := make([]*TraceEvent, 0, len(v))
+		for _, item := range v {
+			ev, err := traceEventFromActionArg(item)
+			if err != nil {
+				return nil, err
+			}
+			events = append(events, ev)
+		}
+		return events, nil
+	case nil:
+		return nil, nil
+	default:
+		return nil, fmt.Errorf("events_new_sheet: unsupported events payload %T", raw)
+	}
+}
+
+func traceEventFromActionArg(raw interface{}) (*TraceEvent, error) {
+	switch v := raw.(type) {
+	case *TraceEvent:
+		return v, nil
+	case TraceEvent:
+		ev := v
+		return &ev, nil
+	case map[string]interface{}:
+		text, _ := v["text"].(string)
+		if text == "" {
+			return nil, fmt.Errorf("event is missing text")
+		}
+		ev := NewTraceEvent(text)
+		if addr, ok := v["address"].(string); ok {
+			ev.Address = addr
+		}
+		if rawSubs, ok := v["subs"].([]interface{}); ok {
+			subs, err := traceEventsFromActionArg(rawSubs)
+			if err != nil {
+				return nil, err
+			}
+			ev.Subs = subs
+		}
+		return ev, nil
+	default:
+		return nil, fmt.Errorf("unsupported event payload %T", raw)
+	}
 }
 
 func actionStringArg(args map[string]interface{}, key string) string {
@@ -482,6 +561,27 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 	return goivy.TrueClauses(nil), nil
 }
 
+func (s *Session) ctiConceptWidgetForSheetLocked(sheetID string) (*CTIConceptGraphWidget, error) {
+	if s.CTIUI == nil {
+		return nil, fmt.Errorf("cti action: CTI UI is not initialized")
+	}
+	var w *GraphWidget
+	if (sheetID == "" || sheetID == rootSheetID) && s.CTIUI.CurrentConceptGraph != nil {
+		w = s.CTIUI.CurrentConceptGraph
+	} else {
+		w = s.ensureConceptGraphWidgetForSheetLocked(sheetID)
+	}
+	if w == nil || w.G() == nil {
+		return nil, fmt.Errorf("cti action: no concept graph")
+	}
+	return &CTIConceptGraphWidget{
+		GraphWidget:     w,
+		ParentCTI:       s.CTIUI,
+		CISess:          s.ConceptSess,
+		ActiveFactExprs: w.GetActiveFactExprs(),
+	}, nil
+}
+
 func ctiClausesFromModule(mod *goivy.Module) []*goivy.Clauses {
 	if mod == nil {
 		return nil
@@ -521,6 +621,106 @@ func relationNamesUsedByClauses(mod *goivy.Module, clauses *goivy.Clauses) []str
 	}
 	sort.Strings(rels)
 	return rels
+}
+
+func (s *Session) saveInvariantContent() string {
+	current := ctiClausesFromModule(s.CompiledModule)
+	if s.CTIUI != nil && s.CTIUI.Conjectures != nil {
+		current = s.CTIUI.Conjectures
+	}
+	original := s.OriginalConjs
+	if len(original) == 0 && s.CompiledModule != nil {
+		original = s.CompiledModule.LabeledConjs
+	}
+	oldSet := make(map[string]bool)
+	for _, lc := range original {
+		oldSet[labeledConjKey(lc)] = true
+	}
+	newSet := make(map[string]bool)
+	for _, conj := range current {
+		newSet[clausesConjKey(conj)] = true
+	}
+
+	var oldKept []*goivy.LabeledFormula
+	var oldDropped []*goivy.LabeledFormula
+	for _, lc := range original {
+		if newSet[labeledConjKey(lc)] {
+			oldKept = append(oldKept, lc)
+		} else {
+			oldDropped = append(oldDropped, lc)
+		}
+	}
+	var newConjs []*goivy.Clauses
+	for _, conj := range current {
+		if !oldSet[clausesConjKey(conj)] {
+			newConjs = append(newConjs, conj)
+		}
+	}
+
+	var sb strings.Builder
+	sb.WriteString("# This file was generated by ivy.\n\n")
+	if len(oldKept) > 0 {
+		sb.WriteString("\n# original conjectures kept\n\n")
+		for _, lc := range oldKept {
+			writeInvariantConj(&sb, labeledConjLabel(lc), labeledConjFormula(lc), false)
+		}
+	}
+	if len(oldDropped) > 0 {
+		sb.WriteString("\n# original conjectures dropped\n\n")
+		for _, lc := range oldDropped {
+			writeInvariantConj(&sb, labeledConjLabel(lc), labeledConjFormula(lc), true)
+		}
+	}
+	if len(newConjs) > 0 {
+		sb.WriteString("\n# new conjectures\n\n")
+		for _, conj := range newConjs {
+			writeInvariantConj(&sb, "", clausesConjFormula(conj), false)
+		}
+	}
+	return sb.String()
+}
+
+func labeledConjKey(lc *goivy.LabeledFormula) string {
+	return labeledConjFormula(lc)
+}
+
+func clausesConjKey(conj *goivy.Clauses) string {
+	return clausesConjFormula(conj)
+}
+
+func labeledConjLabel(lc *goivy.LabeledFormula) string {
+	if lc == nil || lc.Label == nil {
+		return ""
+	}
+	return fmt.Sprint(lc.Label)
+}
+
+func labeledConjFormula(lc *goivy.LabeledFormula) string {
+	if lc == nil || lc.Formula == nil {
+		return ""
+	}
+	if expr, ok := lc.Formula.(goivy.Expr); ok {
+		return fmt.Sprint(goivy.DropUniversals(expr))
+	}
+	return fmt.Sprint(lc.Formula)
+}
+
+func clausesConjFormula(conj *goivy.Clauses) string {
+	if conj == nil {
+		return ""
+	}
+	return fmt.Sprint(goivy.DropUniversals(conj.ToFormula()))
+}
+
+func writeInvariantConj(sb *strings.Builder, label, formula string, commented bool) {
+	if commented {
+		sb.WriteString("# ")
+	}
+	if label != "" {
+		sb.WriteString(fmt.Sprintf("invariant [%s] %s\n", label, formula))
+	} else {
+		sb.WriteString(fmt.Sprintf("invariant %s\n", formula))
+	}
 }
 
 func graphWidgetDOT(w *GraphWidget) string {
@@ -667,6 +867,92 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 
 	var err error
 	switch actionName {
+	// --- Event trace viewer operations (ivy_ev_viewer.py) ---
+	case "events_new_sheet":
+		events, evErr := traceEventsFromActionArg(args["events"])
+		if evErr != nil {
+			err = evErr
+			break
+		}
+		viewer := s.ensureEventViewerLocked()
+		sheetID := viewer.NewSheet(events)
+		eventSheetResult(result, viewer, sheetID)
+	case "events_parse":
+		content := actionStringArg(args, "content")
+		if content == "" {
+			err = fmt.Errorf("events_parse: missing content")
+			break
+		}
+		events, parseErr := ParseTraceEvents(content)
+		if parseErr != nil {
+			err = fmt.Errorf("events_parse: %w", parseErr)
+			break
+		}
+		viewer := s.ensureEventViewerLocked()
+		sheetID := viewer.NewSheet(events)
+		eventSheetResult(result, viewer, sheetID)
+	case "events_filter":
+		viewer := s.ensureEventViewerLocked()
+		sheetID := actionStringArg(args, "sheet_id")
+		sheet := viewer.GetSheet(sheetID)
+		if sheet == nil {
+			err = fmt.Errorf("events_filter: unknown sheet %q", sheetID)
+			break
+		}
+		pattern := actionStringArg(args, "pattern")
+		filtered := FilterEvents(sheet.Events, pattern)
+		newSheetID := viewer.NewSheet(filtered)
+		eventSheetResult(result, viewer, newSheetID)
+	case "events_find":
+		viewer := s.ensureEventViewerLocked()
+		sheetID := actionStringArg(args, "sheet_id")
+		sheet := viewer.GetSheet(sheetID)
+		if sheet == nil {
+			err = fmt.Errorf("events_find: unknown sheet %q", sheetID)
+			break
+		}
+		pattern := actionStringArg(args, "pattern")
+		reverse, _ := actionBoolArg(args, "reverse")
+		anchor := actionStringArg(args, "anchor")
+		ev, addr := FindEventFrom(sheet.Events, pattern, reverse, anchor)
+		if ev == nil {
+			result["found"] = false
+			result["message"] = "Pattern not found"
+			break
+		}
+		result["found"] = true
+		result["address"] = addr
+		result["event"] = ev
+	case "events_add_pattern":
+		viewer := s.ensureEventViewerLocked()
+		pattern := actionStringArg(args, "pattern")
+		if pattern == "" {
+			err = fmt.Errorf("events_add_pattern: missing pattern")
+			break
+		}
+		viewer.AddPattern(pattern)
+		result["patterns"] = append([]string{}, viewer.Patterns...)
+	case "events_remove_pattern":
+		viewer := s.ensureEventViewerLocked()
+		idx, ok := actionIntArg(args, "index")
+		if !ok {
+			err = fmt.Errorf("events_remove_pattern: missing index")
+			break
+		}
+		err = viewer.RemovePattern(idx)
+		result["patterns"] = append([]string{}, viewer.Patterns...)
+	case "events_clear_patterns":
+		viewer := s.ensureEventViewerLocked()
+		viewer.ClearPatterns()
+		result["patterns"] = []string{}
+	case "events_load_patterns":
+		viewer := s.ensureEventViewerLocked()
+		viewer.LoadPatterns(actionStringArg(args, "patterns"))
+		result["patterns"] = append([]string{}, viewer.Patterns...)
+	case "events_save_patterns":
+		viewer := s.ensureEventViewerLocked()
+		result["content"] = viewer.SavePatterns()
+
 	// --- Concept graph operations (ConceptInteractiveSession) ---
 	case "undo":
 		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil && s.AGUI.CurrentConceptGraph.GraphStack.CanUndo() {
@@ -1030,9 +1316,15 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		toRemove := make(map[int]bool, len(indices))
+		var intIndices []int
 		for _, idx := range indices {
 			if fi, ok := idx.(float64); ok {
-				toRemove[int(fi)] = true
+				i := int(fi)
+				toRemove[i] = true
+				intIndices = append(intIndices, i)
+			} else if ii, ok := idx.(int); ok {
+				toRemove[ii] = true
+				intIndices = append(intIndices, ii)
 			}
 		}
 		var kept []*goivy.LabeledFormula
@@ -1051,10 +1343,74 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			}
 		}
 		s.CompiledModule.LabeledConjs = kept
+		if s.CTIUI != nil {
+			_, _ = s.CTIUI.Weaken(append([]int{}, intIndices...))
+		}
 		result["removed_count"] = len(removed)
 		result["removed"] = removed
 		result["remaining_count"] = len(kept)
 		s.emit(Event{Type: "weaken_result", Data: map[string]interface{}{"removed": removed}})
+
+	case "cti_gather", "cti_minimize", "cti_check_sufficient", "cti_check_inductive", "cti_strengthen":
+		w, widgetErr := s.ctiConceptWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
+		if widgetErr != nil {
+			err = widgetErr
+			break
+		}
+		switch actionName {
+		case "cti_gather":
+			w.GatherFacts()
+			result["message"] = "CTI facts gathered"
+		case "cti_minimize":
+			bound := 10
+			if s.CTIUI != nil && s.CTIUI.CurrentBound > 0 {
+				bound = s.CTIUI.CurrentBound
+			}
+			conj, minErr := w.MinimizeConjecture(bound)
+			if minErr != nil {
+				err = minErr
+				break
+			}
+			if conj != nil {
+				result["conjecture"] = fmt.Sprint(conj.ToFormula())
+			}
+			result["message"] = "Conjecture minimized"
+		case "cti_check_sufficient":
+			ok, msg := w.IsSufficient()
+			result["ok"] = ok
+			result["message"] = msg
+		case "cti_check_inductive":
+			ok, msg := w.IsInductive()
+			result["ok"] = ok
+			result["message"] = msg
+		case "cti_strengthen":
+			conj, strErr := w.Strengthen()
+			if strErr != nil {
+				err = strErr
+				break
+			}
+			if conj != nil {
+				result["conjecture"] = fmt.Sprint(conj.ToFormula())
+				if s.CompiledModule != nil && s.CompiledModule.Cfg != nil && s.CompiledModule.Cfg.AstCfg != nil {
+					s.CompiledModule.LabeledConjs = append(
+						s.CompiledModule.LabeledConjs,
+						s.CompiledModule.Cfg.AstCfg.NewLabeledFormula(nil, conj.ToFormula()),
+					)
+				}
+			}
+			result["message"] = "Invariant strengthened"
+		}
+		result["concept"] = conceptGraphActionPayload(w.GraphWidget)
+
+	case "save_invariant":
+		if s.CompiledModule == nil {
+			err = fmt.Errorf("save_invariant: no compiled module")
+			break
+		}
+		content := s.saveInvariantContent()
+		result["content"] = content
+		result["filename"] = "invariant.ivy"
+		s.emit(Event{Type: "export", Data: map[string]string{"content": content}})
 
 	case "save_abstraction":
 		// Save abstraction: export concept spaces and conjectures.
@@ -1673,13 +2029,99 @@ func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}
 func (s *Session) SaveState() []byte {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	checks := s.ensureConceptChecksLocked()
+	s.toggles = checks.Snapshot()
+	sheets := []map[string]interface{}{s.analysisSheetStateLocked(rootSheetID, "Sheet 1", s.AGUI)}
+	for _, sheetID := range s.sortedAnalysisSheetIDsLocked() {
+		if sheetID == rootSheetID {
+			continue
+		}
+		sheets = append(sheets, s.analysisSheetStateLocked(sheetID, sheetID, s.SheetUIs[sheetID]))
+	}
 	data, _ := json.Marshal(map[string]interface{}{
-		"session_id":   s.ID,
-		"file_path":    s.FilePath,
-		"file_content": s.FileContent,
-		"toggles":      s.toggles,
+		"analysis_state_format":  "ivyweb-json",
+		"analysis_state_version": 1,
+		"python_a2g_equivalent":  false,
+		"session_id":             s.ID,
+		"file_path":              s.FilePath,
+		"file_content":           s.FileContent,
+		"toggles":                s.toggles,
+		"sheets":                 sheets,
+		"event_viewer":           eventViewerState(s.EventViewer),
 	})
 	return data
+}
+
+func (s *Session) sortedAnalysisSheetIDsLocked() []string {
+	ids := make([]string, 0, len(s.SheetUIs))
+	for id := range s.SheetUIs {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	return ids
+}
+
+func (s *Session) analysisSheetStateLocked(sheetID, label string, ui *AnalysisGraphUI) map[string]interface{} {
+	argElements := []WebUICyElement{}
+	if ui != nil && ui.AG != nil {
+		if cy := RenderAnalysisUIARG(ui); cy != nil {
+			argElements = cy.Elements
+		}
+	} else if sheetID == rootSheetID && s.Graph != nil {
+		if cy := RenderWebUIARG(s.Graph); cy != nil {
+			argElements = cy.Elements
+		}
+	}
+	conceptElements := []WebUICyElement{}
+	if ui != nil && ui.CurrentConceptGraph != nil && ui.CurrentConceptGraph.G() != nil {
+		g := ui.CurrentConceptGraph.G()
+		if g.ConceptSess != nil {
+			if cy := RenderConceptGraph(g.ConceptSess, g.Checks); cy != nil {
+				conceptElements = cy.Elements
+			}
+		}
+	} else if sheetID == rootSheetID && s.SimpleSess != nil {
+		if cy := RenderConceptGraph(s.SimpleSess, s.ensureConceptChecksLocked()); cy != nil {
+			conceptElements = cy.Elements
+		}
+	}
+	return map[string]interface{}{
+		"id":    sheetID,
+		"type":  "analysis",
+		"label": label,
+		"arg": map[string]interface{}{
+			"elements": argElements,
+		},
+		"concept": map[string]interface{}{
+			"elements": conceptElements,
+		},
+	}
+}
+
+func eventViewerState(viewer *EventTraceViewer) map[string]interface{} {
+	result := map[string]interface{}{
+		"patterns": []string{},
+		"sheets":   []map[string]interface{}{},
+	}
+	if viewer == nil {
+		return result
+	}
+	result["patterns"] = append([]string{}, viewer.Patterns...)
+	var sheets []map[string]interface{}
+	for _, name := range viewer.SheetNames() {
+		sheet := viewer.GetSheet(name)
+		if sheet == nil {
+			continue
+		}
+		sheets = append(sheets, map[string]interface{}{
+			"id":     sheet.Name,
+			"label":  sheet.Label,
+			"events": sheet.Events,
+		})
+	}
+	result["sheets"] = sheets
+	result["current_sheet"] = viewer.CurrentSheet
+	return result
 }
 
 // CheckResult holds the result of a verification check.
@@ -1694,6 +2136,10 @@ type WebUICheckResult struct {
 
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
 func (s *Session) RunCheck(mode string) *WebUICheckResult {
+	return s.RunCheckWithOptions(mode, CheckOptions{})
+}
+
+func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUICheckResult {
 	if s.CompiledModule == nil {
 		return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
 	}
@@ -1880,6 +2326,12 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check (BMC)"}
 		}
 		nSteps := 10
+		if options.Bound > 0 {
+			nSteps = options.Bound
+		}
+		if s.CTIUI != nil {
+			s.CTIUI.CurrentBound = nSteps
+		}
 		bmcCfg := goivy.DefaultConfig(s.CompiledModule, nSteps)
 		var bmcResult *goivy.BMCResult
 		var bmcErr error

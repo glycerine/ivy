@@ -239,8 +239,8 @@ func TestConformCheck(t *testing.T) {
 	// Allow Python a moment to finish compilation.
 	time.Sleep(500 * time.Millisecond)
 
-	goCheck, goErr := goBE.Check(goSID, "induction")
-	pyCheck, pyErr := pyBE.Check(pySID, "induction")
+	goCheck, goErr := goBE.Check(goSID, "induction", CheckOptions{})
+	pyCheck, pyErr := pyBE.Check(pySID, "induction", CheckOptions{})
 
 	if goErr != nil {
 		t.Fatalf("Go Check error: %v", goErr)

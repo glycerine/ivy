@@ -3,6 +3,7 @@ package webui
 import (
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
+	"sort"
 	"strings"
 )
 
@@ -130,10 +131,12 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		return g
 	}
 
+	nodes := orderedConceptNodes(cs, checks)
+
 	// Build a map of sort name -> color index for per-sort coloring
 	// (matches Python tk_graph_ui.py choose_colors).
 	sortColorMap := make(map[string]string)
-	for i, sortName := range cs.Domain.Nodes {
+	for i, sortName := range nodes {
 		sortColorMap[sortName] = goivy.SortColors[(i+1)%len(goivy.SortColors)]
 	}
 
@@ -145,7 +148,7 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 			if c == nil {
 				continue
 			}
-			for _, sortName := range cs.Domain.Nodes {
+			for _, sortName := range nodes {
 				sortConcept := cs.Domain.Concepts[sortName]
 				if sortConcept == nil {
 					continue
@@ -171,8 +174,14 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		}
 	}
 
+	edgeTuples := renderConceptGraphEdgeTuples(cs, nodes)
+	hiddenByTransitive := make(map[[3]string]bool)
+	if checks != nil && cs.AbstractValue != nil {
+		hiddenByTransitive = GetTransitiveReduction(checks, cs.AbstractValue, edgeTuples)
+	}
+
 	// Add sort nodes.
-	for _, sortName := range cs.Domain.Nodes {
+	for _, sortName := range nodes {
 		c := cs.Domain.Concepts[sortName]
 		if c == nil {
 			continue
@@ -184,6 +193,7 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		shortInfo := sortName
 		longInfo := c.Formula
 		g.AddNodeWithColor(sortName, label, []string{cls}, shortInfo, longInfo, nil, "octagon", sortColorMap[sortName])
+		g.Elements[len(g.Elements)-1].Data["cluster"] = conceptCluster(c, sortName)
 	}
 
 	// Add binary relations as edges between sort nodes.
@@ -192,21 +202,11 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		if c == nil || len(c.Sorts) < 2 {
 			continue
 		}
-		sourceSortName := ""
-		targetSortName := ""
-		for _, sn := range cs.Domain.Nodes {
-			sc := cs.Domain.Concepts[sn]
-			if sc == nil || len(sc.Sorts) == 0 {
-				continue
-			}
-			if sourceSortName == "" && sc.Sorts[0] == c.Sorts[0] {
-				sourceSortName = sn
-			}
-			if targetSortName == "" && sc.Sorts[0] == c.Sorts[1] {
-				targetSortName = sn
-			}
-		}
+		sourceSortName, targetSortName := conceptEdgeEndpoints(cs, nodes, c)
 		if sourceSortName == "" || targetSortName == "" {
+			continue
+		}
+		if hiddenByTransitive[[3]string{edgeName, sourceSortName, targetSortName}] {
 			continue
 		}
 		if _, ok := g.NodeID[sourceSortName]; !ok {
@@ -235,6 +235,9 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 	// Also add any explicit combiners.
 	for _, comb := range cs.Domain.Combiners {
 		if comb.Source != "" && comb.Target != "" {
+			if hiddenByTransitive[[3]string{comb.Label, comb.Source, comb.Target}] {
+				continue
+			}
 			key := comb.Label + "|" + comb.Source + "|" + comb.Target
 			if _, exists := g.EdgeID[key]; exists {
 				continue
@@ -254,6 +257,91 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		}
 	}
 	return g
+}
+
+func orderedConceptNodes(cs *ConceptSession, checks *DisplayCheckboxes) []string {
+	nodes := append([]string{}, cs.Domain.Nodes...)
+	sort.Strings(nodes)
+	if checks == nil || cs.AbstractValue == nil {
+		return nodes
+	}
+	var order [][2]string
+	for _, edge := range renderConceptGraphEdgeTuples(cs, nodes) {
+		edgeName, source, target := edge[0], edge[1], edge[2]
+		if !checks.EdgeVisible(edgeName, EdgeDisplayAllToAll) || !checks.EdgeVisible(edgeName, EdgeDisplayTransitive) {
+			continue
+		}
+		key := fmt.Sprintf("edge_info|all_to_all|%s|%s|%s", edgeName, source, target)
+		if cs.AbstractValue[key] {
+			order = append(order, [2]string{source, target})
+		}
+	}
+	if len(order) == 0 {
+		return nodes
+	}
+	return goivy.TopologicalSort(nodes, order, func(s string) string { return s })
+}
+
+func renderConceptGraphEdgeTuples(cs *ConceptSession, nodes []string) [][3]string {
+	var tuples [][3]string
+	seen := make(map[[3]string]bool)
+	add := func(edge, source, target string) {
+		tuple := [3]string{edge, source, target}
+		if edge == "" || source == "" || target == "" || seen[tuple] {
+			return
+		}
+		seen[tuple] = true
+		tuples = append(tuples, tuple)
+	}
+	for _, edgeName := range cs.Domain.Edges {
+		c := cs.Domain.Concepts[edgeName]
+		if c == nil || len(c.Sorts) < 2 {
+			continue
+		}
+		source, target := conceptEdgeEndpoints(cs, nodes, c)
+		add(edgeName, source, target)
+	}
+	for _, comb := range cs.Domain.Combiners {
+		if comb == nil {
+			continue
+		}
+		add(comb.Label, comb.Source, comb.Target)
+	}
+	sort.Slice(tuples, func(i, j int) bool {
+		if tuples[i][0] != tuples[j][0] {
+			return tuples[i][0] < tuples[j][0]
+		}
+		if tuples[i][1] != tuples[j][1] {
+			return tuples[i][1] < tuples[j][1]
+		}
+		return tuples[i][2] < tuples[j][2]
+	})
+	return tuples
+}
+
+func conceptEdgeEndpoints(cs *ConceptSession, nodes []string, c *Concept) (string, string) {
+	sourceSortName := ""
+	targetSortName := ""
+	for _, sn := range nodes {
+		sc := cs.Domain.Concepts[sn]
+		if sc == nil || len(sc.Sorts) == 0 {
+			continue
+		}
+		if sourceSortName == "" && sc.Sorts[0] == c.Sorts[0] {
+			sourceSortName = sn
+		}
+		if targetSortName == "" && sc.Sorts[0] == c.Sorts[1] {
+			targetSortName = sn
+		}
+	}
+	return sourceSortName, targetSortName
+}
+
+func conceptCluster(c *Concept, fallback string) string {
+	if c != nil && len(c.Sorts) > 0 && c.Sorts[0] != "" {
+		return c.Sorts[0]
+	}
+	return fallback
 }
 
 // conceptNodeClass determines the CSS class for a concept node.

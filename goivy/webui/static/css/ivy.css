@@ -534,6 +534,102 @@ html, body {
     flex-direction: column;
 }
 
+.event-sheet.active {
+    min-height: 0;
+}
+
+.event-viewer {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.event-tree-panel {
+    flex: 1;
+    min-width: 260px;
+}
+
+.event-pattern-panel {
+    flex: 0 0 220px;
+    min-width: 180px;
+    border-left: 1px solid #3c3c3c;
+}
+
+.event-tree {
+    flex: 1;
+    overflow: auto;
+    padding: 6px 8px;
+    font-family: Menlo, Consolas, monospace;
+    font-size: 12px;
+}
+
+.event-tree-list {
+    list-style: none;
+    margin: 0;
+    padding-left: 16px;
+}
+
+.event-tree > .event-tree-list {
+    padding-left: 0;
+}
+
+.event-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 22px;
+    color: #d4d4d4;
+    cursor: default;
+    user-select: none;
+}
+
+.event-row:hover {
+    background: #2a2d2e;
+}
+
+.event-row.selected {
+    color: #fff;
+    background: #094771;
+}
+
+.event-toggle {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    color: #ccc;
+    background: transparent;
+    cursor: pointer;
+}
+
+.event-toggle:disabled {
+    cursor: default;
+}
+
+.event-text {
+    white-space: nowrap;
+}
+
+.event-pattern-list {
+    width: calc(100% - 16px);
+    margin: 8px;
+    min-height: 120px;
+    color: #d4d4d4;
+    background: #1e1e1e;
+    border: 1px solid #3c3c3c;
+}
+
+.event-pattern-buttons {
+    display: flex;
+    gap: 4px;
+    padding: 0 8px 8px;
+}
+
+.event-pattern-buttons .menu-btn {
+    flex: 1;
+}
+
 /* Sheet columns: left (ARG+concept+details) | divider2 | state checkboxes */
 .sheet-columns {
     display: flex;

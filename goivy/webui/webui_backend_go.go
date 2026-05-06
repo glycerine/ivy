@@ -468,6 +468,22 @@ func (gbe *GoBackend) ConceptDiagram(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
+		if sess.CTIUI != nil {
+			diagram, diagErr := sess.CTIUI.Diagram()
+			if diagErr != nil {
+				err = diagErr
+				return nil
+			}
+			response := map[string]interface{}{
+				"status":  "ok",
+				"diagram": diagram,
+			}
+			if sess.CTIUI.CurrentConceptGraph != nil {
+				response["concept"] = conceptGraphActionPayload(sess.CTIUI.CurrentConceptGraph)
+			}
+			by, err = canonicalJSON(response)
+			return nil
+		}
 		sess.SimpleSess.Diagram()
 		by = okJSON
 		return nil
@@ -519,7 +535,7 @@ func (gbe *GoBackend) SetToggle(sessionID, edge, displayClass string, value bool
 	return
 }
 
-func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
+func (gbe *GoBackend) Check(sessionID, mode string, options CheckOptions) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
@@ -527,7 +543,7 @@ func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
 			return nil
 		}
 		sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": mode}})
-		cr := sess.RunCheck(mode)
+		cr := sess.RunCheckWithOptions(mode, options)
 		sess.emit(Event{Type: "check_completed", Data: map[string]interface{}{
 			"result":  cr.Result,
 			"mode":    mode,

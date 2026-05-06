@@ -35,8 +35,11 @@
                 <span class="panel-menu" data-dropdown="file-menu">File</span>
                 <div id="file-menu" class="dropdown-content">
                     <a href="#" id="file-load">Load...</a>
+                    <a href="#" id="file-open-event-trace">Open Event Trace...</a>
                     <a href="#" id="file-save-as">Save as...</a>
                     <a href="#" id="file-download">Download current model</a>
+                    <a href="#" id="file-save-analysis-state">Save Analysis State...</a>
+                    <a href="#" id="file-load-analysis-state">Load Analysis State...</a>
                     <a href="#" id="file-save-invariant">Save Invariant...</a>
                     <div class="dropdown-sep"></div>
                     <div id="file-recent-list">
@@ -119,6 +122,11 @@
                                                 <a href="#" id="conj-pdr-step">PDR step</a>
                                                 <a href="#" id="conj-concrete">Concrete</a>
                                                 <a href="#" id="conj-gather">Gather</a>
+                                                <a href="#" id="conj-cti-gather">CTI Gather</a>
+                                                <a href="#" id="conj-cti-minimize">Minimize</a>
+                                                <a href="#" id="conj-cti-check-sufficient">Check sufficient</a>
+                                                <a href="#" id="conj-cti-check-inductive">Check relative induction</a>
+                                                <a href="#" id="conj-cti-strengthen">Strengthen</a>
                                                 <a href="#" id="conj-reverse">Reverse</a>
                                                 <a href="#" id="conj-path-reach">Path reach</a>
                                                 <a href="#" id="conj-reach">Reach</a>
@@ -216,6 +224,8 @@
 
     <!-- File dialog (hidden) -->
     <input type="file" id="file-input" accept=".ivy" style="display:none;">
+    <input type="file" id="event-file-input" accept=".iev,.pats,.txt" style="display:none;">
+    <input type="file" id="analysis-state-file-input" accept=".json,.ivyweb.json" style="display:none;">
 
     <!-- Text dialog (matches Python ivy_ui_util.py text_dialog) -->
     <div id="text-dialog-overlay" class="dialog-overlay" style="display:none;">
