@@ -1,4 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const webuiDir = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(webuiDir, '../..');
+const goBuildCache = path.join(repoRoot, '.cache', 'go-build-playwright');
 
 export default defineConfig({
   testDir: './pw_test',
@@ -9,7 +15,7 @@ export default defineConfig({
   webServer: {
     command: 'go run ../cmd/ivyweb -addr 127.0.0.1:18089',
     env: {
-      GOCACHE: '/private/tmp/goivy-webui-playwright-gocache',
+      GOCACHE: goBuildCache,
     },
     url: 'http://127.0.0.1:18089',
     reuseExistingServer: false,

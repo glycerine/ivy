@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { useDetailsStore } from './detailsStore.js';
 
@@ -23,5 +23,18 @@ describe('detailsStore', () => {
 
     expect(details.traceActionVisible).toBe(false);
     expect(details.traceActionCallback).toBeNull();
+  });
+
+  it('stores constraint facts and toggles through a callback', async () => {
+    const details = useDetailsStore();
+    const callback = vi.fn(async () => {});
+
+    details.setConstraintFacts([
+      { index: 3, text: 'link(a,b)', selected: true },
+    ], callback);
+    await details.toggleFact(3);
+
+    expect(details.facts[0].selected).toBe(false);
+    expect(callback).toHaveBeenCalledWith(3, false);
   });
 });

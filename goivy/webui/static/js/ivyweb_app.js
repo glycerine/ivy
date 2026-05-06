@@ -2000,96 +2000,138 @@ class IvyApp {
         }
         var self = this;
 
-        for (var i = 0; i < names.length; i++) {
-            (function(name) {
+        var appendLegacyRows = function () {
+            tbody.innerHTML = '';
+            for (var i = 0; i < names.length; i++) {
+                (function(name) {
+                    var tr = document.createElement('tr');
+
+                    // + checkbox (all_to_all)
+                    var td1 = document.createElement('td');
+                    var cb1 = document.createElement('input');
+                    cb1.type = 'checkbox';
+                    cb1.title = 'Show definite edges (' + name + ')';
+                    cb1.checked = self._toggleChecked(name, 'all_to_all');
+                    cb1.addEventListener('change', function() {
+                        self.onEdgeToggle(name, 'all_to_all', cb1.checked);
+                    });
+                    td1.appendChild(cb1);
+                    tr.appendChild(td1);
+
+                    // ? checkbox (unknown)
+                    var td2 = document.createElement('td');
+                    var cb2 = document.createElement('input');
+                    cb2.type = 'checkbox';
+                    cb2.title = 'Show unknown edges (' + name + ')';
+                    cb2.checked = self._toggleChecked(name, 'edge_unknown');
+                    cb2.addEventListener('change', function() {
+                        self.onEdgeToggle(name, 'edge_unknown', cb2.checked);
+                    });
+                    td2.appendChild(cb2);
+                    tr.appendChild(td2);
+
+                    // - checkbox (none_to_none)
+                    var td3 = document.createElement('td');
+                    var cb3 = document.createElement('input');
+                    cb3.type = 'checkbox';
+                    cb3.title = 'Show absent edges (' + name + ')';
+                    cb3.checked = self._toggleChecked(name, 'none_to_none');
+                    cb3.addEventListener('change', function() {
+                        self.onEdgeToggle(name, 'none_to_none', cb3.checked);
+                    });
+                    td3.appendChild(cb3);
+                    tr.appendChild(td3);
+
+                    // T checkbox (transitive reduction)
+                    var td4 = document.createElement('td');
+                    var cb4 = document.createElement('input');
+                    cb4.type = 'checkbox';
+                    cb4.title = 'Transitive reduction (' + name + ')';
+                    cb4.checked = self._toggleChecked(name, 'transitive');
+                    cb4.addEventListener('change', function() {
+                        self.onEdgeToggle(name, 'transitive', cb4.checked);
+                    });
+                    td4.appendChild(cb4);
+                    tr.appendChild(td4);
+
+                    // Name column
+                    var td5 = document.createElement('td');
+                    td5.className = 'name-col';
+                    var a = document.createElement('a');
+                    a.textContent = name;
+                    a.href = '#';
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        // Clicking the name could highlight related edges
+                    });
+                    td5.appendChild(a);
+                    tr.appendChild(td5);
+
+                    tbody.appendChild(tr);
+                })(names[i]);
+            }
+
+            // If no edges found, show a placeholder
+            if (names.length === 0 && conceptData) {
                 var tr = document.createElement('tr');
-
-                // + checkbox (all_to_all)
-                var td1 = document.createElement('td');
-                var cb1 = document.createElement('input');
-                cb1.type = 'checkbox';
-                cb1.title = 'Show definite edges (' + name + ')';
-                cb1.checked = self._toggleChecked(name, 'all_to_all');
-                cb1.addEventListener('change', function() {
-                    self.onEdgeToggle(name, 'all_to_all', cb1.checked);
-                });
-                td1.appendChild(cb1);
-                tr.appendChild(td1);
-
-                // ? checkbox (unknown)
-                var td2 = document.createElement('td');
-                var cb2 = document.createElement('input');
-                cb2.type = 'checkbox';
-                cb2.title = 'Show unknown edges (' + name + ')';
-                cb2.checked = self._toggleChecked(name, 'edge_unknown');
-                cb2.addEventListener('change', function() {
-                    self.onEdgeToggle(name, 'edge_unknown', cb2.checked);
-                });
-                td2.appendChild(cb2);
-                tr.appendChild(td2);
-
-                // - checkbox (none_to_none)
-                var td3 = document.createElement('td');
-                var cb3 = document.createElement('input');
-                cb3.type = 'checkbox';
-                cb3.title = 'Show absent edges (' + name + ')';
-                cb3.checked = self._toggleChecked(name, 'none_to_none');
-                cb3.addEventListener('change', function() {
-                    self.onEdgeToggle(name, 'none_to_none', cb3.checked);
-                });
-                td3.appendChild(cb3);
-                tr.appendChild(td3);
-
-                // T checkbox (transitive reduction)
-                var td4 = document.createElement('td');
-                var cb4 = document.createElement('input');
-                cb4.type = 'checkbox';
-                cb4.title = 'Transitive reduction (' + name + ')';
-                cb4.checked = self._toggleChecked(name, 'transitive');
-                cb4.addEventListener('change', function() {
-                    self.onEdgeToggle(name, 'transitive', cb4.checked);
-                });
-                td4.appendChild(cb4);
-                tr.appendChild(td4);
-
-                // Name column
-                var td5 = document.createElement('td');
-                td5.className = 'name-col';
-                var a = document.createElement('a');
-                a.textContent = name;
-                a.href = '#';
-                a.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // Clicking the name could highlight related edges
-                });
-                td5.appendChild(a);
-                tr.appendChild(td5);
-
+                var td = document.createElement('td');
+                td.colSpan = 5;
+                td.style.color = '#666';
+                td.style.fontStyle = 'italic';
+                td.textContent = 'No relations loaded';
+                tr.appendChild(td);
                 tbody.appendChild(tr);
-            })(names[i]);
+            }
+        };
+
+        var vueRows = names.map(function (name) {
+            return {
+                name: name,
+                checked: {
+                    all_to_all: self._toggleChecked(name, 'all_to_all'),
+                    edge_unknown: self._toggleChecked(name, 'edge_unknown'),
+                    none_to_none: self._toggleChecked(name, 'none_to_none'),
+                    transitive: self._toggleChecked(name, 'transitive')
+                }
+            };
+        });
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateRelations === 'function') {
+            window.__ivyVueBridge.updateStateRelations(vueRows, function (name, displayClass, checked) {
+                self.onEdgeToggle(name, displayClass, checked);
+            });
+            this._applyEdgeVisibility();
+            this._applyNodeLabels();
+            this.populateConstraintFacts(conceptData);
+            setTimeout(function () {
+                var liveTbody = document.getElementById('state-checkbox-body');
+                if (liveTbody && liveTbody.children.length === 0) {
+                    appendLegacyRows();
+                }
+            }, 0);
+            return;
         }
+
+        appendLegacyRows();
 
         this._applyEdgeVisibility();
         this._applyNodeLabels();
         this.populateConstraintFacts(conceptData);
-
-        // If no edges found, show a placeholder
-        if (names.length === 0 && conceptData) {
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            td.colSpan = 5;
-            td.style.color = '#666';
-            td.style.fontStyle = 'italic';
-            td.textContent = 'No relations loaded';
-            tr.appendChild(td);
-            tbody.appendChild(tr);
-        }
     }
 
     populateConstraintFacts(conceptData) {
         var info = document.getElementById('info-content');
         if (!info) return;
         var facts = (conceptData && Array.isArray(conceptData.facts)) ? conceptData.facts : [];
+        var self = this;
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateConstraintFacts === 'function') {
+            window.__ivyVueBridge.updateConstraintFacts(facts, async function (index, selected) {
+                await self.api.executeAction('set_fact_selection', {
+                    index: index,
+                    selected: selected,
+                });
+            });
+            return;
+        }
         info.innerHTML = '';
         if (facts.length === 0) {
             info.textContent = 'Select a node or edge to see details';
@@ -2101,7 +2143,6 @@ class IvyApp {
         title.textContent = 'Constraints:';
         info.appendChild(title);
 
-        var self = this;
         facts.forEach(function(fact, offset) {
             var index = typeof fact.index === 'number' ? fact.index : offset;
             var row = document.createElement('button');
@@ -2389,6 +2430,9 @@ class IvyApp {
         var label = document.getElementById('state-label');
         if (label) {
             label.textContent = 'State: ' + (nodeId != null ? nodeId : '—');
+        }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateStateLabel === 'function') {
+            window.__ivyVueBridge.updateStateLabel(nodeId);
         }
     }
 
@@ -3718,6 +3762,9 @@ class IvyApp {
         this._updateReopenLastFileButton();
         var tbody = document.getElementById('state-checkbox-body');
         if (tbody) tbody.innerHTML = '';
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearStateRelations === 'function') {
+            window.__ivyVueBridge.clearStateRelations();
+        }
 
         this.controls.setStatus('New model — load an .ivy file to begin', 'success');
     }
