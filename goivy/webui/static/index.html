@@ -93,16 +93,19 @@
                             <div class="sheet-main">
                                 <div id="arg-panel" class="panel">
                                     <div class="panel-header">
-                                        <div class="dropdown">
-                                            <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
-                                            <div id="arg-inv-menu" class="dropdown-content">
-                                                <a href="#" id="arg-check-induction">Check induction</a>
-                                                <a href="#" id="arg-bounded-check">Bounded check</a>
-                                                <a href="#" id="arg-diagram">Diagram</a>
-                                                <a href="#" id="arg-weaken">Weaken</a>
-                                                <div class="dropdown-sep"></div>
-                                                <a href="#" id="arg-save-invariant">Save Invariant...</a>
-                                                <a href="#" id="arg-save-abs">Save Abstraction...</a>
+                                        <strong class="column-title">ARG (Abstract Reachability Graph)</strong>
+                                        <div class="panel-header-actions">
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
+                                                <div id="arg-inv-menu" class="dropdown-content">
+                                                    <a href="#" id="arg-check-induction">Check induction</a>
+                                                    <a href="#" id="arg-bounded-check">Bounded check</a>
+                                                    <a href="#" id="arg-diagram">Diagram</a>
+                                                    <a href="#" id="arg-weaken">Weaken</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="arg-save-invariant">Save Invariant...</a>
+                                                    <a href="#" id="arg-save-abs">Save Abstraction...</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -113,36 +116,39 @@
 
                                 <div id="concept-panel" class="panel">
                                     <div class="panel-header">
-                                        <div class="dropdown">
-                                            <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
-                                            <div id="conj-menu" class="dropdown-content">
-                                                <a href="#" id="conj-undo">Undo</a>
-                                                <a href="#" id="conj-redo">Redo</a>
-                                                <div class="dropdown-sep"></div>
-                                                <a href="#" id="conj-pdr-step">PDR step</a>
-                                                <a href="#" id="conj-concrete">Concrete</a>
-                                                <a href="#" id="conj-gather">Gather</a>
-                                                <a href="#" id="conj-cti-gather">CTI Gather</a>
-                                                <a href="#" id="conj-cti-minimize">Minimize</a>
-                                                <a href="#" id="conj-cti-check-sufficient">Check sufficient</a>
-                                                <a href="#" id="conj-cti-check-inductive">Check relative induction</a>
-                                                <a href="#" id="conj-cti-strengthen">Strengthen</a>
-                                                <a href="#" id="conj-reverse">Reverse</a>
-                                                <a href="#" id="conj-path-reach">Path reach</a>
-                                                <a href="#" id="conj-reach">Reach</a>
-                                                <a href="#" id="conj-conjecture">Conjecture</a>
-                                                <a href="#" id="conj-backtrack">Backtrack</a>
-                                                <div class="dropdown-sep"></div>
-                                                <a href="#" id="conj-recalculate">Recalculate</a>
-                                                <a href="#" id="conj-diagram">Diagram</a>
-                                                <a href="#" id="conj-remember">Remember</a>
-                                                <a href="#" id="conj-export">Export</a>
+                                        <strong class="column-title">Concept graph</strong>
+                                        <div class="panel-header-actions">
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
+                                                <div id="conj-menu" class="dropdown-content">
+                                                    <a href="#" id="conj-undo">Undo</a>
+                                                    <a href="#" id="conj-redo">Redo</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-pdr-step">PDR step</a>
+                                                    <a href="#" id="conj-concrete">Concrete</a>
+                                                    <a href="#" id="conj-gather">Gather</a>
+                                                    <a href="#" id="conj-cti-gather">CTI Gather</a>
+                                                    <a href="#" id="conj-cti-minimize">Minimize</a>
+                                                    <a href="#" id="conj-cti-check-sufficient">Check sufficient</a>
+                                                    <a href="#" id="conj-cti-check-inductive">Check relative induction</a>
+                                                    <a href="#" id="conj-cti-strengthen">Strengthen</a>
+                                                    <a href="#" id="conj-reverse">Reverse</a>
+                                                    <a href="#" id="conj-path-reach">Path reach</a>
+                                                    <a href="#" id="conj-reach">Reach</a>
+                                                    <a href="#" id="conj-conjecture">Conjecture</a>
+                                                    <a href="#" id="conj-backtrack">Backtrack</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-recalculate">Recalculate</a>
+                                                    <a href="#" id="conj-diagram">Diagram</a>
+                                                    <a href="#" id="conj-remember">Remember</a>
+                                                    <a href="#" id="conj-export">Export</a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="dropdown">
-                                            <span class="panel-menu" data-dropdown="view-menu">View</span>
-                                            <div id="view-menu" class="dropdown-content">
-                                                <a href="#" id="view-add-relation">Add relation</a>
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="view-menu">View</span>
+                                                <div id="view-menu" class="dropdown-content">
+                                                    <a href="#" id="view-add-relation">Add relation</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +168,10 @@
                         <!-- State checkboxes column -->
                         <div id="state-panel" class="panel">
                             <div class="panel-header">
-                                <span id="state-label">State: 0</span>
+                                <strong class="column-title">State/relations</strong>
+                                <div class="panel-header-actions">
+                                    <span id="state-label">State: 0</span>
+                                </div>
                             </div>
                             <div id="state-controls">
                                 <table id="state-checkbox-table">
@@ -189,15 +198,20 @@
             <!-- Model editor column (outside tabs, always visible) -->
             <div id="editor-panel">
                 <div class="panel-header">
-                    <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
-                    <span id="model-editor-label">Model</span>
-                    <button id="file-reopen-last" class="reopen-last-btn" style="display:none;"></button>
-                    <span class="keymap-radios">
-                        <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
-                        <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>
-                        <label><input type="radio" name="keymap" value="vim"> Vim</label>
-                        <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
-                    </span>
+                    <div class="editor-title-row">
+                        <strong class="column-title">Editing:</strong>
+                        <span id="model-editor-label" class="editor-path">(unsaved file)</span>
+                    </div>
+                    <div class="panel-header-actions">
+                        <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
+                        <button id="file-reopen-last" class="reopen-last-btn" style="display:none;"></button>
+                        <span class="keymap-radios">
+                            <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
+                            <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>
+                            <label><input type="radio" name="keymap" value="vim"> Vim</label>
+                            <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
+                        </span>
+                    </div>
                 </div>
                 <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
             </div>

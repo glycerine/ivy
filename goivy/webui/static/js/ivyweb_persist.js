@@ -311,9 +311,8 @@ var IvyPersist = {
             if (app.setEditorContent) {
                 app.setEditorContent(restoredContent);
             }
-            var editorLabel = document.getElementById('model-editor-label');
-            if (editorLabel) {
-                editorLabel.textContent = 'Model: ' + (app._persistedFileName || state.fileName || '');
+            if (app._updateEditorLabel) {
+                app._updateEditorLabel();
             }
 
             // Re-upload the file to the server to rebuild compiled module.

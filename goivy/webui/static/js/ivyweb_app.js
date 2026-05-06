@@ -179,16 +179,19 @@ class IvyApp {
     _updateEditorLabel() {
         var editorLabel = document.getElementById('model-editor-label');
         if (!editorLabel) return;
-        var name = this._persistedFileName || '';
+        var name = this._persistedFilePath || this._persistedFileName || '';
         var current = (this.cmEditor && typeof this.cmEditor.getValue === 'function') ? this.cmEditor.getValue() : (this._persistedFileContent || '');
         var dirty = current !== (this._savedFileContent || '');
+        var labelText;
         if (!name) {
-            editorLabel.textContent = 'Model: ' + (dirty ? '** ' : '') + '(unsaved file)';
+            labelText = (dirty ? '** ' : '') + '(unsaved file)';
         } else if (dirty) {
-            editorLabel.textContent = 'Model: ** ' + name;
+            labelText = '** ' + name;
         } else {
-            editorLabel.textContent = 'Model: ' + name + ' [saved]';
+            labelText = name + ' [saved]';
         }
+        editorLabel.textContent = labelText;
+        editorLabel.title = 'Editing: ' + labelText;
         this._updateReopenLastFileButton();
     }
 
@@ -2956,10 +2959,6 @@ class IvyApp {
 
             // Populate the model editor with the file content (also marks clean via setEditorContent)
             this.setEditorContent(fileContent);
-            var editorLabel = document.getElementById('model-editor-label');
-            if (editorLabel) {
-                editorLabel.textContent = 'Model: ' + file.name;
-            }
 
             var result = await this.api.loadFile(file);
             // Refresh ARG
@@ -3513,10 +3512,6 @@ class IvyApp {
 
         // Clear UI
         this.setEditorContent('');
-        var editorLabel = document.getElementById('model-editor-label');
-        if (editorLabel) {
-            editorLabel.textContent = 'Model: (unsaved file)';
-        }
         IvyPersist.setFileName('');
         this._updateReopenLastFileButton();
         var tbody = document.getElementById('state-checkbox-body');
@@ -4035,11 +4030,12 @@ class IvyApp {
         if (!header) return;
         var old = header.querySelector('[data-dynamic-menu-region="' + region + '"]');
         if (old) old.remove();
+        var menuRow = header.querySelector('.panel-header-actions') || header;
 
         var root = document.createElement('div');
         root.className = 'dynamic-menu-root';
         root.setAttribute('data-dynamic-menu-region', region);
-        header.appendChild(root);
+        menuRow.appendChild(root);
 
         for (var i = 0; i < menus.length; i++) {
             this.renderMenuDescriptor(root, region, menus[i], i);
