@@ -1,26 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { IvyApp } from './legacyAppController.js';
+import { IvyRuntime } from './ivyRuntime.js';
 
-function publicControllerMethods() {
+function publicRuntimeMethods() {
   const names = new Set();
-  let proto = IvyApp.prototype;
+  let proto = IvyRuntime.prototype;
   while (proto && proto !== Object.prototype) {
     for (const name of Object.getOwnPropertyNames(proto)) {
       if (name === 'constructor' || name.startsWith('_')) continue;
-      if (typeof IvyApp.prototype[name] === 'function') names.add(name);
+      if (typeof IvyRuntime.prototype[name] === 'function') names.add(name);
     }
     proto = Object.getPrototypeOf(proto);
   }
   return Array.from(names).sort();
 }
 
-describe('legacyAppController compatibility surface', () => {
-  // This is a compatibility debt inventory, not the desired command surface.
-  // As service/store/component tests replace controller-oriented coverage, this
+describe('ivyRuntime public surface', () => {
+  // This is a runtime debt inventory, not the desired command surface.
+  // As service/store/component tests replace runtime-oriented coverage, this
   // list should shrink. Production Vue components should use services or the
-  // command registry instead of instantiating IvyApp.
-  it('inventories the public methods still exposed by the compatibility controller', () => {
-    expect(publicControllerMethods()).toEqual([
+  // command registry instead of instantiating IvyRuntime.
+  it('inventories the public methods still exposed by the runtime coordinator', () => {
+    expect(publicRuntimeMethods()).toEqual([
       'activeEventSheet',
       'addCheckResultViewActions',
       'addEventPattern',

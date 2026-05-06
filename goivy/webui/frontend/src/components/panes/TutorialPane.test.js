@@ -8,7 +8,6 @@ import { registerCommand, resetCommandRegistry } from '../../services/commandReg
 describe('TutorialPane', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = undefined;
     resetCommandRegistry();
   });
 

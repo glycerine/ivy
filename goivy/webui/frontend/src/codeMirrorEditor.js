@@ -1,5 +1,5 @@
-export function initializeLegacyCodeMirror({
-  legacyApp,
+export function initializeCodeMirrorEditor({
+  runtime,
   editorStore,
   doc = globalThis.document,
   codeMirror = globalThis.CodeMirror,
@@ -28,12 +28,12 @@ export function initializeLegacyCodeMirror({
   });
   modelEditor.__ivyCodeMirrorEditor = editor;
 
-  if (editor && typeof editor.on === 'function' && legacyApp) {
+  if (editor && typeof editor.on === 'function' && runtime) {
     editor.on('change', () => {
-      if (!legacyApp.cmEditor || typeof legacyApp.cmEditor.getValue !== 'function') return;
-      legacyApp._persistedFileContent = legacyApp.cmEditor.getValue();
-      if (typeof legacyApp._updateEditorLabel === 'function') {
-        legacyApp._updateEditorLabel();
+      if (!runtime.cmEditor || typeof runtime.cmEditor.getValue !== 'function') return;
+      runtime._persistedFileContent = runtime.cmEditor.getValue();
+      if (typeof runtime._updateEditorLabel === 'function') {
+        runtime._updateEditorLabel();
       }
     });
   }

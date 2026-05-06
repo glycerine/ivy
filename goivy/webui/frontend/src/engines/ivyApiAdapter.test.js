@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LegacyApiAdapter } from './legacyApiAdapter.js';
+import { IvyApiAdapter } from './ivyApiAdapter.js';
 
 function makeEngine() {
   return {
@@ -25,14 +25,14 @@ function makeEngine() {
   };
 }
 
-describe('LegacyApiAdapter', () => {
+describe('IvyApiAdapter', () => {
   beforeEach(() => {
     vi.useRealTimers();
   });
 
   it('presents the old IvyAPI graph/action shape over the engine interface', async () => {
     const engine = makeEngine();
-    const api = new LegacyApiAdapter(engine);
+    const api = new IvyApiAdapter(engine);
 
     await api.reloadContent('ivy source', 'client.ivy');
     await api.getConceptGraph('state_1', 'sheet-2');
@@ -53,7 +53,7 @@ describe('LegacyApiAdapter', () => {
 
   it('keeps concept mutation endpoints compatible with the old IvyAPI', async () => {
     const engine = makeEngine();
-    const api = new LegacyApiAdapter(engine);
+    const api = new IvyApiAdapter(engine);
 
     await api.splitConcept('client', 'server');
     await api.materializeEdge('link', 'client', 'server', false);
@@ -84,7 +84,7 @@ describe('LegacyApiAdapter', () => {
       statusText: 'Internal Server Error',
       blob: vi.fn(),
     }));
-    const api = new LegacyApiAdapter(engine);
+    const api = new IvyApiAdapter(engine);
 
     await expect(api.saveSession()).rejects.toThrow('Save failed: Internal Server Error');
     expect(engine.fetchSession).toHaveBeenCalledWith('/save');
@@ -100,7 +100,7 @@ describe('LegacyApiAdapter', () => {
         return unsubscribe;
       }),
     };
-    const api = new LegacyApiAdapter(engine);
+    const api = new IvyApiAdapter(engine);
     api.onConnectionLost = vi.fn();
     const onEvent = vi.fn();
 

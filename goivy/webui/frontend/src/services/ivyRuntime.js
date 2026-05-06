@@ -1,20 +1,20 @@
 /**
- * IvyApp - Main application for the Ivy Interactive Verification web UI.
+ * IvyRuntime - Service runtime for the Ivy Interactive Verification web UI.
  *
  * Orchestrates the API, graph views, and UI controls. Handles all
  * user interactions including ARG/concept graph clicks, context menus,
  * file loading, mode selection, and verification checks.
  */
 
-import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './services/graphRuntime.js';
-import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './services/runtimeShims.js';
-import { createIvyPersist } from './services/persistenceService.js';
+import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './graphRuntime.js';
+import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './runtimeShims.js';
+import { createIvyPersist } from './persistenceService.js';
 import {
     connectSessionEvents,
-    createLegacyApi,
+    createIvyApi,
     createSession,
     updateSessionDisplay as updateSessionDisplayViaService,
-} from './services/sessionService.js';
+} from './sessionService.js';
 import {
     editorContent,
     editorDirty,
@@ -25,8 +25,8 @@ import {
     setEditorContent as setEditorContentViaService,
     setEditorKeymap as setEditorKeymapViaService,
     updateEditorLabel as updateEditorLabelViaService,
-} from './services/editorService.js';
-import { initializeLegacyCodeMirror } from './codeMirrorEditor.js';
+} from './editorService.js';
+import { initializeCodeMirrorEditor } from '../codeMirrorEditor.js';
 import {
     chooseAndLoadModelFile as chooseAndLoadModelFileViaService,
     closeCurrentFile as closeCurrentFileViaService,
@@ -45,11 +45,11 @@ import {
     saveModel,
     saveModelAs,
     updateReopenLastFileButton,
-} from './services/fileService.js';
+} from './fileService.js';
 import {
     loadRecentSession as loadRecentSessionViaService,
     populateRecentFiles as populateRecentFilesViaService,
-} from './services/recentFileService.js';
+} from './recentFileService.js';
 import {
     currentSheet as currentSheetViaService,
     graphElementsSnapshot as graphElementsSnapshotViaService,
@@ -57,7 +57,7 @@ import {
     refreshGraphsAndEditorLayout,
     refreshLayoutAfterVuePatch,
     registerSheet as registerSheetViaService,
-} from './services/graphService.js';
+} from './graphService.js';
 import {
     applyEdgeVisibility,
     applyNodeLabels,
@@ -70,8 +70,8 @@ import {
     populateStateCheckboxes as populateStateCheckboxesViaService,
     toggleChecked,
     updateStateLabel as updateStateLabelViaService,
-} from './services/conceptVisibilityService.js';
-import { populateConstraintFacts as populateConstraintFactsViaService } from './services/detailsService.js';
+} from './conceptVisibilityService.js';
+import { populateConstraintFacts as populateConstraintFactsViaService } from './detailsService.js';
 import {
     assertValidSheetId as assertValidSheetIdViaService,
     isValidSheetId as isValidSheetIdViaService,
@@ -81,7 +81,7 @@ import {
     sheetTab as sheetTabViaService,
     switchSheet as switchSheetViaService,
     visualOnlyMessage as visualOnlyMessageViaService,
-} from './services/sheetService.js';
+} from './sheetService.js';
 import {
     activeEventSheet as activeEventSheetViaService,
     addEventPattern as addEventPatternViaService,
@@ -100,7 +100,7 @@ import {
     selectedEventPattern as selectedEventPatternViaService,
     toggleEventTraceNode as toggleEventTraceNodeViaService,
     uncoverEventTraceAddress as uncoverEventTraceAddressViaService,
-} from './services/eventTraceService.js';
+} from './eventTraceService.js';
 import {
     addCheckResultViewActions as addCheckResultViewActionsViaService,
     autoCheckUsedRelations,
@@ -110,19 +110,19 @@ import {
     runCheck as runCheckViaService,
     showCheckResult as showCheckResultViaService,
     weakenInvariant as weakenInvariantViaService,
-} from './services/checkService.js';
+} from './checkService.js';
 import {
     executeAndRefresh,
     exportConjecture as exportConjectureViaService,
     refreshConceptGraph as refreshConceptGraphViaService,
     rememberGraph as rememberGraphViaService,
     runAction as runActionViaService,
-} from './services/analysisActionService.js';
+} from './analysisActionService.js';
 import {
     closeAllDropdowns as closeAllDropdownsViaService,
     dispatchMenuDescriptorAction as dispatchMenuDescriptorActionViaService,
     flashAndClose as flashAndCloseViaService,
-} from './services/menuService.js';
+} from './menuService.js';
 import {
     analysisStateLimits as analysisStateLimitsViaService,
     buildAnalysisState as buildAnalysisStateViaService,
@@ -134,12 +134,12 @@ import {
     validateAnalysisStateGraphPayload as validateAnalysisStateGraphPayloadViaService,
     validateAnalysisStateObject as validateAnalysisStateObjectViaService,
     validateAnalysisStateSheet as validateAnalysisStateSheetViaService,
-} from './services/analysisStateService.js';
+} from './analysisStateService.js';
 import {
     executeArgEdgeAction as executeArgEdgeActionViaService,
     executeArgNodeAction as executeArgNodeActionViaService,
     prepareArgNodeActionArgs as prepareArgNodeActionArgsViaService,
-} from './services/argActionService.js';
+} from './argActionService.js';
 import {
     addProjection as addProjectionViaService,
     addRelationFromString as addRelationFromStringViaService,
@@ -153,7 +153,7 @@ import {
     splatterNode as splatterNodeViaService,
     splitConcept as splitConceptViaService,
     supposeEmpty as supposeEmptyViaService,
-} from './services/conceptActionService.js';
+} from './conceptActionService.js';
 import {
     buttonListDialog as buttonListDialogViaService,
     entryDialog as entryDialogViaService,
@@ -162,9 +162,9 @@ import {
     okCancelDialog as okCancelDialogViaService,
     okDialog as okDialogViaService,
     textDialog as textDialogViaService,
-} from './services/dialogService.js';
+} from './dialogService.js';
 
-const defaultLegacyAppDependencies = {
+const defaultRuntimeDependencies = {
     IvyAPI: DefaultIvyAPI,
     IvyControls: DefaultIvyControls,
     IvyGraph: DefaultIvyGraph,
@@ -173,22 +173,22 @@ const defaultLegacyAppDependencies = {
     CONCEPT_STYLE: DEFAULT_CONCEPT_STYLE,
     CodeMirror: globalThis.window && globalThis.window.CodeMirror,
 };
-let legacyAppDeps = { ...defaultLegacyAppDependencies };
+let runtimeDeps = { ...defaultRuntimeDependencies };
 
-function configureLegacyAppDependencies(overrides) {
-    legacyAppDeps = { ...defaultLegacyAppDependencies, ...(overrides || {}) };
-    return legacyAppDeps;
+function configureIvyRuntimeDependencies(overrides) {
+    runtimeDeps = { ...defaultRuntimeDependencies, ...(overrides || {}) };
+    return runtimeDeps;
 }
 
-function resetLegacyAppDependencies() {
-    legacyAppDeps = { ...defaultLegacyAppDependencies };
-    return legacyAppDeps;
+function resetIvyRuntimeDependencies() {
+    runtimeDeps = { ...defaultRuntimeDependencies };
+    return runtimeDeps;
 }
 
-class IvyApp {
+class IvyRuntime {
     constructor() {
         this.api = this.createApi();
-        this.controls = new legacyAppDeps.IvyControls(this.api);
+        this.controls = new runtimeDeps.IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
         this.sheets = {};
@@ -217,9 +217,9 @@ class IvyApp {
     }
 
     createApi() {
-        return createLegacyApi({
+        return createIvyApi({
             fallbackApiFactory: function () {
-                return new legacyAppDeps.IvyAPI();
+                return new runtimeDeps.IvyAPI();
             },
         });
     }
@@ -233,7 +233,7 @@ class IvyApp {
 
         // Check for a saved session BEFORE creating a new server session.
         // This prevents the URL session ID from incrementing on every reload.
-        var savedState = legacyAppDeps.IvyPersist.load();
+        var savedState = runtimeDeps.IvyPersist.load();
 
         // Always need a server session for API calls.
         try {
@@ -245,17 +245,17 @@ class IvyApp {
         // If restoring, keep the saved session's URL hash.
         // If fresh, set the new session ID in the URL.
         if (!savedState || !savedState.fileContent) {
-            legacyAppDeps.IvyPersist.setSessionIdInURL(this.api.sessionId);
+            runtimeDeps.IvyPersist.setSessionIdInURL(this.api.sessionId);
         }
 
         // Show the persisted session ID (from URL hash), not the server session ID.
         // These can differ because the server ID increments on restart while
         // the persisted ID is stable across reloads.
-        this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
+        this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
 
         // Create Cytoscape graph instances
-        this.argGraph = new legacyAppDeps.IvyGraph('arg-graph', legacyAppDeps.ARG_STYLE);
-        this.conceptGraph = new legacyAppDeps.IvyGraph('concept-graph', legacyAppDeps.CONCEPT_STYLE);
+        this.argGraph = new runtimeDeps.IvyGraph('arg-graph', runtimeDeps.ARG_STYLE);
+        this.conceptGraph = new runtimeDeps.IvyGraph('concept-graph', runtimeDeps.CONCEPT_STYLE);
         this.registerSheet('sheet-1', this.argGraph, this.conceptGraph);
 
         // Health check: verify graphs initialized correctly.
@@ -295,9 +295,9 @@ class IvyApp {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.initializeEditor === 'function') {
             this.cmEditor = window.__ivyVueBridge.initializeEditor(this);
         } else if (modelEditor) {
-            var codeMirror = legacyAppDeps.CodeMirror || window.CodeMirror;
-            this.cmEditor = initializeLegacyCodeMirror({
-                legacyApp: this,
+            var codeMirror = runtimeDeps.CodeMirror || window.CodeMirror;
+            this.cmEditor = initializeCodeMirrorEditor({
+                runtime: this,
                 editorStore: { keymap: this.getEditorKeymap() },
                 doc: document,
                 codeMirror: codeMirror,
@@ -318,10 +318,10 @@ class IvyApp {
         // Restore saved session if available (survives page reload).
         if (savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
-            var restored = await legacyAppDeps.IvyPersist.restore(this, savedState);
+            var restored = await runtimeDeps.IvyPersist.restore(this, savedState);
             if (restored) {
                 // Keep the URL hash from the saved session (don't overwrite)
-                legacyAppDeps.IvyPersist.setFileName(savedState.fileName, savedState.filePath);
+                runtimeDeps.IvyPersist.setFileName(savedState.fileName, savedState.filePath);
                 this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
             } else {
                 this.controls.setStatus('Ready');
@@ -333,7 +333,7 @@ class IvyApp {
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
         // and after any successful operation (debounced).
         window.addEventListener('beforeunload', function () {
-            legacyAppDeps.IvyPersist.save(self);
+            runtimeDeps.IvyPersist.save(self);
         });
 
         // Hook into setStatus: auto-save whenever a 'success' status is set.
@@ -341,7 +341,7 @@ class IvyApp {
         this.controls.setStatus = function (msg, level) {
             origSetStatus(msg, level);
             if (level === 'success') {
-                legacyAppDeps.IvyPersist.save(self);
+                runtimeDeps.IvyPersist.save(self);
             }
         };
     }
@@ -428,7 +428,7 @@ class IvyApp {
     }
 
     _rememberLastOpenFile() {
-        rememberLastOpenFile(this, legacyAppDeps.IvyPersist);
+        rememberLastOpenFile(this, runtimeDeps.IvyPersist);
     }
 
     _updateReopenLastFileButton() {
@@ -436,7 +436,7 @@ class IvyApp {
     }
 
     async reopenLastFile() {
-        return reopenLastFileViaService(this, legacyAppDeps.IvyPersist);
+        return reopenLastFileViaService(this, runtimeDeps.IvyPersist);
     }
 
     async _ensureFileHandleWritable() {
@@ -448,11 +448,11 @@ class IvyApp {
     }
 
     async _restoreFileHandleForCurrentFile() {
-        return restoreFileHandleForCurrentFile(this, legacyAppDeps.IvyPersist);
+        return restoreFileHandleForCurrentFile(this, runtimeDeps.IvyPersist);
     }
 
     async _confirmNoExternalChangeBeforeSave(content) {
-        return confirmNoExternalChangeBeforeSaveViaService(this, content, legacyAppDeps.IvyPersist);
+        return confirmNoExternalChangeBeforeSaveViaService(this, content, runtimeDeps.IvyPersist);
     }
 
     _mergeDiskVersionIntoEditBuffer(baseContent, editorContent, diskContent) {
@@ -1336,8 +1336,8 @@ class IvyApp {
             graphIds.push(graphs[i].id);
         }
 
-        var argGraph = new legacyAppDeps.IvyGraph(graphIds[0], legacyAppDeps.ARG_STYLE);
-        var conceptGraph = new legacyAppDeps.IvyGraph(graphIds[1], legacyAppDeps.CONCEPT_STYLE);
+        var argGraph = new runtimeDeps.IvyGraph(graphIds[0], runtimeDeps.ARG_STYLE);
+        var conceptGraph = new runtimeDeps.IvyGraph(graphIds[1], runtimeDeps.CONCEPT_STYLE);
         argGraph.healthCheck();
         conceptGraph.healthCheck();
         this.registerSheet(sheetId, argGraph, conceptGraph);
@@ -3438,7 +3438,7 @@ class IvyApp {
      * Load an .ivy file.
      */
     async loadFile(file) {
-        return loadModelFile(this, file, legacyAppDeps.IvyPersist);
+        return loadModelFile(this, file, runtimeDeps.IvyPersist);
     }
 
     /**
@@ -3505,15 +3505,15 @@ class IvyApp {
      * for subsequent saves.
      */
     async save() {
-        return saveModel(this, legacyAppDeps.IvyPersist);
+        return saveModel(this, runtimeDeps.IvyPersist);
     }
 
     downloadModelForUnsupportedSave(content) {
-        return downloadModelForUnsupportedSaveViaService(this, content, legacyAppDeps.IvyPersist);
+        return downloadModelForUnsupportedSaveViaService(this, content, runtimeDeps.IvyPersist);
     }
 
     async saveAs(options) {
-        return saveModelAs(this, legacyAppDeps.IvyPersist, { options: options || {} });
+        return saveModelAs(this, runtimeDeps.IvyPersist, { options: options || {} });
     }
 
     // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
@@ -3559,7 +3559,7 @@ class IvyApp {
     }
 
     buildAnalysisState() {
-        return buildAnalysisStateViaService(this, legacyAppDeps.IvyPersist);
+        return buildAnalysisStateViaService(this, runtimeDeps.IvyPersist);
         var sheets = [];
         var ids = Object.keys(this.sheets || {});
         ids.sort(function (a, b) {
@@ -3603,7 +3603,7 @@ class IvyApp {
             selectedArgNode: this.selectedArgNode || null,
             edgeVisibility: this._edgeVisibility || {},
             labelVisibility: this._labelVisibility || {},
-            toggles: legacyAppDeps.IvyPersist._getToggles ? legacyAppDeps.IvyPersist._getToggles() : {},
+            toggles: runtimeDeps.IvyPersist._getToggles ? runtimeDeps.IvyPersist._getToggles() : {},
             sheets: sheets,
         };
     }
@@ -3649,7 +3649,7 @@ class IvyApp {
     }
 
     async loadAnalysisStateObject(state) {
-        return loadAnalysisStateObjectViaService(this, state, legacyAppDeps.IvyPersist);
+        return loadAnalysisStateObjectViaService(this, state, runtimeDeps.IvyPersist);
         this.validateAnalysisStateObject(state);
         if (!state || state.analysis_state_format !== 'ivyweb-json') {
             throw new Error('unsupported analysis state format');
@@ -3709,14 +3709,14 @@ class IvyApp {
         }
 
         if (state.toggles) {
-            legacyAppDeps.IvyPersist._setToggles(state.toggles);
+            runtimeDeps.IvyPersist._setToggles(state.toggles);
         }
         if (state.activeSheetId && this.sheetExists(state.activeSheetId)) {
             this.switchSheet(state.activeSheetId);
         } else {
             this.switchSheet('sheet-1');
         }
-        legacyAppDeps.IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
+        runtimeDeps.IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
         this.controls.setStatus('Visual analysis state loaded: ' + (this._persistedFileName || 'state'), 'warning');
         return true;
     }
@@ -3836,7 +3836,7 @@ class IvyApp {
      * Start a new model. Saves any existing state first, then clears everything.
      */
     async newModel(options) {
-        return newModelViaService(this, legacyAppDeps.IvyPersist, { options: options || {} });
+        return newModelViaService(this, runtimeDeps.IvyPersist, { options: options || {} });
     }
 
     /**
@@ -3845,14 +3845,14 @@ class IvyApp {
      * Shows truncated path context when file names collide.
      */
     populateRecentFiles() {
-        populateRecentFilesViaService(this, legacyAppDeps.IvyPersist);
+        populateRecentFilesViaService(this, runtimeDeps.IvyPersist);
     }
 
     /**
      * Load a recent session by its saved session ID.
      */
     async loadRecentSession(savedSessionId) {
-        return loadRecentSessionViaService(this, legacyAppDeps.IvyPersist, savedSessionId);
+        return loadRecentSessionViaService(this, runtimeDeps.IvyPersist, savedSessionId);
     }
 
     /**
@@ -5219,19 +5219,19 @@ class IvyApp {
 // ================================================================
 // Initialize on DOM ready unless a framework shell owns boot timing.
 // ================================================================
-let activeIvyApp = null;
+let activeIvyRuntime = null;
 
-function startIvyApp() {
-    if (activeIvyApp) {
-        return activeIvyApp;
+function startIvyRuntime() {
+    if (activeIvyRuntime) {
+        return activeIvyRuntime;
     }
-    activeIvyApp = new IvyApp();
-    activeIvyApp.init();
-    return activeIvyApp;
+    activeIvyRuntime = new IvyRuntime();
+    activeIvyRuntime.init();
+    return activeIvyRuntime;
 }
 
-function stopIvyApp() {
-    activeIvyApp = null;
+function stopIvyRuntime() {
+    activeIvyRuntime = null;
 }
 
-export { IvyApp, configureLegacyAppDependencies, resetLegacyAppDependencies, startIvyApp, stopIvyApp };
+export { IvyRuntime, configureIvyRuntimeDependencies, resetIvyRuntimeDependencies, startIvyRuntime, stopIvyRuntime };

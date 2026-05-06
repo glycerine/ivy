@@ -70,39 +70,3 @@ export function runCommand(name, ...args) {
   }
   return handler(...args);
 }
-
-export function registerControllerCommands(controller) {
-  if (!controller) {
-    return () => {};
-  }
-
-  const names = new Set();
-  let proto = Object.getPrototypeOf(controller);
-  while (proto && proto !== Object.prototype) {
-    for (const name of Object.getOwnPropertyNames(proto)) {
-      if (name === 'constructor') continue;
-      if (typeof controller[name] === 'function') {
-        names.add(name);
-      }
-    }
-    proto = Object.getPrototypeOf(proto);
-  }
-
-  for (const name of Object.keys(controller)) {
-    if (typeof controller[name] === 'function') {
-      names.add(name);
-    }
-  }
-
-  const unregister = [];
-  for (const name of names) {
-    unregister.push(registerCommand(name, controller[name].bind(controller)));
-  }
-  if (controller.controls && typeof controller.controls.setStatus === 'function') {
-    unregister.push(registerCommand('app.setStatus', controller.controls.setStatus.bind(controller.controls)));
-  }
-
-  return () => {
-    for (const remove of unregister) remove();
-  };
-}

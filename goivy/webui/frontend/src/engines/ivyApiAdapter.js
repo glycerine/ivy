@@ -6,7 +6,7 @@ function jsonPost(body = {}) {
   };
 }
 
-export class LegacyApiAdapter {
+export class IvyApiAdapter {
   constructor(engine) {
     this.engine = engine;
     this.onConnectionLost = null;

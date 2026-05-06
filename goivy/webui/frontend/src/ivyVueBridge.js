@@ -1,7 +1,7 @@
 import { h, nextTick, render } from 'vue';
 import AnalysisSheetShell from './components/panes/AnalysisSheetShell.vue';
-import { initializeLegacyCodeMirror } from './codeMirrorEditor.js';
-import { LegacyApiAdapter } from './engines/index.js';
+import { initializeCodeMirrorEditor } from './codeMirrorEditor.js';
+import { IvyApiAdapter } from './engines/index.js';
 import {
   useContextMenuStore,
   useDetailsStore,
@@ -60,8 +60,8 @@ export function createIvyVueBridge({
   const toastStore = useToastStore(pinia);
 
   return {
-    createLegacyApi() {
-      return new LegacyApiAdapter(engineStore.engine);
+    createIvyApi() {
+      return new IvyApiAdapter(engineStore.engine);
     },
     getEngine() {
       return engineStore.engine;
@@ -77,9 +77,9 @@ export function createIvyVueBridge({
     updateEditor(snapshot) {
       editorStore.applyLegacySnapshot(snapshot);
     },
-    initializeEditor(legacyApp) {
-      return initializeLegacyCodeMirror({
-        legacyApp,
+    initializeEditor(runtime) {
+      return initializeCodeMirrorEditor({
+        runtime,
         editorStore,
         doc,
         codeMirror: win.CodeMirror,

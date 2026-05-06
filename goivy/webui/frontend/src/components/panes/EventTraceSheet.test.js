@@ -11,12 +11,10 @@ describe('EventTraceSheet', () => {
   beforeEach(() => {
     pinia = createPinia();
     setActivePinia(pinia);
-    window.ivyApp = undefined;
     resetCommandRegistry();
   });
 
   afterEach(() => {
-    window.ivyApp = undefined;
     resetCommandRegistry();
   });
 

@@ -30,7 +30,7 @@ const registrars = [
   registerMenuCommands,
 ];
 
-export const LEGACY_CONTROLLER_COMMAND_METHODS = Array.from(new Set([
+export const APP_COMMAND_METHODS = Array.from(new Set([
   ...FILE_COMMAND_METHODS,
   ...SESSION_COMMAND_METHODS,
   ...EDITOR_COMMAND_METHODS,
@@ -46,10 +46,10 @@ export const LEGACY_CONTROLLER_COMMAND_METHODS = Array.from(new Set([
   ...MENU_COMMAND_METHODS,
 ])).sort();
 
-export function registerLegacyControllerCommands(controller) {
-  const unregisters = registrars.flatMap((register) => register(controller));
-  if (controller && controller.controls && typeof controller.controls.setStatus === 'function') {
-    unregisters.push(registerCommand('app.setStatus', controller.controls.setStatus.bind(controller.controls)));
+export function registerAppCommands(commandTarget) {
+  const unregisters = registrars.flatMap((register) => register(commandTarget));
+  if (commandTarget && commandTarget.controls && typeof commandTarget.controls.setStatus === 'function') {
+    unregisters.push(registerCommand('app.setStatus', commandTarget.controls.setStatus.bind(commandTarget.controls)));
   }
   return () => unregisterAll(unregisters);
 }

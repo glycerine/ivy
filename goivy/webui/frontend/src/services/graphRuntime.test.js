@@ -61,7 +61,7 @@ afterEach(() => {
 });
 
 describe('graphRuntime', () => {
-  it('installs graph globals for the remaining legacy app script', () => {
+  it('installs graph globals for compatibility harnesses', () => {
     installLegacyGraphGlobals(window);
 
     expect(window.IvyGraph).toBe(IvyGraph);

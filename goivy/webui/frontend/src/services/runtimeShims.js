@@ -1,7 +1,7 @@
 import { IvyHttpClient } from '../api/ivyHttpClient.js';
-import { HostedGoEngine, LegacyApiAdapter } from '../engines/index.js';
+import { HostedGoEngine, IvyApiAdapter } from '../engines/index.js';
 
-export class IvyAPIShim extends LegacyApiAdapter {
+export class IvyAPIShim extends IvyApiAdapter {
   constructor(baseURL = '') {
     const client = new IvyHttpClient({ baseURL });
     super(new HostedGoEngine({ client }));

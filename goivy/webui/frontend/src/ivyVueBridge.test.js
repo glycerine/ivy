@@ -121,7 +121,7 @@ describe('ivyVueBridge', () => {
     expect(eventTraceStore.sheetById('events-1')).toBeNull();
   });
 
-  it('can select a runtime-supplied engine before the legacy adapter is created', () => {
+  it('can select a runtime-supplied engine before the API adapter is created', () => {
     const { pinia } = makeBridge();
     const fakeEngine = { kind: 'in-browser', createSession: vi.fn() };
     window.__IVY_ENGINE__ = fakeEngine;

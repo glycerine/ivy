@@ -1,16 +1,16 @@
-import { LegacyApiAdapter } from '../engines/index.js';
+import { IvyApiAdapter } from '../engines/index.js';
 
 export function currentIvyBridge(win = globalThis.window) {
   return win && win.__ivyVueBridge;
 }
 
-export function createLegacyApi({
+export function createIvyApi({
   bridge = currentIvyBridge(),
   fallbackApiFactory,
 } = {}) {
-  if (bridge && typeof bridge.createLegacyApi === 'function') {
+  if (bridge && typeof bridge.createIvyApi === 'function') {
     try {
-      return bridge.createLegacyApi();
+      return bridge.createIvyApi();
     } catch (err) {
       console.warn('Vue engine bridge unavailable, falling back to IvyAPI:', err);
     }
@@ -19,7 +19,7 @@ export function createLegacyApi({
     return fallbackApiFactory();
   }
   if (bridge && typeof bridge.getEngine === 'function') {
-    return new LegacyApiAdapter(bridge.getEngine());
+    return new IvyApiAdapter(bridge.getEngine());
   }
   throw new Error('No Ivy API factory is available');
 }

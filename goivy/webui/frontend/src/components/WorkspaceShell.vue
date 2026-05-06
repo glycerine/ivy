@@ -15,7 +15,7 @@ import EditorPane from './panes/EditorPane.vue';
 import SheetArea from './panes/SheetArea.vue';
 import TutorialPane from './panes/TutorialPane.vue';
 import { useLayoutStore } from '../stores/layoutStore.js';
-import { scheduleLegacyLayoutRefresh, startMouseDrag } from '../resizeDrag.js';
+import { scheduleLayoutRefresh, startMouseDrag } from '../resizeDrag.js';
 
 const layoutStore = useLayoutStore();
 
@@ -38,11 +38,11 @@ function startEditorResize(event) {
       const maxWidth = Math.max(minEditorWidth, topRow.offsetWidth - dividerWidth - minSheetAreaWidth);
       const newWidth = Math.max(minEditorWidth, Math.min(startWidth + startX - moveEvent.clientX, maxWidth));
       layoutStore.setEditorWidth(newWidth);
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
     onEnd() {
       divider.classList.remove('active');
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
   });
 }
@@ -63,12 +63,12 @@ function startTutorialResize(event) {
       const maxHeight = outerContainer ? outerContainer.offsetHeight - 100 : 600;
       const newHeight = Math.max(80, Math.min(startHeight + startY - moveEvent.clientY, maxHeight));
       layoutStore.setTutorialHeight(newHeight);
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
     onEnd() {
       divider.classList.remove('active');
       if (iframe) iframe.style.pointerEvents = '';
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
   });
 }

@@ -18,7 +18,6 @@ describe('globalInteractions', () => {
 
   afterEach(() => {
     document.body.innerHTML = '';
-    window.ivyApp = undefined;
     delete window._testUndoCommand;
     resetCommandRegistry();
   });
@@ -50,7 +49,7 @@ describe('globalInteractions', () => {
     cleanup();
   });
 
-  it('routes save and undo shortcuts to the legacy service layer', () => {
+  it('routes save and undo shortcuts through the command service', () => {
     const cleanup = installGlobalInteractions({});
     const saveEvent = new KeyboardEvent('keydown', {
       key: 's',

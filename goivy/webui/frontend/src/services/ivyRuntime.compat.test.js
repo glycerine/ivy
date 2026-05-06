@@ -1,36 +1,36 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
-  IvyApp,
-  configureLegacyAppDependencies,
-  resetLegacyAppDependencies,
-} from './legacyAppController.js';
-import { FakeAPI, FakeControls, FakeGraph } from './test/fakes.js';
+  IvyRuntime,
+  configureIvyRuntimeDependencies,
+  resetIvyRuntimeDependencies,
+} from './ivyRuntime.js';
+import { FakeAPI, FakeControls, FakeGraph } from '../test/fakes.js';
 
-function makeApp() {
-  resetLegacyAppDependencies();
-  configureLegacyAppDependencies({
+function makeRuntime() {
+  resetIvyRuntimeDependencies();
+  configureIvyRuntimeDependencies({
     IvyAPI: FakeAPI,
     IvyControls: FakeControls,
     IvyGraph: FakeGraph,
   });
-  return new IvyApp();
+  return new IvyRuntime();
 }
 
 afterEach(() => {
-  resetLegacyAppDependencies();
+  resetIvyRuntimeDependencies();
   delete window.__ivyVueBridge;
   document.body.innerHTML = '';
   vi.useRealTimers();
 });
 
-describe('legacyAppController compatibility behavior', () => {
+describe('ivyRuntime compatibility behavior', () => {
   it('routes toast notifications through the Vue bridge when available', () => {
-    const app = makeApp();
+    const runtime = makeRuntime();
     window.__ivyVueBridge = {
       showToast: vi.fn(() => 7),
     };
 
-    const result = app._showToast('Connection lost', 'error', { persistent: true });
+    const result = runtime._showToast('Connection lost', 'error', { persistent: true });
 
     expect(result).toBe(7);
     expect(window.__ivyVueBridge.showToast).toHaveBeenCalledWith('Connection lost', 'error', { persistent: true });
@@ -38,9 +38,9 @@ describe('legacyAppController compatibility behavior', () => {
   });
 
   it('keeps a direct DOM toast fallback for non-Vue compatibility harnesses', () => {
-    const app = makeApp();
+    const runtime = makeRuntime();
 
-    app._showToast('Connection lost', 'error', { persistent: true, className: 'custom-toast' });
+    runtime._showToast('Connection lost', 'error', { persistent: true, className: 'custom-toast' });
 
     const toast = document.querySelector('.ivy-toast');
     expect(toast.textContent).toBe('Connection lost');

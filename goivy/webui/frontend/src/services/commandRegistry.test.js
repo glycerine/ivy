@@ -4,7 +4,6 @@ import {
   hasCommand,
   registeredCommands,
   registerCommand,
-  registerControllerCommands,
   resetCommandRegistry,
   runCommand,
   unregisterCommand,
@@ -30,15 +29,15 @@ describe('commandRegistry', () => {
     expect(runCommand('demo.greet')).toBeUndefined();
   });
 
-  it('delegates unknown commands to the temporary legacy fallback target', () => {
-    const legacy = {
+  it('delegates unknown commands to an explicit fallback target', () => {
+    const fallback = {
       save: vi.fn(() => 'saved'),
     };
-    configureCommandRegistry({ fallbackTarget: () => legacy });
+    configureCommandRegistry({ fallbackTarget: () => fallback });
 
     expect(hasCommand('save')).toBe(true);
     expect(runCommand('save')).toBe('saved');
-    expect(legacy.save).toHaveBeenCalledTimes(1);
+    expect(fallback.save).toHaveBeenCalledTimes(1);
   });
 
   it('does not use window.ivyApp as an implicit production fallback', () => {
@@ -49,30 +48,6 @@ describe('commandRegistry', () => {
     expect(hasCommand('save')).toBe(false);
     expect(runCommand('save')).toBeUndefined();
     expect(window.ivyApp.save).not.toHaveBeenCalled();
-  });
-
-  it('registers controller methods and status updates as commands', () => {
-    class Controller {
-      constructor() {
-        this.controls = {
-          setStatus: vi.fn(() => true),
-        };
-      }
-
-      saveAs(name) {
-        return `saved ${name}`;
-      }
-    }
-    const controller = new Controller();
-
-    const remove = registerControllerCommands(controller);
-
-    expect(runCommand('saveAs', 'demo.ivy')).toBe('saved demo.ivy');
-    expect(runCommand('app.setStatus', 'Ready', 'success')).toBe(true);
-    expect(controller.controls.setStatus).toHaveBeenCalledWith('Ready', 'success');
-
-    remove();
-    expect(hasCommand('saveAs')).toBe(false);
   });
 
   it('can refuse to unregister a command when the handler does not match', () => {

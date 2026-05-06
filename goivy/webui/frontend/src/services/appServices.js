@@ -1,13 +1,13 @@
 import { nextTick } from 'vue';
-import { startIvyApp, stopIvyApp } from '../legacyAppController.js';
-import { registerLegacyControllerCommands } from './appCommands.js';
+import { startIvyRuntime, stopIvyRuntime } from './ivyRuntime.js';
+import { registerAppCommands } from './appCommands.js';
 
 let installedServices = null;
 
 export function createAppServices({
-  startRuntime = startIvyApp,
-  stopRuntime = stopIvyApp,
-  registerCommands = registerLegacyControllerCommands,
+  startRuntime = startIvyRuntime,
+  stopRuntime = stopIvyRuntime,
+  registerCommands = registerAppCommands,
 } = {}) {
   let started = false;
   let runtimeApp = null;

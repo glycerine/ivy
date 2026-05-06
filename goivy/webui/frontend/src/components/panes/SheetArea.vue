@@ -31,7 +31,7 @@ import StateRelationsPane from './StateRelationsPane.vue';
 import TabBar from './TabBar.vue';
 import { useSheetStore } from '../../stores/sheetStore.js';
 import { useLayoutStore } from '../../stores/layoutStore.js';
-import { scheduleLegacyLayoutRefresh, setGraphPointerEvents, startMouseDrag } from '../../resizeDrag.js';
+import { scheduleLayoutRefresh, setGraphPointerEvents, startMouseDrag } from '../../resizeDrag.js';
 
 const sheetStore = useSheetStore();
 const layoutStore = useLayoutStore();
@@ -66,12 +66,12 @@ function startGraphDividerResize(event, divider) {
       } else {
         panel.style.flex = `0 0 ${newWidth}px`;
       }
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
     onEnd() {
       divider.classList.remove('active');
       setGraphPointerEvents(event.currentTarget, '');
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
   });
 }
@@ -89,11 +89,11 @@ function startStateDividerResize(event, divider) {
       const maxWidth = topRow ? topRow.offsetWidth - 300 : 800;
       const newWidth = Math.max(200, Math.min(startWidth + startX - moveEvent.clientX, maxWidth));
       layoutStore.setStatePanelWidth(newWidth);
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
     onEnd() {
       divider.classList.remove('active');
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
   });
 }
@@ -121,12 +121,12 @@ function startDetailsResize(event, header) {
         panel.style.flex = `0 0 ${newHeight}px`;
         panel.style.height = `${newHeight}px`;
       }
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
     onEnd() {
       header.classList.remove('active');
       setGraphPointerEvents(sheetLeft, '');
-      scheduleLegacyLayoutRefresh();
+      scheduleLayoutRefresh();
     },
   });
 }

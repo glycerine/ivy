@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { initializeLegacyCodeMirror } from './codeMirrorEditor.js';
+import { initializeCodeMirrorEditor } from './codeMirrorEditor.js';
 
 describe('codeMirrorEditor', () => {
-  it('initializes CodeMirror with Ivy editor options and wires legacy dirty tracking', () => {
+  it('initializes CodeMirror with Ivy editor options and wires dirty tracking', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     let changeHandler = null;
     let value = 'saved';
@@ -15,13 +15,13 @@ describe('codeMirrorEditor', () => {
     const codeMirror = {
       fromTextArea: vi.fn(() => editor),
     };
-    const legacyApp = {
+    const runtime = {
       cmEditor: editor,
       _updateEditorLabel: vi.fn(),
     };
 
-    const result = initializeLegacyCodeMirror({
-      legacyApp,
+    const result = initializeCodeMirrorEditor({
+      runtime,
       editorStore: { keymap: 'vim' },
       codeMirror,
     });
@@ -39,8 +39,8 @@ describe('codeMirrorEditor', () => {
     value = 'edited';
     changeHandler();
 
-    expect(legacyApp._persistedFileContent).toBe('edited');
-    expect(legacyApp._updateEditorLabel).toHaveBeenCalled();
+    expect(runtime._persistedFileContent).toBe('edited');
+    expect(runtime._updateEditorLabel).toHaveBeenCalled();
   });
 
   it('reuses an existing editor for the textarea', () => {
@@ -48,6 +48,6 @@ describe('codeMirrorEditor', () => {
     const existing = {};
     document.getElementById('model-editor').__ivyCodeMirrorEditor = existing;
 
-    expect(initializeLegacyCodeMirror({ codeMirror: { fromTextArea: vi.fn() } })).toBe(existing);
+    expect(initializeCodeMirrorEditor({ codeMirror: { fromTextArea: vi.fn() } })).toBe(existing);
   });
 });

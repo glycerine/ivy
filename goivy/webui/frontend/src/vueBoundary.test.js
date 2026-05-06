@@ -38,11 +38,11 @@ function productionSourceFiles(dir = srcDir) {
 }
 
 describe('Vue production boundary', () => {
-  it('keeps Vue components off the legacy IvyApp global and controller module', () => {
+  it('keeps Vue components off runtime globals and runtime modules', () => {
     const offenders = [];
     for (const file of vueFiles()) {
       const text = fs.readFileSync(file, 'utf8');
-      if (/\b(?:window|globalThis\.window)\.ivyApp\b/.test(text) || /legacyAppController/.test(text)) {
+      if (/\b(?:window|globalThis\.window)\.ivyApp\b/.test(text) || /ivyRuntime/.test(text)) {
         offenders.push(path.relative(srcDir, file));
       }
     }
@@ -50,9 +50,9 @@ describe('Vue production boundary', () => {
     expect(offenders).toEqual([]);
   });
 
-  it('keeps production legacy browser globals inside the temporary allowlist', () => {
+  it('keeps production browser globals inside the temporary allowlist', () => {
     const allowed = new Set([]);
-    const legacyGlobal = /\b(?:window|globalThis\.window)\.(?:ivyApp|startIvyApp|IvyApp|IvyControls|IvyPersist|IvyGraph)\b/;
+    const legacyGlobal = /\b(?:window|globalThis\.window)\.(?:ivyApp|startIvyRuntime|IvyRuntime|IvyControls|IvyPersist|IvyGraph)\b/;
     const offenders = [];
     for (const file of productionSourceFiles()) {
       const text = fs.readFileSync(file, 'utf8');

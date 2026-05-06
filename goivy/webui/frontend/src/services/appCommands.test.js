@@ -1,17 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registeredCommands, resetCommandRegistry, runCommand } from './commandRegistry.js';
-import { LEGACY_CONTROLLER_COMMAND_METHODS, registerLegacyControllerCommands } from './appCommands.js';
+import { APP_COMMAND_METHODS, registerAppCommands } from './appCommands.js';
 
-function fakeController() {
-  const controller = {
+function fakeCommandTarget() {
+  const commandTarget = {
     controls: {
       setStatus: vi.fn(() => 'status-set'),
     },
   };
-  for (const method of LEGACY_CONTROLLER_COMMAND_METHODS) {
-    controller[method] = vi.fn((...args) => ({ method, args }));
+  for (const method of APP_COMMAND_METHODS) {
+    commandTarget[method] = vi.fn((...args) => ({ method, args }));
   }
-  return controller;
+  return commandTarget;
 }
 
 afterEach(() => {
@@ -19,9 +19,9 @@ afterEach(() => {
 });
 
 describe('app command registration', () => {
-  it('registers the production command surface explicitly without constructing IvyApp', () => {
-    const controller = fakeController();
-    const unregister = registerLegacyControllerCommands(controller);
+  it('registers the production command surface explicitly without constructing the runtime', () => {
+    const commandTarget = fakeCommandTarget();
+    const unregister = registerAppCommands(commandTarget);
 
     expect(registeredCommands()).toContain('file.save');
     expect(registeredCommands()).toContain('checkInduction');
@@ -35,7 +35,7 @@ describe('app command registration', () => {
       args: [{ obj: 'state_0' }, 'join'],
     });
     expect(runCommand('app.setStatus', 'Ready', 'success')).toBe('status-set');
-    expect(controller.controls.setStatus).toHaveBeenCalledWith('Ready', 'success');
+    expect(commandTarget.controls.setStatus).toHaveBeenCalledWith('Ready', 'success');
 
     unregister();
     expect(runCommand('file.save')).toBeUndefined();

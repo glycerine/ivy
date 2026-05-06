@@ -5,7 +5,7 @@ function refreshNow() {
   currentAppServices().refreshLayout();
 }
 
-export function scheduleLegacyLayoutRefresh() {
+export function scheduleLayoutRefresh() {
   refreshNow();
   nextTick(refreshNow);
   const win = globalThis.window;

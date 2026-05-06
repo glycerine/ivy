@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   connectSessionEvents,
-  createLegacyApi,
+  createIvyApi,
   createSession,
   updateSessionDisplay,
 } from './sessionService.js';
@@ -11,26 +11,26 @@ afterEach(() => {
 });
 
 describe('sessionService', () => {
-  it('creates the legacy API through the Vue bridge when available', () => {
+  it('creates the Ivy API through the Vue bridge when available', () => {
     const api = { sessionId: 's1' };
     const bridge = {
-      createLegacyApi: vi.fn(() => api),
+      createIvyApi: vi.fn(() => api),
     };
 
-    expect(createLegacyApi({ bridge })).toBe(api);
-    expect(bridge.createLegacyApi).toHaveBeenCalledTimes(1);
+    expect(createIvyApi({ bridge })).toBe(api);
+    expect(bridge.createIvyApi).toHaveBeenCalledTimes(1);
   });
 
-  it('falls back to the provided legacy API factory', () => {
+  it('falls back to the provided Ivy API factory', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     const api = { sessionId: 'fallback' };
     const bridge = {
-      createLegacyApi: vi.fn(() => {
+      createIvyApi: vi.fn(() => {
         throw new Error('offline');
       }),
     };
 
-    expect(createLegacyApi({ bridge, fallbackApiFactory: () => api })).toBe(api);
+    expect(createIvyApi({ bridge, fallbackApiFactory: () => api })).toBe(api);
   });
 
   it('creates sessions and reports failures through controls', async () => {

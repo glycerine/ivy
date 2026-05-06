@@ -11,7 +11,6 @@ function makeFile(name) {
 describe('FileInputHost', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = undefined;
     resetCommandRegistry();
   });
 
