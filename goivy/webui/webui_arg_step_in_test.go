@@ -1,12 +1,36 @@
 package webui
 
 import (
+	"encoding/json"
 	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 )
+
+const executeActionMenuSample = `#lang ivy1.7
+type client
+type server
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+after init { semaphore(W) := true; link(X,Y) := false }
+action connect(x:client,y:server) = { require semaphore(y); link(x,y) := true; semaphore(y) := false }
+export connect
+conjecture link(X,Y) -> ~semaphore(Y)
+`
+
+const ctiUsedRelationSample = `#lang ivy1.7
+type node
+relation p(X:node)
+relation q(X:node)
+relation unused(X:node)
+relation spare(X:node)
+after init { p(X) := false; q(X) := true; unused(X) := false }
+action bad(x:node) = { p(x) := true }
+export bad
+conjecture p(X) -> ~q(X)
+`
 
 func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
@@ -53,6 +77,482 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	}
 	if len(elements) == 0 {
 		t.Fatal("sub_arg elements empty")
+	}
+}
+
+func TestArgStepInRegistersIndependentAnalysisSheet(t *testing.T) {
+	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read example: %v", err)
+	}
+
+	s := NewSession(goivy.NewConfig(), "test-step-in-sheet")
+	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message: %s", cr.Result, cr.Message)
+	}
+
+	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{
+		"sheet_id": "sheet-1",
+		"target":   "state_1",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction decompose: %v", err)
+	}
+	sheetID, _ := result["sheet_id"].(string)
+	if sheetID == "" || sheetID == "sheet-1" {
+		t.Fatalf("decompose sheet_id = %#v, want new sheet id; result=%#v", result["sheet_id"], result)
+	}
+
+	s.mu.Lock()
+	ui := s.analysisUIForSheetLocked(sheetID)
+	root := s.analysisUIForSheetLocked("sheet-1")
+	s.mu.Unlock()
+	if ui == nil {
+		t.Fatalf("decompose did not register backend analysis UI for %q", sheetID)
+	}
+	if ui == root {
+		t.Fatalf("decompose sheet %q reuses root AnalysisGraphUI", sheetID)
+	}
+	if ui.AG == nil || len(ui.AG.States) == 0 {
+		t.Fatalf("decompose sheet %q has no analysis graph states", sheetID)
+	}
+
+	selected, stateLabel, err := s.selectConceptARGNode(sheetID, "state_0")
+	if err != nil {
+		t.Fatalf("select concept node in decomposed sheet: %v", err)
+	}
+	if selected != "state_0" {
+		t.Fatalf("selected = %q, want state_0", selected)
+	}
+	if stateLabel == "" {
+		t.Fatalf("state label is empty for decomposed sheet")
+	}
+	s.mu.Lock()
+	if ui.CurrentConceptGraph == nil {
+		t.Fatalf("decomposed sheet did not receive its own concept graph")
+	}
+	if root != nil && root.CurrentConceptGraph == ui.CurrentConceptGraph {
+		t.Fatalf("decomposed sheet concept graph aliases root concept graph")
+	}
+	s.mu.Unlock()
+}
+
+func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-execute-menu")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	cy := RenderAnalysisUIARG(s.AGUI)
+	var actions []any
+	for _, ele := range cy.Elements {
+		if ele.Group == "nodes" && ele.Data["obj"] == "state_0" {
+			raw, ok := ele.Data["actions"].([]goivy.NodeAction)
+			if !ok {
+				t.Fatalf("state_0 actions missing or wrong type: %#v", ele.Data["actions"])
+			}
+			for _, act := range raw {
+				actions = append(actions, act)
+			}
+		}
+	}
+	if len(actions) == 0 {
+		t.Fatalf("state_0 has no rendered actions")
+	}
+	foundExecute := false
+	for _, raw := range actions {
+		act := raw.(goivy.NodeAction)
+		if act.Label == "ext:connect" && act.Action == "execute_action" {
+			if got := act.Args["action_name"]; got != "ext:connect" {
+				t.Fatalf("ext:connect action_name = %#v, want ext:connect", got)
+			}
+			foundExecute = true
+			break
+		}
+	}
+	if !foundExecute {
+		t.Fatalf("state_0 actions do not include connect execute_action: %#v", actions)
+	}
+
+	beforeStates := len(s.AG.States)
+	beforeTransitions := len(s.AG.Transitions)
+	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    "sheet-1",
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction execute_action: %v", err)
+	}
+	if len(s.AG.States) != beforeStates+1 {
+		t.Fatalf("states after execute = %d, want %d", len(s.AG.States), beforeStates+1)
+	}
+	if len(s.AG.Transitions) != beforeTransitions+1 {
+		t.Fatalf("transitions after execute = %d, want %d", len(s.AG.Transitions), beforeTransitions+1)
+	}
+	if _, ok := result["arg"]; !ok {
+		t.Fatalf("execute_action result missing arg update: %#v", result)
+	}
+}
+
+func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-choice-backed")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	choices, err := s.ArgNodeAction("state_0", "try_conjecture_choices", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("try_conjecture_choices: %v", err)
+	}
+	conjChoices, ok := choices["choices"].([]ChoiceItem)
+	if !ok {
+		t.Fatalf("choices have type %T, want []ChoiceItem: %#v", choices["choices"], choices["choices"])
+	}
+	if len(conjChoices) == 0 {
+		t.Fatalf("expected at least one conjecture choice")
+	}
+	if !strings.Contains(conjChoices[0].Label, "link") {
+		t.Fatalf("conjecture choice label = %q, want link conjecture", conjChoices[0].Label)
+	}
+
+	if _, _, err := s.selectConceptARGNode("sheet-1", "state_0"); err != nil {
+		t.Fatalf("select concept graph: %v", err)
+	}
+	remember, err := s.ExecuteAction("remember", map[string]interface{}{
+		"sheet_id": "sheet-1",
+		"name":     "goal-a",
+	})
+	if err != nil {
+		t.Fatalf("remember: %v", err)
+	}
+	if got := remember["remembered"]; got != "goal-a" {
+		t.Fatalf("remembered = %#v, want goal-a", got)
+	}
+	rememberedChoices, err := s.ArgNodeAction("state_0", "try_remembered_choices", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("try_remembered_choices: %v", err)
+	}
+	goalChoices, ok := rememberedChoices["choices"].([]ChoiceItem)
+	if !ok {
+		t.Fatalf("remembered choices have type %T, want []ChoiceItem", rememberedChoices["choices"])
+	}
+	if len(goalChoices) != 1 || goalChoices[0].Value != "goal-a" {
+		t.Fatalf("remembered choices = %#v, want goal-a", goalChoices)
+	}
+	result, err := s.ArgNodeAction("state_0", "try_remembered", map[string]interface{}{
+		"sheet_id": "sheet-1",
+		"goal":     "goal-a",
+	})
+	if err != nil {
+		t.Fatalf("try_remembered: %v", err)
+	}
+	if _, ok := result["concept"]; !ok {
+		t.Fatalf("try_remembered result missing concept graph update: %#v", result)
+	}
+}
+
+func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
+	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read example: %v", err)
+	}
+
+	cfg := goivy.NewConfig()
+	be := NewGoBackend(cfg)
+	sessionJSON, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var session map[string]string
+	if err := json.Unmarshal(sessionJSON, &session); err != nil {
+		t.Fatalf("session json: %v", err)
+	}
+	if _, err := be.Load(session["session_id"], "client_server_example.ivy", content); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	resultJSON, err := be.Check(session["session_id"], "induction")
+	if err != nil {
+		t.Fatalf("Check: %v", err)
+	}
+	var result map[string]interface{}
+	if err := json.Unmarshal(resultJSON, &result); err != nil {
+		t.Fatalf("check json: %v", err)
+	}
+	if result["result"] != "fail" {
+		t.Fatalf("result = %#v, want fail; body=%s", result["result"], resultJSON)
+	}
+	trace, ok := result["trace_arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("trace_arg missing or wrong type: %#v", result["trace_arg"])
+	}
+	elements, ok := trace["elements"].([]interface{})
+	if !ok || len(elements) == 0 {
+		t.Fatalf("trace_arg elements missing/empty: %#v", trace["elements"])
+	}
+}
+
+func TestShowReachableStatesOpensReachableARGSheet(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-show-reachable")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	result, err := s.ExecuteAction("show_reachable", nil)
+	if err != nil {
+		t.Fatalf("show_reachable: %v", err)
+	}
+	sheetID, _ := result["sheet_id"].(string)
+	if sheetID == "" || sheetID == "sheet-1" {
+		t.Fatalf("sheet_id = %#v, want new reachable sheet", result["sheet_id"])
+	}
+	arg, ok := result["arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("arg missing/wrong type: %#v", result["arg"])
+	}
+	elements, ok := arg["elements"].([]goivy.CyElement)
+	if !ok || len(elements) == 0 {
+		t.Fatalf("reachable arg elements missing/empty: %#v", arg["elements"])
+	}
+	s.mu.Lock()
+	ui := s.analysisUIForSheetLocked(sheetID)
+	s.mu.Unlock()
+	if ui == nil || ui != s.ReachableUI {
+		t.Fatalf("reachable sheet %q not registered to reachable UI", sheetID)
+	}
+}
+
+func TestConceptResponseIncludesEdgeSortsForMaterializeFromSelected(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := NewGoBackend(cfg)
+	sessionJSON, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var session map[string]string
+	if err := json.Unmarshal(sessionJSON, &session); err != nil {
+		t.Fatalf("session json: %v", err)
+	}
+	if _, err := be.Load(session["session_id"], "test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	conceptJSON, err := be.GetConcept(session["session_id"], "sheet-1", "")
+	if err != nil {
+		t.Fatalf("GetConcept: %v", err)
+	}
+	var concept map[string]interface{}
+	if err := json.Unmarshal(conceptJSON, &concept); err != nil {
+		t.Fatalf("concept json: %v", err)
+	}
+	edgeSorts, ok := concept["edge_sorts"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("edge_sorts missing/wrong type: %#v", concept["edge_sorts"])
+	}
+	linkSorts, ok := edgeSorts["link"].([]interface{})
+	if !ok || len(linkSorts) != 2 || linkSorts[0] != "client" || linkSorts[1] != "server" {
+		t.Fatalf("edge_sorts[link] = %#v, want [client server]", edgeSorts["link"])
+	}
+}
+
+func TestBacktrackUsesGraphWidgetBacktrackPoint(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-backtrack-action")
+	s.AGUI = NewAnalysisGraphUI()
+	s.SheetUIs = map[string]*AnalysisGraphUI{"sheet-1": s.AGUI}
+	w := NewGraphWidget(StandardGraph([]string{"node"}, nil))
+	s.AGUI.CurrentConceptGraph = w
+
+	w.Checkpoint(true)
+	w.G().State = "at-backtrack"
+	w.Checkpoint(false)
+	w.G().State = "past-backtrack"
+	_, err := s.ExecuteAction("backtrack", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("backtrack: %v", err)
+	}
+	if got := w.G().State; got == "past-backtrack" {
+		t.Fatalf("backtrack left state at %q", got)
+	}
+	if got := w.G().State; got != "" {
+		t.Fatalf("backtrack state = %q, want initial backtrack point", got)
+	}
+}
+
+func TestConcreteUsesCurrentConceptGraph(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-concrete-graph")
+	s.AGUI = NewAnalysisGraphUI()
+	s.SheetUIs = map[string]*AnalysisGraphUI{"sheet-1": s.AGUI}
+	w := NewGraphWidget(StandardGraph([]string{"node"}, nil))
+	w.G().State = "base_state"
+	w.G().Concrete = "concrete_constraints"
+	s.AGUI.CurrentConceptGraph = w
+
+	result, err := s.ExecuteAction("concrete", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("concrete: %v", err)
+	}
+	if got := w.G().State; got != "base_state & concrete_constraints" {
+		t.Fatalf("concrete graph state = %q, want combined state", got)
+	}
+	if _, ok := result["concept"]; !ok {
+		t.Fatalf("concrete result missing concept graph update: %#v", result)
+	}
+}
+
+func TestGatherUsesRequestedConceptGraphSheet(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-gather-sheet")
+	rootUI := NewAnalysisGraphUI()
+	otherUI := NewAnalysisGraphUI()
+	rootW := NewGraphWidget(StandardGraph([]string{"root"}, nil))
+	otherW := NewGraphWidget(StandardGraph([]string{"other"}, nil))
+	rootW.G().ConceptSess.AbstractValue["root_fact"] = true
+	otherW.G().ConceptSess.AbstractValue["other_fact"] = true
+	rootUI.CurrentConceptGraph = rootW
+	otherUI.CurrentConceptGraph = otherW
+	s.AGUI = rootUI
+	s.SheetUIs = map[string]*AnalysisGraphUI{
+		"sheet-1": rootUI,
+		"sheet-2": otherUI,
+	}
+
+	result, err := s.ExecuteAction("gather", map[string]interface{}{"sheet_id": "sheet-2"})
+	if err != nil {
+		t.Fatalf("gather: %v", err)
+	}
+	facts, ok := result["facts"].([]string)
+	if !ok {
+		t.Fatalf("facts have type %T, want []string: %#v", result["facts"], result["facts"])
+	}
+	if len(facts) != 1 || facts[0] != "other_fact" {
+		t.Fatalf("facts = %#v, want only sheet-2 fact", facts)
+	}
+	if _, ok := result["concept"]; !ok {
+		t.Fatalf("gather result missing concept graph update: %#v", result)
+	}
+}
+
+func TestReachUsesCurrentConceptGraphParentState(t *testing.T) {
+	mod := goivy.New()
+	p := goivy.NewConst("p", goivy.Boolean)
+	mod.Relations.Set("p", goivy.Boolean)
+	pred := goivy.NewState(mod, goivy.TrueClauses(nil))
+	pred.Unders = []*goivy.State{
+		goivy.NewState(mod, goivy.FalseClauses(nil)),
+		goivy.NewState(mod, goivy.TrueClauses(nil)),
+	}
+	target := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{p}, nil, nil))
+	target.Pred = pred
+	target.Update = goivy.GetUpdate(goivy.NewAssignAction(p, goivy.True), &goivy.UpdateContext{
+		Domain: mod,
+		ActCfg: goivy.NewActionsConfig(),
+	})
+	unrelated := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(pred, nil)
+	ag.Add(target, nil)
+	ag.Add(unrelated, nil)
+
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = mod
+	w := NewGraphWidget(StandardGraph([]string{"node"}, target))
+	w.G().ParentState = target
+	ui.CurrentConceptGraph = w
+
+	s := NewSession(goivy.NewConfig(), "test-reach-sheet")
+	s.CompiledModule = mod
+	s.AG = ag
+	s.AGUI = ui
+	s.SheetUIs = map[string]*AnalysisGraphUI{"sheet-1": ui}
+
+	result, err := s.ExecuteAction("reach", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("reach: %v", err)
+	}
+	if result["reachable"] != true {
+		t.Fatalf("reachable = %#v, want true; result=%#v", result["reachable"], result)
+	}
+	if len(target.Unders) != 1 {
+		t.Fatalf("target unders = %d, want reached under appended", len(target.Unders))
+	}
+}
+
+func TestExportConceptGraphReturnsDOT(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-export-dot")
+	ui := NewAnalysisGraphUI()
+	w := NewGraphWidget(StandardGraph([]string{"node"}, nil))
+	w.G().ConceptSess.Domain.Nodes = []string{"node"}
+	w.G().ConceptSess.Domain.Concepts["node"] = &Concept{
+		Name:    "node",
+		Formula: "X:node = X:node",
+		Sorts:   []string{"node"},
+		Arity:   1,
+	}
+	ui.CurrentConceptGraph = w
+	s.AGUI = ui
+	s.SheetUIs = map[string]*AnalysisGraphUI{"sheet-1": ui}
+
+	result, err := s.ExecuteAction("export", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("export: %v", err)
+	}
+	content, _ := result["content"].(string)
+	if !strings.HasPrefix(content, "digraph concept_graph") {
+		t.Fatalf("export content = %q, want DOT graph", content)
+	}
+	if !strings.Contains(content, "node") {
+		t.Fatalf("export content %q does not mention rendered node sort", content)
+	}
+	if got := result["filename"]; got != "concept_graph.dot" {
+		t.Fatalf("filename = %#v, want concept_graph.dot", got)
+	}
+}
+
+func TestLoadFileContentInitializesCTIUI(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-load-cti")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	if s.CTIUI == nil {
+		t.Fatal("CTIUI should be initialized after loading a module")
+	}
+	if len(s.CTIUI.Conjectures) == 0 {
+		t.Fatal("CTIUI should load module conjectures")
+	}
+	if s.CTIUI.CurrentConceptGraph == nil {
+		t.Fatal("CTIUI should view state 0 and create a concept graph")
+	}
+	if s.CTIUI.AnalysisGraphUI == nil || s.CTIUI.AnalysisGraphUI.AG == nil || len(s.CTIUI.AnalysisGraphUI.AG.States) == 0 {
+		t.Fatal("CTIUI should have its own initialized analysis graph")
+	}
+	if len(s.AG.States) != 0 {
+		t.Fatalf("generic session ARG states = %d, want lazy empty ARG preserved", len(s.AG.States))
+	}
+}
+
+func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-used-relations")
+	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+	for _, rel := range cr.UsedRelations {
+		if rel == "unused" || rel == "spare" {
+			t.Fatalf("used relations include unused relation: %#v", cr.UsedRelations)
+		}
+	}
+	if !stringSliceContains(cr.UsedRelations, "p") || !stringSliceContains(cr.UsedRelations, "q") {
+		t.Fatalf("used relations = %#v, want p and q", cr.UsedRelations)
 	}
 }
 

@@ -128,8 +128,9 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sessionID st
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
+	sheetID := r.URL.Query().Get("sheet")
 	nodeID := r.URL.Query().Get("node")
-	data, err := s.backend.GetConcept(sessionID, nodeID)
+	data, err := s.backend.GetConcept(sessionID, sheetID, nodeID)
 	if err != nil {
 		writeBackendErr(w, err)
 		return
@@ -235,14 +236,12 @@ func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, s
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	var req struct {
-		Concept string `json:"concept"`
-	}
+	var req ConceptMaterializeRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	data, err := s.backend.ConceptMaterialize(sessionID, req.Concept)
+	data, err := s.backend.ConceptMaterialize(sessionID, req)
 	if err != nil {
 		writeBackendErr(w, err)
 		return

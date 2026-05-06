@@ -204,16 +204,18 @@ func TestAPIConcept(t *testing.T) {
 
 type conceptNodeBackend struct {
 	Backend
-	nodeID string
+	nodeID  string
+	sheetID string
 }
 
 func (b *conceptNodeBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
 	return canonicalJSON(map[string]string{"session_id": "s1"})
 }
 
-func (b *conceptNodeBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
+func (b *conceptNodeBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, error) {
 	b.nodeID = nodeID
-	return canonicalJSON(map[string]string{"node": nodeID})
+	b.sheetID = sheetID
+	return canonicalJSON(map[string]string{"node": nodeID, "sheet": sheetID})
 }
 
 func TestAPIConceptPassesSelectedARGNode(t *testing.T) {
@@ -231,6 +233,24 @@ func TestAPIConceptPassesSelectedARGNode(t *testing.T) {
 	}
 	if be.nodeID != "state_1" {
 		t.Fatalf("backend saw nodeID %q, want state_1", be.nodeID)
+	}
+}
+
+func TestAPIConceptPassesSheetID(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &conceptNodeBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+	w := doReq(t, srv, "GET", "/api/session/"+id+"/concept?sheet=sheet-2&node=state_1", "")
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	m := jsonBody(t, w)
+	if got := m["sheet"]; got != "sheet-2" {
+		t.Fatalf("concept sheet route = %v, want sheet-2", got)
+	}
+	if be.sheetID != "sheet-2" {
+		t.Fatalf("backend saw sheetID %q, want sheet-2", be.sheetID)
 	}
 }
 
@@ -281,6 +301,35 @@ func TestAPIConceptMaterializeNotFound(t *testing.T) {
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/materialize", `{"concept":"x"}`)
 	if w.Code == 200 {
 		t.Error("expected error for missing concept")
+	}
+}
+
+type materializePayloadBackend struct {
+	Backend
+	req ConceptMaterializeRequest
+}
+
+func (b *materializePayloadBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *materializePayloadBackend) ConceptMaterialize(sessionID string, req ConceptMaterializeRequest) ([]byte, error) {
+	b.req = req
+	return okJSON, nil
+}
+
+func TestAPIConceptMaterializeEdgePayload(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &materializePayloadBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+	body := `{"type":"edge","relation":"link","source":"client","target":"server","positive":false}`
+	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/materialize", body)
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if be.req.Type != "edge" || be.req.Relation != "link" || be.req.Source != "client" || be.req.Target != "server" || be.req.Positive {
+		t.Fatalf("materialize request = %#v, want negative link(client,server)", be.req)
 	}
 }
 

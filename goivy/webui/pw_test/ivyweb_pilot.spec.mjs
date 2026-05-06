@@ -442,6 +442,187 @@ test('sheet graph instances are owned independently when switching tabs', async 
   expect(result.secondLabels).toEqual(['second']);
 });
 
+test('Step in opens a backend-owned sheet whose node clicks load that sheet concept graph', async ({ page }) => {
+  await openIvy(page);
+
+  const result = await page.evaluate(async () => {
+    const app = window.ivyApp;
+    window._stepInCalls = { arg: [], concept: [] };
+    app.api.argNodeAction = async (node, action, args) => {
+      window._stepInCalls.arg.push({ node, action, args });
+      return {
+        status: 'ok',
+        decomposed: true,
+        sheet_id: 'sheet-2',
+        sub_arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+            { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' } },
+            { group: 'edges', data: { id: 'step-edge', source: 'state_0', target: 'state_1', label: 'sub' } },
+          ],
+        },
+      };
+    };
+    app.api.getConceptGraph = async (node, sheet) => {
+      window._stepInCalls.concept.push({ node, sheet });
+      return {
+        selected_node: node,
+        sheet_id: sheet,
+        elements: [
+          { group: 'nodes', data: { id: 'concept-' + sheet + '-' + node, label: sheet + ':' + node } },
+        ],
+        toggles: { edges: {}, labels: {} },
+        facts: [],
+      };
+    };
+
+    await app.executeArgEdgeAction({
+      source_obj: 'state_0',
+      target_obj: 'state_1',
+      label: 'call ext',
+    }, 'decompose', 'sheet-1');
+
+    const sheet = app.sheets['sheet-2'];
+    const node = sheet.argGraph.cy.getElementById('state_1');
+    node.emit('tap', { target: node });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    return {
+      activeSheet: app.activeSheetId,
+      selected: sheet.selectedArgNode,
+      argCalls: window._stepInCalls.arg,
+      conceptCalls: window._stepInCalls.concept,
+      conceptLabels: sheet.conceptGraph.cy.nodes().map((n) => n.data('label')),
+      rootConceptLabels: app.sheets['sheet-1'].conceptGraph.cy.nodes().map((n) => n.data('label')),
+    };
+  });
+
+  expect(result.activeSheet).toBe('sheet-2');
+  expect(result.selected).toBe('state_1');
+  expect(result.argCalls).toEqual([
+    { node: 'state_0', action: 'decompose', args: { target: 'state_1', sheet_id: 'sheet-1' } },
+  ]);
+  expect(result.conceptCalls).toEqual([
+    { node: 'state_1', sheet: 'sheet-2' },
+  ]);
+  expect(result.conceptLabels).toEqual(['sheet-2:state_1']);
+  expect(result.rootConceptLabels).toEqual([]);
+});
+
+test('ARG node execute actions are rendered from backend descriptors and dispatch action args', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    const app = window.ivyApp;
+    window._executeActionCalls = [];
+    app.api.argNodeAction = async (node, action, args) => {
+      window._executeActionCalls.push({ node, action, args });
+      return {
+        status: 'ok',
+        arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+            { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' } },
+            { group: 'edges', data: { id: 'edge_0_1', source: 'state_0', target: 'state_1', label: 'ext:connect' } },
+          ],
+        },
+      };
+    };
+    app.argGraph.update([
+      {
+        group: 'nodes',
+        data: {
+          id: 'state_0',
+          obj: 'state_0',
+          label: '0',
+          actions: [
+            { label: 'Execute action:', action: '' },
+            { label: '---', action: '' },
+            { label: 'ext:connect', action: 'execute_action', args: { action_name: 'ext:connect', action_label: 'ext:connect' } },
+          ],
+        },
+      },
+    ]);
+    app.onArgNodeRightClick(app.argGraph.cy.getElementById('state_0').data(), { x: 12, y: 12 }, 'sheet-1');
+  });
+
+  await expect(page.locator('.context-menu-header', { hasText: 'Execute action:' })).toBeVisible();
+  await page.locator('.context-menu-item', { hasText: 'ext:connect' }).click();
+  const calls = await page.evaluate(() => window._executeActionCalls);
+  expect(calls).toEqual([
+    { node: 'state_0', action: 'execute_action', args: { action_name: 'ext:connect', action_label: 'ext:connect', sheet_id: 'sheet-1' } },
+  ]);
+});
+
+test('failed check result can open its trace ARG in a sheet', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.ivyApp.showCheckResult({
+      result: 'fail',
+      z3_contacted: true,
+      message: 'The node is unsafe: View error trace?',
+      trace_arg: {
+        elements: [
+          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+          { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' } },
+          { group: 'edges', data: { id: 'trace_edge', source: 'state_0', target: 'state_1', label: 'trace' } },
+        ],
+      },
+    });
+  });
+
+  await expect(page.locator('[data-check-view-trace]')).toBeVisible();
+  await page.locator('[data-check-view-trace]').click();
+  const result = await page.evaluate(() => {
+    const sheet = window.ivyApp.sheets[window.ivyApp.activeSheetId];
+    return {
+      activeSheet: window.ivyApp.activeSheetId,
+      labels: sheet.argGraph.cy.nodes().map((n) => n.data('label')),
+      edgeLabels: sheet.argGraph.cy.edges().map((e) => e.data('label')),
+    };
+  });
+
+  expect(result.activeSheet).toBe('sheet-2');
+  expect(result.labels).toEqual(['0', '1']);
+  expect(result.edgeLabels).toEqual(['trace']);
+});
+
+test('Show Reachable opens a reachable-state ARG sheet', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.ivyApp.api.executeAction = async (action, args) => {
+      window._showReachableCall = { action, args };
+      return {
+        status: 'ok',
+        sheet_id: 'sheet-2',
+        arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+          ],
+        },
+      };
+    };
+  });
+
+  await page.locator('#btn-show-reachable').click();
+  const result = await page.evaluate(() => {
+    const sheet = window.ivyApp.sheets[window.ivyApp.activeSheetId];
+    return {
+      call: window._showReachableCall,
+      activeSheet: window.ivyApp.activeSheetId,
+      labels: sheet.argGraph.cy.nodes().map((n) => n.data('label')),
+      status: document.getElementById('statusbar').textContent,
+    };
+  });
+
+  expect(result.call).toEqual({ action: 'show_reachable', args: {} });
+  expect(result.activeSheet).toBe('sheet-2');
+  expect(result.labels).toEqual(['0']);
+  expect(result.status).toContain('Reachable states opened');
+});
+
 test('Cytoscape is loaded', async ({ page }) => {
   await openIvy(page);
 

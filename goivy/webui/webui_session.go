@@ -6,6 +6,7 @@ import (
 	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -37,16 +38,24 @@ type Session struct {
 	CompiledSig     *goivy.Sig           // populated by full compiler pipeline
 	AG              *goivy.AnalysisGraph // persistent analysis graph for interactive verification
 	AGUI            *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
+	CTIUI           *CTIAnalysisGraphUI  // CTI/invariant workflow UI
+	SheetUIs        map[string]*AnalysisGraphUI
+	sheetCounter    int
+	ReachableUI     *AnalysisGraphUI
 }
+
+const rootSheetID = "sheet-1"
 
 // NewSession creates a new verification session with the given id.
 func NewSession(cfg *goivy.Config, id string) *Session {
 	return &Session{
-		Cfg:        cfg,
-		ID:         id,
-		Events:     make(chan Event, 64),
-		Graph:      NewWebUIAnalysisGraphState(),
-		SimpleSess: NewConceptSession(),
+		Cfg:          cfg,
+		ID:           id,
+		Events:       make(chan Event, 64),
+		Graph:        NewWebUIAnalysisGraphState(),
+		SimpleSess:   NewConceptSession(),
+		SheetUIs:     make(map[string]*AnalysisGraphUI),
+		sheetCounter: 1,
 	}
 }
 
@@ -218,6 +227,20 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.AGUI.AG = s.AG
 	s.AGUI.Mod = s.CompiledModule
 	s.AGUI.SyncCallback = func() { s.syncARGToGraph() }
+	s.SheetUIs = map[string]*AnalysisGraphUI{rootSheetID: s.AGUI}
+	s.sheetCounter = 1
+
+	s.CTIUI = NewCTIAnalysisGraphUI(s.CompiledModule)
+	s.CTIUI.AnalysisGraphUI.AG = goivy.NewAnalysisGraph(s.CompiledModule)
+	s.CTIUI.AnalysisGraphUI.Mod = s.CompiledModule
+	s.CTIUI.AnalysisGraphUI.SyncCallback = func() {
+		if s.CTIUI != nil && s.CTIUI.AnalysisGraphUI != nil {
+			s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(s.CTIUI.AnalysisGraphUI.AG)
+		}
+	}
+	s.CTIUI.AnalysisGraphUI.AG.AddInitialState(nil, nil)
+	s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(s.CTIUI.AnalysisGraphUI.AG)
+	s.CTIUI.StartCTI(ctiClausesFromModule(s.CompiledModule))
 
 	// Python's ivy_new() creates an empty ARG — initial state is added
 	// lazily by each operation that needs it (e.g., runUPDR, RunCheck).
@@ -242,6 +265,79 @@ func (s *Session) syncARGToGraph() {
 	s.Graph = ArtToGraphState(s.AG)
 }
 
+func (s *Session) ensureRootAnalysisUIRegisteredLocked() {
+	if s.SheetUIs == nil {
+		s.SheetUIs = make(map[string]*AnalysisGraphUI)
+	}
+	if s.sheetCounter < 1 {
+		s.sheetCounter = 1
+	}
+	if s.AGUI != nil {
+		s.SheetUIs[rootSheetID] = s.AGUI
+	}
+}
+
+func (s *Session) analysisUIForSheetLocked(sheetID string) *AnalysisGraphUI {
+	if sheetID == "" {
+		sheetID = rootSheetID
+	}
+	s.ensureRootAnalysisUIRegisteredLocked()
+	if ui := s.SheetUIs[sheetID]; ui != nil {
+		return ui
+	}
+	if sheetID == rootSheetID {
+		return s.AGUI
+	}
+	return nil
+}
+
+func (s *Session) requireAnalysisUIForSheetLocked(sheetID string) (*AnalysisGraphUI, string, error) {
+	if sheetID == "" {
+		sheetID = rootSheetID
+	}
+	ui := s.analysisUIForSheetLocked(sheetID)
+	if ui == nil {
+		return nil, sheetID, fmt.Errorf("analysis sheet %q is not initialized", sheetID)
+	}
+	return ui, sheetID, nil
+}
+
+func (s *Session) nextAnalysisSheetIDLocked() string {
+	s.ensureRootAnalysisUIRegisteredLocked()
+	s.sheetCounter++
+	return fmt.Sprintf("sheet-%d", s.sheetCounter)
+}
+
+func (s *Session) registerAnalysisSheetLocked(ui *AnalysisGraphUI) string {
+	sheetID := s.nextAnalysisSheetIDLocked()
+	s.SheetUIs[sheetID] = ui
+	return sheetID
+}
+
+func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *AnalysisGraphUI {
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = s.CompiledModule
+	if ui.Mod == nil {
+		ui.Mod = s.CompiledModule
+	}
+	ui.G = ArtToGraphState(ag)
+	ui.SyncCallback = func() {
+		ui.G = ArtToGraphState(ui.AG)
+	}
+	return ui
+}
+
+func actionStringArg(args map[string]interface{}, key string) string {
+	if args == nil {
+		return ""
+	}
+	if v, ok := args[key].(string); ok {
+		return v
+	}
+	return ""
+}
+
 func parseARGStateNodeID(nodeID string) (int, bool, error) {
 	if nodeID == "" {
 		return 0, false, nil
@@ -260,7 +356,7 @@ func parseARGStateNodeID(nodeID string) (int, bool, error) {
 	return idx, true, nil
 }
 
-func (s *Session) selectConceptARGNode(nodeID string) (selectedNode, stateLabel string, err error) {
+func (s *Session) selectConceptARGNode(sheetID, nodeID string) (selectedNode, stateLabel string, err error) {
 	idx, ok, err := parseARGStateNodeID(nodeID)
 	if err != nil || !ok {
 		return "", "", err
@@ -268,18 +364,19 @@ func (s *Session) selectConceptARGNode(nodeID string) (selectedNode, stateLabel 
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.AGUI == nil {
-		return "", "", fmt.Errorf("analysis graph UI is not initialized")
+	ui, _, err := s.requireAnalysisUIForSheetLocked(sheetID)
+	if err != nil {
+		return "", "", err
 	}
-	state, err := s.AGUI.stateByID(idx)
+	state, err := ui.stateByID(idx)
 	if err != nil {
 		return "", "", err
 	}
 
-	if s.AGUI.CurrentConceptGraph == nil ||
-		s.AGUI.CurrentConceptGraph.G() == nil ||
-		s.AGUI.CurrentConceptGraph.G().ParentState != state {
-		s.AGUI.ViewState(idx, "", false)
+	if ui.CurrentConceptGraph == nil ||
+		ui.CurrentConceptGraph.G() == nil ||
+		ui.CurrentConceptGraph.G().ParentState != state {
+		ui.ViewState(idx, "", false)
 	}
 	if s.ConceptSess != nil {
 		if state.Clauses != nil {
@@ -292,26 +389,35 @@ func (s *Session) selectConceptARGNode(nodeID string) (selectedNode, stateLabel 
 		s.ConceptSess.Recompute(nil)
 		s.syncAbstractValue()
 	}
-	return fmt.Sprintf("state_%d", idx), s.AGUI.StateLabel(idx), nil
+	return fmt.Sprintf("state_%d", idx), ui.StateLabel(idx), nil
 }
 
 func (s *Session) ensureConceptGraphWidgetLocked() *GraphWidget {
-	if s.AGUI == nil {
+	return s.ensureConceptGraphWidgetForSheetLocked(rootSheetID)
+}
+
+func (s *Session) ensureConceptGraphWidgetForSheetLocked(sheetID string) *GraphWidget {
+	ui := s.analysisUIForSheetLocked(sheetID)
+	if ui == nil {
 		return nil
 	}
-	if s.AGUI.CurrentConceptGraph != nil {
-		return s.AGUI.CurrentConceptGraph
+	if ui.CurrentConceptGraph != nil {
+		return ui.CurrentConceptGraph
 	}
-	sorts := s.AGUI.conceptSortNames()
+	sorts := ui.conceptSortNames()
 	gs := StandardGraph(sorts, nil)
 	w := NewGraphWidget(gs)
-	w.Parent = s.AGUI
-	s.AGUI.CurrentConceptGraph = w
+	w.Parent = ui
+	ui.CurrentConceptGraph = w
 	return w
 }
 
 func (s *Session) ensureConceptChecksLocked() *DisplayCheckboxes {
-	w := s.ensureConceptGraphWidgetLocked()
+	return s.ensureConceptChecksForSheetLocked(rootSheetID)
+}
+
+func (s *Session) ensureConceptChecksForSheetLocked(sheetID string) *DisplayCheckboxes {
+	w := s.ensureConceptGraphWidgetForSheetLocked(sheetID)
 	if w == nil || w.G() == nil {
 		return NewDisplayCheckboxes()
 	}
@@ -327,6 +433,168 @@ func (s *Session) ensureConceptChecksLocked() *DisplayCheckboxes {
 	}
 	s.toggles = checks.Snapshot()
 	return checks
+}
+
+func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
+	if w == nil || w.G() == nil {
+		return map[string]interface{}{
+			"elements": []WebUICyElement{},
+			"facts":    []FactSelection{},
+			"toggles":  NewDisplayCheckboxes().Snapshot(),
+		}
+	}
+	cy := RenderConceptGraph(w.G().ConceptSess, w.G().Checks)
+	if cy.Elements == nil {
+		cy.Elements = []WebUICyElement{}
+	}
+	return map[string]interface{}{
+		"elements": cy.Elements,
+		"facts":    w.ConstraintFacts(),
+		"toggles":  w.G().Checks.Snapshot(),
+	}
+}
+
+func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, error) {
+	if w != nil {
+		exprs := w.GetActiveFactExprs()
+		if len(exprs) == 1 {
+			return goivy.FormulaToClauses(exprs[0], nil), nil
+		}
+		if len(exprs) > 1 {
+			and, err := goivy.NewAnd(exprs...)
+			if err != nil {
+				return nil, err
+			}
+			return goivy.FormulaToClauses(and, nil), nil
+		}
+		if g := w.G(); g != nil && strings.TrimSpace(g.State) != "" {
+			fmla, err := goivy.ToFormula(g.State)
+			if err == nil {
+				if expr, ok := fmla.(goivy.Expr); ok {
+					return goivy.FormulaToClauses(expr, nil), nil
+				}
+			}
+		}
+	}
+	if parentState != nil && parentState.Clauses != nil {
+		return parentState.Clauses, nil
+	}
+	return goivy.TrueClauses(nil), nil
+}
+
+func ctiClausesFromModule(mod *goivy.Module) []*goivy.Clauses {
+	if mod == nil {
+		return nil
+	}
+	conjs := make([]*goivy.Clauses, 0, len(mod.LabeledConjs))
+	for _, lc := range mod.LabeledConjs {
+		if lc == nil || lc.Formula == nil {
+			continue
+		}
+		if expr, ok := lc.Formula.(goivy.Expr); ok {
+			conjs = append(conjs, goivy.FormulaToClauses(expr, nil))
+		}
+	}
+	return conjs
+}
+
+func relationNamesUsedByClauses(mod *goivy.Module, clauses *goivy.Clauses) []string {
+	if mod == nil || mod.Sig == nil || clauses == nil {
+		return nil
+	}
+	used := map[string]bool{}
+	if syms := goivy.UsedSymbolsAST(clauses.ToFormula()); syms != nil {
+		for _, sym := range syms.All() {
+			if c, ok := sym.(*goivy.Const); ok {
+				used[c.Name] = true
+			}
+		}
+	}
+	var rels []string
+	for symName, entry := range mod.Sig.Symbols.All() {
+		if !used[symName] || entry == nil || entry.Sort == nil {
+			continue
+		}
+		if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok && goivy.SortEqual(fs.Range(), goivy.Boolean) {
+			rels = append(rels, symName)
+		}
+	}
+	sort.Strings(rels)
+	return rels
+}
+
+func graphWidgetDOT(w *GraphWidget) string {
+	var elements []WebUICyElement
+	if w != nil && w.G() != nil {
+		cy := RenderConceptGraph(w.G().ConceptSess, w.G().Checks)
+		if cy != nil {
+			elements = cy.Elements
+		}
+	}
+	var nodes []string
+	var edges []string
+	for _, ele := range elements {
+		switch ele.Group {
+		case "nodes":
+			id := dotDataString(ele.Data, "id")
+			if id == "" {
+				id = dotDataString(ele.Data, "obj")
+			}
+			if id == "" {
+				continue
+			}
+			label := dotDataString(ele.Data, "label")
+			if label == "" {
+				label = id
+			}
+			nodes = append(nodes, fmt.Sprintf("  %q [label=%q];", dotEscape(id), dotEscape(label)))
+		case "edges":
+			src := dotDataString(ele.Data, "source")
+			tgt := dotDataString(ele.Data, "target")
+			if src == "" || tgt == "" {
+				continue
+			}
+			label := dotDataString(ele.Data, "label")
+			if label == "" {
+				label = dotDataString(ele.Data, "obj")
+			}
+			if label == "" {
+				edges = append(edges, fmt.Sprintf("  %q -> %q;", dotEscape(src), dotEscape(tgt)))
+			} else {
+				edges = append(edges, fmt.Sprintf("  %q -> %q [label=%q];", dotEscape(src), dotEscape(tgt), dotEscape(label)))
+			}
+		}
+	}
+	sort.Strings(nodes)
+	sort.Strings(edges)
+	var sb strings.Builder
+	sb.WriteString("digraph concept_graph {\n")
+	for _, line := range nodes {
+		sb.WriteString(line)
+		sb.WriteByte('\n')
+	}
+	for _, line := range edges {
+		sb.WriteString(line)
+		sb.WriteByte('\n')
+	}
+	sb.WriteString("}\n")
+	return sb.String()
+}
+
+func dotDataString(data map[string]interface{}, key string) string {
+	if data == nil {
+		return ""
+	}
+	if v, ok := data[key]; ok && v != nil {
+		return fmt.Sprint(v)
+	}
+	return ""
+}
+
+func dotEscape(s string) string {
+	s = strings.ReplaceAll(s, "\\", "\\\\")
+	s = strings.ReplaceAll(s, "\n", "\\n")
+	return s
 }
 
 // syncProofStack converts the live proof.ProofGoalStack (s.ProofMgr)
@@ -425,9 +693,23 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			s.syncAbstractValue()
 		}
 	case "gather":
-		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil {
-			s.AGUI.CurrentConceptGraph.Gather()
-			result["facts"] = s.AGUI.CurrentConceptGraph.GetActiveFacts()
+		sheetID := actionStringArg(args, "sheet_id")
+		if sheetID != "" {
+			w := s.ensureConceptGraphWidgetForSheetLocked(sheetID)
+			if w == nil {
+				err = fmt.Errorf("gather: no concept graph for sheet %q", sheetID)
+				break
+			}
+			facts := w.Gather()
+			active := w.GetActiveFacts()
+			if len(active) > 0 {
+				facts = active
+			}
+			result["facts"] = facts
+			result["concept"] = conceptGraphActionPayload(w)
+			if w.G() != nil {
+				s.toggles = w.G().Checks.Snapshot()
+			}
 		} else if s.ConceptSess != nil {
 			facts := s.ConceptSess.GetFacts(nil)
 			s.ConceptSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
@@ -462,8 +744,14 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 		result["facts"] = w.GetActiveFacts()
 	case "backtrack":
-		if s.ConceptSess != nil {
-			err = s.ConceptSess.Undo() // backtrack = undo all to checkpoint
+		w := s.ensureConceptGraphWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
+		if w != nil {
+			w.Backtrack()
+			if w.G() != nil {
+				s.toggles = w.G().Checks.Snapshot()
+			}
+		} else if s.ConceptSess != nil {
+			err = s.ConceptSess.Undo()
 		}
 	case "conjecture":
 		// Generate a conjecture from the gathered facts
@@ -476,10 +764,41 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			}
 		}
 	case "remember":
-		// Store current concept graph for later recall
-		if s.ConceptSess != nil && s.ConceptSess.AnalysisSession != nil {
-			s.ConceptSess.SaveDomain("remembered")
+		name := actionStringArg(args, "name")
+		if name == "" {
+			err = fmt.Errorf("remember: missing name")
+			break
 		}
+		ui, _, uiErr := s.requireAnalysisUIForSheetLocked(actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		w := ui.CurrentConceptGraph
+		if w == nil {
+			w = s.ensureConceptGraphWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
+		}
+		if w == nil || w.G() == nil {
+			err = fmt.Errorf("remember: no concept graph")
+			break
+		}
+		ui.RememberGraph(name, w.G().Copy())
+		result["remembered"] = name
+		result["remembered_graphs"] = ui.RememberedGraphNames()
+	case "show_reachable", "show_reachable_states":
+		if s.CompiledModule == nil {
+			err = fmt.Errorf("show_reachable: no compiled module")
+			break
+		}
+		if s.ReachableUI == nil {
+			ag := goivy.NewAnalysisGraph(s.CompiledModule)
+			ag.AddInitialState(nil, nil)
+			s.ReachableUI = s.newAnalysisGraphUIForGraphLocked(ag)
+		}
+		sheetID := s.registerAnalysisSheetLocked(s.ReachableUI)
+		cy := RenderAnalysisUIARG(s.ReachableUI)
+		result["sheet_id"] = sheetID
+		result["arg"] = map[string]interface{}{"elements": cy.Elements}
 
 	// --- Verification operations (check/art packages) ---
 	case "pdr_step":
@@ -511,6 +830,20 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		s.emit(Event{Type: "pdr_complete", Data: map[string]string{"message": msg}})
 
 	case "concrete":
+		if sheetID := actionStringArg(args, "sheet_id"); sheetID != "" {
+			w := s.ensureConceptGraphWidgetForSheetLocked(sheetID)
+			if w == nil {
+				err = fmt.Errorf("concrete: no concept graph for sheet %q", sheetID)
+				break
+			}
+			w.MakeConcrete()
+			result["state"] = w.G().State
+			result["concept"] = conceptGraphActionPayload(w)
+			if w.G() != nil {
+				s.toggles = w.G().Checks.Snapshot()
+			}
+			break
+		}
 		// Compute concrete model via Z3.
 		// Matches Python ivy_solver.py get_model_clauses().
 		if s.CompiledModule == nil || s.AG == nil {
@@ -591,6 +924,64 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		s.emit(Event{Type: "reverse_result", Data: map[string]string{"pre_state": preStr}})
 
 	case "path_reach", "reach":
+		if sheetID := actionStringArg(args, "sheet_id"); sheetID != "" {
+			ui, _, uiErr := s.requireAnalysisUIForSheetLocked(sheetID)
+			if uiErr != nil {
+				err = uiErr
+				break
+			}
+			w := ui.CurrentConceptGraph
+			if w == nil {
+				err = fmt.Errorf("%s: no concept graph for sheet %q", actionName, sheetID)
+				break
+			}
+			parentState, _ := w.G().ParentState.(*goivy.State)
+			if parentState == nil {
+				err = fmt.Errorf("%s: current concept graph has no parent ARG state", actionName)
+				break
+			}
+			goalClauses, goalErr := conceptGraphGoalClauses(w, parentState)
+			if goalErr != nil {
+				err = fmt.Errorf("%s: %w", actionName, goalErr)
+				break
+			}
+			if actionName == "path_reach" {
+				var boundPtr *int
+				if bound, ok := actionIntArg(args, "bound"); ok {
+					boundPtr = &bound
+				}
+				if ui.AG == nil {
+					err = fmt.Errorf("path_reach: no analysis graph")
+					break
+				}
+				resultAG := ui.AG.BMC(parentState, goalClauses.ToFormula(), nil, boundPtr)
+				if resultAG == nil {
+					result["reachable"] = false
+					result["message"] = "The condition is unreachable along the given path"
+					break
+				}
+				subUI := s.newAnalysisGraphUIForGraphLocked(resultAG)
+				subSheetID := s.registerAnalysisSheetLocked(subUI)
+				result["reachable"] = true
+				result["sheet_id"] = subSheetID
+				result["arg"] = map[string]interface{}{"elements": RenderAnalysisUIARG(subUI).Elements}
+				break
+			}
+
+			reached := goivy.ReachState(goivy.ArtToInterpState(parentState), goalClauses)
+			if reached == nil {
+				result["reachable"] = false
+				result["message"] = `Cannot reach this state in one step from any known reachable state. Try "reverse".`
+				break
+			}
+			artReached := goivy.InterpToArtState(reached)
+			parentState.Unders = append(parentState.Unders, artReached)
+			result["reachable"] = true
+			if artReached.Clauses != nil {
+				result["reached_state"] = goivy.PrettyFmla(artReached.Clauses.ToFormula())
+			}
+			break
+		}
 		// Reachability: forward image from predecessor, SAT check, extract model.
 		// Matches Python ivy_interp.py reach_state().
 		if s.CompiledModule == nil || s.AG == nil {
@@ -702,8 +1093,18 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		result["content"] = sb.String()
 		s.emit(Event{Type: "export", Data: map[string]string{"content": sb.String()}})
 	case "export":
-		// Export current conjecture
-		if s.ConceptSess != nil {
+		if sheetID := actionStringArg(args, "sheet_id"); sheetID != "" {
+			w := s.ensureConceptGraphWidgetForSheetLocked(sheetID)
+			if w == nil {
+				err = fmt.Errorf("export: no concept graph for sheet %q", sheetID)
+				break
+			}
+			content := graphWidgetDOT(w)
+			result["content"] = content
+			result["filename"] = "concept_graph.dot"
+			result["mime_type"] = "text/vnd.graphviz"
+			s.emit(Event{Type: "export", Data: map[string]interface{}{"filename": "concept_graph.dot", "bytes": len(content)}})
+		} else if s.ConceptSess != nil {
 			facts := s.ConceptSess.GetFacts(nil)
 			s.emit(Event{Type: "export", Data: map[string]interface{}{"facts": len(facts)}})
 		}
@@ -738,14 +1139,22 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				err = fmt.Errorf("add_relation: parse error: %w", parseErr)
 				break
 			}
-			c := &Concept{
-				Name:    formula,
-				Formula: formula,
-			}
+			c := s.conceptFromFormulaString(formula)
 			if s.SimpleSess != nil {
 				s.SimpleSess.Domain.Concepts[formula] = c
+				if c.Arity == 1 && !stringSliceContains(s.SimpleSess.Domain.NodeLabels, formula) {
+					s.SimpleSess.Domain.NodeLabels = append(s.SimpleSess.Domain.NodeLabels, formula)
+				}
+				if c.Arity == 2 && !stringSliceContains(s.SimpleSess.Domain.Edges, formula) {
+					s.SimpleSess.Domain.Edges = append(s.SimpleSess.Domain.Edges, formula)
+				}
+			}
+			if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil {
+				s.AGUI.CurrentConceptGraph.AddConcept(c)
 			}
 			result["concept_name"] = formula
+			result["arity"] = c.Arity
+			result["sorts"] = c.Sorts
 			s.emit(Event{Type: "concept_updated", Data: map[string]interface{}{
 				"name": formula, "formula": formula,
 			}})
@@ -861,6 +1270,41 @@ func actionBoolArg(args map[string]interface{}, key string) (bool, bool) {
 	return v, ok
 }
 
+func (s *Session) conceptFromFormulaString(formula string) *Concept {
+	c := &Concept{Name: formula, Formula: formula}
+	open := strings.Index(formula, "(")
+	close := strings.LastIndex(formula, ")")
+	if open <= 0 || close <= open {
+		return c
+	}
+	baseName := strings.TrimSpace(formula[:open])
+	rawArgs := strings.Split(formula[open+1:close], ",")
+	var vars []string
+	for _, raw := range rawArgs {
+		arg := strings.TrimSpace(raw)
+		if arg != "" {
+			vars = append(vars, arg)
+		}
+	}
+	c.Variables = vars
+	c.Arity = len(vars)
+	if s.SimpleSess != nil && s.SimpleSess.Domain != nil {
+		if base := s.SimpleSess.Domain.Concepts[baseName]; base != nil && len(base.Sorts) >= c.Arity {
+			c.Sorts = append([]string{}, base.Sorts[:c.Arity]...)
+		}
+	}
+	return c
+}
+
+func stringSliceContains(xs []string, want string) bool {
+	for _, x := range xs {
+		if x == want {
+			return true
+		}
+	}
+	return false
+}
+
 // WebUIProofStack holds proof goal state for rendering.
 // Stub: will be wired to the proof/ package.
 func (s *Session) ProofStackData() *WebUIProofStack {
@@ -894,10 +1338,23 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	}
 
 	var err error
+	sheetID := actionStringArg(args, "sheet_id")
+	ui, resolvedSheetID, uiErr := s.requireAnalysisUIForSheetLocked(sheetID)
+	if uiErr == nil {
+		result["sheet_id"] = resolvedSheetID
+	}
 
 	switch action {
 	case "view_state":
-		// View state triggers concept graph update
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if stateIdx >= 0 {
+			ui.ViewState(stateIdx, "", false)
+		}
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
@@ -905,8 +1362,8 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	case "check_safety":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			safe, msg := s.AGUI.CheckSafetyNode(stateIdx)
+		if uiErr == nil && stateIdx >= 0 {
+			safe, msg := ui.CheckSafetyNode(stateIdx)
 			result["safe"] = safe
 			result["message"] = msg
 		}
@@ -914,29 +1371,53 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	case "extend", "find_extension":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			label, extErr := s.AGUI.FindExtension(stateIdx)
+		if uiErr == nil && stateIdx >= 0 {
+			label, extErr := ui.FindExtension(stateIdx)
 			if extErr != nil {
 				err = extErr
 			} else {
 				result["extension"] = label
-				cy := RenderWebUIARG(s.Graph)
+				cy := RenderAnalysisUIARG(ui)
 				result["arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extended from node " + nodeID}})
+	case "execute_action":
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		actionName := actionStringArg(args, "action_name")
+		if stateIdx < 0 {
+			err = fmt.Errorf("execute_action: invalid ARG node %q", nodeID)
+			break
+		}
+		if actionName == "" {
+			err = fmt.Errorf("execute_action: missing action_name")
+			break
+		}
+		if execErr := ui.ExecuteAction(stateIdx, actionName); execErr != nil {
+			err = execErr
+			break
+		}
+		cy := RenderAnalysisUIARG(ui)
+		result["executed_action"] = actionName
+		result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Executed " + actionName + " at node " + nodeID}})
 	case "mark", "mark_node":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			s.AGUI.MarkNode(&ARGStateRef{ID: stateIdx})
+		if uiErr == nil && stateIdx >= 0 {
+			ui.MarkNode(&ARGStateRef{ID: stateIdx})
 		}
 		result["marked"] = true
 	case "cover", "cover_node":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			ok, coverErr := s.AGUI.CoverNode(stateIdx)
+		if uiErr == nil && stateIdx >= 0 {
+			ok, coverErr := ui.CoverNode(stateIdx)
 			result["covered"] = ok
 			if coverErr != nil {
 				err = coverErr
@@ -946,31 +1427,64 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	case "join", "join_node":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			err = s.AGUI.JoinNode(stateIdx)
+		if uiErr == nil && stateIdx >= 0 {
+			err = ui.JoinNode(stateIdx)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Join at node " + nodeID}})
 	case "try_conjecture":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		conjStr, _ := args["conjecture"].(string)
-		if s.AGUI != nil && stateIdx >= 0 {
-			err = s.AGUI.TryConjecture(stateIdx, conjStr)
+		if uiErr == nil && stateIdx >= 0 {
+			err = ui.TryConjecture(stateIdx, conjStr)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try conjecture at node " + nodeID}})
+	case "try_conjecture_choices":
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if stateIdx < 0 {
+			err = fmt.Errorf("try_conjecture_choices: invalid ARG node %q", nodeID)
+			break
+		}
+		choices, choiceErr := ui.TryConjectureChoices(stateIdx)
+		if choiceErr != nil {
+			err = choiceErr
+			break
+		}
+		result["choices"] = choices
 	case "try_remembered":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		goalName, _ := args["goal"].(string)
-		if s.AGUI != nil && stateIdx >= 0 {
-			err = s.AGUI.TryRememberedGraph(stateIdx, goalName)
+		if uiErr == nil && stateIdx >= 0 {
+			err = ui.TryRememberedGraph(stateIdx, goalName)
+			if err == nil && ui.CurrentConceptGraph != nil {
+				result["concept"] = map[string]interface{}{
+					"elements": RenderConceptGraph(s.SimpleSess, ui.CurrentConceptGraph.G().Checks).Elements,
+				}
+			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try remembered at node " + nodeID}})
+	case "try_remembered_choices":
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		names := ui.RememberedGraphNames()
+		choices := make([]ChoiceItem, 0, len(names))
+		for _, name := range names {
+			choices = append(choices, ChoiceItem{Label: name, Value: name})
+		}
+		result["choices"] = choices
 	case "delete", "delete_node":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
-		if s.AGUI != nil && stateIdx >= 0 {
-			s.AGUI.DeleteNode(stateIdx)
+		if uiErr == nil && stateIdx >= 0 {
+			ui.DeleteNode(stateIdx)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Delete node " + nodeID}})
 	case "recalculate", "recalculate_edge":
@@ -982,13 +1496,17 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				fmt.Sscanf(t, "state_%d", &tgtIdx)
 			}
 		}
-		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
-			s.AGUI.RecalculateEdge(srcIdx, tgtIdx)
-		} else if s.AGUI != nil {
-			s.AGUI.RecalculateAll()
+		if uiErr == nil && srcIdx >= 0 && tgtIdx >= 0 {
+			ui.RecalculateEdge(srcIdx, tgtIdx)
+		} else if uiErr == nil {
+			ui.RecalculateAll()
 		}
-		cy := RenderWebUIARG(s.Graph)
-		result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		if uiErr != nil {
+			err = uiErr
+		} else {
+			cy := RenderAnalysisUIARG(ui)
+			result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculated at " + nodeID}})
 	case "decompose", "decompose_edge":
 		srcIdx := -1
@@ -999,13 +1517,18 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				fmt.Sscanf(t, "state_%d", &tgtIdx)
 			}
 		}
-		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
-			subGraph, decompErr := s.AGUI.DecomposeEdge(srcIdx, tgtIdx)
+		if uiErr != nil {
+			err = uiErr
+		} else if srcIdx >= 0 && tgtIdx >= 0 {
+			subArt, decompErr := ui.DecomposeEdgeGraph(srcIdx, tgtIdx)
 			if decompErr != nil {
 				err = decompErr
-			} else if subGraph != nil {
+			} else if subArt != nil {
+				subUI := s.newAnalysisGraphUIForGraphLocked(subArt)
+				subSheetID := s.registerAnalysisSheetLocked(subUI)
 				result["decomposed"] = true
-				cy := RenderWebUIARG(subGraph)
+				result["sheet_id"] = subSheetID
+				cy := RenderAnalysisUIARG(subUI)
 				result["sub_arg"] = map[string]interface{}{"elements": cy.Elements}
 			}
 		}
@@ -1019,8 +1542,8 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				fmt.Sscanf(t, "state_%d", &tgtIdx)
 			}
 		}
-		if s.AGUI != nil && srcIdx >= 0 && tgtIdx >= 0 {
-			filename, lineno, vsErr := s.AGUI.ViewSourceEdge(srcIdx, tgtIdx)
+		if uiErr == nil && srcIdx >= 0 && tgtIdx >= 0 {
+			filename, lineno, vsErr := ui.ViewSourceEdge(srcIdx, tgtIdx)
 			if vsErr == nil {
 				result["file"] = filename
 				result["lineno"] = lineno
@@ -1308,21 +1831,15 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 				s.AG = cexTrace.AnalysisGraph
 				s.AGUI.AG = cexTrace.AnalysisGraph
 				s.syncARGToGraph()
-
-				// Collect used relations matching Python show_used_relations:
-				// all relations from the signature that appear in the CTI.
-				var usedRels []string
-				if s.CompiledSig != nil {
-					for symName, entry := range s.CompiledSig.Symbols.All() {
-						if entry == nil || entry.Sort == nil {
-							continue
-						}
-						if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
-							if goivy.SortEqual(fs.Range(), goivy.Boolean) {
-								usedRels = append(usedRels, symName)
-							}
-						}
+				if s.CTIUI != nil {
+					s.CTIUI.AG = cexTrace.AnalysisGraph
+					s.CTIUI.AnalysisGraphUI.AG = cexTrace.AnalysisGraph
+					s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(cexTrace.AnalysisGraph)
+					s.CTIUI.HaveCTI = true
+					if i < len(conjClauses) {
+						s.CTIUI.CurrentConjecture = conjClauses[i]
 					}
+					s.CTIUI.ShowUsedRelations(finalCond, false)
 				}
 				return &WebUICheckResult{
 					Z3Contacted:      true,
@@ -1330,7 +1847,7 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 					Message:          "The following conjecture is not relatively inductive:",
 					FailedConjecture: formula,
 					FailedLabel:      label,
-					UsedRelations:    usedRels,
+					UsedRelations:    relationNamesUsedByClauses(s.CompiledModule, finalCond),
 				}
 			}
 		}

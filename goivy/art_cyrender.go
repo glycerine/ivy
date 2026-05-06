@@ -16,7 +16,8 @@ import (
 type NodeAction struct {
 	Label string `json:"label"`
 	// Action is the identifier sent back to the server when chosen.
-	Action string `json:"action"`
+	Action string                 `json:"action"`
+	Args   map[string]interface{} `json:"args,omitempty"`
 }
 
 // CyElements is a collection of Cytoscape.js graph elements (nodes + edges)

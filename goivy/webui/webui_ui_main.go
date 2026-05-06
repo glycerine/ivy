@@ -39,6 +39,11 @@ type RadioOption struct {
 	Value string `json:"value"`
 }
 
+type ChoiceItem struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
+
 // ARGStateRef is a lightweight reference to an ARG state node,
 // used to avoid pulling in the full art package.
 type ARGStateRef struct {
@@ -240,6 +245,16 @@ func defEquationLabel(eq *goivy.Definition) string {
 	return StateEquationLabel(actionName, transLabel)
 }
 
+func stateEquationActionName(eq *goivy.Definition) string {
+	if eq == nil || eq.Rhs == nil {
+		return ""
+	}
+	if atom, ok := eq.Rhs.(*goivy.Atom); ok {
+		return atom.Rep
+	}
+	return ""
+}
+
 // Start initializes the UI, creating an initial ARG node if needed
 // (Python: AnalysisGraphUI.start).
 func (ui *AnalysisGraphUI) Start() {
@@ -306,9 +321,14 @@ func (ui *AnalysisGraphUI) NodeExecuteCommands(nodeID int) []ActionEntry {
 	var entries []ActionEntry
 	for _, eq := range equations {
 		label := defEquationLabel(eq)
+		actionName := stateEquationActionName(eq)
 		entries = append(entries, ActionEntry{
 			Label:  label,
-			Action: fmt.Sprintf("execute_%d_%s", nodeID, label),
+			Action: "execute_action",
+			Args: map[string]interface{}{
+				"action_name":  actionName,
+				"action_label": label,
+			},
 		})
 	}
 	return entries
@@ -498,6 +518,14 @@ func (ui *AnalysisGraphUI) RecalculateEdge(srcID, tgtID int) {
 // DecomposeEdge decomposes a transition into sub-actions
 // (Python: AnalysisGraphUI.decompose_edge).
 func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*WebUIAnalysisGraphState, error) {
+	subArt, err := ui.DecomposeEdgeGraph(srcID, tgtID)
+	if err != nil {
+		return nil, err
+	}
+	return ArtToGraphState(subArt), nil
+}
+
+func (ui *AnalysisGraphUI) DecomposeEdgeGraph(srcID, tgtID int) (*goivy.AnalysisGraph, error) {
 	t, err := ui.transitionByEndpoints(srcID, tgtID)
 	if err != nil {
 		return nil, err
@@ -517,7 +545,7 @@ func (ui *AnalysisGraphUI) DecomposeEdge(srcID, tgtID int) (*WebUIAnalysisGraphS
 	if subArt == nil {
 		return nil, fmt.Errorf("cannot decompose action")
 	}
-	return ArtToGraphState(subArt), nil
+	return subArt, nil
 }
 
 func (ui *AnalysisGraphUI) fallbackStepInGraph(t *goivy.Transition) *goivy.AnalysisGraph {
@@ -643,6 +671,35 @@ func (ui *AnalysisGraphUI) TryConjecture(nodeID int, conjecture string) error {
 	return nil
 }
 
+func (ui *AnalysisGraphUI) TryConjectureChoices(nodeID int) ([]ChoiceItem, error) {
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return nil, err
+	}
+	interpState := goivy.ArtToInterpState(state)
+	conjs := goivy.UndecidedConjectures(interpState)
+	choices := make([]ChoiceItem, 0, len(conjs))
+	for _, conj := range conjs {
+		if conj == nil {
+			continue
+		}
+		text := goivy.PrettyFmla(conj.ToFormula())
+		choices = append(choices, ChoiceItem{Label: text, Value: text})
+	}
+	if len(choices) == 0 && ui.Mod != nil {
+		for _, lf := range ui.Mod.LabeledConjs {
+			if lf == nil || lf.Formula == nil {
+				continue
+			}
+			if expr, ok := lf.Formula.(goivy.Expr); ok {
+				text := goivy.PrettyFmla(expr)
+				choices = append(choices, ChoiceItem{Label: text, Value: text})
+			}
+		}
+	}
+	return choices, nil
+}
+
 // TryRememberedGraph loads a previously saved proof goal
 // (Python: AnalysisGraphUI.try_remembered_graph).
 func (ui *AnalysisGraphUI) TryRememberedGraph(nodeID int, goalName string) error {
@@ -661,6 +718,12 @@ func (ui *AnalysisGraphUI) TryRememberedGraph(nodeID int, goalName string) error
 	}
 	sgCopy := sg.Copy()
 	sgCopy.ParentState = state
+	if state.Clauses != nil {
+		sgCopy.SetState(state.Clauses.String(), true, false, true)
+	}
+	w := NewGraphWidget(NewGraphStack(sgCopy))
+	w.Parent = ui
+	ui.CurrentConceptGraph = w
 	return nil
 }
 

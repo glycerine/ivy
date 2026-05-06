@@ -269,8 +269,18 @@ func TestSolverAddRelation(t *testing.T) {
 	}
 	// Verify concept was added to domain.
 	if s.SimpleSess != nil {
-		if _, exists := s.SimpleSess.Domain.Concepts[name]; !exists {
+		concept, exists := s.SimpleSess.Domain.Concepts[name]
+		if !exists {
 			t.Error("concept should be in SimpleSess domain")
+		}
+		if concept.Arity != 2 {
+			t.Errorf("concept arity = %d, want 2", concept.Arity)
+		}
+		if len(concept.Sorts) != 2 || concept.Sorts[0] != "client" || concept.Sorts[1] != "server" {
+			t.Errorf("concept sorts = %#v, want [client server]", concept.Sorts)
+		}
+		if !stringSliceContains(s.SimpleSess.Domain.Edges, name) {
+			t.Errorf("binary added relation %q not registered as an edge", name)
 		}
 	}
 }

@@ -158,10 +158,10 @@ func (c *ConformBackend) GetARG(sessionID string) ([]byte, error) {
 	)
 }
 
-func (c *ConformBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
+func (c *ConformBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, error) {
 	return c.conform("GetConcept",
-		func() ([]byte, error) { return c.goBE.GetConcept(sessionID, nodeID) },
-		func() ([]byte, error) { return c.pyBE.GetConcept(c.pySessionID(sessionID), nodeID) },
+		func() ([]byte, error) { return c.goBE.GetConcept(sessionID, sheetID, nodeID) },
+		func() ([]byte, error) { return c.pyBE.GetConcept(c.pySessionID(sessionID), sheetID, nodeID) },
 	)
 }
 
@@ -193,10 +193,10 @@ func (c *ConformBackend) ConceptUndo(sessionID string) ([]byte, error) {
 	)
 }
 
-func (c *ConformBackend) ConceptMaterialize(sessionID, concept string) ([]byte, error) {
+func (c *ConformBackend) ConceptMaterialize(sessionID string, req ConceptMaterializeRequest) ([]byte, error) {
 	return c.conform("ConceptMaterialize",
-		func() ([]byte, error) { return c.goBE.ConceptMaterialize(sessionID, concept) },
-		func() ([]byte, error) { return c.pyBE.ConceptMaterialize(c.pySessionID(sessionID), concept) },
+		func() ([]byte, error) { return c.goBE.ConceptMaterialize(sessionID, req) },
+		func() ([]byte, error) { return c.pyBE.ConceptMaterialize(c.pySessionID(sessionID), req) },
 	)
 }
 

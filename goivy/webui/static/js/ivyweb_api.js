@@ -100,10 +100,17 @@ class IvyAPI {
      * @param {string} [nodeId] - Optional ARG node ID to view
      * @returns {Promise<object>} concept graph data (Cytoscape elements JSON)
      */
-    async getConceptGraph(nodeId) {
+    async getConceptGraph(nodeId, sheetId) {
         var path = '/api/session/' + this.sessionId + '/concept';
+        var params = [];
+        if (sheetId) {
+            params.push('sheet=' + encodeURIComponent(sheetId));
+        }
         if (nodeId) {
-            path += '?node=' + encodeURIComponent(nodeId);
+            params.push('node=' + encodeURIComponent(nodeId));
+        }
+        if (params.length > 0) {
+            path += '?' + params.join('&');
         }
         return this._request(path);
     }
@@ -199,11 +206,11 @@ class IvyAPI {
      * @param {boolean} positive - true for positive witness, false for negative
      * @returns {Promise<object>}
      */
-    async materializeEdge(concept, positive) {
+    async materializeEdge(relation, source, target, positive) {
         return this._request('/api/session/' + this.sessionId + '/concept/materialize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ concept: concept, type: 'edge', positive: positive }),
+            body: JSON.stringify({ relation: relation, source: source, target: target, type: 'edge', positive: positive }),
         });
     }
 

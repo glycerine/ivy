@@ -25,6 +25,37 @@ var NewWebUICyElements = goivy.NewCyElements
 var NewWebUIAnalysisGraphState = goivy.NewAnalysisGraphState
 var RenderWebUIARG = goivy.RenderARG
 
+func RenderAnalysisUIARG(ui *AnalysisGraphUI) *WebUICyElements {
+	if ui == nil || ui.AG == nil {
+		return RenderWebUIARG(nil)
+	}
+	cy := RenderWebUIARG(ArtToGraphState(ui.AG))
+	for i := range cy.Elements {
+		ele := &cy.Elements[i]
+		if ele.Group != "nodes" {
+			continue
+		}
+		obj, _ := ele.Data["obj"].(string)
+		var stateID int
+		if _, err := fmt.Sscanf(obj, "state_%d", &stateID); err != nil {
+			continue
+		}
+		entries := ui.GetNodeActions(stateID, "right")
+		actions := make([]goivy.NodeAction, 0, len(entries))
+		for _, entry := range entries {
+			actions = append(actions, goivy.NodeAction{
+				Label:  entry.Label,
+				Action: entry.Action,
+				Args:   entry.Args,
+			})
+		}
+		if len(actions) > 0 {
+			ele.Data["actions"] = actions
+		}
+	}
+	return cy
+}
+
 // -----------------------------------------------------------------------
 // Proof goal rendering — stays in webui (only used by webui).
 // -----------------------------------------------------------------------

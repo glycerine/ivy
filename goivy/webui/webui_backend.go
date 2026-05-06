@@ -23,12 +23,12 @@ type Backend interface {
 	LoadPath(sessionID, path string) ([]byte, error)
 	Action(sessionID, action string, args map[string]interface{}) ([]byte, error)
 	GetARG(sessionID string) ([]byte, error)
-	GetConcept(sessionID, nodeID string) ([]byte, error)
+	GetConcept(sessionID, sheetID, nodeID string) ([]byte, error)
 	ConceptSplit(sessionID, concept, splitBy string) ([]byte, error)
 	ConceptEmpty(sessionID, concept string) ([]byte, error)
 	ConceptRemove(sessionID, concept string) ([]byte, error)
 	ConceptUndo(sessionID string) ([]byte, error)
-	ConceptMaterialize(sessionID, concept string) ([]byte, error)
+	ConceptMaterialize(sessionID string, req ConceptMaterializeRequest) ([]byte, error)
 	ConceptReset(sessionID string) ([]byte, error)
 	ConceptDiagram(sessionID string) ([]byte, error)
 	ConceptProjection(sessionID, name, concept string) ([]byte, error)
@@ -41,6 +41,15 @@ type Backend interface {
 	Save(sessionID string) ([]byte, error)
 	Events(sessionID string) (<-chan Event, error)
 	Close() error
+}
+
+type ConceptMaterializeRequest struct {
+	Concept  string `json:"concept,omitempty"`
+	Type     string `json:"type,omitempty"`
+	Relation string `json:"relation,omitempty"`
+	Source   string `json:"source,omitempty"`
+	Target   string `json:"target,omitempty"`
+	Positive bool   `json:"positive,omitempty"`
 }
 
 // ErrSessionNotFound is returned when a session ID is not recognized.

@@ -151,7 +151,7 @@ func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
-		cy := RenderWebUIARG(sess.Graph)
+		cy := RenderAnalysisUIARG(sess.AGUI)
 		// Ensure empty elements is [] not null to match Python.
 		if cy.Elements == nil {
 			cy.Elements = []WebUICyElement{}
@@ -162,7 +162,7 @@ func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
 	return
 }
 
-func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error) {
+func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
@@ -172,7 +172,7 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 		var selectedNode string
 		var stateLabel string
 		if nodeID != "" {
-			selectedNode, stateLabel, err = sess.selectConceptARGNode(nodeID)
+			selectedNode, stateLabel, err = sess.selectConceptARGNode(sheetID, nodeID)
 			if err != nil {
 				return nil
 			}
@@ -182,8 +182,8 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 		var facts []FactSelection
 		var displayChecks *DisplayCheckboxes
 		sess.mu.Lock()
-		widget := sess.ensureConceptGraphWidgetLocked()
-		displayChecks = sess.ensureConceptChecksLocked()
+		widget := sess.ensureConceptGraphWidgetForSheetLocked(sheetID)
+		displayChecks = sess.ensureConceptChecksForSheetLocked(sheetID)
 		checks = displayChecks.Snapshot()
 		sess.toggles = checks
 		if widget != nil {
@@ -203,6 +203,7 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 		var nodeLabels []string
 		var relations []string
 		labelSorts := make(map[string]string)
+		edgeSorts := make(map[string][]string)
 
 		if sess.SimpleSess != nil && sess.SimpleSess.Domain != nil {
 			d := sess.SimpleSess.Domain
@@ -231,6 +232,12 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 				c := d.Concepts[lbl]
 				if c != nil && len(c.Sorts) > 0 {
 					labelSorts[lbl] = c.Sorts[0]
+				}
+			}
+			for _, edge := range d.Edges {
+				c := d.Concepts[edge]
+				if c != nil && len(c.Sorts) >= 2 {
+					edgeSorts[edge] = append([]string{}, c.Sorts...)
 				}
 			}
 		}
@@ -263,9 +270,10 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 			}
 		}
 
-		by, err = canonicalJSON(map[string]interface{}{
+		response := map[string]interface{}{
 			"abstract_value": abstractValue,
 			"edges":          edges,
+			"edge_sorts":     edgeSorts,
 			"elements":       cy.Elements,
 			"facts":          facts,
 			"label_sorts":    labelSorts,
@@ -275,7 +283,11 @@ func (gbe *GoBackend) GetConcept(sessionID, nodeID string) (by []byte, err error
 			"selected_node":  selectedNode,
 			"state_label":    stateLabel,
 			"toggles":        checks,
-		})
+		}
+		if sheetID != "" {
+			response["sheet_id"] = sheetID
+		}
+		by, err = canonicalJSON(response)
 		return nil
 	})
 	return
@@ -365,15 +377,45 @@ func (gbe *GoBackend) ConceptUndo(sessionID string) (by []byte, err error) {
 	return
 }
 
-func (gbe *GoBackend) ConceptMaterialize(sessionID, concept string) (by []byte, err error) {
+func (gbe *GoBackend) ConceptMaterialize(sessionID string, req ConceptMaterializeRequest) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
 			return nil
 		}
+		if req.Type == "edge" {
+			relation := req.Relation
+			if relation == "" {
+				relation = req.Concept
+			}
+			if relation == "" || req.Source == "" || req.Target == "" {
+				err = fmt.Errorf("materialize edge: relation, source, and target are required")
+				return nil
+			}
+			widget := sess.ensureConceptGraphWidgetLocked()
+			if widget == nil {
+				err = fmt.Errorf("materialize edge: no concept graph")
+				return nil
+			}
+			var witnesses []string
+			witnesses, err = widget.MaterializeEdge(relation, req.Source, req.Target, req.Positive)
+			if err != nil {
+				return nil
+			}
+			by, err = canonicalJSON(map[string]interface{}{"status": "ok", "witnesses": witnesses})
+			return nil
+		}
+		concept := req.Concept
+		if concept == "" {
+			err = fmt.Errorf("materialize node: concept is required")
+			return nil
+		}
 		if sess.ConceptSess != nil {
 			sess.ConceptSess.MaterializeNode(concept)
+		}
+		if sess.AGUI != nil && sess.AGUI.CurrentConceptGraph != nil {
+			_, _ = sess.AGUI.CurrentConceptGraph.MaterializeNode(concept)
 		}
 		err = sess.SimpleSess.Materialize(concept)
 		if err != nil {
@@ -506,6 +548,10 @@ func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
 			// and we are comparing byte-for-byte.
 			// TODO: better solution would be to add to python too.
 			m["z3_contacted"] = cr.Z3Contacted
+		}
+		if !gbe.cfg.WebUIConformCheck && cr.Result == "fail" && sess.AGUI != nil && sess.AGUI.AG != nil && len(sess.AGUI.AG.States) > 0 {
+			cy := RenderAnalysisUIARG(sess.AGUI)
+			m["trace_arg"] = map[string]interface{}{"elements": cy.Elements}
 		}
 		by, err = canonicalJSON(m)
 		return nil

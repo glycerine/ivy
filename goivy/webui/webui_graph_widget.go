@@ -30,8 +30,9 @@ type MenuItem struct {
 
 // ActionEntry describes a context-menu action (label + callback key).
 type ActionEntry struct {
-	Label  string `json:"label"`
-	Action string `json:"action"` // identifier sent to server
+	Label  string                 `json:"label"`
+	Action string                 `json:"action"` // identifier sent to server
+	Args   map[string]interface{} `json:"args,omitempty"`
 }
 
 // FactSelection is the browser-facing state for one constraint/fact line.
@@ -156,17 +157,25 @@ func (w *GraphWidget) Backtrack() {
 func (w *GraphWidget) MakeConcrete() {
 	w.Checkpoint(false)
 	g := w.G()
-	combined := g.State + " & " + g.Concrete
+	combined := g.State
+	if g.Concrete != "" {
+		if combined == "" {
+			combined = g.Concrete
+		} else {
+			combined = combined + " & " + g.Concrete
+		}
+	}
 	g.SetState(combined, true, false, false)
 	w.Update()
 }
 
 // Gather gathers definite facts from visible relations (Python: GraphWidget.gather).
-func (w *GraphWidget) Gather() {
+func (w *GraphWidget) Gather() []string {
 	w.Checkpoint(false)
 	g := w.G()
-	g.GetFacts(true)
+	facts := g.GetFacts(true)
 	w.Update()
+	return facts
 }
 
 // ClearElemSelection clears node and edge selections.
@@ -441,8 +450,33 @@ func (w *GraphWidget) GetNodeSplittingActions(nodeID string) []ActionEntry {
 
 // GetNodeProjectionActions returns projection actions for a node.
 func (w *GraphWidget) GetNodeProjectionActions(nodeID string) []ActionEntry {
-	// Stub: real implementation queries concept_session.get_projections.
-	return nil
+	g := w.G()
+	if g == nil || g.InteractiveSess == nil {
+		return nil
+	}
+	projs := g.InteractiveSess.GetProjections(nodeID)
+	if len(projs) == 0 {
+		return nil
+	}
+	result := []ActionEntry{
+		{Label: "Add projection...", Action: ""},
+		{Label: "---", Action: ""},
+	}
+	for _, proj := range projs {
+		if proj.Concept == nil {
+			continue
+		}
+		result = append(result, ActionEntry{
+			Label:  proj.Name,
+			Action: "add_projection",
+			Args: map[string]interface{}{
+				"name":    proj.Name,
+				"concept": proj.Concept.Formula.String(),
+			},
+		})
+	}
+	sort.Slice(result[2:], func(i, j int) bool { return result[i+2].Label < result[j+2].Label })
+	return result
 }
 
 // GetEdgeActions returns the context-menu actions for an edge.

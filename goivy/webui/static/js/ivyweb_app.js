@@ -460,8 +460,9 @@ class IvyApp {
         conceptGraph._ivyVisibilityHooked = true;
     }
 
-    attachGraphEventHandlers(argGraph, conceptGraph) {
+    attachGraphEventHandlers(argGraph, conceptGraph, sheetId) {
         var self = this;
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
         if (argGraph && argGraph.containerId) {
             var argEl = document.getElementById(argGraph.containerId);
             if (argEl && !argEl._ivyContextSuppressed) {
@@ -478,16 +479,16 @@ class IvyApp {
         }
 
         argGraph.onNodeClick(function (nodeData) {
-            self.onArgNodeClick(nodeData);
+            self.onArgNodeClick(nodeData, sheetId);
         });
         argGraph.onNodeRightClick(function (nodeData, pos) {
-            self.onArgNodeRightClick(nodeData, pos);
+            self.onArgNodeRightClick(nodeData, pos, sheetId);
         });
         argGraph.onEdgeClick(function (edgeData) {
             self.controls.showInfo(edgeData.short_info, edgeData.long_info);
         });
         argGraph.onEdgeRightClick(function (edgeData, pos) {
-            self.onArgEdgeRightClick(edgeData, pos);
+            self.onArgEdgeRightClick(edgeData, pos, sheetId);
         });
         argGraph.onBackgroundClick(function () {
             self.controls.clearInfo();
@@ -626,6 +627,11 @@ class IvyApp {
             self.runCheck();
         });
 
+        // --- Show reachable states ---
+        document.getElementById('btn-show-reachable').addEventListener('click', function () {
+            self.showReachableStates();
+        });
+
         // --- Undo ---
         document.getElementById('btn-undo').addEventListener('click', function () {
             self.doUndo();
@@ -693,7 +699,7 @@ class IvyApp {
             }
         });
 
-        this.attachGraphEventHandlers(this.argGraph, this.conceptGraph);
+        this.attachGraphEventHandlers(this.argGraph, this.conceptGraph, 'sheet-1');
     }
 
     /**
@@ -927,9 +933,13 @@ class IvyApp {
      * @param {string} [label] - Tab label (default: "Sheet N")
      * @returns {string} The new sheet ID
      */
-    addSheet(label) {
+    addSheet(label, preferredSheetId) {
         this._sheetCounter++;
-        var sheetId = 'sheet-' + this._sheetCounter;
+        var sheetId = preferredSheetId || ('sheet-' + this._sheetCounter);
+        var match = /^sheet-(\d+)$/.exec(sheetId);
+        if (match) {
+            this._sheetCounter = Math.max(this._sheetCounter, parseInt(match[1], 10));
+        }
         label = label || ('Sheet ' + this._sheetCounter);
 
         // Create tab button with close X (Sheet 1 never has X)
@@ -977,11 +987,20 @@ class IvyApp {
         argGraph.healthCheck();
         conceptGraph.healthCheck();
         this.registerSheet(sheetId, argGraph, conceptGraph);
-        this.attachGraphEventHandlers(argGraph, conceptGraph);
+        this.attachGraphEventHandlers(argGraph, conceptGraph, sheetId);
 
         // Switch to the new sheet
         this.switchSheet(sheetId);
         this.controls.setStatus('Opened: ' + label);
+        return sheetId;
+    }
+
+    openARGSheet(label, argData, preferredSheetId) {
+        var sheetId = this.addSheet(label, preferredSheetId);
+        var sheetState = this.sheets && this.sheets[sheetId];
+        if (sheetState && sheetState.argGraph && argData && argData.elements) {
+            sheetState.argGraph.update(argData.elements, argData.positions);
+        }
         return sheetId;
     }
 
@@ -1622,21 +1641,30 @@ class IvyApp {
     /**
      * Handle left-click on an ARG node: load its concept graph.
      */
-    async onArgNodeClick(nodeData) {
+    async onArgNodeClick(nodeData, sheetId) {
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
+        var sheet = this.sheets && this.sheets[sheetId];
+        var argGraph = (sheet && sheet.argGraph) || this.argGraph;
+        var conceptGraph = (sheet && sheet.conceptGraph) || this.conceptGraph;
+        if (sheetId !== this.activeSheetId && this.sheets && this.sheets[sheetId]) {
+            this.switchSheet(sheetId);
+            sheet = this.sheets[sheetId];
+            argGraph = sheet.argGraph;
+            conceptGraph = sheet.conceptGraph;
+        }
         this.selectedArgNode = nodeData.id;
-        var sheet = this.currentSheet();
         if (sheet) {
             sheet.selectedArgNode = nodeData.id;
         }
-        this.argGraph.highlightNode(nodeData.id);
+        argGraph.highlightNode(nodeData.id);
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
         this.updateStateLabel(nodeData.label || nodeData.id);
         this.controls.setStatus('Loading concept graph for state ' + (nodeData.label || nodeData.id) + '...');
 
         try {
-            var result = await this.api.getConceptGraph(nodeData.obj || nodeData.id);
+            var result = await this.api.getConceptGraph(nodeData.obj || nodeData.id, sheetId);
             if (result && result.elements) {
-                this.conceptGraph.update(result.elements, result.positions);
+                conceptGraph.update(result.elements, result.positions);
             }
             // Build toggles if toggle info is provided
             if (result && result.edge_names) {
@@ -1656,14 +1684,16 @@ class IvyApp {
      * Handle right-click on an ARG node: show context menu.
      * Actions: view state, execute action, mark, cover, safety check.
      */
-    onArgNodeRightClick(nodeData, pos) {
+    onArgNodeRightClick(nodeData, pos, sheetId) {
         var self = this;
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
+        var sheet = this.sheets && this.sheets[sheetId];
         var actions = [
             { header: 'State ' + (nodeData.label || nodeData.id) },
             {
                 name: 'View State',
                 id: 'view_state',
-                callback: function () { self.onArgNodeClick(nodeData); },
+                callback: function () { self.onArgNodeClick(nodeData, sheetId); },
             },
             { separator: true },
         ];
@@ -1672,12 +1702,22 @@ class IvyApp {
         if (nodeData.actions && Array.isArray(nodeData.actions)) {
             for (var i = 0; i < nodeData.actions.length; i++) {
                 var act = nodeData.actions[i];
+                var actionLabel = act.label || act[0] || act.name || '';
+                var actionID = act.action || act.id || act[0] || '';
+                if (actionLabel === '---') {
+                    actions.push({ separator: true });
+                    continue;
+                }
+                if (!actionID) {
+                    actions.push({ header: actionLabel });
+                    continue;
+                }
                 (function (action) {
                     actions.push({
-                        name: action[0] || action.name,
-                        id: action.id || action[0],
+                        name: action.label || action[0] || action.name,
+                        id: action.action || action.id || action[0],
                         callback: function () {
-                            self.executeArgNodeAction(nodeData, action);
+                            self.executeArgNodeAction(nodeData, action, sheetId);
                         },
                     });
                 })(act);
@@ -1700,7 +1740,7 @@ class IvyApp {
                         name: act.name,
                         id: act.id,
                         callback: function () {
-                            self.executeArgNodeAction(nodeData, act);
+                            self.executeArgNodeAction(nodeData, act, sheetId);
                         },
                     });
                 })(defaultActions[j]);
@@ -1708,7 +1748,7 @@ class IvyApp {
         }
 
         // Offset from the graph container position
-        var graphContainer = document.getElementById('arg-graph');
+        var graphContainer = document.getElementById((sheet && sheet.argGraph && sheet.argGraph.containerId) || 'arg-graph');
         var rect = graphContainer.getBoundingClientRect();
         this.controls.showContextMenu(rect.left + pos.x, rect.top + pos.y, actions);
     }
@@ -1716,16 +1756,27 @@ class IvyApp {
     /**
      * Execute an ARG node action via the API.
      */
-    async executeArgNodeAction(nodeData, action) {
-        var actionName = action.id || action[0] || action.name;
+    async executeArgNodeAction(nodeData, action, sheetId) {
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
+        var actionName = action.action || action.id || action[0] || action.name;
         this.controls.setStatus('Executing: ' + actionName + '...');
         try {
-            var result = await this.api.argNodeAction(nodeData.obj || nodeData.id, actionName);
+            var args = Object.assign({}, action.args || {});
+            args.sheet_id = sheetId;
+            args = await this.prepareArgNodeActionArgs(nodeData, actionName, args, sheetId);
+            if (args === null) {
+                this.controls.setStatus('Action cancelled: ' + actionName, 'warning');
+                return;
+            }
+            var result = await this.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args);
+            var sheet = this.sheets && this.sheets[sheetId];
+            var argGraph = (sheet && sheet.argGraph) || this.argGraph;
+            var conceptGraph = (sheet && sheet.conceptGraph) || this.conceptGraph;
             if (result && result.arg) {
-                this.argGraph.update(result.arg.elements, result.arg.positions);
+                argGraph.update(result.arg.elements, result.arg.positions);
             }
             if (result && result.concept) {
-                this.conceptGraph.update(result.concept.elements, result.concept.positions);
+                conceptGraph.update(result.concept.elements, result.concept.positions);
             }
             this.controls.setStatus('Action complete: ' + actionName, 'success');
         } catch (e) {
@@ -1734,12 +1785,39 @@ class IvyApp {
         }
     }
 
+    async prepareArgNodeActionArgs(nodeData, actionName, args, sheetId) {
+        if (actionName === 'try_conjecture' && !args.conjecture) {
+            var conjChoices = await this.api.argNodeAction(nodeData.obj || nodeData.id, 'try_conjecture_choices', { sheet_id: sheetId });
+            var selectedConj = await this.listboxDialog(
+                'Try conjecture',
+                'Choose a conjecture to prove:',
+                conjChoices.choices || [],
+                { cancel: true }
+            );
+            if (selectedConj == null) return null;
+            args.conjecture = selectedConj;
+        } else if (actionName === 'try_remembered' && !args.goal) {
+            var goalChoices = await this.api.argNodeAction(nodeData.obj || nodeData.id, 'try_remembered_choices', { sheet_id: sheetId });
+            var selectedGoal = await this.listboxDialog(
+                'Try remembered goal',
+                'Choose a remembered goal:',
+                goalChoices.choices || [],
+                { cancel: true }
+            );
+            if (selectedGoal == null) return null;
+            args.goal = selectedGoal;
+        }
+        return args;
+    }
+
     /**
      * Handle right-click on an ARG edge: show context menu.
      * Matches Python ivy_ui.py get_edge_actions: Dismiss, Recalculate, Step in, View Source.
      */
-    onArgEdgeRightClick(edgeData, pos) {
+    onArgEdgeRightClick(edgeData, pos, sheetId) {
         var self = this;
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
+        var sheet = this.sheets && this.sheets[sheetId];
         var label = edgeData.label || edgeData.obj || '';
         var actions = [
             { header: 'Transition: ' + label },
@@ -1751,20 +1829,20 @@ class IvyApp {
             {
                 name: 'Recalculate',
                 id: 'recalculate_edge',
-                callback: function () { self.executeArgEdgeAction(edgeData, 'recalculate'); },
+                callback: function () { self.executeArgEdgeAction(edgeData, 'recalculate', sheetId); },
             },
             {
                 name: 'Step in',
                 id: 'decompose_edge',
-                callback: function () { self.executeArgEdgeAction(edgeData, 'decompose'); },
+                callback: function () { self.executeArgEdgeAction(edgeData, 'decompose', sheetId); },
             },
             {
                 name: 'View Source',
                 id: 'view_source_edge',
-                callback: function () { self.executeArgEdgeAction(edgeData, 'view_source'); },
+                callback: function () { self.executeArgEdgeAction(edgeData, 'view_source', sheetId); },
             },
         ];
-        var graphContainer = document.getElementById('arg-graph');
+        var graphContainer = document.getElementById((sheet && sheet.argGraph && sheet.argGraph.containerId) || 'arg-graph');
         var rect = graphContainer.getBoundingClientRect();
         this.controls.showContextMenu(rect.left + pos.x, rect.top + pos.y, actions);
     }
@@ -1772,28 +1850,24 @@ class IvyApp {
     /**
      * Execute an ARG edge action via the API.
      */
-    async executeArgEdgeAction(edgeData, actionName) {
+    async executeArgEdgeAction(edgeData, actionName, sheetId) {
+        sheetId = sheetId || this.activeSheetId || 'sheet-1';
         this.controls.setStatus('Executing: ' + actionName + '...');
         try {
             var result = await this.api.argNodeAction(
                 edgeData.source_obj || edgeData.source || edgeData.obj,
                 actionName,
-                { target: edgeData.target_obj || edgeData.target }
+                { target: edgeData.target_obj || edgeData.target, sheet_id: sheetId }
             );
             if (actionName === 'decompose' && result && result.decomposed) {
                 // Decompose: open a new tab with the sub-ARG
                 var label = 'Step: ' + (edgeData.label || actionName);
-                var sheetId = this.addSheet(label);
-                // Populate the new sheet's ARG with the decomposed sub-graph
-                if (result.sub_arg && result.sub_arg.elements) {
-                    var sheetState = this.sheets && this.sheets[sheetId];
-                    if (sheetState && sheetState.argGraph) {
-                        sheetState.argGraph.update(result.sub_arg.elements);
-                    }
-                }
+                this.openARGSheet(label, result.sub_arg, result.sheet_id);
             }
             if (result && result.arg) {
-                this.argGraph.update(result.arg.elements, result.arg.positions);
+                var sheet = this.sheets && this.sheets[sheetId];
+                var argGraph = (sheet && sheet.argGraph) || this.argGraph;
+                argGraph.update(result.arg.elements, result.arg.positions);
             }
             if (result && result.source && actionName === 'view_source') {
                 // Show source in the model editor and scroll to the action line.
@@ -1832,11 +1906,21 @@ class IvyApp {
         if (nodeData.actions && Array.isArray(nodeData.actions)) {
             for (var i = 0; i < nodeData.actions.length; i++) {
                 var act = nodeData.actions[i];
+                var label = act.label || act[0] || act.name || '';
+                var id = act.action || act.id || act[0] || '';
+                if (label === '---') {
+                    actions.push({ separator: true });
+                    continue;
+                }
+                if (!id) {
+                    actions.push({ header: label });
+                    continue;
+                }
                 (function (action) {
-                    var actionName = action[0] || action.name;
+                    var actionName = action.label || action[0] || action.name;
                     actions.push({
                         name: actionName,
-                        id: actionName,
+                        id: action.action || action.id || action[0] || actionName,
                         callback: function () {
                             self.executeConceptNodeAction(nodeData, action);
                         },
@@ -1872,6 +1956,13 @@ class IvyApp {
                 id: 'materialize',
                 callback: function () {
                     self.materializeNode(nodeData.obj || nodeData.id);
+                },
+            });
+            actions.push({
+                name: 'Materialize edge',
+                id: 'materialize_from_selected',
+                callback: function () {
+                    self.materializeEdgeFromSelected(nodeData.obj || nodeData.id);
                 },
             });
             actions.push({
@@ -1930,12 +2021,12 @@ class IvyApp {
             actions.push({
                 name: 'Materialize +',
                 id: 'materialize_pos',
-                callback: function () { self.materializeEdge(conceptId, true); },
+                callback: function () { self.materializeEdge(edgeData, true); },
             });
             actions.push({
                 name: 'Materialize \u2013',
                 id: 'materialize_neg',
-                callback: function () { self.materializeEdge(conceptId, false); },
+                callback: function () { self.materializeEdge(edgeData, false); },
             });
             actions.push({ separator: true });
             actions.push({
@@ -1961,7 +2052,9 @@ class IvyApp {
      * Execute a concept node action dispatched from the context menu.
      */
     async executeConceptNodeAction(nodeData, action) {
-        var actionName = (action[0] || action.name || '').toLowerCase();
+        var actionID = action.action || action.id || action[0] || action.name || '';
+        var actionName = actionID.toLowerCase();
+        var actionArgs = action.args || {};
 
         if (actionName === 'remove') {
             return this.removeConcept(nodeData.obj || nodeData.id);
@@ -1972,6 +2065,9 @@ class IvyApp {
         if (actionName === 'materialize') {
             return this.materializeNode(nodeData.obj || nodeData.id);
         }
+        if (actionName === 'materialize edge' || actionName === 'materialize_from_selected') {
+            return this.materializeEdgeFromSelected(nodeData.obj || nodeData.id);
+        }
         if (actionName.indexOf('split by ') === 0) {
             var splitBy = actionName.substring('split by '.length);
             return this.splitConcept(nodeData.obj || nodeData.id, splitBy);
@@ -1979,6 +2075,9 @@ class IvyApp {
         if (actionName.indexOf('add ') === 0) {
             var projName = actionName.substring('add '.length);
             return this.addProjection(projName, nodeData.obj || nodeData.id);
+        }
+        if (actionName === 'add_projection') {
+            return this.addProjection(actionArgs.name, actionArgs.concept || actionArgs.name);
         }
 
         // Fallback: generic action execution
@@ -2005,10 +2104,13 @@ class IvyApp {
             return this.removeConcept(conceptId);
         }
         if (actionName === 'materialize +') {
-            return this.materializeEdge(conceptId, true);
+            return this.materializeEdge(edgeData, true);
         }
         if (actionName === 'materialize -' || actionName === 'materialize \u2013') {
-            return this.materializeEdge(conceptId, false);
+            return this.materializeEdge(edgeData, false);
+        }
+        if (actionName === 'dematerialize') {
+            return this.materializeEdge(edgeData, false);
         }
 
         // Fallback
@@ -2070,11 +2172,19 @@ class IvyApp {
         }
     }
 
-    async materializeEdge(concept, positive) {
+    async materializeEdge(edgeOrConcept, positive) {
         var dir = positive ? '+' : '\u2013';
+        var relation = edgeOrConcept;
+        var source = '';
+        var target = '';
+        if (edgeOrConcept && typeof edgeOrConcept === 'object') {
+            relation = edgeOrConcept.obj || edgeOrConcept.label || edgeOrConcept.id;
+            source = edgeOrConcept.source_obj || edgeOrConcept.source || '';
+            target = edgeOrConcept.target_obj || edgeOrConcept.target || '';
+        }
         this.controls.setStatus('Materializing edge (' + dir + ')...');
         try {
-            await this.api.materializeEdge(concept, positive);
+            await this.api.materializeEdge(relation, source, target, positive);
             await this.refreshConceptGraph();
             this.controls.setStatus('Edge materialized (' + dir + ')', 'success');
         } catch (e) {
@@ -2113,6 +2223,45 @@ class IvyApp {
                     this.controls.setStatus('Selected: ' + conceptId);
                 }
             }
+        }
+    }
+
+    async materializeEdgeFromSelected(targetConceptId) {
+        var sourceConceptId = this.selectedConceptNode;
+        if (!sourceConceptId) {
+            this.controls.setStatus('Select a source node first', 'warning');
+            return;
+        }
+        var data = this._lastConceptData || {};
+        var edgeSorts = data.edge_sorts || {};
+        var relations = Object.keys(edgeSorts).filter(function (rel) {
+            var sorts = edgeSorts[rel] || [];
+            return sorts.length >= 2 && sorts[0] === sourceConceptId && sorts[1] === targetConceptId;
+        });
+        if (relations.length === 0 && Array.isArray(data.edges)) {
+            relations = data.edges.slice();
+        }
+        if (relations.length === 0) {
+            this.controls.setStatus('No matching binary relations', 'warning');
+            return;
+        }
+        var selected = await this.listboxDialog(
+            'Materialize edge',
+            'Materialize this relation from selected node:',
+            relations.map(function (rel) { return { label: rel, value: rel }; }),
+            { cancel: true }
+        );
+        if (selected == null) {
+            this.controls.setStatus('Materialize edge cancelled', 'warning');
+            return;
+        }
+        this.controls.setStatus('Materializing edge ' + selected + '...');
+        try {
+            await this.api.materializeEdge(selected, sourceConceptId, targetConceptId, true);
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Edge materialized (+)', 'success');
+        } catch (e) {
+            this.controls.setStatus('Materialize edge failed: ' + e.message, 'error');
         }
     }
 
@@ -2735,6 +2884,7 @@ class IvyApp {
             }
             this.controls.setStatus('Check FAILED' + mode + z3note + ' - counterexample found', 'error');
             this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + failDetails);
+            this.addCheckResultViewActions(result);
             if (result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);
             }
@@ -2745,6 +2895,23 @@ class IvyApp {
             this.controls.setStatus('Check result: ' + verdict + z3note);
             this.controls.showInfo('Verification Result', result.message || JSON.stringify(result));
         }
+    }
+
+    addCheckResultViewActions(result) {
+        if (!result || !result.trace_arg) return;
+        var info = document.getElementById('info-content');
+        if (!info) return;
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn small';
+        button.setAttribute('data-check-view-trace', 'true');
+        button.textContent = 'View error trace';
+        var self = this;
+        button.addEventListener('click', function () {
+            self.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id);
+        });
+        info.appendChild(document.createElement('br'));
+        info.appendChild(button);
     }
 
     /**
@@ -3552,6 +3719,17 @@ class IvyApp {
         }
     }
 
+    async showReachableStates() {
+        this.controls.setStatus('Opening reachable states...');
+        try {
+            var result = await this.api.executeAction('show_reachable', {});
+            this.openARGSheet('Reachable states', result.arg, result.sheet_id);
+            this.controls.setStatus('Reachable states opened', 'success');
+        } catch (e) {
+            this.controls.setStatus('Show reachable states failed: ' + e.message, 'error');
+        }
+    }
+
     /**
      * Show concrete model.
      * Matches Python ivy_graph_ui.py concrete().
@@ -3559,8 +3737,12 @@ class IvyApp {
     async concreteStep() {
         this.controls.setStatus('Computing concrete model...');
         try {
-            var result = await this.api.executeAction('concrete', {});
-            await this.refreshConceptGraph();
+            var result = await this.api.executeAction('concrete', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.updateConceptGraph(result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
             this.controls.setStatus('Concrete model computed', 'success');
         } catch (e) {
             this.controls.setStatus('Concrete failed: ' + e.message, 'error');
@@ -3574,8 +3756,12 @@ class IvyApp {
     async gatherFacts() {
         this.controls.setStatus('Gathering facts...');
         try {
-            var result = await this.api.executeAction('gather', {});
-            await this.refreshConceptGraph();
+            var result = await this.api.executeAction('gather', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.updateConceptGraph(result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
             this.controls.setStatus('Facts gathered', 'success');
         } catch (e) {
             this.controls.setStatus('Gather failed: ' + e.message, 'error');
@@ -3604,7 +3790,7 @@ class IvyApp {
     async pathReach() {
         this.controls.setStatus('Computing path reachability...');
         try {
-            var result = await this.api.executeAction('path_reach', {});
+            var result = await this.api.executeAction('path_reach', { sheet_id: this.activeSheetId || 'sheet-1' });
             await this.refreshConceptGraph();
             this.controls.setStatus('Path reach complete', 'success');
         } catch (e) {
@@ -3619,7 +3805,7 @@ class IvyApp {
     async reachStep() {
         this.controls.setStatus('Computing reachability...');
         try {
-            var result = await this.api.executeAction('reach', {});
+            var result = await this.api.executeAction('reach', { sheet_id: this.activeSheetId || 'sheet-1' });
             await this.refreshConceptGraph();
             this.controls.setStatus('Reach complete', 'success');
         } catch (e) {
@@ -3649,7 +3835,7 @@ class IvyApp {
     async backtrack() {
         this.controls.setStatus('Backtracking...');
         try {
-            await this.api.executeAction('backtrack', {});
+            await this.api.executeAction('backtrack', { sheet_id: this.activeSheetId || 'sheet-1' });
             await this.refreshConceptGraph();
             this.controls.setStatus('Backtracked', 'success');
         } catch (e) {
@@ -3679,7 +3865,12 @@ class IvyApp {
     async rememberGraph() {
         this.controls.setStatus('Remembering graph...');
         try {
-            await this.api.executeAction('remember', {});
+            var name = await this.entryDialog('Remember graph', 'Enter a name for this goal:', '', { okLabel: 'Remember' });
+            if (name === null) {
+                this.controls.setStatus('Remember cancelled', 'warning');
+                return;
+            }
+            await this.api.executeAction('remember', { name: name, sheet_id: this.activeSheetId || 'sheet-1' });
             this.controls.setStatus('Graph remembered', 'success');
         } catch (e) {
             this.controls.setStatus('Remember failed: ' + e.message, 'error');
@@ -3693,8 +3884,34 @@ class IvyApp {
     async exportConjecture() {
         this.controls.setStatus('Exporting conjecture...');
         try {
-            var result = await this.api.executeAction('export', {});
-            this.controls.setStatus('Conjecture exported', 'success');
+            var result = await this.api.executeAction('export', { sheet_id: this.activeSheetId || 'sheet-1' });
+            var content = (result && result.content) || '';
+            var filename = (result && result.filename) || 'concept_graph.dot';
+            if (content) {
+                if (window.showSaveFilePicker) {
+                    var handle = await window.showSaveFilePicker({
+                        suggestedName: filename,
+                        types: [{
+                            description: 'DOT files',
+                            accept: { 'text/vnd.graphviz': ['.dot'] },
+                        }],
+                    });
+                    var writable = await handle.createWritable();
+                    await writable.write(content);
+                    await writable.close();
+                } else {
+                    var blob = new Blob([content], { type: (result && result.mime_type) || 'text/vnd.graphviz' });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            }
+            this.controls.setStatus('Graph exported', 'success');
         } catch (e) {
             this.controls.setStatus('Export failed: ' + e.message, 'error');
         }
@@ -3704,16 +3921,20 @@ class IvyApp {
      * Add a relation from a user-entered string.
      * Matches Python ivy_graph_ui.py add_concept_from_string().
      */
-    addRelationFromString() {
-        var input = prompt('Enter a relation formula (e.g., r(X,Y)):');
-        if (input) {
-            this.api.executeAction('add_relation', { formula: input }).then(
-                function () {
-                    this.refreshConceptGraph();
-                }.bind(this)
-            ).catch(function (e) {
-                this.controls.setStatus('Add relation failed: ' + e.message, 'error');
-            }.bind(this));
+    async addRelationFromString() {
+        var input = await this.entryDialog(
+            'Add relation',
+            'Add a relation [example: p(X,a,Y)]:',
+            '',
+            { okLabel: 'Add' }
+        );
+        if (!input) return;
+        try {
+            await this.api.executeAction('add_relation', { formula: input });
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Relation added', 'success');
+        } catch (e) {
+            this.controls.setStatus('Add relation failed: ' + e.message, 'error');
         }
     }
 

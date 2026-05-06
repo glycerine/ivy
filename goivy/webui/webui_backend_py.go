@@ -269,7 +269,7 @@ func (b *PyBackend) GetARG(sessionID string) ([]byte, error) {
 	return b.get("/session/" + sessionID + "/arg")
 }
 
-func (b *PyBackend) GetConcept(sessionID, nodeID string) ([]byte, error) {
+func (b *PyBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, error) {
 	return b.get("/session/" + sessionID + "/concept")
 }
 
@@ -292,8 +292,8 @@ func (b *PyBackend) ConceptUndo(sessionID string) ([]byte, error) {
 	return b.post("/session/"+sessionID+"/concept/undo", nil)
 }
 
-func (b *PyBackend) ConceptMaterialize(sessionID, concept string) ([]byte, error) {
-	return b.post("/session/"+sessionID+"/concept/materialize", map[string]string{"concept": concept})
+func (b *PyBackend) ConceptMaterialize(sessionID string, req ConceptMaterializeRequest) ([]byte, error) {
+	return b.post("/session/"+sessionID+"/concept/materialize", map[string]string{"concept": req.Concept})
 }
 
 func (b *PyBackend) ConceptReset(sessionID string) ([]byte, error) {

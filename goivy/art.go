@@ -1701,6 +1701,14 @@ func artToInterpMemo(s *State, memo map[*State]*InterpState) *InterpState {
 			is.JoinOf = append(is.JoinOf, artToInterpMemo(jo, memo))
 		}
 	}
+	if len(s.Unders) > 0 {
+		unders := make([]*InterpState, 0, len(s.Unders))
+		for _, under := range s.Unders {
+			unders = append(unders, artToInterpMemo(under, memo))
+		}
+		is.SetUnders(unders)
+	}
+	is.Universe = s.Universe
 	// Convert art.State.Prov (art.Provenance) → interp.InterpState.Expr (ast.Node)
 	is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, memo)
 	return is
@@ -1768,6 +1776,13 @@ func interpToArtMemo(is *InterpState, memo map[*InterpState]*State) *State {
 			s.JoinOf = append(s.JoinOf, interpToArtMemo(jo, memo))
 		}
 	}
+	if unders := is.Unders(); len(unders) > 0 {
+		s.Unders = make([]*State, 0, len(unders))
+		for _, under := range unders {
+			s.Unders = append(s.Unders, interpToArtMemo(under, memo))
+		}
+	}
+	s.Universe = is.Universe
 	// Convert interp.InterpState.Expr (ast.Node) → art.State.Prov (art.Provenance)
 	s.Prov = interpExprToProvenance(is.Expr, memo)
 	return s
