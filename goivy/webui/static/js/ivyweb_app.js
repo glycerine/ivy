@@ -257,6 +257,9 @@ class IvyApp {
     }
 
     _showSaveEditorSheen() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.editorSaveSheenHandled === 'function' && window.__ivyVueBridge.editorSaveSheenHandled()) {
+            return { vueHandled: true };
+        }
         var target = this._editorTextElement();
         if (!target || typeof target.getBoundingClientRect !== 'function') return null;
         var rect = target.getBoundingClientRect();
@@ -1302,6 +1305,7 @@ class IvyApp {
         var existingTab = this.sheetTab(sheetId);
         var existingSheet = document.getElementById(sheetId);
         var tabLabel = label || data.label || 'Events';
+        var vueEventSheets = window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertEventTraceSheet === 'function';
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertSheetTab === 'function') {
             window.__ivyVueBridge.upsertSheetTab({ id: sheetId, label: tabLabel, closable: true, type: 'events' });
         } else {
@@ -1329,7 +1333,7 @@ class IvyApp {
         }
 
         var sheet = existingSheet;
-        if (!sheet) {
+        if (!sheet && !vueEventSheets) {
             sheet = document.createElement('div');
             sheet.id = sheetId;
             sheet.className = 'sheet-content event-sheet';
@@ -1343,7 +1347,17 @@ class IvyApp {
             patterns: patterns.slice(),
             selectedEventAddress: data.selected_address || null,
         };
-        this.renderEventTraceSheet(sheetId);
+        if (vueEventSheets) {
+            window.__ivyVueBridge.upsertEventTraceSheet({
+                id: sheetId,
+                label: tabLabel,
+                events: events,
+                patterns: patterns,
+                selectedEventAddress: data.selected_address || null,
+            });
+        } else {
+            this.renderEventTraceSheet(sheetId);
+        }
         this.switchSheet(sheetId);
         this.controls.setStatus('Opened: ' + (label || data.label || 'Events'));
         return sheetId;
@@ -1521,6 +1535,14 @@ class IvyApp {
     }
 
     toggleEventTraceNode(sheetId, address) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEventTraceExpanded === 'function') {
+            var expanded = false;
+            if (typeof window.__ivyVueBridge.isEventTraceExpanded === 'function') {
+                expanded = !!window.__ivyVueBridge.isEventTraceExpanded(sheetId, address);
+            }
+            window.__ivyVueBridge.setEventTraceExpanded(sheetId, address, !expanded);
+            return;
+        }
         var row = this.eventTraceRow(sheetId, address);
         var li = row ? row.closest('.event-tree-node') : null;
         var sheetState = this.sheets && this.sheets[sheetId];
@@ -1570,8 +1592,13 @@ class IvyApp {
     }
 
     selectEventTraceRow(sheetId, address) {
-        this.uncoverEventTraceAddress(sheetId, address);
         var sheetState = this.sheets && this.sheets[sheetId];
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.selectEventTraceRow === 'function') {
+            if (sheetState) sheetState.selectedEventAddress = address;
+            window.__ivyVueBridge.selectEventTraceRow(sheetId, address);
+            return;
+        }
+        this.uncoverEventTraceAddress(sheetId, address);
         var sheet = document.getElementById(sheetId);
         if (!sheetState || !sheet) return;
         var rows = sheet.querySelectorAll('.event-row.selected');
@@ -1654,12 +1681,22 @@ class IvyApp {
         } else if (fallbackPatterns) {
             sheet.patterns = fallbackPatterns.slice();
         }
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEventPatterns === 'function') {
+            window.__ivyVueBridge.updateEventPatterns(sheetId, sheet.patterns || []);
+            return;
+        }
         this.renderEventPatternList(sheetId);
     }
 
     renderEventPatternList(sheetId) {
         var sheet = document.getElementById(sheetId);
         var sheetState = this.sheets && this.sheets[sheetId];
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEventPatterns === 'function') {
+            if (sheetState) {
+                window.__ivyVueBridge.updateEventPatterns(sheetId, sheetState.patterns || []);
+            }
+            return;
+        }
         var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
         if (!select || !sheetState) return;
         select.innerHTML = '';
@@ -1672,6 +1709,9 @@ class IvyApp {
     }
 
     selectedEventPattern(sheetId) {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSelectedEventPattern === 'function') {
+            return window.__ivyVueBridge.getSelectedEventPattern(sheetId) || '';
+        }
         var sheet = document.getElementById(sheetId);
         var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
         return select && select.value ? select.value : '';
@@ -1693,8 +1733,13 @@ class IvyApp {
         var sheet = this.sheets && this.sheets[sheetId];
         var sheetEl = document.getElementById(sheetId);
         var select = sheetEl ? sheetEl.querySelector('.event-pattern-list') : null;
-        if (!sheet || !select || select.selectedIndex < 0) return;
-        var idx = select.selectedIndex;
+        var idx = -1;
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSelectedEventPatternIndex === 'function') {
+            idx = window.__ivyVueBridge.getSelectedEventPatternIndex(sheetId);
+        } else if (select) {
+            idx = select.selectedIndex;
+        }
+        if (!sheet || idx < 0) return;
         if (this.api && this.api.executeAction && !sheet.visualOnly) {
             var result = await this.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
             this.applyEventPatternResult(sheetId, result);
@@ -1776,6 +1821,23 @@ class IvyApp {
         var dividerH = document.getElementById('divider-h');
         var btn = document.getElementById('btn-toggle-tutorial');
         if (!tutorial || !btn) return;
+
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setTutorialVisible === 'function') {
+            var visible = tutorial.style.display !== 'none';
+            if (typeof window.__ivyVueBridge.isTutorialVisible === 'function') {
+                visible = !!window.__ivyVueBridge.isTutorialVisible();
+            }
+            var nextVisible = !visible;
+            window.__ivyVueBridge.setTutorialVisible(nextVisible);
+            if (!nextVisible && flash) {
+                btn.classList.add('btn-flash');
+                setTimeout(function () { btn.classList.remove('btn-flash'); }, 1200);
+            }
+            if (this.argGraph) this.argGraph.resize();
+            if (this.conceptGraph) this.conceptGraph.resize();
+            this._refreshEditorLayout();
+            return;
+        }
 
         if (tutorial.style.display === 'none') {
             // Show

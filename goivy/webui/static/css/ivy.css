@@ -304,6 +304,25 @@ html, body {
     line-height: 1.4;
 }
 
+.editor-text-shell {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.editor-text-shell .CodeMirror {
+    width: 100%;
+}
+
+.editor-text-shell > .ivy-save-editor-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    background: rgba(128, 128, 128, 0.2);
+}
+
 .model-editor-text:focus {
     outline: 1px solid #007acc;
 }

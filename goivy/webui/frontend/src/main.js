@@ -5,6 +5,8 @@ import { useContextMenuStore } from './stores/contextMenuStore.js';
 import { useDetailsStore } from './stores/detailsStore.js';
 import { useDialogStore } from './stores/dialogStore.js';
 import { useEditorStore } from './stores/editorStore.js';
+import { useEventTraceStore } from './stores/eventTraceStore.js';
+import { useLayoutStore } from './stores/layoutStore.js';
 import { useMenuDescriptorStore } from './stores/menuDescriptorStore.js';
 import { useGraphStore } from './stores/graphStore.js';
 import { useRecentFilesStore } from './stores/recentFilesStore.js';
@@ -26,6 +28,8 @@ const menuDescriptorStore = useMenuDescriptorStore(pinia);
 const sheetStore = useSheetStore(pinia);
 const graphStore = useGraphStore(pinia);
 const recentFilesStore = useRecentFilesStore(pinia);
+const eventTraceStore = useEventTraceStore(pinia);
+const layoutStore = useLayoutStore(pinia);
 
 function syncContextMenuElement(visible, x = 0, y = 0) {
   const menu = document.getElementById('context-menu');
@@ -93,9 +97,11 @@ window.__ivyVueBridge = {
   },
   removeSheetTab(sheetId) {
     sheetStore.removeTab(sheetId);
+    eventTraceStore.removeSheet(sheetId);
   },
   resetSheetTabs() {
     sheetStore.resetTabs();
+    eventTraceStore.reset();
   },
   getSheetTabLabel(sheetId) {
     return sheetStore.labelFor(sheetId);
@@ -112,8 +118,41 @@ window.__ivyVueBridge = {
   showDialog(config) {
     return dialogStore.open(config);
   },
+  editorSaveSheenHandled() {
+    return true;
+  },
   updateRecentFiles(items, loader) {
     recentFilesStore.setItems(items, loader);
+  },
+  upsertEventTraceSheet(sheet) {
+    eventTraceStore.upsertSheet(sheet);
+  },
+  setEventTraceExpanded(sheetId, address, expanded) {
+    eventTraceStore.setExpanded(sheetId, address, expanded);
+  },
+  isEventTraceExpanded(sheetId, address) {
+    return eventTraceStore.isExpanded(sheetId, address);
+  },
+  selectEventTraceRow(sheetId, address) {
+    eventTraceStore.selectEvent(sheetId, address);
+  },
+  updateEventPatterns(sheetId, patterns) {
+    eventTraceStore.setPatterns(sheetId, patterns);
+  },
+  setSelectedEventPatternIndex(sheetId, index) {
+    eventTraceStore.setSelectedPatternIndex(sheetId, index);
+  },
+  getSelectedEventPattern(sheetId) {
+    return eventTraceStore.selectedPattern(sheetId);
+  },
+  getSelectedEventPatternIndex(sheetId) {
+    return eventTraceStore.selectedPatternIndex(sheetId);
+  },
+  setTutorialVisible(visible) {
+    layoutStore.setTutorialVisible(visible);
+  },
+  isTutorialVisible() {
+    return layoutStore.tutorialVisible;
   },
 };
 

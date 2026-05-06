@@ -442,6 +442,31 @@ test('sheet graph instances are owned independently when switching tabs', async 
   expect(result.secondLabels).toEqual(['second']);
 });
 
+test('event trace sheets render through the Vue bridge', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.ivyApp.openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [
+        { text: 'root(a)', address: '0', subs: [{ text: 'child(a)', address: '0/0' }] },
+      ],
+      patterns: ['root(a)'],
+    }, 'events-1');
+  });
+
+  await expect(page.locator('.sheet-tab[data-sheet="events-1"]')).toContainText('Trace');
+  await expect(page.locator('#events-1 [data-event-address="0"]')).toContainText('root(a)');
+  await expect(page.locator('#events-1 [data-event-address="0/0"]')).toHaveCount(0);
+
+  await page.locator('#events-1 [data-event-toggle="0"]').click();
+  await expect(page.locator('#events-1 [data-event-address="0/0"]')).toContainText('child(a)');
+
+  await page.locator('#events-1 .event-pattern-list').selectOption('root(a)');
+  const selectedPattern = await page.evaluate(() => window.__ivyVueBridge.getSelectedEventPattern('events-1'));
+  expect(selectedPattern).toBe('root(a)');
+});
+
 test('Step in opens a backend-owned sheet whose node clicks load that sheet concept graph', async ({ page }) => {
   await openIvy(page);
 

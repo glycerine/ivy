@@ -18,6 +18,7 @@
         <StateRelationsPane />
       </div>
     </div>
+    <EventTraceSheetHost />
   </div>
 </template>
 
@@ -25,6 +26,7 @@
 import ArgPane from './ArgPane.vue';
 import ConceptPane from './ConceptPane.vue';
 import DetailsPane from './DetailsPane.vue';
+import EventTraceSheetHost from './EventTraceSheetHost.vue';
 import StateRelationsPane from './StateRelationsPane.vue';
 import TabBar from './TabBar.vue';
 </script>

@@ -1,0 +1,98 @@
+<script setup>
+import { computed } from 'vue';
+import EventTraceNode from './EventTraceNode.vue';
+import { useEventTraceStore } from '../../stores/eventTraceStore.js';
+
+const props = defineProps({
+  sheetId: {
+    type: String,
+    required: true,
+  },
+});
+
+const eventTraceStore = useEventTraceStore();
+const sheet = computed(() => eventTraceStore.sheetById(props.sheetId));
+
+async function askEntry(title, message, okLabel, callback) {
+  if (!window.ivyApp) return;
+  const pattern = await window.ivyApp.entryDialog(title, message, '', { okLabel });
+  if (pattern !== null && pattern !== '') {
+    await callback(pattern);
+  }
+}
+
+function selectedPattern() {
+  return eventTraceStore.selectedPattern(props.sheetId);
+}
+
+function selectedPatternIndex(event) {
+  return event.target.selectedIndex;
+}
+</script>
+
+<template>
+  <div class="event-viewer">
+    <div class="event-tree-panel panel">
+      <div class="panel-header">
+        <span class="panel-title">Events</span>
+        <button
+          class="menu-btn event-filter-btn"
+          type="button"
+          @click="askEntry('Filter events', 'Pattern:', 'Filter', (pattern) => window.ivyApp.filterEventTrace(pattern))"
+        >Filter...</button>
+        <button
+          class="menu-btn event-find-fwd-btn"
+          type="button"
+          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => window.ivyApp.findEventTrace(pattern, false))"
+        >&gt;&gt;</button>
+        <button
+          class="menu-btn event-find-rev-btn"
+          type="button"
+          @click="askEntry('Find event', 'Pattern:', 'Find', (pattern) => window.ivyApp.findEventTrace(pattern, true))"
+        >&lt;&lt;</button>
+      </div>
+      <div class="event-tree" :data-event-tree="sheetId">
+        <ul class="event-tree-list">
+          <EventTraceNode
+            v-for="event in (sheet && sheet.events) || []"
+            :key="event.address"
+            :sheet-id="sheetId"
+            :event="event"
+          />
+        </ul>
+      </div>
+    </div>
+    <div class="event-pattern-panel panel">
+      <div class="panel-header"><span class="panel-title">Patterns</span></div>
+      <select
+        class="event-pattern-list"
+        size="8"
+        @change="eventTraceStore.setSelectedPatternIndex(sheetId, selectedPatternIndex($event))"
+      >
+        <option
+          v-for="pattern in (sheet && sheet.patterns) || []"
+          :key="pattern"
+          :value="pattern"
+        >{{ pattern }}</option>
+      </select>
+      <div class="event-pattern-buttons">
+        <button class="menu-btn event-pattern-rev" type="button" @click="selectedPattern() && window.ivyApp.findEventTrace(selectedPattern(), true)">&lt;&lt;</button>
+        <button class="menu-btn event-pattern-fwd" type="button" @click="selectedPattern() && window.ivyApp.findEventTrace(selectedPattern(), false)">&gt;&gt;</button>
+        <button class="menu-btn event-pattern-add" type="button" @click="askEntry('Add pattern', 'Pattern:', 'Add', (pattern) => window.ivyApp.addEventPattern(sheetId, pattern))">+</button>
+        <button class="menu-btn event-pattern-remove" type="button" @click="window.ivyApp.removeSelectedEventPattern(sheetId)">-</button>
+      </div>
+      <div class="event-pattern-buttons">
+        <button class="menu-btn event-pattern-save" type="button" @click="window.ivyApp.saveEventPatterns(sheetId)">Save</button>
+        <button
+          class="menu-btn event-pattern-load"
+          type="button"
+          @click="async () => {
+            const text = await window.ivyApp.textDialog('Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
+            if (text !== null) await window.ivyApp.loadEventPatterns(sheetId, text);
+          }"
+        >Load</button>
+        <button class="menu-btn event-pattern-clear" type="button" @click="window.ivyApp.clearEventPatterns(sheetId)">Clear</button>
+      </div>
+    </div>
+  </div>
+</template>

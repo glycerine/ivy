@@ -38,11 +38,14 @@
       <span id="loaded-file" class="loaded-file"></span>
     </div>
     <div class="menu-group menu-right">
-      <button id="btn-toggle-tutorial" class="menu-btn">Hide Tutorial</button>
+      <button id="btn-toggle-tutorial" class="menu-btn">{{ layoutStore.tutorialVisible ? 'Hide Tutorial' : 'Show Tutorial' }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import RecentFilesMenu from './RecentFilesMenu.vue';
+import { useLayoutStore } from '../stores/layoutStore.js';
+
+const layoutStore = useLayoutStore();
 </script>

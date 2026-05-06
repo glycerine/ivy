@@ -22,6 +22,9 @@ const editorStore = useEditorStore();
         </span>
       </div>
     </div>
-    <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
+    <div class="editor-text-shell">
+      <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
+      <div v-if="editorStore.saveState === 'saving'" class="ivy-save-editor-sheen" aria-hidden="true"></div>
+    </div>
   </div>
 </template>
