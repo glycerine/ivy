@@ -64,22 +64,28 @@ For local password auth:
 
 - store password hashes only
 - use Argon2id from day one
-- persist users, credentials, accounts, project grants, and sessions in MariaDB
+- persist users, credentials, accounts, project grants, and sessions in
+  PostgreSQL
 - no plaintext passwords outside tests or local seed config
 
 ### Persistence Backend
 
-Use MariaDB through Go's `database/sql` package from Phase 0. This is not a
-later adapter.
+Use PostgreSQL through Go's `database/sql` package from Phase 0. This is not a
+later adapter. Prefer the `github.com/jackc/pgx/v5/stdlib` driver so the app
+still programs to `database/sql` while using the actively maintained pgx
+PostgreSQL implementation.
 
-Use a two-layer persistence model:
+Use one PostgreSQL application database by default:
 
-1. `ivyvue` is the control-plane database.
-2. Each project gets its own MariaDB database for project-owned Ivy data.
+1. `ivyvue` is the application database.
+2. control-plane tables store identity, accounts, projects, grants, sessions,
+   and storage metadata.
+3. project-owned tables include `project_id`.
+4. PostgreSQL row-level security protects project-owned rows.
 
-Do not make the database isolation unit a login user or an account. Users can
-belong to many accounts, accounts can own many projects, and projects can be
-shared with many users. The project is the unit of Ivy data isolation.
+Do not make the storage isolation unit a login user. Users can belong to many
+accounts, accounts can own many projects, and projects can be shared with many
+users. The project is the unit of application authorization.
 
 Use the GitHub-like ownership model:
 
@@ -91,31 +97,41 @@ Use the GitHub-like ownership model:
 - projects belong to accounts
 - projects can grant `read`, `write`, or `admin` access to users and team
   accounts
-- every project gets its own MariaDB database
+- project data is scoped by `project_id` and protected by RLS
 
 Implementation choices:
 
-- control-plane database: `ivyvue`
-- local development database user: `jaten`
-- local development database password: `jaten`
-- driver: `github.com/go-sql-driver/mysql`
+- database: `ivyvue`
+- local bootstrap PostgreSQL role: `jaten`
+- local bootstrap PostgreSQL password: `jaten`
+- runtime database role: `ivyvue_app`
+- migration database role: `ivyvue_migrator`
+- optional administrative database role for local setup: `ivyvue_admin`
+- driver: `github.com/jackc/pgx/v5/stdlib`
 - production and CI should pass a DSN by flag or environment variable
-- local development may default to the installed MariaDB instance when no DSN
+- local development may default to the installed PostgreSQL instance when no DSN
   is supplied
 
 Local development DSN shape:
 
 ```text
-jaten:jaten@tcp(127.0.0.1:3306)/ivyvue?parseTime=true&loc=UTC&charset=utf8mb4,utf8
+postgres://jaten:jaten@127.0.0.1:5432/postgres?sslmode=disable
+postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable
 ```
 
-Do not hard-code production credentials. The `jaten`/`jaten` credentials are
-development-only bootstrap values for this workspace.
+The `jaten`/`jaten` PostgreSQL credential is a local bootstrap credential only.
+Use it to create the `ivyvue` database and application roles on this machine.
+Do not use it as the web server runtime credential. Do not hard-code production
+credentials. Any local default passwords in scripts are development-only
+bootstrap values for this workspace.
 
 Command/config inputs:
 
 - `-db-dsn`
 - `IVYVUE_DB_DSN`
+- `IVYVUE_MIGRATION_DSN`
+- `IVYVUE_ADMIN_DSN`
+- `IVYVUE_BOOTSTRAP_DSN`
 - optional split config later if useful:
   - `IVYVUE_DB_HOST`
   - `IVYVUE_DB_NAME`
@@ -125,7 +141,7 @@ Command/config inputs:
 The server should open the database once at startup, verify connectivity with
 `PingContext`, and pass a narrow auth/session store interface into handlers.
 
-The control-plane database stores:
+The PostgreSQL database stores:
 
 - users
 - password credentials
@@ -134,30 +150,95 @@ The control-plane database stores:
 - account memberships
 - projects
 - project access grants
-- mapping from project id to project database name
+- project storage-location metadata
 - mapping from web workspace sessions to underlying Ivy backend sessions
+- project-owned Ivy data tables, each scoped by `project_id`
 
-Project databases store project-owned application data. Phase 0 only needs to
-provision and record them. Later phases can store project-local persisted
-artifacts there, such as models, saved workspaces, analysis state, uploaded
-files, and future collaboration records.
+Project-owned tables must enable and force RLS:
 
-Project database names must be server-generated, not derived directly from
-email, display name, or request input. Use an opaque identifier:
-
-```text
-ivyvue_p_<32 lowercase hex chars>
+```sql
+ALTER TABLE project_data.example ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_data.example FORCE ROW LEVEL SECURITY;
 ```
 
-Database identifiers cannot be bound as SQL parameters. Any code that issues
-`CREATE DATABASE`, `USE`, or cross-database SQL must use only database names
-loaded from the control plane after validating them against the generated-name
-pattern.
+Project-scoped operations must run inside an explicit transaction. After the
+server verifies effective project access, it sets transaction-local context:
 
-For production, prefer a narrow runtime database user plus a separate
-provisioning path that has `CREATE DATABASE` and migration privileges. For
-local development, the `jaten` MariaDB user can be used for both if it already
-has the needed privileges.
+```text
+ivy.user_id
+ivy.project_id
+ivy.project_role
+```
+
+Use `SELECT set_config(name, value, true)` inside the transaction so connection
+pool reuse cannot leak one request's project context into the next request.
+RLS policies read these settings with `current_setting(..., true)`.
+
+Keep a storage-location abstraction from day one:
+
+```text
+mode: shared_postgres
+database_name: ivyvue
+schema_name: project_data
+```
+
+This lets us add dedicated project databases later for large customers or
+stronger isolation without changing the account/project authorization model.
+
+For production, prefer a narrow runtime database role that cannot create
+schemas, create roles, disable RLS, or own project data tables. Use a separate
+migration/admin path for schema changes and account bootstrap.
+
+### Administrative Setup
+
+Because a fresh PostgreSQL install only starts the server, Phase 0 needs
+administrative setup scripts and an admin command path.
+
+Create:
+
+```text
+goivy/webvue/admin/
+  README.md
+  postgres/
+    00_bootstrap_database.sql
+    01_roles_and_grants.sql
+    02_verify_bootstrap.sql
+
+goivy/cmd/ivywebvue-admin/
+  ivywebvue-admin.go
+```
+
+The SQL scripts are run with `psql` by a local PostgreSQL superuser or a role
+with database/role creation privileges. They should:
+
+- use the local bootstrap role `jaten`/`jaten` during development
+- create the `ivyvue` database if it does not exist
+- create development roles:
+  - `ivyvue_admin`
+  - `ivyvue_migrator`
+  - `ivyvue_app`
+- grant runtime privileges only to `ivyvue_app`
+- grant schema/migration privileges only to `ivyvue_migrator`
+- revoke broad `PUBLIC` privileges from application schemas
+- leave production passwords out of the repository
+
+The Go admin command should use `database/sql` too. It should provide:
+
+```text
+ivywebvue-admin migrate
+ivywebvue-admin seed-dev
+ivywebvue-admin create-user
+ivywebvue-admin create-personal-account
+ivywebvue-admin create-team-account
+ivywebvue-admin create-project
+ivywebvue-admin grant-project
+ivywebvue-admin revoke-project
+ivywebvue-admin list-users
+ivywebvue-admin list-projects
+```
+
+Password hashing belongs in the Go admin command, not raw SQL seed files, so
+Argon2id parameters stay in one implementation.
 
 ### Database Schema
 
@@ -165,12 +246,19 @@ Phase 0 owns the schema needed for auth, account/project ownership, project
 access, and mapping project-scoped web sessions to underlying Ivy backend
 sessions.
 
+Use PostgreSQL schemas to keep intent clear:
+
+- `control` for users, accounts, projects, grants, sessions, and migrations
+- `project_data` for project-owned Ivy data tables protected by RLS
+- `app_private` for helper functions that should not be called directly by the
+  runtime app role
+
 ```text
-schema_migrations
+control.schema_migrations
   version
   applied_at
 
-users
+control.users
   id
   email
   display_name
@@ -178,13 +266,13 @@ users
   created_at
   updated_at
 
-password_credentials
+control.password_credentials
   user_id
   password_hash
   password_hash_params
   updated_at
 
-accounts
+control.accounts
   id
   slug
   kind
@@ -194,7 +282,7 @@ accounts
   created_at
   updated_at
 
-account_memberships
+control.account_memberships
   account_id
   user_id
   role
@@ -202,19 +290,25 @@ account_memberships
   created_at
   updated_at
 
-projects
+control.projects
   id
   owner_account_id
   slug
   display_name
-  database_name
-  database_state
-  database_created_at
   disabled_at
   created_at
   updated_at
 
-project_grants
+control.project_storage_locations
+  project_id
+  mode
+  database_name
+  schema_name
+  state
+  created_at
+  updated_at
+
+control.project_grants
   project_id
   subject_kind
   subject_id
@@ -223,7 +317,7 @@ project_grants
   created_at
   updated_at
 
-auth_sessions
+control.auth_sessions
   id_hash
   user_id
   csrf_token_hash
@@ -233,7 +327,7 @@ auth_sessions
   absolute_expires_at
   revoked_at
 
-ivy_workspace_sessions
+control.ivy_workspace_sessions
   id
   project_id
   user_id
@@ -246,33 +340,37 @@ ivy_workspace_sessions
 Store session ids and CSRF tokens as hashes. Return only the raw opaque values
 to the browser cookie/header path at creation time.
 
+Every future table in `project_data` must include `project_id`, enable RLS, and
+have `USING` and `WITH CHECK` policies based on the transaction-local
+`ivy.project_id` and `ivy.project_role` settings.
+
 ### Migrations And Seed Data
 
 Create idempotent SQL migrations under `goivy/webvue/auth/migrations`:
 
 ```text
-001_auth_schema.sql
-002_project_database_tracking.sql
-003_seed_dev_account.sql
+001_control_schema.sql
+002_auth_sessions.sql
+003_project_storage.sql
+004_rls_helpers.sql
 ```
 
-The dev seed is enabled only for local development and tests. It creates:
+The dev seed is enabled only for local development and tests, and is performed
+by `ivywebvue-admin seed-dev` so password hashing goes through Go. It creates:
 
 ```text
 email: dev@local
 password: dev-password
 personal account: dev
 project: dev/client-server
-project database: ivyvue_p_<generated id>
+project storage: shared_postgres in project_data
 account role: owner
 project role: admin
 ```
 
-Keep this separate from the MariaDB login user. `jaten`/`jaten` is the database
-credential; `dev@local`/`dev-password` is the local web application login.
-
-The seed path must also provision the dev project database and mark the project
-database state as ready only after its migration succeeds.
+Keep PostgreSQL roles separate from web application accounts.
+`dev@local`/`dev-password` is the local web application login, not a PostgreSQL
+role.
 
 ### Browser Session
 
@@ -331,9 +429,14 @@ Project
   ownerAccountId
   slug
   displayName
-  databaseName
-  databaseState
   disabledAt
+
+ProjectStorageLocation
+  projectId
+  mode
+  databaseName
+  schemaName
+  state
 
 ProjectGrant
   projectId
@@ -437,18 +540,26 @@ goivy/webvue/
   README.md
   groundup_vue3.md
   phase0.md
+  postgres_admin.md
   auth/
     model.go
     store.go
-    mariadb_store.go
+    postgres_store.go
     migrate.go
     password.go
     migrations/
-      001_auth_schema.sql
-      002_project_database_tracking.sql
-      003_seed_dev_account.sql
+      001_control_schema.sql
+      002_auth_sessions.sql
+      003_project_storage.sql
+      004_rls_helpers.sql
     session.go
     middleware.go
+  admin/
+    README.md
+    postgres/
+      00_bootstrap_database.sql
+      01_roles_and_grants.sql
+      02_verify_bootstrap.sql
   server.go
   server_test.go
   frontend/
@@ -498,6 +609,9 @@ goivy/webvue/
 
 goivy/cmd/ivywebvue/
   ivywebvue.go
+
+goivy/cmd/ivywebvue-admin/
+  ivywebvue-admin.go
 ```
 
 Use TypeScript from the beginning for `webvue` frontend code.
@@ -575,9 +689,10 @@ Phase 0 command flags:
 
 - `-addr`
 - `-db-dsn`
-- `-project-db-prefix` defaulting to `ivyvue_p_`
-- `-migrate` defaulting to true for local development
-- optional `-seed-dev-user` defaulting to true for local development
+- `-migrate` defaulting to false in production and true only for explicit local
+  development commands
+
+Administrative setup uses `goivy/cmd/ivywebvue-admin`, not the web server.
 
 Seeded dev identity:
 
@@ -596,9 +711,10 @@ Default database configuration for local development:
 
 ```text
 database: ivyvue
-database user: jaten
-database password: jaten
-host: 127.0.0.1:3306
+database role: ivyvue_app
+database password: ivyvue_app_dev
+host: 127.0.0.1:5432
+sslmode: disable
 ```
 
 If `-db-dsn` or `IVYVUE_DB_DSN` is set, it wins over the local defaults.
@@ -724,12 +840,13 @@ Go tests:
 - project route rejects missing project access
 - project route rejects insufficient role for write/admin operations
 - state-changing project route rejects missing CSRF
-- MariaDB store contract tests cover users, credentials, accounts, account
+- PostgreSQL store contract tests cover users, credentials, accounts, account
   memberships, projects, grants, sessions, revocation, expiration, and
   workspace-session ownership
-- project provisioning tests create a generated project database, run its
-  migrations, record it in the control plane, and clean up only that generated
-  database
+- RLS tests prove project-owned rows are visible only with the matching
+  transaction-local project context
+- admin setup tests verify the bootstrap SQL is idempotent against a disposable
+  local database when `IVYVUE_ADMIN_DSN` is set
 - database tests must create unique test records and clean up only records they
   created; do not wipe `ivyvue`
 
@@ -774,8 +891,9 @@ Phase 0 should end green with:
 ```sh
 npm --prefix goivy/webvue/frontend run test
 npm --prefix goivy/webvue/frontend run build
-IVYVUE_DB_DSN='jaten:jaten@tcp(127.0.0.1:3306)/ivyvue?parseTime=true&loc=UTC&charset=utf8mb4,utf8' go test ./goivy/webvue
+IVYVUE_DB_DSN='postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable' go test ./goivy/webvue
 go test ./goivy/cmd/ivywebvue
+go test ./goivy/cmd/ivywebvue-admin
 cd goivy/webvue && ../../node_modules/.bin/playwright test
 ```
 
@@ -783,32 +901,35 @@ The browser test may require sandbox escalation to bind localhost.
 
 ## Implementation Order
 
-1. Copy allowed static assets.
+1. Create PostgreSQL administrative setup docs and SQL scripts.
 2. Create frontend package/config files.
-3. Create new `static/index.html`.
-4. Create `webvue.css`.
-5. Create SQL migrations for users, credentials, accounts, account
-   memberships, projects, grants, auth sessions, project database tracking, and
-   Ivy workspace-session mappings.
-6. Create Go auth model/store/session/middleware interfaces.
-7. Create MariaDB `database/sql` auth store.
-8. Create project database name generator and identifier validator.
-9. Create project database provisioning/migration path.
+3. Copy allowed static assets.
+4. Create new `static/index.html`.
+5. Create `webvue.css`.
+6. Create SQL migrations for users, credentials, accounts, account
+   memberships, projects, grants, auth sessions, project storage locations, RLS
+   helpers, and Ivy workspace-session mappings.
+7. Create Go auth model/store/session/middleware interfaces.
+8. Create PostgreSQL `database/sql` auth store.
+9. Create project-scoped transaction helper that sets RLS context with
+   `set_config`.
 10. Create password hashing/verification helpers.
-11. Create control-plane migration runner and dev seed path.
-12. Create `webvue` server with `/auth/*` routes.
-13. Create account/project API route skeleton and project authorization
+11. Create migration runner.
+12. Create `goivy/cmd/ivywebvue-admin` with `migrate`, `seed-dev`, user,
+    account, project, and grant commands.
+13. Create `webvue` server with `/auth/*` routes.
+14. Create account/project API route skeleton and project authorization
     middleware.
-14. Create `goivy/cmd/ivywebvue`.
-15. Create frontend auth/account/project stores.
-16. Create HTTP client, auth API, and project API modules.
-17. Create login, project picker, and workspace shell components.
-18. Create source guard test.
-19. Create frontend unit tests.
-20. Create Go auth/server/store/provisioning tests.
-21. Create Playwright config and auth smoke test.
-22. Run verification commands.
-23. Update `README.md` with build/test/serve/login/database commands.
+15. Create `goivy/cmd/ivywebvue`.
+16. Create frontend auth/account/project stores.
+17. Create HTTP client, auth API, and project API modules.
+18. Create login, project picker, and workspace shell components.
+19. Create source guard test.
+20. Create frontend unit tests.
+21. Create Go auth/server/store/RLS/admin tests.
+22. Create Playwright config and auth smoke test.
+23. Run verification commands.
+24. Update `README.md` with build/test/serve/login/database/admin commands.
 
 ## Phase 0 Non-Goals
 
@@ -820,7 +941,8 @@ The browser test may require sandbox escalation to bind localhost.
 - no dynamic menus yet
 - no tutorial iframe behavior yet
 - no production OIDC implementation yet
-- no production-grade project database credential rotation yet
+- no dedicated per-project database provisioning yet
+- no production-grade PostgreSQL role/password rotation yet
 
 Those start in Phase 1 and later. Phase 0 must still make their future API
 surface project-scoped.
