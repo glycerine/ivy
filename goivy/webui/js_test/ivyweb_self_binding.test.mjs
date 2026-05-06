@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
-const staticJsDir = path.resolve(testDir, '../static/js');
+const frontendSrcDir = path.resolve(testDir, '../frontend/src');
 
 function methodBlocks(source) {
   const lines = source.split(/\n/);
@@ -44,18 +44,19 @@ function methodBlocks(source) {
   return blocks;
 }
 
-describe('static JavaScript self binding', () => {
+describe('bundled frontend self binding', () => {
   it('binds self in methods before callbacks use it', () => {
-    const files = fs.readdirSync(staticJsDir)
-      .filter((name) => name.endsWith('.js'))
-      .map((name) => path.join(staticJsDir, name));
+    const files = [
+      path.join(frontendSrcDir, 'legacyAppController.js'),
+      path.join(frontendSrcDir, 'legacyPersist.js'),
+    ];
     const missingBindings = [];
 
     for (const file of files) {
       const source = fs.readFileSync(file, 'utf8');
       for (const block of methodBlocks(source)) {
         if (/\bself\b/.test(block.body) && !/\bvar\s+self\s*=\s*this\b/.test(block.body)) {
-          missingBindings.push(`${path.basename(file)}:${block.startLine}-${block.endLine} ${block.name}()`);
+          missingBindings.push(`${path.relative(frontendSrcDir, file)}:${block.startLine}-${block.endLine} ${block.name}()`);
         }
       }
     }

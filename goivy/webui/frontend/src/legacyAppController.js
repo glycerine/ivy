@@ -6,16 +6,35 @@
  * file loading, mode selection, and verification checks.
  */
 
-import { ARG_STYLE, CONCEPT_STYLE, IvyGraph } from './legacyGraph.js';
-import { IvyAPIShim as IvyAPI, IvyControlsShim as IvyControls } from './legacyRuntimeGlobals.js';
+import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './legacyGraph.js';
+import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './legacyRuntimeGlobals.js';
 import { createIvyPersist } from './legacyPersist.js';
 
-const IvyPersist = createIvyPersist(globalThis.window);
+const defaultLegacyAppDependencies = {
+    IvyAPI: DefaultIvyAPI,
+    IvyControls: DefaultIvyControls,
+    IvyGraph: DefaultIvyGraph,
+    IvyPersist: createIvyPersist(globalThis.window),
+    ARG_STYLE: DEFAULT_ARG_STYLE,
+    CONCEPT_STYLE: DEFAULT_CONCEPT_STYLE,
+    CodeMirror: globalThis.window && globalThis.window.CodeMirror,
+};
+let legacyAppDeps = { ...defaultLegacyAppDependencies };
+
+function configureLegacyAppDependencies(overrides) {
+    legacyAppDeps = { ...defaultLegacyAppDependencies, ...(overrides || {}) };
+    return legacyAppDeps;
+}
+
+function resetLegacyAppDependencies() {
+    legacyAppDeps = { ...defaultLegacyAppDependencies };
+    return legacyAppDeps;
+}
 
 class IvyApp {
     constructor() {
         this.api = this.createApi();
-        this.controls = new IvyControls(this.api);
+        this.controls = new legacyAppDeps.IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
         this.sheets = {};
@@ -52,7 +71,7 @@ class IvyApp {
                 console.warn('Vue engine bridge unavailable, falling back to IvyAPI:', e);
             }
         }
-        return new IvyAPI();
+        return new legacyAppDeps.IvyAPI();
     }
 
     /**
@@ -64,7 +83,7 @@ class IvyApp {
 
         // Check for a saved session BEFORE creating a new server session.
         // This prevents the URL session ID from incrementing on every reload.
-        var savedState = IvyPersist.load();
+        var savedState = legacyAppDeps.IvyPersist.load();
 
         // Always need a server session for API calls.
         try {
@@ -77,17 +96,17 @@ class IvyApp {
         // If restoring, keep the saved session's URL hash.
         // If fresh, set the new session ID in the URL.
         if (!savedState || !savedState.fileContent) {
-            IvyPersist.setSessionIdInURL(this.api.sessionId);
+            legacyAppDeps.IvyPersist.setSessionIdInURL(this.api.sessionId);
         }
 
         // Show the persisted session ID (from URL hash), not the server session ID.
         // These can differ because the server ID increments on restart while
         // the persisted ID is stable across reloads.
-        this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
+        this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
 
         // Create Cytoscape graph instances
-        this.argGraph = new IvyGraph('arg-graph', ARG_STYLE);
-        this.conceptGraph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+        this.argGraph = new legacyAppDeps.IvyGraph('arg-graph', legacyAppDeps.ARG_STYLE);
+        this.conceptGraph = new legacyAppDeps.IvyGraph('concept-graph', legacyAppDeps.CONCEPT_STYLE);
         this.registerSheet('sheet-1', this.argGraph, this.conceptGraph);
 
         // Health check: verify graphs initialized correctly.
@@ -128,7 +147,11 @@ class IvyApp {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.initializeEditor === 'function') {
             this.cmEditor = window.__ivyVueBridge.initializeEditor(this);
         } else if (modelEditor) {
-            this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
+            var codeMirror = legacyAppDeps.CodeMirror || window.CodeMirror;
+            if (!codeMirror) {
+                throw new Error('CodeMirror is not available');
+            }
+            this.cmEditor = codeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
                 keyMap: this.getEditorKeymap(),
                 tabSize: 4,
@@ -163,10 +186,10 @@ class IvyApp {
         // Restore saved session if available (survives page reload).
         if (savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
-            var restored = await IvyPersist.restore(this, savedState);
+            var restored = await legacyAppDeps.IvyPersist.restore(this, savedState);
             if (restored) {
                 // Keep the URL hash from the saved session (don't overwrite)
-                IvyPersist.setFileName(savedState.fileName, savedState.filePath);
+                legacyAppDeps.IvyPersist.setFileName(savedState.fileName, savedState.filePath);
                 this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
             } else {
                 this.controls.setStatus('Ready');
@@ -178,7 +201,7 @@ class IvyApp {
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
         // and after any successful operation (debounced).
         window.addEventListener('beforeunload', function () {
-            IvyPersist.save(self);
+            legacyAppDeps.IvyPersist.save(self);
         });
 
         // Hook into setStatus: auto-save whenever a 'success' status is set.
@@ -186,7 +209,7 @@ class IvyApp {
         this.controls.setStatus = function (msg, level) {
             origSetStatus(msg, level);
             if (level === 'success') {
-                IvyPersist.save(self);
+                legacyAppDeps.IvyPersist.save(self);
             }
         };
     }
@@ -337,7 +360,7 @@ class IvyApp {
         var name = this._persistedFileName || (this._fileHandle && this._fileHandle.name) || '';
         if (!name) return;
         this._lastClosedFileHandle = this._fileHandle;
-        this._lastClosedSessionId = IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '';
+        this._lastClosedSessionId = legacyAppDeps.IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '';
         this._lastClosedFileName = name || 'file';
     }
 
@@ -369,7 +392,7 @@ class IvyApp {
             } else {
                 await this.loadRecentSession(this._lastClosedSessionId);
             }
-            IvyPersist.setFileName(
+            legacyAppDeps.IvyPersist.setFileName(
                 this._persistedFileName || this._lastClosedFileName,
                 this._persistedFilePath || this._persistedFileName || this._lastClosedFileName
             );
@@ -400,14 +423,14 @@ class IvyApp {
         if (this._fileHandle) return true;
         if (!this._persistedFileName) return false;
         var state = {
-            sessionId: IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '',
+            sessionId: legacyAppDeps.IvyPersist.getSessionIdFromURL() || (this.api && this.api.sessionId) || '',
             fileName: this._persistedFileName,
             filePath: this._persistedFilePath || this._persistedFileName,
         };
-        var handle = await IvyPersist.loadFileHandle(state);
+        var handle = await legacyAppDeps.IvyPersist.loadFileHandle(state);
         if (!handle) return false;
         this._fileHandle = handle;
-        await IvyPersist.saveFileHandle(this);
+        await legacyAppDeps.IvyPersist.saveFileHandle(this);
         return true;
     }
 
@@ -426,7 +449,7 @@ class IvyApp {
             this.setEditorContent(diskContent);
             this._persistedFileContent = diskContent;
             this._savedFileContent = diskContent;
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
             this.controls.setStatus('Reverted to on-disk version: ' + (this._persistedFileName || 'model'), 'success');
         } else if (choice === 'merge') {
             var merged = this._mergeDiskVersionIntoEditBuffer(lastSaved, content, diskContent);
@@ -436,7 +459,7 @@ class IvyApp {
                 this.cmEditor.setValue(merged);
             }
             this._updateEditorLabel();
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
             this.controls.setStatus('Merged disk changes into editor buffer; resolve conflict markers before saving', 'warning');
         } else {
             this.controls.setStatus('Save cancelled: file changed on disk', 'warning');
@@ -1403,8 +1426,8 @@ class IvyApp {
             graphIds.push(graphs[i].id);
         }
 
-        var argGraph = new IvyGraph(graphIds[0], ARG_STYLE);
-        var conceptGraph = new IvyGraph(graphIds[1], CONCEPT_STYLE);
+        var argGraph = new legacyAppDeps.IvyGraph(graphIds[0], legacyAppDeps.ARG_STYLE);
+        var conceptGraph = new legacyAppDeps.IvyGraph(graphIds[1], legacyAppDeps.CONCEPT_STYLE);
         argGraph.healthCheck();
         conceptGraph.healthCheck();
         this.registerSheet(sheetId, argGraph, conceptGraph);
@@ -3497,7 +3520,7 @@ class IvyApp {
             self._persistedFilePath = file.path || file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
             if (self._fileHandle) {
-                await IvyPersist.saveFileHandle(self);
+                await legacyAppDeps.IvyPersist.saveFileHandle(self);
             }
 
             // Populate the model editor with the file content (also marks clean via setEditorContent)
@@ -3518,11 +3541,11 @@ class IvyApp {
             this.populateStateCheckboxes(conceptData);
             // Update state label and file name display
             this.updateStateLabel(0);
-            IvyPersist.setFileName(file.name, this._persistedFilePath);
+            legacyAppDeps.IvyPersist.setFileName(file.name, this._persistedFilePath);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
 
             // Auto-save after file load
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
         } catch (e) {
             this.controls.setStatus('Load failed: ' + e.message, 'error');
             console.error('File load error:', e);
@@ -3673,7 +3696,7 @@ class IvyApp {
             this._persistedFileContent = content;
             this._savedFileContent = content;
             this._updateEditorLabel();
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
             this.controls.setStatus('Downloaded edited copy: ' + filename + '. In Firefox, choose the original file to overwrite.', 'success');
             return true;
         } catch (e) {
@@ -3722,8 +3745,8 @@ class IvyApp {
             this._persistedFilePath = handle.name;
             this._persistedFileContent = content;
             this._savedFileContent = content;
-            await IvyPersist.saveFileHandle(this);
-            IvyPersist.setFileName(handle.name, this._persistedFilePath);
+            await legacyAppDeps.IvyPersist.saveFileHandle(this);
+            legacyAppDeps.IvyPersist.setFileName(handle.name, this._persistedFilePath);
             this._updateEditorLabel();
             this.controls.setStatus('Saved: ' + handle.name, 'success');
             return true;
@@ -3844,7 +3867,7 @@ class IvyApp {
             selectedArgNode: this.selectedArgNode || null,
             edgeVisibility: this._edgeVisibility || {},
             labelVisibility: this._labelVisibility || {},
-            toggles: IvyPersist._getToggles ? IvyPersist._getToggles() : {},
+            toggles: legacyAppDeps.IvyPersist._getToggles ? legacyAppDeps.IvyPersist._getToggles() : {},
             sheets: sheets,
         };
     }
@@ -3947,14 +3970,14 @@ class IvyApp {
         }
 
         if (state.toggles) {
-            IvyPersist._setToggles(state.toggles);
+            legacyAppDeps.IvyPersist._setToggles(state.toggles);
         }
         if (state.activeSheetId && this.sheetExists(state.activeSheetId)) {
             this.switchSheet(state.activeSheetId);
         } else {
             this.switchSheet('sheet-1');
         }
-        IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
+        legacyAppDeps.IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
         this.controls.setStatus('Visual analysis state loaded: ' + (this._persistedFileName || 'state'), 'warning');
         return true;
     }
@@ -4084,15 +4107,15 @@ class IvyApp {
         options = options || {};
         // Save current state before clearing
         if (!options.skipSaveCurrent && this._persistedFileContent) {
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
         }
         this._rememberLastOpenFile();
 
         // Create a fresh server session
         try {
             await this.api.createSession();
-            this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
-            IvyPersist.setSessionIdInURL(this.api.sessionId);
+            this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
+            legacyAppDeps.IvyPersist.setSessionIdInURL(this.api.sessionId);
 
             // Reconnect SSE
             if (this.api.sessionId) {
@@ -4118,7 +4141,7 @@ class IvyApp {
 
         // Clear UI
         this.setEditorContent('');
-        IvyPersist.setFileName('');
+        legacyAppDeps.IvyPersist.setFileName('');
         this._updateReopenLastFileButton();
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.clearStateRelations === 'function') {
             window.__ivyVueBridge.clearStateRelations();
@@ -4143,7 +4166,7 @@ class IvyApp {
             container.innerHTML = '';
         }
 
-        var sessions = IvyPersist.listSessions();
+        var sessions = legacyAppDeps.IvyPersist.listSessions();
         if (sessions.length === 0) {
             if (vueRecentFiles) {
                 window.__ivyVueBridge.updateRecentFiles([], null);
@@ -4189,7 +4212,7 @@ class IvyApp {
                 var session = unique[m];
                 var label = session.fileName;
                 if (baseNameCount[session.fileName] > 1 && session.filePath) {
-                    label = session.fileName + '  ' + IvyPersist.truncatePath(session.filePath, 15);
+                    label = session.fileName + '  ' + legacyAppDeps.IvyPersist.truncatePath(session.filePath, 15);
                 }
                 var title = '';
                 if (session.timestamp) {
@@ -4207,7 +4230,7 @@ class IvyApp {
                 var displayName = s.fileName;
                 // If basename appears more than once, show path context
                 if (baseNameCount[s.fileName] > 1 && s.filePath) {
-                    displayName = s.fileName + '  ' + IvyPersist.truncatePath(s.filePath, 15);
+                    displayName = s.fileName + '  ' + legacyAppDeps.IvyPersist.truncatePath(s.filePath, 15);
                 }
                 var link = document.createElement('a');
                 link.href = '#';
@@ -4231,10 +4254,10 @@ class IvyApp {
     async loadRecentSession(savedSessionId) {
         // Save current state first
         if (this._persistedFileContent) {
-            IvyPersist.save(this);
+            legacyAppDeps.IvyPersist.save(this);
         }
 
-        var state = IvyPersist.loadSession(savedSessionId);
+        var state = legacyAppDeps.IvyPersist.loadSession(savedSessionId);
         if (!state || !state.fileContent) {
             this.controls.setStatus('Could not load session: no saved data', 'error');
             return;
@@ -4253,16 +4276,16 @@ class IvyApp {
             this.api.connectEvents(this.handleEvent.bind(this));
         }
 
-        var restored = await IvyPersist.restore(this, state);
+        var restored = await legacyAppDeps.IvyPersist.restore(this, state);
         if (restored) {
             // Keep the URL set by restore() (state.sessionId) — do NOT clobber it with
             // api.sessionId, which resets to s1/s2/... on every server restart and would
             // overwrite unrelated historical sessions stored under those same IDs.
-            IvyPersist.setFileName(
+            legacyAppDeps.IvyPersist.setFileName(
                 this._persistedFileName || state.fileName,
                 this._persistedFilePath || state.filePath || state.fileName
             );
-            this.updateSessionDisplay(IvyPersist.getSessionIdFromURL() || this.api.sessionId);
+            this.updateSessionDisplay(legacyAppDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
             this.controls.setStatus('Loaded: ' + state.fileName, 'success');
         } else {
             this.controls.setStatus('Restore failed', 'error');
@@ -5610,4 +5633,4 @@ function startIvyApp() {
     return window.ivyApp;
 }
 
-export { IvyApp, startIvyApp };
+export { IvyApp, configureLegacyAppDependencies, resetLegacyAppDependencies, startIvyApp };
