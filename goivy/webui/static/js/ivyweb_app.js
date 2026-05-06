@@ -228,8 +228,19 @@ class IvyApp {
             persistent: true,
             className: 'ivy-save-progress',
         });
+        this._positionSaveProgressToast(toast);
         this._saveProgressToast = toast;
         return toast;
+    }
+
+    _positionSaveProgressToast(toast) {
+        var editorPanel = document.getElementById('editor-panel');
+        if (!toast || !editorPanel || typeof editorPanel.getBoundingClientRect !== 'function') return;
+        var rect = editorPanel.getBoundingClientRect();
+        var gap = 8;
+        toast.style.right = 'auto';
+        toast.style.left = Math.round(rect.left) + 'px';
+        toast.style.top = Math.round(rect.top - toast.offsetHeight - gap) + 'px';
     }
 
     _hideSaveProgress(toast) {
