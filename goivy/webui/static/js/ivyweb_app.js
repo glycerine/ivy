@@ -196,6 +196,21 @@ class IvyApp {
         this._updateReopenLastFileButton();
     }
 
+    _refreshEditorLayout() {
+        var self = this;
+        var refresh = function () {
+            if (self.cmEditor && typeof self.cmEditor.refresh === 'function') {
+                self.cmEditor.refresh();
+            }
+        };
+
+        refresh();
+        if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(refresh);
+        }
+        setTimeout(refresh, 0);
+    }
+
     _editorContent() {
         return this.cmEditor ? this.cmEditor.getValue() : (this._persistedFileContent || '');
     }
@@ -1639,6 +1654,7 @@ class IvyApp {
         // Resize graphs to fill the reclaimed/reduced space
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
+        this._refreshEditorLayout();
     }
 
     setupResizerH() {

@@ -60,4 +60,26 @@ describe('IvyApp checkbox state', () => {
     expect(app._edgeVisibility['link(X,Y)'].edge_unknown).toBe(true);
     expect(app._labelVisibility.semaphore.node_necessarily).toBe(true);
   });
+
+  it('refreshes the editor layout when the tutorial pane is hidden', () => {
+    const IvyApp = loadApp();
+    const app = makeApp(IvyApp);
+    document.body.insertAdjacentHTML('beforeend', [
+      '<div id="tutorial-container"></div>',
+      '<div id="divider-h"></div>',
+      '<button id="btn-toggle-tutorial">Hide Tutorial</button>',
+    ].join(''));
+    app.cmEditor.refresh = vi.fn();
+    app.argGraph = { resize: vi.fn() };
+    app.conceptGraph = { resize: vi.fn() };
+
+    app.toggleTutorial();
+
+    expect(document.getElementById('tutorial-container').style.display).toBe('none');
+    expect(document.getElementById('divider-h').style.display).toBe('none');
+    expect(document.getElementById('btn-toggle-tutorial').textContent).toBe('Show Tutorial');
+    expect(app.argGraph.resize).toHaveBeenCalled();
+    expect(app.conceptGraph.resize).toHaveBeenCalled();
+    expect(app.cmEditor.refresh).toHaveBeenCalled();
+  });
 });
