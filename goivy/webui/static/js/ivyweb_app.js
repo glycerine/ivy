@@ -3124,21 +3124,14 @@ class IvyApp {
     async downloadModel() {
         this.controls.setStatus('Downloading...');
         try {
-            var content = this._persistedFileContent || '';
+            var content = this._editorContent();
             if (!content) {
                 this.controls.setStatus('No model loaded to download', 'error');
                 return;
             }
-            var blob = new Blob([content], { type: 'text/plain' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = this._persistedFileName || 'model.ivy';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            this.controls.setStatus('Downloaded: ' + a.download, 'success');
+            var filename = this._persistedFileName || 'model.ivy';
+            this.downloadTextFile(filename, content, 'text/plain');
+            this.controls.setStatus('Downloaded: ' + filename, 'success');
         } catch (e) {
             this.controls.setStatus('Download failed: ' + e.message, 'error');
         }
@@ -3197,7 +3190,26 @@ class IvyApp {
                 this._updateEditorLabel();
                 return true;
             }
+            if (!window.showSaveFilePicker) {
+                return this.downloadModelForUnsupportedSave(content);
+            }
             return await this.saveAs({ explainMissingHandle: true });
+        }
+    }
+
+    downloadModelForUnsupportedSave(content) {
+        var filename = this._persistedFileName || 'model.ivy';
+        try {
+            this.downloadTextFile(filename, content, 'text/plain');
+            this._persistedFileContent = content;
+            this._savedFileContent = content;
+            this._updateEditorLabel();
+            IvyPersist.save(this);
+            this.controls.setStatus('Downloaded edited copy: ' + filename + '. In Firefox, choose the original file to overwrite.', 'success');
+            return true;
+        } catch (e) {
+            this.controls.setStatus('Download failed: ' + e.message, 'error');
+            return false;
         }
     }
 
@@ -3210,9 +3222,7 @@ class IvyApp {
         }
         try {
             if (!window.showSaveFilePicker) {
-                // Fallback for browsers without File System Access API
-                this.controls.setStatus('Save as... not supported in this browser — use Download instead', 'error');
-                return false;
+                return this.downloadModelForUnsupportedSave(content);
             }
             if (options.explainMissingHandle) {
                 this.showSaveAsExplanationNotice();

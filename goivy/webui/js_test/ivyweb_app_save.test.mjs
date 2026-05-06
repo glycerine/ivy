@@ -116,6 +116,26 @@ describe('IvyApp Save and Save As', () => {
     expect(setFileName).toHaveBeenCalledWith('helloworld.ivy', 'helloworld.ivy');
   });
 
+  it('keeps the Chrome-capable Ctrl-S path on Save As when no handle is available', async () => {
+    const handle = makeWritableHandle({ name: 'client.ivy' });
+    window.showSaveFilePicker = vi.fn(async () => handle);
+    const { IvyApp } = loadAppWithPersist();
+    const app = makeApp(IvyApp, {
+      fileName: 'client.ivy',
+      savedContent: 'old model',
+      editorContent: 'new model',
+    });
+    app.downloadTextFile = vi.fn();
+
+    const saved = await app.save();
+
+    expect(saved).toBe(true);
+    expect(window.showSaveFilePicker).toHaveBeenCalledTimes(1);
+    expect(app.downloadTextFile).not.toHaveBeenCalled();
+    expect(handle.writes).toEqual(['new model']);
+    expect(app._fileHandle).toBe(handle);
+  });
+
   it('leaves dirty state intact when the Save As picker is cancelled', async () => {
     window.showSaveFilePicker = vi.fn(async () => {
       throw abortError();
@@ -159,22 +179,41 @@ describe('IvyApp Save and Save As', () => {
     expect(app.controls.lastStatus).toEqual({ message: 'Save failed: disk full', kind: 'error' });
   });
 
-  it('uses the explicit unsupported fallback when File System Access is unavailable', async () => {
+  it('downloads the current buffer when Save As is unavailable', async () => {
     const { IvyApp } = loadAppWithPersist();
     const app = makeApp(IvyApp, {
       fileName: 'client.ivy',
       savedContent: 'old model',
       editorContent: 'new model',
     });
+    app.downloadTextFile = vi.fn();
 
     const saved = await app.saveAs();
 
-    expect(saved).toBe(false);
-    expect(app._editorDirty()).toBe(true);
-    expect(app.controls.lastStatus).toEqual({
-      message: 'Save as... not supported in this browser — use Download instead',
-      kind: 'error',
+    expect(saved).toBe(true);
+    expect(app.downloadTextFile).toHaveBeenCalledWith('client.ivy', 'new model', 'text/plain');
+    expect(app._editorDirty()).toBe(false);
+    expect(app._savedFileContent).toBe('new model');
+    expect(app._persistedFileContent).toBe('new model');
+    expect(app.controls.lastStatus.kind).toBe('success');
+    expect(app.controls.lastStatus.message).toContain('Downloaded edited copy: client.ivy');
+  });
+
+  it('uses a same-name download for Ctrl-S in browsers without writable file handles', async () => {
+    const { IvyApp } = loadAppWithPersist();
+    const app = makeApp(IvyApp, {
+      fileName: 'client.ivy',
+      savedContent: 'old model',
+      editorContent: 'new model',
     });
+    app.downloadTextFile = vi.fn();
+
+    const saved = await app.save();
+
+    expect(saved).toBe(true);
+    expect(app.downloadTextFile).toHaveBeenCalledWith('client.ivy', 'new model', 'text/plain');
+    expect(app._editorDirty()).toBe(false);
+    expect(app.controls.lastStatus.message).toContain('choose the original file to overwrite');
   });
 });
 
