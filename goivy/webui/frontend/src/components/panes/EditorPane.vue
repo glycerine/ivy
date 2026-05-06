@@ -1,5 +1,6 @@
 <script setup>
 import { useEditorStore } from '../../stores/editorStore.js';
+import { callApp, runCommand } from '../legacyCommand.js';
 
 const editorStore = useEditorStore();
 </script>
@@ -12,8 +13,8 @@ const editorStore = useEditorStore();
         <span id="model-editor-label" class="editor-path" :title="`Editing: ${editorStore.label}`">{{ editorStore.label }}</span>
       </div>
       <div class="panel-header-actions">
-        <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
-        <button id="file-reopen-last" class="reopen-last-btn" style="display:none;"></button>
+        <button id="file-close-current" class="editor-close-btn" title="Close current file" @click="runCommand($event, () => callApp('closeCurrentFile'))">x</button>
+        <button id="file-reopen-last" class="reopen-last-btn" style="display:none;" @click="runCommand($event, () => callApp('reopenLastFile'))"></button>
         <span class="keymap-radios">
           <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
           <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>

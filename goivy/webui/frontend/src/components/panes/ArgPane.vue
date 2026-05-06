@@ -3,16 +3,16 @@
     <div class="panel-header">
       <strong class="column-title">ARG (Abstract Reachability Graph)</strong>
       <div class="panel-header-actions">
-        <div class="dropdown">
-          <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
+        <div class="dropdown" :class="{ open: dropdownStore.isOpen('arg-inv-menu') }">
+          <span class="panel-menu" data-dropdown="arg-inv-menu" @click="toggleDropdownCommand($event, dropdownStore, 'arg-inv-menu')">Invariant</span>
           <div id="arg-inv-menu" class="dropdown-content">
-            <a href="#" id="arg-check-induction">Check induction</a>
-            <a href="#" id="arg-bounded-check">Bounded check</a>
-            <a href="#" id="arg-diagram">Diagram</a>
-            <a href="#" id="arg-weaken">Weaken</a>
+            <a href="#" id="arg-check-induction" @click="runMenuCommand($event, () => callApp('checkInduction'))">Check induction</a>
+            <a href="#" id="arg-bounded-check" @click="runMenuCommand($event, () => callApp('boundedCheck'))">Bounded check</a>
+            <a href="#" id="arg-diagram" @click="runMenuCommand($event, () => callApp('diagramDomain'))">Diagram</a>
+            <a href="#" id="arg-weaken" @click="runMenuCommand($event, () => callApp('weakenInvariant'))">Weaken</a>
             <div class="dropdown-sep"></div>
-            <a href="#" id="arg-save-invariant">Save Invariant...</a>
-            <a href="#" id="arg-save-abs">Save Abstraction...</a>
+            <a href="#" id="arg-save-invariant" @click="runMenuCommand($event, () => callApp('saveInvariant'))">Save Invariant...</a>
+            <a href="#" id="arg-save-abs" @click="runMenuCommand($event, () => callApp('saveAbstraction'))">Save Abstraction...</a>
           </div>
         </div>
         <DynamicMenuRegion region="arg" />
@@ -24,4 +24,8 @@
 
 <script setup>
 import DynamicMenuRegion from '../DynamicMenuRegion.vue';
+import { callApp, runMenuCommand, toggleDropdownCommand } from '../legacyCommand.js';
+import { useDropdownStore } from '../../stores/dropdownStore.js';
+
+const dropdownStore = useDropdownStore();
 </script>

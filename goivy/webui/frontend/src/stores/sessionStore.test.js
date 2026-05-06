@@ -32,5 +32,8 @@ describe('sessionStore', () => {
 
     session.hideLoading();
     expect(session.loading).toBe(false);
+
+    session.setSaveAsNoticeVisible(true);
+    expect(session.saveAsNoticeVisible).toBe(true);
   });
 });

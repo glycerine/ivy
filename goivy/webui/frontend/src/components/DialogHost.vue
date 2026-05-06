@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
-  <div id="save-as-explain-notice" class="save-as-explain-notice" style="display:none;">
+  <div id="save-as-explain-notice" class="save-as-explain-notice" :style="{ display: sessionStore.saveAsNoticeVisible ? 'block' : 'none' }">
     The browser security model requires re-confirmation of the save path on disk when IvyWeb cannot locate an IndexedDB cached file handle.
   </div>
 

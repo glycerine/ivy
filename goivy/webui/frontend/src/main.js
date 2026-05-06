@@ -1,9 +1,11 @@
-import { createApp } from 'vue';
+import { createApp, h, render } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
+import AnalysisSheetShell from './components/panes/AnalysisSheetShell.vue';
 import { useContextMenuStore } from './stores/contextMenuStore.js';
 import { useDetailsStore } from './stores/detailsStore.js';
 import { useDialogStore } from './stores/dialogStore.js';
+import { useDropdownStore } from './stores/dropdownStore.js';
 import { useEditorStore } from './stores/editorStore.js';
 import { useEventTraceStore } from './stores/eventTraceStore.js';
 import { useLayoutStore } from './stores/layoutStore.js';
@@ -22,6 +24,7 @@ const editorStore = useEditorStore(pinia);
 const contextMenuStore = useContextMenuStore(pinia);
 const detailsStore = useDetailsStore(pinia);
 const dialogStore = useDialogStore(pinia);
+const dropdownStore = useDropdownStore(pinia);
 const sessionStore = useSessionStore(pinia);
 const stateRelationsStore = useStateRelationsStore(pinia);
 const menuDescriptorStore = useMenuDescriptorStore(pinia);
@@ -83,14 +86,41 @@ window.__ivyVueBridge = {
   hideLoading() {
     sessionStore.hideLoading();
   },
+  setSaveAsNoticeVisible(visible) {
+    sessionStore.setSaveAsNoticeVisible(visible);
+  },
   updateMenuRegion(region, menus, dispatcher) {
     menuDescriptorStore.setRegion(region, menus, dispatcher);
   },
   closeDropdownMenus() {
     menuDescriptorStore.closeAll();
+    dropdownStore.closeAll();
   },
   upsertSheetTab(tab) {
     sheetStore.upsertTab(tab);
+  },
+  createAnalysisSheetShell({ id, counter }) {
+    if (!id) return null;
+    const sheetArea = document.getElementById('sheet-area');
+    if (!sheetArea) return null;
+    let sheet = document.getElementById(id);
+    if (!sheet) {
+      sheet = document.createElement('div');
+      sheet.id = id;
+      sheet.className = 'sheet-content';
+      sheet.__ivyVueRenderedSheet = true;
+      sheetArea.appendChild(sheet);
+    }
+    const vnode = h(AnalysisSheetShell, { counter });
+    vnode.appContext = app._context;
+    render(vnode, sheet);
+    return sheet;
+  },
+  removeRenderedSheet(sheetId) {
+    const sheet = document.getElementById(sheetId);
+    if (sheet && sheet.__ivyVueRenderedSheet) {
+      render(null, sheet);
+    }
   },
   activateSheetTab(sheetId) {
     sheetStore.activateTab(sheetId);

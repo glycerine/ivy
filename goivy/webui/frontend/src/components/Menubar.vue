@@ -1,21 +1,21 @@
 <template>
   <div id="menubar">
     <div class="menu-group">
-      <div class="dropdown">
-        <span class="panel-menu" data-dropdown="file-menu">File</span>
+      <div class="dropdown" :class="{ open: dropdownStore.isOpen('file-menu') }">
+        <span class="panel-menu" data-dropdown="file-menu" @click="toggleDropdownCommand($event, dropdownStore, 'file-menu', () => callApp('populateRecentFiles'))">File</span>
         <div id="file-menu" class="dropdown-content">
-          <a href="#" id="file-load">Load...</a>
-          <a href="#" id="file-open-event-trace">Open Event Trace...</a>
-          <a href="#" id="file-save-as">Save as...</a>
-          <a href="#" id="file-download">Download current model</a>
-          <a href="#" id="file-save-analysis-state">Save Analysis State...</a>
-          <a href="#" id="file-load-analysis-state">Load Analysis State...</a>
-          <a href="#" id="file-save-invariant">Save Invariant...</a>
+          <a href="#" id="file-load" @click="runMenuCommand($event, () => callApp('chooseAndLoadModelFile'))">Load...</a>
+          <a href="#" id="file-open-event-trace" @click="runMenuCommand($event, () => callApp('chooseAndLoadEventTraceFile'))">Open Event Trace...</a>
+          <a href="#" id="file-save-as" @click="runMenuCommand($event, () => callApp('saveAs'))">Save as...</a>
+          <a href="#" id="file-download" @click="runMenuCommand($event, () => callApp('downloadModel'))">Download current model</a>
+          <a href="#" id="file-save-analysis-state" @click="runMenuCommand($event, () => callApp('saveAnalysisState'))">Save Analysis State...</a>
+          <a href="#" id="file-load-analysis-state" @click="runMenuCommand($event, () => callApp('chooseAndLoadAnalysisStateFile'))">Load Analysis State...</a>
+          <a href="#" id="file-save-invariant" @click="runMenuCommand($event, () => callApp('saveInvariant'))">Save Invariant...</a>
           <div class="dropdown-sep"></div>
           <RecentFilesMenu />
           <div class="dropdown-sep"></div>
           <div style="height:4px"></div>
-          <a href="#" id="file-new">New Model</a>
+          <a href="#" id="file-new" @click="runMenuCommand($event, () => callApp('newModel'))">New Model</a>
         </div>
       </div>
     </div>
@@ -30,22 +30,25 @@
       </select>
     </div>
     <div class="menu-group">
-      <button id="btn-check" class="menu-btn action-btn">Check</button>
-      <button id="btn-show-reachable" class="menu-btn">Show Reachable</button>
-      <button id="btn-undo" class="menu-btn">Undo</button>
-      <button id="btn-reset-domain" class="menu-btn">Reset Domain</button>
-      <button id="btn-diagram-domain" class="menu-btn">Diagram Domain</button>
+      <button id="btn-check" class="menu-btn action-btn" @click="runCommand($event, () => callApp('runCheck'))">Check</button>
+      <button id="btn-show-reachable" class="menu-btn" @click="runCommand($event, () => callApp('showReachableStates'))">Show Reachable</button>
+      <button id="btn-undo" class="menu-btn" @click="runCommand($event, () => callApp('doUndo'))">Undo</button>
+      <button id="btn-reset-domain" class="menu-btn" @click="runCommand($event, () => callApp('resetDomain'))">Reset Domain</button>
+      <button id="btn-diagram-domain" class="menu-btn" @click="runCommand($event, () => callApp('diagramDomain'))">Diagram Domain</button>
       <span id="loaded-file" class="loaded-file"></span>
     </div>
     <div class="menu-group menu-right">
-      <button id="btn-toggle-tutorial" class="menu-btn">{{ layoutStore.tutorialVisible ? 'Hide Tutorial' : 'Show Tutorial' }}</button>
+      <button id="btn-toggle-tutorial" class="menu-btn" @click="runCommand($event, () => callApp('toggleTutorial'))">{{ layoutStore.tutorialVisible ? 'Hide Tutorial' : 'Show Tutorial' }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import RecentFilesMenu from './RecentFilesMenu.vue';
+import { callApp, runCommand, runMenuCommand, toggleDropdownCommand } from './legacyCommand.js';
+import { useDropdownStore } from '../stores/dropdownStore.js';
 import { useLayoutStore } from '../stores/layoutStore.js';
 
 const layoutStore = useLayoutStore();
+const dropdownStore = useDropdownStore();
 </script>

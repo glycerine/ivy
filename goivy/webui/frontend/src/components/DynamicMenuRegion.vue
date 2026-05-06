@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { useDropdownStore } from '../stores/dropdownStore.js';
 import { useMenuDescriptorStore } from '../stores/menuDescriptorStore.js';
 
 const props = defineProps({
@@ -10,9 +11,11 @@ const props = defineProps({
 });
 
 const menuStore = useMenuDescriptorStore();
+const dropdownStore = useDropdownStore();
 const menus = computed(() => menuStore.menusFor(props.region));
 
 function closeStaticDropdowns() {
+  dropdownStore.closeAll();
   document.querySelectorAll('.dropdown.open').forEach((dropdown) => {
     if (!dropdown.closest('[data-dynamic-menu-region]')) {
       dropdown.classList.remove('open');

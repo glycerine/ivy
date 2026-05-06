@@ -520,6 +520,10 @@ class IvyApp {
     }
 
     showSaveAsExplanationNotice() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSaveAsNoticeVisible === 'function') {
+            window.__ivyVueBridge.setSaveAsNoticeVisible(true);
+            return;
+        }
         var notice = document.getElementById('save-as-explain-notice');
         if (notice) {
             notice.style.display = 'block';
@@ -527,6 +531,10 @@ class IvyApp {
     }
 
     hideSaveAsExplanationNotice() {
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSaveAsNoticeVisible === 'function') {
+            window.__ivyVueBridge.setSaveAsNoticeVisible(false);
+            return;
+        }
         var notice = document.getElementById('save-as-explain-notice');
         if (notice) {
             notice.style.display = 'none';
@@ -696,6 +704,55 @@ class IvyApp {
         });
     }
 
+    async chooseAndLoadModelFile() {
+        var fileInput = document.getElementById('file-input');
+        if (window.showOpenFilePicker) {
+            try {
+                var handles = await window.showOpenFilePicker({
+                    types: [{ description: 'Ivy files', accept: { 'text/plain': ['.ivy'] } }],
+                    multiple: false,
+                });
+                var handle = handles[0];
+                var file = await handle.getFile();
+                this._fileHandle = handle;
+                await this.loadFile(file);
+            } catch (ex) {
+                if (ex.name !== 'AbortError') {
+                    this.controls.setStatus('Load failed: ' + ex.message, 'error');
+                }
+            }
+        } else if (fileInput) {
+            fileInput.click();
+        }
+    }
+
+    async chooseAndLoadEventTraceFile() {
+        var eventFileInput = document.getElementById('event-file-input');
+        if (window.showOpenFilePicker) {
+            try {
+                var handles = await window.showOpenFilePicker({
+                    types: [{ description: 'Ivy event traces', accept: { 'text/plain': ['.iev', '.txt'] } }],
+                    multiple: false,
+                });
+                var file = await handles[0].getFile();
+                await this.loadEventTraceFile(file);
+            } catch (ex) {
+                if (ex.name !== 'AbortError') {
+                    this.controls.setStatus('Event trace load failed: ' + ex.message, 'error');
+                }
+            }
+        } else if (eventFileInput) {
+            eventFileInput.click();
+        }
+    }
+
+    chooseAndLoadAnalysisStateFile() {
+        var analysisStateFileInput = document.getElementById('analysis-state-file-input');
+        if (analysisStateFileInput) {
+            analysisStateFileInput.click();
+        }
+    }
+
     /**
      * Set up all DOM and graph event handlers.
      */
@@ -713,24 +770,7 @@ class IvyApp {
         document.getElementById('file-load').addEventListener('click', function (e) {
             e.preventDefault();
             self.flashAndClose(this, async function () {
-                if (window.showOpenFilePicker) {
-                    try {
-                        var handles = await window.showOpenFilePicker({
-                            types: [{ description: 'Ivy files', accept: { 'text/plain': ['.ivy'] } }],
-                            multiple: false,
-                        });
-                        var handle = handles[0];
-                        var file = await handle.getFile();
-                        self._fileHandle = handle;
-                        await self.loadFile(file);
-                    } catch (ex) {
-                        if (ex.name !== 'AbortError') {
-                            self.controls.setStatus('Load failed: ' + ex.message, 'error');
-                        }
-                    }
-                } else {
-                    fileInput.click();
-                }
+                await self.chooseAndLoadModelFile();
             });
         });
         fileInput.addEventListener('change', function () {
@@ -745,22 +785,7 @@ class IvyApp {
             eventTraceOpen.addEventListener('click', function (e) {
                 e.preventDefault();
                 self.flashAndClose(this, async function () {
-                    if (window.showOpenFilePicker) {
-                        try {
-                            var handles = await window.showOpenFilePicker({
-                                types: [{ description: 'Ivy event traces', accept: { 'text/plain': ['.iev', '.txt'] } }],
-                                multiple: false,
-                            });
-                            var file = await handles[0].getFile();
-                            await self.loadEventTraceFile(file);
-                        } catch (ex) {
-                            if (ex.name !== 'AbortError') {
-                                self.controls.setStatus('Event trace load failed: ' + ex.message, 'error');
-                            }
-                        }
-                    } else {
-                        eventFileInput.click();
-                    }
+                    await self.chooseAndLoadEventTraceFile();
                 });
             });
             eventFileInput.addEventListener('change', function () {
@@ -794,7 +819,7 @@ class IvyApp {
         if (loadAnalysis && analysisStateFileInput) {
             loadAnalysis.addEventListener('click', function (e) {
                 e.preventDefault();
-                self.flashAndClose(this, function () { analysisStateFileInput.click(); });
+                self.flashAndClose(this, function () { self.chooseAndLoadAnalysisStateFile(); });
             });
             analysisStateFileInput.addEventListener('change', async function () {
                 if (analysisStateFileInput.files.length > 0) {
@@ -1245,29 +1270,40 @@ class IvyApp {
         }
 
         // Create sheet content (clone structure from sheet-1)
-        var template = document.getElementById('sheet-1');
-        var newSheet = template.cloneNode(true);
-        newSheet.id = sheetId;
-        newSheet.classList.remove('active');
-        // Clear graph containers (they'll be initialized fresh)
+        var newSheet = null;
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.createAnalysisSheetShell === 'function') {
+            newSheet = window.__ivyVueBridge.createAnalysisSheetShell({ id: sheetId, counter: this._sheetCounter });
+        }
+        if (!newSheet) {
+            var template = document.getElementById('sheet-1');
+            newSheet = template.cloneNode(true);
+            newSheet.id = sheetId;
+            newSheet.classList.remove('active');
+            // Clear graph containers (they'll be initialized fresh)
+            var fallbackGraphs = newSheet.querySelectorAll('.graph-container');
+            for (var g = 0; g < fallbackGraphs.length; g++) {
+                fallbackGraphs[g].innerHTML = '';
+                fallbackGraphs[g].id = fallbackGraphs[g].id + '-' + this._sheetCounter;
+            }
+            // Clear info panel
+            var info = newSheet.querySelector('#info-content');
+            if (info) {
+                info.id = 'info-content-' + this._sheetCounter;
+                info.textContent = 'Select a node or edge to see details';
+            }
+            var infoHeader = newSheet.querySelector('#info-header');
+            if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
+            // Insert before the tutorial container
+            var sheetArea = document.getElementById('sheet-area');
+            sheetArea.appendChild(newSheet);
+        }
+
         var graphs = newSheet.querySelectorAll('.graph-container');
         var graphIds = [];
         for (var i = 0; i < graphs.length; i++) {
             graphs[i].innerHTML = '';
-            graphs[i].id = graphs[i].id + '-' + this._sheetCounter;
             graphIds.push(graphs[i].id);
         }
-        // Clear info panel
-        var info = newSheet.querySelector('#info-content');
-        if (info) {
-            info.id = 'info-content-' + this._sheetCounter;
-            info.textContent = 'Select a node or edge to see details';
-        }
-        var infoHeader = newSheet.querySelector('#info-header');
-        if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
-        // Insert before the tutorial container
-        var sheetArea = document.getElementById('sheet-area');
-        sheetArea.appendChild(newSheet);
 
         var argGraph = new IvyGraph(graphIds[0], ARG_STYLE);
         var conceptGraph = new IvyGraph(graphIds[1], CONCEPT_STYLE);
@@ -1802,6 +1838,9 @@ class IvyApp {
         var wasActive = this.activeSheetId === sheetId || (tab && tab.classList.contains('active'));
 
         if (tab) tab.remove();
+        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.removeRenderedSheet === 'function') {
+            window.__ivyVueBridge.removeRenderedSheet(sheetId);
+        }
         if (sheet) sheet.remove();
         if (this.sheets) {
             delete this.sheets[sheetId];

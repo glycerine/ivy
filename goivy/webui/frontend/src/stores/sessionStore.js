@@ -9,6 +9,7 @@ export const useSessionStore = defineStore('session', {
     statusLevel: '',
     loading: false,
     loadingMessage: 'Loading...',
+    saveAsNoticeVisible: false,
     events: [],
     unsubscribeEvents: null,
   }),
@@ -23,6 +24,9 @@ export const useSessionStore = defineStore('session', {
     },
     hideLoading() {
       this.loading = false;
+    },
+    setSaveAsNoticeVisible(visible) {
+      this.saveAsNoticeVisible = Boolean(visible);
     },
     async createSession() {
       const engine = useEngineStore().engine;
