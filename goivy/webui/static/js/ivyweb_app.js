@@ -989,17 +989,22 @@ class IvyApp {
     setupResizer3() {
         var divider3 = document.getElementById('divider3');
         if (!divider3) return;
-        var statePanel = document.getElementById('sheet-area');
-        var rightSection = document.getElementById('top-row');
+        var sheetArea = document.getElementById('sheet-area');
+        var editorPanel = document.getElementById('editor-panel');
+        var topRow = document.getElementById('top-row');
+        if (!sheetArea || !editorPanel || !topRow) return;
         var self = this;
         var isDragging = false;
         var startX = 0;
         var startWidth = 0;
+        var minEditorWidth = 200;
+        var minSheetAreaWidth = 400;
 
         divider3.addEventListener('mousedown', function (e) {
             isDragging = true;
             startX = e.clientX;
-            startWidth = statePanel.offsetWidth;
+            startWidth = editorPanel.offsetWidth;
+            sheetArea.style.flex = '1 1 auto';
             divider3.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
@@ -1008,11 +1013,15 @@ class IvyApp {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var dx = e.clientX - startX; // drag right = state wider
+            var dx = startX - e.clientX; // drag left = editor wider
             var newWidth = startWidth + dx;
-            var maxW = rightSection ? rightSection.offsetWidth - 100 : 400;
-            newWidth = Math.max(100, Math.min(newWidth, maxW));
-            statePanel.style.flex = '0 0 ' + newWidth + 'px';
+            var dividerWidth = divider3.offsetWidth || 4;
+            var maxW = Math.max(minEditorWidth, topRow.offsetWidth - dividerWidth - minSheetAreaWidth);
+            newWidth = Math.max(minEditorWidth, Math.min(newWidth, maxW));
+            editorPanel.style.flex = '0 0 ' + newWidth + 'px';
+            if (self.argGraph) self.argGraph.resize();
+            if (self.conceptGraph) self.conceptGraph.resize();
+            self._refreshEditorLayout();
         });
 
         document.addEventListener('mouseup', function () {
@@ -1021,6 +1030,9 @@ class IvyApp {
                 divider3.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
+                if (self.argGraph) self.argGraph.resize();
+                if (self.conceptGraph) self.conceptGraph.resize();
+                self._refreshEditorLayout();
             }
         });
     }
