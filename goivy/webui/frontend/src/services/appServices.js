@@ -28,6 +28,10 @@ export function createAppServices({
       runtimeApp = null;
     },
 
+    runtime() {
+      return runtimeApp;
+    },
+
     refreshLayout() {
       if (runtimeApp && typeof runtimeApp._refreshGraphsAndEditorLayout === 'function') {
         runtimeApp._refreshGraphsAndEditorLayout();

@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import { installIvyVueBridge } from './ivyVueBridge.js';
 import { createAppServices, installAppServices } from './services/appServices.js';
+import { installIvyDiagnostics } from './services/diagnosticsService.js';
 
 async function bootstrap() {
   const app = createApp(App);
@@ -10,7 +11,8 @@ async function bootstrap() {
   app.use(pinia);
 
   installIvyVueBridge({ app, pinia });
-  installAppServices(createAppServices());
+  const services = installAppServices(createAppServices());
+  installIvyDiagnostics({ services });
 
   app.mount('#ivy-vue-root');
 }
