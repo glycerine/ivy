@@ -1,8 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
-import { createIvyVueBridge, installIvyVueBridge, syncContextMenuElement } from './ivyVueBridge.js';
-import { useContextMenuStore, useEditorStore, useSheetStore } from './stores/index.js';
+import { configureEngineFromRuntime, createIvyVueBridge, installIvyVueBridge, syncContextMenuElement } from './ivyVueBridge.js';
+import { useContextMenuStore, useEditorStore, useEngineStore, useSheetStore } from './stores/index.js';
 
 function makeBridge() {
   const app = createApp({ template: '<div />' });
@@ -19,6 +19,8 @@ function makeBridge() {
 afterEach(() => {
   document.body.innerHTML = '';
   delete window.__ivyVueBridge;
+  delete window.__IVY_ENGINE__;
+  delete window.__IVY_ENGINE_KIND__;
 });
 
 describe('ivyVueBridge', () => {
@@ -84,6 +86,35 @@ describe('ivyVueBridge', () => {
     expect(editorStore.dirty).toBe(true);
     expect(sheetStore.activeSheetId).toBe('events-1');
     expect(bridge.getSheetTabLabel('events-1')).toBe('Trace');
+  });
+
+  it('can select a runtime-supplied engine before the legacy adapter is created', () => {
+    const { pinia } = makeBridge();
+    const fakeEngine = { kind: 'in-browser', createSession: vi.fn() };
+    window.__IVY_ENGINE__ = fakeEngine;
+    window.__IVY_ENGINE_KIND__ = 'test-engine';
+
+    const selected = configureEngineFromRuntime({ pinia, win: window });
+    const engineStore = useEngineStore(pinia);
+
+    expect(selected).toBe(fakeEngine);
+    expect(engineStore.kind).toBe('test-engine');
+    expect(engineStore.engine).toBe(fakeEngine);
+
+    delete window.__IVY_ENGINE__;
+    delete window.__IVY_ENGINE_KIND__;
+  });
+
+  it('can switch to the Wanix placeholder engine through runtime configuration', () => {
+    const { app, pinia } = makeBridge();
+    window.__IVY_ENGINE_KIND__ = 'wanix';
+
+    const bridge = installIvyVueBridge({ app, pinia });
+
+    expect(useEngineStore(pinia).kind).toBe('wanix');
+    expect(bridge.getEngine().kind).toBe('wanix');
+
+    delete window.__IVY_ENGINE_KIND__;
   });
 
   it('tolerates a missing legacy context menu element', () => {

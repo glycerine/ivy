@@ -715,6 +715,26 @@ test('right-click context menu path does not crash', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
+test('Vue context menu stays inside the viewport', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.__ivyVueBridge.showContextMenu(window.innerWidth - 4, window.innerHeight - 4, [
+      { name: 'Near edge action', id: 'near-edge-action', callback: () => {} },
+    ]);
+  });
+  const menu = page.locator('#context-menu');
+  await expect(menu).toBeVisible();
+  await expect(menu.locator('[data-action-id="near-edge-action"]')).toBeVisible();
+
+  const box = await menu.boundingBox();
+  const viewport = page.viewportSize();
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+});
+
 test('divider exists', async ({ page }) => {
   await openIvy(page);
 

@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import Menubar from './components/Menubar.vue';
 import WorkspaceShell from './components/WorkspaceShell.vue';
 import ContextMenuHost from './components/ContextMenuHost.vue';
@@ -8,13 +8,9 @@ import FileInputHost from './components/FileInputHost.vue';
 import SessionOverlayHost from './components/SessionOverlayHost.vue';
 import StatusBar from './components/StatusBar.vue';
 import ToastHost from './components/ToastHost.vue';
+import { startLegacyAppWhenReady } from './legacyStartup.js';
 
-onMounted(async () => {
-  await nextTick();
-  if (typeof window.startIvyApp === 'function') {
-    window.startIvyApp();
-  }
-});
+onMounted(() => startLegacyAppWhenReady());
 </script>
 
 <template>

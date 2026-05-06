@@ -287,8 +287,22 @@ export function createIvyVueBridge({
   };
 }
 
+export function configureEngineFromRuntime({ pinia, win = globalThis.window } = {}) {
+  if (!pinia || !win) return null;
+  const engineStore = useEngineStore(pinia);
+  if (win.__IVY_ENGINE__) {
+    const kind = win.__IVY_ENGINE_KIND__ || win.__IVY_ENGINE__.kind || 'custom';
+    return engineStore.setEngine(kind, win.__IVY_ENGINE__);
+  }
+  if (win.__IVY_ENGINE_KIND__ === 'wanix') {
+    return engineStore.useWanix();
+  }
+  return engineStore.engine;
+}
+
 export function installIvyVueBridge(options = {}) {
   const win = options.win || globalThis.window;
+  configureEngineFromRuntime({ pinia: options.pinia, win });
   const bridge = createIvyVueBridge(options);
   win.__ivyVueBridge = bridge;
   return bridge;
