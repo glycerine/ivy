@@ -2696,6 +2696,5 @@ OK
 atg after collapse of most into one package. golden 2 hrs looks good.
 
 With the golden-2hr and atg, we migrated to Vue 3 for the webui. 
-See the vue branch. We are still getting it idiomatic Vue though.
-
+See the vue branch.
 
