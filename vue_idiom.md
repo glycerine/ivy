@@ -1,668 +1,407 @@
 # Vue-Idiomatic Web UI Migration Plan
 
-## Purpose
-
-The Vue 3 switch-over is complete in the served/runtime sense: the browser loads the Vue/Vite bundle, the old `static/js/ivyweb_*.js` scripts are gone, and the UI is rendered through Vue components and Pinia stores.
-
-The remaining smell is architectural: `goivy/webui/frontend/src/legacyAppController.js` is still a large imperative compatibility controller. It owns backend orchestration, file persistence, graph wiring, editor state, menus, event traces, analysis-state serialization, dialogs, and many command handlers. Vue is currently the shell and state surface; the controller is still the command brain.
-
-This plan describes how to turn that compatibility island into idiomatic Vue/Pinia without another risky big-bang rewrite.
-
-## Target Architecture
-
-The end state should have these properties:
-
-- Vue components render state and emit user intent.
-- Pinia stores own user-visible state and durable UI state.
-- Small services/composables own side effects:
-  - backend API calls
-  - browser file handles
-  - persistence
-  - CodeMirror integration
-  - Cytoscape graph instances
-  - downloads/uploads
-- Commands are plain functions/actions, not methods on `window.ivyApp`.
-- `window.ivyApp` is removed or reduced to a temporary debug-only compatibility facade.
-- The `legacy*` modules are either gone or renamed to `compat*` while they are still needed.
-- Browser tests guard the actual served runtime path, not an alternate static implementation.
-
-## Current Compatibility Island
-
-Main files involved:
-
-- `goivy/webui/frontend/src/legacyAppController.js`
-- `goivy/webui/frontend/src/legacyAppRuntime.js`
-- `goivy/webui/frontend/src/legacyScripts.js`
-- `goivy/webui/frontend/src/legacyRuntimeGlobals.js`
-- `goivy/webui/frontend/src/legacyGraph.js`
-- `goivy/webui/frontend/src/legacyPersist.js`
-- `goivy/webui/frontend/src/components/legacyCommand.js`
-- `goivy/webui/frontend/src/ivyVueBridge.js`
-
-Current global/compatibility affordances:
-
-- `window.ivyApp`
-- `window.IvyApp`
-- `window.startIvyApp`
-- `window.IvyAPI`
-- `window.IvyControls`
-- `window.IvyPersist`
-- `window.IvyGraph`
-- `window.__ivyVueBridge`
-
-Some of these may remain briefly as migration shims. The plan below removes them in dependency order.
-
-## Constraints
-
-- Keep Go as the only server and runtime host.
-- Do not introduce a Vite dev server or proxy workflow.
-- Keep Vite as build-only bundling unless the project direction changes.
-- Avoid React.
-- Keep the working browser behavior stable after every slice.
-- Keep the old JS test coverage, but keep it pointed at the bundled frontend modules.
-- Prefer small, reversible extraction steps over a second big switch-over.
-
-## High-Level Dependency Graph
-
-The controller can be split safely only after the command path is no longer hardwired to `window.ivyApp`.
-
-Recommended dependency order:
-
-1. Command bus/service layer.
-2. Session/API service.
-3. Editor and file workflow.
-4. Persistence and recent files.
-5. Graph instance management.
-6. State relations and concept visibility.
-7. Sheet and event-trace workflows.
-8. Menus/actions/check workflows.
-9. Analysis-state serialization.
-10. Delete compatibility globals and rename/remove compatibility modules.
-
-Do not start by deleting `legacyAppController.js`. First surround it with proper service interfaces, then move one behavior family at a time.
-
-## Implementation Order
-
-### Phase 0: Establish Guardrails
-
-1. Create an inventory test for controller surface area.
-   - Add a unit test that lists public methods still used from `legacyAppController.js`.
-   - This is not to freeze the controller forever; it makes shrinkage visible.
-   - Dependency: none.
-   - Verification: `npm run test:webui:js`.
-
-2. Add a Playwright guard that `window.ivyApp` is not used by Vue components directly.
-   - Components should call command services, not globals.
-   - Temporary exception: command service may still delegate to `window.ivyApp`.
-   - Dependency: none.
-   - Verification: browser suite.
-
-3. Rename intent in docs/tests without behavior change.
-   - Keep files as-is initially, but document that `legacy` now means compatibility.
-   - Avoid churny renames until service boundaries are in place.
-   - Dependency: none.
-   - Verification: no code required.
-
-### Phase 1: Introduce a Vue Command Registry
-
-4. Add `frontend/src/services/commandRegistry.js`.
-   - Exposes `registerCommand(name, fn)`, `runCommand(name, args)`, `hasCommand(name)`.
-   - Internally may delegate unknown commands to `window.ivyApp` for now.
-   - Dependency: Phase 0.
-   - Verification: new unit tests.
-
-5. Replace `components/legacyCommand.js` internals with the command registry.
-   - Keep exported function names for component compatibility.
-   - Components stop knowing about `window.ivyApp`.
-   - Dependency: step 4.
-   - Verification: existing Vue component tests.
-
-6. Register controller-backed commands during boot.
-   - `legacyAppRuntime.js` or `legacyStartup.js` can register adapter commands after creating the controller.
-   - This is still compatibility, but hidden behind a proper command API.
-   - Dependency: step 5.
-   - Verification: browser suite.
-
-### Phase 2: Extract Backend Session/API Ownership
-
-7. Create `services/sessionService.js`.
-   - Wraps engine/API creation, session creation, SSE connection, connection-lost handling.
-   - Uses `engineStore` and `sessionStore`.
-   - Dependency: command registry can exist but is not strictly required.
-   - Verification: unit tests for session creation and SSE lost connection.
-
-8. Move `createApi()`, session creation, and `updateSessionDisplay()` out of the controller.
-   - Controller delegates to `sessionService`.
-   - `sessionStore` becomes canonical for current session ID/status.
-   - Dependency: step 7.
-   - Verification: `npm run test:webui:all`.
-
-9. Update `ivyVueBridge.createLegacyApi()` consumers.
-   - New code should use `sessionService.api` or `engineStore.engine`.
-   - Keep bridge method temporarily for compatibility tests.
-   - Dependency: step 8.
-   - Verification: API wiring tests.
-
-### Phase 3: Extract Editor Ownership
-
-10. Create `services/editorService.js`.
-   - Owns CodeMirror instance lookup, editor content get/set, dirty calculation, label rules, layout refresh.
-   - Uses `editorStore`.
-   - Dependency: command registry.
-   - Verification: migrate existing editor-label and save-progress tests.
-
-11. Move `_editorContent()`, `_editorDirty()`, `_updateEditorLabel()`, `_refreshEditorLayout()`, `setEditorContent()`, `scrollEditorToLine()`.
-   - Controller delegates to editor service.
-   - Dependency: step 10.
-   - Verification: editor unit tests and source-view browser test.
-
-12. Remove controller direct knowledge of CodeMirror initialization.
-   - `codeMirrorEditor.js` becomes the only CodeMirror setup path.
-   - Controller receives editor service methods instead of touching `cmEditor`.
-   - Dependency: step 11.
-   - Verification: editor tests, browser suite.
-
-### Phase 4: Extract File Save/Load Workflow
-
-13. Create `services/fileService.js`.
-   - Owns browser file handles, load model, save, save-as, download fallback, external-change detection, merge conflict markers.
-   - Uses `editorService`, `sessionService`, `persistenceService`, `dialogStore`, `toastStore`.
-   - Dependency: Phases 2 and 3.
-   - Verification: migrate `ivyweb_app_save.test.mjs` to this service.
-
-14. Move file-handle methods:
-   - `_ensureFileHandleWritable()`
-   - `_readFileHandleContent()`
-   - `_restoreFileHandleForCurrentFile()`
-   - `_confirmNoExternalChangeBeforeSave()`
-   - `_mergeDiskVersionIntoEditBuffer()`
-   - `_rememberLastOpenFile()`
-   - `_updateReopenLastFileButton()`
-   - `reopenLastFile()`
-   - Dependency: step 13.
-   - Verification: save tests.
-
-15. Move user-facing file actions:
-   - `chooseAndLoadModelFile()`
-   - `loadFile()`
-   - `save()`
-   - `saveAs()`
-   - `downloadModel()`
-   - `downloadTextFile()`
-   - `downloadModelForUnsupportedSave()`
-   - `closeCurrentFile()`
-   - `newModel()`
-   - Dependency: step 14.
-   - Verification: file input tests, save tests, browser load/save smoke if available.
-
-16. Register file commands in command registry.
-   - `file.load`, `file.save`, `file.saveAs`, `file.download`, `file.close`, `file.new`, `file.reopenLast`.
-   - Components call command names instead of controller methods.
-   - Dependency: step 15.
-   - Verification: Menubar and FileInputHost tests.
-
-### Phase 5: Extract Persistence and Recent Files
-
-17. Rename `legacyPersist.js` to `persistenceService.js`.
-   - Keep a temporary re-export from `legacyPersist.js` if tests/imports need gradual migration.
-   - Dependency: file service exists.
-   - Verification: persistence tests.
-
-18. Make persistence independent of controller shape.
-   - Save/load plain objects from stores/services instead of scraping `app` fields.
-   - Inputs should be explicit:
-     - session
-     - file metadata/content
-     - graph snapshots
-     - toggles
-     - sheet/event state
-   - Dependency: steps 13-17.
-   - Verification: persistence tests and browser reload/persistence path if available.
-
-19. Move `populateRecentFiles()` and `loadRecentSession()` into `recentFileService.js`.
-   - Uses `recentFilesStore` and `persistenceService`.
-   - Dependency: step 18.
-   - Verification: recent files tests.
-
-### Phase 6: Extract Graph Runtime Ownership
-
-20. Rename `legacyGraph.js` to `graphRuntime.js`.
-   - Keep temporary re-export from `legacyGraph.js`.
-   - Dependency: none, but easier after file/persistence snapshots become explicit.
-   - Verification: graph tests.
-
-21. Create `services/graphService.js`.
-   - Owns graph instance creation, graph registry by sheet ID, Cytoscape snapshots, graph resize/fit, layout refresh.
-   - Uses `graphStore` and `sheetStore`.
-   - Dependency: command registry and stores already exist.
-   - Verification: graph service unit tests and existing graph browser tests.
-
-22. Move graph registry methods:
-   - `currentSheet()`
-   - `registerSheet()`
-   - `installGraphStoreHook()`
-   - `graphElementsSnapshot()`
-   - `_refreshGraphsAndEditorLayout()`
-   - `_refreshLayoutAfterVuePatch()`
-   - Dependency: step 21.
-   - Verification: sheet graph browser tests.
-
-23. Move graph event attachment into graph service.
-   - `attachGraphEventHandlers()`
-   - `onArgNodeClick()`
-   - `onArgNodeRightClick()`
-   - `onArgEdgeRightClick()`
-   - `onConceptNodeRightClick()`
-   - `onConceptEdgeRightClick()`
-   - Dependency: step 22 and command registry.
-   - Verification: context-menu and graph-click browser tests.
-
-### Phase 7: Extract State Relations and Concept Visibility
-
-24. Create `services/conceptVisibilityService.js`.
-   - Owns edge/label visibility maps and applies classes/labels to graph instances.
-   - Uses `stateRelationsStore`.
-   - Dependency: graph service.
-   - Verification: state relation toggle tests.
-
-25. Move:
-   - `populateStateCheckboxes()`
-   - `_hydrateBackendToggleState()`
-   - `_toggleChecked()`
-   - `onEdgeToggle()`
-   - `onEdgeToggleChange()`
-   - `onLabelToggleChange()`
-   - `_applyEdgeVisibility()`
-   - `_findEdgeVisibility()`
-   - `_applyNodeLabels()`
-   - `_displayConceptName()`
-   - `updateStateLabel()`
-   - Dependency: step 24.
-   - Verification: `ivyweb_persist_state_relations.test.mjs`, browser relation-toggle test.
-
-26. Move `populateConstraintFacts()` into `detailsService.js`.
-   - Details store becomes canonical for details and fact action callbacks.
-   - Dependency: step 24 not strict, but same data source.
-   - Verification: constraint facts tests.
-
-### Phase 8: Extract Sheet and Event Trace Workflows
-
-27. Create `services/sheetService.js`.
-   - Owns sheet creation/removal/switching, visual-only sheets, active sheet.
-   - Uses `sheetStore`, `graphService`, `eventTraceStore`.
-   - Dependency: graph service.
-   - Verification: tab and sheet tests.
-
-28. Move sheet methods:
-   - `isVisualOnlySheet()`
-   - `setVisualOnlySheet()`
-   - `visualOnlyMessage()`
-   - `isValidSheetId()`
-   - `assertValidSheetId()`
-   - `sheetTab()`
-   - `sheetExists()`
-   - `switchSheet()`
-   - `addSheet()`
-   - `removeSheet()`
-   - `openARGSheet()`
-   - Dependency: step 27.
-   - Verification: sheet tests and ARG sheet browser tests.
-
-29. Create `services/eventTraceService.js`.
-   - Owns event trace loading, tree operations, patterns, filtering/finding.
-   - Uses `eventTraceStore` and `sheetService`.
-   - Dependency: sheet service.
-   - Verification: event trace unit tests and browser event-trace tests.
-
-30. Move event trace methods:
-   - `openEventTraceSheet()`
-   - `loadEventTraceFile()`
-   - `readFileText()`
-   - `renderEventTraceSheet()`
-   - `renderEventTree()`
-   - `renderEventTreeNode()`
-   - `attachEventTraceHandlers()`
-   - `toggleEventTraceNode()`
-   - `lookupEventTrace()`
-   - `uncoverEventTraceAddress()`
-   - `selectEventTraceRow()`
-   - `activeEventSheet()`
-   - `filterEventTrace()`
-   - `findEventTrace()`
-   - `applyEventPatternResult()`
-   - `renderEventPatternList()`
-   - `selectedEventPattern()`
-   - `addEventPattern()`
-   - `removeSelectedEventPattern()`
-   - `clearEventPatterns()`
-   - `loadEventPatterns()`
-   - `saveEventPatterns()`
-   - Dependency: step 29.
-   - Verification: event trace tests.
-
-### Phase 9: Extract Action Workflows
-
-31. Create `services/argActionService.js`.
-   - Owns ARG node/edge action descriptors and execution.
-   - Uses `sessionService`, `graphService`, `sheetService`, `dialogStore`.
-   - Dependency: graph and sheet services.
-   - Verification: ARG choice-backed command tests.
-
-32. Move:
-   - `executeArgNodeAction()`
-   - `prepareArgNodeActionArgs()`
-   - `executeArgEdgeAction()`
-   - Dependency: step 31.
-   - Verification: ARG action tests and browser tests.
-
-33. Create `services/conceptActionService.js`.
-   - Owns concept split/materialize/splatter/projection/remove/empty workflows.
-   - Uses `sessionService`, `graphService`, `conceptVisibilityService`, `dialogStore`.
-   - Dependency: graph and visibility services.
-   - Verification: materialize/splatter/export tests.
-
-34. Move:
-   - `executeConceptNodeAction()`
-   - `executeConceptEdgeAction()`
-   - `splitConcept()`
-   - `supposeEmpty()`
-   - `removeConcept()`
-   - `materializeNode()`
-   - `materializeEdge()`
-   - `addProjection()`
-   - `selectConceptNode()`
-   - `materializeEdgeFromSelected()`
-   - `splatterNode()`
-   - Dependency: step 33.
-   - Verification: concept action tests and browser context menu tests.
-
-35. Create `services/analysisActionService.js`.
-   - Owns general backend action runners and graph refresh.
-   - Uses `sessionService`, `graphService`, `detailsService`, `toastStore`.
-   - Dependency: session, graph, visibility services.
-   - Verification: shared action runner tests.
-
-36. Move:
-   - `runAction()`
-   - `doUndo()`
-   - `doRedo()`
-   - `resetDomain()`
-   - `diagramDomain()`
-   - `refreshConceptGraph()`
-   - `pdrStep()`
-   - `showReachableStates()`
-   - `concreteStep()`
-   - `gatherFacts()`
-   - `ctiConceptAction()`
-   - `reverseStep()`
-   - `pathReach()`
-   - `reachStep()`
-   - `makeConjecture()`
-   - `backtrack()`
-   - `recalculateGraph()`
-   - `rememberGraph()`
-   - `addRelationFromString()`
-   - `refreshAfterLoad()`
-   - Dependency: step 35.
-   - Verification: action tests and browser suite.
-
-### Phase 10: Extract Check/CTI Workflow
-
-37. Create `services/checkService.js`.
-   - Owns check induction/bounded check/result rendering/trace actions.
-   - Uses `sessionService`, `detailsStore`, `sheetService`, `graphService`.
-   - Dependency: sheet/graph/action services.
-   - Verification: CTI tests and browser failed-check trace test.
-
-38. Move:
-   - `runCheck()`
-   - `_autoCheckUsedRelations()`
-   - `showCheckResult()`
-   - `addCheckResultViewActions()`
-   - `checkInduction()`
-   - `boundedCheck()`
-   - `weakenInvariant()`
-   - Dependency: step 37.
-   - Verification: CTI text/ARG browser tests.
-
-### Phase 11: Extract Menus and Dialogs
-
-39. Move dropdown/menu descriptor logic into `menuService.js`.
-   - `loadMenuDescriptors()`
-   - `renderMenuRegion()`
-   - `renderMenuDescriptor()`
-   - `dispatchMenuDescriptorAction()`
-   - `setupDropdownMenus()`
-   - `closeAllDropdowns()`
-   - `flashAndClose()`
-   - `bindMenuAction()`
-   - Dependency: command registry and action services.
-   - Verification: menu descriptor tests and browser menu tests.
-
-40. Remove fallback DOM dialog builder from controller.
-   - Delete or quarantine:
-     - `_createDialog()`
-     - `_setDialogError()`
-     - `_addDialogButton()`
-     - `_finishDialog()`
-     - `_installDialogEscape()`
-   - Keep high-level helpers as thin wrappers over `dialogStore` temporarily:
-     - `okDialog()`
-     - `okCancelDialog()`
-     - `textDialog()`
-     - `showTextDialog()`
-     - `entryDialog()`
-     - `integerDialog()`
-     - `listboxDialog()`
-     - `buttonListDialog()`
-   - Dependency: all action services use `dialogStore` directly.
-   - Verification: dialog tests.
-
-41. Move remaining high-level dialog wrappers to `dialogService.js`.
-   - Components/services import `dialogService`, not controller.
-   - Dependency: step 40.
-   - Verification: dialog tests.
-
-### Phase 12: Extract Analysis-State Serialization
-
-42. Create `services/analysisStateService.js`.
-   - Owns save/load JSON shape, validation, and restoring sheet/graph/event state.
-   - Uses explicit dependencies:
-     - `editorService`
-     - `fileService`
-     - `graphService`
-     - `sheetService`
-     - `eventTraceService`
-     - `stateRelationsStore`
-   - Dependency: most previous services.
-   - Verification: existing analysis-state tests.
-
-43. Move:
-   - `buildAnalysisState()`
-   - `saveAnalysisState()`
-   - `loadAnalysisStateFile()`
-   - `loadAnalysisStateObject()`
-   - `analysisStateLimits()`
-   - `validateAnalysisStateObject()`
-   - `validateAnalysisStateSheet()`
-   - `validateAnalysisStateGraphPayload()`
-   - `validateAnalysisStateEvents()`
-   - `removeAnalysisStateExtraSheets()`
-   - Dependency: step 42.
-   - Verification: analysis-state tests and browser reachable/trace tests.
-
-### Phase 13: Remove Compatibility Controller
-
-44. Replace `legacyAppController.js` with a small facade.
-   - At this point it should contain no logic, only command registration or backwards-compatible method aliases.
-   - Dependency: all method families extracted.
-   - Verification: full test suite.
-
-45. Replace `window.ivyApp` calls.
-   - Component code should use command registry/services.
-   - Tests should not need `window.ivyApp` except for explicit backwards-compat tests.
-   - Dependency: command registry and services.
-   - Verification: source sweep for `window.ivyApp`.
-
-46. Remove `legacyStartup.js`, `legacyAppRuntime.js`, and `legacyScripts.js`.
-   - Vue boot should directly install services and mount.
-   - Dependency: no `startIvyApp` reliance.
-   - Verification: App tests and browser suite.
-
-47. Remove `legacyRuntimeGlobals.js` browser globals.
-   - Keep `LegacyApiAdapter` only if it is still useful for engine compatibility.
-   - Dependency: no global `IvyAPI`, `IvyControls`, `IvyPersist`, `IvyGraph` consumers.
-   - Verification: source sweep and browser guard update.
-
-48. Rename remaining compatibility modules.
-   - `legacyGraph.js` should already be `graphRuntime.js`.
-   - `legacyPersist.js` should already be `persistenceService.js`.
-   - `legacyCommand.js` should be `commandRegistry.js`/`commandService.js`.
-   - Dependency: previous phases.
-   - Verification: source sweep for `legacy`.
-
-### Phase 14: Final Hardening
-
-49. Update browser guard tests.
-   - Assert:
-     - no `/static/js/ivyweb_*.js`
-     - no `window.ivyApp` required for UI commands
-     - Vue services can boot without legacy globals
-   - Dependency: compatibility removal.
-   - Verification: Playwright.
-
-50. Split large tests by service.
-   - The old `js_test/ivyweb_app_*.test.mjs` names should become service-specific tests.
-   - Keep behavior coverage, change naming to match new ownership.
-   - Dependency: extracted services.
-   - Verification: test suite remains green.
-
-51. Document new frontend architecture.
-   - Add a `goivy/webui/frontend/README.md`.
-   - Include:
-     - build-only Vite workflow
-     - Go-served production/dev workflow
-     - service/store/component responsibilities
-     - command naming conventions
-     - how Wanix-compatible engines plug in
-   - Dependency: stable target architecture.
-   - Verification: documentation only.
-
-52. Final source hygiene pass.
-   - `rg "legacy|window.ivyApp|startIvyApp|IvyApp|IvyControls|IvyPersist|IvyGraph|__ivyVueBridge"`
-   - Decide for every remaining hit:
-     - keep as documented compatibility
-     - rename
-     - delete
-   - Dependency: all phases.
-   - Verification: documented exceptions only.
-
-## Recommended Slice Size
-
-Each implementation slice should be one service extraction or smaller. A good slice should:
-
-- Change one ownership boundary.
-- Preserve public behavior.
-- Add or move tests before deleting old code.
-- End with:
-  - `npm run test:webui:js`
-  - `npm run test:webui:vue`
-  - `npm run build:webui`
-- Run Playwright after UI, graph, save, tutorial, or sheet behavior changes.
-
-## Suggested First Three Actual PR-Sized Slices
-
-### Slice 1: Command Registry
-
-Do steps 4-6.
-
-Why first:
-
-- It removes direct component dependence on `window.ivyApp`.
-- It gives all later services a common command surface.
-- It is low-risk because it can initially delegate to the controller.
-
-Expected changed files:
-
-- `frontend/src/services/commandRegistry.js`
-- `frontend/src/components/legacyCommand.js`
-- component tests that currently assert legacy command behavior
-
-### Slice 2: Editor Service
-
-Do steps 10-12.
-
-Why second:
-
-- Editor dirty/save feedback has already had regressions.
-- It has good existing tests.
-- It is a contained stateful integration.
-
-Expected changed files:
-
-- `frontend/src/services/editorService.js`
-- `frontend/src/codeMirrorEditor.js`
-- `frontend/src/stores/editorStore.js`
-- editor/save tests
-
-### Slice 3: File Service
-
-Do steps 13-16.
-
-Why third:
-
-- File save/load is high user value.
-- It depends on editor service.
-- It removes a large cluster from the controller.
-
-Expected changed files:
-
-- `frontend/src/services/fileService.js`
-- `frontend/src/components/FileInputHost.vue`
-- `frontend/src/components/Menubar.vue`
-- save/load tests
-
-## Risks and Mitigations
-
-Risk: Breaking browser file save semantics, especially Chrome vs Firefox.
-
-Mitigation:
-
-- Move save tests first.
-- Keep File System Access API decisions in `fileService`.
-- Add browser coverage for status/dirty marker timing if feasible.
-
-Risk: Graph redraw regressions after layout changes.
-
-Mitigation:
-
-- Extract graph service only after command registry.
-- Keep Playwright graph fit/redraw checks.
-- Add service-level tests for resize/fit scheduling.
-
-Risk: Event trace and analysis state have hidden cross-dependencies.
-
-Mitigation:
-
-- Defer event trace and analysis-state extraction until sheet/graph services exist.
-- Keep old behavior tests green through each move.
-
-Risk: Losing useful compatibility with tests or old debugging workflows.
-
-Mitigation:
-
-- Keep a temporary facade only as long as source sweeps show consumers.
-- Every facade method should have a deletion milestone.
+## Status
+
+Updated on May 6, 2026 after comparing the previous plan with the current
+`goivy/webui/frontend/src` tree.
+
+The Vue runtime switch-over is complete: the served web UI is a Vue 3 bundle,
+Pinia stores exist for user-visible state, and the old `goivy/webui/js_test`
+harness has been retired in favor of Vue/Vitest tests.
+
+The Vue-idiomatic migration is not complete. The previous plan was treated as
+done too early. Its own Definition of Done was not satisfied because
+`goivy/webui/frontend/src/legacyAppController.js` still exists, is still large,
+and production startup still creates `window.ivyApp`.
+
+This document is now the active cleanup plan. Its final implementation step is
+to delete `legacyAppController.js` after all behavior has moved into idiomatic
+Vue, Pinia, and service modules.
 
 ## Definition of Done
 
-The Vue-idiomatic migration is complete when:
+The migration is complete when:
 
-- No production component imports `legacyCommand.js`.
-- No production code requires `window.ivyApp`.
-- `legacyAppController.js` is deleted or reduced to a documented, test-only facade.
-- No production module exports browser globals like `IvyApp`, `IvyPersist`, `IvyGraph`, or `IvyControls`.
-- Service modules own side effects.
-- Pinia stores own durable UI state.
-- Browser tests pass with guards proving the app is Vue-bundled, Go-served, and free of old static runtime scripts.
+- No production component imports `components/legacyCommand.js`.
+- No production component calls `callApp()` or `hasAppMethod()` as a proxy for
+  controller methods.
+- No production module requires `window.ivyApp`, `window.startIvyApp`,
+  `window.IvyApp`, `window.IvyControls`, `window.IvyPersist`, or
+  `window.IvyGraph`.
+- Production boot starts Vue services directly, not a legacy controller.
+- Commands are registered by service modules, not by reflecting over
+  `IvyApp.prototype`.
+- Pinia stores own user-visible and durable UI state.
+- Service modules own side effects: backend API calls, browser file handles,
+  persistence, CodeMirror, Cytoscape, downloads, dialogs, and analysis-state
+  serialization.
+- Browser and unit tests pass without constructing `IvyApp`.
+- `goivy/webui/frontend/src/legacyAppController.js` is deleted.
 
+## Current State Compared With The Old Plan
+
+Completed baseline:
+
+- Vue 3 is the served frontend shell.
+- Pinia stores exist for layout, editor, sheets, dialogs, details, graphs,
+  event traces, state relations, session, engine, recent files, toasts,
+  context menus, dropdowns, and menu descriptors.
+- The command registry exists in `services/commandRegistry.js`.
+- Components no longer import `legacyAppController.js` directly.
+- `components/legacyCommand.js` is a thin re-export over
+  `services/uiCommandService.js`.
+- Many service modules already exist:
+  - `fileService.js`
+  - `editorService.js`
+  - `sessionService.js`
+  - `sheetService.js`
+  - `graphService.js`
+  - `conceptVisibilityService.js`
+  - `detailsService.js`
+  - `eventTraceService.js`
+  - `argActionService.js`
+  - `conceptActionService.js`
+  - `analysisActionService.js`
+  - `checkService.js`
+  - `analysisStateService.js`
+  - `menuService.js`
+  - `dialogService.js`
+  - `recentFileService.js`
+- Vue/Vitest tests now own the old JavaScript behavior coverage.
+
+Still not done:
+
+- `legacyAppController.js` is still about 5,000 lines and is still production
+  runtime code.
+- `App.vue` still calls `startLegacyAppWhenReady()`.
+- `legacyStartup.js` still waits for `window.startIvyApp`.
+- `legacyAppRuntime.js` still installs `window.IvyApp` and
+  `window.startIvyApp`.
+- `startIvyApp()` still creates `window.ivyApp`.
+- `commandRegistry.js` still falls back to `window.ivyApp`.
+- `uiCommandService.js` still exposes `callApp()` and `hasAppMethod()`, which
+  keeps component intent tied to controller-style method names.
+- `resizeDrag.js` still refreshes layout through `window.ivyApp`.
+- `legacyRuntimeGlobals.js`, `legacyGraph.js`, and `legacyPersist.js` still
+  install or expose legacy browser-global compatibility.
+- Playwright tests still use `window.ivyApp` for many end-to-end probes.
+- `legacyAppController.surface.test.js` still inventories a large public
+  controller API instead of proving the controller is gone.
+
+## Migration Strategy
+
+Do not shrink the controller by hand first. That creates churn without changing
+ownership. Instead:
+
+1. Make each service complete enough to run without an `app` object.
+2. Register user commands from those services.
+3. Move components and tests to command names or direct store/service calls.
+4. Remove controller fallback paths.
+5. Delete the legacy runtime globals.
+6. Delete the controller.
+
+Every extraction should preserve behavior before deleting old code. Each slice
+should run at least:
+
+```sh
+npm run test:webui:js
+npm run build:webui
+```
+
+Run browser tests after changes to startup, graph layout, editor save/load,
+menus, sheets, tutorial visibility, or event traces:
+
+```sh
+npm run test:webui:browser
+```
+
+## Implementation Order
+
+### Phase 1: Freeze The Remaining Legacy Surface
+
+1. Update `legacyAppController.surface.test.js` so it is a shrinkage ratchet.
+   - Keep the current list as the starting maximum.
+   - Require every future controller method removal to shrink the list.
+   - Add a comment that the target list is empty, not a stable API.
+
+2. Add a source guard for production `window.ivyApp` use.
+   - Existing component guards are useful but too narrow.
+   - Add a Vitest source scan that fails if production modules outside a small
+     temporary allowlist reference `window.ivyApp`, `window.startIvyApp`,
+     `window.IvyApp`, `window.IvyControls`, `window.IvyPersist`, or
+     `window.IvyGraph`.
+   - Start with the current allowlist:
+     - `legacyAppController.js`
+     - `legacyAppRuntime.js`
+     - `legacyStartup.js`
+     - `legacyRuntimeGlobals.js`
+     - `legacyGraph.js`
+     - `legacyPersist.js`
+     - `services/commandRegistry.js`
+     - `services/uiCommandService.js`
+     - `resizeDrag.js`
+   - Shrink the allowlist in later phases.
+
+3. Add a command registry coverage test for the real production command names.
+   - Assert that file, editor, sheet, ARG, concept, event trace, check, and
+     analysis-state commands can be registered without constructing `IvyApp`.
+   - This test should initially fail or require temporary controller adapters.
+     That is the map for the next phases.
+
+### Phase 2: Replace Controller Reflection With Explicit Commands
+
+4. Stop using `registerControllerCommands()` as the primary command source.
+   - Keep it temporarily for compatibility tests only.
+   - Add explicit command registration modules, grouped by ownership:
+     - `services/fileCommands.js`
+     - `services/editorCommands.js`
+     - `services/sheetCommands.js`
+     - `services/graphCommands.js`
+     - `services/eventTraceCommands.js`
+     - `services/argCommands.js`
+     - `services/conceptCommands.js`
+     - `services/checkCommands.js`
+     - `services/analysisStateCommands.js`
+     - `services/menuCommands.js`
+
+5. Introduce a boot-time service container.
+   - Add `services/appServices.js`.
+   - It creates and wires:
+     - engine/session API
+     - stores
+     - CodeMirror/editor adapter
+     - graph runtime factory
+     - persistence
+     - dialog/toast/menu services
+     - command registration
+   - The container is not a new God object. It should only wire dependencies
+     and expose lifecycle methods such as `start()`, `stop()`, and
+     `refreshLayout()`.
+
+6. Change `commandRegistry.js` fallback behavior.
+   - Default fallback should be `undefined`, not `window.ivyApp`.
+   - Allow tests to inject a fallback explicitly when testing compatibility.
+   - Production command execution should fail visibly when a command is not
+     registered.
+
+7. Rename `uiCommandService.js` away from app terminology.
+   - Replace `callApp()` with `runUiCommand()` or direct `runCommand()`.
+   - Replace `hasAppMethod()` with `hasUiCommand()`.
+   - Update components to use command language, not app-method language.
+   - Delete `components/legacyCommand.js` once no production import remains.
+
+### Phase 3: Make Services Independent Of The Controller Shape
+
+8. Remove `app` object coupling from `editorService.js`.
+   - Inputs should be `editorStore`, CodeMirror adapter, and bridge/service
+     callbacks.
+   - Move remaining editor label, dirty, save sheen, scroll, and keymap logic
+     out of controller wrappers.
+   - Register editor commands directly.
+
+9. Remove `app` object coupling from `fileService.js`.
+   - Replace fields like `_fileHandle`, `_persistedFileName`,
+     `_persistedFileContent`, and `_savedFileContent` with explicit state in
+     `editorStore`, `sessionStore`, and/or a small file store.
+   - Keep browser File System Access API logic here.
+   - Register file commands directly.
+
+10. Remove `app` object coupling from `sessionService.js`.
+    - Session creation, SSE connection state, and API ownership must be
+      available from services/stores.
+    - Delete controller `createApi()` and `updateSessionDisplay()` usage after
+      callers are moved.
+
+11. Remove `app` object coupling from `sheetService.js`.
+    - Make `sheetStore` canonical for active sheet, visual-only sheets, tab
+      labels, validity, add/remove/switch, and ARG/event sheet creation.
+    - Register sheet commands directly.
+
+12. Remove `app` object coupling from `graphService.js` and `graphRuntime.js`.
+    - Move Cytoscape instance ownership and resize/fit behavior into graph
+      services.
+    - Replace `resizeDrag.js` calls to `window.ivyApp` with injected graph and
+      editor layout refresh callbacks.
+    - Rename remaining `legacyGraph.js` imports to `services/graphRuntime.js`.
+    - Keep a temporary `legacyGraph.js` re-export only while tests are moved.
+
+13. Remove `app` object coupling from `conceptVisibilityService.js`.
+    - Make `stateRelationsStore` canonical for edge/label visibility and
+      backend toggle hydration.
+    - Register state-relation commands directly.
+
+14. Remove `app` object coupling from `detailsService.js`.
+    - Details/fact rendering should update `detailsStore` directly.
+    - Eliminate controller details/facts wrappers.
+
+15. Remove `app` object coupling from `eventTraceService.js`.
+    - Make `eventTraceStore` canonical for trees, selected rows, patterns,
+      filter/find state, and event sheet payloads.
+    - Register event trace commands directly.
+
+16. Remove `app` object coupling from `argActionService.js`.
+    - ARG node/edge actions should depend on session API, graph service,
+      sheet service, editor service, and dialog service.
+    - Register ARG commands directly.
+
+17. Remove `app` object coupling from `conceptActionService.js`.
+    - Concept actions should depend on session API, graph service, visibility
+      service, and dialog service.
+    - Register concept commands directly.
+
+18. Remove `app` object coupling from `analysisActionService.js`.
+    - Generic backend action helpers should depend on session API, graph
+      refresh, details, dialogs, and toasts.
+    - Register analysis/action commands directly.
+
+19. Remove `app` object coupling from `checkService.js`.
+    - Check induction, bounded check, CTI result rendering, and related view
+      actions should depend on session API, graph service, sheet service,
+      state relations, and details.
+    - Register check commands directly.
+
+20. Remove `app` object coupling from `analysisStateService.js`.
+    - Build/save/load should consume explicit stores and service snapshots.
+    - Validation should be pure functions.
+    - Restore should call services, not controller methods.
+    - Register analysis-state commands directly.
+
+21. Remove `app` object coupling from `menuService.js`.
+    - Dynamic menu descriptors should dispatch through the command registry.
+    - Flash/close/dropdown behavior should be Vue store-driven.
+    - Register menu commands directly.
+
+22. Remove `app` object coupling from `dialogService.js`.
+    - All dialogs should go through `dialogStore`/`DialogHost.vue`.
+    - Delete fallback DOM dialog construction from controller once callers are
+      moved.
+
+23. Remove `app` object coupling from `legacyPersist.js`.
+    - Rename the implementation to `services/persistenceService.js`.
+    - Persist explicit state snapshots rather than scraping controller fields.
+    - Keep a temporary `legacyPersist.js` re-export only while tests are moved.
+
+### Phase 4: Move Production Boot Off The Legacy Runtime
+
+24. Replace `startLegacyAppWhenReady()` in `App.vue`.
+    - `App.vue` should call the new service container lifecycle directly.
+    - Production boot should not wait for `window.startIvyApp`.
+
+25. Delete production use of `legacyStartup.js`, `legacyAppRuntime.js`, and
+    `legacyScripts.js`.
+    - If a compatibility test still needs old globals, move that test-only
+      installer into a clearly named test helper.
+    - Production bundle should not install `window.IvyApp` or
+      `window.startIvyApp`.
+
+26. Remove production use of `window.__ivyVueBridge` where it is just a local
+    dependency shortcut.
+    - Prefer direct store/service imports or injected dependencies.
+    - Keep a small documented browser diagnostics bridge only if Playwright or
+      developer tools still need it.
+    - The diagnostics bridge must not be required for normal UI behavior.
+
+27. Remove `window.ivyApp` from production.
+    - `startIvyApp()` should no longer be called by production.
+    - `commandRegistry.js` should have no production fallback to
+      `window.ivyApp`.
+    - `resizeDrag.js` should use service callbacks, not globals.
+    - Source guard allowlist should remove `window.ivyApp` from all production
+      modules.
+
+### Phase 5: Migrate Browser Tests Off `window.ivyApp`
+
+28. Add a Playwright diagnostics API that is not the app runtime.
+    - Example: `window.__ivyDiagnostics`.
+    - It may expose test-only read/command helpers:
+      - current session ID
+      - graph node/edge counts
+      - graph snapshots
+      - command execution by command name
+      - editor content and cursor helpers
+      - sheet/event trace snapshots
+    - It must be installed by the Vue/service boot path, not by
+      `legacyAppController.js`.
+
+29. Rewrite Playwright tests to use user interactions first.
+    - Prefer clicking menus/buttons and asserting visible UI.
+    - Use diagnostics only for hard-to-observe graph/editor internals.
+    - Remove direct `window.ivyApp` calls from `goivy/webui/pw_test`.
+
+30. Delete compatibility tests that construct `IvyApp`.
+    - Replace them with service/component tests or diagnostics tests.
+    - Delete `legacyAppController.compat.test.js`.
+    - Delete `legacyAppController.surface.test.js` once the controller is gone.
+    - Delete `legacySelfBinding.test.js` once no callback-heavy legacy module
+      remains.
+
+### Phase 6: Rename Or Delete Remaining Legacy Modules
+
+31. Delete `components/legacyCommand.js`.
+    - Production components should import command helpers from the command
+      service/registry directly.
+    - Rename `components/legacyCommand.test.js` or delete it after equivalent
+      command service tests exist.
+
+32. Delete or rename `legacyRuntimeGlobals.js`.
+    - `IvyControlsShim` behavior should become service/store behavior.
+    - `IvyPersist` behavior should live in `persistenceService.js`.
+    - `IvyGraph` behavior should live in `graphRuntime.js`.
+
+33. Delete or rename `legacyGraph.js`.
+    - Keep `services/graphRuntime.js` as the canonical Cytoscape runtime
+      module.
+    - Tests should import the canonical module.
+
+34. Delete or rename `legacyPersist.js`.
+    - Keep `services/persistenceService.js` as the canonical persistence
+      module.
+    - Tests should import the canonical module.
+
+35. Delete `legacyStartup.js`, `legacyAppRuntime.js`, and `legacyScripts.js`.
+    - Production startup and tests should use the Vue service boot path.
+
+36. Remove compatibility aliases in package/test naming where useful.
+    - `test:webui:js` may stay as a short-term alias, but the preferred name
+      should be Vue/Vitest-oriented.
+    - Remove empty `goivy/webui/js_test` directories if they still exist.
+
+### Phase 7: Final Guards And Hardening
+
+37. Tighten source guards to final state.
+    - No production references to:
+      - `legacyAppController`
+      - `legacyCommand`
+      - `window.ivyApp`
+      - `window.startIvyApp`
+      - `window.IvyApp`
+      - `window.IvyControls`
+      - `window.IvyPersist`
+      - `window.IvyGraph`
+    - Any remaining `legacy` reference must be test-only or documented as
+      external compatibility.
+
+38. Update frontend docs.
+    - Document:
+      - Go-served, build-only Vite workflow
+      - Vue component responsibilities
+      - Pinia store responsibilities
+      - service ownership boundaries
+      - command registration conventions
+      - browser diagnostics bridge
+      - hosted Go engine vs future Wanix-compatible engine interface
+
+39. Confirm the deletion preconditions.
+    - No production import of `legacyAppController.js`.
+    - No test constructs `IvyApp`.
+    - No command registration reflects over `IvyApp.prototype`.
+    - No browser test reaches through `window.ivyApp`.
+
+40. Delete `goivy/webui/frontend/src/legacyAppController.js`.
+    - This is the final migration step because every controller behavior now
+      lives in Vue components, Pinia stores, or service modules.
+    - As part of this deletion slice, run:
+      - `npm run test:webui:js`
+      - `npm run build:webui`
+      - `go test ./goivy/webui`
+      - `npm run test:webui:browser`
