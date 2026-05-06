@@ -233,6 +233,40 @@ func TestDiagramNoCtI(t *testing.T) {
 	_ = result
 }
 
+func TestDiagramUsesLazyStateUpdateNotBMCValue(t *testing.T) {
+	mod := goivy.New()
+	mod.Actions.Set("act", goivy.NewSequence())
+	ui := NewCTIAnalysisGraphUI(mod)
+	ui.Solver = nil
+	ui.HaveCTI = true
+	ui.AG = goivy.NewAnalysisGraph(mod)
+
+	s0 := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ui.AG.Add(s0, nil)
+	s1 := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ui.AG.Add(s1, goivy.NewActionApp("act", s0))
+
+	if s1.Update != nil {
+		t.Fatalf("test setup expected no cached update")
+	}
+	if s1.Value != nil {
+		t.Fatalf("test setup expected no BMC value")
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("Diagram panicked instead of using Python State.update behavior: %v", r)
+		}
+	}()
+
+	_, err := ui.Diagram()
+	if err == nil || !strings.Contains(err.Error(), "no solver available") {
+		t.Fatalf("expected Diagram to reach solver availability check, got %v", err)
+	}
+	if s1.Update == nil {
+		t.Fatalf("Diagram did not compute the CTI successor update")
+	}
+}
+
 // --- Weaken tests ---
 
 func TestWeakenMultipleIndices(t *testing.T) {

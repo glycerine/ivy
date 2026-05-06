@@ -86,6 +86,30 @@ print(json.dumps(type(state.clauses.annot).__name__))
 	}
 }
 
+func TestStateUpdateComputesFromActionAppProvenance(t *testing.T) {
+	ag := testGraph()
+	registerAction(ag, "act")
+	s0 := testState(ag.Domain)
+	ag.Add(s0, nil)
+	s1 := testState(ag.Domain)
+	ag.Add(s1, NewActionApp("act", s0))
+
+	if s1.Update != nil {
+		t.Fatalf("test setup expected no cached update")
+	}
+	if s1.Value != nil {
+		t.Fatalf("test setup expected no BMC value")
+	}
+
+	update := StateUpdate(s1)
+	if update == nil {
+		t.Fatalf("StateUpdate returned nil for ActionApp provenance")
+	}
+	if s1.Update != update {
+		t.Fatalf("StateUpdate did not cache the computed update")
+	}
+}
+
 func TestArtStateIsBottom(t *testing.T) {
 	mod := artTestModule()
 	s := NewState(mod, falseClauses())

@@ -74,6 +74,73 @@ func (s *State) SetStateValue(u *Update) {
 	}
 }
 
+// StateUpdate returns the Python State.update property equivalent. It lazily
+// computes and caches the update from ActionApp provenance when available.
+func StateUpdate(state *State) *Update {
+	if state == nil {
+		return nil
+	}
+	if state.Update != nil {
+		return state.Update
+	}
+	action := stateActionForUpdate(state)
+	if action == nil || state.Domain == nil {
+		return nil
+	}
+
+	ctx := &UpdateContext{
+		Domain: state.Domain,
+		PVars:  state.InScope,
+		GetAction: func(name string) ActionsAction {
+			return stateActionByName(state, name)
+		},
+	}
+	if state.Domain.Cfg != nil {
+		ctx.ActCfg = state.Domain.Cfg.ActCfg
+		ctx.CheckUnprovable = state.Domain.Cfg.OnlyCheckUnprovable
+		ctx.CheckedAssert = state.Domain.Cfg.CheckLineno
+	}
+	ctx.Instantiator = state.Domain.Instantiator
+
+	xtracer.Trace("interp.State.Update calling GetUpdate type=%s", ActionTypeName(action))
+	state.Update = GetUpdate(action, ctx)
+	return state.Update
+}
+
+func stateActionForUpdate(state *State) ActionsAction {
+	if state == nil {
+		return nil
+	}
+	if state.Action != nil {
+		return state.Action
+	}
+	aa, ok := state.Prov.(*ActionApp)
+	if !ok || aa == nil {
+		return nil
+	}
+	switch rep := aa.Rep.(type) {
+	case ActionsAction:
+		return rep
+	case string:
+		return stateActionByName(state, rep)
+	case *Const:
+		return stateActionByName(state, rep.Name)
+	default:
+		return nil
+	}
+}
+
+func stateActionByName(state *State, name string) ActionsAction {
+	if state == nil || state.Domain == nil || state.Domain.Actions == nil {
+		return nil
+	}
+	action, ok := state.Domain.Actions.Get2(name)
+	if !ok {
+		return nil
+	}
+	return action
+}
+
 // IsBottom reports whether this state is the bottom (empty/false) state.
 func (s *State) IsBottom() bool {
 	return s.Clauses != nil && s.Clauses.IsFalse()
@@ -759,33 +826,9 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *History {
 	}
 	h := ag.GetHistory(state.Pred, nextBound)
 
-	// Lazy compute state.Update for the failState path. Python:
-	// ivy_interp.py:137-142 - the State.update property is accessed by
-	// history_forward_step (ivy_interp.py:597-599) inside ag.get_history.
-	//
-	// In Go we set failState.Action = NewFailAction(envAction) at
-	// construction time but leave failState.Update nil so the lazy compute
-	// fires here, exactly where Python's lazy property would fire.
-	if state.Update == nil && state.Action != nil && state.Domain != nil {
-		ctx := &UpdateContext{
-			Domain:          state.Domain,
-			PVars:           state.InScope,
-			ActCfg:          state.Domain.Cfg.ActCfg,
-			Instantiator:    state.Domain.Instantiator,
-			CheckUnprovable: state.Domain.Cfg.OnlyCheckUnprovable,
-			CheckedAssert:   state.Domain.Cfg.CheckLineno,
-			GetAction: func(name string) ActionsAction {
-				if v, ok := state.Domain.Actions.Get2(name); ok {
-					if act, ok := v.(ActionsAction); ok {
-						return act
-					}
-				}
-				return nil
-			},
-		}
-		xtracer.Trace("interp.State.Update calling GetUpdate type=%s", ActionTypeName(state.Action))
-		state.Update = GetUpdate(state.Action, ctx)
-	}
+	// Python ivy_interp.py:137-142 exposes this as State.update. The cached
+	// value is computed lazily when history_forward_step asks for it.
+	StateUpdate(state)
 
 	// If the state has an Update, use it for the forward step.
 	// Matches Python ivy_interp.py:591:

@@ -411,7 +411,11 @@ func (ui *CTIAnalysisGraphUI) Diagram() (string, error) {
 	axiomsUc := goivy.AndClausesTyped(axioms, uc)
 
 	// Python: rev = reverse_image(post, axioms, self.g.states[1].update)
-	rev := goivy.ReverseImage(post, axioms, ui.AG.States[1].Value)
+	update := goivy.StateUpdate(ui.AG.States[1])
+	if update == nil {
+		return "", fmt.Errorf("CTI successor state has no update")
+	}
+	rev := goivy.ReverseImage(post, axioms, update)
 
 	// Python: clauses = and_clauses(and_clauses(pre, rev), axioms_uc)
 	combined := goivy.AndClausesTyped(goivy.AndClausesTyped(pre, rev), axiomsUc)
