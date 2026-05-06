@@ -24,7 +24,7 @@ function setKeymap(keymap) {
         <button
           id="file-reopen-last"
           class="reopen-last-btn"
-          :style="{ display: editorStore.reopenLastVisible ? '' : 'none' }"
+          v-show="editorStore.reopenLastVisible"
           @click="runCommand($event, () => callApp('reopenLastFile'))"
         >
           {{ editorStore.reopenLastLabel }}

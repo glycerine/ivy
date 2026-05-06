@@ -33,6 +33,14 @@ export class HostedGoEngine extends IvyEngine {
     return `/api/session/${this.sessionId}${suffix}`;
   }
 
+  async requestSession(suffix, options = {}) {
+    return this.client.request(this.sessionPath(suffix), options);
+  }
+
+  async fetchSession(suffix, options = {}) {
+    return this.client.fetch(this.sessionPath(suffix), options);
+  }
+
   async createSession() {
     const data = await this.client.request('/api/session/new', { method: 'POST' });
     this.sessionId = data.session_id;
@@ -51,10 +59,11 @@ export class HostedGoEngine extends IvyEngine {
     return this.client.request(this.sessionPath(suffix));
   }
 
-  async getConcept({ sheetId, stateId } = {}) {
+  async getConcept({ sheetId, nodeId, stateId } = {}) {
     const params = new URLSearchParams();
     if (sheetId) params.set('sheet', sheetId);
-    if (stateId != null) params.set('state', String(stateId));
+    const selectedNode = nodeId != null ? nodeId : stateId;
+    if (selectedNode != null) params.set('node', String(selectedNode));
     const query = params.toString();
     return this.client.request(this.sessionPath(`/concept${query ? `?${query}` : ''}`));
   }
@@ -63,10 +72,9 @@ export class HostedGoEngine extends IvyEngine {
     return this.client.request(this.sessionPath('/menus'));
   }
 
-  async check({ mode, bound } = {}) {
-    const body = {};
+  async check({ mode, ...options } = {}) {
+    const body = { ...options };
     if (mode) body.mode = mode;
-    if (bound != null) body.bound = bound;
     return this.client.request(this.sessionPath('/check'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

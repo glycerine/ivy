@@ -43,10 +43,22 @@ describe('HostedGoEngine', () => {
     engine.sessionId = 'abc';
 
     await engine.getArg({ sheetId: 'trace-1' });
-    await engine.getConcept({ sheetId: 'trace-1', stateId: 2 });
+    await engine.getConcept({ sheetId: 'trace-1', nodeId: 'state_2' });
 
     expect(fetchImpl.mock.calls[0][0]).toBe('/api/session/abc/arg?sheet=trace-1');
-    expect(fetchImpl.mock.calls[1][0]).toBe('/api/session/abc/concept?sheet=trace-1&state=2');
+    expect(fetchImpl.mock.calls[1][0]).toBe('/api/session/abc/concept?sheet=trace-1&node=state_2');
+  });
+
+  it('preserves check options when posting through the hosted engine', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+    const engine = new HostedGoEngine({ client: new IvyHttpClient({ fetchImpl }) });
+    engine.sessionId = 'abc';
+
+    await engine.check({ mode: 'bounded', bound: 7, trace: true });
+
+    const [url, options] = fetchImpl.mock.calls[0];
+    expect(url).toBe('/api/session/abc/check');
+    expect(JSON.parse(options.body)).toEqual({ bound: 7, trace: true, mode: 'bounded' });
   });
 
   it('returns an unsubscribe function for server events', () => {

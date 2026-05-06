@@ -5,7 +5,7 @@
       <div id="divider3" class="divider"></div>
       <EditorPane />
     </div>
-    <div id="divider-h" class="divider-horizontal" :style="{ display: layoutStore.tutorialVisible ? '' : 'none' }"></div>
+    <div id="divider-h" class="divider-horizontal" v-show="layoutStore.tutorialVisible"></div>
     <TutorialPane />
   </div>
 </template>

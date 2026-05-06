@@ -48,8 +48,9 @@ class IvyControls {
      */
     buildEdgeToggles(edgeNames, onChange) {
         var container = document.getElementById('edge-toggles');
-        container.innerHTML = '';
         this.edgeToggles = {};
+        if (!container) return;
+        container.innerHTML = '';
 
         for (var i = 0; i < edgeNames.length; i++) {
             var edgeName = edgeNames[i];
@@ -91,8 +92,9 @@ class IvyControls {
      */
     buildLabelToggles(labelNames, onChange) {
         var container = document.getElementById('label-toggles');
-        container.innerHTML = '';
         this.labelToggles = {};
+        if (!container) return;
+        container.innerHTML = '';
 
         for (var i = 0; i < labelNames.length; i++) {
             var labelName = labelNames[i];

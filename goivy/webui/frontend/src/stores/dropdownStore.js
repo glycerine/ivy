@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 export const useDropdownStore = defineStore('dropdowns', {
   state: () => ({
     openId: '',
+    flashingItemId: '',
   }),
   getters: {
     isOpen: (state) => (id) => state.openId === id,
@@ -14,6 +15,15 @@ export const useDropdownStore = defineStore('dropdowns', {
     },
     closeAll() {
       this.openId = '';
+    },
+    flashItem(id, durationMs = 50) {
+      if (!id) return;
+      this.flashingItemId = String(id);
+      window.setTimeout(() => {
+        if (this.flashingItemId === String(id)) {
+          this.flashingItemId = '';
+        }
+      }, durationMs);
     },
   },
 });

@@ -1,40 +1,32 @@
 import { mount } from '@vue/test-utils';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import DialogHost from './DialogHost.vue';
-
-function makeFile(name) {
-  return new File(['content'], name, { type: 'text/plain' });
-}
+import { useDialogStore } from '../stores/dialogStore.js';
 
 describe('DialogHost', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
-    window.ivyApp = undefined;
   });
 
-  it('routes hidden file input changes through the app bridge', async () => {
-    const loadFile = vi.fn(async () => undefined);
-    const loadEventTraceFile = vi.fn(async () => undefined);
-    const loadAnalysisStateFile = vi.fn(async () => undefined);
-    window.ivyApp = { loadFile, loadEventTraceFile, loadAnalysisStateFile };
+  it('renders an active dialog and resolves button choices through the store', async () => {
+    const dialogStore = useDialogStore();
+    const promise = dialogStore.open({
+      type: 'buttons',
+      title: 'Confirm',
+      message: 'Pick one',
+      buttons: [
+        { label: 'Cancel', value: 'cancel' },
+        { label: 'Use it', value: 'use' },
+      ],
+    });
 
     const wrapper = mount(DialogHost);
 
-    const modelInput = wrapper.find('#file-input').element;
-    Object.defineProperty(modelInput, 'files', { configurable: true, value: [makeFile('model.ivy')] });
-    await wrapper.find('#file-input').trigger('change');
-    expect(loadFile).toHaveBeenCalledWith(modelInput.files[0]);
-    expect(modelInput.value).toBe('');
+    expect(wrapper.text()).toContain('Confirm');
+    expect(wrapper.text()).toContain('Pick one');
+    await wrapper.findAll('[data-ivy-dialog-button]')[1].trigger('click');
 
-    const eventInput = wrapper.find('#event-file-input').element;
-    Object.defineProperty(eventInput, 'files', { configurable: true, value: [makeFile('trace.iev')] });
-    await wrapper.find('#event-file-input').trigger('change');
-    expect(loadEventTraceFile).toHaveBeenCalledWith(eventInput.files[0]);
-
-    const stateInput = wrapper.find('#analysis-state-file-input').element;
-    Object.defineProperty(stateInput, 'files', { configurable: true, value: [makeFile('state.ivyweb.json')] });
-    await wrapper.find('#analysis-state-file-input').trigger('change');
-    expect(loadAnalysisStateFile).toHaveBeenCalledWith(stateInput.files[0]);
+    await expect(promise).resolves.toBe('use');
   });
 });

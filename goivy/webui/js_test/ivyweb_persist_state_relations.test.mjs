@@ -82,4 +82,26 @@ describe('IvyPersist state relation snapshots', () => {
     expect(window.__ivyVueBridge.setLoadedFile).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
     expect(document.getElementById('loaded-file').textContent).toBe('old');
   });
+
+  it('routes mode restore through Vue without mutating the Vue-owned select', () => {
+    const IvyPersist = loadIvyPersist();
+    document.body.innerHTML = '<select id="mode-select"><option value="pdr" selected>PDR</option><option value="bounded">Bounded</option></select>';
+    window.__ivyVueBridge = {
+      setMode: vi.fn(),
+    };
+
+    IvyPersist._setMode('bounded');
+
+    expect(window.__ivyVueBridge.setMode).toHaveBeenCalledWith('bounded');
+    expect(document.getElementById('mode-select').value).toBe('pdr');
+  });
+
+  it('keeps the mode restore select fallback for non-Vue harnesses', () => {
+    const IvyPersist = loadIvyPersist();
+    document.body.innerHTML = '<select id="mode-select"><option value="pdr" selected>PDR</option><option value="bounded">Bounded</option></select>';
+
+    IvyPersist._setMode('bounded');
+
+    expect(document.getElementById('mode-select').value).toBe('bounded');
+  });
 });

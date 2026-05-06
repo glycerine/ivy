@@ -20,7 +20,7 @@ function choose(item) {
     <a
       v-if="recentFilesStore.items.length === 0"
       href="#"
-      style="color:#666;pointer-events:none;"
+      class="recent-files-empty"
     >(no recent files)</a>
     <a
       v-for="item in recentFilesStore.items"

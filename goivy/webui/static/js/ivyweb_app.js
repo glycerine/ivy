@@ -10,7 +10,7 @@
 
 class IvyApp {
     constructor() {
-        this.api = new IvyAPI();
+        this.api = this.createApi();
         this.controls = new IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
@@ -37,6 +37,18 @@ class IvyApp {
         this._saveInProgress = false;
         this._saveProgressSheen = null;
         this.currentBound = 10;
+    }
+
+    createApi() {
+        var bridge = window.__ivyVueBridge;
+        if (bridge && typeof bridge.createLegacyApi === 'function') {
+            try {
+                return bridge.createLegacyApi();
+            } catch (e) {
+                console.warn('Vue engine bridge unavailable, falling back to IvyAPI:', e);
+            }
+        }
+        return new IvyAPI();
     }
 
     /**
@@ -1268,12 +1280,16 @@ class IvyApp {
         var tabs = vueTabs ? [] : document.querySelectorAll('.sheet-tab');
         var sheets = document.querySelectorAll('.sheet-content');
         for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-        for (var i = 0; i < sheets.length; i++) sheets[i].classList.remove('active');
+        for (var i = 0; i < sheets.length; i++) {
+            if (!vueTabs || sheets[i].__ivyVueRenderedSheet) {
+                sheets[i].classList.remove('active');
+            }
+        }
         // Activate the target
         var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
-        if (tab) tab.classList.add('active');
-        if (sheet) sheet.classList.add('active');
+        if (tab && !vueTabs) tab.classList.add('active');
+        if (sheet && (!vueTabs || sheet.__ivyVueRenderedSheet)) sheet.classList.add('active');
         if (this.sheets && this.sheets[sheetId]) {
             this.activeSheetId = sheetId;
             if (this.sheets[sheetId].type !== 'events') {
@@ -1923,25 +1939,34 @@ class IvyApp {
     }
 
     toggleTutorial(flash) {
-        var tutorial = document.getElementById('tutorial-container');
-        var dividerH = document.getElementById('divider-h');
-        var btn = document.getElementById('btn-toggle-tutorial');
-        if (!tutorial || !btn) return;
-
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setTutorialVisible === 'function') {
-            var visible = tutorial.style.display !== 'none';
-            if (typeof window.__ivyVueBridge.isTutorialVisible === 'function') {
-                visible = !!window.__ivyVueBridge.isTutorialVisible();
+        var bridge = window.__ivyVueBridge;
+        if (bridge && typeof bridge.setTutorialVisible === 'function') {
+            var tutorialForState = document.getElementById('tutorial-container');
+            var visible = tutorialForState ? tutorialForState.style.display !== 'none' : true;
+            if (typeof bridge.isTutorialVisible === 'function') {
+                visible = !!bridge.isTutorialVisible();
             }
             var nextVisible = !visible;
-            window.__ivyVueBridge.setTutorialVisible(nextVisible);
+            bridge.setTutorialVisible(nextVisible);
             if (!nextVisible && flash) {
-                btn.classList.add('btn-flash');
-                setTimeout(function () { btn.classList.remove('btn-flash'); }, 1200);
+                if (typeof bridge.flashTutorialButton === 'function') {
+                    bridge.flashTutorialButton(1200);
+                } else {
+                    var vueFallbackButton = document.getElementById('btn-toggle-tutorial');
+                    if (vueFallbackButton) {
+                        vueFallbackButton.classList.add('btn-flash');
+                        setTimeout(function () { vueFallbackButton.classList.remove('btn-flash'); }, 1200);
+                    }
+                }
             }
             this._refreshLayoutAfterVuePatch();
             return;
         }
+
+        var tutorial = document.getElementById('tutorial-container');
+        var dividerH = document.getElementById('divider-h');
+        var btn = document.getElementById('btn-toggle-tutorial');
+        if (!tutorial || !btn) return;
 
         if (tutorial.style.display === 'none') {
             // Show
@@ -2376,12 +2401,6 @@ class IvyApp {
             this._applyEdgeVisibility();
             this._applyNodeLabels();
             this.populateConstraintFacts(conceptData);
-            setTimeout(function () {
-                var liveTbody = document.getElementById('state-checkbox-body');
-                if (liveTbody && liveTbody.children.length === 0) {
-                    appendLegacyRows();
-                }
-            }, 0);
             return;
         }
 
@@ -3724,6 +3743,7 @@ class IvyApp {
         }
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEditorKeymap === 'function') {
             window.__ivyVueBridge.setEditorKeymap(next);
+            return;
         }
         var radio = document.querySelector('input[name="keymap"][value="' + next + '"]');
         if (radio) radio.checked = true;
@@ -3750,6 +3770,7 @@ class IvyApp {
     setMode(mode) {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setMode === 'function') {
             window.__ivyVueBridge.setMode(mode);
+            return;
         }
         var modeEl = document.getElementById('mode-select');
         if (modeEl && mode) modeEl.value = mode;
@@ -3904,7 +3925,7 @@ class IvyApp {
         if (state.toggles) {
             IvyPersist._setToggles(state.toggles);
         }
-        if (state.activeSheetId && document.getElementById(state.activeSheetId)) {
+        if (state.activeSheetId && this.sheetExists(state.activeSheetId)) {
             this.switchSheet(state.activeSheetId);
         } else {
             this.switchSheet('sheet-1');
@@ -4365,7 +4386,6 @@ class IvyApp {
 
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setCheckTraceAction === 'function') {
             window.__ivyVueBridge.setCheckTraceAction(openTrace);
-            setTimeout(appendLegacyButton, 0);
             return;
         }
         appendLegacyButton();
@@ -4595,6 +4615,15 @@ class IvyApp {
      */
     flashAndClose(el, callback) {
         var self = this;
+        var bridge = window.__ivyVueBridge;
+        if (bridge && typeof bridge.flashMenuItem === 'function' && el && el.id) {
+            bridge.flashMenuItem(el.id, 50);
+            setTimeout(function () {
+                self.closeAllDropdowns();
+                if (callback) callback();
+            }, 50);
+            return;
+        }
         el.classList.add('menu-flash');
         setTimeout(function () {
             el.classList.remove('menu-flash');

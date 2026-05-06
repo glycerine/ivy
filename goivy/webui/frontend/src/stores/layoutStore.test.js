@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { DEFAULT_TUTORIAL_URL, useLayoutStore } from './layoutStore.js';
 
 describe('layoutStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
+    vi.useRealTimers();
   });
 
   it('tracks tutorial visibility and constrained pane sizes', () => {
@@ -61,5 +62,17 @@ describe('layoutStore', () => {
 
     expect(layout.tutorialUrl).toBe('/static/tutorial/linked.html#section');
     expect(layout.tutorialInput).toBe('/static/tutorial/linked.html#section');
+  });
+
+  it('tracks the tutorial button flash state', () => {
+    vi.useFakeTimers();
+    const layout = useLayoutStore();
+
+    layout.flashTutorialButton(25);
+    expect(layout.tutorialButtonFlashing).toBe(true);
+
+    vi.advanceTimersByTime(25);
+    expect(layout.tutorialButtonFlashing).toBe(false);
+    vi.useRealTimers();
   });
 });

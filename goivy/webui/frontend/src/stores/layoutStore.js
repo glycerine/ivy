@@ -31,6 +31,7 @@ export const useLayoutStore = defineStore('layout', {
     tutorialHistory: [DEFAULT_TUTORIAL_URL],
     tutorialHistoryIndex: 0,
     tutorialFrameKey: 0,
+    tutorialButtonFlashing: false,
     argPanelWidth: null,
     statePanelWidth: null,
     detailsHeight: null,
@@ -60,6 +61,12 @@ export const useLayoutStore = defineStore('layout', {
   actions: {
     setTutorialVisible(visible) {
       this.tutorialVisible = Boolean(visible);
+    },
+    flashTutorialButton(durationMs = 1200) {
+      this.tutorialButtonFlashing = true;
+      window.setTimeout(() => {
+        this.tutorialButtonFlashing = false;
+      }, Number(durationMs) || 1200);
     },
     setTutorialInput(value) {
       this.tutorialInput = String(value || '');

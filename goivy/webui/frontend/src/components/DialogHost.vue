@@ -1,13 +1,8 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { useContextMenuStore } from '../stores/contextMenuStore.js';
 import { useDialogStore } from '../stores/dialogStore.js';
-import { useSessionStore } from '../stores/sessionStore.js';
-import { callApp, ivyApp } from './legacyCommand.js';
 
-const contextMenuStore = useContextMenuStore();
 const dialogStore = useDialogStore();
-const sessionStore = useSessionStore();
 const textInput = ref(null);
 const scalarInput = ref(null);
 const listInput = ref(null);
@@ -57,40 +52,6 @@ function handleKeydown(event) {
   }
 }
 
-async function handleModelFileChange(event) {
-  const input = event.target;
-  const file = input.files && input.files[0];
-  if (file) {
-    await callApp('loadFile', file);
-  }
-  input.value = '';
-}
-
-async function handleEventTraceFileChange(event) {
-  const input = event.target;
-  const file = input.files && input.files[0];
-  if (file) {
-    await callApp('loadEventTraceFile', file);
-  }
-  input.value = '';
-}
-
-async function handleAnalysisStateFileChange(event) {
-  const input = event.target;
-  const file = input.files && input.files[0];
-  if (file) {
-    const app = ivyApp();
-    try {
-      await callApp('loadAnalysisStateFile', file);
-    } catch (ex) {
-      if (app && app.controls && typeof app.controls.setStatus === 'function') {
-        app.controls.setStatus(`Load analysis state failed: ${ex.message}`, 'error');
-      }
-    }
-  }
-  input.value = '';
-}
-
 watch(activeDialog, async (active) => {
   if (!active) return;
   await nextTick();
@@ -113,26 +74,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="context-menu" class="context-menu" :style="contextMenuStore.style">
-    <template v-for="item in contextMenuStore.items" :key="item.key">
-      <div v-if="item.kind === 'separator'" class="context-menu-separator"></div>
-      <div v-else-if="item.kind === 'header'" class="context-menu-header">{{ item.header }}</div>
-      <div
-        v-else
-        class="context-menu-item"
-        :data-action-id="item.id"
-        @click.stop="contextMenuStore.runItem(item)"
-      >
-        {{ item.name }}
-      </div>
-    </template>
-  </div>
-
   <div
     v-if="activeDialog"
     class="dialog-overlay"
     data-ivy-dialog="true"
-    style="display:flex;"
   >
     <div class="dialog-box">
       <div class="dialog-title">{{ activeDialog.title }}</div>
@@ -193,7 +138,7 @@ onBeforeUnmount(() => {
       <div
         class="dialog-message dialog-error"
         data-ivy-dialog-error="true"
-        :style="{ display: activeDialog.error ? 'block' : 'none' }"
+        v-show="activeDialog.error"
       >
         {{ activeDialog.error }}
       </div>
@@ -213,16 +158,4 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
-  <input type="file" id="file-input" accept=".ivy" style="display:none;" @change="handleModelFileChange">
-  <input type="file" id="event-file-input" accept=".iev,.pats,.txt" style="display:none;" @change="handleEventTraceFileChange">
-  <input type="file" id="analysis-state-file-input" accept=".json,.ivyweb.json" style="display:none;" @change="handleAnalysisStateFileChange">
-
-  <div id="save-as-explain-notice" class="save-as-explain-notice" :style="{ display: sessionStore.saveAsNoticeVisible ? 'block' : 'none' }">
-    The browser security model requires re-confirmation of the save path on disk when IvyWeb cannot locate an IndexedDB cached file handle.
-  </div>
-
-  <div id="loading-overlay" :style="{ display: sessionStore.loading ? 'flex' : 'none' }">
-    <div class="spinner"></div>
-    <div id="loading-message">{{ sessionStore.loadingMessage }}</div>
-  </div>
 </template>

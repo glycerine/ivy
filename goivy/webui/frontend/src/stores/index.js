@@ -1,9 +1,15 @@
 export { useEngineStore } from './engineStore.js';
 export { useContextMenuStore } from './contextMenuStore.js';
+export { useDialogStore } from './dialogStore.js';
+export { useDropdownStore } from './dropdownStore.js';
 export { useSessionStore } from './sessionStore.js';
 export { useEditorStore } from './editorStore.js';
+export { useEventTraceStore } from './eventTraceStore.js';
 export { useDetailsStore } from './detailsStore.js';
 export { useGraphStore } from './graphStore.js';
 export { useLayoutStore } from './layoutStore.js';
+export { useMenuDescriptorStore } from './menuDescriptorStore.js';
+export { useRecentFilesStore } from './recentFilesStore.js';
+export { useSheetStore } from './sheetStore.js';
 export { useStateRelationsStore } from './stateRelationsStore.js';
 export { useToastStore } from './toastStore.js';

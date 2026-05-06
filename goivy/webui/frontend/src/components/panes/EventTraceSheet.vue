@@ -76,6 +76,7 @@ async function loadPatterns() {
       <select
         class="event-pattern-list"
         size="8"
+        :value="selectedPattern()"
         @change="eventTraceStore.setSelectedPatternIndex(sheetId, selectedPatternIndex($event))"
       >
         <option

@@ -49,4 +49,12 @@ export class WanixEngine extends IvyEngine {
   async setToggles() {
     this.unavailable();
   }
+
+  async requestSession() {
+    this.unavailable();
+  }
+
+  async fetchSession() {
+    this.unavailable();
+  }
 }

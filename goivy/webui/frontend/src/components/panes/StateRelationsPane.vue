@@ -49,7 +49,7 @@ const columns = [
             </td>
           </tr>
           <tr v-if="stateRelationsStore.showPlaceholder">
-            <td colspan="5" style="color:#666;font-style:italic;">No relations loaded</td>
+            <td colspan="5" class="state-relations-placeholder">No relations loaded</td>
           </tr>
         </tbody>
       </table>

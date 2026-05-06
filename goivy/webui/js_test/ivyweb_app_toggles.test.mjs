@@ -67,6 +67,33 @@ describe('IvyApp checkbox state', () => {
     expect(app._labelVisibility.semaphore.node_necessarily).toBe(true);
   });
 
+  it('routes state relation rows through Vue without appending legacy rows', () => {
+    vi.useFakeTimers();
+    const IvyApp = loadApp();
+    const app = makeApp(IvyApp);
+    app.populateConstraintFacts = vi.fn();
+    app._applyEdgeVisibility = vi.fn();
+    app._applyNodeLabels = vi.fn();
+    window.__ivyVueBridge = {
+      updateStateRelations: vi.fn(),
+    };
+
+    app.populateStateCheckboxes({
+      relations: ['link(X,Y)'],
+      toggles: {
+        edges: {
+          'link(X,Y)': {
+            all_to_all: true,
+          },
+        },
+      },
+    });
+    vi.runAllTimers();
+
+    expect(window.__ivyVueBridge.updateStateRelations).toHaveBeenCalled();
+    expect(document.querySelector('#state-checkbox-body tr')).toBeNull();
+  });
+
   it('refreshes the editor layout when the tutorial pane is hidden', () => {
     const IvyApp = loadApp();
     const app = makeApp(IvyApp);
@@ -106,14 +133,16 @@ describe('IvyApp checkbox state', () => {
     window.__ivyVueBridge = {
       setTutorialVisible: vi.fn(),
       isTutorialVisible: vi.fn(() => true),
+      flashTutorialButton: vi.fn(),
       afterLayoutSettled: vi.fn((callback) => {
         settledCallback = callback;
       }),
     };
 
-    app.toggleTutorial();
+    app.toggleTutorial(true);
 
     expect(window.__ivyVueBridge.setTutorialVisible).toHaveBeenCalledWith(false);
+    expect(window.__ivyVueBridge.flashTutorialButton).toHaveBeenCalledWith(1200);
     expect(window.__ivyVueBridge.afterLayoutSettled).toHaveBeenCalled();
     expect(app.argGraph.resize).not.toHaveBeenCalled();
     expect(app.conceptGraph.resize).not.toHaveBeenCalled();
@@ -126,5 +155,28 @@ describe('IvyApp checkbox state', () => {
     vi.advanceTimersByTime(60);
     expect(app.argGraph.resize).toHaveBeenCalledTimes(2);
     expect(app.conceptGraph.resize).toHaveBeenCalledTimes(2);
+  });
+
+  it('routes Vue-rendered menu flashing through the bridge', () => {
+    vi.useFakeTimers();
+    const IvyApp = loadApp();
+    const app = makeApp(IvyApp);
+    const el = document.createElement('a');
+    el.id = 'file-load';
+    const callback = vi.fn();
+    window.__ivyVueBridge = {
+      flashMenuItem: vi.fn(),
+      closeDropdownMenus: vi.fn(),
+    };
+
+    app.flashAndClose(el, callback);
+
+    expect(window.__ivyVueBridge.flashMenuItem).toHaveBeenCalledWith('file-load', 50);
+    expect(el.classList.contains('menu-flash')).toBe(false);
+    expect(callback).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(50);
+    expect(window.__ivyVueBridge.closeDropdownMenus).toHaveBeenCalled();
+    expect(callback).toHaveBeenCalled();
   });
 });

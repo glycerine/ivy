@@ -38,6 +38,16 @@ export function loadIvyPersist() {
   );
 }
 
+export function loadIvyControls() {
+  const source = readStaticScript('ivyweb_controls.js');
+  const factory = new window.Function(
+    'window',
+    'document',
+    `${source}\nreturn IvyControls;`,
+  );
+  return factory(window, document);
+}
+
 export function loadIvyApp(deps = {}) {
   const source = readStaticScript('ivyweb_app.js');
   const factory = new window.Function(

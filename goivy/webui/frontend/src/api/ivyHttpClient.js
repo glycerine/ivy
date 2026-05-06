@@ -1,5 +1,8 @@
 export class IvyHttpClient {
-  constructor({ baseURL = '', fetchImpl = globalThis.fetch } = {}) {
+  constructor({
+    baseURL = '',
+    fetchImpl = typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : undefined,
+  } = {}) {
     if (typeof fetchImpl !== 'function') {
       throw new Error('IvyHttpClient requires a fetch implementation');
     }
@@ -8,6 +11,15 @@ export class IvyHttpClient {
   }
 
   async request(path, options = {}) {
+    const response = await this.fetch(path, options);
+    const contentType = response.headers?.get?.('content-type') || '';
+    if (contentType.includes('application/json')) {
+      return response.json();
+    }
+    return response.text();
+  }
+
+  async fetch(path, options = {}) {
     const response = await this.fetchImpl(this.baseURL + path, options);
     if (!response.ok) {
       let text = '';
@@ -18,11 +30,6 @@ export class IvyHttpClient {
       }
       throw new Error(`API error ${response.status}: ${text || response.statusText}`);
     }
-
-    const contentType = response.headers?.get?.('content-type') || '';
-    if (contentType.includes('application/json')) {
-      return response.json();
-    }
-    return response.text();
+    return response;
   }
 }

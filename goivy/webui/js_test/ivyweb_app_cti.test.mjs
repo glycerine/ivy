@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadIvyApp } from './helpers/load_browser_scripts.mjs';
 import { FakeAPI, FakeControls, FakeGraph, makePersist } from './helpers/fakes.mjs';
 
@@ -21,6 +21,11 @@ async function click(label) {
   button.click();
   await Promise.resolve();
 }
+
+afterEach(() => {
+  window.__ivyVueBridge = undefined;
+  vi.useRealTimers();
+});
 
 describe('IvyApp CTI workflows', () => {
   it('prompts for a bounded-check bound and sends it to the backend', async () => {
@@ -83,5 +88,23 @@ describe('IvyApp CTI workflows', () => {
     expect(app.api.executeAction).toHaveBeenCalledWith('cti_strengthen', { sheet_id: 'sheet-2' });
     expect(app.refreshConceptGraph).toHaveBeenCalled();
     expect(app.controls.lastStatus).toEqual({ message: 'strengthened', kind: 'success' });
+  });
+
+  it('does not append a legacy trace button when Vue owns details actions', () => {
+    vi.useFakeTimers();
+    window.__ivyVueBridge = {
+      setCheckTraceAction: vi.fn(),
+    };
+    const app = makeCTIApp();
+    document.body.innerHTML = '<div id="info-content"></div>';
+
+    app.addCheckResultViewActions({
+      trace_arg: { elements: [] },
+      trace_sheet_id: 'trace-1',
+    });
+    vi.runAllTimers();
+
+    expect(window.__ivyVueBridge.setCheckTraceAction).toHaveBeenCalled();
+    expect(document.querySelector('[data-check-view-trace]')).toBeNull();
   });
 });

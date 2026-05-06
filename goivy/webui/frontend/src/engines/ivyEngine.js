@@ -39,6 +39,14 @@ export class IvyEngine {
     throw new Error('setToggles is not implemented');
   }
 
+  async requestSession(_suffix, _options = {}) {
+    throw new Error('requestSession is not implemented');
+  }
+
+  async fetchSession(_suffix, _options = {}) {
+    throw new Error('fetchSession is not implemented');
+  }
+
   subscribeEvents(_onEvent, _onError) {
     return () => {};
   }

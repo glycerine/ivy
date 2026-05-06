@@ -441,6 +441,7 @@ var IvyPersist = {
     _setMode: function (mode) {
         if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setMode === 'function') {
             window.__ivyVueBridge.setMode(mode);
+            return;
         }
         var sel = document.getElementById('mode-select');
         if (sel && mode) sel.value = mode;

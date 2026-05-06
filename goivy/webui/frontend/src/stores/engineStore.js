@@ -1,25 +1,26 @@
 import { defineStore } from 'pinia';
+import { markRaw } from 'vue';
 import { HostedGoEngine, WanixEngine } from '../engines/index.js';
 
 export const useEngineStore = defineStore('engine', {
   state: () => ({
     kind: 'hosted-go',
-    engine: new HostedGoEngine(),
+    engine: markRaw(new HostedGoEngine()),
   }),
   actions: {
     useHostedGo(options = {}) {
       this.kind = 'hosted-go';
-      this.engine = new HostedGoEngine(options);
+      this.engine = markRaw(new HostedGoEngine(options));
       return this.engine;
     },
     useWanix() {
       this.kind = 'wanix';
-      this.engine = new WanixEngine();
+      this.engine = markRaw(new WanixEngine());
       return this.engine;
     },
     setEngine(kind, engine) {
       this.kind = kind;
-      this.engine = engine;
+      this.engine = markRaw(engine);
       return this.engine;
     },
   },

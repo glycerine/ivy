@@ -89,7 +89,47 @@ describe('IvyApp analysis state save/load', () => {
 
     app.setMode('bounded');
     expect(window.__ivyVueBridge.setMode).toHaveBeenCalledWith('bounded');
+    expect(document.getElementById('mode-select').value).toBe('pdr');
+  });
+
+  it('keeps the mode select fallback for non-Vue harnesses', () => {
+    const app = makeStateApp();
+
+    app.setMode('bounded');
+
     expect(document.getElementById('mode-select').value).toBe('bounded');
+  });
+
+  it('does not mutate Vue-owned sheet or tab active classes during bridge tab activation', () => {
+    const app = makeStateApp();
+    document.getElementById('tab-bar').insertAdjacentHTML(
+      'beforeend',
+      '<button class="sheet-tab" data-sheet="sheet-2"><span>Sheet 2</span></button>',
+    );
+    document.getElementById('sheet-area').insertAdjacentHTML(
+      'beforeend',
+      '<div id="sheet-2" class="sheet-content"></div>',
+    );
+    const dynamicSheet = document.getElementById('sheet-2');
+    dynamicSheet.__ivyVueRenderedSheet = true;
+    app.sheets['sheet-2'] = {
+      id: 'sheet-2',
+      type: 'analysis',
+      argGraph: { resize: vi.fn() },
+      conceptGraph: { resize: vi.fn() },
+      selectedArgNode: null,
+    };
+    window.__ivyVueBridge = {
+      activateSheetTab: vi.fn(),
+      setActiveGraphSheet: vi.fn(),
+    };
+
+    app.switchSheet('sheet-2');
+
+    expect(window.__ivyVueBridge.activateSheetTab).toHaveBeenCalledWith('sheet-2');
+    expect(document.querySelector('[data-sheet="sheet-2"]').classList.contains('active')).toBe(false);
+    expect(document.getElementById('sheet-1').classList.contains('active')).toBe(true);
+    expect(dynamicSheet.classList.contains('active')).toBe(true);
   });
 
   it('restores a saved visual analysis state into sheets and graph instances', async () => {
@@ -133,6 +173,35 @@ describe('IvyApp analysis state save/load', () => {
     expect(app.selectedArgNode).toBe('state_1');
     expect(app.activeSheetId).toBe('events-1');
     expect(document.querySelector('#events-1 [data-event-address="0"]').textContent).toContain('root(a)');
+  });
+
+  it('restores an active Vue-owned event sheet before its DOM exists', async () => {
+    const app = makeStateApp();
+    app.api = { reloadContent: vi.fn(async () => ({ status: 'ok' })) };
+    window.__ivyVueBridge = {
+      upsertSheetTab: vi.fn(),
+      upsertEventTraceSheet: vi.fn(),
+      removeSheetTab: vi.fn(),
+      activateSheetTab: vi.fn(),
+      setActiveGraphSheet: vi.fn(),
+      setLoadedFile: vi.fn(),
+    };
+    const state = {
+      analysis_state_format: 'ivyweb-json',
+      fileName: 'client.ivy',
+      fileContent: 'ivy source',
+      activeSheetId: 'events-1',
+      sheets: [
+        { id: 'sheet-1', type: 'analysis', label: 'Sheet 1' },
+        { id: 'events-1', type: 'events', label: 'Trace', events: [], patterns: [] },
+      ],
+    };
+
+    await app.loadAnalysisStateObject(state);
+
+    expect(document.getElementById('events-1')).toBeNull();
+    expect(app.activeSheetId).toBe('events-1');
+    expect(window.__ivyVueBridge.activateSheetTab).toHaveBeenCalledWith('events-1');
   });
 
   it('marks restored analysis sheets visual-only and blocks backend graph actions', async () => {
