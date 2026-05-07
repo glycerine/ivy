@@ -174,7 +174,7 @@ $(WEBVUE_VITEST_BIN): $(WEBVUE_NODE_MODULES_STAMP)
 webvue-setup: $(WEBVUE_VITEST_BIN)
 
 test-vue: $(WEBVUE_VITEST_BIN)
-	cd webvue && npm run test
+	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
 
 test-js: $(VITEST_BIN)
 	cd webui && npm run test:webui:js
