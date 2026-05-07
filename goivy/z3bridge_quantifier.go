@@ -8,7 +8,7 @@ package goivy
 
 /*
 #cgo CFLAGS: -I${SRCDIR}/z3vendor/z3/src/api
-#cgo LDFLAGS: ${SRCDIR}/z3vendor/z3/build/libz3.a
+#cgo LDFLAGS: ${SRCDIR}/z3vendor/native_lib/libz3.a
 
 // Use libstdc++ on Linux
 #cgo linux LDFLAGS: -lstdc++ -lm -lgomp

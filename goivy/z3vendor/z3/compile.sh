@@ -12,3 +12,8 @@ cd build
 
 # 4. Compile using standard Make (not CMake)
 make -j8
+
+# 5. Copy the artifact out so wasm can build too.
+cp -p libz3.a ../../native_lib/
+
+
