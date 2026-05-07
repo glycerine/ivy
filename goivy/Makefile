@@ -97,6 +97,8 @@ Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/ivyweb
 	go install  -tags xtracer_off ./cmd/goivy_check
+	go install  -tags xtracer_off ./cmd/ivy-control
+	go install  -tags xtracer_off ./cmd/ivy-control-admin
 
 grammar_gen: # be sure .y -> .go up to date
 	goyacc -o parser_grammar_v17.go -p parser17 parser_grammar_v17.y
