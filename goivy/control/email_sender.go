@@ -61,7 +61,7 @@ type MailgunEmailSender struct {
 	From   string
 }
 
-func (s MailgunEmailSender) SendLoginLink(ctx context.Context, toEmail, loginURL string, expiresAt time.Time) error {
+func (s *MailgunEmailSender) SendLoginLink(ctx context.Context, toEmail, loginURL string, expiresAt time.Time) error {
 	if strings.TrimSpace(s.Domain) == "" {
 		return errors.New("mailgun domain is required")
 	}
@@ -73,12 +73,15 @@ func (s MailgunEmailSender) SendLoginLink(ctx context.Context, toEmail, loginURL
 		from = "Ivy <postmaster@" + s.Domain + ">"
 	}
 	mg := mailgun.NewMailgun(s.Domain, s.APIKey)
+	ex := expiresAt.Format(time.RFC1123)
 	message := mg.NewMessage(
 		from,
 		"Your Ivy sign-in link",
-		fmt.Sprintf("Use this link to sign in to Ivy. It expires at %s.\n\n%s", expiresAt.Format(time.RFC1123), loginURL),
+		fmt.Sprintf("Use this link to sign in to Ivy. It expires at %s.\n\n%s", ex, loginURL),
 		toEmail,
 	)
 	_, _, err := mg.Send(ctx, message)
+
+	vv("end of MailgunEmailSender.SendLoginLink(): mailgun.Send() returned err = '%v'; message='%v' toEmail='%v'; loginURL = '%v'; expiresAt='%v'", err, message, toEmail, loginURL, ex)
 	return err
 }
