@@ -61,8 +61,13 @@ type SessionView struct {
 	Teams         []Team            `json:"teams,omitempty"`
 	Projects      []Project         `json:"projects,omitempty"`
 	Roles         map[string]string `json:"roles,omitempty"`
+	Passkey       *PasskeyState     `json:"passkey,omitempty"`
 
 	CookieRefreshNeeded bool `json:"-"`
+}
+
+type PasskeyState struct {
+	Registered bool `json:"registered"`
 }
 
 type SessionTouch struct {
@@ -71,6 +76,20 @@ type SessionTouch struct {
 	VisitHourInserted    bool
 	PreviousLastSeenAt   time.Time
 	CurrentVisitRecorded time.Time
+}
+
+type StoredPasskeyCredential struct {
+	ID              string
+	UserID          string
+	CredentialID    []byte
+	PublicKeyCOSE   []byte
+	SignCount       uint32
+	Transports      []string
+	BackupEligible  bool
+	BackedUp        bool
+	AttestationType string
+	AAGUID          string
+	DisplayName     string
 }
 
 type BillingProvider interface {

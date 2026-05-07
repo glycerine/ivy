@@ -2,11 +2,12 @@
 import { computed } from 'vue';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
-import { useAuthClient } from './app/dependencies.js';
+import { useAuthClient, usePasskeyBrowser } from './app/dependencies.js';
 import { useSessionStore } from './stores/sessionStore.js';
 
 const session = useSessionStore();
 const authClient = useAuthClient();
+const passkeyBrowser = usePasskeyBrowser();
 const currentPath = globalThis.location?.pathname || '/';
 
 const selectedProject = computed(() => session.selectedProject);
@@ -19,23 +20,73 @@ const email = ref('');
 const sending = ref(false);
 const sent = ref(false);
 const failed = ref(false);
-const authLoading = ref(isEmailContinue.value);
-const authFailed = ref(false);
 const isAdmin = ref(globalThis.location?.pathname?.startsWith('/admin') || false);
+const authLoading = ref(!isAdmin.value);
+const authLoadingMessage = ref('Loading your account...');
+const authFailed = ref(false);
 const adminEmails = ref([]);
 const adminLoading = ref(false);
 const adminFailed = ref(false);
+const passkeyEnrollmentDismissed = ref(false);
+const passkeyWorking = ref(false);
+const passkeyFailed = ref(false);
+const showPasskeyEnrollment = computed(() => {
+  return session.authenticated && passkeyBrowser.isSupported() && !session.passkey.registered && !passkeyEnrollmentDismissed.value;
+});
 
 async function loadCurrentSession() {
   authLoading.value = true;
+  authLoadingMessage.value = 'Loading your account...';
   authFailed.value = false;
   try {
     const view = await authClient.currentSession();
     session.applyAuthView(view);
+    if (!session.authenticated) {
+      await attemptPasskeyStartup();
+    }
   } catch {
     authFailed.value = true;
   } finally {
     authLoading.value = false;
+  }
+}
+
+async function attemptPasskeyStartup() {
+  if (!passkeyBrowser.isSupported()) {
+    return false;
+  }
+  authLoadingMessage.value = 'Checking for your passkey...';
+  try {
+    const options = await authClient.beginPasskeyLogin();
+    const credential = await passkeyBrowser.authenticate(options);
+    const view = await authClient.finishPasskeyLogin(credential);
+    session.applyAuthView(view);
+    return session.authenticated;
+  } catch {
+    return false;
+  }
+}
+
+async function retryPasskeySignIn() {
+  authLoading.value = true;
+  authFailed.value = false;
+  await attemptPasskeyStartup();
+  authLoading.value = false;
+}
+
+async function createPasskey() {
+  passkeyWorking.value = true;
+  passkeyFailed.value = false;
+  try {
+    const options = await authClient.beginPasskeyRegistration();
+    const credential = await passkeyBrowser.create(options);
+    const view = await authClient.finishPasskeyRegistration(credential);
+    session.applyAuthView(view);
+    passkeyEnrollmentDismissed.value = true;
+  } catch {
+    passkeyFailed.value = true;
+  } finally {
+    passkeyWorking.value = false;
   }
 }
 
@@ -67,6 +118,7 @@ function replaceBrowserPath(path) {
 
 async function continueEmailLogin() {
   authLoading.value = true;
+  authLoadingMessage.value = 'Checking your sign-in link...';
   authFailed.value = false;
   emailContinueStatus.value = 'checking';
   const token = readMagicLinkToken();
@@ -165,12 +217,23 @@ onMounted(() => {
 
     <section v-else-if="authLoading" aria-label="Loading session">
       <h1>Ivy</h1>
-      <p>Loading your account...</p>
+      <p>{{ authLoadingMessage }}</p>
     </section>
 
     <section v-else-if="showVerifiedLanding" aria-label="Email verified">
       <h1>Email verified</h1>
       <p>{{ session.user?.email }} is ready to use Ivy.</p>
+      <section v-if="showPasskeyEnrollment" aria-label="Passkey setup">
+        <h2>Use a passkey next time?</h2>
+        <p>When this browser has your passkey, Ivy can open directly without stopping at email sign-in.</p>
+        <button type="button" :disabled="passkeyWorking" @click="createPasskey">
+          {{ passkeyWorking ? 'Creating passkey...' : 'Create passkey' }}
+        </button>
+        <button type="button" :disabled="passkeyWorking" @click="passkeyEnrollmentDismissed = true">
+          Not now
+        </button>
+        <p v-if="passkeyFailed" role="alert">The passkey was not created. You can keep using email sign-in.</p>
+      </section>
       <a href="/">Continue to projects</a>
     </section>
 
@@ -194,12 +257,26 @@ onMounted(() => {
           {{ sending ? 'Sending...' : 'Send sign-in link' }}
         </button>
       </form>
+      <button v-if="passkeyBrowser.isSupported() && !sent" type="button" @click="retryPasskeySignIn">
+        Use passkey
+      </button>
       <p v-if="sent" role="status">Check your email for a sign-in link.</p>
       <p v-if="failed" role="alert">We could not send a sign-in link. Try again in a moment.</p>
     </section>
 
     <section v-else-if="!selectedProject" aria-label="Project picker">
       <h1>Projects</h1>
+      <section v-if="showPasskeyEnrollment" aria-label="Passkey setup">
+        <h2>Use a passkey next time?</h2>
+        <p>When this browser has your passkey, Ivy can open directly without stopping at email sign-in.</p>
+        <button type="button" :disabled="passkeyWorking" @click="createPasskey">
+          {{ passkeyWorking ? 'Creating passkey...' : 'Create passkey' }}
+        </button>
+        <button type="button" :disabled="passkeyWorking" @click="passkeyEnrollmentDismissed = true">
+          Not now
+        </button>
+        <p v-if="passkeyFailed" role="alert">The passkey was not created. You can keep using email sign-in.</p>
+      </section>
       <ul>
         <li v-for="project in session.projects" :key="project.id">
           <button type="button" @click="session.selectProject(project.id)">

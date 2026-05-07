@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import App from './App.vue';
-import { authClientKey } from './app/dependencies.js';
+import { authClientKey, passkeyBrowserKey } from './app/dependencies.js';
 import { useSessionStore } from './stores/sessionStore.js';
 
 function mountApp(options = {}) {
@@ -20,7 +20,31 @@ function mountApp(options = {}) {
     async listUnverifiedEmails() {
       return { emails: [] };
     },
+    async beginPasskeyRegistration() {
+      return { publicKey: { challenge: 'abc' } };
+    },
+    async finishPasskeyRegistration() {
+      return { authenticated: true, passkey: { registered: true } };
+    },
+    async beginPasskeyLogin() {
+      return { publicKey: { challenge: 'abc' } };
+    },
+    async finishPasskeyLogin() {
+      return { authenticated: false };
+    },
     ...(provided[authClientKey] || {}),
+  };
+  const passkeyBrowser = {
+    isSupported() {
+      return false;
+    },
+    async create() {
+      return { id: 'credential-1' };
+    },
+    async authenticate() {
+      return { id: 'credential-1' };
+    },
+    ...(provided[passkeyBrowserKey] || {}),
   };
   return mount(App, {
     global: {
@@ -28,15 +52,17 @@ function mountApp(options = {}) {
       provide: {
         ...provided,
         [authClientKey]: authClient,
+        [passkeyBrowserKey]: passkeyBrowser,
       },
     },
   });
 }
 
 async function settleMountedAsync(wrapper) {
-  await wrapper.vm.$nextTick();
-  await Promise.resolve();
-  await wrapper.vm.$nextTick();
+  for (let i = 0; i < 8; i += 1) {
+    await wrapper.vm.$nextTick();
+    await Promise.resolve();
+  }
 }
 
 describe('App', () => {
@@ -51,6 +77,50 @@ describe('App', () => {
 
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Ivy workspace"]').exists()).toBe(false);
+  });
+
+  it('tries a passkey during startup before rendering the email sign-in fallback', async () => {
+    const calls = [];
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async currentSession() {
+            calls.push('currentSession');
+            return { authenticated: false };
+          },
+          async beginPasskeyLogin() {
+            calls.push('beginPasskeyLogin');
+            return { publicKey: { challenge: 'challenge' } };
+          },
+          async finishPasskeyLogin() {
+            calls.push('finishPasskeyLogin');
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+              passkey: { registered: true },
+            };
+          },
+        },
+        [passkeyBrowserKey]: {
+          isSupported() {
+            return true;
+          },
+          async authenticate() {
+            calls.push('browserPasskey');
+            return { id: 'credential-1' };
+          },
+        },
+      },
+    });
+    expect(wrapper.find('[aria-label="Loading session"]').text()).toContain('Loading your account');
+
+    await settleMountedAsync(wrapper);
+
+    expect(calls).toEqual(['currentSession', 'beginPasskeyLogin', 'browserPasskey', 'finishPasskeyLogin']);
+    expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(false);
+    expect(wrapper.find('[aria-label="Project picker"]').exists()).toBe(true);
   });
 
   it('submits the email sign-up form and shows the neutral sent state', async () => {
@@ -190,6 +260,85 @@ describe('App', () => {
     expect(wrapper.find('[aria-label="Email verified"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Email verified"]').text()).toContain('alice@example.test');
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(false);
+  });
+
+  it('asks a newly verified user if they want to create a passkey', async () => {
+    window.history.pushState({}, '', '/verified');
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async currentSession() {
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+              passkey: { registered: false },
+            };
+          },
+        },
+        [passkeyBrowserKey]: {
+          isSupported() {
+            return true;
+          },
+        },
+      },
+    });
+
+    await settleMountedAsync(wrapper);
+
+    expect(wrapper.find('[aria-label="Email verified"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Passkey setup"]').text()).toContain('Use a passkey next time');
+  });
+
+  it('creates a passkey from the post-login prompt and updates the session view', async () => {
+    const calls = [];
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async currentSession() {
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+              passkey: { registered: false },
+            };
+          },
+          async beginPasskeyRegistration() {
+            calls.push('beginPasskeyRegistration');
+            return { publicKey: { challenge: 'challenge' } };
+          },
+          async finishPasskeyRegistration(credential) {
+            calls.push(['finishPasskeyRegistration', credential.id]);
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+              passkey: { registered: true },
+            };
+          },
+        },
+        [passkeyBrowserKey]: {
+          isSupported() {
+            return true;
+          },
+          async create() {
+            calls.push('browserCreate');
+            return { id: 'credential-1' };
+          },
+        },
+      },
+    });
+    await settleMountedAsync(wrapper);
+
+    await wrapper.find('[aria-label="Passkey setup"] button').trigger('click');
+    await settleMountedAsync(wrapper);
+
+    expect(calls).toEqual(['beginPasskeyRegistration', 'browserCreate', ['finishPasskeyRegistration', 'credential-1']]);
+    expect(useSessionStore().passkey.registered).toBe(true);
+    expect(wrapper.find('[aria-label="Passkey setup"]').exists()).toBe(false);
   });
 
   it('consumes a valid magic link in place and shows the verified landing page', async () => {

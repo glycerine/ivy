@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -80,7 +81,13 @@ func (s *Server) Start() error {
 	if addr == "" {
 		addr = "127.0.0.1:18080"
 	}
-	return http.ListenAndServe(addr, s.Handler())
+	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		return err
+	}
+	limited := newSocketLimitListener(ln, defaultSocketLimitConfig())
+	server := &http.Server{Handler: s.Handler()}
+	return server.Serve(limited)
 }
 
 func (s *Server) accessLog(next http.Handler) http.Handler {
@@ -110,6 +117,10 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("POST /auth/email/request", s.handleEmailLoginRequest)
 	s.mux.HandleFunc("GET /auth/email/continue", s.handleIndex)
 	s.mux.HandleFunc("POST /auth/email/consume", s.handleEmailLoginConsume)
+	s.mux.HandleFunc("POST /auth/passkeys/register/options", s.handlePasskeyRegisterOptions)
+	s.mux.HandleFunc("POST /auth/passkeys/register/finish", s.handlePasskeyRegisterFinish)
+	s.mux.HandleFunc("POST /auth/passkeys/login/options", s.handlePasskeyLoginOptions)
+	s.mux.HandleFunc("POST /auth/passkeys/login/finish", s.handlePasskeyLoginFinish)
 	s.mux.HandleFunc("GET /auth/login", s.handleLogin)
 	s.mux.HandleFunc("GET /auth/callback", s.handleCallback)
 	s.mux.HandleFunc("POST /auth/logout", s.handleLogout)

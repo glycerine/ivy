@@ -41,6 +41,56 @@ export function createAuthClient(fetchImpl = globalThis.fetch) {
       }
       return response.json();
     },
+    async beginPasskeyRegistration() {
+      const response = await fetchImpl('/auth/passkeys/register/options', {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`passkey registration options request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
+    async finishPasskeyRegistration(credential) {
+      const response = await fetchImpl('/auth/passkeys/register/finish', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(credential),
+      });
+      if (!response.ok) {
+        throw new Error(`passkey registration finish request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
+    async beginPasskeyLogin() {
+      const response = await fetchImpl('/auth/passkeys/login/options', {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`passkey login options request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
+    async finishPasskeyLogin(credential) {
+      const response = await fetchImpl('/auth/passkeys/login/finish', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(credential),
+      });
+      if (!response.ok) {
+        throw new Error(`passkey login finish request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
     async listUnverifiedEmails() {
       const response = await fetchImpl('/admin/api/unverified-emails', {
         method: 'GET',

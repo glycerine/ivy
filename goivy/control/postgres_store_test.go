@@ -153,3 +153,67 @@ func TestPostgresStoreConsumesEmailLoginToken(t *testing.T) {
 		t.Fatalf("second consume succeeded, want error")
 	}
 }
+
+func TestPostgresStorePasskeyCredentialMarksSessionViewRegistered(t *testing.T) {
+	store := newTestStore(t)
+
+	ctx := context.Background()
+	subject, err := NewUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	user, err := store.UpsertUserFromOIDC(ctx, OIDCIdentity{
+		Issuer:        "email",
+		Subject:       subject,
+		Email:         "passkey-view+" + subject[:8] + "@example.test",
+		DisplayName:   "Passkey View",
+		EmailVerified: true,
+	})
+	if err != nil {
+		t.Fatalf("upsert user: %v", err)
+	}
+	sessionToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	csrfToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now().UTC()
+	if err := store.CreateAppSession(ctx, user.ID, sessionToken, csrfToken, now, AppSessionTTL, AppSessionTTL); err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+	initial, err := store.SessionViewByToken(ctx, sessionToken, now, AppSessionTTL)
+	if err != nil {
+		t.Fatalf("load initial session: %v", err)
+	}
+	if initial.Passkey != nil && initial.Passkey.Registered {
+		t.Fatalf("passkey registered before credential insert: %#v", initial.Passkey)
+	}
+	if err := store.CreatePasskeyCredential(ctx, StoredPasskeyCredential{
+		UserID:          user.ID,
+		CredentialID:    []byte("credential-" + subject[:8]),
+		PublicKeyCOSE:   []byte{0xa1, 0x01, 0x02},
+		SignCount:       7,
+		Transports:      []string{"internal"},
+		AttestationType: "none",
+		DisplayName:     user.Email,
+	}); err != nil {
+		t.Fatalf("create passkey credential: %v", err)
+	}
+	view, err := store.SessionViewByToken(ctx, sessionToken, now, AppSessionTTL)
+	if err != nil {
+		t.Fatalf("load session view: %v", err)
+	}
+	if view.Passkey == nil || !view.Passkey.Registered {
+		t.Fatalf("passkey registered = false, want true")
+	}
+	credential, err := store.PasskeyCredentialByID(ctx, []byte("credential-"+subject[:8]))
+	if err != nil {
+		t.Fatalf("load passkey credential: %v", err)
+	}
+	if credential.UserID != user.ID || credential.SignCount != 7 {
+		t.Fatalf("bad credential: %#v", credential)
+	}
+}

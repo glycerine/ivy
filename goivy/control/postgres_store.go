@@ -408,6 +408,129 @@ WHERE id_hash = $1
 	return touch, nil
 }
 
+func (s *PostgresStore) CreatePasskeyChallenge(ctx context.Context, userID, purpose string, rawChallenge []byte, rpID, origin string, now time.Time, ttl time.Duration) error {
+	if len(rawChallenge) == 0 {
+		return errors.New("passkey challenge is required")
+	}
+	var nullableUserID any
+	if strings.TrimSpace(userID) != "" {
+		nullableUserID = userID
+	}
+	_, err := s.db.ExecContext(ctx, `
+INSERT INTO passkey_challenges (challenge_hash, user_id, purpose, rp_id, origin, created_at, expires_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+`, hashBytes(rawChallenge), nullableUserID, purpose, rpID, origin, now, now.Add(ttl))
+	return err
+}
+
+func (s *PostgresStore) ConsumePasskeyChallenge(ctx context.Context, userID, purpose string, rawChallenge []byte, rpID, origin string, now time.Time) error {
+	if strings.TrimSpace(userID) != "" {
+		result, err := s.db.ExecContext(ctx, `
+UPDATE passkey_challenges
+SET used_at = $2
+WHERE challenge_hash = $1
+  AND used_at IS NULL
+  AND expires_at > $2
+  AND purpose = $3
+  AND rp_id = $4
+  AND origin = $5
+  AND user_id = $6
+`, hashBytes(rawChallenge), now, purpose, rpID, origin, userID)
+		return passkeyChallengeResult(result, err)
+	}
+	result, err := s.db.ExecContext(ctx, `
+UPDATE passkey_challenges
+SET used_at = $2
+WHERE challenge_hash = $1
+  AND used_at IS NULL
+  AND expires_at > $2
+  AND purpose = $3
+  AND rp_id = $4
+  AND origin = $5
+  AND user_id IS NULL
+`, hashBytes(rawChallenge), now, purpose, rpID, origin)
+	return passkeyChallengeResult(result, err)
+}
+
+func passkeyChallengeResult(result sql.Result, err error) error {
+	if err != nil {
+		return err
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return ErrPasskeyChallengeNotFound
+	}
+	return nil
+}
+
+func (s *PostgresStore) PasskeyCredentialIDsForUser(ctx context.Context, userID string) ([][]byte, error) {
+	rows, err := s.db.QueryContext(ctx, `
+SELECT credential_id
+FROM passkey_credentials
+WHERE user_id = $1 AND disabled_at IS NULL
+ORDER BY created_at DESC
+`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var ids [][]byte
+	for rows.Next() {
+		var id []byte
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	return ids, rows.Err()
+}
+
+func (s *PostgresStore) CreatePasskeyCredential(ctx context.Context, credential StoredPasskeyCredential) error {
+	if credential.ID == "" {
+		id, err := NewUUID()
+		if err != nil {
+			return err
+		}
+		credential.ID = id
+	}
+	transports := strings.Join(credential.Transports, ",")
+	_, err := s.db.ExecContext(ctx, `
+INSERT INTO passkey_credentials
+  (id, user_id, credential_id, public_key_cose, sign_count, transports, backup_eligible, backed_up, attestation_type, aaguid, display_name)
+VALUES
+  ($1, $2, $3, $4, $5, CASE WHEN $6 = '' THEN '{}'::text[] ELSE string_to_array($6, ',') END, $7, $8, $9, NULLIF($10, '')::uuid, $11)
+`, credential.ID, credential.UserID, credential.CredentialID, credential.PublicKeyCOSE, credential.SignCount, transports, credential.BackupEligible, credential.BackedUp, credential.AttestationType, credential.AAGUID, credential.DisplayName)
+	return err
+}
+
+func (s *PostgresStore) PasskeyCredentialByID(ctx context.Context, credentialID []byte) (StoredPasskeyCredential, error) {
+	row := s.db.QueryRowContext(ctx, `
+SELECT id::text, user_id::text, credential_id, public_key_cose, sign_count, backup_eligible, backed_up, attestation_type, COALESCE(aaguid::text, ''), display_name
+FROM passkey_credentials
+WHERE credential_id = $1 AND disabled_at IS NULL
+`, credentialID)
+	var credential StoredPasskeyCredential
+	if err := row.Scan(&credential.ID, &credential.UserID, &credential.CredentialID, &credential.PublicKeyCOSE, &credential.SignCount, &credential.BackupEligible, &credential.BackedUp, &credential.AttestationType, &credential.AAGUID, &credential.DisplayName); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return StoredPasskeyCredential{}, ErrPasskeyCredentialNotFound
+		}
+		return StoredPasskeyCredential{}, err
+	}
+	return credential, nil
+}
+
+func (s *PostgresStore) UpdatePasskeyCredentialSignCount(ctx context.Context, credentialID []byte, signCount uint32, now time.Time) error {
+	_, err := s.db.ExecContext(ctx, `
+UPDATE passkey_credentials
+SET sign_count = $2, last_used_at = $3
+WHERE credential_id = $1 AND disabled_at IS NULL
+`, credentialID, signCount, now)
+	return err
+}
+
 func upsertEmailUserTx(ctx context.Context, tx *sql.Tx, email string, now time.Time) (User, error) {
 	id, err := NewUUID()
 	if err != nil {
@@ -521,6 +644,10 @@ func sessionViewForUser(ctx context.Context, tx *sql.Tx, userID string) (Session
 	if err != nil {
 		return SessionView{}, err
 	}
+	passkeyRegistered, err := passkeyRegisteredForUser(ctx, tx, userID)
+	if err != nil {
+		return SessionView{}, err
+	}
 	return SessionView{
 		Authenticated: true,
 		User:          &user,
@@ -528,7 +655,20 @@ func sessionViewForUser(ctx context.Context, tx *sql.Tx, userID string) (Session
 		Teams:         teams,
 		Projects:      projects,
 		Roles:         roles,
+		Passkey:       &PasskeyState{Registered: passkeyRegistered},
 	}, nil
+}
+
+func passkeyRegisteredForUser(ctx context.Context, tx *sql.Tx, userID string) (bool, error) {
+	var exists bool
+	err := tx.QueryRowContext(ctx, `
+SELECT EXISTS (
+  SELECT 1
+  FROM passkey_credentials
+  WHERE user_id = $1 AND disabled_at IS NULL
+)
+`, userID).Scan(&exists)
+	return exists, err
 }
 
 func userByID(ctx context.Context, tx *sql.Tx, userID string) (User, error) {

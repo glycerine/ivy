@@ -46,6 +46,60 @@ describe('authClient', () => {
     });
   });
 
+  it('starts and finishes passkey registration', async () => {
+    const fetchImpl = vi.fn(async (path) => {
+      if (path.endsWith('/options')) {
+        return new Response(JSON.stringify({ publicKey: { challenge: 'abc' } }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ authenticated: true }), { status: 200 });
+    });
+    const client = createAuthClient(fetchImpl);
+
+    await expect(client.beginPasskeyRegistration()).resolves.toEqual({ publicKey: { challenge: 'abc' } });
+    await expect(client.finishPasskeyRegistration({ id: 'credential-1' })).resolves.toEqual({ authenticated: true });
+
+    expect(fetchImpl).toHaveBeenNthCalledWith(1, '/auth/passkeys/register/options', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+      },
+    });
+    expect(fetchImpl).toHaveBeenNthCalledWith(2, '/auth/passkeys/register/finish', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ id: 'credential-1' }),
+    });
+  });
+
+  it('starts and finishes passkey login', async () => {
+    const fetchImpl = vi.fn(async (path) => {
+      if (path.endsWith('/options')) {
+        return new Response(JSON.stringify({ publicKey: { challenge: 'abc' } }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ authenticated: true }), { status: 200 });
+    });
+    const client = createAuthClient(fetchImpl);
+
+    await expect(client.beginPasskeyLogin()).resolves.toEqual({ publicKey: { challenge: 'abc' } });
+    await expect(client.finishPasskeyLogin({ id: 'credential-1' })).resolves.toEqual({ authenticated: true });
+
+    expect(fetchImpl).toHaveBeenNthCalledWith(1, '/auth/passkeys/login/options', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+      },
+    });
+    expect(fetchImpl).toHaveBeenNthCalledWith(2, '/auth/passkeys/login/finish', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ id: 'credential-1' }),
+    });
+  });
+
   it('loads admin unverified emails', async () => {
     const fetchImpl = vi.fn(async () => new Response(JSON.stringify({ emails: [] }), { status: 200 }));
     const client = createAuthClient(fetchImpl);

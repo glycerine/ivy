@@ -29,6 +29,7 @@ WHERE table_schema = 'public'
     'email_deliveries',
     'email_login_tokens',
     'ivy_workspace_sessions',
-    'passkey_credentials'
+    'passkey_credentials',
+    'passkey_challenges'
   )
 ORDER BY table_name;

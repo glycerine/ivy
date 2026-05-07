@@ -177,3 +177,17 @@ CREATE TABLE IF NOT EXISTS passkey_credentials (
 
 CREATE INDEX IF NOT EXISTS passkey_credentials_user_idx
   ON passkey_credentials (user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS passkey_challenges (
+  challenge_hash bytea PRIMARY KEY,
+  user_id uuid REFERENCES users(id),
+  purpose text NOT NULL CHECK (purpose IN ('registration', 'login')),
+  rp_id text NOT NULL,
+  origin text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz NOT NULL,
+  used_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS passkey_challenges_user_created_idx
+  ON passkey_challenges (user_id, created_at DESC);

@@ -10,8 +10,10 @@ import (
 )
 
 var (
-	ErrEmailLoginTokenNotFound = errors.New("email login token not found")
-	ErrSessionNotFound         = errors.New("session not found")
+	ErrEmailLoginTokenNotFound  = errors.New("email login token not found")
+	ErrSessionNotFound          = errors.New("session not found")
+	ErrPasskeyChallengeNotFound  = errors.New("passkey challenge not found")
+	ErrPasskeyCredentialNotFound = errors.New("passkey credential not found")
 )
 
 type Store interface {
@@ -22,6 +24,12 @@ type Store interface {
 	CreateAppSession(ctx context.Context, userID, rawSessionToken, rawCSRFToken string, now time.Time, idleTTL, absoluteTTL time.Duration) error
 	TouchSessionByToken(ctx context.Context, rawSessionToken string, now time.Time, ttl time.Duration) (SessionTouch, error)
 	SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error)
+	CreatePasskeyChallenge(ctx context.Context, userID, purpose string, rawChallenge []byte, rpID, origin string, now time.Time, ttl time.Duration) error
+	ConsumePasskeyChallenge(ctx context.Context, userID, purpose string, rawChallenge []byte, rpID, origin string, now time.Time) error
+	PasskeyCredentialIDsForUser(ctx context.Context, userID string) ([][]byte, error)
+	CreatePasskeyCredential(ctx context.Context, credential StoredPasskeyCredential) error
+	PasskeyCredentialByID(ctx context.Context, credentialID []byte) (StoredPasskeyCredential, error)
+	UpdatePasskeyCredentialSignCount(ctx context.Context, credentialID []byte, signCount uint32, now time.Time) error
 }
 
 type EmailLoginTokenDebug struct {
@@ -59,7 +67,11 @@ func (i OIDCIdentity) Validate() error {
 }
 
 func hashToken(raw string) []byte {
-	sum := sha256.Sum256([]byte(raw))
+	return hashBytes([]byte(raw))
+}
+
+func hashBytes(raw []byte) []byte {
+	sum := sha256.Sum256(raw)
 	return sum[:]
 }
 

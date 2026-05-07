@@ -8,6 +8,7 @@ export const useSessionStore = defineStore('session', {
     teams: [],
     projects: [],
     roles: {},
+    passkey: { registered: false },
     selectedProjectId: '',
   }),
 
@@ -25,6 +26,9 @@ export const useSessionStore = defineStore('session', {
       this.teams = Array.isArray(view?.teams) ? view.teams : [];
       this.projects = Array.isArray(view?.projects) ? view.projects : [];
       this.roles = view?.roles && typeof view.roles === 'object' ? view.roles : {};
+      this.passkey = {
+        registered: Boolean(view?.passkey?.registered),
+      };
       if (!this.authenticated || !this.projects.some((project) => project.id === this.selectedProjectId)) {
         this.selectedProjectId = '';
       }

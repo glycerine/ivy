@@ -23,6 +23,7 @@ describe('sessionStore', () => {
       teams: [{ id: 'team-1', accountId: 'acct-1', slug: 'core', displayName: 'Core' }],
       projects: [{ id: 'project-1', accountId: 'acct-1', slug: 'client-server', displayName: 'Client/server' }],
       roles: { 'project-1': 'admin' },
+      passkey: { registered: true },
     });
 
     store.selectProject('project-1');
@@ -32,6 +33,7 @@ describe('sessionStore', () => {
     expect(store.teams).toHaveLength(1);
     expect(store.selectedProject.displayName).toBe('Client/server');
     expect(store.projectRole('project-1')).toBe('admin');
+    expect(store.passkey.registered).toBe(true);
   });
 
   it('rejects selecting a project that is not in the authorized project list', () => {

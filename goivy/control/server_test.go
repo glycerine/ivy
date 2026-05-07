@@ -363,6 +363,103 @@ func TestLandingPageRefreshesCookieOnlyOnNewDayAndRecordsVisitHour(t *testing.T)
 	}
 }
 
+func TestPasskeyRegistrationOptionsRequireAuthenticatedSessionAndStoreChallenge(t *testing.T) {
+	store := newTestStore(t)
+	server := NewServer(Config{Store: store})
+
+	unauthenticatedReq := httptest.NewRequest(http.MethodPost, "/auth/passkeys/register/options", nil)
+	unauthenticatedRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(unauthenticatedRec, unauthenticatedReq)
+	if unauthenticatedRec.Code != http.StatusUnauthorized {
+		t.Fatalf("unauthenticated status = %d, want %d", unauthenticatedRec.Code, http.StatusUnauthorized)
+	}
+
+	ctx := context.Background()
+	subject, err := NewUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	user, err := store.UpsertUserFromOIDC(ctx, OIDCIdentity{
+		Issuer:        "email",
+		Subject:       subject,
+		Email:         "passkey-register+" + subject[:8] + "@example.test",
+		DisplayName:   "Passkey Register",
+		EmailVerified: true,
+	})
+	if err != nil {
+		t.Fatalf("upsert user: %v", err)
+	}
+	sessionToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	csrfToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now().UTC()
+	if err := store.CreateAppSession(ctx, user.ID, sessionToken, csrfToken, now, AppSessionTTL, AppSessionTTL); err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodPost, "/auth/passkeys/register/options", nil)
+	req.Host = "127.0.0.1:18080"
+	req.AddCookie(&http.Cookie{Name: SessionCookieName, Value: sessionToken})
+	rec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusOK, rec.Body.String())
+	}
+	var payload passkeyRegistrationOptionsResponse
+	if err := json.NewDecoder(rec.Body).Decode(&payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if payload.PublicKey.Challenge == "" {
+		t.Fatalf("missing passkey challenge: %#v", payload.PublicKey)
+	}
+	if payload.PublicKey.RP.Name != "Ivy" {
+		t.Fatalf("rp = %#v", payload.PublicKey.RP)
+	}
+	if payload.PublicKey.User.Name != user.Email {
+		t.Fatalf("user name = %q, want %q", payload.PublicKey.User.Name, user.Email)
+	}
+	challenge, err := decodeBase64URL(payload.PublicKey.Challenge)
+	if err != nil {
+		t.Fatalf("decode challenge: %v", err)
+	}
+	if err := store.ConsumePasskeyChallenge(ctx, user.ID, "registration", challenge, "127.0.0.1", "http://127.0.0.1:18080", time.Now().UTC()); err != nil {
+		t.Fatalf("stored passkey registration challenge was not consumable: %v", err)
+	}
+}
+
+func TestPasskeyLoginOptionsStoreAnonymousDiscoverableChallenge(t *testing.T) {
+	store := newTestStore(t)
+	server := NewServer(Config{Store: store})
+	req := httptest.NewRequest(http.MethodPost, "/auth/passkeys/login/options", nil)
+	req.Host = "localhost:18080"
+	rec := httptest.NewRecorder()
+
+	server.Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusOK, rec.Body.String())
+	}
+	var payload passkeyLoginOptionsResponse
+	if err := json.NewDecoder(rec.Body).Decode(&payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if payload.PublicKey.Challenge == "" || payload.PublicKey.RPID != "localhost" {
+		t.Fatalf("bad passkey login options: %#v", payload.PublicKey)
+	}
+	challenge, err := decodeBase64URL(payload.PublicKey.Challenge)
+	if err != nil {
+		t.Fatalf("decode challenge: %v", err)
+	}
+	if err := store.ConsumePasskeyChallenge(context.Background(), "", "login", challenge, "localhost", "http://localhost:18080", time.Now().UTC()); err != nil {
+		t.Fatalf("stored passkey login challenge was not consumable: %v", err)
+	}
+}
+
 func TestLoginRedirectsToOIDCAuthorizeURL(t *testing.T) {
 	server := NewServer(Config{
 		Store: newTestStore(t),
