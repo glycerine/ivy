@@ -18,3 +18,6 @@ emcc \
   -o build/z3-api.js
 
 echo "Built build/z3-api.js and build/z3-api.wasm"
+
+cp -p build/z3-api.wasm ../../webvue/static/
+cp -p build/z3-api.js   ../../webvue/static/
