@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	apiKey := os.Getenv("MAILGIN_FENCEBUNT_SIGNUP_API_KEY")
+	apiKey := os.Getenv("MAILGUN_FENCEBUNT_SIGNUP_API_KEY")
 	if apiKey == "" {
 		apiKey = "API_KEY"
 	}

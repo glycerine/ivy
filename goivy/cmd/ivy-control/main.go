@@ -53,7 +53,7 @@ func main() {
 		*redirectURL = "http://" + *addr + "/auth/callback"
 	}
 	emailSender := control.EmailSender(control.NewDatabaseEmailSender(pg))
-	if apiKey := envDefault("IVY_CONTROL_MAILGUN_API_KEY", os.Getenv("MAILGIN_FENCEBUNT_SIGNUP_API_KEY")); apiKey != "" {
+	if apiKey := envDefault("IVY_CONTROL_MAILGUN_API_KEY", os.Getenv("MAILGUN_FENCEBUNT_SIGNUP_API_KEY")); apiKey != "" {
 		emailSender = control.CompositeEmailSender{
 			Senders: []control.EmailSender{
 				control.NewDatabaseEmailSender(pg),
