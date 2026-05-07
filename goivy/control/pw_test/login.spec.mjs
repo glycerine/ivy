@@ -31,7 +31,7 @@ test('Feature: Sign-up - email magic link verifies email and creates app session
   const message = await latest.json();
 
   await page.goto(message.loginUrl);
-  await expect(page).toHaveURL('http://127.0.0.1:18080/');
+  await expect(page).toHaveURL('http://127.0.0.1:18080/verified');
 
   const cookies = await page.context().cookies();
   const session = cookies.find((cookie) => cookie.name === 'ivy_webvue_session');
@@ -53,6 +53,24 @@ test('Feature: Sign-up - email magic link verifies email and creates app session
   expect(body.teams).toHaveLength(1);
   expect(body.projects).toHaveLength(1);
   expect(body.roles[body.projects[0].id]).toBe('admin');
+});
+
+test('Feature: Sign-up - expired email magic link returns to sign-up in place', async ({ page, request }) => {
+  const email = 'expired-link@example.test';
+  await request.post('/auth/email/request', {
+    data: { email },
+  });
+  const latest = await request.get(`/test/email/latest?email=${encodeURIComponent(email)}`);
+  const message = await latest.json();
+  const token = new URL(message.loginUrl).hash.slice('#token='.length);
+
+  const first = await request.post('/auth/email/consume', { data: { token } });
+  expect(first.ok()).toBe(true);
+
+  await page.goto(message.loginUrl);
+  await expect(page).toHaveURL('http://127.0.0.1:18080/');
+  await expect(page.getByRole('alert')).toContainText('sign-in link is invalid or expired');
+  await expect(page.getByRole('button', { name: 'Send sign-in link' })).toBeVisible();
 });
 
 test('Feature: Login - email magic links are single-use', async ({ request }) => {

@@ -84,6 +84,13 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 		t.Fatalf("verified response = %d %q", verifiedRec.Code, verifiedRec.Body.String())
 	}
 
+	continueReq := httptest.NewRequest(http.MethodGet, "/auth/email/continue", nil)
+	continueRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(continueRec, continueReq)
+	if continueRec.Code != http.StatusOK || !strings.Contains(continueRec.Body.String(), `id="app"`) {
+		t.Fatalf("email continue response = %d %q", continueRec.Code, continueRec.Body.String())
+	}
+
 	assetReq := httptest.NewRequest(http.MethodGet, "/static/dist/ivywebvue.js", nil)
 	assetRec := httptest.NewRecorder()
 	server.Handler().ServeHTTP(assetRec, assetReq)
@@ -92,7 +99,7 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 	}
 }
 
-func TestEmailContinueRedirectsSuccessfulConsumeToVerifiedLanding(t *testing.T) {
+func TestEmailContinueUsesVueAppInsteadOfRedirectShim(t *testing.T) {
 	server := NewServer(Config{Store: newTestStore(t)})
 	req := httptest.NewRequest(http.MethodGet, "/auth/email/continue", nil)
 	rec := httptest.NewRecorder()
@@ -102,14 +109,11 @@ func TestEmailContinueRedirectsSuccessfulConsumeToVerifiedLanding(t *testing.T) 
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
 	}
-	if !strings.Contains(rec.Body.String(), `location.replace("/verified")`) {
-		t.Fatalf("continue page does not redirect to verified landing:\n%s", rec.Body.String())
+	if !strings.Contains(rec.Body.String(), `id="app"`) {
+		t.Fatalf("continue page does not serve the Vue app:\n%s", rec.Body.String())
 	}
-	if !strings.Contains(rec.Body.String(), `location.replace(signupRetryURL)`) || !strings.Contains(rec.Body.String(), `/?auth=link-expired`) {
-		t.Fatalf("continue page does not redirect invalid links to signup retry:\n%s", rec.Body.String())
-	}
-	if strings.Contains(rec.Body.String(), `Sign-in link is invalid or expired.`) {
-		t.Fatalf("continue page still renders the dead-end invalid-link message:\n%s", rec.Body.String())
+	if strings.Contains(rec.Body.String(), `location.replace`) || strings.Contains(rec.Body.String(), `auth=link-expired`) || strings.Contains(rec.Body.String(), `Sign-in link is invalid or expired.`) {
+		t.Fatalf("continue page still renders the old redirect shim:\n%s", rec.Body.String())
 	}
 }
 
