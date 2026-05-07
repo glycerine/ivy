@@ -109,9 +109,10 @@ grammar_gen: # be sure .y -> .go up to date
 
 
 GOBIN ?= $(HOME)/go/bin
-NODE_MODULES_DIR := ../node_modules
+NODE_MODULES_DIR := webui/node_modules
 VITEST_BIN := $(NODE_MODULES_DIR)/.bin/vitest
 PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
+WEBUI_NODE_MODULES_STAMP := $(NODE_MODULES_DIR)/.package-lock.stamp
 CONTROL_NODE_MODULES_DIR := control/node_modules
 CONTROL_PLAYWRIGHT_BIN := $(CONTROL_NODE_MODULES_DIR)/.bin/playwright
 
@@ -148,8 +149,11 @@ dylib_test: z3ivy
 test:
 	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
-$(VITEST_BIN) $(PLAYWRIGHT_BIN): ../package.json ../package-lock.json
-	cd .. && npm ci
+$(WEBUI_NODE_MODULES_STAMP): webui/package.json webui/package-lock.json
+	cd webui && npm ci
+	touch $(WEBUI_NODE_MODULES_STAMP)
+
+$(VITEST_BIN) $(PLAYWRIGHT_BIN): $(WEBUI_NODE_MODULES_STAMP)
 
 vitest-setup: $(VITEST_BIN) $(PLAYWRIGHT_BIN)
 
@@ -159,13 +163,13 @@ $(CONTROL_PLAYWRIGHT_BIN): control/package.json control/package-lock.json
 control-browser-setup: $(CONTROL_PLAYWRIGHT_BIN)
 
 test-js: $(VITEST_BIN)
-	cd .. && npm run test:webui:js
+	cd webui && npm run test:webui:js
 
 test-js-watch: $(VITEST_BIN)
-	cd .. && npm run test:webui:js:watch
+	cd webui && npm run test:webui:js:watch
 
 test-browser: $(PLAYWRIGHT_BIN)
-	cd .. && npm run test:webui:browser
+	cd webui && npm run test:webui:browser
 
 test-control-browser: $(CONTROL_PLAYWRIGHT_BIN)
 	cd control && npm run test:browser

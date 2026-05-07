@@ -4,10 +4,10 @@ The frontend is a Vue 3 + Pinia application that is bundled by Vite and served b
 
 ## Workflow
 
-- Build bundle: `npm --prefix goivy/webui/frontend run build`
-- Vue/unit tests: `npm --prefix goivy/webui/frontend run test`
-- Compatibility alias: `npm run test:webui:js` currently runs the Vue/unit suite
-- Browser tests: `npm run test:webui:browser`
+- Build bundle: `npm --prefix goivy/webui run build:webui`
+- Vue/unit tests: `npm --prefix goivy/webui run test:webui:js`
+- Watch Vue/unit tests: `npm --prefix goivy/webui run test:webui:js:watch`
+- Browser tests: `npm --prefix goivy/webui run test:webui:browser`
 
 The Go server serves `goivy/webui/static/index.html` and the built files under `goivy/webui/static/dist`.
 

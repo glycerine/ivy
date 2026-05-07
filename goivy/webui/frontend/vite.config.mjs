@@ -8,7 +8,7 @@ const frontendDir = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [vue()],
   root: frontendDir,
-  cacheDir: path.resolve(frontendDir, '../../../node_modules/.vite-goivy-webui-vue'),
+  cacheDir: path.resolve(frontendDir, '../node_modules/.vite-goivy-webui-vue'),
   build: {
     outDir: path.resolve(frontendDir, '../static/dist'),
     emptyOutDir: true,

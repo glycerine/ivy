@@ -7,7 +7,7 @@ const frontendDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [vue()],
-  cacheDir: path.resolve(frontendDir, '../../../node_modules/.vite-goivy-webui-vue-test'),
+  cacheDir: path.resolve(frontendDir, '../node_modules/.vite-goivy-webui-vue-test'),
   test: {
     environment: 'jsdom',
     include: ['src/**/*.test.js'],
