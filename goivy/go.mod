@@ -7,13 +7,13 @@ require (
 	github.com/cristalhq/base64 v0.1.2
 	github.com/glycerine/blake3 v1.5.2
 	github.com/glycerine/idem v0.20.7
-	github.com/glycerine/rate v0.0.0
+	github.com/glycerine/rate v0.0.1
 	github.com/glycerine/rbtree v0.2.1
 	github.com/goccy/go-yaml v1.19.2
 	github.com/mailgun/mailgun-go/v4 v4.23.0
 )
 
-replace github.com/glycerine/rate => ../../rate
+//replace github.com/glycerine/rate => ../../rate
 
 require (
 	4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f // indirect
