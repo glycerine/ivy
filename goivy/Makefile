@@ -235,3 +235,7 @@ vs:
 
 setup: # install abc and aigtoaig binaries that we shell out to.
 	cd ../pyivy && ./onetime.sh
+
+cleardb:
+	psql -c "drop database ivyvue"
+	make bootstrap
