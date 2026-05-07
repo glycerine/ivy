@@ -13,4 +13,4 @@ emmake make -j8
 
 cd .. 
 mv build wasm.build
-
+ln -s wasm.build build

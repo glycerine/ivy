@@ -38,6 +38,7 @@ const optTypes = {
   Z3_sort_opt: 'Z3_sort',
   Z3_ast_opt: 'Z3_ast',
   Z3_func_interp_opt: 'Z3_func_interp',
+  Z3_bool_opt: 'bool', 
 } as unknown as Record<string, string>;
 
 // parse type declarations

@@ -2,7 +2,8 @@
 
 # 1. Wipe the CMake build directory
 
-rm -rf build
+# remove the wasm.build symlink, if present (compile-wasm.sh creates).
+rm -f build
 
 # 2. Run the legacy Python generator, explicitly requesting a static library.
 # (We pass the "silence the sprintf blabber" flags via standard environment variables here)
