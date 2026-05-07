@@ -54,7 +54,7 @@ func main() {
 	}
 	emailSender := control.EmailSender(control.NewMemoryEmailSender())
 	if apiKey := envDefault("IVY_CONTROL_MAILGUN_API_KEY", os.Getenv("MAILGIN_FENCEBUNT_SIGNUP_API_KEY")); apiKey != "" {
-		emailSender = control.MailgunEmailSender{
+		emailSender = &control.MailgunEmailSender{
 			Domain: *mailgunDomain,
 			APIKey: apiKey,
 			From:   *mailgunFrom,
