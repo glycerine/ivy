@@ -61,6 +61,16 @@ type SessionView struct {
 	Teams         []Team            `json:"teams,omitempty"`
 	Projects      []Project         `json:"projects,omitempty"`
 	Roles         map[string]string `json:"roles,omitempty"`
+
+	CookieRefreshNeeded bool `json:"-"`
+}
+
+type SessionTouch struct {
+	UserID               string
+	CookieRefreshNeeded  bool
+	VisitHourInserted    bool
+	PreviousLastSeenAt   time.Time
+	CurrentVisitRecorded time.Time
 }
 
 type BillingProvider interface {

@@ -119,6 +119,7 @@ func (s *Server) routes() {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
+	s.touchLandingSession(w, r)
 	if strings.TrimSpace(s.cfg.StaticIndex) != "" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = w.Write([]byte(s.cfg.StaticIndex))
@@ -159,8 +160,32 @@ func (s *Server) handleAuthMe(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to load session"})
 		return
 	}
-	setAppCookie(w, SessionCookieName, cookie.Value, AppSessionTTL, s.cfg.CookieSecure)
+	if view.CookieRefreshNeeded {
+		setAppCookie(w, SessionCookieName, cookie.Value, AppSessionTTL, s.cfg.CookieSecure)
+	}
 	writeJSON(w, http.StatusOK, view)
+}
+
+func (s *Server) touchLandingSession(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie(SessionCookieName)
+	if errors.Is(err, http.ErrNoCookie) {
+		return
+	}
+	if err != nil {
+		return
+	}
+	touch, err := s.store.TouchSessionByToken(r.Context(), cookie.Value, time.Now().UTC(), AppSessionTTL)
+	if errors.Is(err, ErrSessionNotFound) {
+		clearCookie(w, SessionCookieName, s.cfg.CookieSecure)
+		return
+	}
+	if err != nil {
+		s.logf("session_touch failed path=%s remote=%s error=%q", r.URL.Path, r.RemoteAddr, err)
+		return
+	}
+	if touch.CookieRefreshNeeded {
+		setAppCookie(w, SessionCookieName, cookie.Value, AppSessionTTL, s.cfg.CookieSecure)
+	}
 }
 
 func (s *Server) handleEmailLoginRequest(w http.ResponseWriter, r *http.Request) {

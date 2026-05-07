@@ -106,6 +106,19 @@ CREATE TABLE IF NOT EXISTS app_sessions (
   revoked_at timestamptz
 );
 
+CREATE TABLE IF NOT EXISTS visiting_hours (
+  id uuid PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES users(id),
+  session_id_hash bytea NOT NULL REFERENCES app_sessions(id_hash),
+  visited_at timestamptz NOT NULL,
+  visited_hour timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (user_id, visited_hour)
+);
+
+CREATE INDEX IF NOT EXISTS visiting_hours_user_visited_at_idx
+  ON visiting_hours (user_id, visited_at DESC);
+
 CREATE TABLE IF NOT EXISTS email_login_tokens (
   token_hash bytea PRIMARY KEY,
   email text NOT NULL,
@@ -144,3 +157,23 @@ CREATE TABLE IF NOT EXISTS ivy_workspace_sessions (
   last_seen_at timestamptz NOT NULL DEFAULT now(),
   closed_at timestamptz
 );
+
+CREATE TABLE IF NOT EXISTS passkey_credentials (
+  id uuid PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES users(id),
+  credential_id bytea NOT NULL UNIQUE,
+  public_key_cose bytea NOT NULL,
+  sign_count bigint NOT NULL DEFAULT 0,
+  transports text[] NOT NULL DEFAULT '{}',
+  backup_eligible boolean NOT NULL DEFAULT false,
+  backed_up boolean NOT NULL DEFAULT false,
+  attestation_type text NOT NULL DEFAULT '',
+  aaguid uuid,
+  display_name text NOT NULL DEFAULT '',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  last_used_at timestamptz,
+  disabled_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS passkey_credentials_user_idx
+  ON passkey_credentials (user_id, created_at DESC);

@@ -314,41 +314,98 @@ VALUES
 	return err
 }
 
+func (s *PostgresStore) TouchSessionByToken(ctx context.Context, rawSessionToken string, now time.Time, ttl time.Duration) (SessionTouch, error) {
+	if strings.TrimSpace(rawSessionToken) == "" {
+		return SessionTouch{}, ErrSessionNotFound
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return SessionTouch{}, err
+	}
+	defer tx.Rollback()
+
+	touch, err := touchSessionTx(ctx, tx, hashToken(rawSessionToken), now, ttl)
+	if err != nil {
+		return SessionTouch{}, err
+	}
+	return touch, tx.Commit()
+}
+
 func (s *PostgresStore) SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error) {
+	if strings.TrimSpace(rawSessionToken) == "" {
+		return SessionView{}, ErrSessionNotFound
+	}
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return SessionView{}, err
 	}
 	defer tx.Rollback()
 
+	touch, err := touchSessionTx(ctx, tx, hashToken(rawSessionToken), now, idleTTL)
+	if err != nil {
+		return SessionView{}, err
+	}
+	view, err := sessionViewForUser(ctx, tx, touch.UserID)
+	if err != nil {
+		return SessionView{}, err
+	}
+	view.CookieRefreshNeeded = touch.CookieRefreshNeeded
+	return view, tx.Commit()
+}
+
+func touchSessionTx(ctx context.Context, tx *sql.Tx, sessionHash []byte, now time.Time, ttl time.Duration) (SessionTouch, error) {
 	var userID string
-	err = tx.QueryRowContext(ctx, `
-SELECT user_id::text
+	var lastSeenAt time.Time
+	err := tx.QueryRowContext(ctx, `
+SELECT user_id::text, last_seen_at
 FROM app_sessions
 WHERE id_hash = $1
   AND revoked_at IS NULL
   AND idle_expires_at > $2
   AND absolute_expires_at > $2
-`, hashToken(rawSessionToken), now).Scan(&userID)
+`, sessionHash, now).Scan(&userID, &lastSeenAt)
 	if errors.Is(err, sql.ErrNoRows) {
-		return SessionView{}, ErrSessionNotFound
+		return SessionTouch{}, ErrSessionNotFound
 	}
 	if err != nil {
-		return SessionView{}, err
+		return SessionTouch{}, err
 	}
-	if _, err := tx.ExecContext(ctx, `
+
+	touch := SessionTouch{
+		UserID:               userID,
+		CookieRefreshNeeded:  !sameUTCDate(lastSeenAt, now),
+		PreviousLastSeenAt:   lastSeenAt,
+		CurrentVisitRecorded: now,
+	}
+	visitID, err := NewUUID()
+	if err != nil {
+		return SessionTouch{}, err
+	}
+	visitHour := now.UTC().Truncate(time.Hour)
+	err = tx.QueryRowContext(ctx, `
+WITH inserted AS (
+  INSERT INTO visiting_hours (id, user_id, session_id_hash, visited_at, visited_hour)
+  VALUES ($1, $2, $3, $4, $5)
+  ON CONFLICT (user_id, visited_hour) DO NOTHING
+  RETURNING 1
+)
+SELECT EXISTS (SELECT 1 FROM inserted)
+`, visitID, userID, sessionHash, now, visitHour).Scan(&touch.VisitHourInserted)
+	if err != nil {
+		return SessionTouch{}, err
+	}
+	if !sameUTCHour(lastSeenAt, now) {
+		if _, err := tx.ExecContext(ctx, `
 UPDATE app_sessions
 SET last_seen_at = $2,
-    idle_expires_at = $3
+    idle_expires_at = $3,
+    absolute_expires_at = $3
 WHERE id_hash = $1
-`, hashToken(rawSessionToken), now, now.Add(idleTTL)); err != nil {
-		return SessionView{}, err
+`, sessionHash, now, now.Add(ttl)); err != nil {
+			return SessionTouch{}, err
+		}
 	}
-	view, err := sessionViewForUser(ctx, tx, userID)
-	if err != nil {
-		return SessionView{}, err
-	}
-	return view, tx.Commit()
+	return touch, nil
 }
 
 func upsertEmailUserTx(ctx context.Context, tx *sql.Tx, email string, now time.Time) (User, error) {
@@ -605,6 +662,16 @@ func roleRank(role string) int {
 	default:
 		return 0
 	}
+}
+
+func sameUTCDate(a, b time.Time) bool {
+	au := a.UTC()
+	bu := b.UTC()
+	return au.Year() == bu.Year() && au.YearDay() == bu.YearDay()
+}
+
+func sameUTCHour(a, b time.Time) bool {
+	return a.UTC().Truncate(time.Hour).Equal(b.UTC().Truncate(time.Hour))
 }
 
 func (s *PostgresStore) Ping(ctx context.Context) error {

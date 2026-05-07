@@ -20,6 +20,7 @@ type Store interface {
 	CreateEmailLoginToken(ctx context.Context, email, rawToken string, now time.Time, ttl time.Duration) error
 	ConsumeEmailLoginToken(ctx context.Context, rawToken string, now time.Time) (User, error)
 	CreateAppSession(ctx context.Context, userID, rawSessionToken, rawCSRFToken string, now time.Time, idleTTL, absoluteTTL time.Duration) error
+	TouchSessionByToken(ctx context.Context, rawSessionToken string, now time.Time, ttl time.Duration) (SessionTouch, error)
 	SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error)
 }
 

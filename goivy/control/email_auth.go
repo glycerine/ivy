@@ -11,7 +11,7 @@ import (
 
 const (
 	EmailLoginTokenTTL = 10 * time.Minute
-	AppSessionTTL      = 72 * time.Hour
+	AppSessionTTL      = 400 * 24 * time.Hour
 )
 
 type EmailSender interface {

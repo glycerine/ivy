@@ -15,7 +15,8 @@ Current responsibilities in this slice:
 - optionally send real email through Mailgun when an API key is explicitly set
 - expose an `/admin` dashboard for pending unverified email links
 - consume 10-minute, single-use email login tokens
-- create and refresh the HttpOnly `ivy_webvue_session` app cookie for 72 hours
+- create and refresh the HttpOnly `ivy_webvue_session` app cookie for 400 days
+- record authenticated return visits in hourly `visiting_hours` rows
 - return the authenticated user's starter account, team, project, and role
 - keep OIDC client code available for future Google/GitHub sign-in attachment
 - define the product model for users, billing accounts, teams, projects, and

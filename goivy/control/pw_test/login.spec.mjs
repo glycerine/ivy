@@ -37,7 +37,7 @@ test('Feature: Sign-up - email magic link verifies email and creates app session
   const session = cookies.find((cookie) => cookie.name === 'ivy_webvue_session');
   expect(session).toBeTruthy();
   expect(session.httpOnly).toBe(true);
-  expect(session.expires).toBeGreaterThan(Date.now() / 1000 + 71 * 60 * 60);
+  expect(session.expires).toBeGreaterThan(Date.now() / 1000 + 399 * 24 * 60 * 60);
 
   const response = await request.get('/auth/me', {
     headers: {

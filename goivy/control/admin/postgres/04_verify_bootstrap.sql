@@ -25,8 +25,10 @@ WHERE table_schema = 'public'
     'project_grants',
     'project_storage_locations',
     'app_sessions',
+    'visiting_hours',
     'email_deliveries',
     'email_login_tokens',
-    'ivy_workspace_sessions'
+    'ivy_workspace_sessions',
+    'passkey_credentials'
   )
 ORDER BY table_name;

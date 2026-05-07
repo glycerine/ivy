@@ -43,10 +43,11 @@ Feature: Login
     Then the control-plane clears the app session cookie
     And /auth/me returns unauthenticated
 
-  Scenario: Browser return refreshes the app session for 72 hours
+  Scenario: Browser return refreshes the app session for 400 days
     Given Alice is logged in
-    When Alice returns to the website within 72 hours
+    When Alice returns to the website within 400 days
     Then Alice remains logged in
-    And the app session expiry is refreshed for another 72 hours
+    And the app session expiry is refreshed for another 400 days
+    And the return visit is recorded for that hour
     When Alice returns after the app session expires
     Then /auth/me returns unauthenticated

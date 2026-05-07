@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 const defaultTestDatabaseDSN = "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable"
@@ -260,6 +261,9 @@ func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
 	if sessionCookie == nil || sessionCookie.Value == "" {
 		t.Fatalf("missing app session cookie: %#v", consumeRec.Result().Cookies())
 	}
+	if sessionCookie.MaxAge != int(AppSessionTTL.Seconds()) {
+		t.Fatalf("session cookie max-age = %d, want %d", sessionCookie.MaxAge, int(AppSessionTTL.Seconds()))
+	}
 
 	authReq := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
 	authReq.AddCookie(sessionCookie)
@@ -281,6 +285,81 @@ func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
 	}
 	if len(view.Accounts) != 1 || len(view.Teams) != 1 || len(view.Projects) != 1 {
 		t.Fatalf("starter workspace missing: accounts=%d teams=%d projects=%d", len(view.Accounts), len(view.Teams), len(view.Projects))
+	}
+}
+
+func TestLandingPageRefreshesCookieOnlyOnNewDayAndRecordsVisitHour(t *testing.T) {
+	store := newTestStore(t)
+	server := NewServer(Config{Store: store, StaticIndex: `<!doctype html><div id="app"></div>`})
+	ctx := context.Background()
+	subject, err := NewUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	user, err := store.UpsertUserFromOIDC(ctx, OIDCIdentity{
+		Issuer:        "email",
+		Subject:       subject,
+		Email:         "landing+" + subject[:8] + "@example.test",
+		DisplayName:   "Landing Tester",
+		EmailVerified: true,
+	})
+	if err != nil {
+		t.Fatalf("upsert user: %v", err)
+	}
+	sessionToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	csrfToken, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now().UTC()
+	if err := store.CreateAppSession(ctx, user.ID, sessionToken, csrfToken, now, AppSessionTTL, AppSessionTTL); err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+	cookie := &http.Cookie{Name: SessionCookieName, Value: sessionToken}
+
+	sameDayReq := httptest.NewRequest(http.MethodGet, "/", nil)
+	sameDayReq.AddCookie(cookie)
+	sameDayRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(sameDayRec, sameDayReq)
+	if sameDayRec.Code != http.StatusOK {
+		t.Fatalf("same-day landing status = %d, want %d", sameDayRec.Code, http.StatusOK)
+	}
+	for _, refreshed := range sameDayRec.Result().Cookies() {
+		if refreshed.Name == SessionCookieName && refreshed.MaxAge > 0 {
+			t.Fatalf("same-day landing refreshed cookie unexpectedly: %#v", refreshed)
+		}
+	}
+
+	yesterday := now.Add(-25 * time.Hour)
+	if _, err := store.db.ExecContext(ctx, `UPDATE app_sessions SET last_seen_at = $2 WHERE id_hash = $1`, hashToken(sessionToken), yesterday); err != nil {
+		t.Fatalf("backdate session: %v", err)
+	}
+	nextDayReq := httptest.NewRequest(http.MethodGet, "/", nil)
+	nextDayReq.AddCookie(cookie)
+	nextDayRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(nextDayRec, nextDayReq)
+	if nextDayRec.Code != http.StatusOK {
+		t.Fatalf("next-day landing status = %d, want %d", nextDayRec.Code, http.StatusOK)
+	}
+	var refreshedCookie *http.Cookie
+	for _, cookie := range nextDayRec.Result().Cookies() {
+		if cookie.Name == SessionCookieName {
+			refreshedCookie = cookie
+			break
+		}
+	}
+	if refreshedCookie == nil || refreshedCookie.MaxAge != int(AppSessionTTL.Seconds()) {
+		t.Fatalf("next-day landing cookie = %#v, want refreshed %s cookie", refreshedCookie, AppSessionTTL)
+	}
+	var visits int
+	if err := store.db.QueryRowContext(ctx, `SELECT count(*) FROM visiting_hours WHERE user_id = $1`, user.ID).Scan(&visits); err != nil {
+		t.Fatalf("count visiting hours: %v", err)
+	}
+	if visits != 1 {
+		t.Fatalf("visiting_hours rows = %d, want 1 for repeated same-hour landing hits", visits)
 	}
 }
 
