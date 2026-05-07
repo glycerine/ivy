@@ -16,9 +16,8 @@ export default defineConfig({
     command: 'go run ../cmd/ivy-control -addr 127.0.0.1:18080',
     env: {
       GOCACHE: goBuildCache,
-      IVY_CONTROL_OIDC_AUTH_URL: 'http://127.0.0.1:18082/login/oauth/authorize',
+      IVY_CONTROL_TEST_IDP: '1',
       IVY_CONTROL_OIDC_CLIENT_ID: 'ivy-control-local',
-      IVY_CONTROL_OIDC_REDIRECT_URL: 'http://127.0.0.1:18080/auth/callback',
     },
     url: 'http://127.0.0.1:18080/healthz',
     reuseExistingServer: false,

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -15,19 +16,33 @@ const (
 )
 
 type Config struct {
-	Addr        string
-	OIDC        OIDCConfig
-	StaticIndex string
-	Logger      *log.Logger
+	Addr                      string
+	OIDC                      OIDCConfig
+	OIDCProvider              OIDCProvider
+	Store                     Store
+	StaticIndex               string
+	Logger                    *log.Logger
+	CookieSecure              bool
+	AutoProvisionStarterSpace bool
+	EnableTestIDP             bool
 }
 
 type Server struct {
-	cfg Config
-	mux *http.ServeMux
+	cfg     Config
+	mux     *http.ServeMux
+	store   Store
+	oidc    OIDCProvider
+	testIDP *TestIDP
 }
 
 func NewServer(cfg Config) *Server {
-	s := &Server{cfg: cfg, mux: http.NewServeMux()}
+	if cfg.Store == nil {
+		cfg.Store = NewMemoryStore()
+	}
+	if cfg.OIDCProvider == nil {
+		cfg.OIDCProvider = NewHTTPOIDCProvider(cfg.OIDC, nil)
+	}
+	s := &Server{cfg: cfg, mux: http.NewServeMux(), store: cfg.Store, oidc: cfg.OIDCProvider}
 	s.routes()
 	return s
 }
@@ -45,6 +60,10 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) routes() {
+	if s.cfg.EnableTestIDP {
+		s.testIDP = NewTestIDP(s.cfg.OIDC.IssuerURL, s.cfg.OIDC.ClientID)
+		s.testIDP.Routes(s.mux)
+	}
 	s.mux.HandleFunc("GET /", s.handleIndex)
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 	s.mux.HandleFunc("GET /auth/me", s.handleAuthMe)
@@ -63,7 +82,7 @@ func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleAuthMe(w http.ResponseWriter, r *http.Request) {
-	_, err := r.Cookie(SessionCookieName)
+	cookie, err := r.Cookie(SessionCookieName)
 	if errors.Is(err, http.ErrNoCookie) {
 		writeJSON(w, http.StatusOK, SessionView{Authenticated: false})
 		return
@@ -72,8 +91,17 @@ func (s *Server) handleAuthMe(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid session cookie"})
 		return
 	}
-	// Full session lookup lands once the Postgres store exists.
-	writeJSON(w, http.StatusOK, SessionView{Authenticated: true})
+	view, err := s.store.SessionViewByToken(r.Context(), cookie.Value, time.Now().UTC())
+	if errors.Is(err, ErrSessionNotFound) {
+		clearCookie(w, SessionCookieName, s.cfg.CookieSecure)
+		writeJSON(w, http.StatusOK, SessionView{Authenticated: false})
+		return
+	}
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to load session"})
+		return
+	}
+	writeJSON(w, http.StatusOK, view)
 }
 
 func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -103,14 +131,52 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid oidc state"})
 		return
 	}
-	// Token exchange and ID token validation belong to the next slice.
-	writeJSON(w, http.StatusNotImplemented, map[string]string{"error": "oidc callback exchange not implemented"})
+	nonceCookie, err := r.Cookie(OIDCNonceCookie)
+	if err != nil || strings.TrimSpace(nonceCookie.Value) == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid oidc nonce"})
+		return
+	}
+	identity, err := s.oidc.ExchangeCode(r.Context(), r.URL.Query().Get("code"), nonceCookie.Value)
+	if err != nil {
+		writeJSON(w, http.StatusBadGateway, map[string]string{"error": "oidc exchange failed"})
+		return
+	}
+	user, err := s.store.UpsertUserFromOIDC(r.Context(), identity)
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to map oidc user"})
+		return
+	}
+	if s.cfg.AutoProvisionStarterSpace {
+		if err := s.store.EnsureStarterWorkspace(r.Context(), user); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to provision starter workspace"})
+			return
+		}
+	}
+	sessionToken, err := RandomToken(32)
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to create app session"})
+		return
+	}
+	csrfToken, err := RandomToken(32)
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to create csrf token"})
+		return
+	}
+	now := time.Now().UTC()
+	if err := s.store.CreateAppSession(r.Context(), user.ID, sessionToken, csrfToken, now, 24*time.Hour, 30*24*time.Hour); err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to store app session"})
+		return
+	}
+	setAppCookie(w, SessionCookieName, sessionToken, 30*24*time.Hour, s.cfg.CookieSecure)
+	clearCookie(w, OIDCStateCookie, s.cfg.CookieSecure)
+	clearCookie(w, OIDCNonceCookie, s.cfg.CookieSecure)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
-	clearCookie(w, SessionCookieName)
-	clearCookie(w, OIDCStateCookie)
-	clearCookie(w, OIDCNonceCookie)
+	clearCookie(w, SessionCookieName, s.cfg.CookieSecure)
+	clearCookie(w, OIDCStateCookie, s.cfg.CookieSecure)
+	clearCookie(w, OIDCNonceCookie, s.cfg.CookieSecure)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
@@ -125,13 +191,26 @@ func setTransientCookie(w http.ResponseWriter, name, value string, maxAge time.D
 	})
 }
 
-func clearCookie(w http.ResponseWriter, name string) {
+func setAppCookie(w http.ResponseWriter, name, value string, maxAge time.Duration, secure bool) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     name,
+		Value:    value,
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   secure,
+		MaxAge:   int(maxAge.Seconds()),
+	})
+}
+
+func clearCookie(w http.ResponseWriter, name string, secure bool) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     name,
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		Secure:   secure,
 		MaxAge:   -1,
 	})
 }

@@ -1,6 +1,7 @@
 package control
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -88,4 +89,73 @@ func TestCallbackRejectsMismatchedState(t *testing.T) {
 	if rec.Code != http.StatusBadRequest {
 		t.Fatalf("status = %d, want %d", rec.Code, http.StatusBadRequest)
 	}
+}
+
+func TestCallbackCreatesAppSessionAndAuthMeShowsStarterProject(t *testing.T) {
+	store := NewMemoryStore()
+	server := NewServer(Config{
+		Store:                     store,
+		OIDCProvider:              fakeOIDCProvider{},
+		AutoProvisionStarterSpace: true,
+	})
+	req := httptest.NewRequest(http.MethodGet, "/auth/callback?state=real-state&code=ok", nil)
+	req.AddCookie(&http.Cookie{Name: OIDCStateCookie, Value: "real-state"})
+	req.AddCookie(&http.Cookie{Name: OIDCNonceCookie, Value: "real-nonce"})
+	rec := httptest.NewRecorder()
+
+	server.Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusFound {
+		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusFound, rec.Body.String())
+	}
+	var sessionCookie *http.Cookie
+	for _, cookie := range rec.Result().Cookies() {
+		if cookie.Name == SessionCookieName {
+			sessionCookie = cookie
+			break
+		}
+	}
+	if sessionCookie == nil || sessionCookie.Value == "" {
+		t.Fatalf("missing app session cookie: %#v", rec.Result().Cookies())
+	}
+
+	authReq := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
+	authReq.AddCookie(sessionCookie)
+	authRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(authRec, authReq)
+
+	if authRec.Code != http.StatusOK {
+		t.Fatalf("/auth/me status = %d, want %d; body=%s", authRec.Code, http.StatusOK, authRec.Body.String())
+	}
+	var view SessionView
+	if err := json.NewDecoder(authRec.Body).Decode(&view); err != nil {
+		t.Fatalf("decode auth view: %v", err)
+	}
+	if !view.Authenticated {
+		t.Fatalf("authenticated = false, want true")
+	}
+	if view.User == nil || view.User.Email != "alice@example.test" {
+		t.Fatalf("user = %#v", view.User)
+	}
+	if len(view.Accounts) != 1 || len(view.Teams) != 1 || len(view.Projects) != 1 {
+		t.Fatalf("starter workspace missing: accounts=%d teams=%d projects=%d", len(view.Accounts), len(view.Teams), len(view.Projects))
+	}
+	if view.Projects[0].Slug != "client-server" {
+		t.Fatalf("project slug = %q, want client-server", view.Projects[0].Slug)
+	}
+	if view.Roles[view.Projects[0].ID] != string(ProjectRoleAdmin) {
+		t.Fatalf("project role = %q, want admin", view.Roles[view.Projects[0].ID])
+	}
+}
+
+type fakeOIDCProvider struct{}
+
+func (fakeOIDCProvider) ExchangeCode(ctx context.Context, code, nonce string) (OIDCIdentity, error) {
+	return OIDCIdentity{
+		Issuer:        "http://casdoor.example.test",
+		Subject:       "alice-subject",
+		Email:         "alice@example.test",
+		DisplayName:   "Alice",
+		EmailVerified: true,
+	}, nil
 }

@@ -11,6 +11,9 @@ import (
 type OIDCConfig struct {
 	IssuerURL    string
 	AuthURL      string
+	TokenURL     string
+	JWKSURL      string
+	UserInfoURL  string
 	ClientID     string
 	ClientSecret string
 	RedirectURL  string
