@@ -6,14 +6,34 @@ import { authClientKey } from './app/dependencies.js';
 import { useSessionStore } from './stores/sessionStore.js';
 
 function mountApp(options = {}) {
+  const provided = options.provide || {};
+  const authClient = {
+    async currentSession() {
+      return { authenticated: false };
+    },
+    async requestEmailLogin() {
+      return { ok: true };
+    },
+    async listUnverifiedEmails() {
+      return { emails: [] };
+    },
+    ...(provided[authClientKey] || {}),
+  };
   return mount(App, {
     global: {
       plugins: [createPinia()],
       provide: {
-        ...(options.provide || {}),
+        ...provided,
+        [authClientKey]: authClient,
       },
     },
   });
+}
+
+async function settleMountedAsync(wrapper) {
+  await wrapper.vm.$nextTick();
+  await Promise.resolve();
+  await wrapper.vm.$nextTick();
 }
 
 describe('App', () => {
@@ -22,8 +42,9 @@ describe('App', () => {
     window.history.pushState({}, '', '/');
   });
 
-  it('starts at email sign-in when unauthenticated', () => {
+  it('starts at email sign-in when unauthenticated', async () => {
     const wrapper = mountApp();
+    await settleMountedAsync(wrapper);
 
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Ivy workspace"]').exists()).toBe(false);
@@ -41,6 +62,7 @@ describe('App', () => {
         },
       },
     });
+    await settleMountedAsync(wrapper);
 
     await wrapper.find('input[type="email"]').setValue('alice@example.test');
     await wrapper.find('form').trigger('submit');
@@ -53,6 +75,7 @@ describe('App', () => {
 
   it('shows only authorized projects before entering the workspace', async () => {
     const wrapper = mountApp();
+    await settleMountedAsync(wrapper);
     const session = useSessionStore();
     session.applyAuthView({
       authenticated: true,
@@ -71,6 +94,7 @@ describe('App', () => {
 
   it('renders the project-scoped workspace only after project selection', async () => {
     const wrapper = mountApp();
+    await settleMountedAsync(wrapper);
     const session = useSessionStore();
     session.applyAuthView({
       authenticated: true,
@@ -115,5 +139,29 @@ describe('App', () => {
     expect(wrapper.find('[aria-label="Admin dashboard"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Unverified emails"]').text()).toContain('alice@example.test');
     expect(wrapper.find('a').attributes('href')).toBe('http://127.0.0.1:18080/auth/email/continue#token=abc');
+  });
+
+  it('shows a verified landing page after the magic link session cookie is accepted', async () => {
+    window.history.pushState({}, '', '/verified');
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async currentSession() {
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+            };
+          },
+        },
+      },
+    });
+
+    await settleMountedAsync(wrapper);
+
+    expect(wrapper.find('[aria-label="Email verified"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Email verified"]').text()).toContain('alice@example.test');
+    expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(false);
   });
 });

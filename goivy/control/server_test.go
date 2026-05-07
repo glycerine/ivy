@@ -77,11 +77,33 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 		t.Fatalf("index response = %d %q", indexRec.Code, indexRec.Body.String())
 	}
 
+	verifiedReq := httptest.NewRequest(http.MethodGet, "/verified", nil)
+	verifiedRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(verifiedRec, verifiedReq)
+	if verifiedRec.Code != http.StatusOK || !strings.Contains(verifiedRec.Body.String(), `id="app"`) {
+		t.Fatalf("verified response = %d %q", verifiedRec.Code, verifiedRec.Body.String())
+	}
+
 	assetReq := httptest.NewRequest(http.MethodGet, "/static/dist/ivywebvue.js", nil)
 	assetRec := httptest.NewRecorder()
 	server.Handler().ServeHTTP(assetRec, assetReq)
 	if assetRec.Code != http.StatusOK || !strings.Contains(assetRec.Body.String(), "webvue") {
 		t.Fatalf("asset response = %d %q", assetRec.Code, assetRec.Body.String())
+	}
+}
+
+func TestEmailContinueRedirectsSuccessfulConsumeToVerifiedLanding(t *testing.T) {
+	server := NewServer(Config{Store: newTestStore(t)})
+	req := httptest.NewRequest(http.MethodGet, "/auth/email/continue", nil)
+	rec := httptest.NewRecorder()
+
+	server.Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
+	}
+	if !strings.Contains(rec.Body.String(), `location.replace("/verified")`) {
+		t.Fatalf("continue page does not redirect to verified landing:\n%s", rec.Body.String())
 	}
 }
 

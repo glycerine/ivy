@@ -101,6 +101,7 @@ func (s *Server) routes() {
 		s.mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.cfg.StaticDir))))
 	}
 	s.mux.HandleFunc("GET /", s.handleIndex)
+	s.mux.HandleFunc("GET /verified", s.handleIndex)
 	s.mux.HandleFunc("GET /admin", s.handleIndex)
 	s.mux.HandleFunc("GET /admin/", s.handleIndex)
 	s.mux.HandleFunc("GET /admin/api/unverified-emails", s.handleAdminUnverifiedEmails)
@@ -217,7 +218,7 @@ func (s *Server) handleEmailContinue(w http.ResponseWriter, r *http.Request) {
     body: JSON.stringify({token})
   });
   if (response.ok) {
-    location.replace("/");
+    location.replace("/verified");
     return;
   }
   document.getElementById("status").textContent = "Sign-in link is invalid or expired.";

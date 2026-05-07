@@ -3,6 +3,18 @@ export function createAuthClient(fetchImpl = globalThis.fetch) {
     throw new Error('fetch implementation is required');
   }
   return {
+    async currentSession() {
+      const response = await fetchImpl('/auth/me', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`auth session request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
     async requestEmailLogin(email) {
       const response = await fetchImpl('/auth/email/request', {
         method: 'POST',

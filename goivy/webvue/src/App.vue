@@ -9,14 +9,30 @@ const session = useSessionStore();
 const authClient = useAuthClient();
 
 const selectedProject = computed(() => session.selectedProject);
+const isVerifiedLanding = ref(globalThis.location?.pathname === '/verified');
 const email = ref('');
 const sending = ref(false);
 const sent = ref(false);
 const failed = ref(false);
+const authLoading = ref(false);
+const authFailed = ref(false);
 const isAdmin = ref(globalThis.location?.pathname?.startsWith('/admin') || false);
 const adminEmails = ref([]);
 const adminLoading = ref(false);
 const adminFailed = ref(false);
+
+async function loadCurrentSession() {
+  authLoading.value = true;
+  authFailed.value = false;
+  try {
+    const view = await authClient.currentSession();
+    session.applyAuthView(view);
+  } catch {
+    authFailed.value = true;
+  } finally {
+    authLoading.value = false;
+  }
+}
 
 async function requestSignupLink() {
   sending.value = true;
@@ -57,7 +73,9 @@ function emailStatus(row) {
 onMounted(() => {
   if (isAdmin.value) {
     loadAdminEmails();
+    return;
   }
+  loadCurrentSession();
 });
 </script>
 
@@ -93,6 +111,22 @@ onMounted(() => {
           </tbody>
         </table>
       </section>
+    </section>
+
+    <section v-else-if="authLoading" aria-label="Loading session">
+      <h1>Ivy</h1>
+      <p>Loading your account...</p>
+    </section>
+
+    <section v-else-if="isVerifiedLanding && session.authenticated" aria-label="Email verified">
+      <h1>Email verified</h1>
+      <p>{{ session.user?.email }} is ready to use Ivy.</p>
+      <a href="/">Continue to projects</a>
+    </section>
+
+    <section v-else-if="isVerifiedLanding && authFailed" aria-label="Verification status unavailable">
+      <h1>Verification status unavailable</h1>
+      <p>Your browser could not load the verified account session. Try opening the sign-in link again.</p>
     </section>
 
     <section v-else-if="!session.authenticated" aria-label="Sign in">
