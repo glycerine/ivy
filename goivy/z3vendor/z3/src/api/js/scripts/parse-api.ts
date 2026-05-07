@@ -18,6 +18,7 @@ const aliases = {
   __proto__: null,
   Z3_string: 'string',
   bool: 'boolean',
+  Z3_bool: 'boolean',  
   signed: 'int',
 } as unknown as Record<string, string>;
 
