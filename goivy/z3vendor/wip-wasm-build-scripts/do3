@@ -1,0 +1,29 @@
+#cd /path/to/z3
+
+## homebrew emscripten not happy. try emsdk instead.
+## emcc --version
+## emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 4.0.6-git
+## . ~/.bashrc loads emsdk
+## which emcc
+## /Users/jaten/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc
+## emcc --version
+## emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 5.0.7 (263db4cffa6f9fc2ec514a70abac81362ea41849)
+## Copyright (C) 2026 the Emscripten authors (see AUTHORS.txt)
+##  ... too bleeding edge...
+## downgraded to 3.1.50
+# (goivy-venv) jaten@jbook ~/go/src/github.com/emscripten-core/emsdk (main) $ ./emsdk install 3.1.50 
+# ./emsdk activate 3.1.50
+# emcc --version
+# emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.50 (047b82506d6b471873300a5e4d1e690420b582d0)
+# Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
+
+rm -rf build
+
+CXXFLAGS="-Wno-deprecated-declarations -std=c++17" \
+CFLAGS="-Wno-deprecated-declarations" \
+CXX=em++ \
+CC=emcc \
+python3 scripts/mk_make.py --staticlib
+
+cd build
+emmake make -j6
