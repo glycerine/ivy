@@ -47,6 +47,10 @@ IVY_CONTROL_MAILGUN_API_KEY="$MAILGIN_FENCEBUNT_SIGNUP_API_KEY" \
 go run ./cmd/ivy-control
 ```
 
+`ivy-control` materializes its embedded Vue browser app into `./.runweb` in the
+directory where it is launched, so the server does not depend on the repository
+working directory.
+
 `MAILGIN_FENCEBUNT_SIGNUP_API_KEY` is also accepted directly for compatibility
 with the existing local Mailgun test program.
 

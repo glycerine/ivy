@@ -34,4 +34,5 @@ webvue/node_modules/
 webvue/coverage/
 webvue/.vitest/
 webvue/static/dist/
+.runweb/
 .cache
