@@ -1,11 +1,11 @@
 -- Initial control-plane schema. Run against ivyvue as ivyvue_migrator.
 
-CREATE TABLE IF NOT EXISTS control.schema_migrations (
+CREATE TABLE IF NOT EXISTS schema_migrations (
   version text PRIMARY KEY,
   applied_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS control.users (
+CREATE TABLE IF NOT EXISTS users (
   id uuid PRIMARY KEY,
   idp_issuer text NOT NULL,
   idp_subject text NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS control.users (
   UNIQUE (email)
 );
 
-CREATE TABLE IF NOT EXISTS control.accounts (
+CREATE TABLE IF NOT EXISTS accounts (
   id uuid PRIMARY KEY,
   slug text NOT NULL UNIQUE,
   display_name text NOT NULL,
@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS control.accounts (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS control.account_users (
-  account_id uuid NOT NULL REFERENCES control.accounts(id),
-  user_id uuid NOT NULL REFERENCES control.users(id),
+CREATE TABLE IF NOT EXISTS account_users (
+  account_id uuid NOT NULL REFERENCES accounts(id),
+  user_id uuid NOT NULL REFERENCES users(id),
   role text NOT NULL CHECK (role IN ('owner', 'admin', 'billing_admin', 'member')),
   seat_state text NOT NULL DEFAULT 'active',
   disabled_at timestamptz,
@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS control.account_users (
   PRIMARY KEY (account_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS control.teams (
+CREATE TABLE IF NOT EXISTS teams (
   id uuid PRIMARY KEY,
-  account_id uuid NOT NULL REFERENCES control.accounts(id),
+  account_id uuid NOT NULL REFERENCES accounts(id),
   slug text NOT NULL,
   display_name text NOT NULL,
   disabled_at timestamptz,
@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS control.teams (
   UNIQUE (account_id, slug)
 );
 
-CREATE TABLE IF NOT EXISTS control.team_memberships (
-  team_id uuid NOT NULL REFERENCES control.teams(id),
-  user_id uuid NOT NULL REFERENCES control.users(id),
+CREATE TABLE IF NOT EXISTS team_memberships (
+  team_id uuid NOT NULL REFERENCES teams(id),
+  user_id uuid NOT NULL REFERENCES users(id),
   role text NOT NULL CHECK (role IN ('owner', 'admin', 'member')),
   disabled_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -62,20 +62,20 @@ CREATE TABLE IF NOT EXISTS control.team_memberships (
   PRIMARY KEY (team_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS control.projects (
+CREATE TABLE IF NOT EXISTS projects (
   id uuid PRIMARY KEY,
-  account_id uuid NOT NULL REFERENCES control.accounts(id),
+  account_id uuid NOT NULL REFERENCES accounts(id),
   slug text NOT NULL,
   display_name text NOT NULL,
-  created_by_user_id uuid NOT NULL REFERENCES control.users(id),
+  created_by_user_id uuid NOT NULL REFERENCES users(id),
   disabled_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (account_id, slug)
 );
 
-CREATE TABLE IF NOT EXISTS control.project_grants (
-  project_id uuid NOT NULL REFERENCES control.projects(id),
+CREATE TABLE IF NOT EXISTS project_grants (
+  project_id uuid NOT NULL REFERENCES projects(id),
   subject_kind text NOT NULL CHECK (subject_kind IN ('user', 'team', 'account')),
   subject_id uuid NOT NULL,
   role text NOT NULL CHECK (role IN ('read', 'write', 'admin')),
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS control.project_grants (
   PRIMARY KEY (project_id, subject_kind, subject_id)
 );
 
-CREATE TABLE IF NOT EXISTS control.project_storage_locations (
-  project_id uuid PRIMARY KEY REFERENCES control.projects(id),
+CREATE TABLE IF NOT EXISTS project_storage_locations (
+  project_id uuid PRIMARY KEY REFERENCES projects(id),
   mode text NOT NULL DEFAULT 'shared_postgres',
   database_name text NOT NULL DEFAULT 'ivyvue',
   schema_name text NOT NULL DEFAULT 'project_data',
@@ -95,9 +95,9 @@ CREATE TABLE IF NOT EXISTS control.project_storage_locations (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS control.app_sessions (
+CREATE TABLE IF NOT EXISTS app_sessions (
   id_hash bytea PRIMARY KEY,
-  user_id uuid NOT NULL REFERENCES control.users(id),
+  user_id uuid NOT NULL REFERENCES users(id),
   csrf_token_hash bytea NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
   last_seen_at timestamptz NOT NULL DEFAULT now(),
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS control.app_sessions (
   revoked_at timestamptz
 );
 
-CREATE TABLE IF NOT EXISTS control.email_login_tokens (
+CREATE TABLE IF NOT EXISTS email_login_tokens (
   token_hash bytea PRIMARY KEY,
   email text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -115,12 +115,12 @@ CREATE TABLE IF NOT EXISTS control.email_login_tokens (
 );
 
 CREATE INDEX IF NOT EXISTS email_login_tokens_email_created_idx
-  ON control.email_login_tokens (email, created_at DESC);
+  ON email_login_tokens (email, created_at DESC);
 
-CREATE TABLE IF NOT EXISTS control.ivy_workspace_sessions (
+CREATE TABLE IF NOT EXISTS ivy_workspace_sessions (
   id uuid PRIMARY KEY,
-  project_id uuid NOT NULL REFERENCES control.projects(id),
-  user_id uuid NOT NULL REFERENCES control.users(id),
+  project_id uuid NOT NULL REFERENCES projects(id),
+  user_id uuid NOT NULL REFERENCES users(id),
   analysis_session_id text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
   last_seen_at timestamptz NOT NULL DEFAULT now(),

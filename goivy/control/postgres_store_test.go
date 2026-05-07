@@ -2,21 +2,12 @@ package control
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 )
 
 func TestPostgresStoreMapsOIDCUserSessionAndStarterWorkspace(t *testing.T) {
-	dsn := os.Getenv("IVY_CONTROL_TEST_DATABASE_DSN")
-	if dsn == "" {
-		t.Skip("set IVY_CONTROL_TEST_DATABASE_DSN to run PostgreSQL control store test")
-	}
-	store, err := OpenPostgresStore(dsn)
-	if err != nil {
-		t.Fatalf("open postgres store: %v", err)
-	}
-	defer store.Close()
+	store := newTestStore(t)
 
 	ctx := context.Background()
 	subject, err := NewUUID()
@@ -65,15 +56,7 @@ func TestPostgresStoreMapsOIDCUserSessionAndStarterWorkspace(t *testing.T) {
 }
 
 func TestPostgresStoreConsumesEmailLoginToken(t *testing.T) {
-	dsn := os.Getenv("IVY_CONTROL_TEST_DATABASE_DSN")
-	if dsn == "" {
-		t.Skip("set IVY_CONTROL_TEST_DATABASE_DSN to run PostgreSQL control store test")
-	}
-	store, err := OpenPostgresStore(dsn)
-	if err != nil {
-		t.Fatalf("open postgres store: %v", err)
-	}
-	defer store.Close()
+	store := newTestStore(t)
 
 	ctx := context.Background()
 	token, err := RandomToken(32)

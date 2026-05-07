@@ -25,7 +25,7 @@ Feature: Login
 
   Scenario: Product-disabled user cannot access projects after email verification succeeds
     Given Alice has a verified product user
-    And Alice is disabled in control.users
+    And Alice is disabled in users
     When Alice opens a fresh magic link
     Then the control-plane rejects the session
     And Alice cannot access project APIs

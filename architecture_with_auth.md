@@ -233,7 +233,7 @@ The initial request goes to the Go control-plane server.
 8. Casdoor authenticates user.
 9. Casdoor redirects back to control-plane /auth/callback.
 10. Control-plane validates OIDC response.
-11. Control-plane maps issuer+subject to control.users.
+11. Control-plane maps issuer+subject to users.
 12. Control-plane creates ivy_webvue_session.
 13. Browser returns to Vue workspace/project picker.
 ```
@@ -247,7 +247,7 @@ Casdoor owns identities. `ivyvue` stores local product users mapped to OIDC
 subjects.
 
 ```text
-control.users
+users
   id
   idp_issuer
   idp_subject
@@ -355,7 +355,7 @@ app_private
 Core control tables:
 
 ```text
-control.users
+users
   id
   idp_issuer
   idp_subject
@@ -366,7 +366,7 @@ control.users
   created_at
   updated_at
 
-control.accounts
+accounts
   id
   slug
   display_name
@@ -376,7 +376,7 @@ control.accounts
   created_at
   updated_at
 
-control.account_users
+account_users
   account_id
   user_id
   role              -- owner | admin | billing_admin | member
@@ -385,7 +385,7 @@ control.account_users
   created_at
   updated_at
 
-control.teams
+teams
   id
   account_id
   slug
@@ -394,7 +394,7 @@ control.teams
   created_at
   updated_at
 
-control.team_memberships
+team_memberships
   team_id
   user_id
   role              -- owner | admin | member
@@ -402,7 +402,7 @@ control.team_memberships
   created_at
   updated_at
 
-control.projects
+projects
   id
   account_id
   slug
@@ -412,7 +412,7 @@ control.projects
   created_at
   updated_at
 
-control.project_grants
+project_grants
   project_id
   subject_kind      -- user | team | account
   subject_id
@@ -421,7 +421,7 @@ control.project_grants
   created_at
   updated_at
 
-control.project_storage_locations
+project_storage_locations
   project_id
   mode              -- shared_postgres for Phase 0
   database_name
@@ -430,7 +430,7 @@ control.project_storage_locations
   created_at
   updated_at
 
-control.app_sessions
+app_sessions
   id_hash
   user_id
   csrf_token_hash
@@ -440,7 +440,7 @@ control.app_sessions
   absolute_expires_at
   revoked_at
 
-control.ivy_workspace_sessions
+ivy_workspace_sessions
   id
   project_id
   user_id
@@ -607,7 +607,7 @@ For initial testers:
 
 ```text
 control admin creates/invites user in Casdoor
-control admin creates local control.users row
+control admin creates local users row
 control admin creates account/team/project rows
 control admin grants project access
 tester logs in through Casdoor
@@ -676,7 +676,7 @@ The first spike should verify Casdoor exposes enough API surface for:
 - mark or require email verification
 - disable/deactivate a user
 - query user by ID/email
-- update display name/email metadata needed by `control.users`
+- update display name/email metadata needed by `users`
 - create an OIDC application/client
 - configure redirect URLs
 - export enough stable identifiers for `idp_issuer + idp_subject`
@@ -931,7 +931,7 @@ Feature: Sign-up
     When Alice opens the verification link from the test email sink
     And Alice returns to the control-plane application
     Then Alice is logged in
-    And a control.users row exists for Alice's Casdoor issuer and subject
+    And a users row exists for Alice's Casdoor issuer and subject
     And Alice has a billing account
     And Alice has a starter project
     And Alice can open the project workspace
@@ -949,7 +949,7 @@ Scenario: Sign-up cancellation returns to the public control-plane page
 
 Assertions:
 
-- `control.users` stores `idp_issuer`, `idp_subject`, email, display name, and
+- `users` stores `idp_issuer`, `idp_subject`, email, display name, and
   email verification state.
 - duplicate retries are idempotent.
 - no billing account/project is created for failed registration unless the
@@ -1089,7 +1089,7 @@ Feature: Alpha tester dashboard
     When Admin creates alpha tester "tester1@example.test"
     And Admin grants tester1 read/write access to "alpha/client-server"
     Then Casdoor has a user or invitation for "tester1@example.test"
-    And control.users has a pending or active mapped user record
+    And users has a pending or active mapped user record
     And the tester is an account user in the alpha billing account
     And the tester has write access to "alpha/client-server"
     And an invitation email is sent to "tester1@example.test"
@@ -1177,7 +1177,7 @@ The BDD plan is complete when:
 7. Serve a minimal Vue app from the control-plane server.
 8. Add OIDC login/callback/logout against Casdoor.
 9. Add control-plane app session cookie.
-10. Add `control.users` mapping from Casdoor/OIDC `issuer + subject`.
+10. Add `users` mapping from Casdoor/OIDC `issuer + subject`.
 11. Add billing account, account user, team, team membership, project, and grant
    migrations.
 12. Add project authorization service and tests.
@@ -1203,7 +1203,7 @@ Phase 0 is complete when:
   and alpha dashboard tester creation
 - unauthenticated users are sent through Casdoor login
 - successful login creates an app session cookie
-- Casdoor/OIDC user maps to `control.users`
+- Casdoor/OIDC user maps to `users`
 - the seeded/dev user can see a billing account, team, and project
 - project access is enforced by the control-plane server
 - project-owned data uses PostgreSQL RLS
@@ -1220,7 +1220,7 @@ Phase 0 is complete when:
 - Whether the control-plane server or a reverse proxy terminates TLS.
 - Exact internal credential format for control-plane to analysis server.
 - Whether analysis session state is entirely in memory at first or persisted in
-  `control.ivy_workspace_sessions`.
+  `ivy_workspace_sessions`.
 - How quickly to add queueing, timeouts, and cancellation around Z3 work.
 - Whether trial users start with server-backed Z3 or an eventual browser/WASM
   engine.
@@ -1234,7 +1234,7 @@ The Casdoor spike is successful when:
 - Casdoor redirects back to `/auth/callback`.
 - The control-plane server validates the OIDC response.
 - The control-plane server creates `ivy_webvue_session`.
-- `control.users` stores `idp_issuer`, `idp_subject`, email, display name, and
+- `users` stores `idp_issuer`, `idp_subject`, email, display name, and
   email verification state.
 - A tester can be created or invited without requiring Gmail/GitHub accounts.
 - An admin workflow can create a billing account, team, project, and grant for

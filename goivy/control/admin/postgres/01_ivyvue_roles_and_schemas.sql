@@ -17,25 +17,24 @@ $$;
 REVOKE ALL ON DATABASE ivyvue FROM PUBLIC;
 GRANT CONNECT ON DATABASE ivyvue TO ivyvue_app, ivyvue_migrator, ivyvue_admin;
 
-CREATE SCHEMA IF NOT EXISTS control AUTHORIZATION ivyvue_migrator;
 CREATE SCHEMA IF NOT EXISTS project_data AUTHORIZATION ivyvue_migrator;
 CREATE SCHEMA IF NOT EXISTS app_private AUTHORIZATION ivyvue_migrator;
 
-REVOKE ALL ON SCHEMA control, project_data, app_private FROM PUBLIC;
-GRANT USAGE ON SCHEMA control, project_data TO ivyvue_app;
-GRANT USAGE, CREATE ON SCHEMA control, project_data, app_private TO ivyvue_migrator;
-GRANT USAGE, CREATE ON SCHEMA control, project_data, app_private TO ivyvue_admin;
+REVOKE ALL ON SCHEMA project_data, app_private FROM PUBLIC;
+GRANT USAGE ON SCHEMA public, project_data TO ivyvue_app;
+GRANT USAGE, CREATE ON SCHEMA public, project_data, app_private TO ivyvue_migrator;
+GRANT USAGE, CREATE ON SCHEMA public, project_data, app_private TO ivyvue_admin;
 
-ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA control
+ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA public
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ivyvue_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA project_data
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ivyvue_app;
-ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA control
+ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA public
   GRANT USAGE, SELECT ON SEQUENCES TO ivyvue_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA project_data
   GRANT USAGE, SELECT ON SEQUENCES TO ivyvue_app;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA control, project_data TO ivyvue_app;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA control, project_data TO ivyvue_app;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA control, project_data, app_private TO ivyvue_migrator, ivyvue_admin;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA control, project_data, app_private TO ivyvue_migrator, ivyvue_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public, project_data TO ivyvue_app;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public, project_data TO ivyvue_app;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public, project_data, app_private TO ivyvue_migrator, ivyvue_admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public, project_data, app_private TO ivyvue_migrator, ivyvue_admin;

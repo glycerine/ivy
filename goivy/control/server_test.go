@@ -1,8 +1,10 @@
 package control
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -12,8 +14,31 @@ import (
 	"testing"
 )
 
+const defaultTestDatabaseDSN = "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable"
+
+func newTestStore(t *testing.T) *PostgresStore {
+	t.Helper()
+	dsn := os.Getenv("IVY_CONTROL_TEST_DATABASE_DSN")
+	if dsn == "" {
+		dsn = defaultTestDatabaseDSN
+	}
+	store, err := OpenPostgresStore(dsn)
+	if err != nil {
+		t.Fatalf("open postgres test store: %v", err)
+	}
+	if err := store.Ping(context.Background()); err != nil {
+		t.Fatalf("ping postgres test store: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := store.Close(); err != nil {
+			t.Fatalf("close postgres test store: %v", err)
+		}
+	})
+	return store
+}
+
 func TestAuthMeUnauthenticated(t *testing.T) {
-	server := NewServer(Config{})
+	server := NewServer(Config{Store: newTestStore(t)})
 	req := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
 	rec := httptest.NewRecorder()
 
@@ -43,7 +68,7 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dist, "ivywebvue.js"), []byte("console.log('webvue')"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	server := NewServer(Config{StaticDir: dir})
+	server := NewServer(Config{Store: newTestStore(t), StaticDir: dir})
 
 	indexReq := httptest.NewRequest(http.MethodGet, "/", nil)
 	indexRec := httptest.NewRecorder()
@@ -63,6 +88,7 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
 	sender := NewMemoryEmailSender()
 	server := NewServer(Config{
+		Store:                     newTestStore(t),
 		EmailSender:               sender,
 		AutoProvisionStarterSpace: true,
 	})
@@ -83,8 +109,40 @@ func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
 	}
 }
 
+func TestEmailLoginRequestLogsTestOutboxLinkWhenEnabled(t *testing.T) {
+	var logs bytes.Buffer
+	sender := NewMemoryEmailSender()
+	server := NewServer(Config{
+		Store:                     newTestStore(t),
+		EmailSender:               sender,
+		AutoProvisionStarterSpace: true,
+		EnableTestEmailOutbox:     true,
+		Logger:                    log.New(&logs, "", 0),
+	})
+	req := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"Alice@Example.Test"}`))
+	rec := httptest.NewRecorder()
+
+	server.Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusOK, rec.Body.String())
+	}
+	got := logs.String()
+	for _, want := range []string{
+		"email_login_request received email=alice@example.test",
+		"email_login_request queued email=alice@example.test",
+		"test_email_outbox login_link email=alice@example.test",
+		"/auth/email/continue#token=",
+		"http method=POST path=/auth/email/request status=200",
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("logs missing %q in:\n%s", want, got)
+		}
+	}
+}
+
 func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
-	store := NewMemoryStore()
+	store := newTestStore(t)
 	sender := NewMemoryEmailSender()
 	server := NewServer(Config{
 		Store:                     store,
@@ -146,6 +204,7 @@ func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
 
 func TestLoginRedirectsToOIDCAuthorizeURL(t *testing.T) {
 	server := NewServer(Config{
+		Store: newTestStore(t),
 		OIDC: OIDCConfig{
 			AuthURL:     "http://127.0.0.1:18082/login/oauth/authorize",
 			ClientID:    "ivy-control-local",
@@ -194,7 +253,7 @@ func TestLoginRedirectsToOIDCAuthorizeURL(t *testing.T) {
 }
 
 func TestCallbackRejectsMismatchedState(t *testing.T) {
-	server := NewServer(Config{})
+	server := NewServer(Config{Store: newTestStore(t)})
 	req := httptest.NewRequest(http.MethodGet, "/auth/callback?state=attacker", nil)
 	req.AddCookie(&http.Cookie{Name: OIDCStateCookie, Value: "real-state"})
 	rec := httptest.NewRecorder()
@@ -207,7 +266,7 @@ func TestCallbackRejectsMismatchedState(t *testing.T) {
 }
 
 func TestCallbackCreatesAppSessionAndAuthMeShowsStarterProject(t *testing.T) {
-	store := NewMemoryStore()
+	store := newTestStore(t)
 	server := NewServer(Config{
 		Store:                     store,
 		OIDCProvider:              fakeOIDCProvider{},
@@ -249,7 +308,7 @@ func TestCallbackCreatesAppSessionAndAuthMeShowsStarterProject(t *testing.T) {
 	if !view.Authenticated {
 		t.Fatalf("authenticated = false, want true")
 	}
-	if view.User == nil || view.User.Email != "alice@example.test" {
+	if view.User == nil || view.User.Email != "oidc-alice@example.test" {
 		t.Fatalf("user = %#v", view.User)
 	}
 	if len(view.Accounts) != 1 || len(view.Teams) != 1 || len(view.Projects) != 1 {
@@ -269,7 +328,7 @@ func (fakeOIDCProvider) ExchangeCode(ctx context.Context, code, nonce string) (O
 	return OIDCIdentity{
 		Issuer:        "http://oauth.example.test",
 		Subject:       "alice-subject",
-		Email:         "alice@example.test",
+		Email:         "oidc-alice@example.test",
 		DisplayName:   "Alice",
 		EmailVerified: true,
 	}, nil

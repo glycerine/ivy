@@ -46,7 +46,7 @@ func (s *PostgresStore) UpsertUserFromOIDC(ctx context.Context, identity OIDCIde
 		verifiedAt = time.Now().UTC()
 	}
 	row := s.db.QueryRowContext(ctx, `
-INSERT INTO control.users (id, idp_issuer, idp_subject, email, display_name, email_verified_at)
+INSERT INTO users (id, idp_issuer, idp_subject, email, display_name, email_verified_at)
 VALUES ($1, $2, $3, $4, $5, $6)
 ON CONFLICT (idp_issuer, idp_subject)
 DO UPDATE SET
@@ -68,12 +68,53 @@ func (s *PostgresStore) CreateEmailLoginToken(ctx context.Context, email, rawTok
 		return errors.New("email login token is required")
 	}
 	_, err = s.db.ExecContext(ctx, `
-INSERT INTO control.email_login_tokens
+INSERT INTO email_login_tokens
   (token_hash, email, created_at, expires_at)
 VALUES
   ($1, $2, $3, $4)
 `, hashToken(rawToken), email, now, now.Add(ttl))
 	return err
+}
+
+func (s *PostgresStore) EmailLoginTokenDebug(ctx context.Context, rawToken string, now time.Time) (EmailLoginTokenDebug, bool, error) {
+	if rawToken == "" {
+		return EmailLoginTokenDebug{}, false, nil
+	}
+	var debug EmailLoginTokenDebug
+	var usedAt sql.NullTime
+	err := s.db.QueryRowContext(ctx, `
+SELECT email, created_at, expires_at, used_at
+FROM email_login_tokens
+WHERE token_hash = $1
+`, hashToken(rawToken)).Scan(&debug.Email, &debug.CreatedAt, &debug.ExpiresAt, &usedAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return EmailLoginTokenDebug{}, false, nil
+	}
+	if err != nil {
+		return EmailLoginTokenDebug{}, false, err
+	}
+	if usedAt.Valid {
+		debug.UsedAt = &usedAt.Time
+	}
+	debug.Expired = !debug.ExpiresAt.After(now)
+	return debug, true, nil
+}
+
+func (s *PostgresStore) EmailVerified(ctx context.Context, email string) (bool, error) {
+	email, err := NormalizeEmail(email)
+	if err != nil {
+		return false, err
+	}
+	var verified bool
+	err = s.db.QueryRowContext(ctx, `
+SELECT email_verified_at IS NOT NULL
+FROM users
+WHERE email = $1
+`, email).Scan(&verified)
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+	return verified, err
 }
 
 func (s *PostgresStore) ConsumeEmailLoginToken(ctx context.Context, rawToken string, now time.Time) (User, error) {
@@ -89,7 +130,7 @@ func (s *PostgresStore) ConsumeEmailLoginToken(ctx context.Context, rawToken str
 	var email string
 	err = tx.QueryRowContext(ctx, `
 SELECT email
-FROM control.email_login_tokens
+FROM email_login_tokens
 WHERE token_hash = $1
   AND used_at IS NULL
   AND expires_at > $2
@@ -102,7 +143,7 @@ FOR UPDATE
 		return User{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-UPDATE control.email_login_tokens
+UPDATE email_login_tokens
 SET used_at = $2
 WHERE token_hash = $1
 `, hashToken(rawToken), now); err != nil {
@@ -127,7 +168,7 @@ func (s *PostgresStore) EnsureStarterWorkspace(ctx context.Context, user User) e
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.account_users (account_id, user_id, role)
+INSERT INTO account_users (account_id, user_id, role)
 VALUES ($1, $2, 'owner')
 ON CONFLICT (account_id, user_id)
 DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
@@ -139,7 +180,7 @@ DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.team_memberships (team_id, user_id, role)
+INSERT INTO team_memberships (team_id, user_id, role)
 VALUES ($1, $2, 'owner')
 ON CONFLICT (team_id, user_id)
 DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
@@ -151,7 +192,7 @@ DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.project_grants (project_id, subject_kind, subject_id, role)
+INSERT INTO project_grants (project_id, subject_kind, subject_id, role)
 VALUES ($1, 'user', $2, 'admin')
 ON CONFLICT (project_id, subject_kind, subject_id)
 DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
@@ -159,7 +200,7 @@ DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.project_storage_locations (project_id)
+INSERT INTO project_storage_locations (project_id)
 VALUES ($1)
 ON CONFLICT (project_id) DO NOTHING
 `, projectID); err != nil {
@@ -173,7 +214,7 @@ func (s *PostgresStore) CreateAppSession(ctx context.Context, userID, rawSession
 		return errors.New("session token and csrf token are required")
 	}
 	_, err := s.db.ExecContext(ctx, `
-INSERT INTO control.app_sessions
+INSERT INTO app_sessions
   (id_hash, user_id, csrf_token_hash, created_at, last_seen_at, idle_expires_at, absolute_expires_at)
 VALUES
   ($1, $2, $3, $4, $4, $5, $6)
@@ -191,7 +232,7 @@ func (s *PostgresStore) SessionViewByToken(ctx context.Context, rawSessionToken 
 	var userID string
 	err = tx.QueryRowContext(ctx, `
 SELECT user_id::text
-FROM control.app_sessions
+FROM app_sessions
 WHERE id_hash = $1
   AND revoked_at IS NULL
   AND idle_expires_at > $2
@@ -204,7 +245,7 @@ WHERE id_hash = $1
 		return SessionView{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-UPDATE control.app_sessions
+UPDATE app_sessions
 SET last_seen_at = $2,
     idle_expires_at = $3
 WHERE id_hash = $1
@@ -224,13 +265,13 @@ func upsertEmailUserTx(ctx context.Context, tx *sql.Tx, email string, now time.T
 		return User{}, err
 	}
 	row := tx.QueryRowContext(ctx, `
-INSERT INTO control.users (id, idp_issuer, idp_subject, email, display_name, email_verified_at)
+INSERT INTO users (id, idp_issuer, idp_subject, email, display_name, email_verified_at)
 VALUES ($1, 'email', $2, $2, $2, $3)
 ON CONFLICT (idp_issuer, idp_subject)
 DO UPDATE SET
   email = EXCLUDED.email,
-  display_name = COALESCE(NULLIF(control.users.display_name, ''), EXCLUDED.display_name),
-  email_verified_at = COALESCE(control.users.email_verified_at, EXCLUDED.email_verified_at),
+  display_name = COALESCE(NULLIF(users.display_name, ''), EXCLUDED.display_name),
+  email_verified_at = COALESCE(users.email_verified_at, EXCLUDED.email_verified_at),
   updated_at = now()
 RETURNING id::text, idp_issuer, idp_subject, email, display_name, email_verified_at, disabled_at
 `, id, email, now)
@@ -262,7 +303,7 @@ func ensureAccount(ctx context.Context, tx *sql.Tx, slug, displayName, billingEm
 	}
 	var accountID string
 	err = tx.QueryRowContext(ctx, `
-INSERT INTO control.accounts (id, slug, display_name, billing_email, billing_status)
+INSERT INTO accounts (id, slug, display_name, billing_email, billing_status)
 VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (slug)
 DO UPDATE SET
@@ -283,7 +324,7 @@ func ensureTeam(ctx context.Context, tx *sql.Tx, accountID, slug, displayName st
 	}
 	var teamID string
 	err = tx.QueryRowContext(ctx, `
-INSERT INTO control.teams (id, account_id, slug, display_name)
+INSERT INTO teams (id, account_id, slug, display_name)
 VALUES ($1, $2, $3, $4)
 ON CONFLICT (account_id, slug)
 DO UPDATE SET
@@ -302,7 +343,7 @@ func ensureProject(ctx context.Context, tx *sql.Tx, accountID, slug, displayName
 	}
 	var projectID string
 	err = tx.QueryRowContext(ctx, `
-INSERT INTO control.projects (id, account_id, slug, display_name, created_by_user_id)
+INSERT INTO projects (id, account_id, slug, display_name, created_by_user_id)
 VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (account_id, slug)
 DO UPDATE SET
@@ -344,7 +385,7 @@ func sessionViewForUser(ctx context.Context, tx *sql.Tx, userID string) (Session
 func userByID(ctx context.Context, tx *sql.Tx, userID string) (User, error) {
 	row := tx.QueryRowContext(ctx, `
 SELECT id::text, idp_issuer, idp_subject, email, display_name, email_verified_at, disabled_at
-FROM control.users
+FROM users
 WHERE id = $1 AND disabled_at IS NULL
 `, userID)
 	return scanUser(row)
@@ -353,8 +394,8 @@ WHERE id = $1 AND disabled_at IS NULL
 func accountsForUser(ctx context.Context, tx *sql.Tx, userID string) ([]Account, error) {
 	rows, err := tx.QueryContext(ctx, `
 SELECT a.id::text, a.slug, a.display_name, a.billing_email, a.billing_status, a.disabled_at
-FROM control.accounts a
-JOIN control.account_users au ON au.account_id = a.id
+FROM accounts a
+JOIN account_users au ON au.account_id = a.id
 WHERE au.user_id = $1
   AND au.disabled_at IS NULL
   AND a.disabled_at IS NULL
@@ -382,8 +423,8 @@ ORDER BY a.slug
 func teamsForUser(ctx context.Context, tx *sql.Tx, userID string) ([]Team, error) {
 	rows, err := tx.QueryContext(ctx, `
 SELECT t.id::text, t.account_id::text, t.slug, t.display_name, t.disabled_at
-FROM control.teams t
-JOIN control.team_memberships tm ON tm.team_id = t.id
+FROM teams t
+JOIN team_memberships tm ON tm.team_id = t.id
 WHERE tm.user_id = $1
   AND tm.disabled_at IS NULL
   AND t.disabled_at IS NULL
@@ -411,13 +452,13 @@ ORDER BY t.slug
 func projectsForUser(ctx context.Context, tx *sql.Tx, userID string) ([]Project, map[string]string, error) {
 	rows, err := tx.QueryContext(ctx, `
 SELECT DISTINCT p.id::text, p.account_id::text, p.slug, p.display_name, p.created_by_user_id::text, p.disabled_at, pg.role
-FROM control.projects p
-JOIN control.project_grants pg ON pg.project_id = p.id
-LEFT JOIN control.account_users au
+FROM projects p
+JOIN project_grants pg ON pg.project_id = p.id
+LEFT JOIN account_users au
   ON au.account_id = p.account_id
  AND au.user_id = $1
  AND au.disabled_at IS NULL
-LEFT JOIN control.team_memberships tm
+LEFT JOIN team_memberships tm
   ON tm.team_id = pg.subject_id
  AND tm.user_id = $1
  AND tm.disabled_at IS NULL

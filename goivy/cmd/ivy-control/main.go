@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"os"
@@ -9,6 +10,8 @@ import (
 	"github.com/glycerine/ivy/goivy/control"
 	"github.com/glycerine/ivy/goivy/webvue"
 )
+
+const defaultControlDatabaseDSN = "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable"
 
 func main() {
 	addr := flag.String("addr", envDefault("IVY_CONTROL_ADDR", "127.0.0.1:18080"), "listen address")
@@ -23,7 +26,7 @@ func main() {
 	clientID := flag.String("oidc-client-id", envDefault("IVY_CONTROL_OIDC_CLIENT_ID", "ivy-control-local"), "OIDC client id")
 	clientSecret := flag.String("oidc-client-secret", os.Getenv("IVY_CONTROL_OIDC_CLIENT_SECRET"), "OIDC client secret")
 	redirectURL := flag.String("oidc-redirect-url", envDefault("IVY_CONTROL_OIDC_REDIRECT_URL", "http://127.0.0.1:18080/auth/callback"), "OIDC redirect URL")
-	databaseDSN := flag.String("database-dsn", os.Getenv("IVY_CONTROL_DATABASE_DSN"), "PostgreSQL database/sql DSN for ivyvue control tables")
+	databaseDSN := flag.String("database-dsn", envDefault("IVY_CONTROL_DATABASE_DSN", defaultControlDatabaseDSN), "PostgreSQL database/sql DSN for ivyvue control tables")
 	cookieSecure := flag.Bool("cookie-secure", envBool("IVY_CONTROL_COOKIE_SECURE", false), "set Secure on app session cookies")
 	testIDP := flag.Bool("test-idp", envBool("IVY_CONTROL_TEST_IDP", false), "enable the in-process deterministic OIDC issuer for local tests only")
 	testEmailOutbox := flag.Bool("test-email-outbox", envBool("IVY_CONTROL_TEST_EMAIL_OUTBOX", false), "enable test-only endpoint for the in-memory email outbox")
@@ -31,19 +34,15 @@ func main() {
 	mailgunFrom := flag.String("mailgun-from", envDefault("IVY_CONTROL_MAILGUN_FROM", "Ivy <postmaster@mg.fencebunt.com>"), "Mailgun From header")
 	flag.Parse()
 
-	var store control.Store
-	var closer interface{ Close() error }
-	if *databaseDSN != "" {
-		pg, err := control.OpenPostgresStore(*databaseDSN)
-		if err != nil {
-			log.Fatalf("open control database: %v", err)
-		}
-		store = pg
-		closer = pg
-		defer closer.Close()
-	} else {
-		store = control.NewMemoryStore()
+	pg, err := control.OpenPostgresStore(*databaseDSN)
+	if err != nil {
+		log.Fatalf("open control database: %v", err)
 	}
+	if err := pg.Ping(context.Background()); err != nil {
+		log.Fatalf("ping control database: %v", err)
+	}
+	defer pg.Close()
+	log.Printf("ivy control-plane using PostgreSQL database")
 	if *testIDP {
 		base := "http://" + *addr + "/test-idp"
 		*issuerURL = base
@@ -80,7 +79,7 @@ func main() {
 			RedirectURL:  *redirectURL,
 			Scopes:       []string{"openid", "profile", "email"},
 		},
-		Store:                     store,
+		Store:                     pg,
 		EmailSender:               emailSender,
 		Logger:                    log.Default(),
 		CookieSecure:              *cookieSecure,

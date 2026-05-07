@@ -46,7 +46,7 @@ func (s *PostgresStore) SeedAlphaTester(ctx context.Context, params SeedAlphaTes
 		return SessionView{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.account_users (account_id, user_id, role)
+INSERT INTO account_users (account_id, user_id, role)
 VALUES ($1, $2, 'member')
 ON CONFLICT (account_id, user_id)
 DO UPDATE SET disabled_at = NULL, updated_at = now()
@@ -58,7 +58,7 @@ DO UPDATE SET disabled_at = NULL, updated_at = now()
 		return SessionView{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.team_memberships (team_id, user_id, role)
+INSERT INTO team_memberships (team_id, user_id, role)
 VALUES ($1, $2, 'member')
 ON CONFLICT (team_id, user_id)
 DO UPDATE SET disabled_at = NULL, updated_at = now()
@@ -70,7 +70,7 @@ DO UPDATE SET disabled_at = NULL, updated_at = now()
 		return SessionView{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.project_grants (project_id, subject_kind, subject_id, role)
+INSERT INTO project_grants (project_id, subject_kind, subject_id, role)
 VALUES ($1, 'user', $2, $3)
 ON CONFLICT (project_id, subject_kind, subject_id)
 DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
@@ -78,7 +78,7 @@ DO UPDATE SET role = EXCLUDED.role, disabled_at = NULL, updated_at = now()
 		return SessionView{}, err
 	}
 	if _, err := tx.ExecContext(ctx, `
-INSERT INTO control.project_storage_locations (project_id)
+INSERT INTO project_storage_locations (project_id)
 VALUES ($1)
 ON CONFLICT (project_id) DO NOTHING
 `, projectID); err != nil {

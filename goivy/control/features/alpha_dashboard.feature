@@ -5,7 +5,7 @@ Feature: Alpha tester dashboard
     And project "alpha/client-server" exists
     When Admin creates alpha tester "tester1@example.test"
     And Admin grants tester1 read/write access to "alpha/client-server"
-    Then control.users has a pending or active email user record
+    Then users has a pending or active email user record
     And the tester is an account user in the alpha billing account
     And the tester has write access to "alpha/client-server"
     And an invitation magic-link email is sent to "tester1@example.test"
@@ -28,7 +28,7 @@ Feature: Alpha tester dashboard
   Scenario: Creating the same alpha tester twice is idempotent
     Given Admin already invited "tester1@example.test"
     When Admin creates alpha tester "tester1@example.test" again
-    Then there is one control.users row
+    Then there is one users row
     And the requested project grant exists
     And the invitation workflow remains retryable
 

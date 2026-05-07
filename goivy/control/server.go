@@ -44,7 +44,7 @@ type Server struct {
 
 func NewServer(cfg Config) *Server {
 	if cfg.Store == nil {
-		cfg.Store = NewMemoryStore()
+		panic("control.NewServer requires a PostgreSQL-backed Store")
 	}
 	if cfg.OIDCProvider == nil {
 		cfg.OIDCProvider = NewHTTPOIDCProvider(cfg.OIDC, nil)
@@ -64,6 +64,9 @@ func NewServer(cfg Config) *Server {
 }
 
 func (s *Server) Handler() http.Handler {
+	if s.cfg.Logger != nil {
+		return s.accessLog(s.mux)
+	}
 	return s.mux
 }
 
@@ -73,6 +76,15 @@ func (s *Server) Start() error {
 		addr = "127.0.0.1:18080"
 	}
 	return http.ListenAndServe(addr, s.Handler())
+}
+
+func (s *Server) accessLog(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
+		next.ServeHTTP(rec, r)
+		s.logf("http method=%s path=%s status=%d duration=%s remote=%s", r.Method, r.URL.Path, rec.status, time.Since(start).Round(time.Millisecond), r.RemoteAddr)
+	})
 }
 
 func (s *Server) routes() {
@@ -147,8 +159,15 @@ func (s *Server) handleEmailLoginRequest(w http.ResponseWriter, r *http.Request)
 		Email string `json:"email"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		s.logf("email_login_request invalid_json remote=%s error=%q", r.RemoteAddr, err)
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid request"})
 		return
+	}
+	email, normalizeErr := NormalizeEmail(payload.Email)
+	if normalizeErr == nil {
+		s.logf("email_login_request received email=%s remote=%s", email, r.RemoteAddr)
+	} else {
+		s.logf("email_login_request invalid_email remote=%s error=%q", r.RemoteAddr, normalizeErr)
 	}
 	service := EmailAuthService{
 		Store:                     s.store,
@@ -157,9 +176,15 @@ func (s *Server) handleEmailLoginRequest(w http.ResponseWriter, r *http.Request)
 		AutoProvisionStarterSpace: s.cfg.AutoProvisionStarterSpace,
 	}
 	if err := service.RequestLogin(r.Context(), payload.Email, time.Now().UTC()); err != nil {
-		// Keep the browser response neutral; details can go to logs once we add structured logging.
-		if s.cfg.Logger != nil {
-			s.cfg.Logger.Printf("email login request failed: %v", err)
+		s.logf("email_login_request failed email=%s error=%q", email, err)
+	} else if normalizeErr == nil {
+		s.logf("email_login_request queued email=%s ttl=%s", email, EmailLoginTokenTTL)
+		if s.cfg.EnableTestEmailOutbox {
+			if sender, ok := s.email.(*MemoryEmailSender); ok {
+				if message, ok := sender.LatestFor(email); ok {
+					s.logf("test_email_outbox login_link email=%s expires_at=%s url=%s", email, message.ExpiresAt.Format(time.RFC3339), message.LoginURL)
+				}
+			}
 		}
 	}
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
@@ -206,20 +231,24 @@ func (s *Server) handleEmailLoginConsume(w http.ResponseWriter, r *http.Request)
 		BaseURL:                   s.publicBaseURL(r),
 		AutoProvisionStarterSpace: s.cfg.AutoProvisionStarterSpace,
 	}
-	sessionToken, _, _, err := service.ConsumeLogin(r.Context(), payload.Token, time.Now().UTC())
+	sessionToken, _, user, err := service.ConsumeLogin(r.Context(), payload.Token, time.Now().UTC())
 	if errors.Is(err, ErrEmailLoginTokenNotFound) {
+		s.logf("email_login_consume rejected reason=invalid_or_expired remote=%s", r.RemoteAddr)
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid or expired login token"})
 		return
 	}
 	if err != nil {
+		s.logf("email_login_consume failed remote=%s error=%q", r.RemoteAddr, err)
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to create app session"})
 		return
 	}
+	s.logf("email_login_consume accepted user_id=%s email=%s remote=%s", user.ID, user.Email, r.RemoteAddr)
 	setAppCookie(w, SessionCookieName, sessionToken, AppSessionTTL, s.cfg.CookieSecure)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
 func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
+	s.logf("oidc_login_start remote=%s", r.RemoteAddr)
 	state, err := RandomToken(32)
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to create login state"})
@@ -253,11 +282,13 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	identity, err := s.oidc.ExchangeCode(r.Context(), r.URL.Query().Get("code"), nonceCookie.Value)
 	if err != nil {
+		s.logf("oidc_callback exchange_failed remote=%s error=%q", r.RemoteAddr, err)
 		writeJSON(w, http.StatusBadGateway, map[string]string{"error": "oidc exchange failed"})
 		return
 	}
 	user, err := s.store.UpsertUserFromOIDC(r.Context(), identity)
 	if err != nil {
+		s.logf("oidc_callback map_failed issuer=%s subject=%s email=%s error=%q", identity.Issuer, identity.Subject, identity.Email, err)
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to map oidc user"})
 		return
 	}
@@ -279,9 +310,11 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	now := time.Now().UTC()
 	if err := s.store.CreateAppSession(r.Context(), user.ID, sessionToken, csrfToken, now, AppSessionTTL, AppSessionTTL); err != nil {
+		s.logf("oidc_callback session_failed user_id=%s email=%s error=%q", user.ID, user.Email, err)
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to store app session"})
 		return
 	}
+	s.logf("oidc_callback accepted user_id=%s email=%s", user.ID, user.Email)
 	setAppCookie(w, SessionCookieName, sessionToken, AppSessionTTL, s.cfg.CookieSecure)
 	clearCookie(w, OIDCStateCookie, s.cfg.CookieSecure)
 	clearCookie(w, OIDCNonceCookie, s.cfg.CookieSecure)
@@ -301,9 +334,11 @@ func (s *Server) handleTestEmailLatest(w http.ResponseWriter, r *http.Request) {
 	}
 	message, ok := sender.LatestFor(email)
 	if !ok {
+		s.logf("test_email_latest miss email=%s", email)
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "no message for email"})
 		return
 	}
+	s.logf("test_email_latest hit email=%s expires_at=%s", email, message.ExpiresAt.Format(time.RFC3339))
 	writeJSON(w, http.StatusOK, message)
 }
 
@@ -319,10 +354,27 @@ func (s *Server) publicBaseURL(r *http.Request) string {
 }
 
 func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
+	s.logf("logout remote=%s", r.RemoteAddr)
 	clearCookie(w, SessionCookieName, s.cfg.CookieSecure)
 	clearCookie(w, OIDCStateCookie, s.cfg.CookieSecure)
 	clearCookie(w, OIDCNonceCookie, s.cfg.CookieSecure)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
+}
+
+func (s *Server) logf(format string, args ...any) {
+	if s.cfg.Logger != nil {
+		s.cfg.Logger.Printf(format, args...)
+	}
+}
+
+type statusRecorder struct {
+	http.ResponseWriter
+	status int
+}
+
+func (r *statusRecorder) WriteHeader(status int) {
+	r.status = status
+	r.ResponseWriter.WriteHeader(status)
 }
 
 func setTransientCookie(w http.ResponseWriter, name, value string, maxAge time.Duration) {

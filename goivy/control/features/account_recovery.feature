@@ -27,6 +27,6 @@ Feature: Account recovery
     Then the control-plane rejects the token
 
   Scenario: Recovery for disabled user does not reactivate product access
-    Given Alice is disabled in control.users
+    Given Alice is disabled in users
     When Alice opens a fresh recovery link
     Then Alice still cannot access product projects

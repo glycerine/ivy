@@ -269,7 +269,7 @@ control.schema_migrations
   version
   applied_at
 
-control.users
+users
   id
   email
   display_name
@@ -283,7 +283,7 @@ control.password_credentials
   password_hash_params
   updated_at
 
-control.accounts
+accounts
   id
   slug
   display_name
@@ -293,7 +293,7 @@ control.accounts
   created_at
   updated_at
 
-control.account_users
+account_users
   account_id
   user_id
   role
@@ -302,7 +302,7 @@ control.account_users
   created_at
   updated_at
 
-control.teams
+teams
   id
   account_id
   slug
@@ -311,7 +311,7 @@ control.teams
   created_at
   updated_at
 
-control.team_memberships
+team_memberships
   team_id
   user_id
   role
@@ -319,7 +319,7 @@ control.team_memberships
   created_at
   updated_at
 
-control.projects
+projects
   id
   account_id
   slug
@@ -329,7 +329,7 @@ control.projects
   created_at
   updated_at
 
-control.project_storage_locations
+project_storage_locations
   project_id
   mode
   database_name
@@ -338,7 +338,7 @@ control.project_storage_locations
   created_at
   updated_at
 
-control.project_grants
+project_grants
   project_id
   subject_kind
   subject_id
@@ -357,7 +357,7 @@ control.auth_sessions
   absolute_expires_at
   revoked_at
 
-control.ivy_workspace_sessions
+ivy_workspace_sessions
   id
   project_id
   user_id
