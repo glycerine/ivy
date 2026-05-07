@@ -11,6 +11,7 @@ import (
 func main() {
 	addr := flag.String("addr", envDefault("IVY_CONTROL_ADDR", "127.0.0.1:18080"), "listen address")
 	publicBaseURL := flag.String("public-base-url", os.Getenv("IVY_CONTROL_PUBLIC_BASE_URL"), "public base URL used in emailed login links")
+	staticDir := flag.String("static-dir", envDefault("IVY_CONTROL_STATIC_DIR", "webvue/static"), "directory containing webvue static assets")
 	issuerURL := flag.String("oidc-issuer-url", envDefault("IVY_CONTROL_OIDC_ISSUER_URL", "http://127.0.0.1:18082"), "OIDC issuer URL")
 	authURL := flag.String("oidc-auth-url", envDefault("IVY_CONTROL_OIDC_AUTH_URL", "http://127.0.0.1:18082/login/oauth/authorize"), "OIDC authorization endpoint URL")
 	tokenURL := flag.String("oidc-token-url", os.Getenv("IVY_CONTROL_OIDC_TOKEN_URL"), "OIDC token endpoint URL")
@@ -60,6 +61,7 @@ func main() {
 	srv := control.NewServer(control.Config{
 		Addr:          *addr,
 		PublicBaseURL: *publicBaseURL,
+		StaticDir:     *staticDir,
 		OIDC: control.OIDCConfig{
 			IssuerURL:    *issuerURL,
 			AuthURL:      *authURL,

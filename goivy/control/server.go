@@ -5,6 +5,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -23,6 +25,7 @@ type Config struct {
 	Store                     Store
 	EmailSender               EmailSender
 	StaticIndex               string
+	StaticDir                 string
 	Logger                    *log.Logger
 	CookieSecure              bool
 	AutoProvisionStarterSpace bool
@@ -77,6 +80,9 @@ func (s *Server) routes() {
 		s.testIDP = NewTestIDP(s.cfg.OIDC.IssuerURL, s.cfg.OIDC.ClientID)
 		s.testIDP.Routes(s.mux)
 	}
+	if strings.TrimSpace(s.cfg.StaticDir) != "" {
+		s.mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.cfg.StaticDir))))
+	}
 	s.mux.HandleFunc("GET /", s.handleIndex)
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 	s.mux.HandleFunc("GET /auth/me", s.handleAuthMe)
@@ -92,6 +98,18 @@ func (s *Server) routes() {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
+	if strings.TrimSpace(s.cfg.StaticIndex) != "" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_, _ = w.Write([]byte(s.cfg.StaticIndex))
+		return
+	}
+	if strings.TrimSpace(s.cfg.StaticDir) != "" {
+		indexPath := filepath.Join(s.cfg.StaticDir, "index.html")
+		if _, err := os.Stat(indexPath); err == nil {
+			http.ServeFile(w, r, indexPath)
+			return
+		}
+	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_, _ = w.Write([]byte("<!doctype html><title>Ivy</title><div id=\"app\">Ivy control-plane</div>"))
 }

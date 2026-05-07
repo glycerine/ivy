@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -26,6 +28,35 @@ func TestAuthMeUnauthenticated(t *testing.T) {
 	}
 	if view.Authenticated {
 		t.Fatalf("authenticated = true, want false")
+	}
+}
+
+func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
+	dir := t.TempDir()
+	dist := filepath.Join(dir, "dist")
+	if err := os.MkdirAll(dist, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "index.html"), []byte("<!doctype html><div id=\"app\"></div>"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dist, "ivywebvue.js"), []byte("console.log('webvue')"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := NewServer(Config{StaticDir: dir})
+
+	indexReq := httptest.NewRequest(http.MethodGet, "/", nil)
+	indexRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(indexRec, indexReq)
+	if indexRec.Code != http.StatusOK || !strings.Contains(indexRec.Body.String(), `id="app"`) {
+		t.Fatalf("index response = %d %q", indexRec.Code, indexRec.Body.String())
+	}
+
+	assetReq := httptest.NewRequest(http.MethodGet, "/static/dist/ivywebvue.js", nil)
+	assetRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(assetRec, assetReq)
+	if assetRec.Code != http.StatusOK || !strings.Contains(assetRec.Body.String(), "webvue") {
+		t.Fatalf("asset response = %d %q", assetRec.Code, assetRec.Body.String())
 	}
 }
 

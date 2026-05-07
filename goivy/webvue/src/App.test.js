@@ -2,12 +2,16 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import App from './App.vue';
+import { authClientKey } from './app/dependencies.js';
 import { useSessionStore } from './stores/sessionStore.js';
 
-function mountApp() {
+function mountApp(options = {}) {
   return mount(App, {
     global: {
       plugins: [createPinia()],
+      provide: {
+        ...(options.provide || {}),
+      },
     },
   });
 }
@@ -22,6 +26,28 @@ describe('App', () => {
 
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Ivy workspace"]').exists()).toBe(false);
+  });
+
+  it('submits the email sign-up form and shows the neutral sent state', async () => {
+    const requests = [];
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async requestEmailLogin(email) {
+            requests.push(email);
+            return { ok: true };
+          },
+        },
+      },
+    });
+
+    await wrapper.find('input[type="email"]').setValue('alice@example.test');
+    await wrapper.find('form').trigger('submit');
+    await wrapper.vm.$nextTick();
+
+    expect(requests).toEqual(['alice@example.test']);
+    expect(wrapper.find('[role="status"]').text()).toContain('Check your email');
+    expect(wrapper.find('form').exists()).toBe(false);
   });
 
   it('shows only authorized projects before entering the workspace', async () => {
