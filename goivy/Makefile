@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-web vitest-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-web vitest-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -112,6 +112,23 @@ GOBIN ?= $(HOME)/go/bin
 NODE_MODULES_DIR := ../node_modules
 VITEST_BIN := $(NODE_MODULES_DIR)/.bin/vitest
 PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
+
+PSQL ?= psql
+CONTROL_PG_DIR := control/admin/postgres
+PG_BOOTSTRAP_DSN ?= postgres://jaten:jaten@127.0.0.1:5432/postgres?sslmode=disable
+CASDOOR_BOOTSTRAP_DSN ?= postgres://jaten:jaten@127.0.0.1:5432/casdoor?sslmode=disable
+IVYVUE_BOOTSTRAP_DSN ?= postgres://jaten:jaten@127.0.0.1:5432/ivyvue?sslmode=disable
+IVYVUE_MIGRATION_DSN ?= postgres://ivyvue_migrator:ivyvue_migrator_dev@127.0.0.1:5432/ivyvue?sslmode=disable
+
+bootstrap:
+	@command -v $(PSQL) >/dev/null || { echo "psql not found; install PostgreSQL client tools first"; exit 1; }
+	$(PSQL) '$(PG_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/00_bootstrap_databases.sql
+	$(PSQL) '$(CASDOOR_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/01_casdoor_roles_and_schemas.sql
+	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/01_ivyvue_roles_and_schemas.sql
+	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/02_control_schema.sql
+	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/03_rls_template.sql
+	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/04_verify_bootstrap.sql
+	@echo "bootstrap complete: casdoor and ivyvue PostgreSQL databases are ready for local servers/tests"
 
 tr: # xtracer builds:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace

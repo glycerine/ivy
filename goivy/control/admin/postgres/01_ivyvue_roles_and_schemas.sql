@@ -34,3 +34,8 @@ ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA control
   GRANT USAGE, SELECT ON SEQUENCES TO ivyvue_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE ivyvue_migrator IN SCHEMA project_data
   GRANT USAGE, SELECT ON SEQUENCES TO ivyvue_app;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA control, project_data TO ivyvue_app;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA control, project_data TO ivyvue_app;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA control, project_data, app_private TO ivyvue_migrator, ivyvue_admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA control, project_data, app_private TO ivyvue_migrator, ivyvue_admin;
