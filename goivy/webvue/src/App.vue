@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { onMounted } from 'vue';
 import { ref } from 'vue';
 import { useAuthClient } from './app/dependencies.js';
 import { useSessionStore } from './stores/sessionStore.js';
@@ -12,6 +13,10 @@ const email = ref('');
 const sending = ref(false);
 const sent = ref(false);
 const failed = ref(false);
+const isAdmin = ref(globalThis.location?.pathname?.startsWith('/admin') || false);
+const adminEmails = ref([]);
+const adminLoading = ref(false);
+const adminFailed = ref(false);
 
 async function requestSignupLink() {
   sending.value = true;
@@ -25,11 +30,72 @@ async function requestSignupLink() {
     sending.value = false;
   }
 }
+
+async function loadAdminEmails() {
+  adminLoading.value = true;
+  adminFailed.value = false;
+  try {
+    const response = await authClient.listUnverifiedEmails();
+    adminEmails.value = response.emails || [];
+  } catch {
+    adminFailed.value = true;
+  } finally {
+    adminLoading.value = false;
+  }
+}
+
+function emailStatus(row) {
+  if (row.usedAt) {
+    return 'used';
+  }
+  if (row.expired) {
+    return 'expired';
+  }
+  return 'pending';
+}
+
+onMounted(() => {
+  if (isAdmin.value) {
+    loadAdminEmails();
+  }
+});
 </script>
 
 <template>
   <main class="ivy-webvue-shell">
-    <section v-if="!session.authenticated" aria-label="Sign in">
+    <section v-if="isAdmin" aria-label="Admin dashboard">
+      <h1>Ivy admin</h1>
+      <section aria-label="Unverified emails">
+        <header>
+          <h2>Unverified emails</h2>
+          <button type="button" :disabled="adminLoading" @click="loadAdminEmails">
+            {{ adminLoading ? 'Refreshing...' : 'Refresh' }}
+          </button>
+        </header>
+        <p v-if="adminFailed" role="alert">Could not load unverified emails.</p>
+        <p v-else-if="!adminLoading && adminEmails.length === 0">No unverified email links.</p>
+        <table v-else>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Expires</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in adminEmails" :key="row.loginUrl">
+              <td>{{ row.email }}</td>
+              <td>{{ emailStatus(row) }}</td>
+              <td>{{ new Date(row.expiresAt).toLocaleString() }}</td>
+              <td><a :href="row.loginUrl">Open sign-in link</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+
+    <section v-else-if="!session.authenticated" aria-label="Sign in">
       <h1>Ivy</h1>
       <p>Create your account or sign in with your verified email.</p>
       <form v-if="!sent" @submit.prevent="requestSignupLink">

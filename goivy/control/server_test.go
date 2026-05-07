@@ -85,11 +85,11 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 	}
 }
 
-func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
-	sender := NewMemoryEmailSender()
+func TestEmailLoginRequestUsesDatabaseOutboxWithoutRealEmail(t *testing.T) {
+	store := newTestStore(t)
 	server := NewServer(Config{
-		Store:                     newTestStore(t),
-		EmailSender:               sender,
+		Store:                     store,
+		EmailSender:               NewDatabaseEmailSender(store),
 		AutoProvisionStarterSpace: true,
 	})
 	req := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"Alice@Example.Test"}`))
@@ -100,9 +100,12 @@ func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusOK, rec.Body.String())
 	}
-	message, ok := sender.LatestFor("alice@example.test")
+	message, ok, err := store.LatestEmailDeliveryFor(context.Background(), "alice@example.test")
+	if err != nil {
+		t.Fatalf("load latest email delivery: %v", err)
+	}
 	if !ok {
-		t.Fatalf("memory sender did not receive login email")
+		t.Fatalf("database email outbox did not receive login email")
 	}
 	if !strings.Contains(message.LoginURL, "/auth/email/continue#token=") {
 		t.Fatalf("login URL = %q", message.LoginURL)
@@ -111,10 +114,10 @@ func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
 
 func TestEmailLoginRequestLogsTestOutboxLinkWhenEnabled(t *testing.T) {
 	var logs bytes.Buffer
-	sender := NewMemoryEmailSender()
+	store := newTestStore(t)
 	server := NewServer(Config{
-		Store:                     newTestStore(t),
-		EmailSender:               sender,
+		Store:                     store,
+		EmailSender:               NewDatabaseEmailSender(store),
 		AutoProvisionStarterSpace: true,
 		EnableTestEmailOutbox:     true,
 		Logger:                    log.New(&logs, "", 0),
@@ -141,12 +144,56 @@ func TestEmailLoginRequestLogsTestOutboxLinkWhenEnabled(t *testing.T) {
 	}
 }
 
-func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
+func TestAdminUnverifiedEmailsShowsDatabaseOutboxLoginLink(t *testing.T) {
 	store := newTestStore(t)
-	sender := NewMemoryEmailSender()
 	server := NewServer(Config{
 		Store:                     store,
-		EmailSender:               sender,
+		EmailSender:               NewDatabaseEmailSender(store),
+		AutoProvisionStarterSpace: true,
+	})
+	suffix, err := NewUUID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	email := "pending+" + suffix[:8] + "@example.test"
+	request := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"`+email+`"}`))
+	requestRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(requestRec, request)
+	if requestRec.Code != http.StatusOK {
+		t.Fatalf("request status = %d, want %d; body=%s", requestRec.Code, http.StatusOK, requestRec.Body.String())
+	}
+
+	adminReq := httptest.NewRequest(http.MethodGet, "/admin/api/unverified-emails", nil)
+	adminRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(adminRec, adminReq)
+	if adminRec.Code != http.StatusOK {
+		t.Fatalf("admin status = %d, want %d; body=%s", adminRec.Code, http.StatusOK, adminRec.Body.String())
+	}
+	var payload struct {
+		Emails []AdminUnverifiedEmail `json:"emails"`
+	}
+	if err := json.NewDecoder(adminRec.Body).Decode(&payload); err != nil {
+		t.Fatalf("decode admin response: %v", err)
+	}
+	for _, row := range payload.Emails {
+		if row.Email == email {
+			if !strings.Contains(row.LoginURL, "/auth/email/continue#token=") {
+				t.Fatalf("login URL = %q", row.LoginURL)
+			}
+			if row.Expired || row.UsedAt != nil {
+				t.Fatalf("unexpected email status: %#v", row)
+			}
+			return
+		}
+	}
+	t.Fatalf("admin response missing %s: %#v", email, payload.Emails)
+}
+
+func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
+	store := newTestStore(t)
+	server := NewServer(Config{
+		Store:                     store,
+		EmailSender:               NewDatabaseEmailSender(store),
 		AutoProvisionStarterSpace: true,
 	})
 	request := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"alice@example.test"}`))
@@ -156,7 +203,10 @@ func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
 	if requestRec.Code != http.StatusOK {
 		t.Fatalf("request status = %d, want %d; body=%s", requestRec.Code, http.StatusOK, requestRec.Body.String())
 	}
-	message, ok := sender.LatestFor("alice@example.test")
+	message, ok, err := store.LatestEmailDeliveryFor(context.Background(), "alice@example.test")
+	if err != nil {
+		t.Fatalf("load latest email delivery: %v", err)
+	}
 	if !ok {
 		t.Fatalf("missing login email")
 	}

@@ -16,5 +16,17 @@ export function createAuthClient(fetchImpl = globalThis.fetch) {
       }
       return response.json();
     },
+    async listUnverifiedEmails() {
+      const response = await fetchImpl('/admin/api/unverified-emails', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`admin unverified emails request failed with status ${response.status}`);
+      }
+      return response.json();
+    },
   };
 }

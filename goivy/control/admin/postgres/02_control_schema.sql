@@ -117,6 +117,24 @@ CREATE TABLE IF NOT EXISTS email_login_tokens (
 CREATE INDEX IF NOT EXISTS email_login_tokens_email_created_idx
   ON email_login_tokens (email, created_at DESC);
 
+CREATE TABLE IF NOT EXISTS email_deliveries (
+  id uuid PRIMARY KEY,
+  to_email text NOT NULL,
+  kind text NOT NULL DEFAULT 'login_link',
+  login_url text NOT NULL,
+  token_hash bytea,
+  provider text NOT NULL DEFAULT 'database',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz NOT NULL,
+  delivered_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS email_deliveries_to_email_created_idx
+  ON email_deliveries (to_email, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS email_deliveries_token_hash_idx
+  ON email_deliveries (token_hash);
+
 CREATE TABLE IF NOT EXISTS ivy_workspace_sessions (
   id uuid PRIMARY KEY,
   project_id uuid NOT NULL REFERENCES projects(id),

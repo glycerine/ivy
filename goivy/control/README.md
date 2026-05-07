@@ -10,8 +10,10 @@ Current responsibilities in this slice:
 - expose `/auth/me`
 - request email magic links without revealing whether an email exists
 - send sign-in links through an `EmailSender` interface
-- use an in-memory email sender in tests so no paid email is sent
+- record local/test sign-in links in the `email_deliveries` table so no paid
+  email is sent
 - optionally send real email through Mailgun when an API key is explicitly set
+- expose an `/admin` dashboard for pending unverified email links
 - consume 10-minute, single-use email login tokens
 - create and refresh the HttpOnly `ivy_webvue_session` app cookie for 72 hours
 - return the authenticated user's starter account, team, project, and role

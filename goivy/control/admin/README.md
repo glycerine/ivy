@@ -33,8 +33,9 @@ psql 'postgres://jaten:jaten@127.0.0.1:5432/ivyvue?sslmode=disable' -v ON_ERROR_
 
 ## Email Delivery
 
-Tests use `MemoryEmailSender`; no real email is sent unless Mailgun is
-explicitly configured.
+Local tests and development record sign-in emails in the `email_deliveries`
+table; no real email is sent unless Mailgun is explicitly configured. The admin
+dashboard reads those database rows at `/admin`.
 
 For local manual testing with your Mailgun DNS/API setup:
 

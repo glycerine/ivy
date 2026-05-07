@@ -19,6 +19,7 @@ function mountApp(options = {}) {
 describe('App', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
+    window.history.pushState({}, '', '/');
   });
 
   it('starts at email sign-in when unauthenticated', () => {
@@ -84,5 +85,35 @@ describe('App', () => {
     expect(wrapper.find('[aria-label="Concept graph"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="State/relations"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Editing"]').exists()).toBe(true);
+  });
+
+  it('shows the admin unverified email dashboard with sign-in links', async () => {
+    window.history.pushState({}, '', '/admin');
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async listUnverifiedEmails() {
+            return {
+              emails: [
+                {
+                  email: 'alice@example.test',
+                  loginUrl: 'http://127.0.0.1:18080/auth/email/continue#token=abc',
+                  expiresAt: '2026-05-07T04:10:00Z',
+                  expired: false,
+                  usedAt: null,
+                },
+              ],
+            };
+          },
+        },
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find('[aria-label="Admin dashboard"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Unverified emails"]').text()).toContain('alice@example.test');
+    expect(wrapper.find('a').attributes('href')).toBe('http://127.0.0.1:18080/auth/email/continue#token=abc');
   });
 });

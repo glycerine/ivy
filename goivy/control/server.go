@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -50,7 +51,11 @@ func NewServer(cfg Config) *Server {
 		cfg.OIDCProvider = NewHTTPOIDCProvider(cfg.OIDC, nil)
 	}
 	if cfg.EmailSender == nil {
-		cfg.EmailSender = NewMemoryEmailSender()
+		pg, ok := cfg.Store.(*PostgresStore)
+		if !ok {
+			panic("control.NewServer requires an EmailSender")
+		}
+		cfg.EmailSender = NewDatabaseEmailSender(pg)
 	}
 	s := &Server{
 		cfg:   cfg,
@@ -96,6 +101,9 @@ func (s *Server) routes() {
 		s.mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.cfg.StaticDir))))
 	}
 	s.mux.HandleFunc("GET /", s.handleIndex)
+	s.mux.HandleFunc("GET /admin", s.handleIndex)
+	s.mux.HandleFunc("GET /admin/", s.handleIndex)
+	s.mux.HandleFunc("GET /admin/api/unverified-emails", s.handleAdminUnverifiedEmails)
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 	s.mux.HandleFunc("GET /auth/me", s.handleAuthMe)
 	s.mux.HandleFunc("POST /auth/email/request", s.handleEmailLoginRequest)
@@ -180,8 +188,8 @@ func (s *Server) handleEmailLoginRequest(w http.ResponseWriter, r *http.Request)
 	} else if normalizeErr == nil {
 		s.logf("email_login_request queued email=%s ttl=%s", email, EmailLoginTokenTTL)
 		if s.cfg.EnableTestEmailOutbox {
-			if sender, ok := s.email.(*MemoryEmailSender); ok {
-				if message, ok := sender.LatestFor(email); ok {
+			if store, ok := s.store.(*PostgresStore); ok {
+				if message, ok, err := store.LatestEmailDeliveryFor(r.Context(), email); err == nil && ok {
 					s.logf("test_email_outbox login_link email=%s expires_at=%s url=%s", email, message.ExpiresAt.Format(time.RFC3339), message.LoginURL)
 				}
 			}
@@ -322,9 +330,9 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleTestEmailLatest(w http.ResponseWriter, r *http.Request) {
-	sender, ok := s.email.(*MemoryEmailSender)
+	store, ok := s.store.(*PostgresStore)
 	if !ok {
-		writeJSON(w, http.StatusNotFound, map[string]string{"error": "test email outbox is not available"})
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "test email outbox database is not available"})
 		return
 	}
 	email, err := NormalizeEmail(r.URL.Query().Get("email"))
@@ -332,7 +340,11 @@ func (s *Server) handleTestEmailLatest(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "valid email query is required"})
 		return
 	}
-	message, ok := sender.LatestFor(email)
+	message, ok, err := store.LatestEmailDeliveryFor(r.Context(), email)
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to load email outbox"})
+		return
+	}
 	if !ok {
 		s.logf("test_email_latest miss email=%s", email)
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "no message for email"})
@@ -340,6 +352,30 @@ func (s *Server) handleTestEmailLatest(w http.ResponseWriter, r *http.Request) {
 	}
 	s.logf("test_email_latest hit email=%s expires_at=%s", email, message.ExpiresAt.Format(time.RFC3339))
 	writeJSON(w, http.StatusOK, message)
+}
+
+func (s *Server) handleAdminUnverifiedEmails(w http.ResponseWriter, r *http.Request) {
+	store, ok := s.store.(*PostgresStore)
+	if !ok {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "admin dashboard requires PostgreSQL"})
+		return
+	}
+	limit := 50
+	if raw := r.URL.Query().Get("limit"); raw != "" {
+		parsed, err := strconv.Atoi(raw)
+		if err != nil || parsed <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "limit must be a positive integer"})
+			return
+		}
+		limit = parsed
+	}
+	emails, err := store.AdminUnverifiedEmails(r.Context(), time.Now().UTC(), limit)
+	if err != nil {
+		s.logf("admin_unverified_emails failed error=%q", err)
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to load unverified emails"})
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"emails": emails})
 }
 
 func (s *Server) publicBaseURL(r *http.Request) string {

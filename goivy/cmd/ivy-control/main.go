@@ -52,12 +52,17 @@ func main() {
 		*userInfoURL = base + "/api/userinfo"
 		*redirectURL = "http://" + *addr + "/auth/callback"
 	}
-	emailSender := control.EmailSender(control.NewMemoryEmailSender())
+	emailSender := control.EmailSender(control.NewDatabaseEmailSender(pg))
 	if apiKey := envDefault("IVY_CONTROL_MAILGUN_API_KEY", os.Getenv("MAILGIN_FENCEBUNT_SIGNUP_API_KEY")); apiKey != "" {
-		emailSender = &control.MailgunEmailSender{
-			Domain: *mailgunDomain,
-			APIKey: apiKey,
-			From:   *mailgunFrom,
+		emailSender = control.CompositeEmailSender{
+			Senders: []control.EmailSender{
+				control.NewDatabaseEmailSender(pg),
+				&control.MailgunEmailSender{
+					Domain: *mailgunDomain,
+					APIKey: apiKey,
+					From:   *mailgunFrom,
+				},
+			},
 		}
 	}
 	serveStaticDir, err := prepareStaticDir(*staticDir, *runwebDir)

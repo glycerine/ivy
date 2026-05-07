@@ -25,6 +25,7 @@ WHERE table_schema = 'public'
     'project_grants',
     'project_storage_locations',
     'app_sessions',
+    'email_deliveries',
     'email_login_tokens',
     'ivy_workspace_sessions'
   )

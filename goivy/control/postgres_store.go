@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -12,6 +13,15 @@ import (
 
 type PostgresStore struct {
 	db *sql.DB
+}
+
+type AdminUnverifiedEmail struct {
+	Email     string     `json:"email"`
+	LoginURL  string     `json:"loginUrl"`
+	CreatedAt time.Time  `json:"createdAt"`
+	ExpiresAt time.Time  `json:"expiresAt"`
+	UsedAt    *time.Time `json:"usedAt"`
+	Expired   bool       `json:"expired"`
 }
 
 func OpenPostgresStore(dsn string) (*PostgresStore, error) {
@@ -74,6 +84,88 @@ VALUES
   ($1, $2, $3, $4)
 `, hashToken(rawToken), email, now, now.Add(ttl))
 	return err
+}
+
+func (s *PostgresStore) RecordEmailDelivery(ctx context.Context, toEmail, loginURL string, expiresAt, now time.Time) error {
+	toEmail, err := NormalizeEmail(toEmail)
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(loginURL) == "" {
+		return errors.New("login URL is required")
+	}
+	id, err := NewUUID()
+	if err != nil {
+		return err
+	}
+	tokenHash, err := tokenHashFromLoginURL(loginURL)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.ExecContext(ctx, `
+INSERT INTO email_deliveries
+  (id, to_email, kind, login_url, token_hash, provider, created_at, expires_at)
+VALUES
+  ($1, $2, 'login_link', $3, $4, 'database', $5, $6)
+`, id, toEmail, loginURL, tokenHash, now, expiresAt)
+	return err
+}
+
+func (s *PostgresStore) AdminUnverifiedEmails(ctx context.Context, now time.Time, limit int) ([]AdminUnverifiedEmail, error) {
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	rows, err := s.db.QueryContext(ctx, `
+SELECT d.to_email, d.login_url, d.created_at, d.expires_at, t.used_at
+FROM email_deliveries d
+LEFT JOIN email_login_tokens t ON t.token_hash = d.token_hash
+LEFT JOIN users u ON u.email = d.to_email
+WHERE d.kind = 'login_link'
+  AND u.email_verified_at IS NULL
+ORDER BY d.created_at DESC
+LIMIT $1
+`, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var emails []AdminUnverifiedEmail
+	for rows.Next() {
+		var email AdminUnverifiedEmail
+		var usedAt sql.NullTime
+		if err := rows.Scan(&email.Email, &email.LoginURL, &email.CreatedAt, &email.ExpiresAt, &usedAt); err != nil {
+			return nil, err
+		}
+		if usedAt.Valid {
+			email.UsedAt = &usedAt.Time
+		}
+		email.Expired = !email.ExpiresAt.After(now)
+		emails = append(emails, email)
+	}
+	return emails, rows.Err()
+}
+
+func (s *PostgresStore) LatestEmailDeliveryFor(ctx context.Context, email string) (EmailMessage, bool, error) {
+	email, err := NormalizeEmail(email)
+	if err != nil {
+		return EmailMessage{}, false, err
+	}
+	var message EmailMessage
+	err = s.db.QueryRowContext(ctx, `
+SELECT to_email, login_url, expires_at
+FROM email_deliveries
+WHERE to_email = $1
+  AND kind = 'login_link'
+ORDER BY created_at DESC
+LIMIT 1
+`, email).Scan(&message.ToEmail, &message.LoginURL, &message.ExpiresAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return EmailMessage{}, false, nil
+	}
+	if err != nil {
+		return EmailMessage{}, false, err
+	}
+	return message, true, nil
 }
 
 func (s *PostgresStore) EmailLoginTokenDebug(ctx context.Context, rawToken string, now time.Time) (EmailLoginTokenDebug, bool, error) {

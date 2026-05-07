@@ -16,4 +16,18 @@ describe('authClient', () => {
       body: JSON.stringify({ email: 'alice@example.test' }),
     });
   });
+
+  it('loads admin unverified emails', async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify({ emails: [] }), { status: 200 }));
+    const client = createAuthClient(fetchImpl);
+
+    await expect(client.listUnverifiedEmails()).resolves.toEqual({ emails: [] });
+
+    expect(fetchImpl).toHaveBeenCalledWith('/admin/api/unverified-emails', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+      },
+    });
+  });
 });
