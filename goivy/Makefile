@@ -71,8 +71,8 @@ get_goyacc:
 	go install golang.org/x/tools/cmd/goyacc@latest
 
 # static linked to z3vendor now, for completeness within this repo.
-z3ivy: z3vendor/z3/build/libz3.a
-	echo "must manually build static libz3.a using z3vendor/z3/compile.sh"
+z3ivy: z3vendor/native_lib/libz3.a #z3vendor/z3/build/libz3.a
+	echo "must manually build static libz3.a using z3vendor/z3/compile.sh and z3vendor/z3/compile-wasm.sh"
 
 $(Z3IVY)/lib/libz3.dylib: $(Z3_BUILD)/libz3.dylib
 	@mkdir -p $(Z3IVY)/include $(Z3IVY)/lib

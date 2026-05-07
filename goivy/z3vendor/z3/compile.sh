@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 1. Wipe the CMake build directory
+
 rm -rf build
 
 # 2. Run the legacy Python generator, explicitly requesting a static library.
@@ -20,4 +21,4 @@ cd ..
 mv build native.build
 
 # 6. build wasm too, using emscripten
-./compile-wasm.sh
+#./compile-wasm.sh

@@ -75,3 +75,7 @@ src/api/ml/z3.mllib
 *.bak
 doc/api
 doc/code
+native.build
+wasm.build
+a.out.wasm
+a.out.js
