@@ -54,8 +54,8 @@ web UI whose architecture is Vue-native from day one.
   explicit stores/composables/services.
 - Browser diagnostics expose narrow helpers only, not an application object.
 - Unit and browser tests cover the core behaviors above.
-- Auth, account, project, access-grant, and project-owned Ivy data live in the
-  PostgreSQL database `ivyvue`.
+- Auth, billing account, team, project, access-grant, and project-owned Ivy
+  data live in the PostgreSQL database `ivyvue`.
 - Project-owned rows are scoped by `project_id` and protected with PostgreSQL
   row-level security.
 
@@ -64,24 +64,26 @@ web UI whose architecture is Vue-native from day one.
 ### Auth And Project Persistence
 
 Use PostgreSQL through Go's `database/sql` package. `ivyvue` is the application
-database for authentication, sessions, accounts, account memberships, projects,
-access grants, project storage metadata, and project-owned Ivy data.
+database for authentication, sessions, billing accounts, account users, teams,
+team memberships, projects, access grants, project storage metadata, and
+project-owned Ivy data.
 
-Use a GitHub-like ownership model:
+Use a billing-account collaboration model:
 
 - a `User` is a human login identity
-- an `Account` is an owner namespace with kind `personal` or `team`
-- every user gets a personal account
-- team accounts have members
-- projects belong to accounts
-- projects can grant `read`, `write`, or `admin` access to users and team
-  accounts
+- an `Account` is the billing and payment responsibility
+- an account can pay for standalone users and multiple teams
+- a `Team` is a collaboration group inside an account
+- users can be standalone account users, team members, or both
+- projects belong to billing accounts
+- projects can grant `read`, `write`, or `admin` access to users, teams, or all
+  active users in the account
 
 Project-owned tables include `project_id` and use PostgreSQL row-level security
 so the database enforces the same project boundary as the application. The
-isolation boundary is the project, not the user or account. A single-user trial
-is modeled as a personal account with one project, so it gets project-scoped
-storage without blocking future team projects.
+isolation boundary is the project, not the user, team, or billing account. A
+single-user trial is modeled as a billing account with one standalone user and
+one project, so it gets project-scoped storage without blocking future teams.
 
 Keep a storage-location abstraction from day one. Phase 0 uses
 `shared_postgres` in the `project_data` schema. Later, the same abstraction can
@@ -122,7 +124,7 @@ Use Pinia for user-visible and durable UI state:
 - `sessionStore`
   - session id
   - connection status
-  - user/account/project/workspace identity placeholders
+  - user/account/team/project/workspace identity placeholders
   - status text and severity
 - `editorStore`
   - path

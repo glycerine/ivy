@@ -417,7 +417,7 @@ Use server-side sessions with cookies:
   - no broad `Domain` attribute
   - `Path=/`
 - session id generated with cryptographically secure random bytes
-- session id is opaque and stores no user/account/project data client-side
+- session id is opaque and stores no user/account/team/project data client-side
 - rotate session id on login
 - clear session on logout
 - enforce idle and absolute expiration in server-side session records
@@ -493,6 +493,12 @@ ProjectGrant
   role
   disabledAt
 
+Project grant subject kinds for Phase 0:
+
+- `user`
+- `team`
+- `account`
+
 AuthSession
   id
   userId
@@ -548,9 +554,12 @@ Access rules:
 3. Account `billing_admin` users have billing access only and no project access
    by default.
 4. Account `member` users have no project access by default.
-5. A direct user project grant contributes that role.
-6. A team project grant contributes that role to active members of the team.
-7. An account project grant contributes that role to active account users.
+5. A direct user project grant contributes that role when the user is active
+   in the project's billing account.
+6. A team project grant contributes that role to active members of that team.
+   In Phase 0, the team must belong to the same billing account as the project.
+7. An account project grant contributes that role to active users in the
+   project's billing account.
 8. Effective project access is the highest role found across account admin
    status, direct user grants, team grants, and account-wide grants.
 9. `read` can view/load project state.
@@ -645,6 +654,8 @@ goivy/webvue/
       api/
         webvueHttpClient.ts
         authApi.ts
+        teamApi.ts
+        projectApi.ts
       components/
         AuthShell.vue
         LoginForm.vue
@@ -658,6 +669,7 @@ goivy/webvue/
       stores/
         authStore.ts
         accountStore.ts
+        teamStore.ts
         projectStore.ts
         layoutStore.ts
         sessionStore.ts
@@ -740,7 +752,7 @@ The `webvue` server should:
 - serve `goivy/webvue/static/index.html` at `/`
 - serve `goivy/webvue/static/*` under `/static/`
 - expose `/auth/*`
-- expose account/project APIs under `/api/accounts`, `/api/projects`, and
+- expose account/team/project APIs under `/api/accounts`, `/api/projects`, and
   project-scoped `/api/projects/{projectID}/*`
 - reuse the existing Go backend implementation from `goivy/webui` behind the
   project boundary by importing backend interfaces/types from
@@ -904,6 +916,7 @@ Unit/component tests:
   - workspace shows all four pane headers
 - auth store tests
 - account store tests
+- team store tests
 - project store tests
 - HTTP client tests for CSRF header behavior
 - `architecture/sourceGuards.test.ts`
@@ -913,16 +926,16 @@ Go tests:
 
 - unauthenticated `/auth/me` returns unauthenticated state
 - seeded dev login sets session cookie
-- `/auth/me` returns user, accounts, memberships, projects, and effective roles
-  after login
+- `/auth/me` returns user, billing accounts, account roles, teams, projects,
+  and effective project roles after login
 - logout clears session
-- account and project lists require auth
+- account, team, account-user, and project lists require auth
 - project route rejects missing project access
 - project route rejects insufficient role for write/admin operations
 - state-changing project route rejects missing CSRF
-- PostgreSQL store contract tests cover users, credentials, accounts, account
-  memberships, projects, grants, sessions, revocation, expiration, and
-  workspace-session ownership
+- PostgreSQL store contract tests cover users, credentials, billing accounts,
+  account users, teams, team memberships, projects, grants, sessions,
+  revocation, expiration, and workspace-session ownership
 - RLS tests prove project-owned rows are visible only with the matching
   transaction-local project context
 - admin setup tests verify the bootstrap SQL is idempotent against a disposable
@@ -986,9 +999,9 @@ The browser test may require sandbox escalation to bind localhost.
 3. Copy allowed static assets.
 4. Create new `static/index.html`.
 5. Create `webvue.css`.
-6. Create SQL migrations for users, credentials, accounts, account
-   memberships, projects, grants, auth sessions, project storage locations, RLS
-   helpers, and Ivy workspace-session mappings.
+6. Create SQL migrations for users, credentials, billing accounts, account
+   users, teams, team memberships, projects, grants, auth sessions, project
+   storage locations, RLS helpers, and Ivy workspace-session mappings.
 7. Create Go auth model/store/session/middleware interfaces.
 8. Create PostgreSQL `database/sql` auth store.
 9. Create project-scoped transaction helper that sets RLS context with
@@ -996,13 +1009,14 @@ The browser test may require sandbox escalation to bind localhost.
 10. Create password hashing/verification helpers.
 11. Create migration runner.
 12. Create `goivy/cmd/ivywebvue-admin` with `migrate`, `seed-dev`, user,
-    account, project, and grant commands.
+    billing-account, account-user, team, team-user, project, and grant
+    commands.
 13. Create `webvue` server with `/auth/*` routes.
-14. Create account/project API route skeleton and project authorization
+14. Create account/team/project API route skeleton and project authorization
     middleware.
 15. Create `goivy/cmd/ivywebvue`.
-16. Create frontend auth/account/project stores.
-17. Create HTTP client, auth API, and project API modules.
+16. Create frontend auth/account/team/project stores.
+17. Create HTTP client, auth API, team API, and project API modules.
 18. Create login, project picker, and workspace shell components.
 19. Create source guard test.
 20. Create frontend unit tests.
@@ -1023,6 +1037,8 @@ The browser test may require sandbox escalation to bind localhost.
 - no production OIDC implementation yet
 - no dedicated per-project database provisioning yet
 - no production-grade PostgreSQL role/password rotation yet
+- no cross-account project sharing yet; Phase 0 grants are scoped to the
+  project's billing account
 
 Those start in Phase 1 and later. Phase 0 must still make their future API
 surface project-scoped.

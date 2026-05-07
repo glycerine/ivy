@@ -28,9 +28,13 @@ Target local state:
 - migration PostgreSQL role: `ivyvue_migrator`
 - optional local admin PostgreSQL role: `ivyvue_admin`
 - web login: `dev@local`
-- personal account: `dev`
+- billing account: `dev`
+- account user role for `dev@local`: `owner`
+- team: `dev/core`
+- team role for `dev@local`: `owner`
 - project: `dev/client-server`
 - project role for `dev@local`: `admin`
+- project role for `dev/core`: `admin`
 
 ## SQL Bootstrap Scripts
 
@@ -85,12 +89,16 @@ It should provide:
 ivywebvue-admin migrate
 ivywebvue-admin seed-dev
 ivywebvue-admin create-user
-ivywebvue-admin create-personal-account
-ivywebvue-admin create-team-account
+ivywebvue-admin create-account
+ivywebvue-admin add-account-user
+ivywebvue-admin create-team
+ivywebvue-admin add-team-user
 ivywebvue-admin create-project
 ivywebvue-admin grant-project
 ivywebvue-admin revoke-project
 ivywebvue-admin list-users
+ivywebvue-admin list-accounts
+ivywebvue-admin list-teams
 ivywebvue-admin list-projects
 ```
 
