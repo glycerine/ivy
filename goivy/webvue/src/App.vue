@@ -10,6 +10,8 @@ const authClient = useAuthClient();
 
 const selectedProject = computed(() => session.selectedProject);
 const isVerifiedLanding = ref(globalThis.location?.pathname === '/verified');
+const authNotice = ref(new URLSearchParams(globalThis.location?.search || '').get('auth'));
+const linkExpired = computed(() => authNotice.value === 'link-expired');
 const email = ref('');
 const sending = ref(false);
 const sent = ref(false);
@@ -37,6 +39,7 @@ async function loadCurrentSession() {
 async function requestSignupLink() {
   sending.value = true;
   failed.value = false;
+  authNotice.value = '';
   try {
     await authClient.requestEmailLogin(email.value);
     sent.value = true;
@@ -132,6 +135,9 @@ onMounted(() => {
     <section v-else-if="!session.authenticated" aria-label="Sign in">
       <h1>Ivy</h1>
       <p>Create your account or sign in with your verified email.</p>
+      <p v-if="linkExpired && !sent" role="alert">
+        That sign-in link is invalid or expired. Enter your email and we will send a new one.
+      </p>
       <form v-if="!sent" @submit.prevent="requestSignupLink">
         <label>
           Email

@@ -105,6 +105,12 @@ func TestEmailContinueRedirectsSuccessfulConsumeToVerifiedLanding(t *testing.T) 
 	if !strings.Contains(rec.Body.String(), `location.replace("/verified")`) {
 		t.Fatalf("continue page does not redirect to verified landing:\n%s", rec.Body.String())
 	}
+	if !strings.Contains(rec.Body.String(), `location.replace(signupRetryURL)`) || !strings.Contains(rec.Body.String(), `/?auth=link-expired`) {
+		t.Fatalf("continue page does not redirect invalid links to signup retry:\n%s", rec.Body.String())
+	}
+	if strings.Contains(rec.Body.String(), `Sign-in link is invalid or expired.`) {
+		t.Fatalf("continue page still renders the dead-end invalid-link message:\n%s", rec.Body.String())
+	}
 }
 
 func TestEmailLoginRequestUsesDatabaseOutboxWithoutRealEmail(t *testing.T) {

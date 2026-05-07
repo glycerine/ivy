@@ -206,10 +206,11 @@ func (s *Server) handleEmailContinue(w http.ResponseWriter, r *http.Request) {
 <main id="status">Signing in...</main>
 <script>
 (async () => {
+  const signupRetryURL = "/?auth=link-expired";
   const params = new URLSearchParams(location.hash.slice(1));
   const token = params.get("token");
   if (!token) {
-    document.getElementById("status").textContent = "Sign-in link is missing its token.";
+    location.replace(signupRetryURL);
     return;
   }
   const response = await fetch("/auth/email/consume", {
@@ -221,7 +222,7 @@ func (s *Server) handleEmailContinue(w http.ResponseWriter, r *http.Request) {
     location.replace("/verified");
     return;
   }
-  document.getElementById("status").textContent = "Sign-in link is invalid or expired.";
+  location.replace(signupRetryURL);
 })();
 </script>`))
 }

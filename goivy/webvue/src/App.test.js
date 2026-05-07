@@ -73,6 +73,16 @@ describe('App', () => {
     expect(wrapper.find('form').exists()).toBe(false);
   });
 
+  it('shows an expired-link retry message on the sign-in page', async () => {
+    window.history.pushState({}, '', '/?auth=link-expired');
+    const wrapper = mountApp();
+    await settleMountedAsync(wrapper);
+
+    expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(true);
+    expect(wrapper.find('[role="alert"]').text()).toContain('sign-in link is invalid or expired');
+    expect(wrapper.find('form').exists()).toBe(true);
+  });
+
   it('shows only authorized projects before entering the workspace', async () => {
     const wrapper = mountApp();
     await settleMountedAsync(wrapper);
