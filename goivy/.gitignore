@@ -27,3 +27,6 @@ webui/coverage/
 webui/.vitest/
 webui/playwright-report/
 webui/test-results/
+control/node_modules/
+control/playwright-report/
+control/test-results/
