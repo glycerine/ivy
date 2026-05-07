@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web vitest-setup control-browser-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -117,6 +117,9 @@ PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
 WEBUI_NODE_MODULES_STAMP := $(NODE_MODULES_DIR)/.package-lock.stamp
 CONTROL_NODE_MODULES_DIR := control/node_modules
 CONTROL_PLAYWRIGHT_BIN := $(CONTROL_NODE_MODULES_DIR)/.bin/playwright
+WEBVUE_NODE_MODULES_DIR := webvue/node_modules
+WEBVUE_VITEST_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/vitest
+WEBVUE_NODE_MODULES_STAMP := $(WEBVUE_NODE_MODULES_DIR)/.package-lock.stamp
 
 PSQL ?= psql
 CONTROL_PG_DIR := control/admin/postgres
@@ -162,6 +165,17 @@ $(CONTROL_PLAYWRIGHT_BIN): control/package.json control/package-lock.json
 
 control-browser-setup: $(CONTROL_PLAYWRIGHT_BIN)
 
+$(WEBVUE_NODE_MODULES_STAMP): webvue/package.json webvue/package-lock.json
+	cd webvue && npm ci
+	touch $(WEBVUE_NODE_MODULES_STAMP)
+
+$(WEBVUE_VITEST_BIN): $(WEBVUE_NODE_MODULES_STAMP)
+
+webvue-setup: $(WEBVUE_VITEST_BIN)
+
+test-vue: $(WEBVUE_VITEST_BIN)
+	cd webvue && npm run test
+
 test-js: $(VITEST_BIN)
 	cd webui && npm run test:webui:js
 
@@ -177,9 +191,8 @@ test-control-browser: $(CONTROL_PLAYWRIGHT_BIN)
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web: test-js test-browser test-control-browser
+test-web:
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
-
 
 unimerge-audit:
 	go run ./cmd/unimerge_audit -details -max 120

@@ -30,4 +30,8 @@ webui/test-results/
 control/node_modules/
 control/playwright-report/
 control/test-results/
+webvue/node_modules/
+webvue/coverage/
+webvue/.vitest/
+webvue/static/dist/
 .cache
