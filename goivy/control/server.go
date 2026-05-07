@@ -108,7 +108,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 	s.mux.HandleFunc("GET /auth/me", s.handleAuthMe)
 	s.mux.HandleFunc("POST /auth/email/request", s.handleEmailLoginRequest)
-	s.mux.HandleFunc("GET /auth/email/continue", s.handleEmailContinue)
+	s.mux.HandleFunc("GET /auth/email/continue", s.handleIndex)
 	s.mux.HandleFunc("POST /auth/email/consume", s.handleEmailLoginConsume)
 	s.mux.HandleFunc("GET /auth/login", s.handleLogin)
 	s.mux.HandleFunc("GET /auth/callback", s.handleCallback)
@@ -197,34 +197,6 @@ func (s *Server) handleEmailLoginRequest(w http.ResponseWriter, r *http.Request)
 		}
 	}
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
-}
-
-func (s *Server) handleEmailContinue(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_, _ = w.Write([]byte(`<!doctype html>
-<title>Ivy sign in</title>
-<main id="status">Signing in...</main>
-<script>
-(async () => {
-  const signupRetryURL = "/?auth=link-expired";
-  const params = new URLSearchParams(location.hash.slice(1));
-  const token = params.get("token");
-  if (!token) {
-    location.replace(signupRetryURL);
-    return;
-  }
-  const response = await fetch("/auth/email/consume", {
-    method: "POST",
-    headers: {"content-type": "application/json"},
-    body: JSON.stringify({token})
-  });
-  if (response.ok) {
-    location.replace("/verified");
-    return;
-  }
-  location.replace(signupRetryURL);
-})();
-</script>`))
 }
 
 func (s *Server) handleEmailLoginConsume(w http.ResponseWriter, r *http.Request) {

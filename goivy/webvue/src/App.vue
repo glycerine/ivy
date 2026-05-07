@@ -7,11 +7,14 @@ import { useSessionStore } from './stores/sessionStore.js';
 
 const session = useSessionStore();
 const authClient = useAuthClient();
+const currentPath = globalThis.location?.pathname || '/';
 
 const selectedProject = computed(() => session.selectedProject);
-const isVerifiedLanding = ref(globalThis.location?.pathname === '/verified');
-const authNotice = ref(new URLSearchParams(globalThis.location?.search || '').get('auth'));
-const linkExpired = computed(() => authNotice.value === 'link-expired');
+const isVerifiedLanding = ref(currentPath === '/verified');
+const isEmailContinue = ref(currentPath === '/auth/email/continue');
+const emailContinueStatus = ref('');
+const linkExpired = computed(() => emailContinueStatus.value === 'expired');
+const showVerifiedLanding = computed(() => (isVerifiedLanding.value || emailContinueStatus.value === 'verified') && session.authenticated);
 const email = ref('');
 const sending = ref(false);
 const sent = ref(false);
@@ -39,7 +42,7 @@ async function loadCurrentSession() {
 async function requestSignupLink() {
   sending.value = true;
   failed.value = false;
-  authNotice.value = '';
+  emailContinueStatus.value = '';
   try {
     await authClient.requestEmailLogin(email.value);
     sent.value = true;
@@ -47,6 +50,46 @@ async function requestSignupLink() {
     failed.value = true;
   } finally {
     sending.value = false;
+  }
+}
+
+function readMagicLinkToken() {
+  const params = new URLSearchParams(globalThis.location?.hash?.slice(1) || '');
+  return params.get('token') || '';
+}
+
+function replaceBrowserPath(path) {
+  if (typeof globalThis.history?.replaceState !== 'function') {
+    return;
+  }
+  globalThis.history.replaceState({}, '', path);
+}
+
+async function continueEmailLogin() {
+  authLoading.value = true;
+  authFailed.value = false;
+  emailContinueStatus.value = 'checking';
+  const token = readMagicLinkToken();
+  replaceBrowserPath('/auth/email/continue');
+  if (!token) {
+    session.applyAuthView({ authenticated: false });
+    emailContinueStatus.value = 'expired';
+    replaceBrowserPath('/');
+    authLoading.value = false;
+    return;
+  }
+  try {
+    await authClient.consumeEmailLogin(token);
+    const view = await authClient.currentSession();
+    session.applyAuthView(view);
+    emailContinueStatus.value = 'verified';
+    replaceBrowserPath('/verified');
+  } catch {
+    session.applyAuthView({ authenticated: false });
+    emailContinueStatus.value = 'expired';
+    replaceBrowserPath('/');
+  } finally {
+    authLoading.value = false;
   }
 }
 
@@ -76,6 +119,10 @@ function emailStatus(row) {
 onMounted(() => {
   if (isAdmin.value) {
     loadAdminEmails();
+    return;
+  }
+  if (isEmailContinue.value) {
+    continueEmailLogin();
     return;
   }
   loadCurrentSession();
@@ -121,7 +168,7 @@ onMounted(() => {
       <p>Loading your account...</p>
     </section>
 
-    <section v-else-if="isVerifiedLanding && session.authenticated" aria-label="Email verified">
+    <section v-else-if="showVerifiedLanding" aria-label="Email verified">
       <h1>Email verified</h1>
       <p>{{ session.user?.email }} is ready to use Ivy.</p>
       <a href="/">Continue to projects</a>

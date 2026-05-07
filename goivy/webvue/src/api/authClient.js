@@ -28,6 +28,19 @@ export function createAuthClient(fetchImpl = globalThis.fetch) {
       }
       return response.json();
     },
+    async consumeEmailLogin(token) {
+      const response = await fetchImpl('/auth/email/consume', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+      if (!response.ok) {
+        throw new Error(`email login consume failed with status ${response.status}`);
+      }
+      return response.json();
+    },
     async listUnverifiedEmails() {
       const response = await fetchImpl('/admin/api/unverified-emails', {
         method: 'GET',

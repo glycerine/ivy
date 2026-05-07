@@ -14,6 +14,9 @@ function mountApp(options = {}) {
     async requestEmailLogin() {
       return { ok: true };
     },
+    async consumeEmailLogin() {
+      return { ok: true };
+    },
     async listUnverifiedEmails() {
       return { emails: [] };
     },
@@ -73,11 +76,25 @@ describe('App', () => {
     expect(wrapper.find('form').exists()).toBe(false);
   });
 
-  it('shows an expired-link retry message on the sign-in page', async () => {
-    window.history.pushState({}, '', '/?auth=link-expired');
-    const wrapper = mountApp();
+  it('shows an expired-link retry message on the sign-in page without a redirect hop or query flag', async () => {
+    const consumedTokens = [];
+    window.history.pushState({}, '', '/auth/email/continue#token=expired-token');
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async consumeEmailLogin(token) {
+            consumedTokens.push(token);
+            throw new Error('expired');
+          },
+        },
+      },
+    });
     await settleMountedAsync(wrapper);
 
+    expect(consumedTokens).toEqual(['expired-token']);
+    expect(window.location.pathname).toBe('/');
+    expect(window.location.search).toBe('');
+    expect(window.location.hash).toBe('');
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(true);
     expect(wrapper.find('[role="alert"]').text()).toContain('sign-in link is invalid or expired');
     expect(wrapper.find('form').exists()).toBe(true);
@@ -173,5 +190,37 @@ describe('App', () => {
     expect(wrapper.find('[aria-label="Email verified"]').exists()).toBe(true);
     expect(wrapper.find('[aria-label="Email verified"]').text()).toContain('alice@example.test');
     expect(wrapper.find('[aria-label="Sign in"]').exists()).toBe(false);
+  });
+
+  it('consumes a valid magic link in place and shows the verified landing page', async () => {
+    const consumedTokens = [];
+    window.history.pushState({}, '', '/auth/email/continue#token=valid-token');
+    const wrapper = mountApp({
+      provide: {
+        [authClientKey]: {
+          async consumeEmailLogin(token) {
+            consumedTokens.push(token);
+            return { ok: true };
+          },
+          async currentSession() {
+            return {
+              authenticated: true,
+              user: { id: 'user-1', email: 'alice@example.test' },
+              projects: [{ id: 'project-1', displayName: 'Client/server' }],
+              roles: { 'project-1': 'admin' },
+            };
+          },
+        },
+      },
+    });
+
+    await settleMountedAsync(wrapper);
+
+    expect(consumedTokens).toEqual(['valid-token']);
+    expect(window.location.pathname).toBe('/verified');
+    expect(window.location.search).toBe('');
+    expect(window.location.hash).toBe('');
+    expect(wrapper.find('[aria-label="Email verified"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Email verified"]').text()).toContain('alice@example.test');
   });
 });
