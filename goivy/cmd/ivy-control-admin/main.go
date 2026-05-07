@@ -45,7 +45,7 @@ func seedAlpha(args []string) {
 	dsn := fs.String("dsn", envDefault("IVY_CONTROL_DATABASE_DSN", "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable"), "ivyvue PostgreSQL DSN")
 	email := fs.String("email", "", "tester email address")
 	displayName := fs.String("display-name", "", "tester display name")
-	idpIssuer := fs.String("idp-issuer", "casdoor-local", "identity-provider issuer to seed")
+	idpIssuer := fs.String("idp-issuer", "email", "identity-provider issuer to seed")
 	idpSubject := fs.String("idp-subject", "", "identity-provider subject; defaults to email")
 	accountSlug := fs.String("account", "alpha", "billing account slug")
 	accountName := fs.String("account-name", "Alpha Testers", "billing account display name")

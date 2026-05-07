@@ -93,7 +93,7 @@ ON CONFLICT (project_id) DO NOTHING
 
 func normalizeSeedAlphaTesterParams(params SeedAlphaTesterParams) SeedAlphaTesterParams {
 	if params.IDPIssuer == "" {
-		params.IDPIssuer = "casdoor-local"
+		params.IDPIssuer = "email"
 	}
 	if params.IDPSubject == "" {
 		params.IDPSubject = params.Email

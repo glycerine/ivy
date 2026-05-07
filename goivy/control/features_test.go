@@ -17,11 +17,11 @@ func TestBDDFeatureFilesCoverRequiredFlows(t *testing.T) {
 		"login.feature": {
 			"Feature: Login",
 			"Scenario: Existing user logs in and sees authorized projects",
-			"Scenario: Wrong password does not create an app session",
+			"Scenario: Reused magic link does not create another app session",
 		},
 		"account_recovery.feature": {
 			"Feature: Account recovery",
-			"Scenario: User resets password from a recovery email",
+			"Scenario: User recovers access with a fresh email magic link",
 			"Scenario: Unknown email receives the same neutral response",
 		},
 		"billing.feature": {

@@ -106,6 +106,17 @@ CREATE TABLE IF NOT EXISTS control.app_sessions (
   revoked_at timestamptz
 );
 
+CREATE TABLE IF NOT EXISTS control.email_login_tokens (
+  token_hash bytea PRIMARY KEY,
+  email text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz NOT NULL,
+  used_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS email_login_tokens_email_created_idx
+  ON control.email_login_tokens (email, created_at DESC);
+
 CREATE TABLE IF NOT EXISTS control.ivy_workspace_sessions (
   id uuid PRIMARY KEY,
   project_id uuid NOT NULL REFERENCES control.projects(id),

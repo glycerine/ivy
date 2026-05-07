@@ -29,7 +29,91 @@ func TestAuthMeUnauthenticated(t *testing.T) {
 	}
 }
 
-func TestLoginRedirectsToCasdoorAuthorizeURL(t *testing.T) {
+func TestEmailLoginRequestUsesMemorySenderWithoutRealEmail(t *testing.T) {
+	sender := NewMemoryEmailSender()
+	server := NewServer(Config{
+		EmailSender:               sender,
+		AutoProvisionStarterSpace: true,
+	})
+	req := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"Alice@Example.Test"}`))
+	rec := httptest.NewRecorder()
+
+	server.Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d; body=%s", rec.Code, http.StatusOK, rec.Body.String())
+	}
+	message, ok := sender.LatestFor("alice@example.test")
+	if !ok {
+		t.Fatalf("memory sender did not receive login email")
+	}
+	if !strings.Contains(message.LoginURL, "/auth/email/continue#token=") {
+		t.Fatalf("login URL = %q", message.LoginURL)
+	}
+}
+
+func TestEmailMagicLinkCreatesAppSessionAndStarterProject(t *testing.T) {
+	store := NewMemoryStore()
+	sender := NewMemoryEmailSender()
+	server := NewServer(Config{
+		Store:                     store,
+		EmailSender:               sender,
+		AutoProvisionStarterSpace: true,
+	})
+	request := httptest.NewRequest(http.MethodPost, "/auth/email/request", strings.NewReader(`{"email":"alice@example.test"}`))
+	request.Host = "ivy.example.test"
+	requestRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(requestRec, request)
+	if requestRec.Code != http.StatusOK {
+		t.Fatalf("request status = %d, want %d; body=%s", requestRec.Code, http.StatusOK, requestRec.Body.String())
+	}
+	message, ok := sender.LatestFor("alice@example.test")
+	if !ok {
+		t.Fatalf("missing login email")
+	}
+	token := message.LoginURL[strings.LastIndex(message.LoginURL, "#token=")+len("#token="):]
+
+	consume := httptest.NewRequest(http.MethodPost, "/auth/email/consume", strings.NewReader(`{"token":"`+token+`"}`))
+	consumeRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(consumeRec, consume)
+	if consumeRec.Code != http.StatusOK {
+		t.Fatalf("consume status = %d, want %d; body=%s", consumeRec.Code, http.StatusOK, consumeRec.Body.String())
+	}
+	var sessionCookie *http.Cookie
+	for _, cookie := range consumeRec.Result().Cookies() {
+		if cookie.Name == SessionCookieName {
+			sessionCookie = cookie
+			break
+		}
+	}
+	if sessionCookie == nil || sessionCookie.Value == "" {
+		t.Fatalf("missing app session cookie: %#v", consumeRec.Result().Cookies())
+	}
+
+	authReq := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
+	authReq.AddCookie(sessionCookie)
+	authRec := httptest.NewRecorder()
+	server.Handler().ServeHTTP(authRec, authReq)
+
+	if authRec.Code != http.StatusOK {
+		t.Fatalf("/auth/me status = %d, want %d; body=%s", authRec.Code, http.StatusOK, authRec.Body.String())
+	}
+	var view SessionView
+	if err := json.NewDecoder(authRec.Body).Decode(&view); err != nil {
+		t.Fatalf("decode auth view: %v", err)
+	}
+	if !view.Authenticated || view.User == nil || view.User.Email != "alice@example.test" {
+		t.Fatalf("bad auth view: %#v", view)
+	}
+	if view.User.EmailVerifiedAt == nil {
+		t.Fatalf("email was not marked verified")
+	}
+	if len(view.Accounts) != 1 || len(view.Teams) != 1 || len(view.Projects) != 1 {
+		t.Fatalf("starter workspace missing: accounts=%d teams=%d projects=%d", len(view.Accounts), len(view.Teams), len(view.Projects))
+	}
+}
+
+func TestLoginRedirectsToOIDCAuthorizeURL(t *testing.T) {
 	server := NewServer(Config{
 		OIDC: OIDCConfig{
 			AuthURL:     "http://127.0.0.1:18082/login/oauth/authorize",
@@ -152,7 +236,7 @@ type fakeOIDCProvider struct{}
 
 func (fakeOIDCProvider) ExchangeCode(ctx context.Context, code, nonce string) (OIDCIdentity, error) {
 	return OIDCIdentity{
-		Issuer:        "http://casdoor.example.test",
+		Issuer:        "http://oauth.example.test",
 		Subject:       "alice-subject",
 		Email:         "alice@example.test",
 		DisplayName:   "Alice",

@@ -5,16 +5,15 @@ Feature: Alpha tester dashboard
     And project "alpha/client-server" exists
     When Admin creates alpha tester "tester1@example.test"
     And Admin grants tester1 read/write access to "alpha/client-server"
-    Then Casdoor has a user or invitation for "tester1@example.test"
-    And control.users has a pending or active mapped user record
+    Then control.users has a pending or active email user record
     And the tester is an account user in the alpha billing account
     And the tester has write access to "alpha/client-server"
-    And an invitation email is sent to "tester1@example.test"
+    And an invitation magic-link email is sent to "tester1@example.test"
 
   Scenario: Invited alpha tester accepts invite and opens project
     Given Admin invited "tester1@example.test"
     When Tester opens the invitation email
-    And Tester completes Casdoor account setup
+    And Tester consumes the magic link
     And Tester returns to the control-plane application
     Then Tester sees "alpha/client-server"
     And Tester can open the Ivy workspace
@@ -24,14 +23,14 @@ Feature: Alpha tester dashboard
     Given Alice is not a dashboard admin
     When Alice tries to create an alpha tester
     Then the control-plane rejects the request
-    And Casdoor is not called
+    And no invitation email is sent
 
   Scenario: Creating the same alpha tester twice is idempotent
     Given Admin already invited "tester1@example.test"
     When Admin creates alpha tester "tester1@example.test" again
-    Then there is one Casdoor user or invitation
-    And there is one control.users row
+    Then there is one control.users row
     And the requested project grant exists
+    And the invitation workflow remains retryable
 
   Scenario: Revoked tester loses project access immediately
     Given tester1 has write access to "alpha/client-server"

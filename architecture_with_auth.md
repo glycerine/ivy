@@ -1,5 +1,50 @@
 # Ivy Web Architecture With Auth
 
+## Current Auth Decision
+
+The earlier Casdoor/ZITADEL-style identity-provider plan is superseded.
+Casdoor's Go backend still requires a large React/Node frontend build, which is
+not acceptable for this project.
+
+The control-plane server now owns the primary auth flow:
+
+```text
+Browser
+  -> Go control-plane server
+       -> PostgreSQL ivyvue database
+       -> Mailgun API for production email delivery
+       -> ivyvue analysis server
+```
+
+Phase 0 auth policy:
+
+- every account starts with a verified email address
+- email verification uses a 10-minute, single-use magic link
+- tests use an in-memory `EmailSender`, never Mailgun
+- production/manual testing uses Mailgun only when an API key is explicitly set
+- successful login creates the HttpOnly `ivy_webvue_session` cookie
+- app sessions use a sliding 72-hour expiry
+- returning within 72 hours refreshes the cookie/session for another 72 hours
+- returning after expiry requires a fresh email magic link
+- OAuth sign-in through Google/GitHub can be added as an attached identity after
+  the user has verified an email address
+- passkeys should be offered after the initial email signup roundtrip
+
+Implementation package shape:
+
+```text
+goivy/control/
+  EmailSender interface
+  MemoryEmailSender for tests
+  MailgunEmailSender for explicit real delivery
+  email login token store
+  app session store
+  optional OIDC/OAuth client adapters later
+```
+
+The large Casdoor sections below are retained only as historical context until
+this document is fully rewritten around the current email-first architecture.
+
 ## Summary
 
 The browser-facing application should be split into three processes:

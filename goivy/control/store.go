@@ -12,13 +12,18 @@ import (
 	"time"
 )
 
-var ErrSessionNotFound = errors.New("session not found")
+var (
+	ErrEmailLoginTokenNotFound = errors.New("email login token not found")
+	ErrSessionNotFound         = errors.New("session not found")
+)
 
 type Store interface {
 	UpsertUserFromOIDC(ctx context.Context, identity OIDCIdentity) (User, error)
 	EnsureStarterWorkspace(ctx context.Context, user User) error
+	CreateEmailLoginToken(ctx context.Context, email, rawToken string, now time.Time, ttl time.Duration) error
+	ConsumeEmailLoginToken(ctx context.Context, rawToken string, now time.Time) (User, error)
 	CreateAppSession(ctx context.Context, userID, rawSessionToken, rawCSRFToken string, now time.Time, idleTTL, absoluteTTL time.Duration) error
-	SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time) (SessionView, error)
+	SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error)
 }
 
 type OIDCIdentity struct {
@@ -30,25 +35,39 @@ type OIDCIdentity struct {
 }
 
 type MemoryStore struct {
-	mu           sync.Mutex
-	usersByIDP   map[string]User
-	usersByID    map[string]User
-	sessionByTok map[string]string
-	accountsByU  map[string][]Account
-	teamsByU     map[string][]Team
-	projectsByU  map[string][]Project
-	rolesByU     map[string]map[string]string
+	mu             sync.Mutex
+	usersByIDP     map[string]User
+	usersByID      map[string]User
+	emailTokens    map[string]memoryEmailToken
+	sessionByToken map[string]memoryAppSession
+	accountsByU    map[string][]Account
+	teamsByU       map[string][]Team
+	projectsByU    map[string][]Project
+	rolesByU       map[string]map[string]string
+}
+
+type memoryEmailToken struct {
+	Email     string
+	ExpiresAt time.Time
+	UsedAt    *time.Time
+}
+
+type memoryAppSession struct {
+	UserID            string
+	IdleExpiresAt     time.Time
+	AbsoluteExpiresAt time.Time
 }
 
 func NewMemoryStore() *MemoryStore {
 	return &MemoryStore{
-		usersByIDP:   map[string]User{},
-		usersByID:    map[string]User{},
-		sessionByTok: map[string]string{},
-		accountsByU:  map[string][]Account{},
-		teamsByU:     map[string][]Team{},
-		projectsByU:  map[string][]Project{},
-		rolesByU:     map[string]map[string]string{},
+		usersByIDP:     map[string]User{},
+		usersByID:      map[string]User{},
+		emailTokens:    map[string]memoryEmailToken{},
+		sessionByToken: map[string]memoryAppSession{},
+		accountsByU:    map[string][]Account{},
+		teamsByU:       map[string][]Team{},
+		projectsByU:    map[string][]Project{},
+		rolesByU:       map[string]map[string]string{},
 	}
 }
 
@@ -129,6 +148,43 @@ func (s *MemoryStore) EnsureStarterWorkspace(ctx context.Context, user User) err
 	return nil
 }
 
+func (s *MemoryStore) CreateEmailLoginToken(ctx context.Context, email, rawToken string, now time.Time, ttl time.Duration) error {
+	email, err := NormalizeEmail(email)
+	if err != nil {
+		return err
+	}
+	if rawToken == "" {
+		return errors.New("email login token is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.emailTokens[hashTokenString(rawToken)] = memoryEmailToken{
+		Email:     email,
+		ExpiresAt: now.Add(ttl),
+	}
+	return nil
+}
+
+func (s *MemoryStore) ConsumeEmailLoginToken(ctx context.Context, rawToken string, now time.Time) (User, error) {
+	if rawToken == "" {
+		return User{}, ErrEmailLoginTokenNotFound
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	tokenHash := hashTokenString(rawToken)
+	token, ok := s.emailTokens[tokenHash]
+	if !ok || token.UsedAt != nil || !token.ExpiresAt.After(now) {
+		return User{}, ErrEmailLoginTokenNotFound
+	}
+	token.UsedAt = &now
+	s.emailTokens[tokenHash] = token
+	user, err := s.upsertEmailUserLocked(token.Email, now)
+	if err != nil {
+		return User{}, err
+	}
+	return user, nil
+}
+
 func (s *MemoryStore) CreateAppSession(ctx context.Context, userID, rawSessionToken, rawCSRFToken string, now time.Time, idleTTL, absoluteTTL time.Duration) error {
 	if userID == "" || rawSessionToken == "" || rawCSRFToken == "" {
 		return errors.New("session requires user id, token, and csrf token")
@@ -138,24 +194,33 @@ func (s *MemoryStore) CreateAppSession(ctx context.Context, userID, rawSessionTo
 	if _, ok := s.usersByID[userID]; !ok {
 		return errors.New("session user not found")
 	}
-	s.sessionByTok[hashTokenString(rawSessionToken)] = userID
+	s.sessionByToken[hashTokenString(rawSessionToken)] = memoryAppSession{
+		UserID:            userID,
+		IdleExpiresAt:     now.Add(idleTTL),
+		AbsoluteExpiresAt: now.Add(absoluteTTL),
+	}
 	return nil
 }
 
-func (s *MemoryStore) SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time) (SessionView, error) {
+func (s *MemoryStore) SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	hash := hashTokenString(rawSessionToken)
-	var userID string
-	for storedHash, candidateUserID := range s.sessionByTok {
+	var session memoryAppSession
+	var sessionHash string
+	for storedHash, candidateSession := range s.sessionByToken {
 		if subtle.ConstantTimeCompare([]byte(storedHash), []byte(hash)) == 1 {
-			userID = candidateUserID
+			session = candidateSession
+			sessionHash = storedHash
 			break
 		}
 	}
-	if userID == "" {
+	if session.UserID == "" || !session.IdleExpiresAt.After(now) || !session.AbsoluteExpiresAt.After(now) {
 		return SessionView{}, ErrSessionNotFound
 	}
+	session.IdleExpiresAt = now.Add(idleTTL)
+	s.sessionByToken[sessionHash] = session
+	userID := session.UserID
 	user := s.usersByID[userID]
 	return SessionView{
 		Authenticated: true,
@@ -165,6 +230,27 @@ func (s *MemoryStore) SessionViewByToken(ctx context.Context, rawSessionToken st
 		Projects:      append([]Project(nil), s.projectsByU[userID]...),
 		Roles:         cloneStringMap(s.rolesByU[userID]),
 	}, nil
+}
+
+func (s *MemoryStore) upsertEmailUserLocked(email string, now time.Time) (User, error) {
+	key := identityKey("email", email)
+	user, ok := s.usersByIDP[key]
+	if !ok {
+		id, err := NewUUID()
+		if err != nil {
+			return User{}, err
+		}
+		user.ID = id
+		user.IDPIssuer = "email"
+		user.IDPSubject = email
+		user.Email = email
+		user.DisplayName = email
+	}
+	user.Email = email
+	user.EmailVerifiedAt = &now
+	s.usersByIDP[key] = user
+	s.usersByID[user.ID] = user
+	return user, nil
 }
 
 func (i OIDCIdentity) Validate() error {

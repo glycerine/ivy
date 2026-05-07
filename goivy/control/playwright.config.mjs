@@ -17,6 +17,7 @@ export default defineConfig({
     env: {
       GOCACHE: goBuildCache,
       IVY_CONTROL_TEST_IDP: '1',
+      IVY_CONTROL_TEST_EMAIL_OUTBOX: '1',
       IVY_CONTROL_OIDC_CLIENT_ID: 'ivy-control-local',
     },
     url: 'http://127.0.0.1:18080/healthz',

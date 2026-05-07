@@ -24,7 +24,7 @@ func TestPostgresStoreMapsOIDCUserSessionAndStarterWorkspace(t *testing.T) {
 		t.Fatal(err)
 	}
 	identity := OIDCIdentity{
-		Issuer:        "http://casdoor.local.test",
+		Issuer:        "email",
 		Subject:       subject,
 		Email:         "tester+" + subject[:8] + "@example.test",
 		DisplayName:   "Postgres Tester",
@@ -49,7 +49,7 @@ func TestPostgresStoreMapsOIDCUserSessionAndStarterWorkspace(t *testing.T) {
 	if err := store.CreateAppSession(ctx, user.ID, sessionToken, csrfToken, now, time.Hour, 24*time.Hour); err != nil {
 		t.Fatalf("create session: %v", err)
 	}
-	view, err := store.SessionViewByToken(ctx, sessionToken, now)
+	view, err := store.SessionViewByToken(ctx, sessionToken, now, AppSessionTTL)
 	if err != nil {
 		t.Fatalf("load session: %v", err)
 	}
@@ -61,5 +61,42 @@ func TestPostgresStoreMapsOIDCUserSessionAndStarterWorkspace(t *testing.T) {
 	}
 	if view.Roles[view.Projects[0].ID] != string(ProjectRoleAdmin) {
 		t.Fatalf("project role = %q, want admin", view.Roles[view.Projects[0].ID])
+	}
+}
+
+func TestPostgresStoreConsumesEmailLoginToken(t *testing.T) {
+	dsn := os.Getenv("IVY_CONTROL_TEST_DATABASE_DSN")
+	if dsn == "" {
+		t.Skip("set IVY_CONTROL_TEST_DATABASE_DSN to run PostgreSQL control store test")
+	}
+	store, err := OpenPostgresStore(dsn)
+	if err != nil {
+		t.Fatalf("open postgres store: %v", err)
+	}
+	defer store.Close()
+
+	ctx := context.Background()
+	token, err := RandomToken(32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now().UTC()
+	email := "magic+" + token[:8] + "@example.test"
+	email, err = NormalizeEmail(email)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := store.CreateEmailLoginToken(ctx, email, token, now, EmailLoginTokenTTL); err != nil {
+		t.Fatalf("create email login token: %v", err)
+	}
+	user, err := store.ConsumeEmailLoginToken(ctx, token, now)
+	if err != nil {
+		t.Fatalf("consume email login token: %v", err)
+	}
+	if user.Email != email || user.EmailVerifiedAt == nil {
+		t.Fatalf("bad user from email token: %#v", user)
+	}
+	if _, err := store.ConsumeEmailLoginToken(ctx, token, now); err == nil {
+		t.Fatalf("second consume succeeded, want error")
 	}
 }

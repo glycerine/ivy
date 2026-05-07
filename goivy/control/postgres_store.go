@@ -59,6 +59,62 @@ RETURNING id, idp_issuer, idp_subject, email, display_name, email_verified_at, d
 	return scanUser(row)
 }
 
+func (s *PostgresStore) CreateEmailLoginToken(ctx context.Context, email, rawToken string, now time.Time, ttl time.Duration) error {
+	email, err := NormalizeEmail(email)
+	if err != nil {
+		return err
+	}
+	if rawToken == "" {
+		return errors.New("email login token is required")
+	}
+	_, err = s.db.ExecContext(ctx, `
+INSERT INTO control.email_login_tokens
+  (token_hash, email, created_at, expires_at)
+VALUES
+  ($1, $2, $3, $4)
+`, hashToken(rawToken), email, now, now.Add(ttl))
+	return err
+}
+
+func (s *PostgresStore) ConsumeEmailLoginToken(ctx context.Context, rawToken string, now time.Time) (User, error) {
+	if rawToken == "" {
+		return User{}, ErrEmailLoginTokenNotFound
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return User{}, err
+	}
+	defer tx.Rollback()
+
+	var email string
+	err = tx.QueryRowContext(ctx, `
+SELECT email
+FROM control.email_login_tokens
+WHERE token_hash = $1
+  AND used_at IS NULL
+  AND expires_at > $2
+FOR UPDATE
+`, hashToken(rawToken), now).Scan(&email)
+	if errors.Is(err, sql.ErrNoRows) {
+		return User{}, ErrEmailLoginTokenNotFound
+	}
+	if err != nil {
+		return User{}, err
+	}
+	if _, err := tx.ExecContext(ctx, `
+UPDATE control.email_login_tokens
+SET used_at = $2
+WHERE token_hash = $1
+`, hashToken(rawToken), now); err != nil {
+		return User{}, err
+	}
+	user, err := upsertEmailUserTx(ctx, tx, email, now)
+	if err != nil {
+		return User{}, err
+	}
+	return user, tx.Commit()
+}
+
 func (s *PostgresStore) EnsureStarterWorkspace(ctx context.Context, user User) error {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -125,7 +181,7 @@ VALUES
 	return err
 }
 
-func (s *PostgresStore) SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time) (SessionView, error) {
+func (s *PostgresStore) SessionViewByToken(ctx context.Context, rawSessionToken string, now time.Time, idleTTL time.Duration) (SessionView, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return SessionView{}, err
@@ -149,9 +205,10 @@ WHERE id_hash = $1
 	}
 	if _, err := tx.ExecContext(ctx, `
 UPDATE control.app_sessions
-SET last_seen_at = $2
+SET last_seen_at = $2,
+    idle_expires_at = $3
 WHERE id_hash = $1
-`, hashToken(rawSessionToken), now); err != nil {
+`, hashToken(rawSessionToken), now, now.Add(idleTTL)); err != nil {
 		return SessionView{}, err
 	}
 	view, err := sessionViewForUser(ctx, tx, userID)
@@ -159,6 +216,25 @@ WHERE id_hash = $1
 		return SessionView{}, err
 	}
 	return view, tx.Commit()
+}
+
+func upsertEmailUserTx(ctx context.Context, tx *sql.Tx, email string, now time.Time) (User, error) {
+	id, err := NewUUID()
+	if err != nil {
+		return User{}, err
+	}
+	row := tx.QueryRowContext(ctx, `
+INSERT INTO control.users (id, idp_issuer, idp_subject, email, display_name, email_verified_at)
+VALUES ($1, 'email', $2, $2, $2, $3)
+ON CONFLICT (idp_issuer, idp_subject)
+DO UPDATE SET
+  email = EXCLUDED.email,
+  display_name = COALESCE(NULLIF(control.users.display_name, ''), EXCLUDED.display_name),
+  email_verified_at = COALESCE(control.users.email_verified_at, EXCLUDED.email_verified_at),
+  updated_at = now()
+RETURNING id::text, idp_issuer, idp_subject, email, display_name, email_verified_at, disabled_at
+`, id, email, now)
+	return scanUser(row)
 }
 
 func scanUser(row interface {
