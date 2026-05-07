@@ -177,7 +177,7 @@ test-control-browser: $(CONTROL_PLAYWRIGHT_BIN)
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web: test-js test-browser
+test-web: test-js test-browser test-control-browser
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 
 
