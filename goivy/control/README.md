@@ -24,7 +24,8 @@ Run the initial browser BDD smoke tests:
 
 ```sh
 cd goivy/control
-../../node_modules/.bin/playwright test --config playwright.config.mjs
+npm ci
+npm run test:browser
 ```
 
 The Playwright server binds localhost and may require sandbox approval in Codex.

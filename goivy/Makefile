@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-web vitest-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web vitest-setup control-browser-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -112,6 +112,8 @@ GOBIN ?= $(HOME)/go/bin
 NODE_MODULES_DIR := ../node_modules
 VITEST_BIN := $(NODE_MODULES_DIR)/.bin/vitest
 PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
+CONTROL_NODE_MODULES_DIR := control/node_modules
+CONTROL_PLAYWRIGHT_BIN := $(CONTROL_NODE_MODULES_DIR)/.bin/playwright
 
 PSQL ?= psql
 CONTROL_PG_DIR := control/admin/postgres
@@ -151,6 +153,11 @@ $(VITEST_BIN) $(PLAYWRIGHT_BIN): ../package.json ../package-lock.json
 
 vitest-setup: $(VITEST_BIN) $(PLAYWRIGHT_BIN)
 
+$(CONTROL_PLAYWRIGHT_BIN): control/package.json control/package-lock.json
+	cd control && npm ci
+
+control-browser-setup: $(CONTROL_PLAYWRIGHT_BIN)
+
 test-js: $(VITEST_BIN)
 	cd .. && npm run test:webui:js
 
@@ -160,11 +167,15 @@ test-js-watch: $(VITEST_BIN)
 test-browser: $(PLAYWRIGHT_BIN)
 	cd .. && npm run test:webui:browser
 
+test-control-browser: $(CONTROL_PLAYWRIGHT_BIN)
+	cd control && npm run test:browser
+
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
 test-web: test-js test-browser
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
+
 
 unimerge-audit:
 	go run ./cmd/unimerge_audit -details -max 120

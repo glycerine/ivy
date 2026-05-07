@@ -1,0 +1,12 @@
+{
+  "name": "ivy-control-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:browser": "playwright test --config playwright.config.mjs",
+    "test:browser:headed": "playwright test --headed --config playwright.config.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1"
+  }
+}
