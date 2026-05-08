@@ -66,8 +66,6 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 }
 
 func buildWasip1MainSource(t *testing.T, goivyDir, staticDir, name, source string) string {
-	t.Helper()
-
 	sourceDir := t.TempDir()
 	requireWriteFile(t, filepath.Join(sourceDir, "go.mod"), fmt.Sprintf(`module smtwasip1fixture
 
