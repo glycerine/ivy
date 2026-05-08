@@ -1,6 +1,8 @@
 libz3.a
 libz3.dylib
 libz3.wasm
+z3-471-api.js
+z3-471-api.wasm
 z3-api.js
 z3-api.wasm
 z3.wasm
