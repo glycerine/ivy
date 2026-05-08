@@ -1,3 +1,5 @@
+//go:build !tinygo
+
 // interp.go provides CGo wrappers for Z3's Craig interpolation API.
 // These functions correspond to Z3_mk_interpolant, Z3_mk_interpolation_context,
 // and Z3_compute_interpolant from z3_interp.h.

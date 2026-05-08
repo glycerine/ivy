@@ -1,3 +1,5 @@
+//go:build !tinygo
+
 // This file provides a focused Z3 wrapper for translating Ivy logic nodes to
 // Z3 expressions and checking satisfiability.
 //

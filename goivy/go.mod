@@ -11,6 +11,7 @@ require (
 	github.com/glycerine/rbtree v0.2.1
 	github.com/goccy/go-yaml v1.19.2
 	github.com/mailgun/mailgun-go/v4 v4.23.0
+	github.com/tetratelabs/wazero v1.11.1-0.20260428013916-2bbd517b7633
 )
 
 //replace github.com/glycerine/rate => ../../rate
@@ -29,6 +30,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
 	golang.org/x/text v0.29.0 // indirect
 )

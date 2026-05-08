@@ -1,3 +1,5 @@
+//go:build !tinygo
+
 // array.go provides Z3 array theory operations: ArraySort, Select, Store,
 // ConstArray, and array sort introspection.
 // Ported from Python ivy_solver.py z3.Select/z3.Update/z3.K/z3.ArraySort.
