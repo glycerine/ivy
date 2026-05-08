@@ -1,8 +1,9 @@
 package goivy
 
 import (
-	"github.com/glycerine/ivy/goivy/smt"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 // helper: assert SAT

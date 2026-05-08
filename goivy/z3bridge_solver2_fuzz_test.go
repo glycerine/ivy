@@ -1,10 +1,11 @@
 package goivy
 
 import (
-	"github.com/glycerine/ivy/goivy/smt"
 	"runtime"
 	"sync"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 // --- Z3 Worker Goroutine ---

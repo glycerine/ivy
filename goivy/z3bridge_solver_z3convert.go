@@ -5,10 +5,10 @@ package goivy
 
 import (
 	"fmt"
-	"github.com/glycerine/ivy/goivy/smt"
 	"strconv"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 

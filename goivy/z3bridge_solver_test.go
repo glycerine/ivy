@@ -2,9 +2,10 @@ package goivy
 
 import (
 	"encoding/json"
-	"github.com/glycerine/ivy/goivy/smt"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/smt"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 

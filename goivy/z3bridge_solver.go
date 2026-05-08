@@ -9,11 +9,11 @@ package goivy
 
 import (
 	"fmt"
-	"github.com/glycerine/ivy/goivy/smt"
 	"sort"
 	"strings"
 	"sync"
 
+	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 

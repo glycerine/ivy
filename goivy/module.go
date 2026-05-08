@@ -10,7 +10,6 @@ import (
 	"sync/atomic"
 
 	"github.com/glycerine/ivy/goivy/smt"
-
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 

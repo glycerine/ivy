@@ -3,9 +3,10 @@
 package goivy
 
 import (
-	"github.com/glycerine/ivy/goivy/smt"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 // ============================================================

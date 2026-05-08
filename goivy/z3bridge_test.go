@@ -1,8 +1,9 @@
 package goivy
 
 import (
-	"github.com/glycerine/ivy/goivy/smt"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 func z3MustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
