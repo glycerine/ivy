@@ -57,26 +57,6 @@ type Z3Context struct {
 //export goZ3BridgeErrorHandler
 func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 
-	// Z3 error codes (See #Z3_get_error_code):
-	// ---------------------  -----------------
-	//                 Z3_OK: No error.
-	//         Z3_SORT_ERROR: User tried to build an invalid (type incorrect) AST.
-	//                Z3_IOB: Index out of bounds.
-	//        Z3_INVALID_ARG: Invalid argument was provided.
-	//       Z3_PARSER_ERROR: An error occurred when parsing a string or file.
-	//          Z3_NO_PARSER: Parser output is not available, that is, user
-	//                        didn't invoke #Z3_parse_smtlib2_string or #Z3_parse_smtlib2_file.
-	//    Z3_INVALID_PATTERN: Invalid pattern was used to build a quantifier.
-	//        Z3_MEMOUT_FAIL: A memory allocation failure was encountered.
-	// Z3_FILE_ACCESS_ERRROR: A file could not be accessed.
-	//      Z3_INVALID_USAGE: API call is invalid in the current state.
-	//     Z3_INTERNAL_FATAL: An error internal to Z3 occurred.
-	//      Z3_DEC_REF_ERROR: Trying to decrement the reference counter
-	//                        of an AST that was deleted or the reference
-	//                        counter was not initialized with #Z3_inc_ref.
-	//          Z3_EXCEPTION: Internal Z3 exception. Additional details can
-	//                        be retrieved using #Z3_get_error_msg.
-
 	if e == C.Z3_OK {
 		// what are we even doing here then...
 		return
@@ -90,382 +70,6 @@ func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 // within it) must be used from a single OS thread. In Go, use
 // runtime.LockOSThread() to pin the goroutine to its thread before
 // creating a context and performing Z3 operations.
-//
-/*
-# thread-safety
-
-Q: Is the Z3 c++ API thread-safe at version 4.7.1 ?
-
-A: The short answer is no. The Z3 C++ API is not thread-safe
-if you are attempting to share a single z3::context (and
-the objects created within it) across multiple threads.
-This was true in version 4.7.1 and remains true in the
-latest releases.
-
-Here is how Z3 handles concurrency and what you need
-to know to safely multi-thread your application:
-
-The Golden Rule: One Context per Thread
-
-In Z3, almost everything—symbols, sorts, expressions
-(z3::expr), and solvers (z3::solver) -- is tied to
-the z3::context that created it. The context internally
-manages state, memory allocation, and reference
-counting for all of its AST (Abstract Syntax Tree) nodes.
-
-Because Z3 does not use internal locking for these
-operations (to maximize single-threaded performance),
-accessing or modifying a context or its child objects
-from multiple threads simultaneously will lead to
-race conditions, memory corruption, and crashes.
-
-To run Z3 safely in a multi-threaded C++ environment, you must:
-
-1. Instantiate a completely separate z3::context
-inside each thread.
-
-2. Ensure that any z3::solver or z3::expr is only
-manipulated by the thread that owns its parent context.
-
-Q: What about a single goroutine holding a Z3 Context,
-is that safe? goroutines get executed on different
-threads at different times.
-
-A: You have hit on a brilliant and incredibly
-subtle edge case. Your understanding of the Go runtime
-is spot-on: goroutines are multiplexed onto OS
-threads (an M:N scheduling model), meaning a goroutine
-can execute a CGO call on OS Thread A, yield, and
-later execute the next CGO call on OS Thread B.
-
-Because of this, no, it is not entirely safe to
-just let a standard goroutine hold a Z3 context
-without taking precautions.
-
-Here is exactly why, and how to fix it.
-
-The Problem: The Thread-Local Storage (TLS) Trap
-
-From a strict concurrency standpoint, confining a
-Z3 context to a single goroutine guarantees
-sequential access. You won't get data races because
-two operations won't happen at the exact same time.
-
-However, C/C++ libraries like Z3 aren't just worried
-about simultaneous access; they often care about OS
-thread identity. Under the hood, Z3 has historically
-used Thread-Local Storage (TLS) for things like:
-
-1. Memory Management: Tracking memory allocations
-and reference counts per thread.
-
-2. Internal Caching: Certain thread-specific
-execution states or error handlers.
-
-If your goroutine hops threads, you might allocate
-an AST node while the goroutine is on OS Thread A,
-but later trigger garbage collection, reference
-counting updates, or context destruction while the
-goroutine is on OS Thread B. This causes Z3's
-internal TLS states to get confused (e.g., Thread
-B attempts to decrement or free memory that Thread
-A "owns"), which can lead to silent memory leaks,
-corrupted states, or outright segfaults inside
-the CGO boundary.
-
-The Solution: runtime.LockOSThread()
-
-Go provides a specific tool for dealing with C
-libraries that care about OS thread identity:
-
-runtime.LockOSThread().
-
-When you call this inside a goroutine, it permanently
-wires that specific goroutine to its current
-underlying OS thread. The Go scheduler guarantees
-that this goroutine will never be moved to another
-OS thread, and no other goroutines will be scheduled
-on that specific OS thread until it is explicitly
-unlocked.
-
-To safely use Z3 in a Go concurrent environment,
-you should implement a dedicated "Worker Goroutine" pattern:
-
-~~~
-package z3bridge
-
-import (
-	"runtime"
-	// ... other imports
-)
-
-func Z3Worker(jobChannel <-chan Job, resultChannel chan<- Result) {
-	// 1. Lock this goroutine to the current OS thread
-	runtime.LockOSThread()
-
-	// Optional: Unlock when the goroutine exits (if it ever does)
-	defer runtime.UnlockOSThread()
-
-	// 2. NOW it is perfectly safe to initialize your Z3 context
-	// ctx := C.Z3_mk_context(...)
-	// defer C.Z3_del_context(ctx)
-
-	// 3. Listen for work on a channel and interact with Z3 sequentially
-	for job := range jobChannel {
-		// Process the job using the Z3 context...
-		// Because of LockOSThread, Z3's TLS remains perfectly intact.
-
-		// resultChannel <- result
-	}
-}
-~~~
-
-By confining your Z3 context not just to a single goroutine,
-but to a single locked OS thread, you satisfy both Go's
-concurrency model and Z3's internal C++ assumptions.
-
-# open Context count limits
-
-Q: Can Z3 have 100 open Context at the same time, or do
-I need to close one before I make a new one, with
-Z3_mk_context_rc()/Z3_del_context() ?
-
-A: Yes, you can absolutely have 100 (or even 1,000)
-open Z3 Contexts at the same time. You do not need to
-close one before making a new one.
-
-In Z3, a Z3_context is essentially a completely independent sandbox. Each context has its own memory manager, its own symbol table, and its own configuration. Because they do not share global state, they can coexist perfectly within the same process.
-
-In fact, creating multiple contexts is the standard way to achieve parallel solving in Z3.
-
-Here is how this applies to your Go/CGO setup:
-
-The Worker Pool Pattern
-Since we just discussed that a Z3 context must be tied to a single locked OS thread, having multiple open contexts is exactly how you scale your application. You can create a pool of 100 Go worker routines, where:
-
-1. Each worker calls runtime.LockOSThread().
-
-2. Each worker calls C.Z3_mk_context_rc() to initialize its own private context.
-
-3. All 100 workers pull jobs from a Go channel and solve formulas simultaneously in parallel.
-
-4. When a worker is permanently done, it calls C.Z3_del_context().
-
-Things to Keep in Mind
-
-Memory Consumption: While Z3 doesn't care how many contexts
-you open, your RAM will. An empty Z3 context is relatively
-lightweight, but once you start populating them with complex
-ASTs (Abstract Syntax Trees) and solvers, they can consume
-a significant amount of memory. 100 heavily loaded contexts
-could easily eat up gigabytes of RAM.
-
-No Cross-Context Sharing: Remember that AST nodes
-(expressions, sorts, symbols) belong strictly to the context
-that created them. You cannot take an expression created in
-Context A and assert it in Context B without explicitly
-translating it first using Z3_ast_translate.
-
-Reference Counting (Z3_mk_context_rc): You mentioned
-Z3_mk_context_rc. This is the recommended initialization
-function when building bindings for garbage-collected
-languages like Go. It turns on reference counting for AST
-nodes, allowing you to tie the lifecycle of Z3 objects to
-Go's finalizers. Just ensure you actually call Z3_inc_ref
-and Z3_dec_ref on the objects you create, or you will
-leak memory inside the C heap.
-
-# memory management, reset the solver not the context,
-unless fuzz testing (see below).
-
-Q: can I re-use a Z3 Context by clearing it or reseting
-it to empty somehow? what is the API for that?
-
-A: "You cannot reset or clear a Z3_context. There is no
-API function like Z3_reset_context.
-
-If you want a completely empty context, you must destroy
-the old one with Z3_del_context(ctx) and create a brand
-new one with Z3_mk_context_rc(config).
-
-However, it is highly likely that you don't actually need
-to reset the context. You probably just want to reset the solver.
-
-Here is a breakdown of why this is, and how to get the behavior you are looking for.
-
-Why You Can't Reset a Context
-
-In Z3, the Z3_context is the global memory manager and
-factory for your mathematical universe. Every time you
-create a symbol, a sort, or an expression (AST node),
-Z3 "interns" it inside the context.
-
-If Z3 provided a way to "wipe" the context, it would
-immediately invalidate every single Z3_ast pointer your
-Go program is currently holding, leading to catastrophic
-use-after-free segfaults. Because of this design, the
-context itself only grows. Memory is only fully reclaimed
-when you delete the entire context (or when reference counts
-drop to zero, if using _rc functions, but the underlying
-memory pools don't strictly shrink on command).
-
-The Solution: Resetting the Solver
-
-If your goal is to clear out all your old formulas and
-start solving a brand new problem, you should reuse the
-context but reset the solver.
-
-The solver is the stateful object that actually holds
-your assertions and checks for satisfiability. You can
-wipe a solver completely clean using the C API:
-
-C.Z3_solver_reset(ctx, solver)
-
-What Z3_solver_reset does:
-
-It removes all assertions (formulas) you have added to the solver.
-
-It clears any internal caches or learned clauses
-from previous Z3_solver_check runs.
-
-It leaves the Z3_context completely intact, meaning all
-your variables, sorts, and functions are still valid
-and can be reused immediately.
-
-This is extremely fast and is the standard way to
-run thousands of sequential queries in Z3 without the
-overhead of tearing down and spinning up a new context every time.
-
-When You Must Recreate the Context
-
-The only time you should genuinely destroy and recreate
-a Z3_context in a loop is if you are suffering from memory bloat.
-
-If you run a fuzzer (like in your Makefile) that generates
-millions of unique, complex AST nodes (massive equations), the
-context's internal memory pools will swell. Even if you reset the
-solver and decrement the reference counts of the ASTs, the context
-might hold onto that allocated RAM pool. In long-running server
-processes or heavy fuzzing loops, periodically nuking the context
-and making a new one is a valid strategy to return that RAM to
-the operating system.
-
-docs:
-https://z3prover.github.io/api/html/classz3_1_1solver.html
-
-# fuzzing means you must delete the Context after each test.
-
-Q: okay, but won't that re-using a context across tests
-result in cross-talk between tests? that is a big non-starter
-for Go fuzz testing.
-
-A: You are 100% right to flag this.
-
-For Go fuzz testing specifically, **reusing a `Z3_context`
-is a bad idea**, and your instinct to demand strict
-isolation is spot on.
-
-Here is the breakdown of why reusing a context in a fuzzer
-is dangerous, both in terms of logical cross-talk and
-system stability.
-
-### 1. The Risk of Logical Cross-Talk (Symbol Collisions)
-While wiping the `Z3_solver` clears out the *equations*,
-the `Z3_context` still remembers the *vocabulary*.
-
-If Fuzz Iteration A creates a boolean variable named `"x"`
-and asserts something about it, and Fuzz Iteration B also
-asks the context for a variable named `"x"`, Z3 will
-return the exact same underlying AST node from its
-internal cache.
-
-If your Go code isn't meticulously careful about
-clearing out its own Go-side maps or ensuring globally
-unique symbol names per iteration, you can easily end
-up with cross-talk where a test accidentally references
-a leftover constraint or type definition from a
-previous run.
-
-### 2. The Real Killer: Fuzzer OOM (Out of Memory)
-Even if you perfectly isolate your logic and reset
-your solvers, reusing a context during fuzzing will
-almost certainly crash your machine.
-
-Fuzzers run thousands of iterations per second, throwing
-chaotic, garbage data at your logic. Every time your
-bridge parses that data and creates a new Z3 expression,
-sort, or symbol, the `Z3_context` allocates memory for it.
-Because contexts are interning pools designed to never
-invalidate active pointers, **a context never shrinks**.
-
-If you reuse one context for a fuzz run, its memory
-pool will swell continuously until the OS kills the
-Go process for eating all your RAM.
-
-### The Verdict for Go Fuzzing: Tear It Down
-
-In the context of `go test -fuzz`, you should embrace
-the overhead and completely create and destroy the
-context for every single fuzz execution. The few
-milliseconds of overhead to spin up a context is the
-only way to guarantee memory safety and mathematical
-isolation.
-
-Because Go 1.18+ fuzzing runs your fuzz target
-concurrently across multiple goroutines automatically,
-you still need to respect the OS thread rules we talked
-about.
-
-Your ideal fuzz target should look something like this:
-
-```go
-func FuzzMyEq(f *testing.F) {
-    // Add corpus data...
-    f.Add(...)
-
-    f.Fuzz(func(t *testing.T, data []byte) {
-        // 1. Lock this specific fuzz execution to an OS thread
-        runtime.LockOSThread()
-        defer runtime.UnlockOSThread()
-
-        // 2. Create a pristine, isolated universe for this iteration
-        // Assuming you have a wrapper or call C directly:
-        // ctx := NewZ3Context()
-        // defer ctx.Close()
-
-        // 3. Run your solver logic...
-        // Even if this iteration panics or generates massive ASTs,
-        // the deferred Z3_del_context call will completely
-        // nuke the memory and state.
-    })
-}
-```
-
-This guarantees zero cross-talk, zero thread-local storage
-corruption, and stable memory usage, no matter how long the fuzzer runs.
-
-# Actual API for ref-counting or Z3 doing GC itself:
-
-(We tried the non-rc version: got lots of CGO signal
-problems and segfaults, and have retreated to _rc land).
-
-Context and AST Reference Counting
-Z3_context Z3_API 	Z3_mk_context (Z3_config c)
- 	Create a context using the given configuration.
-
-Z3_context Z3_API 	Z3_mk_context_rc (Z3_config c)
- 	Create a context using the given configuration.
-This function is similar to Z3_mk_context. However, in
-the context returned by this function, the user is
-responsible for managing Z3_ast reference counters.
-Managing reference counters is a burden and error-prone,
-but allows the user to use the memory more efficiently.
-The user must invoke Z3_inc_ref for any Z3_ast returned
-by Z3, and Z3_dec_ref whenever the Z3_ast is not needed
-anymore. This idiom is similar to the one used in BDD
-(binary decision diagrams) packages such as CUDD.
-
-*/
 func NewZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
@@ -483,82 +87,11 @@ func NewZ3Context() *Z3Context {
 	// on the objects you create, or you will leak memory inside the C heap."
 	c := C.Z3_mk_context_rc(cfg)
 
-	// note there is also a Z3-does-GC version, but I'd rather leak
-	// memory for now that have Z3 do a rug pull because it couldn't
-	// see we were using something and then get a mysterious crash.
-	// Maybe later, if memory becomes an issue:
-	//
-	// --- begin docs from Claude ---
-	// Z3_mk_context(cfg) (without _rc) is the simpler API — Z3 manages
-	// all memory internally via garbage collection, with no reference counting at all.
-	// When you call Z3_del_context(), everything is freed.
-	//
-	// The _rc variant (Z3_mk_context_rc) exists specifically for languages that want to
-	// tie Z3 object lifetimes to their own GC via inc_ref/dec_ref — exactly the Python
-	// __del__ pattern. But we've abandoned that pattern (commented-out finalizers, no
-	// dec_ref calls). So right now we're paying the overhead of _rc mode (every
-	// newExpr/newSort/newFuncDecl calls Z3_inc_ref via CGO) without getting any benefit
-	// from it, since Z3_del_context nukes everything anyway.
-	//
-	// Switching to Z3_mk_context:
-	// - Remove all Z3_inc_ref calls in newExpr, newSort, newFuncDecl
-	// - Remove all commented-out Z3_dec_ref finalizer code
-	// - Change Z3_mk_context_rc(cfg) → Z3_mk_context(cfg) in NewZ3Context
-	// - Keep Z3_del_context in Close() — works the same either way
-	//
-	// The only thing to watch: Z3_mk_context uses its own internal GC that can collect
-	// AST nodes when Z3 decides they're unreachable from its perspective. If Go holds a
-	// C.Z3_ast pointer but Z3 doesn't know about it (no solver references it, no other
-	// AST references it), Z3 might collect it. In practice this shouldn't happen because
-	//  our patterns always feed ASTs into solvers or larger expressions before Z3's GC
-	// runs, but it's worth knowing. If we ever hit a use-after-free, the fix would be to
-	//  call Z3_persist_ast(ctx, ast) on long-lived nodes — but I'd cross that bridge
-	// only if we see it.
-	// --- end docs ---
-	//
-	// What does Python do?
-	// Python Ivy uses one global Z3 context for the entire process
-	// lifetime. It never closes it.
-	//
-	// Key details:
-	//
-	// 1. Single global context: z3.main_ctx() — a process-wide singleton
-	// created by the Python Z3 binding on first use. Never destroyed
-	// until process exit.
-	//
-	// 2. Module-level caches accumulate forever (ivy_solver.py:228-235):
-	//   - z3_sorts — cached DeclareSort() results
-	//   - z3_constants — cached Const() and enum constants
-	//   - z3_functions — cached Function() declarations
-	//   - z3_predicates — cached relation declarations
-	//
-	// 3. Solvers are transient: z3.Solver() is created per-query (21
-	// instances across the codebase), used, then dropped for Python GC
-	// to collect. No explicit reset() or del.
-	//
-	// 4. clear() function (line 228): Resets the four Ivy-level cache dicts to empty.
-	// Called between compilation units (e.g., from sidecar.py). This drops Python
-	// references to Z3 objects, but does NOT touch the Z3 context — the context's
-	// internal memory pools keep growing.
-	//
-	// 5. No reference counting (directly) by Ivy: but Python's Z3 binding does and
-	// handles ref counting.
-
-	// quoting github.com/aclements/go-z3/z3/context.go:114,
-	// "[This can be used to install] an error handler
-	// that turns errors into Go panics.
-	// This error handler is equivalent to a longjmp on the C++
-	// side, but Z3 is actually designed to handle that, which is
-	// nice because it saves us the trouble of checking the
-	// context's error code all over the place."
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
 
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
 
-	// caller should prefer to arrange to "defer ctx.Close()" instead of:
-	//runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
-	//	ctx.Close()
-	//})
+	// caller should prefer to arrange to "defer ctx.Close()"
 	return ctx
 }
 
@@ -600,7 +133,7 @@ type Z3Sort struct {
 }
 
 // String returns the name of the Z3 sort.
-func (s Z3Sort) String() string {
+func (s *Z3Sort) String() string {
 	var res string
 	s.ctx.do(func() {
 		sym := C.Z3_get_sort_name(s.ctx.c, s.c)
@@ -612,7 +145,7 @@ func (s Z3Sort) String() string {
 
 // GetId returns the unique numeric AST ID for this sort.
 // Corresponds to Python's get_id() which calls Z3_get_ast_id.
-func (s Z3Sort) GetId() uint {
+func (s *Z3Sort) GetId() uint {
 	//xtracer.Trace("ivy_solver.py:781 get_id() ENTER")
 	var id uint
 	s.ctx.do(func() {
@@ -688,7 +221,7 @@ func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
 }
 
 // String returns the S-expression representation.
-func (e Z3Expr) String() string {
+func (e *Z3Expr) String() string {
 	var res string
 	e.ctx.do(func() {
 		res = C.GoString(C.Z3_ast_to_string(e.ctx.c, e.c))
@@ -774,7 +307,7 @@ func (ctx *Z3Context) Function(name string, domain []Z3Sort, range_ Z3Sort) Func
 // AsExpr converts a FuncDecl to an Expr via Z3_func_decl_to_ast.
 // This is needed for Z3_substitute which operates on AST nodes.
 // Matches Python's FuncDeclRef.as_ast() used in z3.substitute().
-func (fd FuncDecl) AsExpr() Z3Expr {
+func (fd *FuncDecl) AsExpr() Z3Expr {
 	var e Z3Expr
 	fd.ctx.do(func() {
 		e = fd.ctx.newExpr(C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
@@ -784,7 +317,7 @@ func (fd FuncDecl) AsExpr() Z3Expr {
 }
 
 // Apply applies the function declaration to arguments, returning an expression.
-func (fd FuncDecl) Apply(args ...Z3Expr) Z3Expr {
+func (fd *FuncDecl) Apply(args ...Z3Expr) Z3Expr {
 	cargs := make([]C.Z3_ast, len(args))
 	for i, a := range args {
 		cargs[i] = a.c
@@ -1610,7 +1143,7 @@ func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 }
 
 // Equal returns true if two expressions are structurally equal.
-func (e Z3Expr) Equal(other Z3Expr) bool {
+func (e *Z3Expr) Equal(other Z3Expr) bool {
 	var result bool
 	e.ctx.do(func() {
 		result = bool(C.Z3_is_eq_ast(e.ctx.c, e.c, other.c))
@@ -1621,7 +1154,7 @@ func (e Z3Expr) Equal(other Z3Expr) bool {
 }
 
 // IsTrue returns true if the expression is the boolean constant true.
-func (e Z3Expr) IsTrue() bool {
+func (e *Z3Expr) IsTrue() bool {
 	var result bool
 	e.ctx.do(func() {
 		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_TRUE
@@ -1631,7 +1164,7 @@ func (e Z3Expr) IsTrue() bool {
 }
 
 // IsFalse returns true if the expression is the boolean constant false.
-func (e Z3Expr) IsFalse() bool {
+func (e *Z3Expr) IsFalse() bool {
 	var result bool
 	e.ctx.do(func() {
 		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_FALSE

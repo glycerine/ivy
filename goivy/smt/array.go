@@ -66,7 +66,7 @@ func (ctx *Z3Context) ConstArray(domain Z3Sort, value Z3Expr) Z3Expr {
 
 // ArrayDomain returns the domain sort of an array sort.
 // Wraps Z3_get_array_sort_domain.
-func (s Z3Sort) ArrayDomain() Z3Sort {
+func (s *Z3Sort) ArrayDomain() Z3Sort {
 	var r Z3Sort
 	s.ctx.do(func() {
 		r = s.ctx.newSort(C.Z3_get_array_sort_domain(s.ctx.c, s.c))
@@ -77,7 +77,7 @@ func (s Z3Sort) ArrayDomain() Z3Sort {
 
 // ArrayRange returns the range sort of an array sort.
 // Wraps Z3_get_array_sort_range.
-func (s Z3Sort) ArrayRange() Z3Sort {
+func (s *Z3Sort) ArrayRange() Z3Sort {
 	var r Z3Sort
 	s.ctx.do(func() {
 		r = s.ctx.newSort(C.Z3_get_array_sort_range(s.ctx.c, s.c))
