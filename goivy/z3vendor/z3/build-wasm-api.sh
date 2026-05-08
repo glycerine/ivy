@@ -6,31 +6,15 @@ set -e
 EXPORTED_FUNCS=$(cat src/api/js/exported-functions.json)
 : "${EMCC:=emcc}"
 : "${Z3_API_BASENAME:=z3-api}"
-: "${Z3_API_STATIC_BASENAME:=z3-471-api}"
-: "${Z3_API_COPY_STATIC:=1}"
-: "${Z3_WASM_EH:=js}"
 EMCC_CACHE_ARGS=()
 if [[ -n "${EM_CACHE:-}" ]]; then
   EMCC_CACHE_ARGS=(--cache "$EM_CACHE")
 fi
 
-case "$Z3_WASM_EH" in
-  js)
-    EH_FLAGS=(-fexceptions -sDISABLE_EXCEPTION_CATCHING=0)
-    ;;
-  wasm)
-    EH_FLAGS=(-fwasm-exceptions)
-    ;;
-  *)
-    echo "unknown Z3_WASM_EH=$Z3_WASM_EH; expected js or wasm" >&2
-    exit 2
-    ;;
-esac
-
 "$EMCC" \
   "${EMCC_CACHE_ARGS[@]}" \
   -std=c++17 \
-  "${EH_FLAGS[@]}" \
+  -fwasm-exceptions \
   -D_NO_OMP_ \
   -D_MP_INTERNAL \
   -Isrc/api \
@@ -44,8 +28,3 @@ esac
   -o "build/$Z3_API_BASENAME.js"
 
 echo "Built build/$Z3_API_BASENAME.js and build/$Z3_API_BASENAME.wasm"
-
-if [[ "$Z3_API_COPY_STATIC" != 0 ]]; then
-  cp -p "build/$Z3_API_BASENAME.wasm" "../../webvue/static/$Z3_API_STATIC_BASENAME.wasm"
-  cp -p "build/$Z3_API_BASENAME.js"   "../../webvue/static/$Z3_API_STATIC_BASENAME.js"
-fi
