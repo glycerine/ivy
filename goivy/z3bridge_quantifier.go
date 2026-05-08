@@ -1,10 +1,13 @@
 //go:build !tinygo && !wasip1
 
-// This file provides a focused Z3 wrapper for translating Ivy logic nodes to
+// This file provides a focused Z3 wrapper for
+// translating Ivy logic nodes to
 // Z3 expressions and checking satisfiability.
 //
-// This package wraps the Z3 C API directly via CGo rather than depending on
-// go-z3, because go-z3 lacks quantifier support (ForAll/Exists) which is
+// This package wraps the Z3 C API directly via CGo
+// rather than depending on
+// go-z3, because go-z3 lacks quantifier support
+// (ForAll/Exists) which is
 // essential for Ivy's first-order logic.
 package goivy
 
@@ -630,33 +633,6 @@ func (ctx *Z3Context) newSort(c C.Z3_sort) Z3Sort {
 	// Called with lock held — do raw ref counting
 	ctx.incRefSort(c)
 	s := Z3Sort{ctx: ctx, c: c}
-	/*
-		runtime.SetFinalizer(&s, func(s *Sort) {
-			s.ctx.do(func() {
-				// caused panic: maybe b/c ctx was already closed?
-
-				   // panic: z3 bridge panic on error: invalid dec_ref command
-
-				   // goroutine 18 [running]:
-				   // github.com/glycerine/ivy/goivy/z3bridge.goZ3BridgeErrorHandler(0x7f951902a208, 0xb)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
-				   // github.com/glycerine/ivy/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7f951902a208, 0x7f951903ced8)
-				   // 	_cgo_gotypes.go:280 +0x5b
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1.1.1(...)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1.1()
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528 +0xa5
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).do(0x3992eb5b4008?, 0x3992eb866000?)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newSort.func1(0x0?)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:527 +0x49
-				   // runtime.runFinalizers()
-				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7
-
-				//C.Z3_dec_ref(s.ctx.c, C.Z3_sort_to_ast(s.ctx.c, s.c))
-			})
-		})
-	*/
 	return s
 }
 
@@ -709,35 +685,6 @@ type Z3Expr struct {
 func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
 	C.Z3_inc_ref(ctx.c, c)
 	e := Z3Expr{ctx: ctx, c: c}
-	/*
-		runtime.SetFinalizer(&e, func(e *Expr) {
-			e.ctx.do(func() {
-				// caused panic in fuzz test: === RUN   FuzzQuantConstraintsForAll
-
-				   // translate2_fuzz_test.go:139 [goID 26] 2026-03-19 08:22:50.463886000 +0000 UTC ran fine
-				   // panic: z3 bridge panic on error: invalid dec_ref command
-
-				   // goroutine 5 [running]:
-				   // github.com/glycerine/ivy/goivy/z3bridge.goZ3BridgeErrorHandler(0x7fa1e2008808, 0xb)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
-				   // github.com/glycerine/ivy/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7fa1e2008808, 0x7fa1e2019d90)
-				   // 	_cgo_gotypes.go:280 +0x5b
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2.1.1(...)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2.1()
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606 +0x9d
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).do(0x2e4d48034110?, 0x2e4d4807c610?)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
-				   // github.com/glycerine/ivy/goivy/z3bridge.(*Z3Context).newExpr.func2(0x0?)
-				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:605 +0x49
-				   // runtime.runFinalizers()
-				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7
-
-
-				//C.Z3_dec_ref(e.ctx.c, e.c)
-			})
-		})
-	*/
 	return e
 }
 

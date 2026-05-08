@@ -2,7 +2,8 @@
 
 package smt
 
-// This file is intentionally selected by the _wasip1.go filename suffix. Do not
+// This file is intentionally selected by
+// the _wasip1.go filename suffix. Do not
 // broaden this to a raw wasm build tag; wasm-unknown and wasip1 have
 // incompatible host contracts.
 
