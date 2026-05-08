@@ -28,7 +28,7 @@ func compileIvySource(t *testing.T, src string) *goivy.Module {
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Sig = goivy.NewSig()
 	err = goivy.IvyCompile(result.Decls, mod, true)
 	if err != nil {

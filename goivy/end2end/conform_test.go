@@ -68,7 +68,7 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 		t.Logf("Go parse error: %v", err)
 		return false, false
 	}
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Sig = goivy.NewSig()
 	err = goivy.IvyCompile(result.Decls, mod, true)
 	if err != nil {

@@ -222,7 +222,7 @@ func TestEmitRangeHelpers(t *testing.T) {
 }
 
 func TestEmitSortDecls_WithModule(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	colorSort := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	mod.SortOrder = []string{"color"}
 	mod.Sig.Sorts.Set("color", colorSort)

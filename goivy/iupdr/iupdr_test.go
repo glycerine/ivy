@@ -101,7 +101,7 @@ func TestUserSelectCoreOnCloseOK(t *testing.T) {
 // In Go, the first yielded op should be a *webui.ShowModal carrying the
 // error text, after which the iterator stops.
 func TestInteractiveUpdrInitialFrameError(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	ag := goivy.NewAnalysisGraph(mod)
 
 	// Add two states to violate the "exactly one frame" precondition.

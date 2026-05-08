@@ -58,7 +58,7 @@ func TestLabeledFmlasToStr_Multiple(t *testing.T) {
 // --- FormatModule tests ---
 
 func TestFormatModule_Empty(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	result := FormatModule(mod)
 	// Should not panic and should produce some output (at least the sig)
 	if result == "" {
@@ -67,7 +67,7 @@ func TestFormatModule_Empty(t *testing.T) {
 }
 
 func TestFormatModule_WithAxioms(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	acfg := goivy.NewAstConfig()
 	lf := acfg.NewLabeledFormula(nil, goivy.True)
 	mod.LabeledAxioms = []*goivy.LabeledFormula{lf}
@@ -78,7 +78,7 @@ func TestFormatModule_WithAxioms(t *testing.T) {
 }
 
 func TestFormatModule_WithConjectures(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	label := boolConst("inv1")
 	acfg := goivy.NewAstConfig()
 	lf := acfg.NewLabeledFormula(label, goivy.True)
@@ -90,7 +90,7 @@ func TestFormatModule_WithConjectures(t *testing.T) {
 }
 
 func TestFormatModule_WithActions(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	act := goivy.NewSequence()
 	mod.Actions.Set("myaction", act)
 	result := FormatModule(mod)
@@ -100,7 +100,7 @@ func TestFormatModule_WithActions(t *testing.T) {
 }
 
 func TestFormatModule_WithExports(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.PublicActions.Set("ext:foo", true)
 	result := FormatModule(mod)
 	if !strings.Contains(result, "export ext:foo") {
@@ -109,7 +109,7 @@ func TestFormatModule_WithExports(t *testing.T) {
 }
 
 func TestFormatModule_WithInitializers(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	act := goivy.NewAssumeAction(goivy.True)
 	mod.Initializers = []goivy.NamedAction{{Name: "init", Action: act}}
 	result := FormatModule(mod)
@@ -119,7 +119,7 @@ func TestFormatModule_WithInitializers(t *testing.T) {
 }
 
 func TestFormatModule_Deterministic(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Actions.Set("alpha", goivy.NewSequence())
 	mod.Actions.Set("beta", goivy.NewSequence())
 	mod.Actions.Set("gamma", goivy.NewSequence())

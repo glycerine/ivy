@@ -8,7 +8,7 @@ import (
 
 // newTestModule builds a simple module for testing.
 func newTestModule() *goivy.Module {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Sig = goivy.NewSig()
 
 	// Add an enumerated sort: Color = {red, green, blue}
@@ -212,7 +212,7 @@ func TestGenerator_WithInitializer(t *testing.T) {
 }
 
 func TestGenerator_EmptyModule(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()
 	if err != nil {
