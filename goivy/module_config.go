@@ -28,10 +28,6 @@ func DefaultZ3Backend() Z3Backend {
 	return &cpp{}
 }
 
-//func defaultZ3Backend() Z3Backend {
-//	return &cpp{}
-//}
-
 func NewZ3Backend(back BACK) (Z3Backend, error) {
 	switch back {
 	case Cpp:
