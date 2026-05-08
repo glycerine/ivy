@@ -14,3 +14,7 @@ emmake make -j8
 cd .. 
 mv build wasm.build
 ln -s wasm.build build
+
+# save them above in case we rebuild native and wipe them out by accident.
+for i in z3-api.js z3-api.wasm z3.wasm libz3.a libz3.wasm libz3.dylib; do cp -p wasm.build/$i ../wasm_lib/; done
+
