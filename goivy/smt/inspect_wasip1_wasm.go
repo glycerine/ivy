@@ -1,4 +1,4 @@
-//go:build !tinygo && !wasip1
+//go:build wasip1
 
 // inspect.go provides Z3 expression introspection methods needed for
 // converting Z3 expressions back to Ivy formulas.
