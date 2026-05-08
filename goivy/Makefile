@@ -194,8 +194,8 @@ $(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/expor
 
 biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
 
-$(SMT_WASIP1_ROUNDTRIP_WASM): Makefile smt/types.go smt/imports_wasip1.go smt/testdata/wasip1_roundtrip/main.go
-	GOOS=wasip1 GOARCH=wasm go build -o $(SMT_WASIP1_ROUNDTRIP_WASM) ./smt/testdata/wasip1_roundtrip
+$(SMT_WASIP1_ROUNDTRIP_WASM): Makefile smt/types.go smt/imports_wasip1.go smt/vectors/wasip1_roundtrip/main.go
+	GOOS=wasip1 GOARCH=wasm go build -o $(SMT_WASIP1_ROUNDTRIP_WASM) ./smt/vectors/wasip1_roundtrip
 
 z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm
 
@@ -215,10 +215,10 @@ test-smt-wasip1-browser:
 	@test -f $(Z3_WEBVUE_WASM) || { echo "missing $(Z3_WEBVUE_WASM); run make z3-wasm-api"; exit 1; }
 	@test -f $(SMT_WASIP1_ROUNDTRIP_WASM) || { echo "missing $(SMT_WASIP1_ROUNDTRIP_WASM); run make test-smt-wasip1-browser-build"; exit 1; }
 	@test -x $(WEBVUE_PLAYWRIGHT_BIN) || { echo "missing $(WEBVUE_PLAYWRIGHT_BIN); run make webvue-setup"; exit 1; }
-	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtWasip1Worker.browser.spec.js
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtSolverRoundTrip.browser.spec.js
 
 test-smt-wasip1-browser-build: z3-wasm-api $(SMT_WASIP1_ROUNDTRIP_WASM) $(WEBVUE_PLAYWRIGHT_BIN)
-	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtWasip1Worker.browser.spec.js
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtSolverRoundTrip.browser.spec.js
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 

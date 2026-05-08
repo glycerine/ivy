@@ -4,12 +4,45 @@ package smt
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 )
+
+const solverBoolRoundTripWasip1Source = `//go:build wasip1
+
+package main
+
+import "github.com/glycerine/ivy/goivy/smt"
+
+func main() {}
+
+//go:wasmexport smt_solver_sat_true
+func smtSolverSatTrue() int32 {
+	ctx := smt.NewContext()
+	defer ctx.Close()
+
+	solver := ctx.NewSolver()
+	solver.Assert(ctx.BoolVal(true))
+	return int32(solver.Check())
+}
+
+//go:wasmexport smt_solver_unsat_true_and_not_true
+func smtSolverUnsatTrueAndNotTrue() int32 {
+	ctx := smt.NewContext()
+	defer ctx.Close()
+
+	truth := ctx.BoolVal(true)
+	solver := ctx.NewSolver()
+	solver.Assert(truth)
+	solver.Assert(ctx.Not(truth))
+	return int32(solver.Check())
+}
+`
 
 func TestSolverBoolRoundTrip(t *testing.T) {
 	_, file, _, ok := runtime.Caller(0)
@@ -19,22 +52,70 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 	goivyDir := filepath.Dir(filepath.Dir(file))
 	webvueDir := filepath.Join(goivyDir, "webvue")
 	staticDir := filepath.Join(webvueDir, "static")
-	roundTripWasm := filepath.Join(staticDir, "smt-wasip1-roundtrip.wasm")
 
 	requireFile(t, filepath.Join(staticDir, "z3-471-api.js"), "run make z3-wasm-api")
 	requireFile(t, filepath.Join(staticDir, "z3-471-api.wasm"), "run make z3-wasm-api")
 	requireFile(t, filepath.Join(webvueDir, "node_modules", ".bin", playwrightBin()), "run make webvue-setup")
 
-	runCommand(t, goivyDir, []string{
+	roundTripWasm := buildWasip1MainSource(t, goivyDir, staticDir, "solver-bool-round-trip", solverBoolRoundTripWasip1Source)
+
+	runCommand(t, webvueDir, []string{"SMT_SOLVER_ROUND_TRIP_WASM=" + roundTripWasm},
+		filepath.Join(".", "node_modules", ".bin", playwrightBin()),
+		"test", "--config", "playwright.config.mjs", "tests/smtSolverRoundTrip.browser.spec.js",
+	)
+}
+
+func buildWasip1MainSource(t *testing.T, goivyDir, staticDir, name, source string) string {
+	t.Helper()
+
+	sourceDir := t.TempDir()
+	requireWriteFile(t, filepath.Join(sourceDir, "go.mod"), fmt.Sprintf(`module smtwasip1fixture
+
+go 1.25.0
+
+require github.com/glycerine/ivy/goivy v0.0.0
+
+replace github.com/glycerine/ivy/goivy => %s
+`, filepath.ToSlash(goivyDir)))
+	requireWriteFile(t, filepath.Join(sourceDir, "main.go"), source)
+
+	assetName := fmt.Sprintf("smt-%s-%d-%s.wasm", safeAssetName(name), os.Getpid(), filepath.Base(sourceDir))
+	wasmPath := filepath.Join(staticDir, assetName)
+	t.Cleanup(func() {
+		if err := os.Remove(wasmPath); err != nil && !os.IsNotExist(err) {
+			t.Logf("could not remove generated wasm %s: %v", wasmPath, err)
+		}
+	})
+
+	runCommand(t, sourceDir, []string{
 		"GOCACHE=/private/tmp/go-build",
 		"GOOS=wasip1",
 		"GOARCH=wasm",
-	}, "go", "build", "-o", roundTripWasm, "./smt/testdata/wasip1_roundtrip")
+	}, "go", "build", "-o", wasmPath, ".")
 
-	runCommand(t, webvueDir, nil,
-		filepath.Join(".", "node_modules", ".bin", playwrightBin()),
-		"test", "--config", "playwright.config.mjs", "tests/smtWasip1Worker.browser.spec.js",
-	)
+	return assetName
+}
+
+func requireWriteFile(t *testing.T, path, content string) {
+	t.Helper()
+	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+		t.Fatalf("write %s: %v", path, err)
+	}
+}
+
+func safeAssetName(name string) string {
+	var b strings.Builder
+	for _, r := range strings.ToLower(name) {
+		switch {
+		case r >= 'a' && r <= 'z':
+			b.WriteRune(r)
+		case r >= '0' && r <= '9':
+			b.WriteRune(r)
+		default:
+			b.WriteByte('-')
+		}
+	}
+	return strings.Trim(b.String(), "-")
 }
 
 func playwrightBin() string {

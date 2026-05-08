@@ -21,4 +21,5 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 	if got := unsatSolver.Check(); got != Unsat {
 		t.Fatalf("true and not true check = %v, want %v", got, Unsat)
 	}
+	vv("unsat: as expected")
 }

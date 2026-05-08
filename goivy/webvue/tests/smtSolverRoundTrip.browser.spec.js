@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const webvueDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const staticDir = path.join(webvueDir, 'static');
+const wasmFile = process.env.SMT_SOLVER_ROUND_TRIP_WASM ?? 'smt-wasip1-roundtrip.wasm';
 
 const contentTypes = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -58,10 +59,11 @@ test.afterAll(async () => {
 test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', async ({ page }) => {
   await page.goto(baseURL);
 
-  const result = await page.evaluate(async () => {
+  const result = await page.evaluate(async ({ wasmFile }) => {
     const assetBaseURL = window.location.origin;
     const workerSource = `
       const assetBaseURL = ${JSON.stringify(assetBaseURL)};
+      const wasmFile = ${JSON.stringify(wasmFile)};
 
       class WasiExit extends Error {
         constructor(code) {
@@ -248,9 +250,9 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
             wasi_snapshot_preview1: createWasiImports(() => wasmMemory),
           };
 
-          const response = await fetch(assetBaseURL + '/smt-wasip1-roundtrip.wasm', { cache: 'no-store' });
+          const response = await fetch(assetBaseURL + '/' + wasmFile, { cache: 'no-store' });
           if (!response.ok) {
-            throw new Error('could not fetch smt-wasip1-roundtrip.wasm: ' + response.status);
+            throw new Error('could not fetch ' + wasmFile + ': ' + response.status);
           }
 
           const bytes = await response.arrayBuffer();
@@ -314,7 +316,7 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
       worker.terminate();
       URL.revokeObjectURL(workerURL);
     }
-  });
+  }, { wasmFile });
 
   expect(result.satTrue).toBe(1);
   expect(result.unsatTrueAndNotTrue).toBe(-1);
