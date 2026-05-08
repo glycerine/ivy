@@ -199,7 +199,6 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
 
       self.onmessage = async () => {
         let z3;
-        let legacyCtx = 0;
 
         try {
           importScripts(assetBaseURL + '/z3-471-api.js');
@@ -216,18 +215,8 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
             },
           });
 
-          const legacyCfg = z3._Z3_mk_config();
-          legacyCtx = z3._Z3_mk_context_rc(legacyCfg);
-          z3._Z3_del_config(legacyCfg);
-
           let wasmMemory;
           const imports = {
-            goivy_z3: {
-              bool_sort() {
-                const sort = z3._Z3_mk_bool_sort(legacyCtx);
-                return z3._Z3_get_sort_id(legacyCtx, sort) >>> 0;
-              },
-            },
             smt_z3: {
               context_new() {
                 const cfg = z3._Z3_mk_config();
@@ -259,9 +248,9 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
             wasi_snapshot_preview1: createWasiImports(() => wasmMemory),
           };
 
-          const response = await fetch(assetBaseURL + '/ivy-biggo-wasip1-probe.wasm', { cache: 'no-store' });
+          const response = await fetch(assetBaseURL + '/smt-wasip1-roundtrip.wasm', { cache: 'no-store' });
           if (!response.ok) {
-            throw new Error('could not fetch ivy-biggo-wasip1-probe.wasm: ' + response.status);
+            throw new Error('could not fetch smt-wasip1-roundtrip.wasm: ' + response.status);
           }
 
           const bytes = await response.arrayBuffer();
@@ -276,10 +265,10 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
             }
           }
 
-          const satTrue = instance.exports.ivy_probe_smt_solver_sat_true;
-          const unsatTrueAndNotTrue = instance.exports.ivy_probe_smt_solver_unsat_true_and_not_true;
+          const satTrue = instance.exports.smt_solver_sat_true;
+          const unsatTrueAndNotTrue = instance.exports.smt_solver_unsat_true_and_not_true;
           if (typeof satTrue !== 'function' || typeof unsatTrueAndNotTrue !== 'function') {
-            throw new Error('Big Go probe is missing smt solver exports; run make biggo-ivy-wasip1-probe-wasm');
+            throw new Error('SMT wasip1 round-trip fixture is missing solver exports');
           }
 
           self.postMessage({
@@ -292,10 +281,6 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
             ok: false,
             error: error && error.stack ? error.stack : String(error),
           });
-        } finally {
-          if (z3 && legacyCtx) {
-            z3._Z3_del_context(legacyCtx);
-          }
         }
       };
     `;

@@ -5,5 +5,8 @@
 // Do not add raw "wasm" or "wasm_unknown" build-tag variants here. They are a
 // different execution environment from wasip1, and mixing the two makes the
 // host-import contract ambiguous. Go still emits a .wasm binary for GOOS=wasip1
-// GOARCH=wasm, but code selection in this package is by the wasip1 build tag.
+// GOARCH=wasm, but the implementation is selected by GOOS=wasip1.
+//
+// The manual command "go test -tags web ./smt" is reserved for a host-side
+// test harness that runs the browser/worker Playwright round trip.
 package smt

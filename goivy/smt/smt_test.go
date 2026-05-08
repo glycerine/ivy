@@ -1,4 +1,4 @@
-//go:build cgo && !tinygo && !wasip1
+//go:build cgo && !tinygo && !wasip1 && !web
 
 package smt
 

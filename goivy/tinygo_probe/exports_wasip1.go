@@ -17,16 +17,6 @@ func ivyProbeRoundTripBoolSortID() uint32 {
 	return probeRoundTripBoolSortID()
 }
 
-//go:wasmexport ivy_probe_smt_solver_sat_true
-func ivyProbeSMTSolverSatTrue() int32 {
-	return probeSMTSolverSatTrue()
-}
-
-//go:wasmexport ivy_probe_smt_solver_unsat_true_and_not_true
-func ivyProbeSMTSolverUnsatTrueAndNotTrue() int32 {
-	return probeSMTSolverUnsatTrueAndNotTrue()
-}
-
 //go:wasmexport ivy_probe_checksum
 func ivyProbeChecksum() uint32 {
 	return probeChecksumValue()

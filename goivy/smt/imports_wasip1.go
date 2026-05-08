@@ -1,9 +1,10 @@
-//go:build !tinygo && wasip1
+//go:build !tinygo
 
 package smt
 
-// This file is intentionally selected by wasip1 only. Do not broaden this to a
-// raw wasm build tag; wasm-unknown and wasip1 have incompatible host contracts.
+// This file is intentionally selected by the _wasip1.go filename suffix. Do not
+// broaden this to a raw wasm build tag; wasm-unknown and wasip1 have
+// incompatible host contracts.
 
 type Context struct {
 	handle uint32

@@ -27,6 +27,7 @@ Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
 TINYGO               ?= /usr/local/bin/tinygo
 TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
 BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
+SMT_WASIP1_ROUNDTRIP_WASM := $(Z3_WEBVUE_STATIC)/smt-wasip1-roundtrip.wasm
 EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
@@ -188,10 +189,13 @@ $(TINYGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/expo
 
 tinygo-ivy-wasip1-probe-wasm: $(TINYGO_IVY_WASIP1_PROBE_WASM)
 
-$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go tinygo_probe/smt_roundtrip_wasip1.go smt/types.go smt/wasip1_imports.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
 	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o $(BIGGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
 
 biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
+
+$(SMT_WASIP1_ROUNDTRIP_WASM): Makefile smt/types.go smt/imports_wasip1.go smt/testdata/wasip1_roundtrip/main.go
+	GOOS=wasip1 GOARCH=wasm go build -o $(SMT_WASIP1_ROUNDTRIP_WASM) ./smt/testdata/wasip1_roundtrip
 
 z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm
 
@@ -209,11 +213,11 @@ test-z3-wasip1-browser-build: z3-wasip1-browser-artifacts $(WEBVUE_PLAYWRIGHT_BI
 test-smt-wasip1-browser:
 	@test -f $(Z3_WEBVUE_JS) || { echo "missing $(Z3_WEBVUE_JS); run make z3-wasm-api"; exit 1; }
 	@test -f $(Z3_WEBVUE_WASM) || { echo "missing $(Z3_WEBVUE_WASM); run make z3-wasm-api"; exit 1; }
-	@test -f $(BIGGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(BIGGO_IVY_WASIP1_PROBE_WASM); run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
+	@test -f $(SMT_WASIP1_ROUNDTRIP_WASM) || { echo "missing $(SMT_WASIP1_ROUNDTRIP_WASM); run make test-smt-wasip1-browser-build"; exit 1; }
 	@test -x $(WEBVUE_PLAYWRIGHT_BIN) || { echo "missing $(WEBVUE_PLAYWRIGHT_BIN); run make webvue-setup"; exit 1; }
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtWasip1Worker.browser.spec.js
 
-test-smt-wasip1-browser-build: z3-wasm-api biggo-ivy-wasip1-probe-wasm $(WEBVUE_PLAYWRIGHT_BIN)
+test-smt-wasip1-browser-build: z3-wasm-api $(SMT_WASIP1_ROUNDTRIP_WASM) $(WEBVUE_PLAYWRIGHT_BIN)
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/smtWasip1Worker.browser.spec.js
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
