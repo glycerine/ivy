@@ -10,7 +10,6 @@ package smt
 import (
 	"fmt"
 	"runtime"
-	"sync/atomic"
 	"unsafe"
 )
 
@@ -111,7 +110,7 @@ type Z3Context struct {
 
 	// z3CheckCounter provides a per Z3Context
 	// sequence number for Z3 check calls.
-	z3CheckCounter atomic.Int64
+	z3CheckCounter int64
 
 	// z3Merkle is a rolling Merkle hash for Z3 check
 	// conformance auditing.
