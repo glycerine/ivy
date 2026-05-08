@@ -1,5 +1,16 @@
 package goivy
 
+import (
+	"fmt"
+	"strings"
+)
+
+const (
+	BackendCGo       = "cgo"
+	BackendWazero    = "wazero"
+	BackendJSBrowser = "jsbrowser"
+)
+
 // GuiArtHook is the type for the analysis-graph GUI hook stored on
 // Config.GuiArtHook. It is invoked by GuiArt to display an analysis graph in
 // an interactive UI.
@@ -18,6 +29,16 @@ package goivy
 // (ivy_check.py:102).
 type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
 
+// Z3Backend is the single runtime-selected Z3 implementation boundary. The
+// method names intentionally mention Z3 so future non-Z3 SMT backends do not
+// get hidden behind generic solver names.
+type Z3Backend interface {
+	Z3BackendName() string
+	NewZ3Context() *Z3Context
+	NewInterpolationZ3Context() *Z3Context
+	NewZ3Solver(ctx *Z3Context) *Z3Solver
+}
+
 // Config holds per-session settings that Python Ivy keeps in module-level
 // parameters/globals. This is the main intentional architectural difference
 // from Python: Go threads explicit config instead of mutable process globals.
@@ -26,6 +47,11 @@ type Config struct {
 	// "" means use embeded stdlib files, otherwise
 	// look for the include/ directory here:
 	IncludePathStdlib string
+
+	// BackendName is the serializable/debuggable Z3 backend name. Backend is
+	// the actual runtime object selected from this name at process edges.
+	BackendName string    `json:"backend"`
+	Backend     Z3Backend `json:"-"`
 
 	CurrentModule *Module
 
@@ -222,8 +248,11 @@ func NewConfig() *Config {
 	astCfg.IuCfg = iuCfg
 	actCfg := NewActionsConfig()
 	actCfg.IuCfg = iuCfg
+	backend := defaultZ3Backend()
 	return &Config{
 		ActCfg:           actCfg,
+		BackendName:      backend.Z3BackendName(),
+		Backend:          backend,
 		Coverage:         true,
 		SolverOpts:       DefaultSolverOptions(),
 		GlobalIncluded:   make(map[string]bool),
@@ -237,6 +266,82 @@ func NewConfig() *Config {
 		TraceDetailed:    true, // default matches trace.OptionDetailed = true
 		ProofCfg:         TacticNewConfig(),
 	}
+}
+
+// NormalizeBackendName returns the canonical backend name and treats "" as the
+// default native CGo backend for compatibility with older serialized configs.
+func NormalizeBackendName(backend string) (string, error) {
+	switch strings.ToLower(strings.TrimSpace(backend)) {
+	case "", BackendCGo:
+		return BackendCGo, nil
+	case BackendWazero:
+		return BackendWazero, nil
+	case BackendJSBrowser:
+		return BackendJSBrowser, nil
+	default:
+		return "", fmt.Errorf("unknown backend %q; expected %q, %q, or %q", backend, BackendCGo, BackendWazero, BackendJSBrowser)
+	}
+}
+
+func mustNewZ3BackendByName(name string) Z3Backend {
+	backend, err := NewZ3BackendByName(name)
+	if err != nil {
+		panic(err)
+	}
+	return backend
+}
+
+// NewZ3BackendByName creates the backend object selected by name.
+func NewZ3BackendByName(name string) (Z3Backend, error) {
+	backendName, err := NormalizeBackendName(name)
+	if err != nil {
+		return nil, err
+	}
+	return newZ3BackendByCanonicalName(backendName), nil
+}
+
+// SetBackendName resolves name immediately into cfg.Backend.
+func (cfg *Config) SetBackendName(name string) error {
+	backend, err := NewZ3BackendByName(name)
+	if err != nil {
+		return err
+	}
+	cfg.BackendName = backend.Z3BackendName()
+	cfg.Backend = backend
+	return nil
+}
+
+// ResolveBackend ensures cfg.Backend is populated. It preserves a manually
+// injected backend object and fills BackendName from it when needed.
+func (cfg *Config) ResolveBackend() error {
+	if cfg.Backend != nil {
+		if cfg.BackendName == "" {
+			cfg.BackendName = cfg.Backend.Z3BackendName()
+			return nil
+		}
+		backendName, err := NormalizeBackendName(cfg.BackendName)
+		if err != nil {
+			return err
+		}
+		if backendName == cfg.Backend.Z3BackendName() {
+			cfg.BackendName = backendName
+			return nil
+		}
+	}
+	return cfg.SetBackendName(cfg.BackendName)
+}
+
+func z3BackendForConfig(cfg *Config) Z3Backend {
+	if cfg == nil {
+		return defaultZ3Backend()
+	}
+	if err := cfg.ResolveBackend(); err != nil {
+		panic(err)
+	}
+	if cfg.Backend == nil {
+		return defaultZ3Backend()
+	}
+	return cfg.Backend
 }
 
 // --- ActionContext ---

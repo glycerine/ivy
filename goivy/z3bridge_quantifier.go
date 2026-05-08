@@ -38,10 +38,11 @@ import (
 
 // Z3Context wraps a Z3 context.
 type Z3Context struct {
-	c      C.Z3_context
-	mu     sync.Mutex
-	syms   map[string]C.Z3_symbol
-	closed bool
+	backend Z3Backend
+	c       C.Z3_context
+	mu      sync.Mutex
+	syms    map[string]C.Z3_symbol
+	closed  bool
 
 	// z3CheckCounter provides a per Z3Context
 	// sequence number for Z3 check calls.
@@ -465,6 +466,10 @@ anymore. This idiom is similar to the one used in BDD
 
 */
 func NewZ3Context() *Z3Context {
+	return defaultZ3Backend().NewZ3Context()
+}
+
+func newCGoZ3Context(backend Z3Backend) *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
 
@@ -551,7 +556,7 @@ func NewZ3Context() *Z3Context {
 	// context's error code all over the place."
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
 
-	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	ctx := &Z3Context{backend: backend, c: c, syms: make(map[string]C.Z3_symbol)}
 
 	// caller should prefer to arrange to "defer ctx.Close()" instead of:
 	//runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
@@ -1447,6 +1452,14 @@ type Z3Solver struct {
 
 // NewZ3Solver creates a new solver.
 func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
+	backend := ctx.backend
+	if backend == nil {
+		backend = defaultZ3Backend()
+	}
+	return backend.NewZ3Solver(ctx)
+}
+
+func newCGoZ3Solver(ctx *Z3Context) *Z3Solver {
 	var s *Z3Solver
 	ctx.do(func() {
 		cs := C.Z3_mk_solver(ctx.c)

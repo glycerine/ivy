@@ -27,6 +27,7 @@ func main() {
 	open := flag.Bool("open", false, "open browser automatically")
 	usePy := flag.Bool("py", false, "use Python Ivy backend only")
 	conform := flag.Bool("conform", false, "send to both Go and Python backends, check conformance")
+	backendName := flag.String("backend", goivy.BackendCGo, "Z3 backend: cgo, wazero, jsbrowser")
 	flag.Parse()
 
 	if *usePy && *conform {
@@ -34,6 +35,9 @@ func main() {
 	}
 
 	cfg := goivy.NewConfig()
+	if err := cfg.SetBackendName(*backendName); err != nil {
+		log.Fatal(err)
+	}
 
 	var backend webui.Backend
 	switch {
@@ -59,7 +63,7 @@ func main() {
 	default:
 		backend = webui.NewGoBackend(cfg)
 		defer backend.Close()
-		fmt.Printf("IVy: Go backend\n")
+		fmt.Printf("IVy: Go backend (%s Z3)\n", cfg.BackendName)
 	}
 
 	url := fmt.Sprintf("http://localhost%s", *addr)

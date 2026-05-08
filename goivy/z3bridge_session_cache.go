@@ -49,8 +49,15 @@ type Z3SessionCache struct {
 // maps, then pre-populates the equality predicate (matching Python's
 // clear() initial state with z3_predicates = {ivy_logic.equals: my_eq}).
 func NewZ3SessionCache() *Z3SessionCache {
+	return NewZ3SessionCacheWithBackend(defaultZ3Backend())
+}
+
+func NewZ3SessionCacheWithBackend(backend Z3Backend) *Z3SessionCache {
+	if backend == nil {
+		backend = defaultZ3Backend()
+	}
 	c := &Z3SessionCache{
-		Ctx: NewZ3Context(),
+		Ctx: backend.NewZ3Context(),
 	}
 	c.resetMaps()
 	return c

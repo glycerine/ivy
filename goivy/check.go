@@ -1227,6 +1227,9 @@ func Start(args []string, cfg *Config) error {
 	if cfg == nil {
 		cfg = NewConfig()
 	}
+	if err := cfg.ResolveBackend(); err != nil {
+		return err
+	}
 	if len(args) >= 1 {
 		// Python: set_macro_finder(True) at ivy_solver.py:53 during module import.
 		// Emit matching trace before check.start.

@@ -34,11 +34,15 @@ func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
 // for interpolation.
 // Corresponds to Python's context created via Z3_mk_interpolation_context.
 func NewInterpolationZ3Context() *Z3Context {
+	return defaultZ3Backend().NewInterpolationZ3Context()
+}
+
+func newCGoInterpolationZ3Context(backend Z3Backend) *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
 	c := C.Z3_mk_interpolation_context(cfg)
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
-	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	ctx := &Z3Context{backend: backend, c: c, syms: make(map[string]C.Z3_symbol)}
 	//runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
 	//	ctx.Close()
 	//})
@@ -101,7 +105,7 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Z3Expr) ([]Z3Expr, error) {
 // main solver).
 func (s *Solver) NewTranslatorWithInterpolation() *Translator {
 	cache := &Z3SessionCache{
-		Ctx: NewInterpolationZ3Context(),
+		Ctx: s.z3Backend().NewInterpolationZ3Context(),
 	}
 	cache.resetMaps()
 	return &Translator{

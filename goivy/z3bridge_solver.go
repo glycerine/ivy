@@ -27,7 +27,8 @@ type Solver struct {
 	opts             *SolverOptions
 	sig              *Sig
 	mod              *Module // module this solver belongs to (nil = ad-hoc/test)
-	HandleRangeSorts bool    // controls range sort clamped arithmetic; default true
+	backend          Z3Backend
+	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
 }
 
 // NewSolver creates a new Solver bound to the given module. The module's
@@ -53,14 +54,16 @@ func NewSolver(mod *Module, opts *SolverOptions) *Solver {
 	if sig == nil {
 		sig = NewSig()
 	}
+	backend := z3BackendForModule(mod)
 	s := &Solver{
-		z3u:              NewZ3Utils(),
+		z3u:              NewZ3UtilsWithBackend(backend),
 		opts:             opts,
 		sig:              sig,
 		mod:              mod,
+		backend:          backend,
 		HandleRangeSorts: true,
 	}
-	cache := getOrCreateModuleCache(mod)
+	cache := getOrCreateModuleCacheWithBackend(mod, backend)
 	s.tr = s.NewTranslatorWithCache(cache)
 	//s.wireNativeLookup()
 	return s
@@ -79,12 +82,33 @@ func NewSolverFromSig(sig *Sig, opts *SolverOptions) *Solver {
 	return NewSolver(mod, opts)
 }
 
+func (s *Solver) z3Backend() Z3Backend {
+	if s != nil && s.backend != nil {
+		return s.backend
+	}
+	if s != nil && s.mod != nil {
+		return z3BackendForModule(s.mod)
+	}
+	return defaultZ3Backend()
+}
+
+func z3BackendForModule(mod *Module) Z3Backend {
+	if mod == nil {
+		return defaultZ3Backend()
+	}
+	return z3BackendForConfig(mod.Cfg)
+}
+
 // getOrCreateModuleCache returns mod's Z3SessionCache, lazily creating
 // and attaching it on first access. For mod == nil, returns a fresh
 // per-Solver cache (no sharing — preserves legacy/test behavior).
 func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
+	return getOrCreateModuleCacheWithBackend(mod, z3BackendForModule(mod))
+}
+
+func getOrCreateModuleCacheWithBackend(mod *Module, backend Z3Backend) *Z3SessionCache {
 	if mod == nil {
-		return NewZ3SessionCache()
+		return NewZ3SessionCacheWithBackend(backend)
 	}
 	if mod.z3SessionCache != nil {
 		return mod.z3SessionCache
@@ -97,7 +121,7 @@ func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 		cache = NewZ3SessionCacheWithCtx(mod.z3SharedCtx.ctx)
 	}
 	if cache == nil {
-		cache = NewZ3SessionCache()
+		cache = NewZ3SessionCacheWithBackend(backend)
 	}
 	mod.z3SessionCache = cache
 	// Ensure z3SharedCtx is set for future copies of this module.

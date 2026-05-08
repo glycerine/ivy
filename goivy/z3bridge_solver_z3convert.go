@@ -243,9 +243,10 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *Clauses) (*Clauses, error
 
 	// Re-translate both clause sets into the interpolation context.
 	itpSolver := &Solver{
-		tr:   itpTr,
-		opts: s.opts,
-		sig:  s.sig,
+		tr:      itpTr,
+		opts:    s.opts,
+		sig:     s.sig,
+		backend: s.z3Backend(),
 	}
 
 	z2, err := itpSolver.ClausesToZ3(clauses2)

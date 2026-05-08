@@ -18,9 +18,11 @@ type Z3Context struct {
 	z3CheckCounter atomic.Int64
 }
 
-func NewZ3Context() *Z3Context { return &Z3Context{} }
+func NewZ3Context() *Z3Context { return defaultZ3Backend().NewZ3Context() }
 
-func NewInterpolationZ3Context() *Z3Context { return NewZ3Context() }
+func NewInterpolationZ3Context() *Z3Context {
+	return defaultZ3Backend().NewInterpolationZ3Context()
+}
 
 func (ctx *Z3Context) Close() error {
 	ctx.mu.Lock()
