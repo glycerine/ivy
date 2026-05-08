@@ -36,3 +36,4 @@ webvue/.vitest/
 webvue/static/dist/
 .runweb/
 .cache
+webvue/test-results/

@@ -92,9 +92,8 @@ func (s *Z3Solver) CanonZ3Assertions() string {
 }
 
 // canonZ3ExprUnlocked recursively walks a Z3 expression AST and writes
-// a canonical s-expression to sb. MUST be called with the Z3 context
-// lock held (i.e., from inside an s.ctx.do(...) block). Uses raw CGO
-// calls instead of the Expr/Sort wrappers to avoid re-entering ctx.do.
+// a canonical s-expression to sb. Uses raw wasm-import calls instead of
+// the Expr/Sort wrappers to avoid re-entering ctx.do.
 //
 // binders is a stack of bound-variable name lists, one entry per
 // enclosing quantifier (innermost LAST). Each entry is the AST-order
@@ -191,7 +190,6 @@ func canonZ3ExprUnlocked(c z3Context, ast z3AST, binders [][]string, sb *strings
 }
 
 // canonZ3SortUnlocked writes the canonical name of a Z3 sort to sb.
-// MUST be called with the Z3 context lock held.
 func canonZ3SortUnlocked(c z3Context, s z3Sort, sb *strings.Builder) {
 	sym := z3_get_sort_name(c, s)
 	name := z3String(z3_get_symbol_string(c, sym))

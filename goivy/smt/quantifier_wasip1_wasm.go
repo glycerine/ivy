@@ -10,7 +10,6 @@ package smt
 import (
 	"fmt"
 	"runtime"
-	"sync"
 	"sync/atomic"
 	"unsafe"
 )
@@ -107,7 +106,6 @@ func z3String(h z3StringHandle) string {
 // Z3Context wraps a Z3 context.
 type Z3Context struct {
 	c      z3Context
-	mu     sync.Mutex
 	syms   map[string]z3Symbol
 	closed bool
 
@@ -121,10 +119,8 @@ type Z3Context struct {
 }
 
 // NewZ3Context creates a new Z3 context.
-// Z3 contexts are not thread-safe: each context (and all objects created
-// within it) must be used from a single OS thread. In Go, use
-// runtime.LockOSThread() to pin the goroutine to its thread before
-// creating a context and performing Z3 operations.
+// The wasip1/browser bridge runs this Z3 context behind a single worker
+// execution lane, so there is no Go-side mutex or OS-thread pinning here.
 func NewZ3Context() *Z3Context {
 	cfg := z3_mk_config()
 	defer z3_del_config(cfg)
@@ -151,8 +147,6 @@ func NewZ3Context() *Z3Context {
 }
 
 func (ctx *Z3Context) Close() error {
-	ctx.mu.Lock()
-	defer ctx.mu.Unlock()
 	if ctx.closed {
 		return nil
 	}
@@ -161,10 +155,9 @@ func (ctx *Z3Context) Close() error {
 	return nil
 }
 
-// do runs f with the context lock held.
+// do mirrors the native wrapper structure. In wasip1 there is no Go-side
+// context mutex; browser worker execution serializes access.
 func (ctx *Z3Context) do(f func()) {
-	ctx.mu.Lock()
-	defer ctx.mu.Unlock()
 	f()
 }
 
@@ -209,13 +202,12 @@ func (s *Z3Sort) GetId() uint {
 	return id
 }
 
-// incRefSort must be called with ctx lock held.
+// incRefSort assumes the caller is already in the context operation flow.
 func (ctx *Z3Context) incRefSort(c z3Sort) {
 	z3_inc_ref(ctx.c, z3Sort_to_ast(ctx.c, c))
 }
 
 func (ctx *Z3Context) newSort(c z3Sort) Z3Sort {
-	// Called with lock held — do raw ref counting
 	ctx.incRefSort(c)
 	s := Z3Sort{ctx: ctx, c: c}
 	return s
@@ -266,7 +258,7 @@ type Z3Expr struct {
 	c   z3AST
 }
 
-// newExpr creates an Expr from a C Z3_ast. Must be called with ctx lock held.
+// newExpr creates an Expr from a Z3 AST handle.
 func (ctx *Z3Context) newExpr(c z3AST) Z3Expr {
 	z3_inc_ref(ctx.c, c)
 	e := Z3Expr{ctx: ctx, c: c}
@@ -325,7 +317,7 @@ type FuncDecl struct {
 	c   z3FuncDecl
 }
 
-// newFuncDecl creates a FuncDecl. Must be called with ctx lock held.
+// newFuncDecl creates a FuncDecl.
 func (ctx *Z3Context) newFuncDecl(c z3FuncDecl) FuncDecl {
 	z3_inc_ref(ctx.c, z3FuncDecl_to_ast(ctx.c, c))
 	fd := FuncDecl{ctx: ctx, c: c}
