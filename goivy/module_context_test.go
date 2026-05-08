@@ -5,7 +5,7 @@ import (
 )
 
 func TestEnterExit(t *testing.T) {
-	m1 := New()
+	m1 := NewModule()
 	cfg := m1.Cfg
 
 	m1.Enter()
@@ -13,7 +13,7 @@ func TestEnterExit(t *testing.T) {
 		t.Fatal("expected m1 to be current after Enter")
 	}
 
-	m2 := New()
+	m2 := NewModule()
 	m2.Cfg = cfg
 	m2.Enter()
 	if cfg.CurrentModule != m2 {
@@ -32,7 +32,7 @@ func TestEnterExit(t *testing.T) {
 }
 
 func TestRelevantDefinitionsEmpty(t *testing.T) {
-	m := New()
+	m := NewModule()
 	syms := map[string]bool{"x": true}
 	result := RelevantDefinitions(m, syms)
 	if len(result) != 0 {
@@ -41,7 +41,7 @@ func TestRelevantDefinitionsEmpty(t *testing.T) {
 }
 
 func TestRelevantDefinitionsReachable(t *testing.T) {
-	m := New()
+	m := NewModule()
 
 	tSort := &UninterpretedSort{Name: "t"}
 	fSort, _ := NewFunctionSort(tSort, tSort)
@@ -81,7 +81,7 @@ func TestRelevantDefinitionsReachable(t *testing.T) {
 }
 
 func TestRelevantDefinitionsUnreachable(t *testing.T) {
-	m := New()
+	m := NewModule()
 	tSort := &UninterpretedSort{Name: "t"}
 	fSort, _ := NewFunctionSort(tSort, tSort)
 	fSym := NewConst("f", fSort)
@@ -102,7 +102,7 @@ func TestRelevantDefinitionsUnreachable(t *testing.T) {
 }
 
 func TestSortDependencyGraph(t *testing.T) {
-	m := New()
+	m := NewModule()
 	tSort := &UninterpretedSort{Name: "t"}
 	uSort := &UninterpretedSort{Name: "u"}
 	dSort, _ := NewFunctionSort(tSort, uSort)
@@ -125,7 +125,7 @@ func TestSortDependencyGraph(t *testing.T) {
 }
 
 func TestPrevModuleField(t *testing.T) {
-	m := New()
+	m := NewModule()
 	if m.prevModule != nil {
 		t.Error("prevModule should be nil on new module")
 	}

@@ -17,7 +17,7 @@ func isolateMkSort(name string) Sort {
 }
 
 func mkModule() *Module {
-	m := New()
+	m := NewModule()
 	return m
 }
 
@@ -831,7 +831,7 @@ with im.Module():
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	mod.Cfg.IsolateCfg.CreateImports = true
 	if err := IvyCompile(result.Decls, mod, false); err != nil {

@@ -47,7 +47,7 @@ func makeLabeledFormula(cfg *AstConfig, label string, formula Node) *LabeledForm
 // Test 1: Definitions without proofs move to mod.Definitions;
 // non-definitions stay in LabeledProps; definitions with proofs stay in LabeledProps.
 func TestCheckDefinitions_SeparatesDefsFromProps(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// defA: definition of f (no proof) — should move to Definitions
@@ -83,7 +83,7 @@ func TestCheckDefinitions_SeparatesDefsFromProps(t *testing.T) {
 // Test 2: Definition C uses symbol g which is stale (defined by B which has proof).
 // C should NOT move to Definitions — it stays in LabeledProps.
 func TestCheckDefinitions_StaleSymbols(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// defA: f = true_const (no proof, no stale deps)
@@ -128,7 +128,7 @@ func TestCheckDefinitions_StaleSymbols(t *testing.T) {
 
 // Test 3: Two definitions both define 'f' — should return error mentioning "redefinition".
 func TestCheckDefinitions_RedefinitionError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	def1 := makeLabeledDef(cfg, "def1", makeLogicDef("f"))
@@ -147,7 +147,7 @@ func TestCheckDefinitions_RedefinitionError(t *testing.T) {
 
 // Test 4: Definition in Definitions + NativeDefinitions with same symbol → error.
 func TestCheckDefinitions_NativeDefinitionRedefinitionError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// Put one definition of 'f' as a LabeledProp (will move to Definitions)
@@ -169,7 +169,7 @@ func TestCheckDefinitions_NativeDefinitionRedefinitionError(t *testing.T) {
 
 // Test 5: Definition of 'f' and a Named entry with same symbol → error.
 func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	def1 := makeLabeledDef(cfg, "def1", makeLogicDef("f"))
@@ -191,7 +191,7 @@ func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 
 // Test 6: Two definitions forming a cycle: f→g and g→f. Should return error.
 func TestCheckDefinitions_CycleDetection(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// f = g
@@ -212,7 +212,7 @@ func TestCheckDefinitions_CycleDetection(t *testing.T) {
 
 // Test 7: Self-recursive definition (f uses f) without proof → error "recursion schema".
 func TestCheckDefinitions_SelfLoopRequiresProof(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// f = f (self-loop)
@@ -230,7 +230,7 @@ func TestCheckDefinitions_SelfLoopRequiresProof(t *testing.T) {
 
 // Test 8: Self-recursive definition WITH matching proof → should NOT error.
 func TestCheckDefinitions_SelfLoopWithProofAccepted(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// f = f (self-loop) but has a proof
@@ -248,7 +248,7 @@ func TestCheckDefinitions_SelfLoopWithProofAccepted(t *testing.T) {
 
 // Test 9: Action modifies symbol used in axiom → error for version >= 1.7.
 func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -274,7 +274,7 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 
 // Test 10: Action assigns to a defined symbol → error.
 func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -300,7 +300,7 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 
 // Test 11: Clean definitions — no cycles, no redefinition, no stale. Should pass.
 func TestCheckDefinitions_NoErrorOnCleanDefinitions(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	defA := makeLabeledDef(cfg, "defA", makeLogicDef("a"))
@@ -324,7 +324,7 @@ func TestCheckDefinitions_NoErrorOnCleanDefinitions(t *testing.T) {
 
 // Test 12: Version <= 1.6 → CreateConjActions should be a no-op.
 func TestCreateConjActions_VersionGate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.6")
@@ -347,7 +347,7 @@ func TestCreateConjActions_VersionGate(t *testing.T) {
 
 // Test 13: Top-level conjecture with no isolates → all exports.
 func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -374,7 +374,7 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 
 // Test 14: Isolate-scoped conjecture → only that isolate's exports.
 func TestCreateConjActions_IsolateScoping(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -438,7 +438,7 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 
 // Test 15: Nested object walk — conj "obj.sub.inv" walks up to find "obj".
 func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -481,7 +481,7 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 
 // Test 16: Conjecture with nil label → skipped, no ConjActions entry.
 func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	conjLF := cfg.NewLabeledFormula(nil, cfg.NewAtom("unlabeled"))
@@ -559,7 +559,7 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 		t.Fatalf("parse error: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	err = IvyCompile(result.Decls, mod, false)
 	if err == nil {
@@ -790,7 +790,7 @@ func TestConjSetup_ConjectureLabel_Preserved(t *testing.T) {
 // but lexicographically < "1.7". After the VersionLE fix, the action
 // interference check (v1.7+) should still trigger at version 1.10.
 func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.10") // > 1.7 semantically but < "1.7" lexicographically
@@ -816,7 +816,7 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 
 // Test 27: Definition of an interpreted symbol should be rejected.
 func TestCheckDefinitions_InterpretedSymbolError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	// Mark "myint" as interpreted in the signature
 	mod.Sig.Interp["myint"] = &UninterpretedSort{Name: "int"}
@@ -836,7 +836,7 @@ func TestCheckDefinitions_InterpretedSymbolError(t *testing.T) {
 
 // Test 28: Definition ordering — multiple clean definitions maintain their order.
 func TestCheckDefinitions_OrderPreserved(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	defA := makeLabeledDef(cfg, "defA", makeLogicDef("a"))
@@ -861,7 +861,7 @@ func TestCheckDefinitions_OrderPreserved(t *testing.T) {
 // Test 29: Stale-symbol transitivity — definition h = f(g(x)) where g is stale
 // means h should stay in LabeledProps even though f is clean.
 func TestCheckDefinitions_StaleSymbolTransitive(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// defF: f = true_const (clean, no proof, no stale deps)
@@ -915,7 +915,7 @@ func TestCheckDefinitions_StaleSymbolTransitive(t *testing.T) {
 
 // Test 30: VersionLE in CreateConjActions — version "1.10" should NOT skip (> 1.6).
 func TestCreateConjActions_VersionSemantic(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.10") // > 1.6 semantically
@@ -936,7 +936,7 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 
 // Test 31: definesName with Apply LHS — f(x) = body should extract "f", not "f(x)".
 func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	// Build definition with Apply LHS: f(x) = true_const
@@ -960,7 +960,7 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	}
 
 	// Verify name extraction works correctly via redefinition
-	mod2 := New()
+	mod2 := NewModule()
 	def1 := cfg.NewLabeledFormula(cfg.NewAtom("def1"), &LogicDefinition{Lhs: lhs, Rhs: rhs})
 	def2 := cfg.NewLabeledFormula(cfg.NewAtom("def2"), &LogicDefinition{Lhs: fSym, Rhs: rhs})
 	mod2.LabeledProps = []*LabeledFormula{def1, def2}
@@ -976,7 +976,7 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 
 // Test 32: opt_mutax guard — when OptMutax is true, axiom interference is allowed.
 func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -1010,7 +1010,7 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 
 // Test 33: opt_mutax guard — definition LHS check is NOT skipped even with opt_mutax=true.
 func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")

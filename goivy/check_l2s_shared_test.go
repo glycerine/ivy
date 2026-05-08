@@ -19,7 +19,7 @@ func boolFuncSort(domains ...Sort) Sort {
 // because it only handled *lg.Eq).
 func TestBuildDefnDeps_Definition(t *testing.T) {
 	cfg := NewAstConfig()
-	mod := New()
+	mod := NewModule()
 
 	// Build: f(X) = LogicAnd(g(X), h(X))
 	uSort := &UninterpretedSort{Name: "T"}
@@ -48,7 +48,7 @@ func TestBuildDefnDeps_Definition(t *testing.T) {
 // (regression guard — some code paths may produce Eq instead of Definition).
 func TestBuildDefnDeps_Eq(t *testing.T) {
 	cfg := NewAstConfig()
-	mod := New()
+	mod := NewModule()
 
 	uSort := &UninterpretedSort{Name: "T"}
 	fSym := NewConst("f", boolFuncSort(uSort))
@@ -70,7 +70,7 @@ func TestBuildDefnDeps_Eq(t *testing.T) {
 // is handled. (Round 4 Bug 2 regression guard.)
 func TestBuildDefnDeps_BareConst(t *testing.T) {
 	cfg := NewAstConfig()
-	mod := New()
+	mod := NewModule()
 
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)
@@ -91,7 +91,7 @@ func TestBuildDefnDeps_BareConst(t *testing.T) {
 // The canon of the processed formula should match NormalizeOps output.
 func TestBuildDefnDeps_NormalizedCanon(t *testing.T) {
 	cfg := NewAstConfig()
-	mod := New()
+	mod := NewModule()
 
 	a := NewConst("a", Boolean)
 	b := NewConst("b", Boolean)

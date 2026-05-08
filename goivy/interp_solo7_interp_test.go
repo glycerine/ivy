@@ -13,7 +13,7 @@ import (
 // TestModuleTypeCheck_ArityError verifies that an axiom with wrong arity
 // is caught by ModuleTypeCheck.
 func TestModuleTypeCheck_ArityError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	sig := NewSig()
 	mod.Sig = sig
 
@@ -38,7 +38,7 @@ func TestModuleTypeCheck_ArityError(t *testing.T) {
 
 // TestModuleTypeCheck_Valid verifies that valid axioms pass type check.
 func TestModuleTypeCheck_Valid(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	sig := NewSig()
 	mod.Sig = sig
 
@@ -62,7 +62,7 @@ func TestModuleTypeCheck_Valid(t *testing.T) {
 
 // TestModuleTypeCheck_EmptyAxioms verifies no error with empty axiom list.
 func TestModuleTypeCheck_EmptyAxioms(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Sig = NewSig()
 
 	err := ModuleTypeCheck(mod)
@@ -77,7 +77,7 @@ func TestModuleTypeCheck_EmptyAxioms(t *testing.T) {
 
 // TestModuleTypeCheckConcepts_Empty verifies no error with no concept spaces.
 func TestModuleTypeCheckConcepts_Empty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Sig = NewSig()
 
 	err := ModuleTypeCheckConcepts(mod)
@@ -88,7 +88,7 @@ func TestModuleTypeCheckConcepts_Empty(t *testing.T) {
 
 // TestModuleTypeCheckConcepts_Valid verifies valid concept spaces pass.
 func TestModuleTypeCheckConcepts_Valid(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	sig := NewSig()
 	mod.Sig = sig
 
@@ -119,7 +119,7 @@ func TestModuleTypeCheckConcepts_Valid(t *testing.T) {
 // TestModuleTypeCheckConcepts_ArityError verifies that a concept space body
 // with wrong arity is caught.
 func TestModuleTypeCheckConcepts_ArityError(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	sig := NewSig()
 	mod.Sig = sig
 
@@ -163,7 +163,7 @@ func pSort(dom Sort) Sort {
 // relations map is restored after type checking, even when concept space
 // relations are temporarily added.
 func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	sig := NewSig()
 	mod.Sig = sig
 

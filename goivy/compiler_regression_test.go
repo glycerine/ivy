@@ -29,7 +29,7 @@ export bar.a
 		t.Fatalf("parse error: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile error: %v", err)
@@ -89,7 +89,7 @@ export cfabric.step
 		t.Fatalf("parse error: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	err = IvyCompile(result.Decls, mod, false)
 	if err != nil {
@@ -146,7 +146,7 @@ export cfabric.step
 		t.Fatalf("parse error: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile error: %v", err)
@@ -171,7 +171,7 @@ export cfabric.step
 
 	// Verify the interference check passes (rd_pio_fair is modified by
 	// cfabric.step, so it should NOT be flagged as immutable)
-	mod2 := New()
+	mod2 := NewModule()
 	mod2.Cfg = NewConfig()
 	err = IvyCompile(result.Decls, mod2, false)
 	if err != nil {
@@ -220,7 +220,7 @@ isolate live = {
 		t.Fatalf("parse error: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile error: %v", err)
@@ -301,7 +301,7 @@ export cfabric.step
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	err = IvyCompile(result.Decls, mod, false)
 	if err != nil {
@@ -350,7 +350,7 @@ instance idx : mymod
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	err = IvyCompile(result.Decls, mod, false)
 	if err != nil {

@@ -15,7 +15,7 @@ func TestCheckSubgoalsMethodFailureAppliesTraceHook(t *testing.T) {
 		return trace
 	})
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	err := CheckSubgoals([]*LabeledFormula{goal}, func(_ *Module) error {
 		return fmt.Errorf("method counterexample")
@@ -78,7 +78,7 @@ print(json.dumps(str(foo)))
 		return replacement
 	})
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	mod.Cfg.Diagnose = true
 	var guiTarget interface{}

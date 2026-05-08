@@ -8,7 +8,7 @@ import (
 // makeFmlaPairsFromAction returns only 1 fmlaPair (the TR formula),
 // matching Python's preconds_only=True which only appends triple[1].
 func TestMakeFmlaPairsPrecondsOnlyTrue(t *testing.T) {
-	m := New()
+	m := NewModule()
 	act := NewAssumeAction(NewConst("p", Boolean))
 
 	fps := makeFmlaPairsFromAction(act, m, true)
@@ -27,7 +27,7 @@ func TestMakeFmlaPairsPrecondsOnlyTrue(t *testing.T) {
 // makeFmlaPairsFromAction returns 2 fmlaPairs (TR and Pre),
 // matching Python's normal mode which appends both triple[1] and triple[2].
 func TestMakeFmlaPairsPrecondsOnlyFalse(t *testing.T) {
-	m := New()
+	m := NewModule()
 	act := NewAssumeAction(NewConst("p", Boolean))
 
 	fps := makeFmlaPairsFromAction(act, m, false)
@@ -51,7 +51,7 @@ func TestMakeFmlaPairsPrecondsOnlyFalse(t *testing.T) {
 // TestMakeFmlaPairsFormulaIdentity verifies that the returned formulas
 // match the expected TR and Pre from the action's update.
 func TestMakeFmlaPairsFormulaIdentity(t *testing.T) {
-	m := New()
+	m := NewModule()
 	act := NewAssumeAction(NewConst("q", Boolean))
 
 	// Get both pairs

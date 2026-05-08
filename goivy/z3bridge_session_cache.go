@@ -48,28 +48,16 @@ type Z3SessionCache struct {
 // NewZ3SessionCache builds a fresh cache with its own Z3 context and empty
 // maps, then pre-populates the equality predicate (matching Python's
 // clear() initial state with z3_predicates = {ivy_logic.equals: my_eq}).
-func NewZ3SessionCache() *Z3SessionCache {
-	return NewZ3SessionCacheWithBackend(defaultZ3Backend())
-}
-
-func NewZ3SessionCacheWithBackend(backend Z3Backend) *Z3SessionCache {
-	if backend == nil {
-		backend = defaultZ3Backend()
-	}
-	c := &Z3SessionCache{
-		Ctx: backend.NewZ3Context(),
-	}
-	c.resetMaps()
-	return c
-}
-
-// NewZ3SessionCacheWithCtx builds a fresh cache with empty maps but reuses
+// The reuse can be nil. If not nil, we reuse
 // an existing Z3Context. This lets module copies share the Z3Context (and
 // its z3CheckCounter) while getting fresh translation caches — matching
 // Python where _z3_check_counter is a process global but z3_sorts etc.
 // are cleared on Module.__enter__.
-func NewZ3SessionCacheWithCtx(ctx *Z3Context) *Z3SessionCache {
-	c := &Z3SessionCache{Ctx: ctx}
+func NewZ3SessionCache(b Z3Backend, reuse *Z3Context) *Z3SessionCache {
+	c := &Z3SessionCache{Ctx: reuse}
+	if reuse == nil {
+		c.Ctx = b.NewZ3Context()
+	}
 	c.resetMaps()
 	return c
 }

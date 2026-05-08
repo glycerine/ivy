@@ -2650,7 +2650,7 @@ func ClearRules(mod *Module, name string) {
 // Reads the file, parses it, and compiles the declarations.
 // Corresponds to Python's ivy_load_file functionality.
 func IvyLoadFile(filename string) (*Module, error) {
-	mod := New()
+	mod := NewModule()
 	result, err := ReadModule(filename, false, mod.Cfg)
 	if err != nil {
 		return nil, err
@@ -2688,7 +2688,7 @@ func IvyFromString(source string) (*Module, error) {
 		return nil, err
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Name = "string_input"
 	if err := IvyCompile(result.Decls, mod, true); err != nil {
 		return nil, err

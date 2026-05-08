@@ -811,7 +811,7 @@ func compileExprVocabLF(lf *LabeledFormula, vocab *Vocab, mod *Module) (*Labeled
 	// Python: expr = il.sort_infer_list([expr.compile()] + vocab.variables)[0]
 	// expr.compile() for LabeledFormula → _labeled_formula_cmpl → CompileLF
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	c := NewCompiler(sig, mod)
 	compiled, err := c.ThingLF(lf)

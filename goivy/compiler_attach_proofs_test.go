@@ -38,7 +38,7 @@ func proofNode(name string) Node {
 
 // Test 1: Direct proofs (non-nil formula) pass through unchanged.
 func TestAttachProofs_DirectProofsPassThrough(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	body := cfg.NewAtom("body")
 	pf := makeDirectProof("p1", body, proofNode("proof1"))
@@ -58,7 +58,7 @@ func TestAttachProofs_DirectProofsPassThrough(t *testing.T) {
 
 // Test 2: Label-only proof matching a property.
 func TestAttachProofs_LabelMatchesProperty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	prop := makePropFormula("myprop")
 	mod.LabeledProps = []*LabeledFormula{prop}
 	mod.Proofs = []ProofEntry{makeLabelOnlyProof("myprop", proofNode("proof_obj"))}
@@ -81,7 +81,7 @@ func TestAttachProofs_LabelMatchesProperty(t *testing.T) {
 
 // Test 3: Label-only proof matching a conjecture.
 func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	conj := makePropFormula("myconj")
 	mod.LabeledConjs = []*LabeledFormula{conj}
 	mod.Proofs = []ProofEntry{makeLabelOnlyProof("myconj", proofNode("conj_proof"))}
@@ -100,7 +100,7 @@ func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
 
 // Test 4: Label-only proof matching an isolate.
 func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	acfg := NewAstConfig()
 	mod.Isolates["myiso"] = acfg.NewIsolateDef(nil, 0)
 	mod.Proofs = []ProofEntry{makeLabelOnlyProof("myiso", proofNode("iso_proof"))}
@@ -119,7 +119,7 @@ func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 
 // Test 5: Duplicate label → error.
 func TestAttachProofs_DuplicateLabelErrors(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	prop := makePropFormula("dup")
 	mod.LabeledProps = []*LabeledFormula{prop}
 	mod.Proofs = []ProofEntry{
@@ -138,7 +138,7 @@ func TestAttachProofs_DuplicateLabelErrors(t *testing.T) {
 
 // Test 6: Unmatched label → error.
 func TestAttachProofs_UnmatchedLabelErrors(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Proofs = []ProofEntry{makeLabelOnlyProof("nonexistent", proofNode("proof"))}
 
 	err := AttachProofs(mod)
@@ -152,7 +152,7 @@ func TestAttachProofs_UnmatchedLabelErrors(t *testing.T) {
 
 // Test 7: Empty label → error.
 func TestAttachProofs_EmptyLabelErrors(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	// Create a label-only proof with an empty-string label.
 	lf := cfg.NewLabeledFormula(cfg.NewAtom(""), nil)
@@ -169,7 +169,7 @@ func TestAttachProofs_EmptyLabelErrors(t *testing.T) {
 
 // Test 8: Mix of direct and label-only proofs.
 func TestAttachProofs_MixedDirectAndLabeled(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	prop := makePropFormula("labeled_prop")
 	mod.LabeledProps = []*LabeledFormula{prop}
@@ -202,7 +202,7 @@ func TestAttachProofs_MixedDirectAndLabeled(t *testing.T) {
 
 // Test 9: Empty proofs list → no error, empty output.
 func TestAttachProofs_EmptyProofsList(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	err := AttachProofs(mod)
 	if err != nil {
@@ -215,7 +215,7 @@ func TestAttachProofs_EmptyProofsList(t *testing.T) {
 
 // Test 10: Direct proof with label "X" blocks label-only proof for "X" (duplicate).
 func TestAttachProofs_DirectProofLabelBlocksLabeledProof(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	prop := makePropFormula("shared")
 	mod.LabeledProps = []*LabeledFormula{prop}
@@ -261,7 +261,7 @@ func FuzzAttachProofs(f *testing.F) {
 			nProofs = 8
 		}
 
-		mod := New()
+		mod := NewModule()
 		cfg := mod.Cfg.AstCfg
 		var allLabels []string
 

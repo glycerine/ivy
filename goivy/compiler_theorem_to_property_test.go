@@ -6,7 +6,7 @@ import (
 
 // makeT2PMod creates a test module with a fresh signature.
 func makeT2PMod() *Module {
-	mod := New()
+	mod := NewModule()
 	mod.Sig = NewSig()
 	return mod
 }

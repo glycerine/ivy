@@ -171,7 +171,7 @@ func NewCompiler(sig *Sig, mod *Module) *Compiler {
 		}
 	}
 	if mod == nil {
-		c.Module = New()
+		c.Module = NewModule()
 	}
 	// Share the Module's Merkle chain so all compilers in a session
 	// accumulate into one root, matching Python's module-level sig_merkle.

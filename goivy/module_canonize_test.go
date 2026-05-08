@@ -134,7 +134,7 @@ func TestResortSymbol(t *testing.T) {
 }
 
 func TestCanonizeTypesNoOp(t *testing.T) {
-	m := New()
+	m := NewModule()
 	f := &LogicAnd{Terms: []Expr{True}}
 	m.LabeledAxioms = []*LabeledFormula{{Formula: f}}
 
@@ -146,7 +146,7 @@ func TestCanonizeTypesNoOp(t *testing.T) {
 }
 
 func TestCanonizeTypesApplied(t *testing.T) {
-	m := New()
+	m := NewModule()
 	old := &UninterpretedSort{Name: "abstract_t"}
 	new_ := &UninterpretedSort{Name: "concrete_t"}
 
@@ -239,7 +239,7 @@ func TestCanonActionMapWithActions(t *testing.T) {
 // --- Module.Canon() tests ---
 
 func TestModuleCanonEmpty(t *testing.T) {
-	m := New()
+	m := NewModule()
 	got := string(m.Canon())
 
 	// Empty module should have all empty slices/maps
@@ -258,7 +258,7 @@ func TestModuleCanonEmpty(t *testing.T) {
 }
 
 func TestModuleCanonWithActions(t *testing.T) {
-	m := New()
+	m := NewModule()
 	a := &stubAction{name: "assume", formula: True}
 	m.Actions.Set("my_action", a)
 
@@ -271,7 +271,7 @@ func TestModuleCanonWithActions(t *testing.T) {
 }
 
 func TestModuleCanonFieldOrder(t *testing.T) {
-	m := New()
+	m := NewModule()
 	got := string(m.Canon())
 
 	// Verify field order matches Python: axioms, defs, props, inits, conjs, schemata, actions

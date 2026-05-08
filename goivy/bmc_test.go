@@ -10,7 +10,7 @@ import (
 // --- helpers ---
 
 func bmcTestModule() *Module {
-	return New()
+	return NewModule()
 }
 
 func testModuleWithConj() *Module {
@@ -618,7 +618,7 @@ func TestBMCInitializerRespected(t *testing.T) {
 	P := NewConst("P", pSort)
 	PX, _ := NewApply(P, X)
 
-	mod := New()
+	mod := NewModule()
 
 	mod.Sig = NewSig()
 	mod.Sig.Sorts.Set("S", S)

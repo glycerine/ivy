@@ -289,7 +289,7 @@ func TestAigerWitnessToIvyTrace2CallsMatchAnnotation(t *testing.T) {
 	tmpFile.WriteString("1\n0 10 0 0\n")
 	tmpFile.Close()
 
-	mod := New()
+	mod := NewModule()
 
 	handler, err := AigerWitnessToIvyTrace2(result, tmpFile.Name(), mod)
 	if err != nil {

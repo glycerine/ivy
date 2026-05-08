@@ -3,7 +3,7 @@ package goivy
 import "testing"
 
 func TestArtInterpStateAdaptersPreserveUnders(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	pred := NewState(mod, TrueClauses(nil))
 	under := NewState(mod, FalseClauses(nil))
 	pred.Unders = []*State{under}

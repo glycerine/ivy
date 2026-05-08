@@ -5,14 +5,14 @@ package goivy
 import "testing"
 
 type recordingZ3Backend struct {
-	name     string
+	back     BACK
 	contexts int
 	interps  int
 	solvers  int
 }
 
-func (b *recordingZ3Backend) Z3BackendName() string {
-	return b.name
+func (b *recordingZ3Backend) Name() BACK {
+	return b.back
 }
 
 func (b *recordingZ3Backend) NewZ3Context() *Z3Context {
@@ -31,12 +31,12 @@ func (b *recordingZ3Backend) NewZ3Solver(ctx *Z3Context) *Z3Solver {
 }
 
 func TestNewSolverUsesConfiguredZ3BackendInterface(t *testing.T) {
-	backend := &recordingZ3Backend{name: "recording"}
+	backend := &recordingZ3Backend{back: Recording}
 	cfg := NewConfig()
-	cfg.BackendName = ""
+	cfg.BackendName = Recording
 	cfg.Backend = backend
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = cfg
 
 	s := NewSolver(mod, nil)

@@ -227,7 +227,7 @@ type MixinTriple struct {
 }
 
 // New creates a fresh empty module with a new signature.
-func New() *Module {
+func NewModule() *Module {
 	m := &Module{
 		Cfg:         NewConfig(),
 		z3SharedCtx: &z3CtxHolder{},
@@ -239,7 +239,7 @@ func New() *Module {
 
 // NewWithSig creates a module using the given signature.
 func NewWithSig(sig *Sig) *Module {
-	m := New()
+	m := NewModule()
 	m.Sig = sig
 	return m
 }
@@ -331,7 +331,7 @@ func (m *Module) Clear() {
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
 	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), len(m.Isolates))
-	c := New()
+	c := NewModule()
 	*c.Cfg = *m.Cfg
 
 	// defer after c is declared so we can report its counts

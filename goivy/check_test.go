@@ -11,7 +11,7 @@ import (
 // --- BaseChecker tests ---
 
 func TestBaseCheckerCreate(t *testing.T) {
-	c := NewBaseChecker(New(), True, true, true)
+	c := NewBaseChecker(NewModule(), True, true, true)
 	if c == nil {
 		t.Fatal("NewBaseChecker returned nil")
 	}
@@ -24,7 +24,7 @@ func TestBaseCheckerCreate(t *testing.T) {
 }
 
 func TestBaseCheckerCond(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, false)
+	c := NewBaseChecker(NewModule(), True, false, false)
 	cond := c.Cond()
 	if cond == nil {
 		t.Fatal("Cond returned nil")
@@ -32,7 +32,7 @@ func TestBaseCheckerCond(t *testing.T) {
 }
 
 func TestBaseCheckerPass(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, true)
+	c := NewBaseChecker(NewModule(), True, false, true)
 	result := c.Pass()
 	if !result {
 		t.Error("Pass should return true")
@@ -43,7 +43,7 @@ func TestBaseCheckerPass(t *testing.T) {
 }
 
 func TestBaseCheckerFail(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldFailures := mod.Cfg.Failures
 	c := NewBaseChecker(mod, True, false, true)
 	_ = c.Fail()
@@ -57,7 +57,7 @@ func TestBaseCheckerFail(t *testing.T) {
 }
 
 func TestBaseCheckerSatCallsFail(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldFailures := mod.Cfg.Failures
 	c := NewBaseChecker(mod, True, false, true)
 	_ = c.Sat()
@@ -68,7 +68,7 @@ func TestBaseCheckerSatCallsFail(t *testing.T) {
 }
 
 func TestBaseCheckerUnsatCallsPass(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, true)
+	c := NewBaseChecker(NewModule(), True, false, true)
 	result := c.Unsat()
 	if !result {
 		t.Error("Unsat should trigger Pass and return true")
@@ -76,21 +76,21 @@ func TestBaseCheckerUnsatCallsPass(t *testing.T) {
 }
 
 func TestBaseCheckerAssume(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, true)
+	c := NewBaseChecker(NewModule(), True, false, true)
 	if c.Assume() {
 		t.Error("BaseChecker.Assume should return false")
 	}
 }
 
 func TestBaseCheckerGetAnnot(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, true)
+	c := NewBaseChecker(NewModule(), True, false, true)
 	if c.GetAnnot() != nil {
 		t.Error("BaseChecker.GetAnnot should return nil")
 	}
 }
 
 func TestBaseCheckerGetLF(t *testing.T) {
-	c := NewBaseChecker(New(), True, false, true)
+	c := NewBaseChecker(NewModule(), True, false, true)
 	if c.GetLF() != nil {
 		t.Error("BaseChecker.GetLF should return nil")
 	}
@@ -99,7 +99,7 @@ func TestBaseCheckerGetLF(t *testing.T) {
 // --- ConjChecker tests ---
 
 func TestConjCheckerCreate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	lf.SetLineno(Location{Line: 42})
@@ -116,7 +116,7 @@ func TestConjCheckerCreate(t *testing.T) {
 }
 
 func TestConjCheckerGetLF(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	cc := NewConjChecker(mod, lf, 4)
@@ -126,7 +126,7 @@ func TestConjCheckerGetLF(t *testing.T) {
 }
 
 func TestConjCheckerImplementsChecker(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	var _ Checker = NewConjChecker(mod, lf, 8)
@@ -135,7 +135,7 @@ func TestConjCheckerImplementsChecker(t *testing.T) {
 // --- ConjAssumer tests ---
 
 func TestConjAssumerCreate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	ca := NewConjAssumer(mod, lf)
@@ -148,7 +148,7 @@ func TestConjAssumerCreate(t *testing.T) {
 }
 
 func TestConjAssumerAssume(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	ca := NewConjAssumer(mod, lf)
@@ -158,7 +158,7 @@ func TestConjAssumerAssume(t *testing.T) {
 }
 
 func TestConjAssumerImplementsChecker(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	var _ Checker = NewConjAssumer(mod, lf)
@@ -218,7 +218,7 @@ print(json.dumps(captured, sort_keys=True))
 		t.Fatalf("python show_counterexample oracle did not assign value/universe: %+v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	ag := NewAnalysisGraph(mod)
 	source := NewState(mod, TrueClauses(EmptyAnnotation{}))
 	ag.Add(source, nil)
@@ -287,7 +287,7 @@ print(json.dumps([str(g.args[0]) for g in guarantees]))
 		t.Fatalf("python initializer guarantee oracle changed: %#v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	first := NewAssertAction(NewConst("A", Boolean))
 	last := NewAssertAction(NewConst("B", Boolean))
 	mod.Initializers = []NamedAction{
@@ -430,7 +430,7 @@ func TestPrettyLFNil(t *testing.T) {
 // --- GetCheckedActions tests ---
 
 func TestGetCheckedActionsEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := GetCheckedActions(mod)
 	if len(result) != 0 {
 		t.Errorf("expected 0 actions, got %d", len(result))
@@ -438,7 +438,7 @@ func TestGetCheckedActionsEmpty(t *testing.T) {
 }
 
 func TestGetCheckedActionsAll(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.PublicActions.Set("ext:send", true)
 	mod.PublicActions.Set("ext:recv", true)
 	result := GetCheckedActions(mod)
@@ -465,7 +465,7 @@ func TestGetPrioritizedActionsNil(t *testing.T) {
 // --- GetConjs tests ---
 
 func TestGetConjsEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := GetConjs(mod)
 	if result == nil {
 		t.Fatal("expected non-nil clauses")
@@ -476,7 +476,7 @@ func TestGetConjsEmpty(t *testing.T) {
 }
 
 func TestGetConjsFiltersExplicit(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	p := NewConst("p", Boolean)
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: p, Explicit: false, Unprovable: false},
@@ -492,7 +492,7 @@ func TestGetConjsFiltersExplicit(t *testing.T) {
 // --- FindAssertions tests ---
 
 func TestFindAssertionsEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := FindAssertions("", mod)
 	if len(result) != 0 {
 		t.Errorf("expected 0 assertions, got %d", len(result))
@@ -500,7 +500,7 @@ func TestFindAssertionsEmpty(t *testing.T) {
 }
 
 func TestFindAssertionsWithAsserts(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	assertAct := NewAssertAction(True)
 	seq := NewSequence(assertAct)
 	mod.Actions.Set("test_action", seq)
@@ -622,7 +622,7 @@ func TestMatchHandlerString(t *testing.T) {
 // --- BuildCallGraph tests ---
 
 func TestBuildCallGraphEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cg := BuildCallGraph(mod)
 	if len(cg) != 0 {
 		t.Errorf("expected empty call graph, got %d entries", len(cg))
@@ -646,7 +646,7 @@ func TestPrettyActionNameWithoutPrefix(t *testing.T) {
 // --- FilterCheckers tests ---
 
 func TestFilterCheckersNoFilter(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	lf.SetLineno(Location{Line: 10})
@@ -658,7 +658,7 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 }
 
 func TestFilterCheckersWithLineFilter(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	lf1 := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
 	lf1.SetLineno(Location{Filename: "test.ivy", Line: 10})
@@ -674,7 +674,7 @@ func TestFilterCheckersWithLineFilter(t *testing.T) {
 // --- CheckFcsInState tests ---
 
 func TestCheckFcsInStateEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := CheckFcsInState(mod, nil)
 	if !result {
 		t.Error("empty checkers should pass")
@@ -682,7 +682,7 @@ func TestCheckFcsInStateEmpty(t *testing.T) {
 }
 
 func TestCheckFcsInStateWithChecker(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	c := NewBaseChecker(mod, True, false, true)
 	result := CheckFcsInState(mod, []Checker{c})
 	if !result {
@@ -697,7 +697,7 @@ used anywhere either. So we just ported dead code.
 Comment out for now to avoid confusion.
 // --- CheckProperties tests ---
 func TestCheckProperties(t *testing.T) {
-	mod := module.New()
+	mod := module.NewModule()
 	mod.LabeledProps = []*ast.LabeledFormula{
 		{Formula: lg.True},
 	}
@@ -714,7 +714,7 @@ func TestCheckProperties(t *testing.T) {
 // --- ApplyConjProofs tests ---
 
 func TestApplyConjProofs(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: True},
 	}
@@ -764,7 +764,7 @@ func TestSortedUnion(t *testing.T) {
 // --- Isolate check tests ---
 
 func TestGetIsolateMethodDefault(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := GetIsolateMethod("", mod)
 	if result != "ic" {
 		t.Errorf("expected 'ic', got '%s'", result)
@@ -773,7 +773,7 @@ func TestGetIsolateMethodDefault(t *testing.T) {
 
 func TestGetIsolateMethodMC(t *testing.T) {
 	// Save and restore
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg
 
 	oldVal := cfg.OptMC
@@ -787,14 +787,14 @@ func TestGetIsolateMethodMC(t *testing.T) {
 }
 
 func TestCheckSeparatelyDefault(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	if CheckSeparately("test", mod) {
 		t.Error("should default to false")
 	}
 }
 
 func TestAllAssertLinenosEmpty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result, err := AllAssertLinenos(mod)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -815,7 +815,7 @@ func TestHasTemporalStuff(t *testing.T) {
 func TestCheckModuleEmpty(t *testing.T) {
 	cfg := NewConfig()
 
-	mod := New()
+	mod := NewModule()
 	cfg.Failures = 0
 	err := CheckModule(mod)
 	if err != nil {
@@ -864,7 +864,7 @@ func FuzzPrettyLabel(f *testing.F) {
 // --- MCIsolate tests ---
 
 func TestMCIsolateNilMethod(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// No properties, nil method → should be a no-op success
 	err := MCIsolate("test", mod, nil)
 	if err != nil {
@@ -873,7 +873,7 @@ func TestMCIsolateNilMethod(t *testing.T) {
 }
 
 func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	falseVal := false
 	mod.LabeledProps = []*LabeledFormula{
 		{Formula: True, Temporal: &falseVal},
@@ -888,7 +888,7 @@ func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
 }
 
 func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	trueVal := true
 	falseVal := false
 	mod.LabeledProps = []*LabeledFormula{
@@ -902,7 +902,7 @@ func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
 }
 
 func TestMCIsolateAllTemporalPasses(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	trueVal1 := true
 	trueVal2 := true
 	mod.LabeledProps = []*LabeledFormula{
@@ -923,7 +923,7 @@ func TestMCIsolateAllTemporalPasses(t *testing.T) {
 }
 
 func TestMCIsolateNoPropsCallsMethod(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// No LabeledProps → the temporal check loop has no iterations,
 	// so it passes. Method should be called.
 	called := false
@@ -940,7 +940,7 @@ func TestMCIsolateNoPropsCallsMethod(t *testing.T) {
 }
 
 func TestMCIsolateMethodErrorPropagates(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	err := MCIsolate("test", mod, func(_ *Module) error {
 		return fmt.Errorf("counterexample found")
 	})
@@ -953,7 +953,7 @@ func TestMCIsolateMethodErrorPropagates(t *testing.T) {
 }
 
 func TestMCIsolateCallsMethodOnce(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	callCount := 0
 	err := MCIsolate("test", mod, func(_ *Module) error {
 		callCount++
@@ -970,7 +970,7 @@ func TestMCIsolateCallsMethodOnce(t *testing.T) {
 func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 	cfg := NewConfig()
 
-	mod := New()
+	mod := NewModule()
 	// Set up assertions so AllAssertLinenos returns something
 	assertAct := NewAssertAction(True)
 	loc := assertAct.GetLineno()
@@ -1003,7 +1003,7 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 	cfg := NewConfig()
 
-	mod := New()
+	mod := NewModule()
 	assertAct := NewAssertAction(True)
 	loc := assertAct.GetLineno()
 	loc.Line = 10
@@ -1031,7 +1031,7 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 	cfg := NewConfig()
 
-	mod := New()
+	mod := NewModule()
 	// Add two assertions at different lines
 	a1 := NewAssertAction(True)
 	loc1 := a1.GetLineno()
@@ -1065,7 +1065,7 @@ func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 // --- GetIsolateAttr tests ---
 
 func TestGetIsolateAttrEmptyIsolate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := GetIsolateAttr("", "method", "default", mod)
 	if result != "default" {
 		t.Errorf("expected 'default', got %q", result)
@@ -1073,7 +1073,7 @@ func TestGetIsolateAttrEmptyIsolate(t *testing.T) {
 }
 
 func TestGetIsolateAttrNotFound(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	result := GetIsolateAttr("myiso", "method", "ic", mod)
 	if result != "ic" {
 		t.Errorf("expected default 'ic', got %q", result)
@@ -1081,7 +1081,7 @@ func TestGetIsolateAttrNotFound(t *testing.T) {
 }
 
 func TestGetIsolateAttrStringValue(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["myiso.method"] = "mc"
 	result := GetIsolateAttr("myiso", "method", "ic", mod)
 	if result != "mc" {
@@ -1090,7 +1090,7 @@ func TestGetIsolateAttrStringValue(t *testing.T) {
 }
 
 func TestGetIsolateAttrFallbackParentIso(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// If child is "iso", fall back to parent.attrName
 	mod.Attributes["parent.method"] = "vmt"
 	result := GetIsolateAttr("parent.iso", "method", "ic", mod)
@@ -1100,7 +1100,7 @@ func TestGetIsolateAttrFallbackParentIso(t *testing.T) {
 }
 
 func TestGetIsolateAttrNoFallbackNonIso(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["parent.method"] = "vmt"
 	// child is "other", not "iso", so no fallback
 	result := GetIsolateAttr("parent.other", "method", "ic", mod)
@@ -1110,7 +1110,7 @@ func TestGetIsolateAttrNoFallbackNonIso(t *testing.T) {
 }
 
 func TestGetIsolateAttrStringer(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// Use a fmt.Stringer value
 	mod.Attributes["myiso.method"] = stringerVal("bmc[10]")
 	result := GetIsolateAttr("myiso", "method", "ic", mod)
@@ -1124,7 +1124,7 @@ type stringerVal string
 func (s stringerVal) String() string { return string(s) }
 
 func TestGetIsolateAttrIntValue(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// Non-string, non-Stringer: uses fmt.Sprint
 	mod.Attributes["myiso.cardinality"] = 42
 	result := GetIsolateAttr("myiso", "cardinality", "0", mod)
@@ -1136,7 +1136,7 @@ func TestGetIsolateAttrIntValue(t *testing.T) {
 // --- GetIsolateMethod tests ---
 
 func TestGetIsolateMethodFromAttribute(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["myiso.method"] = "vmt"
 	result := GetIsolateMethod("myiso", mod)
 	if result != "vmt" {
@@ -1145,7 +1145,7 @@ func TestGetIsolateMethodFromAttribute(t *testing.T) {
 }
 
 func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg
 
 	oldVal := cfg.OptMC
@@ -1160,7 +1160,7 @@ func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
 }
 
 func TestGetIsolateMethodBMCFromAttribute(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["myiso.method"] = "bmc[5]"
 	result := GetIsolateMethod("myiso", mod)
 	if result != "bmc[5]" {
@@ -1171,7 +1171,7 @@ func TestGetIsolateMethodBMCFromAttribute(t *testing.T) {
 // --- CheckSeparately tests ---
 
 func TestCheckSeparatelyFromAttribute(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["myiso.separate"] = "true"
 	if !CheckSeparately("myiso", mod) {
 		t.Error("should return true when attribute is 'true'")
@@ -1179,7 +1179,7 @@ func TestCheckSeparatelyFromAttribute(t *testing.T) {
 }
 
 func TestCheckSeparatelyFalseAttribute(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Attributes["myiso.separate"] = "false"
 	if CheckSeparately("myiso", mod) {
 		t.Error("should return false when attribute is 'false'")
@@ -1187,7 +1187,7 @@ func TestCheckSeparatelyFalseAttribute(t *testing.T) {
 }
 
 func TestCheckSeparatelyOptOverrides(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg
 
 	oldVal := cfg.OptSeparate
@@ -1296,7 +1296,7 @@ func TestSomeBoundedZeroByDefault(t *testing.T) {
 // CreateIsolate).
 func loadBMCFixture(t *testing.T, method string) *Module {
 	t.Helper()
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	mod.Cfg.Isolate = "this"
 	err := SourceFile(
@@ -1359,7 +1359,7 @@ func TestSomeBoundedResetByStartWithConfig(t *testing.T) {
 // --- AllAssertLinenos tests (more comprehensive) ---
 
 func TestAllAssertLinenosDeduplicates(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	a1 := NewAssertAction(True)
 	loc1 := a1.GetLineno()
 	loc1.Line = 10
@@ -1378,7 +1378,7 @@ func TestAllAssertLinenosDeduplicates(t *testing.T) {
 }
 
 func TestAllAssertLinenosIncludesConjs(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	lf := &LabeledFormula{Formula: True}
 	lf.SetLineno(Location{Line: 55})
 	mod.LabeledConjs = []*LabeledFormula{lf}
@@ -1395,7 +1395,7 @@ func TestAllAssertLinenosIncludesConjs(t *testing.T) {
 }
 
 func TestAllAssertLinenosMultipleActions(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	a1 := NewAssertAction(True)
 	loc1 := a1.GetLineno()
 	loc1.Line = 10
@@ -1419,7 +1419,7 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 // --- Integration-level tests ---
 
 func TestCheckerInterfaceCompliance(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 
 	// All checker types implement the Checker interface
 	lf := mod.Cfg.AstCfg.NewLabeledFormula(nil, True)
@@ -1444,7 +1444,7 @@ func TestCheckSafetyInState(t *testing.T) {
 	// fails because the dual of the empty Or (false) is True, and
 	// True is trivially SAT, meaning the checker finds a "counterexample".
 	// This is correct: with no information, safety cannot be proved.
-	mod := New()
+	mod := NewModule()
 	// Reset failures counter
 	oldFailures := mod.Cfg.Failures
 	result := CheckSafetyInState(mod, false)
@@ -1454,7 +1454,7 @@ func TestCheckSafetyInState(t *testing.T) {
 }
 
 func TestCheckConjsInState(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: True},
 	}
@@ -1481,7 +1481,7 @@ func TestCheckModuleReportsFailures(t *testing.T) {
 	// each → True → trivially SAT → Fail(). Failures accumulate on
 	// isoMod.Cfg.Failures inside the copy; the propagation code at
 	// isolate_check.go must bring them back to mod.Cfg.Failures.
-	mod := New()
+	mod := NewModule()
 	acfg := mod.Cfg.AstCfg
 	for i := 0; i < 3; i++ {
 		label := acfg.NewAtom(fmt.Sprintf("false_conj_%d", i))
@@ -1502,7 +1502,7 @@ func TestCheckModuleReportsFailures(t *testing.T) {
 }
 
 func TestCheckModuleNoFailuresReturnsNil(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	err := CheckModule(mod)
 	if err != nil {
 		t.Errorf("expected nil error when no conjectures fail, got: %v", err)

@@ -339,7 +339,7 @@ type AnalysisGraph struct {
 // If mod is nil a fresh empty module is used.
 func NewAnalysisGraph(mod *Module, pvars ...Expr) *AnalysisGraph {
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	ag := &AnalysisGraph{
 		Domain:        mod,

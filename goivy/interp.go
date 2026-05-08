@@ -94,7 +94,7 @@ func NewInterpState(domain *Module, value *StateValue, expr Node, label string) 
 		value = TopStateValue()
 	}
 	if domain == nil {
-		domain = New()
+		domain = NewModule()
 	}
 	return &InterpState{
 		InScope: make(map[string]bool),

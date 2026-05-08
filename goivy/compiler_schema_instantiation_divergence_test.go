@@ -60,7 +60,7 @@ func TestTopLevelSchemaInstantiationMatchesPython(t *testing.T) {
 		t.Fatalf("parse Go Ivy source: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := CheckInstantiations(mod, result.Decls); err != nil {
 		t.Fatalf("Go CheckInstantiations: %v", err)
@@ -98,7 +98,7 @@ func TestTopLevelSchemaInstancesAppearInGetAxioms(t *testing.T) {
 		t.Fatalf("parse Go Ivy source: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := CheckInstantiations(mod, result.Decls); err != nil {
 		t.Fatalf("Go CheckInstantiations: %v", err)
@@ -128,7 +128,7 @@ func TestActionLevelSchemaInstantiationMatchesPython(t *testing.T) {
 		t.Fatalf("parse Go Ivy source: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := CheckInstantiations(mod, result.Decls); err != nil {
 		t.Fatalf("Go CheckInstantiations: %v", err)

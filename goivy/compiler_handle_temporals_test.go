@@ -30,14 +30,14 @@ func getTestLabels(act interface{}) []string {
 
 // TestHandleTemporals_EmptyActions — No actions → no panic.
 func TestHandleTemporals_EmptyActions(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// no actions, no isolates
 	HandleTemporals(mod) // should not panic
 }
 
 // TestHandleTemporals_ActionGetsLabels — One action in one isolate → gets that isolate name.
 func TestHandleTemporals_ActionGetsLabels(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
 	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
@@ -53,7 +53,7 @@ func TestHandleTemporals_ActionGetsLabels(t *testing.T) {
 // TestHandleTemporals_ActionNotInAnyIsolate — action not in any isolate → Labels set (not nil).
 // Verifies Bug 1 fix: Python's defaultdict returns [] for missing keys.
 func TestHandleTemporals_ActionNotInAnyIsolate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq := NewSequence()
 	// Give it non-nil labels to prove SetLabels was called (overwriting with nil from imap).
 	seq.Labels = []string{"should-be-cleared"}
@@ -76,7 +76,7 @@ func TestHandleTemporals_ActionNotInAnyIsolate(t *testing.T) {
 
 // TestHandleTemporals_MultipleIsolates — action in 2 isolates → Labels has both names.
 func TestHandleTemporals_MultipleIsolates(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
 	mod.Isolates["isoA"] = makeTestIsolateDef([]string{"act1"}, nil)
@@ -99,7 +99,7 @@ func TestHandleTemporals_MultipleIsolates(t *testing.T) {
 
 // TestHandleTemporals_MultipleActions — different actions with different isolate memberships.
 func TestHandleTemporals_MultipleActions(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq1 := NewSequence()
 	seq2 := NewSequence()
 	seq3 := NewSequence()
@@ -130,7 +130,7 @@ func TestHandleTemporals_MultipleActions(t *testing.T) {
 // TestHandleTemporals_GetLabelsWorks — verify GetLabels() interface works after HandleTemporals.
 // This tests the Bug 2 fix: GetLabels() added to ActionBase.
 func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
 	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
@@ -151,7 +151,7 @@ func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
 
 // TestHandleTemporals_NoIsolates — module with actions but empty Isolates → all get nil/empty labels.
 func TestHandleTemporals_NoIsolates(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	seq1 := NewSequence()
 	seq2 := NewSequence()
 	mod.Actions.Set("act1", seq1)
@@ -180,7 +180,7 @@ func FuzzHandleTemporals(f *testing.F) {
 		numActions := rng.Intn(6)  // 0-5
 		numIsolates := rng.Intn(4) // 0-3
 
-		mod := New()
+		mod := NewModule()
 
 		// Create actions
 		actNames := make([]string, numActions)

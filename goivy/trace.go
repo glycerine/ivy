@@ -48,7 +48,7 @@ type TraceBase struct {
 // NewTraceBase creates a new empty TraceBase.
 func NewTraceBase(cfg *IvyUtilsConfig, mod *Module) *TraceBase {
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	return &TraceBase{
 		cfg:           cfg,
@@ -559,14 +559,14 @@ type TraceModel interface {
 
 // NewTrace creates a Trace from clauses and a model.
 func NewTrace(cfg *IvyUtilsConfig, clauses *Clauses, model TraceModel, vocab []Expr, topLevel bool) *Trace {
-	return NewTraceForModule(cfg, New(), clauses, model, vocab, topLevel)
+	return NewTraceForModule(cfg, NewModule(), clauses, model, vocab, topLevel)
 }
 
 // NewTraceForModule creates a Trace using the given module as its analysis
 // graph domain, matching Python TraceBase's use of the current ivy module.
 func NewTraceForModule(cfg *IvyUtilsConfig, mod *Module, clauses *Clauses, model TraceModel, vocab []Expr, topLevel bool) *Trace {
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	t := &Trace{
 		TraceBase: NewTraceBase(cfg, mod),

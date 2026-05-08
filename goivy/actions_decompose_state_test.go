@@ -130,7 +130,7 @@ print(json.dumps({
 	}
 
 	cfg := NewActionsConfig()
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.ActCfg = cfg
 	x := NewConst("x", Boolean)
 	y := NewConst("y", Boolean)
@@ -195,7 +195,7 @@ print(json.dumps({"acts": [type(a).__name__ for a in comp[1]]}))
 	}
 
 	cfg := NewActionsConfig()
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.ActCfg = cfg
 	ctx := &UpdateContext{Domain: mod, ActCfg: cfg}
 	p := NewConst("p", Boolean)

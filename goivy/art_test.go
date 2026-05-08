@@ -9,7 +9,7 @@ import (
 // --- helpers ---
 
 func artTestModule() *Module {
-	return New()
+	return NewModule()
 }
 
 func artTestClauses() *Clauses {
@@ -80,7 +80,7 @@ print(json.dumps(type(state.clauses.annot).__name__))
 		t.Fatalf("decode python module.new_state annotation oracle %q: %v", out, err)
 	}
 
-	state := NewState(New(), TrueClauses(nil))
+	state := NewState(NewModule(), TrueClauses(nil))
 	if got := TypeName(state.Clauses.Annot); got != want {
 		t.Fatalf("NewState annotation differs from Python\nwant: %q\ngot:  %q", want, got)
 	}
@@ -1057,7 +1057,7 @@ print(json.dumps({"order": bool(mod.order(state, false_state))}, sort_keys=True)
 		t.Fatal("python module.order oracle no longer covers true by false under inconsistent background theory")
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom("ax"), False))
 	mod.UpdateTheory()
 	ag := NewAnalysisGraph(mod)

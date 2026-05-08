@@ -33,7 +33,7 @@ func TestScenarioReusedTransitionRenamesLaterFormals(t *testing.T) {
 		t.Fatalf("parse Go Ivy source: %v", err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile: %v", err)

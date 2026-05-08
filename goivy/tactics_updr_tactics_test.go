@@ -35,7 +35,7 @@ conjecture flag(X)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Sig = goivy.NewSig()
 	mod.Cfg.ProofCfg = goivy.TacticNewConfig()
 	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)

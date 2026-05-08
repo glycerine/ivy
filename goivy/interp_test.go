@@ -82,7 +82,7 @@ func TestNewStateDefaults(t *testing.T) {
 }
 
 func TestNewStateWithDomain(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "label1")
 	if s.Domain != m {
 		t.Error("expected same domain")
@@ -169,7 +169,7 @@ func TestStatePredAndUpdate(t *testing.T) {
 }
 
 func TestStateConjs(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	if s.Conjs() != nil {
 		t.Error("initial Conjs should be nil")
@@ -183,7 +183,7 @@ func TestStateConjs(t *testing.T) {
 }
 
 func TestStateUnders(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	if s.Unders() != nil {
 		t.Error("initial Unders should be nil")
@@ -423,7 +423,7 @@ func TestIvyActionFailedErrorDefaultMsg(t *testing.T) {
 }
 
 func TestNewIvyActionFailedError(t *testing.T) {
-	m := New()
+	m := NewModule()
 	state := NewInterpState(m, nil, nil, "")
 	seq := NewSequence()
 	err := NewIvyActionFailedError(
@@ -460,7 +460,7 @@ func TestUnsatCoreWithInterpolant(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestConcretePostBasic(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	upd := NullUpdate()
 	result, err := ConcretePost(true, upd, s, nil)
@@ -485,7 +485,7 @@ func TestConcretePostNilDomain(t *testing.T) {
 }
 
 func TestConcreteJoinBasic(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s1 := NewInterpState(m, nil, nil, "")
 	s2 := NewInterpState(m, nil, nil, "")
 	result, err := ConcreteJoin(s1, s2)
@@ -522,7 +522,7 @@ func TestEvalActionDirect(t *testing.T) {
 }
 
 func TestEvalActionFromModule(t *testing.T) {
-	m := New()
+	m := NewModule()
 	seq := NewSequence()
 	m.Actions.Set("myAct", seq)
 	act, err := EvalAction("myAct", m)
@@ -535,7 +535,7 @@ func TestEvalActionFromModule(t *testing.T) {
 }
 
 func TestEvalActionNotFound(t *testing.T) {
-	m := New()
+	m := NewModule()
 	_, err := EvalAction("missing", m)
 	if err == nil {
 		t.Error("expected error for missing action")
@@ -557,7 +557,7 @@ func TestEvalActionUnsupportedType(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestEvalStateAtomWrappedState(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	wrapped := WrapState(s)
 	result, err := EvalStateAtom(wrapped, m)
@@ -570,7 +570,7 @@ func TestEvalStateAtomWrappedState(t *testing.T) {
 }
 
 func TestEvalStateAtomTrue(t *testing.T) {
-	m := New()
+	m := NewModule()
 	trueNode := interpTestAstCfg.NewAnd() // empty And = true
 	result, err := EvalStateAtom(trueNode, m)
 	if err != nil {
@@ -582,7 +582,7 @@ func TestEvalStateAtomTrue(t *testing.T) {
 }
 
 func TestEvalStateAtomFalse(t *testing.T) {
-	m := New()
+	m := NewModule()
 	falseNode := interpTestAstCfg.NewOr() // empty Or = false
 	result, err := EvalStateAtom(falseNode, m)
 	if err != nil {
@@ -594,7 +594,7 @@ func TestEvalStateAtomFalse(t *testing.T) {
 }
 
 func TestEvalStateAtomSymbol(t *testing.T) {
-	m := New()
+	m := NewModule()
 	sym := interpTestAstCfg.NewAtom("s")
 	_, err := EvalStateAtom(sym, m)
 	if err == nil {
@@ -607,7 +607,7 @@ func TestEvalStateAtomSymbol(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestJoinUnders(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	result := JoinUnders(s)
 	if result == nil {
@@ -616,7 +616,7 @@ func TestJoinUnders(t *testing.T) {
 }
 
 func TestAddUnder(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	cls := TrueClauses(nil)
 	under := AddUnder(s, cls, nil, nil)
@@ -629,7 +629,7 @@ func TestAddUnder(t *testing.T) {
 }
 
 func TestAddUnderWithPred(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	pred := NewInterpState(m, nil, nil, "pred")
 	under := AddUnder(s, TrueClauses(nil), pred, "universe")
@@ -700,7 +700,7 @@ print(json.dumps({
 		t.Fatalf("python ReachState oracle changed: %+v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	p := NewConst("p", Boolean)
 	mod.Relations.Set("p", Boolean)
 	pred := NewInterpState(mod, nil, nil, "")
@@ -811,7 +811,7 @@ print(json.dumps(res, sort_keys=True))
 		t.Fatalf("python ReachStateFromPred oracle changed: %+v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	p := NewConst("p", Boolean)
 	mod.Relations.Set("p", Boolean)
 	pred := NewInterpState(mod, nil, nil, "")
@@ -831,7 +831,7 @@ print(json.dumps(res, sort_keys=True))
 }
 
 func TestUndecidedConjectures(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	// TrueClauses state implies TrueClauses conjecture, so it should
 	// be decided (not undecided). Use FalseClauses as conjecture to
@@ -845,7 +845,7 @@ func TestUndecidedConjectures(t *testing.T) {
 }
 
 func TestFilterConjectures(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	conjs := []*Clauses{TrueClauses(nil)}
 	s.SetConjs(conjs)
@@ -856,7 +856,7 @@ func TestFilterConjectures(t *testing.T) {
 }
 
 func TestCaseConjecture(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	// Smoke test for the rewritten CaseConjecture, which now delegates
 	// to actions.InterpolantCase (Python ivy_interp.py:325-337). With an
@@ -866,7 +866,7 @@ func TestCaseConjecture(t *testing.T) {
 }
 
 func TestDiagram(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	// TrueClauses is satisfiable, so Diagram should return non-nil.
 	result := Diagram(s, TrueClauses(nil), nil, nil, true, true)
@@ -923,7 +923,7 @@ print(json.dumps({
 		t.Fatalf("python Diagram oracle changed: %+v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	sortS := &UninterpretedSort{Name: "S"}
 	if err := mod.Sig.AddSort(sortS); err != nil {
 		t.Fatalf("AddSort(S): %v", err)
@@ -1015,7 +1015,7 @@ func TestHistorySatisfy(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestModuleNewState(t *testing.T) {
-	m := New()
+	m := NewModule()
 	cls := TrueClauses(nil)
 	s := ModuleNewState(m, cls)
 	if s == nil {
@@ -1027,7 +1027,7 @@ func TestModuleNewState(t *testing.T) {
 }
 
 func TestModuleNewStateWithValue(t *testing.T) {
-	m := New()
+	m := NewModule()
 	sv := TopStateValue()
 	s := ModuleNewStateWithValue(m, sv)
 	if s == nil {
@@ -1036,21 +1036,21 @@ func TestModuleNewStateWithValue(t *testing.T) {
 }
 
 func TestModuleTypeCheck(t *testing.T) {
-	m := New()
+	m := NewModule()
 	if err := ModuleTypeCheck(m); err != nil {
 		t.Errorf("stub should return nil: %v", err)
 	}
 }
 
 func TestModuleTypeCheckConcepts(t *testing.T) {
-	m := New()
+	m := NewModule()
 	if err := ModuleTypeCheckConcepts(m); err != nil {
 		t.Errorf("stub should return nil: %v", err)
 	}
 }
 
 func TestFalseProperties(t *testing.T) {
-	m := New()
+	m := NewModule()
 	result := FalseProperties(m)
 	if len(result) != 0 {
 		t.Errorf("stub should return empty, got %d", len(result))
@@ -1058,7 +1058,7 @@ func TestFalseProperties(t *testing.T) {
 }
 
 func TestGetPropertyContext(t *testing.T) {
-	m := New()
+	m := NewModule()
 	result := GetPropertyContext(m, nil)
 	if result == nil {
 		t.Fatal("should not be nil")
@@ -1076,7 +1076,7 @@ func TestBottomState(t *testing.T) {
 }
 
 func TestNewStateFromClauses(t *testing.T) {
-	m := New()
+	m := NewModule()
 	cls := NewClauses(nil, nil, nil) // annot is nil
 	s := NewStateFromClauses(m, cls)
 	if s == nil {
@@ -1089,7 +1089,7 @@ func TestNewStateFromClauses(t *testing.T) {
 }
 
 func TestNewStateFromClausesWithAnnot(t *testing.T) {
-	m := New()
+	m := NewModule()
 	existingAnnot := EmptyAnnotation{}
 	cls := NewClauses(nil, nil, existingAnnot)
 	s := NewStateFromClauses(m, cls)
@@ -1152,7 +1152,7 @@ func TestReverseUpdateConcreteClauses(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestApplyAction(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := NewInterpState(m, nil, nil, "")
 	seq := NewSequence()
 	result, err := ApplyAction(true, interpTestAstCfg.NewAtom("test"), "test", seq, s)
@@ -1174,7 +1174,7 @@ func TestApplyAction(t *testing.T) {
 func TestEvalActionFailAction(t *testing.T) {
 	inner := NewSequence()
 	fa := NewFailAction(inner)
-	m := New()
+	m := NewModule()
 	act, err := EvalAction(fa, m)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

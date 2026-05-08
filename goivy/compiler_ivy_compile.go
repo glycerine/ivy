@@ -52,7 +52,7 @@ var OptMutax = NewBooleanParameter("mutax", false)
 // calls create_isolate separately for each isolate.
 func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	xtracer.Trace("compiler.IvyCompile ENTER decls=%d", len(decls))
 

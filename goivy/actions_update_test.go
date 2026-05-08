@@ -9,7 +9,7 @@ import (
 
 func testCtx() *UpdateContext {
 	return &UpdateContext{
-		Domain: New(),
+		Domain: NewModule(),
 		PVars:  nil,
 		ActCfg: NewActionsConfig(),
 	}
@@ -323,7 +323,7 @@ print(json.dumps({
 	x, _ := NewVariable("X", sortS)
 	p := NewConst("p", LogicRelationSort([]Sort{sortS}))
 	q := NewConst("q", LogicRelationSort([]Sort{sortS}))
-	mod := New()
+	mod := NewModule()
 	mod.AddToHierarchy("p.a")
 	mod.AddToHierarchy("p.b")
 	u := NewAssignAction(MustApply(p, x), MustApply(q, x)).ActionUpdate(&UpdateContext{

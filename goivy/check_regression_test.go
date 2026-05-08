@@ -50,7 +50,7 @@ func TestRegression_Bug1_CheckConjsFilters(t *testing.T) {
 	// With OnlyCheckUnprovable=true and only unprovable conjectures,
 	// CheckConjsInState should not panic. The filter selects only
 	// unprovable conjectures.
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.OnlyCheckUnprovable = true
 
 	mod.LabeledConjs = []*LabeledFormula{
@@ -70,7 +70,7 @@ func TestRegression_Bug2_NoPanic(t *testing.T) {
 			t.Fatalf("CheckConjsInStateWithAG panicked: %v", r)
 		}
 	}()
-	mod := New()
+	mod := NewModule()
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: True},
 	}
@@ -126,7 +126,7 @@ func TestRegression_Bug3_NilUpdate(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug4_PromotionUpdatesTheory(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.LabeledProps = []*LabeledFormula{
 		{Formula: True},
 	}
@@ -156,7 +156,7 @@ func TestRegression_Bug5_SkolemPrefix(t *testing.T) {
 	}
 	// NewBaseChecker(invert=true) dualizes the conjecture using the @-prefix
 	// witness skolemizer (Python: def witness(v): return lg.Symbol('@'+v.name, v.sort)).
-	checker := NewBaseChecker(New(), v, false, true)
+	checker := NewBaseChecker(NewModule(), v, false, true)
 	if checker == nil || checker.FC == nil {
 		t.Fatal("NewBaseChecker returned nil or FC")
 	}
@@ -324,7 +324,7 @@ func TestRegression_Bug9_ActionInterface(t *testing.T) {
 }
 
 func TestRegression_Bug9_FindAssertionsRanking(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	ranking := NewRanking(True, True)
 	seq := NewSequence(ranking)
 	mod.Actions.Set("test_action", seq)
@@ -342,7 +342,7 @@ func TestRegression_Bug9_FindAssertionsRanking(t *testing.T) {
 }
 
 func TestRegression_Bug9_BothTypes(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	assert := NewAssertAction(True)
 	ranking := NewRanking(True)
 	seq := NewSequence(assert, ranking)
@@ -371,7 +371,7 @@ func TestRegression_Bug9_BothTypes(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug11_FilterCheckers(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	ac := mod.Cfg.AstCfg
 	lf10 := ac.NewLabeledFormula(nil, True)
 	lf10.SetLineno(Location{Filename: "test.ivy", Line: 10})
@@ -403,7 +403,7 @@ func TestRegression_Bug11_FilterCheckers(t *testing.T) {
 func TestRegression_Bug12_FragmentCheck(t *testing.T) {
 	// CheckIsolate calls fragment.CheckFragment. We verify the call path
 	// doesn't panic on an empty module.
-	mod := New()
+	mod := NewModule()
 	err := CheckIsolate(mod, nil)
 	// An error is acceptable (missing solver etc.); a panic is not.
 	_ = err
@@ -414,7 +414,7 @@ func TestRegression_Bug12_FragmentCheck(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug13_TheoryContext(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	cleanup := mod.TheoryContext()
 	if cleanup == nil {
 		t.Fatal("TheoryContext returned nil cleanup function")
@@ -433,7 +433,7 @@ func TestRegression_Bug13_TheoryContext(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug14_WithFilter(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	ac := mod.Cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, True)
 	lf42.SetLineno(Location{Filename: "test.ivy", Line: 42})
@@ -456,7 +456,7 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 }
 
 func TestRegression_Bug14_NoFilter(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	ac := mod.Cfg.AstCfg
 	lf42 := ac.NewLabeledFormula(nil, True)
 	lf42.SetLineno(Location{Line: 42})
@@ -519,13 +519,13 @@ func TestRegression_Bug18_NoPanic(t *testing.T) {
 			t.Fatalf("CheckSubgoals panicked: %v", r)
 		}
 	}()
-	mod := New()
+	mod := NewModule()
 	err := CheckSubgoals(nil, nil, mod)
 	_ = err
 }
 
 func TestRegression_Bug18_EmptyGoals(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	err := CheckSubgoals(nil, nil, mod)
 	if err != nil {
 		t.Errorf("CheckSubgoals with nil goals should not error, got: %v", err)
@@ -611,7 +611,7 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 		}
 	}()
 
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 
 	act1Stmt := NewSequence()

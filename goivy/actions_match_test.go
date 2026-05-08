@@ -322,7 +322,7 @@ print(json.dumps(records))
 	whileAction := NewWhileAction(cond, NewSequence(), &RankingWrapper{Ranking: ranking})
 	whileAction.SetLineno(Location{Filename: "test.ivy", Line: 99})
 
-	expanded := expandWhile(whileAction, New())
+	expanded := expandWhile(whileAction, NewModule())
 	got := collectGeneratedRankingLineRecords(expanded)
 
 	if strings.Join(lineRecordsToComparableJSON(t, got), "\n") != strings.Join(lineRecordsToComparableJSON(t, want), "\n") {

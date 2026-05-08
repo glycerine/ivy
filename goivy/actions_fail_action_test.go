@@ -72,7 +72,7 @@ func TestFailActionIterSubactions(t *testing.T) {
 func TestFailActionUpdate(t *testing.T) {
 	inner := NewAssumeAction(True)
 	fa := NewFailAction(inner)
-	m := New()
+	m := NewModule()
 	ctx := &UpdateContext{
 		Domain:       m,
 		PVars:        map[string]bool{},
@@ -93,7 +93,7 @@ func TestFailActionUpdate(t *testing.T) {
 func TestFailActionIntUpdate(t *testing.T) {
 	inner := NewAssumeAction(True)
 	fa := NewFailAction(inner)
-	m := New()
+	m := NewModule()
 	ctx := &UpdateContext{
 		Domain:       m,
 		PVars:        map[string]bool{},
@@ -127,7 +127,7 @@ func TestGetUpdateBypassesFailEnter(t *testing.T) {
 	// the actual xtrace text is verified by the make-golden flow.
 	inner := NewAssumeAction(True)
 	fa := NewFailAction(inner)
-	m := New()
+	m := NewModule()
 	ctx := &UpdateContext{
 		Domain:       m,
 		PVars:        map[string]bool{},

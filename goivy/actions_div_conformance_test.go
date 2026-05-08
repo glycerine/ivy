@@ -46,7 +46,7 @@ func TestDIV9_WhileExpandSubgoalFiltering(t *testing.T) {
 	wa := NewWhileAction(cond, body, fmla1, sg)
 
 	ctx := &UpdateContext{
-		Domain: New(),
+		Domain: NewModule(),
 		ActCfg: NewActionsConfig(),
 	}
 	expanded := wa.Expand(ctx)
@@ -97,7 +97,7 @@ func TestDIV10_WhileExpandHavocLineno(t *testing.T) {
 	wa.SetLineno(Location{Filename: "test.ivy", Line: 99})
 
 	ctx := &UpdateContext{
-		Domain: New(),
+		Domain: NewModule(),
 		ActCfg: NewActionsConfig(),
 	}
 	expanded := wa.Expand(ctx)
@@ -136,7 +136,7 @@ func TestWhileExpandRankingChecksUseDecreasesLineno(t *testing.T) {
 	wa.SetLineno(Location{Filename: "test.ivy", Line: 99})
 
 	ctx := &UpdateContext{
-		Domain: New(),
+		Domain: NewModule(),
 		ActCfg: NewActionsConfig(),
 	}
 	expanded := wa.Expand(ctx)
@@ -221,7 +221,7 @@ func TestDIV12_InstantiateActionDispatch(t *testing.T) {
 	ia := NewInstantiateAction(inst)
 
 	ctx := &UpdateContext{
-		Domain: New(),
+		Domain: NewModule(),
 		ActCfg: NewActionsConfig(),
 	}
 
@@ -278,7 +278,7 @@ func TestDIV14_CheckedAssertIgnoresFile(t *testing.T) {
 	// CheckedAssert targets bar.ivy:42 specifically.
 	// Python: Location("bar.ivy", 42) != Location("foo.ivy", 42).
 	ctx := &UpdateContext{
-		Domain:        New(),
+		Domain:        NewModule(),
 		ActCfg:        NewActionsConfig(),
 		CheckedAssert: "bar.ivy:42",
 	}

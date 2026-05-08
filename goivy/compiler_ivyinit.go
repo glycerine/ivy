@@ -231,7 +231,7 @@ func IvyInit(cfg *Config, args []string, reg *ParameterRegistry) (*AnalysisGraph
 		return nil, fmt.Errorf("expected .ivy or .dfy file, got: %s", filename)
 	}
 
-	mod := New()
+	mod := NewModule()
 	sig := NewSigOn(mod.Cfg.IuCfg)
 
 	if err := SourceFile(filename, mod, sig, nil); err != nil {

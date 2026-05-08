@@ -5,7 +5,7 @@ import (
 )
 
 func TestBackgroundTheoryEmpty(t *testing.T) {
-	m := New()
+	m := NewModule()
 	theory := m.BackgroundTheory(nil)
 	if theory == nil {
 		t.Fatal("BackgroundTheory should not return nil")
@@ -16,7 +16,7 @@ func TestBackgroundTheoryEmpty(t *testing.T) {
 }
 
 func TestUpdateTheorySimple(t *testing.T) {
-	m := New()
+	m := NewModule()
 	// Add a simple axiom: And() (true)
 	acfg := m.Cfg.AstCfg
 	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, NewConst("axiom", Boolean)))
@@ -33,7 +33,7 @@ func TestUpdateTheorySimple(t *testing.T) {
 }
 
 func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
-	m := New()
+	m := NewModule()
 	acfg := m.Cfg.AstCfg
 	// A temporal axiom should be excluded from the background theory.
 	trueVal := true
@@ -52,7 +52,7 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 }
 
 func TestAxioms(t *testing.T) {
-	m := New()
+	m := NewModule()
 	f1 := NewConst("axiom", Boolean)
 	f2 := &LogicOr{Terms: []Expr{True}}
 	falseVal := false
@@ -72,7 +72,7 @@ func TestAxioms(t *testing.T) {
 }
 
 func TestConjs(t *testing.T) {
-	m := New()
+	m := NewModule()
 	f1 := NewConst("axiom", Boolean)
 	lf := &LabeledFormula{Formula: f1}
 	lf.SetLineno(Location{Line: 10})
@@ -88,7 +88,7 @@ func TestConjs(t *testing.T) {
 }
 
 func TestGetAxiomsNoSchemata(t *testing.T) {
-	m := New()
+	m := NewModule()
 	f1 := NewConst("axiom", Boolean)
 	m.LabeledAxioms = []*LabeledFormula{
 		m.Cfg.AstCfg.NewLabeledFormula(nil, f1),
@@ -123,7 +123,7 @@ func TestDropLabel(t *testing.T) {
 }
 
 func TestVariantAxiomsEmpty(t *testing.T) {
-	m := New()
+	m := NewModule()
 	axioms := m.VariantAxioms()
 	if len(axioms) != 0 {
 		t.Errorf("expected 0 variant axioms, got %d", len(axioms))
@@ -131,7 +131,7 @@ func TestVariantAxiomsEmpty(t *testing.T) {
 }
 
 func TestVariantAxiomsWithVariants(t *testing.T) {
-	m := New()
+	m := NewModule()
 	parentSort := &UninterpretedSort{Name: "msg"}
 	v1 := &UninterpretedSort{Name: "req"}
 	v2 := &UninterpretedSort{Name: "resp"}
@@ -148,7 +148,7 @@ func TestVariantAxiomsWithVariants(t *testing.T) {
 }
 
 func TestTheoryContext(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.LabeledAxioms = []*LabeledFormula{
 		{Formula: NewConst("axiom", Boolean)},
 	}
@@ -164,7 +164,7 @@ func TestTheoryContext(t *testing.T) {
 }
 
 func TestUpdateTheoryWithDefinition(t *testing.T) {
-	m := New()
+	m := NewModule()
 
 	// Create a simple definition: f(X) = X
 	xSort := &UninterpretedSort{Name: "t"}
@@ -188,7 +188,7 @@ func TestUpdateTheoryWithDefinition(t *testing.T) {
 }
 
 func TestUpdateTheoryExtensionality(t *testing.T) {
-	m := New()
+	m := NewModule()
 
 	// Set up a struct with destructors.
 	sSort := &UninterpretedSort{Name: "mystruct"}
@@ -212,7 +212,7 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 
 // Verify that Clauses type is properly used.
 func TestConjsReturnType(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.LabeledConjs = []*LabeledFormula{
 		{Formula: &LogicAnd{}},
 	}

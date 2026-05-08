@@ -329,7 +329,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	body := actionsTestAstCfg.NewAtom("assume", actionsTestAstCfg.NewAtom("x"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
-	mod := New()
+	mod := NewModule()
 	if _, err := mod.Sig.AddSymbol("p", Boolean); err != nil {
 		t.Fatalf("AddSymbol(p): %v", err)
 	}
@@ -357,7 +357,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 
 func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 	// When macro not found, should fall back to schemata
-	mod := New()
+	mod := NewModule()
 	mod.Macros = map[string]*Definition{} // no macros
 
 	fmla := NewConst("p", Boolean)
@@ -384,7 +384,7 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
 	// Python (ivy_actions.py:820): raise IvyError("instantiation of undefined: ...")
 	// when neither macros nor schemata contain the name. Faithful Go port panics.
-	mod := New()
+	mod := NewModule()
 	mod.Macros = map[string]*Definition{}
 
 	a := NewInstantiateAction(nil)
@@ -405,7 +405,7 @@ func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
 
 func TestInstantiateActionIntUpdateCompiledExprFallback(t *testing.T) {
 	// When AstInst is nil, use compiled Inst for schema lookup
-	mod := New()
+	mod := NewModule()
 
 	fmla := NewConst("q", Boolean)
 	mod.Schemata.Set("myschema", actionsTestAstCfg.NewLabeledFormula(actionsTestAstCfg.NewSymbol("myschema", nil), fmla))
@@ -587,7 +587,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	body := actionsTestAstCfg.NewAtom("assume", actionsTestAstCfg.NewAtom("x"))
 	defn := makeMacroDef("double_assume", []string{"x"}, body)
 
-	mod := New()
+	mod := NewModule()
 	if _, err := mod.Sig.AddSymbol("p", Boolean); err != nil {
 		t.Fatalf("AddSymbol(p): %v", err)
 	}

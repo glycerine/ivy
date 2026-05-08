@@ -28,7 +28,7 @@
 //	ivy_stats=bool         Print timing statistics (default false)
 //	prioritize=a,b,c       Comma-separated actions to check first
 //	no_check_guarantees=bool  Skip guarantee checking (default false)
-//	backend=cgo|wazero|jsbrowser
+//	backend=cpp|wazero|jsbrowser
 //
 // Corresponds to Python's ivy_check console_scripts entry point:
 //
@@ -160,7 +160,7 @@ func applyParams(cfg *goivy.Config, params map[string]string) error {
 		case "checked_assert":
 			cfg.CheckLineno = val
 		case "backend":
-			if err := cfg.SetBackendName(val); err != nil {
+			if err := cfg.SetBackend(val); err != nil {
 				return err
 			}
 		case "parser":

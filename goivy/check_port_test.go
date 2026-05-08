@@ -74,7 +74,7 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &LogicAnd{})
 	lf.Annot = &ActionAnnotation{Action: NewSequence(), Annot: EmptyAnnotation{}}
-	cc := NewConjChecker(New(), lf, 8)
+	cc := NewConjChecker(NewModule(), lf, 8)
 	got := cc.GetAnnot()
 	if got != lf.Annot {
 		t.Errorf("GetAnnot() = %v, want %v", got, lf.Annot)
@@ -83,7 +83,7 @@ func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 
 func TestConjCheckerGetAnnotWithoutAnnot(t *testing.T) {
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("test"), &LogicAnd{})
-	cc := NewConjChecker(New(), lf, 8)
+	cc := NewConjChecker(NewModule(), lf, 8)
 	got := cc.GetAnnot()
 	if got != nil {
 		t.Errorf("GetAnnot() = %v, want nil", got)
@@ -130,7 +130,7 @@ func TestMatchHandlerImplementsAnnotationHandler(t *testing.T) {
 
 func TestCheckIsolateWithNilProof(t *testing.T) {
 	// When IsolateProof is nil, CheckIsolate should not enter the proof path
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	mod.Cfg.OptSummary = true // skip actual checking
 	err := CheckIsolate(mod, nil)
@@ -142,7 +142,7 @@ func TestCheckIsolateWithNilProof(t *testing.T) {
 // --- Group A: CheckTemporals ---
 
 func TestCheckTemporalsNoTemporalProps(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	// Non-temporal property should be skipped
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("p1"), &LogicAnd{})
@@ -155,7 +155,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 }
 
 func TestCheckTemporalsAssumedProp(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_assumed"), &LogicAnd{})
 	lf.Temporal = BoolPtr(true)
@@ -169,7 +169,7 @@ func TestCheckTemporalsAssumedProp(t *testing.T) {
 }
 
 func TestCheckTemporalsWithProof(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("temporal_proved"), &LogicAnd{})
 	lf.Temporal = BoolPtr(true)
@@ -190,7 +190,7 @@ func TestCheckTemporalsWithProof(t *testing.T) {
 // --- Group B: MCTactic/VMTTactic ---
 
 func TestMCTacticEmptyGoals(t *testing.T) {
-	remaining, err := MCTactic(nil, nil, nil, New())
+	remaining, err := MCTactic(nil, nil, nil, NewModule())
 	if err != nil {
 		t.Errorf("MCTactic with empty goals should not error, got: %v", err)
 	}
@@ -200,7 +200,7 @@ func TestMCTacticEmptyGoals(t *testing.T) {
 }
 
 func TestVMTTacticEmptyGoals(t *testing.T) {
-	remaining, err := VMTTactic(nil, nil, nil, New())
+	remaining, err := VMTTactic(nil, nil, nil, NewModule())
 	if err != nil {
 		t.Errorf("VMTTactic with empty goals should not error, got: %v", err)
 	}
@@ -281,7 +281,7 @@ func TestLabeledFormulaClonePreservesAnnot(t *testing.T) {
 // --- Misc integration ---
 
 func TestNormalProgramFromModuleDoesNotPanic(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	np := NormalProgramFromModule(mod)
 	if np == nil {
 		t.Error("NormalProgramFromModule should not return nil for empty module")
@@ -296,7 +296,7 @@ func TestProofCheckerAdmitAxiomDoesNotPanic(t *testing.T) {
 }
 
 func TestCheckConjsInStateEmptyModule(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	result := CheckConjsInState(mod, 8, nil)
 	if !result {
@@ -305,7 +305,7 @@ func TestCheckConjsInStateEmptyModule(t *testing.T) {
 }
 
 func TestGetConjs(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	// Add a non-explicit, non-unprovable conjecture.
 	// Use *lg.Const which fully implements lg.Expr (has Sexp()).
 	formula := NewConst("conj_fmla", Boolean)
@@ -323,7 +323,7 @@ func TestGetConjs(t *testing.T) {
 }
 
 func TestApplyConjProofsNoProofs(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("conj1"), &LogicAnd{})
 	mod.LabeledConjs = []*LabeledFormula{lf}
 	ApplyConjProofs(mod)
@@ -406,7 +406,7 @@ func FuzzCheckTemporalsProps(f *testing.F) {
 	f.Add("", true, false)
 
 	f.Fuzz(func(t *testing.T, name string, temporal, assumed bool) {
-		mod := New()
+		mod := NewModule()
 		mod.Cfg = NewConfig()
 		lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom(name), &LogicAnd{})
 		lf.Temporal = BoolPtr(temporal)
@@ -473,7 +473,7 @@ func TestUniteAnnotWithLgExprConds(t *testing.T) {
 // ProofConfig with all expected tactics. Python registers these at import
 // time; Go must wire them explicitly.
 func TestRegisterTacticsWiring(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	proofCfg := TacticNewConfig()
 	mod.Cfg.ProofCfg = proofCfg
@@ -521,7 +521,7 @@ func (s *spyPC) GetModule() *Module {
 func TestMCVMTTacticClosureUsesProofCheckerModule(t *testing.T) {
 	// origMod: the module passed to RegisterTactics (simulates
 	// the compilation-level module with many actions).
-	origMod := New()
+	origMod := NewModule()
 	origMod.Cfg = NewConfig()
 	for i := 0; i < 10; i++ {
 		seq := NewSequence()
@@ -533,7 +533,7 @@ func TestMCVMTTacticClosureUsesProofCheckerModule(t *testing.T) {
 
 	// isoMod: the isolate-processed module (simulates post-CreateIsolate
 	// with a smaller action set). This is what pc.GetModule() should return.
-	isoMod := New()
+	isoMod := NewModule()
 	isoMod.Cfg = NewConfig()
 	seq := NewSequence()
 	isoMod.Actions.Set("iso_action", seq)

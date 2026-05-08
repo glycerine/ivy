@@ -2,38 +2,105 @@ package goivy
 
 import (
 	"fmt"
-	"strings"
 )
+
+// BACK allows clients and tests to choose the which backend is in use.
+// "Cpp" means Native Ivy Go + CGO to C++ native compiled Z3 uses CGo.
+// When Z3 is compiled to wasm, it can be
+// accessed from the command line via Go + wazero ("Wazero"), or
+// in browser over javascript to the Z3 wasm in
+// a service or web worker ("Js").
+type BACK string
 
 const (
-	BackendCGo       = "cgo"
-	BackendWazero    = "wazero"
-	BackendJSBrowser = "jsbrowser"
+	Cpp       BACK = "Cpp"
+	Wazero    BACK = "Wazero"
+	Js        BACK = "Js"
+	Recording BACK = "Recording"
 )
 
-// GuiArtHook is the type for the analysis-graph GUI hook stored on
-// Config.GuiArtHook. It is invoked by GuiArt to display an analysis graph in
-// an interactive UI.
-//
-// The `target` argument is interface{} to mirror Python's gui_art polymorphism:
-// callers pass either an *AnalysisGraph (from the ShowCounterexample /
-// DisplayCex paths) or a *Trace (from the trace failure path).
-// target stays interface{} because the Python entry point accepts both shapes,
-// and the hook implementation type-switches on the concrete value.
-//
-// The `isCti` argument carries the failing-conjecture clauses captured by the
-// trace failure path, or nil for non-CTI counterexamples.
-//
-// The hook is responsible for any blocking UI loop and may call os.Exit if
-// it wishes to mirror Python's `exit(1)` at the end of gui_art
-// (ivy_check.py:102).
-type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
+// implementers of Z3Backend interface
+type cpp struct{}
+type js struct{}
+type wazero struct{}
+
+func defaultZ3Backend() Z3Backend {
+	return &cpp{}
+}
+
+func NewZ3Backend(back BACK) (Z3Backend, error) {
+	switch back {
+	case Cpp:
+		return &cpp{}, nil
+	case Wazero:
+		return &wazero{}, nil
+	case Js:
+		return &js{}, nil
+	default:
+		return nil, fmt.Errorf("unknown Z3 backend '%v'", string(back))
+	}
+}
+
+func z3BackendForConfig(cfg *Config) Z3Backend {
+	if cfg == nil || isNil(cfg.Backend) {
+		return defaultZ3Backend()
+	}
+	return cfg.Backend
+}
+
+func (b *cpp) Name() BACK {
+	return Cpp
+}
+
+func (b *cpp) NewZ3Context() *Z3Context {
+	return newCGoZ3Context(b)
+}
+
+func (b *cpp) NewInterpolationZ3Context() *Z3Context {
+	return newCGoInterpolationZ3Context(b)
+}
+
+func (b *cpp) NewZ3Solver(ctx *Z3Context) *Z3Solver {
+	return newCGoZ3Solver(ctx)
+}
+
+func (b *wazero) Name() BACK {
+	return Wazero
+}
+
+func (b *wazero) NewZ3Context() *Z3Context {
+	return newCGoZ3Context(b)
+}
+
+func (b *wazero) NewInterpolationZ3Context() *Z3Context {
+	return newCGoInterpolationZ3Context(b)
+}
+
+func (b *wazero) NewZ3Solver(ctx *Z3Context) *Z3Solver {
+	return newCGoZ3Solver(ctx)
+}
+
+func (b *js) Name() BACK {
+	return Js
+}
+
+func (b *js) NewZ3Context() *Z3Context {
+	return newCGoZ3Context(b)
+}
+
+func (b *js) NewInterpolationZ3Context() *Z3Context {
+	return newCGoInterpolationZ3Context(b)
+}
+
+func (b *js) NewZ3Solver(ctx *Z3Context) *Z3Solver {
+	return newCGoZ3Solver(ctx)
+}
 
 // Z3Backend is the single runtime-selected Z3 implementation boundary. The
 // method names intentionally mention Z3 so future non-Z3 SMT backends do not
 // get hidden behind generic solver names.
 type Z3Backend interface {
-	Z3BackendName() string
+	Name() BACK
 	NewZ3Context() *Z3Context
 	NewInterpolationZ3Context() *Z3Context
 	NewZ3Solver(ctx *Z3Context) *Z3Solver
@@ -50,7 +117,7 @@ type Config struct {
 
 	// BackendName is the serializable/debuggable Z3 backend name. Backend is
 	// the actual runtime object selected from this name at process edges.
-	BackendName string    `json:"backend"`
+	BackendName BACK      `json:"backend"`
 	Backend     Z3Backend `json:"-"`
 
 	CurrentModule *Module
@@ -248,11 +315,11 @@ func NewConfig() *Config {
 	astCfg.IuCfg = iuCfg
 	actCfg := NewActionsConfig()
 	actCfg.IuCfg = iuCfg
-	backend := defaultZ3Backend()
+
 	return &Config{
 		ActCfg:           actCfg,
-		BackendName:      backend.Z3BackendName(),
-		Backend:          backend,
+		Backend:          &cpp{}, // default is native C++ Z3 via CGO
+		BackendName:      Cpp,
 		Coverage:         true,
 		SolverOpts:       DefaultSolverOptions(),
 		GlobalIncluded:   make(map[string]bool),
@@ -268,80 +335,16 @@ func NewConfig() *Config {
 	}
 }
 
-// NormalizeBackendName returns the canonical backend name and treats "" as the
-// default native CGo backend for compatibility with older serialized configs.
-func NormalizeBackendName(backend string) (string, error) {
-	switch strings.ToLower(strings.TrimSpace(backend)) {
-	case "", BackendCGo:
-		return BackendCGo, nil
-	case BackendWazero:
-		return BackendWazero, nil
-	case BackendJSBrowser:
-		return BackendJSBrowser, nil
-	default:
-		return "", fmt.Errorf("unknown backend %q; expected %q, %q, or %q", backend, BackendCGo, BackendWazero, BackendJSBrowser)
-	}
-}
+// FixBackend establishes which backend to use. It cannot
+// be altered later.
+func (cfg *Config) FixBackend(back BACK) error {
 
-func mustNewZ3BackendByName(name string) Z3Backend {
-	backend, err := NewZ3BackendByName(name)
-	if err != nil {
-		panic(err)
-	}
-	return backend
-}
-
-// NewZ3BackendByName creates the backend object selected by name.
-func NewZ3BackendByName(name string) (Z3Backend, error) {
-	backendName, err := NormalizeBackendName(name)
-	if err != nil {
-		return nil, err
-	}
-	return newZ3BackendByCanonicalName(backendName), nil
-}
-
-// SetBackendName resolves name immediately into cfg.Backend.
-func (cfg *Config) SetBackendName(name string) error {
-	backend, err := NewZ3BackendByName(name)
+	backend, err := NewZ3Backend(back)
 	if err != nil {
 		return err
 	}
-	cfg.BackendName = backend.Z3BackendName()
 	cfg.Backend = backend
 	return nil
-}
-
-// ResolveBackend ensures cfg.Backend is populated. It preserves a manually
-// injected backend object and fills BackendName from it when needed.
-func (cfg *Config) ResolveBackend() error {
-	if cfg.Backend != nil {
-		if cfg.BackendName == "" {
-			cfg.BackendName = cfg.Backend.Z3BackendName()
-			return nil
-		}
-		backendName, err := NormalizeBackendName(cfg.BackendName)
-		if err != nil {
-			return err
-		}
-		if backendName == cfg.Backend.Z3BackendName() {
-			cfg.BackendName = backendName
-			return nil
-		}
-	}
-	return cfg.SetBackendName(cfg.BackendName)
-}
-
-func z3BackendForConfig(cfg *Config) Z3Backend {
-	if cfg == nil {
-		return defaultZ3Backend()
-	}
-	if err := cfg.ResolveBackend(); err != nil {
-		panic(err)
-	}
-	if cfg.Backend == nil {
-		return defaultZ3Backend()
-	}
-	return cfg.Backend
 }
 
 // --- ActionContext ---
@@ -428,3 +431,21 @@ func RunWithActionContext(ctx IActionContext, fn func()) {
 	defer ctx.Exit()
 	fn()
 }
+
+// GuiArtHook is the type for the analysis-graph GUI hook stored on
+// Config.GuiArtHook. It is invoked by GuiArt to display an analysis graph in
+// an interactive UI.
+//
+// The `target` argument is interface{} to mirror Python's gui_art polymorphism:
+// callers pass either an *AnalysisGraph (from the ShowCounterexample /
+// DisplayCex paths) or a *Trace (from the trace failure path).
+// target stays interface{} because the Python entry point accepts both shapes,
+// and the hook implementation type-switches on the concrete value.
+//
+// The `isCti` argument carries the failing-conjecture clauses captured by the
+// trace failure path, or nil for non-CTI counterexamples.
+//
+// The hook is responsible for any blocking UI loop and may call os.Exit if
+// it wishes to mirror Python's `exit(1)` at the end of gui_art
+// (ivy_check.py:102).
+type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error

@@ -47,7 +47,7 @@ print(json.dumps(res, sort_keys=True))
 		t.Fatalf("python check_properties proof-error oracle changed: %+v", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	cfg := mod.Cfg.AstCfg
 	prop := cfg.NewLabeledFormula(cfg.NewAtom("badprop"), True)
 	proof := cfg.NewSchemaInstantiation(cfg.NewAtom("missing"), nil)

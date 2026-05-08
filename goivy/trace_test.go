@@ -10,7 +10,7 @@ import (
 // --- helpers ---
 
 func traceTestModule() *Module {
-	return New()
+	return NewModule()
 }
 
 func traceTestClauses(fmlas ...Expr) *Clauses {
@@ -189,7 +189,7 @@ print(json.dumps(str(trace)))
 		t.Fatalf("decode python trace oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.TraceDetailed = true
 	old := NewConst("old", Boolean)
 	action := NewAssignAction(old, True)
@@ -237,7 +237,7 @@ print(json.dumps(str(trace)))
 		t.Fatalf("decode python non-detailed failure oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.TraceDetailed = false
 	action := NewAssertAction(False)
 	action.SetLineno(Location{Filename: "sample.ivy", Line: 9})
@@ -284,7 +284,7 @@ print(json.dumps(str(trace)))
 		t.Fatalf("decode python non-detailed env oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.TraceDetailed = false
 	x := NewConst("x", Boolean)
 	branch := NewSequence()
@@ -334,7 +334,7 @@ print(json.dumps(str(trace)))
 		t.Fatalf("decode python non-detailed call oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.TraceDetailed = false
 	x := NewConst("x", Boolean)
 	body := NewSequence()
@@ -383,7 +383,7 @@ print(json.dumps(str(trace)))
 		t.Fatalf("decode python non-detailed debug oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.TraceDetailed = false
 	x := NewConst("x", Boolean)
 	event := NewConst("event", TopS)
@@ -558,7 +558,7 @@ print(json.dumps({
 		t.Fatalf("decode python ValueToStr oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	arr := &UninterpretedSort{Name: "arr"}
 	idx := &UninterpretedSort{Name: "idx"}
 	elem := &UninterpretedSort{Name: "elem"}
@@ -886,7 +886,7 @@ print(json.dumps({
 		t.Fatalf("decode python MakeCheckArt oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Actions.Set("ext:foo", NewSequence())
 	mod.PublicActions.Set("ext:foo", true)
 
@@ -985,7 +985,7 @@ print(json.dumps({
 		t.Fatalf("decode python CheckFinalCond nil-final oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	ag := NewAnalysisGraph(mod)
 	state := NewState(mod, TrueClauses(nil))
 	result := CheckFinalCond(ag, state, nil, nil, false)
@@ -1034,7 +1034,7 @@ except AssertionError:
 		t.Fatalf("python CheckFinalCond oracle returned %q, want AssertionError", want)
 	}
 
-	mod := New()
+	mod := NewModule()
 	ag := NewAnalysisGraph(mod)
 	post := &State{
 		ID:      -1,
@@ -1101,7 +1101,7 @@ print(json.dumps([[str(f) for f in st.clauses.fmlas] for st in tr.states]))
 		t.Fatal("python CheckVC oracle returned no states")
 	}
 
-	mod := New()
+	mod := NewModule()
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
 	clauses := NewClauses([]Expr{&LogicOr{Terms: []Expr{p, q}}}, nil, EmptyAnnotation{})
@@ -1140,7 +1140,7 @@ print(json.dumps(tr.hidden_symbols(p)))
 	}
 
 	p := NewConst("p", Boolean)
-	gotTrace := CheckVC(New(), NewClauses([]Expr{p}, nil, EmptyAnnotation{}), NewSequence(), nil, nil, false)
+	gotTrace := CheckVC(NewModule(), NewClauses([]Expr{p}, nil, EmptyAnnotation{}), NewSequence(), nil, nil, false)
 	if gotTrace == nil {
 		t.Fatal("Go CheckVC returned nil trace")
 	}
@@ -1182,7 +1182,7 @@ print(json.dumps([[str(f) for f in st.clauses.fmlas] for st in tr.states]))
 	}
 	sort.Strings(want[0])
 
-	mod := New()
+	mod := NewModule()
 	S := &UninterpretedSort{Name: "S"}
 	a := NewConst("a", S)
 	b := NewConst("b", S)
@@ -1236,7 +1236,7 @@ print(json.dumps(rels_to_min))
 		t.Fatalf("decode python CTI relation-min history-map oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	mod.Relations.Set("r", Boolean)
 	history := &History{Maps: []LogicRenaming{LogicRenaming{}}}
 	history.Maps[0].Set(NewConst("r", Boolean), NewConst("__r", Boolean))
@@ -1271,7 +1271,7 @@ print(json.dumps(keys))
 		t.Fatalf("decode python CheckVC signature-sort oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	sortS := &UninterpretedSort{Name: "S"}
 	mod.Sig.Sorts.Set("S", sortS)
 	p, err := mod.Sig.AddSymbol("p", Boolean)
@@ -1318,7 +1318,7 @@ print(json.dumps(keys))
 		t.Fatalf("decode python CheckVC shrink oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	sortS := &UninterpretedSort{Name: "S"}
 	mod.Sig.Sorts.Set("S", sortS)
 	p, err := mod.Sig.AddSymbol("p", Boolean)
@@ -1541,7 +1541,7 @@ print(json.dumps(str(tr)))
 		t.Fatalf("decode python trace oracle %q: %v", out, err)
 	}
 
-	tb := NewTraceBase(nil, New())
+	tb := NewTraceBase(nil, NewModule())
 	old := NewConst("old", Boolean)
 	ppIn := NewConst("pp_in", Boolean)
 	tb.AddTraceState([]Expr{
@@ -1606,7 +1606,7 @@ print(json.dumps(str(tr)))
 	if err != nil {
 		t.Fatal(err)
 	}
-	tb := NewTraceBase(nil, New())
+	tb := NewTraceBase(nil, NewModule())
 	tb.AddTraceState([]Expr{&Eq{T1: lhs, T2: True}})
 	if got := tb.String(); got != want {
 		t.Fatalf("Go numeric trace suppression differs from Python\nwant: %q\ngot:  %q", want, got)
@@ -1644,7 +1644,7 @@ print(json.dumps(str(tr)))
 		t.Fatalf("decode python overlapping rename oracle %q: %v", out, err)
 	}
 
-	tb := NewTraceBase(nil, New())
+	tb := NewTraceBase(nil, NewModule())
 	tb.AddTraceState([]Expr{&Eq{T1: NewConst("l2s_s_10", Boolean), T2: False}})
 	tb.Rename(map[string]string{
 		"l2s_s_1":  "orig1",

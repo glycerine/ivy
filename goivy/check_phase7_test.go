@@ -16,14 +16,14 @@ import (
 func TestGuiArtNilTargetCreatesFreshGraph(t *testing.T) {
 	// With nil target and no hook, GuiArt should construct a fresh graph
 	// internally and print diagnostic info, returning nil.
-	mod := New()
+	mod := NewModule()
 	if err := GuiArt(mod, nil, nil); err != nil {
 		t.Errorf("GuiArt(nil, nil) returned error: %v", err)
 	}
 }
 
 func TestGuiArtAnalysisGraphTarget(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	ag := NewAnalysisGraph(mod)
 	if err := GuiArt(mod, ag, nil); err != nil {
 		t.Errorf("GuiArt with AnalysisGraph target returned error: %v", err)
@@ -33,7 +33,7 @@ func TestGuiArtAnalysisGraphTarget(t *testing.T) {
 func TestGuiArtMatchHandlerTarget(t *testing.T) {
 	// MatchHandler is the trace-failure-path target type. GuiArt should
 	// accept it as `target interface{}` without error.
-	mod := New()
+	mod := NewModule()
 	handler := &MatchHandler{}
 	if err := GuiArt(mod, handler, nil); err != nil {
 		t.Errorf("GuiArt with MatchHandler target returned error: %v", err)
@@ -43,7 +43,7 @@ func TestGuiArtMatchHandlerTarget(t *testing.T) {
 func TestGuiArtHookInvoked(t *testing.T) {
 	// Register a hook on Cfg.GuiArtHook and verify GuiArt calls it with the
 	// arguments that were passed in.
-	mod := New()
+	mod := NewModule()
 	ag := NewAnalysisGraph(mod)
 	called := false
 	var gotMod *Module
@@ -76,7 +76,7 @@ func TestGuiArtHookInvoked(t *testing.T) {
 }
 
 func TestGuiArtHookErrorPropagates(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	wantErr := errors.New("hook failure")
 	mod.Cfg.GuiArtHook = func(m *Module, target interface{}, isCti *Clauses) error {
 		return wantErr
@@ -89,7 +89,7 @@ func TestGuiArtHookErrorPropagates(t *testing.T) {
 
 func TestGuiArtHookReceivesIsCti(t *testing.T) {
 	// When IsCti is non-nil, GuiArt should pass it through to the hook.
-	mod := New()
+	mod := NewModule()
 	cti := &Clauses{}
 	var gotIsCti *Clauses
 	mod.Cfg.GuiArtHook = func(m *Module, target interface{}, isCti *Clauses) error {
@@ -106,7 +106,7 @@ func TestGuiArtArtUIBranchNoHook(t *testing.T) {
 	// Set DefaultUI = "art" and verify GuiArt's data-setup branch runs
 	// without panicking. With no hook registered, it should fall through
 	// to the diagnostic-print fallback.
-	mod := New()
+	mod := NewModule()
 	mod.Cfg.IuCfg.DefaultUI = "art"
 	if err := GuiArt(mod, nil, nil); err != nil {
 		t.Errorf("GuiArt(art-mode, nil) returned error: %v", err)

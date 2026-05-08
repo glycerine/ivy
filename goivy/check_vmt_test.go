@@ -55,7 +55,7 @@ print(json.dumps({
 		t.Fatalf("decode python ivy_vmt.action_to_tr oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	p := NewConst("p", Boolean)
 	action := NewAssignAction(p, True)
 	gotStateVars, gotTrans, gotError, err := actionToTR(mod, action, "")
@@ -100,7 +100,7 @@ print(json.dumps({"nconjs": len(subgoals)}))
 		t.Fatalf("decode python proof oracle %q: %v", out, err)
 	}
 
-	mod := New()
+	mod := NewModule()
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 	acfg := mod.Cfg.AstCfg
 	p := NewConst("p", Boolean)

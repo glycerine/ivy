@@ -30,7 +30,7 @@ func mkRelSort(dom ...Sort) Sort {
 
 // mkTestModule creates a module with optional setup.
 func mkTestModule() *Module {
-	return New()
+	return NewModule()
 }
 
 // ---------------------------------------------------------------------------

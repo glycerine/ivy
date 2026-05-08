@@ -8,7 +8,7 @@ var tacticsTestAstCfg = NewAstConfig()
 
 // testPC creates a minimal ProofChecker with a module.Config for testing.
 func testPC() *ProofChecker {
-	mod := New()
+	mod := NewModule()
 	mod.Cfg = NewConfig()
 	return &ProofChecker{
 		Cfg:    TacticNewConfig(),
@@ -325,7 +325,7 @@ func TestPcAstCfg_CheckerWithNilAstCfg(t *testing.T) {
 	pc := &ProofChecker{
 		Cfg:    TacticNewConfig(),
 		AstCfg: nil, // deliberately nil
-		Mod:    New(),
+		Mod:    NewModule(),
 	}
 	cfg := pcAstCfg(pc)
 	if cfg == nil {
@@ -428,7 +428,7 @@ func TestVcgenWithProofChecker(t *testing.T) {
 // --- Tests for ImpliedFacts and RefutedGoal (PLAN219) ---
 
 func TestImpliedFactsNilPremise(t *testing.T) {
-	tc := NewTacticsContext(nil, New())
+	tc := NewTacticsContext(nil, NewModule())
 	result := tc.ImpliedFacts(nil, []*Clauses{TrueClauses(nil)})
 	if result != nil {
 		t.Error("nil premise should return nil")
@@ -436,7 +436,7 @@ func TestImpliedFactsNilPremise(t *testing.T) {
 }
 
 func TestImpliedFactsEmptyFacts(t *testing.T) {
-	tc := NewTacticsContext(nil, New())
+	tc := NewTacticsContext(nil, NewModule())
 	p := NewConst("p", Boolean)
 	premClauses := NewClauses([]Expr{p}, nil, nil)
 	result := tc.ImpliedFacts(premClauses, nil)
@@ -446,7 +446,7 @@ func TestImpliedFactsEmptyFacts(t *testing.T) {
 }
 
 func TestImpliedFactsBasic(t *testing.T) {
-	tc := NewTacticsContext(nil, New())
+	tc := NewTacticsContext(nil, NewModule())
 
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
@@ -468,14 +468,14 @@ func TestImpliedFactsBasic(t *testing.T) {
 }
 
 func TestRefutedGoalNilGoal(t *testing.T) {
-	tc := NewTacticsContext(nil, New())
+	tc := NewTacticsContext(nil, NewModule())
 	if tc.RefutedGoal(nil) {
 		t.Error("nil goal should not be refuted")
 	}
 }
 
 func TestRefutedGoalFalseFormula(t *testing.T) {
-	tc := NewTacticsContext(nil, New())
+	tc := NewTacticsContext(nil, NewModule())
 	// Empty Or is False
 	goal := &ProofGoal{Formula: &LogicOr{Terms: []Expr{}}}
 	if !tc.RefutedGoal(goal) {

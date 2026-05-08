@@ -522,7 +522,7 @@ print(json.dumps({
 		t.Fatalf("TaggedOrClauses empty result differs from Python\nwant: one false formula, no defs\ngot:  fmlas=%v defs=%d", tagged.Fmlas, len(tagged.Defs))
 	}
 
-	state := NewInterpState(New(), nil, nil, "")
+	state := NewInterpState(NewModule(), nil, nil, "")
 	joined := JoinUnders(state)
 	if len(joined.Fmlas) != want.JoinNFmlas || len(joined.Defs) != want.JoinNDefs || !IsFalse(joined.Fmlas[0]) {
 		t.Fatalf("JoinUnders empty result differs from Python\nwant: one false formula, no defs\ngot:  fmlas=%v defs=%d", joined.Fmlas, len(joined.Defs))

@@ -699,7 +699,7 @@ func applyGoalTraceHookToFailure(goal *LabeledFormula, err error) (error, interf
 
 func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Module) error {
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 
 	for _, goal := range goals {

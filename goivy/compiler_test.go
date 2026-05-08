@@ -6,7 +6,7 @@ import (
 
 func newTestCompiler() *Compiler {
 	sig := NewSig()
-	mod := New()
+	mod := NewModule()
 	mod.Sig = sig
 	return NewCompiler(sig, mod)
 }
@@ -336,7 +336,7 @@ func TestCompileEventually(t *testing.T) {
 
 // TestResolveAlias checks alias resolution.
 func TestResolveAlias(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	mod.Aliases["foo"] = "bar"
 	mod.Aliases["baz"] = "qux"
 
@@ -821,7 +821,7 @@ export a
 
 		// Compile — must not panic regardless of input
 		sig := NewSig()
-		mod := New()
+		mod := NewModule()
 		mod.Sig = sig
 		cmplr := NewCompiler(sig, mod)
 		di := NewDomainSetup(cmplr)

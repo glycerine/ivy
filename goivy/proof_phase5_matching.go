@@ -49,7 +49,7 @@ func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
 	defer tsDefault.Exit()
 
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	c := NewCompiler(sig, mod)
 	compiled, err := c.Thing(expr)
@@ -119,7 +119,7 @@ func CompileExprVocabExt(expr Node, vocab *Vocab, mod *Module) Expr {
 	defer tsDefault.Exit()
 
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	c := NewCompiler(sig, mod)
 	compiled, err := c.Thing(expr)
@@ -147,7 +147,7 @@ func CompileExprVocabExtLF(lf *LabeledFormula, vocab *Vocab, mod *Module) *Label
 	tsDefault.Enter()
 	defer tsDefault.Exit()
 	if mod == nil {
-		mod = New()
+		mod = NewModule()
 	}
 	c := NewCompiler(sig, mod)
 	compiled, err := c.ThingLF(lf)

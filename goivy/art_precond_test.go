@@ -466,5 +466,4 @@ func FuzzExecuteAndCheckSafety(f *testing.F) {
 
 // Ensure transrel import is used.
 var _ = NullUpdate
-var _ = New
 var _ = TrueClauses

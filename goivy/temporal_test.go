@@ -180,7 +180,7 @@ func TestOldActionToNewRoundTrip(t *testing.T) {
 // --- NormalProgramFromModule ---
 
 func TestNormalProgramFromModule_Empty(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	np := NormalProgramFromModule(mod)
 	if len(np.Bindings) != 0 {
 		t.Error("empty module should have no bindings")
@@ -191,7 +191,7 @@ func TestNormalProgramFromModule_Empty(t *testing.T) {
 }
 
 func TestNormalProgramFromModule_WithActions(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	act := NewSequence()
 	mod.Actions.Set("ext:myact", act)
 	mod.PublicActions.Set("ext:myact", true)

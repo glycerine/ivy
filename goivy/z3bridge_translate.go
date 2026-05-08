@@ -233,7 +233,7 @@ func (t *Translator) Numeral(name string, sort Sort) (*Z3Expr, error) {
 // (and therefore its own Z3 context). Used by tests, ad-hoc Solver
 // instances without a module, and the legacy NewSolver(nil, ...) path.
 func (s *Solver) NewTranslator() *Translator {
-	return s.NewTranslatorWithCache(NewZ3SessionCache())
+	return s.NewTranslatorWithCache(NewZ3SessionCache(s.backend, nil))
 }
 
 // NewTranslatorWithCache creates a Translator that shares the given

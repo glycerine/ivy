@@ -108,7 +108,7 @@ func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 
 func getOrCreateModuleCacheWithBackend(mod *Module, backend Z3Backend) *Z3SessionCache {
 	if mod == nil {
-		return NewZ3SessionCacheWithBackend(backend)
+		return NewZ3SessionCache(backend, nil)
 	}
 	if mod.z3SessionCache != nil {
 		return mod.z3SessionCache
@@ -118,10 +118,10 @@ func getOrCreateModuleCacheWithBackend(mod *Module, backend Z3Backend) *Z3Sessio
 	// is a process global that persists), otherwise create fresh.
 	var cache *Z3SessionCache
 	if mod.z3SharedCtx != nil && mod.z3SharedCtx.ctx != nil {
-		cache = NewZ3SessionCacheWithCtx(mod.z3SharedCtx.ctx)
+		cache = NewZ3SessionCache(backend, mod.z3SharedCtx.ctx)
 	}
 	if cache == nil {
-		cache = NewZ3SessionCacheWithBackend(backend)
+		cache = NewZ3SessionCache(backend, nil)
 	}
 	mod.z3SessionCache = cache
 	// Ensure z3SharedCtx is set for future copies of this module.

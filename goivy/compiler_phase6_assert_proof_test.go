@@ -27,7 +27,7 @@ func (m *mockProofChecker) GetAxioms() []*LabeledFormula { return nil }
 
 // newTestModule creates a minimal module with a CompilerConfig for testing.
 func newTestModule(verifying bool) *Module {
-	mod := New()
+	mod := NewModule()
 	mod.Sig = NewSig()
 	cc := &CompilerConfig{OptionVerifying: verifying}
 	mod.CompCfg = cc

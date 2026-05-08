@@ -17,7 +17,7 @@ import (
 // TestIvyCompile_VersionGuard_ThisIsolate_V17 verifies that version > 1.6
 // creates a default "this" isolate when none exists.
 func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -37,7 +37,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
 // TestIvyCompile_VersionGuard_ThisIsolate_V16 verifies that version <= 1.6
 // does NOT create a default "this" isolate.
 func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.6")
@@ -57,7 +57,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
 // TestIvyCompile_VersionGuard_ExistingIsolate verifies that an existing
 // "this" isolate is not overwritten.
 func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -87,7 +87,7 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 // ModuleTypeCheck on the module. We do this by adding an axiom with
 // incorrect arity and checking that IvyCompile returns an error.
 func TestIvyCompile_TypeCheckCalled(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
@@ -117,7 +117,7 @@ func TestIvyCompile_TypeCheckCalled(t *testing.T) {
 
 // TestIvyCompile_TypeCheckValid verifies that valid axioms pass type check.
 func TestIvyCompile_TypeCheckValid(t *testing.T) {
-	mod := New()
+	mod := NewModule()
 	oldVer := mod.Cfg.IuCfg.GetStringVersion()
 	defer SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	SetStringVersionOn(mod.Cfg.IuCfg, "1.7")

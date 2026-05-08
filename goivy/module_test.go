@@ -27,7 +27,7 @@ func (d *dummyAction) Sexp() NodeKey                  { return "(dummyAction)" }
 func (d *dummyAction) Canon() Canonical               { return Canonical(d.Sexp()) }
 
 func TestModuleNew(t *testing.T) {
-	m := New()
+	m := NewModule()
 	if m == nil {
 		t.Fatal("New returned nil")
 	}
@@ -40,7 +40,7 @@ func TestModuleNew(t *testing.T) {
 }
 
 func TestModuleClear(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.Actions.Set("test", &dummyAction{Tag: "dummy"})
 	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, nil))
 	m.Clear()
@@ -53,7 +53,7 @@ func TestModuleClear(t *testing.T) {
 }
 
 func TestModuleCopy(t *testing.T) {
-	m := New()
+	m := NewModule()
 	sort := &UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
 	m.Actions.Set("act1", &dummyAction{Tag: "dummy"})
@@ -88,7 +88,7 @@ func TestModuleCopy(t *testing.T) {
 }
 
 func TestModuleAddToHierarchy(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.AddToHierarchy("protocol")
 	thisMap, ok := m.Hierarchy.Get2("this")
 	if !ok || !thisMap.Get("protocol") {
@@ -97,7 +97,7 @@ func TestModuleAddToHierarchy(t *testing.T) {
 }
 
 func TestModuleAddToHierarchyDotted(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.AddToHierarchy("net.protocol")
 	thisMap2, ok2 := m.Hierarchy.Get2("this")
 	if !ok2 || !thisMap2.Get("net") {
@@ -110,7 +110,7 @@ func TestModuleAddToHierarchyDotted(t *testing.T) {
 }
 
 func TestModuleAddObject(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.AddObject("myobj")
 	if _, ok := m.Hierarchy.Get2("myobj"); !ok {
 		t.Error("AddObject should create hierarchy entry")
@@ -118,7 +118,7 @@ func TestModuleAddObject(t *testing.T) {
 }
 
 func TestModuleFindAction(t *testing.T) {
-	m := New()
+	m := NewModule()
 	m.Actions.Set("send", &dummyAction{Tag: "action_impl"})
 	a, ok := m.FindAction("send")
 	if !ok {
@@ -135,7 +135,7 @@ func TestModuleFindAction(t *testing.T) {
 }
 
 func TestModuleIsVariant(t *testing.T) {
-	m := New()
+	m := NewModule()
 	lsort := &UninterpretedSort{Name: "msg"}
 	rsort := &UninterpretedSort{Name: "req"}
 	m.Variants["msg"] = []Sort{rsort}
@@ -149,7 +149,7 @@ func TestModuleIsVariant(t *testing.T) {
 }
 
 func TestModuleVariantIndex(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s1 := &UninterpretedSort{Name: "a"}
 	s2 := &UninterpretedSort{Name: "b"}
 	lsort := &UninterpretedSort{Name: "msg"}
@@ -167,7 +167,7 @@ func TestModuleVariantIndex(t *testing.T) {
 }
 
 func TestModuleSortCard(t *testing.T) {
-	m := New()
+	m := NewModule()
 	// Enumerated sort should return card
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	if SortCardDefault(es) != 3 {
@@ -188,7 +188,7 @@ func TestModuleSortCard(t *testing.T) {
 }
 
 func TestModuleSortDependencies(t *testing.T) {
-	m := New()
+	m := NewModule()
 	tSort := &UninterpretedSort{Name: "t"}
 	uSort := &UninterpretedSort{Name: "u"}
 	dSort, _ := NewFunctionSort(tSort, uSort)
@@ -202,7 +202,7 @@ func TestModuleSortDependencies(t *testing.T) {
 }
 
 func TestModuleSortDependenciesVariants(t *testing.T) {
-	m := New()
+	m := NewModule()
 	v1 := &UninterpretedSort{Name: "v1"}
 	v2 := &UninterpretedSort{Name: "v2"}
 	m.Variants["msg"] = []Sort{v1, v2}
@@ -214,7 +214,7 @@ func TestModuleSortDependenciesVariants(t *testing.T) {
 }
 
 func TestModuleModuleString(t *testing.T) {
-	m := New()
+	m := NewModule()
 	s := m.String()
 	if len(s) == 0 {
 		t.Error("Module.String() should not be empty")
@@ -261,7 +261,7 @@ func FuzzModuleCopy(f *testing.F) {
 	f.Add("a.b.c", "x.y")
 
 	f.Fuzz(func(t *testing.T, sortName, symName string) {
-		m := New()
+		m := NewModule()
 		if sortName != "" {
 			m.Sig.AddSort(&UninterpretedSort{Name: sortName})
 		}
