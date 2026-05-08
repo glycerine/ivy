@@ -15,9 +15,9 @@ import (
 // Corresponds to Python's z3.Interpolant(a) and C's Z3_mk_interpolant.
 func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
 	var r Z3Expr
-	ctx.do(func() {
-		r = ctx.newExpr(z3_mk_interpolant(ctx.c, e.c))
-	})
+
+	r = ctx.newExpr(z3_mk_interpolant(ctx.c, e.c))
+
 	runtime.KeepAlive(e)
 	return r
 }
@@ -48,38 +48,37 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Z3Expr) ([]Z3Expr, error) {
 	var result []Z3Expr
 	var resErr error
 
-	ctx.do(func() {
-		defer func() {
-			if r := recover(); r != nil {
-				resErr = fmt.Errorf("Z3 interpolation failed: %v", r)
-			}
-		}()
-
-		params := z3_mk_params(ctx.c)
-		z3Params_inc_ref(ctx.c, params)
-		defer z3Params_dec_ref(ctx.c, params)
-
-		var interp z3ASTVector
-		var model z3Model
-
-		res := z3_compute_interpolant(ctx.c, pattern.c, params, &interp, &model)
-
-		if res == z3_L_FALSE {
-			// UNSAT — extract interpolants from the ast_vector
-			z3ASTVector_inc_ref(ctx.c, interp)
-			n := int(z3ASTVector_size(ctx.c, interp))
-			result = make([]Z3Expr, n)
-			for i := 0; i < n; i++ {
-				ast := z3ASTVector_get(ctx.c, interp, uint32(i))
-				result[i] = ctx.newExpr(ast)
-			}
-			z3ASTVector_dec_ref(ctx.c, interp)
-		} else if res == z3_L_TRUE {
-			resErr = fmt.Errorf("interpolation: formula is satisfiable")
-		} else {
-			resErr = fmt.Errorf("interpolation: result unknown")
+	defer func() {
+		if r := recover(); r != nil {
+			resErr = fmt.Errorf("Z3 interpolation failed: %v", r)
 		}
-	})
+	}()
+
+	params := z3_mk_params(ctx.c)
+	z3Params_inc_ref(ctx.c, params)
+	defer z3Params_dec_ref(ctx.c, params)
+
+	var interp z3ASTVector
+	var model z3Model
+
+	res := z3_compute_interpolant(ctx.c, pattern.c, params, &interp, &model)
+
+	if res == z3_L_FALSE {
+		// UNSAT — extract interpolants from the ast_vector
+		z3ASTVector_inc_ref(ctx.c, interp)
+		n := int(z3ASTVector_size(ctx.c, interp))
+		result = make([]Z3Expr, n)
+		for i := 0; i < n; i++ {
+			ast := z3ASTVector_get(ctx.c, interp, uint32(i))
+			result[i] = ctx.newExpr(ast)
+		}
+		z3ASTVector_dec_ref(ctx.c, interp)
+	} else if res == z3_L_TRUE {
+		resErr = fmt.Errorf("interpolation: formula is satisfiable")
+	} else {
+		resErr = fmt.Errorf("interpolation: result unknown")
+	}
+
 	runtime.KeepAlive(pattern)
 
 	if resErr != nil {

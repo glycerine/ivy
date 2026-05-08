@@ -70,30 +70,30 @@ import (
 // the format spec.
 func (s *Z3Solver) CanonZ3Assertions() string {
 	var res string
-	s.ctx.do(func() {
-		// Get assertions as an AST vector.
-		vec := z3Solver_get_assertions(s.ctx.c, s.c)
-		z3ASTVector_inc_ref(s.ctx.c, vec)
-		defer z3ASTVector_dec_ref(s.ctx.c, vec)
 
-		n := int(z3ASTVector_size(s.ctx.c, vec))
-		var sb strings.Builder
-		sb.WriteString("(asserts")
-		for i := 0; i < n; i++ {
-			ast := z3ASTVector_get(s.ctx.c, vec, uint32(i))
-			sb.WriteByte(' ')
-			canonZ3ExprUnlocked(s.ctx.c, ast, nil, &sb)
-		}
-		sb.WriteByte(')')
-		res = sb.String()
-	})
+	// Get assertions as an AST vector.
+	vec := z3Solver_get_assertions(s.ctx.c, s.c)
+	z3ASTVector_inc_ref(s.ctx.c, vec)
+	defer z3ASTVector_dec_ref(s.ctx.c, vec)
+
+	n := int(z3ASTVector_size(s.ctx.c, vec))
+	var sb strings.Builder
+	sb.WriteString("(asserts")
+	for i := 0; i < n; i++ {
+		ast := z3ASTVector_get(s.ctx.c, vec, uint32(i))
+		sb.WriteByte(' ')
+		canonZ3ExprUnlocked(s.ctx.c, ast, nil, &sb)
+	}
+	sb.WriteByte(')')
+	res = sb.String()
+
 	runtime.KeepAlive(s)
 	return res
 }
 
 // canonZ3ExprUnlocked recursively walks a Z3 expression AST and writes
-// a canonical s-expression to sb. Uses raw wasm-import calls instead of
-// the Expr/Sort wrappers to avoid re-entering ctx.do.
+// a canonical s-expression to sb. Uses raw wasm-import calls directly
+// instead of the Expr/Sort wrappers.
 //
 // binders is a stack of bound-variable name lists, one entry per
 // enclosing quantifier (innermost LAST). Each entry is the AST-order
