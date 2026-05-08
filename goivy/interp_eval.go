@@ -334,6 +334,4 @@ func stateValueToUpdate(sv *StateValue) *Update {
 	}
 }
 
-// Ensure unused imports don't cause errors.
-var _ = Sat
 var _ = True

@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"runtime"
 	"sync"
 	"testing"
@@ -95,8 +96,8 @@ func FuzzMyEq(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, isXTrue, isYTrue, isYFalse bool) {
 		runOnZ3Thread2(t, func(t *testing.T) {
-			ctx := NewZ3Context()
-			var x, y Z3Expr
+			ctx := smt.NewZ3Context()
+			var x, y smt.Z3Expr
 			if isXTrue {
 				x = ctx.BoolVal(true)
 			} else {
@@ -116,7 +117,7 @@ func FuzzMyEq(f *testing.F) {
 			expected := ctx.Eq(x, y)
 			slv := ctx.NewZ3Solver()
 			slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-			if slv.Check() != Unsat {
+			if slv.Check() != smt.Unsat {
 				t.Fatalf("MyEq(%s, %s) = %s is not equivalent to Eq",
 					x.String(), y.String(), result.String())
 			}
@@ -145,9 +146,9 @@ func FuzzGebin(f *testing.F) {
 		}
 
 		runOnZ3Thread2(t, func(t *testing.T) {
-			ctx := NewZ3Context()
+			ctx := smt.NewZ3Context()
 
-			bits := make([]Z3Expr, nbits)
+			bits := make([]smt.Z3Expr, nbits)
 			for i := 0; i < nbits; i++ {
 				bits[i] = ctx.Const(string(rune('a'+i)), ctx.BoolSort())
 			}
@@ -169,13 +170,13 @@ func FuzzGebin(f *testing.F) {
 				expectTrue := val >= threshold
 				if expectTrue {
 					slv.Assert(ctx.Not(result))
-					if slv.Check() != Unsat {
+					if slv.Check() != smt.Unsat {
 						t.Fatalf("Gebin(bits, %d) should be true for val=%d (nbits=%d)",
 							threshold, val, nbits)
 					}
 				} else {
 					slv.Assert(result)
-					if slv.Check() != Unsat {
+					if slv.Check() != smt.Unsat {
 						t.Fatalf("Gebin(bits, %d) should be false for val=%d (nbits=%d)",
 							threshold, val, nbits)
 					}
@@ -201,7 +202,7 @@ func FuzzBinEncZ3(f *testing.F) {
 		}
 
 		runOnZ3Thread2(t, func(t *testing.T) {
-			ctx := NewZ3Context()
+			ctx := smt.NewZ3Context()
 			bits := BinEncZ3(ctx, m, n)
 
 			if len(bits) != n {
@@ -407,12 +408,12 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			slv := ctx.NewZ3Solver()
 			if i1 == i2 {
 				slv.Assert(eq)
-				if slv.Check() == Unsat {
+				if slv.Check() == smt.Unsat {
 					t.Fatalf("encode_equality(%s, %s) should be SAT", ext[i1], ext[i2])
 				}
 			} else {
 				slv.Assert(eq)
-				if slv.Check() != Unsat {
+				if slv.Check() != smt.Unsat {
 					t.Fatalf("encode_equality(%s, %s) should be UNSAT", ext[i1], ext[i2])
 				}
 			}

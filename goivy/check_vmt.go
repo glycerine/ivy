@@ -633,7 +633,8 @@ func VMTCheckIsolate(method string, m *Module) error {
 			fmt.Fprintln(f, decl.String())
 		} else {
 			if !IsInterpretedSymbol(sig, sym) {
-				fmt.Fprintf(f, "(declare-const %s %s)\n", decl.String(), decl.ExprSort().String())
+				declSort := decl.ExprSort()
+				fmt.Fprintf(f, "(declare-const %s %s)\n", decl.String(), declSort.String())
 			}
 		}
 	}
@@ -655,8 +656,9 @@ func VMTCheckIsolate(method string, m *Module) error {
 		if err != nil {
 			continue
 		}
+		declSort := decl.ExprSort()
 		fmt.Fprintf(f, "(declare-fun $sv.%d () %s (! %s :next %s))\n",
-			ctr, decl.ExprSort().String(), declc.String(), decl.String())
+			ctr, declSort.String(), declc.String(), decl.String())
 		ctr++
 	}
 

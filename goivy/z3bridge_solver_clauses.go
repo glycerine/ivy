@@ -4,6 +4,7 @@ package goivy
 
 import (
 	"fmt"
+	"github.com/glycerine/ivy/goivy/smt"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -30,7 +31,7 @@ func (s *Solver) ClausesImplyList(clauses1 *Clauses, clauses2List []*Clauses) ([
 		}
 		z3solver.Push()
 		z3solver.Assert(z2)
-		results[i] = z3solver.Check() == Unsat
+		results[i] = s.checkZ3(z3solver) == smt.Unsat
 		z3solver.Pop()
 	}
 	return results, nil
@@ -323,14 +324,14 @@ func (s *Solver) ClausesModelToDiagramFull(
 }
 
 // NewZ3Solver creates a new Z3 solver on this solver's context.
-func (s *Solver) NewZ3Solver() *Z3Solver {
+func (s *Solver) NewZ3Solver() *smt.Z3Solver {
 	xtracer.Trace("ivy_solver.py:808 new_solver() ENTER")
 	return s.tr.Ctx.NewZ3Solver()
 }
 
 // AddClauses adds a clauses set to a Z3 solver.
 // Corresponds to Python's add_clauses.
-func (s *Solver) AddClauses(z3solver *Z3Solver, clauses *Clauses) error {
+func (s *Solver) AddClauses(z3solver *smt.Z3Solver, clauses *Clauses) error {
 	xtracer.Trace("ivy_solver.py:820 add_clauses() ENTER")
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
@@ -342,7 +343,7 @@ func (s *Solver) AddClauses(z3solver *Z3Solver, clauses *Clauses) error {
 
 // SolverAdd adds a formula to a Z3 solver.
 // Corresponds to Python's solver_add.
-func (s *Solver) SolverAdd(z3solver *Z3Solver, fmla Expr) error {
+func (s *Solver) SolverAdd(z3solver *smt.Z3Solver, fmla Expr) error {
 	xtracer.Trace("ivy_solver.py:812 solver_add() ENTER")
 	zf, err := s.formulaToZ3(fmla)
 	if err != nil {
@@ -356,15 +357,15 @@ func (s *Solver) SolverAdd(z3solver *Z3Solver, fmla Expr) error {
 // If assumptions are provided, uses assumption-based checking.
 // Returns an error if the result is unknown.
 // Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
-func Decide(z3solver *Z3Solver, assumptions ...Z3Expr) (Z3CheckResult, error) {
+func Decide(z3solver *smt.Z3Solver, assumptions ...smt.Z3Expr) (smt.Z3CheckResult, error) {
 	xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-	var result Z3CheckResult
+	var result smt.Z3CheckResult
 	if len(assumptions) > 0 {
 		result = z3solver.CheckAssumptions(assumptions)
 	} else {
 		result = z3solver.Check()
 	}
-	if result == Unknown {
+	if result == smt.Unknown {
 		return result, fmt.Errorf("solver produced inconclusive result")
 	}
 	return result, nil

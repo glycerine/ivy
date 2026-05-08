@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"testing"
 )
 
@@ -16,14 +17,14 @@ func z3MustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 // --- Low-level Z3 wrapper tests ---
 
 func TestZ3BridgeContextCreateDestroy(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	if ctx == nil {
 		t.Fatal("context should not be nil")
 	}
 }
 
 func TestZ3BridgeBoolOps(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	a := ctx.BoolVal(true)
 	b := ctx.BoolVal(false)
 	_ = ctx.And(a, b)
@@ -34,7 +35,7 @@ func TestZ3BridgeBoolOps(t *testing.T) {
 }
 
 func TestZ3BridgeConstAndEq(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
@@ -43,10 +44,10 @@ func TestZ3BridgeConstAndEq(t *testing.T) {
 }
 
 func TestZ3BridgeFuncDeclApply(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	bs := ctx.BoolSort()
-	f := ctx.Function("leq", []Z3Sort{s, s}, bs)
+	f := ctx.Function("leq", []smt.Z3Sort{s, s}, bs)
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
 	result := f.Apply(x, y)
@@ -54,90 +55,90 @@ func TestZ3BridgeFuncDeclApply(t *testing.T) {
 }
 
 func TestZ3BridgeSolverSat(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	s := ctx.NewZ3Solver()
 	s.Assert(x)
-	if s.Check() != Sat {
+	if s.Check() != smt.Sat {
 		t.Error("expected sat")
 	}
 }
 
 func TestZ3BridgeSolverUnsat(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	s := ctx.NewZ3Solver()
 	s.Assert(x)
 	s.Assert(ctx.Not(x))
-	if s.Check() != Unsat {
+	if s.Check() != smt.Unsat {
 		t.Error("expected unsat")
 	}
 }
 
 func TestZ3BridgeForAllQuantifier(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	eq := ctx.Eq(x, x)
-	fa := ctx.ForAll([]Z3Expr{x}, eq)
+	fa := ctx.ForAll([]smt.Z3Expr{x}, eq)
 	t.Log("ForAll:", fa.String())
 
 	solver := ctx.NewZ3Solver()
 	solver.Assert(fa)
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Error("ForAll x. x==x should be sat")
 	}
 }
 
 func TestZ3BridgeExistsQuantifier(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
 	eq := ctx.Eq(x, y)
-	ex := ctx.Exists([]Z3Expr{x}, eq)
+	ex := ctx.Exists([]smt.Z3Expr{x}, eq)
 	t.Log("Exists:", ex.String())
 
 	solver := ctx.NewZ3Solver()
 	solver.Assert(ex)
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Error("Exists x. x==y should be sat")
 	}
 }
 
 func TestZ3BridgePushPop(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
 	solver := ctx.NewZ3Solver()
 	solver.Assert(x)
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Error("expected sat before push")
 	}
 
 	solver.Push()
 	solver.Assert(ctx.Not(x))
-	if solver.Check() != Unsat {
+	if solver.Check() != smt.Unsat {
 		t.Error("expected unsat after contradictory assert")
 	}
 
 	solver.Pop()
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Error("expected sat after pop")
 	}
 }
 
 func TestZ3BridgeModel(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
 	solver := ctx.NewZ3Solver()
 	solver.Assert(x)
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Fatal("expected sat")
 	}
 	m := solver.Model()
@@ -392,7 +393,7 @@ func TestZ3BridgeTranslateFalse(t *testing.T) {
 // --- IC3/PDR extension tests ---
 
 func TestZ3BridgeCheckAssumptions(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -400,34 +401,34 @@ func TestZ3BridgeCheckAssumptions(t *testing.T) {
 	solver := ctx.NewZ3Solver()
 
 	// SAT case: no background assertions, assumptions are compatible
-	res := solver.CheckAssumptions([]Z3Expr{a, b})
-	if res != Sat {
+	res := solver.CheckAssumptions([]smt.Z3Expr{a, b})
+	if res != smt.Sat {
 		t.Errorf("expected Sat, got %v", res)
 	}
 
 	// UNSAT case: assumptions contradict each other
 	notA := ctx.Not(a)
-	res = solver.CheckAssumptions([]Z3Expr{a, notA})
-	if res != Unsat {
+	res = solver.CheckAssumptions([]smt.Z3Expr{a, notA})
+	if res != smt.Unsat {
 		t.Errorf("expected Unsat, got %v", res)
 	}
 
 	// SAT with background assertion: solver.Assert(a), assume b
 	solver.Assert(a)
-	res = solver.CheckAssumptions([]Z3Expr{b})
-	if res != Sat {
+	res = solver.CheckAssumptions([]smt.Z3Expr{b})
+	if res != smt.Sat {
 		t.Errorf("expected Sat with background + assumption, got %v", res)
 	}
 
 	// UNSAT: solver has a, assume not(a)
-	res = solver.CheckAssumptions([]Z3Expr{notA})
-	if res != Unsat {
+	res = solver.CheckAssumptions([]smt.Z3Expr{notA})
+	if res != smt.Unsat {
 		t.Errorf("expected Unsat with contradictory assumption, got %v", res)
 	}
 }
 
 func TestZ3BridgeUnsatCore(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -438,8 +439,8 @@ func TestZ3BridgeUnsatCore(t *testing.T) {
 	solver.Assert(ctx.Implies(a, ctx.Not(b)))
 
 	// Assumptions: a, b, c — core should contain a and b (c is irrelevant)
-	res := solver.CheckAssumptions([]Z3Expr{a, b, c})
-	if res != Unsat {
+	res := solver.CheckAssumptions([]smt.Z3Expr{a, b, c})
+	if res != smt.Unsat {
 		t.Fatal("expected Unsat")
 	}
 
@@ -449,7 +450,7 @@ func TestZ3BridgeUnsatCore(t *testing.T) {
 	}
 
 	// The core should be a subset of {a, b, c}
-	assumptions := []Z3Expr{a, b, c}
+	assumptions := []smt.Z3Expr{a, b, c}
 	for _, ce := range core {
 		found := false
 		for _, ae := range assumptions {
@@ -474,8 +475,8 @@ func TestZ3BridgeUnsatCore(t *testing.T) {
 }
 
 func TestZ3BridgeSolverForLogic(t *testing.T) {
-	ctx := NewZ3Context()
-	solver := NewZ3SolverForLogic(ctx, "QF_LIA")
+	ctx := smt.NewZ3Context()
+	solver := smt.NewZ3SolverForLogic(ctx, "QF_LIA")
 	if solver == nil {
 		t.Fatal("expected solver")
 	}
@@ -487,13 +488,13 @@ func TestZ3BridgeSolverForLogic(t *testing.T) {
 
 	// x == y
 	solver.Assert(ctx.Eq(x, y))
-	if solver.Check() != Sat {
+	if solver.Check() != smt.Sat {
 		t.Error("expected Sat")
 	}
 }
 
 func TestZ3BridgeExprEqual(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -516,7 +517,7 @@ func TestZ3BridgeExprEqual(t *testing.T) {
 }
 
 func TestZ3BridgeIsTrueIsFalse(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	trueExpr := ctx.BoolVal(true)
 	falseExpr := ctx.BoolVal(false)
 
@@ -545,7 +546,7 @@ func TestZ3BridgeIsTrueIsFalse(t *testing.T) {
 }
 
 func TestZ3BridgeSubstitute(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -553,7 +554,7 @@ func TestZ3BridgeSubstitute(t *testing.T) {
 
 	// Create (a AND b), substitute a->c, expect (c AND b)
 	expr := ctx.And(a, b)
-	result := ctx.Substitute(expr, []Z3Expr{a}, []Z3Expr{c})
+	result := ctx.Substitute(expr, []smt.Z3Expr{a}, []smt.Z3Expr{c})
 
 	expected := ctx.And(c, b)
 
@@ -561,7 +562,7 @@ func TestZ3BridgeSubstitute(t *testing.T) {
 	solver := ctx.NewZ3Solver()
 	diff := ctx.Not(ctx.Iff(result, expected))
 	solver.Assert(diff)
-	if solver.Check() != Unsat {
+	if solver.Check() != smt.Unsat {
 		t.Errorf("substitution result %s should be equivalent to %s", result.String(), expected.String())
 	}
 }
@@ -577,7 +578,7 @@ func TestZ3BridgeIsSat(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result != Sat {
+	if result != smt.Sat {
 		t.Error("X == X should be satisfiable")
 	}
 }
@@ -599,7 +600,7 @@ func TestZ3BridgeIsUnsat(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result != Unsat {
+	if result != smt.Unsat {
 		t.Error("X != X should be unsatisfiable")
 	}
 

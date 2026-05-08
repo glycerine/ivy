@@ -5,6 +5,7 @@ package goivy
 
 import (
 	"fmt"
+	"github.com/glycerine/ivy/goivy/smt"
 	"strconv"
 	"strings"
 
@@ -15,17 +16,17 @@ import (
 
 // Z3SortToSort converts a Z3 sort back to an Ivy sort.
 // Corresponds to Python's z3sort_to_sort.
-func Z3SortToSort(z3sort Z3Sort) Sort {
+func Z3SortToSort(z3sort smt.Z3Sort) Sort {
 	xtracer.Trace("ivy_solver.py:1799 z3sort_to_sort() ENTER")
 	kind := z3sort.Kind()
 	switch kind {
-	case SortBool:
+	case smt.SortBool:
 		return Boolean
-	case SortInt:
+	case smt.SortInt:
 		return &UninterpretedSort{Name: "int"}
-	case SortReal:
+	case smt.SortReal:
 		return &UninterpretedSort{Name: "real"}
-	case SortArray:
+	case smt.SortArray:
 		domSort := Z3SortToSort(z3sort.ArrayDomain())
 		rngSort := Z3SortToSort(z3sort.ArrayRange())
 		domName := sortToName(domSort)
@@ -42,7 +43,7 @@ func Z3SortToSort(z3sort Z3Sort) Sort {
 
 // Z3DeclToSymbol converts a Z3 function declaration to an Ivy constant (symbol).
 // Corresponds to Python's z3decl_to_symbol.
-func Z3DeclToSymbol(z3decl FuncDecl) *Const {
+func Z3DeclToSymbol(z3decl smt.FuncDecl) *Const {
 	xtracer.Trace("ivy_solver.py:1805 z3decl_to_symbol() ENTER")
 	arity := z3decl.Arity()
 	rng := Z3SortToSort(z3decl.RangeSort())
@@ -75,7 +76,7 @@ func Z3DeclToSymbol(z3decl FuncDecl) *Const {
 // Z3ToFormula converts a Z3 expression back to an Ivy formula.
 // The vars parameter holds de Bruijn variable bindings (innermost first).
 // Corresponds to Python's z3_to_formula.
-func Z3ToFormula(z3expr Z3Expr, vars []*LogicVariable) (Expr, error) {
+func Z3ToFormula(z3expr smt.Z3Expr, vars []*LogicVariable) (Expr, error) {
 	xtracer.Trace("ivy_solver.py:1817 z3_to_formula() ENTER")
 	// Application (includes constants, And, Or, Not, Eq, etc.)
 	if z3expr.IsApp() {
@@ -95,43 +96,43 @@ func Z3ToFormula(z3expr Z3Expr, vars []*LogicVariable) (Expr, error) {
 		kind := decl.Kind()
 
 		switch kind {
-		case DeclAnd:
+		case smt.DeclAnd:
 			if len(args) == 0 {
 				return True, nil
 			}
 			return &LogicAnd{Terms: args}, nil
 
-		case DeclOr:
+		case smt.DeclOr:
 			if len(args) == 0 {
 				return False, nil
 			}
 			return &LogicOr{Terms: args}, nil
 
-		case DeclNot:
+		case smt.DeclNot:
 			if len(args) != 1 {
 				return nil, fmt.Errorf("z3_to_formula: Not with %d args", len(args))
 			}
 			return &LogicNot{Body: args[0]}, nil
 
-		case DeclEq:
+		case smt.DeclEq:
 			if len(args) != 2 {
 				return nil, fmt.Errorf("z3_to_formula: Eq with %d args", len(args))
 			}
 			return &Eq{T1: args[0], T2: args[1]}, nil
 
-		case DeclITE:
+		case smt.DeclITE:
 			if len(args) != 3 {
 				return nil, fmt.Errorf("z3_to_formula: ITE with %d args", len(args))
 			}
 			return &LogicIte{Cond: args[0], Then: args[1], Else: args[2]}, nil
 
-		case DeclTrue:
+		case smt.DeclTrue:
 			return True, nil
 
-		case DeclFalse:
+		case smt.DeclFalse:
 			return False, nil
 
-		case DeclIff:
+		case smt.DeclIff:
 			if len(args) != 2 {
 				return nil, fmt.Errorf("z3_to_formula: Iff with %d args", len(args))
 			}
@@ -209,7 +210,7 @@ func Z3ToFormula(z3expr Z3Expr, vars []*LogicVariable) (Expr, error) {
 
 // Z3ToFormulaNoVars is a convenience wrapper that calls Z3ToFormula with no
 // initial variable bindings.
-func Z3ToFormulaNoVars(z3expr Z3Expr) (Expr, error) {
+func Z3ToFormulaNoVars(z3expr smt.Z3Expr) (Expr, error) {
 	return Z3ToFormula(z3expr, nil)
 }
 
@@ -282,7 +283,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *Clauses) (*Clauses, error
 // The ctx must be an interpolation-capable context (created via
 // NewInterpolationContext).
 // Corresponds to Python's z3.binary_interpolant.
-func computeZ3Interpolant(ctx *Z3Context, a, b Z3Expr) (Z3Expr, error) {
+func computeZ3Interpolant(ctx *smt.Z3Context, a, b smt.Z3Expr) (smt.Z3Expr, error) {
 	// Build the interpolation pattern: And(Interpolant(a), b)
 	// This mirrors Python's z3.binary_interpolant which does:
 	//   f = LogicAnd(Interpolant(a), b)
@@ -293,10 +294,10 @@ func computeZ3Interpolant(ctx *Z3Context, a, b Z3Expr) (Z3Expr, error) {
 
 	interps, err := ctx.ComputeInterpolant(pattern)
 	if err != nil {
-		return Z3Expr{}, fmt.Errorf("computing interpolant: %w", err)
+		return smt.Z3Expr{}, fmt.Errorf("computing interpolant: %w", err)
 	}
 	if len(interps) == 0 {
-		return Z3Expr{}, fmt.Errorf("interpolation returned empty result")
+		return smt.Z3Expr{}, fmt.Errorf("interpolation returned empty result")
 	}
 	return interps[0], nil
 }
@@ -306,13 +307,13 @@ func computeZ3Interpolant(ctx *Z3Context, a, b Z3Expr) (Z3Expr, error) {
 // CollectNumeralsRecursive recursively collects all numeral subterms from a
 // Z3 expression. For ITE expressions, it recurses into the then/else branches.
 // Corresponds to Python's collect_numerals.
-func CollectNumeralsRecursive(z3term Z3Expr) []Z3Expr {
-	var result []Z3Expr
+func CollectNumeralsRecursive(z3term smt.Z3Expr) []smt.Z3Expr {
+	var result []smt.Z3Expr
 	collectNumeralsHelper(z3term, &result)
 	return result
 }
 
-func collectNumeralsHelper(z3term Z3Expr, result *[]Z3Expr) {
+func collectNumeralsHelper(z3term smt.Z3Expr, result *[]smt.Z3Expr) {
 	// Check if it's a numeral (int value or bv value)
 	if z3term.IsNumeral() {
 		*result = append(*result, z3term)
@@ -320,7 +321,7 @@ func collectNumeralsHelper(z3term Z3Expr, result *[]Z3Expr) {
 	}
 
 	// Check if it's an ITE application — recurse into then/else branches
-	if z3term.IsApp() && z3term.IsAppOf(DeclITE) {
+	if z3term.IsApp() && z3term.IsAppOf(smt.DeclITE) {
 		if z3term.NumArgs() == 3 {
 			collectNumeralsHelper(z3term.Arg(1), result) // then branch
 			collectNumeralsHelper(z3term.Arg(2), result) // else branch
@@ -340,7 +341,7 @@ func collectNumeralsHelper(z3term Z3Expr, result *[]Z3Expr) {
 // FromZ3Numeral converts a Z3 numeral expression to an Ivy constant
 // of the given sort.
 // Corresponds to Python's from_z3_numeral.
-func FromZ3Numeral(z3term Z3Expr, sort Sort) *Const {
+func FromZ3Numeral(z3term smt.Z3Expr, sort Sort) *Const {
 	xtracer.Trace("ivy_solver.py:877 from_z3_numeral() ENTER sort=%s", sort)
 	name := z3term.String()
 	if len(name) == 0 {
@@ -359,7 +360,7 @@ func FromZ3Numeral(z3term Z3Expr, sort Sort) *Const {
 // from a Z3 model. Uses sym_placeholders to create a term, evaluates it in
 // the model, and collects the numerals.
 // Corresponds to Python's collect_model_values.
-func (s *Solver) CollectModelValuesZ3(sort Sort, model *Model, sym *Const) map[string]*Const {
+func (s *Solver) CollectModelValuesZ3(sort Sort, model *smt.Model, sym *Const) map[string]*Const {
 	result := make(map[string]*Const)
 
 	// Create the term: sym(V0, V1, ...)
@@ -402,14 +403,14 @@ func (s *Solver) CollectModelValuesZ3(sort Sort, model *Model, sym *Const) map[s
 // It uses a Z3 order relation and a model to compare values.
 // Corresponds to Python's SortOrder class.
 type Z3SortOrder struct {
-	Vs    []Z3Expr   // Z3 variables for the order relation
-	Order Z3Expr     // Z3 expression representing the order (e.g., less-than)
-	Model *Model     // Z3 model for evaluation
-	Ctx   *Z3Context // Z3 context for substitution
+	Vs    []smt.Z3Expr   // Z3 variables for the order relation
+	Order smt.Z3Expr     // Z3 expression representing the order (e.g., less-than)
+	Model *smt.Model     // Z3 model for evaluation
+	Ctx   *smt.Z3Context // Z3 context for substitution
 }
 
 // NewSortOrder creates a new SortOrder.
-func NewZ3SortOrder(vs []Z3Expr, order Z3Expr, model *Model, ctx *Z3Context) *Z3SortOrder {
+func NewZ3SortOrder(vs []smt.Z3Expr, order smt.Z3Expr, model *smt.Model, ctx *smt.Z3Context) *Z3SortOrder {
 	return &Z3SortOrder{
 		Vs:    vs,
 		Order: order,
@@ -421,7 +422,7 @@ func NewZ3SortOrder(vs []Z3Expr, order Z3Expr, model *Model, ctx *Z3Context) *Z3
 // Compare returns -1 if x < y according to the order, +1 otherwise.
 // This implements a comparison function suitable for sorting.
 // Corresponds to Python's SortOrder.__call__.
-func (so *Z3SortOrder) Compare(x, y Z3Expr) int {
+func (so *Z3SortOrder) Compare(x, y smt.Z3Expr) int {
 	xtracer.Trace("ivy_solver.py:856 SortOrder.compare() ENTER")
 	if len(so.Vs) < 2 {
 		return 0
@@ -429,7 +430,7 @@ func (so *Z3SortOrder) Compare(x, y Z3Expr) int {
 
 	// Substitute vs[0]->x, vs[1]->y into the order expression
 	from := so.Vs[:2]
-	to := []Z3Expr{x, y}
+	to := []smt.Z3Expr{x, y}
 	fact := so.Ctx.Substitute(so.Order, from, to)
 
 	// Evaluate in the model
@@ -449,13 +450,13 @@ func (so *Z3SortOrder) Compare(x, y Z3Expr) int {
 // pairs is a list of (from, to) expression pairs.
 // This is a thin wrapper around Context.Substitute.
 // Corresponds to Python's substitute.
-func SubstituteZ3(ctx *Z3Context, t Z3Expr, pairs [][2]Z3Expr) Z3Expr {
+func SubstituteZ3(ctx *smt.Z3Context, t smt.Z3Expr, pairs [][2]smt.Z3Expr) smt.Z3Expr {
 	xtracer.Trace("ivy_solver.py:1788 substitute() ENTER")
 	if len(pairs) == 0 {
 		return t
 	}
-	from := make([]Z3Expr, len(pairs))
-	to := make([]Z3Expr, len(pairs))
+	from := make([]smt.Z3Expr, len(pairs))
+	to := make([]smt.Z3Expr, len(pairs))
 	for i, p := range pairs {
 		from[i] = p[0]
 		to[i] = p[1]
@@ -468,18 +469,18 @@ func SubstituteZ3(ctx *Z3Context, t Z3Expr, pairs [][2]Z3Expr) Z3Expr {
 // RangeSortBoundsToZ3 converts a RangeSort's lower and upper bounds to Z3
 // integer expressions.
 // Corresponds to Python's range_sort_bounds_to_z3.
-func (s *Solver) RangeSortBoundsToZ3(rs *RangeSort) (lb, ub Z3Expr, err error) {
+func (s *Solver) RangeSortBoundsToZ3(rs *RangeSort) (lb, ub smt.Z3Expr, err error) {
 	xtracer.Trace("ivy_solver.py:299 range_sort_bounds_to_z3() ENTER")
 	// Parse the lower bound
 	lbVal, err := strconv.ParseInt(rs.LbString(), 10, 64)
 	if err != nil {
-		return Z3Expr{}, Z3Expr{}, fmt.Errorf("range sort lower bound %q is not an integer: %w", rs.LbString(), err)
+		return smt.Z3Expr{}, smt.Z3Expr{}, fmt.Errorf("range sort lower bound %q is not an integer: %w", rs.LbString(), err)
 	}
 
 	// Parse the upper bound
 	ubVal, err := strconv.ParseInt(rs.UbString(), 10, 64)
 	if err != nil {
-		return Z3Expr{}, Z3Expr{}, fmt.Errorf("range sort upper bound %q is not an integer: %w", rs.UbString(), err)
+		return smt.Z3Expr{}, smt.Z3Expr{}, fmt.Errorf("range sort upper bound %q is not an integer: %w", rs.UbString(), err)
 	}
 
 	return s.tr.Ctx.IntVal(lbVal), s.tr.Ctx.IntVal(ubVal), nil
@@ -497,7 +498,7 @@ func (s *Solver) RangeSortBoundsToZ3(rs *RangeSort) (lb, ub Z3Expr, err error) {
 //	If(x+y > ub, ub, If(x+y < lb, lb, x+y))
 //
 // Corresponds to Python ivy_solver.py lookup_native clamped arithmetic.
-func (s *Solver) RangeSortClampedAdd(lb, ub, x, y Z3Expr) Z3Expr {
+func (s *Solver) RangeSortClampedAdd(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	sum := ctx.Add(x, y)
 	// If sum > ub, return ub; else if sum < lb, return lb; else return sum
@@ -507,7 +508,7 @@ func (s *Solver) RangeSortClampedAdd(lb, ub, x, y Z3Expr) Z3Expr {
 // RangeSortClampedSub returns a Z3 expression for clamped subtraction:
 //
 //	If(x-y > ub, ub, If(x-y < lb, lb, x-y))
-func (s *Solver) RangeSortClampedSub(lb, ub, x, y Z3Expr) Z3Expr {
+func (s *Solver) RangeSortClampedSub(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	diff := ctx.Sub(x, y)
 	return ctx.Ite(ctx.Gt(diff, ub), ub, ctx.Ite(ctx.Lt(diff, lb), lb, diff))
@@ -516,7 +517,7 @@ func (s *Solver) RangeSortClampedSub(lb, ub, x, y Z3Expr) Z3Expr {
 // RangeSortClampedMul returns a Z3 expression for clamped multiplication:
 //
 //	If(x*y > ub, ub, If(x*y < lb, lb, x*y))
-func (s *Solver) RangeSortClampedMul(lb, ub, x, y Z3Expr) Z3Expr {
+func (s *Solver) RangeSortClampedMul(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	prod := ctx.Mul(x, y)
 	return ctx.Ite(ctx.Gt(prod, ub), ub, ctx.Ite(ctx.Lt(prod, lb), lb, prod))
@@ -525,7 +526,7 @@ func (s *Solver) RangeSortClampedMul(lb, ub, x, y Z3Expr) Z3Expr {
 // RangeSortClampedDiv returns a Z3 expression for clamped division:
 //
 //	If(x/y > ub, ub, If(x/y < lb, lb, x/y))
-func (s *Solver) RangeSortClampedDiv(lb, ub, x, y Z3Expr) Z3Expr {
+func (s *Solver) RangeSortClampedDiv(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	quot := ctx.Div(x, y)
 	return ctx.Ite(ctx.Gt(quot, ub), ub, ctx.Ite(ctx.Lt(quot, lb), lb, quot))
@@ -535,7 +536,7 @@ func (s *Solver) RangeSortClampedDiv(lb, ub, x, y Z3Expr) Z3Expr {
 
 // NativeFunc is a function that takes Z3 expressions and returns a Z3 expression.
 // This represents a native Z3 operation mapped from an Ivy symbol.
-type NativeFunc func(args ...Z3Expr) Z3Expr
+type NativeFunc func(args ...smt.Z3Expr) smt.Z3Expr
 
 // Sorts resolves a sort interpretation name to a Z3 sort.
 // Corresponds to Python sorts() (ivy_solver.py:120).
@@ -623,9 +624,9 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 				rngName := sortToName(rngSort)
 				if _, inInterp := s.sig.Interp[rngName]; inInterp {
 					z3arrSort, err := s.tr.TranslateSort(rngSort)
-					if err == nil && z3arrSort.Kind() == SortArray {
+					if err == nil && z3arrSort.Kind() == smt.SortArray {
 						domSort := z3arrSort.ArrayDomain()
-						return NativeFunc(func(args ...Z3Expr) Z3Expr {
+						return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 							if len(args) == 1 {
 								return ctx.ConstArray(domSort, args[0])
 							}
@@ -697,7 +698,7 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 
 	// Python line 325: if thing.name == '-' and itp == 'nat':
 	if interpStr, ok := interp.(string); ok && interpStr == "nat" && name == "-" {
-		return NativeFunc(func(args ...Z3Expr) Z3Expr {
+		return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Ite(ctx.Lt(args[0], args[1]), ctx.IntVal(0), ctx.Sub(args[0], args[1]))
 			}
@@ -711,28 +712,28 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 		ub := ctx.IntVal(parseInt64(rs.UbString()))
 		switch name {
 		case "+":
-			return NativeFunc(func(args ...Z3Expr) Z3Expr {
+			return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedAdd(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
 			})
 		case "-":
-			return NativeFunc(func(args ...Z3Expr) Z3Expr {
+			return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedSub(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
 			})
 		case "*":
-			return NativeFunc(func(args ...Z3Expr) Z3Expr {
+			return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedMul(lb, ub, args[0], args[1])
 				}
 				return ctx.IntVal(0)
 			})
 		case "/":
-			return NativeFunc(func(args ...Z3Expr) Z3Expr {
+			return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 2 {
 					return s.RangeSortClampedDiv(lb, ub, args[0], args[1])
 				}
@@ -755,14 +756,14 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 	ctx := s.tr.Ctx
 	switch name {
 	case "+":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Add(args[0], args[1])
 			}
 			return ctx.IntVal(0)
 		}
 	case "-":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Sub(args[0], args[1])
 			}
@@ -772,56 +773,56 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 			return ctx.IntVal(0)
 		}
 	case "*":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Mul(args[0], args[1])
 			}
 			return ctx.IntVal(0)
 		}
 	case "/":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Div(args[0], args[1])
 			}
 			return ctx.IntVal(0)
 		}
 	case "concat":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Concat(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "bvand":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.BvAnd(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "bvor":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.BvOr(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "bvnot":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 1 {
 				return ctx.BvNot(args[0])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "arrsel":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Select(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "arrupd":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 3 {
 				return ctx.Store(args[0], args[1], args[2])
 			}
@@ -846,7 +847,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	ctx := s.tr.Ctx
 	switch name {
 	case "<":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUlt(args[0], args[1])
@@ -859,7 +860,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			return ctx.BoolVal(false)
 		}
 	case "<=":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUle(args[0], args[1])
@@ -872,7 +873,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			return ctx.BoolVal(false)
 		}
 	case ">":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUgt(args[0], args[1])
@@ -885,7 +886,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			return ctx.BoolVal(false)
 		}
 	case ">=":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				if ctx.IsBvExpr(args[0]) {
 					return ctx.BvUge(args[0], args[1])
@@ -898,7 +899,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			return ctx.BoolVal(false)
 		}
 	case "arrsel":
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
 				return ctx.Select(args[0], args[1])
 			}
@@ -950,7 +951,7 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 	fs, ok := sym.CSort.(*LogicFunctionSort)
 	if !ok || fs.Arity() < 1 {
 		// Fallback: simple extract
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 1 {
 				return ctx.Extract(hi, lo, args[0])
 			}
@@ -966,10 +967,10 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 		return nil
 	}
 
-	isIntIn := (insort.Kind() == SortInt)
-	isBvIn := (insort.Kind() == SortBV)
-	isIntOut := (outsort.Kind() == SortInt)
-	isBvOut := (outsort.Kind() == SortBV)
+	isIntIn := (insort.Kind() == smt.SortInt)
+	isBvIn := (insort.Kind() == smt.SortBV)
+	isIntOut := (outsort.Kind() == smt.SortInt)
+	isBvOut := (outsort.Kind() == smt.SortBV)
 
 	// Clamp hi for BV inputs whose size <= hi
 	if !isIntIn {
@@ -985,19 +986,19 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 	if isIntOut {
 		// Output is IntSort
 		if hi < lo {
-			return func(args ...Z3Expr) Z3Expr {
+			return func(args ...smt.Z3Expr) smt.Z3Expr {
 				return ctx.IntVal(0)
 			}
 		}
 		if isIntIn {
-			return func(args ...Z3Expr) Z3Expr {
+			return func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 1 {
 					return ctx.Bv2Int(ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0])), false)
 				}
 				return ctx.IntVal(0)
 			}
 		}
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 1 {
 				return ctx.Bv2Int(ctx.Extract(hi, lo, args[0]), false)
 			}
@@ -1017,7 +1018,7 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 
 	if hi < lo {
 		// Zero-width: return 0 bitvec
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			return ctx.BvVal(0, outSize)
 		}
 	}
@@ -1027,14 +1028,14 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 		// Need zero-extension
 		padWidth := outSize - extractWidth
 		if isIntIn {
-			return func(args ...Z3Expr) Z3Expr {
+			return func(args ...smt.Z3Expr) smt.Z3Expr {
 				if len(args) == 1 {
 					return ctx.Concat(ctx.BvVal(0, padWidth), ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0])))
 				}
 				return ctx.BvVal(0, outSize)
 			}
 		}
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 1 {
 				return ctx.Concat(ctx.BvVal(0, padWidth), ctx.Extract(hi, lo, args[0]))
 			}
@@ -1044,14 +1045,14 @@ func (s *Solver) bfeToZ3(sym *Const) NativeFunc {
 
 	// Exact width match
 	if isIntIn {
-		return func(args ...Z3Expr) Z3Expr {
+		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 1 {
 				return ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0]))
 			}
 			return ctx.BvVal(0, outSize)
 		}
 	}
-	return func(args ...Z3Expr) Z3Expr {
+	return func(args ...smt.Z3Expr) smt.Z3Expr {
 		if len(args) == 1 {
 			return ctx.Extract(hi, lo, args[0])
 		}
@@ -1186,7 +1187,7 @@ func parseInt64(s string) int64 {
 
 // MyMinus creates a Z3 subtraction, handling unary case.
 // Corresponds to Python's my_minus (ivy_solver.py:83-86).
-func MyMinus(ctx *Z3Context, args []Z3Expr) Z3Expr {
+func MyMinus(ctx *smt.Z3Context, args []smt.Z3Expr) smt.Z3Expr {
 	//xtracer.Trace("ivy_solver.py:89 my_minus() ENTER nargs=%d", len(args))
 	if len(args) == 1 {
 		zero := ctx.IntVal(0)
@@ -1212,7 +1213,7 @@ func MyMinus(ctx *Z3Context, args []Z3Expr) Z3Expr {
 // decl with name "iff" instead of "=", which then breaks the z3.check
 // canon hash comparison between Go and Python (the underlying logic
 // is equivalent, but the AST decl is different).
-func MyEq(ctx *Z3Context, x, y Z3Expr) Z3Expr {
+func MyEq(ctx *smt.Z3Context, x, y smt.Z3Expr) smt.Z3Expr {
 	xtracer.Trace("ivy_solver.py:95 my_eq() ENTER")
 	if y.IsTrue() {
 		return x
@@ -1225,7 +1226,7 @@ func MyEq(ctx *Z3Context, x, y Z3Expr) Z3Expr {
 
 // SortNameToZ3 converts an Ivy sort name to a Z3 sort using the solver's
 // translator. Corresponds to Python's sort_name_to_z3 (ivy_solver.py:107).
-func (s *Solver) SortNameToZ3(name string) (Z3Sort, error) {
+func (s *Solver) SortNameToZ3(name string) (smt.Z3Sort, error) {
 	xtracer.Trace("ivy_solver.py:116 sort_name_to_z3() ENTER name=%s", name)
 	sort := &UninterpretedSort{Name: name}
 	xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", sort.Sexp())
@@ -1235,7 +1236,7 @@ func (s *Solver) SortNameToZ3(name string) (Z3Sort, error) {
 // Gebin encodes "bits >= n" as a boolean formula over a list of Z3 Bool
 // expressions (MSB first). Recursively splits on the MSB.
 // Corresponds to Python's gebin (ivy_solver.py:1570-1578).
-func Gebin(ctx *Z3Context, bits []Z3Expr, n int) Z3Expr {
+func Gebin(ctx *smt.Z3Context, bits []smt.Z3Expr, n int) smt.Z3Expr {
 	xtracer.Trace("ivy_solver.py:1722 gebin() ENTER n=%d", n)
 	if n == 0 {
 		return ctx.BoolVal(true)

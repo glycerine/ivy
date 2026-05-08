@@ -9,6 +9,7 @@ package goivy
 
 import (
 	"fmt"
+	"github.com/glycerine/ivy/goivy/smt"
 	"sort"
 	"strings"
 	"sync"
@@ -89,21 +90,22 @@ func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 	if mod.z3SessionCache != nil {
 		return mod.z3SessionCache
 	}
+	if mod.z3SharedCtx == nil {
+		mod.z3SharedCtx = &z3CtxHolder{}
+	}
 	// Create new cache: reuse shared Z3Context if available (preserves
 	// z3CheckCounter across module copies — Python's _z3_check_counter
 	// is a process global that persists), otherwise create fresh.
 	var cache *Z3SessionCache
-	if mod.z3SharedCtx != nil && mod.z3SharedCtx.ctx != nil {
+	if mod.z3SharedCtx.ctx != nil {
 		cache = NewZ3SessionCacheWithCtx(mod.z3SharedCtx.ctx)
 	}
 	if cache == nil {
 		cache = NewZ3SessionCache()
 	}
+	cache.z3CheckCounter = &mod.z3SharedCtx.z3CheckCounter
 	mod.z3SessionCache = cache
 	// Ensure z3SharedCtx is set for future copies of this module.
-	if mod.z3SharedCtx == nil {
-		mod.z3SharedCtx = &z3CtxHolder{}
-	}
 	if mod.z3SharedCtx.ctx == nil {
 		mod.z3SharedCtx.ctx = cache.Ctx
 	}
@@ -113,7 +115,7 @@ func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 // newZ3Solver creates a Solver and applies opts
 // (e.g., smt.macro_finder). Always sets the parameter
 // explicitly — never assumes Z3's default matches ours.
-func (s *Solver) newZ3Solver() *Z3Solver {
+func (s *Solver) newZ3Solver() *smt.Z3Solver {
 	zs := s.tr.Ctx.NewZ3Solver()
 	if s.opts.MacroFinder {
 		zs.SetParam("smt.macro_finder", "true")
@@ -272,7 +274,7 @@ func (s *Solver) Translator() *Translator {
 }
 
 // Context returns the underlying Z3 context.
-func (s *Solver) Context() *Z3Context {
+func (s *Solver) Context() *smt.Z3Context {
 	return s.tr.Ctx
 }
 
@@ -292,7 +294,7 @@ func (s *Solver) SetSig(sig *Sig) {
 // This is a raw translate (no HASH, no closing, no type constraints).
 // Used by tests and external callers (vmt, alpha).
 // For the full Python formula_to_z3 equivalent, use formulaToZ3 (private).
-func (s *Solver) FormulaToZ3(fmla Expr) (Z3Expr, error) {
+func (s *Solver) FormulaToZ3(fmla Expr) (smt.Z3Expr, error) {
 	return s.tr.Translate(fmla)
 }
 
@@ -301,14 +303,14 @@ func (s *Solver) FormulaToZ3(fmla Expr) (Z3Expr, error) {
 // After translating formulas and definitions, it also appends type_constraints
 // for nat sorts (non-negativity) and range sorts (bounds), matching Python's
 // clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
-func (s *Solver) ClausesToZ3(clauses *Clauses) (Z3Expr, error) {
+func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	if clauses == nil {
 		xtracer.Trace("solver.ClausesToZ3 ENTER nil")
 		return s.tr.Ctx.BoolVal(true), nil
 	}
 	xtracer.Trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 
-	var exprs []Z3Expr
+	var exprs []smt.Z3Expr
 
 	// Match Python clauses_to_z3: a `for` loop emits the per-fmla sort traces,
 	// THEN a separate list comprehension calls conj_to_z3 on each formula.
@@ -321,7 +323,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (Z3Expr, error) {
 	for _, f := range clauses.Fmlas {
 		zf, err := s.conjToZ3(f)
 		if err != nil {
-			return Z3Expr{}, fmt.Errorf("translating formula: %w", err)
+			return smt.Z3Expr{}, fmt.Errorf("translating formula: %w", err)
 		}
 		exprs = append(exprs, zf)
 	}
@@ -337,7 +339,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (Z3Expr, error) {
 				}
 			}
 			xtracer.Trace("clauses_to_z3: Z3 error on def[%d]: %v defines=%s", di, err, defName)
-			return Z3Expr{}, fmt.Errorf("translating definition: %w", err)
+			return smt.Z3Expr{}, fmt.Errorf("translating definition: %w", err)
 		}
 		exprs = append(exprs, zd)
 	}
@@ -367,7 +369,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (Z3Expr, error) {
 	})
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
-		return Z3Expr{}, tcErr
+		return smt.Z3Expr{}, tcErr
 	}
 	exprs = append(exprs, tcs...)
 
@@ -485,10 +487,10 @@ func (s *Solver) rangeConstraintsForSymbol(sym Expr) []Expr {
 // typeConstraints generates type constraints for nat and range sorts,
 // translating each to Z3 via formulaToZ3Closed.
 // Matches Python type_constraints (ivy_solver.py:603-631).
-func (s *Solver) typeConstraints(syms []Expr) ([]Z3Expr, error) {
+func (s *Solver) typeConstraints(syms []Expr) ([]smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:603 type_constraints() ENTER nsyms=%d", len(syms))
 
-	var res []Z3Expr
+	var res []smt.Z3Expr
 
 	// Pass 1: nat sort constraints (Python lines 605-615)
 	for _, sym := range syms {
@@ -525,7 +527,7 @@ func (s *Solver) typeConstraints(syms []Expr) ([]Z3Expr, error) {
 //
 // Call chain: formulaToZ3 → formulaToZ3Closed → Translate (no HASH)
 // Only this function emits the HASH trace, matching Python.
-func (s *Solver) formulaToZ3(fmla Expr) (x Z3Expr, err error) {
+func (s *Solver) formulaToZ3(fmla Expr) (x smt.Z3Expr, err error) {
 	defer func() {
 		r := recover()
 		if r != nil {
@@ -545,7 +547,7 @@ func (s *Solver) formulaToZ3(fmla Expr) (x Z3Expr, err error) {
 	z3Fmla, err := s.formulaToZ3Closed(fmla)
 	if err != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on formula_to_z3_closed: %v type=%v", err, ShortTypeName(fmla))
-		return Z3Expr{}, err
+		return smt.Z3Expr{}, err
 	}
 
 	// Python formula_to_z3 line 725: tcs = type_constraints(used_symbols_ast(fmla))
@@ -561,10 +563,10 @@ func (s *Solver) formulaToZ3(fmla Expr) (x Z3Expr, err error) {
 	tcs, tcErr := s.typeConstraints(usedSyms)
 	if tcErr != nil {
 		xtracer.Trace("formula_to_z3: Z3 error on type_constraints: %v type=%v", tcErr, ShortTypeName(fmla))
-		return Z3Expr{}, tcErr
+		return smt.Z3Expr{}, tcErr
 	}
 	if len(tcs) > 0 {
-		all := make([]Z3Expr, 0, len(tcs)+1)
+		all := make([]smt.Z3Expr, 0, len(tcs)+1)
 		all = append(all, z3Fmla)
 		all = append(all, tcs...)
 		return s.tr.Ctx.And(all...), nil
@@ -577,11 +579,11 @@ func (s *Solver) formulaToZ3(fmla Expr) (x Z3Expr, err error) {
 //
 // For Definition: wraps in raw z3.ForAll (no quant constraints).
 // For others: wraps via forall() helper (with quant constraints).
-func (s *Solver) formulaToZ3Closed(fmla Expr) (Z3Expr, error) {
+func (s *Solver) formulaToZ3Closed(fmla Expr) (smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:688 formula_to_z3_closed() ENTER type=%v HASH canon=%v", ShortTypeName(fmla), fmla.Sexp())
 	z3Formula, err := s.tr.TranslateNoHash(fmla)
 	if err != nil {
-		return Z3Expr{}, err
+		return smt.Z3Expr{}, err
 	}
 
 	freeVars := FreeVariablesList(fmla)
@@ -594,11 +596,11 @@ func (s *Solver) formulaToZ3Closed(fmla Expr) (Z3Expr, error) {
 		return freeVars[i].Name < freeVars[j].Name
 	})
 
-	z3Vars := make([]Z3Expr, len(freeVars))
+	z3Vars := make([]smt.Z3Expr, len(freeVars))
 	for i, v := range freeVars {
 		z3Vars[i], err = s.tr.TranslateVar(v)
 		if err != nil {
-			return Z3Expr{}, err
+			return smt.Z3Expr{}, err
 		}
 	}
 
@@ -615,15 +617,15 @@ func (s *Solver) formulaToZ3Closed(fmla Expr) (Z3Expr, error) {
 // Matches Python's conj_to_z3 (ivy_solver.py:546-549).
 // For And: recursively translates each conjunct.
 // Otherwise: delegates to formulaToZ3Closed.
-func (s *Solver) conjToZ3(fmla Expr) (Z3Expr, error) {
+func (s *Solver) conjToZ3(fmla Expr) (smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:585 conj_to_z3() ENTER type=%v", ShortTypeName(fmla))
 	if and, ok := fmla.(*LogicAnd); ok {
-		z3Args := make([]Z3Expr, len(and.Terms))
+		z3Args := make([]smt.Z3Expr, len(and.Terms))
 		for i, t := range and.Terms {
 			var err error
 			z3Args[i], err = s.conjToZ3(t)
 			if err != nil {
-				return Z3Expr{}, err
+				return smt.Z3Expr{}, err
 			}
 		}
 		return s.tr.Ctx.And(z3Args...), nil
@@ -633,13 +635,13 @@ func (s *Solver) conjToZ3(fmla Expr) (Z3Expr, error) {
 
 // forall wraps a Z3 body in ForAll with quant constraints (nat/range bounds).
 // Delegates to the solver's translator. Used by formulaToZ3Closed.
-func (s *Solver) forall(vars []*LogicVariable, z3Vars []Z3Expr, z3Body Z3Expr) Z3Expr {
+func (s *Solver) forall(vars []*LogicVariable, z3Vars []smt.Z3Expr, z3Body smt.Z3Expr) smt.Z3Expr {
 	return s.tr.forall(vars, z3Vars, z3Body)
 }
 
 // NotClausesToZ3 negates a Clauses and converts to Z3.
 // Corresponds to Python's not_clauses_to_z3.
-func (s *Solver) NotClausesToZ3(clauses *Clauses) (Z3Expr, error) {
+func (s *Solver) NotClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:1102 not_clauses_to_z3() ENTER")
 	// Separate Skolem definitions from other definitions
 	var skolemDefs, otherDefs []*IvyDefinition
@@ -656,13 +658,13 @@ func (s *Solver) NotClausesToZ3(clauses *Clauses) (Z3Expr, error) {
 	skolemClauses := NewClauses(nil, skolemDefs, nil)
 	zSkolem, err := s.ClausesToZ3(skolemClauses)
 	if err != nil {
-		return Z3Expr{}, err
+		return smt.Z3Expr{}, err
 	}
 
 	// Full clauses are negated
 	zAll, err := s.ClausesToZ3(clauses)
 	if err != nil {
-		return Z3Expr{}, err
+		return smt.Z3Expr{}, err
 	}
 
 	_ = otherDefs
@@ -683,7 +685,7 @@ func (s *Solver) IsSat(fmla Expr) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result == Sat, nil
+	return result == smt.Sat, nil
 }
 
 // Implies checks whether fmla1 implies fmla2.
@@ -702,8 +704,8 @@ func (s *Solver) ClausesSat(clauses *Clauses) (bool, error) {
 		return false, err
 	}
 	z3solver.Assert(zc)
-	result := z3solver.Check()
-	return result != Unsat, nil
+	result := s.checkZ3(z3solver)
+	return result != smt.Unsat, nil
 }
 
 // ClausesImply checks whether clauses1 imply clauses2.
@@ -724,8 +726,8 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *Clauses) (bool, error) {
 	}
 	z3solver.Assert(z2)
 
-	result := z3solver.Check()
-	return result == Unsat, nil
+	result := s.checkZ3(z3solver)
+	return result == smt.Unsat, nil
 }
 
 // ImpliesBatch tests if premise implies each formula in fmlas.
@@ -762,8 +764,8 @@ func (s *Solver) ClausesImplyFormula(clauses1 *Clauses, fmla2 Expr) (bool, error
 	}
 	z3solver.Assert(z2)
 
-	result := z3solver.Check()
-	return result == Unsat, nil
+	result := s.checkZ3(z3solver)
+	return result == smt.Unsat, nil
 }
 
 // --- UNSAT Core ---
@@ -787,7 +789,7 @@ func (s *Solver) UnsatCore(
 	z3solver := s.newZ3Solver()
 
 	// Create activation literals
-	alits := make([]Z3Expr, len(fmlas))
+	alits := make([]smt.Z3Expr, len(fmlas))
 	for i := range fmlas {
 		name := fmt.Sprintf("__c%d", i)
 		alits[i] = s.tr.Ctx.Const(name, s.tr.Ctx.BoolSort())
@@ -833,9 +835,9 @@ func (s *Solver) UnsatCore(
 	// Use Z3's native assumption-based checking + unsat_core() API.
 	// This is more efficient than manual push/pop minimization.
 	// Python: ivy_solver.py:696-710 uses check(assumptions) + unsat_core()
-	result := z3solver.CheckAssumptions(alits)
+	result := s.checkZ3Assumptions(z3solver, alits)
 
-	if result == Sat {
+	if result == smt.Sat {
 		return nil, nil // satisfiable, no core
 	}
 
@@ -858,14 +860,14 @@ func (s *Solver) UnsatCore(
 
 	// If the core is empty but the system was unsat, include all formulas
 	// (this can happen when the unsat-ness comes from clauses2/implies)
-	if len(resFmlas) == 0 && result == Unsat {
+	if len(resFmlas) == 0 && result == smt.Unsat {
 		resFmlas = append(resFmlas, fmlas...)
 	}
 
 	// Minimize core using biased_core approach: try removing unlikely formulas first,
 	// then remaining. This produces a smaller core than Z3's native unsat_core.
 	if len(resFmlas) > 1 {
-		resFmlas = minimizeCore(z3solver, resFmlas, alits, fmlas, unlikely)
+		resFmlas = s.minimizeCore(z3solver, resFmlas, alits, fmlas, unlikely)
 	}
 
 	defs := make([]*IvyDefinition, len(clauses1.Defs))
@@ -876,12 +878,12 @@ func (s *Solver) UnsatCore(
 // minimizeCore performs biased core minimization on a set of formulas.
 // It tries removing unlikely formulas first, then remaining ones.
 // Python: ivy_core.py minimize_core / biased_core
-func minimizeCore(
-	z3solver *Z3Solver,
-	resFmlas []Expr, alits []Z3Expr, allFmlas []Expr, unlikely func(Expr) bool,
+func (s *Solver) minimizeCore(
+	z3solver *smt.Z3Solver,
+	resFmlas []Expr, alits []smt.Z3Expr, allFmlas []Expr, unlikely func(Expr) bool,
 ) []Expr {
 	// Build index from formula key to activation literal
-	fmlaToAlit := make(map[string]Z3Expr)
+	fmlaToAlit := make(map[string]smt.Z3Expr)
 	for i, f := range allFmlas {
 		fmlaToAlit[fmt.Sprint(f)] = alits[i]
 	}
@@ -892,7 +894,7 @@ func minimizeCore(
 	}
 
 	// Get activation literals for core formulas
-	coreAlits := make([]Z3Expr, len(resFmlas))
+	coreAlits := make([]smt.Z3Expr, len(resFmlas))
 	for i, f := range resFmlas {
 		key := fmt.Sprint(f)
 		if a, ok := fmlaToAlit[key]; ok {
@@ -907,7 +909,7 @@ func minimizeCore(
 		}
 		core[i] = false
 		assumptions := collectAssumptions(coreAlits, core)
-		if z3solver.CheckAssumptions(assumptions) == Unsat {
+		if s.checkZ3Assumptions(z3solver, assumptions) == smt.Unsat {
 			// Still unsat, can keep it removed
 		} else {
 			core[i] = true
@@ -921,7 +923,7 @@ func minimizeCore(
 		}
 		core[i] = false
 		assumptions := collectAssumptions(coreAlits, core)
-		if z3solver.CheckAssumptions(assumptions) == Unsat {
+		if s.checkZ3Assumptions(z3solver, assumptions) == smt.Unsat {
 			// Still unsat, can keep it removed
 		} else {
 			core[i] = true
@@ -938,8 +940,8 @@ func minimizeCore(
 }
 
 // collectAssumptions builds the list of activation literals for included formulas.
-func collectAssumptions(alits []Z3Expr, included []bool) []Z3Expr {
-	var result []Z3Expr
+func collectAssumptions(alits []smt.Z3Expr, included []bool) []smt.Z3Expr {
+	var result []smt.Z3Expr
 	for i, a := range alits {
 		if included[i] && a.String() != "" {
 			result = append(result, a)
@@ -1100,7 +1102,7 @@ func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter
 			}
 			z3solver.Push()
 			z3solver.Assert(z2)
-			checkResult := z3solver.Check() == Unsat
+			checkResult := s.checkZ3(z3solver) == smt.Unsat
 			results = append(results, checkResult)
 			if reporter != nil {
 				if !reporter.End(checkResult, aa.Doc) {

@@ -3,7 +3,9 @@ package goivy
 import (
 	"fmt"
 	"regexp"
+	"sync/atomic"
 
+	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -52,21 +54,39 @@ func NormalizeZ3VarNames(sexpr string) string {
 	})
 }
 
-// TraceCheck emits Z3 solver state and check result via xtracer.
-// Called automatically from Solver.Check() when xtracer is enabled.
-func (s *Z3Solver) TraceCheck(result Z3CheckResult) {
+var fallbackZ3CheckCounter atomic.Int64
+
+func (s *Solver) checkZ3(z3solver *smt.Z3Solver) smt.Z3CheckResult {
+	result := z3solver.Check()
+	s.traceZ3Check(z3solver, result)
+	return result
+}
+
+func (s *Solver) checkZ3Assumptions(z3solver *smt.Z3Solver, assumptions []smt.Z3Expr) smt.Z3CheckResult {
+	result := z3solver.CheckAssumptions(assumptions)
+	s.traceZ3Check(z3solver, result)
+	return result
+}
+
+// traceZ3Check emits Z3 solver state and check result via xtracer. Raw Z3
+// checking remains a direct smt boundary call; this helper keeps Ivy trace
+// sequencing in goivy instead of teaching smt about xtrace.
+func (s *Solver) traceZ3Check(z3solver *smt.Z3Solver, result smt.Z3CheckResult) {
 	if !xtracer.Enabled {
 		return
 	}
-	seq := s.ctx.z3CheckCounter.Add(1)
-	//vv("seq = %v (from s.ctx.z3CheckCounter, corresponds to ivy_solver.py:1386)", seq)
-	asserts := s.CanonZ3Assertions()
+	counter := &fallbackZ3CheckCounter
+	if s != nil && s.tr != nil && s.tr.cache != nil && s.tr.cache.z3CheckCounter != nil {
+		counter = s.tr.cache.z3CheckCounter
+	}
+	seq := counter.Add(1)
+	asserts := z3solver.CanonZ3Assertions()
 
 	var rs string
 	switch result {
-	case Sat:
+	case smt.Sat:
 		rs = "sat"
-	case Unsat:
+	case smt.Unsat:
 		rs = "unsat"
 	default:
 		rs = "unknown"

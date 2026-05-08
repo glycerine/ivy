@@ -8,6 +8,9 @@ package goivy
 
 import (
 	"sync"
+	"sync/atomic"
+
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 // Z3SessionCache holds the translation state shared by every Translator
@@ -33,16 +36,20 @@ type Z3SessionCache struct {
 
 	// Ctx is the shared Z3 context. All cached Z3 sorts/exprs are tied
 	// to this context. Solvers that share this cache share this context.
-	Ctx *Z3Context
+	Ctx *smt.Z3Context
+
+	// z3CheckCounter is goivy-owned trace state. The smt package owns raw
+	// Z3 objects; xtrace sequencing lives at the session/module layer.
+	z3CheckCounter *atomic.Int64
 
 	// Translation caches — same names/semantics as the old per-Translator
 	// fields they replace.
-	sorts         map[NodeKey]Z3Sort
+	sorts         map[NodeKey]smt.Z3Sort
 	sortsInv      map[uint]Sort
-	consts        map[NodeKey]Z3Expr
-	z3_functions  map[NodeKey]FuncDecl
-	z3_predicates map[NodeKey]func(args ...Z3Expr) Z3Expr
-	nativeFuncs   map[NodeKey]func(args ...Z3Expr) Z3Expr
+	consts        map[NodeKey]smt.Z3Expr
+	z3_functions  map[NodeKey]smt.FuncDecl
+	z3_predicates map[NodeKey]func(args ...smt.Z3Expr) smt.Z3Expr
+	nativeFuncs   map[NodeKey]func(args ...smt.Z3Expr) smt.Z3Expr
 }
 
 // NewZ3SessionCache builds a fresh cache with its own Z3 context and empty
@@ -50,7 +57,8 @@ type Z3SessionCache struct {
 // clear() initial state with z3_predicates = {ivy_logic.equals: my_eq}).
 func NewZ3SessionCache() *Z3SessionCache {
 	c := &Z3SessionCache{
-		Ctx: NewZ3Context(),
+		Ctx:            smt.NewZ3Context(),
+		z3CheckCounter: &atomic.Int64{},
 	}
 	c.resetMaps()
 	return c
@@ -61,8 +69,11 @@ func NewZ3SessionCache() *Z3SessionCache {
 // its z3CheckCounter) while getting fresh translation caches — matching
 // Python where _z3_check_counter is a process global but z3_sorts etc.
 // are cleared on Module.__enter__.
-func NewZ3SessionCacheWithCtx(ctx *Z3Context) *Z3SessionCache {
-	c := &Z3SessionCache{Ctx: ctx}
+func NewZ3SessionCacheWithCtx(ctx *smt.Z3Context) *Z3SessionCache {
+	c := &Z3SessionCache{
+		Ctx:            ctx,
+		z3CheckCounter: &atomic.Int64{},
+	}
 	c.resetMaps()
 	return c
 }
@@ -80,13 +91,13 @@ func (c *Z3SessionCache) Clear() {
 // The equality predicate is re-installed because Python's clear() also
 // re-installs it (z3_predicates = {ivy_logic.equals: my_eq} on line 253).
 func (c *Z3SessionCache) resetMaps() {
-	c.sorts = make(map[NodeKey]Z3Sort)
+	c.sorts = make(map[NodeKey]smt.Z3Sort)
 	c.sortsInv = make(map[uint]Sort)
-	c.consts = make(map[NodeKey]Z3Expr)
-	c.z3_functions = make(map[NodeKey]FuncDecl)
-	c.z3_predicates = make(map[NodeKey]func(args ...Z3Expr) Z3Expr)
-	c.nativeFuncs = make(map[NodeKey]func(args ...Z3Expr) Z3Expr)
-	c.z3_predicates[eqCanonPredKey] = func(args ...Z3Expr) Z3Expr {
+	c.consts = make(map[NodeKey]smt.Z3Expr)
+	c.z3_functions = make(map[NodeKey]smt.FuncDecl)
+	c.z3_predicates = make(map[NodeKey]func(args ...smt.Z3Expr) smt.Z3Expr)
+	c.nativeFuncs = make(map[NodeKey]func(args ...smt.Z3Expr) smt.Z3Expr)
+	c.z3_predicates[eqCanonPredKey] = func(args ...smt.Z3Expr) smt.Z3Expr {
 		return MyEq(c.Ctx, args[0], args[1])
 	}
 }

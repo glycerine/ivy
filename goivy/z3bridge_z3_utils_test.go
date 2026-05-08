@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"strings"
 	"testing"
 )
@@ -71,11 +72,11 @@ func TestZ3BridgeToZ3BooleanSort(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	zs, ok := result.(Z3Sort)
+	zs, ok := result.(smt.Z3Sort)
 	if !ok {
 		t.Fatalf("expected Sort, got %T", result)
 	}
-	if zs.Kind() != SortBool {
+	if zs.Kind() != smt.SortBool {
 		t.Errorf("expected Bool sort, got kind %d", zs.Kind())
 	}
 }
@@ -89,11 +90,11 @@ func TestZ3BridgeToZ3UninterpretedSort(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	zs, ok := result.(Z3Sort)
+	zs, ok := result.(smt.Z3Sort)
 	if !ok {
 		t.Fatalf("expected Sort, got %T", result)
 	}
-	if zs.Kind() != SortUninterpreted {
+	if zs.Kind() != smt.SortUninterpreted {
 		t.Errorf("expected Uninterpreted sort, got kind %d", zs.Kind())
 	}
 }
@@ -112,8 +113,8 @@ func TestZ3BridgeToZ3UninterpretedSortCache(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Both should be the exact same Sort (from cache)
-	s1 := r1.(Z3Sort)
-	s2 := r2.(Z3Sort)
+	s1 := r1.(smt.Z3Sort)
+	s2 := r2.(smt.Z3Sort)
 	if s1.GetId() != s2.GetId() {
 		t.Error("expected same Z3 sort from cache")
 	}
@@ -213,7 +214,7 @@ func TestZ3BridgeToZ3ConstHigherOrder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, ok := result.(FuncDecl)
+	_, ok := result.(smt.FuncDecl)
 	if !ok {
 		t.Fatalf("expected FuncDecl for higher-order const, got %T", result)
 	}
@@ -290,7 +291,7 @@ func TestZ3BridgeToZ3Eq(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.ExprSort().Kind() != SortBool {
+	if result.ExprSort().Kind() != smt.SortBool {
 		t.Error("Eq should produce Bool-sorted expression")
 	}
 }
@@ -452,7 +453,7 @@ func TestZ3BridgeToZ3ForAll(t *testing.T) {
 	str := result.String()
 	t.Log("ForAll:", str)
 	// Should contain quantifier syntax
-	if result.ExprSort().Kind() != SortBool {
+	if result.ExprSort().Kind() != smt.SortBool {
 		t.Error("ForAll should produce Bool-sorted expression")
 	}
 }
@@ -472,7 +473,7 @@ func TestZ3BridgeToZ3Exists(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.ExprSort().Kind() != SortBool {
+	if result.ExprSort().Kind() != smt.SortBool {
 		t.Error("Exists should produce Bool-sorted expression")
 	}
 }
@@ -533,7 +534,7 @@ func TestZ3BridgeToZ3CacheHit(t *testing.T) {
 	}
 
 	// Both should be same Expr
-	e1, e2 := r1.(Z3Expr), r2.(Z3Expr)
+	e1, e2 := r1.(smt.Z3Expr), r2.(smt.Z3Expr)
 	if e1.String() != e2.String() {
 		t.Errorf("cached result differs: %q vs %q", e1.String(), e2.String())
 	}

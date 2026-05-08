@@ -5,6 +5,7 @@ package goivy
 
 import (
 	"fmt"
+	"github.com/glycerine/ivy/goivy/smt"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -78,7 +79,7 @@ func (s *Solver) CheckNativeCompatSym(sym *Const) (retErr error) {
 
 	// Create dummy Z3 args and invoke
 	ctx := s.tr.Ctx
-	args := make([]Z3Expr, fs.Arity())
+	args := make([]smt.Z3Expr, fs.Arity())
 	for i, d := range fs.Domain() {
 		xtracer.Trace("TranslateSort_call callsite=check_native_compat_dom HASH canon=%s", d.Sexp())
 		zs, err := s.tr.TranslateSort(d)
@@ -311,7 +312,7 @@ func (s *Solver) ModelIfNone(clauses *Clauses, implied *Clauses, model *Herbrand
 			}
 			z3solver.Assert(zsc)
 		}
-		if z3solver.Check() != Unsat {
+		if s.checkZ3(z3solver) != smt.Unsat {
 			m := z3solver.Model()
 			if m == nil {
 				z3solver.Pop()

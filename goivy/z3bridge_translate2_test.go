@@ -125,7 +125,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 	// Create a fresh P decl to negate P(-1)
 	pDecl := tr.Ctx.Function("P", []Sort{tr.Ctx.IntSort()}, tr.Ctx.BoolSort())
 	slv.Assert(tr.Ctx.Not(pDecl.Apply(tr.Ctx.IntVal(-1))))
-	if slv.Check() == Unsat {
+	if slv.Check() == smt.Unsat {
 		t.Fatal("ForAll(X, 0<=X => P(X)) + Not(P(-1)) should be SAT")
 	}
 }
@@ -169,7 +169,7 @@ func TestQuantConstraints_Exists(t *testing.T) {
 		[]Expr{xConst},
 		tr.Ctx.Eq(pDecl.Apply(xConst), tr.Ctx.Eq(xConst, tr.Ctx.IntVal(-1))),
 	))
-	if slv.Check() != Unsat {
+	if slv.Check() != smt.Unsat {
 		t.Fatal("Exists(X, 0<=X && P(X)) with P(-1 only) should be UNSAT")
 	}
 }

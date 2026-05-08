@@ -5,6 +5,7 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"strings"
 	"testing"
 )
@@ -53,7 +54,7 @@ func TestGetModelConstant_NativeEnum(t *testing.T) {
 	// Assert x == green
 	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(zx, zgreen))
-	if slv.Check() != Sat {
+	if slv.Check() != smt.Sat {
 		t.Fatal("x == green should be SAT")
 	}
 	model := slv.Model()
@@ -104,7 +105,7 @@ func TestGetModelConstant_BinaryEncoding(t *testing.T) {
 	// Assert x == blue
 	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Eq(zx, zblue))
-	if slv.Check() != Sat {
+	if slv.Check() != smt.Sat {
 		t.Fatal("x == blue should be SAT")
 	}
 	model := slv.Model()
@@ -157,7 +158,7 @@ func TestGetModelConstant_AllEnumValues(t *testing.T) {
 
 				slv := ctx.NewZ3Solver()
 				slv.Assert(ctx.Eq(zx, zval))
-				if slv.Check() != Sat {
+				if slv.Check() != smt.Sat {
 					t.Fatalf("x == %s should be SAT", expected)
 				}
 				model := slv.Model()
@@ -230,7 +231,7 @@ func TestEnumeratedToNumeralZ3_Int(t *testing.T) {
 		expected := ctx.IntVal(int64(i))
 		slv := ctx.NewZ3Solver()
 		slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-		if slv.Check() != Unsat {
+		if slv.Check() != smt.Unsat {
 			t.Errorf("enum %q ordinal %d: expected IntVal(%d), got %s", name, i, i, result.String())
 		}
 	}
@@ -253,7 +254,7 @@ func TestEnumeratedToNumeralZ3_Nat(t *testing.T) {
 	expected := ctx.IntVal(2)
 	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-	if slv.Check() != Unsat {
+	if slv.Check() != smt.Unsat {
 		t.Errorf("blue ordinal 2: expected IntVal(2), got %s", result.String())
 	}
 }
@@ -277,7 +278,7 @@ func TestEnumeratedToNumeralZ3_Bv(t *testing.T) {
 		expected := ctx.BvVal(int64(i), 2)
 		slv := ctx.NewZ3Solver()
 		slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-		if slv.Check() != Unsat {
+		if slv.Check() != smt.Unsat {
 			t.Errorf("enum %q: expected BvVal(%d,2), got %s", name, i, result.String())
 		}
 	}
@@ -333,7 +334,7 @@ func TestEnumeratedToNumeralZ3_RangeSort(t *testing.T) {
 	expected := ctx.IntVal(1)
 	slv := ctx.NewZ3Solver()
 	slv.Assert(ctx.Not(ctx.Eq(result, expected)))
-	if slv.Check() != Unsat {
+	if slv.Check() != smt.Unsat {
 		t.Errorf("green ordinal 1: expected IntVal(1), got %s", result.String())
 	}
 }

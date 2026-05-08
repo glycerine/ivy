@@ -1,51 +1,52 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"testing"
 )
 
 // --- ArraySort creation and introspection ---
 
 func TestArraySortIntInt(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	intSort := ctx.IntSort()
 	arrSort := ctx.ArraySort(intSort, intSort)
 
-	if arrSort.Kind() != SortArray {
+	if arrSort.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray, got %d", arrSort.Kind())
 	}
-	if arrSort.ArrayDomain().Kind() != SortInt {
+	if arrSort.ArrayDomain().Kind() != smt.SortInt {
 		t.Fatalf("expected domain SortInt, got %d", arrSort.ArrayDomain().Kind())
 	}
-	if arrSort.ArrayRange().Kind() != SortInt {
+	if arrSort.ArrayRange().Kind() != smt.SortInt {
 		t.Fatalf("expected range SortInt, got %d", arrSort.ArrayRange().Kind())
 	}
 }
 
 func TestArraySortIntBool(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 
-	if arrSort.Kind() != SortArray {
+	if arrSort.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray kind")
 	}
-	if arrSort.ArrayDomain().Kind() != SortInt {
+	if arrSort.ArrayDomain().Kind() != smt.SortInt {
 		t.Fatalf("expected domain Int")
 	}
-	if arrSort.ArrayRange().Kind() != SortBool {
+	if arrSort.ArrayRange().Kind() != smt.SortBool {
 		t.Fatalf("expected range Bool")
 	}
 }
 
 func TestArraySortBvDomain(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	bv8 := ctx.BvSort(8)
 	arrSort := ctx.ArraySort(bv8, ctx.IntSort())
 
-	if arrSort.Kind() != SortArray {
+	if arrSort.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray kind")
 	}
-	if arrSort.ArrayDomain().Kind() != SortBV {
+	if arrSort.ArrayDomain().Kind() != smt.SortBV {
 		t.Fatalf("expected domain BV, got %d", arrSort.ArrayDomain().Kind())
 	}
 	if ctx.BvSortSize(arrSort.ArrayDomain()) != 8 {
@@ -54,36 +55,36 @@ func TestArraySortBvDomain(t *testing.T) {
 }
 
 func TestArraySortUninterpreted(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	nodeSort := ctx.UninterpretedSort("node")
 	valSort := ctx.UninterpretedSort("value")
 	arrSort := ctx.ArraySort(nodeSort, valSort)
 
-	if arrSort.Kind() != SortArray {
+	if arrSort.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray")
 	}
-	if arrSort.ArrayDomain().Kind() != SortUninterpreted {
+	if arrSort.ArrayDomain().Kind() != smt.SortUninterpreted {
 		t.Fatalf("expected uninterpreted domain")
 	}
-	if arrSort.ArrayRange().Kind() != SortUninterpreted {
+	if arrSort.ArrayRange().Kind() != smt.SortUninterpreted {
 		t.Fatalf("expected uninterpreted range")
 	}
 }
 
 func TestArraySortNested(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	// Array(Int, Array(Int, Bool)) — nested array
 	inner := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 	outer := ctx.ArraySort(ctx.IntSort(), inner)
 
-	if outer.Kind() != SortArray {
+	if outer.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray")
 	}
 	rng := outer.ArrayRange()
-	if rng.Kind() != SortArray {
+	if rng.Kind() != smt.SortArray {
 		t.Fatalf("expected nested array range, got %d", rng.Kind())
 	}
-	if rng.ArrayRange().Kind() != SortBool {
+	if rng.ArrayRange().Kind() != smt.SortBool {
 		t.Fatalf("expected inner range Bool")
 	}
 }
@@ -91,7 +92,7 @@ func TestArraySortNested(t *testing.T) {
 // --- Select ---
 
 func TestSelectFromSymbolicArray(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -103,7 +104,7 @@ func TestSelectFromSymbolicArray(t *testing.T) {
 }
 
 func TestSelectFromConstArray(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(7))
 
 	// Select at any index from K(Int, 7) must equal 7
@@ -117,7 +118,7 @@ func TestSelectFromConstArray(t *testing.T) {
 // --- Store ---
 
 func TestStoreSelectSameIndex(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -133,7 +134,7 @@ func TestStoreSelectSameIndex(t *testing.T) {
 }
 
 func TestStoreSelectDifferentIndex(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -148,7 +149,7 @@ func TestStoreSelectDifferentIndex(t *testing.T) {
 }
 
 func TestStoreOverwrite(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -163,7 +164,7 @@ func TestStoreOverwrite(t *testing.T) {
 }
 
 func TestStoreMultipleIndices(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -182,7 +183,7 @@ func TestStoreMultipleIndices(t *testing.T) {
 // --- ConstArray ---
 
 func TestConstArrayBoolRange(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.BoolVal(true))
 
 	// Every index maps to true
@@ -193,7 +194,7 @@ func TestConstArrayBoolRange(t *testing.T) {
 }
 
 func TestConstArrayThenStore(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(0))
 
 	// Start with all-zero array, store 99 at index 5
@@ -210,7 +211,7 @@ func TestConstArrayThenStore(t *testing.T) {
 // --- Array equality ---
 
 func TestArrayExtensionality(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 	b := ctx.Const("b", arrSort)
@@ -286,7 +287,7 @@ func TestTranslateSortArrayIntBool(t *testing.T) {
 	if err != nil {
 		t.Fatalf("TranslateSort(arr[int][bool]) failed: %v", err)
 	}
-	if z3s.Kind() != SortArray {
+	if z3s.Kind() != smt.SortArray {
 		t.Fatalf("expected SortArray, got %d", z3s.Kind())
 	}
 }
@@ -334,7 +335,7 @@ func TestTranslateSortNonArray(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.Kind() != SortUninterpreted {
+	if s.Kind() != smt.SortUninterpreted {
 		t.Fatalf("expected SortUninterpreted, got %d", s.Kind())
 	}
 }
@@ -342,7 +343,7 @@ func TestTranslateSortNonArray(t *testing.T) {
 // --- Symbolic array solving ---
 
 func TestArraySymbolicSolve(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -355,7 +356,7 @@ func TestArraySymbolicSolve(t *testing.T) {
 }
 
 func TestArraySymbolicUnsatConflict(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -369,7 +370,7 @@ func TestArraySymbolicUnsatConflict(t *testing.T) {
 // --- Array with quantifiers ---
 
 func TestArrayForAllSelect(t *testing.T) {
-	ctx := NewZ3Context()
+	ctx := smt.NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(5))
@@ -380,6 +381,6 @@ func TestArrayForAllSelect(t *testing.T) {
 	x := ctx.Const("x", ctx.IntSort())
 	body := ctx.Eq(ctx.Select(a, x), ctx.IntVal(5))
 	// Negate forall to check validity: NOT(forall x: a[x]==5) should be unsat
-	slv.Assert(ctx.Not(ctx.ForAll([]Z3Expr{x}, body)))
+	slv.Assert(ctx.Not(ctx.ForAll([]smt.Z3Expr{x}, body)))
 	assertUnsat(t, slv, "K(Int,5) satisfies forall x: a[x]==5")
 }

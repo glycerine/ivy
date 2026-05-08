@@ -7,6 +7,9 @@ package goivy
 import (
 	"fmt"
 	"strings"
+	"sync/atomic"
+
+	"github.com/glycerine/ivy/goivy/smt"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -172,7 +175,8 @@ type Module struct {
 // all other copies see it. This matches Python's process-global
 // _z3_check_counter which accumulates across all module copies.
 type z3CtxHolder struct {
-	ctx *Z3Context
+	ctx            *smt.Z3Context
+	z3CheckCounter atomic.Int64
 }
 
 // NamedAction pairs a name with an action.

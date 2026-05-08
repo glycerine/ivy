@@ -4,20 +4,21 @@ package goivy
 
 import (
 	"fmt"
+	"github.com/glycerine/ivy/goivy/smt"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // ModelResult holds a Z3 model and associated solver state.
 type ModelResult struct {
-	Solver  *Z3Solver
-	Model   *Model
+	Solver  *smt.Z3Solver
+	Model   *smt.Model
 	Vocab   []*Const
-	Context *Z3Context
+	Context *smt.Z3Context
 }
 
 // Eval evaluates a Z3 expression in the model with completion.
-func (mr *ModelResult) Eval(e Z3Expr) (Z3Expr, bool) {
+func (mr *ModelResult) Eval(e smt.Z3Expr) (smt.Z3Expr, bool) {
 	return mr.Model.Eval(e, true)
 }
 
@@ -40,8 +41,8 @@ func (s *Solver) GetModelClauses(clauses *Clauses) (*ModelResult, error) {
 	}
 	z3solver.Assert(zc)
 
-	result := z3solver.Check()
-	if result == Unsat {
+	result := s.checkZ3(z3solver)
+	if result == smt.Unsat {
 		return nil, nil // unsatisfiable
 	}
 
@@ -69,8 +70,8 @@ func (s *Solver) GetModelClauses(clauses *Clauses) (*ModelResult, error) {
 
 // ModelValues evaluates a list of expressions in a model.
 // Returns a map from expression string to its model value.
-func (s *Solver) ModelValues(model *Model, syms []*Const) (map[string]Z3Expr, error) {
-	result := make(map[string]Z3Expr, len(syms))
+func (s *Solver) ModelValues(model *smt.Model, syms []*Const) (map[string]smt.Z3Expr, error) {
+	result := make(map[string]smt.Z3Expr, len(syms))
 	for _, sym := range syms {
 		zSym, err := s.tr.Translate(sym)
 		if err != nil {
@@ -142,7 +143,7 @@ func (s *Solver) GetSmallModelWithCond(
 	// Supports both incremental (push/pop) and non-incremental (fresh solver)
 	// modes, matching Python's opt_incremental parameter.
 	// Python: ivy_solver.py:1221-1265
-	overallResult := Unsat
+	overallResult := smt.Unsat
 	var assumes []*Clauses // track assumed conditions for non-incremental replay
 	// Python ivy_solver.py:1469-1512:
 	//   if final_cond is not None:    → Go: finalCond != nil
@@ -207,14 +208,14 @@ func (s *Solver) GetSmallModelWithCond(
 				// Python ivy_solver.py:1437 calls decide(s) which emits the
 				// decide() ENTER trace before invoking solver.check.
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				res := z3solver.Check()
+				res := s.checkZ3(z3solver)
 
-				if res != Unsat {
+				if res != smt.Unsat {
 					overallResult = res
 					// SAT: the check condition is satisfiable (property fails)
 					if fc.Sat() {
 						// Checker says to continue (ignore this failure)
-						overallResult = Unsat
+						overallResult = smt.Unsat
 						if s.opts.Incremental {
 							z3solver.Pop()
 						}
@@ -224,7 +225,7 @@ func (s *Solver) GetSmallModelWithCond(
 					// model remains constrained by the failing final condition.
 					break // stop checking
 				} else {
-					overallResult = Unsat
+					overallResult = smt.Unsat
 					fc.Unsat()
 				}
 				if s.opts.Incremental {
@@ -236,10 +237,10 @@ func (s *Solver) GetSmallModelWithCond(
 		// No final conditions: just check satisfiability.
 		// Python ivy_solver.py:1451 calls decide(s) here.
 		xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-		overallResult = z3solver.Check()
+		overallResult = s.checkZ3(z3solver)
 	}
 
-	if overallResult == Unsat {
+	if overallResult == smt.Unsat {
 		return nil, nil
 	}
 
@@ -255,7 +256,7 @@ func (s *Solver) GetSmallModelWithCond(
 				z3solver.Push()
 				z3solver.Assert(zsc)
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				if z3solver.Check() == Sat {
+				if s.checkZ3(z3solver) == smt.Sat {
 					break
 				}
 				z3solver.Pop()
@@ -273,7 +274,7 @@ func (s *Solver) GetSmallModelWithCond(
 				z3solver.Push()
 				z3solver.Assert(zsc)
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				if z3solver.Check() == Sat {
+				if s.checkZ3(z3solver) == smt.Sat {
 					break
 				}
 				z3solver.Pop()
@@ -303,7 +304,7 @@ func (s *Solver) GetSmallModelWithCond(
 }
 
 // EvalFormula evaluates a formula in a model, returning true/false/unknown.
-func (s *Solver) EvalFormula(model *Model, fmla Expr) (bool, error) {
+func (s *Solver) EvalFormula(model *smt.Model, fmla Expr) (bool, error) {
 	zf, err := s.tr.Translate(fmla)
 	if err != nil {
 		return false, err
@@ -318,16 +319,16 @@ func (s *Solver) EvalFormula(model *Model, fmla Expr) (bool, error) {
 
 // CubeToZ3 converts a list of literals (a cube) to a Z3 conjunction.
 // Corresponds to Python's cube_to_z3.
-func (s *Solver) CubeToZ3(cube []*LogicLiteral) (Z3Expr, error) {
+func (s *Solver) CubeToZ3(cube []*LogicLiteral) (smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:774 cube_to_z3() ENTER nlits=%d", len(cube))
 	if len(cube) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
-	exprs := make([]Z3Expr, len(cube))
+	exprs := make([]smt.Z3Expr, len(cube))
 	for i, lit := range cube {
 		zlit, err := s.LiteralToZ3(lit)
 		if err != nil {
-			return Z3Expr{}, err
+			return smt.Z3Expr{}, err
 		}
 		exprs[i] = zlit
 	}
@@ -338,11 +339,11 @@ func (s *Solver) CubeToZ3(cube []*LogicLiteral) (Z3Expr, error) {
 }
 
 // LiteralToZ3 converts a single literal to a Z3 expression.
-func (s *Solver) LiteralToZ3(lit *LogicLiteral) (Z3Expr, error) {
+func (s *Solver) LiteralToZ3(lit *LogicLiteral) (smt.Z3Expr, error) {
 	xtracer.Trace("ivy_solver.py:537 literal_to_z3() ENTER polarity=%v", lit.Polarity)
 	zAtom, err := s.tr.Translate(lit.Atom)
 	if err != nil {
-		return Z3Expr{}, err
+		return smt.Z3Expr{}, err
 	}
 	if lit.Polarity == 0 {
 		return s.tr.Ctx.Not(zAtom), nil
@@ -354,7 +355,7 @@ func (s *Solver) LiteralToZ3(lit *LogicLiteral) (Z3Expr, error) {
 // Keeps a reference to the Z3 expression to preserve the AST ID from GC.
 // Corresponds to Python's memo[fid] = (f, res) in check_cube.
 type CubeMemoEntry struct {
-	Expr   Z3Expr // prevent GC so AST ID stays valid
+	Expr   smt.Z3Expr // prevent GC so AST ID stays valid
 	Result bool
 }
 
@@ -367,7 +368,7 @@ type CubeMemoEntry struct {
 //
 // Corresponds to Python's check_cube (ivy_solver.py:714-733).
 func (s *Solver) CheckCube(
-	z3solver *Z3Solver,
+	z3solver *smt.Z3Solver,
 	cube []*LogicLiteral,
 	memo map[uint]*CubeMemoEntry,
 	memoUnsatOnly bool,
@@ -394,8 +395,8 @@ func (s *Solver) CheckCube(
 	}
 
 	z3solver.Assert(zcube)
-	result := z3solver.Check()
-	sat := result != Unsat
+	result := s.checkZ3(z3solver)
+	sat := result != smt.Unsat
 
 	// Store in memo
 	// Python: memo[fid] = (f, res) -- keep reference to f to preserve id
@@ -552,7 +553,7 @@ func (s *Solver) FilterRedundantFacts(clauses *Clauses, axioms *Clauses) (*Claus
 	// Create activation literals and gated negatives.
 	// Python: alits = [z3.Const("__c%s" % n, z3.BoolSort()) for n,c in enumerate(neg_fmlas)]
 	//         cc = [z3.Or(z3.Not(a), z3.Not(formula_to_z3(c))) for a,c in zip(alits,neg_fmlas)]
-	alits := make([]Z3Expr, len(negFmlas))
+	alits := make([]smt.Z3Expr, len(negFmlas))
 	for i, nf := range negFmlas {
 		alit := ctx.Const(fmt.Sprintf("__c%d", i), ctx.BoolSort())
 		alits[i] = alit
@@ -568,7 +569,7 @@ func (s *Solver) FilterRedundantFacts(clauses *Clauses, axioms *Clauses) (*Claus
 	// Python: if decide(s2, [alit]) == z3.sat: keep.append(fmla)
 	var keep []Expr
 	for i, fmla := range negFmlas {
-		if z3solver.CheckAssumptions([]Z3Expr{alits[i]}) == Sat {
+		if s.checkZ3Assumptions(z3solver, []smt.Z3Expr{alits[i]}) == smt.Sat {
 			keep = append(keep, fmla)
 		}
 	}

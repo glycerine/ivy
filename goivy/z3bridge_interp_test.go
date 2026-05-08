@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"github.com/glycerine/ivy/goivy/smt"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ import (
 // Matches the Python z3 docstring example.
 func TestBinaryInterpolant(t *testing.T) {
 	// Create an interpolation-capable context
-	ctx := NewInterpolationZ3Context()
+	ctx := smt.NewInterpolationZ3Context()
 
 	// Create integer variable x
 	intSort := ctx.IntSort()
@@ -42,7 +43,7 @@ func TestBinaryInterpolant(t *testing.T) {
 	solver1 := ctx.NewZ3Solver()
 	solver1.Assert(a)
 	solver1.Assert(ctx.Not(itp))
-	if solver1.Check() != Unsat {
+	if solver1.Check() != smt.Unsat {
 		t.Error("interpolant is not implied by a (x < 0)")
 	}
 
@@ -50,7 +51,7 @@ func TestBinaryInterpolant(t *testing.T) {
 	solver2 := ctx.NewZ3Solver()
 	solver2.Assert(itp)
 	solver2.Assert(b)
-	if solver2.Check() != Unsat {
+	if solver2.Check() != smt.Unsat {
 		t.Error("interpolant AND b (x > 2) is satisfiable")
 	}
 }
@@ -58,7 +59,7 @@ func TestBinaryInterpolant(t *testing.T) {
 // TestComputeInterpolantSat verifies that ComputeInterpolant returns
 // an error when the formula is satisfiable (no interpolant exists).
 func TestComputeInterpolantSat(t *testing.T) {
-	ctx := NewInterpolationZ3Context()
+	ctx := smt.NewInterpolationZ3Context()
 	intSort := ctx.IntSort()
 	x := ctx.Const("x", intSort)
 

@@ -2,13 +2,14 @@
 
 package main
 
+import "github.com/glycerine/ivy/goivy/smt"
 import goivy "github.com/glycerine/ivy/goivy"
 
 var (
 	probeConfig    *goivy.Config
 	probeModule    *goivy.Module
-	probeZ3Context *goivy.Z3Context
-	probeBoolSort  goivy.Z3Sort
+	probeZ3Context *smt.Z3Context
+	probeBoolSort  smt.Z3Sort
 	probeChecksum  uint32
 )
 
@@ -19,7 +20,7 @@ func main() {
 func probeInit() uint32 {
 	cfg := goivy.NewConfig()
 	mod := goivy.New()
-	ctx := goivy.NewZ3Context()
+	ctx := smt.NewZ3Context()
 	boolSort := ctx.BoolSort()
 
 	probeConfig = cfg
@@ -31,7 +32,7 @@ func probeInit() uint32 {
 	if cfg.Coverage {
 		checksum ^= 0x10000
 	}
-	if boolSort.Kind() == goivy.SortBool {
+	if boolSort.Kind() == smt.SortBool {
 		checksum ^= 0x47100000
 	}
 	checksum += uint32(mod.Relations.Len())
@@ -51,7 +52,8 @@ func probeRoundTripBoolSortID() uint32 {
 	if probeZ3Context == nil {
 		probeChecksum = probeInit()
 	}
-	return uint32(probeZ3Context.BoolSort().GetId())
+	boolSort := probeZ3Context.BoolSort()
+	return uint32(boolSort.GetId())
 }
 
 func probeChecksumValue() uint32 {
