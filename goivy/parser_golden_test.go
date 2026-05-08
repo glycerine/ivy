@@ -1,3 +1,5 @@
+//go:build !wasip1
+
 package goivy
 
 // Golden AST comparison test: parses each .ivy file in ivy-lang-examples/
