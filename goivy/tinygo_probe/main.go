@@ -5,11 +5,11 @@ package main
 import goivy "github.com/glycerine/ivy/goivy"
 
 var (
-	probeConfig   *goivy.Config
-	probeModule   *goivy.Module
+	probeConfig    *goivy.Config
+	probeModule    *goivy.Module
 	probeZ3Context *goivy.Z3Context
-	probeBoolSort goivy.Z3Sort
-	probeChecksum uint32
+	probeBoolSort  goivy.Z3Sort
+	probeChecksum  uint32
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 //export ivy_probe_init
 func ivyProbeInit() uint32 {
 	cfg := goivy.NewConfig()
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	ctx := goivy.NewZ3Context()
 	boolSort := ctx.BoolSort()
 
