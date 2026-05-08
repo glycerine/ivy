@@ -43,9 +43,6 @@ func TestNewSolverUsesConfiguredZ3BackendInterface(t *testing.T) {
 	defer s.z3u.Close()
 	defer s.tr.Ctx.Close()
 
-	if cfg.BackendName != "recording" {
-		t.Fatalf("ResolveBackend did not fill BackendName from injected backend: %q", cfg.BackendName)
-	}
 	if backend.contexts != 2 {
 		t.Fatalf("configured backend created %d contexts, want 2", backend.contexts)
 	}

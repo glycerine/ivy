@@ -24,12 +24,12 @@ type Z3Utils struct {
 
 // NewZ3Utils creates a Z3Utils with a fresh Z3 context and empty caches.
 func NewZ3Utils() *Z3Utils {
-	return NewZ3UtilsWithBackend(defaultZ3Backend())
+	return NewZ3UtilsWithBackend(DefaultZ3Backend())
 }
 
 func NewZ3UtilsWithBackend(backend Z3Backend) *Z3Utils {
 	if backend == nil {
-		backend = defaultZ3Backend()
+		backend = DefaultZ3Backend()
 	}
 	return &Z3Utils{
 		Ctx:           backend.NewZ3Context(),

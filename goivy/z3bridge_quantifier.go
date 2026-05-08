@@ -466,7 +466,7 @@ anymore. This idiom is similar to the one used in BDD
 
 */
 func NewZ3Context() *Z3Context {
-	return defaultZ3Backend().NewZ3Context()
+	return DefaultZ3Backend().NewZ3Context()
 }
 
 func newCGoZ3Context(backend Z3Backend) *Z3Context {
@@ -1454,7 +1454,7 @@ type Z3Solver struct {
 func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
 	backend := ctx.backend
 	if backend == nil {
-		backend = defaultZ3Backend()
+		backend = DefaultZ3Backend()
 	}
 	return backend.NewZ3Solver(ctx)
 }

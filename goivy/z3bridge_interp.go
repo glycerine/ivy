@@ -34,7 +34,7 @@ func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
 // for interpolation.
 // Corresponds to Python's context created via Z3_mk_interpolation_context.
 func NewInterpolationZ3Context() *Z3Context {
-	return defaultZ3Backend().NewInterpolationZ3Context()
+	return DefaultZ3Backend().NewInterpolationZ3Context()
 }
 
 func newCGoInterpolationZ3Context(backend Z3Backend) *Z3Context {

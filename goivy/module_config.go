@@ -24,9 +24,13 @@ type cpp struct{}
 type js struct{}
 type wazero struct{}
 
-func defaultZ3Backend() Z3Backend {
+func DefaultZ3Backend() Z3Backend {
 	return &cpp{}
 }
+
+//func defaultZ3Backend() Z3Backend {
+//	return &cpp{}
+//}
 
 func NewZ3Backend(back BACK) (Z3Backend, error) {
 	switch back {
@@ -43,7 +47,7 @@ func NewZ3Backend(back BACK) (Z3Backend, error) {
 
 func z3BackendForConfig(cfg *Config) Z3Backend {
 	if cfg == nil || isNil(cfg.Backend) {
-		return defaultZ3Backend()
+		return DefaultZ3Backend()
 	}
 	return cfg.Backend
 }

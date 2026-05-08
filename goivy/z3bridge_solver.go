@@ -89,12 +89,12 @@ func (s *Solver) z3Backend() Z3Backend {
 	if s != nil && s.mod != nil {
 		return z3BackendForModule(s.mod)
 	}
-	return defaultZ3Backend()
+	return DefaultZ3Backend()
 }
 
 func z3BackendForModule(mod *Module) Z3Backend {
 	if mod == nil {
-		return defaultZ3Backend()
+		return DefaultZ3Backend()
 	}
 	return z3BackendForConfig(mod.Cfg)
 }

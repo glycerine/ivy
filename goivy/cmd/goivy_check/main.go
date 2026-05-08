@@ -160,16 +160,22 @@ func applyParams(cfg *goivy.Config, params map[string]string) error {
 		case "checked_assert":
 			cfg.CheckLineno = val
 		case "backend":
-			if err := cfg.SetBackend(val); err != nil {
+			be, err := goivy.NewZ3Backend(goivy.BACK(val))
+			if err != nil {
 				return err
 			}
+			cfg.Backend = be
 		case "parser":
 			panic("parser is no longer a choice; we only have the one now.")
 		default:
 			return fmt.Errorf("unknown parameter: %s", key)
 		}
 	}
-	return cfg.ResolveBackend()
+	if cfg.Backend != nil {
+		return nil
+	}
+	cfg.Backend = goivy.DefaultZ3Backend()
+	return nil
 }
 
 func parseBool(s string) bool {
