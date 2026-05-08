@@ -1,11 +1,9 @@
-import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const require = createRequire(import.meta.url);
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const webvueDir = path.resolve(testDir, '../..');
 const staticDir = path.join(webvueDir, 'static');
@@ -14,6 +12,16 @@ const z3WasmPath = path.join(staticDir, 'z3-471-api.wasm');
 const z3ExportListPath = path.join(staticDir, 'z3-wasm-exported-functions.json');
 
 const wasmModuleNameExpectedByGlue = 'z3-api.wasm';
+const legacyInterpolationExports = [
+  '_Z3_mk_interpolant',
+  '_Z3_mk_interpolation_context',
+  '_Z3_get_interpolant',
+  '_Z3_compute_interpolant',
+  '_Z3_interpolation_profile',
+  '_Z3_read_interpolation_problem',
+  '_Z3_check_interpolant',
+  '_Z3_write_interpolation_problem',
+];
 
 function readExportedFunctions() {
   return JSON.parse(fs.readFileSync(z3ExportListPath, 'utf8'));
@@ -24,37 +32,91 @@ function missingExports(requiredExports) {
   return requiredExports.filter((name) => !exported.has(name));
 }
 
-function loadZ3Factory() {
-  const source = fs.readFileSync(z3GluePath, 'utf8');
-  const moduleObject = { exports: {} };
-  const evaluateGlue = new Function(
-    'module',
-    'exports',
-    'require',
-    '__dirname',
-    '__filename',
-    `${source}\nreturn module.exports;`,
-  );
-  return evaluateGlue(moduleObject, moduleObject.exports, require, staticDir, z3GluePath);
-}
+function runNodeWithWasmExceptionHandling(script) {
+  const result = spawnSync(process.execPath, ['--experimental-wasm-exnref', '-e', script], {
+    cwd: webvueDir,
+    encoding: 'utf8',
+    timeout: 30000,
+  });
+  const optionFailure = result.status === 9
+    && /bad option|unrecognized|not allowed/.test(result.stderr || '');
 
-async function instantiateZ3() {
-  const initZ3 = loadZ3Factory();
-  return initZ3({
-    locateFile(file) {
-      if (file === wasmModuleNameExpectedByGlue) {
-        return z3WasmPath;
-      }
-      return path.join(staticDir, file);
-    },
+  if (!optionFailure) {
+    return result;
+  }
+
+  return spawnSync(process.execPath, ['-e', script], {
+    cwd: webvueDir,
+    encoding: 'utf8',
+    timeout: 30000,
   });
 }
 
-function writeCString(z3, value) {
-  const byteLength = Buffer.byteLength(value, 'utf8') + 1;
-  const ptr = z3._malloc(byteLength);
-  z3.stringToUTF8(value, ptr, byteLength);
-  return ptr;
+function expectNodeScriptToPass(result) {
+  expect(result.error).toBeUndefined();
+  if (result.status !== 0) {
+    throw new Error(`Node Z3 harness failed with status ${result.status}.\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`);
+  }
+}
+
+function z3NodeScript(body) {
+  return `
+    const fs = require('fs');
+    const path = require('path');
+    const staticDir = ${JSON.stringify(staticDir)};
+    const z3GluePath = ${JSON.stringify(z3GluePath)};
+    const z3WasmPath = ${JSON.stringify(z3WasmPath)};
+    const wasmModuleNameExpectedByGlue = ${JSON.stringify(wasmModuleNameExpectedByGlue)};
+    const source = fs.readFileSync(z3GluePath, 'utf8');
+    const moduleObject = { exports: {} };
+    const initZ3 = new Function(
+      'module',
+      'exports',
+      'require',
+      '__dirname',
+      '__filename',
+      source + '\\nreturn module.exports;',
+    )(moduleObject, moduleObject.exports, require, staticDir, z3GluePath);
+
+    function writeCString(z3, value) {
+      const byteLength = Buffer.byteLength(value, 'utf8') + 1;
+      const ptr = z3._malloc(byteLength);
+      z3.stringToUTF8(value, ptr, byteLength);
+      return ptr;
+    }
+
+    function mkBoolVar(z3, ctx, name) {
+      const symbolName = writeCString(z3, name);
+      const symbol = z3._Z3_mk_string_symbol(ctx, symbolName);
+      z3._free(symbolName);
+      return z3._Z3_mk_const(ctx, symbol, z3._Z3_mk_bool_sort(ctx));
+    }
+
+    function mkAnd(z3, ctx, args) {
+      const argsPtr = z3._malloc(4 * args.length);
+      for (let i = 0; i < args.length; i += 1) {
+        z3.HEAP32[(argsPtr >> 2) + i] = args[i];
+      }
+      const ast = z3._Z3_mk_and(ctx, args.length, argsPtr);
+      z3._free(argsPtr);
+      return ast;
+    }
+
+    (async () => {
+      const z3 = await initZ3({
+        locateFile(file) {
+          if (file === wasmModuleNameExpectedByGlue) {
+            return z3WasmPath;
+          }
+          return path.join(staticDir, file);
+        },
+      });
+      ${body}
+    })().catch((err) => {
+      console.error(err && err.stack ? err.stack : err);
+      process.exit(1);
+    });
+  `;
 }
 
 describe('Z3 wasm artifact', () => {
@@ -116,71 +178,103 @@ describe('Z3 wasm artifact', () => {
     ])).toEqual([]);
   });
 
-  it('documents the legacy interpolation exports still missing from the wasm artifact', () => {
-    expect(missingExports([
-      '_Z3_mk_interpolation_context',
-      '_Z3_mk_interpolant',
-      '_Z3_compute_interpolant',
-    ])).toEqual([
-      '_Z3_mk_interpolation_context',
-      '_Z3_mk_interpolant',
-      '_Z3_compute_interpolant',
-    ]);
+  it('exports the legacy interpolation C API needed by Ivy', () => {
+    expect(missingExports(legacyInterpolationExports)).toEqual([]);
   });
 
-  it('instantiates Z3 wasm and runs a synchronous solver check', async () => {
-    const z3 = await instantiateZ3();
-    const cfg = z3._Z3_mk_config();
-    const ctx = z3._Z3_mk_context_rc(cfg);
-    z3._Z3_del_config(cfg);
+  it('instantiates Z3 wasm with native Wasm EH and runs a synchronous solver check', () => {
+    const result = runNodeWithWasmExceptionHandling(z3NodeScript(`
+      const cfg = z3._Z3_mk_config();
+      const ctx = z3._Z3_mk_context_rc(cfg);
+      z3._Z3_del_config(cfg);
 
-    try {
-      const symbolName = writeCString(z3, 'p');
-      const symbol = z3._Z3_mk_string_symbol(ctx, symbolName);
-      z3._free(symbolName);
+      try {
+        const p = mkBoolVar(z3, ctx, 'p');
+        z3._Z3_inc_ref(ctx, p);
 
-      const boolSort = z3._Z3_mk_bool_sort(ctx);
-      const p = z3._Z3_mk_const(ctx, symbol, boolSort);
-      z3._Z3_inc_ref(ctx, p);
+        const notP = z3._Z3_mk_not(ctx, p);
+        z3._Z3_inc_ref(ctx, notP);
 
-      const notP = z3._Z3_mk_not(ctx, p);
-      z3._Z3_inc_ref(ctx, notP);
+        const solver = z3._Z3_mk_solver(ctx);
+        z3._Z3_solver_inc_ref(ctx, solver);
+        z3._Z3_solver_assert(ctx, solver, p);
+        z3._Z3_solver_assert(ctx, solver, notP);
 
-      const solver = z3._Z3_mk_solver(ctx);
-      z3._Z3_solver_inc_ref(ctx, solver);
-      z3._Z3_solver_assert(ctx, solver, p);
-      z3._Z3_solver_assert(ctx, solver, notP);
+        console.log('solver check', z3._Z3_solver_check(ctx, solver));
+        console.log(z3.UTF8ToString(z3._Z3_solver_to_string(ctx, solver)));
+      } finally {
+        z3._Z3_del_context(ctx);
+      }
+    `));
 
-      expect(z3._Z3_solver_check(ctx, solver)).toBe(-1);
-      expect(z3.UTF8ToString(z3._Z3_solver_to_string(ctx, solver))).toContain('(assert');
-    } finally {
-      z3._Z3_del_context(ctx);
-    }
+    expectNodeScriptToPass(result);
+    expect(result.stdout).toContain('solver check -1');
+    expect(result.stdout).toContain('(assert');
+  }, 30000);
+
+  it('computes a legacy interpolation result through the JavaScript glue', () => {
+    const result = runNodeWithWasmExceptionHandling(z3NodeScript(`
+      for (const name of ${JSON.stringify(legacyInterpolationExports)}) {
+        if (typeof z3[name] !== 'function') {
+          throw new Error(name + ' is not callable through the Emscripten glue');
+        }
+      }
+
+      const cfg = z3._Z3_mk_config();
+      const modelKey = writeCString(z3, 'model');
+      const modelValue = writeCString(z3, 'true');
+      z3._Z3_set_param_value(cfg, modelKey, modelValue);
+      z3._free(modelKey);
+      z3._free(modelValue);
+
+      const ctx = z3._Z3_mk_interpolation_context(cfg);
+      z3._Z3_del_config(cfg);
+
+      const predA = mkBoolVar(z3, ctx, 'PredA');
+      const predB = mkBoolVar(z3, ctx, 'PredB');
+      const predC = mkBoolVar(z3, ctx, 'PredC');
+      const markedLeft = z3._Z3_mk_interpolant(ctx, mkAnd(z3, ctx, [predA, predB]));
+      const right = mkAnd(z3, ctx, [z3._Z3_mk_not(ctx, predB), predC]);
+      const formula = mkAnd(z3, ctx, [markedLeft, right]);
+      const interpolationOut = z3._malloc(4);
+      const modelOut = z3._malloc(4);
+      z3.HEAP32[interpolationOut >> 2] = 0;
+      z3.HEAP32[modelOut >> 2] = 0;
+
+      try {
+        const status = z3._Z3_compute_interpolant(ctx, formula, 0, interpolationOut, modelOut);
+        const interpolationVector = z3.HEAP32[interpolationOut >> 2];
+        if (status !== -1) {
+          throw new Error('expected unsat interpolation status -1, got ' + status);
+        }
+        if (!interpolationVector) {
+          throw new Error('Z3_compute_interpolant did not return an AST vector');
+        }
+
+        const vectorSize = z3._Z3_ast_vector_size(ctx, interpolationVector);
+        if (vectorSize !== 1) {
+          throw new Error('expected one interpolant, got ' + vectorSize);
+        }
+
+        const interpolant = z3._Z3_ast_vector_get(ctx, interpolationVector, 0);
+        const interpolantText = z3.UTF8ToString(z3._Z3_ast_to_string(ctx, interpolant));
+        if (!interpolantText.length) {
+          throw new Error('interpolant string was empty');
+        }
+        console.log('interpolation compute ok', status, vectorSize, interpolantText);
+      } finally {
+        z3._free(interpolationOut);
+        z3._free(modelOut);
+        z3._Z3_del_context(ctx);
+      }
+    `));
+
+    expectNodeScriptToPass(result);
+    expect(result.stdout).toContain('interpolation compute ok -1 1');
   }, 30000);
 
   it('documents that the current build cannot safely use the SMT-LIB2 parser path yet', () => {
-    const script = `
-      const fs = require('fs');
-      const path = require('path');
-      const source = fs.readFileSync(${JSON.stringify(z3GluePath)}, 'utf8');
-      const moduleObject = { exports: {} };
-      const initZ3 = new Function(
-        'module',
-        'exports',
-        'require',
-        '__dirname',
-        '__filename',
-        source + '\\nreturn module.exports;',
-      )(moduleObject, moduleObject.exports, require, ${JSON.stringify(staticDir)}, ${JSON.stringify(z3GluePath)});
-
-      (async () => {
-        const z3 = await initZ3({
-          locateFile(file) {
-            return file === ${JSON.stringify(wasmModuleNameExpectedByGlue)}
-              ? ${JSON.stringify(z3WasmPath)}
-              : path.join(${JSON.stringify(staticDir)}, file);
-          },
-        });
+    const result = runNodeWithWasmExceptionHandling(z3NodeScript(`
         const cfg = z3._Z3_mk_config();
         const ctx = z3._Z3_mk_context_rc(cfg);
         z3._Z3_del_config(cfg);
@@ -190,16 +284,11 @@ describe('Z3 wasm artifact', () => {
         const ptr = z3._malloc(Buffer.byteLength(text, 'utf8') + 1);
         z3.stringToUTF8(text, ptr, Buffer.byteLength(text, 'utf8') + 1);
         z3._Z3_solver_from_string(ctx, solver, ptr);
-        console.log(z3._Z3_solver_check(ctx, solver));
-      })();
-    `;
+        console.log('solver from string check', z3._Z3_solver_check(ctx, solver));
+    `));
 
-    const result = spawnSync(process.execPath, ['-e', script], {
-      encoding: 'utf8',
-      timeout: 30000,
-    });
-
+    expect(result.error).toBeUndefined();
     expect(result.status).not.toBe(0);
-    expect(`${result.stderr}\n${result.stdout}`).toContain('Exception thrown, but exception catching is not enabled');
+    expect(`${result.stderr}\n${result.stdout}`).toMatch(/memory access out of bounds|RuntimeError/);
   }, 30000);
 });

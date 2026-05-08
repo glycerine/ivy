@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero test-z3-wasm-wazero tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero test-z3-wasm-wazero test-z3-wasm-js tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -16,14 +16,24 @@ Z3_VENDOR_BUILD      := $(Z3_VENDOR_DIR)/build
 Z3_VENDOR_JS_API     := $(Z3_VENDOR_DIR)/src/api/js
 Z3_WEBVUE_STATIC     := webvue/static
 Z3_WEBVUE_API_BASE   := z3-471-api
+Z3_WASM_EXPORTS      := $(Z3_VENDOR_JS_API)/exported-functions.json
+Z3_WEBVUE_EXPORTS    := $(Z3_WEBVUE_STATIC)/z3-wasm-exported-functions.json
+Z3_WASM_LIB          := $(Z3_VENDOR_BUILD)/libz3.a
+Z3_WASM_API_STAMP    := $(Z3_VENDOR_BUILD)/.z3-api-wasm-eh.stamp
 Z3_WASM_PRE_EXNREF   := $(Z3_VENDOR_BUILD)/z3-api.pre-exnref.wasm
 Z3_WASM_EXNREF       := $(Z3_VENDOR_BUILD)/z3-api.exnref.wasm
+Z3_WEBVUE_WASM       := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).wasm
+Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
 EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
 WASM_OPT            ?= /usr/local/bin/wasm-opt
 Z3_WASM_JOBS        ?= 8
 EM_CACHE            ?= /private/tmp/ivy-emscripten-cache
+Z3_JS_EXPORT_HEADERS := $(addprefix $(Z3_VENDOR_DIR)/src/api/, \
+	z3_api.h z3_algebraic.h z3_ast_containers.h z3_fixedpoint.h \
+	z3_fpa.h z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h \
+	z3_interp.h)
 
 # Headers needed by the Go CGO bridge.
 Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
@@ -106,11 +116,15 @@ z3-build:
 		echo "Z3 fork already built at $(Z3_BUILD)/libz3.dylib"; \
 	fi
 
-z3-wasm-exports:
+$(Z3_WASM_EXPORTS): $(Z3_VENDOR_JS_API)/scripts/get-exports.ts $(Z3_VENDOR_JS_API)/scripts/parse-api.ts $(Z3_JS_EXPORT_HEADERS)
 	cd $(Z3_VENDOR_JS_API) && ./node_modules/.bin/ts-node --transpileOnly scripts/get-exports.ts > exported-functions.json
-	cp -p $(Z3_VENDOR_JS_API)/exported-functions.json $(Z3_WEBVUE_STATIC)/z3-wasm-exported-functions.json
 
-z3-wasm-lib-wasm-eh:
+$(Z3_WEBVUE_EXPORTS): $(Z3_WASM_EXPORTS)
+	cp -p $(Z3_WASM_EXPORTS) $(Z3_WEBVUE_EXPORTS)
+
+z3-wasm-exports: $(Z3_WEBVUE_EXPORTS)
+
+$(Z3_WASM_LIB):
 	cd $(Z3_VENDOR_DIR) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" AR=emar CXX=em++ CC=emcc \
@@ -121,12 +135,17 @@ z3-wasm-lib-wasm-eh:
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" emmake $(MAKE) -j$(Z3_WASM_JOBS) libz3.a
 
-z3-wasm-api-link: z3-wasm-lib-wasm-eh z3-wasm-exports
+z3-wasm-lib-wasm-eh: $(Z3_WASM_LIB)
+
+$(Z3_WASM_API_STAMP): $(Z3_WASM_LIB) $(Z3_WEBVUE_EXPORTS) $(Z3_VENDOR_DIR)/build-wasm-api.sh
 	cd $(Z3_VENDOR_DIR) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" EMCC="$(EMCC)" ./build-wasm-api.sh
+	touch $(Z3_WASM_API_STAMP)
 
-z3-wasm-api: z3-wasm-api-link
+z3-wasm-api-link: $(Z3_WASM_API_STAMP)
+
+$(Z3_WASM_EXNREF): $(Z3_WASM_API_STAMP)
 	cp -p $(Z3_VENDOR_BUILD)/z3-api.wasm $(Z3_WASM_PRE_EXNREF)
 	$(WASM_OPT) --translate-to-exnref \
 		--enable-exception-handling \
@@ -138,13 +157,22 @@ z3-wasm-api: z3-wasm-api-link
 		--enable-sign-ext \
 		--enable-nontrapping-float-to-int \
 		-o $(Z3_WASM_EXNREF) $(Z3_WASM_PRE_EXNREF)
-	cp -p $(Z3_WASM_EXNREF) $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).wasm
-	cp -p $(Z3_VENDOR_BUILD)/z3-api.js $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
+
+$(Z3_WEBVUE_WASM): $(Z3_WASM_EXNREF)
+	cp -p $(Z3_WASM_EXNREF) $(Z3_WEBVUE_WASM)
+
+$(Z3_WEBVUE_JS): $(Z3_WASM_API_STAMP)
+	cp -p $(Z3_VENDOR_BUILD)/z3-api.js $(Z3_WEBVUE_JS)
+
+z3-wasm-api: $(Z3_WEBVUE_WASM) $(Z3_WEBVUE_JS)
 
 z3-wasm-api-wazero: z3-wasm-api
 
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
+
+test-z3-wasm-js: z3-wasm-api $(WEBVUE_VITEST_BIN)
+	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
