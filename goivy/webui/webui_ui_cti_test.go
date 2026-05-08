@@ -64,7 +64,7 @@ func TestAutodetectTransitiveNilModule(t *testing.T) {
 }
 
 func TestAutodetectTransitiveEmptySig(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	ui := NewCTIAnalysisGraphUI(mod)
 	ui.AutodetectTransitive()
 	if len(ui.TransitiveRelations) != 0 {
@@ -166,7 +166,7 @@ print(json.dumps({
 	P := goivy.NewConst("P", pSort)
 	PX, _ := goivy.NewApply(P, X)
 
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Sig = goivy.NewSig()
 	mod.Sig.Sorts.Set("S", S)
 	mod.Sig.Symbols.Set("P", &goivy.SymbolEntry{Sort: pSort})
@@ -234,7 +234,7 @@ func TestDiagramNoCtI(t *testing.T) {
 }
 
 func TestDiagramUsesLazyStateUpdateNotBMCValue(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	mod.Actions.Set("act", goivy.NewSequence())
 	ui := NewCTIAnalysisGraphUI(mod)
 	ui.Solver = nil

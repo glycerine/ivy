@@ -512,7 +512,7 @@ func TestGatherUsesRequestedConceptGraphSheet(t *testing.T) {
 }
 
 func TestReachUsesCurrentConceptGraphParentState(t *testing.T) {
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	p := goivy.NewConst("p", goivy.Boolean)
 	mod.Relations.Set("p", goivy.Boolean)
 	pred := goivy.NewState(mod, goivy.TrueClauses(nil))
@@ -707,7 +707,7 @@ func TestArgViewSourceReturnsLoadedSourceAndLine(t *testing.T) {
 
 func TestArgViewSourceLocatedActionReturnsLine(t *testing.T) {
 	const source = "line1\naction go = {\n}\n"
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	ag := goivy.NewAnalysisGraph(mod)
 	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
 	post := goivy.NewState(mod, goivy.TrueClauses(nil))

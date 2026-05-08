@@ -115,7 +115,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
 	// and CreateIsolate — matching Python's ivy_compile exactly.
 	sig := goivy.NewSig()
-	mod := goivy.New()
+	mod := goivy.NewModule()
 	if s.Cfg != nil {
 		if s.Cfg.ExtAction == "" {
 			s.Cfg.ExtAction = CompileKwargs["ext"]
