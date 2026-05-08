@@ -1,15 +1,15 @@
-//go:build tinygo || wasip1
+//go:build wasip1
 
 package main
 
 import goivy "github.com/glycerine/ivy/goivy"
 
 var (
-	probeConfig   *goivy.Config
-	probeModule   *goivy.Module
+	probeConfig    *goivy.Config
+	probeModule    *goivy.Module
 	probeZ3Context *goivy.Z3Context
-	probeBoolSort goivy.Z3Sort
-	probeChecksum uint32
+	probeBoolSort  goivy.Z3Sort
+	probeChecksum  uint32
 )
 
 func main() {

@@ -1,4 +1,4 @@
-//go:build tinygo || wasip1
+//go:build wasip1
 
 package goivy
 

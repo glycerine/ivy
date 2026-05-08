@@ -19,11 +19,11 @@ func TestTinyGoProbeImportsZ3OverWazero(t *testing.T) {
 	}
 
 	tmp := t.TempDir()
-	wasmPath := filepath.Join(tmp, "ivy-tinygo-probe.wasm")
+	wasip1Path := filepath.Join(tmp, "ivy-tinygo-wasip1-probe.wasm")
 	cmd := exec.Command("tinygo", "build",
 		"-tags", "xtracer_off",
 		"-target", "wasip1",
-		"-o", wasmPath,
+		"-o", wasip1Path,
 		".",
 	)
 	cmd.Env = append(os.Environ(),
@@ -35,7 +35,7 @@ func TestTinyGoProbeImportsZ3OverWazero(t *testing.T) {
 		t.Fatalf("tinygo build failed: %v\n%s", err, out)
 	}
 
-	wasmBytes, err := os.ReadFile(wasmPath)
+	wasmBytes, err := os.ReadFile(wasip1Path)
 	if err != nil {
 		t.Fatalf("read wasm probe: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestTinyGoProbeImportsZ3OverWazero(t *testing.T) {
 	}
 
 	mod, err := rt.InstantiateWithConfig(ctx, wasmBytes, wazero.NewModuleConfig().
-		WithName("ivy_tinygo_probe").
+		WithName("ivy_tinygo_wasip1_probe").
 		WithStartFunctions(),
 	)
 	if err != nil {
