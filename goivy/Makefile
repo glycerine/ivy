@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero test-z3-wasm-wazero test-z3-wasm-js tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -174,6 +174,9 @@ test-z3-wasm-wazero: z3-wasm-api-wazero
 test-z3-wasm-js: z3-wasm-api $(WEBVUE_VITEST_BIN)
 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
 
+test-z3-wasm-browser: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
+
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
 build: # grammer_gen
@@ -202,6 +205,7 @@ CONTROL_PLAYWRIGHT_BIN := $(CONTROL_NODE_MODULES_DIR)/.bin/playwright
 WEBVUE_NODE_MODULES_DIR := webvue/node_modules
 WEBVUE_VITEST_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/vitest
 WEBVUE_VITE_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/vite
+WEBVUE_PLAYWRIGHT_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/playwright
 WEBVUE_NODE_MODULES_STAMP := $(WEBVUE_NODE_MODULES_DIR)/.package-lock.stamp
 
 PSQL ?= psql
@@ -252,9 +256,9 @@ $(WEBVUE_NODE_MODULES_STAMP): webvue/package.json webvue/package-lock.json
 	cd webvue && npm ci
 	touch $(WEBVUE_NODE_MODULES_STAMP)
 
-$(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN): $(WEBVUE_NODE_MODULES_STAMP)
+$(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN) $(WEBVUE_PLAYWRIGHT_BIN): $(WEBVUE_NODE_MODULES_STAMP)
 
-webvue-setup: $(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN)
+webvue-setup: $(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN) $(WEBVUE_PLAYWRIGHT_BIN)
 
 test-vue: $(WEBVUE_VITEST_BIN)
 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
