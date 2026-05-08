@@ -1,4 +1,4 @@
-//go:build tinygo
+//go:build tinygo || wasip1
 
 package main
 
@@ -13,11 +13,10 @@ var (
 )
 
 func main() {
-	probeChecksum = ivyProbeInit()
+	probeChecksum = probeInit()
 }
 
-//export ivy_probe_init
-func ivyProbeInit() uint32 {
+func probeInit() uint32 {
 	cfg := goivy.NewConfig()
 	mod := goivy.New()
 	ctx := goivy.NewZ3Context()
@@ -41,18 +40,23 @@ func ivyProbeInit() uint32 {
 	return checksum
 }
 
-//export ivy_probe_z3_bool_sort_id
-func ivyProbeZ3BoolSortID() uint32 {
+func probeZ3BoolSortID() uint32 {
 	if probeZ3Context == nil {
-		probeChecksum = ivyProbeInit()
+		probeChecksum = probeInit()
 	}
 	return uint32(probeBoolSort.GetId())
 }
 
-//export ivy_probe_checksum
-func ivyProbeChecksum() uint32 {
+func probeRoundTripBoolSortID() uint32 {
+	if probeZ3Context == nil {
+		probeChecksum = probeInit()
+	}
+	return uint32(probeZ3Context.BoolSort().GetId())
+}
+
+func probeChecksumValue() uint32 {
 	if probeChecksum == 0 {
-		probeChecksum = ivyProbeInit()
+		probeChecksum = probeInit()
 	}
 	return probeChecksum
 }

@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-probe-wasm tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-tinygo-browser test-z3-wasip1-browser test-z3-wasip1-browser-build tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -24,6 +24,10 @@ Z3_WASM_PRE_EXNREF   := $(Z3_VENDOR_BUILD)/z3-api.pre-exnref.wasm
 Z3_WASM_EXNREF       := $(Z3_VENDOR_BUILD)/z3-api.exnref.wasm
 Z3_WEBVUE_WASM       := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).wasm
 Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
+TINYGO               ?= /usr/local/bin/tinygo
+TINYGO_IVY_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-probe.wasm
+TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
+BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
 EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
@@ -176,6 +180,37 @@ test-z3-wasm-js: z3-wasm-api $(WEBVUE_VITEST_BIN)
 
 test-z3-wasm-browser: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
+
+$(TINYGO_IVY_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+	$(TINYGO) build -tags xtracer_off -target wasm-unknown -scheduler=none -panic=trap -gc=leaking -no-debug -o $(TINYGO_IVY_PROBE_WASM) ./tinygo_probe
+
+tinygo-ivy-probe-wasm: $(TINYGO_IVY_PROBE_WASM)
+
+test-z3-tinygo-browser: z3-wasm-api tinygo-ivy-probe-wasm $(WEBVUE_PLAYWRIGHT_BIN)
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/tinygoZ3Worker.browser.spec.js
+
+$(TINYGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+	$(TINYGO) build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o $(TINYGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
+
+tinygo-ivy-wasip1-probe-wasm: $(TINYGO_IVY_WASIP1_PROBE_WASM)
+
+$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o $(BIGGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
+
+biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
+
+z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm
+
+test-z3-wasip1-browser:
+	@test -f $(Z3_WEBVUE_JS) || { echo "missing $(Z3_WEBVUE_JS); run make z3-wasm-api"; exit 1; }
+	@test -f $(Z3_WEBVUE_WASM) || { echo "missing $(Z3_WEBVUE_WASM); run make z3-wasm-api"; exit 1; }
+	@test -f $(TINYGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(TINYGO_IVY_WASIP1_PROBE_WASM); run make tinygo-ivy-wasip1-probe-wasm"; exit 1; }
+	@test -f $(BIGGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(BIGGO_IVY_WASIP1_PROBE_WASM); run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
+	@test -x $(WEBVUE_PLAYWRIGHT_BIN) || { echo "missing $(WEBVUE_PLAYWRIGHT_BIN); run make webvue-setup"; exit 1; }
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
+
+test-z3-wasip1-browser-build: z3-wasip1-browser-artifacts $(WEBVUE_PLAYWRIGHT_BIN)
+	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
