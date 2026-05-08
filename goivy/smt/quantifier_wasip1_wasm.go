@@ -71,9 +71,9 @@ func stringBytes(s string) (*byte, uint32) {
 	return unsafe.StringData(s), uint32(len(s))
 }
 
-func z3_mk_string_symbol_go(s string) z3Symbol {
+func z3_mk_string_symbol_go(ctx z3Context, s string) z3Symbol {
 	p, n := stringBytes(s)
-	return z3_mk_string_symbol(p, n)
+	return z3_mk_string_symbol(ctx, p, n)
 }
 
 func z3_mk_string_go(ctx z3Context, s string) z3AST {
@@ -172,7 +172,7 @@ func (ctx *Z3Context) symbol(name string) z3Symbol {
 	if sym, ok := ctx.syms[name]; ok {
 		return sym
 	}
-	sym := z3_mk_string_symbol_go(name)
+	sym := z3_mk_string_symbol_go(ctx.c, name)
 	ctx.syms[name] = sym
 	return sym
 }
@@ -579,12 +579,12 @@ func (ctx *Z3Context) EnumSort(name string, elements []string) (Z3Sort, []Z3Expr
 	var s Z3Sort
 	consts := make([]Z3Expr, len(elements))
 	ctx.do(func() {
-		sym := z3_mk_string_symbol_go(name)
+		sym := z3_mk_string_symbol_go(ctx.c, name)
 
 		n := uint32(len(elements))
 		cElems := make([]z3Symbol, len(elements))
 		for i, e := range elements {
-			cElems[i] = z3_mk_string_symbol_go(e)
+			cElems[i] = z3_mk_string_symbol_go(ctx.c, e)
 		}
 
 		cConsts := make([]z3FuncDecl, len(elements))
@@ -1170,7 +1170,7 @@ func (s *Z3Solver) UnsatCore() []Z3Expr {
 func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 	var s *Z3Solver
 	ctx.do(func() {
-		sym := z3_mk_string_symbol_go(logic)
+		sym := z3_mk_string_symbol_go(ctx.c, logic)
 		cs := z3_mk_solver_for_logic(ctx.c, sym)
 		z3Solver_inc_ref(ctx.c, cs)
 		s = &Z3Solver{ctx: ctx, c: cs}
@@ -1247,7 +1247,7 @@ func (s *Z3Solver) SetParam(key, value string) {
 		params := z3_mk_params(s.ctx.c)
 		z3Params_inc_ref(s.ctx.c, params)
 
-		keySym := z3_mk_string_symbol_go(key)
+		keySym := z3_mk_string_symbol_go(s.ctx.c, key)
 
 		switch value {
 		case "true":
@@ -1261,7 +1261,7 @@ func (s *Z3Solver) SetParam(key, value string) {
 			if n == 1 {
 				z3Params_set_uint(s.ctx.c, params, keySym, uint32(uval))
 			} else {
-				valSym := z3_mk_string_symbol_go(value)
+				valSym := z3_mk_string_symbol_go(s.ctx.c, value)
 				z3Params_set_symbol(s.ctx.c, params, keySym, valSym)
 			}
 		}
@@ -1318,7 +1318,7 @@ func z3_inc_ref(ctx z3Context, ast z3AST)
 func z3_dec_ref(ctx z3Context, ast z3AST)
 
 //go:wasmimport smt_z3 Z3_mk_string_symbol_bytes
-func z3_mk_string_symbol(name *byte, n uint32) z3Symbol
+func z3_mk_string_symbol(ctx z3Context, name *byte, n uint32) z3Symbol
 
 //go:wasmimport smt_z3 Z3_get_symbol_string
 func z3_get_symbol_string(ctx z3Context, sym z3Symbol) z3StringHandle

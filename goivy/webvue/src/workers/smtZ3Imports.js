@@ -101,9 +101,9 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     return strings.add(z3String(handle));
   }
 
-  function symbolFromGoBytes(ptr, len) {
+  function symbolFromGoBytes(ctx, ptr, len) {
     return withZ3CString(z3, goString(getGoMemory, ptr, len), (z3Ptr) => (
-      z3._Z3_mk_string_symbol(z3Ptr) >>> 0
+      z3._Z3_mk_string_symbol(ctx, z3Ptr) >>> 0
     ));
   }
 
